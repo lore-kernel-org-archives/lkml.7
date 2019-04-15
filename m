@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80602C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:45:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E7AC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:45:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4D8C12073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:45:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B1B3218DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:45:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555353936;
-	bh=jvdnfx7i1BZOSc0nVxbkv8tDOtMDTq7xv2YEYUFs0K0=;
+	s=default; t=1555353939;
+	bh=OZIBWPzJ6nyVfUL2DdGVAqB6z9X/MG8Yb9PHbFFmb/Q=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=yxNEvorMIqizdyRAjTILVXpJBFikYV0GAbweFylQWljAHwpbemCiqkuy/5fNyEf0j
-	 OzZnNRCIyDXZIPjnjVqwNK3GWGNubuJw1skYzFR3fTlFbVcWao7uPCRO0JI97EJzfq
-	 yUeIVmT4Uw88Hab770LsRGMip6GyD6RXPBeUaBlA=
+	b=ZZhBgSjfjL3DDjceB12nTxjNr0Ceuhzb5tTk5DwPkw6EqGmW3jIcn8N0NpFXG/S9Y
+	 +2lLWM2/OjcIo57cxH3PX+mhVvX9wl6KmjuW0ecXQ2ejWge6PPK0t98Tra/6vSZcpn
+	 n94aVAGr8w6BUhgr1+vjW6Z5gKX6ocDQ/pqrsPIc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728407AbfDOSpe (ORCPT
+        id S1728421AbfDOSpi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 14:45:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47940 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 14:45:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48004 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728393AbfDOSpb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 14:45:31 -0400
+        id S1728399AbfDOSpe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 14:45:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 641EB2073F;
-        Mon, 15 Apr 2019 18:45:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 296202087C;
+        Mon, 15 Apr 2019 18:45:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555353930;
-        bh=jvdnfx7i1BZOSc0nVxbkv8tDOtMDTq7xv2YEYUFs0K0=;
+        s=default; t=1555353933;
+        bh=OZIBWPzJ6nyVfUL2DdGVAqB6z9X/MG8Yb9PHbFFmb/Q=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bLhyjSCMCSwmX6unKz8ZpLNTrZbhNsadfqLzlGz8C2LgSoSI7wsLNqSV1n1pBVNM/
-         fZQc+CSN8qupvNxTDHcTKTl5IIUDT3Tfkh11/T1D0No7ReyPb3CGXQbD/m8/SjgaZV
-         ndQMoFsQebU7im0IOUYmF6q/PzdXEchVsplCNrvE=
+        b=tkYGpuDZjeBP6v71sAbZ9Im6ulXWFE4ZKPi7iIvQvH2kViSkrWKGXd27xHF1/Dp/2
+         gCLBHqBVqCeWfrUYQQinsu+hWuT9my0Pqu3sAeZeZvNeL9H7reQPehUeS5yBAxypuA
+         NrjXM837tlVDTu07MG+c+jvV3s/5UNbp8afru/DM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Diana Craciun <diana.craciun@nxp.com>,
+        stable@vger.kernel.org, Andreas Schwab <schwab@linux-m68k.org>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 23/76] powerpc/64: Call setup_barrier_nospec() from setup_arch()
-Date:   Mon, 15 Apr 2019 20:43:47 +0200
-Message-Id: <20190415183713.834205881@linuxfoundation.org>
+Subject: [PATCH 4.9 10/76] powerpc: Fix invalid use of register expressions
+Date:   Mon, 15 Apr 2019 20:43:34 +0200
+Message-Id: <20190415183710.669821401@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183707.712011689@linuxfoundation.org>
 References: <20190415183707.712011689@linuxfoundation.org>
@@ -60,75 +60,528 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit af375eefbfb27cbb5b831984e66d724a40d26b5c upstream.
+commit 8a583c0a8d316d8ea52ea78491174ab1a3e9ef9d upstream.
 
-Currently we require platform code to call setup_barrier_nospec(). But
-if we add an empty definition for the !CONFIG_PPC_BARRIER_NOSPEC case
-then we can call it in setup_arch().
+binutils >= 2.26 now warns about misuse of register expressions in
+assembler operands that are actually literals, for example:
 
-Signed-off-by: Diana Craciun <diana.craciun@nxp.com>
+  arch/powerpc/kernel/entry_64.S:535: Warning: invalid register expression
+
+In practice these are almost all uses of r0 that should just be a
+literal 0.
+
+Signed-off-by: Andreas Schwab <schwab@linux-m68k.org>
+[mpe: Mention r0 is almost always the culprit, fold in purgatory change]
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/setup.h       | 4 ++++
- arch/powerpc/kernel/setup-common.c     | 2 ++
- arch/powerpc/platforms/powernv/setup.c | 1 -
- arch/powerpc/platforms/pseries/setup.c | 1 -
- 4 files changed, 6 insertions(+), 2 deletions(-)
+ arch/powerpc/include/asm/ppc_asm.h |  2 +-
+ arch/powerpc/kernel/swsusp_asm64.S |  2 +-
+ arch/powerpc/lib/copypage_power7.S | 14 +++----
+ arch/powerpc/lib/copyuser_power7.S | 66 +++++++++++++++---------------
+ arch/powerpc/lib/memcpy_power7.S   | 66 +++++++++++++++---------------
+ arch/powerpc/lib/string_64.S       |  2 +-
+ 6 files changed, 76 insertions(+), 76 deletions(-)
 
-diff --git a/arch/powerpc/include/asm/setup.h b/arch/powerpc/include/asm/setup.h
-index 38525bd2ed65..d3e9da62d029 100644
---- a/arch/powerpc/include/asm/setup.h
-+++ b/arch/powerpc/include/asm/setup.h
-@@ -51,7 +51,11 @@ enum l1d_flush_type {
+diff --git a/arch/powerpc/include/asm/ppc_asm.h b/arch/powerpc/include/asm/ppc_asm.h
+index c73750b0d9fa..24e95be3bfaf 100644
+--- a/arch/powerpc/include/asm/ppc_asm.h
++++ b/arch/powerpc/include/asm/ppc_asm.h
+@@ -437,7 +437,7 @@ END_FTR_SECTION_IFCLR(CPU_FTR_601)
+ .machine push ;					\
+ .machine "power4" ;				\
+        lis     scratch,0x60000000@h;		\
+-       dcbt    r0,scratch,0b01010;		\
++       dcbt    0,scratch,0b01010;		\
+ .machine pop
  
- void setup_rfi_flush(enum l1d_flush_type, bool enable);
- void do_rfi_flush_fixups(enum l1d_flush_type types);
-+#ifdef CONFIG_PPC_BARRIER_NOSPEC
- void setup_barrier_nospec(void);
-+#else
-+static inline void setup_barrier_nospec(void) { };
-+#endif
- void do_barrier_nospec_fixups(bool enable);
- extern bool barrier_nospec_enabled;
+ /*
+diff --git a/arch/powerpc/kernel/swsusp_asm64.S b/arch/powerpc/kernel/swsusp_asm64.S
+index 988f38dced0f..82d8aae81c6a 100644
+--- a/arch/powerpc/kernel/swsusp_asm64.S
++++ b/arch/powerpc/kernel/swsusp_asm64.S
+@@ -179,7 +179,7 @@ nothing_to_copy:
+ 	sld	r3, r3, r0
+ 	li	r0, 0
+ 1:
+-	dcbf	r0,r3
++	dcbf	0,r3
+ 	addi	r3,r3,0x20
+ 	bdnz	1b
  
-diff --git a/arch/powerpc/kernel/setup-common.c b/arch/powerpc/kernel/setup-common.c
-index bf0f712ac0e0..d5a128f54537 100644
---- a/arch/powerpc/kernel/setup-common.c
-+++ b/arch/powerpc/kernel/setup-common.c
-@@ -918,6 +918,8 @@ void __init setup_arch(char **cmdline_p)
- 	if (ppc_md.setup_arch)
- 		ppc_md.setup_arch();
+diff --git a/arch/powerpc/lib/copypage_power7.S b/arch/powerpc/lib/copypage_power7.S
+index a84d333ecb09..ca5fc8fa7efc 100644
+--- a/arch/powerpc/lib/copypage_power7.S
++++ b/arch/powerpc/lib/copypage_power7.S
+@@ -45,13 +45,13 @@ _GLOBAL(copypage_power7)
+ .machine push
+ .machine "power4"
+ 	/* setup read stream 0  */
+-	dcbt	r0,r4,0b01000  	/* addr from */
+-	dcbt	r0,r7,0b01010   /* length and depth from */
++	dcbt	0,r4,0b01000  	/* addr from */
++	dcbt	0,r7,0b01010   /* length and depth from */
+ 	/* setup write stream 1 */
+-	dcbtst	r0,r9,0b01000   /* addr to */
+-	dcbtst	r0,r10,0b01010  /* length and depth to */
++	dcbtst	0,r9,0b01000   /* addr to */
++	dcbtst	0,r10,0b01010  /* length and depth to */
+ 	eieio
+-	dcbt	r0,r8,0b01010	/* all streams GO */
++	dcbt	0,r8,0b01010	/* all streams GO */
+ .machine pop
  
-+	setup_barrier_nospec();
-+
- 	paging_init();
+ #ifdef CONFIG_ALTIVEC
+@@ -83,7 +83,7 @@ _GLOBAL(copypage_power7)
+ 	li	r12,112
  
- 	/* Initialize the MMU context management stuff. */
-diff --git a/arch/powerpc/platforms/powernv/setup.c b/arch/powerpc/platforms/powernv/setup.c
-index eb5464648810..17203abf38e8 100644
---- a/arch/powerpc/platforms/powernv/setup.c
-+++ b/arch/powerpc/platforms/powernv/setup.c
-@@ -123,7 +123,6 @@ static void pnv_setup_rfi_flush(void)
- 		  security_ftr_enabled(SEC_FTR_L1D_FLUSH_HV));
+ 	.align	5
+-1:	lvx	v7,r0,r4
++1:	lvx	v7,0,r4
+ 	lvx	v6,r4,r6
+ 	lvx	v5,r4,r7
+ 	lvx	v4,r4,r8
+@@ -92,7 +92,7 @@ _GLOBAL(copypage_power7)
+ 	lvx	v1,r4,r11
+ 	lvx	v0,r4,r12
+ 	addi	r4,r4,128
+-	stvx	v7,r0,r3
++	stvx	v7,0,r3
+ 	stvx	v6,r3,r6
+ 	stvx	v5,r3,r7
+ 	stvx	v4,r3,r8
+diff --git a/arch/powerpc/lib/copyuser_power7.S b/arch/powerpc/lib/copyuser_power7.S
+index da0c568d18c4..391694814691 100644
+--- a/arch/powerpc/lib/copyuser_power7.S
++++ b/arch/powerpc/lib/copyuser_power7.S
+@@ -327,13 +327,13 @@ err1;	stb	r0,0(r3)
+ .machine push
+ .machine "power4"
+ 	/* setup read stream 0 */
+-	dcbt	r0,r6,0b01000   /* addr from */
+-	dcbt	r0,r7,0b01010   /* length and depth from */
++	dcbt	0,r6,0b01000   /* addr from */
++	dcbt	0,r7,0b01010   /* length and depth from */
+ 	/* setup write stream 1 */
+-	dcbtst	r0,r9,0b01000   /* addr to */
+-	dcbtst	r0,r10,0b01010  /* length and depth to */
++	dcbtst	0,r9,0b01000   /* addr to */
++	dcbtst	0,r10,0b01010  /* length and depth to */
+ 	eieio
+-	dcbt	r0,r8,0b01010	/* all streams GO */
++	dcbt	0,r8,0b01010	/* all streams GO */
+ .machine pop
  
- 	setup_rfi_flush(type, enable);
--	setup_barrier_nospec();
- }
+ 	beq	cr1,.Lunwind_stack_nonvmx_copy
+@@ -388,26 +388,26 @@ err3;	std	r0,0(r3)
+ 	li	r11,48
  
- static void __init pnv_setup_arch(void)
-diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
-index 2b2759c98c7e..91ade7755823 100644
---- a/arch/powerpc/platforms/pseries/setup.c
-+++ b/arch/powerpc/platforms/pseries/setup.c
-@@ -525,7 +525,6 @@ void pseries_setup_rfi_flush(void)
- 		 security_ftr_enabled(SEC_FTR_L1D_FLUSH_PR);
+ 	bf	cr7*4+3,5f
+-err3;	lvx	v1,r0,r4
++err3;	lvx	v1,0,r4
+ 	addi	r4,r4,16
+-err3;	stvx	v1,r0,r3
++err3;	stvx	v1,0,r3
+ 	addi	r3,r3,16
  
- 	setup_rfi_flush(types, enable);
--	setup_barrier_nospec();
- }
+ 5:	bf	cr7*4+2,6f
+-err3;	lvx	v1,r0,r4
++err3;	lvx	v1,0,r4
+ err3;	lvx	v0,r4,r9
+ 	addi	r4,r4,32
+-err3;	stvx	v1,r0,r3
++err3;	stvx	v1,0,r3
+ err3;	stvx	v0,r3,r9
+ 	addi	r3,r3,32
  
- static void __init pSeries_setup_arch(void)
+ 6:	bf	cr7*4+1,7f
+-err3;	lvx	v3,r0,r4
++err3;	lvx	v3,0,r4
+ err3;	lvx	v2,r4,r9
+ err3;	lvx	v1,r4,r10
+ err3;	lvx	v0,r4,r11
+ 	addi	r4,r4,64
+-err3;	stvx	v3,r0,r3
++err3;	stvx	v3,0,r3
+ err3;	stvx	v2,r3,r9
+ err3;	stvx	v1,r3,r10
+ err3;	stvx	v0,r3,r11
+@@ -433,7 +433,7 @@ err3;	stvx	v0,r3,r11
+ 	 */
+ 	.align	5
+ 8:
+-err4;	lvx	v7,r0,r4
++err4;	lvx	v7,0,r4
+ err4;	lvx	v6,r4,r9
+ err4;	lvx	v5,r4,r10
+ err4;	lvx	v4,r4,r11
+@@ -442,7 +442,7 @@ err4;	lvx	v2,r4,r14
+ err4;	lvx	v1,r4,r15
+ err4;	lvx	v0,r4,r16
+ 	addi	r4,r4,128
+-err4;	stvx	v7,r0,r3
++err4;	stvx	v7,0,r3
+ err4;	stvx	v6,r3,r9
+ err4;	stvx	v5,r3,r10
+ err4;	stvx	v4,r3,r11
+@@ -463,29 +463,29 @@ err4;	stvx	v0,r3,r16
+ 	mtocrf	0x01,r6
+ 
+ 	bf	cr7*4+1,9f
+-err3;	lvx	v3,r0,r4
++err3;	lvx	v3,0,r4
+ err3;	lvx	v2,r4,r9
+ err3;	lvx	v1,r4,r10
+ err3;	lvx	v0,r4,r11
+ 	addi	r4,r4,64
+-err3;	stvx	v3,r0,r3
++err3;	stvx	v3,0,r3
+ err3;	stvx	v2,r3,r9
+ err3;	stvx	v1,r3,r10
+ err3;	stvx	v0,r3,r11
+ 	addi	r3,r3,64
+ 
+ 9:	bf	cr7*4+2,10f
+-err3;	lvx	v1,r0,r4
++err3;	lvx	v1,0,r4
+ err3;	lvx	v0,r4,r9
+ 	addi	r4,r4,32
+-err3;	stvx	v1,r0,r3
++err3;	stvx	v1,0,r3
+ err3;	stvx	v0,r3,r9
+ 	addi	r3,r3,32
+ 
+ 10:	bf	cr7*4+3,11f
+-err3;	lvx	v1,r0,r4
++err3;	lvx	v1,0,r4
+ 	addi	r4,r4,16
+-err3;	stvx	v1,r0,r3
++err3;	stvx	v1,0,r3
+ 	addi	r3,r3,16
+ 
+ 	/* Up to 15B to go */
+@@ -565,25 +565,25 @@ err3;	lvx	v0,0,r4
+ 	addi	r4,r4,16
+ 
+ 	bf	cr7*4+3,5f
+-err3;	lvx	v1,r0,r4
++err3;	lvx	v1,0,r4
+ 	VPERM(v8,v0,v1,v16)
+ 	addi	r4,r4,16
+-err3;	stvx	v8,r0,r3
++err3;	stvx	v8,0,r3
+ 	addi	r3,r3,16
+ 	vor	v0,v1,v1
+ 
+ 5:	bf	cr7*4+2,6f
+-err3;	lvx	v1,r0,r4
++err3;	lvx	v1,0,r4
+ 	VPERM(v8,v0,v1,v16)
+ err3;	lvx	v0,r4,r9
+ 	VPERM(v9,v1,v0,v16)
+ 	addi	r4,r4,32
+-err3;	stvx	v8,r0,r3
++err3;	stvx	v8,0,r3
+ err3;	stvx	v9,r3,r9
+ 	addi	r3,r3,32
+ 
+ 6:	bf	cr7*4+1,7f
+-err3;	lvx	v3,r0,r4
++err3;	lvx	v3,0,r4
+ 	VPERM(v8,v0,v3,v16)
+ err3;	lvx	v2,r4,r9
+ 	VPERM(v9,v3,v2,v16)
+@@ -592,7 +592,7 @@ err3;	lvx	v1,r4,r10
+ err3;	lvx	v0,r4,r11
+ 	VPERM(v11,v1,v0,v16)
+ 	addi	r4,r4,64
+-err3;	stvx	v8,r0,r3
++err3;	stvx	v8,0,r3
+ err3;	stvx	v9,r3,r9
+ err3;	stvx	v10,r3,r10
+ err3;	stvx	v11,r3,r11
+@@ -618,7 +618,7 @@ err3;	stvx	v11,r3,r11
+ 	 */
+ 	.align	5
+ 8:
+-err4;	lvx	v7,r0,r4
++err4;	lvx	v7,0,r4
+ 	VPERM(v8,v0,v7,v16)
+ err4;	lvx	v6,r4,r9
+ 	VPERM(v9,v7,v6,v16)
+@@ -635,7 +635,7 @@ err4;	lvx	v1,r4,r15
+ err4;	lvx	v0,r4,r16
+ 	VPERM(v15,v1,v0,v16)
+ 	addi	r4,r4,128
+-err4;	stvx	v8,r0,r3
++err4;	stvx	v8,0,r3
+ err4;	stvx	v9,r3,r9
+ err4;	stvx	v10,r3,r10
+ err4;	stvx	v11,r3,r11
+@@ -656,7 +656,7 @@ err4;	stvx	v15,r3,r16
+ 	mtocrf	0x01,r6
+ 
+ 	bf	cr7*4+1,9f
+-err3;	lvx	v3,r0,r4
++err3;	lvx	v3,0,r4
+ 	VPERM(v8,v0,v3,v16)
+ err3;	lvx	v2,r4,r9
+ 	VPERM(v9,v3,v2,v16)
+@@ -665,27 +665,27 @@ err3;	lvx	v1,r4,r10
+ err3;	lvx	v0,r4,r11
+ 	VPERM(v11,v1,v0,v16)
+ 	addi	r4,r4,64
+-err3;	stvx	v8,r0,r3
++err3;	stvx	v8,0,r3
+ err3;	stvx	v9,r3,r9
+ err3;	stvx	v10,r3,r10
+ err3;	stvx	v11,r3,r11
+ 	addi	r3,r3,64
+ 
+ 9:	bf	cr7*4+2,10f
+-err3;	lvx	v1,r0,r4
++err3;	lvx	v1,0,r4
+ 	VPERM(v8,v0,v1,v16)
+ err3;	lvx	v0,r4,r9
+ 	VPERM(v9,v1,v0,v16)
+ 	addi	r4,r4,32
+-err3;	stvx	v8,r0,r3
++err3;	stvx	v8,0,r3
+ err3;	stvx	v9,r3,r9
+ 	addi	r3,r3,32
+ 
+ 10:	bf	cr7*4+3,11f
+-err3;	lvx	v1,r0,r4
++err3;	lvx	v1,0,r4
+ 	VPERM(v8,v0,v1,v16)
+ 	addi	r4,r4,16
+-err3;	stvx	v8,r0,r3
++err3;	stvx	v8,0,r3
+ 	addi	r3,r3,16
+ 
+ 	/* Up to 15B to go */
+diff --git a/arch/powerpc/lib/memcpy_power7.S b/arch/powerpc/lib/memcpy_power7.S
+index 786234fd4e91..193909abd18b 100644
+--- a/arch/powerpc/lib/memcpy_power7.S
++++ b/arch/powerpc/lib/memcpy_power7.S
+@@ -261,12 +261,12 @@ _GLOBAL(memcpy_power7)
+ 
+ .machine push
+ .machine "power4"
+-	dcbt	r0,r6,0b01000
+-	dcbt	r0,r7,0b01010
+-	dcbtst	r0,r9,0b01000
+-	dcbtst	r0,r10,0b01010
++	dcbt	0,r6,0b01000
++	dcbt	0,r7,0b01010
++	dcbtst	0,r9,0b01000
++	dcbtst	0,r10,0b01010
+ 	eieio
+-	dcbt	r0,r8,0b01010	/* GO */
++	dcbt	0,r8,0b01010	/* GO */
+ .machine pop
+ 
+ 	beq	cr1,.Lunwind_stack_nonvmx_copy
+@@ -321,26 +321,26 @@ _GLOBAL(memcpy_power7)
+ 	li	r11,48
+ 
+ 	bf	cr7*4+3,5f
+-	lvx	v1,r0,r4
++	lvx	v1,0,r4
+ 	addi	r4,r4,16
+-	stvx	v1,r0,r3
++	stvx	v1,0,r3
+ 	addi	r3,r3,16
+ 
+ 5:	bf	cr7*4+2,6f
+-	lvx	v1,r0,r4
++	lvx	v1,0,r4
+ 	lvx	v0,r4,r9
+ 	addi	r4,r4,32
+-	stvx	v1,r0,r3
++	stvx	v1,0,r3
+ 	stvx	v0,r3,r9
+ 	addi	r3,r3,32
+ 
+ 6:	bf	cr7*4+1,7f
+-	lvx	v3,r0,r4
++	lvx	v3,0,r4
+ 	lvx	v2,r4,r9
+ 	lvx	v1,r4,r10
+ 	lvx	v0,r4,r11
+ 	addi	r4,r4,64
+-	stvx	v3,r0,r3
++	stvx	v3,0,r3
+ 	stvx	v2,r3,r9
+ 	stvx	v1,r3,r10
+ 	stvx	v0,r3,r11
+@@ -366,7 +366,7 @@ _GLOBAL(memcpy_power7)
+ 	 */
+ 	.align	5
+ 8:
+-	lvx	v7,r0,r4
++	lvx	v7,0,r4
+ 	lvx	v6,r4,r9
+ 	lvx	v5,r4,r10
+ 	lvx	v4,r4,r11
+@@ -375,7 +375,7 @@ _GLOBAL(memcpy_power7)
+ 	lvx	v1,r4,r15
+ 	lvx	v0,r4,r16
+ 	addi	r4,r4,128
+-	stvx	v7,r0,r3
++	stvx	v7,0,r3
+ 	stvx	v6,r3,r9
+ 	stvx	v5,r3,r10
+ 	stvx	v4,r3,r11
+@@ -396,29 +396,29 @@ _GLOBAL(memcpy_power7)
+ 	mtocrf	0x01,r6
+ 
+ 	bf	cr7*4+1,9f
+-	lvx	v3,r0,r4
++	lvx	v3,0,r4
+ 	lvx	v2,r4,r9
+ 	lvx	v1,r4,r10
+ 	lvx	v0,r4,r11
+ 	addi	r4,r4,64
+-	stvx	v3,r0,r3
++	stvx	v3,0,r3
+ 	stvx	v2,r3,r9
+ 	stvx	v1,r3,r10
+ 	stvx	v0,r3,r11
+ 	addi	r3,r3,64
+ 
+ 9:	bf	cr7*4+2,10f
+-	lvx	v1,r0,r4
++	lvx	v1,0,r4
+ 	lvx	v0,r4,r9
+ 	addi	r4,r4,32
+-	stvx	v1,r0,r3
++	stvx	v1,0,r3
+ 	stvx	v0,r3,r9
+ 	addi	r3,r3,32
+ 
+ 10:	bf	cr7*4+3,11f
+-	lvx	v1,r0,r4
++	lvx	v1,0,r4
+ 	addi	r4,r4,16
+-	stvx	v1,r0,r3
++	stvx	v1,0,r3
+ 	addi	r3,r3,16
+ 
+ 	/* Up to 15B to go */
+@@ -499,25 +499,25 @@ _GLOBAL(memcpy_power7)
+ 	addi	r4,r4,16
+ 
+ 	bf	cr7*4+3,5f
+-	lvx	v1,r0,r4
++	lvx	v1,0,r4
+ 	VPERM(v8,v0,v1,v16)
+ 	addi	r4,r4,16
+-	stvx	v8,r0,r3
++	stvx	v8,0,r3
+ 	addi	r3,r3,16
+ 	vor	v0,v1,v1
+ 
+ 5:	bf	cr7*4+2,6f
+-	lvx	v1,r0,r4
++	lvx	v1,0,r4
+ 	VPERM(v8,v0,v1,v16)
+ 	lvx	v0,r4,r9
+ 	VPERM(v9,v1,v0,v16)
+ 	addi	r4,r4,32
+-	stvx	v8,r0,r3
++	stvx	v8,0,r3
+ 	stvx	v9,r3,r9
+ 	addi	r3,r3,32
+ 
+ 6:	bf	cr7*4+1,7f
+-	lvx	v3,r0,r4
++	lvx	v3,0,r4
+ 	VPERM(v8,v0,v3,v16)
+ 	lvx	v2,r4,r9
+ 	VPERM(v9,v3,v2,v16)
+@@ -526,7 +526,7 @@ _GLOBAL(memcpy_power7)
+ 	lvx	v0,r4,r11
+ 	VPERM(v11,v1,v0,v16)
+ 	addi	r4,r4,64
+-	stvx	v8,r0,r3
++	stvx	v8,0,r3
+ 	stvx	v9,r3,r9
+ 	stvx	v10,r3,r10
+ 	stvx	v11,r3,r11
+@@ -552,7 +552,7 @@ _GLOBAL(memcpy_power7)
+ 	 */
+ 	.align	5
+ 8:
+-	lvx	v7,r0,r4
++	lvx	v7,0,r4
+ 	VPERM(v8,v0,v7,v16)
+ 	lvx	v6,r4,r9
+ 	VPERM(v9,v7,v6,v16)
+@@ -569,7 +569,7 @@ _GLOBAL(memcpy_power7)
+ 	lvx	v0,r4,r16
+ 	VPERM(v15,v1,v0,v16)
+ 	addi	r4,r4,128
+-	stvx	v8,r0,r3
++	stvx	v8,0,r3
+ 	stvx	v9,r3,r9
+ 	stvx	v10,r3,r10
+ 	stvx	v11,r3,r11
+@@ -590,7 +590,7 @@ _GLOBAL(memcpy_power7)
+ 	mtocrf	0x01,r6
+ 
+ 	bf	cr7*4+1,9f
+-	lvx	v3,r0,r4
++	lvx	v3,0,r4
+ 	VPERM(v8,v0,v3,v16)
+ 	lvx	v2,r4,r9
+ 	VPERM(v9,v3,v2,v16)
+@@ -599,27 +599,27 @@ _GLOBAL(memcpy_power7)
+ 	lvx	v0,r4,r11
+ 	VPERM(v11,v1,v0,v16)
+ 	addi	r4,r4,64
+-	stvx	v8,r0,r3
++	stvx	v8,0,r3
+ 	stvx	v9,r3,r9
+ 	stvx	v10,r3,r10
+ 	stvx	v11,r3,r11
+ 	addi	r3,r3,64
+ 
+ 9:	bf	cr7*4+2,10f
+-	lvx	v1,r0,r4
++	lvx	v1,0,r4
+ 	VPERM(v8,v0,v1,v16)
+ 	lvx	v0,r4,r9
+ 	VPERM(v9,v1,v0,v16)
+ 	addi	r4,r4,32
+-	stvx	v8,r0,r3
++	stvx	v8,0,r3
+ 	stvx	v9,r3,r9
+ 	addi	r3,r3,32
+ 
+ 10:	bf	cr7*4+3,11f
+-	lvx	v1,r0,r4
++	lvx	v1,0,r4
+ 	VPERM(v8,v0,v1,v16)
+ 	addi	r4,r4,16
+-	stvx	v8,r0,r3
++	stvx	v8,0,r3
+ 	addi	r3,r3,16
+ 
+ 	/* Up to 15B to go */
+diff --git a/arch/powerpc/lib/string_64.S b/arch/powerpc/lib/string_64.S
+index 57ace356c949..11e6372537fd 100644
+--- a/arch/powerpc/lib/string_64.S
++++ b/arch/powerpc/lib/string_64.S
+@@ -192,7 +192,7 @@ err1;	std	r0,8(r3)
+ 	mtctr	r6
+ 	mr	r8,r3
+ 14:
+-err1;	dcbz	r0,r3
++err1;	dcbz	0,r3
+ 	add	r3,r3,r9
+ 	bdnz	14b
+ 
 -- 
 2.19.1
 
