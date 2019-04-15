@@ -7,48 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C3696C10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:27:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C713EC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:27:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D1F020651
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:27:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 835A420651
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:27:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555356441;
-	bh=abd4mRKFVgbERGl3rqUOvXidqBQLDPQNuFiS9iNKN+s=;
+	s=default; t=1555356450;
+	bh=wKkHwOQj5RIqSl4IAipOYpMxvC6ArGGnPtpw1Mc1DnQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mWVE+jtoSfiUh5y+pGHrvLZSSosO8sLpjJZ2vC+7+7+z7o+Sp3ATlbR+j7AekRW/s
-	 isscKs5dnSoTcjrL4pnwVhuveniyIsTkyQiNzkW7h+MOBeicrIvL61uOxPy/lO73Ba
-	 tH0bzMiD5c0mwdYTHKDov+PKsG0p9eIywVmISj6M=
+	b=YZYYgo40+hK7P8pIFayIDoFUaXVpq+r/UbWT+wxPtVQHnrT5DZqSdl8XnwU2mhxYJ
+	 C6nmBH54dm4MgxlQ4G/kiamDLhvEsLzFLQzMKKQhRKD2eVjiIWI2kYveTFIRIM9WHK
+	 ZFc3SFIfm1vkztCfOd7zJ9zP7QDTMYFX8bJQc6j0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729812AbfDOT1U (ORCPT
+        id S1729382AbfDOTDy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:27:20 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36368 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:03:54 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35872 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728596AbfDOTD6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:03:58 -0400
+        id S1729323AbfDOTDp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:03:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 124CD2087C;
-        Mon, 15 Apr 2019 19:03:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 25D94218FE;
+        Mon, 15 Apr 2019 19:03:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355037;
-        bh=abd4mRKFVgbERGl3rqUOvXidqBQLDPQNuFiS9iNKN+s=;
+        s=default; t=1555355024;
+        bh=wKkHwOQj5RIqSl4IAipOYpMxvC6ArGGnPtpw1Mc1DnQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hBvfC6lk7g4WPcAppn4cBxGlYyO0KEKexZUbavoBXWXIQIxb/Y+/Csu5eojqCqyOs
-         DVJG30TxUF22GJOCDEZ5QD3nO4E4iQeVATjosIorowXDTLOODDmK2riWQnKCCVNPq9
-         jQm21SHPgTmHI1o09CZw1UPsls2e39RoNmB9/Nps=
+        b=yoE/Pqpyd5PfPYeNGi/T5dDONmFqKHYtVqcKjACi7oIPdyuntFre0rL0Um5gj68RE
+         L6eXrXISyqhdNiqi5Sr1AXM+JxfPRkH87ZcfWQPWtkQYPgtm2t0bnbi1JxhBUF2Y2y
+         CWKuei5o4XCXNT31d326dvQJ2FZwfIWAZa1DKPvs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.14 45/69] ASoC: fsl_esai: fix channel swap issue when stream starts
-Date:   Mon, 15 Apr 2019 20:59:03 +0200
-Message-Id: <20190415183733.394496768@linuxfoundation.org>
+        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Tony Lindgren <tony@atomide.com>, Stable@vger.kernel.org
+Subject: [PATCH 4.14 54/69] ARM: dts: am335x-evmsk: Correct the regulators for the audio codec
+Date:   Mon, 15 Apr 2019 20:59:12 +0200
+Message-Id: <20190415183734.641831835@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183726.036654568@linuxfoundation.org>
 References: <20190415183726.036654568@linuxfoundation.org>
@@ -61,130 +59,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: S.j. Wang <shengjiu.wang@nxp.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-commit 0ff4e8c61b794a4bf6c854ab071a1abaaa80f358 upstream.
+commit 6691370646e844be98bb6558c024269791d20bd7 upstream.
 
-There is very low possibility ( < 0.1% ) that channel swap happened
-in beginning when multi output/input pin is enabled. The issue is
-that hardware can't send data to correct pin in the beginning with
-the normal enable flow.
+Correctly map the regulators used by tlv320aic3106.
+Both 1.8V and 3.3V for the codec is derived from VBAT via fixed regulators.
 
-This is hardware issue, but there is no errata, the workaround flow
-is that: Each time playback/recording, firstly clear the xSMA/xSMB,
-then enable TE/RE, then enable xSMB and xSMA (xSMB must be enabled
-before xSMA). Which is to use the xSMA as the trigger start register,
-previously the xCR_TE or xCR_RE is the bit for starting.
-
-Fixes commit 43d24e76b698 ("ASoC: fsl_esai: Add ESAI CPU DAI driver")
-Cc: <stable@vger.kernel.org>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Cc: <Stable@vger.kernel.org> # v4.14+
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/fsl/fsl_esai.c |   47 +++++++++++++++++++++++++++++++++++++----------
- 1 file changed, 37 insertions(+), 10 deletions(-)
+ arch/arm/boot/dts/am335x-evmsk.dts |   26 ++++++++++++++++++++++----
+ 1 file changed, 22 insertions(+), 4 deletions(-)
 
---- a/sound/soc/fsl/fsl_esai.c
-+++ b/sound/soc/fsl/fsl_esai.c
-@@ -58,6 +58,8 @@ struct fsl_esai {
- 	u32 fifo_depth;
- 	u32 slot_width;
- 	u32 slots;
-+	u32 tx_mask;
-+	u32 rx_mask;
- 	u32 hck_rate[2];
- 	u32 sck_rate[2];
- 	bool hck_dir[2];
-@@ -358,21 +360,13 @@ static int fsl_esai_set_dai_tdm_slot(str
- 	regmap_update_bits(esai_priv->regmap, REG_ESAI_TCCR,
- 			   ESAI_xCCR_xDC_MASK, ESAI_xCCR_xDC(slots));
+--- a/arch/arm/boot/dts/am335x-evmsk.dts
++++ b/arch/arm/boot/dts/am335x-evmsk.dts
+@@ -73,6 +73,24 @@
+ 		enable-active-high;
+ 	};
  
--	regmap_update_bits(esai_priv->regmap, REG_ESAI_TSMA,
--			   ESAI_xSMA_xS_MASK, ESAI_xSMA_xS(tx_mask));
--	regmap_update_bits(esai_priv->regmap, REG_ESAI_TSMB,
--			   ESAI_xSMB_xS_MASK, ESAI_xSMB_xS(tx_mask));
--
- 	regmap_update_bits(esai_priv->regmap, REG_ESAI_RCCR,
- 			   ESAI_xCCR_xDC_MASK, ESAI_xCCR_xDC(slots));
- 
--	regmap_update_bits(esai_priv->regmap, REG_ESAI_RSMA,
--			   ESAI_xSMA_xS_MASK, ESAI_xSMA_xS(rx_mask));
--	regmap_update_bits(esai_priv->regmap, REG_ESAI_RSMB,
--			   ESAI_xSMB_xS_MASK, ESAI_xSMB_xS(rx_mask));
--
- 	esai_priv->slot_width = slot_width;
- 	esai_priv->slots = slots;
-+	esai_priv->tx_mask = tx_mask;
-+	esai_priv->rx_mask = rx_mask;
- 
- 	return 0;
- }
-@@ -593,6 +587,7 @@ static int fsl_esai_trigger(struct snd_p
- 	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
- 	u8 i, channels = substream->runtime->channels;
- 	u32 pins = DIV_ROUND_UP(channels, esai_priv->slots);
-+	u32 mask;
- 
- 	switch (cmd) {
- 	case SNDRV_PCM_TRIGGER_START:
-@@ -605,15 +600,38 @@ static int fsl_esai_trigger(struct snd_p
- 		for (i = 0; tx && i < channels; i++)
- 			regmap_write(esai_priv->regmap, REG_ESAI_ETDR, 0x0);
- 
-+		/*
-+		 * When set the TE/RE in the end of enablement flow, there
-+		 * will be channel swap issue for multi data line case.
-+		 * In order to workaround this issue, we switch the bit
-+		 * enablement sequence to below sequence
-+		 * 1) clear the xSMB & xSMA: which is done in probe and
-+		 *                           stop state.
-+		 * 2) set TE/RE
-+		 * 3) set xSMB
-+		 * 4) set xSMA:  xSMA is the last one in this flow, which
-+		 *               will trigger esai to start.
-+		 */
- 		regmap_update_bits(esai_priv->regmap, REG_ESAI_xCR(tx),
- 				   tx ? ESAI_xCR_TE_MASK : ESAI_xCR_RE_MASK,
- 				   tx ? ESAI_xCR_TE(pins) : ESAI_xCR_RE(pins));
-+		mask = tx ? esai_priv->tx_mask : esai_priv->rx_mask;
++	/* TPS79518 */
++	v1_8d_reg: fixedregulator-v1_8d {
++		compatible = "regulator-fixed";
++		regulator-name = "v1_8d";
++		vin-supply = <&vbat>;
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++	};
 +
-+		regmap_update_bits(esai_priv->regmap, REG_ESAI_xSMB(tx),
-+				   ESAI_xSMB_xS_MASK, ESAI_xSMB_xS(mask));
-+		regmap_update_bits(esai_priv->regmap, REG_ESAI_xSMA(tx),
-+				   ESAI_xSMA_xS_MASK, ESAI_xSMA_xS(mask));
++	/* TPS78633 */
++	v3_3d_reg: fixedregulator-v3_3d {
++		compatible = "regulator-fixed";
++		regulator-name = "v3_3d";
++		vin-supply = <&vbat>;
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
 +
- 		break;
- 	case SNDRV_PCM_TRIGGER_SUSPEND:
- 	case SNDRV_PCM_TRIGGER_STOP:
- 	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
- 		regmap_update_bits(esai_priv->regmap, REG_ESAI_xCR(tx),
- 				   tx ? ESAI_xCR_TE_MASK : ESAI_xCR_RE_MASK, 0);
-+		regmap_update_bits(esai_priv->regmap, REG_ESAI_xSMA(tx),
-+				   ESAI_xSMA_xS_MASK, 0);
-+		regmap_update_bits(esai_priv->regmap, REG_ESAI_xSMB(tx),
-+				   ESAI_xSMB_xS_MASK, 0);
+ 	leds {
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&user_leds_s0>;
+@@ -493,10 +511,10 @@
+ 		status = "okay";
  
- 		/* Disable and reset FIFO */
- 		regmap_update_bits(esai_priv->regmap, REG_ESAI_xFCR(tx),
-@@ -903,6 +921,15 @@ static int fsl_esai_probe(struct platfor
- 		return ret;
- 	}
+ 		/* Regulators */
+-		AVDD-supply = <&vaux2_reg>;
+-		IOVDD-supply = <&vaux2_reg>;
+-		DRVDD-supply = <&vaux2_reg>;
+-		DVDD-supply = <&vbat>;
++		AVDD-supply = <&v3_3d_reg>;
++		IOVDD-supply = <&v3_3d_reg>;
++		DRVDD-supply = <&v3_3d_reg>;
++		DVDD-supply = <&v1_8d_reg>;
+ 	};
+ };
  
-+	esai_priv->tx_mask = 0xFFFFFFFF;
-+	esai_priv->rx_mask = 0xFFFFFFFF;
-+
-+	/* Clear the TSMA, TSMB, RSMA, RSMB */
-+	regmap_write(esai_priv->regmap, REG_ESAI_TSMA, 0);
-+	regmap_write(esai_priv->regmap, REG_ESAI_TSMB, 0);
-+	regmap_write(esai_priv->regmap, REG_ESAI_RSMA, 0);
-+	regmap_write(esai_priv->regmap, REG_ESAI_RSMB, 0);
-+
- 	ret = devm_snd_soc_register_component(&pdev->dev, &fsl_esai_component,
- 					      &fsl_esai_dai, 1);
- 	if (ret) {
 
 
