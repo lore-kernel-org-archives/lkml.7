@@ -2,93 +2,104 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31E83C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:41:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 814B4C10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:41:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 00A412075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:41:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="TEwFTWb/"
+	by mail.kernel.org (Postfix) with ESMTP id 57E692077C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:41:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727591AbfDOOlA (ORCPT
+        id S1727649AbfDOOlO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 10:41:00 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:46020 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbfDOOk7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 10:40:59 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3FEchpP164639;
-        Mon, 15 Apr 2019 14:40:54 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=date : from : to : cc
- : subject : message-id : references : mime-version : content-type :
- in-reply-to; s=corp-2018-07-02;
- bh=Rqu3t+StshgC0iHzQioipMk01kLa+SdGai1fnj0ULRM=;
- b=TEwFTWb/3738xWTXrj896UgIClekOvA23UjQaDRx6wBfU0S+AIqf4/yxD6DNCV8JOyBF
- OKykhca+v44K9iEWxU30cWhU4Qyjv/PAWzTXBCsuMYrh7KsB39gUkB/J/UVDPPVfRz3i
- jaB5EAHcmGI+skpMpAhg1VZI4m9CPCq+XAidHFAErTqmJLK/8RTuYVDco1PdmSqneZcF
- J4P6+YX3hNcE0A04Rv14aB2Ha3fJxD7GxwlSdgnYWRx9NPWbRSRS30CcrZzGDVFyibKa
- buDnzg5IuDinFD+2xeLdDAM5YgiIWRYlfh1v4+X7wbaSZQWEN4fABwxqrGwkGyindYoo mg== 
-Received: from userp3020.oracle.com (userp3020.oracle.com [156.151.31.79])
-        by userp2130.oracle.com with ESMTP id 2ru76t72s5-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Apr 2019 14:40:54 +0000
-Received: from pps.filterd (userp3020.oracle.com [127.0.0.1])
-        by userp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3FEeKlT179003;
-        Mon, 15 Apr 2019 14:40:53 GMT
-Received: from aserv0122.oracle.com (aserv0122.oracle.com [141.146.126.236])
-        by userp3020.oracle.com with ESMTP id 2rubq5sers-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Apr 2019 14:40:53 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by aserv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x3FEeo4t019732;
-        Mon, 15 Apr 2019 14:40:50 GMT
-Received: from kadam (/41.210.147.169)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Mon, 15 Apr 2019 07:40:49 -0700
-Date:   Mon, 15 Apr 2019 17:40:16 +0300
-From:   Dan Carpenter <dan.carpenter@oracle.com>
-To:     Johan Hovold <johan@kernel.org>
-Cc:     devel@driverdev.osuosl.org, elder@kernel.org,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        Madhumitha Prabakaran <madhumithabiw@gmail.com>,
-        greybus-dev@lists.linaro.org
-Subject: Re: [PATCH] Staging: greybus: Cleanup in header file control.h
-Message-ID: <20190415144015.GB22423@kadam>
-References: <20190405201437.3689-1-madhumithabiw@gmail.com>
- <20190415131002.GC775@localhost>
- <20190415133357.GP6095@kadam>
- <20190415141201.GD775@localhost>
+        Mon, 15 Apr 2019 10:41:14 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36494 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727602AbfDOOlN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 10:41:13 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D35DE2075B;
+        Mon, 15 Apr 2019 14:41:10 +0000 (UTC)
+Date:   Mon, 15 Apr 2019 10:41:09 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Olof Johansson <olof@lixom.net>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Manoj Rao <linux@manojrajarao.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        atish patra <atishp04@gmail.com>,
+        Daniel Colascione <dancol@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Kees Cook <keescook@chromium.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
+Subject: Re: [PATCH v5 1/3] Provide in-kernel headers to make extending
+ kernel easier
+Message-ID: <20190415104109.64d914f3@gandalf.local.home>
+In-Reply-To: <CAOesGMgiPB=7FE7tXXHes7WSLfByyPxirOStoH21NZqMwaUihQ@mail.gmail.com>
+References: <20190320163116.39275-1-joel@joelfernandes.org>
+        <CAOesGMheoZda84OSz9spQ7p66wot5S_9aaqaKC=QYp+8utASXA@mail.gmail.com>
+        <20190408203601.GF133872@google.com>
+        <CAOesGMibHCuMPCYkc8V++Z2Kuf3YQf_OjYn18GvDgzTy6ubV=g@mail.gmail.com>
+        <CAJWu+or0hWce9+7aEfTHoOR8cptRbzHYVL-bPdJWGZH20dbo7Q@mail.gmail.com>
+        <CAOesGMiuGK-Sbqo2z=1ab070JONav1LF82MRRLCdX-4+14_XZA@mail.gmail.com>
+        <20190411031540.ehezr6kq7ouobpzx@ast-mbp.dhcp.thefacebook.com>
+        <CAOesGMgiPB=7FE7tXXHes7WSLfByyPxirOStoH21NZqMwaUihQ@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190415141201.GD775@localhost>
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9227 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=863
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904150101
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9227 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 lowpriorityscore=0
- mlxlogscore=904 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904150101
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-What I'm saying is that if we just apply it then we avoid the long
-discussion forever.  The macro is OK, sure, but it's not like anyone is
-going to come back later and argue that macros are better or preferred.
+On Sun, 14 Apr 2019 12:38:34 -0700
+Olof Johansson <olof@lixom.net> wrote:
 
-regards,
-dan carpenter
+> >From my perspective, this is where we're at:  
+> 
+> This patch seems to have been met with a lot of responses in the tone
+> of "this is not an appealing solution". Meanwhile, some of the
+> suggested alternative solutions have not worked out, and we are now at
+> a point where there's less interest in exploring alternatives and
+> arguments to merge as-is with only minor adjustments.
 
+Another consideration to make is difficulty of support. Having a
+tarball compressed headers may not be an appealing solution, but it
+isn't one that would be too much of an issue to support. Having a
+better interface would be difficult to get right, and if you get it
+wrong, you are now stuck with supporting something that may become a
+big pain to do so in the future.
+
+> I'd be a *lot* less hesitant if this went into debugfs or another
+> location than /proc, which is one of the most regression-sensitive
+> interfaces we have in the kernel.
+> 
+
+I agree with this assessment. We shouldn't use config.gz as precedence
+for this solution. config.gz should have been in debugfs to begin with,
+but I don't believe debugfs was around when config.gz was introduced.
+(Don't have time to look into the history of the two).
+
+-- Steve
