@@ -2,253 +2,206 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC1C8C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3399C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:10:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6826D20874
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:09:38 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=armh.onmicrosoft.com header.i=@armh.onmicrosoft.com header.b="cbKnB2NC"
+	by mail.kernel.org (Postfix) with ESMTP id A17B12075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:10:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555312239;
+	bh=g22wWW72ermFm9LEnoi9m68VeyetHkEq+g30fB6hsHg=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=JGqQmThqg4ooFzmQ4cvTL4F9rC7NCKNXgy+Gl3tKtUFPso+EiKJg15ZJjh0e4pdiL
+	 fIXsQL7LxY+leAN1eUTBglDEu00LrvF9227NtyNL2LK5709TC2scjMl27qx3CR/Kvf
+	 gkefoMREkkpsPHZGRkzgc9dADIViZ0r6lCp8nET8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726484AbfDOHJh (ORCPT
+        id S1726289AbfDOHKi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 03:09:37 -0400
-Received: from mail-eopbgr30059.outbound.protection.outlook.com ([40.107.3.59]:22766
-        "EHLO EUR03-AM5-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725798AbfDOHJf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 03:09:35 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=armh.onmicrosoft.com;
- s=selector1-arm-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=H681B3umMbytc//z8YXxpXKvOwb3FYghhdtdj6v3BMM=;
- b=cbKnB2NCKlkchTEo5drg8WLaAtvCzwCX54APWFr5tWLp4bdUAAXmNGV9UN/ukt1WEffX0ZtchXxN9rJK6N9wFiOxPicMgY0FPPKo5GjCP+jZPoYiy9GPdGnDQ7bNrj9XCZhDDQkHkdZI4Syikmud3iz8Bru7azlQeIPfIc0WQJc=
-Received: from VE1PR08MB5006.eurprd08.prod.outlook.com (10.255.159.31) by
- VE1PR08MB5151.eurprd08.prod.outlook.com (20.179.30.154) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1792.14; Mon, 15 Apr 2019 07:09:31 +0000
-Received: from VE1PR08MB5006.eurprd08.prod.outlook.com
- ([fe80::6ca6:1d85:8903:90d7]) by VE1PR08MB5006.eurprd08.prod.outlook.com
- ([fe80::6ca6:1d85:8903:90d7%5]) with mapi id 15.20.1792.018; Mon, 15 Apr 2019
- 07:09:31 +0000
-From:   "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
-To:     Liviu Dudau <Liviu.Dudau@arm.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        Brian Starkey <Brian.Starkey@arm.com>,
-        "maarten.lankhorst@linux.intel.com" 
-        <maarten.lankhorst@linux.intel.com>,
-        "sean@poorly.run" <sean@poorly.run>
-CC:     "Jonathan Chai (Arm Technology China)" <Jonathan.Chai@arm.com>,
-        "Julien Yin (Arm Technology China)" <Julien.Yin@arm.com>,
-        "thomas Sun (Arm Technology China)" <thomas.Sun@arm.com>,
-        "Lowry Li (Arm Technology China)" <Lowry.Li@arm.com>,
-        Ayan Halder <Ayan.Halder@arm.com>,
-        "Tiannan Zhu (Arm Technology China)" <Tiannan.Zhu@arm.com>,
-        "Yiqi Kang (Arm Technology China)" <Yiqi.Kang@arm.com>,
-        nd <nd@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
-Subject: [PATCH v1 6/6] drm/komeda: Add image enhancement support
-Thread-Topic: [PATCH v1 6/6] drm/komeda: Add image enhancement support
-Thread-Index: AQHU81orSKx7HPFRv0ONxxssyQ0uLA==
-Date:   Mon, 15 Apr 2019 07:09:31 +0000
-Message-ID: <20190415070828.24075-7-james.qian.wang@arm.com>
-References: <20190415070828.24075-1-james.qian.wang@arm.com>
-In-Reply-To: <20190415070828.24075-1-james.qian.wang@arm.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [113.29.88.7]
-x-clientproxiedby: HK0P153CA0011.APCP153.PROD.OUTLOOK.COM
- (2603:1096:203:18::23) To VE1PR08MB5006.eurprd08.prod.outlook.com
- (2603:10a6:803:113::31)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=james.qian.wang@arm.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.17.1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 288645c2-dc33-4729-88f6-08d6c1714e46
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600140)(711020)(4605104)(4618075)(4534185)(7168020)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VE1PR08MB5151;
-x-ms-traffictypediagnostic: VE1PR08MB5151:
-nodisclaimer: True
-x-microsoft-antispam-prvs: <VE1PR08MB5151508042592CBDF789510DB32B0@VE1PR08MB5151.eurprd08.prod.outlook.com>
-x-forefront-prvs: 000800954F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(396003)(39850400004)(376002)(136003)(346002)(366004)(199004)(189003)(446003)(11346002)(486006)(2616005)(14454004)(476003)(6486002)(52116002)(86362001)(4326008)(97736004)(102836004)(8936002)(5660300002)(6506007)(6512007)(386003)(53936002)(76176011)(103116003)(2201001)(1076003)(6436002)(55236004)(26005)(186003)(478600001)(7736002)(110136005)(2906002)(14444005)(5024004)(256004)(81156014)(105586002)(54906003)(81166006)(99286004)(316002)(3846002)(6116002)(106356001)(305945005)(8676002)(2501003)(66066001)(25786009)(71190400001)(71200400001)(50226002)(68736007)(36756003)(309714004)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR08MB5151;H:VE1PR08MB5006.eurprd08.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: arm.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 430P11KheWqxWpeNTbUQqnPfe2/VO73LssFnibie2MMmLU0qCt3GOhAJnMKM1uiMB82aqlu+PQU7QL7g2BnFU4EEOGEYPM+44UtatGBhApTQo51N+m3WPOS0/d32fEEQUMLSGkqkZP6W6TZjjZNUHrgP20BhaeC2uItR1y/x+7qaxIrsSGOeEkgsQc2k+JZj5vVoFSlaE1Tzph+ZfZqeUKVkPyWGkZuvofYEFDMrDwE8D/WCfn3DwBYPvGzuqDV5jRm6INPc0BEK4bEMHXuiqNtbNTO48DhcfsAgbnXkC+Ch/KDzJXlz7IOqsBILettauG7yBTra4Ht9xXXqKg9dar08Qo/jugbFOcUdiQwYkAE6J/XHtV7U+iC2GXXuuPWkCr3c7WFSr34BUqRS4Kq/+wsLo1HJClrVh0O+8OBHizY=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 15 Apr 2019 03:10:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54720 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725794AbfDOHKi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 03:10:38 -0400
+Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com [209.85.208.176])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E3AE2077C;
+        Mon, 15 Apr 2019 07:10:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555312236;
+        bh=g22wWW72ermFm9LEnoi9m68VeyetHkEq+g30fB6hsHg=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=rb/oLjGKkDUsSRefhtgh9J18QV6JaRW9180VO3sdW7aXbVSN4orXQy9ev1+XiOzko
+         tNIQ8ysffsNQsLKVt3VpmeAJ4ikGSUcOlI/fWKNLHoa6IZj8JTcc7anWVtsbNYUvcX
+         9VRJgBAsjSIQFvc5VcXPVndY8SqSKINMPplUucgI=
+Received: by mail-lj1-f176.google.com with SMTP id h21so14530533ljk.13;
+        Mon, 15 Apr 2019 00:10:36 -0700 (PDT)
+X-Gm-Message-State: APjAAAUz4IyoHwwhSRHWawuS90s4Rm1/lLTAxTo+dJq0rRB5WTa7vIfL
+        wHR5epZ9iZGLJlI2T4IJHeoE05F33wt1heCZH4Q=
+X-Google-Smtp-Source: APXvYqwzCLRHPK4xrIUuOctzilU65CqyuHZ7hneYqs8ZhXoV1A+ux6ay+jFOJ0Flpt/CH9hzesnMADfezBeTjH8vr5c=
+X-Received: by 2002:a2e:9c51:: with SMTP id t17mr38641964ljj.104.1555312234479;
+ Mon, 15 Apr 2019 00:10:34 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: arm.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 288645c2-dc33-4729-88f6-08d6c1714e46
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Apr 2019 07:09:31.1096
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: f34e5979-57d9-4aaa-ad4d-b122a662184d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR08MB5151
+References: <CAJKOXPfvs=uETF0-xpwCWc5khSpWjpz2zz354Jcx1bVjm9cG2A@mail.gmail.com>
+ <20190415012635.6369-1-matheus@castello.eng.br> <20190415012635.6369-2-matheus@castello.eng.br>
+In-Reply-To: <20190415012635.6369-2-matheus@castello.eng.br>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Mon, 15 Apr 2019 09:10:23 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPfXS_L992rPdHqitFyRmw93En9GRLVOjRRnwGgiEwV28Q@mail.gmail.com>
+Message-ID: <CAJKOXPfXS_L992rPdHqitFyRmw93En9GRLVOjRRnwGgiEwV28Q@mail.gmail.com>
+Subject: Re: [PATCH v2 1/4] power: supply: max17040: Add IRQ handler for low
+ SOC alert
+To:     Matheus Castello <matheus@castello.eng.br>
+Cc:     sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
+        <b.zolnierkie@samsung.com>, lee.jones@linaro.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QmVzaWRlcyBzY2FsaW5nLCBBcm0gZGlzcGxheSBzY2FsZXIgYWxzbyBjYW4gc3VwcG9ydCBpbWFn
-ZSBlbmhhbmNlbWVudC4NCkZvciBzdXBwb3J0IGl0LCBBZGQgYSBuZXcgcHJvcGVydHkgImltZ19l
-bmhhbmNlbWVudCIgdG8gcGxhbmUsIHRoZW4gdXNlcg0KY2FuIHR1cm4gb24vb2ZmIGl0IGJ5IHRo
-aXMgcHJvcGVydHksIGFuZCBrZXJuZWwgZm9sbG93IHVzZXIncyByZXF1aXJlbWVudA0KdG8gbWFp
-dGFpbiB0aGUgc3RhdGUgYW5kIGVuYWJsZS9kaXNhYmxlIHRoZSByZWFsIEhXIGltYWdlIGVuaGFu
-Y2VtZW50Lg0KDQpTaWduZWQtb2ZmLWJ5OiBKYW1lcyBRaWFuIFdhbmcgKEFybSBUZWNobm9sb2d5
-IENoaW5hKSA8amFtZXMucWlhbi53YW5nQGFybS5jb20+DQotLS0NCiAuLi4vYXJtL2Rpc3BsYXkv
-a29tZWRhL2Q3MS9kNzFfY29tcG9uZW50LmMgICAgfCAgMSArDQogLi4uL2dwdS9kcm0vYXJtL2Rp
-c3BsYXkva29tZWRhL2tvbWVkYV9rbXMuaCAgIHwgIDYgKy0NCiAuLi4vZHJtL2FybS9kaXNwbGF5
-L2tvbWVkYS9rb21lZGFfcGlwZWxpbmUuaCAgfCAgNiArLQ0KIC4uLi9kaXNwbGF5L2tvbWVkYS9r
-b21lZGFfcGlwZWxpbmVfc3RhdGUuYyAgICB8ICAzICstDQogLi4uL2dwdS9kcm0vYXJtL2Rpc3Bs
-YXkva29tZWRhL2tvbWVkYV9wbGFuZS5jIHwgNzUgKysrKysrKysrKysrKysrKysrLQ0KIDUgZmls
-ZXMgY2hhbmdlZCwgODQgaW5zZXJ0aW9ucygrKSwgNyBkZWxldGlvbnMoLSkNCg0KZGlmZiAtLWdp
-dCBhL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEvZDcxL2Q3MV9jb21wb25lbnQu
-YyBiL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEvZDcxL2Q3MV9jb21wb25lbnQu
-Yw0KaW5kZXggYmYyMTRkYzllMzcyLi4yMWQyYjNhNWM2MzAgMTAwNjQ0DQotLS0gYS9kcml2ZXJz
-L2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2Q3MS9kNzFfY29tcG9uZW50LmMNCisrKyBiL2Ry
-aXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEvZDcxL2Q3MV9jb21wb25lbnQuYw0KQEAg
-LTYxMCw2ICs2MTAsNyBAQCBzdGF0aWMgdm9pZCBkNzFfc2NhbGVyX3VwZGF0ZShzdHJ1Y3Qga29t
-ZWRhX2NvbXBvbmVudCAqYywNCiAJY3RybCA9IDA7DQogCWN0cmwgfD0gc3QtPmVuX3NjYWxpbmcg
-PyBTQ19DVFJMX1NDTCA6IDA7DQogCWN0cmwgfD0gc3QtPmVuX2FscGhhID8gU0NfQ1RSTF9BUCA6
-IDA7DQorCWN0cmwgfD0gc3QtPmVuX2ltZ19lbmhhbmNlbWVudCA/IFNDX0NUUkxfSUVOSCA6IDA7
-DQogDQogCW1hbGlkcF93cml0ZTMyKHJlZywgQkxLX0NPTlRST0wsIGN0cmwpOw0KIAltYWxpZHBf
-d3JpdGUzMihyZWcsIEJMS19JTlBVVF9JRDAsIHRvX2Q3MV9pbnB1dF9pZCgmc3RhdGUtPmlucHV0
-c1swXSkpOw0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEv
-a29tZWRhX2ttcy5oIGIvZHJpdmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFf
-a21zLmgNCmluZGV4IGRiNTlhOTA0MmJlYi4uZTZlMDU5ZjJhZjUyIDEwMDY0NA0KLS0tIGEvZHJp
-dmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfa21zLmgNCisrKyBiL2RyaXZl
-cnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX2ttcy5oDQpAQCAtMzIsNiArMzIs
-OSBAQCBzdHJ1Y3Qga29tZWRhX3BsYW5lIHsNCiAJICogTGF5ZXJzIHdpdGggc2FtZSBjYXBhYmls
-aXRpZXMuDQogCSAqLw0KIAlzdHJ1Y3Qga29tZWRhX2xheWVyICpsYXllcjsNCisNCisJLyoqIEBw
-cm9wX2ltZ19lbmhhbmNlbWVudDogZm9yIG9uL29mZiBpbWFnZSBlbmhhbmNlbWVudCAqLw0KKwlz
-dHJ1Y3QgZHJtX3Byb3BlcnR5ICpwcm9wX2ltZ19lbmhhbmNlbWVudDsNCiB9Ow0KIA0KIC8qKg0K
-QEAgLTQ0LDcgKzQ3LDggQEAgc3RydWN0IGtvbWVkYV9wbGFuZV9zdGF0ZSB7DQogCS8qKiBAYmFz
-ZTogJmRybV9wbGFuZV9zdGF0ZSAqLw0KIAlzdHJ1Y3QgZHJtX3BsYW5lX3N0YXRlIGJhc2U7DQog
-DQotCS8qIHByaXZhdGUgcHJvcGVydGllcyAqLw0KKwkvKiBAaW1nX2VuaGFuY2VtZW50OiBvbi9v
-ZmYgaW1hZ2UgZW5oYW5jZW1lbnQgKi8NCisJdTggaW1nX2VuaGFuY2VtZW50IDogMTsNCiB9Ow0K
-IA0KIC8qKg0KZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEv
-a29tZWRhX3BpcGVsaW5lLmggYi9kcml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tv
-bWVkYV9waXBlbGluZS5oDQppbmRleCBiMjZjODU1MmEyZDEuLmEzMmE4ZDY5N2YzNCAxMDA2NDQN
-Ci0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX3BpcGVsaW5l
-LmgNCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX3BpcGVs
-aW5lLmgNCkBAIC0yNTQsNyArMjU0LDggQEAgc3RydWN0IGtvbWVkYV9zY2FsZXJfc3RhdGUgew0K
-IAl1MTYgaHNpemVfaW4sIHZzaXplX2luOw0KIAl1MTYgaHNpemVfb3V0LCB2c2l6ZV9vdXQ7DQog
-CXU4IGVuX3NjYWxpbmcgOiAxLA0KLQkgICBlbl9hbHBoYSA6IDE7IC8qIGVuYWJsZSBhbHBoYSBw
-cm9jZXNzaW5nICovDQorCSAgIGVuX2FscGhhIDogMSwgLyogZW5hYmxlIGFscGhhIHByb2Nlc3Np
-bmcgKi8NCisJICAgZW5faW1nX2VuaGFuY2VtZW50IDogMTsNCiB9Ow0KIA0KIHN0cnVjdCBrb21l
-ZGFfY29tcGl6IHsNCkBAIC0zMTMsNyArMzE0LDggQEAgc3RydWN0IGtvbWVkYV9kYXRhX2Zsb3df
-Y2ZnIHsNCiAJdTMyIHJvdDsNCiAJaW50IGJsZW5kaW5nX3pvcmRlcjsNCiAJdTggcGl4ZWxfYmxl
-bmRfbW9kZSwgbGF5ZXJfYWxwaGE7DQotCXU4IG5lZWRzX3NjYWxpbmcgOiAxOw0KKwl1OCBuZWVk
-c19zY2FsaW5nIDogMSwNCisJICAgbmVlZHNfaW1nX2VuaGFuY2VtZW50IDogMTsNCiB9Ow0KIA0K
-IC8qIHN0cnVjdCBrb21lZGFfcGlwZWxpbmVfZnVuY3MgKi8NCmRpZmYgLS1naXQgYS9kcml2ZXJz
-L2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9waXBlbGluZV9zdGF0ZS5jIGIvZHJp
-dmVycy9ncHUvZHJtL2FybS9kaXNwbGF5L2tvbWVkYS9rb21lZGFfcGlwZWxpbmVfc3RhdGUuYw0K
-aW5kZXggNTNlYjQwOTQxMjgxLi4yNDMwMzg4YTc4YzMgMTAwNjQ0DQotLS0gYS9kcml2ZXJzL2dw
-dS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9waXBlbGluZV9zdGF0ZS5jDQorKysgYi9k
-cml2ZXJzL2dwdS9kcm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9waXBlbGluZV9zdGF0ZS5j
-DQpAQCAtNDU1LDcgKzQ1NSw3IEBAIGtvbWVkYV9zY2FsZXJfdmFsaWRhdGUodm9pZCAqdXNlciwN
-CiAJc3RydWN0IGtvbWVkYV9zY2FsZXIgKnNjYWxlcjsNCiAJaW50IGVyciA9IDA7DQogDQotCWlm
-ICghZGZsb3ctPm5lZWRzX3NjYWxpbmcpDQorCWlmICghKGRmbG93LT5uZWVkc19zY2FsaW5nIHx8
-IGRmbG93LT5uZWVkc19pbWdfZW5oYW5jZW1lbnQpKQ0KIAkJcmV0dXJuIDA7DQogDQogCXNjYWxl
-ciA9IGtvbWVkYV9jb21wb25lbnRfZ2V0X2F2YWlsX3NjYWxlcihkZmxvdy0+aW5wdXQuY29tcG9u
-ZW50LA0KQEAgLTQ4Myw2ICs0ODMsNyBAQCBrb21lZGFfc2NhbGVyX3ZhbGlkYXRlKHZvaWQgKnVz
-ZXIsDQogCXN0LT5lbl9zY2FsaW5nID0gZGZsb3ctPm5lZWRzX3NjYWxpbmc7DQogCS8qIEVuYWJs
-ZSBhbHBoYSBwcm9jZXNzaW5nIGlmIHRoZSBuZXh0IHN0YWdlIG5lZWRzIHRoZSBwaXhlbCBhbHBo
-YSAqLw0KIAlzdC0+ZW5fYWxwaGEgPSBkZmxvdy0+cGl4ZWxfYmxlbmRfbW9kZSAhPSBEUk1fTU9E
-RV9CTEVORF9QSVhFTF9OT05FOw0KKwlzdC0+ZW5faW1nX2VuaGFuY2VtZW50ID0gZGZsb3ctPm5l
-ZWRzX2ltZ19lbmhhbmNlbWVudDsNCiANCiAJa29tZWRhX2NvbXBvbmVudF9hZGRfaW5wdXQoJnN0
-LT5iYXNlLCAmZGZsb3ctPmlucHV0LCAwKTsNCiAJa29tZWRhX2NvbXBvbmVudF9zZXRfb3V0cHV0
-KCZkZmxvdy0+aW5wdXQsICZzY2FsZXItPmJhc2UsIDApOw0KZGlmZiAtLWdpdCBhL2RyaXZlcnMv
-Z3B1L2RybS9hcm0vZGlzcGxheS9rb21lZGEva29tZWRhX3BsYW5lLmMgYi9kcml2ZXJzL2dwdS9k
-cm0vYXJtL2Rpc3BsYXkva29tZWRhL2tvbWVkYV9wbGFuZS5jDQppbmRleCA1ZGU0NjIxNzIxNTEu
-LmZhNDU1NjY1YWE3NyAxMDA2NDQNCi0tLSBhL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9r
-b21lZGEva29tZWRhX3BsYW5lLmMNCisrKyBiL2RyaXZlcnMvZ3B1L2RybS9hcm0vZGlzcGxheS9r
-b21lZGEva29tZWRhX3BsYW5lLmMNCkBAIC0xNCw2ICsxNCw3IEBAIHN0YXRpYyBpbnQNCiBrb21l
-ZGFfcGxhbmVfaW5pdF9kYXRhX2Zsb3coc3RydWN0IGRybV9wbGFuZV9zdGF0ZSAqc3QsDQogCQkJ
-ICAgIHN0cnVjdCBrb21lZGFfZGF0YV9mbG93X2NmZyAqZGZsb3cpDQogew0KKwlzdHJ1Y3Qga29t
-ZWRhX3BsYW5lX3N0YXRlICprcGxhbmVfc3QgPSB0b19rcGxhbmVfc3Qoc3QpOw0KIAlzdHJ1Y3Qg
-ZHJtX2ZyYW1lYnVmZmVyICpmYiA9IHN0LT5mYjsNCiANCiAJbWVtc2V0KGRmbG93LCAwLCBzaXpl
-b2YoKmRmbG93KSk7DQpAQCAtMjIsNyArMjMsNyBAQCBrb21lZGFfcGxhbmVfaW5pdF9kYXRhX2Zs
-b3coc3RydWN0IGRybV9wbGFuZV9zdGF0ZSAqc3QsDQogDQogCS8qIGlmIGZvcm1hdCBkb2Vzbid0
-IGhhdmUgYWxwaGEsIGZpeCBibGVuZCBtb2RlIHRvIFBJWEVMX05PTkUgKi8NCiAJZGZsb3ctPnBp
-eGVsX2JsZW5kX21vZGUgPSBmYi0+Zm9ybWF0LT5oYXNfYWxwaGEgPw0KLQkJc3QtPnBpeGVsX2Js
-ZW5kX21vZGUgOiBEUk1fTU9ERV9CTEVORF9QSVhFTF9OT05FOw0KKwkJCXN0LT5waXhlbF9ibGVu
-ZF9tb2RlIDogRFJNX01PREVfQkxFTkRfUElYRUxfTk9ORTsNCiAJZGZsb3ctPmxheWVyX2FscGhh
-ID0gc3QtPmFscGhhID4+IDg7DQogDQogCWRmbG93LT5vdXRfeCA9IHN0LT5jcnRjX3g7DQpAQCAt
-MzUsNiArMzYsOCBAQCBrb21lZGFfcGxhbmVfaW5pdF9kYXRhX2Zsb3coc3RydWN0IGRybV9wbGFu
-ZV9zdGF0ZSAqc3QsDQogCWRmbG93LT5pbl93ID0gc3QtPnNyY193ID4+IDE2Ow0KIAlkZmxvdy0+
-aW5faCA9IHN0LT5zcmNfaCA+PiAxNjsNCiANCisJZGZsb3ctPm5lZWRzX2ltZ19lbmhhbmNlbWVu
-dCA9IGtwbGFuZV9zdC0+aW1nX2VuaGFuY2VtZW50Ow0KKw0KIAlrb21lZGFfY29tcGxldGVfZGF0
-YV9mbG93X2NmZyhkZmxvdyk7DQogDQogCXJldHVybiAwOw0KQEAgLTEzMCw3ICsxMzMsNyBAQCBz
-dGF0aWMgdm9pZCBrb21lZGFfcGxhbmVfcmVzZXQoc3RydWN0IGRybV9wbGFuZSAqcGxhbmUpDQog
-c3RhdGljIHN0cnVjdCBkcm1fcGxhbmVfc3RhdGUgKg0KIGtvbWVkYV9wbGFuZV9hdG9taWNfZHVw
-bGljYXRlX3N0YXRlKHN0cnVjdCBkcm1fcGxhbmUgKnBsYW5lKQ0KIHsNCi0Jc3RydWN0IGtvbWVk
-YV9wbGFuZV9zdGF0ZSAqbmV3Ow0KKwlzdHJ1Y3Qga29tZWRhX3BsYW5lX3N0YXRlICpuZXcsICpv
-bGQ7DQogDQogCWlmIChXQVJOX09OKCFwbGFuZS0+c3RhdGUpKQ0KIAkJcmV0dXJuIE5VTEw7DQpA
-QCAtMTQxLDYgKzE0NCwxMCBAQCBrb21lZGFfcGxhbmVfYXRvbWljX2R1cGxpY2F0ZV9zdGF0ZShz
-dHJ1Y3QgZHJtX3BsYW5lICpwbGFuZSkNCiANCiAJX19kcm1fYXRvbWljX2hlbHBlcl9wbGFuZV9k
-dXBsaWNhdGVfc3RhdGUocGxhbmUsICZuZXctPmJhc2UpOw0KIA0KKwlvbGQgPSB0b19rcGxhbmVf
-c3QocGxhbmUtPnN0YXRlKTsNCisNCisJbmV3LT5pbWdfZW5oYW5jZW1lbnQgPSBvbGQtPmltZ19l
-bmhhbmNlbWVudDsNCisNCiAJcmV0dXJuICZuZXctPmJhc2U7DQogfQ0KIA0KQEAgLTE1Miw2ICsx
-NTksNDAgQEAga29tZWRhX3BsYW5lX2F0b21pY19kZXN0cm95X3N0YXRlKHN0cnVjdCBkcm1fcGxh
-bmUgKnBsYW5lLA0KIAlrZnJlZSh0b19rcGxhbmVfc3Qoc3RhdGUpKTsNCiB9DQogDQorc3RhdGlj
-IGludA0KK2tvbWVkYV9wbGFuZV9hdG9taWNfZ2V0X3Byb3BlcnR5KHN0cnVjdCBkcm1fcGxhbmUg
-KnBsYW5lLA0KKwkJCQkgY29uc3Qgc3RydWN0IGRybV9wbGFuZV9zdGF0ZSAqc3RhdGUsDQorCQkJ
-CSBzdHJ1Y3QgZHJtX3Byb3BlcnR5ICpwcm9wZXJ0eSwNCisJCQkJIHVpbnQ2NF90ICp2YWwpDQor
-ew0KKwlzdHJ1Y3Qga29tZWRhX3BsYW5lICprcGxhbmUgPSB0b19rcGxhbmUocGxhbmUpOw0KKwlz
-dHJ1Y3Qga29tZWRhX3BsYW5lX3N0YXRlICpzdCA9IHRvX2twbGFuZV9zdChzdGF0ZSk7DQorDQor
-CWlmIChwcm9wZXJ0eSA9PSBrcGxhbmUtPnByb3BfaW1nX2VuaGFuY2VtZW50KQ0KKwkJKnZhbCA9
-IHN0LT5pbWdfZW5oYW5jZW1lbnQ7DQorCWVsc2UNCisJCXJldHVybiAtRUlOVkFMOw0KKw0KKwly
-ZXR1cm4gMDsNCit9DQorDQorc3RhdGljIGludA0KK2tvbWVkYV9wbGFuZV9hdG9taWNfc2V0X3By
-b3BlcnR5KHN0cnVjdCBkcm1fcGxhbmUgKnBsYW5lLA0KKwkJCQkgc3RydWN0IGRybV9wbGFuZV9z
-dGF0ZSAqc3RhdGUsDQorCQkJCSBzdHJ1Y3QgZHJtX3Byb3BlcnR5ICpwcm9wZXJ0eSwNCisJCQkJ
-IHVpbnQ2NF90IHZhbCkNCit7DQorCXN0cnVjdCBrb21lZGFfcGxhbmUgKmtwbGFuZSA9IHRvX2tw
-bGFuZShwbGFuZSk7DQorCXN0cnVjdCBrb21lZGFfcGxhbmVfc3RhdGUgKnN0ID0gdG9fa3BsYW5l
-X3N0KHN0YXRlKTsNCisNCisJaWYgKHByb3BlcnR5ID09IGtwbGFuZS0+cHJvcF9pbWdfZW5oYW5j
-ZW1lbnQpDQorCQlzdC0+aW1nX2VuaGFuY2VtZW50ID0gISF2YWw7DQorCWVsc2UNCisJCXJldHVy
-biAtRUlOVkFMOw0KKw0KKwlyZXR1cm4gMDsNCit9DQorDQogc3RhdGljIGJvb2wNCiBrb21lZGFf
-cGxhbmVfZm9ybWF0X21vZF9zdXBwb3J0ZWQoc3RydWN0IGRybV9wbGFuZSAqcGxhbmUsDQogCQkJ
-CSAgdTMyIGZvcm1hdCwgdTY0IG1vZGlmaWVyKQ0KQEAgLTE3MSw5ICsyMTIsMzMgQEAgc3RhdGlj
-IGNvbnN0IHN0cnVjdCBkcm1fcGxhbmVfZnVuY3Mga29tZWRhX3BsYW5lX2Z1bmNzID0gew0KIAku
-cmVzZXQJCQk9IGtvbWVkYV9wbGFuZV9yZXNldCwNCiAJLmF0b21pY19kdXBsaWNhdGVfc3RhdGUJ
-PSBrb21lZGFfcGxhbmVfYXRvbWljX2R1cGxpY2F0ZV9zdGF0ZSwNCiAJLmF0b21pY19kZXN0cm95
-X3N0YXRlCT0ga29tZWRhX3BsYW5lX2F0b21pY19kZXN0cm95X3N0YXRlLA0KKwkuYXRvbWljX2dl
-dF9wcm9wZXJ0eQk9IGtvbWVkYV9wbGFuZV9hdG9taWNfZ2V0X3Byb3BlcnR5LA0KKwkuYXRvbWlj
-X3NldF9wcm9wZXJ0eQk9IGtvbWVkYV9wbGFuZV9hdG9taWNfc2V0X3Byb3BlcnR5LA0KIAkuZm9y
-bWF0X21vZF9zdXBwb3J0ZWQJPSBrb21lZGFfcGxhbmVfZm9ybWF0X21vZF9zdXBwb3J0ZWQsDQog
-fTsNCiANCitzdGF0aWMgaW50DQora29tZWRhX3BsYW5lX2NyZWF0ZV9sYXllcl9wcm9wZXJ0aWVz
-KHN0cnVjdCBrb21lZGFfcGxhbmUgKmtwbGFuZSwNCisJCQkJICAgICBzdHJ1Y3Qga29tZWRhX2xh
-eWVyICpsYXllcikNCit7DQorCXN0cnVjdCBkcm1fZGV2aWNlICpkcm0gPSBrcGxhbmUtPmJhc2Uu
-ZGV2Ow0KKwlzdHJ1Y3QgZHJtX3BsYW5lICpwbGFuZSA9ICZrcGxhbmUtPmJhc2U7DQorCXN0cnVj
-dCBkcm1fcHJvcGVydHkgKnByb3AgPSBOVUxMOw0KKw0KKwkvKiBwcm9wZXJ0eTogbGF5ZXIgaW1h
-Z2VfZW5oYW5jZW1lbnQgKi8NCisJaWYgKGxheWVyLT5iYXNlLnN1cHBvcnRlZF9vdXRwdXRzICYg
-S09NRURBX1BJUEVMSU5FX1NDQUxFUlMpIHsNCisJCXByb3AgPSBkcm1fcHJvcGVydHlfY3JlYXRl
-X2Jvb2woZHJtLCBEUk1fTU9ERV9QUk9QX0FUT01JQywNCisJCQkJCQkiaW1nX2VuaGFuY2VtZW50
-Iik7DQorCQlpZiAoIXByb3ApDQorCQkJcmV0dXJuIC1FTk9NRU07DQorDQorCQlkcm1fb2JqZWN0
-X2F0dGFjaF9wcm9wZXJ0eSgmcGxhbmUtPmJhc2UsIHByb3AsIDApOw0KKwkJa3BsYW5lLT5wcm9w
-X2ltZ19lbmhhbmNlbWVudCA9IHByb3A7DQorCX0NCisNCisJcmV0dXJuIDA7DQorfQ0KKw0KIC8q
-IGZvciBrb21lZGEsIHdoaWNoIGlzIHBpcGVsaW5lIGNhbiBiZSBzaGFyZSBiZXR3ZWVuIGNydGNz
-ICovDQogc3RhdGljIHUzMiBnZXRfcG9zc2libGVfY3J0Y3Moc3RydWN0IGtvbWVkYV9rbXNfZGV2
-ICprbXMsDQogCQkJICAgICAgc3RydWN0IGtvbWVkYV9waXBlbGluZSAqcGlwZSkNCkBAIC0yNDEs
-MTEgKzMwNiwxNSBAQCBzdGF0aWMgaW50IGtvbWVkYV9wbGFuZV9hZGQoc3RydWN0IGtvbWVkYV9r
-bXNfZGV2ICprbXMsDQogDQogCWVyciA9IGRybV9wbGFuZV9jcmVhdGVfYmxlbmRfbW9kZV9wcm9w
-ZXJ0eShwbGFuZSwNCiAJCQlCSVQoRFJNX01PREVfQkxFTkRfUElYRUxfTk9ORSkgfA0KLQkJCUJJ
-VChEUk1fTU9ERV9CTEVORF9QUkVNVUxUSSkgICB8DQorCQkJQklUKERSTV9NT0RFX0JMRU5EX1BS
-RU1VTFRJKSB8DQogCQkJQklUKERSTV9NT0RFX0JMRU5EX0NPVkVSQUdFKSk7DQogCWlmIChlcnIp
-DQogCQlnb3RvIGNsZWFudXA7DQogDQorCWVyciA9IGtvbWVkYV9wbGFuZV9jcmVhdGVfbGF5ZXJf
-cHJvcGVydGllcyhrcGxhbmUsIGxheWVyKTsNCisJaWYgKGVycikNCisJCWdvdG8gY2xlYW51cDsN
-CisNCiAJcmV0dXJuIDA7DQogY2xlYW51cDoNCiAJa29tZWRhX3BsYW5lX2Rlc3Ryb3kocGxhbmUp
-Ow0KLS0gDQoyLjE3LjENCg0K
+On Mon, 15 Apr 2019 at 03:49, Matheus Castello <matheus@castello.eng.br> wrote:
+>
+> According datasheet max17040 has a pin for alert host for low SOC.
+> This pin can be used as external interrupt, so we need to check for
+> interrupts assigned for device and handle it.
+>
+> In hadler we are checking and storing fuel gauge registers values
+> and send an uevent to notificate user space, so user space can decide
+> save work or turn off since the alert demonstrate that the battery may
+> no have the power to keep the system turned on for much longer.
+>
+> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+> ---
+>  drivers/power/supply/max17040_battery.c | 69 +++++++++++++++++++++++--
+>  1 file changed, 64 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
+> index 91cafc7bed30..8d2f8ed3f44c 100644
+> --- a/drivers/power/supply/max17040_battery.c
+> +++ b/drivers/power/supply/max17040_battery.c
+> @@ -13,6 +13,7 @@
+>  #include <linux/err.h>
+>  #include <linux/i2c.h>
+>  #include <linux/delay.h>
+> +#include <linux/interrupt.h>
+>  #include <linux/power_supply.h>
+>  #include <linux/max17040_battery.h>
+>  #include <linux/slab.h>
+> @@ -160,21 +161,40 @@ static void max17040_get_status(struct i2c_client *client)
+>                 chip->status = POWER_SUPPLY_STATUS_FULL;
+>  }
+>
+> +static void max17040_check_changes(struct i2c_client *client)
+> +{
+> +       max17040_get_vcell(client);
+> +       max17040_get_soc(client);
+> +       max17040_get_online(client);
+> +       max17040_get_status(client);
+> +}
+> +
+>  static void max17040_work(struct work_struct *work)
+>  {
+>         struct max17040_chip *chip;
+>
+>         chip = container_of(work, struct max17040_chip, work.work);
+> -
+> -       max17040_get_vcell(chip->client);
+> -       max17040_get_soc(chip->client);
+> -       max17040_get_online(chip->client);
+> -       max17040_get_status(chip->client);
+> +       max17040_check_changes(chip->client);
+>
+>         queue_delayed_work(system_power_efficient_wq, &chip->work,
+>                            MAX17040_DELAY);
+>  }
+>
+> +static irqreturn_t max17040_thread_handler(int id, void *dev)
+> +{
+> +       struct max17040_chip *chip = dev;
+> +       struct i2c_client *client = chip->client;
+> +
+> +       dev_warn(&client->dev, "IRQ: Alert battery low level");
+> +       /* read registers */
+> +       max17040_check_changes(chip->client);
+> +
+> +       /* send uevent */
+> +       power_supply_changed(chip->battery);
+> +
+> +       return IRQ_HANDLED;
+> +}
+> +
+>  static enum power_supply_property max17040_battery_props[] = {
+>         POWER_SUPPLY_PROP_STATUS,
+>         POWER_SUPPLY_PROP_ONLINE,
+> @@ -217,6 +237,27 @@ static int max17040_probe(struct i2c_client *client,
+>                 return PTR_ERR(chip->battery);
+>         }
+>
+> +       /* check interrupt */
+> +       if (client->irq) {
+> +               int ret;
+> +               unsigned int flags;
+> +
+> +               dev_info(&client->dev, "IRQ: enabled\n");
+> +               flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
+> +
+> +               ret = devm_request_threaded_irq(&client->dev, client->irq, NULL,
+> +                                               max17040_thread_handler, flags,
+> +                                               chip->battery->desc->name,
+> +                                               chip);
+> +
+> +               if (ret) {
+> +                       client->irq = 0;
+> +                       if (ret != -EBUSY)
+
+Why not on EBUSY?
+
+> +                               dev_warn(&client->dev,
+> +                                       "Failed to get IRQ err %d\n", ret);
+> +               }
+> +       }
+> +
+>         max17040_reset(client);
+>         max17040_get_version(client);
+>
+> @@ -224,6 +265,8 @@ static int max17040_probe(struct i2c_client *client,
+>         queue_delayed_work(system_power_efficient_wq, &chip->work,
+>                            MAX17040_DELAY);
+>
+> +       device_init_wakeup(&client->dev, 1);
+
+Either you parse DT for wakeup-source property and use it... or you
+unconditionally enable wakeup. In the second case - there is no point
+to check later for device_may_wakeup(). Instead check the return value
+of device_init_wakeup().
+
+> +
+>         return 0;
+>  }
+>
+> @@ -244,6 +287,14 @@ static int max17040_suspend(struct device *dev)
+>         struct max17040_chip *chip = i2c_get_clientdata(client);
+>
+>         cancel_delayed_work(&chip->work);
+> +
+> +       if (client->irq) {
+> +               if (device_may_wakeup(dev))
+> +                       enable_irq_wake(client->irq);
+> +               else
+> +                       disable_irq_wake(client->irq);
+
+Did you try the wakeup from suspend? You do not have a disable_irq()
+here which usually was needed for interrupts to work properly on
+suspend. Maybe this was fixed?
+
+Best regards,
+Krzysztof
