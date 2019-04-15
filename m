@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D709C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:46:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0009C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:46:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EEC962087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:46:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 755AC2073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:46:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555354000;
-	bh=YL+YBOT6nSq7/kJn06kWbVEJVEWsXbkiZf3Z1BXnUcQ=;
+	s=default; t=1555354006;
+	bh=olEGL0T2K24uoWv0St+kfvi5eNIrWXMXE1stNziTBFA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=E8LGMVvnml+1D6valKTbQddcrfJQ9C/kZDEieQ3J5V74epj0rsEpKekXoX3DKCWND
-	 U5zDfIgsUAnxkjfSu2z8z6EI7lyDhk4Ue9myUSCRJJI+fmQcZYj5kNUF65/8Os7fr5
-	 Ki9XhFMJKMiBp3Y0KIdjFjmf8Vqznydqjz2I81Z0=
+	b=cZ3aOBvjccv8pJeCXJqT6ZLSOg4hZ+ROyQK3pOGPTGKJbj5VpzO/B9KUsyWuTvhAw
+	 UIoM1RqOeJxAoZkQe3EwTyHFjWZis99qzuXWSl3NAU5ETC9KaVaKyZETvlq8dzr6fb
+	 4JSbhKxraGTIv90VU8EIQ3gruJrY5YIytohMwMlc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728668AbfDOSqj (ORCPT
+        id S1728701AbfDOSqp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 14:46:39 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49332 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 14:46:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49490 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728637AbfDOSqg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 14:46:36 -0400
+        id S1728292AbfDOSql (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 14:46:41 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id F25B1218EA;
-        Mon, 15 Apr 2019 18:46:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1B7E0218A1;
+        Mon, 15 Apr 2019 18:46:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555353995;
-        bh=YL+YBOT6nSq7/kJn06kWbVEJVEWsXbkiZf3Z1BXnUcQ=;
+        s=default; t=1555354000;
+        bh=olEGL0T2K24uoWv0St+kfvi5eNIrWXMXE1stNziTBFA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=n3hec6yeRBhwvDOmMpuVJINO0NpMYjhhXDFBUMnRCiioxred0iuANtPjPD8TV5rQl
-         cDY9GLFUr8C/75b/7aM56ltPX+kzmfjd337UEerOnqI6ezsMmh7LxFpwwvdzit0n4n
-         L5V8Pswkr1CyZmN0FaylvnHlpeBOXRE3Nzfin3JI=
+        b=mAVgNKiUpk7GfVC/jdpU7kbOCT1e47Ps49sAAy+YtkarhLiYFkfMWf5Kt5zvKQAYV
+         eMCH2Gg0mpojXI8dhJd0KsDMlGfX2CwlPAZCHzlbwrTDrmflE/UbMkWicYgDNHwomW
+         456gJmixIxUldFo/939dihAe5Yv9LbiUp/6lWSc0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Diana Craciun <diana.craciun@nxp.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 32/76] powerpc/fsl: Add infrastructure to fixup branch predictor flush
-Date:   Mon, 15 Apr 2019 20:43:56 +0200
-Message-Id: <20190415183715.999898401@linuxfoundation.org>
+Subject: [PATCH 4.9 24/76] powerpc/64: Make meltdown reporting Book3S 64 specific
+Date:   Mon, 15 Apr 2019 20:43:48 +0200
+Message-Id: <20190415183714.021106293@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183707.712011689@linuxfoundation.org>
 References: <20190415183707.712011689@linuxfoundation.org>
@@ -60,122 +60,40 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 76a5eaa38b15dda92cd6964248c39b5a6f3a4e9d upstream.
+commit 406d2b6ae3420f5bb2b3db6986dc6f0b6dbb637b upstream.
 
-In order to protect against speculation attacks (Spectre
-variant 2) on NXP PowerPC platforms, the branch predictor
-should be flushed when the privillege level is changed.
-This patch is adding the infrastructure to fixup at runtime
-the code sections that are performing the branch predictor flush
-depending on a boot arg parameter which is added later in a
-separate patch.
+In a subsequent patch we will enable building security.c for Book3E.
+However the NXP platforms are not vulnerable to Meltdown, so make the
+Meltdown vulnerability reporting PPC_BOOK3S_64 specific.
 
 Signed-off-by: Diana Craciun <diana.craciun@nxp.com>
+[mpe: Split out of larger patch]
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/feature-fixups.h | 12 ++++++++++++
- arch/powerpc/include/asm/setup.h          |  2 ++
- arch/powerpc/kernel/vmlinux.lds.S         |  8 ++++++++
- arch/powerpc/lib/feature-fixups.c         | 23 +++++++++++++++++++++++
- 4 files changed, 45 insertions(+)
+ arch/powerpc/kernel/security.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-diff --git a/arch/powerpc/include/asm/feature-fixups.h b/arch/powerpc/include/asm/feature-fixups.h
-index afd3efd38938..175128e19025 100644
---- a/arch/powerpc/include/asm/feature-fixups.h
-+++ b/arch/powerpc/include/asm/feature-fixups.h
-@@ -221,6 +221,17 @@ void setup_feature_keys(void);
- 	FTR_ENTRY_OFFSET 953b-954b;			\
- 	.popsection;
+diff --git a/arch/powerpc/kernel/security.c b/arch/powerpc/kernel/security.c
+index 926ed3c38741..2f30fc8ed0a8 100644
+--- a/arch/powerpc/kernel/security.c
++++ b/arch/powerpc/kernel/security.c
+@@ -93,6 +93,7 @@ static __init int barrier_nospec_debugfs_init(void)
+ device_initcall(barrier_nospec_debugfs_init);
+ #endif /* CONFIG_DEBUG_FS */
  
-+#define START_BTB_FLUSH_SECTION			\
-+955:							\
-+
-+#define END_BTB_FLUSH_SECTION			\
-+956:							\
-+	.pushsection __btb_flush_fixup,"a";	\
-+	.align 2;							\
-+957:						\
-+	FTR_ENTRY_OFFSET 955b-957b;			\
-+	FTR_ENTRY_OFFSET 956b-957b;			\
-+	.popsection;
++#ifdef CONFIG_PPC_BOOK3S_64
+ ssize_t cpu_show_meltdown(struct device *dev, struct device_attribute *attr, char *buf)
+ {
+ 	bool thread_priv;
+@@ -125,6 +126,7 @@ ssize_t cpu_show_meltdown(struct device *dev, struct device_attribute *attr, cha
  
- #ifndef __ASSEMBLY__
- 
-@@ -229,6 +240,7 @@ extern long __start___stf_entry_barrier_fixup, __stop___stf_entry_barrier_fixup;
- extern long __start___stf_exit_barrier_fixup, __stop___stf_exit_barrier_fixup;
- extern long __start___rfi_flush_fixup, __stop___rfi_flush_fixup;
- extern long __start___barrier_nospec_fixup, __stop___barrier_nospec_fixup;
-+extern long __start__btb_flush_fixup, __stop__btb_flush_fixup;
- 
- #endif
- 
-diff --git a/arch/powerpc/include/asm/setup.h b/arch/powerpc/include/asm/setup.h
-index d3e9da62d029..23ee67e279ae 100644
---- a/arch/powerpc/include/asm/setup.h
-+++ b/arch/powerpc/include/asm/setup.h
-@@ -65,6 +65,8 @@ void do_barrier_nospec_fixups_range(bool enable, void *start, void *end);
- static inline void do_barrier_nospec_fixups_range(bool enable, void *start, void *end) { };
- #endif
- 
-+void do_btb_flush_fixups(void);
-+
- #endif /* !__ASSEMBLY__ */
- 
- #endif	/* _ASM_POWERPC_SETUP_H */
-diff --git a/arch/powerpc/kernel/vmlinux.lds.S b/arch/powerpc/kernel/vmlinux.lds.S
-index 5c6cf58943b9..50d365060855 100644
---- a/arch/powerpc/kernel/vmlinux.lds.S
-+++ b/arch/powerpc/kernel/vmlinux.lds.S
-@@ -164,6 +164,14 @@ SECTIONS
- 	}
- #endif /* CONFIG_PPC_BARRIER_NOSPEC */
- 
-+#ifdef CONFIG_PPC_FSL_BOOK3E
-+	. = ALIGN(8);
-+	__spec_btb_flush_fixup : AT(ADDR(__spec_btb_flush_fixup) - LOAD_OFFSET) {
-+		__start__btb_flush_fixup = .;
-+		*(__btb_flush_fixup)
-+		__stop__btb_flush_fixup = .;
-+	}
-+#endif
- 	EXCEPTION_TABLE(0)
- 
- 	NOTES :kernel :notes
-diff --git a/arch/powerpc/lib/feature-fixups.c b/arch/powerpc/lib/feature-fixups.c
-index b3e362437ec4..e6ed0ec94bc8 100644
---- a/arch/powerpc/lib/feature-fixups.c
-+++ b/arch/powerpc/lib/feature-fixups.c
-@@ -347,6 +347,29 @@ void do_barrier_nospec_fixups_range(bool enable, void *fixup_start, void *fixup_
- 
- 	printk(KERN_DEBUG "barrier-nospec: patched %d locations\n", i);
+ 	return sprintf(buf, "Vulnerable\n");
  }
-+
-+static void patch_btb_flush_section(long *curr)
-+{
-+	unsigned int *start, *end;
-+
-+	start = (void *)curr + *curr;
-+	end = (void *)curr + *(curr + 1);
-+	for (; start < end; start++) {
-+		pr_devel("patching dest %lx\n", (unsigned long)start);
-+		patch_instruction(start, PPC_INST_NOP);
-+	}
-+}
-+
-+void do_btb_flush_fixups(void)
-+{
-+	long *start, *end;
-+
-+	start = PTRRELOC(&__start__btb_flush_fixup);
-+	end = PTRRELOC(&__stop__btb_flush_fixup);
-+
-+	for (; start < end; start += 2)
-+		patch_btb_flush_section(start);
-+}
- #endif /* CONFIG_PPC_FSL_BOOK3E */
++#endif
  
- void do_lwsync_fixups(unsigned long value, void *fixup_start, void *fixup_end)
+ ssize_t cpu_show_spectre_v1(struct device *dev, struct device_attribute *attr, char *buf)
+ {
 -- 
 2.19.1
 
