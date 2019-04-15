@@ -2,106 +2,152 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 72CB6C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:24:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB8EC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:24:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4394120874
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:24:05 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555320245;
-	bh=JulKskcohmjU1LQCxlJpqEI+tr9kx1WSlzr48IXgw5g=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=OHFkYnvOs7nAOLLZI7lt5eiQYFqhdR9ifBu8ghdFlme6CrzNO7sDWpwG35Eq3DHcm
-	 0wYxVeQKst7koSquSxc843JpgwStxVufu1uPZsbBqbYU89waBLuyQtOYXbtEnezGJ8
-	 UMBgqOVhG/hGqR03ivUFo3D5FqqB4bxt1o4qbfho=
+	by mail.kernel.org (Postfix) with ESMTP id F148720656
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:24:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727055AbfDOJYE (ORCPT
+        id S1727085AbfDOJYd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 05:24:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50178 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725798AbfDOJYD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 05:24:03 -0400
-Received: from X250.skyworth_vap (98.142.130.235.16clouds.com [98.142.130.235])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4C0DF20656;
-        Mon, 15 Apr 2019 09:23:58 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555320243;
-        bh=JulKskcohmjU1LQCxlJpqEI+tr9kx1WSlzr48IXgw5g=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=mPiLlj6fvXqyHnS3MqqlO/pxiwz87HdwMQbjjkRGIWvB7hZSdseWXBZoe6Y08YVRx
-         orjFxfk6P/C6R9i3gU8mS4xe/WRK/O5zZsW2LUWmngYpywMZInFvBpsk1plUWGHeFn
-         QNwx4lg5tJoovZXubKyMhL/hRPiiEeXuYiCWMU/I=
-Date:   Mon, 15 Apr 2019 17:23:54 +0800
-From:   Shawn Guo <shawnguo@kernel.org>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Anson Huang <anson.huang@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "a.zummo@towertech.it" <a.zummo@towertech.it>,
-        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
-        "sboyd@kernel.org" <sboyd@kernel.org>, Peng Fan <peng.fan@nxp.com>,
-        Daniel Baluta <daniel.baluta@nxp.com>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-rtc@vger.kernel.org" <linux-rtc@vger.kernel.org>,
-        dl-linux-imx <linux-imx@nxp.com>
-Subject: Re: [EXT] Re: [PATCH V7 2/4] firmware: imx: enable imx scu general
- irq function
-Message-ID: <20190415092350.GC18917@X250.skyworth_vap>
-References: <1554785675-8090-1-git-send-email-Anson.Huang@nxp.com>
- <1554785675-8090-2-git-send-email-Anson.Huang@nxp.com>
- <20190411073252.GC3050@dragon>
- <DB3PR0402MB3916B67E6DA995AB70C29799F5280@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <AM0PR04MB4211816EDBEF23F7B330CCCB80280@AM0PR04MB4211.eurprd04.prod.outlook.com>
- <DB3PR0402MB39162D194A2B5B79211C1774F5280@DB3PR0402MB3916.eurprd04.prod.outlook.com>
- <20190412084116.GS3578@piout.net>
+        Mon, 15 Apr 2019 05:24:33 -0400
+Received: from mx2.suse.de ([195.135.220.15]:53656 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725798AbfDOJYc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 05:24:32 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 697AEAFE8;
+        Mon, 15 Apr 2019 09:24:29 +0000 (UTC)
+Date:   Mon, 15 Apr 2019 11:24:24 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Alastair D'Silva <alastair@d-silva.org>
+Cc:     'Alastair D'Silva' <alastair@au1.ibm.com>,
+        'Jani Nikula' <jani.nikula@linux.intel.com>,
+        'Joonas Lahtinen' <joonas.lahtinen@linux.intel.com>,
+        'Rodrigo Vivi' <rodrigo.vivi@intel.com>,
+        'David Airlie' <airlied@linux.ie>,
+        'Daniel Vetter' <daniel@ffwll.ch>,
+        'Karsten Keil' <isdn@linux-pingi.de>,
+        'Jassi Brar' <jassisinghbrar@gmail.com>,
+        'Tom Lendacky' <thomas.lendacky@amd.com>,
+        "'David S. Miller'" <davem@davemloft.net>,
+        'Jose Abreu' <Jose.Abreu@synopsys.com>,
+        'Kalle Valo' <kvalo@codeaurora.org>,
+        'Stanislaw Gruszka' <sgruszka@redhat.com>,
+        'Benson Leung' <bleung@chromium.org>,
+        'Enric Balletbo i Serra' <enric.balletbo@collabora.com>,
+        "'James E.J. Bottomley'" <jejb@linux.ibm.com>,
+        "'Martin K. Petersen'" <martin.petersen@oracle.com>,
+        'Greg Kroah-Hartman' <gregkh@linuxfoundation.org>,
+        'Alexander Viro' <viro@zeniv.linux.org.uk>,
+        'Sergey Senozhatsky' <sergey.senozhatsky@gmail.com>,
+        'Steven Rostedt' <rostedt@goodmis.org>,
+        'Andrew Morton' <akpm@linux-foundation.org>,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org, netdev@vger.kernel.org,
+        ath10k@lists.infradead.org, linux-wireless@vger.kernel.org,
+        linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org,
+        devel@driverdev.osuosl.org, linux-fsdevel@vger.kernel.org
+Subject: Re: [PATCH 3/4] lib/hexdump.c: Replace ascii bool in
+ hex_dump_to_buffer with flags
+Message-ID: <20190415092424.qos7d54nbyr5hphu@pathway.suse.cz>
+References: <20190410031720.11067-1-alastair@au1.ibm.com>
+ <20190410031720.11067-4-alastair@au1.ibm.com>
+ <20190412141211.lvnz6wb7mwkykmxf@pathway.suse.cz>
+ <093301d4f187$da0756a0$8e1603e0$@d-silva.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190412084116.GS3578@piout.net>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <093301d4f187$da0756a0$8e1603e0$@d-silva.org>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 10:41:16AM +0200, Alexandre Belloni wrote:
-> On 12/04/2019 02:32:54+0000, Anson Huang wrote:
-> > > > 	As i.MX SCU general irq function is picked up by Shawn, could you
-> > > > please also pick up below i.MX SC RTC alarm support patch ?
-> > > > 	https://patchwork.kernel.org/patch/10890525/
-> > > >
-> > > 
-> > > No, it can't go through Alexandre's tree due to dependency issue.
-> > > 
-> > > Shawn,
-> > > Do you think you can pick it up? Alexandre already gave the Ack.
-> > > 
-> > > AFAIK there's no other SCU RTC patches since v5.1-rc1 in Alexandre's tree.
+On Sat 2019-04-13 09:31:27, Alastair D'Silva wrote:
+> > -----Original Message-----
+> > From: Petr Mladek <pmladek@suse.com>
+> > Sent: Saturday, 13 April 2019 12:12 AM
+> > To: Alastair D'Silva <alastair@au1.ibm.com>
+> > Cc: alastair@d-silva.org; Jani Nikula <jani.nikula@linux.intel.com>;
+> Joonas
+> > Lahtinen <joonas.lahtinen@linux.intel.com>; Rodrigo Vivi
+> > <rodrigo.vivi@intel.com>; David Airlie <airlied@linux.ie>; Daniel Vetter
+> > <daniel@ffwll.ch>; Karsten Keil <isdn@linux-pingi.de>; Jassi Brar
+> > <jassisinghbrar@gmail.com>; Tom Lendacky <thomas.lendacky@amd.com>;
+> > David S. Miller <davem@davemloft.net>; Jose Abreu
+> > <Jose.Abreu@synopsys.com>; Kalle Valo <kvalo@codeaurora.org>;
+> > Stanislaw Gruszka <sgruszka@redhat.com>; Benson Leung
+> > <bleung@chromium.org>; Enric Balletbo i Serra
+> > <enric.balletbo@collabora.com>; James E.J. Bottomley
+> > <jejb@linux.ibm.com>; Martin K. Petersen <martin.petersen@oracle.com>;
+> > Greg Kroah-Hartman <gregkh@linuxfoundation.org>; Alexander Viro
+> > <viro@zeniv.linux.org.uk>; Sergey Senozhatsky
+> > <sergey.senozhatsky@gmail.com>; Steven Rostedt <rostedt@goodmis.org>;
+> > Andrew Morton <akpm@linux-foundation.org>; intel-
+> > gfx@lists.freedesktop.org; dri-devel@lists.freedesktop.org; linux-
+> > kernel@vger.kernel.org; netdev@vger.kernel.org;
+> > ath10k@lists.infradead.org; linux-wireless@vger.kernel.org; linux-
+> > scsi@vger.kernel.org; linux-fbdev@vger.kernel.org;
+> > devel@driverdev.osuosl.org; linux-fsdevel@vger.kernel.org
+> > Subject: Re: [PATCH 3/4] lib/hexdump.c: Replace ascii bool in
+> > hex_dump_to_buffer with flags
 > > 
-> > Yes, need to make sure the dependency is handled, the RTC alarm patch MUST be picked up
-> > ONLY when scu irq patch is ready, NOT sure how to handle this case for such scenario?
+> > On Wed 2019-04-10 13:17:19, Alastair D'Silva wrote:
+> > > From: Alastair D'Silva <alastair@d-silva.org>
+> > >
+> > > In order to support additional features in hex_dump_to_buffer, replace
+> > > the ascii bool parameter with flags.
+> > >
+> > > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> > > ---
+> > >  drivers/gpu/drm/i915/intel_engine_cs.c            |  2 +-
+> > >  drivers/isdn/hardware/mISDN/mISDNisar.c           |  6 ++++--
+> > >  drivers/mailbox/mailbox-test.c                    |  2 +-
+> > >  drivers/net/ethernet/amd/xgbe/xgbe-drv.c          |  2 +-
+> > >  drivers/net/ethernet/synopsys/dwc-xlgmac-common.c |  2 +-
+> > >  drivers/net/wireless/ath/ath10k/debug.c           |  3 ++-
+> > >  drivers/net/wireless/intel/iwlegacy/3945-mac.c    |  2 +-
+> > >  drivers/platform/chrome/wilco_ec/debugfs.c        |  3 ++-
+> > >  drivers/scsi/scsi_logging.c                       |  8 +++-----
+> > >  drivers/staging/fbtft/fbtft-core.c                |  2 +-
+> > >  fs/seq_file.c                                     |  3 ++-
+> > >  include/linux/printk.h                            |  2 +-
+> > >  lib/hexdump.c                                     | 15 ++++++++-------
+> > >  lib/test_hexdump.c                                |  5 +++--
+> > >  14 files changed, 31 insertions(+), 26 deletions(-)
+> > >
+> > > diff --git a/drivers/gpu/drm/i915/intel_engine_cs.c
+> > > b/drivers/gpu/drm/i915/intel_engine_cs.c
+> > > index 49fa43ff02ba..fb133e729f9a 100644
+> > > --- a/drivers/gpu/drm/i915/intel_engine_cs.c
+> > > +++ b/drivers/gpu/drm/i915/intel_engine_cs.c
+> > > @@ -1318,7 +1318,7 @@ static void hexdump(struct drm_printer *m, const
+> > void *buf, size_t len)
+> > >  		WARN_ON_ONCE(hex_dump_to_buffer(buf + pos, len -
+> > pos,
+> > >  						rowsize, sizeof(u32),
+> > >  						line, sizeof(line),
+> > > -						false) >= sizeof(line));
+> > > +						0) >= sizeof(line));
 > > 
+> > It might be more clear when we define:
+> > 
+> > #define HEXDUMP_BINARY 0
 > 
-> Either it goes through arm-soc or if it can wait one release, I pick it
-> up for 5.3. The other solution involves immutable branch but I don't
-> think this is necessary.
+> This feels unnecessary, and weird. Omitting the flag won't disable the hex
+> output (as expected), and if you don't want hex output why call hexdump in
+> the first place?
 
-I send other subsystem patch through arm-soc tree only when it's
-absolutely necessary. This is not anything either critical or urgent,
-so I'm not going to take it.  Wait one release, I'd say.
+Why do we have HEXDUMP_ASCII then?
+Why is the above funtion not using HEXDUMP_ASCII?
+Who would call it with (HEXDUMP_ASCII | HEXDUMP_BINARY)?
 
-Shawn
+Best Regards,
+Petr
