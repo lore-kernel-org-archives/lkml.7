@@ -4,36 +4,36 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A9FA0C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:08:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B1E2C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:08:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 85F4320880
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:08:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7366F20880
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:08:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727919AbfDOQGD (ORCPT
+        id S1727903AbfDOQGC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 12:06:03 -0400
-Received: from foss.arm.com ([217.140.101.70]:37756 "EHLO foss.arm.com"
+        Mon, 15 Apr 2019 12:06:02 -0400
+Received: from foss.arm.com ([217.140.101.70]:37730 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727895AbfDOQGA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 12:06:00 -0400
+        id S1727876AbfDOQF5 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 12:05:57 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A178480D;
-        Mon, 15 Apr 2019 09:06:00 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 02A8480D;
+        Mon, 15 Apr 2019 09:05:57 -0700 (PDT)
 Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 264493F68F;
-        Mon, 15 Apr 2019 09:05:59 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7B0933F68F;
+        Mon, 15 Apr 2019 09:05:55 -0700 (PDT)
 From:   Suzuki K Poulose <suzuki.poulose@arm.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
         mathieu.poirier@linaro.org, mike.leach@linaro.org,
         rjw@rjwysocki.net, robert.walker@arm.com,
         Suzuki K Poulose <suzuki.poulose@arm.com>
-Subject: [PATCH v2 09/36] coresight: catu: Cleanup device specific data
-Date:   Mon, 15 Apr 2019 17:03:52 +0100
-Message-Id: <1555344260-12375-10-git-send-email-suzuki.poulose@arm.com>
+Subject: [PATCH v2 07/36] coresight: replicator: Cleanup device tracking
+Date:   Mon, 15 Apr 2019 17:03:50 +0100
+Message-Id: <1555344260-12375-8-git-send-email-suzuki.poulose@arm.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1555344260-12375-1-git-send-email-suzuki.poulose@arm.com>
 References: <1555344260-12375-1-git-send-email-suzuki.poulose@arm.com>
@@ -42,85 +42,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Switch to using the CoreSight device instead of the real
-amba device.
+In preparation to use a consistent device naming scheme,
+clean up the device link tracking in replicator driver.
+Use the "coresight" device instead of the "real" parent device
+for all internal purposes. All other requests (e.g, power management,
+DMA operations) must use the "real" device which is the parent device.
 
 Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
 Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 ---
- drivers/hwtracing/coresight/coresight-catu.c | 13 +++++++------
- drivers/hwtracing/coresight/coresight-catu.h |  1 -
- 2 files changed, 7 insertions(+), 7 deletions(-)
+ drivers/hwtracing/coresight/coresight-replicator.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/hwtracing/coresight/coresight-catu.c b/drivers/hwtracing/coresight/coresight-catu.c
-index ba3c005..14d1cf5 100644
---- a/drivers/hwtracing/coresight/coresight-catu.c
-+++ b/drivers/hwtracing/coresight/coresight-catu.c
-@@ -408,13 +408,14 @@ static int catu_enable_hw(struct catu_drvdata *drvdata, void *data)
- 	int rc;
- 	u32 control, mode;
- 	struct etr_buf *etr_buf = data;
-+	struct device *dev = &drvdata->csdev->dev;
- 
- 	if (catu_wait_for_ready(drvdata))
--		dev_warn(drvdata->dev, "Timeout while waiting for READY\n");
-+		dev_warn(dev, "Timeout while waiting for READY\n");
- 
- 	control = catu_read_control(drvdata);
- 	if (control & BIT(CATU_CONTROL_ENABLE)) {
--		dev_warn(drvdata->dev, "CATU is already enabled\n");
-+		dev_warn(dev, "CATU is already enabled\n");
- 		return -EBUSY;
- 	}
- 
-@@ -440,7 +441,7 @@ static int catu_enable_hw(struct catu_drvdata *drvdata, void *data)
- 	catu_write_irqen(drvdata, 0);
- 	catu_write_mode(drvdata, mode);
- 	catu_write_control(drvdata, control);
--	dev_dbg(drvdata->dev, "Enabled in %s mode\n",
-+	dev_dbg(dev, "Enabled in %s mode\n",
- 		(mode == CATU_MODE_PASS_THROUGH) ?
- 		"Pass through" :
- 		"Translate");
-@@ -461,15 +462,16 @@ static int catu_enable(struct coresight_device *csdev, void *data)
- static int catu_disable_hw(struct catu_drvdata *drvdata)
- {
- 	int rc = 0;
-+	struct device *dev = &drvdata->csdev->dev;
- 
- 	catu_write_control(drvdata, 0);
- 	coresight_disclaim_device_unlocked(drvdata->base);
- 	if (catu_wait_for_ready(drvdata)) {
--		dev_info(drvdata->dev, "Timeout while waiting for READY\n");
-+		dev_info(dev, "Timeout while waiting for READY\n");
- 		rc = -EAGAIN;
- 	}
- 
--	dev_dbg(drvdata->dev, "Disabled\n");
-+	dev_dbg(dev, "Disabled\n");
+diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
+index 4e0da85..8bbb008 100644
+--- a/drivers/hwtracing/coresight/coresight-replicator.c
++++ b/drivers/hwtracing/coresight/coresight-replicator.c
+@@ -26,13 +26,11 @@
+  * struct replicator_drvdata - specifics associated to a replicator component
+  * @base:	memory mapped base address for this component. Also indicates
+  *		whether this one is programmable or not.
+- * @dev:	the device entity associated with this component
+  * @atclk:	optional clock for the core parts of the replicator.
+  * @csdev:	component vitals needed by the framework
+  */
+ struct replicator_drvdata {
+ 	void __iomem		*base;
+-	struct device		*dev;
+ 	struct clk		*atclk;
+ 	struct coresight_device	*csdev;
+ };
+@@ -100,7 +98,7 @@ static int replicator_enable(struct coresight_device *csdev, int inport,
+ 	if (drvdata->base)
+ 		rc = dynamic_replicator_enable(drvdata, inport, outport);
+ 	if (!rc)
+-		dev_dbg(drvdata->dev, "REPLICATOR enabled\n");
++		dev_dbg(&csdev->dev, "REPLICATOR enabled\n");
  	return rc;
  }
  
-@@ -519,7 +521,6 @@ static int catu_probe(struct amba_device *adev, const struct amba_id *id)
- 		goto out;
- 	}
+@@ -139,7 +137,7 @@ static void replicator_disable(struct coresight_device *csdev, int inport,
+ 
+ 	if (drvdata->base)
+ 		dynamic_replicator_disable(drvdata, inport, outport);
+-	dev_dbg(drvdata->dev, "REPLICATOR disabled\n");
++	dev_dbg(&csdev->dev, "REPLICATOR disabled\n");
+ }
+ 
+ static const struct coresight_ops_link replicator_link_ops = {
+@@ -193,7 +191,6 @@ static int replicator_probe(struct device *dev, struct resource *res)
+ 	if (!drvdata)
+ 		return -ENOMEM;
  
 -	drvdata->dev = dev;
- 	dev_set_drvdata(dev, drvdata);
- 	base = devm_ioremap_resource(dev, &adev->res);
- 	if (IS_ERR(base)) {
-diff --git a/drivers/hwtracing/coresight/coresight-catu.h b/drivers/hwtracing/coresight/coresight-catu.h
-index 1b281f0..96ea8c4 100644
---- a/drivers/hwtracing/coresight/coresight-catu.h
-+++ b/drivers/hwtracing/coresight/coresight-catu.h
-@@ -61,7 +61,6 @@
- #define CATU_IRQEN_OFF		0x0
- 
- struct catu_drvdata {
--	struct device *dev;
- 	void __iomem *base;
- 	struct coresight_device *csdev;
- 	int irq;
+ 	drvdata->atclk = devm_clk_get(dev, "atclk"); /* optional */
+ 	if (!IS_ERR(drvdata->atclk)) {
+ 		ret = clk_prepare_enable(drvdata->atclk);
 -- 
 2.7.4
 
