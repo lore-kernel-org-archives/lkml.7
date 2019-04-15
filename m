@@ -7,58 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D6FC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27CE1C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:03:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E4FC2087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:02:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E85E2218EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:02:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555354976;
-	bh=1/SyIu0OXXX2OtItZtMTZDyFUPZSjpx3GPUXkohNUIQ=;
+	s=default; t=1555354980;
+	bh=zNdLVdzahmNhp/Do/aeElOZd3or5toZWZOGereNie1o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tbk6ffm250bEYlocV/PJ5rr0MPp+MmhZvH8zXO5aNMjPU/I4H8mQgnmCqTl4vPWwo
-	 eF3LewIaqTrgBUX2cVBdC9Sv0g5gGsy07csK6cWpTuW95YVS0YgqFtql93hLqB0r1t
-	 gQ07cv+fn0teYSnSkO91FBpHPl4BXgMm6XaCQdcQ=
+	b=xYKpTStNgA5wY1NddB4SNszdRaMyZpa7hvh9wqr/uTF5I9ppPYWqBBGlmysfGf78k
+	 vzaZPFLT9tYrJj1p7jIMrP7tXL4v+PahkPClSWKAfqcGMP6zk8vi1PCXoGBWWjMNyb
+	 RoPBzuABGIhSnrv9l/YdjCLSR2UA1CcxWH6EFisU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729056AbfDOTCz (ORCPT
+        id S1729082AbfDOTC6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:02:55 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34228 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:02:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34328 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728999AbfDOTCw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:02:52 -0400
+        id S1729048AbfDOTCz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:02:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 696C6218FC;
-        Mon, 15 Apr 2019 19:02:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 130812087C;
+        Mon, 15 Apr 2019 19:02:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555354971;
-        bh=1/SyIu0OXXX2OtItZtMTZDyFUPZSjpx3GPUXkohNUIQ=;
+        s=default; t=1555354974;
+        bh=zNdLVdzahmNhp/Do/aeElOZd3or5toZWZOGereNie1o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=hwgo/u2oIn4Ag9Hvdveg9OPW1AZN2ihbNKPuSV9OGByOYcfbIc5LoCN8tP30+ogdA
-         9942jpRTJPqaTB2LVnHQ/feTOCqRxk+MpI1bn0IXnhR6EDuKxKFgNzfU9LKz+oh+j7
-         aKLroT0zr6xsqy4uTcbQF5y8atWXaVZ+yDb+C1vo=
+        b=Ihb90o82ZyHGcbwCT/ZobKTwYUBb2JKk8vxMIvXTcuGXfMg1O0eqCLJaEYLuQwcW8
+         xBi/RkWGhWiNyNKD+gFrNRu1GdmkBHOZQjJC6g/avWHCu3kquajE+31yGEYJeV50Vt
+         JSDcW1oTwsRLW/IkXEN3A9skPlOjpW9C6yMaKdQs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Koen De Schepper <koen.de_schepper@nokia-bell-labs.com>,
-        Olivier Tilmans <olivier.tilmans@nokia-bell-labs.com>,
-        Bob Briscoe <research@bobbriscoe.net>,
-        Lawrence Brakmo <brakmo@fb.com>,
-        Florian Westphal <fw@strlen.de>,
-        Daniel Borkmann <borkmann@iogearbox.net>,
-        Yuchung Cheng <ycheng@google.com>,
-        Neal Cardwell <ncardwell@google.com>,
-        Eric Dumazet <edumazet@google.com>,
-        Andrew Shewmaker <agshew@gmail.com>,
-        Glenn Judd <glenn.judd@morganstanley.com>,
-        Daniel Borkmann <daniel@iogearbox.net>,
+        stable@vger.kernel.org, Li RongQing <lirongqing@baidu.com>,
+        Wang Li <wangli39@baidu.com>,
+        Michal Kubecek <mkubecek@suse.cz>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 26/69] tcp: Ensure DCTCP reacts to losses
-Date:   Mon, 15 Apr 2019 20:58:44 +0200
-Message-Id: <20190415183731.114640169@linuxfoundation.org>
+Subject: [PATCH 4.14 35/69] net: ethtool: not call vzalloc for zero sized memory request
+Date:   Mon, 15 Apr 2019 20:58:53 +0200
+Message-Id: <20190415183732.029772029@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183726.036654568@linuxfoundation.org>
 References: <20190415183726.036654568@linuxfoundation.org>
@@ -71,139 +61,95 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Koen De Schepper <koen.de_schepper@nokia-bell-labs.com>
+From: Li RongQing <lirongqing@baidu.com>
 
-[ Upstream commit aecfde23108b8e637d9f5c5e523b24fb97035dc3 ]
+[ Upstream commit 3d8830266ffc28c16032b859e38a0252e014b631 ]
 
-RFC8257 §3.5 explicitly states that "A DCTCP sender MUST react to
-loss episodes in the same way as conventional TCP".
+NULL or ZERO_SIZE_PTR will be returned for zero sized memory
+request, and derefencing them will lead to a segfault
 
-Currently, Linux DCTCP performs no cwnd reduction when losses
-are encountered. Optionally, the dctcp_clamp_alpha_on_loss resets
-alpha to its maximal value if a RTO happens. This behavior
-is sub-optimal for at least two reasons: i) it ignores losses
-triggering fast retransmissions; and ii) it causes unnecessary large
-cwnd reduction in the future if the loss was isolated as it resets
-the historical term of DCTCP's alpha EWMA to its maximal value (i.e.,
-denoting a total congestion). The second reason has an especially
-noticeable effect when using DCTCP in high BDP environments, where
-alpha normally stays at low values.
+so it is unnecessory to call vzalloc for zero sized memory
+request and not call functions which maybe derefence the
+NULL allocated memory
 
-This patch replace the clamping of alpha by setting ssthresh to
-half of cwnd for both fast retransmissions and RTOs, at most once
-per RTT. Consequently, the dctcp_clamp_alpha_on_loss module parameter
-has been removed.
+this also fixes a possible memory leak if phy_ethtool_get_stats
+returns error, memory should be freed before exit
 
-The table below shows experimental results where we measured the
-drop probability of a PIE AQM (not applying ECN marks) at a
-bottleneck in the presence of a single TCP flow with either the
-alpha-clamping option enabled or the cwnd halving proposed by this
-patch. Results using reno or cubic are given for comparison.
-
-                          |  Link   |   RTT    |    Drop
-                 TCP CC   |  speed  | base+AQM | probability
-        ==================|=========|==========|============
-                    CUBIC |  40Mbps |  7+20ms  |    0.21%
-                     RENO |         |          |    0.19%
-        DCTCP-CLAMP-ALPHA |         |          |   25.80%
-         DCTCP-HALVE-CWND |         |          |    0.22%
-        ------------------|---------|----------|------------
-                    CUBIC | 100Mbps |  7+20ms  |    0.03%
-                     RENO |         |          |    0.02%
-        DCTCP-CLAMP-ALPHA |         |          |   23.30%
-         DCTCP-HALVE-CWND |         |          |    0.04%
-        ------------------|---------|----------|------------
-                    CUBIC | 800Mbps |   1+1ms  |    0.04%
-                     RENO |         |          |    0.05%
-        DCTCP-CLAMP-ALPHA |         |          |   18.70%
-         DCTCP-HALVE-CWND |         |          |    0.06%
-
-We see that, without halving its cwnd for all source of losses,
-DCTCP drives the AQM to large drop probabilities in order to keep
-the queue length under control (i.e., it repeatedly faces RTOs).
-Instead, if DCTCP reacts to all source of losses, it can then be
-controlled by the AQM using similar drop levels than cubic or reno.
-
-Signed-off-by: Koen De Schepper <koen.de_schepper@nokia-bell-labs.com>
-Signed-off-by: Olivier Tilmans <olivier.tilmans@nokia-bell-labs.com>
-Cc: Bob Briscoe <research@bobbriscoe.net>
-Cc: Lawrence Brakmo <brakmo@fb.com>
-Cc: Florian Westphal <fw@strlen.de>
-Cc: Daniel Borkmann <borkmann@iogearbox.net>
-Cc: Yuchung Cheng <ycheng@google.com>
-Cc: Neal Cardwell <ncardwell@google.com>
-Cc: Eric Dumazet <edumazet@google.com>
-Cc: Andrew Shewmaker <agshew@gmail.com>
-Cc: Glenn Judd <glenn.judd@morganstanley.com>
-Acked-by: Florian Westphal <fw@strlen.de>
-Acked-by: Neal Cardwell <ncardwell@google.com>
-Acked-by: Daniel Borkmann <daniel@iogearbox.net>
+Signed-off-by: Li RongQing <lirongqing@baidu.com>
+Reviewed-by: Wang Li <wangli39@baidu.com>
+Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv4/tcp_dctcp.c |   36 ++++++++++++++++++------------------
- 1 file changed, 18 insertions(+), 18 deletions(-)
+ net/core/ethtool.c |   43 +++++++++++++++++++++++++++----------------
+ 1 file changed, 27 insertions(+), 16 deletions(-)
 
---- a/net/ipv4/tcp_dctcp.c
-+++ b/net/ipv4/tcp_dctcp.c
-@@ -66,11 +66,6 @@ static unsigned int dctcp_alpha_on_init
- module_param(dctcp_alpha_on_init, uint, 0644);
- MODULE_PARM_DESC(dctcp_alpha_on_init, "parameter for initial alpha value");
+--- a/net/core/ethtool.c
++++ b/net/core/ethtool.c
+@@ -1815,11 +1815,15 @@ static int ethtool_get_strings(struct ne
+ 	WARN_ON_ONCE(!ret);
  
--static unsigned int dctcp_clamp_alpha_on_loss __read_mostly;
--module_param(dctcp_clamp_alpha_on_loss, uint, 0644);
--MODULE_PARM_DESC(dctcp_clamp_alpha_on_loss,
--		 "parameter for clamping alpha on loss");
+ 	gstrings.len = ret;
+-	data = vzalloc(gstrings.len * ETH_GSTRING_LEN);
+-	if (gstrings.len && !data)
+-		return -ENOMEM;
++	if (gstrings.len) {
++		data = vzalloc(gstrings.len * ETH_GSTRING_LEN);
++		if (!data)
++			return -ENOMEM;
+ 
+-	__ethtool_get_strings(dev, gstrings.string_set, data);
++		__ethtool_get_strings(dev, gstrings.string_set, data);
++	} else {
++		data = NULL;
++	}
+ 
+ 	ret = -EFAULT;
+ 	if (copy_to_user(useraddr, &gstrings, sizeof(gstrings)))
+@@ -1915,11 +1919,14 @@ static int ethtool_get_stats(struct net_
+ 		return -EFAULT;
+ 
+ 	stats.n_stats = n_stats;
+-	data = vzalloc(n_stats * sizeof(u64));
+-	if (n_stats && !data)
+-		return -ENOMEM;
 -
- static struct tcp_congestion_ops dctcp_reno;
+-	ops->get_ethtool_stats(dev, &stats, data);
++	if (n_stats) {
++		data = vzalloc(n_stats * sizeof(u64));
++		if (!data)
++			return -ENOMEM;
++		ops->get_ethtool_stats(dev, &stats, data);
++	} else {
++		data = NULL;
++	}
  
- static void dctcp_reset(const struct tcp_sock *tp, struct dctcp *ca)
-@@ -211,21 +206,23 @@ static void dctcp_update_alpha(struct so
- 	}
- }
+ 	ret = -EFAULT;
+ 	if (copy_to_user(useraddr, &stats, sizeof(stats)))
+@@ -1955,13 +1962,17 @@ static int ethtool_get_phy_stats(struct
+ 		return -EFAULT;
  
--static void dctcp_state(struct sock *sk, u8 new_state)
-+static void dctcp_react_to_loss(struct sock *sk)
- {
--	if (dctcp_clamp_alpha_on_loss && new_state == TCP_CA_Loss) {
--		struct dctcp *ca = inet_csk_ca(sk);
-+	struct dctcp *ca = inet_csk_ca(sk);
-+	struct tcp_sock *tp = tcp_sk(sk);
- 
--		/* If this extension is enabled, we clamp dctcp_alpha to
--		 * max on packet loss; the motivation is that dctcp_alpha
--		 * is an indicator to the extend of congestion and packet
--		 * loss is an indicator of extreme congestion; setting
--		 * this in practice turned out to be beneficial, and
--		 * effectively assumes total congestion which reduces the
--		 * window by half.
--		 */
--		ca->dctcp_alpha = DCTCP_MAX_ALPHA;
--	}
-+	ca->loss_cwnd = tp->snd_cwnd;
-+	tp->snd_ssthresh = max(tp->snd_cwnd >> 1U, 2U);
-+}
+ 	stats.n_stats = n_stats;
+-	data = vzalloc(n_stats * sizeof(u64));
+-	if (n_stats && !data)
+-		return -ENOMEM;
+-
+-	mutex_lock(&phydev->lock);
+-	phydev->drv->get_stats(phydev, &stats, data);
+-	mutex_unlock(&phydev->lock);
++	if (n_stats) {
++		data = vzalloc(n_stats * sizeof(u64));
++		if (!data)
++			return -ENOMEM;
 +
-+static void dctcp_state(struct sock *sk, u8 new_state)
-+{
-+	if (new_state == TCP_CA_Recovery &&
-+	    new_state != inet_csk(sk)->icsk_ca_state)
-+		dctcp_react_to_loss(sk);
-+	/* We handle RTO in dctcp_cwnd_event to ensure that we perform only
-+	 * one loss-adjustment per RTT.
-+	 */
- }
++		mutex_lock(&phydev->lock);
++		phydev->drv->get_stats(phydev, &stats, data);
++		mutex_unlock(&phydev->lock);
++	} else {
++		data = NULL;
++	}
  
- static void dctcp_cwnd_event(struct sock *sk, enum tcp_ca_event ev)
-@@ -237,6 +234,9 @@ static void dctcp_cwnd_event(struct sock
- 	case CA_EVENT_ECN_NO_CE:
- 		dctcp_ce_state_1_to_0(sk);
- 		break;
-+	case CA_EVENT_LOSS:
-+		dctcp_react_to_loss(sk);
-+		break;
- 	default:
- 		/* Don't care for the rest. */
- 		break;
+ 	ret = -EFAULT;
+ 	if (copy_to_user(useraddr, &stats, sizeof(stats)))
 
 
