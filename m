@@ -2,84 +2,85 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DCCB6C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:53:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11C81C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:53:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9DFE20880
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:53:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC9C820880
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:53:55 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="dm/ieGao"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727592AbfDOPxt (ORCPT
+        id S1727722AbfDOPxy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 11:53:49 -0400
-Received: from lhrrgout.huawei.com ([185.176.76.210]:32920 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725972AbfDOPxt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 11:53:49 -0400
-Received: from LHREML711-CAH.china.huawei.com (unknown [172.18.7.108])
-        by Forcepoint Email with ESMTP id B9DE8915B1329F164F21;
-        Mon, 15 Apr 2019 16:53:47 +0100 (IST)
-Received: from [127.0.0.1] (10.202.227.157) by LHREML711-CAH.china.huawei.com
- (10.201.108.34) with Microsoft SMTP Server id 14.3.408.0; Mon, 15 Apr 2019
- 16:53:38 +0100
-Subject: Re: [PATCH v2 0/2] Add Reset controller support for HI3670 SoC
-To:     Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        <p.zabel@pengutronix.de>, <robh+dt@kernel.org>
-CC:     <linux-arm-kernel@lists.infradead.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <guodong.xu@linaro.org>, <john.stultz@linaro.org>,
-        <xuwei5@hisilicon.com>
-References: <20190215054955.788-1-manivannan.sadhasivam@linaro.org>
-From:   Wei Xu <xuwei5@hisilicon.com>
-Message-ID: <fa2bf251-56f4-fe2c-b645-4b634a87940f@hisilicon.com>
-Date:   Mon, 15 Apr 2019 16:53:36 +0100
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Mon, 15 Apr 2019 11:53:54 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:34518 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727628AbfDOPxv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 11:53:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=LO1RllZ/71tnHIfUtwFXLB6BFIjHkbH0y5hcmUBDVA8=; b=dm/ieGaoYMyCpo9uwiKcCSrKz
+        Kl7yOtT5AwGoz0eus3tki78ToFCaIFC5a914DlkrKYRao+XxO5iOrLi0CQIXhNSPsVPTXLACwUut4
+        JI9V3jJ9eWKjy7dEqO/IS+w/UkKfFFDlIzySRTa6ec2gTxbMIg/YTCGj3fgFt/uEMxTmMFDY6a25J
+        4QAs6ydsGRssBHHFChnZgwl+M6WZuAx7Bp24JhD3bjPpJuoTFbE/U/Mgbwy6Vfl0y0n5KpbAB/f1s
+        axqSiz3anP9JaoBocQs77I7R+MN97vazixpW3GBgQQ2v8fgIRifK7EVTEhM2tcu764n2QsplDw/AC
+        vbg2l2ugg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hG3uv-0002d5-Tz; Mon, 15 Apr 2019 15:53:10 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 88F812038C257; Mon, 15 Apr 2019 17:53:08 +0200 (CEST)
+Date:   Mon, 15 Apr 2019 17:53:08 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Stephane Eranian <eranian@google.com>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        ak@linux.intel.com, kan.liang@intel.com, mingo@elte.hu,
+        nelson.dsouza@intel.com, jolsa@redhat.com, tonyj@suse.com
+Subject: Re: [PATCH v2 1/2] perf/core: add perf_ctx_resched() as global
+ function
+Message-ID: <20190415155308.GP14281@hirez.programming.kicks-ass.net>
+References: <20190408173252.37932-1-eranian@google.com>
+ <20190408173252.37932-2-eranian@google.com>
+ <20190415154537.GH12232@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-In-Reply-To: <20190215054955.788-1-manivannan.sadhasivam@linaro.org>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.202.227.157]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190415154537.GH12232@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Manivannan,
+On Mon, Apr 15, 2019 at 05:45:37PM +0200, Peter Zijlstra wrote:
+> On Mon, Apr 08, 2019 at 10:32:51AM -0700, Stephane Eranian wrote:
+> > This patch add perf_ctx_resched() a global function that can be called
+> > to force rescheduling of events based on event types. The function locks
+> > both cpuctx and task_ctx internally. This will be used by a subsequent patch.
+> 
+> I took out the task_ctx and event_type arguments.
 
-On 2/15/2019 5:49 AM, Manivannan Sadhasivam wrote:
-> Hello,
-> 
-> This patchset adds Reset controller support for HiSilicon HI3670 SoC.
-> HI3670 SoC is architecturally same as HI3660 SoC, hence the same driver
-> is reused.
-> 
-> This patchset has been tested on HiKey970 board.
-> 
-> Thanks,
-> Mani
-> 
-> Changes in v2:
-> 
-> * Used the DT compatible fallback approach instead of adding a new one
->   for HI3670
-> 
-> Manivannan Sadhasivam (2):
->   dt-bindings: reset: Add HI3670 reset controller binding
->   arm64: dts: hisilicon: hi3670: Add reset controller support
-> 
->  .../devicetree/bindings/reset/hisilicon,hi3660-reset.txt   | 7 ++++---
->  arch/arm64/boot/dts/hisilicon/hi3670.dtsi                  | 6 ++++++
->  2 files changed, 10 insertions(+), 3 deletions(-)
-> 
+> +void perf_ctx_resched(struct perf_cpu_context *cpuctx)
+> +{
+> +	struct perf_event_context *task_ctx = cpuctx->task_ctx;
+> +
+> +	perf_ctx_lock(cpuctx, task_ctx);
+> +	ctx_resched(cpuctx, task_ctx, EVENT_ALL|EVENT_CPU);
+> +	perf_ctx_unlock(cpuctx, task_ctx);
+> +}
 
-Thanks!
-Applied the series to the hisilicon dts tree.
+Hmm... I might just rework the thing to:
 
-Best Regards,
-Wei
+  perf_pmu_resched(struct pmu *pmu);
 
+As that is what we want; esp. in the light of that whole core context
+rewrite that i'm still sitting on :/
