@@ -2,127 +2,171 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-10.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF98CC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 13:37:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B447C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 13:37:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4889820833
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 13:37:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2CD1420833
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 13:37:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="Lx3e2sDR"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="loEKQiVa";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="loEKQiVa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727494AbfDONhY (ORCPT
+        id S1727571AbfDONhp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 09:37:24 -0400
-Received: from mail.efficios.com ([167.114.142.138]:41780 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727252AbfDONhX (ORCPT
+        Mon, 15 Apr 2019 09:37:45 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:37058 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727261AbfDONhp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 09:37:23 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 355431810C3;
-        Mon, 15 Apr 2019 09:37:22 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id XiHIcA4Aq8MH; Mon, 15 Apr 2019 09:37:21 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 891DA1810BF;
-        Mon, 15 Apr 2019 09:37:21 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 891DA1810BF
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1555335441;
-        bh=6W8UOxj+5vWBjrJvO0dDS19EwvcULP0VSPJvBnO8b1A=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=Lx3e2sDRktIwYLHJ93/3F4SYOEqCIGSUVPSj3/kD3aD7A27jBYC4o0L7J+Prnxf1s
-         kN5GYBvLUfeFE992Ve8iiiu1kDSK35QQbWmGlk1wzHNxuh47IgG2NeTInxBijOa00W
-         frbLlvgb8bdumrTnSWaU/9nYYyZ5yJ8jNyaOYDS8495+xuRqIRYuEL1D3yee5K4Rxr
-         OSKR7+56c12eaTKa4cbJrIPPawjsDemJ5/HuWPpooVYlM36dRmsi5vIpA6qreZf0Jm
-         BGjt5v9Z0Kda9Qrdj749rJD2Yga86950G7dupVTQbjICNKJ8nDoWp79mldOeyoNe0G
-         OkbFClka4JPMA==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id NkulOQjzQ8zE; Mon, 15 Apr 2019 09:37:21 -0400 (EDT)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id 697851810A8;
-        Mon, 15 Apr 2019 09:37:21 -0400 (EDT)
-Date:   Mon, 15 Apr 2019 09:37:21 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     peter maydell <peter.maydell@linaro.org>
-Cc:     Will Deacon <will.deacon@arm.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        carlos <carlos@redhat.com>,
-        richard earnshaw <richard.earnshaw@arm.com>
-Message-ID: <71495082.295.1555335441325.JavaMail.zimbra@efficios.com>
-In-Reply-To: <CAFEAcA8YP5vvZpa_5dvv00koupsry9_3x2EB0cjvE6vtoi8sog@mail.gmail.com>
-References: <1050734985.2625.1554838340011.JavaMail.zimbra@efficios.com> <1933578130.3292.1554928159928.JavaMail.zimbra@efficios.com> <20190411164219.GE29081@fuggles.cambridge.arm.com> <1469455003.811.1555005112414.JavaMail.zimbra@efficios.com> <CAFEAcA849mmSds9euyvR2uLWqEeA2eedkmcq1O4pT6-S0oK8BA@mail.gmail.com> <936773156.261.1555333890988.JavaMail.zimbra@efficios.com> <CAFEAcA8YP5vvZpa_5dvv00koupsry9_3x2EB0cjvE6vtoi8sog@mail.gmail.com>
-Subject: Re: rseq/arm32: choosing rseq code signature
+        Mon, 15 Apr 2019 09:37:45 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id B464F611C5; Mon, 15 Apr 2019 13:37:43 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1555335463;
+        bh=n+UJcdgqidsB4FC3ATWojYU73bBqdvGAiT2DWScLDIM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=loEKQiVa2VQCjv+2dBnZkCtw3RwPnFrn5jqz57Uk+nE17xnSwZNrWIU5477SMxAu/
+         4NSDjQ1Pd64djf4DbaKNjtgpBAT1vShywqI3A9gLKAoEWIBBxp17wIiyA9iB0hSKwp
+         r8iNXJJOFiT5KJTWOxgM7mkeCisGKzTYQvX8fcwY=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 06E066019D;
+        Mon, 15 Apr 2019 13:37:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1555335463;
+        bh=n+UJcdgqidsB4FC3ATWojYU73bBqdvGAiT2DWScLDIM=;
+        h=From:To:Cc:Subject:Date:From;
+        b=loEKQiVa2VQCjv+2dBnZkCtw3RwPnFrn5jqz57Uk+nE17xnSwZNrWIU5477SMxAu/
+         4NSDjQ1Pd64djf4DbaKNjtgpBAT1vShywqI3A9gLKAoEWIBBxp17wIiyA9iB0hSKwp
+         r8iNXJJOFiT5KJTWOxgM7mkeCisGKzTYQvX8fcwY=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 06E066019D
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     David Miller <davem@davemloft.net>
+Cc:     linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: pull-request: wireless-drivers 2019-04-15
+Date:   Mon, 15 Apr 2019 16:37:39 +0300
+Message-ID: <87ef63crto.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
-Thread-Topic: rseq/arm32: choosing rseq code signature
-Thread-Index: VZEg1Ag6Z/BBTTsrujcfED6/RqHFqg==
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Apr 15, 2019, at 9:30 AM, peter maydell peter.maydell@linaro.org wrote:
+Hi Dave,
 
-> On Mon, 15 Apr 2019 at 14:11, Mathieu Desnoyers
-> <mathieu.desnoyers@efficios.com> wrote:
->>
->> ----- On Apr 11, 2019, at 3:55 PM, peter maydell peter.maydell@linaro.org wrote:
->>
->> > On Thu, 11 Apr 2019 at 18:51, Mathieu Desnoyers
->> > <mathieu.desnoyers@efficios.com> wrote:
->> >>  * This translates to the following instruction pattern in the T16 instruction
->> >>  * set:
->> >>  *
->> >>  * little endian:
->> >>  * def3        udf    #243      ; 0xf3
->> >>  * e7f5        b.n    <7f5>
->> >>  *
->> >>  * big endian:
->> >>  * e7f5        b.n    <7f5>
->> >>  * def3        udf    #243      ; 0xf3
->> >
->> > Do we really care about big-endian instruction-ordering for Thumb?
->> > It requires (AIUI) either an ARMv7R CPU which implements and sets
->> > SCTLR.IE to 1, or a v6-or-earlier CPU using BE32, and it's going to
->> > be even rarer than normal BE8 big-endian...
->>
->> I don't think we care enough about it to look for a trick to
->> turn the branch into something else (which would not branch away from the
->> udf instruction), but considering this signature will be ABI, it's good to
->> be thorough documentation-wise and cover all existing cases.
-> 
-> I think if you want to document it it would be helpful to
-> readers to make it clear that this is the ultra-rare
-> big-endian-instruction-order "big endian Thumb", not the only
-> moderately-rare little-endian-instructions-big-endian-data
-> "big endian Thumb".
+here's a pull request to net tree for v5.1, more info below. Please let
+me know if there are any problems.
 
-I'm actually very much concerned about environments with big endian
-data and little endian code. Which gcc compiler flags do I need to
-use to test it ?
+Kalle
 
-I'm concerned about a signature mismatch between what is passed to
-the rseq system call ("data-endian signature") and what is generated
-in the code ("instruction-endian signature").
+The following changes since commit 22bdf7d459ceff6eb06a99364b1d75ecb2fcafe5:
 
-Thanks,
+  Merge git://git.kernel.org/pub/scm/linux/kernel/git/bpf/bpf (2019-03-29 21:00:28 -0700)
 
-Mathieu
+are available in the git repository at:
 
+  git://git.kernel.org/pub/scm/linux/kernel/git/kvalo/wireless-drivers.git tags/wireless-drivers-for-davem-2019-04-15
+
+for you to fetch changes up to 832bc250d71ff28b1addcc0796cd220ca4c03026:
+
+  Merge tag 'iwlwifi-for-kalle-2019-04-03' of git://git.kernel.org/pub/scm/linux/kernel/git/iwlwifi/iwlwifi-fixes (2019-04-12 21:34:27 +0300)
+
+----------------------------------------------------------------
+wireless-drivers fixes for 5.1
+
+Second set of fixes for 5.1.
+
+iwlwifi
+
+* add some new PCI IDs (plus a struct name change they depend on)
+
+* fix crypto with new devices, namely 22560 and above
+
+* fix for a potential deadlock in the TX path
+
+* a fix for offloaded rate-control
+
+* support new PCI HW IDs which use a new FW
+
+mt76
+
+* fix lock initialisation and a possible deadlock
+
+* aggregation fixes
+
+rt2x00
+
+* fix sequence numbering during retransmits
+
+----------------------------------------------------------------
+Felix Fietkau (3):
+      mt76: mt7603: add missing initialization for dev->ps_lock
+      mt76: mt7603: fix sequence number assignment
+      mt76: mt7603: send BAR after powersave wakeup
+
+Ihab Zhaika (2):
+      iwlwifi: rename structs to fit the new names
+      iwlwifi: add new 0x2723/0x2080 card for 22000
+
+Johannes Berg (3):
+      iwlwifi: mvm: fix TX crypto on 22560+ devices
+      iwlwifi: mvm: avoid possible deadlock in TX path
+      iwlwifi: mvm: update offloaded rate control on changes
+
+Kalle Valo (2):
+      Merge tag 'iwlwifi-for-kalle-2019-03-22' of git://git.kernel.org/.../iwlwifi/iwlwifi-fixes
+      Merge tag 'iwlwifi-for-kalle-2019-04-03' of git://git.kernel.org/.../iwlwifi/iwlwifi-fixes
+
+Luca Coelho (1):
+      iwlwifi: add support for quz firmwares
+
+Shahar S Matityahu (4):
+      iwlwifi: add sync_nmi to trans ops
+      iwlwifi: dbg_ini: in case of region dump failure set memory to 0
+      iwlwifi: dbg_ini: fix bad dump size calculation
+      iwlwifi: use sync nmi in case of init flow failure
+
+Stanislaw Gruszka (1):
+      mt76x02: avoid status_list.lock and sta->rate_ctrl_lock dependency
+
+Vijayakumar Durai (1):
+      rt2x00: do not increment sequence number while re-transmitting
+
+ drivers/net/wireless/intel/iwlwifi/cfg/22000.c     | 30 ++++++---
+ drivers/net/wireless/intel/iwlwifi/fw/dbg.c        | 34 +++--------
+ drivers/net/wireless/intel/iwlwifi/fw/init.c       |  1 -
+ drivers/net/wireless/intel/iwlwifi/iwl-config.h    |  3 +-
+ drivers/net/wireless/intel/iwlwifi/iwl-csr.h       |  1 +
+ drivers/net/wireless/intel/iwlwifi/iwl-trans.h     | 12 ++--
+ drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c  | 71 +++++++---------------
+ drivers/net/wireless/intel/iwlwifi/mvm/mvm.h       |  1 -
+ drivers/net/wireless/intel/iwlwifi/mvm/sta.c       | 43 ++-----------
+ drivers/net/wireless/intel/iwlwifi/mvm/sta.h       |  7 +--
+ drivers/net/wireless/intel/iwlwifi/pcie/drv.c      | 13 ++--
+ drivers/net/wireless/intel/iwlwifi/pcie/internal.h |  2 +-
+ drivers/net/wireless/intel/iwlwifi/pcie/trans.c    | 11 +++-
+ drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c  |  2 +-
+ drivers/net/wireless/intel/iwlwifi/pcie/tx.c       |  2 +-
+ drivers/net/wireless/mediatek/mt76/mt7603/init.c   |  2 +
+ drivers/net/wireless/mediatek/mt76/mt7603/mac.c    | 53 +++++-----------
+ drivers/net/wireless/mediatek/mt76/mt7603/main.c   |  8 +--
+ drivers/net/wireless/mediatek/mt76/mt7603/mt7603.h |  2 +-
+ drivers/net/wireless/mediatek/mt76/mt76x02_mac.c   | 14 +++--
+ drivers/net/wireless/ralink/rt2x00/rt2x00.h        |  1 -
+ drivers/net/wireless/ralink/rt2x00/rt2x00mac.c     | 10 ---
+ drivers/net/wireless/ralink/rt2x00/rt2x00queue.c   | 15 +++--
+ 23 files changed, 123 insertions(+), 215 deletions(-)
 
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+Kalle Valo
