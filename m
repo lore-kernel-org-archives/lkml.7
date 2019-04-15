@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B1595C282DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC761C10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:28:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7479520651
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:28:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7251E20651
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:28:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555356487;
-	bh=v+EuV75IoSVit2gNtdmgdDDt3iqHUEQwCcJ87e7GBOU=;
+	s=default; t=1555356490;
+	bh=sDrm8jyvBa7A+2cNEmb9S0o2rOBZtu44DqzSyuXNTr0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xTJM6BcxwoCP+Vma5e6z5jJ++w2doTIC+u9HcCDVZubxMi8QiRM04EczIM5hyOT/x
-	 XhZgUZpM3gp9caCASF3tvzqLw5kmOKYTRxGpu8Qvf8Nc1FU/Q9bUouhKo8od26LP+a
-	 9/KZGjlFpzfmxLN5bDUFQem9BRZOQ4lXhi9biiA0=
+	b=gRRvHSl6d0Ky5vSrNuXK3itFEIdXvi1RibtPN/i0mYYWIYOzvdz8BQInwEFQy9Zna
+	 JE6uLa28lnu42xsJWgeRdYD2ArL2xHpND/BwS9cQaYQOibsAGTR1wQb7L7Cx6KOyGO
+	 pel+Zcq/V4VxuR7nkSuVZO5qKEJ99Pnez4q+fHy8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729267AbfDOTDe (ORCPT
+        id S1729255AbfDOTDb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:03:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35324 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:03:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35238 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729235AbfDOTD0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:03:26 -0400
+        id S1729214AbfDOTDY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:03:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B669820880;
-        Mon, 15 Apr 2019 19:03:25 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1099721919;
+        Mon, 15 Apr 2019 19:03:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355006;
-        bh=v+EuV75IoSVit2gNtdmgdDDt3iqHUEQwCcJ87e7GBOU=;
+        s=default; t=1555355003;
+        bh=sDrm8jyvBa7A+2cNEmb9S0o2rOBZtu44DqzSyuXNTr0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fp9BopQMPYBlddZrokfpzJoV615012NMsPwd9vPyhf0HvYb4KTJ09cYbjdCUkzWLv
-         fB8Ji/COX2a1hVTHUMegTINjBkaoO4sYxsL5C14zzOMpMfreh6GZzp+BwtqzfMS31z
-         IuMMz82BY9j59P9qziat4scA3esyhFu3oSje/cck=
+        b=TX7Y2kIZ8lAT2YIiE0cJ0vrM83VlBE0HZ2c/BlKofsCt9Jxv7CfzhKKYH59G88dc7
+         VhBvcDh5fWaCNYwrroxibkWbgJPK+Qg3xoiyf/Bvj28V9K6MGDA8cH5TPBPpTSXv3N
+         vpSiPPrepGdevsMvH5Nz0mW1xLMZIn3TAhbE6wIg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 32/69] bnxt_en: Reset device on RX buffer errors.
-Date:   Mon, 15 Apr 2019 20:58:50 +0200
-Message-Id: <20190415183731.688756152@linuxfoundation.org>
+Subject: [PATCH 4.14 31/69] bnxt_en: Improve RX consumer index validity check.
+Date:   Mon, 15 Apr 2019 20:58:49 +0200
+Message-Id: <20190415183731.578234487@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183726.036654568@linuxfoundation.org>
 References: <20190415183726.036654568@linuxfoundation.org>
@@ -61,39 +60,54 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Michael Chan <michael.chan@broadcom.com>
 
-[ Upstream commit 8e44e96c6c8e8fb80b84a2ca11798a8554f710f2 ]
+[ Upstream commit a1b0e4e684e9c300b9e759b46cb7a0147e61ddff ]
 
-If the RX completion indicates RX buffers errors, the RX ring will be
-disabled by firmware and no packets will be received on that ring from
-that point on.  Recover by resetting the device.
+There is logic to check that the RX/TPA consumer index is the expected
+index to work around a hardware problem.  However, the potentially bad
+consumer index is first used to index into an array to reference an entry.
+This can potentially crash if the bad consumer index is beyond legal
+range.  Improve the logic to use the consumer index for dereferencing
+after the validity check and log an error message.
 
-Fixes: c0c050c58d84 ("bnxt_en: New Broadcom ethernet driver.")
+Fixes: fa7e28127a5a ("bnxt_en: Add workaround to detect bad opaque in rx completion (part 2)")
 Signed-off-by: Michael Chan <michael.chan@broadcom.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/net/ethernet/broadcom/bnxt/bnxt.c |    6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c |   10 +++++++---
+ 1 file changed, 7 insertions(+), 3 deletions(-)
 
 --- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
 +++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
-@@ -1557,11 +1557,17 @@ static int bnxt_rx_pkt(struct bnxt *bp,
+@@ -1076,6 +1076,8 @@ static void bnxt_tpa_start(struct bnxt *
+ 	tpa_info = &rxr->rx_tpa[agg_id];
  
- 	rx_buf->data = NULL;
- 	if (rxcmp1->rx_cmp_cfa_code_errors_v2 & RX_CMP_L2_ERRORS) {
-+		u32 rx_err = le32_to_cpu(rxcmp1->rx_cmp_cfa_code_errors_v2);
-+
- 		bnxt_reuse_rx_data(rxr, cons, data);
- 		if (agg_bufs)
- 			bnxt_reuse_rx_agg_bufs(bnapi, cp_cons, agg_bufs);
- 
- 		rc = -EIO;
-+		if (rx_err & RX_CMPL_ERRORS_BUFFER_ERROR_MASK) {
-+			netdev_warn(bp->dev, "RX buffer error %x\n", rx_err);
-+			bnxt_sched_reset(bp, rxr);
-+		}
- 		goto next_rx;
+ 	if (unlikely(cons != rxr->rx_next_cons)) {
++		netdev_warn(bp->dev, "TPA cons %x != expected cons %x\n",
++			    cons, rxr->rx_next_cons);
+ 		bnxt_sched_reset(bp, rxr);
+ 		return;
+ 	}
+@@ -1528,15 +1530,17 @@ static int bnxt_rx_pkt(struct bnxt *bp,
  	}
  
+ 	cons = rxcmp->rx_cmp_opaque;
+-	rx_buf = &rxr->rx_buf_ring[cons];
+-	data = rx_buf->data;
+-	data_ptr = rx_buf->data_ptr;
+ 	if (unlikely(cons != rxr->rx_next_cons)) {
+ 		int rc1 = bnxt_discard_rx(bp, bnapi, raw_cons, rxcmp);
+ 
++		netdev_warn(bp->dev, "RX cons %x != expected cons %x\n",
++			    cons, rxr->rx_next_cons);
+ 		bnxt_sched_reset(bp, rxr);
+ 		return rc1;
+ 	}
++	rx_buf = &rxr->rx_buf_ring[cons];
++	data = rx_buf->data;
++	data_ptr = rx_buf->data_ptr;
+ 	prefetch(data_ptr);
+ 
+ 	misc = le32_to_cpu(rxcmp->rx_cmp_misc_v1);
 
 
