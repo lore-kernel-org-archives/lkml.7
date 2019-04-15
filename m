@@ -6,46 +6,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB9DC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:15:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1645C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:15:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFD9E218D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:15:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C0DD92075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:15:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355713;
-	bh=g6g8xW5j/YIu+0VLQs8Xd3m2QqFGLBL2VMlWFkNdXjA=;
+	s=default; t=1555355716;
+	bh=BcNvGjFBZ+Y8wDYg0lU0haPKSLlVNuMeOWSxsvhXEW8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BCW9QFBPaTJHb6vh4vSs5mS3WvLupjmBH8CFf+lB07VeO9iPhEOiAmTOSEOoWC0K4
-	 L+uNatmealpEJon4TLyEl/lWMi6DktIsQAPszy7djhB0AjZLGnDr9WUfQcEyLAbcxQ
-	 HcgPRu+plpMzzfv41Yrf98EPuHtze7TzwozB+sgQ=
+	b=vtxTXTFk2eas+ch43iaeLz7wsRfgja+ZM9Ejp9ds0s8FXira6XaPXIrAQqXIHgxbH
+	 1xbSbYR71zxiIlRL19WjHBqxzx23OWwFwNIzqOQE0UbD/hZK9611D8W4GEV9gYER7O
+	 ER6kwPtNk7gSFOc6w7xATH3qDcPL8izyomzKWbk4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731722AbfDOTOT (ORCPT
+        id S1731483AbfDOTPP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:14:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52456 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:15:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52538 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731696AbfDOTOQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:14:16 -0400
+        id S1731724AbfDOTOT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:14:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AC338218EA;
-        Mon, 15 Apr 2019 19:14:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 41C82218FC;
+        Mon, 15 Apr 2019 19:14:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355656;
-        bh=g6g8xW5j/YIu+0VLQs8Xd3m2QqFGLBL2VMlWFkNdXjA=;
+        s=default; t=1555355658;
+        bh=BcNvGjFBZ+Y8wDYg0lU0haPKSLlVNuMeOWSxsvhXEW8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jSkX8AfSptdvr9cfPk1INCeB4x14j88xB0llHMfr1ri3kDioGVtsE/QW6QY4ObSz+
-         7e5xsgSk3qCa49++h3yjm2C0Oz0wvnBkY/cTr7B6FnYuYngWdVB0QkgEXMFSJwEZlT
-         WZvAO24qyIk/vj24KmuIK5+uF8+vdBwTbnK7xP1U=
+        b=ByaIu3i4uMwsP5ADSQ/Sdgxqzus+zSbfsZWkBFCZS8hqx2nu00XMRmin3sDe3rGh+
+         W9yOXsvbfLM6Dw2HTmKOwpJY2z2ofaU1P3N111e8eA2eQDox+kOV9ccr/8Ag96gCLE
+         nsaU9+v+7qbonXAkXkN9fQHCZBig6X/wEiFuxsuk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
+        Ming Lei <ming.lei@redhat.com>,
         Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.0 110/117] dm integrity: change memcmp to strncmp in dm_integrity_ctr
-Date:   Mon, 15 Apr 2019 21:01:20 +0200
-Message-Id: <20190415183750.345852297@linuxfoundation.org>
+Subject: [PATCH 5.0 111/117] dm: revert 8f50e358153d ("dm: limit the max bio size as BIO_MAX_PAGES * PAGE_SIZE")
+Date:   Mon, 15 Apr 2019 21:01:21 +0200
+Message-Id: <20190415183750.396263755@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183744.887851196@linuxfoundation.org>
 References: <20190415183744.887851196@linuxfoundation.org>
@@ -60,55 +61,51 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Mikulas Patocka <mpatocka@redhat.com>
 
-commit 0d74e6a3b6421d98eeafbed26f29156d469bc0b5 upstream.
+commit 75ae193626de3238ca5fb895868ec91c94e63b1b upstream.
 
-If the string opt_string is small, the function memcmp can access bytes
-that are beyond the terminating nul character. In theory, it could cause
-segfault, if opt_string were located just below some unmapped memory.
+The limit was already incorporated to dm-crypt with commit 4e870e948fba
+("dm crypt: fix error with too large bios"), so we don't need to apply
+it globally to all targets. The quantity BIO_MAX_PAGES * PAGE_SIZE is
+wrong anyway because the variable ti->max_io_len it is supposed to be in
+the units of 512-byte sectors not in bytes.
 
-Change from memcmp to strncmp so that we don't read bytes beyond the end
-of the string.
+Reduction of the limit to 1048576 sectors could even cause data
+corruption in rare cases - suppose that we have a dm-striped device with
+stripe size 768MiB. The target will call dm_set_target_max_io_len with
+the value 1572864. The buggy code would reduce it to 1048576. Now, the
+dm-core will errorneously split the bios on 1048576-sector boundary
+insetad of 1572864-sector boundary and pass these stripe-crossing bios
+to the striped target.
 
-Cc: stable@vger.kernel.org # v4.12+
+Cc: stable@vger.kernel.org # v4.16+
+Fixes: 8f50e358153d ("dm: limit the max bio size as BIO_MAX_PAGES * PAGE_SIZE")
 Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
+Acked-by: Ming Lei <ming.lei@redhat.com>
 Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-integrity.c |    8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/md/dm.c |   10 +---------
+ 1 file changed, 1 insertion(+), 9 deletions(-)
 
---- a/drivers/md/dm-integrity.c
-+++ b/drivers/md/dm-integrity.c
-@@ -3185,7 +3185,7 @@ static int dm_integrity_ctr(struct dm_ta
- 			journal_watermark = val;
- 		else if (sscanf(opt_string, "commit_time:%u%c", &val, &dummy) == 1)
- 			sync_msec = val;
--		else if (!memcmp(opt_string, "meta_device:", strlen("meta_device:"))) {
-+		else if (!strncmp(opt_string, "meta_device:", strlen("meta_device:"))) {
- 			if (ic->meta_dev) {
- 				dm_put_device(ti, ic->meta_dev);
- 				ic->meta_dev = NULL;
-@@ -3204,17 +3204,17 @@ static int dm_integrity_ctr(struct dm_ta
- 				goto bad;
- 			}
- 			ic->sectors_per_block = val >> SECTOR_SHIFT;
--		} else if (!memcmp(opt_string, "internal_hash:", strlen("internal_hash:"))) {
-+		} else if (!strncmp(opt_string, "internal_hash:", strlen("internal_hash:"))) {
- 			r = get_alg_and_key(opt_string, &ic->internal_hash_alg, &ti->error,
- 					    "Invalid internal_hash argument");
- 			if (r)
- 				goto bad;
--		} else if (!memcmp(opt_string, "journal_crypt:", strlen("journal_crypt:"))) {
-+		} else if (!strncmp(opt_string, "journal_crypt:", strlen("journal_crypt:"))) {
- 			r = get_alg_and_key(opt_string, &ic->journal_crypt_alg, &ti->error,
- 					    "Invalid journal_crypt argument");
- 			if (r)
- 				goto bad;
--		} else if (!memcmp(opt_string, "journal_mac:", strlen("journal_mac:"))) {
-+		} else if (!strncmp(opt_string, "journal_mac:", strlen("journal_mac:"))) {
- 			r = get_alg_and_key(opt_string, &ic->journal_mac_alg,  &ti->error,
- 					    "Invalid journal_mac argument");
- 			if (r)
+--- a/drivers/md/dm.c
++++ b/drivers/md/dm.c
+@@ -1060,15 +1060,7 @@ int dm_set_target_max_io_len(struct dm_t
+ 		return -EINVAL;
+ 	}
+ 
+-	/*
+-	 * BIO based queue uses its own splitting. When multipage bvecs
+-	 * is switched on, size of the incoming bio may be too big to
+-	 * be handled in some targets, such as crypt.
+-	 *
+-	 * When these targets are ready for the big bio, we can remove
+-	 * the limit.
+-	 */
+-	ti->max_io_len = min_t(uint32_t, len, BIO_MAX_PAGES * PAGE_SIZE);
++	ti->max_io_len = (uint32_t) len;
+ 
+ 	return 0;
+ }
 
 
