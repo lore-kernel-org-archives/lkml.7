@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D22DAC10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D55CC282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:26:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D2CE2075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:26:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B40220880
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:26:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555356403;
-	bh=lV/5N/A/xAKHQrs+2JzZ2IFh2g1IBhWls9baD+cI1ts=;
+	s=default; t=1555356413;
+	bh=5Et1N5ymEUid78bkME3Qf+QTEQkNLZk0kbPTYggib8M=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iWlhFOKDXl3ZICrL4o3n1h5XkB0+tVQ6/n0ZofL2ctxkwEK2rggGoeYI9ZWZGBFtu
-	 BnyvEDlzr/x7Wnuwa4VXhJKAJWxxVrO9hxqZB5yofqsy+uGUBx6Lp3j/7lcHnXzWyg
-	 PBFJ7OCTfM4uIpfZDHHo2G5e/UXq2MbwS+YF/YqI=
+	b=gD0DFDITcyuA1u1isPMn0BWKez0PCh6hdTLj6nLl6kAvK4n8h1uJh66g22fH8/U6c
+	 zDN3Y2KDFQna8N0LgAQUkfgY8fVro99OBFIDZt0l7b650df3LfcHVgAubTZ+mizrwQ
+	 FdmnUhhuo5oNcNyXNQlYXMXnA8URRNOksz8l/EhU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730816AbfDOT0m (ORCPT
+        id S1729525AbfDOTEW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:26:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37566 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:04:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37168 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729557AbfDOTEc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:04:32 -0400
+        id S1729513AbfDOTET (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:04:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B19B9218A1;
-        Mon, 15 Apr 2019 19:04:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 60E5421900;
+        Mon, 15 Apr 2019 19:04:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355072;
-        bh=lV/5N/A/xAKHQrs+2JzZ2IFh2g1IBhWls9baD+cI1ts=;
+        s=default; t=1555355058;
+        bh=5Et1N5ymEUid78bkME3Qf+QTEQkNLZk0kbPTYggib8M=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cq4aF3z60qNyTl/++DookMS4G+1NayG3eogGNDJHJ1de7VyUN+yZ6vCDIk4uds46L
-         /huNCq2mCmmf1rklIPM68nT+VeefVs+mfmHhTy4MhVyFb/pvLZBo9w+jsDnlldX/W3
-         GSBxkiMCTZAIUcBk0rxeinwKezbumhpnoGqjFgaU=
+        b=u1PHUEMfFEVXhpci5qQS3yO/t3+B2/lAIJklmnv4NA27r6ID5zysbcPeigxdLSEzd
+         1isnHzWgncLMJ5DxBiFzFKw8ojdcl86gMkKgewHVhnrfYAP7Mwv9BwubSLfN4XgwTk
+         PhNzj+DUvGXBSWJJhMiZasMtyg5YLr77pJVAzyHs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Max Filippov <jcmvbkbc@gmail.com>
-Subject: [PATCH 4.14 62/69] xtensa: fix return_address
-Date:   Mon, 15 Apr 2019 20:59:20 +0200
-Message-Id: <20190415183735.698315344@linuxfoundation.org>
+        stable@vger.kernel.org, Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Will Deacon <will.deacon@arm.com>
+Subject: [PATCH 4.14 59/69] arm64: backtrace: Dont bother trying to unwind the userspace stack
+Date:   Mon, 15 Apr 2019 20:59:17 +0200
+Message-Id: <20190415183735.551119463@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183726.036654568@linuxfoundation.org>
 References: <20190415183726.036654568@linuxfoundation.org>
@@ -58,42 +58,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Max Filippov <jcmvbkbc@gmail.com>
+From: Will Deacon <will.deacon@arm.com>
 
-commit ada770b1e74a77fff2d5f539bf6c42c25f4784db upstream.
+commit 1e6f5440a6814d28c32d347f338bfef68bc3e69d upstream.
 
-return_address returns the address that is one level higher in the call
-stack than requested in its argument, because level 0 corresponds to its
-caller's return address. Use requested level as the number of stack
-frames to skip.
+Calling dump_backtrace() with a pt_regs argument corresponding to
+userspace doesn't make any sense and our unwinder will simply print
+"Call trace:" before unwinding the stack looking for user frames.
 
-This fixes the address reported by might_sleep and friends.
+Rather than go through this song and dance, just return early if we're
+passed a user register state.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Max Filippov <jcmvbkbc@gmail.com>
+Cc: <stable@vger.kernel.org>
+Fixes: 1149aad10b1e ("arm64: Add dump_backtrace() in show_regs")
+Reported-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/xtensa/kernel/stacktrace.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ arch/arm64/kernel/traps.c |   15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
---- a/arch/xtensa/kernel/stacktrace.c
-+++ b/arch/xtensa/kernel/stacktrace.c
-@@ -253,10 +253,14 @@ static int return_address_cb(struct stac
- 	return 1;
- }
- 
-+/*
-+ * level == 0 is for the return address from the caller of this function,
-+ * not from this function itself.
-+ */
- unsigned long return_address(unsigned level)
+--- a/arch/arm64/kernel/traps.c
++++ b/arch/arm64/kernel/traps.c
+@@ -145,10 +145,16 @@ static void dump_instr(const char *lvl,
+ void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
  {
- 	struct return_addr_data r = {
--		.skip = level + 1,
-+		.skip = level,
- 	};
- 	walk_stackframe(stack_pointer(NULL), return_address_cb, &r);
- 	return r.addr;
+ 	struct stackframe frame;
+-	int skip;
++	int skip = 0;
+ 
+ 	pr_debug("%s(regs = %p tsk = %p)\n", __func__, regs, tsk);
+ 
++	if (regs) {
++		if (user_mode(regs))
++			return;
++		skip = 1;
++	}
++
+ 	if (!tsk)
+ 		tsk = current;
+ 
+@@ -169,7 +175,6 @@ void dump_backtrace(struct pt_regs *regs
+ 	frame.graph = tsk->curr_ret_stack;
+ #endif
+ 
+-	skip = !!regs;
+ 	printk("Call trace:\n");
+ 	while (1) {
+ 		unsigned long stack;
+@@ -232,15 +237,13 @@ static int __die(const char *str, int er
+ 		return ret;
+ 
+ 	print_modules();
+-	__show_regs(regs);
+ 	pr_emerg("Process %.*s (pid: %d, stack limit = 0x%p)\n",
+ 		 TASK_COMM_LEN, tsk->comm, task_pid_nr(tsk),
+ 		 end_of_stack(tsk));
++	show_regs(regs);
+ 
+-	if (!user_mode(regs)) {
+-		dump_backtrace(regs, tsk);
++	if (!user_mode(regs))
+ 		dump_instr(KERN_EMERG, regs);
+-	}
+ 
+ 	return ret;
+ }
 
 
