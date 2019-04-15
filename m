@@ -2,145 +2,98 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B615CC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:28:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1595C282DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:28:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8E1022075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:28:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7479520651
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:28:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555356487;
+	bh=v+EuV75IoSVit2gNtdmgdDDt3iqHUEQwCcJ87e7GBOU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=xTJM6BcxwoCP+Vma5e6z5jJ++w2doTIC+u9HcCDVZubxMi8QiRM04EczIM5hyOT/x
+	 XhZgUZpM3gp9caCASF3tvzqLw5kmOKYTRxGpu8Qvf8Nc1FU/Q9bUouhKo8od26LP+a
+	 9/KZGjlFpzfmxLN5bDUFQem9BRZOQ4lXhi9biiA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730551AbfDOT17 (ORCPT
+        id S1729267AbfDOTDe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:27:59 -0400
-Received: from mout.kundenserver.de ([212.227.17.13]:46841 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729289AbfDOT1x (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:27:53 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1M8ysi-1hB9SM1EKE-00674C; Mon, 15 Apr 2019 21:27:40 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Hartley Sweeten <hsweeten@visionengravers.com>,
-        Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jakub Kicinski <jakub.kicinski@netronome.com>,
-        David Ahern <dsahern@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-Subject: [PATCH 1/4] ARM: ep93xx: move network platform data to separate header
-Date:   Mon, 15 Apr 2019 21:25:23 +0200
-Message-Id: <20190415192734.935387-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Mon, 15 Apr 2019 15:03:34 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35324 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729235AbfDOTD0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:03:26 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id B669820880;
+        Mon, 15 Apr 2019 19:03:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555355006;
+        bh=v+EuV75IoSVit2gNtdmgdDDt3iqHUEQwCcJ87e7GBOU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=fp9BopQMPYBlddZrokfpzJoV615012NMsPwd9vPyhf0HvYb4KTJ09cYbjdCUkzWLv
+         fB8Ji/COX2a1hVTHUMegTINjBkaoO4sYxsL5C14zzOMpMfreh6GZzp+BwtqzfMS31z
+         IuMMz82BY9j59P9qziat4scA3esyhFu3oSje/cck=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Michael Chan <michael.chan@broadcom.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 32/69] bnxt_en: Reset device on RX buffer errors.
+Date:   Mon, 15 Apr 2019 20:58:50 +0200
+Message-Id: <20190415183731.688756152@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190415183726.036654568@linuxfoundation.org>
+References: <20190415183726.036654568@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:7r+4JlmJvPvM2nMPpt2FgcrqkZ9O2yXFTBYzL79J2n1R3gNsh/I
- zJMiJz8yleneH9BgK+3DA6euAm9OBrFBVqYEnYfi8KOfp9koIp176i3pXHKoXLt0TLtR9HD
- 2KtYPTztUNtZy5X0U8Wff5PQIwLt/up9RF3G5UbUGPB4XISltrdFVGVhDSuGGSQFpSHnQPe
- UsLWgi5C9ubd95k4xDVIA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:htVNGk9GjfE=:8kjSBdwfuVj67ArJmu3r2I
- Mk2fc2oxt/2uttWubzOjlR+4odS9D3Hui8yKU97BhjkeijT9SOxFRHWMkwKtOJGQJzGEeVQO6
- fJAezqbiOLxP0p4rez36baBm813X2m2VlhsdAo9aygLqPflPXIC4U7J9fKH6KcOK3Umts2eS6
- tdZfZFDxbrfwr3aBRplYuOu+zUW8ZMiUSw1Ox/OGlVc0yj/GoaVpihoXpXZzacc8m/E1SNdNr
- 58JNdx6D78Y83s90YNo2ixoi0cH5zgNSt4uxvTuHfih95VBvyAeeOnAPL++uNg/W8vGJMh/RJ
- DMOUBoSVs2CiBuVvt2Zb46u6MRpQ7q71q9iRBInGqZeKh1D/+mnhyUJ/EoMIkEsx+Jd/6yUsN
- 3z5STqII//8IWzlOdZ5uLhOngUHJZjGZ5E8PeCx2rqrGcAsjAo4t6rcUo/TG5xAqUdObpr/7S
- kBsMJfT1owAp95s+RhwvuQG89JD/Hb2v+7wxWgJWEzETTTq4qNZZDRri82OyhYLypJRW9XHCV
- zYDEtOkn65Bfc7KYGHJljNgvwBkLkdmXbsN10zuINzZePJ7Sy4S25zWQ6rHUVPta74539eFjq
- uDpsAIiWFeKCTjNVn/knGM1aZ0yW8Tvaake3dWigzrRJHBpPCGArwpQonD+Ik+cHUK6WoRqtJ
- Mn2fkzOI9XiNfERYw14un8oCH1XggQlYYcz4zTL9lZjZupS2vFVvCKjFZwo5z0yS6nIPM1cUS
- LGuQDd8ZOJ1plRIq1/vZ7RwSUXDkuu4EkpnJrA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The header file is the only thing preventing us from building the
-driver in a cross-platform configuration, so move the structure
-we are interested in to the global platform_data location
-and enable compile testing.
+From: Michael Chan <michael.chan@broadcom.com>
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+[ Upstream commit 8e44e96c6c8e8fb80b84a2ca11798a8554f710f2 ]
+
+If the RX completion indicates RX buffers errors, the RX ring will be
+disabled by firmware and no packets will be received on that ring from
+that point on.  Recover by resetting the device.
+
+Fixes: c0c050c58d84 ("bnxt_en: New Broadcom ethernet driver.")
+Signed-off-by: Michael Chan <michael.chan@broadcom.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- arch/arm/mach-ep93xx/include/mach/platform.h |  7 +------
- drivers/net/ethernet/cirrus/Kconfig          |  2 +-
- drivers/net/ethernet/cirrus/ep93xx_eth.c     |  2 +-
- include/linux/platform_data/eth-ep93xx.h     | 10 ++++++++++
- 4 files changed, 13 insertions(+), 8 deletions(-)
- create mode 100644 include/linux/platform_data/eth-ep93xx.h
+ drivers/net/ethernet/broadcom/bnxt/bnxt.c |    6 ++++++
+ 1 file changed, 6 insertions(+)
 
-diff --git a/arch/arm/mach-ep93xx/include/mach/platform.h b/arch/arm/mach-ep93xx/include/mach/platform.h
-index 6c41c794bed5..43446f33c2be 100644
---- a/arch/arm/mach-ep93xx/include/mach/platform.h
-+++ b/arch/arm/mach-ep93xx/include/mach/platform.h
-@@ -5,6 +5,7 @@
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -1557,11 +1557,17 @@ static int bnxt_rx_pkt(struct bnxt *bp,
  
- #ifndef __ASSEMBLY__
- 
-+#include <linux/platform_data/eth-ep93xx.h>
- #include <linux/reboot.h>
- 
- struct device;
-@@ -15,12 +16,6 @@ struct ep93xxfb_mach_info;
- struct ep93xx_keypad_platform_data;
- struct ep93xx_spi_info;
- 
--struct ep93xx_eth_data
--{
--	unsigned char	dev_addr[6];
--	unsigned char	phy_id;
--};
--
- void ep93xx_map_io(void);
- void ep93xx_init_irq(void);
- 
-diff --git a/drivers/net/ethernet/cirrus/Kconfig b/drivers/net/ethernet/cirrus/Kconfig
-index e9a0213b08c4..6238e6951336 100644
---- a/drivers/net/ethernet/cirrus/Kconfig
-+++ b/drivers/net/ethernet/cirrus/Kconfig
-@@ -41,7 +41,7 @@ config CS89x0_PLATFORM
- 
- config EP93XX_ETH
- 	tristate "EP93xx Ethernet support"
--	depends on ARM && ARCH_EP93XX
-+	depends on (ARM && ARCH_EP93XX) || COMPILE_TEST
- 	select MII
- 	help
- 	  This is a driver for the ethernet hardware included in EP93xx CPUs.
-diff --git a/drivers/net/ethernet/cirrus/ep93xx_eth.c b/drivers/net/ethernet/cirrus/ep93xx_eth.c
-index 13dfdfca49fc..a6da9873570b 100644
---- a/drivers/net/ethernet/cirrus/ep93xx_eth.c
-+++ b/drivers/net/ethernet/cirrus/ep93xx_eth.c
-@@ -25,7 +25,7 @@
- #include <linux/io.h>
- #include <linux/slab.h>
- 
--#include <mach/hardware.h>
-+#include <linux/platform_data/eth-ep93xx.h>
- 
- #define DRV_MODULE_NAME		"ep93xx-eth"
- #define DRV_MODULE_VERSION	"0.1"
-diff --git a/include/linux/platform_data/eth-ep93xx.h b/include/linux/platform_data/eth-ep93xx.h
-new file mode 100644
-index 000000000000..8eef637a804d
---- /dev/null
-+++ b/include/linux/platform_data/eth-ep93xx.h
-@@ -0,0 +1,10 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _LINUX_PLATFORM_DATA_ETH_EP93XX
-+#define _LINUX_PLATFORM_DATA_ETH_EP93XX
+ 	rx_buf->data = NULL;
+ 	if (rxcmp1->rx_cmp_cfa_code_errors_v2 & RX_CMP_L2_ERRORS) {
++		u32 rx_err = le32_to_cpu(rxcmp1->rx_cmp_cfa_code_errors_v2);
 +
-+struct ep93xx_eth_data {
-+	unsigned char	dev_addr[6];
-+	unsigned char	phy_id;
-+};
-+
-+#endif
--- 
-2.20.0
+ 		bnxt_reuse_rx_data(rxr, cons, data);
+ 		if (agg_bufs)
+ 			bnxt_reuse_rx_agg_bufs(bnapi, cp_cons, agg_bufs);
+ 
+ 		rc = -EIO;
++		if (rx_err & RX_CMPL_ERRORS_BUFFER_ERROR_MASK) {
++			netdev_warn(bp->dev, "RX buffer error %x\n", rx_err);
++			bnxt_sched_reset(bp, rxr);
++		}
+ 		goto next_rx;
+ 	}
+ 
+
 
