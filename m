@@ -7,57 +7,54 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA0CFC10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:16:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C31CC10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:16:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 832742073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:16:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 464472073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:16:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355779;
-	bh=Jf6Wm65SfGaJn1IcUhbm1cKC+SgNvHZK51elKDsBxXI=;
+	s=default; t=1555355791;
+	bh=IhKfWWEhStqe2GxnIxQ3ILeLP4G6tNh9inIXyQeczUE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wQsn3qHbqqn+RsBl+8WHDnp7uioAOgpm61ElAingIKdDbE3XvsGivfQ7eYlXgtxJ0
-	 EZt2tNrcVYxgQ75SjfLTgvSp3vTvEnnTBpMTJaxYfm6+B6tLE0EdcU/YrXO+TOym8/
-	 VxO1kOsqQ44NGuXql+DafCsLIEmHeFTHMZEIoNQo=
+	b=rZ+Gs19ZhRdDbC1I8F8Rh5Uu8NPmtcj3ZNSs+1n8tbJlQFiGdpRZZzft5N/sfCn+Z
+	 JcrClsEYNxwDFZ+Fw0psLIl+RMC+F6ybYibjBFskLlAiNOZgHzE96eXppeePM19C8P
+	 nonGQkkubIJwx4zaDgpuXHcVYvyKujRLZ1mWnHcI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731602AbfDOTQS (ORCPT
+        id S1731523AbfDOTNM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:16:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51124 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:13:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50746 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731552AbfDOTNZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:13:25 -0400
+        id S1730804AbfDOTNK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:13:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D8DB6218D3;
-        Mon, 15 Apr 2019 19:13:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 75E61218A1;
+        Mon, 15 Apr 2019 19:13:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355604;
-        bh=Jf6Wm65SfGaJn1IcUhbm1cKC+SgNvHZK51elKDsBxXI=;
+        s=default; t=1555355588;
+        bh=IhKfWWEhStqe2GxnIxQ3ILeLP4G6tNh9inIXyQeczUE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ozkEuO0oms9m2xqgFb14HYm4jbdHFKokRCw7fwxVxk71vyY9Fwg366UYrJI1S5RZM
-         +9YK3tCJkjz5IJ3JD9nKji9SKqbVhb+G9GCezNtXfEBAFd4grs1Ih00XoeUuPwxvOr
-         rbDGIREf1bFY2hJo+2+D00byQ/VhlzunX4Ngn1LU=
+        b=qIAQImInHZPvNNwoa5qxmgCgsrEDkQUwGlSiMWkSuAZYma9fyATHprSqhE4pq8uHI
+         wXuMkuInXrmRdOSBK62AIv/+WzRJfSAreE66z49xhTXhqCpZ1uxS2VH4xdBgE/0sEK
+         Fkmv+3lDKePHr6XZbPF5EdL4Rlv0StgLZ2hdv/iQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Ville=20Syrj=C3=A4l=C3=A4?= 
-        <ville.syrjala@linux.intel.com>,
-        Manasi Navare <manasi.d.navare@intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        Matt Atwood <matthew.s.atwood@intel.com>,
-        "Lee, Shawn C" <shawn.c.lee@intel.com>,
-        Dave Airlie <airlied@gmail.com>,
-        intel-gfx@lists.freedesktop.org,
-        Jani Nikula <jani.nikula@intel.com>,
-        Albert Astals Cid <aacid@kde.org>,
-        Emanuele Panigati <ilpanich@gmail.com>,
-        Matteo Iervasi <matteoiervasi@gmail.com>
-Subject: [PATCH 5.0 084/117] drm/i915/dp: revert back to max link rate and lane count on eDP
-Date:   Mon, 15 Apr 2019 21:00:54 +0200
-Message-Id: <20190415183749.193873670@linuxfoundation.org>
+        stable@vger.kernel.org, Christoph Hellwig <hch@infradead.org>,
+        Ming Lei <ming.lei@redhat.com>,
+        Jianchao Wang <jianchao.w.wang@oracle.com>,
+        Hannes Reinecke <hare@suse.com>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        James Smart <james.smart@broadcom.com>,
+        Dongli Zhang <dongli.zhang@oracle.com>,
+        Laurence Oberman <loberman@redhat.com>,
+        Bart Van Assche <bvanassche@acm.org>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 5.0 078/117] block: Revert v5.0 blk_mq_request_issue_directly() changes
+Date:   Mon, 15 Apr 2019 21:00:48 +0200
+Message-Id: <20190415183748.914356583@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183744.887851196@linuxfoundation.org>
 References: <20190415183744.887851196@linuxfoundation.org>
@@ -70,138 +67,280 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jani Nikula <jani.nikula@intel.com>
+From: Bart Van Assche <bvanassche@acm.org>
 
-commit 21635d7311734d2d1b177f8a95e2f9386174b76d upstream.
+commit fd9c40f64c514bdc585a21e2e33fa5f83ca8811b upstream.
 
-Commit 7769db588384 ("drm/i915/dp: optimize eDP 1.4+ link config fast
-and narrow") started to optize the eDP 1.4+ link config, both per spec
-and as preparation for display stream compression support.
+blk_mq_try_issue_directly() can return BLK_STS*_RESOURCE for requests that
+have been queued. If that happens when blk_mq_try_issue_directly() is called
+by the dm-mpath driver then dm-mpath will try to resubmit a request that is
+already queued and a kernel crash follows. Since it is nontrivial to fix
+blk_mq_request_issue_directly(), revert the blk_mq_request_issue_directly()
+changes that went into kernel v5.0.
 
-Sadly, we again face panels that flat out fail with parameters they
-claim to support. Revert, and go back to the drawing board.
+This patch reverts the following commits:
+* d6a51a97c0b2 ("blk-mq: replace and kill blk_mq_request_issue_directly") # v5.0.
+* 5b7a6f128aad ("blk-mq: issue directly with bypass 'false' in blk_mq_sched_insert_requests") # v5.0.
+* 7f556a44e61d ("blk-mq: refactor the code of issue request directly") # v5.0.
 
-v2: Actually revert to max params instead of just wide-and-slow.
-
-Bugzilla: https://bugs.freedesktop.org/show_bug.cgi?id=109959
-Fixes: 7769db588384 ("drm/i915/dp: optimize eDP 1.4+ link config fast and narrow")
-Cc: Ville Syrjälä <ville.syrjala@linux.intel.com>
-Cc: Manasi Navare <manasi.d.navare@intel.com>
-Cc: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Cc: Matt Atwood <matthew.s.atwood@intel.com>
-Cc: "Lee, Shawn C" <shawn.c.lee@intel.com>
-Cc: Dave Airlie <airlied@gmail.com>
-Cc: intel-gfx@lists.freedesktop.org
-Cc: <stable@vger.kernel.org> # v5.0+
-Reviewed-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
-Reviewed-by: Manasi Navare <manasi.d.navare@intel.com>
-Tested-by: Albert Astals Cid <aacid@kde.org> # v5.0 backport
-Tested-by: Emanuele Panigati <ilpanich@gmail.com> # v5.0 backport
-Tested-by: Matteo Iervasi <matteoiervasi@gmail.com> # v5.0 backport
-Signed-off-by: Jani Nikula <jani.nikula@intel.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190405075220.9815-1-jani.nikula@intel.com
-(cherry picked from commit f11cb1c19ad0563b3c1ea5eb16a6bac0e401f428)
-Signed-off-by: Rodrigo Vivi <rodrigo.vivi@intel.com>
+Cc: Christoph Hellwig <hch@infradead.org>
+Cc: Ming Lei <ming.lei@redhat.com>
+Cc: Jianchao Wang <jianchao.w.wang@oracle.com>
+Cc: Hannes Reinecke <hare@suse.com>
+Cc: Johannes Thumshirn <jthumshirn@suse.de>
+Cc: James Smart <james.smart@broadcom.com>
+Cc: Dongli Zhang <dongli.zhang@oracle.com>
+Cc: Laurence Oberman <loberman@redhat.com>
+Cc: <stable@vger.kernel.org>
+Reported-by: Laurence Oberman <loberman@redhat.com>
+Tested-by: Laurence Oberman <loberman@redhat.com>
+Fixes: 7f556a44e61d ("blk-mq: refactor the code of issue request directly") # v5.0.
+Signed-off-by: Bart Van Assche <bvanassche@acm.org>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-
 ---
- drivers/gpu/drm/i915/intel_dp.c |   69 +++++-----------------------------------
- 1 file changed, 10 insertions(+), 59 deletions(-)
+ block/blk-core.c     |    4 -
+ block/blk-mq-sched.c |    8 ++-
+ block/blk-mq.c       |  122 ++++++++++++++++++++++++++-------------------------
+ block/blk-mq.h       |    6 --
+ 4 files changed, 71 insertions(+), 69 deletions(-)
 
---- a/drivers/gpu/drm/i915/intel_dp.c
-+++ b/drivers/gpu/drm/i915/intel_dp.c
-@@ -1845,42 +1845,6 @@ intel_dp_compute_link_config_wide(struct
- 	return false;
+--- a/block/blk-core.c
++++ b/block/blk-core.c
+@@ -1246,8 +1246,6 @@ static int blk_cloned_rq_check_limits(st
+  */
+ blk_status_t blk_insert_cloned_request(struct request_queue *q, struct request *rq)
+ {
+-	blk_qc_t unused;
+-
+ 	if (blk_cloned_rq_check_limits(q, rq))
+ 		return BLK_STS_IOERR;
+ 
+@@ -1263,7 +1261,7 @@ blk_status_t blk_insert_cloned_request(s
+ 	 * bypass a potential scheduler on the bottom device for
+ 	 * insert.
+ 	 */
+-	return blk_mq_try_issue_directly(rq->mq_hctx, rq, &unused, true, true);
++	return blk_mq_request_issue_directly(rq, true);
+ }
+ EXPORT_SYMBOL_GPL(blk_insert_cloned_request);
+ 
+--- a/block/blk-mq-sched.c
++++ b/block/blk-mq-sched.c
+@@ -423,10 +423,12 @@ void blk_mq_sched_insert_requests(struct
+ 		 * busy in case of 'none' scheduler, and this way may save
+ 		 * us one extra enqueue & dequeue to sw queue.
+ 		 */
+-		if (!hctx->dispatch_busy && !e && !run_queue_async)
++		if (!hctx->dispatch_busy && !e && !run_queue_async) {
+ 			blk_mq_try_issue_list_directly(hctx, list);
+-		else
+-			blk_mq_insert_requests(hctx, ctx, list);
++			if (list_empty(list))
++				return;
++		}
++		blk_mq_insert_requests(hctx, ctx, list);
+ 	}
+ 
+ 	blk_mq_run_hw_queue(hctx, run_queue_async);
+--- a/block/blk-mq.c
++++ b/block/blk-mq.c
+@@ -1805,74 +1805,76 @@ static blk_status_t __blk_mq_issue_direc
+ 	return ret;
  }
  
--/* Optimize link config in order: max bpp, min lanes, min clock */
--static bool
--intel_dp_compute_link_config_fast(struct intel_dp *intel_dp,
--				  struct intel_crtc_state *pipe_config,
--				  const struct link_config_limits *limits)
--{
--	struct drm_display_mode *adjusted_mode = &pipe_config->base.adjusted_mode;
--	int bpp, clock, lane_count;
--	int mode_rate, link_clock, link_avail;
--
--	for (bpp = limits->max_bpp; bpp >= limits->min_bpp; bpp -= 2 * 3) {
--		mode_rate = intel_dp_link_required(adjusted_mode->crtc_clock,
--						   bpp);
--
--		for (lane_count = limits->min_lane_count;
--		     lane_count <= limits->max_lane_count;
--		     lane_count <<= 1) {
--			for (clock = limits->min_clock; clock <= limits->max_clock; clock++) {
--				link_clock = intel_dp->common_rates[clock];
--				link_avail = intel_dp_max_data_rate(link_clock,
--								    lane_count);
--
--				if (mode_rate <= link_avail) {
--					pipe_config->lane_count = lane_count;
--					pipe_config->pipe_bpp = bpp;
--					pipe_config->port_clock = link_clock;
--
--					return true;
--				}
--			}
--		}
--	}
--
--	return false;
--}
--
- static int intel_dp_dsc_compute_bpp(struct intel_dp *intel_dp, u8 dsc_max_bpc)
+-blk_status_t blk_mq_try_issue_directly(struct blk_mq_hw_ctx *hctx,
++static blk_status_t __blk_mq_try_issue_directly(struct blk_mq_hw_ctx *hctx,
+ 						struct request *rq,
+ 						blk_qc_t *cookie,
+-						bool bypass, bool last)
++						bool bypass_insert, bool last)
  {
- 	int i, num_bpc;
-@@ -2013,15 +1977,13 @@ intel_dp_compute_link_config(struct inte
- 	limits.min_bpp = 6 * 3;
- 	limits.max_bpp = intel_dp_compute_bpp(intel_dp, pipe_config);
+ 	struct request_queue *q = rq->q;
+ 	bool run_queue = true;
+-	blk_status_t ret = BLK_STS_RESOURCE;
+-	int srcu_idx;
+-	bool force = false;
  
--	if (intel_dp_is_edp(intel_dp) && intel_dp->edp_dpcd[0] < DP_EDP_14) {
-+	if (intel_dp_is_edp(intel_dp)) {
- 		/*
- 		 * Use the maximum clock and number of lanes the eDP panel
--		 * advertizes being capable of. The eDP 1.3 and earlier panels
--		 * are generally designed to support only a single clock and
--		 * lane configuration, and typically these values correspond to
--		 * the native resolution of the panel. With eDP 1.4 rate select
--		 * and DSC, this is decreasingly the case, and we need to be
--		 * able to select less than maximum link config.
-+		 * advertizes being capable of. The panels are generally
-+		 * designed to support only a single clock and lane
-+		 * configuration, and typically these values correspond to the
-+		 * native resolution of the panel.
- 		 */
- 		limits.min_lane_count = limits.max_lane_count;
- 		limits.min_clock = limits.max_clock;
-@@ -2035,22 +1997,11 @@ intel_dp_compute_link_config(struct inte
- 		      intel_dp->common_rates[limits.max_clock],
- 		      limits.max_bpp, adjusted_mode->crtc_clock);
+-	hctx_lock(hctx, &srcu_idx);
+ 	/*
+-	 * hctx_lock is needed before checking quiesced flag.
++	 * RCU or SRCU read lock is needed before checking quiesced flag.
+ 	 *
+-	 * When queue is stopped or quiesced, ignore 'bypass', insert
+-	 * and return BLK_STS_OK to caller, and avoid driver to try to
+-	 * dispatch again.
++	 * When queue is stopped or quiesced, ignore 'bypass_insert' from
++	 * blk_mq_request_issue_directly(), and return BLK_STS_OK to caller,
++	 * and avoid driver to try to dispatch again.
+ 	 */
+-	if (unlikely(blk_mq_hctx_stopped(hctx) || blk_queue_quiesced(q))) {
++	if (blk_mq_hctx_stopped(hctx) || blk_queue_quiesced(q)) {
+ 		run_queue = false;
+-		bypass = false;
+-		goto out_unlock;
++		bypass_insert = false;
++		goto insert;
+ 	}
  
--	if (intel_dp_is_edp(intel_dp))
--		/*
--		 * Optimize for fast and narrow. eDP 1.3 section 3.3 and eDP 1.4
--		 * section A.1: "It is recommended that the minimum number of
--		 * lanes be used, using the minimum link rate allowed for that
--		 * lane configuration."
--		 *
--		 * Note that we use the max clock and lane count for eDP 1.3 and
--		 * earlier, and fast vs. wide is irrelevant.
--		 */
--		ret = intel_dp_compute_link_config_fast(intel_dp, pipe_config,
--							&limits);
--	else
--		/* Optimize for slow and wide. */
--		ret = intel_dp_compute_link_config_wide(intel_dp, pipe_config,
--							&limits);
-+	/*
-+	 * Optimize for slow and wide. This is the place to add alternative
-+	 * optimization policy.
-+	 */
-+	ret = intel_dp_compute_link_config_wide(intel_dp, pipe_config, &limits);
+-	if (unlikely(q->elevator && !bypass))
+-		goto out_unlock;
++	if (q->elevator && !bypass_insert)
++		goto insert;
  
- 	/* enable compression if the mode doesn't fit available BW */
- 	if (!ret) {
+ 	if (!blk_mq_get_dispatch_budget(hctx))
+-		goto out_unlock;
++		goto insert;
+ 
+ 	if (!blk_mq_get_driver_tag(rq)) {
+ 		blk_mq_put_dispatch_budget(hctx);
+-		goto out_unlock;
++		goto insert;
+ 	}
+ 
+-	/*
+-	 * Always add a request that has been through
+-	 *.queue_rq() to the hardware dispatch list.
+-	 */
+-	force = true;
+-	ret = __blk_mq_issue_directly(hctx, rq, cookie, last);
+-out_unlock:
++	return __blk_mq_issue_directly(hctx, rq, cookie, last);
++insert:
++	if (bypass_insert)
++		return BLK_STS_RESOURCE;
++
++	blk_mq_request_bypass_insert(rq, run_queue);
++	return BLK_STS_OK;
++}
++
++static void blk_mq_try_issue_directly(struct blk_mq_hw_ctx *hctx,
++		struct request *rq, blk_qc_t *cookie)
++{
++	blk_status_t ret;
++	int srcu_idx;
++
++	might_sleep_if(hctx->flags & BLK_MQ_F_BLOCKING);
++
++	hctx_lock(hctx, &srcu_idx);
++
++	ret = __blk_mq_try_issue_directly(hctx, rq, cookie, false, true);
++	if (ret == BLK_STS_RESOURCE || ret == BLK_STS_DEV_RESOURCE)
++		blk_mq_request_bypass_insert(rq, true);
++	else if (ret != BLK_STS_OK)
++		blk_mq_end_request(rq, ret);
++
++	hctx_unlock(hctx, srcu_idx);
++}
++
++blk_status_t blk_mq_request_issue_directly(struct request *rq, bool last)
++{
++	blk_status_t ret;
++	int srcu_idx;
++	blk_qc_t unused_cookie;
++	struct blk_mq_hw_ctx *hctx = rq->mq_hctx;
++
++	hctx_lock(hctx, &srcu_idx);
++	ret = __blk_mq_try_issue_directly(hctx, rq, &unused_cookie, true, last);
+ 	hctx_unlock(hctx, srcu_idx);
+-	switch (ret) {
+-	case BLK_STS_OK:
+-		break;
+-	case BLK_STS_DEV_RESOURCE:
+-	case BLK_STS_RESOURCE:
+-		if (force) {
+-			blk_mq_request_bypass_insert(rq, run_queue);
+-			/*
+-			 * We have to return BLK_STS_OK for the DM
+-			 * to avoid livelock. Otherwise, we return
+-			 * the real result to indicate whether the
+-			 * request is direct-issued successfully.
+-			 */
+-			ret = bypass ? BLK_STS_OK : ret;
+-		} else if (!bypass) {
+-			blk_mq_sched_insert_request(rq, false,
+-						    run_queue, false);
+-		}
+-		break;
+-	default:
+-		if (!bypass)
+-			blk_mq_end_request(rq, ret);
+-		break;
+-	}
+ 
+ 	return ret;
+ }
+@@ -1880,20 +1882,22 @@ out_unlock:
+ void blk_mq_try_issue_list_directly(struct blk_mq_hw_ctx *hctx,
+ 		struct list_head *list)
+ {
+-	blk_qc_t unused;
+-	blk_status_t ret = BLK_STS_OK;
+-
+ 	while (!list_empty(list)) {
++		blk_status_t ret;
+ 		struct request *rq = list_first_entry(list, struct request,
+ 				queuelist);
+ 
+ 		list_del_init(&rq->queuelist);
+-		if (ret == BLK_STS_OK)
+-			ret = blk_mq_try_issue_directly(hctx, rq, &unused,
+-							false,
++		ret = blk_mq_request_issue_directly(rq, list_empty(list));
++		if (ret != BLK_STS_OK) {
++			if (ret == BLK_STS_RESOURCE ||
++					ret == BLK_STS_DEV_RESOURCE) {
++				blk_mq_request_bypass_insert(rq,
+ 							list_empty(list));
+-		else
+-			blk_mq_sched_insert_request(rq, false, true, false);
++				break;
++			}
++			blk_mq_end_request(rq, ret);
++		}
+ 	}
+ 
+ 	/*
+@@ -1901,7 +1905,7 @@ void blk_mq_try_issue_list_directly(stru
+ 	 * the driver there was more coming, but that turned out to
+ 	 * be a lie.
+ 	 */
+-	if (ret != BLK_STS_OK && hctx->queue->mq_ops->commit_rqs)
++	if (!list_empty(list) && hctx->queue->mq_ops->commit_rqs)
+ 		hctx->queue->mq_ops->commit_rqs(hctx);
+ }
+ 
+@@ -2014,13 +2018,13 @@ static blk_qc_t blk_mq_make_request(stru
+ 		if (same_queue_rq) {
+ 			data.hctx = same_queue_rq->mq_hctx;
+ 			blk_mq_try_issue_directly(data.hctx, same_queue_rq,
+-					&cookie, false, true);
++					&cookie);
+ 		}
+ 	} else if ((q->nr_hw_queues > 1 && is_sync) || (!q->elevator &&
+ 			!data.hctx->dispatch_busy)) {
+ 		blk_mq_put_ctx(data.ctx);
+ 		blk_mq_bio_to_request(rq, bio);
+-		blk_mq_try_issue_directly(data.hctx, rq, &cookie, false, true);
++		blk_mq_try_issue_directly(data.hctx, rq, &cookie);
+ 	} else {
+ 		blk_mq_put_ctx(data.ctx);
+ 		blk_mq_bio_to_request(rq, bio);
+--- a/block/blk-mq.h
++++ b/block/blk-mq.h
+@@ -67,10 +67,8 @@ void blk_mq_request_bypass_insert(struct
+ void blk_mq_insert_requests(struct blk_mq_hw_ctx *hctx, struct blk_mq_ctx *ctx,
+ 				struct list_head *list);
+ 
+-blk_status_t blk_mq_try_issue_directly(struct blk_mq_hw_ctx *hctx,
+-						struct request *rq,
+-						blk_qc_t *cookie,
+-						bool bypass, bool last);
++/* Used by blk_insert_cloned_request() to issue request directly */
++blk_status_t blk_mq_request_issue_directly(struct request *rq, bool last);
+ void blk_mq_try_issue_list_directly(struct blk_mq_hw_ctx *hctx,
+ 				    struct list_head *list);
+ 
 
 
