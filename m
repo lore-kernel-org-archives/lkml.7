@@ -7,49 +7,45 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83DA3C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:07:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C1FC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:07:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 528FD218A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:07:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 403CA2087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:07:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355273;
-	bh=aRZ3aRMylXpBl/ZENBGU29JNC1NzKlwAAFnBA9GtQeg=;
+	s=default; t=1555355278;
+	bh=3pfRlHGvDOfiJHSPXsEvGAxacrekbSneK81BfCV8twg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SMEPMcInlZe+/opoWBAI3DrnZNh8m9+yj+UUgyOmLhwsgpFauu6gJpb2xV9tIx5Vc
-	 AnldFQkDFufXIJ1gxZV/BZhj7w7Q3A8ciwaGmp+CwQCN3Xh8pDZXt2qRJfM849j2dE
-	 Ngg+zA95ndsIufjxUvLswaJEbdMQecGYZ6cx/l7w=
+	b=KR0C/p4fwMzQowR/fynGoFMpAud3SMQunZ0nf+PC3fLHDab/6MgcJL4AsUfgn8H+b
+	 xqbfAggTsXK6JbLrzN8MUTP8yGEjz/gKZqVYXyNgwBKYISXzqT66O+l6CnMZPRWrIW
+	 kAktHh+niFMWvFoo7/GVrjHtO9tHpZzAx2igfHfM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730328AbfDOTHw (ORCPT
+        id S1730340AbfDOTH4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:07:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42920 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:07:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43054 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728200AbfDOTHt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:07:49 -0400
+        id S1729806AbfDOTHy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:07:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1F828218DA;
-        Mon, 15 Apr 2019 19:07:47 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4AF922087C;
+        Mon, 15 Apr 2019 19:07:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355268;
-        bh=aRZ3aRMylXpBl/ZENBGU29JNC1NzKlwAAFnBA9GtQeg=;
+        s=default; t=1555355273;
+        bh=3pfRlHGvDOfiJHSPXsEvGAxacrekbSneK81BfCV8twg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=usZ/tFmNLQnl4YL7Q3Suoapz9Wwvlk2K63tLBllIiAaV494WVPh711wMauM8cGu5x
-         rD2JUdrqHhhXOspGdTHtm6MOHCjZFRPPvfPtSKJaLnQYrvW+awr6+SRW8EiufkMv11
-         tmvoi0vlrdvMNLeyl48QrwkU0KgH80nvKQjiNV+g=
+        b=h/koQAZbd+7+CRTMCEJnOcyYKqd1zCW4eyyNQCEoUYBqo+rpoZKpjAIFFM9uqdKdY
+         AjYTocQrOdEcOLzw3NQcWa5F8hptG2YJzPmjEHtIBbuOXtEOs9mVlXh4gPZZ4hroYg
+         eVf5ge2WHACmhJFiI5BEN1ICENnAvVNie06eYaos=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Stephen Boyd <swboyd@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-gpio@vger.kernel.org,
-        Lina Iyer <ilina@codeaurora.org>
-Subject: [PATCH 4.19 073/101] genirq: Respect IRQCHIP_SKIP_SET_WAKE in irq_chip_set_wake_parent()
-Date:   Mon, 15 Apr 2019 20:59:11 +0200
-Message-Id: <20190415183744.324123019@linuxfoundation.org>
+        stable@vger.kernel.org, Helge Deller <deller@gmx.de>
+Subject: [PATCH 4.19 056/101] parisc: Detect QEMU earlier in boot process
+Date:   Mon, 15 Apr 2019 20:58:54 +0200
+Message-Id: <20190415183743.487943324@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183740.341577907@linuxfoundation.org>
 References: <20190415183740.341577907@linuxfoundation.org>
@@ -62,69 +58,55 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Stephen Boyd <swboyd@chromium.org>
+From: Helge Deller <deller@gmx.de>
 
-commit 325aa19598e410672175ed50982f902d4e3f31c5 upstream.
+commit d006e95b5561f708d0385e9677ffe2c46f2ae345 upstream.
 
-If a child irqchip calls irq_chip_set_wake_parent() but its parent irqchip
-has the IRQCHIP_SKIP_SET_WAKE flag set an error is returned.
+While adding LASI support to QEMU, I noticed that the QEMU detection in
+the kernel happens much too late. For example, when a LASI chip is found
+by the kernel, it registers the LASI LED driver as well.  But when we
+run on QEMU it makes sense to avoid spending unnecessary CPU cycles, so
+we need to access the running_on_QEMU flag earlier than before.
 
-This is inconsistent behaviour vs. set_irq_wake_real() which returns 0 when
-the irqchip has the IRQCHIP_SKIP_SET_WAKE flag set. It doesn't attempt to
-walk the chain of parents and set irq wake on any chips that don't have the
-flag set either. If the intent is to call the .irq_set_wake() callback of
-the parent irqchip, then we expect irqchip implementations to omit the
-IRQCHIP_SKIP_SET_WAKE flag and implement an .irq_set_wake() function that
-calls irq_chip_set_wake_parent().
+This patch now makes the QEMU detection the fist task of the Linux
+kernel by moving it to where the kernel enters the C-coding.
 
-The problem has been observed on a Qualcomm sdm845 device where set wake
-fails on any GPIO interrupts after applying work in progress wakeup irq
-patches to the GPIO driver. The chain of chips looks like this:
-
-     QCOM GPIO -> QCOM PDC (SKIP) -> ARM GIC (SKIP)
-
-The GPIO controllers parent is the QCOM PDC irqchip which in turn has ARM
-GIC as parent.  The QCOM PDC irqchip has the IRQCHIP_SKIP_SET_WAKE flag
-set, and so does the grandparent ARM GIC.
-
-The GPIO driver doesn't know if the parent needs to set wake or not, so it
-unconditionally calls irq_chip_set_wake_parent() causing this function to
-return a failure because the parent irqchip (PDC) doesn't have the
-.irq_set_wake() callback set. Returning 0 instead makes everything work and
-irqs from the GPIO controller can be configured for wakeup.
-
-Make it consistent by returning 0 (success) from irq_chip_set_wake_parent()
-when a parent chip has IRQCHIP_SKIP_SET_WAKE set.
-
-[ tglx: Massaged changelog ]
-
-Fixes: 08b55e2a9208e ("genirq: Add irqchip_set_wake_parent")
-Signed-off-by: Stephen Boyd <swboyd@chromium.org>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Marc Zyngier <marc.zyngier@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-gpio@vger.kernel.org
-Cc: Lina Iyer <ilina@codeaurora.org>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190325181026.247796-1-swboyd@chromium.org
+Fixes: 310d82784fb4 ("parisc: qemu idle sleep support")
+Signed-off-by: Helge Deller <deller@gmx.de>
+Cc: stable@vger.kernel.org # v4.14+
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/irq/chip.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ arch/parisc/kernel/process.c |    6 ------
+ arch/parisc/kernel/setup.c   |    3 +++
+ 2 files changed, 3 insertions(+), 6 deletions(-)
 
---- a/kernel/irq/chip.c
-+++ b/kernel/irq/chip.c
-@@ -1384,6 +1384,10 @@ int irq_chip_set_vcpu_affinity_parent(st
- int irq_chip_set_wake_parent(struct irq_data *data, unsigned int on)
- {
- 	data = data->parent_data;
-+
-+	if (data->chip->flags & IRQCHIP_SKIP_SET_WAKE)
-+		return 0;
-+
- 	if (data->chip->irq_set_wake)
- 		return data->chip->irq_set_wake(data, on);
+--- a/arch/parisc/kernel/process.c
++++ b/arch/parisc/kernel/process.c
+@@ -210,12 +210,6 @@ void __cpuidle arch_cpu_idle(void)
  
+ static int __init parisc_idle_init(void)
+ {
+-	const char *marker;
+-
+-	/* check QEMU/SeaBIOS marker in PAGE0 */
+-	marker = (char *) &PAGE0->pad0;
+-	running_on_qemu = (memcmp(marker, "SeaBIOS", 8) == 0);
+-
+ 	if (!running_on_qemu)
+ 		cpu_idle_poll_ctrl(1);
+ 
+--- a/arch/parisc/kernel/setup.c
++++ b/arch/parisc/kernel/setup.c
+@@ -399,6 +399,9 @@ void __init start_parisc(void)
+ 	int ret, cpunum;
+ 	struct pdc_coproc_cfg coproc_cfg;
+ 
++	/* check QEMU/SeaBIOS marker in PAGE0 */
++	running_on_qemu = (memcmp(&PAGE0->pad0, "SeaBIOS", 8) == 0);
++
+ 	cpunum = smp_processor_id();
+ 
+ 	init_cpu_topology();
 
 
