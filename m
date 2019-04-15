@@ -2,123 +2,120 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A6EC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 04:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5878C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 04:21:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E05420825
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 04:07:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B5A720825
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 04:21:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="LqTrC4Ac"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1725828AbfDOEHJ (ORCPT
+        id S1725852AbfDOEVl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 00:07:09 -0400
-Received: from gate.crashing.org ([63.228.1.57]:51734 "EHLO gate.crashing.org"
+        Mon, 15 Apr 2019 00:21:41 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:56191 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725775AbfDOEHI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 00:07:08 -0400
-Received: from localhost (localhost.localdomain [127.0.0.1])
-        by gate.crashing.org (8.14.1/8.14.1) with ESMTP id x3F45VaY012216;
-        Sun, 14 Apr 2019 23:05:32 -0500
-Message-ID: <7ff812ec9c1e2a8b734b90f7480752dfd74cb8ad.camel@kernel.crashing.org>
-Subject: Re: [PATCH v2 01/21] docs/memory-barriers.txt: Rewrite "KERNEL I/O
- BARRIER EFFECTS" section
-From:   Benjamin Herrenschmidt <benh@kernel.crashing.org>
-To:     Will Deacon <will.deacon@arm.com>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-arch <linux-arch@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Arnd Bergmann <arnd@arndb.de>,
+        id S1725777AbfDOEVl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 00:21:41 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44jFgh5zHnz9s3q;
+        Mon, 15 Apr 2019 14:21:36 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1555302098;
+        bh=yT5z1V22fHrycbsaVFf5vuhuIT2gSMgmJB+hF4p96pQ=;
+        h=Date:From:To:Cc:Subject:From;
+        b=LqTrC4Ac0kce2Sii/4V2okwvHn72qeDyJe17x6nsNFikQ+WuRwYYHsyS0M7h7ODG5
+         Kc4ytLpBm/6FOtl9tYML3Mg28/wSbaOK+F70AuMFqfhCSro5eTeAjC5ztJVrnw3S2p
+         432t42fKM3RuJWqTPIP7k+jZ0mG0j6m/cokBVdhrYtfDNOap8EC/HDUv1M8buhJEpT
+         LAGLWLffR6XWWJWunV+qWmBwaS7Zk37kIZoLviysdfHvXBgYa19hiBc0xLYXMrNMZg
+         YGk75QD4qUwA9AWWIwuROFOYKoCCN1sju5MTEEztcDk2f9RGI/TDs0/pDx/qVTOV+Z
+         ZK4/HnjUP3s3w==
+Date:   Mon, 15 Apr 2019 14:21:34 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Thomas Gleixner <tglx@linutronix.de>, Ingo Molnar <mingo@elte.hu>,
+        "H. Peter Anvin" <hpa@zytor.com>,
         Peter Zijlstra <peterz@infradead.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Daniel Lustig <dlustig@nvidia.com>,
-        David Howells <dhowells@redhat.com>,
-        Alan Stern <stern@rowland.harvard.edu>,
-        "Maciej W. Rozycki" <macro@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, Tony Luck <tony.luck@intel.com>,
-        Mikulas Patocka <mpatocka@redhat.com>,
-        Akira Yokosawa <akiyks@gmail.com>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Nicholas Piggin <npiggin@gmail.com>
-Date:   Mon, 15 Apr 2019 14:05:30 +1000
-In-Reply-To: <20190412131727.GB29218@fuggles.cambridge.arm.com>
-References: <20190405135936.7266-1-will.deacon@arm.com>
-         <20190405135936.7266-2-will.deacon@arm.com>
-         <080d1ec73e3e29d6ffeeeb50b39b613da28afb37.camel@kernel.crashing.org>
-         <CAHk-=wgLLOmocrOw2uH9QxsV=SK236gv0Df8SWXGS8c8LAiyCA@mail.gmail.com>
-         <e172bf1d741eafd8c056ae3692b400f24bb7c3a7.camel@kernel.crashing.org>
-         <20190412131727.GB29218@fuggles.cambridge.arm.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.28.5-0ubuntu0.18.04.1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Waiman Long <longman@redhat.com>
+Subject: linux-next: manual merge of the tip tree with the arm64 tree
+Message-ID: <20190415142134.0956422f@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/t3_dEJ+Z55BQXx9L74Sbklh"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, 2019-04-12 at 14:17 +0100, Will Deacon wrote:
-> 
-> +	   the same CPU thread to a particular device will arrive in program
-> +	   order.
-> +
-> +	2. A writeX() by a CPU thread to the peripheral will first wait for the
-> +	   completion of all prior writes to memory either issued by the thread
-> +	   or issued while holding a spinlock that was subsequently taken by the
-> +	   thread. This ensures that writes by the CPU to an outbound DMA
-> +	   buffer allocated by dma_alloc_coherent() will be visible to a DMA
-> +	   engine when the CPU writes to its MMIO control register to trigger
-> +	   the transfer.
+--Sig_/t3_dEJ+Z55BQXx9L74Sbklh
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Not particularily trying to be annoying here but I find the above
-rather hard to parse :) I know what you're getting at but I'm not sure
-somebody who doesn't will understand.
+Hi all,
 
-One way would be to instead prefix the whole thing with a blurb along
-the lines of:
+Today's linux-next merge of the tip tree got a conflict in:
 
-	readX() and writeX() provide some ordering guarantees versus
-        each other and other memory accesses that are described below. 
-	Those guarantees apply to accesses performed either by the same
-        logical thread of execution, or by different threads but while 
-        holding the same lock (spinlock or mutex).
+  arch/s390/include/asm/Kbuild
 
-Then have as simpler description of each case. No ?
+between commit:
 
-> +	3. A readX() by a CPU thread from the peripheral will complete before
-> +	   any subsequent reads from memory by the same thread can begin. This
-> +	   ensures that reads by the CPU from an incoming DMA buffer allocated
-> +	   by dma_alloc_coherent() will not see stale data after reading from
-> +	   the DMA engine's MMIO status register to establish that the DMA
-> +	   transfer has completed.
-> +
-> +	4. A readX() by a CPU thread from the peripheral will complete before
-> +	   any subsequent delay() loop can begin execution on the same thread.
-> +	   This ensures that two MMIO register writes by the CPU to a peripheral
-> +	   will arrive at least 1us apart if the first write is immediately read
-> +	   back with readX() and udelay(1) is called prior to the second
-> +	   writeX():
->  
->  		writel(42, DEVICE_REGISTER_0); // Arrives at the device...
->  		readl(DEVICE_REGISTER_0);
-> @@ -2600,8 +2604,10 @@ guarantees:
->  	These will perform appropriately for the type of access they're actually
->  	doing, be it inX()/outX() or readX()/writeX().
->  
-> -All of these accessors assume that the underlying peripheral is little-endian,
-> -and will therefore perform byte-swapping operations on big-endian architectures.
-> +With the exception of the string accessors (insX(), outsX(), readsX() and
-> +writesX()), all of the above assume that the underlying peripheral is
-> +little-endian and will therefore perform byte-swapping operations on big-endian
-> +architectures.
->  
->  
->  ========================================
+  fdcd06a8ab77 ("arch: Use asm-generic header for asm/mmiowb.h")
 
+from the arm64 tree and commit:
+
+  46ad0840b158 ("locking/rwsem: Remove arch specific rwsem files")
+
+from the tip tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc arch/s390/include/asm/Kbuild
+index bdc4f06a04c5,d5fadefea33c..000000000000
+--- a/arch/s390/include/asm/Kbuild
++++ b/arch/s390/include/asm/Kbuild
+@@@ -20,8 -20,6 +20,7 @@@ generic-y +=3D local.
+  generic-y +=3D local64.h
+  generic-y +=3D mcs_spinlock.h
+  generic-y +=3D mm-arch-hooks.h
+ +generic-y +=3D mmiowb.h
+- generic-y +=3D rwsem.h
+  generic-y +=3D trace_clock.h
+  generic-y +=3D unaligned.h
+  generic-y +=3D word-at-a-time.h
+
+--Sig_/t3_dEJ+Z55BQXx9L74Sbklh
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAly0Bs4ACgkQAVBC80lX
+0Gw59gf/WtQapbHy3Zt/wrdgGGvPCPzxL6Vu2IqOx/8odyaKoS/iJg9UV5cx5/TV
+cTEj+Voy2QoV4VH7GUMwNLuMf6sEPT5e1M9GChRa7+c6XpbMzGIwxbdg17/Gdwxo
+okC4m0Vy0ik44xSCQQoyDbyj4+o6uNEPbDb03wXs3nkOJ/T2iq3iSBVAr/LYVNp9
+/t/Za6n6nC9l/oO9U6zOSraTUYxTckpCadog8iU39LfH98K1hs6s7VYiNisaXsAb
+H1dxpqNeQooh4eND1smLQ+nWWsAg/ffWuXN84kyJY1lIbFia6W/JdXp1OycftZyJ
+RUagmd/6gJUNc4I4pXe6eupbIAgcig==
+=70Xt
+-----END PGP SIGNATURE-----
+
+--Sig_/t3_dEJ+Z55BQXx9L74Sbklh--
