@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9589C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:07:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89654C282DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:07:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E74C20880
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:07:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 584E82087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:07:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355256;
-	bh=hotzOfjDzbhKyCQdEKu20YFM9oNVe/K5KONzulO77qI=;
+	s=default; t=1555355258;
+	bh=1QUr1HOEiVC48iGBBFI3teoaKM3RtaomYix4dALh23E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zYIGnPll2qUzotfiBptYf3yFTb75dyHYZ9K6FkpX4bTUCO6IsZaBvAHGrwgyZPMuI
-	 sBqw4k6SHpr/j9gI8qoEYsnwvRysqAHwbGr4dBUa6Nh3k7oEe251hRmq/4Ra1ZYbMR
-	 0O1kbKYBlJ6O8O37V5GNx7zjGbUERHIHKwi+qdGY=
+	b=nry0aDHpc/D4bhQFb1mzRTwcj5Li/W5tA9SszxAxY7QXXFrTmqPwGJohf5oGxsHfW
+	 FqSh3DNZ/X5ZIBwEiNpjexz5Gku5rDB56eYbUsX6ojIxsoSipoWtqhrAmMYb57HFqv
+	 u5uFKCFgwO5AlHkyw3N5wv48xGiiSJXyneJCXDYw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730227AbfDOTHf (ORCPT
+        id S1730238AbfDOTHh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:07:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42436 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:07:37 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42558 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730186AbfDOTH2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:07:28 -0400
+        id S1730208AbfDOTHd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:07:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8B86721900;
-        Mon, 15 Apr 2019 19:07:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C1F7920880;
+        Mon, 15 Apr 2019 19:07:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355248;
-        bh=hotzOfjDzbhKyCQdEKu20YFM9oNVe/K5KONzulO77qI=;
+        s=default; t=1555355253;
+        bh=1QUr1HOEiVC48iGBBFI3teoaKM3RtaomYix4dALh23E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=LXqS33s8eJS0HZgqBMiXguPjpP/waiD3zRuYFw8O9k/IuJtxHaPh7LLlF3F4JteQ/
-         otTsYamlJrWz/Cetj/slrFGBaEN9i+63Xoa7Rt/QTqLsWL86A5PcgJmYn7IyiI43Q0
-         VMtfiX4PdhWLi+FKL0iA22xNU814jMBE55et9q6Y=
+        b=ZAaR1Q9McvqoXRUCS7fBLTjCElNWUAi7bHwM+mmhS1qf6Y1KNZ+v1DkjJyGY7zbPF
+         YhjbOuS07qanjaRqaY/YXsEg32LeHi4kfm6KwLPxbILdAbTkJ4pZqa3KSN+bJhEtkb
+         1JcoDpFLhJqixtoey0t6nG1wXcmYPxQ0yTkarrx0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Shengjiu Wang <shengjiu.wang@nxp.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 4.19 066/101] ASoC: fsl_esai: fix channel swap issue when stream starts
-Date:   Mon, 15 Apr 2019 20:59:04 +0200
-Message-Id: <20190415183743.978907094@linuxfoundation.org>
+        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
+        Anand Jain <anand.jain@oracle.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.19 068/101] btrfs: prop: fix zstd compression parameter validation
+Date:   Mon, 15 Apr 2019 20:59:06 +0200
+Message-Id: <20190415183744.077806404@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183740.341577907@linuxfoundation.org>
 References: <20190415183740.341577907@linuxfoundation.org>
@@ -60,130 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: S.j. Wang <shengjiu.wang@nxp.com>
+From: Anand Jain <anand.jain@oracle.com>
 
-commit 0ff4e8c61b794a4bf6c854ab071a1abaaa80f358 upstream.
+commit 50398fde997f6be8faebdb5f38e9c9c467370f51 upstream.
 
-There is very low possibility ( < 0.1% ) that channel swap happened
-in beginning when multi output/input pin is enabled. The issue is
-that hardware can't send data to correct pin in the beginning with
-the normal enable flow.
+We let pass zstd compression parameter even if it is not fully valid.
+For example:
 
-This is hardware issue, but there is no errata, the workaround flow
-is that: Each time playback/recording, firstly clear the xSMA/xSMB,
-then enable TE/RE, then enable xSMB and xSMA (xSMB must be enabled
-before xSMA). Which is to use the xSMA as the trigger start register,
-previously the xCR_TE or xCR_RE is the bit for starting.
+  $ btrfs prop set /btrfs compression zst
+  $ btrfs prop get /btrfs compression
+     compression=zst
 
-Fixes commit 43d24e76b698 ("ASoC: fsl_esai: Add ESAI CPU DAI driver")
-Cc: <stable@vger.kernel.org>
-Reviewed-by: Fabio Estevam <festevam@gmail.com>
-Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
-Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+zlib and lzo are fine.
+
+Fix it by checking the correct prefix length.
+
+Fixes: 5c1aab1dd544 ("btrfs: Add zstd support")
+CC: stable@vger.kernel.org # 4.14+
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Signed-off-by: Anand Jain <anand.jain@oracle.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/fsl/fsl_esai.c |   47 +++++++++++++++++++++++++++++++++++++----------
- 1 file changed, 37 insertions(+), 10 deletions(-)
+ fs/btrfs/props.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/soc/fsl/fsl_esai.c
-+++ b/sound/soc/fsl/fsl_esai.c
-@@ -54,6 +54,8 @@ struct fsl_esai {
- 	u32 fifo_depth;
- 	u32 slot_width;
- 	u32 slots;
-+	u32 tx_mask;
-+	u32 rx_mask;
- 	u32 hck_rate[2];
- 	u32 sck_rate[2];
- 	bool hck_dir[2];
-@@ -361,21 +363,13 @@ static int fsl_esai_set_dai_tdm_slot(str
- 	regmap_update_bits(esai_priv->regmap, REG_ESAI_TCCR,
- 			   ESAI_xCCR_xDC_MASK, ESAI_xCCR_xDC(slots));
- 
--	regmap_update_bits(esai_priv->regmap, REG_ESAI_TSMA,
--			   ESAI_xSMA_xS_MASK, ESAI_xSMA_xS(tx_mask));
--	regmap_update_bits(esai_priv->regmap, REG_ESAI_TSMB,
--			   ESAI_xSMB_xS_MASK, ESAI_xSMB_xS(tx_mask));
--
- 	regmap_update_bits(esai_priv->regmap, REG_ESAI_RCCR,
- 			   ESAI_xCCR_xDC_MASK, ESAI_xCCR_xDC(slots));
- 
--	regmap_update_bits(esai_priv->regmap, REG_ESAI_RSMA,
--			   ESAI_xSMA_xS_MASK, ESAI_xSMA_xS(rx_mask));
--	regmap_update_bits(esai_priv->regmap, REG_ESAI_RSMB,
--			   ESAI_xSMB_xS_MASK, ESAI_xSMB_xS(rx_mask));
--
- 	esai_priv->slot_width = slot_width;
- 	esai_priv->slots = slots;
-+	esai_priv->tx_mask = tx_mask;
-+	esai_priv->rx_mask = rx_mask;
- 
- 	return 0;
- }
-@@ -596,6 +590,7 @@ static int fsl_esai_trigger(struct snd_p
- 	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
- 	u8 i, channels = substream->runtime->channels;
- 	u32 pins = DIV_ROUND_UP(channels, esai_priv->slots);
-+	u32 mask;
- 
- 	switch (cmd) {
- 	case SNDRV_PCM_TRIGGER_START:
-@@ -608,15 +603,38 @@ static int fsl_esai_trigger(struct snd_p
- 		for (i = 0; tx && i < channels; i++)
- 			regmap_write(esai_priv->regmap, REG_ESAI_ETDR, 0x0);
- 
-+		/*
-+		 * When set the TE/RE in the end of enablement flow, there
-+		 * will be channel swap issue for multi data line case.
-+		 * In order to workaround this issue, we switch the bit
-+		 * enablement sequence to below sequence
-+		 * 1) clear the xSMB & xSMA: which is done in probe and
-+		 *                           stop state.
-+		 * 2) set TE/RE
-+		 * 3) set xSMB
-+		 * 4) set xSMA:  xSMA is the last one in this flow, which
-+		 *               will trigger esai to start.
-+		 */
- 		regmap_update_bits(esai_priv->regmap, REG_ESAI_xCR(tx),
- 				   tx ? ESAI_xCR_TE_MASK : ESAI_xCR_RE_MASK,
- 				   tx ? ESAI_xCR_TE(pins) : ESAI_xCR_RE(pins));
-+		mask = tx ? esai_priv->tx_mask : esai_priv->rx_mask;
-+
-+		regmap_update_bits(esai_priv->regmap, REG_ESAI_xSMB(tx),
-+				   ESAI_xSMB_xS_MASK, ESAI_xSMB_xS(mask));
-+		regmap_update_bits(esai_priv->regmap, REG_ESAI_xSMA(tx),
-+				   ESAI_xSMA_xS_MASK, ESAI_xSMA_xS(mask));
-+
- 		break;
- 	case SNDRV_PCM_TRIGGER_SUSPEND:
- 	case SNDRV_PCM_TRIGGER_STOP:
- 	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
- 		regmap_update_bits(esai_priv->regmap, REG_ESAI_xCR(tx),
- 				   tx ? ESAI_xCR_TE_MASK : ESAI_xCR_RE_MASK, 0);
-+		regmap_update_bits(esai_priv->regmap, REG_ESAI_xSMA(tx),
-+				   ESAI_xSMA_xS_MASK, 0);
-+		regmap_update_bits(esai_priv->regmap, REG_ESAI_xSMB(tx),
-+				   ESAI_xSMB_xS_MASK, 0);
- 
- 		/* Disable and reset FIFO */
- 		regmap_update_bits(esai_priv->regmap, REG_ESAI_xFCR(tx),
-@@ -906,6 +924,15 @@ static int fsl_esai_probe(struct platfor
- 		return ret;
- 	}
- 
-+	esai_priv->tx_mask = 0xFFFFFFFF;
-+	esai_priv->rx_mask = 0xFFFFFFFF;
-+
-+	/* Clear the TSMA, TSMB, RSMA, RSMB */
-+	regmap_write(esai_priv->regmap, REG_ESAI_TSMA, 0);
-+	regmap_write(esai_priv->regmap, REG_ESAI_TSMB, 0);
-+	regmap_write(esai_priv->regmap, REG_ESAI_RSMA, 0);
-+	regmap_write(esai_priv->regmap, REG_ESAI_RSMB, 0);
-+
- 	ret = devm_snd_soc_register_component(&pdev->dev, &fsl_esai_component,
- 					      &fsl_esai_dai, 1);
- 	if (ret) {
+--- a/fs/btrfs/props.c
++++ b/fs/btrfs/props.c
+@@ -396,7 +396,7 @@ static int prop_compression_apply(struct
+ 		btrfs_set_fs_incompat(fs_info, COMPRESS_LZO);
+ 	} else if (!strncmp("zlib", value, 4)) {
+ 		type = BTRFS_COMPRESS_ZLIB;
+-	} else if (!strncmp("zstd", value, len)) {
++	} else if (!strncmp("zstd", value, 4)) {
+ 		type = BTRFS_COMPRESS_ZSTD;
+ 		btrfs_set_fs_incompat(fs_info, COMPRESS_ZSTD);
+ 	} else {
 
 
