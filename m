@@ -3,99 +3,81 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E779C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:51:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C8AFC10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:51:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EBA2020880
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:51:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ED67520880
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:51:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727608AbfDOPvP (ORCPT
+        id S1727674AbfDOPvi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 11:51:15 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:34000 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726034AbfDOPvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 11:51:15 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 5BDF17F7799A833B01C0;
-        Mon, 15 Apr 2019 23:51:10 +0800 (CST)
-Received: from [127.0.0.1] (10.184.38.59) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.408.0; Mon, 15 Apr 2019
- 23:51:04 +0800
-Subject: Re: [PATCH] sched/fair: Use 'unsigned long' for
- group_shares,group_runnable
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     <huawei.libin@huawei.com>, <xiexiuqi@huawei.com>,
-        <yangyingliang@huawei.com>, <mingo@redhat.com>,
-        <linux-kernel@vger.kernel.org>,
-        "chengjian (D)" <cj.chengjian@huawei.com>
-References: <20190413033234.30002-1-cj.chengjian@huawei.com>
- <20190415124617.GP11158@hirez.programming.kicks-ass.net>
- <eb7dede4-9668-9252-b95a-e20e313c5890@huawei.com>
- <20190415152549.GQ11158@hirez.programming.kicks-ass.net>
-From:   "chengjian (D)" <cj.chengjian@huawei.com>
-Message-ID: <8c8e96d0-226b-de46-d498-0d8a6947b4c9@huawei.com>
-Date:   Mon, 15 Apr 2019 23:50:49 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.2
+        Mon, 15 Apr 2019 11:51:38 -0400
+Received: from ale.deltatee.com ([207.54.116.67]:33136 "EHLO ale.deltatee.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726094AbfDOPvi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 11:51:38 -0400
+Received: from guinness.priv.deltatee.com ([172.16.1.162])
+        by ale.deltatee.com with esmtp (Exim 4.89)
+        (envelope-from <logang@deltatee.com>)
+        id 1hG3tP-0004hA-CP; Mon, 15 Apr 2019 09:51:36 -0600
+To:     Wesley Sheng <wesley.sheng@microchip.com>,
+        kurt.schwemmer@microsemi.com, bhelgaas@google.com,
+        linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Cc:     wesleyshenggit@sina.com
+References: <1555339302-31829-1-git-send-email-wesley.sheng@microchip.com>
+From:   Logan Gunthorpe <logang@deltatee.com>
+Message-ID: <ac314aa2-951b-58c7-cfd6-65e53b5b5f1e@deltatee.com>
+Date:   Mon, 15 Apr 2019 09:51:30 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190415152549.GQ11158@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset="UTF-8"; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Originating-IP: [10.184.38.59]
-X-CFilter-Loop: Reflected
+In-Reply-To: <1555339302-31829-1-git-send-email-wesley.sheng@microchip.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-CA
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 172.16.1.162
+X-SA-Exim-Rcpt-To: wesleyshenggit@sina.com, linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org, bhelgaas@google.com, kurt.schwemmer@microsemi.com, wesley.sheng@microchip.com
+X-SA-Exim-Mail-From: logang@deltatee.com
+Subject: Re: [PATCH v2 0/2] Fix two bugs of switchtec module
+X-SA-Exim-Version: 4.2.1 (built Tue, 02 Aug 2016 21:08:31 +0000)
+X-SA-Exim-Scanned: Yes (on ale.deltatee.com)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 2019/4/15 23:25, Peter Zijlstra wrote:
-> On Mon, Apr 15, 2019 at 11:20:31PM +0800, chengjian (D) wrote:
->> Hi, Peter
->>
->>
->> On 2019/4/15 20:46, Peter Zijlstra wrote:
->>
->> I write a demo about this, which I described it as overflow.
-> I'm not saying there's no overflow, I'm saying there's nothing UB about
-> it.
->
+On 2019-04-15 8:41 a.m., Wesley Sheng wrote:
+> Hi, Everyone,
+> 
+> This patch series fix two bugs of switchtec module.
+> 
+> The first is introduced by device spec definition issue: the maximum
+> supported PCIe function number by hardware should be 255 instead of 
+> the false number of 48. Rectify it in driver and for backward 
+> compatible, a new ioctl and corresponding data structure are created,
+> while keep the deprecated one.
+> 
+> The second is MRPC event unintentionally masked at corner case.
+> Fix this bug by skipping the mask operation for MRPC event in event ISR
+> like what we already do for LINK event.
+> 
+> Regard,
+> Wesley
+> 
+> --
+> 
+> Changed since v1:
+>   - rewrapped the commit message of [PATCH 1/2] into one paragraph
 
-Yeah. I got it.
+Probably should have collected my Reviewed-by tag into the patches as
+well. I still approve this series:
 
-This may not be an undefined behavior,
+Reviewed-by: Logan Gunthorpe <logang@deltatee.com>
 
-but rather a bug or logic error caused by overflow.
+Thanks,
 
-
-```cpp
-
-
-static long calc_group_shares(struct cfs_rq *cfs_rq)
-{
-
-     // ......
-
-     shares = (tg_shares * load);   // 1048576 * 9144968455305  = 
--8857549630719655936 (OVERFLOW)
-     if (tg_weight)                         // assume tg_weight is 3
-         shares /= tg_weight;         //  0xd7068dd8c2daaaab shoule be 
-0x2c5be32e18300000
-}
-
-```
-
-
-It will cause `se->runnable_weight` to have an incorrect value in 
-reweight_entity().
-
-
-Thanks.
-
-CHENG Jian
-
-
+Logan
