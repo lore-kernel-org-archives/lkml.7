@@ -2,223 +2,150 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B818C10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:51:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F0EBC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:51:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A3102075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:51:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 29AB32075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:51:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727542AbfDOOvT (ORCPT
+        id S1727590AbfDOOvl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 10:51:19 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:36262 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727304AbfDOOvT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 10:51:19 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 54E6A374;
-        Mon, 15 Apr 2019 07:51:18 -0700 (PDT)
-Received: from e110439-lin (e110439-lin.cambridge.arm.com [10.1.194.43])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 616413F68F;
-        Mon, 15 Apr 2019 07:51:15 -0700 (PDT)
-Date:   Mon, 15 Apr 2019 15:51:07 +0100
-From:   Patrick Bellasi <patrick.bellasi@arm.com>
-To:     linux-kernel@vger.kernel.org, linux-pm@vger.kernel.org,
-        linux-api@vger.kernel.org
-Cc:     Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tejun Heo <tj@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>,
-        Suren Baghdasaryan <surenb@google.com>
-Subject: Re: [PATCH v8 02/16] sched/core: Add bucket local max tracking
-Message-ID: <20190415144930.pntid6evu6r67l4o@e110439-lin>
-References: <20190402104153.25404-1-patrick.bellasi@arm.com>
- <20190402104153.25404-3-patrick.bellasi@arm.com>
+        Mon, 15 Apr 2019 10:51:41 -0400
+Received: from relay3-d.mail.gandi.net ([217.70.183.195]:45869 "EHLO
+        relay3-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727129AbfDOOvk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 10:51:40 -0400
+X-Originating-IP: 90.88.18.121
+Received: from localhost (aaubervilliers-681-1-63-121.w90-88.abo.wanadoo.fr [90.88.18.121])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay3-d.mail.gandi.net (Postfix) with ESMTPSA id 03D1C60017;
+        Mon, 15 Apr 2019 14:51:35 +0000 (UTC)
+Date:   Mon, 15 Apr 2019 16:51:35 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Subject: Re: [PATCH 1/4] dt-bindings: sound: sun4i-spdif: Add Allwinner H6
+ compatible
+Message-ID: <20190415145135.fjbcaldwy7w3eqcs@flea>
+References: <20190411214422.2267-1-peron.clem@gmail.com>
+ <20190411214422.2267-2-peron.clem@gmail.com>
+ <20190415080443.frubh4ln4agrdsfe@flea>
+ <CAJiuCcc0Q8rh8u_30gKi8o07k0+e35UR99ZBHtCjx-DPkJEtdw@mail.gmail.com>
+ <20190415081816.2pay4pioc5d4mojf@flea>
+ <CAJiuCcedNF0xYSa_+Zfwj-vqYsbjfEpRqisOhEvuitYALMsyjw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="sxl5ukncdhkjkqsu"
 Content-Disposition: inline
-In-Reply-To: <20190402104153.25404-3-patrick.bellasi@arm.com>
+In-Reply-To: <CAJiuCcedNF0xYSa_+Zfwj-vqYsbjfEpRqisOhEvuitYALMsyjw@mail.gmail.com>
 User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 02-Apr 11:41, Patrick Bellasi wrote:
-> Because of bucketization, different task-specific clamp values are
-> tracked in the same bucket.  For example, with 20% bucket size and
-> assuming to have:
->   Task1: util_min=25%
->   Task2: util_min=35%
-> both tasks will be refcounted in the [20..39]% bucket and always boosted
-> only up to 20% thus implementing a simple floor aggregation normally
-> used in histograms.
-> 
-> In systems with only few and well-defined clamp values, it would be
-> useful to track the exact clamp value required by a task whenever
-> possible. For example, if a system requires only 23% and 47% boost
-> values then it's possible to track the exact boost required by each
-> task using only 3 buckets of ~33% size each.
-> 
-> Introduce a mechanism to max aggregate the requested clamp values of
-> RUNNABLE tasks in the same bucket. Keep it simple by resetting the
-> bucket value to its base value only when a bucket becomes inactive.
-> Allow a limited and controlled overboosting margin for tasks recounted
-> in the same bucket.
-> 
-> In systems where the boost values are not known in advance, it is still
-> possible to control the maximum acceptable overboosting margin by tuning
-> the number of clamp groups. For example, 20 groups ensure a 5% maximum
-> overboost.
-> 
-> Remove the rq bucket initialization code since a correct bucket value
-> is now computed when a task is refcounted into a CPU's rq.
-> 
-> Signed-off-by: Patrick Bellasi <patrick.bellasi@arm.com>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
-> 
-> --
-> Changes in v8:
->  Message-ID: <20190313193916.GQ2482@worktop.programming.kicks-ass.net>
->  - split this code out from the previous patch
-> ---
->  kernel/sched/core.c | 46 ++++++++++++++++++++++++++-------------------
->  1 file changed, 27 insertions(+), 19 deletions(-)
-> 
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 032211b72110..6e1beae5f348 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -778,6 +778,11 @@ unsigned int uclamp_rq_max_value(struct rq *rq, unsigned int clamp_id)
->   * When a task is enqueued on a rq, the clamp bucket currently defined by the
->   * task's uclamp::bucket_id is refcounted on that rq. This also immediately
->   * updates the rq's clamp value if required.
-> + *
-> + * Tasks can have a task-specific value requested from user-space, track
-> + * within each bucket the maximum value for tasks refcounted in it.
-> + * This "local max aggregation" allows to track the exact "requested" value
-> + * for each bucket when all its RUNNABLE tasks require the same clamp.
->   */
->  static inline void uclamp_rq_inc_id(struct task_struct *p, struct rq *rq,
->  				    unsigned int clamp_id)
-> @@ -789,8 +794,15 @@ static inline void uclamp_rq_inc_id(struct task_struct *p, struct rq *rq,
->  	bucket = &uc_rq->bucket[uc_se->bucket_id];
->  	bucket->tasks++;
->  
-> +	/*
-> +	 * Local max aggregation: rq buckets always track the max
-> +	 * "requested" clamp value of its RUNNABLE tasks.
-> +	 */
-> +	if (uc_se->value > bucket->value)
-> +		bucket->value = uc_se->value;
-> +
->  	if (uc_se->value > READ_ONCE(uc_rq->value))
-> -		WRITE_ONCE(uc_rq->value, bucket->value);
-> +		WRITE_ONCE(uc_rq->value, uc_se->value);
->  }
->  
->  /*
-> @@ -815,6 +827,12 @@ static inline void uclamp_rq_dec_id(struct task_struct *p, struct rq *rq,
->  	if (likely(bucket->tasks))
->  		bucket->tasks--;
->  
-> +	/*
-> +	 * Keep "local max aggregation" simple and accept to (possibly)
-> +	 * overboost some RUNNABLE tasks in the same bucket.
-> +	 * The rq clamp bucket value is reset to its base value whenever
-> +	 * there are no more RUNNABLE tasks refcounting it.
-> +	 */
->  	if (likely(bucket->tasks))
->  		return;
->  
-> @@ -824,8 +842,14 @@ static inline void uclamp_rq_dec_id(struct task_struct *p, struct rq *rq,
->  	 * e.g. due to future modification, warn and fixup the expected value.
->  	 */
->  	SCHED_WARN_ON(bucket->value > rq_clamp);
-> -	if (bucket->value >= rq_clamp)
-> +	if (bucket->value >= rq_clamp) {
-> +		/*
-> +		 * Reset clamp bucket value to its nominal value whenever
-> +		 * there are anymore RUNNABLE tasks refcounting it.
-> +		 */
-> +		bucket->value = uclamp_bucket_base_value(bucket->value);
 
-While running tests on Android, I found that the snipped above should
-be better done in uclamp_rq_inc_id() for two main reasons:
- 1. because of the early return in this function, we skip the reset in
-    case the task is not the last one running on a CPU, thus
-    triggering the above SCHED_WARN_ON
- 2. since a non active bucket is already ignored, we don't care about
-    resetting its "local max value"
+--sxl5ukncdhkjkqsu
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Will move the "max local update" in uclamp_rq_inc_id() where something
-like:
+On Mon, Apr 15, 2019 at 10:30:38AM +0200, Cl=E9ment P=E9ron wrote:
+> On Mon, 15 Apr 2019 at 10:18, Maxime Ripard <maxime.ripard@bootlin.com> w=
+rote:
+> >
+> > On Mon, Apr 15, 2019 at 10:09:11AM +0200, Cl=E9ment P=E9ron wrote:
+> > > Hi,
+> > >
+> > > On Mon, 15 Apr 2019 at 10:04, Maxime Ripard <maxime.ripard@bootlin.co=
+m> wrote:
+> > > >
+> > > > Hi,
+> > > >
+> > > > On Thu, Apr 11, 2019 at 11:44:19PM +0200, Cl=E9ment P=E9ron wrote:
+> > > > > Allwinner H6 has a SPDIF controller with an increase of the fifo
+> > > > > size and the possibility to output the master clock.
+> > > > > However it's still compatible with the already existing driver for
+> > > > > Allwiner H3.
+> > > > >
+> > > > > Add this compatible in the device-tree bindings documentation.
+> > > >
+> > > > How was this tested?
+> > >
+> > > Using Alsa utils on a Beelink GS1 and I check correct output sound on
+> > > my home cinema.
+> > >
+> > > > After looking at the datasheet, it looks like it's still significan=
+tly
+> > > > different. In particular:
+> > > >
+> > > >   - The MCLK divider isn't at the same offset
+> > >
+> > > We don't use the MCLK
+> > >
+> > > >   - The bits to flush the FIFO aren't at the same offset
+> > > >   - The FIFO trigger levels aren't at the same offset
+> > > >   - The FIFO status register layout is almost entirely different
+> > >
+> > > We use DMA not FIFO
+> >
+> > Well, DMA still uses the FIFOs. And even then, you're kind of missing
+> > the point. The device tree's compatible is about whether a particular
+> > device can be used as another one. How you are using it in the driver
+> > is completely irrelevant.
+>
+> Sorry I meant " We use DMA not PIO".
 
+I'm still not quite sure what you mean. Both DMA and PIO would be
+using the FIFOs.
 
-    /*
-     * Local max aggregation: rq buckets always track the max
-     * "requested" clamp value of its RUNNABLE tasks.
-     */
-    if (bucket->tasks == 1 || uc_se->value > bucket->value)
-    	bucket->value = uc_se->value;
+> I didn't change the driver and the SPDIF is working what's irrelevant
+> in declaring the driver as compatible ?
 
+It's working by accident.
 
-Should grant to always have an updated local max every time a bucket
-is active.
+This won't work for example:
+https://elixir.bootlin.com/linux/latest/source/sound/soc/sunxi/sun4i-spdif.=
+c#L181
 
+> If some feature are missing they can be introduce later as there is a
+> special binding for H6 no ?
 
->  		WRITE_ONCE(uc_rq->value, uclamp_rq_max_value(rq, clamp_id));
-> +	}
->  }
->  
->  static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p)
-> @@ -855,25 +879,9 @@ static void __init init_uclamp(void)
->  	unsigned int clamp_id;
->  	int cpu;
->  
-> -	for_each_possible_cpu(cpu) {
-> -		struct uclamp_bucket *bucket;
-> -		struct uclamp_rq *uc_rq;
-> -		unsigned int bucket_id;
-> -
-> +	for_each_possible_cpu(cpu)
->  		memset(&cpu_rq(cpu)->uclamp, 0, sizeof(struct uclamp_rq));
->  
-> -		for (clamp_id = 0; clamp_id < UCLAMP_CNT; ++clamp_id) {
-> -			uc_rq = &cpu_rq(cpu)->uclamp[clamp_id];
-> -
-> -			bucket_id = 1;
-> -			while (bucket_id < UCLAMP_BUCKETS) {
-> -				bucket = &uc_rq->bucket[bucket_id];
-> -				bucket->value = bucket_id * UCLAMP_BUCKET_DELTA;
-> -				++bucket_id;
-> -			}
-> -		}
-> -	}
-> -
->  	for (clamp_id = 0; clamp_id < UCLAMP_CNT; ++clamp_id) {
->  		struct uclamp_se *uc_se = &init_task.uclamp[clamp_id];
->  
-> -- 
-> 2.20.1
-> 
+Again, that's irrelevant. The only question you need to ask yourself
+is whether, if you take an imaginary source code that would support
+all the H3 SPDIF features and run it on an H6, it works just as well.
 
--- 
-#include <best/regards.h>
+The examples above that it's not the case, so you can't claim that the
+device is compatible.
 
-Patrick Bellasi
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--sxl5ukncdhkjkqsu
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXLSadwAKCRDj7w1vZxhR
+xceAAP96JN2YhYM1zBkmyvK0GznWHP/qGjaXEu34Ymc9cr94WgEA5YRrzmmCqSra
+G/5VRd32UJzMeF3TWQFNRHrueDOylwI=
+=A0UO
+-----END PGP SIGNATURE-----
+
+--sxl5ukncdhkjkqsu--
