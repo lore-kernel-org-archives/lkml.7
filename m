@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF5EC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:46:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D59B5C10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:46:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5AE72073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:46:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A57D32073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:46:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555353973;
-	bh=uQVN4YjdpOiOYhOblB5qUPgSrZR6ogBCuS0yQjco0+0=;
+	s=default; t=1555353977;
+	bh=DwSdeP288kOuyytRsoktnn49/wtq75rGDnmJj7B6r8U=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=w32qpsVIJWxy0itgFDagpB/x3pBAf7gvuNpkgObg4SJbbVy/7bG/ePCaHBrhJFG1L
-	 abtQ2KpT78MzjOo4fGLKYlPvzyAAB0RJ3atrOm/7h1mLlz4U5Kb4M0XkhKRNxXpXDB
-	 8bFF88kid+YKiLxmIxULEE3sBYOdzu1jNSbEiF+U=
+	b=XGDPuOj40Eq6RKMa0BB76ayN8S3s8s5ZVz03+pRTK1sZrBe00UAoPySc+EtLEkCh2
+	 hrQAgSAiDKvZXfw66Um6Rz8DE9nzV0HNQBElJlAVpzXc7SMrA6bibSTVBWwIMmyyRm
+	 bM+AyRXOsbq6DFPUTfJrI2N2YtpjS9G0OLgEVn+I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728537AbfDOSqM (ORCPT
+        id S1728562AbfDOSqQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 14:46:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48728 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 14:46:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48862 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728511AbfDOSqH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 14:46:07 -0400
+        id S1728532AbfDOSqN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 14:46:13 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A76792087C;
-        Mon, 15 Apr 2019 18:46:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2581E2087C;
+        Mon, 15 Apr 2019 18:46:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555353966;
-        bh=uQVN4YjdpOiOYhOblB5qUPgSrZR6ogBCuS0yQjco0+0=;
+        s=default; t=1555353971;
+        bh=DwSdeP288kOuyytRsoktnn49/wtq75rGDnmJj7B6r8U=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kuk5stXaVMWzwv+xRInFQ+Iz4CLKtRlJMHXg9XDBVHAZzA5/XxAwH3qi5uw8ARUc4
-         oqW6n3I8SJna001IoH6ZvMuARY8OfhzeftzXdh+2byO805BkJ07Te9Iuq3qsMb5Qma
-         +qvsAaHVFfJF8VVxA7o2bexKXKJaMIy9YSiorkmQ=
+        b=Xyj2XRA0tBAAcV4mWgWFQIFq6NTiNTZNMd44f4UKmZbyc1iJVSBFPksjkqn6JFsDr
+         UfX4R6sMWFOFdiofaIxO5E67nfEq/ZQNzGo4OyC7c5KF1Q3VoRmFwv4cmU7MDUIgtU
+         aDwPnAIGa8SErkme/cwZ+01g2xBgZzJ3We37ufDQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Diana Craciun <diana.craciun@nxp.com>,
         Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 36/76] powerpc/fsl: Add nospectre_v2 command line argument
-Date:   Mon, 15 Apr 2019 20:44:00 +0200
-Message-Id: <20190415183717.159908152@linuxfoundation.org>
+Subject: [PATCH 4.9 38/76] powerpc/fsl: Flush the branch predictor at each kernel entry (32 bit)
+Date:   Mon, 15 Apr 2019 20:44:02 +0200
+Message-Id: <20190415183717.477172842@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183707.712011689@linuxfoundation.org>
 References: <20190415183707.712011689@linuxfoundation.org>
@@ -60,74 +60,81 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit f633a8ad636efb5d4bba1a047d4a0f1ef719aa06 upstream.
+commit 7fef436295bf6c05effe682c8797dfcb0deb112a upstream.
 
-When the command line argument is present, the Spectre variant 2
-mitigations are disabled.
+In order to protect against speculation attacks on
+indirect branches, the branch predictor is flushed at
+kernel entry to protect for the following situations:
+- userspace process attacking another userspace process
+- userspace process attacking the kernel
+Basically when the privillege level change (i.e.the kernel
+is entered), the branch predictor state is flushed.
 
 Signed-off-by: Diana Craciun <diana.craciun@nxp.com>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/setup.h |  5 +++++
- arch/powerpc/kernel/security.c   | 21 +++++++++++++++++++++
- 2 files changed, 26 insertions(+)
+ arch/powerpc/kernel/head_booke.h     |  6 ++++++
+ arch/powerpc/kernel/head_fsl_booke.S | 15 +++++++++++++++
+ 2 files changed, 21 insertions(+)
 
-diff --git a/arch/powerpc/include/asm/setup.h b/arch/powerpc/include/asm/setup.h
-index 23ee67e279ae..862ebce3ae54 100644
---- a/arch/powerpc/include/asm/setup.h
-+++ b/arch/powerpc/include/asm/setup.h
-@@ -65,6 +65,11 @@ void do_barrier_nospec_fixups_range(bool enable, void *start, void *end);
- static inline void do_barrier_nospec_fixups_range(bool enable, void *start, void *end) { };
- #endif
+diff --git a/arch/powerpc/kernel/head_booke.h b/arch/powerpc/kernel/head_booke.h
+index a620203f7de3..384bb4d80520 100644
+--- a/arch/powerpc/kernel/head_booke.h
++++ b/arch/powerpc/kernel/head_booke.h
+@@ -42,6 +42,9 @@
+ 	andi.	r11, r11, MSR_PR;	/* check whether user or kernel    */\
+ 	mr	r11, r1;						     \
+ 	beq	1f;							     \
++START_BTB_FLUSH_SECTION					\
++	BTB_FLUSH(r11)						\
++END_BTB_FLUSH_SECTION					\
+ 	/* if from user, start at top of this thread's kernel stack */       \
+ 	lwz	r11, THREAD_INFO-THREAD(r10);				     \
+ 	ALLOC_STACK_FRAME(r11, THREAD_SIZE);				     \
+@@ -127,6 +130,9 @@
+ 	stw	r9,_CCR(r8);		/* save CR on stack		   */\
+ 	mfspr	r11,exc_level_srr1;	/* check whether user or kernel    */\
+ 	DO_KVM	BOOKE_INTERRUPT_##intno exc_level_srr1;		             \
++START_BTB_FLUSH_SECTION								\
++	BTB_FLUSH(r10)									\
++END_BTB_FLUSH_SECTION								\
+ 	andi.	r11,r11,MSR_PR;						     \
+ 	mfspr	r11,SPRN_SPRG_THREAD;	/* if from user, start at top of   */\
+ 	lwz	r11,THREAD_INFO-THREAD(r11); /* this thread's kernel stack */\
+diff --git a/arch/powerpc/kernel/head_fsl_booke.S b/arch/powerpc/kernel/head_fsl_booke.S
+index bf4c6021515f..60a0aeefc4a7 100644
+--- a/arch/powerpc/kernel/head_fsl_booke.S
++++ b/arch/powerpc/kernel/head_fsl_booke.S
+@@ -452,6 +452,13 @@ END_FTR_SECTION_IFSET(CPU_FTR_EMB_HV)
+ 	mfcr	r13
+ 	stw	r13, THREAD_NORMSAVE(3)(r10)
+ 	DO_KVM	BOOKE_INTERRUPT_DTLB_MISS SPRN_SRR1
++START_BTB_FLUSH_SECTION
++	mfspr r11, SPRN_SRR1
++	andi. r10,r11,MSR_PR
++	beq 1f
++	BTB_FLUSH(r10)
++1:
++END_BTB_FLUSH_SECTION
+ 	mfspr	r10, SPRN_DEAR		/* Get faulting address */
  
-+#ifdef CONFIG_PPC_FSL_BOOK3E
-+void setup_spectre_v2(void);
-+#else
-+static inline void setup_spectre_v2(void) {};
-+#endif
- void do_btb_flush_fixups(void);
- 
- #endif /* !__ASSEMBLY__ */
-diff --git a/arch/powerpc/kernel/security.c b/arch/powerpc/kernel/security.c
-index fc41bccd9ab6..6dc5cdc2b87c 100644
---- a/arch/powerpc/kernel/security.c
-+++ b/arch/powerpc/kernel/security.c
-@@ -27,6 +27,10 @@ static enum count_cache_flush_type count_cache_flush_type = COUNT_CACHE_FLUSH_NO
- 
- bool barrier_nospec_enabled;
- static bool no_nospec;
-+static bool btb_flush_enabled;
-+#ifdef CONFIG_PPC_FSL_BOOK3E
-+static bool no_spectrev2;
-+#endif
- 
- static void enable_barrier_nospec(bool enable)
- {
-@@ -102,6 +106,23 @@ static __init int barrier_nospec_debugfs_init(void)
- device_initcall(barrier_nospec_debugfs_init);
- #endif /* CONFIG_DEBUG_FS */
- 
-+#ifdef CONFIG_PPC_FSL_BOOK3E
-+static int __init handle_nospectre_v2(char *p)
-+{
-+	no_spectrev2 = true;
+ 	/* If we are faulting a kernel address, we have to use the
+@@ -546,6 +553,14 @@ END_FTR_SECTION_IFSET(CPU_FTR_EMB_HV)
+ 	mfcr	r13
+ 	stw	r13, THREAD_NORMSAVE(3)(r10)
+ 	DO_KVM	BOOKE_INTERRUPT_ITLB_MISS SPRN_SRR1
++START_BTB_FLUSH_SECTION
++	mfspr r11, SPRN_SRR1
++	andi. r10,r11,MSR_PR
++	beq 1f
++	BTB_FLUSH(r10)
++1:
++END_BTB_FLUSH_SECTION
 +
-+	return 0;
-+}
-+early_param("nospectre_v2", handle_nospectre_v2);
-+void setup_spectre_v2(void)
-+{
-+	if (no_spectrev2)
-+		do_btb_flush_fixups();
-+	else
-+		btb_flush_enabled = true;
-+}
-+#endif /* CONFIG_PPC_FSL_BOOK3E */
-+
- #ifdef CONFIG_PPC_BOOK3S_64
- ssize_t cpu_show_meltdown(struct device *dev, struct device_attribute *attr, char *buf)
- {
+ 	mfspr	r10, SPRN_SRR0		/* Get faulting address */
+ 
+ 	/* If we are faulting a kernel address, we have to use the
 -- 
 2.19.1
 
