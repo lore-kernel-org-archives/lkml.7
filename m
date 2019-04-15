@@ -7,52 +7,50 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE6B4C10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:07:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E138EC282DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:07:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7291120880
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:07:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B0B1D218D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:07:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355247;
-	bh=VVMl++n3uhVTe0xMydQc4rY7xpoiXH/Z1dtMfIxV2WQ=;
+	s=default; t=1555355250;
+	bh=xbq8+N/Rmnb9W4kf7biegwCefl9XjEhlodcaUAF9ov4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mMjqtA4wNliZvxul3RHJhQeX4Ybkphp0SkC4XBZJw51GCFlTK4t8xp781l8mbi/8A
-	 4MApTONlid/TuAOj060k/AmpW7ZMo11d12YE5NipY3Cc8MIMLOxOGeGvqQmJcVAkPO
-	 Q7xBPEU931a3ZIlB4kme4MUsc7j1oeg7z0jIDs7U=
+	b=XqOWSLmQiVoNod0Z0tah9/csUjsrUbwFQbpQQ0OhjXMbpWoD3aQ0blLRTytBOR7vp
+	 baKewKyrrxiCFOGrVl7ysIInJIKderbPs7IW+u6VJq8unJu/Cq/52GK/PGztt4MYtj
+	 CsHZ62CnqQc7Sz/2aaFLT7DJ1+MPes11N0du7JD8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730178AbfDOTH0 (ORCPT
+        id S1730201AbfDOTH3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:07:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42276 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:07:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42364 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730161AbfDOTHY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:07:24 -0400
+        id S1730167AbfDOTH0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:07:26 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 13BA3218A1;
-        Mon, 15 Apr 2019 19:07:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C60BB218FF;
+        Mon, 15 Apr 2019 19:07:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355242;
-        bh=VVMl++n3uhVTe0xMydQc4rY7xpoiXH/Z1dtMfIxV2WQ=;
+        s=default; t=1555355245;
+        bh=xbq8+N/Rmnb9W4kf7biegwCefl9XjEhlodcaUAF9ov4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B775Z8OeOuuKgSSy26wBNM1TkbdIHrAjZ3t0lnOrcYDlmziGh9rb4z++YlEs2PxD9
-         4V2K5D2k+Df6y0uxPh3In6vIAJor9IyyCwYg89I01MuieKyKs1/zH/XAF1a5KNJ3Q2
-         0eao1dXb4P8jw/xe88V9p/sKgw71UBkuP+/cMR1M=
+        b=waf90+s8EsAu+R5Xt7hrGKnJuh5Koecwfmv1TOY+031+ZgNHB1HZ985cIKDgt6zgF
+         NDi1B8Zv5EvD2b20kq+uNisTZFvE+XrvzJfQgxRSV1OawIIEsevk35SV5TmXPMPE9k
+         soculFypjYTRaF5fwTNkCTS/hmFgNxGxIhZvMtns=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Greg Thelen <gthelen@google.com>,
-        Roman Gushchin <guro@fb.com>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Michal Hocko <mhocko@kernel.org>,
-        Vladimir Davydov <vdavydov.dev@gmail.com>,
-        Tejun Heo <tj@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.19 064/101] mm: writeback: use exact memcg dirty counts
-Date:   Mon, 15 Apr 2019 20:59:02 +0200
-Message-Id: <20190415183743.876384717@linuxfoundation.org>
+        stable@vger.kernel.org,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Curtis Malainey <cujomalainey@chromium.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 4.19 065/101] ASoC: intel: Fix crash at suspend/resume after failed codec registration
+Date:   Mon, 15 Apr 2019 20:59:03 +0200
+Message-Id: <20190415183743.929772812@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183740.341577907@linuxfoundation.org>
 References: <20190415183740.341577907@linuxfoundation.org>
@@ -65,223 +63,114 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Thelen <gthelen@google.com>
+From: Guenter Roeck <linux@roeck-us.net>
 
-commit 0b3d6e6f2dd0a7b697b1aa8c167265908940624b upstream.
+commit 8f71370f4b02730e8c27faf460af7a3586e24e1f upstream.
 
-Since commit a983b5ebee57 ("mm: memcontrol: fix excessive complexity in
-memory.stat reporting") memcg dirty and writeback counters are managed
-as:
+If codec registration fails after the ASoC Intel SST driver has been probed,
+the kernel will Oops and crash at suspend/resume.
 
- 1) per-memcg per-cpu values in range of [-32..32]
+general protection fault: 0000 [#1] PREEMPT SMP KASAN PTI
+CPU: 1 PID: 2811 Comm: cat Tainted: G        W         4.19.30 #15
+Hardware name: GOOGLE Clapper, BIOS Google_Clapper.5216.199.7 08/22/2014
+RIP: 0010:snd_soc_suspend+0x5a/0xd21
+Code: 03 80 3c 10 00 49 89 d7 74 0b 48 89 df e8 71 72 c4 fe 4c 89
+fa 48 8b 03 48 89 45 d0 48 8d 98 a0 01 00 00 48 89 d8 48 c1 e8 03
+<8a> 04 10 84 c0 0f 85 85 0c 00 00 80 3b 00 0f 84 6b 0c 00 00 48 8b
+RSP: 0018:ffff888035407750 EFLAGS: 00010202
+RAX: 0000000000000034 RBX: 00000000000001a0 RCX: 0000000000000000
+RDX: dffffc0000000000 RSI: 0000000000000008 RDI: ffff88805c417098
+RBP: ffff8880354077b0 R08: dffffc0000000000 R09: ffffed100b975718
+R10: 0000000000000001 R11: ffffffff949ea4a3 R12: 1ffff1100b975746
+R13: dffffc0000000000 R14: ffff88805cba4588 R15: dffffc0000000000
+FS:  0000794a78e91b80(0000) GS:ffff888068d00000(0000) knlGS:0000000000000000
+CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+CR2: 00007bd5283ccf58 CR3: 000000004b7aa000 CR4: 00000000001006e0
+Call Trace:
+? dpm_complete+0x67b/0x67b
+? i915_gem_suspend+0x14d/0x1ad
+sst_soc_prepare+0x91/0x1dd
+? sst_be_hw_params+0x7e/0x7e
+dpm_prepare+0x39a/0x88b
+dpm_suspend_start+0x13/0x9d
+suspend_devices_and_enter+0x18f/0xbd7
+? arch_suspend_enable_irqs+0x11/0x11
+? printk+0xd9/0x12d
+? lock_release+0x95f/0x95f
+? log_buf_vmcoreinfo_setup+0x131/0x131
+? rcu_read_lock_sched_held+0x140/0x22a
+? __bpf_trace_rcu_utilization+0xa/0xa
+? __pm_pr_dbg+0x186/0x190
+? pm_notifier_call_chain+0x39/0x39
+? suspend_test+0x9d/0x9d
+pm_suspend+0x2f4/0x728
+? trace_suspend_resume+0x3da/0x3da
+? lock_release+0x95f/0x95f
+? kernfs_fop_write+0x19f/0x32d
+state_store+0xd8/0x147
+? sysfs_kf_read+0x155/0x155
+kernfs_fop_write+0x23e/0x32d
+__vfs_write+0x108/0x608
+? vfs_read+0x2e9/0x2e9
+? rcu_read_lock_sched_held+0x140/0x22a
+? __bpf_trace_rcu_utilization+0xa/0xa
+? debug_smp_processor_id+0x10/0x10
+? selinux_file_permission+0x1c5/0x3c8
+? rcu_sync_lockdep_assert+0x6a/0xad
+? __sb_start_write+0x129/0x2ac
+vfs_write+0x1aa/0x434
+ksys_write+0xfe/0x1be
+? __ia32_sys_read+0x82/0x82
+do_syscall_64+0xcd/0x120
+entry_SYSCALL_64_after_hwframe+0x49/0xbe
 
- 2) per-memcg atomic counter
+In the observed situation, the problem is seen because the codec driver
+failed to probe due to a hardware problem.
 
-When a per-cpu counter cannot fit in [-32..32] it's flushed to the
-atomic.  Stat readers only check the atomic.  Thus readers such as
-balance_dirty_pages() may see a nontrivial error margin: 32 pages per
-cpu.
+max98090 i2c-193C9890:00: Failed to read device revision: -1
+max98090 i2c-193C9890:00: ASoC: failed to probe component -1
+cht-bsw-max98090 cht-bsw-max98090: ASoC: failed to instantiate card -1
+cht-bsw-max98090 cht-bsw-max98090: snd_soc_register_card failed -1
+cht-bsw-max98090: probe of cht-bsw-max98090 failed with error -1
 
-Assuming 100 cpus:
-   4k x86 page_size:  13 MiB error per memcg
-  64k ppc page_size: 200 MiB error per memcg
+The problem is similar to the problem solved with commit 2fc995a87f2e
+("ASoC: intel: Fix crash at suspend/resume without card registration"),
+but codec registration fails at a later point. At that time, the pointer
+checked with the above mentioned commit is already set, but it is not
+cleared if the device is subsequently removed. Adding a remove function
+to clear the pointer fixes the problem.
 
-Considering that dirty+writeback are used together for some decisions the
-errors double.
-
-This inaccuracy can lead to undeserved oom kills.  One nasty case is
-when all per-cpu counters hold positive values offsetting an atomic
-negative value (i.e.  per_cpu[*]=32, atomic=n_cpu*-32).
-balance_dirty_pages() only consults the atomic and does not consider
-throttling the next n_cpu*32 dirty pages.  If the file_lru is in the
-13..200 MiB range then there's absolutely no dirty throttling, which
-burdens vmscan with only dirty+writeback pages thus resorting to oom
-kill.
-
-It could be argued that tiny containers are not supported, but it's more
-subtle.  It's the amount the space available for file lru that matters.
-If a container has memory.max-200MiB of non reclaimable memory, then it
-will also suffer such oom kills on a 100 cpu machine.
-
-The following test reliably ooms without this patch.  This patch avoids
-oom kills.
-
-  $ cat test
-  mount -t cgroup2 none /dev/cgroup
-  cd /dev/cgroup
-  echo +io +memory > cgroup.subtree_control
-  mkdir test
-  cd test
-  echo 10M > memory.max
-  (echo $BASHPID > cgroup.procs && exec /memcg-writeback-stress /foo)
-  (echo $BASHPID > cgroup.procs && exec dd if=/dev/zero of=/foo bs=2M count=100)
-
-  $ cat memcg-writeback-stress.c
-  /*
-   * Dirty pages from all but one cpu.
-   * Clean pages from the non dirtying cpu.
-   * This is to stress per cpu counter imbalance.
-   * On a 100 cpu machine:
-   * - per memcg per cpu dirty count is 32 pages for each of 99 cpus
-   * - per memcg atomic is -99*32 pages
-   * - thus the complete dirty limit: sum of all counters 0
-   * - balance_dirty_pages() only sees atomic count -99*32 pages, which
-   *   it max()s to 0.
-   * - So a workload can dirty -99*32 pages before balance_dirty_pages()
-   *   cares.
-   */
-  #define _GNU_SOURCE
-  #include <err.h>
-  #include <fcntl.h>
-  #include <sched.h>
-  #include <stdlib.h>
-  #include <stdio.h>
-  #include <sys/stat.h>
-  #include <sys/sysinfo.h>
-  #include <sys/types.h>
-  #include <unistd.h>
-
-  static char *buf;
-  static int bufSize;
-
-  static void set_affinity(int cpu)
-  {
-  	cpu_set_t affinity;
-
-  	CPU_ZERO(&affinity);
-  	CPU_SET(cpu, &affinity);
-  	if (sched_setaffinity(0, sizeof(affinity), &affinity))
-  		err(1, "sched_setaffinity");
-  }
-
-  static void dirty_on(int output_fd, int cpu)
-  {
-  	int i, wrote;
-
-  	set_affinity(cpu);
-  	for (i = 0; i < 32; i++) {
-  		for (wrote = 0; wrote < bufSize; ) {
-  			int ret = write(output_fd, buf+wrote, bufSize-wrote);
-  			if (ret == -1)
-  				err(1, "write");
-  			wrote += ret;
-  		}
-  	}
-  }
-
-  int main(int argc, char **argv)
-  {
-  	int cpu, flush_cpu = 1, output_fd;
-  	const char *output;
-
-  	if (argc != 2)
-  		errx(1, "usage: output_file");
-
-  	output = argv[1];
-  	bufSize = getpagesize();
-  	buf = malloc(getpagesize());
-  	if (buf == NULL)
-  		errx(1, "malloc failed");
-
-  	output_fd = open(output, O_CREAT|O_RDWR);
-  	if (output_fd == -1)
-  		err(1, "open(%s)", output);
-
-  	for (cpu = 0; cpu < get_nprocs(); cpu++) {
-  		if (cpu != flush_cpu)
-  			dirty_on(output_fd, cpu);
-  	}
-
-  	set_affinity(flush_cpu);
-  	if (fsync(output_fd))
-  		err(1, "fsync(%s)", output);
-  	if (close(output_fd))
-  		err(1, "close(%s)", output);
-  	free(buf);
-  }
-
-Make balance_dirty_pages() and wb_over_bg_thresh() work harder to
-collect exact per memcg counters.  This avoids the aforementioned oom
-kills.
-
-This does not affect the overhead of memory.stat, which still reads the
-single atomic counter.
-
-Why not use percpu_counter? memcg already handles cpus going offline, so
-no need for that overhead from percpu_counter.  And the percpu_counter
-spinlocks are more heavyweight than is required.
-
-It probably also makes sense to use exact dirty and writeback counters
-in memcg oom reports.  But that is saved for later.
-
-Link: http://lkml.kernel.org/r/20190329174609.164344-1-gthelen@google.com
-Signed-off-by: Greg Thelen <gthelen@google.com>
-Reviewed-by: Roman Gushchin <guro@fb.com>
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-Cc: Michal Hocko <mhocko@kernel.org>
-Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
-Cc: Tejun Heo <tj@kernel.org>
-Cc: <stable@vger.kernel.org>	[4.16+]
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: stable@vger.kernel.org
+Cc: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Cc: Curtis Malainey <cujomalainey@chromium.org>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/memcontrol.h |    5 ++++-
- mm/memcontrol.c            |   20 ++++++++++++++++++--
- 2 files changed, 22 insertions(+), 3 deletions(-)
+ sound/soc/intel/atom/sst-mfld-platform-pcm.c |    8 ++++++++
+ 1 file changed, 8 insertions(+)
 
---- a/include/linux/memcontrol.h
-+++ b/include/linux/memcontrol.h
-@@ -559,7 +559,10 @@ struct mem_cgroup *lock_page_memcg(struc
- void __unlock_page_memcg(struct mem_cgroup *memcg);
- void unlock_page_memcg(struct page *page);
- 
--/* idx can be of type enum memcg_stat_item or node_stat_item */
-+/*
-+ * idx can be of type enum memcg_stat_item or node_stat_item.
-+ * Keep in sync with memcg_exact_page_state().
-+ */
- static inline unsigned long memcg_page_state(struct mem_cgroup *memcg,
- 					     int idx)
- {
---- a/mm/memcontrol.c
-+++ b/mm/memcontrol.c
-@@ -3897,6 +3897,22 @@ struct wb_domain *mem_cgroup_wb_domain(s
- 	return &memcg->cgwb_domain;
+--- a/sound/soc/intel/atom/sst-mfld-platform-pcm.c
++++ b/sound/soc/intel/atom/sst-mfld-platform-pcm.c
+@@ -711,9 +711,17 @@ static int sst_soc_probe(struct snd_soc_
+ 	return sst_dsp_init_v2_dpcm(component);
  }
  
-+/*
-+ * idx can be of type enum memcg_stat_item or node_stat_item.
-+ * Keep in sync with memcg_exact_page().
-+ */
-+static unsigned long memcg_exact_page_state(struct mem_cgroup *memcg, int idx)
++static void sst_soc_remove(struct snd_soc_component *component)
 +{
-+	long x = atomic_long_read(&memcg->stat[idx]);
-+	int cpu;
++	struct sst_data *drv = dev_get_drvdata(component->dev);
 +
-+	for_each_online_cpu(cpu)
-+		x += per_cpu_ptr(memcg->stat_cpu, cpu)->count[idx];
-+	if (x < 0)
-+		x = 0;
-+	return x;
++	drv->soc_card = NULL;
 +}
 +
- /**
-  * mem_cgroup_wb_stats - retrieve writeback related stats from its memcg
-  * @wb: bdi_writeback in question
-@@ -3922,10 +3938,10 @@ void mem_cgroup_wb_stats(struct bdi_writ
- 	struct mem_cgroup *memcg = mem_cgroup_from_css(wb->memcg_css);
- 	struct mem_cgroup *parent;
- 
--	*pdirty = memcg_page_state(memcg, NR_FILE_DIRTY);
-+	*pdirty = memcg_exact_page_state(memcg, NR_FILE_DIRTY);
- 
- 	/* this should eventually include NR_UNSTABLE_NFS */
--	*pwriteback = memcg_page_state(memcg, NR_WRITEBACK);
-+	*pwriteback = memcg_exact_page_state(memcg, NR_WRITEBACK);
- 	*pfilepages = mem_cgroup_nr_lru_pages(memcg, (1 << LRU_INACTIVE_FILE) |
- 						     (1 << LRU_ACTIVE_FILE));
- 	*pheadroom = PAGE_COUNTER_MAX;
+ static const struct snd_soc_component_driver sst_soc_platform_drv  = {
+ 	.name		= DRV_NAME,
+ 	.probe		= sst_soc_probe,
++	.remove		= sst_soc_remove,
+ 	.ops		= &sst_platform_ops,
+ 	.compr_ops	= &sst_platform_compr_ops,
+ 	.pcm_new	= sst_pcm_new,
 
 
