@@ -2,166 +2,357 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 23469C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 02:03:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9569EC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 02:05:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF39B206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 02:03:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C9B2206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 02:05:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727159AbfDOCDX (ORCPT
+        id S1726579AbfDOCFd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 22:03:23 -0400
-Received: from mga07.intel.com ([134.134.136.100]:30388 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726884AbfDOCDH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 22:03:07 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Apr 2019 19:03:07 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,351,1549958400"; 
-   d="scan'208";a="149422504"
-Received: from genxtest-ykzhao.sh.intel.com ([10.239.143.71])
-  by FMSMGA003.fm.intel.com with ESMTP; 14 Apr 2019 19:03:06 -0700
-From:   Zhao Yakui <yakui.zhao@intel.com>
-To:     linux-kernel@vger.kernel.org, x86@kernel.org
-Cc:     bp@alien8.de, tglx@linutronix.de,
-        Zhao Yakui <yakui.zhao@intel.com>,
-        Jason Chen CJ <jason.cj.chen@intel.com>
-Subject: [RFC PATCH v4 3/4] x86/acrn: Use HYPERVISOR_CALLBACK_VECTOR for ACRN guest upcall vector
-Date:   Mon, 15 Apr 2019 10:00:56 +0800
-Message-Id: <1555293657-32233-4-git-send-email-yakui.zhao@intel.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1555293657-32233-1-git-send-email-yakui.zhao@intel.com>
-References: <1555293657-32233-1-git-send-email-yakui.zhao@intel.com>
+        Sun, 14 Apr 2019 22:05:33 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:44814 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725975AbfDOCFc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Apr 2019 22:05:32 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 2B1A3B1DC1772B0485CC;
+        Mon, 15 Apr 2019 10:05:27 +0800 (CST)
+Received: from [127.0.0.1] (10.177.131.64) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.408.0; Mon, 15 Apr 2019
+ 10:05:21 +0800
+Subject: Re: [PATCH v3 3/4] arm64: kdump: support more than one crash kernel
+ regions
+To:     Mike Rapoport <rppt@linux.ibm.com>
+References: <20190409102819.121335-1-chenzhou10@huawei.com>
+ <20190409102819.121335-4-chenzhou10@huawei.com>
+ <20190410130917.GC17196@rapoport-lnx>
+ <137bef2e-8726-fd8f-1cb0-7592074f7870@huawei.com>
+ <20190414121058.GC20947@rapoport-lnx>
+CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <ebiederm@xmission.com>, <catalin.marinas@arm.com>,
+        <will.deacon@arm.com>, <akpm@linux-foundation.org>,
+        <ard.biesheuvel@linaro.org>, <horms@verge.net.au>,
+        <takahiro.akashi@linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
+        <linux-mm@kvack.org>, <wangkefeng.wang@huawei.com>
+From:   Chen Zhou <chenzhou10@huawei.com>
+Message-ID: <b5206f0c-d711-427e-256a-98b2e30c1ab0@huawei.com>
+Date:   Mon, 15 Apr 2019 10:05:18 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
+MIME-Version: 1.0
+In-Reply-To: <20190414121058.GC20947@rapoport-lnx>
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
+X-Originating-IP: [10.177.131.64]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linux kernel uses the HYPERVISOR_CALLBACK_VECTOR for hypervisor upcall
-vector. And it is already used for Xen and HyperV.
-After ACRN hypervisor is detected, it will also use this defined vector
-to notify kernel.
+Hi Mike,
 
-Co-developed-by: Jason Chen CJ <jason.cj.chen@intel.com>
-Signed-off-by: Jason Chen CJ <jason.cj.chen@intel.com>
-Signed-off-by: Zhao Yakui <yakui.zhao@intel.com>
----
-V1->V2: Remove the unused API definition of acrn_setup_intr_handler and
-acrn_remove_intr_handler.
-        Adjust the order of header file
-        Add the declaration of acrn_hv_vector_handler and tracing
-definition of acrn_hv_callback_vector.
+On 2019/4/14 20:10, Mike Rapoport wrote:
+> Hi,
+> 
+> On Thu, Apr 11, 2019 at 08:17:43PM +0800, Chen Zhou wrote:
+>> Hi Mike,
+>>
+>> This overall looks well.
+>> Replacing memblock_cap_memory_range() with memblock_cap_memory_ranges() was what i wanted
+>> to do in v1, sorry for don't express that clearly.
+> 
+> I didn't object to memblock_cap_memory_ranges() in general, I was worried
+> about it's complexity and I hoped that we could find a simpler solution.
+>  
+>> But there are some issues as below. After fixing this, it can work correctly.
+>>
+>> On 2019/4/10 21:09, Mike Rapoport wrote:
+>>> Hi,
+>>>
+>>> On Tue, Apr 09, 2019 at 06:28:18PM +0800, Chen Zhou wrote:
+>>>> After commit (arm64: kdump: support reserving crashkernel above 4G),
+>>>> there may be two crash kernel regions, one is below 4G, the other is
+>>>> above 4G.
+>>>>
+>>>> Crash dump kernel reads more than one crash kernel regions via a dtb
+>>>> property under node /chosen,
+>>>> linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>
+>>>>
+>>>> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+>>>> ---
+>>>>  arch/arm64/mm/init.c     | 66 ++++++++++++++++++++++++++++++++++++++++--------
+>>>>  include/linux/memblock.h |  6 +++++
+>>>>  mm/memblock.c            |  7 ++---
+>>>>  3 files changed, 66 insertions(+), 13 deletions(-)
+>>>>
+>>>> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+>>>> index 3bebddf..0f18665 100644
+>>>> --- a/arch/arm64/mm/init.c
+>>>> +++ b/arch/arm64/mm/init.c
+>>>> @@ -65,6 +65,11 @@ phys_addr_t arm64_dma_phys_limit __ro_after_init;
+>>>>  
+>>>>  #ifdef CONFIG_KEXEC_CORE
+>>>>  
+>>>> +/* at most two crash kernel regions, low_region and high_region */
+>>>> +#define CRASH_MAX_USABLE_RANGES	2
+>>>> +#define LOW_REGION_IDX			0
+>>>> +#define HIGH_REGION_IDX			1
+>>>> +
+>>>>  /*
+>>>>   * reserve_crashkernel() - reserves memory for crash kernel
+>>>>   *
+>>>> @@ -297,8 +302,8 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
+>>>>  		const char *uname, int depth, void *data)
+>>>>  {
+>>>>  	struct memblock_region *usablemem = data;
+>>>> -	const __be32 *reg;
+>>>> -	int len;
+>>>> +	const __be32 *reg, *endp;
+>>>> +	int len, nr = 0;
+>>>>  
+>>>>  	if (depth != 1 || strcmp(uname, "chosen") != 0)
+>>>>  		return 0;
+>>>> @@ -307,22 +312,63 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
+>>>>  	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
+>>>>  		return 1;
+>>>>  
+>>>> -	usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
+>>>> -	usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
+>>>> +	endp = reg + (len / sizeof(__be32));
+>>>> +	while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
+>>>> +		usablemem[nr].base = dt_mem_next_cell(dt_root_addr_cells, &reg);
+>>>> +		usablemem[nr].size = dt_mem_next_cell(dt_root_size_cells, &reg);
+>>>> +
+>>>> +		if (++nr >= CRASH_MAX_USABLE_RANGES)
+>>>> +			break;
+>>>> +	}
+>>>>  
+>>>>  	return 1;
+>>>>  }
+>>>>  
+>>>>  static void __init fdt_enforce_memory_region(void)
+>>>>  {
+>>>> -	struct memblock_region reg = {
+>>>> -		.size = 0,
+>>>> -	};
+>>>> +	int i, cnt = 0;
+>>>> +	struct memblock_region regs[CRASH_MAX_USABLE_RANGES];
+>>>
+>>> I only now noticed that fdt_enforce_memory_region() uses memblock_region to
+>>> pass the ranges around. If we'd switch to memblock_type instead, the
+>>> implementation of memblock_cap_memory_ranges() would be really
+>>> straightforward. Can you check if the below patch works for you? 
+>>>
+>>> >From e476d584098e31273af573e1a78e308880c5cf28 Mon Sep 17 00:00:00 2001
+>>> From: Mike Rapoport <rppt@linux.ibm.com>
+>>> Date: Wed, 10 Apr 2019 16:02:32 +0300
+>>> Subject: [PATCH] memblock: extend memblock_cap_memory_range to multiple ranges
+>>>
+>>> The memblock_cap_memory_range() removes all the memory except the range
+>>> passed to it. Extend this function to recieve memblock_type with the
+>>> regions that should be kept. This allows switching to simple iteration over
+>>> memblock arrays with 'for_each_mem_range' to remove the unneeded memory.
+>>>
+>>> Enable use of this function in arm64 for reservation of multile regions for
+>>> the crash kernel.
+>>>
+>>> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
+>>> ---
+>>>  arch/arm64/mm/init.c     | 34 ++++++++++++++++++++++++----------
+>>>  include/linux/memblock.h |  2 +-
+>>>  mm/memblock.c            | 45 ++++++++++++++++++++++-----------------------
+>>>  3 files changed, 47 insertions(+), 34 deletions(-)
+>>>
+>>>  
+>>> -void __init memblock_cap_memory_range(phys_addr_t base, phys_addr_t size)
+>>> +void __init memblock_cap_memory_ranges(struct memblock_type *regions_to_keep)
+>>>  {
+>>> -	int start_rgn, end_rgn;
+>>> -	int i, ret;
+>>> -
+>>> -	if (!size)
+>>> -		return;
+>>> -
+>>> -	ret = memblock_isolate_range(&memblock.memory, base, size,
+>>> -						&start_rgn, &end_rgn);
+>>> -	if (ret)
+>>> -		return;
+>>> -
+>>> -	/* remove all the MAP regions */
+>>> -	for (i = memblock.memory.cnt - 1; i >= end_rgn; i--)
+>>> -		if (!memblock_is_nomap(&memblock.memory.regions[i]))
+>>> -			memblock_remove_region(&memblock.memory, i);
+>>> +	phys_addr_t start, end;
+>>> +	u64 i;
+>>>  
+>>> -	for (i = start_rgn - 1; i >= 0; i--)
+>>> -		if (!memblock_is_nomap(&memblock.memory.regions[i]))
+>>> -			memblock_remove_region(&memblock.memory, i);
+>>> +	/* truncate memory while skipping NOMAP regions */
+>>> +	for_each_mem_range(i, &memblock.memory, regions_to_keep, NUMA_NO_NODE,
+>>> +			   MEMBLOCK_NONE, &start, &end, NULL)
+>>> +		memblock_remove(start, end);
+>>
+>> 1. use memblock_remove(start, size) instead of memblock_remove(start, end).
+>>
+>> 2. There is a another hidden issue. We couldn't mix __next_mem_range()(called by for_each_mem_range) operation
+>> with remove operation because __next_mem_range() records the index of last time. If we do remove between
+>> __next_mem_range(), the index may be mess.
+> 
+> Oops, I've really missed that :)
+>  
+>> Therefore, we could do remove operation after for_each_mem_range like this, solution A:
+>>  void __init memblock_cap_memory_ranges(struct memblock_type *regions_to_keep)
+>>  {
+>> -	phys_addr_t start, end;
+>> -	u64 i;
+>> +	phys_addr_t start[INIT_MEMBLOCK_RESERVED_REGIONS * 2];
+>> +	phys_addr_t end[INIT_MEMBLOCK_RESERVED_REGIONS * 2];
+>> +	u64 i, nr = 0;
+>>
+>>  	/* truncate memory while skipping NOMAP regions */
+>>  	for_each_mem_range(i, &memblock.memory, regions_to_keep, NUMA_NO_NODE,
+>> -			   MEMBLOCK_NONE, &start, &end, NULL)
+>> -		memblock_remove(start, end);
+>> +			   MEMBLOCK_NONE, &start[nr], &end[nr], NULL)
+>> +		nr++;
+>> +	for (i = 0; i < nr; i++)
+>> +		memblock_remove(start[i], end[i] - start[i]);
+>>
+>>  	/* truncate the reserved regions */
+>> +	nr = 0;
+>>  	for_each_mem_range(i, &memblock.reserved, regions_to_keep, NUMA_NO_NODE,
+>> -			   MEMBLOCK_NONE, &start, &end, NULL)
+>> -		memblock_remove_range(&memblock.reserved, start, end);
+>> +			   MEMBLOCK_NONE, &start[nr], &end[nr], NULL)
+>> +		nr++;
+>> +	for (i = 0; i < nr; i++)
+>> +		memblock_remove_range(&memblock.reserved, start[i],
+>> +				end[i] - start[i]);
+>>  }
+>>
+>> But a warning occurs when compiling:
+>>   CALL    scripts/atomic/check-atomics.sh
+>>   CALL    scripts/checksyscalls.sh
+>>   CHK     include/generated/compile.h
+>>   CC      mm/memblock.o
+>> mm/memblock.c: In function ‘memblock_cap_memory_ranges’:
+>> mm/memblock.c:1635:1: warning: the frame size of 36912 bytes is larger than 2048 bytes [-Wframe-larger-than=]
+>>  }
+>>
+>> another solution is my implementation in v1, solution B:
+>> +void __init memblock_cap_memory_ranges(struct memblock_type *regions_to_keep)
+>> +{
+>> +   int start_rgn[INIT_MEMBLOCK_REGIONS], end_rgn[INIT_MEMBLOCK_REGIONS];
+>> +   int i, j, ret, nr = 0;
+>> +   memblock_region *regs = regions_to_keep->regions;
+>> +
+>> +   nr = regions_to_keep -> cnt;
+>> +   if (!nr)
+>> +       return;
+>> +
+>> +   /* remove all the MAP regions */
+>> +   for (i = memblock.memory.cnt - 1; i >= end_rgn[nr - 1]; i--)
+>> +       if (!memblock_is_nomap(&memblock.memory.regions[i]))
+>> +           memblock_remove_region(&memblock.memory, i);
+>> +
+>> +   for (i = nr - 1; i > 0; i--)
+>> +       for (j = start_rgn[i] - 1; j >= end_rgn[i - 1]; j--)
+>> +           if (!memblock_is_nomap(&memblock.memory.regions[j]))
+>> +               memblock_remove_region(&memblock.memory, j);
+>> +
+>> +   for (i = start_rgn[0] - 1; i >= 0; i--)
+>> +       if (!memblock_is_nomap(&memblock.memory.regions[i]))
+>> +           memblock_remove_region(&memblock.memory, i);
+>> +
+>> +   /* truncate the reserved regions */
+>> +   memblock_remove_range(&memblock.reserved, 0, regs[0].base);
+>> +
+>> +   for (i = nr - 1; i > 0; i--)
+>> +       memblock_remove_range(&memblock.reserved,
+>> +               regs[i - 1].base + regs[i - 1].size,
+>> +		regs[i].base - regs[i - 1].base - regs[i - 1].size);
+>> +
+>> +   memblock_remove_range(&memblock.reserved,
+>> +           regs[nr - 1].base + regs[nr - 1].size, PHYS_ADDR_MAX);
+>> +}
+>>
+>> solution A: 	phys_addr_t start[INIT_MEMBLOCK_RESERVED_REGIONS * 2];
+>> 		phys_addr_t end[INIT_MEMBLOCK_RESERVED_REGIONS * 2];
+>> start, end is physical addr
+>>
+>> solution B: 	int start_rgn[INIT_MEMBLOCK_REGIONS], end_rgn[INIT_MEMBLOCK_REGIONS];
+>> start_rgn, end_rgn is rgn index		
+>>
+>> Solution B do less remove operations and with no warning comparing to solution A.
+>> I think solution B is better, could you give some suggestions?
+>  
+> Solution B is indeed better that solution A, but I'm still worried by
+> relatively large arrays on stack and the amount of loops :(
+> 
+> The very least we could do is to call memblock_cap_memory_range() to drop
+> the memory before and after the ranges we'd like to keep.
 
-v2->v3: Select the X86_HV_CALLBACK_VECTOR for ACRN guest
-v3->v4: Refine the file name of acrnhyper.h to acrn.h
----
- arch/x86/Kconfig            |  1 +
- arch/x86/entry/entry_64.S   |  5 +++++
- arch/x86/include/asm/acrn.h | 11 +++++++++++
- arch/x86/kernel/cpu/acrn.c  | 22 ++++++++++++++++++++++
- 4 files changed, 39 insertions(+)
- create mode 100644 arch/x86/include/asm/acrn.h
+1. relatively large arrays
+As my said above, the start_rgn, end_rgn is rgn index, we could use unsigned char type.
 
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index b33bfe5..4bad72c 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -848,6 +848,7 @@ config JAILHOUSE_GUEST
- config ACRN_GUEST
- 	bool "ACRN Guest support"
- 	depends on X86_64
-+	select X86_HV_CALLBACK_VECTOR
- 	help
- 	  This option allows to run Linux as guest in ACRN hypervisor. Enabling
- 	  this will allow the kernel to boot in virtualized environment under
-diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-index 1f0efdb..d1b8ad3 100644
---- a/arch/x86/entry/entry_64.S
-+++ b/arch/x86/entry/entry_64.S
-@@ -1129,6 +1129,11 @@ apicinterrupt3 HYPERV_STIMER0_VECTOR \
- 	hv_stimer0_callback_vector hv_stimer0_vector_handler
- #endif /* CONFIG_HYPERV */
- 
-+#if IS_ENABLED(CONFIG_ACRN_GUEST)
-+apicinterrupt3 HYPERVISOR_CALLBACK_VECTOR \
-+	acrn_hv_callback_vector acrn_hv_vector_handler
-+#endif
-+
- idtentry debug			do_debug		has_error_code=0	paranoid=1 shift_ist=DEBUG_STACK
- idtentry int3			do_int3			has_error_code=0
- idtentry stack_segment		do_stack_segment	has_error_code=1
-diff --git a/arch/x86/include/asm/acrn.h b/arch/x86/include/asm/acrn.h
-new file mode 100644
-index 0000000..43ab032
---- /dev/null
-+++ b/arch/x86/include/asm/acrn.h
-@@ -0,0 +1,11 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+#ifndef _ASM_X86_ACRN_H
-+#define _ASM_X86_ACRN_H
-+
-+void acrn_hv_callback_vector(void);
-+#ifdef CONFIG_TRACING
-+#define trace_acrn_hv_callback_vector acrn_hv_callback_vector
-+#endif
-+
-+void acrn_hv_vector_handler(struct pt_regs *regs);
-+#endif /* _ASM_X86_ACRN_H */
-diff --git a/arch/x86/kernel/cpu/acrn.c b/arch/x86/kernel/cpu/acrn.c
-index f556640..d8072bf 100644
---- a/arch/x86/kernel/cpu/acrn.c
-+++ b/arch/x86/kernel/cpu/acrn.c
-@@ -9,7 +9,11 @@
-  *
-  */
- 
-+#include <linux/interrupt.h>
-+#include <asm/acrn.h>
-+#include <asm/desc.h>
- #include <asm/hypervisor.h>
-+#include <asm/irq_regs.h>
- 
- static uint32_t __init acrn_detect(void)
- {
-@@ -18,6 +22,8 @@ static uint32_t __init acrn_detect(void)
- 
- static void __init acrn_init_platform(void)
- {
-+	alloc_intr_gate(HYPERVISOR_CALLBACK_VECTOR,
-+			acrn_hv_callback_vector);
- }
- 
- static bool acrn_x2apic_available(void)
-@@ -30,6 +36,22 @@ static bool acrn_x2apic_available(void)
- 	return false;
- }
- 
-+static void (*acrn_intr_handler)(void);
-+
-+__visible void __irq_entry acrn_hv_vector_handler(struct pt_regs *regs)
-+{
-+	struct pt_regs *old_regs = set_irq_regs(regs);
-+
-+	entering_ack_irq();
-+	inc_irq_stat(irq_hv_callback_count);
-+
-+	if (acrn_intr_handler)
-+		acrn_intr_handler();
-+
-+	exiting_irq();
-+	set_irq_regs(old_regs);
-+}
-+
- const __initconst struct hypervisor_x86 x86_hyper_acrn = {
- 	.name                   = "ACRN",
- 	.detect                 = acrn_detect,
--- 
-2.7.4
+2. loops
+Loops always exist, and the solution with fewer loops may be just encapsulated well.
+
+Thanks,
+Chen Zhou
+
+> 
+>>>  
+>>>  	/* truncate the reserved regions */
+>>> -	memblock_remove_range(&memblock.reserved, 0, base);
+>>> -	memblock_remove_range(&memblock.reserved,
+>>> -			base + size, PHYS_ADDR_MAX);
+>>> +	for_each_mem_range(i, &memblock.reserved, regions_to_keep, NUMA_NO_NODE,
+>>> +			   MEMBLOCK_NONE, &start, &end, NULL)
+>>> +		memblock_remove_range(&memblock.reserved, start, end);
+>>
+>> There are the same issues as above.
+>>
+>>>  }
+>>>  
+>>>  void __init memblock_mem_limit_remove_map(phys_addr_t limit)
+>>>  {
+>>> +	struct memblock_region rgn = {
+>>> +		.base = 0,
+>>> +	};
+>>> +
+>>> +	struct memblock_type region_to_keep = {
+>>> +		.cnt = 1,
+>>> +		.max = 1,
+>>> +		.regions = &rgn,
+>>> +	};
+>>> +
+>>>  	phys_addr_t max_addr;
+>>>  
+>>>  	if (!limit)
+>>> @@ -1646,7 +1644,8 @@ void __init memblock_mem_limit_remove_map(phys_addr_t limit)
+>>>  	if (max_addr == PHYS_ADDR_MAX)
+>>>  		return;
+>>>  
+>>> -	memblock_cap_memory_range(0, max_addr);
+>>> +	region_to_keep.regions[0].size = max_addr;
+>>> +	memblock_cap_memory_ranges(&region_to_keep);
+>>>  }
+>>>  
+>>>  static int __init_memblock memblock_search(struct memblock_type *type, phys_addr_t addr)
+>>>
+>>
+>> Thanks,
+>> Chen Zhou
+>>
+> 
 
