@@ -7,45 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E04DEC10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:17:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CB7C10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:17:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E3672073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:17:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 530452073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:17:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355840;
-	bh=RqMzeHO0/nO2zE2+lwmErEH+ewxaUdTxcNW4FEtKBpk=;
+	s=default; t=1555355844;
+	bh=vzYCNknAcHI6ANSWfRgMCdjBUVN9rwhNis3Yne9SqaE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1O1Xom1hJhtlTqaoVzuWp86hyspS1YoomD7Zde9tO+PI5N1h+ReD94q60aW1wA65a
-	 jLexCnE6rc+1l6qdj02EEgREBUsAvEMd6x3p7C+Wi5stu5Yam/2Z7p75xXkZB0/Q0G
-	 c7SnmwtCHsCUh158fs0AxhQTVw2Wo+bp7KvN+ct0=
+	b=qvtIhBqIqwuBxJARrT/AYjaWDIpsoknjyYrxqMvLkzH9UYe2PBN+mgk3ieRkZPPcX
+	 B1RALzWgGWRR8yCmPJ+RyZ4pibMR8k0K91igwXLLRs2ZhnGtw0HmXbfvrdSXnc1x/D
+	 ENzTuO6kzgC9tXgqtgsUENoGOjHbMywCsQeiYdRk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731685AbfDOTRT (ORCPT
+        id S1731394AbfDOTMZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:17:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49908 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:12:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731405AbfDOTMa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:12:30 -0400
+        id S1731377AbfDOTMW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:12:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 521B9218DA;
-        Mon, 15 Apr 2019 19:12:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 42D44218D3;
+        Mon, 15 Apr 2019 19:12:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355549;
-        bh=RqMzeHO0/nO2zE2+lwmErEH+ewxaUdTxcNW4FEtKBpk=;
+        s=default; t=1555355541;
+        bh=vzYCNknAcHI6ANSWfRgMCdjBUVN9rwhNis3Yne9SqaE=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=CtMHv3wi8z20mn6+XPYbB5iVrh6FOhKH3fYPAn7rQeIIVXo0ejbYbxryhLsFNZUcv
-         cGwkUanXYJj2KyGa2xDIUfn3+MuAlLW88pvaNsVCXBnnz261BZ0Ibj+D/osJK2PJoe
-         24blENi3/6yEkPz3c0D4RHL0uPAOJMdcJrgitlIk=
+        b=C4UbdiRBhr7yDpf1VOJ5ggwcdaSeLA5RboFR3LCpDc1UIsBZueKeWZBNfyUSI1CYe
+         P1461pFKe6MQyDJivTTTbjcC7Wr7NgNCKv3fJ9+0WI0NrQztXAZ+X4e96UXr7WUbQb
+         0f9gRhhVJ6tIbhBhlEg8rtdwvxTNkqjr053cJoeg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Helge Deller <deller@gmx.de>
-Subject: [PATCH 5.0 062/117] parisc: Detect QEMU earlier in boot process
-Date:   Mon, 15 Apr 2019 21:00:32 +0200
-Message-Id: <20190415183748.087422732@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.0 074/117] Btrfs: do not allow trimming when a fs is mounted with the nologreplay option
+Date:   Mon, 15 Apr 2019 21:00:44 +0200
+Message-Id: <20190415183748.703487287@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183744.887851196@linuxfoundation.org>
 References: <20190415183744.887851196@linuxfoundation.org>
@@ -58,55 +62,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helge Deller <deller@gmx.de>
+From: Filipe Manana <fdmanana@suse.com>
 
-commit d006e95b5561f708d0385e9677ffe2c46f2ae345 upstream.
+commit f35f06c35560a86e841631f0243b83a984dc11a9 upstream.
 
-While adding LASI support to QEMU, I noticed that the QEMU detection in
-the kernel happens much too late. For example, when a LASI chip is found
-by the kernel, it registers the LASI LED driver as well.  But when we
-run on QEMU it makes sense to avoid spending unnecessary CPU cycles, so
-we need to access the running_on_QEMU flag earlier than before.
+Whan a filesystem is mounted with the nologreplay mount option, which
+requires it to be mounted in RO mode as well, we can not allow discard on
+free space inside block groups, because log trees refer to extents that
+are not pinned in a block group's free space cache (pinning the extents is
+precisely the first phase of replaying a log tree).
 
-This patch now makes the QEMU detection the fist task of the Linux
-kernel by moving it to where the kernel enters the C-coding.
+So do not allow the fitrim ioctl to do anything when the filesystem is
+mounted with the nologreplay option, because later it can be mounted RW
+without that option, which causes log replay to happen and result in
+either a failure to replay the log trees (leading to a mount failure), a
+crash or some silent corruption.
 
-Fixes: 310d82784fb4 ("parisc: qemu idle sleep support")
-Signed-off-by: Helge Deller <deller@gmx.de>
-Cc: stable@vger.kernel.org # v4.14+
+Reported-by: Darrick J. Wong <darrick.wong@oracle.com>
+Fixes: 96da09192cda ("btrfs: Introduce new mount option to disable tree log replay")
+CC: stable@vger.kernel.org # 4.9+
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/parisc/kernel/process.c |    6 ------
- arch/parisc/kernel/setup.c   |    3 +++
- 2 files changed, 3 insertions(+), 6 deletions(-)
+ fs/btrfs/ioctl.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
---- a/arch/parisc/kernel/process.c
-+++ b/arch/parisc/kernel/process.c
-@@ -210,12 +210,6 @@ void __cpuidle arch_cpu_idle(void)
+--- a/fs/btrfs/ioctl.c
++++ b/fs/btrfs/ioctl.c
+@@ -501,6 +501,16 @@ static noinline int btrfs_ioctl_fitrim(s
+ 	if (!capable(CAP_SYS_ADMIN))
+ 		return -EPERM;
  
- static int __init parisc_idle_init(void)
- {
--	const char *marker;
--
--	/* check QEMU/SeaBIOS marker in PAGE0 */
--	marker = (char *) &PAGE0->pad0;
--	running_on_qemu = (memcmp(marker, "SeaBIOS", 8) == 0);
--
- 	if (!running_on_qemu)
- 		cpu_idle_poll_ctrl(1);
- 
---- a/arch/parisc/kernel/setup.c
-+++ b/arch/parisc/kernel/setup.c
-@@ -396,6 +396,9 @@ void __init start_parisc(void)
- 	int ret, cpunum;
- 	struct pdc_coproc_cfg coproc_cfg;
- 
-+	/* check QEMU/SeaBIOS marker in PAGE0 */
-+	running_on_qemu = (memcmp(&PAGE0->pad0, "SeaBIOS", 8) == 0);
++	/*
++	 * If the fs is mounted with nologreplay, which requires it to be
++	 * mounted in RO mode as well, we can not allow discard on free space
++	 * inside block groups, because log trees refer to extents that are not
++	 * pinned in a block group's free space cache (pinning the extents is
++	 * precisely the first phase of replaying a log tree).
++	 */
++	if (btrfs_test_opt(fs_info, NOLOGREPLAY))
++		return -EROFS;
 +
- 	cpunum = smp_processor_id();
- 
- 	init_cpu_topology();
+ 	rcu_read_lock();
+ 	list_for_each_entry_rcu(device, &fs_info->fs_devices->devices,
+ 				dev_list) {
 
 
