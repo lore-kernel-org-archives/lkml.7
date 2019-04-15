@@ -2,93 +2,103 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91D78C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:15:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8CF9C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:15:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68F4A218A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:15:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 716F12077C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:15:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ucpboVWl"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727432AbfDOMPS (ORCPT
+        id S1727466AbfDOMPV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 08:15:18 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:33738 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727177AbfDOMPR (ORCPT
+        Mon, 15 Apr 2019 08:15:21 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:36324 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727433AbfDOMPS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 08:15:17 -0400
-Received: by mail-qk1-f196.google.com with SMTP id k189so9660582qkc.0
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 05:15:16 -0700 (PDT)
+        Mon, 15 Apr 2019 08:15:18 -0400
+Received: by mail-pg1-f196.google.com with SMTP id 85so8502231pgc.3
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 05:15:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :in-reply-to:references;
+        bh=CAUNijlh9/PyuN9Nu9xMccDkwi74nLVT9vlXbtkz1ds=;
+        b=ucpboVWlQ5/w5Wu9P8+gVZtpfga1IRqvUoAo5DPUJU0Pxdb6xA3tpyd1e57aAy0pgb
+         ieOVfBtAJXpRZlmX+n4tMGCGGW29Ce6U+Q6HYFKnLDDgGfjQRvXQU+sW3fvbiDsXBT5q
+         xoHIE5eZorhruD6XJdKUujPzV+O+DgFbHynEfd/Zn795a42mbE+slNNCFEcGW3VOb7Hg
+         WSm2R4TRtGlQQY0mBjPS4YHtzOABnCp0hiYddfZLU/keK/qtdoA74w0aJDpksXTM5gNY
+         mE8OQW8PaFIsb4FMsKRjHLw1c1kymt/Cs2IWeMgDqIoJlEDmlNXpkEGl0QBxGHpw2OdI
+         IHPg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=7unhlftixqJkBJ/xoqxwthgcxUvr22VS2Hsdja3tIGo=;
-        b=tcdwMQrprWb2nnso54DuNhvy3PtEccPagi4RE4GsNZR23x+4YWXPSmX/Mbz4Ka7i4o
-         N22BNAWKyfYQwobsmg5bN8HPsduEs0b1I49AoWYskR8m8pZbBh1xYKHoYTXuvVwCeZ3t
-         GHRjd27gV0Dvub4CxlQZy+nErfctFbRCoaDMn/pc4EvAICum79bDccu6ThvYnv3tua74
-         za7OAc4+frQ8EoC+wMTC1kNDZLTRwpntyqXVmDg63U0O8tegF48rDZcFgclcN4Ybu4kB
-         HbVXroB2BVjYyVg3HLmaFYjpyRJbTgYTbkHJ3mXdIWHyOEdCJ6avrN13z7akn3CW4SoO
-         CXtQ==
-X-Gm-Message-State: APjAAAU2dJSBPerD3DDxppYa3zFdi+80elrVAW+0QlLvOpSsl3ZngKt4
-        7uX6gLahJ+EQeKRuHdS4ZbuojA==
-X-Google-Smtp-Source: APXvYqzAKeHud5K2uh6vYJdS1SKBKtPQdZNPJct8AwIBQlHkNGzTJDKRP1DfepXOzTVYuAG+zqFOhA==
-X-Received: by 2002:ae9:c314:: with SMTP id n20mr56272144qkg.191.1555330516030;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:in-reply-to:references;
+        bh=CAUNijlh9/PyuN9Nu9xMccDkwi74nLVT9vlXbtkz1ds=;
+        b=ec8UHP8MBN0/ZXwtrEw2NWDnGJhkVA1xQoTJJoADmgVjoM3OLNpsrcaRsdgFRbDyr+
+         9YUv4eDG9P/aHiQvDCHi8MCNWQsJz6ogGMY2/UOteSxJ+nGhrQ3+HJVzpPoo1ed5/Mp/
+         q5ieMNdl57PLVFrtgzBdehpAnuImAnUx4/yVqthm0PuWmm86XvrhznuVEyAjzppOqFJK
+         Lry1m7tpiwqiZssjJq4l1HPXNnJs+ku/lNnup5MM5qlMRJvC0z1Af/ZvZ5DnSh5pd8bf
+         21uC7VrEZ/GP/bl4tWx1+iqLKGkl0Uge35oQEMjvbqmCtRoPhiwejCsGSMBecjhqL0s5
+         Cp0g==
+X-Gm-Message-State: APjAAAX4A4cVF2XyZiIkvdJzn3pyM8eQqH5iluJmkXfF86NRgWUzGGD6
+        1z+pA2lEyLZ6cXPoT1uVm+2rww==
+X-Google-Smtp-Source: APXvYqzFwA1PM9j5ZwIwdADWuSPlcmW3p3seKOvWmE7l0Qs8TQWml2IfQNh29iOponW4uMd7MtMLlg==
+X-Received: by 2002:a63:b64:: with SMTP id a36mr70563796pgl.58.1555330518223;
+        Mon, 15 Apr 2019 05:15:18 -0700 (PDT)
+Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.102])
+        by smtp.gmail.com with ESMTPSA id 6sm64157155pfj.95.2019.04.15.05.15.12
+        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
         Mon, 15 Apr 2019 05:15:16 -0700 (PDT)
-Received: from t460s.bristot.redhat.com (host237-128-dynamic.51-79-r.retail.telecomitalia.it. [79.51.128.237])
-        by smtp.gmail.com with ESMTPSA id x5sm24424750qki.26.2019.04.15.05.15.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Apr 2019 05:15:15 -0700 (PDT)
-Subject: Re: [PATCH V5 7/7] x86/jump_label: Batch jump label updates
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Chris von Recklinghausen <crecklin@redhat.com>,
-        Jason Baron <jbaron@akamai.com>, Scott Wood <swood@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Clark Williams <williams@redhat.com>, x86@kernel.org
-References: <cover.1554106794.git.bristot@redhat.com>
- <725010896650bc040743b0479b103f5f6d28b404.1554106794.git.bristot@redhat.com>
- <20190415115458.GM11158@hirez.programming.kicks-ass.net>
-From:   Daniel Bristot de Oliveira <bristot@redhat.com>
-Message-ID: <e3ff2665-cf0a-a172-9484-f609adecbf25@redhat.com>
-Date:   Mon, 15 Apr 2019 14:15:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190415115458.GM11158@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+From:   Baolin Wang <baolin.wang@linaro.org>
+To:     dan.j.williams@intel.com, vkoul@kernel.org
+Cc:     eric.long@unisoc.com, orsonzhai@gmail.com, zhang.lyra@gmail.com,
+        broonie@kernel.org, baolin.wang@linaro.org,
+        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/7] dmaengine: sprd: Fix the possible crash when getting engine status
+Date:   Mon, 15 Apr 2019 20:14:55 +0800
+Message-Id: <2eecd528e85377f03e6fbc5e7d6544b9c9f59cb1.1555330115.git.baolin.wang@linaro.org>
+X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <cover.1555330115.git.baolin.wang@linaro.org>
+References: <cover.1555330115.git.baolin.wang@linaro.org>
+In-Reply-To: <cover.1555330115.git.baolin.wang@linaro.org>
+References: <cover.1555330115.git.baolin.wang@linaro.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/15/19 1:54 PM, Peter Zijlstra wrote:
-> So how about we do something like:
-> 
-> +static struct bp_patching_desc {
-> +       int nr_entries;
-> +       struct text_patch_loc vec[PAGE_SIZE / sizeof(struct text_patch_loc)];
-> +} bp_patching;
-> 
-> and call it a day?
+We will get a NULL virtual descriptor by vchan_find_desc() when the descriptor
+has been submitted, that will crash the kernel when getting the engine status.
 
-Sure!
+In this case, since the descriptor has been submitted, which means the pointer
+'schan->cur_desc' will point to the current descriptor, then we can use
+'schan->cur_desc' to get the engine status to avoid this issue.
 
-Actually, I used something like that in my first poc patches (for my own), but I
-thought people would complain...
+Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
+---
+ drivers/dma/sprd-dma.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-If nobody else complains, I will use it in the next version.
+diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
+index 48431e2..e29342a 100644
+--- a/drivers/dma/sprd-dma.c
++++ b/drivers/dma/sprd-dma.c
+@@ -625,7 +625,7 @@ static enum dma_status sprd_dma_tx_status(struct dma_chan *chan,
+ 		else
+ 			pos = 0;
+ 	} else if (schan->cur_desc && schan->cur_desc->vd.tx.cookie == cookie) {
+-		struct sprd_dma_desc *sdesc = to_sprd_dma_desc(vd);
++		struct sprd_dma_desc *sdesc = schan->cur_desc;
+ 
+ 		if (sdesc->dir == DMA_DEV_TO_MEM)
+ 			pos = sprd_dma_get_dst_addr(schan);
+-- 
+1.7.9.5
 
--- Daniel
