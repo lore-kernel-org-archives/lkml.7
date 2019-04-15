@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A8EAC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BEB8C10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:55:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2461C2075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:55:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFA3F2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:55:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Rn7ta0qn"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="czVmYOou"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727660AbfDOOzl (ORCPT
+        id S1727680AbfDOOzp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 10:55:41 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:34465 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727564AbfDOOzj (ORCPT
+        Mon, 15 Apr 2019 10:55:45 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:46920 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727638AbfDOOzl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 10:55:39 -0400
-Received: by mail-lj1-f194.google.com with SMTP id j89so15964494ljb.1;
-        Mon, 15 Apr 2019 07:55:37 -0700 (PDT)
+        Mon, 15 Apr 2019 10:55:41 -0400
+Received: by mail-lf1-f67.google.com with SMTP id k18so4406030lfj.13;
+        Mon, 15 Apr 2019 07:55:39 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=cBA/ZMY4L1vdrvxaRh3YG36Kn12w5WQabTbSgaahxao=;
-        b=Rn7ta0qn5pQd5j80L2NNfiOt+0m6Zj80jOQHk5lwAxmAav+AbUH2/UzHPCzB01h0Iv
-         GGJTr2SDrGqvs5cql3+Rb987+6/0xRTkTVulsPCScXC5DCSGpmEAi1CUTS1ZFCD6ia9Z
-         GVux8cGlVapwr4dg+aoIV9i6WGwta0KQRWaGiej3FJBCMwpICJN4k/8vYpiNewZ59f1f
-         HonkkUFlXKszkxaiXsaJ/USOin/zPzO6tCMZbun0HQSjpS0mvykZx3Hx+Cx6QA2Rbvbx
-         6wV2Sglltm6ouWZs88AhMjmuzumUBGrUq7JJk0S2hX9YjOFLfy7OnlK+qdVh/5i5P1D7
-         yzAA==
+        bh=vb5aKDrshoN/AsERjs9oArk+gZDepbjo8hgOV69FmyQ=;
+        b=czVmYOouenoz7kyLQ/xzLM2TMkDlbUR2oSjA8nTbIpQkSys6vvoo2ka0tq8AcMcHuW
+         c75nDGcefIXDbb83LX1WHdJAKxFZpmiEyUbUUbthBINCzndWfyUfJm6jHPXSvdV1U3bp
+         Ra4mNXHOO0N+JF323Km1/raFzlNTT4BPtyEpmze+clulOgB7WIr9+8NWGzsAH+44pgEj
+         LM2ol2e/+zGbGoFaqvgmVv98cChmiXTWBM4r9ibEHaPg/I1ob69g4MDdkrbBADrVLnAh
+         PH9CLpDmZ7D9YpDFWNHkiF4asMMUr0Lo1oMbfdmImMPd5fcElGAVAwBJZR5K7ueMcop+
+         BuhQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=cBA/ZMY4L1vdrvxaRh3YG36Kn12w5WQabTbSgaahxao=;
-        b=EF8W1vrjXQoXB6+cVtOXI0HpkMfC7OIlPuhBGzE3pIkGuWMw7nlEm23Q8piEBc9HN2
-         /JQ2EDjRgv3eyhAQ+ycYXNKsJsFfPVw3ysSl+bGHN8m95yPBrcKDAcFA6upt+jcLxVSg
-         +pc5Dm2DYHWALfeR35dyUXWZm5ccgHmrmIdhmTOZ4U21Pe6ZBEHbXDJc9oHNZSXSuWcl
-         IqRsSCOu61EjxaZVxVepLFK0z7O3Kthsi/Mq6JyNxz5+EJxpEow0RP2SYg5eRYry9noE
-         OAQtOW5s2YXvJYhmOmyKhtwyGJaJLqlZrnDxWML3BFx5wd19WlyB9shGi3LSx9PQopyQ
-         AYQw==
-X-Gm-Message-State: APjAAAUB99MbS86K4fGmKOiwapKf5MyP2vOIoedrfNt3OA0iLAL+VNZo
-        x+ScJZq6T+GOh8gLp9hNl6U=
-X-Google-Smtp-Source: APXvYqywHld9ZlUmtrLWMCsLR4OVnsMP0M+g0xZ84w60ykIGleHwsIIMBhB0hubRrF5IDOBbCPCECQ==
-X-Received: by 2002:a2e:2d02:: with SMTP id t2mr20937235ljt.148.1555340136896;
-        Mon, 15 Apr 2019 07:55:36 -0700 (PDT)
+        bh=vb5aKDrshoN/AsERjs9oArk+gZDepbjo8hgOV69FmyQ=;
+        b=pALHjBMQ5ycv9ZoLQn1QnGr0Tepp0LCdSZCM+r983edKH+xAaNYDhe4rgv843V+yao
+         f1rx2fhlx7bH1+p5fE9hP7V2XXgDTL4HHNgtkvECR0+CiTFPR8WH+ShbK49YwkMKmdik
+         2kfNeh6Jwa2vvsbG47P4iPc75wpW36j+TPwnqHMEebBex9mjZ7USXMpyfqNlXp05IwEJ
+         72YgUsBLHi0pI+INQIZmYcyjgcgDvg3DqfnJwmteQumpeaxvLdnNUZRZJLFEg5NqrmhB
+         G9kr1hvIeVahevf5+Zt1iz7konLEXLE337pdZfkrMjWh67TR/smHYfeQT0eDvqPm0WML
+         PRWA==
+X-Gm-Message-State: APjAAAVb+nmLicctm46AvBcKTs/NHSiYv3u/YYqofHKrBChxXtE9RRtC
+        66knmv6rOqnKE/F24HGwm14=
+X-Google-Smtp-Source: APXvYqycYgYjwaH8ozMlI+luULH0EHgG6Yavyf6/wvkvChmg2K17n1kaItbgXkjllJDtadhy6/qMvg==
+X-Received: by 2002:ac2:558d:: with SMTP id v13mr2960397lfg.76.1555340139178;
+        Mon, 15 Apr 2019 07:55:39 -0700 (PDT)
 Received: from localhost.localdomain (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
-        by smtp.gmail.com with ESMTPSA id l12sm9989932lfc.61.2019.04.15.07.55.35
+        by smtp.gmail.com with ESMTPSA id l12sm9989932lfc.61.2019.04.15.07.55.38
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Apr 2019 07:55:36 -0700 (PDT)
+        Mon, 15 Apr 2019 07:55:38 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -65,9 +65,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Tomeu Vizoso <tomeu.vizoso@collabora.com>
 Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pm@vger.kernel.org
-Subject: [PATCH v2 02/19] PM / devfreq: tegra: Replace readl-writel with relaxed versions
-Date:   Mon, 15 Apr 2019 17:54:48 +0300
-Message-Id: <20190415145505.18397-3-digetx@gmail.com>
+Subject: [PATCH v2 04/19] PM / devfreq: tegra: Don't set EMC clock rate to maximum on probe
+Date:   Mon, 15 Apr 2019 17:54:50 +0300
+Message-Id: <20190415145505.18397-5-digetx@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415145505.18397-1-digetx@gmail.com>
 References: <20190415145505.18397-1-digetx@gmail.com>
@@ -78,46 +78,27 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is no need to insert memory barrier on each readl/writel
-invocation, hence use the relaxed versions.
+There is no real benefit from doing so, hence let's drop that rate setting
+for consistency.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/devfreq/tegra-devfreq.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+ drivers/devfreq/tegra-devfreq.c | 2 --
+ 1 file changed, 2 deletions(-)
 
 diff --git a/drivers/devfreq/tegra-devfreq.c b/drivers/devfreq/tegra-devfreq.c
-index 02905978abe1..0c0909fba545 100644
+index 69581c9082d4..d62fb1b0d9bb 100644
 --- a/drivers/devfreq/tegra-devfreq.c
 +++ b/drivers/devfreq/tegra-devfreq.c
-@@ -191,23 +191,23 @@ static struct tegra_actmon_emc_ratio actmon_emc_ratios[] = {
+@@ -648,8 +648,6 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+ 		return PTR_ERR(tegra->emc_clock);
+ 	}
  
- static u32 actmon_readl(struct tegra_devfreq *tegra, u32 offset)
- {
--	return readl(tegra->regs + offset);
-+	return readl_relaxed(tegra->regs + offset);
- }
- 
- static void actmon_writel(struct tegra_devfreq *tegra, u32 val, u32 offset)
- {
--	writel(val, tegra->regs + offset);
-+	writel_relaxed(val, tegra->regs + offset);
- }
- 
- static u32 device_readl(struct tegra_devfreq_device *dev, u32 offset)
- {
--	return readl(dev->regs + offset);
-+	return readl_relaxed(dev->regs + offset);
- }
- 
- static void device_writel(struct tegra_devfreq_device *dev, u32 val,
- 			  u32 offset)
- {
--	writel(val, dev->regs + offset);
-+	writel_relaxed(val, dev->regs + offset);
- }
- 
- static unsigned long do_percent(unsigned long val, unsigned int pct)
+-	clk_set_rate(tegra->emc_clock, ULONG_MAX);
+-
+ 	tegra->rate_change_nb.notifier_call = tegra_actmon_rate_notify_cb;
+ 	err = clk_notifier_register(tegra->emc_clock, &tegra->rate_change_nb);
+ 	if (err) {
 -- 
 2.21.0
 
