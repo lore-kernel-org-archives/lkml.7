@@ -2,100 +2,157 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A829AC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:09:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 07CECC282DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:10:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78C462075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:09:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE5CD2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:10:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="RspnIX+A"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726644AbfDOKI6 (ORCPT
+        id S1727079AbfDOKKB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 06:08:58 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:44801 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725794AbfDOKI6 (ORCPT
+        Mon, 15 Apr 2019 06:10:01 -0400
+Received: from mail1.bemta26.messagelabs.com ([85.158.142.4]:55143 "EHLO
+        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725885AbfDOKKA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 06:08:58 -0400
-Received: from [192.168.1.110] ([95.115.91.41]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MZjQl-1hK3Z5495z-00WoSD; Mon, 15 Apr 2019 12:08:13 +0200
-Subject: RFC: on adding new CLONE_* flags [WAS Re: [PATCH 0/4] clone: add
- CLONE_PIDFD]
-To:     Christian Brauner <christian@brauner.io>,
-        torvalds@linux-foundation.org, viro@zeniv.linux.org.uk,
-        jannh@google.com, dhowells@redhat.com, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     serge@hallyn.com, luto@kernel.org, arnd@arndb.de,
-        ebiederm@xmission.com, keescook@chromium.org, tglx@linutronix.de,
-        mtk.manpages@gmail.com, akpm@linux-foundation.org, oleg@redhat.com,
-        cyphar@cyphar.com, joel@joelfernandes.org, dancol@google.com
-References: <20190414201436.19502-1-christian@brauner.io>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <dc05ffe3-c2ff-8b3e-d181-e0cc620bf91d@metux.net>
-Date:   Mon, 15 Apr 2019 12:08:09 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
-MIME-Version: 1.0
-In-Reply-To: <20190414201436.19502-1-christian@brauner.io>
-Content-Type: text/plain; charset=utf-8
+        Mon, 15 Apr 2019 06:10:00 -0400
+Received: from [85.158.142.104] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-4.bemta.az-a.eu-central-1.aws.symcld.net id 4E/D0-24683-57854BC5; Mon, 15 Apr 2019 10:09:57 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA1WSbUhTYRTHfXbvtqu4uE7Nk2TFygjzrs1K7I0
+  ikkZR+CEiyl7u3G1bzWm7W2lfKiKrDcWgqJamRq6axHJlyJJMw+GCfAeHlGaOSntFzYJS291d
+  Zt/+nN//nP95Hg6BSZ+IEgmmwMyYjLRBJorCdSuiVlOWPY+yFed+R2d0e8pEGXXDXwQZJW1bM
+  +612rFNuOpdlQtX+V4EcNWYe0EWtleoN6rzCg4JdZ6fU+L8S1EFzrr008hGWFEUgZMuDFpKun
+  EriiSkZKkAOv0qDkjJAQTVLb2IAyJSCTc/fQ3pOHIJXHRN45wJI70Iiid9Qg7Ekjvh/ntv2JQ
+  FxQONGK83Q1P7YCgBJ5OhpMch5rSE3A+OD12IT3uMwD/dL+JAJJkCFS0ToUGITILxMzWhQRiZ
+  AH2BCgGngSThdkM7xut4GB6aEvL+g3C+8bOYr6fCy94A4rUMHH67kNdJ0FVhC9d3wKvmptASQ
+  HYimHrmEfEgBfz11nCDATwuWzh4PlzwToYb3gvB11sr4j8vB76VvwwnLwBn8SDOmzowuDt+Q8
+  w/IRUqn4yKeL0cHFUfsVK0zD7rdfZZNvssmz30ZTHgux7AKxHuRGvUJr1WZ86l9QZKqVBQSuV
+  KKo1KW5Uup09StJyxUDmM0Wyig1ROn2DlbGFujkEjNzJmNwoekuaYYKIe1Vm1zWgeIZDFS7bj
+  j7Klc9R5mkIdzeoOmiwGhm1G8wlCBhJqd5DFmBgtU3BYbwhe418MRLQsTpLFYQmbT+eyei2PX
+  iCKeHZrsByT4sY8I5OYILnKmUjOpLMYZ0b8vekulJQYK0ERERHS6HzGlKs3/89HUAKBZLGS/d
+  yUaL3RPJM0ElxCEFzicmoNt4SZ/ocST6OGh0eGJkrbMk0q7/Lkfv134QHrIve2hVfXa+ZtYxd
+  r22yOwrWt2FZbvZjZcuZk9brJs4GlmOVKd3nm8w+7xxS+C87RH/1Pj05dOzW37+2bmp5Nbczo
+  sWltU9Kupi8b1xe9Tj/+a98ddfnvVI+brQW3de/5yeoN9Y1FDZoHZckdsS4ZzupoZQpmYuk/r
+  m8K7c4DAAA=
+X-Env-Sender: stwiss.opensource@diasemi.com
+X-Msg-Ref: server-21.tower-229.messagelabs.com!1555322996!2440606!1
+X-Originating-IP: [104.47.10.53]
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.31.5; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 32314 invoked from network); 15 Apr 2019 10:09:57 -0000
+Received: from mail-db5eur03lp2053.outbound.protection.outlook.com (HELO EUR03-DB5-obe.outbound.protection.outlook.com) (104.47.10.53)
+  by server-21.tower-229.messagelabs.com with AES256-SHA256 encrypted SMTP; 15 Apr 2019 10:09:57 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=dialogsemiconductor.onmicrosoft.com; s=selector1-diasemi-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=EyyPGDztL9waWKe9oJ3VE8ISLBRxxx/ZUkSuQDYgxQg=;
+ b=RspnIX+AT+A4ONbroKdP4g1CohkOSpDInaMzaxB1tFJ/J/v8RqtNb+2sIH046UIQ26sWqbyD/7W0sIyiNFMDpm9vX9iMtmKju+ZoWWnnc4bo9p3V65ZKRkOAWMXOFCo52Ya3+6SXKrxvxgqdcRFDuw2LA3KdXk/q8HiI3/JnEBA=
+Received: from VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM (20.177.62.92) by
+ VI1PR10MB1567.EURPRD10.PROD.OUTLOOK.COM (10.165.191.148) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1792.15; Mon, 15 Apr 2019 10:09:55 +0000
+Received: from VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::acc9:6d8f:da36:9f25]) by VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::acc9:6d8f:da36:9f25%2]) with mapi id 15.20.1792.018; Mon, 15 Apr 2019
+ 10:09:55 +0000
+From:   Steve Twiss <stwiss.opensource@diasemi.com>
+To:     Wolfram Sang <wsa@the-dreams.de>
+CC:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        LINUX RENESAS SOC <linux-renesas-soc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Support Opensource <Support.Opensource@diasemi.com>
+Subject: RE: [PATCH RFT] watchdog: da9063_wdt: parse DT for timeout value, too
+Thread-Topic: [PATCH RFT] watchdog: da9063_wdt: parse DT for timeout value,
+ too
+Thread-Index: AQHU8rKQiJBjLGoJgEygrdEbYLd/faY82vLAgAAa8ICAAAP5gA==
+Date:   Mon, 15 Apr 2019 10:09:55 +0000
+Message-ID: <VI1PR10MB23520D64B2120138FF64D0BBFE2B0@VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM>
+References: <20190414110933.30529-1-wsa+renesas@sang-engineering.com>
+ <VI1PR10MB23525523F623FFAC4126EBC9FE2B0@VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM>
+ <20190415092853.GA1861@kunai>
+In-Reply-To: <20190415092853.GA1861@kunai>
+Accept-Language: en-GB, en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:CppkLBFAQ5VngkZ9OaDM4DFt8Che81pzKFVU8Ac4OttUp1lmrZS
- b7Emi/b+QPXLshyrmJmnwH+ADdGUtVhAdgzWXFBKLJfFF6BDxEAXZxBkDgQnkG5ZzhcIcA2
- syjRZH7pe2QLR6kvltuVCUdJ6PdQkv0SUEGaE/wxjC6HTBlT0MCnFyVo3bpSxOFyf9xPi5v
- OpNuP6urMZdqlZRMfL+AQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:9TDmmkiFtQI=:FCGjtchip+z2/utjrrxbvh
- 9RiomPtCgc5XYZ18bEGqE0wkQJukLcffVJwZM1/7U4rXfqBap36yC/G/oOJ5K4u3+n27m0ZzO
- hwqhVyg4rH3njcezWvEbTMdy/flPha/1NQgnW646z53sKIMM4UP0yjrpZhNM4WdWcyyWKSWGS
- wFvZusmgXtCUnmQjgKcImD3GExYMYJgqxUMdh7XWutehlSCVW7EYLlpmddKo6GgTv2FBOOGCA
- MMpriAu/TEqeNSQLxIOvHuzw3yDF92xrq7BjgWC35fxY1mmmpYtmTZMAK2YfRBa856k1bk7QW
- Qk14g4vAtF1QO3jUuVdADkZpe21JFNC+2G2GOl5ebXo0Aa57G0HpxYByByAXelDyvrwASSrVF
- +fa6fhx1V2zc/qS8A9DEqqBPJEsyklO22HBulGeRLb8OIwxxLwaUBN0u+skdqD05hKmuZDz9O
- 6vYOrFFPj79vhW6MdIpFyrpnvUO+nMrEF9HgMe0wo3fRWvLXn9agf3O6QdoycK50F/MA/BW1c
- YoYkcNl/V3vUpNIYE5MzVqU/A9la6Ch+Pp2caRV30uKaUdMrxCqJqzSyyOihkfqtCWIB4kpFq
- pOtdATFgGH1EwY+IWmrwp92apd4ryrOdF0rnCcxjd0T4K4Gdvn1TpA20lw3TPpvZvuqRBnnP7
- 2d7eB+yWvKM7rauN3I9Eu2OVHvWxZ+ubzgBjVfRnUwaMzuMMbuUdXA3fceZWHVLmU90SKJFAJ
- Rs/qZV4ai207upIyMbVrV2Cxkvi0OXu5sriLf04igvFjEp89z2ituV5ZmE0=
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [193.240.73.196]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 7e57116e-79cc-4fbd-a0e6-08d6c18a8277
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600140)(711020)(4605104)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR10MB1567;
+x-ms-traffictypediagnostic: VI1PR10MB1567:
+x-microsoft-antispam-prvs: <VI1PR10MB15678400493A2D335C2D739AF52B0@VI1PR10MB1567.EURPRD10.PROD.OUTLOOK.COM>
+x-forefront-prvs: 000800954F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(136003)(39850400004)(346002)(376002)(366004)(396003)(189003)(199004)(51914003)(8936002)(186003)(105586002)(106356001)(55016002)(66066001)(11346002)(446003)(486006)(476003)(5660300002)(71190400001)(68736007)(14444005)(7696005)(71200400001)(97736004)(26005)(52536014)(76176011)(256004)(102836004)(53546011)(6506007)(99286004)(6246003)(6436002)(7736002)(8676002)(25786009)(81166006)(81156014)(53936002)(2906002)(478600001)(14454004)(3846002)(6116002)(74316002)(33656002)(229853002)(316002)(6916009)(4326008)(305945005)(107886003)(86362001)(9686003)(54906003);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR10MB1567;H:VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: diasemi.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: BNDxI2NQdbN6Zj7YI783Xv/syHS/OwHptqndNcXrp7EdOjIehXSVPfhuyH6G+eLKZxAb82sNpviFTc/YhREfc5FG5l9yANSNuoAReu3Nindezr2Htfo8qGhZGVGmfg0n7bGBDPTEl+QBgoCTioHWZlbX6tLS3Wr8hJaM1VpnWSALKiLNiC8vQ61JIKbJqRlxeisJGz09SLpEy9VQ/CgXTOEAzTs0dTrZOEJla71Rf5DDa7hCDt233sMbW9WXU2OFhoAdGs1zEyluzheDxgxRIz+SOm3m2d8hhDpv5n3QsqwBq+rjrqtMRy4QFul/Te9wNP6XJ0nICwQjw83sZnC5FLWRkFl4CiN2hXkMCtj9iG2wygffvqRo2w8EcU6b+lnJgRmXAu7ChklRaNdNAVdQDSyxo7uo3VhLlbWhJBIBuhk=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 7e57116e-79cc-4fbd-a0e6-08d6c18a8277
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Apr 2019 10:09:55.6558
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB1567
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14.04.19 22:14, Christian Brauner wrote:
+Hi Wolfram,
 
-Hi folks,
+No problem.
 
-> This patchset makes it possible to retrieve pid file descriptors at
-> process creation time by introducing the new flag CLONE_PIDFD to the
-> clone() system call as previously discussed.
+On 15 April 2019 10:29, Wolfram Sang wrote:
 
-Sorry, for highjacking this thread, but I'm curious on what things to
-consider when introducing new CLONE_* flags.
+> Subject: Re: [PATCH RFT] watchdog: da9063_wdt: parse DT for timeout value=
+, too
+>=20
+> On Mon, Apr 15, 2019 at 08:11:16AM +0000, Steve Twiss wrote:
+> > Hi Wolfram,
+> >
+> > On 14 April 2019 12:10, Wolfram Sang wrote:
+> >
+> > > Tested with a Renesas Lager board (R-Car H2, DA9063AD)
+> >
+> > Can I please check there is no mistake in your description. I have been=
+ repeatedly
+> > told by the hardware engineers here, (for the past 6 years) it is not p=
+ossible.
+> > But, you seem to have an R-Car H2 with the AD silicon version of DA9063=
+?
+>=20
+> I am confused, what is not possible? That I have an AD version? Yes, we
+> found that out when we worked on the RTC recently.=20
 
-The reason I'm asking is:
+Sure, I know, people have been requesting continued support for DA9063 AD s=
+ilicon
+for years. The original DA9063 Linux driver was sent to LKML with AD suppor=
+t.
 
-I'm working on implementing plan9-like fs namespaces, where unprivileged
-processes can change their own namespace at will. For that, certain
-traditional unix'ish things have to be disabled, most notably suid.
-As forbidding suid can be helpful in other scenarios, too, I thought
-about making this its own feature. Doing that switch on clone() seems
-a nice place for that, IMHO.
+> It is an early version of the Lager development board. I have no numbers
+> but my assumption is there are not too many out there.
 
-As there might be potentially even more CLONE_* flags in the future,
-and the bitmask size is limited, this raises the question on how to
-proceed with those flag additions in the future.
+Thanks, yes, there is interest from the hardware engineers here. Thanks for=
+ the
+confirmation about your board. I will inform them about the DA9063 AD silic=
+on on
+the Renesas Lager board -- and I will let you know their response.
 
-What's your thoughts on that ?
+Regards,
+Steve
 
 
---mtx
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
