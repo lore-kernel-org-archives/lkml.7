@@ -2,65 +2,53 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 921BEC10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:07:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 816B7C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5334721905
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:07:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4FFA421900
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:07:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355237;
-	bh=Hy425lnHAqhP3mkzcrj7iBQhgNRmuXiyohfhVmq+vNU=;
+	s=default; t=1555355239;
+	bh=R9Ud+9zrGfWDWV7gWM/wQHsWNy9WLdmxSnhwN6502iA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gJTCxsMZPYoaKsqkdKjyq2WX+u5mipc655wlzM5lQUPZXRv9U0AENXIUebc1XREgu
-	 Z9bbwAbO3PfmwS/3lKueX0DQ5fCwE9RgAvTMODveP5B0AhK33To4dqvr7lSReKEyVn
-	 YCL3g8tIsw7mnRsJpx7v0xqQsmaRJrtnK2HVIeow=
+	b=VYLhZRfTOsn0Hd6NXtKKcsfZsmoSLbV6ZNAlBzD39ySUkY2ecAnE4Qh+a38CCRsUI
+	 SyMhhGhg5kwnb6i1oabf/J36WrBwtSpAWMybshw9Z2oAKbFMz4o7NCWY15tShRJ7rZ
+	 vWgPWEqMfiyhk5xo437MtP81SzcGgtYbI5M7l+aw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730130AbfDOTHQ (ORCPT
+        id S1730155AbfDOTHR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:07:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41972 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:07:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42068 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730110AbfDOTHM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:07:12 -0400
+        id S1730120AbfDOTHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:07:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 89DF12087C;
-        Mon, 15 Apr 2019 19:07:11 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2084820880;
+        Mon, 15 Apr 2019 19:07:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355232;
-        bh=Hy425lnHAqhP3mkzcrj7iBQhgNRmuXiyohfhVmq+vNU=;
+        s=default; t=1555355234;
+        bh=R9Ud+9zrGfWDWV7gWM/wQHsWNy9WLdmxSnhwN6502iA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=t0UlwLgFsodbQPCgmkRIFKS1VsQvh9ynIZzX6AehM7LMk0OEdHg8A5hLf5THHPCLu
-         LAQr45gJCU5ZjhcH9sy17M26oYqG50XC7Ur6FIUl3SClu50O/0Xx5LJf0Ycd+mlYSn
-         rYeFSoNQTHAzLi3YQoLRyWpkE/GHEsIac9HkCFeU=
+        b=BWQAQXLEIFCJpTIoCWIW6jYGZtO/6HdZjWI5M5C7aE7OC0gBZ1W262zfmiyWvcSK5
+         WNrQedV31n86cnl2fnse7U1633MNQsQA4HKyZkwS/DwEq1PmL/OuxBE0flx9pWKOVr
+         3O83uPpUfPvBNqK1KMW3GmxKVXEL7j80QI28vSx4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Adhemerval Zanella <adhemerval.zanella@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        James Y Knight <jyknight@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org,
+        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 040/101] lib/string.c: implement a basic bcmp
-Date:   Mon, 15 Apr 2019 20:58:38 +0200
-Message-Id: <20190415183742.579457656@linuxfoundation.org>
+Subject: [PATCH 4.19 031/101] net: ip6_gre: fix possible use-after-free in ip6erspan_rcv
+Date:   Mon, 15 Apr 2019 20:58:29 +0200
+Message-Id: <20190415183742.094876291@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183740.341577907@linuxfoundation.org>
 References: <20190415183740.341577907@linuxfoundation.org>
@@ -73,109 +61,86 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5f074f3e192f10c9fade898b9b3b8812e3d83342 ]
+[ Upstream commit 2a3cabae4536edbcb21d344e7aa8be7a584d2afb ]
 
-A recent optimization in Clang (r355672) lowers comparisons of the
-return value of memcmp against zero to comparisons of the return value
-of bcmp against zero.  This helps some platforms that implement bcmp
-more efficiently than memcmp.  glibc simply aliases bcmp to memcmp, but
-an optimized implementation is in the works.
+erspan_v6 tunnels run __iptunnel_pull_header on received skbs to remove
+erspan header. This can determine a possible use-after-free accessing
+pkt_md pointer in ip6erspan_rcv since the packet will be 'uncloned'
+running pskb_expand_head if it is a cloned gso skb (e.g if the packet has
+been sent though a veth device). Fix it resetting pkt_md pointer after
+__iptunnel_pull_header
 
-This results in linkage failures for all targets with Clang due to the
-undefined symbol.  For now, just implement bcmp as a tailcail to memcmp
-to unbreak the build.  This routine can be further optimized in the
-future.
-
-Other ideas discussed:
-
- * A weak alias was discussed, but breaks for architectures that define
-   their own implementations of memcmp since aliases to declarations are
-   not permitted (only definitions). Arch-specific memcmp
-   implementations typically declare memcmp in C headers, but implement
-   them in assembly.
-
- * -ffreestanding also is used sporadically throughout the kernel.
-
- * -fno-builtin-bcmp doesn't work when doing LTO.
-
-Link: https://bugs.llvm.org/show_bug.cgi?id=41035
-Link: https://code.woboq.org/userspace/glibc/string/memcmp.c.html#bcmp
-Link: https://github.com/llvm/llvm-project/commit/8e16d73346f8091461319a7dfc4ddd18eedcff13
-Link: https://github.com/ClangBuiltLinux/linux/issues/416
-Link: http://lkml.kernel.org/r/20190313211335.165605-1-ndesaulniers@google.com
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-Reported-by: Adhemerval Zanella <adhemerval.zanella@linaro.org>
-Suggested-by: Arnd Bergmann <arnd@arndb.de>
-Suggested-by: James Y Knight <jyknight@google.com>
-Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
-Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: David Laight <David.Laight@ACULAB.COM>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Fixes: 1d7e2ed22f8d ("net: erspan: refactor existing erspan code")
+Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/string.h |  3 +++
- lib/string.c           | 20 ++++++++++++++++++++
- 2 files changed, 23 insertions(+)
+ net/ipv6/ip6_gre.c | 21 +++++++++++++--------
+ 1 file changed, 13 insertions(+), 8 deletions(-)
 
-diff --git a/include/linux/string.h b/include/linux/string.h
-index 4a5a0eb7df51..f58e1ef76572 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -143,6 +143,9 @@ extern void * memscan(void *,int,__kernel_size_t);
- #ifndef __HAVE_ARCH_MEMCMP
- extern int memcmp(const void *,const void *,__kernel_size_t);
- #endif
-+#ifndef __HAVE_ARCH_BCMP
-+extern int bcmp(const void *,const void *,__kernel_size_t);
-+#endif
- #ifndef __HAVE_ARCH_MEMCHR
- extern void * memchr(const void *,int,__kernel_size_t);
- #endif
-diff --git a/lib/string.c b/lib/string.c
-index 2c0900a5d51a..72125fd5b4a6 100644
---- a/lib/string.c
-+++ b/lib/string.c
-@@ -865,6 +865,26 @@ __visible int memcmp(const void *cs, const void *ct, size_t count)
- EXPORT_SYMBOL(memcmp);
- #endif
+diff --git a/net/ipv6/ip6_gre.c b/net/ipv6/ip6_gre.c
+index faed98dab913..c4a7db62658e 100644
+--- a/net/ipv6/ip6_gre.c
++++ b/net/ipv6/ip6_gre.c
+@@ -540,11 +540,10 @@ static int ip6gre_rcv(struct sk_buff *skb, const struct tnl_ptk_info *tpi)
+ 	return PACKET_REJECT;
+ }
  
-+#ifndef __HAVE_ARCH_BCMP
-+/**
-+ * bcmp - returns 0 if and only if the buffers have identical contents.
-+ * @a: pointer to first buffer.
-+ * @b: pointer to second buffer.
-+ * @len: size of buffers.
-+ *
-+ * The sign or magnitude of a non-zero return value has no particular
-+ * meaning, and architectures may implement their own more efficient bcmp(). So
-+ * while this particular implementation is a simple (tail) call to memcmp, do
-+ * not rely on anything but whether the return value is zero or non-zero.
-+ */
-+#undef bcmp
-+int bcmp(const void *a, const void *b, size_t len)
-+{
-+	return memcmp(a, b, len);
-+}
-+EXPORT_SYMBOL(bcmp);
-+#endif
-+
- #ifndef __HAVE_ARCH_MEMSCAN
- /**
-  * memscan - Find a character in an area of memory.
+-static int ip6erspan_rcv(struct sk_buff *skb, int gre_hdr_len,
+-			 struct tnl_ptk_info *tpi)
++static int ip6erspan_rcv(struct sk_buff *skb, struct tnl_ptk_info *tpi,
++			 int gre_hdr_len)
+ {
+ 	struct erspan_base_hdr *ershdr;
+-	struct erspan_metadata *pkt_md;
+ 	const struct ipv6hdr *ipv6h;
+ 	struct erspan_md2 *md2;
+ 	struct ip6_tnl *tunnel;
+@@ -563,18 +562,16 @@ static int ip6erspan_rcv(struct sk_buff *skb, int gre_hdr_len,
+ 		if (unlikely(!pskb_may_pull(skb, len)))
+ 			return PACKET_REJECT;
+ 
+-		ershdr = (struct erspan_base_hdr *)skb->data;
+-		pkt_md = (struct erspan_metadata *)(ershdr + 1);
+-
+ 		if (__iptunnel_pull_header(skb, len,
+ 					   htons(ETH_P_TEB),
+ 					   false, false) < 0)
+ 			return PACKET_REJECT;
+ 
+ 		if (tunnel->parms.collect_md) {
++			struct erspan_metadata *pkt_md, *md;
+ 			struct metadata_dst *tun_dst;
+ 			struct ip_tunnel_info *info;
+-			struct erspan_metadata *md;
++			unsigned char *gh;
+ 			__be64 tun_id;
+ 			__be16 flags;
+ 
+@@ -587,6 +584,14 @@ static int ip6erspan_rcv(struct sk_buff *skb, int gre_hdr_len,
+ 			if (!tun_dst)
+ 				return PACKET_REJECT;
+ 
++			/* skb can be uncloned in __iptunnel_pull_header, so
++			 * old pkt_md is no longer valid and we need to reset
++			 * it
++			 */
++			gh = skb_network_header(skb) +
++			     skb_network_header_len(skb);
++			pkt_md = (struct erspan_metadata *)(gh + gre_hdr_len +
++							    sizeof(*ershdr));
+ 			info = &tun_dst->u.tun_info;
+ 			md = ip_tunnel_info_opts(info);
+ 			md->version = ver;
+@@ -623,7 +628,7 @@ static int gre_rcv(struct sk_buff *skb)
+ 
+ 	if (unlikely(tpi.proto == htons(ETH_P_ERSPAN) ||
+ 		     tpi.proto == htons(ETH_P_ERSPAN2))) {
+-		if (ip6erspan_rcv(skb, hdr_len, &tpi) == PACKET_RCVD)
++		if (ip6erspan_rcv(skb, &tpi, hdr_len) == PACKET_RCVD)
+ 			return 0;
+ 		goto out;
+ 	}
 -- 
 2.19.1
 
