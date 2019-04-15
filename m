@@ -2,78 +2,78 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD2CC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:47:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E59C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:47:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08FA020833
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:47:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="q6XInizr"
+	by mail.kernel.org (Postfix) with ESMTP id C18CE20833
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:47:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727018AbfDOJro (ORCPT
+        id S1727109AbfDOJrt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 05:47:44 -0400
-Received: from 50-203-203-244-static.hfc.comcastbusiness.net ([50.203.203.244]:59106
-        "EHLO mail.codeweavers.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725798AbfDOJro (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 05:47:44 -0400
-X-Greylist: delayed 1013 seconds by postgrey-1.27 at vger.kernel.org; Mon, 15 Apr 2019 05:47:43 EDT
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=codeweavers.com; s=6377696661; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=hNO72mY6owZc9BbDkbkB6z1MumKqdRQ98mR/U6MEzko=; b=q6XInizrZMsjXaI5QsIP0B2zq
-        bNLE+82bw2qRak7Auo29DUAx+nKMkn9AdFa0uJz77YL2JUCo1MDH/GvA6RIb0VAc69uyEnV/OrdOl
-        AIFqaL1Z2X87ZTiV8bRcmH/aTS4pocqTAltHifuoGYBiOU4ZettOdUT88/rJPZOmQCQ2M=;
-Received: from merlot.physics.ox.ac.uk ([163.1.241.98] helo=merlot)
-        by mail.codeweavers.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <huw@codeweavers.com>)
-        id 1hFxx3-0008JV-VR; Mon, 15 Apr 2019 04:30:59 -0500
-Received: from daviesh by merlot with local (Exim 4.90_1)
-        (envelope-from <huw@codeweavers.com>)
-        id 1hFxwp-0005h8-KS; Mon, 15 Apr 2019 10:30:43 +0100
-Date:   Mon, 15 Apr 2019 10:30:43 +0100
-From:   Huw Davies <huw@codeweavers.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     linux kernel <linux-kernel@vger.kernel.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Vincenzo Frascino <vincenzo.frascino@arm.com>
-Subject: Re: [PATCH 2/3] x86/vdso: Allow clock specific mult and shift values
-Message-ID: <20190415093042.GA21726@merlot.physics.ox.ac.uk>
-References: <20190411101205.10006-1-huw@codeweavers.com>
- <20190411101205.10006-3-huw@codeweavers.com>
- <alpine.DEB.2.21.1904141229380.4917@nanos.tec.linutronix.de>
+        Mon, 15 Apr 2019 05:47:49 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57192 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725798AbfDOJrr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 05:47:47 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C7898B02C;
+        Mon, 15 Apr 2019 09:47:39 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 251261E42AA; Mon, 15 Apr 2019 11:47:39 +0200 (CEST)
+Date:   Mon, 15 Apr 2019 11:47:39 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Bharath Vedartham <linux.bhar@gmail.com>
+Cc:     keescook@chromium.org, jack@suse.cz, arnd@arndb.de,
+        akpm@linux-foundation.org, reiserfs-devel@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] fs/reiserfs/journal.c: Make remove_journal_hash static
+Message-ID: <20190415094739.GA13684@quack2.suse.cz>
+References: <20190414112438.GA23266@bharath12345-Inspiron-5559>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <alpine.DEB.2.21.1904141229380.4917@nanos.tec.linutronix.de>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190414112438.GA23266@bharath12345-Inspiron-5559>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 14, 2019 at 12:53:32PM +0200, Thomas Gleixner wrote:
-> So it stays in the same cache line, but as we move the VDSO to generic
-> code, the mask field needs to stay and this will make basetime[CLOCK_MONOTONIC] 
-> overlap into the next cache line.
+On Sun 14-04-19 16:54:38, Bharath Vedartham wrote:
+> This fixes the -WDecl sparse warning in journal.c. Function was declared
+> as static void but the definition was void.
+> 
+> Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
 
-Thanks for the great review; this is a good point.
+Thanks! I've added your patch into my tree.
 
-> See https://lkml.kernel.org/r/alpine.DEB.2.21.1902231727060.1666@nanos.tec.linutronix.de
-> for an alternate solution to this problem, which avoids this and just gives
-> CLOCK_MONOTONIC_RAW a separate storage space alltogether.
+								Honza
 
-I can certainly do this for the x86 vdso.  Would that be useful or
-should I wait for Vincenzo's work on the generic vdso first?
-
-Many thanks,
-Huw.
+> ---
+>  fs/reiserfs/journal.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/fs/reiserfs/journal.c b/fs/reiserfs/journal.c
+> index 8a76f9d..36346dc 100644
+> --- a/fs/reiserfs/journal.c
+> +++ b/fs/reiserfs/journal.c
+> @@ -1844,7 +1844,7 @@ static int flush_used_journal_lists(struct super_block *s,
+>   * removes any nodes in table with name block and dev as bh.
+>   * only touchs the hnext and hprev pointers.
+>   */
+> -void remove_journal_hash(struct super_block *sb,
+> +static void remove_journal_hash(struct super_block *sb,
+>  			 struct reiserfs_journal_cnode **table,
+>  			 struct reiserfs_journal_list *jl,
+>  			 unsigned long block, int remove_freed)
+> -- 
+> 2.7.4
+> 
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
