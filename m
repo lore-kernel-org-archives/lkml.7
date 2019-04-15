@@ -2,91 +2,90 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A56CFC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3737CC10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:05:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69F2D20880
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:03:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555340615;
-	bh=LbMuZJXS3OuHCA50YYwRd7qhH0F0uusSi5Tdf1BeWYc=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=19jjNMiLXf8rYbwlneETlkl1QfKE8/21B6rl4tuOEAYaia4ZUAXLyvHS676/VOi85
-	 ktwgD8pq8vT0XvN8NIbG12zPNGJtXaaBsNaMPsveuJP+Hd0I1UBzFlfSIsWbHLlIDZ
-	 2AgmzHJFkSIo9U8410nfTxZlpWcCWdENJg9Cl3Wg=
+	by mail.kernel.org (Postfix) with ESMTP id 064DD20880
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:05:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727602AbfDOPDe (ORCPT
+        id S1727603AbfDOPFc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 11:03:34 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:43320 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727558AbfDOPDd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 11:03:33 -0400
-Received: by mail-lf1-f66.google.com with SMTP id i68so2442697lfi.10
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 08:03:32 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Z5LOiqCT2DO1rtZ6X70ffSdt0K6mgD3RtIkDbDwnU5M=;
-        b=czC6JhfMudxVT4xD8skQpmlKC8ZCDSFLCJBcxne/pOw/e+emu/gVm3qs+7ZO905B0X
-         hZKree3K58yMhGjSm1In+tEDS6YeLDwTNf2+QIA3PamwB6CyOWSs2XI81r4bTrwj0Pgo
-         eAquPKo71NI2HvS8HuZxMBJegjImbdFdImSodKtSvxET0cMHMaM97DWxRO8xEX05HSWh
-         O2PTn0oFke6mTOk+LhII1QPufnLHGgrPCW2k9AyWj20F+mEiy4J6PhJ+RJgXBHWJW4dO
-         dZsE/2e8wMoQcxuYNwMmsBm3+LZwnnW6UKeaQ33cDGXiieXwI+mtUuCAfAzT5YfxxS+P
-         eYQA==
-X-Gm-Message-State: APjAAAWI2/GzEzv/vTrbOr4eq7O9BYcVuez5yhMuL+N8VYCpxABYxCje
-        wrwRp/niOOOM13ZiTfPrkhg=
-X-Google-Smtp-Source: APXvYqw1mfwkaNel6rJ2q9bmkeboo8NXLX6+majtiahj1daPzxxdr/z1sb3S/+CdrQX1mjvq0jdhtw==
-X-Received: by 2002:a19:6911:: with SMTP id e17mr11462421lfc.5.1555340608776;
-        Mon, 15 Apr 2019 08:03:28 -0700 (PDT)
-Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
-        by smtp.gmail.com with ESMTPSA id o7sm9956476ljj.23.2019.04.15.08.03.27
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Apr 2019 08:03:27 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.91)
-        (envelope-from <johan@kernel.org>)
-        id 1hG38v-0003QZ-CJ; Mon, 15 Apr 2019 17:03:33 +0200
-Date:   Mon, 15 Apr 2019 17:03:33 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Dan Carpenter <dan.carpenter@oracle.com>
-Cc:     Johan Hovold <johan@kernel.org>, devel@driverdev.osuosl.org,
-        elder@kernel.org, gregkh@linuxfoundation.org,
-        linux-kernel@vger.kernel.org,
-        Madhumitha Prabakaran <madhumithabiw@gmail.com>,
-        greybus-dev@lists.linaro.org
-Subject: Re: [PATCH] Staging: greybus: Cleanup in header file control.h
-Message-ID: <20190415150333.GE775@localhost>
-References: <20190405201437.3689-1-madhumithabiw@gmail.com>
- <20190415131002.GC775@localhost>
- <20190415133357.GP6095@kadam>
- <20190415141201.GD775@localhost>
- <20190415144015.GB22423@kadam>
+        Mon, 15 Apr 2019 11:05:32 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:50202 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726147AbfDOPFb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 11:05:31 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 1DC1788AAE;
+        Mon, 15 Apr 2019 15:05:27 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.38])
+        by smtp.corp.redhat.com (Postfix) with SMTP id D1F9D19C57;
+        Mon, 15 Apr 2019 15:05:21 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Mon, 15 Apr 2019 17:05:26 +0200 (CEST)
+Date:   Mon, 15 Apr 2019 17:05:21 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Paul Moore <paul@paul-moore.com>
+Cc:     Casey Schaufler <casey@schaufler-ca.com>,
+        "chengjian (D)" <cj.chengjian@huawei.com>, neilb@suse.com,
+        Anna.Schumaker@netapp.com, keescook@chromium.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        viro@zeniv.linux.org.uk,
+        "Xiexiuqi (Xie XiuQi)" <xiexiuqi@huawei.com>,
+        Li Bin <huawei.libin@huawei.com>, yanaijie@huawei.com,
+        peterz@infradead.org, mingo@redhat.com,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>, selinux@vger.kernel.org
+Subject: Re: kernel BUG at kernel/cred.c:434!
+Message-ID: <20190415150520.GA13257@redhat.com>
+References: <6e4428ca-3da1-a033-08f7-a51e57503989@huawei.com>
+ <b1575d02-fd88-65e6-2f16-70a96985087e@schaufler-ca.com>
+ <20190415134331.GC22204@redhat.com>
+ <CAHC9VhQ7ihqU0K57ctwzoHq0t0QVJPKiQQZn5TXB1FUqsvOSEQ@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190415144015.GB22423@kadam>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <CAHC9VhQ7ihqU0K57ctwzoHq0t0QVJPKiQQZn5TXB1FUqsvOSEQ@mail.gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Mon, 15 Apr 2019 15:05:31 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 05:40:16PM +0300, Dan Carpenter wrote:
-> What I'm saying is that if we just apply it then we avoid the long
-> discussion forever.  The macro is OK, sure, but it's not like anyone is
-> going to come back later and argue that macros are better or preferred.
+On 04/15, Paul Moore wrote:
+>
+> On Mon, Apr 15, 2019 at 9:43 AM Oleg Nesterov <oleg@redhat.com> wrote:
+> > Well, acct("/proc/self/attr/current") doesn't look like a good idea, but I do
+> > not know where should we put the additional check... And probably
+> > "echo /proc/self/attr/current > /proc/sys/kernel/core_pattern" can hit the
+> > same problem, do_coredump() does override_creds() too.
+> >
+> > May be just add
+> >
+> >         if (current->cred != current->real_cred)
+> >                 return -EACCES;
+> >
+> > into proc_pid_attr_write(), I dunno.
+>
+> Is the problem that do_acct_process() is calling override_creds() and
+> the returned/old credentials are being freed before do_acct_process()
+> can reinstall the creds via revert_creds()?  Presumably because the
+> process accounting is causing the credentials to be replaced?
 
-That may be a valid argument, at least with respect to staging
-currently (even if checkpatch isn't entirely too blame for this
-particular "cleanup").
+Afaics, the problem is that do_acct_process() does override_creds() and
+then __kernel_write(). Which calls proc_pid_attr_write(), which in turn calls
+selinux_setprocattr(), which does another prepare_creds() + commit_creds();
+and commit_creds() hits
 
-But then all eight or so instances should be replaced in one go, to
-maintain consistency.
+	BUG_ON(task->cred != old);
 
-Johan
+Oleg.
+
