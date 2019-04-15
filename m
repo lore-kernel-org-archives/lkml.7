@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EB3EC282DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:11:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBF91C10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:11:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61D26218DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:11:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87BBC218FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:11:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355495;
-	bh=xM3lO0D/WMjPUUXa5Kb+MEXDxyEQ3e930JfPQ5fvUxc=;
+	s=default; t=1555355499;
+	bh=E2iC6yA9zYmFQwbiiiB8xuLXmAxmuCUMCHfMaY3b69w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FW6PXDLsGY+a8eDxAJ+kKy/brXzVXxCWthDBZZ4T+ux8KZO/1Wrmnaw7mPXUqGfFM
-	 Omrv46/O3T8keBlbpkEcz6hci/DHkdUdgmChemVYmC7gDqaZcp1ip5rf0K/sYbvA1Y
-	 xAKILFOeEGf8TFXHtE/KbQbb8fQkqirSUcl6690c=
+	b=BPFCYxOvegxt7FrQnM6HOP7w0q0ONqzWSwlAZQlN+CIXMIfP9KTc16ClRh91TEOaO
+	 l9QklpMAb8aov6Sas2HYDfjl03EzV5EA1IYdVi5ZwVcdeLNG8dZJoUwd4cOGHYMDe5
+	 Mvty0CgUjAGFahziQ5nqwn8Jy25u8eMfOYr9leNM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731248AbfDOTLe (ORCPT
+        id S1731264AbfDOTLi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:11:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48498 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:11:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48566 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730727AbfDOTLc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:11:32 -0400
+        id S1731244AbfDOTLd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:11:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7154620880;
-        Mon, 15 Apr 2019 19:11:30 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 10D5A20880;
+        Mon, 15 Apr 2019 19:11:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355490;
-        bh=xM3lO0D/WMjPUUXa5Kb+MEXDxyEQ3e930JfPQ5fvUxc=;
+        s=default; t=1555355493;
+        bh=E2iC6yA9zYmFQwbiiiB8xuLXmAxmuCUMCHfMaY3b69w=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ywFrGIrzZWDYfG3ZzaIhpql/z6swFGXmouu72oOKyIzbZVmzyKimonJSNwM0Ulm9y
-         cQw8farzBB99Um8BylJ3ImQ8p4EWcWG2G8tTuf7qY1LiDnJgzdPRT7gAMy2PQurGU0
-         4V63248w5rIgX7JTd0gMjbnD6CwOOsJg2ISkHF98=
+        b=IgonYyJ1KAwfYgqF+kBV59CzcZEfsDH9xvn2Lfu27u9ddVwzH+aCXJACp57bmsBw1
+         D14NGhIFLFAa0S/H3EfqsEEXddxSGdd9d7V2RjIEzFlLl7vm3JZyFxh53BrN14SG7z
+         HvO+CvQ3c5Z/Pe5OTwcmP75vrGINFXupDOKGy7F0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Richard Sailer <rs@tuxedocomputers.com>,
+        stable@vger.kernel.org, Juergen Gross <jgross@suse.com>,
+        Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>,
         Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.0 055/117] ALSA: hda/realtek - Add quirk for Tuxedo XC 1509
-Date:   Mon, 15 Apr 2019 21:00:25 +0200
-Message-Id: <20190415183747.736640032@linuxfoundation.org>
+Subject: [PATCH 5.0 056/117] ALSA: xen-front: Do not use stream buffer size before it is set
+Date:   Mon, 15 Apr 2019 21:00:26 +0200
+Message-Id: <20190415183747.781946658@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183744.887851196@linuxfoundation.org>
 References: <20190415183744.887851196@linuxfoundation.org>
@@ -59,85 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Richard Sailer <rs@tuxedocomputers.com>
+From: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
 
-commit 80690a276f444a68a332136d98bfea1c338bc263 upstream.
+commit 8b030a57e35a0efc1a8aa18bb10555bc5066ac40 upstream.
 
-This adds a SND_PCI_QUIRK(...) line for the Tuxedo XC 1509.
+This fixes the regression introduced while moving to Xen shared
+buffer implementation.
 
-The Tuxedo XC 1509 and the System76 oryp5 are the same barebone
-notebooks manufactured by Clevo. To name the fixups both use after the
-actual underlying hardware, this patch also changes System76_orpy5
-to clevo_pb51ed in 2 enum symbols and one function name,
-matching the other pci_quirk entries which are also named after the
-device ODM.
-
-Fixes: 7f665b1c3283 ("ALSA: hda/realtek - Headset microphone and internal speaker support for System76 oryp5")
-Signed-off-by: Richard Sailer <rs@tuxedocomputers.com>
-Cc: <stable@vger.kernel.org>
+Fixes: 58f9d806d16a ("ALSA: xen-front: Use Xen common shared buffer implementation")
+Reviewed-by: Juergen Gross <jgross@suse.com>
+Signed-off-by: Oleksandr Andrushchenko <oleksandr_andrushchenko@epam.com>
+Cc: <stable@vger.kernel.org> # v5.0+
 Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/patch_realtek.c |   19 ++++++++++---------
- 1 file changed, 10 insertions(+), 9 deletions(-)
+ sound/xen/xen_snd_front_alsa.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/pci/hda/patch_realtek.c
-+++ b/sound/pci/hda/patch_realtek.c
-@@ -1864,8 +1864,8 @@ enum {
- 	ALC887_FIXUP_BASS_CHMAP,
- 	ALC1220_FIXUP_GB_DUAL_CODECS,
- 	ALC1220_FIXUP_CLEVO_P950,
--	ALC1220_FIXUP_SYSTEM76_ORYP5,
--	ALC1220_FIXUP_SYSTEM76_ORYP5_PINS,
-+	ALC1220_FIXUP_CLEVO_PB51ED,
-+	ALC1220_FIXUP_CLEVO_PB51ED_PINS,
- };
- 
- static void alc889_fixup_coef(struct hda_codec *codec,
-@@ -2070,7 +2070,7 @@ static void alc1220_fixup_clevo_p950(str
- static void alc_fixup_headset_mode_no_hp_mic(struct hda_codec *codec,
- 				const struct hda_fixup *fix, int action);
- 
--static void alc1220_fixup_system76_oryp5(struct hda_codec *codec,
-+static void alc1220_fixup_clevo_pb51ed(struct hda_codec *codec,
- 				     const struct hda_fixup *fix,
- 				     int action)
+--- a/sound/xen/xen_snd_front_alsa.c
++++ b/sound/xen/xen_snd_front_alsa.c
+@@ -441,7 +441,7 @@ static int shbuf_setup_backstore(struct
  {
-@@ -2322,18 +2322,18 @@ static const struct hda_fixup alc882_fix
- 		.type = HDA_FIXUP_FUNC,
- 		.v.func = alc1220_fixup_clevo_p950,
- 	},
--	[ALC1220_FIXUP_SYSTEM76_ORYP5] = {
-+	[ALC1220_FIXUP_CLEVO_PB51ED] = {
- 		.type = HDA_FIXUP_FUNC,
--		.v.func = alc1220_fixup_system76_oryp5,
-+		.v.func = alc1220_fixup_clevo_pb51ed,
- 	},
--	[ALC1220_FIXUP_SYSTEM76_ORYP5_PINS] = {
-+	[ALC1220_FIXUP_CLEVO_PB51ED_PINS] = {
- 		.type = HDA_FIXUP_PINS,
- 		.v.pins = (const struct hda_pintbl[]) {
- 			{ 0x19, 0x01a1913c }, /* use as headset mic, without its own jack detect */
- 			{}
- 		},
- 		.chained = true,
--		.chain_id = ALC1220_FIXUP_SYSTEM76_ORYP5,
-+		.chain_id = ALC1220_FIXUP_CLEVO_PB51ED,
- 	},
- };
+ 	int i;
  
-@@ -2411,8 +2411,9 @@ static const struct snd_pci_quirk alc882
- 	SND_PCI_QUIRK(0x1558, 0x9501, "Clevo P950HR", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1558, 0x95e1, "Clevo P95xER", ALC1220_FIXUP_CLEVO_P950),
- 	SND_PCI_QUIRK(0x1558, 0x95e2, "Clevo P950ER", ALC1220_FIXUP_CLEVO_P950),
--	SND_PCI_QUIRK(0x1558, 0x96e1, "System76 Oryx Pro (oryp5)", ALC1220_FIXUP_SYSTEM76_ORYP5_PINS),
--	SND_PCI_QUIRK(0x1558, 0x97e1, "System76 Oryx Pro (oryp5)", ALC1220_FIXUP_SYSTEM76_ORYP5_PINS),
-+	SND_PCI_QUIRK(0x1558, 0x96e1, "System76 Oryx Pro (oryp5)", ALC1220_FIXUP_CLEVO_PB51ED_PINS),
-+	SND_PCI_QUIRK(0x1558, 0x97e1, "System76 Oryx Pro (oryp5)", ALC1220_FIXUP_CLEVO_PB51ED_PINS),
-+	SND_PCI_QUIRK(0x1558, 0x65d1, "Tuxedo Book XC1509", ALC1220_FIXUP_CLEVO_PB51ED_PINS),
- 	SND_PCI_QUIRK_VENDOR(0x1558, "Clevo laptop", ALC882_FIXUP_EAPD),
- 	SND_PCI_QUIRK(0x161f, 0x2054, "Medion laptop", ALC883_FIXUP_EAPD),
- 	SND_PCI_QUIRK(0x17aa, 0x3a0d, "Lenovo Y530", ALC882_FIXUP_LENOVO_Y530),
+-	stream->buffer = alloc_pages_exact(stream->buffer_sz, GFP_KERNEL);
++	stream->buffer = alloc_pages_exact(buffer_sz, GFP_KERNEL);
+ 	if (!stream->buffer)
+ 		return -ENOMEM;
+ 
 
 
