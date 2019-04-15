@@ -7,47 +7,50 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D75C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:23:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C02EAC10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A5F120651
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:23:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86A6D20651
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:23:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555356198;
-	bh=VaXOLE2WGm9xCzg1zqcLDIlB8qNwohGne1xxPBGKNy0=;
+	s=default; t=1555356220;
+	bh=kCpm+MyXmaaPxl+WAR7wPjIj+5TZtAOJr4Lre1+Vvms=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zy4xEe/o82tECmsUpUPH4E+O/UsGisdGSheVjyhZn2TlUIyI7dW8Im0rvuLcmtHxg
-	 Q/u4wb4wlp2DLuThaxX4R73Doo8KT1FDTxpZv4zHVwtzMHGNVs9haeyyHdlkldYW8D
-	 gsfPp/Cil3+hIZLldD3zO5i73QdJhSozIHgOjyXw=
+	b=sUYhjPKzg2fflNthRU2Ea8r+422HMFSVQVFNMTJvVErKJ+4lK3ye3+vhLUjD7caeY
+	 GVvVDq02JLJcw4x+GGUZynK0zUwkKvtXXkwLEPSTBYX4SpU/h/CH6N8taFPkysoI9i
+	 FVPD4HY2UBBXuiGo+aPu/BuzBkVBMEhFDWpqIs1U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730264AbfDOTHl (ORCPT
+        id S1730610AbfDOTXi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:07:41 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42620 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:23:38 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42224 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729730AbfDOTHg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:07:36 -0400
+        id S1728568AbfDOTHV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:07:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 58245218A1;
-        Mon, 15 Apr 2019 19:07:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 615EA21905;
+        Mon, 15 Apr 2019 19:07:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355255;
-        bh=VaXOLE2WGm9xCzg1zqcLDIlB8qNwohGne1xxPBGKNy0=;
+        s=default; t=1555355239;
+        bh=kCpm+MyXmaaPxl+WAR7wPjIj+5TZtAOJr4Lre1+Vvms=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WN6o4Ytq0zT2qdhESU2VkxK4+ntW6Q87+mXxDZHUrCrWcfyGXylsfHclOwL1B3e2P
-         uEtEz2eTegeoRZPq/wKqJCSSK2K834HjzcWgorxNLIJHxtQRS/Xw4sms84CBRgQSHc
-         XUXZUVSQDodwHItnCNoAypvWTlc5QAl/5ITSEO5c=
+        b=djwuJ4WSptQ5vxVQfQLoaNudhGCuh8N+ED+hP1GMtB82JTaS9tG2Ul8SqUeB91lQm
+         fRR5iMg2TgSYBp9S5Muc/ugY0nrqe8tZRYmg0OpuSf7j9CcE3ci2+jr6z3NRHXLhow
+         e/b1Thy2HA5dXKfD+THqqqi/WJzJOSNvmfnNSzB8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
-        Anand Jain <anand.jain@oracle.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 069/101] btrfs: prop: fix vanished compression property after failed set
-Date:   Mon, 15 Apr 2019 20:59:07 +0200
-Message-Id: <20190415183744.122598536@linuxfoundation.org>
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Zhao Qiang <qiang.zhao@nxp.com>,
+        Yalin Wang <yalin.wang@sonymobile.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 063/101] include/linux/bitrev.h: fix constant bitrev
+Date:   Mon, 15 Apr 2019 20:59:01 +0200
+Message-Id: <20190415183743.823917556@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183740.341577907@linuxfoundation.org>
 References: <20190415183740.341577907@linuxfoundation.org>
@@ -60,53 +63,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anand Jain <anand.jain@oracle.com>
+From: Arnd Bergmann <arnd@arndb.de>
 
-commit 272e5326c7837697882ce3162029ba893059b616 upstream.
+commit 6147e136ff5071609b54f18982dea87706288e21 upstream.
 
-The compression property resets to NULL, instead of the old value if we
-fail to set the new compression parameter.
+clang points out with hundreds of warnings that the bitrev macros have a
+problem with constant input:
 
-  $ btrfs prop get /btrfs compression
-    compression=lzo
-  $ btrfs prop set /btrfs compression zli
-    ERROR: failed to set compression for /btrfs: Invalid argument
-  $ btrfs prop get /btrfs compression
+  drivers/hwmon/sht15.c:187:11: error: variable '__x' is uninitialized when used within its own initialization
+        [-Werror,-Wuninitialized]
+          u8 crc = bitrev8(data->val_status & 0x0F);
+                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  include/linux/bitrev.h:102:21: note: expanded from macro 'bitrev8'
+          __constant_bitrev8(__x) :                       \
+          ~~~~~~~~~~~~~~~~~~~^~~~
+  include/linux/bitrev.h:67:11: note: expanded from macro '__constant_bitrev8'
+          u8 __x = x;                     \
+             ~~~   ^
 
-This is because the compression property ->validate() is successful for
-'zli' as the strncmp() used the length passed from the userspace.
+Both the bitrev and the __constant_bitrev macros use an internal
+variable named __x, which goes horribly wrong when passing one to the
+other.
 
-Fix it by using the expected string length in strncmp().
+The obvious fix is to rename one of the variables, so this adds an extra
+'_'.
 
-Fixes: 63541927c8d1 ("Btrfs: add support for inode properties")
-Fixes: 5c1aab1dd544 ("btrfs: Add zstd support")
-CC: stable@vger.kernel.org # 4.14+
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Signed-off-by: Anand Jain <anand.jain@oracle.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+It seems we got away with this because
+
+ - there are only a few drivers using bitrev macros
+
+ - usually there are no constant arguments to those
+
+ - when they are constant, they tend to be either 0 or (unsigned)-1
+   (drivers/isdn/i4l/isdnhdlc.o, drivers/iio/amplifiers/ad8366.c) and
+   give the correct result by pure chance.
+
+In fact, the only driver that I could find that gets different results
+with this is drivers/net/wan/slic_ds26522.c, which in turn is a driver
+for fairly rare hardware (adding the maintainer to Cc for testing).
+
+Link: http://lkml.kernel.org/r/20190322140503.123580-1-arnd@arndb.de
+Fixes: 556d2f055bf6 ("ARM: 8187/1: add CONFIG_HAVE_ARCH_BITREVERSE to support rbit instruction")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Zhao Qiang <qiang.zhao@nxp.com>
+Cc: Yalin Wang <yalin.wang@sonymobile.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/props.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ include/linux/bitrev.h |   46 +++++++++++++++++++++++-----------------------
+ 1 file changed, 23 insertions(+), 23 deletions(-)
 
---- a/fs/btrfs/props.c
-+++ b/fs/btrfs/props.c
-@@ -366,11 +366,11 @@ int btrfs_subvol_inherit_props(struct bt
+--- a/include/linux/bitrev.h
++++ b/include/linux/bitrev.h
+@@ -34,41 +34,41 @@ static inline u32 __bitrev32(u32 x)
  
- static int prop_compression_validate(const char *value, size_t len)
- {
--	if (!strncmp("lzo", value, len))
-+	if (!strncmp("lzo", value, 3))
- 		return 0;
--	else if (!strncmp("zlib", value, len))
-+	else if (!strncmp("zlib", value, 4))
- 		return 0;
--	else if (!strncmp("zstd", value, len))
-+	else if (!strncmp("zstd", value, 4))
- 		return 0;
+ #define __constant_bitrev32(x)	\
+ ({					\
+-	u32 __x = x;			\
+-	__x = (__x >> 16) | (__x << 16);	\
+-	__x = ((__x & (u32)0xFF00FF00UL) >> 8) | ((__x & (u32)0x00FF00FFUL) << 8);	\
+-	__x = ((__x & (u32)0xF0F0F0F0UL) >> 4) | ((__x & (u32)0x0F0F0F0FUL) << 4);	\
+-	__x = ((__x & (u32)0xCCCCCCCCUL) >> 2) | ((__x & (u32)0x33333333UL) << 2);	\
+-	__x = ((__x & (u32)0xAAAAAAAAUL) >> 1) | ((__x & (u32)0x55555555UL) << 1);	\
+-	__x;								\
++	u32 ___x = x;			\
++	___x = (___x >> 16) | (___x << 16);	\
++	___x = ((___x & (u32)0xFF00FF00UL) >> 8) | ((___x & (u32)0x00FF00FFUL) << 8);	\
++	___x = ((___x & (u32)0xF0F0F0F0UL) >> 4) | ((___x & (u32)0x0F0F0F0FUL) << 4);	\
++	___x = ((___x & (u32)0xCCCCCCCCUL) >> 2) | ((___x & (u32)0x33333333UL) << 2);	\
++	___x = ((___x & (u32)0xAAAAAAAAUL) >> 1) | ((___x & (u32)0x55555555UL) << 1);	\
++	___x;								\
+ })
  
- 	return -EINVAL;
+ #define __constant_bitrev16(x)	\
+ ({					\
+-	u16 __x = x;			\
+-	__x = (__x >> 8) | (__x << 8);	\
+-	__x = ((__x & (u16)0xF0F0U) >> 4) | ((__x & (u16)0x0F0FU) << 4);	\
+-	__x = ((__x & (u16)0xCCCCU) >> 2) | ((__x & (u16)0x3333U) << 2);	\
+-	__x = ((__x & (u16)0xAAAAU) >> 1) | ((__x & (u16)0x5555U) << 1);	\
+-	__x;								\
++	u16 ___x = x;			\
++	___x = (___x >> 8) | (___x << 8);	\
++	___x = ((___x & (u16)0xF0F0U) >> 4) | ((___x & (u16)0x0F0FU) << 4);	\
++	___x = ((___x & (u16)0xCCCCU) >> 2) | ((___x & (u16)0x3333U) << 2);	\
++	___x = ((___x & (u16)0xAAAAU) >> 1) | ((___x & (u16)0x5555U) << 1);	\
++	___x;								\
+ })
+ 
+ #define __constant_bitrev8x4(x) \
+ ({			\
+-	u32 __x = x;	\
+-	__x = ((__x & (u32)0xF0F0F0F0UL) >> 4) | ((__x & (u32)0x0F0F0F0FUL) << 4);	\
+-	__x = ((__x & (u32)0xCCCCCCCCUL) >> 2) | ((__x & (u32)0x33333333UL) << 2);	\
+-	__x = ((__x & (u32)0xAAAAAAAAUL) >> 1) | ((__x & (u32)0x55555555UL) << 1);	\
+-	__x;								\
++	u32 ___x = x;	\
++	___x = ((___x & (u32)0xF0F0F0F0UL) >> 4) | ((___x & (u32)0x0F0F0F0FUL) << 4);	\
++	___x = ((___x & (u32)0xCCCCCCCCUL) >> 2) | ((___x & (u32)0x33333333UL) << 2);	\
++	___x = ((___x & (u32)0xAAAAAAAAUL) >> 1) | ((___x & (u32)0x55555555UL) << 1);	\
++	___x;								\
+ })
+ 
+ #define __constant_bitrev8(x)	\
+ ({					\
+-	u8 __x = x;			\
+-	__x = (__x >> 4) | (__x << 4);	\
+-	__x = ((__x & (u8)0xCCU) >> 2) | ((__x & (u8)0x33U) << 2);	\
+-	__x = ((__x & (u8)0xAAU) >> 1) | ((__x & (u8)0x55U) << 1);	\
+-	__x;								\
++	u8 ___x = x;			\
++	___x = (___x >> 4) | (___x << 4);	\
++	___x = ((___x & (u8)0xCCU) >> 2) | ((___x & (u8)0x33U) << 2);	\
++	___x = ((___x & (u8)0xAAU) >> 1) | ((___x & (u8)0x55U) << 1);	\
++	___x;								\
+ })
+ 
+ #define bitrev32(x) \
 
 
