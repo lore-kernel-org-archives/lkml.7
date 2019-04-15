@@ -7,49 +7,60 @@ X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D7CCC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:07:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 921BEC10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:07:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE358218FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:07:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5334721905
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:07:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355233;
-	bh=lxC8+yuu3crnRi+Gft1xk/XP3S1Sm8ISoYy5GjkXD34=;
+	s=default; t=1555355237;
+	bh=Hy425lnHAqhP3mkzcrj7iBQhgNRmuXiyohfhVmq+vNU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=toC1RAutAKpk8Z3JBQGBfeWmKCcImlkwnXYjpoV++gD+stMGCXCIE4g/rYiSm0EFb
-	 Wftq0qhRUAM9pCfJ0CEeKacr6D0SYnqmFFGtE2a4QbRac6n5ig9L654Wt7MxziJwdU
-	 ZI9EUI2rNVI2IE/yhh6cEG0hqDW/QEoQk6imWhrQ=
+	b=gJTCxsMZPYoaKsqkdKjyq2WX+u5mipc655wlzM5lQUPZXRv9U0AENXIUebc1XREgu
+	 Z9bbwAbO3PfmwS/3lKueX0DQ5fCwE9RgAvTMODveP5B0AhK33To4dqvr7lSReKEyVn
+	 YCL3g8tIsw7mnRsJpx7v0xqQsmaRJrtnK2HVIeow=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729053AbfDOTHM (ORCPT
+        id S1730130AbfDOTHQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:07:12 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41808 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:07:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41972 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730091AbfDOTHH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:07:07 -0400
+        id S1730110AbfDOTHM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:07:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8752C2087C;
-        Mon, 15 Apr 2019 19:07:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 89DF12087C;
+        Mon, 15 Apr 2019 19:07:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355227;
-        bh=lxC8+yuu3crnRi+Gft1xk/XP3S1Sm8ISoYy5GjkXD34=;
+        s=default; t=1555355232;
+        bh=Hy425lnHAqhP3mkzcrj7iBQhgNRmuXiyohfhVmq+vNU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wJGTCMMGnnTnEP+cHTfdVpmth5ijqlu07yp7zWELZ4+x1CMOzP5apzsgJD/It5fB3
-         1S24o83LcY72mQY1stMtXtgRCTpyx69AUrkVUWexhAuJipdf4eTmpsUZBMGLfIRMjy
-         Ja72asdH/0aOWB/BSt2y7IMtBC06ihEK9wJibs+Q=
+        b=t0UlwLgFsodbQPCgmkRIFKS1VsQvh9ynIZzX6AehM7LMk0OEdHg8A5hLf5THHPCLu
+         LAQr45gJCU5ZjhcH9sy17M26oYqG50XC7Ur6FIUl3SClu50O/0Xx5LJf0Ycd+mlYSn
+         rYeFSoNQTHAzLi3YQoLRyWpkE/GHEsIac9HkCFeU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
+        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
         Nathan Chancellor <natechancellor@gmail.com>,
-        Nick Desaulniers <ndesaulniers@google.com>,
+        Adhemerval Zanella <adhemerval.zanella@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        James Y Knight <jyknight@google.com>,
         Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 038/101] kbuild: clang: choose GCC_TOOLCHAIN_DIR not on LD
-Date:   Mon, 15 Apr 2019 20:58:36 +0200
-Message-Id: <20190415183742.470154291@linuxfoundation.org>
+Subject: [PATCH 4.19 040/101] lib/string.c: implement a basic bcmp
+Date:   Mon, 15 Apr 2019 20:58:38 +0200
+Message-Id: <20190415183742.579457656@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183740.341577907@linuxfoundation.org>
 References: <20190415183740.341577907@linuxfoundation.org>
@@ -62,44 +73,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit ad15006cc78459d059af56729c4d9bed7c7fd860 upstream.
+[ Upstream commit 5f074f3e192f10c9fade898b9b3b8812e3d83342 ]
 
-This causes an issue when trying to build with `make LD=ld.lld` if
-ld.lld and the rest of your cross tools aren't in the same directory
-(ex. /usr/local/bin) (as is the case for Android's build system), as the
-GCC_TOOLCHAIN_DIR then gets set based on `which $(LD)` which will point
-where LLVM tools are, not GCC/binutils tools are located.
+A recent optimization in Clang (r355672) lowers comparisons of the
+return value of memcmp against zero to comparisons of the return value
+of bcmp against zero.  This helps some platforms that implement bcmp
+more efficiently than memcmp.  glibc simply aliases bcmp to memcmp, but
+an optimized implementation is in the works.
 
-Instead, select the GCC_TOOLCHAIN_DIR based on another tool provided by
-binutils for which LLVM does not provide a substitute for, such as
-elfedit.
+This results in linkage failures for all targets with Clang due to the
+undefined symbol.  For now, just implement bcmp as a tailcail to memcmp
+to unbreak the build.  This routine can be further optimized in the
+future.
 
-Fixes: 785f11aa595b ("kbuild: Add better clang cross build support")
-Link: https://github.com/ClangBuiltLinux/linux/issues/341
+Other ideas discussed:
+
+ * A weak alias was discussed, but breaks for architectures that define
+   their own implementations of memcmp since aliases to declarations are
+   not permitted (only definitions). Arch-specific memcmp
+   implementations typically declare memcmp in C headers, but implement
+   them in assembly.
+
+ * -ffreestanding also is used sporadically throughout the kernel.
+
+ * -fno-builtin-bcmp doesn't work when doing LTO.
+
+Link: https://bugs.llvm.org/show_bug.cgi?id=41035
+Link: https://code.woboq.org/userspace/glibc/string/memcmp.c.html#bcmp
+Link: https://github.com/llvm/llvm-project/commit/8e16d73346f8091461319a7dfc4ddd18eedcff13
+Link: https://github.com/ClangBuiltLinux/linux/issues/416
+Link: http://lkml.kernel.org/r/20190313211335.165605-1-ndesaulniers@google.com
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+Reported-by: Adhemerval Zanella <adhemerval.zanella@linaro.org>
+Suggested-by: Arnd Bergmann <arnd@arndb.de>
+Suggested-by: James Y Knight <jyknight@google.com>
+Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
 Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
+Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
 Tested-by: Nathan Chancellor <natechancellor@gmail.com>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: David Laight <David.Laight@ACULAB.COM>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- Makefile | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ include/linux/string.h |  3 +++
+ lib/string.c           | 20 ++++++++++++++++++++
+ 2 files changed, 23 insertions(+)
 
-diff --git a/Makefile b/Makefile
-index 8fdfe0af5862..c07f25e2e11b 100644
---- a/Makefile
-+++ b/Makefile
-@@ -483,7 +483,7 @@ endif
- ifeq ($(cc-name),clang)
- ifneq ($(CROSS_COMPILE),)
- CLANG_FLAGS	:= --target=$(notdir $(CROSS_COMPILE:%-=%))
--GCC_TOOLCHAIN_DIR := $(dir $(shell which $(LD)))
-+GCC_TOOLCHAIN_DIR := $(dir $(shell which $(CROSS_COMPILE)elfedit))
- CLANG_FLAGS	+= --prefix=$(GCC_TOOLCHAIN_DIR)
- GCC_TOOLCHAIN	:= $(realpath $(GCC_TOOLCHAIN_DIR)/..)
- endif
+diff --git a/include/linux/string.h b/include/linux/string.h
+index 4a5a0eb7df51..f58e1ef76572 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -143,6 +143,9 @@ extern void * memscan(void *,int,__kernel_size_t);
+ #ifndef __HAVE_ARCH_MEMCMP
+ extern int memcmp(const void *,const void *,__kernel_size_t);
+ #endif
++#ifndef __HAVE_ARCH_BCMP
++extern int bcmp(const void *,const void *,__kernel_size_t);
++#endif
+ #ifndef __HAVE_ARCH_MEMCHR
+ extern void * memchr(const void *,int,__kernel_size_t);
+ #endif
+diff --git a/lib/string.c b/lib/string.c
+index 2c0900a5d51a..72125fd5b4a6 100644
+--- a/lib/string.c
++++ b/lib/string.c
+@@ -865,6 +865,26 @@ __visible int memcmp(const void *cs, const void *ct, size_t count)
+ EXPORT_SYMBOL(memcmp);
+ #endif
+ 
++#ifndef __HAVE_ARCH_BCMP
++/**
++ * bcmp - returns 0 if and only if the buffers have identical contents.
++ * @a: pointer to first buffer.
++ * @b: pointer to second buffer.
++ * @len: size of buffers.
++ *
++ * The sign or magnitude of a non-zero return value has no particular
++ * meaning, and architectures may implement their own more efficient bcmp(). So
++ * while this particular implementation is a simple (tail) call to memcmp, do
++ * not rely on anything but whether the return value is zero or non-zero.
++ */
++#undef bcmp
++int bcmp(const void *a, const void *b, size_t len)
++{
++	return memcmp(a, b, len);
++}
++EXPORT_SYMBOL(bcmp);
++#endif
++
+ #ifndef __HAVE_ARCH_MEMSCAN
+ /**
+  * memscan - Find a character in an area of memory.
 -- 
 2.19.1
 
