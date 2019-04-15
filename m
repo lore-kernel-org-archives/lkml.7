@@ -2,133 +2,144 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0154BC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:12:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70E2EC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:14:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0ED12075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:12:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39EB1206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:14:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Pa4FP18a"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Kwae56LU"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727874AbfDOQML (ORCPT
+        id S1727697AbfDOQOP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 12:12:11 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:41500 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726522AbfDOQML (ORCPT
+        Mon, 15 Apr 2019 12:14:15 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:35348 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726522AbfDOQOO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 12:12:11 -0400
-Received: by mail-ed1-f65.google.com with SMTP id g6so11236283edc.8;
-        Mon, 15 Apr 2019 09:12:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mfR67O5uzhL+W/kXKjgRK+h5z0stG4aLMzE9rLCaSq8=;
-        b=Pa4FP18aCYBhzUXu2XjNKs/oVZXE2oLwsAfV7jMTCdOLP49806h4Coc+nM/W9Vt8NP
-         rwRLynhfrjIn4Z3WNbUg6Jt/x5upHLJQ8Hv/vngT+WtNpKl+xid7PbRHh2108Cs3R9+n
-         O3PArttb9+0jIxmd5TVrw+dPgi/WRIIsATN1UQqRvsEgza3I/tZ4Pgex+uMRR+2HMejt
-         4InA33r9hvYYgeiluyIt4pmfRdsuu47YbTcf8ssyHU1AX+ZZWLiDMvzKpf0luaI2FQZz
-         4Q7Q3xH7tuZjkquSF8PqYbrVONfmtb7qLtOfAgxyP44zbQh1aTIbC+DQYmT7ybrFjIY+
-         g7rg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mfR67O5uzhL+W/kXKjgRK+h5z0stG4aLMzE9rLCaSq8=;
-        b=YAHJVHpCPg0b3qkVlPo35zYdvACeLkKqwji/JBcqYcjMiSf+OQaWw4tZ9XvG2wrCVa
-         q5br5Yf282i8CU147HcNLf2lYigy/N5glhFwftqOKJ+OIz4ZFGJl+uu2L/4f/h1YIPrW
-         rbQGM9KY6PjO3FlbtxSKVzNZYC4tVg2IIJqWKh1Gwq7awmxM/C8ReFfVndufoBNt2dYI
-         lyktrFaNQg7fl4u8D7dpd+eouK1zR0GtmQWcUviaxM/hA3z4QDYx+CdRSCOhsm9TPBRu
-         y+epRoge4iN4j2DbKX8HRGfNP+38GW41EHQGUhArb+TRkeFvRb9T/I2rj77f6cVhPm3T
-         xdkw==
-X-Gm-Message-State: APjAAAW6tBqukhiG2vewXTfFFYQMjdNt4HKVa+XsJpE4Wihbb3Egvg7s
-        w9e/Btn/78mWMa2bxyYf5Ug=
-X-Google-Smtp-Source: APXvYqz1DwAQSX/GFh3COJel1OdmJib8l9US29q0JS6adOO/Bi2PmX9Be9UghKvTSeqA+fLbPsfrXg==
-X-Received: by 2002:a50:9052:: with SMTP id z18mr9214097edz.256.1555344728991;
-        Mon, 15 Apr 2019 09:12:08 -0700 (PDT)
-Received: from archlinux-i9 ([2a01:4f9:2b:2b84::2])
-        by smtp.gmail.com with ESMTPSA id i12sm9249007ejp.57.2019.04.15.09.12.07
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Mon, 15 Apr 2019 09:12:08 -0700 (PDT)
-Date:   Mon, 15 Apr 2019 09:12:06 -0700
-From:   Nathan Chancellor <natechancellor@gmail.com>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        clang-built-linux@googlegroups.com,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        linux-s390@vger.kernel.org, Vasily Gorbik <gor@linux.ibm.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Luc Van Oostenryck <luc.vanoostenryck@gmail.com>,
-        Philipp Rudo <prudo@linux.ibm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 2/4] s390: boot, purgatory: pass $(CLANG_FLAGS) where
- needed
-Message-ID: <20190415161206.GA6928@archlinux-i9>
-References: <20190415083605.2560074-1-arnd@arndb.de>
- <20190415083605.2560074-2-arnd@arndb.de>
+        Mon, 15 Apr 2019 12:14:14 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=8qX7lMV5ZLJfVM93dzSu7Tm9Urf60WLVZEZIANFnhCY=; b=Kwae56LUiJtR71D0lsNMAkCfn
+        C7azt1tS2aNClYxrT3Y0hRjaFDb7RF/AbbhJKmu1whRFKA03LHJ2okb/XZqpDSq+Q+BzwLBNY0X71
+        /r0uSUwwet5oXd3CrmqQNdoR/EVlC/UQPlk2W5EAahWCXu5MwRkLod4NP+TZKofwLbgmV8GSZHIkG
+        UXBNp2jHoewRcBfrFvlK6apWk2N4IJESNlvhbfhUF35MeSEFj2BhgwYwXskI4V8wa9ZFEswBNmlFG
+        X4OAl0Yt0OvThDtJTRH0xgjbeqxzY5mulzi9zx6jQzB39VUYF8X5weRkRBM1zw74jEIdYwjXFg3kb
+        Df1SSDjgQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hG4FB-0002vx-IR; Mon, 15 Apr 2019 16:14:05 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 0BDE628B6D259; Mon, 15 Apr 2019 18:14:04 +0200 (CEST)
+Date:   Mon, 15 Apr 2019 18:14:04 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     "Singh, Brijesh" <brijesh.singh@amd.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Dan Williams <dan.j.williams@intel.com>,
+        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
+Subject: Re: [PATCH v2] x86: mm: Do not use set_{pud,pmd}_safe when splitting
+ the large page
+Message-ID: <20190415161404.GL4038@hirez.programming.kicks-ass.net>
+References: <20190415145515.13559-1-brijesh.singh@amd.com>
+ <1aec4241-09c0-5295-7bb7-235e9a494d2c@intel.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190415083605.2560074-2-arnd@arndb.de>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <1aec4241-09c0-5295-7bb7-235e9a494d2c@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 10:35:52AM +0200, Arnd Bergmann wrote:
-> The purgatory and boot Makefiles do not inherit the original cflags,
-> so clang falls back to the default target architecture when building it,
-> typically this would be x86 when cross-compiling.
+On Mon, Apr 15, 2019 at 08:58:52AM -0700, Dave Hansen wrote:
+> On 4/15/19 7:55 AM, Singh, Brijesh wrote:
+> >  static unsigned long __meminit
+> >  phys_pte_init(pte_t *pte_page, unsigned long paddr, unsigned long paddr_end,
+> > -	      pgprot_t prot)
+> > +	      pgprot_t prot, bool safe)
+> >  {
+> >  	unsigned long pages = 0, paddr_next;
+> >  	unsigned long paddr_last = paddr_end;
+> > @@ -432,7 +463,7 @@ phys_pte_init(pte_t *pte_page, unsigned long paddr, unsigned long paddr_end,
+> >  					     E820_TYPE_RAM) &&
+> >  			    !e820__mapped_any(paddr & PAGE_MASK, paddr_next,
+> >  					     E820_TYPE_RESERVED_KERN))
+> > -				set_pte_safe(pte, __pte(0));
+> > +				__set_pte(pte, __pte(0), safe);
+> >  			continue;
+> >  		}
 > 
-> Add $(CLANG_FLAGS) everywhere so we pass the correct --target=s390x-linux
-> option when cross-compiling.
+> The changelog is great, btw.
 > 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> But, I'm not a big fan of propagating the 'safe' nomenclature.  Could
+> we, at least, call it 'overwrite_safe' or something if we're going to
+> have a variable name?  Or even, 'new_entries_only' or something that
+> actually conveys meaning?
+> 
+> Because, just reading it, I always wonder "why do we have an unsafe
+> variant, that's stupid" every time. :)
 
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+s/safe/init/ on the whole thing?
 
-> ---
->  arch/s390/Makefile           | 4 ++--
->  arch/s390/purgatory/Makefile | 1 +
->  2 files changed, 3 insertions(+), 2 deletions(-)
+And maybe even back on the initial _safe functions? Because all of this
+is about initializing page-tables, which is a TLB *safe* operation I
+suppose :-)
+
+> > +#define DEFINE_ENTRY(type1, type2, safe)			\
+> > +static inline void __set_##type1(type1##_t *arg1,		\
+> > +			type2##_t arg2, bool safe)		\
+> > +{								\
+> > +	if (safe)						\
+> > +		set_##type1##_safe(arg1, arg2);			\
+> > +	else							\
+> > +		set_##type1(arg1, arg2);			\
+> > +}
 > 
-> diff --git a/arch/s390/Makefile b/arch/s390/Makefile
-> index 9c079a506325..9a228786e34f 100644
-> --- a/arch/s390/Makefile
-> +++ b/arch/s390/Makefile
-> @@ -17,9 +17,9 @@ KBUILD_CFLAGS_MODULE += -fPIC
->  KBUILD_AFLAGS	+= -m64
->  KBUILD_CFLAGS	+= -m64
->  aflags_dwarf	:= -Wa,-gdwarf-2
-> -KBUILD_AFLAGS_DECOMPRESSOR := -m64 -D__ASSEMBLY__
-> +KBUILD_AFLAGS_DECOMPRESSOR := $(CLANG_FLAGS) -m64 -D__ASSEMBLY__
->  KBUILD_AFLAGS_DECOMPRESSOR += $(if $(CONFIG_DEBUG_INFO),$(aflags_dwarf))
-> -KBUILD_CFLAGS_DECOMPRESSOR := -m64 -O2
-> +KBUILD_CFLAGS_DECOMPRESSOR := $(CLANG_FLAGS) -m64 -O2
->  KBUILD_CFLAGS_DECOMPRESSOR += -DDISABLE_BRANCH_PROFILING -D__NO_FORTIFY
->  KBUILD_CFLAGS_DECOMPRESSOR += -fno-delete-null-pointer-checks -msoft-float
->  KBUILD_CFLAGS_DECOMPRESSOR += -fno-asynchronous-unwind-tables
-> diff --git a/arch/s390/purgatory/Makefile b/arch/s390/purgatory/Makefile
-> index ce6a3f75065b..ecd0b3847fef 100644
-> --- a/arch/s390/purgatory/Makefile
-> +++ b/arch/s390/purgatory/Makefile
-> @@ -22,6 +22,7 @@ KBUILD_CFLAGS := -fno-strict-aliasing -Wall -Wstrict-prototypes
->  KBUILD_CFLAGS += -Wno-pointer-sign -Wno-sign-compare
->  KBUILD_CFLAGS += -fno-zero-initialized-in-bss -fno-builtin -ffreestanding
->  KBUILD_CFLAGS += -c -MD -Os -m64 -msoft-float -fno-common
-> +KBUILD_CFLAGS += $(CLANG_FLAGS)
->  KBUILD_CFLAGS += $(call cc-option,-fno-PIE)
->  KBUILD_AFLAGS := $(filter-out -DCC_USING_EXPOLINE,$(KBUILD_AFLAGS))
->  
-> -- 
-> 2.20.0
+> While I appreciate the brevity that these macros allow, I detest their
+> ability to thwart cscope and grep.  I guess it's just one file, but it
+> does make me grumble a bit.
+
+There is scripts/tags.sh where you can add to regex_c to teach
+cscope/ctags about magic macros.
+
+> Also, can we do better than "__"?  Aren't these specific to
+> initialization, and only for the kernel?  Maybe we should call them
+> meminit_set_pte() or kern_set_pte() or something so make it totally
+> clear to the reader that they're new.
+
+set_*_init() and set_*() I suppose.
+
 > 
+> > -		kernel_physical_mapping_init(__pa(vaddr & pmask),
+> > -					     __pa((vaddr_end & pmask) + psize),
+> > -					     split_page_size_mask);
+> > +		kernel_physical_mapping_change(__pa(vaddr & pmask),
+> > +					       __pa((vaddr_end & pmask) + psize),
+> > +					       split_page_size_mask);
+> 
+> BTW, this hunk is really nice the way that the new naming makes it more
+> intuitive what's going on.  My only nit w9uld be that we now have two
+> very similarly-named functions with different TLB-flushing requirements.
+> 
+> Could we please include a comment at this site that reminds us that we
+> owe a TLB flush after this?
+
+Right, a comment would be good. I think my initial proposal had the TLB
+flushing inside, but I see the usage is in a loop, so I appreciate the
+desire to keep the TLB flushing outside.
