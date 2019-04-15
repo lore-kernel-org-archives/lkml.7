@@ -7,56 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5AEA2C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEAE4C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:26:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 250D920651
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:26:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7C7B120818
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:26:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555356382;
-	bh=rxnzBwlkhUzrI6abMQJu/V3EOLM6jm7aXGSvuvpuN+M=;
+	s=default; t=1555356386;
+	bh=y1JV1QDiaC70Wh0bqYFdiYtfJ8Yx9YOJ997lCY8ISMM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uBIwVWOb3oV61Vwh0lPZnZs9e2HJBp2o0S5F2l8pClcbA0+qeblWL5MYN+ERCvym1
-	 ooMb8K4MVPSbhSgS83Nr8pz30YHQs7nK3Qb5rARfspK7SCdSgZmwlDqmy9MFHtP3wR
-	 31cDL6L+Xu3SpDBM/I1gWPIquDm6e0m5jB4+DAMs=
+	b=Wxs6aOXFmZzpZDRvfmpLBMw14I7MDDLaA7ZfOT8HFWjUdlZ3CTxSveB+Js8FFxLaf
+	 SX6gUPS+Yrsoc0dAunQPJQBM+SRWTVzHYpZjyYSnFkqWgvQEB0zdo6cB/sPgE86fir
+	 RF1mGg+7Ara2XwGFnT+JIzLTHJn9aEm6eMJ9wQFY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729606AbfDOTEq (ORCPT
+        id S1730401AbfDOT0Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:04:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37758 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:26:25 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37938 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728278AbfDOTEk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:04:40 -0400
+        id S1729601AbfDOTEp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:04:45 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2E8F6218DA;
-        Mon, 15 Apr 2019 19:04:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7B022218EA;
+        Mon, 15 Apr 2019 19:04:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355079;
-        bh=rxnzBwlkhUzrI6abMQJu/V3EOLM6jm7aXGSvuvpuN+M=;
+        s=default; t=1555355085;
+        bh=y1JV1QDiaC70Wh0bqYFdiYtfJ8Yx9YOJ997lCY8ISMM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=MQxBRvJ1LV8duEurp+Mm/QNmtr5N3gP59BaQY9fzLTYXRR8tPS/GBLp2Cb21byapF
-         vehABac10prkLIOI3oqF+7KyjeILTtCb6z7wZHoott6lE5PJpWhIXe8yidMYzr2F4I
-         +bWk+17OlgV397sfIOSQ27oxMNKaDP1ZnQcKfcxI=
+        b=aVMIwCKZHwq3rsgyQKXm2V2l9dGwx9HykzVQ4U5TCTVzSo3moam920pKTFkctt81J
+         rddH/nAxW+ukx7CD+U6CpmmaZJXqz5AZKaYuBSjDm7GSneh0nC+29sk+5/qvvZtP7b
+         PePwE5ZSDfMAFz5QWBN+x6oc/XLda/ZHa7W8wFHs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Lendacky <thomas.lendacky@amd.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.14 65/69] x86/perf/amd: Remove need to check "running" bit in NMI handler
-Date:   Mon, 15 Apr 2019 20:59:23 +0200
-Message-Id: <20190415183736.330712794@linuxfoundation.org>
+        stable@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>,
+        Mike Snitzer <snitzer@redhat.com>
+Subject: [PATCH 4.14 67/69] dm table: propagate BDI_CAP_STABLE_WRITES to fix sporadic checksum errors
+Date:   Mon, 15 Apr 2019 20:59:25 +0200
+Message-Id: <20190415183736.670484314@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183726.036654568@linuxfoundation.org>
 References: <20190415183726.036654568@linuxfoundation.org>
@@ -69,127 +59,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lendacky, Thomas <Thomas.Lendacky@amd.com>
+From: Ilya Dryomov <idryomov@gmail.com>
 
-commit 3966c3feca3fd10b2935caa0b4a08c7dd59469e5 upstream.
+commit eb40c0acdc342b815d4d03ae6abb09e80c0f2988 upstream.
 
-Spurious interrupt support was added to perf in the following commit, almost
-a decade ago:
+Some devices don't use blk_integrity but still want stable pages
+because they do their own checksumming.  Examples include rbd and iSCSI
+when data digests are negotiated.  Stacking DM (and thus LVM) on top of
+these devices results in sporadic checksum errors.
 
-  63e6be6d98e1 ("perf, x86: Catch spurious interrupts after disabling counters")
+Set BDI_CAP_STABLE_WRITES if any underlying device has it set.
 
-The two previous patches (resolving the race condition when disabling a
-PMC and NMI latency mitigation) allow for the removal of this older
-spurious interrupt support.
-
-Currently in x86_pmu_stop(), the bit for the PMC in the active_mask bitmap
-is cleared before disabling the PMC, which sets up a race condition. This
-race condition was mitigated by introducing the running bitmap. That race
-condition can be eliminated by first disabling the PMC, waiting for PMC
-reset on overflow and then clearing the bit for the PMC in the active_mask
-bitmap. The NMI handler will not re-enable a disabled counter.
-
-If x86_pmu_stop() is called from the perf NMI handler, the NMI latency
-mitigation support will guard against any unhandled NMI messages.
-
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: <stable@vger.kernel.org> # 4.14.x-
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Link: https://lkml.kernel.org/r/Message-ID:
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: stable@vger.kernel.org
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/events/amd/core.c |   21 +++++++++++++++++++--
- arch/x86/events/core.c     |   13 +++----------
- 2 files changed, 22 insertions(+), 12 deletions(-)
+ drivers/md/dm-table.c |   39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -4,8 +4,8 @@
- #include <linux/init.h>
- #include <linux/slab.h>
- #include <linux/delay.h>
--#include <linux/nmi.h>
- #include <asm/apicdef.h>
-+#include <asm/nmi.h>
- 
- #include "../perf_event.h"
- 
-@@ -491,6 +491,23 @@ static void amd_pmu_disable_all(void)
- 	}
+--- a/drivers/md/dm-table.c
++++ b/drivers/md/dm-table.c
+@@ -1789,6 +1789,36 @@ static bool dm_table_supports_discards(s
+ 	return true;
  }
  
-+static void amd_pmu_disable_event(struct perf_event *event)
++static int device_requires_stable_pages(struct dm_target *ti,
++					struct dm_dev *dev, sector_t start,
++					sector_t len, void *data)
 +{
-+	x86_pmu_disable_event(event);
++	struct request_queue *q = bdev_get_queue(dev->bdev);
 +
-+	/*
-+	 * This can be called from NMI context (via x86_pmu_stop). The counter
-+	 * may have overflowed, but either way, we'll never see it get reset
-+	 * by the NMI if we're already in the NMI. And the NMI latency support
-+	 * below will take care of any pending NMI that might have been
-+	 * generated by the overflow.
-+	 */
-+	if (in_nmi())
-+		return;
-+
-+	amd_pmu_wait_on_overflow(event->hw.idx);
++	return q && bdi_cap_stable_pages_required(q->backing_dev_info);
 +}
 +
- /*
-  * Because of NMI latency, if multiple PMC counters are active or other sources
-  * of NMIs are received, the perf NMI handler can handle one or more overflowed
-@@ -738,7 +755,7 @@ static __initconst const struct x86_pmu
- 	.disable_all		= amd_pmu_disable_all,
- 	.enable_all		= x86_pmu_enable_all,
- 	.enable			= x86_pmu_enable_event,
--	.disable		= x86_pmu_disable_event,
-+	.disable		= amd_pmu_disable_event,
- 	.hw_config		= amd_pmu_hw_config,
- 	.schedule_events	= x86_schedule_events,
- 	.eventsel		= MSR_K7_EVNTSEL0,
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -1328,8 +1328,9 @@ void x86_pmu_stop(struct perf_event *eve
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 	struct hw_perf_event *hwc = &event->hw;
++/*
++ * If any underlying device requires stable pages, a table must require
++ * them as well.  Only targets that support iterate_devices are considered:
++ * don't want error, zero, etc to require stable pages.
++ */
++static bool dm_table_requires_stable_pages(struct dm_table *t)
++{
++	struct dm_target *ti;
++	unsigned i;
++
++	for (i = 0; i < dm_table_get_num_targets(t); i++) {
++		ti = dm_table_get_target(t, i);
++
++		if (ti->type->iterate_devices &&
++		    ti->type->iterate_devices(ti, device_requires_stable_pages, NULL))
++			return true;
++	}
++
++	return false;
++}
++
+ void dm_table_set_restrictions(struct dm_table *t, struct request_queue *q,
+ 			       struct queue_limits *limits)
+ {
+@@ -1838,6 +1868,15 @@ void dm_table_set_restrictions(struct dm
+ 	dm_table_verify_integrity(t);
  
--	if (__test_and_clear_bit(hwc->idx, cpuc->active_mask)) {
-+	if (test_bit(hwc->idx, cpuc->active_mask)) {
- 		x86_pmu.disable(event);
-+		__clear_bit(hwc->idx, cpuc->active_mask);
- 		cpuc->events[hwc->idx] = NULL;
- 		WARN_ON_ONCE(hwc->state & PERF_HES_STOPPED);
- 		hwc->state |= PERF_HES_STOPPED;
-@@ -1426,16 +1427,8 @@ int x86_pmu_handle_irq(struct pt_regs *r
- 	apic_write(APIC_LVTPC, APIC_DM_NMI);
- 
- 	for (idx = 0; idx < x86_pmu.num_counters; idx++) {
--		if (!test_bit(idx, cpuc->active_mask)) {
--			/*
--			 * Though we deactivated the counter some cpus
--			 * might still deliver spurious interrupts still
--			 * in flight. Catch them:
--			 */
--			if (__test_and_clear_bit(idx, cpuc->running))
--				handled++;
-+		if (!test_bit(idx, cpuc->active_mask))
- 			continue;
--		}
- 
- 		event = cpuc->events[idx];
- 
+ 	/*
++	 * Some devices don't use blk_integrity but still want stable pages
++	 * because they do their own checksumming.
++	 */
++	if (dm_table_requires_stable_pages(t))
++		q->backing_dev_info->capabilities |= BDI_CAP_STABLE_WRITES;
++	else
++		q->backing_dev_info->capabilities &= ~BDI_CAP_STABLE_WRITES;
++
++	/*
+ 	 * Determine whether or not this queue's I/O timings contribute
+ 	 * to the entropy pool, Only request-based targets use this.
+ 	 * Clear QUEUE_FLAG_ADD_RANDOM if any underlying device does not
 
 
