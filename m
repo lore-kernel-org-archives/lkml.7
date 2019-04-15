@@ -2,142 +2,236 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4675C10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:58:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CBD4C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:58:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B24DF20818
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:58:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4044920818
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:58:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iFB/D+48"
+	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="QrkEgSkQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726102AbfDOO6I (ORCPT
+        id S1727847AbfDOO6T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 10:58:08 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:34895 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727447AbfDOOzh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 10:55:37 -0400
-Received: by mail-lj1-f194.google.com with SMTP id t4so7445480ljc.2;
-        Mon, 15 Apr 2019 07:55:36 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=YyEWyd/0/FOQqZopdUl0UO49wVaBKveFMv7rmBv9s6k=;
-        b=iFB/D+48kanPXUd9c+KTDTPEaK2DGIPtI/y1W+50te+5dWUK8c80SnQWmjgu530V6C
-         neE+v4gjVqDulAvJsAm2FMeAQ7dIU84nAq38pGbtgSgHOMnxeNWKuWeViO4iuFC1//+6
-         Ue6uwZiT+mxf/njtGDYaK7dWt4amiqLeFqHQY4BRTxX05wON+At/QDQUXoBRrgFWysrH
-         rf31ZzZjr/5odEaZrSg+lI0S6w0fEkMDj3JuFrE2ndY7XD0rDdxwjrPXx8zg/OU5LJy9
-         ubPRwudVSXOkH4KWMXNu11H/EaYMQdms54xTu+sQpIMP7ne/ub44+6wgii1w5mW15HF8
-         6fsQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=YyEWyd/0/FOQqZopdUl0UO49wVaBKveFMv7rmBv9s6k=;
-        b=F7BDc8BnwT7iH5ARLgfeAmws2Dj+qw/PZiUQpPEYZuu5k1ViCRF9AH8ZQx5nUsjar8
-         XbBnneNYt/IKLjiU1p187YLB5ZJyHyrZKM/QhcflpO7qfMM/o1k6ySS9RYZ5qZq/wFBJ
-         Ypfc97UCzv5t1dJ15/fglyiWUGuzfTJ8sqatT8DDMlopN5SvkJddhjjWn9mtFU5zSKZ5
-         kvqE/AzWFrx3gfRvxHgnfRWs0h7unsfqFc8YpyiipTiJtNH8SxRDvOBXtSrarX8rF+8p
-         p/a/l5TAB8V7qDChLzzm8wtHdkMeFdRberhhkxjW4IdmKJlwQ28AQ8eNvnVU9Igr2r4r
-         MmQw==
-X-Gm-Message-State: APjAAAUCLRD4+/SjXrGfrSyQDRE4gRHXVLIyVelHEICu1e20E3vek/N6
-        xBWsWQHupgCqyG9r3tog8pO1pwiL
-X-Google-Smtp-Source: APXvYqxlHCj1h3ecJd5aGgmuZF3aw5DUepJt++1LHniEfWi7S0ndLg/AgcFkrd7YywmPYqQiPihItQ==
-X-Received: by 2002:a2e:960b:: with SMTP id v11mr27575063ljh.135.1555340135615;
-        Mon, 15 Apr 2019 07:55:35 -0700 (PDT)
-Received: from localhost.localdomain (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
-        by smtp.gmail.com with ESMTPSA id l12sm9989932lfc.61.2019.04.15.07.55.34
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Apr 2019 07:55:34 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: [PATCH v2 01/19] PM / devfreq: tegra: Fix kHz to Hz conversion
-Date:   Mon, 15 Apr 2019 17:54:47 +0300
-Message-Id: <20190415145505.18397-2-digetx@gmail.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190415145505.18397-1-digetx@gmail.com>
-References: <20190415145505.18397-1-digetx@gmail.com>
+        Mon, 15 Apr 2019 10:58:19 -0400
+Received: from node.akkea.ca ([192.155.83.177]:46428 "EHLO node.akkea.ca"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726605AbfDOO6S (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 10:58:18 -0400
+Received: by node.akkea.ca (Postfix, from userid 33)
+        id A67A84E204B; Mon, 15 Apr 2019 14:58:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
+        t=1555340297; bh=Kc7cUyZtAWJIy0UnVNkOS5QC/tEpOGH2fKeWYUfecqc=;
+        h=To:Subject:Date:From:Cc:In-Reply-To:References;
+        b=QrkEgSkQV4YROtNXnbTUHsWU6N14qlv3LeRchQDTvymkIcQzI3HmSK5DhJ1H/13Ml
+         7YABmnMjvUBmNdMNoFjtpGGhkttUTOMghSyt2jAf3WAdRLnk8PJEG4P3eIYg2Agem2
+         tS71+Bce0V49mjN1ncViIH7XZaH5PdVBSy+oDWIA=
+To:     Leonard Crestez <leonard.crestez@nxp.com>
+Subject: Re: [PATCH v2 1/2] arm64: dts: fsl: librem5: Add a device tree for  the Librem5 devkit
+X-PHP-Originating-Script: 1000:rcube.php
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 15 Apr 2019 07:58:17 -0700
+From:   Angus Ainslie <angus@akkea.ca>
+Cc:     matti.vaittinen@fi.rohmeurope.com,
+        dl-linux-imx <linux-imx@nxp.com>, linux-kernel@vger.kernel.org,
+        robh+dt@kernel.org, devicetree@vger.kernel.org, festevam@gmail.com,
+        mark.rutland@arm.com, shawnguo@kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        Robin Gong <yibin.gong@nxp.com>, kernel@pengutronix.de,
+        s.hauer@pengutronix.de
+In-Reply-To: <baef6ba37a7a8d6e4dec0cfbc4ab8252b1d7a3fa.camel@nxp.com>
+References: <20190412130427.13418-1-angus@akkea.ca>
+ <20190412130427.13418-2-angus@akkea.ca>
+ <baef6ba37a7a8d6e4dec0cfbc4ab8252b1d7a3fa.camel@nxp.com>
+Message-ID: <8e0b801194e1a3e2961ccceeb9de5381@www.akkea.ca>
+X-Sender: angus@akkea.ca
+User-Agent: Roundcube Webmail/1.1.3
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The kHz to Hz is incorrectly converted in a few places in the code,
-this results in a wrong frequency being calculated because devfreq core
-uses OPP frequencies that are given in Hz to clamp the rate, while
-tegra-devfreq gives to the core value in kHz and then it also expects to
-receive value in kHz from the core. In a result memory freq is always set
-to a value which is close to ULONG_MAX because of the bug. Hence the EMC
-frequency is always capped to the maximum and the driver doesn't do
-anything useful. This patch was tested on Tegra30 and Tegra124 SoC's, EMC
-frequency scaling works properly now.
+On 2019-04-12 07:39, Leonard Crestez wrote:
+> On Fri, 2019-04-12 at 07:04 -0600, Angus Ainslie (Purism) wrote:
+>> +&i2c1 {
+>> +       clock-frequency = <400000>;
+>> +       pinctrl-names = "default";
+>> +       pinctrl-0 = <&pinctrl_i2c1>;
+>> +       status = "okay";
+>> +
+>> +       pmic: pmic@4b {
+>> +               reg = <0x4b>;
+>> +               compatible = "rohm,bd71837";
+>> +               pinctrl-names = "default";
+>> +               pinctrl-0 = <&pinctrl_pmic>;
+>> +               clocks = <&pmic_osc>;
+>> +               clock-names = "osc";
+>> +               clock-output-names = "pmic_clk";
+>> +               interrupt-parent = <&gpio1>;
+>> +               interrupts = <3 GPIO_ACTIVE_LOW>;
+>> +               interrupt-names = "irq";
+>> +               rohm,reset-snvs-powered;
+>> +
+>> +               gpo {
+>> +                       /* 0b0000_1100 all gpos with cmos output mode
+>> */
+>> +                       rohm,drv = <0x0C>;
+>> +               };
+> 
+> After searching for this gpo/rohm,drv property it does not seem to be
+> documented or handled anywhere?
+> 
+> Should probably just drop.
 
-Cc: <stable@vger.kernel.org> # 4.14+
-Tested-by: Steev Klimaszewski <steev@kali.org>
-Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
----
- drivers/devfreq/tegra-devfreq.c | 10 ++++------
- 1 file changed, 4 insertions(+), 6 deletions(-)
+Right I can't find it in the driver either. I'll drop it.
 
-diff --git a/drivers/devfreq/tegra-devfreq.c b/drivers/devfreq/tegra-devfreq.c
-index c89ba7b834ff..02905978abe1 100644
---- a/drivers/devfreq/tegra-devfreq.c
-+++ b/drivers/devfreq/tegra-devfreq.c
-@@ -486,9 +486,9 @@ static int tegra_devfreq_target(struct device *dev, unsigned long *freq,
- {
- 	struct tegra_devfreq *tegra = dev_get_drvdata(dev);
- 	struct dev_pm_opp *opp;
--	unsigned long rate = *freq * KHZ;
-+	unsigned long rate;
- 
--	opp = devfreq_recommended_opp(dev, &rate, flags);
-+	opp = devfreq_recommended_opp(dev, freq, flags);
- 	if (IS_ERR(opp)) {
- 		dev_err(dev, "Failed to find opp for %lu KHz\n", *freq);
- 		return PTR_ERR(opp);
-@@ -499,8 +499,6 @@ static int tegra_devfreq_target(struct device *dev, unsigned long *freq,
- 	clk_set_min_rate(tegra->emc_clock, rate);
- 	clk_set_rate(tegra->emc_clock, 0);
- 
--	*freq = rate;
--
- 	return 0;
- }
- 
-@@ -510,7 +508,7 @@ static int tegra_devfreq_get_dev_status(struct device *dev,
- 	struct tegra_devfreq *tegra = dev_get_drvdata(dev);
- 	struct tegra_devfreq_device *actmon_dev;
- 
--	stat->current_frequency = tegra->cur_freq;
-+	stat->current_frequency = tegra->cur_freq * KHZ;
- 
- 	/* To be used by the tegra governor */
- 	stat->private_data = tegra;
-@@ -565,7 +563,7 @@ static int tegra_governor_get_target(struct devfreq *devfreq,
- 		target_freq = max(target_freq, dev->target_freq);
- 	}
- 
--	*freq = target_freq;
-+	*freq = target_freq * KHZ;
- 
- 	return 0;
- }
--- 
-2.21.0
+Thanks
+Angus
+
+> 
+>> +               regulators {
+>> +                       #address-cells = <1>;
+>> +                       #size-cells = <0>;
+>> +
+>> +                       buck1_reg: BUCK1@0 {
+>> +                               reg = <0>;
+>> +                               regulator-name = "buck1";
+>> +                               regulator-min-microvolt = <700000>;
+>> +                               regulator-max-microvolt = <1300000>;
+>> +                               regulator-boot-on;
+>> +                               regulator-always-on;
+>> +                               regulator-ramp-delay = <1250>;
+>> +                               rohm,dvs-run-voltage = <900000>;
+>> +                               rohm,dvs-idle-voltage = <850000>;
+>> +                               rohm,dvs-suspend-voltage = <800000>;
+>> +                       };
+>> +
+>> +                       buck2_reg: BUCK2@1 {
+>> +                               reg = <1>;
+>> +                               regulator-name = "buck2";
+>> +                               regulator-min-microvolt = <700000>;
+>> +                               regulator-max-microvolt = <1300000>;
+>> +                               regulator-boot-on;
+>> +                               regulator-always-on;
+>> +                               regulator-ramp-delay = <1250>;
+>> +                               rohm,dvs-run-voltage = <1000000>;
+>> +                               rohm,dvs-idle-voltage = <900000>;
+>> +                       };
+>> +
+>> +                       buck3_reg: BUCK3@2 {
+>> +                               reg = <2>;
+>> +                               regulator-name = "buck3";
+>> +                               regulator-min-microvolt = <700000>;
+>> +                               regulator-max-microvolt = <1300000>;
+>> +                               rohm,dvs-run-voltage = <1000000>;
+>> +                       };
+>> +
+>> +                       buck4_reg: BUCK4@3 {
+>> +                               reg = <3>;
+>> +                               regulator-name = "buck4";
+>> +                               regulator-min-microvolt = <700000>;
+>> +                               regulator-max-microvolt = <1300000>;
+>> +                               rohm,dvs-run-voltage = <1000000>;
+>> +                       };
+>> +
+>> +                       buck5_reg: BUCK5@4 {
+>> +                               reg = <4>;
+>> +                               regulator-name = "buck5";
+>> +                               regulator-min-microvolt = <700000>;
+>> +                               regulator-max-microvolt = <1350000>;
+>> +                               regulator-boot-on;
+>> +                               regulator-always-on;
+>> +                       };
+>> +
+>> +                       buck6_reg: BUCK6@5 {
+>> +                               reg = <5>;
+>> +                               regulator-name = "buck6";
+>> +                               regulator-min-microvolt = <3000000>;
+>> +                               regulator-max-microvolt = <3300000>;
+>> +                               regulator-boot-on;
+>> +                               regulator-always-on;
+>> +                       };
+>> +
+>> +                       buck7_reg: BUCK7@6 {
+>> +                               reg = <6>;
+>> +                               regulator-name = "buck7";
+>> +                               regulator-min-microvolt = <1605000>;
+>> +                               regulator-max-microvolt = <1995000>;
+>> +                               regulator-boot-on;
+>> +                               regulator-always-on;
+>> +                       };
+>> +
+>> +                       buck8_reg: BUCK8@7 {
+>> +                               reg = <7>;
+>> +                               regulator-name = "buck8";
+>> +                               regulator-min-microvolt = <800000>;
+>> +                               regulator-max-microvolt = <1400000>;
+>> +                               regulator-boot-on;
+>> +                               regulator-always-on;
+>> +                       };
+>> +
+>> +                       ldo1_reg: LDO1@8 {
+>> +                               reg = <8>;
+>> +                               regulator-name = "ldo1";
+>> +                               regulator-min-microvolt = <3000000>;
+>> +                               regulator-max-microvolt = <3300000>;
+>> +                               regulator-boot-on;
+>> +                               regulator-always-on;
+>> +                       };
+>> +
+>> +                       ldo2_reg: LDO2@9 {
+>> +                               reg = <9>;
+>> +                               regulator-name = "ldo2";
+>> +                               regulator-min-microvolt = <900000>;
+>> +                               regulator-max-microvolt = <900000>;
+>> +                               regulator-boot-on;
+>> +                               regulator-always-on;
+>> +                       };
+>> +
+>> +                       ldo3_reg: LDO3@10 {
+>> +                               reg = <10>;
+>> +                               regulator-name = "ldo3";
+>> +                               regulator-min-microvolt = <1800000>;
+>> +                               regulator-max-microvolt = <3300000>;
+>> +                               regulator-boot-on;
+>> +                               regulator-always-on;
+>> +                       };
+>> +
+>> +                       ldo4_reg: LDO4@11 {
+>> +                               reg = <11>;
+>> +                               regulator-name = "ldo4";
+>> +                               regulator-min-microvolt = <900000>;
+>> +                               regulator-max-microvolt = <1800000>;
+>> +                               regulator-boot-on;
+>> +                               regulator-always-on;
+>> +                       };
+>> +
+>> +                       ldo5_reg: LDO5@12 {
+>> +                               reg = <12>;
+>> +                               regulator-name = "ldo5";
+>> +                               regulator-min-microvolt = <1800000>;
+>> +                               regulator-max-microvolt = <3300000>;
+>> +                       };
+>> +
+>> +                       ldo6_reg: LDO6@13 {
+>> +                               reg = <13>;
+>> +                               regulator-name = "ldo6";
+>> +                               regulator-min-microvolt = <900000>;
+>> +                               regulator-max-microvolt = <1800000>;
+>> +                       };
+>> +
+>> +                       ldo7_reg: LDO7@14 {
+>> +                               reg = <14>;
+>> +                               regulator-name = "ldo7";
+>> +                               regulator-min-microvolt = <1800000>;
+>> +                               regulator-max-microvolt = <3300000>;
+>> +                       };
+>> +               };
+>> +       };
 
