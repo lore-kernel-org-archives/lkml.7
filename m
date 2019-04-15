@@ -2,114 +2,68 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9DB6C282DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 11:12:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92D67C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 11:16:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E31620848
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 11:12:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A73E2073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 11:16:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="ChvxF7ND"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727327AbfDOLMk (ORCPT
+        id S1727269AbfDOLQw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 07:12:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:42172 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726298AbfDOLMj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 07:12:39 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 00DD0B05E;
-        Mon, 15 Apr 2019 11:12:37 +0000 (UTC)
-Message-ID: <1555326745.13626.10.camel@suse.com>
-Subject: Re: KASAN: use-after-free Read in dvb_usb_device_exit
-From:   Oliver Neukum <oneukum@suse.com>
-To:     syzbot <syzbot+26ec41e9f788b3eba396@syzkaller.appspotmail.com>,
-        andreyknvl@google.com, syzkaller-bugs@googlegroups.com,
-        mchehab@kernel.org, corbet@lwn.net, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-usb@vger.kernel.org
-Date:   Mon, 15 Apr 2019 13:12:25 +0200
-In-Reply-To: <000000000000789d3d058653d9bb@google.com>
-References: <000000000000789d3d058653d9bb@google.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.26.6 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 15 Apr 2019 07:16:52 -0400
+Received: from smtp89.iad3a.emailsrvr.com ([173.203.187.89]:41512 "EHLO
+        smtp89.iad3a.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726298AbfDOLQv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 07:16:51 -0400
+X-Greylist: delayed 385 seconds by postgrey-1.27 at vger.kernel.org; Mon, 15 Apr 2019 07:16:51 EDT
+Received: from smtp36.relay.iad3a.emailsrvr.com (localhost [127.0.0.1])
+        by smtp36.relay.iad3a.emailsrvr.com (SMTP Server) with ESMTP id E299E439A;
+        Mon, 15 Apr 2019 07:10:25 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
+        s=20190130-41we5z8j; t=1555326625;
+        bh=u1YBA1qinJiN8oenxmdCjykH2lLWHSKmI0Oq9IT6qjE=;
+        h=From:To:Subject:Date:From;
+        b=ChvxF7NDAFOBckNAS8i5kipPizaH5WHcp/6sHvnkmc1NcLd1gYh/kiPy42c5TpXbb
+         PMfCTe81qra2DMVpZa8IInyhZZ3+w7BLhr90dERKKMo6RvZA2MDg0AyaGJ3/bGtiYA
+         1Bimn4p7FCtAHmHdi3mIPNIlqRX/p6p6XMsucbLw=
+X-Auth-ID: abbotti@mev.co.uk
+Received: by smtp36.relay.iad3a.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 27FD55407;
+        Mon, 15 Apr 2019 07:10:25 -0400 (EDT)
+X-Sender-Id: abbotti@mev.co.uk
+Received: from ian-deb.inside.mev.co.uk (remote.quintadena.com [81.133.34.160])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-GCM-SHA256)
+        by 0.0.0.0:465 (trex/5.7.12);
+        Mon, 15 Apr 2019 07:10:25 -0400
+From:   Ian Abbott <abbotti@mev.co.uk>
+To:     devel@driverdev.osuosl.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ian Abbott <abbotti@mev.co.uk>,
+        H Hartley Sweeten <hsweeten@visionengravers.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 0/2] staging: comedi: vmk80xx: Fix a couple of bugs
+Date:   Mon, 15 Apr 2019 12:10:13 +0100
+Message-Id: <20190415111015.8257-1-abbotti@mev.co.uk>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fr, 2019-04-12 at 04:46 -0700, syzbot wrote:
-> Hello,
-> 
-> syzbot found the following crash on:
-> 
-> HEAD commit:    9a33b369 usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan/tree/usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=1643974b200000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=23e37f59d94ddd15
-> dashboard link: https://syzkaller.appspot.com/bug?extid=26ec41e9f788b3eba396
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=12f5efa7200000
-> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1395a0f3200000
-> 
-> IMPORTANT: if you fix the bug, please add the following tag to the commit:
-> Reported-by: syzbot+26ec41e9f788b3eba396@syzkaller.appspotmail.com
-> 
-> dvb-usb: schedule remote query interval to 150 msecs.
-> dw2102: su3000_power_ctrl: 0, initialized 1
-> dvb-usb: TeVii S421 PCI successfully initialized and connected.
-> usb 1-1: USB disconnect, device number 2
+Fix a bug detected by syzbot and another bug that I noticed while
+investigating the syzbot reported bug.
 
-Hi,
+1) staging: comedi: vmk80xx: Fix use of uninitialized semaphore
+2) staging: comedi: vmk80xx: Fix possible double-free of ->usb_rx_buf
 
-proposed fix. If nobody objects, I will submit it.
-
-	Regards
-		Oliver
-
-From d6097d205ac61745334b79639d3b8b910ae66c71 Mon Sep 17 00:00:00 2001
-From: Oliver Neukum <oneukum@suse.com>
-Date: Mon, 15 Apr 2019 13:06:01 +0200
-Subject: [PATCH] dvb: usb: fix use after free in dvb_usb_device_exit
-
-dvb_usb_device_exit() frees and uses teh device name in that order
-Fix by storing the name in a buffer before freeing it
-
-Signed-off-by: Oliver Neukum <oneukum@suse.com>
-Reported-by: syzbot+26ec41e9f788b3eba396@syzkaller.appspotmail.com
----
- drivers/media/usb/dvb-usb/dvb-usb-init.c | 7 ++++++-
- 1 file changed, 6 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/media/usb/dvb-usb/dvb-usb-init.c b/drivers/media/usb/dvb-usb/dvb-usb-init.c
-index 99951e02a880..2e1670cc3903 100644
---- a/drivers/media/usb/dvb-usb/dvb-usb-init.c
-+++ b/drivers/media/usb/dvb-usb/dvb-usb-init.c
-@@ -288,13 +288,18 @@ void dvb_usb_device_exit(struct usb_interface *intf)
- {
- 	struct dvb_usb_device *d = usb_get_intfdata(intf);
- 	const char *name = "generic DVB-USB module";
-+	char identifier[40];
- 
- 	usb_set_intfdata(intf, NULL);
- 	if (d != NULL && d->desc != NULL) {
- 		name = d->desc->name;
-+		memcpy(identifier, name, 39);
-+		identifier[39] = NULL;
- 		dvb_usb_exit(d);
-+	} else {
-+		memcpy(identifier, name, 39);
- 	}
--	info("%s successfully deinitialized and disconnected.", name);
-+	info("%s successfully deinitialized and disconnected.", identifier);
- 
- }
- EXPORT_SYMBOL(dvb_usb_device_exit);
--- 
-2.16.4
+ drivers/staging/comedi/drivers/vmk80xx.c | 8 +++-----
+ 1 file changed, 3 insertions(+), 5 deletions(-)
 
