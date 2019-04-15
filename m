@@ -4,49 +4,54 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CF4BC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:24:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48B23C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:24:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2D0F92075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:24:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1852C20818
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:24:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555356272;
-	bh=7DsOpPYvtwZ9Mu5MY6ncdl1osHiPlEXpm3yAOMdh16U=;
+	s=default; t=1555356277;
+	bh=6Stq7zh5KcZncVK4wLYTrk+yqjKLYG5z3PTPnfeGVOc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iR4GLwDZ3PHTR2WPsg8tXmOtQEMisG/E0qQLOd7VRPzfXU+LGgI3Wg3mapDLMrnXU
-	 5FSYpuDctt9ytvHNxnwlJk5J3F5E57BkvCCwWqfOv4ojbJ02QdjS4uI7YqJvlE7fkP
-	 ftXjbtkdPPIVfVsY20Nr004UGi2wL6ZTmFRkqkhs=
+	b=wA8x8PUi1qHoUdYH+a6Ib4HctguIjq5rvqgIqcN1K0PeJCHqbJAMf0jJ/4MeMjUv2
+	 UiFZEUVYkq1TSpj951lGD4vqS/Wh/HHCyJ+/SHTjzdgzqrBDaR3scNC+IEILShtImc
+	 2d3Kawt7k3epCqWpSkuRaOp94ilW9gn05mFnD8jg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729895AbfDOTGW (ORCPT
+        id S1729876AbfDOTGP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:06:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40564 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729871AbfDOTGP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 15 Apr 2019 15:06:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40426 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729421AbfDOTGK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:06:10 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 31579218A1;
-        Mon, 15 Apr 2019 19:06:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 16CB9218A1;
+        Mon, 15 Apr 2019 19:06:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355174;
-        bh=7DsOpPYvtwZ9Mu5MY6ncdl1osHiPlEXpm3yAOMdh16U=;
+        s=default; t=1555355169;
+        bh=6Stq7zh5KcZncVK4wLYTrk+yqjKLYG5z3PTPnfeGVOc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=sfXHWYKtCMFtobGQ2iWxXJL9OXT4rSLquaS7ATNFReHcuteTEBQ4ukr82n7a2XrHh
-         fEPl/7sTEl9TpASi7BLOtG0gADMvH7xkcOc8+Nj/aVVUgtVkFPpz5snPXHhCsEbjZM
-         KIms5jiiMH7fAQ962pKxanEA/+EVywnsGQNCfFZA=
+        b=tMkgkKzVdGugg2dsjY52j1fBGH2qSCg54gW2fviMyWXdeCXUpj9dwPz1KoUWSPw1b
+         zP0o8k/9llwv21Y2Cty7GxDpzDyx554TPUxPXbWpBxPJzM+QkbJAjCKdMUuLui+45y
+         wvgSbtlIU/07Q0jZO3fcy8B48ziKB9X5+hIh98YQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>,
+        stable@vger.kernel.org, Artemy Kovalyov <artemyko@mellanox.com>,
+        Moni Shoua <monis@mellanox.com>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Shalom Toledo <shalomt@mellanox.com>,
+        Or Gerlitz <ogerlitz@mellanox.com>,
+        Saeed Mahameed <saeedm@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 041/101] Revert "clk: meson: clean-up clock registration"
-Date:   Mon, 15 Apr 2019 20:58:39 +0200
-Message-Id: <20190415183742.628462437@linuxfoundation.org>
+Subject: [PATCH 4.19 012/101] net/mlx5: Decrease default mr cache size
+Date:   Mon, 15 Apr 2019 20:58:10 +0200
+Message-Id: <20190415183741.017244743@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183740.341577907@linuxfoundation.org>
 References: <20190415183740.341577907@linuxfoundation.org>
@@ -59,51 +64,58 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit c8e4f8406842332fb55cd792016e5dac266f6354.
+[ Upstream commit e8b26b2135dedc0284490bfeac06dfc4418d0105 ]
 
-This patch was not initially a fix and is dependent on other
-changes which are not fixes eithers.
+Delete initialization of high order entries in mr cache to decrease initial
+memory footprint. When required, the administrator can populate the
+entries with memory keys via the /sys interface.
 
-With this change, multiple Amlogic based boards fails to boot,
-as reported by kernelci.
+This approach is very helpful to significantly reduce the per HW function
+memory footprint in virtualization environments such as SRIOV.
 
-Cc: stable@vger.kernel.org # 4.19.34
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+Fixes: 9603b61de1ee ("mlx5: Move pci device handling from mlx5_ib to mlx5_core")
+Signed-off-by: Artemy Kovalyov <artemyko@mellanox.com>
+Signed-off-by: Moni Shoua <monis@mellanox.com>
+Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
+Reported-by:  Shalom Toledo <shalomt@mellanox.com>
+Acked-by: Or Gerlitz <ogerlitz@mellanox.com>
+Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/clk/meson/meson-aoclk.c | 15 +++++----------
- 1 file changed, 5 insertions(+), 10 deletions(-)
+ .../net/ethernet/mellanox/mlx5/core/main.c    | 20 -------------------
+ 1 file changed, 20 deletions(-)
 
-diff --git a/drivers/clk/meson/meson-aoclk.c b/drivers/clk/meson/meson-aoclk.c
-index 258c8d259ea1..f965845917e3 100644
---- a/drivers/clk/meson/meson-aoclk.c
-+++ b/drivers/clk/meson/meson-aoclk.c
-@@ -65,20 +65,15 @@ int meson_aoclkc_probe(struct platform_device *pdev)
- 		return ret;
- 	}
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/main.c b/drivers/net/ethernet/mellanox/mlx5/core/main.c
+index 563ce3fedab4..0e820cf92f8a 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/main.c
+@@ -162,26 +162,6 @@ static struct mlx5_profile profile[] = {
+ 			.size	= 8,
+ 			.limit	= 4
+ 		},
+-		.mr_cache[16]	= {
+-			.size	= 8,
+-			.limit	= 4
+-		},
+-		.mr_cache[17]	= {
+-			.size	= 8,
+-			.limit	= 4
+-		},
+-		.mr_cache[18]	= {
+-			.size	= 8,
+-			.limit	= 4
+-		},
+-		.mr_cache[19]	= {
+-			.size	= 4,
+-			.limit	= 2
+-		},
+-		.mr_cache[20]	= {
+-			.size	= 4,
+-			.limit	= 2
+-		},
+ 	},
+ };
  
--	/* Populate regmap */
--	for (clkid = 0; clkid < data->num_clks; clkid++)
-+	/*
-+	 * Populate regmap and register all clks
-+	 */
-+	for (clkid = 0; clkid < data->num_clks; clkid++) {
- 		data->clks[clkid]->map = regmap;
- 
--	/* Register all clks */
--	for (clkid = 0; clkid < data->hw_data->num; clkid++) {
--		if (!data->hw_data->hws[clkid])
--			continue;
--
- 		ret = devm_clk_hw_register(dev, data->hw_data->hws[clkid]);
--		if (ret) {
--			dev_err(dev, "Clock registration failed\n");
-+		if (ret)
- 			return ret;
--		}
- 	}
- 
- 	return devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get,
 -- 
 2.19.1
 
