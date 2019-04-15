@@ -7,56 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 82AC2C10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:13:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C28BC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:13:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4638E21909
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:13:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A5D120880
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:13:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355627;
-	bh=uYjFwDXfMQovrfb2uWhsVclhuzGVwoqNUxf8AerrfBA=;
+	s=default; t=1555355639;
+	bh=5YL+rWJV1VY0G7h6sA/ONOHxtJlgO2PM6OISqDGaYH8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HIepr6GNk+xvMAAMyEl634hgsPx/dPCJiSGr/t4u0YAvQyq8lMpzCVjhK677jSeoc
-	 MI1eAaethmnYZxbeo/jCbIs1VgFcrHNjOYlYyqLAmLAP9pQty+mUqlQiR9NBQKXb7x
-	 yGUUa3toWT1PSacLSKSxH6TjwG0mIAXOEsfMC0GE=
+	b=ATStlZiGB4e6j0NXsM5QA2gqtnKI8jMsFxYc1VHP36LQ5eXQSkeoGrGZY04QiMA1k
+	 5YzcrHQLaZHatRswuTFsXG3eHb3lDQ7nexbDJrK0PHtsTZCCBcL85v4o3l4bQ8d+ac
+	 yjg3l3xb0QnC3EN5w2rdY5Djqtrc/OfNRBFBhkHw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731628AbfDOTNq (ORCPT
+        id S1731667AbfDOTN6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:13:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51676 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:13:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731616AbfDOTNn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:13:43 -0400
+        id S1731655AbfDOTNz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:13:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7D0D7218DA;
-        Mon, 15 Apr 2019 19:13:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B6A9520880;
+        Mon, 15 Apr 2019 19:13:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355622;
-        bh=uYjFwDXfMQovrfb2uWhsVclhuzGVwoqNUxf8AerrfBA=;
+        s=default; t=1555355635;
+        bh=5YL+rWJV1VY0G7h6sA/ONOHxtJlgO2PM6OISqDGaYH8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=S3DDUxt4dNy6nNYzKxaR7AAD7X0o7UP/7jhpvy9O2NaKEpKNlhvw59G6EQGnVMYt1
-         B6vB2+ddcllsy2xPzqc6ovqxYkdQxSWbHk5VYQ5cfoKircscGq+BVAKe7qZuM1D3ne
-         vUwAFz+08fLhLtbIWgKt1DYIojirz87Fd23G8nkM=
+        b=osLex4tWBcirSQgsjgffGOz+pXGVIEeygzgH34XHYe9z2/3gN2sl9cTc3iVLkTak1
+         6d1gk/ZQdbn+o3phfw2xz9m10m28HIZFQZ89ViWi3G5sclB6Sm7t73CRRlG8/3H9M4
+         69SCP3UXuMgv2N7h6LwFJd4E1570VqzV9uJbzguw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Tom Lendacky <thomas.lendacky@amd.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@redhat.com>,
-        Borislav Petkov <bp@alien8.de>, Jiri Olsa <jolsa@redhat.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Stephane Eranian <eranian@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Vince Weaver <vincent.weaver@maine.edu>,
-        Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 5.0 105/117] x86/perf/amd: Remove need to check "running" bit in NMI handler
-Date:   Mon, 15 Apr 2019 21:01:15 +0200
-Message-Id: <20190415183750.105655465@linuxfoundation.org>
+        stable@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Will Deacon <will.deacon@arm.com>
+Subject: [PATCH 5.0 095/117] arm64/ftrace: fix inadvertent BUG() in trampoline check
+Date:   Mon, 15 Apr 2019 21:01:05 +0200
+Message-Id: <20190415183749.669767123@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183744.887851196@linuxfoundation.org>
 References: <20190415183744.887851196@linuxfoundation.org>
@@ -69,127 +60,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lendacky, Thomas <Thomas.Lendacky@amd.com>
+From: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 
-commit 3966c3feca3fd10b2935caa0b4a08c7dd59469e5 upstream.
+commit 5a3ae7b314a2259b1188b22b392f5eba01e443ee upstream.
 
-Spurious interrupt support was added to perf in the following commit, almost
-a decade ago:
+The ftrace trampoline code (which deals with modules loaded out of
+BL range of the core kernel) uses plt_entries_equal() to check whether
+the per-module trampoline equals a zero buffer, to decide whether the
+trampoline has already been initialized.
 
-  63e6be6d98e1 ("perf, x86: Catch spurious interrupts after disabling counters")
+This triggers a BUG() in the opcode manipulation code, since we end
+up checking the ADRP offset of a 0x0 opcode, which is not an ADRP
+instruction.
 
-The two previous patches (resolving the race condition when disabling a
-PMC and NMI latency mitigation) allow for the removal of this older
-spurious interrupt support.
+So instead, add a helper to check whether a PLT is initialized, and
+call that from the frace code.
 
-Currently in x86_pmu_stop(), the bit for the PMC in the active_mask bitmap
-is cleared before disabling the PMC, which sets up a race condition. This
-race condition was mitigated by introducing the running bitmap. That race
-condition can be eliminated by first disabling the PMC, waiting for PMC
-reset on overflow and then clearing the bit for the PMC in the active_mask
-bitmap. The NMI handler will not re-enable a disabled counter.
-
-If x86_pmu_stop() is called from the perf NMI handler, the NMI latency
-mitigation support will guard against any unhandled NMI messages.
-
-Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: <stable@vger.kernel.org> # 4.14.x-
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Link: https://lkml.kernel.org/r/Message-ID:
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
+Cc: <stable@vger.kernel.org> # v5.0
+Fixes: bdb85cd1d206 ("arm64/module: switch to ADRP/ADD sequences for PLT entries")
+Acked-by: Mark Rutland <mark.rutland@arm.com>
+Signed-off-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/events/amd/core.c |   21 +++++++++++++++++++--
- arch/x86/events/core.c     |   13 +++----------
- 2 files changed, 22 insertions(+), 12 deletions(-)
+ arch/arm64/include/asm/module.h |    5 +++++
+ arch/arm64/kernel/ftrace.c      |    3 +--
+ 2 files changed, 6 insertions(+), 2 deletions(-)
 
---- a/arch/x86/events/amd/core.c
-+++ b/arch/x86/events/amd/core.c
-@@ -4,8 +4,8 @@
- #include <linux/init.h>
- #include <linux/slab.h>
- #include <linux/delay.h>
--#include <linux/nmi.h>
- #include <asm/apicdef.h>
-+#include <asm/nmi.h>
+--- a/arch/arm64/include/asm/module.h
++++ b/arch/arm64/include/asm/module.h
+@@ -73,4 +73,9 @@ static inline bool is_forbidden_offset_f
+ struct plt_entry get_plt_entry(u64 dst, void *pc);
+ bool plt_entries_equal(const struct plt_entry *a, const struct plt_entry *b);
  
- #include "../perf_event.h"
- 
-@@ -491,6 +491,23 @@ static void amd_pmu_disable_all(void)
- 	}
- }
- 
-+static void amd_pmu_disable_event(struct perf_event *event)
++static inline bool plt_entry_is_initialized(const struct plt_entry *e)
 +{
-+	x86_pmu_disable_event(event);
-+
-+	/*
-+	 * This can be called from NMI context (via x86_pmu_stop). The counter
-+	 * may have overflowed, but either way, we'll never see it get reset
-+	 * by the NMI if we're already in the NMI. And the NMI latency support
-+	 * below will take care of any pending NMI that might have been
-+	 * generated by the overflow.
-+	 */
-+	if (in_nmi())
-+		return;
-+
-+	amd_pmu_wait_on_overflow(event->hw.idx);
++	return e->adrp || e->add || e->br;
 +}
 +
- /*
-  * Because of NMI latency, if multiple PMC counters are active or other sources
-  * of NMIs are received, the perf NMI handler can handle one or more overflowed
-@@ -738,7 +755,7 @@ static __initconst const struct x86_pmu
- 	.disable_all		= amd_pmu_disable_all,
- 	.enable_all		= x86_pmu_enable_all,
- 	.enable			= x86_pmu_enable_event,
--	.disable		= x86_pmu_disable_event,
-+	.disable		= amd_pmu_disable_event,
- 	.hw_config		= amd_pmu_hw_config,
- 	.schedule_events	= x86_schedule_events,
- 	.eventsel		= MSR_K7_EVNTSEL0,
---- a/arch/x86/events/core.c
-+++ b/arch/x86/events/core.c
-@@ -1349,8 +1349,9 @@ void x86_pmu_stop(struct perf_event *eve
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 	struct hw_perf_event *hwc = &event->hw;
- 
--	if (__test_and_clear_bit(hwc->idx, cpuc->active_mask)) {
-+	if (test_bit(hwc->idx, cpuc->active_mask)) {
- 		x86_pmu.disable(event);
-+		__clear_bit(hwc->idx, cpuc->active_mask);
- 		cpuc->events[hwc->idx] = NULL;
- 		WARN_ON_ONCE(hwc->state & PERF_HES_STOPPED);
- 		hwc->state |= PERF_HES_STOPPED;
-@@ -1447,16 +1448,8 @@ int x86_pmu_handle_irq(struct pt_regs *r
- 	apic_write(APIC_LVTPC, APIC_DM_NMI);
- 
- 	for (idx = 0; idx < x86_pmu.num_counters; idx++) {
--		if (!test_bit(idx, cpuc->active_mask)) {
--			/*
--			 * Though we deactivated the counter some cpus
--			 * might still deliver spurious interrupts still
--			 * in flight. Catch them:
--			 */
--			if (__test_and_clear_bit(idx, cpuc->running))
--				handled++;
-+		if (!test_bit(idx, cpuc->active_mask))
- 			continue;
--		}
- 
- 		event = cpuc->events[idx];
- 
+ #endif /* __ASM_MODULE_H */
+--- a/arch/arm64/kernel/ftrace.c
++++ b/arch/arm64/kernel/ftrace.c
+@@ -107,8 +107,7 @@ int ftrace_make_call(struct dyn_ftrace *
+ 		trampoline = get_plt_entry(addr, mod->arch.ftrace_trampoline);
+ 		if (!plt_entries_equal(mod->arch.ftrace_trampoline,
+ 				       &trampoline)) {
+-			if (!plt_entries_equal(mod->arch.ftrace_trampoline,
+-					       &(struct plt_entry){})) {
++			if (plt_entry_is_initialized(mod->arch.ftrace_trampoline)) {
+ 				pr_err("ftrace: far branches to multiple entry points unsupported inside a single module\n");
+ 				return -EINVAL;
+ 			}
 
 
