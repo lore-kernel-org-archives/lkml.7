@@ -2,53 +2,50 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BC28C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:24:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29EEEC10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:24:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B56020651
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:24:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4C7420818
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:24:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555356264;
-	bh=eEUlxKqf14zB/d+w3+bpwIum4KqZ7JtGZiNuL2rHqQw=;
+	s=default; t=1555356268;
+	bh=lxbG+YuuhSNqx5qi6R0x0VGzdWRnl96MPmNnYiqTAG0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=dUryat0kP+eee21iwi0VwqcSwpE3IMYvClJsc+NNfnCdXeKa9/KOTdN0ugObzye5q
-	 3vM3g+CphPQPxNOpkg54RiHQ0bYv1pg1oUoeq3zChzZfFjYEL0NcCfbMEKqoV1hcUL
-	 qEL14QmwpGLFwrKXfasi+SKFmfldF8UKGoDTHOKQ=
+	b=EHYEh6xNxpFC0OIif8xuc3z2IDsE8lHMtM0OTiIfTM59oOtX0RXOrsvKVfDeS7g3Z
+	 EyMuasa77K3grDr4qsKvC+O/HmSC7mMdGFRIOiuaZWiWRN7ouDeVD5RfhPxGvfNehX
+	 AkbktdXVBbftPZuAJQXlplHGys8L1x/KBmeLcxXI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729914AbfDOTG0 (ORCPT
+        id S1730424AbfDOTY1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:06:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40624 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:24:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40838 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729886AbfDOTGS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:06:18 -0400
+        id S1729902AbfDOTGZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:06:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DF1F1218A1;
-        Mon, 15 Apr 2019 19:06:16 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BB06E218FE;
+        Mon, 15 Apr 2019 19:06:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355177;
-        bh=eEUlxKqf14zB/d+w3+bpwIum4KqZ7JtGZiNuL2rHqQw=;
+        s=default; t=1555355185;
+        bh=lxbG+YuuhSNqx5qi6R0x0VGzdWRnl96MPmNnYiqTAG0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=a36L74ovLljYxiS//QguAmL6sRJDNkPi9kzsUyCgmbXTKlUwlID7PW85Q906+1O2+
-         FSijywLPPYaOfkTvucpB7VTLfoujYEbzBcTY3HfQCSrwk+nojzHpbGmdOpiojiZiY+
-         b72CC9b592L0mDpum5FNP4d2+0izC06EzO+g/Bd4=
+        b=EVTWZZVapIDbJs9r6KzmOJ4RK8kbRdETLRPYAsfu71Gs+wVYozDO6Tv7ej7FCHHt6
+         PifN/cVPLhlEckjnigCTIOKaI/lyDCQe8Sd4rrB9jJyc19wfDZjSizbQtJfMYxdOpq
+         xRBxLYLECmoE6v+Rpnp3GSq9+1LCd8uM5zRcaKGw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Eric Dumazet <eric.dumazet@gmail.com>,
-        Pablo Neira Ayuso <pablo@netfilter.org>,
-        Zubin Mithra <zsm@chromium.org>,
-        "Sasha Levin (Microsoft)" <sashal@kernel.org>
-Subject: [PATCH 4.19 042/101] netfilter: nfnetlink_cttimeout: pass default timeout policy to obj_to_nlattr
-Date:   Mon, 15 Apr 2019 20:58:40 +0200
-Message-Id: <20190415183742.687800187@linuxfoundation.org>
+        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 045/101] tty: mark Siemens R3964 line discipline as BROKEN
+Date:   Mon, 15 Apr 2019 20:58:43 +0200
+Message-Id: <20190415183742.975649929@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183740.341577907@linuxfoundation.org>
 References: <20190415183740.341577907@linuxfoundation.org>
@@ -61,118 +58,45 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 8866df9264a34e675b4ee8a151db819b87cce2d3 upstream
+From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Otherwise, we hit a NULL pointer deference since handlers always assume
-default timeout policy is passed.
+commit c7084edc3f6d67750f50d4183134c4fb5712a5c8 upstream.
 
-  netlink: 24 bytes leftover after parsing attributes in process `syz-executor2'.
-  kasan: CONFIG_KASAN_INLINE enabled
-  kasan: GPF could be caused by NULL-ptr deref or user memory access
-  general protection fault: 0000 [#1] PREEMPT SMP KASAN
-  CPU: 0 PID: 9575 Comm: syz-executor1 Not tainted 4.19.0+ #312
-  Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS Google 01/01/2011
-  RIP: 0010:icmp_timeout_obj_to_nlattr+0x77/0x170 net/netfilter/nf_conntrack_proto_icmp.c:297
+The n_r3964 line discipline driver was written in a different time, when
+SMP machines were rare, and users were trusted to do the right thing.
+Since then, the world has moved on but not this code, it has stayed
+rooted in the past with its lovely hand-crafted list structures and
+loads of "interesting" race conditions all over the place.
 
-Fixes: c779e849608a ("netfilter: conntrack: remove get_timeout() indirection")
-Reported-by: Eric Dumazet <eric.dumazet@gmail.com>
-Signed-off-by: Pablo Neira Ayuso <pablo@netfilter.org>
-Signed-off-by: Zubin Mithra <zsm@chromium.org>
-Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
+After attempting to clean up most of the issues, I just gave up and am
+now marking the driver as BROKEN so that hopefully someone who has this
+hardware will show up out of the woodwork (I know you are out there!)
+and will help with debugging a raft of changes that I had laying around
+for the code, but was too afraid to commit as odds are they would break
+things.
+
+Many thanks to Jann and Linus for pointing out the initial problems in
+this codebase, as well as many reviews of my attempts to fix the issues.
+It was a case of whack-a-mole, and as you can see, the mole won.
+
+Reported-by: Jann Horn <jannh@google.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+
 ---
- net/netfilter/nfnetlink_cttimeout.c | 46 +++++++++++++++++++++++++----
- 1 file changed, 40 insertions(+), 6 deletions(-)
+ drivers/char/Kconfig |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/netfilter/nfnetlink_cttimeout.c b/net/netfilter/nfnetlink_cttimeout.c
-index a30f8ba4b89a..1dc4ea327cbe 100644
---- a/net/netfilter/nfnetlink_cttimeout.c
-+++ b/net/netfilter/nfnetlink_cttimeout.c
-@@ -392,7 +392,8 @@ err:
- static int
- cttimeout_default_fill_info(struct net *net, struct sk_buff *skb, u32 portid,
- 			    u32 seq, u32 type, int event,
--			    const struct nf_conntrack_l4proto *l4proto)
-+			    const struct nf_conntrack_l4proto *l4proto,
-+			    const unsigned int *timeouts)
- {
- 	struct nlmsghdr *nlh;
- 	struct nfgenmsg *nfmsg;
-@@ -421,7 +422,7 @@ cttimeout_default_fill_info(struct net *net, struct sk_buff *skb, u32 portid,
- 		if (!nest_parms)
- 			goto nla_put_failure;
+--- a/drivers/char/Kconfig
++++ b/drivers/char/Kconfig
+@@ -343,7 +343,7 @@ config XILINX_HWICAP
  
--		ret = l4proto->ctnl_timeout.obj_to_nlattr(skb, NULL);
-+		ret = l4proto->ctnl_timeout.obj_to_nlattr(skb, timeouts);
- 		if (ret < 0)
- 			goto nla_put_failure;
- 
-@@ -444,6 +445,7 @@ static int cttimeout_default_get(struct net *net, struct sock *ctnl,
- 				 struct netlink_ext_ack *extack)
- {
- 	const struct nf_conntrack_l4proto *l4proto;
-+	unsigned int *timeouts = NULL;
- 	struct sk_buff *skb2;
- 	int ret, err;
- 	__u16 l3num;
-@@ -456,12 +458,44 @@ static int cttimeout_default_get(struct net *net, struct sock *ctnl,
- 	l4num = nla_get_u8(cda[CTA_TIMEOUT_L4PROTO]);
- 	l4proto = nf_ct_l4proto_find_get(l3num, l4num);
- 
--	/* This protocol is not supported, skip. */
--	if (l4proto->l4proto != l4num) {
--		err = -EOPNOTSUPP;
-+	err = -EOPNOTSUPP;
-+	if (l4proto->l4proto != l4num)
- 		goto err;
-+
-+	switch (l4proto->l4proto) {
-+	case IPPROTO_ICMP:
-+		timeouts = &net->ct.nf_ct_proto.icmp.timeout;
-+		break;
-+	case IPPROTO_TCP:
-+		timeouts = net->ct.nf_ct_proto.tcp.timeouts;
-+		break;
-+	case IPPROTO_UDP:
-+		timeouts = net->ct.nf_ct_proto.udp.timeouts;
-+		break;
-+	case IPPROTO_DCCP:
-+#ifdef CONFIG_NF_CT_PROTO_DCCP
-+		timeouts = net->ct.nf_ct_proto.dccp.dccp_timeout;
-+#endif
-+		break;
-+	case IPPROTO_ICMPV6:
-+		timeouts = &net->ct.nf_ct_proto.icmpv6.timeout;
-+		break;
-+	case IPPROTO_SCTP:
-+#ifdef CONFIG_NF_CT_PROTO_SCTP
-+		timeouts = net->ct.nf_ct_proto.sctp.timeouts;
-+#endif
-+		break;
-+	case 255:
-+		timeouts = &net->ct.nf_ct_proto.generic.timeout;
-+		break;
-+	default:
-+		WARN_ON_ONCE(1);
-+		break;
- 	}
- 
-+	if (!timeouts)
-+		goto err;
-+
- 	skb2 = nlmsg_new(NLMSG_DEFAULT_SIZE, GFP_KERNEL);
- 	if (skb2 == NULL) {
- 		err = -ENOMEM;
-@@ -472,7 +506,7 @@ static int cttimeout_default_get(struct net *net, struct sock *ctnl,
- 					  nlh->nlmsg_seq,
- 					  NFNL_MSG_TYPE(nlh->nlmsg_type),
- 					  IPCTNL_MSG_TIMEOUT_DEFAULT_SET,
--					  l4proto);
-+					  l4proto, timeouts);
- 	if (ret <= 0) {
- 		kfree_skb(skb2);
- 		err = -ENOMEM;
--- 
-2.19.1
-
+ config R3964
+ 	tristate "Siemens R3964 line discipline"
+-	depends on TTY
++	depends on TTY && BROKEN
+ 	---help---
+ 	  This driver allows synchronous communication with devices using the
+ 	  Siemens R3964 packet protocol. Unless you are dealing with special
 
 
