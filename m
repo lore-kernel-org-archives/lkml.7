@@ -6,25 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D9C7C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 21:21:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 64E56C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 21:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 229692087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 21:21:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3C65020880
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 21:21:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728024AbfDOVVl (ORCPT
+        id S1728068AbfDOVVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 17:21:41 -0400
-Received: from foss.arm.com ([217.140.101.70]:42876 "EHLO foss.arm.com"
+        Mon, 15 Apr 2019 17:21:45 -0400
+Received: from foss.arm.com ([217.140.101.70]:42902 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726041AbfDOVVi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 17:21:38 -0400
+        id S1728019AbfDOVVl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 17:21:41 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 35D2FA78;
-        Mon, 15 Apr 2019 14:21:38 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id DF8E21688;
+        Mon, 15 Apr 2019 14:21:40 -0700 (PDT)
 Received: from mammon-tx2.austin.arm.com (mammon-tx2.austin.arm.com [10.118.29.246])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 7C0653F68F;
-        Mon, 15 Apr 2019 14:21:37 -0700 (PDT)
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 43D483F68F;
+        Mon, 15 Apr 2019 14:21:40 -0700 (PDT)
 From:   Jeremy Linton <jeremy.linton@arm.com>
 To:     linux-arm-kernel@lists.infradead.org
 Cc:     catalin.marinas@arm.com, will.deacon@arm.com, marc.zyngier@arm.com,
@@ -33,11 +33,10 @@ Cc:     catalin.marinas@arm.com, will.deacon@arm.com, marc.zyngier@arm.com,
         mlangsdo@redhat.com, stefan.wahren@i2se.com,
         Andre.Przywara@arm.com, linux-kernel@vger.kernel.org,
         Jeremy Linton <jeremy.linton@arm.com>,
-        Andre Przywara <andre.przywara@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>, linux-doc@vger.kernel.org
-Subject: [v8 01/10] arm64: Provide a command line to disable spectre_v2 mitigation
-Date:   Mon, 15 Apr 2019 16:21:20 -0500
-Message-Id: <20190415212129.1112-2-jeremy.linton@arm.com>
+        Andre Przywara <andre.przywara@arm.com>
+Subject: [v8 03/10] arm64: add sysfs vulnerability show for meltdown
+Date:   Mon, 15 Apr 2019 16:21:22 -0500
+Message-Id: <20190415212129.1112-4-jeremy.linton@arm.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190415212129.1112-1-jeremy.linton@arm.com>
 References: <20190415212129.1112-1-jeremy.linton@arm.com>
@@ -48,71 +47,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are various reasons, including bencmarking, to disable spectrev2
-mitigation on a machine. Provide a command-line to do so.
+Display the system vulnerability status. This means that
+while its possible to have the mitigation enabled, the
+sysfs entry won't indicate that status. This is because
+the core ABI doesn't express the concept of mitigation
+when the system isn't vulnerable.
 
 Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
 Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
 Reviewed-by: Andre Przywara <andre.przywara@arm.com>
 Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
 Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
-Cc: Jonathan Corbet <corbet@lwn.net>
-Cc: linux-doc@vger.kernel.org
 ---
- Documentation/admin-guide/kernel-parameters.txt |  8 ++++----
- arch/arm64/kernel/cpu_errata.c                  | 13 +++++++++++++
- 2 files changed, 17 insertions(+), 4 deletions(-)
+ arch/arm64/kernel/cpufeature.c | 58 ++++++++++++++++++++++++++--------
+ 1 file changed, 44 insertions(+), 14 deletions(-)
 
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 2b8ee90bb644..d153bb15c8c7 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -2873,10 +2873,10 @@
- 			check bypass). With this option data leaks are possible
- 			in the system.
- 
--	nospectre_v2	[X86,PPC_FSL_BOOK3E] Disable all mitigations for the Spectre variant 2
--			(indirect branch prediction) vulnerability. System may
--			allow data leaks with this option, which is equivalent
--			to spectre_v2=off.
-+	nospectre_v2	[X86,PPC_FSL_BOOK3E,ARM64] Disable all mitigations for
-+			the Spectre variant 2 (indirect branch prediction)
-+			vulnerability. System may allow data leaks with this
-+			option.
- 
- 	nospec_store_bypass_disable
- 			[HW] Disable all mitigations for the Speculative Store Bypass vulnerability
-diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
-index 9950bb0cbd52..d2b2c69d31bb 100644
---- a/arch/arm64/kernel/cpu_errata.c
-+++ b/arch/arm64/kernel/cpu_errata.c
-@@ -220,6 +220,14 @@ static void qcom_link_stack_sanitization(void)
- 		     : "=&r" (tmp));
+diff --git a/arch/arm64/kernel/cpufeature.c b/arch/arm64/kernel/cpufeature.c
+index 4061de10cea6..6b7e1556460a 100644
+--- a/arch/arm64/kernel/cpufeature.c
++++ b/arch/arm64/kernel/cpufeature.c
+@@ -947,7 +947,7 @@ has_useable_cnp(const struct arm64_cpu_capabilities *entry, int scope)
+ 	return has_cpuid_feature(entry, scope);
  }
  
-+static bool __nospectre_v2;
-+static int __init parse_nospectre_v2(char *str)
-+{
-+	__nospectre_v2 = true;
-+	return 0;
-+}
-+early_param("nospectre_v2", parse_nospectre_v2);
-+
- static void
- enable_smccc_arch_workaround_1(const struct arm64_cpu_capabilities *entry)
- {
-@@ -231,6 +239,11 @@ enable_smccc_arch_workaround_1(const struct arm64_cpu_capabilities *entry)
- 	if (!entry->matches(entry, SCOPE_LOCAL_CPU))
- 		return;
+-#ifdef CONFIG_UNMAP_KERNEL_AT_EL0
++static bool __meltdown_safe = true;
+ static int __kpti_forced; /* 0: not forced, >0: forced on, <0: forced off */
  
-+	if (__nospectre_v2) {
-+		pr_info_once("spectrev2 mitigation disabled by command line option\n");
-+		return;
+ static bool unmap_kernel_at_el0(const struct arm64_cpu_capabilities *entry,
+@@ -967,6 +967,16 @@ static bool unmap_kernel_at_el0(const struct arm64_cpu_capabilities *entry,
+ 		{ /* sentinel */ }
+ 	};
+ 	char const *str = "command line option";
++	bool meltdown_safe;
++
++	meltdown_safe = is_midr_in_range_list(read_cpuid_id(), kpti_safe_list);
++
++	/* Defer to CPU feature registers */
++	if (has_cpuid_feature(entry, scope))
++		meltdown_safe = true;
++
++	if (!meltdown_safe)
++		__meltdown_safe = false;
+ 
+ 	/*
+ 	 * For reasons that aren't entirely clear, enabling KPTI on Cavium
+@@ -978,6 +988,19 @@ static bool unmap_kernel_at_el0(const struct arm64_cpu_capabilities *entry,
+ 		__kpti_forced = -1;
+ 	}
+ 
++	/* Useful for KASLR robustness */
++	if (IS_ENABLED(CONFIG_RANDOMIZE_BASE) && kaslr_offset() > 0) {
++		if (!__kpti_forced) {
++			str = "KASLR";
++			__kpti_forced = 1;
++		}
 +	}
 +
- 	if (psci_ops.smccc_version == SMCCC_VERSION_1_0)
- 		return;
++	if (!IS_ENABLED(CONFIG_UNMAP_KERNEL_AT_EL0)) {
++		pr_info_once("kernel page table isolation disabled by CONFIG\n");
++		return false;
++	}
++
+ 	/* Forced? */
+ 	if (__kpti_forced) {
+ 		pr_info_once("kernel page table isolation forced %s by %s\n",
+@@ -985,18 +1008,10 @@ static bool unmap_kernel_at_el0(const struct arm64_cpu_capabilities *entry,
+ 		return __kpti_forced > 0;
+ 	}
  
+-	/* Useful for KASLR robustness */
+-	if (IS_ENABLED(CONFIG_RANDOMIZE_BASE))
+-		return kaslr_offset() > 0;
+-
+-	/* Don't force KPTI for CPUs that are not vulnerable */
+-	if (is_midr_in_range_list(read_cpuid_id(), kpti_safe_list))
+-		return false;
+-
+-	/* Defer to CPU feature registers */
+-	return !has_cpuid_feature(entry, scope);
++	return !meltdown_safe;
+ }
+ 
++#ifdef CONFIG_UNMAP_KERNEL_AT_EL0
+ static void
+ kpti_install_ng_mappings(const struct arm64_cpu_capabilities *__unused)
+ {
+@@ -1026,6 +1041,12 @@ kpti_install_ng_mappings(const struct arm64_cpu_capabilities *__unused)
+ 
+ 	return;
+ }
++#else
++static void
++kpti_install_ng_mappings(const struct arm64_cpu_capabilities *__unused)
++{
++}
++#endif	/* CONFIG_UNMAP_KERNEL_AT_EL0 */
+ 
+ static int __init parse_kpti(char *str)
+ {
+@@ -1039,7 +1060,6 @@ static int __init parse_kpti(char *str)
+ 	return 0;
+ }
+ early_param("kpti", parse_kpti);
+-#endif	/* CONFIG_UNMAP_KERNEL_AT_EL0 */
+ 
+ #ifdef CONFIG_ARM64_HW_AFDBM
+ static inline void __cpu_enable_hw_dbm(void)
+@@ -1306,7 +1326,6 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
+ 		.field_pos = ID_AA64PFR0_EL0_SHIFT,
+ 		.min_field_value = ID_AA64PFR0_EL0_32BIT_64BIT,
+ 	},
+-#ifdef CONFIG_UNMAP_KERNEL_AT_EL0
+ 	{
+ 		.desc = "Kernel page table isolation (KPTI)",
+ 		.capability = ARM64_UNMAP_KERNEL_AT_EL0,
+@@ -1322,7 +1341,6 @@ static const struct arm64_cpu_capabilities arm64_features[] = {
+ 		.matches = unmap_kernel_at_el0,
+ 		.cpu_enable = kpti_install_ng_mappings,
+ 	},
+-#endif
+ 	{
+ 		/* FP/SIMD is not implemented */
+ 		.capability = ARM64_HAS_NO_FPSIMD,
+@@ -2101,3 +2119,15 @@ static int __init enable_mrs_emulation(void)
+ }
+ 
+ core_initcall(enable_mrs_emulation);
++
++ssize_t cpu_show_meltdown(struct device *dev, struct device_attribute *attr,
++			  char *buf)
++{
++	if (__meltdown_safe)
++		return sprintf(buf, "Not affected\n");
++
++	if (arm64_kernel_unmapped_at_el0())
++		return sprintf(buf, "Mitigation: KPTI\n");
++
++	return sprintf(buf, "Vulnerable\n");
++}
 -- 
 2.20.1
 
