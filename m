@@ -2,106 +2,78 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EEDAAC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 22:22:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1267C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 22:23:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC3A120854
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 22:22:10 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ktgJc5kt"
+	by mail.kernel.org (Postfix) with ESMTP id BDF5120854
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 22:23:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728072AbfDOWWJ (ORCPT
+        id S1728091AbfDOWXj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 18:22:09 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:40489 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726609AbfDOWWJ (ORCPT
+        Mon, 15 Apr 2019 18:23:39 -0400
+Received: from out30-131.freemail.mail.aliyun.com ([115.124.30.131]:36521 "EHLO
+        out30-131.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726093AbfDOWXj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 18:22:09 -0400
-Received: by mail-pl1-f196.google.com with SMTP id b3so9265650plr.7
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 15:22:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=lptdN09AWw8dqNZlD1qBwSSlbgj7fwHxdKofOcd3HoA=;
-        b=ktgJc5ktdUWFh+RXzUm3uAD2p0pZ7YvBmn8+INN0V/yPjPTLgukY0JCxi0O2IHt9aE
-         xygetAonU1mVcAYctyiGDPNY1U/NutMYzxap7XXc3WCK+W/lAgBL50Qj4ZiIQpgkh60f
-         /Q/Bi0E7bHQQ5MTMrryk9X2JxI0W6WAKoiflMA6JSQ2KXROZU68RffwtQiFphPscPGtP
-         MA5UXX49z8+CUwkRhlUF+txMUN0zIfN8D7RumqEZm326KZRt6HIQ0N4T53trNaVY6hFM
-         ItcFLJy2iAtD2q+r5QjszjVttq+ZjOUqD/xAkjoA75K+6nuNRIq8b9DvmPcKC8V+2YAi
-         6DvQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=lptdN09AWw8dqNZlD1qBwSSlbgj7fwHxdKofOcd3HoA=;
-        b=uIxn9KCOpvSdSrHoGTCnqelgYyP7QB9Inl4S14e6QDvkYSwA89BnkAfevE0pjSBqKO
-         6A1xaLWdMWtO0PlB+EsVyceonDzPdMYuHwUJxUsfLS7S1zQZyPw1W9LU7EtGhKiok+8e
-         i4qbcVBu6qJx7k++bhilKvdDzQ2Lg01/71fbhRYFeDXNM9gROXJgOIG0g5wvcZht5fjJ
-         ImZlRN79a7q4z1tkJe7+bSU2wQjBs6A19mg2XyNTXG2n5/++PtBu87mblDs0e3SB8qA5
-         acCWeM9Rg4vyZ2ROL2bRGOJlV12sg0TxYiTSs87dM0VJJTf6ApFLx71BD4vcT33D2Gi4
-         cn1Q==
-X-Gm-Message-State: APjAAAX16iph/y5QRG6ViARtSeXl5MFsIv8qutdKVIaRpeBs+Zwn3D3N
-        pifxi97TSHkbGlXlke0WXOp+yw==
-X-Google-Smtp-Source: APXvYqwfyYWiUTTXxdFaINioxbue02XqHvTyGmZQgmfWUuefcgJfNNTp5gxkt4ieJZ3H12wkQMDn5w==
-X-Received: by 2002:a17:902:1003:: with SMTP id b3mr76226418pla.306.1555366928363;
-        Mon, 15 Apr 2019 15:22:08 -0700 (PDT)
-Received: from localhost ([2601:602:9200:a1a5:c45e:7ed8:c242:3563])
-        by smtp.googlemail.com with ESMTPSA id 128sm38039859pgb.47.2019.04.15.15.22.07
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 15 Apr 2019 15:22:07 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
-        linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 0/3] dt-bindings: meson: Add G12A display bindings
-In-Reply-To: <5c7c873c-0535-0342-26b5-6cb29df9859b@baylibre.com>
-References: <20190313141030.5958-1-narmstrong@baylibre.com> <5c7c873c-0535-0342-26b5-6cb29df9859b@baylibre.com>
-Date:   Mon, 15 Apr 2019 15:22:06 -0700
-Message-ID: <7hmukqrjsh.fsf@baylibre.com>
+        Mon, 15 Apr 2019 18:23:39 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R121e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04395;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0TPPkBEu_1555367013;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TPPkBEu_1555367013)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Tue, 16 Apr 2019 06:23:36 +0800
+Subject: Re: [v2 PATCH 7/9] mm: vmscan: check if the demote target node is
+ contended or not
+To:     Dave Hansen <dave.hansen@intel.com>, mhocko@suse.com,
+        mgorman@techsingularity.net, riel@surriel.com, hannes@cmpxchg.org,
+        akpm@linux-foundation.org, keith.busch@intel.com,
+        dan.j.williams@intel.com, fengguang.wu@intel.com, fan.du@intel.com,
+        ying.huang@intel.com, ziy@nvidia.com
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1554955019-29472-1-git-send-email-yang.shi@linux.alibaba.com>
+ <1554955019-29472-8-git-send-email-yang.shi@linux.alibaba.com>
+ <6d40d60e-dde4-7d70-c7a8-1a444c70c3ff@intel.com>
+ <5082655c-6a24-a3d7-1b7d-bb256597890c@linux.alibaba.com>
+ <9bcf765c-c051-9086-b3fe-679adbe239cb@intel.com>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <1b317d9a-406f-78c4-c2dd-d4c41eef8cc6@linux.alibaba.com>
+Date:   Mon, 15 Apr 2019 15:23:28 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <9bcf765c-c051-9086-b3fe-679adbe239cb@intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
 
-> On 13/03/2019 15:10, Neil Armstrong wrote:
->> This patchset adds the G12A specific bindings for the Display VPU
->> and VPU Power Control.
->> 
->> The Amlogic Meson G12A Display module is based on the Meson GXM SoC
->> with an updated Plane Blender, thus VPU architecture and interconnect
->> is the same.
->> 
->> Implementation then DT nodes will come in a further patchsets.
->> 
->> Neil Armstrong (3):
->>   dt-bindings: display: amlogic,meson-vpu: Add G12A compatible and ports
->>   dt-bindings: display: amlogic,meson-dw-hdmi: Add G12A compatible and
->>     ports
->>   dt-bindings: power: amlogic,meson-gx-pwrc: Add G12A compatible
->> 
->>  .../devicetree/bindings/display/amlogic,meson-dw-hdmi.txt     | 4 ++++
->>  .../devicetree/bindings/display/amlogic,meson-vpu.txt         | 4 ++++
->>  .../devicetree/bindings/power/amlogic,meson-gx-pwrc.txt       | 4 +++-
->>  3 files changed, 11 insertions(+), 1 deletion(-)
->> 
+
+On 4/15/19 3:13 PM, Dave Hansen wrote:
+> On 4/15/19 3:06 PM, Yang Shi wrote:
+>>> This seems like an actively bad idea to me.
+>>>
+>>> Why do we need an *active* note to say the node is contended?  Why isn't
+>>> just getting a failure back from migrate_pages() enough?  Have you
+>>> observed this in practice?
+>> The flag will be used to check if the target node is contended or not
+>> before moving the page into the demotion list. If the target node is
+>> contended (i.e. GFP_NOWAIT would likely fail), the page reclaim code
+>> even won't scan anonymous page list on swapless system.
+> That seems like the actual problem that needs to get fixed.
 >
-> Kevin,
->
-> I applied Patches 1 & 2 to drm-misc-next, can you take Patch 3 along :
+> On systems where we have demotions available, perhaps we need to start
+> scanning anonymous pages again, at least for zones where we *can* demote
+> from them.
 
-Queued for v5.2,
+But the problem is if we know the demotion would likely fail, why bother 
+scanning anonymous pages again? The flag will be cleared by the target 
+node's kswapd once it gets balanced again. Then the anonymous pages 
+would get scanned next time.
 
-Thanks,
 
-Kevin
