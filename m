@@ -2,168 +2,159 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27668C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 06:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3986EC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 06:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE8F320693
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 06:50:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=innovation.ch header.i=@innovation.ch header.b="R7s1DtWp"
+	by mail.kernel.org (Postfix) with ESMTP id 0BB5120693
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 06:55:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726150AbfDOGup (ORCPT
+        id S1726172AbfDOGzG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 02:50:45 -0400
-Received: from chill.innovation.ch ([216.218.245.220]:37112 "EHLO
-        chill.innovation.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbfDOGup (ORCPT
+        Mon, 15 Apr 2019 02:55:06 -0400
+Received: from mail-it1-f199.google.com ([209.85.166.199]:54483 "EHLO
+        mail-it1-f199.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbfDOGzG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 02:50:45 -0400
-Date:   Sun, 14 Apr 2019 23:50:44 -0700
-DKIM-Filter: OpenDKIM Filter v2.10.3 chill.innovation.ch 2A29C640114
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=innovation.ch;
-        s=default; t=1555311044;
-        bh=TaWduF2lSVu2+BYWSt3wEV+6w2mAbmHKuS0SDY2gT9o=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=R7s1DtWpzdAONUAy5i5Xqv5CXXXJUQYHfO8FdFxGBvdQ4smfvNnR0hLyHdmq8D2i0
-         OTFl7UMQ3oerPTTK+sAhdfqMfHeBih/2Bn+yraRY2mfOGy0k9N0R+A7YmTeQmCWjc3
-         R5Fq4xKazp50qHFx/vJq0e7G++UnMqyNRdI32py6/ZegEcRwM9iOO0WBEbhn54orrG
-         LghbaUauRg+O4dGkn96CK78TCyJxYMvlCA8k/fR7aBjugs0fbNhOFQFG3euHg/qSKa
-         BVYIQ0iPwZtprWVxcUvsW8R9LVHCXSl5fs9nMqwPZ5Zv/zZb8Mqd5BH2QdLDGj7Ed3
-         Myhe9UWLAJBGQ==
-From:   "Life is hard, and then you die" <ronald@innovation.ch>
-To:     Andrzej Hajda <a.hajda@samsung.com>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lukas Wunner <lukas@wunner.de>,
-        Federico Lorenzi <federico@travelground.com>,
-        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Inki Dae <inki.dae@samsung.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
-Subject: Re: [PATCH v4 1/2] drm/bridge: sil_sii8620: make remote control
- optional.
-Message-ID: <20190415065044.GA14097@innovation.ch>
-References: <20190407050358.2976-1-ronald@innovation.ch>
- <CGME20190407050410epcas1p3ec1f887f8ccf8ff4495f4557437cd594@epcas1p3.samsung.com>
- <20190407050358.2976-2-ronald@innovation.ch>
- <c861091d-f659-614d-65f4-6fe983885e09@samsung.com>
+        Mon, 15 Apr 2019 02:55:06 -0400
+Received: by mail-it1-f199.google.com with SMTP id i188so15545810iti.4
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2019 23:55:05 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=ZemaBQEK2j6NfWyJ+bikcyU88hEbBD2R/oNX89YYc68=;
+        b=IuijBvhdXj9QHxfje8LDPtcPaQawaM2wwCmKvu7QRf8BewQ2Cz/RocQvFt7k/oIfio
+         AeUtDKxldqnqVrU5akxwz4/R3xaN2h4tWqHmXxy6XAtYKabdRIgS4DTZ0UA9tWbzPECz
+         7LrHEIY6kN/3VjlCV07c4gzWaQmbExi5rCaQAn2WLdpD4pM9ww/B5whwJIQnSHUnJcuN
+         ISyo2/mjJKD/0nAYD62Cw6T922kx3J64Chi2Qtn6pECBLT2XgYMDfFYPWbZx06U+tvDs
+         YxVZkao01jrDQ6Tnk5ABTF3qO0nlYA9x+Pm9aX0iuzW+i88THZiNz681itx7TmmZJVU0
+         1vIA==
+X-Gm-Message-State: APjAAAWhRFTDuvRXsjX9KP08aU+WhNx+x7GSCVL5ppZr36piuSdjFULc
+        ysxXCnrm2D57UB9NPJwW1NeYGw04mS5mFPI+ZND4JhEEmRDS
+X-Google-Smtp-Source: APXvYqxxc3P7WiRN6Gw3NuJf9fjKIgqME5N9ryQO8gQ3sNMCmNB693eydNjSwlcXyk6SCQXbtXHGyr9sVssLcDffToMpyqpgjWIy
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <c861091d-f659-614d-65f4-6fe983885e09@samsung.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Received: by 2002:a5d:8c8f:: with SMTP id g15mr721488ion.36.1555311305158;
+ Sun, 14 Apr 2019 23:55:05 -0700 (PDT)
+Date:   Sun, 14 Apr 2019 23:55:05 -0700
+In-Reply-To: <0000000000008706a1058653d950@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000dbf5a105868c21c7@google.com>
+Subject: Re: WARNING: proc registration bug in snd_info_register
+From:   syzbot <syzbot+4d729bd9da724d0282dd@syzkaller.appspotmail.com>
+To:     alsa-devel-owner@alsa-project.org, alsa-devel@alsa-project.org,
+        andreyknvl@google.com, joe@perches.com,
+        linux-kernel@vger.kernel.org, linux-usb@vger.kernel.org,
+        perex@perex.cz, syzkaller-bugs@googlegroups.com, tiwai@suse.com,
+        vkoul@kernel.org
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+syzbot has found a reproducer for the following crash on:
 
-  Hi Andrzej,
+HEAD commit:    9a33b369 usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan/tree/usb-fuzzer
+console output: https://syzkaller.appspot.com/x/log.txt?x=147d659f200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=23e37f59d94ddd15
+dashboard link: https://syzkaller.appspot.com/bug?extid=4d729bd9da724d0282dd
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=144ab07b200000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=1559d1e3200000
 
-On Wed, Apr 10, 2019 at 11:42:50AM +0200, Andrzej Hajda wrote:
-> On 07.04.2019 07:03, Ronald Tschalär wrote:
-> > commit d6abe6df706c (drm/bridge: sil_sii8620: do not have a dependency
-> > of RC_CORE) changed the driver to select both RC_CORE and INPUT.
-> > However, this causes problems with other drivers, in particular an input
-> > driver that depends on MFD_INTEL_LPSS_PCI (to be added in a separate
-> > commit):
-> >
-> >   drivers/clk/Kconfig:9:error: recursive dependency detected!
-> >   drivers/clk/Kconfig:9:        symbol COMMON_CLK is selected by MFD_INTEL_LPSS
-> >   drivers/mfd/Kconfig:566:      symbol MFD_INTEL_LPSS is selected by MFD_INTEL_LPSS_PCI
-> >   drivers/mfd/Kconfig:580:      symbol MFD_INTEL_LPSS_PCI is implied by KEYBOARD_APPLESPI
-> >   drivers/input/keyboard/Kconfig:73:    symbol KEYBOARD_APPLESPI depends on INPUT
-> >   drivers/input/Kconfig:8:      symbol INPUT is selected by DRM_SIL_SII8620
-> >   drivers/gpu/drm/bridge/Kconfig:83:    symbol DRM_SIL_SII8620 depends on DRM_BRIDGE
-> >   drivers/gpu/drm/bridge/Kconfig:1:     symbol DRM_BRIDGE is selected by DRM_PL111
-> >   drivers/gpu/drm/pl111/Kconfig:1:      symbol DRM_PL111 depends on COMMON_CLK
-> >
-> > According to the docs and general consensus, select should only be used
-> > for non user-visible symbols, but both RC_CORE and INPUT are
-> > user-visible. Furthermore almost all other references to INPUT
-> > throughout the kernel config are depends, not selects. For this reason
-> > the first part of this change reverts commit d6abe6df706c.
-> >
-> > In order to address the original reason for commit d6abe6df706c, namely
-> > that not all boards use the remote controller functionality and hence
-> > should not need have to deal with RC_CORE, the second part of this
-> > change now makes the remote control support in the driver optional and
-> > contingent on RC_CORE being defined. And with this the hard dependency
-> > on INPUT also goes away as that is only needed if RC_CORE is defined
-> > (which in turn already depends on INPUT).
-[snip]
-> What about:
-> 
-> ---------
-> 
-> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
-> index 8840f396a7b6..298189067929 100644
-> --- a/drivers/gpu/drm/bridge/Kconfig
-> +++ b/drivers/gpu/drm/bridge/Kconfig
-> @@ -86,8 +86,7 @@ config DRM_SIL_SII8620
->         depends on OF
->         select DRM_KMS_HELPER
->         imply EXTCON
-> -       select INPUT
-> -       select RC_CORE
-> +       imply RC_CORE
->         help
->           Silicon Image SII8620 HDMI/MHL bridge chip driver.
->  
-> diff --git a/drivers/gpu/drm/bridge/sil-sii8620.c
-> b/drivers/gpu/drm/bridge/sil-sii8620.c
-> index 0cc293a6ac24..df0f9dbbe839 100644
-> --- a/drivers/gpu/drm/bridge/sil-sii8620.c
-> +++ b/drivers/gpu/drm/bridge/sil-sii8620.c
-> @@ -1762,10 +1762,8 @@ static bool sii8620_rcp_consume(struct sii8620
-> *ctx, u8 scancode)
->  
->         scancode &= MHL_RCP_KEY_ID_MASK;
->  
-> -       if (!ctx->rc_dev) {
-> -               dev_dbg(ctx->dev, "RCP input device not initialized\n");
-> +       if (!IS_ENABLED(RC_CORE) || !ctx->rc_dev)
->                 return false;
-> -       }
->  
->         if (pressed)
->                 rc_keydown(ctx->rc_dev, RC_PROTO_CEC, scancode, 0);
-> @@ -2102,6 +2100,9 @@ static void sii8620_init_rcp_input_dev(struct
-> sii8620 *ctx)
->         struct rc_dev *rc_dev;
->         int ret;
->  
-> +       if (!IS_ENABLED(RC_CORE))
-> +               return;
-> +
->         rc_dev = rc_allocate_device(RC_DRIVER_SCANCODE);
->         if (!rc_dev) {
->                 dev_err(ctx->dev, "Failed to allocate RC device\n");
-> @@ -2216,6 +2217,9 @@ static void sii8620_detach(struct drm_bridge *bridge)
->  {
->         struct sii8620 *ctx = bridge_to_sii8620(bridge);
->  
-> +       if (!IS_ENABLED(RC_CORE))
-> +               return;
-> +
->         rc_unregister_device(ctx->rc_dev);
->  }
-> -----------
-> 
-> Less changes, no conditional compilation - better compiler coverage,
-> more readable.
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+4d729bd9da724d0282dd@syzkaller.appspotmail.com
 
-This works for me (with RC_CORE replaced with CONFIG_RC_CORE). Sending
-a new patch that includes this shortly.
-
-
-  Cheers,
-
-  Ronald
+snd_usb_toneport 1-1:0.0: Line 6 POD Studio UX2 now attached
+usb 1-1: USB disconnect, device number 11
+snd_usb_toneport 5-1:0.0: read request failed (error -110)
+------------[ cut here ]------------
+proc_dir_entry 'asound/card4' already registered
+WARNING: CPU: 0 PID: 5572 at fs/proc/generic.c:359  
+proc_register+0x3d9/0x550 fs/proc/generic.c:359
+Kernel panic - not syncing: panic_on_warn set ...
+CPU: 0 PID: 5572 Comm: kworker/0:2 Not tainted 5.1.0-rc4-319354-g9a33b36 #3
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Workqueue: usb_hub_wq hub_event
+usb 2-1: Using ep0 maxpacket: 8
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0xe8/0x16e lib/dump_stack.c:113
+  panic+0x29d/0x5f2 kernel/panic.c:214
+usb 3-1: Using ep0 maxpacket: 8
+  __warn.cold+0x20/0x48 kernel/panic.c:571
+  report_bug+0x262/0x2a0 lib/bug.c:186
+  fixup_bug arch/x86/kernel/traps.c:179 [inline]
+  fixup_bug arch/x86/kernel/traps.c:174 [inline]
+  do_error_trap+0x130/0x1f0 arch/x86/kernel/traps.c:272
+  do_invalid_op+0x37/0x40 arch/x86/kernel/traps.c:291
+snd_usb_toneport 5-1:0.0: read request failed (error -110)
+  invalid_op+0x14/0x20 arch/x86/entry/entry_64.S:973
+RIP: 0010:proc_register+0x3d9/0x550 fs/proc/generic.c:359
+Code: ff df 48 89 f9 48 c1 e9 03 80 3c 01 00 0f 85 61 01 00 00 48 8b 04 24  
+48 c7 c7 e0 a0 79 8e 48 8b b0 d0 00 00 00 e8 a7 9e 71 ff <0f> 0b 48 c7 c7  
+a0 90 91 91 e8 b9 10 34 0c 48 8b 4c 24 28 48 b8 00
+RSP: 0018:ffff88809176f040 EFLAGS: 00010282
+RAX: 0000000000000000 RBX: ffff88809cf2f700 RCX: 0000000000000000
+usb 2-1: config 0 interface 0 has no altsetting 0
+RDX: 0000000000000000 RSI: ffffffff815b1e42 RDI: ffffed10122eddfa
+RBP: ffff8880a00f3140 R08: ffff88809738e200 R09: ffffed1015a03edb
+R10: ffffed1015a03eda R11: ffff8880ad01f6d7 R12: 0000000000000000
+R13: dffffc0000000000 R14: ffff8880933340b8 R15: 0000000000000005
+  proc_mkdir_data+0x17b/0x230 fs/proc/generic.c:475
+usb 2-1: New USB device found, idVendor=0e41, idProduct=4151,  
+bcdDevice=7a.8f
+  __snd_info_register sound/core/info.c:814 [inline]
+  snd_info_register+0x2f8/0x3e0 sound/core/info.c:854
+  create_subdir+0x69/0xa0 sound/core/info.c:458
+  snd_info_card_create+0xcf/0x230 sound/core/info.c:528
+  snd_card_new+0x61d/0x920 sound/core/init.c:255
+  line6_probe+0x135/0x1150 sound/usb/line6/driver.c:736
+usb 2-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+  usb_probe_interface+0x31d/0x820 drivers/usb/core/driver.c:361
+usb 2-1: config 0 descriptor??
+  really_probe+0x2da/0xb10 drivers/base/dd.c:509
+  driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
+  __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
+  bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
+  __device_attach+0x223/0x3a0 drivers/base/dd.c:844
+  bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
+  device_add+0xad2/0x16e0 drivers/base/core.c:2106
+usb 3-1: config 0 interface 0 has no altsetting 0
+  usb_set_configuration+0xdf7/0x1740 drivers/usb/core/message.c:2021
+  generic_probe+0xa2/0xda drivers/usb/core/generic.c:210
+usb 3-1: New USB device found, idVendor=0e41, idProduct=4151,  
+bcdDevice=7a.8f
+  usb_probe_device+0xc0/0x150 drivers/usb/core/driver.c:266
+  really_probe+0x2da/0xb10 drivers/base/dd.c:509
+  driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
+  __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
+  bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
+usb 3-1: New USB device strings: Mfr=0, Product=0, SerialNumber=0
+snd_usb_toneport 5-1:0.0: write request failed (error -110)
+  __device_attach+0x223/0x3a0 drivers/base/dd.c:844
+  bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
+usb 3-1: config 0 descriptor??
+  device_add+0xad2/0x16e0 drivers/base/core.c:2106
+usb 5-1: send failed (error -110)
+  usb_new_device.cold+0x537/0xccf drivers/usb/core/hub.c:2534
+  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
+  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
+  port_event drivers/usb/core/hub.c:5350 [inline]
+  hub_event+0x138e/0x3b00 drivers/usb/core/hub.c:5432
+  process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
+usb 5-1: send failed (error -110)
+  process_scheduled_works kernel/workqueue.c:2331 [inline]
+  worker_thread+0x7b0/0xe20 kernel/workqueue.c:2417
+  kthread+0x313/0x420 kernel/kthread.c:253
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+Kernel Offset: disabled
+Rebooting in 86400 seconds..
 
