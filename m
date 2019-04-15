@@ -2,112 +2,70 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D984EC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 20:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 347E6C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 20:58:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B150B20818
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 20:57:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6F3E20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 20:58:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727838AbfDOU50 (ORCPT
+        id S1727823AbfDOU6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 16:57:26 -0400
-Received: from gateway32.websitewelcome.com ([192.185.145.100]:43940 "EHLO
-        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725786AbfDOU5Z (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 16:57:25 -0400
-Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
-        by gateway32.websitewelcome.com (Postfix) with ESMTP id F3C806D7A
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 15:57:24 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id G8fMhfwOp90onG8fMhrGGr; Mon, 15 Apr 2019 15:57:24 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.55.242] (port=52932 helo=embeddedor)
-        by gator4166.hostgator.com with esmtpa (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hG8fM-0011A0-A2; Mon, 15 Apr 2019 15:57:24 -0500
-Date:   Mon, 15 Apr 2019 15:57:23 -0500
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Subject: [PATCH] net: atm: Fix potential Spectre v1 vulnerabilities
-Message-ID: <20190415205723.GA31452@embeddedor>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-User-Agent: Mutt/1.9.4 (2018-02-28)
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.55.242
-X-Source-L: No
-X-Exim-ID: 1hG8fM-0011A0-A2
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (embeddedor) [189.250.55.242]:52932
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 3
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+        Mon, 15 Apr 2019 16:58:55 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56080 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725786AbfDOU6z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 16:58:55 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 390E23082E24;
+        Mon, 15 Apr 2019 20:58:55 +0000 (UTC)
+Received: from llong.com (ovpn-122-46.rdu2.redhat.com [10.10.122.46])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 7669C19C6A;
+        Mon, 15 Apr 2019 20:58:51 +0000 (UTC)
+From:   Waiman Long <longman@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>,
+        Waiman Long <longman@redhat.com>
+Subject: [PATCH-tip 0/2] locking/rwsem: Rwsem rearchitecture part 2 follow-up patches
+Date:   Mon, 15 Apr 2019 16:58:27 -0400
+Message-Id: <20190415205829.32707-1-longman@redhat.com>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Mon, 15 Apr 2019 20:58:55 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-arg is controlled by user-space, hence leading to a potential
-exploitation of the Spectre variant 1 vulnerability.
+This series contain 2 follow-up patches to alleviate the performance
+regression found in the page_fault1 test of the will-it-scale benchmark.
+This does not recover all the lost performance, but reclaim a sizeable
+portion of it.
 
-This issue was detected with the help of Smatch:
+The regression was found on an Intel system. I have run the test on
+an AMD system. The regression wasn't seen there.  There are only minor
+variations in performance. Perhaps the page fault path is quite different
+between Intel and AMD systems.
 
-net/atm/lec.c:715 lec_mcast_attach() warn: potential spectre issue 'dev_lec' [r] (local cap)
+Waiman Long (2):
+  locking/rwsem: Clarify usage of owner's nonspinaable bit
+  locking/rwsem: Adaptive disabling of reader optimistic spinning
 
-Fix this by sanitizing arg before using it to index dev_lec.
+ include/linux/rwsem.h             |   2 +-
+ kernel/locking/lock_events_list.h |   9 +-
+ kernel/locking/rwsem.c            | 178 +++++++++++++++++++++---------
+ 3 files changed, 131 insertions(+), 58 deletions(-)
 
-Notice that given that speculation windows are large, the policy is
-to kill the speculation on the first load and not worry if it can be
-completed with a dependent load/store [1].
-
-[1] https://lore.kernel.org/lkml/20180423164740.GY17484@dhcp22.suse.cz/
-
-Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
----
- net/atm/lec.c | 6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
-
-diff --git a/net/atm/lec.c b/net/atm/lec.c
-index d7f5cf5b7594..ad4f829193f0 100644
---- a/net/atm/lec.c
-+++ b/net/atm/lec.c
-@@ -710,7 +710,10 @@ static int lec_vcc_attach(struct atm_vcc *vcc, void __user *arg)
- 
- static int lec_mcast_attach(struct atm_vcc *vcc, int arg)
- {
--	if (arg < 0 || arg >= MAX_LEC_ITF || !dev_lec[arg])
-+	if (arg < 0 || arg >= MAX_LEC_ITF)
-+		return -EINVAL;
-+	arg = array_index_nospec(arg, MAX_LEC_ITF);
-+	if (!dev_lec[arg])
- 		return -EINVAL;
- 	vcc->proto_data = dev_lec[arg];
- 	return lec_mcast_make(netdev_priv(dev_lec[arg]), vcc);
-@@ -728,6 +731,7 @@ static int lecd_attach(struct atm_vcc *vcc, int arg)
- 		i = arg;
- 	if (arg >= MAX_LEC_ITF)
- 		return -EINVAL;
-+	i = array_index_nospec(arg, MAX_LEC_ITF);
- 	if (!dev_lec[i]) {
- 		int size;
- 
 -- 
-2.21.0
+2.18.1
 
