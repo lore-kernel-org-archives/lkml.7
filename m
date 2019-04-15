@@ -2,145 +2,112 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D78FEC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:37:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27311C282DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:37:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4ED72077C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:37:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9D412077C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:37:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fVZN7S4Y"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727528AbfDOMhO (ORCPT
+        id S1727452AbfDOMh5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 08:37:14 -0400
-Received: from [110.188.70.11] ([110.188.70.11]:40560 "EHLO spam1.hygon.cn"
-        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727513AbfDOMhN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 08:37:13 -0400
-Received: from spam1.hygon.cn (localhost [127.0.0.2] (may be forged))
-        by spam1.hygon.cn with ESMTP id x3FCAnZR027062;
-        Mon, 15 Apr 2019 20:10:49 +0800 (GMT-8)
-        (envelope-from fenghao@hygon.cn)
-Received: from MK-DB.hygon.cn ([172.23.18.60])
-        by spam1.hygon.cn with ESMTP id x3FC81TD026732;
-        Mon, 15 Apr 2019 20:08:01 +0800 (GMT-8)
-        (envelope-from fenghao@hygon.cn)
-Received: from cncheex02.Hygon.cn ([172.23.18.12])
-        by MK-DB.hygon.cn with ESMTP id x3FC7sc5053956;
-        Mon, 15 Apr 2019 20:07:54 +0800 (GMT-8)
-        (envelope-from fenghao@hygon.cn)
-Received: from harry-Inspiron-5675.higon.com (172.23.18.44) by
- cncheex02.Hygon.cn (172.23.18.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Mon, 15 Apr
- 2019 20:07:58 +0800
-From:   Hao Feng <fenghao@hygon.cn>
-To:     "'Joerg Roedel '" <joro@8bytes.org>,
-        "'Paolo Bonzini '" <pbonzini@redhat.com>,
-        =?UTF-8?q?=27=20Radim=20Kr=C4=8Dm=C3=A1=C5=99=20=27?= 
-        <rkrcmar@redhat.com>, "'Thomas Gleixner '" <tglx@linutronix.de>,
-        "'Ingo Molnar '" <mingo@redhat.com>,
-        "'Borislav Petkov '" <bp@alien8.de>,
-        "' H. Peter Anvin '" <hpa@zytor.com>
-CC:     "'Zhaohui Du '" <duzhaohui@hygon.cn>,
-        "'Zhiwei Ying '" <yingzhiwei@hygon.cn>,
-        "'Wen Pu '" <puwen@hygon.cn>, Hao Feng <fenghao@hygon.cn>,
-        <x86@kernel.org>, <kvm@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: [PATCH 6/6] KVM: SVM: Add support for KVM_SEV_GM_VERIFY_DIGEST command
-Date:   Mon, 15 Apr 2019 20:04:28 +0800
-Message-ID: <1555329868-17895-7-git-send-email-fenghao@hygon.cn>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1555329868-17895-1-git-send-email-fenghao@hygon.cn>
-References: <1555329868-17895-1-git-send-email-fenghao@hygon.cn>
+        Mon, 15 Apr 2019 08:37:57 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:34447 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726094AbfDOMh4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 08:37:56 -0400
+Received: by mail-pf1-f196.google.com with SMTP id b3so8545996pfd.1;
+        Mon, 15 Apr 2019 05:37:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=xa6jjHflkzVp6geEZRvxsF3ygTrUd40lz1AHWCxLn4I=;
+        b=fVZN7S4YtVLZbyxoG1H9GJSQZuL4N7mEfXwrvivWdCOLCRgxA6O0nwkTIxh24bOsAK
+         y/bdk0j3kASrvsJwLJ6RFLE+AMB/gDDwExHanLTHUByGEmEXKDk8K9twpn10qadzTQSq
+         Aup9ppS5oySRQDMlhgBGHIc2uWHqHL1UGAukJFTBUEcAH6MQqR6ZPIyg8/optjr/5fQK
+         TqvoB0QwaCXqd7GI5gz+hRpBPYRdjb6pqbb8JSZKxvTaPqahenQXP8pKq11zrS9WplGE
+         IIz36n/tqZgzlXESZvuNFXT71tQ3YrTtf+dQFvdry4wcYoXVI0GQVmlu40o5FkAiShPY
+         0Sfg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=xa6jjHflkzVp6geEZRvxsF3ygTrUd40lz1AHWCxLn4I=;
+        b=WAxe5uUccvwdqWOcgQIHJv9+0Ms4eEaLr6BWOy63LflQ0W56iuxMafAcfcRzOJJSg3
+         GbpBzrDcrUwyN6JBRtjIdjR6GZcZdqwtcpfOlRSpGo1wqI6fKzt54Xy7T1S0ZQzyQfGE
+         3vrRb+m1T2lJRBT24qU9s/1uOrHIUDObhErHrfcaEcMYQ81NoxQYBwNT7LkdPUc9LaG/
+         ux1/hKcRTX2NijbjI4sIuAQiC1JOXzKiL69erJ7VU27lqLvdvaXrY0zxKYlZs0WVNSEt
+         J4daftBht75by0NqlIFybXv5YeZNTmMYDK3uyRrVjkRtQ4j5/sr7KVcCe9EhqyEHM295
+         JRgw==
+X-Gm-Message-State: APjAAAXcsFkp0D6HjgcAleRUHRytp0WxO7ZDRl3qG2xdSvwhjnMTLesh
+        KMaHCVteJH9/yJXX9cIY7GX4r4DJcJrhLEA7ZImf6G2cC/oZYQ==
+X-Google-Smtp-Source: APXvYqytPIE790S7DxBuychfe3y9JmXIaVZf8d3f22yuqTqDPsS50+mmfsEgz7nIM3fWJPXlAtCwhN7FgFJvQh/mSVU=
+X-Received: by 2002:a62:6587:: with SMTP id z129mr75772062pfb.88.1555331875726;
+ Mon, 15 Apr 2019 05:37:55 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [172.23.18.44]
-X-ClientProxiedBy: cncheex02.Hygon.cn (172.23.18.12) To cncheex02.Hygon.cn
- (172.23.18.12)
-X-MAIL: spam1.hygon.cn x3FC81TD026732
-X-DNSRBL: 
+References: <20190403124019.8947-1-wsa+renesas@sang-engineering.com> <20190403124019.8947-6-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20190403124019.8947-6-wsa+renesas@sang-engineering.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 15 Apr 2019 15:37:44 +0300
+Message-ID: <CAHp75VcnwMpWWDdg=y2z7N84kr8ZpUXW9un3UxB3uA__F56tGQ@mail.gmail.com>
+Subject: Re: [PATCH 05/12] i2c: demux: handle the new atomic callbacks
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-i2c <linux-i2c@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Peter Rosin <peda@axentia.se>,
+        Stefan Lengfeld <contact@stefanchrist.eu>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        linux-tegra@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The command is used to send guest owner's key digest to SEV firmware,
-firmware will check the key digest to see if the key negotiation is
-successful or not.
+On Wed, Apr 3, 2019 at 3:42 PM Wolfram Sang
+<wsa+renesas@sang-engineering.com> wrote:
+>
+> If the parent has an atomic callback, we need to translate it the same
+> way as the non-atomic callback.
+>
 
-Signed-off-by: Hao Feng <fenghao@hygon.cn>
-Signed-off-by: Pu Wen <puwen@hygon.cn>
----
- arch/x86/kvm/svm.c | 47 +++++++++++++++++++++++++++++++++++++++++++++++
- 1 file changed, 47 insertions(+)
+Reviewed-by Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-diff --git a/arch/x86/kvm/svm.c b/arch/x86/kvm/svm.c
-index f8e7042..4dbdccf 100644
---- a/arch/x86/kvm/svm.c
-+++ b/arch/x86/kvm/svm.c
-@@ -7015,6 +7015,50 @@ static int sev_gm_get_digest(struct kvm *kvm, struct kvm_sev_cmd *argp)
- 	return ret;
- }
- 
-+static int sev_gm_verify_digest(struct kvm *kvm, struct kvm_sev_cmd *argp)
-+{
-+	void __user *digest = (void __user *)(uintptr_t)argp->data;
-+	struct kvm_sev_info *sev = &to_kvm_svm(kvm)->sev_info;
-+	struct sev_data_gm_verify_digest *data = NULL;
-+	struct kvm_sev_gm_verify_digest params;
-+	void *digest_blob = NULL;
-+	int *error = &argp->error;
-+	int ret;
-+
-+	if (!sev_guest(kvm))
-+		return -ENOTTY;
-+
-+	if (copy_from_user(&params, digest, sizeof(params)))
-+		return -EFAULT;
-+
-+	data = kzalloc(sizeof(*data), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	if (params.uaddr) {
-+		digest_blob = psp_copy_user_blob(params.uaddr, params.len);
-+		if (IS_ERR(digest_blob)) {
-+			ret = PTR_ERR(digest_blob);
-+			goto e_free;
-+		}
-+
-+		data->address = __psp_pa(digest_blob);
-+		data->len = params.len;
-+	}
-+
-+	data->handle = sev->handle;
-+	ret = sev_issue_cmd(kvm, SEV_CMD_GM_VERIFY_DIGEST, data, error);
-+	if (ret)
-+		goto e_free_digest;
-+
-+e_free_digest:
-+	kfree(digest_blob);
-+e_free:
-+	kfree(data);
-+
-+	return ret;
-+}
-+
- static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
- {
- 	struct kvm_sev_cmd sev_cmd;
-@@ -7059,6 +7103,9 @@ static int svm_mem_enc_op(struct kvm *kvm, void __user *argp)
- 	case KVM_SEV_GM_GET_DIGEST:
- 		r = sev_gm_get_digest(kvm, &sev_cmd);
- 		break;
-+	case KVM_SEV_GM_VERIFY_DIGEST:
-+		r = sev_gm_verify_digest(kvm, &sev_cmd);
-+		break;
- 	default:
- 		r = -EINVAL;
- 		goto out;
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> ---
+>  drivers/i2c/muxes/i2c-demux-pinctrl.c | 2 ++
+>  1 file changed, 2 insertions(+)
+>
+> diff --git a/drivers/i2c/muxes/i2c-demux-pinctrl.c b/drivers/i2c/muxes/i2c-demux-pinctrl.c
+> index 035032e20327..d50454c565ee 100644
+> --- a/drivers/i2c/muxes/i2c-demux-pinctrl.c
+> +++ b/drivers/i2c/muxes/i2c-demux-pinctrl.c
+> @@ -99,6 +99,8 @@ static int i2c_demux_activate_master(struct i2c_demux_pinctrl_priv *priv, u32 ne
+>
+>         /* Now fill out current adapter structure. cur_chan must be up to date */
+>         priv->algo.master_xfer = i2c_demux_master_xfer;
+> +       if (adap->algo->master_xfer_atomic)
+> +               priv->algo.master_xfer_atomic = i2c_demux_master_xfer;
+>         priv->algo.functionality = i2c_demux_functionality;
+>
+>         snprintf(priv->cur_adap.name, sizeof(priv->cur_adap.name),
+> --
+> 2.11.0
+>
+
+
 -- 
-2.7.4
-
+With Best Regards,
+Andy Shevchenko
