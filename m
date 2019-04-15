@@ -2,180 +2,241 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58F0DC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 11:35:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F36FC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 11:36:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 283AC20645
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 11:35:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA38220833
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 11:36:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vhpBp/wp"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="R630wj9a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727264AbfDOLfy (ORCPT
+        id S1727308AbfDOLgU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 07:35:54 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:60506 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726313AbfDOLfy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 07:35:54 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=KCPWHTN30sFpitzu9muU3nKBytIKi1M+ll7D6eJnfsU=; b=vhpBp/wpfzAm4CFvW5oq9nvG4
-        c6lT/mu6eGvIR7Ubu98NbJ0LbVpjKw0w4llAchvh3ez3Pb5j2xAtQxjqHLbHIleXUdVIXm3wvBPz5
-        W1k6CBU4TmIBSmIAxSqY+hUMJ/c1M+eQMwqjcsQWAtm2z2FQuX/P57Qz9GA1WySZQrA39OH4aXMyv
-        hyZITqGCpROnWq0ZtBfiXfn5kvrB8sX2flz3aTNK90u2M487L/Wq9/gOXePPURJeW62tP7PVVFFtI
-        JBYyLPhU9QfRNDyExeJSP5aD8Tbzs6bwCwgjdyac7EgEV4dPHQgiFU83RbU0GrHsUMgPfelCHs5wf
-        nyk2AKfdQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hFztg-0000JV-P3; Mon, 15 Apr 2019 11:35:36 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1558A2038C257; Mon, 15 Apr 2019 13:35:35 +0200 (CEST)
-Date:   Mon, 15 Apr 2019 13:35:35 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Daniel Bristot de Oliveira <bristot@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Chris von Recklinghausen <crecklin@redhat.com>,
-        Jason Baron <jbaron@akamai.com>, Scott Wood <swood@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Clark Williams <williams@redhat.com>, x86@kernel.org
-Subject: Re: [PATCH V5 5/7] x86/alternative: Batch of patch operations
-Message-ID: <20190415113535.GK11158@hirez.programming.kicks-ass.net>
-References: <cover.1554106794.git.bristot@redhat.com>
- <a4e6c503c552f7c02273c5f000c2c601a1b87c32.1554106794.git.bristot@redhat.com>
+        Mon, 15 Apr 2019 07:36:20 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:38918 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726313AbfDOLgT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 07:36:19 -0400
+Received: from zn.tnic (p4FED3D80.dip0.t-ipconnect.de [79.237.61.128])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id EC3551EC04B9;
+        Mon, 15 Apr 2019 13:36:17 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1555328178;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=2xpUU5C8DKfqBB3m3oeH9RMdPkaA483999IXjeC0//U=;
+        b=R630wj9aKHLDforXY1jeXXwT7MnjEaoehx8WZcngbPXvRlt8MjXz5Yma2AyRNOd9OahPWo
+        N3A2IMQ9sGD+YJxLPmb6+egPqMpVz7I31m94iEws5lz33dX4dPf2U6HNku8/MAL6KCUY87
+        2gp7KStQhH/JLJ1Wp7iQGI8vxv1OwdA=
+Date:   Mon, 15 Apr 2019 13:34:05 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Xiaochen Shen <xiaochen.shen@intel.com>
+Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
+        tony.luck@intel.com, fenghua.yu@intel.com,
+        reinette.chatre@intel.com, x86@kernel.org,
+        linux-kernel@vger.kernel.org, pei.p.jia@intel.com
+Subject: Re: [PATCH 2/2] x86/resctrl: Initialize new resource group with
+ default MBA values
+Message-ID: <20190415113405.GC29317@zn.tnic>
+References: <1554839728-5544-1-git-send-email-xiaochen.shen@intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <a4e6c503c552f7c02273c5f000c2c601a1b87c32.1554106794.git.bristot@redhat.com>
+In-Reply-To: <1554839728-5544-1-git-send-email-xiaochen.shen@intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 01, 2019 at 10:58:17AM +0200, Daniel Bristot de Oliveira wrote:
-> +	ip = (void *) regs->ip - sizeof(unsigned char);
+On Wed, Apr 10, 2019 at 03:55:28AM +0800, Xiaochen Shen wrote:
+> Currently when a new resource group is created, the allocation values
+> of MBA resource are not initialized and remain meaningless data.
+> 
+> For example:
+> mkdir /sys/fs/resctrl/p1
+> cat /sys/fs/resctrl/p1/schemata
+> MB:0=100;1=100
+> 
+> echo "MB:0=10;1=20" > /sys/fs/resctrl/p1/schemata
+> cat /sys/fs/resctrl/p1/schemata
+> MB:0= 10;1= 20
+> 
+> rmdir /sys/fs/resctrl/p1
+> mkdir /sys/fs/resctrl/p2
+> cat /sys/fs/resctrl/p2/schemata
+> MB:0= 10;1= 20
+> 
+> When the new group is created, it is reasonable to initialize MBA
+> resource with default values.
+> 
+> Initialize MBA resource and cache resources in separate functions.
 
-That one confused me mightily. Does that want to be:
+Please format your commit message by indenting the examples:
 
-	ip = (void *)regs->ip - LEN_INT3;
+x86/resctrl: Initialize a new resource group with default MBA values
 
-or something? Even just a naked 1 would've been less confusing.
+Currently, when a new resource group is created, the allocation values
+of the MBA resource are not initialized and remain meaningless data.
 
+For example:
+
+  mkdir /sys/fs/resctrl/p1
+  cat /sys/fs/resctrl/p1/schemata
+  MB:0=100;1=100
+
+  echo "MB:0=10;1=20" > /sys/fs/resctrl/p1/schemata
+  cat /sys/fs/resctrl/p1/schemata
+  MB:0= 10;1= 20
+
+  rmdir /sys/fs/resctrl/p1
+  mkdir /sys/fs/resctrl/p2
+  cat /sys/fs/resctrl/p2/schemata
+  MB:0= 10;1= 20
+
+Therefore, when the new group is created, it is reasonable to initialize
+MBA resource with default values.
+
+Initialize the MBA resource and cache resources in separate functions."
+
+Thx.
+
+> 
+> Signed-off-by: Xiaochen Shen <xiaochen.shen@intel.com>
+> Reviewed-by: Fenghua Yu <fenghua.yu@intel.com>
+> Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
+> ---
+>  arch/x86/kernel/cpu/resctrl/ctrlmondata.c |   4 +-
+>  arch/x86/kernel/cpu/resctrl/rdtgroup.c    | 139 ++++++++++++++++--------------
+>  2 files changed, 75 insertions(+), 68 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
+> index 2dbd990..576bb6a 100644
+> --- a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
+> +++ b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
+> @@ -342,10 +342,10 @@ int update_domains(struct rdt_resource *r, int closid)
+>  	if (cpumask_empty(cpu_mask) || mba_sc)
+>  		goto done;
+>  	cpu = get_cpu();
+> -	/* Update CBM on this cpu if it's in cpu_mask. */
+> +	/* Update resource control msr on this cpu if it's in cpu_mask. */
+
+s/cpu/CPU/g
+
+>  	if (cpumask_test_cpu(cpu, cpu_mask))
+>  		rdt_ctrl_update(&msr_param);
+> -	/* Update CBM on other cpus. */
+> +	/* Update resource control msr on other cpus. */
+
+Ditto.
+
+>  	smp_call_function_many(cpu_mask, rdt_ctrl_update, &msr_param, 1);
+>  	put_cpu();
 >  
-> +	/*
-> +	 * Skip the binary search if there is a single member in the vector.
-> +	 */
-> +	if (unlikely(bp_patching.nr_entries == 1))
-> +		goto single_poke;
-> +
-> +	tp = bsearch(ip, bp_patching.vec, bp_patching.nr_entries,
-> +		     sizeof(struct text_patch_loc),
-> +		     patch_cmp);
-> +	if (!tp)
-> +		return 0;
-> +
-> +	/* set up the specified breakpoint detour */
-> +	regs->ip = (unsigned long) tp->detour;
->  	return 1;
-> +single_poke:
-> +	if (ip == bp_patching.vec->addr) {
-> +		regs->ip = (unsigned long) bp_patching.vec->detour;
-> +		return 1;
-> +	}
-> +
-> +	return 0;
-
-	if (bp_patching.nr_entries > 1) {
-		tp = bsearch(ip, bp_patching.vec, bp_patching.nr_entries,
-			     sizeof(struct text_patch_loc), patch_cmp);
-		if (!tp)
-			return 0;
-	} else {
-		tp = bp_patching.vec;
-		if (tp->addr != ip)
-			return 0;
-	}
-
-	regs->ip = (unsigned long)tp->detour;
-	return 1;
+> diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> index 08e0333..9f12a02 100644
+> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+> @@ -2516,8 +2516,8 @@ static void cbm_ensure_valid(u32 *_val, struct rdt_resource *r)
+>  	bitmap_clear(val, zero_bit, cbm_len - zero_bit);
 >  }
->  NOKPROBE_SYMBOL(poke_int3_handler);
-
-> +void text_poke_bp_batch(struct text_patch_loc *tp, unsigned int nr_entries)
+>  
+> -/**
+> - * rdtgroup_init_alloc - Initialize the new RDT group's allocations
+> +/*
+> + * Initialize cache resources with default values.
+>   *
+>   * A new RDT group is being created on an allocation capable (CAT)
+>   * supporting system. Set this group up to start off with all usable
+> @@ -2526,85 +2526,92 @@ static void cbm_ensure_valid(u32 *_val, struct rdt_resource *r)
+>   * All-zero CBM is invalid. If there are no more shareable bits available
+>   * on any domain then the entire allocation will fail.
+>   */
+> -static int rdtgroup_init_alloc(struct rdtgroup *rdtgrp)
+> +static int rdtgroup_init_cat(struct rdt_resource *r, u32 closid)
 >  {
-> +	int patched_all_but_first = 0;
->  	unsigned char int3 = 0xcc;
-> +	unsigned int i;
+>  	struct rdt_resource *r_cdp = NULL;
+>  	struct rdt_domain *d_cdp = NULL;
+>  	u32 used_b = 0, unused_b = 0;
+> -	u32 closid = rdtgrp->closid;
+> -	struct rdt_resource *r;
+>  	unsigned long tmp_cbm;
+>  	enum rdtgrp_mode mode;
+>  	struct rdt_domain *d;
+>  	u32 peer_ctl, *ctrl;
+> -	int i, ret;
+> +	int i;
 >  
->  	lockdep_assert_held(&text_mutex);
->  
-> +	bp_patching.vec = tp;
-> +	bp_patching.nr_entries = nr_entries;
-> +	bp_patching.in_progress = true;
->  	/*
->  	 * Corresponding read barrier in int3 notifier for making sure the
->  	 * in_progress and handler are correctly ordered wrt. patching.
->  	 */
->  	smp_wmb();
->  
-> +	/*
-> +	 * First step: add a int3 trap to the address that will be patched.
-> +	 */
-> +	for (i = 0; i < nr_entries; i++)
-> +		text_poke(tp[i].addr, &int3, sizeof(int3));
->  
->  	on_each_cpu(do_sync_core, NULL, 1);
->  
-> +	/*
-> +	 * Second step: update all but the first byte of the patched range.
-> +	 */
-> +	for (i = 0; i < nr_entries; i++) {
-> +		if (tp[i].len - sizeof(int3) > 0) {
-> +			text_poke((char *)tp[i].addr + sizeof(int3),
-> +				  (const char *)tp[i].opcode + sizeof(int3),
-> +				  tp[i].len - sizeof(int3));
-> +			patched_all_but_first++;
+> -	for_each_alloc_enabled_rdt_resource(r) {
+> +	list_for_each_entry(d, &r->domains, list) {
+> +		rdt_cdp_peer_get(r, d, &r_cdp, &d_cdp);
+> +		d->have_new_ctrl = false;
+> +		d->new_ctrl = r->cache.shareable_bits;
+> +		used_b = r->cache.shareable_bits;
+> +		ctrl = d->ctrl_val;
+> +		for (i = 0; i < closids_supported(); i++, ctrl++) {
+> +			if (closid_allocated(i) && i != closid) {
+> +				mode = rdtgroup_mode_by_closid(i);
+> +				if (mode == RDT_MODE_PSEUDO_LOCKSETUP)
+> +					break;
+> +				/*
+> +				 * If CDP is active include peer
+> +				 * domain's usage to ensure there
+> +				 * is no overlap with an exclusive
+> +				 * group.
+> +				 */
+> +				if (d_cdp)
+> +					peer_ctl = d_cdp->ctrl_val[i];
+> +				else
+> +					peer_ctl = 0;
+> +				used_b |= *ctrl | peer_ctl;
+> +				if (mode == RDT_MODE_SHAREABLE)
+> +					d->new_ctrl |= *ctrl | peer_ctl;
+> +			}
 > +		}
-> +	}
-> +
-> +	if (patched_all_but_first) {
+> +		if (d->plr && d->plr->cbm > 0)
+> +			used_b |= d->plr->cbm;
+> +		unused_b = used_b ^ (BIT_MASK(r->cache.cbm_len) - 1);
+> +		unused_b &= BIT_MASK(r->cache.cbm_len) - 1;
+> +		d->new_ctrl |= unused_b;
+> +		cbm_ensure_valid(&d->new_ctrl, r);
 >  		/*
->  		 * According to Intel, this core syncing is very likely
->  		 * not necessary and we'd be safe even without it. But
-> @@ -821,15 +874,52 @@ void *text_poke_bp(void *addr, const void *opcode, size_t len, void *handler)
->  		on_each_cpu(do_sync_core, NULL, 1);
->  	}
->  
-> +	/*
-> +	 * Third step: replace the first byte (int3) by the first byte of
-> +	 * replacing opcode.
-> +	 */
-> +	for (i = 0; i < nr_entries; i++)
-> +		text_poke(tp[i].addr, tp[i].opcode, sizeof(int3));
->  
->  	on_each_cpu(do_sync_core, NULL, 1);
->  	/*
->  	 * sync_core() implies an smp_mb() and orders this store against
->  	 * the writing of the new instruction.
->  	 */
-> +	bp_patching.vec = NULL;
-> +	bp_patching.nr_entries = 0;
-> +	bp_patching.in_progress = false;
-> +}
+> -		 * Only initialize default allocations for CBM cache
+> -		 * resources
+> +		 * Assign the u32 CBM to an unsigned long to ensure
+> +		 * that bitmap_weight() does not access out-of-bound
+> +		 * memory.
+>  		 */
 
+So all this code working on a rdt_domain *d pointer could be carved out
+into a separate function called something like:
+
+	__init_one_rdt_domain(d, ...)
+
+and this will make the code more readable and save us at least 2
+indentation levels.
+
+Please do that in a preparatory patch.
+
+> -		if (r->rid == RDT_RESOURCE_MBA)
+> -			continue;
+
+Then, after having done that, it would be very obvious when you do this
+above because you won't be calling that __init_one_rdt_domain() function
+for an MBA anyway.
+
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
