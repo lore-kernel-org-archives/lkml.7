@@ -2,135 +2,137 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B07EC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 13:12:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6DF1C10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 13:14:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 566B920693
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 13:12:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1A8C20693
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 13:14:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e4po0CFr"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="SZ99pled"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727495AbfDONMN (ORCPT
+        id S1727448AbfDONOB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 09:12:13 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:55742 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726095AbfDONMM (ORCPT
+        Mon, 15 Apr 2019 09:14:01 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:34929 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726095AbfDONOA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 09:12:12 -0400
-Received: by mail-it1-f193.google.com with SMTP id y134so26817645itc.5;
-        Mon, 15 Apr 2019 06:12:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0e9K0Gw5A5BMZlba2rGxcgVoWDajYpsyy7t0cixtbLo=;
-        b=e4po0CFru+ntdphh3yX5Dj6vtrnKfop3S0o61mx8e6k2AUPLMh9GbZHCqm9WxTtoNt
-         ETnt0q8tG++zhV4mBMnuSKcLF6sL/bFoEmz4QoJZUOuCHeDlOK16Vfo/q1SyXR8HkQ9i
-         MRKsvIAyD4YnMCIVq+M5ura0f4YQtVvzNCih3r8NNGCd1BHucG/5t833nKrw9ukPzGsR
-         nHQPw+8T4Ff8Rl0YuRkFpGYKJ4LNnucX53MlCfO9NBUsAH9Lds1XUJeA3yUAw57LD5yd
-         CIe4Hyo78Rgwo2xO9+U8jqSgBwY71rall7iabGoMQwOaDBdSDs8BP4zrpP87gVQ5TAgm
-         LT9w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0e9K0Gw5A5BMZlba2rGxcgVoWDajYpsyy7t0cixtbLo=;
-        b=maw3AkNUX3l6/hb+706wW2sZ+qkvUf4fEZDGoqlMBERP5yd2aw2lO1Yx1gNOrdgPjm
-         KTUdoKqg9OGBg9ubDrVlB8P+ZH22+9gcV99hG62mCJRR0a7cXgZTcwqxlGHZwgIFLSE8
-         4j06st9BHN17pPNxiBAD/0TSOkG8QyofIpf8DIqqa+t9IPAmkSJ+m5FpMtqGg2NFdtXi
-         vPYoSX1DGa732bH30oXvINo6oF9ckRsv+6Wd0HJKyujJSfRb9IvDQfevl1zUVcxmvG1P
-         UBPHW8aGkBMYAOBezcUGUpf3LxUgVSPXTirMTl/FyP1HDDn0CADt18VPBBKc06xQlUWM
-         gHKw==
-X-Gm-Message-State: APjAAAVHhLmQhM83/sptVi2NI2w7bCZpBOHHGujGVifn3wQ1Vs6cbQv5
-        0mc2rgeJcg9SbyPj4v3a4vfD8E2wCsLH7nxAYlE=
-X-Google-Smtp-Source: APXvYqzYtQWgRI5Uu9HsBVWSiEfUOBGuUcE0rAa75FjO0B4ZVckYMdaFe7Or9BkFX4WRRPhFhsRj03rTKyGTXumcFB4=
-X-Received: by 2002:a05:660c:350:: with SMTP id b16mr26891344itl.29.1555333931677;
- Mon, 15 Apr 2019 06:12:11 -0700 (PDT)
+        Mon, 15 Apr 2019 09:14:00 -0400
+Received: from pps.filterd (m0046037.ppops.net [127.0.0.1])
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3FDD03K016272;
+        Mon, 15 Apr 2019 15:13:45 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=subject : to : cc :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=STMicroelectronics;
+ bh=pVfFlkSPFP7dS9+W0jKtlwvszZ1b6U8ZRRT6weF36T8=;
+ b=SZ99pled915rPvUgPw4f/vfqrTZBfEeCTHTr1TrOHHMGH0nd2XRiSf1lIZJzH/2QpIc2
+ CzzBlw4vV52zU9hRGmawCSElOxF5G+rGad2pAbp+Y4fOyrlillYVv1Cqx3rXkDJQWwPL
+ mh+tQmLyj2TbCBPMfj93OSa6EVy721l/T4dqnLRwJtLE8pUVkgUCIVm8ZNM2Md8RTlwL
+ r0dvmj2w1oXeCghlVuoCUUnVdYT8pr46UEheDzshR8KovdmHdjsPx9ylbB1MAm+iYmRl
+ TqVynr1cgcQFme26L211MQS6nee3bFPEWFAT4G/Sr+hohKmewzrGrECLRxh7p7yhASRS cA== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx07-00178001.pphosted.com with ESMTP id 2ru5hu2b6r-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 15 Apr 2019 15:13:45 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1E6D734;
+        Mon, 15 Apr 2019 13:13:45 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id DD0572557;
+        Mon, 15 Apr 2019 13:13:44 +0000 (GMT)
+Received: from [10.48.0.167] (10.75.127.46) by SFHDAG5NODE3.st.com
+ (10.75.127.15) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 15 Apr
+ 2019 15:13:44 +0200
+Subject: Re: linux-next: Tree for Apr 8 (iio/adc/)
+To:     Jonathan Cameron <jic23@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>
+CC:     Stephen Rothwell <sfr@canb.auug.org.au>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        <linux-iio@vger.kernel.org>
+References: <20190408154140.515139e3@canb.auug.org.au>
+ <47db3c7b-eb05-c4cd-ed03-f03e6754d5f8@infradead.org>
+ <20190414133059.4e25a574@archlinux>
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+Message-ID: <b28b147f-0f42-3829-ff5a-aeb9ad0cc249@st.com>
+Date:   Mon, 15 Apr 2019 15:13:44 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190410103926.8781-1-alexandre.belloni@bootlin.com>
- <20190410103926.8781-3-alexandre.belloni@bootlin.com> <CACRpkdY2Znvf0h5KiMqqq7J9r3uKU+Uss2Rteaw8a687BetV6A@mail.gmail.com>
-In-Reply-To: <CACRpkdY2Znvf0h5KiMqqq7J9r3uKU+Uss2Rteaw8a687BetV6A@mail.gmail.com>
-From:   Sylvain Lemieux <slemieux.tyco@gmail.com>
-Date:   Mon, 15 Apr 2019 09:12:00 -0400
-Message-ID: <CA+rxa6o9+MJBJy4hTkPukXhkCSvqnRokjT5FNsdm_hbdUjPJQw@mail.gmail.com>
-Subject: Re: [PATCH 2/3] gpio: lpc32xx: enable interrupt lookup for port 3
-To:     Linus Walleij <linus.walleij@linaro.org>
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>,
-        "open list:GPIO SUBSYSTEM" <linux-gpio@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Vladimir Zapolskiy <vz@mleia.com>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190414133059.4e25a574@archlinux>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.75.127.46]
+X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG5NODE3.st.com
+ (10.75.127.15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-15_05:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 9:55 AM Linus Walleij <linus.walleij@linaro.org> wrote:
->
-> On Wed, Apr 10, 2019 at 12:39 PM Alexandre Belloni
-> <alexandre.belloni@bootlin.com> wrote:
->
-> > Interrupt support was disabled "temporarily" in commit 320a6480ef24 ("gpio:
-> > lpc32xx: disable broken to_irq support").
-> >
-> > Reenable to_irq for port 3 as they are directly connected to an interrupt
-> > controller and a simple lookup is working.
-> >
-> > Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
->
-> Unfortunately this seems to be one of these hacks for
-> hierarchical interrupts that does not quite cut it.
->
-> > +static int lpc32xx_gpio_to_irq_p3(struct gpio_chip *chip, unsigned int offset)
-> > +       return of_irq_get_byname(chip->of_node, chip->names[offset]);
->
-> This works as long as consuming drivers pick a GPIO first
-> using gpiod_get() (and variants) and then convert it to an
-> IRQ using gpiod_to_irq().
->
-> But it doesn't work when some consumer is just picking an
-> IRQ off of the node without picking the GPIO first.
-> And in DT that is OK, this DT node is definately an interrupt
-> controller. (Leaving out the attribute for interrupt controller
-> as is currently the case doesn't really fix the issue, it is
-> just inconsistent.)
->
-> Look at Brian Masney's series for the qualcomm pin controller
-> chips for inspiration on how to do things right, see:
-> commit 9d2b563bc23acfa93e7716b3396fd2f79fa8f0cd
-> and down.
->
-> Also:
-> https://marc.info/?l=linux-gpio&m=154959228527643&w=2
->
-> Especially note how he removes the kind of hack you are
-> adding in e.g.
-> commit a796fab2c605d6340512c51c6c3fa1c581357993
->
-> Yours,
-> Linus Walleij
->
+On 4/14/19 2:30 PM, Jonathan Cameron wrote:
+> On Mon, 8 Apr 2019 09:09:37 -0700
+> Randy Dunlap <rdunlap@infradead.org> wrote:
+> 
+>> On 4/7/19 10:41 PM, Stephen Rothwell wrote:
+>>> Hi all,
+>>>
+>>> Changes since 20190405:
+>>>   
+>>
+>> on i386 or x86_64:
+>>
+>> modular:
+>> ERROR: "is_stm32_timer_trigger" [drivers/iio/adc/stm32-dfsdm-adc.ko] undefined!
+>>
+>> or builtin:
+>> ld: drivers/iio/adc/stm32-dfsdm-adc.o: in function `stm32_dfsdm_postenable':
+>> stm32-dfsdm-adc.c:(.text+0x878): undefined reference to `is_stm32_timer_trigger'
+>>
+>>
+>> Full i386 randconfig file is attached.
+>>
+> Thanks Randy.
+> 
+> So two possible fixes for this one.  We can do what is done for the
+> stm32-adc driver and select IIO_STM_TIMER_TRIGGER or we can add a stub
+> for this function in the header to make it return false if that
+> driver isn't built.
+> 
+> I personally favour the stub option but would like Fabrice to say what
+> makes more sense.
+> 
+> So Fabrice, which of the above? If you are busy and don't get back
+> in the next day or two, I'll add the stub.
 
-Hi Alexandre,
+Hi Jonathan, Randy,
 
-you can also look at the original attempt, in 2015, to replace
-this driver by a new version:
-http://lists.infradead.org/pipermail/linux-arm-kernel/2015-November/386708.html
+I've posted 3 patches:
+- One to fix the current issue, with the stub option [1]. This makes
+sense as the STM32 DFSDM can use timer and/or lptimer. I think I'll post
+another patch later to remove the select in STM32_ADC config (no longer
+needed then... But it's not the subject here, right ?).
+- Two other patches to fix other warning/build issues I've seen while
+working on the stub option. See [2]:
 
-Regards,
-Sylvain
+[1] https://lkml.org/lkml/2019/4/15/223
+[2] https://lkml.org/lkml/2019/4/15/437
 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
+Sorry for the inconvenience, I should have seen this earlier.
+
+Thanks,
+Best Regards,
+Fabrice
+
+> 
+> Thanks,
+> 
+> Jonathan
+> 
