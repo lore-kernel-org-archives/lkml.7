@@ -2,175 +2,286 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B22AEC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:44:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 55823C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:49:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8266721905
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:44:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 103822077C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:49:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="lKiG0NU7";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="iaQh6zZT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727710AbfDOQoT (ORCPT
+        id S1727505AbfDOQt0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 12:44:19 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:46031 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727531AbfDOQoS (ORCPT
+        Mon, 15 Apr 2019 12:49:26 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:47866 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725972AbfDOQt0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 12:44:18 -0400
-Received: by mail-lf1-f67.google.com with SMTP id t11so9124206lfl.12;
-        Mon, 15 Apr 2019 09:44:16 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:reply-to:subject:to:cc:references:from:openpgp
-         :autocrypt:message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=l/Boc/dswoykLQ38M0llBl4UgbbW5I1+hywGgMsTYSQ=;
-        b=Qb6QyLQ40f17mFS72IfOh6tuJBL3PVX4bP+HGSLKoCqkQzk2y5AwGX/UVQ38tNKxY2
-         7/Fa4QH9hD8EROJjsmfB+5hAfQM3lJwDFq57MJDCeC4pzFcOFjeKQ5oG6pUZmWdjGCWd
-         dcmRtHWE7KmMW0LO4XCxG7zNm5oqMQE7KZNT8Ed+zDADBoNmpNh+reIZPwfIVkYmB09j
-         bEJ3DwAwijdd98+OV1CBTY/APkqdQ87JsDcDjV2j/nzItLrUnTVLDTgRVESVQbTCZOxe
-         qlobKKYeXe0SLug9ek2S6aJEOoUO67kPPbNl8rfvlBEzCshLJaervTbDVu3DqQcDPs6R
-         Qj7g==
-X-Gm-Message-State: APjAAAX9HntNn43dWaB7dSWxLpxJ5m5dohWr0RfyGgMqbJP0u7hLLoy0
-        6jisUlLIaZ0BKZBNFOLWc3/ZFBTf
-X-Google-Smtp-Source: APXvYqxHE62uYN8UHKf300oS6/bhmZRi/CosZMR+lQLWIDp/GQJp+BwfyKRBaRq8DMt74qXD0FfwYQ==
-X-Received: by 2002:ac2:4192:: with SMTP id z18mr38503976lfh.96.1555346653607;
-        Mon, 15 Apr 2019 09:44:13 -0700 (PDT)
-Received: from [192.168.42.112] ([213.87.151.48])
-        by smtp.gmail.com with ESMTPSA id y17sm10937506ljd.54.2019.04.15.09.44.10
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Apr 2019 09:44:12 -0700 (PDT)
-Reply-To: alex.popov@linux.com
-Subject: Re: [PATCH v2 1/3] security: Create "kernel hardening" config area
-To:     Kees Cook <keescook@chromium.org>,
-        Alexander Potapenko <glider@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        James Morris <jmorris@namei.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Kostya Serebryany <kcc@google.com>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Sandeep Patil <sspatil@android.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Michal Marek <michal.lkml@markovi.net>,
-        Emese Revfy <re.emese@gmail.com>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        kernel-hardening@lists.openwall.com,
-        linux-security-module@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190411180117.27704-1-keescook@chromium.org>
- <20190411180117.27704-2-keescook@chromium.org>
-From:   Alexander Popov <alex.popov@linux.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=alex.popov@linux.com; prefer-encrypt=mutual; keydata=
- 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
- jXz/74kjFsyRgZA+d6a1pGtOwITEBxtxxg==
-Message-ID: <947dbe9a-3444-6fe4-9f79-f8f210da8960@linux.com>
-Date:   Mon, 15 Apr 2019 19:44:09 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190411180117.27704-2-keescook@chromium.org>
-Content-Type: text/plain; charset=utf-8
+        Mon, 15 Apr 2019 12:49:26 -0400
+Received: from pps.filterd (m0044008.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3FGiHEs032436;
+        Mon, 15 Apr 2019 09:49:06 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=TEHzZEZdrC/d6Tz1Tbgw+1V5dE4hw4LpftnJuRBmkIk=;
+ b=lKiG0NU7AuW8j5d9CbQnIdh6q/xCFGANTsZBbtH4YLENqLbbay2H21q86xfSdv0H5298
+ OopqPUMmfBMgE+Y5rX+NQDliMb8fp8/uLIjG4e0WEu1i+wUXjJJaB7G6PVgxQPb0PzJe
+ OfLxCRLy8U5pIQynvnx/ZuoY3tSR0TfKDgU= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2rvn2fhrdm-2
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Mon, 15 Apr 2019 09:49:06 -0700
+Received: from prn-mbx02.TheFacebook.com (2620:10d:c081:6::16) by
+ prn-hub04.TheFacebook.com (2620:10d:c081:35::128) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Mon, 15 Apr 2019 09:49:05 -0700
+Received: from prn-hub02.TheFacebook.com (2620:10d:c081:35::126) by
+ prn-mbx02.TheFacebook.com (2620:10d:c081:6::16) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Mon, 15 Apr 2019 09:49:04 -0700
+Received: from NAM02-CY1-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.26) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Mon, 15 Apr 2019 09:49:04 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=TEHzZEZdrC/d6Tz1Tbgw+1V5dE4hw4LpftnJuRBmkIk=;
+ b=iaQh6zZTAg6UtBTRAjBuRwznQrkN+Omt+83Y9bzYViZezciqaoQdNMVqt+Xw1SQW+okUsrQylXbtEddKB+y1p/Y2jNzsmUoZkrz9ZMwL3Yj0eu/3K1VrrDDTnTnE3q7w2pm3VPH06OoSVfRE+8wcn+VRgyY/hnjSyXEvTLJnU4Q=
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.2.19) by
+ MWHPR15MB1533.namprd15.prod.outlook.com (10.173.235.18) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1792.15; Mon, 15 Apr 2019 16:48:49 +0000
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::5185:8137:2f1d:7171]) by MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::5185:8137:2f1d:7171%2]) with mapi id 15.20.1792.018; Mon, 15 Apr 2019
+ 16:48:49 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     Ingo Molnar <mingo@redhat.com>,
+        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        "Morten Rasmussen" <morten.rasmussen@arm.com>,
+        Kernel Team <Kernel-team@fb.com>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH 0/7] introduce cpu.headroom knob to cpu controller
+Thread-Topic: [PATCH 0/7] introduce cpu.headroom knob to cpu controller
+Thread-Index: AQHU7lSD68FtcB4UGUOYupgC9AfmOKY9eYgA
+Date:   Mon, 15 Apr 2019 16:48:49 +0000
+Message-ID: <2A377F4D-8A84-4D90-9C59-48B865EB34D1@fb.com>
+References: <20190408214539.2705660-1-songliubraving@fb.com>
+In-Reply-To: <20190408214539.2705660-1-songliubraving@fb.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3445.104.8)
+x-originating-ip: [2620:10d:c090:180::76d3]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: cc90bf8f-5a2b-4629-47ff-08d6c1c23bdf
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600140)(711020)(4605104)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MWHPR15MB1533;
+x-ms-traffictypediagnostic: MWHPR15MB1533:
+x-microsoft-antispam-prvs: <MWHPR15MB153399D188B2D4D504964D62B32B0@MWHPR15MB1533.namprd15.prod.outlook.com>
+x-forefront-prvs: 000800954F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(366004)(346002)(396003)(376002)(136003)(199004)(189003)(2616005)(86362001)(11346002)(229853002)(83716004)(76176011)(446003)(102836004)(6506007)(53546011)(50226002)(186003)(2906002)(14444005)(81156014)(46003)(106356001)(14454004)(486006)(476003)(256004)(4326008)(81166006)(99286004)(105586002)(6486002)(82746002)(8936002)(5660300002)(478600001)(54906003)(7736002)(6246003)(6916009)(8676002)(316002)(68736007)(305945005)(71200400001)(6512007)(6436002)(36756003)(53936002)(97736004)(33656002)(25786009)(57306001)(71190400001)(6116002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1533;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: 0WFKGP2sv9F7vMcUYy7KhQA5YG/n5LyddVmbGpdqRBafndF/ezYjNR1YtZwCLAZSCpiVcb8EMUE6rhfFlAJozixFeEdH3VzwL39ICNFCCsEzvi7ue7gQlnF1GS4oiz44vyWvAXy3l7TcdtsXKq3zmWpJutG3xO8uYh3fx1gmvUZuIDmoe5zujFsBX+8XoEM8m+NYjxX9N1EOTJIyHY0YFAm0tnoNEpRTZWiwjZKCe4k/suj9i1aRAB5el+8LlaIS0c2HmjOvL7KbVuT6gRLAuEHdKoDUmrqPVXGP9KIgd+VaVTGEaqpew4ZYMFxzzUmLLod4n4yTYhblAkk4LwmHPmRlfn53XJ8gp6VqgXpd2NKp9uoTYoM9qrHQFUoslmVPwtBE/hdJgXe3+4Md0yCKjl7PH7FAuDZIiGT7oFNzouk=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <DA114A4AFB606A44AAE4F9B2F011544F@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: cc90bf8f-5a2b-4629-47ff-08d6c1c23bdf
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Apr 2019 16:48:49.0557
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1533
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-15_06:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11.04.2019 21:01, Kees Cook wrote:
-> Right now kernel hardening options are scattered around various Kconfig
-> files. This can be a central place to collect these kinds of options
-> going forward. This is initially populated with the memory initialization
-> options from the gcc-plugins.
-> 
-> Signed-off-by: Kees Cook <keescook@chromium.org>
+Hi Peter,
 
-Hello Kees, hello everyone!
+> On Apr 8, 2019, at 2:45 PM, Song Liu <songliubraving@fb.com> wrote:
+>=20
+> Servers running latency sensitive workload usually aren't fully loaded fo=
+r=20
+> various reasons including disaster readiness. The machines running our=20
+> interactive workloads (referred as main workload) have a lot of spare CPU=
+=20
+> cycles that we would like to use for optimistic side jobs like video=20
+> encoding. However, our experiments show that the side workload has strong
+> impact on the latency of main workload:
+>=20
+>  side-job   main-load-level   main-avg-latency
+>     none          1.0              1.00
+>     none          1.1              1.10
+>     none          1.2              1.10=20
+>     none          1.3              1.10
+>     none          1.4              1.15
+>     none          1.5              1.24
+>     none          1.6              1.74
+>=20
+>     ffmpeg        1.0              1.82
+>     ffmpeg        1.1              2.74
+>=20
+> Note: both the main-load-level and the main-avg-latency numbers are
+> _normalized_.
+>=20
+> In these experiments, ffmpeg is put in a cgroup with cpu.weight of 1=20
+> (lowest priority). However, it consumes all idle CPU cycles in the=20
+> system and causes high latency for the main workload. Further experiments
+> and analysis (more details below) shows that, for the main workload to me=
+et
+> its latency targets, it is necessary to limit the CPU usage of the side
+> workload so that there are some _idle_ CPU. There are various reasons
+> behind the need of idle CPU time. First, shared CPU resouce saturation=20
+> starts to happen way before time-measured utilization reaches 100%.=20
+> Secondly, scheduling latency starts to impact the main workload as CPU=20
+> reaches full utilization.=20
+>=20
+> Currently, the cpu controller provides two mechanisms to protect the main=
+=20
+> workload: cpu.weight and cpu.max. However, neither of them is sufficient=
+=20
+> in these use cases. As shown in the experiments above, side workload with=
+=20
+> cpu.weight of 1 (lowest priority) would still consume all idle CPU and ad=
+d=20
+> unacceptable latency to the main workload. cpu.max can throttle the CPU=20
+> usage of the side workload and preserve some idle CPU. However, cpu.max=20
+> cannot react to changes in load levels. For example, when the main=20
+> workload uses 40% of CPU, cpu.max of 30% for the side workload would yiel=
+d=20
+> good latencies for the main workload. However, when the workload=20
+> experiences higher load levels and uses more CPU, the same setting (cpu.m=
+ax=20
+> of 30%) would cause the interactive workload to miss its latency target.=
+=20
+>=20
+> These experiments demonstrated the need for a mechanism to effectively=20
+> throttle CPU usage of the side workload and preserve idle CPU cycles.=20
+> The mechanism should be able to adjust the level of throttling based on
+> the load level of the main workload.=20
+>=20
+> This patchset introduces a new knob for cpu controller: cpu.headroom.=20
+> cgroup of the main workload uses cpu.headroom to ensure side workload to=
+=20
+> use limited CPU cycles. For example, if a main workload has a cpu.headroo=
+m=20
+> of 30%. The side workload will be throttled to give 30% overall idle CPU.=
+=20
+> If the main workload uses more than 70% of CPU, the side workload will on=
+ly=20
+> run with configurable minimal cycles. This configurable minimal cycles is
+> referred as "tolerance" of the main workload.=20
+>=20
+> The following is a detailed example:
+>=20
+> main/cpu.headroom    main-cpu-load    low-pri-cpu-cycle   idle-cpu
+>      30%                 30%                40%              30%
+>      30%                 40%                30%              30%
+>      30%                 50%                20%              30%
+>      30%                 60%                10%              30%
+>      30%                 70%                minimal          ~30%
+>      30%                 80%                minimal          ~20%
+>=20
+> In the example, we use a constant cpu.headroom setting of 30%. As main jo=
+b
+> experiences different level of load, the cpu controller adjusts CPU cycle=
+s
+> used by the low-pri jobs.
+>=20
+> We experiemented with a web server as the main workload and ffmpeg as the=
+=20
+> side workload. The following table compares latency impact on the main=20
+> workload under different cpu.headroom settings and load levels. In all=20
+> tests, the side workload cgroup is configured with cpu.weight of 1. When=
+=20
+> throttled, the side workload can only run 1ms per 100ms period.
+>=20
+>                               average-latency
+> main-load-level   w/o-side    w/-side-      w/-side-       w/-side-
+>                            no-headroom   30%-headroom   20%-headroom
+>     1.0            1.00       1.82          1.26           1.14          =
+           =20
+>     1.1            1.10       2.74          1.26           1.32          =
+           =20
+>     1.2            1.10                     1.29           1.38          =
+           =20
+>     1.3            1.10                     1.32           1.49          =
+           =20
+>     1.4            1.15                     1.29           1.85          =
+           =20
+>     1.5            1.24                     1.32                         =
+      =20
+>     1.6            1.74                     1.50                         =
+    =20
+>=20
+> Each row of the table shows a normalized load level and average latencies=
+=20
+> for 4 scenarios: w/o side workload, w/ side workload but no headroom; w/=
+=20
+> side workload and 30% headroom; with side workload and 20% headroom.=20
+>=20
+>=20
+> When there is no side workload, average latency of main job falls in the=
+=20
+> 0.7x range, except the very high load scenarios. When there is side=20
+> workload but no headroom, latency of the main job goes very high at=20
+> moderate load levels. With 30% headroom, the average latency falls in the=
+=20
+> 0.8x range. With 20% headroom, the average latency falls in the 0.9x to=20
+> 1.x range. We didn't finish tests in some cases with high load, because=20
+> the latency is too high.=20
+>=20
+> This experiment demonstrated cpu.headroom is an effective and efficient
+> knob to control the latency of the main job.
+>=20
+> Thanks!
 
-After applying this series the kernel config looks like that:
+Could you please kindly share your feedback and comments on this work?
 
-...
-...
-CONFIG_LSM="yama,loadpin,safesetid,integrity,selinux,smack,tomoyo,apparmor"
+Thanks and Regards,
+Song
 
-#
-# Kernel hardening options
-#
+> Song Liu (7):
+>  sched: refactor tg_set_cfs_bandwidth()
+>  cgroup: introduce hook css_has_tasks_changed
+>  cgroup: introduce cgroup_parse_percentage
+>  sched, cgroup: add entry cpu.headroom
+>  sched/fair: global idleness counter for cpu.headroom
+>  sched/fair: throttle task runtime based on cpu.headroom
+>  Documentation: cgroup-v2: add information for cpu.headroom
+>=20
+> Documentation/admin-guide/cgroup-v2.rst |  18 +
+> fs/proc/stat.c                          |   4 +-
+> include/linux/cgroup-defs.h             |   2 +
+> include/linux/cgroup.h                  |   1 +
+> include/linux/kernel_stat.h             |   2 +
+> kernel/cgroup/cgroup.c                  |  51 +++
+> kernel/sched/core.c                     | 425 ++++++++++++++++++++++--
+> kernel/sched/fair.c                     | 143 +++++++-
+> kernel/sched/sched.h                    |  30 ++
+> 9 files changed, 634 insertions(+), 42 deletions(-)
+>=20
+> --=20
+> 2.17.1
+>=20
 
-#
-# Memory initialization
-#
-CONFIG_INIT_STACK_NONE=y
-# CONFIG_GCC_PLUGIN_STRUCTLEAK_USER is not set
-# CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF is not set
-# CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF_ALL is not set
-# CONFIG_GCC_PLUGIN_STACKLEAK is not set
-CONFIG_CRYPTO=y
-
-#
-# Crypto core or helper
-#
-CONFIG_CRYPTO_ALGAPI=y
-...
-...
-
-What do you think about some separator between memory initialization options and
-CONFIG_CRYPTO?
-
-Best regards,
-Alexander
