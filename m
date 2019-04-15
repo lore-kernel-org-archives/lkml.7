@@ -2,261 +2,255 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6443C10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 11:41:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85D8EC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 11:42:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89A0020645
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 11:41:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="hW0m//e7"
+	by mail.kernel.org (Postfix) with ESMTP id 5545F2073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 11:42:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727370AbfDOLlt (ORCPT
+        id S1727394AbfDOLmJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 07:41:49 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:41096 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727328AbfDOLls (ORCPT
+        Mon, 15 Apr 2019 07:42:09 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:41294 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727381AbfDOLmI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 07:41:48 -0400
-Received: by mail-pf1-f194.google.com with SMTP id 188so8451750pfd.8
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 04:41:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=Fu7AyZVZalK8UR+GPhJKpKxlsPvKLTQ33a/iCgHu9tY=;
-        b=hW0m//e7wvWbxnGvyJj2CJ9m+ztDx35O8qKLehJHXZuZYI2IvfnY3kBKDfhp8ZZk02
-         /LlnmpgaR2Ol13LVnbHj5kvggtJfBwvK8E2ZI3vLif9Jr0yXtHFzag/9rh3e9dbdanoB
-         dlEXELEmIxG2O5UcFhOuv6lubf70S+Ax6B+AOKGmubtFN3lWeaf2rSbQ5hoyTFHkONOU
-         CgdlNkomIAPTXsJTC/TEqXk4NhWxYb8semmMEls0vPnwDzH5cXOyipj026HFF8M01YFJ
-         fzkXOoY+pAT8zmG6/HwXzE65UggJr8aEmc6K1t26oyPveGqMwGoCMxwmddVyVMOzLeMf
-         o+lw==
+        Mon, 15 Apr 2019 07:42:08 -0400
+Received: by mail-ed1-f66.google.com with SMTP id g6so10413528edc.8
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 04:42:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=Fu7AyZVZalK8UR+GPhJKpKxlsPvKLTQ33a/iCgHu9tY=;
-        b=ZZNqu45nX03k3XvUoTJqakHGJ74gLBE6GabwiTxoL6ceGp7XrL23FBocUWf6631UxF
-         XSB6bL8FwaXgbIHSUCHvyojUUwFlvrFb8fmUPtbQn35Pm1vjs6QSizGJgfaXJJRlQpy3
-         7xkkVc3+yrPr0z2A4BZ4Qr0bwmYhnmXkPwlN5ULWMvrMCHJTfazl4JLX67ljn3FOUlXM
-         Ei/LYFOilNNly1PjsdQ1kpehuV1T6gZ8MSQzhTkCNbzdt/oLwUTWhL+JUNbGj0Fw3fDY
-         FnxUfF8eSGIPE6z/tPkpGID4IBJAfZ2v1/UJHp4jb9FubZK2RuJ5+PrD69vxkiGJT4V0
-         ltxw==
-X-Gm-Message-State: APjAAAVFGwYKfHN61cy2+7o0TzGArpqzaLMD2GQ41wYYoT3F5fZ7/fYG
-        pQjypuf2uMNJ2XmQ7B/wfypqyw==
-X-Google-Smtp-Source: APXvYqyrHJDn4Z/dgXOXUBnwQ4i5lD+ipu+kJzxmOj4J5/nDaxfIhNcmWs1Zr7niOmP6YXBjz6XmsA==
-X-Received: by 2002:a63:54b:: with SMTP id 72mr66979719pgf.323.1555328507967;
-        Mon, 15 Apr 2019 04:41:47 -0700 (PDT)
-Received: from buildserver-90.open-silicon.com ([114.143.65.226])
-        by smtp.googlemail.com with ESMTPSA id l4sm32317273pgh.17.2019.04.15.04.41.43
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 15 Apr 2019 04:41:47 -0700 (PDT)
-From:   Yash Shah <yash.shah@sifive.com>
-To:     devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, palmer@sifive.com,
-        aou@eecs.berkeley.edu, paul.walmsley@sifive.com, bp@alien8.de,
-        mchehab@kernel.org, james.morse@arm.com, sachin.ghadi@sifive.com,
-        Yash Shah <yash.shah@sifive.com>
-Subject: [PATCH 3/3] edac: sifive: Add EDAC platform driver for SiFive SoCs
-Date:   Mon, 15 Apr 2019 17:10:43 +0530
-Message-Id: <1555328443-30874-4-git-send-email-yash.shah@sifive.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1555328443-30874-1-git-send-email-yash.shah@sifive.com>
-References: <1555328443-30874-1-git-send-email-yash.shah@sifive.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=VZAcf9Uc5WBYttcjsSgtLRRSm3YtvN4hclpbBRhMBeo=;
+        b=a+n12DTpbhPy9lLW/ICAMvKtSRyGXnkKX/gGxv01Lb4hjlb3oXu9RRVX4qmCCopBNG
+         R4ZJh3sFkLLaPnomvDuflOJvW5at32Nbqj2WylMp8ihZjbYaGfu1aYp28eSDTzjqraGr
+         Ag+bz6TGrgBrHZucH1b7uRNMDKUpbswoghKvBh1jRW97SNIvu1WUAvhGNLOnW7nIcv0w
+         Nt5hp3/Pp+OYze3S7vRjP8XSLzrsUGgAeLtaa9IK7z5SukOcz/aRPj5bsHn1Z/aXExvR
+         IpVLBJaYWVknVCR6Nlk9HL1y7/doD3npdiYRGBl6wU/lq6lqpQhpnsPpVpHa6TZWXqE9
+         ZACA==
+X-Gm-Message-State: APjAAAWc3I4ohHvHHxDz0yJyHKUHuZqhwX9SHIMcrRh0BLZoHPePaa7n
+        jly+AnNwVYcVRnOfHYzMNzIK/glmao4=
+X-Google-Smtp-Source: APXvYqyuWBK/aWTfm9H4ZHiC4qj5KnteKboda/slVRlZGcQIPUzGw2SoED4fX5XipXSCkk0IDFy9IQ==
+X-Received: by 2002:a17:906:498b:: with SMTP id p11mr41182116eju.119.1555328525556;
+        Mon, 15 Apr 2019 04:42:05 -0700 (PDT)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id h11sm8568481eds.44.2019.04.15.04.42.03
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Apr 2019 04:42:04 -0700 (PDT)
+Subject: Re: [PATCH] ELAN touchpad i2c_hid bugs fix
+To:     hotwater438@tutanota.com,
+        Kai-Heng Feng <kai.heng.feng@canonical.com>
+Cc:     Dmitry Torokhov <dtor@chromium.org>,
+        Vladislav Dalechyn <vlad.dalechin@gmail.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>, Swboyd <swboyd@chromium.org>,
+        Bigeasy <bigeasy@linutronix.de>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+References: <CAE_wzQ8Aep1FOONeCUxvjBFbgKcVRWP5mUuwQnDxzfemUw-eaA@mail.gmail.com>
+ <a2952bc4-0ad0-c8a0-5a5b-13a279023455@redhat.com>
+ <CAE_wzQ8sYcMVYLmnctw_UQuvn0B8U2CU2dNeg-9sh85AL_CfgQ@mail.gmail.com>
+ <abe3eccb-1490-e088-1fd8-6af4dc1bd2ec@redhat.com> <LbI7kio--3-1@tutanota.com>
+ <a58ebeb8-10fd-29d0-1562-4ed8d84f2239@redhat.com> <LbZjy9p--3-1@tutanota.com>
+ <B7A141A3-613C-4EB8-8BB4-F845A0AC8F23@canonical.com>
+ <LcKqhgD--3-1@tutanota.com>
+ <385F448C-463D-4EF0-BCFB-8386D043F189@canonical.com>
+ <LcVmBjG--3-1@tutanota.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <b495a521-16b5-8005-16be-e0b899f954f7@redhat.com>
+Date:   Mon, 15 Apr 2019 13:42:03 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <LcVmBjG--3-1@tutanota.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This initial ver of EDAC driver supports:
-- ECC event monitoring and reporting through the EDAC framework for SiFive
-  L2 cache controller.
+Hi,
 
-This driver registers for notifier events from the L2 cache controller
-driver (arch/riscv/mm/sifive_l2_cache.c) for L2 ECC events
+On 15-04-19 13:36, hotwater438@tutanota.com wrote:
+> Sorry for the delay.
+> By applying this patch I get next results:
+> Five finger tap and two finger scroll issues disappear, but after suspend touchpad dies. Restarting module doesn't help.
 
-Signed-off-by: Yash Shah <yash.shah@sifive.com>
----
- arch/riscv/Kconfig         |   1 +
- drivers/edac/Kconfig       |   6 +++
- drivers/edac/Makefile      |   1 +
- drivers/edac/sifive_edac.c | 121 +++++++++++++++++++++++++++++++++++++++++++++
- 4 files changed, 129 insertions(+)
- create mode 100644 drivers/edac/sifive_edac.c
+So bascally the same results as with the edge-triggered interrupt patch/hack,
+right?
 
-diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
-index eb56c82..31999a6 100644
---- a/arch/riscv/Kconfig
-+++ b/arch/riscv/Kconfig
-@@ -49,6 +49,7 @@ config RISCV
- 	select GENERIC_IRQ_MULTI_HANDLER
- 	select ARCH_HAS_PTE_SPECIAL
- 	select HAVE_EBPF_JIT if 64BIT
-+	select EDAC_SUPPORT
- 
- config MMU
- 	def_bool y
-diff --git a/drivers/edac/Kconfig b/drivers/edac/Kconfig
-index 47eb4d1..3e05228 100644
---- a/drivers/edac/Kconfig
-+++ b/drivers/edac/Kconfig
-@@ -460,6 +460,12 @@ config EDAC_ALTERA_SDMMC
- 	  Support for error detection and correction on the
- 	  Altera SDMMC FIFO Memory for Altera SoCs.
- 
-+config EDAC_SIFIVE
-+	bool "Sifive platform EDAC driver"
-+	depends on EDAC=y && RISCV
-+	help
-+	  Support for error detection and correction on the SiFive SoCs.
-+
- config EDAC_SYNOPSYS
- 	tristate "Synopsys DDR Memory Controller"
- 	depends on ARCH_ZYNQ || ARCH_ZYNQMP
-diff --git a/drivers/edac/Makefile b/drivers/edac/Makefile
-index 89ad4a84..165ca65e 100644
---- a/drivers/edac/Makefile
-+++ b/drivers/edac/Makefile
-@@ -79,6 +79,7 @@ obj-$(CONFIG_EDAC_OCTEON_PCI)		+= octeon_edac-pci.o
- obj-$(CONFIG_EDAC_THUNDERX)		+= thunderx_edac.o
- 
- obj-$(CONFIG_EDAC_ALTERA)		+= altera_edac.o
-+obj-$(CONFIG_EDAC_SIFIVE)		+= sifive_edac.o
- obj-$(CONFIG_EDAC_SYNOPSYS)		+= synopsys_edac.o
- obj-$(CONFIG_EDAC_XGENE)		+= xgene_edac.o
- obj-$(CONFIG_EDAC_TI)			+= ti_edac.o
-diff --git a/drivers/edac/sifive_edac.c b/drivers/edac/sifive_edac.c
-new file mode 100644
-index 0000000..eb7a9b9
---- /dev/null
-+++ b/drivers/edac/sifive_edac.c
-@@ -0,0 +1,121 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * SiFive Platform EDAC Driver
-+ *
-+ * Copyright (C) 2018-2019 SiFive, Inc.
-+ *
-+ * This driver is partially based on octeon_edac-pc.c
-+ *
-+ */
-+#include <linux/edac.h>
-+#include <linux/platform_device.h>
-+#include "edac_module.h"
-+
-+#define DRVNAME "sifive_edac"
-+
-+extern int register_sifive_l2_error_notifier(struct notifier_block *nb);
-+extern int unregister_sifive_l2_error_notifier(struct notifier_block *nb);
-+
-+struct sifive_edac_priv {
-+	struct notifier_block notifier;
-+	struct edac_device_ctl_info *dci;
-+};
-+
-+/**
-+ * EDAC error callback
-+ *
-+ * @event: non-zero if unrecoverable.
-+ */
-+static
-+int ecc_err_event(struct notifier_block *this, unsigned long event, void *ptr)
-+{
-+	const char *msg = (char *)ptr;
-+	struct sifive_edac_priv *p;
-+
-+	p = container_of(this, struct sifive_edac_priv, notifier);
-+
-+	if (event)
-+		edac_device_handle_ue(p->dci, 0, 0, msg);
-+	else
-+		edac_device_handle_ce(p->dci, 0, 0, msg);
-+
-+	return NOTIFY_STOP;
-+}
-+
-+static int ecc_register(struct platform_device *pdev)
-+{
-+	struct sifive_edac_priv *p;
-+
-+	p = devm_kzalloc(&pdev->dev, sizeof(*p), GFP_KERNEL);
-+	if (!p)
-+		return -ENOMEM;
-+
-+	p->notifier.notifier_call = ecc_err_event;
-+	platform_set_drvdata(pdev, p);
-+
-+	p->dci = edac_device_alloc_ctl_info(sizeof(*p), "sifive_ecc", 1,
-+					    "sifive_ecc", 1, 1, NULL, 0,
-+					    edac_device_alloc_index());
-+	if (IS_ERR(p->dci))
-+		return PTR_ERR(p->dci);
-+
-+	p->dci->dev = &pdev->dev;
-+	p->dci->mod_name = "Sifive ECC Manager";
-+	p->dci->ctl_name = dev_name(&pdev->dev);
-+	p->dci->dev_name = dev_name(&pdev->dev);
-+
-+	if (edac_device_add_device(p->dci)) {
-+		dev_err(p->dci->dev, "failed to register with EDAC core\n");
-+		goto err;
-+	}
-+
-+	register_sifive_l2_error_notifier(&p->notifier);
-+
-+	return 0;
-+
-+err:
-+	edac_device_free_ctl_info(p->dci);
-+
-+	return -ENXIO;
-+}
-+
-+static int ecc_unregister(struct platform_device *pdev)
-+{
-+	struct sifive_edac_priv *p = platform_get_drvdata(pdev);
-+
-+	unregister_sifive_l2_error_notifier(&p->notifier);
-+	edac_device_del_device(&pdev->dev);
-+	edac_device_free_ctl_info(p->dci);
-+
-+	return 0;
-+}
-+
-+struct platform_device *sifive_pdev;
-+
-+static int __init sifive_edac_init(void)
-+{
-+	int ret;
-+
-+	sifive_pdev = platform_device_register_simple(DRVNAME, 0, NULL, 0);
-+	if (IS_ERR(sifive_pdev))
-+		return PTR_ERR(sifive_pdev);
-+
-+	ret = ecc_register(sifive_pdev);
-+	if (ret)
-+		platform_device_unregister(sifive_pdev);
-+
-+	return ret;
-+}
-+
-+static void __exit sifive_edac_exit(void)
-+{
-+	ecc_unregister(sifive_pdev);
-+	platform_device_unregister(sifive_pdev);
-+}
-+
-+module_init(sifive_edac_init);
-+module_exit(sifive_edac_exit);
-+
-+MODULE_AUTHOR("SiFive Inc.");
-+MODULE_DESCRIPTION("SiFive platform EDAC driver");
-+MODULE_LICENSE("GPL v2");
--- 
-1.9.1
+Are you still using the edge-triggered interrupt patch, or just the new
+patch Kai-Heng Feng provided.
 
+To me it sounds like the patch Kai-Heng Feng provided at least removes
+the need for the edge-triggered interrupt patch/hack and what remains to
+be solved is the suspend/resume issues.
+
+Regards,
+
+Hans
+
+
+
+> Here's the log:
+> 
+> Apr 15 14:35:54 parrot sudo[3473]: h0tw4t3r : TTY=pts/1 ; PWD=/home/h0tw4t3r ; USER=root ; COMMAND=/sbin/rmmod i2c_hid
+> Apr 15 14:35:54 parrot sudo[3478]: h0tw4t3r : TTY=pts/1 ; PWD=/home/h0tw4t3r ; USER=root ; COMMAND=/sbin/modprobe i2c_hid
+> Apr 15 14:35:54 parrot kernel: i2c_hid i2c-ELAN1200:00: i2c-ELAN1200:00 supply vdd not found, using dummy regulator
+> Apr 15 14:35:54 parrot kernel: i2c_hid i2c-ELAN1200:00: i2c-ELAN1200:00 supply vddl not found, using dummy regulator
+> 
+> Could you please explain what this patch does?
+> 
+> Regards,
+> Vladislav.
+> 
+> Apr 13, 2019, 11:42 AM by kai.heng.feng@canonical.com:
+> 
+>     at 16:40, <hotwater438@tutanota.com <mailto:hotwater438@tutanota.com>> <hotwater438@tutanota.com <mailto:hotwater438@tutanota.com>> wrote:
+> 
+>         Hi.
+> 
+>         I've applied this patch, but still getting incomplete report messages.
+> 
+> 
+>     Does the patch fix the other two issues:
+>     - Five finger tap kill's module so you have to restart it;
+>     - Two finger scoll is working incorrect and sometimes even when you
+>     raised one of two finger still thinks that you are scrolling.
+> 
+>     Kai-Heng
+> 
+> 
+>         Regards,
+>         Vladislav
+> 
+>         Apr 11, 2019, 7:17 PM by kai.heng.feng@canonical.com <mailto:kai.heng.feng@canonical.com>:
+>         Hi,
+> 
+>         at 05:18, <hotwater438@tutanota.com <mailto:hotwater438@tutanota.com>> <hotwater438@tutanota.com <mailto:hotwater438@tutanota.com>> wrote:
+>         Hi.
+> 
+>         1) Run "cat /proc/interrupts | grep ELAN" , note down the value
+>         2) Very quickly/briefly touch the touchpad once
+>         3) Run "cat /proc/interrupts | grep ELAN" , note down the value again
+>         4) Subtract result from 1. from result from 3, this difference is
+>         the value we are interested in. E.g. my testing got 254 and 257, so
+>         a difference of 3.
+>         I've tested that, main diffs are 30, 24, 16 (the most frequent), 2 (the least frequent).
+> 
+>         I was using 4.19.13 kernel, because I use ParrotOS (which happens to be Debian distribution).
+>         But I've installed experimental 5.0.0 kernel and I can't say right now if suspend problem is resolved (i have to rebuild latest kernel with patch).
+> 
+>         Can you try below fix?
+> 
+>         This can solve what commit 1475af255e18 ("HID: i2c-hid: Ignore input report if there's no data present on Elan touchpanels”) tries to workaround.
+> 
+>         diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
+>         index c19a4c45f7bb..30e3664f1ae5 100644
+>         --- a/drivers/pinctrl/intel/pinctrl-intel.c
+>         +++ b/drivers/pinctrl/intel/pinctrl-intel.c
+>         @@ -957,6 +957,10 @@ static void intel_gpio_irq_mask_unmask(struct irq_data *d, bool mask)
+>         reg = community->regs + community->ie_offset + gpp * 4;
+> 
+>         raw_spin_lock_irqsave(&pctrl->lock, flags);
+>         +
+>         + if (!mask)
+>         + writel(BIT(gpp_offset), community->regs + community->is_offset + gpp * 4);
+>         +
+>         value = readl(reg);
+>         if (mask)
+>         value &= ~BIT(gpp_offset);
+> 
+> 
+>         Regards,
+>         Vladislav.
+> 
+>         Apr 3, 2019, 2:18 PM by hdegoede@redhat.com <mailto:hdegoede@redhat.com>:
+>         Hi,
+> 
+>         On 31-03-19 11:50, hotwater438@tutanota.com <mailto:hotwater438@tutanota.com> wrote:
+>         Hi. I've done everything you said, here are results:
+> 
+>         Vladislav can you check the output of /cat/interrupts on a kernel
+>         without the patch and while *not* using the touchpad; and check
+>         if the amount of touchpads-interrupts still keeps increasing in this
+>         case?
+> 
+>         IWI or IRQ work interrupts keep increasing with speed at least 3 interrupts/s.
+> 
+>         I'm really only interested in the touchpad related IRQs, so e.g. the line
+>         about "intel-gpio 129 ELAN1200:00", if you're seeing 3 interrupts/s on
+>         some others that is fine, so I take it the ELAN1200:00 interrupt count
+>         does not increase on an *unpatched* kernel, unless you use the touchpad?
+>         Also when I am moving touchpad IR-IO-APIC 14-fasteoi INT345D:00 get's triggered and increased.
+> 
+>         That is the GPIO controller interrupt, so that one increasing is normal.
+> 
+>         If I understand things correctly then this all means that the IRQ indeed
+>         is a normal level IRQ and Dmitry is likely correct that there is an
+>         pinctrl / gpiochip driver problem here.
+> 
+>         Can you try the following with an *unpatched* kernel? :
+> 
+>         1) Run "cat /proc/interrupts | grep ELAN" , note down the value
+>         2) Very quickly/briefly touch the touchpad once
+>         3) Run "cat /proc/interrupts | grep ELAN" , note down the value again
+>         4) Subtract result from 1. from result from 3, this difference is
+>         the value we are interested in. E.g. my testing got 254 and 257, so
+>         a difference of 3.
+> 
+>         The goal here is to get an as low as possible difference. Feel free
+>         to repeat this a couple of times.
+> 
+>         On an Apollo Lake laptop with an I2C hid mt touchpad I can get the
+>         amount of interrupts triggered for a single touch down to 3,
+>         given the huge interrupt counts of 130000+ reported in:
+>         https://bugzilla.redhat.com/show_bug.cgi?id=1543769
+> 
+>         I expect you to get a much bigger smallest possible difference
+>         between 2 "cat /proc/interrupts | grep ELAN" commands, note a
+>         difference of 0 means your touch did not register.
+> 
+>         Assuming you indeed see much more interrupts for a very quick
+>         touch + release, then we indeed have an interrupt handling problem
+>         we need to investigate further.
+>         I don't know if it's important or not, but for some reason these interrupts keep popping only on CPU2 (i have 4cpu processor).
+> 
+>         That does not matter.
+>         1) Suspending the machine by selecting suspend from a menu in your
+>         desktop environment, or by briefly pressing the power-button, do
+>         not close the lid
+>         2) As soon as the system starts suspending and while it is suspended, move
+>         your finger around the touchpad
+>         3) Wake the system up with the powerbutton while moving your finger around
+>         4) Check if the touchpad still works after this
+> 
+>         It works, but as it seems, looses edge. JournalCTL is being flooded with i2c_hid_get_input: incomplete report (16/65535)
+> 
+>         That is probably a different issue. If you loose the edge IRQ, then the touchpad
+>         would stop working without any messages. I believe that the suspend / resume
+>         issue may be fixed by:
+>         https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=52cf93e63ee672a92f349edc6ddad86ec8808fd8
+> 
+>         Does your kernel have this commit? (please always use the latest kernel while
+>         testing).
+>         Also a thing to notice, that after manually removing and modprobing i2c_hid module, it says next in journalctl:
+> 
+>         i2c_hid i2c-ELAN1200:00: i2c-ELAN1200:00 supply vdd not found, using dummy regulator
+>         i2c_hid i2c-ELAN1200:00: i2c-ELAN1200:00 supply vddl not found, using dummy regulator
+> 
+>         Those messages can safely be ignored.
+> 
+>         Regards,
+> 
+>         Hans
+> 
+> 
