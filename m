@@ -2,161 +2,269 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1782C282DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:47:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23813C282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8FF520684
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:47:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E63C420684
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:47:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727249AbfDOKrA (ORCPT
+        id S1727268AbfDOKrB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Mon, 15 Apr 2019 06:47:01 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:38436 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726785AbfDOKrA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 15 Apr 2019 06:47:00 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:60352 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725939AbfDOKq6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 06:46:58 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 404F980D;
-        Mon, 15 Apr 2019 03:46:58 -0700 (PDT)
-Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 251D53F557;
-        Mon, 15 Apr 2019 03:46:56 -0700 (PDT)
-Subject: Re: [PATCH 1/7] ARM: vdso: Remove dependency with the arch_timer
- driver internals
-From:   Marc Zyngier <marc.zyngier@arm.com>
-To:     Russell King <linux@arm.linux.org.uk>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Will Deacon <will.deacon@arm.com>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Valentin Schneider <valentin.schneider@arm.com>,
-        Guenter Roeck <linux@roeck-us.net>
-References: <20190408154907.223536-1-marc.zyngier@arm.com>
- <20190408154907.223536-2-marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: ARM Ltd
-Message-ID: <dd739e23-f898-b6df-9924-5c4772f6c125@arm.com>
-Date:   Mon, 15 Apr 2019 11:46:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 690EA8DA76D87F47CC55;
+        Mon, 15 Apr 2019 18:46:58 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.408.0; Mon, 15 Apr 2019 18:46:48 +0800
+From:   Chen Zhou <chenzhou10@huawei.com>
+To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <ebiederm@xmission.com>, <rppt@linux.ibm.com>,
+        <catalin.marinas@arm.com>, <will.deacon@arm.com>,
+        <akpm@linux-foundation.org>, <ard.biesheuvel@linaro.org>
+CC:     <horms@verge.net.au>, <takahiro.akashi@linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
+        <linux-mm@kvack.org>, <wangkefeng.wang@huawei.com>,
+        Chen Zhou <chenzhou10@huawei.com>
+Subject: [PATCH v4 1/5] x86: kdump: move reserve_crashkernel_low() into kexec_core.c
+Date:   Mon, 15 Apr 2019 18:57:21 +0800
+Message-ID: <20190415105725.22088-2-chenzhou10@huawei.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190415105725.22088-1-chenzhou10@huawei.com>
+References: <20190415105725.22088-1-chenzhou10@huawei.com>
 MIME-Version: 1.0
-In-Reply-To: <20190408154907.223536-2-marc.zyngier@arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 08/04/2019 16:49, Marc Zyngier wrote:
-> THe VDSO code uses the kernel helper that was originally designed
-> to abstract the access between 32 and 64bit systems. It worked so
-> far because this function is declared as 'inline'.
-> 
-> As we're about to revamp that part of the code, the VDSO would
-> break. Let's fix it by doing what should have been done from
-> the start, a proper system register access.
-> 
-> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
-> ---
->  arch/arm/include/asm/cp15.h   | 2 ++
->  arch/arm/vdso/vgettimeofday.c | 5 +++--
->  2 files changed, 5 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/arm/include/asm/cp15.h b/arch/arm/include/asm/cp15.h
-> index 07e27f212dc7..d2453e2d3f1f 100644
-> --- a/arch/arm/include/asm/cp15.h
-> +++ b/arch/arm/include/asm/cp15.h
-> @@ -68,6 +68,8 @@
->  #define BPIALL				__ACCESS_CP15(c7, 0, c5, 6)
->  #define ICIALLU				__ACCESS_CP15(c7, 0, c5, 0)
->  
-> +#define CNTVCT				__ACCESS_CP15_64(1, c14)
-> +
->  extern unsigned long cr_alignment;	/* defined in entry-armv.S */
->  
->  static inline unsigned long get_cr(void)
-> diff --git a/arch/arm/vdso/vgettimeofday.c b/arch/arm/vdso/vgettimeofday.c
-> index a9dd619c6c29..7bdbf5d5c47d 100644
-> --- a/arch/arm/vdso/vgettimeofday.c
-> +++ b/arch/arm/vdso/vgettimeofday.c
-> @@ -18,9 +18,9 @@
->  #include <linux/compiler.h>
->  #include <linux/hrtimer.h>
->  #include <linux/time.h>
-> -#include <asm/arch_timer.h>
->  #include <asm/barrier.h>
->  #include <asm/bug.h>
-> +#include <asm/cp15.h>
->  #include <asm/page.h>
->  #include <asm/unistd.h>
->  #include <asm/vdso_datapage.h>
-> @@ -123,7 +123,8 @@ static notrace u64 get_ns(struct vdso_data *vdata)
->  	u64 cycle_now;
->  	u64 nsec;
->  
-> -	cycle_now = arch_counter_get_cntvct();
-> +	isb();
-> +	cycle_now = read_sysreg(CNTVCT);
->  
->  	cycle_delta = (cycle_now - vdata->cs_cycle_last) & vdata->cs_mask;
->  
-> 
+In preparation for supporting more than one crash kernel regions
+in arm64 as x86_64 does, move reserve_crashkernel_low() into
+kexec/kexec_core.c.
 
-Russell, are you OK with this being carried via the arm64 tree? Or would
-you prefer me to stick it in your patch system?
+Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+---
+ arch/x86/include/asm/kexec.h |  3 ++
+ arch/x86/kernel/setup.c      | 66 +++++---------------------------------------
+ include/linux/kexec.h        |  5 ++++
+ kernel/kexec_core.c          | 56 +++++++++++++++++++++++++++++++++++++
+ 4 files changed, 71 insertions(+), 59 deletions(-)
 
-Thanks,
-
-	M.
+diff --git a/arch/x86/include/asm/kexec.h b/arch/x86/include/asm/kexec.h
+index 003f2da..485a514 100644
+--- a/arch/x86/include/asm/kexec.h
++++ b/arch/x86/include/asm/kexec.h
+@@ -18,6 +18,9 @@
+ 
+ # define KEXEC_CONTROL_CODE_MAX_SIZE	2048
+ 
++/* 16M alignment for crash kernel regions */
++#define CRASH_ALIGN		(16 << 20)
++
+ #ifndef __ASSEMBLY__
+ 
+ #include <linux/string.h>
+diff --git a/arch/x86/kernel/setup.c b/arch/x86/kernel/setup.c
+index 3773905..4182035 100644
+--- a/arch/x86/kernel/setup.c
++++ b/arch/x86/kernel/setup.c
+@@ -447,9 +447,6 @@ static void __init memblock_x86_reserve_range_setup_data(void)
+ 
+ #ifdef CONFIG_KEXEC_CORE
+ 
+-/* 16M alignment for crash kernel regions */
+-#define CRASH_ALIGN		(16 << 20)
+-
+ /*
+  * Keep the crash kernel below this limit.  On 32 bits earlier kernels
+  * would limit the kernel to the low 512 MiB due to mapping restrictions.
+@@ -463,59 +460,6 @@ static void __init memblock_x86_reserve_range_setup_data(void)
+ # define CRASH_ADDR_HIGH_MAX	MAXMEM
+ #endif
+ 
+-static int __init reserve_crashkernel_low(void)
+-{
+-#ifdef CONFIG_X86_64
+-	unsigned long long base, low_base = 0, low_size = 0;
+-	unsigned long total_low_mem;
+-	int ret;
+-
+-	total_low_mem = memblock_mem_size(1UL << (32 - PAGE_SHIFT));
+-
+-	/* crashkernel=Y,low */
+-	ret = parse_crashkernel_low(boot_command_line, total_low_mem, &low_size, &base);
+-	if (ret) {
+-		/*
+-		 * two parts from lib/swiotlb.c:
+-		 * -swiotlb size: user-specified with swiotlb= or default.
+-		 *
+-		 * -swiotlb overflow buffer: now hardcoded to 32k. We round it
+-		 * to 8M for other buffers that may need to stay low too. Also
+-		 * make sure we allocate enough extra low memory so that we
+-		 * don't run out of DMA buffers for 32-bit devices.
+-		 */
+-		low_size = max(swiotlb_size_or_default() + (8UL << 20), 256UL << 20);
+-	} else {
+-		/* passed with crashkernel=0,low ? */
+-		if (!low_size)
+-			return 0;
+-	}
+-
+-	low_base = memblock_find_in_range(0, 1ULL << 32, low_size, CRASH_ALIGN);
+-	if (!low_base) {
+-		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
+-		       (unsigned long)(low_size >> 20));
+-		return -ENOMEM;
+-	}
+-
+-	ret = memblock_reserve(low_base, low_size);
+-	if (ret) {
+-		pr_err("%s: Error reserving crashkernel low memblock.\n", __func__);
+-		return ret;
+-	}
+-
+-	pr_info("Reserving %ldMB of low memory at %ldMB for crashkernel (System low RAM: %ldMB)\n",
+-		(unsigned long)(low_size >> 20),
+-		(unsigned long)(low_base >> 20),
+-		(unsigned long)(total_low_mem >> 20));
+-
+-	crashk_low_res.start = low_base;
+-	crashk_low_res.end   = low_base + low_size - 1;
+-	insert_resource(&iomem_resource, &crashk_low_res);
+-#endif
+-	return 0;
+-}
+-
+ static void __init reserve_crashkernel(void)
+ {
+ 	unsigned long long crash_size, crash_base, total_mem;
+@@ -573,9 +517,13 @@ static void __init reserve_crashkernel(void)
+ 		return;
+ 	}
+ 
+-	if (crash_base >= (1ULL << 32) && reserve_crashkernel_low()) {
+-		memblock_free(crash_base, crash_size);
+-		return;
++	if (crash_base >= (1ULL << 32)) {
++		if (reserve_crashkernel_low()) {
++			memblock_free(crash_base, crash_size);
++			return;
++		}
++
++		insert_resource(&iomem_resource, &crashk_low_res);
+ 	}
+ 
+ 	pr_info("Reserving %ldMB of memory at %ldMB for crashkernel (System RAM: %ldMB)\n",
+diff --git a/include/linux/kexec.h b/include/linux/kexec.h
+index b9b1bc5..096ad63 100644
+--- a/include/linux/kexec.h
++++ b/include/linux/kexec.h
+@@ -63,6 +63,10 @@
+ 
+ #define KEXEC_CORE_NOTE_NAME	CRASH_CORE_NOTE_NAME
+ 
++#ifndef CRASH_ALIGN
++#define CRASH_ALIGN SZ_128M
++#endif
++
+ /*
+  * This structure is used to hold the arguments that are used when loading
+  * kernel binaries.
+@@ -281,6 +285,7 @@ extern void __crash_kexec(struct pt_regs *);
+ extern void crash_kexec(struct pt_regs *);
+ int kexec_should_crash(struct task_struct *);
+ int kexec_crash_loaded(void);
++int __init reserve_crashkernel_low(void);
+ void crash_save_cpu(struct pt_regs *regs, int cpu);
+ extern int kimage_crash_copy_vmcoreinfo(struct kimage *image);
+ 
+diff --git a/kernel/kexec_core.c b/kernel/kexec_core.c
+index d714044..3492abd 100644
+--- a/kernel/kexec_core.c
++++ b/kernel/kexec_core.c
+@@ -39,6 +39,8 @@
+ #include <linux/compiler.h>
+ #include <linux/hugetlb.h>
+ #include <linux/frame.h>
++#include <linux/memblock.h>
++#include <linux/swiotlb.h>
+ 
+ #include <asm/page.h>
+ #include <asm/sections.h>
+@@ -96,6 +98,60 @@ int kexec_crash_loaded(void)
+ }
+ EXPORT_SYMBOL_GPL(kexec_crash_loaded);
+ 
++int __init reserve_crashkernel_low(void)
++{
++	unsigned long long base, low_base = 0, low_size = 0;
++	unsigned long total_low_mem;
++	int ret;
++
++	total_low_mem = memblock_mem_size(1UL << (32 - PAGE_SHIFT));
++
++	/* crashkernel=Y,low */
++	ret = parse_crashkernel_low(boot_command_line, total_low_mem,
++			&low_size, &base);
++	if (ret) {
++		/*
++		 * two parts from lib/swiotlb.c:
++		 * -swiotlb size: user-specified with swiotlb= or default.
++		 *
++		 * -swiotlb overflow buffer: now hardcoded to 32k. We round it
++		 * to 8M for other buffers that may need to stay low too. Also
++		 * make sure we allocate enough extra low memory so that we
++		 * don't run out of DMA buffers for 32-bit devices.
++		 */
++		low_size = max(swiotlb_size_or_default() + (8UL << 20),
++				256UL << 20);
++	} else {
++		/* passed with crashkernel=0,low ? */
++		if (!low_size)
++			return 0;
++	}
++
++	low_base = memblock_find_in_range(0, 1ULL << 32, low_size, CRASH_ALIGN);
++	if (!low_base) {
++		pr_err("Cannot reserve %ldMB crashkernel low memory, please try smaller size.\n",
++		       (unsigned long)(low_size >> 20));
++		return -ENOMEM;
++	}
++
++	ret = memblock_reserve(low_base, low_size);
++	if (ret) {
++		pr_err("%s: Error reserving crashkernel low memblock.\n",
++				__func__);
++		return ret;
++	}
++
++	pr_info("Reserving %ldMB of low memory at %ldMB for crashkernel (System low RAM: %ldMB)\n",
++		(unsigned long)(low_size >> 20),
++		(unsigned long)(low_base >> 20),
++		(unsigned long)(total_low_mem >> 20));
++
++	crashk_low_res.start = low_base;
++	crashk_low_res.end   = low_base + low_size - 1;
++
++	return 0;
++}
++
+ /*
+  * When kexec transitions to the new kernel there is a one-to-one
+  * mapping between physical and virtual addresses.  On processors
 -- 
-Jazz is not dead. It just smells funny...
+2.7.4
+
