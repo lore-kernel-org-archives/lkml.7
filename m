@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AD4BC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:05:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D31FC10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:05:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 168A72087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:05:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 334B42087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:05:05 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355100;
-	bh=H7rKdmFTc5qZBeuaO8rpSqLCLhvPVO44wOUlN+eUbfc=;
+	s=default; t=1555355105;
+	bh=mF2BBxg4kqXaj9f2hI7ltrvsQ2w8gbMjYgy+7a7ZDXU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=arJHHSuBP2Pt2z2LRkvDW/CPWPYL+HAf2pxA1dK2wOXDhC58rnbsc+TC8bAR+MifB
-	 Vn+M+EXbgoyMhG97QGOgCNTywZnj7gcccYk5BS5NvjUa1xkQiINCnIBY43SFKbMbBz
-	 9YF89S+PeUpIe84IvoW5sLey2ZCsvt5BYow0lTU4=
+	b=GlU1tkxac//CfplPnudoEQuV6PLQHCJl+h4m/KUPZYFyT94lgsNcBM9Y5WODeAWwh
+	 I091iBKhDqUOTEXGaH05DFtOr843dhySs3nKRB5GXKbsxkwObsI/s+aWTKGUhzRFGS
+	 gfQPHGQP5MK2CorKMLwxrcxKHhJJ5LpMDfy1pF0E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729651AbfDOTE7 (ORCPT
+        id S1729662AbfDOTFD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:04:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:38266 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:05:03 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729640AbfDOTE4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:04:56 -0400
+        id S1729640AbfDOTFB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:05:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C0491218A1;
-        Mon, 15 Apr 2019 19:04:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 24357218A1;
+        Mon, 15 Apr 2019 19:04:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355095;
-        bh=H7rKdmFTc5qZBeuaO8rpSqLCLhvPVO44wOUlN+eUbfc=;
+        s=default; t=1555355100;
+        bh=mF2BBxg4kqXaj9f2hI7ltrvsQ2w8gbMjYgy+7a7ZDXU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=N2sox8SCaeXZY0n4ae+SDkpzN1K4XBBqi9Gx62qismEr6aXMqN2Mzxn6NlAHQHaxv
-         A+OB5y1ZPJJKo00KapXh/OuGYBK2w6oNIxfe24Xj9YDs/xbZtB+fY0fte3uPXkPjQ4
-         4FXMP5y3VzLUa7K3NxZ0hrIWLlIW0bBax4RJQGYs=
+        b=q7DcZdj3PjWL4T2yXwjh+2Rwo1ntPaI3c1g3w+I5KOEckgcYLAZyKi/LBBYs+kSY/
+         iwTekA+vOlO0Hl8HJXEIanJsqinyO38T/LBmqtcUgE8wxt2iQO8VDSHYlMhr5AUbbl
+         SVEVjSraVMc08p8IzoInyxWSnWf6WEbcGbnJ4s2g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Steffen Klassert <steffen.klassert@secunet.com>,
-        "David S. Miller" <davem@davemloft.net>,
+        Christoph Biedl <linux-kernel.bfrz@manchmal.in-ulm.de>,
+        Breno Leitao <leitao@debian.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Michael Neuling <mikey@neuling.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 011/101] net-gro: Fix GRO flush when receiving a GSO packet.
-Date:   Mon, 15 Apr 2019 20:58:09 +0200
-Message-Id: <20190415183740.969100277@linuxfoundation.org>
+Subject: [PATCH 4.19 003/101] powerpc/tm: Limit TM code inside PPC_TRANSACTIONAL_MEM
+Date:   Mon, 15 Apr 2019 20:58:01 +0200
+Message-Id: <20190415183740.520791587@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183740.341577907@linuxfoundation.org>
 References: <20190415183740.341577907@linuxfoundation.org>
@@ -61,40 +63,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 0ab03f353d3613ea49d1f924faf98559003670a8 ]
+commit 897bc3df8c5aebb54c32d831f917592e873d0559 upstream.
 
-Currently we may merge incorrectly a received GSO packet
-or a packet with frag_list into a packet sitting in the
-gro_hash list. skb_segment() may crash case because
-the assumptions on the skb layout are not met.
-The correct behaviour would be to flush the packet in the
-gro_hash list and send the received GSO packet directly
-afterwards. Commit d61d072e87c8e ("net-gro: avoid reorders")
-sets NAPI_GRO_CB(skb)->flush in this case, but this is not
-checked before merging. This patch makes sure to check this
-flag and to not merge in that case.
+Commit e1c3743e1a20 ("powerpc/tm: Set MSR[TS] just prior to recheckpoint")
+moved a code block around and this block uses a 'msr' variable outside of
+the CONFIG_PPC_TRANSACTIONAL_MEM, however the 'msr' variable is declared
+inside a CONFIG_PPC_TRANSACTIONAL_MEM block, causing a possible error when
+CONFIG_PPC_TRANSACTION_MEM is not defined.
 
-Fixes: d61d072e87c8e ("net-gro: avoid reorders")
-Signed-off-by: Steffen Klassert <steffen.klassert@secunet.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+	error: 'msr' undeclared (first use in this function)
+
+This is not causing a compilation error in the mainline kernel, because
+'msr' is being used as an argument of MSR_TM_ACTIVE(), which is defined as
+the following when CONFIG_PPC_TRANSACTIONAL_MEM is *not* set:
+
+	#define MSR_TM_ACTIVE(x) 0
+
+This patch just fixes this issue avoiding the 'msr' variable usage outside
+the CONFIG_PPC_TRANSACTIONAL_MEM block, avoiding trusting in the
+MSR_TM_ACTIVE() definition.
+
+Cc: stable@vger.kernel.org
+Reported-by: Christoph Biedl <linux-kernel.bfrz@manchmal.in-ulm.de>
+Fixes: e1c3743e1a20 ("powerpc/tm: Set MSR[TS] just prior to recheckpoint")
+Signed-off-by: Breno Leitao <leitao@debian.org>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+Signed-off-by: Michael Neuling <mikey@neuling.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/core/skbuff.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/powerpc/kernel/signal_64.c | 23 ++++++++++++++++++-----
+ 1 file changed, 18 insertions(+), 5 deletions(-)
 
-diff --git a/net/core/skbuff.c b/net/core/skbuff.c
-index 8656b1e20d35..ceee28e184af 100644
---- a/net/core/skbuff.c
-+++ b/net/core/skbuff.c
-@@ -3832,7 +3832,7 @@ int skb_gro_receive(struct sk_buff *p, struct sk_buff *skb)
- 	unsigned int delta_truesize;
- 	struct sk_buff *lp;
+diff --git a/arch/powerpc/kernel/signal_64.c b/arch/powerpc/kernel/signal_64.c
+index bbd1c73243d7..14b0f5b6a373 100644
+--- a/arch/powerpc/kernel/signal_64.c
++++ b/arch/powerpc/kernel/signal_64.c
+@@ -755,12 +755,25 @@ SYSCALL_DEFINE0(rt_sigreturn)
+ 		if (restore_tm_sigcontexts(current, &uc->uc_mcontext,
+ 					   &uc_transact->uc_mcontext))
+ 			goto badframe;
+-	}
+-	else
+-	/* Fall through, for non-TM restore */
++	} else
+ #endif
+-	if (restore_sigcontext(current, NULL, 1, &uc->uc_mcontext))
+-		goto badframe;
++	{
++		/*
++		 * Fall through, for non-TM restore
++		 *
++		 * Unset MSR[TS] on the thread regs since MSR from user
++		 * context does not have MSR active, and recheckpoint was
++		 * not called since restore_tm_sigcontexts() was not called
++		 * also.
++		 *
++		 * If not unsetting it, the code can RFID to userspace with
++		 * MSR[TS] set, but without CPU in the proper state,
++		 * causing a TM bad thing.
++		 */
++		current->thread.regs->msr &= ~MSR_TS_MASK;
++		if (restore_sigcontext(current, NULL, 1, &uc->uc_mcontext))
++			goto badframe;
++	}
  
--	if (unlikely(p->len + len >= 65536))
-+	if (unlikely(p->len + len >= 65536 || NAPI_GRO_CB(skb)->flush))
- 		return -E2BIG;
- 
- 	lp = NAPI_GRO_CB(p)->last;
+ 	if (restore_altstack(&uc->uc_stack))
+ 		goto badframe;
 -- 
 2.19.1
 
