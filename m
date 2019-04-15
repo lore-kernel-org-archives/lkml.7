@@ -2,96 +2,82 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F0183C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:57:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D369C282CE
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:58:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC5B0206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:57:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="HxuiOGS2"
+	by mail.kernel.org (Postfix) with ESMTP id 366F120833
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:58:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726286AbfDOH5f (ORCPT
+        id S1726417AbfDOH6a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 03:57:35 -0400
-Received: from ozlabs.org ([203.11.71.1]:53743 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725779AbfDOH5f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 03:57:35 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44jLSq2Gh2z9s00;
-        Mon, 15 Apr 2019 17:57:31 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1555315052;
-        bh=UHm7ADjBV7S70IALgYFjz+HSEuvdlSWBfmwTelSZUfk=;
-        h=Date:From:To:Cc:Subject:From;
-        b=HxuiOGS2Mniqh1TUnkGg4GCCDdHx4icfA/xf+K0PwF0wW1PBsEZ5s1U9kO85VaIe8
-         ldjgZN0NGtEBcfxYzxYfhuXllThzQ5tC63TZM0aNEewOp/sGisi/Gs0xLkQiqip2QZ
-         uUIT0O+0wW1sRRF+xXAj8qp1Uz0Se0DVIwgwvWI1E7jFNTUjuSfbQwN3VLmGN7F3tr
-         tggVOpOifV/EVPXHy3x5c22kyvJ0AkFDA2RBCWs5AXk3/raBG4C6zQXpoB7Dy/u8zB
-         +UOyIP2vDWUHl8YuHUB197n2xQpOHJfkuICs0hxiv5h3KzRbQa07C5OZ0yO3E8FLNS
-         ZbmPTj5g6rWzg==
-Date:   Mon, 15 Apr 2019 17:57:30 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Pablo Neira Ayuso <pablo@netfilter.org>,
-        NetFilter <netfilter-devel@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Florian Westphal <fw@strlen.de>
-Subject: linux-next: build failure after merge of the netfilter tree
-Message-ID: <20190415175657.7824ebc6@canb.auug.org.au>
+        Mon, 15 Apr 2019 03:58:30 -0400
+Received: from relay2-d.mail.gandi.net ([217.70.183.194]:35681 "EHLO
+        relay2-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725794AbfDOH63 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 03:58:29 -0400
+Received: from webmail.gandi.net (webmail14.sd4.0x35.net [10.200.201.14])
+        (Authenticated sender: gregory.clement@bootlin.com)
+        by relay2-d.mail.gandi.net (Postfix) with ESMTPA id 8BA5440003;
+        Mon, 15 Apr 2019 07:58:26 +0000 (UTC)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/l2K=bE5.rzDSVRQAz7EuIvz"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=US-ASCII;
+ format=flowed
+Content-Transfer-Encoding: 7bit
+Date:   Mon, 15 Apr 2019 09:58:26 +0200
+From:   gregory.clement@bootlin.com
+To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
+Cc:     Guenter Roeck <linux@roeck-us.net>,
+        Vladimir Zapolskiy <vz@mleia.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Sylvain Lemieux <slemieux.tyco@gmail.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-watchdog@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] watchdog: pnx4008: readout watchdog state
+In-Reply-To: <20190411191437.12173-1-alexandre.belloni@bootlin.com>
+References: <20190411191437.12173-1-alexandre.belloni@bootlin.com>
+Message-ID: <ed5f9278c1ca08662c8dae83f2ed60d1@bootlin.com>
+X-Sender: gregory.clement@bootlin.com
+User-Agent: Roundcube Webmail/1.3.8
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/l2K=bE5.rzDSVRQAz7EuIvz
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On 2019-04-11 21:14, Alexandre Belloni wrote:
+> Readout the enabled state so it is possible to get the pre-userspace
+> handler working. Also, avoid disabling the watchdog to ensure it 
+> continues
+> working and triggers if there is an issue later in the boot or if 
+> userspace
+> fails to start.
+> 
+> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 
-Hi all,
+Tested-by: Gregory CLEMENT <gregory.clement@bootlin.com>
 
-After merging the netfilter-next tree, today's linux-next build (powerpc
-allyesconfig) failed like this:
 
-ld: net/netfilter/nf_conntrack_netlink.o: in function `__crc_nf_ct_get_id':
-(.rodata+0x0): multiple definition of `__crc_nf_ct_get_id'; net/netfilter/n=
-f_conntrack_core.o:(.rodata+0x20): first defined here
-
-Caused by commit
-
-  a5dc1fb1928a ("netfilter: ctnetlink: don't use conntrack/expect object ad=
-dresses as id")
-
-I have reverted that commit for today.
-
---=20
-Cheers,
-Stephen Rothwell
-
---Sig_/l2K=bE5.rzDSVRQAz7EuIvz
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAly0OWoACgkQAVBC80lX
-0GwPHAf/UXwnjjoj4okJvHf5Y50ZOJZap4LopxnHSc4MSR6H6g997I22J0sBczXh
-s9SEeAoaz0/asYyTSzH7GCYOupipx/uhPhI45tWqjOxnkMIvaqB6i7ZhNzp86ySF
-42VhtEvbMbgrgO9tLDAUsL1YTq6R+QXY5R7MuSZ7IQz6whPlapPE3lHFi5eQZx9i
-+GFAHzUTaoTQjq86/z44tyPkiXEPB1tVXjT10hSxzbBjjAfIVpVtXkRMmQKVOwvA
-XFERIC7zTZINICw2zciPQcdICkaXq+rDF7R+FdBwTI180frv/mUebrSEnIqUNeq1
-1KLtawiBB8kZ6MN7RWdo8I44DPxtbQ==
-=EEea
------END PGP SIGNATURE-----
-
---Sig_/l2K=bE5.rzDSVRQAz7EuIvz--
+> ---
+>  drivers/watchdog/pnx4008_wdt.c | 3 ++-
+>  1 file changed, 2 insertions(+), 1 deletion(-)
+> 
+> diff --git a/drivers/watchdog/pnx4008_wdt.c 
+> b/drivers/watchdog/pnx4008_wdt.c
+> index 8e261799c84e..4ce0389d1442 100644
+> --- a/drivers/watchdog/pnx4008_wdt.c
+> +++ b/drivers/watchdog/pnx4008_wdt.c
+> @@ -209,7 +209,8 @@ static int pnx4008_wdt_probe(struct platform_device 
+> *pdev)
+>  	watchdog_set_nowayout(&pnx4008_wdd, nowayout);
+>  	watchdog_set_restart_priority(&pnx4008_wdd, 128);
+> 
+> -	pnx4008_wdt_stop(&pnx4008_wdd);	/* disable for now */
+> +	if (readl(WDTIM_CTRL(wdt_base)) & COUNT_ENAB)
+> +		set_bit(WDOG_HW_RUNNING, &pnx4008_wdd.status);
+> 
+>  	ret = watchdog_register_device(&pnx4008_wdd);
+>  	if (ret < 0) {
