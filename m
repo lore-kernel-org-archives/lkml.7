@@ -2,38 +2,39 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9CF2C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:29:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC8FBC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:29:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A7432087E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:29:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EAD2206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:29:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="SCcCxQ3K"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="vE8PfiyE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726906AbfDOH3e (ORCPT
+        id S1726969AbfDOH3h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 03:29:34 -0400
-Received: from onstation.org ([52.200.56.107]:59920 "EHLO onstation.org"
+        Mon, 15 Apr 2019 03:29:37 -0400
+Received: from onstation.org ([52.200.56.107]:59968 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726046AbfDOH3d (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 03:29:33 -0400
+        id S1726880AbfDOH3e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 03:29:34 -0400
 Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id 8387C3E8DE;
-        Mon, 15 Apr 2019 07:29:31 +0000 (UTC)
+        by onstation.org (Postfix) with ESMTPSA id 5511044894;
+        Mon, 15 Apr 2019 07:29:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
-        s=default; t=1555313372;
-        bh=AHDwOJ9oFsQEbq92OLbSdzAIUVXg6oyxZSGg22CAm0c=;
-        h=From:To:Cc:Subject:Date:From;
-        b=SCcCxQ3K/nMElfVk71ldCMToPmxMxt1bAQvhWWrAdEDQpGq8ugyeXaj73SvDIjkoU
-         FPOOcJNfQjoKm9BJbeql9DEyP4lYE/2THVOw3/EAA6kEdr8vqTRrQ1PLds6miipRok
-         csLsONqz0+R/joEmPEKcvINknExQn+O6CxXefYAI=
+        s=default; t=1555313373;
+        bh=S3EJemgLUKZZsdZcaekEktKkHTWjNi1g4qnJJsas6l4=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=vE8PfiyE6JjCe3iz5oTtpTRnlhavJ8rQAtc2V2BYAc4IExv9HhufTST2nd53TyXy7
+         Tch46gqIw3HONHuERUKWxYuoadkhd6fZR8iD2uTtC/Pc8t16OGa6FmOjVuaBhZB1xG
+         mCzhdvS6oQjUrJ9+84H2ut7P+Hssk08+OYE+aJ6Q=
 From:   Brian Masney <masneyb@onstation.org>
 To:     lee.jones@linaro.org, daniel.thompson@linaro.org,
         jingoohan1@gmail.com, robh+dt@kernel.org
@@ -42,10 +43,12 @@ Cc:     jacek.anaszewski@gmail.com, pavel@ucw.cz, mark.rutland@arm.com,
         linux-leds@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-fbdev@vger.kernel.org,
         dmurphy@ti.com, jonathan@marek.ca
-Subject: [PATCH v3 0/3] backlight: lm3630a: bug fix and fwnode support
-Date:   Mon, 15 Apr 2019 03:29:02 -0400
-Message-Id: <20190415072905.2861-1-masneyb@onstation.org>
+Subject: [PATCH v3 2/3] dt-bindings: backlight: add lm3630a bindings
+Date:   Mon, 15 Apr 2019 03:29:04 -0400
+Message-Id: <20190415072905.2861-3-masneyb@onstation.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190415072905.2861-1-masneyb@onstation.org>
+References: <20190415072905.2861-1-masneyb@onstation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -53,23 +56,159 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Here is a patch series that fixes a single bug and adds fwnode support
-to the lm3630a driver. This work was tested on a LG Nexus 5 (hammerhead)
-phone. My status page at https://masneyb.github.io/nexus-5-upstream/
-describes what is working so far with the upstream kernel.
+Add new backlight bindings for the TI LM3630A dual-string white LED.
 
-See the individual patches for the changelog.
+Signed-off-by: Brian Masney <masneyb@onstation.org>
+---
+Rob: Since the common bindings aren't converted to the new JSON schema
+yet, I'm not sure how to do led-sources here. I would expect that we'd
+have the uint32-array on the common binding once it exists. I had to
+add it here to keep 'make dt_binding_check' happy. I left the
+description off though for that property since that'll come from common
+once its converted.
 
-Brian Masney (3):
-  backlight: lm3630a: return 0 on success in update_status functions
-  dt-bindings: backlight: add lm3630a bindings
-  backlight: lm3630a: add firmware node support
+Changes since v2:
+- Update description of max-brightness
+- Add description for reg
+- Correct typo: s/tranisiton/transition
+- Remove label from bindings since this isn't on backlight_properties
+- add reg to control banks
+- add additionalProperties
 
- .../leds/backlight/lm3630a-backlight.yaml     | 124 ++++++++++++++++
- drivers/video/backlight/lm3630a_bl.c          | 132 +++++++++++++++++-
- 2 files changed, 252 insertions(+), 4 deletions(-)
+ .../leds/backlight/lm3630a-backlight.yaml     | 124 ++++++++++++++++++
+ 1 file changed, 124 insertions(+)
  create mode 100644 Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
 
+diff --git a/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
+new file mode 100644
+index 000000000000..cccd43c02732
+--- /dev/null
++++ b/Documentation/devicetree/bindings/leds/backlight/lm3630a-backlight.yaml
+@@ -0,0 +1,124 @@
++# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
++%YAML 1.2
++---
++$id: http://devicetree.org/schemas/leds/backlight/lm3630a-backlight.yaml#
++$schema: http://devicetree.org/meta-schemas/core.yaml#
++
++title: TI LM3630A High-Efficiency Dual-String White LED
++
++maintainers:
++  - Lee Jones <lee.jones@linaro.org>
++  - Daniel Thompson <daniel.thompson@linaro.org>
++  - Jingoo Han <jingoohan1@gmail.com>
++
++description: |
++  The LM3630A is a current-mode boost converter which supplies the power and
++  controls the current in up to two strings of 10 LEDs per string.
++  https://www.ti.com/product/LM3630A
++
++properties:
++  compatible:
++    const: ti,lm3630a
++
++  reg:
++    description: The I2C address of the device
++    maxItems: 1
++
++  ti,linear-mapping-mode:
++    description: |
++      Enable linear mapping mode. If disabled, then it will use exponential
++      mapping mode in which the ramp up/down appears to have a more uniform
++      transition to the human eye.
++    type: boolean
++
++required:
++  - compatible
++  - reg
++
++patternProperties:
++  "^led@[01]$":
++    type: object
++    description: |
++      Properties for a string of connected LEDs.
++
++    properties:
++      reg:
++        description: Control Bank
++        maxItems: 1
++        minimum: 0
++        maximum: 1
++
++      led-sources:
++        allOf:
++          - $ref: /schemas/types.yaml#/definitions/uint32-array
++          - minItems: 1
++            maxItems: 2
++            items:
++              minimum: 0
++              maximum: 1
++
++      default-brightness:
++        description: Default brightness level on boot.
++        minimum: 0
++        maximum: 255
++
++      max-brightness:
++        description: Maximum brightness that is allowed during runtime.
++        minimum: 0
++        maximum: 255
++
++    required:
++      - reg
++
++    additionalProperties: false
++
++additionalProperties: false
++
++examples:
++  - |
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        lm3630a_bl@38 {
++                compatible = "ti,lm3630a";
++                status = "ok";
++                reg = <0x38>;
++
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                led@0 {
++                        reg = <0>;
++                        led-sources = <0 1>;
++                        default-brightness = <200>;
++                        max-brightness = <255>;
++                };
++        };
++    };
++  - |
++    i2c {
++        #address-cells = <1>;
++        #size-cells = <0>;
++
++        lm3630a_bl@38 {
++                compatible = "ti,lm3630a";
++                status = "ok";
++                reg = <0x38>;
++
++                #address-cells = <1>;
++                #size-cells = <0>;
++
++                led@0 {
++                        reg = <0>;
++                        default-brightness = <150>;
++                        ti,linear-mapping-mode;
++                };
++
++                led@1 {
++                        reg = <1>;
++                        default-brightness = <225>;
++                        ti,linear-mapping-mode;
++                };
++        };
++    };
 -- 
 2.20.1
 
