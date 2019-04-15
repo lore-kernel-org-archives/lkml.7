@@ -2,51 +2,53 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D1642C10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:11:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8F836C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:11:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E06820880
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:11:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E29C218A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:11:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355489;
-	bh=NBgbJQoXvQp6YbzNokytJMcdj5bH7DACkuVhg6Tp9w8=;
+	s=default; t=1555355492;
+	bh=FkjuIXRLtLUvMfyVGkon2imvRpxpqR3f+N9dyqcgLRQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uVbHgpHmvRfRDGWHXZBedZakWLs1oAowPvx3N1oUhk13NFXamc+r4rt58weHNpzfY
-	 AQJXMCGWrDAo+rUgW8xJgj+2Fogto09wetwD0SxJbnfD6nDqxQGQSynculST/yRoGm
-	 kQ6HZt+Y/RmbXBlXf6mXmmEdsstsKaU26+eltKR8=
+	b=eTQe8iSnpq0LugkcNgwzBv490nBZI0lpoBHMP8euNueaioUyX/Nd0OJetkUiheLzm
+	 U+MBOgNrabTnJ2y7VNjzFrHgFPcLa1PBJYLcSoHGsVsOuzk0WZPw82X7USal1SsSXc
+	 Y5p6f090XEChC1XtNGZ5C+7Vh8b0uHgMSVuDp/bU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731222AbfDOTL2 (ORCPT
+        id S1731235AbfDOTLb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:11:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48338 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:11:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48434 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731205AbfDOTLX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:11:23 -0400
+        id S1731208AbfDOTL3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:11:29 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 98476218FF;
-        Mon, 15 Apr 2019 19:11:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CEC67218A1;
+        Mon, 15 Apr 2019 19:11:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355483;
-        bh=NBgbJQoXvQp6YbzNokytJMcdj5bH7DACkuVhg6Tp9w8=;
+        s=default; t=1555355488;
+        bh=FkjuIXRLtLUvMfyVGkon2imvRpxpqR3f+N9dyqcgLRQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=icCE3FErCBoTUQ6SXMHP6f4sFXRGcmCqp0ZqjFqueWpiASW6C7vN5HSH2FL9QljZg
-         cfKmb+D/V4fdlngmQhLf5M4JZxInbuHRaF9DRgIBF8yb9w/mBrgUVJ5VqXHD4bXj6t
-         rYrL8lY5EBYLpmdqK/WfKuEl8d3MV/c3WUF77lVk=
+        b=Hzb5szpwtnPg7RzTkEj5KCcRfNqsdO73X5z4rZcSvY8SUQu6p8/TuLbAscWSgADiy
+         Hy7owQePy9xqBdlVpwDMnq+V7LvRRUBiiXvvXeohG9c/X9ym6Ar5ZpWZyj6jDimWbY
+         0f8oE/sFhjZaTgYnwyl2oW0htRi1aPWlLXaqccUY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Neil Armstrong <narmstrong@baylibre.com>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 044/117] Revert "clk: meson: clean-up clock registration"
-Date:   Mon, 15 Apr 2019 21:00:14 +0200
-Message-Id: <20190415183747.254194615@linuxfoundation.org>
+        stable@vger.kernel.org, Jian-Hong Pan <jian-hong@endlessm.com>,
+        Daniel Drake <drake@endlessm.com>,
+        Kailang Yang <kailang@realtek.com>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 5.0 054/117] ALSA: hda/realtek: Enable headset MIC of Acer TravelMate B114-21 with ALC233
+Date:   Mon, 15 Apr 2019 21:00:24 +0200
+Message-Id: <20190415183747.692684967@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183744.887851196@linuxfoundation.org>
 References: <20190415183744.887851196@linuxfoundation.org>
@@ -59,53 +61,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This reverts commit 9b0f430450cf230e736bc40f95bf34fbdb99cead.
+From: Jian-Hong Pan <jian-hong@endlessm.com>
 
-This patch was not initially a fix and is dependent on other
-changes which are not fixes eithers.
+commit ea5c7eba216e832906e594799b8670f1954a588c upstream.
 
-With this change, multiple Amlogic based boards fails to boot,
-as reported by kernelci.
+The Acer TravelMate B114-21 laptop cannot detect and record sound from
+headset MIC.  This patch adds the ALC233_FIXUP_ACER_HEADSET_MIC HDA verb
+quirk chained with ALC233_FIXUP_ASUS_MIC_NO_PRESENCE pin quirk to fix
+this issue.
 
-Cc: stable@vger.kernel.org # 5.0.7
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+[ fixed the missing brace and reordered the entry -- tiwai ]
+
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+Signed-off-by: Daniel Drake <drake@endlessm.com>
+Reviewed-by: Kailang Yang <kailang@realtek.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- drivers/clk/meson/meson-aoclk.c | 15 +++++----------
- 1 file changed, 5 insertions(+), 10 deletions(-)
+ sound/pci/hda/patch_realtek.c |   12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/drivers/clk/meson/meson-aoclk.c b/drivers/clk/meson/meson-aoclk.c
-index 258c8d259ea1..f965845917e3 100644
---- a/drivers/clk/meson/meson-aoclk.c
-+++ b/drivers/clk/meson/meson-aoclk.c
-@@ -65,20 +65,15 @@ int meson_aoclkc_probe(struct platform_device *pdev)
- 		return ret;
- 	}
- 
--	/* Populate regmap */
--	for (clkid = 0; clkid < data->num_clks; clkid++)
-+	/*
-+	 * Populate regmap and register all clks
-+	 */
-+	for (clkid = 0; clkid < data->num_clks; clkid++) {
- 		data->clks[clkid]->map = regmap;
- 
--	/* Register all clks */
--	for (clkid = 0; clkid < data->hw_data->num; clkid++) {
--		if (!data->hw_data->hws[clkid])
--			continue;
--
- 		ret = devm_clk_hw_register(dev, data->hw_data->hws[clkid]);
--		if (ret) {
--			dev_err(dev, "Clock registration failed\n");
-+		if (ret)
- 			return ret;
--		}
- 	}
- 
- 	return devm_of_clk_add_hw_provider(dev, of_clk_hw_onecell_get,
--- 
-2.19.1
-
+--- a/sound/pci/hda/patch_realtek.c
++++ b/sound/pci/hda/patch_realtek.c
+@@ -5661,6 +5661,7 @@ enum {
+ 	ALC233_FIXUP_ASUS_MIC_NO_PRESENCE,
+ 	ALC233_FIXUP_EAPD_COEF_AND_MIC_NO_PRESENCE,
+ 	ALC233_FIXUP_LENOVO_MULTI_CODECS,
++	ALC233_FIXUP_ACER_HEADSET_MIC,
+ 	ALC294_FIXUP_LENOVO_MIC_LOCATION,
+ 	ALC225_FIXUP_DELL_WYSE_MIC_NO_PRESENCE,
+ 	ALC700_FIXUP_INTEL_REFERENCE,
+@@ -6488,6 +6489,16 @@ static const struct hda_fixup alc269_fix
+ 		.type = HDA_FIXUP_FUNC,
+ 		.v.func = alc233_alc662_fixup_lenovo_dual_codecs,
+ 	},
++	[ALC233_FIXUP_ACER_HEADSET_MIC] = {
++		.type = HDA_FIXUP_VERBS,
++		.v.verbs = (const struct hda_verb[]) {
++			{ 0x20, AC_VERB_SET_COEF_INDEX, 0x45 },
++			{ 0x20, AC_VERB_SET_PROC_COEF, 0x5089 },
++			{ }
++		},
++		.chained = true,
++		.chain_id = ALC233_FIXUP_ASUS_MIC_NO_PRESENCE
++	},
+ 	[ALC294_FIXUP_LENOVO_MIC_LOCATION] = {
+ 		.type = HDA_FIXUP_PINS,
+ 		.v.pins = (const struct hda_pintbl[]) {
+@@ -6735,6 +6746,7 @@ static const struct snd_pci_quirk alc269
+ 	SND_PCI_QUIRK(0x1025, 0x1290, "Acer Veriton Z4860G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1025, 0x1291, "Acer Veriton Z4660G", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1025, 0x1308, "Acer Aspire Z24-890", ALC286_FIXUP_ACER_AIO_HEADSET_MIC),
++	SND_PCI_QUIRK(0x1025, 0x132a, "Acer TravelMate B114-21", ALC233_FIXUP_ACER_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1025, 0x1330, "Acer TravelMate X514-51T", ALC255_FIXUP_ACER_HEADSET_MIC),
+ 	SND_PCI_QUIRK(0x1028, 0x0470, "Dell M101z", ALC269_FIXUP_DELL_M101Z),
+ 	SND_PCI_QUIRK(0x1028, 0x054b, "Dell XPS one 2710", ALC275_FIXUP_DELL_XPS),
 
 
