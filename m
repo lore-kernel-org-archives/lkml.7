@@ -4,50 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33597C10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:20:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB2C6C282DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:20:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F36B420643
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:20:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA45A20643
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:20:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555356006;
-	bh=IOwCOy0l8euoE2JG7Gb3t07MSuhkev9wzBtHpfbfoqE=;
+	s=default; t=1555356010;
+	bh=IcOgI36IU+CW+mQj8RxaffjRlbGVcxc3SHzcArx/FtM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=z+Q0GtBd1M/nj3wHGo7fuV+cMJB0jPWjBbrh/vqtNdhiNnGKzENluJ7A+FDX2+cjl
-	 EUsXg8ptKEB/hdw/mfFg7pfrzjKC0LVtCf3PK2bRF0A41JrN/GsrzVIb3WyXlXPg+l
-	 gdbBQd0GE7ytN7Tgv9UTHJpWWAetoaSU7NC2JjOc=
+	b=cUQ45fpIqmL0zt+fqs1kpCbfK8rChbcGRiZQ/bnf8B/tJcoez9mjiK6hYyqPmT8sI
+	 CMz+d9OlC10P2ayl0dvVaUYWsYeLqyD3p+u64jj/aBb/TqWUbK+Th0aSp3W9bE0Tc2
+	 Q0cV/85zwfl4XsabSfB0oHvhcDJvxwsczDYLju0s=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730873AbfDOTKF (ORCPT
+        id S1730858AbfDOTKE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:10:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45962 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:10:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45880 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729610AbfDOTKB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:10:01 -0400
+        id S1730841AbfDOTJ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:09:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 54311218A1;
-        Mon, 15 Apr 2019 19:10:00 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B34F520651;
+        Mon, 15 Apr 2019 19:09:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355400;
-        bh=IOwCOy0l8euoE2JG7Gb3t07MSuhkev9wzBtHpfbfoqE=;
+        s=default; t=1555355398;
+        bh=IcOgI36IU+CW+mQj8RxaffjRlbGVcxc3SHzcArx/FtM=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=lkgBfcMj5s1uAOQlWxZ5NZn6QhlNRyAv2r2qmbhJtsYbAI5ME51wQhrXyLrgM6q5J
-         ewiHJ8C7QHlS+4cphUSYiV4ClUv8bQtSbPSYIwMnB8g3e1KAF/jIhLVwxNK/FYYPXX
-         91Jr9iq0egZmgfPWyOxbwpFkY43Oi1MhzhGZZxwk=
+        b=AxszNn9ldJhqzSkqoZ/0kjCcM3D78gVrOyVuYBbAAD07bpQOHQiYn+xeOgrCkWODl
+         FPKQpbHRVpn2uQrZ48qa41guSB1+g01XKtu/AkbKYPGLpHhR8hcTRbKqJO+815qKwl
+         IUPMdBRV4opCZSwTd2Vw7YpfhkDd5rcRyFFV5g08=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Heiner Kallweit <hkallweit1@gmail.com>,
+        stable@vger.kernel.org,
+        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 021/117] r8169: disable ASPM again
-Date:   Mon, 15 Apr 2019 20:59:51 +0200
-Message-Id: <20190415183745.985425646@linuxfoundation.org>
+Subject: [PATCH 5.0 020/117] qmi_wwan: add Olicard 600
+Date:   Mon, 15 Apr 2019 20:59:50 +0200
+Message-Id: <20190415183745.927194425@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183744.887851196@linuxfoundation.org>
 References: <20190415183744.887851196@linuxfoundation.org>
@@ -60,51 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit b75bb8a5b755d0c7bf1ac071e4df2349a7644a1e ]
+[ Upstream commit 6289d0facd9ebce4cc83e5da39e15643ee998dc5 ]
 
-There's a significant number of reports that re-enabling ASPM causes
-different issues, ranging from decreased performance to system not
-booting at all. This affects only a minority of users, but the number
-of affected users is big enough that we better switch off ASPM again.
+This is a Qualcomm based device with a QMI function on interface 4.
+It is mode switched from 2020:2030 using a standard eject message.
 
-This will hurt notebook users who are not affected by the issues, they
-may see decreased battery runtime w/o ASPM. With the PCI core folks is
-being discussed to add generic sysfs attributes to control ASPM.
-Once this is in place brave enough users can re-enable ASPM on their
-system.
+T:  Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#=  6 Spd=480  MxCh= 0
+D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
+P:  Vendor=2020 ProdID=2031 Rev= 2.32
+S:  Manufacturer=Mobile Connect
+S:  Product=Mobile Connect
+S:  SerialNumber=0123456789ABCDEF
+C:* #Ifs= 6 Cfg#= 1 Atr=80 MxPwr=500mA
+I:* If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
+E:  Ad=81(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=01(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
+E:  Ad=83(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
+E:  Ad=82(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=02(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
+E:  Ad=85(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
+E:  Ad=84(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=03(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
+E:  Ad=87(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
+E:  Ad=86(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=04(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
+E:  Ad=89(I) Atr=03(Int.) MxPS=   8 Ivl=32ms
+E:  Ad=88(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=05(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 5 Alt= 0 #EPs= 2 Cls=08(stor.) Sub=06 Prot=50 Driver=(none)
+E:  Ad=8a(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=06(O) Atr=02(Bulk) MxPS= 512 Ivl=125us
 
-Fixes: a99790bf5c7f ("r8169: Reinstate ASPM Support")
-Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
+Signed-off-by: Bjørn Mork <bjorn@mork.no>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/realtek/r8169.c | 6 ++++++
- 1 file changed, 6 insertions(+)
+ drivers/net/usb/qmi_wwan.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/net/ethernet/realtek/r8169.c b/drivers/net/ethernet/realtek/r8169.c
-index f55d177ae894..5adb00f521db 100644
---- a/drivers/net/ethernet/realtek/r8169.c
-+++ b/drivers/net/ethernet/realtek/r8169.c
-@@ -28,6 +28,7 @@
- #include <linux/pm_runtime.h>
- #include <linux/firmware.h>
- #include <linux/prefetch.h>
-+#include <linux/pci-aspm.h>
- #include <linux/ipv6.h>
- #include <net/ip6_checksum.h>
- 
-@@ -7224,6 +7225,11 @@ static int rtl_init_one(struct pci_dev *pdev, const struct pci_device_id *ent)
- 			return rc;
- 	}
- 
-+	/* Disable ASPM completely as that cause random device stop working
-+	 * problems as well as full system hangs for some PCIe devices users.
-+	 */
-+	pci_disable_link_state(pdev, PCIE_LINK_STATE_L0S | PCIE_LINK_STATE_L1);
-+
- 	/* enable device (incl. PCI PM wakeup and hotplug setup) */
- 	rc = pcim_enable_device(pdev);
- 	if (rc < 0) {
+diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
+index 74bebbdb4b15..9195f3476b1d 100644
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -1203,6 +1203,7 @@ static const struct usb_device_id products[] = {
+ 	{QMI_FIXED_INTF(0x19d2, 0x2002, 4)},	/* ZTE (Vodafone) K3765-Z */
+ 	{QMI_FIXED_INTF(0x2001, 0x7e19, 4)},	/* D-Link DWM-221 B1 */
+ 	{QMI_FIXED_INTF(0x2001, 0x7e35, 4)},	/* D-Link DWM-222 */
++	{QMI_FIXED_INTF(0x2020, 0x2031, 4)},	/* Olicard 600 */
+ 	{QMI_FIXED_INTF(0x2020, 0x2033, 4)},	/* BroadMobi BM806U */
+ 	{QMI_FIXED_INTF(0x0f3d, 0x68a2, 8)},    /* Sierra Wireless MC7700 */
+ 	{QMI_FIXED_INTF(0x114f, 0x68a2, 8)},    /* Sierra Wireless MC7750 */
 -- 
 2.19.1
 
