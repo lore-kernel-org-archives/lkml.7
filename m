@@ -2,197 +2,132 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6AF3C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:27:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BA30C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:28:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5717206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:27:47 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555313267;
-	bh=QWS5xeoMeq0unEDlGpOKZi1/HNLnq+cMZ9ErGDkVNX0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=YwuYvqdoLJgQcaZ7y1RF5MSr3BYxngoTN5cl3eInPg3ZWr6vQaBKGVm+sMqUGCX6q
-	 WrpqP5F4cWIjd0yIWzuGKIfpTEO6V7FiIxg6+viKdyAycH2gfVzVOrba8+Lpr+TcOD
-	 I+VC+squwtlSzDWm4mXqVr7jOlrwi3NqrX9uIdZU=
+	by mail.kernel.org (Postfix) with ESMTP id 57DCD20880
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:28:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726455AbfDOH1q (ORCPT
+        id S1726505AbfDOH2w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 03:27:46 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34632 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725798AbfDOH1q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 03:27:46 -0400
-Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 85DE620880;
-        Mon, 15 Apr 2019 07:27:44 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555313264;
-        bh=QWS5xeoMeq0unEDlGpOKZi1/HNLnq+cMZ9ErGDkVNX0=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=hRqAlhcKw6GJWEjqe9CIbCbRfRvseBPkgCjEHqmCzBcYhB0K4EUdp21qw5ISDOstG
-         qiGwOAQq2cGRWAWRmiB+x9eGQOhGbMz3p4LlI3pYQowJZHTUFdT8Xe5jTQCH14KGpU
-         e0MiG5E1sNxYeBEyBmeqp2sgR/SRb17GlO3FHnng=
-Received: by mail-lj1-f171.google.com with SMTP id q66so14614600ljq.7;
-        Mon, 15 Apr 2019 00:27:44 -0700 (PDT)
-X-Gm-Message-State: APjAAAX2wysRYyGVSKaGre2fN2WMeYSCKUy1UXLb+eyfXguQ1DBoMGFS
-        Wx5JXyomi0AmRZQUl0n4PrC4OFeEec0YVdtgDsc=
-X-Google-Smtp-Source: APXvYqwx/+EuH1bDwzrOmMkn0XXOu9Ga5p5gOEDE6ac0UZM6Iu31Gp0qHq1AR2gqQ9859mRsEmVK4PxHJFJ7DHyN5kw=
-X-Received: by 2002:a2e:5dd2:: with SMTP id v79mr37851018lje.22.1555313262791;
- Mon, 15 Apr 2019 00:27:42 -0700 (PDT)
+        Mon, 15 Apr 2019 03:28:52 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:2546 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725994AbfDOH2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 03:28:51 -0400
+Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.54])
+        by Forcepoint Email with ESMTP id 8A04BAB6FFA3BFA94A17;
+        Mon, 15 Apr 2019 15:28:48 +0800 (CST)
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Mon, 15 Apr 2019 15:28:48 +0800
+Received: from szvp000201624.huawei.com (10.120.216.130) by
+ dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Mon, 15 Apr 2019 15:28:47 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH 01/13] f2fs: fix to avoid panic in dec_valid_block_count()
+Date:   Mon, 15 Apr 2019 15:28:30 +0800
+Message-ID: <20190415072842.2438-1-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
 MIME-Version: 1.0
-References: <CAJKOXPfvs=uETF0-xpwCWc5khSpWjpz2zz354Jcx1bVjm9cG2A@mail.gmail.com>
- <20190415012635.6369-1-matheus@castello.eng.br> <20190415012635.6369-4-matheus@castello.eng.br>
-In-Reply-To: <20190415012635.6369-4-matheus@castello.eng.br>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Mon, 15 Apr 2019 09:27:31 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPfZBmNATxDTOqiZm_rpjEpRL9sdGF7QAOxppG+ygRmZPQ@mail.gmail.com>
-Message-ID: <CAJKOXPfZBmNATxDTOqiZm_rpjEpRL9sdGF7QAOxppG+ygRmZPQ@mail.gmail.com>
-Subject: Re: [PATCH v2 3/4] power: supply: max17040: Config alert SOC low
- level threshold from FDT
-To:     Matheus Castello <matheus@castello.eng.br>
-Cc:     sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
-        <b.zolnierkie@samsung.com>, lee.jones@linaro.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-ClientProxiedBy: dggeme710-chm.china.huawei.com (10.1.199.106) To
+ dggeme763-chm.china.huawei.com (10.3.19.109)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 15 Apr 2019 at 03:51, Matheus Castello <matheus@castello.eng.br> wrote:
->
-> For configuration of fuel gauge alert for a low level state of charge
-> interrupt we add a function to config level threshold and a device tree
-> binding property to set it in flatned device tree node.
->
-> Now we can use "maxim,alert-soc-level" property with the values from
-> 1 up to 32 to configure alert interrupt threshold.
->
-> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-> ---
->  drivers/power/supply/max17040_battery.c | 56 ++++++++++++++++++++++---
->  1 file changed, 50 insertions(+), 6 deletions(-)
->
-> diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
-> index 8d2f8ed3f44c..f036f272d52f 100644
-> --- a/drivers/power/supply/max17040_battery.c
-> +++ b/drivers/power/supply/max17040_battery.c
-> @@ -29,6 +29,9 @@
->  #define MAX17040_DELAY         1000
->  #define MAX17040_BATTERY_FULL  95
->
-> +#define MAX17040_ATHD_MASK             0xFFE0
-> +#define MAX17040_ATHD_DEFAULT_POWER_UP 4
-> +
->  struct max17040_chip {
->         struct i2c_client               *client;
->         struct delayed_work             work;
-> @@ -43,6 +46,8 @@ struct max17040_chip {
->         int soc;
->         /* State Of Charge */
->         int status;
-> +       /* Alert threshold from 32% to 1% of the State of Charge */
-> +       u32 alert_threshold;
->  };
->
->  static int max17040_get_property(struct power_supply *psy,
-> @@ -119,6 +124,27 @@ static void max17040_get_soc(struct i2c_client *client)
->         chip->soc = (soc >> 8);
->  }
->
-> +static int max17040_set_soc_threshold(struct i2c_client *client, u32 level)
-> +{
-> +       int ret;
-> +       u16 data;
-> +
-> +       /* check if level is between 1% and 32% */
-> +       if (level > 0 && level < 33) {
-> +               /* alert threshold use LSb 5 bits from RCOMP */
-> +               level = 32 - level;
-> +               data = max17040_read_reg(client, MAX17040_RCOMP);
-> +               data &= MAX17040_ATHD_MASK;
-> +               data |= level;
-> +               max17040_write_reg(client, MAX17040_RCOMP, data);
-> +               ret = 0;
-> +       } else {
-> +               ret = -EINVAL;
-> +       }
-> +
-> +       return ret;
-> +}
-> +
->  static void max17040_get_version(struct i2c_client *client)
->  {
->         u16 version;
-> @@ -161,6 +187,16 @@ static void max17040_get_status(struct i2c_client *client)
->                 chip->status = POWER_SUPPLY_STATUS_FULL;
->  }
->
-> +static void max17040_get_of_data(struct max17040_chip *chip)
-> +{
-> +       struct device *dev = &chip->client->dev;
-> +       struct device_node *np = dev->of_node;
-> +
-> +       if (of_property_read_u32(np, "maxim,alert-soc-level",
-> +                       &chip->alert_threshold))
-> +               chip->alert_threshold = MAX17040_ATHD_DEFAULT_POWER_UP;
-> +}
-> +
->  static void max17040_check_changes(struct i2c_client *client)
->  {
->         max17040_get_vcell(client);
-> @@ -226,6 +262,7 @@ static int max17040_probe(struct i2c_client *client,
->
->         chip->client = client;
->         chip->pdata = client->dev.platform_data;
-> +       max17040_get_of_data(chip);
->
->         i2c_set_clientdata(client, chip);
->         psy_cfg.drv_data = chip;
-> @@ -237,16 +274,26 @@ static int max17040_probe(struct i2c_client *client,
->                 return PTR_ERR(chip->battery);
->         }
->
-> +       max17040_reset(client);
-> +       max17040_get_version(client);
-> +
->         /* check interrupt */
->         if (client->irq) {
->                 int ret;
-> -               unsigned int flags;
-> +
-> +               ret = max17040_set_soc_threshold(client, chip->alert_threshold);
-> +               if (ret) {
-> +                       dev_err(&client->dev,
-> +                               "Failed to set SOC alert threshold: err %d\n",
-> +                               ret);
-> +                       return ret;
-> +               }
->
->                 dev_info(&client->dev, "IRQ: enabled\n");
-> -               flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
->
->                 ret = devm_request_threaded_irq(&client->dev, client->irq, NULL,
-> -                                               max17040_thread_handler, flags,
-> +                                               max17040_thread_handler,
-> +                                               (client->flags | IRQF_ONESHOT),
->                                                 chip->battery->desc->name,
->                                                 chip);
+As Jungyeon reported in bugzilla:
 
-Now I noticed that you are not clearing the ALRT status bit. Therefore
-alert interrupt will be generated only once. Even if SoC goes up
-(charged) and then down to alert level it will not be generated second
-time. At least documentation for max77836 is saying that clearing this
-bit is required.
+https://bugzilla.kernel.org/show_bug.cgi?id=203209
 
-Best regards,
-Krzysztof
+- Overview
+When mounting the attached crafted image and running program, I got this error.
+Additionally, it hangs on sync after the this script.
+
+The image is intentionally fuzzed from a normal f2fs image for testing and I enabled option CONFIG_F2FS_CHECK_FS on.
+
+- Reproduces
+cc poc_01.c
+./run.sh f2fs
+sync
+
+ kernel BUG at fs/f2fs/f2fs.h:1788!
+ RIP: 0010:f2fs_truncate_data_blocks_range+0x342/0x350
+ Call Trace:
+  f2fs_truncate_blocks+0x36d/0x3c0
+  f2fs_truncate+0x88/0x110
+  f2fs_setattr+0x3e1/0x460
+  notify_change+0x2da/0x400
+  do_truncate+0x6d/0xb0
+  do_sys_ftruncate+0xf1/0x160
+  do_syscall_64+0x43/0xf0
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+The reason is dec_valid_block_count() will trigger kernel panic due to
+inconsistent count in between inode.i_blocks and actual block.
+
+To avoid panic, let's just print debug message and set SBI_NEED_FSCK to
+give a hint to fsck for latter repairing.
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
+ fs/f2fs/f2fs.h | 10 ++++++++--
+ 1 file changed, 8 insertions(+), 2 deletions(-)
+
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 691452448196..8952ce8f94b8 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -1790,6 +1790,7 @@ static inline int inc_valid_block_count(struct f2fs_sb_info *sbi,
+ 	return -ENOSPC;
+ }
+ 
++void f2fs_msg(struct super_block *sb, const char *level, const char *fmt, ...);
+ static inline void dec_valid_block_count(struct f2fs_sb_info *sbi,
+ 						struct inode *inode,
+ 						block_t count)
+@@ -1798,13 +1799,19 @@ static inline void dec_valid_block_count(struct f2fs_sb_info *sbi,
+ 
+ 	spin_lock(&sbi->stat_lock);
+ 	f2fs_bug_on(sbi, sbi->total_valid_block_count < (block_t) count);
+-	f2fs_bug_on(sbi, inode->i_blocks < sectors);
+ 	sbi->total_valid_block_count -= (block_t)count;
+ 	if (sbi->reserved_blocks &&
+ 		sbi->current_reserved_blocks < sbi->reserved_blocks)
+ 		sbi->current_reserved_blocks = min(sbi->reserved_blocks,
+ 					sbi->current_reserved_blocks + count);
+ 	spin_unlock(&sbi->stat_lock);
++	if (inode->i_blocks < sectors) {
++		f2fs_msg(sbi->sb, KERN_WARNING,
++			"Inconsistent i_blocks, ino:%lu, iblocks:%zu, sectors:%zu",
++			inode->i_ino, inode->i_blocks, sectors);
++		set_sbi_flag(sbi, SBI_NEED_FSCK);
++		return;
++	}
+ 	f2fs_i_blocks_write(inode, count, false, true);
+ }
+ 
+@@ -2819,7 +2826,6 @@ static inline void f2fs_update_iostat(struct f2fs_sb_info *sbi,
+ 
+ bool f2fs_is_valid_blkaddr(struct f2fs_sb_info *sbi,
+ 					block_t blkaddr, int type);
+-void f2fs_msg(struct super_block *sb, const char *level, const char *fmt, ...);
+ static inline void verify_blkaddr(struct f2fs_sb_info *sbi,
+ 					block_t blkaddr, int type)
+ {
+-- 
+2.18.0.rc1
+
