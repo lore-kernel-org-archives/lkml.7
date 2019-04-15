@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 151CEC10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B844C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:46:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D172C218D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:46:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CBFCC2087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:46:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555353988;
-	bh=Eb4rEwUZ6RXNtzNjbG+XVZsj6T3Gm4TRFGCWKXhEZf4=;
+	s=default; t=1555353994;
+	bh=qSU1JFafiex7WrACYNvmwOpa6VwgG/nKSFa0Vi9mmZ8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GWrU5WmcTZz1VqTJFm4MbaR0ZQch39iexgeLKpEvlr7M04ZPIc+jww3C6O68pKsHh
-	 DTYLZeyS7wptqm0TZVMukPn061kYCz+Ep/6qkKBUB4ZRgt3OTGtKY/Ka5T9txxbmAa
-	 3AOHi//MBjj1OOvupsxJwoZeYEoTD+g7EK2IUI20=
+	b=F9/Zhq7qNeYhK30gu6YsWRij0lUfA1NofF6GaQW69gP38zRof+vYz06NOwhQurwtW
+	 JTogo7HAnqhrTbrTn2UGBLsKXthmH6bt201x7IgN6CtIGYl21VuuR7FLaeb4IXiV/2
+	 tlTOgfvk7XRSLBlnn18pmwtqbC44w8cjRvhpzBp8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728614AbfDOSq2 (ORCPT
+        id S1728638AbfDOSqd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 14:46:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49144 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 14:46:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49232 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728589AbfDOSqZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 14:46:25 -0400
+        id S1728618AbfDOSqb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 14:46:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7179D2073F;
-        Mon, 15 Apr 2019 18:46:24 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B0388218D3;
+        Mon, 15 Apr 2019 18:46:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555353985;
-        bh=Eb4rEwUZ6RXNtzNjbG+XVZsj6T3Gm4TRFGCWKXhEZf4=;
+        s=default; t=1555353990;
+        bh=qSU1JFafiex7WrACYNvmwOpa6VwgG/nKSFa0Vi9mmZ8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=x3aHBzkdIUyN5Qem/mhT780VhJAHNzBPpsMK+kFSq+G5RJcCy6pUU+w0DyfpXrRYU
-         tn0qlpyE12fPz4LpqOorxsdRIzbFrpaIPe/wn8emiiVgW8zeDxQP0J9fqZja1/MREh
-         fZvb+VlAVEPuhmd1Fgl4WdOZw7KVK7pOPaUu4Pqc=
+        b=KYrROF/7ckKh3vL8/yPrgig3a7zAurJy8T6lhU5pfcd1PJgz8f9W5igzdcylVWlnR
+         NuMkUG256u0Su81/W8ApJCqfxyGTFF0gEnrphuGOmCnudNO6ZdUlLQWM07oqA4ilzZ
+         FtqENaX4LqavYXydarljcAM8rODY0Oa+bCEBuvYQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 28/76] powerpc/64s: Add new security feature flags for count cache flush
-Date:   Mon, 15 Apr 2019 20:43:52 +0200
-Message-Id: <20190415183715.164988720@linuxfoundation.org>
+Subject: [PATCH 4.9 30/76] powerpc/pseries: Query hypervisor for count cache flush settings
+Date:   Mon, 15 Apr 2019 20:43:54 +0200
+Message-Id: <20190415183715.494619540@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183707.712011689@linuxfoundation.org>
 References: <20190415183707.712011689@linuxfoundation.org>
@@ -59,42 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit dc8c6cce9a26a51fc19961accb978217a3ba8c75 upstream.
+commit ba72dc171954b782a79d25e0f4b3ed91090c3b1e upstream.
 
-Add security feature flags to indicate the need for software to flush
-the count cache on context switch, and for the presence of a hardware
-assisted count cache flush.
+Use the existing hypercall to determine the appropriate settings for
+the count cache flush, and then call the generic powerpc code to set
+it up based on the security feature flags.
 
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/security_features.h | 6 ++++++
- 1 file changed, 6 insertions(+)
+ arch/powerpc/include/asm/hvcall.h      | 2 ++
+ arch/powerpc/platforms/pseries/setup.c | 7 +++++++
+ 2 files changed, 9 insertions(+)
 
-diff --git a/arch/powerpc/include/asm/security_features.h b/arch/powerpc/include/asm/security_features.h
-index 44989b22383c..a0d47bc18a5c 100644
---- a/arch/powerpc/include/asm/security_features.h
-+++ b/arch/powerpc/include/asm/security_features.h
-@@ -59,6 +59,9 @@ static inline bool security_ftr_enabled(unsigned long feature)
- // Indirect branch prediction cache disabled
- #define SEC_FTR_COUNT_CACHE_DISABLED	0x0000000000000020ull
+diff --git a/arch/powerpc/include/asm/hvcall.h b/arch/powerpc/include/asm/hvcall.h
+index 9d978102bf0d..9587d301db55 100644
+--- a/arch/powerpc/include/asm/hvcall.h
++++ b/arch/powerpc/include/asm/hvcall.h
+@@ -316,10 +316,12 @@
+ #define H_CPU_CHAR_BRANCH_HINTS_HONORED	(1ull << 58) // IBM bit 5
+ #define H_CPU_CHAR_THREAD_RECONFIG_CTRL	(1ull << 57) // IBM bit 6
+ #define H_CPU_CHAR_COUNT_CACHE_DISABLED	(1ull << 56) // IBM bit 7
++#define H_CPU_CHAR_BCCTR_FLUSH_ASSIST	(1ull << 54) // IBM bit 9
  
-+// bcctr 2,0,0 triggers a hardware assisted count cache flush
-+#define SEC_FTR_BCCTR_FLUSH_ASSIST	0x0000000000000800ull
+ #define H_CPU_BEHAV_FAVOUR_SECURITY	(1ull << 63) // IBM bit 0
+ #define H_CPU_BEHAV_L1D_FLUSH_PR	(1ull << 62) // IBM bit 1
+ #define H_CPU_BEHAV_BNDS_CHK_SPEC_BAR	(1ull << 61) // IBM bit 2
++#define H_CPU_BEHAV_FLUSH_COUNT_CACHE	(1ull << 58) // IBM bit 5
+ 
+ #ifndef __ASSEMBLY__
+ #include <linux/types.h>
+diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
+index 91ade7755823..adb09ab87f7c 100644
+--- a/arch/powerpc/platforms/pseries/setup.c
++++ b/arch/powerpc/platforms/pseries/setup.c
+@@ -475,6 +475,12 @@ static void init_cpu_char_feature_flags(struct h_cpu_char_result *result)
+ 	if (result->character & H_CPU_CHAR_COUNT_CACHE_DISABLED)
+ 		security_ftr_set(SEC_FTR_COUNT_CACHE_DISABLED);
+ 
++	if (result->character & H_CPU_CHAR_BCCTR_FLUSH_ASSIST)
++		security_ftr_set(SEC_FTR_BCCTR_FLUSH_ASSIST);
 +
- 
- // Features indicating need for Spectre/Meltdown mitigations
- 
-@@ -74,6 +77,9 @@ static inline bool security_ftr_enabled(unsigned long feature)
- // Firmware configuration indicates user favours security over performance
- #define SEC_FTR_FAVOUR_SECURITY		0x0000000000000200ull
- 
-+// Software required to flush count cache on context switch
-+#define SEC_FTR_FLUSH_COUNT_CACHE	0x0000000000000400ull
++	if (result->behaviour & H_CPU_BEHAV_FLUSH_COUNT_CACHE)
++		security_ftr_set(SEC_FTR_FLUSH_COUNT_CACHE);
 +
+ 	/*
+ 	 * The features below are enabled by default, so we instead look to see
+ 	 * if firmware has *disabled* them, and clear them if so.
+@@ -525,6 +531,7 @@ void pseries_setup_rfi_flush(void)
+ 		 security_ftr_enabled(SEC_FTR_L1D_FLUSH_PR);
  
- // Features enabled by default
- #define SEC_FTR_DEFAULT \
+ 	setup_rfi_flush(types, enable);
++	setup_count_cache_flush();
+ }
+ 
+ static void __init pSeries_setup_arch(void)
 -- 
 2.19.1
 
