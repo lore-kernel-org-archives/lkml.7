@@ -4,51 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DF3DC10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2856C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:05:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A932218A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:05:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6ABD720880
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:05:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355136;
-	bh=Q5t/ZpIuEHr9VcRVMT/rXDvFpLjW2wV+nfj3KObQQcY=;
+	s=default; t=1555355140;
+	bh=471birNPpVUpM6Dyigla+QC/0KH3q4F/G7aSQFvIc+4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=wNhy4uPItN7ACRVe7TfZMwXs2iGrFWpuGRr3PpYcb33pw18LOLk9g7XQ9aJ/R825Q
-	 OEqJJtJEAwl22m1oA8KRfujinyOZb4e8Aw7eiydN4VIzFFkNM9S/shOOO/srbWyR7k
-	 SVpuQXDxKepw5F2OKwVVrnPlzGjVa+/6D84U3ong=
+	b=0lCZbRhPtkchhQlYwS97c3nyITnRjd06/dR6vPh9q7HRqzeQJ/k5BOPGPSCUvc06C
+	 w/KbzO7W7vFL/w6hFIDX/P7gruIWWxrVgAR8m6llg8h2E3BjaxV1v9/eHqUdaHVxsC
+	 x8jwCOI7/HQDjgnPosk6GiD/+qogTPzvGo7pdWx4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729716AbfDOTFf (ORCPT
+        id S1729744AbfDOTFj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:05:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39236 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:05:39 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39312 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728676AbfDOTFa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:05:30 -0400
+        id S1729724AbfDOTFe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:05:34 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ABA8A20880;
-        Mon, 15 Apr 2019 19:05:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 56677218EA;
+        Mon, 15 Apr 2019 19:05:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355130;
-        bh=Q5t/ZpIuEHr9VcRVMT/rXDvFpLjW2wV+nfj3KObQQcY=;
+        s=default; t=1555355132;
+        bh=471birNPpVUpM6Dyigla+QC/0KH3q4F/G7aSQFvIc+4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=i0KLK59LdTo7VwGvNI7v3rbXKA3plgavaplcRzdKl8KKzmSMVn9phEYYTferfF90K
-         AjpRKB+AXJTsnoLkXPQYQMZKAyxn1z4dBGqJleYmX4t/bCUU8ECdvBRRA8fsUlgA1R
-         ihSniZlmQbTjSm3xroV9Irhs6UeyOHekrf57022Y=
+        b=dAYGSvw8jaAd9D/X9QAfWLviwFmFLI+S4ytW4Fn+wvQ3o4CjDTuHHGdH0UvAhYpmR
+         X44Kfik+R/I9AftHu3Lx/oJzeuqEA0gH25xpewldCGDG2kyZ06l24J2lq4pxPOQ88C
+         de65lWb2b/fb2Joq2g+QTbmfeW4c6H5M5MVETu9M=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Gavi Teitz <gavi@mellanox.com>,
-        Roi Dayan <roid@mellanox.com>,
+        stable@vger.kernel.org, Yuval Avnery <yuvalav@mellanox.com>,
         Saeed Mahameed <saeedm@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 024/101] net/mlx5e: Fix error handling when refreshing TIRs
-Date:   Mon, 15 Apr 2019 20:58:22 +0200
-Message-Id: <20190415183741.670232784@linuxfoundation.org>
+Subject: [PATCH 4.19 025/101] net/mlx5e: Add a lock on tir list
+Date:   Mon, 15 Apr 2019 20:58:23 +0200
+Message-Id: <20190415183741.726681579@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183740.341577907@linuxfoundation.org>
 References: <20190415183740.341577907@linuxfoundation.org>
@@ -61,46 +60,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit bc87a0036826a37b43489b029af8143bd07c6cca ]
+[ Upstream commit 80a2a9026b24c6bd34b8d58256973e22270bedec ]
 
-Previously, a false positive would be caught if the TIRs list is
-empty, since the err value was initialized to -ENOMEM, and was only
-updated if a TIR is refreshed. This is resolved by initializing the
-err value to zero.
+Refresh tirs is looping over a global list of tirs while netdevs are
+adding and removing tirs from that list. That is why a lock is
+required.
 
-Fixes: b676f653896a ("net/mlx5e: Refactor refresh TIRs")
-Signed-off-by: Gavi Teitz <gavi@mellanox.com>
-Reviewed-by: Roi Dayan <roid@mellanox.com>
+Fixes: 724b2aa15126 ("net/mlx5e: TIRs management refactoring")
+Signed-off-by: Yuval Avnery <yuvalav@mellanox.com>
 Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- drivers/net/ethernet/mellanox/mlx5/core/en_common.c | 6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+ drivers/net/ethernet/mellanox/mlx5/core/en_common.c | 7 +++++++
+ include/linux/mlx5/driver.h                         | 2 ++
+ 2 files changed, 9 insertions(+)
 
 diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_common.c b/drivers/net/ethernet/mellanox/mlx5/core/en_common.c
-index db3278cc052b..1e28866e3924 100644
+index 1e28866e3924..124e4567a4ee 100644
 --- a/drivers/net/ethernet/mellanox/mlx5/core/en_common.c
 +++ b/drivers/net/ethernet/mellanox/mlx5/core/en_common.c
-@@ -141,15 +141,17 @@ int mlx5e_refresh_tirs(struct mlx5e_priv *priv, bool enable_uc_lb)
+@@ -45,7 +45,9 @@ int mlx5e_create_tir(struct mlx5_core_dev *mdev,
+ 	if (err)
+ 		return err;
+ 
++	mutex_lock(&mdev->mlx5e_res.td.list_lock);
+ 	list_add(&tir->list, &mdev->mlx5e_res.td.tirs_list);
++	mutex_unlock(&mdev->mlx5e_res.td.list_lock);
+ 
+ 	return 0;
+ }
+@@ -53,8 +55,10 @@ int mlx5e_create_tir(struct mlx5_core_dev *mdev,
+ void mlx5e_destroy_tir(struct mlx5_core_dev *mdev,
+ 		       struct mlx5e_tir *tir)
  {
- 	struct mlx5_core_dev *mdev = priv->mdev;
- 	struct mlx5e_tir *tir;
--	int err  = -ENOMEM;
-+	int err  = 0;
- 	u32 tirn = 0;
- 	int inlen;
- 	void *in;
++	mutex_lock(&mdev->mlx5e_res.td.list_lock);
+ 	mlx5_core_destroy_tir(mdev, tir->tirn);
+ 	list_del(&tir->list);
++	mutex_unlock(&mdev->mlx5e_res.td.list_lock);
+ }
  
- 	inlen = MLX5_ST_SZ_BYTES(modify_tir_in);
- 	in = kvzalloc(inlen, GFP_KERNEL);
--	if (!in)
-+	if (!in) {
-+		err = -ENOMEM;
- 		goto out;
-+	}
+ static int mlx5e_create_mkey(struct mlx5_core_dev *mdev, u32 pdn,
+@@ -114,6 +118,7 @@ int mlx5e_create_mdev_resources(struct mlx5_core_dev *mdev)
+ 	}
  
- 	if (enable_uc_lb)
- 		MLX5_SET(modify_tir_in, in, ctx.self_lb_block,
+ 	INIT_LIST_HEAD(&mdev->mlx5e_res.td.tirs_list);
++	mutex_init(&mdev->mlx5e_res.td.list_lock);
+ 
+ 	return 0;
+ 
+@@ -159,6 +164,7 @@ int mlx5e_refresh_tirs(struct mlx5e_priv *priv, bool enable_uc_lb)
+ 
+ 	MLX5_SET(modify_tir_in, in, bitmask.self_lb_en, 1);
+ 
++	mutex_lock(&mdev->mlx5e_res.td.list_lock);
+ 	list_for_each_entry(tir, &mdev->mlx5e_res.td.tirs_list, list) {
+ 		tirn = tir->tirn;
+ 		err = mlx5_core_modify_tir(mdev, tirn, in, inlen);
+@@ -170,6 +176,7 @@ int mlx5e_refresh_tirs(struct mlx5e_priv *priv, bool enable_uc_lb)
+ 	kvfree(in);
+ 	if (err)
+ 		netdev_err(priv->netdev, "refresh tir(0x%x) failed, %d\n", tirn, err);
++	mutex_unlock(&mdev->mlx5e_res.td.list_lock);
+ 
+ 	return err;
+ }
+diff --git a/include/linux/mlx5/driver.h b/include/linux/mlx5/driver.h
+index bbcfe2e5fd91..e8b92dee5a72 100644
+--- a/include/linux/mlx5/driver.h
++++ b/include/linux/mlx5/driver.h
+@@ -776,6 +776,8 @@ struct mlx5_pagefault {
+ };
+ 
+ struct mlx5_td {
++	/* protects tirs list changes while tirs refresh */
++	struct mutex     list_lock;
+ 	struct list_head tirs_list;
+ 	u32              tdn;
+ };
 -- 
 2.19.1
 
