@@ -2,100 +2,117 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C887DC10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:04:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A24ABC10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:04:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97D7C206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:04:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 707A0206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:04:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="qJsspAKo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727352AbfDOMEo (ORCPT
+        id S1727369AbfDOMEt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 08:04:44 -0400
-Received: from sauhun.de ([88.99.104.3]:41120 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725994AbfDOMEo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 08:04:44 -0400
-Received: from localhost (p54B331F8.dip0.t-ipconnect.de [84.179.49.248])
-        by pokefinder.org (Postfix) with ESMTPSA id 9A7942C0114;
-        Mon, 15 Apr 2019 14:04:41 +0200 (CEST)
-Date:   Mon, 15 Apr 2019 14:04:41 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Peter Rosin <peda@axentia.se>
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        Stefan Lengfeld <contact@stefanchrist.eu>,
-        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH 04/12] i2c: mux: populate the new *_atomic callbacks
-Message-ID: <20190415120441.ka65mytvxsuzul4v@ninjato>
-References: <20190403124019.8947-1-wsa+renesas@sang-engineering.com>
- <20190403124019.8947-5-wsa+renesas@sang-engineering.com>
- <59d32414-3859-d614-dc41-cc0a1bc63301@axentia.se>
+        Mon, 15 Apr 2019 08:04:49 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42132 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727329AbfDOMEs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 08:04:48 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=VmLFfbiaIcxEWV4kEBlZ0BMPymLpnk8TU9PQIRS9AOo=; b=qJsspAKowlGOwC6n3mabzISmE
+        0kGla+MQ7pKk4zj4oSPamzisYvhl/K44Gjq+xY5rYDq7QtsxmbcqqtCaLzcvlWNuTqFETdsPQbbor
+        a0r1ldAqhK3VpnA5UqdIv083vxZwKs6wmIBcsTly73vTdJQrCuSR/WlSUpjru74i+VIdsaeFPWb5U
+        I1LQirgdWf7/RdmNunzOpqVsNMCQtHnjDYnC0pg72Ez9/21otYzfUI9Cx2fy6TM2tJDb27bM7Gbyv
+        TcH8UaNkedUyaiC5mTZwExDDqBtiU4xSJ4locOaZZZA2HNqbHkvGbY+/047wqw/MZQ7VTSKVA40/J
+        AeWh7RmTA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hG0Lu-0004Im-35; Mon, 15 Apr 2019 12:04:46 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5A56128B6D257; Mon, 15 Apr 2019 14:04:44 +0200 (CEST)
+Date:   Mon, 15 Apr 2019 14:04:44 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Bandan Das <bsd@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org
+Subject: Re: [PATCH] perf/x86: descriptive failure messages for PMU init
+Message-ID: <20190415120444.GN11158@hirez.programming.kicks-ass.net>
+References: <jpg5zrjavmq.fsf@linux.bootlegged.copy>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="lhxkp6eumrz5hzmr"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <59d32414-3859-d614-dc41-cc0a1bc63301@axentia.se>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <jpg5zrjavmq.fsf@linux.bootlegged.copy>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Fri, Apr 12, 2019 at 03:09:17PM -0400, Bandan Das wrote:
+> 
+> There's a default warning message that gets printed, however,
+> there are various failure conditions:
+>  - a msr read can fail
+>  - a msr write can fail
+>  - a msr has an unexpected value
+>  - all msrs have unexpected values (disable PMU)
+> 
+> Also, commit commit 005bd0077a79 ("perf/x86: Modify error message in
+> virtualized environment") completely removed printing the msr in
+> question but these messages could be helpful for debugging vPMUs as
+> well. Add them back and change them to pr_debugs, this keeps the
+> behavior the same for baremetal.
+> 
+> Lastly, use %llx to silence checkpatch
 
---lhxkp6eumrz5hzmr
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Yuck... if you're debugging a hypervisor, you can bloody well run your
+own kernel with additional print slattered around.
 
+The whole make an exception for virt bullshit was already pushing it,
+this is just insane.
 
-> I guess the question is if it is allowed to have .master_xfer_atomic
-> but not .master_xfer (and similarly for .smbus_xfer{,_atomic})? Maybe
-> that decision should be made explicit? And perhaps enforced?
-
-xfer_atomic callbacks are optional. One xfer callback is mandatory. I
-did a check for falling back to master_xfer_atomic if there is no
-suitable smbus_xfer_atomic. I will think about the vice-versa case you
-mentioned. Yet, this is indeed a super corner case, so I prefer to fix
-this incrementally.
-
-> I don't care deeply about the above though, so feel free to do
-> something about it, or
->=20
-> Reviewed-by: Peter Rosin <peda@axentia.se>
-
-Thanks for the review!
-
-
---lhxkp6eumrz5hzmr
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAly0c1kACgkQFA3kzBSg
-KbY5og//XeihKLEc7DDv97Bd8+50Rbfgz2b1tUDb5iCLL0Ttpw1Kx/NFjesHZN2I
-saEndxnDFct6Pb9ygV/yYRkKckqIUXzG5DMp/bDhUw+aFeSwSn6nPhSSSU1hsXG3
-yHhSJhKPb3oFr+hQhdZ8dz9skH6NhdZggxQ1pFcCeTOvZ9DcJllm3dxLqZWnGNxk
-+F1lyDyJBHyUWa2OzuMi908/nTR5DWPIy3rTUKYAq2teWyHMok3KR8v8FW8EsqTa
-AffUcR1KV9JgVVAm79S1J1H+3IOLtt6Arh9GXvwkgiiJqvXtiygTQbA6rgTPYi9K
-ZHKh3fv+T6wtOfSAPXSWacGz8k8NJoTsT64ge+IDNIV769/H7W6GgVGa8ScjEWYh
-zPjEV/P8lkfI8HQ1mbcFZebFLIhdg6ki1z4TVq4HADwbgoT3uZdYwzhgnlAO7uGm
-iWe9+rLUm1YXl9k5pOLpZYHkhvy2d/Rsm0WOMuQLXTDXP8yjMD+tWJcHKPy0rqDG
-LV1Eqo18K+FXwBYu4hFKhblVMOtkFeDI7rk90e+BDOiN6FMOqGNoo8PslcT1T9Qe
-Lv+ZJo3bjhHgJiZJsCtzZJD/JsopOptF7zEK7zh4j8TSgyWD1BPBgg80IRdwVKnF
-QKUYvkby2DOPx8dFWrfLxzC5EHsWtPaHq2NibN5HlMcBRB4WYlk=
-=lPUY
------END PGP SIGNATURE-----
-
---lhxkp6eumrz5hzmr--
+> @@ -266,12 +282,30 @@ static bool check_hw_exists(void)
+>  	return true;
+>  
+>  msr_fail:
+> -	if (boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
+> +	if (virt)
+>  		pr_cont("PMU not available due to virtualization, using software events only.\n");
+> -	} else {
+> -		pr_cont("Broken PMU hardware detected, using software events only.\n");
+> -		pr_err("Failed to access perfctr msr (MSR %x is %Lx)\n",
+> -		       reg, val_new);
+> +	switch (status) {
+> +	case READ_FAIL:
+> +		if (virt)
+> +			pr_debug("Failed to read perfctr msr (MSR %x)\n", reg);
+> +		else
+> +			pr_err("Failed to read perfctr msr (MSR %x)\n", reg);
+> +		break;
+> +	case WRITE_FAIL:
+> +		if (virt)
+> +			pr_debug("Failed to write perfctr msr (MSR %x, wrote: %llx, read: %llx)\n",
+> +				 reg, val, val_new);
+> +		else
+> +			pr_err("Failed to write perfctr msr (MSR %x, wrote: %llx, read: %llx)\n",
+> +				 reg, val, val_new);
+> +		break;
+> +	case PMU_FAIL:
+> +		/* fall through for default message */
+> +	default:
+> +		if (virt)
+> +			pr_debug("Broken PMU hardware detected, using software events only.\n");
+> +		else
+> +			pr_cont("Broken PMU hardware detected, using software events only.\n");
+>  	}
