@@ -2,116 +2,142 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DFDFC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:06:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B410C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:06:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D0C7820833
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:06:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555329967;
-	bh=6cutzcw5H5wZoQJyOZqZhMyiVlv4eKy00bSFYS0OEcw=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=nf33OQsVdVwzRdY6RweadjxpQEoF5FrrH9BIDx19UE+WHU1fis+yYMHJvths7wiIv
-	 8xjfiVkUWzPTjIiax2M1zS+AMwKC/bccObs32+lE3895lt3JQTyvQdD+Z4DFLLTbzJ
-	 IB1qKpEH6EDXrY1jqXISC+vJlbqIEThc8bKAUdOw=
+	by mail.kernel.org (Postfix) with ESMTP id 73717206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:06:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727407AbfDOMGG (ORCPT
+        id S1727425AbfDOMGP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 08:06:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35140 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 08:06:15 -0400
+Received: from sauhun.de ([88.99.104.3]:41152 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726094AbfDOMGG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 08:06:06 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 1833520833;
-        Mon, 15 Apr 2019 12:06:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555329965;
-        bh=6cutzcw5H5wZoQJyOZqZhMyiVlv4eKy00bSFYS0OEcw=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=Ul3xyqOmXYOVelEa6QXE2tT28lQnlVi0Z2hF1BKW+oDIXFEhSpIE134JxadjSXXua
-         hZh3qZc/4DQ3nYgjKL38lNazc6kDmqxV/XpaeE3vAhnUviJItKKYTznd96evGBKQIU
-         2B0HXqiPK4rnKIQ+PqpcIHfk7OrBHgBHJoKJNq+Y=
-Date:   Mon, 15 Apr 2019 14:06:01 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Johannes Berg <johannes@sipsolutions.net>
-cc:     Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5.1-rc] iwlwifi: make locking in iwl_mvm_tx_mpdu()
- BH-safe
-In-Reply-To: <01d55c5cf513554d9cbdee0b14f9360a8df859c8.camel@sipsolutions.net>
-Message-ID: <nycvar.YFH.7.76.1904151404430.9803@cbobk.fhfr.pm>
-References: <nycvar.YFH.7.76.1904151300160.9803@cbobk.fhfr.pm>  <24e05607b902e811d1142e3bd345af021fd3d077.camel@sipsolutions.net>  <nycvar.YFH.7.76.1904151328270.9803@cbobk.fhfr.pm> <01d55c5cf513554d9cbdee0b14f9360a8df859c8.camel@sipsolutions.net>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        id S1726094AbfDOMGO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 08:06:14 -0400
+Received: from localhost (p54B331F8.dip0.t-ipconnect.de [84.179.49.248])
+        by pokefinder.org (Postfix) with ESMTPSA id BBF772C0114;
+        Mon, 15 Apr 2019 14:06:11 +0200 (CEST)
+Date:   Mon, 15 Apr 2019 14:06:11 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Peter Rosin <peda@axentia.se>,
+        Stefan Lengfeld <contact@stefanchrist.eu>,
+        linux-omap@vger.kernel.org, linux-tegra@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 00/12] i2c: core: introduce atomic transfers
+Message-ID: <20190415120611.euidifhshkf5yqns@ninjato>
+References: <20190403124019.8947-1-wsa+renesas@sang-engineering.com>
+ <20190403131510.GE9224@smile.fi.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="rigvuvst2m7kwesb"
+Content-Disposition: inline
+In-Reply-To: <20190403131510.GE9224@smile.fi.intel.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 15 Apr 2019, Johannes Berg wrote:
 
-> > If there are other reasons why disable BH for the whole function (are 
-> > there?), then this bigger hammer works as well of course.
-> 
-> I thought there are, but seeing the commit log here I'm not sure.
-> 
-> In any case, even if not, the function itself is part of the TX fast
-> path, but the caller from the workqueue is very uncommon (basically only
-> happens for a handful of packets on each new RA/TID), so I'd say that'd
-> be a good reason to use the slightly bigger hammer (it's not that much
-> different really, if you look at how much code is covered by the lock)
-> and avoid doing it all the time when we know it to be not needed.
+--rigvuvst2m7kwesb
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Given that we don't have a primitive in lockdep to assert this invariant, 
-would you consider queuing the below on top of f5ae2f932e2f in 
-wireless-drivers.git?
+On Wed, Apr 03, 2019 at 04:15:10PM +0300, Andy Shevchenko wrote:
+> On Wed, Apr 03, 2019 at 02:40:07PM +0200, Wolfram Sang wrote:
+> > This series adds support for very late atomic transfers to the I2C subs=
+ystem.
+> > It finally reached a state which I think is ready-to-apply. This is mai=
+nly
+> > because of two things:
+> >=20
+> > a) we decided to respect the current locking scheme and to not give ato=
+mic
+> > transfers a priority. The code needed for that would have been either
+> > incomplete or very invasive. And we cannot guarantee successful transfe=
+rs
+> > anyhow. See [1] for the discussion and other write-ups for design choic=
+es.
+> >=20
+> > b) thanks to a discussion with Peter Zijlstra[2], the conditions when t=
+o allow
+> > atomic transfers became much clearer. The new helper i2c_in_atomic_xfer=
+_mode()
+> > adds readability, too.
+> >=20
+> > In detail, changes since RFC v2:
+> >=20
+> > * dropped coding style patch because already applied
+> > * added new patch 1 to drop in_atomic() and have better conditions when
+> >   to enter the atomic path
+> > * added support to the mux-core
+> > * simplified omap conversion a little
+> > * added new conversions for ocores, stu300, and algo-bit/gpio
+> > * typo corrections found by Simon and Stefan
+> > * added tags to drivers
+> > * dropped tags from core patches because that part changed too much
+> >=20
+> > All tested on a Renesas Lager board (R-Car H2). Sadly, the i2c-sh_mobil=
+e driver
+> > cannot be converted now because of other work needed first. I tested wi=
+th the
+> > i2c-gpio driver, though. The other driver patches are build tested. A b=
+ranch
+> > can be found here:
+> >=20
+> > git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git renesas/i2c=
+/atomic_xfer
+> >=20
+> > I am happy for reviews and comments. Please note if you review (especia=
+lly the
+> > core parts), I'd like to have a short summary of your review even if th=
+ere is
+> > no proposed change. Like what you did, what you think about it, etc. So=
+me stuff
+> > in here is subtle, so if you went through the effort to double check my
+> > assumptions you should name it :)
+> >=20
+>=20
+> Thank you!
+>=20
+> FWIW,
+>=20
+> Reviewed-by Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+>=20
+> for patches 1-5,12.
 
-Thanks.
+Thanks for the review, Andy! May I ask you once more to tag the patches
+individually so patchwork can pick them up for me?
 
 
+--rigvuvst2m7kwesb
+Content-Type: application/pgp-signature; name="signature.asc"
 
+-----BEGIN PGP SIGNATURE-----
 
-From: Jiri Kosina <jkosina@suse.cz>
-Subject: [PATCH] iwlwifi: iwl_mvm_tx_mpdu() must be called with BH disabled
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAly0c7MACgkQFA3kzBSg
+KbaPdg/5AQODvYA/brIEzEebBWxkjKYMSE6klgfCnyxiyMGQpdbuqY8OcnA+hwI/
+1R813o4sfcHaia62ssxzlPJ7Uipc5yItgMc+yX/KNGJWFmC0JJkbNsFhbEnDGho2
+6OEQF/gLqXgpxrd024fb/melBhZhDzAD/BaH5zoPPJ8u8MUymeW4ft8MqnN27aYR
+Ah0TRQ5CbsqOE2X8sh2laQFypFW7CJuV15vk0RAq+GvyTM/RCG71LWRqIgNv9lKk
+KRdCnHbiRTyoxeApI4l45+D8jAu4ogxgMSY3B+rEd91Clk/GgiM2nydeLmuyvfYB
+oueTE1K6fqTYqOOMvkhbufW5bkVQyuhgjwlN9EnnG2ZTGQ3k2Xn3a8kp4TpRbvUL
+k9QgaBazdN2GngwI6Laa9ePrrVnYdqJM+qexmTX89FRMsLJOveVf/38bHLWOmEP1
+TEGVCI6EiOwe6zFdZIHPZ6vWaBD5GQVPNZI3j0orbnia4MfZ2R/+8hBUpI7lj6wm
+yUKdhgChaGFRPHYvbPC/dWZ1QQQknsBWi6bUyJe5fzBZvq949EUpBPlWzzWeomPt
+pEi6M3foHyE3wUUH4H8Ecwla8pV6SekKEbshMZwmirF4ZamEoKTKjixNoik7uI8l
+tWEg2JSw9ku4bkiDM1MiGYZHam2Ea+mMC3n4XOeCVRrlyrbWCU0=
+=0JbO
+-----END PGP SIGNATURE-----
 
-As iwl_mvm_tx_mpdu() is not disabling BH while obtaining iwl_mvm_sta->lock 
-(which is being taken from BH context as well), it has to be always 
-invoked with BH disabled. Make that clear in a comment.
-
-Signed-off-by: Jiri Kosina <jkosina@suse.cz>
----
- drivers/net/wireless/intel/iwlwifi/mvm/tx.c | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
-index 0c2aabc842f9..ad4760307726 100644
---- a/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
-+++ b/drivers/net/wireless/intel/iwlwifi/mvm/tx.c
-@@ -1063,7 +1063,9 @@ static int iwl_mvm_tx_pkt_queued(struct iwl_mvm *mvm,
- }
- 
- /*
-- * Sets the fields in the Tx cmd that are crypto related
-+ * Sets the fields in the Tx cmd that are crypto related.
-+ *
-+ * This function must be called with BHs disabled.
-  */
- static int iwl_mvm_tx_mpdu(struct iwl_mvm *mvm, struct sk_buff *skb,
- 			   struct ieee80211_tx_info *info,
-
--- 
-Jiri Kosina
-SUSE Labs
-
+--rigvuvst2m7kwesb--
