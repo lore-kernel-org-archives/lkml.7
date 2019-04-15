@@ -2,155 +2,127 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF01AC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 08:10:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17784C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 08:11:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D51C206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 08:10:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF28D206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 08:11:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="f0KcyVCI"
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="Bb9nFYOY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726733AbfDOIKf (ORCPT
+        id S1726769AbfDOILZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 04:10:35 -0400
-Received: from mail-qk1-f196.google.com ([209.85.222.196]:39993 "EHLO
-        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725794AbfDOIKe (ORCPT
+        Mon, 15 Apr 2019 04:11:25 -0400
+Received: from mail1.bemta25.messagelabs.com ([195.245.230.132]:61491 "EHLO
+        mail1.bemta25.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725794AbfDOILY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 04:10:34 -0400
-Received: by mail-qk1-f196.google.com with SMTP id w20so9289616qka.7
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 01:10:34 -0700 (PDT)
+        Mon, 15 Apr 2019 04:11:24 -0400
+Received: from [46.226.53.50] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-4.bemta.az-c.eu-west-1.aws.symcld.net id C9/09-09106-9AC34BC5; Mon, 15 Apr 2019 08:11:21 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFlrDJsWRWlGSWpSXmKPExsWSoc9morvCZku
+  MwdzbhhaXd81hs9j68h2TRd85dwdmj2cL17N4fN4kF8AUxZqZl5RfkcCa0bZjNXPBFJaKX9/u
+  szYwrmPuYuTkYBFYzyzxt9G8i5GLQ0ign0nizqy7LBDOfUaJGc39TCBVbAKGEvPevGcEsUUEj
+  CXWNM9mByliFpjKKHHsylF2kISwgJ/E2ufHoIoCJHrv7wdawQFkG0mcXZ0EsU1V4vSrtWDlvA
+  KxEhdutYJdISTgKrGlaytYnFPATeJP20mwOKOArMSXxtVgNrOAuMStJ/PB7pEQEJBYsuc8M4Q
+  tKvHy8T9WiPp4ifb9b9kh4joSZ68/YYSwlSSW3ZjFCmHLSlya3w0V95VYO+8LVP1FRokrzXYQ
+  tpbEvH+XoebnSBza3AFly0h0HPvLCPK7hMBlVomHjyezQTyQLPFh7lmoQXISq3ofskAUXWCW6
+  Nm5kg3iAx2JBbs/QdnaEssWvmaewKgxC8lzs5CUzUJSNgscYIISJ2c+YVnAyLKK0SypKDM9oy
+  Q3MTNH19DAQNfQ0EjXyMBQ11gvsUo3WS+1VLc8tbhE11AvsbxYr7gyNzknRS8vtWQTIzDlpBS
+  cZN7B+GxF+iFGSQ4mJVFeb5YtMUJ8SfkplRmJxRnxRaU5qcWHGGU4OJQkeK9YAeUEi1LTUyvS
+  MnOAyQ8mLcHBoyTCexQkzVtckJhbnJkOkTrFqMtxYNHDucxCLHn5ealS4rz81kBFAiBFGaV5c
+  CNgifgSo6yUMC8jAwODEE9BalFuZgmq/CtGcQ5GJWFeLpApPJl5JXCbXgEdwQR0xBSd1SBHlC
+  QipKQaGA/HtD6wvmaQ8E8qQkNT65bYwu6MEJ4uH7sdnK6zu448FrDfuOcj/9V5/9+wBa3+J/r
+  S0EB169XulkUFTMkRCR0fX73dUfdUeobsKd67kyvybulIp3GwyXLumr+Eo0T5/qE/t0uydtYG
+  NVQ+rPG8F+nIUy86wUxQ7XbbDMUrOqKWe6+9Wao4T4mlOCPRUIu5qDgRAJ1sjEC/AwAA
+X-Env-Sender: stwiss.opensource@diasemi.com
+X-Msg-Ref: server-20.tower-302.messagelabs.com!1555315880!6339237!1
+X-Originating-IP: [104.47.6.52]
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.31.5; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 18570 invoked from network); 15 Apr 2019 08:11:20 -0000
+Received: from mail-ve1eur02lp2052.outbound.protection.outlook.com (HELO EUR02-VE1-obe.outbound.protection.outlook.com) (104.47.6.52)
+  by server-20.tower-302.messagelabs.com with AES256-SHA256 encrypted SMTP; 15 Apr 2019 08:11:20 -0000
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=usx/bJaMhT9Xd427rTsoAeZAG2JpYIEnOVZk4zttm+0=;
-        b=f0KcyVCIyaqc6ng+6BtiL8IRWb2m7opi1KsZ67t9VKOqAMwYldEn6I5ApRhX464n18
-         nJcETufBLMalh1gpgq0AMaGv5TGO40QW/J9H03vxIE5EfUoTgx/MN1IWciOe7cQsm4No
-         Wiznp1KCH2O/jbbOu9QOS+n6lguPxzGwkLa2We8vEWO8fJRtbKM3WxMewupQbcNv0vGn
-         Jn8NECnCJL9IRLLVM8olNLJMGMqFeMOZIqxdHtx6LOgGzx4m7O3Oa99HWLpfysju0wDK
-         F7lxeg+4fNHZgHgn62QZF0M9n15NDuwQgwaYd17PoNTcfDCNRYZZILhspsHLibSO7TkB
-         Af1Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=usx/bJaMhT9Xd427rTsoAeZAG2JpYIEnOVZk4zttm+0=;
-        b=FEXUV3l5fEOOyHIRj3ykpRVGYGCowKyhm2S/nt/Ev5leODydekBwtoJvg88QeWHwZc
-         VPc9FDJ8WiH9N/hEp6CJxL7Suaa0lqY882Ez79eEemFTPlvA4TQZli63sUG5zwFaFMU1
-         8cnqmhaPDi7EUF6fJvGEkqxqH7gNhtPchk8S4SiCbB5l1SLBIS1uxvSBAIh5VpJVi3Ud
-         xGsr96lzm1SicXxC+fmknjZTMMwoyGB+VAA210ExZBn7IQurDRGxmcKwg61IKX19H0X5
-         vV/CHTxUK+umBpw7mkay+a6Y3LUSMag2YICbiqBfBnqpt99pH8LPVI7Z4KY4Df1VbfEY
-         L0hw==
-X-Gm-Message-State: APjAAAUz3BBKGwZI8W6LnQkmZKDyi6alJLAxJUhzWy/TgE/07LpKQ6sb
-        mSs/kKF7qlpw2fJAyRcUlrl6lcAquhLQAAEtk70=
-X-Google-Smtp-Source: APXvYqwN2zm2D9pX6jJ9XK2Ra0ZKvdra+YNHrQ4qTwUZVP7ejF5ja2KOAQqvRVl+Y+Wv3E744kdwisLdMFWFAP+O6CU=
-X-Received: by 2002:a05:620a:15e7:: with SMTP id p7mr53688970qkm.283.1555315833575;
- Mon, 15 Apr 2019 01:10:33 -0700 (PDT)
+ d=dialogsemiconductor.onmicrosoft.com; s=selector1-diasemi-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=PBj7kK95aM/L/kXsfWLuPJ6e/bw3kx7UJX6/yEjvXEM=;
+ b=Bb9nFYOYWIPtcL5qbv4smVjBt1fxPJeVDOrXEPnZ7aWSfJ3RPjsBEnTD7Z7a648DSqpSLvomy5rCxOMjl2Xld8IqGjuV9zZ05bbTL9ehgvkWh6Mh0O7ZrEiILxmJ7FFO137ebm+erFd/Hi+fXTQhikVCaKRWmG+LGFa/yla4Ez0=
+Received: from VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM (20.177.62.92) by
+ VI1PR10MB2397.EURPRD10.PROD.OUTLOOK.COM (20.177.62.141) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1792.19; Mon, 15 Apr 2019 08:11:17 +0000
+Received: from VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::acc9:6d8f:da36:9f25]) by VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::acc9:6d8f:da36:9f25%2]) with mapi id 15.20.1792.018; Mon, 15 Apr 2019
+ 08:11:17 +0000
+From:   Steve Twiss <stwiss.opensource@diasemi.com>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+CC:     LINUX RENESAS SOC <linux-renesas-soc@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Support Opensource <Support.Opensource@diasemi.com>
+Subject: RE: [PATCH RFT] watchdog: da9063_wdt: parse DT for timeout value, too
+Thread-Topic: [PATCH RFT] watchdog: da9063_wdt: parse DT for timeout value,
+ too
+Thread-Index: AQHU8rKQiJBjLGoJgEygrdEbYLd/faY82vLA
+Date:   Mon, 15 Apr 2019 08:11:16 +0000
+Message-ID: <VI1PR10MB23525523F623FFAC4126EBC9FE2B0@VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM>
+References: <20190414110933.30529-1-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20190414110933.30529-1-wsa+renesas@sang-engineering.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [193.240.73.196]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 3766fb73-80e0-4b35-cdcc-08d6c179ef6c
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600140)(711020)(4605104)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:VI1PR10MB2397;
+x-ms-traffictypediagnostic: VI1PR10MB2397:
+x-microsoft-antispam-prvs: <VI1PR10MB2397D44EB96EDDEC05881148F52B0@VI1PR10MB2397.EURPRD10.PROD.OUTLOOK.COM>
+x-forefront-prvs: 000800954F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(136003)(396003)(39850400004)(366004)(346002)(189003)(199004)(305945005)(7736002)(74316002)(14454004)(68736007)(66066001)(256004)(8676002)(9686003)(3846002)(55016002)(2906002)(105586002)(106356001)(97736004)(6116002)(8936002)(81156014)(81166006)(478600001)(5660300002)(99286004)(486006)(476003)(71200400001)(52536014)(86362001)(53546011)(76176011)(102836004)(6246003)(7696005)(26005)(4326008)(4744005)(107886003)(6506007)(316002)(6436002)(54906003)(446003)(25786009)(11346002)(186003)(71190400001)(229853002)(33656002)(53936002);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR10MB2397;H:VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: diasemi.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: S+KwyPoh4x742jHWLBJ7asxK5/q8y0C6KWoqODuqgBf6DsNie/FVyF6YOg3pTJx3bs5CJpMv0Lh0LNedB+6N4c0PHpkDA+sW+mlkqf5SAmjSlIK1MsDLSovC7WGo0f0kyC7hb3PnblSs9kiaxFUAMMav/6Sq+Ityse9int8ZLPA+azADYGbkEr1BKjrUsyqbwry6gZv+PPCZ2LRhkJfFr5u3QS49LWDz9+8sSx6BbsoQyeVXG4PPdgOpmsB9TuVYk3o1rDvgunReLbPxrhec6oObxH2hF1tFefnJTZVFTH4I1pCmOlZdKTo5DzkV8KsMQkcMiv4Q6OPWRKWguMVNhbk3GXg8QCtpcFprsx48WALqQ5u0FOZzlD9KxODc57nLlXok5BOr9SWaSJvtXX0QI1iWxBJE3eVf1B9a9+l0O08=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <20190415073054.2577-1-yuchao0@huawei.com> <20190415073054.2577-5-yuchao0@huawei.com>
-In-Reply-To: <20190415073054.2577-5-yuchao0@huawei.com>
-From:   Ju Hyung Park <qkrwngud825@gmail.com>
-Date:   Mon, 15 Apr 2019 17:10:22 +0900
-Message-ID: <CAD14+f2uV6s6hBfQaQaJPBEAPVOFgEZfueuVPQ_43LpiWS9nZg@mail.gmail.com>
-Subject: Re: [f2fs-dev] [PATCH 13/13] f2fs: don't recovery orphan inode on
- readonly device
-To:     Chao Yu <yuchao0@huawei.com>
-Cc:     Jaegeuk Kim <jaegeuk@kernel.org>, linux-kernel@vger.kernel.org,
-        linux-f2fs-devel@lists.sourceforge.net
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 3766fb73-80e0-4b35-cdcc-08d6c179ef6c
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Apr 2019 08:11:17.0271
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB2397
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Hi Wolfram,
 
-Thanks for the fix. I'll try this sooner than later.
+On 14 April 2019 12:10, Wolfram Sang wrote:
 
-One minor request though, can you change
-"JuHyung Park <qkrwngud825@gmail.com>"
-to
-"Park Ju Hyung <qkrwngud825@gmail.com>"?
+> Tested with a Renesas Lager board (R-Car H2, DA9063AD), checking the init=
+ial
+> timeout value via sysfs. I didn't test handover from bootloader because m=
+y
+> bootloader neither supports WDT or I2C out of the box.
 
-That's my preference and I'd like to avoid any inconsistencies.
+Can I please check there is no mistake in your description. I have been rep=
+eatedly
+told by the hardware engineers here, (for the past 6 years) it is not possi=
+ble.
+But, you seem to have an R-Car H2 with the AD silicon version of DA9063?
 
-One additional question from reviewing the code surrounding it:
-does it really makes sense to cleanup orphan inodes even when the "ro"
-mount option is passed?
-It's an explicit request from the user not to write to the block device/image.
-
-Thanks.
-
-On Mon, Apr 15, 2019 at 4:31 PM Chao Yu <yuchao0@huawei.com> wrote:
->
-> As JuHyung Park reported in mailing list:
->
-> https://sourceforge.net/p/linux-f2fs/mailman/message/36639787/
->
-> generic_make_request: Trying to write to read-only block-device loop0 (partno 0)
-> WARNING: CPU: 0 PID: 23437 at block/blk-core.c:2174 generic_make_request_checks+0x594/0x630
->
->  generic_make_request+0x46/0x3d0
->  submit_bio+0x30/0x110
->  __submit_merged_bio+0x68/0x390
->  f2fs_submit_page_write+0x1bb/0x7f0
->  f2fs_do_write_meta_page+0x7f/0x160
->  __f2fs_write_meta_page+0x70/0x140
->  f2fs_sync_meta_pages+0x140/0x250
->  f2fs_write_checkpoint+0x5c5/0x17b0
->  f2fs_sync_fs+0x9c/0x110
->  sync_filesystem+0x66/0x80
->  f2fs_recover_fsync_data+0x790/0xa30
->  f2fs_fill_super+0xe4e/0x1980
->  mount_bdev+0x518/0x610
->  mount_fs+0x34/0x13f
->  vfs_kern_mount.part.11+0x4f/0x120
->  do_mount+0x2d1/0xe40
->  __x64_sys_mount+0xbf/0xe0
->  do_syscall_64+0x4a/0xf0
->  entry_SYSCALL_64_after_hwframe+0x44/0xa9
->
-> print_req_error: I/O error, dev loop0, sector 4096
->
-> If block device is readonly, we should never trigger write IO from
-> filesystem layer, but previously, orphan recovery didn't consider
-> such condition, result in triggering above warning, fix it.
->
-> Reported-by: JuHyung Park <qkrwngud825@gmail.com>
-> Signed-off-by: Chao Yu <yuchao0@huawei.com>
-> ---
->  fs/f2fs/checkpoint.c | 6 ++++++
->  1 file changed, 6 insertions(+)
->
-> diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-> index a7ad1b1e5750..90e1bab86269 100644
-> --- a/fs/f2fs/checkpoint.c
-> +++ b/fs/f2fs/checkpoint.c
-> @@ -674,6 +674,12 @@ int f2fs_recover_orphan_inodes(struct f2fs_sb_info *sbi)
->         if (!is_set_ckpt_flags(sbi, CP_ORPHAN_PRESENT_FLAG))
->                 return 0;
->
-> +       if (bdev_read_only(sbi->sb->s_bdev)) {
-> +               f2fs_msg(sbi->sb, KERN_INFO, "write access "
-> +                       "unavailable, skipping orphan cleanup");
-> +               return 0;
-> +       }
-> +
->         if (s_flags & SB_RDONLY) {
->                 f2fs_msg(sbi->sb, KERN_INFO, "orphan cleanup on readonly fs");
->                 sbi->sb->s_flags &= ~SB_RDONLY;
-> --
-> 2.18.0.rc1
->
->
->
-> _______________________________________________
-> Linux-f2fs-devel mailing list
-> Linux-f2fs-devel@lists.sourceforge.net
-> https://lists.sourceforge.net/lists/listinfo/linux-f2fs-devel
+Regards,
+Steve
