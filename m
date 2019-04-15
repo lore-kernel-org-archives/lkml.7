@@ -2,98 +2,100 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B8CDC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:04:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C887DC10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:04:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 008B1206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:04:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97D7C206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:04:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727297AbfDOMEH (ORCPT
+        id S1727352AbfDOMEo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 08:04:07 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:47112 "EHLO mx1.redhat.com"
+        Mon, 15 Apr 2019 08:04:44 -0400
+Received: from sauhun.de ([88.99.104.3]:41120 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725994AbfDOMEH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 08:04:07 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 0B0F0308A953;
-        Mon, 15 Apr 2019 12:04:07 +0000 (UTC)
-Received: from prarit.bos.redhat.com (prarit-guest.khw1.lab.eng.bos.redhat.com [10.16.200.63])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 91BF060142;
-        Mon, 15 Apr 2019 12:04:06 +0000 (UTC)
-Subject: Re: [PATCH] modules: Only return -EEXIST for modules that have
- finished loading
-To:     Jessica Yu <jeyu@kernel.org>
-Cc:     linux-kernel@vger.kernel.org, cavery@redhat.com
-References: <20190402133916.13513-1-prarit@redhat.com>
- <20190415112313.GA4080@linux-8ccs>
-From:   Prarit Bhargava <prarit@redhat.com>
-Message-ID: <2c27c9cf-0ce3-1c7f-bdc2-760d6d37d4d1@redhat.com>
-Date:   Mon, 15 Apr 2019 08:04:05 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        id S1725994AbfDOMEo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 08:04:44 -0400
+Received: from localhost (p54B331F8.dip0.t-ipconnect.de [84.179.49.248])
+        by pokefinder.org (Postfix) with ESMTPSA id 9A7942C0114;
+        Mon, 15 Apr 2019 14:04:41 +0200 (CEST)
+Date:   Mon, 15 Apr 2019 14:04:41 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Peter Rosin <peda@axentia.se>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
+        "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        Stefan Lengfeld <contact@stefanchrist.eu>,
+        "linux-omap@vger.kernel.org" <linux-omap@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH 04/12] i2c: mux: populate the new *_atomic callbacks
+Message-ID: <20190415120441.ka65mytvxsuzul4v@ninjato>
+References: <20190403124019.8947-1-wsa+renesas@sang-engineering.com>
+ <20190403124019.8947-5-wsa+renesas@sang-engineering.com>
+ <59d32414-3859-d614-dc41-cc0a1bc63301@axentia.se>
 MIME-Version: 1.0
-In-Reply-To: <20190415112313.GA4080@linux-8ccs>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Mon, 15 Apr 2019 12:04:07 +0000 (UTC)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="lhxkp6eumrz5hzmr"
+Content-Disposition: inline
+In-Reply-To: <59d32414-3859-d614-dc41-cc0a1bc63301@axentia.se>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--lhxkp6eumrz5hzmr
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 4/15/19 7:23 AM, Jessica Yu wrote:
-> +++ Prarit Bhargava [02/04/19 09:39 -0400]:
->> Microsoft HyperV disables the X86_FEATURE_SMCA bit on AMD systems, and
->> linux guests boot with repeated errors:
->>
->> amd64_edac_mod: Unknown symbol amd_unregister_ecc_decoder (err -2)
->> amd64_edac_mod: Unknown symbol amd_register_ecc_decoder (err -2)
->> amd64_edac_mod: Unknown symbol amd_report_gart_errors (err -2)
->> amd64_edac_mod: Unknown symbol amd_unregister_ecc_decoder (err -2)
->> amd64_edac_mod: Unknown symbol amd_register_ecc_decoder (err -2)
->> amd64_edac_mod: Unknown symbol amd_report_gart_errors (err -2)
->>
->> The warnings occur because the module code erroneously returns -EEXIST
->> for modules that have failed to load and are in the process of being
->> removed from the module list.
->>
->> module amd64_edac_mod has a dependency on module edac_mce_amd.  Using
->> modules.dep, systemd will load edac_mce_amd for every request of
->> amd64_edac_mod.  When the edac_mce_amd module loads, the module has
->> state MODULE_STATE_UNFORMED and once the module load fails and the state
->> becomes MODULE_STATE_GOING.  Another request for edac_mce_amd module
->> executes and add_unformed_module() will erroneously return -EEXIST even
->> though the previous instance of edac_mce_amd has MODULE_STATE_GOING.
->> Upon receiving -EEXIST, systemd attempts to load amd64_edac_mod, which
->> fails because of unknown symbols from edac_mce_amd.
->>
->> add_unformed_module() must wait to return for any case other than
->> MODULE_STATE_LIVE to prevent a race between multiple loads of
->> dependent modules.
->>
->> Signed-off-by: Prarit Bhargava <prarit@redhat.com>
->> Reported-by: Cathy Avery <cavery@redhat.com>
->> Cc: Jessica Yu <jeyu@kernel.org>
-> 
-> Applied to modules-next. Thanks Prarit!
 
-Jessica, could I have the URL of the git tree?
+> I guess the question is if it is allowed to have .master_xfer_atomic
+> but not .master_xfer (and similarly for .smbus_xfer{,_atomic})? Maybe
+> that decision should be made explicit? And perhaps enforced?
 
-Thanks,
+xfer_atomic callbacks are optional. One xfer callback is mandatory. I
+did a check for falling back to master_xfer_atomic if there is no
+suitable smbus_xfer_atomic. I will think about the vice-versa case you
+mentioned. Yet, this is indeed a super corner case, so I prefer to fix
+this incrementally.
 
-P.
+> I don't care deeply about the above though, so feel free to do
+> something about it, or
+>=20
+> Reviewed-by: Peter Rosin <peda@axentia.se>
 
-> 
-> Jessica
-> 
+Thanks for the review!
+
+
+--lhxkp6eumrz5hzmr
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAly0c1kACgkQFA3kzBSg
+KbY5og//XeihKLEc7DDv97Bd8+50Rbfgz2b1tUDb5iCLL0Ttpw1Kx/NFjesHZN2I
+saEndxnDFct6Pb9ygV/yYRkKckqIUXzG5DMp/bDhUw+aFeSwSn6nPhSSSU1hsXG3
+yHhSJhKPb3oFr+hQhdZ8dz9skH6NhdZggxQ1pFcCeTOvZ9DcJllm3dxLqZWnGNxk
++F1lyDyJBHyUWa2OzuMi908/nTR5DWPIy3rTUKYAq2teWyHMok3KR8v8FW8EsqTa
+AffUcR1KV9JgVVAm79S1J1H+3IOLtt6Arh9GXvwkgiiJqvXtiygTQbA6rgTPYi9K
+ZHKh3fv+T6wtOfSAPXSWacGz8k8NJoTsT64ge+IDNIV769/H7W6GgVGa8ScjEWYh
+zPjEV/P8lkfI8HQ1mbcFZebFLIhdg6ki1z4TVq4HADwbgoT3uZdYwzhgnlAO7uGm
+iWe9+rLUm1YXl9k5pOLpZYHkhvy2d/Rsm0WOMuQLXTDXP8yjMD+tWJcHKPy0rqDG
+LV1Eqo18K+FXwBYu4hFKhblVMOtkFeDI7rk90e+BDOiN6FMOqGNoo8PslcT1T9Qe
+Lv+ZJo3bjhHgJiZJsCtzZJD/JsopOptF7zEK7zh4j8TSgyWD1BPBgg80IRdwVKnF
+QKUYvkby2DOPx8dFWrfLxzC5EHsWtPaHq2NibN5HlMcBRB4WYlk=
+=lPUY
+-----END PGP SIGNATURE-----
+
+--lhxkp6eumrz5hzmr--
