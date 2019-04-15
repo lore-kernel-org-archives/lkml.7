@@ -2,131 +2,286 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B024CC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4C80C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:11:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 814E02077C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E34A2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:11:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="U2csxADD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727409AbfDOMK4 (ORCPT
+        id S1727429AbfDOMLM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 08:10:56 -0400
-Received: from sauhun.de ([88.99.104.3]:41200 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726095AbfDOMKz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 08:10:55 -0400
-Received: from localhost (p54B331F8.dip0.t-ipconnect.de [84.179.49.248])
-        by pokefinder.org (Postfix) with ESMTPSA id 18A742C0114;
-        Mon, 15 Apr 2019 14:10:53 +0200 (CEST)
-Date:   Mon, 15 Apr 2019 14:10:52 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Peter Rosin <peda@axentia.se>,
-        Stefan Lengfeld <contact@stefanchrist.eu>,
-        linux-omap@vger.kernel.org, linux-tegra@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH 00/12] i2c: core: introduce atomic transfers
-Message-ID: <20190415121052.6fqyffpgvd4ljvzi@ninjato>
-References: <20190403124019.8947-1-wsa+renesas@sang-engineering.com>
+        Mon, 15 Apr 2019 08:11:12 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:47892 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726095AbfDOMLL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 08:11:11 -0400
+Received: from fllv0035.itg.ti.com ([10.64.41.0])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3FCAvk1084317;
+        Mon, 15 Apr 2019 07:10:57 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1555330257;
+        bh=KDLrUYHtuQEagvRbb6L0QAMpPzHCFXmx73so/mM6xTI=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=U2csxADD0UmF/HLoLEjCiv8ovSmY2EAFYmQN4Zwxbpq3eYMLPjm9f/9opHSvVTSUI
+         C9JxKHFVmy6iL4oOT10M+Vpj0rbVw0M4/S6MjwyLdEbRhe7xDX10HX3mJxoVr3YZAR
+         msF1WVLJpELCsxPgTHkU4TfW0TIKenUjqVFUpPLQ=
+Received: from DLEE105.ent.ti.com (dlee105.ent.ti.com [157.170.170.35])
+        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3FCAvmA028121
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 15 Apr 2019 07:10:57 -0500
+Received: from DLEE106.ent.ti.com (157.170.170.36) by DLEE105.ent.ti.com
+ (157.170.170.35) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 15
+ Apr 2019 07:10:56 -0500
+Received: from lelv0327.itg.ti.com (10.180.67.183) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 15 Apr 2019 07:10:57 -0500
+Received: from [10.250.81.84] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3FCAu5j111985;
+        Mon, 15 Apr 2019 07:10:56 -0500
+Subject: Re: [PATCH v3 3/3] backlight: lm3630a: add firmware node support
+To:     Brian Masney <masneyb@onstation.org>, <lee.jones@linaro.org>,
+        <daniel.thompson@linaro.org>, <jingoohan1@gmail.com>,
+        <robh+dt@kernel.org>
+CC:     <jacek.anaszewski@gmail.com>, <pavel@ucw.cz>,
+        <mark.rutland@arm.com>, <b.zolnierkie@samsung.com>,
+        <dri-devel@lists.freedesktop.org>, <linux-leds@vger.kernel.org>,
+        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-fbdev@vger.kernel.org>, <jonathan@marek.ca>
+References: <20190415072905.2861-1-masneyb@onstation.org>
+ <20190415072905.2861-4-masneyb@onstation.org>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <0e5e26ba-cf98-913e-8e76-e988a86dc0d1@ti.com>
+Date:   Mon, 15 Apr 2019 07:10:55 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="2zrottfhsaoyamy5"
-Content-Disposition: inline
-In-Reply-To: <20190403124019.8947-1-wsa+renesas@sang-engineering.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190415072905.2861-4-masneyb@onstation.org>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
---2zrottfhsaoyamy5
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
 
-On Wed, Apr 03, 2019 at 02:40:07PM +0200, Wolfram Sang wrote:
-> This series adds support for very late atomic transfers to the I2C subsys=
-tem.
-> It finally reached a state which I think is ready-to-apply. This is mainly
-> because of two things:
->=20
-> a) we decided to respect the current locking scheme and to not give atomic
-> transfers a priority. The code needed for that would have been either
-> incomplete or very invasive. And we cannot guarantee successful transfers
-> anyhow. See [1] for the discussion and other write-ups for design choices.
->=20
-> b) thanks to a discussion with Peter Zijlstra[2], the conditions when to =
-allow
-> atomic transfers became much clearer. The new helper i2c_in_atomic_xfer_m=
-ode()
-> adds readability, too.
->=20
-> In detail, changes since RFC v2:
->=20
-> * dropped coding style patch because already applied
-> * added new patch 1 to drop in_atomic() and have better conditions when
->   to enter the atomic path
-> * added support to the mux-core
-> * simplified omap conversion a little
-> * added new conversions for ocores, stu300, and algo-bit/gpio
-> * typo corrections found by Simon and Stefan
-> * added tags to drivers
-> * dropped tags from core patches because that part changed too much
->=20
-> All tested on a Renesas Lager board (R-Car H2). Sadly, the i2c-sh_mobile =
-driver
-> cannot be converted now because of other work needed first. I tested with=
- the
-> i2c-gpio driver, though. The other driver patches are build tested. A bra=
-nch
-> can be found here:
->=20
-> git://git.kernel.org/pub/scm/linux/kernel/git/wsa/linux.git renesas/i2c/a=
-tomic_xfer
->=20
-> I am happy for reviews and comments. Please note if you review (especiall=
-y the
-> core parts), I'd like to have a short summary of your review even if ther=
-e is
-> no proposed change. Like what you did, what you think about it, etc. Some=
- stuff
-> in here is subtle, so if you went through the effort to double check my
-> assumptions you should name it :)
->=20
->=20
-> Finally, a big thank you and credit to Renesas for funding this work, of =
-course!
+On 4/15/19 2:29 AM, Brian Masney wrote:
+> Add fwnode support to the lm3630a driver and allow configuring
+> the initial and maximum LED brightness on both LED banks independently.
+> The two outputs can be controlled by bank A and B independently or
+> bank A can control both outputs.
+> 
+> If the platform data was not configured, then the driver defaults to
+> enabling both banks. This patch changes the default value to disable
+> both banks before parsing the firmware node so that just a single bank
+> can be enabled if desired. There are no in-tree users of this driver.
+> 
+> Driver was tested on a LG Nexus 5 (hammerhead) phone.
+> 
+> Signed-off-by: Brian Masney <masneyb@onstation.org>
+> ---
+> Changes since v2
+> - Separated out control banks and outputs via the reg and led-sources
+>   properties.
+> - Use fwnode instead of of API
+> - Disable both banks by default before calling lm3630a_parse_node()
+> - Add lots of error handling
+> - Check for duplicate source / bank definitions
+> - Remove extra ;
+> - Make probe() method fail if fwnode parsing fails.
+> 
+>  drivers/video/backlight/lm3630a_bl.c | 128 ++++++++++++++++++++++++++-
+>  1 file changed, 126 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/video/backlight/lm3630a_bl.c b/drivers/video/backlight/lm3630a_bl.c
+> index ef2553f452ca..15922da9c05a 100644
+> --- a/drivers/video/backlight/lm3630a_bl.c
+> +++ b/drivers/video/backlight/lm3630a_bl.c
+> @@ -364,6 +364,116 @@ static const struct regmap_config lm3630a_regmap = {
+>  	.max_register = REG_MAX,
+>  };
+>  
+> +/**
+> + * lm3630a_parse_led_sources - Parse the optional led-sources fwnode property.
+> + * @node: firmware node
+> + * @default_bitmask: bitmask to return if the led-sources property was not
+> + *                   specified
+> + *
+> + * Parses the optional led-sources firmware node and returns a bitmask that
+> + * contains the outputs that are associated with the control bank. If the
+> + * property is missing, then the value of of @default_bitmask will be returned.
+> + */
+> +static int lm3630a_parse_led_sources(struct fwnode_handle *node,
+> +				     int default_bitmask)
+> +{
+> +	int ret, num_sources, i;
+> +	u32 sources[2];
+> +
+> +	num_sources = fwnode_property_read_u32_array(node, "led-sources", NULL,
+> +						     0);
+> +	if (num_sources < 0)
+> +		return default_bitmask;
+> +	else if (num_sources > ARRAY_SIZE(sources))
+> +		return -EINVAL;
+> +
+> +	ret = fwnode_property_read_u32_array(node, "led-sources", sources,
+> +					     num_sources);
+> +	if (ret)
+> +		return ret;
+> +
+> +	ret = 0;
+> +	for (i = 0; i < num_sources; i++) {
+> +		if (sources[i] < 0 || sources[i] > 1)
+> +			return -EINVAL;
+> +
+> +		ret |= BIT(sources[i]);
+> +	}
+> +
+> +	return ret;
+> +}
+> +
+> +static int lm3630a_parse_node(struct lm3630a_chip *pchip,
+> +			      struct lm3630a_platform_data *pdata)
+> +{
+> +	int seen = 0, led_sources, ret;
+> +	struct fwnode_handle *node;
+> +	u32 bank, val;
+> +	bool linear;
+> +
+> +	device_for_each_child_node(pchip->dev, node) {
+> +		ret = fwnode_property_read_u32(node, "reg", &bank);
+> +		if (ret < 0)
+> +			return ret;
+> +
+> +		if (bank < 0 || bank > 1)
+> +			return -EINVAL;
+> +
+> +		if (seen & BIT(bank))
+> +			return -EINVAL;
 
-No major critcism voiced here, so applied to for-next! Let's see how
-this series does there...
+Need line break for clarity.
 
+> +		seen |= BIT(bank);
+> +
+> +		led_sources = lm3630a_parse_led_sources(node, BIT(bank));
+> +		if (led_sources < 0)
+> +			return led_sources;
+> +
+> +		linear = fwnode_property_read_bool(node,
+> +						   "ti,linear-mapping-mode");
+> +		if (bank == 0) {
+> +			if (!(led_sources & BIT(0)))
+> +				return -EINVAL;
+> +
+> +			pdata->leda_ctrl = linear ?
+> +				LM3630A_LEDA_ENABLE_LINEAR :
+> +				LM3630A_LEDA_ENABLE;
+> +
+> +			if (led_sources & BIT(1)) {
+> +				if (seen & BIT(1))
+> +					return -EINVAL;
 
---2zrottfhsaoyamy5
-Content-Type: application/pgp-signature; name="signature.asc"
+Need line break for clarity.
 
------BEGIN PGP SIGNATURE-----
+> +				seen |= BIT(1);
+> +
+> +				pdata->ledb_ctrl = LM3630A_LEDB_ON_A;
+> +			}
+> +		} else {
+> +			if (led_sources & BIT(0) || !(led_sources & BIT(1)))
+> +				return -EINVAL;
+> +
+> +			pdata->ledb_ctrl = linear ?
+> +				LM3630A_LEDB_ENABLE_LINEAR :
+> +				LM3630A_LEDB_ENABLE;
+> +		}
+> +
+> +		ret = fwnode_property_read_u32(node, "default-brightness",
+> +					       &val);
+> +		if (!ret) {
+> +			if (bank == 0)
+> +				pdata->leda_init_brt = val;
+> +			else
+> +				pdata->ledb_init_brt = val;
+> +		}
+> +
+> +		ret = fwnode_property_read_u32(node, "max-brightness", &val);
+> +		if (!ret) {
+> +			if (bank == 0)
+> +				pdata->leda_max_brt = val;
+> +			else
+> +				pdata->ledb_max_brt = val;
+> +		}
+> +	}
+> +
+> +	return 0;
 
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAly0dMwACgkQFA3kzBSg
-KbYY4hAApGC2YILoXcStCZBF2oIFh8J8yxZF1GCl4EzMAONs5aoXCoV2xomtv/7Y
-J7F44kQYHVt65lnMAnTX+Q+EmnI5PNzmgzjQEbQYE6vIOw9TJ2RZD7S2s+F5pj6Q
-PNweo+l6qO4/lPTrcOCGymgu2NW5upqjDDKdBo445aSDznSeuxT3tNxadLrINy4R
-BzyClWBaV0RPBYS3Fr2wVPkIEZOznRYAEZx6En5oP9IknFXIMhwh9QYQjkPagvgA
-Zsc8BzxomC3spUsgbQZ3ivJXcIcjSR12lDVTHz+Nk3YnJdOXIyXWupSmyTcslMXq
-2mou//sGg5GYtD3h4Arx1XRtdF+NHgxQoKAh1oXuPjg55On84YQ32r6bs5j7rQN2
-2b0wENsxIEJTvVo8XJpfPiMES6CLvwomSErO1h7SejO5djJWNFIMZiNw8u2ubFO/
-mQs7O/7UcuJ0j/P3UiR3hgPXxsrMvm6OnpcLsWM18x7KhwVttKgTJbduj66+vB26
-oZ7thpvQ8gp5TaMYip8EBJJ124T9YHqrt+We52ZVjxsQ4Q7cBYLiuB1tLAFxExZw
-cNr5woDJVVsIw9RBoFmph+WyU0Q8eigjfAiZ3MfNnhfeWtEIMY7PPQT0Mu3WhVy2
-203X/YVUBlqQwcQenxLse5bp95KKb7EKFlAvnTlnguYGWfmjPqg=
-=2/JU
------END PGP SIGNATURE-----
+Shouldn't we return ret here and set ret to -ENODEV?
+If device_for_each does not find a node if falls through and returns a success but really is should fail.
 
---2zrottfhsaoyamy5--
+> +}
+> +
+>  static int lm3630a_probe(struct i2c_client *client,
+>  			 const struct i2c_device_id *id)
+>  {
+> @@ -396,13 +506,20 @@ static int lm3630a_probe(struct i2c_client *client,
+>  				     GFP_KERNEL);
+>  		if (pdata == NULL)
+>  			return -ENOMEM;
+> +
+>  		/* default values */
+> -		pdata->leda_ctrl = LM3630A_LEDA_ENABLE;
+> -		pdata->ledb_ctrl = LM3630A_LEDB_ENABLE;
+> +		pdata->leda_ctrl = LM3630A_LEDA_DISABLE;
+> +		pdata->ledb_ctrl = LM3630A_LEDB_DISABLE;
+
+This is not needed since default is disabled and kzalloc will set these to 0
+
+>  		pdata->leda_max_brt = LM3630A_MAX_BRIGHTNESS;
+>  		pdata->ledb_max_brt = LM3630A_MAX_BRIGHTNESS;
+>  		pdata->leda_init_brt = LM3630A_MAX_BRIGHTNESS;
+>  		pdata->ledb_init_brt = LM3630A_MAX_BRIGHTNESS;
+> +
+> +		rval = lm3630a_parse_node(pchip, pdata);
+> +		if (rval) {
+> +			dev_err(&client->dev, "fail : parse node\n");
+> +			return rval;
+> +		}
+>  	}
+>  	pchip->pdata = pdata;
+>  
+> @@ -470,11 +587,18 @@ static const struct i2c_device_id lm3630a_id[] = {
+>  	{}
+>  };
+>  
+> +static const struct of_device_id lm3630a_match_table[] = {
+> +	{ .compatible = "ti,lm3630a", },
+> +	{ },
+> +};
+> +
+> +
+
+Extra new line here.
+
+>  MODULE_DEVICE_TABLE(i2c, lm3630a_id);
+>  
+>  static struct i2c_driver lm3630a_i2c_driver = {
+>  	.driver = {
+>  		   .name = LM3630A_NAME,
+> +		   .of_match_table = lm3630a_match_table,
+>  		   },
+>  	.probe = lm3630a_probe,
+>  	.remove = lm3630a_remove,
+> 
