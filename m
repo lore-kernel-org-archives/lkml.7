@@ -2,412 +2,156 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 304F6C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 17:28:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BFD79C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 17:29:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F340C20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 17:28:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9507E206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 17:29:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727945AbfDOR2T (ORCPT
+        id S1727977AbfDOR3u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 13:28:19 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:46200 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726956AbfDOR2T (ORCPT
+        Mon, 15 Apr 2019 13:29:50 -0400
+Received: from gateway31.websitewelcome.com ([192.185.144.29]:39709 "EHLO
+        gateway31.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726980AbfDOR3u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 13:28:19 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id EF55727D851
-Subject: Re: [PATCH v8 6/7] platform/chrome: cros_ec: add EC host command
- support using rpmsg.
-To:     Pi-Hsun Shih <pihsun@chromium.org>
-Cc:     Benson Leung <bleung@chromium.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20190412071851.60332-1-pihsun@chromium.org>
- <20190412071851.60332-7-pihsun@chromium.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <2834b99d-0029-c76b-274c-8f08946de09c@collabora.com>
-Date:   Mon, 15 Apr 2019 19:28:14 +0200
+        Mon, 15 Apr 2019 13:29:50 -0400
+Received: from cm11.websitewelcome.com (cm11.websitewelcome.com [100.42.49.5])
+        by gateway31.websitewelcome.com (Postfix) with ESMTP id 6A5E86EBE2
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 12:29:48 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id G5QShu2G8dnCeG5QShh5XF; Mon, 15 Apr 2019 12:29:48 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.55.242] (port=48192 helo=[192.168.43.131])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hG5QR-003Evo-QV; Mon, 15 Apr 2019 12:29:47 -0500
+Subject: Re: [PATCH] wil6210: fix potential out-of-bounds read
+To:     merez@codeaurora.org
+Cc:     Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vladimir Kondratiev <qca_vkondrat@qca.qualcomm.com>,
+        linux-wireless@vger.kernel.org, wil6210@qti.qualcomm.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-wireless-owner@vger.kernel.org
+References: <20190415145646.GA16597@embeddedor>
+ <514f4e102c3cbbd59f4ba0805b091b36@codeaurora.org>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <2062ed93-5729-cb58-7708-9bde957c5ff0@embeddedor.com>
+Date:   Mon, 15 Apr 2019 12:29:46 -0500
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190412071851.60332-7-pihsun@chromium.org>
+In-Reply-To: <514f4e102c3cbbd59f4ba0805b091b36@codeaurora.org>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.55.242
+X-Source-L: No
+X-Exim-ID: 1hG5QR-003Evo-QV
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.131]) [189.250.55.242]:48192
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 8
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
 
-On 12/4/19 9:18, Pi-Hsun Shih wrote:
-> Add EC host command support through rpmsg.
+
+On 4/15/19 12:24 PM, merez@codeaurora.org wrote:
+> On 2019-04-15 17:56, Gustavo A. R. Silva wrote:
+>> Notice that *rc* can evaluate to up to 5, include/linux/netdevice.h:
+>>
+>> enum gro_result {
+>>         GRO_MERGED,
+>>         GRO_MERGED_FREE,
+>>         GRO_HELD,
+>>         GRO_NORMAL,
+>>         GRO_DROP,
+>>         GRO_CONSUMED,
+>> };
+>> typedef enum gro_result gro_result_t;
+>>
+>> In case *rc* evaluates to 5, we end up having an out-of-bounds read
+>> at drivers/net/wireless/ath/wil6210/txrx.c:821:
+>>
+>>     wil_dbg_txrx(wil, "Rx complete %d bytes => %s\n",
+>>              len, gro_res_str[rc]);
+>>
+>> Fix this by adding element "GRO_CONSUMED" to array gro_res_str.
+>>
+>> Addresses-Coverity-ID: 1444666 ("Out-of-bounds read")
+>> Fixes: 194b482b5055 ("wil6210: Debug print GRO Rx result")
+>> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+>> ---
+>>  drivers/net/wireless/ath/wil6210/txrx.c | 1 +
+>>  1 file changed, 1 insertion(+)
 > 
-> Signed-off-by: Pi-Hsun Shih <pihsun@chromium.org>
-> ---
-> Changes from v7:
->  - Remove one unnecessary dev_err.
-> 
-> Changes from v6:
->  - Make data for response aligned to 4 bytes.
-> 
-> Changes from v5:
->  - Change commit title.
->  - Add documents for some structs, and fix all warning from
->    scripts/kernel-doc.
->  - Miscellaneous fixes based on feedback.
-> 
-> Changes from v4:
->  - Change from work queue to completion.
->  - Change from matching using rpmsg id to device tree compatible, to
->    support EC subdevices.
-> 
-> Changes from v3:
->  - Add host event support by adding an extra bytes at the start of IPC
->    message to indicate the type of the message (host event or host
->    command), since there's no additional irq that can be used for host
->    event.
-> 
-> Changes from v2:
->  - Wait for ipi ack instead of depends on the behavior in mtk-rpmsg.
-> 
-> Changes from v1:
->  - Code format fix based on feedback for cros_ec_rpmsg.c.
->  - Extract feature detection for SCP into separate patch (Patch 6).
-> ---
->  drivers/platform/chrome/Kconfig         |   9 +
->  drivers/platform/chrome/Makefile        |   1 +
->  drivers/platform/chrome/cros_ec_rpmsg.c | 258 ++++++++++++++++++++++++
->  3 files changed, 268 insertions(+)
->  create mode 100644 drivers/platform/chrome/cros_ec_rpmsg.c
-> 
-> diff --git a/drivers/platform/chrome/Kconfig b/drivers/platform/chrome/Kconfig
-> index 4313a8bcf0ab..ed39f8cd68f1 100644
-> --- a/drivers/platform/chrome/Kconfig
-> +++ b/drivers/platform/chrome/Kconfig
-> @@ -59,6 +59,15 @@ config CROS_EC_I2C
->  	  a checksum. Failing accesses will be retried three times to
->  	  improve reliability.
->  
-> +config CROS_EC_RPMSG
-> +	tristate "ChromeOS Embedded Controller (rpmsg)"
-> +	depends on MFD_CROS_EC && RPMSG && OF
-> +	help
-> +	  If you say Y here, you get support for talking to the ChromeOS EC
-> +	  through rpmsg. This uses a simple byte-level protocol with a
-> +	  checksum. Also since there's no addition EC-to-host interrupt, this
-> +	  use a byte in message to distinguish host event from host command.
-> +
-
-No need to resend. I added
-
-+         To compile this driver as a module, choose M here: the
-+         module will be called cros_ec_rpmsg.
-
->  config CROS_EC_SPI
->  	tristate "ChromeOS Embedded Controller (SPI)"
->  	depends on MFD_CROS_EC && SPI
-> diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
-> index 0bee2e44748e..2cdee395c9f1 100644
-> --- a/drivers/platform/chrome/Makefile
-> +++ b/drivers/platform/chrome/Makefile
-> @@ -4,6 +4,7 @@ obj-$(CONFIG_CHROMEOS_LAPTOP)		+= chromeos_laptop.o
->  obj-$(CONFIG_CHROMEOS_PSTORE)		+= chromeos_pstore.o
->  obj-$(CONFIG_CHROMEOS_TBMC)		+= chromeos_tbmc.o
->  obj-$(CONFIG_CROS_EC_I2C)		+= cros_ec_i2c.o
-> +obj-$(CONFIG_CROS_EC_RPMSG)		+= cros_ec_rpmsg.o
->  obj-$(CONFIG_CROS_EC_SPI)		+= cros_ec_spi.o
->  cros_ec_lpcs-objs			:= cros_ec_lpc.o cros_ec_lpc_reg.o
->  cros_ec_lpcs-$(CONFIG_CROS_EC_LPC_MEC)	+= cros_ec_lpc_mec.o
-> diff --git a/drivers/platform/chrome/cros_ec_rpmsg.c b/drivers/platform/chrome/cros_ec_rpmsg.c
-> new file mode 100644
-> index 000000000000..6a174fa79296
-> --- /dev/null
-> +++ b/drivers/platform/chrome/cros_ec_rpmsg.c
-> @@ -0,0 +1,258 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +//
-> +// Copyright 2018 Google LLC.
-> +
-> +#include <linux/completion.h>
-> +#include <linux/delay.h>
-> +#include <linux/kernel.h>
-> +#include <linux/module.h>
-> +#include <linux/mfd/cros_ec.h>
-> +#include <linux/mfd/cros_ec_commands.h>
-> +#include <linux/of.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/rpmsg.h>
-> +#include <linux/slab.h>
-> +
-> +#define EC_MSG_TIMEOUT_MS 200
-> +#define HOST_COMMAND_MARK 1
-> +#define HOST_EVENT_MARK 2
-> +
-> +/**
-> + * struct cros_ec_rpmsg_response - rpmsg message format from from EC.
-> + *
-> + * @type:	The type of message, should be either HOST_COMMAND_MARK or
-> + *		HOST_EVENT_MARK, representing that the message is a response to
-> + *		host command, or a host event.
-> + * @data:	ec_host_response for host command.
-> + */
-> +struct cros_ec_rpmsg_response {
-> +	u8 type;
-> +	u8 data[] __aligned(4);
-> +};
-> +
-> +/**
-> + * struct cros_ec_rpmsg - information about a EC over rpmsg.
-> + *
-> + * @rpdev:	rpmsg device we are connected to
-> + * @xfer_ack:	completion for host command transfer.
-> + * @host_event_work:	Work struct for pending host event.
-> + */
-> +struct cros_ec_rpmsg {
-> +	struct rpmsg_device *rpdev;
-> +	struct completion xfer_ack;
-> +	struct work_struct host_event_work;
-> +};
-> +
-> +/**
-> + * cros_ec_cmd_xfer_rpmsg - Transfer a message over rpmsg and receive the reply
-> + *
-> + * @ec_dev: ChromeOS EC device
-> + * @ec_msg: Message to transfer
-> + *
-> + * This is only used for old EC proto version, and is not supported for this
-> + * driver.
-> + *
-> + * Return: number of bytes of the reply on success or negative error code.
-
-No need to resend. Changed to
-
-+ * Return: -EINVAL
-
-
-> + */
-> +static int cros_ec_cmd_xfer_rpmsg(struct cros_ec_device *ec_dev,
-> +				  struct cros_ec_command *ec_msg)
-> +{
-> +	return -EINVAL;
-> +}
-> +
-> +/**
-> + * cros_ec_pkt_xfer_rpmsg - Transfer a packet over rpmsg and receive the reply
-> + *
-> + * @ec_dev: ChromeOS EC device
-> + * @ec_msg: Message to transfer
-> + *
-> + * Return: number of bytes of the reply on success or negative error code.
-> + */
-> +static int cros_ec_pkt_xfer_rpmsg(struct cros_ec_device *ec_dev,
-> +				  struct cros_ec_command *ec_msg)
-> +{
-> +	struct ec_host_response *response;
-> +	struct cros_ec_rpmsg *ec_rpmsg = ec_dev->priv;
-> +	struct rpmsg_device *rpdev = ec_rpmsg->rpdev;
-> +	int len;
-> +	u8 sum;
-> +	int ret;
-> +	int i;
-> +	unsigned long timeout;
-> +
-> +	ec_msg->result = 0;
-> +	len = cros_ec_prepare_tx(ec_dev, ec_msg);
-> +	dev_dbg(ec_dev->dev, "prepared, len=%d\n", len);
-> +
-> +	reinit_completion(&ec_rpmsg->xfer_ack);
-> +	ret = rpmsg_send(rpdev->ept, ec_dev->dout, len);
-> +	if (ret) {
-> +		dev_err(ec_dev->dev, "rpmsg send failed\n");
-> +		return ret;
-> +	}
-> +
-> +	timeout = msecs_to_jiffies(EC_MSG_TIMEOUT_MS);
-> +	ret = wait_for_completion_timeout(&ec_rpmsg->xfer_ack, timeout);
-> +	if (!ret) {
-> +		dev_err(ec_dev->dev, "rpmsg send timeout\n");
-> +		return -EIO;
-> +	}
-> +
-> +	/* check response error code */
-> +	response = (struct ec_host_response *)ec_dev->din;
-> +	ec_msg->result = response->result;
-> +
-> +	ret = cros_ec_check_result(ec_dev, ec_msg);
-> +	if (ret)
-> +		goto exit;
-> +
-> +	if (response->data_len > ec_msg->insize) {
-> +		dev_err(ec_dev->dev, "packet too long (%d bytes, expected %d)",
-> +			response->data_len, ec_msg->insize);
-> +		ret = -EMSGSIZE;
-> +		goto exit;
-> +	}
-> +
-> +	/* copy response packet payload and compute checksum */
-> +	memcpy(ec_msg->data, ec_dev->din + sizeof(*response),
-> +	       response->data_len);
-> +
-> +	sum = 0;
-> +	for (i = 0; i < sizeof(*response) + response->data_len; i++)
-> +		sum += ec_dev->din[i];
-> +
-> +	if (sum) {
-> +		dev_err(ec_dev->dev, "bad packet checksum, calculated %x\n",
-> +			sum);
-> +		ret = -EBADMSG;
-> +		goto exit;
-> +	}
-> +
-> +	ret = response->data_len;
-> +exit:
-> +	if (ec_msg->command == EC_CMD_REBOOT_EC)
-> +		msleep(EC_REBOOT_DELAY_MS);
-> +
-> +	return ret;
-> +}
-> +
-> +static void
-> +cros_ec_rpmsg_host_event_function(struct work_struct *host_event_work)
-> +{
-> +	struct cros_ec_rpmsg *ec_rpmsg = container_of(
-> +		host_event_work, struct cros_ec_rpmsg, host_event_work);
-> +	struct cros_ec_device *ec_dev = dev_get_drvdata(&ec_rpmsg->rpdev->dev);
-> +	bool wake_event = true;
-> +	int ret;
-> +
-> +	ret = cros_ec_get_next_event(ec_dev, &wake_event);
-> +
-> +	/*
-> +	 * Signal only if wake host events or any interrupt if
-> +	 * cros_ec_get_next_event() returned an error (default value for
-> +	 * wake_event is true)
-> +	 */
-> +	if (wake_event && device_may_wakeup(ec_dev->dev))
-> +		pm_wakeup_event(ec_dev->dev, 0);
-> +
-> +	if (ret > 0)
-> +		blocking_notifier_call_chain(&ec_dev->event_notifier,
-> +					     0, ec_dev);
-> +}
-> +
-> +static int cros_ec_rpmsg_callback(struct rpmsg_device *rpdev, void *data,
-> +				  int len, void *priv, u32 src)
-> +{
-> +	struct cros_ec_device *ec_dev = dev_get_drvdata(&rpdev->dev);
-> +	struct cros_ec_rpmsg *ec_rpmsg = ec_dev->priv;
-> +	struct cros_ec_rpmsg_response *resp;
-> +
-> +	if (!len) {
-> +		dev_warn(ec_dev->dev, "rpmsg received empty response");
-> +		return -EINVAL;
-> +	}
-> +
-> +	resp = data;
-> +	len -= offsetof(struct cros_ec_rpmsg_response, data);
-> +	if (resp->type == HOST_COMMAND_MARK) {
-> +		if (len > ec_dev->din_size) {
-> +			dev_warn(
-> +				ec_dev->dev,
-> +				"received length %d > din_size %d, truncating",
-> +				len, ec_dev->din_size);
-> +			len = ec_dev->din_size;
-> +		}
-> +
-> +		memcpy(ec_dev->din, resp->data, len);
-> +		complete(&ec_rpmsg->xfer_ack);
-> +	} else if (resp->type == HOST_EVENT_MARK) {
-> +		schedule_work(&ec_rpmsg->host_event_work);
-> +	} else {
-> +		dev_warn(ec_dev->dev, "rpmsg received invalid type = %d",
-> +			 resp->type);
-> +		return -EINVAL;
-> +	}
-> +
-> +	return 0;
-> +}
-> +
-> +static int cros_ec_rpmsg_probe(struct rpmsg_device *rpdev)
-> +{
-> +	struct device *dev = &rpdev->dev;
-> +	struct cros_ec_device *ec_dev;
-> +	struct cros_ec_rpmsg *ec_rpmsg;
-> +
-> +	ec_dev = devm_kzalloc(dev, sizeof(*ec_dev), GFP_KERNEL);
-> +	if (!ec_dev)
-> +		return -ENOMEM;
-> +
-> +	ec_rpmsg = devm_kzalloc(dev, sizeof(*ec_rpmsg), GFP_KERNEL);
-> +	if (!ec_rpmsg)
-> +		return -ENOMEM;
-> +
-> +	ec_dev->dev = dev;
-> +	ec_dev->priv = ec_rpmsg;
-> +	ec_dev->cmd_xfer = cros_ec_cmd_xfer_rpmsg;
-> +	ec_dev->pkt_xfer = cros_ec_pkt_xfer_rpmsg;
-> +	ec_dev->phys_name = dev_name(&rpdev->dev);
-> +	ec_dev->din_size = sizeof(struct ec_host_response) +
-> +			   sizeof(struct ec_response_get_protocol_info);
-> +	ec_dev->dout_size = sizeof(struct ec_host_request);
-> +	dev_set_drvdata(dev, ec_dev);
-> +
-> +	ec_rpmsg->rpdev = rpdev;
-> +	init_completion(&ec_rpmsg->xfer_ack);
-> +	INIT_WORK(&ec_rpmsg->host_event_work,
-> +		  cros_ec_rpmsg_host_event_function);
-> +
-> +	return cros_ec_register(ec_dev);
-> +}
-> +
-> +static void cros_ec_rpmsg_remove(struct rpmsg_device *rpdev)
-> +{
-> +	struct cros_ec_device *ec_dev = dev_get_drvdata(&rpdev->dev);
-> +	struct cros_ec_rpmsg *ec_rpmsg = ec_dev->priv;
-> +
-> +	cancel_work_sync(&ec_rpmsg->host_event_work);
-> +}
-> +
-> +static const struct of_device_id cros_ec_rpmsg_of_match[] = {
-> +	{ .compatible = "google,cros-ec-rpmsg", },
-> +	{ }
-> +};
-> +MODULE_DEVICE_TABLE(of, cros_ec_rpmsg_of_match);
-> +
-> +static struct rpmsg_driver cros_ec_driver_rpmsg = {
-> +	.drv = {
-> +		.name   = KBUILD_MODNAME,
-
-No need to resend. Changed for "cros-ec-rpmsg"
-
-> +		.of_match_table = cros_ec_rpmsg_of_match,
-> +	},
-> +	.probe		= cros_ec_rpmsg_probe,
-> +	.remove		= cros_ec_rpmsg_remove,
-> +	.callback	= cros_ec_rpmsg_callback,
-> +};
-> +
-> +module_rpmsg_driver(cros_ec_driver_rpmsg);
-> +
-> +MODULE_LICENSE("GPL v2");
-> +MODULE_DESCRIPTION("ChromeOS EC multi function device (rpmsg)");
+> Reviewed-by: Maya Erez <merez@codeaurora.org>
 > 
 
-And some few doc and local variable ordering.
-
-I don't see any problem if this patch goes through the chrome-platform so
-applied for 5.2
-
-If anyone has any objection please ping me.
-
-Thanks
- Enric
+Thanks, Maya.
+--
+Gustavo
