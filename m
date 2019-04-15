@@ -2,107 +2,107 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4BFF2C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 08:48:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF074C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 08:51:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 197FF20693
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 08:48:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555318129;
-	bh=XqWBP5IDXjWbx5vkOZWZaSfuTevF9I7M2eg7oUnc5f8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=KG2QdweMxtwNJrRPRFWrE0TqOanIjXyZxXAlpfJIIz+ITjCQiipknFF/OMW0ueI9g
-	 Et+MGtGRC7lPKnRYkPwfXcVIZp4hc+y1+CzAMCkd8XLM85JpELO2mYdlADL6HmKdCI
-	 mZ8DVlgZhS3eURiNeNdqCMY6/HeNKFP5cCE5pggo=
+	by mail.kernel.org (Postfix) with ESMTP id BE13D2087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 08:51:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726540AbfDOIss (ORCPT
+        id S1726394AbfDOIvv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 04:48:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:32832 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 04:51:51 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40576 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725779AbfDOIsr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 04:48:47 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1725851AbfDOIvv (ORCPT <rfc822;Linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 04:51:51 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B716F20693;
-        Mon, 15 Apr 2019 08:48:46 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555318127;
-        bh=XqWBP5IDXjWbx5vkOZWZaSfuTevF9I7M2eg7oUnc5f8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=pyhA7EL+OD8RhQtkNkaHobID13Lpe6TtP08ksHTzaPQJ9xOMA+lDYNwdQTSQVigoG
-         gwnyNlRvlB26f4S6XZusO3MvIaIeFUs2z5SydG6mF8SB20z4Y2UH6jxCopkVfGw6NI
-         vgvh6AfwI2hAS19W4g4y+loayqSgGw7+R/4O1KY0=
-Date:   Mon, 15 Apr 2019 10:48:44 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Ronald =?iso-8859-1?Q?Tschal=E4r?= <ronald@innovation.ch>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] debugfs: make return value of all debugfs helpers
- consistent
-Message-ID: <20190415084844.GA26101@kroah.com>
-References: <20190415082506.25610-1-ronald@innovation.ch>
- <20190415082506.25610-3-ronald@innovation.ch>
+        by mx1.redhat.com (Postfix) with ESMTPS id B8A7A81DEB;
+        Mon, 15 Apr 2019 08:51:50 +0000 (UTC)
+Received: from krava (unknown [10.43.17.48])
+        by smtp.corp.redhat.com (Postfix) with SMTP id B872E6013A;
+        Mon, 15 Apr 2019 08:51:48 +0000 (UTC)
+Date:   Mon, 15 Apr 2019 10:51:48 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Jin Yao <yao.jin@linux.intel.com>
+Cc:     acme@kernel.org, jolsa@kernel.org, peterz@infradead.org,
+        mingo@redhat.com, alexander.shishkin@linux.intel.com,
+        Linux-kernel@vger.kernel.org, ak@linux.intel.com,
+        kan.liang@intel.com, yao.jin@intel.com
+Subject: Re: [PATCH v4 0/4] perf: Support a new 'percore' event qualifier
+Message-ID: <20190415085148.GC13124@krava>
+References: <1555077590-27664-1-git-send-email-yao.jin@linux.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190415082506.25610-3-ronald@innovation.ch>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <1555077590-27664-1-git-send-email-yao.jin@linux.intel.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.25]); Mon, 15 Apr 2019 08:51:50 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 01:25:06AM -0700, Ronald Tschalär wrote:
-> Since commit ff9fb72bc077 ("debugfs: return error values, not NULL")
-> almost all the debugfs helpers have stopped returning NULL. The lone
-> holdeout was debugfs_create_u32_array(). So fix that.
+On Fri, Apr 12, 2019 at 09:59:46PM +0800, Jin Yao wrote:
+> The 'percore' event qualifier which sums up the event counts for both
+> hardware threads in a core. For example,
 > 
-> Signed-off-by: Ronald Tschalär <ronald@innovation.ch>
-> ---
->  fs/debugfs/file.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
+> perf stat -e cpu/event=0,umask=0x3,percore=1/,cpu/event=0,umask=0x3/
 > 
-> diff --git a/fs/debugfs/file.c b/fs/debugfs/file.c
-> index ddd708b09fa1..bb706d073782 100644
-> --- a/fs/debugfs/file.c
-> +++ b/fs/debugfs/file.c
-> @@ -999,8 +999,8 @@ static const struct file_operations u32_array_fops = {
->   * Once array is created its size can not be changed.
->   *
->   * The function returns a pointer to dentry on success. If an error occurs,
-> - * %ERR_PTR(-ERROR) or NULL will be returned. If debugfs is not enabled in
-> - * the kernel, the value %ERR_PTR(-ENODEV) will be returned.
-> + * %ERR_PTR(-ERROR) will be returned. If debugfs is not enabled in the kernel,
-> + * the value %ERR_PTR(-ENODEV) will be returned.
->   */
->  struct dentry *debugfs_create_u32_array(const char *name, umode_t mode,
->  					    struct dentry *parent,
-> @@ -1009,7 +1009,7 @@ struct dentry *debugfs_create_u32_array(const char *name, umode_t mode,
->  	struct array_data *data = kmalloc(sizeof(*data), GFP_KERNEL);
->  
->  	if (data == NULL)
-> -		return NULL;
-> +		return ERR_PTR(-ENOMEM);
->  
->  	data->array = array;
->  	data->elements = elements;
+> In this example, we count the event 'ref-cycles' per-core and per-CPU in
+> one perf stat command-line.
+> 
+> We can already support per-core counting with --per-core, but it's
+> often useful to do this together with other metrics that are collected
+> per CPU (per hardware thread). So this patch series supports this
+> per-core counting on a event level.
+> 
+>  v4:
+>  ---
+>  Add percore qualifier to documantation.
+>  Rebase to latest perf/core branch
 
-There is only one caller of this function in the kernel now, and it does
-not even care about the return value at all, so we should just remove
-the return value entirely as that's the easiest and best thing to do
-here.  I was going to start doing this slowly over time, but as you are
-touching the function now, might as well do it here :)
+Acked-by: Jiri Olsa <jolsa@kernel.org>
 
 thanks,
+jirka
 
-greg k-h
+> 
+>  v3:
+>  ---
+>  Simplify the patch: "perf: Add a 'percore' event qualifier"
+>  Other patches don't have changes.
+> 
+>  v2:
+>  ---
+>  1. Change 'coresum' to 'percore'.
+>  2. Move the aggregate counts printing to a seperate patch.
+> 
+> Jin Yao (4):
+>   perf: Add a 'percore' event qualifier
+>   perf stat: Factor out aggregate counts printing
+>   perf stat: Support 'percore' event qualifier
+>   perf test: Add a simple test for term 'percore'
+> 
+>  tools/perf/Documentation/perf-list.txt |  12 ++++
+>  tools/perf/Documentation/perf-stat.txt |   4 ++
+>  tools/perf/builtin-stat.c              |  21 +++++++
+>  tools/perf/tests/parse-events.c        |  10 ++-
+>  tools/perf/util/evsel.c                |   2 +
+>  tools/perf/util/evsel.h                |   3 +
+>  tools/perf/util/parse-events.c         |  27 +++++++++
+>  tools/perf/util/parse-events.h         |   1 +
+>  tools/perf/util/parse-events.l         |   1 +
+>  tools/perf/util/stat-display.c         | 107 ++++++++++++++++++++++++---------
+>  tools/perf/util/stat.c                 |   8 ++-
+>  11 files changed, 163 insertions(+), 33 deletions(-)
+> 
+> -- 
+> 2.7.4
+> 
