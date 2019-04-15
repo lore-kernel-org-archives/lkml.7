@@ -2,107 +2,166 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E5A1C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 13:10:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 06664C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 13:10:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DAB020684
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 13:10:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555333802;
-	bh=hsDbWrgWQWPzN8Om4dZeUQ05A2hzINLkEXBG6Y7kOdI=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=HBzCvHbZLZrt4el9vcddSY04gjL/hu0Uo5SipCD7cAvvyCfDvyg1Rt8kzws6bK79W
-	 8VE9/Zf5413dOExraNnRdguqwD2o758T5JlusqZHcIxTTdjXTg/uBflOEaP1dWB0O/
-	 YSQEYTIAXbdVi+mQ/4T8lvPY61uCBg8FlR2A6wrA=
+	by mail.kernel.org (Postfix) with ESMTP id D584C20684
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 13:10:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727430AbfDONKA (ORCPT
+        id S1727467AbfDONKH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 09:10:00 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:42607 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727354AbfDONKA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 09:10:00 -0400
-Received: by mail-lj1-f196.google.com with SMTP id v22so15567182lje.9
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 06:09:59 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=CzafLQFxyk2VowKyPM/l0QmH8L3FCOM/SiYzzcJK+ok=;
-        b=TMEWP0lnIuHIDhb5FDm5CLR3j+/LovsuvfrdPK5v3r+M9pdQvnPe3vpRoo5I7wdQKh
-         DmfcA99pRf8XxA+YwHFtOin/jTB5K9nVevosWkQqeP3Xk17382hjekBXMUJcrnTl23SQ
-         Mh7Lqx6tvcOegEi/Yc+5d4NPNa1kpW/1C2zOrUfNnVuZJ2JcxoU+dmABSj3GKpJRlixA
-         2WaGhOaTi979gmgwilHopR4FU24Q0zpABg/8Qlzcb/1gEgkd9CymcEHzjRvvMIh7pSMr
-         +X2TfEnCqRYre6v0oCZWO+WmMy4xMknuhcjm1AG6CLMHfeTolZEc5uhg3KOO3KBNSHJ0
-         7N4g==
-X-Gm-Message-State: APjAAAV79V9bP6L71/cewb/zse0QxvzeAw9CaBmKuXW6GCFt8YA/CPXo
-        7KPRf8o/PsQEYmB8XjSLArPkUwNG
-X-Google-Smtp-Source: APXvYqxJtTm07FbOSWLozK5QR9X6XPLCCH+PVz1uOWCqbGDTo99y4Dpqbzkxvqz0D8LgzvVeyLVFQQ==
-X-Received: by 2002:a2e:9915:: with SMTP id v21mr8549347lji.154.1555333798524;
-        Mon, 15 Apr 2019 06:09:58 -0700 (PDT)
-Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
-        by smtp.gmail.com with ESMTPSA id y19sm2026066lfb.24.2019.04.15.06.09.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Apr 2019 06:09:57 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.91)
-        (envelope-from <johan@kernel.org>)
-        id 1hG1N4-0000jK-3Q; Mon, 15 Apr 2019 15:10:02 +0200
-Date:   Mon, 15 Apr 2019 15:10:02 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     Madhumitha Prabakaran <madhumithabiw@gmail.com>
-Cc:     johan@kernel.org, elder@kernel.org, gregkh@linuxfoundation.org,
-        greybus-dev@lists.linaro.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] Staging: greybus: Cleanup in header file control.h
-Message-ID: <20190415131002.GC775@localhost>
-References: <20190405201437.3689-1-madhumithabiw@gmail.com>
+        Mon, 15 Apr 2019 09:10:07 -0400
+Received: from mga02.intel.com ([134.134.136.20]:48636 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727354AbfDONKG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 09:10:06 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Apr 2019 06:10:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,353,1549958400"; 
+   d="scan'208";a="149555709"
+Received: from ddimarco-mobl1.amr.corp.intel.com (HELO [10.252.206.7]) ([10.252.206.7])
+  by FMSMGA003.fm.intel.com with ESMTP; 15 Apr 2019 06:10:00 -0700
+Subject: Re: [alsa-devel] [PATCH v3 2/5] soundwire: fix style issues
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        liam.r.girdwood@linux.intel.com, jank@cadence.com, joe@perches.com,
+        srinivas.kandagatla@linaro.org,
+        Sanyog Kale <sanyog.r.kale@intel.com>
+References: <20190411031701.5926-1-pierre-louis.bossart@linux.intel.com>
+ <20190411031701.5926-3-pierre-louis.bossart@linux.intel.com>
+ <20190414095839.GG28103@vkoul-mobl>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <08ea1442-361a-ecfc-ca26-d3bd8a0ec37b@linux.intel.com>
+Date:   Mon, 15 Apr 2019 08:09:59 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190405201437.3689-1-madhumithabiw@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190414095839.GG28103@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 05, 2019 at 03:14:37PM -0500, Madhumitha Prabakaran wrote:
-> Fix a blank line after function/struct/union/enum
-> declarations. Also, convert to_gb_control()  macro into an inline
-> function in order to maintain Linux kernel coding style based
-> on which the inline function is preferable over the macro.
 
-There are about 1200 macros wrapping container_of() in the kernel, so
-this is a common pattern which does not need to be changed (by contrast,
-only a handful container_of are wrapped by functions).
-
-> Signed-off-by: Madhumitha Prabakaran <madhumithabiw@gmail.com>
-> ---
->  drivers/staging/greybus/control.h | 6 +++++-
->  1 file changed, 5 insertions(+), 1 deletion(-)
+>>
+>> Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+>> ---
+>>   drivers/soundwire/Kconfig          |   2 +-
+>>   drivers/soundwire/bus.c            |  87 ++++++++--------
+>>   drivers/soundwire/bus.h            |  16 +--
+>>   drivers/soundwire/bus_type.c       |   4 +-
+>>   drivers/soundwire/cadence_master.c |  87 ++++++++--------
+>>   drivers/soundwire/cadence_master.h |  22 ++--
+>>   drivers/soundwire/intel.c          |  87 ++++++++--------
+>>   drivers/soundwire/intel.h          |   4 +-
+>>   drivers/soundwire/intel_init.c     |  12 +--
+>>   drivers/soundwire/mipi_disco.c     | 116 +++++++++++----------
+>>   drivers/soundwire/slave.c          |  10 +-
+>>   drivers/soundwire/stream.c         | 161 +++++++++++++++--------------
 > 
-> diff --git a/drivers/staging/greybus/control.h b/drivers/staging/greybus/control.h
-> index 3a29ec05f631..a681ef74e7fe 100644
-> --- a/drivers/staging/greybus/control.h
-> +++ b/drivers/staging/greybus/control.h
-> @@ -24,7 +24,11 @@ struct gb_control {
->  	char *vendor_string;
->  	char *product_string;
->  };
-> -#define to_gb_control(d) container_of(d, struct gb_control, dev)
-> +
+> I would prefer this to be a patch per module. It doesnt help to have a
+> single patch for all the files!
+> 
+> It would be great to have cleanup done per logical group, for example
+> typos in a patch, aligns in another etc...
 
-No need for a blank line either as the macro is closely related to the
-preceding struct declaration.
+You've got to be kidding. I've never seen people ask for this sort of 
+detail.
 
-> +static inline struct gb_control *to_gb_control(struct device *d)
-> +{
-> +	return container_of(d, struct gb_control, dev);
-> +}
+> 
+>>   12 files changed, 313 insertions(+), 295 deletions(-)
+>>
+>> diff --git a/drivers/soundwire/Kconfig b/drivers/soundwire/Kconfig
+>> index 19c8efb9a5ee..84876a74874f 100644
+>> --- a/drivers/soundwire/Kconfig
+>> +++ b/drivers/soundwire/Kconfig
+>> @@ -4,7 +4,7 @@
+>>   
+>>   menuconfig SOUNDWIRE
+>>   	bool "SoundWire support"
+>> -	---help---
+>> +	help
+> 
+> Not sure if this is a style issue, kernel seems to have 2990 instances
+> of this!
 
-Johan
+this is reported by checkpatch.pl --strict.
+
+> 
+>>   	if (msg->page)
+>>   		sdw_reset_page(bus, msg->dev_num);
+>> @@ -243,7 +244,7 @@ int sdw_transfer(struct sdw_bus *bus, struct sdw_msg *msg)
+>>    * Caller needs to hold the msg_lock lock while calling this
+>>    */
+>>   int sdw_transfer_defer(struct sdw_bus *bus, struct sdw_msg *msg,
+>> -				struct sdw_defer *defer)
+>> +		       struct sdw_defer *defer)
+> 
+> this does not seem aligned to me!
+
+It is, I checked. 2 tabs and 7 spaces.
+
+> 
+>>   int sdw_fill_msg(struct sdw_msg *msg, struct sdw_slave *slave,
+>> -		u32 addr, size_t count, u16 dev_num, u8 flags, u8 *buf)
+>> +		 u32 addr, size_t count, u16 dev_num, u8 flags, u8 *buf)
+> 
+> this one too
+
+2 tabs and one space.
+
+> 
+>> @@ -458,13 +458,13 @@ static int sdw_assign_device_num(struct sdw_slave *slave)
+>>   		mutex_unlock(&slave->bus->bus_lock);
+>>   		if (dev_num < 0) {
+>>   			dev_err(slave->bus->dev, "Get dev_num failed: %d",
+>> -								dev_num);
+>> +				dev_num);
+> 
+> It might read better if we move the log to second line along with
+> dev_num...
+> 
+>>   int sdw_configure_dpn_intr(struct sdw_slave *slave,
+>> -			int port, bool enable, int mask)
+>> +			   int port, bool enable, int mask)
+> 
+> not aligned
+
+it is in the code. It's a diff illusion.
+
+> 
+>>   void sdw_extract_slave_id(struct sdw_bus *bus,
+>> -			u64 addr, struct sdw_slave_id *id);
+>> +			  u64 addr, struct sdw_slave_id *id);
+>>   
+> 
+> Not aligned
+
+it is in the code. It's a diff illusion.
+
+>   
+>>   enum sdw_command_response
+>>   cdns_xfer_msg_defer(struct sdw_bus *bus,
+>> -		struct sdw_msg *msg, struct sdw_defer *defer)
+>> +		    struct sdw_msg *msg, struct sdw_defer *defer)
+> 
+> this one too..
+> 
+>>   static int cdns_port_params(struct sdw_bus *bus,
+>> -		struct sdw_port_params *p_params, unsigned int bank)
+>> +			    struct sdw_port_params *p_params, unsigned int bank)
+> 
+> here as well.. (and giving up on rest)
+
+Please check for yourself that this is a diff illusion w/ tab space.
