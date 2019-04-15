@@ -2,123 +2,133 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7B78C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DB48C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:59:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7E2602075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:59:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 074662183F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:59:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=digitalocean.com header.i=@digitalocean.com header.b="PVLOMYOQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727670AbfDOQ7K (ORCPT
+        id S1727749AbfDOQ75 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 12:59:10 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:37452 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727447AbfDOQ7J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 12:59:09 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 7BBA4309265A;
-        Mon, 15 Apr 2019 16:59:09 +0000 (UTC)
-Received: from treble (ovpn-120-105.rdu2.redhat.com [10.10.120.105])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C684C5D9C9;
-        Mon, 15 Apr 2019 16:59:02 +0000 (UTC)
-Date:   Mon, 15 Apr 2019 11:58:59 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
+        Mon, 15 Apr 2019 12:59:57 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:42081 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727186AbfDOQ75 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 12:59:57 -0400
+Received: by mail-qt1-f193.google.com with SMTP id p20so19931311qtc.9
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 09:59:56 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=digitalocean.com; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=B5wDF96ljXD7MeDicBsaVlV3xHRFod2qK1sMxjOR97k=;
+        b=PVLOMYOQrQfdic7NCnK0nxC4HyVTQ9baMCSMxw7k0Pp0qbfbwVvTplUgi/e68T4/Xi
+         ZQLygLHyHwqJ3Zx9eWaMjnuqlUS0mRKw9HZ+u0Rh82ymmdHjN90bj69LNWGONGWasF0k
+         uI/fj5vN82cjx9bFwFVZqJuVMY2/mdAXtgYac=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=B5wDF96ljXD7MeDicBsaVlV3xHRFod2qK1sMxjOR97k=;
+        b=WrNTNpDRBsFvu5H5Uk/gN8KX85M0m9Eb6xuuHtlOnPI3NmmQjz1TmPHlKdRjUR+i4G
+         PIfFsJNDf0W16OuhnZuMSNH//XW7Ce+oHGt+zgulRkqxI3UfM/TEFxMJtr6BZuajVayl
+         fD+vmI0d4qohzvY3EoP27hBGp6Eu76/JtbZCQFUUw2Kawc60HFVzJpKagOSgdKaKVcqf
+         2QZ5eKPsMKGZoeOKjpu822P9l9WhQ56g8WMPsKxXvD2Ti6W0WPzbo1yGQxVryUwk6y3w
+         3kr/Y360sugLoPKAqe2IXcCMg8KcqaAVlEe4cyVXFXwvSbHNXkCBQkGlNtTmoeMkgZxn
+         gHaw==
+X-Gm-Message-State: APjAAAXX7b3YvuoUreS6vJMsm4+lEO88Bc/meEm0fwdaR264su/f0lZQ
+        w1nDHXsu8yfZ8mo7dGu0BlciPw==
+X-Google-Smtp-Source: APXvYqyXv4RwxBJyUrDxvSLiHy8obaCC8IDVTSSkeUmsfp5Ysz4cLq/spJDhkl80/CMknnWELvOh8g==
+X-Received: by 2002:ac8:29f8:: with SMTP id 53mr58856872qtt.71.1555347595350;
+        Mon, 15 Apr 2019 09:59:55 -0700 (PDT)
+Received: from sinkpad (192-222-189-155.qc.cable.ebox.net. [192.222.189.155])
+        by smtp.gmail.com with ESMTPSA id w20sm25156152qkj.31.2019.04.15.09.59.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Apr 2019 09:59:53 -0700 (PDT)
+Date:   Mon, 15 Apr 2019 12:59:37 -0400
+From:   Julien Desfossez <jdesfossez@digitalocean.com>
 To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Kairui Song <kasong@redhat.com>, linux-kernel@vger.kernel.org,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Dave Young <dyoung@redhat.com>
-Subject: Re: [RFC PATCH v2] perf/x86: make perf callchain work without
- CONFIG_FRAME_POINTER
-Message-ID: <20190415165859.ul7i2w3lai3umgik@treble>
-References: <20190408165942.23640-1-kasong@redhat.com>
- <20190415153622.GG12232@hirez.programming.kicks-ass.net>
+Cc:     Tim Chen <tim.c.chen@linux.intel.com>,
+        Aaron Lu <aaron.lu@linux.alibaba.com>, mingo@kernel.org,
+        tglx@linutronix.de, pjt@google.com, torvalds@linux-foundation.org,
+        linux-kernel@vger.kernel.org, subhra.mazumdar@oracle.com,
+        fweisbec@gmail.com, keescook@chromium.org, kerrnel@google.com,
+        Aubrey Li <aubrey.intel@gmail.com>
+Subject: Re: [RFC][PATCH 13/16] sched: Add core wide task selection and
+ scheduling.
+Message-ID: <20190415165937.GA26890@sinkpad>
+References: <20190218165620.383905466@infradead.org>
+ <20190218173514.667598558@infradead.org>
+ <20190402064612.GA46500@aaronlu>
+ <20190402082812.GJ12232@hirez.programming.kicks-ass.net>
+ <20190405145530.GA453@aaronlu>
+ <460ce6fb-6a40-4a72-47e8-cf9c7c409bef@linux.intel.com>
+ <20190410080630.GY11158@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <20190415153622.GG12232@hirez.programming.kicks-ass.net>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Mon, 15 Apr 2019 16:59:09 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190410080630.GY11158@hirez.programming.kicks-ass.net>
+X-Mailer: Mutt 1.5.24 (2015-08-30)
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 05:36:22PM +0200, Peter Zijlstra wrote:
+On 10-Apr-2019 10:06:30 AM, Peter Zijlstra wrote:
+> while you're all having fun playing with this, I've not yet had answers
+> to the important questions of how L1TF complete we want to be and if all
+> this crud actually matters one way or the other.
 > 
-> I'll mostly defer to Josh on unwinding, but a few comments below.
-> 
-> On Tue, Apr 09, 2019 at 12:59:42AM +0800, Kairui Song wrote:
-> > diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> > index e2b1447192a8..6075a4f94376 100644
-> > --- a/arch/x86/events/core.c
-> > +++ b/arch/x86/events/core.c
-> > @@ -2355,6 +2355,12 @@ void arch_perf_update_userpage(struct perf_event *event,
-> >  	cyc2ns_read_end();
-> >  }
-> >  
-> > +static inline int
-> > +valid_perf_registers(struct pt_regs *regs)
-> > +{
-> > +	return (regs->ip && regs->bp && regs->sp);
-> > +}
-> 
-> I'm unconvinced by this, with both guess and orc having !bp is perfectly
-> valid.
-> 
-> >  void
-> >  perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs)
-> >  {
-> > @@ -2366,11 +2372,17 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
-> >  		return;
-> >  	}
-> >  
-> > -	if (perf_callchain_store(entry, regs->ip))
-> > +	if (valid_perf_registers(regs)) {
-> > +		if (perf_callchain_store(entry, regs->ip))
-> > +			return;
-> > +		unwind_start(&state, current, regs, NULL);
-> > +	} else if (regs->sp) {
-> > +		unwind_start(&state, current, NULL, (unsigned long *)regs->sp);
-> > +	} else {
-> >  		return;
-> > +	}
-> 
-> AFAICT if we, by pure accident, end up with !bp for ORC, then we
-> initialize the unwind wrong.
-> 
-> Note that @regs is mostly trivially correct, except for that tracepoint
-> case. So I don't think we should magic here.
+> Also, I still don't see this stuff working for high context switch rate
+> workloads, and that is exactly what some people were aiming for..
 
-Ah, I didn't quite understand this code before, and I still don't
-really, but I guess the issue is that @regs can be either real or fake.
+We have been running scaling tests on highly loaded systems (with all
+the fixes and suggestions applied) and here are the results.
 
-In the real @regs case, we just want to always unwind starting from
-regs->sp.
+On a system with 2x6 cores (12 hardware threads per NUMA node), with one
+12-vcpus-32gb VM per NUMA node running a CPU-intensive workload
+(linpack):
+- Baseline: 864 gflops
+- Core scheduling: 864 gflops
+- nosmt (switch to 6 hardware threads per node): 298 gflops (-65%)
 
-But in the fake @regs case, we should instead unwind from the current
-frame, skipping all frames until we hit the fake regs->sp.  Because
-starting from fake/incomplete regs is most likely going to cause
-problems with ORC (or DWARF for other arches).
+In this test, the VMs are basically alone on their own NUMA node, so
+they are only competing with themselves, so for the next test we moved
+the 2 VMs to the same node:
+- Baseline: 340 gflops, about 586k context switches/sec
+- Core scheduling: 322 gflops (-5%), about 575k context switches/sec
+- nosmt: 146 gflops (-57%), about 284k context switches/sec
 
-The idea of a fake regs is fragile and confusing.  Is it possible to
-just pass in the "skip" stack pointer directly instead?  That should
-work for both FP and non-FP.  And I _think_ there's no need to ever
-capture regs->bp anyway -- the stack pointer should be sufficient.
+In terms of isolation, CPU-intensive VMs share their core with a
+"foreign process" (not tagged or tagged with a different tag) less than
+2% of the time (sum of the time spent with a lot of different
+processes). For reference, this could add up to 60% without core
+scheduling and smt on. We are working on identifying the various cases
+where there is unwanted co-scheduling so we can address those.
 
-In other words, either regs should be "real", and skip_sp is NULL; or
-regs should be NULL and skip_sp should have a value.
+With a more heterogeneous benchmark (MySQL benchmark with a remote
+client, 1 12-vcpus MySQL VM on each NUMA node), we don’t measure any
+performance degradation when there is more hardware threads available
+than vcpus (same with nosmt), but when we add noise VMs (sleep(15);
+collect metrics; send them over a VPN; repeat) with an overcommit ratio
+of 3 vcpus to 1 hardware thread, core scheduling can have up to 25%
+performance degradation, whereas nosmt has 15% impact.
 
--- 
-Josh
+So the performance impact varies depending on the type of workload, but
+since the CPU-intensive workloads are the ones most impacted when we
+disable SMT, this is very encouraging and is a worthwhile effort.
+
+Thanks,
+
+Julien
