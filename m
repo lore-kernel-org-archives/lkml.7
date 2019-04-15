@@ -7,50 +7,49 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B73C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:05:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 24040C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97E8920880
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:05:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E424B218DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:05:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355152;
-	bh=pPkfZDGPLTQO69RPnZiirWtTNVNOai/i4W9Sx0ftfEA=;
+	s=default; t=1555355157;
+	bh=YgJP8LPJWE1fttp1UkK4cPW97RAhni5HTj/ZTvGpHBo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=b1HdBobCoN+vp6hXs5VTgJvqmhclvZKULImS7A1L/+4WUrRzkCRLOSEdCb1ib9BHU
-	 6V7KH0LPiVhYDPNleTgANPv8Ijy6obkEnWckjPFpzEn1rVOxmw/15HGiuMudi4aWux
-	 xGEko0RFMZSTydfj7G40U4SurKyPNdam9GbspDQw=
+	b=Pq5/WT46hyKPH+3r6Y5az7G4u1LhgVMZhOVXOmxhHjrrpmnz/Du+0lqa116EBL91r
+	 vgeMDErxXYl9OVC/KlvYDFympAu/4MkfgS0DlB0OUxisVHekRYsUNrT2+cIGxz9S7v
+	 dor8mtfwAzdvI46x8evreF/AoWbNp193opDUopjA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729797AbfDOTFv (ORCPT
+        id S1729809AbfDOTFz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:05:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39770 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:05:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39860 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729778AbfDOTFt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:05:49 -0400
+        id S1729796AbfDOTFw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:05:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 320F820880;
-        Mon, 15 Apr 2019 19:05:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D2EA62087C;
+        Mon, 15 Apr 2019 19:05:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355148;
-        bh=pPkfZDGPLTQO69RPnZiirWtTNVNOai/i4W9Sx0ftfEA=;
+        s=default; t=1555355151;
+        bh=YgJP8LPJWE1fttp1UkK4cPW97RAhni5HTj/ZTvGpHBo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pY07a0iuZiuI64e5cjxu80v+4PBakkDgmlsqxyJpm22Tx6zOkF7j0q9ZQOjJMBni/
-         BEuo+FV9yDOK/2o149TkSt7oQu4rsGf+lSq6wAGZMDR/IE0kyyJo/KkZE3Jub9ZGbc
-         NzZzvi5lt68qxJbdS48SWrc1nxQkA2Lmbk2ZSXAg=
+        b=eckoPQoISjjEyGWIN3uY1GNzBgFF3EMk2wb9vdUP9E3vjpGY+bEPMHzJVVeYdsuqr
+         5Fmiyul5rZLAtrcgwswqMD01WNVqG3JRar6RIEOEFTSpc54rnTeU/AqGtStZrTPyZ/
+         ZPoZstHYgEYpPPWSbrCsUt7Dl3GN5q94NjctJ29I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Mao Wenan <maowenan@huawei.com>,
+        stable@vger.kernel.org, Matteo Croce <mcroce@redhat.com>,
+        Davide Caratti <dcaratti@redhat.com>,
+        Yotam Gigi <yotam.gi@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 014/101] net: rds: force to destroy connection if t_sock is NULL in rds_tcp_kill_sock().
-Date:   Mon, 15 Apr 2019 20:58:12 +0200
-Message-Id: <20190415183741.126077370@linuxfoundation.org>
+Subject: [PATCH 4.19 015/101] net/sched: act_sample: fix divide by zero in the traffic path
+Date:   Mon, 15 Apr 2019 20:58:13 +0200
+Message-Id: <20190415183741.183975442@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183740.341577907@linuxfoundation.org>
 References: <20190415183740.341577907@linuxfoundation.org>
@@ -63,145 +62,138 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit cb66ddd156203daefb8d71158036b27b0e2caf63 ]
+[ Upstream commit fae2708174ae95d98d19f194e03d6e8f688ae195 ]
 
-When it is to cleanup net namespace, rds_tcp_exit_net() will call
-rds_tcp_kill_sock(), if t_sock is NULL, it will not call
-rds_conn_destroy(), rds_conn_path_destroy() and rds_tcp_conn_free() to free
-connection, and the worker cp_conn_w is not stopped, afterwards the net is freed in
-net_drop_ns(); While cp_conn_w rds_connect_worker() will call rds_tcp_conn_path_connect()
-and reference 'net' which has already been freed.
+the control path of 'sample' action does not validate the value of 'rate'
+provided by the user, but then it uses it as divisor in the traffic path.
+Validate it in tcf_sample_init(), and return -EINVAL with a proper extack
+message in case that value is zero, to fix a splat with the script below:
 
-In rds_tcp_conn_path_connect(), rds_tcp_set_callbacks() will set t_sock = sock before
-sock->ops->connect, but if connect() is failed, it will call
-rds_tcp_restore_callbacks() and set t_sock = NULL, if connect is always
-failed, rds_connect_worker() will try to reconnect all the time, so
-rds_tcp_kill_sock() will never to cancel worker cp_conn_w and free the
-connections.
+ # tc f a dev test0 egress matchall action sample rate 0 group 1 index 2
+ # tc -s a s action sample
+ total acts 1
 
-Therefore, the condition !tc->t_sock is not needed if it is going to do
-cleanup_net->rds_tcp_exit_net->rds_tcp_kill_sock, because tc->t_sock is always
-NULL, and there is on other path to cancel cp_conn_w and free
-connection. So this patch is to fix this.
+         action order 0: sample rate 1/0 group 1 pipe
+          index 2 ref 1 bind 1 installed 19 sec used 19 sec
+         Action statistics:
+         Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0)
+         backlog 0b 0p requeues 0
+ # ping 192.0.2.1 -I test0 -c1 -q
 
-rds_tcp_kill_sock():
-...
-if (net != c_net || !tc->t_sock)
-...
-Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+ divide error: 0000 [#1] SMP PTI
+ CPU: 1 PID: 6192 Comm: ping Not tainted 5.1.0-rc2.diag2+ #591
+ Hardware name: Red Hat KVM, BIOS 0.5.1 01/01/2011
+ RIP: 0010:tcf_sample_act+0x9e/0x1e0 [act_sample]
+ Code: 6a f1 85 c0 74 0d 80 3d 83 1a 00 00 00 0f 84 9c 00 00 00 4d 85 e4 0f 84 85 00 00 00 e8 9b d7 9c f1 44 8b 8b e0 00 00 00 31 d2 <41> f7 f1 85 d2 75 70 f6 85 83 00 00 00 10 48 8b 45 10 8b 88 08 01
+ RSP: 0018:ffffae320190ba30 EFLAGS: 00010246
+ RAX: 00000000b0677d21 RBX: ffff8af1ed9ec000 RCX: 0000000059a9fe49
+ RDX: 0000000000000000 RSI: 000000000c7e33b7 RDI: ffff8af23daa0af0
+ RBP: ffff8af1ee11b200 R08: 0000000074fcaf7e R09: 0000000000000000
+ R10: 0000000000000050 R11: ffffffffb3088680 R12: ffff8af232307f80
+ R13: 0000000000000003 R14: ffff8af1ed9ec000 R15: 0000000000000000
+ FS:  00007fe9c6d2f740(0000) GS:ffff8af23da80000(0000) knlGS:0000000000000000
+ CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+ CR2: 00007fff6772f000 CR3: 00000000746a2004 CR4: 00000000001606e0
+ Call Trace:
+  tcf_action_exec+0x7c/0x1c0
+  tcf_classify+0x57/0x160
+  __dev_queue_xmit+0x3dc/0xd10
+  ip_finish_output2+0x257/0x6d0
+  ip_output+0x75/0x280
+  ip_send_skb+0x15/0x40
+  raw_sendmsg+0xae3/0x1410
+  sock_sendmsg+0x36/0x40
+  __sys_sendto+0x10e/0x140
+  __x64_sys_sendto+0x24/0x30
+  do_syscall_64+0x60/0x210
+  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  [...]
+  Kernel panic - not syncing: Fatal exception in interrupt
 
-==================================================================
-BUG: KASAN: use-after-free in inet_create+0xbcc/0xd28
-net/ipv4/af_inet.c:340
-Read of size 4 at addr ffff8003496a4684 by task kworker/u8:4/3721
+Add a TDC selftest to document that 'rate' is now being validated.
 
-CPU: 3 PID: 3721 Comm: kworker/u8:4 Not tainted 5.1.0 #11
-Hardware name: linux,dummy-virt (DT)
-Workqueue: krdsd rds_connect_worker
-Call trace:
- dump_backtrace+0x0/0x3c0 arch/arm64/kernel/time.c:53
- show_stack+0x28/0x38 arch/arm64/kernel/traps.c:152
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x120/0x188 lib/dump_stack.c:113
- print_address_description+0x68/0x278 mm/kasan/report.c:253
- kasan_report_error mm/kasan/report.c:351 [inline]
- kasan_report+0x21c/0x348 mm/kasan/report.c:409
- __asan_report_load4_noabort+0x30/0x40 mm/kasan/report.c:429
- inet_create+0xbcc/0xd28 net/ipv4/af_inet.c:340
- __sock_create+0x4f8/0x770 net/socket.c:1276
- sock_create_kern+0x50/0x68 net/socket.c:1322
- rds_tcp_conn_path_connect+0x2b4/0x690 net/rds/tcp_connect.c:114
- rds_connect_worker+0x108/0x1d0 net/rds/threads.c:175
- process_one_work+0x6e8/0x1700 kernel/workqueue.c:2153
- worker_thread+0x3b0/0xdd0 kernel/workqueue.c:2296
- kthread+0x2f0/0x378 kernel/kthread.c:255
- ret_from_fork+0x10/0x18 arch/arm64/kernel/entry.S:1117
-
-Allocated by task 687:
- save_stack mm/kasan/kasan.c:448 [inline]
- set_track mm/kasan/kasan.c:460 [inline]
- kasan_kmalloc+0xd4/0x180 mm/kasan/kasan.c:553
- kasan_slab_alloc+0x14/0x20 mm/kasan/kasan.c:490
- slab_post_alloc_hook mm/slab.h:444 [inline]
- slab_alloc_node mm/slub.c:2705 [inline]
- slab_alloc mm/slub.c:2713 [inline]
- kmem_cache_alloc+0x14c/0x388 mm/slub.c:2718
- kmem_cache_zalloc include/linux/slab.h:697 [inline]
- net_alloc net/core/net_namespace.c:384 [inline]
- copy_net_ns+0xc4/0x2d0 net/core/net_namespace.c:424
- create_new_namespaces+0x300/0x658 kernel/nsproxy.c:107
- unshare_nsproxy_namespaces+0xa0/0x198 kernel/nsproxy.c:206
- ksys_unshare+0x340/0x628 kernel/fork.c:2577
- __do_sys_unshare kernel/fork.c:2645 [inline]
- __se_sys_unshare kernel/fork.c:2643 [inline]
- __arm64_sys_unshare+0x38/0x58 kernel/fork.c:2643
- __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
- invoke_syscall arch/arm64/kernel/syscall.c:47 [inline]
- el0_svc_common+0x168/0x390 arch/arm64/kernel/syscall.c:83
- el0_svc_handler+0x60/0xd0 arch/arm64/kernel/syscall.c:129
- el0_svc+0x8/0xc arch/arm64/kernel/entry.S:960
-
-Freed by task 264:
- save_stack mm/kasan/kasan.c:448 [inline]
- set_track mm/kasan/kasan.c:460 [inline]
- __kasan_slab_free+0x114/0x220 mm/kasan/kasan.c:521
- kasan_slab_free+0x10/0x18 mm/kasan/kasan.c:528
- slab_free_hook mm/slub.c:1370 [inline]
- slab_free_freelist_hook mm/slub.c:1397 [inline]
- slab_free mm/slub.c:2952 [inline]
- kmem_cache_free+0xb8/0x3a8 mm/slub.c:2968
- net_free net/core/net_namespace.c:400 [inline]
- net_drop_ns.part.6+0x78/0x90 net/core/net_namespace.c:407
- net_drop_ns net/core/net_namespace.c:406 [inline]
- cleanup_net+0x53c/0x6d8 net/core/net_namespace.c:569
- process_one_work+0x6e8/0x1700 kernel/workqueue.c:2153
- worker_thread+0x3b0/0xdd0 kernel/workqueue.c:2296
- kthread+0x2f0/0x378 kernel/kthread.c:255
- ret_from_fork+0x10/0x18 arch/arm64/kernel/entry.S:1117
-
-The buggy address belongs to the object at ffff8003496a3f80
- which belongs to the cache net_namespace of size 7872
-The buggy address is located 1796 bytes inside of
- 7872-byte region [ffff8003496a3f80, ffff8003496a5e40)
-The buggy address belongs to the page:
-page:ffff7e000d25a800 count:1 mapcount:0 mapping:ffff80036ce4b000
-index:0x0 compound_mapcount: 0
-flags: 0xffffe0000008100(slab|head)
-raw: 0ffffe0000008100 dead000000000100 dead000000000200 ffff80036ce4b000
-raw: 0000000000000000 0000000080040004 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8003496a4580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8003496a4600: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff8003496a4680: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                   ^
- ffff8003496a4700: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8003496a4780: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-Fixes: 467fa15356ac("RDS-TCP: Support multiple RDS-TCP listen endpoints, one per netns.")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
+Reported-by: Matteo Croce <mcroce@redhat.com>
+Fixes: 5c5670fae430 ("net/sched: Introduce sample tc action")
+Signed-off-by: Davide Caratti <dcaratti@redhat.com>
+Acked-by: Yotam Gigi <yotam.gi@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/rds/tcp.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/sched/act_sample.c                        | 10 ++++++--
+ .../tc-testing/tc-tests/actions/sample.json   | 24 +++++++++++++++++++
+ 2 files changed, 32 insertions(+), 2 deletions(-)
 
-diff --git a/net/rds/tcp.c b/net/rds/tcp.c
-index b9bbcf3d6c63..18bb522df282 100644
---- a/net/rds/tcp.c
-+++ b/net/rds/tcp.c
-@@ -600,7 +600,7 @@ static void rds_tcp_kill_sock(struct net *net)
- 	list_for_each_entry_safe(tc, _tc, &rds_tcp_conn_list, t_tcp_node) {
- 		struct net *c_net = read_pnet(&tc->t_cpath->cp_conn->c_net);
+diff --git a/net/sched/act_sample.c b/net/sched/act_sample.c
+index 6b67aa13d2dd..c7f5d630d97c 100644
+--- a/net/sched/act_sample.c
++++ b/net/sched/act_sample.c
+@@ -43,8 +43,8 @@ static int tcf_sample_init(struct net *net, struct nlattr *nla,
+ 	struct tc_action_net *tn = net_generic(net, sample_net_id);
+ 	struct nlattr *tb[TCA_SAMPLE_MAX + 1];
+ 	struct psample_group *psample_group;
++	u32 psample_group_num, rate;
+ 	struct tc_sample *parm;
+-	u32 psample_group_num;
+ 	struct tcf_sample *s;
+ 	bool exists = false;
+ 	int ret, err;
+@@ -80,6 +80,12 @@ static int tcf_sample_init(struct net *net, struct nlattr *nla,
+ 		return -EEXIST;
+ 	}
  
--		if (net != c_net || !tc->t_sock)
-+		if (net != c_net)
- 			continue;
- 		if (!list_has_conn(&tmp_list, tc->t_cpath->cp_conn)) {
- 			list_move_tail(&tc->t_tcp_node, &tmp_list);
++	rate = nla_get_u32(tb[TCA_SAMPLE_RATE]);
++	if (!rate) {
++		NL_SET_ERR_MSG(extack, "invalid sample rate");
++		tcf_idr_release(*a, bind);
++		return -EINVAL;
++	}
+ 	psample_group_num = nla_get_u32(tb[TCA_SAMPLE_PSAMPLE_GROUP]);
+ 	psample_group = psample_group_get(net, psample_group_num);
+ 	if (!psample_group) {
+@@ -91,7 +97,7 @@ static int tcf_sample_init(struct net *net, struct nlattr *nla,
+ 
+ 	spin_lock_bh(&s->tcf_lock);
+ 	s->tcf_action = parm->action;
+-	s->rate = nla_get_u32(tb[TCA_SAMPLE_RATE]);
++	s->rate = rate;
+ 	s->psample_group_num = psample_group_num;
+ 	RCU_INIT_POINTER(s->psample_group, psample_group);
+ 
+diff --git a/tools/testing/selftests/tc-testing/tc-tests/actions/sample.json b/tools/testing/selftests/tc-testing/tc-tests/actions/sample.json
+index 3aca33c00039..618def9bdf0e 100644
+--- a/tools/testing/selftests/tc-testing/tc-tests/actions/sample.json
++++ b/tools/testing/selftests/tc-testing/tc-tests/actions/sample.json
+@@ -143,6 +143,30 @@
+             "$TC actions flush action sample"
+         ]
+     },
++    {
++        "id": "7571",
++        "name": "Add sample action with invalid rate",
++        "category": [
++            "actions",
++            "sample"
++        ],
++        "setup": [
++            [
++                "$TC actions flush action sample",
++                0,
++                1,
++                255
++            ]
++        ],
++        "cmdUnderTest": "$TC actions add action sample rate 0 group 1 index 2",
++        "expExitCode": "255",
++        "verifyCmd": "$TC actions get action sample index 2",
++        "matchPattern": "action order [0-9]+: sample rate 1/0 group 1.*index 2 ref",
++        "matchCount": "0",
++        "teardown": [
++            "$TC actions flush action sample"
++        ]
++    },
+     {
+         "id": "b6d4",
+         "name": "Add sample action with mandatory arguments and invalid control action",
 -- 
 2.19.1
 
