@@ -2,108 +2,75 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5417C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:37:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6796C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:40:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 901F820848
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:37:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tNInRRCZ"
+	by mail.kernel.org (Postfix) with ESMTP id 972EA2064A
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:40:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727220AbfDOKhf (ORCPT
+        id S1727137AbfDOKku (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 06:37:35 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:41641 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725816AbfDOKhe (ORCPT
+        Mon, 15 Apr 2019 06:40:50 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:45323 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726500AbfDOKku (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 06:37:34 -0400
-Received: by mail-pg1-f194.google.com with SMTP id f6so8369132pgs.8;
-        Mon, 15 Apr 2019 03:37:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=moUu2oKy4/ZSs2GnMrjVAQqVpkQBAxl+DAb3U6TX1WE=;
-        b=tNInRRCZboPMmSVMV+48vZliP0JnwpZfzYNvWTqBER1MrI3BBkJZUxzwhWK1M1jV1r
-         APy6J43801vUvi++7D5gHtl3AdfVk0m5TItBZm2f+9uDr8gxSzUqpd4C9Byiot3NT6Aq
-         vj1bi76fwrXm0tYZAc+WUKtu/fOk/iH/oRdwJxO0t0Hjgt5VHMVNldRGpIDWOG/HtlbS
-         q9eDvvbnaUGx1ILIPVGD0s9SE/ix10wU9S+pYUid/n4HXl2PpgGCCeX7OBlhi7n5QYm6
-         jSgC+YyanPPHBp09mMCkC1V9YYO1bUg8MxrX7szRIICpgggc23Mqn0L9IGuH+pTwjDfE
-         JR/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=moUu2oKy4/ZSs2GnMrjVAQqVpkQBAxl+DAb3U6TX1WE=;
-        b=BKkBZ4y01eORTDk0HttWZbsOgx8Uej/k+d3MLGH5RktxR6/cgAlr335mgIEkrFoOw+
-         pvvdFda3SnGFFIs0OhxS6aN5lt3naRjCduQIC1m1rze6pKKRLVHXPIwzJ4sO70XjfsnB
-         g1lTB0iME4c/eBwYTa/bHmrhCmXcRTIe1GsT6pFbhH7eokZTfxbcao+pIRkWnIoZsdSB
-         YDM+ICYPSk1VsoliCMEJy86LDHjTNb4EnXcAx+WNBe0DydPFhTm34YNBMHx0ORuucup5
-         2RXiXFHDZvmjYIPt5OSRzagPfS+NzriLSJXO2pCFYOPDj50lYUCvvTOoQAyrIBOda0go
-         9xCg==
-X-Gm-Message-State: APjAAAXFGvkCqa7f5TwfPEC0x5kWflgOON1oQJB/7vv7bzHwCnEOsJVd
-        fGdNmMFWcUNmCDrzblzmrjibmC+WU0mVuQ==
-X-Google-Smtp-Source: APXvYqwYNyIjqXO6PkVvHJDypWze+jCcIdix5jJNyRtF4p3YfCsOagCDaAkASTrI9ehRxwBJ+bxM9A==
-X-Received: by 2002:a65:5ac3:: with SMTP id d3mr71054412pgt.168.1555324654169;
-        Mon, 15 Apr 2019 03:37:34 -0700 (PDT)
-Received: from localhost ([153.254.110.20])
-        by smtp.gmail.com with ESMTPSA id t64sm108849811pfa.86.2019.04.15.03.37.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Apr 2019 03:37:33 -0700 (PDT)
-From:   Lei YU <mine260309@gmail.com>
-To:     Jean Delvare <jdelvare@suse.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Eddie James <eajames@linux.ibm.com>,
-        Lei YU <mine260309@gmail.com>, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
-Subject: [PATCH] hwmon (occ): Fix extended status bits
-Date:   Mon, 15 Apr 2019 18:37:20 +0800
-Message-Id: <1555324640-152061-1-git-send-email-mine260309@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 15 Apr 2019 06:40:50 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1hFz2d-0005MO-LP; Mon, 15 Apr 2019 12:40:47 +0200
+Date:   Mon, 15 Apr 2019 12:40:47 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: Alleged fix for writer stall on -rcu branch dev
+Message-ID: <20190415104047.mrtmv6w6kq5m44fp@linutronix.de>
+References: <20190409221426.GA11212@linux.ibm.com>
+ <20190410181538.3ocva5lmh7ghrisr@linutronix.de>
+ <20190410184105.GR14111@linux.ibm.com>
+ <20190410191918.g2yqnsmuqukmzdfe@linutronix.de>
+ <20190410203302.GT14111@linux.ibm.com>
+ <20190411000610.GA3867@linux.ibm.com>
+ <20190413142153.GA17704@linux.ibm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190413142153.GA17704@linux.ibm.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The occ's extended status is checked and shown as sysfs attributes. But
-the code was incorrectly checking the "status" bits.
-Fix it by checking the "ext_status" bits.
+On 2019-04-13 07:21:53 [-0700], Paul E. McKenney wrote:
+> 
+> And after ramping up the stress in rcutorture a bit, I am able to
+> reproduce this CPU stall involving offlining on my systems.  My plan is
+> my usual one:  Keep increasing rcutorture stress to get it to reproduce
+> in reasonable time, add diagnostics as appropriate, and continue making
+> forward-progress improvements in RCU itself.
 
-Signed-off-by: Lei YU <mine260309@gmail.com>
----
- drivers/hwmon/occ/sysfs.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
+I *think* this one is also new:
 
-diff --git a/drivers/hwmon/occ/sysfs.c b/drivers/hwmon/occ/sysfs.c
-index fe3d15e..a71ca94 100644
---- a/drivers/hwmon/occ/sysfs.c
-+++ b/drivers/hwmon/occ/sysfs.c
-@@ -42,16 +42,16 @@ static ssize_t occ_sysfs_show(struct device *dev,
- 		val = !!(header->status & OCC_STAT_ACTIVE);
- 		break;
- 	case 2:
--		val = !!(header->status & OCC_EXT_STAT_DVFS_OT);
-+		val = !!(header->ext_status & OCC_EXT_STAT_DVFS_OT);
- 		break;
- 	case 3:
--		val = !!(header->status & OCC_EXT_STAT_DVFS_POWER);
-+		val = !!(header->ext_status & OCC_EXT_STAT_DVFS_POWER);
- 		break;
- 	case 4:
--		val = !!(header->status & OCC_EXT_STAT_MEM_THROTTLE);
-+		val = !!(header->ext_status & OCC_EXT_STAT_MEM_THROTTLE);
- 		break;
- 	case 5:
--		val = !!(header->status & OCC_EXT_STAT_QUICK_DROP);
-+		val = !!(header->ext_status & OCC_EXT_STAT_QUICK_DROP);
- 		break;
- 	case 6:
- 		val = header->occ_state;
--- 
-2.7.4
+|Assertion failure in /home/bigeasy/linux-rt/tools/testing/selftests/rcutorture/res/2019.04.14-14:28:40/TREE03.37/console.log TREE03
+|Summary: Warnings: 6 Call Traces: 6
+https://breakpoint.cc/console-03.37.log
 
+|Assertion failure in /home/bigeasy/linux-rt/tools/testing/selftests/rcutorture/res/2019.04.14-14:28:40/TREE03.39/console.log TREE03
+|Summary: Warnings: 4 Call Traces: 4
+https://breakpoint.cc/console-03.39.log
+
+This is still commit 33e04e451279 ("torture: Allow inter-stutter interval to be
+specified").
+
+> Thank you very much for locating this one!!!
+
+You are welcome.
+
+> 							Thanx, Paul
+
+Sebastian
