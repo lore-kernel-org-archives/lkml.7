@@ -7,47 +7,46 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F80EC10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:45:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 319B8C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:45:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20CC8218A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:45:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D79882087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:45:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555353949;
-	bh=zV+L8fu2E1eV0Y+Fd7rC4gJXSkZRpWLe0Fd2xS3GM+k=;
+	s=default; t=1555353953;
+	bh=qWgxOea/jLjWItresIwWBw4qcKRAn6ZBypqyWesMsmk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=afqBrGDUVTRcaDieJCtRUBS1BqorkYaSbpR631YvplvwuB3ANmfrhrkYZ+AAuMoSQ
-	 bVeiKRflveTFGQS9ES6TYu/DCIaFSwf9E9DplWoCk6FHRwUMAy2Wwx+jvrzGCO9y8t
-	 e9qxkVfGsCZ2a6xsaml3ThaKpKlYrwKfr9tHBfVc=
+	b=YS0jiweLFot0O48igOWLuWAEM6EFRrJDiox1fR7cr5fLc7+UHm+t1So04j0WNRIFE
+	 HlPFOjNfUOooN6XbNJHJVZehbflpetzyRtR9vnoHeNj2+n7a7xvBFrnffGc0lgOkU8
+	 29BL/NzIX3ZB0kVX4vFs579JmiIlBTmmJdb5UToI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728460AbfDOSpr (ORCPT
+        id S1728472AbfDOSpw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 14:45:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48234 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 14:45:52 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48292 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728434AbfDOSpq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 14:45:46 -0400
+        id S1728434AbfDOSpt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 14:45:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D3A6F2087C;
-        Mon, 15 Apr 2019 18:45:44 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 77D252073F;
+        Mon, 15 Apr 2019 18:45:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555353945;
-        bh=zV+L8fu2E1eV0Y+Fd7rC4gJXSkZRpWLe0Fd2xS3GM+k=;
+        s=default; t=1555353947;
+        bh=qWgxOea/jLjWItresIwWBw4qcKRAn6ZBypqyWesMsmk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WFOBdE6FB5EMieHAJ+Cq3ZNWCBfHfjU0NOBHIkHR2d0eT6/bo2z/tMEtUJZqmA6px
-         Xmijr/s8Yj7x+MDOROFGlsI5Iv6zsDFE6b5TVnfq2Np/+wWwDrvOcr3wQwVHldXI1a
-         /yqc/mIuOtF7MiBJfwW5ox98ubo1mAz15x2rIXPw=
+        b=amePdFoeEoC2PEMouGUEVrSsqavI2Yg1s/ZebEELSx6P/oyrL3VLp6I7/eJjkxYC5
+         sB8T0DfFyfM2pEg8IuUzgydKQtv5AUsvQY3MHAKwA5HDH+j4dA3I32SNp96v18YsIg
+         fu50+tvX7pwyizsFa8Tputz/oHOKbYHgx5fSsw+g=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Michal Suchanek <msuchanek@suse.de>,
-        Michael Ellerman <mpe@ellerman.id.au>,
+        stable@vger.kernel.org, Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 14/76] powerpc/64s: Patch barrier_nospec in modules
-Date:   Mon, 15 Apr 2019 20:43:38 +0200
-Message-Id: <20190415183711.746568294@linuxfoundation.org>
+Subject: [PATCH 4.9 15/76] powerpc/64s: Enable barrier_nospec based on firmware settings
+Date:   Mon, 15 Apr 2019 20:43:39 +0200
+Message-Id: <20190415183711.923938651@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183707.712011689@linuxfoundation.org>
 References: <20190415183707.712011689@linuxfoundation.org>
@@ -60,113 +59,137 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 815069ca57c142eb71d27439bc27f41a433a67b3 upstream.
+commit cb3d6759a93c6d0aea1c10deb6d00e111c29c19c upstream.
 
-Note that unlike RFI which is patched only in kernel the nospec state
-reflects settings at the time the module was loaded.
+Check what firmware told us and enable/disable the barrier_nospec as
+appropriate.
 
-Iterating all modules and re-patching every time the settings change
-is not implemented.
+We err on the side of enabling the barrier, as it's no-op on older
+systems, see the comment for more detail.
 
-Based on lwsync patching.
-
-Signed-off-by: Michal Suchanek <msuchanek@suse.de>
 Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/powerpc/include/asm/setup.h  |  7 +++++++
- arch/powerpc/kernel/module.c      |  6 ++++++
- arch/powerpc/kernel/security.c    |  2 +-
- arch/powerpc/lib/feature-fixups.c | 16 +++++++++++++---
- 4 files changed, 27 insertions(+), 4 deletions(-)
+ arch/powerpc/include/asm/setup.h       |  1 +
+ arch/powerpc/kernel/security.c         | 60 ++++++++++++++++++++++++++
+ arch/powerpc/platforms/powernv/setup.c |  1 +
+ arch/powerpc/platforms/pseries/setup.c |  1 +
+ 4 files changed, 63 insertions(+)
 
 diff --git a/arch/powerpc/include/asm/setup.h b/arch/powerpc/include/asm/setup.h
-index 709f4e739ae8..a225b5c42e76 100644
+index a225b5c42e76..84ae150ce6a6 100644
 --- a/arch/powerpc/include/asm/setup.h
 +++ b/arch/powerpc/include/asm/setup.h
-@@ -52,6 +52,13 @@ enum l1d_flush_type {
+@@ -51,6 +51,7 @@ enum l1d_flush_type {
+ 
  void setup_rfi_flush(enum l1d_flush_type, bool enable);
  void do_rfi_flush_fixups(enum l1d_flush_type types);
++void setup_barrier_nospec(void);
  void do_barrier_nospec_fixups(bool enable);
-+extern bool barrier_nospec_enabled;
-+
-+#ifdef CONFIG_PPC_BOOK3S_64
-+void do_barrier_nospec_fixups_range(bool enable, void *start, void *end);
-+#else
-+static inline void do_barrier_nospec_fixups_range(bool enable, void *start, void *end) { };
-+#endif
+ extern bool barrier_nospec_enabled;
  
- #endif /* !__ASSEMBLY__ */
- 
-diff --git a/arch/powerpc/kernel/module.c b/arch/powerpc/kernel/module.c
-index 30b89d5cbb03..d30f0626dcd0 100644
---- a/arch/powerpc/kernel/module.c
-+++ b/arch/powerpc/kernel/module.c
-@@ -72,6 +72,12 @@ int module_finalize(const Elf_Ehdr *hdr,
- 		do_feature_fixups(powerpc_firmware_features,
- 				  (void *)sect->sh_addr,
- 				  (void *)sect->sh_addr + sect->sh_size);
-+
-+	sect = find_section(hdr, sechdrs, "__spec_barrier_fixup");
-+	if (sect != NULL)
-+		do_barrier_nospec_fixups_range(barrier_nospec_enabled,
-+				  (void *)sect->sh_addr,
-+				  (void *)sect->sh_addr + sect->sh_size);
- #endif
- 
- 	sect = find_section(hdr, sechdrs, "__lwsync_fixup");
 diff --git a/arch/powerpc/kernel/security.c b/arch/powerpc/kernel/security.c
-index 8b1cf9c81b82..34d436fe2498 100644
+index 34d436fe2498..d0e974da4918 100644
 --- a/arch/powerpc/kernel/security.c
 +++ b/arch/powerpc/kernel/security.c
-@@ -15,7 +15,7 @@
+@@ -9,6 +9,7 @@
+ #include <linux/device.h>
+ #include <linux/seq_buf.h>
  
- unsigned long powerpc_security_features __read_mostly = SEC_FTR_DEFAULT;
++#include <asm/debug.h>
+ #include <asm/security_features.h>
+ #include <asm/setup.h>
  
--static bool barrier_nospec_enabled;
-+bool barrier_nospec_enabled;
- 
- static void enable_barrier_nospec(bool enable)
- {
-diff --git a/arch/powerpc/lib/feature-fixups.c b/arch/powerpc/lib/feature-fixups.c
-index f82ae6bb2365..a1222c441df5 100644
---- a/arch/powerpc/lib/feature-fixups.c
-+++ b/arch/powerpc/lib/feature-fixups.c
-@@ -278,14 +278,14 @@ void do_rfi_flush_fixups(enum l1d_flush_type types)
- 						: "unknown");
+@@ -23,6 +24,65 @@ static void enable_barrier_nospec(bool enable)
+ 	do_barrier_nospec_fixups(enable);
  }
  
--void do_barrier_nospec_fixups(bool enable)
-+void do_barrier_nospec_fixups_range(bool enable, void *fixup_start, void *fixup_end)
- {
- 	unsigned int instr, *dest;
- 	long *start, *end;
- 	int i;
- 
--	start = PTRRELOC(&__start___barrier_nospec_fixup),
--	end = PTRRELOC(&__stop___barrier_nospec_fixup);
-+	start = fixup_start;
-+	end = fixup_end;
- 
- 	instr = 0x60000000; /* nop */
- 
-@@ -304,6 +304,16 @@ void do_barrier_nospec_fixups(bool enable)
- 	printk(KERN_DEBUG "barrier-nospec: patched %d locations\n", i);
- }
- 
-+void do_barrier_nospec_fixups(bool enable)
++void setup_barrier_nospec(void)
 +{
-+	void *start, *end;
++	bool enable;
 +
-+	start = PTRRELOC(&__start___barrier_nospec_fixup),
-+	end = PTRRELOC(&__stop___barrier_nospec_fixup);
++	/*
++	 * It would make sense to check SEC_FTR_SPEC_BAR_ORI31 below as well.
++	 * But there's a good reason not to. The two flags we check below are
++	 * both are enabled by default in the kernel, so if the hcall is not
++	 * functional they will be enabled.
++	 * On a system where the host firmware has been updated (so the ori
++	 * functions as a barrier), but on which the hypervisor (KVM/Qemu) has
++	 * not been updated, we would like to enable the barrier. Dropping the
++	 * check for SEC_FTR_SPEC_BAR_ORI31 achieves that. The only downside is
++	 * we potentially enable the barrier on systems where the host firmware
++	 * is not updated, but that's harmless as it's a no-op.
++	 */
++	enable = security_ftr_enabled(SEC_FTR_FAVOUR_SECURITY) &&
++		 security_ftr_enabled(SEC_FTR_BNDS_CHK_SPEC_BAR);
 +
-+	do_barrier_nospec_fixups_range(enable, start, end);
++	enable_barrier_nospec(enable);
 +}
 +
- #endif /* CONFIG_PPC_BOOK3S_64 */
++#ifdef CONFIG_DEBUG_FS
++static int barrier_nospec_set(void *data, u64 val)
++{
++	switch (val) {
++	case 0:
++	case 1:
++		break;
++	default:
++		return -EINVAL;
++	}
++
++	if (!!val == !!barrier_nospec_enabled)
++		return 0;
++
++	enable_barrier_nospec(!!val);
++
++	return 0;
++}
++
++static int barrier_nospec_get(void *data, u64 *val)
++{
++	*val = barrier_nospec_enabled ? 1 : 0;
++	return 0;
++}
++
++DEFINE_SIMPLE_ATTRIBUTE(fops_barrier_nospec,
++			barrier_nospec_get, barrier_nospec_set, "%llu\n");
++
++static __init int barrier_nospec_debugfs_init(void)
++{
++	debugfs_create_file("barrier_nospec", 0600, powerpc_debugfs_root, NULL,
++			    &fops_barrier_nospec);
++	return 0;
++}
++device_initcall(barrier_nospec_debugfs_init);
++#endif /* CONFIG_DEBUG_FS */
++
+ ssize_t cpu_show_meltdown(struct device *dev, struct device_attribute *attr, char *buf)
+ {
+ 	bool thread_priv;
+diff --git a/arch/powerpc/platforms/powernv/setup.c b/arch/powerpc/platforms/powernv/setup.c
+index 17203abf38e8..eb5464648810 100644
+--- a/arch/powerpc/platforms/powernv/setup.c
++++ b/arch/powerpc/platforms/powernv/setup.c
+@@ -123,6 +123,7 @@ static void pnv_setup_rfi_flush(void)
+ 		  security_ftr_enabled(SEC_FTR_L1D_FLUSH_HV));
  
- void do_lwsync_fixups(unsigned long value, void *fixup_start, void *fixup_end)
+ 	setup_rfi_flush(type, enable);
++	setup_barrier_nospec();
+ }
+ 
+ static void __init pnv_setup_arch(void)
+diff --git a/arch/powerpc/platforms/pseries/setup.c b/arch/powerpc/platforms/pseries/setup.c
+index 91ade7755823..2b2759c98c7e 100644
+--- a/arch/powerpc/platforms/pseries/setup.c
++++ b/arch/powerpc/platforms/pseries/setup.c
+@@ -525,6 +525,7 @@ void pseries_setup_rfi_flush(void)
+ 		 security_ftr_enabled(SEC_FTR_L1D_FLUSH_PR);
+ 
+ 	setup_rfi_flush(types, enable);
++	setup_barrier_nospec();
+ }
+ 
+ static void __init pSeries_setup_arch(void)
 -- 
 2.19.1
 
