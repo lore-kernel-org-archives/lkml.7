@@ -2,111 +2,118 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 362D7C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 08:15:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A585AC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 08:18:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAAB120674
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 08:15:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="YwLmPanv"
+	by mail.kernel.org (Postfix) with ESMTP id 7FCFF20674
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 08:18:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726687AbfDOIPf (ORCPT
+        id S1726441AbfDOISV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 04:15:35 -0400
-Received: from us01smtprelay-2.synopsys.com ([198.182.60.111]:57650 "EHLO
-        smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbfDOIPf (ORCPT
+        Mon, 15 Apr 2019 04:18:21 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:43431 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725779AbfDOISU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 04:15:35 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay.synopsys.com (Postfix) with ESMTPS id 2732210C2A9C;
-        Mon, 15 Apr 2019 01:15:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1555316134; bh=YasZ8OghOGkU1OI8etqUYPfDbjmSfonfqmeP3HJW1VQ=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=YwLmPanvgOj+eyg4kAJw8P+pGwXqzgU7ZLusiDYF+N5GHjhBshLWdvUdbPEVSVbxC
-         AgrrAURakbsQBUJOap1tQyVDVOotXLI0rV3YUDKuzak5LMDYqiaroNQuWig/PAWCvJ
-         0h53L4ogzua4E+R7Wcse5pbZxkqGlg4NefOSNjDM6LxPQ/tyOivLNla+VVhvzahSqi
-         DGCvwmLld9fP8lHzypbIL/QxI2WsgcJiDylfM9/NIeR0OVUbPGDTY/3CmUqXnX4ldX
-         X3Ubd5wSrPBrfBRS8vyTwii8kkEJY61W/3NkuTAtcx/vWu61/lAFizjpFtVgpKmEsb
-         kVDH3WDWrXfFA==
-Received: from US01WXQAHTC1.internal.synopsys.com (us01wxqahtc1.internal.synopsys.com [10.12.238.230])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 50372A006A;
-        Mon, 15 Apr 2019 08:15:31 +0000 (UTC)
-Received: from DE02WEHTCB.internal.synopsys.com (10.225.19.94) by
- US01WXQAHTC1.internal.synopsys.com (10.12.238.230) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Mon, 15 Apr 2019 01:15:31 -0700
-Received: from DE02WEMBXB.internal.synopsys.com ([fe80::95ce:118a:8321:a099])
- by DE02WEHTCB.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Mon,
- 15 Apr 2019 10:15:30 +0200
-From:   Jose Abreu <jose.abreu@synopsys.com>
-To:     "Leonidas P. Papadakos" <papadakospan@gmail.com>,
-        Jose Abreu <jose.abreu@synopsys.com>
-CC:     Robin Murphy <robin.murphy@arm.com>,
-        Philipp Tomsich <philipp.tomsich@theobroma-systems.com>,
-        =?utf-8?B?SGVpa28gU3TDvGJuZXI=?= <heiko@sntech.de>,
-        =?utf-8?B?Q2hyaXN0b3BoIE3DvGxsbmVy?= 
-        <christoph.muellner@theobroma-systems.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Klaus Goger <klaus.goger@theobroma-systems.com>
-Subject: RE: [PATCH 1/2] stmmac: introduce flag to dynamically disable TX
- offload for rockchip devices
-Thread-Topic: [PATCH 1/2] stmmac: introduce flag to dynamically disable TX
- offload for rockchip devices
-Thread-Index: AQHU6Ld2BNOIyyJamEeC//pMtZni+6YnhciAgAADZICAAAGHgIAA920AgAAfNACAACI8cIAAipiAgAALMwCAALjx8IAAYG+AgAAFvgCAAASDgIAC4/OwgABi2ACAAAQmgIAAAsSAgAmYDQCAAM6qYIAAHUAAgASlj1A=
-Date:   Mon, 15 Apr 2019 08:15:29 +0000
-Message-ID: <78EB27739596EE489E55E81C33FEC33A0B4586B2@DE02WEMBXB.internal.synopsys.com>
-References: <20190401181840.31255-1-papadakospan@gmail.com>
-        <9d65a22a-2288-dc53-0059-ec4a31424dd8@arm.com> <2312344.mOsv7YkeBG@diego>
-        <9EC67532-2D43-4AAD-BFA7-8B6797067427@theobroma-systems.com>
-        <78EB27739596EE489E55E81C33FEC33A0B421348@de02wembxa.internal.synopsys.com>
-        <4a9839d6-3d90-4354-7b64-78d5c1126e99@arm.com>
-        <78EB27739596EE489E55E81C33FEC33A0B423811@de02wembxa.internal.synopsys.com>
-        <c45d05f1-47b0-89d5-886d-d456d0111b7a@arm.com> <1554245296.1271.0@gmail.com>
-        <78EB27739596EE489E55E81C33FEC33A0B4254A0@de02wembxa.internal.synopsys.com>
-        <1554305721.1328.0@gmail.com> <1554306954.1328.1@gmail.com>
-        <c863f88a-65e2-4093-7cc1-f37e4443b871@arm.com>
-        <78EB27739596EE489E55E81C33FEC33A0B44985F@DE02WEMBXB.internal.synopsys.com>
-        <1554488052.1193.1@gmail.com> <85c1d945-d49b-3350-6ff4-a058c5a8c1d7@arm.com>
-        <1554489537.1199.0@gmail.com> <1555016970.28872.0@gmail.com>
-        <78EB27739596EE489E55E81C33FEC33A0B4566A9@DE02WEMBXB.internal.synopsys.com>
- <1555067632.1216.0@gmail.com>
-In-Reply-To: <1555067632.1216.0@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.107.19.176]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 15 Apr 2019 04:18:20 -0400
+Received: from localhost (aaubervilliers-681-1-63-121.w90-88.abo.wanadoo.fr [90.88.18.121])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 8D3FD100012;
+        Mon, 15 Apr 2019 08:18:16 +0000 (UTC)
+Date:   Mon, 15 Apr 2019 10:18:16 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Subject: Re: [PATCH 1/4] dt-bindings: sound: sun4i-spdif: Add Allwinner H6
+ compatible
+Message-ID: <20190415081816.2pay4pioc5d4mojf@flea>
+References: <20190411214422.2267-1-peron.clem@gmail.com>
+ <20190411214422.2267-2-peron.clem@gmail.com>
+ <20190415080443.frubh4ln4agrdsfe@flea>
+ <CAJiuCcc0Q8rh8u_30gKi8o07k0+e35UR99ZBHtCjx-DPkJEtdw@mail.gmail.com>
 MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="sl5dsw5iexckdv2a"
+Content-Disposition: inline
+In-Reply-To: <CAJiuCcc0Q8rh8u_30gKi8o07k0+e35UR99ZBHtCjx-DPkJEtdw@mail.gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-RnJvbTogTGVvbmlkYXMgUC4gUGFwYWRha29zIDxwYXBhZGFrb3NwYW5AZ21haWwuY29tPg0KRGF0
-ZTogRnJpLCBBcHIgMTIsIDIwMTkgYXQgMTI6MTM6NTINCg0KPiANCj4gPiBDYW4geW91IHBsZWFz
-ZSBzaGFyZSB0aGUgc3RhY2t0cmFjZSBoZXJlID8gSSBjYW4ndCBhY2Nlc3MgcGFzdGViaW4gDQo+
-ID4gZHVlIHRvDQo+ID4gY29ycG9yYXRlIHBvbGljeS4NCj4gDQo+IFRoaXMgaGFwcGVucyBzZWNv
-bmRzIGFmdGVyIEkgY2hhbmdlIHRoZSBNVFUuIEkgcmVtZW1iZXIgaXQgdXNlZCB0byANCj4gaGFw
-cGVuIHdpdGggMTUwMCBhcyB3ZWxsLCBiZWZvcmUgdGhlIGdtYWMgdHdlYWtzLiBJdCBtYWtlcyBz
-ZW5zZQ0KPg0KDQpOb3RpY2UgdGhhdCBpbmNvcnJlY3Qgc2V0dGluZ3Mgb2YgUEJMIGNhbiBjYXVz
-ZSBRdWV1ZSB0aW1lb3V0LiBDYW4geW91IA0KdHJ5IHdpdGggUEJMID0gMHgxIGFuZCBuby1wYmwt
-eDggYW5kIGxldCBtZSBrbm93IGlmIHRoZSB0aW1lb3V0IHN0aWxsIA0KaGFwcGVucz8NCiANCj4g
-DQo+IFdoZW4geW91IHNheSBGSUZPIHNpemUsIGlzIHRoYXQgcmVsYXRlZCB0byB0aGUgdHgvcnhf
-ZGVsYXk/DQoNCk5vLCBGSUZPIHNpemUgaXMgdGhlIFF1ZXVlIEZJRk8gc2l6ZSB0aGF0IHN0b3Jl
-cyBwYWNrZXRzIGFmdGVyIERNQSANCmZldGNoZXMgdGhlbS4NCg0KVGhhbmtzLA0KSm9zZSBNaWd1
-ZWwgQWJyZXUNCg==
+
+--sl5dsw5iexckdv2a
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Mon, Apr 15, 2019 at 10:09:11AM +0200, Cl=E9ment P=E9ron wrote:
+> Hi,
+>
+> On Mon, 15 Apr 2019 at 10:04, Maxime Ripard <maxime.ripard@bootlin.com> w=
+rote:
+> >
+> > Hi,
+> >
+> > On Thu, Apr 11, 2019 at 11:44:19PM +0200, Cl=E9ment P=E9ron wrote:
+> > > Allwinner H6 has a SPDIF controller with an increase of the fifo
+> > > size and the possibility to output the master clock.
+> > > However it's still compatible with the already existing driver for
+> > > Allwiner H3.
+> > >
+> > > Add this compatible in the device-tree bindings documentation.
+> >
+> > How was this tested?
+>
+> Using Alsa utils on a Beelink GS1 and I check correct output sound on
+> my home cinema.
+>
+> > After looking at the datasheet, it looks like it's still significantly
+> > different. In particular:
+> >
+> >   - The MCLK divider isn't at the same offset
+>
+> We don't use the MCLK
+>
+> >   - The bits to flush the FIFO aren't at the same offset
+> >   - The FIFO trigger levels aren't at the same offset
+> >   - The FIFO status register layout is almost entirely different
+>
+> We use DMA not FIFO
+
+Well, DMA still uses the FIFOs. And even then, you're kind of missing
+the point. The device tree's compatible is about whether a particular
+device can be used as another one. How you are using it in the driver
+is completely irrelevant.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--sl5dsw5iexckdv2a
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXLQ+SAAKCRDj7w1vZxhR
+xV9zAPwPjI6o8yg+6vnD6ugXzEeHWhbegDdSaovZYn1ID8RmpwD8DqyVBkhgCV5E
+RHFNaCjMBRKIxThcimleGuLS1moVsgI=
+=mbel
+-----END PGP SIGNATURE-----
+
+--sl5dsw5iexckdv2a--
