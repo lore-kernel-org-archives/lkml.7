@@ -4,46 +4,46 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F68FC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 08:54:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A69ACC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 08:54:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DC952087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 08:54:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76C3420675
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 08:54:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555318441;
-	bh=adWlxOt0bEOlMBQ+lnCdxLDIzUXsob042xFZicPJsmI=;
+	s=default; t=1555318447;
+	bh=42hKwwtP+UoQ+fMSrToD/k+e3kYjkm5HCdRLnVWv/y0=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=olje6u0ET/WPSiTrDdIYMTmRJzvEVV3auXZKoK0GTPUqqVh0c1JDcw6WrS+dM1gVT
-	 9jUZbG/rfiFM6YJlMgPkmM8n0Lg3MqDt9RI3d2pj2Jn3t2kdXKSgf3CA0WZr7YJmW/
-	 9sjU2zR3WI76ci4I6yR73o6EnND4XdQQjIr8LeM0=
+	b=rqbRZtPQ+iJweS2vqjhXI5ST+bulupHsHw5KQjzo1O3zsl93JYbRMxefkgqYB9L9H
+	 zaItf/jrzHeGv6AiEW7A4K0wmZblZbsVc72rluIcHwUUoKV1LGTPk7I8zurEHEDcgg
+	 IhLMp1f4vanXpZdRD262O6X+d2hSqZloRwkJ8Nv4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727178AbfDOIyA (ORCPT
+        id S1727200AbfDOIyG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 04:54:00 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36326 "EHLO
+        Mon, 15 Apr 2019 04:54:06 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:36332 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727141AbfDOIx4 (ORCPT
+        with ESMTP id S1727138AbfDOIx5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 04:53:56 -0400
+        Mon, 15 Apr 2019 04:53:57 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=VilkqsMrK/X8m0x72QmRyeKZ5cgL7sSahu18u47zU98=; b=wCNOs7fwoYmZ
-        Gh4TP9LS7REl4ilXLHYR9l3v1RvG6eBGm071g4ljPRGObsfaY/rLyCJ1bE8x/nBny0HIc57O3t8Mc
-        jRqqcb3ZzzMHkjJotqnHPj2WeSIUjpLYi+dWVS8h8syDxaKUiZ5/gb1JgSyJy+T+VHuHamiQi+Cfm
-        Af/nM=;
+        List-Archive; bh=ZEmOSgsMMi0sTzI7EEx1RH7pAkk3w3lt5FqQwCDjxk4=; b=AlHdDVrqEdNL
+        gC7pxpsJUWiqexZIwyaP4AYDn/2S9oQkh8H7PcdShTA/w1/VGlM75OHcJfSzHDK9u4XrNjR7FXVBp
+        s/iMSqEwWekFmbZsUlA42ZR4COwxaw9PwuTVnmis1bCVtejIfDRjiiDdkrc7k8073e4Vf6iPiXGy7
+        yNf40=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hFxMp-0007io-F2; Mon, 15 Apr 2019 08:53:31 +0000
+        id 1hFxMp-0007ip-Gk; Mon, 15 Apr 2019 08:53:31 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 18F5911279F6; Mon, 15 Apr 2019 09:53:30 +0100 (BST)
+        id DD3AC11279E1; Mon, 15 Apr 2019 09:53:29 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Andra Danciu <andradanciu1997@gmail.com>
 Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
@@ -55,11 +55,11 @@ Cc:     alsa-devel@alsa-project.org, broonie@kernel.org,
         perex@perex.cz, s.hauer@pengutronix.de, shawnguo@kernel.org,
         tglx@linutronix.de, Thomas Gleixner <tglx@linutronix.de>,
         timur@kernel.org, tiwai@suse.com, Xiubo.Lee@gmail.com
-Subject: Applied "ASoC: mpc5200_dma: Fix invalid license ID" to the asoc tree
-In-Reply-To: <20190414191450.18377-2-andradanciu1997@gmail.com>
+Subject: Applied "ASoC: mpc5200_psc_i2s: Fix invalid license ID" to the asoc tree
+In-Reply-To: <20190414191450.18377-3-andradanciu1997@gmail.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190415085330.18F5911279F6@debutante.sirena.org.uk>
-Date:   Mon, 15 Apr 2019 09:53:30 +0100 (BST)
+Message-Id: <20190415085329.DD3AC11279E1@debutante.sirena.org.uk>
+Date:   Mon, 15 Apr 2019 09:53:29 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -67,7 +67,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   ASoC: mpc5200_dma: Fix invalid license ID
+   ASoC: mpc5200_psc_i2s: Fix invalid license ID
 
 has been applied to the asoc tree at
 
@@ -92,33 +92,33 @@ to this mail.
 Thanks,
 Mark
 
-From 8981d195355ecf898c8bacabba8ce9c178534b43 Mon Sep 17 00:00:00 2001
+From 93741a77a901d1a4b1861c6dbf5607fdf5d36cbc Mon Sep 17 00:00:00 2001
 From: Andra Danciu <andradanciu1997@gmail.com>
-Date: Sun, 14 Apr 2019 22:14:49 +0300
-Subject: [PATCH] ASoC: mpc5200_dma: Fix invalid license ID
+Date: Sun, 14 Apr 2019 22:14:50 +0300
+Subject: [PATCH] ASoC: mpc5200_psc_i2s: Fix invalid license ID
 
 As the file had no other license notice/reference, it falls under the
 project license and therefore the proper SPDX id is: GPL-2.0-only
 
 Cc: Daniel Baluta <daniel.baluta@nxp.com>
-Fixes: 1edfc2485d8dc ("ASoC: mpc5200_dma: Switch to SPDX identifier")
+Fixes: 864a8472c4412 ("ASoC: mpc5200_psc_i2s: Switch to SPDX identifier")
 Reported-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- sound/soc/fsl/mpc5200_dma.c | 2 +-
+ sound/soc/fsl/mpc5200_psc_i2s.c | 2 +-
  1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/sound/soc/fsl/mpc5200_dma.c b/sound/soc/fsl/mpc5200_dma.c
-index 4396442c2fdd..ccf9301889fe 100644
---- a/sound/soc/fsl/mpc5200_dma.c
-+++ b/sound/soc/fsl/mpc5200_dma.c
+diff --git a/sound/soc/fsl/mpc5200_psc_i2s.c b/sound/soc/fsl/mpc5200_psc_i2s.c
+index 6de97461ba25..9bc01f374b39 100644
+--- a/sound/soc/fsl/mpc5200_psc_i2s.c
++++ b/sound/soc/fsl/mpc5200_psc_i2s.c
 @@ -1,4 +1,4 @@
 -// SPDX-License-Identifier: GPL
 +// SPDX-License-Identifier: GPL-2.0-only
  //
- // Freescale MPC5200 PSC DMA
- // ALSA SoC Platform driver
+ // Freescale MPC5200 PSC in I2S mode
+ // ALSA SoC Digital Audio Interface (DAI) driver
 -- 
 2.20.1
 
