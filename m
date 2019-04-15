@@ -2,112 +2,121 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD19C10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:43:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B26EAC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:44:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC3B22183F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:43:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7D24E20880
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:44:11 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="pINEupJ9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727669AbfDOPnU (ORCPT
+        id S1727698AbfDOPoK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 11:43:20 -0400
-Received: from mga17.intel.com ([192.55.52.151]:2008 "EHLO mga17.intel.com"
+        Mon, 15 Apr 2019 11:44:10 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:48068 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726034AbfDOPnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 11:43:19 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Apr 2019 08:43:19 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,354,1549958400"; 
-   d="scan'208";a="142906558"
-Received: from unknown (HELO [10.7.201.126]) ([10.7.201.126])
-  by orsmga003.jf.intel.com with ESMTP; 15 Apr 2019 08:43:18 -0700
-Subject: Re: [PATCH 0/2] x86, numa: always initialize all possible nodes
-To:     Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org
-Cc:     Pingfan Liu <kernelfans@gmail.com>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Tony Luck <tony.luck@intel.com>, linuxppc-dev@lists.ozlabs.org,
-        linux-ia64@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@elte.hu>
-References: <20190212095343.23315-1-mhocko@kernel.org>
- <20190226131201.GA10588@dhcp22.suse.cz>
- <20190415114209.GJ3366@dhcp22.suse.cz>
-From:   Dave Hansen <dave.hansen@intel.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=dave.hansen@intel.com; keydata=
- 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
-Message-ID: <77b364e5-a30c-964a-6985-00b759dac128@intel.com>
-Date:   Mon, 15 Apr 2019 08:43:18 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726034AbfDOPoK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 11:44:10 -0400
+Received: from zn.tnic (p4FED3D80.dip0.t-ipconnect.de [79.237.61.128])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 576071EC0104;
+        Mon, 15 Apr 2019 17:44:08 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1555343048;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=wZDmvh5A7g3XDKwql0kangfenQr/dEn7Cv+rPbn12ng=;
+        b=pINEupJ9N3oNBeNPhKYdX4zU4/oXa7eEsCPvPhKQKH5gFTTRfHPcD0hV4EZNJamkM80FL8
+        aXV2Zubs7+czdWkwo/9ir18fgWuL26i2ElKWOaTKfpLiagw8pkl3S8nhljbmc/6vq0DIXX
+        8o/oVDVfFqfm3LFvnNuTx2xQ2x4hBCU=
+Date:   Mon, 15 Apr 2019 17:41:55 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     lijiang <lijiang@redhat.com>, Thomas.Lendacky@amd.com
+Cc:     linux-kernel@vger.kernel.org, kexec@lists.infradead.org,
+        tglx@linutronix.de, mingo@redhat.com, akpm@linux-foundation.org,
+        dave.hansen@linux.intel.com, luto@kernel.org, peterz@infradead.org,
+        x86@kernel.org, hpa@zytor.com, dyoung@redhat.com, bhe@redhat.com
+Subject: Re: [PATCH 1/2 RESEND v10] x86/mm, resource: add a new I/O resource
+ descriptor 'IORES_DESC_RESERVED'
+Message-ID: <20190415154155.GH29317@zn.tnic>
+References: <20190329123914.20939-1-lijiang@redhat.com>
+ <20190329123914.20939-2-lijiang@redhat.com>
+ <20190402090652.GD6826@zn.tnic>
+ <c94f887e-2ac8-49c6-e02c-92453e1ad894@redhat.com>
+ <20190402124328.GG6826@zn.tnic>
+ <384ba880-1b53-8013-8be8-66f294c27100@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190415114209.GJ3366@dhcp22.suse.cz>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Disposition: inline
+In-Reply-To: <384ba880-1b53-8013-8be8-66f294c27100@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/15/19 4:42 AM, Michal Hocko wrote:
->> Friendly ping. I haven't heard any complains so can we route this via
->> tip/x86/mm or should we go via mmotm.
-> It seems that Dave is busy. Let's add Andrew. Can we get this [1] merged
-> finally, please?
+On Mon, Apr 15, 2019 at 08:22:22PM +0800, lijiang wrote:
+> They are different problems.
 
-Sorry these slipped through the cracks.
+Aha, so we're getting closer. You should've lead with that!
 
-These look sane to me.  Because it pokes around mm/page_alloc.c a bit,
-and could impact other architectures, my preference would be for Andrew
-to pick these up for -mm.  But, I don't feel that strongly about it.
+> The first problem is that passes the e820 reserved ranges to the second kernel,
 
-Reviewed-by: Dave Hansen <dave.hansen@intel.com>
+Passes or *doesn't* pass?
+
+Because from all the staring, it wants to pass the reserved ranges.
+
+> for this case, it is good enough to use the IORES_DESC_RESERVED, which
+> can ensure that exactly matches the reserved resource ranges when
+> walking through iomem resources.
+
+Ok.
+
+> The second problem is about the SEV case. Now, the IORES_DESC_RESERVED has been
+> created for the reserved areas, therefore the check needs to be expanded so that
+> these areas are not mapped encrypted when using ioremap().
+> 
+> +static int __ioremap_check_desc_none_and_reserved(struct resource *res)
+
+That name is crap. If you need to add another desc type, it becomes
+wrong again. And that whole code around flags->desc_other is just silly:
+
+Make that machinery around it something like this:
+
+struct ioremap_desc {
+        u64 flags;
+};
+
+instead of "struct ioremap_mem_flags" and that struct ioremap_desc is an
+ioremap descriptor which will carry all kinds of settings. system_ram
+can then be a simple flag too.
+
+__ioremap_caller() will hand it down to __ioremap_check_mem() etc
+and there it will set flags like IOREMAP_DESC_MAP_ENCRYPTED or
+IOREMAP_DESC_MAP_DECRYPTED and this way you'll have it explicit and
+clear in __ioremap_caller():
+
+        if ((sev_active() &&
+	    (io_desc.flags & IOREMAP_DESC_MAP_ENCRYPTED)) ||
+	    encrypted)
+                prot = pgprot_encrypted(prot);
+
+But that would need a pre-patch which does that conversion.
+
+> Maybe i should split it into two patches. The change of
+> __ioremap_check_desc_none_and_reserved() should be a separate patch.
+> Any idea?
+
+See above and yes, definitely separate patches.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
