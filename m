@@ -4,49 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B042C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:11:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14DD6C10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:11:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56090218FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:11:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D3D45218DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:11:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355501;
-	bh=mkosKMjaoKJVu9sCR0VqVsCeG4P79RozpKSaigGgDUA=;
+	s=default; t=1555355503;
+	bh=os3sHdUzInbdpZxlphxhiyFbwlwCjyFjrK3Nr0IaKOk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BX1htlTpvtRMmvZtKbiBU/dtDOmn6i1imT4RFgfaX4AORhRlxkAP/+gGG9FbDSkoY
-	 NTFK276Bh7Lem9po1X0RwNjZc/07RVvl8h0pRY1StK8OaLgkRhAPLjJU4PShdqnesz
-	 R+riEfKPOq0ndJhDeHj6e0LbHklNlAijmtOYLkKA=
+	b=YDSUWOJRWWEM7aGU2XfZWwClDW17cEQyEuJSHI7RzSS7J5mYaxOnhUw4mRaPe40m6
+	 qXtIP2nKRxBm5FfsppeHPm0jp8oSb6eC3vkG6QXknI38MEtqhUX3M2dJ6rBYnmPIGr
+	 Zeg3wpTbkAT8grJi0X4+pabUnaY/krCKSkNbkLKU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731275AbfDOTLk (ORCPT
+        id S1731283AbfDOTLm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:11:40 -0400
-Received: from mail.kernel.org ([198.145.29.99]:48648 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:11:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48694 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730727AbfDOTLg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:11:36 -0400
+        id S1731268AbfDOTLj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:11:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B15A9218FF;
-        Mon, 15 Apr 2019 19:11:35 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5DB6C218DA;
+        Mon, 15 Apr 2019 19:11:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355496;
-        bh=mkosKMjaoKJVu9sCR0VqVsCeG4P79RozpKSaigGgDUA=;
+        s=default; t=1555355498;
+        bh=os3sHdUzInbdpZxlphxhiyFbwlwCjyFjrK3Nr0IaKOk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kZR2S0jzRP9rXNdW8vj9/WJuQKO71bBlZ///GWglpztNY7+oYRxVJHAjoWq08kzff
-         LV0NMC0SWMI59iz4tnXN7n4b1ZReNWL72R1eeN0TUuKMAJhAP9yfCH6N6kxiSlqekX
-         L2PBicWZxC5w2D6tooYvmVmVc5q41itaYX9FmKSU=
+        b=nv7sILy4gMSrGuxcoZ0cNHa/zsRVhNPunYgfFFzWyGBB5xv7RML+F5WPJwEN0G4mK
+         y3+UH5KmSirTUl3Qx0ZrnMjZeDB5LqHlCQ9Z4hAWoxjTurJgMJPXAdKGw31lG6Mu7e
+         U/nWB5M84G3PAE9sy4+bGxldDoAblzatNs+ghnvA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Hui Wang <hui.wang@canonical.com>,
-        Takashi Iwai <tiwai@suse.de>
-Subject: [PATCH 5.0 057/117] ALSA: hda - Add two more machines to the power_save_blacklist
-Date:   Mon, 15 Apr 2019 21:00:27 +0200
-Message-Id: <20190415183747.825879847@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Chandan Rajendra <chandan@linux.ibm.com>,
+        Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.0 058/117] mm/huge_memory.c: fix modifying of page protection by insert_pfn_pmd()
+Date:   Mon, 15 Apr 2019 21:00:28 +0200
+Message-Id: <20190415183747.881878682@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183744.887851196@linuxfoundation.org>
 References: <20190415183744.887851196@linuxfoundation.org>
@@ -59,44 +63,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Hui Wang <hui.wang@canonical.com>
+From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-commit cae30527901d9590db0e12ace994c1d58bea87fd upstream.
+commit c6f3c5ee40c10bb65725047a220570f718507001 upstream.
 
-Recently we set CONFIG_SND_HDA_POWER_SAVE_DEFAULT to 1 when
-configuring the kernel, then two machines were reported to have noise
-after installing the new kernel. Put them in the blacklist, the
-noise disappears.
+With some architectures like ppc64, set_pmd_at() cannot cope with a
+situation where there is already some (different) valid entry present.
 
-https://bugs.launchpad.net/bugs/1821663
+Use pmdp_set_access_flags() instead to modify the pfn which is built to
+deal with modifying existing PMD entries.
+
+This is similar to commit cae85cb8add3 ("mm/memory.c: fix modifying of
+page protection by insert_pfn()")
+
+We also do similar update w.r.t insert_pfn_pud eventhough ppc64 don't
+support pud pfn entries now.
+
+Without this patch we also see the below message in kernel log "BUG:
+non-zero pgtables_bytes on freeing mm:"
+
+Link: http://lkml.kernel.org/r/20190402115125.18803-1-aneesh.kumar@linux.ibm.com
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Reported-by: Chandan Rajendra <chandan@linux.ibm.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Cc: Dan Williams <dan.j.williams@intel.com>
 Cc: <stable@vger.kernel.org>
-Signed-off-by: Hui Wang <hui.wang@canonical.com>
-Signed-off-by: Takashi Iwai <tiwai@suse.de>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/pci/hda/hda_intel.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ mm/huge_memory.c |   36 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
---- a/sound/pci/hda/hda_intel.c
-+++ b/sound/pci/hda/hda_intel.c
-@@ -2142,6 +2142,8 @@ static struct snd_pci_quirk power_save_b
- 	SND_PCI_QUIRK(0x8086, 0x2040, "Intel DZ77BH-55K", 0),
- 	/* https://bugzilla.kernel.org/show_bug.cgi?id=199607 */
- 	SND_PCI_QUIRK(0x8086, 0x2057, "Intel NUC5i7RYB", 0),
-+	/* https://bugs.launchpad.net/bugs/1821663 */
-+	SND_PCI_QUIRK(0x8086, 0x2064, "Intel SDP 8086:2064", 0),
- 	/* https://bugzilla.redhat.com/show_bug.cgi?id=1520902 */
- 	SND_PCI_QUIRK(0x8086, 0x2068, "Intel NUC7i3BNB", 0),
- 	/* https://bugzilla.kernel.org/show_bug.cgi?id=198611 */
-@@ -2150,6 +2152,8 @@ static struct snd_pci_quirk power_save_b
- 	SND_PCI_QUIRK(0x17aa, 0x367b, "Lenovo IdeaCentre B550", 0),
- 	/* https://bugzilla.redhat.com/show_bug.cgi?id=1572975 */
- 	SND_PCI_QUIRK(0x17aa, 0x36a7, "Lenovo C50 All in one", 0),
-+	/* https://bugs.launchpad.net/bugs/1821663 */
-+	SND_PCI_QUIRK(0x1631, 0xe017, "Packard Bell NEC IMEDIA 5204", 0),
- 	{}
- };
- #endif /* CONFIG_PM */
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -753,6 +753,21 @@ static void insert_pfn_pmd(struct vm_are
+ 	spinlock_t *ptl;
+ 
+ 	ptl = pmd_lock(mm, pmd);
++	if (!pmd_none(*pmd)) {
++		if (write) {
++			if (pmd_pfn(*pmd) != pfn_t_to_pfn(pfn)) {
++				WARN_ON_ONCE(!is_huge_zero_pmd(*pmd));
++				goto out_unlock;
++			}
++			entry = pmd_mkyoung(*pmd);
++			entry = maybe_pmd_mkwrite(pmd_mkdirty(entry), vma);
++			if (pmdp_set_access_flags(vma, addr, pmd, entry, 1))
++				update_mmu_cache_pmd(vma, addr, pmd);
++		}
++
++		goto out_unlock;
++	}
++
+ 	entry = pmd_mkhuge(pfn_t_pmd(pfn, prot));
+ 	if (pfn_t_devmap(pfn))
+ 		entry = pmd_mkdevmap(entry);
+@@ -764,11 +779,16 @@ static void insert_pfn_pmd(struct vm_are
+ 	if (pgtable) {
+ 		pgtable_trans_huge_deposit(mm, pmd, pgtable);
+ 		mm_inc_nr_ptes(mm);
++		pgtable = NULL;
+ 	}
+ 
+ 	set_pmd_at(mm, addr, pmd, entry);
+ 	update_mmu_cache_pmd(vma, addr, pmd);
++
++out_unlock:
+ 	spin_unlock(ptl);
++	if (pgtable)
++		pte_free(mm, pgtable);
+ }
+ 
+ vm_fault_t vmf_insert_pfn_pmd(struct vm_area_struct *vma, unsigned long addr,
+@@ -819,6 +839,20 @@ static void insert_pfn_pud(struct vm_are
+ 	spinlock_t *ptl;
+ 
+ 	ptl = pud_lock(mm, pud);
++	if (!pud_none(*pud)) {
++		if (write) {
++			if (pud_pfn(*pud) != pfn_t_to_pfn(pfn)) {
++				WARN_ON_ONCE(!is_huge_zero_pud(*pud));
++				goto out_unlock;
++			}
++			entry = pud_mkyoung(*pud);
++			entry = maybe_pud_mkwrite(pud_mkdirty(entry), vma);
++			if (pudp_set_access_flags(vma, addr, pud, entry, 1))
++				update_mmu_cache_pud(vma, addr, pud);
++		}
++		goto out_unlock;
++	}
++
+ 	entry = pud_mkhuge(pfn_t_pud(pfn, prot));
+ 	if (pfn_t_devmap(pfn))
+ 		entry = pud_mkdevmap(entry);
+@@ -828,6 +862,8 @@ static void insert_pfn_pud(struct vm_are
+ 	}
+ 	set_pud_at(mm, addr, pud, entry);
+ 	update_mmu_cache_pud(vma, addr, pud);
++
++out_unlock:
+ 	spin_unlock(ptl);
+ }
+ 
 
 
