@@ -2,115 +2,88 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A03A6C10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:10:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 864F7C282DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:11:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7007820880
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:10:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4862520818
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:11:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="kgiPTLqC";
-	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="BxwnmMa6"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="dzyguiH9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727805AbfDOPKG (ORCPT
+        id S1727672AbfDOPLW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 11:10:06 -0400
-Received: from mail14.wdc04.mandrillapp.com ([205.201.139.14]:19541 "EHLO
-        mail14.wdc04.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727386AbfDOPKG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 11:10:06 -0400
-X-Greylist: delayed 902 seconds by postgrey-1.27 at vger.kernel.org; Mon, 15 Apr 2019 11:10:05 EDT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
- h=From:Subject:To:Cc:Message-Id:References:In-Reply-To:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
- bh=o+R+7V6FYI76MGf1Yo3KgDdQ+TCerityJJLqd48cM54=;
- b=kgiPTLqC2FOX6hS3mxrPXYwnEG7obABlqMJmNtRdvksQMoZOWzVwTRv1B9bF9kcWr4nmicqXUIHf
-   W3qJechCeQi5Jl9OdEJuNExR5kfbvFxXqS3EGJ1W5LhrtDTp+AUGy9mBXaNthSWy0wul0mn7R1dE
-   ne1Funt11jEKj3ScRPI=
-Received: from pmta08.mandrill.prod.suw01.rsglab.com (127.0.0.1) by mail14.wdc04.mandrillapp.com id hmifcq1jvmg7 for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 14:55:03 +0000 (envelope-from <bounce-md_31050260.5cb49b47.v1-9dcccbe053fc416ea8af72280536ffea@mandrillapp.com>)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
- i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1555340103; h=From : 
- Subject : To : Cc : Message-Id : References : In-Reply-To : Date : 
- MIME-Version : Content-Type : Content-Transfer-Encoding : From : 
- Subject : Date : X-Mandrill-User : List-Unsubscribe; 
- bh=o+R+7V6FYI76MGf1Yo3KgDdQ+TCerityJJLqd48cM54=; 
- b=BxwnmMa6a23479Z7LpMFqIyo27Y6nZsQP3+EqVC7KuzgxZkOeoya6e5OTic2/Kn3CCnqaF
- NZA2bMpYwy9WetevxYMieDUc+lB1e2fNR68dNPNi3/HCQthWnHGrc1ELWo3o/U0QPaxMqQd6
- PL7A06iR8SIS2p53kktOZKgyne5Eg=
-From:   Kirill Smelkov <kirr@nexedi.com>
-Subject: Re: [PATCH] pci/switchtec: fix stream_open.cocci warnings (fwd)
-Received: from [87.98.221.171] by mandrillapp.com id 9dcccbe053fc416ea8af72280536ffea; Mon, 15 Apr 2019 14:55:03 +0000
-To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Cc:     Julia Lawall <julia.lawall@lip6.fr>, <kbuild-all@01.org>,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Bjorn Helgaas <helgaas@kernel.org>,
-        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-Message-Id: <20190415145456.GA15280@deco.navytux.spb.ru>
-References: <alpine.DEB.2.21.1904131849350.2536@hadrien> <20190413170056.GA11293@deco.navytux.spb.ru> <20190415143857.kg2dbg3zxsxdktsi@linutronix.de>
-In-Reply-To: <20190415143857.kg2dbg3zxsxdktsi@linutronix.de>
-X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
-X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.9dcccbe053fc416ea8af72280536ffea
-X-Mandrill-User: md_31050260
-Date:   Mon, 15 Apr 2019 14:55:03 +0000
+        Mon, 15 Apr 2019 11:11:22 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:42710 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727326AbfDOPLV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 11:11:21 -0400
+Received: from zn.tnic (p4FED3D80.dip0.t-ipconnect.de [79.237.61.128])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3C20C1EC0104;
+        Mon, 15 Apr 2019 17:11:20 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1555341080;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=QCLMoMsTKAXmw0y+yefNuUjq7iuC6JX/R0IqnnaMksM=;
+        b=dzyguiH94vqpLzkGfsKjhWkhr4Xnk3B08NAUsK6+zAWS6J9ON4n5VLZts64P5nbBPLvlhr
+        17qXqzSdJp5yrUWXBkZwjhm58LsNIs9cIRtak7E8EVGLW8Q0gWHUMVl/SLLlvnNaeQI9p0
+        cUE2EVzrGXSyZcFIufCRvAG+HDD7uAQ=
+Date:   Mon, 15 Apr 2019 17:09:10 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Hao Feng <fenghao@hygon.cn>
+Cc:     'Joerg Roedel ' <joro@8bytes.org>,
+        'Paolo Bonzini ' <pbonzini@redhat.com>,
+        ' Radim =?utf-8?B?S3LEjW3DocWZ?= ' <rkrcmar@redhat.com>,
+        'Thomas Gleixner ' <tglx@linutronix.de>,
+        'Ingo Molnar ' <mingo@redhat.com>,
+        "' H. Peter Anvin '" <hpa@zytor.com>,
+        'Zhaohui Du ' <duzhaohui@hygon.cn>,
+        'Zhiwei Ying ' <yingzhiwei@hygon.cn>,
+        'Wen Pu ' <puwen@hygon.cn>, x86@kernel.org,
+        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 5/6] KVM: SVM: Add support for KVM_SEV_GM_GET_DIGEST
+ command
+Message-ID: <20190415150910.GE29317@zn.tnic>
+References: <1555329868-17895-1-git-send-email-fenghao@hygon.cn>
+ <1555329868-17895-6-git-send-email-fenghao@hygon.cn>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
+Content-Disposition: inline
+In-Reply-To: <1555329868-17895-6-git-send-email-fenghao@hygon.cn>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sebastian,
-
-On Mon, Apr 15, 2019 at 04:38:57PM +0200, Sebastian Andrzej Siewior wrote:
-> On 2019-04-13 17:00:59 [+0000], Kirill Smelkov wrote:
-> > Hello everyone,
-> Hi,
+On Mon, Apr 15, 2019 at 08:04:27PM +0800, Hao Feng wrote:
+> The command is used to get the key digest from SEV firmware, guest
+> owner will check the key digest to see if the key negotiation is
+> successful or not.
 > 
-> > On Sat, Apr 13, 2019 at 06:50:57PM +0200, Julia Lawall wrote:
-> > > Hello,
-> > > 
-> > > Kirill will explain about this issue.
-> > 
-> > pci/switchtec switching to stream_open is already queued to merge
-> > window and it was acked by Logan Gunthorpe:
-> > 
-> >         https://lore.kernel.org/lkml/CAHk-=wgqgN5j1ZWnyVLqqoyU=CCWTYOko3MDyU8L_5e21KvHAg@mail.gmail.com/
-> >         https://lab.nexedi.com/kirr/linux/commit/edaeb4101860
-> > 
-> > ( there are too many Cc's in that patch and email with it and reply-all to
-> >   it did not get into mailing list probably due to being considered as spam )
-> > 
-> > stream_open.cocci was issuing only warning for pci/switchtec, but after
-> > 8a29a3bae2a2 ("pci/switchtec: Don't use completion's wait queue") they
-> > started to use wait_even_* inside read method and, since
-> > stream_open.cocci considers wait_event_* as blocking the warning became
-> > error. Previously it was completions there, but I added support for wait
-> > events only for simplicity.
-> 
-> why is wait_event_interruptible() treated differently compared to
-> wait_for_completion_interruptible()?
+> Signed-off-by: Hao Feng <fenghao@hygon.cn>
+> Signed-off-by: Pu Wen <puwen@hygon.cn>
 
-No particular reason. I just taught stream_open.cocci to consider
-only "wait_event_*" as blocking:
+Your both SOB chains are wrong. See:
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/scripts/coccinelle/api/stream_open.cocci?h=v5.1-rc5#n35
+  11) Sign your work - the Developer's Certificate of Origin
+  12) When to use Acked-by:, Cc:, and Co-developed-by:
+  13) Using Reported-by:, Tested-by:, Reviewed-by:, Suggested-by: and Fixes:
 
-based on original /proc/xen/xenbus deadlock:
+sections in
 
-https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/xen/xenbus/xenbus_dev_frontend.c?h=v5.1-rc5#n135
-https://git.kernel.org/linus/581d21a2d02a
+https://www.kernel.org/doc/html/latest/process/submitting-patches.html
 
-We can extend "a function that blocks" rule to cover other kernel
-primitives.
+-- 
+Regards/Gruss,
+    Boris.
 
-For the reference: the deadlock scenario is described in
-
-https://git.kernel.org/linus/10dce8af3422
-
-Kirill
+Good mailing practices for 400: avoid top-posting and trim the reply.
