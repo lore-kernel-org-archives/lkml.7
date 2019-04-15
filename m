@@ -2,89 +2,250 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 03056C10F14
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 02:24:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8045C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 02:27:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C4F1B2084E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 02:24:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fq0EfNQX"
+	by mail.kernel.org (Postfix) with ESMTP id AC424206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 02:27:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbfDOCYP (ORCPT
+        id S1726461AbfDOC1n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 22:24:15 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:51310 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbfDOCYP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 22:24:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=aB6g0E//NkNVlipKG0sOhrOyS6Dw+DkFuHN89+1UXTY=; b=fq0EfNQX5nmmKBJBSToMWL+EU
-        FxkpnJG2cnRAHFxr+1W/jqEJiVT7FnrH9KpPttGpFx/T7D9QeyyP6ORiCBXLzW0CSHJgygexR8OEv
-        LGgRxRk6rGqLCiZ7KvkazpzS3Ut3DXqH6MarjmuEo/wxSBFEb4VLhMJFLX2C6dc8tHn3KZ57MypRf
-        c2AG1z6qj6Gzc7hj5pNwfP3/xYm+JbK/igIaiG/xhkuvqKjv3NBQNiY/SumzLQQ7HXAPm7ggHF4Go
-        ds5GKrGU3C1kVsilweVs8h7utQitrg4S1CeaHlkJaGpFenphFG+mPP5NG7MCoitqRzYgwVPBWPZ+E
-        cpkaKGf7g==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hFrI4-0005Pf-K4; Mon, 15 Apr 2019 02:24:12 +0000
-Date:   Sun, 14 Apr 2019 19:24:12 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Kees Cook <keescook@chromium.org>
-Cc:     Eric Biggers <ebiggers@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        linux-crypto <linux-crypto@vger.kernel.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>, linux-mm@kvack.org
-Subject: Re: [PATCH] crypto: testmgr - allocate buffers with __GFP_COMP
-Message-ID: <20190415022412.GA29714@bombadil.infradead.org>
-References: <20190411192607.GD225654@gmail.com>
- <20190411192827.72551-1-ebiggers@kernel.org>
- <CAGXu5jJ8k7fP5Vb=ygmQ0B45GfrK2PeaV04bPWmcZ6Vb+swgyA@mail.gmail.com>
+        Sun, 14 Apr 2019 22:27:43 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:35776 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725789AbfDOC1m (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Apr 2019 22:27:42 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 470ACB05A20EA7ED8FC5;
+        Mon, 15 Apr 2019 10:27:40 +0800 (CST)
+Received: from [127.0.0.1] (10.177.131.64) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.408.0; Mon, 15 Apr 2019
+ 10:27:33 +0800
+Subject: Re: [PATCH v3 3/4] arm64: kdump: support more than one crash kernel
+ regions
+To:     Mike Rapoport <rppt@linux.ibm.com>
+References: <20190409102819.121335-1-chenzhou10@huawei.com>
+ <20190409102819.121335-4-chenzhou10@huawei.com>
+ <20190414121315.GD20947@rapoport-lnx>
+CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <ebiederm@xmission.com>, <catalin.marinas@arm.com>,
+        <will.deacon@arm.com>, <akpm@linux-foundation.org>,
+        <ard.biesheuvel@linaro.org>, <horms@verge.net.au>,
+        <takahiro.akashi@linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
+        <linux-mm@kvack.org>, <wangkefeng.wang@huawei.com>
+From:   Chen Zhou <chenzhou10@huawei.com>
+Message-ID: <b43e586c-219c-2911-c8c8-ba66ff7ce926@huawei.com>
+Date:   Mon, 15 Apr 2019 10:27:30 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.7.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAGXu5jJ8k7fP5Vb=ygmQ0B45GfrK2PeaV04bPWmcZ6Vb+swgyA@mail.gmail.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
+In-Reply-To: <20190414121315.GD20947@rapoport-lnx>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.131.64]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 01:32:32PM -0700, Kees Cook wrote:
-> > @@ -156,7 +156,8 @@ static int __testmgr_alloc_buf(char *buf[XBUFSIZE], int order)
-> >         int i;
-> >
-> >         for (i = 0; i < XBUFSIZE; i++) {
-> > -               buf[i] = (char *)__get_free_pages(GFP_KERNEL, order);
-> > +               buf[i] = (char *)__get_free_pages(GFP_KERNEL | __GFP_COMP,
-> > +                                                 order);
+Hi Mike,
+
+On 2019/4/14 20:13, Mike Rapoport wrote:
+> Hi,
 > 
-> Is there a reason __GFP_COMP isn't automatically included in all page
-> allocations? (Or rather, it seems like the exception is when things
-> should NOT be considered part of the same allocation, so something
-> like __GFP_SINGLE should exist?.)
+> On Tue, Apr 09, 2019 at 06:28:18PM +0800, Chen Zhou wrote:
+>> After commit (arm64: kdump: support reserving crashkernel above 4G),
+>> there may be two crash kernel regions, one is below 4G, the other is
+>> above 4G.
+>>
+>> Crash dump kernel reads more than one crash kernel regions via a dtb
+>> property under node /chosen,
+>> linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>
+> 
+> Somehow I've missed that previously, but how is this supposed to work on
+> EFI systems?
 
-The question is not whether or not things should be considered part of the
-same allocation.  The question is whether the allocation is of a compound
-page or of N consecutive pages.  Now you're asking what the difference is,
-and it's whether you need to be able to be able to call compound_head(),
-compound_order(), PageTail() or use a compound_dtor.  If you don't, then
-you can save some time at allocation & free by not specifying __GFP_COMP.
+Whatever the way in which the systems work, there is FDT pointer(__fdt_pointer)
+in arm64 kernel and file /sys/firmware/fdt will be created in late_initcall.
 
-I'll agree this is not documented well, and maybe most multi-page
-allocations do want __GFP_COMP and we should invert that bit, but
-__GFP_SINGLE doesn't seem like the right antonym to __GFP_COMP to me.
+Kexec-tools read and update file /sys/firmware/fdt in EFI systems to support kdump to
+boot capture kernel.
+
+For supporting more than one crash kernel regions, kexec-tools make changes accordingly.
+Details are in below:
+http://lists.infradead.org/pipermail/kexec/2019-April/022792.html
+
+Thanks,
+Chen Zhou
+
+>  
+>> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
+>> ---
+>>  arch/arm64/mm/init.c     | 66 ++++++++++++++++++++++++++++++++++++++++--------
+>>  include/linux/memblock.h |  6 +++++
+>>  mm/memblock.c            |  7 ++---
+>>  3 files changed, 66 insertions(+), 13 deletions(-)
+>>
+>> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+>> index 3bebddf..0f18665 100644
+>> --- a/arch/arm64/mm/init.c
+>> +++ b/arch/arm64/mm/init.c
+>> @@ -65,6 +65,11 @@ phys_addr_t arm64_dma_phys_limit __ro_after_init;
+>>  
+>>  #ifdef CONFIG_KEXEC_CORE
+>>  
+>> +/* at most two crash kernel regions, low_region and high_region */
+>> +#define CRASH_MAX_USABLE_RANGES	2
+>> +#define LOW_REGION_IDX			0
+>> +#define HIGH_REGION_IDX			1
+>> +
+>>  /*
+>>   * reserve_crashkernel() - reserves memory for crash kernel
+>>   *
+>> @@ -297,8 +302,8 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
+>>  		const char *uname, int depth, void *data)
+>>  {
+>>  	struct memblock_region *usablemem = data;
+>> -	const __be32 *reg;
+>> -	int len;
+>> +	const __be32 *reg, *endp;
+>> +	int len, nr = 0;
+>>  
+>>  	if (depth != 1 || strcmp(uname, "chosen") != 0)
+>>  		return 0;
+>> @@ -307,22 +312,63 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
+>>  	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
+>>  		return 1;
+>>  
+>> -	usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
+>> -	usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
+>> +	endp = reg + (len / sizeof(__be32));
+>> +	while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
+>> +		usablemem[nr].base = dt_mem_next_cell(dt_root_addr_cells, &reg);
+>> +		usablemem[nr].size = dt_mem_next_cell(dt_root_size_cells, &reg);
+>> +
+>> +		if (++nr >= CRASH_MAX_USABLE_RANGES)
+>> +			break;
+>> +	}
+>>  
+>>  	return 1;
+>>  }
+>>  
+>>  static void __init fdt_enforce_memory_region(void)
+>>  {
+>> -	struct memblock_region reg = {
+>> -		.size = 0,
+>> -	};
+>> +	int i, cnt = 0;
+>> +	struct memblock_region regs[CRASH_MAX_USABLE_RANGES];
+>> +
+>> +	memset(regs, 0, sizeof(regs));
+>> +	of_scan_flat_dt(early_init_dt_scan_usablemem, regs);
+>> +
+>> +	for (i = 0; i < CRASH_MAX_USABLE_RANGES; i++)
+>> +		if (regs[i].size)
+>> +			cnt++;
+>> +		else
+>> +			break;
+>> +
+>> +	if (cnt - 1 == LOW_REGION_IDX)
+>> +		memblock_cap_memory_range(regs[LOW_REGION_IDX].base,
+>> +				regs[LOW_REGION_IDX].size);
+>> +	else if (cnt - 1 == HIGH_REGION_IDX) {
+>> +		/*
+>> +		 * Two crash kernel regions, cap the memory range
+>> +		 * [regs[LOW_REGION_IDX].base, regs[HIGH_REGION_IDX].end]
+>> +		 * and then remove the memory range in the middle.
+>> +		 */
+>> +		int start_rgn, end_rgn, i, ret;
+>> +		phys_addr_t mid_base, mid_size;
+>> +
+>> +		mid_base = regs[LOW_REGION_IDX].base + regs[LOW_REGION_IDX].size;
+>> +		mid_size = regs[HIGH_REGION_IDX].base - mid_base;
+>> +		ret = memblock_isolate_range(&memblock.memory, mid_base,
+>> +				mid_size, &start_rgn, &end_rgn);
+>>  
+>> -	of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
+>> +		if (ret)
+>> +			return;
+>>  
+>> -	if (reg.size)
+>> -		memblock_cap_memory_range(reg.base, reg.size);
+>> +		memblock_cap_memory_range(regs[LOW_REGION_IDX].base,
+>> +				regs[HIGH_REGION_IDX].base -
+>> +				regs[LOW_REGION_IDX].base +
+>> +				regs[HIGH_REGION_IDX].size);
+>> +		for (i = end_rgn - 1; i >= start_rgn; i--) {
+>> +			if (!memblock_is_nomap(&memblock.memory.regions[i]))
+>> +				memblock_remove_region(&memblock.memory, i);
+>> +		}
+>> +		memblock_remove_range(&memblock.reserved, mid_base,
+>> +				mid_base + mid_size);
+>> +	}
+>>  }
+>>  
+>>  void __init arm64_memblock_init(void)
+>> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
+>> index 294d5d8..787d252 100644
+>> --- a/include/linux/memblock.h
+>> +++ b/include/linux/memblock.h
+>> @@ -110,9 +110,15 @@ void memblock_discard(void);
+>>  
+>>  phys_addr_t memblock_find_in_range(phys_addr_t start, phys_addr_t end,
+>>  				   phys_addr_t size, phys_addr_t align);
+>> +void memblock_remove_region(struct memblock_type *type, unsigned long r);
+>>  void memblock_allow_resize(void);
+>>  int memblock_add_node(phys_addr_t base, phys_addr_t size, int nid);
+>>  int memblock_add(phys_addr_t base, phys_addr_t size);
+>> +int memblock_isolate_range(struct memblock_type *type,
+>> +					phys_addr_t base, phys_addr_t size,
+>> +					int *start_rgn, int *end_rgn);
+>> +int memblock_remove_range(struct memblock_type *type,
+>> +					phys_addr_t base, phys_addr_t size);
+>>  int memblock_remove(phys_addr_t base, phys_addr_t size);
+>>  int memblock_free(phys_addr_t base, phys_addr_t size);
+>>  int memblock_reserve(phys_addr_t base, phys_addr_t size);
+>> diff --git a/mm/memblock.c b/mm/memblock.c
+>> index e7665cf..1846e2d 100644
+>> --- a/mm/memblock.c
+>> +++ b/mm/memblock.c
+>> @@ -357,7 +357,8 @@ phys_addr_t __init_memblock memblock_find_in_range(phys_addr_t start,
+>>  	return ret;
+>>  }
+>>  
+>> -static void __init_memblock memblock_remove_region(struct memblock_type *type, unsigned long r)
+>> +void __init_memblock memblock_remove_region(struct memblock_type *type,
+>> +					unsigned long r)
+>>  {
+>>  	type->total_size -= type->regions[r].size;
+>>  	memmove(&type->regions[r], &type->regions[r + 1],
+>> @@ -724,7 +725,7 @@ int __init_memblock memblock_add(phys_addr_t base, phys_addr_t size)
+>>   * Return:
+>>   * 0 on success, -errno on failure.
+>>   */
+>> -static int __init_memblock memblock_isolate_range(struct memblock_type *type,
+>> +int __init_memblock memblock_isolate_range(struct memblock_type *type,
+>>  					phys_addr_t base, phys_addr_t size,
+>>  					int *start_rgn, int *end_rgn)
+>>  {
+>> @@ -784,7 +785,7 @@ static int __init_memblock memblock_isolate_range(struct memblock_type *type,
+>>  	return 0;
+>>  }
+>>  
+>> -static int __init_memblock memblock_remove_range(struct memblock_type *type,
+>> +int __init_memblock memblock_remove_range(struct memblock_type *type,
+>>  					  phys_addr_t base, phys_addr_t size)
+>>  {
+>>  	int start_rgn, end_rgn;
+>> -- 
+>> 2.7.4
+>>
+> 
+
