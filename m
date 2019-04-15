@@ -3,104 +3,82 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C6242C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:59:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18220C10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:03:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B51A20848
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:59:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DB1D72073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:03:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727090AbfDOJ7J (ORCPT
+        id S1726659AbfDOKDF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 05:59:09 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59956 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725885AbfDOJ7J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 05:59:09 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 12B0CAE69;
-        Mon, 15 Apr 2019 09:59:08 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 71B151E42AA; Mon, 15 Apr 2019 11:59:07 +0200 (CEST)
-Date:   Mon, 15 Apr 2019 11:59:07 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     linux-fsdevel@vger.kernel.org
-Cc:     Orion Poplawski <orion@nwra.com>,
-        Vivek Trivedi <t.vivek@samsung.com>,
-        Amir Goldstein <amir73il@gmail.com>, linux-api@vger.kernel.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Jan Kara <jack@suse.cz>
-Subject: Re: [PATCH] fanotify: Make wait for permission events interruptible
-Message-ID: <20190415095907.GA14466@quack2.suse.cz>
-References: <20190321151142.17104-1-jack@suse.cz>
+        Mon, 15 Apr 2019 06:03:05 -0400
+Received: from foss.arm.com ([217.140.101.70]:59678 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725798AbfDOKDF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 06:03:05 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E486480D;
+        Mon, 15 Apr 2019 03:03:04 -0700 (PDT)
+Received: from red-moon (red-moon.cambridge.arm.com [10.1.197.39])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4476A3F557;
+        Mon, 15 Apr 2019 03:03:03 -0700 (PDT)
+Date:   Mon, 15 Apr 2019 11:03:01 +0100
+From:   Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     Bjorn Helgaas <bhelgaas@google.com>,
+        Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
+        linux-rockchip@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Shawn Lin <shawn.lin@rock-chips.com>
+Subject: Re: [PATCH] PCI: rockchip: fix bitwise operations on status and
+ ROCKCHIP_PCIE_EP_CMD_STATUS_IS
+Message-ID: <20190415100301.GA12127@red-moon>
+References: <20190330150910.9389-1-colin.king@canonical.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190321151142.17104-1-jack@suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190330150910.9389-1-colin.king@canonical.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu 21-03-19 16:11:42, Jan Kara wrote:
-> Switch waiting for response to fanotify permission events interruptible.
-> This allows e.g. the system to be suspended while there are some
-> fanotify permission events pending (which is reportedly pretty common
-> when for example AV solution is in use). However just making the wait
-> interruptible can result in e.g. open(2) returning -EINTR where
-> previously such error code never happened in practice. To avoid
-> confusion of userspace due to this error code, return -ERESTARTNOINTR
-> instead.
+On Sat, Mar 30, 2019 at 03:09:10PM +0000, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> Signed-off-by: Jan Kara <jack@suse.cz>
+> Currently the bitwise operations on the u16 variable 'status' with
+> the setting ROCKCHIP_PCIE_EP_CMD_STATUS_IS are incorrect because
+> ROCKCHIP_PCIE_EP_CMD_STATUS_IS is 1UL<<19 which is wider than the
+> u16 variable.  Fix this by making status a u32.  (Not tested).
+> 
+> Fixes: cf590b078391 ("PCI: rockchip: Add EP driver for Rockchip PCIe controller")
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 > ---
->  fs/notify/fanotify/fanotify.c | 11 +++++++++--
->  1 file changed, 9 insertions(+), 2 deletions(-)
-> 
-> Orion, can you give this patch some testing with your usecase? Also if anybody
-> sees any issue with returning -ERESTARTNOINTR I have missed, please speak up.
+>  drivers/pci/controller/pcie-rockchip-ep.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 
-Ping Orion? Did you have any chance to give this patch a try? Does it fix
-hibernation issues you observe without causing issues with bash and other
-programs? I'd like to queue this patch for the coming merge window but
-I'd like to see some testing results showing that it actually helps
-anything... Thanks!
+Applied to pci/rockchip for v5.2, thanks.
 
-								Honza
+Lorenzo
 
-> 
-> diff --git a/fs/notify/fanotify/fanotify.c b/fs/notify/fanotify/fanotify.c
-> index 6b9c27548997..eb790853844b 100644
-> --- a/fs/notify/fanotify/fanotify.c
-> +++ b/fs/notify/fanotify/fanotify.c
-> @@ -92,10 +92,17 @@ static int fanotify_get_response(struct fsnotify_group *group,
+> diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
+> index a5d799e2dff2..d743b0a48988 100644
+> --- a/drivers/pci/controller/pcie-rockchip-ep.c
+> +++ b/drivers/pci/controller/pcie-rockchip-ep.c
+> @@ -350,7 +350,7 @@ static void rockchip_pcie_ep_assert_intx(struct rockchip_pcie_ep *ep, u8 fn,
+>  	struct rockchip_pcie *rockchip = &ep->rockchip;
+>  	u32 r = ep->max_regions - 1;
+>  	u32 offset;
+> -	u16 status;
+> +	u32 status;
+>  	u8 msg_code;
 >  
->  	pr_debug("%s: group=%p event=%p\n", __func__, group, event);
->  
-> -	ret = wait_event_killable(group->fanotify_data.access_waitq,
-> -				  event->state == FAN_EVENT_ANSWERED);
-> +	ret = wait_event_interruptible(group->fanotify_data.access_waitq,
-> +				       event->state == FAN_EVENT_ANSWERED);
->  	/* Signal pending? */
->  	if (ret < 0) {
-> +		/*
-> +		 * Force restarting a syscall so that this is mostly invisible
-> +		 * for userspace which is not prepared for handling EINTR e.g.
-> +		 * from open(2).
-> +		 */
-> +		if (ret == -ERESTARTSYS)
-> +			ret = -ERESTARTNOINTR;
->  		spin_lock(&group->notification_lock);
->  		/* Event reported to userspace and no answer yet? */
->  		if (event->state == FAN_EVENT_REPORTED) {
+>  	if (unlikely(ep->irq_pci_addr != ROCKCHIP_PCIE_EP_PCI_LEGACY_IRQ_ADDR ||
 > -- 
-> 2.16.4
+> 2.20.1
 > 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
