@@ -2,92 +2,114 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 95718C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:01:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89BA7C282DD
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:01:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5918C2087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:01:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4E587218FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:01:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555354909;
+	bh=HFTrE6SKibGWzuM7onuwvoLWQLSo1YWFwO0ChtJYcvc=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=m146jm6IZBtVOaSQDXEMHe1dRk1uC52EVhP1cfeeQpgAW8CA1X13zrd0bvXSIv1O4
+	 pJU62zrLP3MF6KsCxHLHB125IKGEeCG2FNmC6kh8qqoC7hn35B18rXeAIPGI0GMyKt
+	 HWTtoYaioQ0bBXejefsykwSLW32JnGx5OJNdanSw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728293AbfDOTBE convert rfc822-to-8bit (ORCPT
+        id S1728324AbfDOTBs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:01:04 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:46926 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728201AbfDOTBD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:01:03 -0400
-Received: by mail-qk1-f194.google.com with SMTP id s81so10544314qke.13
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 12:01:03 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=SBZgRHw9QpgkOMfTKYWZFdBmTOtbPzut74YxgdD6F0E=;
-        b=qRuvfDlk97j/TKixSqEnBUJr1bfKgTVSd48pviIKKh1v4MlDWdkIbgFn/jhDk34A7b
-         aAZvQA0v2nJsWaB0JUTMqUXmuR1JxAo7O3+ONwCMwwuYuUnd7JivX1QVqrv4kOuQRqJl
-         6b0qooiKIhM5im27+3gpS3wtrj/l2+FV5AqT/Z9flymPYR5kzyBJL0BGb50iDwiYuM/u
-         McWMRVMSiza5WTYkNUxYiIfl87sIvDyRW+G1CCB3OvLqLawc438cmSj1oAwNWLQqnjcf
-         Vo0TgFmEebWJ3OApKQEZkfEtsbBc2jwHnOT4w+eCMl16JQ30k6buHaa0spzdqsJa1f4I
-         xCSQ==
-X-Gm-Message-State: APjAAAU/Uct2i1IvSDt1nGaDL+tSce0JkTmFsQYF3D2sQAQiJWz2TLCS
-        Ine0te4sGR+agbjroxL/Ba3BiTa5GYGYDpeW3w7JHE7S
-X-Google-Smtp-Source: APXvYqw7+jbK50Ky5+kub78b0FLuXvt7o8tb1KLg6yShCs0neaKZUxg4LCiHBH+mIMl9Re+dbQkTot73LT4/loJ82lU=
-X-Received: by 2002:a37:f511:: with SMTP id l17mr59546266qkk.296.1555354862748;
- Mon, 15 Apr 2019 12:01:02 -0700 (PDT)
+        Mon, 15 Apr 2019 15:01:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60278 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728126AbfDOTBr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:01:47 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DD28A2087C;
+        Mon, 15 Apr 2019 19:01:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555354906;
+        bh=HFTrE6SKibGWzuM7onuwvoLWQLSo1YWFwO0ChtJYcvc=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=wBZkALkmGK/8yYkHsaZZdjRahwkHX4FJVzxitGAy8mqH+AtHwSD624i1xuWj4C26Y
+         7WQfP9D797DS1uoK0CEpV/QQM1Rchdk+cQnMcNAvDNS/0xwgEWZ6WBckMf01sSHLsq
+         ec9zzcsQp2trEurOHndX/YXUq5TMuOOfaFCb96Xs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, Russell King <rmk+kernel@armlinux.org.uk>,
+        "David S. Miller" <davem@davemloft.net>,
+        Sasha Levin <sashal@kernel.org>,
+        =?UTF-8?q?Marek=20Beh=C3=BAn?= <marek.behun@nic.cz>
+Subject: [PATCH 4.14 01/69] net: sfp: move sfp_register_socket call from sfp_remove to sfp_probe
+Date:   Mon, 15 Apr 2019 20:58:19 +0200
+Message-Id: <20190415183726.537386346@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190415183726.036654568@linuxfoundation.org>
+References: <20190415183726.036654568@linuxfoundation.org>
+User-Agent: quilt/0.66
+X-stable: review
+X-Patchwork-Hint: ignore
 MIME-Version: 1.0
-References: <20190415155509.3565087-1-arnd@arndb.de> <20190415164022.GA32090@infradead.org>
- <20190415173935.GE4121@minyard.net>
-In-Reply-To: <20190415173935.GE4121@minyard.net>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 15 Apr 2019 21:00:46 +0200
-Message-ID: <CAK8P3a0MN0U1cZac2t-SE4=nzWfJ-WJCAz=zHAcAKofD_sM1_Q@mail.gmail.com>
-Subject: Re: [PATCH] ipmi: avoid atomic_inc in exit function
-To:     Corey Minyard <minyard@acm.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        openipmi-developer@lists.sourceforge.net,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 7:39 PM Corey Minyard <minyard@acm.org> wrote:
->
-> On Mon, Apr 15, 2019 at 09:40:22AM -0700, Christoph Hellwig wrote:
-> > On Mon, Apr 15, 2019 at 05:55:00PM +0200, Arnd Bergmann wrote:
-> > > This causes a link failure on ARM in certain configurations,
-> > > when we reference each atomic operation from .alt.smp.init in
-> > > order to patch out atomics on non-SMP systems:
-> > >
-> > > `.exit.text' referenced in section `.alt.smp.init' of drivers/char/ipmi/ipmi_msghandler.o: defined in discarded section `.exit.text' of drivers/char/ipmi/ipmi_msghandler.o
-> > >
-> > > In this case, we can trivially replace the atomic_inc() with
-> > > an atomic_set() that has the same effect and does not require
-> > > a fixup.
-> >
-> > I'd rather fіx the arm section management.  Using atomic in exit
-> > routines is perfectly valid, and it would seem odd to forbid it.
->
-> That was my first thought, too.  It's kind of hard to believe that
-> the IPMI driver is the only thing that does an atomic_inc() in the
-> exit code.
+Commit c4ba68b8691e4 backported from upstream to 4.14 stable was
+probably applied wrongly, and instead of calling sfp_register_socket in
+sfp_probe, the socket registering code was put into sfp_remove. This is
+obviously wrong.
 
-That's what I had thought as well at first, and I carried a patch
-to work around this by not dropping the .text.exit section on ARM
-when SMP patching is enabled for a few years. I never sent this
-because that can waste a significant amount of kernel memory,
-and I knew the warning is harmless.
+The commit first appeared in 4.14.104. Fix it for the next 4.14 release.
 
-When revisiting it now, I found that this one was the only instance
-I ever hit. It seems to be that using atomics in module_exit() is
-indeed odd, because the function is rarely concurrent with anything
-else.
+Fixes: c4ba68b8691e4 ("net: sfp: do not probe SFP module before we're attached")
+Cc: stable <stable@vger.kernel.org>
+Cc: Russell King <rmk+kernel@armlinux.org.uk>
+Cc: David S. Miller <davem@davemloft.net>
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Marek Behún <marek.behun@nic.cz>
+Signed-off-by: Sasha Levin <sashal@kernel.org>
+---
+ drivers/net/phy/sfp.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
-        Arnd
+diff --git a/drivers/net/phy/sfp.c b/drivers/net/phy/sfp.c
+index a1b68b19d912..5ab725a571a8 100644
+--- a/drivers/net/phy/sfp.c
++++ b/drivers/net/phy/sfp.c
+@@ -878,6 +878,10 @@ static int sfp_probe(struct platform_device *pdev)
+ 	if (poll)
+ 		mod_delayed_work(system_wq, &sfp->poll, poll_jiffies);
+ 
++	sfp->sfp_bus = sfp_register_socket(sfp->dev, sfp, &sfp_module_ops);
++	if (!sfp->sfp_bus)
++		return -ENOMEM;
++
+ 	return 0;
+ }
+ 
+@@ -887,10 +891,6 @@ static int sfp_remove(struct platform_device *pdev)
+ 
+ 	sfp_unregister_socket(sfp->sfp_bus);
+ 
+-	sfp->sfp_bus = sfp_register_socket(sfp->dev, sfp, &sfp_module_ops);
+-	if (!sfp->sfp_bus)
+-		return -ENOMEM;
+-
+ 	return 0;
+ }
+ 
+-- 
+2.19.1
+
+
+
