@@ -2,106 +2,91 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B32D3C10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E71A5C282DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:20:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8F0A120818
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:19:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B66D4217D6
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:20:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727655AbfDOPTb (ORCPT
+        id S1727667AbfDOPUb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 11:19:31 -0400
-Received: from mga09.intel.com ([134.134.136.24]:2071 "EHLO mga09.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726094AbfDOPTa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 11:19:30 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Apr 2019 08:19:30 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,354,1549958400"; 
-   d="scan'208";a="149586833"
-Received: from pmmacken-mobl.amr.corp.intel.com (HELO pbossart-mobl3.intel.com) ([10.251.139.191])
-  by FMSMGA003.fm.intel.com with ESMTP; 15 Apr 2019 08:19:28 -0700
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-To:     alsa-devel@alsa-project.org
-Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
-        vkoul@kernel.org, gregkh@linuxfoundation.org,
-        liam.r.girdwood@linux.intel.com, jank@cadence.com, joe@perches.com,
-        srinivas.kandagatla@linaro.org,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Schmauss <erik.schmauss@intel.com>,
-        linux-acpi@vger.kernel.org (open list:ACPI),
-        devel@acpica.org (open list:ACPI COMPONENT ARCHITECTURE (ACPICA))
-Subject: [PATCH] ACPI / device_sysfs: change _ADR representation to 64 bits
-Date:   Mon, 15 Apr 2019 10:18:57 -0500
-Message-Id: <20190415151857.25531-1-pierre-louis.bossart@linux.intel.com>
-X-Mailer: git-send-email 2.17.1
+        Mon, 15 Apr 2019 11:20:31 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:46192 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727252AbfDOPUb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 11:20:31 -0400
+Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1hG3PC-0003Uz-Bo; Mon, 15 Apr 2019 17:20:22 +0200
+Date:   Mon, 15 Apr 2019 17:20:22 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Kirill Smelkov <kirr@nexedi.com>
+Cc:     Julia Lawall <julia.lawall@lip6.fr>, kbuild-all@01.org,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] pci/switchtec: fix stream_open.cocci warnings (fwd)
+Message-ID: <20190415152021.3j3riefeoz7rf2pa@linutronix.de>
+References: <alpine.DEB.2.21.1904131849350.2536@hadrien>
+ <20190413170056.GA11293@deco.navytux.spb.ru>
+ <20190415143857.kg2dbg3zxsxdktsi@linutronix.de>
+ <20190415145456.GA15280@deco.navytux.spb.ru>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190415145456.GA15280@deco.navytux.spb.ru>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Standards such as the MIPI DisCo for SoundWire 1.0 specification
-assume the _ADR field is 64 bits.
+On 2019-04-15 14:55:02 [+0000], Kirill Smelkov wrote:
+> Hi Sebastian,
+Hi Kirill,
 
-_ADR is defined as an "Integer" represented as 64 bits since ACPI 2.0
-released in 2002. The low levels already use _ADR as 64 bits, e.g. in
-struct acpi_device_info.
+> On Mon, Apr 15, 2019 at 04:38:57PM +0200, Sebastian Andrzej Siewior wrote:
+> > On 2019-04-13 17:00:59 [+0000], Kirill Smelkov wrote:
+> > > stream_open.cocci was issuing only warning for pci/switchtec, but after
+> > > 8a29a3bae2a2 ("pci/switchtec: Don't use completion's wait queue") they
+> > > started to use wait_even_* inside read method and, since
+> > > stream_open.cocci considers wait_event_* as blocking the warning became
+> > > error. Previously it was completions there, but I added support for wait
+> > > events only for simplicity.
+> > 
+> > why is wait_event_interruptible() treated differently compared to
+> > wait_for_completion_interruptible()?
+> 
+> No particular reason. I just taught stream_open.cocci to consider
+> only "wait_event_*" as blocking:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/scripts/coccinelle/api/stream_open.cocci?h=v5.1-rc5#n35
+> 
+> based on original /proc/xen/xenbus deadlock:
+> 
+> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/xen/xenbus/xenbus_dev_frontend.c?h=v5.1-rc5#n135
+> https://git.kernel.org/linus/581d21a2d02a
+> 
+> We can extend "a function that blocks" rule to cover other kernel
+> primitives.
+> 
+> For the reference: the deadlock scenario is described in
+> 
+> https://git.kernel.org/linus/10dce8af3422
 
-This patch bumps the representation used for sysfs to 64 bits.
+As far I understand the problem is when the ->read() callback waits for
+the ->write() callback. The locking isn't changed by patch you
+mentioned.
+So extended might make sense. But then wait_event_* by itself in
+->read() isn't a problem as long as its counter part isn't in ->write().
+But yes, nice finding.
 
-Example with a SoundWire device, the results show the complete
-vendorID and linkID which were omitted before:
+> Kirill
 
-Before:
-$ more /sys/bus/acpi/devices/device\:38/adr
-0x5d070000
-After:
-$ more /sys/bus/acpi/devices/device\:38/adr
-0x000010025d070000
-
-Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
----
- drivers/acpi/device_sysfs.c | 3 +--
- include/acpi/acpi_bus.h     | 2 +-
- 2 files changed, 2 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/acpi/device_sysfs.c b/drivers/acpi/device_sysfs.c
-index 8940054d6250..f8d73ae42529 100644
---- a/drivers/acpi/device_sysfs.c
-+++ b/drivers/acpi/device_sysfs.c
-@@ -428,8 +428,7 @@ static ssize_t acpi_device_adr_show(struct device *dev,
- {
- 	struct acpi_device *acpi_dev = to_acpi_device(dev);
- 
--	return sprintf(buf, "0x%08x\n",
--		       (unsigned int)(acpi_dev->pnp.bus_address));
-+	return sprintf(buf, "0x%016llx\n", acpi_dev->pnp.bus_address);
- }
- static DEVICE_ATTR(adr, 0444, acpi_device_adr_show, NULL);
- 
-diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
-index f7981751ac77..9075e28ea60a 100644
---- a/include/acpi/acpi_bus.h
-+++ b/include/acpi/acpi_bus.h
-@@ -230,7 +230,7 @@ struct acpi_device_dir {
- /* Plug and Play */
- 
- typedef char acpi_bus_id[8];
--typedef unsigned long acpi_bus_address;
-+typedef u64 acpi_bus_address;
- typedef char acpi_device_name[40];
- typedef char acpi_device_class[20];
- 
--- 
-2.17.1
-
+Sebastian
