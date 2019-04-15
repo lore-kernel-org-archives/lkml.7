@@ -2,117 +2,132 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77F50C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:19:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D35FCC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B3772075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:19:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E5AE2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:20:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555323617;
+	bh=xkkT995wyHiGNkJTyDY9RuTkCF7U40vt++nhBYST41U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=Hq301ejcMKfmmvlpYDOS4K6+PJmUfocQnAfufuQDAnqlB745bIJey7ZRURSzDhwJ1
+	 6K1ei261yShKeJSvXv9cSpqYdW3SwZi3Bb38AYKTVwdgETYILerJISNK6TdF6toDrf
+	 NCywvMt3ysTBl94JovNmOzM3WOHaFBw68y5J+HOU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727181AbfDOKTy convert rfc822-to-8bit (ORCPT
+        id S1727227AbfDOKUQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 06:19:54 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([207.82.80.151]:31665 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726469AbfDOKTy (ORCPT
+        Mon, 15 Apr 2019 06:20:16 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:40554 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726751AbfDOKUQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 06:19:54 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-144-yjSabL5nPTGzMfo5zyKITA-1; Mon, 15 Apr 2019 11:19:47 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
- AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
- Server (TLS) id 15.0.1347.2; Mon, 15 Apr 2019 11:20:57 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Mon, 15 Apr 2019 11:20:57 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Alastair D'Silva' <alastair@d-silva.org>,
-        'Petr Mladek' <pmladek@suse.com>
-CC:     'Alastair D'Silva' <alastair@au1.ibm.com>,
-        'Jani Nikula' <jani.nikula@linux.intel.com>,
-        'Joonas Lahtinen' <joonas.lahtinen@linux.intel.com>,
-        'Rodrigo Vivi' <rodrigo.vivi@intel.com>,
-        'David Airlie' <airlied@linux.ie>,
-        'Daniel Vetter' <daniel@ffwll.ch>,
-        'Karsten Keil' <isdn@linux-pingi.de>,
-        'Jassi Brar' <jassisinghbrar@gmail.com>,
-        'Tom Lendacky' <thomas.lendacky@amd.com>,
-        "'David S. Miller'" <davem@davemloft.net>,
-        'Jose Abreu' <Jose.Abreu@synopsys.com>,
-        'Kalle Valo' <kvalo@codeaurora.org>,
-        'Stanislaw Gruszka' <sgruszka@redhat.com>,
-        'Benson Leung' <bleung@chromium.org>,
-        "'Enric Balletbo i Serra'" <enric.balletbo@collabora.com>,
-        "'James E.J. Bottomley'" <jejb@linux.ibm.com>,
-        "'Martin K. Petersen'" <martin.petersen@oracle.com>,
-        'Greg Kroah-Hartman' <gregkh@linuxfoundation.org>,
-        'Alexander Viro' <viro@zeniv.linux.org.uk>,
-        'Sergey Senozhatsky' <sergey.senozhatsky@gmail.com>,
-        'Steven Rostedt' <rostedt@goodmis.org>,
-        'Andrew Morton' <akpm@linux-foundation.org>,
-        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        "ath10k@lists.infradead.org" <ath10k@lists.infradead.org>,
-        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
-        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
-        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
-Subject: RE: [PATCH 3/4] lib/hexdump.c: Replace ascii bool in
- hex_dump_to_buffer with flags
-Thread-Topic: [PATCH 3/4] lib/hexdump.c: Replace ascii bool in
- hex_dump_to_buffer with flags
-Thread-Index: AQMagew30YCVD5mEhyHx4HPts9xr1ALvlgN3AdorRAgCCza9VAHVj+h+o2yMYSCAAAOL8A==
-Date:   Mon, 15 Apr 2019 10:20:56 +0000
-Message-ID: <10c791893f034c26b4fee1a4659133e5@AcuMS.aculab.com>
-References: <20190410031720.11067-1-alastair@au1.ibm.com>
- <20190410031720.11067-4-alastair@au1.ibm.com>
- <20190412141211.lvnz6wb7mwkykmxf@pathway.suse.cz>
- <093301d4f187$da0756a0$8e1603e0$@d-silva.org>
- <20190415092424.qos7d54nbyr5hphu@pathway.suse.cz>
- <0da301d4f373$01d5bb80$05813280$@d-silva.org>
-In-Reply-To: <0da301d4f373$01d5bb80$05813280$@d-silva.org>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Mon, 15 Apr 2019 06:20:16 -0400
+Received: by mail-lj1-f196.google.com with SMTP id q66so15087726ljq.7;
+        Mon, 15 Apr 2019 03:20:14 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=bqYAp/he9RcQe+K1USjID00PfUaljcvAy/YDV5xrNu0=;
+        b=Vtf3SlckqOS7vf76vmPSNdYxbvfTbiHI+3KhZdypAzY8FDSiIh9sJgQ+mBl199wZhk
+         nlorY1Jyy+s2xa367/6cEOuAiUnmZT1DBtsJU94/KrSeuwgIDtq7Hx5LMhWoYq8hAdKz
+         qPKOu1kyza8JR7Lu2AWMI73MenlcZygZXHEQiZ/izyDC7jURVUBkMrXj+zRNiOk3pl/m
+         QeFwnUZBzFx4Eow5s+tb7e2JpyyRA1j0T0nrybeh7P0uSbV+Ssinzrt2vwtdwXWv9MNj
+         Y8d3ZMUFZk37uiPpRm2p/vWShfnOLUqE8MIu50MRE9b0zGFYS33SOvKUOarxuPIJbSiQ
+         3qVA==
+X-Gm-Message-State: APjAAAUM5hO6pvl0+AErmWL+sdQ8qeYeh9RwmtEIU8Owtq1rUgzj14ha
+        zYbfB32kXNOoJWR+dPxoW7w=
+X-Google-Smtp-Source: APXvYqw9oyN9eUrBKy8vJXhI95uC5hG4QSqFBRXN3zRYA994/kLCJpfOQgRBfoVFEynNd5XEJ4HN1w==
+X-Received: by 2002:a2e:895a:: with SMTP id b26mr38057860ljk.89.1555323613764;
+        Mon, 15 Apr 2019 03:20:13 -0700 (PDT)
+Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
+        by smtp.gmail.com with ESMTPSA id d23sm2805988lfj.64.2019.04.15.03.20.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Apr 2019 03:20:12 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.91)
+        (envelope-from <johan@kernel.org>)
+        id 1hFyio-0000Bc-6P; Mon, 15 Apr 2019 12:20:18 +0200
+Date:   Mon, 15 Apr 2019 12:20:18 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>
+Cc:     peter_hong@fintek.com.tw, johan@kernel.org,
+        gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>,
+        Oliver Neukum <oneukum@suse.com>
+Subject: Re: [PATCH V6 1/3] USB: serial: f81232: clear overrun flag
+Message-ID: <20190415102018.GD29656@localhost>
+References: <1554280832-29286-1-git-send-email-hpeter+linux_kernel@gmail.com>
 MIME-Version: 1.0
-X-MC-Unique: yjSabL5nPTGzMfo5zyKITA-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1554280832-29286-1-git-send-email-hpeter+linux_kernel@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Alastair D'Silva
-> Sent: 15 April 2019 11:07
-...
-> In the above example the author only wants the hex output, while in other
-> situations, both hex & ASCII output is desirable. If you just want ASCII
-> output, the caller should just use a printk or one of it's wrappers.
+On Wed, Apr 03, 2019 at 04:40:30PM +0800, Ji-Ze Hong (Peter Hong) wrote:
+> The F81232 will report data and LSR with bulk like following format:
+> bulk-in data: [LSR(1Byte)+DATA(1Byte)][LSR(1Byte)+DATA(1Byte)]...
+> 
+> LSR will auto clear frame/parity/break error flag when reading by H/W,
+> but overrrun will only cleared when reading LSR. So this patch add a
+> worker to read LSR when overrun and flush the worker on close() &
+> suspend().
+> 
+> Cc: Oliver Neukum <oneukum@suse.com>
+> Signed-off-by: Ji-Ze Hong (Peter Hong) <hpeter+linux_kernel@gmail.com>
+> ---
+> V6:
+> 	1: Add deferred_lsr_work_needed to re-trigger when f81232_resume()
+> 
+> v5:
+> 	1: Source code base revert to v3 and remove all v4 changes.
+> 	2: Add serial->suspending check in f81232_process_read_urb()
+> 	   before schedule_work(&priv->lsr_work) to avoid race condition.
+> 
+> v4:
+> 	1: Add serial->suspending check in f81232_lsr_worker() to avoid
+> 	   re-trigger
+> 	2: Add port_priv-lsr_work_resched to re-trigger LSR worker
+> 
+> v3:
+> 	1: Add flush_work(&port_priv->lsr_work) in f81232_suspend().
+> 
+> v2:
+> 	1: Add flush_work(&port_priv->lsr_work) in f81232_close().
+> 
+>  drivers/usb/serial/f81232.c | 55 +++++++++++++++++++++++++++++++++++++++++++++
+>  1 file changed, 55 insertions(+)
 
-Hexdump will 'sanitise' the ASCII.
+> +static int f81232_suspend(struct usb_serial *serial, pm_message_t message)
+> +{
+> +	struct f81232_private *port_priv;
+> +
+> +	port_priv = usb_get_serial_port_data(serial->port[0]);
+> +	flush_work(&port_priv->lsr_work);
 
-Although I think you'd want a 'no hex' flag to suppress the hex.
+Note that usb-serial core doesn't manage the interrupt urb for you, so
+there's already a bug in this driver which should be fixed in a
+preparatory patch (i.e. resubmit the interrupt urb on resume).
 
-Probably more useful flags are ones to suppress the address column.
-I've also used flags to enable (or disable) suppression of multiple
-lines of zeros of constant bytes.
-In that case you may want hexdump to return the flags for the
-next call when a large buffer is being dumped in fragments.
+And if you stop the bulk-in and interrupt urbs explicitly here, you can
+safely flush the lsr work without any races afterwards.
 
-	David
+Also note that the interrupt work is currently never flushed on suspend
+or close either... Another thing to fix first.
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+There's also a layering violation here, since you're accessing the child
+port data from a parent interface driver callback. The port driver could
+have been unbound and you'd get a NULL deref here. Iterating over the
+interface's ports, and checking if it's been opened (as you need to do
+on resume anyway) might be enough though.
 
+Johan
