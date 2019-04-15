@@ -2,66 +2,159 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3047CC282DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 23:54:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B33C4C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 23:59:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F3B332075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 23:54:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 703D820848
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 23:59:08 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555372748;
+	bh=3+UbA1yAN3lsUeVKtHwfxlSU4L80rFsOslnpcjJt750=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=i8UynewunrG0NHTNPXj6IiS2pNfZqvv9Fo5XMIKM6sgK12wuBRJ2728NwZHfJRRoS
+	 nQcmSMyinORaFmkvb6LOaQndmrUtFLcAR3DlINoef8KzJxtpTT1b7vg6Dlu/q8DzhM
+	 HInx2EaX8jIcUD2EPiBkCw+YAHFprbUx3NuKvn/M=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728300AbfDOXyj (ORCPT
+        id S1728228AbfDOX7H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 19:54:39 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:43588 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728101AbfDOXyi (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 19:54:38 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hGBQi-0004gX-T3; Mon, 15 Apr 2019 23:54:28 +0000
-Date:   Tue, 16 Apr 2019 00:54:28 +0100
-From:   Al Viro <viro@zeniv.linux.org.uk>
-To:     Khazhismel Kumykov <khazhy@google.com>
-Cc:     Tetsuo Handa <penguin-kernel@i-love.sakura.ne.jp>,
-        syzbot <syzbot+2b74da47f048a5046135@syzkaller.appspotmail.com>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        syzkaller-bugs@googlegroups.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-xfs@vger.kernel.org
-Subject: Re: WARNING in notify_change
-Message-ID: <20190415235428.GS2217@ZenIV.linux.org.uk>
-References: <94eb2c0ce3aa7551d30569658325@google.com>
- <96c750b3-fcb0-3d7f-45eb-45459078ef83@I-love.SAKURA.ne.jp>
- <CACGdZYLPLF40cUK+-aZ6O4vOR1YLvHzLJ70SFneKJ7KOXwBOug@mail.gmail.com>
+        Mon, 15 Apr 2019 19:59:07 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56394 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726527AbfDOX7H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 19:59:07 -0400
+Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A694E20854
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 23:59:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555372745;
+        bh=3+UbA1yAN3lsUeVKtHwfxlSU4L80rFsOslnpcjJt750=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=2l746GZFvPPC+7vZffZmakn3bmugVqUgWPhNilSMeGWIU6W3bINYR4L4o1Gki/4jF
+         +YXOpaUcrCu0dJl++3bVaEZEAq77cpFmEwhBM7jkhLAOVynQG0ZeDqUolcf3emlLFM
+         aEfmTuqEFyIo6zCLCmsdcYbNzoEwLpHJEqxS/PJQ=
+Received: by mail-wm1-f53.google.com with SMTP id q16so22813655wmj.3
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 16:59:05 -0700 (PDT)
+X-Gm-Message-State: APjAAAXTh0jX7A6YZsKBrjLYgbTm3UNy6PqiM4J3VBfazeTKyD/3llsK
+        tCQGj865uC8pGMryQXHvo9aCCNSYZnD62eMCD5i09Q==
+X-Google-Smtp-Source: APXvYqwScTPHlbRl5Ea3KnNhOpkryIK7T2poiqXouSy+lNWI+ykp+HLMjgkz/fNbgKh+kloztOoIjygR2L4r+dRL3rs=
+X-Received: by 2002:a1c:4e19:: with SMTP id g25mr25211794wmh.9.1555372744163;
+ Mon, 15 Apr 2019 16:59:04 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACGdZYLPLF40cUK+-aZ6O4vOR1YLvHzLJ70SFneKJ7KOXwBOug@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190414201436.19502-1-christian@brauner.io> <dc05ffe3-c2ff-8b3e-d181-e0cc620bf91d@metux.net>
+ <20190415195911.z7b7miwsj67ha54y@yavin> <CALCETrWxMnaPvwicqkMLswMynWvJVteazD-bFv3ZnBKWp-1joQ@mail.gmail.com>
+ <CAGLj2rEOfW=3wis3YWomWK1AVDdCX6DMqbvSHXba3-x=kpkcNA@mail.gmail.com>
+In-Reply-To: <CAGLj2rEOfW=3wis3YWomWK1AVDdCX6DMqbvSHXba3-x=kpkcNA@mail.gmail.com>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Mon, 15 Apr 2019 16:58:52 -0700
+X-Gmail-Original-Message-ID: <CALCETrV42Ot+pGjeGO23WozwiEFpdaLZibSA10GXNy+Fbi-dNg@mail.gmail.com>
+Message-ID: <CALCETrV42Ot+pGjeGO23WozwiEFpdaLZibSA10GXNy+Fbi-dNg@mail.gmail.com>
+Subject: Re: RFC: on adding new CLONE_* flags [WAS Re: [PATCH 0/4] clone: add CLONE_PIDFD]
+To:     Jonathan Kowalski <bl0pbl33p@gmail.com>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        Aleksa Sarai <cyphar@cyphar.com>,
+        "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
+        Christian Brauner <christian@brauner.io>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Jann Horn <jannh@google.com>,
+        David Howells <dhowells@redhat.com>,
+        Linux API <linux-api@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Kees Cook <keescook@chromium.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Michael Kerrisk <mtk.manpages@gmail.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Daniel Colascione <dancol@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 04:20:17PM -0700, Khazhismel Kumykov wrote:
-> I was able to reproduce this by setting security.capability xattr on a
-> blockdev file, then writing to it - when writing to the blockdev we
-> never lock the inode, so when we clear the capability we hit this
-> lockdep warning.
-> 
-> Is the issue here that we can set this xattr in the first place so we
-> have to clear it at all? Or should we really be locking the inode for
-> blockdevs after all? I'm not too familiar, but my gut says former
+On Mon, Apr 15, 2019 at 2:26 PM Jonathan Kowalski <bl0pbl33p@gmail.com> wrote:
+>
+> On Mon, Apr 15, 2019 at 9:34 PM Andy Lutomirski <luto@kernel.org> wrote:
+> > I would personally *love* it if distros started setting no_new_privs
+> > for basically all processes.  And pidfd actually gets us part of the
+> > way toward a straightforward way to make sudo and su still work in a
+> > no_new_privs world: su could call into a daemon that would spawn the
+> > privileged task, and su would get a (read-only!) pidfd back and then
+> > wait for the fd and exit.  I suppose that, done naively, this might
+> > cause some odd effects with respect to tty handling, but I bet it's
+> > solveable.  I suppose it would be nifty if there were a way for a
+>
+> Hmm, isn't what you're describing roughly what systemd-run -t does? It
+> will serialize the argument list, ask PID 1 to create a transient unit
+> (go through the polkit stuff), and then set the stdout/stderr and
+> stdin of the service to your tty, make it the controlling terminal of
+> the process and
+> reset it. So I guess it should work with sudo/su just fine too.
+>
+> There is also s6-sudod (and a s6-sudoc client to it) that works in a
+> similar fashion, though it's a lot less fancy.
 
-More interesting question is, WTF do we even touch that thing for
-bdev?  The thing is, mknod will cheerfully create any number of
-different filesystem objects, all giving access to the same block
-device.  Which of them should have that xattr removed?  It makes
-no sense whatsoever; moreover, who *cares* about caps for block
-device in the first place?
+Cute.  Now we just distros to work out the kinks and to ship these as
+sudo and su :)
 
-And if we did, what of another way to modify the block device?
-You know, mount it read-write...
+>
+> > process, by mutual agreement, to reparent itself to an unrelated
+> > process.
+> >
+> > Anyway, clone(2) is an enormous mess.  Surely the right solution here
+> > is to have a whole new process creation API that takes a big,
+> > extensible struct as an argument, and supports *at least* the full
+> > abilities of posix_spawn() and ideally covers all the use cases for
+> > fork() + do stuff + exec().  It would be nifty if this API also had a
+> > way to say "add no_new_privs and therefore enable extra functionality
+> > that doesn't work without no_new_privs".  This functionality would
+> > include things like returning a future extra-privileged pidfd that
+> > gives ptrace-like access.
+>
+> My idea was that this intent could be supplied at clone time, you
+> could attach ptrace access modes to a pidfd (we could make those a bit
+> granular, perhaps) and any API that takes PIDs and checks against the
+> caller's ptrace access mode could instead derive so from the pidfd.
+> Since killing is a bit convoluted due to setuid binaries, that should
+> work if one is CAP_KILL capable in the owning userns of the task, and
+> if not that, has permissions to kill and the target has NNP set.
+
+This CAP_KILL trick makes me nervous.  This particular permission is
+really quite powerful, and it would need some analysis to conclude
+that it's not *more* powerful than CAP_KILL.
+
+> This
+> would allow you to bind kill privileges in a way that is compatible
+> with both worlds, the upshot being NNP allows for the functionality to
+> be available to a lot more of userspace. Ofcourse, this would require
+> a new clone version, possibly with taking a clone2 struct which sets a
+> few parameters for the process and the flags for the pidfd.
+>
+> Another point is that you have a pidfd_open (or something else) that
+> can create multiple pidfds from a pidfd obtained at clone time and
+> create pidfds with varying level of rights. It can also work by taking
+> a TID to open a pidfd for an external task (and then for all the
+> rights you wish to acquire on it, check against your ambient
+> authority).
+
+Indeed.
+
+>
+> (Actually, in general, having FMODE_* style bits spanning all methods
+> a file descriptor can take (through system calls), with the type of
+> object as key (class containing a set), and be able to enable/disable
+> them and seal them would be a useful addition, this all happening at
+> the struct file level instead of inode level sealing in memfds).
+
+At the risk of saying a dirty word, the Windows API works quite a bit
+like this :)
