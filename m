@@ -7,82 +7,77 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 828B1C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:29:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE9EC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:30:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50F8520848
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:29:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9466D20675
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:30:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Zk/+2s7T"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="JyY6MKaj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726958AbfDOJ3c (ORCPT
+        id S1727003AbfDOJaR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 05:29:32 -0400
-Received: from mail-ed1-f68.google.com ([209.85.208.68]:36288 "EHLO
-        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726718AbfDOJ3b (ORCPT
+        Mon, 15 Apr 2019 05:30:17 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:44013 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725939AbfDOJaQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 05:29:31 -0400
-Received: by mail-ed1-f68.google.com with SMTP id u57so13410926edm.3
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 02:29:30 -0700 (PDT)
+        Mon, 15 Apr 2019 05:30:16 -0400
+Received: by mail-ed1-f66.google.com with SMTP id j20so3839704edq.10
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 02:30:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ffwll.ch; s=google;
         h=sender:date:from:to:cc:subject:message-id:mail-followup-to
          :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=jMxz7hHKfuHRoflFdmAJmTInyev5A5dOaMV+8dmSbgk=;
-        b=Zk/+2s7TWKZJRvN/e7qUqG6iAl0u9JtiPb3sanIUWBTNY775JTRoBF6xJ+b9CsMGki
-         xLYVKFOjYRQgOQJVx9gvmxNyiEHdSHS346nQpY//CW8Y6BR+4Ns0BxO7zaut2R5Plf6v
-         IQILhg+b+zwPnBy3XF8F9a7D/V3hxq2ly+LAo=
+        bh=5l4pZfeYVCgIufgTo6R8psP3r9rSQEmmZLpDCPOtF0s=;
+        b=JyY6MKajUN9BMEB1et36TqA0OvogqYiKBxW2KDPayhIU0V2Oe1VKtP+WuCKSs8EmkD
+         MEQvRpTYdC6zBHyPerWEfSHs8GlguDJJFlHv88Ny4MFiKYnQdMSFbo5oZ7nIt/WUXhVr
+         kFRxGGlRYmaUQJ2eoqMYu7QsYXDDqGuOaGD5w=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
          :mail-followup-to:references:mime-version:content-disposition
          :in-reply-to:user-agent;
-        bh=jMxz7hHKfuHRoflFdmAJmTInyev5A5dOaMV+8dmSbgk=;
-        b=YdEW8yhypayk1Xf8JfXrIUZUpCPf5mRBbuSrqowMTfYc0ViXyRe/nIXwQk2BXAUB2p
-         Wg5jAWrOp9DOUQzIRo+CnOZIrap2UPBmqMYFfts085/q7FYi2xsUkiw1As0cFxl8gSbb
-         Qm1n6gYWxygC4Sqhm8GAibmkgqVXB7Go/Ms3PDoB9oWXtwvKVuyyDKlxZpRHD9RmmxWx
-         D+KeoksSWXgdqWZeHYrox/CDuyoKXXvu7ioc0WhtrJ/LkR0BNtLHR2AuQKEfDg5DUS7A
-         cxhh1+sW1UfR24MhKDDscrvwHvn+p6XnzdOMVxYJvh3N/MR6fwLvbjRVcdQyeJwKRDGD
-         i/lg==
-X-Gm-Message-State: APjAAAXBMr743HC2vazwzI83p2VQBPOpKrSy2ln1/AUletoDCEBV1GXd
-        U5iBuB98g346GBOmWELxQdtMkQ==
-X-Google-Smtp-Source: APXvYqyzgD3aKdlkr4ZLMAov5HvYxAciXj1muLxZOJSgGK7iSfzJnlF7Z2e2GcqoFQzrWTasLFal/Q==
-X-Received: by 2002:a50:9179:: with SMTP id f54mr45567670eda.207.1555320569959;
-        Mon, 15 Apr 2019 02:29:29 -0700 (PDT)
+        bh=5l4pZfeYVCgIufgTo6R8psP3r9rSQEmmZLpDCPOtF0s=;
+        b=GQMXfeJCKZ8osG1frSDXFpHJtWpnZwLCmJ0KofmlGf3rN+zE9VgUiExD2RIvCTGoMJ
+         n21gnCR5D6Xj8u6k/33yn/1XcK4vZfv9JeYdUM4xAc7TJAtnfDJkhonvkvuj2fBwbwuA
+         IzCmcWfFkVKpnJ136se0e5JkvV3iKCX2+AxYDlz2sE8OU2ZVt/6oA43FvOVl2r/g3QQO
+         8Jq8JEbrrhJwSpO+EtCQo9wfibDmGz+WiwabWHsSAdo02RPzT8qK7aWpHkYZmVvVPam7
+         1OQkqzieOdHcHGZKXgXUDgnwnrnqdkbuFn+3xd7MBTQwyOuqOO/JM2Tn+KiigMdkdM9z
+         oKYg==
+X-Gm-Message-State: APjAAAXyZCEEyFXd/Iet3PzKqXO19qes6ALlFnRGA3SmE5bxvD3G7wzN
+        THn3m97axZtEJODLMtndHHnaVFVID9k=
+X-Google-Smtp-Source: APXvYqwOSqT+IrQ5iPzw+48vIYBra1hbx2/VCsTpdUnPeEnhUhNo5RGi49w2A6C+5dXOkiKn/2uBAQ==
+X-Received: by 2002:a17:906:b84c:: with SMTP id ga12mr37748570ejb.253.1555320615142;
+        Mon, 15 Apr 2019 02:30:15 -0700 (PDT)
 Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id n2sm3202707edr.41.2019.04.15.02.29.28
+        by smtp.gmail.com with ESMTPSA id j12sm1155842eda.71.2019.04.15.02.30.13
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 15 Apr 2019 02:29:29 -0700 (PDT)
-Date:   Mon, 15 Apr 2019 11:29:27 +0200
+        Mon, 15 Apr 2019 02:30:14 -0700 (PDT)
+Date:   Mon, 15 Apr 2019 11:30:12 +0200
 From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Chris Wilson <chris@chris-wilson.co.uk>
-Cc:     Jani Nikula <jani.nikula@linux.intel.com>,
-        Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, michal.wajdeczko@intel.com,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        Janusz Krzysztofik <janusz.krzysztofik@intel.com>
-Subject: Re: [PATCH] drm/i915: Use drm_dev_unplug()
-Message-ID: <20190415092926.GW2665@phenom.ffwll.local>
-Mail-Followup-To: Chris Wilson <chris@chris-wilson.co.uk>,
-        Jani Nikula <jani.nikula@linux.intel.com>,
-        Janusz Krzysztofik <janusz.krzysztofik@linux.intel.com>,
-        Joonas Lahtinen <joonas.lahtinen@linux.intel.com>,
-        Rodrigo Vivi <rodrigo.vivi@intel.com>,
-        David Airlie <airlied@linux.ie>, michal.wajdeczko@intel.com,
-        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org,
-        Janusz Krzysztofik <janusz.krzysztofik@intel.com>
-References: <20190405072657.9997-1-janusz.krzysztofik@linux.intel.com>
- <155445007634.8259.18397004914881394541@skylake-alporthouse-com>
+To:     Joel Stanley <joel@jms.id.au>
+Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
+        Andrew Jeffery <andrew@aj.id.au>,
+        =?iso-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel test robot <lkp@intel.com>
+Subject: Re: [PATCH v2] drm: aspeed: Clean up Kconfig options
+Message-ID: <20190415093012.GX2665@phenom.ffwll.local>
+Mail-Followup-To: Joel Stanley <joel@jms.id.au>,
+        David Airlie <airlied@linux.ie>, Andrew Jeffery <andrew@aj.id.au>,
+        =?iso-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel test robot <lkp@intel.com>
+References: <20190405081117.27339-1-joel@jms.id.au>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <155445007634.8259.18397004914881394541@skylake-alporthouse-com>
+In-Reply-To: <20190405081117.27339-1-joel@jms.id.au>
 X-Operating-System: Linux phenom 4.19.0-1-amd64 
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -90,59 +85,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 05, 2019 at 08:41:16AM +0100, Chris Wilson wrote:
-> Quoting Janusz Krzysztofik (2019-04-05 08:26:57)
-> > From: Janusz Krzysztofik <janusz.krzysztofik@intel.com>
-> > 
-> > The driver does not currently support unbinding from a device which is
-> > in use.  Since open file descriptors may still be pointing into kernel
-> > memory where the device structures used to be, entirely correct kernel
-> > panics protect the driver from being unbound as we should not be
-> > unbinding it before those dangling pointers have been made safe.
-> > 
-> > According to the documentation found inside drivers/gpu/drm/drm_drv.c,
-> > drm_dev_unplug() should be used instead of drm_dev_unregister() in
-> > order to make a device inaccessible to users as soon as it is unpluged.
-> > Follow that advice to make those possibly dangling pointers safe,
-> > protected by DRM layer from a user who is otherwise left pointing into
-> > possibly reused kernel memory after the driver has been unbound from
-> > the device.
-> > 
-> > Signed-off-by: Janusz Krzysztofik <janusz.krzysztofik@intel.com>
-> > ---
-> >  drivers/gpu/drm/i915/i915_drv.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > 
-> > diff --git a/drivers/gpu/drm/i915/i915_drv.c b/drivers/gpu/drm/i915/i915_drv.c
-> > index 9df65d386d11..66163378c481 100644
-> > --- a/drivers/gpu/drm/i915/i915_drv.c
-> > +++ b/drivers/gpu/drm/i915/i915_drv.c
-> > @@ -1596,7 +1596,7 @@ static void i915_driver_unregister(struct drm_i915_private *dev_priv)
-> >         i915_pmu_unregister(dev_priv);
-> >  
-> >         i915_teardown_sysfs(dev_priv);
-> > -       drm_dev_unregister(&dev_priv->drm);
-> > +       drm_dev_unplug(&dev_priv->drm);
+On Fri, Apr 05, 2019 at 06:41:17PM +1030, Joel Stanley wrote:
+> The GFX IP is inside of the ASPEED BMC SoC so there is little use
+> enabling it on a kernel that does not support ASPEED.
 > 
-> I think we may have our onion inverted here. We want to stop the users
-> as the first step, then start removing the entries. (That will also
-> nicely invert the order from register, which is what we typically
-> expect).
+> When building with COMPILE_TEST the architecture many not have CMA
+> support, so to avoid breaking the build we only select these options if
+> the architecture supports the contiguous allocator.
 > 
-> After calling i915_driver_unregister(); call i915_gem_set_wedged() to
-> immediately (give or take external fences) cancel inflight operations.
+> I suspect the DRM_PANEL came from a cut/paste error.
+> 
+> Fixes: 4f2a8f5898ec ("drm: Add ASPEED GFX driver")
+> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> Reported-by: kernel test robot <lkp@intel.com>
+> Signed-off-by: Joel Stanley <joel@jms.id.au>
 
-I think we still need the above patch, since drm_dev_unplug ==
-drm_dev_unregister + "make sure userspace can't get at us anymore". We
-could/should probably drop drm_dev_unplug and move that additional code to
-drm_dev_unregister, but there's some minutea in how we refcount the
-drm_device between the two. So not quite as clean a job.
+Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
 
-There's also drm_put_dev (not to be mistaken with drm_dev_put), for added
-confusion. I think ideally we'd unify all three of drm_dev_unregister,
-drm_dev_unplug and drm_put_dev to one, deprecating all the others. But
-that's work :-)
+Iirc you have commit rights, right?
 -Daniel
+> ---
+> This fixes the powerpc next-20190405 build. Sorry Stephen!
+> 
+> v2: Clean up as well as fix the build
+> v1: https://lore.kernel.org/lkml/20190405052830.27899-1-joel@jms.id.au/
+> 
+>  drivers/gpu/drm/aspeed/Kconfig | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/aspeed/Kconfig b/drivers/gpu/drm/aspeed/Kconfig
+> index 42b74d18a41b..cccab520e02f 100644
+> --- a/drivers/gpu/drm/aspeed/Kconfig
+> +++ b/drivers/gpu/drm/aspeed/Kconfig
+> @@ -1,11 +1,11 @@
+>  config DRM_ASPEED_GFX
+>  	tristate "ASPEED BMC Display Controller"
+>  	depends on DRM && OF
+> +	depends on (COMPILE_TEST || ARCH_ASPEED)
+>  	select DRM_KMS_HELPER
+>  	select DRM_KMS_CMA_HELPER
+> -	select DRM_PANEL
+> -	select DMA_CMA
+> -	select CMA
+> +	select DMA_CMA if HAVE_DMA_CONTIGUOUS
+> +	select CMA if HAVE_DMA_CONTIGUOUS
+>  	select MFD_SYSCON
+>  	help
+>  	  Chose this option if you have an ASPEED AST2500 SOC Display
+> -- 
+> 2.20.1
+> 
+
 -- 
 Daniel Vetter
 Software Engineer, Intel Corporation
