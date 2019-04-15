@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FAA1C282DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:06:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17328C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:06:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2B0021906
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:06:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D95F6218A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:06:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355193;
-	bh=R09b3kr1ivf1MAC/4qHfH7zgtpdnFmKoDzQNcgYs3cY=;
+	s=default; t=1555355196;
+	bh=2+KnyX2t/iFfamUdZsdmEI/4ufLoDglksusPnBnZhJg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=BrEfggU2UI2J7aKj5zTwSLpPu4DQUbprtWfimSGiFJy4mw68JO2ewIsMgrcyKxApC
-	 7rrMFMOof7ja2J4WyNuUEvf13O00ldtVpfXAs44Ow/avGsKbFElFaxPgjE350GX1B5
-	 EOPejEb7E5UydWu40jiU0+Bx7NjPnJ6VfAHl7EZ8=
+	b=0kZ5n9jFe9Uqq2q9x/61UstLrlYxVs+B7CYTtNdfu/vqGuh02Ok8tXhsCmlmQ/9Sv
+	 QQvGEomclDOU0wypyexBMQ7SF4/N262QjIhXOk0MVyAfwzHPJnorx6ZjE1TpTi6Iqb
+	 aXi/9HMc90nXFc3vDGt5wSsg179whVAyv5xxsuYs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729978AbfDOTGb (ORCPT
+        id S1729989AbfDOTGf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:06:31 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40942 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:06:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41046 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729958AbfDOTGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:06:31 -0400
+        id S1729195AbfDOTGd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:06:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 09B1720880;
-        Mon, 15 Apr 2019 19:06:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A1609218A1;
+        Mon, 15 Apr 2019 19:06:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355190;
-        bh=R09b3kr1ivf1MAC/4qHfH7zgtpdnFmKoDzQNcgYs3cY=;
+        s=default; t=1555355193;
+        bh=2+KnyX2t/iFfamUdZsdmEI/4ufLoDglksusPnBnZhJg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=IQJskHn2JQpIy+S1FmnzCRX0Uhpz4VsLWd5wiqTVj5LgnYgjm9HDpPvvmq3oFbHEk
-         1Kiz7UIxv/Um9VXYrYGyQNixkdW+lkp8kiFlleJlbfWYxK0C/ArFm+zF6PB1SQZ1B6
-         E/XQn84wKXktxMz+ivZNiN2I2vWt6XRq5SJvGpnQ=
+        b=QHw5NjF1mJZnt264Xb4XZJN/32D19Qj+OC8RiqUb0r8KLkiaMWXL2oyHQX7vL22zV
+         qBaAOAH49Few3Qg9/9OllfIjzJCsiR+Wl1IeBicYiYBrhd5pl5Xk9m2tVzJzxKncf5
+         tGIY8YQQe5HNYdo7C8QLPM87x3/x/LR10lTjU56s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Axel Lin <axel.lin@ingics.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Subject: [PATCH 4.19 047/101] hwmon: (w83773g) Select REGMAP_I2C to fix build error
-Date:   Mon, 15 Apr 2019 20:58:45 +0200
-Message-Id: <20190415183743.069158516@linuxfoundation.org>
+        stable@vger.kernel.org, Furquan Shaikh <furquan@google.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 4.19 048/101] ACPICA: Clear status of GPEs before enabling them
+Date:   Mon, 15 Apr 2019 20:58:46 +0200
+Message-Id: <20190415183743.116160326@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183740.341577907@linuxfoundation.org>
 References: <20190415183740.341577907@linuxfoundation.org>
@@ -59,32 +58,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Axel Lin <axel.lin@ingics.com>
+From: Furquan Shaikh <furquan@google.com>
 
-commit a165dcc923ada2ffdee1d4f41f12f81b66d04c55 upstream.
+commit c8b1917c8987a6fa3695d479b4d60fbbbc3e537b upstream.
 
-Select REGMAP_I2C to avoid below build error:
-ERROR: "__devm_regmap_init_i2c" [drivers/hwmon/w83773g.ko] undefined!
+Commit 18996f2db918 ("ACPICA: Events: Stop unconditionally clearing
+ACPI IRQs during suspend/resume") was added to stop clearing event
+status bits unconditionally in the system-wide suspend and resume
+paths. This was done because of an issue with a laptop lid appaering
+to be closed even when it was used to wake up the system from suspend
+(see https://bugzilla.kernel.org/show_bug.cgi?id=196249), which
+happened because event status bits were cleared unconditionally on
+system resume. Though this change fixed the issue in the resume path,
+it introduced regressions in a few suspend paths.
 
-Fixes: ee249f271524 ("hwmon: Add W83773G driver")
-Cc: stable@vger.kernel.org
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
+First regression was reported and fixed in the S5 entry path by commit
+fa85015c0d95 ("ACPICA: Clear status of all events when entering S5").
+Next regression was reported and fixed for all legacy sleep paths by
+commit f317c7dc12b7 ("ACPICA: Clear status of all events when entering
+sleep states").  However, there still is a suspend-to-idle regression,
+since suspend-to-idle does not follow the legacy sleep paths.
+
+In the suspend-to-idle case, wakeup is enabled as part of device
+suspend.  If the status bits of wakeup GPEs are set when they are
+enabled, it causes a premature system wakeup to occur.
+
+To address that problem, partially revert commit 18996f2db918 to
+restore GPE status bits clearing before the GPE is enabled in
+acpi_ev_enable_gpe().
+
+Fixes: 18996f2db918 ("ACPICA: Events: Stop unconditionally clearing ACPI IRQs during suspend/resume")
+Signed-off-by: Furquan Shaikh <furquan@google.com>
+Cc: 4.17+ <stable@vger.kernel.org> # 4.17+
+[ rjw: Subject & changelog ]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/hwmon/Kconfig |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/acpi/acpica/evgpe.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/hwmon/Kconfig
-+++ b/drivers/hwmon/Kconfig
-@@ -1755,6 +1755,7 @@ config SENSORS_VT8231
- config SENSORS_W83773G
- 	tristate "Nuvoton W83773G"
- 	depends on I2C
-+	select REGMAP_I2C
- 	help
- 	  If you say yes here you get support for the Nuvoton W83773G hardware
- 	  monitoring chip.
+--- a/drivers/acpi/acpica/evgpe.c
++++ b/drivers/acpi/acpica/evgpe.c
+@@ -81,8 +81,12 @@ acpi_status acpi_ev_enable_gpe(struct ac
+ 
+ 	ACPI_FUNCTION_TRACE(ev_enable_gpe);
+ 
+-	/* Enable the requested GPE */
++	/* Clear the GPE status */
++	status = acpi_hw_clear_gpe(gpe_event_info);
++	if (ACPI_FAILURE(status))
++		return_ACPI_STATUS(status);
+ 
++	/* Enable the requested GPE */
+ 	status = acpi_hw_low_set_gpe(gpe_event_info, ACPI_GPE_ENABLE);
+ 	return_ACPI_STATUS(status);
+ }
 
 
