@@ -4,166 +4,222 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9635C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:07:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21165C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:07:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6ECE2075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:07:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA03F20848
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:07:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="S1dx55p5"
+	dkim=pass (4096-bit key) header.d=d-silva.org header.i=@d-silva.org header.b="kMNWUtJJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726910AbfDOKHM (ORCPT
+        id S1727162AbfDOKH2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 06:07:12 -0400
-Received: from mail-vs1-f66.google.com ([209.85.217.66]:42925 "EHLO
-        mail-vs1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726428AbfDOKHM (ORCPT
+        Mon, 15 Apr 2019 06:07:28 -0400
+Received: from ushosting.nmnhosting.com ([167.160.173.127]:43656 "EHLO
+        ushosting.nmnhosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725794AbfDOKH2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 06:07:12 -0400
-Received: by mail-vs1-f66.google.com with SMTP id f15so9104441vsk.9
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 03:07:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=r+b8MPPNm00IZ9FaojShqmzrNV/w6KAgWlTEURGTqJg=;
-        b=S1dx55p5Te1TsHnTsTn2qLaXahkNmbgyjFtnQun6Yt+iv5rsmy99k1waNvXngeysub
-         Y+L5rysST9pI+4Zi+PGIE2ogNqwXi2Cw+51AinpWWvCJCdlSdSkt+QRfr6NG1XdVE9nC
-         2rdsyuXzfz5+LEBEIQwEkuT/AolNV1KZQVrbXC9pgCM4KDhMo7oguJ4B8iT6WC3nd+xo
-         UFAvWO00sEO8WP+bp+ersDvbimBaYmYZvuZeK9qGMZDmlFdIn074NqhvcPI+Kz/1eR2Q
-         v5+DmOzqrsEdaXEfL46b+RWRSuGbVs7A3eU1sNxSlh3Bq2XBInecUdUBLtZJeimZW9MC
-         lFNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=r+b8MPPNm00IZ9FaojShqmzrNV/w6KAgWlTEURGTqJg=;
-        b=HTS9zxzytT43lCxEqrtFIEmrIkYQIkuWk1tPp6Rb8TayxbmFa3k5DA/5mZer0aZK5J
-         5gcYEsPKyJnJx+VA6Xt+irO+dk1OZp8kzXz5G4tASL5epncSkiYylUgV4xOHr5SBHv8N
-         Mp8bQ0jMg55cepwJZxRNAIIvosbAnTwcOMnFVseG471t+ktJ75zwAwixJI03aHgrABtN
-         RhwmcBG2jHYMV1j2NLMwc+omXjIxG7WqmcQPlGMUTAXkegFCw8towvgHn6YEWRTnHldp
-         8vl9xleceAGts2a0DvTbbHrsSPg2q8NyQVhQZdEY4pK1Tcwh3JMmZQx+1Upzq37GqyR0
-         OLdw==
-X-Gm-Message-State: APjAAAXO5qNK8McZW//q1GSSVO0Lh097vhoJyk5khKfvq5jTzAxx0d/h
-        OM5tTkUX4nGSNFBi8US9dBohQJZE/r3xf28lRw7niQ==
-X-Google-Smtp-Source: APXvYqykItCS9N7dP8mJi13zV9/v0yBM5NvTt4OKgJs9e67gYXxke6ppM8hKMO1HQo/upTJH1+CL7rLvOP+RWCI3Tas=
-X-Received: by 2002:a67:fa04:: with SMTP id i4mr40045545vsq.18.1555322831388;
- Mon, 15 Apr 2019 03:07:11 -0700 (PDT)
+        Mon, 15 Apr 2019 06:07:28 -0400
+Received: from mail2.nmnhosting.com (unknown [202.169.106.97])
+        by ushosting.nmnhosting.com (Postfix) with ESMTPS id 1806F2F28FBB;
+        Mon, 15 Apr 2019 06:07:24 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=d-silva.org;
+        s=201810a; t=1555322845;
+        bh=t09Knx8R5HfcZX8J+2yfarnsGrDTECfqtExsbS+W1mE=;
+        h=From:To:Cc:References:In-Reply-To:Subject:Date:From;
+        b=kMNWUtJJGkTY37RBDPDNzpNbgYjTzzev5jSu074WJF5x66i6AzjklMQxc6s1vuDdt
+         KYzD05HCHCN0gSIYihNVo9Wz7JiCsnV6X5NAtdjm0RRJ3bPZhkxLKbxcp1ew5KfhwT
+         AqD2U30GGY10GbGL2mTFTi2dWxmNdSY71M7B0aNHo/c30iH4AMUaHcwz58+ch5KG8Y
+         Yj4n/ITZrdch1b3fEhvbXOd8HJxP10TthIaYRl3tHRNo4FM4JXm4tbi9lzwbo/+zKA
+         XyR/hnhc/dndRGyR9PCq5pdt0/EeG7wc8yyKJJa6F3/tK/Tbq11GRcmg/nYfySL/P8
+         bA0qzdtOwOgSjhBVcgWBj/VzXn9mqR4niQFtQ6wqgZqJG6JcL68/KxvXcwHgkH/qAB
+         vGzRoD883zXi/7dHV1uO1rW9n0PiriDz3M+EwetK82bGUqWPRBwd23M4ZFTYP9UGye
+         pn7BZ+27NnxvDiShGlJyX95T01CjQD7AOuBIQkHv4LpuT9Sg/nPst8lpv890sYLrBW
+         jn2mCeOXCD0vzxYMZcIG/Reb0GpYEOnUHM+ULPnF/XuaoTnzM1Rwqgdd1hi4YXyi1+
+         UJalVDCCuJjWGujnF+4H0xFvIuI96v2ExzZ08tneQ23n3dOoYWwRJu7yUgf3ZFbOEM
+         hNg++l+W72BaPPeRkPUOdYx4=
+Received: from Hawking (ntp.lan [10.0.1.1])
+        (authenticated bits=0)
+        by mail2.nmnhosting.com (8.15.2/8.15.2) with ESMTPSA id x3FA7BdX038442
+        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
+        Mon, 15 Apr 2019 20:07:12 +1000 (AEST)
+        (envelope-from alastair@d-silva.org)
+From:   "Alastair D'Silva" <alastair@d-silva.org>
+To:     "'Petr Mladek'" <pmladek@suse.com>
+Cc:     "'Alastair D'Silva'" <alastair@au1.ibm.com>,
+        "'Jani Nikula'" <jani.nikula@linux.intel.com>,
+        "'Joonas Lahtinen'" <joonas.lahtinen@linux.intel.com>,
+        "'Rodrigo Vivi'" <rodrigo.vivi@intel.com>,
+        "'David Airlie'" <airlied@linux.ie>,
+        "'Daniel Vetter'" <daniel@ffwll.ch>,
+        "'Karsten Keil'" <isdn@linux-pingi.de>,
+        "'Jassi Brar'" <jassisinghbrar@gmail.com>,
+        "'Tom Lendacky'" <thomas.lendacky@amd.com>,
+        "'David S. Miller'" <davem@davemloft.net>,
+        "'Jose Abreu'" <Jose.Abreu@synopsys.com>,
+        "'Kalle Valo'" <kvalo@codeaurora.org>,
+        "'Stanislaw Gruszka'" <sgruszka@redhat.com>,
+        "'Benson Leung'" <bleung@chromium.org>,
+        "'Enric Balletbo i Serra'" <enric.balletbo@collabora.com>,
+        "'James E.J. Bottomley'" <jejb@linux.ibm.com>,
+        "'Martin K. Petersen'" <martin.petersen@oracle.com>,
+        "'Greg Kroah-Hartman'" <gregkh@linuxfoundation.org>,
+        "'Alexander Viro'" <viro@zeniv.linux.org.uk>,
+        "'Sergey Senozhatsky'" <sergey.senozhatsky@gmail.com>,
+        "'Steven Rostedt'" <rostedt@goodmis.org>,
+        "'Andrew Morton'" <akpm@linux-foundation.org>,
+        <intel-gfx@lists.freedesktop.org>,
+        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
+        <netdev@vger.kernel.org>, <ath10k@lists.infradead.org>,
+        <linux-wireless@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        <linux-fbdev@vger.kernel.org>, <devel@driverdev.osuosl.org>,
+        <linux-fsdevel@vger.kernel.org>
+References: <20190410031720.11067-1-alastair@au1.ibm.com> <20190410031720.11067-4-alastair@au1.ibm.com> <20190412141211.lvnz6wb7mwkykmxf@pathway.suse.cz> <093301d4f187$da0756a0$8e1603e0$@d-silva.org> <20190415092424.qos7d54nbyr5hphu@pathway.suse.cz>
+In-Reply-To: <20190415092424.qos7d54nbyr5hphu@pathway.suse.cz>
+Subject: RE: [PATCH 3/4] lib/hexdump.c: Replace ascii bool in hex_dump_to_buffer with flags
+Date:   Mon, 15 Apr 2019 20:07:10 +1000
+Message-ID: <0da301d4f373$01d5bb80$05813280$@d-silva.org>
 MIME-Version: 1.0
-References: <1555010299-19141-1-git-send-email-skomatineni@nvidia.com>
-In-Reply-To: <1555010299-19141-1-git-send-email-skomatineni@nvidia.com>
-From:   Ulf Hansson <ulf.hansson@linaro.org>
-Date:   Mon, 15 Apr 2019 12:06:33 +0200
-Message-ID: <CAPDyKFo+jwFJQUtTRnejX7CzJEOmfpYwX5ZwnMNHPK=wfW-Ycg@mail.gmail.com>
-Subject: Re: [PATCH V4] mmc: tegra: add sdhci tegra suspend and resume
-To:     Sowjanya Komatineni <skomatineni@nvidia.com>
-Cc:     Adrian Hunter <adrian.hunter@intel.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jon Hunter <jonathanh@nvidia.com>,
-        Timo Alho <talho@nvidia.com>,
-        Aniruddha Tvs Rao <anrao@nvidia.com>, bbiswas@nvidia.com,
-        linux-tegra <linux-tegra@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "linux-mmc@vger.kernel.org" <linux-mmc@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain;
+        charset="us-ascii"
+Content-Transfer-Encoding: 7bit
+X-Mailer: Microsoft Outlook 16.0
+Thread-Index: AQMagew30YCVD5mEhyHx4HPts9xr1ALvlgN3AdorRAgCCza9VAHVj+h+o2yMYSA=
+Content-Language: en-au
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.2 (mail2.nmnhosting.com [10.0.1.20]); Mon, 15 Apr 2019 20:07:19 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, 11 Apr 2019 at 21:18, Sowjanya Komatineni
-<skomatineni@nvidia.com> wrote:
->
-> This patch adds suspend and resume PM ops for tegra SDHCI.
->
-> Acked-by: Thierry Reding <treding@nvidia.com>
-> Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
+> -----Original Message-----
+> From: Petr Mladek <pmladek@suse.com>
+> Sent: Monday, 15 April 2019 7:24 PM
+> To: Alastair D'Silva <alastair@d-silva.org>
+> Cc: 'Alastair D'Silva' <alastair@au1.ibm.com>; 'Jani Nikula'
+> <jani.nikula@linux.intel.com>; 'Joonas Lahtinen'
+> <joonas.lahtinen@linux.intel.com>; 'Rodrigo Vivi'
+<rodrigo.vivi@intel.com>;
+> 'David Airlie' <airlied@linux.ie>; 'Daniel Vetter' <daniel@ffwll.ch>;
+'Karsten
+> Keil' <isdn@linux-pingi.de>; 'Jassi Brar' <jassisinghbrar@gmail.com>; 'Tom
+> Lendacky' <thomas.lendacky@amd.com>; 'David S. Miller'
+> <davem@davemloft.net>; 'Jose Abreu' <Jose.Abreu@synopsys.com>; 'Kalle
+> Valo' <kvalo@codeaurora.org>; 'Stanislaw Gruszka' <sgruszka@redhat.com>;
+> 'Benson Leung' <bleung@chromium.org>; 'Enric Balletbo i Serra'
+> <enric.balletbo@collabora.com>; 'James E.J. Bottomley'
+> <jejb@linux.ibm.com>; 'Martin K. Petersen' <martin.petersen@oracle.com>;
+> 'Greg Kroah-Hartman' <gregkh@linuxfoundation.org>; 'Alexander Viro'
+> <viro@zeniv.linux.org.uk>; 'Sergey Senozhatsky'
+> <sergey.senozhatsky@gmail.com>; 'Steven Rostedt'
+> <rostedt@goodmis.org>; 'Andrew Morton' <akpm@linux-foundation.org>;
+> intel-gfx@lists.freedesktop.org; dri-devel@lists.freedesktop.org; linux-
+> kernel@vger.kernel.org; netdev@vger.kernel.org;
+> ath10k@lists.infradead.org; linux-wireless@vger.kernel.org; linux-
+> scsi@vger.kernel.org; linux-fbdev@vger.kernel.org;
+> devel@driverdev.osuosl.org; linux-fsdevel@vger.kernel.org
+> Subject: Re: [PATCH 3/4] lib/hexdump.c: Replace ascii bool in
+> hex_dump_to_buffer with flags
+> 
+> On Sat 2019-04-13 09:31:27, Alastair D'Silva wrote:
+> > > -----Original Message-----
+> > > From: Petr Mladek <pmladek@suse.com>
+> > > Sent: Saturday, 13 April 2019 12:12 AM
+> > > To: Alastair D'Silva <alastair@au1.ibm.com>
+> > > Cc: alastair@d-silva.org; Jani Nikula <jani.nikula@linux.intel.com>;
+> > Joonas
+> > > Lahtinen <joonas.lahtinen@linux.intel.com>; Rodrigo Vivi
+> > > <rodrigo.vivi@intel.com>; David Airlie <airlied@linux.ie>; Daniel
+> > > Vetter <daniel@ffwll.ch>; Karsten Keil <isdn@linux-pingi.de>; Jassi
+> > > Brar <jassisinghbrar@gmail.com>; Tom Lendacky
+> > > <thomas.lendacky@amd.com>; David S. Miller
+> <davem@davemloft.net>;
+> > > Jose Abreu <Jose.Abreu@synopsys.com>; Kalle Valo
+> > > <kvalo@codeaurora.org>; Stanislaw Gruszka <sgruszka@redhat.com>;
+> > > Benson Leung <bleung@chromium.org>; Enric Balletbo i Serra
+> > > <enric.balletbo@collabora.com>; James E.J. Bottomley
+> > > <jejb@linux.ibm.com>; Martin K. Petersen
+> > > <martin.petersen@oracle.com>; Greg Kroah-Hartman
+> > > <gregkh@linuxfoundation.org>; Alexander Viro
+> > > <viro@zeniv.linux.org.uk>; Sergey Senozhatsky
+> > > <sergey.senozhatsky@gmail.com>; Steven Rostedt
+> > > <rostedt@goodmis.org>; Andrew Morton <akpm@linux-
+> foundation.org>;
+> > > intel- gfx@lists.freedesktop.org; dri-devel@lists.freedesktop.org;
+> > > linux- kernel@vger.kernel.org; netdev@vger.kernel.org;
+> > > ath10k@lists.infradead.org; linux-wireless@vger.kernel.org; linux-
+> > > scsi@vger.kernel.org; linux-fbdev@vger.kernel.org;
+> > > devel@driverdev.osuosl.org; linux-fsdevel@vger.kernel.org
+> > > Subject: Re: [PATCH 3/4] lib/hexdump.c: Replace ascii bool in
+> > > hex_dump_to_buffer with flags
+> > >
+> > > On Wed 2019-04-10 13:17:19, Alastair D'Silva wrote:
+> > > > From: Alastair D'Silva <alastair@d-silva.org>
+> > > >
+> > > > In order to support additional features in hex_dump_to_buffer,
+> > > > replace the ascii bool parameter with flags.
+> > > >
+> > > > Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> > > > ---
+> > > >  drivers/gpu/drm/i915/intel_engine_cs.c            |  2 +-
+> > > >  drivers/isdn/hardware/mISDN/mISDNisar.c           |  6 ++++--
+> > > >  drivers/mailbox/mailbox-test.c                    |  2 +-
+> > > >  drivers/net/ethernet/amd/xgbe/xgbe-drv.c          |  2 +-
+> > > >  drivers/net/ethernet/synopsys/dwc-xlgmac-common.c |  2 +-
+> > > >  drivers/net/wireless/ath/ath10k/debug.c           |  3 ++-
+> > > >  drivers/net/wireless/intel/iwlegacy/3945-mac.c    |  2 +-
+> > > >  drivers/platform/chrome/wilco_ec/debugfs.c        |  3 ++-
+> > > >  drivers/scsi/scsi_logging.c                       |  8 +++-----
+> > > >  drivers/staging/fbtft/fbtft-core.c                |  2 +-
+> > > >  fs/seq_file.c                                     |  3 ++-
+> > > >  include/linux/printk.h                            |  2 +-
+> > > >  lib/hexdump.c                                     | 15
+++++++++-------
+> > > >  lib/test_hexdump.c                                |  5 +++--
+> > > >  14 files changed, 31 insertions(+), 26 deletions(-)
+> > > >
+> > > > diff --git a/drivers/gpu/drm/i915/intel_engine_cs.c
+> > > > b/drivers/gpu/drm/i915/intel_engine_cs.c
+> > > > index 49fa43ff02ba..fb133e729f9a 100644
+> > > > --- a/drivers/gpu/drm/i915/intel_engine_cs.c
+> > > > +++ b/drivers/gpu/drm/i915/intel_engine_cs.c
+> > > > @@ -1318,7 +1318,7 @@ static void hexdump(struct drm_printer *m,
+> > > > const
+> > > void *buf, size_t len)
+> > > >  		WARN_ON_ONCE(hex_dump_to_buffer(buf + pos, len -
+> > > pos,
+> > > >  						rowsize,
+sizeof(u32),
+> > > >  						line, sizeof(line),
+> > > > -						false) >=
+sizeof(line));
+> > > > +						0) >= sizeof(line));
+> > >
+> > > It might be more clear when we define:
+> > >
+> > > #define HEXDUMP_BINARY 0
+> >
+> > This feels unnecessary, and weird. Omitting the flag won't disable the
+> > hex output (as expected), and if you don't want hex output why call
+> > hexdump in the first place?
+> 
+> Why do we have HEXDUMP_ASCII then?
+> Why is the above funtion not using HEXDUMP_ASCII?
+> Who would call it with (HEXDUMP_ASCII | HEXDUMP_BINARY)?
 
-Applied for next, thanks!
+The ASCII flag controls the optional ASCII output, and replaces the boolean
+that existed prior. A user would enable it in the same situations where they
+currently pass true for the ascii parameter.
 
-Kind regards
-Uffe
+In the above example the author only wants the hex output, while in other
+situations, both hex & ASCII output is desirable. If you just want ASCII
+output, the caller should just use a printk or one of it's wrappers.
 
+-- 
+Alastair D'Silva           mob: 0423 762 819
+skype: alastair_dsilva     msn: alastair@d-silva.org
+blog: http://alastair.d-silva.org    Twitter: @EvilDeece
 
-> ---
->  drivers/mmc/host/sdhci-tegra.c | 58 +++++++++++++++++++++++++++++++++++++++++-
->  1 file changed, 57 insertions(+), 1 deletion(-)
->
-> diff --git a/drivers/mmc/host/sdhci-tegra.c b/drivers/mmc/host/sdhci-tegra.c
-> index eafaaefab4a6..f608417ae967 100644
-> --- a/drivers/mmc/host/sdhci-tegra.c
-> +++ b/drivers/mmc/host/sdhci-tegra.c
-> @@ -1611,11 +1611,67 @@ static int sdhci_tegra_remove(struct platform_device *pdev)
->         return 0;
->  }
->
-> +#ifdef CONFIG_PM_SLEEP
-> +static int __maybe_unused sdhci_tegra_suspend(struct device *dev)
-> +{
-> +       struct sdhci_host *host = dev_get_drvdata(dev);
-> +       struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> +       int ret;
-> +
-> +       if (host->mmc->caps2 & MMC_CAP2_CQE) {
-> +               ret = cqhci_suspend(host->mmc);
-> +               if (ret)
-> +                       return ret;
-> +       }
-> +
-> +       ret = sdhci_suspend_host(host);
-> +       if (ret) {
-> +               cqhci_resume(host->mmc);
-> +               return ret;
-> +       }
-> +
-> +       clk_disable_unprepare(pltfm_host->clk);
-> +       return 0;
-> +}
-> +
-> +static int __maybe_unused sdhci_tegra_resume(struct device *dev)
-> +{
-> +       struct sdhci_host *host = dev_get_drvdata(dev);
-> +       struct sdhci_pltfm_host *pltfm_host = sdhci_priv(host);
-> +       int ret;
-> +
-> +       ret = clk_prepare_enable(pltfm_host->clk);
-> +       if (ret)
-> +               return ret;
-> +
-> +       ret = sdhci_resume_host(host);
-> +       if (ret)
-> +               goto disable_clk;
-> +
-> +       if (host->mmc->caps2 & MMC_CAP2_CQE) {
-> +               ret = cqhci_resume(host->mmc);
-> +               if (ret)
-> +                       goto suspend_host;
-> +       }
-> +
-> +       return 0;
-> +
-> +suspend_host:
-> +       sdhci_suspend_host(host);
-> +disable_clk:
-> +       clk_disable_unprepare(pltfm_host->clk);
-> +       return ret;
-> +}
-> +#endif
-> +
-> +static SIMPLE_DEV_PM_OPS(sdhci_tegra_dev_pm_ops, sdhci_tegra_suspend,
-> +                        sdhci_tegra_resume);
-> +
->  static struct platform_driver sdhci_tegra_driver = {
->         .driver         = {
->                 .name   = "sdhci-tegra",
->                 .of_match_table = sdhci_tegra_dt_match,
-> -               .pm     = &sdhci_pltfm_pmops,
-> +               .pm     = &sdhci_tegra_dev_pm_ops,
->         },
->         .probe          = sdhci_tegra_probe,
->         .remove         = sdhci_tegra_remove,
-> --
-> 2.7.4
->
