@@ -4,34 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E2EFC10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 080BAC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:59:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4811720825
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:59:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9C2220818
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:59:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727609AbfDOM7J (ORCPT
+        id S1727620AbfDOM7J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Mon, 15 Apr 2019 08:59:09 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:47990 "EHLO
+Received: from mailgw01.mediatek.com ([210.61.82.183]:37755 "EHLO
         mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727549AbfDOM6t (ORCPT
+        with ESMTP id S1727546AbfDOM6t (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 15 Apr 2019 08:58:49 -0400
-X-UUID: 4d5fc363381642b0b62731c8f79fcdf8-20190415
-X-UUID: 4d5fc363381642b0b62731c8f79fcdf8-20190415
+X-UUID: a2e935a7555e403688ed1b9c4e667c9e-20190415
+X-UUID: a2e935a7555e403688ed1b9c4e667c9e-20190415
 Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
         (envelope-from <bibby.hsieh@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 953565154; Mon, 15 Apr 2019 20:58:39 +0800
+        with ESMTP id 1492707829; Mon, 15 Apr 2019 20:58:38 +0800
 Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs08n2.mediatek.inc (172.21.101.56) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Mon, 15 Apr 2019 20:58:38 +0800
+ mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Mon, 15 Apr 2019 20:58:37 +0800
 Received: from mtkslt302.mediatek.inc (10.21.14.115) by mtkcas09.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Mon, 15 Apr 2019 20:58:38 +0800
+ Transport; Mon, 15 Apr 2019 20:58:37 +0800
 From:   Bibby Hsieh <bibby.hsieh@mediatek.com>
 To:     Jassi Brar <jassisinghbrar@gmail.com>,
         Matthias Brugger <matthias.bgg@gmail.com>,
@@ -53,68 +53,82 @@ CC:     Daniel Kurtz <djkurtz@chromium.org>,
         Houlong Wei <houlong.wei@mediatek.com>,
         <ginny.chen@mediatek.com>, <kendrick.hsu@mediatek.com>,
         Frederic Chen <Frederic.Chen@mediatek.com>
-Subject: [PATCH v4 12/12] arm64: dts: add gce node for mt8183
-Date:   Mon, 15 Apr 2019 20:58:33 +0800
-Message-ID: <20190415125833.38704-13-bibby.hsieh@mediatek.com>
+Subject: [PATCH v4 05/12] soc: mediatek: cmdq: move the CMDQ_IRQ_MASK into cmdq driver data
+Date:   Mon, 15 Apr 2019 20:58:26 +0800
+Message-ID: <20190415125833.38704-6-bibby.hsieh@mediatek.com>
 X-Mailer: git-send-email 2.18.0
 In-Reply-To: <20190415125833.38704-1-bibby.hsieh@mediatek.com>
 References: <20190415125833.38704-1-bibby.hsieh@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
-X-TM-SNTS-SMTP: 364474C44978AA6ED83000E763EDAF2B5EF95E53C214EBB3345E5CCAD1DE3D4D2000:8
 X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-add gce device node for mt8183
+The interrupt mask and thread number has positive correlation,
+so we move the CMDQ_IRQ_MASK into cmdq driver data and calculate
+it by thread number.
 
 Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
-
 ---
-This patch is based on v5.1-rc1 and these patches:
-https://patchwork.kernel.org/patch/10856987/
-https://patchwork.kernel.org/patch/10839021/
-https://patchwork.kernel.org/patch/10879015/
-https://patchwork.kernel.org/patch/10878999/
-https://patchwork.kernel.org/patch/10858941/
-https://patchwork.kernel.org/patch/10846685/
-https://patchwork.kernel.org/patch/10893519/
----
- arch/arm64/boot/dts/mediatek/mt8183.dtsi | 12 ++++++++++++
- 1 file changed, 12 insertions(+)
+ drivers/mailbox/mtk-cmdq-mailbox.c | 12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-index b36e37fcdfe3..60809490a74b 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-@@ -9,6 +9,7 @@
- #include <dt-bindings/interrupt-controller/arm-gic.h>
- #include <dt-bindings/interrupt-controller/irq.h>
- #include <dt-bindings/power/mt8183-power.h>
-+#include <dt-bindings/gce/mt8183-gce.h>
- #include "mt8183-pinfunc.h"
- / {
- 	compatible = "mediatek,mt8183";
-@@ -293,6 +294,17 @@
- 			clock-names = "spi", "wrap";
- 		};
+diff --git a/drivers/mailbox/mtk-cmdq-mailbox.c b/drivers/mailbox/mtk-cmdq-mailbox.c
+index 22811784dc7d..87617dc7504d 100644
+--- a/drivers/mailbox/mtk-cmdq-mailbox.c
++++ b/drivers/mailbox/mtk-cmdq-mailbox.c
+@@ -17,7 +17,6 @@
+ #include <linux/of_device.h>
  
-+		gce: gce@10238000 {
-+			compatible = "mediatek,mt8183-gce";
-+			reg = <0 0x10238000 0 0x4000>;
-+			interrupts = <GIC_SPI 162 IRQ_TYPE_LEVEL_LOW>;
-+			#mbox-cells = <3>;
-+			#gce-event-cells = <1>;
-+			#gce-subsys-cells = <3>;
-+			clocks = <&infracfg CLK_INFRA_GCE>;
-+			clock-names = "gce";
-+		};
+ #define CMDQ_OP_CODE_MASK		(0xff << CMDQ_OP_CODE_SHIFT)
+-#define CMDQ_IRQ_MASK			0xffff
+ #define CMDQ_NUM_CMD(t)			(t->cmd_buf_size / CMDQ_INST_SIZE)
+ 
+ #define CMDQ_CURR_IRQ_STATUS		0x10
+@@ -71,6 +70,7 @@ struct cmdq {
+ 	void __iomem		*base;
+ 	u32			irq;
+ 	u32			thread_nr;
++	u32			irq_mask;
+ 	struct cmdq_thread	*thread;
+ 	struct clk		*clock;
+ 	bool			suspended;
+@@ -284,11 +284,11 @@ static irqreturn_t cmdq_irq_handler(int irq, void *dev)
+ 	unsigned long irq_status, flags = 0L;
+ 	int bit;
+ 
+-	irq_status = readl(cmdq->base + CMDQ_CURR_IRQ_STATUS) & CMDQ_IRQ_MASK;
+-	if (!(irq_status ^ CMDQ_IRQ_MASK))
++	irq_status = readl(cmdq->base + CMDQ_CURR_IRQ_STATUS) & cmdq->irq_mask;
++	if (!(irq_status ^ cmdq->irq_mask))
+ 		return IRQ_NONE;
+ 
+-	for_each_clear_bit(bit, &irq_status, fls(CMDQ_IRQ_MASK)) {
++	for_each_clear_bit(bit, &irq_status, cmdq->thread_nr) {
+ 		struct cmdq_thread *thread = &cmdq->thread[bit];
+ 
+ 		spin_lock_irqsave(&thread->chan->lock, flags);
+@@ -472,6 +472,9 @@ static int cmdq_probe(struct platform_device *pdev)
+ 		dev_err(dev, "failed to get irq\n");
+ 		return -EINVAL;
+ 	}
 +
- 		uart0: serial@11002000 {
- 			compatible = "mediatek,mt8183-uart",
- 				     "mediatek,mt6577-uart";
++	cmdq->thread_nr = (u32)(unsigned long)of_device_get_match_data(dev);
++	cmdq->irq_mask = GENMASK(cmdq->thread_nr - 1, 0);
+ 	err = devm_request_irq(dev, cmdq->irq, cmdq_irq_handler, IRQF_SHARED,
+ 			       "mtk_cmdq", cmdq);
+ 	if (err < 0) {
+@@ -488,7 +491,6 @@ static int cmdq_probe(struct platform_device *pdev)
+ 		return PTR_ERR(cmdq->clock);
+ 	}
+ 
+-	cmdq->thread_nr = (u32)(unsigned long)of_device_get_match_data(dev);
+ 	cmdq->mbox.dev = dev;
+ 	cmdq->mbox.chans = devm_kcalloc(dev, cmdq->thread_nr,
+ 					sizeof(*cmdq->mbox.chans), GFP_KERNEL);
 -- 
 2.18.0
 
