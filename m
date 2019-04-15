@@ -2,43 +2,54 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4AADFC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:03:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ADE38C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:03:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1562220833
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:03:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A9CD20881
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:03:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555318989;
+	bh=o94C3pRsnUp1q4hbRWMvpQZolUpciNHeJyzwWsLxD9Y=;
+	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
+	b=1s2x24kmF76+zsuRJvtBJZlYuCgaf3TPi31yTzChWUR2oBr9CrzmHfUqY/WHJE++v
+	 bdf6jQC1HRucFDgocqt6or3rNgAgBshM8jbMK2CjDV+2rcx95kKvP/zUqf2CLFgSIg
+	 0lxSzWRy2PWXmF0UmxXTVdFcsxRH7uexmmduhBG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727072AbfDOJDC (ORCPT
+        id S1727112AbfDOJDI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 05:03:02 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:44951 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbfDOJDC (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 05:03:02 -0400
-Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hFxVy-0002zp-IB; Mon, 15 Apr 2019 11:02:58 +0200
-Date:   Mon, 15 Apr 2019 11:02:58 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Andy Lutomirski <luto@kernel.org>
-cc:     LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pekka Enberg <penberg@kernel.org>,
-        Linux-MM <linux-mm@kvack.org>
-Subject: [patch V4 01/32] mm/slab: Fix broken stack trace storage
-In-Reply-To: <alpine.DEB.2.21.1904141832400.4917@nanos.tec.linutronix.de>
-Message-ID: <alpine.DEB.2.21.1904151101100.1729@nanos.tec.linutronix.de>
-References: <20190414155936.679808307@linutronix.de> <20190414160143.591255977@linutronix.de> <CALCETrUhVc_u3HL-x7wMnk9ukEbwQPvc9N5Na-Q55se0VwcCpw@mail.gmail.com> <alpine.DEB.2.21.1904141832400.4917@nanos.tec.linutronix.de>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Mon, 15 Apr 2019 05:03:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42552 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725796AbfDOJDH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 05:03:07 -0400
+Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id AEFF620833;
+        Mon, 15 Apr 2019 09:03:05 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555318987;
+        bh=o94C3pRsnUp1q4hbRWMvpQZolUpciNHeJyzwWsLxD9Y=;
+        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
+        b=hlvbgAIJyMUOrwF9thr72g15mb+hjsXdfSfaSbPdjpQYtN2kqgMDu7Z1HLE59EOQS
+         E8n7engiowIpBXBZ10/gi3wHwqGT5BGrh1ikgTm32TgcxXKTQICWfOGLEXmVqi4tab
+         G7uw2vay8H88ChrAC7FT8bm6j377DjKRo23o9BQg=
+Date:   Mon, 15 Apr 2019 11:03:03 +0200 (CEST)
+From:   Jiri Kosina <jikos@kernel.org>
+To:     Mao Wenan <maowenan@huawei.com>
+cc:     benjamin.tissoires@redhat.com, linux-input@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kernel-janitors@vger.kernel.org,
+        Hulk Robot <hulkci@huawei.com>,
+        Andrej Shadura <andrew.shadura@collabora.co.uk>
+Subject: Re: [PATCH] HID: fix compiling error in u2fzero_probe()
+In-Reply-To: <20190413134459.76045-1-maowenan@huawei.com>
+Message-ID: <nycvar.YFH.7.76.1904151102250.9803@cbobk.fhfr.pm>
+References: <20190413134459.76045-1-maowenan@huawei.com>
+User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
 MIME-Version: 1.0
 Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
@@ -46,70 +57,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-kstack_end() is broken on interrupt stacks as they are not guaranteed to be
-sized THREAD_SIZE and THREAD_SIZE aligned.
+On Sat, 13 Apr 2019, Mao Wenan wrote:
 
-Use the stack tracer instead. Remove the pointless pointer increment at the
-end of the function while at it.
+> There is one compiling error in u2fzero_probe()->u2fzero_init_hwrng(),
+> this is because HW_RANDOM is not set.
+> 
+> drivers/hid/hid-u2fzero.o: In function `u2fzero_probe':
+> hid-u2fzero.c:(.text+0xc70): undefined reference to `devm_hwrng_register'
+> 
+> Fixes: 42337b9d4d958("HID: add driver for U2F Zero built-in LED and RNG")
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+> ---
+>  drivers/hid/Kconfig | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+> diff --git a/drivers/hid/Kconfig b/drivers/hid/Kconfig
+> index 4dc1035..76d8206 100644
+> --- a/drivers/hid/Kconfig
+> +++ b/drivers/hid/Kconfig
+> @@ -1017,6 +1017,7 @@ config HID_U2FZERO
+>  	tristate "U2F Zero LED and RNG support"
+>  	depends on USB_HID
+>  	depends on LEDS_CLASS
+> +	depends on HW_RANDOM
 
-Fixes: 98eb235b7feb ("[PATCH] page unmapping debug") - History tree
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: linux-mm@kvack.org
----
-V4: Made the code simpler to understand (Andy) and make it actually compile
----
- mm/slab.c |   30 ++++++++++++++----------------
- 1 file changed, 14 insertions(+), 16 deletions(-)
+[ CCing Andrej ]
 
---- a/mm/slab.c
-+++ b/mm/slab.c
-@@ -1470,33 +1470,31 @@ static bool is_debug_pagealloc_cache(str
- static void store_stackinfo(struct kmem_cache *cachep, unsigned long *addr,
- 			    unsigned long caller)
- {
--	int size = cachep->object_size;
-+	int size = cachep->object_size / sizeof(unsigned long);
- 
- 	addr = (unsigned long *)&((char *)addr)[obj_offset(cachep)];
- 
--	if (size < 5 * sizeof(unsigned long))
-+	if (size < 5)
- 		return;
- 
- 	*addr++ = 0x12345678;
- 	*addr++ = caller;
- 	*addr++ = smp_processor_id();
--	size -= 3 * sizeof(unsigned long);
-+	size -= 3;
-+#ifdef CONFIG_STACKTRACE
- 	{
--		unsigned long *sptr = &caller;
--		unsigned long svalue;
--
--		while (!kstack_end(sptr)) {
--			svalue = *sptr++;
--			if (kernel_text_address(svalue)) {
--				*addr++ = svalue;
--				size -= sizeof(unsigned long);
--				if (size <= sizeof(unsigned long))
--					break;
--			}
--		}
-+		struct stack_trace trace = {
-+			/* Leave one for the end marker below */
-+			.max_entries	= size - 1,
-+			.entries	= addr,
-+			.skip		= 3,
-+		};
- 
-+		save_stack_trace(&trace);
-+		addr += trace.nr_entries;
- 	}
--	*addr++ = 0x87654321;
-+#endif
-+	*addr = 0x87654321;
- }
- 
- static void slab_kernel_map(struct kmem_cache *cachep, void *objp,
+This was supposed to be sent by Andrej (together with other fixes), but 
+you beat him to it. Applied, thanks.
+
+-- 
+Jiri Kosina
+SUSE Labs
+
