@@ -2,65 +2,55 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 05EA4C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:12:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB294C10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:12:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA61921900
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:12:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 952B5218D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:12:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355530;
-	bh=NIN92LyNpMDX+7QNe81KeAa7qGdk4fMxQg6uD831QIc=;
+	s=default; t=1555355537;
+	bh=kCpm+MyXmaaPxl+WAR7wPjIj+5TZtAOJr4Lre1+Vvms=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=HHT0LgV2SBNshTrNBQkflSzsCTargkviI5W2jYcx6jC77AW17NTDMvA9J0wWaww9E
-	 XgRU21ll/cJoH6Ae/uCI716ofMbugbPAbHluqe3G91vekA+rHMRrWDTfOJ+aUVixag
-	 eV9zZVBpuzWKJDpLKLOyOEleJcE9UcbQKYPB2D3Y=
+	b=ZIRo/3UsoQWAjvv7HjfVcgpsj88Rd6CCWpd4mY4gYLrgG/UJL7zIeRB8U+7L5oRT1
+	 izpMJr0mGlkDhv3CTQJA0m/qDdX0A4PkH+VIVweNCt4Q7fu5FJqXYfilwjl5T6Q3Mh
+	 wn/eN3mIh28Fiv8VdjXjKbF5DAko7J11WUnb6KG4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731343AbfDOTMJ (ORCPT
+        id S1731365AbfDOTMQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:12:09 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49256 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:12:16 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730825AbfDOTME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:12:04 -0400
+        id S1731350AbfDOTMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:12:12 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5C59A21902;
-        Mon, 15 Apr 2019 19:12:02 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 6DF30218A1;
+        Mon, 15 Apr 2019 19:12:10 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355522;
-        bh=NIN92LyNpMDX+7QNe81KeAa7qGdk4fMxQg6uD831QIc=;
+        s=default; t=1555355530;
+        bh=kCpm+MyXmaaPxl+WAR7wPjIj+5TZtAOJr4Lre1+Vvms=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iumyyX7JFmueTfwmoZpBtDPjd9RH73IRqmD9ZW8Wv48yCtcKaHLldgSK2ejQ7APvt
-         6vaxQgG7cP6+w0PbdafoUE4vgn+xF3evV2SpQVnRF+/Ms48hep2nlylSzDcekpQKUz
-         /3nJews8pWZXppRrvSxAVL+ab2fMtGyLt3r1ZwJ8=
+        b=eJ/zWOFOmRVwV/rvCbmNpHvCKO5Z09WLJwuPMJvqLVxq8DKTOMBaXprI/yip/iXiT
+         43IVl1CaMuuXtt07bzbQ4QA+PPv2YbJs+KuL1bm0N2m6I/3Dz+Z1f1Kk2CFIks1Vfn
+         pzRHfZzRTiInGF3L9YAjV2B0DEW1PK1PzUxwUAE4=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Adhemerval Zanella <adhemerval.zanella@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        James Y Knight <jyknight@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
+        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Zhao Qiang <qiang.zhao@nxp.com>,
+        Yalin Wang <yalin.wang@sonymobile.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 043/117] lib/string.c: implement a basic bcmp
-Date:   Mon, 15 Apr 2019 21:00:13 +0200
-Message-Id: <20190415183747.209489112@linuxfoundation.org>
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 5.0 070/117] include/linux/bitrev.h: fix constant bitrev
+Date:   Mon, 15 Apr 2019 21:00:40 +0200
+Message-Id: <20190415183748.523340749@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183744.887851196@linuxfoundation.org>
 References: <20190415183744.887851196@linuxfoundation.org>
@@ -73,111 +63,126 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5f074f3e192f10c9fade898b9b3b8812e3d83342 ]
+From: Arnd Bergmann <arnd@arndb.de>
 
-A recent optimization in Clang (r355672) lowers comparisons of the
-return value of memcmp against zero to comparisons of the return value
-of bcmp against zero.  This helps some platforms that implement bcmp
-more efficiently than memcmp.  glibc simply aliases bcmp to memcmp, but
-an optimized implementation is in the works.
+commit 6147e136ff5071609b54f18982dea87706288e21 upstream.
 
-This results in linkage failures for all targets with Clang due to the
-undefined symbol.  For now, just implement bcmp as a tailcail to memcmp
-to unbreak the build.  This routine can be further optimized in the
-future.
+clang points out with hundreds of warnings that the bitrev macros have a
+problem with constant input:
 
-Other ideas discussed:
+  drivers/hwmon/sht15.c:187:11: error: variable '__x' is uninitialized when used within its own initialization
+        [-Werror,-Wuninitialized]
+          u8 crc = bitrev8(data->val_status & 0x0F);
+                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+  include/linux/bitrev.h:102:21: note: expanded from macro 'bitrev8'
+          __constant_bitrev8(__x) :                       \
+          ~~~~~~~~~~~~~~~~~~~^~~~
+  include/linux/bitrev.h:67:11: note: expanded from macro '__constant_bitrev8'
+          u8 __x = x;                     \
+             ~~~   ^
 
- * A weak alias was discussed, but breaks for architectures that define
-   their own implementations of memcmp since aliases to declarations are
-   not permitted (only definitions). Arch-specific memcmp
-   implementations typically declare memcmp in C headers, but implement
-   them in assembly.
+Both the bitrev and the __constant_bitrev macros use an internal
+variable named __x, which goes horribly wrong when passing one to the
+other.
 
- * -ffreestanding also is used sporadically throughout the kernel.
+The obvious fix is to rename one of the variables, so this adds an extra
+'_'.
 
- * -fno-builtin-bcmp doesn't work when doing LTO.
+It seems we got away with this because
 
-Link: https://bugs.llvm.org/show_bug.cgi?id=41035
-Link: https://code.woboq.org/userspace/glibc/string/memcmp.c.html#bcmp
-Link: https://github.com/llvm/llvm-project/commit/8e16d73346f8091461319a7dfc4ddd18eedcff13
-Link: https://github.com/ClangBuiltLinux/linux/issues/416
-Link: http://lkml.kernel.org/r/20190313211335.165605-1-ndesaulniers@google.com
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-Reported-by: Adhemerval Zanella <adhemerval.zanella@linaro.org>
-Suggested-by: Arnd Bergmann <arnd@arndb.de>
-Suggested-by: James Y Knight <jyknight@google.com>
-Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
-Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: David Laight <David.Laight@ACULAB.COM>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
+ - there are only a few drivers using bitrev macros
+
+ - usually there are no constant arguments to those
+
+ - when they are constant, they tend to be either 0 or (unsigned)-1
+   (drivers/isdn/i4l/isdnhdlc.o, drivers/iio/amplifiers/ad8366.c) and
+   give the correct result by pure chance.
+
+In fact, the only driver that I could find that gets different results
+with this is drivers/net/wan/slic_ds26522.c, which in turn is a driver
+for fairly rare hardware (adding the maintainer to Cc for testing).
+
+Link: http://lkml.kernel.org/r/20190322140503.123580-1-arnd@arndb.de
+Fixes: 556d2f055bf6 ("ARM: 8187/1: add CONFIG_HAVE_ARCH_BITREVERSE to support rbit instruction")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Zhao Qiang <qiang.zhao@nxp.com>
+Cc: Yalin Wang <yalin.wang@sonymobile.com>
 Cc: <stable@vger.kernel.org>
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- include/linux/string.h |  3 +++
- lib/string.c           | 20 ++++++++++++++++++++
- 2 files changed, 23 insertions(+)
+ include/linux/bitrev.h |   46 +++++++++++++++++++++++-----------------------
+ 1 file changed, 23 insertions(+), 23 deletions(-)
 
-diff --git a/include/linux/string.h b/include/linux/string.h
-index 7927b875f80c..6ab0a6fa512e 100644
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -150,6 +150,9 @@ extern void * memscan(void *,int,__kernel_size_t);
- #ifndef __HAVE_ARCH_MEMCMP
- extern int memcmp(const void *,const void *,__kernel_size_t);
- #endif
-+#ifndef __HAVE_ARCH_BCMP
-+extern int bcmp(const void *,const void *,__kernel_size_t);
-+#endif
- #ifndef __HAVE_ARCH_MEMCHR
- extern void * memchr(const void *,int,__kernel_size_t);
- #endif
-diff --git a/lib/string.c b/lib/string.c
-index 38e4ca08e757..3ab861c1a857 100644
---- a/lib/string.c
-+++ b/lib/string.c
-@@ -866,6 +866,26 @@ __visible int memcmp(const void *cs, const void *ct, size_t count)
- EXPORT_SYMBOL(memcmp);
- #endif
+--- a/include/linux/bitrev.h
++++ b/include/linux/bitrev.h
+@@ -34,41 +34,41 @@ static inline u32 __bitrev32(u32 x)
  
-+#ifndef __HAVE_ARCH_BCMP
-+/**
-+ * bcmp - returns 0 if and only if the buffers have identical contents.
-+ * @a: pointer to first buffer.
-+ * @b: pointer to second buffer.
-+ * @len: size of buffers.
-+ *
-+ * The sign or magnitude of a non-zero return value has no particular
-+ * meaning, and architectures may implement their own more efficient bcmp(). So
-+ * while this particular implementation is a simple (tail) call to memcmp, do
-+ * not rely on anything but whether the return value is zero or non-zero.
-+ */
-+#undef bcmp
-+int bcmp(const void *a, const void *b, size_t len)
-+{
-+	return memcmp(a, b, len);
-+}
-+EXPORT_SYMBOL(bcmp);
-+#endif
-+
- #ifndef __HAVE_ARCH_MEMSCAN
- /**
-  * memscan - Find a character in an area of memory.
--- 
-2.19.1
-
+ #define __constant_bitrev32(x)	\
+ ({					\
+-	u32 __x = x;			\
+-	__x = (__x >> 16) | (__x << 16);	\
+-	__x = ((__x & (u32)0xFF00FF00UL) >> 8) | ((__x & (u32)0x00FF00FFUL) << 8);	\
+-	__x = ((__x & (u32)0xF0F0F0F0UL) >> 4) | ((__x & (u32)0x0F0F0F0FUL) << 4);	\
+-	__x = ((__x & (u32)0xCCCCCCCCUL) >> 2) | ((__x & (u32)0x33333333UL) << 2);	\
+-	__x = ((__x & (u32)0xAAAAAAAAUL) >> 1) | ((__x & (u32)0x55555555UL) << 1);	\
+-	__x;								\
++	u32 ___x = x;			\
++	___x = (___x >> 16) | (___x << 16);	\
++	___x = ((___x & (u32)0xFF00FF00UL) >> 8) | ((___x & (u32)0x00FF00FFUL) << 8);	\
++	___x = ((___x & (u32)0xF0F0F0F0UL) >> 4) | ((___x & (u32)0x0F0F0F0FUL) << 4);	\
++	___x = ((___x & (u32)0xCCCCCCCCUL) >> 2) | ((___x & (u32)0x33333333UL) << 2);	\
++	___x = ((___x & (u32)0xAAAAAAAAUL) >> 1) | ((___x & (u32)0x55555555UL) << 1);	\
++	___x;								\
+ })
+ 
+ #define __constant_bitrev16(x)	\
+ ({					\
+-	u16 __x = x;			\
+-	__x = (__x >> 8) | (__x << 8);	\
+-	__x = ((__x & (u16)0xF0F0U) >> 4) | ((__x & (u16)0x0F0FU) << 4);	\
+-	__x = ((__x & (u16)0xCCCCU) >> 2) | ((__x & (u16)0x3333U) << 2);	\
+-	__x = ((__x & (u16)0xAAAAU) >> 1) | ((__x & (u16)0x5555U) << 1);	\
+-	__x;								\
++	u16 ___x = x;			\
++	___x = (___x >> 8) | (___x << 8);	\
++	___x = ((___x & (u16)0xF0F0U) >> 4) | ((___x & (u16)0x0F0FU) << 4);	\
++	___x = ((___x & (u16)0xCCCCU) >> 2) | ((___x & (u16)0x3333U) << 2);	\
++	___x = ((___x & (u16)0xAAAAU) >> 1) | ((___x & (u16)0x5555U) << 1);	\
++	___x;								\
+ })
+ 
+ #define __constant_bitrev8x4(x) \
+ ({			\
+-	u32 __x = x;	\
+-	__x = ((__x & (u32)0xF0F0F0F0UL) >> 4) | ((__x & (u32)0x0F0F0F0FUL) << 4);	\
+-	__x = ((__x & (u32)0xCCCCCCCCUL) >> 2) | ((__x & (u32)0x33333333UL) << 2);	\
+-	__x = ((__x & (u32)0xAAAAAAAAUL) >> 1) | ((__x & (u32)0x55555555UL) << 1);	\
+-	__x;								\
++	u32 ___x = x;	\
++	___x = ((___x & (u32)0xF0F0F0F0UL) >> 4) | ((___x & (u32)0x0F0F0F0FUL) << 4);	\
++	___x = ((___x & (u32)0xCCCCCCCCUL) >> 2) | ((___x & (u32)0x33333333UL) << 2);	\
++	___x = ((___x & (u32)0xAAAAAAAAUL) >> 1) | ((___x & (u32)0x55555555UL) << 1);	\
++	___x;								\
+ })
+ 
+ #define __constant_bitrev8(x)	\
+ ({					\
+-	u8 __x = x;			\
+-	__x = (__x >> 4) | (__x << 4);	\
+-	__x = ((__x & (u8)0xCCU) >> 2) | ((__x & (u8)0x33U) << 2);	\
+-	__x = ((__x & (u8)0xAAU) >> 1) | ((__x & (u8)0x55U) << 1);	\
+-	__x;								\
++	u8 ___x = x;			\
++	___x = (___x >> 4) | (___x << 4);	\
++	___x = ((___x & (u8)0xCCU) >> 2) | ((___x & (u8)0x33U) << 2);	\
++	___x = ((___x & (u8)0xAAU) >> 1) | ((___x & (u8)0x55U) << 1);	\
++	___x;								\
+ })
+ 
+ #define bitrev32(x) \
 
 
