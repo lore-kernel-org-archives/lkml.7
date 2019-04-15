@@ -2,340 +2,120 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC2EC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:53:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71883C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:55:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E9F352073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:53:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A82C2087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:55:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="gPHF+412"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728383AbfDOSxu (ORCPT
+        id S1728210AbfDOSzf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 14:53:50 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:65389 "EHLO mx1.redhat.com"
+        Mon, 15 Apr 2019 14:55:35 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:46712 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728223AbfDOSxu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 14:53:50 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1727923AbfDOSzf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 14:55:35 -0400
+Received: from zn.tnic (p4FED3D80.dip0.t-ipconnect.de [79.237.61.128])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B48EC59454;
-        Mon, 15 Apr 2019 18:53:49 +0000 (UTC)
-Received: from x1.home (ovpn-116-122.phx2.redhat.com [10.3.116.122])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B24661001E6F;
-        Mon, 15 Apr 2019 18:53:48 +0000 (UTC)
-Date:   Mon, 15 Apr 2019 12:53:48 -0600
-From:   Alex Williamson <alex.williamson@redhat.com>
-To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        "Yi Liu" <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        "Christoph Hellwig" <hch@infradead.org>,
-        "Lu Baolu" <baolu.lu@linux.intel.com>,
-        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH 02/18] ioasid: Add custom IOASID allocator
-Message-ID: <20190415125348.58073042@x1.home>
-In-Reply-To: <1554767973-30125-3-git-send-email-jacob.jun.pan@linux.intel.com>
-References: <1554767973-30125-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1554767973-30125-3-git-send-email-jacob.jun.pan@linux.intel.com>
-Organization: Red Hat
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 883541EC02AE;
+        Mon, 15 Apr 2019 20:55:33 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1555354533;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=0pCVoqiyciNTIr+2+iXGtLsu4F0w24JAj2NcPviuQXI=;
+        b=gPHF+412dOMhp8ydjlvEebL78q/qUz9vxuKOJ5PGHbHaUt4Iod2DyyZ391P03ms+qAcvWP
+        1R+Mf4Pss+65iqfXsi6h3pqM/mQIOWGQvQ91dOtoHEmlj6SRZ1YC0FsoAvZKyfzTE7QgKr
+        QXhJVt3I3JyDNfFFFBOe4xV2TNTiJAY=
+Date:   Mon, 15 Apr 2019 20:53:19 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Baoquan He <bhe@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, tglx@linutronix.de,
+        mingo@kernel.org, hpa@zytor.com, kirill@shutemov.name,
+        keescook@chromium.org, peterz@infradead.org, thgarnie@google.com,
+        herbert@gondor.apana.org.au, mike.travis@hpe.com,
+        frank.ramsay@hpe.com, yamada.masahiro@socionext.com
+Subject: Re: [PATCH v2 RESEND 1/2] x86/mm/KASLR: Fix the size of the direct
+ mapping section
+Message-ID: <20190415185319.GI29317@zn.tnic>
+References: <20190414072804.12560-1-bhe@redhat.com>
+ <20190414072804.12560-2-bhe@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Mon, 15 Apr 2019 18:53:49 +0000 (UTC)
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190414072804.12560-2-bhe@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon,  8 Apr 2019 16:59:17 -0700
-Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
-
-> Sometimes, IOASID allocation must be handled by platform specific
-> code. The use cases are guest vIOMMU and pvIOMMU where IOASIDs need
-> to be allocated by the host via enlightened or paravirt interfaces.
+On Sun, Apr 14, 2019 at 03:28:03PM +0800, Baoquan He wrote:
+> kernel_randomize_memory() uses __PHYSICAL_MASK_SHIFT to calculate
+> the maximum amount of system RAM supported. The size of the direct
+> mapping section is obtained from the smaller one of the below two
+> values:
 > 
-> This patch adds an extension to the IOASID allocator APIs such that
-> platform drivers can register a custom allocator, possibly at boot
-> time, to take over the allocation. IDR is still used for tracking
-> and searching purposes internal to the IOASID code. Private data of
-> an IOASID can also be set after the allocation.
+>  (actual system RAM size + padding size) vs (max system RAM size supported)
 > 
-> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> ---
->  drivers/base/ioasid.c  | 124 +++++++++++++++++++++++++++++++++++++++++++++----
->  include/linux/ioasid.h |  28 ++++++++++-
->  2 files changed, 143 insertions(+), 9 deletions(-)
+> This calculation is wrong since commit:
+> b83ce5ee91471d ("x86/mm/64: Make __PHYSICAL_MASK_SHIFT always 52").
 > 
-> diff --git a/drivers/base/ioasid.c b/drivers/base/ioasid.c
-> index cf122b2..294e856 100644
-> --- a/drivers/base/ioasid.c
-> +++ b/drivers/base/ioasid.c
-> @@ -17,6 +17,74 @@ struct ioasid_data {
->  };
->  
->  static DEFINE_IDR(ioasid_idr);
-> +static DEFINE_MUTEX(ioasid_allocator_lock);
-> +static const struct ioasid_allocator *ioasid_allocator;
-> +
-> +
-> +/**
-> + * ioasid_set_allocator - register a custom allocator
-> + *
-> + * Custom allocator take precedence over the default IDR based allocator.
-> + * Private data associated with the ASID are managed by ASID common code
-> + * similar to IDR data.
-> + */
-> +int ioasid_set_allocator(struct ioasid_allocator *allocator)
-> +{
-> +	int ret = 0;
-> +
-> +	if (!allocator)
-> +		return -EINVAL;
-> +
-> +	mutex_lock(&ioasid_allocator_lock);
-> +	if (ioasid_allocator) {
-> +		ret = -EBUSY;
-> +		goto exit_unlock;
-> +	}
-> +	ioasid_allocator = allocator;
-> +
-> +exit_unlock:
-> +	mutex_unlock(&ioasid_allocator_lock);
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(ioasid_set_allocator);
+> In commit b83ce5ee91471d, __PHYSICAL_MASK_SHIFT was changed to be 52,
+> regardless of whether it's using 4-level or 5-level page tables.
+> It will always use 4 PB as the maximum amount of system RAM, even
+> in 4-level paging mode where it should be 64 TB.  Thus the size of
+> the direct mapping section will always be the sum of the actual
+> system RAM size plus the padding size.
+> 
+> Even when the amount of system RAM is 64 TB, the following layout will
+> still be used. Obviously KALSR will be weakened significantly.
+> 
+>    |____|_______actual RAM_______|_padding_|______the rest_______|
+>    0            64TB                                            ~120TB
+> 
+> What we want is the following:
+> 
+>    |____|_______actual RAM_______|_________the rest______________|
+>    0            64TB                                            ~120TB
+> 
+> So the code should use MAX_PHYSMEM_BITS instead. Fix it by replacing
+> __PHYSICAL_MASK_SHIFT with MAX_PHYSMEM_BITS.
 
-Should this fault if there are existing idr's allocated?
+First of all, wonderful job!
 
-> +
-> +/**
-> + * ioasid_clear_allocator - Free the custom IOASID allocator
-> + *
-> + * REVISIT: So far there is only one custom allocator allowed.
-> + */
-> +void ioasid_clear_allocator(void)
-> +{
-> +	mutex_lock(&ioasid_allocator_lock);
-> +	ioasid_allocator = NULL;
-> +	mutex_unlock(&ioasid_allocator_lock);
-> +}
-> +EXPORT_SYMBOL_GPL(ioasid_clear_allocator);
-> +
-> +/**
-> + * ioasid_set_data - Set private data for an allocated ioasid
-> + *
-> + * For IOASID that is already allocated, private data can be set
-> + * via this API. Future lookup can be done via ioasid_find.
-> + */
-> +int ioasid_set_data(ioasid_t ioasid, void *data)
-> +{
-> +	struct ioasid_data *ioasid_data;
-> +	int ret = 0;
-> +
-> +	idr_lock(&ioasid_idr);
-> +	ioasid_data = idr_find(&ioasid_idr, ioasid);
-> +	if (ioasid_data)
-> +		ioasid_data->private = data;
-> +	else
-> +		ret = -ENOENT;
-> +	idr_unlock(&ioasid_idr);
-> +	/* getter may use the private data */
-> +	synchronize_rcu();
-> +
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(ioasid_set_data);
->  
->  /**
->   * ioasid_alloc - Allocate an IOASID
-> @@ -32,7 +100,7 @@ static DEFINE_IDR(ioasid_idr);
->  ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
->  		      void *private)
->  {
-> -	int id = -1;
-> +	int id = INVALID_IOASID;
->  	struct ioasid_data *data;
->  
->  	data = kzalloc(sizeof(*data), GFP_KERNEL);
-> @@ -42,13 +110,30 @@ ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
->  	data->set = set;
->  	data->private = private;
->  
-> +	/* Use custom allocator if available, otherwise default to IDR */
-> +	if (ioasid_allocator) {
+This changelog is *light* *years* away from what you had before so keep
+doing them this detailed and on point from now on!
 
-If this races with ioasid_clear_allocator() ioasid_allocator might be
-set above, but NULL below to generate a segfault.  If this races with
-ioasid_set_allocator() an id can be allocated that the custom allocator
-doesn't track.
+Now, lemme make sure I understand exactly what you're fixing here:
+you're fixing the case where CONFIG_RANDOMIZE_MEMORY_PHYSICAL_PADDING is
+not 0. Which is the case when CONFIG_MEMORY_HOTPLUG is enabled.
 
-> +		mutex_lock(&ioasid_allocator_lock);
-> +		id = ioasid_allocator->alloc(min, max, ioasid_allocator->pdata);
-> +		mutex_unlock(&ioasid_allocator_lock);
-> +		if (id == INVALID_IOASID) {
-> +			pr_err("Failed ASID allocation by custom allocator\n");
-> +			goto exit_free;
-> +		}
-> +		/*
-> +		 * Use IDR to manage private data also sanitiy check custom
-> +		 * allocator for duplicates.
-> +		 */
-> +		min = id;
-> +		max = id + 1;
-> +	}
->  	idr_preload(GFP_KERNEL);
->  	idr_lock(&ioasid_idr);
->  	data->id = id = idr_alloc(&ioasid_idr, data, min, max, GFP_ATOMIC);
->  	idr_unlock(&ioasid_idr);
->  	idr_preload_end();
->  
-> -	if (id < 0) {
-> +exit_free:
-> +	if (id < 0 || id == INVALID_IOASID) {
->  		kfree(data);
+Yes, no?
 
-What if an ioasid is already allocated before the ioasid_allocator is
-registered?  The .alloc callback above could return an id that
-idr_alloc cannot provide, in which case this cleanup does not call the
-custom allocator's free callback.
+If so, please extend the commit message with that fact because it is
+crucial and the last missing piece in the explanation.
 
->  		return INVALID_IOASID;
->  	}
-> @@ -60,9 +145,20 @@ EXPORT_SYMBOL_GPL(ioasid_alloc);
->   * ioasid_free - Free an IOASID
->   * @ioasid: the ID to remove
->   */
-> -void ioasid_free(ioasid_t ioasid)
-> +int ioasid_free(ioasid_t ioasid)
->  {
->  	struct ioasid_data *ioasid_data;
-> +	int ret = 0;
-> +
-> +	if (ioasid_allocator) {
+Otherwise, when the padding is 0, the clamping:
 
-Same races as above.
+        /* Adapt phyiscal memory region size based on available memory */
+        if (memory_tb < kaslr_regions[0].size_tb)
+                kaslr_regions[0].size_tb = memory_tb;
 
-> +		mutex_lock(&ioasid_allocator_lock);
-> +		ret = ioasid_allocator->free(ioasid, ioasid_allocator->pdata);
-> +		mutex_unlock(&ioasid_allocator_lock);
-> +	}
-> +	if (ret) {
-> +		pr_err("ioasid %d custom allocator free failed\n", ioasid);
-> +		return ret;
-> +	}
->  
->  	idr_lock(&ioasid_idr);
->  	ioasid_data = idr_remove(&ioasid_idr, ioasid);
-> @@ -70,6 +166,8 @@ void ioasid_free(ioasid_t ioasid)
->  
->  	if (ioasid_data)
->  		kfree_rcu(ioasid_data, rcu);
-> +
-> +	return ret;
->  }
->  EXPORT_SYMBOL_GPL(ioasid_free);
->  
-> @@ -84,7 +182,8 @@ EXPORT_SYMBOL_GPL(ioasid_free);
->   * if @getter returns false, then the object is invalid and NULL is returned.
->   *
->   * If the IOASID has been allocated for this set, return the private pointer
-> - * passed to ioasid_alloc. Otherwise return NULL.
-> + * passed to ioasid_alloc. Private data can be NULL if not set. Return an error
-> + * if the IOASID is not found or not belong to the set.
->   */
->  void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
->  		  bool (*getter)(void *))
-> @@ -94,11 +193,20 @@ void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
->  
->  	rcu_read_lock();
->  	ioasid_data = idr_find(&ioasid_idr, ioasid);
-> -	if (ioasid_data && ioasid_data->set == set) {
-> -		priv = ioasid_data->private;
-> -		if (getter && !getter(priv))
-> -			priv = NULL;
-> +	if (!ioasid_data) {
-> +		priv = ERR_PTR(-ENOENT);
-> +		goto unlock;
-> +	}
-> +	if (set && ioasid_data->set != set) {
-> +		/* data found but does not belong to the set */
-> +		priv = ERR_PTR(-EACCES);
-> +		goto unlock;
->  	}
-> +	/* Now IOASID and its set is verified, we can return the private data */
-> +	priv = ioasid_data->private;
-> +	if (getter && !getter(priv))
-> +		priv = NULL;
-> +unlock:
->  	rcu_read_unlock();
->  
->  	return priv;
-> diff --git a/include/linux/ioasid.h b/include/linux/ioasid.h
-> index 6f3655a..64994e7 100644
-> --- a/include/linux/ioasid.h
-> +++ b/include/linux/ioasid.h
-> @@ -5,20 +5,31 @@
->  #define INVALID_IOASID ((ioasid_t)-1)
->  typedef unsigned int ioasid_t;
->  typedef int (*ioasid_iter_t)(ioasid_t ioasid, void *private, void *data);
-> +typedef ioasid_t (*ioasid_alloc_fn_t)(ioasid_t min, ioasid_t max, void *data);
-> +typedef int (*ioasid_free_fn_t)(ioasid_t ioasid, void *data);
->  
->  struct ioasid_set {
->  	int dummy;
->  };
->  
-> +struct ioasid_allocator {
-> +	ioasid_alloc_fn_t alloc;
-> +	ioasid_free_fn_t free;
-> +	void *pdata;
-> +};
-> +
->  #define DECLARE_IOASID_SET(name) struct ioasid_set name = { 0 }
->  
->  #ifdef CONFIG_IOASID
->  ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
->  		      void *private);
-> -void ioasid_free(ioasid_t ioasid);
-> +int ioasid_free(ioasid_t ioasid);
->  
->  void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
->  		  bool (*getter)(void *));
-> +int ioasid_set_allocator(struct ioasid_allocator *allocator);
-> +void ioasid_clear_allocator(void);
-> +int ioasid_set_data(ioasid_t ioasid, void *data);
->  
->  #else /* !CONFIG_IOASID */
->  static inline ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min,
-> @@ -36,5 +47,20 @@ static inline void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
->  {
->  	return NULL;
->  }
-> +
-> +static inline int ioasid_set_allocator(struct ioasid_allocator *allocator)
-> +{
-> +	return -EINVAL;
-> +}
-> +
-> +static inline void ioasid_clear_allocator(void)
-> +{
-> +}
-> +
-> +static inline int ioasid_set_data(ioasid_t ioasid, void *data)
-> +{
-> +	return -EINVAL;
-> +}
-> +
->  #endif /* CONFIG_IOASID */
->  #endif /* __LINUX_IOASID_H */
+will "fix" the direct mapping section size.
 
+Thx.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
