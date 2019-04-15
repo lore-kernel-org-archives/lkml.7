@@ -2,132 +2,175 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67044C282DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:22:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 073A6C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:25:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 33CC2218D0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:22:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C1A832075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:25:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="fDhLY4Eg"
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="cZM0tsmj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727740AbfDOQWd (ORCPT
+        id S1727747AbfDOQZr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 12:22:33 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:34898 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbfDOQWd (ORCPT
+        Mon, 15 Apr 2019 12:25:47 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:35189 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727447AbfDOQZq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 12:22:33 -0400
-Received: by mail-lj1-f193.google.com with SMTP id t4so7738795ljc.2
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 09:22:32 -0700 (PDT)
+        Mon, 15 Apr 2019 12:25:46 -0400
+Received: by mail-pf1-f195.google.com with SMTP id t21so8862801pfh.2
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 09:25:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:references:from:organization:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=w+tDuZqaqdzYfTQNvruROpEVJ+Nl3iAAOw59oxXlT98=;
-        b=fDhLY4EgNp0rEvmmWYIDwvSTz86PV622/ZbPx8Nydj/91f5ap9awAqU44vHpR/qsml
-         +3fZbv8B9sGerxHheki0s0DY3o9I6mpMwznGOaATX+/Iw0G6FOdjJc5IEEDit8Q0TXVQ
-         bbJqOLg1y8LaULIiClN43T9p4KcJC0GJOtwF0uWprg+fwrU2udXX4nY+EuhK18qIMvje
-         Nt9HxfOXgyMFxeSmKXon+RmXKBvrN7WBCj8oSdJ8dgK5Sw4fLYwnGpOUkkmAdfvCK8qW
-         wNLs497JhyVZhG8CdmclxLWuOz05lgn5YZg+T3SEqGpfCN6Sw8G4/5qKJ822yqiy0Pbd
-         29xw==
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=Kv51A9NZcOFkd2xZwLrm10H5Q11JeOUU4uR7MMM4cKQ=;
+        b=cZM0tsmjcFuX35sAEMbLybikGA6rsbZ2pweIzNT2EF73NihBIQjlhZ1yCChf7vpCqq
+         6VsvNYNM92yk/j6rrtgdg3xMuANx/yRY0JRM+fCROhPg+AcN6YamfDDhDLD1kN1Lq+hE
+         yvxsCa3rHXXWASM3R4UZT9lRA3WNmN8zEZLrs=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=w+tDuZqaqdzYfTQNvruROpEVJ+Nl3iAAOw59oxXlT98=;
-        b=UmCuHPVgqobH1Tmdc7JAW3pgXQE95gXNP19G5HnwHpBJLLMsMLj67KTXps2Pxnfa/q
-         wMdIxYjoyxHf2uysMULUM25Qzh9OF3MqPG0F4VYUTcEaen/lL/l/VnreLqhO+xA2Yzsm
-         XcfYxWIVVGVcoTa4HgqwOnc7j7TYYM0xzGCEm9IxgjO2wnfzDs0j+F8ERHjB3mwmpyKv
-         gr48CwXz61d7MJ2/9iczMJZW0roPJESNCvicxPN3bB8rUYEeQ5FRv/005NtmtE3I30oO
-         bDkCZJ9aQ0bE5XKg03Lr2Kmd9JIrqqo0YJ+5pW1iK1beuy07uq76/DxZ6nWcxVr9/7V4
-         afHw==
-X-Gm-Message-State: APjAAAWAzBsU73eRamqd4ne9QK+AlMNLQbm6q34Z6FkFoppHNwkgepJI
-        /uXy14t6CaJS3g5qR7Jdn3TvDQ==
-X-Google-Smtp-Source: APXvYqw47gKudrEWEzYdf9hRdvuBBSXHXF2Nhii39dT9CsXBYIOV46XriMlCbOVjdnpxCrDf45A+Kg==
-X-Received: by 2002:a2e:8156:: with SMTP id t22mr19961789ljg.77.1555345351659;
-        Mon, 15 Apr 2019 09:22:31 -0700 (PDT)
-Received: from wasted.cogentembedded.com ([31.173.85.61])
-        by smtp.gmail.com with ESMTPSA id b78sm2132187lfg.38.2019.04.15.09.22.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Apr 2019 09:22:30 -0700 (PDT)
-Subject: Re: KASAN: use-after-free Read in dvb_usb_device_exit
-To:     Oliver Neukum <oneukum@suse.com>,
-        syzbot <syzbot+26ec41e9f788b3eba396@syzkaller.appspotmail.com>,
-        andreyknvl@google.com, syzkaller-bugs@googlegroups.com,
-        mchehab@kernel.org, corbet@lwn.net, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org, linux-usb@vger.kernel.org
-References: <000000000000789d3d058653d9bb@google.com>
- <1555326745.13626.10.camel@suse.com>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <1e782001-7f5c-623e-f4c6-6e1e0fc90598@cogentembedded.com>
-Date:   Mon, 15 Apr 2019 19:22:29 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=Kv51A9NZcOFkd2xZwLrm10H5Q11JeOUU4uR7MMM4cKQ=;
+        b=Jy7YMCmrco7dOIf1TswMcXfWSpVhrt+7tTZ79asbPG4xWBWD5yz+2/SrbCDHvvHmlC
+         k1LzKCSfRxt/BlxJceYM17GiwQJDaflj7eSge0W1goat/2sXnCUnljxiPQpZxP4iBtlj
+         6+Tqx8j2LYte/RWN7OanWsYRK/53Fs+TjVZPQPAI9PySlzSn5jUFUwecnoZPHX3fCXUL
+         kfas8rU5eEw5FCwgrOWTeht3HZm71uDXwYA/HHnyoUZYEPskwep40rvyVEexrYikBGCn
+         z1qPPNkGv2qnfVHCa87ldyJN0IE2gduesO//q2IyXdCtW2uoNdmsnUjkH8DMZA/F/V6R
+         6aBA==
+X-Gm-Message-State: APjAAAVjELDZ3x17X293DOdXXmCTmbvbOPH4LYZHWd1zJBZ+vdmdBF8N
+        SfwPacGYYpO+OjDhF9Snfq5Gyg==
+X-Google-Smtp-Source: APXvYqyv9wCVAfbmksEIfW5OHe27pSaEYLIoFJCiKjrvw+ALq/bAlZ1t43LbcWVe3/xgeajnQpu1jQ==
+X-Received: by 2002:aa7:943b:: with SMTP id y27mr52448203pfo.59.1555345544730;
+        Mon, 15 Apr 2019 09:25:44 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id b16sm67626644pfo.168.2019.04.15.09.25.42
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 15 Apr 2019 09:25:43 -0700 (PDT)
+Date:   Mon, 15 Apr 2019 12:25:42 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Christian Brauner <christian@brauner.io>
+Cc:     Oleg Nesterov <oleg@redhat.com>, torvalds@linux-foundation.org,
+        viro@zeniv.linux.org.uk, jannh@google.com, dhowells@redhat.com,
+        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
+        serge@hallyn.com, luto@kernel.org, arnd@arndb.de,
+        ebiederm@xmission.com, keescook@chromium.org, tglx@linutronix.de,
+        mtk.manpages@gmail.com, akpm@linux-foundation.org,
+        cyphar@cyphar.com, dancol@google.com
+Subject: Re: [PATCH 2/4] clone: add CLONE_PIDFD
+Message-ID: <20190415162542.GA246478@google.com>
+References: <20190414201436.19502-1-christian@brauner.io>
+ <20190414201436.19502-3-christian@brauner.io>
+ <20190415105209.GA22204@redhat.com>
+ <20190415114204.ydczeuwmi74wfsuv@brauner.io>
+ <20190415132416.GB22204@redhat.com>
+ <20190415135246.d6pvyf3pkt3sbh6t@brauner.io>
 MIME-Version: 1.0
-In-Reply-To: <1555326745.13626.10.camel@suse.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190415135246.d6pvyf3pkt3sbh6t@brauner.io>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
-
-On 04/15/2019 02:12 PM, Oliver Neukum wrote:
-
-[...]
-> From d6097d205ac61745334b79639d3b8b910ae66c71 Mon Sep 17 00:00:00 2001
-> From: Oliver Neukum <oneukum@suse.com>
-> Date: Mon, 15 Apr 2019 13:06:01 +0200
-> Subject: [PATCH] dvb: usb: fix use after free in dvb_usb_device_exit
+On Mon, Apr 15, 2019 at 03:52:48PM +0200, Christian Brauner wrote:
+> On Mon, Apr 15, 2019 at 03:24:16PM +0200, Oleg Nesterov wrote:
+> > On 04/15, Christian Brauner wrote:
+> > >
+> > > > CLONE_PARENT_SETTID doesn't look very usefule, so what if we add
+> > > >
+> > > > 	if ((clone_flags & (CLONE_PIDFD|CLONE_PARENT_SETTID)) ==
+> > > > 	                   (CLONE_PIDFD|CLONE_PARENT_SETTID))
+> > > > 		return ERR_PTR(-EINVAL);
+> > > >
+> > > > at the start of copy_process() ?
+> > > >
+> > > > Then it can do
+> > > >
+> > > > 	if (clone_flags & CLONE_PIDFD) {
+> > > > 		retval = pidfd_create(pid, &pidfdf);
+> > > > 		if (retval < 0)
+> > > > 			goto bad_fork_free_pid;
+> > > > 		retval = put_user(retval, parent_tidptr)
+> > > > 		if (retval < 0)
+> > > > 			goto bad_fork_free_pid;
+> > > > 	}
+> > >
+> > > Uhhh Oleg, that is nifty. I have to say I like that a lot. This would
+> > > let us return the pid and the pidfd in one go and we can also start
+> > > pidfd numbering at 0.
+> > 
+> > Christian, sorry if it was already discussed, but I can't force myself to
+> > read all the previous discussions ;)
+> > 
+> > If we forget about CONFIG_PROC_FS, why do we really want to create a file?
+> > 
+> > 
+> > Suppose we add a global u64 counter incremented by copy_process and reported
+> > in /proc/$pid/status. Suppose that clone(CLONE_PIDFD) writes this counter to
+> > *parent_tidptr. Let's denote this counter as UNIQ_PID.
+> > 
+> > Now, if you want to (say) safely kill a task and you have its UNIQ_PID, you
+> > can do
+> > 
+> > 	kill_by_pid_uniq(int pid, u64 uniq_pid)
+> > 	{
+> > 		pidfd = open("/proc/$pid", O_DIRECTORY);
+> > 
+> > 		status = openat(pidfd, "status");
+> > 		u64 this_uniq_pid = ... read UNIQ_PID from status ...;
+> > 
+> > 		if (uniq_pid != this_uniq_pid)
+> > 			return;
+> > 
+> > 		pidfd_send_signal(pidfd);
+> > 	}
+> > 
+> > Why else do we want pidfd?
 > 
-> dvb_usb_device_exit() frees and uses teh device name in that order
-
-   s/teh/the/.
-
-> Fix by storing the name in a buffer before freeing it
+> I think this was thrown around at one point but this is rather
+> inelegant imho. It basically makes a process unique by using a
+> combination of two identifiers. You end up with a similar concept but
+> you make it way less flexible and extensible imho. With pidfds you can
+> not care about pids at all if you don't want to. The UNIQ_PID thing
+> would require you to always juggle two identifiers.
 > 
-> Signed-off-by: Oliver Neukum <oneukum@suse.com>
-> Reported-by: syzbot+26ec41e9f788b3eba396@syzkaller.appspotmail.com
-> ---
->  drivers/media/usb/dvb-usb/dvb-usb-init.c | 7 ++++++-
->  1 file changed, 6 insertions(+), 1 deletion(-)
+> Your example would also only work if CONFIG_PROC_FS is set (Not sure if
+> that's what you meant by "forget about CONFIG_PROC_FS")? Say, you get
+> a pid from clone() and your UNIQ_PID thing. Then you still can't
+> reliably kill a process because pidfd_send_signal() is not useable since
+> you can't get pidfds. And if you go the kill way you end up with the same
+> problem. Yes, you could solve this by probably extending syscalls to
+> take a UNIQ_PID argument but that seems very inelegant.
 > 
-> diff --git a/drivers/media/usb/dvb-usb/dvb-usb-init.c b/drivers/media/usb/dvb-usb/dvb-usb-init.c
-> index 99951e02a880..2e1670cc3903 100644
-> --- a/drivers/media/usb/dvb-usb/dvb-usb-init.c
-> +++ b/drivers/media/usb/dvb-usb/dvb-usb-init.c
-> @@ -288,13 +288,18 @@ void dvb_usb_device_exit(struct usb_interface *intf)
->  {
->  	struct dvb_usb_device *d = usb_get_intfdata(intf);
->  	const char *name = "generic DVB-USB module";
-> +	char identifier[40];
->  
->  	usb_set_intfdata(intf, NULL);
->  	if (d != NULL && d->desc != NULL) {
->  		name = d->desc->name;
-> +		memcpy(identifier, name, 39);
-> +		identifier[39] = NULL;
+> The UNIQ_PID implementation would also require being tracked in the
+> kernel either in task_struct or struct pid potentially and thus would
+> probably add more infrastructure in the kernel. We don't need any of
+> that if we simply rely on pidfds.
+> 
+> Most of all, the pidfd concept allows one way more flexibility in
+> extending it. For example, Joel is working on a patchset to make pidfds
+> pollable so you can get information about a process death by polling
+> them. We also want to be able to potentially wait on a process with
+> waitid(W_PIDFD) or similar as suggested by Linus in earlier threads. At
+> that point you end up in a similar situation as tgkill() where you pass
+> a tgid and a pid already to make sure that the pid you pass has the tgid
+> as thread-group leader. That is all way simpler with pidfds.
 
-   NULL is for pointers, no?
+I agree the pidfd file descriptor approach is simpler than dealing with 2
+pids and is needed for the poll notification support I posted.
 
->  		dvb_usb_exit(d);
-> +	} else {
-> +		memcpy(identifier, name, 39);
->  	}
-> -	info("%s successfully deinitialized and disconnected.", name);
-> +	info("%s successfully deinitialized and disconnected.", identifier);
->  
->  }
->  EXPORT_SYMBOL(dvb_usb_device_exit);
+Also in the future it allows for a pidfd to sent over IPC to another
+process using binder or unix domain sockets.
 
-MBR, Sergei
+thanks,
+
+ - Joel
+
