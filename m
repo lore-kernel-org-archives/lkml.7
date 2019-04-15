@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 56AD9C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:15:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CB9DC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:15:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 258B02075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:15:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EFD9E218D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:15:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355708;
-	bh=RrjFZNysGzoeIiLm65KhCtItbrvVDPMUw/WCBP1Jrv8=;
+	s=default; t=1555355713;
+	bh=g6g8xW5j/YIu+0VLQs8Xd3m2QqFGLBL2VMlWFkNdXjA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=mQN3WkzGsqRTnEi4hYRSLm+9bmNX8ntNFTRuHVeY95spTNrf85u8BdaH/uk4La7ja
-	 j7jpqLCOnDn7necNL/iyyLBm1SF1uRRK7T3a/QRNYie8HFbwK0xISFeVeHt3soVg2I
-	 IJ8BOeXnfT3LY2IOkXw9fRArwTTSoBFRqmpCn5YQ=
+	b=BCW9QFBPaTJHb6vh4vSs5mS3WvLupjmBH8CFf+lB07VeO9iPhEOiAmTOSEOoWC0K4
+	 L+uNatmealpEJon4TLyEl/lWMi6DktIsQAPszy7djhB0AjZLGnDr9WUfQcEyLAbcxQ
+	 HcgPRu+plpMzzfv41Yrf98EPuHtze7TzwozB+sgQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731744AbfDOTO0 (ORCPT
+        id S1731722AbfDOTOT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:14:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52580 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:14:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52456 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730351AbfDOTOW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:14:22 -0400
+        id S1731696AbfDOTOQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:14:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E2882218A1;
-        Mon, 15 Apr 2019 19:14:20 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AC338218EA;
+        Mon, 15 Apr 2019 19:14:15 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355661;
-        bh=RrjFZNysGzoeIiLm65KhCtItbrvVDPMUw/WCBP1Jrv8=;
+        s=default; t=1555355656;
+        bh=g6g8xW5j/YIu+0VLQs8Xd3m2QqFGLBL2VMlWFkNdXjA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=FZjBeS6CnMA1P0y1bW6QKTP88St8pzZy4utN6LLjgg0vafg/tzuqB3jyg6hNxOmGf
-         fOr6KfrXCalqbNUx+WeEseAmmMZIPcQniUC8kkU7g3MVMxIGWlVurmnJOo2rlBXMUA
-         yV/GPjR8ApG7cTA6qLFE1RkTU9wBkfieOMYzgdbw=
+        b=jSkX8AfSptdvr9cfPk1INCeB4x14j88xB0llHMfr1ri3kDioGVtsE/QW6QY4ObSz+
+         7e5xsgSk3qCa49++h3yjm2C0Oz0wvnBkY/cTr7B6FnYuYngWdVB0QkgEXMFSJwEZlT
+         WZvAO24qyIk/vj24KmuIK5+uF8+vdBwTbnK7xP1U=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>,
+        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
         Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.0 112/117] dm table: propagate BDI_CAP_STABLE_WRITES to fix sporadic checksum errors
-Date:   Mon, 15 Apr 2019 21:01:22 +0200
-Message-Id: <20190415183750.449763205@linuxfoundation.org>
+Subject: [PATCH 5.0 110/117] dm integrity: change memcmp to strncmp in dm_integrity_ctr
+Date:   Mon, 15 Apr 2019 21:01:20 +0200
+Message-Id: <20190415183750.345852297@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183744.887851196@linuxfoundation.org>
 References: <20190415183744.887851196@linuxfoundation.org>
@@ -58,80 +58,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Ilya Dryomov <idryomov@gmail.com>
+From: Mikulas Patocka <mpatocka@redhat.com>
 
-commit eb40c0acdc342b815d4d03ae6abb09e80c0f2988 upstream.
+commit 0d74e6a3b6421d98eeafbed26f29156d469bc0b5 upstream.
 
-Some devices don't use blk_integrity but still want stable pages
-because they do their own checksumming.  Examples include rbd and iSCSI
-when data digests are negotiated.  Stacking DM (and thus LVM) on top of
-these devices results in sporadic checksum errors.
+If the string opt_string is small, the function memcmp can access bytes
+that are beyond the terminating nul character. In theory, it could cause
+segfault, if opt_string were located just below some unmapped memory.
 
-Set BDI_CAP_STABLE_WRITES if any underlying device has it set.
+Change from memcmp to strncmp so that we don't read bytes beyond the end
+of the string.
 
-Cc: stable@vger.kernel.org
-Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
+Cc: stable@vger.kernel.org # v4.12+
+Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
 Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-table.c |   39 +++++++++++++++++++++++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ drivers/md/dm-integrity.c |    8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
---- a/drivers/md/dm-table.c
-+++ b/drivers/md/dm-table.c
-@@ -1852,6 +1852,36 @@ static bool dm_table_supports_secure_era
- 	return true;
- }
- 
-+static int device_requires_stable_pages(struct dm_target *ti,
-+					struct dm_dev *dev, sector_t start,
-+					sector_t len, void *data)
-+{
-+	struct request_queue *q = bdev_get_queue(dev->bdev);
-+
-+	return q && bdi_cap_stable_pages_required(q->backing_dev_info);
-+}
-+
-+/*
-+ * If any underlying device requires stable pages, a table must require
-+ * them as well.  Only targets that support iterate_devices are considered:
-+ * don't want error, zero, etc to require stable pages.
-+ */
-+static bool dm_table_requires_stable_pages(struct dm_table *t)
-+{
-+	struct dm_target *ti;
-+	unsigned i;
-+
-+	for (i = 0; i < dm_table_get_num_targets(t); i++) {
-+		ti = dm_table_get_target(t, i);
-+
-+		if (ti->type->iterate_devices &&
-+		    ti->type->iterate_devices(ti, device_requires_stable_pages, NULL))
-+			return true;
-+	}
-+
-+	return false;
-+}
-+
- void dm_table_set_restrictions(struct dm_table *t, struct request_queue *q,
- 			       struct queue_limits *limits)
- {
-@@ -1910,6 +1940,15 @@ void dm_table_set_restrictions(struct dm
- 	dm_table_verify_integrity(t);
- 
- 	/*
-+	 * Some devices don't use blk_integrity but still want stable pages
-+	 * because they do their own checksumming.
-+	 */
-+	if (dm_table_requires_stable_pages(t))
-+		q->backing_dev_info->capabilities |= BDI_CAP_STABLE_WRITES;
-+	else
-+		q->backing_dev_info->capabilities &= ~BDI_CAP_STABLE_WRITES;
-+
-+	/*
- 	 * Determine whether or not this queue's I/O timings contribute
- 	 * to the entropy pool, Only request-based targets use this.
- 	 * Clear QUEUE_FLAG_ADD_RANDOM if any underlying device does not
+--- a/drivers/md/dm-integrity.c
++++ b/drivers/md/dm-integrity.c
+@@ -3185,7 +3185,7 @@ static int dm_integrity_ctr(struct dm_ta
+ 			journal_watermark = val;
+ 		else if (sscanf(opt_string, "commit_time:%u%c", &val, &dummy) == 1)
+ 			sync_msec = val;
+-		else if (!memcmp(opt_string, "meta_device:", strlen("meta_device:"))) {
++		else if (!strncmp(opt_string, "meta_device:", strlen("meta_device:"))) {
+ 			if (ic->meta_dev) {
+ 				dm_put_device(ti, ic->meta_dev);
+ 				ic->meta_dev = NULL;
+@@ -3204,17 +3204,17 @@ static int dm_integrity_ctr(struct dm_ta
+ 				goto bad;
+ 			}
+ 			ic->sectors_per_block = val >> SECTOR_SHIFT;
+-		} else if (!memcmp(opt_string, "internal_hash:", strlen("internal_hash:"))) {
++		} else if (!strncmp(opt_string, "internal_hash:", strlen("internal_hash:"))) {
+ 			r = get_alg_and_key(opt_string, &ic->internal_hash_alg, &ti->error,
+ 					    "Invalid internal_hash argument");
+ 			if (r)
+ 				goto bad;
+-		} else if (!memcmp(opt_string, "journal_crypt:", strlen("journal_crypt:"))) {
++		} else if (!strncmp(opt_string, "journal_crypt:", strlen("journal_crypt:"))) {
+ 			r = get_alg_and_key(opt_string, &ic->journal_crypt_alg, &ti->error,
+ 					    "Invalid journal_crypt argument");
+ 			if (r)
+ 				goto bad;
+-		} else if (!memcmp(opt_string, "journal_mac:", strlen("journal_mac:"))) {
++		} else if (!strncmp(opt_string, "journal_mac:", strlen("journal_mac:"))) {
+ 			r = get_alg_and_key(opt_string, &ic->journal_mac_alg,  &ti->error,
+ 					    "Invalid journal_mac argument");
+ 			if (r)
 
 
