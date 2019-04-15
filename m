@@ -7,46 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C5AD8C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:17:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98834C282DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:17:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93F862073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:17:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5DFFB2073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:17:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355871;
-	bh=2+KnyX2t/iFfamUdZsdmEI/4ufLoDglksusPnBnZhJg=;
+	s=default; t=1555355876;
+	bh=rnWNUBcHWiclu1T0oCOz5X09Kn82WOB3e9BMuKz7EkU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Lik0e7uQ5Qv6PC8b6OkdldWYzh0pqh1i+PYZDvpnD+Di93w9FQPEMi/WkugxwucxT
-	 ZV07qiG0t87L7tMkp9gqoUP2RB4pklfJaZckrw9HQdhabzfESc6JT8yQzTVY8yiRLf
-	 poiSj8atKWg1Q/tkPvEvv1IIq1xxML5SJH2oUY4E=
+	b=10Slu4JBKnpfNpiDrYKRCGNOCv2NFLli69Hur/bT3MXMf9OEBSdk59UGey1RK9age
+	 fprrCXJGx9oQD9/wtbRqWUbDxXG0zFho9tT3wSG/ss9JOZOGME5oWOheKXmzlh1lpm
+	 J/XeeNtK1lsdDcIZae6jgaNuzSUhiLfNS1CaEMOM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731718AbfDOTRu (ORCPT
+        id S1731316AbfDOTL5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:17:50 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49148 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:11:57 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49034 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731318AbfDOTL6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:11:58 -0400
+        id S1731308AbfDOTLy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:11:54 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2652321908;
-        Mon, 15 Apr 2019 19:11:57 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E584A21902;
+        Mon, 15 Apr 2019 19:11:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355517;
-        bh=2+KnyX2t/iFfamUdZsdmEI/4ufLoDglksusPnBnZhJg=;
+        s=default; t=1555355512;
+        bh=rnWNUBcHWiclu1T0oCOz5X09Kn82WOB3e9BMuKz7EkU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=TVBlA+4iFQAEicuw79qfw5sjm/XjLE96bzLP1k6xAI4ZDOTbuKliCmqY+p4NleHzu
-         vGs7RlxguWAxougscjSkBltk/phLlcv6OkavWjTJXyNMS570ap0Rd2UMSfhVdPQVVI
-         e4aVJQ8XO3oZ4pacic6vtYkaKQoIn10ElZe2XI8w=
+        b=hH3aeYWAreYUcfgkvYJnj89x4FMp/N6IcwQ5/iirHo0/7E2MJVmc/Qjm/orRJ01cc
+         IiQPAI2i7F7jphvUrZEJVv0uy0PaDX0tH+2KsBRFJ5DrN0cYXfPlbOEwtTNreyHamK
+         N27Cel10vyfQevQpZPKoo4O2vzQhrlIYPWgv2/zM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Furquan Shaikh <furquan@google.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
-Subject: [PATCH 5.0 051/117] ACPICA: Clear status of GPEs before enabling them
-Date:   Mon, 15 Apr 2019 21:00:21 +0200
-Message-Id: <20190415183747.563797571@linuxfoundation.org>
+        stable@vger.kernel.org, Steve French <stfrench@microsoft.com>,
+        Pavel Shilovsky <pshilov@microsoft.com>,
+        Ronnie Sahlberg <lsahlber@redhat.com>
+Subject: [PATCH 5.0 049/117] SMB3: Allow persistent handle timeout to be configurable on mount
+Date:   Mon, 15 Apr 2019 21:00:19 +0200
+Message-Id: <20190415183747.480857937@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183744.887851196@linuxfoundation.org>
 References: <20190415183744.887851196@linuxfoundation.org>
@@ -59,61 +60,204 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Furquan Shaikh <furquan@google.com>
+From: Steve French <stfrench@microsoft.com>
 
-commit c8b1917c8987a6fa3695d479b4d60fbbbc3e537b upstream.
+commit ca567eb2b3f014d5be0f44c6f68b01a522f15ca4 upstream.
 
-Commit 18996f2db918 ("ACPICA: Events: Stop unconditionally clearing
-ACPI IRQs during suspend/resume") was added to stop clearing event
-status bits unconditionally in the system-wide suspend and resume
-paths. This was done because of an issue with a laptop lid appaering
-to be closed even when it was used to wake up the system from suspend
-(see https://bugzilla.kernel.org/show_bug.cgi?id=196249), which
-happened because event status bits were cleared unconditionally on
-system resume. Though this change fixed the issue in the resume path,
-it introduced regressions in a few suspend paths.
+Reconnecting after server or network failure can be improved
+(to maintain availability and protect data integrity) by allowing
+the client to choose the default persistent (or resilient)
+handle timeout in some use cases.  Today we default to 0 which lets
+the server pick the default timeout (usually 120 seconds) but this
+can be problematic for some workloads.  Add the new mount parameter
+to cifs.ko for SMB3 mounts "handletimeout" which enables the user
+to override the default handle timeout for persistent (mount
+option "persistenthandles") or resilient handles (mount option
+"resilienthandles").  Maximum allowed is 16 minutes (960000 ms).
+Units for the timeout are expressed in milliseconds. See
+section 2.2.14.2.12 and 2.2.31.3 of the MS-SMB2 protocol
+specification for more information.
 
-First regression was reported and fixed in the S5 entry path by commit
-fa85015c0d95 ("ACPICA: Clear status of all events when entering S5").
-Next regression was reported and fixed for all legacy sleep paths by
-commit f317c7dc12b7 ("ACPICA: Clear status of all events when entering
-sleep states").  However, there still is a suspend-to-idle regression,
-since suspend-to-idle does not follow the legacy sleep paths.
-
-In the suspend-to-idle case, wakeup is enabled as part of device
-suspend.  If the status bits of wakeup GPEs are set when they are
-enabled, it causes a premature system wakeup to occur.
-
-To address that problem, partially revert commit 18996f2db918 to
-restore GPE status bits clearing before the GPE is enabled in
-acpi_ev_enable_gpe().
-
-Fixes: 18996f2db918 ("ACPICA: Events: Stop unconditionally clearing ACPI IRQs during suspend/resume")
-Signed-off-by: Furquan Shaikh <furquan@google.com>
-Cc: 4.17+ <stable@vger.kernel.org> # 4.17+
-[ rjw: Subject & changelog ]
-Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+Signed-off-by: Steve French <stfrench@microsoft.com>
+Reviewed-by: Pavel Shilovsky <pshilov@microsoft.com>
+Reviewed-by: Ronnie Sahlberg <lsahlber@redhat.com>
+CC: Stable <stable@vger.kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/acpi/acpica/evgpe.c |    6 +++++-
- 1 file changed, 5 insertions(+), 1 deletion(-)
+ fs/cifs/cifsfs.c   |    2 ++
+ fs/cifs/cifsglob.h |    8 ++++++++
+ fs/cifs/connect.c  |   30 +++++++++++++++++++++++++++++-
+ fs/cifs/smb2file.c |    4 +++-
+ fs/cifs/smb2pdu.c  |   14 +++++++++++---
+ 5 files changed, 53 insertions(+), 5 deletions(-)
 
---- a/drivers/acpi/acpica/evgpe.c
-+++ b/drivers/acpi/acpica/evgpe.c
-@@ -81,8 +81,12 @@ acpi_status acpi_ev_enable_gpe(struct ac
+--- a/fs/cifs/cifsfs.c
++++ b/fs/cifs/cifsfs.c
+@@ -559,6 +559,8 @@ cifs_show_options(struct seq_file *s, st
+ 			tcon->ses->server->echo_interval / HZ);
+ 	if (tcon->snapshot_time)
+ 		seq_printf(s, ",snapshot=%llu", tcon->snapshot_time);
++	if (tcon->handle_timeout)
++		seq_printf(s, ",handletimeout=%u", tcon->handle_timeout);
+ 	/* convert actimeo and display it in seconds */
+ 	seq_printf(s, ",actimeo=%lu", cifs_sb->actimeo / HZ);
  
- 	ACPI_FUNCTION_TRACE(ev_enable_gpe);
+--- a/fs/cifs/cifsglob.h
++++ b/fs/cifs/cifsglob.h
+@@ -60,6 +60,12 @@
+ #define CIFS_MAX_ACTIMEO (1 << 30)
  
--	/* Enable the requested GPE */
-+	/* Clear the GPE status */
-+	status = acpi_hw_clear_gpe(gpe_event_info);
-+	if (ACPI_FAILURE(status))
-+		return_ACPI_STATUS(status);
+ /*
++ * Max persistent and resilient handle timeout (milliseconds).
++ * Windows durable max was 960000 (16 minutes)
++ */
++#define SMB3_MAX_HANDLE_TIMEOUT 960000
++
++/*
+  * MAX_REQ is the maximum number of requests that WE will send
+  * on one socket concurrently.
+  */
+@@ -572,6 +578,7 @@ struct smb_vol {
+ 	struct nls_table *local_nls;
+ 	unsigned int echo_interval; /* echo interval in secs */
+ 	__u64 snapshot_time; /* needed for timewarp tokens */
++	__u32 handle_timeout; /* persistent and durable handle timeout in ms */
+ 	unsigned int max_credits; /* smb3 max_credits 10 < credits < 60000 */
+ };
  
-+	/* Enable the requested GPE */
- 	status = acpi_hw_low_set_gpe(gpe_event_info, ACPI_GPE_ENABLE);
- 	return_ACPI_STATUS(status);
+@@ -1028,6 +1035,7 @@ struct cifs_tcon {
+ 	__u32 vol_serial_number;
+ 	__le64 vol_create_time;
+ 	__u64 snapshot_time; /* for timewarp tokens - timestamp of snapshot */
++	__u32 handle_timeout; /* persistent and durable handle timeout in ms */
+ 	__u32 ss_flags;		/* sector size flags */
+ 	__u32 perf_sector_size; /* best sector size for perf */
+ 	__u32 max_chunks;
+--- a/fs/cifs/connect.c
++++ b/fs/cifs/connect.c
+@@ -103,7 +103,7 @@ enum {
+ 	Opt_cruid, Opt_gid, Opt_file_mode,
+ 	Opt_dirmode, Opt_port,
+ 	Opt_blocksize, Opt_rsize, Opt_wsize, Opt_actimeo,
+-	Opt_echo_interval, Opt_max_credits,
++	Opt_echo_interval, Opt_max_credits, Opt_handletimeout,
+ 	Opt_snapshot,
+ 
+ 	/* Mount options which take string value */
+@@ -208,6 +208,7 @@ static const match_table_t cifs_mount_op
+ 	{ Opt_rsize, "rsize=%s" },
+ 	{ Opt_wsize, "wsize=%s" },
+ 	{ Opt_actimeo, "actimeo=%s" },
++	{ Opt_handletimeout, "handletimeout=%s" },
+ 	{ Opt_echo_interval, "echo_interval=%s" },
+ 	{ Opt_max_credits, "max_credits=%s" },
+ 	{ Opt_snapshot, "snapshot=%s" },
+@@ -1600,6 +1601,9 @@ cifs_parse_mount_options(const char *mou
+ 
+ 	vol->actimeo = CIFS_DEF_ACTIMEO;
+ 
++	/* Most clients set timeout to 0, allows server to use its default */
++	vol->handle_timeout = 0; /* See MS-SMB2 spec section 2.2.14.2.12 */
++
+ 	/* offer SMB2.1 and later (SMB3 etc). Secure and widely accepted */
+ 	vol->ops = &smb30_operations;
+ 	vol->vals = &smbdefault_values;
+@@ -1998,6 +2002,18 @@ cifs_parse_mount_options(const char *mou
+ 				goto cifs_parse_mount_err;
+ 			}
+ 			break;
++		case Opt_handletimeout:
++			if (get_option_ul(args, &option)) {
++				cifs_dbg(VFS, "%s: Invalid handletimeout value\n",
++					 __func__);
++				goto cifs_parse_mount_err;
++			}
++			vol->handle_timeout = option;
++			if (vol->handle_timeout > SMB3_MAX_HANDLE_TIMEOUT) {
++				cifs_dbg(VFS, "Invalid handle cache timeout, longer than 16 minutes\n");
++				goto cifs_parse_mount_err;
++			}
++			break;
+ 		case Opt_echo_interval:
+ 			if (get_option_ul(args, &option)) {
+ 				cifs_dbg(VFS, "%s: Invalid echo interval value\n",
+@@ -3164,6 +3180,8 @@ static int match_tcon(struct cifs_tcon *
+ 		return 0;
+ 	if (tcon->snapshot_time != volume_info->snapshot_time)
+ 		return 0;
++	if (tcon->handle_timeout != volume_info->handle_timeout)
++		return 0;
+ 	return 1;
  }
+ 
+@@ -3278,6 +3296,16 @@ cifs_get_tcon(struct cifs_ses *ses, stru
+ 			tcon->snapshot_time = volume_info->snapshot_time;
+ 	}
+ 
++	if (volume_info->handle_timeout) {
++		if (ses->server->vals->protocol_id == 0) {
++			cifs_dbg(VFS,
++			     "Use SMB2.1 or later for handle timeout option\n");
++			rc = -EOPNOTSUPP;
++			goto out_fail;
++		} else
++			tcon->handle_timeout = volume_info->handle_timeout;
++	}
++
+ 	tcon->ses = ses;
+ 	if (volume_info->password) {
+ 		tcon->password = kstrdup(volume_info->password, GFP_KERNEL);
+--- a/fs/cifs/smb2file.c
++++ b/fs/cifs/smb2file.c
+@@ -68,7 +68,9 @@ smb2_open_file(const unsigned int xid, s
+ 
+ 
+ 	 if (oparms->tcon->use_resilient) {
+-		nr_ioctl_req.Timeout = 0; /* use server default (120 seconds) */
++		/* default timeout is 0, servers pick default (120 seconds) */
++		nr_ioctl_req.Timeout =
++			cpu_to_le32(oparms->tcon->handle_timeout);
+ 		nr_ioctl_req.Reserved = 0;
+ 		rc = SMB2_ioctl(xid, oparms->tcon, fid->persistent_fid,
+ 			fid->volatile_fid, FSCTL_LMR_REQUEST_RESILIENCY,
+--- a/fs/cifs/smb2pdu.c
++++ b/fs/cifs/smb2pdu.c
+@@ -1837,8 +1837,9 @@ add_lease_context(struct TCP_Server_Info
+ }
+ 
+ static struct create_durable_v2 *
+-create_durable_v2_buf(struct cifs_fid *pfid)
++create_durable_v2_buf(struct cifs_open_parms *oparms)
+ {
++	struct cifs_fid *pfid = oparms->fid;
+ 	struct create_durable_v2 *buf;
+ 
+ 	buf = kzalloc(sizeof(struct create_durable_v2), GFP_KERNEL);
+@@ -1852,7 +1853,14 @@ create_durable_v2_buf(struct cifs_fid *p
+ 				(struct create_durable_v2, Name));
+ 	buf->ccontext.NameLength = cpu_to_le16(4);
+ 
+-	buf->dcontext.Timeout = 0; /* Should this be configurable by workload */
++	/*
++	 * NB: Handle timeout defaults to 0, which allows server to choose
++	 * (most servers default to 120 seconds) and most clients default to 0.
++	 * This can be overridden at mount ("handletimeout=") if the user wants
++	 * a different persistent (or resilient) handle timeout for all opens
++	 * opens on a particular SMB3 mount.
++	 */
++	buf->dcontext.Timeout = cpu_to_le32(oparms->tcon->handle_timeout);
+ 	buf->dcontext.Flags = cpu_to_le32(SMB2_DHANDLE_FLAG_PERSISTENT);
+ 	generate_random_uuid(buf->dcontext.CreateGuid);
+ 	memcpy(pfid->create_guid, buf->dcontext.CreateGuid, 16);
+@@ -1905,7 +1913,7 @@ add_durable_v2_context(struct kvec *iov,
+ 	struct smb2_create_req *req = iov[0].iov_base;
+ 	unsigned int num = *num_iovec;
+ 
+-	iov[num].iov_base = create_durable_v2_buf(oparms->fid);
++	iov[num].iov_base = create_durable_v2_buf(oparms);
+ 	if (iov[num].iov_base == NULL)
+ 		return -ENOMEM;
+ 	iov[num].iov_len = sizeof(struct create_durable_v2);
 
 
