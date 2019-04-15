@@ -2,87 +2,113 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91FAAC282DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 20:17:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8067C10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 20:19:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D7BA2070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 20:17:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E6C82087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 20:19:11 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555359551;
+	bh=wvktTMWEEtjKHS6GEsVhpKDC8rfR3zBfhNlN4gzQv6o=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=0BiHwr9m+JnlvLjDQKlS6iq8KFh1miSEJEn5tPhNkk2Ly3FI8M3ry/xOizMU9PILJ
+	 bg9UjZohMxzx3/yHYe+BRV51ZxsZjkRPmpV+DtXErT3yPsdblXgDQ6n+QtXFwUIklD
+	 YOX2iIoMzHWceuzCgOnRSti0IiYACGmX/6Xnygho=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729088AbfDOURk (ORCPT
+        id S1729054AbfDOUTK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 16:17:40 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56396 "EHLO mx1.redhat.com"
+        Mon, 15 Apr 2019 16:19:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37968 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728148AbfDOURj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 16:17:39 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1728292AbfDOUTK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 16:19:10 -0400
+Received: from mail-wr1-f50.google.com (mail-wr1-f50.google.com [209.85.221.50])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6206F308626F;
-        Mon, 15 Apr 2019 20:17:39 +0000 (UTC)
-Received: from amt.cnet (ovpn-112-12.gru2.redhat.com [10.97.112.12])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 7BE805D9C9;
-        Mon, 15 Apr 2019 20:17:34 +0000 (UTC)
-Received: from amt.cnet (localhost [127.0.0.1])
-        by amt.cnet (Postfix) with ESMTP id 893DE10518E;
-        Mon, 15 Apr 2019 17:17:09 -0300 (BRT)
-Received: (from marcelo@localhost)
-        by amt.cnet (8.14.7/8.14.7/Submit) id x3FKH9tA014287;
-        Mon, 15 Apr 2019 17:17:09 -0300
-Date:   Mon, 15 Apr 2019 17:17:09 -0300
-From:   Marcelo Tosatti <mtosatti@redhat.com>
-To:     linux-kernel@vger.kernel.org, linux-rt-users@vger.kernel.org
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Anna-Maria Gleixner <anna-maria@linutronix.de>,
-        Daniel Bristot de Oliveira <bristot@redhat.com>,
-        Luiz Capitulino <lcapitulino@redhat.com>,
-        Haris Okanovic <haris.okanovic@ni.com>
-Subject: Re: [patch 0/3] do not raise timer softirq unconditionally
- (spinlockless version)
-Message-ID: <20190415201708.GA14212@amt.cnet>
-References: <20190415201213.600254019@amt.cnet>
+        by mail.kernel.org (Postfix) with ESMTPSA id 5817C218FF
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 20:19:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555359549;
+        bh=wvktTMWEEtjKHS6GEsVhpKDC8rfR3zBfhNlN4gzQv6o=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=G+M4PDu4En58IAUFetL/yyP1RRPkr9v8vyYZzcfMiKRobRYDHKUsMONecmGTCpgG7
+         7HkfJGSKtLwyhnGDylyeB43Pqcqd4DPWOd0Iy122R96VXe9hBn2YjyBZ0M8p+Jf7uQ
+         +u82mlfdHk2MXceJ/WCYGc+eIzp2z8BERO2sjYEA=
+Received: by mail-wr1-f50.google.com with SMTP id p10so23650273wrq.1
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 13:19:09 -0700 (PDT)
+X-Gm-Message-State: APjAAAU4FErFrzadU0VEJH13fszMjY/loFVOH15w+mVfEYq1aDG9/Iu7
+        Tt6epfBWlNiXSAn928Yr4OTg70g1qEUu42oRZdZSgg==
+X-Google-Smtp-Source: APXvYqxEoZHQkSkCkSz4q33m1Xs3bk6vOmhORe7/J6/MaDt8wfgbxl9NWJyOrOLiNe0b/GcLyGEIrZF01y31ltt6ft4=
+X-Received: by 2002:adf:fd46:: with SMTP id h6mr50713558wrs.139.1555359547852;
+ Mon, 15 Apr 2019 13:19:07 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190415201213.600254019@amt.cnet>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Mon, 15 Apr 2019 20:17:39 +0000 (UTC)
+References: <20190415183726.036654568@linuxfoundation.org> <20190415183727.581656002@linuxfoundation.org>
+ <20190415200452.GA25908@amd>
+In-Reply-To: <20190415200452.GA25908@amd>
+From:   Andy Lutomirski <luto@kernel.org>
+Date:   Mon, 15 Apr 2019 13:18:56 -0700
+X-Gmail-Original-Message-ID: <CALCETrW9E8Y1vxn377jU_P2cQBw0oR2VDJGUkUKKH3RJEByiPQ@mail.gmail.com>
+Message-ID: <CALCETrW9E8Y1vxn377jU_P2cQBw0oR2VDJGUkUKKH3RJEByiPQ@mail.gmail.com>
+Subject: Re: [PATCH 4.14 05/69] x86/power: Make restore_processor_context() sane
+To:     Pavel Machek <pavel@denx.de>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        stable <stable@vger.kernel.org>,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bpetkov@suse.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 05:12:13PM -0300, Marcelo Tosatti wrote:
-> For isolated CPUs, we'd like to skip awakening ktimersoftd
-> (the switch to and then back from ktimersoftd takes 10us in
-> virtualized environments, in addition to other OS overhead,
-> which exceeds telco requirements for packet forwarding for
-> 5G) from the sched tick.
-> 
-> The patch "timers: do not raise softirq unconditionally" from Thomas
-> attempts to address that by checking, in the sched tick, whether its
-> necessary to raise the timer softirq. Unfortunately, it attempts to grab
-> the tvec base spinlock which generates the issue described in the patch
-> "Revert "timers: do not raise softirq unconditionally"".
-> 
-> tvec_base->lock protects addition of timers to the wheel versus
-> timer interrupt execution.
-> 
-> This patch does not grab the tvec base spinlock from irq context,
-> but rather performs a lockless access to base->pending_map.
-> 
-> It handles the the race between timer addition and timer interrupt
-> execution by unconditionally (in case of isolated CPUs) raising the
-> timer softirq after making sure the updated bitmap is visible
-> on remote CPUs.
-> 
-> This patchset reduces cyclictest latency from 25us to 14us
-> on my testbox. 
+On Mon, Apr 15, 2019 at 1:04 PM Pavel Machek <pavel@denx.de> wrote:
+>
+> On Mon 2019-04-15 20:58:23, Greg Kroah-Hartman wrote:
+> > [ Upstream commit 7ee18d677989e99635027cee04c878950e0752b9 ]
+> >
+> > My previous attempt to fix a couple of bugs in __restore_processor_context():
+> >
+> >   5b06bbcfc2c6 ("x86/power: Fix some ordering bugs in __restore_processor_context()")
+> >
+> > ... introduced yet another bug, breaking suspend-resume.
+> >
+> > Rather than trying to come up with a minimal fix, let's try to clean it up
+> > for real.  This patch fixes quite a few things:
+>
+> 5b06bbcfc2c6 fixed theoretical bug; rather than porting it to stable
+> than fixing it up, it would be better not to port it to stable in the
+> first place or simply revert it there.
 
-Patch against v5.0.5-rt3 branch of linux-rt-devel.
+Are you sure about that?  The bug was reported by real users who had
+their systems really crash:
 
+https://lore.kernel.org/lkml/?q=0fede9f9-88b0-a6e7-1027-dfb2019b8ef2%40linux.intel.com
+
+https://lore.kernel.org/lkml/CA+55aFwsMuHUBQz5kDNwRf17JnasXMWjvmLq5qXGH-694yeq1w@mail.gmail.com/
+
+And we had a report that the bug got backported:
+
+https://lore.kernel.org/stable/20190407160005.djiw4reapwvbxmgo@debian/
+
+And if we're going to backport some of the fix, we should definitely
+backport the whole set to avoid having the -stable kernels be in a
+state that was never in any released kernel.
+
+
+--Andy
+https://lore.kernel.org/stable/20190407160005.djiw4reapwvbxmgo@debian/
