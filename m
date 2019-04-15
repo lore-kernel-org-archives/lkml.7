@@ -7,50 +7,50 @@ X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0AC1FC10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:17:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B984CC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:18:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B446A20656
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:17:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81ABD2073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:18:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="WJT0gahh"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="eh+iIjN+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726920AbfDOJRz (ORCPT
+        id S1727008AbfDOJSA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 05:17:55 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:45568 "EHLO
+        Mon, 15 Apr 2019 05:18:00 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:18508 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725972AbfDOJRw (ORCPT
+        by vger.kernel.org with ESMTP id S1725939AbfDOJRx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 05:17:52 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3F94dG9013416;
+        Mon, 15 Apr 2019 05:17:53 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3F9F8QF019503;
         Mon, 15 Apr 2019 11:17:39 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : references : in-reply-to : content-type :
  content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=J4H2VlXT4xewFfxgmW4unsYz/IQv8tpJ72oD9rZL9Mo=;
- b=WJT0gahhRctWfGoYyN+4Fy/Em4yO+6ecHae/RKNdMVl10zk8V9CfXDov6F1mwgQJLxIe
- T0NR+GVcWjS3lVM90poIOXg6fnRw1IJItJFM4L+ZM2jSbFWULXUAPAlpgakb0nfm7MVw
- y/inD4gnwswgVRVCfD1/5sy/boqLxh4RTRNENttyXuj7NBJWNAuNCI6cVYH91V8Dyr/C
- Y/Aryzo92awF7o68NC7GPHH9W0gM4sZhD8twYh7g/C2m7a7G4Oh8GzhQcbu2xqw1bDwh
- vcpH8XhPYA4FLplqOaN0d5+Nyc0LJaCE7SpSPpuhC/7a6Qy5O9pvSV4ofv3YRygc6135 /Q== 
+ bh=8NB65M5rO5FiFbEGG/GlrIlPxGe4fP0kMDfL2P8Ygrs=;
+ b=eh+iIjN+b6C/8iQUV7gBUNr+SQ2LYfpKzdQLZWdAuYqzgXxnnxLpp79LaHxY9dSoFl9X
+ 9+bpqRzQ/NhmUWPHkp3XyTZcq+ewW1QZb1xYkWd9eii2P81iObrUiVbcZ+YK6krNeF7c
+ X21XvdRh0J4z15zRwZWetPuJYLMsMFY5oBjzl8D8HBp7MGcEX73Xwf11I70QMWcYRLiV
+ Hygao5BgcwXDIgdtZ8sAPPY3h/5FaWggn/UcthLNcJLyl5mTV8lqSoFge2j8KgIMQzdn
+ Lqb0CCkyziADcmtpq/ATF3ESm/dVDCT/cB+j+dDbQ+l4jFASgb0pdtzH0WCFDW6yhHRM IA== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2ru6nghk2b-1
+        by mx08-00178001.pphosted.com with ESMTP id 2ru4w81xt0-1
         (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
         Mon, 15 Apr 2019 11:17:39 +0200
 Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 070073F;
-        Mon, 15 Apr 2019 09:17:39 +0000 (GMT)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 558CC3A;
+        Mon, 15 Apr 2019 09:17:38 +0000 (GMT)
 Received: from Webmail-eu.st.com (sfhdag6node3.st.com [10.75.127.18])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id D1A44145A;
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 249A41455;
         Mon, 15 Apr 2019 09:17:38 +0000 (GMT)
 Received: from SFHDAG6NODE2.st.com (10.75.127.17) by SFHDAG6NODE3.st.com
  (10.75.127.18) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 15 Apr
- 2019 11:17:38 +0200
+ 2019 11:17:37 +0200
 Received: from SFHDAG6NODE2.st.com ([fe80::a56f:c186:bab7:13d6]) by
  SFHDAG6NODE2.st.com ([fe80::a56f:c186:bab7:13d6%20]) with mapi id
- 15.00.1347.000; Mon, 15 Apr 2019 11:17:38 +0200
+ 15.00.1347.000; Mon, 15 Apr 2019 11:17:37 +0200
 From:   Pascal PAILLET-LME <p.paillet@st.com>
 To:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
         "broonie@kernel.org" <broonie@kernel.org>,
@@ -67,11 +67,12 @@ To:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
 CC:     Pascal PAILLET-LME <p.paillet@st.com>,
         "linux-stm32@st-md-mailman.stormreply.com" 
         <linux-stm32@st-md-mailman.stormreply.com>
-Subject: [PATCH v2 2/2] regulator: Add support for stm32 power regulators
-Thread-Topic: [PATCH v2 2/2] regulator: Add support for stm32 power regulators
-Thread-Index: AQHU82wRi/sm1BT8JEu6TJR7SecZvg==
-Date:   Mon, 15 Apr 2019 09:17:38 +0000
-Message-ID: <1555319855-2982-3-git-send-email-p.paillet@st.com>
+Subject: [PATCH v2 1/2] dt-bindings: regulator: Add stm32mp1 pwr regulators
+Thread-Topic: [PATCH v2 1/2] dt-bindings: regulator: Add stm32mp1 pwr
+ regulators
+Thread-Index: AQHU82wRi0socM2fHEetmI2UcTtd9A==
+Date:   Mon, 15 Apr 2019 09:17:37 +0000
+Message-ID: <1555319855-2982-2-git-send-email-p.paillet@st.com>
 References: <1555319855-2982-1-git-send-email-p.paillet@st.com>
 In-Reply-To: <1555319855-2982-1-git-send-email-p.paillet@st.com>
 Accept-Language: en-US
@@ -91,242 +92,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for 1V1 1V8 USB3V3 power regulators.
+Document devicetree bindings for stm32mp1 pwr regulators.
 
 Signed-off-by: Pascal Paillet <p.paillet@st.com>
 ---
- drivers/regulator/Kconfig     |   7 ++
- drivers/regulator/Makefile    |   1 +
- drivers/regulator/stm32-pwr.c | 190 ++++++++++++++++++++++++++++++++++++++=
+ .../bindings/regulator/st,stm32mp1-pwr-reg.txt     | 43 ++++++++++++++++++=
 ++++
- 3 files changed, 198 insertions(+)
- create mode 100644 drivers/regulator/stm32-pwr.c
+ 1 file changed, 43 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/st,stm32mp1=
+-pwr-reg.txt
 
-diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
-index c4dc2bc..6c37f0d 100644
---- a/drivers/regulator/Kconfig
-+++ b/drivers/regulator/Kconfig
-@@ -840,6 +840,13 @@ config REGULATOR_STM32_VREFBUF
- 	  This driver can also be built as a module. If so, the module
- 	  will be called stm32-vrefbuf.
-=20
-+config REGULATOR_STM32_PWR
-+	bool "STMicroelectronics STM32 PWR"
-+	depends on ARCH_STM32 || COMPILE_TEST
-+	help
-+	  This driver supports internal regulators (1V1, 1V8, 3V3) in the
-+	  STMicroelectronics STM32 chips.
-+
- config REGULATOR_STPMIC1
- 	tristate "STMicroelectronics STPMIC1 PMIC Regulators"
- 	depends on MFD_STPMIC1
-diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
-index 1169f8a..93f5384 100644
---- a/drivers/regulator/Makefile
-+++ b/drivers/regulator/Makefile
-@@ -105,6 +105,7 @@ obj-$(CONFIG_REGULATOR_S5M8767) +=3D s5m8767.o
- obj-$(CONFIG_REGULATOR_SC2731) +=3D sc2731-regulator.o
- obj-$(CONFIG_REGULATOR_SKY81452) +=3D sky81452-regulator.o
- obj-$(CONFIG_REGULATOR_STM32_VREFBUF) +=3D stm32-vrefbuf.o
-+obj-$(CONFIG_REGULATOR_STM32_PWR) +=3D stm32-pwr.o
- obj-$(CONFIG_REGULATOR_STPMIC1) +=3D stpmic1_regulator.o
- obj-$(CONFIG_REGULATOR_STW481X_VMMC) +=3D stw481x-vmmc.o
- obj-$(CONFIG_REGULATOR_SY8106A) +=3D sy8106a-regulator.o
-diff --git a/drivers/regulator/stm32-pwr.c b/drivers/regulator/stm32-pwr.c
+diff --git a/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-re=
+g.txt b/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt
 new file mode 100644
-index 0000000..e434b26
+index 0000000..e372dd3
 --- /dev/null
-+++ b/drivers/regulator/stm32-pwr.c
-@@ -0,0 +1,190 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Copyright (C) STMicroelectronics 2019
-+// Authors: Gabriel Fernandez <gabriel.fernandez@st.com>
-+//          Pascal Paillet <p.paillet@st.com>.
++++ b/Documentation/devicetree/bindings/regulator/st,stm32mp1-pwr-reg.txt
+@@ -0,0 +1,43 @@
++STM32MP1 PWR Regulators
++-----------------------
 +
-+#include <linux/io.h>
-+#include <linux/iopoll.h>
-+#include <linux/module.h>
-+#include <linux/of_address.h>
-+#include <linux/of_device.h>
-+#include <linux/platform_device.h>
-+#include <linux/regulator/driver.h>
-+#include <linux/regulator/of_regulator.h>
++Available Regulators in STM32MP1 PWR block are:
++  - reg11 for regulator 1V1
++  - reg18 for regulator 1V8
++  - usb33 for the swtich USB3V3
 +
-+/*
-+ * Registers description
-+ */
-+#define REG_PWR_CR3 0x0C
++Required properties:
++- compatible: Must be "st,stm32mp1,pwr-reg"
++- list of child nodes that specify the regulator reg11, reg18 or usb33
++  initialization data for defined regulators. The definition for each of
++  these nodes is defined using the standard binding for regulators found a=
+t
++  Documentation/devicetree/bindings/regulator/regulator.txt.
++- vdd-supply: phandle to the parent supply/regulator node for vdd input
++- vdd_3v3_usbfs-supply: phandle to the parent supply/regulator node for us=
+b33
 +
-+#define USB_3_3_EN BIT(24)
-+#define USB_3_3_RDY BIT(26)
-+#define REG_1_8_EN BIT(28)
-+#define REG_1_8_RDY BIT(29)
-+#define REG_1_1_EN BIT(30)
-+#define REG_1_1_RDY BIT(31)
++Example:
 +
-+/* list of supported regulators */
-+enum {
-+	PWR_REG11,
-+	PWR_REG18,
-+	PWR_USB33,
-+	STM32PWR_REG_NUM_REGS
++pwr_regulators: pwr@50001000 {
++	compatible =3D "st,stm32mp1,pwr-reg";
++	reg =3D <0x50001000 0x10>;
++	vdd-supply =3D <&vdd>;
++	vdd_3v3_usbfs-supply =3D <&vdd_usb>;
++
++	reg11: reg11 {
++		regulator-name =3D "reg11";
++		regulator-min-microvolt =3D <1100000>;
++		regulator-max-microvolt =3D <1100000>;
++	};
++
++	reg18: reg18 {
++		regulator-name =3D "reg18";
++		regulator-min-microvolt =3D <1800000>;
++		regulator-max-microvolt =3D <1800000>;
++	};
++
++	usb33: usb33 {
++		regulator-name =3D "usb33";
++		regulator-min-microvolt =3D <3300000>;
++		regulator-max-microvolt =3D <3300000>;
++	};
 +};
-+
-+u32 ready_mask_table[STM32PWR_REG_NUM_REGS] =3D {
-+	[PWR_REG11] =3D REG_1_1_RDY,
-+	[PWR_REG18] =3D REG_1_8_RDY,
-+	[PWR_USB33] =3D USB_3_3_RDY,
-+};
-+
-+struct stm32_pwr_reg {
-+	void __iomem *base;
-+	const struct regulator_desc *desc;
-+	u32 ready_mask;
-+};
-+
-+int stm32_pwr_reg_is_ready(struct regulator_dev *rdev)
-+{
-+	struct stm32_pwr_reg *priv =3D rdev_get_drvdata(rdev);
-+	u32 val;
-+
-+	val =3D readl_relaxed(priv->base + REG_PWR_CR3);
-+
-+	return (val & priv->ready_mask);
-+}
-+
-+int stm32_pwr_reg_is_enabled(struct regulator_dev *rdev)
-+{
-+	struct stm32_pwr_reg *priv =3D rdev_get_drvdata(rdev);
-+	u32 val;
-+
-+	val =3D readl_relaxed(priv->base + REG_PWR_CR3);
-+
-+	return (val & priv->desc->enable_mask);
-+}
-+
-+static int stm32_pwr_reg_enable(struct regulator_dev *rdev)
-+{
-+	struct stm32_pwr_reg *priv =3D rdev_get_drvdata(rdev);
-+	int ret;
-+	u32 val;
-+
-+	val =3D readl_relaxed(priv->base + REG_PWR_CR3);
-+	val |=3D priv->desc->enable_mask;
-+	writel_relaxed(val, priv->base + REG_PWR_CR3);
-+
-+	/* use an arbitrary timeout of 20ms */
-+	ret =3D readx_poll_timeout(stm32_pwr_reg_is_ready, rdev, val, val,
-+				 100, 20 * 1000);
-+	if (ret)
-+		dev_err(&rdev->dev, "regulator enable timed out!\n");
-+
-+	return ret;
-+}
-+
-+static int stm32_pwr_reg_disable(struct regulator_dev *rdev)
-+{
-+	struct stm32_pwr_reg *priv =3D rdev_get_drvdata(rdev);
-+	int ret;
-+	u32 val;
-+
-+	val =3D readl_relaxed(priv->base + REG_PWR_CR3);
-+	val &=3D ~priv->desc->enable_mask;
-+	writel_relaxed(val, priv->base + REG_PWR_CR3);
-+
-+	/* use an arbitrary timeout of 20ms */
-+	ret =3D readx_poll_timeout(stm32_pwr_reg_is_ready, rdev, val, !val,
-+				 100, 20 * 1000);
-+	if (ret)
-+		dev_err(&rdev->dev, "regulator disable timed out!\n");
-+
-+	return ret;
-+}
-+
-+static const struct regulator_ops stm32_pwr_reg_ops =3D {
-+	.list_voltage	=3D regulator_list_voltage_linear,
-+	.enable		=3D stm32_pwr_reg_enable,
-+	.disable	=3D stm32_pwr_reg_disable,
-+	.is_enabled	=3D stm32_pwr_reg_is_enabled,
-+};
-+
-+#define PWR_REG(_id, _name, _volt, _en, _supply) \
-+	[_id] =3D { \
-+		.id =3D _id, \
-+		.name =3D _name, \
-+		.of_match =3D of_match_ptr(_name), \
-+		.n_voltages =3D 1, \
-+		.type =3D REGULATOR_VOLTAGE, \
-+		.min_uV =3D _volt, \
-+		.fixed_uV =3D _volt, \
-+		.ops =3D &stm32_pwr_reg_ops, \
-+		.enable_mask =3D _en, \
-+		.owner =3D THIS_MODULE, \
-+		.supply_name =3D _supply, \
-+	} \
-+
-+static const struct regulator_desc stm32_pwr_desc[] =3D {
-+	PWR_REG(PWR_REG11, "reg11", 1100000, REG_1_1_EN, "vdd"),
-+	PWR_REG(PWR_REG18, "reg18", 1800000, REG_1_8_EN, "vdd"),
-+	PWR_REG(PWR_USB33, "usb33", 3300000, USB_3_3_EN, "vdd_3v3_usbfs"),
-+};
-+
-+static int stm32_pwr_regulator_probe(struct platform_device *pdev)
-+{
-+	struct device_node *np =3D pdev->dev.of_node;
-+	struct stm32_pwr_reg *priv;
-+	void __iomem *base;
-+	struct regulator_dev *rdev;
-+	struct regulator_config config =3D { };
-+	int i, ret =3D 0;
-+
-+	base =3D of_iomap(np, 0);
-+	if (IS_ERR(base)) {
-+		dev_err(&pdev->dev, "Unable to map IO memory\n");
-+		return PTR_ERR(base);
-+	}
-+
-+	config.dev =3D &pdev->dev;
-+
-+	for (i =3D 0; i < STM32PWR_REG_NUM_REGS; i++) {
-+		priv =3D devm_kzalloc(&pdev->dev, sizeof(struct stm32_pwr_reg),
-+				    GFP_KERNEL);
-+		if (!priv)
-+			return -ENOMEM;
-+		priv->base =3D base;
-+		priv->desc =3D &stm32_pwr_desc[i];
-+		priv->ready_mask =3D ready_mask_table[i];
-+		config.driver_data =3D priv;
-+
-+		rdev =3D devm_regulator_register(&pdev->dev,
-+					       &stm32_pwr_desc[i],
-+					       &config);
-+		if (IS_ERR(rdev)) {
-+			ret =3D PTR_ERR(rdev);
-+			dev_err(&pdev->dev,
-+				"Failed to register regulator: %d\n", ret);
-+			break;
-+		}
-+	}
-+	return ret;
-+}
-+
-+static const struct of_device_id stm32_pwr_of_match[] =3D {
-+	{ .compatible =3D "st,stm32mp1,pwr-reg", },
-+	{},
-+};
-+MODULE_DEVICE_TABLE(of, stm32_pwr_of_match);
-+
-+static struct platform_driver stm32_pwr_driver =3D {
-+	.probe =3D stm32_pwr_regulator_probe,
-+	.driver =3D {
-+		.name  =3D "stm32-pwr-regulator",
-+		.of_match_table =3D of_match_ptr(stm32_pwr_of_match),
-+	},
-+};
-+module_platform_driver(stm32_pwr_driver);
-+
-+MODULE_DESCRIPTION("STM32MP1 PWR voltage regulator driver");
-+MODULE_AUTHOR("Pascal Paillet <p.paillet@st.com>");
-+MODULE_LICENSE("GPL v2");
 --=20
 1.9.1
