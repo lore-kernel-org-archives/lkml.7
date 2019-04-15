@@ -2,144 +2,155 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6EF6CC10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 13:35:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17AB9C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 13:35:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CB7C20825
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 13:35:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Q/jgEdzk"
+	by mail.kernel.org (Postfix) with ESMTP id DAF0720825
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 13:35:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727540AbfDONfm (ORCPT
+        id S1727556AbfDONfn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 09:35:42 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:39769 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727218AbfDONfi (ORCPT
+        Mon, 15 Apr 2019 09:35:43 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60158 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727129AbfDONfj (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 09:35:38 -0400
-Received: by mail-wr1-f67.google.com with SMTP id j9so21983071wrn.6;
-        Mon, 15 Apr 2019 06:35:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:subject:date:message-id;
-        bh=l0BXPxJnV3M/J78ZMbwuKScX2XPGMDAUphIyQ4g9kDA=;
-        b=Q/jgEdzkF4nepfcxennCLIYCl9fP1zp9OBSVmbnlIuZhuXy2pKUIey8FaD1lloz24f
-         7QQ8dx1f/gW6kXcdS1uQ0LOGkyYAUr1NOQhQbkZeBUqhmDZRiZBuqjQxZ+UiYNNrn/e0
-         G5uGDOBeX+0imXAJLC+1HV/WmKGzhY/SsMoM1Ve2qutyaXj8ZqzExuEQc4PUQ35oOoCF
-         UOvqxdIA7LED/W7V+jPFCygMPOlQnuy9C3NqZqmYFyNrB9xPz4IvZ8Eq+XRjnPHIdrEy
-         6OPeD4BVxsWf6RHACaJDmRtdRl3V3D/znYrOv6RxDPySkwAX4WcgHLiWMsRh5iZwqWae
-         6GRQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:subject:date:message-id;
-        bh=l0BXPxJnV3M/J78ZMbwuKScX2XPGMDAUphIyQ4g9kDA=;
-        b=Tnpxv8UX3PVOl/w0uyDv18BcTTbRM9tjC1z2iCmk0oGXBTtb1ZvnTsCHjAlLIsVUz6
-         OgekZI0+m2ao8cKZJADNAxlLwDgg8sXQ4FN7FjUvhOWe/ORQxBHCIiQFsdCFEDJtQHMT
-         MLcLqYNfEUM3wm1as0pq099zBr/AedG00gP4M+5lAucz/q/ugjIlGBmt3YCmfUlMS3gl
-         M/wrYgXl1A7MpF8Q8m/C4Acy39lPGanEuRrYSbe/ORCGnJmwcMZowZFjxEfmH9eBUTha
-         m/yFgmHoMALYj3YVIQa2LOghkYKdhkDJY4tuYBoq1yfavLxovvGAethF693a2LYGa0U8
-         HanA==
-X-Gm-Message-State: APjAAAUGifShuKs9KSdipUPneYqUJm19nA0iaFIrbhGn879NUxMdKoDZ
-        /VQ0yhMhiPYVmgh88CwmWAVVf5Un
-X-Google-Smtp-Source: APXvYqw0AzQCMv19es+zU5KyToQN9VfqoXmOBpOZ4SZ56H/mTl/c5kCQvS0SVlXWpxJ1zzj98ro83A==
-X-Received: by 2002:a5d:5190:: with SMTP id k16mr48330416wrv.10.1555335336701;
-        Mon, 15 Apr 2019 06:35:36 -0700 (PDT)
-Received: from 640k.lan ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id z20sm12965574wmf.34.2019.04.15.06.35.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Apr 2019 06:35:35 -0700 (PDT)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Subject: [PATCH] KVM: nVMX: allow tests to use bad virtual-APIC page address
-Date:   Mon, 15 Apr 2019 15:35:33 +0200
-Message-Id: <1555335333-23636-2-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
+        Mon, 15 Apr 2019 09:35:39 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3FDYLwN171509
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 09:35:38 -0400
+Received: from e17.ny.us.ibm.com (e17.ny.us.ibm.com [129.33.205.207])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rvt3c2wan-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 09:35:37 -0400
+Received: from localhost
+        by e17.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Mon, 15 Apr 2019 14:35:37 +0100
+Received: from b01cxnp23033.gho.pok.ibm.com (9.57.198.28)
+        by e17.ny.us.ibm.com (146.89.104.204) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 15 Apr 2019 14:35:32 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp23033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3FDZVIV30474312
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Apr 2019 13:35:31 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 7E957B2066;
+        Mon, 15 Apr 2019 13:35:31 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 5F050B205F;
+        Mon, 15 Apr 2019 13:35:31 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.70.82.188])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon, 15 Apr 2019 13:35:31 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 11AD716C265F; Mon, 15 Apr 2019 06:35:35 -0700 (PDT)
+Date:   Mon, 15 Apr 2019 06:35:35 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Andrea Parri <andrea.parri@amarulasolutions.com>
+Cc:     Alan Stern <stern@rowland.harvard.edu>,
+        LKMM Maintainers -- Akira Yokosawa <akiyks@gmail.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        David Howells <dhowells@redhat.com>,
+        Jade Alglave <j.alglave@ucl.ac.uk>,
+        Luc Maranget <luc.maranget@inria.fr>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Daniel Kroening <kroening@cs.ox.ac.uk>,
+        Kernel development list <linux-kernel@vger.kernel.org>
+Subject: Re: Adding plain accesses and detecting data races in the LKMM
+Reply-To: paulmck@linux.ibm.com
+References: <20190408055117.GA25135@andrea>
+ <Pine.LNX.4.44L0.1904081010090.1440-100000@iolanthe.rowland.org>
+ <20190409013618.GA3824@andrea>
+ <20190409150132.GB14111@linux.ibm.com>
+ <20190413213938.GA4371@andrea>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190413213938.GA4371@andrea>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19041513-0040-0000-0000-000004E1198C
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010932; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000284; SDB=6.01189443; UDB=6.00623208; IPR=6.00970229;
+ MB=3.00026451; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-15 13:35:36
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19041513-0041-0000-0000-000008EC2346
+Message-Id: <20190415133535.GU14111@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-15_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=917 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904150094
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As mentioned in the comment, there are some special cases where we can simply
-clear the TPR shadow bit from the CPU-based execution controls in the vmcs02.
-Handle them so that we can remove some XFAILs from vmx.flat.
+On Sat, Apr 13, 2019 at 11:39:38PM +0200, Andrea Parri wrote:
+> On Tue, Apr 09, 2019 at 08:01:32AM -0700, Paul E. McKenney wrote:
+> > On Tue, Apr 09, 2019 at 03:36:18AM +0200, Andrea Parri wrote:
+> > > > > The formula was more along the line of "do not assume either of these
+> > > > > cases to hold; use barrier() is you need an unconditional barrier..."
+> > > > > AFAICT, all current implementations of smp_mb__{before,after}_atomic()
+> > > > > provides a compiler barrier with either barrier() or "memory" clobber.
+> > > > 
+> > > > Well, we have two reasonable choices: Say that 
+> > > > smp_mb__{before,after}_atomic will always provide a compiler barrier, 
+> > > > or don't say this.  I see no point in saying that the combination of 
+> > > > Before-atomic followed by RMW provides a barrier.
+> > > 
+> > > ;-/ I'm fine with the first choice. I don't see how the second choice
+> > > (this proposal/patch) would be consistent with some documentation and
+> > > with the current implementations; for example,
+> > > 
+> > > 1) Documentation/atomic_t.txt says:
+> > > 
+> > > Thus:
+> > > 
+> > >   atomic_fetch_add();
+> > > 
+> > > is equivalent to:
+> > > 
+> > >   smp_mb__before_atomic();
+> > >   atomic_fetch_add_relaxed();
+> > >   smp_mb__after_atomic();
+> > > 
+> > > [...]
+> > > 
+> > > 2) Some implementations of the _relaxed() variants do not provide any
+> > > compiler barrier currently.
+> > 
+> > But don't all implementations of smp_mb__before_atomic() and
+> > smp_mb__after_atomic() currently supply a compiler barrier?
+> 
+> Yes, AFAICS, all implementations of smp_mb__{before,after}_atomic() currently
+> supply a compiler barrier.
+> 
+> Nevertheless, there's a difference between:  (1) Specify that these barriers
+> supply a compiler barrier,  (2) Specify that (certain) combinations of these
+> barriers and RMWs supply a compiler barrier, and  (3) This patch...  ;-)
+> 
+> FWIW, I'm not aware of current/informal documentation following (the arguably
+> simpler but slightly stronger) (1).  But again (amending my last remark): (1)
+> and (2) both make sense to me.
 
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
----
- arch/x86/kvm/vmx/nested.c | 25 ++++++++++++++++---------
- arch/x86/kvm/vmx/vmx.c    |  2 +-
- arch/x86/kvm/vmx/vmx.h    |  2 ++
- 3 files changed, 19 insertions(+), 10 deletions(-)
+Another question is "should the kernel permit smp_mb__{before,after}*()
+anywhere other than immediately before or after the primitive being
+strengthened?"
 
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index 7ec9bb1dd723..a22af5a85540 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -2873,20 +2873,27 @@ static void nested_get_vmcs12_pages(struct kvm_vcpu *vcpu)
- 		/*
- 		 * If translation failed, VM entry will fail because
- 		 * prepare_vmcs02 set VIRTUAL_APIC_PAGE_ADDR to -1ull.
--		 * Failing the vm entry is _not_ what the processor
--		 * does but it's basically the only possibility we
--		 * have.  We could still enter the guest if CR8 load
--		 * exits are enabled, CR8 store exits are enabled, and
--		 * virtualize APIC access is disabled; in this case
--		 * the processor would never use the TPR shadow and we
--		 * could simply clear the bit from the execution
--		 * control.  But such a configuration is useless, so
--		 * let's keep the code simple.
- 		 */
- 		if (!is_error_page(page)) {
- 			vmx->nested.virtual_apic_page = page;
- 			hpa = page_to_phys(vmx->nested.virtual_apic_page);
- 			vmcs_write64(VIRTUAL_APIC_PAGE_ADDR, hpa);
-+		} else if (nested_cpu_has(vmcs12, CPU_BASED_CR8_LOAD_EXITING) &&
-+		           nested_cpu_has(vmcs12, CPU_BASED_CR8_STORE_EXITING) &&
-+			   !nested_cpu_has2(vmcs12, SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES)) {
-+			/*
-+			 * The processor will never use the TPR shadow, simply
-+			 * clear the bit from the execution control.  Such a
-+			 * configuration is useless, but it happens in tests.
-+			 * For any other configuration, failing the vm entry is
-+			 * _not_ what the processor does but it's basically the
-+			 * only possibility we have.
-+			 */
-+			vmcs_clear_bits(CPU_BASED_VM_EXEC_CONTROL,
-+					CPU_BASED_TPR_SHADOW);
-+		} else {
-+			printk("bad virtual-APIC page address\n");
-+			dump_vmcs();
- 		}
- 	}
- 
-diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
-index f8054dc1de65..14cacfd7ffd0 100644
---- a/arch/x86/kvm/vmx/vmx.c
-+++ b/arch/x86/kvm/vmx/vmx.c
-@@ -5603,7 +5603,7 @@ static void vmx_dump_dtsel(char *name, uint32_t limit)
- 	       vmcs_readl(limit + GUEST_GDTR_BASE - GUEST_GDTR_LIMIT));
- }
- 
--static void dump_vmcs(void)
-+void dump_vmcs(void)
- {
- 	u32 vmentry_ctl = vmcs_read32(VM_ENTRY_CONTROLS);
- 	u32 vmexit_ctl = vmcs_read32(VM_EXIT_CONTROLS);
-diff --git a/arch/x86/kvm/vmx/vmx.h b/arch/x86/kvm/vmx/vmx.h
-index a1e00d0a2482..f879529906b4 100644
---- a/arch/x86/kvm/vmx/vmx.h
-+++ b/arch/x86/kvm/vmx/vmx.h
-@@ -517,4 +517,6 @@ static inline void decache_tsc_multiplier(struct vcpu_vmx *vmx)
- 	vmcs_write64(TSC_MULTIPLIER, vmx->current_tsc_ratio);
- }
- 
-+void dump_vmcs(void);
-+
- #endif /* __KVM_X86_VMX_H */
--- 
-1.8.3.1
+Thoughts?
+
+							Thanx, Paul
 
