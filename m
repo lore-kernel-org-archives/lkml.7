@@ -2,123 +2,99 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93298C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:22:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DA17C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:23:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5F77520651
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:22:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C2F6320651
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:23:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555356172;
-	bh=1whlbDkVOjC9NZbWP6oG4nHV6LXVhiDVReMq4n5B37w=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=SeY2jUzLz1b00be4Dsaq73ilVbsxFM1mOAji/14B/p91EYQyPRMR1KHM566jTKvp/
-	 1L3d0nOs8jlT7T/ZtQA35lF3v0+9NSmJ4+mgb9VtA667Zw8Z8eeAGZxkpT73wlSJEf
-	 VnulSi8lYFMxUGmTtSY6zCqNYgeg/WrTF+4H/8Jw=
+	s=default; t=1555356191;
+	bh=WVeBqYPgdfpR+mnim3L5Wgt9NBJzLhKP1/afZf0EBUk=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=tXEnEjltxrBQ7Z59uZl+IXWWNZaCzkyyMOpwmpHVJ6olW9c6iD6oMUjBRiBhoZgqP
+	 tep8AftbhLMhaQfRq+9GRXOGl/OP5bdPCII/b2VtGTuStOq4cjnD2HbLdjm17Vhnn5
+	 moDfH9off3VPuVyYyVfhPkMTGBzlSy7lXXITA/aE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731260AbfDOTWv (ORCPT
+        id S1730288AbfDOTHp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:22:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:60838 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:07:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42750 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731009AbfDOTWq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:22:46 -0400
-Received: from mail-ed1-f42.google.com (mail-ed1-f42.google.com [209.85.208.42])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1730252AbfDOTHl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:07:41 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A1287218D3;
-        Mon, 15 Apr 2019 19:22:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4A2442087C;
+        Mon, 15 Apr 2019 19:07:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555356165;
-        bh=1whlbDkVOjC9NZbWP6oG4nHV6LXVhiDVReMq4n5B37w=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=EUaYmZE5tGV7AUHei6+EYHXGERYaBBBVoCl2lux89oDaGyZAxBM97Upnh+MJYe7EH
-         2QdFdrencPfGKYbDdglSb2vy/oAsBkeO5ydEgw2MI+n95/z60rVQ+8IoJyMWIIhhK6
-         EQOWMzF+pqUI9BKS+lf+egQDrrkPm1B/Hy4rALeE=
-Received: by mail-ed1-f42.google.com with SMTP id a6so4466504edv.1;
-        Mon, 15 Apr 2019 12:22:45 -0700 (PDT)
-X-Gm-Message-State: APjAAAXTa+BHpzulL1bmmHWiO6F9VOO3uJ5vUHMv5hDMDYUc2eB3j28z
-        KmSRyvYcmlcuYY+IJytHRzwAYCcbrVQ/nbDVa6w=
-X-Google-Smtp-Source: APXvYqxUe0FV1sPT9E8JRLmhhEtCqNg+T+vLsJConGhq1fIu+Wd7ZWGqKQWITGyKLIw9PrRchN12fKBaNOL/2Y0sm8E=
-X-Received: by 2002:a17:906:3fc4:: with SMTP id k4mr41366100ejj.166.1555356164198;
- Mon, 15 Apr 2019 12:22:44 -0700 (PDT)
+        s=default; t=1555355260;
+        bh=WVeBqYPgdfpR+mnim3L5Wgt9NBJzLhKP1/afZf0EBUk=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=y8d6RlI72ZTDGU1bHCgqO8JbvRdh73yitBVKMeLNIhydszt5gPAH56rd9KpoeFtqr
+         DnmRqQxElUhYGdK7AK3So85VTjZcOIcqqjjaY8g5VSY8d08BwwleuGiHxZztXI1Xd5
+         g5HRS9F4jj0R2r714Y9EQNy65kxC8cWbSUD27MFs=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org, linux-block@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.19 071/101] block: do not leak memory in bio_copy_user_iov()
+Date:   Mon, 15 Apr 2019 20:59:09 +0200
+Message-Id: <20190415183744.225068525@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190415183740.341577907@linuxfoundation.org>
+References: <20190415183740.341577907@linuxfoundation.org>
+User-Agent: quilt/0.66
 MIME-Version: 1.0
-References: <20190410215327.8024-1-swood@redhat.com> <20190411123314.GA19198@hao-dev>
- <CAJYdmeNX9F_EmTPBjQ1SXOOU=JBA1kBO6WEjBXTmJux4O-CR5A@mail.gmail.com>
-In-Reply-To: <CAJYdmeNX9F_EmTPBjQ1SXOOU=JBA1kBO6WEjBXTmJux4O-CR5A@mail.gmail.com>
-From:   Alan Tull <atull@kernel.org>
-Date:   Mon, 15 Apr 2019 14:22:08 -0500
-X-Gmail-Original-Message-ID: <CANk1AXTv2DFpRDAJ9UH9+LRo=wrmcbP02zbWbtTXku6iwPAhOw@mail.gmail.com>
-Message-ID: <CANk1AXTv2DFpRDAJ9UH9+LRo=wrmcbP02zbWbtTXku6iwPAhOw@mail.gmail.com>
-Subject: Re: [PATCH] fpga: dfl: afu: Pass the correct device to dma_mapping_error()
-To:     Moritz Fischer <moritz.fischer.private@gmail.com>
-Cc:     Wu Hao <hao.wu@intel.com>, Scott Wood <swood@redhat.com>,
-        Alan Tull <atull@kernel.org>, linux-fpga@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 11:36 AM Moritz Fischer
-<moritz.fischer.private@gmail.com> wrote:
+From: Jérôme Glisse <jglisse@redhat.com>
 
-Hi Scott,
+commit a3761c3c91209b58b6f33bf69dd8bb8ec0c9d925 upstream.
 
-Thanks!
+When bio_add_pc_page() fails in bio_copy_user_iov() we should free
+the page we just allocated otherwise we are leaking it.
 
->
-> Hi Scott,
->
-> good catch!
->
-> On Thu, Apr 11, 2019 at 5:49 AM Wu Hao <hao.wu@intel.com> wrote:
-> >
-> > On Wed, Apr 10, 2019 at 04:53:27PM -0500, Scott Wood wrote:
-> > > dma_mapping_error() was being called on a different device struct than
-> > > what was passed to map/unmap.  Besides rendering the error checking
-> > > ineffective, it caused a debug splat with CONFIG_DMA_API_DEBUG.
-> > >
-> > > Signed-off-by: Scott Wood <swood@redhat.com>
-> >
-> > Hi Scott,
-> >
-> > Looks good to me. Thanks for catching this issue.
-> >
-> > Acked-by: Wu Hao <hao.wu@intel.com>
-> >
-> > Hao
-> >
-> > > ---
-> > >  drivers/fpga/dfl-afu-dma-region.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/drivers/fpga/dfl-afu-dma-region.c b/drivers/fpga/dfl-afu-dma-region.c
-> > > index e18a786fc943..cd68002ac097 100644
-> > > --- a/drivers/fpga/dfl-afu-dma-region.c
-> > > +++ b/drivers/fpga/dfl-afu-dma-region.c
-> > > @@ -399,7 +399,7 @@ int afu_dma_map_region(struct dfl_feature_platform_data *pdata,
-> > >                                   region->pages[0], 0,
-> > >                                   region->length,
-> > >                                   DMA_BIDIRECTIONAL);
-> > > -     if (dma_mapping_error(&pdata->dev->dev, region->iova)) {
-> > > +     if (dma_mapping_error(dfl_fpga_pdata_to_parent(pdata), region->iova)) {
-> > >               dev_err(&pdata->dev->dev, "failed to map for dma\n");
-> > >               ret = -EFAULT;
-> > >               goto unpin_pages;
-> > > --
-> > > 1.8.3.1
->
-> Acked-by: Moritz Fischer <mdf@kernel.org>
+Cc: linux-block@vger.kernel.org
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: stable@vger.kernel.org
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
-Acked-by: Alan Tull <atull@kernel.org>
+---
+ block/bio.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
->
-> Thanks
-> Moritz
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -1240,8 +1240,11 @@ struct bio *bio_copy_user_iov(struct req
+ 			}
+ 		}
+ 
+-		if (bio_add_pc_page(q, bio, page, bytes, offset) < bytes)
++		if (bio_add_pc_page(q, bio, page, bytes, offset) < bytes) {
++			if (!map_data)
++				__free_page(page);
+ 			break;
++		}
+ 
+ 		len -= bytes;
+ 		offset = 0;
 
-Alan
+
