@@ -2,145 +2,111 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 827EDC10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6AB2C10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:56:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52AC82147C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:56:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="V9nQ2s4V"
+	by mail.kernel.org (Postfix) with ESMTP id AACE62075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:56:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727833AbfDOO4Y (ORCPT
+        id S1727884AbfDOO4y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 10:56:24 -0400
-Received: from mta-p6.oit.umn.edu ([134.84.196.206]:50726 "EHLO
-        mta-p6.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727608AbfDOO4V (ORCPT
+        Mon, 15 Apr 2019 10:56:54 -0400
+Received: from gateway34.websitewelcome.com ([192.185.148.231]:35083 "EHLO
+        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727769AbfDOO4x (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 10:56:21 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p6.oit.umn.edu (Postfix) with ESMTP id 079DACCA
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 14:56:20 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p6.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p6.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id rf3ajMPaPMuo for <linux-kernel@vger.kernel.org>;
-        Mon, 15 Apr 2019 09:56:19 -0500 (CDT)
-Received: from mail-io1-f69.google.com (mail-io1-f69.google.com [209.85.166.69])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p6.oit.umn.edu (Postfix) with ESMTPS id C5095B96
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 09:56:03 -0500 (CDT)
-Received: by mail-io1-f69.google.com with SMTP id b16so14284218iot.5
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 07:56:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=OVfJ2iOS0oUQifj2xXtFvPtDE+Eag0qBqDFOQ3KG+Ek=;
-        b=V9nQ2s4VSxnEmO050wxtdc0l7cLsNcGgJ0MhWXm/QdX5vWwRYNxg2GTq9q6VbmMdec
-         x3pmUeywriHgPtA0mlxrPmfoJhfuaIiPwABHiHD/hPEQH5wLrCPIhbDr2czJRXHiGDNO
-         zN3tSEom8038DOpOXQeGcHSAQNksqo19VO9FzPvPKx3tZXAedHa9wgYccq+0h248JqlD
-         WP/UtUPbfi9UwkcLotvaOj8sM3OHJeelmfdSqIn2LOd1MzupOcBhVJ4gwUJZTGZJZ9jS
-         fLXoWIFhX00BJ0zr7mI07OJf3ansghuofju8h4elk1xuCNHGRJS0pWZSALbmyRa3vRhN
-         WIjA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=OVfJ2iOS0oUQifj2xXtFvPtDE+Eag0qBqDFOQ3KG+Ek=;
-        b=Fl35NGRqtVefvtAO1jcnY7yk5oEStGUs9Esw05Cm4ZRCrJzNwNYuDyTG+61Bt80jMU
-         yaNlM+87Dnan8za1C+rzmizgKUsnK3tS0XsSpgstWnurDf655plYehVmYLBXaaRBrZpE
-         mf9mL1EpQs+eTmUbBia8+JZMTjEk40yb1aPzTXmVNUXUk1nyvoBg6SWz3UaGt8QZK1Be
-         ITBV4DS1yhhPqWYfC6eTDMdfZtaPms8ZBYh9Pw6kMCPxknLKyhSi7xYIUsF6G6nPrl39
-         wmUGDiqFKk/VOOPEmH86BBFVuzn2ltZgGPZhzq6lMB9Pa8jm06srOrISmI9pK+cg3DNX
-         uHhQ==
-X-Gm-Message-State: APjAAAVQMxazEXpq34hSSKtd6hnKvI/tBsuBx19HlWLcwAfuSRk+QGXX
-        NOdD84A4zrdcokzoAwE/1/MX0QdWbbitP+z0izlEjRa2TfDWpc75GeILNAX48KP22HXfEB93RCH
-        XhQudAr5GC0FM7Bs3cAj9CS4Cnh5W
-X-Received: by 2002:a24:9414:: with SMTP id j20mr11773537ite.91.1555340163517;
-        Mon, 15 Apr 2019 07:56:03 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzHzWqXSoZP/hL9mCHhoNlnbWK0cmDZS6VZ46LK80hgIWsrpqvg1kq2KxnzvdQSHt7vk8rlFA==
-X-Received: by 2002:a24:9414:: with SMTP id j20mr11773526ite.91.1555340163359;
-        Mon, 15 Apr 2019 07:56:03 -0700 (PDT)
-Received: from cs-u-cslp16.dtc.umn.edu (cs-u-cslp16.cs.umn.edu. [128.101.106.40])
-        by smtp.gmail.com with ESMTPSA id a16sm8085709itc.36.2019.04.15.07.56.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 15 Apr 2019 07:56:02 -0700 (PDT)
-From:   Wenwen Wang <wang6495@umn.edu>
-To:     Wenwen Wang <wang6495@umn.edu>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
-        linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
-        linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND
-        64-BIT))
-Subject: [PATCH] x86/PCI: fix a memory leak bug
-Date:   Mon, 15 Apr 2019 09:54:18 -0500
-Message-Id: <1555340058-3065-1-git-send-email-wang6495@umn.edu>
-X-Mailer: git-send-email 2.7.4
+        Mon, 15 Apr 2019 10:56:53 -0400
+Received: from cm17.websitewelcome.com (cm17.websitewelcome.com [100.42.49.20])
+        by gateway34.websitewelcome.com (Postfix) with ESMTP id B8CF31A345C
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 09:56:51 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id G32RhXZ1M90onG32Rhivqb; Mon, 15 Apr 2019 09:56:51 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.55.242] (port=43596 helo=embeddedor)
+        by gator4166.hostgator.com with esmtpa (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hG32Q-001eJq-Be; Mon, 15 Apr 2019 09:56:51 -0500
+Date:   Mon, 15 Apr 2019 09:56:46 -0500
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+To:     Maya Erez <merez@codeaurora.org>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S. Miller" <davem@davemloft.net>,
+        Vladimir Kondratiev <qca_vkondrat@qca.qualcomm.com>
+Cc:     linux-wireless@vger.kernel.org, wil6210@qti.qualcomm.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Subject: [PATCH] wil6210: fix potential out-of-bounds read
+Message-ID: <20190415145646.GA16597@embeddedor>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+User-Agent: Mutt/1.9.4 (2018-02-28)
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.55.242
+X-Source-L: No
+X-Exim-ID: 1hG32Q-001eJq-Be
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (embeddedor) [189.250.55.242]:43596
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 8
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In pcibios_irq_init(), the PCI IRQ routing table 'pirq_table' is firstly
-found through pirq_find_routing_table(). If the table is not found and
-'CONFIG_PCI_BIOS' is defined, the table is then allocated in
-pcibios_get_irq_routing_table() using kmalloc(). In the following
-execution, if the I/O APIC is used, this table is actually not used.
-However, in that case, the allocated table is not freed, which can lead to
-a memory leak bug.
+Notice that *rc* can evaluate to up to 5, include/linux/netdevice.h:
 
-To fix this issue, this patch frees the allocated table if it is not used.
+enum gro_result {
+        GRO_MERGED,
+        GRO_MERGED_FREE,
+        GRO_HELD,
+        GRO_NORMAL,
+        GRO_DROP,
+        GRO_CONSUMED,
+};
+typedef enum gro_result gro_result_t;
 
-Signed-off-by: Wenwen Wang <wang6495@umn.edu>
+In case *rc* evaluates to 5, we end up having an out-of-bounds read
+at drivers/net/wireless/ath/wil6210/txrx.c:821:
+
+	wil_dbg_txrx(wil, "Rx complete %d bytes => %s\n",
+		     len, gro_res_str[rc]);
+
+Fix this by adding element "GRO_CONSUMED" to array gro_res_str.
+
+Addresses-Coverity-ID: 1444666 ("Out-of-bounds read")
+Fixes: 194b482b5055 ("wil6210: Debug print GRO Rx result")
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 ---
- arch/x86/pci/irq.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+ drivers/net/wireless/ath/wil6210/txrx.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/pci/irq.c b/arch/x86/pci/irq.c
-index 52e5510..d9bcb96 100644
---- a/arch/x86/pci/irq.c
-+++ b/arch/x86/pci/irq.c
-@@ -1119,6 +1119,8 @@ static const struct dmi_system_id pciirq_dmi_table[] __initconst = {
+diff --git a/drivers/net/wireless/ath/wil6210/txrx.c b/drivers/net/wireless/ath/wil6210/txrx.c
+index 4ccfd1404458..d74837cce67f 100644
+--- a/drivers/net/wireless/ath/wil6210/txrx.c
++++ b/drivers/net/wireless/ath/wil6210/txrx.c
+@@ -750,6 +750,7 @@ void wil_netif_rx_any(struct sk_buff *skb, struct net_device *ndev)
+ 		[GRO_HELD]		= "GRO_HELD",
+ 		[GRO_NORMAL]		= "GRO_NORMAL",
+ 		[GRO_DROP]		= "GRO_DROP",
++		[GRO_CONSUMED]		= "GRO_CONSUMED",
+ 	};
  
- void __init pcibios_irq_init(void)
- {
-+	struct irq_routing_table *itable = NULL;
-+
- 	DBG(KERN_DEBUG "PCI: IRQ init\n");
- 
- 	if (raw_pci_ops == NULL)
-@@ -1129,8 +1131,10 @@ void __init pcibios_irq_init(void)
- 	pirq_table = pirq_find_routing_table();
- 
- #ifdef CONFIG_PCI_BIOS
--	if (!pirq_table && (pci_probe & PCI_BIOS_IRQ_SCAN))
-+	if (!pirq_table && (pci_probe & PCI_BIOS_IRQ_SCAN)) {
- 		pirq_table = pcibios_get_irq_routing_table();
-+		itable = pirq_table;
-+	}
- #endif
- 	if (pirq_table) {
- 		pirq_peer_trick();
-@@ -1145,8 +1149,10 @@ void __init pcibios_irq_init(void)
- 		 * If we're using the I/O APIC, avoid using the PCI IRQ
- 		 * routing table
- 		 */
--		if (io_apic_assign_pci_irqs)
-+		if (io_apic_assign_pci_irqs) {
-+			kfree(itable);
- 			pirq_table = NULL;
-+		}
- 	}
- 
- 	x86_init.pci.fixup_irqs();
+ 	wil->txrx_ops.get_netif_rx_params(skb, &cid, &security);
 -- 
-2.7.4
+2.21.0
 
