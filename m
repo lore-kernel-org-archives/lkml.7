@@ -4,48 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD0CC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:15:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 56AD9C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:15:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 065522075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:15:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 258B02075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:15:08 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355705;
-	bh=1RN0fwYUgpVwFH6JVrcY5uUlzqCf0oeHvk8Yfv61y+k=;
+	s=default; t=1555355708;
+	bh=RrjFZNysGzoeIiLm65KhCtItbrvVDPMUw/WCBP1Jrv8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eRc95zwOngJKbkn8/fU50/zINZso7iQy3X9/JZT+GIDMr90ftqASeOEz42M4u6Gor
-	 A64Nz1qFtavF8o43uvLzJfI/n5lrphFYKacXz4AnuCzB0BgwlKUWxSvD+LbRpGyQY3
-	 z1xWxowKKv8oO5mG+9LyyDZqbcxSfYIpBup48sjo=
+	b=mQN3WkzGsqRTnEi4hYRSLm+9bmNX8ntNFTRuHVeY95spTNrf85u8BdaH/uk4La7ja
+	 j7jpqLCOnDn7necNL/iyyLBm1SF1uRRK7T3a/QRNYie8HFbwK0xISFeVeHt3soVg2I
+	 IJ8BOeXnfT3LY2IOkXw9fRArwTTSoBFRqmpCn5YQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731754AbfDOTO2 (ORCPT
+        id S1731744AbfDOTO0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:14:28 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52624 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:14:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52580 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731372AbfDOTOZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:14:25 -0400
+        id S1730351AbfDOTOW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:14:22 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9F213218A1;
-        Mon, 15 Apr 2019 19:14:23 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E2882218A1;
+        Mon, 15 Apr 2019 19:14:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355664;
-        bh=1RN0fwYUgpVwFH6JVrcY5uUlzqCf0oeHvk8Yfv61y+k=;
+        s=default; t=1555355661;
+        bh=RrjFZNysGzoeIiLm65KhCtItbrvVDPMUw/WCBP1Jrv8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=iNZJjLmRb1CbqDGohkNI4H7bO+E4obLwVA58RD3JLgFc1UzGgK+oWfteTDGZSah62
-         4bRs2YyIX9HkakDynUaQAKpN2fPRs+IYsYM8nT9etkPpPN9MledU3s2UHvsxYlVpth
-         L9Sw/KTcLtDrXGDvqydIAAS01++yC6DnR5qepeDU=
+        b=FZjBeS6CnMA1P0y1bW6QKTP88St8pzZy4utN6LLjgg0vafg/tzuqB3jyg6hNxOmGf
+         fOr6KfrXCalqbNUx+WeEseAmmMZIPcQniUC8kkU7g3MVMxIGWlVurmnJOo2rlBXMUA
+         yV/GPjR8ApG7cTA6qLFE1RkTU9wBkfieOMYzgdbw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Jeffery <djeffery@redhat.com>,
+        stable@vger.kernel.org, Ilya Dryomov <idryomov@gmail.com>,
         Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 5.0 113/117] dm: disable DISCARD if the underlying storage no longer supports it
-Date:   Mon, 15 Apr 2019 21:01:23 +0200
-Message-Id: <20190415183750.508911553@linuxfoundation.org>
+Subject: [PATCH 5.0 112/117] dm table: propagate BDI_CAP_STABLE_WRITES to fix sporadic checksum errors
+Date:   Mon, 15 Apr 2019 21:01:22 +0200
+Message-Id: <20190415183750.449763205@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183744.887851196@linuxfoundation.org>
 References: <20190415183744.887851196@linuxfoundation.org>
@@ -58,120 +58,80 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mike Snitzer <snitzer@redhat.com>
+From: Ilya Dryomov <idryomov@gmail.com>
 
-commit bcb44433bba5eaff293888ef22ffa07f1f0347d6 upstream.
+commit eb40c0acdc342b815d4d03ae6abb09e80c0f2988 upstream.
 
-Storage devices which report supporting discard commands like
-WRITE_SAME_16 with unmap, but reject discard commands sent to the
-storage device.  This is a clear storage firmware bug but it doesn't
-change the fact that should a program cause discards to be sent to a
-multipath device layered on this buggy storage, all paths can end up
-failed at the same time from the discards, causing possible I/O loss.
+Some devices don't use blk_integrity but still want stable pages
+because they do their own checksumming.  Examples include rbd and iSCSI
+when data digests are negotiated.  Stacking DM (and thus LVM) on top of
+these devices results in sporadic checksum errors.
 
-The first discard to a path will fail with Illegal Request, Invalid
-field in cdb, e.g.:
- kernel: sd 8:0:8:19: [sdfn] tag#0 FAILED Result: hostbyte=DID_OK driverbyte=DRIVER_SENSE
- kernel: sd 8:0:8:19: [sdfn] tag#0 Sense Key : Illegal Request [current]
- kernel: sd 8:0:8:19: [sdfn] tag#0 Add. Sense: Invalid field in cdb
- kernel: sd 8:0:8:19: [sdfn] tag#0 CDB: Write same(16) 93 08 00 00 00 00 00 a0 08 00 00 00 80 00 00 00
- kernel: blk_update_request: critical target error, dev sdfn, sector 10487808
-
-The SCSI layer converts this to the BLK_STS_TARGET error number, the sd
-device disables its support for discard on this path, and because of the
-BLK_STS_TARGET error multipath fails the discard without failing any
-path or retrying down a different path.  But subsequent discards can
-cause path failures.  Any discards sent to the path which already failed
-a discard ends up failing with EIO from blk_cloned_rq_check_limits with
-an "over max size limit" error since the discard limit was set to 0 by
-the sd driver for the path.  As the error is EIO, this now fails the
-path and multipath tries to send the discard down the next path.  This
-cycle continues as discards are sent until all paths fail.
-
-Fix this by training DM core to disable DISCARD if the underlying
-storage already did so.
-
-Also, fix branching in dm_done() and clone_endio() to reflect the
-mutually exclussive nature of the IO operations in question.
+Set BDI_CAP_STABLE_WRITES if any underlying device has it set.
 
 Cc: stable@vger.kernel.org
-Reported-by: David Jeffery <djeffery@redhat.com>
+Signed-off-by: Ilya Dryomov <idryomov@gmail.com>
 Signed-off-by: Mike Snitzer <snitzer@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm-core.h |    1 +
- drivers/md/dm-rq.c   |   11 +++++++----
- drivers/md/dm.c      |   20 ++++++++++++++++----
- 3 files changed, 24 insertions(+), 8 deletions(-)
+ drivers/md/dm-table.c |   39 +++++++++++++++++++++++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
---- a/drivers/md/dm-core.h
-+++ b/drivers/md/dm-core.h
-@@ -115,6 +115,7 @@ struct mapped_device {
- 	struct srcu_struct io_barrier;
- };
- 
-+void disable_discard(struct mapped_device *md);
- void disable_write_same(struct mapped_device *md);
- void disable_write_zeroes(struct mapped_device *md);
- 
---- a/drivers/md/dm-rq.c
-+++ b/drivers/md/dm-rq.c
-@@ -206,11 +206,14 @@ static void dm_done(struct request *clon
- 	}
- 
- 	if (unlikely(error == BLK_STS_TARGET)) {
--		if (req_op(clone) == REQ_OP_WRITE_SAME &&
--		    !clone->q->limits.max_write_same_sectors)
-+		if (req_op(clone) == REQ_OP_DISCARD &&
-+		    !clone->q->limits.max_discard_sectors)
-+			disable_discard(tio->md);
-+		else if (req_op(clone) == REQ_OP_WRITE_SAME &&
-+			 !clone->q->limits.max_write_same_sectors)
- 			disable_write_same(tio->md);
--		if (req_op(clone) == REQ_OP_WRITE_ZEROES &&
--		    !clone->q->limits.max_write_zeroes_sectors)
-+		else if (req_op(clone) == REQ_OP_WRITE_ZEROES &&
-+			 !clone->q->limits.max_write_zeroes_sectors)
- 			disable_write_zeroes(tio->md);
- 	}
- 
---- a/drivers/md/dm.c
-+++ b/drivers/md/dm.c
-@@ -963,6 +963,15 @@ static void dec_pending(struct dm_io *io
- 	}
+--- a/drivers/md/dm-table.c
++++ b/drivers/md/dm-table.c
+@@ -1852,6 +1852,36 @@ static bool dm_table_supports_secure_era
+ 	return true;
  }
  
-+void disable_discard(struct mapped_device *md)
++static int device_requires_stable_pages(struct dm_target *ti,
++					struct dm_dev *dev, sector_t start,
++					sector_t len, void *data)
 +{
-+	struct queue_limits *limits = dm_get_queue_limits(md);
++	struct request_queue *q = bdev_get_queue(dev->bdev);
 +
-+	/* device doesn't really support DISCARD, disable it */
-+	limits->max_discard_sectors = 0;
-+	blk_queue_flag_clear(QUEUE_FLAG_DISCARD, md->queue);
++	return q && bdi_cap_stable_pages_required(q->backing_dev_info);
 +}
 +
- void disable_write_same(struct mapped_device *md)
++/*
++ * If any underlying device requires stable pages, a table must require
++ * them as well.  Only targets that support iterate_devices are considered:
++ * don't want error, zero, etc to require stable pages.
++ */
++static bool dm_table_requires_stable_pages(struct dm_table *t)
++{
++	struct dm_target *ti;
++	unsigned i;
++
++	for (i = 0; i < dm_table_get_num_targets(t); i++) {
++		ti = dm_table_get_target(t, i);
++
++		if (ti->type->iterate_devices &&
++		    ti->type->iterate_devices(ti, device_requires_stable_pages, NULL))
++			return true;
++	}
++
++	return false;
++}
++
+ void dm_table_set_restrictions(struct dm_table *t, struct request_queue *q,
+ 			       struct queue_limits *limits)
  {
- 	struct queue_limits *limits = dm_get_queue_limits(md);
-@@ -988,11 +997,14 @@ static void clone_endio(struct bio *bio)
- 	dm_endio_fn endio = tio->ti->type->end_io;
+@@ -1910,6 +1940,15 @@ void dm_table_set_restrictions(struct dm
+ 	dm_table_verify_integrity(t);
  
- 	if (unlikely(error == BLK_STS_TARGET) && md->type != DM_TYPE_NVME_BIO_BASED) {
--		if (bio_op(bio) == REQ_OP_WRITE_SAME &&
--		    !bio->bi_disk->queue->limits.max_write_same_sectors)
-+		if (bio_op(bio) == REQ_OP_DISCARD &&
-+		    !bio->bi_disk->queue->limits.max_discard_sectors)
-+			disable_discard(md);
-+		else if (bio_op(bio) == REQ_OP_WRITE_SAME &&
-+			 !bio->bi_disk->queue->limits.max_write_same_sectors)
- 			disable_write_same(md);
--		if (bio_op(bio) == REQ_OP_WRITE_ZEROES &&
--		    !bio->bi_disk->queue->limits.max_write_zeroes_sectors)
-+		else if (bio_op(bio) == REQ_OP_WRITE_ZEROES &&
-+			 !bio->bi_disk->queue->limits.max_write_zeroes_sectors)
- 			disable_write_zeroes(md);
- 	}
- 
+ 	/*
++	 * Some devices don't use blk_integrity but still want stable pages
++	 * because they do their own checksumming.
++	 */
++	if (dm_table_requires_stable_pages(t))
++		q->backing_dev_info->capabilities |= BDI_CAP_STABLE_WRITES;
++	else
++		q->backing_dev_info->capabilities &= ~BDI_CAP_STABLE_WRITES;
++
++	/*
+ 	 * Determine whether or not this queue's I/O timings contribute
+ 	 * to the entropy pool, Only request-based targets use this.
+ 	 * Clear QUEUE_FLAG_ADD_RANDOM if any underlying device does not
 
 
