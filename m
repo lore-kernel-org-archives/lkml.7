@@ -2,278 +2,82 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73BDFC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2467C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:43:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3C5A22087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:43:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BEA6D2073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:43:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="g5neISu3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728216AbfDOSnc (ORCPT
+        id S1728249AbfDOSns (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 14:43:32 -0400
-Received: from mga05.intel.com ([192.55.52.43]:30899 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728036AbfDOSn2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 14:43:28 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Apr 2019 11:43:28 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,354,1549958400"; 
-   d="scan'208";a="136032392"
-Received: from otc-lr-04.jf.intel.com ([10.54.39.141])
-  by orsmga006.jf.intel.com with ESMTP; 15 Apr 2019 11:43:28 -0700
-From:   kan.liang@linux.intel.com
-To:     peterz@infradead.org, tglx@linutronix.de, mingo@redhat.com,
+        Mon, 15 Apr 2019 14:43:48 -0400
+Received: from smtprelay.synopsys.com ([198.182.60.111]:55500 "EHLO
+        smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728212AbfDOSnb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 14:43:31 -0400
+Received: from mailhost1.synopsys.com (mailhost1.synopsys.com [10.12.238.239])
+        by smtprelay.synopsys.com (Postfix) with ESMTP id 6CDDB10C10F0;
+        Mon, 15 Apr 2019 11:43:31 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1555353811; bh=GEZdOqtDmf3cGDISZQ11mIjshPILmaz5bfyTH6m/G24=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=g5neISu3/IUJHGfgPvxFAWhqBrC3/mMHYFWb0DwCt8lbo5skLRwkjDr2xjGe2Xyem
+         icU3uuOtccB8SYCGvXZxEnxPjgQbQ4a9f9vKdRKhaZa39wrP072do0d8SnbDiLi4iv
+         UR0ygYbZg3YrKtvo2VU8xCdCxAnDz2k5SGeWIOUHrrgCNHf8ucUBHt4MGq6XQb/IDl
+         0dKFyUdzJlATUEmmRXUK7uVNxnVfWrdsDFvhJxTa+ycZYW0TblMO8IcixPPzQPnKHm
+         ppya5i2nJInnP+u+g/iMvHXxEbd7WFuqJ+Mqey8wSXTy06jkZ4+utenaob9Q7MIxmk
+         l84+vmh4ZsocQ==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost1.synopsys.com (Postfix) with ESMTP id 510185B68;
+        Mon, 15 Apr 2019 11:43:00 -0700 (PDT)
+From:   Vitor Soares <vitor.soares@synopsys.com>
+To:     vitor.soares@synopsys.com
+Cc:     Vitor Soares <vitor.soares@synopsys.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
         linux-kernel@vger.kernel.org
-Cc:     acme@kernel.org, eranian@google.com, ak@linux.intel.com,
-        Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH 3/5] perf/x86/intel/uncore: Support MMIO type uncore blocks
-Date:   Mon, 15 Apr 2019 11:41:54 -0700
-Message-Id: <1555353716-35041-3-git-send-email-kan.liang@linux.intel.com>
+Subject: [PATCH 3/3] i3c: dw: Add limited bus mode support
+Date:   Mon, 15 Apr 2019 20:42:47 +0200
+Message-Id: <8cf1b180c31c5908d667285fa4880167a5e80c8c.1555350118.git.vitor.soares@synopsys.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1555353716-35041-1-git-send-email-kan.liang@linux.intel.com>
-References: <1555353716-35041-1-git-send-email-kan.liang@linux.intel.com>
+In-Reply-To: <cover.1555350118.git.vitor.soares@synopsys.com>
+References: <cover.1555350118.git.vitor.soares@synopsys.com>
+In-Reply-To: <cover.1555350118.git.vitor.soares@synopsys.com>
+References: <cover.1555350118.git.vitor.soares@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+This patch add limited bus mode support for DesignWare i3c master
 
-A new MMIO type uncore box is introduced on Snow Ridge server. The
-counters of MMIO type uncore box can only be accessed by MMIO.
-
-Add a new uncore type, uncore_mmio_uncores, for MMIO type uncore blocks.
-
-Support MMIO type uncore blocks in CPU hot plug. The MMIO space has to
-be map/unmap for the first/last CPU. The context also need to be
-migrated if the bind CPU changes.
-
-Add mmio_init() to init and register PMUs for MMIO type uncore blocks.
-
-Add a helper to calculate the box_ctl address.
-
-The helpers which calculate ctl/ctr can be shared with PCI type uncore
-blocks.
-
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
+Cc: Boris Brezillon <bbrezillon@kernel.org>
+Cc: <linux-kernel@vger.kernel.org>
 ---
- arch/x86/events/intel/uncore.c | 51 ++++++++++++++++++++++++++++++++++++------
- arch/x86/events/intel/uncore.h | 21 ++++++++++++-----
- 2 files changed, 60 insertions(+), 12 deletions(-)
+ drivers/i3c/master/dw-i3c-master.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index 0b72ca5..3c00635 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -7,6 +7,7 @@
- static struct intel_uncore_type *empty_uncore[] = { NULL, };
- struct intel_uncore_type **uncore_msr_uncores = empty_uncore;
- struct intel_uncore_type **uncore_pci_uncores = empty_uncore;
-+struct intel_uncore_type **uncore_mmio_uncores = empty_uncore;
+diff --git a/drivers/i3c/master/dw-i3c-master.c b/drivers/i3c/master/dw-i3c-master.c
+index 0b01607..4005508 100644
+--- a/drivers/i3c/master/dw-i3c-master.c
++++ b/drivers/i3c/master/dw-i3c-master.c
+@@ -650,6 +650,7 @@ static int dw_i3c_master_bus_init(struct i3c_master_controller *m)
  
- static bool pcidrv_registered;
- struct pci_driver *uncore_pci_driver;
-@@ -1175,12 +1176,14 @@ static int uncore_event_cpu_offline(unsigned int cpu)
- 		target = -1;
- 
- 	uncore_change_context(uncore_msr_uncores, cpu, target);
-+	uncore_change_context(uncore_mmio_uncores, cpu, target);
- 	uncore_change_context(uncore_pci_uncores, cpu, target);
- 
- unref:
- 	/* Clear the references */
- 	pkg = topology_logical_package_id(cpu);
- 	uncore_box_unref(uncore_msr_uncores, pkg);
-+	uncore_box_unref(uncore_mmio_uncores, pkg);
- 	return 0;
- }
- 
-@@ -1248,12 +1251,13 @@ static int uncore_box_ref(struct intel_uncore_type **types,
- 
- static int uncore_event_cpu_online(unsigned int cpu)
- {
--	int ret, pkg, target;
-+	int pkg, target, msr_ret, mmio_ret;
- 
- 	pkg = topology_logical_package_id(cpu);
--	ret = uncore_box_ref(uncore_msr_uncores, pkg, cpu);
--	if (ret)
--		return ret;
-+	msr_ret = uncore_box_ref(uncore_msr_uncores, pkg, cpu);
-+	mmio_ret = uncore_box_ref(uncore_mmio_uncores, pkg, cpu);
-+	if (msr_ret && mmio_ret)
-+		return -ENOMEM;
- 
- 	/*
- 	 * Check if there is an online cpu in the package
-@@ -1265,7 +1269,10 @@ static int uncore_event_cpu_online(unsigned int cpu)
- 
- 	cpumask_set_cpu(cpu, &uncore_cpu_mask);
- 
--	uncore_change_context(uncore_msr_uncores, -1, cpu);
-+	if (!msr_ret)
-+		uncore_change_context(uncore_msr_uncores, -1, cpu);
-+	if (!mmio_ret)
-+		uncore_change_context(uncore_mmio_uncores, -1, cpu);
- 	uncore_change_context(uncore_pci_uncores, -1, cpu);
- 	return 0;
- }
-@@ -1313,12 +1320,35 @@ static int __init uncore_cpu_init(void)
- 	return ret;
- }
- 
-+static int __init uncore_mmio_init(void)
-+{
-+	struct intel_uncore_type **types = uncore_mmio_uncores;
-+	int ret;
-+
-+	ret = uncore_types_init(types, true);
-+	if (ret)
-+		goto err;
-+
-+	for (; *types; types++) {
-+		ret = type_pmu_register(*types);
-+		if (ret)
-+			goto err;
-+	}
-+	return 0;
-+err:
-+	uncore_types_exit(uncore_mmio_uncores);
-+	uncore_mmio_uncores = empty_uncore;
-+	return ret;
-+}
-+
-+
- #define X86_UNCORE_MODEL_MATCH(model, init)	\
- 	{ X86_VENDOR_INTEL, 6, model, X86_FEATURE_ANY, (unsigned long)&init }
- 
- struct intel_uncore_init_fun {
- 	void	(*cpu_init)(void);
- 	int	(*pci_init)(void);
-+	void	(*mmio_init)(void);
- };
- 
- static const struct intel_uncore_init_fun nhm_uncore_init __initconst = {
-@@ -1431,7 +1461,7 @@ static int __init intel_uncore_init(void)
- {
- 	const struct x86_cpu_id *id;
- 	struct intel_uncore_init_fun *uncore_init;
--	int pret = 0, cret = 0, ret;
-+	int pret = 0, cret = 0, mret = 0, ret;
- 
- 	id = x86_match_cpu(intel_uncore_match);
- 	if (!id)
-@@ -1454,7 +1484,12 @@ static int __init intel_uncore_init(void)
- 		cret = uncore_cpu_init();
- 	}
- 
--	if (cret && pret)
-+	if (uncore_init->mmio_init) {
-+		uncore_init->mmio_init();
-+		mret = uncore_mmio_init();
-+	}
-+
-+	if (cret && pret && mret)
- 		return -ENODEV;
- 
- 	/* Install hotplug callbacks to setup the targets for each package */
-@@ -1468,6 +1503,7 @@ static int __init intel_uncore_init(void)
- 
- err:
- 	uncore_types_exit(uncore_msr_uncores);
-+	uncore_types_exit(uncore_mmio_uncores);
- 	uncore_pci_exit();
- 	return ret;
- }
-@@ -1477,6 +1513,7 @@ static void __exit intel_uncore_exit(void)
- {
- 	cpuhp_remove_state(CPUHP_AP_PERF_X86_UNCORE_ONLINE);
- 	uncore_types_exit(uncore_msr_uncores);
-+	uncore_types_exit(uncore_mmio_uncores);
- 	uncore_pci_exit();
- }
- module_exit(intel_uncore_exit);
-diff --git a/arch/x86/events/intel/uncore.h b/arch/x86/events/intel/uncore.h
-index 5e97e5e..426a490 100644
---- a/arch/x86/events/intel/uncore.h
-+++ b/arch/x86/events/intel/uncore.h
-@@ -56,7 +56,10 @@ struct intel_uncore_type {
- 	unsigned fixed_ctr;
- 	unsigned fixed_ctl;
- 	unsigned box_ctl;
--	unsigned msr_offset;
-+	union {
-+		unsigned msr_offset;
-+		unsigned mmio_offset;
-+	};
- 	unsigned num_shared_regs:8;
- 	unsigned single_fixed:1;
- 	unsigned pair_ctr_ctl:1;
-@@ -190,6 +193,13 @@ static inline bool uncore_pmc_freerunning(int idx)
- 	return idx == UNCORE_PMC_IDX_FREERUNNING;
- }
- 
-+static inline
-+unsigned int uncore_mmio_box_ctl(struct intel_uncore_box *box)
-+{
-+	return box->pmu->type->box_ctl +
-+	       box->pmu->type->mmio_offset * box->pmu->pmu_idx;
-+}
-+
- static inline unsigned uncore_pci_box_ctl(struct intel_uncore_box *box)
- {
- 	return box->pmu->type->box_ctl;
-@@ -330,7 +340,7 @@ unsigned uncore_msr_perf_ctr(struct intel_uncore_box *box, int idx)
- static inline
- unsigned uncore_fixed_ctl(struct intel_uncore_box *box)
- {
--	if (box->pci_dev)
-+	if (box->pci_dev || box->io_addr)
- 		return uncore_pci_fixed_ctl(box);
- 	else
- 		return uncore_msr_fixed_ctl(box);
-@@ -339,7 +349,7 @@ unsigned uncore_fixed_ctl(struct intel_uncore_box *box)
- static inline
- unsigned uncore_fixed_ctr(struct intel_uncore_box *box)
- {
--	if (box->pci_dev)
-+	if (box->pci_dev || box->io_addr)
- 		return uncore_pci_fixed_ctr(box);
- 	else
- 		return uncore_msr_fixed_ctr(box);
-@@ -348,7 +358,7 @@ unsigned uncore_fixed_ctr(struct intel_uncore_box *box)
- static inline
- unsigned uncore_event_ctl(struct intel_uncore_box *box, int idx)
- {
--	if (box->pci_dev)
-+	if (box->pci_dev || box->io_addr)
- 		return uncore_pci_event_ctl(box, idx);
- 	else
- 		return uncore_msr_event_ctl(box, idx);
-@@ -357,7 +367,7 @@ unsigned uncore_event_ctl(struct intel_uncore_box *box, int idx)
- static inline
- unsigned uncore_perf_ctr(struct intel_uncore_box *box, int idx)
- {
--	if (box->pci_dev)
-+	if (box->pci_dev || box->io_addr)
- 		return uncore_pci_perf_ctr(box, idx);
- 	else
- 		return uncore_msr_perf_ctr(box, idx);
-@@ -507,6 +517,7 @@ u64 uncore_shared_reg_config(struct intel_uncore_box *box, int idx);
- 
- extern struct intel_uncore_type **uncore_msr_uncores;
- extern struct intel_uncore_type **uncore_pci_uncores;
-+extern struct intel_uncore_type **uncore_mmio_uncores;
- extern struct pci_driver *uncore_pci_driver;
- extern raw_spinlock_t pci2phy_map_lock;
- extern struct list_head pci2phy_map_head;
+ 	switch (bus->mode) {
+ 	case I3C_BUS_MODE_MIXED_FAST:
++	case I3C_BUS_MODE_MIXED_LIMITED:
+ 		ret = dw_i2c_clk_cfg(master);
+ 		if (ret)
+ 			return ret;
 -- 
 2.7.4
 
