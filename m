@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75B93C10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:47:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B81C1C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:47:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4A29A218D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:47:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 76170218FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:47:13 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555354029;
-	bh=Jz4CMJJAqqS8hXRcDOx/AmbcXYAgo3CVD8RX9M/PJkI=;
+	s=default; t=1555354033;
+	bh=4gxW72HfJr5+kkJDdtE9i6Nz5A/Ke0uzBsjxdhn05vQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KIgQOqhi+g6fk1dnhHWmnylo81yoZtwa4eCy/WrTR7ZwIKJH0GbmTACjZcc4EBYHa
-	 WaoVStgXGqn4snJ3X7qjUla/D1AmQ6ke/E13qhvpeknEcePifddkajd/HteJoZ1CtA
-	 AAYuE5i8hRoUyONf359R5FhBV8Z+t4E+w+HQc3Mc=
+	b=rzRlaoRI41Fzh8P3A2mjgOYzScOD6kX/hA3xbz+q2Nd71HIF31fZlFx2FUfGYuLtt
+	 aLKp3+XAFP5AUvEsRw30HdH2upV0YaTS0KQ4pGeNjrbUOxy2UKsB2csbqSX9QymtSy
+	 lFvsy27O1wKjli/ouQL46ZKJibsGwJ0Uf1UEeM98=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728830AbfDOSrH (ORCPT
+        id S1728846AbfDOSrL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 14:47:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50036 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 14:47:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50204 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728801AbfDOSrC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 14:47:02 -0400
+        id S1728831AbfDOSrH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 14:47:07 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4428D218DA;
-        Mon, 15 Apr 2019 18:47:01 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B60DD218DA;
+        Mon, 15 Apr 2019 18:47:06 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555354021;
-        bh=Jz4CMJJAqqS8hXRcDOx/AmbcXYAgo3CVD8RX9M/PJkI=;
+        s=default; t=1555354027;
+        bh=4gxW72HfJr5+kkJDdtE9i6Nz5A/Ke0uzBsjxdhn05vQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=fQXLPeENoQAMZ96W/xdB6clWzpMYf4EOAxpsLipgGwgWm2az6jNuhKgWKDhkDYBSO
-         sxZ7UdBijyBws7Z37c8NE5yNoZQiHbtKQwaUpwAQaKS4AJqBxWzWAzMj3U4cgypLSt
-         Ln/EnHu4W14PHiqHyu12KKOsNKa0qHA73A57HPYw=
+        b=PkTF9hlgAkQTg2ur8jdoQygXNC9hTUet7w53TiMmIVwdeg+y0J52aSM4D2pNqx1gH
+         qOhyEMlpatMkJ4TCnvB0wvHAQYEOYoxtzCP5wOzoUxzf+jS/gWH5lrC1ELYTkduNvV
+         jH4TeprnxY6GDbosyGmC08MUOmcl4Bynllzwb4Fw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Diana Craciun <diana.craciun@nxp.com>,
-        Christophe Leroy <christophe.leroy@c-s.fr>,
-        Daniel Axtens <dja@axtens.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 43/76] powerpc/fsl: Fix the flush of branch predictor.
-Date:   Mon, 15 Apr 2019 20:44:07 +0200
-Message-Id: <20190415183718.829242692@linuxfoundation.org>
+        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        liyueyi <liyueyi@live.com>, Will Deacon <will.deacon@arm.com>,
+        "Sasha Levin (Microsoft)" <sashal@kernel.org>
+Subject: [PATCH 4.9 45/76] arm64: kaslr: Reserve size of ARM64_MEMSTART_ALIGN in linear region
+Date:   Mon, 15 Apr 2019 20:44:09 +0200
+Message-Id: <20190415183720.131293717@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183707.712011689@linuxfoundation.org>
 References: <20190415183707.712011689@linuxfoundation.org>
@@ -62,43 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit 27da80719ef132cf8c80eb406d5aeb37dddf78cc upstream.
+[ Upstream commit c8a43c18a97845e7f94ed7d181c11f41964976a2 ]
 
-The commit identified below adds MC_BTB_FLUSH macro only when
-CONFIG_PPC_FSL_BOOK3E is defined. This results in the following error
-on some configs (seen several times with kisskb randconfig_defconfig)
+When KASLR is enabled (CONFIG_RANDOMIZE_BASE=y), the top 4K of kernel
+virtual address space may be mapped to physical addresses despite being
+reserved for ERR_PTR values.
 
-arch/powerpc/kernel/exceptions-64e.S:576: Error: Unrecognized opcode: `mc_btb_flush'
-make[3]: *** [scripts/Makefile.build:367: arch/powerpc/kernel/exceptions-64e.o] Error 1
-make[2]: *** [scripts/Makefile.build:492: arch/powerpc/kernel] Error 2
-make[1]: *** [Makefile:1043: arch/powerpc] Error 2
-make: *** [Makefile:152: sub-make] Error 2
+Fix the randomization of the linear region so that we avoid mapping the
+last page of the virtual address space.
 
-This patch adds a blank definition of MC_BTB_FLUSH for other cases.
-
-Fixes: 10c5e83afd4a ("powerpc/fsl: Flush the branch predictor at each kernel entry (64bit)")
-Cc: Diana Craciun <diana.craciun@nxp.com>
-Signed-off-by: Christophe Leroy <christophe.leroy@c-s.fr>
-Reviewed-by: Daniel Axtens <dja@axtens.net>
-Reviewed-by: Diana Craciun <diana.craciun@nxp.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: liyueyi <liyueyi@live.com>
+[will: rewrote commit message; merged in suggestion from Ard]
+Signed-off-by: Will Deacon <will.deacon@arm.com>
+Signed-off-by: Sasha Levin (Microsoft) <sashal@kernel.org>
 ---
- arch/powerpc/kernel/exceptions-64e.S | 1 +
- 1 file changed, 1 insertion(+)
+ arch/arm64/mm/init.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/arch/powerpc/kernel/exceptions-64e.S b/arch/powerpc/kernel/exceptions-64e.S
-index 79c6fee6368d..423b5257d3a1 100644
---- a/arch/powerpc/kernel/exceptions-64e.S
-+++ b/arch/powerpc/kernel/exceptions-64e.S
-@@ -348,6 +348,7 @@ ret_from_mc_except:
- #define GEN_BTB_FLUSH
- #define CRIT_BTB_FLUSH
- #define DBG_BTB_FLUSH
-+#define MC_BTB_FLUSH
- #define GDBELL_BTB_FLUSH
- #endif
- 
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index fa6b2fad7a3d..5d3df68272f5 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -272,7 +272,7 @@ void __init arm64_memblock_init(void)
+ 		 * memory spans, randomize the linear region as well.
+ 		 */
+ 		if (memstart_offset_seed > 0 && range >= ARM64_MEMSTART_ALIGN) {
+-			range = range / ARM64_MEMSTART_ALIGN + 1;
++			range /= ARM64_MEMSTART_ALIGN;
+ 			memstart_addr -= ARM64_MEMSTART_ALIGN *
+ 					 ((range * memstart_offset_seed) >> 16);
+ 		}
 -- 
 2.19.1
 
