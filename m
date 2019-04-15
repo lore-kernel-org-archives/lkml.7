@@ -2,102 +2,152 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1742EC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 11:52:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FC7BC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 11:55:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD1A42073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 11:52:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EBEE20833
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 11:55:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="cJiD5z+X"
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="FoRnldgZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727342AbfDOLwm (ORCPT
+        id S1727283AbfDOLzK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 07:52:42 -0400
-Received: from smtp112.iad3a.emailsrvr.com ([173.203.187.112]:54626 "EHLO
-        smtp112.iad3a.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726182AbfDOLwm (ORCPT
+        Mon, 15 Apr 2019 07:55:10 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:43194 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726523AbfDOLzK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 07:52:42 -0400
-Received: from smtp7.relay.iad3a.emailsrvr.com (localhost [127.0.0.1])
-        by smtp7.relay.iad3a.emailsrvr.com (SMTP Server) with ESMTP id D27C43A1B;
-        Mon, 15 Apr 2019 07:52:40 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
-        s=20190130-41we5z8j; t=1555329160;
-        bh=bDoBB/miubeqrsxxvGhYDLsTOVsh4BOlQkap4COlMbk=;
-        h=From:To:Subject:Date:From;
-        b=cJiD5z+X+PHOT3G9iWIILh/ONH7PW6blACeq+i2mKZrBEq3/Q0mlUc7tinVDQZyc/
-         QzzDtq5S/lg/yxcV+mPlE4Zbd1ZMcLRdCBChxNCUcVBwAy8itPrUX8MxVwloLdoXma
-         0GKXIR1rp7pU4ruO+4LhjLomSV9f/XFxoX/tGRuc=
-X-Auth-ID: abbotti@mev.co.uk
-Received: by smtp7.relay.iad3a.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 15FA62BA8;
-        Mon, 15 Apr 2019 07:52:39 -0400 (EDT)
-X-Sender-Id: abbotti@mev.co.uk
-Received: from ian-deb.inside.mev.co.uk (remote.quintadena.com [81.133.34.160])
-        (using TLSv1.2 with cipher DHE-RSA-AES128-GCM-SHA256)
-        by 0.0.0.0:465 (trex/5.7.12);
-        Mon, 15 Apr 2019 07:52:40 -0400
-From:   Ian Abbott <abbotti@mev.co.uk>
-To:     devel@driverdev.osuosl.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Ian Abbott <abbotti@mev.co.uk>,
-        H Hartley Sweeten <hsweeten@visionengravers.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v2 2/2] staging: comedi: vmk80xx: Fix possible double-free of ->usb_rx_buf
-Date:   Mon, 15 Apr 2019 12:52:30 +0100
-Message-Id: <20190415115230.7288-1-abbotti@mev.co.uk>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190415111015.8257-3-abbotti@mev.co.uk>
-References: <20190415111015.8257-3-abbotti@mev.co.uk>
+        Mon, 15 Apr 2019 07:55:10 -0400
+Received: by mail-oi1-f196.google.com with SMTP id t81so13481055oig.10
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 04:55:09 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=OJeGfagnzu7sHS6lzKrlFuG5rtL+zOcGoyAKvxG7Ty4=;
+        b=FoRnldgZjLl3J9I10P6T2NeNh3n0hkgUdOu1e/NFiidEHY+qKLWsBY7YNdOHs8wn17
+         mABhoCs9OXDmZTmYTDQLMDq7ukZ64+h2lO4veRG4SsLufGZLU/jMy2ziuR2KfxBPDPdV
+         y+VrraPcuEBeTclGCaRyObfOgmnF1tTAI9+IaoLnoy1srLo9rGbChQvcKj6bPXxZbG18
+         XBOBrIO/EYSMQn0i+3Hpi8eq4ha55ko4p0ijRY4dgro5iJ/2O8V3SwFwHPg8IO4dCp/4
+         JagJ13OS6o9taRz+b+KFkk3NONdQDzj4VY/qz1O0ZCSo8sh6IFH5bibNFTG1XXVB3L8S
+         mJYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=OJeGfagnzu7sHS6lzKrlFuG5rtL+zOcGoyAKvxG7Ty4=;
+        b=Ze6QFdYfGDotAc0sUzYzlBWkSvmx1X4QvcYUIsujKv15Ge0PAJ7YMPNxMLRLKDv3hM
+         xp7ZPmTqyo4VXMUjxg8q1MtLICugOj6fVQGNucz0c8cPkNE5U64NzXZjxBA8uRmBcjMf
+         4GPrFwuiG7uXsGB1glOpX2PGIFdZvW7M2aSTA3vAzvCVa02OazgsSOZyBiihWYkyCSHR
+         c9mbudLFsE1GHAutQbpwml+vvRZfwv3+wVXSiVvELNjZ+d4rx5KARjm6R9fXeeYOQpLk
+         k57Vtw0zpU4sf/RkkJ+j+9/jUraJwQvrzxoPamn9stn3luIc3H9UC4UUnO9XXwE7q6kE
+         FLwg==
+X-Gm-Message-State: APjAAAXqVyiRXwH15wgrHP+w0iBCchu76Uw6u62C05DMM6ak37SpSzmk
+        GQih3d9QsgLF/1WYqXHVeKn2bsT0U9dwD4GdBIoA3Q==
+X-Google-Smtp-Source: APXvYqzTBlOkus2TSxPt5/3q1kFrELesaQt6aOV30tCUfQYfvCdsJD6KDQSbFNssW/+3SiNuoRHQ+GwNx3nvF1KHBnE=
+X-Received: by 2002:aca:f2c2:: with SMTP id q185mr19624994oih.147.1555329309135;
+ Mon, 15 Apr 2019 04:55:09 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190408075924.2284-1-brgl@bgdev.pl> <20190408075924.2284-2-brgl@bgdev.pl>
+ <5f72a26b-428a-c50e-cb6a-7c888ea22329@ti.com> <CAMRc=McGwGh9RKhxxCDnz3aMG_EVjjXzN+pmMZVtE7aChdU3jw@mail.gmail.com>
+ <3f6c906b-53b0-8284-bf4d-9b404f341e7b@ti.com> <CAMRc=Me8vppb9vEmKOUcU28YKVR9jJ64sBSn-KwNyNnZA=VB9Q@mail.gmail.com>
+ <6ff5711c-b607-1f3a-e362-709b53762179@ti.com>
+In-Reply-To: <6ff5711c-b607-1f3a-e362-709b53762179@ti.com>
+From:   Bartosz Golaszewski <bgolaszewski@baylibre.com>
+Date:   Mon, 15 Apr 2019 13:54:58 +0200
+Message-ID: <CAMpxmJUG+7ENUCnooexWKMwoq+zCuRsV_Y54un7omumk9nJguA@mail.gmail.com>
+Subject: Re: [PATCH v3 1/3] ARM: dts: da850: add cpu node and operating points
+ to DT
+To:     Sekhar Nori <nsekhar@ti.com>
+Cc:     Bartosz Golaszewski <brgl@bgdev.pl>,
+        Kevin Hilman <khilman@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        David Lechner <david@lechnology.com>,
+        Adam Ford <aford173@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-`vmk80xx_alloc_usb_buffers()` is called from `vmk80xx_auto_attach()` to
-allocate RX and TX buffers for USB transfers.  It allocates
-`devpriv->usb_rx_buf` followed by `devpriv->usb_tx_buf`.  If the
-allocation of `devpriv->usb_tx_buf` fails, it frees
-`devpriv->usb_rx_buf`,  leaving the pointer set dangling, and returns an
-error.  Later, `vmk80xx_detach()` will be called from the core comedi
-module code to clean up.  `vmk80xx_detach()` also frees both
-`devpriv->usb_rx_buf` and `devpriv->usb_tx_buf`, but
-`devpriv->usb_rx_buf` may have already been freed, leading to a
-double-free error.  Fix it by removing the call to
-`kfree(devpriv->usb_rx_buf)` from `vmk80xx_alloc_usb_buffers()`, relying
-on `vmk80xx_detach()` to free the memory.
+pon., 15 kwi 2019 o 12:21 Sekhar Nori <nsekhar@ti.com> napisa=C5=82(a):
+>
+> On 12/04/19 9:01 PM, Bartosz Golaszewski wrote:
+> > pt., 12 kwi 2019 o 15:53 Sekhar Nori <nsekhar@ti.com> napisa=C5=82(a):
+> >>
+> >> On 12/04/19 5:41 PM, Bartosz Golaszewski wrote:
+> >>> pt., 12 kwi 2019 o 13:26 Sekhar Nori <nsekhar@ti.com> napisa=C5=82(a)=
+:
+> >>>>
+> >>>> Hi Bartosz,
+> >>>>
+> >>>> On 08/04/19 1:29 PM, Bartosz Golaszewski wrote:
+> >>>>> From: David Lechner <david@lechnology.com>
+> >>>>>
+> >>>>> This adds a cpu node and operating points to the common da850.dtsi =
+file.
+> >>>>>
+> >>>>> Additionally, a regulator is added to the LEGO EV3 board along with
+> >>>>> some board-specific CPU configuration.
+> >>>>>
+> >>>>> Regulators need to be hooked up on other boards to get them working=
+.
+> >>>>>
+> >>>>> Signed-off-by: David Lechner <david@lechnology.com>
+> >>>>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+> >>>>
+> >>>> I remember you mentioning about some problems using OCHI and cpufreq
+> >>>> together. Are those resolved now? CPU PLL on DA850 can affect other
+> >>>> peripheral clock frequencies too. So enabling it should really be a
+> >>>> per-board decision.
+> >>>>
+> >>>
+> >>> The problems are still there. I've never been able to find the
+> >>> culprit, but it also occurs on TI BSP in the same way (a couple
+> >>> cpufreq transitions will make the controller unresponsive).
+> >>
+> >> Is that on LCDK as well? As I recall cpufreq was never enabled on LCDK
+> >> in TI BSP.
+> >>
+> >
+> > Yes, I just verified that the bug occurs on LCDK with patches from this=
+ series.
+> >
+> >> If the OHCI problem is present on LCDK, then there is a user visible
+> >> regression on mainline after this patch. Lets enable cpufreq in LCDK
+> >> only if all working peripherals keep working afterwards.
+> >>
+> >
+> > The OHCI driver doesn't register any cpufreq transition notifier
+> > callbacks. I can't really find anything in the datasheet, but I'm
+> > wondering if we shouldn't do something similar to what the driver for
+> > davinci i2c controller does. I'll try a couple things tomorrow.
+>
+> Even if OHCI issue is fixed, with a fixed regulator like on LCDK, I am
+> not sure the benefits of just frequency scaling will be justifiable enoug=
+h.
+>
+> Fixing the OHCI issue may help in other boards like da850-evm use it
+> though. So that will be a good thing.
+>
+> How do you feel about keeping all OPPs disabled by default in da850.dtsi
+> and enabling only the ones that make sense for a board in <board>.dts?
+>
+> Empty OPP table is illegal, so this does mean that every board must
+> enable at least one OPP.
+>
 
-Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
----
-v2: Fix commit message because it incorrectly indicated that the call to
-    `kfree()` was being removed from `vmk80xx_auto_attach()`, not
-    `vmk80xx_alloc_usb_buffers().
----
- drivers/staging/comedi/drivers/vmk80xx.c | 4 +---
- 1 file changed, 1 insertion(+), 3 deletions(-)
+I guess in that case we'd need to make 300 MHz the default for
+da850-evm, but on da850-lcdk I'd go for 456 MHz (due to the regulator
+being fixed anyway).
 
-diff --git a/drivers/staging/comedi/drivers/vmk80xx.c b/drivers/staging/comedi/drivers/vmk80xx.c
-index b035d662390b..65dc6c51037e 100644
---- a/drivers/staging/comedi/drivers/vmk80xx.c
-+++ b/drivers/staging/comedi/drivers/vmk80xx.c
-@@ -682,10 +682,8 @@ static int vmk80xx_alloc_usb_buffers(struct comedi_device *dev)
- 
- 	size = usb_endpoint_maxp(devpriv->ep_tx);
- 	devpriv->usb_tx_buf = kzalloc(size, GFP_KERNEL);
--	if (!devpriv->usb_tx_buf) {
--		kfree(devpriv->usb_rx_buf);
-+	if (!devpriv->usb_tx_buf)
- 		return -ENOMEM;
--	}
- 
- 	return 0;
- }
--- 
-2.20.1
-
+Bart
