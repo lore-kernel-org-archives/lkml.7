@@ -5,58 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B2203C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 00:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 879C5C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 00:48:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 83CD021734
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 00:48:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 540F720850
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 00:48:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="n9Y0RN4P"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Bwx1ORez"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726862AbfDOArd (ORCPT
+        id S1727301AbfDOAsX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 20:47:33 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:40504 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726626AbfDOAra (ORCPT
+        Sun, 14 Apr 2019 20:48:23 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:36273 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726178AbfDOArb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 20:47:30 -0400
-Received: by mail-pg1-f195.google.com with SMTP id d31so7714620pgl.7;
-        Sun, 14 Apr 2019 17:47:30 -0700 (PDT)
+        Sun, 14 Apr 2019 20:47:31 -0400
+Received: by mail-pl1-f195.google.com with SMTP id ck15so7706942plb.3;
+        Sun, 14 Apr 2019 17:47:31 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=ZAdm/vG86hflxhCcEg67tfgVoXjeF3f0FU+ijE2iqzc=;
-        b=n9Y0RN4PNgdPwN6k9dTLOVyPbtIQID6vLeQ7waedD1PkU2iBk/RWWcQ6/HA0ra/2de
-         tNSlt/OTfCJsuleI/4oRgv/WC9hT9MGOPj8i2UFDKaKeDeWkXMHX7wip8Z9tiyPna9Sa
-         ir0ORdUV8xWu2oo3e3oMdSGRflm59HxZZADajkM9v/KcUT6ij6nowO8hUrNXmF+DUjtn
-         I3lBVo+2DQv2YY/xu3Fhr5ADFTLRqnxeat+9ej0xdwqnF1P1cvMfB73l5Ndme4mrk50N
-         scd0COfvlaIdusz/MgAX0VIL4JnxMlOb/nJ03kQGzVDugDHGpCppUfdja+95Hw8uLyL0
-         gojw==
+        bh=4GxuKyo+B/7MbRuzp+bShwrzV//RQSTv8UPpnXETmOQ=;
+        b=Bwx1ORezfx4adyMoVZvaNhKYAezLR17LZ13BX1BGoyzy2boc3PRupDzTWIqjtVz88U
+         43BSUQZNj96vMWUCEdRSavtp6OEBYPDbJ2wWSTPlZikk11r4lLVym7wUDx38gfyzVXOq
+         nEU7uzofvMNNwwo5wQH74Wi2sIdNnCl1IdKP3CNGWrucN2qkhEH8aCUHuG/HMBiXxSlg
+         4gesDnGKNIBqE9u/CvgOm8fQgLnO+AXz28DO1vaF/EFpgkHA/UL53S/4MiehkmXKGuRC
+         VwHuOSU3URAZyhPNpm8N0+smr3wZM1tViEtGJJT9Gfzju5tzmNM9WxVMfOBTeKGtQqyj
+         qGCQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=ZAdm/vG86hflxhCcEg67tfgVoXjeF3f0FU+ijE2iqzc=;
-        b=JI4PxBx4F34atCEFbCCDmc+L+P/ZjyTCI0iLBck0DbHKtl9nj/u8bXaqVwOECcHJH2
-         Zpo5x41IyrWYRqmD5hqG1edxpEWUZ3NfY+jcbNfA5NBU4ZUsLFfuzYzzG9xRorNAe1hg
-         nV4evxDCw7llZSNiRhen84Cl7fhERcaGI8LONwsLtbcMHlpIJ8qGAEYxAGXjhRu9S+kZ
-         x9Y/d+IbYNmQLaJHhqWJ/DuaI4D8VcTmpRA6vBsy7gFRvLQssM03QWp7ykWHq4HKKx7p
-         EiD3OLF/dSBb0CyrSwYqb+f136UbyMFNyM0uVluAA49p3lxyaxnzPe5AkfDVYFUnToEb
-         fq6w==
-X-Gm-Message-State: APjAAAX5WGYqCkcf2ieZdMC0cPY0js3vvjugecOG7jU7eUlRu1ADpZes
-        mFgvGbDcEFqn7OcGcM2tub/tn1Td
-X-Google-Smtp-Source: APXvYqzu8CXJA8mDHVcGjK1dWj9/Er/DOXiIXfFhmRes9GcM+ZkEDh9IhgPgUrePDbv52YCYPmhDVw==
-X-Received: by 2002:a63:29c8:: with SMTP id p191mr67531444pgp.197.1555289249472;
-        Sun, 14 Apr 2019 17:47:29 -0700 (PDT)
+        bh=4GxuKyo+B/7MbRuzp+bShwrzV//RQSTv8UPpnXETmOQ=;
+        b=iterJMDffHxa0XUijLkuZYyWI9bMwm0Ie/9pa3CxYXc2MSQKvo8cQNJRrvcxqpXNKD
+         2mUGyZ5tXqtOhSLOmP115XjPO5HLFa40RxyYwhaK1mleEowTC6Kwou5qXfPq9K6IJuWq
+         eKDHnCAKRmSmhPDdws+/FDZZhmUb9vurYX3YvvG/xFqKtPCtBga9Ytwb4xCsTl26varU
+         ahuCK0ilWo9mGI0TgGfWZ3YfewqHFjZV8K8WexLBnRKGDoN0k4O5wCZH6/gUKhep5F/J
+         g/Pq/6EhdZxjuDXhytrwz+rElzceXXeRiYZ9yUJGMN8iS8hB66y5rKLqZmdGkV+PdeX/
+         gyFA==
+X-Gm-Message-State: APjAAAXcLeJikzRiqm92PDHTZq4qmS1hqw2QC6UkSiNrADexJsXvzRH9
+        M6BkAIIADnpH8i/y1HEee5D0ZvLt
+X-Google-Smtp-Source: APXvYqxD8SPh+An9HHu8MKhajezK5gAKwk3tDKVhH1ykKQgMdA0SLfWlN9MHsbv6MlpKrjpkeJ8Stw==
+X-Received: by 2002:a17:902:2702:: with SMTP id c2mr53116686plb.37.1555289250700;
+        Sun, 14 Apr 2019 17:47:30 -0700 (PDT)
 Received: from squirtle.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id u17sm66111981pfn.19.2019.04.14.17.47.28
+        by smtp.gmail.com with ESMTPSA id u17sm66111981pfn.19.2019.04.14.17.47.29
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 14 Apr 2019 17:47:28 -0700 (PDT)
+        Sun, 14 Apr 2019 17:47:29 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     linux-pci@vger.kernel.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
@@ -64,9 +63,9 @@ Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Chris Healy <cphealy@gmail.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 02/11] PCI: imx6: Drop imx6_pcie_wait_for_link()
-Date:   Sun, 14 Apr 2019 17:46:23 -0700
-Message-Id: <20190415004632.5907-3-andrew.smirnov@gmail.com>
+Subject: [PATCH v4 03/11] PCI: imx6: Return -ETIMEOUT from imx6_pcie_wait_for_speed_change()
+Date:   Sun, 14 Apr 2019 17:46:24 -0700
+Message-Id: <20190415004632.5907-4-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190415004632.5907-1-andrew.smirnov@gmail.com>
 References: <20190415004632.5907-1-andrew.smirnov@gmail.com>
@@ -77,13 +76,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-All calls to imx6_pcie_wait_for_link() share the same error path and
-the state of PHY debug registers will already be printed there, so
-there's no real reason we can't just use dw_pcie_wait_for_link(). Drop
-imx6_pcie_wait_for_link() and replace it with dw_pcie_wait_for_link().
+Change error code from EINVAL to ETIMEDOUT in
+imx6_pcie_wait_for_speed_change() since that error code seems more
+appropriate.
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-Suggested-by: Lucas Stach <l.stach@pengutronix.de>
+Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
 Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
 Cc: Bjorn Helgaas <bhelgaas@google.com>
 Cc: Chris Healy <cphealy@gmail.com>
@@ -91,53 +89,22 @@ Cc: Lucas Stach <l.stach@pengutronix.de>
 Cc: linux-kernel@vger.kernel.org
 Cc: linux-pci@vger.kernel.org
 ---
- drivers/pci/controller/dwc/pci-imx6.c | 19 ++-----------------
- 1 file changed, 2 insertions(+), 17 deletions(-)
+ drivers/pci/controller/dwc/pci-imx6.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
 diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index ea2617712a3b..bb3dcfdbf697 100644
+index bb3dcfdbf697..021ef121a058 100644
 --- a/drivers/pci/controller/dwc/pci-imx6.c
 +++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -723,21 +723,6 @@ static int imx6_setup_phy_mpll(struct imx6_pcie *imx6_pcie)
- 	return 0;
+@@ -739,7 +739,7 @@ static int imx6_pcie_wait_for_speed_change(struct imx6_pcie *imx6_pcie)
+ 	}
+ 
+ 	dev_err(dev, "Speed change timeout\n");
+-	return -EINVAL;
++	return -ETIMEDOUT;
  }
  
--static int imx6_pcie_wait_for_link(struct imx6_pcie *imx6_pcie)
--{
--	struct dw_pcie *pci = imx6_pcie->pci;
--	struct device *dev = pci->dev;
--
--	/* check if the link is up or not */
--	if (!dw_pcie_wait_for_link(pci))
--		return 0;
--
--	dev_dbg(dev, "DEBUG_R0: 0x%08x, DEBUG_R1: 0x%08x\n",
--		dw_pcie_readl_dbi(pci, PCIE_PHY_DEBUG_R0),
--		dw_pcie_readl_dbi(pci, PCIE_PHY_DEBUG_R1));
--	return -ETIMEDOUT;
--}
--
- static int imx6_pcie_wait_for_speed_change(struct imx6_pcie *imx6_pcie)
- {
- 	struct dw_pcie *pci = imx6_pcie->pci;
-@@ -796,7 +781,7 @@ static int imx6_pcie_establish_link(struct imx6_pcie *imx6_pcie)
- 	/* Start LTSSM. */
- 	imx6_pcie_ltssm_enable(dev);
- 
--	ret = imx6_pcie_wait_for_link(imx6_pcie);
-+	ret = dw_pcie_wait_for_link(pci);
- 	if (ret)
- 		goto err_reset_phy;
- 
-@@ -834,7 +819,7 @@ static int imx6_pcie_establish_link(struct imx6_pcie *imx6_pcie)
- 		}
- 
- 		/* Make sure link training is finished as well! */
--		ret = imx6_pcie_wait_for_link(imx6_pcie);
-+		ret = dw_pcie_wait_for_link(pci);
- 		if (ret) {
- 			dev_err(dev, "Failed to bring link up!\n");
- 			goto err_reset_phy;
+ static void imx6_pcie_ltssm_enable(struct device *dev)
 -- 
 2.20.1
 
