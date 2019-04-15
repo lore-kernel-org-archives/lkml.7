@@ -7,48 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9965CC10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:02:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79764C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:02:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69BBE218A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:02:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4749D20880
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:02:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555354944;
-	bh=/r+1RXDhGMvpkON4sP+q2RhQlyIUMdumIH8ArT0FEWI=;
+	s=default; t=1555354947;
+	bh=+0C8S1OAuoJLNOmt4I2uhYQKuzE/993Rakhl/taz3LQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=i6bWUFFkN265AXiDEKto2jAp2F5miBsMC0zPapA0GzO4njFOmVQPuWHkaRRWgeKeq
-	 EbiBZf67OU7y49N1Iz/ZCmo9srpYBAVKCK2vfwilbKn4O8MhCCSUq26KY/iXNDcy3G
-	 ePT47NLKZytN4mcjKIrzPhn9QNsT9LNG2IBQ38Wk=
+	b=V06d1OsLRqb4K6HS2zASvfi+pBe4sdSfIB23fENvCK7q+akp3H/QBvIJdwcpGsf0O
+	 zweBN0yw04g77vt2C+aSWXXhpKDKK6yKOk8FixUo9qj9w2CZDqjTHuMNYmUUNvJAWM
+	 Zpkf6JuA3nNZGlxf3yYbGJvvMNC4TN/3hAqxVdOM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728723AbfDOTCX (ORCPT
+        id S1728750AbfDOTC0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:02:23 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33138 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:02:26 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33188 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728659AbfDOTCV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:02:21 -0400
+        id S1728659AbfDOTCY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:02:24 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E00F02087C;
-        Mon, 15 Apr 2019 19:02:19 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9A88120880;
+        Mon, 15 Apr 2019 19:02:22 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555354940;
-        bh=/r+1RXDhGMvpkON4sP+q2RhQlyIUMdumIH8ArT0FEWI=;
+        s=default; t=1555354943;
+        bh=+0C8S1OAuoJLNOmt4I2uhYQKuzE/993Rakhl/taz3LQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=xaYdVZpBDoPMGDA1Kl6PaSg259Ho6KKHc78H5IJ65+27IrcD/NT3lvxjG6Q1QsVjf
-         aFcBQwmkfT+u8b3dgFW6daSlcIJ9aykeCsIWrEakZzaj+zZofNi6BKYG29NmZa/vc+
-         nimPqIQQTyWKjYYDTOdWk3GscRcOTYlpwr8w4yS4=
+        b=Oj58CJOpDui/z3uuc7YbKe8obsxkpFd17SbxkUqGxNTWeZpWY98qECQ9hSJFKvmlK
+         gC3F+UjENchaDEtAhzrAHHXBm9sbghYNCcWOcPr6v3iOZC5g9VkQVA4Z4H95zjeODx
+         c7rgGYJGBBf6sm7/rBZIBjP7MvBk/CRYawlA3K98=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yotam Gigi <yotamg@mellanox.com>,
-        Jiri Pirko <jiri@mellanox.com>,
-        Nicolas Dichtel <nicolas.dichtel@6wind.com>,
+        stable@vger.kernel.org, Andrea Righi <andrea.righi@canonical.com>,
+        Pravin B Shelar <pshelar@ovn.org>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 22/69] net/sched: fix ->get helper of the matchall cls
-Date:   Mon, 15 Apr 2019 20:58:40 +0200
-Message-Id: <20190415183730.445550198@linuxfoundation.org>
+Subject: [PATCH 4.14 23/69] openvswitch: fix flow actions reallocation
+Date:   Mon, 15 Apr 2019 20:58:41 +0200
+Message-Id: <20190415183730.595444568@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183726.036654568@linuxfoundation.org>
 References: <20190415183726.036654568@linuxfoundation.org>
@@ -61,54 +60,65 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+From: Andrea Righi <andrea.righi@canonical.com>
 
-[ Upstream commit 0db6f8befc32c68bb13d7ffbb2e563c79e913e13 ]
+[ Upstream commit f28cd2af22a0c134e4aa1c64a70f70d815d473fb ]
 
-It returned always NULL, thus it was never possible to get the filter.
+The flow action buffer can be resized if it's not big enough to contain
+all the requested flow actions. However, this resize doesn't take into
+account the new requested size, the buffer is only increased by a factor
+of 2x. This might be not enough to contain the new data, causing a
+buffer overflow, for example:
 
-Example:
-$ ip link add foo type dummy
-$ ip link add bar type dummy
-$ tc qdisc add dev foo clsact
-$ tc filter add dev foo protocol all pref 1 ingress handle 1234 \
-	matchall action mirred ingress mirror dev bar
+[   42.044472] =============================================================================
+[   42.045608] BUG kmalloc-96 (Not tainted): Redzone overwritten
+[   42.046415] -----------------------------------------------------------------------------
 
-Before the patch:
-$ tc filter get dev foo protocol all pref 1 ingress handle 1234 matchall
-Error: Specified filter handle not found.
-We have an error talking to the kernel
+[   42.047715] Disabling lock debugging due to kernel taint
+[   42.047716] INFO: 0x8bf2c4a5-0x720c0928. First byte 0x0 instead of 0xcc
+[   42.048677] INFO: Slab 0xbc6d2040 objects=29 used=18 fp=0xdc07dec4 flags=0x2808101
+[   42.049743] INFO: Object 0xd53a3464 @offset=2528 fp=0xccdcdebb
 
-After:
-$ tc filter get dev foo protocol all pref 1 ingress handle 1234 matchall
-filter ingress protocol all pref 1 matchall chain 0 handle 0x4d2
-  not_in_hw
-        action order 1: mirred (Ingress Mirror to device bar) pipe
-        index 1 ref 1 bind 1
+[   42.050747] Redzone 76f1b237: cc cc cc cc cc cc cc cc                          ........
+[   42.051839] Object d53a3464: 6b 6b 6b 6b 6b 6b 6b 6b 0c 00 00 00 6c 00 00 00  kkkkkkkk....l...
+[   42.053015] Object f49a30cc: 6c 00 0c 00 00 00 00 00 00 00 00 03 78 a3 15 f6  l...........x...
+[   42.054203] Object acfe4220: 20 00 02 00 ff ff ff ff 00 00 00 00 00 00 00 00   ...............
+[   42.055370] Object 21024e91: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+[   42.056541] Object 070e04c3: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+[   42.057797] Object 948a777a: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+[   42.059061] Redzone 8bf2c4a5: 00 00 00 00                                      ....
+[   42.060189] Padding a681b46e: 5a 5a 5a 5a 5a 5a 5a 5a                          ZZZZZZZZ
 
-CC: Yotam Gigi <yotamg@mellanox.com>
-CC: Jiri Pirko <jiri@mellanox.com>
-Fixes: fd62d9f5c575 ("net/sched: matchall: Fix configuration race")
-Signed-off-by: Nicolas Dichtel <nicolas.dichtel@6wind.com>
+Fix by making sure the new buffer is properly resized to contain all the
+requested data.
+
+BugLink: https://bugs.launchpad.net/bugs/1813244
+Signed-off-by: Andrea Righi <andrea.righi@canonical.com>
+Acked-by: Pravin B Shelar <pshelar@ovn.org>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/sched/cls_matchall.c |    5 +++++
- 1 file changed, 5 insertions(+)
+ net/openvswitch/flow_netlink.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
---- a/net/sched/cls_matchall.c
-+++ b/net/sched/cls_matchall.c
-@@ -125,6 +125,11 @@ static void mall_destroy(struct tcf_prot
+--- a/net/openvswitch/flow_netlink.c
++++ b/net/openvswitch/flow_netlink.c
+@@ -1967,14 +1967,14 @@ static struct nlattr *reserve_sfa_size(s
  
- static void *mall_get(struct tcf_proto *tp, u32 handle)
- {
-+	struct cls_mall_head *head = rtnl_dereference(tp->root);
-+
-+	if (head && head->handle == handle)
-+		return head;
-+
- 	return NULL;
- }
+ 	struct sw_flow_actions *acts;
+ 	int new_acts_size;
+-	int req_size = NLA_ALIGN(attr_len);
++	size_t req_size = NLA_ALIGN(attr_len);
+ 	int next_offset = offsetof(struct sw_flow_actions, actions) +
+ 					(*sfa)->actions_len;
  
+ 	if (req_size <= (ksize(*sfa) - next_offset))
+ 		goto out;
+ 
+-	new_acts_size = ksize(*sfa) * 2;
++	new_acts_size = max(next_offset + req_size, ksize(*sfa) * 2);
+ 
+ 	if (new_acts_size > MAX_ACTIONS_BUFSIZE) {
+ 		if ((MAX_ACTIONS_BUFSIZE - next_offset) < req_size) {
 
 
