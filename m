@@ -2,113 +2,197 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B55FC10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:27:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6AF3C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:27:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D05D2206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:27:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UjDRWsx2"
+	by mail.kernel.org (Postfix) with ESMTP id A5717206B7
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:27:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555313267;
+	bh=QWS5xeoMeq0unEDlGpOKZi1/HNLnq+cMZ9ErGDkVNX0=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=YwuYvqdoLJgQcaZ7y1RF5MSr3BYxngoTN5cl3eInPg3ZWr6vQaBKGVm+sMqUGCX6q
+	 WrpqP5F4cWIjd0yIWzuGKIfpTEO6V7FiIxg6+viKdyAycH2gfVzVOrba8+Lpr+TcOD
+	 I+VC+squwtlSzDWm4mXqVr7jOlrwi3NqrX9uIdZU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726430AbfDOH1H (ORCPT
+        id S1726455AbfDOH1q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 03:27:07 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:35563 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbfDOH1H (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 03:27:07 -0400
-Received: by mail-ed1-f65.google.com with SMTP id y67so461525ede.2
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 00:27:06 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=oZs1t7dzptvM8+UvWwUnA1FIOgorbXKUPYsdSd5YMlg=;
-        b=UjDRWsx2/8KT65imliIICFTyn9za7WkCkdX4dNbGXlsi8Y4TXF084nZjB1w+D5Zv+v
-         e6b78n8hgX25KmF5G+ZY2nLBtLIg4bsFrXmnRQUbV6KJyRNX54pKHBSV0/gsZDFN3fC4
-         5AuKQQzPgxj9IExk+84rBPLZsirzoLfpOFs3Gp7WJpWn2+PuulQsqjEHZIUygz0uYnvR
-         oAPKjN+nGX2ItZ/yc2UWbxfFtxKeP9sBhd1TOM8FDTp9CLpHRT5l3tf/RDtTrfsLPWFB
-         asSOzuhTjfJnMahs3w81X0gmmtU4H6V1tyY4RUYEtwAuJlXniSKRtsRyEhCi+QiP+YLw
-         fLZQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=oZs1t7dzptvM8+UvWwUnA1FIOgorbXKUPYsdSd5YMlg=;
-        b=U0js8k61QoIOiN7yxCOAhjsoDwZD0t9MI2Fg7FVLj1ik5kHCYw3DD5X3oZB1dXfb1l
-         oVEXRXQprVCFqrKEM1NG7BV2xE/bY+CxF66ZzZIjucpnMu6iJNWvOpMhA6FMVGz3dgNU
-         SFuejnoRXmxXVda/4p3uD84/u2gLjibR2pzYYFg1TURMu+dGGGx4qbOTCNQxxBavttZi
-         zykxCBUycBUM2rYd8LB14kcEt21d8O8DdaG9wAGXkawe5cN1VM+AGsC7sMZXqFXrV0pi
-         TFWbtGLSJzX6chxEMNAC1FAMr+4fu6eGXI/E4qVaojsLSasFieJ6nd0WOHg3e/sSXvnr
-         VU6A==
-X-Gm-Message-State: APjAAAXCIszh3iOeTJ+On07vig2QypoA+lWNdCVlmyGyTHx73qrWi5Vu
-        fcQ3JCL87JCdpfcgIy1nEx6LTkvvA4YdupaJpRk=
-X-Google-Smtp-Source: APXvYqxHfMUzdZo3n/YAwd+9RzuAEF6B3wFCmP8V7JFd6g7AiuXXisPrtTrT/2yO4R7m1dWvx3Ppu89kUROufhXRRxI=
-X-Received: by 2002:a50:ad58:: with SMTP id z24mr7201898edc.75.1555313225459;
- Mon, 15 Apr 2019 00:27:05 -0700 (PDT)
+        Mon, 15 Apr 2019 03:27:46 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34632 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725798AbfDOH1q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 03:27:46 -0400
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com [209.85.208.171])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 85DE620880;
+        Mon, 15 Apr 2019 07:27:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555313264;
+        bh=QWS5xeoMeq0unEDlGpOKZi1/HNLnq+cMZ9ErGDkVNX0=;
+        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
+        b=hRqAlhcKw6GJWEjqe9CIbCbRfRvseBPkgCjEHqmCzBcYhB0K4EUdp21qw5ISDOstG
+         qiGwOAQq2cGRWAWRmiB+x9eGQOhGbMz3p4LlI3pYQowJZHTUFdT8Xe5jTQCH14KGpU
+         e0MiG5E1sNxYeBEyBmeqp2sgR/SRb17GlO3FHnng=
+Received: by mail-lj1-f171.google.com with SMTP id q66so14614600ljq.7;
+        Mon, 15 Apr 2019 00:27:44 -0700 (PDT)
+X-Gm-Message-State: APjAAAX2wysRYyGVSKaGre2fN2WMeYSCKUy1UXLb+eyfXguQ1DBoMGFS
+        Wx5JXyomi0AmRZQUl0n4PrC4OFeEec0YVdtgDsc=
+X-Google-Smtp-Source: APXvYqwx/+EuH1bDwzrOmMkn0XXOu9Ga5p5gOEDE6ac0UZM6Iu31Gp0qHq1AR2gqQ9859mRsEmVK4PxHJFJ7DHyN5kw=
+X-Received: by 2002:a2e:5dd2:: with SMTP id v79mr37851018lje.22.1555313262791;
+ Mon, 15 Apr 2019 00:27:42 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190414191450.18377-1-andradanciu1997@gmail.com>
- <20190414191450.18377-2-andradanciu1997@gmail.com> <CAOMZO5C_esXni-N-U+hDXNG6Z5rJLC6ZrgKEseCW7mcK=aiyQw@mail.gmail.com>
-In-Reply-To: <CAOMZO5C_esXni-N-U+hDXNG6Z5rJLC6ZrgKEseCW7mcK=aiyQw@mail.gmail.com>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Mon, 15 Apr 2019 10:26:54 +0300
-Message-ID: <CAEnQRZBD_M8Pp4RWXY4TS5MHAEBnkwUOyR16ttAitX-L+Z88Ew@mail.gmail.com>
-Subject: Re: [PATCH 1/2] ASoC: mpc5200_dma: Fix invalid license ID
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Andra Danciu <andradanciu1997@gmail.com>,
-        Timur Tabi <timur@kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
+References: <CAJKOXPfvs=uETF0-xpwCWc5khSpWjpz2zz354Jcx1bVjm9cG2A@mail.gmail.com>
+ <20190415012635.6369-1-matheus@castello.eng.br> <20190415012635.6369-4-matheus@castello.eng.br>
+In-Reply-To: <20190415012635.6369-4-matheus@castello.eng.br>
+From:   Krzysztof Kozlowski <krzk@kernel.org>
+Date:   Mon, 15 Apr 2019 09:27:31 +0200
+X-Gmail-Original-Message-ID: <CAJKOXPfZBmNATxDTOqiZm_rpjEpRL9sdGF7QAOxppG+ygRmZPQ@mail.gmail.com>
+Message-ID: <CAJKOXPfZBmNATxDTOqiZm_rpjEpRL9sdGF7QAOxppG+ygRmZPQ@mail.gmail.com>
+Subject: Re: [PATCH v2 3/4] power: supply: max17040: Config alert SOC low
+ level threshold from FDT
+To:     Matheus Castello <matheus@castello.eng.br>
+Cc:     sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        Chanwoo Choi <cw00.choi@samsung.com>,
+        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
+        <b.zolnierkie@samsung.com>, lee.jones@linaro.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 12:53 AM Fabio Estevam <festevam@gmail.com> wrote:
+On Mon, 15 Apr 2019 at 03:51, Matheus Castello <matheus@castello.eng.br> wrote:
 >
-> On Sun, Apr 14, 2019 at 4:15 PM Andra Danciu <andradanciu1997@gmail.com> wrote:
-> >
-> > As the file had no other license notice/reference, it falls under the
-> > project license and therefore the proper SPDX id is: GPL-2.0-only
-> >
-> > Cc: Daniel Baluta <daniel.baluta@nxp.com>
-> > Fixes: 1edfc2485d8dc ("ASoC: mpc5200_dma: Switch to SPDX identifier")
-> > Reported-by: Thomas Gleixner <tglx@linutronix.de>
-> > Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
-> > ---
-> >  sound/soc/fsl/mpc5200_dma.c | 2 +-
-> >  1 file changed, 1 insertion(+), 1 deletion(-)
-> >
-> > diff --git a/sound/soc/fsl/mpc5200_dma.c b/sound/soc/fsl/mpc5200_dma.c
-> > index 4396442c2fdd..ccf9301889fe 100644
-> > --- a/sound/soc/fsl/mpc5200_dma.c
-> > +++ b/sound/soc/fsl/mpc5200_dma.c
-> > @@ -1,4 +1,4 @@
-> > -// SPDX-License-Identifier: GPL
-> > +// SPDX-License-Identifier: GPL-2.0-only
+> For configuration of fuel gauge alert for a low level state of charge
+> interrupt we add a function to config level threshold and a device tree
+> binding property to set it in flatned device tree node.
 >
-> According to Documentation/process/license-rules.rst this should be:
+> Now we can use "maxim,alert-soc-level" property with the values from
+> 1 up to 32 to configure alert interrupt threshold.
 >
-> // SPDX-License-Identifier: GPL-2.0
+> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
+> ---
+>  drivers/power/supply/max17040_battery.c | 56 ++++++++++++++++++++++---
+>  1 file changed, 50 insertions(+), 6 deletions(-)
+>
+> diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
+> index 8d2f8ed3f44c..f036f272d52f 100644
+> --- a/drivers/power/supply/max17040_battery.c
+> +++ b/drivers/power/supply/max17040_battery.c
+> @@ -29,6 +29,9 @@
+>  #define MAX17040_DELAY         1000
+>  #define MAX17040_BATTERY_FULL  95
+>
+> +#define MAX17040_ATHD_MASK             0xFFE0
+> +#define MAX17040_ATHD_DEFAULT_POWER_UP 4
+> +
+>  struct max17040_chip {
+>         struct i2c_client               *client;
+>         struct delayed_work             work;
+> @@ -43,6 +46,8 @@ struct max17040_chip {
+>         int soc;
+>         /* State Of Charge */
+>         int status;
+> +       /* Alert threshold from 32% to 1% of the State of Charge */
+> +       u32 alert_threshold;
+>  };
+>
+>  static int max17040_get_property(struct power_supply *psy,
+> @@ -119,6 +124,27 @@ static void max17040_get_soc(struct i2c_client *client)
+>         chip->soc = (soc >> 8);
+>  }
+>
+> +static int max17040_set_soc_threshold(struct i2c_client *client, u32 level)
+> +{
+> +       int ret;
+> +       u16 data;
+> +
+> +       /* check if level is between 1% and 32% */
+> +       if (level > 0 && level < 33) {
+> +               /* alert threshold use LSb 5 bits from RCOMP */
+> +               level = 32 - level;
+> +               data = max17040_read_reg(client, MAX17040_RCOMP);
+> +               data &= MAX17040_ATHD_MASK;
+> +               data |= level;
+> +               max17040_write_reg(client, MAX17040_RCOMP, data);
+> +               ret = 0;
+> +       } else {
+> +               ret = -EINVAL;
+> +       }
+> +
+> +       return ret;
+> +}
+> +
+>  static void max17040_get_version(struct i2c_client *client)
+>  {
+>         u16 version;
+> @@ -161,6 +187,16 @@ static void max17040_get_status(struct i2c_client *client)
+>                 chip->status = POWER_SUPPLY_STATUS_FULL;
+>  }
+>
+> +static void max17040_get_of_data(struct max17040_chip *chip)
+> +{
+> +       struct device *dev = &chip->client->dev;
+> +       struct device_node *np = dev->of_node;
+> +
+> +       if (of_property_read_u32(np, "maxim,alert-soc-level",
+> +                       &chip->alert_threshold))
+> +               chip->alert_threshold = MAX17040_ATHD_DEFAULT_POWER_UP;
+> +}
+> +
+>  static void max17040_check_changes(struct i2c_client *client)
+>  {
+>         max17040_get_vcell(client);
+> @@ -226,6 +262,7 @@ static int max17040_probe(struct i2c_client *client,
+>
+>         chip->client = client;
+>         chip->pdata = client->dev.platform_data;
+> +       max17040_get_of_data(chip);
+>
+>         i2c_set_clientdata(client, chip);
+>         psy_cfg.drv_data = chip;
+> @@ -237,16 +274,26 @@ static int max17040_probe(struct i2c_client *client,
+>                 return PTR_ERR(chip->battery);
+>         }
+>
+> +       max17040_reset(client);
+> +       max17040_get_version(client);
+> +
+>         /* check interrupt */
+>         if (client->irq) {
+>                 int ret;
+> -               unsigned int flags;
+> +
+> +               ret = max17040_set_soc_threshold(client, chip->alert_threshold);
+> +               if (ret) {
+> +                       dev_err(&client->dev,
+> +                               "Failed to set SOC alert threshold: err %d\n",
+> +                               ret);
+> +                       return ret;
+> +               }
+>
+>                 dev_info(&client->dev, "IRQ: enabled\n");
+> -               flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
+>
+>                 ret = devm_request_threaded_irq(&client->dev, client->irq, NULL,
+> -                                               max17040_thread_handler, flags,
+> +                                               max17040_thread_handler,
+> +                                               (client->flags | IRQF_ONESHOT),
+>                                                 chip->battery->desc->name,
+>                                                 chip);
 
-Actually
+Now I noticed that you are not clearing the ALRT status bit. Therefore
+alert interrupt will be generated only once. Even if SoC goes up
+(charged) and then down to alert level it will not be generated second
+time. At least documentation for max77836 is saying that clearing this
+bit is required.
+
+Best regards,
+Krzysztof
