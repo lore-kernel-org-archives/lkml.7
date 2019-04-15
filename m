@@ -2,80 +2,126 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99196C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:27:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13F80C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:29:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 718BB2073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:27:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E00882073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:29:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727385AbfDOM1j (ORCPT
+        id S1727368AbfDOM3R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 08:27:39 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36592 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727186AbfDOM1j (ORCPT
+        Mon, 15 Apr 2019 08:29:17 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:35307 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726042AbfDOM3R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 08:27:39 -0400
-Received: by mail-wm1-f66.google.com with SMTP id h18so20215898wml.1
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 05:27:38 -0700 (PDT)
+        Mon, 15 Apr 2019 08:29:17 -0400
+Received: by mail-qt1-f194.google.com with SMTP id h39so18825018qte.2
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 05:29:16 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=NFkaEcrMcC+TkQE3T7eDIT8t/gt8OW6BPDneAKgJs0E=;
-        b=ogZtf4FLmuzZVfPTgDkqECF8c4yLmwQP0rWALNz15YURZrVGQvzxEl4p+bkGZpvIUc
-         KN2kmFd5+j9ulwNWyOJVXKahRd1l+37Y6iIqq13GWbWifJXIDTpy4LLeOTtoG9KWp0QK
-         OrW7T0sI5qVyWacbprtz8wGpg6gehBzHiT/hewJsa/8IA7x9y9glsUO/7XwraJnF+dqO
-         kuaFTvTJsRZt3+N+ZKIKo3YmN7QgCNfr2x4cUjcQIjlRGhZarBGzS3R2toHOQmsLKayC
-         SObBc7EuVRZ4Whml6uJ3I13iWjOnNYyywTgw+VwCXv+nHjHy3kZmi4Q0AInKl+gwLMo/
-         8Vzw==
-X-Gm-Message-State: APjAAAUJ1ZhePs8FmKhHk6zNMrSd3QBZrgCGOK1tUXVELl69HoUzzEqI
-        jPdNtG+yJsrYw7FLRmZpefEDXg==
-X-Google-Smtp-Source: APXvYqy10B54Sg22aN8scwrJY70VAnPjGpILUNo7T8gOq70S1eMMaCDd8f8pJBO2stBk04EayG0PsQ==
-X-Received: by 2002:a7b:c086:: with SMTP id r6mr22390739wmh.123.1555331257642;
-        Mon, 15 Apr 2019 05:27:37 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id o1sm19020108wmh.47.2019.04.15.05.27.36
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 15 Apr 2019 05:27:36 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Long Li <longli@microsoft.com>, Simon Xiao <sixiao@microsoft.com>
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org,
-        "K. Y. Srinivasan" <kys@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <sashal@kernel.org>,
-        "Michael Kelley \(EOSG\)" <Michael.H.Kelley@microsoft.com>,
-        linux-hyperv@vger.kernel.org
-Subject: Re: [PATCH] x86/hyper-v: implement EOI assist
-In-Reply-To: <20190403170309.4107-1-vkuznets@redhat.com>
-References: <20190403170309.4107-1-vkuznets@redhat.com>
-Date:   Mon, 15 Apr 2019 14:27:36 +0200
-Message-ID: <87v9zfh2rr.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=WlFJ2a0Gegd+f+5u8gC2fdwSw0IBQnT8ATkMdXPZXJU=;
+        b=fEyHN/dF4/1e8rx3j/hot7lyuMs/pcfeF1jSd6k+01PHISxSuB/66qQw0p17EBGcg2
+         WGCXb/4+958NiZj2UJSm5klSfIN6KiYE8zXSH94VYJ/3poyPafIlUjebqHNM06SAMY6Z
+         DuCrZiaA0wTLVASzS0gA1PP0FnvS4PWgI4aomjjpJQptS2bhGLFOt5yCFsKPqAAwIGlR
+         gB6U5carCYod1UZHzuZ4lONIrilpJaVVhqF2h3SGAhfFv4BDow44OJ874Cvh55QC3EKu
+         YZSRb24cGd7JZ39pZfRVBBjPXVGKvGMU32Ta3fwzXk7UUltxQLDU/VcvZWx3nw66XoaQ
+         E8mw==
+X-Gm-Message-State: APjAAAVWymIppGwIgvsf32uHGmXEiRlsFXb3iRnvnQXACKMXbk6bs5gY
+        U6s6Rgh/8QVH+IfONLbJhxQ+Ey68KjFgF0Y6AWU=
+X-Google-Smtp-Source: APXvYqy62EKdoa8lroEe3OKmo1MpQUH0mQbWzQwZ9WWH5VghFXYCClje3nRf/dg3x0sDiod6qnRhXm9RqNC0ThhBgAw=
+X-Received: by 2002:ac8:1a0b:: with SMTP id v11mr62319215qtj.171.1555331355533;
+ Mon, 15 Apr 2019 05:29:15 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190414194705.2e10802aca2df36c8f27f349@kernel.org> <20190414133458.zxdekgx6qwd562qa@shell.armlinux.org.uk>
+In-Reply-To: <20190414133458.zxdekgx6qwd562qa@shell.armlinux.org.uk>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Mon, 15 Apr 2019 14:28:59 +0200
+Message-ID: <CAK8P3a2xf9Lp=apuAE5zo+4GHQHjDTeJUh8gkCOWeotsQXRaNA@mail.gmail.com>
+Subject: Re: Kconfig dependency issue on function-graph tracer and frame
+ pointer on arm
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
+Cc:     Masami Hiramatsu <mhiramat@kernel.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Stefan Agner <stefan@agner.ch>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Naresh Kamboju <naresh.kamboju@linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vitaly Kuznetsov <vkuznets@redhat.com> writes:
+On Sun, Apr 14, 2019 at 3:35 PM Russell King - ARM Linux admin
+<linux@armlinux.org.uk> wrote:
 
-> Hyper-V TLFS suggests an optimization to avoid imminent VMExit on EOI:
-> "The OS performs an EOI by atomically writing zero to the EOI Assist field
-> of the virtual VP assist page and checking whether the "No EOI required"
-> field was previously zero. If it was, the OS must write to the
-> HV_X64_APIC_EOI MSR thereby triggering an intercept into the hypervisor."
+> The subsequent hunks remove the defaulting of the choice according to
+> the function graph tracer - this is not a "hint" where the user can
+> still choose either option irrespective of the state of the function
+> graph tracer.  They should only be able to select the frame pointer
+> option in that case.
 >
-> Implement the optimization in Linux.
+> Another way forward would be for someone to put the work in to making
+> the function graph tracer work without frame pointers.
+
+I think Stefan was already looking into making CONFIG_FUNCTION_TRACER
+work with clang. I don't know what the status of that work is, but I
+think getting
+FUNCTION_GRAPH_TRACER working at the same time would be best.
+
+I never noticed the Kconfig issue here, because I was using a patch to
+turn off FUNCTION_TRACER on ARM with clang to make it build, and that
+turns off FUNCTION_GRAPH_TRACER in the process.
+
+> So, how about this:
 >
+> diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
+> index 850b4805e2d1..9aed25a6019b 100644
+> --- a/arch/arm/Kconfig
+> +++ b/arch/arm/Kconfig
+> @@ -73,7 +73,7 @@ config ARM
+>         select HAVE_EFFICIENT_UNALIGNED_ACCESS if (CPU_V6 || CPU_V6K || CPU_V7) && MMU
+>         select HAVE_EXIT_THREAD
+>         select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
+> -       select HAVE_FUNCTION_GRAPH_TRACER if !THUMB2_KERNEL
+> +       select HAVE_FUNCTION_GRAPH_TRACER if !THUMB2_KERNEL && !CC_IS_CLANG
+>         select HAVE_FUNCTION_TRACER if !XIP_KERNEL
+>         select HAVE_GCC_PLUGINS
+>         select HAVE_HW_BREAKPOINT if PERF_EVENTS && (CPU_V6 || CPU_V6K || CPU_V7)
+> diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
+> index 6d6e0330930b..e388af4594a6 100644
+> --- a/arch/arm/Kconfig.debug
+> +++ b/arch/arm/Kconfig.debug
+> @@ -47,8 +47,8 @@ config DEBUG_WX
+>
+>  choice
+>         prompt "Choose kernel unwinder"
+> -       default UNWINDER_ARM if AEABI && !FUNCTION_GRAPH_TRACER
+> -       default UNWINDER_FRAME_POINTER if !AEABI || FUNCTION_GRAPH_TRACER
+> +       default UNWINDER_ARM if AEABI
+> +       default UNWINDER_FRAME_POINTER if !AEABI
+>         help
+>           This determines which method will be used for unwinding kernel stack
+>           traces for panics, oopses, bugs, warnings, perf, /proc/<pid>/stack,
+> @@ -65,7 +65,7 @@ config UNWINDER_FRAME_POINTER
+>
+>  config UNWINDER_ARM
+>         bool "ARM EABI stack unwinder"
+> -       depends on AEABI
+> +       depends on AEABI && !FUNCTION_GRAPH_TRACER
+>         select ARM_UNWIND
+>         help
+>           This option enables stack unwinding support in the kernel
 
-Simon, Long,
+This looks good to me in the meantime, at least if there is any
+way to get the non-graph FUNCTION_TRACER to build with clang.
 
-did you get a chance to run some tests with this?
-
--- 
-Vitaly
+       Arnd
