@@ -2,123 +2,100 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3EE9C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 20:02:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0744FC282DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 20:04:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA1132070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 20:02:05 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LqmQpn5Z"
+	by mail.kernel.org (Postfix) with ESMTP id D0C2420880
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 20:04:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729152AbfDOUCE (ORCPT
+        id S1729121AbfDOUEz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 16:02:04 -0400
-Received: from mail-yw1-f67.google.com ([209.85.161.67]:44020 "EHLO
-        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728774AbfDOUCE (ORCPT
+        Mon, 15 Apr 2019 16:04:55 -0400
+Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:40199 "EHLO
+        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728530AbfDOUEz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 16:02:04 -0400
-Received: by mail-yw1-f67.google.com with SMTP id j66so6472113ywc.10
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 13:02:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=0ykRqAIluU0NXsuz7m0Y2cAIvAKzXoeZkUO2WAzqLZw=;
-        b=LqmQpn5Z1qhKBlkwDJqV0cR2Yk2DijDZhxwv4S9Kw3NL3UNjnt4kpQ5Z8UCOpLF/1T
-         bHeWPlrhDk/m6wVJ0oMcXmqz36JaDgXxl5Keo73mcqNoXJDHxaF+MYly9J0mB9K12HwG
-         s6QqmVumLNmqEeMbE/lQTAuyhW5kzCeiC7BwTf2W3kpVpqDAGrwGoqGwFMweJUvRUtPl
-         3CnAxamx2AeAlUttnxj5wX23mobAU2WIYFRefahf3YIWOQbeGgk55Zislw7GPMYuwKPf
-         XmfXp8s56+5BCprqrOC8uL1+vp0KY08GRY3TXx77wyHFRxJjM1YVEecdS+DIqr4bpaZ5
-         emNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=0ykRqAIluU0NXsuz7m0Y2cAIvAKzXoeZkUO2WAzqLZw=;
-        b=IhZI1LUMvTVzqbOsCdsyXoJI7ZfJniqPm4AXbIJRxIrG63512hiqL32im9o3JIPk+H
-         3rrdb1VdsbJcZow0L8aPqBU2A0Upi/7NRA1gOCJqxbdryV14f65XCEVWuk83BB6WHZXZ
-         CGV0sWU7gPTfmHkSq+6J1MLFsXe6w004u7zcXwdjh/Pt2wfU2yYQMAg3Q2pcEk8iDLyj
-         Vy5RP5OLxBtruR54ChndX67O9NMRokIas1spqy3o6L0KoBEV8jRAOjn8Cr6JXNhnfZ7y
-         tBxzTeYEow2LLn022caSF5VkJHVqr1VB59mmMpqAG9+JmKyCuyzokSRMvAScSJp2SY1C
-         f0Ww==
-X-Gm-Message-State: APjAAAX0iGzfwNIPZ06f0lZ6ocVoupiAyXVJ+jRcxwzDWkPMjbcfK3f2
-        I7clZ06m4rAWhFRVNvusEQpORd2pU8N/KGZieoQr3A==
-X-Google-Smtp-Source: APXvYqw0dYDSSDt1BitpQJva9u+gyVKXlF8K0n4lSdPPTcYA2nT+LE1oJJC6iF/QeRqfM5A58k3IaPG2schHr4Li6uo=
-X-Received: by 2002:a81:1054:: with SMTP id 81mr58903408ywq.48.1555358522808;
- Mon, 15 Apr 2019 13:02:02 -0700 (PDT)
+        Mon, 15 Apr 2019 16:04:55 -0400
+Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
+        id 18A1380537; Mon, 15 Apr 2019 22:04:45 +0200 (CEST)
+Date:   Mon, 15 Apr 2019 22:04:53 +0200
+From:   Pavel Machek <pavel@denx.de>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bpetkov@suse.de>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Zhang Rui <rui.zhang@intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Sasha Levin <sashal@kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: Re: [PATCH 4.14 05/69] x86/power: Make restore_processor_context()
+ sane
+Message-ID: <20190415200452.GA25908@amd>
+References: <20190415183726.036654568@linuxfoundation.org>
+ <20190415183727.581656002@linuxfoundation.org>
 MIME-Version: 1.0
-References: <20190415192734.935387-1-arnd@arndb.de> <20190415192734.935387-2-arnd@arndb.de>
- <CO2PR01MB21683E465191EA8246503774D02B0@CO2PR01MB2168.prod.exchangelabs.com>
- <CAK8P3a1DSN3jcfGngrJFp93Mt98qsibvKvtJGtjHYjOmcM1kNQ@mail.gmail.com> <3665a5ad-ff6d-97a1-ca31-971973a7167f@gmail.com>
-In-Reply-To: <3665a5ad-ff6d-97a1-ca31-971973a7167f@gmail.com>
-From:   Guenter Roeck <groeck@google.com>
-Date:   Mon, 15 Apr 2019 13:01:51 -0700
-Message-ID: <CABXOdTce7EXE7xZhh=YUj23wxRzwYKGv=7TueJ3nfUuKhUgz4A@mail.gmail.com>
-Subject: Re: [PATCH 2/4] ARM: ep93xx: keypad: stop using mach/platform.h
-To:     Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Hartley Sweeten <HartleyS@visionengravers.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha1;
+        protocol="application/pgp-signature"; boundary="zYM0uCDKw75PZbzx"
+Content-Disposition: inline
+In-Reply-To: <20190415183727.581656002@linuxfoundation.org>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 12:56 PM Alexander Sverdlin
-<alexander.sverdlin@gmail.com> wrote:
->
-> Hi!
->
-> On 15/04/2019 21:47, Arnd Bergmann wrote:
-> >>> We can communicate the clock rate using platform data rather than setting a
-> >>> flag to use a particular value in the driver, which is cleaner and avoids the dependency.
-> >>>
-> >>> No platform in the kernel currently defines the ep93xx keypad device structure, so this
-> >>> is a rather pointless excercise.  Any out of tree users are probably dead now, but if not,
-> >>>  they have to change their platform code to match the new platform_data structure.
-> >> <snip>
-> >>
-> >>> diff --git a/include/linux/platform_data/keypad-ep93xx.h b/include/linux/platform_data/keypad-ep93xx.h
-> >>> index 0e36818e3680..3054fced8509 100644
-> >>> --- a/include/linux/platform_data/keypad-ep93xx.h
-> >>> +++ b/include/linux/platform_data/keypad-ep93xx.h
-> >>> @@ -9,8 +9,7 @@ struct matrix_keymap_data;
-> >>>  #define EP93XX_KEYPAD_DIAG_MODE              (1<<1)  /* diagnostic mode */
-> >>>  #define EP93XX_KEYPAD_BACK_DRIVE     (1<<2)  /* back driving mode */
-> >>>  #define EP93XX_KEYPAD_TEST_MODE              (1<<3)  /* scan only column 0 */
-> >>> -#define EP93XX_KEYPAD_KDIV           (1<<4)  /* 1/4 clock or 1/16 clock */
-> >>> -#define EP93XX_KEYPAD_AUTOREPEAT     (1<<5)  /* enable key autorepeat */
-> >>> +#define EP93XX_KEYPAD_AUTOREPEAT     (1<<4)  /* enable key autorepeat */
-> >> You have re-defined the keypad register bits here.
-> >>
-> >> The KDIV bit changes the clock rate. The AUTOREPEAT bit enables key autorepeat.
-> > As far as I can tell, they are not register bits, just software flags
-> > for communicating between a board file and the driver, so I
-> > assumed I could freely reorganize them.
-> >
-> > Did I miss something?
->
-> They are indeed only software flags (just checked datasheet), so you are only changing
-> platform data format. But as I do not know any keypad user in person, I'd rely on
-> Hartley's opinion in this case (if it's a good idea to change platform data or not).
->
 
-If there are out-of-tree users, it would be their responsibility to
-upstream their code. If they don't, any changes in platform data is
-their problem, not ours. Either case, platform data does, if anything,
-reflect an in-kernel API, and thus is fair game for cleanup.
+--zYM0uCDKw75PZbzx
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Guenter
+On Mon 2019-04-15 20:58:23, Greg Kroah-Hartman wrote:
+> [ Upstream commit 7ee18d677989e99635027cee04c878950e0752b9 ]
+>=20
+> My previous attempt to fix a couple of bugs in __restore_processor_contex=
+t():
+>=20
+>   5b06bbcfc2c6 ("x86/power: Fix some ordering bugs in __restore_processor=
+_context()")
+>=20
+> ... introduced yet another bug, breaking suspend-resume.
+>=20
+> Rather than trying to come up with a minimal fix, let's try to clean it up
+> for real.  This patch fixes quite a few things:
+
+5b06bbcfc2c6 fixed theoretical bug; rather than porting it to stable
+than fixing it up, it would be better not to port it to stable in the
+first place or simply revert it there.
+
+Thanks,
+								Pavel
+							=09
+--=20
+(english) http://www.livejournal.com/~pavelmachek
+(cesky, pictures) http://atrey.karlin.mff.cuni.cz/~pavel/picture/horses/blo=
+g.html
+
+--zYM0uCDKw75PZbzx
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: Digital signature
+
+-----BEGIN PGP SIGNATURE-----
+Version: GnuPG v1
+
+iEYEARECAAYFAly04+QACgkQMOfwapXb+vJGgwCfXqUXWgPm5NBq7Ai1ZpsoLhgl
+icsAn1TgPzftTqlhIi8HgPhxW83hu1XY
+=Bewa
+-----END PGP SIGNATURE-----
+
+--zYM0uCDKw75PZbzx--
