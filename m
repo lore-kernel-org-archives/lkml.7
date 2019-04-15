@@ -2,88 +2,113 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 864F7C282DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:11:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C1FA5C10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:12:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4862520818
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:11:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="dzyguiH9"
+	by mail.kernel.org (Postfix) with ESMTP id 9BA6420818
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:12:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727672AbfDOPLW (ORCPT
+        id S1727705AbfDOPME (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 11:11:22 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:42710 "EHLO mail.skyhub.de"
+        Mon, 15 Apr 2019 11:12:04 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56484 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727326AbfDOPLV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 11:11:21 -0400
-Received: from zn.tnic (p4FED3D80.dip0.t-ipconnect.de [79.237.61.128])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727456AbfDOPME (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 11:12:04 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 3C20C1EC0104;
-        Mon, 15 Apr 2019 17:11:20 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1555341080;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=QCLMoMsTKAXmw0y+yefNuUjq7iuC6JX/R0IqnnaMksM=;
-        b=dzyguiH94vqpLzkGfsKjhWkhr4Xnk3B08NAUsK6+zAWS6J9ON4n5VLZts64P5nbBPLvlhr
-        17qXqzSdJp5yrUWXBkZwjhm58LsNIs9cIRtak7E8EVGLW8Q0gWHUMVl/SLLlvnNaeQI9p0
-        cUE2EVzrGXSyZcFIufCRvAG+HDD7uAQ=
-Date:   Mon, 15 Apr 2019 17:09:10 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Hao Feng <fenghao@hygon.cn>
-Cc:     'Joerg Roedel ' <joro@8bytes.org>,
-        'Paolo Bonzini ' <pbonzini@redhat.com>,
-        ' Radim =?utf-8?B?S3LEjW3DocWZ?= ' <rkrcmar@redhat.com>,
-        'Thomas Gleixner ' <tglx@linutronix.de>,
-        'Ingo Molnar ' <mingo@redhat.com>,
-        "' H. Peter Anvin '" <hpa@zytor.com>,
-        'Zhaohui Du ' <duzhaohui@hygon.cn>,
-        'Zhiwei Ying ' <yingzhiwei@hygon.cn>,
-        'Wen Pu ' <puwen@hygon.cn>, x86@kernel.org,
-        kvm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 5/6] KVM: SVM: Add support for KVM_SEV_GM_GET_DIGEST
- command
-Message-ID: <20190415150910.GE29317@zn.tnic>
-References: <1555329868-17895-1-git-send-email-fenghao@hygon.cn>
- <1555329868-17895-6-git-send-email-fenghao@hygon.cn>
+        by mx1.redhat.com (Postfix) with ESMTPS id 116D581F0F;
+        Mon, 15 Apr 2019 15:11:57 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.236])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8A56460F9B;
+        Mon, 15 Apr 2019 15:11:48 +0000 (UTC)
+Date:   Mon, 15 Apr 2019 11:11:46 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     "Yan, Zheng" <zyan@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-mm@kvack.org,
+        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Ming Lei <ming.lei@redhat.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+        ceph-devel@vger.kernel.org
+Subject: Re: [PATCH v1 15/15] ceph: use put_user_pages() instead of
+ ceph_put_page_vector()
+Message-ID: <20190415151146.GA3436@redhat.com>
+References: <20190411210834.4105-1-jglisse@redhat.com>
+ <20190411210834.4105-16-jglisse@redhat.com>
+ <df4da184-fe8b-c189-43e5-fac58adb3ed9@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <1555329868-17895-6-git-send-email-fenghao@hygon.cn>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <df4da184-fe8b-c189-43e5-fac58adb3ed9@redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Mon, 15 Apr 2019 15:12:03 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 08:04:27PM +0800, Hao Feng wrote:
-> The command is used to get the key digest from SEV firmware, guest
-> owner will check the key digest to see if the key negotiation is
-> successful or not.
+On Mon, Apr 15, 2019 at 03:46:59PM +0800, Yan, Zheng wrote:
+> On 4/12/19 5:08 AM, jglisse@redhat.com wrote:
+> > From: Jérôme Glisse <jglisse@redhat.com>
+> > 
+> > When page reference were taken through GUP (get_user_page*()) we need
+> > to drop them with put_user_pages().
+> > 
+> > Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
+> > Cc: linux-fsdevel@vger.kernel.org
+> > Cc: linux-block@vger.kernel.org
+> > Cc: linux-mm@kvack.org
+> > Cc: John Hubbard <jhubbard@nvidia.com>
+> > Cc: Jan Kara <jack@suse.cz>
+> > Cc: Dan Williams <dan.j.williams@intel.com>
+> > Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+> > Cc: Johannes Thumshirn <jthumshirn@suse.de>
+> > Cc: Christoph Hellwig <hch@lst.de>
+> > Cc: Jens Axboe <axboe@kernel.dk>
+> > Cc: Ming Lei <ming.lei@redhat.com>
+> > Cc: Dave Chinner <david@fromorbit.com>
+> > Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> > Cc: Matthew Wilcox <willy@infradead.org>
+> > Cc: Yan Zheng <zyan@redhat.com>
+> > Cc: Sage Weil <sage@redhat.com>
+> > Cc: Ilya Dryomov <idryomov@gmail.com>
+> > Cc: ceph-devel@vger.kernel.org
+> > ---
+> >   fs/ceph/file.c | 3 ++-
+> >   1 file changed, 2 insertions(+), 1 deletion(-)
+> > 
+> > diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+> > index 6c5b85f01721..5842ad3a4218 100644
+> > --- a/fs/ceph/file.c
+> > +++ b/fs/ceph/file.c
+> > @@ -667,7 +667,8 @@ static ssize_t ceph_sync_read(struct kiocb *iocb, struct iov_iter *to,
+> >   			} else {
+> >   				iov_iter_advance(to, 0);
+> >   			}
+> > -			ceph_put_page_vector(pages, num_pages, false);
+> > +			/* iov_iter_get_pages_alloc() did call GUP */
+> > +			put_user_pages(pages, num_pages);
 > 
-> Signed-off-by: Hao Feng <fenghao@hygon.cn>
-> Signed-off-by: Pu Wen <puwen@hygon.cn>
+> pages in pipe were not from get_user_pages(). Am I missing anything?
 
-Your both SOB chains are wrong. See:
+Oh my mistake i miss-read iov_iter_is_pipe() and iov_iter_get_pages_alloc()
+missed the special case for pipe before iterate_all_kinds() Thanks for
+catching that.
 
-  11) Sign your work - the Developer's Certificate of Origin
-  12) When to use Acked-by:, Cc:, and Co-developed-by:
-  13) Using Reported-by:, Tested-by:, Reviewed-by:, Suggested-by: and Fixes:
-
-sections in
-
-https://www.kernel.org/doc/html/latest/process/submitting-patches.html
-
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Cheers,
+Jérôme
