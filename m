@@ -2,141 +2,116 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE9EC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:30:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C65FC10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9466D20675
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:30:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="JyY6MKaj"
+	by mail.kernel.org (Postfix) with ESMTP id 42D8820675
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:30:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727003AbfDOJaR (ORCPT
+        id S1727102AbfDOJaV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 05:30:17 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:44013 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725939AbfDOJaQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 05:30:16 -0400
-Received: by mail-ed1-f66.google.com with SMTP id j20so3839704edq.10
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 02:30:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=5l4pZfeYVCgIufgTo6R8psP3r9rSQEmmZLpDCPOtF0s=;
-        b=JyY6MKajUN9BMEB1et36TqA0OvogqYiKBxW2KDPayhIU0V2Oe1VKtP+WuCKSs8EmkD
-         MEQvRpTYdC6zBHyPerWEfSHs8GlguDJJFlHv88Ny4MFiKYnQdMSFbo5oZ7nIt/WUXhVr
-         kFRxGGlRYmaUQJ2eoqMYu7QsYXDDqGuOaGD5w=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=5l4pZfeYVCgIufgTo6R8psP3r9rSQEmmZLpDCPOtF0s=;
-        b=GQMXfeJCKZ8osG1frSDXFpHJtWpnZwLCmJ0KofmlGf3rN+zE9VgUiExD2RIvCTGoMJ
-         n21gnCR5D6Xj8u6k/33yn/1XcK4vZfv9JeYdUM4xAc7TJAtnfDJkhonvkvuj2fBwbwuA
-         IzCmcWfFkVKpnJ136se0e5JkvV3iKCX2+AxYDlz2sE8OU2ZVt/6oA43FvOVl2r/g3QQO
-         8Jq8JEbrrhJwSpO+EtCQo9wfibDmGz+WiwabWHsSAdo02RPzT8qK7aWpHkYZmVvVPam7
-         1OQkqzieOdHcHGZKXgXUDgnwnrnqdkbuFn+3xd7MBTQwyOuqOO/JM2Tn+KiigMdkdM9z
-         oKYg==
-X-Gm-Message-State: APjAAAXyZCEEyFXd/Iet3PzKqXO19qes6ALlFnRGA3SmE5bxvD3G7wzN
-        THn3m97axZtEJODLMtndHHnaVFVID9k=
-X-Google-Smtp-Source: APXvYqwOSqT+IrQ5iPzw+48vIYBra1hbx2/VCsTpdUnPeEnhUhNo5RGi49w2A6C+5dXOkiKn/2uBAQ==
-X-Received: by 2002:a17:906:b84c:: with SMTP id ga12mr37748570ejb.253.1555320615142;
-        Mon, 15 Apr 2019 02:30:15 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id j12sm1155842eda.71.2019.04.15.02.30.13
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 15 Apr 2019 02:30:14 -0700 (PDT)
-Date:   Mon, 15 Apr 2019 11:30:12 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Joel Stanley <joel@jms.id.au>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        =?iso-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel test robot <lkp@intel.com>
-Subject: Re: [PATCH v2] drm: aspeed: Clean up Kconfig options
-Message-ID: <20190415093012.GX2665@phenom.ffwll.local>
-Mail-Followup-To: Joel Stanley <joel@jms.id.au>,
-        David Airlie <airlied@linux.ie>, Andrew Jeffery <andrew@aj.id.au>,
-        =?iso-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel test robot <lkp@intel.com>
-References: <20190405081117.27339-1-joel@jms.id.au>
+        Mon, 15 Apr 2019 05:30:21 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:59124 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725816AbfDOJaT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 05:30:19 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 7DB7C374;
+        Mon, 15 Apr 2019 02:30:18 -0700 (PDT)
+Received: from [10.1.196.69] (e112269-lin.cambridge.arm.com [10.1.196.69])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6578F3F557;
+        Mon, 15 Apr 2019 02:30:16 -0700 (PDT)
+Subject: Re: [PATCH v2 3/3] drm/panfrost: Add initial panfrost driver
+To:     Alyssa Rosenzweig <alyssa@rosenzweig.io>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        David Airlie <airlied@linux.ie>,
+        iommu@lists.linux-foundation.org,
+        "Marty E . Plummer" <hanetzer@startmail.com>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+References: <20190401074730.12241-1-robh@kernel.org>
+ <20190401074730.12241-4-robh@kernel.org>
+ <5efdc3cb-7367-65e1-d1bf-14051db5da10@arm.com>
+ <20190405161632.GA9160@rosenzweig.io>
+ <34a7038e-34f0-0cc4-4fc4-9b7dda356df6@arm.com>
+ <20190415091837.GV2665@phenom.ffwll.local>
+From:   Steven Price <steven.price@arm.com>
+Message-ID: <50682635-4134-f36b-dcb0-2a4d98eedb3c@arm.com>
+Date:   Mon, 15 Apr 2019 10:30:14 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190405081117.27339-1-joel@jms.id.au>
-X-Operating-System: Linux phenom 4.19.0-1-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190415091837.GV2665@phenom.ffwll.local>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 05, 2019 at 06:41:17PM +1030, Joel Stanley wrote:
-> The GFX IP is inside of the ASPEED BMC SoC so there is little use
-> enabling it on a kernel that does not support ASPEED.
+On 15/04/2019 10:18, Daniel Vetter wrote:
+> On Fri, Apr 05, 2019 at 05:42:33PM +0100, Steven Price wrote:
+>> On 05/04/2019 17:16, Alyssa Rosenzweig wrote:
+>>> acronym once ever and have it as a "??"), I'm not sure how to respond to
+>>> that... We don't know how to allocate memory for the GPU-internal data
+>>> structures (the tiler heap, for instance, but also a few others I've
+>>> just named "misc_0" and "scratchpad" -- guessing one of those is for
+>>> "TLS"). With kbase, I took the worst-case strategy of allocating
+>>> gigantic chunks on startup with tiny commit counts and GROW_ON_GPF set.
+>>> With the new driver, well, our memory consumption is scary since
+>>> implementing GROW_ON_GPF in an upstream-friendly way is a bit more work
+>>> and isn't expected to hit the 5.2 window.
+>>
+>> Yes GROW_ON_GPF is pretty much required for the tiler heap - it's not
+>> (reasonably) possible to determine how big it should be. The Arm user
+>> space driver does the same approach (tiny commit count, but allow it to
+>> grow).
 > 
-> When building with COMPILE_TEST the architecture many not have CMA
-> support, so to avoid breaking the build we only select these options if
-> the architecture supports the contiguous allocator.
+> Jumping in here with a drive through comment ...
 > 
-> I suspect the DRM_PANEL came from a cut/paste error.
+> Growing gem bo and dma-buf is going to be endless amounts of fun, since we
+> hard-coded that their size is invariant.
 > 
-> Fixes: 4f2a8f5898ec ("drm: Add ASPEED GFX driver")
-> Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> Reported-by: kernel test robot <lkp@intel.com>
-> Signed-off-by: Joel Stanley <joel@jms.id.au>
+> I think the only reasonable way to implement this is if you allocate a
+> really huge bo, map it, but only put the pages in on faulting. Or when
+> really evil userspace tries to export it. Actually changing the underlying
+> buffer size is not going to work I think.
 
-Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+Yes the idea is that you allocate a large amount of virtual address
+space, but only put a few physical pages in. If the GPU needs more you
+fault them in as necessary. The "buffer size" (i.e. virtual address
+region) never changes size.
 
-Iirc you have commit rights, right?
--Daniel
-> ---
-> This fixes the powerpc next-20190405 build. Sorry Stephen!
-> 
-> v2: Clean up as well as fix the build
-> v1: https://lore.kernel.org/lkml/20190405052830.27899-1-joel@jms.id.au/
-> 
->  drivers/gpu/drm/aspeed/Kconfig | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/aspeed/Kconfig b/drivers/gpu/drm/aspeed/Kconfig
-> index 42b74d18a41b..cccab520e02f 100644
-> --- a/drivers/gpu/drm/aspeed/Kconfig
-> +++ b/drivers/gpu/drm/aspeed/Kconfig
-> @@ -1,11 +1,11 @@
->  config DRM_ASPEED_GFX
->  	tristate "ASPEED BMC Display Controller"
->  	depends on DRM && OF
-> +	depends on (COMPILE_TEST || ARCH_ASPEED)
->  	select DRM_KMS_HELPER
->  	select DRM_KMS_CMA_HELPER
-> -	select DRM_PANEL
-> -	select DMA_CMA
-> -	select CMA
-> +	select DMA_CMA if HAVE_DMA_CONTIGUOUS
-> +	select CMA if HAVE_DMA_CONTIGUOUS
->  	select MFD_SYSCON
->  	help
->  	  Chose this option if you have an ASPEED AST2500 SOC Display
-> -- 
-> 2.20.1
-> 
+> Note: I didn't read kbase, so might be totally wrong in how GROW_ON_GPF
+> works.
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+For kbase we simply don't support exporting this type of memory, and are
+fairly restrictive about mapping it into user space (user space
+shouldn't normally need to read it).
+
+Since Panfrost is using GEM BO it will have to deal with malicious user
+space. But it would be sufficient to simply fully back the region in
+that case.
+
+Recent version of kbase also support what is termed JIT (Just In Time
+memory allocation). Basically this involves the kernel driver
+allocating/freeing memory regions just before the job is loaded onto the
+GPU. These regions might also be GROW_ON_GPF. The intention is that when
+there isn't memory pressure these regions can be kept between jobs, but
+under memory pressure they can be discarded and recreated if they turn
+out to be needed again.
+
+Given the differences between the Panfrost and the proprietary user
+space I'm not sure exactly what form this will need to be for Panfrost,
+but Vulkan makes memory management "more interesting"! Allocating
+upfront for the worst case can become prohibitively expensive.
+
+Steve
