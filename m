@@ -2,97 +2,120 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB52C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 01:57:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19643C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 02:01:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B6C90206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 01:57:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D5368206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 02:01:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="e2EtH93a"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="T+p3m0JX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726810AbfDOB55 (ORCPT
+        id S1726562AbfDOCBi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 21:57:57 -0400
-Received: from esa4.microchip.iphmx.com ([68.232.154.123]:19772 "EHLO
-        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725789AbfDOB55 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 21:57:57 -0400
-X-IronPort-AV: E=Sophos;i="5.60,351,1549954800"; 
-   d="scan'208";a="29910893"
-Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
-  by esa4.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 14 Apr 2019 18:57:55 -0700
-Received: from NAM02-SN1-obe.outbound.protection.outlook.com (10.10.215.89) by
- email.microchip.com (10.10.76.107) with Microsoft SMTP Server (TLS) id
- 14.3.352.0; Sun, 14 Apr 2019 18:57:55 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=microchiptechnology.onmicrosoft.com;
- s=selector1-microchiptechnology-onmicrosoft-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=U07ejqDZiCKTqP9ieSe72XCsEstQcTWZySqTKr1Exuk=;
- b=e2EtH93aE21PqfMHf2vQWlURqpmDvGZSvBAt1m+LuiU+FRJU0zbnTQAoRX5a2gnHoqlZJrcTR/BULEHiuMlLzK+kbqbvmcM9GVmGPAPIzvHBWTcaWEcwvDYoUucs60oonqAhIiTnQQQlcoZKQzPiy/kR5B2ejdjOvl1hfRuGKdo=
-Received: from BN6PR1101MB2130.namprd11.prod.outlook.com (10.174.239.148) by
- BN6PR1101MB2242.namprd11.prod.outlook.com (10.174.116.19) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1792.14; Mon, 15 Apr 2019 01:57:50 +0000
-Received: from BN6PR1101MB2130.namprd11.prod.outlook.com
- ([fe80::4d14:ae52:3fbe:ecad]) by BN6PR1101MB2130.namprd11.prod.outlook.com
- ([fe80::4d14:ae52:3fbe:ecad%3]) with mapi id 15.20.1792.018; Mon, 15 Apr 2019
- 01:57:50 +0000
-From:   <Woojung.Huh@microchip.com>
-To:     <lukas.bulwahn@gmail.com>
-CC:     <UNGLinuxDriver@microchip.com>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH] MAINTAINERS: normalize Woojung Huh's email address
-Thread-Topic: [PATCH] MAINTAINERS: normalize Woojung Huh's email address
-Thread-Index: AQHU8c3YTbAxIjIkPkKxJ+Nj35yJPqY8eVGg
-Date:   Mon, 15 Apr 2019 01:57:50 +0000
-Message-ID: <BN6PR1101MB213052D211A593D0B2EA8C8CE72B0@BN6PR1101MB2130.namprd11.prod.outlook.com>
-References: <20190413075215.11889-1-lukas.bulwahn@gmail.com>
-In-Reply-To: <20190413075215.11889-1-lukas.bulwahn@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Woojung.Huh@microchip.com; 
-x-originating-ip: [67.81.18.121]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 113d887a-af8a-4315-fe61-08d6c145c43e
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600140)(711020)(4605104)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BN6PR1101MB2242;
-x-ms-traffictypediagnostic: BN6PR1101MB2242:
-x-microsoft-antispam-prvs: <BN6PR1101MB2242D915C3A0121BEDBEF60FE72B0@BN6PR1101MB2242.namprd11.prod.outlook.com>
-x-forefront-prvs: 000800954F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(39850400004)(376002)(136003)(346002)(366004)(199004)(189003)(6506007)(72206003)(97736004)(54906003)(256004)(6916009)(102836004)(68736007)(229853002)(25786009)(558084003)(71200400001)(71190400001)(86362001)(52536014)(53936002)(105586002)(3846002)(478600001)(99286004)(6116002)(106356001)(7696005)(316002)(8936002)(8676002)(81156014)(486006)(66066001)(26005)(6436002)(5660300002)(2906002)(4326008)(14454004)(186003)(6246003)(446003)(33656002)(476003)(76176011)(7736002)(9686003)(74316002)(11346002)(81166006)(305945005)(55016002);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR1101MB2242;H:BN6PR1101MB2130.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: microchip.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: GhVs9tmHVxx07Cwmmj4zQx56egM/4Dj+RQPjTp60H8zCSuRNISszTcJb/8G2vbbnSQcxnRqFa9q5iu0llEMFHjN9WsdAS4QQHQK4bNC7867dqk7AHZG8kGKWwiEGARYtAw6ndnRROosoaZXGrNAA4Lm3CG5K11bcNIinMVy3071N01QR4kJibqIEfX1Cw+x+6Zg/HFkgYjxZhkWIoG6HWg78d4qzC9df6ucb8/phdqvIiAuiD5CElyQcGjxCP/v/d6U14diyabr4plr0P5pHRoRRA7oL9oQv1IU6/ycDOa1cCoVxN6vX0++WuyqZGv4cfzmBZbFKktGEKbNuRbzijsDWaN6p1qng9zMMRnX4RCm1TBJc61sBLwBYEnU8jKmFjzTJeM9Dv8s7MCsa3zeczIg4evn2VnKWGinSbq+N2wo=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Sun, 14 Apr 2019 22:01:38 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:40969 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726262AbfDOCBi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Apr 2019 22:01:38 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44jBZ66NG7z9s4V;
+        Mon, 15 Apr 2019 12:01:34 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1555293695;
+        bh=8Uog2E3phY7eafl4Ib9Z8JYHzBDsbSpBGlSUvNTpWLY=;
+        h=Date:From:To:Cc:Subject:From;
+        b=T+p3m0JXAUa1VV8iwdQlr9J+AHbiHamxQtx2g9JvtCcM4Q1a/hhewATXa1Mnsk4VV
+         0lzFiAcy1SSQd8bLESp8aH206Lslb7baFtKFUB/F+sUM4fYDrzbUJBJu5wSLGGqAVi
+         EGOVuNZ6/3YsnkmlPWO/lpA0lSVrYgAZlHvHclURsVrrNiB1CFEGCtVF/QT7Ek81B+
+         e9SSkCzhCpoRFz/LukZESxU0TgTASAvxC/hn00qiqgrC2UGYZXWUqs+HODgL2QDPQ0
+         m+U9TeJF71Dsdri8Q7QBMXKFw4I06J7AUcRdpFX9oIKctorXLTE/S54E9Tw4EvHCSW
+         FFoHT15ArltTg==
+Date:   Mon, 15 Apr 2019 12:01:33 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Kalle Valo <kvalo@codeaurora.org>,
+        Wireless <linux-wireless@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Shahar S Matityahu <shahar.s.matityahu@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>
+Subject: linux-next: manual merge of the wireless-drivers-next tree with the
+ wireless-drivers tree
+Message-ID: <20190415120133.40c0f343@canb.auug.org.au>
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: 113d887a-af8a-4315-fe61-08d6c145c43e
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Apr 2019 01:57:50.6198
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1101MB2242
-X-OriginatorOrg: microchip.com
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/9dAKwPxUqEQEiYVHcHeRlGL"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> MAINTAINERS contains a lower-case and upper-case variant of
-> Woojung Huh' s email address.
->=20
-> Only keep the lower-case variant in MAINTAINERS.
->=20
-> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
+--Sig_/9dAKwPxUqEQEiYVHcHeRlGL
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Acked-by: Woojung Huh <woojung.huh@microchip.com>
+Hi all,
+
+Today's linux-next merge of the wireless-drivers-next tree got a conflict
+in:
+
+  drivers/net/wireless/intel/iwlwifi/iwl-trans.h
+
+between commit:
+
+  07d35b4270ef ("iwlwifi: use sync nmi in case of init flow failure")
+
+from the wireless-drivers tree and commit:
+
+  4b1831e48974 ("iwlwifi: dbg_ini: support HW error trigger")
+
+from the wireless-drivers-next tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/net/wireless/intel/iwlwifi/iwl-trans.h
+index d8690acee40c,2235978adf70..000000000000
+--- a/drivers/net/wireless/intel/iwlwifi/iwl-trans.h
++++ b/drivers/net/wireless/intel/iwlwifi/iwl-trans.h
+@@@ -830,6 -831,8 +830,7 @@@ struct iwl_trans=20
+  	u32 lmac_error_event_table[2];
+  	u32 umac_error_event_table;
+  	unsigned int error_event_table_tlv_status;
+ -	wait_queue_head_t fw_halt_waitq;
++ 	bool hw_error;
+ =20
+  	/* pointer to trans specific struct */
+  	/*Ensure that this pointer will always be aligned to sizeof pointer */
+
+--Sig_/9dAKwPxUqEQEiYVHcHeRlGL
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyz5f0ACgkQAVBC80lX
+0Gxj3QgAnyucsFp+xPAm2x2mpt5NXUExZvGL0TlsNnT1pLaD3sxGZz2XBhzCRmi3
+yu3JuhmhSZzCr9mJO+rXHeTNmzK2mC2xWnxF9baWrKKlfEnYZ322v4UtT5reb08R
+s0wRllXtuh9+VKVn88HNGg/6Ku9+PEccWl+D6EksoqB+iKQOkBKymu31cbntwIs5
+GRZVvuVTD0Mo0HBBZX9i29iEdqQ8viioKZTJVFki3E4RZJJThwuKwqPglYZ3ChTs
+2/5vbBnF5RCxh/WuDKEE/Rd7PASTVl/eMvraaJlCyPykw/T3JmHY5j+c6LSIWOm+
+t/FC6zpzgvbB/0+kjJ46vvnCW1Fb+Q==
+=exFE
+-----END PGP SIGNATURE-----
+
+--Sig_/9dAKwPxUqEQEiYVHcHeRlGL--
