@@ -2,75 +2,115 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C53CC282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:17:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA6E0C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:17:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF25A2073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:17:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89F8E20656
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:17:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sSzZS/8r"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="CqKws8Jx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726719AbfDOJRA (ORCPT
+        id S1726757AbfDOJRw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 05:17:00 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:51478 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725794AbfDOJRA (ORCPT
+        Mon, 15 Apr 2019 05:17:52 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:29106 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725794AbfDOJRw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 05:17:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=uhpEWH6neJu2QMhSGFrpcqmZfPITg9TWcWrhBjiJ6KY=; b=sSzZS/8rdl/JhAdfqB7Qegkb/
-        oyMWDE2YQF8gwtjJE/hpmrZ7Lmf9/wU6gce/MxNlUZ/tDeQOvHupnN6+D3I7949CCbQvh1CLWcxas
-        kbN8IfFzUkZ/5nG8YJr1R89QdK3YpKpsMA8XIa/V0VDM7evBtQeziMkCcVECjD6blQ7HSOrDWoKSb
-        ZXxMP4pfu+vRxu2N7WKODpgamYAL7y0HNlMEJOwcktyjwY1I7UNHriOGqOHEqVvjkUXcD1xqqDbw7
-        RUjlaDKvbLWqM+NATvJN8sXx6i5L9RtV7GkOge3jZ+UhOJ4c+KAYm+UOMQ0dnfBgUULWiw+UENwe+
-        UX5XV9WAA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hFxjV-0006vN-9W; Mon, 15 Apr 2019 09:16:57 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 718CD29AC5C51; Mon, 15 Apr 2019 11:16:55 +0200 (CEST)
-Date:   Mon, 15 Apr 2019 11:16:55 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Ben Gainey <Ben.Gainey@arm.com>
-Cc:     "alexander.shishkin@linux.intel.com" 
-        <alexander.shishkin@linux.intel.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "stable@vger.kernel.org" <stable@vger.kernel.org>,
-        "acme@redhat.com" <acme@redhat.com>,
+        Mon, 15 Apr 2019 05:17:52 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3F9F8SD019506;
+        Mon, 15 Apr 2019 11:17:39 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : content-type : content-transfer-encoding :
+ mime-version; s=STMicroelectronics;
+ bh=WKcDVUt3eJxya8lvec0kpB+XZOCrE6KUNKvsxWE1Hxo=;
+ b=CqKws8JxZPv4IZQ/c18aEPbYBi4WaucwEBk8at7l9u2kLGf1a5bIsEXpDVBJO8I9dewU
+ n8Fk1Fjm0AGoTJ4SGxSpN+WGYap2fLkmF/pmoFJyeVo3rm21uALfCLqSF/UwN+Ai3q/O
+ ZnMNSrwRniR9qjJD5kiodXbh3aWQdrTva9KFsv27Ja/dNqJ/V7You+8nwWkizLDlgFPw
+ 4AI+GFg1JAWTw8LRZlIE1y3HLQ8LoNKgKGNOENxuRFQ+tJSwFnHmc7SPIxHwIx+2Exfe
+ 3SA4YbMn1Yj+1XZt2U5JcDHFHEZ3fFnkWjaSwPT5HNNBXFdaCi4rXJduhLQgCcDFvbjQ ZQ== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2ru4w81xt1-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 15 Apr 2019 11:17:39 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id F188531;
+        Mon, 15 Apr 2019 09:17:37 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag6node1.st.com [10.75.127.16])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 9E797145B;
+        Mon, 15 Apr 2019 09:17:37 +0000 (GMT)
+Received: from SFHDAG6NODE2.st.com (10.75.127.17) by SFHDAG6NODE1.st.com
+ (10.75.127.16) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 15 Apr
+ 2019 11:17:37 +0200
+Received: from SFHDAG6NODE2.st.com ([fe80::a56f:c186:bab7:13d6]) by
+ SFHDAG6NODE2.st.com ([fe80::a56f:c186:bab7:13d6%20]) with mapi id
+ 15.00.1347.000; Mon, 15 Apr 2019 11:17:37 +0200
+From:   Pascal PAILLET-LME <p.paillet@st.com>
+To:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
+        Alexandre TORGUE <alexandre.torgue@st.com>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jolsa@redhat.com" <jolsa@redhat.com>
-Subject: Re: [PATCH] perf: Fix AUX record suppression
-Message-ID: <20190415091655.GH11158@hirez.programming.kicks-ass.net>
-References: <20190329091338.29999-1-alexander.shishkin@linux.intel.com>
- <7b073941dd6abfc81773f26573b103adf077bfed.camel@arm.com>
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>
+CC:     Pascal PAILLET-LME <p.paillet@st.com>,
+        "linux-stm32@st-md-mailman.stormreply.com" 
+        <linux-stm32@st-md-mailman.stormreply.com>
+Subject: [PATCH v2 0/2] Add support for STM32MP1 power regulators
+Thread-Topic: [PATCH v2 0/2] Add support for STM32MP1 power regulators
+Thread-Index: AQHU82wRryk5xo81okmIoqW6eJ8QHw==
+Date:   Mon, 15 Apr 2019 09:17:37 +0000
+Message-ID: <1555319855-2982-1-git-send-email-p.paillet@st.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.75.127.45]
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <7b073941dd6abfc81773f26573b103adf077bfed.camel@arm.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-15_04:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 08:04:33AM +0000, Ben Gainey wrote:
-> Hi Alex
-> 
-> I was just wondering if this was expected to make 5.1? (I could not see
-> it in RC5)?
+The POWER block of the STM32MP1 integrates 3 fixed regulators with a ready
+status bit for each one. The goal of this patchset is to add support those
+regulators.
 
-Yikes, I forgot about this again, didn't I ?
+Pascal Paillet (2):
+changes in v2:
+* add COMPILE_TEST switch
+* do not test ready in is_enabled() callback
+* remove of_regulator_match
+* change author
 
-At least, they appear to still apply, so I've queued them. Not sure
-they'll still make this release, but at least they should not go missing
-_again_.
+  dt-bindings: regulator: Add stm32mp1 pwr regulators
+  regulator: Add support for stm32 power regulators
+
+ .../bindings/regulator/st,stm32mp1-pwr-reg.txt     |  43 +++++
+ drivers/regulator/Kconfig                          |   7 +
+ drivers/regulator/Makefile                         |   1 +
+ drivers/regulator/stm32-pwr.c                      | 190 +++++++++++++++++=
+++++
+ 4 files changed, 241 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/regulator/st,stm32mp1=
+-pwr-reg.txt
+ create mode 100644 drivers/regulator/stm32-pwr.c
+
+--=20
+1.9.1
