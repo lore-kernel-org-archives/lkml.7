@@ -2,215 +2,167 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-13.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DFC2C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:35:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 116C5C10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:35:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19DCF20651
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:35:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CF94B218EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:35:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="h3/ILorc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728583AbfDOTfU (ORCPT
+        id S1728803AbfDOTfW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:35:20 -0400
-Received: from gateway32.websitewelcome.com ([192.185.145.171]:13556 "EHLO
-        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728061AbfDOTfU (ORCPT
+        Mon, 15 Apr 2019 15:35:22 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:43864 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728377AbfDOTfU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 15 Apr 2019 15:35:20 -0400
-Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
-        by gateway32.websitewelcome.com (Postfix) with ESMTP id B48917463D
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 14:35:18 -0500 (CDT)
-Received: from gator4166.hostgator.com ([108.167.133.22])
-        by cmsmtp with SMTP
-        id G7Nuh9e4LiQerG7NuhsIl9; Mon, 15 Apr 2019 14:35:18 -0500
-X-Authority-Reason: nr=8
-Received: from [189.250.55.242] (port=52672 helo=[192.168.43.131])
-        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <gustavo@embeddedor.com>)
-        id 1hG7Nu-000A88-5G; Mon, 15 Apr 2019 14:35:18 -0500
-Subject: Re: [PATCH] ALSA: isa/wavefront: Fix potential Spectre v1
- vulnerabilities
-To:     Jaroslav Kysela <perex@perex.cz>, Takashi Iwai <tiwai@suse.com>
-Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
-References: <20190326183202.GA17285@embeddedor>
-From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=gustavo@embeddedor.com; keydata=
- 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
- VtSixD1uOgytAP7RWS474w==
-Message-ID: <52a533e5-f106-db5f-35f7-2dd85672f541@embeddedor.com>
-Date:   Mon, 15 Apr 2019 14:35:17 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+Received: by mail-pl1-f195.google.com with SMTP id n8so9051715plp.10
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 12:35:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=+ls/GUTFHxmWqNfbL8nZPHO/mEsZK+0BWBT3eOnQ4Qs=;
+        b=h3/ILorcTzTxllmLWIGP0BOGGDDA73Gwspt4hAlZrWzW4MCVkvokEi/eeXwp+0WPpc
+         +p/MQ30G89WjUmX/muWwWpO1A9Wdj1RfY5YT0NEqXpDTikCPGj2pKFb8ssUkh6BrI0cJ
+         DiIU4TsB+ko2elGnsPnQIvdPVe7Yg95X2PlCQpAowzj/O3O/nX96gb9cRP17TGlUh00G
+         9skfECkbRINt6+ZjxPpanM+V/udpVtXOym01rAqSLLOpebeAC2Do+s1fEgVzArIGiKev
+         8sE/CJBZ/76iZEIfaPOe9haJzcX10esIBCaF9tjwMciYa+iblqnvN5+P7ZbW29pDrHsb
+         VJRg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=+ls/GUTFHxmWqNfbL8nZPHO/mEsZK+0BWBT3eOnQ4Qs=;
+        b=LTXO6ud7nYlK9SrIhRqEPaozE84DePZzuzOGM2cKP6FB7UyJMaL1NzuqNGLpeKgxz2
+         1FXx3SpnH447nD4td5elf+veH7i93w/KtaG5HOSnurT8PAUBETHw//+55Q8mPjJnqRjc
+         HEI4Y3CYnEYV2X9OsBz047H8WgMhKTUnHmigfE/75LPzcPLRcf/FNGmTwLvrfkw4gmmC
+         rsPjLjIfdnQTexPbiAGV2IUL8NF4PlJLlZbiAjazVWpEX3qCvi4+K/lz1ZMsXNNX80Mm
+         EB/cWrDYle1Qh0jH16VqCrA3VZQvPhLhXNkEUAuz34yXq+6SCj4gWFDx/Q9zcP/ede7i
+         oc6Q==
+X-Gm-Message-State: APjAAAXKWJES0oT3vxnx8EAKHk6Aae25BvEvqvygATsdxE6yVGVIZmvp
+        ahjAPmdbEqSIClYRuEpBIl6LS13ud22VS7/2vqYJjg==
+X-Google-Smtp-Source: APXvYqz8HDSJaoiNXjgVa9if3F4CzpMv18WCnMzhEjEajxJp+JjMXa6KXRAW0hf6jqctigS8e/kcyP8nXbY/EOjiK/Y=
+X-Received: by 2002:a17:902:b48c:: with SMTP id y12mr75396478plr.280.1555356919335;
+ Mon, 15 Apr 2019 12:35:19 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190326183202.GA17285@embeddedor>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - embeddedor.com
-X-BWhitelist: no
-X-Source-IP: 189.250.55.242
-X-Source-L: No
-X-Exim-ID: 1hG7Nu-000A88-5G
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: ([192.168.43.131]) [189.250.55.242]:52672
-X-Source-Auth: gustavo@embeddedor.com
-X-Email-Count: 4
-X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
-X-Local-Domain: yes
+References: <0000000000006f1596058653d991@google.com> <Pine.LNX.4.44L0.1904121540001.1283-100000@iolanthe.rowland.org>
+ <CAAeHK+wrF8Oh7ur+BcuyARvm2sx6KNVGFxqKHoyajApN+tOA_g@mail.gmail.com>
+ <52ac871b-ac61-432e-3a85-47b8e97233d2@embeddedor.com> <20190415190054.GA10359@kroah.com>
+In-Reply-To: <20190415190054.GA10359@kroah.com>
+From:   Andrey Konovalov <andreyknvl@google.com>
+Date:   Mon, 15 Apr 2019 21:35:08 +0200
+Message-ID: <CAAeHK+wgB+HsA_aAtL=ddJB51BNjkkRBHnK8NQ0ke94SLZ+Sqw@mail.gmail.com>
+Subject: Re: INFO: task hung in usb_kill_urb
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi all,
+On Mon, Apr 15, 2019 at 9:09 PM Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> On Mon, Apr 15, 2019 at 01:39:57PM -0500, Gustavo A. R. Silva wrote:
+> >
+> >
+> > On 4/15/19 12:48 PM, Andrey Konovalov wrote:
+> > > On Fri, Apr 12, 2019 at 9:46 PM Alan Stern <stern@rowland.harvard.edu> wrote:
+> > >>
+> > >> Andrey:
+> > >>
+> > >> It's really hard to tell just what's going on here.
+> > >>
+> > >> On Fri, 12 Apr 2019, syzbot wrote:
+> > >>
+> > >>> Hello,
+> > >>>
+> > >>> syzbot found the following crash on:
+> > >>>
+> > >>> HEAD commit:    9a33b369 usb-fuzzer: main usb gadget fuzzer driver
+> > >>> git tree:       https://github.com/google/kasan/tree/usb-fuzzer
+> > >>> console output: https://syzkaller.appspot.com/x/log.txt?x=14c4c1af200000
+> > >>> kernel config:  https://syzkaller.appspot.com/x/.config?x=23e37f59d94ddd15
+> > >>> dashboard link: https://syzkaller.appspot.com/bug?extid=d919b0f29d7b5a4994b9
+> > >>> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > >>> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14410dbb200000
+> > >>> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12f0acd3200000
+> > >>>
+> > >>> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > >>> Reported-by: syzbot+d919b0f29d7b5a4994b9@syzkaller.appspotmail.com
+> > >>>
+> > >>> usb-fuzzer-gadget dummy_udc.0: failed to start USB fuzzer: -22
+> > >>> usb-fuzzer-gadget dummy_udc.0: failed to start USB fuzzer: -22
+> > >>> usb-fuzzer-gadget dummy_udc.0: failed to start USB fuzzer: -22
+> > >>> usb-fuzzer-gadget dummy_udc.0: failed to start USB fuzzer: -22
+> > >>> usb-fuzzer-gadget dummy_udc.0: failed to start USB fuzzer: -22
+> > >>> INFO: task kworker/0:2:532 blocked for more than 143 seconds.
+> > >>>        Not tainted 5.1.0-rc4-319354-g9a33b36 #3
+> > >>> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> > >>> kworker/0:2     D26656   532      2 0x80000000
+> > >>> Workqueue: usb_hub_wq hub_event
+> > >>> Call Trace:
+> > >>>   schedule+0x8f/0x180 kernel/sched/core.c:3562
+> > >>>   usb_kill_urb drivers/usb/core/urb.c:695 [inline]
+> > >>>   usb_kill_urb+0x22a/0x2c0 drivers/usb/core/urb.c:687
+> > >>>   usb_start_wait_urb+0x257/0x4d0 drivers/usb/core/message.c:63
+> > >>>   usb_internal_control_msg drivers/usb/core/message.c:101 [inline]
+> > >>>   usb_control_msg+0x321/0x4a0 drivers/usb/core/message.c:152
+> > >>
+> > >> It looks like something is stuck waiting for usb_kill_urb() to finish.
+> > >> But what happened before that?
+> > >
+> > > This crash is somewhat special. It happens quite often during USB
+> > > fuzzing, but at the same time it's a hang, which makes it a bit harder
+> > > debug. I initially thought that is somehow related to my custom USB
+> > > fuzzing kernel patches, but then I saw that someone else hit this
+> > > issue while doing USB fuzzing in a completely different way that
+> > > doesn't require kernel modifications. So it might be an actual issue
+> > > in the kernel.
+> > >
+> > > The full console output is provided by the syzbot, but I guess it's
+> > > not very useful in this case. I've just made sure that this issue is
+> > > manually reproducible, so we can easily retest it with debug patches
+> > > (syzbot should be also able to do that via the syz test command). Or
+> > > is there a way to turn on some verbose mode to see some USB debug
+> > > messages?
+> > >
+> > >>
+> > >> I can't tell from the reproducer source, because it uses a bunch of
+> > >> special stuff you added in your usb-fuzzer tree.
+> > >>
+> > >> Alan Stern
+> > >>
+> > >
+> > > I understand, for now I guess the simpler way to debug this is to run
+> > > the reproducer. I'll write you and Greg a separate email regarding all
+> > > that special stuff that I added.
+> > >
+> >
+> > Hi Andrey,
+> >
+> > Please, CC me on that email too.
+>
+> Please cc: all of linux-usb@vger.kernel.org, no need to keep anything
+> private.
 
-Friendly ping:
+Sure!
 
-Who can take this?
-
-Thanks
---
-Gustavo
-
-On 3/26/19 1:32 PM, Gustavo A. R. Silva wrote:
-> header->number and i are indirectly controlled by user-space, hence leading
-> to a potential exploitation of the Spectre variant 1 vulnerability.
-> 
-> This issue was detected with the help of Smatch:
-> 
-> sound/isa/wavefront/wavefront_synth.c:792 wavefront_send_patch() warn: potential spectre issue 'dev->patch_status' [w] (local cap)
-> sound/isa/wavefront/wavefront_synth.c:819 wavefront_send_program() warn: potential spectre issue 'dev->prog_status' [w] (local cap)
-> sound/isa/wavefront/wavefront_synth.c:1197 wavefront_send_alias() warn: potential spectre issue 'dev->sample_status' [w]
-> sound/isa/wavefront/wavefront_synth.c:1248 wavefront_send_multisample() warn: potential spectre issue 'dev->sample_status' [w]
-> sound/isa/wavefront/wavefront_synth.c:1548 wavefront_synth_control() warn: potential spectre issue 'dev->sample_status' [r] (local cap)
-> 
-> Fix this by sanitizing header->number and i before using them to index
-> dev->patch_status, dev->prog_status, dev->sample_status.
-> 
-> Notice that given that speculation windows are large, the policy is
-> to kill the speculation on the first load and not worry if it can be
-> completed with a dependent load/store [1].
-> 
-> [1] https://lore.kernel.org/lkml/20180423164740.GY17484@dhcp22.suse.cz/
-> 
-> Cc: stable@vger.kernel.org
-> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
-> ---
->  sound/isa/wavefront/wavefront_synth.c | 17 +++++++++++++++++
->  1 file changed, 17 insertions(+)
-> 
-> diff --git a/sound/isa/wavefront/wavefront_synth.c b/sound/isa/wavefront/wavefront_synth.c
-> index 0b1e4b34b299..a78e125dfdf9 100644
-> --- a/sound/isa/wavefront/wavefront_synth.c
-> +++ b/sound/isa/wavefront/wavefront_synth.c
-> @@ -31,6 +31,7 @@
->  #include <linux/moduleparam.h>
->  #include <linux/slab.h>
->  #include <linux/module.h>
-> +#include <linux/nospec.h>
->  #include <sound/core.h>
->  #include <sound/snd_wavefront.h>
->  #include <sound/initval.h>
-> @@ -788,6 +789,8 @@ wavefront_send_patch (snd_wavefront_t *dev, wavefront_patch_info *header)
->  
->  	if (header->number >= ARRAY_SIZE(dev->patch_status))
->  		return -EINVAL;
-> +	header->number = array_index_nospec(header->number,
-> +					    ARRAY_SIZE(dev->patch_status));
->  
->  	dev->patch_status[header->number] |= WF_SLOT_FILLED;
->  
-> @@ -815,6 +818,8 @@ wavefront_send_program (snd_wavefront_t *dev, wavefront_patch_info *header)
->  
->  	if (header->number >= ARRAY_SIZE(dev->prog_status))
->  		return -EINVAL;
-> +	header->number = array_index_nospec(header->number,
-> +					    ARRAY_SIZE(dev->prog_status));
->  
->  	dev->prog_status[header->number] = WF_SLOT_USED;
->  
-> @@ -1194,6 +1199,11 @@ wavefront_send_alias (snd_wavefront_t *dev, wavefront_patch_info *header)
->  		return -EIO;
->  	}
->  
-> +	if (header->number >= ARRAY_SIZE(dev->sample_status))
-> +		return -EINVAL;
-> +	header->number = array_index_nospec(header->number,
-> +					    ARRAY_SIZE(dev->sample_status));
-> +
->  	dev->sample_status[header->number] = (WF_SLOT_FILLED|WF_ST_ALIAS);
->  
->  	return (0);
-> @@ -1245,6 +1255,12 @@ wavefront_send_multisample (snd_wavefront_t *dev, wavefront_patch_info *header)
->  		return -EIO;
->  	}
->  
-> +	if (header->number >= ARRAY_SIZE(dev->sample_status)) {
-> +		kfree(msample_hdr);
-> +		return -EINVAL;
-> +	}
-> +	header->number = array_index_nospec(header->number,
-> +					    ARRAY_SIZE(dev->sample_status));
->  	dev->sample_status[header->number] = (WF_SLOT_FILLED|WF_ST_MULTISAMPLE);
->  
->  	kfree(msample_hdr);
-> @@ -1545,6 +1561,7 @@ wavefront_synth_control (snd_wavefront_card_t *acard,
->  			wc->status = EINVAL;
->  			return -EINVAL;
->  		}
-> +		i = array_index_nospec(i, WF_MAX_SAMPLE);
->  		wc->rbuf[0] = dev->sample_status[i];
->  		wc->status = 0;
->  		return 0;
-> 
+>
+> thanks,
+>
+> greg k-h
+>
