@@ -2,80 +2,196 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1D9EC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:04:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 392A0C10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:05:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 80DBA2087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:04:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 001692087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:05:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="NCEoz5IK"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727560AbfDOOEX (ORCPT
+        id S1727585AbfDOOFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 10:04:23 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:45474 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727261AbfDOOEX (ORCPT
+        Mon, 15 Apr 2019 10:05:35 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42415 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727371AbfDOOFe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 10:04:23 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 903A7281628
-Subject: Re: [PATCH v4 2/2] platform/chrome: wilco_ec: Add h1_gpio status to
- debugfs
-To:     Nick Crews <ncrews@chromium.org>, bleung@chromium.org
-Cc:     linux-kernel@vger.kernel.org, dlaurie@chromium.org,
-        derat@google.com, groeck@google.com, dtor@google.com,
-        sjg@chromium.org, alevkoy@chromium.org, keithshort@chromium.org
-References: <20190412181443.239166-1-ncrews@chromium.org>
- <20190412181443.239166-2-ncrews@chromium.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <b4d24cd0-b637-4616-1977-ec08bb119422@collabora.com>
-Date:   Mon, 15 Apr 2019 16:04:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 15 Apr 2019 10:05:34 -0400
+Received: by mail-pf1-f193.google.com with SMTP id w25so8637450pfi.9
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 07:05:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=joelfernandes.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=0WDxr7x++wyxZBE+48i+O5ufisb7Dj38JxloaCZIM1g=;
+        b=NCEoz5IKT8jCnPgqYIAWnJK8ysRkcxML7a53/BSGxcv4hkvYLWrjZ9Yscpy5OoTZmA
+         UgA88NzFVWuBs/mro+fu0DELzgUH7DgwJ5zjtM7kJcbbLgKxwADikls2Zbhp3rfQYvmU
+         FalL6hftLUMqTQUZXUZEJVGJILFdgUIyMhags=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=0WDxr7x++wyxZBE+48i+O5ufisb7Dj38JxloaCZIM1g=;
+        b=MrC3mZEQ/SGa3ui65b4rXeUN1IJYUphjUal1adehlXGqY7JJPCxgrGl4YAZi3tTplH
+         se4KkF6AeADKUN5a6F5kOWsDxD0zcJqyozRRY8eijVNAdYtQyrNtRIaeA4rYUcaUSeZi
+         eVN1Gkn0AxwjSuzAkLAGd3uqqimziFUQmblAf3lzIgxIsq97rW90b/qg0TVfvHnxpuz4
+         /bHkBTgVTvObdyZiMjoe6UASwCBhGvoi+Uf33ZUUAsRmYA8EkkMhCx0skV+muwkPGeU2
+         XqNncmEhGsm3/J9ZryOdCDWGEdT9S00WYnyxNl5vFMQybDw4V8ddDTWLFwyMzi656kMB
+         8Jzg==
+X-Gm-Message-State: APjAAAVHftm2/8hAhsySRolg4pA4KQuDMQT3ZbAwnNkc4AGyCNNrzDha
+        4KecU0jlVJizNeOtJ6UoAxL/8g==
+X-Google-Smtp-Source: APXvYqyLhgQVBx81W0JcBdv3yAJYu5l22G1X1P7p/QGvIEXEqRq+ou1HUwmoW8xJZITy8HzRTkNEJg==
+X-Received: by 2002:a63:5149:: with SMTP id r9mr67474876pgl.177.1555337133723;
+        Mon, 15 Apr 2019 07:05:33 -0700 (PDT)
+Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
+        by smtp.gmail.com with ESMTPSA id d69sm35046794pfg.24.2019.04.15.07.05.32
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 15 Apr 2019 07:05:32 -0700 (PDT)
+Date:   Mon, 15 Apr 2019 10:05:31 -0400
+From:   Joel Fernandes <joel@joelfernandes.org>
+To:     Olof Johansson <olof@lixom.net>
+Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Manoj Rao <linux@manojrajarao.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        atish patra <atishp04@gmail.com>,
+        Daniel Colascione <dancol@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Kees Cook <keescook@chromium.org>,
+        Android Kernel Team <kernel-team@android.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
+Subject: Re: [PATCH v5 1/3] Provide in-kernel headers to make extending
+ kernel easier
+Message-ID: <20190415140531.GB205801@google.com>
+References: <20190320163116.39275-1-joel@joelfernandes.org>
+ <CAOesGMheoZda84OSz9spQ7p66wot5S_9aaqaKC=QYp+8utASXA@mail.gmail.com>
+ <20190408203601.GF133872@google.com>
+ <CAOesGMibHCuMPCYkc8V++Z2Kuf3YQf_OjYn18GvDgzTy6ubV=g@mail.gmail.com>
+ <CAJWu+or0hWce9+7aEfTHoOR8cptRbzHYVL-bPdJWGZH20dbo7Q@mail.gmail.com>
+ <CAOesGMiuGK-Sbqo2z=1ab070JONav1LF82MRRLCdX-4+14_XZA@mail.gmail.com>
+ <20190411031540.ehezr6kq7ouobpzx@ast-mbp.dhcp.thefacebook.com>
+ <CAOesGMgiPB=7FE7tXXHes7WSLfByyPxirOStoH21NZqMwaUihQ@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190412181443.239166-2-ncrews@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAOesGMgiPB=7FE7tXXHes7WSLfByyPxirOStoH21NZqMwaUihQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 12/4/19 20:14, Nick Crews wrote:
-> As part of Chrome OS's FAFT (Fully Automated Firmware Testing)
-> tests, we need to ensure that the H1 chip is properly setting
-> some GPIO lines. The h1_gpio attribute exposes the state
-> of the lines:
-> - ENTRY_TO_FACT_MODE in BIT(0)
-> - SPI_CHROME_SEL in BIT(1)
+On Sun, Apr 14, 2019 at 12:38:34PM -0700, Olof Johansson wrote:
+> On Wed, Apr 10, 2019 at 8:15 PM Alexei Starovoitov
+> <alexei.starovoitov@gmail.com> wrote:
+> >
+> > On Wed, Apr 10, 2019 at 09:34:49AM -0700, Olof Johansson wrote:
+> > > On Wed, Apr 10, 2019 at 8:51 AM Joel Fernandes <joelaf@google.com> wrote:
+> > > >
+> > > > On Wed, Apr 10, 2019 at 11:07 AM Olof Johansson <olof@lixom.net> wrote:
+> > > > [snip]
+> > > > > > > Wouldn't it be more convenient to provide it in a standardized format
+> > > > > > > such that you won't have to take an additional step, and always have
+> > > > > > > This is that form IMO.
+> > ...
+> > > Compared to:
+> > >  - Extract tarball
+> > >  - Build and load
+> > >  - Remove file tree from filesystem
+> >
+> > I think there are too many assumptions in this thread in regard to what
+> > is more convenient for user space.
+> > I think bcc should try to avoid extracting tarball into file system.
+> > For example libbcc can uncompress kheader.tar.xz into virtual file system
+> > of clang front-end. It's more or less std::map<string, string>
+> > with key=path, value=content of the file. Access to such in-memory
+> > 'files' is obviously faster than doing open/read syscalls.
 > 
-> There are two reasons that I am exposing this in debugfs,
-> and not as a GPIO:
-> 1. This is only useful for testing, so end users shouldn't ever
-> care about this. In fact, if it passes the tests, then the value of
-> h1_gpio will always be 2, so it would be really uninteresting for users.
-> 2. This GPIO is not connected to, controlled by, or really even related
-> to the AP. The GPIO runs between the EC and the H1 security chip.
+> I think performance is a red herring, especially since you have to
+> uncompress it on every compiler invocation. With this you'd need to
+> read/touch/write _all_ header files, not just the one your current
+> compiler invocation will use.
 > 
-> Changes in v4:
-> - Use "0x02x\n" instead of "02x\n" for format string
-> - Use DEFINE_DEBUGFS_ATTRIBUTE()
-> - Add documentation
-> Changes in v3:
-> - Fix documentation to correspond with formatting change in v2.
-> Changes in v2:
-> - Zero out the unused fields in the request.
-> - Format result as "%02x\n" instead of as a decimal.
+> In the grand scheme of things, open/mmap syscalls wouldn't necessarily
+> be slower.
+
+Agreed.
+
+> > bcc already uses this approach for some bcc internal 'files' that
+> > it passes to clang during compilation.
+> > All of /proc/kheaders.tar.xz files can be passed the same way
+> > without extracting them into real file system.
 > 
-> Signed-off-by: Nick Crews <ncrews@chromium.org>
+> This is now a circular argument. Joel was stating that the plain text
+> headers took up too much memory, but now it's preferred to create such
+> filesystem in userspace memory on *every compiler invocation*?
+> That's... not better. And definitely worse if you want to compile in
+> parallel.
 
-Applied for 5.2
+The BCC patch does not extract purely into memory, but uses temporary
+directory: https://github.com/iovisor/bcc/pull/2312
+I believe this is a good approach.
 
-Thanks
+> From my perspective, this is where we're at:
+> 
+> This patch seems to have been met with a lot of responses in the tone
+> of "this is not an appealing solution". Meanwhile, some of the
+> suggested alternative solutions have not worked out, and we are now at
+> a point where there's less interest in exploring alternatives and
+> arguments to merge as-is with only minor adjustments.
+> 
+> I understand the desire to solve this. It'd be really convenient to
+> have a way to runtime build against the same structure layouts that
+> the kernel was built with. But I haven't heard anyone say that they
+
+About structure layouts, I'm assuming you mean compiler generated debug info.
+That does not work for eBPF tools as was mentioned previously in these threads:
+https://lkml.org/lkml/2019/3/11/1358
+https://lkml.org/lkml/2019/3/11/1363
+
+> *like* the solution proposed, and I haven't seen many of those
+> expressing concerns being converted to support it.
+
+IMHO there has been good number of people on both sides of the argument. If
+it were as strong of an opposition as you think, then I would have personally
+not wanted this merged tbh. We do want a solution that is clean and works, and
+I think this is a candidate.
+
+[snip]
+> I'd be a *lot* less hesitant if this went into debugfs or another
+> location than /proc, which is one of the most regression-sensitive
+> interfaces we have in the kernel.
+
+The solution should be regression-sensitive imho, we don't want the tracing
+tools to break, people use them. And their usability and robustness is
+important which prompted these patches. For some time we have been hosting
+downloadable headers for popular kernels (such as LTS versions) to workaround
+this issue, but this both a maintenance issue and non-scalable, and not
+robust (someone boots a custom kernel or we forget to update headers for a
+future LTS release and the tools break).
+
+thanks,
+
+ - Joel
+
