@@ -2,119 +2,84 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F01EC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 21:22:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7825AC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 21:22:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EA4FA20880
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 21:22:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DD2D218DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 21:22:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728174AbfDOVWN (ORCPT
+        id S1728212AbfDOVWW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 17:22:13 -0400
-Received: from foss.arm.com ([217.140.101.70]:42926 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727760AbfDOVVm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 17:21:42 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 3E41FA78;
-        Mon, 15 Apr 2019 14:21:42 -0700 (PDT)
-Received: from mammon-tx2.austin.arm.com (mammon-tx2.austin.arm.com [10.118.29.246])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 96AD13F68F;
-        Mon, 15 Apr 2019 14:21:41 -0700 (PDT)
-From:   Jeremy Linton <jeremy.linton@arm.com>
-To:     linux-arm-kernel@lists.infradead.org
-Cc:     catalin.marinas@arm.com, will.deacon@arm.com, marc.zyngier@arm.com,
-        suzuki.poulose@arm.com, Dave.Martin@arm.com,
-        shankerd@codeaurora.org, julien.thierry@arm.com,
-        mlangsdo@redhat.com, stefan.wahren@i2se.com,
-        Andre.Przywara@arm.com, linux-kernel@vger.kernel.org,
-        Jeremy Linton <jeremy.linton@arm.com>,
-        Andre Przywara <andre.przywara@arm.com>
-Subject: [v8 05/10] arm64: Use firmware to detect CPUs that are not affected by Spectre-v2
-Date:   Mon, 15 Apr 2019 16:21:24 -0500
-Message-Id: <20190415212129.1112-6-jeremy.linton@arm.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190415212129.1112-1-jeremy.linton@arm.com>
-References: <20190415212129.1112-1-jeremy.linton@arm.com>
+        Mon, 15 Apr 2019 17:22:22 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:47275 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726041AbfDOVWU (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 17:22:20 -0400
+Received: from pd9ef12d2.dip0.t-ipconnect.de ([217.239.18.210] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hG93S-0005wV-Aq; Mon, 15 Apr 2019 23:22:18 +0200
+Date:   Mon, 15 Apr 2019 23:22:17 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Andy Lutomirski <luto@kernel.org>
+cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pekka Enberg <penberg@kernel.org>,
+        Linux-MM <linux-mm@kvack.org>
+Subject: Re: [patch V4 01/32] mm/slab: Fix broken stack trace storage
+In-Reply-To: <CALCETrXLa9ec8Lcz2WPML8qQiStpTtDSAGkW=Rv9bMSiunNNMw@mail.gmail.com>
+Message-ID: <alpine.DEB.2.21.1904152320540.1806@nanos.tec.linutronix.de>
+References: <20190414155936.679808307@linutronix.de> <20190414160143.591255977@linutronix.de> <CALCETrUhVc_u3HL-x7wMnk9ukEbwQPvc9N5Na-Q55se0VwcCpw@mail.gmail.com> <alpine.DEB.2.21.1904141832400.4917@nanos.tec.linutronix.de> <alpine.DEB.2.21.1904151101100.1729@nanos.tec.linutronix.de>
+ <20190415132339.wiqyzygqklliyml7@treble> <alpine.DEB.2.21.1904151804460.1895@nanos.tec.linutronix.de> <20190415161657.2zwboghblj5ducux@treble> <CALCETrXLa9ec8Lcz2WPML8qQiStpTtDSAGkW=Rv9bMSiunNNMw@mail.gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Marc Zyngier <marc.zyngier@arm.com>
+On Mon, 15 Apr 2019, Andy Lutomirski wrote:
+> On Mon, Apr 15, 2019 at 9:17 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> > On Mon, Apr 15, 2019 at 06:07:44PM +0200, Thomas Gleixner wrote:
+> > > > Looks like stack_trace.nr_entries isn't initialized?  (though this code
+> > > > gets eventually replaced by a later patch)
+> > >
+> > > struct initializer initialized the non mentioned fields to 0, if I'm not
+> > > totally mistaken.
+> >
+> > Hm, it seems you are correct.  And I thought I knew C.
+> >
+> > > > Who actually reads this stack trace?  I couldn't find a consumer.
+> > >
+> > > It's stored directly in the memory pointed to by @addr and that's the freed
+> > > cache memory. If that is used later (UAF) then the stack trace can be
+> > > printed to see where it was freed.
+> >
+> > Right... but who reads it?
+> 
+> That seems like a reasonable question.  After some grepping and some
+> git searching, it looks like there might not be any users.  I found
 
-The SMCCC ARCH_WORKAROUND_1 service can indicate that although the
-firmware knows about the Spectre-v2 mitigation, this particular
-CPU is not vulnerable, and it is thus not necessary to call
-the firmware on this CPU.
+Anymore. There was something 10y+ ago...
 
-Let's use this information to our benefit.
+> SLAB_STORE_USER, but that seems to be independent.
+> 
+> So maybe the whole mess should just be deleted.  If anyone ever
+> notices, they can re-add it better.
 
-Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
-Signed-off-by: Jeremy Linton <jeremy.linton@arm.com>
-Reviewed-by: Andre Przywara <andre.przywara@arm.com>
-Reviewed-by: Catalin Marinas <catalin.marinas@arm.com>
-Tested-by: Stefan Wahren <stefan.wahren@i2se.com>
----
- arch/arm64/kernel/cpu_errata.c | 32 +++++++++++++++++++++++---------
- 1 file changed, 23 insertions(+), 9 deletions(-)
+No objections from my side, but the mm people might have opinions.
 
-diff --git a/arch/arm64/kernel/cpu_errata.c b/arch/arm64/kernel/cpu_errata.c
-index 032f1a4dbea2..60cf87c4deb7 100644
---- a/arch/arm64/kernel/cpu_errata.c
-+++ b/arch/arm64/kernel/cpu_errata.c
-@@ -230,22 +230,36 @@ static int detect_harden_bp_fw(void)
- 	case PSCI_CONDUIT_HVC:
- 		arm_smccc_1_1_hvc(ARM_SMCCC_ARCH_FEATURES_FUNC_ID,
- 				  ARM_SMCCC_ARCH_WORKAROUND_1, &res);
--		if ((int)res.a0 < 0)
-+		switch ((int)res.a0) {
-+		case 1:
-+			/* Firmware says we're just fine */
-+			return 0;
-+		case 0:
-+			cb = call_hvc_arch_workaround_1;
-+			/* This is a guest, no need to patch KVM vectors */
-+			smccc_start = NULL;
-+			smccc_end = NULL;
-+			break;
-+		default:
- 			return -1;
--		cb = call_hvc_arch_workaround_1;
--		/* This is a guest, no need to patch KVM vectors */
--		smccc_start = NULL;
--		smccc_end = NULL;
-+		}
- 		break;
- 
- 	case PSCI_CONDUIT_SMC:
- 		arm_smccc_1_1_smc(ARM_SMCCC_ARCH_FEATURES_FUNC_ID,
- 				  ARM_SMCCC_ARCH_WORKAROUND_1, &res);
--		if ((int)res.a0 < 0)
-+		switch ((int)res.a0) {
-+		case 1:
-+			/* Firmware says we're just fine */
-+			return 0;
-+		case 0:
-+			cb = call_smc_arch_workaround_1;
-+			smccc_start = __smccc_workaround_1_smc_start;
-+			smccc_end = __smccc_workaround_1_smc_end;
-+			break;
-+		default:
- 			return -1;
--		cb = call_smc_arch_workaround_1;
--		smccc_start = __smccc_workaround_1_smc_start;
--		smccc_end = __smccc_workaround_1_smc_end;
-+		}
- 		break;
- 
- 	default:
--- 
-2.20.1
+Thanks,
 
+	tglx
