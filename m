@@ -4,41 +4,41 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8223EC10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:04:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71FE7C10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:04:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4075D218D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:04:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26045218EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:04:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355080;
-	bh=UKLIMG4WBw3HBVghBcftB39EWuojo1+j/6tovH03OeE=;
+	s=default; t=1555355084;
+	bh=KPYYhPZqSI/FP4Dxd7uiGmGTlPzzp5DZCgYuGDd8qOs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qXUUHe402PqZINYuWAuFOq5Z211Zsr4wSsBZ7X+bPeH5SZmaXAlbeHfh4SBI+LJpl
-	 cHPAbfHQis9Xc8KXBRb9Xj/lVI/jbq6uUvvpGqTqC0ueaX7hhtUuAFkog55aJ2CT61
-	 1FaM1/rignLMK24Wv6V+8pquDrLGXzOOhUbuDACY=
+	b=Bs8OaShzla+qJg/51e23lFBx3IFGKVfH2aCINFZD3zSik1i7h0RWvWJ6LDTVQvqyi
+	 yOkxvr0RchG5q0lTaUgyVqr3cMwygLbnYDYj7Ts6iG3Cz/Ivt8T8fIRJ0vwmQ4U0IA
+	 e7h2D5iOvTqJr4IoqaCofrxvq6JxhLoApIeAEoUM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729580AbfDOTEi (ORCPT
+        id S1729595AbfDOTEn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:04:38 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37612 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:04:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:37698 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729519AbfDOTEg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:04:36 -0400
+        id S1729569AbfDOTEi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:04:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2C5D4218A1;
-        Mon, 15 Apr 2019 19:04:34 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BFF3D20880;
+        Mon, 15 Apr 2019 19:04:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355074;
-        bh=UKLIMG4WBw3HBVghBcftB39EWuojo1+j/6tovH03OeE=;
+        s=default; t=1555355077;
+        bh=KPYYhPZqSI/FP4Dxd7uiGmGTlPzzp5DZCgYuGDd8qOs=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jOgMUeCrmxzwe+wCOM+aLCVFRFPK/Lsx8XBFUN07QsQQJMYF6ulKlnxtZXxWC23nx
-         9BZaY1Eof7YcEBobnpoulPrJmiW9zlPoWjt/0Y5MuocBNdq1cu5h+0jhZG4Ks6kQqQ
-         F2izIowblT9B7Xd0OhOsxFYWTHaGkTH8jSCYJBvU=
+        b=uHI5XZVcI6DgTYOcrfh5xEKcyNn6ufWmjmD4B7DzZ1kgSe4MTFfL/sU+6Tvnmv59r
+         kfhsaObi4QmVAb9QfWwHPvDcWPecsXGCBUj7xDxcoc2EVtHNaLEMPEjNrepzRhy19g
+         2OrlIrUcouNaPUlh0bxMYSOECoKjHc9jd5eqVHwg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
@@ -54,9 +54,9 @@ Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
         Vince Weaver <vincent.weaver@maine.edu>,
         Ingo Molnar <mingo@kernel.org>
-Subject: [PATCH 4.14 63/69] x86/perf/amd: Resolve race condition when disabling PMC
-Date:   Mon, 15 Apr 2019 20:59:21 +0200
-Message-Id: <20190415183735.786951968@linuxfoundation.org>
+Subject: [PATCH 4.14 64/69] x86/perf/amd: Resolve NMI latency issues for active PMCs
+Date:   Mon, 15 Apr 2019 20:59:22 +0200
+Message-Id: <20190415183736.083652040@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183726.036654568@linuxfoundation.org>
 References: <20190415183726.036654568@linuxfoundation.org>
@@ -71,26 +71,35 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Lendacky, Thomas <Thomas.Lendacky@amd.com>
 
-commit 914123fa39042e651d79eaf86bbf63a1b938dddf upstream.
+commit 6d3edaae16c6c7d238360f2841212c2b26774d5e upstream.
 
-On AMD processors, the detection of an overflowed counter in the NMI
-handler relies on the current value of the counter. So, for example, to
-check for overflow on a 48 bit counter, bit 47 is checked to see if it
-is 1 (not overflowed) or 0 (overflowed).
+On AMD processors, the detection of an overflowed PMC counter in the NMI
+handler relies on the current value of the PMC. So, for example, to check
+for overflow on a 48-bit counter, bit 47 is checked to see if it is 1 (not
+overflowed) or 0 (overflowed).
 
-There is currently a race condition present when disabling and then
-updating the PMC. Increased NMI latency in newer AMD processors makes this
-race condition more pronounced. If the counter value has overflowed, it is
-possible to update the PMC value before the NMI handler can run. The
-updated PMC value is not an overflowed value, so when the perf NMI handler
-does run, it will not find an overflowed counter. This may appear as an
-unknown NMI resulting in either a panic or a series of messages, depending
-on how the kernel is configured.
+When the perf NMI handler executes it does not know in advance which PMC
+counters have overflowed. As such, the NMI handler will process all active
+PMC counters that have overflowed. NMI latency in newer AMD processors can
+result in multiple overflowed PMC counters being processed in one NMI and
+then a subsequent NMI, that does not appear to be a back-to-back NMI, not
+finding any PMC counters that have overflowed. This may appear to be an
+unhandled NMI resulting in either a panic or a series of messages,
+depending on how the kernel was configured.
 
-To eliminate this race condition, the PMC value must be checked after
-disabling the counter. Add an AMD function, amd_pmu_disable_all(), that
-will wait for the NMI handler to reset any active and overflowed counter
-after calling x86_pmu_disable_all().
+To mitigate this issue, add an AMD handle_irq callback function,
+amd_pmu_handle_irq(), that will invoke the common x86_pmu_handle_irq()
+function and upon return perform some additional processing that will
+indicate if the NMI has been handled or would have been handled had an
+earlier NMI not handled the overflowed PMC. Using a per-CPU variable, a
+minimum value of the number of active PMCs or 2 will be set whenever a
+PMC is active. This is used to indicate the possible number of NMIs that
+can still occur. The value of 2 is used for when an NMI does not arrive
+at the LAPIC in time to be collapsed into an already pending NMI. Each
+time the function is called without having handled an overflowed counter,
+the per-CPU value is checked. If the value is non-zero, it is decremented
+and the NMI indicates that it handled the NMI. If the value is zero, then
+the NMI indicates that it did not handle the NMI.
 
 Signed-off-by: Tom Lendacky <thomas.lendacky@amd.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
@@ -111,110 +120,91 @@ Signed-off-by: Ingo Molnar <mingo@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/x86/events/amd/core.c |   65 ++++++++++++++++++++++++++++++++++++++++++---
- 1 file changed, 62 insertions(+), 3 deletions(-)
+ arch/x86/events/amd/core.c |   56 ++++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 55 insertions(+), 1 deletion(-)
 
 --- a/arch/x86/events/amd/core.c
 +++ b/arch/x86/events/amd/core.c
-@@ -3,6 +3,7 @@
- #include <linux/types.h>
+@@ -4,10 +4,13 @@
  #include <linux/init.h>
  #include <linux/slab.h>
-+#include <linux/delay.h>
+ #include <linux/delay.h>
++#include <linux/nmi.h>
  #include <asm/apicdef.h>
  
  #include "../perf_event.h"
-@@ -429,6 +430,64 @@ static void amd_pmu_cpu_dead(int cpu)
+ 
++static DEFINE_PER_CPU(unsigned int, perf_nmi_counter);
++
+ static __initconst const u64 amd_hw_cache_event_ids
+ 				[PERF_COUNT_HW_CACHE_MAX]
+ 				[PERF_COUNT_HW_CACHE_OP_MAX]
+@@ -488,6 +491,57 @@ static void amd_pmu_disable_all(void)
  	}
  }
  
 +/*
-+ * When a PMC counter overflows, an NMI is used to process the event and
-+ * reset the counter. NMI latency can result in the counter being updated
-+ * before the NMI can run, which can result in what appear to be spurious
-+ * NMIs. This function is intended to wait for the NMI to run and reset
-+ * the counter to avoid possible unhandled NMI messages.
++ * Because of NMI latency, if multiple PMC counters are active or other sources
++ * of NMIs are received, the perf NMI handler can handle one or more overflowed
++ * PMC counters outside of the NMI associated with the PMC overflow. If the NMI
++ * doesn't arrive at the LAPIC in time to become a pending NMI, then the kernel
++ * back-to-back NMI support won't be active. This PMC handler needs to take into
++ * account that this can occur, otherwise this could result in unknown NMI
++ * messages being issued. Examples of this is PMC overflow while in the NMI
++ * handler when multiple PMCs are active or PMC overflow while handling some
++ * other source of an NMI.
++ *
++ * Attempt to mitigate this by using the number of active PMCs to determine
++ * whether to return NMI_HANDLED if the perf NMI handler did not handle/reset
++ * any PMCs. The per-CPU perf_nmi_counter variable is set to a minimum of the
++ * number of active PMCs or 2. The value of 2 is used in case an NMI does not
++ * arrive at the LAPIC in time to be collapsed into an already pending NMI.
 + */
-+#define OVERFLOW_WAIT_COUNT	50
-+
-+static void amd_pmu_wait_on_overflow(int idx)
-+{
-+	unsigned int i;
-+	u64 counter;
-+
-+	/*
-+	 * Wait for the counter to be reset if it has overflowed. This loop
-+	 * should exit very, very quickly, but just in case, don't wait
-+	 * forever...
-+	 */
-+	for (i = 0; i < OVERFLOW_WAIT_COUNT; i++) {
-+		rdmsrl(x86_pmu_event_addr(idx), counter);
-+		if (counter & (1ULL << (x86_pmu.cntval_bits - 1)))
-+			break;
-+
-+		/* Might be in IRQ context, so can't sleep */
-+		udelay(1);
-+	}
-+}
-+
-+static void amd_pmu_disable_all(void)
++static int amd_pmu_handle_irq(struct pt_regs *regs)
 +{
 +	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-+	int idx;
-+
-+	x86_pmu_disable_all();
++	int active, handled;
 +
 +	/*
-+	 * This shouldn't be called from NMI context, but add a safeguard here
-+	 * to return, since if we're in NMI context we can't wait for an NMI
-+	 * to reset an overflowed counter value.
++	 * Obtain the active count before calling x86_pmu_handle_irq() since
++	 * it is possible that x86_pmu_handle_irq() may make a counter
++	 * inactive (through x86_pmu_stop).
 +	 */
-+	if (in_nmi())
-+		return;
++	active = __bitmap_weight(cpuc->active_mask, X86_PMC_IDX_MAX);
++
++	/* Process any counter overflows */
++	handled = x86_pmu_handle_irq(regs);
 +
 +	/*
-+	 * Check each counter for overflow and wait for it to be reset by the
-+	 * NMI if it has overflowed. This relies on the fact that all active
-+	 * counters are always enabled when this function is caled and
-+	 * ARCH_PERFMON_EVENTSEL_INT is always set.
++	 * If a counter was handled, record the number of possible remaining
++	 * NMIs that can occur.
 +	 */
-+	for (idx = 0; idx < x86_pmu.num_counters; idx++) {
-+		if (!test_bit(idx, cpuc->active_mask))
-+			continue;
++	if (handled) {
++		this_cpu_write(perf_nmi_counter,
++			       min_t(unsigned int, 2, active));
 +
-+		amd_pmu_wait_on_overflow(idx);
++		return handled;
 +	}
++
++	if (!this_cpu_read(perf_nmi_counter))
++		return NMI_DONE;
++
++	this_cpu_dec(perf_nmi_counter);
++
++	return NMI_HANDLED;
 +}
 +
  static struct event_constraint *
  amd_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
  			  struct perf_event *event)
-@@ -622,7 +681,7 @@ static ssize_t amd_event_sysfs_show(char
+@@ -680,7 +734,7 @@ static ssize_t amd_event_sysfs_show(char
+ 
  static __initconst const struct x86_pmu amd_pmu = {
  	.name			= "AMD",
- 	.handle_irq		= x86_pmu_handle_irq,
--	.disable_all		= x86_pmu_disable_all,
-+	.disable_all		= amd_pmu_disable_all,
+-	.handle_irq		= x86_pmu_handle_irq,
++	.handle_irq		= amd_pmu_handle_irq,
+ 	.disable_all		= amd_pmu_disable_all,
  	.enable_all		= x86_pmu_enable_all,
  	.enable			= x86_pmu_enable_event,
- 	.disable		= x86_pmu_disable_event,
-@@ -728,7 +787,7 @@ void amd_pmu_enable_virt(void)
- 	cpuc->perf_ctr_virt_mask = 0;
- 
- 	/* Reload all events */
--	x86_pmu_disable_all();
-+	amd_pmu_disable_all();
- 	x86_pmu_enable_all(0);
- }
- EXPORT_SYMBOL_GPL(amd_pmu_enable_virt);
-@@ -746,7 +805,7 @@ void amd_pmu_disable_virt(void)
- 	cpuc->perf_ctr_virt_mask = AMD64_EVENTSEL_HOSTONLY;
- 
- 	/* Reload all events */
--	x86_pmu_disable_all();
-+	amd_pmu_disable_all();
- 	x86_pmu_enable_all(0);
- }
- EXPORT_SYMBOL_GPL(amd_pmu_disable_virt);
 
 
