@@ -2,112 +2,204 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+X-Spam-Status: No, score=-0.7 required=3.0 tests=FROM_LOCAL_HEX,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44073C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 13:51:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EF983C282DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 13:52:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 075902073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 13:51:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Z9QBifhj"
+	by mail.kernel.org (Postfix) with ESMTP id BB3CD2073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 13:52:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727577AbfDONvG (ORCPT
+        id S1727559AbfDONwH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 09:51:06 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:40160 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726102AbfDONvG (ORCPT
+        Mon, 15 Apr 2019 09:52:07 -0400
+Received: from mail-it1-f200.google.com ([209.85.166.200]:41291 "EHLO
+        mail-it1-f200.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726102AbfDONwG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 09:51:06 -0400
-Received: by mail-qt1-f193.google.com with SMTP id x12so19116003qts.7;
-        Mon, 15 Apr 2019 06:51:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=DSPnncDo1mFhEN6ABkYMgGVlfBcYMv1E23QjBIfu+ew=;
-        b=Z9QBifhjz4WriAMttFkMM5nKPVYrZ7xAogJsqIkYXcMENQcwOi7DybaUksFDTezdfQ
-         9y5VVh08Zqf//t0jzjcDFde3cLYvNxOuqdw+4toCmD5QhhcQz41lsKANhlVWWsWxbyVK
-         1RcPQsu6r5ggAM7E3wHGBTuB+qnR+BbcM3QlyO6iIhLjshPvFrepOsHMZjl9fEwSU1Vl
-         rHzgihrAbXdrvfabfuEQsjxeQq8ujJB5n5c9bZgBaCTYii8uRhQDHU9+bufCC1KeBFkQ
-         KnujjymNjSqyG2dZNCqbsXp4Yd5R4/8mm3u0NLCsah3rXF8NtKuYTxt1ypIlyc1MufLE
-         PMbg==
+        Mon, 15 Apr 2019 09:52:06 -0400
+Received: by mail-it1-f200.google.com with SMTP id m128so15816829itm.6
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 06:52:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=DSPnncDo1mFhEN6ABkYMgGVlfBcYMv1E23QjBIfu+ew=;
-        b=pI/WxRGkEQO5xfj9utyS7bsTiJnQxTHoQcjFmhflJL4hbBfe2T3KuBJ7I6azRqXtp+
-         2RNemyH1fdk7qeDNlX3x4TqdcYfvl/dwXOKcU5Z3Iwtr5cN9s494kNS8gniBnafcf5bc
-         dqCg0VGJcVjiNJKFSzj7d1cbGkzD/HvLPqrHYm9I1W4bmNCrvOKY9sojMa1c8CJNYyb+
-         iuOS+hfFcgmztms09icckrFLuDhHVEBwBtFH8onZugjrMzne7/nhVf6oyJVKjX3cE7PL
-         q8WZcFTGqNpPo/sTHTqAMuossI7z9PENI9WGVpxri53SVOvlrYQrceAHEOfVxMsju3sa
-         DpcQ==
-X-Gm-Message-State: APjAAAW0QBGFSpJWQrFe7ggatYLUsxVc/iXfgEhGmyaF9QOtoO3ofzSS
-        204ZlQZ5xLmAzfZa/vL+Ns5rfYL/Wh41tRZZ6Oo=
-X-Google-Smtp-Source: APXvYqxCmW3ic1Y154tvtrZmiT+soQfL2GjbQQ0W6NS/iLodsgT4QrkhF7lfF2FyUXOfCHgmzgyMgyqzGHKfdgATkbw=
-X-Received: by 2002:a0c:9599:: with SMTP id s25mr60082491qvs.119.1555336265322;
- Mon, 15 Apr 2019 06:51:05 -0700 (PDT)
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=yC4zLRl/MeEuJ6j66K19B2CaSKv1TPcBGPtpoT8DQaY=;
+        b=sM6VMsAaXudj2xLAuRp7zGDXaLfD+GRRimmoiFbcalHmpUeLqHw/i6/KWQKo8Q4h57
+         gNHwHDmX/pZyuIwFGoUY81B6cYr2gjcT29ca5gRtO2ANT2upW9bRf+fK95ZnQ6d1Vp06
+         h+cCK+hZGOojPl9G0HZEbe8XfRNOTyPIZd0OVDDsMlq3uq1F5IdIBU1bGR9w2PZVI0R2
+         yCTWJBzSWyRj6EpDbkJBsnGp16SD/i1H/i02vA9DL313i3jdNb3avsjm+/eLGNfUTjYC
+         dPIda4GXYHa4ZAy4fEM8UMzSTN4aaYotOgmeH2UGoUXbK0uIJox+rleKZ5uFE+wInISN
+         1ITg==
+X-Gm-Message-State: APjAAAX6EzsdEWBzwiicvJxehEyJL918K8GbBw5Hmhcb0nHB/GQF5Jba
+        L2KNz8h7Z11CVctOAUU3O8H7Z/17bGdcDfhCTAq2OwLu6piX
+X-Google-Smtp-Source: APXvYqyvHd4jxDm+oeASLWWHTEnw49a3sItAJtcG3rKuuiXF7vXtxDME+9+A9+yqoiWRQOOnrjtSoa8gaCumsHQPuwBMr/KcMlB/
 MIME-Version: 1.0
-References: <1553183239-13253-1-git-send-email-fabien.dessenne@st.com>
- <1553183239-13253-3-git-send-email-fabien.dessenne@st.com>
- <CAH2Cfb8K5hB=UeMOeTEXud1XZVp12Qbw9NYoxJ0XQK4FFuF3wQ@mail.gmail.com>
- <4857555a-812d-0b96-9a70-2984ffb50ca9@st.com> <CAH2Cfb8NzsOZDt8zBypY9ZiD6oOFWUBkZoPpKfU97ZRF_O0z+A@mail.gmail.com>
- <770c71bc-f387-62b6-f799-07ba6446e7e8@st.com> <CAH2Cfb87Wacgsh=xz9h9kgwYgBkxNBDbcDJ4W3uPs2LiKbTD9A@mail.gmail.com>
- <760819dc-4c26-b492-a0ba-8b27c189d5b1@st.com> <CAH2Cfb-EvWeP28W=Hqzvwaue55hBFCMecqvt3p8mRh52BZMdNg@mail.gmail.com>
- <596f9e4d-2db1-8040-211b-173ad19d9d0e@st.com> <CAH2Cfb87+MR5SNmm2zQU+44mV+3gTv4M2moFxQDXhEGHO00W+A@mail.gmail.com>
- <45511e33-df29-1a3c-66a1-151dc42bf10d@st.com> <CAH2Cfb9vJG=ujkB9G7P6OmgRZQUiKoH6DGfOu4NuwB+cnXOs1A@mail.gmail.com>
- <6351cde2-7470-40f5-9f3a-c872cb193e50@st.com> <0c1d34df-7aeb-648b-b118-cf608e6ba636@metux.net>
-In-Reply-To: <0c1d34df-7aeb-648b-b118-cf608e6ba636@metux.net>
-From:   xiang xiao <xiaoxiang781216@gmail.com>
-Date:   Mon, 15 Apr 2019 21:50:54 +0800
-Message-ID: <CAH2Cfb-FHAQQcxOfvmD5VYxd6vKK1iCqN2oW5YLr80tCtCx=xQ@mail.gmail.com>
-Subject: Re: [PATCH 2/2] tty: add rpmsg driver
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        Fabien Dessenne <fabien.dessenne@st.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jiri Slaby <jslaby@suse.com>, linux-kernel@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Content-Type: text/plain; charset="UTF-8"
+X-Received: by 2002:a02:a507:: with SMTP id e7mr2266753jam.19.1555336325727;
+ Mon, 15 Apr 2019 06:52:05 -0700 (PDT)
+Date:   Mon, 15 Apr 2019 06:52:05 -0700
+In-Reply-To: <0000000000009c60fe058665c584@google.com>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <0000000000003393e6058691f589@google.com>
+Subject: Re: INFO: task hung in __io_uring_register
+From:   syzbot <syzbot+16dc03452dee970a0c3e@syzkaller.appspotmail.com>
+To:     axboe@kernel.dk, linux-block@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org,
+        syzkaller-bugs@googlegroups.com, viro@zeniv.linux.org.uk
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 9:14 PM Enrico Weigelt, metux IT consult
-<lkml@metux.net> wrote:
->
-> On 12.04.19 18:00, Arnaud Pouliquen wrote:
->
-> Hi folks,
->
-> <snip>
->
-> Haven't followed the whole thread, but I've got the impression that the
-> device is emulating an uart - if that's the case wouldn't it be better
-> to implement a serial driver, instead of tty directly (which IMHO should
-> make it also usable for serbus-based devices) ?
+syzbot has found a reproducer for the following crash on:
 
-It's more natural to implement rpmsg uart on top of tty core instead
-of serial layer, since:
-1.Serial layer model the hardware which can just send the data one by one
-2.But rpmsg could send a buffer(max 512B) in one packet
-On the other hand, it's very easy to support serbus by replace
-tty_port_register_device_attr to tty_port_register_device_attr_serdev.
+HEAD commit:    dc4060a5 Linux 5.1-rc5
+git tree:       upstream
+console output: https://syzkaller.appspot.com/x/log.txt?x=17eacddd200000
+kernel config:  https://syzkaller.appspot.com/x/.config?x=856fc6d0fbbeede9
+dashboard link: https://syzkaller.appspot.com/bug?extid=16dc03452dee970a0c3e
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+userspace arch: i386
+syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14eb47ed200000
+C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=112175dd200000
 
->
->
-> --mtx
->
-> --
-> Enrico Weigelt, metux IT consult
-> Free software and Linux embedded engineering
-> info@metux.net -- +49-151-27565287
+IMPORTANT: if you fix the bug, please add the following tag to the commit:
+Reported-by: syzbot+16dc03452dee970a0c3e@syzkaller.appspotmail.com
+
+INFO: task syz-executor043:8083 blocked for more than 143 seconds.
+       Not tainted 5.1.0-rc5 #68
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor043 D29912  8083   8063 0x20020004
+Call Trace:
+  context_switch kernel/sched/core.c:2877 [inline]
+  __schedule+0x813/0x1cc0 kernel/sched/core.c:3518
+  schedule+0x92/0x180 kernel/sched/core.c:3562
+  schedule_timeout+0x8ca/0xfd0 kernel/time/timer.c:1779
+  do_wait_for_common kernel/sched/completion.c:83 [inline]
+  __wait_for_common kernel/sched/completion.c:104 [inline]
+  wait_for_common kernel/sched/completion.c:115 [inline]
+  wait_for_completion+0x29c/0x440 kernel/sched/completion.c:136
+  __io_uring_register+0xb6/0x1fd0 fs/io_uring.c:2929
+  __do_sys_io_uring_register fs/io_uring.c:2979 [inline]
+  __se_sys_io_uring_register fs/io_uring.c:2961 [inline]
+  __ia32_sys_io_uring_register+0x193/0x1f0 fs/io_uring.c:2961
+  do_syscall_32_irqs_on arch/x86/entry/common.c:326 [inline]
+  do_fast_syscall_32+0x281/0xc98 arch/x86/entry/common.c:397
+  entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
+RIP: 0023:0xf7f06869
+Code: Bad RIP value.
+RSP: 002b:00000000f7f021ec EFLAGS: 00000296 ORIG_RAX: 00000000000001ab
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000000001
+RDX: 0000000000000000 RSI: 0000000000000000 RDI: 000000000000014a
+RBP: 00000000200000c0 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+INFO: task syz-executor043:8084 blocked for more than 143 seconds.
+       Not tainted 5.1.0-rc5 #68
+"echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+syz-executor043 D30320  8084   8063 0x20020004
+Call Trace:
+  context_switch kernel/sched/core.c:2877 [inline]
+  __schedule+0x813/0x1cc0 kernel/sched/core.c:3518
+  schedule+0x92/0x180 kernel/sched/core.c:3562
+  schedule_preempt_disabled+0x13/0x20 kernel/sched/core.c:3620
+  __mutex_lock_common kernel/locking/mutex.c:1002 [inline]
+  __mutex_lock+0x726/0x1310 kernel/locking/mutex.c:1072
+  mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1087
+  __do_sys_io_uring_enter fs/io_uring.c:2678 [inline]
+  __se_sys_io_uring_enter fs/io_uring.c:2637 [inline]
+  __ia32_sys_io_uring_enter+0x67f/0xac0 fs/io_uring.c:2637
+  do_syscall_32_irqs_on arch/x86/entry/common.c:326 [inline]
+  do_fast_syscall_32+0x281/0xc98 arch/x86/entry/common.c:397
+  entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
+RIP: 0023:0xf7f06869
+Code: Bad RIP value.
+RSP: 002b:00000000f7ee11ec EFLAGS: 00000292 ORIG_RAX: 00000000000001aa
+RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000010005
+RDX: 0000000000000002 RSI: 0000000000000003 RDI: 0000000000000000
+RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+
+Showing all locks held in the system:
+1 lock held by khungtaskd/1042:
+  #0: 00000000fbdbf33e (rcu_read_lock){....}, at:  
+debug_show_all_locks+0x5f/0x27e kernel/locking/lockdep.c:5056
+2 locks held by rsyslogd/7952:
+  #0: 000000001bb2c5a7 (&f->f_pos_lock){+.+.}, at: __fdget_pos+0xee/0x110  
+fs/file.c:801
+  #1: 000000007392ce44 (fs_reclaim){+.+.}, at: is_bpf_text_address+0x0/0x170  
+kernel/bpf/core.c:697
+2 locks held by getty/8041:
+  #0: 00000000e7d67802 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+  #1: 0000000026520570 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+2 locks held by getty/8042:
+  #0: 000000004426012c (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+  #1: 0000000004c02a9e (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+2 locks held by getty/8043:
+  #0: 00000000e0209856 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+  #1: 000000009f921bda (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+2 locks held by getty/8044:
+  #0: 0000000000de2ea5 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+  #1: 000000002674bf52 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+2 locks held by getty/8045:
+  #0: 00000000abbba1ef (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+  #1: 00000000ef32475e (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+2 locks held by getty/8046:
+  #0: 000000008d742c83 (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+  #1: 00000000fa255b8a (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+2 locks held by getty/8047:
+  #0: 00000000d3d56b2b (&tty->ldisc_sem){++++}, at:  
+ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+  #1: 0000000015242045 (&ldata->atomic_read_lock){+.+.}, at:  
+n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+1 lock held by syz-executor043/8083:
+  #0: 000000005524ed18 (&ctx->uring_lock){+.+.}, at:  
+__do_sys_io_uring_register fs/io_uring.c:2978 [inline]
+  #0: 000000005524ed18 (&ctx->uring_lock){+.+.}, at:  
+__se_sys_io_uring_register fs/io_uring.c:2961 [inline]
+  #0: 000000005524ed18 (&ctx->uring_lock){+.+.}, at:  
+__ia32_sys_io_uring_register+0x182/0x1f0 fs/io_uring.c:2961
+1 lock held by syz-executor043/8084:
+  #0: 000000005524ed18 (&ctx->uring_lock){+.+.}, at: __do_sys_io_uring_enter  
+fs/io_uring.c:2678 [inline]
+  #0: 000000005524ed18 (&ctx->uring_lock){+.+.}, at: __se_sys_io_uring_enter  
+fs/io_uring.c:2637 [inline]
+  #0: 000000005524ed18 (&ctx->uring_lock){+.+.}, at:  
+__ia32_sys_io_uring_enter+0x67f/0xac0 fs/io_uring.c:2637
+
+=============================================
+
+NMI backtrace for cpu 1
+CPU: 1 PID: 1042 Comm: khungtaskd Not tainted 5.1.0-rc5 #68
+Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+Google 01/01/2011
+Call Trace:
+  __dump_stack lib/dump_stack.c:77 [inline]
+  dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+  nmi_cpu_backtrace.cold+0x63/0xa4 lib/nmi_backtrace.c:101
+  nmi_trigger_cpumask_backtrace+0x1be/0x236 lib/nmi_backtrace.c:62
+  arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
+  trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
+  check_hung_uninterruptible_tasks kernel/hung_task.c:204 [inline]
+  watchdog+0x9b7/0xec0 kernel/hung_task.c:288
+  kthread+0x357/0x430 kernel/kthread.c:253
+  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+Sending NMI from CPU 1 to CPUs 0:
+
