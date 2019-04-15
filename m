@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BEB24C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:46:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 42065C10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CBDB2087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:46:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0D27B218FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:46:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="QpHKQExW"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="EvNQ28S7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728746AbfDOSqx (ORCPT
+        id S1728762AbfDOSqz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 14:46:53 -0400
-Received: from smtprelay2.synopsys.com ([198.182.60.111]:55706 "EHLO
+        Mon, 15 Apr 2019 14:46:55 -0400
+Received: from smtprelay2.synopsys.com ([198.182.60.111]:55714 "EHLO
         smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728721AbfDOSqv (ORCPT
+        with ESMTP id S1728745AbfDOSqx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 14:46:51 -0400
+        Mon, 15 Apr 2019 14:46:53 -0400
 Received: from mailhost1.synopsys.com (mailhost1.synopsys.com [10.12.238.239])
-        by smtprelay.synopsys.com (Postfix) with ESMTP id F26BD10C1084;
-        Mon, 15 Apr 2019 11:46:50 -0700 (PDT)
+        by smtprelay.synopsys.com (Postfix) with ESMTP id 62C6910C10F0;
+        Mon, 15 Apr 2019 11:46:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1555354011; bh=n6inYUl0YHNqBHgFN/exfZfs4AjaXGG9AEqyDA7rheA=;
+        t=1555354013; bh=GEZdOqtDmf3cGDISZQ11mIjshPILmaz5bfyTH6m/G24=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=QpHKQExWp3HSwvCwZXncuLsmdtCh2MQEaJaSugUeYLVOSYURwQVR1QA1sqJJUh+zf
-         MXeEwMIywkkCMI+TFz+gsJFQdbLRZv04ZfqvyZQLYlEv3Id9iWF8TZbeHb5RM9UsBG
-         D+BwF7fRuwhfeh9faRHmILIwpPTcqL7eTu3e5ZWNGw9rjALwt59jK2wWgLOFq/nc78
-         +6hf5wGP5pZngNIc+3gaGjIwyBYh4p42i5nIhEkJ9bYNMsMVGKEPzjICBK0wm9o2aX
-         l+YCO+QYPv0hC81OsBo3i9eIQ219Lr+2BgBXaM8d/ekXsnhaIRCcvqpzl1FdUJ/wfO
-         BFFe0XEolDKVQ==
+        b=EvNQ28S7Uz9qSFW+hF7CweUHX1h94DCcBrbPqIL6fMGZxszJZFmhfSP1E36tHNcvy
+         4ysMGwm4imZhvxej4YLKTOM5NFiKkLkdq6tRujhilDGrrbcl7bD91jJQqp/ysv/Pzv
+         Mu7nNaQszluRpFYAUZvEgN2PY0bVcpSDTfmDVn14h8/Rf8qpzcdIYEZ70t5aFfnaEi
+         EqXOvhdAdOBiQrRBxxsQhvyPtoBrAua7PQflSJq7qNNB44EJD+p7eS4Awwocxsl9Qq
+         7hkOfrlTB9JjAtkYKljUXWjNQ3pB5ABzSUgQgc3dGTFkTwf2Q7CeVRTTWyEalWlyV+
+         MN7whTXihhMdA==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost1.synopsys.com (Postfix) with ESMTP id AF22E5B73;
-        Mon, 15 Apr 2019 11:46:49 -0700 (PDT)
+        by mailhost1.synopsys.com (Postfix) with ESMTP id 5B2EC5B76;
+        Mon, 15 Apr 2019 11:46:52 -0700 (PDT)
 From:   Vitor Soares <vitor.soares@synopsys.com>
 To:     linux-i3c@lists.infradead.org
 Cc:     joao.pinto@synopsys.com, Vitor Soares <vitor.soares@synopsys.com>,
         Boris Brezillon <bbrezillon@kernel.org>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 2/3] i3c: add mixed limited bus mode
-Date:   Mon, 15 Apr 2019 20:46:42 +0200
+Subject: [PATCH 3/3] i3c: dw: Add limited bus mode support
+Date:   Mon, 15 Apr 2019 20:46:43 +0200
 Message-Id:
- <a3bf32dadd9b0135442526cc77fec5726e6e617d.1555350118.git.vitor.soares@synopsys.com>
+ <8cf1b180c31c5908d667285fa4880167a5e80c8c.1555350118.git.vitor.soares@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1555350118.git.vitor.soares@synopsys.com>
 References: <cover.1555350118.git.vitor.soares@synopsys.com>
@@ -58,74 +58,29 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Message-ID: <20190415184642.i4sySk3srwMC6wLc5oddNlOOLk-VE7f8sAASRHmUQlo@z>
+Message-ID: <20190415184643.Mbb8p0-Ci4mhoAg62hFLazvu5oQTy3vBmbixvBne-ek@z>
 
-The i3c bus spec define a bus configuration where the i2c devices
-doesn't have the 50ns filter yet they allow the SDR max speed.
-
-This patch introduce the limited bus mode so the users can use
-a higher speed on presence of i2c devices index 1.
+This patch add limited bus mode support for DesignWare i3c master
 
 Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
 Cc: Boris Brezillon <bbrezillon@kernel.org>
 Cc: <linux-kernel@vger.kernel.org>
 ---
- drivers/i3c/master.c       | 5 +++++
- include/linux/i3c/master.h | 5 +++++
- 2 files changed, 10 insertions(+)
+ drivers/i3c/master/dw-i3c-master.c | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
-index 1c4a86a..46d3774 100644
---- a/drivers/i3c/master.c
-+++ b/drivers/i3c/master.c
-@@ -463,6 +463,7 @@ static int i3c_bus_init(struct i3c_bus *i3cbus)
- static const char * const i3c_bus_mode_strings[] = {
- 	[I3C_BUS_MODE_PURE] = "pure",
- 	[I3C_BUS_MODE_MIXED_FAST] = "mixed-fast",
-+	[I3C_BUS_MODE_MIXED_LIMITED] = "mixed-limited",
- 	[I3C_BUS_MODE_MIXED_SLOW] = "mixed-slow",
- };
+diff --git a/drivers/i3c/master/dw-i3c-master.c b/drivers/i3c/master/dw-i3c-master.c
+index 0b01607..4005508 100644
+--- a/drivers/i3c/master/dw-i3c-master.c
++++ b/drivers/i3c/master/dw-i3c-master.c
+@@ -650,6 +650,7 @@ static int dw_i3c_master_bus_init(struct i3c_master_controller *m)
  
-@@ -575,6 +576,7 @@ int i3c_bus_set_mode(struct i3c_bus *i3cbus, enum i3c_bus_mode mode,
- 			i3cbus->scl_rate.i3c = I3C_BUS_TYP_I3C_SCL_RATE;
- 		break;
+ 	switch (bus->mode) {
  	case I3C_BUS_MODE_MIXED_FAST:
 +	case I3C_BUS_MODE_MIXED_LIMITED:
- 		if (!i3cbus->scl_rate.i3c)
- 			i3cbus->scl_rate.i3c = I3C_BUS_TYP_I3C_SCL_RATE;
- 		if (!i3cbus->scl_rate.i2c)
-@@ -2481,6 +2483,9 @@ int i3c_master_register(struct i3c_master_controller *master,
- 				mode = I3C_BUS_MODE_MIXED_FAST;
- 			break;
- 		case I3C_LVR_I2C_INDEX(1):
-+			if (mode < I3C_BUS_MODE_MIXED_LIMITED)
-+				mode = I3C_BUS_MODE_MIXED_LIMITED;
-+			break;
- 		case I3C_LVR_I2C_INDEX(2):
- 			if (mode < I3C_BUS_MODE_MIXED_SLOW)
- 				mode = I3C_BUS_MODE_MIXED_SLOW;
-diff --git a/include/linux/i3c/master.h b/include/linux/i3c/master.h
-index 44fb3cf..740235e 100644
---- a/include/linux/i3c/master.h
-+++ b/include/linux/i3c/master.h
-@@ -250,12 +250,17 @@ struct i3c_device {
-  *			     the bus. The only impact in this mode is that the
-  *			     high SCL pulse has to stay below 50ns to trick I2C
-  *			     devices when transmitting I3C frames
-+ * @I3C_BUS_MODE_MIXED_LIMITED: I2C devices without 50ns spike filter are
-+ *				present on the bus. However they allows
-+ *				compliance up to the maximum SDR SCL clock
-+ *				frequency.
-  * @I3C_BUS_MODE_MIXED_SLOW: I2C devices without 50ns spike filter are present
-  *			     on the bus
-  */
- enum i3c_bus_mode {
- 	I3C_BUS_MODE_PURE,
- 	I3C_BUS_MODE_MIXED_FAST,
-+	I3C_BUS_MODE_MIXED_LIMITED,
- 	I3C_BUS_MODE_MIXED_SLOW,
- };
- 
+ 		ret = dw_i2c_clk_cfg(master);
+ 		if (ret)
+ 			return ret;
 -- 
 2.7.4
 
