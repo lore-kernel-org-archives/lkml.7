@@ -2,142 +2,95 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D9848C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:34:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E03B4C282DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:38:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA9A8218D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:34:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9EE0420880
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:38:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555353298;
-	bh=Y5TjgtdGJPsZ8tV3HabzkpD9mGYfF7hgz8fGx7LB2Xk=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Mrw5qHYWBnCyWIXZFHGj5LNv/vQ5b354IsMQ4pyWb/r7xK0OK3Pcz+KrNr7/A6zJW
-	 lD2wVJhZdyd88JpvApwnNx6H/oNKeZwEORNwdIzeLKs1cbFUMIISj1rPZXvuVJNxyw
-	 ZrQVjD0Dcx3bTvuejenK5/KZTZ+BG3SW0JXpbCSs=
+	s=default; t=1555353525;
+	bh=k1pIDXmf5qG/rFR28fZScm3JRu+jUOtfmwhZJiR+oQw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=n49HRMvE7JgyGt3ul54YZk4/Kw+CKWZUvp5eHrDo1oHYQkNkwsTw1JpcBWzUphrOp
+	 k/p3ZgSHTcVl06QEHeWlY/mE7XMvi9EobunZqhPBQ0/2KCO6OiXTPe6h1YMsHK2VsJ
+	 fo5r4hMoFiCevcHsZGKg9nIiiUBhPAqcqlT5VcUw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728119AbfDOSe5 (ORCPT
+        id S1727905AbfDOSio (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 14:34:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42638 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 14:38:44 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44126 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726182AbfDOSe4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 14:34:56 -0400
-Received: from localhost.localdomain (unknown [194.230.158.135])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1726182AbfDOSio (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 14:38:44 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A125B20880;
-        Mon, 15 Apr 2019 18:34:52 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 0288A2087C;
+        Mon, 15 Apr 2019 18:38:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555353296;
-        bh=Y5TjgtdGJPsZ8tV3HabzkpD9mGYfF7hgz8fGx7LB2Xk=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Md2zptC8spqxgF7K1J0MSJKq0f92nWgic86EgzFnRmUt2FcZzvDtalttEkiyEpFI2
-         BV057BS0G3cH4jgKAcyCkIBK2itm5BhwbxZdDQxHHMQ8fURAGXKlM3ZGD1C1FU8fev
-         R67UwQaW3XIQMTGavVKx5vXs8myaPpHlp676eWHc=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        Marek Szyprowski <m.szyprowski@samsung.com>,
-        Andrzej Hajda <a.hajda@samsung.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, linux-kernel@vger.kernel.org
-Cc:     Sylwester Nawrocki <snawrocki@kernel.org>,
-        Chanwoo Choi <cw00.choi@samsung.com>
-Subject: [PATCH 2/2] arm64: dts: exynos: Move fixed-clocks out of soc
-Date:   Mon, 15 Apr 2019 20:34:40 +0200
-Message-Id: <20190415183440.19697-2-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190415183440.19697-1-krzk@kernel.org>
-References: <20190415183440.19697-1-krzk@kernel.org>
+        s=default; t=1555353523;
+        bh=k1pIDXmf5qG/rFR28fZScm3JRu+jUOtfmwhZJiR+oQw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Di9iKUmZvSoRW6jDqcIgp8I48CTgpbCB9m+k2Aq1qT4GHUQ0KFE6kx3K9toYZIzWD
+         qsCPFPsr32jWeFGUTwVySnmgeEGaF4ZelMXfR0KTRK69qB2Slz365Q7j4BcJnnO3Z0
+         V7bOsNZwCpaUaFj+jT9kRCL/qys2vIaYuy1yUw5c=
+Date:   Mon, 15 Apr 2019 20:38:41 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Naresh Kamboju <naresh.kamboju@linaro.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Subject: Re: [PATCH 5.0 000/246] 5.0.7-stable review
+Message-ID: <20190415183841.GA7423@kroah.com>
+References: <20190404084619.236418459@linuxfoundation.org>
+ <CA+G9fYtJrZxcnV35PYoJecUEAZpXXO1uz3g6+HKccpdshpeKZQ@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CA+G9fYtJrZxcnV35PYoJecUEAZpXXO1uz3g6+HKccpdshpeKZQ@mail.gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The XXTI fixed-clock is the input to the SoC therefore it should not be
-inside the soc node.  This also fixes DTC W=1 warning:
+On Fri, Apr 05, 2019 at 12:03:28PM +0530, Naresh Kamboju wrote:
+> On Thu, 4 Apr 2019 at 14:38, Greg Kroah-Hartman
+> <gregkh@linuxfoundation.org> wrote:
+> >
+> > This is the start of the stable review cycle for the 5.0.7 release.
+> > There are 246 patches in this series, all will be posted as a response
+> > to this one.  If anyone has any issues with these being applied, please
+> > let me know.
+> >
+> > Responses should be made by Sat Apr  6 08:44:36 UTC 2019.
+> > Anything received after that time might be too late.
+> >
+> > The whole patch series can be found in one patch at:
+> >         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.0.7-rc1.gz
+> > or in the git tree and branch at:
+> >         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.0.y
+> > and the diffstat can be found below.
+> >
+> > thanks,
+> >
+> > greg k-h
+> >
+> 
+> Results from Linaro’s test farm.
+> No regressions on arm64, arm, x86_64, and i386.
 
-    arch/arm64/boot/dts/exynos/exynos7.dtsi:90.17-94.5:
-        Warning (simple_bus_reg): /soc/xxti: missing or empty reg/ranges property
+Thanks for testing all of these and letting me know.
 
-While moving, change the name of the xxti node to match the generic type
-of device (following DeviceTree specification).
-
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
----
- arch/arm64/boot/dts/exynos/exynos5433.dtsi | 13 +++++++------
- arch/arm64/boot/dts/exynos/exynos7.dtsi    | 13 +++++++------
- 2 files changed, 14 insertions(+), 12 deletions(-)
-
-diff --git a/arch/arm64/boot/dts/exynos/exynos5433.dtsi b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-index 62cedf9855cf..d29d13f4694f 100644
---- a/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynos5433.dtsi
-@@ -41,6 +41,13 @@
- 		interrupt-affinity = <&cpu4>, <&cpu5>, <&cpu6>, <&cpu7>;
- 	};
- 
-+	xxti: clock {
-+		/* XXTI */
-+		compatible = "fixed-clock";
-+		clock-output-names = "oscclk";
-+		#clock-cells = <0>;
-+	};
-+
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-@@ -260,12 +267,6 @@
- 			reg = <0x10000000 0x100>;
- 		};
- 
--		xxti: xxti {
--			compatible = "fixed-clock";
--			clock-output-names = "oscclk";
--			#clock-cells = <0>;
--		};
--
- 		cmu_top: clock-controller@10030000 {
- 			compatible = "samsung,exynos5433-cmu-top";
- 			reg = <0x10030000 0x1000>;
-diff --git a/arch/arm64/boot/dts/exynos/exynos7.dtsi b/arch/arm64/boot/dts/exynos/exynos7.dtsi
-index f83ad4c491f2..077d23478901 100644
---- a/arch/arm64/boot/dts/exynos/exynos7.dtsi
-+++ b/arch/arm64/boot/dts/exynos/exynos7.dtsi
-@@ -38,6 +38,13 @@
- 				     <&cpu_atlas2>, <&cpu_atlas3>;
- 	};
- 
-+	fin_pll: clock {
-+		/* XXTI */
-+		compatible = "fixed-clock";
-+		clock-output-names = "fin_pll";
-+		#clock-cells = <0>;
-+	};
-+
- 	cpus {
- 		#address-cells = <1>;
- 		#size-cells = <0>;
-@@ -87,12 +94,6 @@
- 			reg = <0x10000000 0x100>;
- 		};
- 
--		fin_pll: xxti {
--			compatible = "fixed-clock";
--			clock-output-names = "fin_pll";
--			#clock-cells = <0>;
--		};
--
- 		gic: interrupt-controller@11001000 {
- 			compatible = "arm,gic-400";
- 			#interrupt-cells = <3>;
--- 
-2.17.1
-
+greg k-h
