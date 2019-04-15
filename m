@@ -6,49 +6,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F1DAC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:50:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69C47C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:50:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E21F22073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:50:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3600321904
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:50:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555354214;
-	bh=bkMSQGj6dTDB7743AhTbjQBd0wFoxBp9xyNal0/OvFc=;
+	s=default; t=1555354219;
+	bh=11dhVHPg81rZGmUcqwDRLGVE2JCVaK5epYLtyTdQuHc=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=F7ZENsHq4jvPFsdjA+cFC8MHCE2jfcHxqX6sQqBWpRShGgZBiheE0e0stlJGxoEDl
-	 Fn89/fgQJpODJPIiJ0rJUFbKV4KtVJeLLcYkx87saJ4osWMh+vC/eQpF6sMHAQHxiI
-	 XeLK93Jz9Wb6HybR/kCwTN8TU5wSBfoHcRX7gXXs=
+	b=UMNml5NTyYxZJOA+4nLEpuh6nCkjHZj5byH4ScX81S1UdjJQrmlbuMW62nN5AF38G
+	 CCI2MQLDpyoupx5EM89naKKGc8I4KOdtkEz9UUrs8dbw7ocVV+G9egcJxDzalAih/v
+	 dbM76EOQ63pPBibXUQSjLi4/d9O7sRkk9YJcXHRs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728731AbfDOSqw (ORCPT
+        id S1728844AbfDOSuR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 14:46:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49570 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 14:50:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49718 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728292AbfDOSqr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 14:46:47 -0400
+        id S1728212AbfDOSqw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 14:46:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 724CD2087C;
-        Mon, 15 Apr 2019 18:46:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D18DC218DA;
+        Mon, 15 Apr 2019 18:46:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555354006;
-        bh=bkMSQGj6dTDB7743AhTbjQBd0wFoxBp9xyNal0/OvFc=;
+        s=default; t=1555354011;
+        bh=11dhVHPg81rZGmUcqwDRLGVE2JCVaK5epYLtyTdQuHc=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=jov01h3Kc5wIprXf22KF9hg5t8I7FZ8Kggh3UMkyeMWsIE2AdCxB5xllbfB1xFfhq
-         Qlayq7zKgNii8PjKH3dO2Ps8d10ryEV2s5ajt6djRcpV86N4+fxUOaFXMZKXcommoi
-         2RBrwU0oPuJ1Xx2QtJ8DjmlQP9eAwa18pQ9MWcjg=
+        b=uc0xKbuLLzNklG6s6p3C8StlUhWpvh3fsyzzxilpMH2OZWJfqhquF9G5iZF8WlFFS
+         MKc+HC/VZhPGvedg6HljGRiSiUWQ/bl0TTBftjGe0pcPNB9xNYJl5NTIHIF3FrT1Ut
+         kCo+CUNoWZqIjUwSdCuQW5R3qPLAItXpDKGtuNf8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
-        Hulk Robot <hulkci@huawei.com>,
-        Mao Wenan <maowenan@huawei.com>,
+        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 51/76] net: rds: force to destroy connection if t_sock is NULL in rds_tcp_kill_sock().
-Date:   Mon, 15 Apr 2019 20:44:15 +0200
-Message-Id: <20190415183721.710981118@linuxfoundation.org>
+Subject: [PATCH 4.9 53/76] qmi_wwan: add Olicard 600
+Date:   Mon, 15 Apr 2019 20:44:17 +0200
+Message-Id: <20190415183722.393464373@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183707.712011689@linuxfoundation.org>
 References: <20190415183707.712011689@linuxfoundation.org>
@@ -61,144 +59,59 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mao Wenan <maowenan@huawei.com>
+From: Bjørn Mork <bjorn@mork.no>
 
-[ Upstream commit cb66ddd156203daefb8d71158036b27b0e2caf63 ]
+[ Upstream commit 6289d0facd9ebce4cc83e5da39e15643ee998dc5 ]
 
-When it is to cleanup net namespace, rds_tcp_exit_net() will call
-rds_tcp_kill_sock(), if t_sock is NULL, it will not call
-rds_conn_destroy(), rds_conn_path_destroy() and rds_tcp_conn_free() to free
-connection, and the worker cp_conn_w is not stopped, afterwards the net is freed in
-net_drop_ns(); While cp_conn_w rds_connect_worker() will call rds_tcp_conn_path_connect()
-and reference 'net' which has already been freed.
+This is a Qualcomm based device with a QMI function on interface 4.
+It is mode switched from 2020:2030 using a standard eject message.
 
-In rds_tcp_conn_path_connect(), rds_tcp_set_callbacks() will set t_sock = sock before
-sock->ops->connect, but if connect() is failed, it will call
-rds_tcp_restore_callbacks() and set t_sock = NULL, if connect is always
-failed, rds_connect_worker() will try to reconnect all the time, so
-rds_tcp_kill_sock() will never to cancel worker cp_conn_w and free the
-connections.
+T:  Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#=  6 Spd=480  MxCh= 0
+D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
+P:  Vendor=2020 ProdID=2031 Rev= 2.32
+S:  Manufacturer=Mobile Connect
+S:  Product=Mobile Connect
+S:  SerialNumber=0123456789ABCDEF
+C:* #Ifs= 6 Cfg#= 1 Atr=80 MxPwr=500mA
+I:* If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
+E:  Ad=81(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=01(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
+E:  Ad=83(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
+E:  Ad=82(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=02(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
+E:  Ad=85(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
+E:  Ad=84(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=03(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
+E:  Ad=87(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
+E:  Ad=86(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=04(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
+E:  Ad=89(I) Atr=03(Int.) MxPS=   8 Ivl=32ms
+E:  Ad=88(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=05(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+I:* If#= 5 Alt= 0 #EPs= 2 Cls=08(stor.) Sub=06 Prot=50 Driver=(none)
+E:  Ad=8a(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
+E:  Ad=06(O) Atr=02(Bulk) MxPS= 512 Ivl=125us
 
-Therefore, the condition !tc->t_sock is not needed if it is going to do
-cleanup_net->rds_tcp_exit_net->rds_tcp_kill_sock, because tc->t_sock is always
-NULL, and there is on other path to cancel cp_conn_w and free
-connection. So this patch is to fix this.
-
-rds_tcp_kill_sock():
-...
-if (net != c_net || !tc->t_sock)
-...
-Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
-
-==================================================================
-BUG: KASAN: use-after-free in inet_create+0xbcc/0xd28
-net/ipv4/af_inet.c:340
-Read of size 4 at addr ffff8003496a4684 by task kworker/u8:4/3721
-
-CPU: 3 PID: 3721 Comm: kworker/u8:4 Not tainted 5.1.0 #11
-Hardware name: linux,dummy-virt (DT)
-Workqueue: krdsd rds_connect_worker
-Call trace:
- dump_backtrace+0x0/0x3c0 arch/arm64/kernel/time.c:53
- show_stack+0x28/0x38 arch/arm64/kernel/traps.c:152
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0x120/0x188 lib/dump_stack.c:113
- print_address_description+0x68/0x278 mm/kasan/report.c:253
- kasan_report_error mm/kasan/report.c:351 [inline]
- kasan_report+0x21c/0x348 mm/kasan/report.c:409
- __asan_report_load4_noabort+0x30/0x40 mm/kasan/report.c:429
- inet_create+0xbcc/0xd28 net/ipv4/af_inet.c:340
- __sock_create+0x4f8/0x770 net/socket.c:1276
- sock_create_kern+0x50/0x68 net/socket.c:1322
- rds_tcp_conn_path_connect+0x2b4/0x690 net/rds/tcp_connect.c:114
- rds_connect_worker+0x108/0x1d0 net/rds/threads.c:175
- process_one_work+0x6e8/0x1700 kernel/workqueue.c:2153
- worker_thread+0x3b0/0xdd0 kernel/workqueue.c:2296
- kthread+0x2f0/0x378 kernel/kthread.c:255
- ret_from_fork+0x10/0x18 arch/arm64/kernel/entry.S:1117
-
-Allocated by task 687:
- save_stack mm/kasan/kasan.c:448 [inline]
- set_track mm/kasan/kasan.c:460 [inline]
- kasan_kmalloc+0xd4/0x180 mm/kasan/kasan.c:553
- kasan_slab_alloc+0x14/0x20 mm/kasan/kasan.c:490
- slab_post_alloc_hook mm/slab.h:444 [inline]
- slab_alloc_node mm/slub.c:2705 [inline]
- slab_alloc mm/slub.c:2713 [inline]
- kmem_cache_alloc+0x14c/0x388 mm/slub.c:2718
- kmem_cache_zalloc include/linux/slab.h:697 [inline]
- net_alloc net/core/net_namespace.c:384 [inline]
- copy_net_ns+0xc4/0x2d0 net/core/net_namespace.c:424
- create_new_namespaces+0x300/0x658 kernel/nsproxy.c:107
- unshare_nsproxy_namespaces+0xa0/0x198 kernel/nsproxy.c:206
- ksys_unshare+0x340/0x628 kernel/fork.c:2577
- __do_sys_unshare kernel/fork.c:2645 [inline]
- __se_sys_unshare kernel/fork.c:2643 [inline]
- __arm64_sys_unshare+0x38/0x58 kernel/fork.c:2643
- __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
- invoke_syscall arch/arm64/kernel/syscall.c:47 [inline]
- el0_svc_common+0x168/0x390 arch/arm64/kernel/syscall.c:83
- el0_svc_handler+0x60/0xd0 arch/arm64/kernel/syscall.c:129
- el0_svc+0x8/0xc arch/arm64/kernel/entry.S:960
-
-Freed by task 264:
- save_stack mm/kasan/kasan.c:448 [inline]
- set_track mm/kasan/kasan.c:460 [inline]
- __kasan_slab_free+0x114/0x220 mm/kasan/kasan.c:521
- kasan_slab_free+0x10/0x18 mm/kasan/kasan.c:528
- slab_free_hook mm/slub.c:1370 [inline]
- slab_free_freelist_hook mm/slub.c:1397 [inline]
- slab_free mm/slub.c:2952 [inline]
- kmem_cache_free+0xb8/0x3a8 mm/slub.c:2968
- net_free net/core/net_namespace.c:400 [inline]
- net_drop_ns.part.6+0x78/0x90 net/core/net_namespace.c:407
- net_drop_ns net/core/net_namespace.c:406 [inline]
- cleanup_net+0x53c/0x6d8 net/core/net_namespace.c:569
- process_one_work+0x6e8/0x1700 kernel/workqueue.c:2153
- worker_thread+0x3b0/0xdd0 kernel/workqueue.c:2296
- kthread+0x2f0/0x378 kernel/kthread.c:255
- ret_from_fork+0x10/0x18 arch/arm64/kernel/entry.S:1117
-
-The buggy address belongs to the object at ffff8003496a3f80
- which belongs to the cache net_namespace of size 7872
-The buggy address is located 1796 bytes inside of
- 7872-byte region [ffff8003496a3f80, ffff8003496a5e40)
-The buggy address belongs to the page:
-page:ffff7e000d25a800 count:1 mapcount:0 mapping:ffff80036ce4b000
-index:0x0 compound_mapcount: 0
-flags: 0xffffe0000008100(slab|head)
-raw: 0ffffe0000008100 dead000000000100 dead000000000200 ffff80036ce4b000
-raw: 0000000000000000 0000000080040004 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8003496a4580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8003496a4600: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
->ffff8003496a4680: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                   ^
- ffff8003496a4700: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
- ffff8003496a4780: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-Fixes: 467fa15356ac("RDS-TCP: Support multiple RDS-TCP listen endpoints, one per netns.")
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
+Signed-off-by: Bjørn Mork <bjorn@mork.no>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/rds/tcp.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/usb/qmi_wwan.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/net/rds/tcp.c
-+++ b/net/rds/tcp.c
-@@ -527,7 +527,7 @@ static void rds_tcp_kill_sock(struct net
- 	list_for_each_entry_safe(tc, _tc, &rds_tcp_conn_list, t_tcp_node) {
- 		struct net *c_net = read_pnet(&tc->t_cpath->cp_conn->c_net);
- 
--		if (net != c_net || !tc->t_sock)
-+		if (net != c_net)
- 			continue;
- 		if (!list_has_conn(&tmp_list, tc->t_cpath->cp_conn)) {
- 			list_move_tail(&tc->t_tcp_node, &tmp_list);
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -890,6 +890,7 @@ static const struct usb_device_id produc
+ 	{QMI_FIXED_INTF(0x19d2, 0x2002, 4)},	/* ZTE (Vodafone) K3765-Z */
+ 	{QMI_FIXED_INTF(0x2001, 0x7e19, 4)},	/* D-Link DWM-221 B1 */
+ 	{QMI_FIXED_INTF(0x2001, 0x7e35, 4)},	/* D-Link DWM-222 */
++	{QMI_FIXED_INTF(0x2020, 0x2031, 4)},	/* Olicard 600 */
+ 	{QMI_FIXED_INTF(0x2020, 0x2033, 4)},	/* BroadMobi BM806U */
+ 	{QMI_FIXED_INTF(0x0f3d, 0x68a2, 8)},    /* Sierra Wireless MC7700 */
+ 	{QMI_FIXED_INTF(0x114f, 0x68a2, 8)},    /* Sierra Wireless MC7750 */
 
 
