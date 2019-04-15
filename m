@@ -2,83 +2,101 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD866C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:59:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70D98C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 08:00:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 955EC20833
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:59:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3F7E720833
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 08:00:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555315258;
+	bh=J+698oxhqHBOnMF8C8VUDpclE65kXybGTV8+R+kQBK8=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OrInbZsFvYDYa86vYjw54pQo29MQuYr2ihD6vObTSTrpvYsV6/fpx6RLVOy5RovcT
+	 9BlrYENx+5+qsm/uPksHjg5cK91cabwP/JVad+QWhv7lyDIMWk/y/E7LI3HNT/G8fh
+	 WjF3C6lMwQ+RSpk1ooUpbOTOo3GCt3ZATRhQ6djU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726658AbfDOH7m (ORCPT
+        id S1726439AbfDOIA5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 03:59:42 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:51873 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbfDOH7l (ORCPT
+        Mon, 15 Apr 2019 04:00:57 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:43352 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbfDOIA5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 03:59:41 -0400
-Received: from webmail.gandi.net (webmail14.sd4.0x35.net [10.200.201.14])
-        (Authenticated sender: gregory.clement@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPA id AB4E8200012;
-        Mon, 15 Apr 2019 07:59:39 +0000 (UTC)
+        Mon, 15 Apr 2019 04:00:57 -0400
+Received: by mail-lj1-f196.google.com with SMTP id f18so14691560lja.10;
+        Mon, 15 Apr 2019 01:00:55 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=NzcgzxUNtWnsraNIBShDZ6XRg3i0t/Su0UrJJ7SzQFo=;
+        b=O4sRvx5Mb1ftEeCQycjjeA28RCfoUsoI8bccPwNoOiCw6COOHR4jNxSJZVXIUpcXeK
+         /2U5D/pUh5bc8hk11N3lrNZX1YI1XAtvItZ5tOmGzWALKqBn2QlOe78EsHxLCVOa+kGm
+         5AwYSiUwf0oKeD5Tke4nJdLx40lmu1NYEEnrbFd0tuxvb4sbHIISxUoW4eEuy29MSyfd
+         PV4ri1TN3wGsPoxF9SvUatV7lBPe7P0Isokf8G2DwT+SfnLLRrQrr4efx9gHmcvJs1mM
+         oqkQ6dN18ENqFhBhJClH1ZZBGHHieGL7g+lpJn1pK3mbhoUQSU8UBX6zmpk7erCBU50K
+         LbVw==
+X-Gm-Message-State: APjAAAVzrx8OX+lVz7htvKcIsCnsGyOSUQUurmKKkNsPogl7AD+T9eYg
+        yazKXWOHgT9hwmBxYpejaTRnd/xu
+X-Google-Smtp-Source: APXvYqwY/Gb907x1ZzRilH+F3WXrDf8CCQSgoQdZaGZJkrMksVRFyzq/otEGqQL5aPrJ6TLfQh2UiQ==
+X-Received: by 2002:a2e:99d2:: with SMTP id l18mr37824891ljj.27.1555315254650;
+        Mon, 15 Apr 2019 01:00:54 -0700 (PDT)
+Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
+        by smtp.gmail.com with ESMTPSA id w8sm3404125lfn.95.2019.04.15.01.00.53
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Apr 2019 01:00:53 -0700 (PDT)
+Received: from johan by xi.terra with local (Exim 4.91)
+        (envelope-from <johan@kernel.org>)
+        id 1hFwXy-0007oB-Fh; Mon, 15 Apr 2019 10:00:58 +0200
+Date:   Mon, 15 Apr 2019 10:00:58 +0200
+From:   Johan Hovold <johan@kernel.org>
+To:     "Ramachandran Srinivasan (BRT-SG)" <srinivasan.r@brtchip.com>
+Cc:     Johan Hovold <johan@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] usb: serial: defer URB submission for ftdi_sio
+Message-ID: <20190415080058.GA29656@localhost>
+References: <1554724399-2972-1-git-send-email-srinivasan.r@brtchip.com>
+ <1554806826-11543-1-git-send-email-srinivasan.r@brtchip.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Mon, 15 Apr 2019 09:59:39 +0200
-From:   gregory.clement@bootlin.com
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Vladimir Zapolskiy <vz@mleia.com>,
-        Sylvain Lemieux <slemieux.tyco@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: lpc32xx: stop overwriting TEST_CLK_SEL
-In-Reply-To: <20190411141209.3106-1-alexandre.belloni@bootlin.com>
-References: <20190411141209.3106-1-alexandre.belloni@bootlin.com>
-Message-ID: <b5b97198d85ead33afa2fcf619a50944@bootlin.com>
-X-Sender: gregory.clement@bootlin.com
-User-Agent: Roundcube Webmail/1.3.8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1554806826-11543-1-git-send-email-srinivasan.r@brtchip.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-04-11 16:12, Alexandre Belloni wrote:
-> While the UDA1380 is described in some lpc3250 device trees, there is
-> currently no real user of that codec. Anyway, if the codec needs a 
-> clock,
-> it should take it explicitly.
+On Tue, Apr 09, 2019 at 10:47:42AM +0000, Ramachandran Srinivasan (BRT-SG) wrote:
+> From: Srinivasan R <srinivasan.r@brtchip.com>
 > 
-> lpc3250_machine_init is called for all the lpc32xx machines and some 
-> are
-> using test1_clk (for example to strobe an HW watchdog). Overwriting
-> TEST_CLK_SEL prevents booting those platforms.
-> 
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+> Deferring the URB resubmission, this can help time share the available
+> DMA chanels of DWC_OTG host controller in RaspberryPi.This change can
+> fix the problem, failed to enumerate the USB device when all the 8
+> instance of ftdi_sio serial driver is open by application. many bugs
+> had been rasied for RaspberryPi around this problem can be solved
 
+Thanks for resending with a commit message. Your patch is still
+white-space damaged (check your mail setup, and make sure you can send a
+patch to yourself and apply it with git am), but with the above
+description I think I can give some feedback already.
 
-Tested-by: Gregory CLEMENT <gregory.clement@bootlin.com>
+First of all, if there's a problem here, it would need to be fixed in
+the host-controller driver of the rpi as we don't want to add
+workarounds for host-controller issues to every USB driver.
 
+I suggest you write up an even more detailed bug report describing the
+problem you're seeing and send it to the list.
 
-> ---
->  arch/arm/mach-lpc32xx/phy3250.c | 5 -----
->  1 file changed, 5 deletions(-)
-> 
-> diff --git a/arch/arm/mach-lpc32xx/phy3250.c 
-> b/arch/arm/mach-lpc32xx/phy3250.c
-> index fdbb1409c32b..1db8508493a5 100644
-> --- a/arch/arm/mach-lpc32xx/phy3250.c
-> +++ b/arch/arm/mach-lpc32xx/phy3250.c
-> @@ -128,11 +128,6 @@ static void __init lpc3250_machine_init(void)
->  {
->  	lpc32xx_serial_init();
-> 
-> -	/* Test clock needed for UDA1380 initial init */
-> -	__raw_writel(LPC32XX_CLKPWR_TESTCLK2_SEL_MOSC |
-> -		LPC32XX_CLKPWR_TESTCLK_TESTCLK2_EN,
-> -		LPC32XX_CLKPWR_TEST_CLK_SEL);
-> -
->  	of_platform_default_populate(NULL, lpc32xx_auxdata_lookup, NULL);
->  }
+Meanwhile, you can try increasing the latency timer of the connected
+ftdi devices to reduce the amount of traffic they generate when they're
+otherwise idle (16 ms default, can be increased up to 255 ms I think).
+That may possibly allow you to push the limits of the rpi.
+
+Johan
