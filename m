@@ -2,284 +2,147 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 79213C10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:12:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37EDBC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:14:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4755E206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:12:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02D15206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:14:01 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="dkiPsFxF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727251AbfDOKMf (ORCPT
+        id S1727225AbfDOKOA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 06:12:35 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:54090 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727179AbfDOKMa (ORCPT
+        Mon, 15 Apr 2019 06:14:00 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:54394 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726094AbfDOKN7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 06:12:30 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3FA8oqX135315
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 06:12:28 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2rvqjm1egs-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 06:12:28 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <anju@linux.vnet.ibm.com>;
-        Mon, 15 Apr 2019 11:12:26 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 15 Apr 2019 11:12:24 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3FACNIE51904662
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Apr 2019 10:12:23 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 2014C5205A;
-        Mon, 15 Apr 2019 10:12:23 +0000 (GMT)
-Received: from localhost.localdomain.com (unknown [9.145.161.180])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id E163652057;
-        Mon, 15 Apr 2019 10:12:21 +0000 (GMT)
-From:   Anju T Sudhakar <anju@linux.vnet.ibm.com>
-To:     mpe@ellerman.id.au
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.vnet.ibm.com, anju@linux.vnet.ibm.com
-Subject: [PATCH v4 5/5] powerpc/perf: Trace imc PMU functions
-Date:   Mon, 15 Apr 2019 15:42:04 +0530
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20190415101204.15125-1-anju@linux.vnet.ibm.com>
-References: <20190415101204.15125-1-anju@linux.vnet.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19041510-0016-0000-0000-0000026EEC34
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19041510-0017-0000-0000-000032CB3033
-Message-Id: <20190415101204.15125-6-anju@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-15_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904150072
+        Mon, 15 Apr 2019 06:13:59 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3FA8Ule131521;
+        Mon, 15 Apr 2019 10:12:27 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=content-type :
+ mime-version : subject : from : in-reply-to : date : cc :
+ content-transfer-encoding : message-id : references : to;
+ s=corp-2018-07-02; bh=YoMWmUaIuhPWO6FEtWwrQktpmL4pDG/BBVlcee6yDfE=;
+ b=dkiPsFxFARZHO8s5GhtIc9W+Ua/BB8ArL9gL0S4apvcmpbFv4Qq5c9ctchFDiwT/M6b2
+ mqa3kgf4ykq/sRcF4xmGL1mtLKZTeAoUdFCUhVS+EB3aswa7IuJEbp0Gq16PyICqTibx
+ SjTX8OHfHCQJRNM63Ib74hA9hCVxFm/XT3R13vz7MFgxkq2F3kRNaCfQ3xcf9PMl1eyf
+ Kn3HzmOKUYJ/K3MUs+TXxxRUQXuUNBGqBbJzNdFHHf6+8pIsCOCSnbltssuRk7Rw/+SW
+ y5ZDZZ00HbckDtY+Fap94sV/ze7rlw5VPKZznkO/NwtWS1VHZ53D9m+bArDCVnECy2+W cw== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by aserp2130.oracle.com with ESMTP id 2ru59cwvfj-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Apr 2019 10:12:27 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3FACObS176437;
+        Mon, 15 Apr 2019 10:12:27 GMT
+Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
+        by aserp3020.oracle.com with ESMTP id 2rv2tu3b2u-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Apr 2019 10:12:26 +0000
+Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
+        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x3FACIeb009910;
+        Mon, 15 Apr 2019 10:12:22 GMT
+Received: from [192.168.0.110] (/73.243.10.6)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 15 Apr 2019 03:12:18 -0700
+Content-Type: text/plain;
+        charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: [PATCH 1/2] include: linux: Regularise the use of FIELD_SIZEOF
+ macro
+From:   William Kucharski <william.kucharski@oracle.com>
+In-Reply-To: <20190414091452.22275-1-shyam.saini@amarulasolutions.com>
+Date:   Mon, 15 Apr 2019 04:12:16 -0600
+Cc:     Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        keescook@chromium.org, linux-arm-kernel@lists.infradead.org,
+        linux-mips@vger.kernel.org, intel-gvt-dev@lists.freedesktop.org,
+        intel-gfx@lists.freedesktop.org, dri-devel@lists.freedesktop.org,
+        netdev@vger.kernel.org, linux-ext4@vger.kernel.org,
+        devel@lists.orangefs.org, linux-mm@kvack.org,
+        linux-sctp@vger.kernel.org, bpf@vger.kernel.org,
+        kvm@vger.kernel.org, mayhs11saini@gmail.com
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <C398B8C9-6A54-4590-AA88-58D514BAEB71@oracle.com>
+References: <20190414091452.22275-1-shyam.saini@amarulasolutions.com>
+To:     Shyam Saini <shyam.saini@amarulasolutions.com>
+X-Mailer: Apple Mail (2.3445.104.8)
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9227 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904150072
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9227 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904150072
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add PMU functions to support trace-imc.
 
-Signed-off-by: Anju T Sudhakar <anju@linux.vnet.ibm.com>
-Reviewed-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
----
- arch/powerpc/perf/imc-pmu.c | 183 ++++++++++++++++++++++++++++++++++++
- 1 file changed, 183 insertions(+)
 
-diff --git a/arch/powerpc/perf/imc-pmu.c b/arch/powerpc/perf/imc-pmu.c
-index 3fe0222885bc..3f433cc96b18 100644
---- a/arch/powerpc/perf/imc-pmu.c
-+++ b/arch/powerpc/perf/imc-pmu.c
-@@ -1108,6 +1108,182 @@ static int trace_imc_cpu_init(void)
- 			  ppc_trace_imc_cpu_offline);
- }
- 
-+static u64 get_trace_imc_event_base_addr(void)
-+{
-+	return (u64)per_cpu(trace_imc_mem, smp_processor_id());
-+}
-+
-+/*
-+ * Function to parse trace-imc data obtained
-+ * and to prepare the perf sample.
-+ */
-+static int trace_imc_prepare_sample(struct trace_imc_data *mem,
-+				    struct perf_sample_data *data,
-+				    u64 *prev_tb,
-+				    struct perf_event_header *header,
-+				    struct perf_event *event)
-+{
-+	/* Sanity checks for a valid record */
-+	if (be64_to_cpu(READ_ONCE(mem->tb1)) > *prev_tb)
-+		*prev_tb = be64_to_cpu(READ_ONCE(mem->tb1));
-+	else
-+		return -EINVAL;
-+
-+	if ((be64_to_cpu(READ_ONCE(mem->tb1)) & IMC_TRACE_RECORD_TB1_MASK) !=
-+			 be64_to_cpu(READ_ONCE(mem->tb2)))
-+		return -EINVAL;
-+
-+	/* Prepare perf sample */
-+	data->ip =  be64_to_cpu(READ_ONCE(mem->ip));
-+	data->period = event->hw.last_period;
-+
-+	header->type = PERF_RECORD_SAMPLE;
-+	header->size = sizeof(*header) + event->header_size;
-+	header->misc = 0;
-+
-+	if (is_kernel_addr(data->ip))
-+		header->misc |= PERF_RECORD_MISC_KERNEL;
-+	else
-+		header->misc |= PERF_RECORD_MISC_USER;
-+
-+	perf_event_header__init_id(header, data, event);
-+
-+	return 0;
-+}
-+
-+static void dump_trace_imc_data(struct perf_event *event)
-+{
-+	struct trace_imc_data *mem;
-+	int i, ret;
-+	u64 prev_tb = 0;
-+
-+	mem = (struct trace_imc_data *)get_trace_imc_event_base_addr();
-+	for (i = 0; i < (trace_imc_mem_size / sizeof(struct trace_imc_data));
-+		i++, mem++) {
-+		struct perf_sample_data data;
-+		struct perf_event_header header;
-+
-+		ret = trace_imc_prepare_sample(mem, &data, &prev_tb, &header, event);
-+		if (ret) /* Exit, if not a valid record */
-+			break;
-+		else {
-+			/* If this is a valid record, create the sample */
-+			struct perf_output_handle handle;
-+
-+			if (perf_output_begin(&handle, event, header.size))
-+				return;
-+
-+			perf_output_sample(&handle, &header, &data, event);
-+			perf_output_end(&handle);
-+		}
-+	}
-+}
-+
-+static int trace_imc_event_add(struct perf_event *event, int flags)
-+{
-+	int core_id = smp_processor_id() / threads_per_core;
-+	struct imc_pmu_ref *ref = NULL;
-+	u64 local_mem, ldbar_value;
-+
-+	/* Set trace-imc bit in ldbar and load ldbar with per-thread memory address */
-+	local_mem = get_trace_imc_event_base_addr();
-+	ldbar_value = ((u64)local_mem & THREAD_IMC_LDBAR_MASK) | TRACE_IMC_ENABLE;
-+
-+	if (core_imc_refc)
-+		ref = &core_imc_refc[core_id];
-+	if (!ref) {
-+		/* If core-imc is not enabled, use trace-imc reference count */
-+		if (trace_imc_refc)
-+			ref = &trace_imc_refc[core_id];
-+		if (!ref)
-+			return -EINVAL;
-+	}
-+	mtspr(SPRN_LDBAR, ldbar_value);
-+	mutex_lock(&ref->lock);
-+	if (ref->refc == 0) {
-+		if (opal_imc_counters_start(OPAL_IMC_COUNTERS_TRACE,
-+				get_hard_smp_processor_id(smp_processor_id()))) {
-+			mutex_unlock(&ref->lock);
-+			pr_err("trace-imc: Unable to start the counters for core %d\n", core_id);
-+			mtspr(SPRN_LDBAR, 0);
-+			return -EINVAL;
-+		}
-+	}
-+	++ref->refc;
-+	mutex_unlock(&ref->lock);
-+
-+	return 0;
-+}
-+
-+static void trace_imc_event_read(struct perf_event *event)
-+{
-+	return;
-+}
-+
-+static void trace_imc_event_stop(struct perf_event *event, int flags)
-+{
-+	u64 local_mem = get_trace_imc_event_base_addr();
-+	dump_trace_imc_data(event);
-+	memset((void *)local_mem, 0, sizeof(u64));
-+}
-+
-+static void trace_imc_event_start(struct perf_event *event, int flags)
-+{
-+	return;
-+}
-+
-+static void trace_imc_event_del(struct perf_event *event, int flags)
-+{
-+	int core_id = smp_processor_id() / threads_per_core;
-+	struct imc_pmu_ref *ref = NULL;
-+
-+	if (core_imc_refc)
-+		ref = &core_imc_refc[core_id];
-+	if (!ref) {
-+		/* If core-imc is not enabled, use trace-imc reference count */
-+		if (trace_imc_refc)
-+			ref = &trace_imc_refc[core_id];
-+		if (!ref)
-+			return;
-+	}
-+	mtspr(SPRN_LDBAR, 0);
-+	mutex_lock(&ref->lock);
-+	ref->refc--;
-+	if (ref->refc == 0) {
-+		if (opal_imc_counters_stop(OPAL_IMC_COUNTERS_TRACE,
-+				get_hard_smp_processor_id(smp_processor_id()))) {
-+			mutex_unlock(&ref->lock);
-+			pr_err("trace-imc: Unable to stop the counters for core %d\n", core_id);
-+			return;
-+		}
-+	} else if (ref->refc < 0) {
-+		ref->refc = 0;
-+	}
-+	mutex_unlock(&ref->lock);
-+	trace_imc_event_stop(event, flags);
-+}
-+
-+static int trace_imc_event_init(struct perf_event *event)
-+{
-+	struct task_struct *target;
-+
-+	if (event->attr.type != event->pmu->type)
-+		return -ENOENT;
-+
-+	if (!capable(CAP_SYS_ADMIN))
-+		return -EACCES;
-+
-+	/* Return if this is a couting event */
-+	if (event->attr.sample_period == 0)
-+		return -ENOENT;
-+
-+	event->hw.idx = -1;
-+	target = event->hw.target;
-+
-+	event->pmu->task_ctx_nr = perf_hw_context;
-+	return 0;
-+}
-+
- /* update_pmu_ops : Populate the appropriate operations for "pmu" */
- static int update_pmu_ops(struct imc_pmu *pmu)
- {
-@@ -1138,6 +1314,13 @@ static int update_pmu_ops(struct imc_pmu *pmu)
- 		pmu->pmu.cancel_txn = thread_imc_pmu_cancel_txn;
- 		pmu->pmu.commit_txn = thread_imc_pmu_commit_txn;
- 		break;
-+	case IMC_DOMAIN_TRACE:
-+		pmu->pmu.event_init = trace_imc_event_init;
-+		pmu->pmu.add = trace_imc_event_add;
-+		pmu->pmu.del = trace_imc_event_del;
-+		pmu->pmu.start = trace_imc_event_start;
-+		pmu->pmu.stop = trace_imc_event_stop;
-+		pmu->pmu.read = trace_imc_event_read;
- 	default:
- 		break;
- 	}
--- 
-2.17.2
+> On Apr 14, 2019, at 3:14 AM, Shyam Saini =
+<shyam.saini@amarulasolutions.com> wrote:
+>=20
+> Currently, there are 3 different macros, namely sizeof_field, =
+SIZEOF_FIELD
+> and FIELD_SIZEOF which are used to calculate the size of a member of
+> structure, so to bring uniformity in entire kernel source tree lets =
+use
+> FIELD_SIZEOF and replace all occurrences of other two macros with =
+this.
+>=20
+> For this purpose, redefine FIELD_SIZEOF in include/linux/stddef.h and
+> tools/testing/selftests/bpf/bpf_util.h and remove its defination from
+> include/linux/kernel.h
+
+
+> --- a/include/linux/stddef.h
+> +++ b/include/linux/stddef.h
+> @@ -20,6 +20,15 @@ enum {
+> #endif
+>=20
+> /**
+> + * FIELD_SIZEOF - get the size of a struct's field
+> + * @t: the target struct
+> + * @f: the target struct's field
+> + * Return: the size of @f in the struct definition without having a
+> + * declared instance of @t.
+> + */
+> +#define FIELD_SIZEOF(t, f) (sizeof(((t *)0)->f))
+> +
+> +/**
+>  * sizeof_field(TYPE, MEMBER)
+>  *
+>  * @TYPE: The structure containing the field of interest
+> @@ -34,6 +43,6 @@ enum {
+>  * @MEMBER: The member within the structure to get the end offset of
+>  */
+> #define offsetofend(TYPE, MEMBER) \
+> -	(offsetof(TYPE, MEMBER)	+ sizeof_field(TYPE, MEMBER))
+> +	(offsetof(TYPE, MEMBER)	+ FIELD_SIZEOF(TYPE, MEMBER))
+
+If you're doing this, why are you leaving the definition of =
+sizeof_field() in
+stddef.h untouched?
+
+Given the way this has worked historically, if you are leaving it in =
+place for
+source compatibility reasons, shouldn't it be redefined in terms of
+FIELD_SIZEOF(), e.g.:
+
+#define sizeof_field(TYPE, MEMBER) FIELD_SIZEOF(TYPE, MEMBER)
+
+
 
