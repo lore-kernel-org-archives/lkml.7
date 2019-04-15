@@ -2,231 +2,185 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27388C10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 22:01:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 058C3C282DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 22:01:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F2476206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 22:01:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C758C206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 22:01:58 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LhL8C6TG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727413AbfDOWBF (ORCPT
+        id S1728129AbfDOWB5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 18:01:05 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:47088 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725804AbfDOWBB (ORCPT
+        Mon, 15 Apr 2019 18:01:57 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:35496 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725804AbfDOWB5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 18:01:01 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id B8AB4281AC5
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-To:     linux-pm@vger.kernel.org, sre@kernel.org
-Cc:     Sameer Nanda <snanda@chromium.org>, bleung@chromium.org,
-        rjw@rjwysocki.net, gwendal@chromium.org,
-        linux-kernel@vger.kernel.org, Len Brown <len.brown@intel.com>,
-        groeck@chromium.org, Adam.Thomson.Opensource@diasemi.com,
-        kernel@collabora.com, Pavel Machek <pavel@ucw.cz>
-Subject: [RESEND PATCH v3 2/2] power: supply: cros: allow to set input voltage and current limit
-Date:   Tue, 16 Apr 2019 00:00:49 +0200
-Message-Id: <20190415220049.14924-2-enric.balletbo@collabora.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190415220049.14924-1-enric.balletbo@collabora.com>
-References: <20190415220049.14924-1-enric.balletbo@collabora.com>
+        Mon, 15 Apr 2019 18:01:57 -0400
+Received: by mail-ed1-f68.google.com with SMTP id y67so2810027ede.2;
+        Mon, 15 Apr 2019 15:01:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=RJqS8aUhikcYPZrVt+ASSZGTsN7hObt7ZSRvFLdA9Mk=;
+        b=LhL8C6TGF5qrwHscLfvYjjPlw4g5okjx2s5ZgM9HOzroeGIQMzvqhISoAfAYth10a2
+         dr9wc9VU21x4R/Nur2+AQsIHbTRTj9DyHAHnHdEM5p/ZImk4dw8/u7LYxGixa7s4qtLN
+         iT6hxRE2b6PlL1q2AOYsT8W/FWqvIpz+LC6m6oNnx3nQdzES3CasL2gwnkFeP3nzdZ60
+         bYzCTuGQGH+q+bgkko+fEwlJPsJ2OxL0+TLNohlwvPgI311SMMRamCDAWYO4sv71FrNt
+         jv5nWOABfUxIWUIyrj6IBbsyncnlSIQDabslysHhVtRyJrnPowjPn9gfPV5WfCUKUIRM
+         tXRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=RJqS8aUhikcYPZrVt+ASSZGTsN7hObt7ZSRvFLdA9Mk=;
+        b=TrZv7vbSyBWfshD6sa0atW+frgPqP7kbQcCEms6u/gFHDsxktblwVmGvZ11igEthCt
+         xbDuijs4u0I1OGS2LDiKbo77P2THwMRR/4eNJJ52KLHNQb6piHmM7a3vMoN79+3LHjIW
+         DB5GPLPJOiESfhB1XcWyg6vkVIAiFqy1riGO7d4a5u4tAnShZWiyo83AfnaVEe0jbxYR
+         OHId6VKj1qvpcLpQLqxloF7ClGJye8hzyW4+PNzS2Gd4gnMcGrxJV4cW2/2OEyTd1mXT
+         5hBNhNOnC+1mB1dTIK1OrZRwMyen3RYo7xqf+A1+oroOGG89ndMLcSzTfOUWbHR49eKQ
+         B+bA==
+X-Gm-Message-State: APjAAAXrsDtremosMju0wDcHQVx6PU5AYq9PGGRbt4GCu1imntRWecwI
+        URLk8+jqUOGNkMhB+3jfe20tM96IHNc=
+X-Google-Smtp-Source: APXvYqw7VZYDNV9MDxala6jKYeIHzOAnspA9bIpEKpijftLvnT4Wl6/M/VqXeJqHn+m7bFpZJD6xUQ==
+X-Received: by 2002:a50:b80e:: with SMTP id j14mr10773402ede.170.1555365714762;
+        Mon, 15 Apr 2019 15:01:54 -0700 (PDT)
+Received: from archlinux-i9 ([2a01:4f9:2b:2b84::2])
+        by smtp.gmail.com with ESMTPSA id x13sm1862556eda.13.2019.04.15.15.01.53
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Mon, 15 Apr 2019 15:01:53 -0700 (PDT)
+Date:   Mon, 15 Apr 2019 15:01:51 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        stable@kernel.org, Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH 4.9 72/76] arm64: futex: Fix FUTEX_WAKE_OP atomic ops
+ with non-zero result value
+Message-ID: <20190415220151.GA23056@archlinux-i9>
+References: <20190415183707.712011689@linuxfoundation.org>
+ <20190415183729.170980546@linuxfoundation.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190415183729.170980546@linuxfoundation.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch allows reading and writing the input voltage and current
-limit through the POWER_SUPPLY_PROP_INPUT_VOLTAGE_LIMIT and
-POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT sysfs properties. This allows
-userspace to see current values and to re-configure these values at
-runtime based on system-level knowledge or user input.
+On Mon, Apr 15, 2019 at 08:44:36PM +0200, Greg Kroah-Hartman wrote:
+> From: Will Deacon <will.deacon@arm.com>
+> 
+> commit 045afc24124d80c6998d9c770844c67912083506 upstream.
+> 
+> Rather embarrassingly, our futex() FUTEX_WAKE_OP implementation doesn't
+> explicitly set the return value on the non-faulting path and instead
+> leaves it holding the result of the underlying atomic operation. This
+> means that any FUTEX_WAKE_OP atomic operation which computes a non-zero
+> value will be reported as having failed. Regrettably, I wrote the buggy
+> code back in 2011 and it was upstreamed as part of the initial arm64
+> support in 2012.
+> 
+> The reasons we appear to get away with this are:
+> 
+>   1. FUTEX_WAKE_OP is rarely used and therefore doesn't appear to get
+>      exercised by futex() test applications
+> 
+>   2. If the result of the atomic operation is zero, the system call
+>      behaves correctly
+> 
+>   3. Prior to version 2.25, the only operation used by GLIBC set the
+>      futex to zero, and therefore worked as expected. From 2.25 onwards,
+>      FUTEX_WAKE_OP is not used by GLIBC at all.
+> 
+> Fix the implementation by ensuring that the return value is either 0
+> to indicate that the atomic operation completed successfully, or -EFAULT
+> if we encountered a fault when accessing the user mapping.
+> 
+> Cc: <stable@kernel.org>
+> Fixes: 6170a97460db ("arm64: Atomic operations")
+> Signed-off-by: Will Deacon <will.deacon@arm.com>
+> Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> 
+> ---
+>  arch/arm64/include/asm/futex.h |   16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
+> 
+> --- a/arch/arm64/include/asm/futex.h
+> +++ b/arch/arm64/include/asm/futex.h
+> @@ -33,8 +33,8 @@
+>  "	prfm	pstl1strm, %2\n"					\
+>  "1:	ldxr	%w1, %2\n"						\
+>  	insn "\n"							\
+> -"2:	stlxr	%w3, %w0, %2\n"						\
+> -"	cbnz	%w3, 1b\n"						\
+> +"2:	stlxr	%w0, %w3, %2\n"						\
+> +"	cbnz	%w0, 1b\n"						\
+>  "	dmb	ish\n"							\
+>  "3:\n"									\
+>  "	.pushsection .fixup,\"ax\"\n"					\
+> @@ -53,29 +53,29 @@
+>  static inline int
+>  arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
+>  {
+> -	int oldval = 0, ret, tmp;
+> +	int oldval, ret, tmp;
+>  
+>  	pagefault_disable();
+>  
+>  	switch (op) {
+>  	case FUTEX_OP_SET:
+> -		__futex_atomic_op("mov	%w0, %w4",
+> +		__futex_atomic_op("mov	%w3, %w4",
+>  				  ret, oldval, uaddr, tmp, oparg);
+>  		break;
+>  	case FUTEX_OP_ADD:
+> -		__futex_atomic_op("add	%w0, %w1, %w4",
+> +		__futex_atomic_op("add	%w3, %w1, %w4",
+>  				  ret, oldval, uaddr, tmp, oparg);
+>  		break;
+>  	case FUTEX_OP_OR:
+> -		__futex_atomic_op("orr	%w0, %w1, %w4",
+> +		__futex_atomic_op("orr	%w3, %w1, %w4",
+>  				  ret, oldval, uaddr, tmp, oparg);
+>  		break;
+>  	case FUTEX_OP_ANDN:
+> -		__futex_atomic_op("and	%w0, %w1, %w4",
+> +		__futex_atomic_op("and	%w3, %w1, %w4",
+>  				  ret, oldval, uaddr, tmp, ~oparg);
+>  		break;
+>  	case FUTEX_OP_XOR:
+> -		__futex_atomic_op("eor	%w0, %w1, %w4",
+> +		__futex_atomic_op("eor	%w3, %w1, %w4",
+>  				  ret, oldval, uaddr, tmp, oparg);
+>  		break;
+>  	default:
+> 
+>
 
-By default there is no limit, this is reported as a -1 when reading from
-userspace. Writing a value will set the current or voltage limit in uA
-or uV, and writing any negative value will remove that limit.
+This causes a (false) build warning with AOSP's GCC 4.9.4 (which is
+used to build nearly all arm64 Android kernels before 4.14):
 
-Signed-off-by: Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Reviewed-by: Guenter Roeck <groeck@chromium.org>
----
+  CC      kernel/futex.o
+../kernel/futex.c: In function 'do_futex':
+../kernel/futex.c:1492:17: warning: 'oldval' may be used uninitialized in this function [-Wmaybe-uninitialized]
+   return oldval == cmparg;
+                 ^
+In file included from ../kernel/futex.c:69:0:
+../arch/arm64/include/asm/futex.h:56:6: note: 'oldval' was declared here
+  int oldval, ret, tmp;
+      ^
 
-Changes in v3: None
-Changes in v2:
-- Fix the upper limit that can be set.
-- Remove unnecessary else.
+The only reason I bring this up is Qualcomm based kernels have a Python
+script that emulates -Werror, meaning this will be fatal for a large
+number of kernels, when this eventually gets merged into them.
 
- drivers/power/supply/cros_usbpd-charger.c | 116 ++++++++++++++++++++++
- 1 file changed, 116 insertions(+)
-
-diff --git a/drivers/power/supply/cros_usbpd-charger.c b/drivers/power/supply/cros_usbpd-charger.c
-index 7e9c3984ef6a..3a9ea94c3de3 100644
---- a/drivers/power/supply/cros_usbpd-charger.c
-+++ b/drivers/power/supply/cros_usbpd-charger.c
-@@ -53,6 +53,8 @@ struct charger_data {
- };
- 
- static enum power_supply_property cros_usbpd_charger_props[] = {
-+	POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT,
-+	POWER_SUPPLY_PROP_INPUT_VOLTAGE_LIMIT,
- 	POWER_SUPPLY_PROP_ONLINE,
- 	POWER_SUPPLY_PROP_STATUS,
- 	POWER_SUPPLY_PROP_CURRENT_MAX,
-@@ -80,6 +82,10 @@ static enum power_supply_usb_type cros_usbpd_charger_usb_types[] = {
- 	POWER_SUPPLY_USB_TYPE_APPLE_BRICK_ID
- };
- 
-+/* Input voltage/current limit in mV/mA. Default to none. */
-+static u16 input_voltage_limit = EC_POWER_LIMIT_NONE;
-+static u16 input_current_limit = EC_POWER_LIMIT_NONE;
-+
- static bool cros_usbpd_charger_port_is_dedicated(struct port_data *port)
- {
- 	return port->port_number >= port->charger->num_usbpd_ports;
-@@ -324,6 +330,26 @@ static int cros_usbpd_charger_get_port_status(struct port_data *port,
- 	return ret;
- }
- 
-+static int cros_usbpd_charger_set_ext_power_limit(struct charger_data *charger,
-+						  u16 current_lim,
-+						  u16 voltage_lim)
-+{
-+	struct ec_params_external_power_limit_v1 req;
-+	int ret;
-+
-+	req.current_lim = current_lim;
-+	req.voltage_lim = voltage_lim;
-+
-+	ret = cros_usbpd_charger_ec_command(charger, 0,
-+					    EC_CMD_EXTERNAL_POWER_LIMIT,
-+					    &req, sizeof(req), NULL, 0);
-+	if (ret < 0)
-+		dev_err(charger->dev,
-+			"Unable to set the 'External Power Limit': %d\n", ret);
-+
-+	return ret;
-+}
-+
- static void cros_usbpd_charger_power_changed(struct power_supply *psy)
- {
- 	struct port_data *port = power_supply_get_drvdata(psy);
-@@ -396,6 +422,18 @@ static int cros_usbpd_charger_get_prop(struct power_supply *psy,
- 	case POWER_SUPPLY_PROP_USB_TYPE:
- 		val->intval = port->psy_usb_type;
- 		break;
-+	case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
-+		if (input_current_limit == EC_POWER_LIMIT_NONE)
-+			val->intval = -1;
-+		else
-+			val->intval = input_current_limit * 1000;
-+		break;
-+	case POWER_SUPPLY_PROP_INPUT_VOLTAGE_LIMIT:
-+		if (input_voltage_limit == EC_POWER_LIMIT_NONE)
-+			val->intval = -1;
-+		else
-+			val->intval = input_voltage_limit * 1000;
-+		break;
- 	case POWER_SUPPLY_PROP_MODEL_NAME:
- 		val->strval = port->model_name;
- 		break;
-@@ -409,6 +447,81 @@ static int cros_usbpd_charger_get_prop(struct power_supply *psy,
- 	return 0;
- }
- 
-+static int cros_usbpd_charger_set_prop(struct power_supply *psy,
-+				       enum power_supply_property psp,
-+				       const union power_supply_propval *val)
-+{
-+	struct port_data *port = power_supply_get_drvdata(psy);
-+	struct charger_data *charger = port->charger;
-+	struct device *dev = charger->dev;
-+	u16 intval;
-+	int ret;
-+
-+	/* U16_MAX in mV/mA is the maximum supported value */
-+	if (val->intval >= U16_MAX * 1000)
-+		return -EINVAL;
-+	/* A negative number is used to clear the limit */
-+	if (val->intval < 0)
-+		intval = EC_POWER_LIMIT_NONE;
-+	else	/* Convert from uA/uV to mA/mV */
-+		intval = val->intval / 1000;
-+
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
-+		ret = cros_usbpd_charger_set_ext_power_limit(charger, intval,
-+							input_voltage_limit);
-+		if (ret < 0)
-+			break;
-+
-+		input_current_limit = intval;
-+		if (input_current_limit == EC_POWER_LIMIT_NONE)
-+			dev_info(dev,
-+			  "External Current Limit cleared for all ports\n");
-+		else
-+			dev_info(dev,
-+			  "External Current Limit set to %dmA for all ports\n",
-+			  input_current_limit);
-+		break;
-+	case POWER_SUPPLY_PROP_INPUT_VOLTAGE_LIMIT:
-+		ret = cros_usbpd_charger_set_ext_power_limit(charger,
-+							input_current_limit,
-+							intval);
-+		if (ret < 0)
-+			break;
-+
-+		input_voltage_limit = intval;
-+		if (input_voltage_limit == EC_POWER_LIMIT_NONE)
-+			dev_info(dev,
-+			  "External Voltage Limit cleared for all ports\n");
-+		else
-+			dev_info(dev,
-+			  "External Voltage Limit set to %dmV for all ports\n",
-+			  input_voltage_limit);
-+		break;
-+	default:
-+		ret = -EINVAL;
-+	}
-+
-+	return ret;
-+}
-+
-+static int cros_usbpd_charger_property_is_writeable(struct power_supply *psy,
-+						enum power_supply_property psp)
-+{
-+	int ret;
-+
-+	switch (psp) {
-+	case POWER_SUPPLY_PROP_INPUT_CURRENT_LIMIT:
-+	case POWER_SUPPLY_PROP_INPUT_VOLTAGE_LIMIT:
-+		ret = 1;
-+		break;
-+	default:
-+		ret = 0;
-+	}
-+
-+	return ret;
-+}
-+
- static int cros_usbpd_charger_ec_event(struct notifier_block *nb,
- 				       unsigned long queued_during_suspend,
- 				       void *_notify)
-@@ -525,6 +638,9 @@ static int cros_usbpd_charger_probe(struct platform_device *pd)
- 
- 		psy_desc = &port->psy_desc;
- 		psy_desc->get_property = cros_usbpd_charger_get_prop;
-+		psy_desc->set_property = cros_usbpd_charger_set_prop;
-+		psy_desc->property_is_writeable =
-+				cros_usbpd_charger_property_is_writeable;
- 		psy_desc->external_power_changed =
- 					cros_usbpd_charger_power_changed;
- 		psy_cfg.drv_data = port;
--- 
-2.20.1
-
+Nathan
