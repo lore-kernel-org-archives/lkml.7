@@ -2,91 +2,147 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E71A5C282DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:20:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0477C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B66D4217D6
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:20:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA21020818
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:20:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727667AbfDOPUb (ORCPT
+        id S1727690AbfDOPUv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 11:20:31 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:46192 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727252AbfDOPUb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 11:20:31 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1hG3PC-0003Uz-Bo; Mon, 15 Apr 2019 17:20:22 +0200
-Date:   Mon, 15 Apr 2019 17:20:22 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     Kirill Smelkov <kirr@nexedi.com>
-Cc:     Julia Lawall <julia.lawall@lip6.fr>, kbuild-all@01.org,
-        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
-        Logan Gunthorpe <logang@deltatee.com>,
-        Bjorn Helgaas <helgaas@kernel.org>, linux-pci@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] pci/switchtec: fix stream_open.cocci warnings (fwd)
-Message-ID: <20190415152021.3j3riefeoz7rf2pa@linutronix.de>
-References: <alpine.DEB.2.21.1904131849350.2536@hadrien>
- <20190413170056.GA11293@deco.navytux.spb.ru>
- <20190415143857.kg2dbg3zxsxdktsi@linutronix.de>
- <20190415145456.GA15280@deco.navytux.spb.ru>
+        Mon, 15 Apr 2019 11:20:51 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:41858 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726034AbfDOPUv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 11:20:51 -0400
+Received: from DGGEMS401-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 6EEEE427724505D695B4;
+        Mon, 15 Apr 2019 23:20:46 +0800 (CST)
+Received: from [127.0.0.1] (10.184.38.59) by DGGEMS401-HUB.china.huawei.com
+ (10.3.19.201) with Microsoft SMTP Server id 14.3.408.0; Mon, 15 Apr 2019
+ 23:20:38 +0800
+Subject: Re: [PATCH] sched/fair: Use 'unsigned long' for
+ group_shares,group_runnable
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     <huawei.libin@huawei.com>, <xiexiuqi@huawei.com>,
+        <yangyingliang@huawei.com>, <mingo@redhat.com>,
+        <linux-kernel@vger.kernel.org>,
+        "chengjian (D)" <cj.chengjian@huawei.com>,
+        Yang Yingliang <yangyingliang@huawei.com>
+References: <20190413033234.30002-1-cj.chengjian@huawei.com>
+ <20190415124617.GP11158@hirez.programming.kicks-ass.net>
+From:   "chengjian (D)" <cj.chengjian@huawei.com>
+Message-ID: <eb7dede4-9668-9252-b95a-e20e313c5890@huawei.com>
+Date:   Mon, 15 Apr 2019 23:20:31 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190415145456.GA15280@deco.navytux.spb.ru>
-User-Agent: NeoMutt/20180716
+In-Reply-To: <20190415124617.GP11158@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Originating-IP: [10.184.38.59]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-04-15 14:55:02 [+0000], Kirill Smelkov wrote:
-> Hi Sebastian,
-Hi Kirill,
+Hi, Peter
 
-> On Mon, Apr 15, 2019 at 04:38:57PM +0200, Sebastian Andrzej Siewior wrote:
-> > On 2019-04-13 17:00:59 [+0000], Kirill Smelkov wrote:
-> > > stream_open.cocci was issuing only warning for pci/switchtec, but after
-> > > 8a29a3bae2a2 ("pci/switchtec: Don't use completion's wait queue") they
-> > > started to use wait_even_* inside read method and, since
-> > > stream_open.cocci considers wait_event_* as blocking the warning became
-> > > error. Previously it was completions there, but I added support for wait
-> > > events only for simplicity.
-> > 
-> > why is wait_event_interruptible() treated differently compared to
-> > wait_for_completion_interruptible()?
-> 
-> No particular reason. I just taught stream_open.cocci to consider
-> only "wait_event_*" as blocking:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/scripts/coccinelle/api/stream_open.cocci?h=v5.1-rc5#n35
-> 
-> based on original /proc/xen/xenbus deadlock:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/xen/xenbus/xenbus_dev_frontend.c?h=v5.1-rc5#n135
-> https://git.kernel.org/linus/581d21a2d02a
-> 
-> We can extend "a function that blocks" rule to cover other kernel
-> primitives.
-> 
-> For the reference: the deadlock scenario is described in
-> 
-> https://git.kernel.org/linus/10dce8af3422
 
-As far I understand the problem is when the ->read() callback waits for
-the ->write() callback. The locking isn't changed by patch you
-mentioned.
-So extended might make sense. But then wait_event_* by itself in
-->read() isn't a problem as long as its counter part isn't in ->write().
-But yes, nice finding.
+On 2019/4/15 20:46, Peter Zijlstra wrote:
 
-> Kirill
+I write a demo about this, which I described it as overflow.
 
-Sebastian
+#cat test.c
+
+//test.c
+#include <stdio.h>
+#include <stdlib.h>
+#include <limits.h>
+#include <assert.h>
+
+int main(void)
+{
+     long a = 1048576 * 9144968455305; /* shares = tg_shares * load */
+     unsigned long b = a;
+     //unsigned long e = 1048576 * 9144968455305;
+
+     printf("LONG_MAX = %ld, 0x%lx\n", LONG_MAX, LONG_MAX);
+     printf("ULONG_MAX = %lu, 0x%lx\n", ULONG_MAX, ULONG_MAX);
+
+     if (b > LONG_MAX)
+         printf("==overflow!!!==\n");   // OVERFLOW
+     printf("a = %20ld,0x%016lx\n", a, a);
+     printf("b = %20lu,0x%016lx\n", b, b);
+
+     /* shares /= tg_weight */
+     printf("a/3 = 0x%016lx\n", (a / 3));                        // WRONG
+     printf("a/3 = 0x%016lx\n", (((unsigned long)a) / 3));   // unsigned
+     printf("a/3 = 0x%016lx\n", (a / (unsigned long)3));    // unsigned
+     printf("b/3 = 0x%016lx\n", b / 3);            // unsigned
+
+     return EXIT_SUCCESS;
+}
+
+
+
+#./test
+
+LONG_MAX = 9223372036854775807, 0x7fffffffffffffff
+ULONG_MAX = 18446744073709551615, 0xffffffffffffffff
+==overflow!!!==
+a = -8857549630719655936,0x8513a98a48900000
+b =  9589194442989895680,0x8513a98a48900000
+a/3 = 0xd7068dd8c2daaaab     //  WRONG
+a/3 = 0x2c5be32e18300000
+a/3 = 0x2c5be32e18300000
+b/3 = 0x2c5be32e18300000
+
+
+
+> On Sat, Apr 13, 2019 at 03:32:34AM +0000, Cheng Jian wrote:
+>> group_share and group_runnable are tracked as 'unsigned long',
+>> however some functions using them as 'long' which is ultimately
+>> assigned back to 'unsigned long' variables in reweight_entity.
+>>
+>> Since there is not scope on using a different and signed type,
+>> this change improves code consistency and avoids further type
+>> conversions. More important, to prevent undefined behavior
+>> caused by overflow.
+> There is no undefined behaviour due to overflow.UBSAN is broken,
+> upgrade to GCC8 or later.
+>
+> .
+
+
+So, function calc_group_shares will return the wrong value.
+
+
+```cpp
+
+static long calc_group_shares(struct cfs_rq *cfs_rq)
+{
+
+     // ......
+
+     shares = (tg_shares * load);
+     if (tg_weight)
+         shares /= tg_weight;
+}
+
+```
+
+
+The same to calc_group_runnable.
+
+
+Thanks.
+
+     CHENG Jian.
+
+
