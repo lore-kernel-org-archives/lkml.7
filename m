@@ -2,137 +2,132 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB148C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:55:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 507A3C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:56:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C9B8206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:55:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="sZx/GclE"
+	by mail.kernel.org (Postfix) with ESMTP id 257F4206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:56:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727271AbfDOKz4 (ORCPT
+        id S1727273AbfDOK4q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 06:55:56 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:42248 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727136AbfDOKz4 (ORCPT
+        Mon, 15 Apr 2019 06:56:46 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:58226 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726751AbfDOK4q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 06:55:56 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Gxzy/AaNeEIvJVgpcQ2SD4ixinqpb33r3egFNFahl0Y=; b=sZx/GclEx2J7ERWF/WG5Aw9Va
-        IkO2Q8iGHGIwnSMWq1ir1DZcQlabOA16th0I2Sf6iZrIGBGcIDGfP3M0M84oQdzCA0h0Rk1C7EfXK
-        zjRbgvmTxS+tAoCIJ3lPjk/Ypg/XpGf4PvDEPU9OV1JBi/Rs3T5B9ZvrCRlLX43Lwp4Wg99hQj8Il
-        DFtHYUpHAYA6qmRiW2U4ekWyIC3q5jI4QaBsR1ElUhE/00Wo2e1nAuJapbiRiDiMMEc3mdFHTasnQ
-        /Hbx4AZR/671L75GI+1CM1Y5bvbfms4J9b9QsW7BqgeX7/Y8g2fJdhBkqS2gsRq+ETcFde9FiOXH+
-        n18BNKssQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hFzGt-0006DR-Lx; Mon, 15 Apr 2019 10:55:31 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 04F622038C257; Mon, 15 Apr 2019 12:55:30 +0200 (CEST)
-Date:   Mon, 15 Apr 2019 12:55:29 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Daniel Bristot de Oliveira <bristot@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Chris von Recklinghausen <crecklin@redhat.com>,
-        Jason Baron <jbaron@akamai.com>, Scott Wood <swood@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Clark Williams <williams@redhat.com>, x86@kernel.org
-Subject: Re: [PATCH V5 4/7] jump_label: Sort entries of the same key by the
- code
-Message-ID: <20190415105529.GJ11158@hirez.programming.kicks-ass.net>
-References: <cover.1554106794.git.bristot@redhat.com>
- <d89001dfd5429567a4c54ff6667986ecaed9900b.1554106794.git.bristot@redhat.com>
+        Mon, 15 Apr 2019 06:56:46 -0400
+Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3FAtfD4026369
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 06:56:45 -0400
+Received: from e15.ny.us.ibm.com (e15.ny.us.ibm.com [129.33.205.205])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rvr6s92px-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 06:56:44 -0400
+Received: from localhost
+        by e15.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <paulmck@linux.vnet.ibm.com>;
+        Mon, 15 Apr 2019 11:56:44 +0100
+Received: from b01cxnp22033.gho.pok.ibm.com (9.57.198.23)
+        by e15.ny.us.ibm.com (146.89.104.202) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 15 Apr 2019 11:56:42 +0100
+Received: from b01ledav003.gho.pok.ibm.com (b01ledav003.gho.pok.ibm.com [9.57.199.108])
+        by b01cxnp22033.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3FAufM733554584
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Apr 2019 10:56:41 GMT
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 67F31B2066;
+        Mon, 15 Apr 2019 10:56:41 +0000 (GMT)
+Received: from b01ledav003.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 48118B205F;
+        Mon, 15 Apr 2019 10:56:41 +0000 (GMT)
+Received: from paulmck-ThinkPad-W541 (unknown [9.85.174.176])
+        by b01ledav003.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon, 15 Apr 2019 10:56:41 +0000 (GMT)
+Received: by paulmck-ThinkPad-W541 (Postfix, from userid 1000)
+        id 623F816C0B95; Mon, 15 Apr 2019 03:56:45 -0700 (PDT)
+Date:   Mon, 15 Apr 2019 03:56:45 -0700
+From:   "Paul E. McKenney" <paulmck@linux.ibm.com>
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: Alleged fix for writer stall on -rcu branch dev
+Reply-To: paulmck@linux.ibm.com
+References: <20190409221426.GA11212@linux.ibm.com>
+ <20190410181538.3ocva5lmh7ghrisr@linutronix.de>
+ <20190410184105.GR14111@linux.ibm.com>
+ <20190410191918.g2yqnsmuqukmzdfe@linutronix.de>
+ <20190410203302.GT14111@linux.ibm.com>
+ <20190411000610.GA3867@linux.ibm.com>
+ <20190413142153.GA17704@linux.ibm.com>
+ <20190415104047.mrtmv6w6kq5m44fp@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d89001dfd5429567a4c54ff6667986ecaed9900b.1554106794.git.bristot@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190415104047.mrtmv6w6kq5m44fp@linutronix.de>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19041510-0068-0000-0000-000003B53E78
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010931; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000284; SDB=6.01189390; UDB=6.00623175; IPR=6.00970177;
+ MB=3.00026449; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-15 10:56:43
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19041510-0069-0000-0000-0000482AA8BA
+Message-Id: <20190415105645.GQ14111@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-15_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904150075
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 01, 2019 at 10:58:16AM +0200, Daniel Bristot de Oliveira wrote:
-> In the batching mode, entries with the same key should also be sorted by the
-> code, enabling a bsearch() of a code/addr when updating a key.
-
-Might be good to explain *why*.
-
-We can see what the code does, explaining why we do things is what we
-have Changelogs for.
-
-> Signed-off-by: Daniel Bristot de Oliveira <bristot@redhat.com>
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Borislav Petkov <bp@alien8.de>
-> Cc: "H. Peter Anvin" <hpa@zytor.com>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Masami Hiramatsu <mhiramat@kernel.org>
-> Cc: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
-> Cc: Jiri Kosina <jkosina@suse.cz>
-> Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-> Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
-> Cc: Chris von Recklinghausen <crecklin@redhat.com>
-> Cc: Jason Baron <jbaron@akamai.com>
-> Cc: Scott Wood <swood@redhat.com>
-> Cc: Marcelo Tosatti <mtosatti@redhat.com>
-> Cc: Clark Williams <williams@redhat.com>
-> Cc: x86@kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  kernel/jump_label.c | 16 ++++++++++++++++
->  1 file changed, 16 insertions(+)
+On Mon, Apr 15, 2019 at 12:40:47PM +0200, Sebastian Andrzej Siewior wrote:
+> On 2019-04-13 07:21:53 [-0700], Paul E. McKenney wrote:
+> > 
+> > And after ramping up the stress in rcutorture a bit, I am able to
+> > reproduce this CPU stall involving offlining on my systems.  My plan is
+> > my usual one:  Keep increasing rcutorture stress to get it to reproduce
+> > in reasonable time, add diagnostics as appropriate, and continue making
+> > forward-progress improvements in RCU itself.
 > 
-> diff --git a/kernel/jump_label.c b/kernel/jump_label.c
-> index e666a4d6642a..8b7bfbba4cef 100644
-> --- a/kernel/jump_label.c
-> +++ b/kernel/jump_label.c
-> @@ -36,12 +36,28 @@ static int jump_label_cmp(const void *a, const void *b)
->  	const struct jump_entry *jea = a;
->  	const struct jump_entry *jeb = b;
->  
-> +	/*
-> +	 * Entrires are sorted by key.
-> +	 */
->  	if (jump_entry_key(jea) < jump_entry_key(jeb))
->  		return -1;
->  
->  	if (jump_entry_key(jea) > jump_entry_key(jeb))
->  		return 1;
->  
-> +#ifdef HAVE_JUMP_LABEL_BATCH
-> +	/*
-> +	 * In the batching mode, entries should also be sorted by the code
-> +	 * inside the already sorted list of entries, enabling a bsearch in
-> +	 * the vector.
-> +	 */
-> +	if (jump_entry_code(jea) < jump_entry_code(jeb))
-> +		return -1;
-> +
-> +	if (jump_entry_code(jea) > jump_entry_code(jeb))
-> +		return 1;
-> +#endif
-> +
->  	return 0;
->  }
+> I *think* this one is also new:
+> 
+> |Assertion failure in /home/bigeasy/linux-rt/tools/testing/selftests/rcutorture/res/2019.04.14-14:28:40/TREE03.37/console.log TREE03
+> |Summary: Warnings: 6 Call Traces: 6
+> https://breakpoint.cc/console-03.37.log
 
-The secondary sort order doesn't hurt, so we could leave the #ifdef out,
-not sure.
+This is new in rcutorture as well.  It is complaining that we just got
+done with a stutter interval (in which torturing temporarily stops)
+but not everything has progressed through the callback chain to be freed.
+And in this case it is happening during rcutorture shutdown, so I need
+to check the callback -- I might need end-of-run checks in that WARN_ON().
+
+> |Assertion failure in /home/bigeasy/linux-rt/tools/testing/selftests/rcutorture/res/2019.04.14-14:28:40/TREE03.39/console.log TREE03
+> |Summary: Warnings: 4 Call Traces: 4
+> https://breakpoint.cc/console-03.39.log
+
+And the same here.  So neither count against you.  ;-)
+
+							Thanx, Paul
+
+> This is still commit 33e04e451279 ("torture: Allow inter-stutter interval to be
+> specified").
+> 
+> > Thank you very much for locating this one!!!
+> 
+> You are welcome.
+> 
+> > 							Thanx, Paul
+> 
+> Sebastian
+> 
+
