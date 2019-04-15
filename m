@@ -2,132 +2,144 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D35FCC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:20:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2292C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:22:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E5AE2075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:20:17 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555323617;
-	bh=xkkT995wyHiGNkJTyDY9RuTkCF7U40vt++nhBYST41U=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=Hq301ejcMKfmmvlpYDOS4K6+PJmUfocQnAfufuQDAnqlB745bIJey7ZRURSzDhwJ1
-	 6K1ei261yShKeJSvXv9cSpqYdW3SwZi3Bb38AYKTVwdgETYILerJISNK6TdF6toDrf
-	 NCywvMt3ysTBl94JovNmOzM3WOHaFBw68y5J+HOU=
+	by mail.kernel.org (Postfix) with ESMTP id AD65020883
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:22:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="KoQdK5wB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727227AbfDOKUQ (ORCPT
+        id S1727028AbfDOKWN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 06:20:16 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:40554 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726751AbfDOKUQ (ORCPT
+        Mon, 15 Apr 2019 06:22:13 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:45646 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725794AbfDOKWN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 06:20:16 -0400
-Received: by mail-lj1-f196.google.com with SMTP id q66so15087726ljq.7;
-        Mon, 15 Apr 2019 03:20:14 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bqYAp/he9RcQe+K1USjID00PfUaljcvAy/YDV5xrNu0=;
-        b=Vtf3SlckqOS7vf76vmPSNdYxbvfTbiHI+3KhZdypAzY8FDSiIh9sJgQ+mBl199wZhk
-         nlorY1Jyy+s2xa367/6cEOuAiUnmZT1DBtsJU94/KrSeuwgIDtq7Hx5LMhWoYq8hAdKz
-         qPKOu1kyza8JR7Lu2AWMI73MenlcZygZXHEQiZ/izyDC7jURVUBkMrXj+zRNiOk3pl/m
-         QeFwnUZBzFx4Eow5s+tb7e2JpyyRA1j0T0nrybeh7P0uSbV+Ssinzrt2vwtdwXWv9MNj
-         Y8d3ZMUFZk37uiPpRm2p/vWShfnOLUqE8MIu50MRE9b0zGFYS33SOvKUOarxuPIJbSiQ
-         3qVA==
-X-Gm-Message-State: APjAAAUM5hO6pvl0+AErmWL+sdQ8qeYeh9RwmtEIU8Owtq1rUgzj14ha
-        zYbfB32kXNOoJWR+dPxoW7w=
-X-Google-Smtp-Source: APXvYqw9oyN9eUrBKy8vJXhI95uC5hG4QSqFBRXN3zRYA994/kLCJpfOQgRBfoVFEynNd5XEJ4HN1w==
-X-Received: by 2002:a2e:895a:: with SMTP id b26mr38057860ljk.89.1555323613764;
-        Mon, 15 Apr 2019 03:20:13 -0700 (PDT)
-Received: from xi.terra (c-74bee655.07-184-6d6c6d4.bbcust.telenor.se. [85.230.190.116])
-        by smtp.gmail.com with ESMTPSA id d23sm2805988lfj.64.2019.04.15.03.20.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Apr 2019 03:20:12 -0700 (PDT)
-Received: from johan by xi.terra with local (Exim 4.91)
-        (envelope-from <johan@kernel.org>)
-        id 1hFyio-0000Bc-6P; Mon, 15 Apr 2019 12:20:18 +0200
-Date:   Mon, 15 Apr 2019 12:20:18 +0200
-From:   Johan Hovold <johan@kernel.org>
-To:     "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>
-Cc:     peter_hong@fintek.com.tw, johan@kernel.org,
-        gregkh@linuxfoundation.org, linux-usb@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>,
-        Oliver Neukum <oneukum@suse.com>
-Subject: Re: [PATCH V6 1/3] USB: serial: f81232: clear overrun flag
-Message-ID: <20190415102018.GD29656@localhost>
-References: <1554280832-29286-1-git-send-email-hpeter+linux_kernel@gmail.com>
+        Mon, 15 Apr 2019 06:22:13 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3FALJZT110511;
+        Mon, 15 Apr 2019 05:21:19 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1555323679;
+        bh=8b6kBhBFdSOPc8SDTqfFQA0rlFoTm7OJpkSsvharSJM=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=KoQdK5wBVpzrrLzM8DGwZAvw6QIEXMeSjnqx65zHyPGTU4yaLZeL4mZWMGpAEs3xg
+         pCWE7QdSODuK2/LpLkZbkwSszNXVVoHlHoEUisDi8ZzH2QahlhkaNpazmPTJpEBaEw
+         wtm6YBB5arWBwi2BQ33SSLN0AXBf2GiPajwTVIiA=
+Received: from DFLE102.ent.ti.com (dfle102.ent.ti.com [10.64.6.23])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3FALITm046495
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 15 Apr 2019 05:21:19 -0500
+Received: from DFLE111.ent.ti.com (10.64.6.32) by DFLE102.ent.ti.com
+ (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 15
+ Apr 2019 05:21:18 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DFLE111.ent.ti.com
+ (10.64.6.32) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 15 Apr 2019 05:21:18 -0500
+Received: from [172.24.190.172] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3FALEpE020868;
+        Mon, 15 Apr 2019 05:21:15 -0500
+Subject: Re: [PATCH v3 1/3] ARM: dts: da850: add cpu node and operating points
+ to DT
+To:     Bartosz Golaszewski <brgl@bgdev.pl>
+CC:     Kevin Hilman <khilman@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        David Lechner <david@lechnology.com>,
+        Adam Ford <aford173@gmail.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bartosz Golaszewski <bgolaszewski@baylibre.com>
+References: <20190408075924.2284-1-brgl@bgdev.pl>
+ <20190408075924.2284-2-brgl@bgdev.pl>
+ <5f72a26b-428a-c50e-cb6a-7c888ea22329@ti.com>
+ <CAMRc=McGwGh9RKhxxCDnz3aMG_EVjjXzN+pmMZVtE7aChdU3jw@mail.gmail.com>
+ <3f6c906b-53b0-8284-bf4d-9b404f341e7b@ti.com>
+ <CAMRc=Me8vppb9vEmKOUcU28YKVR9jJ64sBSn-KwNyNnZA=VB9Q@mail.gmail.com>
+From:   Sekhar Nori <nsekhar@ti.com>
+Message-ID: <6ff5711c-b607-1f3a-e362-709b53762179@ti.com>
+Date:   Mon, 15 Apr 2019 15:51:13 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1554280832-29286-1-git-send-email-hpeter+linux_kernel@gmail.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <CAMRc=Me8vppb9vEmKOUcU28YKVR9jJ64sBSn-KwNyNnZA=VB9Q@mail.gmail.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 03, 2019 at 04:40:30PM +0800, Ji-Ze Hong (Peter Hong) wrote:
-> The F81232 will report data and LSR with bulk like following format:
-> bulk-in data: [LSR(1Byte)+DATA(1Byte)][LSR(1Byte)+DATA(1Byte)]...
+On 12/04/19 9:01 PM, Bartosz Golaszewski wrote:
+> pt., 12 kwi 2019 o 15:53 Sekhar Nori <nsekhar@ti.com> napisał(a):
+>>
+>> On 12/04/19 5:41 PM, Bartosz Golaszewski wrote:
+>>> pt., 12 kwi 2019 o 13:26 Sekhar Nori <nsekhar@ti.com> napisał(a):
+>>>>
+>>>> Hi Bartosz,
+>>>>
+>>>> On 08/04/19 1:29 PM, Bartosz Golaszewski wrote:
+>>>>> From: David Lechner <david@lechnology.com>
+>>>>>
+>>>>> This adds a cpu node and operating points to the common da850.dtsi file.
+>>>>>
+>>>>> Additionally, a regulator is added to the LEGO EV3 board along with
+>>>>> some board-specific CPU configuration.
+>>>>>
+>>>>> Regulators need to be hooked up on other boards to get them working.
+>>>>>
+>>>>> Signed-off-by: David Lechner <david@lechnology.com>
+>>>>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
+>>>>
+>>>> I remember you mentioning about some problems using OCHI and cpufreq
+>>>> together. Are those resolved now? CPU PLL on DA850 can affect other
+>>>> peripheral clock frequencies too. So enabling it should really be a
+>>>> per-board decision.
+>>>>
+>>>
+>>> The problems are still there. I've never been able to find the
+>>> culprit, but it also occurs on TI BSP in the same way (a couple
+>>> cpufreq transitions will make the controller unresponsive).
+>>
+>> Is that on LCDK as well? As I recall cpufreq was never enabled on LCDK
+>> in TI BSP.
+>>
 > 
-> LSR will auto clear frame/parity/break error flag when reading by H/W,
-> but overrrun will only cleared when reading LSR. So this patch add a
-> worker to read LSR when overrun and flush the worker on close() &
-> suspend().
+> Yes, I just verified that the bug occurs on LCDK with patches from this series.
 > 
-> Cc: Oliver Neukum <oneukum@suse.com>
-> Signed-off-by: Ji-Ze Hong (Peter Hong) <hpeter+linux_kernel@gmail.com>
-> ---
-> V6:
-> 	1: Add deferred_lsr_work_needed to re-trigger when f81232_resume()
+>> If the OHCI problem is present on LCDK, then there is a user visible
+>> regression on mainline after this patch. Lets enable cpufreq in LCDK
+>> only if all working peripherals keep working afterwards.
+>>
 > 
-> v5:
-> 	1: Source code base revert to v3 and remove all v4 changes.
-> 	2: Add serial->suspending check in f81232_process_read_urb()
-> 	   before schedule_work(&priv->lsr_work) to avoid race condition.
-> 
-> v4:
-> 	1: Add serial->suspending check in f81232_lsr_worker() to avoid
-> 	   re-trigger
-> 	2: Add port_priv-lsr_work_resched to re-trigger LSR worker
-> 
-> v3:
-> 	1: Add flush_work(&port_priv->lsr_work) in f81232_suspend().
-> 
-> v2:
-> 	1: Add flush_work(&port_priv->lsr_work) in f81232_close().
-> 
->  drivers/usb/serial/f81232.c | 55 +++++++++++++++++++++++++++++++++++++++++++++
->  1 file changed, 55 insertions(+)
+> The OHCI driver doesn't register any cpufreq transition notifier
+> callbacks. I can't really find anything in the datasheet, but I'm
+> wondering if we shouldn't do something similar to what the driver for
+> davinci i2c controller does. I'll try a couple things tomorrow.
 
-> +static int f81232_suspend(struct usb_serial *serial, pm_message_t message)
-> +{
-> +	struct f81232_private *port_priv;
-> +
-> +	port_priv = usb_get_serial_port_data(serial->port[0]);
-> +	flush_work(&port_priv->lsr_work);
+Even if OHCI issue is fixed, with a fixed regulator like on LCDK, I am
+not sure the benefits of just frequency scaling will be justifiable enough.
 
-Note that usb-serial core doesn't manage the interrupt urb for you, so
-there's already a bug in this driver which should be fixed in a
-preparatory patch (i.e. resubmit the interrupt urb on resume).
+Fixing the OHCI issue may help in other boards like da850-evm use it
+though. So that will be a good thing.
 
-And if you stop the bulk-in and interrupt urbs explicitly here, you can
-safely flush the lsr work without any races afterwards.
+How do you feel about keeping all OPPs disabled by default in da850.dtsi
+and enabling only the ones that make sense for a board in <board>.dts?
 
-Also note that the interrupt work is currently never flushed on suspend
-or close either... Another thing to fix first.
+Empty OPP table is illegal, so this does mean that every board must
+enable at least one OPP.
 
-There's also a layering violation here, since you're accessing the child
-port data from a parent interface driver callback. The port driver could
-have been unbound and you'd get a NULL deref here. Iterating over the
-interface's ports, and checking if it's been opened (as you need to do
-on resume anyway) might be enough though.
-
-Johan
+Thanks,
+Sekhar
