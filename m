@@ -2,120 +2,106 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19643C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 02:01:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99046C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 02:03:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5368206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 02:01:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="T+p3m0JX"
+	by mail.kernel.org (Postfix) with ESMTP id 666B9206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 02:03:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726562AbfDOCBi (ORCPT
+        id S1726842AbfDOCDF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 22:01:38 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:40969 "EHLO ozlabs.org"
+        Sun, 14 Apr 2019 22:03:05 -0400
+Received: from mga07.intel.com ([134.134.136.100]:30382 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726262AbfDOCBi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 22:01:38 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44jBZ66NG7z9s4V;
-        Mon, 15 Apr 2019 12:01:34 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1555293695;
-        bh=8Uog2E3phY7eafl4Ib9Z8JYHzBDsbSpBGlSUvNTpWLY=;
-        h=Date:From:To:Cc:Subject:From;
-        b=T+p3m0JXAUa1VV8iwdQlr9J+AHbiHamxQtx2g9JvtCcM4Q1a/hhewATXa1Mnsk4VV
-         0lzFiAcy1SSQd8bLESp8aH206Lslb7baFtKFUB/F+sUM4fYDrzbUJBJu5wSLGGqAVi
-         EGOVuNZ6/3YsnkmlPWO/lpA0lSVrYgAZlHvHclURsVrrNiB1CFEGCtVF/QT7Ek81B+
-         e9SSkCzhCpoRFz/LukZESxU0TgTASAvxC/hn00qiqgrC2UGYZXWUqs+HODgL2QDPQ0
-         m+U9TeJF71Dsdri8Q7QBMXKFw4I06J7AUcRdpFX9oIKctorXLTE/S54E9Tw4EvHCSW
-         FFoHT15ArltTg==
-Date:   Mon, 15 Apr 2019 12:01:33 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Kalle Valo <kvalo@codeaurora.org>,
-        Wireless <linux-wireless@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Shahar S Matityahu <shahar.s.matityahu@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>
-Subject: linux-next: manual merge of the wireless-drivers-next tree with the
- wireless-drivers tree
-Message-ID: <20190415120133.40c0f343@canb.auug.org.au>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/9dAKwPxUqEQEiYVHcHeRlGL"; protocol="application/pgp-signature"
+        id S1726120AbfDOCDE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Apr 2019 22:03:04 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Apr 2019 19:03:03 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,351,1549958400"; 
+   d="scan'208";a="149422488"
+Received: from genxtest-ykzhao.sh.intel.com ([10.239.143.71])
+  by FMSMGA003.fm.intel.com with ESMTP; 14 Apr 2019 19:03:02 -0700
+From:   Zhao Yakui <yakui.zhao@intel.com>
+To:     linux-kernel@vger.kernel.org, x86@kernel.org
+Cc:     bp@alien8.de, tglx@linutronix.de, Zhao Yakui <yakui.zhao@intel.com>
+Subject: [RFC PATCH v4 0/4] x86: Add the support of ACRN guest under arch/x86
+Date:   Mon, 15 Apr 2019 10:00:53 +0800
+Message-Id: <1555293657-32233-1-git-send-email-yakui.zhao@intel.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/9dAKwPxUqEQEiYVHcHeRlGL
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+ACRN is a flexible, lightweight reference hypervisor, built with real-time
+and safety-criticality in mind, optimized to streamline embedded development
+through an open source platform. It is built for embedded IOT with small
+footprint and real-time features. More details can be found
+in https://projectacrn.org/
 
-Hi all,
+This is the patch set that allows the Linux to work on ACRN hypervisor and it can
+work with the following patch set to manage the Linux guest on acrn-hypervisor. It
+includes the detection of acrn_hypervisor, upcall notification vector from
+hypervisor, hypercall. The hypervisor detection is similar to Xen/VMWARE/Hyperv.
+ACRN also uses the upcall notification mechanism similar to that in Xen/Microsoft
+HyperV when it needs to send the notification to Linux OS. The hypercall provides
+the mechanism that can be used to query/configure the acrn-hypervisor by Linux guest.
 
-Today's linux-next merge of the wireless-drivers-next tree got a conflict
-in:
+Following this patch set, we will send acrn driver part, which provides the interface
+that can be used to manage the virtualized CPU/memory/device/interrupt for other guest
+OS after the acrn hypervisor is detected.
 
-  drivers/net/wireless/intel/iwlwifi/iwl-trans.h
 
-between commit:
+v1->v2: Change the CONFIG_ACRN to CONFIG_ACRN_GUEST, which makes it easy to
+understand.
+        Remove the export of x86_hyper_acrn.
+        Remove the unused API definition of acrn_setup_intr_handler and
+acrn_remove_intr_handler.
+        Adjust the order of header file
+        Add the declaration of acrn_hv_vector_handler and tracing
+definition of acrn_hv_callback_vector.
+	Refine the comments for the function of acrn_hypercall0/1/2
 
-  07d35b4270ef ("iwlwifi: use sync nmi in case of init flow failure")
+v2-v3:  Add one new config symbol to unify the conditional definition
+of hv_irq_callback_count
+        Use the "vmcall" mnemonic to replace the hard-code byte definition
+	Remove the unnecessary dependency of CONFIG_PARAVIRT for ACRN_GUEST
 
-from the wireless-drivers tree and commit:
+v3-v4:  Rename the file name of acrnhyper.h to acrn.h
+	Refine the commit log and some other minor changes(more comments and 
+redundant ifdef in acrn.h, sorting the header file in acrn.c)
 
-  4b1831e48974 ("iwlwifi: dbg_ini: support HW error trigger")
+Zhao Yakui (4):
+  x86/Kconfig: Add new config symbol to unify conditional definition of
+    hv_irq_callback_count
+  x86: Add the support of Linux guest on ACRN hypervisor
+  x86/acrn: Use HYPERVISOR_CALLBACK_VECTOR for ACRN guest upcall vector
+  x86/acrn: Add hypercall for ACRN guest
 
-from the wireless-drivers-next tree.
+ arch/x86/Kconfig                      | 16 +++++++
+ arch/x86/entry/entry_64.S             |  5 +++
+ arch/x86/include/asm/acrn.h           | 11 +++++
+ arch/x86/include/asm/acrn_hypercall.h | 81 +++++++++++++++++++++++++++++++++++
+ arch/x86/include/asm/hardirq.h        |  2 +-
+ arch/x86/include/asm/hypervisor.h     |  1 +
+ arch/x86/kernel/cpu/Makefile          |  1 +
+ arch/x86/kernel/cpu/acrn.c            | 61 ++++++++++++++++++++++++++
+ arch/x86/kernel/cpu/hypervisor.c      |  4 ++
+ arch/x86/kernel/irq.c                 |  2 +-
+ arch/x86/xen/Kconfig                  |  1 +
+ drivers/hv/Kconfig                    |  1 +
+ 12 files changed, 184 insertions(+), 2 deletions(-)
+ create mode 100644 arch/x86/include/asm/acrn.h
+ create mode 100644 arch/x86/include/asm/acrn_hypercall.h
+ create mode 100644 arch/x86/kernel/cpu/acrn.c
 
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
+-- 
+2.7.4
 
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/net/wireless/intel/iwlwifi/iwl-trans.h
-index d8690acee40c,2235978adf70..000000000000
---- a/drivers/net/wireless/intel/iwlwifi/iwl-trans.h
-+++ b/drivers/net/wireless/intel/iwlwifi/iwl-trans.h
-@@@ -830,6 -831,8 +830,7 @@@ struct iwl_trans=20
-  	u32 lmac_error_event_table[2];
-  	u32 umac_error_event_table;
-  	unsigned int error_event_table_tlv_status;
- -	wait_queue_head_t fw_halt_waitq;
-+ 	bool hw_error;
- =20
-  	/* pointer to trans specific struct */
-  	/*Ensure that this pointer will always be aligned to sizeof pointer */
-
---Sig_/9dAKwPxUqEQEiYVHcHeRlGL
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyz5f0ACgkQAVBC80lX
-0Gxj3QgAnyucsFp+xPAm2x2mpt5NXUExZvGL0TlsNnT1pLaD3sxGZz2XBhzCRmi3
-yu3JuhmhSZzCr9mJO+rXHeTNmzK2mC2xWnxF9baWrKKlfEnYZ322v4UtT5reb08R
-s0wRllXtuh9+VKVn88HNGg/6Ku9+PEccWl+D6EksoqB+iKQOkBKymu31cbntwIs5
-GRZVvuVTD0Mo0HBBZX9i29iEdqQ8viioKZTJVFki3E4RZJJThwuKwqPglYZ3ChTs
-2/5vbBnF5RCxh/WuDKEE/Rd7PASTVl/eMvraaJlCyPykw/T3JmHY5j+c6LSIWOm+
-t/FC6zpzgvbB/0+kjJ46vvnCW1Fb+Q==
-=exFE
------END PGP SIGNATURE-----
-
---Sig_/9dAKwPxUqEQEiYVHcHeRlGL--
