@@ -5,30 +5,29 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC9BEC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 22:13:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C9D8C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 22:14:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA0E020825
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 22:13:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3303320854
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 22:14:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727831AbfDOWNF (ORCPT
+        id S1727992AbfDOWOt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 18:13:05 -0400
-Received: from mga11.intel.com ([192.55.52.93]:48253 "EHLO mga11.intel.com"
+        Mon, 15 Apr 2019 18:14:49 -0400
+Received: from mga18.intel.com ([134.134.136.126]:11782 "EHLO mga18.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726085AbfDOWNF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 18:13:05 -0400
+        id S1727214AbfDOWOs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 18:14:48 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Apr 2019 15:13:04 -0700
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Apr 2019 15:14:48 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,355,1549958400"; 
-   d="scan'208";a="223807253"
+   d="scan'208";a="223807485"
 Received: from ray.jf.intel.com (HELO [10.7.201.126]) ([10.7.201.126])
-  by orsmga001.jf.intel.com with ESMTP; 15 Apr 2019 15:13:03 -0700
-Subject: Re: [v2 PATCH 7/9] mm: vmscan: check if the demote target node is
- contended or not
+  by orsmga001.jf.intel.com with ESMTP; 15 Apr 2019 15:14:47 -0700
+Subject: Re: [v2 PATCH 5/9] mm: vmscan: demote anon DRAM pages to PMEM node
 To:     Yang Shi <yang.shi@linux.alibaba.com>, mhocko@suse.com,
         mgorman@techsingularity.net, riel@surriel.com, hannes@cmpxchg.org,
         akpm@linux-foundation.org, keith.busch@intel.com,
@@ -36,9 +35,9 @@ To:     Yang Shi <yang.shi@linux.alibaba.com>, mhocko@suse.com,
         ying.huang@intel.com, ziy@nvidia.com
 Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org
 References: <1554955019-29472-1-git-send-email-yang.shi@linux.alibaba.com>
- <1554955019-29472-8-git-send-email-yang.shi@linux.alibaba.com>
- <6d40d60e-dde4-7d70-c7a8-1a444c70c3ff@intel.com>
- <5082655c-6a24-a3d7-1b7d-bb256597890c@linux.alibaba.com>
+ <1554955019-29472-6-git-send-email-yang.shi@linux.alibaba.com>
+ <bc4cd9b2-327d-199b-6de4-61561b45c661@intel.com>
+ <0f4d092d-1421-7163-d937-f8aa681db594@linux.alibaba.com>
 From:   Dave Hansen <dave.hansen@intel.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=dave.hansen@intel.com; keydata=
@@ -84,12 +83,12 @@ Autocrypt: addr=dave.hansen@intel.com; keydata=
  MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
  hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
  vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
-Message-ID: <9bcf765c-c051-9086-b3fe-679adbe239cb@intel.com>
-Date:   Mon, 15 Apr 2019 15:13:03 -0700
+Message-ID: <42f2a561-f675-14d7-8d4f-87acfe0a18e9@intel.com>
+Date:   Mon, 15 Apr 2019 15:14:46 -0700
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <5082655c-6a24-a3d7-1b7d-bb256597890c@linux.alibaba.com>
+In-Reply-To: <0f4d092d-1421-7163-d937-f8aa681db594@linux.alibaba.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
@@ -98,21 +97,13 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/15/19 3:06 PM, Yang Shi wrote:
->>>
->> This seems like an actively bad idea to me.
->>
->> Why do we need an *active* note to say the node is contended?  Why isn't
->> just getting a failure back from migrate_pages() enough?  Have you
->> observed this in practice?
+On 4/15/19 3:10 PM, Yang Shi wrote:
+>> Also, I don't see anything in the code tying this to strictly demote
+>> from DRAM to PMEM.  Is that the end effect, or is it really implemented
+>> that way and I missed it?
 > 
-> The flag will be used to check if the target node is contended or not
-> before moving the page into the demotion list. If the target node is
-> contended (i.e. GFP_NOWAIT would likely fail), the page reclaim code
-> even won't scan anonymous page list on swapless system.
+> No, not restrict to PMEM. It just tries to demote from "preferred node"
+> (or called compute node) to a memory-only node. In the hardware with
+> PMEM, PMEM would be the memory-only node.
 
-That seems like the actual problem that needs to get fixed.
-
-On systems where we have demotions available, perhaps we need to start
-scanning anonymous pages again, at least for zones where we *can* demote
-from them.
+If that's the case, your patch subject is pretty criminal. :)
