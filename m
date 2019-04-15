@@ -7,49 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DA17C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:23:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9D75C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:23:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2F6320651
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:23:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A5F120651
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:23:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555356191;
-	bh=WVeBqYPgdfpR+mnim3L5Wgt9NBJzLhKP1/afZf0EBUk=;
+	s=default; t=1555356198;
+	bh=VaXOLE2WGm9xCzg1zqcLDIlB8qNwohGne1xxPBGKNy0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=tXEnEjltxrBQ7Z59uZl+IXWWNZaCzkyyMOpwmpHVJ6olW9c6iD6oMUjBRiBhoZgqP
-	 tep8AftbhLMhaQfRq+9GRXOGl/OP5bdPCII/b2VtGTuStOq4cjnD2HbLdjm17Vhnn5
-	 moDfH9off3VPuVyYyVfhPkMTGBzlSy7lXXITA/aE=
+	b=zy4xEe/o82tECmsUpUPH4E+O/UsGisdGSheVjyhZn2TlUIyI7dW8Im0rvuLcmtHxg
+	 Q/u4wb4wlp2DLuThaxX4R73Doo8KT1FDTxpZv4zHVwtzMHGNVs9haeyyHdlkldYW8D
+	 gsfPp/Cil3+hIZLldD3zO5i73QdJhSozIHgOjyXw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730288AbfDOTHp (ORCPT
+        id S1730264AbfDOTHl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:07:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42750 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730252AbfDOTHl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 15 Apr 2019 15:07:41 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42620 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729730AbfDOTHg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:07:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4A2442087C;
-        Mon, 15 Apr 2019 19:07:40 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58245218A1;
+        Mon, 15 Apr 2019 19:07:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355260;
-        bh=WVeBqYPgdfpR+mnim3L5Wgt9NBJzLhKP1/afZf0EBUk=;
+        s=default; t=1555355255;
+        bh=VaXOLE2WGm9xCzg1zqcLDIlB8qNwohGne1xxPBGKNy0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=y8d6RlI72ZTDGU1bHCgqO8JbvRdh73yitBVKMeLNIhydszt5gPAH56rd9KpoeFtqr
-         DnmRqQxElUhYGdK7AK3So85VTjZcOIcqqjjaY8g5VSY8d08BwwleuGiHxZztXI1Xd5
-         g5HRS9F4jj0R2r714Y9EQNy65kxC8cWbSUD27MFs=
+        b=WN6o4Ytq0zT2qdhESU2VkxK4+ntW6Q87+mXxDZHUrCrWcfyGXylsfHclOwL1B3e2P
+         uEtEz2eTegeoRZPq/wKqJCSSK2K834HjzcWgorxNLIJHxtQRS/Xw4sms84CBRgQSHc
+         XUXZUVSQDodwHItnCNoAypvWTlc5QAl/5ITSEO5c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, linux-block@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
-        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 4.19 071/101] block: do not leak memory in bio_copy_user_iov()
-Date:   Mon, 15 Apr 2019 20:59:09 +0200
-Message-Id: <20190415183744.225068525@linuxfoundation.org>
+        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
+        Anand Jain <anand.jain@oracle.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.19 069/101] btrfs: prop: fix vanished compression property after failed set
+Date:   Mon, 15 Apr 2019 20:59:07 +0200
+Message-Id: <20190415183744.122598536@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183740.341577907@linuxfoundation.org>
 References: <20190415183740.341577907@linuxfoundation.org>
@@ -62,39 +60,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Jérôme Glisse <jglisse@redhat.com>
+From: Anand Jain <anand.jain@oracle.com>
 
-commit a3761c3c91209b58b6f33bf69dd8bb8ec0c9d925 upstream.
+commit 272e5326c7837697882ce3162029ba893059b616 upstream.
 
-When bio_add_pc_page() fails in bio_copy_user_iov() we should free
-the page we just allocated otherwise we are leaking it.
+The compression property resets to NULL, instead of the old value if we
+fail to set the new compression parameter.
 
-Cc: linux-block@vger.kernel.org
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: stable@vger.kernel.org
-Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
-Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
-Signed-off-by: Jens Axboe <axboe@kernel.dk>
+  $ btrfs prop get /btrfs compression
+    compression=lzo
+  $ btrfs prop set /btrfs compression zli
+    ERROR: failed to set compression for /btrfs: Invalid argument
+  $ btrfs prop get /btrfs compression
+
+This is because the compression property ->validate() is successful for
+'zli' as the strncmp() used the length passed from the userspace.
+
+Fix it by using the expected string length in strncmp().
+
+Fixes: 63541927c8d1 ("Btrfs: add support for inode properties")
+Fixes: 5c1aab1dd544 ("btrfs: Add zstd support")
+CC: stable@vger.kernel.org # 4.14+
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Signed-off-by: Anand Jain <anand.jain@oracle.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- block/bio.c |    5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ fs/btrfs/props.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
---- a/block/bio.c
-+++ b/block/bio.c
-@@ -1240,8 +1240,11 @@ struct bio *bio_copy_user_iov(struct req
- 			}
- 		}
+--- a/fs/btrfs/props.c
++++ b/fs/btrfs/props.c
+@@ -366,11 +366,11 @@ int btrfs_subvol_inherit_props(struct bt
  
--		if (bio_add_pc_page(q, bio, page, bytes, offset) < bytes)
-+		if (bio_add_pc_page(q, bio, page, bytes, offset) < bytes) {
-+			if (!map_data)
-+				__free_page(page);
- 			break;
-+		}
+ static int prop_compression_validate(const char *value, size_t len)
+ {
+-	if (!strncmp("lzo", value, len))
++	if (!strncmp("lzo", value, 3))
+ 		return 0;
+-	else if (!strncmp("zlib", value, len))
++	else if (!strncmp("zlib", value, 4))
+ 		return 0;
+-	else if (!strncmp("zstd", value, len))
++	else if (!strncmp("zstd", value, 4))
+ 		return 0;
  
- 		len -= bytes;
- 		offset = 0;
+ 	return -EINVAL;
 
 
