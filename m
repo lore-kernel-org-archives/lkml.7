@@ -2,217 +2,123 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 895D7C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 20:00:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3EE9C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 20:02:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 478A520854
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 20:00:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555358413;
-	bh=xQceLgE4GOqmOy1EnVQPHFmfIiFb8XhkYFKH96y9I/Q=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=u3S1b2uEBZT4FIEJboF8POB/bNsW9cyviJysqmlaxSHENwT48X/lwTsEvlLKh87Gp
-	 GZxkF1/TTIlUjduF/haCovllercCOq/ceshdxYiSKBgAEt10i6yrpGiTtBujMLn/7O
-	 rfAuIMmY/TJd6MJikopTaKZftdsgwjSWnW6MByvA=
+	by mail.kernel.org (Postfix) with ESMTP id BA1132070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 20:02:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="LqmQpn5Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729145AbfDOUAM (ORCPT
+        id S1729152AbfDOUCE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 16:00:12 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:43234 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728548AbfDOUAL (ORCPT
+        Mon, 15 Apr 2019 16:02:04 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:44020 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728774AbfDOUCE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 16:00:11 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Reply-To:Content-Type:
-        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
-        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=8VAeXYQhAceTMAWihPs9U6+XpVdyQlovkNBbfa8Vd8o=; b=uN8Xg7UgjlMBvEQSeB99WiIjE
-        LmaqwZcBNLRg2JS0QIYzBzcHuDJbkfjA/IHYXVu3B0Fcr2o7cyMvv2+Pdrcph1sPtdgkvHfldEygP
-        rbLjOsyGnivYo9ynqb+tjEQXWjHKkjycJWM3uUsdIBPfLJbdcIknRd9Qwl0YQcn9cFC52tHl0f9vN
-        HmTydHKflDgyomAJEwnmu1VUu76Efz/8KSCoyhM49o80foIZ/ovr9p6batDtP5jsyCQeA3rVcVljG
-        77dLvOHbqTbybo6EQtwT9ZuDAlfsA97QFAqx37ZLc9WA0oClGIa8D+S1Oyehz1/+ZiY6+3ASsXKyW
-        S90YDJEbA==;
-Received: from 177.205.118.176.dynamic.adsl.gvt.net.br ([177.205.118.176] helo=bombadil.infradead.org)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hG7lx-0007fV-R3; Mon, 15 Apr 2019 20:00:10 +0000
-Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
-        (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hG7lu-00052q-M1; Mon, 15 Apr 2019 17:00:06 -0300
-From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Tom Zanussi <tom.zanussi@linux.intel.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Masanari Iida <standby24x7@gmail.com>,
-        "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Subject: [PATCH] docs: trace: fix some Sphinx warnings
-Date:   Mon, 15 Apr 2019 17:00:05 -0300
-Message-Id: <466439c96cc753254dc0fab97902d3d12aaf1e6a.1555358399.git.mchehab+samsung@kernel.org>
-X-Mailer: git-send-email 2.20.1
+        Mon, 15 Apr 2019 16:02:04 -0400
+Received: by mail-yw1-f67.google.com with SMTP id j66so6472113ywc.10
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 13:02:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=0ykRqAIluU0NXsuz7m0Y2cAIvAKzXoeZkUO2WAzqLZw=;
+        b=LqmQpn5Z1qhKBlkwDJqV0cR2Yk2DijDZhxwv4S9Kw3NL3UNjnt4kpQ5Z8UCOpLF/1T
+         bHeWPlrhDk/m6wVJ0oMcXmqz36JaDgXxl5Keo73mcqNoXJDHxaF+MYly9J0mB9K12HwG
+         s6QqmVumLNmqEeMbE/lQTAuyhW5kzCeiC7BwTf2W3kpVpqDAGrwGoqGwFMweJUvRUtPl
+         3CnAxamx2AeAlUttnxj5wX23mobAU2WIYFRefahf3YIWOQbeGgk55Zislw7GPMYuwKPf
+         XmfXp8s56+5BCprqrOC8uL1+vp0KY08GRY3TXx77wyHFRxJjM1YVEecdS+DIqr4bpaZ5
+         emNA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0ykRqAIluU0NXsuz7m0Y2cAIvAKzXoeZkUO2WAzqLZw=;
+        b=IhZI1LUMvTVzqbOsCdsyXoJI7ZfJniqPm4AXbIJRxIrG63512hiqL32im9o3JIPk+H
+         3rrdb1VdsbJcZow0L8aPqBU2A0Upi/7NRA1gOCJqxbdryV14f65XCEVWuk83BB6WHZXZ
+         CGV0sWU7gPTfmHkSq+6J1MLFsXe6w004u7zcXwdjh/Pt2wfU2yYQMAg3Q2pcEk8iDLyj
+         Vy5RP5OLxBtruR54ChndX67O9NMRokIas1spqy3o6L0KoBEV8jRAOjn8Cr6JXNhnfZ7y
+         tBxzTeYEow2LLn022caSF5VkJHVqr1VB59mmMpqAG9+JmKyCuyzokSRMvAScSJp2SY1C
+         f0Ww==
+X-Gm-Message-State: APjAAAX0iGzfwNIPZ06f0lZ6ocVoupiAyXVJ+jRcxwzDWkPMjbcfK3f2
+        I7clZ06m4rAWhFRVNvusEQpORd2pU8N/KGZieoQr3A==
+X-Google-Smtp-Source: APXvYqw0dYDSSDt1BitpQJva9u+gyVKXlF8K0n4lSdPPTcYA2nT+LE1oJJC6iF/QeRqfM5A58k3IaPG2schHr4Li6uo=
+X-Received: by 2002:a81:1054:: with SMTP id 81mr58903408ywq.48.1555358522808;
+ Mon, 15 Apr 2019 13:02:02 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190415192734.935387-1-arnd@arndb.de> <20190415192734.935387-2-arnd@arndb.de>
+ <CO2PR01MB21683E465191EA8246503774D02B0@CO2PR01MB2168.prod.exchangelabs.com>
+ <CAK8P3a1DSN3jcfGngrJFp93Mt98qsibvKvtJGtjHYjOmcM1kNQ@mail.gmail.com> <3665a5ad-ff6d-97a1-ca31-971973a7167f@gmail.com>
+In-Reply-To: <3665a5ad-ff6d-97a1-ca31-971973a7167f@gmail.com>
+From:   Guenter Roeck <groeck@google.com>
+Date:   Mon, 15 Apr 2019 13:01:51 -0700
+Message-ID: <CABXOdTce7EXE7xZhh=YUj23wxRzwYKGv=7TueJ3nfUuKhUgz4A@mail.gmail.com>
+Subject: Re: [PATCH 2/4] ARM: ep93xx: keypad: stop using mach/platform.h
+To:     Alexander Sverdlin <alexander.sverdlin@gmail.com>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Hartley Sweeten <HartleyS@visionengravers.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are some warnings produced when building trace. Fix them.
+On Mon, Apr 15, 2019 at 12:56 PM Alexander Sverdlin
+<alexander.sverdlin@gmail.com> wrote:
+>
+> Hi!
+>
+> On 15/04/2019 21:47, Arnd Bergmann wrote:
+> >>> We can communicate the clock rate using platform data rather than setting a
+> >>> flag to use a particular value in the driver, which is cleaner and avoids the dependency.
+> >>>
+> >>> No platform in the kernel currently defines the ep93xx keypad device structure, so this
+> >>> is a rather pointless excercise.  Any out of tree users are probably dead now, but if not,
+> >>>  they have to change their platform code to match the new platform_data structure.
+> >> <snip>
+> >>
+> >>> diff --git a/include/linux/platform_data/keypad-ep93xx.h b/include/linux/platform_data/keypad-ep93xx.h
+> >>> index 0e36818e3680..3054fced8509 100644
+> >>> --- a/include/linux/platform_data/keypad-ep93xx.h
+> >>> +++ b/include/linux/platform_data/keypad-ep93xx.h
+> >>> @@ -9,8 +9,7 @@ struct matrix_keymap_data;
+> >>>  #define EP93XX_KEYPAD_DIAG_MODE              (1<<1)  /* diagnostic mode */
+> >>>  #define EP93XX_KEYPAD_BACK_DRIVE     (1<<2)  /* back driving mode */
+> >>>  #define EP93XX_KEYPAD_TEST_MODE              (1<<3)  /* scan only column 0 */
+> >>> -#define EP93XX_KEYPAD_KDIV           (1<<4)  /* 1/4 clock or 1/16 clock */
+> >>> -#define EP93XX_KEYPAD_AUTOREPEAT     (1<<5)  /* enable key autorepeat */
+> >>> +#define EP93XX_KEYPAD_AUTOREPEAT     (1<<4)  /* enable key autorepeat */
+> >> You have re-defined the keypad register bits here.
+> >>
+> >> The KDIV bit changes the clock rate. The AUTOREPEAT bit enables key autorepeat.
+> > As far as I can tell, they are not register bits, just software flags
+> > for communicating between a board file and the driver, so I
+> > assumed I could freely reorganize them.
+> >
+> > Did I miss something?
+>
+> They are indeed only software flags (just checked datasheet), so you are only changing
+> platform data format. But as I do not know any keypad user in person, I'd rely on
+> Hartley's opinion in this case (if it's a good idea to change platform data or not).
+>
 
-Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
----
- Documentation/trace/ftrace.rst    |  1 +
- Documentation/trace/histogram.rst | 86 ++++++++++++++++---------------
- 2 files changed, 45 insertions(+), 42 deletions(-)
+If there are out-of-tree users, it would be their responsibility to
+upstream their code. If they don't, any changes in platform data is
+their problem, not ours. Either case, platform data does, if anything,
+reflect an in-kernel API, and thus is fair game for cleanup.
 
-diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
-index 809b39d066ee..f60079259669 100644
---- a/Documentation/trace/ftrace.rst
-+++ b/Documentation/trace/ftrace.rst
-@@ -1435,6 +1435,7 @@ trace has provided some very helpful debugging information.
- 
- If we prefer function graph output instead of function, we can set
- display-graph option::
-+
-  with echo 1 > options/display-graph
- 
-   # tracer: irqsoff
-diff --git a/Documentation/trace/histogram.rst b/Documentation/trace/histogram.rst
-index 7612c7ad5715..2a6b23f779bb 100644
---- a/Documentation/trace/histogram.rst
-+++ b/Documentation/trace/histogram.rst
-@@ -2121,33 +2121,33 @@ The following commonly-used handler.action pairs are available:
-     the end the event that triggered the snapshot (in this case you
-     can verify the timestamps between the sched_waking and
-     sched_switch events, which should match the time displayed in the
--    global maximum):
-+    global maximum)::
- 
--    # cat /sys/kernel/debug/tracing/snapshot
-+     # cat /sys/kernel/debug/tracing/snapshot
- 
--     <...>-2103  [005] d..3   309.873125: sched_switch: prev_comm=cyclictest prev_pid=2103 prev_prio=19 prev_state=D ==> next_comm=swapper/5 next_pid=0 next_prio=120
--     <idle>-0     [005] d.h3   309.873611: sched_waking: comm=cyclictest pid=2102 prio=19 target_cpu=005
--     <idle>-0     [005] dNh4   309.873613: sched_wakeup: comm=cyclictest pid=2102 prio=19 target_cpu=005
--     <idle>-0     [005] d..3   309.873616: sched_switch: prev_comm=swapper/5 prev_pid=0 prev_prio=120 prev_state=S ==> next_comm=cyclictest next_pid=2102 next_prio=19
--     <...>-2102  [005] d..3   309.873625: sched_switch: prev_comm=cyclictest prev_pid=2102 prev_prio=19 prev_state=D ==> next_comm=swapper/5 next_pid=0 next_prio=120
--     <idle>-0     [005] d.h3   309.874624: sched_waking: comm=cyclictest pid=2102 prio=19 target_cpu=005
--     <idle>-0     [005] dNh4   309.874626: sched_wakeup: comm=cyclictest pid=2102 prio=19 target_cpu=005
--     <idle>-0     [005] dNh3   309.874628: sched_waking: comm=cyclictest pid=2103 prio=19 target_cpu=005
--     <idle>-0     [005] dNh4   309.874630: sched_wakeup: comm=cyclictest pid=2103 prio=19 target_cpu=005
--     <idle>-0     [005] d..3   309.874633: sched_switch: prev_comm=swapper/5 prev_pid=0 prev_prio=120 prev_state=S ==> next_comm=cyclictest next_pid=2102 next_prio=19
--     <idle>-0     [004] d.h3   309.874757: sched_waking: comm=gnome-terminal- pid=1699 prio=120 target_cpu=004
--     <idle>-0     [004] dNh4   309.874762: sched_wakeup: comm=gnome-terminal- pid=1699 prio=120 target_cpu=004
--     <idle>-0     [004] d..3   309.874766: sched_switch: prev_comm=swapper/4 prev_pid=0 prev_prio=120 prev_state=S ==> next_comm=gnome-terminal- next_pid=1699 next_prio=120
-- gnome-terminal--1699  [004] d.h2   309.874941: sched_stat_runtime: comm=gnome-terminal- pid=1699 runtime=180706 [ns] vruntime=1126870572 [ns]
--     <idle>-0     [003] d.s4   309.874956: sched_waking: comm=rcu_sched pid=9 prio=120 target_cpu=007
--     <idle>-0     [003] d.s5   309.874960: sched_wake_idle_without_ipi: cpu=7
--     <idle>-0     [003] d.s5   309.874961: sched_wakeup: comm=rcu_sched pid=9 prio=120 target_cpu=007
--     <idle>-0     [007] d..3   309.874963: sched_switch: prev_comm=swapper/7 prev_pid=0 prev_prio=120 prev_state=S ==> next_comm=rcu_sched next_pid=9 next_prio=120
--  rcu_sched-9     [007] d..3   309.874973: sched_stat_runtime: comm=rcu_sched pid=9 runtime=13646 [ns] vruntime=22531430286 [ns]
--  rcu_sched-9     [007] d..3   309.874978: sched_switch: prev_comm=rcu_sched prev_pid=9 prev_prio=120 prev_state=R+ ==> next_comm=swapper/7 next_pid=0 next_prio=120
--      <...>-2102  [005] d..4   309.874994: sched_migrate_task: comm=cyclictest pid=2103 prio=19 orig_cpu=5 dest_cpu=1
--      <...>-2102  [005] d..4   309.875185: sched_wake_idle_without_ipi: cpu=1
--     <idle>-0     [001] d..3   309.875200: sched_switch: prev_comm=swapper/1 prev_pid=0 prev_prio=120 prev_state=S ==> next_comm=cyclictest next_pid=2103 next_prio=19
-+         <...>-2103  [005] d..3   309.873125: sched_switch: prev_comm=cyclictest prev_pid=2103 prev_prio=19 prev_state=D ==> next_comm=swapper/5 next_pid=0 next_prio=120
-+         <idle>-0     [005] d.h3   309.873611: sched_waking: comm=cyclictest pid=2102 prio=19 target_cpu=005
-+         <idle>-0     [005] dNh4   309.873613: sched_wakeup: comm=cyclictest pid=2102 prio=19 target_cpu=005
-+         <idle>-0     [005] d..3   309.873616: sched_switch: prev_comm=swapper/5 prev_pid=0 prev_prio=120 prev_state=S ==> next_comm=cyclictest next_pid=2102 next_prio=19
-+         <...>-2102  [005] d..3   309.873625: sched_switch: prev_comm=cyclictest prev_pid=2102 prev_prio=19 prev_state=D ==> next_comm=swapper/5 next_pid=0 next_prio=120
-+         <idle>-0     [005] d.h3   309.874624: sched_waking: comm=cyclictest pid=2102 prio=19 target_cpu=005
-+         <idle>-0     [005] dNh4   309.874626: sched_wakeup: comm=cyclictest pid=2102 prio=19 target_cpu=005
-+         <idle>-0     [005] dNh3   309.874628: sched_waking: comm=cyclictest pid=2103 prio=19 target_cpu=005
-+         <idle>-0     [005] dNh4   309.874630: sched_wakeup: comm=cyclictest pid=2103 prio=19 target_cpu=005
-+         <idle>-0     [005] d..3   309.874633: sched_switch: prev_comm=swapper/5 prev_pid=0 prev_prio=120 prev_state=S ==> next_comm=cyclictest next_pid=2102 next_prio=19
-+         <idle>-0     [004] d.h3   309.874757: sched_waking: comm=gnome-terminal- pid=1699 prio=120 target_cpu=004
-+         <idle>-0     [004] dNh4   309.874762: sched_wakeup: comm=gnome-terminal- pid=1699 prio=120 target_cpu=004
-+         <idle>-0     [004] d..3   309.874766: sched_switch: prev_comm=swapper/4 prev_pid=0 prev_prio=120 prev_state=S ==> next_comm=gnome-terminal- next_pid=1699 next_prio=120
-+     gnome-terminal--1699  [004] d.h2   309.874941: sched_stat_runtime: comm=gnome-terminal- pid=1699 runtime=180706 [ns] vruntime=1126870572 [ns]
-+         <idle>-0     [003] d.s4   309.874956: sched_waking: comm=rcu_sched pid=9 prio=120 target_cpu=007
-+         <idle>-0     [003] d.s5   309.874960: sched_wake_idle_without_ipi: cpu=7
-+         <idle>-0     [003] d.s5   309.874961: sched_wakeup: comm=rcu_sched pid=9 prio=120 target_cpu=007
-+         <idle>-0     [007] d..3   309.874963: sched_switch: prev_comm=swapper/7 prev_pid=0 prev_prio=120 prev_state=S ==> next_comm=rcu_sched next_pid=9 next_prio=120
-+      rcu_sched-9     [007] d..3   309.874973: sched_stat_runtime: comm=rcu_sched pid=9 runtime=13646 [ns] vruntime=22531430286 [ns]
-+      rcu_sched-9     [007] d..3   309.874978: sched_switch: prev_comm=rcu_sched prev_pid=9 prev_prio=120 prev_state=R+ ==> next_comm=swapper/7 next_pid=0 next_prio=120
-+          <...>-2102  [005] d..4   309.874994: sched_migrate_task: comm=cyclictest pid=2103 prio=19 orig_cpu=5 dest_cpu=1
-+          <...>-2102  [005] d..4   309.875185: sched_wake_idle_without_ipi: cpu=1
-+         <idle>-0     [001] d..3   309.875200: sched_switch: prev_comm=swapper/1 prev_pid=0 prev_prio=120 prev_state=S ==> next_comm=cyclictest next_pid=2103 next_prio=19
- 
-   - onchange(var).save(field,..	.)
- 
-@@ -2201,9 +2201,10 @@ The following commonly-used handler.action pairs are available:
-     following the rest of the fields.
- 
-     If a snaphot was taken, there is also a message indicating that,
--    along with the value and event that triggered the snapshot:
-+    along with the value and event that triggered the snapshot::
-+
-+      # cat /sys/kernel/debug/tracing/events/tcp/tcp_probe/hist
- 
--    # cat /sys/kernel/debug/tracing/events/tcp/tcp_probe/hist
-       { dport:       1521 } hitcount:          8
- 	changed:         10  snd_wnd:      35456  srtt:     154262  rcv_wnd:      42112
- 
-@@ -2216,14 +2217,15 @@ The following commonly-used handler.action pairs are available:
-       { dport:        443 } hitcount:        211
- 	changed:         10  snd_wnd:      26960  srtt:      17379  rcv_wnd:      28800
- 
--    Snapshot taken (see tracing/snapshot).  Details:
-+    Snapshot taken (see tracing/snapshot).  Details::
-+
-         triggering value { onchange($cwnd) }:         10
-         triggered by event with key: { dport:         80 }
- 
--    Totals:
--        Hits: 414
--        Entries: 4
--        Dropped: 0
-+      Totals:
-+          Hits: 414
-+          Entries: 4
-+          Dropped: 0
- 
-     In the above case, the event that triggered the snapshot has the
-     key with dport == 80.  If you look at the bucket that has 80 as
-@@ -2233,18 +2235,18 @@ The following commonly-used handler.action pairs are available:
-     the global snapshot).
- 
-     And finally, looking at the snapshot data should show at or near
--    the end the event that triggered the snapshot:
-+    the end the event that triggered the snapshot::
- 
--    # cat /sys/kernel/debug/tracing/snapshot
-+      # cat /sys/kernel/debug/tracing/snapshot
- 
--       gnome-shell-1261  [006] dN.3    49.823113: sched_stat_runtime: comm=gnome-shell pid=1261 runtime=49347 [ns] vruntime=1835730389 [ns]
--     kworker/u16:4-773   [003] d..3    49.823114: sched_switch: prev_comm=kworker/u16:4 prev_pid=773 prev_prio=120 prev_state=R+ ==> next_comm=kworker/3:2 next_pid=135 next_prio=120
--       gnome-shell-1261  [006] d..3    49.823114: sched_switch: prev_comm=gnome-shell prev_pid=1261 prev_prio=120 prev_state=R+ ==> next_comm=kworker/6:2 next_pid=387 next_prio=120
--       kworker/3:2-135   [003] d..3    49.823118: sched_stat_runtime: comm=kworker/3:2 pid=135 runtime=5339 [ns] vruntime=17815800388 [ns]
--       kworker/6:2-387   [006] d..3    49.823120: sched_stat_runtime: comm=kworker/6:2 pid=387 runtime=9594 [ns] vruntime=14589605367 [ns]
--       kworker/6:2-387   [006] d..3    49.823122: sched_switch: prev_comm=kworker/6:2 prev_pid=387 prev_prio=120 prev_state=R+ ==> next_comm=gnome-shell next_pid=1261 next_prio=120
--       kworker/3:2-135   [003] d..3    49.823123: sched_switch: prev_comm=kworker/3:2 prev_pid=135 prev_prio=120 prev_state=T ==> next_comm=swapper/3 next_pid=0 next_prio=120
--            <idle>-0     [004] ..s7    49.823798: tcp_probe: src=10.0.0.10:54326 dest=23.215.104.193:80 mark=0x0 length=32 snd_nxt=0xe3ae2ff5 snd_una=0xe3ae2ecd snd_cwnd=10 ssthresh=2147483647 snd_wnd=28960 srtt=19604 rcv_wnd=29312
-+         gnome-shell-1261  [006] dN.3    49.823113: sched_stat_runtime: comm=gnome-shell pid=1261 runtime=49347 [ns] vruntime=1835730389 [ns]
-+       kworker/u16:4-773   [003] d..3    49.823114: sched_switch: prev_comm=kworker/u16:4 prev_pid=773 prev_prio=120 prev_state=R+ ==> next_comm=kworker/3:2 next_pid=135 next_prio=120
-+         gnome-shell-1261  [006] d..3    49.823114: sched_switch: prev_comm=gnome-shell prev_pid=1261 prev_prio=120 prev_state=R+ ==> next_comm=kworker/6:2 next_pid=387 next_prio=120
-+         kworker/3:2-135   [003] d..3    49.823118: sched_stat_runtime: comm=kworker/3:2 pid=135 runtime=5339 [ns] vruntime=17815800388 [ns]
-+         kworker/6:2-387   [006] d..3    49.823120: sched_stat_runtime: comm=kworker/6:2 pid=387 runtime=9594 [ns] vruntime=14589605367 [ns]
-+         kworker/6:2-387   [006] d..3    49.823122: sched_switch: prev_comm=kworker/6:2 prev_pid=387 prev_prio=120 prev_state=R+ ==> next_comm=gnome-shell next_pid=1261 next_prio=120
-+         kworker/3:2-135   [003] d..3    49.823123: sched_switch: prev_comm=kworker/3:2 prev_pid=135 prev_prio=120 prev_state=T ==> next_comm=swapper/3 next_pid=0 next_prio=120
-+              <idle>-0     [004] ..s7    49.823798: tcp_probe: src=10.0.0.10:54326 dest=23.215.104.193:80 mark=0x0 length=32 snd_nxt=0xe3ae2ff5 snd_una=0xe3ae2ecd snd_cwnd=10 ssthresh=2147483647 snd_wnd=28960 srtt=19604 rcv_wnd=29312
- 
- 3. User space creating a trigger
- --------------------------------
--- 
-2.20.1
-
+Guenter
