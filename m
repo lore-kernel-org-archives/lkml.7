@@ -4,83 +4,118 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B64BC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:41:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D17D0C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:43:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BC6B2075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:41:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B48520880
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:43:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="clAw7PEK"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="gDi7sxor"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727617AbfDOPlz (ORCPT
+        id S1727627AbfDOPnP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 11:41:55 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:32937 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbfDOPlz (ORCPT
+        Mon, 15 Apr 2019 11:43:15 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:42187 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726034AbfDOPnO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 11:41:55 -0400
-Received: by mail-pl1-f194.google.com with SMTP id t16so8766746plo.0;
-        Mon, 15 Apr 2019 08:41:55 -0700 (PDT)
+        Mon, 15 Apr 2019 11:43:14 -0400
+Received: by mail-ed1-f67.google.com with SMTP id x61so15097894edc.9
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 08:43:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=03U2+gNC/tIGz//LfXqwAH1STf4MB9cTPsC4LtWU1hs=;
-        b=clAw7PEKP+T+IfxwlxZTrhucaaezcIpRoc0B707Xfji5JrW5EEbGpPDhuOVRi7dj2t
-         hfwzbD6RbHabaoqnTEUVUvSzwWZjj/K2++1ytJ06c/pNgrdRsU7S9W32ihW9JRzoON9o
-         LuIZFV6iTeqeDEzvuDw1xrhTpB8bXsdXHZOEJ1TLP5zoHSKRxOWpz/q1SHzJjblJaKX2
-         uyLRXErKJoYYOb9MJWRZs2H88B2GN8GmmGIRl1cV6L+PHCHu9S+IPYvilg80O6wsvXTz
-         jXWnhyz4ktOHfG6YXOwHGeUtMKGIP2WYGy0+tcAqIaEXILVSIu0Q4jPJjvxJVB2uEc8T
-         IhEA==
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=iLYihP302CGl8iTQsNLBRNlcVyDiev3EggGLEBc+/gI=;
+        b=gDi7sxorGTkR2q9v33CbnX2EyIeoqv+LqksDSF6JPHC7OrQx7RojkMUqKKAzzStKoH
+         5VxTpx6LXWI7J1OhDfyFeuDPvNwbz57GmTGiXzfCvgbu2j6WPYmctQdB3s7iIXuVn8vU
+         KiGgjd4B+4a4EooYFiZZyhOtr254TTx9+J6NQ=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=03U2+gNC/tIGz//LfXqwAH1STf4MB9cTPsC4LtWU1hs=;
-        b=ATf+0TuyJtFAqvCt+PqxbJuCDtqBt/5j/n4o81kwhc5dKQYWI/McWWw5KjojvCuHLg
-         UR0+7gTXyop5bunxgc4LfRAcmpc+zO2rmhlw6c7/EimNjvc7fBI1qU0hD8DGwM9+lBtE
-         MimBfsjCvyM6ww1iwVvZnssJEif757p1XKtk8d1s5uGDvA/abDHKhQaYW35EIfHJiAGP
-         5+0uwHJpqlGf1Ud7NNkwg3hrdYgR2ctFT9vhxRlXTJ3/ia7UhcHiaialG+JpQhvTBSlm
-         M9zkTGv8ifidFdpMR8YC+AQto2ttwjvz2pqWE4pu6IeB9FTon1UzA4yWXX6VDxHxgNMq
-         s07w==
-X-Gm-Message-State: APjAAAVeWSBAfe3pKIxjLWMZK+m35Kuc1q1UJwtjIaO3Z5JfJ4jlbx6d
-        EH6lQnfWeLHCTrjBSXFCEvdnLfjp
-X-Google-Smtp-Source: APXvYqz39iqJRTwlyGeSLEpp91C4BX6W6y9xH6hv9V9M6k16pwsRaq01nE2WBm3oZuE7fINZR4ZQdA==
-X-Received: by 2002:a17:902:b60d:: with SMTP id b13mr77026589pls.100.1555342914669;
-        Mon, 15 Apr 2019 08:41:54 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id y191sm23409547pgd.78.2019.04.15.08.41.52
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Apr 2019 08:41:53 -0700 (PDT)
-Date:   Mon, 15 Apr 2019 08:41:51 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Patrick Venture <venture@google.com>
-Cc:     jdelvare@suse.com, corbet@lwn.net, linux-hwmon@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] hwmon: (ir38064) delete incorrect line
-Message-ID: <20190415154151.GA7292@roeck-us.net>
-References: <20190415141728.133110-1-venture@google.com>
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=iLYihP302CGl8iTQsNLBRNlcVyDiev3EggGLEBc+/gI=;
+        b=qqqMRhIfzgru/57IBrbW0ieSnlcgx8gYdWkGl9/f4fGaEGLBLELnhPoleyZ1qTeIej
+         hVW7tPnpRgVxkWEJEl/CgwBmAmJHpOTLKxuUkuKuTK9QJq2HU9/zIQn/23OJSXH4GpsA
+         Cbxdy5n2J9k2+5pI1PeaipR5e48EzGrqKFV0uyydAEv+oOaeawddRLHdbVQig1ILsSly
+         3xbgJKgmf13M8kCN6NFLZs1uvqaswDHYlys1g6go9zU7SsTTKmrb+FNPbpK2jLtB8d8k
+         Qhrr+fQsxr+2RRZY35J5xz8oBEw6oqJNIvE3RIHrzxncwylrIqgCI6RA2GKXO+QC7kCz
+         W+oQ==
+X-Gm-Message-State: APjAAAWYUkEZJiBnddmUxRsq1N+p+ntmdKZbd9D9B5Heor8VfbuzvNCg
+        IB93Ljfn+OVbDdtfgOGc02wVBA==
+X-Google-Smtp-Source: APXvYqwSzqhsGy+qrknAlCrRdFnySI5FKubXKvL9RIrrOZs+p/TXDcooSzr8qHvsdtMiYEa1h8R6dg==
+X-Received: by 2002:a50:95ed:: with SMTP id x42mr9082352eda.92.1555342993199;
+        Mon, 15 Apr 2019 08:43:13 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id z3sm7749660eja.32.2019.04.15.08.43.11
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 15 Apr 2019 08:43:12 -0700 (PDT)
+Date:   Mon, 15 Apr 2019 17:43:10 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Joel Stanley <joel@jms.id.au>
+Cc:     David Airlie <airlied@linux.ie>, Andrew Jeffery <andrew@aj.id.au>,
+        =?iso-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel test robot <lkp@intel.com>,
+        Daniel Vetter <daniel@ffwll.ch>
+Subject: Re: [PATCH v2] drm: aspeed: Clean up Kconfig options
+Message-ID: <20190415154310.GA2665@phenom.ffwll.local>
+Mail-Followup-To: Joel Stanley <joel@jms.id.au>,
+        David Airlie <airlied@linux.ie>, Andrew Jeffery <andrew@aj.id.au>,
+        =?iso-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        kernel test robot <lkp@intel.com>
+References: <20190405081117.27339-1-joel@jms.id.au>
+ <20190415093012.GX2665@phenom.ffwll.local>
+ <CACPK8XcT4Z-9mbqc0obteWKOoLYke+gR4Hd0rZ-C=g0NgSNd0A@mail.gmail.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190415141728.133110-1-venture@google.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <CACPK8XcT4Z-9mbqc0obteWKOoLYke+gR4Hd0rZ-C=g0NgSNd0A@mail.gmail.com>
+X-Operating-System: Linux phenom 4.19.0-1-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 07:17:28AM -0700, Patrick Venture wrote:
-> Delete line indicating the datasheet was not publicly available.  This
-> line was originally present as a default during the write-up and was
-> subsequently not removed once the datasheet was located.
+On Mon, Apr 15, 2019 at 06:41:48PM +0800, Joel Stanley wrote:
+> On Mon., 15 Apr. 2019, 17:32 Daniel Vetter, <daniel@ffwll.ch> wrote:
 > 
-> Signed-off-by: Patrick Venture <venture@google.com>
+> > On Fri, Apr 05, 2019 at 06:41:17PM +1030, Joel Stanley wrote:
+> > > The GFX IP is inside of the ASPEED BMC SoC so there is little use
+> > > enabling it on a kernel that does not support ASPEED.
+> > >
+> > > When building with COMPILE_TEST the architecture many not have CMA
+> > > support, so to avoid breaking the build we only select these options if
+> > > the architecture supports the contiguous allocator.
+> > >
+> > > I suspect the DRM_PANEL came from a cut/paste error.
+> > >
+> > > Fixes: 4f2a8f5898ec ("drm: Add ASPEED GFX driver")
+> > > Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
+> > > Reported-by: kernel test robot <lkp@intel.com>
+> > > Signed-off-by: Joel Stanley <joel@jms.id.au>
+> >
+> > Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
+> >
+> > Iirc you have commit rights, right?
+> >
+> 
+> Can you please apply this one for me? I'm traveling and don't have my keys
+> with me.
 
-Applied.
-
-Thanks,
-Guenter
+Ok, since it's holding up linux-next testing I've applied, in general it's
+ok to just wait until you're back I think.
+-Daniel
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
