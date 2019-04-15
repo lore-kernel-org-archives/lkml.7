@@ -7,47 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D6874C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:16:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 69A2BC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:16:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A0812073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:16:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 361DF2073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:16:44 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355797;
-	bh=q+4pjPZ1jZOTtIAFNsg9ZAhepzhuc5cL95X2C98unBg=;
+	s=default; t=1555355804;
+	bh=HlA1l8YBLo80eU+FnB7BNPGxYdou/96umeVdS1CVP6Y=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cl5wvJVf/eqwqVMQTxPYk1lbVEVme/wd5+jqnPa9K1RbR9O4xnjk8gu2EMOjKy4dq
-	 +NROUf/y8LHvZtdA1S/03XWin0NKZLZ3ByKPzuRIOPp5jP4ia6veY6MNfzS36TjbYH
-	 WR+MJJnFS4L+QXNlYJHxpEtAb4OPIpoGJcbHAbmQ=
+	b=oaiBhb+erNoeiKNaxHpv05j+9LUZojqdzk4QephiUJ8cQ0djF9GK+7OClOzpOQh98
+	 Lg4rBsUFaxKiJzykc7i16gd/bfh5/5dRLTNAm4bwU3p6FzKBCDAPRt3sY4hL+QpaYk
+	 rBEPJduoCv5aKkO5EELlgUYIfOYfznNKMACzlGfI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731494AbfDOTNI (ORCPT
+        id S1731512AbfDOTQn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:13:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50658 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:16:43 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50594 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730804AbfDOTNE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:13:04 -0400
+        id S1731469AbfDOTNB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:13:01 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6FCA020880;
-        Mon, 15 Apr 2019 19:13:03 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BDA9E2075B;
+        Mon, 15 Apr 2019 19:13:00 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355583;
-        bh=q+4pjPZ1jZOTtIAFNsg9ZAhepzhuc5cL95X2C98unBg=;
+        s=default; t=1555355581;
+        bh=HlA1l8YBLo80eU+FnB7BNPGxYdou/96umeVdS1CVP6Y=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nHtpN89Ifj638RGDT7tFJuRcmKgzr/oiAD7dfmXzye3gV7vNzUCT8FHf2kFmQUuRP
-         +T8KmxObjcMfBJyXQM/Znma/wd+WEi5G12aj4py44ufdBIN1IK673/pwlfRft+h1bQ
-         XL4yLlYok6fFeaVXkqKAE+MkPYyec0sG1ZPsqQEs=
+        b=tWJdXv4bSXggfLdOYsPIBAOOyjUrp5auWzrkgEZeJJ60eriAHVDol/u1Bx/FoCecS
+         +YScdmZnFNyy82M0gOEI2luje1dOabm7Xaz0PY9eStkUtExIq5vROvNd1a+3fPtnfR
+         CIj92zolt2xcBnYqgbxmBRPtMCEu9kqRRBdkBhXY=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, David Engraf <david.engraf@sysgo.com>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Ludovic Desroches <ludovic.desroches@microchip.com>
-Subject: [PATCH 5.0 090/117] ARM: dts: at91: Fix typo in ISC_D0 on PC9
-Date:   Mon, 15 Apr 2019 21:01:00 +0200
-Message-Id: <20190415183749.450639153@linuxfoundation.org>
+        stable@vger.kernel.org,
+        David Summers <beagleboard@davidjohnsummers.uk>,
+        Jonas Karlman <jonas@kwiboo.se>,
+        Robin Murphy <robin.murphy@arm.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH 5.0 089/117] ARM: dts: rockchip: Fix SD card detection on rk3288-tinker
+Date:   Mon, 15 Apr 2019 21:00:59 +0200
+Message-Id: <20190415183749.408085731@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183744.887851196@linuxfoundation.org>
 References: <20190415183744.887851196@linuxfoundation.org>
@@ -60,34 +62,79 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: David Engraf <david.engraf@sysgo.com>
+From: David Summers <beagleboard@davidjohnsummers.uk>
 
-commit e7dfb6d04e4715be1f3eb2c60d97b753fd2e4516 upstream.
+commit 8dbc4d5ddb59f49cb3e85bccf42a4720b27a6576 upstream.
 
-The function argument for the ISC_D0 on PC9 was incorrect. According to
-the documentation it should be 'C' aka 3.
+The Problem:
 
-Signed-off-by: David Engraf <david.engraf@sysgo.com>
-Reviewed-by: Nicolas Ferre <nicolas.ferre@microchip.com>
-Signed-off-by: Ludovic Desroches <ludovic.desroches@microchip.com>
-Fixes: 7f16cb676c00 ("ARM: at91/dt: add sama5d2 pinmux")
-Cc: <stable@vger.kernel.org> # v4.4+
+On ASUS Tinker Board S, when booting from the eMMC, and there is card
+in the sd slot, there are constant errors.
+
+Also when warm reboot, uboot can not access the sd slot
+
+Cause:
+
+Identified by Robin Murphy @ ARM. The Card Detect on rk3288
+devices is pulled up by vccio-sd; so when the regulator powers this
+off, card detect gives spurious errors. A second problem, is during
+power down, vccio-sd apprears to be powered down. This causes a
+problem when warm rebooting from the sd card. This was identified by
+Jonas Karlman.
+
+History:
+
+A common fault on these rk3288 board, which impliment the reference
+design.
+
+When this arose before:
+
+http://lists.infradead.org/pipermail/linux-arm-kernel/2014-August/281153.html
+
+And Ulf and Jaehoon clearly said this was a broken card detect design,
+which should be solved via polling
+
+Solution:
+
+Hence broken-cd is set as a property. This cures the errors. The
+powering down of vccio-sd during reboot is cured by adding
+regulator-boot-on.
+
+This solutions has been fairly widely reviewed and tested.
+
+Fixes: e58c5e739d6f ("ARM: dts: rockchip: move shared tinker-board nodes to a common dtsi")
+Cc: stable@vger.kernel.org
+[Heiko: slightly inaccurate fixes but tinker is a sbc (aka like a Pi) where
+ we can hopefully expect people not to rely on overly old stable kernels]
+Signed-off-by: David Summers <beagleboard@davidjohnsummers.uk>
+Reviewed-by: Jonas Karlman <jonas@kwiboo.se>
+Tested-by: Jonas Karlman <jonas@kwiboo.se>
+Reviewed-by: Robin Murphy <robin.murphy@arm.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm/boot/dts/sama5d2-pinfunc.h |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/arm/boot/dts/rk3288-tinker.dtsi |    3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
---- a/arch/arm/boot/dts/sama5d2-pinfunc.h
-+++ b/arch/arm/boot/dts/sama5d2-pinfunc.h
-@@ -518,7 +518,7 @@
- #define PIN_PC9__GPIO			PINMUX_PIN(PIN_PC9, 0, 0)
- #define PIN_PC9__FIQ			PINMUX_PIN(PIN_PC9, 1, 3)
- #define PIN_PC9__GTSUCOMP		PINMUX_PIN(PIN_PC9, 2, 1)
--#define PIN_PC9__ISC_D0			PINMUX_PIN(PIN_PC9, 2, 1)
-+#define PIN_PC9__ISC_D0			PINMUX_PIN(PIN_PC9, 3, 1)
- #define PIN_PC9__TIOA4			PINMUX_PIN(PIN_PC9, 4, 2)
- #define PIN_PC10			74
- #define PIN_PC10__GPIO			PINMUX_PIN(PIN_PC10, 0, 0)
+--- a/arch/arm/boot/dts/rk3288-tinker.dtsi
++++ b/arch/arm/boot/dts/rk3288-tinker.dtsi
+@@ -254,6 +254,7 @@
+ 			};
+ 
+ 			vccio_sd: LDO_REG5 {
++				regulator-boot-on;
+ 				regulator-min-microvolt = <1800000>;
+ 				regulator-max-microvolt = <3300000>;
+ 				regulator-name = "vccio_sd";
+@@ -430,7 +431,7 @@
+ 	bus-width = <4>;
+ 	cap-mmc-highspeed;
+ 	cap-sd-highspeed;
+-	card-detect-delay = <200>;
++	broken-cd;
+ 	disable-wp;			/* wp not hooked up */
+ 	pinctrl-names = "default";
+ 	pinctrl-0 = <&sdmmc_clk &sdmmc_cmd &sdmmc_cd &sdmmc_bus4>;
 
 
