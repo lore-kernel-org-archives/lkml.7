@@ -2,124 +2,245 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3678FC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:56:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E99CC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 026AE2070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:56:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B4402070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:57:52 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JZcVgi2w"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="B7orOxy/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728947AbfDOT4Y (ORCPT
+        id S1728986AbfDOT5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:56:24 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:33874 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728347AbfDOT4X (ORCPT
+        Mon, 15 Apr 2019 15:57:50 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:44735 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728774AbfDOT5u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:56:23 -0400
-Received: by mail-wm1-f68.google.com with SMTP id r186so704773wmf.1;
-        Mon, 15 Apr 2019 12:56:22 -0700 (PDT)
+        Mon, 15 Apr 2019 15:57:50 -0400
+Received: by mail-lj1-f194.google.com with SMTP id h16so16840348ljg.11
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 12:57:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=wIk65o+RO0GXjCOm+Angc753gmqOE8dlMvOLS/9D4ls=;
-        b=JZcVgi2w/siujD5wC49nOZKOqGAYoYcbzgNq9zfqiwzdzV0zfuhwBrqIMThC0FqQAH
-         IZpEcd3ivbRMeqsrotU2qXQVOf0I4z+SbjBytWvsYTb7mFwxXs+stNU9aTP7NdwnaKbO
-         ne+Nt1X+om7X/Prf09dm5tNUNoiKTay5FtZRHrMedTPD010ggqk44PMlrCG/MrFxVana
-         OuEs/8XMsHd2yrXYbQbNXBQQu1+gVxBqTz/d2XvOtQiA95yPxe7U0onAoERQJMExpjwG
-         VM3xuZAZNyjxOL9BCtgKwQOd57xbarQJDkoPVo+ICVuR2peVeHu/XbLrgYUhMpllX/4M
-         XwCw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=from:subject:to:cc:references:organization:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=wIk65o+RO0GXjCOm+Angc753gmqOE8dlMvOLS/9D4ls=;
-        b=GZ7YpU8AdVS1NSbK0N+/1KyGIEZ2KevK7hiWNLKpmmwIqN4slnugEWWpwlzXvTaJR+
-         LJe7ufzFo7SYYu2dQHV6nv23Iy16eccK8CYcza5uPh/Xo/D8Vzir/108XrSf7yHik+e+
-         6CudRv/ZIb1O+voBspm2Gxbv2FH7nz+lsE+Y6idNhXaNVgo2kyaNbLJ0f72pkEEwUcG8
-         Fm30r3B1EQhcqnWRQrcIBkm08NwjCE/ckuYO03mJpHTbUgjO1YwcLDHn+pYfq6qnk/pn
-         EL2QsWmsi3wzTvsX0h3wYc+meV9o5C2y64SRPnwSN4WiJPy9yWyXB0StXe7sWxsanwyp
-         pZWg==
-X-Gm-Message-State: APjAAAVGG+gyhf8bCyqF+ixClv0+xD51fogOZ7vtz+nFDVtOnDK4KoZL
-        1e8f2cszjTHC2+a42DtOWYobTFZQBErN9g==
-X-Google-Smtp-Source: APXvYqyFEU6YIX+CbAOvJV5afdQPF7HdjSRbNYuRE8GHyWaUc2fqQmpMpyRCWIvUKMnX+WToSkdO4w==
-X-Received: by 2002:a05:600c:220b:: with SMTP id z11mr23144663wml.73.1555358181873;
-        Mon, 15 Apr 2019 12:56:21 -0700 (PDT)
-Received: from [192.168.1.221] ([195.245.38.118])
-        by smtp.gmail.com with ESMTPSA id r16sm38548382wrx.37.2019.04.15.12.56.20
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Apr 2019 12:56:21 -0700 (PDT)
-Subject: Re: [PATCH 2/4] ARM: ep93xx: keypad: stop using mach/platform.h
-To:     Arnd Bergmann <arnd@arndb.de>,
-        Hartley Sweeten <HartleyS@visionengravers.com>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <20190415192734.935387-1-arnd@arndb.de>
- <20190415192734.935387-2-arnd@arndb.de>
- <CO2PR01MB21683E465191EA8246503774D02B0@CO2PR01MB2168.prod.exchangelabs.com>
- <CAK8P3a1DSN3jcfGngrJFp93Mt98qsibvKvtJGtjHYjOmcM1kNQ@mail.gmail.com>
-From:   Alexander Sverdlin <alexander.sverdlin@gmail.com>
-Message-ID: <3665a5ad-ff6d-97a1-ca31-971973a7167f@gmail.com>
-Date:   Mon, 15 Apr 2019 21:54:57 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        bh=H1MMV0mrpetojB6wkoeaHxVzGhoDBvvAhfwEHNFpeNg=;
+        b=B7orOxy/CPdQGiyRKz3VaPZPbyqvFvxsSjgAa/OzKviEfARbjiccjYRd85Sfq7Xskp
+         XqH6YBxyfheIMnVeJjwkmrZhGkjcxBg4f3amuJbg/JRiQbfdBgUBINWnCmB0wX3G0PJi
+         mCGxOxTlA2VVdv1YfWWtTIWYA59IRiWSJVYSzrvyRKJ2L2kx12Um5kBZKeA1o0HeA7/G
+         r6X021NWrEJnnQGQTj1Vl/FeLNQjtS8fonFwUfPrsGhBCzBwe1Dot4IoQH1D5NW1ykSL
+         RyxiJ5/7qqB+SuRISY0idSfVSrt+7nLHpjb1MpztGgHZ8dunmmKvshtHu1b3mQTtodd0
+         E/Bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:subject:to:cc:references:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=H1MMV0mrpetojB6wkoeaHxVzGhoDBvvAhfwEHNFpeNg=;
+        b=IJkMrK2Mz7FQsCQIrIdw3g00Myh7q3DOdTog5KPS8UyP+7jfwa7HzIZYygExhTqT/Q
+         pJSgYaNuP6FCql5ljnuItABgyDV4/g3DwRsFTWoFKMkd1abl0dtbZ9qRjVDf816bU+qi
+         C9c4YZMNBNL/81zzcoNJPWpSLQrGKEZ1SYIKLUw8qC1nwqqaGDHYmc6tYqX3gS1vdf6Q
+         p9yElyBvY3Sp3cBdihyGrVs6xaAK7v19cbbgAct7mrxdTIszRQdljzbD2ehjacjY36xj
+         ygfgM1cnt1ixq8w6N++TCkGvsnLJRWnjBJ8Z10wbF1gK4L3+nxDg0pVe0uY2OJOY0zTn
+         il4g==
+X-Gm-Message-State: APjAAAVz7KQhta7wwLTDTPin5X9wMqOL5uB48OkFjz9TloJccEnU+hwz
+        wKf60pj/YHIPifKAWt4ShAnH3Q==
+X-Google-Smtp-Source: APXvYqzuApBgmMNGPYTpGaX2JM/hPR8Eymqv0HeFTK7bnzToX69hgX82bDRKVYj0WPAiXD6hce9jlg==
+X-Received: by 2002:a2e:9d99:: with SMTP id c25mr15789356ljj.159.1555358267348;
+        Mon, 15 Apr 2019 12:57:47 -0700 (PDT)
+Received: from wasted.cogentembedded.com ([31.173.85.61])
+        by smtp.gmail.com with ESMTPSA id x72sm1073507lfa.58.2019.04.15.12.57.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Apr 2019 12:57:46 -0700 (PDT)
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Subject: Re: [PATCH v10 1/3] mfd: Add Renesas R-Car Gen3 RPC-IF MFD controller
+ driver
+To:     Mason Yang <masonccyang@mxic.com.tw>, broonie@kernel.org,
+        marek.vasut@gmail.com, linux-kernel@vger.kernel.org,
+        linux-spi@vger.kernel.org, bbrezillon@kernel.org,
+        linux-renesas-soc@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
+        devicetree@vger.kernel.org
+Cc:     juliensu@mxic.com.tw, Simon Horman <horms@verge.net.au>
+References: <1555313834-15107-1-git-send-email-masonccyang@mxic.com.tw>
+ <1555313834-15107-2-git-send-email-masonccyang@mxic.com.tw>
+Organization: Cogent Embedded
+Message-ID: <935046cc-e2e5-b9b8-0c94-1be5ae604276@cogentembedded.com>
+Date:   Mon, 15 Apr 2019 22:57:45 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-In-Reply-To: <CAK8P3a1DSN3jcfGngrJFp93Mt98qsibvKvtJGtjHYjOmcM1kNQ@mail.gmail.com>
+In-Reply-To: <1555313834-15107-2-git-send-email-masonccyang@mxic.com.tw>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Language: en-MW
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi!
+The patch name is somewhat misleading -- there's no "MFD controller".
 
-On 15/04/2019 21:47, Arnd Bergmann wrote:
->>> We can communicate the clock rate using platform data rather than setting a
->>> flag to use a particular value in the driver, which is cleaner and avoids the dependency.
->>>
->>> No platform in the kernel currently defines the ep93xx keypad device structure, so this
->>> is a rather pointless excercise.  Any out of tree users are probably dead now, but if not,
->>>  they have to change their platform code to match the new platform_data structure.
->> <snip>
->>
->>> diff --git a/include/linux/platform_data/keypad-ep93xx.h b/include/linux/platform_data/keypad-ep93xx.h
->>> index 0e36818e3680..3054fced8509 100644
->>> --- a/include/linux/platform_data/keypad-ep93xx.h
->>> +++ b/include/linux/platform_data/keypad-ep93xx.h
->>> @@ -9,8 +9,7 @@ struct matrix_keymap_data;
->>>  #define EP93XX_KEYPAD_DIAG_MODE              (1<<1)  /* diagnostic mode */
->>>  #define EP93XX_KEYPAD_BACK_DRIVE     (1<<2)  /* back driving mode */
->>>  #define EP93XX_KEYPAD_TEST_MODE              (1<<3)  /* scan only column 0 */
->>> -#define EP93XX_KEYPAD_KDIV           (1<<4)  /* 1/4 clock or 1/16 clock */
->>> -#define EP93XX_KEYPAD_AUTOREPEAT     (1<<5)  /* enable key autorepeat */
->>> +#define EP93XX_KEYPAD_AUTOREPEAT     (1<<4)  /* enable key autorepeat */
->> You have re-defined the keypad register bits here.
->>
->> The KDIV bit changes the clock rate. The AUTOREPEAT bit enables key autorepeat.
-> As far as I can tell, they are not register bits, just software flags
-> for communicating between a board file and the driver, so I
-> assumed I could freely reorganize them.
+On 04/15/2019 10:37 AM, Mason Yang wrote:
+
+> Add a driver for Renesas R-Car Gen3 RPC-IF MFD controller.
 > 
-> Did I miss something?
+> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+[...]
+> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+> index 26ad646..7914349 100644
+> --- a/drivers/mfd/Kconfig
+> +++ b/drivers/mfd/Kconfig
+> @@ -978,6 +978,15 @@ config MFD_RDC321X
+>  	  southbridge which provides access to GPIOs and Watchdog using the
+>  	  southbridge PCI device configuration space.
+>  
+> +config MFD_RENESAS_RPC
+> +	tristate "Renesas R-Car Gen3 RPC-IF MFD driver"
+> +	select MFD_CORE
+> +	depends on ARCH_RENESAS
+> +	help
+> +	  This supports for Renesas R-Car Gen3 RPC-IF multifunction device
 
-They are indeed only software flags (just checked datasheet), so you are only changing
-platform data format. But as I do not know any keypad user in person, I'd rely on
-Hartley's opinion in this case (if it's a good idea to change platform data or not).
+   "For" node needed here.
 
---
-Alex.
+> +	  controller which provides either SPI host controller or HyperFlash.
+> +	  You have to select individual components under the corresponding menu.
+> +
+>  config MFD_RT5033
+>  	tristate "Richtek RT5033 Power Management IC"
+>  	depends on I2C
+[...]
+> diff --git a/drivers/mfd/renesas-rpc.c b/drivers/mfd/renesas-rpc.c
+> new file mode 100644
+> index 0000000..a565f31
+> --- /dev/null
+> +++ b/drivers/mfd/renesas-rpc.c
+> @@ -0,0 +1,128 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +//
+> +// Copyright (C) 2018 ~ 2019 Renesas Solutions Corp.
+> +// Copyright (C) 2019 Macronix International Co., Ltd.
+> +//
+> +// R-Car Gen3 RPC-IF MFD driver
+> +//
+> +// Author:
+> +//	Mason Yang <masonccyang@mxic.com.tw>
+> +//
+> +
+> +#include <linux/mfd/renesas-rpc.h>
+> +#include <linux/mfd/core.h>
+> +
+> +static const struct mfd_cell rpc_hf_ctlr = {
+> +	.name = "rpc-hf",
+> +	.of_compatible = "renesas,rcar-rpc-hf",
+
+   Don't need this line any more...
+
+> +};
+> +
+> +static const struct mfd_cell rpc_spi_ctlr = {
+> +	.name = "rpc-spi",
+> +	.of_compatible = "renesas,rcar-rpc-spi",
+
+   ... and this too.
+
+[...]
+> +static int rpc_mfd_probe(struct platform_device *pdev)
+> +{
+> +	struct device_node *flash;
+> +	const struct mfd_cell *cell;
+> +	struct resource *res;
+> +	struct rpc_mfd *rpc;
+> +	void __iomem *base;
+> +	int ret;
+> +
+> +	flash = of_get_next_child(pdev->dev.of_node, NULL);
+> +	if (!flash) {
+> +		dev_warn(&pdev->dev, "no flash node found\n");
+> +		return -ENODEV;
+> +	}
+> +
+> +	ret = of_device_is_compatible(flash, "jedec,spi-nor");
+> +	if (ret) {
+> +		cell = &rpc_spi_ctlr;
+> +	} else {
+> +		ret = of_device_is_compatible(flash, "cfi-flash");
+> +		if (ret) {
+> +			cell = &rpc_hf_ctlr;
+> +		} else {
+> +			dev_warn(&pdev->dev, "no jedec spi/cfi device found\n");
+> +			return -ENODEV;
+> +		}
+> +	}
+
+
+   This definitely should look simpler, like below:
+
+	if (of_device_is_compatible(flash, "jedec,spi-nor")) {
+ 		cell = &rpc_spi_ctlr;
+	} else if (of_device_is_compatible(flash, "cfi-flash")) {
+		cell = &rpc_hf_ctlr;
+ 	} else {
+		dev_warn(&pdev->dev, "unknown flash type\n");
+		return -ENODEV;
+	}
+
+[...]
+
+> +	ret = devm_mfd_add_devices(&pdev->dev, -1, cell, 1, NULL, 0, NULL);
+> +
+> +	return ret;
+
+	return devm_mfd_add_devices(&pdev->dev, -1, cell, 1, NULL, 0, NULL);
+
+[...]
+> diff --git a/include/linux/mfd/renesas-rpc.h b/include/linux/mfd/renesas-rpc.h
+> new file mode 100644
+> index 0000000..61ada14
+> --- /dev/null
+> +++ b/include/linux/mfd/renesas-rpc.h
+> @@ -0,0 +1,153 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +//
+> +// Copyright (C) 2018 ~ 2019 Renesas Solutions Corp.
+> +// Copyright (C) 2019 Macronix International Co., Ltd.
+> +//
+> +// R-Car Gen3 RPC-IF MFD driver
+> +//
+> +// Author:
+> +//	Mason Yang <masonccyang@mxic.com.tw>
+> +//
+> +
+> +#ifndef __MFD_RENESAS_RPC_H
+> +#define __MFD_RENESAS_RPC_H
+> +
+> +#include <linux/clk.h>
+> +#include <linux/io.h>
+> +#include <linux/log2.h>
+> +#include <linux/iopoll.h>
+> +#include <linux/module.h>
+> +#include <linux/mtd/mtd.h>
+> +#include <linux/platform_device.h>
+> +#include <linux/pm_runtime.h>
+> +#include <linux/of.h>
+> +#include <linux/regmap.h>
+> +#include <linux/reset.h>
+
+   NAK. I have already told you that these #include's are only needed in the
+drivers, not in this header.
+
+   My idea is to contain all hardware manipulation in the MFD driver,
+with SPI/HF drivers calling that code via a set of APIs declared in this header.
+The registers (declared below) would end up only needed by that common MFD driver...
+
+[...]
+
+MBR, Sergei
