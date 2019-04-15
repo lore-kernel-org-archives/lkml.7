@@ -2,135 +2,98 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D4FC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:06:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CA0B1C282DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:06:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3AF92087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:06:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sa7nrG2n"
+	by mail.kernel.org (Postfix) with ESMTP id A4FAB2087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:06:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727605AbfDOOGB (ORCPT
+        id S1727610AbfDOOGn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 10:06:01 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:51026 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727588AbfDOOGB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 10:06:01 -0400
-Received: by mail-wm1-f66.google.com with SMTP id z11so20943378wmi.0;
-        Mon, 15 Apr 2019 07:05:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=t1nPpstrlJM5kBs2fqSCtG3M2bij+WTmTrEa9fXX0WE=;
-        b=sa7nrG2n2XdYRLO5bcWtTP0XQ/lCvo4C79lFXbdXSFCqqVsNcaYey1KISdEKzy6Tvd
-         bporXZcI2YQkAlrWHS2w2q23pOVp4EXpIg7QSZP/oyATlNrOiiuI/X8S6vmTXvzcWO/R
-         weF/G03rKwakeB78XfDZfeDvVXpqZKBmT67wEo9L9/8rewWpFKBLMcUYYNI/YJL74s9Q
-         1LFi+2QGIyc3WkjSuCO3CjnO0UEGEFtQehVK/rv2kGTzOXQOue/6vcjUi96uMShvuDWp
-         nbodecL6cPu0Q57Ad33sTStodLzNp6p9jjQIbe5zudH8E4GYMuzcz2kA2XsxVBB+3Rk5
-         bWeQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=t1nPpstrlJM5kBs2fqSCtG3M2bij+WTmTrEa9fXX0WE=;
-        b=crAFI0KQkZsyCadi6iLbfHHlog5DgDuTZ6uixN59BS/a0PSjxy7kR948PJew4rj+52
-         j8cWAV3lLDtjvWX88cudYo044ty2515xNOKU2wp3j9gffBx7Dm6mLTFrI2N9pNOPNp/b
-         FKSUBPqZEERBpgd6C5NN9+FULbIVW2bUwaXybEGlKYO5OCTT1WRAvhpTDgp6luT77biw
-         yNwpqBiq/J1xxWSaYdanguVuobbtRC5BfetMKv2aRg/kS9GKCLbg/WY6/InMuhv7Fenc
-         oNaZhQkJEF5kdxPeD0OpknoUxruFJe084vSPMcYP/aQ3Q5sfN7BpSvCrGs9G62/iR1er
-         drCQ==
-X-Gm-Message-State: APjAAAXu4uIifE4A7mhHAbl39fT+askUT4mF2jkONQwouboEEllcCiAp
-        U5zwiCVOmLz2kVdMMFm8y4uuMrlF
-X-Google-Smtp-Source: APXvYqz3DuIshr47RqymvoprLqcQpOaDYluoOEIPrMeRm+UD4ljTQlaCmwlyf/u68QsVS+DC05S+aw==
-X-Received: by 2002:a1c:b646:: with SMTP id g67mr23515676wmf.125.1555337158495;
-        Mon, 15 Apr 2019 07:05:58 -0700 (PDT)
-Received: from 640k.lan ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id z84sm22034053wmg.24.2019.04.15.07.05.57
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Apr 2019 07:05:57 -0700 (PDT)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     Sean Christopherson <sean.j.christopherson@intel.com>
-Subject: [PATCH] KVM: nVMX: always use early vmcs check when EPT is disabled
-Date:   Mon, 15 Apr 2019 16:05:56 +0200
-Message-Id: <1555337156-37142-1-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
+        Mon, 15 Apr 2019 10:06:43 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6745 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727371AbfDOOGn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 10:06:43 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id B0157736DB3AAEA97740;
+        Mon, 15 Apr 2019 22:06:35 +0800 (CST)
+Received: from [127.0.0.1] (10.177.31.96) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.408.0; Mon, 15 Apr 2019
+ 22:06:30 +0800
+Subject: Re: [PATCH -next] PCI: mvebu: Make mvebu_pci_bridge_emul_ops static
+To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+References: <20190410140949.26716-1-yuehaibing@huawei.com>
+ <20190415130009.GA12388@red-moon>
+CC:     <thomas.petazzoni@bootlin.com>, <jason@lakedaemon.net>,
+        <bhelgaas@google.com>, <gustavo.pimentel@synopsys.com>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <linux-pci@vger.kernel.org>
+From:   YueHaibing <yuehaibing@huawei.com>
+Message-ID: <6852d7a5-3f0f-ee82-89ef-f3d5caf7bd83@huawei.com>
+Date:   Mon, 15 Apr 2019 22:06:28 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
+ Thunderbird/45.2.0
+MIME-Version: 1.0
+In-Reply-To: <20190415130009.GA12388@red-moon>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The remaining failures of vmx.flat when EPT is disabled are caused by
-incorrectly reflecting VMfails to the L1 hypervisor.  What happens is
-that nested_vmx_restore_host_state corrupts the guest CR3, reloading it
-with the host's shadow CR3 instead, because it blindly loads GUEST_CR3
-from the vmcs01.
+On 2019/4/15 21:00, Lorenzo Pieralisi wrote:
+> On Wed, Apr 10, 2019 at 10:09:49PM +0800, Yue Haibing wrote:
+>> From: YueHaibing <yuehaibing@huawei.com>
+>>
+>> Fix sparse warning:
+>>
+>> drivers/pci/controller/pci-mvebu.c:557:28: warning:
+>>  symbol 'mvebu_pci_bridge_emul_ops' was not declared. Should it be static?
+>>
+>> Reported-by: Hulk Robot <hulkci@huawei.com>
+> 
+> Is Mr.Robot reachable by email ?
+> 
+> If it is a CI bot I doubt it is useful to leave this tag there unless
+> you want it for accounting purposes, just let me know.
 
-For simplicity let's just always use hardware VMCS checks when EPT is
-disabled.  This way, nested_vmx_restore_host_state is not reached at
-all (or at least shouldn't be reached).
----
- arch/x86/include/uapi/asm/vmx.h |  1 +
- arch/x86/kvm/vmx/nested.c       | 22 ++++++++++++++++++++--
- 2 files changed, 21 insertions(+), 2 deletions(-)
+Yes, it is our CI bot.
 
-diff --git a/arch/x86/include/uapi/asm/vmx.h b/arch/x86/include/uapi/asm/vmx.h
-index f0b0c90dd398..d213ec5c3766 100644
---- a/arch/x86/include/uapi/asm/vmx.h
-+++ b/arch/x86/include/uapi/asm/vmx.h
-@@ -146,6 +146,7 @@
- 
- #define VMX_ABORT_SAVE_GUEST_MSR_FAIL        1
- #define VMX_ABORT_LOAD_HOST_PDPTE_FAIL       2
-+#define VMX_ABORT_VMCS_CORRUPTED             3
- #define VMX_ABORT_LOAD_HOST_MSR_FAIL         4
- 
- #endif /* _UAPIVMX_H */
-diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
-index a22af5a85540..6401eb7ef19c 100644
---- a/arch/x86/kvm/vmx/nested.c
-+++ b/arch/x86/kvm/vmx/nested.c
-@@ -3796,8 +3796,18 @@ static void nested_vmx_restore_host_state(struct kvm_vcpu *vcpu)
- 	vmx_set_cr4(vcpu, vmcs_readl(CR4_READ_SHADOW));
- 
- 	nested_ept_uninit_mmu_context(vcpu);
--	vcpu->arch.cr3 = vmcs_readl(GUEST_CR3);
--	__set_bit(VCPU_EXREG_CR3, (ulong *)&vcpu->arch.regs_avail);
-+
-+	/*
-+	 * This is only valid if EPT is in use, otherwise the vmcs01 GUEST_CR3
-+	 * points to shadow pages!  Fortunately we only get here after a WARN_ON
-+	 * if EPT is disabled, so a VMabort is perfectly fine.
-+	 */
-+	if (enable_ept) {
-+		vcpu->arch.cr3 = vmcs_readl(GUEST_CR3);
-+		__set_bit(VCPU_EXREG_CR3, (ulong *)&vcpu->arch.regs_avail);
-+	} else {
-+		nested_vmx_abort(vcpu, VMX_ABORT_VMCS_CORRUPTED);
-+	}
- 
- 	/*
- 	 * Use ept_save_pdptrs(vcpu) to load the MMU's cached PDPTRs
-@@ -5745,6 +5755,14 @@ __init int nested_vmx_hardware_setup(int (*exit_handlers[])(struct kvm_vcpu *))
- {
- 	int i;
- 
-+	/*
-+	 * Without EPT it is not possible to restore L1's CR3 and PDPTR on
-+	 * VMfail, because they are not available in vmcs01.  Just always
-+	 * use hardware checks.
-+	 */
-+	if (!enable_ept)
-+		nested_early_check = 1;
-+
- 	if (!cpu_has_vmx_shadow_vmcs())
- 		enable_shadow_vmcs = 0;
- 	if (enable_shadow_vmcs) {
--- 
-1.8.3.1
+> 
+> Thanks,
+> Lorenzo
+> 
+>> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+>> ---
+>>  drivers/pci/controller/pci-mvebu.c | 2 +-
+>>  1 file changed, 1 insertion(+), 1 deletion(-)
+>>
+>> diff --git a/drivers/pci/controller/pci-mvebu.c b/drivers/pci/controller/pci-mvebu.c
+>> index d3a0419..ed032e9 100644
+>> --- a/drivers/pci/controller/pci-mvebu.c
+>> +++ b/drivers/pci/controller/pci-mvebu.c
+>> @@ -554,7 +554,7 @@ mvebu_pci_bridge_emul_pcie_conf_write(struct pci_bridge_emul *bridge,
+>>  	}
+>>  }
+>>  
+>> -struct pci_bridge_emul_ops mvebu_pci_bridge_emul_ops = {
+>> +static struct pci_bridge_emul_ops mvebu_pci_bridge_emul_ops = {
+>>  	.write_base = mvebu_pci_bridge_emul_base_conf_write,
+>>  	.read_pcie = mvebu_pci_bridge_emul_pcie_conf_read,
+>>  	.write_pcie = mvebu_pci_bridge_emul_pcie_conf_write,
+>> -- 
+>> 2.7.4
+>>
+>>
+> 
+> .
+> 
 
