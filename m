@@ -2,139 +2,143 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35927C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 08:30:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 740C9C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 08:34:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AF7A20833
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 08:30:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3B87E20651
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 08:34:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LgdU9brQ"
+	dkim=pass (1024-bit key) header.d=xilinx.onmicrosoft.com header.i=@xilinx.onmicrosoft.com header.b="kI16SkBY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726926AbfDOIau (ORCPT
+        id S1726488AbfDOIei (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 04:30:50 -0400
-Received: from mail-yb1-f194.google.com ([209.85.219.194]:41709 "EHLO
-        mail-yb1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbfDOIau (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 04:30:50 -0400
-Received: by mail-yb1-f194.google.com with SMTP id a13so3130927ybl.8;
-        Mon, 15 Apr 2019 01:30:50 -0700 (PDT)
+        Mon, 15 Apr 2019 04:34:38 -0400
+Received: from mail-eopbgr800054.outbound.protection.outlook.com ([40.107.80.54]:14432
+        "EHLO NAM03-DM3-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725794AbfDOIeh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 04:34:37 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=YZQ0fktRX58H0NhtEKSqJXi8xc/s3VWkbaKd8PJvbh4=;
-        b=LgdU9brQknv1g1UjS228vI6A8UudAMMys2ppz5q9Xt4K6o49CZqwgnEIXWv1aAUae0
-         VRGiIrb9WqsVQtqfaOUtwYYuimBUx0rnWgxYPvgL51v/sef75/POfXfS2D/dL1JlfPNB
-         XthG2C//RVtXtNFmdJKImpwF4jQ6mMZ0gkpuHQuiiRsUZMEE19Jx1Y1nG8YjjrK+ZaiY
-         NfgIXmxd1h1uTWTyfiQmNm4HVlWTEulXqVOZwRsfkTWNW+4N2KXgqbSkAfG/5TjVg3Ju
-         bNbNNoDfH1UqsryW1r/OtzRi6RUskO5n6yrIoa81/qFu5Db5Q84bmZ8/ssmcBCWzLJDV
-         jzCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=YZQ0fktRX58H0NhtEKSqJXi8xc/s3VWkbaKd8PJvbh4=;
-        b=lflS022P9p5Ngxn39BuPoF78NP9KVIaG+IsUy5CPkpu4kemDKoyuBEneuPFegqRPMo
-         gxRN5ehnNO9GL7bAysUpFLrND9R9nLZsJ8AcaP5khhMLKe3vWQRuaLTSoN1naXQnvn2u
-         mARLzCi5c/FY6kQc5xUO81etchcoGnXlkyfiPxjIpW8AUaFEloS3nf7gE11NxpCCJkCM
-         slpAQw55co2BRoIEsY9nKMIA6d/Ur5K8LkMOVaPNXX4nEsTlvTVfM+afzpQsbPHND5ye
-         b3Mut0QleudVr3P3Spbc1Rs3/hVxJGGhVhSkyNMmVRznNjkwwnUrc+YgaNhHDKnYjxq1
-         C8zw==
-X-Gm-Message-State: APjAAAXmB+7AImI4JOxkgJt3PJVmyVFPkQXzbE77kunEhU8RUbFtjEX/
-        Sw6bOSIMuv7kTrciFU4lCQsX8h8oehK2oyMUDzY=
-X-Google-Smtp-Source: APXvYqyj0JBokUHfVrJQmM9A98AVN6COWS3xkEP7FVek/62tPGZDkWxk4FLloxyhjCpBU6Cjmvrz2ROdBaIJEQxW6K4=
-X-Received: by 2002:a25:2b87:: with SMTP id r129mr41332684ybr.23.1555317049408;
- Mon, 15 Apr 2019 01:30:49 -0700 (PDT)
+ d=xilinx.onmicrosoft.com; s=selector1-xilinx-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=Ak7BP+kudwuiGOHMoLGXVz9w1sjL7wfkABOIToG2U7U=;
+ b=kI16SkBYvlbuqPc/dr78NeqS6R67HNV1yONcI5Aa4F0QNYKfTUz+0VoSRx0azF0htsRstbvwFqgvz8v4VSmUA+TOP5wBdHd9IVtZJedUsgsxwiEsAgue5x6a9PHuG5xkU/vCLRIox96xDjNhNfbmNxjXS3EBW0N2hMfTw4gYqbE=
+Received: from DM6PR02CA0095.namprd02.prod.outlook.com (2603:10b6:5:1f4::36)
+ by BL2PR02MB2002.namprd02.prod.outlook.com (2a01:111:e400:c749::28) with
+ Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1792.17; Mon, 15 Apr
+ 2019 08:34:33 +0000
+Received: from SN1NAM02FT049.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::207) by DM6PR02CA0095.outlook.office365.com
+ (2603:10b6:5:1f4::36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1792.16 via Frontend
+ Transport; Mon, 15 Apr 2019 08:34:32 +0000
+Authentication-Results: spf=pass (sender IP is 149.199.60.100)
+ smtp.mailfrom=xilinx.com; kernel.org; dkim=none (message not signed)
+ header.d=none;kernel.org; dmarc=bestguesspass action=none
+ header.from=xilinx.com;
+Received-SPF: Pass (protection.outlook.com: domain of xilinx.com designates
+ 149.199.60.100 as permitted sender) receiver=protection.outlook.com;
+ client-ip=149.199.60.100; helo=xsj-pvapsmtpgw02;
+Received: from xsj-pvapsmtpgw02 (149.199.60.100) by
+ SN1NAM02FT049.mail.protection.outlook.com (10.152.72.166) with Microsoft SMTP
+ Server (version=TLS1_0, cipher=TLS_RSA_WITH_AES_256_CBC_SHA) id 15.20.1771.16
+ via Frontend Transport; Mon, 15 Apr 2019 08:34:32 +0000
+Received: from unknown-38-66.xilinx.com ([149.199.38.66]:33749 helo=xsj-pvapsmtp01)
+        by xsj-pvapsmtpgw02 with esmtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1hFx4R-0004kD-W4; Mon, 15 Apr 2019 01:34:32 -0700
+Received: from [127.0.0.1] (helo=localhost)
+        by xsj-pvapsmtp01 with smtp (Exim 4.63)
+        (envelope-from <michal.simek@xilinx.com>)
+        id 1hFx4M-0002U6-Sm; Mon, 15 Apr 2019 01:34:26 -0700
+Received: from xsj-pvapsmtp01 (smtp3.xilinx.com [149.199.38.66])
+        by xsj-smtp-dlp1.xlnx.xilinx.com (8.13.8/8.13.1) with ESMTP id x3F8YGYO020244;
+        Mon, 15 Apr 2019 01:34:16 -0700
+Received: from [172.30.17.111]
+        by xsj-pvapsmtp01 with esmtp (Exim 4.63)
+        (envelope-from <michals@xilinx.com>)
+        id 1hFx4C-0002Rn-1e; Mon, 15 Apr 2019 01:34:16 -0700
+Subject: Re: [PATCH v5 1/3] firmware: xilinx: Add fpga API's
+To:     Nava kishore Manne <nava.manne@xilinx.com>, <atull@kernel.org>,
+        <mdf@kernel.org>, <robh+dt@kernel.org>, <mark.rutland@arm.com>,
+        <michal.simek@xilinx.com>, <rajanv@xilinx.com>,
+        <jollys@xilinx.com>, <linux-fpga@vger.kernel.org>,
+        <devicetree@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <chinnikishore369@gmail.com>
+References: <20190415071748.32275-1-nava.manne@xilinx.com>
+ <20190415071748.32275-2-nava.manne@xilinx.com>
+From:   Michal Simek <michal.simek@xilinx.com>
+Message-ID: <24f666c6-50e7-36d9-62a9-73efb9d66dda@xilinx.com>
+Date:   Mon, 15 Apr 2019 10:34:12 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190411214422.2267-1-peron.clem@gmail.com> <20190411214422.2267-2-peron.clem@gmail.com>
- <20190415080443.frubh4ln4agrdsfe@flea> <CAJiuCcc0Q8rh8u_30gKi8o07k0+e35UR99ZBHtCjx-DPkJEtdw@mail.gmail.com>
- <20190415081816.2pay4pioc5d4mojf@flea>
-In-Reply-To: <20190415081816.2pay4pioc5d4mojf@flea>
-From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
-Date:   Mon, 15 Apr 2019 10:30:38 +0200
-Message-ID: <CAJiuCcedNF0xYSa_+Zfwj-vqYsbjfEpRqisOhEvuitYALMsyjw@mail.gmail.com>
-Subject: Re: [PATCH 1/4] dt-bindings: sound: sun4i-spdif: Add Allwinner H6 compatible
-To:     Maxime Ripard <maxime.ripard@bootlin.com>
-Cc:     Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
-        Icenowy Zheng <icenowy@aosc.io>,
-        Jagan Teki <jagan@amarulasolutions.com>,
-        Jernej Skrabec <jernej.skrabec@siol.net>,
-        devicetree <devicetree@vger.kernel.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
-        linux-sunxi <linux-sunxi@googlegroups.com>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190415071748.32275-2-nava.manne@xilinx.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-RCIS-Action: ALLOW
+X-TM-AS-Product-Ver: IMSS-7.1.0.1224-8.2.0.1013-23620.005
+X-TM-AS-User-Approved-Sender: Yes;Yes
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:149.199.60.100;IPV:NLI;CTRY:US;EFV:NLI;SFV:NSPM;SFS:(10009020)(396003)(376002)(136003)(39860400002)(346002)(2980300002)(189003)(199004)(8936002)(230700001)(2486003)(23676004)(63266004)(6246003)(356004)(2906002)(4744005)(316002)(6666004)(106002)(36756003)(64126003)(106466001)(8676002)(81166006)(81156014)(110136005)(58126008)(229853002)(5660300002)(2201001)(126002)(44832011)(31696002)(76176011)(36386004)(336012)(426003)(26005)(77096007)(9786002)(305945005)(186003)(65826007)(11346002)(446003)(2616005)(31686004)(476003)(47776003)(478600001)(486006)(65806001)(65956001)(50466002)(921003)(2101003)(1121003)(83996005)(5001870100001);DIR:OUT;SFP:1101;SCL:1;SRVR:BL2PR02MB2002;H:xsj-pvapsmtpgw02;FPR:;SPF:Pass;LANG:en;PTR:unknown-60-100.xilinx.com,xapps1.xilinx.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: b47fc281-db2c-4909-a902-08d6c17d2f43
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600140)(711020)(4605104)(4709054)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328);SRVR:BL2PR02MB2002;
+X-MS-TrafficTypeDiagnostic: BL2PR02MB2002:
+X-Auto-Response-Suppress: DR, RN, NRN, OOF, AutoReply
+X-Microsoft-Antispam-PRVS: <BL2PR02MB2002F9181614674E361B33D5C62B0@BL2PR02MB2002.namprd02.prod.outlook.com>
+X-Forefront-PRVS: 000800954F
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: jFAdCm/t2eW2Q1+3KlAh35pbr0Spi8ihjv+uif9q6iphPAZRvhLQ3G1V3dY8lRGDxXMvJDbXGKi3v5wxJ8HFKX+dv2hLe0xUBONFsfYczD6H2RcdkbGr/nNJ6S5ysWjhW5hPFUTOj8naaCgTOZo5sCf+/R5jM0hoafCut+q4ixg9SwaG2Jy+ZY2k5mJ5MtvrVLXvrS9LFWFoP17I0jOwW8ixZ7r7Uhwt7ok62eCrSI7XeksoYQ37FYe3skInLv6VlEe90baCPwZMxBA2iS41b2jyoEwkbAiNxjOeykGb6Zgw22ObFLHoIkLlbluMjwWbRrET6u8BGNoy8txRw2yUcP/w5suvVCtc1qhYpXga8mpRh0UipIiZ5t9fMP4cwzynzv8XTsdzQvDFVxXDxX5az2GzYJ4IwkUHYiAaH2UiGyM=
+X-OriginatorOrg: xilinx.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2019 08:34:32.4307
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: b47fc281-db2c-4909-a902-08d6c17d2f43
+X-MS-Exchange-CrossTenant-Id: 657af505-d5df-48d0-8300-c31994686c5c
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=657af505-d5df-48d0-8300-c31994686c5c;Ip=[149.199.60.100];Helo=[xsj-pvapsmtpgw02]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BL2PR02MB2002
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 15 Apr 2019 at 10:18, Maxime Ripard <maxime.ripard@bootlin.com> wro=
-te:
->
-> On Mon, Apr 15, 2019 at 10:09:11AM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
-> > Hi,
-> >
-> > On Mon, 15 Apr 2019 at 10:04, Maxime Ripard <maxime.ripard@bootlin.com>=
- wrote:
-> > >
-> > > Hi,
-> > >
-> > > On Thu, Apr 11, 2019 at 11:44:19PM +0200, Cl=C3=A9ment P=C3=A9ron wro=
-te:
-> > > > Allwinner H6 has a SPDIF controller with an increase of the fifo
-> > > > size and the possibility to output the master clock.
-> > > > However it's still compatible with the already existing driver for
-> > > > Allwiner H3.
-> > > >
-> > > > Add this compatible in the device-tree bindings documentation.
-> > >
-> > > How was this tested?
-> >
-> > Using Alsa utils on a Beelink GS1 and I check correct output sound on
-> > my home cinema.
-> >
-> > > After looking at the datasheet, it looks like it's still significantl=
-y
-> > > different. In particular:
-> > >
-> > >   - The MCLK divider isn't at the same offset
-> >
-> > We don't use the MCLK
-> >
-> > >   - The bits to flush the FIFO aren't at the same offset
-> > >   - The FIFO trigger levels aren't at the same offset
-> > >   - The FIFO status register layout is almost entirely different
-> >
-> > We use DMA not FIFO
->
-> Well, DMA still uses the FIFOs. And even then, you're kind of missing
-> the point. The device tree's compatible is about whether a particular
-> device can be used as another one. How you are using it in the driver
-> is completely irrelevant.
+On 15. 04. 19 9:17, Nava kishore Manne wrote:
+> This Patch Adds fpga API's to support the Bitstream loading
+> by using firmware interface.
+> 
+> Signed-off-by: Nava kishore Manne <nava.manne@xilinx.com>
+> Reviewed-by: Moritz Fischer <mdf@kernel.org>
+> ---
+> Changes for v5:
+> 		-Modified API's doc as suggested by Moritz.
+> 
+>  drivers/firmware/xilinx/zynqmp.c     | 45 ++++++++++++++++++++++++++++
+>  include/linux/firmware/xlnx-zynqmp.h | 12 ++++++++
+>  2 files changed, 57 insertions(+)
+> 
+> diff --git a/drivers/firmware/xilinx/zynqmp.c b/drivers/firmware/xilinx/zynqmp.c
+> index 98f936125643..f355ad42917c 100644
+> --- a/drivers/firmware/xilinx/zynqmp.c
+> +++ b/drivers/firmware/xilinx/zynqmp.c
+> @@ -537,6 +537,49 @@ static int zynqmp_pm_reset_get_status(const enum zynqmp_pm_reset reset,
+>  	return ret;
+>  }
+>  
+> +/*
 
-Sorry I meant " We use DMA not PIO".
+This should be /**
 
-I didn't change the driver and the SPDIF is working what's irrelevant
-in declaring the driver as compatible ?
+I have fixed it myself and applied the whole series to zynqmp/soc branch
+and this will go via arm-soc tree.
 
-If some feature are missing they can be introduce later as there is a
-special binding for H6 no ?
-
-Clement
-
->
-> Maxime
->
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
+Thanks,
+Michal
