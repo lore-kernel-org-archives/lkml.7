@@ -6,46 +6,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01E25C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:48:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99ACEC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:48:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C24D42087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:48:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6732E218D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:48:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555354097;
-	bh=XG236dCSBRpL3kj6+C+m7KpVATumLoxtR9UeKdfgVzs=;
+	s=default; t=1555354101;
+	bh=SY+UyONV8wP7f3PvhZP+xucsYBGez/OGqrhjyq/DTAo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=XT+MkKCGfmTwKEKyASGIcHevg0pJOSxipQGLmsCoCTZsAXeuWfhESGnyfdFCeL+ui
-	 bNQZ7NIO6n8PS918TkOoFtRwqru375B71hVzJUthhSr+xox7W6C3OmP2X8WymjBFYm
-	 Cn4L52eqNwqjOqepdlou++6K/AoQ9jxJ3XqgbKGI=
+	b=ywXjg/RAY49PHoGLHLtqsGwBBLlIhKgFLdISJ/7U8U/4l50Fy6zZoDkkcsKFDMHDy
+	 9/tb+bEbFK0WjjIU6GG3uLdufentVA0pTWq6aYaXurCzhIEHco2AlXhQxrCQnv/jGz
+	 WxMvAIfTSlVQTveRLD5mU4alOVkKl0DcB9G6kbSw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729100AbfDOSsQ (ORCPT
+        id S1729114AbfDOSsU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 14:48:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:52036 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 14:48:20 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52112 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729088AbfDOSsN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 14:48:13 -0400
+        id S1729095AbfDOSsQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 14:48:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 47181218FE;
-        Mon, 15 Apr 2019 18:48:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 13A91218A1;
+        Mon, 15 Apr 2019 18:48:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555354092;
-        bh=XG236dCSBRpL3kj6+C+m7KpVATumLoxtR9UeKdfgVzs=;
+        s=default; t=1555354095;
+        bh=SY+UyONV8wP7f3PvhZP+xucsYBGez/OGqrhjyq/DTAo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nyoQz/WcaQsiEoAIkio7ER7H2CiiOautoTBD9nU7LRZfYw5nttxNpQLkhXxdv7cHP
-         H1GKqjdgz104OA6vmg935qD2wKhHbqAd6FZ8jF5JyUGD7XtmqHbvI3w5B70xXN/cPL
-         gswePQ/aWTVw0Czn7bl2dvRBRM+KTnxsomAvdbA8=
+        b=p4L/gzTGb2kvjCxMTT8MXbqFGGNiWzvOg6iWqviL6cTzrpqIwyg+aUlKtb+LtN0UI
+         f4Vc61uPV2h2aJpNhVJ7nGUWdXjgwEDOcSSBZudfGnXkLuwrVK5G828qDe/toXXX0o
+         30hQtOQusUqxPYn3lgT3ENcQ1MKb10bgr6PTtldQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Andre Przywara <andre.przywara@arm.com>,
-        Bjorn Helgaas <bhelgaas@google.com>
-Subject: [PATCH 4.9 76/76] PCI: Add function 1 DMA alias quirk for Marvell 9170 SATA controller
-Date:   Mon, 15 Apr 2019 20:44:40 +0200
-Message-Id: <20190415183729.688018384@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>
+Subject: [PATCH 4.9 73/76] xen: Prevent buffer overflow in privcmd ioctl
+Date:   Mon, 15 Apr 2019 20:44:37 +0200
+Message-Id: <20190415183729.388192500@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183707.712011689@linuxfoundation.org>
 References: <20190415183707.712011689@linuxfoundation.org>
@@ -58,37 +59,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Andre Przywara <andre.przywara@arm.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 9cde402a59770a0669d895399c13407f63d7d209 upstream.
+commit 42d8644bd77dd2d747e004e367cb0c895a606f39 upstream.
 
-There is a Marvell 88SE9170 PCIe SATA controller I found on a board here.
-Some quick testing with the ARM SMMU enabled reveals that it suffers from
-the same requester ID mixup problems as the other Marvell chips listed
-already.
+The "call" variable comes from the user in privcmd_ioctl_hypercall().
+It's an offset into the hypercall_page[] which has (PAGE_SIZE / 32)
+elements.  We need to put an upper bound on it to prevent an out of
+bounds access.
 
-Add the PCI vendor/device ID to the list of chips which need the
-workaround.
-
-Signed-off-by: Andre Przywara <andre.przywara@arm.com>
-Signed-off-by: Bjorn Helgaas <bhelgaas@google.com>
-CC: stable@vger.kernel.org
+Cc: stable@vger.kernel.org
+Fixes: 1246ae0bb992 ("xen: add variable hypercall caller")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/pci/quirks.c |    2 ++
- 1 file changed, 2 insertions(+)
+ arch/x86/include/asm/xen/hypercall.h |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/drivers/pci/quirks.c
-+++ b/drivers/pci/quirks.c
-@@ -3866,6 +3866,8 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_M
- /* https://bugzilla.kernel.org/show_bug.cgi?id=42679#c14 */
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9130,
- 			 quirk_dma_func1_alias);
-+DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9170,
-+			 quirk_dma_func1_alias);
- /* https://bugzilla.kernel.org/show_bug.cgi?id=42679#c47 + c57 */
- DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9172,
- 			 quirk_dma_func1_alias);
+--- a/arch/x86/include/asm/xen/hypercall.h
++++ b/arch/x86/include/asm/xen/hypercall.h
+@@ -216,6 +216,9 @@ privcmd_call(unsigned call,
+ 	__HYPERCALL_DECLS;
+ 	__HYPERCALL_5ARG(a1, a2, a3, a4, a5);
+ 
++	if (call >= PAGE_SIZE / sizeof(hypercall_page[0]))
++		return -EINVAL;
++
+ 	stac();
+ 	asm volatile(CALL_NOSPEC
+ 		     : __HYPERCALL_5PARAM
 
 
