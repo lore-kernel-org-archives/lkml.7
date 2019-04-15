@@ -2,129 +2,175 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C75A8C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:36:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2350FC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:36:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AB6E2147C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:36:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD2CE2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:36:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="XsJuTkH5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727658AbfDOPgS (ORCPT
+        id S1727704AbfDOPgX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 11:36:18 -0400
-Received: from mga01.intel.com ([192.55.52.88]:33648 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726785AbfDOPgR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 11:36:17 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Apr 2019 08:36:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,354,1549958400"; 
-   d="scan'208";a="140843503"
-Received: from linux.intel.com ([10.54.29.200])
-  by fmsmga008.fm.intel.com with ESMTP; 15 Apr 2019 08:36:17 -0700
-Received: from [10.251.90.212] (abudanko-mobl.ccr.corp.intel.com [10.251.90.212])
-        by linux.intel.com (Postfix) with ESMTP id 0BFB15804D6;
-        Mon, 15 Apr 2019 08:36:14 -0700 (PDT)
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     Jiri Olsa <jolsa@redhat.com>, Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-From:   Alexey Budankov <alexey.budankov@linux.intel.com>
-Subject: [PATCH v1] perf record: collect user registers set jointly with dwarf
- stacks
-Organization: Intel Corp.
-Message-ID: <a83183c0-21f4-02af-1443-1a3fdb5d89c3@linux.intel.com>
-Date:   Mon, 15 Apr 2019 18:36:13 +0300
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 15 Apr 2019 11:36:23 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:15092 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726522AbfDOPgV (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 11:36:21 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cb4a4f90000>; Mon, 15 Apr 2019 08:36:25 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Mon, 15 Apr 2019 08:36:20 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Mon, 15 Apr 2019 08:36:20 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL104.nvidia.com
+ (172.18.146.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Mon, 15 Apr
+ 2019 15:36:20 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Mon, 15 Apr 2019 15:36:20 +0000
+Received: from sumitg-l4t.nvidia.com (Not Verified[10.24.42.162]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5cb4a4f10001>; Mon, 15 Apr 2019 08:36:19 -0700
+From:   Sumit Gupta <sumitg@nvidia.com>
+To:     <mchehab@kernel.org>, <hverkuil-cisco@xs4all.nl>,
+        <sakari.ailus@linux.intel.com>, <paul.kocialkowski@bootlin.com>,
+        <tfiga@chromium.org>, <keiichiw@chromium.org>, <sumitg@nvidia.com>,
+        <bbasu@nvidia.com>
+CC:     <linux-media@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [Patch V3] v4l2-core: fix use-after-free error
+Date:   Mon, 15 Apr 2019 21:06:14 +0530
+Message-ID: <1555342574-15940-1-git-send-email-sumitg@nvidia.com>
+X-Mailer: git-send-email 2.7.4
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1555342585; bh=CoJlo7u72gt6x5TjSc1ianvMzwS3wHRHZ4CWcBMBguo=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=XsJuTkH5JAbi/NBtPRaJqgRBdLBo2g5jp+JrxPi8xRkW3i+bxMkpOcA//yhHO6TkC
+         uIkyodEbLTcbyo/BhfF1EpiGMIjy847UShb7Mrz28L3wmxFmNOJBAVPm1erTfRDPz2
+         /wbrzu0xaYLNc7ziWA/Q67ezVSuU8JzeQexEbQVF0Mq0rEpbBjFdVuK/btQ7IXIvE6
+         OxtlPMMFe3WACbdtEz00EQv/I+Io8vLK3TPRQLymZ2yO9apJYEnYNI2tNF4vkDilaX
+         V+0upmLvsgpV7qV4iu0DFX69LRVIOZSb38Py80Fo8GLzxHOYutwZoqUZTTSGqT8vQq
+         oqVgOOmMC4VZg==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+From: sumitg <sumitg@nvidia.com>
 
-When dwarf stacks are collected jointly with user specified register
-set using --user-regs option like below the full register context is
-still captured on a sample:
+Fixing use-after-free within __v4l2_ctrl_handler_setup().
+Memory is being freed with kfree(new_ref) for duplicate
+control reference entry but ctrl->cluster pointer is still
+referring to freed duplicate entry resulting in error on
+access. Change done to update cluster pointer only when new
+control reference is added. Also, added check to add new
+ctrl to handler only if the cluster points to an entry.
 
-  $ perf record -g --call-graph dwarf,1024 --user-regs=IP,SP,BP -- matrix.gcc.g.O3
+ ==================================================================
+ BUG: KASAN: use-after-free in __v4l2_ctrl_handler_setup+0x388/0x428
+ Read of size 8 at addr ffffffc324e78618 by task systemd-udevd/312
 
-  188143843893585 0x6b48 [0x4f8]: PERF_RECORD_SAMPLE(IP, 0x4002): 23828/23828: 0x401236 period: 1363819 addr: 0x7ffedbdd51ac
-  ... FP chain: nr:0
-  ... user regs: mask 0xff0fff ABI 64-bit
-  .... AX    0x53b
-  .... BX    0x7ffedbdd3cc0
-  .... CX    0xffffffff
-  .... DX    0x33d3a
-  .... SI    0x7f09b74c38d0
-  .... DI    0x0
-  .... BP    0x401260
-  .... SP    0x7ffedbdd3cc0
-  .... IP    0x401236
-  .... FLAGS 0x20a
-  .... CS    0x33
-  .... SS    0x2b
-  .... R8    0x7f09b74c3800
-  .... R9    0x7f09b74c2da0
-  .... R10   0xfffffffffffff3ce
-  .... R11   0x246
-  .... R12   0x401070
-  .... R13   0x7ffedbdd5db0
-  .... R14   0x0
-  .... R15   0x0
-  ... ustack: size 1024, offset 0xe0
-   . data_src: 0x5080021
-   ... thread: stack_test2.g.O:23828
-   ...... dso: /root/abudanko/stacks/stack_test2.g.O3
+ Allocated by task 312:
 
-After applying the change suggested in the patch the sample data contain
-only user specified register values:
+ Freed by task 312:
 
-  $ perf record -g --call-graph dwarf,1024 --user-regs=IP,SP,BP -- matrix.gcc.g.03
+ The buggy address belongs to the object at ffffffc324e78600
+  which belongs to the cache kmalloc-64 of size 64
+ The buggy address is located 24 bytes inside of
+  64-byte region [ffffffc324e78600, ffffffc324e78640)
+ The buggy address belongs to the page:
+ page:ffffffbf0c939e00 count:1 mapcount:0 mapping:
+					(null) index:0xffffffc324e78f80
+ flags: 0x4000000000000100(slab)
+ raw: 4000000000000100 0000000000000000 ffffffc324e78f80 000000018020001a
+ raw: 0000000000000000 0000000100000001 ffffffc37040fb80 0000000000000000
+ page dumped because: kasan: bad access detected
 
-  188368474305373 0x5e40 [0x470]: PERF_RECORD_SAMPLE(IP, 0x4002): 23839/23839: 0x401236 period: 1260507 addr: 0x7ffd3d85e96c
-  ... FP chain: nr:0
-  ... user regs: mask 0x1c0 ABI 64-bit
-  .... BP    0x401260
-  .... SP    0x7ffd3d85cc20
-  .... IP    0x401236
-  ... ustack: size 1024, offset 0x58
-   . data_src: 0x5080021
-   ... thread: stack_test2.g.O:23839
-   ...... dso: /root/abudanko/stacks/stack_test2.g.O3
+ Memory state around the buggy address:
+  ffffffc324e78500: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+  ffffffc324e78580: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+ >ffffffc324e78600: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+                             ^
+  ffffffc324e78680: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
+  ffffffc324e78700: 00 00 00 00 00 fc fc fc fc fc fc fc fc fc fc fc
+ ==================================================================
 
-Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+Suggested-by: Hans Verkuil <hverkuil-cisco@xs4all.nl>
+Signed-off-by: Sumit Gupta <sumitg@nvidia.com>
 ---
- tools/perf/util/evsel.c | 3 ++-
- 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 84cfb9fe2fc6..29a223b4c699 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -702,7 +702,8 @@ static void __perf_evsel__config_callchain(struct perf_evsel *evsel,
- 		if (!function) {
- 			perf_evsel__set_sample_bit(evsel, REGS_USER);
- 			perf_evsel__set_sample_bit(evsel, STACK_USER);
--			attr->sample_regs_user |= PERF_REGS_MASK;
-+			if (!opts->sample_user_regs)
-+				attr->sample_regs_user |= PERF_REGS_MASK;
- 			attr->sample_stack_user = param->dump_size;
- 			attr->exclude_callchain_user = 1;
- 		} else {
+v3:
+* update ctrl->cluster only when new control reference is added.
+* add new ctrl to handler only if the cluster points to an entry.
+
+v2:
+* update ctrl->cluster only when new control reference is added.
+* check ctrl->ncontrols to avoid illegal access when cluster has zero controls.
+
+ drivers/media/v4l2-core/v4l2-ctrls.c | 26 ++++++++++++++------------
+ 1 file changed, 14 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/media/v4l2-core/v4l2-ctrls.c b/drivers/media/v4l2-core/v4l2-ctrls.c
+index 5e3806f..877c2ab 100644
+--- a/drivers/media/v4l2-core/v4l2-ctrls.c
++++ b/drivers/media/v4l2-core/v4l2-ctrls.c
+@@ -2154,15 +2154,6 @@ static int handler_new_ref(struct v4l2_ctrl_handler *hdl,
+ 	if (size_extra_req)
+ 		new_ref->p_req.p = &new_ref[1];
+ 
+-	if (ctrl->handler == hdl) {
+-		/* By default each control starts in a cluster of its own.
+-		   new_ref->ctrl is basically a cluster array with one
+-		   element, so that's perfect to use as the cluster pointer.
+-		   But only do this for the handler that owns the control. */
+-		ctrl->cluster = &new_ref->ctrl;
+-		ctrl->ncontrols = 1;
+-	}
+-
+ 	INIT_LIST_HEAD(&new_ref->node);
+ 
+ 	mutex_lock(hdl->lock);
+@@ -2195,6 +2186,15 @@ static int handler_new_ref(struct v4l2_ctrl_handler *hdl,
+ 	hdl->buckets[bucket] = new_ref;
+ 	if (ctrl_ref)
+ 		*ctrl_ref = new_ref;
++	if (ctrl->handler == hdl) {
++		/* By default each control starts in a cluster of its own.
++		 * new_ref->ctrl is basically a cluster array with one
++		 * element, so that's perfect to use as the cluster pointer.
++		 * But only do this for the handler that owns the control.
++		 */
++		ctrl->cluster = &new_ref->ctrl;
++		ctrl->ncontrols = 1;
++	}
+ 
+ unlock:
+ 	mutex_unlock(hdl->lock);
+@@ -2346,9 +2346,11 @@ static struct v4l2_ctrl *v4l2_ctrl_new(struct v4l2_ctrl_handler *hdl,
+ 		kvfree(ctrl);
+ 		return NULL;
+ 	}
+-	mutex_lock(hdl->lock);
+-	list_add_tail(&ctrl->node, &hdl->ctrls);
+-	mutex_unlock(hdl->lock);
++	if (ctrl->cluster) {
++		mutex_lock(hdl->lock);
++		list_add_tail(&ctrl->node, &hdl->ctrls);
++		mutex_unlock(hdl->lock);
++	}
+ 	return ctrl;
+ }
+ 
 -- 
-2.20.1
+2.7.4
 
