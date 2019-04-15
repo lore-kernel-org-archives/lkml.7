@@ -2,102 +2,74 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBBFAC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 06:31:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9468BC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 06:31:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A12AF20825
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 06:31:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59B0B20874
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 06:31:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="T2woLxIN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726254AbfDOGbI convert rfc822-to-8bit (ORCPT
+        id S1726279AbfDOGbi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 02:31:08 -0400
-Received: from mga05.intel.com ([192.55.52.43]:48388 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725777AbfDOGbH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 02:31:07 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 14 Apr 2019 23:31:06 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,352,1549958400"; 
-   d="scan'208";a="140721804"
-Received: from irsmsx108.ger.corp.intel.com ([163.33.3.3])
-  by fmsmga008.fm.intel.com with ESMTP; 14 Apr 2019 23:31:05 -0700
-Received: from irsmsx102.ger.corp.intel.com ([169.254.2.21]) by
- IRSMSX108.ger.corp.intel.com ([169.254.11.82]) with mapi id 14.03.0415.000;
- Mon, 15 Apr 2019 07:31:04 +0100
-From:   "Reshetova, Elena" <elena.reshetova@intel.com>
-To:     Julia Lawall <julia.lawall@lip6.fr>,
-        "Jan Alexander Steffens (heftig)" <jan.steffens@gmail.com>
-CC:     "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "kbuild-all@01.org" <kbuild-all@01.org>
-Subject: RE: [PATCH] ZEN: fix platform_no_drv_owner.cocci warnings
-Thread-Topic: [PATCH] ZEN: fix platform_no_drv_owner.cocci warnings
-Thread-Index: AQHU8oYKwWji7w/b90CRq2E0Weg20qY8w/nA
-Date:   Mon, 15 Apr 2019 06:31:03 +0000
-Message-ID: <2236FBA76BA1254E88B949DDB74E612BA4C4F65E@IRSMSX102.ger.corp.intel.com>
-References: <alpine.DEB.2.21.1904140748230.2615@hadrien>
-In-Reply-To: <alpine.DEB.2.21.1904140748230.2615@hadrien>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-ctpclassification: CTP_NT
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiZjQzZGRhZTctY2Y5OC00NzAwLWIxMWUtZDk5NmZkNGU0ZDMwIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiTDVTdk15UE14MCt6b2JjRTUzcXR2alhXZ1pqcE1xTFJLQVJcL3JhbjQrZEsrNE5FXC81REJObkVrTnlqQXQ0b3I2In0=
-x-originating-ip: [163.33.239.181]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Mon, 15 Apr 2019 02:31:38 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37546 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725777AbfDOGbi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 02:31:38 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Vnx/FDuyfGzMLVKxKI7cCwcEPLdbD7UnzGISx2MXjRo=; b=T2woLxINdDPMGVm6g5xO298us
+        N/78FYtB7ExqP6ovwznjwj+S1NyADW0QOuLCg38CE62Jy06Rqy0MliwcinJOKGD0hfej37r7WH4P7
+        oGm6nabX41XlPUuGs/8auqdw5VfcrGy6iTHXbg/juq7L4tB77sxeCokMSKR5UMGBA+pt2KYUQBOzC
+        UOz4pvEY8LemZS2i1eFEHpTC755HIwnFJWSiHfsFXN53z2RINi49eDdhwj1YSJzpp4jXmw9vpk9jg
+        yv+xzLTSRudN/FVGLEM7ucSalk0sck+8PjHRpbTKrybAUwUi/URsImgHymNaFh9rsmvfqK6ZqJL+z
+        Gy2ulR78A==;
+Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hFv9S-0002HX-W3; Mon, 15 Apr 2019 06:31:34 +0000
+Date:   Sun, 14 Apr 2019 23:31:34 -0700
+From:   Christoph Hellwig <hch@infradead.org>
+To:     Tom Murphy <tmurphy@arista.com>
+Cc:     iommu@lists.linux-foundation.org, Heiko Stuebner <heiko@sntech.de>,
+        Will Deacon <will.deacon@arm.com>,
+        David Brown <david.brown@linaro.org>,
+        linux-samsung-soc@vger.kernel.org, dima@arista.com,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-rockchip@lists.infradead.org, Kukjin Kim <kgene@kernel.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        murphyt7@tcd.ie, Robin Murphy <robin.murphy@arm.com>
+Subject: Re: [PATCH 3/9] iommu/dma-iommu: Add iommu_dma_copy_reserved_iova,
+ iommu_dma_apply_resv_region to the dma-iommu api
+Message-ID: <20190415063134.GB1377@infradead.org>
+References: <20190411184741.27540-1-tmurphy@arista.com>
+ <20190411184741.27540-4-tmurphy@arista.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190411184741.27540-4-tmurphy@arista.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Thu, Apr 11, 2019 at 07:47:32PM +0100, Tom Murphy via iommu wrote:
+> +
+> +	WARN_ON_ONCE(iommu_dma_reserve_iova(domain, region->start, end) == NULL);
 
-> From: kbuild test robot <lkp@intel.com>
-> 
-> Remove .owner field if calls are used which set it automatically
-> 
-> Generated by: scripts/coccinelle/api/platform_no_drv_owner.cocci
-> 
-> Fixes: 26e2aa63d568 ("ZEN: Add VHBA driver")
-> Signed-off-by: kbuild test robot <lkp@intel.com>
-> Signed-off-by: Julia Lawall <julia.lawall@lip6.fr>
-> 
-> ---
-> 
-> There was also a report about:
-> 
-> drivers/scsi/vhba/vhba.c:184:8-27: atomic_dec_and_test variation before
-> object free at line 185.
-> 
-> that Elena may want to comment on.
-> 
->
-
-Yes, on a quick look it seems that you should be using refcount_t type and not
-atomic_t for your reference counter, as you use it as classical refcounter, i.e. 
-free  the object upon reaching zero, etc:
-
-static void vhba_device_put (struct vhba_device *vdev)
-{
-    if (atomic_dec_and_test(&vdev->refcnt)) {
-        kfree(vdev);
-    }
-}
-
-Any reason why you didn't use refcount_t type to begin with?
-
-Best Regards,
-Elena.
+Overly long line..
