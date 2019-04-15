@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B45FC10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:49:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0E06C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:49:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C8B3C2073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:49:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9E5E82073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:49:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555354145;
-	bh=6SBP+UepJ6h5naaSQnb5iAg08fqNy6u3wMbzA4kOzJM=;
+	s=default; t=1555354152;
+	bh=2H0wK8BjLhOc9eLqs/aANts+Nw5YlAqrgkPWwiVJ0T0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=bbm8K4zwlg499HuOrQGHx8k0ck4rr1UujBI7CxxSWJGjU335Chq6kvlafHCsNALPG
-	 5TD0h8TP+XyORRpNmfwRDVGO8LzZmDOFxmUjYV00nK8WSAYqE9rg/soe4MqdWzt+wb
-	 D1wtrd4DSq/3bD1TFDy5PrOpdusD6EICI9p0jl5U=
+	b=O5B72RT9rR1/7KIuBfprk/EDnuC3CvivG5WO9RlGzjWxmdvscY4Xx6dH6jKDtTwug
+	 UgDSxbUsja7soC9OeUAs1BhWfbNYAlL8BnzZgeXjz22kdwCu4M61MKRbJfaXjPCdBM
+	 fj+Mpmu2yDRJq4bCWN4yEBrGQLShySFjkGoHz99E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729123AbfDOStE (ORCPT
+        id S1729134AbfDOStL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 14:49:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51306 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 14:49:11 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728973AbfDOSro (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 14:47:44 -0400
+        id S1728455AbfDOSrg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 14:47:36 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 715A92087C;
-        Mon, 15 Apr 2019 18:47:43 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id A3520218D3;
+        Mon, 15 Apr 2019 18:47:35 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555354063;
-        bh=6SBP+UepJ6h5naaSQnb5iAg08fqNy6u3wMbzA4kOzJM=;
+        s=default; t=1555354056;
+        bh=2H0wK8BjLhOc9eLqs/aANts+Nw5YlAqrgkPWwiVJ0T0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=o8PHjf9tnhvSNIF4y+YDF70N2hEIsZTMdG9QXSeVnv9oT8ZmzXdBlscp4lHDamwY4
-         2IMwaWfvRcSCQMovCNjp9qlfbAs9h9dpyxEP1aSFViSZu1+4mCWeBIoKhwFfnS0qyd
-         V6GaPBq5yCPvAkG7qsqqDg2LyH0/0XInYgYWI/xY=
+        b=k5pJFEPihOCN91UZ/Zx1ToBmD8c1/MfsXxZYgh6IKRkUF54Uqh+3oxG+xig/jQj51
+         oxYo3Ayto5UJCauLAnuL1BNR2lIq5LqM0fdFlk6dBOuwKRqp5ERZt6YTTHYrP3Jv+v
+         24yChCVVrnOdS3TD59tlDO61OZZWEU59VfEG0RFk=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Yuval Avnery <yuvalav@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>
-Subject: [PATCH 4.9 59/76] net/mlx5e: Add a lock on tir list
-Date:   Mon, 15 Apr 2019 20:44:23 +0200
-Message-Id: <20190415183724.736253909@linuxfoundation.org>
+        stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Jens Freimann <jfreimann@redhat.com>
+Subject: [PATCH 4.9 70/76] virtio: Honour may_reduce_num in vring_create_virtqueue
+Date:   Mon, 15 Apr 2019 20:44:34 +0200
+Message-Id: <20190415183728.569186534@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183707.712011689@linuxfoundation.org>
 References: <20190415183707.712011689@linuxfoundation.org>
@@ -59,80 +60,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yuval Avnery <yuvalav@mellanox.com>
+From: Cornelia Huck <cohuck@redhat.com>
 
-[ Upstream commit 80a2a9026b24c6bd34b8d58256973e22270bedec ]
+commit cf94db21905333e610e479688add629397a4b384 upstream.
 
-Refresh tirs is looping over a global list of tirs while netdevs are
-adding and removing tirs from that list. That is why a lock is
-required.
+vring_create_virtqueue() allows the caller to specify via the
+may_reduce_num parameter whether the vring code is allowed to
+allocate a smaller ring than specified.
 
-Fixes: 724b2aa15126 ("net/mlx5e: TIRs management refactoring")
-Signed-off-by: Yuval Avnery <yuvalav@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+However, the split ring allocation code tries to allocate a
+smaller ring on allocation failure regardless of what the
+caller specified. This may cause trouble for e.g. virtio-pci
+in legacy mode, which does not support ring resizing. (The
+packed ring code does not resize in any case.)
+
+Let's fix this by bailing out immediately in the split ring code
+if the requested size cannot be allocated and may_reduce_num has
+not been specified.
+
+While at it, fix a typo in the usage instructions.
+
+Fixes: 2a2d1382fe9d ("virtio: Add improved queue allocation API")
+Cc: stable@vger.kernel.org # v4.6+
+Signed-off-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Reviewed-by: Halil Pasic <pasic@linux.ibm.com>
+Reviewed-by: Jens Freimann <jfreimann@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/net/ethernet/mellanox/mlx5/core/en_common.c |    7 +++++++
- include/linux/mlx5/driver.h                         |    2 ++
- 2 files changed, 9 insertions(+)
 
---- a/drivers/net/ethernet/mellanox/mlx5/core/en_common.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en_common.c
-@@ -45,7 +45,9 @@ int mlx5e_create_tir(struct mlx5_core_de
- 	if (err)
- 		return err;
- 
-+	mutex_lock(&mdev->mlx5e_res.td.list_lock);
- 	list_add(&tir->list, &mdev->mlx5e_res.td.tirs_list);
-+	mutex_unlock(&mdev->mlx5e_res.td.list_lock);
- 
- 	return 0;
- }
-@@ -53,8 +55,10 @@ int mlx5e_create_tir(struct mlx5_core_de
- void mlx5e_destroy_tir(struct mlx5_core_dev *mdev,
- 		       struct mlx5e_tir *tir)
- {
-+	mutex_lock(&mdev->mlx5e_res.td.list_lock);
- 	mlx5_core_destroy_tir(mdev, tir->tirn);
- 	list_del(&tir->list);
-+	mutex_unlock(&mdev->mlx5e_res.td.list_lock);
- }
- 
- static int mlx5e_create_mkey(struct mlx5_core_dev *mdev, u32 pdn,
-@@ -114,6 +118,7 @@ int mlx5e_create_mdev_resources(struct m
+---
+ drivers/virtio/virtio_ring.c |    2 ++
+ include/linux/virtio_ring.h  |    2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
+
+--- a/drivers/virtio/virtio_ring.c
++++ b/drivers/virtio/virtio_ring.c
+@@ -1040,6 +1040,8 @@ struct virtqueue *vring_create_virtqueue
+ 					  GFP_KERNEL|__GFP_NOWARN|__GFP_ZERO);
+ 		if (queue)
+ 			break;
++		if (!may_reduce_num)
++			return NULL;
  	}
  
- 	INIT_LIST_HEAD(&mdev->mlx5e_res.td.tirs_list);
-+	mutex_init(&mdev->mlx5e_res.td.list_lock);
- 
- 	return 0;
- 
-@@ -151,6 +156,7 @@ int mlx5e_refresh_tirs_self_loopback_ena
- 
- 	MLX5_SET(modify_tir_in, in, bitmask.self_lb_en, 1);
- 
-+	mutex_lock(&mdev->mlx5e_res.td.list_lock);
- 	list_for_each_entry(tir, &mdev->mlx5e_res.td.tirs_list, list) {
- 		err = mlx5_core_modify_tir(mdev, tir->tirn, in, inlen);
- 		if (err)
-@@ -159,6 +165,7 @@ int mlx5e_refresh_tirs_self_loopback_ena
- 
- out:
- 	kvfree(in);
-+	mutex_unlock(&mdev->mlx5e_res.td.list_lock);
- 
- 	return err;
- }
---- a/include/linux/mlx5/driver.h
-+++ b/include/linux/mlx5/driver.h
-@@ -578,6 +578,8 @@ enum mlx5_pci_status {
- };
- 
- struct mlx5_td {
-+	/* protects tirs list changes while tirs refresh */
-+	struct mutex     list_lock;
- 	struct list_head tirs_list;
- 	u32              tdn;
- };
+ 	if (!num)
+--- a/include/linux/virtio_ring.h
++++ b/include/linux/virtio_ring.h
+@@ -62,7 +62,7 @@ struct virtqueue;
+ /*
+  * Creates a virtqueue and allocates the descriptor ring.  If
+  * may_reduce_num is set, then this may allocate a smaller ring than
+- * expected.  The caller should query virtqueue_get_ring_size to learn
++ * expected.  The caller should query virtqueue_get_vring_size to learn
+  * the actual size of the ring.
+  */
+ struct virtqueue *vring_create_virtqueue(unsigned int index,
 
 
