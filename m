@@ -2,106 +2,111 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2ADECC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:39:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2A550C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:39:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 092362075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:39:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 02BEA2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:39:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727601AbfDOOjZ (ORCPT
+        id S1727623AbfDOOj0 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 10:39:25 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:41886 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727319AbfDOOjW (ORCPT
-        <rfc822;Linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 10:39:22 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3FEZZIG103070
-        for <Linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 10:39:20 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rvuh419qv-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <Linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 10:39:20 -0400
-Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <Linux-kernel@vger.kernel.org> from <ravi.bangoria@linux.ibm.com>;
-        Mon, 15 Apr 2019 15:39:18 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 15 Apr 2019 15:39:14 +0100
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (b06wcsmtp001.portsmouth.uk.ibm.com [9.149.105.160])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3FEdDir57802906
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Apr 2019 14:39:13 GMT
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 69FD9A4062;
-        Mon, 15 Apr 2019 14:39:13 +0000 (GMT)
-Received: from b06wcsmtp001.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id AB249A4064;
-        Mon, 15 Apr 2019 14:39:10 +0000 (GMT)
-Received: from [9.85.69.153] (unknown [9.85.69.153])
-        by b06wcsmtp001.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Mon, 15 Apr 2019 14:39:10 +0000 (GMT)
-Subject: Re: [PATCH v4 3/4] perf stat: Support 'percore' event qualifier
-To:     Jin Yao <yao.jin@linux.intel.com>, acme@kernel.org
-Cc:     jolsa@kernel.org, peterz@infradead.org, mingo@redhat.com,
-        alexander.shishkin@linux.intel.com, Linux-kernel@vger.kernel.org,
-        ak@linux.intel.com, kan.liang@intel.com, yao.jin@intel.com,
-        Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-References: <1555077590-27664-1-git-send-email-yao.jin@linux.intel.com>
- <1555077590-27664-4-git-send-email-yao.jin@linux.intel.com>
-From:   Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-Date:   Mon, 15 Apr 2019 20:09:09 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 15 Apr 2019 10:39:26 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:33569 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbfDOOjY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 10:39:24 -0400
+Received: by mail-ed1-f68.google.com with SMTP id d55so14128231ede.0;
+        Mon, 15 Apr 2019 07:39:23 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=hmJsJeNNfh+93dB7/T+Nj58jE4CDvzJ6YUnZ1kMFnf4=;
+        b=SpirkLRBdd4/vA579uHeZriFs2G2R2m7mrb8rkH+aIaurW9KdD1HWqNFJoUPMIRWBY
+         xCC64YQaNTkWFMqk+6pNXSnB0tmk2TWtCa+u9T3eHY0+h3IKvdMd7lmSH0TH2Ba5i31A
+         CFJJ/AHNfxyd87st9Ad9oDeBEGYXYFUwkWWVFCMoMe8ZSU72IR/+ZQgSgyQQWNySuClN
+         i2TaiEIcrnMSOxyPu1Mz9wyMq08Qbyo7lMCZbEYKItEuacxJx4CGpGmTGInnZ0pP893p
+         HVpxN2Cpz/WBpeJRzOZw4Stj/ZYkP6mIiDKq9XBbdq+sAgHmDwJ5bjpTa+LOLHvpr6tN
+         7Mmg==
+X-Gm-Message-State: APjAAAXkJLtBZ968/qlCH214Ks1JqqeppO2b9cClPcXHZaB/f3aCgi8o
+        QH+g3YDGg5zGfjPTI7jfNuzDgMtHJYg=
+X-Google-Smtp-Source: APXvYqxPq5ouQd7gXbHAZQAFWUClkbhCJglynytotmoaUy2e5k+2xMTeD/76uU9tJDlkW0yLfaPSkQ==
+X-Received: by 2002:a50:8b95:: with SMTP id m21mr16293745edm.178.1555339161716;
+        Mon, 15 Apr 2019 07:39:21 -0700 (PDT)
+Received: from mail-wm1-f43.google.com (mail-wm1-f43.google.com. [209.85.128.43])
+        by smtp.gmail.com with ESMTPSA id p4sm8794741edr.55.2019.04.15.07.39.20
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Apr 2019 07:39:21 -0700 (PDT)
+Received: by mail-wm1-f43.google.com with SMTP id n25so20815487wmk.4;
+        Mon, 15 Apr 2019 07:39:20 -0700 (PDT)
+X-Received: by 2002:a05:600c:2118:: with SMTP id u24mr22582843wml.24.1555339160744;
+ Mon, 15 Apr 2019 07:39:20 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1555077590-27664-4-git-send-email-yao.jin@linux.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19041514-4275-0000-0000-000003280D12
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19041514-4276-0000-0000-000038373961
-Message-Id: <bba8359b-7986-0938-16ea-9bc179ef76cb@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-15_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904150101
+References: <20190412120730.473-1-megous@megous.com> <CAGb2v66cbpsoHJoiFJkBwhZ5SbO+uO+Kf6gtnA3kPFQZq0329Q@mail.gmail.com>
+ <20190415142222.cytlvz7z3mjf7slm@core.my.home> <20190415143304.dxpmyh73qxzaybtc@flea>
+In-Reply-To: <20190415143304.dxpmyh73qxzaybtc@flea>
+From:   Chen-Yu Tsai <wens@csie.org>
+Date:   Mon, 15 Apr 2019 22:39:08 +0800
+X-Gmail-Original-Message-ID: <CAGb2v66dY40zkQcVcyORZ-7RAkC1ATB9fTyRzabf-NyDKAustw@mail.gmail.com>
+Message-ID: <CAGb2v66dY40zkQcVcyORZ-7RAkC1ATB9fTyRzabf-NyDKAustw@mail.gmail.com>
+Subject: Re: [linux-sunxi] [PATCH 0/3] Add basic support for RTC on Allwinner
+ H6 SoC
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>, linux-rtc@vger.kernel.org,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Apr 15, 2019 at 10:33 PM Maxime Ripard
+<maxime.ripard@bootlin.com> wrote:
+>
+> On Mon, Apr 15, 2019 at 04:22:22PM +0200, Ondřej Jirman wrote:
+> > DT would still probably need a re-work in the future, if the PRCM clock
+> > modeling the gate would be needed.
+>
+> Just reacting to that bit.
+>
+> I know we're pretty bad at this, and the documentation doesn't make it
+> any easier, but if you have any idea of how it should be modelled
+> next, then do that.
 
+It seems to be just a clock gate, judging by previous (A80/A83T) SoCs.
+However since we lack documents for the PRCM, we might need to poke
+around to verify that it's actually there.
 
-On 4/12/19 7:29 PM, Jin Yao wrote:
-> diff --git a/tools/perf/Documentation/perf-stat.txt b/tools/perf/Documentation/perf-stat.txt
-> index 39c05f8..1e312c2 100644
-> --- a/tools/perf/Documentation/perf-stat.txt
-> +++ b/tools/perf/Documentation/perf-stat.txt
-> @@ -43,6 +43,10 @@ report::
->  	  param1 and param2 are defined as formats for the PMU in
->  	  /sys/bus/event_source/devices/<pmu>/format/*
->  
-> +	  'percore' is a event qualifier that sums up the event counts for both
-> +	  hardware threads in a core.
+Or maybe we could ask Allwinner very specific questions, like:
 
-s/both/all/  :
+  - Does the PRCM have a gate controlling XO?
+  - Is it bit 2 in register 0x44 in the PRCM?
 
-  $ lscpu | grep Thread
-  Thread(s) per core:    4
+ChenYu
 
-
-Apart from that, for the series:
-Tested-by: Ravi Bangoria <ravi.bangoria@linux.ibm.com>
-
+> There's no reason to push it to a later time, it makes everyone's life
+> harder.
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+>
+> --
+> You received this message because you are subscribed to the Google Groups "linux-sunxi" group.
+> To unsubscribe from this group and stop receiving emails from it, send an email to linux-sunxi+unsubscribe@googlegroups.com.
+> For more options, visit https://groups.google.com/d/optout.
