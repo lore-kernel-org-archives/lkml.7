@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A3B3BC10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:10:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 18730C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:11:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6706A218DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:10:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD709218DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:11:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355457;
-	bh=EgYgkLnUqtVpIAwaB9qjdHKIqfOCQFk2iDa5+b95ydg=;
+	s=default; t=1555355461;
+	bh=jPh/LBMZd5CCRnp+pjxE6K4YrEXRxU1+eqjr84U295c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=GGfXXToOG90wFBPXgvQyV5kuAVvRNKP3CDbLHI6piJUqSb6VLZIxuIygnXMneA0sL
-	 R43Jg/NldYk1v+74PwizpCvKMcKRijZMhxjLphTJxNZCGop1MKGLlq8iagyCh1DKiv
-	 /LAy+S8b69B07Z2g3h5Nkm2gvluPfu/A5GZlWGBM=
+	b=pEDFOVDwnPeEoP1o9JioJkUZQUoKTOY7qO4hsItRnvfp41UochEAFbfVyozb/sR1/
+	 XBCicIM3+cV393/bhmsNiu6mFgFN/USv9QLZW8M21vA43qnBUxB7AL1/Ee3gAxBUss
+	 xpXKEey266M0Ox98SRYy04lsFEAsktnqdjRIkmTU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731125AbfDOTK4 (ORCPT
+        id S1731134AbfDOTLA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:10:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47522 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:11:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47610 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731113AbfDOTKw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:10:52 -0400
+        id S1730270AbfDOTKz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:10:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C906F21902;
-        Mon, 15 Apr 2019 19:10:50 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7060D21903;
+        Mon, 15 Apr 2019 19:10:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355451;
-        bh=EgYgkLnUqtVpIAwaB9qjdHKIqfOCQFk2iDa5+b95ydg=;
+        s=default; t=1555355453;
+        bh=jPh/LBMZd5CCRnp+pjxE6K4YrEXRxU1+eqjr84U295c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=G+CbHK3gxnwjuGEqD/CUkcMrlzZp57bN2xQfNRKHNT1q4JFpjPbk9xCvnmY73YUhj
-         3R6LFykYxWtM5MXtFdiGQO+IClzXVl4JkXcV5/n03WccN1Ipz9Jm/1GyMfLmabJLzo
-         zDcWp3w6/JbReLzkDMwupsx9wN48rCxiaassKdvY=
+        b=J2D91kk/Ljopy+QkdsOV0lSKMtN1SYILneRTRiFxTMSu3wIGhEjPRUvvUaDV59r1D
+         uYXnhi6kPbChUE8IuXrmD8kw6QVkxOxfJUFLur1VZTnSyG/w+7VlimA7ptTZ4Onv5x
+         LrbF2fXG6/W7eGbfgoIzGwnQA1WXqZG+Bw19BnaE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org, Huy Nguyen <huyn@mellanox.com>,
         Saeed Mahameed <saeedm@mellanox.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 040/117] net/mlx5e: Update xoff formula
-Date:   Mon, 15 Apr 2019 21:00:10 +0200
-Message-Id: <20190415183747.071879739@linuxfoundation.org>
+Subject: [PATCH 5.0 041/117] net/mlx5e: Update xon formula
+Date:   Mon, 15 Apr 2019 21:00:11 +0200
+Message-Id: <20190415183747.118018756@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183744.887851196@linuxfoundation.org>
 References: <20190415183744.887851196@linuxfoundation.org>
@@ -60,47 +60,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5ec983e924c7978aaec3cf8679ece9436508bb20 ]
+[ Upstream commit e28408e98bced123038857b6e3c81fa12a2e3e68 ]
 
-Set minimum speed in xoff threshold formula to 40Gbps
+Set xon = xoff - netdev's max_mtu.
+netdev's max_mtu will give enough time for the pause frame to
+arrive at the sender.
 
 Fixes: 0696d60853d5 ("net/mlx5e: Receive buffer configuration")
 Signed-off-by: Huy Nguyen <huyn@mellanox.com>
 Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/mellanox/mlx5/core/en/port_buffer.c  | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ .../mellanox/mlx5/core/en/port_buffer.c       | 28 +++++++++++--------
+ 1 file changed, 16 insertions(+), 12 deletions(-)
 
 diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/port_buffer.c b/drivers/net/ethernet/mellanox/mlx5/core/en/port_buffer.c
-index eac245a93f91..f00de0c987cd 100644
+index f00de0c987cd..4ab0d030b544 100644
 --- a/drivers/net/ethernet/mellanox/mlx5/core/en/port_buffer.c
 +++ b/drivers/net/ethernet/mellanox/mlx5/core/en/port_buffer.c
-@@ -122,7 +122,9 @@ static int port_set_buffer(struct mlx5e_priv *priv,
- 	return err;
+@@ -143,7 +143,7 @@ static u32 calculate_xoff(struct mlx5e_priv *priv, unsigned int mtu)
  }
  
--/* xoff = ((301+2.16 * len [m]) * speed [Gbps] + 2.72 MTU [B]) */
-+/* xoff = ((301+2.16 * len [m]) * speed [Gbps] + 2.72 MTU [B])
-+ * minimum speed value is 40Gbps
-+ */
- static u32 calculate_xoff(struct mlx5e_priv *priv, unsigned int mtu)
+ static int update_xoff_threshold(struct mlx5e_port_buffer *port_buffer,
+-				 u32 xoff, unsigned int mtu)
++				 u32 xoff, unsigned int max_mtu)
  {
- 	u32 speed;
-@@ -130,10 +132,9 @@ static u32 calculate_xoff(struct mlx5e_priv *priv, unsigned int mtu)
+ 	int i;
+ 
+@@ -155,11 +155,12 @@ static int update_xoff_threshold(struct mlx5e_port_buffer *port_buffer,
+ 		}
+ 
+ 		if (port_buffer->buffer[i].size <
+-		    (xoff + mtu + (1 << MLX5E_BUFFER_CELL_SHIFT)))
++		    (xoff + max_mtu + (1 << MLX5E_BUFFER_CELL_SHIFT)))
+ 			return -ENOMEM;
+ 
+ 		port_buffer->buffer[i].xoff = port_buffer->buffer[i].size - xoff;
+-		port_buffer->buffer[i].xon  = port_buffer->buffer[i].xoff - mtu;
++		port_buffer->buffer[i].xon  =
++			port_buffer->buffer[i].xoff - max_mtu;
+ 	}
+ 
+ 	return 0;
+@@ -167,7 +168,7 @@ static int update_xoff_threshold(struct mlx5e_port_buffer *port_buffer,
+ 
+ /**
+  * update_buffer_lossy()
+- *   mtu: device's MTU
++ *   max_mtu: netdev's max_mtu
+  *   pfc_en: <input> current pfc configuration
+  *   buffer: <input> current prio to buffer mapping
+  *   xoff:   <input> xoff value
+@@ -184,7 +185,7 @@ static int update_xoff_threshold(struct mlx5e_port_buffer *port_buffer,
+  *     Return 0 if no error.
+  *     Set change to true if buffer configuration is modified.
+  */
+-static int update_buffer_lossy(unsigned int mtu,
++static int update_buffer_lossy(unsigned int max_mtu,
+ 			       u8 pfc_en, u8 *buffer, u32 xoff,
+ 			       struct mlx5e_port_buffer *port_buffer,
+ 			       bool *change)
+@@ -221,7 +222,7 @@ static int update_buffer_lossy(unsigned int mtu,
+ 	}
+ 
+ 	if (changed) {
+-		err = update_xoff_threshold(port_buffer, xoff, mtu);
++		err = update_xoff_threshold(port_buffer, xoff, max_mtu);
+ 		if (err)
+ 			return err;
+ 
+@@ -231,6 +232,7 @@ static int update_buffer_lossy(unsigned int mtu,
+ 	return 0;
+ }
+ 
++#define MINIMUM_MAX_MTU 9216
+ int mlx5e_port_manual_buffer_config(struct mlx5e_priv *priv,
+ 				    u32 change, unsigned int mtu,
+ 				    struct ieee_pfc *pfc,
+@@ -242,12 +244,14 @@ int mlx5e_port_manual_buffer_config(struct mlx5e_priv *priv,
+ 	bool update_prio2buffer = false;
+ 	u8 buffer[MLX5E_MAX_PRIORITY];
+ 	bool update_buffer = false;
++	unsigned int max_mtu;
+ 	u32 total_used = 0;
+ 	u8 curr_pfc_en;
  	int err;
+ 	int i;
  
- 	err = mlx5e_port_linkspeed(priv->mdev, &speed);
--	if (err) {
--		mlx5_core_warn(priv->mdev, "cannot get port speed\n");
--		return 0;
--	}
-+	if (err)
-+		speed = SPEED_40000;
-+	speed = max_t(u32, speed, SPEED_40000);
+ 	mlx5e_dbg(HW, priv, "%s: change=%x\n", __func__, change);
++	max_mtu = max_t(unsigned int, priv->netdev->max_mtu, MINIMUM_MAX_MTU);
  
- 	xoff = (301 + 216 * priv->dcbx.cable_len / 100) * speed / 1000 + 272 * mtu / 100;
+ 	err = mlx5e_port_query_buffer(priv, &port_buffer);
+ 	if (err)
+@@ -255,7 +259,7 @@ int mlx5e_port_manual_buffer_config(struct mlx5e_priv *priv,
  
+ 	if (change & MLX5E_PORT_BUFFER_CABLE_LEN) {
+ 		update_buffer = true;
+-		err = update_xoff_threshold(&port_buffer, xoff, mtu);
++		err = update_xoff_threshold(&port_buffer, xoff, max_mtu);
+ 		if (err)
+ 			return err;
+ 	}
+@@ -265,7 +269,7 @@ int mlx5e_port_manual_buffer_config(struct mlx5e_priv *priv,
+ 		if (err)
+ 			return err;
+ 
+-		err = update_buffer_lossy(mtu, pfc->pfc_en, buffer, xoff,
++		err = update_buffer_lossy(max_mtu, pfc->pfc_en, buffer, xoff,
+ 					  &port_buffer, &update_buffer);
+ 		if (err)
+ 			return err;
+@@ -277,8 +281,8 @@ int mlx5e_port_manual_buffer_config(struct mlx5e_priv *priv,
+ 		if (err)
+ 			return err;
+ 
+-		err = update_buffer_lossy(mtu, curr_pfc_en, prio2buffer, xoff,
+-					  &port_buffer, &update_buffer);
++		err = update_buffer_lossy(max_mtu, curr_pfc_en, prio2buffer,
++					  xoff, &port_buffer, &update_buffer);
+ 		if (err)
+ 			return err;
+ 	}
+@@ -302,7 +306,7 @@ int mlx5e_port_manual_buffer_config(struct mlx5e_priv *priv,
+ 			return -EINVAL;
+ 
+ 		update_buffer = true;
+-		err = update_xoff_threshold(&port_buffer, xoff, mtu);
++		err = update_xoff_threshold(&port_buffer, xoff, max_mtu);
+ 		if (err)
+ 			return err;
+ 	}
+@@ -310,7 +314,7 @@ int mlx5e_port_manual_buffer_config(struct mlx5e_priv *priv,
+ 	/* Need to update buffer configuration if xoff value is changed */
+ 	if (!update_buffer && xoff != priv->dcbx.xoff) {
+ 		update_buffer = true;
+-		err = update_xoff_threshold(&port_buffer, xoff, mtu);
++		err = update_xoff_threshold(&port_buffer, xoff, max_mtu);
+ 		if (err)
+ 			return err;
+ 	}
 -- 
 2.19.1
 
