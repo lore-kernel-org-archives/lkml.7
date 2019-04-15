@@ -2,115 +2,124 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C60E9C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 01:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F87CC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 01:47:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9519F20833
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 01:47:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DA8B20833
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 01:47:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="jvMlnyAn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726415AbfDOBrB (ORCPT
+        id S1726906AbfDOBrS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 21:47:01 -0400
-Received: from lucky1.263xmail.com ([211.157.147.135]:41966 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbfDOBrB (ORCPT
+        Sun, 14 Apr 2019 21:47:18 -0400
+Received: from gateway22.websitewelcome.com ([192.185.46.131]:24347 "EHLO
+        gateway22.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726277AbfDOBrS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 21:47:01 -0400
-Received: from shawn.lin?rock-chips.com (unknown [192.168.167.158])
-        by lucky1.263xmail.com (Postfix) with ESMTP id F00D32F0E7;
-        Mon, 15 Apr 2019 09:46:52 +0800 (CST)
-X-263anti-spam: KSV:0;BIG:0;
-X-MAIL-GRAY: 1
-X-MAIL-DELIVERY: 0
-X-KSVirus-check: 0
-X-ADDR-CHECKED4: 1
-X-ABS-CHECKED: 0
-X-SKE-CHECKED: 0
-X-ANTISPAM-LEVEL: 2
-Received: from [172.16.12.37] (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P29205T140646411134720S1555292811449255_;
-        Mon, 15 Apr 2019 09:46:52 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <c3d1131c66fe1eae6618fdc8c5ef4cca>
-X-RL-SENDER: shawn.lin@rock-chips.com
-X-SENDER: lintao@rock-chips.com
-X-LOGIN-NAME: shawn.lin@rock-chips.com
-X-FST-TO: linux-kernel@vger.kernel.org
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-Cc:     shawn.lin@rock-chips.com, Bjorn Helgaas <bhelgaas@google.com>,
-        Heiko Stuebner <heiko@sntech.de>, linux-pci@vger.kernel.org,
-        linux-rockchip@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: rockchip: fix bitwise operations on status and
- ROCKCHIP_PCIE_EP_CMD_STATUS_IS
-To:     Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Colin King <colin.king@canonical.com>
-References: <20190330150910.9389-1-colin.king@canonical.com>
- <20190412095125.GB8113@red-moon>
-From:   Shawn Lin <shawn.lin@rock-chips.com>
-Message-ID: <1df4816e-8d16-e894-e99e-ee16cd1c4cb8@rock-chips.com>
-Date:   Mon, 15 Apr 2019 09:46:54 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190412095125.GB8113@red-moon>
-Content-Type: text/plain; charset=gbk; format=flowed
-Content-Transfer-Encoding: 7bit
+        Sun, 14 Apr 2019 21:47:18 -0400
+Received: from cm10.websitewelcome.com (cm10.websitewelcome.com [100.42.49.4])
+        by gateway22.websitewelcome.com (Postfix) with ESMTP id C375A8AC2
+        for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2019 20:26:59 -0500 (CDT)
+Received: from br164.hostgator.com.br ([192.185.176.180])
+        by cmsmtp with SMTP
+        id FqOhhppiZ2PzOFqOhhODGS; Sun, 14 Apr 2019 20:26:59 -0500
+X-Authority-Reason: nr=8
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=castello.eng.br; s=default; h=References:In-Reply-To:Message-Id:Date:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ehx28VB6y1uEnwmkJnSgWnLiQGhYihbomMudxDm1/0U=; b=jvMlnyAneE5syeHXostqrU0y5
+        i9TGJHVlNWMGJx065L0LgTxxAJISj10oyFH5/D1QFIiJ9Sp6F5zF7DpQkIW6yiaPoqYzbSUTS1gpJ
+        Ptgq3t/BfJzoO4e/WE+dcsiqYnY/wV7Bik82H6B6YGeZu5TyRih796dlx1fsxeGdY0kTRNdVqILf4
+        2qgsTFnNMzonj4bjDsDareeFvlQKBqDYti2XGuZSb7cDFta6POIf+yxZR8N9/TZRq2H4MY4IOlFyy
+        7iPMTth0ogCz7ExjZc9n8Mdi7IVS1KTILR/K+ZTcXw9h9xI/jLg/KP3h9S0JaEtw8XWkNGOsVd2sC
+        j70A/4zNg==;
+Received: from [191.191.240.251] (port=33232 helo=localhost.localdomain)
+        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <matheus@castello.eng.br>)
+        id 1hFqOf-000Uj7-Kx; Sun, 14 Apr 2019 22:26:59 -0300
+From:   Matheus Castello <matheus@castello.eng.br>
+To:     sre@kernel.org, krzk@kernel.org, robh+dt@kernel.org
+Cc:     mark.rutland@arm.com, cw00.choi@samsung.com,
+        b.zolnierkie@samsung.com, lee.jones@linaro.org,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Matheus Castello <matheus@castello.eng.br>
+Subject: [PATCH v2 0/4] power: supply: MAX17040: Add IRQ for low level and alert SOC changes 
+Date:   Sun, 14 Apr 2019 22:26:31 -0300
+Message-Id: <20190415012635.6369-1-matheus@castello.eng.br>
+X-Mailer: git-send-email 2.17.0
+In-Reply-To: <CAJKOXPfvs=uETF0-xpwCWc5khSpWjpz2zz354Jcx1bVjm9cG2A@mail.gmail.com>
+References: <CAJKOXPfvs=uETF0-xpwCWc5khSpWjpz2zz354Jcx1bVjm9cG2A@mail.gmail.com>
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - castello.eng.br
+X-BWhitelist: no
+X-Source-IP: 191.191.240.251
+X-Source-L: No
+X-Exim-ID: 1hFqOf-000Uj7-Kx
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: (localhost.localdomain) [191.191.240.251]:33232
+X-Source-Auth: matheus@castello.eng.br
+X-Email-Count: 11
+X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This series add IRQ handler for low level SOC alert, define a devicetree 
+binding attribute to configure the alert level threshold and check for
+changes in SOC for send uevents.
 
-On 2019/4/12 17:51, Lorenzo Pieralisi wrote:
-> On Sat, Mar 30, 2019 at 03:09:10PM +0000, Colin King wrote:
->> From: Colin Ian King <colin.king@canonical.com>
->>
->> Currently the bitwise operations on the u16 variable 'status' with
->> the setting ROCKCHIP_PCIE_EP_CMD_STATUS_IS are incorrect because
->> ROCKCHIP_PCIE_EP_CMD_STATUS_IS is 1UL<<19 which is wider than the
->> u16 variable.  Fix this by making status a u32.  (Not tested).
->>
->> Fixes: cf590b078391 ("PCI: rockchip: Add EP driver for Rockchip PCIe controller")
->> Signed-off-by: Colin Ian King <colin.king@canonical.com>
->> ---
->>   drivers/pci/controller/pcie-rockchip-ep.c | 2 +-
->>   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> Shawn,
-> 
-> I need your ACK on this patch, thanks.
+Max17040 have a pin for alert host about low level state of charge and
+this alert can be configured in a threshold from 1% up to 32% of SOC.
 
-Acked-by: Shawn Lin <shawn.lin@rock-chips.com>
+Tested on Toradex Colibri iMX7D, with a SparkFun Lipo Fuel Gauge module
+based on MAXIM MAX17043.
 
-> 
-> Lorenzo
-> 
->> diff --git a/drivers/pci/controller/pcie-rockchip-ep.c b/drivers/pci/controller/pcie-rockchip-ep.c
->> index a5d799e2dff2..d743b0a48988 100644
->> --- a/drivers/pci/controller/pcie-rockchip-ep.c
->> +++ b/drivers/pci/controller/pcie-rockchip-ep.c
->> @@ -350,7 +350,7 @@ static void rockchip_pcie_ep_assert_intx(struct rockchip_pcie_ep *ep, u8 fn,
->>   	struct rockchip_pcie *rockchip = &ep->rockchip;
->>   	u32 r = ep->max_regions - 1;
->>   	u32 offset;
->> -	u16 status;
->> +	u32 status;
->>   	u8 msg_code;
->>   
->>   	if (unlikely(ep->irq_pci_addr != ROCKCHIP_PCIE_EP_PCI_LEGACY_IRQ_ADDR ||
->> -- 
->> 2.20.1
->>
-> 
-> 
-> 
+Thanks Krzysztof Kozlowski for your time reviewing it, and forgive me for
+the delay in working on it, now I'm back to the patchs. Let me know what
+you think about the fixes and I'm open to maintainers suggestions.
 
+Changes since v1:
+(Suggested by Krzysztof Kozlowski)
+- Put common code from max17040_work and max17040_thread_handler in a function
+- Code style fixes
+- Define mask and low level threshold alert default
+- Check return value from max17040_set_soc_threshold
+- Set low level state of charge threshold before IRQ
+- CC maintainers from drivers/mfd/max14577
+- Use flags from FDT client->flags instead hard coded it
+- Mention interrupts on DT Documentation
+- Fix "maxim,max77836-battery" missed from DT Documentation
+- Fix commit description
+
+Matheus Castello (4):
+  power: supply: max17040: Add IRQ handler for low SOC alert
+  dt-bindings: power: supply: Max17040: Add low level SOC alert
+    threshold
+  power: supply: max17040: Config alert SOC low level threshold from FDT
+  power: supply: max17040: Send uevent in SOC changes
+
+ .../power/supply/max17040_battery.txt         |  24 ++++
+ drivers/power/supply/max17040_battery.c       | 118 +++++++++++++++++-
+ 2 files changed, 138 insertions(+), 4 deletions(-)
+ create mode 100644 Documentation/devicetree/bindings/power/supply/max17040_battery.txt
+
+-- 
+2.17.0
 
