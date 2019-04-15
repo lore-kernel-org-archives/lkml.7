@@ -3,28 +3,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D81BAC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:09:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89BBCC10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:09:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC1C520818
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:09:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D8DE20818
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:09:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727629AbfDOPJP (ORCPT
+        id S1727695AbfDOPJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 11:09:15 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:34783 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727050AbfDOPJM (ORCPT
+        Mon, 15 Apr 2019 11:09:18 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:54025 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727050AbfDOPJQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 11:09:12 -0400
+        Mon, 15 Apr 2019 11:09:16 -0400
 X-Originating-IP: 109.212.207.226
 Received: from localhost (alyon-652-1-176-226.w109-212.abo.wanadoo.fr [109.212.207.226])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id E88EDFF80B;
-        Mon, 15 Apr 2019 15:09:09 +0000 (UTC)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id F33E4C0006;
+        Mon, 15 Apr 2019 15:09:13 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     Daniel Lezcano <daniel.lezcano@linaro.org>
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
@@ -32,12 +32,10 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Alexander Dahl <ada@thorsis.com>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>
-Subject: [PATCH v2 1/9] ARM: at91: move SoC specific definitions to SoC folder
-Date:   Mon, 15 Apr 2019 17:08:48 +0200
-Message-Id: <20190415150856.9384-2-alexandre.belloni@bootlin.com>
+        Alexandre Belloni <alexandre.belloni@bootlin.com>
+Subject: [PATCH v2 3/9] clocksource/drivers/tcb_clksrc: Use tcb as sched_clock
+Date:   Mon, 15 Apr 2019 17:08:50 +0200
+Message-Id: <20190415150856.9384-4-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190415150856.9384-1-alexandre.belloni@bootlin.com>
 References: <20190415150856.9384-1-alexandre.belloni@bootlin.com>
@@ -48,83 +46,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Move linux/atmel_tc.h to the SoC specific folder include/soc/at91.
+Now that the driver is registered early enough, use the TCB as the
+sched_clock which is much more accurate than the jiffies implementation.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-Acked-by: Thierry Reding <thierry.reding@gmail.com>
-Acked-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/clocksource/tcb_clksrc.c                   | 2 +-
- drivers/misc/atmel_tclib.c                         | 2 +-
- drivers/pwm/pwm-atmel-tcb.c                        | 2 +-
- include/{linux/atmel_tc.h => soc/at91/atmel_tcb.h} | 4 ++--
- 4 files changed, 5 insertions(+), 5 deletions(-)
- rename include/{linux/atmel_tc.h => soc/at91/atmel_tcb.h} (99%)
+ drivers/clocksource/tcb_clksrc.c | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
 
 diff --git a/drivers/clocksource/tcb_clksrc.c b/drivers/clocksource/tcb_clksrc.c
-index 43f4d5c4d6fa..138a12090149 100644
+index bf68504da94a..9de8c10ab546 100644
 --- a/drivers/clocksource/tcb_clksrc.c
 +++ b/drivers/clocksource/tcb_clksrc.c
-@@ -11,7 +11,7 @@
+@@ -11,6 +11,7 @@
  #include <linux/io.h>
- #include <linux/platform_device.h>
+ #include <linux/of_address.h>
+ #include <linux/of_irq.h>
++#include <linux/sched_clock.h>
  #include <linux/syscore_ops.h>
--#include <linux/atmel_tc.h>
-+#include <soc/at91/atmel_tcb.h>
+ #include <soc/at91/atmel_tcb.h>
  
+@@ -114,6 +115,16 @@ static struct clocksource clksrc = {
+ 	.resume		= tc_clksrc_resume,
+ };
  
- /*
-diff --git a/drivers/misc/atmel_tclib.c b/drivers/misc/atmel_tclib.c
-index ac24a4bd63f7..194f774ab3a1 100644
---- a/drivers/misc/atmel_tclib.c
-+++ b/drivers/misc/atmel_tclib.c
-@@ -1,4 +1,3 @@
--#include <linux/atmel_tc.h>
- #include <linux/clk.h>
- #include <linux/err.h>
- #include <linux/init.h>
-@@ -10,6 +9,7 @@
- #include <linux/slab.h>
- #include <linux/export.h>
- #include <linux/of.h>
-+#include <soc/at91/atmel_tcb.h>
++static u64 notrace tc_sched_clock_read(void)
++{
++	return tc_get_cycles(&clksrc);
++}
++
++static u64 notrace tc_sched_clock_read32(void)
++{
++	return tc_get_cycles32(&clksrc);
++}
++
+ #ifdef CONFIG_GENERIC_CLOCKEVENTS
  
- /*
-  * This is a thin library to solve the problem of how to portably allocate
-diff --git a/drivers/pwm/pwm-atmel-tcb.c b/drivers/pwm/pwm-atmel-tcb.c
-index 0d0f8376bc35..7da1fdb4d269 100644
---- a/drivers/pwm/pwm-atmel-tcb.c
-+++ b/drivers/pwm/pwm-atmel-tcb.c
-@@ -17,10 +17,10 @@
- #include <linux/ioport.h>
- #include <linux/io.h>
- #include <linux/platform_device.h>
--#include <linux/atmel_tc.h>
- #include <linux/pwm.h>
- #include <linux/of_device.h>
- #include <linux/slab.h>
-+#include <soc/at91/atmel_tcb.h>
+ struct tc_clkevt_device {
+@@ -335,6 +346,7 @@ static int __init tcb_clksrc_init(struct device_node *node)
+ 	struct atmel_tc tc;
+ 	struct clk *t0_clk;
+ 	const struct of_device_id *match;
++	u64 (*tc_sched_clock)(void);
+ 	u32 rate, divided_rate = 0;
+ 	int best_divisor_idx = -1;
+ 	int clk32k_divisor_idx = -1;
+@@ -419,6 +431,7 @@ static int __init tcb_clksrc_init(struct device_node *node)
+ 		clksrc.read = tc_get_cycles32;
+ 		/* setup ony channel 0 */
+ 		tcb_setup_single_chan(&tc, best_divisor_idx);
++		tc_sched_clock = tc_sched_clock_read32;
+ 	} else {
+ 		/* we have three clocks no matter what the
+ 		 * underlying platform supports.
+@@ -430,6 +443,7 @@ static int __init tcb_clksrc_init(struct device_node *node)
+ 		}
+ 		/* setup both channel 0 & 1 */
+ 		tcb_setup_dual_chan(&tc, best_divisor_idx);
++		tc_sched_clock = tc_sched_clock_read;
+ 	}
  
- #define NPWM	6
+ 	/* and away we go! */
+@@ -442,6 +456,8 @@ static int __init tcb_clksrc_init(struct device_node *node)
+ 	if (ret)
+ 		goto err_unregister_clksrc;
  
-diff --git a/include/linux/atmel_tc.h b/include/soc/at91/atmel_tcb.h
-similarity index 99%
-rename from include/linux/atmel_tc.h
-rename to include/soc/at91/atmel_tcb.h
-index 468fdfa643f0..c3c7200ce151 100644
---- a/include/linux/atmel_tc.h
-+++ b/include/soc/at91/atmel_tcb.h
-@@ -7,8 +7,8 @@
-  * (at your option) any later version.
-  */
++	sched_clock_register(tc_sched_clock, 32, divided_rate);
++
+ 	return 0;
  
--#ifndef ATMEL_TC_H
--#define ATMEL_TC_H
-+#ifndef __SOC_ATMEL_TCB_H
-+#define __SOC_ATMEL_TCB_H
- 
- #include <linux/compiler.h>
- #include <linux/list.h>
+ err_unregister_clksrc:
 -- 
 2.20.1
 
