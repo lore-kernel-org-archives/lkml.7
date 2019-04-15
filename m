@@ -2,139 +2,89 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C03C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 02:08:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03056C10F14
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 02:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A3BE206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 02:08:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C4F1B2084E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 02:24:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="EWY1iGKZ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="fq0EfNQX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726728AbfDOCI6 (ORCPT
+        id S1726475AbfDOCYP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 22:08:58 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:42415 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725975AbfDOCI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 22:08:58 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44jBkZ3phtz9s55;
-        Mon, 15 Apr 2019 12:08:54 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1555294134;
-        bh=Xzpnz0G5SbJIIery03VxJPBxt+OqGMtwpRc7d7Km5dM=;
-        h=Date:From:To:Cc:Subject:From;
-        b=EWY1iGKZwfY334ZQWBe00QclVhQyXJap377WuQP8I4rIwHe2MgohJves8jQKHKkbf
-         8nIB5goW6LElPqfrCpBQi3LEqgRRouNwMfhlOqtykG/623c5EBzHhbks6qy9JHgczs
-         d2gpBkouZPZNBZ+lAUPFPOHhDEb9GqqHmHZD0y/jN5FXvpCksKnnTDqSBb3RHTLWyK
-         xPeNRH2p9g4Blu/URaL0HVkLLMyIwuxaRAc9Qwygs0AeN5pRNaAB6cS/0qDNWo+x3r
-         yp8oTdVFvkOawYTPvNQxhbL1MbkAGo5IBjQ3evwlxNFVmxGOJI/poCCnIHU7Wpa2HJ
-         Q3HuAjYEsIzKQ==
-Date:   Mon, 15 Apr 2019 12:08:53 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Kalle Valo <kvalo@codeaurora.org>,
-        Wireless <linux-wireless@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Sun, 14 Apr 2019 22:24:15 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:51310 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbfDOCYP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Apr 2019 22:24:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=aB6g0E//NkNVlipKG0sOhrOyS6Dw+DkFuHN89+1UXTY=; b=fq0EfNQX5nmmKBJBSToMWL+EU
+        FxkpnJG2cnRAHFxr+1W/jqEJiVT7FnrH9KpPttGpFx/T7D9QeyyP6ORiCBXLzW0CSHJgygexR8OEv
+        LGgRxRk6rGqLCiZ7KvkazpzS3Ut3DXqH6MarjmuEo/wxSBFEb4VLhMJFLX2C6dc8tHn3KZ57MypRf
+        c2AG1z6qj6Gzc7hj5pNwfP3/xYm+JbK/igIaiG/xhkuvqKjv3NBQNiY/SumzLQQ7HXAPm7ggHF4Go
+        ds5GKrGU3C1kVsilweVs8h7utQitrg4S1CeaHlkJaGpFenphFG+mPP5NG7MCoitqRzYgwVPBWPZ+E
+        cpkaKGf7g==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hFrI4-0005Pf-K4; Mon, 15 Apr 2019 02:24:12 +0000
+Date:   Sun, 14 Apr 2019 19:24:12 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Eric Biggers <ebiggers@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        linux-crypto <linux-crypto@vger.kernel.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ihab Zhaika <ihab.zhaika@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>
-Subject: linux-next: manual merge of the wireless-drivers-next tree with the
- wireless-drivers tree
-Message-ID: <20190415120853.39e0e46a@canb.auug.org.au>
+        Laura Abbott <labbott@redhat.com>, linux-mm@kvack.org
+Subject: Re: [PATCH] crypto: testmgr - allocate buffers with __GFP_COMP
+Message-ID: <20190415022412.GA29714@bombadil.infradead.org>
+References: <20190411192607.GD225654@gmail.com>
+ <20190411192827.72551-1-ebiggers@kernel.org>
+ <CAGXu5jJ8k7fP5Vb=ygmQ0B45GfrK2PeaV04bPWmcZ6Vb+swgyA@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/NXPNfRBIc4_Zh=Iruc5coyI"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGXu5jJ8k7fP5Vb=ygmQ0B45GfrK2PeaV04bPWmcZ6Vb+swgyA@mail.gmail.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/NXPNfRBIc4_Zh=Iruc5coyI
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+On Thu, Apr 11, 2019 at 01:32:32PM -0700, Kees Cook wrote:
+> > @@ -156,7 +156,8 @@ static int __testmgr_alloc_buf(char *buf[XBUFSIZE], int order)
+> >         int i;
+> >
+> >         for (i = 0; i < XBUFSIZE; i++) {
+> > -               buf[i] = (char *)__get_free_pages(GFP_KERNEL, order);
+> > +               buf[i] = (char *)__get_free_pages(GFP_KERNEL | __GFP_COMP,
+> > +                                                 order);
+> 
+> Is there a reason __GFP_COMP isn't automatically included in all page
+> allocations? (Or rather, it seems like the exception is when things
+> should NOT be considered part of the same allocation, so something
+> like __GFP_SINGLE should exist?.)
 
-Hi all,
+The question is not whether or not things should be considered part of the
+same allocation.  The question is whether the allocation is of a compound
+page or of N consecutive pages.  Now you're asking what the difference is,
+and it's whether you need to be able to be able to call compound_head(),
+compound_order(), PageTail() or use a compound_dtor.  If you don't, then
+you can save some time at allocation & free by not specifying __GFP_COMP.
 
-Today's linux-next merge of the wireless-drivers-next tree got a
-conflict in:
-
-  drivers/net/wireless/intel/iwlwifi/pcie/drv.c
-
-between commits:
-
-  0d5bad14226a ("iwlwifi: rename structs to fit the new names")
-  972d8e137779 ("iwlwifi: add new 0x2723/0x2080 card for 22000")
-
-from the wireless-drivers tree and commit:
-
-  ef8a913766cd ("iwlwifi: remove misconfigured pci ids from 22260 series")
-
-from the wireless-drivers-next tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc drivers/net/wireless/intel/iwlwifi/pcie/drv.c
-index 9f1af8da9dc1,0329b626ada6..000000000000
---- a/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
-@@@ -953,19 -953,15 +953,15 @@@ static const struct pci_device_id iwl_h
-  	{IWL_PCI_DEVICE(0xA0F0, 0x1652, killer1650i_2ax_cfg_qu_b0_hr_b0)},
-  	{IWL_PCI_DEVICE(0xA0F0, 0x4070, iwl_ax101_cfg_qu_hr)},
- =20
- -	{IWL_PCI_DEVICE(0x2723, 0x0080, iwl22260_2ax_cfg)},
- -	{IWL_PCI_DEVICE(0x2723, 0x0084, iwl22260_2ax_cfg)},
- -	{IWL_PCI_DEVICE(0x2723, 0x0088, iwl22260_2ax_cfg)},
- -	{IWL_PCI_DEVICE(0x2723, 0x008C, iwl22260_2ax_cfg)},
- +	{IWL_PCI_DEVICE(0x2723, 0x0080, iwl_ax200_cfg_cc)},
- +	{IWL_PCI_DEVICE(0x2723, 0x0084, iwl_ax200_cfg_cc)},
- +	{IWL_PCI_DEVICE(0x2723, 0x0088, iwl_ax200_cfg_cc)},
- +	{IWL_PCI_DEVICE(0x2723, 0x008C, iwl_ax200_cfg_cc)},
-  	{IWL_PCI_DEVICE(0x2723, 0x1653, killer1650w_2ax_cfg)},
-  	{IWL_PCI_DEVICE(0x2723, 0x1654, killer1650x_2ax_cfg)},
- -	{IWL_PCI_DEVICE(0x2723, 0x2080, iwl22260_2ax_cfg)},
- -	{IWL_PCI_DEVICE(0x2723, 0x4080, iwl22260_2ax_cfg)},
- -	{IWL_PCI_DEVICE(0x2723, 0x4088, iwl22260_2ax_cfg)},
- +	{IWL_PCI_DEVICE(0x2723, 0x2080, iwl_ax200_cfg_cc)},
- +	{IWL_PCI_DEVICE(0x2723, 0x4080, iwl_ax200_cfg_cc)},
- +	{IWL_PCI_DEVICE(0x2723, 0x4088, iwl_ax200_cfg_cc)},
--=20
-- 	{IWL_PCI_DEVICE(0x1a56, 0x1653, killer1650w_2ax_cfg)},
-- 	{IWL_PCI_DEVICE(0x1a56, 0x1654, killer1650x_2ax_cfg)},
--=20
-  	{IWL_PCI_DEVICE(0x2725, 0x0090, iwlax210_2ax_cfg_so_hr_a0)},
-  	{IWL_PCI_DEVICE(0x7A70, 0x0090, iwlax210_2ax_cfg_so_hr_a0)},
-  	{IWL_PCI_DEVICE(0x7A70, 0x0310, iwlax210_2ax_cfg_so_hr_a0)},
-
---Sig_/NXPNfRBIc4_Zh=Iruc5coyI
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyz57UACgkQAVBC80lX
-0GycRwf/TJ5j6jINo+rxZJmG/3J9ND8BMB4ej/SDCYiVCVv+7Og3CY1XcKRw8t5C
-NPD9CwpFbPdIEiaxSVkml5UQyDOH7xdspodUyBxz8602E/0kGU/hmU4bFfqf5sa3
-y3NNcSBeVd8tQcfcswhbtmT4aH5NKa2B277wpCCE31AmcSVNuArSGcjE0vpnZGvI
-sPmz/Gc202aXdmJ3k3Q8i2hgwZ6J6ZF76dkJQskRhGua7oZTsBEpzmeTtmkg/1eL
-pKuyn+d9wiwpX8kvhUXxVBvNXxvSQ3QF2hfJxCfHoaRI3aLD+E2TgCENLWIdw4H3
-OLvHpCAHDkBRxPcy4783PjmaqyacGw==
-=99KX
------END PGP SIGNATURE-----
-
---Sig_/NXPNfRBIc4_Zh=Iruc5coyI--
+I'll agree this is not documented well, and maybe most multi-page
+allocations do want __GFP_COMP and we should invert that bit, but
+__GFP_SINGLE doesn't seem like the right antonym to __GFP_COMP to me.
