@@ -2,112 +2,204 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77EB1C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:29:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16283C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30F4A20818
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:29:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE4AD2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:29:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555356559;
-	bh=ibY6WkuhGQkKiebGRWtUBTmZTIFsUKAv6W4GPhM0jIU=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=u9lvO72pIE3krBhVNLL1PYQakAQD0pEnRvxxCU4xHkDAomjZG9fxl8gbZ4lc3Sd5K
-	 kFSl74WNN04THXmVz+uTE+HQA7KnA4xPx5yGWLl8ldflCSWed83cNrDbvIXqNX+a4w
-	 dFwKPmyJYWErX1LBXgAf7xERKl+U4DzVG1JH1JlY=
+	s=default; t=1555356576;
+	bh=OMJkLoqsWmafYmoNbg7JZne2jVFd4T0yyL/iute99g0=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=LtQfl4/Zy6fKTJ/cNBESgNag6aG71RbylzUXCVxNPNV7OKbD9vq1XTvz9RuKJZK+7
+	 ZlqnFCebV85Rj4n58YJzHszqSunUU3KasJ3TMtkTVvgRmHwHOujdqCZU9RVcSwPVAA
+	 aSdlfkynBbWo1IbXDeHKOAM3ea4nkKEBSE98RMns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730601AbfDOT3S (ORCPT
+        id S1728673AbfDOTCW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:29:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33666 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:02:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:33040 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728865AbfDOTCg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:02:36 -0400
-Received: from localhost.localdomain (unknown [194.230.158.135])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        id S1728632AbfDOTCS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:02:18 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A99DE218FC;
-        Mon, 15 Apr 2019 19:02:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3CF7020880;
+        Mon, 15 Apr 2019 19:02:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555354955;
-        bh=ibY6WkuhGQkKiebGRWtUBTmZTIFsUKAv6W4GPhM0jIU=;
-        h=From:To:Cc:Subject:Date:From;
-        b=1/4LxXebJOmN+bmqY0Xg9Y2MOW8VWC3AoU1ITPtJKmnGBVI/oa5yhpIrOCQP2vHli
-         1Y7W1WFT1ULUrEISEXkbkgQ5xn9xEkRAQ5e0c1PN2Du/PcWyIOjY7hVR4yV4gr7iJW
-         iI/KS/b9BXsGa9vPefXnul+XAWDXFGq0Sm9bYACI=
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-To:     Kukjin Kim <kgene@kernel.org>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        =?UTF-8?q?Pawe=C5=82=20Chmiel?= <pawel.mikolaj.chmiel@gmail.com>,
-        Tomasz Figa <tomasz.figa@gmail.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-samsung-soc@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Jonathan Bakker <xc-racer2@live.ca>
-Subject: [RFT] ARM: dts: s5pv210: Fix camera clock provider for Goni board
-Date:   Mon, 15 Apr 2019 21:02:22 +0200
-Message-Id: <20190415190222.9665-1-krzk@kernel.org>
-X-Mailer: git-send-email 2.17.1
+        s=default; t=1555354937;
+        bh=OMJkLoqsWmafYmoNbg7JZne2jVFd4T0yyL/iute99g0=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=LMyeE69VyP7Bfz1y1qLxAZwFvUE4FNdsjiU0TG2ITsevOhRgMh2bsOXueeU1K9L0K
+         ZmVxUL22Lt8NP1EgzB6kSMCJiE4EmNhOr25CAucUg+DdPu9w40ijMhPVmkSTfm0YDO
+         UZlfwB08dnivr6r/H3rYhV+nsovJDkj73754GbGM=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        Hulk Robot <hulkci@huawei.com>,
+        Mao Wenan <maowenan@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 21/69] net: rds: force to destroy connection if t_sock is NULL in rds_tcp_kill_sock().
+Date:   Mon, 15 Apr 2019 20:58:39 +0200
+Message-Id: <20190415183730.348122928@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190415183726.036654568@linuxfoundation.org>
+References: <20190415183726.036654568@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The camera driver (according also to bindings) registers a clock
-provider if clock-output-names property is present and later the sensors
-use registered clocks.
+From: Mao Wenan <maowenan@huawei.com>
 
-The DTS for S5Pv210 Goni board was incorrectly adding a child node with
-clock output cells but without clock-output-names property.  Although
-the DTS was compiling (with "/soc/camera/clock-controller: missing or
-empty reg/ranges property" warning), the clock provider was not
-registered.
+[ Upstream commit cb66ddd156203daefb8d71158036b27b0e2caf63 ]
 
-Signed-off-by: Krzysztof Kozlowski <krzk@kernel.org>
+When it is to cleanup net namespace, rds_tcp_exit_net() will call
+rds_tcp_kill_sock(), if t_sock is NULL, it will not call
+rds_conn_destroy(), rds_conn_path_destroy() and rds_tcp_conn_free() to free
+connection, and the worker cp_conn_w is not stopped, afterwards the net is freed in
+net_drop_ns(); While cp_conn_w rds_connect_worker() will call rds_tcp_conn_path_connect()
+and reference 'net' which has already been freed.
 
+In rds_tcp_conn_path_connect(), rds_tcp_set_callbacks() will set t_sock = sock before
+sock->ops->connect, but if connect() is failed, it will call
+rds_tcp_restore_callbacks() and set t_sock = NULL, if connect is always
+failed, rds_connect_worker() will try to reconnect all the time, so
+rds_tcp_kill_sock() will never to cancel worker cp_conn_w and free the
+connections.
+
+Therefore, the condition !tc->t_sock is not needed if it is going to do
+cleanup_net->rds_tcp_exit_net->rds_tcp_kill_sock, because tc->t_sock is always
+NULL, and there is on other path to cancel cp_conn_w and free
+connection. So this patch is to fix this.
+
+rds_tcp_kill_sock():
+...
+if (net != c_net || !tc->t_sock)
+...
+Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+
+==================================================================
+BUG: KASAN: use-after-free in inet_create+0xbcc/0xd28
+net/ipv4/af_inet.c:340
+Read of size 4 at addr ffff8003496a4684 by task kworker/u8:4/3721
+
+CPU: 3 PID: 3721 Comm: kworker/u8:4 Not tainted 5.1.0 #11
+Hardware name: linux,dummy-virt (DT)
+Workqueue: krdsd rds_connect_worker
+Call trace:
+ dump_backtrace+0x0/0x3c0 arch/arm64/kernel/time.c:53
+ show_stack+0x28/0x38 arch/arm64/kernel/traps.c:152
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x120/0x188 lib/dump_stack.c:113
+ print_address_description+0x68/0x278 mm/kasan/report.c:253
+ kasan_report_error mm/kasan/report.c:351 [inline]
+ kasan_report+0x21c/0x348 mm/kasan/report.c:409
+ __asan_report_load4_noabort+0x30/0x40 mm/kasan/report.c:429
+ inet_create+0xbcc/0xd28 net/ipv4/af_inet.c:340
+ __sock_create+0x4f8/0x770 net/socket.c:1276
+ sock_create_kern+0x50/0x68 net/socket.c:1322
+ rds_tcp_conn_path_connect+0x2b4/0x690 net/rds/tcp_connect.c:114
+ rds_connect_worker+0x108/0x1d0 net/rds/threads.c:175
+ process_one_work+0x6e8/0x1700 kernel/workqueue.c:2153
+ worker_thread+0x3b0/0xdd0 kernel/workqueue.c:2296
+ kthread+0x2f0/0x378 kernel/kthread.c:255
+ ret_from_fork+0x10/0x18 arch/arm64/kernel/entry.S:1117
+
+Allocated by task 687:
+ save_stack mm/kasan/kasan.c:448 [inline]
+ set_track mm/kasan/kasan.c:460 [inline]
+ kasan_kmalloc+0xd4/0x180 mm/kasan/kasan.c:553
+ kasan_slab_alloc+0x14/0x20 mm/kasan/kasan.c:490
+ slab_post_alloc_hook mm/slab.h:444 [inline]
+ slab_alloc_node mm/slub.c:2705 [inline]
+ slab_alloc mm/slub.c:2713 [inline]
+ kmem_cache_alloc+0x14c/0x388 mm/slub.c:2718
+ kmem_cache_zalloc include/linux/slab.h:697 [inline]
+ net_alloc net/core/net_namespace.c:384 [inline]
+ copy_net_ns+0xc4/0x2d0 net/core/net_namespace.c:424
+ create_new_namespaces+0x300/0x658 kernel/nsproxy.c:107
+ unshare_nsproxy_namespaces+0xa0/0x198 kernel/nsproxy.c:206
+ ksys_unshare+0x340/0x628 kernel/fork.c:2577
+ __do_sys_unshare kernel/fork.c:2645 [inline]
+ __se_sys_unshare kernel/fork.c:2643 [inline]
+ __arm64_sys_unshare+0x38/0x58 kernel/fork.c:2643
+ __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
+ invoke_syscall arch/arm64/kernel/syscall.c:47 [inline]
+ el0_svc_common+0x168/0x390 arch/arm64/kernel/syscall.c:83
+ el0_svc_handler+0x60/0xd0 arch/arm64/kernel/syscall.c:129
+ el0_svc+0x8/0xc arch/arm64/kernel/entry.S:960
+
+Freed by task 264:
+ save_stack mm/kasan/kasan.c:448 [inline]
+ set_track mm/kasan/kasan.c:460 [inline]
+ __kasan_slab_free+0x114/0x220 mm/kasan/kasan.c:521
+ kasan_slab_free+0x10/0x18 mm/kasan/kasan.c:528
+ slab_free_hook mm/slub.c:1370 [inline]
+ slab_free_freelist_hook mm/slub.c:1397 [inline]
+ slab_free mm/slub.c:2952 [inline]
+ kmem_cache_free+0xb8/0x3a8 mm/slub.c:2968
+ net_free net/core/net_namespace.c:400 [inline]
+ net_drop_ns.part.6+0x78/0x90 net/core/net_namespace.c:407
+ net_drop_ns net/core/net_namespace.c:406 [inline]
+ cleanup_net+0x53c/0x6d8 net/core/net_namespace.c:569
+ process_one_work+0x6e8/0x1700 kernel/workqueue.c:2153
+ worker_thread+0x3b0/0xdd0 kernel/workqueue.c:2296
+ kthread+0x2f0/0x378 kernel/kthread.c:255
+ ret_from_fork+0x10/0x18 arch/arm64/kernel/entry.S:1117
+
+The buggy address belongs to the object at ffff8003496a3f80
+ which belongs to the cache net_namespace of size 7872
+The buggy address is located 1796 bytes inside of
+ 7872-byte region [ffff8003496a3f80, ffff8003496a5e40)
+The buggy address belongs to the page:
+page:ffff7e000d25a800 count:1 mapcount:0 mapping:ffff80036ce4b000
+index:0x0 compound_mapcount: 0
+flags: 0xffffe0000008100(slab|head)
+raw: 0ffffe0000008100 dead000000000100 dead000000000200 ffff80036ce4b000
+raw: 0000000000000000 0000000080040004 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8003496a4580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8003496a4600: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff8003496a4680: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                   ^
+ ffff8003496a4700: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8003496a4780: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+Fixes: 467fa15356ac("RDS-TCP: Support multiple RDS-TCP listen endpoints, one per netns.")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
+ net/rds/tcp.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Not tested.
----
- arch/arm/boot/dts/s5pv210-goni.dts | 2 +-
- arch/arm/boot/dts/s5pv210.dtsi     | 6 ++----
- 2 files changed, 3 insertions(+), 5 deletions(-)
+--- a/net/rds/tcp.c
++++ b/net/rds/tcp.c
+@@ -530,7 +530,7 @@ static void rds_tcp_kill_sock(struct net
+ 	list_for_each_entry_safe(tc, _tc, &rds_tcp_conn_list, t_tcp_node) {
+ 		struct net *c_net = read_pnet(&tc->t_cpath->cp_conn->c_net);
+ 
+-		if (net != c_net || !tc->t_sock)
++		if (net != c_net)
+ 			continue;
+ 		if (!list_has_conn(&tmp_list, tc->t_cpath->cp_conn)) {
+ 			list_move_tail(&tc->t_tcp_node, &tmp_list);
 
-diff --git a/arch/arm/boot/dts/s5pv210-goni.dts b/arch/arm/boot/dts/s5pv210-goni.dts
-index eb6d1926c0d6..fbbd93707404 100644
---- a/arch/arm/boot/dts/s5pv210-goni.dts
-+++ b/arch/arm/boot/dts/s5pv210-goni.dts
-@@ -376,7 +376,7 @@
- 		vdd_core-supply = <&ldo14_reg>;
- 
- 		clock-frequency = <16000000>;
--		clocks = <&clock_cam 0>;
-+		clocks = <&camera 0>;
- 		clock-names = "mclk";
- 		nreset-gpios = <&gpb 2 0>;
- 		nstby-gpios = <&gpb 0 0>;
-diff --git a/arch/arm/boot/dts/s5pv210.dtsi b/arch/arm/boot/dts/s5pv210.dtsi
-index a44d5eb56bed..2ad642f51fd9 100644
---- a/arch/arm/boot/dts/s5pv210.dtsi
-+++ b/arch/arm/boot/dts/s5pv210.dtsi
-@@ -585,12 +585,10 @@
- 			clock-names = "sclk_cam0", "sclk_cam1";
- 			#address-cells = <1>;
- 			#size-cells = <1>;
-+			#clock-cells = <1>;
-+			clock-output-names = "cam_a_clkout", "cam_b_clkout";
- 			ranges;
- 
--			clock_cam: clock-controller {
--				#clock-cells = <1>;
--			};
--
- 			csis0: csis@fa600000 {
- 				compatible = "samsung,s5pv210-csis";
- 				reg = <0xfa600000 0x4000>;
--- 
-2.17.1
 
