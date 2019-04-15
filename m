@@ -2,220 +2,343 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.4 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 732CCC282DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 20:54:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D5545C282DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 20:57:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CC7420825
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 20:54:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8EB6720675
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 20:57:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GgH3dPcp"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="djRXbFR3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727815AbfDOUyN (ORCPT
+        id S1727593AbfDOU5T (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 16:54:13 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:32823 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727052AbfDOUyN (ORCPT
+        Mon, 15 Apr 2019 16:57:19 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:40648 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725786AbfDOU5S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 16:54:13 -0400
-Received: by mail-pg1-f193.google.com with SMTP id k19so9183918pgh.0;
-        Mon, 15 Apr 2019 13:54:12 -0700 (PDT)
+        Mon, 15 Apr 2019 16:57:18 -0400
+Received: by mail-it1-f193.google.com with SMTP id k64so5513653itb.5
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 13:57:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=v/DK1xyuObQUpvpRdqdIUTRguBtee+RAYqcwAMAIjds=;
-        b=GgH3dPcpozvXu/fZNtTu9/byU6890p4vPTEuXgrr0h2q9blxapNJb/ZPZnSCOoZ8Mh
-         rUfo1kyHOSkTNBcMQz8sRTqLdZoun2oJSUxrcd4upE3Fde1tNm7UF+mBNTiCY9ZuSe1t
-         Vf8JaE1zJueLBUA2sZa0UlyzXc+K25w+MLNR4C6yMhjpkSCaRdVqQoE+dGQsrmn95z5+
-         zFsRWDCF9McTr6cHYq4Viby4GNreL4dGgh+pceJCGP42/P4RscqvlyocVMyJEyfwuk3b
-         3UbFy/B3h7rAfX74lr5F6oXY5n+XZIQLAge9FsaRO6cnEab3Y1XkA6R61tvYx/rFrimH
-         5J1w==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jkVG35wDRSZS4+USbtL5NmiVCgjg7hYck3xsf971ZK8=;
+        b=djRXbFR3uOEXWyLaa70M8b464BJWr5KXItgrycLOXRgAA2ajxLO72AqfZajnhOQ6q5
+         aT13rH/yUQ4b/FrNUxDJ9ChM9uqdFkF+TZiRny07vB46ltIX/2YWY7nARTBu+lwR/Kio
+         p523oQ1HfFS2vIT//pOa7KCZfRrl+TDAGFn5o=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=v/DK1xyuObQUpvpRdqdIUTRguBtee+RAYqcwAMAIjds=;
-        b=L5giHM0OpnikmPzKn7+bruPoM5tCXx13MCFgsbwenK3rjT3GrDFbw9Uj0ohMve3hQ+
-         LIuZFL43hS3+lZd6ZlJpWvy30MIG/3g47QwYiAbsj+LVZ5LSUPwqnGrhJmJpHV0qZClI
-         j3Ih3g8KCw0zCFQ2yuaToEZDEcXGBG8pIfZ8DFVKmqT4ZyeNaPtlZ6c+o/4C07DSHmMh
-         BFzd5p7c62SbSBz/xtHU7UP83lJQ5NoOTcKvG43gtuj7nFcQl7Lb+Mp1cfmVskunzfFI
-         NoUyZyFx+lTzWrfuBmsLpfPpAp9WNffuYIyKDphzKjOnK+fpK40scR2TxtSVHDVPvbR1
-         eHIQ==
-X-Gm-Message-State: APjAAAXZMUXf1xTg8+0SYQmohh2apno9ZIF+x3Bg2Sc3O3a3LE/loP2L
-        SPMmG+xFJKDQx5CPtPFBwnVWGYhr
-X-Google-Smtp-Source: APXvYqw1I/VFUuns/27KIE1T04Uhv8uRwbBBF47iSiE0C/bYaZeUjJV6+zuoZul44nw3b7rn8uhqhQ==
-X-Received: by 2002:a63:3fc3:: with SMTP id m186mr74609379pga.151.1555361652449;
-        Mon, 15 Apr 2019 13:54:12 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id p7sm88044649pfp.70.2019.04.15.13.54.10
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=jkVG35wDRSZS4+USbtL5NmiVCgjg7hYck3xsf971ZK8=;
+        b=oB3+H8KEcCcwAj3acBzv7v2ZIUJjMazdVu7MAyDnUkuAejiZqIyCMCTaJFxOE9jXYV
+         kRNi5OHt6/II9wzCgL1XpFnMyjCnSmq55FHdYi/7RvMiDtGrLl9LQTmD82gvdEqlgds6
+         sdpH47+cF0TmpKvPEtr2a8jfHNiBLe5P+knwmggx0kvbYTd6bj2RebcOrrai6dYBv7Yi
+         +vOjUwX3AbpgfaJdi25lk3LBgjWLzWp8UoezRsj9iDKc4gSYSTU2EWXhFt/lTpZT5S67
+         Sad3V2chLWrqaDeHjJrH0ETMzRhAOiRIalWv/La/inZwgoEuLBXJ9f5EAEL2i/6nh9yH
+         /xEA==
+X-Gm-Message-State: APjAAAXCrSZ+qgAfO9+1ZMQgdrZCV/PoNBWtFHh1QU4yzILegWqHTpL9
+        Hii6QLgJnnI2VVj1QLHH7oV3og==
+X-Google-Smtp-Source: APXvYqypjHX/qzY/n+VlGH4RwfZ1EEL0b3F0sBmfA4VqTZL+v9bmUJJHeuWJNZRSk5SQyo18Nz7N0A==
+X-Received: by 2002:a02:c845:: with SMTP id r5mr53742773jao.110.1555361837440;
+        Mon, 15 Apr 2019 13:57:17 -0700 (PDT)
+Received: from localhost ([2620:15c:183:0:20b8:dee7:5447:d05])
+        by smtp.gmail.com with ESMTPSA id y203sm8461000itb.22.2019.04.15.13.57.16
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Apr 2019 13:54:11 -0700 (PDT)
-Date:   Mon, 15 Apr 2019 13:54:10 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Greg Ungerer <gerg@uclinux.org>,
-        Linus Walleij <linus.walleij@linaro.org>, arm@kernel.org,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-watchdog@vger.kernel.org
-Subject: Re: [PATCH 1/6] ARM: ks8695: watchdog: stop using mach/*.h
-Message-ID: <20190415205410.GA31583@roeck-us.net>
-References: <20190415202501.941196-1-arnd@arndb.de>
+        Mon, 15 Apr 2019 13:57:16 -0700 (PDT)
+From:   Raul E Rangel <rrangel@chromium.org>
+To:     linux-trace-devel@vger.kernel.org
+Cc:     eballetbo@gmail.com, zwisler@chromium.org, djkurtz@chromium.org,
+        Raul E Rangel <rrangel@chromium.org>,
+        Ross Zwisler <zwisler@google.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        linux-kernel@vger.kernel.org, Benson Leung <bleung@chromium.org>
+Subject: [PATCH v5] chrome/platform: cros_ec_proto: Add trace event to trace EC commands
+Date:   Mon, 15 Apr 2019 14:57:04 -0600
+Message-Id: <20190415205704.46726-1-rrangel@chromium.org>
+X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190415202501.941196-1-arnd@arndb.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 10:24:13PM +0200, Arnd Bergmann wrote:
-> drivers should not rely on machine specific headers but
-> get their information from the platform device.
-> 
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  arch/arm/mach-ks8695/devices.c | 13 ++++++++++++-
->  drivers/watchdog/Kconfig       |  2 +-
->  drivers/watchdog/ks8695_wdt.c  | 30 +++++++++++++++++-------------
->  3 files changed, 30 insertions(+), 15 deletions(-)
-> 
-> diff --git a/arch/arm/mach-ks8695/devices.c b/arch/arm/mach-ks8695/devices.c
-> index 61cf20beb45f..57766817d86f 100644
-> --- a/arch/arm/mach-ks8695/devices.c
-> +++ b/arch/arm/mach-ks8695/devices.c
-> @@ -169,11 +169,22 @@ void __init ks8696_add_device_hpna(void)
->  /* --------------------------------------------------------------------
->   *  Watchdog
->   * -------------------------------------------------------------------- */
-> +#define KS8695_TMR_OFFSET      (0xF0000 + 0xE400)
-> +#define KS8695_TMR_PA          (KS8695_IO_PA + KS8695_TMR_OFFSET)
-> +static struct resource ks8695_wdt_resources[] = {
-> +	[0] = {
-> +		.name	= "tmr",
-> +		.start	= KS8695_TMR_PA,
-> +		.end	= KS8695_TMR_PA + 0xf,
-> +		.flags	= IORESOURCE_MEM,
-> +	},
-> +};
->  
->  static struct platform_device ks8695_wdt_device = {
->  	.name		= "ks8695_wdt",
->  	.id		= -1,
-> -	.num_resources	= 0,
-> +	.resource	= ks8695_wdt_resources,
-> +	.num_resources	= ARRAY_SIZE(ks8695_wdt_resources),
->  };
->  
->  static void __init ks8695_add_device_watchdog(void)
-> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-> index 242eea859637..046e01daef57 100644
-> --- a/drivers/watchdog/Kconfig
-> +++ b/drivers/watchdog/Kconfig
-> @@ -397,7 +397,7 @@ config IXP4XX_WATCHDOG
->  
->  config KS8695_WATCHDOG
->  	tristate "KS8695 watchdog"
-> -	depends on ARCH_KS8695
-> +	depends on ARCH_KS8695 || COMPILE_TEST
+This is useful to see which EC commands are being executed and when.
 
-Is __raw_readl / __raw_writel really available for all architectures / platforms ?
+To enable:
 
->  	help
->  	  Watchdog timer embedded into KS8695 processor. This will reboot your
->  	  system when the timeout is reached.
-> diff --git a/drivers/watchdog/ks8695_wdt.c b/drivers/watchdog/ks8695_wdt.c
-> index 1e41818a44bc..87c542c2f912 100644
-> --- a/drivers/watchdog/ks8695_wdt.c
-> +++ b/drivers/watchdog/ks8695_wdt.c
-> @@ -23,10 +23,8 @@
->  #include <linux/watchdog.h>
->  #include <linux/io.h>
->  #include <linux/uaccess.h>
-> -#include <mach/hardware.h>
->  
-> -#define KS8695_TMR_OFFSET	(0xF0000 + 0xE400)
-> -#define KS8695_TMR_VA		(KS8695_IO_VA + KS8695_TMR_OFFSET)
-> +#define KS8695_CLOCK_RATE  25000000
->  
->  /*
->   * Timer registers
-> @@ -57,6 +55,7 @@ MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
->  
->  static unsigned long ks8695wdt_busy;
->  static DEFINE_SPINLOCK(ks8695_lock);
-> +static void __iomem *tmr_reg;
->  
->  /* ......................................................................... */
->  
-> @@ -69,8 +68,8 @@ static inline void ks8695_wdt_stop(void)
->  
->  	spin_lock(&ks8695_lock);
->  	/* disable timer0 */
-> -	tmcon = __raw_readl(KS8695_TMR_VA + KS8695_TMCON);
-> -	__raw_writel(tmcon & ~TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
-> +	tmcon = __raw_readl(tmr_reg + KS8695_TMCON);
-> +	__raw_writel(tmcon & ~TMCON_T0EN, tmr_reg + KS8695_TMCON);
->  	spin_unlock(&ks8695_lock);
->  }
->  
-> @@ -84,15 +83,15 @@ static inline void ks8695_wdt_start(void)
->  
->  	spin_lock(&ks8695_lock);
->  	/* disable timer0 */
-> -	tmcon = __raw_readl(KS8695_TMR_VA + KS8695_TMCON);
-> -	__raw_writel(tmcon & ~TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
-> +	tmcon = __raw_readl(tmr_reg + KS8695_TMCON);
-> +	__raw_writel(tmcon & ~TMCON_T0EN, tmr_reg + KS8695_TMCON);
->  
->  	/* program timer0 */
-> -	__raw_writel(tval | T0TC_WATCHDOG, KS8695_TMR_VA + KS8695_T0TC);
-> +	__raw_writel(tval | T0TC_WATCHDOG, tmr_reg + KS8695_T0TC);
->  
->  	/* re-enable timer0 */
-> -	tmcon = __raw_readl(KS8695_TMR_VA + KS8695_TMCON);
-> -	__raw_writel(tmcon | TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
-> +	tmcon = __raw_readl(tmr_reg + KS8695_TMCON);
-> +	__raw_writel(tmcon | TMCON_T0EN, tmr_reg + KS8695_TMCON);
->  	spin_unlock(&ks8695_lock);
->  }
->  
-> @@ -105,9 +104,9 @@ static inline void ks8695_wdt_reload(void)
->  
->  	spin_lock(&ks8695_lock);
->  	/* disable, then re-enable timer0 */
-> -	tmcon = __raw_readl(KS8695_TMR_VA + KS8695_TMCON);
-> -	__raw_writel(tmcon & ~TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
-> -	__raw_writel(tmcon | TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
-> +	tmcon = __raw_readl(tmr_reg + KS8695_TMCON);
-> +	__raw_writel(tmcon & ~TMCON_T0EN, tmr_reg + KS8695_TMCON);
-> +	__raw_writel(tmcon | TMCON_T0EN, tmr_reg + KS8695_TMCON);
->  	spin_unlock(&ks8695_lock);
->  }
->  
-> @@ -238,6 +237,11 @@ static struct miscdevice ks8695wdt_miscdev = {
->  static int ks8695wdt_probe(struct platform_device *pdev)
->  {
->  	int res;
-> +	struct resource *resource = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-> +
-> +	tmr_reg = devm_ioremap_resource(&pdev->dev, resource);
+    echo 'cros_ec:*' >> /sys/kernel/debug/tracing/set_event
 
-Please use devm_platform_ioremap_resource().
+Example:
 
-Thanks,
-Guenter
+    /* cros_ec_cmd: version: 0, command: EC_CMD_GET_VERSION */
+    /* cros_ec_cmd: version: 0, command: EC_CMD_GET_PROTOCOL_INFO */
+    /* cros_ec_cmd: version: 1, command: EC_CMD_GET_CMD_VERSIONS */
+    /* cros_ec_cmd: version: 1, command: EC_CMD_USB_PD_CONTROL */
 
-> +	if (!tmr_reg)
-> +		return -ENXIO;
->  
->  	if (ks8695wdt_miscdev.parent)
->  		return -EBUSY;
+Signed-off-by: Raul E Rangel <rrangel@chromium.org>
+Reviewed-by: Ross Zwisler <zwisler@google.com>
+---
+
+Changes in v5:
+- Rebased on upstream/master. It turns out upstream/master is missing a
+  lot of changes to cros_ec_commands.h.
+- Replace SYM with SYMBOL in macro name.
+
+Changes in v4:
+- Use the full command name so go to definition continues to work in my
+editor.
+
+Changes in v3:
+- Use a macro to avoid duplicating the ec command names.
+
+Changes in v2:
+- Changed comment style to match other cros_ec files.
+- Fixed commit tag.
+
+ drivers/platform/chrome/Makefile        |   4 +-
+ drivers/platform/chrome/cros_ec_proto.c |   4 +
+ drivers/platform/chrome/cros_ec_trace.c | 121 ++++++++++++++++++++++++
+ drivers/platform/chrome/cros_ec_trace.h |  51 ++++++++++
+ 4 files changed, 179 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/platform/chrome/cros_ec_trace.c
+ create mode 100644 drivers/platform/chrome/cros_ec_trace.h
+
+diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
+index 1e2f0029b597..e542268454a4 100644
+--- a/drivers/platform/chrome/Makefile
++++ b/drivers/platform/chrome/Makefile
+@@ -3,12 +3,14 @@
+ obj-$(CONFIG_CHROMEOS_LAPTOP)		+= chromeos_laptop.o
+ obj-$(CONFIG_CHROMEOS_PSTORE)		+= chromeos_pstore.o
+ obj-$(CONFIG_CHROMEOS_TBMC)		+= chromeos_tbmc.o
++# tell define_trace.h where to find the cros ec trace header
++CFLAGS_cros_ec_trace.o:=		-I$(src)
+ obj-$(CONFIG_CROS_EC_I2C)		+= cros_ec_i2c.o
+ obj-$(CONFIG_CROS_EC_SPI)		+= cros_ec_spi.o
+ cros_ec_lpcs-objs			:= cros_ec_lpc.o cros_ec_lpc_reg.o
+ cros_ec_lpcs-$(CONFIG_CROS_EC_LPC_MEC)	+= cros_ec_lpc_mec.o
+ obj-$(CONFIG_CROS_EC_LPC)		+= cros_ec_lpcs.o
+-obj-$(CONFIG_CROS_EC_PROTO)		+= cros_ec_proto.o
++obj-$(CONFIG_CROS_EC_PROTO)		+= cros_ec_proto.o cros_ec_trace.o
+ obj-$(CONFIG_CROS_KBD_LED_BACKLIGHT)	+= cros_kbd_led_backlight.o
+ obj-$(CONFIG_CROS_EC_LIGHTBAR)		+= cros_ec_lightbar.o
+ obj-$(CONFIG_CROS_EC_VBC)		+= cros_ec_vbc.o
+diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
+index 97a068dff192..3d02c8259ac6 100644
+--- a/drivers/platform/chrome/cros_ec_proto.c
++++ b/drivers/platform/chrome/cros_ec_proto.c
+@@ -10,6 +10,8 @@
+ #include <linux/slab.h>
+ #include <asm/unaligned.h>
+ 
++#include "cros_ec_trace.h"
++
+ #define EC_COMMAND_RETRIES	50
+ 
+ static int prepare_packet(struct cros_ec_device *ec_dev,
+@@ -51,6 +53,8 @@ static int send_command(struct cros_ec_device *ec_dev,
+ 	int ret;
+ 	int (*xfer_fxn)(struct cros_ec_device *ec, struct cros_ec_command *msg);
+ 
++	trace_cros_ec_cmd(msg);
++
+ 	if (ec_dev->proto_version > 2)
+ 		xfer_fxn = ec_dev->pkt_xfer;
+ 	else
+diff --git a/drivers/platform/chrome/cros_ec_trace.c b/drivers/platform/chrome/cros_ec_trace.c
+new file mode 100644
+index 000000000000..68f429f3c5f5
+--- /dev/null
++++ b/drivers/platform/chrome/cros_ec_trace.c
+@@ -0,0 +1,121 @@
++// SPDX-License-Identifier: GPL-2.0
++// Trace events for the ChromeOS Embedded Controller
++//
++// Copyright 2019 Google LLC.
++
++#define TRACE_SYMBOL(a) {a, #a}
++
++#define ec_cmds \
++	TRACE_SYMBOL(EC_CMD_PROTO_VERSION), \
++	TRACE_SYMBOL(EC_CMD_HELLO), \
++	TRACE_SYMBOL(EC_CMD_GET_VERSION), \
++	TRACE_SYMBOL(EC_CMD_READ_TEST), \
++	TRACE_SYMBOL(EC_CMD_GET_BUILD_INFO), \
++	TRACE_SYMBOL(EC_CMD_GET_CHIP_INFO), \
++	TRACE_SYMBOL(EC_CMD_GET_BOARD_VERSION), \
++	TRACE_SYMBOL(EC_CMD_READ_MEMMAP), \
++	TRACE_SYMBOL(EC_CMD_GET_CMD_VERSIONS), \
++	TRACE_SYMBOL(EC_CMD_GET_COMMS_STATUS), \
++	TRACE_SYMBOL(EC_CMD_TEST_PROTOCOL), \
++	TRACE_SYMBOL(EC_CMD_GET_PROTOCOL_INFO), \
++	TRACE_SYMBOL(EC_CMD_GSV_PAUSE_IN_S5), \
++	TRACE_SYMBOL(EC_CMD_GET_FEATURES), \
++	TRACE_SYMBOL(EC_CMD_FLASH_INFO), \
++	TRACE_SYMBOL(EC_CMD_FLASH_READ), \
++	TRACE_SYMBOL(EC_CMD_FLASH_WRITE), \
++	TRACE_SYMBOL(EC_CMD_FLASH_ERASE), \
++	TRACE_SYMBOL(EC_CMD_FLASH_PROTECT), \
++	TRACE_SYMBOL(EC_CMD_FLASH_REGION_INFO), \
++	TRACE_SYMBOL(EC_CMD_VBNV_CONTEXT), \
++	TRACE_SYMBOL(EC_CMD_PWM_GET_FAN_TARGET_RPM), \
++	TRACE_SYMBOL(EC_CMD_PWM_SET_FAN_TARGET_RPM), \
++	TRACE_SYMBOL(EC_CMD_PWM_GET_KEYBOARD_BACKLIGHT), \
++	TRACE_SYMBOL(EC_CMD_PWM_SET_KEYBOARD_BACKLIGHT), \
++	TRACE_SYMBOL(EC_CMD_PWM_SET_FAN_DUTY), \
++	TRACE_SYMBOL(EC_CMD_PWM_SET_DUTY), \
++	TRACE_SYMBOL(EC_CMD_PWM_GET_DUTY), \
++	TRACE_SYMBOL(EC_CMD_LIGHTBAR_CMD), \
++	TRACE_SYMBOL(EC_CMD_LED_CONTROL), \
++	TRACE_SYMBOL(EC_CMD_VBOOT_HASH), \
++	TRACE_SYMBOL(EC_CMD_MOTION_SENSE_CMD), \
++	TRACE_SYMBOL(EC_CMD_USB_CHARGE_SET_MODE), \
++	TRACE_SYMBOL(EC_CMD_PSTORE_INFO), \
++	TRACE_SYMBOL(EC_CMD_PSTORE_READ), \
++	TRACE_SYMBOL(EC_CMD_PSTORE_WRITE), \
++	TRACE_SYMBOL(EC_CMD_RTC_GET_VALUE), \
++	TRACE_SYMBOL(EC_CMD_RTC_GET_ALARM), \
++	TRACE_SYMBOL(EC_CMD_RTC_SET_VALUE), \
++	TRACE_SYMBOL(EC_CMD_RTC_SET_ALARM), \
++	TRACE_SYMBOL(EC_CMD_PORT80_READ), \
++	TRACE_SYMBOL(EC_CMD_THERMAL_SET_THRESHOLD), \
++	TRACE_SYMBOL(EC_CMD_THERMAL_GET_THRESHOLD), \
++	TRACE_SYMBOL(EC_CMD_THERMAL_AUTO_FAN_CTRL), \
++	TRACE_SYMBOL(EC_CMD_TMP006_GET_CALIBRATION), \
++	TRACE_SYMBOL(EC_CMD_TMP006_SET_CALIBRATION), \
++	TRACE_SYMBOL(EC_CMD_TMP006_GET_RAW), \
++	TRACE_SYMBOL(EC_CMD_MKBP_STATE), \
++	TRACE_SYMBOL(EC_CMD_MKBP_INFO), \
++	TRACE_SYMBOL(EC_CMD_MKBP_SIMULATE_KEY), \
++	TRACE_SYMBOL(EC_CMD_MKBP_SET_CONFIG), \
++	TRACE_SYMBOL(EC_CMD_MKBP_GET_CONFIG), \
++	TRACE_SYMBOL(EC_CMD_KEYSCAN_SEQ_CTRL), \
++	TRACE_SYMBOL(EC_CMD_GET_NEXT_EVENT), \
++	TRACE_SYMBOL(EC_CMD_TEMP_SENSOR_GET_INFO), \
++	TRACE_SYMBOL(EC_CMD_ACPI_READ), \
++	TRACE_SYMBOL(EC_CMD_ACPI_WRITE), \
++	TRACE_SYMBOL(EC_CMD_ACPI_QUERY_EVENT), \
++	TRACE_SYMBOL(EC_CMD_HOST_EVENT_GET_B), \
++	TRACE_SYMBOL(EC_CMD_HOST_EVENT_GET_SMI_MASK), \
++	TRACE_SYMBOL(EC_CMD_HOST_EVENT_GET_SCI_MASK), \
++	TRACE_SYMBOL(EC_CMD_HOST_EVENT_SET_SMI_MASK), \
++	TRACE_SYMBOL(EC_CMD_HOST_EVENT_SET_SCI_MASK), \
++	TRACE_SYMBOL(EC_CMD_HOST_EVENT_CLEAR), \
++	TRACE_SYMBOL(EC_CMD_HOST_EVENT_GET_WAKE_MASK), \
++	TRACE_SYMBOL(EC_CMD_HOST_EVENT_SET_WAKE_MASK), \
++	TRACE_SYMBOL(EC_CMD_HOST_EVENT_CLEAR_B), \
++	TRACE_SYMBOL(EC_CMD_SWITCH_ENABLE_BKLIGHT), \
++	TRACE_SYMBOL(EC_CMD_SWITCH_ENABLE_WIRELESS), \
++	TRACE_SYMBOL(EC_CMD_GPIO_SET), \
++	TRACE_SYMBOL(EC_CMD_GPIO_GET), \
++	TRACE_SYMBOL(EC_CMD_I2C_READ), \
++	TRACE_SYMBOL(EC_CMD_I2C_WRITE), \
++	TRACE_SYMBOL(EC_CMD_CHARGE_CONTROL), \
++	TRACE_SYMBOL(EC_CMD_CONSOLE_SNAPSHOT), \
++	TRACE_SYMBOL(EC_CMD_CONSOLE_READ), \
++	TRACE_SYMBOL(EC_CMD_BATTERY_CUT_OFF), \
++	TRACE_SYMBOL(EC_CMD_USB_MUX), \
++	TRACE_SYMBOL(EC_CMD_LDO_SET), \
++	TRACE_SYMBOL(EC_CMD_LDO_GET), \
++	TRACE_SYMBOL(EC_CMD_POWER_INFO), \
++	TRACE_SYMBOL(EC_CMD_I2C_PASSTHRU), \
++	TRACE_SYMBOL(EC_CMD_HANG_DETECT), \
++	TRACE_SYMBOL(EC_CMD_CHARGE_STATE), \
++	TRACE_SYMBOL(EC_CMD_CHARGE_CURRENT_LIMIT), \
++	TRACE_SYMBOL(EC_CMD_EXTERNAL_POWER_LIMIT), \
++	TRACE_SYMBOL(EC_CMD_HOST_SLEEP_EVENT), \
++	TRACE_SYMBOL(EC_CMD_SB_READ_WORD), \
++	TRACE_SYMBOL(EC_CMD_SB_WRITE_WORD), \
++	TRACE_SYMBOL(EC_CMD_SB_READ_BLOCK), \
++	TRACE_SYMBOL(EC_CMD_SB_WRITE_BLOCK), \
++	TRACE_SYMBOL(EC_CMD_BATTERY_VENDOR_PARAM), \
++	TRACE_SYMBOL(EC_CMD_CEC_WRITE_MSG), \
++	TRACE_SYMBOL(EC_CMD_CEC_SET), \
++	TRACE_SYMBOL(EC_CMD_CEC_GET), \
++	TRACE_SYMBOL(EC_CMD_CODEC_I2S), \
++	TRACE_SYMBOL(EC_CMD_REBOOT), \
++	TRACE_SYMBOL(EC_CMD_REBOOT_EC), \
++	TRACE_SYMBOL(EC_CMD_GET_PANIC_INFO), \
++	TRACE_SYMBOL(EC_CMD_RESEND_RESPONSE), \
++	TRACE_SYMBOL(EC_CMD_VERSION0), \
++	TRACE_SYMBOL(EC_CMD_PD_EXCHANGE_STATUS), \
++	TRACE_SYMBOL(EC_CMD_USB_PD_CONTROL), \
++	TRACE_SYMBOL(EC_CMD_USB_PD_PORTS), \
++	TRACE_SYMBOL(EC_CMD_USB_PD_POWER_INFO), \
++	TRACE_SYMBOL(EC_CMD_CHARGE_PORT_COUNT), \
++	TRACE_SYMBOL(EC_CMD_USB_PD_DISCOVERY), \
++	TRACE_SYMBOL(EC_CMD_PD_CHARGE_PORT_OVERRIDE), \
++	TRACE_SYMBOL(EC_CMD_PD_GET_LOG_ENTRY), \
++	TRACE_SYMBOL(EC_CMD_USB_PD_MUX_INFO)
++
++#define CREATE_TRACE_POINTS
++#include "cros_ec_trace.h"
+diff --git a/drivers/platform/chrome/cros_ec_trace.h b/drivers/platform/chrome/cros_ec_trace.h
+new file mode 100644
+index 000000000000..86ef52f96fd4
+--- /dev/null
++++ b/drivers/platform/chrome/cros_ec_trace.h
+@@ -0,0 +1,51 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * Trace events for the ChromeOS Embedded Controller
++ *
++ * Copyright 2019 Google LLC.
++ */
++
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM cros_ec
++
++#if !defined(_CROS_EC_TRACE_H_) || defined(TRACE_HEADER_MULTI_READ)
++#define _CROS_EC_TRACE_H_
++
++#include <linux/types.h>
++#include <linux/mfd/cros_ec.h>
++
++#include <linux/tracepoint.h>
++
++DECLARE_EVENT_CLASS(cros_ec_cmd_class,
++	TP_PROTO(struct cros_ec_command *cmd),
++	TP_ARGS(cmd),
++	TP_STRUCT__entry(
++		__field(uint32_t, version)
++		__field(uint32_t, command)
++	),
++	TP_fast_assign(
++		__entry->version = cmd->version;
++		__entry->command = cmd->command;
++	),
++	TP_printk("version: %u, command: %s", __entry->version,
++		  __print_symbolic(__entry->command, ec_cmds))
++);
++
++
++DEFINE_EVENT(cros_ec_cmd_class, cros_ec_cmd,
++	TP_PROTO(struct cros_ec_command *cmd),
++	TP_ARGS(cmd)
++);
++
++
++#endif /* _CROS_EC_TRACE_H_ */
++
++/* this part must be outside header guard */
++
++#undef TRACE_INCLUDE_PATH
++#define TRACE_INCLUDE_PATH .
++
++#undef TRACE_INCLUDE_FILE
++#define TRACE_INCLUDE_FILE cros_ec_trace
++
++#include <trace/define_trace.h>
+-- 
+2.21.0.392.gf8f6787159e-goog
+
