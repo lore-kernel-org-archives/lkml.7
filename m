@@ -2,147 +2,171 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35EF5C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 22:46:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27CBCC10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 22:53:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 03A342087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 22:46:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6BB020854
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 22:53:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="CkHHH4Nu"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SLWChC7s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728134AbfDOWqd (ORCPT
+        id S1728029AbfDOWxB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 18:46:33 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42254 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727552AbfDOWqc (ORCPT
+        Mon, 15 Apr 2019 18:53:01 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:39368 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726041AbfDOWxA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 18:46:32 -0400
-Received: by mail-pl1-f196.google.com with SMTP id cv12so9306759plb.9
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 15:46:32 -0700 (PDT)
+        Mon, 15 Apr 2019 18:53:00 -0400
+Received: by mail-io1-f66.google.com with SMTP id e13so16041380ioq.6
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 15:53:00 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:in-reply-to:references:date:message-id
-         :mime-version;
-        bh=bG81ld+Ifo/Ibz8BPNzF6UdN7r62GWdQqkw2sfWxBIE=;
-        b=CkHHH4NuB+CJi00KBtMI+2BVKiviKLnau6lg5Yv6TwUlwvwh6OUIKTqtu4CZlnbYkT
-         OFWnzhoK0T0UqA9DmEUe6BvGdSUQEpzlg8CKY5J5BzaXnD9C+bc8JKfK0e9+F6j0AIHD
-         3MGT0C9S69csNVqDT2UCs299JCg+upU3/5xV7J8TdCY+rQmenohIfsek84DdX/RBWjDM
-         tb9u6YUy2Aeec1xqeHgN+cNfnnx3dkJJl1kalZTC6PEPhGbJXXYTTHOE3bnbfBDR+V2/
-         w06nSLtMEbxHfoyGEv8LiMxcyevBH+GCqCaQo6geCIwFSSK54fCT0FXjGEGrxhGv3km+
-         zibw==
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ne5pjde4HF9lJsw056hcCinTNwk9gZ4Gsc2PETazukk=;
+        b=SLWChC7su73E9YCNo30HEymjebC11nB28pHbTyvMXRljj6wGKJpLLLZdOei855VSy5
+         715GG9vYQ+Yokih+hurV0vvDNs4giXKpGIFrNZJ90mzU5ZTnmOecEY8GLSrYgOmCIh1d
+         eUkZUYp5h1f+v8IVpsh9sxli0s3LZQwIH2b38=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=bG81ld+Ifo/Ibz8BPNzF6UdN7r62GWdQqkw2sfWxBIE=;
-        b=sdNrvXsIS3jarvnbq6NkwMXGZj4mhtwox3r9FjZe0iAVgyUmcb4479PXnNHb+CbC+0
-         B3aTxQ7nqlSgT3ukcluz086kdYloAFUoDc3EUjRXpEYN+LasGf/9nnwkwhkXnDzcGcby
-         DR4D+okBnIiJoFZPARwNLvNXTwv0N284JVVebqYAjHKUlHJgiIaRfiNqT+lyLDa1C6Pm
-         MwRT45PsTrSOwhxioKLfBNlvGGYTLPEok8IWKO8XtbsH+573NBPSMMHF1Z/NGaTHTLkc
-         Sj1zotq4ru30roWy8dpCVVMgP4Tvb4o7+3goCsuulD8kSUQwAekfn5Di3Ma4iiwlIEsN
-         Webg==
-X-Gm-Message-State: APjAAAUQyw7HBWIQrCERdZpmHg0CAYrrjh6ZtFDEB20+BgeWZisYFI53
-        Rvq0IeLmDQpp1XdxkrPzeViGSA==
-X-Google-Smtp-Source: APXvYqzO+U4ObfjyK28csaq2gUw4VrbmhMj98+DwzveBg/IggfpXO4gRQQCyro2DZBPX1uDGPVXhjA==
-X-Received: by 2002:a17:902:1101:: with SMTP id d1mr61503457pla.16.1555368391746;
-        Mon, 15 Apr 2019 15:46:31 -0700 (PDT)
-Received: from localhost ([2601:602:9200:a1a5:c45e:7ed8:c242:3563])
-        by smtp.googlemail.com with ESMTPSA id g64sm115360066pfg.13.2019.04.15.15.46.30
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 15 Apr 2019 15:46:30 -0700 (PDT)
-From:   Kevin Hilman <khilman@baylibre.com>
-To:     Neil Armstrong <narmstrong@baylibre.com>
-Cc:     linux-amlogic@lists.infradead.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3 0/3] arm64: dts: g12a: Add peripherals
-In-Reply-To: <891b8b51-256f-0c31-6b16-1b70bddc73c2@baylibre.com>
-References: <20190325100339.749-1-narmstrong@baylibre.com> <6b97b67a-3b00-81d5-1031-3a7c423f62ff@baylibre.com> <891b8b51-256f-0c31-6b16-1b70bddc73c2@baylibre.com>
-Date:   Mon, 15 Apr 2019 15:46:29 -0700
-Message-ID: <7hef62rinu.fsf@baylibre.com>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=ne5pjde4HF9lJsw056hcCinTNwk9gZ4Gsc2PETazukk=;
+        b=GqvxlIhOxN5GPerahF1cwonwLL2I76lSsK+Y9/TU8ZdAnluxaS8mvrT6nrYnE1kOld
+         hDzQdnuWkUwuZ03MOspe0ZTdoaYZlcdzQUXuCWHMSS7Aoe5d5sQxqKsreOMDHyp++73K
+         Rb9N2QK1Jt6bDStjzF0h2Mf5qV5QofMMrG8GtrEvx/FGNsfmSWR5HRTPMV+E3c24XQm3
+         1c4Rm1SI5Ja/QNHGRr8eCOFPt5DtNiVddJo5MrBew3cvK55IvEFpLpRpLWz9rq0kyhz3
+         2rAyXCgtfAR/OHJUpfZJ+BGug+eba1dn2uq8ZC3id8DP6EbWnHnP71rbp3bJ2DbAnM5P
+         WL/Q==
+X-Gm-Message-State: APjAAAWzUSZEEr1tnql3JYiN2zhcVK7rJHE+y100dllqhiWBrY3LgxE2
+        jL4B3iX7A+fT8TFmyA9N6GQXPg==
+X-Google-Smtp-Source: APXvYqxL3Y1/5EY9rT1odg/U/wDCVci/c5Ayg9G8OwUTt1pbou2Sl7HGdCuZSnjch5kBpOPfOLD81w==
+X-Received: by 2002:a5d:87d3:: with SMTP id q19mr25910171ios.29.1555368779666;
+        Mon, 15 Apr 2019 15:52:59 -0700 (PDT)
+Received: from localhost ([2620:15c:183:0:20b8:dee7:5447:d05])
+        by smtp.gmail.com with ESMTPSA id a16sm8666316itc.36.2019.04.15.15.52.58
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Apr 2019 15:52:58 -0700 (PDT)
+From:   Raul E Rangel <rrangel@chromium.org>
+To:     linux-mmc@vger.kernel.org, linux-trace-devel@vger.kernel.org
+Cc:     djkurtz@chromium.org, zwisler@chromium.org,
+        Raul E Rangel <rrangel@chromium.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        hongjiefang <hongjiefang@asrmicro.com>,
+        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Shawn Lin <shawn.lin@rock-chips.com>,
+        Kyle Roeschley <kyle.roeschley@ni.com>,
+        Avri Altman <avri.altman@wdc.com>,
+        Ulf Hansson <ulf.hansson@linaro.org>
+Subject: [PATCH v1 1/4] mmc: core: Add trace event for SD SCR response
+Date:   Mon, 15 Apr 2019 16:52:38 -0600
+Message-Id: <20190415225241.70088-1-rrangel@chromium.org>
+X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Neil Armstrong <narmstrong@baylibre.com> writes:
+Example:
+sd_scr: mmc0: version: 2, spec3: 1, width: 5, cmds: 0, raw: {0x2b58000,0x0}
 
-> On 01/04/2019 13:51, Neil Armstrong wrote:
->> On 25/03/2019 11:03, Neil Armstrong wrote:
->>> Add following peripherals :
->>> - SAR-ADC
->>> - USB
->>> - Mali GPU
->>>
->>> Dependencies :
->>> - ADC
->>>
->>> Depends on CLKID_AO_SAR_ADC_SEL, stable clk headers tags will be
->>> available after v5.1-rc4
->>>
->>> Bindings has been merged for 5.2-rc1
->>>
->>> - USB
->>>
->>> USB depends on the CLKID_PCIE_PLL, stable clk headers tags will be
->>> available after v5.1-rc4
->>>
->>> USB2 PHY depends on missing Reset bindings, have been applied to
->>> reset/fixes, waiting to be merge into master or immutable branch/tag
->>>
->>> Bindings has been Reviewed, waiting to be applied
->>>
->>> - Mali
->>>
->>> No Clk or Reset dependencies
->>>
->>> Mali GPU bindings are still in review.
->>>
->>> Changes since v2 :
->>> - dropped applied patches
->>> - collected review tags
->>>
->>> Changes since v1 :
->>> - dropped already applied "Add AO Secure node"
->>> - dropped meson-g12a-u200.dts uart_AO change
->>> - fixed includes overall to fix build for each patches
->>> - removed disabled status in dwc2 node
->>> - removed uart_ao_a_c pinctrl
->>> - fixed uart pinctrl node name
->>>
->>> Neil Armstrong (3):
->>>   arm64: dts: meson: g12a: Add SAR ADC node
->>>   arm64: dts: meson: g12a: Add G12A USB nodes
->>>   arm64: dts: meson: g12a: Add mali-g31 gpu node
->>>
->>>  arch/arm64/boot/dts/amlogic/meson-g12a.dtsi | 117 ++++++++++++++++++++
->>>  1 file changed, 117 insertions(+)
->>>
->> 
->> Hi Kevin,
->> 
->> Clock headers bindings stable tag has been sent to the list,
->> USB PHY Bindings has been applied, USB Glue patches are
->> still pending.
->> The Mali Bifrost GPU bindings are still in review.
->> 
->> Neil
->> 
->
-> The Mali bindings has been applied to drm-misc-next.
->
-> The only remaining dependencies are the USB Glue & DWC2 bindings that has been
-> reviewed, but not yet applied.
+Signed-off-by: Raul E Rangel <rrangel@chromium.org>
+---
 
-OK, those don't cause any build/boot time dependencies, so I'll queue up
-this series for v5.2.
+ drivers/mmc/core/sd.c      |  4 ++++
+ include/trace/events/mmc.h | 42 ++++++++++++++++++++++++++++++++++++++
+ 2 files changed, 46 insertions(+)
 
-Thanks,
+diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
+index 265e1aeeb9d8..3bed7c4b6d75 100644
+--- a/drivers/mmc/core/sd.c
++++ b/drivers/mmc/core/sd.c
+@@ -21,6 +21,8 @@
+ #include <linux/mmc/mmc.h>
+ #include <linux/mmc/sd.h>
+ 
++#include <trace/events/mmc.h>
++
+ #include "core.h"
+ #include "card.h"
+ #include "host.h"
+@@ -200,6 +202,7 @@ static int mmc_decode_scr(struct mmc_card *card)
+ 	if (scr_struct != 0) {
+ 		pr_err("%s: unrecognised SCR structure version %d\n",
+ 			mmc_hostname(card->host), scr_struct);
++		trace_sd_scr(card, NULL);
+ 		return -EINVAL;
+ 	}
+ 
+@@ -221,6 +224,7 @@ static int mmc_decode_scr(struct mmc_card *card)
+ 
+ 	if (scr->sda_spec3)
+ 		scr->cmds = UNSTUFF_BITS(resp, 32, 2);
++	trace_sd_scr(card, scr);
+ 	return 0;
+ }
+ 
+diff --git a/include/trace/events/mmc.h b/include/trace/events/mmc.h
+index 7b706ff21335..e45258e8a6cb 100644
+--- a/include/trace/events/mmc.h
++++ b/include/trace/events/mmc.h
+@@ -10,6 +10,48 @@
+ #include <linux/mmc/host.h>
+ #include <linux/tracepoint.h>
+ 
++TRACE_EVENT(sd_scr,
++
++	TP_PROTO(struct mmc_card *card, struct sd_scr *scr),
++
++	TP_ARGS(card, scr),
++
++	TP_STRUCT__entry(
++		__array(u32,			raw,	2)
++		__field(unsigned char,		sda_vsn)
++		__field(unsigned char,		sda_spec3)
++		__field(unsigned char,		bus_widths)
++		__field(unsigned char,		cmds)
++		__string(name,			mmc_hostname(card->host))
++	),
++
++	TP_fast_assign(
++		memcpy(__entry->raw, card->raw_scr, sizeof(card->raw_scr));
++		if (scr) {
++			__entry->sda_vsn = scr->sda_vsn;
++			__entry->sda_spec3 = scr->sda_spec3;
++			__entry->bus_widths = scr->bus_widths;
++			__entry->cmds = scr->cmds;
++		} else {
++			__entry->sda_vsn = 0;
++			__entry->sda_spec3 = 0;
++			__entry->bus_widths = 0;
++			__entry->cmds = 0;
++		}
++		__assign_str(name, mmc_hostname(card->host));
++	),
++
++	TP_printk("%s: version: %d, spec3: %d, width: %d, cmds: %d, "
++		"raw: %s",
++		  __get_str(name),
++		  __entry->sda_vsn,
++		  __entry->sda_spec3,
++		  __entry->bus_widths,
++		  __entry->cmds,
++		  __print_array(__entry->raw, 2, sizeof(u32))
++	)
++);
++
+ TRACE_EVENT(mmc_request_start,
+ 
+ 	TP_PROTO(struct mmc_host *host, struct mmc_request *mrq),
+-- 
+2.21.0.392.gf8f6787159e-goog
 
-Kevin
