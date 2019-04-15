@@ -4,51 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAC2AC10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:05:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9B73C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:05:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 941962087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:05:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 97E8920880
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:05:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355150;
-	bh=74NF6t6x76by8bHCCmeDDrtQE+57CZunci9bkwuwZIE=;
+	s=default; t=1555355152;
+	bh=pPkfZDGPLTQO69RPnZiirWtTNVNOai/i4W9Sx0ftfEA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Gnw+X87fwQgrPJrFwvdYsfrgftBPMbbP9T8/2yt/dZZwnM/aNLFQXZiZlQJrEVYK4
-	 Y5Um9LJO9VCw0L+U7uynagg9nV7/gmNV8ZZQnn1NUlfO/14mb9sKoVDF5YHf/FAUR6
-	 dDUrnRjWRuBQQjUNLCEm/KoTvjGeuCG/Bok8k82o=
+	b=b1HdBobCoN+vp6hXs5VTgJvqmhclvZKULImS7A1L/+4WUrRzkCRLOSEdCb1ib9BHU
+	 6V7KH0LPiVhYDPNleTgANPv8Ijy6obkEnWckjPFpzEn1rVOxmw/15HGiuMudi4aWux
+	 xGEko0RFMZSTydfj7G40U4SurKyPNdam9GbspDQw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729783AbfDOTFt (ORCPT
+        id S1729797AbfDOTFv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:05:49 -0400
-Received: from mail.kernel.org ([198.145.29.99]:39678 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:05:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39770 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729294AbfDOTFq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:05:46 -0400
+        id S1729778AbfDOTFt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:05:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 764B72087C;
-        Mon, 15 Apr 2019 19:05:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 320F820880;
+        Mon, 15 Apr 2019 19:05:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355145;
-        bh=74NF6t6x76by8bHCCmeDDrtQE+57CZunci9bkwuwZIE=;
+        s=default; t=1555355148;
+        bh=pPkfZDGPLTQO69RPnZiirWtTNVNOai/i4W9Sx0ftfEA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=kbx7RnUgOAB+wihBpCoxPOLvgp6iI6ZdnzZtoZrjhI+pTW0WJAnifLtuq3nvVdf06
-         Yy68l+Ya/BtVSBaKP3tmrl+3F63NRiMr740GHye/VXmt4cx32D6C4IquSpYSLmFvmf
-         OGs94Iv35sb1owk3d5gOSebhZknUR63AcXWPgxLc=
+        b=pY07a0iuZiuI64e5cjxu80v+4PBakkDgmlsqxyJpm22Tx6zOkF7j0q9ZQOjJMBni/
+         BEuo+FV9yDOK/2o149TkSt7oQu4rsGf+lSq6wAGZMDR/IE0kyyJo/KkZE3Jub9ZGbc
+         NzZzvi5lt68qxJbdS48SWrc1nxQkA2Lmbk2ZSXAg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        Hulk Robot <hulkci@huawei.com>,
+        Mao Wenan <maowenan@huawei.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 030/101] net: ip_gre: fix possible use-after-free in erspan_rcv
-Date:   Mon, 15 Apr 2019 20:58:28 +0200
-Message-Id: <20190415183742.032647007@linuxfoundation.org>
+Subject: [PATCH 4.19 014/101] net: rds: force to destroy connection if t_sock is NULL in rds_tcp_kill_sock().
+Date:   Mon, 15 Apr 2019 20:58:12 +0200
+Message-Id: <20190415183741.126077370@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183740.341577907@linuxfoundation.org>
 References: <20190415183740.341577907@linuxfoundation.org>
@@ -61,71 +63,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 492b67e28ee5f2a2522fb72e3d3bcb990e461514 ]
+[ Upstream commit cb66ddd156203daefb8d71158036b27b0e2caf63 ]
 
-erspan tunnels run __iptunnel_pull_header on received skbs to remove
-gre and erspan headers. This can determine a possible use-after-free
-accessing pkt_md pointer in erspan_rcv since the packet will be 'uncloned'
-running pskb_expand_head if it is a cloned gso skb (e.g if the packet has
-been sent though a veth device). Fix it resetting pkt_md pointer after
-__iptunnel_pull_header
+When it is to cleanup net namespace, rds_tcp_exit_net() will call
+rds_tcp_kill_sock(), if t_sock is NULL, it will not call
+rds_conn_destroy(), rds_conn_path_destroy() and rds_tcp_conn_free() to free
+connection, and the worker cp_conn_w is not stopped, afterwards the net is freed in
+net_drop_ns(); While cp_conn_w rds_connect_worker() will call rds_tcp_conn_path_connect()
+and reference 'net' which has already been freed.
 
-Fixes: 1d7e2ed22f8d ("net: erspan: refactor existing erspan code")
-Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+In rds_tcp_conn_path_connect(), rds_tcp_set_callbacks() will set t_sock = sock before
+sock->ops->connect, but if connect() is failed, it will call
+rds_tcp_restore_callbacks() and set t_sock = NULL, if connect is always
+failed, rds_connect_worker() will try to reconnect all the time, so
+rds_tcp_kill_sock() will never to cancel worker cp_conn_w and free the
+connections.
+
+Therefore, the condition !tc->t_sock is not needed if it is going to do
+cleanup_net->rds_tcp_exit_net->rds_tcp_kill_sock, because tc->t_sock is always
+NULL, and there is on other path to cancel cp_conn_w and free
+connection. So this patch is to fix this.
+
+rds_tcp_kill_sock():
+...
+if (net != c_net || !tc->t_sock)
+...
+Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+
+==================================================================
+BUG: KASAN: use-after-free in inet_create+0xbcc/0xd28
+net/ipv4/af_inet.c:340
+Read of size 4 at addr ffff8003496a4684 by task kworker/u8:4/3721
+
+CPU: 3 PID: 3721 Comm: kworker/u8:4 Not tainted 5.1.0 #11
+Hardware name: linux,dummy-virt (DT)
+Workqueue: krdsd rds_connect_worker
+Call trace:
+ dump_backtrace+0x0/0x3c0 arch/arm64/kernel/time.c:53
+ show_stack+0x28/0x38 arch/arm64/kernel/traps.c:152
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x120/0x188 lib/dump_stack.c:113
+ print_address_description+0x68/0x278 mm/kasan/report.c:253
+ kasan_report_error mm/kasan/report.c:351 [inline]
+ kasan_report+0x21c/0x348 mm/kasan/report.c:409
+ __asan_report_load4_noabort+0x30/0x40 mm/kasan/report.c:429
+ inet_create+0xbcc/0xd28 net/ipv4/af_inet.c:340
+ __sock_create+0x4f8/0x770 net/socket.c:1276
+ sock_create_kern+0x50/0x68 net/socket.c:1322
+ rds_tcp_conn_path_connect+0x2b4/0x690 net/rds/tcp_connect.c:114
+ rds_connect_worker+0x108/0x1d0 net/rds/threads.c:175
+ process_one_work+0x6e8/0x1700 kernel/workqueue.c:2153
+ worker_thread+0x3b0/0xdd0 kernel/workqueue.c:2296
+ kthread+0x2f0/0x378 kernel/kthread.c:255
+ ret_from_fork+0x10/0x18 arch/arm64/kernel/entry.S:1117
+
+Allocated by task 687:
+ save_stack mm/kasan/kasan.c:448 [inline]
+ set_track mm/kasan/kasan.c:460 [inline]
+ kasan_kmalloc+0xd4/0x180 mm/kasan/kasan.c:553
+ kasan_slab_alloc+0x14/0x20 mm/kasan/kasan.c:490
+ slab_post_alloc_hook mm/slab.h:444 [inline]
+ slab_alloc_node mm/slub.c:2705 [inline]
+ slab_alloc mm/slub.c:2713 [inline]
+ kmem_cache_alloc+0x14c/0x388 mm/slub.c:2718
+ kmem_cache_zalloc include/linux/slab.h:697 [inline]
+ net_alloc net/core/net_namespace.c:384 [inline]
+ copy_net_ns+0xc4/0x2d0 net/core/net_namespace.c:424
+ create_new_namespaces+0x300/0x658 kernel/nsproxy.c:107
+ unshare_nsproxy_namespaces+0xa0/0x198 kernel/nsproxy.c:206
+ ksys_unshare+0x340/0x628 kernel/fork.c:2577
+ __do_sys_unshare kernel/fork.c:2645 [inline]
+ __se_sys_unshare kernel/fork.c:2643 [inline]
+ __arm64_sys_unshare+0x38/0x58 kernel/fork.c:2643
+ __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
+ invoke_syscall arch/arm64/kernel/syscall.c:47 [inline]
+ el0_svc_common+0x168/0x390 arch/arm64/kernel/syscall.c:83
+ el0_svc_handler+0x60/0xd0 arch/arm64/kernel/syscall.c:129
+ el0_svc+0x8/0xc arch/arm64/kernel/entry.S:960
+
+Freed by task 264:
+ save_stack mm/kasan/kasan.c:448 [inline]
+ set_track mm/kasan/kasan.c:460 [inline]
+ __kasan_slab_free+0x114/0x220 mm/kasan/kasan.c:521
+ kasan_slab_free+0x10/0x18 mm/kasan/kasan.c:528
+ slab_free_hook mm/slub.c:1370 [inline]
+ slab_free_freelist_hook mm/slub.c:1397 [inline]
+ slab_free mm/slub.c:2952 [inline]
+ kmem_cache_free+0xb8/0x3a8 mm/slub.c:2968
+ net_free net/core/net_namespace.c:400 [inline]
+ net_drop_ns.part.6+0x78/0x90 net/core/net_namespace.c:407
+ net_drop_ns net/core/net_namespace.c:406 [inline]
+ cleanup_net+0x53c/0x6d8 net/core/net_namespace.c:569
+ process_one_work+0x6e8/0x1700 kernel/workqueue.c:2153
+ worker_thread+0x3b0/0xdd0 kernel/workqueue.c:2296
+ kthread+0x2f0/0x378 kernel/kthread.c:255
+ ret_from_fork+0x10/0x18 arch/arm64/kernel/entry.S:1117
+
+The buggy address belongs to the object at ffff8003496a3f80
+ which belongs to the cache net_namespace of size 7872
+The buggy address is located 1796 bytes inside of
+ 7872-byte region [ffff8003496a3f80, ffff8003496a5e40)
+The buggy address belongs to the page:
+page:ffff7e000d25a800 count:1 mapcount:0 mapping:ffff80036ce4b000
+index:0x0 compound_mapcount: 0
+flags: 0xffffe0000008100(slab|head)
+raw: 0ffffe0000008100 dead000000000100 dead000000000200 ffff80036ce4b000
+raw: 0000000000000000 0000000080040004 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8003496a4580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8003496a4600: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff8003496a4680: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                   ^
+ ffff8003496a4700: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8003496a4780: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+Fixes: 467fa15356ac("RDS-TCP: Support multiple RDS-TCP listen endpoints, one per netns.")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv4/ip_gre.c | 15 ++++++++++-----
- 1 file changed, 10 insertions(+), 5 deletions(-)
+ net/rds/tcp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/ipv4/ip_gre.c b/net/ipv4/ip_gre.c
-index f199945f6e4a..3c734832bb7c 100644
---- a/net/ipv4/ip_gre.c
-+++ b/net/ipv4/ip_gre.c
-@@ -260,7 +260,6 @@ static int erspan_rcv(struct sk_buff *skb, struct tnl_ptk_info *tpi,
- 	struct net *net = dev_net(skb->dev);
- 	struct metadata_dst *tun_dst = NULL;
- 	struct erspan_base_hdr *ershdr;
--	struct erspan_metadata *pkt_md;
- 	struct ip_tunnel_net *itn;
- 	struct ip_tunnel *tunnel;
- 	const struct iphdr *iph;
-@@ -283,9 +282,6 @@ static int erspan_rcv(struct sk_buff *skb, struct tnl_ptk_info *tpi,
- 		if (unlikely(!pskb_may_pull(skb, len)))
- 			return PACKET_REJECT;
+diff --git a/net/rds/tcp.c b/net/rds/tcp.c
+index b9bbcf3d6c63..18bb522df282 100644
+--- a/net/rds/tcp.c
++++ b/net/rds/tcp.c
+@@ -600,7 +600,7 @@ static void rds_tcp_kill_sock(struct net *net)
+ 	list_for_each_entry_safe(tc, _tc, &rds_tcp_conn_list, t_tcp_node) {
+ 		struct net *c_net = read_pnet(&tc->t_cpath->cp_conn->c_net);
  
--		ershdr = (struct erspan_base_hdr *)(skb->data + gre_hdr_len);
--		pkt_md = (struct erspan_metadata *)(ershdr + 1);
--
- 		if (__iptunnel_pull_header(skb,
- 					   len,
- 					   htons(ETH_P_TEB),
-@@ -293,8 +289,9 @@ static int erspan_rcv(struct sk_buff *skb, struct tnl_ptk_info *tpi,
- 			goto drop;
- 
- 		if (tunnel->collect_md) {
-+			struct erspan_metadata *pkt_md, *md;
- 			struct ip_tunnel_info *info;
--			struct erspan_metadata *md;
-+			unsigned char *gh;
- 			__be64 tun_id;
- 			__be16 flags;
- 
-@@ -307,6 +304,14 @@ static int erspan_rcv(struct sk_buff *skb, struct tnl_ptk_info *tpi,
- 			if (!tun_dst)
- 				return PACKET_REJECT;
- 
-+			/* skb can be uncloned in __iptunnel_pull_header, so
-+			 * old pkt_md is no longer valid and we need to reset
-+			 * it
-+			 */
-+			gh = skb_network_header(skb) +
-+			     skb_network_header_len(skb);
-+			pkt_md = (struct erspan_metadata *)(gh + gre_hdr_len +
-+							    sizeof(*ershdr));
- 			md = ip_tunnel_info_opts(&tun_dst->u.tun_info);
- 			md->version = ver;
- 			md2 = &md->u.md2;
+-		if (net != c_net || !tc->t_sock)
++		if (net != c_net)
+ 			continue;
+ 		if (!list_has_conn(&tmp_list, tc->t_cpath->cp_conn)) {
+ 			list_move_tail(&tc->t_tcp_node, &tmp_list);
 -- 
 2.19.1
 
