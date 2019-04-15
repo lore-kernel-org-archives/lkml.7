@@ -2,85 +2,105 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE85EC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:57:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C6242C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:59:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9861C2073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:57:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B51A20848
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:59:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726357AbfDOJ5c (ORCPT
+        id S1727090AbfDOJ7J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 05:57:32 -0400
-Received: from smtp2200-217.mail.aliyun.com ([121.197.200.217]:41705 "EHLO
-        smtp2200-217.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725794AbfDOJ5a (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 05:57:30 -0400
-X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07511862|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.504454-0.105798-0.389748;FP=0|0|0|0|0|-1|-1|-1;HT=e01l07423;MF=han_mao@c-sky.com;NM=1;PH=DS;RN=6;RT=6;SR=0;TI=SMTPD_---.ELbwotw_1555322247;
-Received: from localhost(mailfrom:han_mao@c-sky.com fp:SMTPD_---.ELbwotw_1555322247)
-          by smtp.aliyun-inc.com(10.147.40.2);
-          Mon, 15 Apr 2019 17:57:27 +0800
-From:   Mao Han <han_mao@c-sky.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     Mao Han <han_mao@c-sky.com>, Palmer Dabbelt <palmer@sifive.com>,
-        linux-riscv <linux-riscv@lists.infradead.org>,
-        Christoph Hellwig <hch@lst.de>, Guo Ren <guoren@kernel.org>
-Subject: [PATCH v2 0/3] riscv: Add perf callchain support
-Date:   Mon, 15 Apr 2019 17:52:10 +0800
-Message-Id: <cover.1555320740.git.han_mao@c-sky.com>
-X-Mailer: git-send-email 2.7.4
+        Mon, 15 Apr 2019 05:59:09 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59956 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725885AbfDOJ7J (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 05:59:09 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 12B0CAE69;
+        Mon, 15 Apr 2019 09:59:08 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 71B151E42AA; Mon, 15 Apr 2019 11:59:07 +0200 (CEST)
+Date:   Mon, 15 Apr 2019 11:59:07 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     linux-fsdevel@vger.kernel.org
+Cc:     Orion Poplawski <orion@nwra.com>,
+        Vivek Trivedi <t.vivek@samsung.com>,
+        Amir Goldstein <amir73il@gmail.com>, linux-api@vger.kernel.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        "Eric W. Biederman" <ebiederm@xmission.com>,
+        Jan Kara <jack@suse.cz>
+Subject: Re: [PATCH] fanotify: Make wait for permission events interruptible
+Message-ID: <20190415095907.GA14466@quack2.suse.cz>
+References: <20190321151142.17104-1-jack@suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190321151142.17104-1-jack@suse.cz>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch set add perf callchain(FP/DWARF) support for RISC-V.
-It comes from the csky version callchain support with some
-slight modifications. The patchset base on Linux 5.1-rc4:
-15ade5d2e7775667cf191cf2f94327a4889f8b9d
+On Thu 21-03-19 16:11:42, Jan Kara wrote:
+> Switch waiting for response to fanotify permission events interruptible.
+> This allows e.g. the system to be suspended while there are some
+> fanotify permission events pending (which is reportedly pretty common
+> when for example AV solution is in use). However just making the wait
+> interruptible can result in e.g. open(2) returning -EINTR where
+> previously such error code never happened in practice. To avoid
+> confusion of userspace due to this error code, return -ERESTARTNOINTR
+> instead.
+> 
+> Signed-off-by: Jan Kara <jack@suse.cz>
+> ---
+>  fs/notify/fanotify/fanotify.c | 11 +++++++++--
+>  1 file changed, 9 insertions(+), 2 deletions(-)
+> 
+> Orion, can you give this patch some testing with your usecase? Also if anybody
+> sees any issue with returning -ERESTARTNOINTR I have missed, please speak up.
 
-CC: Palmer Dabbelt <palmer@sifive.com>
-CC: linux-riscv<linux-riscv@lists.infradead.org>
-CC: Christoph Hellwig <hch@lst.de>
-CC: Guo Ren <guoren@kernel.org>
+Ping Orion? Did you have any chance to give this patch a try? Does it fix
+hibernation issues you observe without causing issues with bash and other
+programs? I'd like to queue this patch for the coming merge window but
+I'd like to see some testing results showing that it actually helps
+anything... Thanks!
 
-Changes since v1:
-  - simplify implementation and code convention
+								Honza
 
-Mao Han (3):
-  riscv: Add perf callchain support
-  riscv: Add support for perf registers sampling
-  riscv: Add support for libdw
-
- arch/riscv/Kconfig                            |   2 +
- arch/riscv/include/uapi/asm/perf_regs.h       |  42 ++++++++++
- arch/riscv/kernel/Makefile                    |   4 +-
- arch/riscv/kernel/perf_callchain.c            | 113 ++++++++++++++++++++++++++
- arch/riscv/kernel/perf_regs.c                 |  44 ++++++++++
- tools/arch/riscv/include/uapi/asm/perf_regs.h |  42 ++++++++++
- tools/perf/Makefile.config                    |   6 +-
- tools/perf/arch/riscv/Build                   |   1 +
- tools/perf/arch/riscv/Makefile                |   3 +
- tools/perf/arch/riscv/include/perf_regs.h     |  96 ++++++++++++++++++++++
- tools/perf/arch/riscv/util/Build              |   2 +
- tools/perf/arch/riscv/util/dwarf-regs.c       |  72 ++++++++++++++++
- tools/perf/arch/riscv/util/unwind-libdw.c     |  57 +++++++++++++
- 13 files changed, 482 insertions(+), 2 deletions(-)
- create mode 100644 arch/riscv/include/uapi/asm/perf_regs.h
- create mode 100644 arch/riscv/kernel/perf_callchain.c
- create mode 100644 arch/riscv/kernel/perf_regs.c
- create mode 100644 tools/arch/riscv/include/uapi/asm/perf_regs.h
- create mode 100644 tools/perf/arch/riscv/Build
- create mode 100644 tools/perf/arch/riscv/Makefile
- create mode 100644 tools/perf/arch/riscv/include/perf_regs.h
- create mode 100644 tools/perf/arch/riscv/util/Build
- create mode 100644 tools/perf/arch/riscv/util/dwarf-regs.c
- create mode 100644 tools/perf/arch/riscv/util/unwind-libdw.c
-
+> 
+> diff --git a/fs/notify/fanotify/fanotify.c b/fs/notify/fanotify/fanotify.c
+> index 6b9c27548997..eb790853844b 100644
+> --- a/fs/notify/fanotify/fanotify.c
+> +++ b/fs/notify/fanotify/fanotify.c
+> @@ -92,10 +92,17 @@ static int fanotify_get_response(struct fsnotify_group *group,
+>  
+>  	pr_debug("%s: group=%p event=%p\n", __func__, group, event);
+>  
+> -	ret = wait_event_killable(group->fanotify_data.access_waitq,
+> -				  event->state == FAN_EVENT_ANSWERED);
+> +	ret = wait_event_interruptible(group->fanotify_data.access_waitq,
+> +				       event->state == FAN_EVENT_ANSWERED);
+>  	/* Signal pending? */
+>  	if (ret < 0) {
+> +		/*
+> +		 * Force restarting a syscall so that this is mostly invisible
+> +		 * for userspace which is not prepared for handling EINTR e.g.
+> +		 * from open(2).
+> +		 */
+> +		if (ret == -ERESTARTSYS)
+> +			ret = -ERESTARTNOINTR;
+>  		spin_lock(&group->notification_lock);
+>  		/* Event reported to userspace and no answer yet? */
+>  		if (event->state == FAN_EVENT_REPORTED) {
+> -- 
+> 2.16.4
+> 
 -- 
-2.7.4
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
