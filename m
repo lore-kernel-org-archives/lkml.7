@@ -2,357 +2,139 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9569EC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 02:05:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C03C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 02:08:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C9B2206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 02:05:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1A3BE206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 02:08:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="EWY1iGKZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726579AbfDOCFd (ORCPT
+        id S1726728AbfDOCI6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 22:05:33 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:44814 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725975AbfDOCFc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 22:05:32 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 2B1A3B1DC1772B0485CC;
-        Mon, 15 Apr 2019 10:05:27 +0800 (CST)
-Received: from [127.0.0.1] (10.177.131.64) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.408.0; Mon, 15 Apr 2019
- 10:05:21 +0800
-Subject: Re: [PATCH v3 3/4] arm64: kdump: support more than one crash kernel
- regions
-To:     Mike Rapoport <rppt@linux.ibm.com>
-References: <20190409102819.121335-1-chenzhou10@huawei.com>
- <20190409102819.121335-4-chenzhou10@huawei.com>
- <20190410130917.GC17196@rapoport-lnx>
- <137bef2e-8726-fd8f-1cb0-7592074f7870@huawei.com>
- <20190414121058.GC20947@rapoport-lnx>
-CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <ebiederm@xmission.com>, <catalin.marinas@arm.com>,
-        <will.deacon@arm.com>, <akpm@linux-foundation.org>,
-        <ard.biesheuvel@linaro.org>, <horms@verge.net.au>,
-        <takahiro.akashi@linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
-        <linux-mm@kvack.org>, <wangkefeng.wang@huawei.com>
-From:   Chen Zhou <chenzhou10@huawei.com>
-Message-ID: <b5206f0c-d711-427e-256a-98b2e30c1ab0@huawei.com>
-Date:   Mon, 15 Apr 2019 10:05:18 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Sun, 14 Apr 2019 22:08:58 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:42415 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725975AbfDOCI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Apr 2019 22:08:58 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44jBkZ3phtz9s55;
+        Mon, 15 Apr 2019 12:08:54 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1555294134;
+        bh=Xzpnz0G5SbJIIery03VxJPBxt+OqGMtwpRc7d7Km5dM=;
+        h=Date:From:To:Cc:Subject:From;
+        b=EWY1iGKZwfY334ZQWBe00QclVhQyXJap377WuQP8I4rIwHe2MgohJves8jQKHKkbf
+         8nIB5goW6LElPqfrCpBQi3LEqgRRouNwMfhlOqtykG/623c5EBzHhbks6qy9JHgczs
+         d2gpBkouZPZNBZ+lAUPFPOHhDEb9GqqHmHZD0y/jN5FXvpCksKnnTDqSBb3RHTLWyK
+         xPeNRH2p9g4Blu/URaL0HVkLLMyIwuxaRAc9Qwygs0AeN5pRNaAB6cS/0qDNWo+x3r
+         yp8oTdVFvkOawYTPvNQxhbL1MbkAGo5IBjQ3evwlxNFVmxGOJI/poCCnIHU7Wpa2HJ
+         Q3HuAjYEsIzKQ==
+Date:   Mon, 15 Apr 2019 12:08:53 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Kalle Valo <kvalo@codeaurora.org>,
+        Wireless <linux-wireless@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ihab Zhaika <ihab.zhaika@intel.com>,
+        Luca Coelho <luciano.coelho@intel.com>
+Subject: linux-next: manual merge of the wireless-drivers-next tree with the
+ wireless-drivers tree
+Message-ID: <20190415120853.39e0e46a@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20190414121058.GC20947@rapoport-lnx>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
-X-Originating-IP: [10.177.131.64]
-X-CFilter-Loop: Reflected
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/NXPNfRBIc4_Zh=Iruc5coyI"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mike,
+--Sig_/NXPNfRBIc4_Zh=Iruc5coyI
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 2019/4/14 20:10, Mike Rapoport wrote:
-> Hi,
-> 
-> On Thu, Apr 11, 2019 at 08:17:43PM +0800, Chen Zhou wrote:
->> Hi Mike,
->>
->> This overall looks well.
->> Replacing memblock_cap_memory_range() with memblock_cap_memory_ranges() was what i wanted
->> to do in v1, sorry for don't express that clearly.
-> 
-> I didn't object to memblock_cap_memory_ranges() in general, I was worried
-> about it's complexity and I hoped that we could find a simpler solution.
->  
->> But there are some issues as below. After fixing this, it can work correctly.
->>
->> On 2019/4/10 21:09, Mike Rapoport wrote:
->>> Hi,
->>>
->>> On Tue, Apr 09, 2019 at 06:28:18PM +0800, Chen Zhou wrote:
->>>> After commit (arm64: kdump: support reserving crashkernel above 4G),
->>>> there may be two crash kernel regions, one is below 4G, the other is
->>>> above 4G.
->>>>
->>>> Crash dump kernel reads more than one crash kernel regions via a dtb
->>>> property under node /chosen,
->>>> linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>
->>>>
->>>> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
->>>> ---
->>>>  arch/arm64/mm/init.c     | 66 ++++++++++++++++++++++++++++++++++++++++--------
->>>>  include/linux/memblock.h |  6 +++++
->>>>  mm/memblock.c            |  7 ++---
->>>>  3 files changed, 66 insertions(+), 13 deletions(-)
->>>>
->>>> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
->>>> index 3bebddf..0f18665 100644
->>>> --- a/arch/arm64/mm/init.c
->>>> +++ b/arch/arm64/mm/init.c
->>>> @@ -65,6 +65,11 @@ phys_addr_t arm64_dma_phys_limit __ro_after_init;
->>>>  
->>>>  #ifdef CONFIG_KEXEC_CORE
->>>>  
->>>> +/* at most two crash kernel regions, low_region and high_region */
->>>> +#define CRASH_MAX_USABLE_RANGES	2
->>>> +#define LOW_REGION_IDX			0
->>>> +#define HIGH_REGION_IDX			1
->>>> +
->>>>  /*
->>>>   * reserve_crashkernel() - reserves memory for crash kernel
->>>>   *
->>>> @@ -297,8 +302,8 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
->>>>  		const char *uname, int depth, void *data)
->>>>  {
->>>>  	struct memblock_region *usablemem = data;
->>>> -	const __be32 *reg;
->>>> -	int len;
->>>> +	const __be32 *reg, *endp;
->>>> +	int len, nr = 0;
->>>>  
->>>>  	if (depth != 1 || strcmp(uname, "chosen") != 0)
->>>>  		return 0;
->>>> @@ -307,22 +312,63 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
->>>>  	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
->>>>  		return 1;
->>>>  
->>>> -	usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
->>>> -	usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
->>>> +	endp = reg + (len / sizeof(__be32));
->>>> +	while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
->>>> +		usablemem[nr].base = dt_mem_next_cell(dt_root_addr_cells, &reg);
->>>> +		usablemem[nr].size = dt_mem_next_cell(dt_root_size_cells, &reg);
->>>> +
->>>> +		if (++nr >= CRASH_MAX_USABLE_RANGES)
->>>> +			break;
->>>> +	}
->>>>  
->>>>  	return 1;
->>>>  }
->>>>  
->>>>  static void __init fdt_enforce_memory_region(void)
->>>>  {
->>>> -	struct memblock_region reg = {
->>>> -		.size = 0,
->>>> -	};
->>>> +	int i, cnt = 0;
->>>> +	struct memblock_region regs[CRASH_MAX_USABLE_RANGES];
->>>
->>> I only now noticed that fdt_enforce_memory_region() uses memblock_region to
->>> pass the ranges around. If we'd switch to memblock_type instead, the
->>> implementation of memblock_cap_memory_ranges() would be really
->>> straightforward. Can you check if the below patch works for you? 
->>>
->>> >From e476d584098e31273af573e1a78e308880c5cf28 Mon Sep 17 00:00:00 2001
->>> From: Mike Rapoport <rppt@linux.ibm.com>
->>> Date: Wed, 10 Apr 2019 16:02:32 +0300
->>> Subject: [PATCH] memblock: extend memblock_cap_memory_range to multiple ranges
->>>
->>> The memblock_cap_memory_range() removes all the memory except the range
->>> passed to it. Extend this function to recieve memblock_type with the
->>> regions that should be kept. This allows switching to simple iteration over
->>> memblock arrays with 'for_each_mem_range' to remove the unneeded memory.
->>>
->>> Enable use of this function in arm64 for reservation of multile regions for
->>> the crash kernel.
->>>
->>> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
->>> ---
->>>  arch/arm64/mm/init.c     | 34 ++++++++++++++++++++++++----------
->>>  include/linux/memblock.h |  2 +-
->>>  mm/memblock.c            | 45 ++++++++++++++++++++++-----------------------
->>>  3 files changed, 47 insertions(+), 34 deletions(-)
->>>
->>>  
->>> -void __init memblock_cap_memory_range(phys_addr_t base, phys_addr_t size)
->>> +void __init memblock_cap_memory_ranges(struct memblock_type *regions_to_keep)
->>>  {
->>> -	int start_rgn, end_rgn;
->>> -	int i, ret;
->>> -
->>> -	if (!size)
->>> -		return;
->>> -
->>> -	ret = memblock_isolate_range(&memblock.memory, base, size,
->>> -						&start_rgn, &end_rgn);
->>> -	if (ret)
->>> -		return;
->>> -
->>> -	/* remove all the MAP regions */
->>> -	for (i = memblock.memory.cnt - 1; i >= end_rgn; i--)
->>> -		if (!memblock_is_nomap(&memblock.memory.regions[i]))
->>> -			memblock_remove_region(&memblock.memory, i);
->>> +	phys_addr_t start, end;
->>> +	u64 i;
->>>  
->>> -	for (i = start_rgn - 1; i >= 0; i--)
->>> -		if (!memblock_is_nomap(&memblock.memory.regions[i]))
->>> -			memblock_remove_region(&memblock.memory, i);
->>> +	/* truncate memory while skipping NOMAP regions */
->>> +	for_each_mem_range(i, &memblock.memory, regions_to_keep, NUMA_NO_NODE,
->>> +			   MEMBLOCK_NONE, &start, &end, NULL)
->>> +		memblock_remove(start, end);
->>
->> 1. use memblock_remove(start, size) instead of memblock_remove(start, end).
->>
->> 2. There is a another hidden issue. We couldn't mix __next_mem_range()(called by for_each_mem_range) operation
->> with remove operation because __next_mem_range() records the index of last time. If we do remove between
->> __next_mem_range(), the index may be mess.
-> 
-> Oops, I've really missed that :)
->  
->> Therefore, we could do remove operation after for_each_mem_range like this, solution A:
->>  void __init memblock_cap_memory_ranges(struct memblock_type *regions_to_keep)
->>  {
->> -	phys_addr_t start, end;
->> -	u64 i;
->> +	phys_addr_t start[INIT_MEMBLOCK_RESERVED_REGIONS * 2];
->> +	phys_addr_t end[INIT_MEMBLOCK_RESERVED_REGIONS * 2];
->> +	u64 i, nr = 0;
->>
->>  	/* truncate memory while skipping NOMAP regions */
->>  	for_each_mem_range(i, &memblock.memory, regions_to_keep, NUMA_NO_NODE,
->> -			   MEMBLOCK_NONE, &start, &end, NULL)
->> -		memblock_remove(start, end);
->> +			   MEMBLOCK_NONE, &start[nr], &end[nr], NULL)
->> +		nr++;
->> +	for (i = 0; i < nr; i++)
->> +		memblock_remove(start[i], end[i] - start[i]);
->>
->>  	/* truncate the reserved regions */
->> +	nr = 0;
->>  	for_each_mem_range(i, &memblock.reserved, regions_to_keep, NUMA_NO_NODE,
->> -			   MEMBLOCK_NONE, &start, &end, NULL)
->> -		memblock_remove_range(&memblock.reserved, start, end);
->> +			   MEMBLOCK_NONE, &start[nr], &end[nr], NULL)
->> +		nr++;
->> +	for (i = 0; i < nr; i++)
->> +		memblock_remove_range(&memblock.reserved, start[i],
->> +				end[i] - start[i]);
->>  }
->>
->> But a warning occurs when compiling:
->>   CALL    scripts/atomic/check-atomics.sh
->>   CALL    scripts/checksyscalls.sh
->>   CHK     include/generated/compile.h
->>   CC      mm/memblock.o
->> mm/memblock.c: In function ‘memblock_cap_memory_ranges’:
->> mm/memblock.c:1635:1: warning: the frame size of 36912 bytes is larger than 2048 bytes [-Wframe-larger-than=]
->>  }
->>
->> another solution is my implementation in v1, solution B:
->> +void __init memblock_cap_memory_ranges(struct memblock_type *regions_to_keep)
->> +{
->> +   int start_rgn[INIT_MEMBLOCK_REGIONS], end_rgn[INIT_MEMBLOCK_REGIONS];
->> +   int i, j, ret, nr = 0;
->> +   memblock_region *regs = regions_to_keep->regions;
->> +
->> +   nr = regions_to_keep -> cnt;
->> +   if (!nr)
->> +       return;
->> +
->> +   /* remove all the MAP regions */
->> +   for (i = memblock.memory.cnt - 1; i >= end_rgn[nr - 1]; i--)
->> +       if (!memblock_is_nomap(&memblock.memory.regions[i]))
->> +           memblock_remove_region(&memblock.memory, i);
->> +
->> +   for (i = nr - 1; i > 0; i--)
->> +       for (j = start_rgn[i] - 1; j >= end_rgn[i - 1]; j--)
->> +           if (!memblock_is_nomap(&memblock.memory.regions[j]))
->> +               memblock_remove_region(&memblock.memory, j);
->> +
->> +   for (i = start_rgn[0] - 1; i >= 0; i--)
->> +       if (!memblock_is_nomap(&memblock.memory.regions[i]))
->> +           memblock_remove_region(&memblock.memory, i);
->> +
->> +   /* truncate the reserved regions */
->> +   memblock_remove_range(&memblock.reserved, 0, regs[0].base);
->> +
->> +   for (i = nr - 1; i > 0; i--)
->> +       memblock_remove_range(&memblock.reserved,
->> +               regs[i - 1].base + regs[i - 1].size,
->> +		regs[i].base - regs[i - 1].base - regs[i - 1].size);
->> +
->> +   memblock_remove_range(&memblock.reserved,
->> +           regs[nr - 1].base + regs[nr - 1].size, PHYS_ADDR_MAX);
->> +}
->>
->> solution A: 	phys_addr_t start[INIT_MEMBLOCK_RESERVED_REGIONS * 2];
->> 		phys_addr_t end[INIT_MEMBLOCK_RESERVED_REGIONS * 2];
->> start, end is physical addr
->>
->> solution B: 	int start_rgn[INIT_MEMBLOCK_REGIONS], end_rgn[INIT_MEMBLOCK_REGIONS];
->> start_rgn, end_rgn is rgn index		
->>
->> Solution B do less remove operations and with no warning comparing to solution A.
->> I think solution B is better, could you give some suggestions?
->  
-> Solution B is indeed better that solution A, but I'm still worried by
-> relatively large arrays on stack and the amount of loops :(
-> 
-> The very least we could do is to call memblock_cap_memory_range() to drop
-> the memory before and after the ranges we'd like to keep.
+Hi all,
 
-1. relatively large arrays
-As my said above, the start_rgn, end_rgn is rgn index, we could use unsigned char type.
+Today's linux-next merge of the wireless-drivers-next tree got a
+conflict in:
 
-2. loops
-Loops always exist, and the solution with fewer loops may be just encapsulated well.
+  drivers/net/wireless/intel/iwlwifi/pcie/drv.c
 
-Thanks,
-Chen Zhou
+between commits:
 
-> 
->>>  
->>>  	/* truncate the reserved regions */
->>> -	memblock_remove_range(&memblock.reserved, 0, base);
->>> -	memblock_remove_range(&memblock.reserved,
->>> -			base + size, PHYS_ADDR_MAX);
->>> +	for_each_mem_range(i, &memblock.reserved, regions_to_keep, NUMA_NO_NODE,
->>> +			   MEMBLOCK_NONE, &start, &end, NULL)
->>> +		memblock_remove_range(&memblock.reserved, start, end);
->>
->> There are the same issues as above.
->>
->>>  }
->>>  
->>>  void __init memblock_mem_limit_remove_map(phys_addr_t limit)
->>>  {
->>> +	struct memblock_region rgn = {
->>> +		.base = 0,
->>> +	};
->>> +
->>> +	struct memblock_type region_to_keep = {
->>> +		.cnt = 1,
->>> +		.max = 1,
->>> +		.regions = &rgn,
->>> +	};
->>> +
->>>  	phys_addr_t max_addr;
->>>  
->>>  	if (!limit)
->>> @@ -1646,7 +1644,8 @@ void __init memblock_mem_limit_remove_map(phys_addr_t limit)
->>>  	if (max_addr == PHYS_ADDR_MAX)
->>>  		return;
->>>  
->>> -	memblock_cap_memory_range(0, max_addr);
->>> +	region_to_keep.regions[0].size = max_addr;
->>> +	memblock_cap_memory_ranges(&region_to_keep);
->>>  }
->>>  
->>>  static int __init_memblock memblock_search(struct memblock_type *type, phys_addr_t addr)
->>>
->>
->> Thanks,
->> Chen Zhou
->>
-> 
+  0d5bad14226a ("iwlwifi: rename structs to fit the new names")
+  972d8e137779 ("iwlwifi: add new 0x2723/0x2080 card for 22000")
 
+from the wireless-drivers tree and commit:
+
+  ef8a913766cd ("iwlwifi: remove misconfigured pci ids from 22260 series")
+
+from the wireless-drivers-next tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/net/wireless/intel/iwlwifi/pcie/drv.c
+index 9f1af8da9dc1,0329b626ada6..000000000000
+--- a/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
++++ b/drivers/net/wireless/intel/iwlwifi/pcie/drv.c
+@@@ -953,19 -953,15 +953,15 @@@ static const struct pci_device_id iwl_h
+  	{IWL_PCI_DEVICE(0xA0F0, 0x1652, killer1650i_2ax_cfg_qu_b0_hr_b0)},
+  	{IWL_PCI_DEVICE(0xA0F0, 0x4070, iwl_ax101_cfg_qu_hr)},
+ =20
+ -	{IWL_PCI_DEVICE(0x2723, 0x0080, iwl22260_2ax_cfg)},
+ -	{IWL_PCI_DEVICE(0x2723, 0x0084, iwl22260_2ax_cfg)},
+ -	{IWL_PCI_DEVICE(0x2723, 0x0088, iwl22260_2ax_cfg)},
+ -	{IWL_PCI_DEVICE(0x2723, 0x008C, iwl22260_2ax_cfg)},
+ +	{IWL_PCI_DEVICE(0x2723, 0x0080, iwl_ax200_cfg_cc)},
+ +	{IWL_PCI_DEVICE(0x2723, 0x0084, iwl_ax200_cfg_cc)},
+ +	{IWL_PCI_DEVICE(0x2723, 0x0088, iwl_ax200_cfg_cc)},
+ +	{IWL_PCI_DEVICE(0x2723, 0x008C, iwl_ax200_cfg_cc)},
+  	{IWL_PCI_DEVICE(0x2723, 0x1653, killer1650w_2ax_cfg)},
+  	{IWL_PCI_DEVICE(0x2723, 0x1654, killer1650x_2ax_cfg)},
+ -	{IWL_PCI_DEVICE(0x2723, 0x2080, iwl22260_2ax_cfg)},
+ -	{IWL_PCI_DEVICE(0x2723, 0x4080, iwl22260_2ax_cfg)},
+ -	{IWL_PCI_DEVICE(0x2723, 0x4088, iwl22260_2ax_cfg)},
+ +	{IWL_PCI_DEVICE(0x2723, 0x2080, iwl_ax200_cfg_cc)},
+ +	{IWL_PCI_DEVICE(0x2723, 0x4080, iwl_ax200_cfg_cc)},
+ +	{IWL_PCI_DEVICE(0x2723, 0x4088, iwl_ax200_cfg_cc)},
+-=20
+- 	{IWL_PCI_DEVICE(0x1a56, 0x1653, killer1650w_2ax_cfg)},
+- 	{IWL_PCI_DEVICE(0x1a56, 0x1654, killer1650x_2ax_cfg)},
+-=20
+  	{IWL_PCI_DEVICE(0x2725, 0x0090, iwlax210_2ax_cfg_so_hr_a0)},
+  	{IWL_PCI_DEVICE(0x7A70, 0x0090, iwlax210_2ax_cfg_so_hr_a0)},
+  	{IWL_PCI_DEVICE(0x7A70, 0x0310, iwlax210_2ax_cfg_so_hr_a0)},
+
+--Sig_/NXPNfRBIc4_Zh=Iruc5coyI
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyz57UACgkQAVBC80lX
+0GycRwf/TJ5j6jINo+rxZJmG/3J9ND8BMB4ej/SDCYiVCVv+7Og3CY1XcKRw8t5C
+NPD9CwpFbPdIEiaxSVkml5UQyDOH7xdspodUyBxz8602E/0kGU/hmU4bFfqf5sa3
+y3NNcSBeVd8tQcfcswhbtmT4aH5NKa2B277wpCCE31AmcSVNuArSGcjE0vpnZGvI
+sPmz/Gc202aXdmJ3k3Q8i2hgwZ6J6ZF76dkJQskRhGua7oZTsBEpzmeTtmkg/1eL
+pKuyn+d9wiwpX8kvhUXxVBvNXxvSQ3QF2hfJxCfHoaRI3aLD+E2TgCENLWIdw4H3
+OLvHpCAHDkBRxPcy4783PjmaqyacGw==
+=99KX
+-----END PGP SIGNATURE-----
+
+--Sig_/NXPNfRBIc4_Zh=Iruc5coyI--
