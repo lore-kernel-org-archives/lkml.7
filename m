@@ -6,37 +6,37 @@ X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1298C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 06:33:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DF02C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 06:33:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE78820825
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 06:33:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E322820825
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 06:33:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LYAEYuMh"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="SmjV52WJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726302AbfDOGdV (ORCPT
+        id S1726308AbfDOGdz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 02:33:21 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:39244 "EHLO
+        Mon, 15 Apr 2019 02:33:55 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:41064 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbfDOGdV (ORCPT
+        with ESMTP id S1725796AbfDOGdz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 02:33:21 -0400
+        Mon, 15 Apr 2019 02:33:55 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
         :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=fTpJKUXbuUL7KBfPF6XhuEv9pXvxMlQmz20aOroByok=; b=LYAEYuMhBvvLtAlfrkcl2v1Hv
-        J/diuhxsyq4qMmmKNKu4xKSxq5I3IO5ZDmyYJTP3+mWn0X/NJlnxpPV9iIcPt/jxaiuU6sRlC5AOc
-        AKjUHt6v2z2n+4VpqTNOYY8c9vuCqcVPoeEOla5pCEJliS1j99N3glVSRx+R593PXpCgxi651UYZE
-        F8UQBLASAE4bXbt4+VWHcjatc7WGerYL3LRZgIFsBRtNVesV5OABDs+Fbq52qUzC+9Zu82HzHN+/r
-        vI8fPO5j8s1ydWtxojfIB6+dyJi2Pj27AfZ2UnVZu1/9tRJP82e1ynIdIjewgJnR5SYSrv6/hIrio
-        Iy7KtgJ1A==;
+         bh=pNf9pfvgLdccEDVgSHx2Yxh5Htmh35hVEg69OaFdf8k=; b=SmjV52WJpL/Qv7ymPr/M5ytTu
+        Y28R9e7uC2IxTOfzDQv6azgmlL16zED6ZddBalcYpYFWirlqtRZyECYYLLuUfNliGqxpowruzoJzv
+        y7JQmqP6k08iCHrZhMSe5/jqXmtZ7DIh44lKS1W33wicmljUEPyfxguv5cYbTwYnW3UF3xMn+6mlT
+        bbj46TEuL22Q5eIg8QpC0zccRCdNwqxLlD0PUSLYooj6ejcNv2UwXU1Bb68Y4JrwCweGRqfC2YTLG
+        JqiwBNBd8LT+6nMdRmAxe6t6LyZyB9bTPopWyRhuqxCte/nKyLQT5Ghji5j7g3hG81IkpBX9UVOny
+        EJg6AbwSg==;
 Received: from hch by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hFvB8-0002dH-0g; Mon, 15 Apr 2019 06:33:18 +0000
-Date:   Sun, 14 Apr 2019 23:33:17 -0700
+        id 1hFvBf-0002x4-LD; Mon, 15 Apr 2019 06:33:51 +0000
+Date:   Sun, 14 Apr 2019 23:33:51 -0700
 From:   Christoph Hellwig <hch@infradead.org>
 To:     Tom Murphy <tmurphy@arista.com>
 Cc:     iommu@lists.linux-foundation.org, Heiko Stuebner <heiko@sntech.de>,
@@ -52,14 +52,14 @@ Cc:     iommu@lists.linux-foundation.org, Heiko Stuebner <heiko@sntech.de>,
         Thomas Gleixner <tglx@linutronix.de>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         murphyt7@tcd.ie, Robin Murphy <robin.murphy@arm.com>
-Subject: Re: [PATCH 4/9] iommu/dma-iommu: Add iommu_dma_map_page_coherent
-Message-ID: <20190415063317.GC1377@infradead.org>
+Subject: Re: [PATCH 5/9] iommu/amd: Implement .flush_np_cache
+Message-ID: <20190415063351.GD1377@infradead.org>
 References: <20190411184741.27540-1-tmurphy@arista.com>
- <20190411184741.27540-5-tmurphy@arista.com>
+ <20190411184741.27540-6-tmurphy@arista.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190411184741.27540-5-tmurphy@arista.com>
+In-Reply-To: <20190411184741.27540-6-tmurphy@arista.com>
 User-Agent: Mutt/1.9.2 (2017-12-15)
 X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
@@ -67,31 +67,12 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> @@ -693,7 +694,19 @@ dma_addr_t iommu_dma_map_page(struct device *dev, struct page *page,
->  		unsigned long offset, size_t size, int prot)
->  {
->  	return __iommu_dma_map(dev, page_to_phys(page) + offset, size, prot,
-> -			iommu_get_dma_domain(dev));
-> +			iommu_get_dma_domain(dev), dma_get_mask(dev));
-> +}
-> +
-> +dma_addr_t iommu_dma_map_page_coherent(struct device *dev, struct page *page,
-> +		unsigned long offset, size_t size, int prot)
+> +static void amd_iommu_flush_np_cache(struct iommu_domain *domain,
+> +		unsigned long iova, size_t size)
 > +{
-
-Note that my tree pointed to above removes the iommu_dma_map_page
-wrapper.  I think for the coherent mappign we should also just
-call __iommu_dma_map directly and not introduce another wrapper.
-
-> +	dma_addr_t dma_mask = dev->coherent_dma_mask;
+> +	struct protection_domain *dom = to_pdomain(domain);
 > +
-> +	if (!dma_mask)
-> +		dma_mask = dma_get_mask(dev);
-> +
-> +	return __iommu_dma_map(dev, page_to_phys(page) + offset, size, prot,
-> +			iommu_get_dma_domain(dev), dma_mask);
->  }
+> +	if (unlikely(amd_iommu_np_cache)) {
 
-In the DMA API there is no fallback when the coherent_dma_mask is not
-set.  While various bits of legacy code do that we should not copy it
-to new code.
+Is this case really so unlikely that it needs a static branch prediction
+hint?
