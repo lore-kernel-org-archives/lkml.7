@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB11C282DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:04:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AF10C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:04:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 700EC2087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:04:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E1A5D218EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:04:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355049;
-	bh=rKpTxdeomcGyDiOx+zPArMqjPIXal4NVG14FKgCkhME=;
+	s=default; t=1555355052;
+	bh=CrZYAjP2WGzdACf1lr9S+LIp/ticMjMkB1aqPe/IXVU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Q+fZ4uLMuxorqeMbQ4XLM2V3NaA9MMC7EGH18mcimLbKR1ccM5osqPRUEd8q7o8uK
-	 pQHxiLUyOlz/dUwAZESCVkDQ7hTkYM+ZqyLoaN0IynWGgMSy8qdpd9piaxhFrBvTq3
-	 cg/fDSOCPDxjQGTVwDxpQ7lngfkVR9cl8N8RGXwo=
+	b=qZhWFqOdOH+ukbWrzYeInLiikMsFD7Tbb420v8O/WWDEQC4xUWaR9oCpZcJt3lmu7
+	 9IfcSfJtSBp1Kpx91ZsK0OMINiOXXEJ7xpKZKhQiYsK4/6JxDUBi22j8QLnzSycFBV
+	 VEmjYvEVIbnu749IMPFEL7FhyKGhuKLHJnYfQYT8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729456AbfDOTEI (ORCPT
+        id S1729470AbfDOTEK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:04:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36658 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:04:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36778 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729442AbfDOTEG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:04:06 -0400
+        id S1728284AbfDOTEI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:04:08 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 067E9218A1;
-        Mon, 15 Apr 2019 19:04:04 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9230321902;
+        Mon, 15 Apr 2019 19:04:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355045;
-        bh=rKpTxdeomcGyDiOx+zPArMqjPIXal4NVG14FKgCkhME=;
+        s=default; t=1555355048;
+        bh=CrZYAjP2WGzdACf1lr9S+LIp/ticMjMkB1aqPe/IXVU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=As/i/ke5Vos5aVJdn5HdW8+hmzwqkEuk04uzHYjcMwlKT+rEC+Iwb4I1Pjg26OMyh
-         rcETlB6qt6i+MMqGk7YGWRXoLaX+Jp6cRobA6lDL1/SSzgwuUZHTz4/ykxJDcE0Osg
-         QqYFdnTjriMBhObhxVEtzSb+R4OgObTSRHqBOSl8=
+        b=fKlOWhLtc0Sv+B4Mr3Qey6pla6MmRCNRofleAWVw4s1HBwQjCi2/Y4b2tZFPWl3UB
+         2YFYZYx1jjloUdX/avONjtuPRECV5THY6FL9hg3mjRA1r/6gRPRwBgLiIIAU7/DGNv
+         ayvv4tqSe7bMGbPsSWudxkE3O1nrSkGznQkXglI8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
-        Anand Jain <anand.jain@oracle.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.14 48/69] btrfs: prop: fix vanished compression property after failed set
-Date:   Mon, 15 Apr 2019 20:59:06 +0200
-Message-Id: <20190415183733.955422129@linuxfoundation.org>
+        stable@vger.kernel.org, linux-block@vger.kernel.org,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 4.14 49/69] block: do not leak memory in bio_copy_user_iov()
+Date:   Mon, 15 Apr 2019 20:59:07 +0200
+Message-Id: <20190415183734.095752921@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183726.036654568@linuxfoundation.org>
 References: <20190415183726.036654568@linuxfoundation.org>
@@ -59,53 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anand Jain <anand.jain@oracle.com>
+From: Jérôme Glisse <jglisse@redhat.com>
 
-commit 272e5326c7837697882ce3162029ba893059b616 upstream.
+commit a3761c3c91209b58b6f33bf69dd8bb8ec0c9d925 upstream.
 
-The compression property resets to NULL, instead of the old value if we
-fail to set the new compression parameter.
+When bio_add_pc_page() fails in bio_copy_user_iov() we should free
+the page we just allocated otherwise we are leaking it.
 
-  $ btrfs prop get /btrfs compression
-    compression=lzo
-  $ btrfs prop set /btrfs compression zli
-    ERROR: failed to set compression for /btrfs: Invalid argument
-  $ btrfs prop get /btrfs compression
-
-This is because the compression property ->validate() is successful for
-'zli' as the strncmp() used the length passed from the userspace.
-
-Fix it by using the expected string length in strncmp().
-
-Fixes: 63541927c8d1 ("Btrfs: add support for inode properties")
-Fixes: 5c1aab1dd544 ("btrfs: Add zstd support")
-CC: stable@vger.kernel.org # 4.14+
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Signed-off-by: Anand Jain <anand.jain@oracle.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Cc: linux-block@vger.kernel.org
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: stable@vger.kernel.org
+Reviewed-by: Chaitanya Kulkarni <chaitanya.kulkarni@wdc.com>
+Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
+Signed-off-by: Jens Axboe <axboe@kernel.dk>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/props.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ block/bio.c |    5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
---- a/fs/btrfs/props.c
-+++ b/fs/btrfs/props.c
-@@ -386,11 +386,11 @@ int btrfs_subvol_inherit_props(struct bt
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -1280,8 +1280,11 @@ struct bio *bio_copy_user_iov(struct req
+ 			}
+ 		}
  
- static int prop_compression_validate(const char *value, size_t len)
- {
--	if (!strncmp("lzo", value, len))
-+	if (!strncmp("lzo", value, 3))
- 		return 0;
--	else if (!strncmp("zlib", value, len))
-+	else if (!strncmp("zlib", value, 4))
- 		return 0;
--	else if (!strncmp("zstd", value, len))
-+	else if (!strncmp("zstd", value, 4))
- 		return 0;
+-		if (bio_add_pc_page(q, bio, page, bytes, offset) < bytes)
++		if (bio_add_pc_page(q, bio, page, bytes, offset) < bytes) {
++			if (!map_data)
++				__free_page(page);
+ 			break;
++		}
  
- 	return -EINVAL;
+ 		len -= bytes;
+ 		offset = 0;
 
 
