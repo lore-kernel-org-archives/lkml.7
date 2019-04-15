@@ -2,134 +2,144 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 01F2FC10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 17:38:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F916C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 17:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BB5122073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 17:38:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="e50MCywd";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="e50MCywd"
+	by mail.kernel.org (Postfix) with ESMTP id 2C2AC2073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 17:39:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728076AbfDORiS (ORCPT
+        id S1728063AbfDORja (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 13:38:18 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:33002 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728048AbfDORiQ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 13:38:16 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id DD6376155E; Mon, 15 Apr 2019 17:38:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1555349894;
-        bh=EPRjzbK2YO1ZdVR6Hhmsw5ZEruqZqn5nBe33XtS1EuY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e50MCywdbbCMyCCAB7kwCnMxUT5jNc+l7va1/lEr1q9XXtaKs6UlJzFYmwX0y8LFs
-         cnTTxuLEwoazqB05o5BbdwKAdxI3iPCYTe7e8uml5y87j3PTMcZm6O3a1n+eVjgBCj
-         TBY+CSgLnWHZ7/fK9tIh84rxoFIUHo5bKpIKkF4A=
-Received: from blr-ubuntu-41.ap.qualcomm.com (blr-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.18.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: vivek.gautam@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 9E4EE61194;
-        Mon, 15 Apr 2019 17:38:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1555349894;
-        bh=EPRjzbK2YO1ZdVR6Hhmsw5ZEruqZqn5nBe33XtS1EuY=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=e50MCywdbbCMyCCAB7kwCnMxUT5jNc+l7va1/lEr1q9XXtaKs6UlJzFYmwX0y8LFs
-         cnTTxuLEwoazqB05o5BbdwKAdxI3iPCYTe7e8uml5y87j3PTMcZm6O3a1n+eVjgBCj
-         TBY+CSgLnWHZ7/fK9tIh84rxoFIUHo5bKpIKkF4A=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 9E4EE61194
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=vivek.gautam@codeaurora.org
-From:   Vivek Gautam <vivek.gautam@codeaurora.org>
-To:     joro@8bytes.org, will.deacon@arm.com, robin.murphy@arm.com,
-        iommu@lists.linux-foundation.org
-Cc:     vivek.gautam@codeaurora.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-arm-msm@vger.kernel.org
-Subject: [PATCH 1/1] iommu/arm-smmu: Log CBFRSYNRA register on context fault
-Date:   Mon, 15 Apr 2019 23:07:58 +0530
-Message-Id: <20190415173758.22112-1-vivek.gautam@codeaurora.org>
-X-Mailer: git-send-email 2.16.1.72.g5be1f00a9a70
-In-Reply-To: <4cfc7b3b-bc74-6b37-19f5-40b6394fa762@codeaurora.org>
-References: <4cfc7b3b-bc74-6b37-19f5-40b6394fa762@codeaurora.org>
+        Mon, 15 Apr 2019 13:39:30 -0400
+Received: from mga12.intel.com ([192.55.52.136]:32934 "EHLO mga12.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726980AbfDORja (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 13:39:30 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Apr 2019 10:39:29 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,354,1549958400"; 
+   d="scan'208,223";a="291762326"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
+  by orsmga004.jf.intel.com with ESMTP; 15 Apr 2019 10:39:29 -0700
+Date:   Mon, 15 Apr 2019 10:39:29 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Paolo Bonzini <pbonzini@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Subject: Re: [PATCH] KVM: nVMX: always use early vmcs check when EPT is
+ disabled
+Message-ID: <20190415173929.GG24010@linux.intel.com>
+References: <1555337156-37142-1-git-send-email-pbonzini@redhat.com>
+ <20190415173513.GF24010@linux.intel.com>
+MIME-Version: 1.0
+Content-Type: multipart/mixed; boundary="qlTNgmc+xy1dBmNv"
+Content-Disposition: inline
+In-Reply-To: <20190415173513.GF24010@linux.intel.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bits[15:0] in CBFRSYNRA register contain information about
-StreamID of the incoming transaction that generated the
-fault. Dump CBFRSYNRA register to get this info.
-This is specially useful in a distributed SMMU architecture
-where multiple masters are connected to the SMMU.
-SID information helps to quickly identify the faulting
-master device.
 
-Signed-off-by: Vivek Gautam <vivek.gautam@codeaurora.org>
+--qlTNgmc+xy1dBmNv
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+
+On Mon, Apr 15, 2019 at 10:35:13AM -0700, Sean Christopherson wrote:
+> On Mon, Apr 15, 2019 at 04:05:56PM +0200, Paolo Bonzini wrote:
+> > The remaining failures of vmx.flat when EPT is disabled are caused by
+> > incorrectly reflecting VMfails to the L1 hypervisor.  What happens is
+> > that nested_vmx_restore_host_state corrupts the guest CR3, reloading it
+> > with the host's shadow CR3 instead, because it blindly loads GUEST_CR3
+> > from the vmcs01.
+> > 
+> > For simplicity let's just always use hardware VMCS checks when EPT is
+> > disabled.  This way, nested_vmx_restore_host_state is not reached at
+> > all (or at least shouldn't be reached).
+> 
+> At the risk of getting too clever, we can handle this scenario by stashing
+> L1's CR3 in vmcs01.GUEST_CR3 immediately prior to loading L2's state.
+> 
+> The attached patch passes vmx.flat with ept=0, haven't tested it beyond
+> that.
+
+Gah, forgot to regenerate the patch, correct version attached...
+
+--qlTNgmc+xy1dBmNv
+Content-Type: text/x-diff; charset=us-ascii
+Content-Disposition: attachment; filename="0001-KVM-nVMX-Stash-L1-s-CR3-in-vmcs01.GUEST_CR3-on-neste.patch"
+
+From 332242a1f340af2bd313e5a5622985bdafae340f Mon Sep 17 00:00:00 2001
+From: Sean Christopherson <sean.j.christopherson@intel.com>
+Date: Mon, 15 Apr 2019 10:06:22 -0700
+Subject: [PATCH] KVM: nVMX: Stash L1's CR3 in vmcs01.GUEST_CR3 on nested entry
+ w/o EPT
+
+KVM does not have 100% coverage of VMX consistency checks, i.e. some
+checks that cause VM-Fail may only be detected by hardware during a
+nested VM-Entry.  In such a case, KVM must restore L1's state to the
+pre-VM-Enter state as L2's state has already been loaded into KVM's
+software model.
+
+L1's CR3 and PDPTRs in particular are loaded from vmcs01.GUEST_*.  But
+when EPT is disabled, the associated fields hold KVM's shadow values,
+not L1's "real" values.  Fortunately, when EPT is disabled the PDPTRs
+come from memory, i.e. are not cached in the VMCS.  Which leaves CR3
+as the sole anomaly.  Handle CR3 by overwriting vmcs01.GUEST_CR3 with
+L1's CR3 during the nested VM-Entry when EPT is disabled *and* nested
+early checks are disabled, so that nested_vmx_restore_host_state() will
+naturally restore the correct vcpu->arch.cr3 from vmcs01.GUEST_CR3.
+
+Note, these shenanigans work because nested_vmx_restore_host_state()
+does a full kvm_mmu_reset_context(), i.e. unloads the current MMU,
+which guarantees vmcs01.GUEST_CR3 will be rewritten with a new shadow
+CR3 prior to re-entering L1.  Writing vmcs01.GUEST_CR3 is done if and
+only if nested early checks are disabled as "late" VM-Fail should never
+happen in that case (KVM WARNs), and the conditional write avoids the
+need to restore the correct GUEST_CR3 when nested_vmx_check_vmentry_hw()
+fails.
+
+Reported-by: Paolo Bonzini <pbonzini@redhat.com>
+Fixes: bd18bffca353 ("KVM: nVMX: restore host state in nested_vmx_vmexit for VMFail")
+Cc: stable@vger.kernel.org
+Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
 ---
+ arch/x86/kvm/vmx/nested.c | 5 ++++-
+ 1 file changed, 4 insertions(+), 1 deletion(-)
 
-V1 of the patch available @
-https://lore.kernel.org/patchwork/patch/1061615/
-
-Changes from v1:
- - Dump the raw register value of CBFRSYNRA register in the
-   context fault log rather than extracting the SID inforamtion
-   and dumping that.
-
- drivers/iommu/arm-smmu-regs.h | 2 ++
- drivers/iommu/arm-smmu.c      | 8 ++++++--
- 2 files changed, 8 insertions(+), 2 deletions(-)
-
-diff --git a/drivers/iommu/arm-smmu-regs.h b/drivers/iommu/arm-smmu-regs.h
-index a1226e4ab5f8..e9132a926761 100644
---- a/drivers/iommu/arm-smmu-regs.h
-+++ b/drivers/iommu/arm-smmu-regs.h
-@@ -147,6 +147,8 @@ enum arm_smmu_s2cr_privcfg {
- #define CBAR_IRPTNDX_SHIFT		24
- #define CBAR_IRPTNDX_MASK		0xff
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index e5418f78a249..196f33c0e707 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -2982,6 +2982,8 @@ int nested_vmx_enter_non_root_mode(struct kvm_vcpu *vcpu, bool from_vmentry)
+ 	if (kvm_mpx_supported() &&
+ 		!(vmcs12->vm_entry_controls & VM_ENTRY_LOAD_BNDCFGS))
+ 		vmx->nested.vmcs01_guest_bndcfgs = vmcs_read64(GUEST_BNDCFGS);
++	if (!enable_ept && !nested_early_check)
++		vmcs_writel(GUEST_CR3, vcpu->arch.cr3);
  
-+#define ARM_SMMU_GR1_CBFRSYNRA(n)	(0x400 + ((n) << 2))
-+
- #define ARM_SMMU_GR1_CBA2R(n)		(0x800 + ((n) << 2))
- #define CBA2R_RW64_32BIT		(0 << 0)
- #define CBA2R_RW64_64BIT		(1 << 0)
-diff --git a/drivers/iommu/arm-smmu.c b/drivers/iommu/arm-smmu.c
-index 045d93884164..a4773e8c6b0e 100644
---- a/drivers/iommu/arm-smmu.c
-+++ b/drivers/iommu/arm-smmu.c
-@@ -575,7 +575,9 @@ static irqreturn_t arm_smmu_context_fault(int irq, void *dev)
- 	struct arm_smmu_domain *smmu_domain = to_smmu_domain(domain);
- 	struct arm_smmu_cfg *cfg = &smmu_domain->cfg;
- 	struct arm_smmu_device *smmu = smmu_domain->smmu;
-+	void __iomem *gr1_base = ARM_SMMU_GR1(smmu);
- 	void __iomem *cb_base;
-+	u32 cbfrsynra;
+ 	vmx_switch_vmcs(vcpu, &vmx->nested.vmcs02);
  
- 	cb_base = ARM_SMMU_CB(smmu, cfg->cbndx);
- 	fsr = readl_relaxed(cb_base + ARM_SMMU_CB_FSR);
-@@ -585,10 +587,12 @@ static irqreturn_t arm_smmu_context_fault(int irq, void *dev)
+@@ -3802,7 +3804,8 @@ static void nested_vmx_restore_host_state(struct kvm_vcpu *vcpu)
+ 	 * VMFail, like everything else we just need to ensure our
+ 	 * software model is up-to-date.
+ 	 */
+-	ept_save_pdptrs(vcpu);
++	if (enable_ept)
++		ept_save_pdptrs(vcpu);
  
- 	fsynr = readl_relaxed(cb_base + ARM_SMMU_CB_FSYNR0);
- 	iova = readq_relaxed(cb_base + ARM_SMMU_CB_FAR);
-+	cbfrsynra = readl_relaxed(gr1_base +
-+				  ARM_SMMU_GR1_CBFRSYNRA(cfg->cbndx));
+ 	kvm_mmu_reset_context(vcpu);
  
- 	dev_err_ratelimited(smmu->dev,
--	"Unhandled context fault: fsr=0x%x, iova=0x%08lx, fsynr=0x%x, cb=%d\n",
--			    fsr, iova, fsynr, cfg->cbndx);
-+	"Unhandled context fault: fsr=0x%x, iova=0x%08lx, fsynr=0x%x, cbfrsynra = 0x%x, cb=%d\n",
-+			    fsr, iova, fsynr, cbfrsynra, cfg->cbndx);
- 
- 	writel(fsr, cb_base + ARM_SMMU_CB_FSR);
- 	return IRQ_HANDLED;
 -- 
-QUALCOMM INDIA, on behalf of Qualcomm Innovation Center, Inc. is a member
-of Code Aurora Forum, hosted by The Linux Foundation
+2.21.0
 
+
+--qlTNgmc+xy1dBmNv--
