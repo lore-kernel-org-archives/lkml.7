@@ -2,97 +2,106 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8209CC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:18:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B32D3C10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:19:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 589DB20818
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:18:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8F0A120818
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:19:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727641AbfDOPSc (ORCPT
+        id S1727655AbfDOPTb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 11:18:32 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:39390 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1726522AbfDOPSb (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 11:18:31 -0400
-Received: (qmail 4942 invoked by uid 2102); 15 Apr 2019 11:18:30 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 15 Apr 2019 11:18:30 -0400
-Date:   Mon, 15 Apr 2019 11:18:30 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     Kento.A.Kobayashi@sony.com
-cc:     bvanassche@acm.org, <martin.petersen@oracle.com>,
-        <jejb@linux.ibm.com>, <oneukum@suse.com>,
-        <gregkh@linuxfoundation.org>,
-        <usb-storage@lists.one-eyed-alien.net>, <Jacky.Cao@sony.com>,
-        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>
-Subject: RE: [PATCH] usb: uas: fix usb subsystem hang after power off hub
- port
-In-Reply-To: <AE5419EAB4965843B3C0C1FE29F1FFE5899C80@JPYOKXMS103.jp.sony.com>
-Message-ID: <Pine.LNX.4.44L0.1904151107350.1575-100000@iolanthe.rowland.org>
-MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+        Mon, 15 Apr 2019 11:19:31 -0400
+Received: from mga09.intel.com ([134.134.136.24]:2071 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726094AbfDOPTa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 11:19:30 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Apr 2019 08:19:30 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,354,1549958400"; 
+   d="scan'208";a="149586833"
+Received: from pmmacken-mobl.amr.corp.intel.com (HELO pbossart-mobl3.intel.com) ([10.251.139.191])
+  by FMSMGA003.fm.intel.com with ESMTP; 15 Apr 2019 08:19:28 -0700
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+To:     alsa-devel@alsa-project.org
+Cc:     linux-kernel@vger.kernel.org, tiwai@suse.de, broonie@kernel.org,
+        vkoul@kernel.org, gregkh@linuxfoundation.org,
+        liam.r.girdwood@linux.intel.com, jank@cadence.com, joe@perches.com,
+        srinivas.kandagatla@linaro.org,
+        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Schmauss <erik.schmauss@intel.com>,
+        linux-acpi@vger.kernel.org (open list:ACPI),
+        devel@acpica.org (open list:ACPI COMPONENT ARCHITECTURE (ACPICA))
+Subject: [PATCH] ACPI / device_sysfs: change _ADR representation to 64 bits
+Date:   Mon, 15 Apr 2019 10:18:57 -0500
+Message-Id: <20190415151857.25531-1-pierre-louis.bossart@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 15 Apr 2019 Kento.A.Kobayashi@sony.com wrote:
+Standards such as the MIPI DisCo for SoundWire 1.0 specification
+assume the _ADR field is 64 bits.
 
-> Hi
-> 
-> >The unbind happens from inside the SCSI EH callback.  If that really is not allowed, we'll need to change it.  Or we can just change it regardless, since the effort required is pretty small.
-> >
-> >Kento, please try the patch below.  Does it help with your problem?
-> 
-> Thank you for suggestion about this problem.
-> I confirmed your patch fixes this problem.
+_ADR is defined as an "Integer" represented as 64 bits since ACPI 2.0
+released in 2002. The low levels already use _ADR as 64 bits, e.g. in
+struct acpi_device_info.
 
-Good; I will submit it.
+This patch bumps the representation used for sysfs to 64 bits.
 
-> I think you change policy for error handler to not calling unbind, right?
+Example with a SoundWire device, the results show the complete
+vendorID and linkID which were omitted before:
 
-That's right.
+Before:
+$ more /sys/bus/acpi/devices/device\:38/adr
+0x5d070000
+After:
+$ more /sys/bus/acpi/devices/device\:38/adr
+0x000010025d070000
 
-> In addition, I have a question about this patch.
-> Could you please tell me why it should not be allowed that the unbind is occurred from eh callback?
+Signed-off-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+---
+ drivers/acpi/device_sysfs.c | 3 +--
+ include/acpi/acpi_bus.h     | 2 +-
+ 2 files changed, 2 insertions(+), 3 deletions(-)
 
-The SCSI core does not handle unbind properly when it occurs inside an 
-error handler callback.  If you want to know more about why the SCSI 
-core behaves this way, you should ask the SCSI developers -- I don't 
-know the answer.
-
-> This patch will ignore all error which is returned from usb_reset_and_verify_device.
-> But my patch will ignore error only being returned ENODEV case.
-> I think side effect of your patch is bigger than my patch.
-
-The only other errors that usb_reset_and_verify_device() can return are 
-EINVAL and EISDIR.  These error codes occur in three situations:
-
-	The device has already been disconnected;
-
-	The device has no parent hub (it is a root hub);
-
-	The device is currently suspended.
-
-The first situation is just as bad as -ENODEV.  The second cannot
-happen for a USB mass storage device.  The third can happen only if an
-error occurs when usb_reset_device() tries to carry out a resume, and
-that's also just as bad as -ENODEV.
-
-So although the side effects are larger than with your patch, they are 
-not any worse.  Furthermore, they handle correctly some situations that 
-your patch does not handle.
-
-> So I want to know why the unbind is occurred from eh callback should not be allowed.
-
-Ask the SCSI developers.
-
-Alan Stern
+diff --git a/drivers/acpi/device_sysfs.c b/drivers/acpi/device_sysfs.c
+index 8940054d6250..f8d73ae42529 100644
+--- a/drivers/acpi/device_sysfs.c
++++ b/drivers/acpi/device_sysfs.c
+@@ -428,8 +428,7 @@ static ssize_t acpi_device_adr_show(struct device *dev,
+ {
+ 	struct acpi_device *acpi_dev = to_acpi_device(dev);
+ 
+-	return sprintf(buf, "0x%08x\n",
+-		       (unsigned int)(acpi_dev->pnp.bus_address));
++	return sprintf(buf, "0x%016llx\n", acpi_dev->pnp.bus_address);
+ }
+ static DEVICE_ATTR(adr, 0444, acpi_device_adr_show, NULL);
+ 
+diff --git a/include/acpi/acpi_bus.h b/include/acpi/acpi_bus.h
+index f7981751ac77..9075e28ea60a 100644
+--- a/include/acpi/acpi_bus.h
++++ b/include/acpi/acpi_bus.h
+@@ -230,7 +230,7 @@ struct acpi_device_dir {
+ /* Plug and Play */
+ 
+ typedef char acpi_bus_id[8];
+-typedef unsigned long acpi_bus_address;
++typedef u64 acpi_bus_address;
+ typedef char acpi_device_name[40];
+ typedef char acpi_device_class[20];
+ 
+-- 
+2.17.1
 
