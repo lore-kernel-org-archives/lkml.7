@@ -2,76 +2,89 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70691C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:35:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45D95C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:35:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3088220693
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:35:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16DD620693
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:35:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727400AbfDOMfD (ORCPT
+        id S1727417AbfDOMff (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 08:35:03 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59528 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727129AbfDOMfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 08:35:02 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 839D2AD6B;
-        Mon, 15 Apr 2019 12:35:01 +0000 (UTC)
-Date:   Mon, 15 Apr 2019 14:34:59 +0200
-From:   Petr Mladek <pmladek@suse.com>
-To:     Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-Cc:     Paul Gortmaker <paul.gortmaker@windriver.com>,
-        linux-kernel@vger.kernel.org, Andi Kleen <ak@linux.intel.com>,
-        Sergey Senozhatsky <sergey.senozhatsky@gmail.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH] printk: tie printk_once / printk_deferred_once into
- .data.once for reset
-Message-ID: <20190415123459.f7meom5wm5wqggwu@pathway.suse.cz>
-References: <1555121491-31213-1-git-send-email-paul.gortmaker@windriver.com>
- <20190415023216.GA27063@jagdpanzerIV>
+        Mon, 15 Apr 2019 08:35:35 -0400
+Received: from [110.188.70.11] ([110.188.70.11]:52202 "EHLO spam2.hygon.cn"
+        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726094AbfDOMff (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 08:35:35 -0400
+X-Greylist: delayed 1573 seconds by postgrey-1.27 at vger.kernel.org; Mon, 15 Apr 2019 08:35:34 EDT
+Received: from spam2.hygon.cn (localhost [127.0.0.2] (may be forged))
+        by spam2.hygon.cn with ESMTP id x3FC9LMa059344;
+        Mon, 15 Apr 2019 20:09:21 +0800 (GMT-8)
+        (envelope-from fenghao@hygon.cn)
+Received: from MK-FE.hygon.cn ([172.23.18.61])
+        by spam2.hygon.cn with ESMTP id x3FC6sjp059172;
+        Mon, 15 Apr 2019 20:06:54 +0800 (GMT-8)
+        (envelope-from fenghao@hygon.cn)
+Received: from cncheex02.Hygon.cn ([172.23.18.12])
+        by MK-FE.hygon.cn with ESMTP id x3FC6Kds022099;
+        Mon, 15 Apr 2019 20:06:20 +0800 (GMT-8)
+        (envelope-from fenghao@hygon.cn)
+Received: from harry-Inspiron-5675.higon.com (172.23.18.44) by
+ cncheex02.Hygon.cn (172.23.18.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Mon, 15 Apr
+ 2019 20:06:50 +0800
+From:   Hao Feng <fenghao@hygon.cn>
+To:     "'Tom Lendacky '" <thomas.lendacky@amd.com>,
+        "'Gary Hook '" <gary.hook@amd.com>,
+        "'Herbert Xu '" <herbert@gondor.apana.org.au>,
+        "' David S. Miller '" <davem@davemloft.net>
+CC:     "'Zhaohui Du '" <duzhaohui@hygon.cn>,
+        "'Zhiwei Ying '" <yingzhiwei@hygon.cn>,
+        "'Wen Pu '" <puwen@hygon.cn>, Hao Feng <fenghao@hygon.cn>,
+        <linux-crypto@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH 1/6] crypto: ccp: Add Hygon Dhyana support
+Date:   Mon, 15 Apr 2019 20:04:23 +0800
+Message-ID: <1555329868-17895-2-git-send-email-fenghao@hygon.cn>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1555329868-17895-1-git-send-email-fenghao@hygon.cn>
+References: <1555329868-17895-1-git-send-email-fenghao@hygon.cn>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190415023216.GA27063@jagdpanzerIV>
-User-Agent: NeoMutt/20170912 (1.9.0)
+Content-Type: text/plain
+X-Originating-IP: [172.23.18.44]
+X-ClientProxiedBy: cncheex02.Hygon.cn (172.23.18.12) To cncheex02.Hygon.cn
+ (172.23.18.12)
+X-MAIL: spam2.hygon.cn x3FC6sjp059172
+X-DNSRBL: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon 2019-04-15 11:32:16, Sergey Senozhatsky wrote:
-> On (04/12/19 22:11), Paul Gortmaker wrote:
-> > In commit b1fca27d384e ("kernel debug: support resetting WARN*_ONCE")
-> > we got the opportunity to reset state on the one shot messages,
-> > without having to reboot.
-> 
-> Didn't know that.
-> 
-> > However printk_once (printk_deferred_once) live in a different file
-> > and didn't get the same kind of update/conversion, so they remain
-> > unconditionally one shot, until the system is rebooted.
-> > 
-> > For example, we currently have:
-> > 
-> >   sched/rt.c: printk_deferred_once("sched: RT throttling activated\n");
-> > 
-> > ..which could reasonably be tripped as someone is testing and tuning
-> > a new system/workload and their task placements.  For consistency, and
-> > to avoid reboots in the same vein as the original commit, we make these
-> > two instances of _once the same as the WARN*_ONCE instances are.
-> 
-> Looks OK to me.
-> 
-> Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
+The Hygon Dhyana CPU has 2 CCP devices, the device IDs are 0x1456 and
+0x1468, Hygon uses the same device interface as AMD, so enable the CCP
+driver to support Hygon CCP devices.
 
-The patch has been commited into printk.git, branch for-5.2.
+Signed-off-by: Hao Feng <fenghao@hygon.cn>
+---
+ drivers/crypto/ccp/sp-pci.c | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Best Regards,
-Petr
+diff --git a/drivers/crypto/ccp/sp-pci.c b/drivers/crypto/ccp/sp-pci.c
+index 41bce0a..363ad9f 100644
+--- a/drivers/crypto/ccp/sp-pci.c
++++ b/drivers/crypto/ccp/sp-pci.c
+@@ -321,6 +321,8 @@ static const struct pci_device_id sp_pci_table[] = {
+ 	{ PCI_VDEVICE(AMD, 0x1456), (kernel_ulong_t)&dev_vdata[1] },
+ 	{ PCI_VDEVICE(AMD, 0x1468), (kernel_ulong_t)&dev_vdata[2] },
+ 	{ PCI_VDEVICE(AMD, 0x1486), (kernel_ulong_t)&dev_vdata[3] },
++	{ PCI_VDEVICE(HYGON, 0x1456), (kernel_ulong_t)&dev_vdata[1] },
++	{ PCI_VDEVICE(HYGON, 0x1468), (kernel_ulong_t)&dev_vdata[2] },
+ 	/* Last entry must be zero */
+ 	{ 0, }
+ };
+-- 
+2.7.4
+
