@@ -2,112 +2,168 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF5E8C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 06:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27668C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 06:50:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A335A20833
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 06:47:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE8F320693
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 06:50:46 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="nhF7Fogm"
+	dkim=pass (2048-bit key) header.d=innovation.ch header.i=@innovation.ch header.b="R7s1DtWp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726076AbfDOGrT (ORCPT
+        id S1726150AbfDOGup (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 02:47:19 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:54162 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725777AbfDOGrS (ORCPT
+        Mon, 15 Apr 2019 02:50:45 -0400
+Received: from chill.innovation.ch ([216.218.245.220]:37112 "EHLO
+        chill.innovation.ch" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbfDOGup (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 02:47:18 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3F6iIjT148277;
-        Mon, 15 Apr 2019 06:47:04 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=/5Uxmide7W9gl7rmjYHhYH9XEi+gX7190BWTpclzFg0=;
- b=nhF7FogmvUEp7PhklKxgrbRR+GLZ2Eoj1Po5389TnGlbSp58m1B78QaIIK3SkasRK7oq
- 0WpcwhaMZyNn1OIRhH60yD36ovmzfy4NI1ej9pFAYLXC06WpKN668LA6JFv3bf9b52gA
- WEwjRXhp5Aeceg3kd924YRBggi0Bi+brz1OWDvNaisM85HoJ1+QKAqdU1SEEgTRLL8m4
- 0kbK8Z/HThkU3eW9gFi8DguQjYnGzBJNms6o88Nr7W6juseQnugt7f0MZ/N7iZV0O+ef
- +L08yrzswqmrnAmgyWjY4VHtDQuNu7bwmTPl00r4NJ4eXf2UPb/bVVX30ZRrUwZA4/7q aQ== 
-Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
-        by userp2130.oracle.com with ESMTP id 2ru76t4pty-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Apr 2019 06:47:04 +0000
-Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
-        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3F6k6jl110089;
-        Mon, 15 Apr 2019 06:47:04 GMT
-Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
-        by aserp3020.oracle.com with ESMTP id 2rv2tu0p7j-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Apr 2019 06:47:03 +0000
-Received: from abhmp0013.oracle.com (abhmp0013.oracle.com [141.146.116.19])
-        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x3F6l2gx031609;
-        Mon, 15 Apr 2019 06:47:02 GMT
-Received: from [10.182.69.106] (/10.182.69.106)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Sun, 14 Apr 2019 23:47:02 -0700
-Subject: Re: [PATCH 1/1] swiotlb: save io_tlb_used to local variable before
- leaving critical section
-To:     Joe Jin <joe.jin@oracle.com>, iommu@lists.linux-foundation.org,
-        konrad.wilk@oracle.com
-Cc:     linux-kernel@vger.kernel.org, hch@lst.de, m.szyprowski@samsung.com,
-        robin.murphy@arm.com, haakon.bugge@oracle.com
-References: <1555069106-2964-1-git-send-email-dongli.zhang@oracle.com>
- <5bdc3265-e5a4-e8c8-9098-0bba18a66f19@oracle.com>
-From:   Dongli Zhang <dongli.zhang@oracle.com>
-Message-ID: <38f6f868-013e-5619-b939-a8273fc64ee4@oracle.com>
-Date:   Mon, 15 Apr 2019 14:50:49 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Mon, 15 Apr 2019 02:50:45 -0400
+Date:   Sun, 14 Apr 2019 23:50:44 -0700
+DKIM-Filter: OpenDKIM Filter v2.10.3 chill.innovation.ch 2A29C640114
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=innovation.ch;
+        s=default; t=1555311044;
+        bh=TaWduF2lSVu2+BYWSt3wEV+6w2mAbmHKuS0SDY2gT9o=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=R7s1DtWpzdAONUAy5i5Xqv5CXXXJUQYHfO8FdFxGBvdQ4smfvNnR0hLyHdmq8D2i0
+         OTFl7UMQ3oerPTTK+sAhdfqMfHeBih/2Bn+yraRY2mfOGy0k9N0R+A7YmTeQmCWjc3
+         R5Fq4xKazp50qHFx/vJq0e7G++UnMqyNRdI32py6/ZegEcRwM9iOO0WBEbhn54orrG
+         LghbaUauRg+O4dGkn96CK78TCyJxYMvlCA8k/fR7aBjugs0fbNhOFQFG3euHg/qSKa
+         BVYIQ0iPwZtprWVxcUvsW8R9LVHCXSl5fs9nMqwPZ5Zv/zZb8Mqd5BH2QdLDGj7Ed3
+         Myhe9UWLAJBGQ==
+From:   "Life is hard, and then you die" <ronald@innovation.ch>
+To:     Andrzej Hajda <a.hajda@samsung.com>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Lukas Wunner <lukas@wunner.de>,
+        Federico Lorenzi <federico@travelground.com>,
+        linux-input@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Inki Dae <inki.dae@samsung.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>
+Subject: Re: [PATCH v4 1/2] drm/bridge: sil_sii8620: make remote control
+ optional.
+Message-ID: <20190415065044.GA14097@innovation.ch>
+References: <20190407050358.2976-1-ronald@innovation.ch>
+ <CGME20190407050410epcas1p3ec1f887f8ccf8ff4495f4557437cd594@epcas1p3.samsung.com>
+ <20190407050358.2976-2-ronald@innovation.ch>
+ <c861091d-f659-614d-65f4-6fe983885e09@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <5bdc3265-e5a4-e8c8-9098-0bba18a66f19@oracle.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9227 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904150045
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9227 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904150045
+In-Reply-To: <c861091d-f659-614d-65f4-6fe983885e09@samsung.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As the patch to be fixed is still in Konrad's own tree, I will send the v2 for
-the patch to be fixed, instead of an incremental fix.
 
-Dongli Zhang
+  Hi Andrzej,
 
-On 4/12/19 10:13 PM, Joe Jin wrote:
-> I'm good to have this patch, which helps identify the cause of failure is
-> fragmentation or it really been used up.
+On Wed, Apr 10, 2019 at 11:42:50AM +0200, Andrzej Hajda wrote:
+> On 07.04.2019 07:03, Ronald Tschalär wrote:
+> > commit d6abe6df706c (drm/bridge: sil_sii8620: do not have a dependency
+> > of RC_CORE) changed the driver to select both RC_CORE and INPUT.
+> > However, this causes problems with other drivers, in particular an input
+> > driver that depends on MFD_INTEL_LPSS_PCI (to be added in a separate
+> > commit):
+> >
+> >   drivers/clk/Kconfig:9:error: recursive dependency detected!
+> >   drivers/clk/Kconfig:9:        symbol COMMON_CLK is selected by MFD_INTEL_LPSS
+> >   drivers/mfd/Kconfig:566:      symbol MFD_INTEL_LPSS is selected by MFD_INTEL_LPSS_PCI
+> >   drivers/mfd/Kconfig:580:      symbol MFD_INTEL_LPSS_PCI is implied by KEYBOARD_APPLESPI
+> >   drivers/input/keyboard/Kconfig:73:    symbol KEYBOARD_APPLESPI depends on INPUT
+> >   drivers/input/Kconfig:8:      symbol INPUT is selected by DRM_SIL_SII8620
+> >   drivers/gpu/drm/bridge/Kconfig:83:    symbol DRM_SIL_SII8620 depends on DRM_BRIDGE
+> >   drivers/gpu/drm/bridge/Kconfig:1:     symbol DRM_BRIDGE is selected by DRM_PL111
+> >   drivers/gpu/drm/pl111/Kconfig:1:      symbol DRM_PL111 depends on COMMON_CLK
+> >
+> > According to the docs and general consensus, select should only be used
+> > for non user-visible symbols, but both RC_CORE and INPUT are
+> > user-visible. Furthermore almost all other references to INPUT
+> > throughout the kernel config are depends, not selects. For this reason
+> > the first part of this change reverts commit d6abe6df706c.
+> >
+> > In order to address the original reason for commit d6abe6df706c, namely
+> > that not all boards use the remote controller functionality and hence
+> > should not need have to deal with RC_CORE, the second part of this
+> > change now makes the remote control support in the driver optional and
+> > contingent on RC_CORE being defined. And with this the hard dependency
+> > on INPUT also goes away as that is only needed if RC_CORE is defined
+> > (which in turn already depends on INPUT).
+[snip]
+> What about:
 > 
-> On 4/12/19 4:38 AM, Dongli Zhang wrote:
->> When swiotlb is full, the kernel would print io_tlb_used. However, the
->> result might be inaccurate at that time because we have left the critical
->> section protected by spinlock.
->>
->> Therefore, we backup the io_tlb_used into local variable before leaving
->> critical section.
->>
->> Fixes: 83ca25948940 ("swiotlb: dump used and total slots when swiotlb buffer is full")
->> Suggested-by: HÃ¥kon Bugge <haakon.bugge@oracle.com>
->> Signed-off-by: Dongli Zhang <dongli.zhang@oracle.com>
+> ---------
 > 
-> Reviewed-by: Joe Jin <joe.jin@oracle.com> 
+> diff --git a/drivers/gpu/drm/bridge/Kconfig b/drivers/gpu/drm/bridge/Kconfig
+> index 8840f396a7b6..298189067929 100644
+> --- a/drivers/gpu/drm/bridge/Kconfig
+> +++ b/drivers/gpu/drm/bridge/Kconfig
+> @@ -86,8 +86,7 @@ config DRM_SIL_SII8620
+>         depends on OF
+>         select DRM_KMS_HELPER
+>         imply EXTCON
+> -       select INPUT
+> -       select RC_CORE
+> +       imply RC_CORE
+>         help
+>           Silicon Image SII8620 HDMI/MHL bridge chip driver.
+>  
+> diff --git a/drivers/gpu/drm/bridge/sil-sii8620.c
+> b/drivers/gpu/drm/bridge/sil-sii8620.c
+> index 0cc293a6ac24..df0f9dbbe839 100644
+> --- a/drivers/gpu/drm/bridge/sil-sii8620.c
+> +++ b/drivers/gpu/drm/bridge/sil-sii8620.c
+> @@ -1762,10 +1762,8 @@ static bool sii8620_rcp_consume(struct sii8620
+> *ctx, u8 scancode)
+>  
+>         scancode &= MHL_RCP_KEY_ID_MASK;
+>  
+> -       if (!ctx->rc_dev) {
+> -               dev_dbg(ctx->dev, "RCP input device not initialized\n");
+> +       if (!IS_ENABLED(RC_CORE) || !ctx->rc_dev)
+>                 return false;
+> -       }
+>  
+>         if (pressed)
+>                 rc_keydown(ctx->rc_dev, RC_PROTO_CEC, scancode, 0);
+> @@ -2102,6 +2100,9 @@ static void sii8620_init_rcp_input_dev(struct
+> sii8620 *ctx)
+>         struct rc_dev *rc_dev;
+>         int ret;
+>  
+> +       if (!IS_ENABLED(RC_CORE))
+> +               return;
+> +
+>         rc_dev = rc_allocate_device(RC_DRIVER_SCANCODE);
+>         if (!rc_dev) {
+>                 dev_err(ctx->dev, "Failed to allocate RC device\n");
+> @@ -2216,6 +2217,9 @@ static void sii8620_detach(struct drm_bridge *bridge)
+>  {
+>         struct sii8620 *ctx = bridge_to_sii8620(bridge);
+>  
+> +       if (!IS_ENABLED(RC_CORE))
+> +               return;
+> +
+>         rc_unregister_device(ctx->rc_dev);
+>  }
+> -----------
 > 
-> Thanks,
-> Joe
-> 
+> Less changes, no conditional compilation - better compiler coverage,
+> more readable.
+
+This works for me (with RC_CORE replaced with CONFIG_RC_CORE). Sending
+a new patch that includes this shortly.
+
+
+  Cheers,
+
+  Ronald
+
