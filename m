@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98BB6C10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5AD8C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:17:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65BE12073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:17:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93F862073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:17:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355864;
-	bh=TyvOB/myiN6y87ukWB6Js+umNIu4cPnYaG6mXpQRAAE=;
+	s=default; t=1555355871;
+	bh=2+KnyX2t/iFfamUdZsdmEI/4ufLoDglksusPnBnZhJg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=FQX1MU+DkKMKVXtL3hlYIW5XUpr1fiRGtke64ZXh6jKEatWMI1ddI2/WBUEfh8f9z
-	 5PQE+6iJPRAnvfBvTHfnplqUbdJnpqNpAwF7FIAMVRbQ+pQ4AwG/hruVJuspqscBUs
-	 5U0k6abypzmAu9RnNCaCUYVokolpV3Cdi6MUtq3k=
+	b=Lik0e7uQ5Qv6PC8b6OkdldWYzh0pqh1i+PYZDvpnD+Di93w9FQPEMi/WkugxwucxT
+	 ZV07qiG0t87L7tMkp9gqoUP2RB4pklfJaZckrw9HQdhabzfESc6JT8yQzTVY8yiRLf
+	 poiSj8atKWg1Q/tkPvEvv1IIq1xxML5SJH2oUY4E=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731692AbfDOTRn (ORCPT
+        id S1731718AbfDOTRu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:17:43 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49310 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:17:50 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49148 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731338AbfDOTMG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:12:06 -0400
+        id S1731318AbfDOTL6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:11:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2B87F218A1;
-        Mon, 15 Apr 2019 19:12:05 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2652321908;
+        Mon, 15 Apr 2019 19:11:57 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355525;
-        bh=TyvOB/myiN6y87ukWB6Js+umNIu4cPnYaG6mXpQRAAE=;
+        s=default; t=1555355517;
+        bh=2+KnyX2t/iFfamUdZsdmEI/4ufLoDglksusPnBnZhJg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=q9TWydRk+Jxr8rPe6r6g/RnSiwDbeSd5EgZ4vjH5e3z2nqmL7KOPkz5pdA5NoZMGT
-         QBOaQaazLMMY9UUlB2LrPNOSorCWZnn4pgRKjqe14uXJVtmh082KoeRK9L5IppVCAh
-         bhC9ezXUsYfODT/hdfwmJoCkv4TuQOEL9NGipQT8=
+        b=TVBlA+4iFQAEicuw79qfw5sjm/XjLE96bzLP1k6xAI4ZDOTbuKliCmqY+p4NleHzu
+         vGs7RlxguWAxougscjSkBltk/phLlcv6OkavWjTJXyNMS570ap0Rd2UMSfhVdPQVVI
+         e4aVJQ8XO3oZ4pacic6vtYkaKQoIn10ElZe2XI8w=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Drake <drake@endlessm.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH 5.0 060/117] mmc: alcor: dont write data before command has completed
-Date:   Mon, 15 Apr 2019 21:00:30 +0200
-Message-Id: <20190415183747.982218804@linuxfoundation.org>
+        stable@vger.kernel.org, Furquan Shaikh <furquan@google.com>,
+        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>
+Subject: [PATCH 5.0 051/117] ACPICA: Clear status of GPEs before enabling them
+Date:   Mon, 15 Apr 2019 21:00:21 +0200
+Message-Id: <20190415183747.563797571@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183744.887851196@linuxfoundation.org>
 References: <20190415183744.887851196@linuxfoundation.org>
@@ -59,151 +59,61 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Daniel Drake <drake@endlessm.com>
+From: Furquan Shaikh <furquan@google.com>
 
-commit 157c99c5a2956a9ab1ae12de0136a2d8a1b1a307 upstream.
+commit c8b1917c8987a6fa3695d479b4d60fbbbc3e537b upstream.
 
-The alcor driver is setting up data transfer and submitting the associated
-MMC command at the same time. While this works most of the time, it
-occasionally causes problems upon write.
+Commit 18996f2db918 ("ACPICA: Events: Stop unconditionally clearing
+ACPI IRQs during suspend/resume") was added to stop clearing event
+status bits unconditionally in the system-wide suspend and resume
+paths. This was done because of an issue with a laptop lid appaering
+to be closed even when it was used to wake up the system from suspend
+(see https://bugzilla.kernel.org/show_bug.cgi?id=196249), which
+happened because event status bits were cleared unconditionally on
+system resume. Though this change fixed the issue in the resume path,
+it introduced regressions in a few suspend paths.
 
-In the working case, after setting up the data transfer and submitting
-the MMC command, an interrupt comes in a moment later with CMD_END and
-WRITE_BUF_RDY bits set. The data transfer then happens without problem.
+First regression was reported and fixed in the S5 entry path by commit
+fa85015c0d95 ("ACPICA: Clear status of all events when entering S5").
+Next regression was reported and fixed for all legacy sleep paths by
+commit f317c7dc12b7 ("ACPICA: Clear status of all events when entering
+sleep states").  However, there still is a suspend-to-idle regression,
+since suspend-to-idle does not follow the legacy sleep paths.
 
-However, on occasion, the interrupt that arrives at that point only
-has WRITE_BUF_RDY set. The hardware notifies that it's ready to write
-data, but the associated MMC command is still running. Regardless, the
-driver was proceeding to write data immediately, and that would then cause
-another interrupt indicating data CRC error, and the write would fail.
+In the suspend-to-idle case, wakeup is enabled as part of device
+suspend.  If the status bits of wakeup GPEs are set when they are
+enabled, it causes a premature system wakeup to occur.
 
-Additionally, the transfer setup function alcor_trigger_data_transfer()
-was being called 3 times for each write operation, which was confusing
-and may be contributing to this issue.
+To address that problem, partially revert commit 18996f2db918 to
+restore GPE status bits clearing before the GPE is enabled in
+acpi_ev_enable_gpe().
 
-Solve this by tweaking the driver behaviour to follow the sequence observed
-in the original ampe_stor vendor driver:
- 1. When starting request handling, write 0 to DATA_XFER_CTRL
- 2. Submit the command
- 3. Wait for CMD_END interrupt and then trigger data transfer
- 4. For the PIO case, trigger the next step of the data transfer only
-    upon the following DATA_END interrupt, which occurs after the block has
-    been written.
-
-I confirmed that the read path still works (DMA & PIO) and also now
-presents more consistency with the operations performed by ampe_stor.
-
-Signed-off-by: Daniel Drake <drake@endlessm.com>
-Fixes: c5413ad815a6 ("mmc: add new Alcor Micro Cardreader SD/MMC driver")
-Cc: stable@vger.kernel.org
-Signed-off-by: Ulf Hansson <ulf.hansson@linaro.org>
+Fixes: 18996f2db918 ("ACPICA: Events: Stop unconditionally clearing ACPI IRQs during suspend/resume")
+Signed-off-by: Furquan Shaikh <furquan@google.com>
+Cc: 4.17+ <stable@vger.kernel.org> # 4.17+
+[ rjw: Subject & changelog ]
+Signed-off-by: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/mmc/host/alcor.c |   34 +++++++++++++---------------------
- 1 file changed, 13 insertions(+), 21 deletions(-)
+ drivers/acpi/acpica/evgpe.c |    6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
---- a/drivers/mmc/host/alcor.c
-+++ b/drivers/mmc/host/alcor.c
-@@ -48,7 +48,6 @@ struct alcor_sdmmc_host {
- 	struct mmc_command *cmd;
- 	struct mmc_data *data;
- 	unsigned int dma_on:1;
--	unsigned int early_data:1;
+--- a/drivers/acpi/acpica/evgpe.c
++++ b/drivers/acpi/acpica/evgpe.c
+@@ -81,8 +81,12 @@ acpi_status acpi_ev_enable_gpe(struct ac
  
- 	struct mutex cmd_mutex;
+ 	ACPI_FUNCTION_TRACE(ev_enable_gpe);
  
-@@ -144,8 +143,7 @@ static void alcor_data_set_dma(struct al
- 	host->sg_count--;
- }
+-	/* Enable the requested GPE */
++	/* Clear the GPE status */
++	status = acpi_hw_clear_gpe(gpe_event_info);
++	if (ACPI_FAILURE(status))
++		return_ACPI_STATUS(status);
  
--static void alcor_trigger_data_transfer(struct alcor_sdmmc_host *host,
--					bool early)
-+static void alcor_trigger_data_transfer(struct alcor_sdmmc_host *host)
- {
- 	struct alcor_pci_priv *priv = host->alcor_pci;
- 	struct mmc_data *data = host->data;
-@@ -155,13 +153,6 @@ static void alcor_trigger_data_transfer(
- 		ctrl |= AU6601_DATA_WRITE;
- 
- 	if (data->host_cookie == COOKIE_MAPPED) {
--		if (host->early_data) {
--			host->early_data = false;
--			return;
--		}
--
--		host->early_data = early;
--
- 		alcor_data_set_dma(host);
- 		ctrl |= AU6601_DATA_DMA_MODE;
- 		host->dma_on = 1;
-@@ -231,6 +222,7 @@ static void alcor_prepare_sg_miter(struc
- static void alcor_prepare_data(struct alcor_sdmmc_host *host,
- 			       struct mmc_command *cmd)
- {
-+	struct alcor_pci_priv *priv = host->alcor_pci;
- 	struct mmc_data *data = cmd->data;
- 
- 	if (!data)
-@@ -248,7 +240,7 @@ static void alcor_prepare_data(struct al
- 	if (data->host_cookie != COOKIE_MAPPED)
- 		alcor_prepare_sg_miter(host);
- 
--	alcor_trigger_data_transfer(host, true);
-+	alcor_write8(priv, 0, AU6601_DATA_XFER_CTRL);
- }
- 
- static void alcor_send_cmd(struct alcor_sdmmc_host *host,
-@@ -435,7 +427,7 @@ static int alcor_cmd_irq_done(struct alc
- 	if (!host->data)
- 		return false;
- 
--	alcor_trigger_data_transfer(host, false);
-+	alcor_trigger_data_transfer(host);
- 	host->cmd = NULL;
- 	return true;
- }
-@@ -456,7 +448,7 @@ static void alcor_cmd_irq_thread(struct
- 	if (!host->data)
- 		alcor_request_complete(host, 1);
- 	else
--		alcor_trigger_data_transfer(host, false);
-+		alcor_trigger_data_transfer(host);
- 	host->cmd = NULL;
- }
- 
-@@ -487,15 +479,9 @@ static int alcor_data_irq_done(struct al
- 		break;
- 	case AU6601_INT_READ_BUF_RDY:
- 		alcor_trf_block_pio(host, true);
--		if (!host->blocks)
--			break;
--		alcor_trigger_data_transfer(host, false);
- 		return 1;
- 	case AU6601_INT_WRITE_BUF_RDY:
- 		alcor_trf_block_pio(host, false);
--		if (!host->blocks)
--			break;
--		alcor_trigger_data_transfer(host, false);
- 		return 1;
- 	case AU6601_INT_DMA_END:
- 		if (!host->sg_count)
-@@ -508,8 +494,14 @@ static int alcor_data_irq_done(struct al
- 		break;
- 	}
- 
--	if (intmask & AU6601_INT_DATA_END)
--		return 0;
-+	if (intmask & AU6601_INT_DATA_END) {
-+		if (!host->dma_on && host->blocks) {
-+			alcor_trigger_data_transfer(host);
-+			return 1;
-+		} else {
-+			return 0;
-+		}
-+	}
- 
- 	return 1;
++	/* Enable the requested GPE */
+ 	status = acpi_hw_low_set_gpe(gpe_event_info, ACPI_GPE_ENABLE);
+ 	return_ACPI_STATUS(status);
  }
 
 
