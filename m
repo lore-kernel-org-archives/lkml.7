@@ -7,46 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D235C10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:17:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8251DC10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:17:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CE0AC2075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:17:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A0F52075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:17:11 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355822;
-	bh=pQYJmHJT7PBNeH2DZM8AKGRrSD7/IDnhcH7KXwxPyTM=;
+	s=default; t=1555355831;
+	bh=/tTIezOw4NUNRZW97BRmzUuVRCBgj4mMLEcgBhBOjkk=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uovwXeypkNiuLkEkk72W25P/9EqvWMgHhqasQonlsAi2x8JZKpCyLJZ2ysjCBuODU
-	 ek8khDKDQaukPoKMevpayh4rhXCWZzHtDt37ortvWZu1yhCTAI+q7T0TEGFew1oFkv
-	 xqPRFIxYRwGbp8jvxQf+mzMbXuujlgthSscZL3Wc=
+	b=UzRCyJWOs5JhYsBrcISk75JcIk3k+Pjxb9ya9g9SeTr1zoPJYL7Vs44PAD9IpFQ2P
+	 7Nl1dBmfeL/EIVBHUWWfQgm7jD9TCYDrohSRJseeIqfT0jxIGX+jPxgOjevAuy+rKR
+	 cM23ngc93Jm8IHSON8/jOJ8uOTnYwHLPMHgH2LMw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731636AbfDOTRB (ORCPT
+        id S1731674AbfDOTRK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:17:01 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50246 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:17:10 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50100 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731094AbfDOTMq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:12:46 -0400
+        id S1730168AbfDOTMi (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:12:38 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2622D2073F;
-        Mon, 15 Apr 2019 19:12:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 5D87020880;
+        Mon, 15 Apr 2019 19:12:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355565;
-        bh=pQYJmHJT7PBNeH2DZM8AKGRrSD7/IDnhcH7KXwxPyTM=;
+        s=default; t=1555355557;
+        bh=/tTIezOw4NUNRZW97BRmzUuVRCBgj4mMLEcgBhBOjkk=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B7gP8czQnAFBfKnr52lbmHmkbPrYdyPy3IZ3H/+UUo27oo8n9zVuAhoD+y3KOmOv8
-         w9TNnWLyl6GMepVBs1+ed20bcgR3JpHP7gufQer/5sittKb+l0tnM2fu9ZblbcZW43
-         124g9+visulI/+YeibTL/bTGjFJR4ANlwohFPjzU=
+        b=HpH+VtL6ysezJp2kHrTi1woGjPjT9V8obRDE+7wdHcT+X8APtCgx+9RtGJZORcqOn
+         WgkJa6R3v6JpTqHTP9qnBS5mNhimvApqTsEzQ5nWG82PX1D4OickZ/rRuuDxlaoUOd
+         zCQy1Xz4eoLc8ibSWNSPdH/07FskZql42j8kFjGM=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Daniel Vetter <daniel.vetter@ffwll.ch>,
-        Dave Airlie <airlied@redhat.com>
-Subject: [PATCH 5.0 068/117] drm/udl: add a release method and delay modeset teardown
-Date:   Mon, 15 Apr 2019 21:00:38 +0200
-Message-Id: <20190415183748.418353046@linuxfoundation.org>
+        stable@vger.kernel.org, Andrei Vagin <avagin@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Stephen Boyd <sboyd@kernel.org>,
+        John Stultz <john.stultz@linaro.org>
+Subject: [PATCH 5.0 065/117] alarmtimer: Return correct remaining time
+Date:   Mon, 15 Apr 2019 21:00:35 +0200
+Message-Id: <20190415183748.251904926@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183744.887851196@linuxfoundation.org>
 References: <20190415183744.887851196@linuxfoundation.org>
@@ -59,65 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Dave Airlie <airlied@redhat.com>
+From: Andrei Vagin <avagin@gmail.com>
 
-commit 9b39b013037fbfa8d4b999345d9e904d8a336fc2 upstream.
+commit 07d7e12091f4ab869cc6a4bb276399057e73b0b3 upstream.
 
-If we unplug a udl device, the usb callback with deinit the
-mode_config struct, however userspace will still have an open
-file descriptor and a framebuffer on that device. When userspace
-closes the fd, we'll oops because it'll try and look stuff up
-in the object idr which we've destroyed.
+To calculate a remaining time, it's required to subtract the current time
+from the expiration time. In alarm_timer_remaining() the arguments of
+ktime_sub are swapped.
 
-This punts destroying the mode objects until release time instead.
-
+Fixes: d653d8457c76 ("alarmtimer: Implement remaining callback")
+Signed-off-by: Andrei Vagin <avagin@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Cc: Stephen Boyd <sboyd@kernel.org>
+Cc: John Stultz <john.stultz@linaro.org>
 Cc: stable@vger.kernel.org
-Reviewed-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-Signed-off-by: Dave Airlie <airlied@redhat.com>
-Link: https://patchwork.freedesktop.org/patch/msgid/20190405031715.5959-2-airlied@gmail.com
+Link: https://lkml.kernel.org/r/20190408041542.26338-1-avagin@gmail.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/gpu/drm/udl/udl_drv.c  |    1 +
- drivers/gpu/drm/udl/udl_drv.h  |    1 +
- drivers/gpu/drm/udl/udl_main.c |    8 +++++++-
- 3 files changed, 9 insertions(+), 1 deletion(-)
+ kernel/time/alarmtimer.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/drivers/gpu/drm/udl/udl_drv.c
-+++ b/drivers/gpu/drm/udl/udl_drv.c
-@@ -51,6 +51,7 @@ static struct drm_driver driver = {
- 	.driver_features = DRIVER_MODESET | DRIVER_GEM | DRIVER_PRIME,
- 	.load = udl_driver_load,
- 	.unload = udl_driver_unload,
-+	.release = udl_driver_release,
+--- a/kernel/time/alarmtimer.c
++++ b/kernel/time/alarmtimer.c
+@@ -594,7 +594,7 @@ static ktime_t alarm_timer_remaining(str
+ {
+ 	struct alarm *alarm = &timr->it.alarm.alarmtimer;
  
- 	/* gem hooks */
- 	.gem_free_object_unlocked = udl_gem_free_object,
---- a/drivers/gpu/drm/udl/udl_drv.h
-+++ b/drivers/gpu/drm/udl/udl_drv.h
-@@ -104,6 +104,7 @@ void udl_urb_completion(struct urb *urb)
- 
- int udl_driver_load(struct drm_device *dev, unsigned long flags);
- void udl_driver_unload(struct drm_device *dev);
-+void udl_driver_release(struct drm_device *dev);
- 
- int udl_fbdev_init(struct drm_device *dev);
- void udl_fbdev_cleanup(struct drm_device *dev);
---- a/drivers/gpu/drm/udl/udl_main.c
-+++ b/drivers/gpu/drm/udl/udl_main.c
-@@ -378,6 +378,12 @@ void udl_driver_unload(struct drm_device
- 		udl_free_urb_list(dev);
- 
- 	udl_fbdev_cleanup(dev);
--	udl_modeset_cleanup(dev);
- 	kfree(udl);
+-	return ktime_sub(now, alarm->node.expires);
++	return ktime_sub(alarm->node.expires, now);
  }
-+
-+void udl_driver_release(struct drm_device *dev)
-+{
-+	udl_modeset_cleanup(dev);
-+	drm_dev_fini(dev);
-+	kfree(dev);
-+}
+ 
+ /**
 
 
