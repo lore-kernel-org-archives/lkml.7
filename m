@@ -2,131 +2,226 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 231FAC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:18:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C749EC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:20:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D48A52073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:18:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="bfIvQYOs"
+	by mail.kernel.org (Postfix) with ESMTP id 8A7B120883
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:20:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727145AbfDOJSm (ORCPT
+        id S1726392AbfDOJUs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 05:18:42 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:33983 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbfDOJSm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 05:18:42 -0400
-Received: by mail-ed1-f66.google.com with SMTP id a6so2775338edv.1
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 02:18:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=ynQtq/6aBUoTAipkeDKcQtf7kKsME/OPz6dQg69/ZqA=;
-        b=bfIvQYOsMuRfY7e2nyCsEZp366cC8dWDkDaYDWjxwzxadojySJtksZwssf/48Lk7uf
-         GUHPNRX/ujNQ1QYwPiFyrGwtJaU7VpLIjhP0kl/W9R9YUMRSfK4Gyd8c0Ab6ecPHf9bw
-         kywY6l2dmW2fER/dievAMG/iLNhDovtkvEkX0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=ynQtq/6aBUoTAipkeDKcQtf7kKsME/OPz6dQg69/ZqA=;
-        b=JJ0Df8x4ZcjXgD5uKPydg1/KP5gP0q7mdsQ/AAt3NteZEYb/9WSB9KMFFm+/BY5/i4
-         UJClh8flBsk4EWlEnDiCjVPyuue8OC9eDkwurmIciyoHIXzDU06ZU2Mqb+Qn//wkzgio
-         fejNqb+x8GoqmXFUbdP5sQxe9tivtAvpn56p491Ms2MIKfxSAy5SLNrbPW9zo11sbUY5
-         nrrVtvEuth8QV+clFNyLvR0WY5q/ZzrOSmnzVY2cqMl61z8/rcltkh/15M+FRuevAdoJ
-         8l7NvnxHJfKzRuFdSXcDMPG21KGrr+GRVI+SELbsxL5pinbU5kO6NiOcbO7NrR6/36X6
-         Nx0w==
-X-Gm-Message-State: APjAAAV4iu1g+tIrMm2Axe9mCuXuRMlFhqbMg5n9gMjj+wetQkw89H11
-        3SRcqllLI0JnCGtfYdFsEf61jg==
-X-Google-Smtp-Source: APXvYqz4bP4buv8PrROHVBzhkpiDUy0i+0wCAHiCT1WKRbo3mf5xVcBaqcpM2rq8dc8Va+iUasniiA==
-X-Received: by 2002:aa7:ca07:: with SMTP id y7mr14132059eds.149.1555319920740;
-        Mon, 15 Apr 2019 02:18:40 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id b2sm2635652eds.15.2019.04.15.02.18.39
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 15 Apr 2019 02:18:39 -0700 (PDT)
-Date:   Mon, 15 Apr 2019 11:18:37 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Steven Price <steven.price@arm.com>
-Cc:     Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        David Airlie <airlied@linux.ie>,
-        iommu@lists.linux-foundation.org,
-        "Marty E . Plummer" <hanetzer@startmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 3/3] drm/panfrost: Add initial panfrost driver
-Message-ID: <20190415091837.GV2665@phenom.ffwll.local>
-Mail-Followup-To: Steven Price <steven.price@arm.com>,
-        Alyssa Rosenzweig <alyssa@rosenzweig.io>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, Will Deacon <will.deacon@arm.com>,
-        linux-kernel@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        David Airlie <airlied@linux.ie>, iommu@lists.linux-foundation.org,
-        "Marty E . Plummer" <hanetzer@startmail.com>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-References: <20190401074730.12241-1-robh@kernel.org>
- <20190401074730.12241-4-robh@kernel.org>
- <5efdc3cb-7367-65e1-d1bf-14051db5da10@arm.com>
- <20190405161632.GA9160@rosenzweig.io>
- <34a7038e-34f0-0cc4-4fc4-9b7dda356df6@arm.com>
+        Mon, 15 Apr 2019 05:20:48 -0400
+Received: from foss.arm.com ([217.140.101.70]:59020 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725796AbfDOJUr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 05:20:47 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 6EC33374;
+        Mon, 15 Apr 2019 02:20:47 -0700 (PDT)
+Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1A7C23F557;
+        Mon, 15 Apr 2019 02:20:47 -0700 (PDT)
+Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
+        id 6F3EB6801C0; Mon, 15 Apr 2019 10:20:45 +0100 (BST)
+Date:   Mon, 15 Apr 2019 10:20:45 +0100
+From:   Liviu Dudau <Liviu.Dudau@arm.com>
+To:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>
+Cc:     Ben Davis <Ben.Davis@arm.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
+        nd <nd@arm.com>, "sean@poorly.run" <sean@poorly.run>
+Subject: Re: [v2,1/2] drm: Add writeback_w,h properties
+Message-ID: <20190415092045.GO15144@e110455-lin.cambridge.arm.com>
+References: <1555078094-6587-2-git-send-email-ben.davis@arm.com>
+ <20190415075922.GA24596@james-ThinkStation-P300>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <34a7038e-34f0-0cc4-4fc4-9b7dda356df6@arm.com>
-X-Operating-System: Linux phenom 4.19.0-1-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190415075922.GA24596@james-ThinkStation-P300>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 05, 2019 at 05:42:33PM +0100, Steven Price wrote:
-> On 05/04/2019 17:16, Alyssa Rosenzweig wrote:
-> > acronym once ever and have it as a "??"), I'm not sure how to respond to
-> > that... We don't know how to allocate memory for the GPU-internal data
-> > structures (the tiler heap, for instance, but also a few others I've
-> > just named "misc_0" and "scratchpad" -- guessing one of those is for
-> > "TLS"). With kbase, I took the worst-case strategy of allocating
-> > gigantic chunks on startup with tiny commit counts and GROW_ON_GPF set.
-> > With the new driver, well, our memory consumption is scary since
-> > implementing GROW_ON_GPF in an upstream-friendly way is a bit more work
-> > and isn't expected to hit the 5.2 window.
+On Mon, Apr 15, 2019 at 08:59:30AM +0100, james qian wang (Arm Technology China) wrote:
+> On Fri, Apr 12, 2019 at 02:08:28PM +0000, Ben Davis wrote:
+> > Add new properties to specify width and height for writeback.
+> > 
+> > Signed-off-by: Ben Davis <ben.davis@arm.com>
+> > ---
+> >  drivers/gpu/drm/drm_atomic_uapi.c |  8 ++++++++
+> >  drivers/gpu/drm/drm_writeback.c   | 28 ++++++++++++++++++++++++++++
+> >  include/drm/drm_connector.h       |  4 ++++
+> >  include/drm/drm_mode_config.h     | 10 ++++++++++
+> >  4 files changed, 50 insertions(+)
+> > 
+> > -- 
+> > 2.7.4
+> > 
+> > diff --git a/drivers/gpu/drm/drm_atomic_uapi.c b/drivers/gpu/drm/drm_atomic_uapi.c
+> > index d520a04..1f68dce 100644
+> > --- a/drivers/gpu/drm/drm_atomic_uapi.c
+> > +++ b/drivers/gpu/drm/drm_atomic_uapi.c
+> > @@ -765,6 +765,10 @@ static int drm_atomic_connector_set_property(struct drm_connector *connector,
+> >  			return -EINVAL;
+> >  		}
+> >  		state->content_protection = val;
+> > +	} else if (property == config->prop_writeback_w) {
+> > +		state->writeback_w = val;
+> > +	} else if (property == config->prop_writeback_h) {
+> > +		state->writeback_h = val;
+> >  	} else if (property == config->writeback_fb_id_property) {
+> >  		struct drm_framebuffer *fb = drm_framebuffer_lookup(dev, NULL, val);
+> >  		int ret = drm_atomic_set_writeback_fb_for_connector(state, fb);
+> > @@ -837,6 +841,10 @@ drm_atomic_connector_get_property(struct drm_connector *connector,
+> >  		*val = state->scaling_mode;
+> >  	} else if (property == connector->content_protection_property) {
+> >  		*val = state->content_protection;
+> > +	} else if (property == config->prop_writeback_w) {
+> > +		*val = state->writeback_w;
+> > +	} else if (property == config->prop_writeback_h) {
+> > +		*val = state->writeback_h;
+> >  	} else if (property == config->writeback_fb_id_property) {
+> >  		/* Writeback framebuffer is one-shot, write and forget */
+> >  		*val = 0;
+> > diff --git a/drivers/gpu/drm/drm_writeback.c b/drivers/gpu/drm/drm_writeback.c
+> > index c20e6fe..3d0453e 100644
+> > --- a/drivers/gpu/drm/drm_writeback.c
+> > +++ b/drivers/gpu/drm/drm_writeback.c
+> > @@ -74,6 +74,12 @@
+> >   *	applications making use of writeback connectors *always* retrieve an
+> >   *	out-fence for the commit and use it appropriately.
+> >   *	From userspace, this property will always read as zero.
+> > + *
+> > + *  "WRITEBACK_W":
+> > + *	The width of the writeback buffer to write back. 0 acts as default.
+> > + *
+> > + *  "WRITEBACK_H":
+> > + *	The height of the writeback buffer to write back. 0 acts as default.
+> >   */
+> >  
+> >  #define fence_to_wb_connector(x) container_of(x->lock, \
+> > @@ -141,6 +147,22 @@ static int create_writeback_properties(struct drm_device *dev)
+> >  		dev->mode_config.writeback_out_fence_ptr_property = prop;
+> >  	}
+> >  
+> > +	if (!dev->mode_config.prop_writeback_w) {
+> > +		prop = drm_property_create_range(dev, DRM_MODE_PROP_ATOMIC,
+> > +						 "WRITEBACK_W", 1, UINT_MAX);
+> > +		if (!prop)
+> > +			return -ENOMEM;
+> > +		dev->mode_config.prop_writeback_w = prop;
+> > +	}
+> > +
+> > +	if (!dev->mode_config.prop_writeback_h) {
+> > +		prop = drm_property_create_range(dev, DRM_MODE_PROP_ATOMIC,
+> > +						 "WRITEBACK_H", 1, UINT_MAX);
+> > +		if (!prop)
+> > +			return -ENOMEM;
+> > +		dev->mode_config.prop_writeback_h = prop;
+> > +	}
+> > +
+> >  	return 0;
+> >  }
+> >  
+> > @@ -225,6 +247,12 @@ int drm_writeback_connector_init(struct drm_device *dev,
+> >  	drm_object_attach_property(&connector->base,
+> >  				   config->writeback_pixel_formats_property,
+> >  				   blob->base.id);
+> > +
+> > +	drm_object_attach_property(&connector->base,
+> > +				   config->prop_writeback_w, 0);
+> > +	drm_object_attach_property(&connector->base,
+> > +				   config->prop_writeback_h, 0);
 > 
-> Yes GROW_ON_GPF is pretty much required for the tiler heap - it's not
-> (reasonably) possible to determine how big it should be. The Arm user
-> space driver does the same approach (tiny commit count, but allow it to
-> grow).
+> Hi Ben:
+> Do we real need these two individual properties for specifing the writeback
+> w/h, can we use fb->w/h ?
+> And since these two properties are added as common and standard properties,
+> it influnce all existing write-back implementation which all assumed
+> writeback size as fb->w/h.
 
-Jumping in here with a drive through comment ...
+The idea of having these additional properties was to maintain backwards
+compatibility (of some sort). If you don't set writeback_w/h then the
+assumption is that they are the same as fb->w/h, but I can see how it's
+going to be confusing to have fb->w/h different from crtc->w/h and
+different from writeback_w/h.
 
-Growing gem bo and dma-buf is going to be endless amounts of fun, since we
-hard-coded that their size is invariant.
 
-I think the only reasonable way to implement this is if you allocate a
-really huge bo, map it, but only put the pages in on faulting. Or when
-really evil userspace tries to export it. Actually changing the underlying
-buffer size is not going to work I think.
+> To compatible with existing writeback support, I suggest to keep to
+> use fb->w/h or add these properties as malidp private.
 
-Note: I didn't read kbase, so might be totally wrong in how GROW_ON_GPF
-works.
--Daniel
+We don't need to make them malidp private, there is nothing malidp
+specific in them. I'll talk with Ben, we should probably drop this patch
+entirely and just enable malidp scaling when fb->w/h differ from
+crtc->w/h.
+
+Best regards,
+Liviu
+
+
+> 
+> Thanks
+> James
+> 
+> 
+> >  	wb_connector->pixel_formats_blob_ptr = blob;
+> >  
+> >  	return 0;
+> > diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
+> > index 8fe22ab..51c4cb2 100644
+> > --- a/include/drm/drm_connector.h
+> > +++ b/include/drm/drm_connector.h
+> > @@ -515,6 +515,10 @@ struct drm_connector_state {
+> >  	 */
+> >  	struct drm_writeback_job *writeback_job;
+> >  
+> > +	/** @writeback_w: width of plane to write to wb buffer */
+> > +	/** @writeback_h: height of plane to write to wb buffer */
+> > +	uint32_t writeback_w, writeback_h;
+> > +
+> >  	/**
+> >  	 * @max_requested_bpc: Connector property to limit the maximum bit
+> >  	 * depth of the pixels.
+> > diff --git a/include/drm/drm_mode_config.h b/include/drm/drm_mode_config.h
+> > index 7f60e8e..a0c2133 100644
+> > --- a/include/drm/drm_mode_config.h
+> > +++ b/include/drm/drm_mode_config.h
+> > @@ -622,6 +622,16 @@ struct drm_mode_config {
+> >  	 */
+> >  	struct drm_property *prop_crtc_h;
+> >  	/**
+> > +	 * @prop_writeback_w: Writeback connector property for the plane
+> > +	 * destination position in the writeback buffer.
+> > +	 */
+> > +	struct drm_property *prop_writeback_w;
+> > +	/**
+> > +	 * @prop_writeback_h: Writeback connector property for the plane
+> > +	 * destination position in the writeback buffer.
+> > +	 */
+> > +	struct drm_property *prop_writeback_h;
+> > +	/**
+> >  	 * @prop_fb_id: Default atomic plane property to specify the
+> >  	 * &drm_framebuffer.
+> >  	 */
+> 
+> Pls del this window style line ending 
+> 
+
 -- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+====================
+| I would like to |
+| fix the world,  |
+| but they're not |
+| giving me the   |
+ \ source code!  /
+  ---------------
+    ¯\_(ツ)_/¯
