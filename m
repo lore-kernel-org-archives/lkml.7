@@ -2,53 +2,54 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E73C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:29:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB1C3C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:33:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 339CE2070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:29:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 812AC2070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:33:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (4096-bit key) header.d=d-silva.org header.i=@d-silva.org header.b="C88r+lm9"
+	dkim=pass (4096-bit key) header.d=d-silva.org header.i=@d-silva.org header.b="EwBjsqWx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727184AbfDOK3Z (ORCPT
+        id S1727199AbfDOKd5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 06:29:25 -0400
-Received: from ushosting.nmnhosting.com ([167.160.173.127]:46528 "EHLO
+        Mon, 15 Apr 2019 06:33:57 -0400
+Received: from ushosting.nmnhosting.com ([167.160.173.127]:47088 "EHLO
         ushosting.nmnhosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726034AbfDOK3Y (ORCPT
+        with ESMTP id S1726042AbfDOKd4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 06:29:24 -0400
+        Mon, 15 Apr 2019 06:33:56 -0400
 Received: from mail2.nmnhosting.com (unknown [202.169.106.97])
-        by ushosting.nmnhosting.com (Postfix) with ESMTPS id 208BF2F28FBD;
-        Mon, 15 Apr 2019 06:29:18 -0400 (EDT)
+        by ushosting.nmnhosting.com (Postfix) with ESMTPS id 9D7572F28FBB;
+        Mon, 15 Apr 2019 06:33:54 -0400 (EDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=d-silva.org;
-        s=201810a; t=1555324159;
-        bh=bGWnxigOnlzm5DxlxFSHAklaezuMsLcv8acBfqQaCT0=;
+        s=201810a; t=1555324435;
+        bh=72lI9NwZgSFecdEJvPmdYhwBylZIqtjY6AZr2qW5LC0=;
         h=From:To:Cc:References:In-Reply-To:Subject:Date:From;
-        b=C88r+lm9zWe+RP9ergWnDRBcrbCsFZSl9g2/tncr4blc1yTM/mNdTNB+MOEK3cUT5
-         xT4qEGgIwrzOVzWPanC6pSz9hziaUJa8BMLux7N8eGMtuufQwihwDy3MF8f6aWSjpC
-         VobdBxTH9YPULQCcuoNsOWdIdMxCt+bOe6sZzT1vgS06Dpeqr+BjkuiBtGwdQ0obFG
-         8M9fy1xxrQzG22PZJXPrw+baK/19CrDzp/+ZBe6HLbuI2+3g9r73b/xtB2ZJWih3qY
-         tilyBzCQQwKkZsldcReXfrGM54k5DhYZSdMRp0GJzmt7ATdKbWEW5KUNCBq9wiW4cY
-         X+mnRbJdUJAfhvjh6MNHAW+PtU8K1+c8WXVcP/JbzB6O3RL6CyYgcf9U79N9R8VY83
-         GJ9wgzlNqJBUA3Q4jWYOxZ/utNoTiz9bPYtEbyaQWIEO4UYeyUbywZmEmGLf1qsfUn
-         vlBpetHcErvmE0P2VqiTubBFh7rW1sTgsVAYmvgZU+nclVq8c61imtafS+OUlA/rIg
-         DkC9QJZ/5kniuSUCoNMVSn1IH0+LRiwT0tV+8T8Ve5G4jy7ZF+gazF9MoOzN7GyXvr
-         xKJle1POew7TrjG3nJ7c1Yet2VVfI1OFCSV6KT7yHOaAihhAuVrp4X6HpW98mnhIGy
-         MYGmPLHWAz0kOKOqCK3kL0lo=
+        b=EwBjsqWxQozr5w1lJlRrUp2D5MRPGXh/T7co5sbf+E8hadFRpBw6vctj7pgbDMQ0M
+         vUkuSsXv0DkMzT99YmDYW279lCLac6pr6k+Ejl6Q/CrCo4W91mAYd4ufx7RRFh3pVZ
+         kKAnFFgnJhJIJTZEqYrF1NBbZGsvt7r7riP9TapDFwB8maC+Vhhu5SWqdsxS8UU6y2
+         hZivCh9IgHt0isApMS04xSX+cpkT8LpS463Ac81akd1qYRvtshPkQPjNbTPFG20qf+
+         TELCtZhznvd1eryR3rWbUFdmQTVRaRcb4vNE2nL9ye+oP3m8xu4KxvuMLz8vzAkSDU
+         TME2DgDraD0lbxfl/Vl/J8Sw7bWKQKznrFmg4ZsbQ3sg7rqHRGoxUcXg0jzrUAvjBw
+         lA2XiiLQloaWnez0NnYYVBqpGWXJsIORe7f/UxlcGuVH+1nO0dVfjwXCPENX0X7YUs
+         zg/nOXEC1OhkYKtaTdQp9WWyblKAyheYc2g8jiNHxH/LRvugedjqzJuyTFpIBCsz2H
+         QkZFa7LezzA7paw7xtNyd49a1YmEbphLgnjQqt1dk5E1TJHmQzk1pkG05xV6qSX/jD
+         L+xFIxw7v6i936nx9qbqc8WOnQIjC8g9T5xtUJ57hoMJn+hfYJ3s+TE5U5uN8OOFyx
+         AoXGXh0QT4oyWmYonJgxfYkE=
 Received: from Hawking (ntp.lan [10.0.1.1])
         (authenticated bits=0)
-        by mail2.nmnhosting.com (8.15.2/8.15.2) with ESMTPSA id x3FATAQm038571
+        by mail2.nmnhosting.com (8.15.2/8.15.2) with ESMTPSA id x3FAXnup038604
         (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Mon, 15 Apr 2019 20:29:11 +1000 (AEST)
+        Mon, 15 Apr 2019 20:33:49 +1000 (AEST)
         (envelope-from alastair@d-silva.org)
 From:   "Alastair D'Silva" <alastair@d-silva.org>
 To:     "'Petr Mladek'" <pmladek@suse.com>
-Cc:     "'Jani Nikula'" <jani.nikula@linux.intel.com>,
+Cc:     "'Alastair D'Silva'" <alastair@au1.ibm.com>,
+        "'Jani Nikula'" <jani.nikula@linux.intel.com>,
         "'Joonas Lahtinen'" <joonas.lahtinen@linux.intel.com>,
         "'Rodrigo Vivi'" <rodrigo.vivi@intel.com>,
         "'David Airlie'" <airlied@linux.ie>,
@@ -75,91 +76,108 @@ Cc:     "'Jani Nikula'" <jani.nikula@linux.intel.com>,
         <linux-wireless@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
         <linux-fbdev@vger.kernel.org>, <devel@driverdev.osuosl.org>,
         <linux-fsdevel@vger.kernel.org>
-References: <20190410031720.11067-1-alastair@au1.ibm.com> <20190410031720.11067-2-alastair@au1.ibm.com> <20190412134802.kprel2c2iqijd4ai@pathway.suse.cz> <092f01d4f186$8e9e7cd0$abdb7670$@d-silva.org> <20190415090232.3ualhrt5ssrb2ixq@pathway.suse.cz>
-In-Reply-To: <20190415090232.3ualhrt5ssrb2ixq@pathway.suse.cz>
-Subject: RE: [PATCH 1/4] lib/hexdump.c: Allow 64 bytes per line
-Date:   Mon, 15 Apr 2019 20:29:08 +1000
-Message-ID: <0dad01d4f376$113df2b0$33b9d810$@d-silva.org>
+References: <20190410031720.11067-1-alastair@au1.ibm.com> <20190410031720.11067-3-alastair@au1.ibm.com> <20190412140353.mgvksn3yk6n65hbk@pathway.suse.cz> <093101d4f187$612f0f20$238d2d60$@d-silva.org> <20190415091812.s4e5zlwldbe62ego@pathway.suse.cz>
+In-Reply-To: <20190415091812.s4e5zlwldbe62ego@pathway.suse.cz>
+Subject: RE: [PATCH 2/4] lib/hexdump.c: Optionally suppress lines of filler bytes
+Date:   Mon, 15 Apr 2019 20:33:47 +1000
+Message-ID: <0db001d4f376$b598af80$20ca0e80$@d-silva.org>
 MIME-Version: 1.0
 Content-Type: text/plain;
         charset="us-ascii"
 Content-Transfer-Encoding: 7bit
 X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQMagew30YCVD5mEhyHx4HPts9xr1AHAzoGyAvGIFSMBrjp8bwNRRzUuo2RTc0A=
+Thread-Index: AQMagew30YCVD5mEhyHx4HPts9xr1AIaTVgFAud+bokCJYEOIgJRBvYio2YlwMA=
 Content-Language: en-au
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.2 (mail2.nmnhosting.com [10.0.1.20]); Mon, 15 Apr 2019 20:29:14 +1000 (AEST)
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.2 (mail2.nmnhosting.com [10.0.1.20]); Mon, 15 Apr 2019 20:33:49 +1000 (AEST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-<snip>
-> > > On Wed 2019-04-10 13:17:17, Alastair D'Silva wrote:
+> > > On Wed 2019-04-10 13:17:18, Alastair D'Silva wrote:
 > > > > From: Alastair D'Silva <alastair@d-silva.org>
 > > > >
-> > > > With modern high resolution screens, we can display more data,
-> > > > which makes life a bit easier when debugging.
+> > > > Some buffers may only be partially filled with useful data, while
+> > > > the rest is padded (typically with 0x00 or 0xff).
+> > > >
+> > > > This patch introduces flags which allow lines of padding bytes to
+> > > > be suppressed, making the output easier to interpret:
+> > > > HEXDUMP_SUPPRESS_0X00, HEXDUMP_SUPPRESS_0XFF
+> > > >
+> > > > The first and last lines are not suppressed by default, so the
+> > > > function always outputs something. This behaviour can be further
+> > > > controlled with the HEXDUMP_SUPPRESS_FIRST &
+> > > HEXDUMP_SUPPRESS_LAST flags.
+> > > >
+> > > > An inline wrapper function is provided for backwards compatibility
+> > > > with existing code, which maintains the original behaviour.
+> > > >
 > > >
-> > > I have quite some doubts about this feature.
+> > > > diff --git a/lib/hexdump.c b/lib/hexdump.c index
+> > > > b8a164814744..2f3bafb55a44 100644
+> > > > --- a/lib/hexdump.c
+> > > > +++ b/lib/hexdump.c
+> > > > +void print_hex_dump_ext(const char *level, const char *prefix_str,
+> > > > +			int prefix_type, int rowsize, int groupsize,
+> > > > +			const void *buf, size_t len, u64 flags)
+> > > >  {
+> > > >  	const u8 *ptr = buf;
+> > > > -	int i, linelen, remaining = len;
+> > > > +	int i, remaining = len;
+> > > >  	unsigned char linebuf[64 * 3 + 2 + 64 + 1];
+> > > > +	bool first_line = true;
+> > > >
+> > > >  	if (rowsize != 16 && rowsize != 32 && rowsize != 64)
+> > > >  		rowsize = 16;
+> > > >
+> > > >  	for (i = 0; i < len; i += rowsize) {
+> > > > -		linelen = min(remaining, rowsize);
+> > > > +		bool skip = false;
+> > > > +		int linelen = min(remaining, rowsize);
+> > > > +
+> > > >  		remaining -= rowsize;
+> > > >
+> > > > +		if (flags & HEXDUMP_SUPPRESS_0X00)
+> > > > +			skip = buf_is_all(ptr + i, linelen, 0x00);
+> > > > +
+> > > > +		if (!skip && (flags & HEXDUMP_SUPPRESS_0XFF))
+> > > > +			skip = buf_is_all(ptr + i, linelen, 0xff);
+> > > > +
+> > > > +		if (first_line && !(flags & HEXDUMP_SUPPRESS_FIRST))
+> > > > +			skip = false;
+> > > > +
+> > > > +		if (remaining <= 0 && !(flags &
+HEXDUMP_SUPPRESS_LAST))
+> > > > +			skip = false;
+> > > > +
+> > > > +		if (skip)
+> > > > +			continue;
 > > >
-> > > We are talking about more than 256 characters per-line. I wonder if
-> > > such a long line is really easier to read for a human.
-> >
-> > It's basically 2 separate panes of information side by side, the
-> > hexdump and the ASCII version.
-> >
-> > I'm using this myself when dealing with the pmem labels, and it works
-> > quite nicely.
+> > > IMHO, quietly skipping lines could cause a lot of confusion,
+> > > espcially
+> > when the address is not printed.
+> > >
+> > It's up to the caller to decide how they want it displayed.
 > 
-> I am sure that it works for you. But I do not believe that it would be
-useful in
-> general.
+> I wonder who would want to quietly skip some data values.
+> Are you using it yourself? Could you please provide an example?
 
-I do, and I believe the choice of the output length should be in the hands
-of the caller.
-
-On further thought, it would make more sense to remove the hardcoded list of
-sizes and just enforce a power of 2. The function shouldn't dictate what the
-caller can and can't do beyond the technical limits of it's implementation.
-
-Other print/debug functions don't restrict the output size, and I can't see
-a good justification why hexdump should either.
-
-> > > I am not expert but there is a reason why the standard is 80
-> > > characters
-> > per-
-> > > line. I guess that anything above 100 characters is questionable.
-> > > https://en.wikipedia.org/wiki/Line_length
-> > > somehow confirms that.
-> > >
-> > > Second, if we take 8 pixels per-character. Then we need
-> > > 2048 to show the 256 characters. It is more than HD.
-> > > IMHO, there is still huge number of people that even do not have HD
-> > display,
-> > > especially on a notebook.
-> >
-> > The intent is to make debugging easier when dealing with large chunks
-> > of binary data. I don't expect end users to see this output.
+Yes, but I don't have the content with me at the moment, so I can't share
+it. I'm dumping persistent memory labels, which are 64kB long, but only the
+first few hundred bytes are populated.
+ 
+> I do not see why we would need to complicate the API and code by this.
 > 
-> How is it supposed to be used then? Only by your temporary patches?
+> The behavior proposed by Tvrtko Ursulin makes much more sense. I mean
+> https://lkml.kernel.org/r/929244ed-cc7f-b0f3-b5ac-
+> 50e798e83188@linux.intel.com
 
-Let me rephrase that, I don't expect end users to *use* this data.
-
-Current usage of the hexdump functions are predominantly centred around
-logging and debugging, and clearly targeted at someone intimately familiar
-with the relevant subsystem. I expect future use would be similar.
-
-Debugging may be as part of active development, or from a log supplied from
-an end user. In either case, it should be up to the author (as a
-representative for the consumers of the data) to decide how it should be
-formatted.
+I agree that is better, I'll add that to V2.
 
 -- 
 Alastair D'Silva           mob: 0423 762 819
 skype: alastair_dsilva     msn: alastair@d-silva.org
 blog: http://alastair.d-silva.org    Twitter: @EvilDeece
-
-
 
 
 
