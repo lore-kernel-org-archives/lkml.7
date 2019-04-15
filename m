@@ -6,74 +6,129 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC5C6C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 06:07:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20E04C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 06:08:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9527220833
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 06:07:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DF1E420825
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 06:08:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="fKGa7by9"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="IF1vsBRx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726281AbfDOGHa (ORCPT
+        id S1726210AbfDOGID (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 02:07:30 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:36919 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725852AbfDOGHa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 02:07:30 -0400
-Received: by mail-lf1-f67.google.com with SMTP id o19so7743553lfl.4
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2019 23:07:28 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=sifive.com; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=GW7M4MHHIkdd6HVQz82d2WszDsg/6I6fTV7AdaP6ddI=;
-        b=fKGa7by9308ZG4pUNv72cXFoW8iWW29xMC86t01xUJ5gLEwQefS/JYG7GZVgjPRgJh
-         jdx8VzNKD2TRtjY8P0p+xNnaVhsrHWbbkwUlz2hYG9dSRXPI5vfS0SW5Wt2tDalm8XDY
-         XkYx+BvxWJoVY9KyK/H+iHPDpn15fteLUo6BgxyBy0Y1TdNTLJ3gM/JtCtxQz0Fp6Unv
-         w1YO/7iLm6c7dTu6lkr4jciS0tom/y++q49nIsKPRWEIxpMzShtXwwtgeTqPFAnoBskq
-         BfQVLr9NhvF/d8+uX3++dvsJS/tknxSJlqnPs0/mQv8STnCoQfiEd4W41Jut5YbfT93p
-         TLBw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=GW7M4MHHIkdd6HVQz82d2WszDsg/6I6fTV7AdaP6ddI=;
-        b=hWqVPWYER5AJnH1FnUjZ137H9xO1F/qWszHTXi9EO5ky8wC7Ea5zFCtLT+5q+TKYxR
-         XIMjLFfwxo6pvDI6dEaQHkXkyv2haU6Dqfn45EOodFHScuAPq9Cd8wXoq68S5Ro1iZ7N
-         MFxf5RcBgF8rXtGOB/lfAjGq1pOhHqmFFVXZYGUeROeKBMWO+Pp4Ad6o8g/itggb4Q5r
-         OxUoawsGhWVZXIhz78zLZJFQsTHoMSh17nVFlSR31ig+nSBkD1f+CbH9VKnG0k/Pyg0X
-         ACnK7xUDg+ZpB3VUS4vgWyyCbpTP874qXV4ppKfo1mEbSvziuQcqkao7KnrnfXq3tFfk
-         xKpg==
-X-Gm-Message-State: APjAAAUMQDNQqfKsUABlqsdJLVF4qQ9yGU1PdWV5LWVl0V7HW7+TgaUh
-        Ls4voKf6u01DAXD3WghYv59wCkUsbRMjz5LPYwprhQ==
-X-Google-Smtp-Source: APXvYqzRmGYbJwfZKgoXZng5xC6EIs3HK92tsvwK9Xlv6E90GYGlv0vzWnDND9BQbN5cO2R61NRo3nQcYoo7vk/b2Zw=
-X-Received: by 2002:ac2:43cf:: with SMTP id u15mr16750868lfl.67.1555308447972;
- Sun, 14 Apr 2019 23:07:27 -0700 (PDT)
+        Mon, 15 Apr 2019 02:08:03 -0400
+Received: from ozlabs.org ([203.11.71.1]:52935 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725794AbfDOGID (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 02:08:03 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44jJ2S365Kz9s55;
+        Mon, 15 Apr 2019 16:08:00 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1555308480;
+        bh=LiUZAUkPESmSjJVIxSHZ/INj5aD7owdjdmwFg9A6+ho=;
+        h=Date:From:To:Cc:Subject:From;
+        b=IF1vsBRxknpuJaPpa90xDIPw4F6el70EhRNGnFN3wLWj9ZoHLj23YYd9Qb4evHvAA
+         p73jrB62r5s5Hyyoqn37Q0/bj83+Q/2biKRvXBPxNbY9y3zLJi4T1XGAvQxXF0CzN/
+         DMiBb7XUVnoDDdmqSXzR/gTe/hLPg/NRI796oTtTFJQJt4Nm/9uIyrMxeTzrr0mI3I
+         hV2jNKB7nQz12eZsOx452H0lSwCOt7VXNNLUe+sIjh2jC4sWqWj3ckzZ4gjR/NqKTs
+         PB7jytiOY2kTCpJuvUK49xVje457rbpRh4Ms3p4znbNvYnwi2to6aqsDGVhGjSjdZK
+         G6Hq91NEdpVew==
+Date:   Mon, 15 Apr 2019 16:07:58 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Michael S. Tsirkin" <mst@redhat.com>,
+        Bjorn Helgaas <bhelgaas@google.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>
+Subject: linux-next: manual merge of the vhost tree with the pci tree
+Message-ID: <20190415160758.390eaf8d@canb.auug.org.au>
 MIME-Version: 1.0
-References: <1553508779-9685-1-git-send-email-yash.shah@sifive.com>
-In-Reply-To: <1553508779-9685-1-git-send-email-yash.shah@sifive.com>
-From:   Yash Shah <yash.shah@sifive.com>
-Date:   Mon, 15 Apr 2019 11:36:51 +0530
-Message-ID: <CAJ2_jOF8RsLWHkcCJzwfpeMN0+G0oqbHto=nBBnpZDNfuQMKOw@mail.gmail.com>
-Subject: Re: [PATCH v11 0/2] PWM support for HiFive Unleashed
-To:     linux-pwm@vger.kernel.org, linux-riscv@lists.infradead.org,
-        Thierry Reding <thierry.reding@gmail.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Sachin Ghadi <sachin.ghadi@sifive.com>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Palmer Dabbelt <palmer@sifive.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/V7udtFxG3FbkzLoVt4SOoB/"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+--Sig_/V7udtFxG3FbkzLoVt4SOoB/
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Any comments on this patch series?
-Any more changes are needed or it looks good to be merged upstream?
+Hi all,
 
-- Yash
+Today's linux-next merge of the vhost tree got a conflict in:
+
+  drivers/pci/of.c
+
+between commit:
+
+  9cb30a71acd4 ("PCI: OF: Support "external-facing" property")
+
+from the pci tree and commit:
+
+  e1c326663501 ("PCI: OF: Initialize dev->fwnode appropriately")
+
+from the vhost tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/pci/of.c
+index 73d5adec0a28,9454c90980c9..000000000000
+--- a/drivers/pci/of.c
++++ b/drivers/pci/of.c
+@@@ -32,16 -34,13 +35,18 @@@ void pci_release_of_node(struct pci_de
+ =20
+  void pci_set_bus_of_node(struct pci_bus *bus)
+  {
+ -	if (bus->self =3D=3D NULL)
+ -		bus->dev.of_node =3D pcibios_get_phb_of_node(bus);
+ -	else
+ -		bus->dev.of_node =3D of_node_get(bus->self->dev.of_node);
+ +	struct device_node *node;
+ =20
+ -	if (bus->dev.of_node)
+ -		bus->dev.fwnode =3D &bus->dev.of_node->fwnode;
+ +	if (bus->self =3D=3D NULL) {
+ +		node =3D pcibios_get_phb_of_node(bus);
+ +	} else {
+ +		node =3D of_node_get(bus->self->dev.of_node);
+ +		if (node && of_property_read_bool(node, "external-facing"))
+ +			bus->self->untrusted =3D true;
+ +	}
+ +	bus->dev.of_node =3D node;
+++	if (node)
+++		bus->dev.fwnode =3D &node->fwnode;
+  }
+ =20
+  void pci_release_bus_of_node(struct pci_bus *bus)
+
+--Sig_/V7udtFxG3FbkzLoVt4SOoB/
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEyBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAly0H74ACgkQAVBC80lX
+0Gz3Swf3aCDVFBy1S3tddu+clorIixKLKHuMwQ/83DcW2kRgNpedCnjZKiNIkIpL
+lswSefPpg3+t28ExpMQ3vGU8F9yL7lZ+gp81aCcpPPMdlJqKxxCxYXoeEG/CQgIw
+t13K4HEHAB6CS1V3KCAqnzYMcpBXQVfA4ZuxCFS9T1R6iZA+kYN+5LaHRDrQos2n
+OHzE1fn2Cs+fTNAsH+5Lh6ari4ri+C6jVDuOnyjOhHVAKQs9CRwJOYshUBQMzbgc
+eQGOz412cXj9vGsk2R2LX3MbIH8/NxTL6TJJ5KbXARmmi0OacmKdJAYSeprJCLQA
+n2GzXrn6C+KkeRT8e8A+O4MtKY2j
+=Kfar
+-----END PGP SIGNATURE-----
+
+--Sig_/V7udtFxG3FbkzLoVt4SOoB/--
