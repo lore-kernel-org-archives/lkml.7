@@ -4,49 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D1CC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:09:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F3159C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:09:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9F9C32087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:09:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB4D3218FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:09:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355341;
-	bh=qY7SeKY+Huge9Eq1hAK9oCstFZApOcYzOHXgmCs2CKo=;
+	s=default; t=1555355344;
+	bh=e2tOFBoU5wYtkPRHkaxNc1B5wnVXy5OOuGbYz/kMnbU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=Rz8tO5bb4qBXqPm9KMtvlEy8cpQyPz3951AVCPkU/V1jMhqY40RjC3k/BlW4gDfX3
-	 JUE1cDSTF2v1LLRDduvezELrK6qIDnRPCngdZHypJqcZ+5ZBRFVqyRddEP2ckh3OWw
-	 L1Hf+OFycBlqNW88Ck2axZVsHu+u4t8DdKJ14RtM=
+	b=o2Hq3otSq9K6i5ezevYvxYZkWFX9UdImsKYJLi4/jEjqYUbm9UmQSVmzJXRcSGxGP
+	 eSFe9hu6EWa+vnwNfuENNPwxW3uSBAFGCDSNhKb2tFwJBHjAy/FE1P+zM6FxZIByNT
+	 twTIB6NbNlUftoZSPv4LPWolS5Pfps34QxzYM1pY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730625AbfDOTJA (ORCPT
+        id S1730637AbfDOTJE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:09:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44532 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:09:04 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44588 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730598AbfDOTI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:08:58 -0400
+        id S1730075AbfDOTJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:09:00 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E83E92087C;
-        Mon, 15 Apr 2019 19:08:56 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8CAC4218FE;
+        Mon, 15 Apr 2019 19:08:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355337;
-        bh=qY7SeKY+Huge9Eq1hAK9oCstFZApOcYzOHXgmCs2CKo=;
+        s=default; t=1555355340;
+        bh=e2tOFBoU5wYtkPRHkaxNc1B5wnVXy5OOuGbYz/kMnbU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=oU9sUTlrCbp8k2hZXMPZOSiRGeYFZRAu36bTndfRH4l1Ed2hn4NMfjnetCKCsxhcY
-         a7ZjN8cye1xWx029xryZfxl9dFiGXPgL2eX1bVidspclZ5FLJhftB7pp6vZMYAidOe
-         3RjfvHE4rXlp2gkP83fTPDRoHzkojeMlAUkfsSRg=
+        b=YPYz0yXtLdnonxdiwxszdt30QobUIPQLN4IL9rNzqSu/TQe8U3cj24NzEPHFQv6Jd
+         DbWLQP12FdovAZ1t6GAkf6hcWk2xcJ5rb2uPWto2DvICFAUb3xuNgv4Azjzg+HjzT2
+         q1z35l2fVLl3SYmKANsAm0mJCVWrGr0yXnMfYm9k=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Will Deacon <will.deacon@arm.com>
-Subject: [PATCH 4.19 082/101] arm64: backtrace: Dont bother trying to unwind the userspace stack
-Date:   Mon, 15 Apr 2019 20:59:20 +0200
-Message-Id: <20190415183744.750934705@linuxfoundation.org>
+        stable@vger.kernel.org, Dan Carpenter <dan.carpenter@oracle.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Juergen Gross <jgross@suse.com>
+Subject: [PATCH 4.19 083/101] xen: Prevent buffer overflow in privcmd ioctl
+Date:   Mon, 15 Apr 2019 20:59:21 +0200
+Message-Id: <20190415183744.798949630@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183740.341577907@linuxfoundation.org>
 References: <20190415183740.341577907@linuxfoundation.org>
@@ -59,72 +60,37 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Will Deacon <will.deacon@arm.com>
+From: Dan Carpenter <dan.carpenter@oracle.com>
 
-commit 1e6f5440a6814d28c32d347f338bfef68bc3e69d upstream.
+commit 42d8644bd77dd2d747e004e367cb0c895a606f39 upstream.
 
-Calling dump_backtrace() with a pt_regs argument corresponding to
-userspace doesn't make any sense and our unwinder will simply print
-"Call trace:" before unwinding the stack looking for user frames.
+The "call" variable comes from the user in privcmd_ioctl_hypercall().
+It's an offset into the hypercall_page[] which has (PAGE_SIZE / 32)
+elements.  We need to put an upper bound on it to prevent an out of
+bounds access.
 
-Rather than go through this song and dance, just return early if we're
-passed a user register state.
-
-Cc: <stable@vger.kernel.org>
-Fixes: 1149aad10b1e ("arm64: Add dump_backtrace() in show_regs")
-Reported-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Signed-off-by: Will Deacon <will.deacon@arm.com>
+Cc: stable@vger.kernel.org
+Fixes: 1246ae0bb992 ("xen: add variable hypercall caller")
+Signed-off-by: Dan Carpenter <dan.carpenter@oracle.com>
+Reviewed-by: Boris Ostrovsky <boris.ostrovsky@oracle.com>
+Signed-off-by: Juergen Gross <jgross@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/kernel/traps.c |   15 +++++++++------
- 1 file changed, 9 insertions(+), 6 deletions(-)
+ arch/x86/include/asm/xen/hypercall.h |    3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/arch/arm64/kernel/traps.c
-+++ b/arch/arm64/kernel/traps.c
-@@ -101,10 +101,16 @@ static void dump_instr(const char *lvl,
- void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
- {
- 	struct stackframe frame;
--	int skip;
-+	int skip = 0;
+--- a/arch/x86/include/asm/xen/hypercall.h
++++ b/arch/x86/include/asm/xen/hypercall.h
+@@ -206,6 +206,9 @@ xen_single_call(unsigned int call,
+ 	__HYPERCALL_DECLS;
+ 	__HYPERCALL_5ARG(a1, a2, a3, a4, a5);
  
- 	pr_debug("%s(regs = %p tsk = %p)\n", __func__, regs, tsk);
- 
-+	if (regs) {
-+		if (user_mode(regs))
-+			return;
-+		skip = 1;
-+	}
++	if (call >= PAGE_SIZE / sizeof(hypercall_page[0]))
++		return -EINVAL;
 +
- 	if (!tsk)
- 		tsk = current;
- 
-@@ -125,7 +131,6 @@ void dump_backtrace(struct pt_regs *regs
- 	frame.graph = tsk->curr_ret_stack;
- #endif
- 
--	skip = !!regs;
- 	printk("Call trace:\n");
- 	do {
- 		/* skip until specified stack frame */
-@@ -175,15 +180,13 @@ static int __die(const char *str, int er
- 		return ret;
- 
- 	print_modules();
--	__show_regs(regs);
- 	pr_emerg("Process %.*s (pid: %d, stack limit = 0x%p)\n",
- 		 TASK_COMM_LEN, tsk->comm, task_pid_nr(tsk),
- 		 end_of_stack(tsk));
-+	show_regs(regs);
- 
--	if (!user_mode(regs)) {
--		dump_backtrace(regs, tsk);
-+	if (!user_mode(regs))
- 		dump_instr(KERN_EMERG, regs);
--	}
- 
- 	return ret;
- }
+ 	asm volatile(CALL_NOSPEC
+ 		     : __HYPERCALL_5PARAM
+ 		     : [thunk_target] "a" (&hypercall_page[call])
 
 
