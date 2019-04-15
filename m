@@ -2,89 +2,192 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BE90C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:55:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D435C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:56:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 568EE20825
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:55:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEE0120825
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:56:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727659AbfDOPz0 (ORCPT
+        id S1727689AbfDOP4G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 11:55:26 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:57835 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725972AbfDOPzZ (ORCPT
+        Mon, 15 Apr 2019 11:56:06 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:39620 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1726785AbfDOP4G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 11:55:25 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MYvLi-1hKVup0f3I-00Uonv; Mon, 15 Apr 2019 17:55:11 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Corey Minyard <minyard@acm.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        openipmi-developer@lists.sourceforge.net,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ipmi: avoid atomic_inc in exit function
-Date:   Mon, 15 Apr 2019 17:55:00 +0200
-Message-Id: <20190415155509.3565087-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Mon, 15 Apr 2019 11:56:06 -0400
+Received: (qmail 5451 invoked by uid 2102); 15 Apr 2019 11:56:05 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 15 Apr 2019 11:56:05 -0400
+Date:   Mon, 15 Apr 2019 11:56:05 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Raul E Rangel <rrangel@chromium.org>
+cc:     USB list <linux-usb@vger.kernel.org>, <groeck@chromium.org>,
+        Oliver Neukum <oneukum@suse.com>, <djkurtz@chromium.org>,
+        <zwisler@chromium.org>,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Dmitry Torokhov <dtor@chromium.org>,
+        Suwan Kim <suwan.kim027@gmail.com>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Johan Hovold <johan@kernel.org>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>
+Subject: Re: [PATCH v2] usb/hcd: Send a uevent signaling that the host
+ controller has died
+In-Reply-To: <20190411185211.235940-1-rrangel@chromium.org>
+Message-ID: <Pine.LNX.4.44L0.1904151152390.1575-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:yT5pRj1gEeKNHvX+QSSDe1YcoCPQ/mYdkbY06sbVOQPRdm3tdJR
- c4dsDP/p/bGLUbCpToY4coCkxWjyEGExWboznimdUtIQ2XrZeLu8JvOou0fC7jZfS+s9KQ9
- LZIVNrUPgYHtCiU+914HS21/mjKoSQY62YQW1BXT8cTAkvmCqY3iE5nO/DF2gcE7F9KL8wJ
- TKmq8196/pridrG/t4UyQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:AZSHc6nS8fI=:ZfSwKGZsGAAhSzusOlnvk/
- qGtMhxHiDFOOYHnrH8QKwI6Izx16uMUlQeGWhdUHYMzb+XXL/ZDGNf9jijJGkoYJqbxr+LdfF
- l1H9n1kqzNSn20tRdp+K2jDhwqsPsbWHb4Ftbqt9AMXdtIIwDm0HB6mj9TbXzmyfnFrQlX1JE
- vQ3nVnwSKKinD7vmR9UQOvqTgc5vh1NzmYRmHu0A1xVBAolLdUg/uctv4qRUnGL1w7JumTeIQ
- 6y7BPb6jHAsGP475ZCMg1R+tmpxZtdrTD31d2ZaSrjm9pwZCOKt+eekhTewreZKh095yE4SI3
- X5RtQdguB/Yrz201Ycu6j5o4huqz5oLaNLaWZ+Mu2RQWoFxD7dZLAKOj/xU6ZFtf2LOB+6GFH
- EPqLCzXMlEdCqhOaywvp30FIY2MGPhB0jkonaHAg+Bh2XBr9uhjCThD9EHm426uZmyi7VMXTy
- kRSx196fy/dkra9kI7fwPXawQIjAiuVFBR6NpzBTcOOJYd8TeDrh+fQUzzOw5Gtk/9kj4gHi2
- SuWQLHU1ltRySpwf8Sx37MEeNrg5a6fN3FI4UMCgSKJSCzXY0LVj8/8EFU1rl5SeR4FoFdiP7
- GPzV4KovxyHu/0q9LBG69csaCm98jQ53Cv2m1WdsFE4ErNd1MsxQQkorhetkP8erMJ76/FvKF
- rhZa2g25oiyodCV01m1xeTI1LBBBREonvd8PpSAXfD6/3q8CUZcrm5dus8ITpcDdERyTJwVn/
- NjKFqVw1Uq4dKN30U+ZwNKtuCtWQds1fxhPjhQ==
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This causes a link failure on ARM in certain configurations,
-when we reference each atomic operation from .alt.smp.init in
-order to patch out atomics on non-SMP systems:
+On Thu, 11 Apr 2019, Raul E Rangel wrote:
 
-`.exit.text' referenced in section `.alt.smp.init' of drivers/char/ipmi/ipmi_msghandler.o: defined in discarded section `.exit.text' of drivers/char/ipmi/ipmi_msghandler.o
+> This change will send a CHANGE event to udev with the DEAD environment
+> variable set when the HC dies. I chose this instead of any of the other
+> udev events because it's representing a state change in the host
+> controller. The only other event that might have fit was OFFLINE, but
+> that seems to be used for hot-removal and it implies the device could
+> come ONLINE again.
+> 
+> By notifying user space the appropriate policies can be applied.
+> i.e.,
+>  * Collect error logs.
+>  * Notify the user that USB is no longer functional.
+>  * Perform a graceful reboot.
+> 
+> Signed-off-by: Raul E Rangel <rrangel@chromium.org>
+> ---
+> I wasn't able to find any good examples of other drivers sending a dead
+> notification.
+> 
+> Use an EVENT= format
+> https://github.com/torvalds/linux/blob/master/drivers/acpi/dock.c#L302
+> https://github.com/torvalds/linux/blob/master/drivers/net/wireless/ath/wil6210/interrupt.c#L497
+> 
+> Uses SDEV_MEDIA_CHANGE=
+> https://github.com/torvalds/linux/blob/master/drivers/scsi/scsi_lib.c#L2318
+> 
+> Uses ERROR=1.
+> https://chromium.googlesource.com/chromiumos/third_party/kernel/+/7f6d8aec5803aac44192f03dce5637b66cda7abf/drivers/input/touchscreen/atmel_mxt_ts.c#1581
+> I'm not a fan because it doesn't signal what the error was.
+> 
+> We could change the DEAD=1 event to maybe ERROR=1?
+> 
+> Also where would be a good place to document this?
+> 
+> Also thanks for the review. This is my first kernel patch so forgive me
+> if I get the workflow wrong.
+> 
+> Changes in v2:
+> - Check that the root hub still exists before sending the uevent.
+> - Ensure died_work has completed before deallocating.
+> 
+>  drivers/usb/core/hcd.c  | 32 ++++++++++++++++++++++++++++++++
+>  include/linux/usb/hcd.h |  1 +
+>  2 files changed, 33 insertions(+)
 
-In this case, we can trivially replace the atomic_inc() with
-an atomic_set() that has the same effect and does not require
-a fixup.
+Technically this patch looks okay to me.  However, Greg KH may have
+some comments regarding the new uevent this introduces.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- drivers/char/ipmi/ipmi_msghandler.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Acked-by: Alan Stern <stern@rowland.harvard.edu>
 
-diff --git a/drivers/char/ipmi/ipmi_msghandler.c b/drivers/char/ipmi/ipmi_msghandler.c
-index e8ba67834746..c48198eef510 100644
---- a/drivers/char/ipmi/ipmi_msghandler.c
-+++ b/drivers/char/ipmi/ipmi_msghandler.c
-@@ -5164,7 +5164,7 @@ static void __exit cleanup_ipmi(void)
- 		 * avoids problems with race conditions removing the timer
- 		 * here.
- 		 */
--		atomic_inc(&stop_operation);
-+		atomic_set(&stop_operation, 1);
- 		del_timer_sync(&ipmi_timer);
- 
- 		initialized = false;
--- 
-2.20.0
+Alan Stern
+
+
+> diff --git a/drivers/usb/core/hcd.c b/drivers/usb/core/hcd.c
+> index 975d7c1288e3..7835f1a3647d 100644
+> --- a/drivers/usb/core/hcd.c
+> +++ b/drivers/usb/core/hcd.c
+> @@ -2343,6 +2343,27 @@ int hcd_bus_resume(struct usb_device *rhdev, pm_message_t msg)
+>  	return status;
+>  }
+>  
+> +
+> +/**
+> + * hcd_died_work - Workqueue routine for root-hub has died.
+> + * @hcd: primary host controller for this root hub.
+> + *
+> + * Do not call with the shared_hcd.
+> + * */
+> +static void hcd_died_work(struct work_struct *work)
+> +{
+> +	struct usb_hcd *hcd = container_of(work, struct usb_hcd, died_work);
+> +
+> +	mutex_lock(&usb_bus_idr_lock);
+> +
+> +	if (hcd->self.root_hub)
+> +		/* Notify user space that the host controller has died */
+> +		kobject_uevent_env(&hcd->self.root_hub->dev.kobj, KOBJ_CHANGE,
+> +				   (char *[]){ "DEAD=1", NULL });
+> +
+> +	mutex_unlock(&usb_bus_idr_lock);
+> +}
+> +
+>  /* Workqueue routine for root-hub remote wakeup */
+>  static void hcd_resume_work(struct work_struct *work)
+>  {
+> @@ -2488,6 +2509,13 @@ void usb_hc_died (struct usb_hcd *hcd)
+>  			usb_kick_hub_wq(hcd->self.root_hub);
+>  		}
+>  	}
+> +
+> +	/* Handle the case where this function gets called with a shared HCD */
+> +	if (usb_hcd_is_primary_hcd(hcd))
+> +		schedule_work(&hcd->died_work);
+> +	else
+> +		schedule_work(&hcd->primary_hcd->died_work);
+> +
+>  	spin_unlock_irqrestore (&hcd_root_hub_lock, flags);
+>  	/* Make sure that the other roothub is also deallocated. */
+>  }
+> @@ -2555,6 +2583,8 @@ struct usb_hcd *__usb_create_hcd(const struct hc_driver *driver,
+>  	INIT_WORK(&hcd->wakeup_work, hcd_resume_work);
+>  #endif
+>  
+> +	INIT_WORK(&hcd->died_work, hcd_died_work);
+> +
+>  	hcd->driver = driver;
+>  	hcd->speed = driver->flags & HCD_MASK;
+>  	hcd->product_desc = (driver->product_desc) ? driver->product_desc :
+> @@ -2908,6 +2938,7 @@ int usb_add_hcd(struct usb_hcd *hcd,
+>  #ifdef CONFIG_PM
+>  	cancel_work_sync(&hcd->wakeup_work);
+>  #endif
+> +	cancel_work_sync(&hcd->died_work);
+>  	mutex_lock(&usb_bus_idr_lock);
+>  	usb_disconnect(&rhdev);		/* Sets rhdev to NULL */
+>  	mutex_unlock(&usb_bus_idr_lock);
+> @@ -2968,6 +2999,7 @@ void usb_remove_hcd(struct usb_hcd *hcd)
+>  #ifdef CONFIG_PM
+>  	cancel_work_sync(&hcd->wakeup_work);
+>  #endif
+> +	cancel_work_sync(&hcd->died_work);
+>  
+>  	mutex_lock(&usb_bus_idr_lock);
+>  	usb_disconnect(&rhdev);		/* Sets rhdev to NULL */
+> diff --git a/include/linux/usb/hcd.h b/include/linux/usb/hcd.h
+> index 695931b03684..ae51d5bd1dfc 100644
+> --- a/include/linux/usb/hcd.h
+> +++ b/include/linux/usb/hcd.h
+> @@ -98,6 +98,7 @@ struct usb_hcd {
+>  #ifdef CONFIG_PM
+>  	struct work_struct	wakeup_work;	/* for remote wakeup */
+>  #endif
+> +	struct work_struct	died_work;	/* for dying */
+>  
+>  	/*
+>  	 * hardware info/state
+> 
 
