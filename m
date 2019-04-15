@@ -2,267 +2,141 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C32D4C10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:36:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4180EC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:37:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 887F220693
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:36:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="K0sVU6Zs"
+	by mail.kernel.org (Postfix) with ESMTP id 1554A2077C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:37:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727502AbfDOMgr (ORCPT
+        id S1727510AbfDOMhE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 08:36:47 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:40014 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727025AbfDOMgp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 08:36:45 -0400
-Received: by mail-wm1-f65.google.com with SMTP id z24so20371758wmi.5
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 05:36:42 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=r+9SvSXgAtl/2CAFXsrdY5akT9tvybhjeyRAQfcN16s=;
-        b=K0sVU6Zszxcqf0HwQFT4rRrbyxl4kprovp0SWiAUVgwKqqKFPSO9niwftV/aNyvIHk
-         mhcXDMn8SqsgjT9Id4s1nA2yI60ekL3Wf/ZRNfjjFwuemBnwAZ7x/q7k7nuhyVIVqVbI
-         GJankaT1kYDL+Oh6PWMuDEVp6Wk0HrWsK3V2RQgrouT2DvxfzeSE5gfvXdOaxc/QS4Og
-         +F2jm1dhiRKRtevZVUiW0sALXfiOULTtcY0SXu5GQRYIYzoX1rUhf2rEMR6MqzDjsaC/
-         5La0kjSmWpDfyPUP+MjNOnL8DaA7P/QG06ZQTpz5b6gazzPmo/xE77ZH2XSykMWZtp8R
-         S3lw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=r+9SvSXgAtl/2CAFXsrdY5akT9tvybhjeyRAQfcN16s=;
-        b=gsJDqDZ4YwkYNdvZsIG9hB4/awAY+WIV245yW/vqZHwsy3oD4nxxGSlnJSWg4WywZP
-         jC/AT4mAAMHwg9h7r4IyDRwRZbpkQafFr4qK7r7dga9cFpevugKcsxxcS6+IhZK4ncv6
-         TViRibImcfjeLkXNHfcIwvCxJpt+5Epsol+Bdl2dX1+DschmbzHo4AdpLPvpuE8YnLFg
-         u5HgW8lJ3KFB2mjJbYn0XLIrcPECV5sqf9Q5OeH83BoqPnBItchI9F9J1HU0+ycUB8LN
-         PHZgP/JlFVZGo9h3cdhNybwOlQVF9LyR/Hi0JDX2CvB4Xs6s9xKBexRTqXdescxgv40s
-         aboQ==
-X-Gm-Message-State: APjAAAWmhRQof1unTYTxPh4ROLAo9bFNNBzdK+SE7Pqp3DITV1E1iXK7
-        k0inCGM7h2cONKJ65tkETqlF8A==
-X-Google-Smtp-Source: APXvYqy6fXvjz5kLMDbLblVMhy0bg9hpBZVULVeeodXi4RLGv5wUEuSrYwsRTJKKGZGaaQAteI9MPw==
-X-Received: by 2002:a1c:cf46:: with SMTP id f67mr21484965wmg.98.1555331801914;
-        Mon, 15 Apr 2019 05:36:41 -0700 (PDT)
-Received: from [192.168.0.41] (4.112.130.77.rev.sfr.net. [77.130.112.4])
-        by smtp.googlemail.com with ESMTPSA id y125sm27394001wmc.39.2019.04.15.05.36.40
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Apr 2019 05:36:41 -0700 (PDT)
-Subject: Re: [PATCH v4 01/11] clocksource: davinci-timer: new driver
-To:     Bartosz Golaszewski <brgl@bgdev.pl>, Sekhar Nori <nsekhar@ti.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        David Lechner <david@lechnology.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <20190318121100.28132-1-brgl@bgdev.pl>
- <20190318121100.28132-2-brgl@bgdev.pl>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <d3d05858-966b-cd4a-3286-97e7d7bde0bc@linaro.org>
-Date:   Mon, 15 Apr 2019 14:36:39 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 15 Apr 2019 08:37:04 -0400
+Received: from [110.188.70.11] ([110.188.70.11]:13505 "EHLO spam2.hygon.cn"
+        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727025AbfDOMhE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 08:37:04 -0400
+Received: from spam2.hygon.cn (localhost [127.0.0.2] (may be forged))
+        by spam2.hygon.cn with ESMTP id x3FCAr4F059502;
+        Mon, 15 Apr 2019 20:10:53 +0800 (GMT-8)
+        (envelope-from fenghao@hygon.cn)
+Received: from MK-DB.hygon.cn ([172.23.18.60])
+        by spam2.hygon.cn with ESMTP id x3FC6aFG059155;
+        Mon, 15 Apr 2019 20:06:36 +0800 (GMT-8)
+        (envelope-from fenghao@hygon.cn)
+Received: from cncheex02.Hygon.cn ([172.23.18.12])
+        by MK-DB.hygon.cn with ESMTP id x3FC6RPv053895;
+        Mon, 15 Apr 2019 20:06:27 +0800 (GMT-8)
+        (envelope-from fenghao@hygon.cn)
+Received: from harry-Inspiron-5675.higon.com (172.23.18.44) by
+ cncheex02.Hygon.cn (172.23.18.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Mon, 15 Apr
+ 2019 20:06:30 +0800
+From:   Hao Feng <fenghao@hygon.cn>
+To:     "'Tom Lendacky '" <thomas.lendacky@amd.com>,
+        "'Gary Hook '" <gary.hook@amd.com>,
+        "'Herbert Xu '" <herbert@gondor.apana.org.au>,
+        "' David S. Miller '" <davem@davemloft.net>,
+        "'Janakarajan Natarajan '" <Janakarajan.Natarajan@amd.com>,
+        "'Joerg Roedel '" <joro@8bytes.org>,
+        "'Paolo Bonzini '" <pbonzini@redhat.com>,
+        =?UTF-8?q?=27=20Radim=20Kr=C4=8Dm=C3=A1=C5=99=20=27?= 
+        <rkrcmar@redhat.com>, "'Thomas Gleixner '" <tglx@linutronix.de>,
+        "'Ingo Molnar '" <mingo@redhat.com>,
+        "'Borislav Petkov '" <bp@alien8.de>,
+        "' H. Peter Anvin '" <hpa@zytor.com>
+CC:     "'Zhaohui Du '" <duzhaohui@hygon.cn>,
+        "'Zhiwei Ying '" <yingzhiwei@hygon.cn>,
+        "'Wen Pu '" <puwen@hygon.cn>, Hao Feng <fenghao@hygon.cn>,
+        <x86@kernel.org>, <linux-crypto@vger.kernel.org>,
+        <kvm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: [PATCH 0/6] Add Hygon SEV support
+Date:   Mon, 15 Apr 2019 20:04:22 +0800
+Message-ID: <1555329868-17895-1-git-send-email-fenghao@hygon.cn>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <20190318121100.28132-2-brgl@bgdev.pl>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [172.23.18.44]
+X-ClientProxiedBy: cncheex02.Hygon.cn (172.23.18.12) To cncheex02.Hygon.cn
+ (172.23.18.12)
+X-MAIL: spam2.hygon.cn x3FC6aFG059155
+X-DNSRBL: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 18/03/2019 13:10, Bartosz Golaszewski wrote:
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> 
-> Currently the clocksource and clockevent support for davinci platforms
-> lives in mach-davinci. It hard-codes many things, uses global variables,
-> implements functionalities unused by any platform and has code fragments
-> scattered across many (often unrelated) files.
-> 
-> Implement a new, modern and simplified timer driver and put it into
-> drivers/clocksource. We still need to support legacy board files so
-> export a config structure and a function that allows machine code to
-> register the timer.
-> 
-> We don't bother freeing resources on errors in davinci_timer_register()
-> as the system won't boot without a timer anyway.
+Hygon SEV follows AMD SEV work flow, but uses China national standard
+cryptographic algorithms SM2/SM3/SM4 instead of (RSA, ECDSA,
+ECDH)/SHA/AES. Reuse most AMD SEV code path to support Hygon SEV,
+also adds 3 new commands(GM_PUBKEY_GEN, GM_GET_DIGEST,
+GM_VERIFY_DIGEST) to support SM2 key exchange protocol.
 
-Can you give a quick description of the timer hardware and how it works?
+SM2 is based on ECC(Elliptic Curve Cryptography), and uses a special
+curve. It can be used in digital signature, key exchange and
+asymmetric cryptography. For key exchange, SM2 is similar to ECDH, but
+involves new random key, meaning the two sides need to exchange extra
+random public key besides their public key, that's why additional APIs
+are needed to support Hygon SEV.
+SM3 is a hash algorithm, similar to SHA-256.
+SM4 is a block cipher algorithm, similar to AES-128.
 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> Reviewed-by: David Lechner <david@lechnology.com>
-> ---
->  drivers/clocksource/Kconfig         |   5 +
->  drivers/clocksource/Makefile        |   1 +
->  drivers/clocksource/timer-davinci.c | 438 ++++++++++++++++++++++++++++
->  include/clocksource/timer-davinci.h |  44 +++
->  4 files changed, 488 insertions(+)
->  create mode 100644 drivers/clocksource/timer-davinci.c
->  create mode 100644 include/clocksource/timer-davinci.h
-> 
-> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-> index 171502a356aa..08b1f539cfc4 100644
-> --- a/drivers/clocksource/Kconfig
-> +++ b/drivers/clocksource/Kconfig
-> @@ -42,6 +42,11 @@ config BCM_KONA_TIMER
->  	help
->  	  Enables the support for the BCM Kona mobile timer driver.
->  
-> +config DAVINCI_TIMER
-> +	bool "Texas Instruments DaVinci timer driver"
+1. GM_PUBKEY_GEN
+----------------
+The command is used to get SM2 random public key from SEV firmware to
+compute share key.
 
-Make the option silent (eg. if COMPILE_TEST)
+Parameters:
+* GM_KEY_ID_PADDR (in) - Address of key ID for the random public key.
+* GM_KEY_ID_LEN (in) - Length of key ID.
+* GM_PUBKEY_PADDR (in) - Address of the random public key.
+* GM_PUBKEY_LEN (in,out) - Length of the random public key.
 
-> +	help
-> +	  Enables the support for the TI DaVinci timer driver.
-> +
->  config DIGICOLOR_TIMER
->  	bool "Digicolor timer driver" if COMPILE_TEST
->  	select CLKSRC_MMIO
-> diff --git a/drivers/clocksource/Makefile b/drivers/clocksource/Makefile
-> index be6e0fbc7489..3c73d0e58b45 100644
-> --- a/drivers/clocksource/Makefile
-> +++ b/drivers/clocksource/Makefile
-> @@ -15,6 +15,7 @@ obj-$(CONFIG_SH_TIMER_TMU)	+= sh_tmu.o
->  obj-$(CONFIG_EM_TIMER_STI)	+= em_sti.o
->  obj-$(CONFIG_CLKBLD_I8253)	+= i8253.o
->  obj-$(CONFIG_CLKSRC_MMIO)	+= mmio.o
-> +obj-$(CONFIG_DAVINCI_TIMER)	+= timer-davinci.o
->  obj-$(CONFIG_DIGICOLOR_TIMER)	+= timer-digicolor.o
->  obj-$(CONFIG_OMAP_DM_TIMER)	+= timer-ti-dm.o
->  obj-$(CONFIG_DW_APB_TIMER)	+= dw_apb_timer.o
-> diff --git a/drivers/clocksource/timer-davinci.c b/drivers/clocksource/timer-davinci.c
-> new file mode 100644
-> index 000000000000..46dfc4d457fc
-> --- /dev/null
-> +++ b/drivers/clocksource/timer-davinci.c
-> @@ -0,0 +1,438 @@
-> +// SPDX-License-Identifier: GPL-2.0-only
-> +//
-> +// TI DaVinci clocksource driver
-> +//
-> +// Copyright (C) 2019 Texas Instruments
-> +// Author: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> +// (with some parts adopted from code by Kevin Hilman <khilman@baylibre.com>)
-> +
-> +#include <linux/clk.h>
-> +#include <linux/clockchips.h>
-> +#include <linux/clocksource.h>
-> +#include <linux/err.h>
-> +#include <linux/interrupt.h>
-> +#include <linux/kernel.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/sched_clock.h>
-> +
-> +#include <clocksource/timer-davinci.h>
-> +
-> +#undef pr_fmt
-> +#define pr_fmt(fmt) "%s: " fmt "\n", __func__
-> +
-> +#define DAVINCI_TIMER_REG_TIM12			0x10
-> +#define DAVINCI_TIMER_REG_TIM34			0x14
-> +#define DAVINCI_TIMER_REG_PRD12			0x18
-> +#define DAVINCI_TIMER_REG_PRD34			0x1c
-> +#define DAVINCI_TIMER_REG_TCR			0x20
-> +#define DAVINCI_TIMER_REG_TGCR			0x24
-> +
-> +#define DAVINCI_TIMER_TIMMODE_MASK		GENMASK(3, 2)
-> +#define DAVINCI_TIMER_RESET_MASK		GENMASK(1, 0)
-> +#define DAVINCI_TIMER_TIMMODE_32BIT_UNCHAINED	BIT(2)
-> +#define DAVINCI_TIMER_UNRESET			GENMASK(1, 0)
-> +
-> +/* Shift depends on timer. */
-> +#define DAVINCI_TIMER_ENAMODE_MASK		GENMASK(1, 0)
-> +#define DAVINCI_TIMER_ENAMODE_DISABLED		0x00
-> +#define DAVINCI_TIMER_ENAMODE_ONESHOT		BIT(0)
-> +#define DAVINCI_TIMER_ENAMODE_PERIODIC		BIT(1)
-> +
-> +#define DAVINCI_TIMER_ENAMODE_SHIFT_TIM12	6
-> +#define DAVINCI_TIMER_ENAMODE_SHIFT_TIM34	22
-> +
-> +#define DAVINCI_TIMER_MIN_DELTA			0x01
-> +#define DAVINCI_TIMER_MAX_DELTA			0xfffffffe
-> +
-> +#define DAVINCI_TIMER_CLKSRC_BITS		32
-> +
-> +#define DAVINCI_TIMER_TGCR_DEFAULT \
-> +		(DAVINCI_TIMER_TIMMODE_32BIT_UNCHAINED | DAVINCI_TIMER_UNRESET)
-> +
-> +enum {
-> +	DAVINCI_TIMER_MODE_DISABLED = 0,
-> +	DAVINCI_TIMER_MODE_ONESHOT,
-> +	DAVINCI_TIMER_MODE_PERIODIC,
-> +};
+2. GM_GET_DIGEST
+----------------
+The command is used to get key digest from SEV firmware during SM2 key
+exchange, guest owner can check the digest to see if the key
+negotiation is successful or not.
 
-This is replicating what is already available. Right after set_periodic
-or set_oneshot are called, the timer state is changed to respectively
-CLOCK_EVT_STATE_PERIODIC and CLOCK_EVT_STATE_ONESHOT. So it is useless
-to define those enum again as what you want is to check the timer mode.
+Parameters:
+* HANDLE (in) - Guest handle
+* DIGEST_PADDR (in) - Address of the key digest
+* DIGEST_LEN (in, out) - Length of the key digest
 
+3. GM_VERIFY_DIGEST
+-------------------
+The command is used to send guest owner's key digest to SEV firmware
+during SM2 key exchange, firmware can check the digest to see if the
+negotiation is successful or not.
 
-[ ... ]
+Parameters:
+* HANDLE (in) - Guest handle
+* DIGEST_PADDR (in) - Address of the key digest
+* DIGEST_LEN (in) - Length of the key digest
 
-> +
-> +	clocksource = kzalloc(sizeof(*clocksource), GFP_KERNEL);
-> +	if (!clocksource) {
-> +		pr_err("Error allocating memory for clocksource data");
-> +		return -ENOMEM;
-> +	}
-> +
-> +	clocksource->dev.rating = 300;
-> +	clocksource->dev.read = davinci_timer_clksrc_read;
-> +	clocksource->dev.mask = CLOCKSOURCE_MASK(DAVINCI_TIMER_CLKSRC_BITS);
-> +	clocksource->dev.flags = CLOCK_SOURCE_IS_CONTINUOUS;
+Already tested successfully on Hygon DhyanaPlus processor, also tested
+successfully on AMD EPYC processor, results show no side effect on
+current AMD SEV implementation.
 
->>>
+Hao Feng (6):
+  crypto: ccp: Add Hygon Dhyana support
+  crypto: ccp: Define Hygon SEV commands
+  crypto: ccp: Implement SEV_GM_PUBKEY_GEN ioctl command
+  KVM: Define Hygon SEV commands
+  KVM: SVM: Add support for KVM_SEV_GM_GET_DIGEST command
+  KVM: SVM: Add KVM_SEV_GM_VERIFY_DIGEST command
 
-> +	clocksource->timer.set_period = davinci_timer_set_period_std;
-> +	clocksource->timer.mode = DAVINCI_TIMER_MODE_PERIODIC;
-> +	clocksource->timer.base = base;
-
-What for?
-
-<<<
-
-> +	if (timer_cfg->cmp_off) {
-> +		clocksource->timer.regs = &davinci_timer_tim12_regs;
-> +		clocksource->dev.name = "tim12";
-> +	} else {
-> +		clocksource->timer.regs = &davinci_timer_tim34_regs;
-> +		clocksource->dev.name = "tim34";
-> +	}
-> +
-> +	rv = request_irq(timer_cfg->irq[DAVINCI_TIMER_CLOCKSOURCE_IRQ].start,
-> +			 davinci_timer_irq_freerun, IRQF_TIMER,
-> +			 "free-run counter", clocksource);
-> +	if (rv) {
-> +		pr_err("Unable to request the clocksource interrupt");
-> +		return rv;
-> +	}
-
-Why do you have to request an interrupt to do nothing? Isn't possible to
-let the timer run and wrap without generating interrupts?
-
-[ ... ]
-
-
-
+ arch/x86/kvm/svm.c           | 119 +++++++++++++++++++++++++++++++++++++++++++
+ drivers/crypto/ccp/psp-dev.c |  86 +++++++++++++++++++++++++++++++
+ drivers/crypto/ccp/sp-pci.c  |   2 +
+ include/linux/psp-sev.h      |  49 ++++++++++++++++++
+ include/uapi/linux/kvm.h     |  14 +++++
+ include/uapi/linux/psp-sev.h |  17 +++++++
+ 6 files changed, 287 insertions(+)
 
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
+2.7.4
 
