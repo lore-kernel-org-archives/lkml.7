@@ -2,112 +2,103 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0383BC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 11:39:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6705DC10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 11:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3EFD20645
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 11:39:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 30C3F20833
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 11:41:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="jjo8/bzn"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727274AbfDOLjs (ORCPT
+        id S1727290AbfDOLl2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 07:39:48 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:48828 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726298AbfDOLjs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 07:39:48 -0400
-Received: from DGGEMM402-HUB.china.huawei.com (unknown [172.30.72.53])
-        by Forcepoint Email with ESMTP id 3EB7EF6C5183527CC0E0;
-        Mon, 15 Apr 2019 19:39:44 +0800 (CST)
-Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
- DGGEMM402-HUB.china.huawei.com (10.3.20.210) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Mon, 15 Apr 2019 19:39:43 +0800
-Received: from szvp000201624.huawei.com (10.120.216.130) by
- dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Mon, 15 Apr 2019 19:39:43 +0800
-From:   Chao Yu <yuchao0@huawei.com>
-To:     <jaegeuk@kernel.org>
-CC:     <linux-f2fs-devel@lists.sourceforge.net>,
-        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
-        Chao Yu <yuchao0@huawei.com>
-Subject: [PATCH v2 13/13] f2fs: don't recovery orphan inode on readonly device
-Date:   Mon, 15 Apr 2019 19:39:33 +0800
-Message-ID: <20190415113933.21621-1-yuchao0@huawei.com>
-X-Mailer: git-send-email 2.18.0.rc1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.120.216.130]
-X-ClientProxiedBy: dggeme708-chm.china.huawei.com (10.1.199.104) To
- dggeme763-chm.china.huawei.com (10.3.19.109)
-X-CFilter-Loop: Reflected
+        Mon, 15 Apr 2019 07:41:28 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:37363 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726094AbfDOLl1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 07:41:27 -0400
+Received: by mail-pf1-f194.google.com with SMTP id 8so8467370pfr.4
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 04:41:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=9vAsjj4wH0cq3m3qpVkSYBnwOxwjBpDvsPJW0c5pFjc=;
+        b=jjo8/bznAfvwZ9+Xcy6VY23GYfv8XoI/ScoXsSDVX/xI0csb5RA1gUIQpTgMfDffLf
+         08H5gttNVgjmUGOhJ/R+tWlxLe0tCxBkDmYOfxnROA4UEpU08bOhnBdTKQX2BF+djS8e
+         JZ0eaLUMtYTN606fMdufSySDgGQfLu4amDdZwN6DgBdAg5jbNmNzJAt6zAddVIlOux5B
+         EHvBDs4KBI/tXMj5GtVPnp+urM4r4v7/B7+7hguTIZ7MncP49poortFok/kCTSI1PuWz
+         7NgiKBucZD92cCi9D9/pKfo3JtLBPV3RLLabmWXlj2jHlpDrFNnMezY3XI+xZV/bw0ae
+         N8ng==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=9vAsjj4wH0cq3m3qpVkSYBnwOxwjBpDvsPJW0c5pFjc=;
+        b=PuASPsuvy3buZ7mvRzttUOd2YwA4Di8x6nz8vkU72KoAI9VagYdlFROhtuAtTU8OuV
+         UTUfRFK/DL4Tjzc/W7PU6GS6RRMCyznmdV36BfwZvLIdiN5jvqkdB1Jo5Bqaq53r3Y1t
+         aFWpa/xLA6ErYmyTdmnGWfd3gG104TTVcldTAaDts9Hd7cOUImUCVkClW3WPu3O5Ryaa
+         VZlnoSTIzubfwD5fyjDo2rveS40q0jOm07uQwarmvYgSwhxxogo6O8eMpnaYpIPE0Ckg
+         dSsjPq7573P4/J0H3KwkWXIt8JFFVGB1uZPnxQ0TDoENlD6TfK6bp8LStq83pN9SGhKs
+         E+kQ==
+X-Gm-Message-State: APjAAAXrCaO0cqL7ortbfhPgUxjbUIrhbdQV5OEadIowBFue0AaRZdS0
+        /b5YA9A3LlyxbNAU9EBkqwZMXg==
+X-Google-Smtp-Source: APXvYqx4SVLlNI2m1S7EfnifBaaXSVCoC3VOJ0YAalvRiTkoqXpmx98l3ql8ZpwotOJc6pya6B+new==
+X-Received: by 2002:a65:6410:: with SMTP id a16mr56340566pgv.315.1555328487201;
+        Mon, 15 Apr 2019 04:41:27 -0700 (PDT)
+Received: from buildserver-90.open-silicon.com ([114.143.65.226])
+        by smtp.googlemail.com with ESMTPSA id l4sm32317273pgh.17.2019.04.15.04.41.22
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Mon, 15 Apr 2019 04:41:26 -0700 (PDT)
+From:   Yash Shah <yash.shah@sifive.com>
+To:     devicetree@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-edac@vger.kernel.org
+Cc:     robh+dt@kernel.org, mark.rutland@arm.com, palmer@sifive.com,
+        aou@eecs.berkeley.edu, paul.walmsley@sifive.com, bp@alien8.de,
+        mchehab@kernel.org, james.morse@arm.com, sachin.ghadi@sifive.com,
+        Yash Shah <yash.shah@sifive.com>
+Subject: [PATCH 0/3] L2 cache controller and EDAC support for SiFive SoCs
+Date:   Mon, 15 Apr 2019 17:10:40 +0530
+Message-Id: <1555328443-30874-1-git-send-email-yash.shah@sifive.com>
+X-Mailer: git-send-email 1.9.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-As Park Ju Hyung reported in mailing list:
+This patch series adds an L2 cache controller driver with DT documentation
+and an EDAC platform driver for SiFive SoCs.
 
-https://sourceforge.net/p/linux-f2fs/mailman/message/36639787/
+The EDAC platform driver registers for notifier events from the L2 cache
+controller driver for L2 ECC events.
 
-generic_make_request: Trying to write to read-only block-device loop0 (partno 0)
-WARNING: CPU: 0 PID: 23437 at block/blk-core.c:2174 generic_make_request_checks+0x594/0x630
+This patchset is based on Linux 5.1-rc2 and tested on HiFive Unleashed
+board with additional board related patches needed for testing can be found
+at dev/yashs/L2_cache_controller branch of:
+https://github.com/yashshah7/riscv-linux.git
 
- generic_make_request+0x46/0x3d0
- submit_bio+0x30/0x110
- __submit_merged_bio+0x68/0x390
- f2fs_submit_page_write+0x1bb/0x7f0
- f2fs_do_write_meta_page+0x7f/0x160
- __f2fs_write_meta_page+0x70/0x140
- f2fs_sync_meta_pages+0x140/0x250
- f2fs_write_checkpoint+0x5c5/0x17b0
- f2fs_sync_fs+0x9c/0x110
- sync_filesystem+0x66/0x80
- f2fs_recover_fsync_data+0x790/0xa30
- f2fs_fill_super+0xe4e/0x1980
- mount_bdev+0x518/0x610
- mount_fs+0x34/0x13f
- vfs_kern_mount.part.11+0x4f/0x120
- do_mount+0x2d1/0xe40
- __x64_sys_mount+0xbf/0xe0
- do_syscall_64+0x4a/0xf0
- entry_SYSCALL_64_after_hwframe+0x44/0xa9
+Yash Shah (3):
+  RISC-V: Add DT documentation for SiFive L2 Cache Controller
+  RISC-V: sifive_l2_cache: Add L2 cache controller driver for SiFive
+    SoCs
+  edac: sifive: Add EDAC platform driver for SiFive SoCs
 
-print_req_error: I/O error, dev loop0, sector 4096
+ .../devicetree/bindings/riscv/sifive-l2-cache.txt  |  53 +++++
+ arch/riscv/Kconfig                                 |   1 +
+ arch/riscv/mm/Makefile                             |   1 +
+ arch/riscv/mm/sifive_l2_cache.c                    | 224 +++++++++++++++++++++
+ drivers/edac/Kconfig                               |   6 +
+ drivers/edac/Makefile                              |   1 +
+ drivers/edac/sifive_edac.c                         | 121 +++++++++++
+ 7 files changed, 407 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/riscv/sifive-l2-cache.txt
+ create mode 100644 arch/riscv/mm/sifive_l2_cache.c
+ create mode 100644 drivers/edac/sifive_edac.c
 
-If block device is readonly, we should never trigger write IO from
-filesystem layer, but previously, orphan recovery didn't consider
-such condition, result in triggering above warning, fix it.
-
-Reported-by: Park Ju Hyung <qkrwngud825@gmail.com>
-Tested-by: Park Ju Hyung <qkrwngud825@gmail.com>
-Signed-off-by: Chao Yu <yuchao0@huawei.com>
----
-v2:
-- adjust Park's first/last name order.
- fs/f2fs/checkpoint.c | 6 ++++++
- 1 file changed, 6 insertions(+)
-
-diff --git a/fs/f2fs/checkpoint.c b/fs/f2fs/checkpoint.c
-index a7ad1b1e5750..90e1bab86269 100644
---- a/fs/f2fs/checkpoint.c
-+++ b/fs/f2fs/checkpoint.c
-@@ -674,6 +674,12 @@ int f2fs_recover_orphan_inodes(struct f2fs_sb_info *sbi)
- 	if (!is_set_ckpt_flags(sbi, CP_ORPHAN_PRESENT_FLAG))
- 		return 0;
- 
-+	if (bdev_read_only(sbi->sb->s_bdev)) {
-+		f2fs_msg(sbi->sb, KERN_INFO, "write access "
-+			"unavailable, skipping orphan cleanup");
-+		return 0;
-+	}
-+
- 	if (s_flags & SB_RDONLY) {
- 		f2fs_msg(sbi->sb, KERN_INFO, "orphan cleanup on readonly fs");
- 		sbi->sb->s_flags &= ~SB_RDONLY;
 -- 
-2.18.0.rc1
+1.9.1
 
