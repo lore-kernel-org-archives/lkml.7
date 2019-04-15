@@ -2,98 +2,130 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 879F4C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B42C10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:50:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5551A20848
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:47:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2BEC320854
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:50:12 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="OOqT3Caf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728814AbfDOTrr (ORCPT
+        id S1728855AbfDOTuL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:47:47 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:43108 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728305AbfDOTrr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:47:47 -0400
-Received: by mail-qt1-f193.google.com with SMTP id v32so20584617qtc.10;
-        Mon, 15 Apr 2019 12:47:46 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=g/C3t9rgSuWq5OKRvtxUz/xWegl3UdthgeHpxahk+9Q=;
-        b=B/MHFvBES3sK1xXZDLW8Gjec+xjKrvW9WyBzIYCeBy5HKUeL5WvSCM12As2U12jb7P
-         KUuUw5bBBqyy0Hdek+vdfoJLR4DQgOw3Mod8N0fAW/B66L7XqovbZIe+WYmdWTI3zrhZ
-         FenmO43xKpU+3C3O1OvvXCO855uejwDuwcRsj7kTqTbxKe+P6prvrUIXkrnY5HKrKaOx
-         bFyP/7KmdTRq9Zyf4+9pXvB+VlanNiIr3TKL5ruNbxdnmibl3P5wMxSNfiXc6XPgiWsI
-         hhmbDjQ2g5p9QEuLjCpRs451L5DhV0nUZUMo1nS11ipi6fOs/ZK3nk716BY8KhwIDC2/
-         AdrQ==
-X-Gm-Message-State: APjAAAVJn3qG4n4yzNJQGmChWs8wmdKw11Bq2J/D/SqUCw4lo1efuxvR
-        /twM894DUNSK4oqI9KdMSI11bAfHCIbLFCRRlQ8=
-X-Google-Smtp-Source: APXvYqz4SKvbue/y15Z3P53ZnsVQ4k4qqPxK/YjpPhIMm/ubegQZkcu1u5l8IYVF4bBxbN6+DNAh/CvOLpzVHLfFgzQ=
-X-Received: by 2002:a0c:9dcb:: with SMTP id p11mr61785825qvf.28.1555357666114;
- Mon, 15 Apr 2019 12:47:46 -0700 (PDT)
+        Mon, 15 Apr 2019 15:50:11 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:55668 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728605AbfDOTuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:50:10 -0400
+Received: from zn.tnic (p4FED3D80.dip0.t-ipconnect.de [79.237.61.128])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 448EE1EC02AE;
+        Mon, 15 Apr 2019 21:50:08 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1555357808;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=Ief1bSeBDooFjV+/QSkceSHzeIIB5ciAHxhEmjiNw7s=;
+        b=OOqT3CafFcizE4FwSgROrgjYicpEKSTeoPegIba43hVDBRuZ+yVcdkLAM3u1F65ZY7LGCo
+        1D1kEN8ACAcX9nDk6TbwHoBm05SmhITXQy8F0HtvGmfzCn2X16b+Oo/3WeXL0Bv2k4ozYh
+        NCf8bD3F+G7DhDsDgN3tM+UI4muJoNc=
+Date:   Mon, 15 Apr 2019 21:47:55 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Baoquan He <bhe@redhat.com>, kirill@shutemov.name
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, tglx@linutronix.de,
+        mingo@kernel.org, hpa@zytor.com, keescook@chromium.org,
+        peterz@infradead.org, thgarnie@google.com,
+        herbert@gondor.apana.org.au, mike.travis@hpe.com,
+        frank.ramsay@hpe.com, yamada.masahiro@socionext.com
+Subject: Re: [PATCH v2 RESEND 2/2] x86/mm/KASLR: Fix the size of vmemmap
+ section
+Message-ID: <20190415194755.GJ29317@zn.tnic>
+References: <20190414072804.12560-1-bhe@redhat.com>
+ <20190414072804.12560-3-bhe@redhat.com>
 MIME-Version: 1.0
-References: <20190415192734.935387-1-arnd@arndb.de> <20190415192734.935387-2-arnd@arndb.de>
- <CO2PR01MB21683E465191EA8246503774D02B0@CO2PR01MB2168.prod.exchangelabs.com>
-In-Reply-To: <CO2PR01MB21683E465191EA8246503774D02B0@CO2PR01MB2168.prod.exchangelabs.com>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Mon, 15 Apr 2019 21:47:29 +0200
-Message-ID: <CAK8P3a1DSN3jcfGngrJFp93Mt98qsibvKvtJGtjHYjOmcM1kNQ@mail.gmail.com>
-Subject: Re: [PATCH 2/4] ARM: ep93xx: keypad: stop using mach/platform.h
-To:     Hartley Sweeten <HartleyS@visionengravers.com>
-Cc:     Alexander Sverdlin <alexander.sverdlin@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Stefan Agner <stefan@agner.ch>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190414072804.12560-3-bhe@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 9:39 PM Hartley Sweeten
-<HartleyS@visionengravers.com> wrote:
->
-> On Monday, April 15, 2019 12:25 PM, Arnd Bergmann wrote:
-> > We can communicate the clock rate using platform data rather than setting a
-> > flag to use a particular value in the driver, which is cleaner and avoids the dependency.
-> >
-> > No platform in the kernel currently defines the ep93xx keypad device structure, so this
-> > is a rather pointless excercise.  Any out of tree users are probably dead now, but if not,
-> >  they have to change their platform code to match the new platform_data structure.
->
-> <snip>
->
-> > diff --git a/include/linux/platform_data/keypad-ep93xx.h b/include/linux/platform_data/keypad-ep93xx.h
-> > index 0e36818e3680..3054fced8509 100644
-> > --- a/include/linux/platform_data/keypad-ep93xx.h
-> > +++ b/include/linux/platform_data/keypad-ep93xx.h
-> > @@ -9,8 +9,7 @@ struct matrix_keymap_data;
-> >  #define EP93XX_KEYPAD_DIAG_MODE              (1<<1)  /* diagnostic mode */
-> >  #define EP93XX_KEYPAD_BACK_DRIVE     (1<<2)  /* back driving mode */
-> >  #define EP93XX_KEYPAD_TEST_MODE              (1<<3)  /* scan only column 0 */
-> > -#define EP93XX_KEYPAD_KDIV           (1<<4)  /* 1/4 clock or 1/16 clock */
-> > -#define EP93XX_KEYPAD_AUTOREPEAT     (1<<5)  /* enable key autorepeat */
-> > +#define EP93XX_KEYPAD_AUTOREPEAT     (1<<4)  /* enable key autorepeat */
->
-> You have re-defined the keypad register bits here.
->
-> The KDIV bit changes the clock rate. The AUTOREPEAT bit enables key autorepeat.
+On Sun, Apr 14, 2019 at 03:28:04PM +0800, Baoquan He wrote:
+> kernel_randomize_memory() hardcodes the size of vmemmap section as 1 TB,
+> to support the maximum amount of system RAM in 4-level paging mode, 64 TB.
+> 
+> However, 1 TB is not enough for vmemmap in 5-level paging mode. Assuming
+> the size of struct page is 64 Bytes, to support 4 PB system RAM in 5-level,
+> 64 TB of vmemmap area is needed. The wrong hardcoding may cause vmemmap
+> stamping into the following cpu_entry_area section, if KASLR puts vmemmap
+> very close to cpu_entry_area, and the actual area of vmemmap is much bigger
+> than 1 TB.
+> 
+> So here calculate the actual size of vmemmap region, then align up to 1 TB
+> boundary. In 4-level it's always 1 TB. In 5-level it's adjusted on demand.
+> The current code reserves 0.5 PB for vmemmap in 5-level. In this new methor,
+								       ^^^^^^^
 
-As far as I can tell, they are not register bits, just software flags
-for communicating between a board file and the driver, so I
-assumed I could freely reorganize them.
+Please introduce a spellchecker into your patch creation workflow.
 
-Did I miss something?
+> the left space can be saved to join randomization to increase the entropy.
+> 
+> Signed-off-by: Baoquan He <bhe@redhat.com>
+> ---
+>  arch/x86/mm/kaslr.c | 11 ++++++++++-
+>  1 file changed, 10 insertions(+), 1 deletion(-)
+> 
+> diff --git a/arch/x86/mm/kaslr.c b/arch/x86/mm/kaslr.c
+> index 387d4ed25d7c..4679a0075048 100644
+> --- a/arch/x86/mm/kaslr.c
+> +++ b/arch/x86/mm/kaslr.c
+> @@ -52,7 +52,7 @@ static __initdata struct kaslr_memory_region {
+>  } kaslr_regions[] = {
+>  	{ &page_offset_base, 0 },
+>  	{ &vmalloc_base, 0 },
+> -	{ &vmemmap_base, 1 },
+> +	{ &vmemmap_base, 0 },
+>  };
+>  
+>  /* Get size in bytes used by the memory region */
+> @@ -78,6 +78,7 @@ void __init kernel_randomize_memory(void)
+>  	unsigned long rand, memory_tb;
+>  	struct rnd_state rand_state;
+>  	unsigned long remain_entropy;
+> +	unsigned long vmemmap_size;
+>  
+>  	vaddr_start = pgtable_l5_enabled() ? __PAGE_OFFSET_BASE_L5 : __PAGE_OFFSET_BASE_L4;
+>  	vaddr = vaddr_start;
+> @@ -109,6 +110,14 @@ void __init kernel_randomize_memory(void)
+>  	if (memory_tb < kaslr_regions[0].size_tb)
+>  		kaslr_regions[0].size_tb = memory_tb;
+>  
+> +	/**
+> +	 * Calculate how many TB vmemmap region needs, and aligned to
+> +	 * 1TB boundary.
+> +	 */
+> +	vmemmap_size = (kaslr_regions[0].size_tb << (TB_SHIFT - PAGE_SHIFT)) *
+> +		sizeof(struct page);
+> +	kaslr_regions[2].size_tb = DIV_ROUND_UP(vmemmap_size, 1UL << TB_SHIFT);
+> +
+>  	/* Calculate entropy available between regions */
+>  	remain_entropy = vaddr_end - vaddr_start;
+>  	for (i = 0; i < ARRAY_SIZE(kaslr_regions); i++)
+> -- 
 
-      Arnd
+Kirill, ack?
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
