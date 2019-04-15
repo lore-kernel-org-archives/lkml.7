@@ -2,201 +2,284 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 372A0C282DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:36:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 36F16C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:38:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 01EDD2075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:36:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E734D2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:38:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="SuH47miC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727615AbfDOOgI (ORCPT
+        id S1727391AbfDOOiZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 10:36:08 -0400
-Received: from mail-io1-f71.google.com ([209.85.166.71]:57160 "EHLO
-        mail-io1-f71.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727530AbfDOOgG (ORCPT
+        Mon, 15 Apr 2019 10:38:25 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:40548 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726094AbfDOOiZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 10:36:06 -0400
-Received: by mail-io1-f71.google.com with SMTP id s184so14073275iod.23
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 07:36:05 -0700 (PDT)
+        Mon, 15 Apr 2019 10:38:25 -0400
+Received: by mail-pg1-f193.google.com with SMTP id d31so8671430pgl.7
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 07:38:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=AIqQfazSNqgaJokAcdDro2dFfhikFIqjWxYw4YigiZI=;
+        b=SuH47miCIm32LQ4+GVx4b0RiF3W5u3IsWgCSZFT/vLpwrxdUSzD7Z8sXmj3u8eoZkV
+         C/N1vWmbFJ2652FjmouJCx3L8vVnAaFCgpUXvlBF5Vpmj0Xg+F6XcVZ7cSDfzY3Nim1N
+         K+T/cXrHWKGh7zfMTszsZnctfciUvAIxz25Do=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:date:message-id:subject:from:to;
-        bh=maroSdYVUcko5p9go8boJX6HfFuqP/DlI4KskCe4Yk4=;
-        b=CJQ+AFBCnLcxgUhKlreuPEy5v6JVCnWi2TEsSW4r9bgtBLLd4mOTlI79N5VD0SCzDa
-         GBbFAeeZ4NdxfpurFcTQ7+WnIl/NLvLxMsP2ngC/f6f6vi5xBztMixeEDk9FuWDQuvs/
-         yQ317cL9m51v5WnMHi/2N+gqefJEyVKXC2cHb0Cy3PNJJHdYzUXj1PbW3Xces40Ngvk1
-         J4D7m9H0ZYGibeS6J/HXjI/c8yJrkYsBDvPgaXo6L6biVPudbOonubEWHZg00P6zBGZD
-         t09YzZaMX4fUyMjZh37fqLaLxm5mhphPwuTJQ37RyK+pgwiyc3FHwFYT9cUYAtZR8J3W
-         lLJw==
-X-Gm-Message-State: APjAAAXaZCaxw5UoDE9gR3v8pFpC0D/idHXA+kINhzLj4yOEvJqV6WFo
-        WBI8I21UGWapErfYG6IYxSRKhs6+PiUI8cyzgmcvSLS86kXL
-X-Google-Smtp-Source: APXvYqznctK1xYlXchcuvJaWDX+fCGu3z9Zj+TFrwWRO14cCLDWIa8kI+GFaFoM60q2LUjyiC1pGCbV6DBVZcagPmwMVlFo0XFrk
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=AIqQfazSNqgaJokAcdDro2dFfhikFIqjWxYw4YigiZI=;
+        b=nq9eWZEoMSVcHdrLtAMGHDQYfKXEaIMK+2QiCrCOYaYr/GWQN+9cpjz94C/JItGsXb
+         vOnsQdMyP0c5Iaq1n3li0jkrVaRNoEJmqIHYKuOiVXArhomOvYrlrk4j/EGA+A5FjNv+
+         vyGUeX5rTaN6ZtWr2CLiABkufl15cnfH1FROGYIlcdOATSscQGATfawCz2g0xGan2H8t
+         GMveD9aBz7/hEayierEPTJ/cIZ2tVCZ/Pv/ghQybZJhXtGY8HJFAHxLnpAu62wzeHehY
+         rMSeBv/cQLrZCqE0p0vmyxUrgKpIYQ4wVUGPHjRWS51JufIQQXZPxBhf6/aRuKx3AbUr
+         6OaQ==
+X-Gm-Message-State: APjAAAWWIcskJ0r4eEMvDMTX7DBORVPJgA6CL6dNvu55gqNquRxeSuvo
+        g1QwBGXLTfvSoSZKDpZqoUjz8ciib5E=
+X-Google-Smtp-Source: APXvYqzo7u9m2mzQ8NhV5uxXsUmlvdosDxd6nNMGpGnObpCOhMT2HWcSTK+0JYqLJ0/1DnuGEKDeXA==
+X-Received: by 2002:a62:e215:: with SMTP id a21mr74546155pfi.30.1555339104341;
+        Mon, 15 Apr 2019 07:38:24 -0700 (PDT)
+Received: from www.outflux.net (173-164-112-133-Oregon.hfc.comcastbusiness.net. [173.164.112.133])
+        by smtp.gmail.com with ESMTPSA id q128sm79883144pga.60.2019.04.15.07.38.22
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 15 Apr 2019 07:38:23 -0700 (PDT)
+Date:   Mon, 15 Apr 2019 07:38:21 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Catalin Marinas <catalin.marinas@arm.com>
+Cc:     Will Deacon <will.deacon@arm.com>,
+        Alex Matveev <alxmtvv@gmail.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        linux-arm-kernel@lists.infradead.org,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Yury Norov <ynorov@caviumnetworks.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v3] arm64: sysreg: make mrs_s and msr_s macros work with
+ Clang and LTO
+Message-ID: <20190415143821.GA46880@beast>
 MIME-Version: 1.0
-X-Received: by 2002:a24:408e:: with SMTP id n136mr6613893ita.16.1555338965216;
- Mon, 15 Apr 2019 07:36:05 -0700 (PDT)
-Date:   Mon, 15 Apr 2019 07:36:05 -0700
-X-Google-Appengine-App-Id: s~syzkaller
-X-Google-Appengine-App-Id-Alias: syzkaller
-Message-ID: <00000000000086f7f20586929239@google.com>
-Subject: KASAN: use-after-free Read in v4l2_release
-From:   syzbot <syzbot+a4387f5b6b799f6becbf@syzkaller.appspotmail.com>
-To:     andreyknvl@google.com, brian.warner@samsung.com,
-        ezequiel@collabora.com, hans.verkuil@cisco.com,
-        linux-kernel@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-usb@vger.kernel.org, mchehab@kernel.org,
-        niklas.soderlund+renesas@ragnatech.se,
-        sakari.ailus@linux.intel.com, sque@chromium.org,
-        syzkaller-bugs@googlegroups.com
-Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello,
+From: Alex Matveev <alxmtvv@gmail.com>
 
-syzbot found the following crash on:
+Clang's integrated assembler does not allow assembly macros defined
+in one inline asm block using the .macro directive to be used across
+separate asm blocks. LLVM developers consider this a feature and not a
+bug, recommending code refactoring:
 
-HEAD commit:    9a33b369 usb-fuzzer: main usb gadget fuzzer driver
-git tree:       https://github.com/google/kasan/tree/usb-fuzzer
-console output: https://syzkaller.appspot.com/x/log.txt?x=14ab47ed200000
-kernel config:  https://syzkaller.appspot.com/x/.config?x=23e37f59d94ddd15
-dashboard link: https://syzkaller.appspot.com/bug?extid=a4387f5b6b799f6becbf
-compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+  https://bugs.llvm.org/show_bug.cgi?id=19749
 
-Unfortunately, I don't have any reproducer for this crash yet.
+As binutils doesn't allow macros to be redefined, this change uses
+UNDEFINE_MRS_S and UNDEFINE_MSR_S to define corresponding macros
+in-place and workaround gcc and clang limitations on redefining macros
+across different assembler blocks.
 
-IMPORTANT: if you fix the bug, please add the following tag to the commit:
-Reported-by: syzbot+a4387f5b6b799f6becbf@syzkaller.appspotmail.com
+Specifically, the current state after preprocessing looks like this:
 
-==================================================================
-BUG: KASAN: use-after-free in v4l2_release+0x322/0x390  
-drivers/media/v4l2-core/v4l2-dev.c:453
-Read of size 8 at addr ffff88809ccf23e0 by task v4l_id/8258
+asm volatile(".macro mXX_s ... .endm");
+void f()
+{
+	asm volatile("mXX_s a, b");
+}
 
-CPU: 1 PID: 8258 Comm: v4l_id Not tainted 5.1.0-rc4-319354-g9a33b36 #3
-Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
-Google 01/01/2011
-Call Trace:
-usb-fuzzer-gadget dummy_udc.0: failed to start USB fuzzer: -22
-  __dump_stack lib/dump_stack.c:77 [inline]
-  dump_stack+0xe8/0x16e lib/dump_stack.c:113
-  print_address_description+0x6c/0x236 mm/kasan/report.c:187
-  kasan_report.cold+0x1a/0x3c mm/kasan/report.c:317
-  v4l2_release+0x322/0x390 drivers/media/v4l2-core/v4l2-dev.c:453
-  __fput+0x2df/0x8c0 fs/file_table.c:278
-  task_work_run+0x149/0x1c0 kernel/task_work.c:113
-  tracehook_notify_resume include/linux/tracehook.h:188 [inline]
-  exit_to_usermode_loop+0x243/0x270 arch/x86/entry/common.c:166
-  prepare_exit_to_usermode arch/x86/entry/common.c:197 [inline]
-  syscall_return_slowpath arch/x86/entry/common.c:268 [inline]
-  do_syscall_64+0x40c/0x4f0 arch/x86/entry/common.c:293
-  entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x7fd2e34df2b0
-Code: 40 75 0b 31 c0 48 83 c4 08 e9 0c ff ff ff 48 8d 3d c5 32 08 00 e8 c0  
-07 02 00 83 3d 45 a3 2b 00 00 75 10 b8 03 00 00 00 0f 05 <48> 3d 01 f0 ff  
-ff 73 31 c3 48 83 ec 08 e8 ce 8a 01 00 48 89 04 24
-RSP: 002b:00007ffcfd4e8d68 EFLAGS: 00000246 ORIG_RAX: 0000000000000003
-RAX: 0000000000000000 RBX: 0000000000000003 RCX: 00007fd2e34df2b0
-RDX: 00007fd2e3795df0 RSI: 0000000000000001 RDI: 0000000000000003
-RBP: 0000000000000000 R08: 00007fd2e3795df0 R09: 000000000000000a
-R10: 0000000000000000 R11: 0000000000000246 R12: 0000000000400884
-R13: 00007ffcfd4e8ec0 R14: 0000000000000000 R15: 0000000000000000
+With GCC, it gives macro redefinition error because sysreg.h is included
+in multiple source files, and assembler code for all of them is later
+combined for LTO (I've seen an intermediate file with hundreds of
+identical definitions).
 
-Allocated by task 5665:
-  set_track mm/kasan/common.c:87 [inline]
-  __kasan_kmalloc mm/kasan/common.c:497 [inline]
-  __kasan_kmalloc.constprop.0+0xbf/0xd0 mm/kasan/common.c:470
-  slab_post_alloc_hook mm/slab.h:437 [inline]
-  slab_alloc_node mm/slub.c:2756 [inline]
-  __kmalloc_node_track_caller+0xf3/0x320 mm/slub.c:4372
-  alloc_dr drivers/base/devres.c:103 [inline]
-  devm_kmalloc+0x8c/0x190 drivers/base/devres.c:793
-  devm_kzalloc include/linux/device.h:679 [inline]
-  usb_raremono_probe+0x34/0x235 drivers/media/radio/radio-raremono.c:298
-  usb_probe_interface+0x31d/0x820 drivers/usb/core/driver.c:361
-  really_probe+0x2da/0xb10 drivers/base/dd.c:509
-  driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
-  __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
-  bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x223/0x3a0 drivers/base/dd.c:844
-  bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
-  device_add+0xad2/0x16e0 drivers/base/core.c:2106
-  usb_set_configuration+0xdf7/0x1740 drivers/usb/core/message.c:2021
-  generic_probe+0xa2/0xda drivers/usb/core/generic.c:210
-  usb_probe_device+0xc0/0x150 drivers/usb/core/driver.c:266
-  really_probe+0x2da/0xb10 drivers/base/dd.c:509
-  driver_probe_device+0x21d/0x350 drivers/base/dd.c:671
-  __device_attach_driver+0x1d8/0x290 drivers/base/dd.c:778
-  bus_for_each_drv+0x163/0x1e0 drivers/base/bus.c:454
-  __device_attach+0x223/0x3a0 drivers/base/dd.c:844
-  bus_probe_device+0x1f1/0x2a0 drivers/base/bus.c:514
-  device_add+0xad2/0x16e0 drivers/base/core.c:2106
-  usb_new_device.cold+0x537/0xccf drivers/usb/core/hub.c:2534
-  hub_port_connect drivers/usb/core/hub.c:5089 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
-  port_event drivers/usb/core/hub.c:5350 [inline]
-  hub_event+0x138e/0x3b00 drivers/usb/core/hub.c:5432
-  process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
-  worker_thread+0x9b/0xe20 kernel/workqueue.c:2415
-  kthread+0x313/0x420 kernel/kthread.c:253
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+With clang, it gives macro undefined error because clang doesn't allow
+sharing macros between inline asm statements.
 
-Freed by task 5665:
-  set_track mm/kasan/common.c:87 [inline]
-  __kasan_slab_free+0x130/0x180 mm/kasan/common.c:459
-  slab_free_hook mm/slub.c:1429 [inline]
-  slab_free_freelist_hook+0x5e/0x140 mm/slub.c:1456
-  slab_free mm/slub.c:3003 [inline]
-  kfree+0xce/0x290 mm/slub.c:3958
-  release_nodes+0x4ac/0x920 drivers/base/devres.c:508
-  devres_release_all+0x79/0xc8 drivers/base/devres.c:529
-  __device_release_driver drivers/base/dd.c:1086 [inline]
-  device_release_driver_internal+0x23a/0x4f0 drivers/base/dd.c:1113
-  bus_remove_device+0x302/0x5c0 drivers/base/bus.c:556
-  device_del+0x467/0xb90 drivers/base/core.c:2269
-  usb_disable_device+0x242/0x790 drivers/usb/core/message.c:1235
-  usb_disconnect+0x298/0x870 drivers/usb/core/hub.c:2197
-  hub_port_connect drivers/usb/core/hub.c:4940 [inline]
-  hub_port_connect_change drivers/usb/core/hub.c:5204 [inline]
-  port_event drivers/usb/core/hub.c:5350 [inline]
-  hub_event+0xcd2/0x3b00 drivers/usb/core/hub.c:5432
-  process_one_work+0x90f/0x1580 kernel/workqueue.c:2269
-  process_scheduled_works kernel/workqueue.c:2331 [inline]
-  worker_thread+0x7b0/0xe20 kernel/workqueue.c:2417
-  kthread+0x313/0x420 kernel/kthread.c:253
-  ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+I also seem to remember catching another sort of undefined error with
+GCC due to reordering of macro definition asm statement and generated
+asm code for function that uses the macro.
 
-The buggy address belongs to the object at ffff88809ccf2200
-  which belongs to the cache kmalloc-4k of size 4096
-The buggy address is located 480 bytes inside of
-  4096-byte region [ffff88809ccf2200, ffff88809ccf3200)
-The buggy address belongs to the page:
-page:ffffea0002733c00 count:1 mapcount:0 mapping:ffff88812c3f4600 index:0x0  
-compound_mapcount: 0
-flags: 0xfff00000010200(slab|head)
-raw: 00fff00000010200 dead000000000100 dead000000000200 ffff88812c3f4600
-raw: 0000000000000000 0000000000070007 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
+The solution with defining and undefining for each use, while certainly
+not elegant, satisfies both GCC and clang, LTO and non-LTO.
 
-Memory state around the buggy address:
-  ffff88809ccf2280: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff88809ccf2300: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-> ffff88809ccf2380: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                                                        ^
-  ffff88809ccf2400: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-  ffff88809ccf2480: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-==================================================================
-
-
+Signed-off-by: Alex Matveev <alxmtvv@gmail.com>
+Signed-off-by: Yury Norov <ynorov@caviumnetworks.com>
+Signed-off-by: Sami Tolvanen <samitolvanen@google.com>
+Signed-off-by: Kees Cook <keescook@chromium.org>
 ---
-This bug is generated by a bot. It may contain errors.
-See https://goo.gl/tpsmEJ for more information about syzbot.
-syzbot engineers can be reached at syzkaller@googlegroups.com.
+v3: split out patch as stand-alone, added more uses in irqflags,
+    updated commit log, based on discussion in
+    https://lore.kernel.org/patchwork/patch/851580/
+---
+ arch/arm64/include/asm/irqflags.h | 12 +++++--
+ arch/arm64/include/asm/kvm_hyp.h  |  8 +++--
+ arch/arm64/include/asm/sysreg.h   | 55 +++++++++++++++++++++----------
+ 3 files changed, 53 insertions(+), 22 deletions(-)
 
-syzbot will keep track of this bug report. See:
-https://goo.gl/tpsmEJ#status for how to communicate with syzbot.
+diff --git a/arch/arm64/include/asm/irqflags.h b/arch/arm64/include/asm/irqflags.h
+index 43d8366c1e87..06d3987d1546 100644
+--- a/arch/arm64/include/asm/irqflags.h
++++ b/arch/arm64/include/asm/irqflags.h
+@@ -43,7 +43,9 @@ static inline void arch_local_irq_enable(void)
+ 	asm volatile(ALTERNATIVE(
+ 		"msr	daifclr, #2		// arch_local_irq_enable\n"
+ 		"nop",
++		DEFINE_MSR_S
+ 		"msr_s  " __stringify(SYS_ICC_PMR_EL1) ",%0\n"
++		UNDEFINE_MSR_S
+ 		"dsb	sy",
+ 		ARM64_HAS_IRQ_PRIO_MASKING)
+ 		:
+@@ -55,7 +57,9 @@ static inline void arch_local_irq_disable(void)
+ {
+ 	asm volatile(ALTERNATIVE(
+ 		"msr	daifset, #2		// arch_local_irq_disable",
+-		"msr_s  " __stringify(SYS_ICC_PMR_EL1) ", %0",
++		DEFINE_MSR_S
++		"msr_s  " __stringify(SYS_ICC_PMR_EL1) ", %0\n"
++		UNDEFINE_MSR_S,
+ 		ARM64_HAS_IRQ_PRIO_MASKING)
+ 		:
+ 		: "r" ((unsigned long) GIC_PRIO_IRQOFF)
+@@ -85,8 +89,10 @@ static inline unsigned long arch_local_save_flags(void)
+ 	asm volatile(ALTERNATIVE(
+ 			"mov	%0, %1\n"
+ 			"nop\n"
+-			"nop",
++			"nop\n",
++			DEFINE_MRS_S
+ 			"mrs_s	%0, " __stringify(SYS_ICC_PMR_EL1) "\n"
++			UNDEFINE_MRS_S
+ 			"ands	%1, %1, " __stringify(PSR_I_BIT) "\n"
+ 			"csel	%0, %0, %2, eq",
+ 			ARM64_HAS_IRQ_PRIO_MASKING)
+@@ -116,7 +122,9 @@ static inline void arch_local_irq_restore(unsigned long flags)
+ 	asm volatile(ALTERNATIVE(
+ 			"msr	daif, %0\n"
+ 			"nop",
++			DEFINE_MSR_S
+ 			"msr_s	" __stringify(SYS_ICC_PMR_EL1) ", %0\n"
++			UNDEFINE_MSR_S
+ 			"dsb	sy",
+ 			ARM64_HAS_IRQ_PRIO_MASKING)
+ 		: "+r" (flags)
+diff --git a/arch/arm64/include/asm/kvm_hyp.h b/arch/arm64/include/asm/kvm_hyp.h
+index 4da765f2cca5..9d0e7f546240 100644
+--- a/arch/arm64/include/asm/kvm_hyp.h
++++ b/arch/arm64/include/asm/kvm_hyp.h
+@@ -30,7 +30,9 @@
+ 	({								\
+ 		u64 reg;						\
+ 		asm volatile(ALTERNATIVE("mrs %0, " __stringify(r##nvh),\
+-					 "mrs_s %0, " __stringify(r##vh),\
++					 DEFINE_MRS_S			\
++					 "mrs_s %0, " __stringify(r##vh) "\n"\
++					 UNDEFINE_MRS_S,		\
+ 					 ARM64_HAS_VIRT_HOST_EXTN)	\
+ 			     : "=r" (reg));				\
+ 		reg;							\
+@@ -40,7 +42,9 @@
+ 	do {								\
+ 		u64 __val = (u64)(v);					\
+ 		asm volatile(ALTERNATIVE("msr " __stringify(r##nvh) ", %x0",\
+-					 "msr_s " __stringify(r##vh) ", %x0",\
++					 DEFINE_MSR_S			\
++					 "msr_s " __stringify(r##vh) ", %x0\n"\
++					 UNDEFINE_MSR_S,		\
+ 					 ARM64_HAS_VIRT_HOST_EXTN)	\
+ 					 : : "rZ" (__val));		\
+ 	} while (0)
+diff --git a/arch/arm64/include/asm/sysreg.h b/arch/arm64/include/asm/sysreg.h
+index 5b267dec6194..e9f64c237a7c 100644
+--- a/arch/arm64/include/asm/sysreg.h
++++ b/arch/arm64/include/asm/sysreg.h
+@@ -746,20 +746,39 @@
+ #include <linux/build_bug.h>
+ #include <linux/types.h>
+ 
+-asm(
+-"	.irp	num,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30\n"
+-"	.equ	.L__reg_num_x\\num, \\num\n"
+-"	.endr\n"
++#define __DEFINE_MRS_MSR_S_REGNUM				\
++"	.irp	num,0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30\n" \
++"	.equ	.L__reg_num_x\\num, \\num\n"			\
++"	.endr\n"						\
+ "	.equ	.L__reg_num_xzr, 31\n"
+-"\n"
+-"	.macro	mrs_s, rt, sreg\n"
+-	__emit_inst(0xd5200000|(\\sreg)|(.L__reg_num_\\rt))
++
++#define DEFINE_MRS_S						\
++	__DEFINE_MRS_MSR_S_REGNUM				\
++"	.macro	mrs_s, rt, sreg\n"				\
++	__emit_inst(0xd5200000|(\\sreg)|(.L__reg_num_\\rt))	\
+ "	.endm\n"
+-"\n"
+-"	.macro	msr_s, sreg, rt\n"
+-	__emit_inst(0xd5000000|(\\sreg)|(.L__reg_num_\\rt))
++
++#define DEFINE_MSR_S						\
++	__DEFINE_MRS_MSR_S_REGNUM				\
++"	.macro	msr_s, sreg, rt\n"				\
++	__emit_inst(0xd5000000|(\\sreg)|(.L__reg_num_\\rt))	\
+ "	.endm\n"
+-);
++
++#define UNDEFINE_MRS_S						\
++"	.purgem	mrs_s\n"
++
++#define UNDEFINE_MSR_S						\
++"	.purgem	msr_s\n"
++
++#define __mrs_s(r, v)						\
++	DEFINE_MRS_S						\
++"	mrs_s %0, " __stringify(r) "\n"				\
++	UNDEFINE_MRS_S : "=r" (v)
++
++#define __msr_s(r, v)						\
++	DEFINE_MSR_S						\
++"	msr_s " __stringify(r) ", %x0\n"			\
++	UNDEFINE_MSR_S : : "rZ" (v)
+ 
+ /*
+  * Unlike read_cpuid, calls to read_sysreg are never expected to be
+@@ -785,15 +804,15 @@ asm(
+  * For registers without architectural names, or simply unsupported by
+  * GAS.
+  */
+-#define read_sysreg_s(r) ({						\
+-	u64 __val;							\
+-	asm volatile("mrs_s %0, " __stringify(r) : "=r" (__val));	\
+-	__val;								\
++#define read_sysreg_s(r) ({					\
++	u64 __val;						\
++	asm volatile(__mrs_s(r, __val));			\
++	__val;							\
+ })
+ 
+-#define write_sysreg_s(v, r) do {					\
+-	u64 __val = (u64)(v);						\
+-	asm volatile("msr_s " __stringify(r) ", %x0" : : "rZ" (__val));	\
++#define write_sysreg_s(v, r) do {				\
++	u64 __val = (u64)(v);					\
++	asm volatile(__msr_s(r, __val));			\
+ } while (0)
+ 
+ /*
+-- 
+2.17.1
+
+
+-- 
+Kees Cook
