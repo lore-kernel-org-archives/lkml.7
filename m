@@ -2,121 +2,113 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
-	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E36EC10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:09:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B897BC282DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:10:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4DD83218D0
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:09:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8858720880
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:10:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V3muGD5d"
+	dkim=pass (1024-bit key) header.d=amazon.com header.i=@amazon.com header.b="VpSW3UxN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728139AbfDOQJ0 (ORCPT
+        id S1727733AbfDOQKy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 12:09:26 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:35605 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727593AbfDOQJX (ORCPT
+        Mon, 15 Apr 2019 12:10:54 -0400
+Received: from smtp-fw-33001.amazon.com ([207.171.190.10]:37861 "EHLO
+        smtp-fw-33001.amazon.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727186AbfDOQKx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 12:09:23 -0400
-Received: by mail-pl1-f194.google.com with SMTP id w24so8799844plp.2;
-        Mon, 15 Apr 2019 09:09:23 -0700 (PDT)
+        Mon, 15 Apr 2019 12:10:53 -0400
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=Rbroc0TcCejxHzqpYCEDaZApUY9GFl+pj5V6z3KiYE0=;
-        b=V3muGD5dyYhrPtI8I5K0oPQtdoq3nPFfCwjPXHo4rJ64vqA7eWgif+U76ahmWKmti9
-         fUJUrv4FQfOe5Sytf9GBZj/0mghTibf4jLpqKD+O/XfRsWgMVyu4BKxXoYx9XQDeGb1K
-         rTclSwJgmrcyll/U63Lz42Yi/F5CkCX55tcq5ngk4bfoMsi2JoH1gmJSOEjFpBQ1HQIw
-         zLP2OcHbzRFNZbbjKjpjjkyxU1zASjcA8cCAXSxzX3/fYgrSZNenycLWUdKUDCkbGRG0
-         I+gCINcxX+xohd9HSuV+Y3KwD01mbE3N7PmYL2uXNV8WcvuizG0TKtPnwhlgH8/7DAWt
-         vzRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=Rbroc0TcCejxHzqpYCEDaZApUY9GFl+pj5V6z3KiYE0=;
-        b=SILLt/zNCQMSL5CNlr4DRgqdvI4tkB1Rv3wIPe3IJp0ULBnyxqg09XJQaJmvWfGOwG
-         NLDSfe33C8u+OfesV5VJzLaywR0/03LNAlmZj0+DX6KaMc44Zn2YD9m14kALq+Ld8E/O
-         rfn8vpQJvMshwS0YaB7v8cJenO4KkjVioSOpLRvjatZXuco7QxbhWpjJSnadFph/tTUT
-         xRFo0/u3IWIV5n1otCsR+Go8i/lTUtlthDP2+dxpYyz8AO6J4R+9Uk6pN0ta8v/2a9AW
-         WHJROPIqlkfyrzHrDFAvYC4pFarFRWy0i2gknrUqqhU/1lUbTOtMiOzYAFHYQPkK/T1h
-         kxlA==
-X-Gm-Message-State: APjAAAXBCayY8LQ3+9DXrXEcS6thzeReAFJE6ROy3JAfek5ZlxG8jhLx
-        aAby+H8zgvGRsKOfqEnhlJY=
-X-Google-Smtp-Source: APXvYqwuLLTEf8MmfxM1ZnBlFNwMwxsI6II3y7CPBEo4TXaGLapU7yCgAmlx0ymvbuy2JWZ78rceeA==
-X-Received: by 2002:a17:902:4a0c:: with SMTP id w12mr47926844pld.52.1555344563225;
-        Mon, 15 Apr 2019 09:09:23 -0700 (PDT)
-Received: from aw-bldr-10.qualcomm.com (i-global254.qualcomm.com. [199.106.103.254])
-        by smtp.gmail.com with ESMTPSA id h65sm125396567pfd.108.2019.04.15.09.09.21
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Apr 2019 09:09:22 -0700 (PDT)
-From:   Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Cc:     lee.jones@linaro.org, bjorn.andersson@linaro.org,
-        dmitry.torokhov@gmail.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, agross@kernel.org, david.brown@linaro.org,
-        jikos@kernel.org, benjamin.tissoires@redhat.com,
-        linux-input@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Jeffrey Hugo <jeffrey.l.hugo@gmail.com>
-Subject: [PATCH v3 0/3] Basic DT support for Lenovo Miix 630
-Date:   Mon, 15 Apr 2019 09:09:15 -0700
-Message-Id: <20190415160915.16324-1-jeffrey.l.hugo@gmail.com>
-X-Mailer: git-send-email 2.17.1
-To:     unlisted-recipients:; (no To-header on input)
+  d=amazon.com; i=@amazon.com; q=dns/txt; s=amazon201209;
+  t=1555344652; x=1586880652;
+  h=from:to:cc:subject:date:message-id:references:
+   in-reply-to:content-id:content-transfer-encoding:
+   mime-version;
+  bh=3p1H0rEmUCz/ZMlrjBdTnDWFO1f81fJ9H6swRiZsskM=;
+  b=VpSW3UxN5o7CVEDlR10AURcYfDbuuRIvC1CmG6VjXUT5eEeh5abqht9r
+   LEXrDjwcwoG9NvzZDquPCYDJ6sPef+sQV3T+ygUvb+4B27XZ1h1bvq557
+   Nx/WnkVvEXGkXdNRQA7p2z/fUsqGp8OhAe5VviqT2HDxAnH0JCfqDrear
+   4=;
+X-IronPort-AV: E=Sophos;i="5.60,354,1549929600"; 
+   d="scan'208";a="794389974"
+Received: from sea3-co-svc-lb6-vlan2.sea.amazon.com (HELO email-inbound-relay-1a-7d76a15f.us-east-1.amazon.com) ([10.47.22.34])
+  by smtp-border-fw-out-33001.sea14.amazon.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 15 Apr 2019 16:05:04 +0000
+Received: from EX13MTAUWC001.ant.amazon.com (iad55-ws-svc-p15-lb9-vlan2.iad.amazon.com [10.40.159.162])
+        by email-inbound-relay-1a-7d76a15f.us-east-1.amazon.com (8.14.7/8.14.7) with ESMTP id x3FG3Wof126457
+        (version=TLSv1/SSLv3 cipher=AES256-SHA bits=256 verify=FAIL);
+        Mon, 15 Apr 2019 16:03:35 GMT
+Received: from EX13d09UWC001.ant.amazon.com (10.43.162.60) by
+ EX13MTAUWC001.ant.amazon.com (10.43.162.135) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 15 Apr 2019 16:03:34 +0000
+Received: from EX13D02UWC004.ant.amazon.com (10.43.162.236) by
+ EX13d09UWC001.ant.amazon.com (10.43.162.60) with Microsoft SMTP Server (TLS)
+ id 15.0.1367.3; Mon, 15 Apr 2019 16:03:34 +0000
+Received: from EX13D02UWC004.ant.amazon.com ([10.43.162.236]) by
+ EX13D02UWC004.ant.amazon.com ([10.43.162.236]) with mapi id 15.00.1367.000;
+ Mon, 15 Apr 2019 16:03:34 +0000
+From:   "Saidi, Ali" <alisaidi@amazon.com>
+To:     Kees Cook <keescook@chromium.org>, Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jann Horn <jannh@google.com>
+CC:     Dave Hansen <dave.hansen@linux.intel.com>,
+        "Liguori, Anthony" <aliguori@amazon.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        X86 ML <x86@kernel.org>, Will Deacon <will.deacon@arm.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "Woodhouse, David" <dwmw@amazon.co.uk>,
+        Andy Lutomirski <luto@kernel.org>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+Subject: Re: [PATCH 2/2] x86/mmap: handle worst-case heap randomization in
+ mmap_base
+Thread-Topic: [PATCH 2/2] x86/mmap: handle worst-case heap randomization in
+ mmap_base
+Thread-Index: AQHU2PmhiRz/TsWOLEOmeVSaHu1ISKYKLoIAgBXMf4CAHUjGgA==
+Date:   Mon, 15 Apr 2019 16:03:34 +0000
+Message-ID: <34381CFC-A90F-4979-9802-2BA0E6539C68@amazon.com>
+References: <20190312173248.13490-1-alisaidi@amazon.com>
+ <20190312173248.13490-3-alisaidi@amazon.com>
+ <CAGXu5jJ5sj3emOT2QPxQkNQk0qbU6zEfu9=Omfhx_p0nCKPSjA@mail.gmail.com>
+ <CAGXu5jKcBmj0kwAqjqROXuOi=90=Upy8-J8WviGMjD6FV_Guxg@mail.gmail.com>
+In-Reply-To: <CAGXu5jKcBmj0kwAqjqROXuOi=90=Upy8-J8WviGMjD6FV_Guxg@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.43.162.93]
+Content-Type: text/plain; charset="utf-8"
+Content-ID: <6AAB9B7BD5FCCF47AB714C3009212253@amazon.com>
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The Lenovo Miix 630 is one of three ARM based (specifically Qualcomm
-MSM8998) laptops that comes with Windows, and seems to have a dedicated
-following of folks intrested to get Linux up and running on it.
-
-This series adds support for the basic functionality this is validated
-towork using devicetree.  Although the laptops do feed ACPI to Windows,
-the existing MSM8998 support in mainline is DT based, so DT provides a
-quick path to functionality while ACPI support is investigated.
-
-The three devices are very similar, but do have differences in the set
-of peripherals supported, so the idea is that the vast majority of the
-support for all three can live in a common include, which should reduce
-overall duplication.  Adding support for the other two devices as a
-follow on should involve minimal work.
-
-The bleeding edge work for these laptops and work in progress can be
-found at https://github.com/aarch64-laptops/prebuilt
-
-v3:
--Changed "clam" to "clamshell"
--Defined a dt binding for the combo Elan keyboard + touchpad device
--Adjusted the HID quirk to be correct for dt boot
--Removed extranious comment in board dts
--Fixed board level compatible
-
-v2:
--Changed "cls" to "clam" since feedback indicated "cls" is too opaque,
-but
-"clamshell" is a mouthfull.  "clam" seems to be a happy medium.
-
-Jeffrey Hugo (3):
-  dt-bindings: input: add Elan 400 combo keyboard/touchpad over i2c
-  HID: quirks: Fix keyboard + touchpad on Lenovo Miix 630 for DT
-  arm64: dts: qcom: Add Lenovo Miix 630
-
- .../bindings/input/elan,combo400-i2c.txt      |  11 +
- arch/arm64/boot/dts/qcom/Makefile             |   1 +
- .../boot/dts/qcom/msm8998-clamshell.dtsi      | 278 ++++++++++++++++++
- .../boot/dts/qcom/msm8998-lenovo-miix-630.dts |  30 ++
- drivers/hid/hid-quirks.c                      |   3 +-
- 5 files changed, 322 insertions(+), 1 deletion(-)
- create mode 100644 Documentation/devicetree/bindings/input/elan,combo400-i2c.txt
- create mode 100644 arch/arm64/boot/dts/qcom/msm8998-clamshell.dtsi
- create mode 100644 arch/arm64/boot/dts/qcom/msm8998-lenovo-miix-630.dts
-
--- 
-2.17.1
-
+DQoNCu+7v09uIDMvMjcvMTksIDI6NTIgUE0sICJsaW51eC1hcm0ta2VybmVsIG9uIGJlaGFsZiBv
+ZiBLZWVzIENvb2siIDxsaW51eC1hcm0ta2VybmVsLWJvdW5jZXNAbGlzdHMuaW5mcmFkZWFkLm9y
+ZyBvbiBiZWhhbGYgb2Yga2Vlc2Nvb2tAY2hyb21pdW0ub3JnPiB3cm90ZToNCg0KICAgIEFkZGlu
+ZyBzb21lIG1vcmUgcGVvcGxlIHRvIENDLi4uIHdoYXQgZG8gcGVvcGxlIHRoaW5rIGFib3V0IHRo
+aXMNCiAgICBtb3Zpbmcgb2YgdGhlIGJyayB0byBFTEZfRVRfRFlOX0JBU0UgaW4gdGhpcyBjb3Ju
+ZXItY2FzZT8gQW55dGhpbmcNCiAgICB0aGF0IHdvcmtlZCBiZWZvcmUgc2hvdWxkIHN0aWxsIHdv
+cmsgKGkuZS4gdGhlIHVsdGltYXRlbHktbGF1bmNoZWQNCiAgICBiaW5hcnkgYWxyZWFkeSBoYWQg
+dGhlIGJyayB2ZXJ5IGZhciBmcm9tIGl0cyB0ZXh0LCBzbyB0aGlzIHNob3VsZCBiZQ0KICAgIG5v
+IGRpZmZlcmVudCBmcm9tIGEgQ09NUEFUX0JSSyBzdGFuZHBvaW50KS4gVGhlIG9ubHkgcmlzayBJ
+IHNlZSBoZXJlDQogICAgaXMgdGhhdCBpZiBzb21lb25lIHN0YXJ0ZWQgdG8gc3VkZGVubHkgZGVw
+ZW5kIG9uIHRoZSBlbnRpcmUgbWVtb3J5DQogICAgc3BhY2UgYWJvdmUgdGhlIG1tYXAgcmVnaW9u
+IGJlaW5nIGF2YWlsYWJsZSB3aGVuIGxhdW5jaGluZyBiaW5hcmllcw0KICAgIHZpYSBhIGRpcmVj
+dCBsb2FkZXIgZXhlY3MuLi4gd2hpY2ggc2VlbXMgaGlnaGx5IHVubGlrZWx5LCBJJ2QgaG9wZToN
+CiAgICB0aGlzIHdvdWxkIG1lYW4gYSBiaW5hcnkgd291bGQgbm90IHdvcmsgd2hlbiBleGVjZWQg
+bm9ybWFsbHkuDQoNCktlZXMnIHByb3Bvc2FsIGFkZHJlc3NlcyB0aGUgaXNzdWUgZm9yIG1lLiBB
+bnlvbmUgaGF2ZSBjb25jZXJucyBvbiB0aGlzIHByb3Bvc2VkIHNvbHV0aW9uPw0KDQpBbGkNCg0K
+DQo=
