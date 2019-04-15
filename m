@@ -2,67 +2,95 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C4613C10F11
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 08:45:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BB5AEC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 08:46:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EB9520874
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 08:45:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A08620693
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 08:46:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726817AbfDOIpF convert rfc822-to-8bit (ORCPT
+        id S1726840AbfDOIqL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 04:45:05 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:37971 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725779AbfDOIpF (ORCPT
+        Mon, 15 Apr 2019 04:46:11 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:44868 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725779AbfDOIqL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 04:45:05 -0400
-Received: from xps13 (aaubervilliers-681-1-63-121.w90-88.abo.wanadoo.fr [90.88.18.121])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id DB8F2200019;
-        Mon, 15 Apr 2019 08:45:00 +0000 (UTC)
-Date:   Mon, 15 Apr 2019 10:44:58 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH] mtd: cfi_util: mark expected switch fall-throughs
-Message-ID: <20190415104458.7faeec57@xps13>
-In-Reply-To: <71df15e7-af2e-0326-78fe-0271a1e240fe@embeddedor.com>
-References: <20190208180202.GA16603@embeddedor>
-        <69083203-0720-1943-8549-ddf3cea6060e@embeddedor.com>
-        <71df15e7-af2e-0326-78fe-0271a1e240fe@embeddedor.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 15 Apr 2019 04:46:11 -0400
+Received: from [5.158.153.52] (helo=nanos.tec.linutronix.de)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hFxFg-0002bO-1h; Mon, 15 Apr 2019 10:46:08 +0200
+Date:   Mon, 15 Apr 2019 10:46:07 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Xose Vazquez Perez <xose.vazquez@gmail.com>
+cc:     LKML <linux-kernel@vger.kernel.org>, x86 team <x86@kernel.org>
+Subject: [PATCH] x86/mm: Prevent bogus warnings with "noexec=off"
+In-Reply-To: <92ac69b8-7e29-50e1-f460-4e7ac8c6b7ac@gmail.com>
+Message-ID: <alpine.DEB.2.21.1904151037530.1729@nanos.tec.linutronix.de>
+References: <c090ad3c-1f2f-c148-dd44-a58df0788588@gmail.com> <alpine.DEB.2.21.1904141158400.4917@nanos.tec.linutronix.de> <92ac69b8-7e29-50e1-f460-4e7ac8c6b7ac@gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gustavo,
+Xose reported warnings when NX is disabled on the kernel command line.
 
-"Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote on Wed, 10 Apr
-2019 16:16:51 -0500:
+__early_set_fixmap() triggers:
 
-> Hi all,
-> 
-> If no one cares I'll add this to my tree for 5.2.
+  attempted to set unsupported pgprot:    8000000000000163
+  	       	   	       bits:      8000000000000000
+			       supported: 7fffffffffffffff
 
-Which tree are you talking about?
+  WARNING: CPU: 0 PID: 0 at arch/x86/include/asm/pgtable.h:537
+  	   	       	    __early_set_fixmap+0xa2/0xff
 
-Please let the MTD maintainers take patches through their tree. We
-might be late but this is definitely not a good reason to bypass us.
+because it uses __default_kernel_pte_mask to mask out unsupported bits.
 
+Use __supported_pte_mask instead.
 
-Thanks,
-Miquèl
+Disabling NX on the command line also triggers the NX warning in the page
+table mapping check:
+
+  WARNING: CPU: 1 PID: 1 at arch/x86/mm/dump_pagetables.c:262 note_page+0x2ae/0x650
+  ....
+
+Make the warning depend on NX set in __supported_pte_mask.
+
+Reported-by: Xose Vazquez Perez <xose.vazquez@gmail.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+---
+ arch/x86/mm/dump_pagetables.c |    3 ++-
+ arch/x86/mm/ioremap.c         |    2 +-
+ 2 files changed, 3 insertions(+), 2 deletions(-)
+
+--- a/arch/x86/mm/dump_pagetables.c
++++ b/arch/x86/mm/dump_pagetables.c
+@@ -259,7 +259,8 @@ static void note_wx(struct pg_state *st)
+ #endif
+ 	/* Account the WX pages */
+ 	st->wx_pages += npages;
+-	WARN_ONCE(1, "x86/mm: Found insecure W+X mapping at address %pS\n",
++	WARN_ONCE(__supported_pte_mask & _PAGE_NX,
++		  "x86/mm: Found insecure W+X mapping at address %pS\n",
+ 		  (void *)st->start_address);
+ }
+ 
+--- a/arch/x86/mm/ioremap.c
++++ b/arch/x86/mm/ioremap.c
+@@ -825,7 +825,7 @@ void __init __early_set_fixmap(enum fixe
+ 	pte = early_ioremap_pte(addr);
+ 
+ 	/* Sanitize 'prot' against any unsupported bits: */
+-	pgprot_val(flags) &= __default_kernel_pte_mask;
++	pgprot_val(flags) &= __supported_pte_mask;
+ 
+ 	if (pgprot_val(flags))
+ 		set_pte(pte, pfn_pte(phys >> PAGE_SHIFT, flags));
