@@ -2,222 +2,220 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C1B9DC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 20:50:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 732CCC282DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 20:54:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94CD320651
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 20:50:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3CC7420825
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 20:54:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GgH3dPcp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727894AbfDOUuj (ORCPT
+        id S1727815AbfDOUyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 16:50:39 -0400
-Received: from anholt.net ([50.246.234.109]:44874 "EHLO anholt.net"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726556AbfDOUuj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 16:50:39 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by anholt.net (Postfix) with ESMTP id 3CE0210A3362;
-        Mon, 15 Apr 2019 13:50:38 -0700 (PDT)
-X-Virus-Scanned: Debian amavisd-new at anholt.net
-Received: from anholt.net ([127.0.0.1])
-        by localhost (kingsolver.anholt.net [127.0.0.1]) (amavisd-new, port 10024)
-        with LMTP id DDA9wwVGMy-7; Mon, 15 Apr 2019 13:50:36 -0700 (PDT)
-Received: from eliezer.anholt.net (localhost [127.0.0.1])
-        by anholt.net (Postfix) with ESMTP id 4A87C10A28B9;
-        Mon, 15 Apr 2019 13:50:36 -0700 (PDT)
-Received: by eliezer.anholt.net (Postfix, from userid 1000)
-        id CDECD2FE36FA; Mon, 15 Apr 2019 13:50:35 -0700 (PDT)
-From:   Eric Anholt <eric@anholt.net>
-To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Eben Upton <eben@raspberrypi.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: Re: [PATCH v5 4/4] drm/vc4: Allocate binner bo when starting to use the V3D
-In-Reply-To: <20190415123908.28986-5-paul.kocialkowski@bootlin.com>
-References: <20190415123908.28986-1-paul.kocialkowski@bootlin.com> <20190415123908.28986-5-paul.kocialkowski@bootlin.com>
-User-Agent: Notmuch/0.22.2+1~gb0bcfaa (http://notmuchmail.org) Emacs/26.1 (x86_64-pc-linux-gnu)
-Date:   Mon, 15 Apr 2019 13:50:35 -0700
-Message-ID: <87tvez802s.fsf@anholt.net>
+        Mon, 15 Apr 2019 16:54:13 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:32823 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727052AbfDOUyN (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 16:54:13 -0400
+Received: by mail-pg1-f193.google.com with SMTP id k19so9183918pgh.0;
+        Mon, 15 Apr 2019 13:54:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=v/DK1xyuObQUpvpRdqdIUTRguBtee+RAYqcwAMAIjds=;
+        b=GgH3dPcpozvXu/fZNtTu9/byU6890p4vPTEuXgrr0h2q9blxapNJb/ZPZnSCOoZ8Mh
+         rUfo1kyHOSkTNBcMQz8sRTqLdZoun2oJSUxrcd4upE3Fde1tNm7UF+mBNTiCY9ZuSe1t
+         Vf8JaE1zJueLBUA2sZa0UlyzXc+K25w+MLNR4C6yMhjpkSCaRdVqQoE+dGQsrmn95z5+
+         zFsRWDCF9McTr6cHYq4Viby4GNreL4dGgh+pceJCGP42/P4RscqvlyocVMyJEyfwuk3b
+         3UbFy/B3h7rAfX74lr5F6oXY5n+XZIQLAge9FsaRO6cnEab3Y1XkA6R61tvYx/rFrimH
+         5J1w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=v/DK1xyuObQUpvpRdqdIUTRguBtee+RAYqcwAMAIjds=;
+        b=L5giHM0OpnikmPzKn7+bruPoM5tCXx13MCFgsbwenK3rjT3GrDFbw9Uj0ohMve3hQ+
+         LIuZFL43hS3+lZd6ZlJpWvy30MIG/3g47QwYiAbsj+LVZ5LSUPwqnGrhJmJpHV0qZClI
+         j3Ih3g8KCw0zCFQ2yuaToEZDEcXGBG8pIfZ8DFVKmqT4ZyeNaPtlZ6c+o/4C07DSHmMh
+         BFzd5p7c62SbSBz/xtHU7UP83lJQ5NoOTcKvG43gtuj7nFcQl7Lb+Mp1cfmVskunzfFI
+         NoUyZyFx+lTzWrfuBmsLpfPpAp9WNffuYIyKDphzKjOnK+fpK40scR2TxtSVHDVPvbR1
+         eHIQ==
+X-Gm-Message-State: APjAAAXZMUXf1xTg8+0SYQmohh2apno9ZIF+x3Bg2Sc3O3a3LE/loP2L
+        SPMmG+xFJKDQx5CPtPFBwnVWGYhr
+X-Google-Smtp-Source: APXvYqw1I/VFUuns/27KIE1T04Uhv8uRwbBBF47iSiE0C/bYaZeUjJV6+zuoZul44nw3b7rn8uhqhQ==
+X-Received: by 2002:a63:3fc3:: with SMTP id m186mr74609379pga.151.1555361652449;
+        Mon, 15 Apr 2019 13:54:12 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id p7sm88044649pfp.70.2019.04.15.13.54.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Apr 2019 13:54:11 -0700 (PDT)
+Date:   Mon, 15 Apr 2019 13:54:10 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Greg Ungerer <gerg@uclinux.org>,
+        Linus Walleij <linus.walleij@linaro.org>, arm@kernel.org,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-watchdog@vger.kernel.org
+Subject: Re: [PATCH 1/6] ARM: ks8695: watchdog: stop using mach/*.h
+Message-ID: <20190415205410.GA31583@roeck-us.net>
+References: <20190415202501.941196-1-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha512; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190415202501.941196-1-arnd@arndb.de>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
-
-Paul Kocialkowski <paul.kocialkowski@bootlin.com> writes:
-
-> The binner bo is not required until the V3D is in use, so avoid
-> allocating it at probe and do it on the first non-dumb BO allocation.
-> Keep track of which clients are using the V3D and liberate the buffer
-> when there is none left (through a kref) and protect it with a mutex to
-> avoid race conditions.
->
-> The Out-Of-Memory (OOM) interrupt also gets some tweaking, to avoid
-> enabling it before having allocated a binner bo.
-
-I love your solution to this!
-
-> We also want to keep the BO alive during runtime suspend/resume to avoid
-> failing to allocate it at resume. This happens when the CMA pool is
-> full at that point and results in a hard crash.
->
-> Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+On Mon, Apr 15, 2019 at 10:24:13PM +0200, Arnd Bergmann wrote:
+> drivers should not rely on machine specific headers but
+> get their information from the platform device.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
->  drivers/gpu/drm/vc4/vc4_bo.c  | 30 ++++++++++++++++++++++
->  drivers/gpu/drm/vc4/vc4_drv.c | 17 +++++++++++++
->  drivers/gpu/drm/vc4/vc4_drv.h |  9 +++++++
->  drivers/gpu/drm/vc4/vc4_irq.c |  6 +++--
->  drivers/gpu/drm/vc4/vc4_v3d.c | 47 +++++++++++++++++++++++++----------
->  5 files changed, 94 insertions(+), 15 deletions(-)
->
-> diff --git a/drivers/gpu/drm/vc4/vc4_bo.c b/drivers/gpu/drm/vc4/vc4_bo.c
-> index 88ebd681d7eb..5a5276cce9a2 100644
-> --- a/drivers/gpu/drm/vc4/vc4_bo.c
-> +++ b/drivers/gpu/drm/vc4/vc4_bo.c
-> @@ -799,6 +799,28 @@ vc4_prime_import_sg_table(struct drm_device *dev,
->  	return obj;
+>  arch/arm/mach-ks8695/devices.c | 13 ++++++++++++-
+>  drivers/watchdog/Kconfig       |  2 +-
+>  drivers/watchdog/ks8695_wdt.c  | 30 +++++++++++++++++-------------
+>  3 files changed, 30 insertions(+), 15 deletions(-)
+> 
+> diff --git a/arch/arm/mach-ks8695/devices.c b/arch/arm/mach-ks8695/devices.c
+> index 61cf20beb45f..57766817d86f 100644
+> --- a/arch/arm/mach-ks8695/devices.c
+> +++ b/arch/arm/mach-ks8695/devices.c
+> @@ -169,11 +169,22 @@ void __init ks8696_add_device_hpna(void)
+>  /* --------------------------------------------------------------------
+>   *  Watchdog
+>   * -------------------------------------------------------------------- */
+> +#define KS8695_TMR_OFFSET      (0xF0000 + 0xE400)
+> +#define KS8695_TMR_PA          (KS8695_IO_PA + KS8695_TMR_OFFSET)
+> +static struct resource ks8695_wdt_resources[] = {
+> +	[0] = {
+> +		.name	= "tmr",
+> +		.start	= KS8695_TMR_PA,
+> +		.end	= KS8695_TMR_PA + 0xf,
+> +		.flags	= IORESOURCE_MEM,
+> +	},
+> +};
+>  
+>  static struct platform_device ks8695_wdt_device = {
+>  	.name		= "ks8695_wdt",
+>  	.id		= -1,
+> -	.num_resources	= 0,
+> +	.resource	= ks8695_wdt_resources,
+> +	.num_resources	= ARRAY_SIZE(ks8695_wdt_resources),
+>  };
+>  
+>  static void __init ks8695_add_device_watchdog(void)
+> diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+> index 242eea859637..046e01daef57 100644
+> --- a/drivers/watchdog/Kconfig
+> +++ b/drivers/watchdog/Kconfig
+> @@ -397,7 +397,7 @@ config IXP4XX_WATCHDOG
+>  
+>  config KS8695_WATCHDOG
+>  	tristate "KS8695 watchdog"
+> -	depends on ARCH_KS8695
+> +	depends on ARCH_KS8695 || COMPILE_TEST
+
+Is __raw_readl / __raw_writel really available for all architectures / platforms ?
+
+>  	help
+>  	  Watchdog timer embedded into KS8695 processor. This will reboot your
+>  	  system when the timeout is reached.
+> diff --git a/drivers/watchdog/ks8695_wdt.c b/drivers/watchdog/ks8695_wdt.c
+> index 1e41818a44bc..87c542c2f912 100644
+> --- a/drivers/watchdog/ks8695_wdt.c
+> +++ b/drivers/watchdog/ks8695_wdt.c
+> @@ -23,10 +23,8 @@
+>  #include <linux/watchdog.h>
+>  #include <linux/io.h>
+>  #include <linux/uaccess.h>
+> -#include <mach/hardware.h>
+>  
+> -#define KS8695_TMR_OFFSET	(0xF0000 + 0xE400)
+> -#define KS8695_TMR_VA		(KS8695_IO_VA + KS8695_TMR_OFFSET)
+> +#define KS8695_CLOCK_RATE  25000000
+>  
+>  /*
+>   * Timer registers
+> @@ -57,6 +55,7 @@ MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
+>  
+>  static unsigned long ks8695wdt_busy;
+>  static DEFINE_SPINLOCK(ks8695_lock);
+> +static void __iomem *tmr_reg;
+>  
+>  /* ......................................................................... */
+>  
+> @@ -69,8 +68,8 @@ static inline void ks8695_wdt_stop(void)
+>  
+>  	spin_lock(&ks8695_lock);
+>  	/* disable timer0 */
+> -	tmcon = __raw_readl(KS8695_TMR_VA + KS8695_TMCON);
+> -	__raw_writel(tmcon & ~TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
+> +	tmcon = __raw_readl(tmr_reg + KS8695_TMCON);
+> +	__raw_writel(tmcon & ~TMCON_T0EN, tmr_reg + KS8695_TMCON);
+>  	spin_unlock(&ks8695_lock);
 >  }
->=20=20
-> +static int vc4_grab_bin_bo(struct drm_device *dev,
-> +			   struct drm_file *file_priv)
-> +{
-> +	struct vc4_file *vc4file =3D file_priv->driver_priv;
-> +	struct vc4_dev *vc4 =3D to_vc4_dev(dev);
-> +
-> +	if (!vc4->v3d)
-> +		return -ENODEV;
-> +
-> +	if (vc4file->bin_bo_kref)
-> +		return 0;
-> +
-> +	mutex_lock(&vc4->bin_bo_lock);
-> +	vc4file->bin_bo_kref =3D vc4_v3d_bin_bo_get(vc4);
-> +	mutex_unlock(&vc4->bin_bo_lock);
-
-Interesting.  I think I would have stored a bool for whether he had the
-kref, instead of a pointer to vc4->bin_bo_kref.  Either way is fine with
-me, though.
-
-> +
-> +	if (!vc4file->bin_bo_kref)
-> +		return -ENOMEM;
-> +
-> +	return 0;
-> +}
-
-> diff --git a/drivers/gpu/drm/vc4/vc4_drv.c b/drivers/gpu/drm/vc4/vc4_drv.c
-> index d840b52b9805..b09f771384be 100644
-> --- a/drivers/gpu/drm/vc4/vc4_drv.c
-> +++ b/drivers/gpu/drm/vc4/vc4_drv.c
-> @@ -126,10 +126,25 @@ static int vc4_open(struct drm_device *dev, struct =
-drm_file *file)
->  	return 0;
+>  
+> @@ -84,15 +83,15 @@ static inline void ks8695_wdt_start(void)
+>  
+>  	spin_lock(&ks8695_lock);
+>  	/* disable timer0 */
+> -	tmcon = __raw_readl(KS8695_TMR_VA + KS8695_TMCON);
+> -	__raw_writel(tmcon & ~TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
+> +	tmcon = __raw_readl(tmr_reg + KS8695_TMCON);
+> +	__raw_writel(tmcon & ~TMCON_T0EN, tmr_reg + KS8695_TMCON);
+>  
+>  	/* program timer0 */
+> -	__raw_writel(tval | T0TC_WATCHDOG, KS8695_TMR_VA + KS8695_T0TC);
+> +	__raw_writel(tval | T0TC_WATCHDOG, tmr_reg + KS8695_T0TC);
+>  
+>  	/* re-enable timer0 */
+> -	tmcon = __raw_readl(KS8695_TMR_VA + KS8695_TMCON);
+> -	__raw_writel(tmcon | TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
+> +	tmcon = __raw_readl(tmr_reg + KS8695_TMCON);
+> +	__raw_writel(tmcon | TMCON_T0EN, tmr_reg + KS8695_TMCON);
+>  	spin_unlock(&ks8695_lock);
 >  }
->=20=20
-> +static void vc4_close_bin_bo_release(struct kref *ref)
-> +{
-> +	struct vc4_dev *vc4 =3D container_of(ref, struct vc4_dev, bin_bo_kref);
-> +
-> +	return vc4_v3d_bin_bo_free(vc4);
-> +}
-
-Could we have this be the function that vc4_v3d.c publishes instead of
-_free, and then we don't need two separate functions for the free path?
-
->  static void vc4_close(struct drm_device *dev, struct drm_file *file)
+>  
+> @@ -105,9 +104,9 @@ static inline void ks8695_wdt_reload(void)
+>  
+>  	spin_lock(&ks8695_lock);
+>  	/* disable, then re-enable timer0 */
+> -	tmcon = __raw_readl(KS8695_TMR_VA + KS8695_TMCON);
+> -	__raw_writel(tmcon & ~TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
+> -	__raw_writel(tmcon | TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
+> +	tmcon = __raw_readl(tmr_reg + KS8695_TMCON);
+> +	__raw_writel(tmcon & ~TMCON_T0EN, tmr_reg + KS8695_TMCON);
+> +	__raw_writel(tmcon | TMCON_T0EN, tmr_reg + KS8695_TMCON);
+>  	spin_unlock(&ks8695_lock);
+>  }
+>  
+> @@ -238,6 +237,11 @@ static struct miscdevice ks8695wdt_miscdev = {
+>  static int ks8695wdt_probe(struct platform_device *pdev)
 >  {
-> +	struct vc4_dev *vc4 =3D to_vc4_dev(dev);
->  	struct vc4_file *vc4file =3D file->driver_priv;
->=20=20
-> +	mutex_lock(&vc4->bin_bo_lock);
+>  	int res;
+> +	struct resource *resource = platform_get_resource(pdev, IORESOURCE_MEM, 0);
 > +
-> +	if (vc4file->bin_bo_kref)
-> +		kref_put(vc4file->bin_bo_kref, vc4_close_bin_bo_release);
-> +
-> +	mutex_unlock(&vc4->bin_bo_lock);
-> +
->  	vc4_perfmon_close_file(vc4file);
->  	kfree(vc4file);
->  }
+> +	tmr_reg = devm_ioremap_resource(&pdev->dev, resource);
 
+Please use devm_platform_ioremap_resource().
 
-> @@ -313,6 +338,15 @@ int vc4_v3d_bin_bo_alloc(struct vc4_dev *vc4)
->  	return ret;
->  }
->=20=20
-> +void vc4_v3d_bin_bo_free(struct vc4_dev *vc4)
-> +{
-> +	if (!vc4->bin_bo)
-> +		return;
-> +
-> +	drm_gem_object_put_unlocked(&vc4->bin_bo->base.base);
-> +	vc4->bin_bo =3D NULL;
+Thanks,
+Guenter
 
-Hmm.  I'm thinking:
-
-We free the bin BO from the DRM fd close operation, but we could have
-jobs still being executed after the close if userspace didn't happen to
-wait on them before finishing (closing doesn't wait for execution to
-complete, and we couldn't reliably wait during close even if we wanted
-to).  I think to resolve that we need the vc4_exec_info to keep a ref on
-the bin BO as well (at least, if they had a binning component to their
-job).
-
->  #ifdef CONFIG_PM
->  static int vc4_v3d_runtime_suspend(struct device *dev)
->  {
-> @@ -321,9 +355,6 @@ static int vc4_v3d_runtime_suspend(struct device *dev)
->=20=20
->  	vc4_irq_uninstall(vc4->dev);
->=20=20
-> -	drm_gem_object_put_unlocked(&vc4->bin_bo->base.base);
-> -	vc4->bin_bo =3D NULL;
-> -
->  	clk_disable_unprepare(v3d->clk);
->=20=20
->  	return 0;
-> @@ -335,10 +366,6 @@ static int vc4_v3d_runtime_resume(struct device *dev)
->  	struct vc4_dev *vc4 =3D v3d->vc4;
->  	int ret;
->=20=20
-> -	ret =3D vc4_v3d_bin_bo_alloc(vc4);
-> -	if (ret)
-> -		return ret;
-> -
->  	ret =3D clk_prepare_enable(v3d->clk);
->  	if (ret !=3D 0)
->  		return ret;
-
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCgAdFiEE/JuuFDWp9/ZkuCBXtdYpNtH8nugFAly07psACgkQtdYpNtH8
-nuhVhQ//agHD8mONnj+qN/vwqr+cHbHTLY07yG2Qo4htShTARpKJEEzIbLEJdBxG
-Md21UhwJfjX/MdV2M9KkPvcvTFQLqoWofZRsvc9q3vTyLnIht/ZzWJ5V/xN6rFl5
-I7LQD/t8QoULRnJC8huV/iUwYR+kvXRMVUTu8D51Sku1NoTs4fU9yeNTTlD8ptxb
-ojjabySNxkIEnhUrwzchfahjBxyKmIve4Vs/0SoblMKzapD9qVkKr5weGtcxUbFA
-W081sgBxdmKOgvvdRLljqvCc0Xe7gyJfi+UqjHkcjtpGDZThC6gLJdU7W3JF2MfL
-qE5MIsuDu+SRu6njSclf8jHu+1G7vzub9UKpJt/lrWbLghJ+WiORpZL4goCSiZMk
-ZAjQIGUC4iucD1y+chK8yUr27Vx8+eT9kk757rKVp3uit00KmOFzPLGH4cnkkcl+
-Y3UgII4JoICQ4G4WuwqUrQB8k5qGH/u0BGVZBtspbb8LRT1kdOP9hKy3qPgsgupK
-GlPxq8BHuOoVMjS7JsS9ORTbSksBSe16lSTcmIML55Dzk9B7mjMfbPVVzUsQQLLC
-jXCRQL7MTSBsX0b2xgPbNlcwuuYjsy7V5hi5Iv5jEbA0kBw+TATvgiB2zr5jTlmh
-kZvqe/I9hycUnieZ3Qb0Ik3OubO6Bp1/nbkdBtTUlgVu2c/w2Bo=
-=V2WX
------END PGP SIGNATURE-----
---=-=-=--
+> +	if (!tmr_reg)
+> +		return -ENXIO;
+>  
+>  	if (ks8695wdt_miscdev.parent)
+>  		return -EBUSY;
