@@ -2,65 +2,52 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B3BF9C282DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:45:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9569C282DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:45:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 821C4218FF
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:45:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6F9C9218EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:45:25 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555353920;
-	bh=IuFdyzR8IhECT+m9yuXAq67TeoW1Ln9VBoPTab9/YWU=;
+	s=default; t=1555353925;
+	bh=KR6aSEvNHR8dpkikGZPwihP6nIvxV3cnex0/K0fOEkg=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=j5rlkEr6kq+LK9DIwfDlbO1MO/LDtfnfvSR5JOt7Q5DhpabsOBH6jJSnsjgvZlPqs
-	 ZHJQY/0E0XJiPmRkX22lFe6/hjhLqWdksq5Mv3/tqXHfBezpMmmrUpHCzi4H6Zvy/j
-	 KEgE0B6mzAgHGWvIxXmZDdgQZFmWd5KhX/qzevFI=
+	b=yuy9aqW+yQWotJ9Zs8h114QlBhY8GvygXgGeFxzfnCFdQT3U3OEkADPFojojvKnA/
+	 tr+hzgOu1h2gpWeAl9hkzcDL5qmiDVFNjCgZF78iuy1U914Z1w7wfgZnHpF8jQE8li
+	 i7Hh0g2M7fGyYrBObNB/mkOkZrq+r6w9C10SSz3o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728342AbfDOSpT (ORCPT
+        id S1728357AbfDOSpY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 14:45:19 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47576 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 14:45:24 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47668 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728323AbfDOSpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 14:45:16 -0400
+        id S1728335AbfDOSpS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 14:45:18 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 9D19B218D3;
-        Mon, 15 Apr 2019 18:45:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3E343218EA;
+        Mon, 15 Apr 2019 18:45:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555353915;
-        bh=IuFdyzR8IhECT+m9yuXAq67TeoW1Ln9VBoPTab9/YWU=;
+        s=default; t=1555353917;
+        bh=KR6aSEvNHR8dpkikGZPwihP6nIvxV3cnex0/K0fOEkg=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=2V62n7w/e8KZeiA7e/2+RSF3Vk17bMyM16ZFwouaY0oArcW0ewcytPS3yMT092oft
-         kSQ3dS4FGMTvdBBr20nCG8ivO1qmu3W03sesXsHuvgMxQElZBwwM+clGPnZAD9tS/M
-         tZTXOkn3xhoSly0vsAsF3BhA2LcWMKeDVYo2oH6I=
+        b=cWJSLYddR9mq03cFrvFl95ceegjxOuLsxHrgPrjEThEH3Y75xfktUxEa2HE3Y6LOU
+         iDk9DsqpfJOLG/rh0PGq5vKVDrzgtAtasa8rJsJY4ryGW9tfZzlOG+3DYIdBYmgDVu
+         xMyYAyG8zP0TUNp0qEwmNJg+d9EpPeY7l8oV6Ei8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Adhemerval Zanella <adhemerval.zanella@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        James Y Knight <jyknight@google.com>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        David Laight <David.Laight@ACULAB.COM>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
+        stable@vger.kernel.org, Michal Suchanek <msuchanek@suse.de>,
+        Michael Ellerman <mpe@ellerman.id.au>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 09/76] lib/string.c: implement a basic bcmp
-Date:   Mon, 15 Apr 2019 20:43:33 +0200
-Message-Id: <20190415183710.513117495@linuxfoundation.org>
+Subject: [PATCH 4.9 18/76] powerpc/64s: Enhance the information in cpu_show_spectre_v1()
+Date:   Mon, 15 Apr 2019 20:43:42 +0200
+Message-Id: <20190415183712.389439208@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183707.712011689@linuxfoundation.org>
 References: <20190415183707.712011689@linuxfoundation.org>
@@ -73,104 +60,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5f074f3e192f10c9fade898b9b3b8812e3d83342 ]
+commit a377514519b9a20fa1ea9adddbb4129573129cef upstream.
 
-A recent optimization in Clang (r355672) lowers comparisons of the
-return value of memcmp against zero to comparisons of the return value
-of bcmp against zero.  This helps some platforms that implement bcmp
-more efficiently than memcmp.  glibc simply aliases bcmp to memcmp, but
-an optimized implementation is in the works.
+We now have barrier_nospec as mitigation so print it in
+cpu_show_spectre_v1() when enabled.
 
-This results in linkage failures for all targets with Clang due to the
-undefined symbol.  For now, just implement bcmp as a tailcail to memcmp
-to unbreak the build.  This routine can be further optimized in the
-future.
-
-Other ideas discussed:
-
- * A weak alias was discussed, but breaks for architectures that define
-   their own implementations of memcmp since aliases to declarations are
-   not permitted (only definitions). Arch-specific memcmp
-   implementations typically declare memcmp in C headers, but implement
-   them in assembly.
-
- * -ffreestanding also is used sporadically throughout the kernel.
-
- * -fno-builtin-bcmp doesn't work when doing LTO.
-
-Link: https://bugs.llvm.org/show_bug.cgi?id=41035
-Link: https://code.woboq.org/userspace/glibc/string/memcmp.c.html#bcmp
-Link: https://github.com/llvm/llvm-project/commit/8e16d73346f8091461319a7dfc4ddd18eedcff13
-Link: https://github.com/ClangBuiltLinux/linux/issues/416
-Link: http://lkml.kernel.org/r/20190313211335.165605-1-ndesaulniers@google.com
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-Reported-by: Nathan Chancellor <natechancellor@gmail.com>
-Reported-by: Adhemerval Zanella <adhemerval.zanella@linaro.org>
-Suggested-by: Arnd Bergmann <arnd@arndb.de>
-Suggested-by: James Y Knight <jyknight@google.com>
-Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
-Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
-Tested-by: Nathan Chancellor <natechancellor@gmail.com>
-Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Cc: David Laight <David.Laight@ACULAB.COM>
-Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
-Cc: Namhyung Kim <namhyung@kernel.org>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Dan Williams <dan.j.williams@intel.com>
-Cc: <stable@vger.kernel.org>
-Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Michal Suchanek <msuchanek@suse.de>
+Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- include/linux/string.h |    3 +++
- lib/string.c           |   20 ++++++++++++++++++++
- 2 files changed, 23 insertions(+)
+ arch/powerpc/kernel/security.c | 3 +++
+ 1 file changed, 3 insertions(+)
 
---- a/include/linux/string.h
-+++ b/include/linux/string.h
-@@ -111,6 +111,9 @@ extern void * memscan(void *,int,__kerne
- #ifndef __HAVE_ARCH_MEMCMP
- extern int memcmp(const void *,const void *,__kernel_size_t);
- #endif
-+#ifndef __HAVE_ARCH_BCMP
-+extern int bcmp(const void *,const void *,__kernel_size_t);
-+#endif
- #ifndef __HAVE_ARCH_MEMCHR
- extern void * memchr(const void *,int,__kernel_size_t);
- #endif
---- a/lib/string.c
-+++ b/lib/string.c
-@@ -772,6 +772,26 @@ __visible int memcmp(const void *cs, con
- EXPORT_SYMBOL(memcmp);
- #endif
+diff --git a/arch/powerpc/kernel/security.c b/arch/powerpc/kernel/security.c
+index d0e974da4918..f189f946d935 100644
+--- a/arch/powerpc/kernel/security.c
++++ b/arch/powerpc/kernel/security.c
+@@ -121,6 +121,9 @@ ssize_t cpu_show_spectre_v1(struct device *dev, struct device_attribute *attr, c
+ 	if (!security_ftr_enabled(SEC_FTR_BNDS_CHK_SPEC_BAR))
+ 		return sprintf(buf, "Not affected\n");
  
-+#ifndef __HAVE_ARCH_BCMP
-+/**
-+ * bcmp - returns 0 if and only if the buffers have identical contents.
-+ * @a: pointer to first buffer.
-+ * @b: pointer to second buffer.
-+ * @len: size of buffers.
-+ *
-+ * The sign or magnitude of a non-zero return value has no particular
-+ * meaning, and architectures may implement their own more efficient bcmp(). So
-+ * while this particular implementation is a simple (tail) call to memcmp, do
-+ * not rely on anything but whether the return value is zero or non-zero.
-+ */
-+#undef bcmp
-+int bcmp(const void *a, const void *b, size_t len)
-+{
-+	return memcmp(a, b, len);
-+}
-+EXPORT_SYMBOL(bcmp);
-+#endif
++	if (barrier_nospec_enabled)
++		return sprintf(buf, "Mitigation: __user pointer sanitization\n");
 +
- #ifndef __HAVE_ARCH_MEMSCAN
- /**
-  * memscan - Find a character in an area of memory.
+ 	return sprintf(buf, "Vulnerable\n");
+ }
+ 
+-- 
+2.19.1
+
 
 
