@@ -2,120 +2,114 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89F9BC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:46:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25FCCC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:47:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 60D6220825
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:46:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF52120825
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:47:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726379AbfDOHqa (ORCPT
+        id S1726480AbfDOHrN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 03:46:30 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:41934 "EHLO mx1.redhat.com"
+        Mon, 15 Apr 2019 03:47:13 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:40068 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725779AbfDOHq3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 03:46:29 -0400
+        id S1725779AbfDOHrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 03:47:13 -0400
 Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 02521308222E;
-        Mon, 15 Apr 2019 07:46:29 +0000 (UTC)
-Received: from dhcp-128-65.nay.redhat.com (ovpn-12-110.pek2.redhat.com [10.72.12.110])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 6399B5D9CA;
-        Mon, 15 Apr 2019 07:46:25 +0000 (UTC)
-Date:   Mon, 15 Apr 2019 15:46:20 +0800
-From:   Dave Young <dyoung@redhat.com>
-To:     Baoquan He <bhe@redhat.com>
-Cc:     Junichi Nomura <j-nomura@ce.jp.nec.com>,
-        Borislav Petkov <bp@alien8.de>,
-        Chao Fan <fanc.fnst@cn.fujitsu.com>,
-        Kairui Song <kasong@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4] x86/boot: Use efi_setup_data for searching RSDP on
- kexec-ed kernel
-Message-ID: <20190415074620.GA15224@dhcp-128-65.nay.redhat.com>
-References: <20190408231011.GA5402@jeru.linux.bs1.fc.nec.co.jp>
- <20190410171431.GE26580@zn.tnic>
- <7cbc096d-0548-18b1-a335-8ba114f234a7@ce.jp.nec.com>
- <20190411080927.GA30080@zn.tnic>
- <e4de0520-ade8-2834-dadf-7af68701356b@ce.jp.nec.com>
- <20190411084235.GJ3805@localhost.localdomain>
- <1bb7bccb-0270-d073-fa2f-43e1a1c73fbe@ce.jp.nec.com>
- <20190412002345.GA6356@MiWiFi-R3L-srv>
+        by mx1.redhat.com (Postfix) with ESMTPS id CB9F6821C3;
+        Mon, 15 Apr 2019 07:47:12 +0000 (UTC)
+Received: from [10.72.12.206] (ovpn-12-206.pek2.redhat.com [10.72.12.206])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 19B3E5D9CA;
+        Mon, 15 Apr 2019 07:47:00 +0000 (UTC)
+Subject: Re: [PATCH v1 15/15] ceph: use put_user_pages() instead of
+ ceph_put_page_vector()
+To:     jglisse@redhat.com, linux-kernel@vger.kernel.org
+Cc:     linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-mm@kvack.org, John Hubbard <jhubbard@nvidia.com>,
+        Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Ming Lei <ming.lei@redhat.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Matthew Wilcox <willy@infradead.org>,
+        Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+        ceph-devel@vger.kernel.org
+References: <20190411210834.4105-1-jglisse@redhat.com>
+ <20190411210834.4105-16-jglisse@redhat.com>
+From:   "Yan, Zheng" <zyan@redhat.com>
+Message-ID: <df4da184-fe8b-c189-43e5-fac58adb3ed9@redhat.com>
+Date:   Mon, 15 Apr 2019 15:46:59 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190412002345.GA6356@MiWiFi-R3L-srv>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <20190411210834.4105-16-jglisse@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Mon, 15 Apr 2019 07:46:29 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Mon, 15 Apr 2019 07:47:13 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/12/19 at 08:23am, Baoquan He wrote:
-> On 04/11/19 at 09:14am, Junichi Nomura wrote:
-> > On 4/11/19 5:42 PM, Baoquan He wrote:
-> > > On 04/11/19 at 08:16am, Junichi Nomura wrote:
-> > >> kexec_get_rsdp_addr() might fail on kexec-booted kernel, e.g. if the
-> > >> setup_data was invalid. In such a case, falling back to efi_get_rsdp_addr()
-> > >> will hit the problem of accessing invalid table pointer again.
-> > > 
-> > > Seems you are trying to address Dave Young's comment in 
-> > > http://lkml.kernel.org/r/20190404073233.GC5708@dhcp-128-65.nay.redhat.com
-> > 
-> > Right. His "In case kexec_get_rsdp_addr failed.." comment.
-> > 
-> > > We may need discuss and make clear if those are doable. E.g the first
-> > > comment, if not hang by below line of code, returning 0 for what? Can
-> > > kexec still be saved, or just reset to firmware?
-> > > 
-> > > 	error("EFI system table not found in kexec boot_params.")
-> > 
-> > If we return 0 and also don't hang in the rest of get_rsdp_addr(),
-> > it just work as the same way as v5.0 and earlier kernel do.
-> > 
-> > Failure cases in kexec_get_rsdp_addr() are followings:
-> > 1. efi_setup_data is invalid
-> > 2. loader signature is invalid
-> > 3. EFI systab is not found in boot_params
-> > 4. RSDP is not found by parsing tables pointed to by efi_setup_data
-> > 
-> > I think all of them are critical for EFI boot, so one option could be
-> > we never return failure in kexec_get_rsdp_addr() and just hang.
-> > But hanging in this very early stage of boot may make the problem
-> > harder to investigate once happens. Even earlyprintk is not working yet.
-> > So the other option is returning 0 to defer the crash for later stage.
+On 4/12/19 5:08 AM, jglisse@redhat.com wrote:
+> From: Jérôme Glisse <jglisse@redhat.com>
 > 
-> OK, I got the point, thanks. So it is deferred to the late stage, KASLR
-> may not avoid those memory region which is marked as hotpluggable in
-> SRAT. Kernel can boot up, but doesn't function well on hotplug stuff.
-> In this case, people don't know why it happened. We are still blind.
+> When page reference were taken through GUP (get_user_page*()) we need
+> to drop them with put_user_pages().
 > 
-> Seems early console in efi is the problem, but not kexec or hotplug. I
-> am fine to hang, or make it continue booting for now.
+> Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
+> Cc: linux-fsdevel@vger.kernel.org
+> Cc: linux-block@vger.kernel.org
+> Cc: linux-mm@kvack.org
+> Cc: John Hubbard <jhubbard@nvidia.com>
+> Cc: Jan Kara <jack@suse.cz>
+> Cc: Dan Williams <dan.j.williams@intel.com>
+> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
+> Cc: Johannes Thumshirn <jthumshirn@suse.de>
+> Cc: Christoph Hellwig <hch@lst.de>
+> Cc: Jens Axboe <axboe@kernel.dk>
+> Cc: Ming Lei <ming.lei@redhat.com>
+> Cc: Dave Chinner <david@fromorbit.com>
+> Cc: Jason Gunthorpe <jgg@ziepe.ca>
+> Cc: Matthew Wilcox <willy@infradead.org>
+> Cc: Yan Zheng <zyan@redhat.com>
+> Cc: Sage Weil <sage@redhat.com>
+> Cc: Ilya Dryomov <idryomov@gmail.com>
+> Cc: ceph-devel@vger.kernel.org
+> ---
+>   fs/ceph/file.c | 3 ++-
+>   1 file changed, 2 insertions(+), 1 deletion(-)
 > 
-> Hi Dave, 
-> 
-> Is it possible to fix the efi early console issue? I mean the
-> feasibility, I believe it won't be easy. Ask this because not only this
-> issue encountered, any other issue could be triggered during boot
-> decompressing stage. If efi has this problem, we can't debug them
-> either.
+> diff --git a/fs/ceph/file.c b/fs/ceph/file.c
+> index 6c5b85f01721..5842ad3a4218 100644
+> --- a/fs/ceph/file.c
+> +++ b/fs/ceph/file.c
+> @@ -667,7 +667,8 @@ static ssize_t ceph_sync_read(struct kiocb *iocb, struct iov_iter *to,
+>   			} else {
+>   				iov_iter_advance(to, 0);
+>   			}
+> -			ceph_put_page_vector(pages, num_pages, false);
+> +			/* iov_iter_get_pages_alloc() did call GUP */
+> +			put_user_pages(pages, num_pages);
 
-For normal boot, it maybe doable to use some boot services eg. some
-graphic protocols efi firmware provided.
+pages in pipe were not from get_user_pages(). Am I missing anything?
 
-But for kexec, it is different because it become virtual mode, boot
-services are not available, and kernel takes over the mode setting etc.
-the early framebuffer maybe usable, maybe not, it is not reliable.
+Regards
+Yan, Zheng
 
-Thanks
-Dave
+>   		} else {
+>   			int idx = 0;
+>   			size_t left = ret > 0 ? ret : 0;
+> 
+
