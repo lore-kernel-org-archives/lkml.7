@@ -2,78 +2,95 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8E59C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:47:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81B22C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:48:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C18CE20833
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:47:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A50F20833
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:48:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727109AbfDOJrt (ORCPT
+        id S1727139AbfDOJsK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 05:47:49 -0400
-Received: from mx2.suse.de ([195.135.220.15]:57192 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725798AbfDOJrr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 05:47:47 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id C7898B02C;
-        Mon, 15 Apr 2019 09:47:39 +0000 (UTC)
-Received: by quack2.suse.cz (Postfix, from userid 1000)
-        id 251261E42AA; Mon, 15 Apr 2019 11:47:39 +0200 (CEST)
-Date:   Mon, 15 Apr 2019 11:47:39 +0200
-From:   Jan Kara <jack@suse.cz>
-To:     Bharath Vedartham <linux.bhar@gmail.com>
-Cc:     keescook@chromium.org, jack@suse.cz, arnd@arndb.de,
-        akpm@linux-foundation.org, reiserfs-devel@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] fs/reiserfs/journal.c: Make remove_journal_hash static
-Message-ID: <20190415094739.GA13684@quack2.suse.cz>
-References: <20190414112438.GA23266@bharath12345-Inspiron-5559>
+        Mon, 15 Apr 2019 05:48:10 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44844 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725798AbfDOJsK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 05:48:10 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 52D01C05E76E;
+        Mon, 15 Apr 2019 09:48:10 +0000 (UTC)
+Received: from krava (unknown [10.43.17.48])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 0ABF460FCD;
+        Mon, 15 Apr 2019 09:48:06 +0000 (UTC)
+Date:   Mon, 15 Apr 2019 11:48:06 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Bandan Das <bsd@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: Re: [PATCH] perf/x86: descriptive failure messages for PMU init
+Message-ID: <20190415094806.GE13124@krava>
+References: <jpg5zrjavmq.fsf@linux.bootlegged.copy>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190414112438.GA23266@bharath12345-Inspiron-5559>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <jpg5zrjavmq.fsf@linux.bootlegged.copy>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Mon, 15 Apr 2019 09:48:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun 14-04-19 16:54:38, Bharath Vedartham wrote:
-> This fixes the -WDecl sparse warning in journal.c. Function was declared
-> as static void but the definition was void.
-> 
-> Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
+On Fri, Apr 12, 2019 at 03:09:17PM -0400, Bandan Das wrote:
 
-Thanks! I've added your patch into my tree.
+SNIP
 
-								Honza
+>  msr_fail:
+> -	if (boot_cpu_has(X86_FEATURE_HYPERVISOR)) {
+> +	if (virt)
+>  		pr_cont("PMU not available due to virtualization, using software events only.\n");
+> -	} else {
+> -		pr_cont("Broken PMU hardware detected, using software events only.\n");
+> -		pr_err("Failed to access perfctr msr (MSR %x is %Lx)\n",
+> -		       reg, val_new);
+> +	switch (status) {
+> +	case READ_FAIL:
+> +		if (virt)
+> +			pr_debug("Failed to read perfctr msr (MSR %x)\n", reg);
+> +		else
+> +			pr_err("Failed to read perfctr msr (MSR %x)\n", reg);
+> +		break;
+> +	case WRITE_FAIL:
+> +		if (virt)
+> +			pr_debug("Failed to write perfctr msr (MSR %x, wrote: %llx, read: %llx)\n",
+> +				 reg, val, val_new);
+> +		else
+> +			pr_err("Failed to write perfctr msr (MSR %x, wrote: %llx, read: %llx)\n",
+> +				 reg, val, val_new);
+> +		break;
+> +	case PMU_FAIL:
+> +		/* fall through for default message */
+> +	default:
+> +		if (virt)
+> +			pr_debug("Broken PMU hardware detected, using software events only.\n");
+> +		else
+> +			pr_cont("Broken PMU hardware detected, using software events only.\n");
 
-> ---
->  fs/reiserfs/journal.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/fs/reiserfs/journal.c b/fs/reiserfs/journal.c
-> index 8a76f9d..36346dc 100644
-> --- a/fs/reiserfs/journal.c
-> +++ b/fs/reiserfs/journal.c
-> @@ -1844,7 +1844,7 @@ static int flush_used_journal_lists(struct super_block *s,
->   * removes any nodes in table with name block and dev as bh.
->   * only touchs the hnext and hprev pointers.
->   */
-> -void remove_journal_hash(struct super_block *sb,
-> +static void remove_journal_hash(struct super_block *sb,
->  			 struct reiserfs_journal_cnode **table,
->  			 struct reiserfs_journal_list *jl,
->  			 unsigned long block, int remove_freed)
+hum, why can't we have just one pr_err for both virt and bare metal?
+
+jirka
+
+>  	}
+>  
+>  	return false;
 > -- 
-> 2.7.4
+> 2.19.2
 > 
--- 
-Jan Kara <jack@suse.com>
-SUSE Labs, CR
