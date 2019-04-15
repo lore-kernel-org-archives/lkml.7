@@ -2,113 +2,106 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC909C10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 22:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEDAAC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 22:22:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9F0920880
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 22:20:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555366814;
-	bh=kLj6wpbb7vDHRaZbRPhsXOZhxjEdDfzHs6TA1bTC1Cw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=1qKKhDxEnUDy6X+YML3w3h3nF+RRb1a6kSeRlspb4Ub4dEUdJhXNV4b114OJaqsF6
-	 uf72XBh0d8G3f/ZP/n3f0t1Q6y06+wl8zwa3mcyyO6zimiEV5WPK7mHe+U+mq68s9d
-	 TQDf287MZd2LK4YI0MhKU+yiAmgDqH27/vgeVVQE=
+	by mail.kernel.org (Postfix) with ESMTP id BC3A120854
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 22:22:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="ktgJc5kt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728135AbfDOWUG (ORCPT
+        id S1728072AbfDOWWJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 18:20:06 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47656 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725786AbfDOWUF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 18:20:05 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CA7F620880;
-        Mon, 15 Apr 2019 22:20:02 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555366803;
-        bh=kLj6wpbb7vDHRaZbRPhsXOZhxjEdDfzHs6TA1bTC1Cw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=xIYTht5TEGNclQblk9u5VtYfFxaLdB/EmW1oW3+e0gegJfmKxrrAPQcYaEwUbQgEU
-         +9uaBkjdN5pD/gQdGf+U5O1XyXwlw6vdd2aEOgg2G7DGy+pfCTU3jaM1QTKrhfzHZu
-         YXoDzd51SLvEK94+siJFiRFgbtFQvE6YvUr3irfM=
-Date:   Mon, 15 Apr 2019 17:20:01 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "corbet@lwn.net" <corbet@lwn.net>
-Subject: Re: [PATCH v3 0/5] PCI: Patch series to support Thunderbolt without
- any BIOS support
-Message-ID: <20190415222001.GN126710@google.com>
-References: <PS2P216MB06429DB03193EF6635554275802B0@PS2P216MB0642.KORP216.PROD.OUTLOOK.COM>
+        Mon, 15 Apr 2019 18:22:09 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:40489 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726609AbfDOWWJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 18:22:09 -0400
+Received: by mail-pl1-f196.google.com with SMTP id b3so9265650plr.7
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 15:22:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:in-reply-to:references:date:message-id
+         :mime-version;
+        bh=lptdN09AWw8dqNZlD1qBwSSlbgj7fwHxdKofOcd3HoA=;
+        b=ktgJc5ktdUWFh+RXzUm3uAD2p0pZ7YvBmn8+INN0V/yPjPTLgukY0JCxi0O2IHt9aE
+         xygetAonU1mVcAYctyiGDPNY1U/NutMYzxap7XXc3WCK+W/lAgBL50Qj4ZiIQpgkh60f
+         /Q/Bi0E7bHQQ5MTMrryk9X2JxI0W6WAKoiflMA6JSQ2KXROZU68RffwtQiFphPscPGtP
+         MA5UXX49z8+CUwkRhlUF+txMUN0zIfN8D7RumqEZm326KZRt6HIQ0N4T53trNaVY6hFM
+         ItcFLJy2iAtD2q+r5QjszjVttq+ZjOUqD/xAkjoA75K+6nuNRIq8b9DvmPcKC8V+2YAi
+         6DvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=lptdN09AWw8dqNZlD1qBwSSlbgj7fwHxdKofOcd3HoA=;
+        b=uIxn9KCOpvSdSrHoGTCnqelgYyP7QB9Inl4S14e6QDvkYSwA89BnkAfevE0pjSBqKO
+         6A1xaLWdMWtO0PlB+EsVyceonDzPdMYuHwUJxUsfLS7S1zQZyPw1W9LU7EtGhKiok+8e
+         i4qbcVBu6qJx7k++bhilKvdDzQ2Lg01/71fbhRYFeDXNM9gROXJgOIG0g5wvcZht5fjJ
+         ImZlRN79a7q4z1tkJe7+bSU2wQjBs6A19mg2XyNTXG2n5/++PtBu87mblDs0e3SB8qA5
+         acCWeM9Rg4vyZ2ROL2bRGOJlV12sg0TxYiTSs87dM0VJJTf6ApFLx71BD4vcT33D2Gi4
+         cn1Q==
+X-Gm-Message-State: APjAAAX16iph/y5QRG6ViARtSeXl5MFsIv8qutdKVIaRpeBs+Zwn3D3N
+        pifxi97TSHkbGlXlke0WXOp+yw==
+X-Google-Smtp-Source: APXvYqwfyYWiUTTXxdFaINioxbue02XqHvTyGmZQgmfWUuefcgJfNNTp5gxkt4ieJZ3H12wkQMDn5w==
+X-Received: by 2002:a17:902:1003:: with SMTP id b3mr76226418pla.306.1555366928363;
+        Mon, 15 Apr 2019 15:22:08 -0700 (PDT)
+Received: from localhost ([2601:602:9200:a1a5:c45e:7ed8:c242:3563])
+        by smtp.googlemail.com with ESMTPSA id 128sm38039859pgb.47.2019.04.15.15.22.07
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 15 Apr 2019 15:22:07 -0700 (PDT)
+From:   Kevin Hilman <khilman@baylibre.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>
+Cc:     dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-amlogic@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 0/3] dt-bindings: meson: Add G12A display bindings
+In-Reply-To: <5c7c873c-0535-0342-26b5-6cb29df9859b@baylibre.com>
+References: <20190313141030.5958-1-narmstrong@baylibre.com> <5c7c873c-0535-0342-26b5-6cb29df9859b@baylibre.com>
+Date:   Mon, 15 Apr 2019 15:22:06 -0700
+Message-ID: <7hmukqrjsh.fsf@baylibre.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PS2P216MB06429DB03193EF6635554275802B0@PS2P216MB0642.KORP216.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 05:08:41PM +0000, Nicholas Johnson wrote:
-> I have split the last patch into the two patches as suggested. One to 
-> add the new parameter and another to rename them nicely.
-> 
-> There is no longer depreciation of the old kernel parameters - they are 
-> simply dropped, as suggested.
+Neil Armstrong <narmstrong@baylibre.com> writes:
 
-I did not actually suggest dropping the old parameters.  I said I
-wasn't sure the user confusion of deprecating the old names in favor
-of new names was worth the trouble.  I suspect we should just *add*
-one new parameter and leave the old ones unchanged.
+> On 13/03/2019 15:10, Neil Armstrong wrote:
+>> This patchset adds the G12A specific bindings for the Display VPU
+>> and VPU Power Control.
+>> 
+>> The Amlogic Meson G12A Display module is based on the Meson GXM SoC
+>> with an updated Plane Blender, thus VPU architecture and interconnect
+>> is the same.
+>> 
+>> Implementation then DT nodes will come in a further patchsets.
+>> 
+>> Neil Armstrong (3):
+>>   dt-bindings: display: amlogic,meson-vpu: Add G12A compatible and ports
+>>   dt-bindings: display: amlogic,meson-dw-hdmi: Add G12A compatible and
+>>     ports
+>>   dt-bindings: power: amlogic,meson-gx-pwrc: Add G12A compatible
+>> 
+>>  .../devicetree/bindings/display/amlogic,meson-dw-hdmi.txt     | 4 ++++
+>>  .../devicetree/bindings/display/amlogic,meson-vpu.txt         | 4 ++++
+>>  .../devicetree/bindings/power/amlogic,meson-gx-pwrc.txt       | 4 +++-
+>>  3 files changed, 11 insertions(+), 1 deletion(-)
+>> 
+>
+> Kevin,
+>
+> I applied Patches 1 & 2 to drm-misc-next, can you take Patch 3 along :
 
-> I would find it cleaner to just do a single patch without the 
-> depreciation, as both patches change the same things, doubling up on the 
-> number of patch lines. I can still do this if requested.
-> 
-> Bjorn has fixed a trivial problem with the second patch in the series 
-> not applying cleanly due to changes since I first sent it. He said not 
-> to bother fixing it.
+Queued for v5.2,
 
-What I actually meant was "you correctly posted v2 based on my master
-branch at the time, and since my master branch has moved from v5.0-rc1
-to v5.1-rc1 since your v2 post, I'll do trivial fixes for that."
+Thanks,
 
-But since you're posting v3 *today*, and my master branch has been at
-v5.1-rc1 since March 18, you should rebase your patches on top of that
-branch first.
-
-> Nicholas Johnson (5):
->   PCI: Consider alignment of hot-added bridges when distributing
->     available resources
->   PCI: Cleanup comments in setup-bus.c to meet kernel coding style
->     guidelines
-
-We also talked about moving trivial cleanups to be at the end.  The
-important things should be first in the series, with cleanups at the
-end.  That way backporting is easier, since people may want to
-backport only the real fixes, ignoring things like typo fixes.
-
->   PCI: Fix serious bug when sizing bridges with additional size
->   PCI: modify kernel parameters to differentiate between MMIO and
->     MMIO_PREF sizes
->   PCI: Rename pci=hpiosize,hpmemsize,hpmemprefsize to be more readable
-> 
->  .../admin-guide/kernel-parameters.txt         |   7 +-
->  drivers/pci/pci.c                             |  18 +-
->  drivers/pci/setup-bus.c                       | 512 +++++++++---------
->  include/linux/pci.h                           |   3 +-
->  4 files changed, 287 insertions(+), 253 deletions(-)
-> 
-> -- 
-> 2.20.1
-> 
+Kevin
