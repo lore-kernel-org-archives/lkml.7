@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C839C10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:47:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 03A0AC10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:47:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B5E321900
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:47:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF493218EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:47:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555354040;
-	bh=zfzYwbAwJm0fglQB53WTUxwHsqz42lR02PfPzioo9gE=;
+	s=default; t=1555354044;
+	bh=IQgSzUX6w2VqmF/8+jZIK+yRqaY3i6wK5OLNRCWeUuo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZCnearsOSVvhUKU1TaEo+NkmgLjbl10Y8QmFNBiq1YiNkSeKIWyFtHn3I/MbGtCk/
-	 4/SaCE62IpyjRaPdnqX2X+nI75PCQgYp5RbHpAo9lB4kSo1ffsEKiRb7WSmH3dHSta
-	 nbEmy4dJ/2XvePzzXbBgCivyA6oDan/K4MA+CN94=
+	b=XavHz7eRWVbk8fYTidZUwqseEo9gOVk9onUVEXPcIcrgEddZhwAxcclqaGdWKPhA7
+	 iB4RrH+CrgOvU5tEQ457iweVqLk7nh/25v4I5l23nBzCvSxSk0s/7vPGgqyW3xHHrr
+	 6hrMGrAtWW2Xw+bJHftGhvMR01gkVrvVSZRuZ3Mg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728872AbfDOSrS (ORCPT
+        id S1728900AbfDOSrX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 14:47:18 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50402 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 14:47:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50476 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728860AbfDOSrQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 14:47:16 -0400
+        id S1728417AbfDOSrT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 14:47:19 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id ACE53218D3;
-        Mon, 15 Apr 2019 18:47:14 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4EF7D218FC;
+        Mon, 15 Apr 2019 18:47:17 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555354035;
-        bh=zfzYwbAwJm0fglQB53WTUxwHsqz42lR02PfPzioo9gE=;
+        s=default; t=1555354037;
+        bh=IQgSzUX6w2VqmF/8+jZIK+yRqaY3i6wK5OLNRCWeUuo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=R/4nWANb9wrVY35Y1pRl0ql5TFy0npYqF5TBLGTgL6dEyTGRwChCd/fZupvJsjSWp
-         KuZvbTNCvPv0wixPkmuHycN19QP/tfySQmfoTJVeiwwCRT6TPi9CpZ2xcaUjlwCYTX
-         P6lxOz5kB3ZjynU5278ZY7aPHP+csJAlUaRKKKpc=
+        b=DOm4YqYNdYgR9Q/3cUpgrvJsumYci9iJSZG6JAiRvWy7UKJUG8zB/CQu2YLr8A88m
+         goFLULwA6DhfCKVByLqalB2lKCjJeIRoStgBqeJqVUif8RtCwDzfqmF3VxjtfZObei
+         1IHH6z48/ObX8D5E2NCrb83MgwHNjQ7pxuTjZzBs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Junwei Hu <hujunwei4@huawei.com>,
-        Wenhao Zhang <zhangwenhao8@huawei.com>,
-        syzbot+e8ce541d095e486074fc@syzkaller.appspotmail.com,
-        Zhiqiang Liu <liuzhiqiang26@huawei.com>,
-        Martin KaFai Lau <kafai@fb.com>,
+        stable@vger.kernel.org, Jianlin Shi <jishi@redhat.com>,
+        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 48/76] ipv6: Fix dangling pointer when ipv6 fragment
-Date:   Mon, 15 Apr 2019 20:44:12 +0200
-Message-Id: <20190415183720.771455989@linuxfoundation.org>
+Subject: [PATCH 4.9 49/76] ipv6: sit: reset ip header pointer in ipip6_rcv
+Date:   Mon, 15 Apr 2019 20:44:13 +0200
+Message-Id: <20190415183720.957860319@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183707.712011689@linuxfoundation.org>
 References: <20190415183707.712011689@linuxfoundation.org>
@@ -63,59 +60,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Junwei Hu <hujunwei4@huawei.com>
+From: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
 
-[ Upstream commit ef0efcd3bd3fd0589732b67fb586ffd3c8705806 ]
+[ Upstream commit bb9bd814ebf04f579be466ba61fc922625508807 ]
 
-At the beginning of ip6_fragment func, the prevhdr pointer is
-obtained in the ip6_find_1stfragopt func.
-However, all the pointers pointing into skb header may change
-when calling skb_checksum_help func with
-skb->ip_summed = CHECKSUM_PARTIAL condition.
-The prevhdr pointe will be dangling if it is not reloaded after
-calling __skb_linearize func in skb_checksum_help func.
+ipip6 tunnels run iptunnel_pull_header on received skbs. This can
+determine the following use-after-free accessing iph pointer since
+the packet will be 'uncloned' running pskb_expand_head if it is a
+cloned gso skb (e.g if the packet has been sent though a veth device)
 
-Here, I add a variable, nexthdr_offset, to evaluate the offset,
-which does not changes even after calling __skb_linearize func.
+[  706.369655] BUG: KASAN: use-after-free in ipip6_rcv+0x1678/0x16e0 [sit]
+[  706.449056] Read of size 1 at addr ffffe01b6bd855f5 by task ksoftirqd/1/=
+[  706.669494] Hardware name: HPE ProLiant m400 Server/ProLiant m400 Server, BIOS U02 08/19/2016
+[  706.771839] Call trace:
+[  706.801159]  dump_backtrace+0x0/0x2f8
+[  706.845079]  show_stack+0x24/0x30
+[  706.884833]  dump_stack+0xe0/0x11c
+[  706.925629]  print_address_description+0x68/0x260
+[  706.982070]  kasan_report+0x178/0x340
+[  707.025995]  __asan_report_load1_noabort+0x30/0x40
+[  707.083481]  ipip6_rcv+0x1678/0x16e0 [sit]
+[  707.132623]  tunnel64_rcv+0xd4/0x200 [tunnel4]
+[  707.185940]  ip_local_deliver_finish+0x3b8/0x988
+[  707.241338]  ip_local_deliver+0x144/0x470
+[  707.289436]  ip_rcv_finish+0x43c/0x14b0
+[  707.335447]  ip_rcv+0x628/0x1138
+[  707.374151]  __netif_receive_skb_core+0x1670/0x2600
+[  707.432680]  __netif_receive_skb+0x28/0x190
+[  707.482859]  process_backlog+0x1d0/0x610
+[  707.529913]  net_rx_action+0x37c/0xf68
+[  707.574882]  __do_softirq+0x288/0x1018
+[  707.619852]  run_ksoftirqd+0x70/0xa8
+[  707.662734]  smpboot_thread_fn+0x3a4/0x9e8
+[  707.711875]  kthread+0x2c8/0x350
+[  707.750583]  ret_from_fork+0x10/0x18
 
-Fixes: 405c92f7a541 ("ipv6: add defensive check for CHECKSUM_PARTIAL skbs in ip_fragment")
-Signed-off-by: Junwei Hu <hujunwei4@huawei.com>
-Reported-by: Wenhao Zhang <zhangwenhao8@huawei.com>
-Reported-by: syzbot+e8ce541d095e486074fc@syzkaller.appspotmail.com
-Reviewed-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Acked-by: Martin KaFai Lau <kafai@fb.com>
+[  707.811302] Allocated by task 16982:
+[  707.854182]  kasan_kmalloc.part.1+0x40/0x108
+[  707.905405]  kasan_kmalloc+0xb4/0xc8
+[  707.948291]  kasan_slab_alloc+0x14/0x20
+[  707.994309]  __kmalloc_node_track_caller+0x158/0x5e0
+[  708.053902]  __kmalloc_reserve.isra.8+0x54/0xe0
+[  708.108280]  __alloc_skb+0xd8/0x400
+[  708.150139]  sk_stream_alloc_skb+0xa4/0x638
+[  708.200346]  tcp_sendmsg_locked+0x818/0x2b90
+[  708.251581]  tcp_sendmsg+0x40/0x60
+[  708.292376]  inet_sendmsg+0xf0/0x520
+[  708.335259]  sock_sendmsg+0xac/0xf8
+[  708.377096]  sock_write_iter+0x1c0/0x2c0
+[  708.424154]  new_sync_write+0x358/0x4a8
+[  708.470162]  __vfs_write+0xc4/0xf8
+[  708.510950]  vfs_write+0x12c/0x3d0
+[  708.551739]  ksys_write+0xcc/0x178
+[  708.592533]  __arm64_sys_write+0x70/0xa0
+[  708.639593]  el0_svc_handler+0x13c/0x298
+[  708.686646]  el0_svc+0x8/0xc
+
+[  708.739019] Freed by task 17:
+[  708.774597]  __kasan_slab_free+0x114/0x228
+[  708.823736]  kasan_slab_free+0x10/0x18
+[  708.868703]  kfree+0x100/0x3d8
+[  708.905320]  skb_free_head+0x7c/0x98
+[  708.948204]  skb_release_data+0x320/0x490
+[  708.996301]  pskb_expand_head+0x60c/0x970
+[  709.044399]  __iptunnel_pull_header+0x3b8/0x5d0
+[  709.098770]  ipip6_rcv+0x41c/0x16e0 [sit]
+[  709.146873]  tunnel64_rcv+0xd4/0x200 [tunnel4]
+[  709.200195]  ip_local_deliver_finish+0x3b8/0x988
+[  709.255596]  ip_local_deliver+0x144/0x470
+[  709.303692]  ip_rcv_finish+0x43c/0x14b0
+[  709.349705]  ip_rcv+0x628/0x1138
+[  709.388413]  __netif_receive_skb_core+0x1670/0x2600
+[  709.446943]  __netif_receive_skb+0x28/0x190
+[  709.497120]  process_backlog+0x1d0/0x610
+[  709.544169]  net_rx_action+0x37c/0xf68
+[  709.589131]  __do_softirq+0x288/0x1018
+
+[  709.651938] The buggy address belongs to the object at ffffe01b6bd85580
+                which belongs to the cache kmalloc-1024 of size 1024
+[  709.804356] The buggy address is located 117 bytes inside of
+                1024-byte region [ffffe01b6bd85580, ffffe01b6bd85980)
+[  709.946340] The buggy address belongs to the page:
+[  710.003824] page:ffff7ff806daf600 count:1 mapcount:0 mapping:ffffe01c4001f600 index:0x0
+[  710.099914] flags: 0xfffff8000000100(slab)
+[  710.149059] raw: 0fffff8000000100 dead000000000100 dead000000000200 ffffe01c4001f600
+[  710.242011] raw: 0000000000000000 0000000000380038 00000001ffffffff 0000000000000000
+[  710.334966] page dumped because: kasan: bad access detected
+
+Fix it resetting iph pointer after iptunnel_pull_header
+
+Fixes: a09a4c8dd1ec ("tunnels: Remove encapsulation offloads on decap")
+Tested-by: Jianlin Shi <jishi@redhat.com>
+Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/ip6_output.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+ net/ipv6/sit.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/net/ipv6/ip6_output.c
-+++ b/net/ipv6/ip6_output.c
-@@ -592,7 +592,7 @@ int ip6_fragment(struct net *net, struct
- 				inet6_sk(skb->sk) : NULL;
- 	struct ipv6hdr *tmp_hdr;
- 	struct frag_hdr *fh;
--	unsigned int mtu, hlen, left, len;
-+	unsigned int mtu, hlen, left, len, nexthdr_offset;
- 	int hroom, troom;
- 	__be32 frag_id;
- 	int ptr, offset = 0, err = 0;
-@@ -603,6 +603,7 @@ int ip6_fragment(struct net *net, struct
- 		goto fail;
- 	hlen = err;
- 	nexthdr = *prevhdr;
-+	nexthdr_offset = prevhdr - skb_network_header(skb);
+--- a/net/ipv6/sit.c
++++ b/net/ipv6/sit.c
+@@ -661,6 +661,10 @@ static int ipip6_rcv(struct sk_buff *skb
+ 		    !net_eq(tunnel->net, dev_net(tunnel->dev))))
+ 			goto out;
  
- 	mtu = ip6_skb_dst_mtu(skb);
- 
-@@ -637,6 +638,7 @@ int ip6_fragment(struct net *net, struct
- 	    (err = skb_checksum_help(skb)))
- 		goto fail;
- 
-+	prevhdr = skb_network_header(skb) + nexthdr_offset;
- 	hroom = LL_RESERVED_SPACE(rt->dst.dev);
- 	if (skb_has_frag_list(skb)) {
- 		int first_len = skb_pagelen(skb);
++		/* skb can be uncloned in iptunnel_pull_header, so
++		 * old iph is no longer valid
++		 */
++		iph = (const struct iphdr *)skb_mac_header(skb);
+ 		err = IP_ECN_decapsulate(iph, skb);
+ 		if (unlikely(err)) {
+ 			if (log_ecn_error)
 
 
