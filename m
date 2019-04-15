@@ -7,50 +7,47 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96816C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:12:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 975E7C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:12:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 638E4218FE
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:12:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 640F6218FE
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:12:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355544;
-	bh=xbq8+N/Rmnb9W4kf7biegwCefl9XjEhlodcaUAF9ov4=;
+	s=default; t=1555355549;
+	bh=1QUr1HOEiVC48iGBBFI3teoaKM3RtaomYix4dALh23E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0nO/QITHOaMu1vF2GEkAxky+flXpMFlChtFxsE50s/Ol9QGYnGGuxO6WVNu1Q3vxp
-	 LbckqIRg4/Dft9xIsTXuCCiskKF2MNsvioCM48byV4APvc5cUz3m5TVDC6ooGcFJ5h
-	 v0cJQlZpcj6q80g5kOAJttOE4cl1W3G5ewjwjifw=
+	b=e6FWQMbo0yy5dJo4QPHrienMBgTUlNK0znbwXz5evGfawgyGsh2P32r9yhvBk2P1U
+	 X7h5z/0MkCaR4XHvhxa8NnytX8mstuYL1WYhMm0L2/0fzcuaQFaT7WJfvoApbMzhCc
+	 PZrr9UL+ZHGWqBRKeeHB7abEhU5Byy93tSp8hC3I=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731381AbfDOTMW (ORCPT
+        id S1731404AbfDOTM1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:12:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49568 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:12:27 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49766 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731364AbfDOTMR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:12:17 -0400
+        id S1731386AbfDOTMZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:12:25 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id CC2AA218A1;
-        Mon, 15 Apr 2019 19:12:15 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D6DF4218DA;
+        Mon, 15 Apr 2019 19:12:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355536;
-        bh=xbq8+N/Rmnb9W4kf7biegwCefl9XjEhlodcaUAF9ov4=;
+        s=default; t=1555355544;
+        bh=1QUr1HOEiVC48iGBBFI3teoaKM3RtaomYix4dALh23E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=WurIRcXne9D79RWYIFf3M7/Xly+1A+IiVP/6i8X/zI5/yTYz0jH9wWt8aMe4b7d4n
-         +l4cP41BAA0NCIEBFQCldkTysDcuwIwjk+euNC4AmSSrZoShX6RzVcV4uaDkZ61+h6
-         Jgf78eVEl1iz5L/SbcCqZVvSYYhdyOkHbQh2YRN0=
+        b=dthvocdJRHRuRfFLIxXyFdz4l2y2ybJt6orgVoHA9AWrfjPeGZDCG1EUVeX4DoncX
+         c8prsPvKwspbsFxq+n2r6B1B8j2tLGBMLuyhG0FHXv+/DB6ghzM5JmRRbnp9Dlf5tg
+         O1fLbuGqOQYGqDjY8Ngrue6GQlvUmna/7BPN1ToU=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        Curtis Malainey <cujomalainey@chromium.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        Mark Brown <broonie@kernel.org>
-Subject: [PATCH 5.0 072/117] ASoC: intel: Fix crash at suspend/resume after failed codec registration
-Date:   Mon, 15 Apr 2019 21:00:42 +0200
-Message-Id: <20190415183748.614556237@linuxfoundation.org>
+        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
+        Anand Jain <anand.jain@oracle.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 5.0 075/117] btrfs: prop: fix zstd compression parameter validation
+Date:   Mon, 15 Apr 2019 21:00:45 +0200
+Message-Id: <20190415183748.745744116@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183744.887851196@linuxfoundation.org>
 References: <20190415183744.887851196@linuxfoundation.org>
@@ -63,114 +60,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Guenter Roeck <linux@roeck-us.net>
+From: Anand Jain <anand.jain@oracle.com>
 
-commit 8f71370f4b02730e8c27faf460af7a3586e24e1f upstream.
+commit 50398fde997f6be8faebdb5f38e9c9c467370f51 upstream.
 
-If codec registration fails after the ASoC Intel SST driver has been probed,
-the kernel will Oops and crash at suspend/resume.
+We let pass zstd compression parameter even if it is not fully valid.
+For example:
 
-general protection fault: 0000 [#1] PREEMPT SMP KASAN PTI
-CPU: 1 PID: 2811 Comm: cat Tainted: G        W         4.19.30 #15
-Hardware name: GOOGLE Clapper, BIOS Google_Clapper.5216.199.7 08/22/2014
-RIP: 0010:snd_soc_suspend+0x5a/0xd21
-Code: 03 80 3c 10 00 49 89 d7 74 0b 48 89 df e8 71 72 c4 fe 4c 89
-fa 48 8b 03 48 89 45 d0 48 8d 98 a0 01 00 00 48 89 d8 48 c1 e8 03
-<8a> 04 10 84 c0 0f 85 85 0c 00 00 80 3b 00 0f 84 6b 0c 00 00 48 8b
-RSP: 0018:ffff888035407750 EFLAGS: 00010202
-RAX: 0000000000000034 RBX: 00000000000001a0 RCX: 0000000000000000
-RDX: dffffc0000000000 RSI: 0000000000000008 RDI: ffff88805c417098
-RBP: ffff8880354077b0 R08: dffffc0000000000 R09: ffffed100b975718
-R10: 0000000000000001 R11: ffffffff949ea4a3 R12: 1ffff1100b975746
-R13: dffffc0000000000 R14: ffff88805cba4588 R15: dffffc0000000000
-FS:  0000794a78e91b80(0000) GS:ffff888068d00000(0000) knlGS:0000000000000000
-CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-CR2: 00007bd5283ccf58 CR3: 000000004b7aa000 CR4: 00000000001006e0
-Call Trace:
-? dpm_complete+0x67b/0x67b
-? i915_gem_suspend+0x14d/0x1ad
-sst_soc_prepare+0x91/0x1dd
-? sst_be_hw_params+0x7e/0x7e
-dpm_prepare+0x39a/0x88b
-dpm_suspend_start+0x13/0x9d
-suspend_devices_and_enter+0x18f/0xbd7
-? arch_suspend_enable_irqs+0x11/0x11
-? printk+0xd9/0x12d
-? lock_release+0x95f/0x95f
-? log_buf_vmcoreinfo_setup+0x131/0x131
-? rcu_read_lock_sched_held+0x140/0x22a
-? __bpf_trace_rcu_utilization+0xa/0xa
-? __pm_pr_dbg+0x186/0x190
-? pm_notifier_call_chain+0x39/0x39
-? suspend_test+0x9d/0x9d
-pm_suspend+0x2f4/0x728
-? trace_suspend_resume+0x3da/0x3da
-? lock_release+0x95f/0x95f
-? kernfs_fop_write+0x19f/0x32d
-state_store+0xd8/0x147
-? sysfs_kf_read+0x155/0x155
-kernfs_fop_write+0x23e/0x32d
-__vfs_write+0x108/0x608
-? vfs_read+0x2e9/0x2e9
-? rcu_read_lock_sched_held+0x140/0x22a
-? __bpf_trace_rcu_utilization+0xa/0xa
-? debug_smp_processor_id+0x10/0x10
-? selinux_file_permission+0x1c5/0x3c8
-? rcu_sync_lockdep_assert+0x6a/0xad
-? __sb_start_write+0x129/0x2ac
-vfs_write+0x1aa/0x434
-ksys_write+0xfe/0x1be
-? __ia32_sys_read+0x82/0x82
-do_syscall_64+0xcd/0x120
-entry_SYSCALL_64_after_hwframe+0x49/0xbe
+  $ btrfs prop set /btrfs compression zst
+  $ btrfs prop get /btrfs compression
+     compression=zst
 
-In the observed situation, the problem is seen because the codec driver
-failed to probe due to a hardware problem.
+zlib and lzo are fine.
 
-max98090 i2c-193C9890:00: Failed to read device revision: -1
-max98090 i2c-193C9890:00: ASoC: failed to probe component -1
-cht-bsw-max98090 cht-bsw-max98090: ASoC: failed to instantiate card -1
-cht-bsw-max98090 cht-bsw-max98090: snd_soc_register_card failed -1
-cht-bsw-max98090: probe of cht-bsw-max98090 failed with error -1
+Fix it by checking the correct prefix length.
 
-The problem is similar to the problem solved with commit 2fc995a87f2e
-("ASoC: intel: Fix crash at suspend/resume without card registration"),
-but codec registration fails at a later point. At that time, the pointer
-checked with the above mentioned commit is already set, but it is not
-cleared if the device is subsequently removed. Adding a remove function
-to clear the pointer fixes the problem.
-
-Cc: stable@vger.kernel.org
-Cc: Jarkko Nikula <jarkko.nikula@linux.intel.com>
-Cc: Curtis Malainey <cujomalainey@chromium.org>
-Signed-off-by: Guenter Roeck <linux@roeck-us.net>
-Acked-by: Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Signed-off-by: Mark Brown <broonie@kernel.org>
+Fixes: 5c1aab1dd544 ("btrfs: Add zstd support")
+CC: stable@vger.kernel.org # 4.14+
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Signed-off-by: Anand Jain <anand.jain@oracle.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- sound/soc/intel/atom/sst-mfld-platform-pcm.c |    8 ++++++++
- 1 file changed, 8 insertions(+)
+ fs/btrfs/props.c |    2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
---- a/sound/soc/intel/atom/sst-mfld-platform-pcm.c
-+++ b/sound/soc/intel/atom/sst-mfld-platform-pcm.c
-@@ -711,9 +711,17 @@ static int sst_soc_probe(struct snd_soc_
- 	return sst_dsp_init_v2_dpcm(component);
- }
- 
-+static void sst_soc_remove(struct snd_soc_component *component)
-+{
-+	struct sst_data *drv = dev_get_drvdata(component->dev);
-+
-+	drv->soc_card = NULL;
-+}
-+
- static const struct snd_soc_component_driver sst_soc_platform_drv  = {
- 	.name		= DRV_NAME,
- 	.probe		= sst_soc_probe,
-+	.remove		= sst_soc_remove,
- 	.ops		= &sst_platform_ops,
- 	.compr_ops	= &sst_platform_compr_ops,
- 	.pcm_new	= sst_pcm_new,
+--- a/fs/btrfs/props.c
++++ b/fs/btrfs/props.c
+@@ -396,7 +396,7 @@ static int prop_compression_apply(struct
+ 		btrfs_set_fs_incompat(fs_info, COMPRESS_LZO);
+ 	} else if (!strncmp("zlib", value, 4)) {
+ 		type = BTRFS_COMPRESS_ZLIB;
+-	} else if (!strncmp("zstd", value, len)) {
++	} else if (!strncmp("zstd", value, 4)) {
+ 		type = BTRFS_COMPRESS_ZSTD;
+ 		btrfs_set_fs_incompat(fs_info, COMPRESS_ZSTD);
+ 	} else {
 
 
