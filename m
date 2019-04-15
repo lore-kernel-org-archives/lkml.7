@@ -4,53 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB294C10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:12:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB60C10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:12:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 952B5218D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:12:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1097921902
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:12:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355537;
-	bh=kCpm+MyXmaaPxl+WAR7wPjIj+5TZtAOJr4Lre1+Vvms=;
+	s=default; t=1555355540;
+	bh=4lqdExTXrIOjY9ARZEGfgmUCr6gDCcC5IEDX7MY0f3o=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ZIRo/3UsoQWAjvv7HjfVcgpsj88Rd6CCWpd4mY4gYLrgG/UJL7zIeRB8U+7L5oRT1
-	 izpMJr0mGlkDhv3CTQJA0m/qDdX0A4PkH+VIVweNCt4Q7fu5FJqXYfilwjl5T6Q3Mh
-	 wn/eN3mIh28Fiv8VdjXjKbF5DAko7J11WUnb6KG4=
+	b=ehLln3zPKu9ziZScBM67Zedc3HbSr6KBMk1umBsEnx76o6GplTE7cgLWK6VBXuuSh
+	 RqDAqYiUVG2b7GbFRbA8p7flag5SIGA9ZTGItuB1E1bx5rHdsO6685MEOZzNc5gd6K
+	 ewj61rhtP3OGuXiR+HgbBoZJKtVd7emgHSoBtftY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731365AbfDOTMQ (ORCPT
+        id S1730074AbfDOTMS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:12:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49428 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:12:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49500 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731350AbfDOTMM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:12:12 -0400
+        id S1731359AbfDOTMP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:12:15 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6DF30218A1;
-        Mon, 15 Apr 2019 19:12:10 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 1C5272075B;
+        Mon, 15 Apr 2019 19:12:12 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355530;
-        bh=kCpm+MyXmaaPxl+WAR7wPjIj+5TZtAOJr4Lre1+Vvms=;
+        s=default; t=1555355533;
+        bh=4lqdExTXrIOjY9ARZEGfgmUCr6gDCcC5IEDX7MY0f3o=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=eJ/zWOFOmRVwV/rvCbmNpHvCKO5Z09WLJwuPMJvqLVxq8DKTOMBaXprI/yip/iXiT
-         43IVl1CaMuuXtt07bzbQ4QA+PPv2YbJs+KuL1bm0N2m6I/3Dz+Z1f1Kk2CFIks1Vfn
-         pzRHfZzRTiInGF3L9YAjV2B0DEW1PK1PzUxwUAE4=
+        b=c0pF6bDagNzUfLouoeaMQbWfa0OQBT6f4GUzr91xJHMkNR4xC4yFTmhrXbvLo3MOx
+         3iJvxGDT7zYbNI0/8ZMMx9qbOjsXK6MrveoeiCqn9FU/TvXn79sKtRg7+bFMiWeNyv
+         5p7kFjiXpZSMfx25BSDDIOTB+NP75Ch0xHY143tg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Nick Desaulniers <ndesaulniers@google.com>,
-        Zhao Qiang <qiang.zhao@nxp.com>,
-        Yalin Wang <yalin.wang@sonymobile.com>,
+        stable@vger.kernel.org, Greg Thelen <gthelen@google.com>,
+        Roman Gushchin <guro@fb.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Michal Hocko <mhocko@kernel.org>,
+        Vladimir Davydov <vdavydov.dev@gmail.com>,
+        Tejun Heo <tj@kernel.org>,
         Andrew Morton <akpm@linux-foundation.org>,
         Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 5.0 070/117] include/linux/bitrev.h: fix constant bitrev
-Date:   Mon, 15 Apr 2019 21:00:40 +0200
-Message-Id: <20190415183748.523340749@linuxfoundation.org>
+Subject: [PATCH 5.0 071/117] mm: writeback: use exact memcg dirty counts
+Date:   Mon, 15 Apr 2019 21:00:41 +0200
+Message-Id: <20190415183748.570149775@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183744.887851196@linuxfoundation.org>
 References: <20190415183744.887851196@linuxfoundation.org>
@@ -63,126 +65,223 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Arnd Bergmann <arnd@arndb.de>
+From: Greg Thelen <gthelen@google.com>
 
-commit 6147e136ff5071609b54f18982dea87706288e21 upstream.
+commit 0b3d6e6f2dd0a7b697b1aa8c167265908940624b upstream.
 
-clang points out with hundreds of warnings that the bitrev macros have a
-problem with constant input:
+Since commit a983b5ebee57 ("mm: memcontrol: fix excessive complexity in
+memory.stat reporting") memcg dirty and writeback counters are managed
+as:
 
-  drivers/hwmon/sht15.c:187:11: error: variable '__x' is uninitialized when used within its own initialization
-        [-Werror,-Wuninitialized]
-          u8 crc = bitrev8(data->val_status & 0x0F);
-                   ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-  include/linux/bitrev.h:102:21: note: expanded from macro 'bitrev8'
-          __constant_bitrev8(__x) :                       \
-          ~~~~~~~~~~~~~~~~~~~^~~~
-  include/linux/bitrev.h:67:11: note: expanded from macro '__constant_bitrev8'
-          u8 __x = x;                     \
-             ~~~   ^
+ 1) per-memcg per-cpu values in range of [-32..32]
 
-Both the bitrev and the __constant_bitrev macros use an internal
-variable named __x, which goes horribly wrong when passing one to the
-other.
+ 2) per-memcg atomic counter
 
-The obvious fix is to rename one of the variables, so this adds an extra
-'_'.
+When a per-cpu counter cannot fit in [-32..32] it's flushed to the
+atomic.  Stat readers only check the atomic.  Thus readers such as
+balance_dirty_pages() may see a nontrivial error margin: 32 pages per
+cpu.
 
-It seems we got away with this because
+Assuming 100 cpus:
+   4k x86 page_size:  13 MiB error per memcg
+  64k ppc page_size: 200 MiB error per memcg
 
- - there are only a few drivers using bitrev macros
+Considering that dirty+writeback are used together for some decisions the
+errors double.
 
- - usually there are no constant arguments to those
+This inaccuracy can lead to undeserved oom kills.  One nasty case is
+when all per-cpu counters hold positive values offsetting an atomic
+negative value (i.e.  per_cpu[*]=32, atomic=n_cpu*-32).
+balance_dirty_pages() only consults the atomic and does not consider
+throttling the next n_cpu*32 dirty pages.  If the file_lru is in the
+13..200 MiB range then there's absolutely no dirty throttling, which
+burdens vmscan with only dirty+writeback pages thus resorting to oom
+kill.
 
- - when they are constant, they tend to be either 0 or (unsigned)-1
-   (drivers/isdn/i4l/isdnhdlc.o, drivers/iio/amplifiers/ad8366.c) and
-   give the correct result by pure chance.
+It could be argued that tiny containers are not supported, but it's more
+subtle.  It's the amount the space available for file lru that matters.
+If a container has memory.max-200MiB of non reclaimable memory, then it
+will also suffer such oom kills on a 100 cpu machine.
 
-In fact, the only driver that I could find that gets different results
-with this is drivers/net/wan/slic_ds26522.c, which in turn is a driver
-for fairly rare hardware (adding the maintainer to Cc for testing).
+The following test reliably ooms without this patch.  This patch avoids
+oom kills.
 
-Link: http://lkml.kernel.org/r/20190322140503.123580-1-arnd@arndb.de
-Fixes: 556d2f055bf6 ("ARM: 8187/1: add CONFIG_HAVE_ARCH_BITREVERSE to support rbit instruction")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-Reviewed-by: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Zhao Qiang <qiang.zhao@nxp.com>
-Cc: Yalin Wang <yalin.wang@sonymobile.com>
-Cc: <stable@vger.kernel.org>
+  $ cat test
+  mount -t cgroup2 none /dev/cgroup
+  cd /dev/cgroup
+  echo +io +memory > cgroup.subtree_control
+  mkdir test
+  cd test
+  echo 10M > memory.max
+  (echo $BASHPID > cgroup.procs && exec /memcg-writeback-stress /foo)
+  (echo $BASHPID > cgroup.procs && exec dd if=/dev/zero of=/foo bs=2M count=100)
+
+  $ cat memcg-writeback-stress.c
+  /*
+   * Dirty pages from all but one cpu.
+   * Clean pages from the non dirtying cpu.
+   * This is to stress per cpu counter imbalance.
+   * On a 100 cpu machine:
+   * - per memcg per cpu dirty count is 32 pages for each of 99 cpus
+   * - per memcg atomic is -99*32 pages
+   * - thus the complete dirty limit: sum of all counters 0
+   * - balance_dirty_pages() only sees atomic count -99*32 pages, which
+   *   it max()s to 0.
+   * - So a workload can dirty -99*32 pages before balance_dirty_pages()
+   *   cares.
+   */
+  #define _GNU_SOURCE
+  #include <err.h>
+  #include <fcntl.h>
+  #include <sched.h>
+  #include <stdlib.h>
+  #include <stdio.h>
+  #include <sys/stat.h>
+  #include <sys/sysinfo.h>
+  #include <sys/types.h>
+  #include <unistd.h>
+
+  static char *buf;
+  static int bufSize;
+
+  static void set_affinity(int cpu)
+  {
+  	cpu_set_t affinity;
+
+  	CPU_ZERO(&affinity);
+  	CPU_SET(cpu, &affinity);
+  	if (sched_setaffinity(0, sizeof(affinity), &affinity))
+  		err(1, "sched_setaffinity");
+  }
+
+  static void dirty_on(int output_fd, int cpu)
+  {
+  	int i, wrote;
+
+  	set_affinity(cpu);
+  	for (i = 0; i < 32; i++) {
+  		for (wrote = 0; wrote < bufSize; ) {
+  			int ret = write(output_fd, buf+wrote, bufSize-wrote);
+  			if (ret == -1)
+  				err(1, "write");
+  			wrote += ret;
+  		}
+  	}
+  }
+
+  int main(int argc, char **argv)
+  {
+  	int cpu, flush_cpu = 1, output_fd;
+  	const char *output;
+
+  	if (argc != 2)
+  		errx(1, "usage: output_file");
+
+  	output = argv[1];
+  	bufSize = getpagesize();
+  	buf = malloc(getpagesize());
+  	if (buf == NULL)
+  		errx(1, "malloc failed");
+
+  	output_fd = open(output, O_CREAT|O_RDWR);
+  	if (output_fd == -1)
+  		err(1, "open(%s)", output);
+
+  	for (cpu = 0; cpu < get_nprocs(); cpu++) {
+  		if (cpu != flush_cpu)
+  			dirty_on(output_fd, cpu);
+  	}
+
+  	set_affinity(flush_cpu);
+  	if (fsync(output_fd))
+  		err(1, "fsync(%s)", output);
+  	if (close(output_fd))
+  		err(1, "close(%s)", output);
+  	free(buf);
+  }
+
+Make balance_dirty_pages() and wb_over_bg_thresh() work harder to
+collect exact per memcg counters.  This avoids the aforementioned oom
+kills.
+
+This does not affect the overhead of memory.stat, which still reads the
+single atomic counter.
+
+Why not use percpu_counter? memcg already handles cpus going offline, so
+no need for that overhead from percpu_counter.  And the percpu_counter
+spinlocks are more heavyweight than is required.
+
+It probably also makes sense to use exact dirty and writeback counters
+in memcg oom reports.  But that is saved for later.
+
+Link: http://lkml.kernel.org/r/20190329174609.164344-1-gthelen@google.com
+Signed-off-by: Greg Thelen <gthelen@google.com>
+Reviewed-by: Roman Gushchin <guro@fb.com>
+Acked-by: Johannes Weiner <hannes@cmpxchg.org>
+Cc: Michal Hocko <mhocko@kernel.org>
+Cc: Vladimir Davydov <vdavydov.dev@gmail.com>
+Cc: Tejun Heo <tj@kernel.org>
+Cc: <stable@vger.kernel.org>	[4.16+]
 Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
 Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- include/linux/bitrev.h |   46 +++++++++++++++++++++++-----------------------
- 1 file changed, 23 insertions(+), 23 deletions(-)
+ include/linux/memcontrol.h |    5 ++++-
+ mm/memcontrol.c            |   20 ++++++++++++++++++--
+ 2 files changed, 22 insertions(+), 3 deletions(-)
 
---- a/include/linux/bitrev.h
-+++ b/include/linux/bitrev.h
-@@ -34,41 +34,41 @@ static inline u32 __bitrev32(u32 x)
+--- a/include/linux/memcontrol.h
++++ b/include/linux/memcontrol.h
+@@ -561,7 +561,10 @@ struct mem_cgroup *lock_page_memcg(struc
+ void __unlock_page_memcg(struct mem_cgroup *memcg);
+ void unlock_page_memcg(struct page *page);
  
- #define __constant_bitrev32(x)	\
- ({					\
--	u32 __x = x;			\
--	__x = (__x >> 16) | (__x << 16);	\
--	__x = ((__x & (u32)0xFF00FF00UL) >> 8) | ((__x & (u32)0x00FF00FFUL) << 8);	\
--	__x = ((__x & (u32)0xF0F0F0F0UL) >> 4) | ((__x & (u32)0x0F0F0F0FUL) << 4);	\
--	__x = ((__x & (u32)0xCCCCCCCCUL) >> 2) | ((__x & (u32)0x33333333UL) << 2);	\
--	__x = ((__x & (u32)0xAAAAAAAAUL) >> 1) | ((__x & (u32)0x55555555UL) << 1);	\
--	__x;								\
-+	u32 ___x = x;			\
-+	___x = (___x >> 16) | (___x << 16);	\
-+	___x = ((___x & (u32)0xFF00FF00UL) >> 8) | ((___x & (u32)0x00FF00FFUL) << 8);	\
-+	___x = ((___x & (u32)0xF0F0F0F0UL) >> 4) | ((___x & (u32)0x0F0F0F0FUL) << 4);	\
-+	___x = ((___x & (u32)0xCCCCCCCCUL) >> 2) | ((___x & (u32)0x33333333UL) << 2);	\
-+	___x = ((___x & (u32)0xAAAAAAAAUL) >> 1) | ((___x & (u32)0x55555555UL) << 1);	\
-+	___x;								\
- })
+-/* idx can be of type enum memcg_stat_item or node_stat_item */
++/*
++ * idx can be of type enum memcg_stat_item or node_stat_item.
++ * Keep in sync with memcg_exact_page_state().
++ */
+ static inline unsigned long memcg_page_state(struct mem_cgroup *memcg,
+ 					     int idx)
+ {
+--- a/mm/memcontrol.c
++++ b/mm/memcontrol.c
+@@ -3882,6 +3882,22 @@ struct wb_domain *mem_cgroup_wb_domain(s
+ 	return &memcg->cgwb_domain;
+ }
  
- #define __constant_bitrev16(x)	\
- ({					\
--	u16 __x = x;			\
--	__x = (__x >> 8) | (__x << 8);	\
--	__x = ((__x & (u16)0xF0F0U) >> 4) | ((__x & (u16)0x0F0FU) << 4);	\
--	__x = ((__x & (u16)0xCCCCU) >> 2) | ((__x & (u16)0x3333U) << 2);	\
--	__x = ((__x & (u16)0xAAAAU) >> 1) | ((__x & (u16)0x5555U) << 1);	\
--	__x;								\
-+	u16 ___x = x;			\
-+	___x = (___x >> 8) | (___x << 8);	\
-+	___x = ((___x & (u16)0xF0F0U) >> 4) | ((___x & (u16)0x0F0FU) << 4);	\
-+	___x = ((___x & (u16)0xCCCCU) >> 2) | ((___x & (u16)0x3333U) << 2);	\
-+	___x = ((___x & (u16)0xAAAAU) >> 1) | ((___x & (u16)0x5555U) << 1);	\
-+	___x;								\
- })
++/*
++ * idx can be of type enum memcg_stat_item or node_stat_item.
++ * Keep in sync with memcg_exact_page().
++ */
++static unsigned long memcg_exact_page_state(struct mem_cgroup *memcg, int idx)
++{
++	long x = atomic_long_read(&memcg->stat[idx]);
++	int cpu;
++
++	for_each_online_cpu(cpu)
++		x += per_cpu_ptr(memcg->stat_cpu, cpu)->count[idx];
++	if (x < 0)
++		x = 0;
++	return x;
++}
++
+ /**
+  * mem_cgroup_wb_stats - retrieve writeback related stats from its memcg
+  * @wb: bdi_writeback in question
+@@ -3907,10 +3923,10 @@ void mem_cgroup_wb_stats(struct bdi_writ
+ 	struct mem_cgroup *memcg = mem_cgroup_from_css(wb->memcg_css);
+ 	struct mem_cgroup *parent;
  
- #define __constant_bitrev8x4(x) \
- ({			\
--	u32 __x = x;	\
--	__x = ((__x & (u32)0xF0F0F0F0UL) >> 4) | ((__x & (u32)0x0F0F0F0FUL) << 4);	\
--	__x = ((__x & (u32)0xCCCCCCCCUL) >> 2) | ((__x & (u32)0x33333333UL) << 2);	\
--	__x = ((__x & (u32)0xAAAAAAAAUL) >> 1) | ((__x & (u32)0x55555555UL) << 1);	\
--	__x;								\
-+	u32 ___x = x;	\
-+	___x = ((___x & (u32)0xF0F0F0F0UL) >> 4) | ((___x & (u32)0x0F0F0F0FUL) << 4);	\
-+	___x = ((___x & (u32)0xCCCCCCCCUL) >> 2) | ((___x & (u32)0x33333333UL) << 2);	\
-+	___x = ((___x & (u32)0xAAAAAAAAUL) >> 1) | ((___x & (u32)0x55555555UL) << 1);	\
-+	___x;								\
- })
+-	*pdirty = memcg_page_state(memcg, NR_FILE_DIRTY);
++	*pdirty = memcg_exact_page_state(memcg, NR_FILE_DIRTY);
  
- #define __constant_bitrev8(x)	\
- ({					\
--	u8 __x = x;			\
--	__x = (__x >> 4) | (__x << 4);	\
--	__x = ((__x & (u8)0xCCU) >> 2) | ((__x & (u8)0x33U) << 2);	\
--	__x = ((__x & (u8)0xAAU) >> 1) | ((__x & (u8)0x55U) << 1);	\
--	__x;								\
-+	u8 ___x = x;			\
-+	___x = (___x >> 4) | (___x << 4);	\
-+	___x = ((___x & (u8)0xCCU) >> 2) | ((___x & (u8)0x33U) << 2);	\
-+	___x = ((___x & (u8)0xAAU) >> 1) | ((___x & (u8)0x55U) << 1);	\
-+	___x;								\
- })
- 
- #define bitrev32(x) \
+ 	/* this should eventually include NR_UNSTABLE_NFS */
+-	*pwriteback = memcg_page_state(memcg, NR_WRITEBACK);
++	*pwriteback = memcg_exact_page_state(memcg, NR_WRITEBACK);
+ 	*pfilepages = mem_cgroup_nr_lru_pages(memcg, (1 << LRU_INACTIVE_FILE) |
+ 						     (1 << LRU_ACTIVE_FILE));
+ 	*pheadroom = PAGE_COUNTER_MAX;
 
 
