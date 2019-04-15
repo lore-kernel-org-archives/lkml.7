@@ -2,94 +2,113 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1B0AC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:52:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68E61C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:55:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BDB4B206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:52:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Eg6z81qd"
+	by mail.kernel.org (Postfix) with ESMTP id 3B0CE206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:55:36 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727260AbfDOKw1 (ORCPT
+        id S1727253AbfDOKzf convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 06:52:27 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:60244 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726214AbfDOKw1 (ORCPT
+        Mon, 15 Apr 2019 06:55:35 -0400
+Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:35790 "EHLO
+        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726751AbfDOKzd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 06:52:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=DlIj17HSmXj9nZCEjavudDP71Uz3owu6mPfUFnKUouM=; b=Eg6z81qdyNmU6IRF0IvZZ8Xpo
-        HjZnVzizSUjFBPoHIxJyxTHHxBubWFWpXclRmoRlm0DSXBRTmtzCr5ATLpBbeGcZtb1BdFSj7LdkV
-        tl++h7GkBmGuSDtNR6D/iy7/k4unVoBKWO+suyLosd7Grl18SR2F/oc7YA/zhxjQ4JPzg/Zi4Iu10
-        QXn7sIujv71lP2iJdtW0hme+uctNpnuUU2lMWi383W58zWGRRX4MGsEUNv9hXOJvIwKTvhmj1zzwQ
-        Agnx6nZMLSiw5oZiNyqk2BFrYDttrwjMPzsQg6uSW2mtiR1P82Dbimme3kRB99BpmfxAxmlyjE6Vd
-        F5mOzf7Zg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hFzDV-00006V-KO; Mon, 15 Apr 2019 10:52:01 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1A48A2038C257; Mon, 15 Apr 2019 12:51:59 +0200 (CEST)
-Date:   Mon, 15 Apr 2019 12:51:59 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Daniel Bristot de Oliveira <bristot@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
-        Jiri Kosina <jkosina@suse.cz>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Chris von Recklinghausen <crecklin@redhat.com>,
-        Jason Baron <jbaron@akamai.com>, Scott Wood <swood@redhat.com>,
-        Marcelo Tosatti <mtosatti@redhat.com>,
-        Clark Williams <williams@redhat.com>, x86@kernel.org
-Subject: Re: [PATCH V5 1/7] jump_label: Add for_each_label_entry helper
-Message-ID: <20190415105159.GI11158@hirez.programming.kicks-ass.net>
-References: <cover.1554106794.git.bristot@redhat.com>
- <708f1d88826965ef5735c372cc9a17bb80613856.1554106794.git.bristot@redhat.com>
+        Mon, 15 Apr 2019 06:55:33 -0400
+Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
+ TLS) by relay.mimecast.com with ESMTP id
+ uk-mta-163-7kMGV5O_PDmlrIf3f2xIYw-1; Mon, 15 Apr 2019 11:55:29 +0100
+Received: from AcuMS.Aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) by
+ AcuMS.aculab.com (fd9f:af1c:a25b:0:43c:695e:880f:8750) with Microsoft SMTP
+ Server (TLS) id 15.0.1347.2; Mon, 15 Apr 2019 11:56:39 +0100
+Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
+ AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
+ Mon, 15 Apr 2019 11:56:39 +0100
+From:   David Laight <David.Laight@ACULAB.COM>
+To:     'Alastair D'Silva' <alastair@d-silva.org>,
+        'Petr Mladek' <pmladek@suse.com>
+CC:     'Jani Nikula' <jani.nikula@linux.intel.com>,
+        'Joonas Lahtinen' <joonas.lahtinen@linux.intel.com>,
+        'Rodrigo Vivi' <rodrigo.vivi@intel.com>,
+        'David Airlie' <airlied@linux.ie>,
+        'Daniel Vetter' <daniel@ffwll.ch>,
+        'Karsten Keil' <isdn@linux-pingi.de>,
+        'Jassi Brar' <jassisinghbrar@gmail.com>,
+        'Tom Lendacky' <thomas.lendacky@amd.com>,
+        "'David S. Miller'" <davem@davemloft.net>,
+        'Jose Abreu' <Jose.Abreu@synopsys.com>,
+        'Kalle Valo' <kvalo@codeaurora.org>,
+        'Stanislaw Gruszka' <sgruszka@redhat.com>,
+        'Benson Leung' <bleung@chromium.org>,
+        "'Enric Balletbo i Serra'" <enric.balletbo@collabora.com>,
+        "'James E.J. Bottomley'" <jejb@linux.ibm.com>,
+        "'Martin K. Petersen'" <martin.petersen@oracle.com>,
+        'Greg Kroah-Hartman' <gregkh@linuxfoundation.org>,
+        'Alexander Viro' <viro@zeniv.linux.org.uk>,
+        'Sergey Senozhatsky' <sergey.senozhatsky@gmail.com>,
+        'Steven Rostedt' <rostedt@goodmis.org>,
+        'Andrew Morton' <akpm@linux-foundation.org>,
+        "intel-gfx@lists.freedesktop.org" <intel-gfx@lists.freedesktop.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
+        "ath10k@lists.infradead.org" <ath10k@lists.infradead.org>,
+        "linux-wireless@vger.kernel.org" <linux-wireless@vger.kernel.org>,
+        "linux-scsi@vger.kernel.org" <linux-scsi@vger.kernel.org>,
+        "linux-fbdev@vger.kernel.org" <linux-fbdev@vger.kernel.org>,
+        "devel@driverdev.osuosl.org" <devel@driverdev.osuosl.org>,
+        "linux-fsdevel@vger.kernel.org" <linux-fsdevel@vger.kernel.org>
+Subject: RE: [PATCH 1/4] lib/hexdump.c: Allow 64 bytes per line
+Thread-Topic: [PATCH 1/4] lib/hexdump.c: Allow 64 bytes per line
+Thread-Index: AQMagew30YCVD5mEhyHx4HPts9xr1AHAzoGyAvGIFSMBrjp8bwNRRzUuo2RTc0CAAAzpEA==
+Date:   Mon, 15 Apr 2019 10:56:39 +0000
+Message-ID: <6912ef2d83d34c9299d5a5ad120c276f@AcuMS.aculab.com>
+References: <20190410031720.11067-1-alastair@au1.ibm.com>
+ <20190410031720.11067-2-alastair@au1.ibm.com>
+ <20190412134802.kprel2c2iqijd4ai@pathway.suse.cz>
+ <092f01d4f186$8e9e7cd0$abdb7670$@d-silva.org>
+ <20190415090232.3ualhrt5ssrb2ixq@pathway.suse.cz>
+ <0dad01d4f376$113df2b0$33b9d810$@d-silva.org>
+In-Reply-To: <0dad01d4f376$113df2b0$33b9d810$@d-silva.org>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-transport-fromentityheader: Hosted
+x-originating-ip: [10.202.205.107]
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <708f1d88826965ef5735c372cc9a17bb80613856.1554106794.git.bristot@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-MC-Unique: 7kMGV5O_PDmlrIf3f2xIYw-1
+X-Mimecast-Spam-Score: 0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8BIT
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 01, 2019 at 10:58:13AM +0200, Daniel Bristot de Oliveira wrote:
-> Add a helper macro to make jump entry iteration code more readable.
+From: Alastair D'Silva
+> Sent: 15 April 2019 11:29
+...
+> I do, and I believe the choice of the output length should be in the hands
+> of the caller.
 > 
-> Signed-off-by: Daniel Bristot de Oliveira <bristot@redhat.com>
+> On further thought, it would make more sense to remove the hardcoded list of
+> sizes and just enforce a power of 2. The function shouldn't dictate what the
+> caller can and can't do beyond the technical limits of it's implementation.
 
-> diff --git a/include/linux/jump_label.h b/include/linux/jump_label.h
-> index 3e113a1fa0f1..7e91af98bbb1 100644
-> --- a/include/linux/jump_label.h
-> +++ b/include/linux/jump_label.h
-> @@ -227,6 +227,9 @@ extern void static_key_disable(struct static_key *key);
->  extern void static_key_enable_cpuslocked(struct static_key *key);
->  extern void static_key_disable_cpuslocked(struct static_key *key);
->  
-> +#define for_each_label_entry(key, entry, stop)				  \
-> +	for (; (entry < stop) && (jump_entry_key(entry) == key); entry++)
-> +
+Why powers of two?
+You may want the length to match sizeof (struct foo).
+You might even want the address increment to be larger
+that the number of lines dumped.
 
-I don't really like this naming; most (all?) for_each_*() loops start
-iteration and have the iteration variable as first argument.
+	David
 
-This should maybe be called:
+-
+Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
+Registration No: 1397386 (Wales)
 
-	for_each_jump_entry_by_key_cont(entry, stop, key)
-
-and I realize that is a horrible name too.
