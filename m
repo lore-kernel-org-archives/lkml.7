@@ -2,95 +2,178 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35C19C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 17:09:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 577A8C10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 17:09:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0AF832075B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 17:09:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 262E32075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 17:09:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727906AbfDORJu (ORCPT
+        id S1727873AbfDORJt convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 13:09:50 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38250 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727854AbfDORJs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 13:09:48 -0400
-Received: by mail-pl1-f194.google.com with SMTP id f36so8883235plb.5
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 10:09:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=yJcAmVaDYK4vGwlBAXjpdNHJfUAjCCsF7pjOY/brTBk=;
-        b=UZN7oF6j35wlTMLaX+M8l3AF11VIwqR6ZpP5RqqmD8/IjCtqgLejzpxp9iCk5O8ck8
-         Qelqy9ehH/UmtSyflyLGbnC+Kixe5bKIBtntb/VEnJuhgSjLBvTkU3i3ouZefDWNrul0
-         W7wYb/jjpFFj60/KoT78T0KOQo//t6HKuqDQ2lnqU1lpMqFz+PxVmmWF0jYJbj77rC0M
-         MBqUVnUYawb3oXzvOzpMCgdI5k6vU1ZtySBLdFYpnzapBg0kFQ3iVmt2C8Lv2EF4FZyL
-         E9i2dxZMgImHHpz6+pbqSPWo0TLn9qNBYwaqLLvAetCMleHJa0o2CsWFE7tirqGMnTJc
-         0y0w==
-X-Gm-Message-State: APjAAAUt3+iKVMP2mrZRzF1zGHFC3+V3HmNr524cW36+MjGx2iau2nnM
-        gQNCUj2p1cOK5uproLtih7o=
-X-Google-Smtp-Source: APXvYqwWDEyA8vSHfYkLPEtusVHIquAdZjPLaseV+cTdxdArsJT0DgAJLNYBSviMCqCLlo65Ll9JoQ==
-X-Received: by 2002:a17:902:8c97:: with SMTP id t23mr76499930plo.110.1555348188248;
-        Mon, 15 Apr 2019 10:09:48 -0700 (PDT)
-Received: from ?IPv6:2620:15c:2cd:203:5cdc:422c:7b28:ebb5? ([2620:15c:2cd:203:5cdc:422c:7b28:ebb5])
-        by smtp.gmail.com with ESMTPSA id l4sm33180500pgh.17.2019.04.15.10.09.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 15 Apr 2019 10:09:47 -0700 (PDT)
-Message-ID: <1555348186.161891.104.camel@acm.org>
-Subject: Re: [PATCH] kernel/workqueue: Verify alloc_workqueue() argument
- list consistency
-From:   Bart Van Assche <bvanassche@acm.org>
-To:     Tejun Heo <tj@kernel.org>
-Cc:     linux-kernel@vger.kernel.org,
-        Lai Jiangshan <jiangshanlai@gmail.com>,
-        Alexander Duyck <alexander.h.duyck@linux.intel.com>,
-        Dan Williams <dan.j.williams@intel.com>
-Date:   Mon, 15 Apr 2019 10:09:46 -0700
-In-Reply-To: <20190319174047.89815-1-bvanassche@acm.org>
-References: <20190319174047.89815-1-bvanassche@acm.org>
-Content-Type: text/plain; charset="UTF-7"
-X-Mailer: Evolution 3.26.2-1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Mon, 15 Apr 2019 13:09:49 -0400
+Received: from mail-oln040092255044.outbound.protection.outlook.com ([40.92.255.44]:20160
+        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727186AbfDORJr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 13:09:47 -0400
+Received: from HK2APC01FT059.eop-APC01.prod.protection.outlook.com
+ (10.152.248.54) by HK2APC01HT128.eop-APC01.prod.protection.outlook.com
+ (10.152.248.253) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1771.16; Mon, 15 Apr
+ 2019 17:09:43 +0000
+Received: from PS2P216MB0642.KORP216.PROD.OUTLOOK.COM (10.152.248.52) by
+ HK2APC01FT059.mail.protection.outlook.com (10.152.249.214) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.1771.16 via Frontend Transport; Mon, 15 Apr 2019 17:09:43 +0000
+Received: from PS2P216MB0642.KORP216.PROD.OUTLOOK.COM
+ ([fe80::50ee:2afa:f5b:9647]) by PS2P216MB0642.KORP216.PROD.OUTLOOK.COM
+ ([fe80::50ee:2afa:f5b:9647%6]) with mapi id 15.20.1792.018; Mon, 15 Apr 2019
+ 17:09:43 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Subject: [PATCH v3 3/5] PCI: Fix serious bug when sizing bridges with
+ additional size
+Thread-Topic: [PATCH v3 3/5] PCI: Fix serious bug when sizing bridges with
+ additional size
+Thread-Index: AQHU864E3j6/X6V0I02rUqV0pT1uVQ==
+Date:   Mon, 15 Apr 2019 17:09:43 +0000
+Message-ID: <PS2P216MB064249D559CA74018B2E02EF802B0@PS2P216MB0642.KORP216.PROD.OUTLOOK.COM>
+References: <20190416010756.31313-1-nicholas.johnson-opensource@outlook.com.au>
+In-Reply-To: <20190416010756.31313-1-nicholas.johnson-opensource@outlook.com.au>
+Accept-Language: en-AU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SG2PR01CA0087.apcprd01.prod.exchangelabs.com
+ (2603:1096:3:15::13) To PS2P216MB0642.KORP216.PROD.OUTLOOK.COM
+ (2603:1096:300:1c::16)
+x-incomingtopheadermarker: OriginalChecksum:32BC4E01E12A65BA0C8BBA66BB9B68C76039A0E5D8ABA35F8B997F1AAE072661;UpperCasedChecksum:2B51B0981655019053F7BF6B263E04904DF05A21351C744AD0BC449702E6F68E;SizeAsReceived:7914;Count:50
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.19.1
+x-tmn:  [jYtfQpo7npJGBpPrVC+jJaa0tnRwWz9vU3Bjjd5UNpA/cNpBhr6iK0Rd22y6UPow0ZVwXQXUUT0=]
+x-microsoft-original-message-id: <20190416010756.31313-5-nicholas.johnson-opensource@outlook.com.au>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 50
+x-eopattributedmessage: 0
+x-ms-exchange-slblob-mailprops: zswcL9HXbeXjLSNNcQpvuD9Rx3UxByW7VdAOpjuRFXPDNWJrwm9JHt/igX1n5n2+0ujgTnH+Mu1wHkr1P+PXy6emq9MKrKvTAPCo3aOZBEh6MMzTJ/00GpymEgJcCW830CClkVUyIrJc8/KVvaNxkQnlDqhIsu6+DQh96YFX+TV5fUIQePeqnZKcFkD4ZrORZ0nXhWiRpqF8m104UCLpCxwatW1nMnOs8OhVAV3JFBO9X7eKbxl39e53M8G/cInqbFht2b23PaBjp1Snezd87UjX2b85VaRixnDpqRVEP+4w9RgsRhWFNTaFX6ujoiDHk2YSz1KeS/ZQyXyyyXyqglY7op5WGUG5mhCAr9WgsIg+cGp1y3JpvDYTzxlzL6JbcMqZ6CrdLFbNb9oQmIx/WTBhcRrGDJVy53wJ+rPH1viah1AgssyKAmEdtwOvfl4tux47nQLe62e69grPfJ60l5whSJ1HnJFJ/LzJBFM0tsgLe3WcH/ko2FpoDViNElecxFuh8JmqmEXZ2EesmNLW9GwKnOdEZed6/cRbUdIy4Rx8u/q5Gxrx5HAt9t3CAa8cavU8RaegUnGZiX9m7qD3+E3mMUM4bZrEBLbXDWOlRN5LDk11UhMPWCl3Aj5Wao/al+wGSERmm3QFWu0lQQ86s/odGIGuQ2aVcp1nn2Busas8qYSuJPAPfaCDtx+87D85vdZCepYqBWcLq7eIuMJnWZgi8hLRGKfAajqK6rpJwErTy2WWpWZj4jVYOYKPYQUj
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(201702181274)(2017031323274)(2017031324274)(2017031322404)(1601125500)(1603101475)(1701031045);SRVR:HK2APC01HT128;
+x-ms-traffictypediagnostic: HK2APC01HT128:
+x-microsoft-antispam-message-info: tbMpUnSA6G8N1MV+hqt+bQ6I2CQY0+gDbtATXtgtnumP+BOiF+gzDUzkM8wKyPJYoN6XW1h/AjoXd0/vlTEtaOVDpsDTORxeaJhvAzn9ruj0SoUCppoR3uU6Ll4r/FMrF+yCjJTHhVnBTRS80hAj+YWn8kBpJKZO0/t1NfsqVtkKNe84COLHFzpgGQma2n/a
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: de425663-1755-4725-8323-08d6c1c5272e
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Apr 2019 17:09:43.3234
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK2APC01HT128
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-03-19 at 10:40 -0700, Bart Van Assche wrote:
-+AD4 This patch avoids that gcc reports the following warning when building
-+AD4 with W+AD0-1:
-+AD4 
-+AD4 kernel/workqueue.c:4250:2: warning: function alloc+AF8-workqueue might be a candidate for gnu+AF8-printf format attribute +AFs--Wsuggest-attribute+AD0-format+AF0
-+AD4   vsnprintf(wq-+AD4-name, sizeof(wq-+AD4-name), fmt, args)+ADs
-+AD4 
-+AD4 Cc: Lai Jiangshan +ADw-jiangshanlai+AEA-gmail.com+AD4
-+AD4 Cc: Alexander Duyck +ADw-alexander.h.duyck+AEA-linux.intel.com+AD4
-+AD4 Cc: Dan Williams +ADw-dan.j.williams+AEA-intel.com+AD4
-+AD4 Fixes: 669de8bda87b (+ACI-kernel/workqueue: Use dynamic lockdep keys for workqueues+ACI)
-+AD4 Signed-off-by: Bart Van Assche +ADw-bvanassche+AEA-acm.org+AD4
-+AD4 ---
-+AD4  include/linux/workqueue.h +AHw 1 
-+AD4  1 file changed, 1 insertion()
-+AD4 
-+AD4 diff --git a/include/linux/workqueue.h b/include/linux/workqueue.h
-+AD4 index d59525fca4d3..30737b5183c0 100644
-+AD4 --- a/include/linux/workqueue.h
-+AD4 +++b/include/linux/workqueueh4046 +404,7 +AEAAQA extern struct workqueue+AF8-struct +ACo-system+AF8-freezable+AF8-power+AF8-efficient+AF8-wq+ADs
-+AD4   +ACo RETURNS:
-+AD4   +ACo Pointer to the allocated workqueue on success, +ACU-NULL on failure.
-+AD4   +ACo-/
-+AD4 +AF8AXw-printf(1, 4)
-+AD4  struct workqueue+AF8-struct +ACo-alloc+AF8-workqueue(const char +ACo-fmt,
-+AD4  					 unsigned int flags,
-+AD4  					 int max+AF8-active, ...)+ADs
+Change find_free_bus_resource function to not skip assigned resources
+with non-null parent.
 
-Ping?
+Add checks in pbus_size_io and pbus_size_mem to return success if
+resource returned from find_free_bus_resource is already allocated.
 
-Bart.
+This avoids pbus_size_io and pbus_size_mem returning error code to
+__pci_bus_size_bridges when a resource has been successfully assigned in
+a previous pass. This fixes the existing behaviour where space for a
+resource could be reserved multiple times in different parent bridge
+windows. This also greatly reduces the number of failed BAR messages in
+dmesg when Linux assigns resources.
+
+Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+---
+ drivers/pci/setup-bus.c | 25 +++++++++++++++++--------
+ 1 file changed, 17 insertions(+), 8 deletions(-)
+
+diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
+index 0ce641282..efe899b02 100644
+--- a/drivers/pci/setup-bus.c
++++ b/drivers/pci/setup-bus.c
+@@ -791,11 +791,16 @@ static void pci_bridge_check_ranges(struct pci_bus *bus)
+ }
+ 
+ /*
+- * Helper function for sizing routines: find first available bus resource of a
+- * given type. Note: we intentionally skip the bus resources which have already
+- * been assigned (that is, have non-NULL parent resource).
++ * Helper function for sizing routines: find first bus resource of a
++ * given type. Note: we do not skip the bus resources which have already
++ * been assigned (r->parent != NULL). This is because a resource that is
++ * already assigned (nothing more to be done) will be indistinguishable
++ * from one that failed due to lack of space if we skip assigned
++ * resources. If the caller function cannot tell the difference then it
++ * might try to place the resources in a different window, doubling up on
++ * resources or causing unforeseeable issues.
+  */
+-static struct resource *find_free_bus_resource(struct pci_bus *bus,
++static struct resource *find_bus_resource_of_type(struct pci_bus *bus,
+ 			 unsigned long type_mask, unsigned long type)
+ {
+ 	int i;
+@@ -804,7 +809,7 @@ static struct resource *find_free_bus_resource(struct pci_bus *bus,
+ 	pci_bus_for_each_resource(bus, r, i) {
+ 		if (r == &ioport_resource || r == &iomem_resource)
+ 			continue;
+-		if (r && (r->flags & type_mask) == type && !r->parent)
++		if (r && (r->flags & type_mask) == type)
+ 			return r;
+ 	}
+ 	return NULL;
+@@ -903,14 +908,16 @@ static void pbus_size_io(struct pci_bus *bus, resource_size_t min_size,
+ 		resource_size_t add_size, struct list_head *realloc_head)
+ {
+ 	struct pci_dev *dev;
+-	struct resource *b_res = find_free_bus_resource(bus, IORESOURCE_IO,
+-							IORESOURCE_IO);
++	struct resource *b_res = find_bus_resource_of_type(bus, IORESOURCE_IO,
++					IORESOURCE_IO);
+ 	resource_size_t size = 0, size0 = 0, size1 = 0;
+ 	resource_size_t children_add_size = 0;
+ 	resource_size_t min_align, align;
+ 
+ 	if (!b_res)
+ 		return;
++	if (b_res->parent)
++		return;
+ 
+ 	min_align = window_alignment(bus, IORESOURCE_IO);
+ 	list_for_each_entry(dev, &bus->devices, bus_list) {
+@@ -1015,7 +1022,7 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
+ 	resource_size_t min_align, align, size, size0, size1;
+ 	resource_size_t aligns[18]; /* Alignments from 1Mb to 128Gb */
+ 	int order, max_order;
+-	struct resource *b_res = find_free_bus_resource(bus,
++	struct resource *b_res = find_bus_resource_of_type(bus,
+ 					mask | IORESOURCE_PREFETCH, type);
+ 	resource_size_t children_add_size = 0;
+ 	resource_size_t children_add_align = 0;
+@@ -1023,6 +1030,8 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
+ 
+ 	if (!b_res)
+ 		return -ENOSPC;
++	if (b_res->parent)
++		return 0;
+ 
+ 	memset(aligns, 0, sizeof(aligns));
+ 	max_order = 0;
+-- 
+2.20.1
+
