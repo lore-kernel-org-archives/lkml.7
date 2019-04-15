@@ -2,121 +2,132 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BE25C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:29:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B3D0C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:29:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCCF420881
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:29:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="pxY4w9hV"
+	by mail.kernel.org (Postfix) with ESMTP id 0139520874
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:29:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726829AbfDOH3W (ORCPT
+        id S1726407AbfDOH2v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 03:29:22 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:35777 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726046AbfDOH3U (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 03:29:20 -0400
-Received: by mail-ed1-f67.google.com with SMTP id y67so466475ede.2
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 00:29:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CZ7qWGoPqWcS4YQFz4saWhW/MfiFjngdMn05tjxAgyo=;
-        b=pxY4w9hVemR/TFA30aSbZt7AX3XXLMpRPG7KP1pwTxr6ROfoW/fLNjOg+4BNDIOGAa
-         rtmyS4RZgxP1SXpnxU9LechxQ0RXGsS49e7MlMJI5Z+hvW6sK8hcqgwO/JvRwK8+dIrE
-         gMFIp9XDFg08+BWoH2li7Sc1ZL8WiPXkuF2NL4hhIwa/PGNZVy1AIR6d5oPCJANso6UI
-         3BwoPh9lLXmI1zBa0wPnyHMhhs9iNHlJwR2Pn5VWQROMo3Ajrz7nFwWKXWWtQDLEMlCw
-         71OL6zisbrj6uriSnmCLQEFlSg0oQi831X+QUUGA6jeWCBc7HZhT9OE/sb1HYVHvTOKA
-         7wOA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CZ7qWGoPqWcS4YQFz4saWhW/MfiFjngdMn05tjxAgyo=;
-        b=hxWh18yGJkZGcMWaSdrnzCWKLZHquQhZzYSVHl0jNm3mEcJ/2sU4YlywAmuGPc63Eq
-         DCrW6tRrDZpPfZRvkhNuJMcJ+MJhrPY0e8a/pggd24VvI130U+lghNWvu1IkErrcY5YB
-         BhvFvOxz4JMwQkUeFySWmxJx2Kmi0r1PklA867MAHzwkNpvi6v+7uXD7RTvb7IEowgqu
-         Hm3RW+L0pW4gcbp8P5RZueDdFKC3+gEisemAME9jGEOxcb2XjT833awuBFi2C6hIABMr
-         xL1di40ljSnRrWu9HwcMR27FOyJ9Kp0NTIhvP3nYw5ahAXWtsEmqx2G87aZrDi158Kcv
-         keaw==
-X-Gm-Message-State: APjAAAX/hgGeCycWOvluNzwBoS4px6lHa9udOB1QbOTLmfhT4u117nQ5
-        ewR1jm4dLSRBYFVmY6YOrqlMsPuWZe7Nv9K6P5I=
-X-Google-Smtp-Source: APXvYqyHD18l5R0sZwnSODvLqhzvz0Gu56qQ+RIn13F2VREKVTwjZg2GDgICzoVehCK9WmHSYQi6S00RLwBgHiWDl+o=
-X-Received: by 2002:a17:906:950f:: with SMTP id u15mr40804205ejx.118.1555313358469;
- Mon, 15 Apr 2019 00:29:18 -0700 (PDT)
+        Mon, 15 Apr 2019 03:28:51 -0400
+Received: from szxga03-in.huawei.com ([45.249.212.189]:2547 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726034AbfDOH2v (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 03:28:51 -0400
+Received: from DGGEMM403-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id 92197F17DB7EEC30DC74;
+        Mon, 15 Apr 2019 15:28:49 +0800 (CST)
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ DGGEMM403-HUB.china.huawei.com (10.3.20.211) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Mon, 15 Apr 2019 15:28:48 +0800
+Received: from szvp000201624.huawei.com (10.120.216.130) by
+ dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Mon, 15 Apr 2019 15:28:47 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH 02/13] f2fs: fix to avoid panic in dec_valid_node_count()
+Date:   Mon, 15 Apr 2019 15:28:31 +0800
+Message-ID: <20190415072842.2438-2-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
+In-Reply-To: <20190415072842.2438-1-yuchao0@huawei.com>
+References: <20190415072842.2438-1-yuchao0@huawei.com>
 MIME-Version: 1.0
-References: <20190414191450.18377-1-andradanciu1997@gmail.com>
- <20190414191450.18377-2-andradanciu1997@gmail.com> <CAOMZO5C_esXni-N-U+hDXNG6Z5rJLC6ZrgKEseCW7mcK=aiyQw@mail.gmail.com>
- <CAEnQRZBD_M8Pp4RWXY4TS5MHAEBnkwUOyR16ttAitX-L+Z88Ew@mail.gmail.com>
-In-Reply-To: <CAEnQRZBD_M8Pp4RWXY4TS5MHAEBnkwUOyR16ttAitX-L+Z88Ew@mail.gmail.com>
-From:   Daniel Baluta <daniel.baluta@gmail.com>
-Date:   Mon, 15 Apr 2019 10:29:07 +0300
-Message-ID: <CAEnQRZAP6EWXkwfuR+83trtYrpDaRjA6zp-k5sp33bo5jUEjPg@mail.gmail.com>
-Subject: Re: [PATCH 1/2] ASoC: mpc5200_dma: Fix invalid license ID
-To:     Fabio Estevam <festevam@gmail.com>
-Cc:     Andra Danciu <andradanciu1997@gmail.com>,
-        Timur Tabi <timur@kernel.org>,
-        Nicolin Chen <nicoleotsuka@gmail.com>,
-        Xiubo Li <Xiubo.Lee@gmail.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Mark Brown <broonie@kernel.org>,
-        Jaroslav Kysela <perex@perex.cz>,
-        Takashi Iwai <tiwai@suse.com>, Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Linux-ALSA <alsa-devel@alsa-project.org>,
-        linuxppc-dev@lists.ozlabs.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-ClientProxiedBy: dggeme710-chm.china.huawei.com (10.1.199.106) To
+ dggeme763-chm.china.huawei.com (10.3.19.109)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 10:26 AM Daniel Baluta <daniel.baluta@gmail.com> wrote:
->
-> On Mon, Apr 15, 2019 at 12:53 AM Fabio Estevam <festevam@gmail.com> wrote:
-> >
-> > On Sun, Apr 14, 2019 at 4:15 PM Andra Danciu <andradanciu1997@gmail.com> wrote:
-> > >
-> > > As the file had no other license notice/reference, it falls under the
-> > > project license and therefore the proper SPDX id is: GPL-2.0-only
-> > >
-> > > Cc: Daniel Baluta <daniel.baluta@nxp.com>
-> > > Fixes: 1edfc2485d8dc ("ASoC: mpc5200_dma: Switch to SPDX identifier")
-> > > Reported-by: Thomas Gleixner <tglx@linutronix.de>
-> > > Signed-off-by: Andra Danciu <andradanciu1997@gmail.com>
-> > > ---
-> > >  sound/soc/fsl/mpc5200_dma.c | 2 +-
-> > >  1 file changed, 1 insertion(+), 1 deletion(-)
-> > >
-> > > diff --git a/sound/soc/fsl/mpc5200_dma.c b/sound/soc/fsl/mpc5200_dma.c
-> > > index 4396442c2fdd..ccf9301889fe 100644
-> > > --- a/sound/soc/fsl/mpc5200_dma.c
-> > > +++ b/sound/soc/fsl/mpc5200_dma.c
-> > > @@ -1,4 +1,4 @@
-> > > -// SPDX-License-Identifier: GPL
-> > > +// SPDX-License-Identifier: GPL-2.0-only
-> >
-> > According to Documentation/process/license-rules.rst this should be:
-> >
-> > // SPDX-License-Identifier: GPL-2.0
->
+As Jungyeon reported in bugzilla:
 
-Actually, according to
+https://bugzilla.kernel.org/show_bug.cgi?id=203213
 
-https://spdx.org/licenses/GPL-2.0-only.html
+- Overview
+When mounting the attached crafted image and running program, I got this error.
+Additionally, it hangs on sync after running the this script.
 
-GPL-2.0 is another name for GPL-2.0-only
+The image is intentionally fuzzed from a normal f2fs image for testing and I enabled option CONFIG_F2FS_CHECK_FS on.
+
+- Reproduces
+mkdir test
+mount -t f2fs tmp.img test
+cp a.out test
+cd test
+sudo ./a.out
+sync
+
+ kernel BUG at fs/f2fs/f2fs.h:2012!
+ RIP: 0010:truncate_node+0x2c9/0x2e0
+ Call Trace:
+  f2fs_truncate_xattr_node+0xa1/0x130
+  f2fs_remove_inode_page+0x82/0x2d0
+  f2fs_evict_inode+0x2a3/0x3a0
+  evict+0xba/0x180
+  __dentry_kill+0xbe/0x160
+  dentry_kill+0x46/0x180
+  dput+0xbb/0x100
+  do_renameat2+0x3c9/0x550
+  __x64_sys_rename+0x17/0x20
+  do_syscall_64+0x43/0xf0
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+The reason is dec_valid_node_count() will trigger kernel panic due to
+inconsistent count in between inode.i_blocks and actual block.
+
+To avoid panic, let's just print debug message and set SBI_NEED_FSCK to
+give a hint to fsck for latter repairing.
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
+ fs/f2fs/f2fs.h | 13 ++++++++++---
+ 1 file changed, 10 insertions(+), 3 deletions(-)
+
+diff --git a/fs/f2fs/f2fs.h b/fs/f2fs/f2fs.h
+index 8952ce8f94b8..b98b22039f58 100644
+--- a/fs/f2fs/f2fs.h
++++ b/fs/f2fs/f2fs.h
+@@ -2028,7 +2028,6 @@ static inline void dec_valid_node_count(struct f2fs_sb_info *sbi,
+ 
+ 	f2fs_bug_on(sbi, !sbi->total_valid_block_count);
+ 	f2fs_bug_on(sbi, !sbi->total_valid_node_count);
+-	f2fs_bug_on(sbi, !is_inode && !inode->i_blocks);
+ 
+ 	sbi->total_valid_node_count--;
+ 	sbi->total_valid_block_count--;
+@@ -2038,10 +2037,18 @@ static inline void dec_valid_node_count(struct f2fs_sb_info *sbi,
+ 
+ 	spin_unlock(&sbi->stat_lock);
+ 
+-	if (is_inode)
++	if (is_inode) {
+ 		dquot_free_inode(inode);
+-	else
++	} else {
++		if (!inode->i_blocks) {
++			f2fs_msg(sbi->sb, KERN_WARNING,
++				"Inconsistent i_blocks, ino:%lu, iblocks:%zu",
++				inode->i_ino, inode->i_blocks);
++			set_sbi_flag(sbi, SBI_NEED_FSCK);
++			return;
++		}
+ 		f2fs_i_blocks_write(inode, 1, false, true);
++	}
+ }
+ 
+ static inline unsigned int valid_node_count(struct f2fs_sb_info *sbi)
+-- 
+2.18.0.rc1
+
