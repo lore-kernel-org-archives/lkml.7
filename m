@@ -2,109 +2,130 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8665AC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:31:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0270FC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:31:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5761A206BA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:31:16 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555313476;
-	bh=JUQAB0Wo1WE/583zIpphIJODcSIKdzXmVISS33Hzwq8=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=gsV8BsEaZ19+ZfThljq73b7AqEXhh+L1gtaPR2vpNw+O0+mJdC8lGQJ5/7n5FOHIB
-	 T++exRQS94ahC4aY8ZFjUXK9n4DQfLUd19wmWfa2JxN0t2qE87D12lxk4M0JH9Bb5G
-	 /wE2K5/M6nZXhPVUafTD9bXtaQH9aCM53wgvKFQs=
+	by mail.kernel.org (Postfix) with ESMTP id D0BAB206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:31:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726729AbfDOHbO (ORCPT
+        id S1726759AbfDOHbZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 03:31:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35856 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726432AbfDOHbL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 03:31:11 -0400
-Received: from mail-lj1-f169.google.com (mail-lj1-f169.google.com [209.85.208.169])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id AE472218EA;
-        Mon, 15 Apr 2019 07:31:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555313471;
-        bh=JUQAB0Wo1WE/583zIpphIJODcSIKdzXmVISS33Hzwq8=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=r5Gd7km7PiIFZvhyK+g2fbWN4QNzAMavYygNi41q2bF8NnG34PAJvqKltGjQW2hys
-         nWshlaBxgace5X3dTwmE5Jf1eu3rXOcgJCz+7gFn22hn0qYcqofTfV5AwRqdyumE1l
-         lVe7NvwV7ih8WSyP74GkALyep8Fg949gSTrdolfs=
-Received: by mail-lj1-f169.google.com with SMTP id p14so14608314ljg.5;
-        Mon, 15 Apr 2019 00:31:10 -0700 (PDT)
-X-Gm-Message-State: APjAAAXkK8bdXjfZzKsxhzaEvyM0JBe0Z2tgi0fW/NGlKfo47Hp4FQqS
-        yTAW2/z9eKuBtNJEHB8gGoqx1lfcEj3Jby2QxPI=
-X-Google-Smtp-Source: APXvYqygSSnNnDcvGPSYtuR57Nph+AMxv0ORlfoBIvjb7XcvAcEXQW5TmMhAJV2v2I7viHrNM59HTyh+kevpTTHywCg=
-X-Received: by 2002:a2e:500d:: with SMTP id e13mr40925411ljb.169.1555313468959;
- Mon, 15 Apr 2019 00:31:08 -0700 (PDT)
+        Mon, 15 Apr 2019 03:31:25 -0400
+Received: from szxga08-in.huawei.com ([45.249.212.255]:45622 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725851AbfDOHbF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 03:31:05 -0400
+Received: from DGGEMM404-HUB.china.huawei.com (unknown [172.30.72.53])
+        by Forcepoint Email with ESMTP id AA9E8B7DF60FF1B436AE;
+        Mon, 15 Apr 2019 15:31:03 +0800 (CST)
+Received: from dggeme763-chm.china.huawei.com (10.3.19.109) by
+ DGGEMM404-HUB.china.huawei.com (10.3.20.212) with Microsoft SMTP Server (TLS)
+ id 14.3.408.0; Mon, 15 Apr 2019 15:31:03 +0800
+Received: from szvp000201624.huawei.com (10.120.216.130) by
+ dggeme763-chm.china.huawei.com (10.3.19.109) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
+ 15.1.1591.10; Mon, 15 Apr 2019 15:31:02 +0800
+From:   Chao Yu <yuchao0@huawei.com>
+To:     <jaegeuk@kernel.org>
+CC:     <linux-f2fs-devel@lists.sourceforge.net>,
+        <linux-kernel@vger.kernel.org>, <chao@kernel.org>,
+        Chao Yu <yuchao0@huawei.com>
+Subject: [PATCH 11/13] f2fs: fix to avoid panic in f2fs_inplace_write_data()
+Date:   Mon, 15 Apr 2019 15:30:52 +0800
+Message-ID: <20190415073054.2577-3-yuchao0@huawei.com>
+X-Mailer: git-send-email 2.18.0.rc1
+In-Reply-To: <20190415073054.2577-1-yuchao0@huawei.com>
+References: <20190415073054.2577-1-yuchao0@huawei.com>
 MIME-Version: 1.0
-References: <CAJKOXPfvs=uETF0-xpwCWc5khSpWjpz2zz354Jcx1bVjm9cG2A@mail.gmail.com>
- <20190415012635.6369-1-matheus@castello.eng.br> <20190415012635.6369-5-matheus@castello.eng.br>
-In-Reply-To: <20190415012635.6369-5-matheus@castello.eng.br>
-From:   Krzysztof Kozlowski <krzk@kernel.org>
-Date:   Mon, 15 Apr 2019 09:30:58 +0200
-X-Gmail-Original-Message-ID: <CAJKOXPf=nPrmw6Vzi_=LmO=dVsV4Gvoc-q75XP2FBEgm9Gxv0A@mail.gmail.com>
-Message-ID: <CAJKOXPf=nPrmw6Vzi_=LmO=dVsV4Gvoc-q75XP2FBEgm9Gxv0A@mail.gmail.com>
-Subject: Re: [PATCH v2 4/4] power: supply: max17040: Send uevent in SOC changes
-To:     Matheus Castello <matheus@castello.eng.br>
-Cc:     sre@kernel.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        =?UTF-8?B?QmFydMWCb21pZWogxbtvxYJuaWVya2lld2ljeg==?= 
-        <b.zolnierkie@samsung.com>, lee.jones@linaro.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain
+X-Originating-IP: [10.120.216.130]
+X-ClientProxiedBy: dggeme710-chm.china.huawei.com (10.1.199.106) To
+ dggeme763-chm.china.huawei.com (10.3.19.109)
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 15 Apr 2019 at 03:48, Matheus Castello <matheus@castello.eng.br> wrote:
->
-> Notify core through power_supply_changed() in case of changes in state
-> of charge. This is useful for user-space to efficiently update current
-> battery level.
->
-> Signed-off-by: Matheus Castello <matheus@castello.eng.br>
-> ---
->  drivers/power/supply/max17040_battery.c | 7 +++++++
->  1 file changed, 7 insertions(+)
->
-> diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
-> index f036f272d52f..db901ebf495d 100644
-> --- a/drivers/power/supply/max17040_battery.c
-> +++ b/drivers/power/supply/max17040_battery.c
-> @@ -208,10 +208,17 @@ static void max17040_check_changes(struct i2c_client *client)
->  static void max17040_work(struct work_struct *work)
->  {
->         struct max17040_chip *chip;
-> +       int last_soc;
->
->         chip = container_of(work, struct max17040_chip, work.work);
-> +       /* store SOC for check change */
-> +       last_soc = chip->soc;
->         max17040_check_changes(chip->client);
->
-> +       /* check changes and send uevent */
-> +       if (last_soc != chip->soc)
+As Jungyeon reported in bugzilla:
 
-chip->soc could be negative ERRNO so in such case I think user-space
-should not be notified.
+https://bugzilla.kernel.org/show_bug.cgi?id=203239
 
-> +               power_supply_changed(chip->battery);
-> +
+- Overview
+When mounting the attached crafted image and running program, following errors are reported.
+Additionally, it hangs on sync after running program.
 
-You should also notify on online and status change (e.g. started
-charging). User-space also wants to know that, e.g. to show the
-charging icon or battery health status.
+The image is intentionally fuzzed from a normal f2fs image for testing.
+Compile options for F2FS are as follows.
+CONFIG_F2FS_FS=y
+CONFIG_F2FS_STAT_FS=y
+CONFIG_F2FS_FS_XATTR=y
+CONFIG_F2FS_FS_POSIX_ACL=y
+CONFIG_F2FS_CHECK_FS=y
 
-Best regards,
-Krzysztof
+- Reproduces
+cc poc_15.c
+./run.sh f2fs
+sync
+
+- Kernel messages
+ ------------[ cut here ]------------
+ kernel BUG at fs/f2fs/segment.c:3162!
+ RIP: 0010:f2fs_inplace_write_data+0x12d/0x160
+ Call Trace:
+  f2fs_do_write_data_page+0x3c1/0x820
+  __write_data_page+0x156/0x720
+  f2fs_write_cache_pages+0x20d/0x460
+  f2fs_write_data_pages+0x1b4/0x300
+  do_writepages+0x15/0x60
+  __filemap_fdatawrite_range+0x7c/0xb0
+  file_write_and_wait_range+0x2c/0x80
+  f2fs_do_sync_file+0x102/0x810
+  do_fsync+0x33/0x60
+  __x64_sys_fsync+0xb/0x10
+  do_syscall_64+0x43/0xf0
+  entry_SYSCALL_64_after_hwframe+0x44/0xa9
+
+The reason is f2fs_inplace_write_data() will trigger kernel panic due
+to data block locates in node type segment.
+
+To avoid panic, let's just return error code and set SBI_NEED_FSCK to
+give a hint to fsck for latter repairing.
+
+Signed-off-by: Chao Yu <yuchao0@huawei.com>
+---
+ fs/f2fs/segment.c | 9 +++++++--
+ 1 file changed, 7 insertions(+), 2 deletions(-)
+
+diff --git a/fs/f2fs/segment.c b/fs/f2fs/segment.c
+index b59d1c85863b..8388d2abacb5 100644
+--- a/fs/f2fs/segment.c
++++ b/fs/f2fs/segment.c
+@@ -3184,13 +3184,18 @@ int f2fs_inplace_write_data(struct f2fs_io_info *fio)
+ {
+ 	int err;
+ 	struct f2fs_sb_info *sbi = fio->sbi;
++	unsigned int segno;
+ 
+ 	fio->new_blkaddr = fio->old_blkaddr;
+ 	/* i/o temperature is needed for passing down write hints */
+ 	__get_segment_type(fio);
+ 
+-	f2fs_bug_on(sbi, !IS_DATASEG(get_seg_entry(sbi,
+-			GET_SEGNO(sbi, fio->new_blkaddr))->type));
++	segno = GET_SEGNO(sbi, fio->new_blkaddr);
++
++	if (!IS_DATASEG(get_seg_entry(sbi, segno)->type)) {
++		set_sbi_flag(sbi, SBI_NEED_FSCK);
++		return -EFAULT;
++	}
+ 
+ 	stat_inc_inplace_blocks(fio->sbi);
+ 
+-- 
+2.18.0.rc1
+
