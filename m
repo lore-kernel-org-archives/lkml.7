@@ -2,126 +2,66 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81FDFC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 23:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 864C1C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 23:38:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AC872064B
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 23:34:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 57B6320830
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 23:38:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728199AbfDOXeO (ORCPT
+        id S1728077AbfDOXiI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 19:34:14 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46400 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726642AbfDOXeN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 19:34:13 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E27A02064B;
-        Mon, 15 Apr 2019 23:34:11 +0000 (UTC)
-Date:   Mon, 15 Apr 2019 19:34:10 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Raul E Rangel <rrangel@chromium.org>
-Cc:     linux-mmc@vger.kernel.org, linux-trace-devel@vger.kernel.org,
-        djkurtz@chromium.org, zwisler@chromium.org,
-        hongjiefang <hongjiefang@asrmicro.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Kyle Roeschley <kyle.roeschley@ni.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: Re: [PATCH v1 2/4] mmc: core: Add trace event for SD SSR response
-Message-ID: <20190415193410.2b33d1d6@gandalf.local.home>
-In-Reply-To: <20190415225241.70088-2-rrangel@chromium.org>
-References: <20190415225241.70088-1-rrangel@chromium.org>
-        <20190415225241.70088-2-rrangel@chromium.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Mon, 15 Apr 2019 19:38:08 -0400
+Received: from emh07.mail.saunalahti.fi ([62.142.5.117]:51526 "EHLO
+        emh07.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726939AbfDOXiH (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 19:38:07 -0400
+Received: from localhost.localdomain (85-76-110-185-nat.elisa-mobile.fi [85.76.110.185])
+        by emh07.mail.saunalahti.fi (Postfix) with ESMTP id 132E5B004D;
+        Tue, 16 Apr 2019 02:38:04 +0300 (EEST)
+From:   Aaro Koskinen <aaro.koskinen@iki.fi>
+To:     Tony Lindgren <tony@atomide.com>, linux-omap@vger.kernel.org,
+        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Linus Walleij <linus.walleij@linaro.org>
+Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Aaro Koskinen <aaro.koskinen@iki.fi>
+Subject: [PATCH] ARM: OMAP1: ams-delta: fix early boot crash when LED support is disabled
+Date:   Tue, 16 Apr 2019 02:37:32 +0300
+Message-Id: <20190415233732.3612-1-aaro.koskinen@iki.fi>
+X-Mailer: git-send-email 2.17.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 15 Apr 2019 16:52:39 -0600
-Raul E Rangel <rrangel@chromium.org> wrote:
+When we boot with the LED support (CONFIG_NEW_LEDS) disabled,
+gpio_led_register_device() will return a NULL pointer and we try
+to dereference it. Fix by checking also for a NULL pointer.
 
-> Example:
-> sd_ssr: mmc0: au: 8192, erase time: 0, erase offset: 0x0, raw: {0x0,0x3000000,0x1019000,0x10000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0}
-> 
-> Signed-off-by: Raul E Rangel <rrangel@chromium.org>
-> ---
-> 
->  drivers/mmc/core/sd.c      |  2 ++
->  include/trace/events/mmc.h | 31 +++++++++++++++++++++++++++++++
->  2 files changed, 33 insertions(+)
-> 
-> diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
-> index 3bed7c4b6d75..cc33a4f96c6a 100644
-> --- a/drivers/mmc/core/sd.c
-> +++ b/drivers/mmc/core/sd.c
-> @@ -282,6 +282,8 @@ static int mmc_read_ssr(struct mmc_card *card)
->  		}
->  	}
->  
-> +	trace_sd_ssr(card);
-> +
->  	/*
->  	 * starting SD5.1 discard is supported if DISCARD_SUPPORT (b313) is set
->  	 */
-> diff --git a/include/trace/events/mmc.h b/include/trace/events/mmc.h
-> index e45258e8a6cb..cad604ee800f 100644
-> --- a/include/trace/events/mmc.h
-> +++ b/include/trace/events/mmc.h
-> @@ -52,6 +52,37 @@ TRACE_EVENT(sd_scr,
->  	)
->  );
->  
-> +TRACE_EVENT(sd_ssr,
-> +
-> +	TP_PROTO(struct mmc_card *card),
-> +
-> +	TP_ARGS(card),
-> +
-> +	TP_STRUCT__entry(
-> +		__array(u32,			raw,	16)
-> +		__field(unsigned int,		au)
-> +		__field(unsigned int,		erase_timeout)
-> +		__field(unsigned int,		erase_offset)
-> +		__string(name,			mmc_hostname(card->host))
-> +	),
-> +
-> +	TP_fast_assign(
-> +		memcpy(__entry->raw, card->raw_ssr, sizeof(card->raw_ssr));
+Fixes: 19a2668a8ae3 ("ARM: OMAP1: ams-delta: Provide GPIO lookup table for LED device")
+Signed-off-by: Aaro Koskinen <aaro.koskinen@iki.fi>
+---
+ arch/arm/mach-omap1/board-ams-delta.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-Again, memcpy() with the size of the source is dangerous.
-
-Hmm, I wonder if a BUILD_BUG_ON(sizeof(u32)*16 < sizeof(card->raw_ssr))
-would work here too. If it does, then that would be another approach.
-
--- Steve
-
-> +		__entry->au = card->ssr.au;
-> +		__entry->erase_timeout = card->ssr.erase_timeout;
-> +		__entry->erase_offset = card->ssr.erase_offset;
-> +		__assign_str(name, mmc_hostname(card->host));
-> +	),
-> +
-> +	TP_printk("%s: au: %d, erase time: %d, erase offset: %#x, raw: %s",
-> +		  __get_str(name),
-> +		  __entry->au,
-> +		  __entry->erase_timeout,
-> +		  __entry->erase_offset,
-> +		  __print_array(__entry->raw, 16, sizeof(u32))
-> +	)
-> +);
-> +
->  TRACE_EVENT(mmc_request_start,
->  
->  	TP_PROTO(struct mmc_host *host, struct mmc_request *mrq),
+diff --git a/arch/arm/mach-omap1/board-ams-delta.c b/arch/arm/mach-omap1/board-ams-delta.c
+index c4c0a8ea11e4..2b3d1197bb19 100644
+--- a/arch/arm/mach-omap1/board-ams-delta.c
++++ b/arch/arm/mach-omap1/board-ams-delta.c
+@@ -749,7 +749,7 @@ static void __init ams_delta_init(void)
+ 				ARRAY_SIZE(ams_delta_gpio_tables));
+ 
+ 	leds_pdev = gpio_led_register_device(PLATFORM_DEVID_NONE, &leds_pdata);
+-	if (!IS_ERR(leds_pdev)) {
++	if (!IS_ERR_OR_NULL(leds_pdev)) {
+ 		leds_gpio_table.dev_id = dev_name(&leds_pdev->dev);
+ 		gpiod_add_lookup_table(&leds_gpio_table);
+ 	}
+-- 
+2.17.0
 
