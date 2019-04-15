@@ -2,97 +2,108 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF69C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:37:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5417C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:37:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D7572064A
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:37:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 901F820848
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:37:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="tNInRRCZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727140AbfDOKhK (ORCPT
+        id S1727220AbfDOKhf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 06:37:10 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:51158 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725816AbfDOKhJ (ORCPT
+        Mon, 15 Apr 2019 06:37:35 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:41641 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725816AbfDOKhe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 06:37:09 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hFyz1-00068r-Uq; Mon, 15 Apr 2019 10:37:04 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Stanislaw Gruszka <sgruszka@redhat.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S . Miller" <davem@davemloft.net>,
-        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] iwlegacy: fix spelling mistake "acumulative" -> "accumulative"
-Date:   Mon, 15 Apr 2019 11:37:03 +0100
-Message-Id: <20190415103703.11254-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+        Mon, 15 Apr 2019 06:37:34 -0400
+Received: by mail-pg1-f194.google.com with SMTP id f6so8369132pgs.8;
+        Mon, 15 Apr 2019 03:37:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=moUu2oKy4/ZSs2GnMrjVAQqVpkQBAxl+DAb3U6TX1WE=;
+        b=tNInRRCZboPMmSVMV+48vZliP0JnwpZfzYNvWTqBER1MrI3BBkJZUxzwhWK1M1jV1r
+         APy6J43801vUvi++7D5gHtl3AdfVk0m5TItBZm2f+9uDr8gxSzUqpd4C9Byiot3NT6Aq
+         vj1bi76fwrXm0tYZAc+WUKtu/fOk/iH/oRdwJxO0t0Hjgt5VHMVNldRGpIDWOG/HtlbS
+         q9eDvvbnaUGx1ILIPVGD0s9SE/ix10wU9S+pYUid/n4HXl2PpgGCCeX7OBlhi7n5QYm6
+         jSgC+YyanPPHBp09mMCkC1V9YYO1bUg8MxrX7szRIICpgggc23Mqn0L9IGuH+pTwjDfE
+         JR/Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=moUu2oKy4/ZSs2GnMrjVAQqVpkQBAxl+DAb3U6TX1WE=;
+        b=BKkBZ4y01eORTDk0HttWZbsOgx8Uej/k+d3MLGH5RktxR6/cgAlr335mgIEkrFoOw+
+         pvvdFda3SnGFFIs0OhxS6aN5lt3naRjCduQIC1m1rze6pKKRLVHXPIwzJ4sO70XjfsnB
+         g1lTB0iME4c/eBwYTa/bHmrhCmXcRTIe1GsT6pFbhH7eokZTfxbcao+pIRkWnIoZsdSB
+         YDM+ICYPSk1VsoliCMEJy86LDHjTNb4EnXcAx+WNBe0DydPFhTm34YNBMHx0ORuucup5
+         2RXiXFHDZvmjYIPt5OSRzagPfS+NzriLSJXO2pCFYOPDj50lYUCvvTOoQAyrIBOda0go
+         9xCg==
+X-Gm-Message-State: APjAAAXFGvkCqa7f5TwfPEC0x5kWflgOON1oQJB/7vv7bzHwCnEOsJVd
+        fGdNmMFWcUNmCDrzblzmrjibmC+WU0mVuQ==
+X-Google-Smtp-Source: APXvYqwYNyIjqXO6PkVvHJDypWze+jCcIdix5jJNyRtF4p3YfCsOagCDaAkASTrI9ehRxwBJ+bxM9A==
+X-Received: by 2002:a65:5ac3:: with SMTP id d3mr71054412pgt.168.1555324654169;
+        Mon, 15 Apr 2019 03:37:34 -0700 (PDT)
+Received: from localhost ([153.254.110.20])
+        by smtp.gmail.com with ESMTPSA id t64sm108849811pfa.86.2019.04.15.03.37.32
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Apr 2019 03:37:33 -0700 (PDT)
+From:   Lei YU <mine260309@gmail.com>
+To:     Jean Delvare <jdelvare@suse.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Eddie James <eajames@linux.ibm.com>,
+        Lei YU <mine260309@gmail.com>, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
+Subject: [PATCH] hwmon (occ): Fix extended status bits
+Date:   Mon, 15 Apr 2019 18:37:20 +0800
+Message-Id: <1555324640-152061-1-git-send-email-mine260309@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+The occ's extended status is checked and shown as sysfs attributes. But
+the code was incorrectly checking the "status" bits.
+Fix it by checking the "ext_status" bits.
 
-Fix spelling mistakes in rx stats text. I missed these from an earlier
-round of fixing the same spelling mistake.
-
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Lei YU <mine260309@gmail.com>
 ---
- drivers/net/wireless/intel/iwlegacy/3945-debug.c | 8 ++++----
+ drivers/hwmon/occ/sysfs.c | 8 ++++----
  1 file changed, 4 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlegacy/3945-debug.c b/drivers/net/wireless/intel/iwlegacy/3945-debug.c
-index a2960032be81..4b912e707f38 100644
---- a/drivers/net/wireless/intel/iwlegacy/3945-debug.c
-+++ b/drivers/net/wireless/intel/iwlegacy/3945-debug.c
-@@ -185,7 +185,7 @@ il3945_ucode_rx_stats_read(struct file *file, char __user *user_buf,
- 	pos +=
- 	    scnprintf(buf + pos, bufsz - pos,
- 		      "%-32s     current"
--		      "acumulative       delta         max\n",
-+		      "accumulative      delta         max\n",
- 		      "Statistics_Rx - CCK:");
- 	pos +=
- 	    scnprintf(buf + pos, bufsz - pos,
-@@ -273,7 +273,7 @@ il3945_ucode_rx_stats_read(struct file *file, char __user *user_buf,
- 	pos +=
- 	    scnprintf(buf + pos, bufsz - pos,
- 		      "%-32s     current"
--		      "acumulative       delta         max\n",
-+		      "accumulative      delta         max\n",
- 		      "Statistics_Rx - GENERAL:");
- 	pos +=
- 	    scnprintf(buf + pos, bufsz - pos,
-@@ -346,7 +346,7 @@ il3945_ucode_tx_stats_read(struct file *file, char __user *user_buf,
- 	pos +=
- 	    scnprintf(buf + pos, bufsz - pos,
- 		      "%-32s     current"
--		      "acumulative       delta         max\n",
-+		      "accumulative      delta         max\n",
- 		      "Statistics_Tx:");
- 	pos +=
- 	    scnprintf(buf + pos, bufsz - pos,
-@@ -447,7 +447,7 @@ il3945_ucode_general_stats_read(struct file *file, char __user *user_buf,
- 	pos +=
- 	    scnprintf(buf + pos, bufsz - pos,
- 		      "%-32s     current"
--		      "acumulative       delta         max\n",
-+		      "accumulative      delta         max\n",
- 		      "Statistics_General:");
- 	pos +=
- 	    scnprintf(buf + pos, bufsz - pos,
+diff --git a/drivers/hwmon/occ/sysfs.c b/drivers/hwmon/occ/sysfs.c
+index fe3d15e..a71ca94 100644
+--- a/drivers/hwmon/occ/sysfs.c
++++ b/drivers/hwmon/occ/sysfs.c
+@@ -42,16 +42,16 @@ static ssize_t occ_sysfs_show(struct device *dev,
+ 		val = !!(header->status & OCC_STAT_ACTIVE);
+ 		break;
+ 	case 2:
+-		val = !!(header->status & OCC_EXT_STAT_DVFS_OT);
++		val = !!(header->ext_status & OCC_EXT_STAT_DVFS_OT);
+ 		break;
+ 	case 3:
+-		val = !!(header->status & OCC_EXT_STAT_DVFS_POWER);
++		val = !!(header->ext_status & OCC_EXT_STAT_DVFS_POWER);
+ 		break;
+ 	case 4:
+-		val = !!(header->status & OCC_EXT_STAT_MEM_THROTTLE);
++		val = !!(header->ext_status & OCC_EXT_STAT_MEM_THROTTLE);
+ 		break;
+ 	case 5:
+-		val = !!(header->status & OCC_EXT_STAT_QUICK_DROP);
++		val = !!(header->ext_status & OCC_EXT_STAT_QUICK_DROP);
+ 		break;
+ 	case 6:
+ 		val = header->occ_state;
 -- 
-2.20.1
+2.7.4
 
