@@ -2,199 +2,165 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0361EC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 05:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3147C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 05:59:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A187720674
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 05:54:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7EB8020825
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 05:59:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="0Q9czuXB"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="XzhM6LlY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726088AbfDOFyJ (ORCPT
+        id S1726120AbfDOF7s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 01:54:09 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:38046 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725777AbfDOFyJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 01:54:09 -0400
-Received: by mail-pl1-f194.google.com with SMTP id f36so8000847plb.5
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2019 22:54:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=tmRKARuvQC07weyJBgcu/aLZ7pp1eDVPtMWmqheidpU=;
-        b=0Q9czuXBWAR6VIZgerejIg50icRS65ssyiVh8lYinMDBM7qPaV63jf7YWV5RA+N9Su
-         Rx6HfVtEcYR4ZbaC8hYTmGIh6BwILsOLu0ypqYp3tU9B8q0aU22BQK0uQHBsP+MWFzJM
-         x2jE61gXMrHZrzdq+aJC1GRJWOisyQwBZgnTghKaIqJs5qyXtH8TRIEBh6FTd6OCQ/Jd
-         suCjRCvSIeTSz1Ncy/ADmw8wCnS1mltMwPw8/la8pPKiVC9V9vaeTR2pMrbcUChAoNpY
-         8nP2ZNBju6/KQ3LHGe+UkdC0NYZm6thuoMmZ3m5iLOwYL1IISPakNY41p5hB8tstilOO
-         RuZw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=tmRKARuvQC07weyJBgcu/aLZ7pp1eDVPtMWmqheidpU=;
-        b=I/BGGTe5TPrrh7v2K+Nh58G1qgHn6IS5eHb3wNIaTr6bedNThDTyeLN5CL6Feubkrl
-         vCIgK5bgGfyxWywI8sWMz5tSqPg8NvasnqaRFy/RQcVaZ+zO7VJhtnB4f/IgZqny2F0o
-         gr4PvMPI22tDdeCmhBqgX6A24BCepCNFZBDbmP22upytwukeyz7uoAZ0ZfnR7NSbp799
-         3rVTtaeO34Spuu79hXn50vzCuKzUUSwohaP/hd/8Z9fGYnHLrY56DsJ6smM+myZIBUCD
-         0hhySDsihQhVBpNp875foG9Yc6ff9V6MOIPgaxMQyhVqRBLI+Z6jVo07T2Bc1HqcJrDx
-         cbmA==
-X-Gm-Message-State: APjAAAXIbqslp51YZhGh0wMDsmSgvDxG250NcCDyq+YeRgt58JYeURmX
-        L73Fx7yywU4vmVbG9GCI9MS5ZQ==
-X-Google-Smtp-Source: APXvYqwM/k6U9AOVhwhoYYNs8lWNFSJBZ/PEXWZRqWBwbi6ykLknyfo2700HOc7iSnWxsvtTvgxO0A==
-X-Received: by 2002:a17:902:bb0d:: with SMTP id l13mr71014348pls.141.1555307648637;
-        Sun, 14 Apr 2019 22:54:08 -0700 (PDT)
-Received: from localhost.localdomain (220-133-8-232.HINET-IP.hinet.net. [220.133.8.232])
-        by smtp.gmail.com with ESMTPSA id d15sm67298082pfo.34.2019.04.14.22.54.05
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Sun, 14 Apr 2019 22:54:07 -0700 (PDT)
-From:   Chris Chiu <chiu@endlessm.com>
-To:     andriy.shevchenko@intel.com, mika.westerberg@linux.intel.com,
-        heikki.krogerus@linux.intel.com
-Cc:     drake@endlessm.com, linus.walleij@linaro.org,
-        linux-gpio@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux@endlessm.com, Chris Chiu <chiu@endlessm.com>
-Subject: [PATCH v3] pinctrl:intel: Retain HOSTSW_OWN for requested gpio pin
-Date:   Mon, 15 Apr 2019 13:53:58 +0800
-Message-Id: <20190415055358.9269-1-chiu@endlessm.com>
-X-Mailer: git-send-email 2.17.2 (Apple Git-113)
+        Mon, 15 Apr 2019 01:59:48 -0400
+Received: from ozlabs.org ([203.11.71.1]:55545 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725777AbfDOF7r (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 01:59:47 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44jHrv0lLNz9s55;
+        Mon, 15 Apr 2019 15:59:42 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1555307984;
+        bh=RDwIKyWedHglPSeAUogKh2/Et953eTXyZrW3dwS7Vhg=;
+        h=Date:From:To:Cc:Subject:From;
+        b=XzhM6LlYW9IsCFO736qTFJrIMKf3/BzbsYzarKU8DejdnqyAc9aJtS3jtVjzH1Z1h
+         tqkdtCXynffYG/TyF0DPECb+4r3KpTpYevEvEGCPBSNuBMbyZdMeFsdnSkD+i365kE
+         sfiHYDMjJkInc1irroEag8uu01TkOrfQeAtuLK64gvRon05t9jYtbIa/2Ex7MorS+k
+         MWd/UYRoCRdbJLyPA6Ojv7vSRW9RHPaGdvrW1FCzTU8xA5/Ei0YPtiKow8SPuMpGtm
+         6qUuBIX4PQs3uTKeTIhEQRzj6Zhk/jSBB9mSuw0V6144ra5KcA9t3kBCLdml7/ttda
+         HEIA9Jp1F2FBg==
+Date:   Mon, 15 Apr 2019 15:59:39 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Bart Van Assche <bvanassche@acm.org>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Martin Wilck <mwilck@suse.com>, Christoph Hellwig <hch@lst.de>
+Subject: linux-next: manual merge of the scsi tree with the block tree
+Message-ID: <20190415155939.35325ef1@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/d1NnJ8l8lFK=6uQL4lNPhGb"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The touchpad of the ASUS laptops E403NA, X540NA, X541NA are not
-responsive after suspend/resume. The following error message
-shows after resume.
- i2c_hid i2c-ELAN1200:00: failed to reset device.
+--Sig_/d1NnJ8l8lFK=6uQL4lNPhGb
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On these laptops, the touchpad interrupt is connected via a GPIO
-pin which is controlled by Intel pinctrl. After system resumes,
-the GPIO is in ACPI mode and no longer works as an IRQ.
+Hi all,
 
-This commit saves the HOSTSW_OWN value during suspend, make sure
-the HOSTSW_OWN mode remains the same after resume.
+Today's linux-next merge of the scsi tree got a conflict in:
 
-Signed-off-by: Chris Chiu <chiu@endlessm.com>
----
+  drivers/scsi/sd.c
 
-Note:
-v2: update hostown and show pr_info only when the host mode
-    change on requsted GPIO is not expected.
-v3: change return type of intel_gpio_update_pad_mode() from
-    void to u32 and use dev_warn instead of pr_info.
+between commit:
 
- drivers/pinctrl/intel/pinctrl-intel.c | 56 ++++++++++++++++++++++++++-
- 1 file changed, 55 insertions(+), 1 deletion(-)
+  c92e2f04b359 ("block: disk_events: introduce event flags")
 
-diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
-index 8cda7b535b02..5337289c550b 100644
---- a/drivers/pinctrl/intel/pinctrl-intel.c
-+++ b/drivers/pinctrl/intel/pinctrl-intel.c
-@@ -81,6 +81,7 @@ struct intel_pad_context {
- 
- struct intel_community_context {
- 	u32 *intmask;
-+	u32 *hostown;
- };
- 
- struct intel_pinctrl_context {
-@@ -1284,7 +1285,7 @@ static int intel_pinctrl_pm_init(struct intel_pinctrl *pctrl)
- 
- 	for (i = 0; i < pctrl->ncommunities; i++) {
- 		struct intel_community *community = &pctrl->communities[i];
--		u32 *intmask;
-+		u32 *intmask, *hostown;
- 
- 		intmask = devm_kcalloc(pctrl->dev, community->ngpps,
- 				       sizeof(*intmask), GFP_KERNEL);
-@@ -1292,6 +1293,13 @@ static int intel_pinctrl_pm_init(struct intel_pinctrl *pctrl)
- 			return -ENOMEM;
- 
- 		communities[i].intmask = intmask;
-+
-+		hostown = devm_kcalloc(pctrl->dev, community->ngpps,
-+				       sizeof(*hostown), GFP_KERNEL);
-+		if (!hostown)
-+			return -ENOMEM;
-+
-+		communities[i].hostown = hostown;
- 	}
- 
- 	pctrl->context.pads = pads;
-@@ -1503,6 +1511,10 @@ int intel_pinctrl_suspend(struct device *dev)
- 		base = community->regs + community->ie_offset;
- 		for (gpp = 0; gpp < community->ngpps; gpp++)
- 			communities[i].intmask[gpp] = readl(base + gpp * 4);
-+
-+		base = community->regs + community->hostown_offset;
-+		for (gpp = 0; gpp < community->ngpps; gpp++)
-+			communities[i].hostown[gpp] = readl(base + gpp * 4);
- 	}
- 
- 	return 0;
-@@ -1529,6 +1541,29 @@ static void intel_gpio_irq_init(struct intel_pinctrl *pctrl)
- 	}
- }
- 
-+static u32
-+intel_gpio_is_requested(struct gpio_chip *chip, int base, unsigned int size)
-+{
-+	u32 requested = 0;
-+	unsigned int i;
-+
-+	for (i = 0; i < size; i++)
-+		if (gpiochip_is_requested(chip, base + i))
-+			requested |= BIT(i);
-+
-+	return requested;
-+}
-+
-+static u32
-+intel_gpio_update_pad_mode(void __iomem *hostown, u32 mask, u32 value)
-+{
-+	u32 curr = readl(hostown);
-+	u32 updated = (curr & ~mask) | (value & mask);
-+
-+	writel(updated, hostown);
-+	return curr;
-+}
-+
- int intel_pinctrl_resume(struct device *dev)
- {
- 	struct platform_device *pdev = to_platform_device(dev);
-@@ -1588,6 +1623,25 @@ int intel_pinctrl_resume(struct device *dev)
- 			dev_dbg(dev, "restored mask %d/%u %#08x\n", i, gpp,
- 				readl(base + gpp * 4));
- 		}
-+
-+		base = community->regs + community->hostown_offset;
-+		for (gpp = 0; gpp < community->ngpps; gpp++) {
-+			const struct intel_padgroup *padgrp = &community->gpps[gpp];
-+			u32 requested = 0, value = 0;
-+			u32 saved = communities[i].hostown[gpp];
-+
-+			if (padgrp->gpio_base < 0)
-+				continue;
-+
-+			requested = intel_gpio_is_requested(&pctrl->chip,
-+					padgrp->gpio_base, padgrp->size);
-+			value = intel_gpio_update_pad_mode(base + gpp * 4,
-+					requested, saved);
-+			if ((value ^ saved) & requested) {
-+				dev_warn(dev, "restore hostown %d/%u %#8x->%#8x\n",
-+					i, gpp, value, saved);
-+			}
-+		}
- 	}
- 
- 	return 0;
--- 
-2.21.0
+from the block tree and commit:
 
+  21e6ba3f0e02 ("scsi: sd: Rely on the driver core for asynchronous probing=
+")
+  d16ece577bf2 ("scsi: sd: Inline sd_probe_part2()")
+
+from the scsi tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc drivers/scsi/sd.c
+index ebc80354714c,e610b393809b..000000000000
+--- a/drivers/scsi/sd.c
++++ b/drivers/scsi/sd.c
+@@@ -3404,8 -3374,49 +3342,50 @@@ static int sd_probe(struct device *dev
+  	get_device(dev);
+  	dev_set_drvdata(dev, sdkp);
+ =20
+- 	get_device(&sdkp->dev);	/* prevent release before async_schedule */
+- 	async_schedule_domain(sd_probe_async, sdkp, &scsi_sd_probe_domain);
++ 	gd->major =3D sd_major((index & 0xf0) >> 4);
++ 	gd->first_minor =3D ((index & 0xf) << 4) | (index & 0xfff00);
++=20
++ 	gd->fops =3D &sd_fops;
++ 	gd->private_data =3D &sdkp->driver;
++ 	gd->queue =3D sdkp->device->request_queue;
++=20
++ 	/* defaults, until the device tells us otherwise */
++ 	sdp->sector_size =3D 512;
++ 	sdkp->capacity =3D 0;
++ 	sdkp->media_present =3D 1;
++ 	sdkp->write_prot =3D 0;
++ 	sdkp->cache_override =3D 0;
++ 	sdkp->WCE =3D 0;
++ 	sdkp->RCD =3D 0;
++ 	sdkp->ATO =3D 0;
++ 	sdkp->first_scan =3D 1;
++ 	sdkp->max_medium_access_timeouts =3D SD_MAX_MEDIUM_TIMEOUTS;
++=20
++ 	sd_revalidate_disk(gd);
++=20
++ 	gd->flags =3D GENHD_FL_EXT_DEVT;
++ 	if (sdp->removable) {
++ 		gd->flags |=3D GENHD_FL_REMOVABLE;
++ 		gd->events |=3D DISK_EVENT_MEDIA_CHANGE;
+++		gd->event_flags =3D DISK_EVENT_FLAG_POLL | DISK_EVENT_FLAG_UEVENT;
++ 	}
++=20
++ 	blk_pm_runtime_init(sdp->request_queue, dev);
++ 	device_add_disk(dev, gd, NULL);
++ 	if (sdkp->capacity)
++ 		sd_dif_config_host(sdkp);
++=20
++ 	sd_revalidate_disk(gd);
++=20
++ 	if (sdkp->security) {
++ 		sdkp->opal_dev =3D init_opal_dev(sdp, &sd_sec_submit);
++ 		if (sdkp->opal_dev)
++ 			sd_printk(KERN_NOTICE, sdkp, "supports TCG Opal\n");
++ 	}
++=20
++ 	sd_printk(KERN_NOTICE, sdkp, "Attached SCSI %sdisk\n",
++ 		  sdp->removable ? "removable " : "");
++ 	scsi_autopm_put_device(sdp);
+ =20
+  	return 0;
+ =20
+
+--Sig_/d1NnJ8l8lFK=6uQL4lNPhGb
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAly0HcsACgkQAVBC80lX
+0GwbTQf+Jb5xUf5Ebg5uBgAKNEh0JT+CSlMUlVse1KhBLCjjdsmf5WfdDioIi1pw
+RzNS+dtHjhYjQr584aZA8gmWT/f8sBNbCYTN6UGmK1VjLaZ+GyTob/v3NNwvv5g0
+DYSGAd38tYrJAmchuwX3i58+0nGo3LHK4hWAMc3KT8y5bkZLG/5dqh5nViWmKtnh
+pMBSAv8WymAkUOC4TWgpGYEBmINdC8x1iIMJbnnSdgj6kF6/ZjKA4QB0sy7P7ydF
+8tdGnmBKIArlM3KTXAIF9gU2v+CBfYXOfIopA1EZAhk/QqZMSzrHp8YgI6lQjXdd
+mj6dhGkPDd6kFrypin6nErN/87w3Gw==
+=j269
+-----END PGP SIGNATURE-----
+
+--Sig_/d1NnJ8l8lFK=6uQL4lNPhGb--
