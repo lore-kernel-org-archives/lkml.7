@@ -2,56 +2,65 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96A37C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:45:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3BF9C282DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:45:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5AA7A218FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:45:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 821C4218FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:45:20 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555353917;
-	bh=dKiKhBwfxln1skxiM/F2Hvx38E5pV60JRLASeoFUhLA=;
+	s=default; t=1555353920;
+	bh=IuFdyzR8IhECT+m9yuXAq67TeoW1Ln9VBoPTab9/YWU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=zdvZMWz5Jc4HEmZMzmLYX5fBLjlKP6V1W1SZq13LtGGi5j9tfy1CCPp490Dc+xyRG
-	 Zmt5hxtHyPFx041w7vbaXw0nDPtf3vuo1fe3G7yM8j4vzAPaCt3F9/XYEkydJfdf8M
-	 HrgMhHLXLGuX4GaoU8AkpCyL5PMjn95eGuXq3jVo=
+	b=j5rlkEr6kq+LK9DIwfDlbO1MO/LDtfnfvSR5JOt7Q5DhpabsOBH6jJSnsjgvZlPqs
+	 ZHJQY/0E0XJiPmRkX22lFe6/hjhLqWdksq5Mv3/tqXHfBezpMmmrUpHCzi4H6Zvy/j
+	 KEgE0B6mzAgHGWvIxXmZDdgQZFmWd5KhX/qzevFI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728331AbfDOSpQ (ORCPT
+        id S1728342AbfDOSpT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 14:45:16 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47428 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 14:45:19 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47576 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728134AbfDOSpK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 14:45:10 -0400
+        id S1728323AbfDOSpQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 14:45:16 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 709F02073F;
-        Mon, 15 Apr 2019 18:45:09 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9D19B218D3;
+        Mon, 15 Apr 2019 18:45:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555353909;
-        bh=dKiKhBwfxln1skxiM/F2Hvx38E5pV60JRLASeoFUhLA=;
+        s=default; t=1555353915;
+        bh=IuFdyzR8IhECT+m9yuXAq67TeoW1Ln9VBoPTab9/YWU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=B9DB6Jz+lGLmejh/IxrtQQBQAt+x4z4HXHMregBCfI4Xvbb3Qk53vKQ4aAD7gY956
-         AFE0z2gs089OOLLDa+J2xhnEI2hep/DCyoX8V3+a3T6uR/kZGuhmNJDVBKP2M3zkNv
-         6TP3j1K8Uo/a5IG0IqVWDdyYk3fZO5oQf6KjU2/I=
+        b=2V62n7w/e8KZeiA7e/2+RSF3Vk17bMyM16ZFwouaY0oArcW0ewcytPS3yMT092oft
+         kSQ3dS4FGMTvdBBr20nCG8ivO1qmu3W03sesXsHuvgMxQElZBwwM+clGPnZAD9tS/M
+         tZTXOkn3xhoSly0vsAsF3BhA2LcWMKeDVYo2oH6I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Alistair Strachan <astrachan@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, kernel-team@android.com,
-        joel@joelfernandes.org, Andi Kleen <andi.kleen@intel.com>,
+        stable@vger.kernel.org, Nick Desaulniers <ndesaulniers@google.com>,
         Nathan Chancellor <natechancellor@gmail.com>,
+        Adhemerval Zanella <adhemerval.zanella@linaro.org>,
+        Arnd Bergmann <arnd@arndb.de>,
+        James Y Knight <jyknight@google.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        David Laight <David.Laight@ACULAB.COM>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 07/76] x86: vdso: Use $LD instead of $CC to link
-Date:   Mon, 15 Apr 2019 20:43:31 +0200
-Message-Id: <20190415183709.105524388@linuxfoundation.org>
+Subject: [PATCH 4.9 09/76] lib/string.c: implement a basic bcmp
+Date:   Mon, 15 Apr 2019 20:43:33 +0200
+Message-Id: <20190415183710.513117495@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183707.712011689@linuxfoundation.org>
 References: <20190415183707.712011689@linuxfoundation.org>
@@ -64,109 +73,104 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The vdso{32,64}.so can fail to link with CC=clang when clang tries to find
-a suitable GCC toolchain to link these libraries with.
+[ Upstream commit 5f074f3e192f10c9fade898b9b3b8812e3d83342 ]
 
-/usr/bin/ld: arch/x86/entry/vdso/vclock_gettime.o:
-  access beyond end of merged section (782)
+A recent optimization in Clang (r355672) lowers comparisons of the
+return value of memcmp against zero to comparisons of the return value
+of bcmp against zero.  This helps some platforms that implement bcmp
+more efficiently than memcmp.  glibc simply aliases bcmp to memcmp, but
+an optimized implementation is in the works.
 
-This happens because the host environment leaked into the cross compiler
-environment due to the way clang searches for suitable GCC toolchains.
+This results in linkage failures for all targets with Clang due to the
+undefined symbol.  For now, just implement bcmp as a tailcail to memcmp
+to unbreak the build.  This routine can be further optimized in the
+future.
 
-Clang is a retargetable compiler, and each invocation of it must provide
---target=<something> --gcc-toolchain=<something> to allow it to find the
-correct binutils for cross compilation. These flags had been added to
-KBUILD_CFLAGS, but the vdso code uses CC and not KBUILD_CFLAGS (for various
-reasons) which breaks clang's ability to find the correct linker when cross
-compiling.
+Other ideas discussed:
 
-Most of the time this goes unnoticed because the host linker is new enough
-to work anyway, or is incompatible and skipped, but this cannot be reliably
-assumed.
+ * A weak alias was discussed, but breaks for architectures that define
+   their own implementations of memcmp since aliases to declarations are
+   not permitted (only definitions). Arch-specific memcmp
+   implementations typically declare memcmp in C headers, but implement
+   them in assembly.
 
-This change alters the vdso makefile to just use LD directly, which
-bypasses clang and thus the searching problem. The makefile will just use
-${CROSS_COMPILE}ld instead, which is always what we want. This matches the
-method used to link vmlinux.
+ * -ffreestanding also is used sporadically throughout the kernel.
 
-This drops references to DISABLE_LTO; this option doesn't seem to be set
-anywhere, and not knowing what its possible values are, it's not clear how
-to convert it from CC to LD flag.
+ * -fno-builtin-bcmp doesn't work when doing LTO.
 
-Signed-off-by: Alistair Strachan <astrachan@google.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Andy Lutomirski <luto@kernel.org>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
+Link: https://bugs.llvm.org/show_bug.cgi?id=41035
+Link: https://code.woboq.org/userspace/glibc/string/memcmp.c.html#bcmp
+Link: https://github.com/llvm/llvm-project/commit/8e16d73346f8091461319a7dfc4ddd18eedcff13
+Link: https://github.com/ClangBuiltLinux/linux/issues/416
+Link: http://lkml.kernel.org/r/20190313211335.165605-1-ndesaulniers@google.com
+Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
+Reported-by: Nathan Chancellor <natechancellor@gmail.com>
+Reported-by: Adhemerval Zanella <adhemerval.zanella@linaro.org>
+Suggested-by: Arnd Bergmann <arnd@arndb.de>
+Suggested-by: James Y Knight <jyknight@google.com>
+Suggested-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Suggested-by: Nathan Chancellor <natechancellor@gmail.com>
+Suggested-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+Reviewed-by: Nathan Chancellor <natechancellor@gmail.com>
+Tested-by: Nathan Chancellor <natechancellor@gmail.com>
+Reviewed-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc: David Laight <David.Laight@ACULAB.COM>
+Cc: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc: Namhyung Kim <namhyung@kernel.org>
 Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: kernel-team@android.com
-Cc: joel@joelfernandes.org
-Cc: Andi Kleen <andi.kleen@intel.com>
-Link: https://lkml.kernel.org/r/20180803173931.117515-1-astrachan@google.com
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- arch/x86/entry/vdso/Makefile | 22 +++++++++-------------
- 1 file changed, 9 insertions(+), 13 deletions(-)
+ include/linux/string.h |    3 +++
+ lib/string.c           |   20 ++++++++++++++++++++
+ 2 files changed, 23 insertions(+)
 
-diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
-index d5409660f5de..2ae92c6b1de6 100644
---- a/arch/x86/entry/vdso/Makefile
-+++ b/arch/x86/entry/vdso/Makefile
-@@ -47,10 +47,8 @@ targets += $(vdso_img_sodbg)
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -111,6 +111,9 @@ extern void * memscan(void *,int,__kerne
+ #ifndef __HAVE_ARCH_MEMCMP
+ extern int memcmp(const void *,const void *,__kernel_size_t);
+ #endif
++#ifndef __HAVE_ARCH_BCMP
++extern int bcmp(const void *,const void *,__kernel_size_t);
++#endif
+ #ifndef __HAVE_ARCH_MEMCHR
+ extern void * memchr(const void *,int,__kernel_size_t);
+ #endif
+--- a/lib/string.c
++++ b/lib/string.c
+@@ -772,6 +772,26 @@ __visible int memcmp(const void *cs, con
+ EXPORT_SYMBOL(memcmp);
+ #endif
  
- export CPPFLAGS_vdso.lds += -P -C
- 
--VDSO_LDFLAGS_vdso.lds = -m64 -Wl,-soname=linux-vdso.so.1 \
--			-Wl,--no-undefined \
--			-Wl,-z,max-page-size=4096 -Wl,-z,common-page-size=4096 \
--			$(DISABLE_LTO)
-+VDSO_LDFLAGS_vdso.lds = -m elf_x86_64 -soname linux-vdso.so.1 --no-undefined \
-+			-z max-page-size=4096 -z common-page-size=4096
- 
- $(obj)/vdso64.so.dbg: $(src)/vdso.lds $(vobjs) FORCE
- 	$(call if_changed,vdso)
-@@ -96,10 +94,8 @@ CFLAGS_REMOVE_vvar.o = -pg
- #
- 
- CPPFLAGS_vdsox32.lds = $(CPPFLAGS_vdso.lds)
--VDSO_LDFLAGS_vdsox32.lds = -Wl,-m,elf32_x86_64 \
--			   -Wl,-soname=linux-vdso.so.1 \
--			   -Wl,-z,max-page-size=4096 \
--			   -Wl,-z,common-page-size=4096
-+VDSO_LDFLAGS_vdsox32.lds = -m elf32_x86_64 -soname linux-vdso.so.1 \
-+			   -z max-page-size=4096 -z common-page-size=4096
- 
- # 64-bit objects to re-brand as x32
- vobjs64-for-x32 := $(filter-out $(vobjs-nox32),$(vobjs-y))
-@@ -127,7 +123,7 @@ $(obj)/vdsox32.so.dbg: $(src)/vdsox32.lds $(vobjx32s) FORCE
- 	$(call if_changed,vdso)
- 
- CPPFLAGS_vdso32.lds = $(CPPFLAGS_vdso.lds)
--VDSO_LDFLAGS_vdso32.lds = -m32 -Wl,-m,elf_i386 -Wl,-soname=linux-gate.so.1
-+VDSO_LDFLAGS_vdso32.lds = -m elf_i386 -soname linux-gate.so.1
- 
- # This makes sure the $(obj) subdirectory exists even though vdso32/
- # is not a kbuild sub-make subdirectory.
-@@ -165,13 +161,13 @@ $(obj)/vdso32.so.dbg: FORCE \
- # The DSO images are built using a special linker script.
- #
- quiet_cmd_vdso = VDSO    $@
--      cmd_vdso = $(CC) -nostdlib -o $@ \
-+      cmd_vdso = $(LD) -nostdlib -o $@ \
- 		       $(VDSO_LDFLAGS) $(VDSO_LDFLAGS_$(filter %.lds,$(^F))) \
--		       -Wl,-T,$(filter %.lds,$^) $(filter %.o,$^) && \
-+		       -T $(filter %.lds,$^) $(filter %.o,$^) && \
- 		 sh $(srctree)/$(src)/checkundef.sh '$(NM)' '$@'
- 
--VDSO_LDFLAGS = -fPIC -shared $(call cc-ldoption, -Wl$(comma)--hash-style=both) \
--	$(call cc-ldoption, -Wl$(comma)--build-id) -Wl,-Bsymbolic $(LTO_CFLAGS)
-+VDSO_LDFLAGS = -shared $(call ld-option, --hash-style=both) \
-+	$(call ld-option, --build-id) -Bsymbolic
- GCOV_PROFILE := n
- 
- #
--- 
-2.19.1
-
++#ifndef __HAVE_ARCH_BCMP
++/**
++ * bcmp - returns 0 if and only if the buffers have identical contents.
++ * @a: pointer to first buffer.
++ * @b: pointer to second buffer.
++ * @len: size of buffers.
++ *
++ * The sign or magnitude of a non-zero return value has no particular
++ * meaning, and architectures may implement their own more efficient bcmp(). So
++ * while this particular implementation is a simple (tail) call to memcmp, do
++ * not rely on anything but whether the return value is zero or non-zero.
++ */
++#undef bcmp
++int bcmp(const void *a, const void *b, size_t len)
++{
++	return memcmp(a, b, len);
++}
++EXPORT_SYMBOL(bcmp);
++#endif
++
+ #ifndef __HAVE_ARCH_MEMSCAN
+ /**
+  * memscan - Find a character in an area of memory.
 
 
