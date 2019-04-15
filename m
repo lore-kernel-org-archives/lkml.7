@@ -4,50 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 89654C282DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:07:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E61A8C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:07:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 584E82087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:07:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B4276218DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:07:43 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355258;
-	bh=1QUr1HOEiVC48iGBBFI3teoaKM3RtaomYix4dALh23E=;
+	s=default; t=1555355263;
+	bh=NSit78T3Vqt1LsLyM32f+ZxYp6oa2w0kebm1Ee3VE4I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nry0aDHpc/D4bhQFb1mzRTwcj5Li/W5tA9SszxAxY7QXXFrTmqPwGJohf5oGxsHfW
-	 FqSh3DNZ/X5ZIBwEiNpjexz5Gku5rDB56eYbUsX6ojIxsoSipoWtqhrAmMYb57HFqv
-	 u5uFKCFgwO5AlHkyw3N5wv48xGiiSJXyneJCXDYw=
+	b=vYoo7TWP/oeLKohdFEdeH0lARkUhwQbSYbWo8yyVnOb4kMH7tJMugMrR9MPBBsan4
+	 7OYeCpBot2jARfNdHpZ3orb9tiyt887KLc2sp1KL9uBc/kgp9/b8QYAzYJBjQC0GY/
+	 Od9Cfivsp2KlK2ecEMAQ1VvqQDu2RybFIXJJVlQY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730238AbfDOTHh (ORCPT
+        id S1730278AbfDOTHm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:07:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42558 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:07:42 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42680 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730208AbfDOTHd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:07:33 -0400
+        id S1728553AbfDOTHj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:07:39 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id C1F7920880;
-        Mon, 15 Apr 2019 19:07:32 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B77A7218D3;
+        Mon, 15 Apr 2019 19:07:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355253;
-        bh=1QUr1HOEiVC48iGBBFI3teoaKM3RtaomYix4dALh23E=;
+        s=default; t=1555355258;
+        bh=NSit78T3Vqt1LsLyM32f+ZxYp6oa2w0kebm1Ee3VE4I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=ZAaR1Q9McvqoXRUCS7fBLTjCElNWUAi7bHwM+mmhS1qf6Y1KNZ+v1DkjJyGY7zbPF
-         YhjbOuS07qanjaRqaY/YXsEg32LeHi4kfm6KwLPxbILdAbTkJ4pZqa3KSN+bJhEtkb
-         1JcoDpFLhJqixtoey0t6nG1wXcmYPxQ0yTkarrx0=
+        b=XwKHungADuyCoba5gn6lGjxdg1miHCO6Fy+Zx/kplS9A2UYi9KElR8ngMlX7cxfnk
+         mThX+TwsekFYlGSGfVwF9hdv+BLoM1PkP4kTAjdTpt4x28XgJaT8jGyhUiB4KOHcCl
+         3wjoaRt2ZravW1uzgejBSFI2d+S/+cyzKIosi/wE=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
-        Anand Jain <anand.jain@oracle.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 4.19 068/101] btrfs: prop: fix zstd compression parameter validation
-Date:   Mon, 15 Apr 2019 20:59:06 +0200
-Message-Id: <20190415183744.077806404@linuxfoundation.org>
+        stable@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Kees Cook <keescook@chromium.org>,
+        Andy Lutomirski <luto@amacapital.net>,
+        Will Drewry <wad@chromium.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        linux-riscv@lists.infradead.org,
+        Palmer Dabbelt <palmer@sifive.com>,
+        "Dmitry V. Levin" <ldv@altlinux.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+Subject: [PATCH 4.19 070/101] riscv: Fix syscall_get_arguments() and syscall_set_arguments()
+Date:   Mon, 15 Apr 2019 20:59:08 +0200
+Message-Id: <20190415183744.172230767@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183740.341577907@linuxfoundation.org>
 References: <20190415183740.341577907@linuxfoundation.org>
@@ -60,43 +65,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anand Jain <anand.jain@oracle.com>
+From: Dmitry V. Levin <ldv@altlinux.org>
 
-commit 50398fde997f6be8faebdb5f38e9c9c467370f51 upstream.
+commit 10a16997db3d99fc02c026cf2c6e6c670acafab0 upstream.
 
-We let pass zstd compression parameter even if it is not fully valid.
-For example:
+RISC-V syscall arguments are located in orig_a0,a1..a5 fields
+of struct pt_regs.
 
-  $ btrfs prop set /btrfs compression zst
-  $ btrfs prop get /btrfs compression
-     compression=zst
+Due to an off-by-one bug and a bug in pointer arithmetic
+syscall_get_arguments() was reading s3..s7 fields instead of a1..a5.
+Likewise, syscall_set_arguments() was writing s3..s7 fields
+instead of a1..a5.
 
-zlib and lzo are fine.
+Link: http://lkml.kernel.org/r/20190329171221.GA32456@altlinux.org
 
-Fix it by checking the correct prefix length.
-
-Fixes: 5c1aab1dd544 ("btrfs: Add zstd support")
-CC: stable@vger.kernel.org # 4.14+
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Signed-off-by: Anand Jain <anand.jain@oracle.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes: e2c0cdfba7f69 ("RISC-V: User-facing API")
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Andy Lutomirski <luto@amacapital.net>
+Cc: Will Drewry <wad@chromium.org>
+Cc: Albert Ou <aou@eecs.berkeley.edu>
+Cc: linux-riscv@lists.infradead.org
+Cc: stable@vger.kernel.org # v4.15+
+Acked-by: Palmer Dabbelt <palmer@sifive.com>
+Signed-off-by: Dmitry V. Levin <ldv@altlinux.org>
+Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/props.c |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ arch/riscv/include/asm/syscall.h |   12 +++++++-----
+ 1 file changed, 7 insertions(+), 5 deletions(-)
 
---- a/fs/btrfs/props.c
-+++ b/fs/btrfs/props.c
-@@ -396,7 +396,7 @@ static int prop_compression_apply(struct
- 		btrfs_set_fs_incompat(fs_info, COMPRESS_LZO);
- 	} else if (!strncmp("zlib", value, 4)) {
- 		type = BTRFS_COMPRESS_ZLIB;
--	} else if (!strncmp("zstd", value, len)) {
-+	} else if (!strncmp("zstd", value, 4)) {
- 		type = BTRFS_COMPRESS_ZSTD;
- 		btrfs_set_fs_incompat(fs_info, COMPRESS_ZSTD);
- 	} else {
+--- a/arch/riscv/include/asm/syscall.h
++++ b/arch/riscv/include/asm/syscall.h
+@@ -78,10 +78,11 @@ static inline void syscall_get_arguments
+ 	if (i == 0) {
+ 		args[0] = regs->orig_a0;
+ 		args++;
+-		i++;
+ 		n--;
++	} else {
++		i--;
+ 	}
+-	memcpy(args, &regs->a1 + i * sizeof(regs->a1), n * sizeof(args[0]));
++	memcpy(args, &regs->a1 + i, n * sizeof(args[0]));
+ }
+ 
+ static inline void syscall_set_arguments(struct task_struct *task,
+@@ -93,10 +94,11 @@ static inline void syscall_set_arguments
+         if (i == 0) {
+                 regs->orig_a0 = args[0];
+                 args++;
+-                i++;
+                 n--;
+-        }
+-	memcpy(&regs->a1 + i * sizeof(regs->a1), args, n * sizeof(regs->a0));
++	} else {
++		i--;
++	}
++	memcpy(&regs->a1 + i, args, n * sizeof(regs->a1));
+ }
+ 
+ #endif	/* _ASM_RISCV_SYSCALL_H */
 
 
