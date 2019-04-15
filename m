@@ -2,95 +2,102 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 86052C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:50:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 798FDC282DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:50:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A7BB2077C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:50:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45DCF2077C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:50:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727420AbfDOMup (ORCPT
+        id S1727462AbfDOMu4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 08:50:45 -0400
-Received: from mga07.intel.com ([134.134.136.100]:3130 "EHLO mga07.intel.com"
+        Mon, 15 Apr 2019 08:50:56 -0400
+Received: from sauhun.de ([88.99.104.3]:41598 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726094AbfDOMup (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 08:50:45 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Apr 2019 05:50:44 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,353,1549958400"; 
-   d="scan'208";a="149551603"
-Received: from ddimarco-mobl1.amr.corp.intel.com (HELO [10.252.206.7]) ([10.252.206.7])
-  by FMSMGA003.fm.intel.com with ESMTP; 15 Apr 2019 05:50:43 -0700
-Subject: Re: [alsa-devel] [PATCH 0/2] soundwire: fix Kconfig select/depend
- issues
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     alsa-devel@alsa-project.org, tiwai@suse.de,
-        gregkh@linuxfoundation.org, linux-kernel@vger.kernel.org,
-        liam.r.girdwood@linux.intel.com, broonie@kernel.org,
-        srinivas.kandagatla@linaro.org, jank@cadence.com, joe@perches.com
-References: <20190411192814.10663-1-pierre-louis.bossart@linux.intel.com>
- <20190414101347.GJ28103@vkoul-mobl>
-From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
-Message-ID: <7a2378b1-24d5-f60b-b32a-53e2d378d824@linux.intel.com>
-Date:   Mon, 15 Apr 2019 07:50:42 -0500
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        id S1726147AbfDOMu4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 08:50:56 -0400
+Received: from localhost (p54B331F8.dip0.t-ipconnect.de [84.179.49.248])
+        by pokefinder.org (Postfix) with ESMTPSA id 949BB2C0114;
+        Mon, 15 Apr 2019 14:50:53 +0200 (CEST)
+Date:   Mon, 15 Apr 2019 14:50:53 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Peter Rosin <peda@axentia.se>,
+        Stefan Lengfeld <contact@stefanchrist.eu>,
+        linux-omap@vger.kernel.org, linux-tegra@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>
+Subject: Re: [PATCH 00/12] i2c: core: introduce atomic transfers
+Message-ID: <20190415125053.GB11768@kunai>
+References: <20190403124019.8947-1-wsa+renesas@sang-engineering.com>
+ <20190403131510.GE9224@smile.fi.intel.com>
+ <20190415120611.euidifhshkf5yqns@ninjato>
+ <20190415123554.GQ9224@smile.fi.intel.com>
+ <20190415124829.GR9224@smile.fi.intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190414101347.GJ28103@vkoul-mobl>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ftEhullJWpWg/VHq"
+Content-Disposition: inline
+In-Reply-To: <20190415124829.GR9224@smile.fi.intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
+--ftEhullJWpWg/VHq
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-On 4/14/19 5:13 AM, Vinod Koul wrote:
-> On 11-04-19, 14:28, Pierre-Louis Bossart wrote:
->> 0-day/Kbuild starts complaining about missed module dependencies and
->> compilation issues. Since codecs and soc drivers need to be compilable
->> independently, let's fix this using the following model:
-> 
-> I have not seen a build report on this one, is this some internal Intel
-> report or on upstream tree?
+On Mon, Apr 15, 2019 at 03:48:29PM +0300, Andy Shevchenko wrote:
+> On Mon, Apr 15, 2019 at 03:35:54PM +0300, Andy Shevchenko wrote:
+> > On Mon, Apr 15, 2019 at 02:06:11PM +0200, Wolfram Sang wrote:
+> > > On Wed, Apr 03, 2019 at 04:15:10PM +0300, Andy Shevchenko wrote:
+> > > > On Wed, Apr 03, 2019 at 02:40:07PM +0200, Wolfram Sang wrote:
+> > > >=20
+> > > > FWIW,
+> > > >=20
+> > > > Reviewed-by Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+> > > >=20
+> > > > for patches 1-5,12.
+> > >=20
+> > > Thanks for the review, Andy! May I ask you once more to tag the patch=
+es
+> > > individually so patchwork can pick them up for me?
+> >=20
+> > It seems I already cleaned up them from my mailbox. I can check if it's
+> > available in another one.
+>=20
+> Done!
 
-0day/kbuild generated this on my work tree:
+Thanks a ton!
 
-tree:   https://github.com/plbossart/sound fix/soundwire-dev
-head:   d59242993bef53c301c0badda162c6bb3a5f15cb
-commit: 24fe4a80b2435446c52197cb828f4475aa817c79 [22/25] skl change for sdw
-config: x86_64-randconfig-l1-04110213 (attached as .config)
-compiler: gcc-5 (Debian 5.5.0-3) 5.4.1 20171010
-reproduce:
-         git checkout 24fe4a80b2435446c52197cb828f4475aa817c79
-         # save the attached .config to linux build tree
-         make ARCH=x86_64
 
-All errors (new ones prefixed by >>):
+--ftEhullJWpWg/VHq
+Content-Type: application/pgp-signature; name="signature.asc"
 
-    sound/soc/intel/skylake/skl-pcm.o: In function 
-`skl_platform_pcm_prepare':
->> sound/soc/intel/skylake/skl-pcm.c:1364: undefined reference to `sdw_prepare_stream'
-    sound/soc/intel/skylake/skl-pcm.o: In function 
-`skl_platform_pcm_hw_free':
->> sound/soc/intel/skylake/skl-pcm.c:1339: undefined reference to `sdw_deprepare_stream'
-    sound/soc/intel/skylake/skl-pcm.o: In function `skl_platform_shutdown':
->> sound/soc/intel/skylake/skl-pcm.c:1314: undefined reference to `sdw_release_stream'
-    sound/soc/intel/skylake/skl-pcm.o: In function `skl_sdw_stream_trigger':
->> sound/soc/intel/skylake/skl-pcm.c:1266: undefined reference to `sdw_enable_stream'
->> sound/soc/intel/skylake/skl-pcm.c:1278: undefined reference to `sdw_disable_stream'
-    sound/soc/intel/skylake/skl-pcm.o: In function `skl_platform_open':
->> sound/soc/intel/skylake/skl-pcm.c:1136: undefined reference to `sdw_alloc_stream'
-    sound/soc/intel/skylake/skl-pcm.c:1163: undefined reference to 
-`sdw_release_stream'
-    sound/soc/intel/skylake/cnl-sst.o: In function `skl_sdw_init':
->> sound/soc/intel/skylake/cnl-sst.c:514: undefined reference to `sdw_intel_init'
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCgAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAly0fi0ACgkQFA3kzBSg
+KbbLjRAAqfHD5UY9gFoiFgkPv39u6VVy20ibtN9AUHIFRnNxRkc+YqhXWNTAVr1T
+F510KWtG4S9JtrXCXf/N39bXtZZyLYfl0pFHdRc02z5cF7ChThHjX2MFYLQM72dH
+hzOvo/PHEk7efsNfF54sv72od4Tf8gIHMH1qYEL1OkZqMd2F5//7oV7zfOyksTXp
+sPZSj69Sq/eIuAtloMmKh4s6uJDzkj8epuXFw08Llr+oOzLXwbkrzIjGTTAUz62o
+i+1EKlLwMaCZLET8/4EQ4nPfeZDxacW+u2GAgn0q+UTxHO0dPbcZtPmGGwmvlGDH
+BA4Kwu16qhpfC8p88DrQ4Sr3Hee+1VbQ8ID1XhCbzSombf389iJfTMCAl7UajrAm
+MKbEHQnsTENys7Z+9gQG+A+Puhy9qnLWxMYr84v+qw/EaxzEI8jL2f5sgnc8qYLV
+R7ETEFNtyjKhb9lOrh34vgHfLYqNs15E5zuBJ4vKu1Q9cF7wiyDegbfFy6BmFF3s
+OHejKvXHxs8M2I93K5I72LmsApm6IGqDuK3eeenxzem5YCUOqxb2HGNfZzNj2L3q
+n7xbx3Dazss4rValbODKOQi2wvkgvh9vUDPyxZ3yYLkOz0NDwkntI5RSROOF5L2t
+acqUdHKMtgoLeaDAiCvMwpqj7vCKYZCcmVRCXLiUTC1GAGvLGsw=
+=XbuZ
+-----END PGP SIGNATURE-----
+
+--ftEhullJWpWg/VHq--
