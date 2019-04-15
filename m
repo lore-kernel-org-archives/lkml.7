@@ -7,45 +7,49 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73C1FC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D182C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:08:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 403CA2087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:07:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D0F3D2087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:07:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355278;
-	bh=3pfRlHGvDOfiJHSPXsEvGAxacrekbSneK81BfCV8twg=;
+	s=default; t=1555355279;
+	bh=NVvtnQW6+4IY5A1Rbha4/7epwBJhAGchxQSymarG8d8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=KR0C/p4fwMzQowR/fynGoFMpAud3SMQunZ0nf+PC3fLHDab/6MgcJL4AsUfgn8H+b
-	 xqbfAggTsXK6JbLrzN8MUTP8yGEjz/gKZqVYXyNgwBKYISXzqT66O+l6CnMZPRWrIW
-	 kAktHh+niFMWvFoo7/GVrjHtO9tHpZzAx2igfHfM=
+	b=h76gA/TxamzlQAIBqjC7Dy6pLghObzqvBi9y3NJLaC0OjteXYxqEacbA1ZUpYX9mn
+	 hs/Rjg25gvUzBDTi+wpDUDMYM3qNonGl3+wd++M+qZSDnn3AdONk+eKSJGwOBkEVmq
+	 /PNqpwqHxuMY9HFZ2tLSYausgFkx8ZYC4ox0Jezw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730340AbfDOTH4 (ORCPT
+        id S1729816AbfDOTH6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:07:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:43054 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:07:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42988 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729806AbfDOTHy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:07:54 -0400
+        id S1730322AbfDOTHv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:07:51 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 4AF922087C;
-        Mon, 15 Apr 2019 19:07:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ACBAB218FE;
+        Mon, 15 Apr 2019 19:07:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355273;
-        bh=3pfRlHGvDOfiJHSPXsEvGAxacrekbSneK81BfCV8twg=;
+        s=default; t=1555355271;
+        bh=NVvtnQW6+4IY5A1Rbha4/7epwBJhAGchxQSymarG8d8=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=h/koQAZbd+7+CRTMCEJnOcyYKqd1zCW4eyyNQCEoUYBqo+rpoZKpjAIFFM9uqdKdY
-         AjYTocQrOdEcOLzw3NQcWa5F8hptG2YJzPmjEHtIBbuOXtEOs9mVlXh4gPZZ4hroYg
-         eVf5ge2WHACmhJFiI5BEN1ICENnAvVNie06eYaos=
+        b=051yNZl65NIrBlHCYCqoO1KddgvaIe/q9BXnnLOY7AmU1Quo/sZI/FfNZcwiSuIJM
+         fX8LDnH+V09GlHzT8/2tvOAgFZOFfzAJPZEhmQYm6kI96VtwviuADXvY48mOjkzidR
+         54qP0UeALISF6PAMQGmVGCxuxPTQPwC23y43biac=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Helge Deller <deller@gmx.de>
-Subject: [PATCH 4.19 056/101] parisc: Detect QEMU earlier in boot process
-Date:   Mon, 15 Apr 2019 20:58:54 +0200
-Message-Id: <20190415183743.487943324@linuxfoundation.org>
+        stable@vger.kernel.org, Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Mukesh Ojha <mojha@codeaurora.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH 4.19 074/101] genirq: Initialize request_mutex if CONFIG_SPARSE_IRQ=n
+Date:   Mon, 15 Apr 2019 20:59:12 +0200
+Message-Id: <20190415183744.374157389@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183740.341577907@linuxfoundation.org>
 References: <20190415183740.341577907@linuxfoundation.org>
@@ -58,55 +62,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Helge Deller <deller@gmx.de>
+From: Kefeng Wang <wangkefeng.wang@huawei.com>
 
-commit d006e95b5561f708d0385e9677ffe2c46f2ae345 upstream.
+commit e8458e7afa855317b14915d7b86ab3caceea7eb6 upstream.
 
-While adding LASI support to QEMU, I noticed that the QEMU detection in
-the kernel happens much too late. For example, when a LASI chip is found
-by the kernel, it registers the LASI LED driver as well.  But when we
-run on QEMU it makes sense to avoid spending unnecessary CPU cycles, so
-we need to access the running_on_QEMU flag earlier than before.
+When CONFIG_SPARSE_IRQ is disable, the request_mutex in struct irq_desc
+is not initialized which causes malfunction.
 
-This patch now makes the QEMU detection the fist task of the Linux
-kernel by moving it to where the kernel enters the C-coding.
-
-Fixes: 310d82784fb4 ("parisc: qemu idle sleep support")
-Signed-off-by: Helge Deller <deller@gmx.de>
-Cc: stable@vger.kernel.org # v4.14+
+Fixes: 9114014cf4e6 ("genirq: Add mutex to irq desc to serialize request/free_irq()")
+Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+Cc: Marc Zyngier <marc.zyngier@arm.com>
+Cc: <linux-arm-kernel@lists.infradead.org>
+Cc: stable@vger.kernel.org
+Link: https://lkml.kernel.org/r/20190404074512.145533-1-wangkefeng.wang@huawei.com
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/parisc/kernel/process.c |    6 ------
- arch/parisc/kernel/setup.c   |    3 +++
- 2 files changed, 3 insertions(+), 6 deletions(-)
+ kernel/irq/irqdesc.c |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/arch/parisc/kernel/process.c
-+++ b/arch/parisc/kernel/process.c
-@@ -210,12 +210,6 @@ void __cpuidle arch_cpu_idle(void)
- 
- static int __init parisc_idle_init(void)
- {
--	const char *marker;
--
--	/* check QEMU/SeaBIOS marker in PAGE0 */
--	marker = (char *) &PAGE0->pad0;
--	running_on_qemu = (memcmp(marker, "SeaBIOS", 8) == 0);
--
- 	if (!running_on_qemu)
- 		cpu_idle_poll_ctrl(1);
- 
---- a/arch/parisc/kernel/setup.c
-+++ b/arch/parisc/kernel/setup.c
-@@ -399,6 +399,9 @@ void __init start_parisc(void)
- 	int ret, cpunum;
- 	struct pdc_coproc_cfg coproc_cfg;
- 
-+	/* check QEMU/SeaBIOS marker in PAGE0 */
-+	running_on_qemu = (memcmp(&PAGE0->pad0, "SeaBIOS", 8) == 0);
-+
- 	cpunum = smp_processor_id();
- 
- 	init_cpu_topology();
+--- a/kernel/irq/irqdesc.c
++++ b/kernel/irq/irqdesc.c
+@@ -554,6 +554,7 @@ int __init early_irq_init(void)
+ 		alloc_masks(&desc[i], node);
+ 		raw_spin_lock_init(&desc[i].lock);
+ 		lockdep_set_class(&desc[i].lock, &irq_desc_lock_class);
++		mutex_init(&desc[i].request_mutex);
+ 		desc_set_defaults(i, &desc[i], node, NULL, NULL);
+ 	}
+ 	return arch_early_irq_init();
 
 
