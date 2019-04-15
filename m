@@ -2,89 +2,125 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D77D1C282CE
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12774C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:48:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98EFA20833
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:48:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D73A720833
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:48:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="O6oNtu+1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727168AbfDOJs1 (ORCPT
+        id S1727185AbfDOJsu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 05:48:27 -0400
-Received: from www1102.sakura.ne.jp ([219.94.129.142]:57193 "EHLO
-        www1102.sakura.ne.jp" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725798AbfDOJs0 (ORCPT
+        Mon, 15 Apr 2019 05:48:50 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:22228 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1725798AbfDOJst (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 05:48:26 -0400
-Received: from fsav402.sakura.ne.jp (fsav402.sakura.ne.jp [133.242.250.101])
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTP id x3F9m79p078824;
-        Mon, 15 Apr 2019 18:48:07 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Received: from www1102.sakura.ne.jp (219.94.129.142)
- by fsav402.sakura.ne.jp (F-Secure/fsigk_smtp/530/fsav402.sakura.ne.jp);
- Mon, 15 Apr 2019 18:48:07 +0900 (JST)
-X-Virus-Status: clean(F-Secure/fsigk_smtp/530/fsav402.sakura.ne.jp)
-Received: from [192.168.1.2] (118.153.231.153.ap.dti.ne.jp [153.231.153.118])
-        (authenticated bits=0)
-        by www1102.sakura.ne.jp (8.15.2/8.15.2) with ESMTPSA id x3F9m6gc078817
-        (version=TLSv1.2 cipher=AES256-SHA bits=256 verify=NO);
-        Mon, 15 Apr 2019 18:48:07 +0900 (JST)
-        (envelope-from katsuhiro@katsuster.net)
-Subject: Re: [PATCH] arm64: dts: rockchip: fix IO domain voltage setting of
- APIO5
-To:     Heiko Stuebner <heiko@sntech.de>,
-        linux-rockchip@lists.infradead.org
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Robin Murphy <robin.murphy@arm.com>
-References: <20190327120317.15256-1-katsuhiro@katsuster.net>
-From:   Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Message-ID: <5170ca5c-ac5a-d88f-6c3d-3794a5afdb30@katsuster.net>
-Date:   Mon, 15 Apr 2019 18:48:06 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 15 Apr 2019 05:48:49 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3F9k3Qi011233;
+        Mon, 15 Apr 2019 11:47:51 +0200
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
+ : date : message-id : mime-version : content-type; s=STMicroelectronics;
+ bh=jMielUvtFlnnNMz3h26ZklBL+HQCFxVpPNAWKuTSjPk=;
+ b=O6oNtu+1T8UuAE4/oGkpCwo6yDjkDoJWx7CI4/fmZpyehbTkgrUBt7UsO7kXyAM16I77
+ hkApZqeTZEZ11EyR7cAMSAU8SpukR6hBP1FRzrLx1dwzqpNTNEpB/r+VsYsoZI6P+B9L
+ NFCSJi387bzYPWjo09OeqYztvcmhJSRknk+NVz4IbL/wRy1mzxYnMnI9H6pQq+THZbzr
+ XJCDILsMH0aC71KQV8Sh4OkX9z+RXXSE1DHJabJncE6CWlDSE6buqMAl/yQ7jrH9mflt
+ Ca1HfHY3kWiV4vFxZNNsOo75lJri6Jxdxl7Iezw23mJxy58ITI5xdYCZ+pZTg94o2KFK ug== 
+Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
+        by mx08-00178001.pphosted.com with ESMTP id 2ru4w823v9-1
+        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
+        Mon, 15 Apr 2019 11:47:51 +0200
+Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id E5B9131;
+        Mon, 15 Apr 2019 09:47:48 +0000 (GMT)
+Received: from Webmail-eu.st.com (sfhdag5node3.st.com [10.75.127.15])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 54E1613E4;
+        Mon, 15 Apr 2019 09:47:48 +0000 (GMT)
+Received: from localhost (10.75.127.45) by SFHDAG5NODE3.st.com (10.75.127.15)
+ with Microsoft SMTP Server (TLS) id 15.0.1347.2; Mon, 15 Apr 2019 11:47:47
+ +0200
+From:   Fabrice Gasnier <fabrice.gasnier@st.com>
+To:     <jic23@kernel.org>, <rdunlap@infradead.org>
+CC:     <sfr@canb.auug.org.au>, <benjamin.gaignard@linaro.org>,
+        <linux-next@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <mcoquelin.stm32@gmail.com>,
+        <alexandre.torgue@st.com>, <fabrice.gasnier@st.com>,
+        <linux-iio@vger.kernel.org>, <lars@metafoo.de>, <knaack.h@gmx.de>,
+        <pmeerw@pmeerw.net>, <linux-stm32@st-md-mailman.stormreply.com>,
+        <arnaud.pouliquen@st.com>, <olivier.moysan@st.com>
+Subject: [PATCH] iio: trigger: stm32-timer: fix build issue when disabled
+Date:   Mon, 15 Apr 2019 11:47:22 +0200
+Message-ID: <1555321642-482-1-git-send-email-fabrice.gasnier@st.com>
+X-Mailer: git-send-email 2.7.4
 MIME-Version: 1.0
-In-Reply-To: <20190327120317.15256-1-katsuhiro@katsuster.net>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Originating-IP: [10.75.127.45]
+X-ClientProxiedBy: SFHDAG8NODE2.st.com (10.75.127.23) To SFHDAG5NODE3.st.com
+ (10.75.127.15)
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-15_04:,,
+ signatures=0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ping...
+This fixes a build issue when CONFIG_IIO_STM32_TIMER_TRIGGER isn't set but
+used in stm32-dfsdm-adc driver (e.g. CONFIG_STM32_DFSDM_ADC is set):
+ERROR: "is_stm32_timer_trigger" [drivers/iio/adc/stm32-dfsdm-adc.ko]
+undefined!
 
-On 2019/03/27 21:03, Katsuhiro Suzuki wrote:
-> This patch fixes IO domain voltage setting that is related to
-> audio_gpio3d4a_ms (bit 1) of GRF_IO_VSEL.
-> 
-> This is because RockPro64 schematics P.16 says that regulator
-> supplies 3.0V power to APIO5_VDD. So audio_gpio3d4a_ms bit should
-> be clear (means 3.0V). Power domain map is saying different thing
-> (supplies 1.8V) but I believe P.16 is actual connectings.
-> 
-> Signed-off-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-> Suggested-by: Robin Murphy <robin.murphy@arm.com>
-> ---
->   arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-> index 791fb0ee9722..20ec7d1c25d7 100644
-> --- a/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-> +++ b/arch/arm64/boot/dts/rockchip/rk3399-rockpro64.dts
-> @@ -508,7 +508,7 @@
->   	status = "okay";
->   
->   	bt656-supply = <&vcc1v8_dvp>;
-> -	audio-supply = <&vcca1v8_codec>;
-> +	audio-supply = <&vcc_3v0>;
->   	sdmmc-supply = <&vcc_sdio>;
->   	gpio1830-supply = <&vcc_3v0>;
->   };
-> 
+There are two possible options to fix this issue:
+- select IIO_STM32_TIMER_TRIGGER along with CONFIG_STM32_DFSDM_ADC.
+  This is what's being done currently for CONFIG_STM32_ADC.
+- stub "is_stm32_timer_trigger" function
+
+Choice is made to stub this function as suggested in [1]. This is also
+inspired by similar "is_stm32_lptim_trigger" function (see [2]) in
+include/linux/iio/timer/stm32-lptim-trigger.h
+
+[1]
+https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1977377.html
+[2] https://lkml.org/lkml/2017/9/10/124
+
+Fixes: 11646e81d775 ("iio: adc: stm32-dfsdm: add support for buffer modes")
+
+Reported-by: Randy Dunlap <rdunlap@infradead.org>
+Fix-suggested-by: Jonathan Cameron <jic23@kernel.org>
+Signed-off-by: Fabrice Gasnier <fabrice.gasnier@st.com>
+---
+ include/linux/iio/timer/stm32-timer-trigger.h | 11 ++++++++++-
+ 1 file changed, 10 insertions(+), 1 deletion(-)
+
+diff --git a/include/linux/iio/timer/stm32-timer-trigger.h b/include/linux/iio/timer/stm32-timer-trigger.h
+index d68add8..cbb7c7a 100644
+--- a/include/linux/iio/timer/stm32-timer-trigger.h
++++ b/include/linux/iio/timer/stm32-timer-trigger.h
+@@ -73,6 +73,15 @@
+ 
+ #define TIM17_OC1	"tim17_oc1"
+ 
++#if IS_REACHABLE(CONFIG_IIO_STM32_TIMER_TRIGGER)
+ bool is_stm32_timer_trigger(struct iio_trigger *trig);
+-
++#else
++static inline bool is_stm32_timer_trigger(struct iio_trigger *trig)
++{
++#if IS_ENABLED(CONFIG_IIO_STM32_TIMER_TRIGGER)
++	pr_warn_once("stm32-timer-trigger not linked in\n");
++#endif
++	return false;
++}
++#endif
+ #endif
+-- 
+2.7.4
 
