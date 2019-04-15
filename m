@@ -2,121 +2,160 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C9EC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 13:10:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 76537C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 13:11:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2051220684
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 13:10:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2179120684
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 13:11:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="l3zjjhJw"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="eNwZVCzE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727493AbfDONK1 (ORCPT
+        id S1727487AbfDONLd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 09:10:27 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:43248 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727186AbfDONK0 (ORCPT
+        Mon, 15 Apr 2019 09:11:33 -0400
+Received: from mail.efficios.com ([167.114.142.138]:39550 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727129AbfDONLd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 09:10:26 -0400
-Received: by mail-io1-f67.google.com with SMTP id x3so14432756iol.10;
-        Mon, 15 Apr 2019 06:10:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=s3BEBsotfDryLUDef2PzvA8YNpjmE9UBcZeERGUDsjE=;
-        b=l3zjjhJw5q5Fe40iN27J6By4aPsgsbvvUTONve+AznHyT9mxuKDagPaBe0u26vfRpe
-         kEZu/4da4r+uylzHSO3mMvucbhRXTuIM88pFdQk9hcDyEKVu990XjmMT0WcHv2H+TS/D
-         /MrOBlnA53sh4kUEd6DluRkJ1pOrKy+tx517FJLFHHoIDJwaTfxvMDM2LgJ8nn+arHad
-         vG9QqDf19rN67cjE89L84nJe6bB+C3AcIXWrKr3EeVkJ3ygUB1pXV0o/oP3K+ENj2/hV
-         ftwOznkyt6QTomCTRPLr4h7StJOirzas4jbmU5kHqDjO+uH08UkbnSR9DbU6+3PGArbz
-         5sug==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=s3BEBsotfDryLUDef2PzvA8YNpjmE9UBcZeERGUDsjE=;
-        b=WzXIByc8iY1nhWR2Pw9mnn3cKsAagR4y/+PO4AHadZSsEQxlnQ8y2cRrzPebP3VKJK
-         hdxaAp+YLyCpOVm4qDlAV/i0OtOXuO4hH55WJ+4Up8i6sVXkmh+87GJDvNoW+TSX1LQV
-         EGF+Tip3E8ACBKwIQBVe1FmwHNg6OHP7J+sZagmKx/EDtmKon7izIOYMEZD8DVVVB9oZ
-         e9xMtiwDOs1iddxaQFJO7GLzAKGeQ5IzrQjxwYLGJu1CO16CAnWpXW5ey+yBDHoap9r+
-         CzzMaZ4MWAhH9xzR8r0AihC00lm/MnQMjOeDJhhKv2dCWEjeFUELFgy1qnYW8hkgF5ay
-         i6xw==
-X-Gm-Message-State: APjAAAWOVhSevvaiw6knS/t8NpM67wTdZvE4xclyC/d7N6dDN0bFEkfJ
-        7Nm7bukDYWHZpoFQAGJkKePsf5M2UikmmFDUaZY=
-X-Google-Smtp-Source: APXvYqw7QzDOjIxCXi/Fz57Z2qhP6VJrG99xHhA0AdjgCrvwQHDEFFbL/qA9z9BOP3osTn+2OmPHNUZR3Sa/TC4LPIU=
-X-Received: by 2002:a5d:8918:: with SMTP id b24mr49794108ion.241.1555333825852;
- Mon, 15 Apr 2019 06:10:25 -0700 (PDT)
+        Mon, 15 Apr 2019 09:11:33 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 1DFD5B7850;
+        Mon, 15 Apr 2019 09:11:32 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id c6iAZGumT-3x; Mon, 15 Apr 2019 09:11:31 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 697E6B784A;
+        Mon, 15 Apr 2019 09:11:31 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 697E6B784A
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1555333891;
+        bh=a1M60/X8aoD7PZVcRB7tjpsPkm9TwjAjSw0B/sKmFiY=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=eNwZVCzEdVoQGw/HC4obKnrsGtFBJ50dRhyXONl881CrllGyEVeyOGx4KcyWMq9Bd
+         DYhqBtfxRTvx4x/Jli0yAAwHtV5+wzOMOHbT8nUG6C/IbNuXA0JQSZIcI6apaYGlTk
+         ZRlg89PQ8wXp/nxwWPKPBD342QRSvy4CMgFIHwyIHte5jrqF7HwxukjopP5CxXKoPk
+         NwJdch+1hGop+uaYB4nyyT+pntifH40rxyDfAYRE7xXwwI9Sy4VNT/kBV5WHD8umq2
+         eE+t9QXBkI3iBH9VV9rUDBpcFgQsz66J6DQIJ1L06cTN3e4vTYX/MTG4VOIda+lpJA
+         xlo2ugNtAgy9g==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id tbbd8f5Asyty; Mon, 15 Apr 2019 09:11:31 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id 4E773B7845;
+        Mon, 15 Apr 2019 09:11:31 -0400 (EDT)
+Date:   Mon, 15 Apr 2019 09:11:30 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     peter maydell <peter.maydell@linaro.org>
+Cc:     Will Deacon <will.deacon@arm.com>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        carlos <carlos@redhat.com>,
+        richard earnshaw <richard.earnshaw@arm.com>
+Message-ID: <936773156.261.1555333890988.JavaMail.zimbra@efficios.com>
+In-Reply-To: <CAFEAcA849mmSds9euyvR2uLWqEeA2eedkmcq1O4pT6-S0oK8BA@mail.gmail.com>
+References: <1050734985.2625.1554838340011.JavaMail.zimbra@efficios.com> <1933578130.3292.1554928159928.JavaMail.zimbra@efficios.com> <20190411164219.GE29081@fuggles.cambridge.arm.com> <1469455003.811.1555005112414.JavaMail.zimbra@efficios.com> <CAFEAcA849mmSds9euyvR2uLWqEeA2eedkmcq1O4pT6-S0oK8BA@mail.gmail.com>
+Subject: Re: rseq/arm32: choosing rseq code signature
 MIME-Version: 1.0
-References: <20190412134437.14864-1-brgl@bgdev.pl> <20190412134437.14864-5-brgl@bgdev.pl>
-In-Reply-To: <20190412134437.14864-5-brgl@bgdev.pl>
-From:   Adam Ford <aford173@gmail.com>
-Date:   Mon, 15 Apr 2019 08:10:14 -0500
-Message-ID: <CAHCN7xK2BKasMUt-Ytnfw1yewtZePcQhe4PRUQCMG_T8dsVHpQ@mail.gmail.com>
-Subject: Re: [PATCH v4 4/5] ARM: dts: da850-evm: enable cpufreq
-To:     Bartosz Golaszewski <brgl@bgdev.pl>
-Cc:     Sekhar Nori <nsekhar@ti.com>, Kevin Hilman <khilman@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        David Lechner <david@lechnology.com>,
-        arm-soc <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: quoted-printable
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
+Thread-Topic: rseq/arm32: choosing rseq code signature
+Thread-Index: GTYOyR4kdTfxbInO6WNJz6P29g6WSw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 8:44 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
->
-> From: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->
-> Enable cpufreq-dt support for da850-evm. The cvdd is supplied by the
-> tps6507 pmic with configurable output voltage. By default da850-evm
+----- On Apr 11, 2019, at 3:55 PM, peter maydell peter.maydell@linaro.org w=
+rote:
 
- It's just a little minor typo, but technically, the PMIC is TPS65070.
+> On Thu, 11 Apr 2019 at 18:51, Mathieu Desnoyers
+> <mathieu.desnoyers@efficios.com> wrote:
+>> ----- On Apr 11, 2019, at 12:42 PM, Will Deacon will.deacon@arm.com wrot=
+e:
+>> > Peter suggests that anything of the form 0xe7fxdefx should trap in bot=
+h A32
+>> > and T32, although it does assemble to UDF; B <imm11> in T16. I'm not s=
+ure we
+>> > should get too obsessed with trying to encode a signature that univers=
+ally
+>> > decodes to a trap.
+>>
+>> That's a nice trick.
+>>
+>> >
+>> > Whatever you choose, it would be worth checking that it doesn't clash =
+with
+>> > other allocations such as software breakpoints in GDB.
+>>
+>> GDB seems to have [1] :
+>>
+>> #define ARM_LE_BREAKPOINT {0xFE,0xDE,0xFF,0xE7}
+>> #define ARM_BE_BREAKPOINT {0xE7,0xFF,0xDE,0xFE}
+>> #define THUMB_LE_BREAKPOINT {0xbe,0xbe}
+>> #define THUMB_BE_BREAKPOINT {0xbe,0xbe}
+>>
+>> None of which match the value you hint at.
+>=20
+> Hmm? The ARM BPs match 0xe7fxdefx when considered with
+> the appropriate endianness (clearly somebody has
+> been down this line of thought before). Still, as long as
+> we pick different values for the 8 bits of freedom we
+> have it should be fine.
 
-> boards support frequencies up to 375MHz so enable this operating
-> point.
->
-Reviewed-by: Adam Ford <aford173@gmail.com>
+Right.=C2=A0I selected 0xe7f5def3, which should ensure we are distinct
+from gdb's choice.
 
-> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
-> ---
->  arch/arm/boot/dts/da850-evm.dts | 13 +++++++++++++
->  1 file changed, 13 insertions(+)
->
-> diff --git a/arch/arm/boot/dts/da850-evm.dts b/arch/arm/boot/dts/da850-evm.dts
-> index f04bc3e15332..f94bb38fdad9 100644
-> --- a/arch/arm/boot/dts/da850-evm.dts
-> +++ b/arch/arm/boot/dts/da850-evm.dts
-> @@ -191,6 +191,19 @@
->         };
->  };
->
-> +&cpu {
-> +       cpu-supply = <&vdcdc3_reg>;
-> +};
-> +
-> +/*
-> + * The standard da850-evm kits and SOM's are 375MHz so enable this operating
-> + * point by default. Higher frequencies must be enabled for custom boards with
-> + * other variants of the SoC.
-> + */
-> +&opp_375 {
-> +       status = "okay";
-> +};
-> +
->  &sata {
->         status = "okay";
->  };
-> --
-> 2.21.0
->
+>=20
+>> /*
+>>  * RSEQ_SIG uses the udf A32 instruction with an uncommon immediate oper=
+and
+>>  * value 0x5de3. This traps if user-space reaches this instruction by mi=
+stake,
+>>  * and the uncommon operand ensures the kernel does not move the instruc=
+tion
+>>  * pointer to attacker-controlled code on rseq abort.
+>>  *
+>>  * The instruction pattern in the A32 instruction set is:
+>>  *
+>>  * e7f5def3    udf    #24035    ; 0x5de3
+>>  *
+>>  * This translates to the following instruction pattern in the T16 instr=
+uction
+>>  * set:
+>>  *
+>>  * little endian:
+>>  * def3        udf    #243      ; 0xf3
+>>  * e7f5        b.n    <7f5>
+>>  *
+>>  * big endian:
+>>  * e7f5        b.n    <7f5>
+>>  * def3        udf    #243      ; 0xf3
+>=20
+> Do we really care about big-endian instruction-ordering for Thumb?
+> It requires (AIUI) either an ARMv7R CPU which implements and sets
+> SCTLR.IE to 1, or a v6-or-earlier CPU using BE32, and it's going to
+> be even rarer than normal BE8 big-endian...
+
+I don't think we care enough about it to look for a trick to
+turn the branch into something else (which would not branch away from the
+udf instruction), but considering this signature will be ABI, it's good to
+be thorough documentation-wise and cover all existing cases.
+
+Thoughts ?
+
+Thanks,
+
+Mathieu
+
+--=20
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
