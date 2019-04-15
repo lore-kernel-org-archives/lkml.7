@@ -2,107 +2,100 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 697CEC282DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 21:46:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BAF9EC282DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 21:47:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DA2020880
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 21:46:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 87503206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 21:47:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=mbuki-mvuki-org.20150623.gappssmtp.com header.i=@mbuki-mvuki-org.20150623.gappssmtp.com header.b="kt8zl76P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728075AbfDOVqe (ORCPT
+        id S1728099AbfDOVrT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 17:46:34 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35402 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726609AbfDOVqe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 17:46:34 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3A148206B6;
-        Mon, 15 Apr 2019 21:46:33 +0000 (UTC)
-Date:   Mon, 15 Apr 2019 17:46:31 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Raul E Rangel <rrangel@chromium.org>
-Cc:     linux-trace-devel@vger.kernel.org, eballetbo@gmail.com,
-        zwisler@chromium.org, djkurtz@chromium.org,
-        Ross Zwisler <zwisler@google.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        linux-kernel@vger.kernel.org, Benson Leung <bleung@chromium.org>
-Subject: Re: [PATCH v5] chrome/platform: cros_ec_proto: Add trace event to
- trace EC commands
-Message-ID: <20190415174631.471a8e87@gandalf.local.home>
-In-Reply-To: <20190415205704.46726-1-rrangel@chromium.org>
-References: <20190415205704.46726-1-rrangel@chromium.org>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Mon, 15 Apr 2019 17:47:19 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:41787 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727301AbfDOVrT (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 17:47:19 -0400
+Received: by mail-wr1-f67.google.com with SMTP id r4so23892429wrq.8
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 14:47:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=mbuki-mvuki-org.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=2mYPKJwiykBYivU1xKRnC9lEdWiu662zi9Gpi4fZ6KE=;
+        b=kt8zl76PaUjEhO8D1LVUSnTTRJ6rWv8L7w8nOtVQxh2lWnFL2vP9fldXfdSKbpjxwv
+         utR398y+ET2zjcDkjiQasptZX5+VrI17QA+ldghk0uZPJJuYIpV3zc92JQrKvJSNJqEn
+         OMGpS1SmyswbrMGSLEaI865Naz4Q4TSwhEMyKpFLLDHjXQHswmB3vzl8i7zyJSrq2fD9
+         yCEJDOu15mb4OQYCv6q1cJPKe9oUhIK7lpgaoB476AFvnU2mUx9Bzk8rkpjk4RK6oZO8
+         S2WQT+1eNK42uPy9piiwKVK29wW/m8Vk9PTkp5Dm85q6wBegb/R4JoMMmJYyU5JS1ecf
+         lA9w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=2mYPKJwiykBYivU1xKRnC9lEdWiu662zi9Gpi4fZ6KE=;
+        b=SvizjkvSOqcvNjC25HLe8JQV1eO9YQsS3bmZlJMV7XOjdEzRLmzhLdv4ouQxeKZRx9
+         j9YXnPjnPU4VaffclDbLTa7jF8/vstnT+OTPrbRv2ifHeIUYykr1b7DUsSJFZbYDfwuc
+         DugYmqFOpRih3913oyLFL6zeujdSoJqQT878PbXAw2nC3O+wojZft/7FqE/nv+kWM2PC
+         DsaiFPmBwjjS72mCSPSCPGWRfQMyoIGf/X+iNzOpz8xud9/8bELWzVHeQAMlvY8GCsSx
+         daLGyDpwZtpGIzGQANTZHMKMXOQBsw0Nn95wQUP0+1t2DSftu5+mS3xxvD8bJ55+68rc
+         tj2w==
+X-Gm-Message-State: APjAAAVU2G+kj3hO6GPGx5E2W80p724bL7RItK3tK4rC1PRaEmfXJH5x
+        fRz/ZPfy+bpZwd/nvQdiLF5lavmwt3p99EDc8gNRqg==
+X-Google-Smtp-Source: APXvYqzq8Wl4F14sE8D7priUVkmNA2BEjKQfSvwMC8ttpoGm5cLQofJ8g/5uedXxs3Gitt5j6YLCFbKA9NIk3dSONtU=
+X-Received: by 2002:adf:edca:: with SMTP id v10mr20631184wro.157.1555364836976;
+ Mon, 15 Apr 2019 14:47:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+References: <CANSNSoVGLEkRE5DPyVhPVdsCbu44SOu0Tpf7smWjPUn_qwRHHA@mail.gmail.com>
+ <Pine.LNX.4.44L0.1904061121410.19196-100000@netrider.rowland.org>
+In-Reply-To: <Pine.LNX.4.44L0.1904061121410.19196-100000@netrider.rowland.org>
+From:   Jesse Hathaway <jesse@mbuki-mvuki.org>
+Date:   Mon, 15 Apr 2019 16:47:06 -0500
+Message-ID: <CANSNSoVpnK6fyfFct7cLNRJAvdLWh0ac=isnPOkOAp4LV+WoSw@mail.gmail.com>
+Subject: Re: Regression causes a hang on boot with a Comtrol PCI card
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Bjorn Helgaas <helgaas@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        linux-kernel@vger.kernel.org, linux-pci@vger.kernel.org,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 15 Apr 2019 14:57:04 -0600
-Raul E Rangel <rrangel@chromium.org> wrote:
+On Sat, Apr 6, 2019 at 10:32 AM Alan Stern <stern@rowland.harvard.edu> wrote:
+> Well, at least that's forward progress.  I don't know what pstore is or
+> what connection it has to the USB subsystem.  Does the machine hang
+> similarly if you boot without the Comtrol PCI card present?
 
-> This is useful to see which EC commands are being executed and when.
-> 
-> To enable:
-> 
->     echo 'cros_ec:*' >> /sys/kernel/debug/tracing/set_event
+Yes the box boots fine when the Comtrol PCI card is *not* present.
 
-Note, you can accomplish the same thing with:
+> For that matter, what happens if you remove EHCI from the kernel
+> configuration completely?
 
-  echo 1 > /sys/kernel/debug/tracing/events/cros_ec/enable
+If I remove USB support, the box still hangs after registering the pstore, but
+if I remove pstore support and APEI support from the kernel then the box boots
+without issue.
 
-That's the "new" way to do things. The set_event only hangs around for
-historical (and compatibility) reasons.
+> As for how the PCI card affects the USB handoff, it depends on how the
+> BIOS behaves.  Normally the BIOS will take control of all the available
+> EHCI controllers during bootup (so that it can use them to communicate
+> with a USB keyboard or mouse), including controllers on add-on PCI
+> cards as well as those on the motherboard.  When the kernel starts up,
+> it tries to take ownership of the controllers away from the BIOS
+> (that's the handoff) so that Linux can use them.  However, if the BIOS
+> was never tested for handoff of USB controllers on add-on PCI cards, it
+> could easily have a bug that would crash the machine.
 
-
-> 
-> Example:
-> 
->     /* cros_ec_cmd: version: 0, command: EC_CMD_GET_VERSION */
->     /* cros_ec_cmd: version: 0, command: EC_CMD_GET_PROTOCOL_INFO */
->     /* cros_ec_cmd: version: 1, command: EC_CMD_GET_CMD_VERSIONS */
->     /* cros_ec_cmd: version: 1, command: EC_CMD_USB_PD_CONTROL */
-> 
-> Signed-off-by: Raul E Rangel <rrangel@chromium.org>
-> Reviewed-by: Ross Zwisler <zwisler@google.com>
-
-For the tracing side of things:
-
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-
--- Steve
-
-> ---
-> 
-> Changes in v5:
-> - Rebased on upstream/master. It turns out upstream/master is missing a
->   lot of changes to cros_ec_commands.h.
-> - Replace SYM with SYMBOL in macro name.
-> 
-> Changes in v4:
-> - Use the full command name so go to definition continues to work in my
-> editor.
-> 
-> Changes in v3:
-> - Use a macro to avoid duplicating the ec command names.
-> 
-> Changes in v2:
-> - Changed comment style to match other cros_ec files.
-> - Fixed commit tag.
-> 
->  drivers/platform/chrome/Makefile        |   4 +-
->  drivers/platform/chrome/cros_ec_proto.c |   4 +
->  drivers/platform/chrome/cros_ec_trace.c | 121 ++++++++++++++++++++++++
->  drivers/platform/chrome/cros_ec_trace.h |  51 ++++++++++
->  4 files changed, 179 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/platform/chrome/cros_ec_trace.c
->  create mode 100644 drivers/platform/chrome/cros_ec_trace.h
+The Comtrol card provides 32 serial ports, via a breakout box, but it has
+no USB functionality, which was why I was surprised that its presence
+somehow breaks the USB hand off.
