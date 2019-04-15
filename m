@@ -6,318 +6,336 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BA14EC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:52:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EC2EC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:53:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8570E2073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:52:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E9F352073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:53:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728617AbfDOSwz (ORCPT
+        id S1728383AbfDOSxu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 14:52:55 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39660 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728148AbfDOSwy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 14:52:54 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3FIn78e187111
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 14:52:53 -0400
-Received: from e11.ny.us.ibm.com (e11.ny.us.ibm.com [129.33.205.201])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2rvvxsf6rd-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 14:52:53 -0400
-Received: from localhost
-        by e11.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <akrowiak@linux.ibm.com>;
-        Mon, 15 Apr 2019 19:52:52 +0100
-Received: from b01cxnp22034.gho.pok.ibm.com (9.57.198.24)
-        by e11.ny.us.ibm.com (146.89.104.198) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 15 Apr 2019 19:52:48 +0100
-Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
-        by b01cxnp22034.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3FIqjiE26935424
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Apr 2019 18:52:45 GMT
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EB59FAE05F;
-        Mon, 15 Apr 2019 18:52:44 +0000 (GMT)
-Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 3DBE9AE067;
-        Mon, 15 Apr 2019 18:52:44 +0000 (GMT)
-Received: from [9.80.223.51] (unknown [9.80.223.51])
-        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
-        Mon, 15 Apr 2019 18:52:44 +0000 (GMT)
-Subject: Re: [PATCH 6/7] s390: vfio-ap: handle dynamic config/deconfig of AP
- adapter
-To:     linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
-        kvm@vger.kernel.org
-Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
-        frankja@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com, pmorel@linux.ibm.com,
-        pasic@linux.ibm.com, alex.williamson@redhat.com,
-        kwankhede@nvidia.com
-References: <1555016604-2008-1-git-send-email-akrowiak@linux.ibm.com>
- <1555016604-2008-7-git-send-email-akrowiak@linux.ibm.com>
-From:   Tony Krowiak <akrowiak@linux.ibm.com>
-Date:   Mon, 15 Apr 2019 14:52:43 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Mon, 15 Apr 2019 14:53:50 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:65389 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728223AbfDOSxu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 14:53:50 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B48EC59454;
+        Mon, 15 Apr 2019 18:53:49 +0000 (UTC)
+Received: from x1.home (ovpn-116-122.phx2.redhat.com [10.3.116.122])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id B24661001E6F;
+        Mon, 15 Apr 2019 18:53:48 +0000 (UTC)
+Date:   Mon, 15 Apr 2019 12:53:48 -0600
+From:   Alex Williamson <alex.williamson@redhat.com>
+To:     Jacob Pan <jacob.jun.pan@linux.intel.com>
+Cc:     iommu@lists.linux-foundation.org,
+        LKML <linux-kernel@vger.kernel.org>,
+        Joerg Roedel <joro@8bytes.org>,
+        David Woodhouse <dwmw2@infradead.org>,
+        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        "Yi Liu" <yi.l.liu@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>,
+        Raj Ashok <ashok.raj@intel.com>,
+        "Christoph Hellwig" <hch@infradead.org>,
+        "Lu Baolu" <baolu.lu@linux.intel.com>,
+        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH 02/18] ioasid: Add custom IOASID allocator
+Message-ID: <20190415125348.58073042@x1.home>
+In-Reply-To: <1554767973-30125-3-git-send-email-jacob.jun.pan@linux.intel.com>
+References: <1554767973-30125-1-git-send-email-jacob.jun.pan@linux.intel.com>
+        <1554767973-30125-3-git-send-email-jacob.jun.pan@linux.intel.com>
+Organization: Red Hat
 MIME-Version: 1.0
-In-Reply-To: <1555016604-2008-7-git-send-email-akrowiak@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19041518-2213-0000-0000-000003774830
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010933; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000284; SDB=6.01189549; UDB=6.00623271; IPR=6.00970335;
- MB=3.00026455; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-15 18:52:51
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19041518-2214-0000-0000-00005E0964E8
-Message-Id: <78ff829c-9bd3-4483-6205-bd44ba5648d8@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-15_07:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904150130
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Mon, 15 Apr 2019 18:53:49 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/11/19 5:03 PM, Tony Krowiak wrote:
-> Once an APQN is assigned to an mdev device it will remained assigned until
-> it is explicitly unassigned from the mdev device. The associated AP queue
-> devices, however, can come and go due to failures or deliberate actions by
-> a sysadmin. For example, a sysadmin can dynamically remove an AP adapter
-> card using the SE or by executing an SCLP command. This patch refactors
-> the probe and remove callbacks of the vfio_ap driver to handle dynamic
-> changes as follows:
+On Mon,  8 Apr 2019 16:59:17 -0700
+Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
+
+> Sometimes, IOASID allocation must be handled by platform specific
+> code. The use cases are guest vIOMMU and pvIOMMU where IOASIDs need
+> to be allocated by the host via enlightened or paravirt interfaces.
 > 
-> * Probe callback changes:
+> This patch adds an extension to the IOASID allocator APIs such that
+> platform drivers can register a custom allocator, possibly at boot
+> time, to take over the allocation. IDR is still used for tracking
+> and searching purposes internal to the IOASID code. Private data of
+> an IOASID can also be set after the allocation.
 > 
->    If the APQN of the queue being probed is assigned to an mdev device, the
->    mdev device is in use by a guest, and the APQN is not set in the guest's
->    CRYCB, the CRYCB will be dynamically updated to give the guest access to
->    the queue.
-> 
-> * Remove callback changes:
-> 
->    If the APQN of the queue being removed is assigned to an mdev device,
->    the mdev
->    device is in use by a guest, and the APQN is set in the guest's CRYCB,
->    the CRYCB will be dynamically updated to remove the guest's access to
->    the adapter card associated with the queue. Keep in mind, the
->    architecture does not provide a way to remove access to a single queue
->    unless only one queue is in the guest's configuration, so it was decided
->    that it makes more sense to unplug the adapter from the guest.
-> 
->    The APQN of the queue being removed will remain assigned to the mdev
->    device should the queue be dynamically returned to the configuration.
->    The queue will also be reset prior to returning control to the caller
->    (a.k.a., the AP bus).
-> 
-> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
 > ---
->   arch/s390/include/asm/kvm_host.h      |  2 ++
->   arch/s390/kvm/kvm-s390.c              | 37 +++++++++++++++++++
->   drivers/s390/crypto/vfio_ap_drv.c     | 16 +++++++--
->   drivers/s390/crypto/vfio_ap_ops.c     | 67 +++++++++++++++++++++++++++++++++--
->   drivers/s390/crypto/vfio_ap_private.h |  2 ++
->   5 files changed, 120 insertions(+), 4 deletions(-)
+>  drivers/base/ioasid.c  | 124 +++++++++++++++++++++++++++++++++++++++++++++----
+>  include/linux/ioasid.h |  28 ++++++++++-
+>  2 files changed, 143 insertions(+), 9 deletions(-)
 > 
-> diff --git a/arch/s390/include/asm/kvm_host.h b/arch/s390/include/asm/kvm_host.h
-> index c47e22bba87f..0ce5d9b0df59 100644
-> --- a/arch/s390/include/asm/kvm_host.h
-> +++ b/arch/s390/include/asm/kvm_host.h
-> @@ -895,6 +895,8 @@ void kvm_arch_async_page_present(struct kvm_vcpu *vcpu,
->   void kvm_arch_crypto_clear_masks(struct kvm *kvm);
->   void kvm_arch_crypto_set_masks(struct kvm *kvm, unsigned long *apm,
->   			       unsigned long *aqm, unsigned long *adm);
-> +int kvm_arch_crypto_test_masks(struct kvm *kvm, unsigned long *apm,
-> +			       unsigned long *aqm, unsigned long *adm);
->   
->   extern int sie64a(struct kvm_s390_sie_block *, u64 *);
->   extern char sie_exit;
-> diff --git a/arch/s390/kvm/kvm-s390.c b/arch/s390/kvm/kvm-s390.c
-> index 4638303ba6a8..5f423cdd29ba 100644
-> --- a/arch/s390/kvm/kvm-s390.c
-> +++ b/arch/s390/kvm/kvm-s390.c
-> @@ -2217,6 +2217,43 @@ static void kvm_s390_set_crycb_format(struct kvm *kvm)
->   		kvm->arch.crypto.crycbd |= CRYCB_FORMAT1;
->   }
->   
-> +int kvm_arch_crypto_test_masks(struct kvm *kvm, unsigned long *apm,
-> +			       unsigned long *aqm, unsigned long *adm)
-> +{
-> +	int ret;
-> +	struct kvm_s390_crypto_cb *crycb = kvm->arch.crypto.crycb;
+> diff --git a/drivers/base/ioasid.c b/drivers/base/ioasid.c
+> index cf122b2..294e856 100644
+> --- a/drivers/base/ioasid.c
+> +++ b/drivers/base/ioasid.c
+> @@ -17,6 +17,74 @@ struct ioasid_data {
+>  };
+>  
+>  static DEFINE_IDR(ioasid_idr);
+> +static DEFINE_MUTEX(ioasid_allocator_lock);
+> +static const struct ioasid_allocator *ioasid_allocator;
 > +
-> +	switch (kvm->arch.crypto.crycbd & CRYCB_FORMAT_MASK) {
-> +	case CRYCB_FORMAT2: /* APCB1 use 256 bits */
-> +		ret = bitmap_equal(apm, (unsigned long *)crycb->apcb1.apm, 256);
-> +		VM_EVENT(kvm, 3, "TEST CRYCB: apm %016lx %016lx %016lx %016lx",
-> +			 apm[0], apm[1], apm[2], apm[3]);
-> +		ret &= bitmap_equal(aqm,
-> +				    (unsigned long *)crycb->apcb1.aqm, 256);
-> +		VM_EVENT(kvm, 3, "TEST CRYCB: aqm %016lx %016lx %016lx %016lx",
-> +			 aqm[0], aqm[1], aqm[2], aqm[3]);
-> +		ret &= bitmap_equal(adm,
-> +				    (unsigned long *)crycb->apcb1.adm, 256);
-> +		VM_EVENT(kvm, 3, "TEST CRYCB: adm %016lx %016lx %016lx %016lx",
-> +			 adm[0], adm[1], adm[2], adm[3]);
-> +		break;
-> +	case CRYCB_FORMAT1:
-> +	case CRYCB_FORMAT0: /* Fall through both use APCB0 */
-> +		ret = bitmap_equal(apm, (unsigned long *)crycb->apcb1.apm, 64);
-> +		ret &= bitmap_equal(aqm, (unsigned long *)crycb->apcb1.aqm, 16);
-> +		ret &= bitmap_equal(adm, (unsigned long *)crycb->apcb1.adm, 16);
-
-All of the above need to access crycb->apcb0
-
-> +		VM_EVENT(kvm, 3, "TEST CRYCB: apm %016lx aqm %04x adm %04x",
-> +			 apm[0], *((unsigned short *)aqm),
-> +			 *((unsigned short *)adm));
-> +		break;
-> +	default:	/* Can not happen */
-> +		ret = 0;
-> +		break;
+> +
+> +/**
+> + * ioasid_set_allocator - register a custom allocator
+> + *
+> + * Custom allocator take precedence over the default IDR based allocator.
+> + * Private data associated with the ASID are managed by ASID common code
+> + * similar to IDR data.
+> + */
+> +int ioasid_set_allocator(struct ioasid_allocator *allocator)
+> +{
+> +	int ret = 0;
+> +
+> +	if (!allocator)
+> +		return -EINVAL;
+> +
+> +	mutex_lock(&ioasid_allocator_lock);
+> +	if (ioasid_allocator) {
+> +		ret = -EBUSY;
+> +		goto exit_unlock;
 > +	}
+> +	ioasid_allocator = allocator;
+> +
+> +exit_unlock:
+> +	mutex_unlock(&ioasid_allocator_lock);
 > +	return ret;
 > +}
-> +EXPORT_SYMBOL_GPL(kvm_arch_crypto_test_masks);
+> +EXPORT_SYMBOL_GPL(ioasid_set_allocator);
+
+Should this fault if there are existing idr's allocated?
+
 > +
->   void kvm_arch_crypto_set_masks(struct kvm *kvm, unsigned long *apm,
->   			       unsigned long *aqm, unsigned long *adm)
->   {
-> diff --git a/drivers/s390/crypto/vfio_ap_drv.c b/drivers/s390/crypto/vfio_ap_drv.c
-> index f340a28c1d65..2a79d27d9730 100644
-> --- a/drivers/s390/crypto/vfio_ap_drv.c
-> +++ b/drivers/s390/crypto/vfio_ap_drv.c
-> @@ -42,12 +42,24 @@ MODULE_DEVICE_TABLE(vfio_ap, ap_queue_ids);
->   
->   static int vfio_ap_queue_dev_probe(struct ap_device *apdev)
->   {
-> -	return 0;
-> +	struct ap_queue *apq = to_ap_queue(&apdev->device);
-> +	unsigned long apid = AP_QID_CARD(apq->qid);
-> +	unsigned long apqi = AP_QID_QUEUE(apq->qid);
-> +
-> +	mutex_lock(&matrix_dev->lock);
-> +	vfio_ap_mdev_probe_queue(apid, apqi);
-> +	mutex_unlock(&matrix_dev->lock);
->   }
->   
->   static void vfio_ap_queue_dev_remove(struct ap_device *apdev)
->   {
-> -	/* Nothing to do yet */
-> +	struct ap_queue *apq = to_ap_queue(&apdev->device);
-> +	unsigned long apid = AP_QID_CARD(apq->qid);
-> +	unsigned long apqi = AP_QID_QUEUE(apq->qid);
-> +
-> +	mutex_lock(&matrix_dev->lock);
-> +	vfio_ap_mdev_remove_queue(apid, apqi);
-> +	mutex_unlock(&matrix_dev->lock);
->   }
->   
->   static void vfio_ap_matrix_dev_release(struct device *dev)
-> diff --git a/drivers/s390/crypto/vfio_ap_ops.c b/drivers/s390/crypto/vfio_ap_ops.c
-> index ade2c150fe6b..8a70707bf870 100644
-> --- a/drivers/s390/crypto/vfio_ap_ops.c
-> +++ b/drivers/s390/crypto/vfio_ap_ops.c
-> @@ -683,8 +683,8 @@ static void vfio_ap_mdev_wait_for_qempty(unsigned long apid, unsigned long apqi)
->   			msleep(20);
->   			break;
->   		default:
-> -			pr_warn("%s: tapq err %02x: 0x%04x may not be empty\n",
-> -				__func__, status.response_code, q->apqn);
-> +			pr_warn("%s: tapq err %02x: %02lx%04lx may not be empty\n",
-> +				__func__, status.response_code, apid, apqi);
->   			return;
->   		}
->   	} while (--retry);
-> @@ -840,3 +840,66 @@ void vfio_ap_mdev_unregister(void)
->   {
->   	mdev_unregister_device(&matrix_dev->device);
->   }
-> +
-> +static struct ap_matrix_mdev *vfio_ap_mdev_find_matrix_mdev(unsigned long apid,
-> +							    unsigned long apqi)
+> +/**
+> + * ioasid_clear_allocator - Free the custom IOASID allocator
+> + *
+> + * REVISIT: So far there is only one custom allocator allowed.
+> + */
+> +void ioasid_clear_allocator(void)
 > +{
-> +	struct ap_matrix_mdev *matrix_mdev;
-> +
-> +	list_for_each_entry(matrix_mdev, &matrix_dev->mdev_list, node) {
-> +		if (test_bit_inv(apid, matrix_mdev->matrix.apm) &&
-> +		    test_bit_inv(apqi, matrix_mdev->matrix.aqm))
-> +			return matrix_mdev;
-> +	}
-> +
-> +	return NULL;
+> +	mutex_lock(&ioasid_allocator_lock);
+> +	ioasid_allocator = NULL;
+> +	mutex_unlock(&ioasid_allocator_lock);
 > +}
+> +EXPORT_SYMBOL_GPL(ioasid_clear_allocator);
 > +
-> +void vfio_ap_mdev_remove_queue(unsigned long apid, unsigned long apqi)
+> +/**
+> + * ioasid_set_data - Set private data for an allocated ioasid
+> + *
+> + * For IOASID that is already allocated, private data can be set
+> + * via this API. Future lookup can be done via ioasid_find.
+> + */
+> +int ioasid_set_data(ioasid_t ioasid, void *data)
 > +{
-> +	struct ap_matrix_mdev *matrix_mdev;
+> +	struct ioasid_data *ioasid_data;
+> +	int ret = 0;
 > +
-> +	matrix_mdev = vfio_ap_mdev_find_matrix_mdev(apid, apqi);
+> +	idr_lock(&ioasid_idr);
+> +	ioasid_data = idr_find(&ioasid_idr, ioasid);
+> +	if (ioasid_data)
+> +		ioasid_data->private = data;
+> +	else
+> +		ret = -ENOENT;
+> +	idr_unlock(&ioasid_idr);
+> +	/* getter may use the private data */
+> +	synchronize_rcu();
 > +
-> +	/*
-> +	 * If the queue is assigned to the mdev device and the mdev device
-> +	 * is in use by a guest
-> +	 */
-> +	if (matrix_mdev && matrix_mdev->kvm) {
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(ioasid_set_data);
+>  
+>  /**
+>   * ioasid_alloc - Allocate an IOASID
+> @@ -32,7 +100,7 @@ static DEFINE_IDR(ioasid_idr);
+>  ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
+>  		      void *private)
+>  {
+> -	int id = -1;
+> +	int id = INVALID_IOASID;
+>  	struct ioasid_data *data;
+>  
+>  	data = kzalloc(sizeof(*data), GFP_KERNEL);
+> @@ -42,13 +110,30 @@ ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
+>  	data->set = set;
+>  	data->private = private;
+>  
+> +	/* Use custom allocator if available, otherwise default to IDR */
+> +	if (ioasid_allocator) {
+
+If this races with ioasid_clear_allocator() ioasid_allocator might be
+set above, but NULL below to generate a segfault.  If this races with
+ioasid_set_allocator() an id can be allocated that the custom allocator
+doesn't track.
+
+> +		mutex_lock(&ioasid_allocator_lock);
+> +		id = ioasid_allocator->alloc(min, max, ioasid_allocator->pdata);
+> +		mutex_unlock(&ioasid_allocator_lock);
+> +		if (id == INVALID_IOASID) {
+> +			pr_err("Failed ASID allocation by custom allocator\n");
+> +			goto exit_free;
+> +		}
 > +		/*
-> +		 * If the queue is plugged into the guest, unplug the adapter
-> +		 * but keep the adapter assigned to the mdev device
+> +		 * Use IDR to manage private data also sanitiy check custom
+> +		 * allocator for duplicates.
 > +		 */
-> +		if (!kvm_arch_crypto_test_masks(matrix_mdev->kvm,
-> +						matrix_mdev->matrix.apm,
-> +						matrix_mdev->matrix.aqm,
-> +						matrix_mdev->matrix.adm)) {
-> +			clear_bit_inv(apid, matrix_mdev->matrix.apm);
-> +			vfio_ap_mdev_update_crycb(matrix_mdev);
-> +			set_bit_inv(apid, matrix_mdev->matrix.apm);
-> +		}
+> +		min = id;
+> +		max = id + 1;
 > +	}
+>  	idr_preload(GFP_KERNEL);
+>  	idr_lock(&ioasid_idr);
+>  	data->id = id = idr_alloc(&ioasid_idr, data, min, max, GFP_ATOMIC);
+>  	idr_unlock(&ioasid_idr);
+>  	idr_preload_end();
+>  
+> -	if (id < 0) {
+> +exit_free:
+> +	if (id < 0 || id == INVALID_IOASID) {
+>  		kfree(data);
+
+What if an ioasid is already allocated before the ioasid_allocator is
+registered?  The .alloc callback above could return an id that
+idr_alloc cannot provide, in which case this cleanup does not call the
+custom allocator's free callback.
+
+>  		return INVALID_IOASID;
+>  	}
+> @@ -60,9 +145,20 @@ EXPORT_SYMBOL_GPL(ioasid_alloc);
+>   * ioasid_free - Free an IOASID
+>   * @ioasid: the ID to remove
+>   */
+> -void ioasid_free(ioasid_t ioasid)
+> +int ioasid_free(ioasid_t ioasid)
+>  {
+>  	struct ioasid_data *ioasid_data;
+> +	int ret = 0;
 > +
-> +	vfio_ap_mdev_reset_queue(apid, apqi);
-> +}
+> +	if (ioasid_allocator) {
+
+Same races as above.
+
+> +		mutex_lock(&ioasid_allocator_lock);
+> +		ret = ioasid_allocator->free(ioasid, ioasid_allocator->pdata);
+> +		mutex_unlock(&ioasid_allocator_lock);
+> +	}
+> +	if (ret) {
+> +		pr_err("ioasid %d custom allocator free failed\n", ioasid);
+> +		return ret;
+> +	}
+>  
+>  	idr_lock(&ioasid_idr);
+>  	ioasid_data = idr_remove(&ioasid_idr, ioasid);
+> @@ -70,6 +166,8 @@ void ioasid_free(ioasid_t ioasid)
+>  
+>  	if (ioasid_data)
+>  		kfree_rcu(ioasid_data, rcu);
 > +
-> +void vfio_ap_mdev_probe_queue(unsigned long apid, unsigned long apqi)
+> +	return ret;
+>  }
+>  EXPORT_SYMBOL_GPL(ioasid_free);
+>  
+> @@ -84,7 +182,8 @@ EXPORT_SYMBOL_GPL(ioasid_free);
+>   * if @getter returns false, then the object is invalid and NULL is returned.
+>   *
+>   * If the IOASID has been allocated for this set, return the private pointer
+> - * passed to ioasid_alloc. Otherwise return NULL.
+> + * passed to ioasid_alloc. Private data can be NULL if not set. Return an error
+> + * if the IOASID is not found or not belong to the set.
+>   */
+>  void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
+>  		  bool (*getter)(void *))
+> @@ -94,11 +193,20 @@ void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
+>  
+>  	rcu_read_lock();
+>  	ioasid_data = idr_find(&ioasid_idr, ioasid);
+> -	if (ioasid_data && ioasid_data->set == set) {
+> -		priv = ioasid_data->private;
+> -		if (getter && !getter(priv))
+> -			priv = NULL;
+> +	if (!ioasid_data) {
+> +		priv = ERR_PTR(-ENOENT);
+> +		goto unlock;
+> +	}
+> +	if (set && ioasid_data->set != set) {
+> +		/* data found but does not belong to the set */
+> +		priv = ERR_PTR(-EACCES);
+> +		goto unlock;
+>  	}
+> +	/* Now IOASID and its set is verified, we can return the private data */
+> +	priv = ioasid_data->private;
+> +	if (getter && !getter(priv))
+> +		priv = NULL;
+> +unlock:
+>  	rcu_read_unlock();
+>  
+>  	return priv;
+> diff --git a/include/linux/ioasid.h b/include/linux/ioasid.h
+> index 6f3655a..64994e7 100644
+> --- a/include/linux/ioasid.h
+> +++ b/include/linux/ioasid.h
+> @@ -5,20 +5,31 @@
+>  #define INVALID_IOASID ((ioasid_t)-1)
+>  typedef unsigned int ioasid_t;
+>  typedef int (*ioasid_iter_t)(ioasid_t ioasid, void *private, void *data);
+> +typedef ioasid_t (*ioasid_alloc_fn_t)(ioasid_t min, ioasid_t max, void *data);
+> +typedef int (*ioasid_free_fn_t)(ioasid_t ioasid, void *data);
+>  
+>  struct ioasid_set {
+>  	int dummy;
+>  };
+>  
+> +struct ioasid_allocator {
+> +	ioasid_alloc_fn_t alloc;
+> +	ioasid_free_fn_t free;
+> +	void *pdata;
+> +};
+> +
+>  #define DECLARE_IOASID_SET(name) struct ioasid_set name = { 0 }
+>  
+>  #ifdef CONFIG_IOASID
+>  ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min, ioasid_t max,
+>  		      void *private);
+> -void ioasid_free(ioasid_t ioasid);
+> +int ioasid_free(ioasid_t ioasid);
+>  
+>  void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
+>  		  bool (*getter)(void *));
+> +int ioasid_set_allocator(struct ioasid_allocator *allocator);
+> +void ioasid_clear_allocator(void);
+> +int ioasid_set_data(ioasid_t ioasid, void *data);
+>  
+>  #else /* !CONFIG_IOASID */
+>  static inline ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min,
+> @@ -36,5 +47,20 @@ static inline void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
+>  {
+>  	return NULL;
+>  }
+> +
+> +static inline int ioasid_set_allocator(struct ioasid_allocator *allocator)
 > +{
-> +	struct ap_matrix_mdev *matrix_mdev;
-> +
-> +	matrix_mdev = vfio_ap_mdev_find_matrix_mdev(apid, apqi);
-> +
-> +	/*
-> +	 * If the queue is assigned to the mdev device and the mdev device
-> +	 * is in use by a guest
-> +	 */
-> +	if (matrix_mdev && matrix_mdev->kvm) {
-> +		/* If the queue is not plugged into the guest, plug it in */
-> +		if (!kvm_arch_crypto_test_masks(matrix_mdev->kvm,
-> +						matrix_mdev->matrix.apm,
-> +						matrix_mdev->matrix.aqm,
-> +						matrix_mdev->matrix.adm)) {
-> +			vfio_ap_mdev_update_crycb(matrix_mdev);
-> +		}
-> +	}
+> +	return -EINVAL;
 > +}
-> diff --git a/drivers/s390/crypto/vfio_ap_private.h b/drivers/s390/crypto/vfio_ap_private.h
-> index 76b7f98e47e9..acdd5bfabaaf 100644
-> --- a/drivers/s390/crypto/vfio_ap_private.h
-> +++ b/drivers/s390/crypto/vfio_ap_private.h
-> @@ -85,5 +85,7 @@ struct ap_matrix_mdev {
->   
->   extern int vfio_ap_mdev_register(void);
->   extern void vfio_ap_mdev_unregister(void);
-> +void vfio_ap_mdev_remove_queue(unsigned long apid, unsigned long apqi);
-> +void vfio_ap_mdev_probe_queue(unsigned long apid, unsigned long apqi);
->   
->   #endif /* _VFIO_AP_PRIVATE_H_ */
-> 
+> +
+> +static inline void ioasid_clear_allocator(void)
+> +{
+> +}
+> +
+> +static inline int ioasid_set_data(ioasid_t ioasid, void *data)
+> +{
+> +	return -EINVAL;
+> +}
+> +
+>  #endif /* CONFIG_IOASID */
+>  #endif /* __LINUX_IOASID_H */
 
