@@ -2,88 +2,66 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70DFCC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:53:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F1E7BC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:57:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3ACEE2077C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:53:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555332819;
-	bh=tUOUBKN6OyTeIm+VF8rIXekX6tJ+PkjDIfokljGfrpE=;
-	h=From:To:Cc:Subject:Date:List-ID:From;
-	b=A4ddktAgSLuaK5lt3+SVKNVo8qbb36XTARktLTA65CPTw9BtKeDlxRBycg6phQGVH
-	 lcWcPDbVCkYrU3XQ9tK707ws8ZmQ3yWcMmwgMQO7HGvEGiuNYdBlLprAKNhuquItfM
-	 pWxO6B+iKwu+GrxXb68TnPXPpIEdjGg5JZpySEwI=
+	by mail.kernel.org (Postfix) with ESMTP id CA63820880
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:57:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727474AbfDOMxh (ORCPT
+        id S1727415AbfDOM5G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 08:53:37 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46472 "EHLO mx1.redhat.com"
+        Mon, 15 Apr 2019 08:57:06 -0400
+Received: from mga06.intel.com ([134.134.136.31]:49492 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727117AbfDOMxh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 08:53:37 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 084308764F;
-        Mon, 15 Apr 2019 12:53:37 +0000 (UTC)
-Received: from krava.brq.redhat.com (unknown [10.43.17.48])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 1E04C19C56;
-        Mon, 15 Apr 2019 12:53:33 +0000 (UTC)
-From:   Jiri Olsa <jolsa@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Bastian Beischer <bastian.beischer@rwth-aachen.de>
-Subject: [PATCH perf/urgent] perf top: Always sample time
-Date:   Mon, 15 Apr 2019 14:53:33 +0200
-Message-Id: <20190415125333.27160-1-jolsa@kernel.org>
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Mon, 15 Apr 2019 12:53:37 +0000 (UTC)
+        id S1727326AbfDOM5G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 08:57:06 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga003.fm.intel.com ([10.253.24.29])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Apr 2019 05:57:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,353,1549958400"; 
+   d="scan'208";a="149552679"
+Received: from ddimarco-mobl1.amr.corp.intel.com (HELO [10.252.206.7]) ([10.252.206.7])
+  by FMSMGA003.fm.intel.com with ESMTP; 15 Apr 2019 05:57:04 -0700
+Subject: Re: [alsa-devel] [PATCH v3 0/5] soundwire: code cleanup
+To:     Vinod Koul <vkoul@kernel.org>
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org,
+        tiwai@suse.de, broonie@kernel.org, gregkh@linuxfoundation.org,
+        liam.r.girdwood@linux.intel.com, jank@cadence.com, joe@perches.com,
+        srinivas.kandagatla@linaro.org
+References: <20190411031701.5926-1-pierre-louis.bossart@linux.intel.com>
+ <20190414100417.GH28103@vkoul-mobl>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <df6040ba-ab69-ae64-a27f-236e8ac95c14@linux.intel.com>
+Date:   Mon, 15 Apr 2019 07:57:03 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190414100417.GH28103@vkoul-mobl>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Bastian reported broken perf top -p PID command, it won't
-display any data.
 
-The problem is that for -p option we monitor single thread,
-so we don't enable time in samples, because it's not needed.
 
-However since commit 16c66bc167cc we use ordered queues to
-stash data plus later commits added logic for dropping samples
-in case there's big load and we don't keep up. All this needs
-timestamp for sample. Enabling it unconditionally for perf top.
+On 4/14/19 5:04 AM, Vinod Koul wrote:
+> On 10-04-19, 22:16, Pierre-Louis Bossart wrote:
+>> SoundWire support will be provided in Linux with the Sound Open
+>> Firmware (SOF) on Intel platforms. Before we start adding the missing
+>> pieces, there are a number of warnings and style issues reported by
+>> checkpatch, cppcheck and Coccinelle that need to be cleaned-up.
+> 
+> Applied, 1, 3 and 4 (5 looked good but didnt apply)
 
-Fixes: 16c66bc167cc ("perf top: Add processing thread")
-Reported-by: Bastian Beischer <bastian.beischer@rwth-aachen.de>
-Link: http://lkml.kernel.org/n/tip-zhn7jg8hqpl9547g7vqjini7@git.kernel.org
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- tools/perf/builtin-top.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/tools/perf/builtin-top.c b/tools/perf/builtin-top.c
-index 1999d6533d12..fbbb0da43abb 100644
---- a/tools/perf/builtin-top.c
-+++ b/tools/perf/builtin-top.c
-@@ -1377,6 +1377,7 @@ int cmd_top(int argc, const char **argv)
- 			 * */
- 			.overwrite	= 0,
- 			.sample_time	= true,
-+			.sample_time_set = true,
- 		},
- 		.max_stack	     = sysctl__max_stack(),
- 		.annotation_opts     = annotation__default_options,
--- 
-2.17.2
-
+this applies on top of Mark Brown's for-next tree. This should be the 
+reference really for SoundWire work, if we start having another tree 
+with deltas it's really counter productive. I already have dependencies 
+on acpi...
