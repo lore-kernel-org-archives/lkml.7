@@ -3,28 +3,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F1DC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:09:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC21BC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:09:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5BC3B20818
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:09:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89EF520880
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:09:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727730AbfDOPJX (ORCPT
+        id S1727678AbfDOPJS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 11:09:23 -0400
-Received: from relay6-d.mail.gandi.net ([217.70.183.198]:53913 "EHLO
+        Mon, 15 Apr 2019 11:09:18 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:57055 "EHLO
         relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727659AbfDOPJW (ORCPT
+        with ESMTP id S1727608AbfDOPJP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 11:09:22 -0400
+        Mon, 15 Apr 2019 11:09:15 -0400
 X-Originating-IP: 109.212.207.226
 Received: from localhost (alyon-652-1-176-226.w109-212.abo.wanadoo.fr [109.212.207.226])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id DC499C0019;
-        Mon, 15 Apr 2019 15:09:18 +0000 (UTC)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id E8C56C0007;
+        Mon, 15 Apr 2019 15:09:11 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     Daniel Lezcano <daniel.lezcano@linaro.org>
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
@@ -33,9 +33,9 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
         Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v2 6/9] clocksource/drivers/timer-atmel-pit: rework Kconfig option
-Date:   Mon, 15 Apr 2019 17:08:53 +0200
-Message-Id: <20190415150856.9384-7-alexandre.belloni@bootlin.com>
+Subject: [PATCH v2 2/9] clocksource/drivers/tcb_clksrc: stop depending on atmel_tclib
+Date:   Mon, 15 Apr 2019 17:08:49 +0200
+Message-Id: <20190415150856.9384-3-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190415150856.9384-1-alexandre.belloni@bootlin.com>
 References: <20190415150856.9384-1-alexandre.belloni@bootlin.com>
@@ -46,31 +46,255 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow building the PIT driver when COMPILE_TEST is enabled. Also remove its
-default value so it can be disabled.
+atmel_tclib is probed too late in the boot process to be able to use the
+TCB as the boot clocksource. This is an issue for SoCs without the PIT
+(sams70, samv70 and samv71 families) as they simply currently can't boot.
+
+Get rid of the atmel_tclib dependency and probe everything on our own using
+the correct device tree binding.
+
+This also allows getting rid of ATMEL_TCB_CLKSRC_BLOCK and makes the driver
+a bit more flexible as the TCB is not hardcoded in the kernel anymore.
 
 Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 ---
- drivers/clocksource/Kconfig | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ drivers/clocksource/tcb_clksrc.c | 108 +++++++++++++++++++------------
+ drivers/misc/Kconfig             |  14 +---
+ 2 files changed, 70 insertions(+), 52 deletions(-)
 
-diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-index e38ef4906e30..c73736f87600 100644
---- a/drivers/clocksource/Kconfig
-+++ b/drivers/clocksource/Kconfig
-@@ -399,8 +399,11 @@ config ARMV7M_SYSTICK
- 	  This options enables support for the ARMv7M system timer unit
+diff --git a/drivers/clocksource/tcb_clksrc.c b/drivers/clocksource/tcb_clksrc.c
+index 138a12090149..bf68504da94a 100644
+--- a/drivers/clocksource/tcb_clksrc.c
++++ b/drivers/clocksource/tcb_clksrc.c
+@@ -9,7 +9,8 @@
+ #include <linux/err.h>
+ #include <linux/ioport.h>
+ #include <linux/io.h>
+-#include <linux/platform_device.h>
++#include <linux/of_address.h>
++#include <linux/of_irq.h>
+ #include <linux/syscore_ops.h>
+ #include <soc/at91/atmel_tcb.h>
  
- config ATMEL_PIT
-+	bool "Atmel PIT support" if COMPILE_TEST
-+	depends on HAS_IOMEM
- 	select TIMER_OF if OF
--	def_bool SOC_AT91SAM9 || SOC_SAMA5
-+	help
-+	  Support for the Periodic Interval Timer found on Atmel SoCs.
+@@ -28,13 +29,6 @@
+  *     source, used in either periodic or oneshot mode.  This runs
+  *     at 32 KiHZ, and can handle delays of up to two seconds.
+  *
+- * A boot clocksource and clockevent source are also currently needed,
+- * unless the relevant platforms (ARM/AT91, AVR32/AT32) are changed so
+- * this code can be used when init_timers() is called, well before most
+- * devices are set up.  (Some low end AT91 parts, which can run uClinux,
+- * have only the timers in one TC block... they currently don't support
+- * the tclib code, because of that initialization issue.)
+- *
+  * REVISIT behavior during system suspend states... we should disable
+  * all clocks and save the power.  Easily done for clockevent devices,
+  * but clocksources won't necessarily get the needed notifications.
+@@ -112,7 +106,6 @@ void tc_clksrc_resume(struct clocksource *cs)
+ }
  
- config ATMEL_ST
- 	bool "Atmel ST timer support" if COMPILE_TEST
+ static struct clocksource clksrc = {
+-	.name           = "tcb_clksrc",
+ 	.rating         = 200,
+ 	.read           = tc_get_cycles,
+ 	.mask           = CLOCKSOURCE_MASK(32),
+@@ -214,7 +207,6 @@ static int tc_next_event(unsigned long delta, struct clock_event_device *d)
+ 
+ static struct tc_clkevt_device clkevt = {
+ 	.clkevt	= {
+-		.name			= "tc_clkevt",
+ 		.features		= CLOCK_EVT_FEAT_PERIODIC |
+ 					  CLOCK_EVT_FEAT_ONESHOT,
+ 		/* Should be lower than at91rm9200's system timer */
+@@ -330,39 +322,73 @@ static void __init tcb_setup_single_chan(struct atmel_tc *tc, int mck_divisor_id
+ 	writel(ATMEL_TC_SYNC, tcaddr + ATMEL_TC_BCR);
+ }
+ 
+-static int __init tcb_clksrc_init(void)
+-{
+-	static char bootinfo[] __initdata
+-		= KERN_DEBUG "%s: tc%d at %d.%03d MHz\n";
++static const u8 atmel_tcb_divisors[5] = { 2, 8, 32, 128, 0, };
++
++static const struct of_device_id atmel_tcb_of_match[] = {
++	{ .compatible = "atmel,at91rm9200-tcb", .data = (void *)16, },
++	{ .compatible = "atmel,at91sam9x5-tcb", .data = (void *)32, },
++	{ /* sentinel */ }
++};
+ 
+-	struct platform_device *pdev;
+-	struct atmel_tc *tc;
++static int __init tcb_clksrc_init(struct device_node *node)
++{
++	struct atmel_tc tc;
+ 	struct clk *t0_clk;
++	const struct of_device_id *match;
+ 	u32 rate, divided_rate = 0;
+ 	int best_divisor_idx = -1;
+ 	int clk32k_divisor_idx = -1;
++	int bits;
+ 	int i;
+ 	int ret;
+ 
+-	tc = atmel_tc_alloc(CONFIG_ATMEL_TCB_CLKSRC_BLOCK);
+-	if (!tc) {
+-		pr_debug("can't alloc TC for clocksource\n");
+-		return -ENODEV;
++	/* Protect against multiple calls */
++	if (tcaddr)
++		return 0;
++
++	tc.regs = of_iomap(node->parent, 0);
++	if (!tc.regs)
++		return -ENXIO;
++
++	t0_clk = of_clk_get_by_name(node->parent, "t0_clk");
++	if (IS_ERR(t0_clk))
++		return PTR_ERR(t0_clk);
++
++	tc.slow_clk = of_clk_get_by_name(node->parent, "slow_clk");
++	if (IS_ERR(tc.slow_clk))
++		return PTR_ERR(tc.slow_clk);
++
++	tc.clk[0] = t0_clk;
++	tc.clk[1] = of_clk_get_by_name(node->parent, "t1_clk");
++	if (IS_ERR(tc.clk[1]))
++		tc.clk[1] = t0_clk;
++	tc.clk[2] = of_clk_get_by_name(node->parent, "t2_clk");
++	if (IS_ERR(tc.clk[2]))
++		tc.clk[2] = t0_clk;
++
++	tc.irq[2] = of_irq_get(node->parent, 2);
++	if (tc.irq[2] <= 0) {
++		tc.irq[2] = of_irq_get(node->parent, 0);
++		if (tc.irq[2] <= 0)
++			return -EINVAL;
+ 	}
+-	tcaddr = tc->regs;
+-	pdev = tc->pdev;
+ 
+-	t0_clk = tc->clk[0];
++	match = of_match_node(atmel_tcb_of_match, node->parent);
++	bits = (uintptr_t)match->data;
++
++	for (i = 0; i < ARRAY_SIZE(tc.irq); i++)
++		writel(ATMEL_TC_ALL_IRQ, tc.regs + ATMEL_TC_REG(i, IDR));
++
+ 	ret = clk_prepare_enable(t0_clk);
+ 	if (ret) {
+ 		pr_debug("can't enable T0 clk\n");
+-		goto err_free_tc;
++		return ret;
+ 	}
+ 
+ 	/* How fast will we be counting?  Pick something over 5 MHz.  */
+ 	rate = (u32) clk_get_rate(t0_clk);
+-	for (i = 0; i < 5; i++) {
+-		unsigned divisor = atmel_tc_divisors[i];
++	for (i = 0; i < ARRAY_SIZE(atmel_tcb_divisors); i++) {
++		unsigned divisor = atmel_tcb_divisors[i];
+ 		unsigned tmp;
+ 
+ 		/* remember 32 KiHz clock for later */
+@@ -381,27 +407,29 @@ static int __init tcb_clksrc_init(void)
+ 		best_divisor_idx = i;
+ 	}
+ 
+-
+-	printk(bootinfo, clksrc.name, CONFIG_ATMEL_TCB_CLKSRC_BLOCK,
+-			divided_rate / 1000000,
++	clksrc.name = kbasename(node->parent->full_name);
++	clkevt.clkevt.name = kbasename(node->parent->full_name);
++	pr_debug("%s at %d.%03d MHz\n", clksrc.name, divided_rate / 1000000,
+ 			((divided_rate % 1000000) + 500) / 1000);
+ 
+-	if (tc->tcb_config && tc->tcb_config->counter_width == 32) {
++	tcaddr = tc.regs;
++
++	if (bits == 32) {
+ 		/* use apropriate function to read 32 bit counter */
+ 		clksrc.read = tc_get_cycles32;
+ 		/* setup ony channel 0 */
+-		tcb_setup_single_chan(tc, best_divisor_idx);
++		tcb_setup_single_chan(&tc, best_divisor_idx);
+ 	} else {
+-		/* tclib will give us three clocks no matter what the
++		/* we have three clocks no matter what the
+ 		 * underlying platform supports.
+ 		 */
+-		ret = clk_prepare_enable(tc->clk[1]);
++		ret = clk_prepare_enable(tc.clk[1]);
+ 		if (ret) {
+ 			pr_debug("can't enable T1 clk\n");
+ 			goto err_disable_t0;
+ 		}
+ 		/* setup both channel 0 & 1 */
+-		tcb_setup_dual_chan(tc, best_divisor_idx);
++		tcb_setup_dual_chan(&tc, best_divisor_idx);
+ 	}
+ 
+ 	/* and away we go! */
+@@ -410,7 +438,7 @@ static int __init tcb_clksrc_init(void)
+ 		goto err_disable_t1;
+ 
+ 	/* channel 2:  periodic and oneshot timer support */
+-	ret = setup_clkevents(tc, clk32k_divisor_idx);
++	ret = setup_clkevents(&tc, clk32k_divisor_idx);
+ 	if (ret)
+ 		goto err_unregister_clksrc;
+ 
+@@ -420,14 +448,14 @@ static int __init tcb_clksrc_init(void)
+ 	clocksource_unregister(&clksrc);
+ 
+ err_disable_t1:
+-	if (!tc->tcb_config || tc->tcb_config->counter_width != 32)
+-		clk_disable_unprepare(tc->clk[1]);
++	if (bits != 32)
++		clk_disable_unprepare(tc.clk[1]);
+ 
+ err_disable_t0:
+ 	clk_disable_unprepare(t0_clk);
+ 
+-err_free_tc:
+-	atmel_tc_free(tc);
++	tcaddr = NULL;
++
+ 	return ret;
+ }
+-arch_initcall(tcb_clksrc_init);
++TIMER_OF_DECLARE(atmel_tcb_clksrc, "atmel,tcb-timer", tcb_clksrc_init);
+diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
+index 42ab8ec92a04..268a01d3d6f3 100644
+--- a/drivers/misc/Kconfig
++++ b/drivers/misc/Kconfig
+@@ -61,7 +61,8 @@ config ATMEL_TCLIB
+ 
+ config ATMEL_TCB_CLKSRC
+ 	bool "TC Block Clocksource"
+-	depends on ATMEL_TCLIB
++	depends on ARCH_AT91
++	select TIMER_OF if OF
+ 	default y
+ 	help
+ 	  Select this to get a high precision clocksource based on a
+@@ -72,17 +73,6 @@ config ATMEL_TCB_CLKSRC
+ 	  may be used as a clock event device supporting oneshot mode
+ 	  (delays of up to two seconds) based on the 32 KiHz clock.
+ 
+-config ATMEL_TCB_CLKSRC_BLOCK
+-	int
+-	depends on ATMEL_TCB_CLKSRC
+-	default 0
+-	range 0 1
+-	help
+-	  Some chips provide more than one TC block, so you have the
+-	  choice of which one to use for the clock framework.  The other
+-	  TC can be used for other purposes, such as PWM generation and
+-	  interval timing.
+-
+ config DUMMY_IRQ
+ 	tristate "Dummy IRQ handler"
+ 	default n
 -- 
 2.20.1
 
