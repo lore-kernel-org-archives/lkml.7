@@ -2,92 +2,115 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 044E4C10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:09:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A03A6C10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:10:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D19F420818
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:09:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7007820880
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:10:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nexedi.com header.i=kirr@nexedi.com header.b="kgiPTLqC";
+	dkim=pass (1024-bit key) header.d=mandrillapp.com header.i=@mandrillapp.com header.b="BxwnmMa6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727795AbfDOPJw (ORCPT
+        id S1727805AbfDOPKG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 11:09:52 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:47357 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727648AbfDOPJS (ORCPT
+        Mon, 15 Apr 2019 11:10:06 -0400
+Received: from mail14.wdc04.mandrillapp.com ([205.201.139.14]:19541 "EHLO
+        mail14.wdc04.mandrillapp.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727386AbfDOPKG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 11:09:18 -0400
-X-Originating-IP: 109.212.207.226
-Received: from localhost (alyon-652-1-176-226.w109-212.abo.wanadoo.fr [109.212.207.226])
-        (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 745C3FF804;
-        Mon, 15 Apr 2019 15:09:15 +0000 (UTC)
-From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>
-Cc:     Thomas Gleixner <tglx@linutronix.de>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexander Dahl <ada@thorsis.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v2 4/9] ARM: at91: Implement clocksource selection
-Date:   Mon, 15 Apr 2019 17:08:51 +0200
-Message-Id: <20190415150856.9384-5-alexandre.belloni@bootlin.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190415150856.9384-1-alexandre.belloni@bootlin.com>
-References: <20190415150856.9384-1-alexandre.belloni@bootlin.com>
+        Mon, 15 Apr 2019 11:10:06 -0400
+X-Greylist: delayed 902 seconds by postgrey-1.27 at vger.kernel.org; Mon, 15 Apr 2019 11:10:05 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; s=mandrill; d=nexedi.com;
+ h=From:Subject:To:Cc:Message-Id:References:In-Reply-To:Date:MIME-Version:Content-Type:Content-Transfer-Encoding; i=kirr@nexedi.com;
+ bh=o+R+7V6FYI76MGf1Yo3KgDdQ+TCerityJJLqd48cM54=;
+ b=kgiPTLqC2FOX6hS3mxrPXYwnEG7obABlqMJmNtRdvksQMoZOWzVwTRv1B9bF9kcWr4nmicqXUIHf
+   W3qJechCeQi5Jl9OdEJuNExR5kfbvFxXqS3EGJ1W5LhrtDTp+AUGy9mBXaNthSWy0wul0mn7R1dE
+   ne1Funt11jEKj3ScRPI=
+Received: from pmta08.mandrill.prod.suw01.rsglab.com (127.0.0.1) by mail14.wdc04.mandrillapp.com id hmifcq1jvmg7 for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 14:55:03 +0000 (envelope-from <bounce-md_31050260.5cb49b47.v1-9dcccbe053fc416ea8af72280536ffea@mandrillapp.com>)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=mandrillapp.com; 
+ i=@mandrillapp.com; q=dns/txt; s=mandrill; t=1555340103; h=From : 
+ Subject : To : Cc : Message-Id : References : In-Reply-To : Date : 
+ MIME-Version : Content-Type : Content-Transfer-Encoding : From : 
+ Subject : Date : X-Mandrill-User : List-Unsubscribe; 
+ bh=o+R+7V6FYI76MGf1Yo3KgDdQ+TCerityJJLqd48cM54=; 
+ b=BxwnmMa6a23479Z7LpMFqIyo27Y6nZsQP3+EqVC7KuzgxZkOeoya6e5OTic2/Kn3CCnqaF
+ NZA2bMpYwy9WetevxYMieDUc+lB1e2fNR68dNPNi3/HCQthWnHGrc1ELWo3o/U0QPaxMqQd6
+ PL7A06iR8SIS2p53kktOZKgyne5Eg=
+From:   Kirill Smelkov <kirr@nexedi.com>
+Subject: Re: [PATCH] pci/switchtec: fix stream_open.cocci warnings (fwd)
+Received: from [87.98.221.171] by mandrillapp.com id 9dcccbe053fc416ea8af72280536ffea; Mon, 15 Apr 2019 14:55:03 +0000
+To:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Cc:     Julia Lawall <julia.lawall@lip6.fr>, <kbuild-all@01.org>,
+        Kurt Schwemmer <kurt.schwemmer@microsemi.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Bjorn Helgaas <helgaas@kernel.org>,
+        <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Message-Id: <20190415145456.GA15280@deco.navytux.spb.ru>
+References: <alpine.DEB.2.21.1904131849350.2536@hadrien> <20190413170056.GA11293@deco.navytux.spb.ru> <20190415143857.kg2dbg3zxsxdktsi@linutronix.de>
+In-Reply-To: <20190415143857.kg2dbg3zxsxdktsi@linutronix.de>
+X-Report-Abuse: Please forward a copy of this message, including all headers, to abuse@mandrill.com
+X-Report-Abuse: You can also report abuse here: http://mandrillapp.com/contact/abuse?id=31050260.9dcccbe053fc416ea8af72280536ffea
+X-Mandrill-User: md_31050260
+Date:   Mon, 15 Apr 2019 14:55:03 +0000
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow selecting and unselecting the PIT clocksource driver so it doesn't
-have to be compiled when unused.
+Hi Sebastian,
 
-Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
----
- arch/arm/mach-at91/Kconfig | 23 +++++++++++++++++++++++
- 1 file changed, 23 insertions(+)
+On Mon, Apr 15, 2019 at 04:38:57PM +0200, Sebastian Andrzej Siewior wrote:
+> On 2019-04-13 17:00:59 [+0000], Kirill Smelkov wrote:
+> > Hello everyone,
+> Hi,
+> 
+> > On Sat, Apr 13, 2019 at 06:50:57PM +0200, Julia Lawall wrote:
+> > > Hello,
+> > > 
+> > > Kirill will explain about this issue.
+> > 
+> > pci/switchtec switching to stream_open is already queued to merge
+> > window and it was acked by Logan Gunthorpe:
+> > 
+> >         https://lore.kernel.org/lkml/CAHk-=wgqgN5j1ZWnyVLqqoyU=CCWTYOko3MDyU8L_5e21KvHAg@mail.gmail.com/
+> >         https://lab.nexedi.com/kirr/linux/commit/edaeb4101860
+> > 
+> > ( there are too many Cc's in that patch and email with it and reply-all to
+> >   it did not get into mailing list probably due to being considered as spam )
+> > 
+> > stream_open.cocci was issuing only warning for pci/switchtec, but after
+> > 8a29a3bae2a2 ("pci/switchtec: Don't use completion's wait queue") they
+> > started to use wait_even_* inside read method and, since
+> > stream_open.cocci considers wait_event_* as blocking the warning became
+> > error. Previously it was completions there, but I added support for wait
+> > events only for simplicity.
+> 
+> why is wait_event_interruptible() treated differently compared to
+> wait_for_completion_interruptible()?
 
-diff --git a/arch/arm/mach-at91/Kconfig b/arch/arm/mach-at91/Kconfig
-index 903f23c309df..da1d97a06c53 100644
---- a/arch/arm/mach-at91/Kconfig
-+++ b/arch/arm/mach-at91/Kconfig
-@@ -107,6 +107,29 @@ config SOC_AT91SAM9
- 	    AT91SAM9X35
- 	    AT91SAM9XE
- 
-+comment "Clocksource driver selection"
-+
-+config ATMEL_CLOCKSOURCE_PIT
-+	bool "Periodic Interval Timer (PIT) support"
-+	depends on SOC_AT91SAM9 || SOC_SAMA5
-+	default SOC_AT91SAM9 || SOC_SAMA5
-+	select ATMEL_PIT
-+	help
-+	  Select this to get a clocksource based on the Atmel Periodic Interval
-+	  Timer. It has a relatively low resolution and the TC Block clocksource
-+	  should be preferred.
-+
-+config ATMEL_CLOCKSOURCE_TCB
-+	bool "Timer Counter Blocks (TCB) support"
-+	default SOC_AT91RM9200 || SOC_AT91SAM9 || SOC_SAMA5
-+	select ATMEL_TCB_CLKSRC
-+	help
-+	  Select this to get a high precision clocksource based on a
-+	  TC block with a 5+ MHz base clock rate.
-+	  On platforms with 16-bit counters, two timer channels are combined
-+	  to make a single 32-bit timer.
-+	  It can also be used as a clock event device supporting oneshot mode.
-+
- config HAVE_AT91_UTMI
- 	bool
- 
--- 
-2.20.1
+No particular reason. I just taught stream_open.cocci to consider
+only "wait_event_*" as blocking:
 
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/scripts/coccinelle/api/stream_open.cocci?h=v5.1-rc5#n35
+
+based on original /proc/xen/xenbus deadlock:
+
+https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/tree/drivers/xen/xenbus/xenbus_dev_frontend.c?h=v5.1-rc5#n135
+https://git.kernel.org/linus/581d21a2d02a
+
+We can extend "a function that blocks" rule to cover other kernel
+primitives.
+
+For the reference: the deadlock scenario is described in
+
+https://git.kernel.org/linus/10dce8af3422
+
+Kirill
