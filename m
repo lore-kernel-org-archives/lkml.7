@@ -2,90 +2,147 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3737CC10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:05:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81152C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:06:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 064DD20880
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:05:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49DD420880
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:06:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=megous.com header.i=@megous.com header.b="VfVGaH3s"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727603AbfDOPFc (ORCPT
+        id S1727624AbfDOPGZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 11:05:32 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:50202 "EHLO mx1.redhat.com"
+        Mon, 15 Apr 2019 11:06:25 -0400
+Received: from vps.xff.cz ([195.181.215.36]:40094 "EHLO vps.xff.cz"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726147AbfDOPFb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 11:05:31 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1DC1788AAE;
-        Mon, 15 Apr 2019 15:05:27 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.38])
-        by smtp.corp.redhat.com (Postfix) with SMTP id D1F9D19C57;
-        Mon, 15 Apr 2019 15:05:21 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Mon, 15 Apr 2019 17:05:26 +0200 (CEST)
-Date:   Mon, 15 Apr 2019 17:05:21 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     Casey Schaufler <casey@schaufler-ca.com>,
-        "chengjian (D)" <cj.chengjian@huawei.com>, neilb@suse.com,
-        Anna.Schumaker@netapp.com, keescook@chromium.org,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        viro@zeniv.linux.org.uk,
-        "Xiexiuqi (Xie XiuQi)" <xiexiuqi@huawei.com>,
-        Li Bin <huawei.libin@huawei.com>, yanaijie@huawei.com,
-        peterz@infradead.org, mingo@redhat.com,
-        Linux Security Module list 
-        <linux-security-module@vger.kernel.org>, selinux@vger.kernel.org
-Subject: Re: kernel BUG at kernel/cred.c:434!
-Message-ID: <20190415150520.GA13257@redhat.com>
-References: <6e4428ca-3da1-a033-08f7-a51e57503989@huawei.com>
- <b1575d02-fd88-65e6-2f16-70a96985087e@schaufler-ca.com>
- <20190415134331.GC22204@redhat.com>
- <CAHC9VhQ7ihqU0K57ctwzoHq0t0QVJPKiQQZn5TXB1FUqsvOSEQ@mail.gmail.com>
+        id S1726298AbfDOPGZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 11:06:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=megous.com; s=mail;
+        t=1555340782; bh=HFvy0q2gwTmM4xAW9w+gUodMDWGuSfLXWAUViBSn5lA=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VfVGaH3s3USCap1XZmFFKt0pLc2cytBS64Fyak2t/dji2xK9NEgtoMW0h/bHZUhmE
+         /RRVi+dRU515x6RJ3pc606jDqpP5VShBOtV17IWz/HChT+ch4dl0BGVESs7olT7oC0
+         mmXf/5ymg85UtKLs3q5f9PAl5a+3IUbvy3msjqUE=
+Date:   Mon, 15 Apr 2019 17:06:21 +0200
+From:   =?utf-8?Q?Ond=C5=99ej?= Jirman <megous@megous.com>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Icenowy Zheng <icenowy@aosc.io>
+Subject: Re: [PATCH 1/4] dt-bindings: sound: sun4i-spdif: Add Allwinner H6
+ compatible
+Message-ID: <20190415150621.rbuhtoqkdnwgze6s@core.my.home>
+Mail-Followup-To: =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        devicetree <devicetree@vger.kernel.org>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        linux-sunxi <linux-sunxi@googlegroups.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Chen-Yu Tsai <wens@csie.org>, Rob Herring <robh+dt@kernel.org>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        Icenowy Zheng <icenowy@aosc.io>
+References: <20190411214422.2267-1-peron.clem@gmail.com>
+ <20190411214422.2267-2-peron.clem@gmail.com>
+ <20190415080443.frubh4ln4agrdsfe@flea>
+ <CAJiuCcc0Q8rh8u_30gKi8o07k0+e35UR99ZBHtCjx-DPkJEtdw@mail.gmail.com>
+ <20190415081816.2pay4pioc5d4mojf@flea>
+ <CAJiuCcedNF0xYSa_+Zfwj-vqYsbjfEpRqisOhEvuitYALMsyjw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <CAHC9VhQ7ihqU0K57ctwzoHq0t0QVJPKiQQZn5TXB1FUqsvOSEQ@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Mon, 15 Apr 2019 15:05:31 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAJiuCcedNF0xYSa_+Zfwj-vqYsbjfEpRqisOhEvuitYALMsyjw@mail.gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/15, Paul Moore wrote:
+Hi Clement,
+
+On Mon, Apr 15, 2019 at 10:30:38AM +0200, Clément Péron wrote:
+> On Mon, 15 Apr 2019 at 10:18, Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> >
+> > On Mon, Apr 15, 2019 at 10:09:11AM +0200, Clément Péron wrote:
+> > > Hi,
+> > >
+> > > On Mon, 15 Apr 2019 at 10:04, Maxime Ripard <maxime.ripard@bootlin.com> wrote:
+> > > >
+> > > > Hi,
+> > > >
+> > > > On Thu, Apr 11, 2019 at 11:44:19PM +0200, Clément Péron wrote:
+> > > > > Allwinner H6 has a SPDIF controller with an increase of the fifo
+> > > > > size and the possibility to output the master clock.
+> > > > > However it's still compatible with the already existing driver for
+> > > > > Allwiner H3.
+> > > > >
+> > > > > Add this compatible in the device-tree bindings documentation.
+> > > >
+> > > > How was this tested?
+> > >
+> > > Using Alsa utils on a Beelink GS1 and I check correct output sound on
+> > > my home cinema.
+> > >
+> > > > After looking at the datasheet, it looks like it's still significantly
+> > > > different. In particular:
+> > > >
+> > > >   - The MCLK divider isn't at the same offset
+> > >
+> > > We don't use the MCLK
+> > >
+> > > >   - The bits to flush the FIFO aren't at the same offset
+> > > >   - The FIFO trigger levels aren't at the same offset
+> > > >   - The FIFO status register layout is almost entirely different
+> > >
+> > > We use DMA not FIFO
+> >
+> > Well, DMA still uses the FIFOs. And even then, you're kind of missing
+> > the point. The device tree's compatible is about whether a particular
+> > device can be used as another one. How you are using it in the driver
+> > is completely irrelevant.
+> 
+> Sorry I meant " We use DMA not PIO".
+> 
+> I didn't change the driver and the SPDIF is working what's irrelevant
+> in declaring the driver as compatible ?
 >
-> On Mon, Apr 15, 2019 at 9:43 AM Oleg Nesterov <oleg@redhat.com> wrote:
-> > Well, acct("/proc/self/attr/current") doesn't look like a good idea, but I do
-> > not know where should we put the additional check... And probably
-> > "echo /proc/self/attr/current > /proc/sys/kernel/core_pattern" can hit the
-> > same problem, do_coredump() does override_creds() too.
+> If some feature are missing they can be introduce later as there is a
+> special binding for H6 no ?
+
+You have to drop fallback to allwinner,sun8i-h3-spdif at the very least:
+
++                       #sound-dai-cells = <0>;
++                       compatible = "allwinner,sun50i-h6-spdif",
++                                    "allwinner,sun8i-h3-spdif";
++                       reg = <0x05093000 0x400>;
+
+If the H6 hardware doesn't just implement some optional superset of what H3
+does.
+
+regards,
+	o.
+
+> Clement
+> 
 > >
-> > May be just add
+> > Maxime
 > >
-> >         if (current->cred != current->real_cred)
-> >                 return -EACCES;
-> >
-> > into proc_pid_attr_write(), I dunno.
->
-> Is the problem that do_acct_process() is calling override_creds() and
-> the returned/old credentials are being freed before do_acct_process()
-> can reinstall the creds via revert_creds()?  Presumably because the
-> process accounting is causing the credentials to be replaced?
-
-Afaics, the problem is that do_acct_process() does override_creds() and
-then __kernel_write(). Which calls proc_pid_attr_write(), which in turn calls
-selinux_setprocattr(), which does another prepare_creds() + commit_creds();
-and commit_creds() hits
-
-	BUG_ON(task->cred != old);
-
-Oleg.
-
+> > --
+> > Maxime Ripard, Bootlin
+> > Embedded Linux and Kernel engineering
+> > https://bootlin.com
+> 
+> _______________________________________________
+> linux-arm-kernel mailing list
+> linux-arm-kernel@lists.infradead.org
+> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
