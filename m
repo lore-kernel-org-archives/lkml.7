@@ -7,45 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E92AC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:06:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FAA1C282DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBB74218FE
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:06:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F2B0021906
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:06:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355191;
-	bh=zs877YgpGygAIbAjzA/5oGiiO+7HH/6rhHZ70NKLxvY=;
+	s=default; t=1555355193;
+	bh=R09b3kr1ivf1MAC/4qHfH7zgtpdnFmKoDzQNcgYs3cY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=eyIO3oYxPlpmivW+kruVf5DPMA3Ju71+WcVlpt/I6arlxiDRr6gXE+MaQ+3sTTFQE
-	 BbUHN5qt6sQYL8zSgRscKlVamkj+sYrGg8zZ++Iz3D3xNqH+1PbjdGuAfjiCmAAF9M
-	 qQZWX78ZBKNVX2XgpDaD4icbDSDaqk1AE2xRxPwI=
+	b=BrEfggU2UI2J7aKj5zTwSLpPu4DQUbprtWfimSGiFJy4mw68JO2ewIsMgrcyKxApC
+	 7rrMFMOof7ja2J4WyNuUEvf13O00ldtVpfXAs44Ow/avGsKbFElFaxPgjE350GX1B5
+	 EOPejEb7E5UydWu40jiU0+Bx7NjPnJ6VfAHl7EZ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729959AbfDOTGa (ORCPT
+        id S1729978AbfDOTGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:06:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:40892 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:06:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:40942 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729924AbfDOTG2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:06:28 -0400
+        id S1729958AbfDOTGb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:06:31 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 52920218A1;
-        Mon, 15 Apr 2019 19:06:27 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 09B1720880;
+        Mon, 15 Apr 2019 19:06:29 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355187;
-        bh=zs877YgpGygAIbAjzA/5oGiiO+7HH/6rhHZ70NKLxvY=;
+        s=default; t=1555355190;
+        bh=R09b3kr1ivf1MAC/4qHfH7zgtpdnFmKoDzQNcgYs3cY=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=z6UnPpzbAX+w3BV0cMtmXNJm6gzCZuUJzv94OV2IdfhcVet2GuimlSfPFIGiTkmn1
-         AmGRWGMgMtmKNkoHq+4uqzCUJ5OSelYHZUU2lo6et54IpmieP3PBH6YENSlPeGgeMw
-         CVPdwBaQgxQA49GuYzxKA8Ko14eNZMKctFbnohws=
+        b=IQJskHn2JQpIy+S1FmnzCRX0Uhpz4VsLWd5wiqTVj5LgnYgjm9HDpPvvmq3oFbHEk
+         1Kiz7UIxv/Um9VXYrYGyQNixkdW+lkp8kiFlleJlbfWYxK0C/ArFm+zF6PB1SQZ1B6
+         E/XQn84wKXktxMz+ivZNiN2I2vWt6XRq5SJvGpnQ=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Theodore Tso <tytso@mit.edu>
-Subject: [PATCH 4.19 046/101] tty: ldisc: add sysctl to prevent autoloading of ldiscs
-Date:   Mon, 15 Apr 2019 20:58:44 +0200
-Message-Id: <20190415183743.023183415@linuxfoundation.org>
+        stable@vger.kernel.org, Axel Lin <axel.lin@ingics.com>,
+        Guenter Roeck <linux@roeck-us.net>
+Subject: [PATCH 4.19 047/101] hwmon: (w83773g) Select REGMAP_I2C to fix build error
+Date:   Mon, 15 Apr 2019 20:58:45 +0200
+Message-Id: <20190415183743.069158516@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183740.341577907@linuxfoundation.org>
 References: <20190415183740.341577907@linuxfoundation.org>
@@ -58,144 +59,32 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Axel Lin <axel.lin@ingics.com>
 
-commit 7c0cca7c847e6e019d67b7d793efbbe3b947d004 upstream.
+commit a165dcc923ada2ffdee1d4f41f12f81b66d04c55 upstream.
 
-By default, the kernel will automatically load the module of any line
-dicipline that is asked for.  As this sometimes isn't the safest thing
-to do, provide a sysctl to disable this feature.
+Select REGMAP_I2C to avoid below build error:
+ERROR: "__devm_regmap_init_i2c" [drivers/hwmon/w83773g.ko] undefined!
 
-By default, we set this to 'y' as that is the historical way that Linux
-has worked, and we do not want to break working systems.  But in the
-future, perhaps this can default to 'n' to prevent this functionality.
-
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Reviewed-by: Theodore Ts'o <tytso@mit.edu>
+Fixes: ee249f271524 ("hwmon: Add W83773G driver")
+Cc: stable@vger.kernel.org
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Signed-off-by: Guenter Roeck <linux@roeck-us.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/tty/Kconfig     |   24 ++++++++++++++++++++++++
- drivers/tty/tty_io.c    |    3 +++
- drivers/tty/tty_ldisc.c |   47 +++++++++++++++++++++++++++++++++++++++++++++++
- 3 files changed, 74 insertions(+)
+ drivers/hwmon/Kconfig |    1 +
+ 1 file changed, 1 insertion(+)
 
---- a/drivers/tty/Kconfig
-+++ b/drivers/tty/Kconfig
-@@ -441,4 +441,28 @@ config VCC
- 	depends on SUN_LDOMS
+--- a/drivers/hwmon/Kconfig
++++ b/drivers/hwmon/Kconfig
+@@ -1755,6 +1755,7 @@ config SENSORS_VT8231
+ config SENSORS_W83773G
+ 	tristate "Nuvoton W83773G"
+ 	depends on I2C
++	select REGMAP_I2C
  	help
- 	  Support for Sun logical domain consoles.
-+
-+config LDISC_AUTOLOAD
-+	bool "Automatically load TTY Line Disciplines"
-+	default y
-+	help
-+	  Historically the kernel has always automatically loaded any
-+	  line discipline that is in a kernel module when a user asks
-+	  for it to be loaded with the TIOCSETD ioctl, or through other
-+	  means.  This is not always the best thing to do on systems
-+	  where you know you will not be using some of the more
-+	  "ancient" line disciplines, so prevent the kernel from doing
-+	  this unless the request is coming from a process with the
-+	  CAP_SYS_MODULE permissions.
-+
-+	  Say 'Y' here if you trust your userspace users to do the right
-+	  thing, or if you have only provided the line disciplines that
-+	  you know you will be using, or if you wish to continue to use
-+	  the traditional method of on-demand loading of these modules
-+	  by any user.
-+
-+	  This functionality can be changed at runtime with the
-+	  dev.tty.ldisc_autoload sysctl, this configuration option will
-+	  only set the default value of this functionality.
-+
- endif # TTY
---- a/drivers/tty/tty_io.c
-+++ b/drivers/tty/tty_io.c
-@@ -512,6 +512,8 @@ static const struct file_operations hung
- static DEFINE_SPINLOCK(redirect_lock);
- static struct file *redirect;
- 
-+extern void tty_sysctl_init(void);
-+
- /**
-  *	tty_wakeup	-	request more data
-  *	@tty: terminal
-@@ -3340,6 +3342,7 @@ void console_sysfs_notify(void)
-  */
- int __init tty_init(void)
- {
-+	tty_sysctl_init();
- 	cdev_init(&tty_cdev, &tty_fops);
- 	if (cdev_add(&tty_cdev, MKDEV(TTYAUX_MAJOR, 0), 1) ||
- 	    register_chrdev_region(MKDEV(TTYAUX_MAJOR, 0), 1, "/dev/tty") < 0)
---- a/drivers/tty/tty_ldisc.c
-+++ b/drivers/tty/tty_ldisc.c
-@@ -156,6 +156,13 @@ static void put_ldops(struct tty_ldisc_o
-  *		takes tty_ldiscs_lock to guard against ldisc races
-  */
- 
-+#if defined(CONFIG_LDISC_AUTOLOAD)
-+	#define INITIAL_AUTOLOAD_STATE	1
-+#else
-+	#define INITIAL_AUTOLOAD_STATE	0
-+#endif
-+static int tty_ldisc_autoload = INITIAL_AUTOLOAD_STATE;
-+
- static struct tty_ldisc *tty_ldisc_get(struct tty_struct *tty, int disc)
- {
- 	struct tty_ldisc *ld;
-@@ -170,6 +177,8 @@ static struct tty_ldisc *tty_ldisc_get(s
- 	 */
- 	ldops = get_ldops(disc);
- 	if (IS_ERR(ldops)) {
-+		if (!capable(CAP_SYS_MODULE) && !tty_ldisc_autoload)
-+			return ERR_PTR(-EPERM);
- 		request_module("tty-ldisc-%d", disc);
- 		ldops = get_ldops(disc);
- 		if (IS_ERR(ldops))
-@@ -829,3 +838,41 @@ void tty_ldisc_deinit(struct tty_struct
- 		tty_ldisc_put(tty->ldisc);
- 	tty->ldisc = NULL;
- }
-+
-+static int zero;
-+static int one = 1;
-+static struct ctl_table tty_table[] = {
-+	{
-+		.procname	= "ldisc_autoload",
-+		.data		= &tty_ldisc_autoload,
-+		.maxlen		= sizeof(tty_ldisc_autoload),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec,
-+		.extra1		= &zero,
-+		.extra2		= &one,
-+	},
-+	{ }
-+};
-+
-+static struct ctl_table tty_dir_table[] = {
-+	{
-+		.procname	= "tty",
-+		.mode		= 0555,
-+		.child		= tty_table,
-+	},
-+	{ }
-+};
-+
-+static struct ctl_table tty_root_table[] = {
-+	{
-+		.procname	= "dev",
-+		.mode		= 0555,
-+		.child		= tty_dir_table,
-+	},
-+	{ }
-+};
-+
-+void tty_sysctl_init(void)
-+{
-+	register_sysctl_table(tty_root_table);
-+}
+ 	  If you say yes here you get support for the Nuvoton W83773G hardware
+ 	  monitoring chip.
 
 
