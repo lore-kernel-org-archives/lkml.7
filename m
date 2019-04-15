@@ -2,376 +2,155 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 561A3C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 22:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45A21C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 22:43:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1409420854
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 22:42:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1164A2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 22:43:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728014AbfDOWmq (ORCPT
+        id S1728150AbfDOWnf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 18:42:46 -0400
-Received: from mga06.intel.com ([134.134.136.31]:21952 "EHLO mga06.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726041AbfDOWmq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 18:42:46 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Apr 2019 15:42:45 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,355,1549958400"; 
-   d="scan'208";a="136086306"
-Received: from jacob-builder.jf.intel.com (HELO jacob-builder) ([10.7.199.155])
-  by orsmga006.jf.intel.com with ESMTP; 15 Apr 2019 15:42:45 -0700
-Date:   Mon, 15 Apr 2019 15:45:23 -0700
-From:   Jacob Pan <jacob.jun.pan@linux.intel.com>
-To:     Alex Williamson <alex.williamson@redhat.com>
-Cc:     iommu@lists.linux-foundation.org,
-        LKML <linux-kernel@vger.kernel.org>,
-        Joerg Roedel <joro@8bytes.org>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        "Yi Liu" <yi.l.liu@intel.com>,
-        "Tian, Kevin" <kevin.tian@intel.com>,
-        Raj Ashok <ashok.raj@intel.com>,
-        "Christoph Hellwig" <hch@infradead.org>,
-        "Lu Baolu" <baolu.lu@linux.intel.com>,
-        Andriy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        jacob.jun.pan@linux.intel.com
-Subject: Re: [PATCH 02/18] ioasid: Add custom IOASID allocator
-Message-ID: <20190415154523.39fb57d7@jacob-builder>
-In-Reply-To: <20190415125348.58073042@x1.home>
-References: <1554767973-30125-1-git-send-email-jacob.jun.pan@linux.intel.com>
-        <1554767973-30125-3-git-send-email-jacob.jun.pan@linux.intel.com>
-        <20190415125348.58073042@x1.home>
-Organization: OTC
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Mon, 15 Apr 2019 18:43:35 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:36280 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727243AbfDOWnf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 18:43:35 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3FMY60B027407
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 18:43:34 -0400
+Received: from e12.ny.us.ibm.com (e12.ny.us.ibm.com [129.33.205.202])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rw1ws25we-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 18:43:33 -0400
+Received: from localhost
+        by e12.ny.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <akrowiak@linux.ibm.com>;
+        Mon, 15 Apr 2019 23:43:32 +0100
+Received: from b01cxnp22035.gho.pok.ibm.com (9.57.198.25)
+        by e12.ny.us.ibm.com (146.89.104.199) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 15 Apr 2019 23:43:28 +0100
+Received: from b01ledav005.gho.pok.ibm.com (b01ledav005.gho.pok.ibm.com [9.57.199.110])
+        by b01cxnp22035.gho.pok.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3FMhPBp21889252
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Apr 2019 22:43:25 GMT
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 68FBEAE05F;
+        Mon, 15 Apr 2019 22:43:25 +0000 (GMT)
+Received: from b01ledav005.gho.pok.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id AF962AE05C;
+        Mon, 15 Apr 2019 22:43:24 +0000 (GMT)
+Received: from [9.80.223.51] (unknown [9.80.223.51])
+        by b01ledav005.gho.pok.ibm.com (Postfix) with ESMTP;
+        Mon, 15 Apr 2019 22:43:24 +0000 (GMT)
+Subject: Re: [PATCH 1/7] s390: zcrypt: driver callback to indicate resource in
+ use
+To:     Halil Pasic <pasic@linux.ibm.com>
+Cc:     Cornelia Huck <cohuck@redhat.com>,
+        Harald Freudenberger <freude@linux.ibm.com>,
+        linux-s390@vger.kernel.org, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org, Reinhard Buendgen <buendgen@de.ibm.com>,
+        borntraeger@de.ibm.com, frankja@linux.ibm.com, david@redhat.com,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com,
+        pmorel@linux.ibm.com, alex.williamson@redhat.com,
+        kwankhede@nvidia.com
+References: <1555016604-2008-1-git-send-email-akrowiak@linux.ibm.com>
+ <1555016604-2008-2-git-send-email-akrowiak@linux.ibm.com>
+ <223c82c7-6a75-7209-3652-c2341c83878f@linux.ibm.com>
+ <20190412114313.0156c01b.cohuck@redhat.com>
+ <89f09e58-eab6-94d4-c5aa-937162d60744@linux.ibm.com>
+ <20190415115030.1df61182.cohuck@redhat.com>
+ <3d762e51-7210-529f-61de-98d80689bff6@linux.ibm.com>
+ <20190415205950.7655cee3@oc2783563651>
+From:   Tony Krowiak <akrowiak@linux.ibm.com>
+Date:   Mon, 15 Apr 2019 18:43:24 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190415205950.7655cee3@oc2783563651>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19041522-0060-0000-0000-0000032D490A
+X-IBM-SpamModules-Scores: 
+X-IBM-SpamModules-Versions: BY=3.00010934; HX=3.00000242; KW=3.00000007;
+ PH=3.00000004; SC=3.00000284; SDB=6.01189626; UDB=6.00623318; IPR=6.00970412;
+ MB=3.00026458; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-15 22:43:31
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19041522-0061-0000-0000-000048F6FB6D
+Message-Id: <0c7dbcd5-295c-8dc1-7223-01866694ebc4@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-15_08:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=903 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904150152
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 15 Apr 2019 12:53:48 -0600
-Alex Williamson <alex.williamson@redhat.com> wrote:
+On 4/15/19 2:59 PM, Halil Pasic wrote:
+> On Mon, 15 Apr 2019 12:51:23 -0400
+> Tony Krowiak <akrowiak@linux.ibm.com> wrote:
+> 
+>> Having said that, I understand your concern about a driver hogging
+>> resources. I think I can provide a solution that serves both the
+>> purpose of preventing problems associated with accidental removal
+>> of AP resources as well as allowing root to remove them
+>> forcefully. I'll work on that for v2.
+> 
+> Can you tell us some more about this solution? Should we stop reviewing
+> v1 because v2 is going to be different anyway?
 
-> On Mon,  8 Apr 2019 16:59:17 -0700
-> Jacob Pan <jacob.jun.pan@linux.intel.com> wrote:
-> 
-> > Sometimes, IOASID allocation must be handled by platform specific
-> > code. The use cases are guest vIOMMU and pvIOMMU where IOASIDs need
-> > to be allocated by the host via enlightened or paravirt interfaces.
-> > 
-> > This patch adds an extension to the IOASID allocator APIs such that
-> > platform drivers can register a custom allocator, possibly at boot
-> > time, to take over the allocation. IDR is still used for tracking
-> > and searching purposes internal to the IOASID code. Private data of
-> > an IOASID can also be set after the allocation.
-> > 
-> > Signed-off-by: Jacob Pan <jacob.jun.pan@linux.intel.com>
-> > ---
-> >  drivers/base/ioasid.c  | 124
-> > +++++++++++++++++++++++++++++++++++++++++++++----
-> > include/linux/ioasid.h |  28 ++++++++++- 2 files changed, 143
-> > insertions(+), 9 deletions(-)
-> > 
-> > diff --git a/drivers/base/ioasid.c b/drivers/base/ioasid.c
-> > index cf122b2..294e856 100644
-> > --- a/drivers/base/ioasid.c
-> > +++ b/drivers/base/ioasid.c
-> > @@ -17,6 +17,74 @@ struct ioasid_data {
-> >  };
-> >  
-> >  static DEFINE_IDR(ioasid_idr);
-> > +static DEFINE_MUTEX(ioasid_allocator_lock);
-> > +static const struct ioasid_allocator *ioasid_allocator;
-> > +
-> > +
-> > +/**
-> > + * ioasid_set_allocator - register a custom allocator
-> > + *
-> > + * Custom allocator take precedence over the default IDR based
-> > allocator.
-> > + * Private data associated with the ASID are managed by ASID
-> > common code
-> > + * similar to IDR data.
-> > + */
-> > +int ioasid_set_allocator(struct ioasid_allocator *allocator)
-> > +{
-> > +	int ret = 0;
-> > +
-> > +	if (!allocator)
-> > +		return -EINVAL;
-> > +
-> > +	mutex_lock(&ioasid_allocator_lock);
-> > +	if (ioasid_allocator) {
-> > +		ret = -EBUSY;
-> > +		goto exit_unlock;
-> > +	}
-> > +	ioasid_allocator = allocator;
-> > +
-> > +exit_unlock:
-> > +	mutex_unlock(&ioasid_allocator_lock);
-> > +	return ret;
-> > +}
-> > +EXPORT_SYMBOL_GPL(ioasid_set_allocator);  
-> 
-> Should this fault if there are existing idr's allocated?
-> 
-Yes, I think that would make things much simpler. There can be only one
-allocator for the entire time per boot.
-> > +
-> > +/**
-> > + * ioasid_clear_allocator - Free the custom IOASID allocator
-> > + *
-> > + * REVISIT: So far there is only one custom allocator allowed.
-> > + */
-> > +void ioasid_clear_allocator(void)
-> > +{
-> > +	mutex_lock(&ioasid_allocator_lock);
-> > +	ioasid_allocator = NULL;
-> > +	mutex_unlock(&ioasid_allocator_lock);
-> > +}
-> > +EXPORT_SYMBOL_GPL(ioasid_clear_allocator);
-> > +
-> > +/**
-> > + * ioasid_set_data - Set private data for an allocated ioasid
-> > + *
-> > + * For IOASID that is already allocated, private data can be set
-> > + * via this API. Future lookup can be done via ioasid_find.
-> > + */
-> > +int ioasid_set_data(ioasid_t ioasid, void *data)
-> > +{
-> > +	struct ioasid_data *ioasid_data;
-> > +	int ret = 0;
-> > +
-> > +	idr_lock(&ioasid_idr);
-> > +	ioasid_data = idr_find(&ioasid_idr, ioasid);
-> > +	if (ioasid_data)
-> > +		ioasid_data->private = data;
-> > +	else
-> > +		ret = -ENOENT;
-> > +	idr_unlock(&ioasid_idr);
-> > +	/* getter may use the private data */
-> > +	synchronize_rcu();
-> > +
-> > +	return ret;
-> > +}
-> > +EXPORT_SYMBOL_GPL(ioasid_set_data);
-> >  
-> >  /**
-> >   * ioasid_alloc - Allocate an IOASID
-> > @@ -32,7 +100,7 @@ static DEFINE_IDR(ioasid_idr);
-> >  ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min,
-> > ioasid_t max, void *private)
-> >  {
-> > -	int id = -1;
-> > +	int id = INVALID_IOASID;
-> >  	struct ioasid_data *data;
-> >  
-> >  	data = kzalloc(sizeof(*data), GFP_KERNEL);
-> > @@ -42,13 +110,30 @@ ioasid_t ioasid_alloc(struct ioasid_set *set,
-> > ioasid_t min, ioasid_t max, data->set = set;
-> >  	data->private = private;
-> >  
-> > +	/* Use custom allocator if available, otherwise default to
-> > IDR */
-> > +	if (ioasid_allocator) {  
-> 
-> If this races with ioasid_clear_allocator() ioasid_allocator might be
-> set above, but NULL below to generate a segfault.  If this races with
-> ioasid_set_allocator() an id can be allocated that the custom
-> allocator doesn't track.
-> 
-right, need to move this under the lock below. And protect it under
-clear and set function. Or delete the ioasid_clear_allocator() function
-to prevent the case you mentioned below.
+Patch 1 and 2 will be removed. There will not be a major design change
+between these patches and v2. In order to avoid a long explanation of
+my proposed changes, I'd prefer to state that the patch set will 
+establish and enforce the following rules:
 
-> > +		mutex_lock(&ioasid_allocator_lock);
-> > +		id = ioasid_allocator->alloc(min, max,
-> > ioasid_allocator->pdata);
-> > +		mutex_unlock(&ioasid_allocator_lock);
-> > +		if (id == INVALID_IOASID) {
-> > +			pr_err("Failed ASID allocation by custom
-> > allocator\n");
-> > +			goto exit_free;
-> > +		}
-> > +		/*
-> > +		 * Use IDR to manage private data also sanitiy
-> > check custom
-> > +		 * allocator for duplicates.
-> > +		 */
-> > +		min = id;
-> > +		max = id + 1;
-> > +	}
-> >  	idr_preload(GFP_KERNEL);
-> >  	idr_lock(&ioasid_idr);
-> >  	data->id = id = idr_alloc(&ioasid_idr, data, min, max,
-> > GFP_ATOMIC); idr_unlock(&ioasid_idr);
-> >  	idr_preload_end();
-> >  
-> > -	if (id < 0) {
-> > +exit_free:
-> > +	if (id < 0 || id == INVALID_IOASID) {
-> >  		kfree(data);  
-> 
-> What if an ioasid is already allocated before the ioasid_allocator is
-> registered?  The .alloc callback above could return an id that
-> idr_alloc cannot provide, in which case this cleanup does not call the
-> custom allocator's free callback.
-> 
-Good point, I was assuming the custom allocator must be set at boot time
-prior to any allocation thus idr allocation would always be satisfied.
+     1. An APQN can be assigned to an mdev device iff it is NOT
+        reserved for use by a zcrypt driver and is not assigned to
+        another mdev device.
 
-I think I also need to prevent the clearing of custom allocator to
-prevent user from going between IDR and custom allocator back and forth.
-I.e. once a custom allocator is registered, it cannot be deleted.
+     2. Once an APQN is assigned to an mdev device, it will remain
+        assigned until it is explicitly unassigned.
 
-Also undo EXPORT_SYMBOL_GPL(ioasid_set_data), to make it a one way trip.
-> >  		return INVALID_IOASID;
-> >  	}
-> > @@ -60,9 +145,20 @@ EXPORT_SYMBOL_GPL(ioasid_alloc);
-> >   * ioasid_free - Free an IOASID
-> >   * @ioasid: the ID to remove
-> >   */
-> > -void ioasid_free(ioasid_t ioasid)
-> > +int ioasid_free(ioasid_t ioasid)
-> >  {
-> >  	struct ioasid_data *ioasid_data;
-> > +	int ret = 0;
-> > +
-> > +	if (ioasid_allocator) {  
-> 
-> Same races as above.
-> 
-right, I will delete the ioasid_clear_allocator() function.
+     3. A queue's APQN can be set in the guest's CRYCB iff the APQN is
+        assigned to the mdev device used by the guest; however, if the
+        queue is also in the host configuration (i.e., online), it MUST
+        also be bound to the vfio_ap device driver.
 
-Thanks!
-> > +		mutex_lock(&ioasid_allocator_lock);
-> > +		ret = ioasid_allocator->free(ioasid,
-> > ioasid_allocator->pdata);
-> > +		mutex_unlock(&ioasid_allocator_lock);
-> > +	}
-> > +	if (ret) {
-> > +		pr_err("ioasid %d custom allocator free failed\n",
-> > ioasid);
-> > +		return ret;
-> > +	}
-> >  
-> >  	idr_lock(&ioasid_idr);
-> >  	ioasid_data = idr_remove(&ioasid_idr, ioasid);
-> > @@ -70,6 +166,8 @@ void ioasid_free(ioasid_t ioasid)
-> >  
-> >  	if (ioasid_data)
-> >  		kfree_rcu(ioasid_data, rcu);
-> > +
-> > +	return ret;
-> >  }
-> >  EXPORT_SYMBOL_GPL(ioasid_free);
-> >  
-> > @@ -84,7 +182,8 @@ EXPORT_SYMBOL_GPL(ioasid_free);
-> >   * if @getter returns false, then the object is invalid and NULL
-> > is returned. *
-> >   * If the IOASID has been allocated for this set, return the
-> > private pointer
-> > - * passed to ioasid_alloc. Otherwise return NULL.
-> > + * passed to ioasid_alloc. Private data can be NULL if not set.
-> > Return an error
-> > + * if the IOASID is not found or not belong to the set.
-> >   */
-> >  void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
-> >  		  bool (*getter)(void *))
-> > @@ -94,11 +193,20 @@ void *ioasid_find(struct ioasid_set *set,
-> > ioasid_t ioasid, 
-> >  	rcu_read_lock();
-> >  	ioasid_data = idr_find(&ioasid_idr, ioasid);
-> > -	if (ioasid_data && ioasid_data->set == set) {
-> > -		priv = ioasid_data->private;
-> > -		if (getter && !getter(priv))
-> > -			priv = NULL;
-> > +	if (!ioasid_data) {
-> > +		priv = ERR_PTR(-ENOENT);
-> > +		goto unlock;
-> > +	}
-> > +	if (set && ioasid_data->set != set) {
-> > +		/* data found but does not belong to the set */
-> > +		priv = ERR_PTR(-EACCES);
-> > +		goto unlock;
-> >  	}
-> > +	/* Now IOASID and its set is verified, we can return the
-> > private data */
-> > +	priv = ioasid_data->private;
-> > +	if (getter && !getter(priv))
-> > +		priv = NULL;
-> > +unlock:
-> >  	rcu_read_unlock();
-> >  
-> >  	return priv;
-> > diff --git a/include/linux/ioasid.h b/include/linux/ioasid.h
-> > index 6f3655a..64994e7 100644
-> > --- a/include/linux/ioasid.h
-> > +++ b/include/linux/ioasid.h
-> > @@ -5,20 +5,31 @@
-> >  #define INVALID_IOASID ((ioasid_t)-1)
-> >  typedef unsigned int ioasid_t;
-> >  typedef int (*ioasid_iter_t)(ioasid_t ioasid, void *private, void
-> > *data); +typedef ioasid_t (*ioasid_alloc_fn_t)(ioasid_t min,
-> > ioasid_t max, void *data); +typedef int
-> > (*ioasid_free_fn_t)(ioasid_t ioasid, void *data); 
-> >  struct ioasid_set {
-> >  	int dummy;
-> >  };
-> >  
-> > +struct ioasid_allocator {
-> > +	ioasid_alloc_fn_t alloc;
-> > +	ioasid_free_fn_t free;
-> > +	void *pdata;
-> > +};
-> > +
-> >  #define DECLARE_IOASID_SET(name) struct ioasid_set name = { 0 }
-> >  
-> >  #ifdef CONFIG_IOASID
-> >  ioasid_t ioasid_alloc(struct ioasid_set *set, ioasid_t min,
-> > ioasid_t max, void *private);
-> > -void ioasid_free(ioasid_t ioasid);
-> > +int ioasid_free(ioasid_t ioasid);
-> >  
-> >  void *ioasid_find(struct ioasid_set *set, ioasid_t ioasid,
-> >  		  bool (*getter)(void *));
-> > +int ioasid_set_allocator(struct ioasid_allocator *allocator);
-> > +void ioasid_clear_allocator(void);
-> > +int ioasid_set_data(ioasid_t ioasid, void *data);
-> >  
-> >  #else /* !CONFIG_IOASID */
-> >  static inline ioasid_t ioasid_alloc(struct ioasid_set *set,
-> > ioasid_t min, @@ -36,5 +47,20 @@ static inline void
-> > *ioasid_find(struct ioasid_set *set, ioasid_t ioasid, {
-> >  	return NULL;
-> >  }
-> > +
-> > +static inline int ioasid_set_allocator(struct ioasid_allocator
-> > *allocator) +{
-> > +	return -EINVAL;
-> > +}
-> > +
-> > +static inline void ioasid_clear_allocator(void)
-> > +{
-> > +}
-> > +
-> > +static inline int ioasid_set_data(ioasid_t ioasid, void *data)
-> > +{
-> > +	return -EINVAL;
-> > +}
-> > +
-> >  #endif /* CONFIG_IOASID */
-> >  #endif /* __LINUX_IOASID_H */  
+     4. When a queue is bound to the vfio_ap driver and its APQN
+        is assigned to an mdev device in use by a guest, the guest will
+        be given access to the queue.
+
+     5. When a queue is unbound from the vfio_ap driver and its APQN
+        is assigned to an mdev device in use by the guest, access to
+        the card containing the queue will be removed from the guest.
+        Keep in mind that we can not deny access to a specific queue
+        due to the architecture (i.e., clearing a bit in the AQM
+        removes access to the queue for all adapters)
+
+     6. When an adapter is assigned to an mdev device that is in use
+        by a guest, the guest will be given access to the adapter.
+
+     7. When an adapter is unassigned from an mdev device that is in use
+        by a guest, access to the adapter will removed from the guest.
+
+     8. When a domain is assigned to an mdev device that is in use
+        by a guest, the guest will be given access to the domain.
+
+     9. When a domain is unassigned from an mdev device that is in use
+        by a guest, access to the domain will removed from the guest.
+
+> 
+> Regards,
+> Halil
 > 
 
-[Jacob Pan]
