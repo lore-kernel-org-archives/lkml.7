@@ -5,58 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 364A2C10F14
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 00:47:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E542C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 00:47:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F32492070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 00:47:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5A47F2070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 00:47:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rZDowLZq"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G5xfeGdr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726974AbfDOAre (ORCPT
+        id S1727049AbfDOAri (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 20:47:34 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:36331 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726829AbfDOArd (ORCPT
+        Sun, 14 Apr 2019 20:47:38 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:34758 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726829AbfDOArg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 20:47:33 -0400
-Received: by mail-pf1-f195.google.com with SMTP id z5so7716326pfn.3;
-        Sun, 14 Apr 2019 17:47:32 -0700 (PDT)
+        Sun, 14 Apr 2019 20:47:36 -0400
+Received: by mail-pg1-f195.google.com with SMTP id v12so7738637pgq.1;
+        Sun, 14 Apr 2019 17:47:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=9beIuYqBF6SILMxXaavWO/q8AQSlMA1a2HjBO8p38og=;
-        b=rZDowLZqJw3bbECWetTAiWiAIYWB/pbTb6fjFNQC/bCujN2AJJ0K/7GGmGKJiFASau
-         pC8q56ANjK1KplTa6QSiN6LSNglmqhd3IqiKMc3HhVoSJLOoWKEzrC3X4k8j27QgxAFu
-         l9Tc1aiSFc9yO3rxLjHl4oFHPhzuY7acsh6SgiZi+it1FwvEd6ksXF9ML8NS0xdXXejs
-         lB4LHAnLjyTBob8mkR05GYwKvMqPwP2wRxvKbZQJLQjQXyPMBklEauf7vOE5lS/rECGE
-         YXxJ9mBn7H9EZZvv/5DX+EfNiwDMnpRApe3r5+zAxNnyz3iipBT+/I9iBlxJ5z6vez22
-         68JQ==
+        bh=8E2fKSZnUayyuhXz36lAvp2hLXuQRX96+mjdaNJTzGQ=;
+        b=G5xfeGdrcw3arL+TlZ6a++5LDBaK3cSD4NmRGzIyetme2kmjcoie8vW/VU4TGZqTdG
+         vTHiG0OcB1Lk1OUuNyyB9aK3aYipsQGMRkmLIT1IYb2vFkuJ03VqyD5HFO2sTipl5ntb
+         x700F9TRb8G8KiRjvuLjf2O+9cmosn4bL8Z7VoGAm2VJRmnARUgmxQZ4yk+yg42QHVM8
+         fP/+NesX/4jI7mshJThbYu1ZMqCwuvqRldtYc0bZ128AiVraMTA1oqsN4JkxerG+4gkU
+         onNklqq9KA/TcAZM5T3rH5XF5pjzjbwXanzi0S9OZdgeeQm249FfxhIzDquhrpDJCqmn
+         wY3g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=9beIuYqBF6SILMxXaavWO/q8AQSlMA1a2HjBO8p38og=;
-        b=E8paFmJ2sCai8BVh1ZpHmhxB/YbrECMH1uvnc63+/RYSSRSPPkcLHExChEZR/6M6Xr
-         naevgLRwU0K/CJlO6gwzZAmu8wG5q531KjY/LRu1d5Ze/39HUzZt6kdFOUNV/OMvk3J1
-         BgbOMFfoGqnBhkvn3vE6HgkW5GkmMtHLsQRXNgUvtFriuWJEk/Cdn21ZYGzr+fFas4c4
-         AknD4XAWwHc2i5CNL0tJE6cYBvTB7wpQWYPfymehJ3nrbIwJulxTSkNmiWwb4v1SVdO7
-         yok0HmWuIgxYUQDrJmoT3GWjI6nCnFhGnhGDQ7RJWuPtk4a9h/edjLx7mvnAG45ddnwm
-         Gzfw==
-X-Gm-Message-State: APjAAAVvBYVRTQc0UgxYUQuxBysJGgmfzVG50evSDDY4BRtgFUcp+4gB
-        z7JeJYczmdIyBeO5Gq0BvPZoWnEw
-X-Google-Smtp-Source: APXvYqz0bqwjhWJfMUBVTSpq/0QGtNPgOBbelODk1fB1QPQAlQFtiF8DbRCfFyKiEO4dMKeFiqEWxA==
-X-Received: by 2002:a63:31ce:: with SMTP id x197mr65850514pgx.69.1555289252010;
-        Sun, 14 Apr 2019 17:47:32 -0700 (PDT)
+        bh=8E2fKSZnUayyuhXz36lAvp2hLXuQRX96+mjdaNJTzGQ=;
+        b=qk4LEHNNPEZUb3qgsnvRHcLonrvECmlRzH0x07CU9evEz6IuZHqTz3u4UkNhGcRwhS
+         TXHy64BAY2dB08CDYtUdd7begfFyysNBXl+GdjLZAcGzBzCrf7Aa2Lrc4dDHWJzdD9E0
+         v6ep3sgpWo2Zl36jhsaqWS7kS5gEN5d2aokJ3v6JElpkcu9r9V+bMY/IF2ddNL0w3Fre
+         ilTtptZ1ED1noUeJ/FnTTsida6L24prfbjbwK5BjDfvPRBk2kMBk5E+CeWgZ5maA1YmK
+         w5Z5YQScTsUA1I1pQaeLNuAPhfFTt57NwZBX5qKLK/i3aoyIfqBm4nJCrvBH36z/QdGP
+         3k4A==
+X-Gm-Message-State: APjAAAVhrl5jGStV3R7dvspdKp3mxbaYMR8EsHhO4q5fRV4vu8hZ+MU+
+        khlQNrLwt9xo/+VUNzV8FUvLfCZZ
+X-Google-Smtp-Source: APXvYqyDzAo+3+R5otG7RS48KEnbSWMCudgZ/WtqQvqUYkhKGmYoC1bmhbkzIolnAiCraWtJ7ibwQg==
+X-Received: by 2002:a62:b61a:: with SMTP id j26mr72645015pff.203.1555289254763;
+        Sun, 14 Apr 2019 17:47:34 -0700 (PDT)
 Received: from squirtle.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id u17sm66111981pfn.19.2019.04.14.17.47.30
+        by smtp.gmail.com with ESMTPSA id u17sm66111981pfn.19.2019.04.14.17.47.33
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 14 Apr 2019 17:47:31 -0700 (PDT)
+        Sun, 14 Apr 2019 17:47:33 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     linux-pci@vger.kernel.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
@@ -64,9 +63,9 @@ Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
         Chris Healy <cphealy@gmail.com>, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 04/11] PCI: imx6: Remove PCIE_PL_PFLR_* constants
-Date:   Sun, 14 Apr 2019 17:46:25 -0700
-Message-Id: <20190415004632.5907-5-andrew.smirnov@gmail.com>
+Subject: [PATCH v4 06/11] PCI: imx6: Make use of BIT() in constant definitions
+Date:   Sun, 14 Apr 2019 17:46:27 -0700
+Message-Id: <20190415004632.5907-7-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190415004632.5907-1-andrew.smirnov@gmail.com>
 References: <20190415004632.5907-1-andrew.smirnov@gmail.com>
@@ -77,9 +76,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Code using these constants was removed in commit a71280722eeb ("PCI:
-imx6: Remove LTSSM disable workaround"). No functional change
-intended.
+Avoid using explicit left shifts and convert various definitions to
+use BIT() instead. No functional change intended.
 
 Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
 Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
@@ -90,23 +88,41 @@ Cc: Lucas Stach <l.stach@pengutronix.de>
 Cc: linux-kernel@vger.kernel.org
 Cc: linux-pci@vger.kernel.org
 ---
- drivers/pci/controller/dwc/pci-imx6.c | 3 ---
- 1 file changed, 3 deletions(-)
+ drivers/pci/controller/dwc/pci-imx6.c | 8 ++++----
+ 1 file changed, 4 insertions(+), 4 deletions(-)
 
 diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
-index 021ef121a058..c0867df090f5 100644
+index eeacdebd9b50..5650642ab248 100644
 --- a/drivers/pci/controller/dwc/pci-imx6.c
 +++ b/drivers/pci/controller/dwc/pci-imx6.c
-@@ -103,9 +103,6 @@ struct imx6_pcie {
+@@ -118,14 +118,14 @@ struct imx6_pcie {
  
- /* PCIe Port Logic registers (memory-mapped) */
- #define PL_OFFSET 0x700
--#define PCIE_PL_PFLR (PL_OFFSET + 0x08)
--#define PCIE_PL_PFLR_LINK_STATE_MASK		(0x3f << 16)
--#define PCIE_PL_PFLR_FORCE_LINK			(1 << 15)
- #define PCIE_PHY_DEBUG_R0 (PL_OFFSET + 0x28)
- #define PCIE_PHY_DEBUG_R1 (PL_OFFSET + 0x2c)
+ /* PHY registers (not memory-mapped) */
+ #define PCIE_PHY_ATEOVRD			0x10
+-#define  PCIE_PHY_ATEOVRD_EN			(0x1 << 2)
++#define  PCIE_PHY_ATEOVRD_EN			BIT(2)
+ #define  PCIE_PHY_ATEOVRD_REF_CLKDIV_SHIFT	0
+ #define  PCIE_PHY_ATEOVRD_REF_CLKDIV_MASK	0x1
  
+ #define PCIE_PHY_MPLL_OVRD_IN_LO		0x11
+ #define  PCIE_PHY_MPLL_MULTIPLIER_SHIFT		2
+ #define  PCIE_PHY_MPLL_MULTIPLIER_MASK		0x7f
+-#define  PCIE_PHY_MPLL_MULTIPLIER_OVRD		(0x1 << 9)
++#define  PCIE_PHY_MPLL_MULTIPLIER_OVRD		BIT(9)
+ 
+ #define PCIE_PHY_RX_ASIC_OUT 0x100D
+ #define PCIE_PHY_RX_ASIC_OUT_VALID	(1 << 0)
+@@ -148,8 +148,8 @@ struct imx6_pcie {
+ #define PCIE_PHY_CMN_REG26_ATT_MODE	0xBC
+ 
+ #define PHY_RX_OVRD_IN_LO 0x1005
+-#define PHY_RX_OVRD_IN_LO_RX_DATA_EN (1 << 5)
+-#define PHY_RX_OVRD_IN_LO_RX_PLL_EN (1 << 3)
++#define PHY_RX_OVRD_IN_LO_RX_DATA_EN		BIT(5)
++#define PHY_RX_OVRD_IN_LO_RX_PLL_EN		BIT(3)
+ 
+ static int pcie_phy_poll_ack(struct imx6_pcie *imx6_pcie, int exp_val)
+ {
 -- 
 2.20.1
 
