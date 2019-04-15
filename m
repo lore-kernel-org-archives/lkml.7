@@ -2,85 +2,116 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42065C10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 85AE1C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D27B218FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:46:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="EvNQ28S7"
+	by mail.kernel.org (Postfix) with ESMTP id 559C8218FC
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:47:00 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555354020;
+	bh=y0ykGUEIM+gGdYXqciO5su2tkgLyfcyxEFeGzKd19SU=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=LV7i3rkkPK76hz7vRPTquyiyXKhGpcRsMOdS3R7FG8rSCe5WYcI68/T1uD5z0Dly7
+	 PBrQBLlKYIBB1A9hgIg/qZ38J7e8SKrs/KyvD4gC9iy3ZI9J/fpvt+lZ2MVsYcYhDg
+	 o5jkP92gb2ABMk1V2s3BnFMHoTDtCtHheq30RwNE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728762AbfDOSqz (ORCPT
+        id S1728782AbfDOSq6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 14:46:55 -0400
-Received: from smtprelay2.synopsys.com ([198.182.60.111]:55714 "EHLO
-        smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728745AbfDOSqx (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 14:46:53 -0400
-Received: from mailhost1.synopsys.com (mailhost1.synopsys.com [10.12.238.239])
-        by smtprelay.synopsys.com (Postfix) with ESMTP id 62C6910C10F0;
-        Mon, 15 Apr 2019 11:46:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1555354013; bh=GEZdOqtDmf3cGDISZQ11mIjshPILmaz5bfyTH6m/G24=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
-         References:From;
-        b=EvNQ28S7Uz9qSFW+hF7CweUHX1h94DCcBrbPqIL6fMGZxszJZFmhfSP1E36tHNcvy
-         4ysMGwm4imZhvxej4YLKTOM5NFiKkLkdq6tRujhilDGrrbcl7bD91jJQqp/ysv/Pzv
-         Mu7nNaQszluRpFYAUZvEgN2PY0bVcpSDTfmDVn14h8/Rf8qpzcdIYEZ70t5aFfnaEi
-         EqXOvhdAdOBiQrRBxxsQhvyPtoBrAua7PQflSJq7qNNB44EJD+p7eS4Awwocxsl9Qq
-         7hkOfrlTB9JjAtkYKljUXWjNQ3pB5ABzSUgQgc3dGTFkTwf2Q7CeVRTTWyEalWlyV+
-         MN7whTXihhMdA==
-Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost1.synopsys.com (Postfix) with ESMTP id 5B2EC5B76;
-        Mon, 15 Apr 2019 11:46:52 -0700 (PDT)
-From:   Vitor Soares <vitor.soares@synopsys.com>
-To:     linux-i3c@lists.infradead.org
-Cc:     joao.pinto@synopsys.com, Vitor Soares <vitor.soares@synopsys.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/3] i3c: dw: Add limited bus mode support
-Date:   Mon, 15 Apr 2019 20:46:43 +0200
-Message-Id:
- <8cf1b180c31c5908d667285fa4880167a5e80c8c.1555350118.git.vitor.soares@synopsys.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <cover.1555350118.git.vitor.soares@synopsys.com>
-References: <cover.1555350118.git.vitor.soares@synopsys.com>
-In-Reply-To: <cover.1555350118.git.vitor.soares@synopsys.com>
-References: <cover.1555350118.git.vitor.soares@synopsys.com>
+        Mon, 15 Apr 2019 14:46:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49780 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728721AbfDOSqy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 14:46:54 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 7581C2073F;
+        Mon, 15 Apr 2019 18:46:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555354013;
+        bh=y0ykGUEIM+gGdYXqciO5su2tkgLyfcyxEFeGzKd19SU=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=nv2evaoFAwmyj+04ddD14og40/SX2u8dDFwbjAQwFGT5ZqA+QOizKaXjk5GLyIrhE
+         MP7DNG99yYpup8MR0EOY6CPSKAIEgwE/SVRUX578r5I5WOid/MqrhM6ay9035Vc7Pq
+         GXFhsy8WO9+XLUm38B1cFEIxHC9tTDZGQccCXA4g=
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        stable@vger.kernel.org,
+        syzbot+86b5c7c236a22616a72f@syzkaller.appspotmail.com,
+        Xin Long <lucien.xin@gmail.com>,
+        Alexander Potapenko <glider@google.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.9 54/76] sctp: initialize _pad of sockaddr_in before copying to user memory
+Date:   Mon, 15 Apr 2019 20:44:18 +0200
+Message-Id: <20190415183722.684388791@linuxfoundation.org>
+X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190415183707.712011689@linuxfoundation.org>
+References: <20190415183707.712011689@linuxfoundation.org>
+User-Agent: quilt/0.66
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-Message-ID: <20190415184643.Mbb8p0-Ci4mhoAg62hFLazvu5oQTy3vBmbixvBne-ek@z>
 
-This patch add limited bus mode support for DesignWare i3c master
+From: Xin Long <lucien.xin@gmail.com>
 
-Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
-Cc: Boris Brezillon <bbrezillon@kernel.org>
-Cc: <linux-kernel@vger.kernel.org>
+[ Upstream commit 09279e615c81ce55e04835970601ae286e3facbe ]
+
+Syzbot report a kernel-infoleak:
+
+  BUG: KMSAN: kernel-infoleak in _copy_to_user+0x16b/0x1f0 lib/usercopy.c:32
+  Call Trace:
+    _copy_to_user+0x16b/0x1f0 lib/usercopy.c:32
+    copy_to_user include/linux/uaccess.h:174 [inline]
+    sctp_getsockopt_peer_addrs net/sctp/socket.c:5911 [inline]
+    sctp_getsockopt+0x1668e/0x17f70 net/sctp/socket.c:7562
+    ...
+  Uninit was stored to memory at:
+    sctp_transport_init net/sctp/transport.c:61 [inline]
+    sctp_transport_new+0x16d/0x9a0 net/sctp/transport.c:115
+    sctp_assoc_add_peer+0x532/0x1f70 net/sctp/associola.c:637
+    sctp_process_param net/sctp/sm_make_chunk.c:2548 [inline]
+    sctp_process_init+0x1a1b/0x3ed0 net/sctp/sm_make_chunk.c:2361
+    ...
+  Bytes 8-15 of 16 are uninitialized
+
+It was caused by that th _pad field (the 8-15 bytes) of a v4 addr (saved in
+struct sockaddr_in) wasn't initialized, but directly copied to user memory
+in sctp_getsockopt_peer_addrs().
+
+So fix it by calling memset(addr->v4.sin_zero, 0, 8) to initialize _pad of
+sockaddr_in before copying it to user memory in sctp_v4_addr_to_user(), as
+sctp_v6_addr_to_user() does.
+
+Reported-by: syzbot+86b5c7c236a22616a72f@syzkaller.appspotmail.com
+Signed-off-by: Xin Long <lucien.xin@gmail.com>
+Tested-by: Alexander Potapenko <glider@google.com>
+Acked-by: Neil Horman <nhorman@tuxdriver.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- drivers/i3c/master/dw-i3c-master.c | 1 +
+ net/sctp/protocol.c |    1 +
  1 file changed, 1 insertion(+)
 
-diff --git a/drivers/i3c/master/dw-i3c-master.c b/drivers/i3c/master/dw-i3c-master.c
-index 0b01607..4005508 100644
---- a/drivers/i3c/master/dw-i3c-master.c
-+++ b/drivers/i3c/master/dw-i3c-master.c
-@@ -650,6 +650,7 @@ static int dw_i3c_master_bus_init(struct i3c_master_controller *m)
+--- a/net/sctp/protocol.c
++++ b/net/sctp/protocol.c
+@@ -600,6 +600,7 @@ out:
+ static int sctp_v4_addr_to_user(struct sctp_sock *sp, union sctp_addr *addr)
+ {
+ 	/* No address mapping for V4 sockets */
++	memset(addr->v4.sin_zero, 0, sizeof(addr->v4.sin_zero));
+ 	return sizeof(struct sockaddr_in);
+ }
  
- 	switch (bus->mode) {
- 	case I3C_BUS_MODE_MIXED_FAST:
-+	case I3C_BUS_MODE_MIXED_LIMITED:
- 		ret = dw_i2c_clk_cfg(master);
- 		if (ret)
- 			return ret;
--- 
-2.7.4
+
 
