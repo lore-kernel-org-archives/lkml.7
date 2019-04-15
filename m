@@ -2,76 +2,102 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 30A2FC282DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 11:52:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1742EC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 11:52:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02D762073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 11:52:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD1A42073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 11:52:43 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="cJiD5z+X"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727322AbfDOLwd (ORCPT
+        id S1727342AbfDOLwm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 07:52:33 -0400
-Received: from inva021.nxp.com ([92.121.34.21]:49942 "EHLO inva021.nxp.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726182AbfDOLwd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 07:52:33 -0400
-Received: from inva021.nxp.com (localhost [127.0.0.1])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 5EC2C200080;
-        Mon, 15 Apr 2019 13:52:31 +0200 (CEST)
-Received: from inva024.eu-rdc02.nxp.com (inva024.eu-rdc02.nxp.com [134.27.226.22])
-        by inva021.eu-rdc02.nxp.com (Postfix) with ESMTP id 51AE5200067;
-        Mon, 15 Apr 2019 13:52:31 +0200 (CEST)
-Received: from fsr-ub1864-101.ea.freescale.net (fsr-ub1864-101.ea.freescale.net [10.171.82.13])
-        by inva024.eu-rdc02.nxp.com (Postfix) with ESMTP id E9DD5205FE;
-        Mon, 15 Apr 2019 13:52:30 +0200 (CEST)
-From:   laurentiu.tudor@nxp.com
-To:     linuxppc-dev@lists.ozlabs.org, oss@buserror.net, mpe@ellerman.id.au
-Cc:     linux-kernel@vger.kernel.org,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        stable@vger.kernel.org
-Subject: [PATCH v2] powerpc/booke64: set RI in default MSR
-Date:   Mon, 15 Apr 2019 14:52:11 +0300
-Message-Id: <20190415115211.16374-1-laurentiu.tudor@nxp.com>
-X-Mailer: git-send-email 2.17.1
-X-Virus-Scanned: ClamAV using ClamSMTP
+        Mon, 15 Apr 2019 07:52:42 -0400
+Received: from smtp112.iad3a.emailsrvr.com ([173.203.187.112]:54626 "EHLO
+        smtp112.iad3a.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726182AbfDOLwm (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 07:52:42 -0400
+Received: from smtp7.relay.iad3a.emailsrvr.com (localhost [127.0.0.1])
+        by smtp7.relay.iad3a.emailsrvr.com (SMTP Server) with ESMTP id D27C43A1B;
+        Mon, 15 Apr 2019 07:52:40 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
+        s=20190130-41we5z8j; t=1555329160;
+        bh=bDoBB/miubeqrsxxvGhYDLsTOVsh4BOlQkap4COlMbk=;
+        h=From:To:Subject:Date:From;
+        b=cJiD5z+X+PHOT3G9iWIILh/ONH7PW6blACeq+i2mKZrBEq3/Q0mlUc7tinVDQZyc/
+         QzzDtq5S/lg/yxcV+mPlE4Zbd1ZMcLRdCBChxNCUcVBwAy8itPrUX8MxVwloLdoXma
+         0GKXIR1rp7pU4ruO+4LhjLomSV9f/XFxoX/tGRuc=
+X-Auth-ID: abbotti@mev.co.uk
+Received: by smtp7.relay.iad3a.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 15FA62BA8;
+        Mon, 15 Apr 2019 07:52:39 -0400 (EDT)
+X-Sender-Id: abbotti@mev.co.uk
+Received: from ian-deb.inside.mev.co.uk (remote.quintadena.com [81.133.34.160])
+        (using TLSv1.2 with cipher DHE-RSA-AES128-GCM-SHA256)
+        by 0.0.0.0:465 (trex/5.7.12);
+        Mon, 15 Apr 2019 07:52:40 -0400
+From:   Ian Abbott <abbotti@mev.co.uk>
+To:     devel@driverdev.osuosl.org
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ian Abbott <abbotti@mev.co.uk>,
+        H Hartley Sweeten <hsweeten@visionengravers.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 2/2] staging: comedi: vmk80xx: Fix possible double-free of ->usb_rx_buf
+Date:   Mon, 15 Apr 2019 12:52:30 +0100
+Message-Id: <20190415115230.7288-1-abbotti@mev.co.uk>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190415111015.8257-3-abbotti@mev.co.uk>
+References: <20190415111015.8257-3-abbotti@mev.co.uk>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Laurentiu Tudor <laurentiu.tudor@nxp.com>
+`vmk80xx_alloc_usb_buffers()` is called from `vmk80xx_auto_attach()` to
+allocate RX and TX buffers for USB transfers.  It allocates
+`devpriv->usb_rx_buf` followed by `devpriv->usb_tx_buf`.  If the
+allocation of `devpriv->usb_tx_buf` fails, it frees
+`devpriv->usb_rx_buf`,  leaving the pointer set dangling, and returns an
+error.  Later, `vmk80xx_detach()` will be called from the core comedi
+module code to clean up.  `vmk80xx_detach()` also frees both
+`devpriv->usb_rx_buf` and `devpriv->usb_tx_buf`, but
+`devpriv->usb_rx_buf` may have already been freed, leading to a
+double-free error.  Fix it by removing the call to
+`kfree(devpriv->usb_rx_buf)` from `vmk80xx_alloc_usb_buffers()`, relying
+on `vmk80xx_detach()` to free the memory.
 
-Set RI in the default kernel's MSR so that the architected way of
-detecting unrecoverable machine check interrupts has a chance to work.
-This is inline with the MSR setup of the rest of booke powerpc
-architectures configured here.
-
-Signed-off-by: Laurentiu Tudor <laurentiu.tudor@nxp.com>
-Cc: stable@vger.kernel.org
+Signed-off-by: Ian Abbott <abbotti@mev.co.uk>
 ---
-Changes in v2:
- - fixed typo - s/SI/RI
+v2: Fix commit message because it incorrectly indicated that the call to
+    `kfree()` was being removed from `vmk80xx_auto_attach()`, not
+    `vmk80xx_alloc_usb_buffers().
+---
+ drivers/staging/comedi/drivers/vmk80xx.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
- arch/powerpc/include/asm/reg_booke.h | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/powerpc/include/asm/reg_booke.h b/arch/powerpc/include/asm/reg_booke.h
-index eb2a33d5df26..e382bd6ede84 100644
---- a/arch/powerpc/include/asm/reg_booke.h
-+++ b/arch/powerpc/include/asm/reg_booke.h
-@@ -41,7 +41,7 @@
- #if defined(CONFIG_PPC_BOOK3E_64)
- #define MSR_64BIT	MSR_CM
+diff --git a/drivers/staging/comedi/drivers/vmk80xx.c b/drivers/staging/comedi/drivers/vmk80xx.c
+index b035d662390b..65dc6c51037e 100644
+--- a/drivers/staging/comedi/drivers/vmk80xx.c
++++ b/drivers/staging/comedi/drivers/vmk80xx.c
+@@ -682,10 +682,8 @@ static int vmk80xx_alloc_usb_buffers(struct comedi_device *dev)
  
--#define MSR_		(MSR_ME | MSR_CE)
-+#define MSR_		(MSR_ME | MSR_RI | MSR_CE)
- #define MSR_KERNEL	(MSR_ | MSR_64BIT)
- #define MSR_USER32	(MSR_ | MSR_PR | MSR_EE)
- #define MSR_USER64	(MSR_USER32 | MSR_64BIT)
+ 	size = usb_endpoint_maxp(devpriv->ep_tx);
+ 	devpriv->usb_tx_buf = kzalloc(size, GFP_KERNEL);
+-	if (!devpriv->usb_tx_buf) {
+-		kfree(devpriv->usb_rx_buf);
++	if (!devpriv->usb_tx_buf)
+ 		return -ENOMEM;
+-	}
+ 
+ 	return 0;
+ }
 -- 
-2.17.1
+2.20.1
 
