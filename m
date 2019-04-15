@@ -2,111 +2,98 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 19428C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 08:04:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0997C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 08:04:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4F9320652
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 08:04:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A07C1206BA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 08:04:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726475AbfDOIEH (ORCPT
+        id S1726562AbfDOIEv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 04:04:07 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:50465 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725779AbfDOIEH (ORCPT
+        Mon, 15 Apr 2019 04:04:51 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:48007 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725816AbfDOIEv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 04:04:07 -0400
-Received: from [192.168.1.110] ([95.115.91.41]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MT9zD-1hQhHK0lB9-00UYND; Mon, 15 Apr 2019 10:04:01 +0200
-Subject: Re: [PATCH] platform/chrome: wilco_ec: Add telemetry data char device
- interface
-To:     Nick Crews <ncrews@chromium.org>, enric.balletbo@collabora.com,
-        bleung@chromium.org
-Cc:     linux-kernel@vger.kernel.org, dlaurie@chromium.org,
-        derat@google.com, groeck@google.com, dtor@google.com,
-        sjg@chromium.org, bartfab@chromium.org, lamzin@google.com,
-        jchwong@google.com
-References: <20190412224539.161321-1-ncrews@chromium.org>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <1d9add8f-6205-dfa2-d15c-c2fab29b091a@metux.net>
-Date:   Mon, 15 Apr 2019 10:04:00 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Mon, 15 Apr 2019 04:04:51 -0400
+X-Originating-IP: 90.88.18.121
+Received: from localhost (aaubervilliers-681-1-63-121.w90-88.abo.wanadoo.fr [90.88.18.121])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id A3FA1240018;
+        Mon, 15 Apr 2019 08:04:44 +0000 (UTC)
+Date:   Mon, 15 Apr 2019 10:04:43 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     =?utf-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-sunxi@googlegroups.com
+Subject: Re: [PATCH 1/4] dt-bindings: sound: sun4i-spdif: Add Allwinner H6
+ compatible
+Message-ID: <20190415080443.frubh4ln4agrdsfe@flea>
+References: <20190411214422.2267-1-peron.clem@gmail.com>
+ <20190411214422.2267-2-peron.clem@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190412224539.161321-1-ncrews@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:Rbqjkk4WKeRL6koyiNZrw9XUohTmygGUkEJEmL4X97sd2o3lidY
- TrUZjL+pkp3LIkulDqxfnWyKzMJs+VLdpbO7NnO6aDxE57t3ihz9c9ATYr2SNUMF/gpznjC
- FUM0tuTa7Pkq52sYesKQgOlslgE9vhTH0feReK2JG8k0JmQJxHPSx3NozDRoKjvHIFcXGPE
- eEvdRDCpWkD8df84CCnMg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:pccFocRQPc0=:Nry6m95lGOwYWaM3p6i6Cx
- EGrU5ZxASUnLKH1ePfoUc+Oexl3fKy0pHZ5J2MXJY+I22VIBXaiaEzu/nE1hQ2kEiMWt2B5x0
- lEJdTiptUPg0a6Ymg9UXOL7v68zU2hRS2qxz+Kmrky+j/qJd8QkY2xWAg8A3qwAdJH0Gx1Ei3
- ccCFr1DxCYfpOFdhqhIE9fgnuQhNV7wUR2xaJdoU9DLddJJjNEuKtzCQQBb91Qg8OUjX1jwWn
- mEZG3LBKMB4l5h2ierdoIGbJDPDIVmtxwwLIpVfsOBZZS4WWxineKC3XXhPlhq9Z/yl6xL9o7
- dtDhg+d/vmkVcZvsFo4YvMvfnvajHmk2cdhOwEqq6IShowYU76GQzK/1OPgp4Gi7ueuFdMtSR
- YMmfRBYnUGLHJqg+DZJEqX/G2HldmIZkCRqbFIMHQXmV376rGBXp7Uh02tO00m1+UfSkSHoJj
- Qw/UF6n4ksAfi1MmyTLacooRkDhMFSYhnf5s6rcX933nOCdhP2IAt48bRer8UjvVk2NCCG5dp
- +hxJeUYSpaeqSIdlULCnTy4opq+eZmmLaSBsex3Pf5X3j1cbiwVAxtMw9nvo5Ov0+K19FkifU
- JLcKxJ+V7aOzA0CWFY7YLDqn8J3QGETjSLrN5HyJlXxPTNMWn1w8HyexoaIssyDLpL02f7790
- PRLjQIvffTGiMGWk9Z1orpPIIglRjAjGOAUNRyN9Es7duxsBz/cr2AIFVbg5zGu7JY0Jd32gx
- bbEkfHYaGcgRZZT4o0EaI7Cgen3A+J/CP2Cou3bs38KVxff98rAwcz1KCTg=
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="asihfkwa6t6ultx7"
+Content-Disposition: inline
+In-Reply-To: <20190411214422.2267-2-peron.clem@gmail.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13.04.19 00:45, Nick Crews wrote:
-> The Wilco Embedded Controller is able to send telemetry data
-> which is useful for enterprise applications. 
 
-What kind of "enterprise applications" exactly ?
+--asihfkwa6t6ultx7
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-> A daemon running on
-> the OS sends a command to the EC via write() to char device,
-> and can read the response with a read() request.
-> Both the request and the response are in an opaque
-> binary format so that information which is proprietary to the
-> enterprise service provider is secure.
+Hi,
 
-In other words: a direct backdoor for the "provider", who can do
-anything he wants remotely on the user's machine, w/o the user having
-a chance of seeing what's actually going on ?
+On Thu, Apr 11, 2019 at 11:44:19PM +0200, Cl=E9ment P=E9ron wrote:
+> Allwinner H6 has a SPDIF controller with an increase of the fifo
+> size and the possibility to output the master clock.
+> However it's still compatible with the already existing driver for
+> Allwiner H3.
+>
+> Add this compatible in the device-tree bindings documentation.
 
-Seriously ?!
+How was this tested?
 
-In some of your previous mails (*1) you indicate that it sends some
-diagnostics information (eg. "dock is not working"). WTH does that
-have to be "proprietary", IOW: encrypted = kept secret from the owner ?
+After looking at the datasheet, it looks like it's still significantly
+different. In particular:
 
-If I *own* such a device, this is some information, I *need* to know,
-I *deserve* to know, and it is *my* data, as it's a state of *my*
-device. And that's some kind of information that *nobody* else has
-any business with that. Period.
+  - The MCLK divider isn't at the same offset
+  - The bits to flush the FIFO aren't at the same offset
+  - The FIFO trigger levels aren't at the same offset
+  - The FIFO status register layout is almost entirely different
 
-Seems you folks (Google) still didn't learn the fundamental difference
-between ownership and just a license to use. And the recent multi
-billion fines against Google still haven't been enough, so I'm looking
-forward Mrs. Vestager's next strikes.
+So it doesn't really look compatible to me
 
+Maxime
 
-I'd like to remind you of the famous words of JR. Oppenheimer:
-""Now I am become Death, the destroyer of worlds."
-(quoted from the Bhagavad Gita, when he recognized the desatreous
-consequences of his work)
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
 
+--asihfkwa6t6ultx7
+Content-Type: application/pgp-signature; name="signature.asc"
 
---mtx
+-----BEGIN PGP SIGNATURE-----
 
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXLQ7GwAKCRDj7w1vZxhR
+xeXDAQDHMpbzO3Xd4BiFTccIZGTf5U3cg5fsy8liJ1h36l0dkQD/eWFJGNLTdfgp
+XIMHvRXdOlHga2dLvRe/m+JoPKzIYw4=
+=LS+j
+-----END PGP SIGNATURE-----
+
+--asihfkwa6t6ultx7--
