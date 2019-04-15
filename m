@@ -7,46 +7,46 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E3906C10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:08:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8D1CC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:09:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E339218A1
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:08:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9F9C32087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:09:01 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355338;
-	bh=ZqcT66K9k4bSg7Q32qidHm/ycxUkbbq1VomvgluG8qk=;
+	s=default; t=1555355341;
+	bh=qY7SeKY+Huge9Eq1hAK9oCstFZApOcYzOHXgmCs2CKo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=ac51x0Mc79NOvmueMNRp5t+jcvsN/Gap7MdDOxXOldAn9RfVH3+TzNfxySKU8OOg3
-	 3gAdpJEVuamzBokWv4DGNWHLrBbLO6hn0q7dWmH76bDMZfvgejVs5KNyiJ0H7sBtfp
-	 ryheA4UMTphCrWsY1c+5rNovjCpf86vHZjKx8xfo=
+	b=Rz8tO5bb4qBXqPm9KMtvlEy8cpQyPz3951AVCPkU/V1jMhqY40RjC3k/BlW4gDfX3
+	 JUE1cDSTF2v1LLRDduvezELrK6qIDnRPCngdZHypJqcZ+5ZBRFVqyRddEP2ckh3OWw
+	 L1Hf+OFycBlqNW88Ck2axZVsHu+u4t8DdKJ14RtM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730617AbfDOTI5 (ORCPT
+        id S1730625AbfDOTJA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:08:57 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44490 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:09:00 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44532 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730598AbfDOTI4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:08:56 -0400
+        id S1730598AbfDOTI6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:08:58 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60F5E218A1;
-        Mon, 15 Apr 2019 19:08:54 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E83E92087C;
+        Mon, 15 Apr 2019 19:08:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355334;
-        bh=ZqcT66K9k4bSg7Q32qidHm/ycxUkbbq1VomvgluG8qk=;
+        s=default; t=1555355337;
+        bh=qY7SeKY+Huge9Eq1hAK9oCstFZApOcYzOHXgmCs2CKo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nJQIDKK7VEwJ70lzBJbRmiHq3liQ42SrCuXiyKBkDcJXmpzp/yecBhF2WnSHDwLHT
-         DeptG6+0HLF4jeEdbDBY4RIuAGUUOfYhnuc34TcC6X+qNh1CNH9GRJ6bRsAlHHmfFy
-         IN+2fvzZqVp9D4k0Ufbi0mkmNeW2PGIA+3ruHalc=
+        b=oU9sUTlrCbp8k2hZXMPZOSiRGeYFZRAu36bTndfRH4l1Ed2hn4NMfjnetCKCsxhcY
+         a7ZjN8cye1xWx029xryZfxl9dFiGXPgL2eX1bVidspclZ5FLJhftB7pp6vZMYAidOe
+         3RjfvHE4rXlp2gkP83fTPDRoHzkojeMlAUkfsSRg=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Peter Geis <pgwipeout@gmail.com>,
-        Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH 4.19 081/101] arm64: dts: rockchip: fix rk3328 rgmii high tx error rate
-Date:   Mon, 15 Apr 2019 20:59:19 +0200
-Message-Id: <20190415183744.704963646@linuxfoundation.org>
+        stable@vger.kernel.org, Kefeng Wang <wangkefeng.wang@huawei.com>,
+        Will Deacon <will.deacon@arm.com>
+Subject: [PATCH 4.19 082/101] arm64: backtrace: Dont bother trying to unwind the userspace stack
+Date:   Mon, 15 Apr 2019 20:59:20 +0200
+Message-Id: <20190415183744.750934705@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183740.341577907@linuxfoundation.org>
 References: <20190415183740.341577907@linuxfoundation.org>
@@ -59,121 +59,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Geis <pgwipeout@gmail.com>
+From: Will Deacon <will.deacon@arm.com>
 
-commit 6fd8b9780ec1a49ac46e0aaf8775247205e66231 upstream.
+commit 1e6f5440a6814d28c32d347f338bfef68bc3e69d upstream.
 
-Several rk3328 based boards experience high rgmii tx error rates.
-This is due to several pins in the rk3328.dtsi rgmii pinmux that are
-missing a defined pull strength setting.
-This causes the pinmux driver to default to 2ma (bit mask 00).
+Calling dump_backtrace() with a pt_regs argument corresponding to
+userspace doesn't make any sense and our unwinder will simply print
+"Call trace:" before unwinding the stack looking for user frames.
 
-These pins are only defined in the rk3328.dtsi, and are not listed in
-the rk3328 specification.
-The TRM only lists them as "Reserved"
-(RK3328 TRM V1.1, 3.3.3 Detail Register Description, GRF_GPIO0B_IOMUX,
-GRF_GPIO0C_IOMUX, GRF_GPIO0D_IOMUX).
-However, removal of these pins from the rgmii pinmux definition causes
-the interface to fail to transmit.
+Rather than go through this song and dance, just return early if we're
+passed a user register state.
 
-Also, the rgmii tx and rx pins defined in the dtsi are not consistent
-with the rk3328 specification, with tx pins currently set to 12ma and
-rx pins set to 2ma.
-
-Fix this by setting tx pins to 8ma and the rx pins to 4ma, consistent
-with the specification.
-Defining the drive strength for the undefined pins eliminated the high
-tx packet error rate observed under heavy data transfers.
-Aligning the drive strength to the TRM values eliminated the occasional
-packet retry errors under iperf3 testing.
-This allows much higher data rates with no recorded tx errors.
-
-Tested on the rk3328-roc-cc board.
-
-Fixes: 52e02d377a72 ("arm64: dts: rockchip: add core dtsi file for RK3328 SoCs")
-Cc: stable@vger.kernel.org
-Signed-off-by: Peter Geis <pgwipeout@gmail.com>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+Cc: <stable@vger.kernel.org>
+Fixes: 1149aad10b1e ("arm64: Add dump_backtrace() in show_regs")
+Reported-by: Kefeng Wang <wangkefeng.wang@huawei.com>
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/rockchip/rk3328.dtsi |   44 +++++++++++++++----------------
- 1 file changed, 22 insertions(+), 22 deletions(-)
+ arch/arm64/kernel/traps.c |   15 +++++++++------
+ 1 file changed, 9 insertions(+), 6 deletions(-)
 
---- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-+++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
-@@ -1553,50 +1553,50 @@
- 			rgmiim1_pins: rgmiim1-pins {
- 				rockchip,pins =
- 					/* mac_txclk */
--					<1 RK_PB4 2 &pcfg_pull_none_12ma>,
-+					<1 RK_PB4 2 &pcfg_pull_none_8ma>,
- 					/* mac_rxclk */
--					<1 RK_PB5 2 &pcfg_pull_none_2ma>,
-+					<1 RK_PB5 2 &pcfg_pull_none_4ma>,
- 					/* mac_mdio */
--					<1 RK_PC3 2 &pcfg_pull_none_2ma>,
-+					<1 RK_PC3 2 &pcfg_pull_none_4ma>,
- 					/* mac_txen */
--					<1 RK_PD1 2 &pcfg_pull_none_12ma>,
-+					<1 RK_PD1 2 &pcfg_pull_none_8ma>,
- 					/* mac_clk */
--					<1 RK_PC5 2 &pcfg_pull_none_2ma>,
-+					<1 RK_PC5 2 &pcfg_pull_none_4ma>,
- 					/* mac_rxdv */
--					<1 RK_PC6 2 &pcfg_pull_none_2ma>,
-+					<1 RK_PC6 2 &pcfg_pull_none_4ma>,
- 					/* mac_mdc */
--					<1 RK_PC7 2 &pcfg_pull_none_2ma>,
-+					<1 RK_PC7 2 &pcfg_pull_none_4ma>,
- 					/* mac_rxd1 */
--					<1 RK_PB2 2 &pcfg_pull_none_2ma>,
-+					<1 RK_PB2 2 &pcfg_pull_none_4ma>,
- 					/* mac_rxd0 */
--					<1 RK_PB3 2 &pcfg_pull_none_2ma>,
-+					<1 RK_PB3 2 &pcfg_pull_none_4ma>,
- 					/* mac_txd1 */
--					<1 RK_PB0 2 &pcfg_pull_none_12ma>,
-+					<1 RK_PB0 2 &pcfg_pull_none_8ma>,
- 					/* mac_txd0 */
--					<1 RK_PB1 2 &pcfg_pull_none_12ma>,
-+					<1 RK_PB1 2 &pcfg_pull_none_8ma>,
- 					/* mac_rxd3 */
--					<1 RK_PB6 2 &pcfg_pull_none_2ma>,
-+					<1 RK_PB6 2 &pcfg_pull_none_4ma>,
- 					/* mac_rxd2 */
--					<1 RK_PB7 2 &pcfg_pull_none_2ma>,
-+					<1 RK_PB7 2 &pcfg_pull_none_4ma>,
- 					/* mac_txd3 */
--					<1 RK_PC0 2 &pcfg_pull_none_12ma>,
-+					<1 RK_PC0 2 &pcfg_pull_none_8ma>,
- 					/* mac_txd2 */
--					<1 RK_PC1 2 &pcfg_pull_none_12ma>,
-+					<1 RK_PC1 2 &pcfg_pull_none_8ma>,
+--- a/arch/arm64/kernel/traps.c
++++ b/arch/arm64/kernel/traps.c
+@@ -101,10 +101,16 @@ static void dump_instr(const char *lvl,
+ void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
+ {
+ 	struct stackframe frame;
+-	int skip;
++	int skip = 0;
  
- 					/* mac_txclk */
--					<0 RK_PB0 1 &pcfg_pull_none>,
-+					<0 RK_PB0 1 &pcfg_pull_none_8ma>,
- 					/* mac_txen */
--					<0 RK_PB4 1 &pcfg_pull_none>,
-+					<0 RK_PB4 1 &pcfg_pull_none_8ma>,
- 					/* mac_clk */
--					<0 RK_PD0 1 &pcfg_pull_none>,
-+					<0 RK_PD0 1 &pcfg_pull_none_4ma>,
- 					/* mac_txd1 */
--					<0 RK_PC0 1 &pcfg_pull_none>,
-+					<0 RK_PC0 1 &pcfg_pull_none_8ma>,
- 					/* mac_txd0 */
--					<0 RK_PC1 1 &pcfg_pull_none>,
-+					<0 RK_PC1 1 &pcfg_pull_none_8ma>,
- 					/* mac_txd3 */
--					<0 RK_PC7 1 &pcfg_pull_none>,
-+					<0 RK_PC7 1 &pcfg_pull_none_8ma>,
- 					/* mac_txd2 */
--					<0 RK_PC6 1 &pcfg_pull_none>;
-+					<0 RK_PC6 1 &pcfg_pull_none_8ma>;
- 			};
+ 	pr_debug("%s(regs = %p tsk = %p)\n", __func__, regs, tsk);
  
- 			rmiim1_pins: rmiim1-pins {
++	if (regs) {
++		if (user_mode(regs))
++			return;
++		skip = 1;
++	}
++
+ 	if (!tsk)
+ 		tsk = current;
+ 
+@@ -125,7 +131,6 @@ void dump_backtrace(struct pt_regs *regs
+ 	frame.graph = tsk->curr_ret_stack;
+ #endif
+ 
+-	skip = !!regs;
+ 	printk("Call trace:\n");
+ 	do {
+ 		/* skip until specified stack frame */
+@@ -175,15 +180,13 @@ static int __die(const char *str, int er
+ 		return ret;
+ 
+ 	print_modules();
+-	__show_regs(regs);
+ 	pr_emerg("Process %.*s (pid: %d, stack limit = 0x%p)\n",
+ 		 TASK_COMM_LEN, tsk->comm, task_pid_nr(tsk),
+ 		 end_of_stack(tsk));
++	show_regs(regs);
+ 
+-	if (!user_mode(regs)) {
+-		dump_backtrace(regs, tsk);
++	if (!user_mode(regs))
+ 		dump_instr(KERN_EMERG, regs);
+-	}
+ 
+ 	return ret;
+ }
 
 
