@@ -2,52 +2,53 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 232F0C282DD
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:47:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B7A0EC10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:47:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8279218DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:47:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7CA85218D3
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:47:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555354048;
-	bh=gsrIuS87PKHpdBIKiY8Xbmm9wek4Xo2YlcKMxhytBu0=;
+	s=default; t=1555354053;
+	bh=C6y9KtlxXmI/CqXaNTxmOlLp3ZvmluzKVmgnf0Fx+jo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=IR+hftD27WRQZfxBK/ApHfu0CUemXhM7JvvOnmUrs4NeNMFz6L3bg+ogWjpwhiolU
-	 KHPfXBGoRHIWH7PMEKlHieluSD0nhTbedNlKgcWa0TeaNIVl8oJ/7qw0c95nrckJAl
-	 C5/y9+PmvNsqiDaX8WXGVO5fiUs2uuClWHqMFvAQ=
+	b=sC0AnxxM2AWOWzFts1piE7K2LrOh68sWvvluDBWfvUL30dLNkitRUrUGKtUKcVOv4
+	 oq3FoKZb1TWtNg+n6WzlaFOcCkOYzl7pfW5u6IEOVO5imOdmwz16r+H7706gijluQ3
+	 /zxXF494tZFi8BM1BbzocHjlHrBj/CnDHcJjRIZE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728915AbfDOSr0 (ORCPT
+        id S1728465AbfDOSrc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 14:47:26 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50632 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 14:47:32 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50834 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728425AbfDOSrX (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 14:47:23 -0400
+        id S1728425AbfDOSr2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 14:47:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 73C93218D3;
-        Mon, 15 Apr 2019 18:47:22 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id AF42B2087C;
+        Mon, 15 Apr 2019 18:47:27 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555354042;
-        bh=gsrIuS87PKHpdBIKiY8Xbmm9wek4Xo2YlcKMxhytBu0=;
+        s=default; t=1555354048;
+        bh=C6y9KtlxXmI/CqXaNTxmOlLp3ZvmluzKVmgnf0Fx+jo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=O+xxLirf70W6ERC7wD7YjiVfBzHhsXDW2p5RzvuOpvx9Lqb6W6I9Yqnt+wqckPYMg
-         m5AX5U7Sbt8ncy4pumily56I57bm+Rt+UCwpbGZeUWe8E9X9KFT1gAxhobu7YVjTPJ
-         AtOyNj6qcL4l/qZSR5aHoZa4IeNoknswI8COKmDA=
+        b=VB/5s80dhW97E0Sqb8h0j4gObAg65SuqYFx0vKagjhspOLPgbWtcwJnoA1LnG6D9V
+         IofNfybI1zk1wraqlYDMcV2XPVVOkSL75lKUR/vwJC+O7IfHUkhTfqlKw9CgOSCgw9
+         MpOzgBIhgCwB/YOLuWSuoT7f0TfFUg44nftDqZnA=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Diana Craciun <diana.craciun@nxp.com>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.9 41/76] powerpc/fsl: Update Spectre v2 reporting
-Date:   Mon, 15 Apr 2019 20:44:05 +0200
-Message-Id: <20190415183718.146987235@linuxfoundation.org>
+        stable@vger.kernel.org,
+        "Darrick J. Wong" <darrick.wong@oracle.com>,
+        Nikolay Borisov <nborisov@suse.com>,
+        Filipe Manana <fdmanana@suse.com>,
+        David Sterba <dsterba@suse.com>
+Subject: [PATCH 4.9 67/76] Btrfs: do not allow trimming when a fs is mounted with the nologreplay option
+Date:   Mon, 15 Apr 2019 20:44:31 +0200
+Message-Id: <20190415183727.653792862@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183707.712011689@linuxfoundation.org>
 References: <20190415183707.712011689@linuxfoundation.org>
@@ -60,37 +61,53 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-commit dfa88658fb0583abb92e062c7a9cd5a5b94f2a46 upstream.
+From: Filipe Manana <fdmanana@suse.com>
 
-Report branch predictor state flush as a mitigation for
-Spectre variant 2.
+commit f35f06c35560a86e841631f0243b83a984dc11a9 upstream.
 
-Signed-off-by: Diana Craciun <diana.craciun@nxp.com>
-Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+Whan a filesystem is mounted with the nologreplay mount option, which
+requires it to be mounted in RO mode as well, we can not allow discard on
+free space inside block groups, because log trees refer to extents that
+are not pinned in a block group's free space cache (pinning the extents is
+precisely the first phase of replaying a log tree).
+
+So do not allow the fitrim ioctl to do anything when the filesystem is
+mounted with the nologreplay option, because later it can be mounted RW
+without that option, which causes log replay to happen and result in
+either a failure to replay the log trees (leading to a mount failure), a
+crash or some silent corruption.
+
+Reported-by: Darrick J. Wong <darrick.wong@oracle.com>
+Fixes: 96da09192cda ("btrfs: Introduce new mount option to disable tree log replay")
+CC: stable@vger.kernel.org # 4.9+
+Reviewed-by: Nikolay Borisov <nborisov@suse.com>
+Signed-off-by: Filipe Manana <fdmanana@suse.com>
+Reviewed-by: David Sterba <dsterba@suse.com>
+Signed-off-by: David Sterba <dsterba@suse.com>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- arch/powerpc/kernel/security.c | 5 ++++-
- 1 file changed, 4 insertions(+), 1 deletion(-)
+ fs/btrfs/ioctl.c |   10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-diff --git a/arch/powerpc/kernel/security.c b/arch/powerpc/kernel/security.c
-index 6dc5cdc2b87c..43ce800e73bf 100644
---- a/arch/powerpc/kernel/security.c
-+++ b/arch/powerpc/kernel/security.c
-@@ -213,8 +213,11 @@ ssize_t cpu_show_spectre_v2(struct device *dev, struct device_attribute *attr, c
+--- a/fs/btrfs/ioctl.c
++++ b/fs/btrfs/ioctl.c
+@@ -385,6 +385,16 @@ static noinline int btrfs_ioctl_fitrim(s
+ 	if (!capable(CAP_SYS_ADMIN))
+ 		return -EPERM;
  
- 		if (count_cache_flush_type == COUNT_CACHE_FLUSH_HW)
- 			seq_buf_printf(&s, "(hardware accelerated)");
--	} else
-+	} else if (btb_flush_enabled) {
-+		seq_buf_printf(&s, "Mitigation: Branch predictor state flush");
-+	} else {
- 		seq_buf_printf(&s, "Vulnerable");
-+	}
- 
- 	seq_buf_printf(&s, "\n");
- 
--- 
-2.19.1
-
++	/*
++	 * If the fs is mounted with nologreplay, which requires it to be
++	 * mounted in RO mode as well, we can not allow discard on free space
++	 * inside block groups, because log trees refer to extents that are not
++	 * pinned in a block group's free space cache (pinning the extents is
++	 * precisely the first phase of replaying a log tree).
++	 */
++	if (btrfs_test_opt(fs_info, NOLOGREPLAY))
++		return -EROFS;
++
+ 	rcu_read_lock();
+ 	list_for_each_entry_rcu(device, &fs_info->fs_devices->devices,
+ 				dev_list) {
 
 
