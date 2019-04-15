@@ -7,49 +7,48 @@ X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FB24C282DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:03:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 994C9C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:03:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF4272087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:03:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6886A2087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:03:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355024;
-	bh=AUiHHgA59mZ5aKCfD2nJ8sde5DoDoy680OvnJwhRI44=;
+	s=default; t=1555355028;
+	bh=ql1tjAa0nD6jAbAc6C4t4vMQZMq5/nysHOewJu/DL6c=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=TRYgZ5JS97+oqC5pMGes7fo3Gv9l+v0ycvFS0ILhkbVYxezRoWfp+6ImPGgZaYE+E
-	 1vtWxPBoQwuRE/KDdCume5gn7ghlXxnr/iwBxb+JVST/zokQDGYdrcPSf2R8Xa2DnZ
-	 jbiga1+dAE6G1IIl1vcRh2UluieNrggVn0u5C30o=
+	b=q/gL7ZUCSxpkL9s7+m0PqNUteS/l1VCDXIfkSAsq/ALTaDW24uAcA80IFqk4ZxLCT
+	 g1SEXaL6ew4PZje9rNcGFXSl9NiOTkJTXoUIN1K0JI7OlootD8YevQDzcW8fsAb5Hk
+	 c0roAqNYSGYX+a3n4ULDJb4u04YLoal55S+j0LEo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729317AbfDOTDm (ORCPT
+        id S1729332AbfDOTDr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:03:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35700 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:03:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35790 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729297AbfDOTDk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:03:40 -0400
+        id S1729312AbfDOTDm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:03:42 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id EF5F7218A1;
-        Mon, 15 Apr 2019 19:03:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 8D9E6218FE;
+        Mon, 15 Apr 2019 19:03:41 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355019;
-        bh=AUiHHgA59mZ5aKCfD2nJ8sde5DoDoy680OvnJwhRI44=;
+        s=default; t=1555355022;
+        bh=ql1tjAa0nD6jAbAc6C4t4vMQZMq5/nysHOewJu/DL6c=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BixsDwwGdPhw7jXE4FpRtqTAvq29t6eoq+bNLdziw7cCeilIxzL8Z6F7LadGyJwiP
-         ujIwyEEgZ388GamUAjO174wfTp9mAgxgheJWBxvcO1LdARzTSEZQJH6FhGVrtoiWpK
-         DV7wgk2l1wGHitI+DxHDRhVKPt+R0DjO2BFydbwM=
+        b=XbSocjekMEZWHsUEUTTna4e60+T9y1ZIIM7CrG89qTgPbdFBFg0TAiuhnp9V4gbWq
+         qlkZoYBgNHIaVPzig9RKNzJ1jWn+lC5n3lrJ3bKqiqqAT6DJVS5bnf3CbkBCAf/k/V
+         pRX7mp0QW7OgNVyp4E9wwJbVtlwo5+zQPD9MK40I=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Kefeng Wang <wangkefeng.wang@huawei.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mukesh Ojha <mojha@codeaurora.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 4.14 52/69] genirq: Initialize request_mutex if CONFIG_SPARSE_IRQ=n
-Date:   Mon, 15 Apr 2019 20:59:10 +0200
-Message-Id: <20190415183734.481627647@linuxfoundation.org>
+        stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
+        "Michael S. Tsirkin" <mst@redhat.com>,
+        Halil Pasic <pasic@linux.ibm.com>,
+        Jens Freimann <jfreimann@redhat.com>
+Subject: [PATCH 4.14 53/69] virtio: Honour may_reduce_num in vring_create_virtqueue
+Date:   Mon, 15 Apr 2019 20:59:11 +0200
+Message-Id: <20190415183734.540083630@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183726.036654568@linuxfoundation.org>
 References: <20190415183726.036654568@linuxfoundation.org>
@@ -62,36 +61,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kefeng Wang <wangkefeng.wang@huawei.com>
+From: Cornelia Huck <cohuck@redhat.com>
 
-commit e8458e7afa855317b14915d7b86ab3caceea7eb6 upstream.
+commit cf94db21905333e610e479688add629397a4b384 upstream.
 
-When CONFIG_SPARSE_IRQ is disable, the request_mutex in struct irq_desc
-is not initialized which causes malfunction.
+vring_create_virtqueue() allows the caller to specify via the
+may_reduce_num parameter whether the vring code is allowed to
+allocate a smaller ring than specified.
 
-Fixes: 9114014cf4e6 ("genirq: Add mutex to irq desc to serialize request/free_irq()")
-Signed-off-by: Kefeng Wang <wangkefeng.wang@huawei.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-Cc: Marc Zyngier <marc.zyngier@arm.com>
-Cc: <linux-arm-kernel@lists.infradead.org>
-Cc: stable@vger.kernel.org
-Link: https://lkml.kernel.org/r/20190404074512.145533-1-wangkefeng.wang@huawei.com
+However, the split ring allocation code tries to allocate a
+smaller ring on allocation failure regardless of what the
+caller specified. This may cause trouble for e.g. virtio-pci
+in legacy mode, which does not support ring resizing. (The
+packed ring code does not resize in any case.)
+
+Let's fix this by bailing out immediately in the split ring code
+if the requested size cannot be allocated and may_reduce_num has
+not been specified.
+
+While at it, fix a typo in the usage instructions.
+
+Fixes: 2a2d1382fe9d ("virtio: Add improved queue allocation API")
+Cc: stable@vger.kernel.org # v4.6+
+Signed-off-by: Cornelia Huck <cohuck@redhat.com>
+Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
+Reviewed-by: Halil Pasic <pasic@linux.ibm.com>
+Reviewed-by: Jens Freimann <jfreimann@redhat.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- kernel/irq/irqdesc.c |    1 +
- 1 file changed, 1 insertion(+)
+ drivers/virtio/virtio_ring.c |    2 ++
+ include/linux/virtio_ring.h  |    2 +-
+ 2 files changed, 3 insertions(+), 1 deletion(-)
 
---- a/kernel/irq/irqdesc.c
-+++ b/kernel/irq/irqdesc.c
-@@ -535,6 +535,7 @@ int __init early_irq_init(void)
- 		alloc_masks(&desc[i], node);
- 		raw_spin_lock_init(&desc[i].lock);
- 		lockdep_set_class(&desc[i].lock, &irq_desc_lock_class);
-+		mutex_init(&desc[i].request_mutex);
- 		desc_set_defaults(i, &desc[i], node, NULL, NULL);
+--- a/drivers/virtio/virtio_ring.c
++++ b/drivers/virtio/virtio_ring.c
+@@ -1087,6 +1087,8 @@ struct virtqueue *vring_create_virtqueue
+ 					  GFP_KERNEL|__GFP_NOWARN|__GFP_ZERO);
+ 		if (queue)
+ 			break;
++		if (!may_reduce_num)
++			return NULL;
  	}
- 	return arch_early_irq_init();
+ 
+ 	if (!num)
+--- a/include/linux/virtio_ring.h
++++ b/include/linux/virtio_ring.h
+@@ -63,7 +63,7 @@ struct virtqueue;
+ /*
+  * Creates a virtqueue and allocates the descriptor ring.  If
+  * may_reduce_num is set, then this may allocate a smaller ring than
+- * expected.  The caller should query virtqueue_get_ring_size to learn
++ * expected.  The caller should query virtqueue_get_vring_size to learn
+  * the actual size of the ring.
+  */
+ struct virtqueue *vring_create_virtqueue(unsigned int index,
 
 
