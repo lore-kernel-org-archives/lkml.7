@@ -2,76 +2,74 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 483C1C10F13
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 00:47:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88CB6C10F14
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 00:47:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 127B72070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 00:47:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D0D92070D
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 00:47:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V+2169/1"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JlQAvIA9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726464AbfDOAr1 (ORCPT
+        id S1726621AbfDOAra (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 20:47:27 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:39906 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726178AbfDOAr1 (ORCPT
+        Sun, 14 Apr 2019 20:47:30 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:43421 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726178AbfDOAr3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 20:47:27 -0400
-Received: by mail-pg1-f196.google.com with SMTP id k3so7719582pga.6;
-        Sun, 14 Apr 2019 17:47:27 -0700 (PDT)
+        Sun, 14 Apr 2019 20:47:29 -0400
+Received: by mail-pf1-f195.google.com with SMTP id c8so7696905pfd.10;
+        Sun, 14 Apr 2019 17:47:28 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6ZPyWSQHPinUgWmwQRPfs9W8YBEIvp9FgszeG1juFHE=;
-        b=V+2169/1jR/HaXhDuVoQLVhzYg7l+7RaU+E/nUKpESLYBrs6bs/qTKw7pr5xIwlmMt
-         qODOrHcNsS5IdWajLNpMenrq+ZIh1gVeDDPgDdPIYw7MwhWt3ph8ZopDrTPjHjv3vEPv
-         u15PsvDaCQon4kwkB6IPtsc2JYxAaNLm4wR8w+Tt5ZSWJFF+eOOrTpPqHON8/MrtgmsQ
-         BE/BfH4FyqJnXb3FNSwAfB6KigpVXIctj6RKQvt4kpKPYkuUeeNQim6/7sDrlHKIB1cc
-         xjjHiPrmKbx+3msrl2D+iSvDICZmepgkUg1Afej+VkEI8lb9hwekqu80pCp3wY73gh34
-         /NQA==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=ViVmupe5SgRSeZM1zRYXRJzTPlsKO2l+aVu7kqlxatY=;
+        b=JlQAvIA9pt6NOCDRiqJXaJC8iDQVv4OdO9RlBdaREdFG6CBDsHikcZom6DrqoQeBY9
+         U61+MQw0j2GI0J3R6JG0XfDOP3xMZBtqC/klOHysSDEriq4uPZAEvIuSRgptJg1QwNOy
+         Asl6N2OvUK/oLq0wsKZ8HpsbxNM7i9XRxlG++P6sbQ4tooVnlHpMLPrRprMZ6KMOlFqs
+         Tis+mmAUZyV4+2srUvxfQUQAZqcX+6dSpwnykEX4wxzhPwAIVtJ51ZrfiN26+fF9G/p1
+         zG1b0zZzQeX5OcUEsORHtKB9qPjWHFNeaOwdN68sW103T+rYcptHZk74OPXw2LsMuS76
+         5YLQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=6ZPyWSQHPinUgWmwQRPfs9W8YBEIvp9FgszeG1juFHE=;
-        b=ffrfFptp17RwXESS3caYNS/eseIwKUJt2Du1S/VanygL6Ymzm0dn7x5PvQZutxhLPi
-         wYh/8DLGI1wlcK+gEWdYkL5/LiRLmQ5Wln4/WSqprvPRKfRHsQcK7jI+vi5n1LIopvY6
-         mqr9xwDx+tYlDRkLwyLH1ffK2gJDHbBGatdADXUDkuPZK30hZwfGaX6dg6wSuuXcpzrS
-         yJjeHjWvobzIjK+WJg274DCvxXIyFNOO2AqNDDEnAHweHNqZvcYngPmS10y4jLZZa/1u
-         RKB1AtYHmyB/MrQcwO8x5v4STCB+Bvb4XI6e95cvIxNueMgYLinnx3/0gXVhHxbxG4l8
-         nroA==
-X-Gm-Message-State: APjAAAU3jdMPHAT49f+CjNouPm8lM6J10ndY7wJrBekx/j3s1umuGG2f
-        2/BOaGAHPAk1M7crtvsWPaxrYnKf
-X-Google-Smtp-Source: APXvYqw7hf3lFVNbVikfY9YkZ2TVMYXTAKQgR6zFOYzPBkUrROfk638Y34ZH5sanq3hrGkeTVnnZvQ==
-X-Received: by 2002:a65:6150:: with SMTP id o16mr6819893pgv.285.1555289246368;
-        Sun, 14 Apr 2019 17:47:26 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=ViVmupe5SgRSeZM1zRYXRJzTPlsKO2l+aVu7kqlxatY=;
+        b=m7ipAvgNMTGKYy09ireM9XQtBAoppZUUDanNC4FrwhXughhNz7vSwHbNnYygT9l8CA
+         UjAv/s2HtfijIzDq/vcueqW80wYc5R4eLKisXd2Y0d9d9aUdApTs4Fnt6HAUdVnpLQrm
+         kKfy5XroNydcR6fFhOLJywCLiAioqV0SC4HlQ7dpCrvVS+Nk6H+MOrFSpJjZgr3qnQC7
+         sNDvXOUIYMPx4PHAr3l2dM1TDX6mE2gL6nTGYyh5accy/OURvuZHMQHX38CtMRp5ydi7
+         ow5igK1w7SYBEqcZl+CHR1q1StjOdo1/sXPS8o+aE/0/bgHlRnBy6E0bPiGzMBlRhKE5
+         4yLA==
+X-Gm-Message-State: APjAAAUe0gHtpwO28urXXDonr+0oLHhyOxCoEJ2LFi21Uz/zsKbIZSYY
+        RAs/2rvR8A2th9osF7NqwOQ3cmze
+X-Google-Smtp-Source: APXvYqx8nC0z5GM5dQYPF8OiBO2vQYfluJMtmWdbKpd3utkYSJFxrERzsojaxRaK0XqfRqCWDAyKTw==
+X-Received: by 2002:a65:4108:: with SMTP id w8mr66630581pgp.236.1555289248042;
+        Sun, 14 Apr 2019 17:47:28 -0700 (PDT)
 Received: from squirtle.lan (c-24-22-235-96.hsd1.wa.comcast.net. [24.22.235.96])
-        by smtp.gmail.com with ESMTPSA id u17sm66111981pfn.19.2019.04.14.17.47.24
+        by smtp.gmail.com with ESMTPSA id u17sm66111981pfn.19.2019.04.14.17.47.26
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Sun, 14 Apr 2019 17:47:25 -0700 (PDT)
+        Sun, 14 Apr 2019 17:47:26 -0700 (PDT)
 From:   Andrey Smirnov <andrew.smirnov@gmail.com>
 To:     linux-pci@vger.kernel.org
 Cc:     Andrey Smirnov <andrew.smirnov@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
         Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
         Bjorn Helgaas <bhelgaas@google.com>,
-        Fabio Estevam <fabio.estevam@nxp.com>,
-        Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Leonard Crestez <leonard.crestez@nxp.com>,
-        "A.s. Dong" <aisheng.dong@nxp.com>,
-        Richard Zhu <hongxing.zhu@nxp.com>, linux-imx@nxp.com,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH v4 00/11] i.MX6, DesignWare PCI improvements
-Date:   Sun, 14 Apr 2019 17:46:21 -0700
-Message-Id: <20190415004632.5907-1-andrew.smirnov@gmail.com>
+        Chris Healy <cphealy@gmail.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH v4 01/11] PCI: imx6: Simplify imx7d_pcie_wait_for_phy_pll_lock()
+Date:   Sun, 14 Apr 2019 17:46:22 -0700
+Message-Id: <20190415004632.5907-2-andrew.smirnov@gmail.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190415004632.5907-1-andrew.smirnov@gmail.com>
+References: <20190415004632.5907-1-andrew.smirnov@gmail.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -79,78 +77,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Everyone:
+Make use of regmap_read_poll_timeout() to simplify
+imx7d_pcie_wait_for_phy_pll_lock(). No functional change intended.
 
-This is the series containing various small improvements that I made
-while reading the code and researching commit history of pci-imx6.c
-and pcie-designware*.c files. All changes are optional, so commits
-that don't seem like an improvement can be easily dropped. Hopefully
-each patch is self-explanatory.
+Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+Reviewed-by: Lucas Stach <l.stach@pengutronix.de>
+Cc: Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>
+Cc: Bjorn Helgaas <bhelgaas@google.com>
+Cc: Chris Healy <cphealy@gmail.com>
+Cc: Lucas Stach <l.stach@pengutronix.de>
+Cc: linux-kernel@vger.kernel.org
+Cc: linux-pci@vger.kernel.org
+---
+ drivers/pci/controller/dwc/pci-imx6.c | 21 +++++++--------------
+ 1 file changed, 7 insertions(+), 14 deletions(-)
 
-I tested this series on i.MX6Q, i.MX7D and i.MX8MQ.
-
-Feedback is welcome!
-
-Thanks,
-Andrey Smirnov
-
-Chagnes since [v3]:
-
-    - Collected Reviewed-by from Lucas for most of the patches
-
-    - Converted "PCI: imx6: Replace calls to udelay() with
-      usleep_range()" to "PCI: imx6: Use usleep_range() in
-      imx6_pcie_enable_ref_clk()"
-      
-    - Converted "PCI: imx6: Remove redundant debug tracing" to "PCI:
-      imx6: Drop imx6_pcie_wait_for_link()"
-      
-    - Converted all of the callers of pcie_phy_poll_ack() to use
-      true/false in "PCI: imx6: Simplify pcie_phy_poll_ack()"
-
-Changes since [v2]:
-
-    - All non i.MX6 patches dropped, since they were accepted as a
-      seprarte series
-      
-    - Series rebased on latest 'dwc-pci' branch of PCI tree
-    
-    - Patches "PCI: imx6: Use flags to indicate support for suspend"
-      and "PCI: imx6: Replace calls to udelay() with usleep_range()"
-      added to the series
-
-Changes since [v1]:
-
-  - Dropped "PCI: imx6: Drop imx6_pcie_link_up()" due to the matter
-    already having been addressed by "PCI: imx6: Fix link training
-    status detection in link up check" from Trent Piepho
-
-  - Changed "designware" -> "dwc" for all subject lines
-
-  - Collected Acked-by's from Gustavo Pimentel
-
-[v3] lkml.kernel.org/r/20190401042547.14067-1-andrew.smirnov@gmail.com
-[v2] lkml.kernel.org/r/20190104174925.17153-1-andrew.smirnov@gmail.com
-[v1] lkml.kernel.org/r/20181221072716.29017-1-andrew.smirnov@gmail.com
-
-Andrey Smirnov (11):
-  PCI: imx6: Simplify imx7d_pcie_wait_for_phy_pll_lock()
-  PCI: imx6: Drop imx6_pcie_wait_for_link()
-  PCI: imx6: Return -ETIMEOUT from imx6_pcie_wait_for_speed_change()
-  PCI: imx6: Remove PCIE_PL_PFLR_* constants
-  PCI: dwc: imx6: Share PHY debug register definitions
-  PCI: imx6: Make use of BIT() in constant definitions
-  PCI: imx6: Simplify bit operations in PHY functions
-  PCI: imx6: Simplify pcie_phy_poll_ack()
-  PCI: imx6: Restrict PHY register data to 16-bit
-  PCI: imx6: Use flags to indicate support for suspend
-  PCI: imx6: Use usleep_range() in imx6_pcie_enable_ref_clk()
-
- drivers/pci/controller/dwc/pci-imx6.c        | 143 ++++++++-----------
- drivers/pci/controller/dwc/pcie-designware.c |  12 +-
- drivers/pci/controller/dwc/pcie-designware.h |   3 +
- 3 files changed, 62 insertions(+), 96 deletions(-)
-
+diff --git a/drivers/pci/controller/dwc/pci-imx6.c b/drivers/pci/controller/dwc/pci-imx6.c
+index 3d627f94a166..ea2617712a3b 100644
+--- a/drivers/pci/controller/dwc/pci-imx6.c
++++ b/drivers/pci/controller/dwc/pci-imx6.c
+@@ -89,9 +89,8 @@ struct imx6_pcie {
+ };
+ 
+ /* Parameters for the waiting for PCIe PHY PLL to lock on i.MX7 */
+-#define PHY_PLL_LOCK_WAIT_MAX_RETRIES	2000
+-#define PHY_PLL_LOCK_WAIT_USLEEP_MIN	50
+ #define PHY_PLL_LOCK_WAIT_USLEEP_MAX	200
++#define PHY_PLL_LOCK_WAIT_TIMEOUT	(2000 * PHY_PLL_LOCK_WAIT_USLEEP_MAX)
+ 
+ /* PCIe Root Complex registers (memory-mapped) */
+ #define PCIE_RC_IMX6_MSI_CAP			0x50
+@@ -488,20 +487,14 @@ static int imx6_pcie_enable_ref_clk(struct imx6_pcie *imx6_pcie)
+ static void imx7d_pcie_wait_for_phy_pll_lock(struct imx6_pcie *imx6_pcie)
+ {
+ 	u32 val;
+-	unsigned int retries;
+ 	struct device *dev = imx6_pcie->pci->dev;
+ 
+-	for (retries = 0; retries < PHY_PLL_LOCK_WAIT_MAX_RETRIES; retries++) {
+-		regmap_read(imx6_pcie->iomuxc_gpr, IOMUXC_GPR22, &val);
+-
+-		if (val & IMX7D_GPR22_PCIE_PHY_PLL_LOCKED)
+-			return;
+-
+-		usleep_range(PHY_PLL_LOCK_WAIT_USLEEP_MIN,
+-			     PHY_PLL_LOCK_WAIT_USLEEP_MAX);
+-	}
+-
+-	dev_err(dev, "PCIe PLL lock timeout\n");
++	if (regmap_read_poll_timeout(imx6_pcie->iomuxc_gpr,
++				     IOMUXC_GPR22, val,
++				     val & IMX7D_GPR22_PCIE_PHY_PLL_LOCKED,
++				     PHY_PLL_LOCK_WAIT_USLEEP_MAX,
++				     PHY_PLL_LOCK_WAIT_TIMEOUT))
++		dev_err(dev, "PCIe PLL lock timeout\n");
+ }
+ 
+ static void imx6_pcie_deassert_core_reset(struct imx6_pcie *imx6_pcie)
 -- 
 2.20.1
 
