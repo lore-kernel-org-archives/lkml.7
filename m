@@ -2,130 +2,133 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62B42C10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:50:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2D3CC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:53:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BEC320854
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:50:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB79920643
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:53:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="OOqT3Caf"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="tQc3AiOp"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728855AbfDOTuL (ORCPT
+        id S1728928AbfDOTxo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:50:11 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:55668 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728605AbfDOTuK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:50:10 -0400
-Received: from zn.tnic (p4FED3D80.dip0.t-ipconnect.de [79.237.61.128])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 448EE1EC02AE;
-        Mon, 15 Apr 2019 21:50:08 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1555357808;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=Ief1bSeBDooFjV+/QSkceSHzeIIB5ciAHxhEmjiNw7s=;
-        b=OOqT3CafFcizE4FwSgROrgjYicpEKSTeoPegIba43hVDBRuZ+yVcdkLAM3u1F65ZY7LGCo
-        1D1kEN8ACAcX9nDk6TbwHoBm05SmhITXQy8F0HtvGmfzCn2X16b+Oo/3WeXL0Bv2k4ozYh
-        NCf8bD3F+G7DhDsDgN3tM+UI4muJoNc=
-Date:   Mon, 15 Apr 2019 21:47:55 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Baoquan He <bhe@redhat.com>, kirill@shutemov.name
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org, tglx@linutronix.de,
-        mingo@kernel.org, hpa@zytor.com, keescook@chromium.org,
-        peterz@infradead.org, thgarnie@google.com,
-        herbert@gondor.apana.org.au, mike.travis@hpe.com,
-        frank.ramsay@hpe.com, yamada.masahiro@socionext.com
-Subject: Re: [PATCH v2 RESEND 2/2] x86/mm/KASLR: Fix the size of vmemmap
- section
-Message-ID: <20190415194755.GJ29317@zn.tnic>
-References: <20190414072804.12560-1-bhe@redhat.com>
- <20190414072804.12560-3-bhe@redhat.com>
+        Mon, 15 Apr 2019 15:53:44 -0400
+Received: from fllv0016.ext.ti.com ([198.47.19.142]:49672 "EHLO
+        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728096AbfDOTxo (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:53:44 -0400
+Received: from lelv0265.itg.ti.com ([10.180.67.224])
+        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3FJrbCW096485;
+        Mon, 15 Apr 2019 14:53:37 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1555358017;
+        bh=JgSdssHRxOBzgBIWUrCOuItpmmKD4Yjpe8gVYq8JiLY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=tQc3AiOpuBJ3KXNtm+XdMrOBBoN5bp6B7DIt4V00ekYr//8tFBk1Q0nmC0XNrzU5Z
+         OsCJTSHhYopov5O9ZeFXj/Hwu4BPWMhre2pCrjGQ5mSqB3PXHvYv7XJVugl6z5egVh
+         FXt6YNxuB5AV6p6wWq+oRjz3gRvnrrFDrixxWQfc=
+Received: from DFLE112.ent.ti.com (dfle112.ent.ti.com [10.64.6.33])
+        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3FJrbZ4070713
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Mon, 15 Apr 2019 14:53:37 -0500
+Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE112.ent.ti.com
+ (10.64.6.33) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Mon, 15
+ Apr 2019 14:53:37 -0500
+Received: from lelv0326.itg.ti.com (10.180.67.84) by DFLE107.ent.ti.com
+ (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Mon, 15 Apr 2019 14:53:37 -0500
+Received: from [10.250.81.84] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by lelv0326.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3FJraUn010984;
+        Mon, 15 Apr 2019 14:53:36 -0500
+Subject: Re: [PATCH 5/5] leds: lm3697: Introduce the lm3697 driver
+To:     Pavel Machek <pavel@ucw.cz>
+CC:     <robh+dt@kernel.org>, <jacek.anaszewski@gmail.com>,
+        <linux-kernel@vger.kernel.org>, <linux-leds@vger.kernel.org>
+References: <20190325142403.30447-1-dmurphy@ti.com>
+ <20190325142403.30447-6-dmurphy@ti.com> <20190413200605.GA3013@amd>
+ <f47fff9b-bca1-6412-c423-acf01baabc9f@ti.com> <20190415140306.GA13084@amd>
+From:   Dan Murphy <dmurphy@ti.com>
+Message-ID: <ea9ac786-7303-5de3-9686-55589eed35ec@ti.com>
+Date:   Mon, 15 Apr 2019 14:53:35 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190414072804.12560-3-bhe@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190415140306.GA13084@amd>
+Content-Type: text/plain; charset="windows-1252"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 14, 2019 at 03:28:04PM +0800, Baoquan He wrote:
-> kernel_randomize_memory() hardcodes the size of vmemmap section as 1 TB,
-> to support the maximum amount of system RAM in 4-level paging mode, 64 TB.
+
+
+On 4/15/19 9:03 AM, Pavel Machek wrote:
 > 
-> However, 1 TB is not enough for vmemmap in 5-level paging mode. Assuming
-> the size of struct page is 64 Bytes, to support 4 PB system RAM in 5-level,
-> 64 TB of vmemmap area is needed. The wrong hardcoding may cause vmemmap
-> stamping into the following cpu_entry_area section, if KASLR puts vmemmap
-> very close to cpu_entry_area, and the actual area of vmemmap is much bigger
-> than 1 TB.
+>>>> diff --git a/drivers/leds/Kconfig b/drivers/leds/Kconfig
+>>>> index 735009e73414..688bb9a6f275 100644
+>>>> --- a/drivers/leds/Kconfig
+>>>> +++ b/drivers/leds/Kconfig
+>>>> @@ -776,9 +776,15 @@ config LEDS_NIC78BX
+>>>>  	  To compile this driver as a module, choose M here: the module
+>>>>  	  will be called leds-nic78bx.
+>>>>  
+>>>> +config LEDS_LM3697
+>>>> +	tristate "LED driver for LM3697"
+>>>> +	depends on LEDS_TI_LMU_COMMON
+>>>> +	help
+>>>> +	  Say Y to enable the LM3697 LED driver for TI LMU devices.
+>>>> +	  This supports the LED device LM3697.
+>>>> +
+>>>>  config LEDS_TI_LMU_COMMON
+>>>>  	tristate "LED driver for TI LMU"
+>>>> -	depends on REGMAP
+>>>>  	help
+>>>>            Say Y to enable the LED driver for TI LMU devices.
+>>>>            This supports common features between the TI LM3532, LM3631, LM3632,
+> ...
+>>> Plus we'd normally expect "COMMON" first and then specific driver. Not
+>>> sure if Kconfig can handle it out-of-order...
+>>
+>> OK.  Should I rename the ti_lmu file to leds-common-ti-lmu?
 > 
-> So here calculate the actual size of vmemmap region, then align up to 1 TB
-> boundary. In 4-level it's always 1 TB. In 5-level it's adjusted on demand.
-> The current code reserves 0.5 PB for vmemmap in 5-level. In this new methor,
-								       ^^^^^^^
-
-Please introduce a spellchecker into your patch creation workflow.
-
-> the left space can be saved to join randomization to increase the entropy.
+> Oh, no, that is not what I meant.
 > 
-> Signed-off-by: Baoquan He <bhe@redhat.com>
-> ---
->  arch/x86/mm/kaslr.c | 11 ++++++++++-
->  1 file changed, 10 insertions(+), 1 deletion(-)
+> You have
 > 
-> diff --git a/arch/x86/mm/kaslr.c b/arch/x86/mm/kaslr.c
-> index 387d4ed25d7c..4679a0075048 100644
-> --- a/arch/x86/mm/kaslr.c
-> +++ b/arch/x86/mm/kaslr.c
-> @@ -52,7 +52,7 @@ static __initdata struct kaslr_memory_region {
->  } kaslr_regions[] = {
->  	{ &page_offset_base, 0 },
->  	{ &vmalloc_base, 0 },
-> -	{ &vmemmap_base, 1 },
-> +	{ &vmemmap_base, 0 },
->  };
->  
->  /* Get size in bytes used by the memory region */
-> @@ -78,6 +78,7 @@ void __init kernel_randomize_memory(void)
->  	unsigned long rand, memory_tb;
->  	struct rnd_state rand_state;
->  	unsigned long remain_entropy;
-> +	unsigned long vmemmap_size;
->  
->  	vaddr_start = pgtable_l5_enabled() ? __PAGE_OFFSET_BASE_L5 : __PAGE_OFFSET_BASE_L4;
->  	vaddr = vaddr_start;
-> @@ -109,6 +110,14 @@ void __init kernel_randomize_memory(void)
->  	if (memory_tb < kaslr_regions[0].size_tb)
->  		kaslr_regions[0].size_tb = memory_tb;
->  
-> +	/**
-> +	 * Calculate how many TB vmemmap region needs, and aligned to
-> +	 * 1TB boundary.
-> +	 */
-> +	vmemmap_size = (kaslr_regions[0].size_tb << (TB_SHIFT - PAGE_SHIFT)) *
-> +		sizeof(struct page);
-> +	kaslr_regions[2].size_tb = DIV_ROUND_UP(vmemmap_size, 1UL << TB_SHIFT);
-> +
->  	/* Calculate entropy available between regions */
->  	remain_entropy = vaddr_end - vaddr_start;
->  	for (i = 0; i < ARRAY_SIZE(kaslr_regions); i++)
-> -- 
+> config B
+>        depends on A
+> 
+> config A
+> 
+> above. We really want
+> 
+> config A
+> 
+> config B
+>        depends on A
+> 
 
-Kirill, ack?
+Got it I will rearrange that in v2.
 
--- 
-Regards/Gruss,
-    Boris.
+>> This keeps the naming convention the same in the leds directory as well.
+>>
+>> FYI I will not add your acked-by on the LMU patch that introduced the code unless you approve.
+>> Since you found issues with the kconfig
+> 
+> I did not review it in great detail, so no acked-by's, yet :-).
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Thanks
+Dan
+
+> 									Pavel
+> 
