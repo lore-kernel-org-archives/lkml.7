@@ -2,114 +2,94 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25FCCC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AE202C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:50:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF52120825
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:47:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FD5820825
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 07:50:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726480AbfDOHrN (ORCPT
+        id S1726283AbfDOHu3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 03:47:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40068 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725779AbfDOHrN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 03:47:13 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id CB9F6821C3;
-        Mon, 15 Apr 2019 07:47:12 +0000 (UTC)
-Received: from [10.72.12.206] (ovpn-12-206.pek2.redhat.com [10.72.12.206])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 19B3E5D9CA;
-        Mon, 15 Apr 2019 07:47:00 +0000 (UTC)
-Subject: Re: [PATCH v1 15/15] ceph: use put_user_pages() instead of
- ceph_put_page_vector()
-To:     jglisse@redhat.com, linux-kernel@vger.kernel.org
-Cc:     linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
-        linux-mm@kvack.org, John Hubbard <jhubbard@nvidia.com>,
-        Jan Kara <jack@suse.cz>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Ming Lei <ming.lei@redhat.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Matthew Wilcox <willy@infradead.org>,
-        Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
-        ceph-devel@vger.kernel.org
-References: <20190411210834.4105-1-jglisse@redhat.com>
- <20190411210834.4105-16-jglisse@redhat.com>
-From:   "Yan, Zheng" <zyan@redhat.com>
-Message-ID: <df4da184-fe8b-c189-43e5-fac58adb3ed9@redhat.com>
-Date:   Mon, 15 Apr 2019 15:46:59 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 15 Apr 2019 03:50:29 -0400
+Received: from relay11.mail.gandi.net ([217.70.178.231]:33939 "EHLO
+        relay11.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725794AbfDOHu2 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 03:50:28 -0400
+Received: from localhost (aaubervilliers-681-1-63-121.w90-88.abo.wanadoo.fr [90.88.18.121])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay11.mail.gandi.net (Postfix) with ESMTPSA id 8CC52100006;
+        Mon, 15 Apr 2019 07:50:20 +0000 (UTC)
+Date:   Mon, 15 Apr 2019 09:50:20 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     megous@megous.com
+Cc:     linux-sunxi@googlegroups.com, Chen-Yu Tsai <wens@csie.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>,
+        Jose Abreu <joabreu@synopsys.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        dri-devel@lists.freedesktop.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        netdev@vger.kernel.org, linux-stm32@st-md-mailman.stormreply.com,
+        linux-gpio@vger.kernel.org
+Subject: Re: [PATCH v4 9/9] arm64: dts: allwinner: h6: Add MMC1 pins
+Message-ID: <20190415075017.jai642k62vruzmzo@flea>
+References: <20190413165418.27880-1-megous@megous.com>
+ <20190413165418.27880-10-megous@megous.com>
 MIME-Version: 1.0
-In-Reply-To: <20190411210834.4105-16-jglisse@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Mon, 15 Apr 2019 07:47:13 +0000 (UTC)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="yczlegecszr36jd5"
+Content-Disposition: inline
+In-Reply-To: <20190413165418.27880-10-megous@megous.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/12/19 5:08 AM, jglisse@redhat.com wrote:
-> From: Jérôme Glisse <jglisse@redhat.com>
-> 
-> When page reference were taken through GUP (get_user_page*()) we need
-> to drop them with put_user_pages().
-> 
-> Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
-> Cc: linux-fsdevel@vger.kernel.org
-> Cc: linux-block@vger.kernel.org
-> Cc: linux-mm@kvack.org
-> Cc: John Hubbard <jhubbard@nvidia.com>
-> Cc: Jan Kara <jack@suse.cz>
-> Cc: Dan Williams <dan.j.williams@intel.com>
-> Cc: Alexander Viro <viro@zeniv.linux.org.uk>
-> Cc: Johannes Thumshirn <jthumshirn@suse.de>
-> Cc: Christoph Hellwig <hch@lst.de>
-> Cc: Jens Axboe <axboe@kernel.dk>
-> Cc: Ming Lei <ming.lei@redhat.com>
-> Cc: Dave Chinner <david@fromorbit.com>
-> Cc: Jason Gunthorpe <jgg@ziepe.ca>
-> Cc: Matthew Wilcox <willy@infradead.org>
-> Cc: Yan Zheng <zyan@redhat.com>
-> Cc: Sage Weil <sage@redhat.com>
-> Cc: Ilya Dryomov <idryomov@gmail.com>
-> Cc: ceph-devel@vger.kernel.org
-> ---
->   fs/ceph/file.c | 3 ++-
->   1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/fs/ceph/file.c b/fs/ceph/file.c
-> index 6c5b85f01721..5842ad3a4218 100644
-> --- a/fs/ceph/file.c
-> +++ b/fs/ceph/file.c
-> @@ -667,7 +667,8 @@ static ssize_t ceph_sync_read(struct kiocb *iocb, struct iov_iter *to,
->   			} else {
->   				iov_iter_advance(to, 0);
->   			}
-> -			ceph_put_page_vector(pages, num_pages, false);
-> +			/* iov_iter_get_pages_alloc() did call GUP */
-> +			put_user_pages(pages, num_pages);
 
-pages in pipe were not from get_user_pages(). Am I missing anything?
+--yczlegecszr36jd5
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Regards
-Yan, Zheng
+On Sat, Apr 13, 2019 at 06:54:18PM +0200, megous@megous.com wrote:
+> From: Ondrej Jirman <megous@megous.com>
+>
+> MMC1 is used on some H6 boards we want to support. Typical use is 4-bit
+> SDIO interface with a WiFi chip. Add pin definitions for this use case.
+>
+> As this is the only possible configration for mmc1, make it the default
+> one, too.
+>
+> Signed-off-by: Ondrej Jirman <megous@megous.com>
 
->   		} else {
->   			int idx = 0;
->   			size_t left = ret > 0 ? ret : 0;
-> 
+Applied, thanks!
+Maxime
 
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--yczlegecszr36jd5
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXLQ3uQAKCRDj7w1vZxhR
+xRKmAQCVEwpkZqNKqhmU4DhbHz4xJm2KGnWzqBi+OunsCd5QAQD/eiDzVf2S/eYw
+p7/xXokEwB6vPz2YsEI+g1pyruTexgs=
+=IFLY
+-----END PGP SIGNATURE-----
+
+--yczlegecszr36jd5--
