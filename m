@@ -4,51 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26908C10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:10:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCBC6C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:10:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E989420880
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:10:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A9B6521900
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:10:49 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355444;
-	bh=3q6DwNoliPQhv4lfJevyMJ5YpmZMvJ29xZgtblkping=;
+	s=default; t=1555355449;
+	bh=25RIbdRpRJnFuzT0xmyUuz0bjP6Jffz4ce/FSt4R6hI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gh8ymi+cdgt+u+2hQ6KyZsxBpTEgfeEOkdI58kMio83WzxUS736w3/j+VoNI0AA0R
-	 YNHqROAZlyZe+vGReI3lA21Q9KQPhECG3qAFt+XRIPvcbwTa/X4iM3/9GjkNtmcM0E
-	 9SobmORJVfEzo/PKC/foDj7mjulOrjw8FmXe4iK8=
+	b=mZ5qo9tmlh83KxUS9pzlwcyVSm3SKIxTXen0+r+T8753IshjQjlOooxnQCIuLFhyd
+	 uGewmjfIKbmQvYu/xXFMQYLZvl6fET1aYu48wxeiYdQ+7BU96rShG3bvedLOMubow6
+	 9oB0i9m+MxA0RTP9b2CmmCe8fXcMJw+S1M/xlNA0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731086AbfDOTKm (ORCPT
+        id S1731110AbfDOTKs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:10:42 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47116 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:10:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47362 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731070AbfDOTKj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:10:39 -0400
+        id S1731092AbfDOTKq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:10:46 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5B2E520651;
-        Mon, 15 Apr 2019 19:10:37 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 58E33218FF;
+        Mon, 15 Apr 2019 19:10:45 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355437;
-        bh=3q6DwNoliPQhv4lfJevyMJ5YpmZMvJ29xZgtblkping=;
+        s=default; t=1555355445;
+        bh=25RIbdRpRJnFuzT0xmyUuz0bjP6Jffz4ce/FSt4R6hI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=pv/TlxjT7tHIHE3jPRXRXBkX4RQYUe9TNKx/rzIDxtoz7gasc7F1ZfO0d7ZtPhSXP
-         TeVTESqS0M90HC5iMlepawvRaTHn259OQYAf0ZDk2gHl+U3L/dtTTmJhg4IIBwf1T9
-         tUYZKpPL4kQl+cbumtBgwBg7EcxT4LPBW4ovf2pk=
+        b=m0zokWtZ7+OoJxnIJn6clnI9VBmpBmiwQq7BZmbubhTu6LfDRvKI+r4GpdmA9Lymy
+         X44/UfFtGm80GjBpD8UhR+HoABIoi4gUz2QPXaK8UEYAXLX85/4KRGuktgA0CEUyfb
+         QBaZ86tM+qw6+NUAl9i2zuHCLW/8KibZRW1JIlDs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jianlin Shi <jishi@redhat.com>,
-        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
+        stable@vger.kernel.org, Mike Crowe <mac@mcrowe.com>,
+        Heiner Kallweit <hkallweit1@gmail.com>,
         "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 010/117] ipv6: sit: reset ip header pointer in ipip6_rcv
-Date:   Mon, 15 Apr 2019 20:59:40 +0200
-Message-Id: <20190415183745.414698614@linuxfoundation.org>
+Subject: [PATCH 5.0 038/117] r8169: disable default rx interrupt coalescing on RTL8168
+Date:   Mon, 15 Apr 2019 21:00:08 +0200
+Message-Id: <20190415183746.975951896@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183744.887851196@linuxfoundation.org>
 References: <20190415183744.887851196@linuxfoundation.org>
@@ -61,117 +61,39 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit bb9bd814ebf04f579be466ba61fc922625508807 ]
+[ Upstream commit 288ac524cf70a8e7ed851a61ed2a9744039dae8d ]
 
-ipip6 tunnels run iptunnel_pull_header on received skbs. This can
-determine the following use-after-free accessing iph pointer since
-the packet will be 'uncloned' running pskb_expand_head if it is a
-cloned gso skb (e.g if the packet has been sent though a veth device)
+It was reported that re-introducing ASPM, in combination with RX
+interrupt coalescing, results in significantly increased packet
+latency, see [0]. Disabling ASPM or RX interrupt coalescing fixes
+the issue. Therefore change the driver's default to disable RX
+interrupt coalescing. Users still have the option to enable RX
+coalescing via ethtool.
 
-[  706.369655] BUG: KASAN: use-after-free in ipip6_rcv+0x1678/0x16e0 [sit]
-[  706.449056] Read of size 1 at addr ffffe01b6bd855f5 by task ksoftirqd/1/=
-[  706.669494] Hardware name: HPE ProLiant m400 Server/ProLiant m400 Server, BIOS U02 08/19/2016
-[  706.771839] Call trace:
-[  706.801159]  dump_backtrace+0x0/0x2f8
-[  706.845079]  show_stack+0x24/0x30
-[  706.884833]  dump_stack+0xe0/0x11c
-[  706.925629]  print_address_description+0x68/0x260
-[  706.982070]  kasan_report+0x178/0x340
-[  707.025995]  __asan_report_load1_noabort+0x30/0x40
-[  707.083481]  ipip6_rcv+0x1678/0x16e0 [sit]
-[  707.132623]  tunnel64_rcv+0xd4/0x200 [tunnel4]
-[  707.185940]  ip_local_deliver_finish+0x3b8/0x988
-[  707.241338]  ip_local_deliver+0x144/0x470
-[  707.289436]  ip_rcv_finish+0x43c/0x14b0
-[  707.335447]  ip_rcv+0x628/0x1138
-[  707.374151]  __netif_receive_skb_core+0x1670/0x2600
-[  707.432680]  __netif_receive_skb+0x28/0x190
-[  707.482859]  process_backlog+0x1d0/0x610
-[  707.529913]  net_rx_action+0x37c/0xf68
-[  707.574882]  __do_softirq+0x288/0x1018
-[  707.619852]  run_ksoftirqd+0x70/0xa8
-[  707.662734]  smpboot_thread_fn+0x3a4/0x9e8
-[  707.711875]  kthread+0x2c8/0x350
-[  707.750583]  ret_from_fork+0x10/0x18
+[0] https://bugs.debian.org/cgi-bin/bugreport.cgi?bug=925496
 
-[  707.811302] Allocated by task 16982:
-[  707.854182]  kasan_kmalloc.part.1+0x40/0x108
-[  707.905405]  kasan_kmalloc+0xb4/0xc8
-[  707.948291]  kasan_slab_alloc+0x14/0x20
-[  707.994309]  __kmalloc_node_track_caller+0x158/0x5e0
-[  708.053902]  __kmalloc_reserve.isra.8+0x54/0xe0
-[  708.108280]  __alloc_skb+0xd8/0x400
-[  708.150139]  sk_stream_alloc_skb+0xa4/0x638
-[  708.200346]  tcp_sendmsg_locked+0x818/0x2b90
-[  708.251581]  tcp_sendmsg+0x40/0x60
-[  708.292376]  inet_sendmsg+0xf0/0x520
-[  708.335259]  sock_sendmsg+0xac/0xf8
-[  708.377096]  sock_write_iter+0x1c0/0x2c0
-[  708.424154]  new_sync_write+0x358/0x4a8
-[  708.470162]  __vfs_write+0xc4/0xf8
-[  708.510950]  vfs_write+0x12c/0x3d0
-[  708.551739]  ksys_write+0xcc/0x178
-[  708.592533]  __arm64_sys_write+0x70/0xa0
-[  708.639593]  el0_svc_handler+0x13c/0x298
-[  708.686646]  el0_svc+0x8/0xc
-
-[  708.739019] Freed by task 17:
-[  708.774597]  __kasan_slab_free+0x114/0x228
-[  708.823736]  kasan_slab_free+0x10/0x18
-[  708.868703]  kfree+0x100/0x3d8
-[  708.905320]  skb_free_head+0x7c/0x98
-[  708.948204]  skb_release_data+0x320/0x490
-[  708.996301]  pskb_expand_head+0x60c/0x970
-[  709.044399]  __iptunnel_pull_header+0x3b8/0x5d0
-[  709.098770]  ipip6_rcv+0x41c/0x16e0 [sit]
-[  709.146873]  tunnel64_rcv+0xd4/0x200 [tunnel4]
-[  709.200195]  ip_local_deliver_finish+0x3b8/0x988
-[  709.255596]  ip_local_deliver+0x144/0x470
-[  709.303692]  ip_rcv_finish+0x43c/0x14b0
-[  709.349705]  ip_rcv+0x628/0x1138
-[  709.388413]  __netif_receive_skb_core+0x1670/0x2600
-[  709.446943]  __netif_receive_skb+0x28/0x190
-[  709.497120]  process_backlog+0x1d0/0x610
-[  709.544169]  net_rx_action+0x37c/0xf68
-[  709.589131]  __do_softirq+0x288/0x1018
-
-[  709.651938] The buggy address belongs to the object at ffffe01b6bd85580
-                which belongs to the cache kmalloc-1024 of size 1024
-[  709.804356] The buggy address is located 117 bytes inside of
-                1024-byte region [ffffe01b6bd85580, ffffe01b6bd85980)
-[  709.946340] The buggy address belongs to the page:
-[  710.003824] page:ffff7ff806daf600 count:1 mapcount:0 mapping:ffffe01c4001f600 index:0x0
-[  710.099914] flags: 0xfffff8000000100(slab)
-[  710.149059] raw: 0fffff8000000100 dead000000000100 dead000000000200 ffffe01c4001f600
-[  710.242011] raw: 0000000000000000 0000000000380038 00000001ffffffff 0000000000000000
-[  710.334966] page dumped because: kasan: bad access detected
-
-Fix it resetting iph pointer after iptunnel_pull_header
-
-Fixes: a09a4c8dd1ec ("tunnels: Remove encapsulation offloads on decap")
-Tested-by: Jianlin Shi <jishi@redhat.com>
-Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Fixes: a99790bf5c7f ("r8169: Reinstate ASPM Support")
+Reported-by: Mike Crowe <mac@mcrowe.com>
+Signed-off-by: Heiner Kallweit <hkallweit1@gmail.com>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- net/ipv6/sit.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/net/ethernet/realtek/r8169.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/net/ipv6/sit.c b/net/ipv6/sit.c
-index 07e21a82ce4c..b2109b74857d 100644
---- a/net/ipv6/sit.c
-+++ b/net/ipv6/sit.c
-@@ -669,6 +669,10 @@ static int ipip6_rcv(struct sk_buff *skb)
- 		    !net_eq(tunnel->net, dev_net(tunnel->dev))))
- 			goto out;
+diff --git a/drivers/net/ethernet/realtek/r8169.c b/drivers/net/ethernet/realtek/r8169.c
+index 5adb00f521db..365cddbfc684 100644
+--- a/drivers/net/ethernet/realtek/r8169.c
++++ b/drivers/net/ethernet/realtek/r8169.c
+@@ -5333,7 +5333,7 @@ static void rtl_hw_start_8168(struct rtl8169_private *tp)
+ 	tp->cp_cmd |= PktCntrDisable | INTT_1;
+ 	RTL_W16(tp, CPlusCmd, tp->cp_cmd);
  
-+		/* skb can be uncloned in iptunnel_pull_header, so
-+		 * old iph is no longer valid
-+		 */
-+		iph = (const struct iphdr *)skb_mac_header(skb);
- 		err = IP_ECN_decapsulate(iph, skb);
- 		if (unlikely(err)) {
- 			if (log_ecn_error)
+-	RTL_W16(tp, IntrMitigate, 0x5151);
++	RTL_W16(tp, IntrMitigate, 0x5100);
+ 
+ 	/* Work around for RxFIFO overflow. */
+ 	if (tp->mac_version == RTL_GIGA_MAC_VER_11) {
 -- 
 2.19.1
 
