@@ -4,50 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BF21AC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:21:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BCFEC10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 835BF20651
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:21:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 26E6920651
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:21:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555356091;
-	bh=NsL31rVx1hMnkEnWkCH3tBcxUQpezHUptctZGGTHrww=;
+	s=default; t=1555356106;
+	bh=2d021XjXqrApmCc0tAWeYZHebctEUMdgkcjJfV2+07I=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=H9GqKoZb+RbtYnIBywrcyjxd40ZxypVlsVE73A0JfzAdaJjp9b5zaw3ECVnOT8zZg
-	 l7o4OvujBVieFYrSGp28OBoVna+oFG/py+0QWY3lcWBMoG/c5FjNfxflx7g8YW1i6K
-	 MNM7+QwNzPB8ZiGdL6TVxuSD+pbyS3ZB5hrdm9w8=
+	b=04C0NZC28us74KrkN9DGvCnKaLCcXvrpIYVsC/Jt6uzsxZ1iuEgtSRimBTwkOUpOM
+	 5OeoqFaQ3Tjs6DxmB9MsAj1XwHhlLT4RqQ2KRT0Ge9008u7RakB/X1wN1uV7jAOkxv
+	 60+TiZTHmBE2F94dMe3A5pQFYcvjYRxl5w4Qsfnw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731252AbfDOTVa (ORCPT
+        id S1730606AbfDOTI4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:21:30 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44910 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:08:56 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44428 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730667AbfDOTJO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:09:14 -0400
+        id S1730590AbfDOTIx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:08:53 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D7EE120651;
-        Mon, 15 Apr 2019 19:09:12 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id C93292087C;
+        Mon, 15 Apr 2019 19:08:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355353;
-        bh=NsL31rVx1hMnkEnWkCH3tBcxUQpezHUptctZGGTHrww=;
+        s=default; t=1555355332;
+        bh=2d021XjXqrApmCc0tAWeYZHebctEUMdgkcjJfV2+07I=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=bheJ29zLM/FLXBflbxa0c8qom/Fg4FIJXOUVT05Vy7XrREvUFStc0grYsB8AuYbNg
-         Oq36kFQJVMjZlLRSvIO8xuLI4xZ+jPWQ+cEhcyWQexvBUIUqBFdrwlpnZnBokiEmh9
-         qcDZbc/VwvbEV8STjf9X6O5IU1D+TElzy1Nx24P8=
+        b=y/FUaioG1p/3QL0u1RPySuI5EY9iVNFiNAJW/jOR/tkRBqUdrVicEARLc9M++BUQI
+         zRggBzIzspJRacalIbygivcq59HVw5b9mcSSs/U8cnYYJw+ay0IVgZXsr6lGUG+ITt
+         GgOzgFurnE86fwbVLid5ohUJFY1hog7Zvh20usws=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Robin Murphy <robin.murphy@arm.com>,
-        Tomohiro Mayama <parly-gh@iris.mystia.org>,
-        Katsuhiro Suzuki <katsuhiro@katsuster.net>,
-        Heiko Stuebner <heiko@sntech.de>
-Subject: [PATCH 4.19 098/101] arm64: dts: rockchip: Fix vcc_host1_5v GPIO polarity on rk3328-rock64
-Date:   Mon, 15 Apr 2019 20:59:36 +0200
-Message-Id: <20190415183745.544465464@linuxfoundation.org>
+        stable@vger.kernel.org, stable@kernel.org,
+        Will Deacon <will.deacon@arm.com>
+Subject: [PATCH 4.19 080/101] arm64: futex: Fix FUTEX_WAKE_OP atomic ops with non-zero result value
+Date:   Mon, 15 Apr 2019 20:59:18 +0200
+Message-Id: <20190415183744.658684353@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183740.341577907@linuxfoundation.org>
 References: <20190415183740.341577907@linuxfoundation.org>
@@ -60,35 +59,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Tomohiro Mayama <parly-gh@iris.mystia.org>
+From: Will Deacon <will.deacon@arm.com>
 
-commit a8772e5d826d0f61f8aa9c284b3ab49035d5273d upstream.
+commit 045afc24124d80c6998d9c770844c67912083506 upstream.
 
-This patch makes USB ports functioning again.
+Rather embarrassingly, our futex() FUTEX_WAKE_OP implementation doesn't
+explicitly set the return value on the non-faulting path and instead
+leaves it holding the result of the underlying atomic operation. This
+means that any FUTEX_WAKE_OP atomic operation which computes a non-zero
+value will be reported as having failed. Regrettably, I wrote the buggy
+code back in 2011 and it was upstreamed as part of the initial arm64
+support in 2012.
 
-Fixes: 955bebde057e ("arm64: dts: rockchip: add rk3328-rock64 board")
-Cc: stable@vger.kernel.org
-Suggested-by: Robin Murphy <robin.murphy@arm.com>
-Signed-off-by: Tomohiro Mayama <parly-gh@iris.mystia.org>
-Tested-by: Katsuhiro Suzuki <katsuhiro@katsuster.net>
-Signed-off-by: Heiko Stuebner <heiko@sntech.de>
+The reasons we appear to get away with this are:
+
+  1. FUTEX_WAKE_OP is rarely used and therefore doesn't appear to get
+     exercised by futex() test applications
+
+  2. If the result of the atomic operation is zero, the system call
+     behaves correctly
+
+  3. Prior to version 2.25, the only operation used by GLIBC set the
+     futex to zero, and therefore worked as expected. From 2.25 onwards,
+     FUTEX_WAKE_OP is not used by GLIBC at all.
+
+Fix the implementation by ensuring that the return value is either 0
+to indicate that the atomic operation completed successfully, or -EFAULT
+if we encountered a fault when accessing the user mapping.
+
+Cc: <stable@kernel.org>
+Fixes: 6170a97460db ("arm64: Atomic operations")
+Signed-off-by: Will Deacon <will.deacon@arm.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- arch/arm64/boot/dts/rockchip/rk3328-rock64.dts |    3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ arch/arm64/include/asm/futex.h |   16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
---- a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-+++ b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
-@@ -45,8 +45,7 @@
+--- a/arch/arm64/include/asm/futex.h
++++ b/arch/arm64/include/asm/futex.h
+@@ -30,8 +30,8 @@ do {									\
+ "	prfm	pstl1strm, %2\n"					\
+ "1:	ldxr	%w1, %2\n"						\
+ 	insn "\n"							\
+-"2:	stlxr	%w3, %w0, %2\n"						\
+-"	cbnz	%w3, 1b\n"						\
++"2:	stlxr	%w0, %w3, %2\n"						\
++"	cbnz	%w0, 1b\n"						\
+ "	dmb	ish\n"							\
+ "3:\n"									\
+ "	.pushsection .fixup,\"ax\"\n"					\
+@@ -50,30 +50,30 @@ do {									\
+ static inline int
+ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *_uaddr)
+ {
+-	int oldval = 0, ret, tmp;
++	int oldval, ret, tmp;
+ 	u32 __user *uaddr = __uaccess_mask_ptr(_uaddr);
  
- 	vcc_host1_5v: vcc_otg_5v: vcc-host1-5v-regulator {
- 		compatible = "regulator-fixed";
--		enable-active-high;
--		gpio = <&gpio0 RK_PA2 GPIO_ACTIVE_HIGH>;
-+		gpio = <&gpio0 RK_PA2 GPIO_ACTIVE_LOW>;
- 		pinctrl-names = "default";
- 		pinctrl-0 = <&usb20_host_drv>;
- 		regulator-name = "vcc_host1_5v";
+ 	pagefault_disable();
+ 
+ 	switch (op) {
+ 	case FUTEX_OP_SET:
+-		__futex_atomic_op("mov	%w0, %w4",
++		__futex_atomic_op("mov	%w3, %w4",
+ 				  ret, oldval, uaddr, tmp, oparg);
+ 		break;
+ 	case FUTEX_OP_ADD:
+-		__futex_atomic_op("add	%w0, %w1, %w4",
++		__futex_atomic_op("add	%w3, %w1, %w4",
+ 				  ret, oldval, uaddr, tmp, oparg);
+ 		break;
+ 	case FUTEX_OP_OR:
+-		__futex_atomic_op("orr	%w0, %w1, %w4",
++		__futex_atomic_op("orr	%w3, %w1, %w4",
+ 				  ret, oldval, uaddr, tmp, oparg);
+ 		break;
+ 	case FUTEX_OP_ANDN:
+-		__futex_atomic_op("and	%w0, %w1, %w4",
++		__futex_atomic_op("and	%w3, %w1, %w4",
+ 				  ret, oldval, uaddr, tmp, ~oparg);
+ 		break;
+ 	case FUTEX_OP_XOR:
+-		__futex_atomic_op("eor	%w0, %w1, %w4",
++		__futex_atomic_op("eor	%w3, %w1, %w4",
+ 				  ret, oldval, uaddr, tmp, oparg);
+ 		break;
+ 	default:
 
 
