@@ -7,64 +7,64 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 83F32C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:44:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0521CC282DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:44:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3CE53218EA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:44:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BC87920674
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:44:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="E31ZDFu/"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="n3bfc+y6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727287AbfDOKoI (ORCPT
+        id S1727302AbfDOKoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 06:44:08 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:41194 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727258AbfDOKoG (ORCPT
+        Mon, 15 Apr 2019 06:44:12 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:41197 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727271AbfDOKoI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 06:44:06 -0400
-Received: by mail-lf1-f66.google.com with SMTP id t30so12670186lfd.8
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 03:44:04 -0700 (PDT)
+        Mon, 15 Apr 2019 06:44:08 -0400
+Received: by mail-lf1-f67.google.com with SMTP id t30so12670295lfd.8
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 03:44:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=9ShaHEpor3O7/ITeLr779+4xsU9eGQu8/d6dLci/iKU=;
-        b=E31ZDFu/0vstHtsiie8L3Mgc99QxUfhxGOd94YA2Tohhs8LnYUdm8Bef4EAWguAzbR
-         BdXrKNZUC5fCaTBwSZBcbLYeshTWVr9sbV7U43BBXpXRz3h5COJrd+91rglD/hXU4BsD
-         0RVhU4/p6NUYVnPRxs+NLw4nbz9z2GtlT0k0ejC6TzuIyJ/lf8W50l6mdC/Eyob/FS+u
-         lIl7K+VqqIOY+WHTZfrgSUEmJlcN/cQAN2iWUDzFR0ul6bvwzeVZLFAZ7YjQZyWBt+5A
-         cQujKLgqWjFKyTmUkSfVr4aXenPZoIB9knNy4efGUjEWRx6nGPbvFX1ZISE8RkiELuT5
-         CEZw==
+        bh=WnMjrli1zTUtUE5+GT4k5X5hghHhqsPUuTlBpNnfz/8=;
+        b=n3bfc+y6021NjYFPdYL0NUa4U/Zj0uMTb2RRNUH9KzCteZ+gMVZO4Q/BFUfyXaHQDu
+         nNLzl6YO+QiCJ9bOWxtcJ3/IaUT9aUmtsLpfCH+dlHKN2NI6Wne/UUSZXi6gGj1eSELO
+         8wvw8cLtoX+kz5cu5N3hfLMQvqgmsktB8oMVoE1SiEbvLvN5xxrR9+6VO8Je2H1BvSbj
+         cNgf6MnLgkC8z3bpkDwwC0qSLpQ0lX5N1dIiIL64s5ytJC4Zpjnt2By5jnL4M0GYwCVg
+         wALX/z4aWjTs+G8fIENT+AhcTLoQBnF2QRSo6QFCLYbFAMngDgr2GaW04My6bRj44/bN
+         pPFQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=9ShaHEpor3O7/ITeLr779+4xsU9eGQu8/d6dLci/iKU=;
-        b=KkYHdv9lPpumtABWut94w10T3YNQpazE528hEGv55VvkQh0fqoD5kwrXLir6CpuSM+
-         ZdZQqEcs7dLUIwb5XmrOcn+hmociq9gfTaeEpTRFnrJHQYqPasu7a632wjVtMloiWgQD
-         pl/TWpryGuYp3ckoBRkSyhnsPKP0KJSkVYIdPRUPKl/kLotZaiz6e856LXlV4/Fu6V3g
-         9hmy5OnPri++J+UvXYnXDfX2iEhG0xFUUB80krS/waZIb6y5WVbG/ixIzj2Cwz2FHmH3
-         YAW5kCZmfjbiz4y5wDRlFGDEJQpkHpxuJN0Of5G4nu5Ns0V11e55MW6mxQTV7lHl/9VO
-         2iVQ==
-X-Gm-Message-State: APjAAAXy0LsDowqAp3PMa/iap7magmYw9YQ0Zvo2jLoHPC74+X7VMdon
-        Bo3U5m+9MB2017UW+mrz7GuOzQ==
-X-Google-Smtp-Source: APXvYqz+tvt8cE7F2Vkrb92y0B//8UIvokO3c2JqRcADlZ+V4nIyYepWS/i3UN97nzfd9jsC+bxyTA==
-X-Received: by 2002:a19:a417:: with SMTP id q23mr2549425lfc.110.1555325043228;
-        Mon, 15 Apr 2019 03:44:03 -0700 (PDT)
+        bh=WnMjrli1zTUtUE5+GT4k5X5hghHhqsPUuTlBpNnfz/8=;
+        b=stcii6Xfp/rvRYTkHenzBAJfBiZeKgSLU9Iq3gKgR+WOjH1THi8iqIL9ytle/R57vS
+         dIxZLk0rlRS86MyTArpRRzj6+CQ/QE6mbeGu6un6vFFKK3/FMCmSHq0dvM+EoQ6+nHwC
+         AffYRqVdYPkyN4DKubPnkz0T/y4WojaqJZ9VLdjC+i9EkXrf/KwD3t0j4fbDIq66HvSb
+         Fjs1G0s+T03Z54GluJs3XengA1hQRg2NPnpkOHG7NyAq0x+1omU4xalTXUX9/+6sFemJ
+         4szfqUF2qad2iGV8s7LXjc3W9V35hXhcgOrlhes9StIJdpJhemZH+X333923bMe73oBb
+         atHg==
+X-Gm-Message-State: APjAAAXsv51ti83U+a9JL5Tamhl3vJ+eOi52qLmLGIoV3UvMv55knuK8
+        vj1T4n4ZxqQZWSVLyty9KtihcA==
+X-Google-Smtp-Source: APXvYqy6TALo37iE80bKRfYMtmDS/ANnrjXT8127ijvhP4gsL9QhkxFQhehSG2eceYrkW2Jt2T9WRw==
+X-Received: by 2002:ac2:4357:: with SMTP id o23mr16889458lfl.146.1555325046597;
+        Mon, 15 Apr 2019 03:44:06 -0700 (PDT)
 Received: from localhost.localdomain ([212.45.67.2])
-        by smtp.googlemail.com with ESMTPSA id k21sm9812596ljk.21.2019.04.15.03.44.01
+        by smtp.googlemail.com with ESMTPSA id k21sm9812596ljk.21.2019.04.15.03.44.04
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 15 Apr 2019 03:44:02 -0700 (PDT)
+        Mon, 15 Apr 2019 03:44:05 -0700 (PDT)
 From:   Georgi Djakov <georgi.djakov@linaro.org>
 To:     robh+dt@kernel.org, bjorn.andersson@linaro.org,
         georgi.djakov@linaro.org
 Cc:     vkoul@kernel.org, evgreen@chromium.org, daidavid1@codeaurora.org,
         linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org
-Subject: [PATCH v2 2/4] interconnect: qcom: Add QCS404 interconnect provider driver
-Date:   Mon, 15 Apr 2019 13:43:55 +0300
-Message-Id: <20190415104357.5305-3-georgi.djakov@linaro.org>
+Subject: [PATCH v2 4/4] dt-bindings: interconnect: qcs404: Introduce qcom,qos DT property
+Date:   Mon, 15 Apr 2019 13:43:57 +0300
+Message-Id: <20190415104357.5305-5-georgi.djakov@linaro.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415104357.5305-1-georgi.djakov@linaro.org>
 References: <20190415104357.5305-1-georgi.djakov@linaro.org>
@@ -75,718 +75,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Bjorn Andersson <bjorn.andersson@linaro.org>
+There are separate hardware blocks per each interconnect that allow QoS
+configuration to be applied to each port (node). There are different kinds of
+priorities that could be set on these ports. Each port supports also various
+QoS modes such as "fixed", "limiter", "bypass" and "regulator". Depending on
+the mode, there are a few additional knobs that could be configured.
 
-Add driver for the interconnect buses found in Qualcomm QCS404-based
-platforms. The topology consists of three NoCs that are controlled by
-a remote processor that collects the aggregated bandwidth for each
-master-slave pairs.
+Introduce the qcom,qos property, so that we describe this relation in DT and
+allow the interconnect provider drivers can make use of it.
 
-Signed-off-by: Bjorn Andersson <bjorn.andersson@linaro.org>
 Signed-off-by: Georgi Djakov <georgi.djakov@linaro.org>
 ---
 
 v2:
-- Use the clk_bulk API. (Bjorn)
-- Move the port IDs into the provider file. (Bjorn)
-- Use ARRAY_SIZE in the macro to automagically count the num_links. (Bjorn)
-- Improve code readability. (Bjorn)
+- New patch.
 
- drivers/interconnect/qcom/Kconfig             |   8 +
- drivers/interconnect/qcom/Makefile            |   2 +
- drivers/interconnect/qcom/qcs404.c            | 559 ++++++++++++++++++
- .../dt-bindings/interconnect/qcom,qcs404.h    |  88 +++
- 4 files changed, 657 insertions(+)
- create mode 100644 drivers/interconnect/qcom/qcs404.c
- create mode 100644 include/dt-bindings/interconnect/qcom,qcs404.h
+ .../bindings/interconnect/qcom,qcs404.txt     | 31 +++++++++++++++++++
+ 1 file changed, 31 insertions(+)
 
-diff --git a/drivers/interconnect/qcom/Kconfig b/drivers/interconnect/qcom/Kconfig
-index 290d330abe5a..cf9e6d430994 100644
---- a/drivers/interconnect/qcom/Kconfig
-+++ b/drivers/interconnect/qcom/Kconfig
-@@ -4,6 +4,14 @@ config INTERCONNECT_QCOM
- 	help
- 	  Support for Qualcomm's Network-on-Chip interconnect hardware.
+diff --git a/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt b/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
+index 9befcd14a5b5..b971e0ee2963 100644
+--- a/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
++++ b/Documentation/devicetree/bindings/interconnect/qcom,qcs404.txt
+@@ -11,9 +11,37 @@ Required properties :
+ Optional properties :
+ clocks : list of phandles and specifiers to all interconnect bus clocks
+ clock-names : clock names should include both "bus_clk" and "bus_a_clk"
++qcom,qos : phandle to the QoS device-tree node
  
-+config INTERCONNECT_QCOM_QCS404
-+	tristate "Qualcomm QCS404 interconnect driver"
-+	depends on INTERCONNECT_QCOM
-+	depends on QCOM_SMD_RPM || COMPILE_TEST
-+	help
-+	  This is a driver for the Qualcomm Network-on-Chip on qcs404-based
-+	  platforms.
-+
- config INTERCONNECT_QCOM_SDM845
- 	tristate "Qualcomm SDM845 interconnect driver"
- 	depends on INTERCONNECT_QCOM
-diff --git a/drivers/interconnect/qcom/Makefile b/drivers/interconnect/qcom/Makefile
-index 1c1cea690f92..059ff325ee6c 100644
---- a/drivers/interconnect/qcom/Makefile
-+++ b/drivers/interconnect/qcom/Makefile
-@@ -1,5 +1,7 @@
- # SPDX-License-Identifier: GPL-2.0
+ Example:
  
-+qnoc-qcs404-objs			:= qcs404.o
- qnoc-sdm845-objs			:= sdm845.o
- 
-+obj-$(CONFIG_INTERCONNECT_QCOM_QCS404) += qnoc-qcs404.o
- obj-$(CONFIG_INTERCONNECT_QCOM_SDM845) += qnoc-sdm845.o
-diff --git a/drivers/interconnect/qcom/qcs404.c b/drivers/interconnect/qcom/qcs404.c
-new file mode 100644
-index 000000000000..592bcfcb0621
---- /dev/null
-+++ b/drivers/interconnect/qcom/qcs404.c
-@@ -0,0 +1,559 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2019 Linaro Ltd
-+ */
-+
-+#include <dt-bindings/interconnect/qcom,qcs404.h>
-+#include <linux/clk.h>
-+#include <linux/device.h>
-+#include <linux/interconnect-provider.h>
-+#include <linux/io.h>
-+#include <linux/module.h>
-+#include <linux/of_device.h>
-+#include <linux/of_platform.h>
-+#include <linux/platform_device.h>
-+#include <linux/slab.h>
-+#include <linux/soc/qcom/smd-rpm.h>
-+
-+#define QCS404_MASTER_AMPSS_M0			0
-+#define QCS404_MASTER_GRAPHICS_3D		1
-+#define QCS404_MASTER_MDP_PORT0			2
-+#define QCS404_SNOC_BIMC_1_MAS			3
-+#define QCS404_MASTER_TCU_0			4
-+#define QCS404_MASTER_SPDM			5
-+#define QCS404_MASTER_BLSP_1			6
-+#define QCS404_MASTER_BLSP_2			7
-+#define QCS404_MASTER_XM_USB_HS1		8
-+#define QCS404_MASTER_CRYPTO_CORE0		9
-+#define QCS404_MASTER_SDCC_1			10
-+#define QCS404_MASTER_SDCC_2			11
-+#define QCS404_SNOC_PNOC_MAS			12
-+#define QCS404_MASTER_QPIC			13
-+#define QCS404_MASTER_QDSS_BAM			14
-+#define QCS404_BIMC_SNOC_MAS			15
-+#define QCS404_PNOC_SNOC_MAS			16
-+#define QCS404_MASTER_QDSS_ETR			17
-+#define QCS404_MASTER_EMAC			18
-+#define QCS404_MASTER_PCIE			19
-+#define QCS404_MASTER_USB3			20
-+#define QCS404_PNOC_INT_0			21
-+#define QCS404_PNOC_INT_2			22
-+#define QCS404_PNOC_INT_3			23
-+#define QCS404_PNOC_SLV_0			24
-+#define QCS404_PNOC_SLV_1			25
-+#define QCS404_PNOC_SLV_2			26
-+#define QCS404_PNOC_SLV_3			27
-+#define QCS404_PNOC_SLV_4			28
-+#define QCS404_PNOC_SLV_6			29
-+#define QCS404_PNOC_SLV_7			30
-+#define QCS404_PNOC_SLV_8			31
-+#define QCS404_PNOC_SLV_9			32
-+#define QCS404_PNOC_SLV_10			33
-+#define QCS404_PNOC_SLV_11			34
-+#define QCS404_SNOC_QDSS_INT			35
-+#define QCS404_SNOC_INT_0			36
-+#define QCS404_SNOC_INT_1			37
-+#define QCS404_SNOC_INT_2			38
-+#define QCS404_SLAVE_EBI_CH0			39
-+#define QCS404_BIMC_SNOC_SLV			40
-+#define QCS404_SLAVE_SPDM_WRAPPER		41
-+#define QCS404_SLAVE_PDM			42
-+#define QCS404_SLAVE_PRNG			43
-+#define QCS404_SLAVE_TCSR			44
-+#define QCS404_SLAVE_SNOC_CFG			45
-+#define QCS404_SLAVE_MESSAGE_RAM		46
-+#define QCS404_SLAVE_DISPLAY_CFG		47
-+#define QCS404_SLAVE_GRAPHICS_3D_CFG		48
-+#define QCS404_SLAVE_BLSP_1			49
-+#define QCS404_SLAVE_TLMM_NORTH			50
-+#define QCS404_SLAVE_PCIE_1			51
-+#define QCS404_SLAVE_EMAC_CFG			52
-+#define QCS404_SLAVE_BLSP_2			53
-+#define QCS404_SLAVE_TLMM_EAST			54
-+#define QCS404_SLAVE_TCU			55
-+#define QCS404_SLAVE_PMIC_ARB			56
-+#define QCS404_SLAVE_SDCC_1			57
-+#define QCS404_SLAVE_SDCC_2			58
-+#define QCS404_SLAVE_TLMM_SOUTH			59
-+#define QCS404_SLAVE_USB_HS			60
-+#define QCS404_SLAVE_USB3			61
-+#define QCS404_SLAVE_CRYPTO_0_CFG		62
-+#define QCS404_PNOC_SNOC_SLV			63
-+#define QCS404_SLAVE_APPSS			64
-+#define QCS404_SLAVE_WCSS			65
-+#define QCS404_SNOC_BIMC_1_SLV			66
-+#define QCS404_SLAVE_OCIMEM			67
-+#define QCS404_SNOC_PNOC_SLV			68
-+#define QCS404_SLAVE_QDSS_STM			69
-+#define QCS404_SLAVE_CATS_128			70
-+#define QCS404_SLAVE_OCMEM_64			71
-+#define QCS404_SLAVE_LPASS			72
-+
-+#define RPM_BUS_MASTER_REQ	0x73616d62
-+#define RPM_BUS_SLAVE_REQ	0x766c7362
-+#define RPM_KEY_BW		0x00007762
-+
-+#define to_qcom_provider(_provider) \
-+	container_of(_provider, struct qcom_icc_provider, provider)
-+
-+static struct qcom_smd_rpm *rpm;
-+
-+struct icc_rpm_smd_req {
-+	__le32 key;
-+	__le32 nbytes;
-+	__le32 value;
-+};
-+
-+static const struct clk_bulk_data bus_clocks[] = {
-+	{ .id = "bus_clk" },
-+	{ .id = "bus_a_clk" },
-+};
-+
-+/**
-+ * struct qcom_icc_provider - Qualcomm specific interconnect provider
-+ * @provider: generic interconnect provider
-+ * @bus_clks: the clk_bulk_data table of bus clocks
-+ * @num_clks: the total number of clk_bulk_data entries
-+ */
-+struct qcom_icc_provider {
-+	struct icc_provider provider;
-+	struct clk_bulk_data *bus_clks;
-+	int num_clks;
-+};
-+
-+#define QCS404_MAX_LINKS	12
-+
-+/**
-+ * struct qcom_icc_node - Qualcomm specific interconnect nodes
-+ * @name: the node name used in debugfs
-+ * @id: a unique node identifier
-+ * @links: an array of nodes where we can go next while traversing
-+ * @num_links: the total number of @links
-+ * @buswidth: width of the interconnect between a node and the bus (bytes)
-+ * @mas_rpm_id:	RPM id for devices that are bus masters
-+ * @slv_rpm_id:	RPM id for devices that are bus slaves
-+ * @rate: current bus clock rate in Hz
-+ */
-+struct qcom_icc_node {
-+	unsigned char *name;
-+	u16 id;
-+	u16 links[QCS404_MAX_LINKS];
-+	u16 num_links;
-+	u16 buswidth;
-+	int mas_rpm_id;
-+	int slv_rpm_id;
-+	u64 rate;
-+};
-+
-+struct qcom_icc_desc {
-+	struct qcom_icc_node **nodes;
-+	size_t num_nodes;
-+};
-+
-+#define DEFINE_QNODE(_name, _id, _buswidth, _mas_rpm_id, _slv_rpm_id,	\
-+		     ...)						\
-+		static struct qcom_icc_node _name = {			\
-+		.name = #_name,						\
-+		.id = _id,						\
-+		.buswidth = _buswidth,					\
-+		.mas_rpm_id = _mas_rpm_id,				\
-+		.slv_rpm_id = _slv_rpm_id,				\
-+		.num_links = ARRAY_SIZE(((int[]){ __VA_ARGS__ })),	\
-+		.links = { __VA_ARGS__ },				\
-+	}
-+
-+DEFINE_QNODE(mas_apps_proc, QCS404_MASTER_AMPSS_M0, 8, 0, -1, QCS404_SLAVE_EBI_CH0, QCS404_BIMC_SNOC_SLV);
-+DEFINE_QNODE(mas_oxili, QCS404_MASTER_GRAPHICS_3D, 8, 6, -1, QCS404_SLAVE_EBI_CH0, QCS404_BIMC_SNOC_SLV);
-+DEFINE_QNODE(mas_mdp, QCS404_MASTER_MDP_PORT0, 8, 8, -1, QCS404_SLAVE_EBI_CH0, QCS404_BIMC_SNOC_SLV);
-+DEFINE_QNODE(mas_snoc_bimc_1, QCS404_SNOC_BIMC_1_MAS, 8, 76, -1, QCS404_SLAVE_EBI_CH0);
-+DEFINE_QNODE(mas_tcu_0, QCS404_MASTER_TCU_0, 8, -1, -1, QCS404_SLAVE_EBI_CH0, QCS404_BIMC_SNOC_SLV);
-+DEFINE_QNODE(mas_spdm, QCS404_MASTER_SPDM, 4, -1, -1, QCS404_PNOC_INT_3);
-+DEFINE_QNODE(mas_blsp_1, QCS404_MASTER_BLSP_1, 4, 41, -1, QCS404_PNOC_INT_3);
-+DEFINE_QNODE(mas_blsp_2, QCS404_MASTER_BLSP_2, 4, 39, -1, QCS404_PNOC_INT_3);
-+DEFINE_QNODE(mas_xi_usb_hs1, QCS404_MASTER_XM_USB_HS1, 8, 138, -1, QCS404_PNOC_INT_0);
-+DEFINE_QNODE(mas_crypto, QCS404_MASTER_CRYPTO_CORE0, 8, 23, -1, QCS404_PNOC_SNOC_SLV, QCS404_PNOC_INT_2);
-+DEFINE_QNODE(mas_sdcc_1, QCS404_MASTER_SDCC_1, 8, 33, -1, QCS404_PNOC_INT_0);
-+DEFINE_QNODE(mas_sdcc_2, QCS404_MASTER_SDCC_2, 8, 35, -1, QCS404_PNOC_INT_0);
-+DEFINE_QNODE(mas_snoc_pcnoc, QCS404_SNOC_PNOC_MAS, 8, 77, -1, QCS404_PNOC_INT_2);
-+DEFINE_QNODE(mas_qpic, QCS404_MASTER_QPIC, 4, -1, -1, QCS404_PNOC_INT_0);
-+DEFINE_QNODE(mas_qdss_bam, QCS404_MASTER_QDSS_BAM, 4, -1, -1, QCS404_SNOC_QDSS_INT);
-+DEFINE_QNODE(mas_bimc_snoc, QCS404_BIMC_SNOC_MAS, 8, 21, -1, QCS404_SLAVE_OCMEM_64, QCS404_SLAVE_CATS_128, QCS404_SNOC_INT_0, QCS404_SNOC_INT_1);
-+DEFINE_QNODE(mas_pcnoc_snoc, QCS404_PNOC_SNOC_MAS, 8, 29, -1, QCS404_SNOC_BIMC_1_SLV, QCS404_SNOC_INT_2, QCS404_SNOC_INT_0);
-+DEFINE_QNODE(mas_qdss_etr, QCS404_MASTER_QDSS_ETR, 8, -1, -1, QCS404_SNOC_QDSS_INT);
-+DEFINE_QNODE(mas_emac, QCS404_MASTER_EMAC, 8, -1, -1, QCS404_SNOC_BIMC_1_SLV, QCS404_SNOC_INT_1);
-+DEFINE_QNODE(mas_pcie, QCS404_MASTER_PCIE, 8, -1, -1, QCS404_SNOC_BIMC_1_SLV, QCS404_SNOC_INT_1);
-+DEFINE_QNODE(mas_usb3, QCS404_MASTER_USB3, 8, -1, -1, QCS404_SNOC_BIMC_1_SLV, QCS404_SNOC_INT_1);
-+DEFINE_QNODE(pcnoc_int_0, QCS404_PNOC_INT_0, 8, 85, 114, QCS404_PNOC_SNOC_SLV, QCS404_PNOC_INT_2);
-+DEFINE_QNODE(pcnoc_int_2, QCS404_PNOC_INT_2, 8, 124, 184, QCS404_PNOC_SLV_10, QCS404_SLAVE_TCU, QCS404_PNOC_SLV_11, QCS404_PNOC_SLV_2, QCS404_PNOC_SLV_3, QCS404_PNOC_SLV_0, QCS404_PNOC_SLV_1, QCS404_PNOC_SLV_6, QCS404_PNOC_SLV_7, QCS404_PNOC_SLV_4, QCS404_PNOC_SLV_8, QCS404_PNOC_SLV_9);
-+DEFINE_QNODE(pcnoc_int_3, QCS404_PNOC_INT_3, 8, 125, 185, QCS404_PNOC_SNOC_SLV);
-+DEFINE_QNODE(pcnoc_s_0, QCS404_PNOC_SLV_0, 4, 89, 118, QCS404_SLAVE_PRNG, QCS404_SLAVE_SPDM_WRAPPER, QCS404_SLAVE_PDM);
-+DEFINE_QNODE(pcnoc_s_1, QCS404_PNOC_SLV_1, 4, 90, 119, QCS404_SLAVE_TCSR);
-+DEFINE_QNODE(pcnoc_s_2, QCS404_PNOC_SLV_2, 4, -1, -1, QCS404_SLAVE_GRAPHICS_3D_CFG);
-+DEFINE_QNODE(pcnoc_s_3, QCS404_PNOC_SLV_3, 4, 92, 121, QCS404_SLAVE_MESSAGE_RAM);
-+DEFINE_QNODE(pcnoc_s_4, QCS404_PNOC_SLV_4, 4, 93, 122, QCS404_SLAVE_SNOC_CFG);
-+DEFINE_QNODE(pcnoc_s_6, QCS404_PNOC_SLV_6, 4, 94, 123, QCS404_SLAVE_BLSP_1, QCS404_SLAVE_TLMM_NORTH, QCS404_SLAVE_EMAC_CFG);
-+DEFINE_QNODE(pcnoc_s_7, QCS404_PNOC_SLV_7, 4, 95, 124, QCS404_SLAVE_TLMM_SOUTH, QCS404_SLAVE_DISPLAY_CFG, QCS404_SLAVE_SDCC_1, QCS404_SLAVE_PCIE_1, QCS404_SLAVE_SDCC_2);
-+DEFINE_QNODE(pcnoc_s_8, QCS404_PNOC_SLV_8, 4, 96, 125, QCS404_SLAVE_CRYPTO_0_CFG);
-+DEFINE_QNODE(pcnoc_s_9, QCS404_PNOC_SLV_9, 4, 97, 126, QCS404_SLAVE_BLSP_2, QCS404_SLAVE_TLMM_EAST, QCS404_SLAVE_PMIC_ARB);
-+DEFINE_QNODE(pcnoc_s_10, QCS404_PNOC_SLV_10, 4, 157, -1, QCS404_SLAVE_USB_HS);
-+DEFINE_QNODE(pcnoc_s_11, QCS404_PNOC_SLV_11, 4, 158, 246, QCS404_SLAVE_USB3);
-+DEFINE_QNODE(qdss_int, QCS404_SNOC_QDSS_INT, 8, -1, -1, QCS404_SNOC_BIMC_1_SLV, QCS404_SNOC_INT_1);
-+DEFINE_QNODE(snoc_int_0, QCS404_SNOC_INT_0, 8, 99, 130, QCS404_SLAVE_LPASS, QCS404_SLAVE_APPSS, QCS404_SLAVE_WCSS);
-+DEFINE_QNODE(snoc_int_1, QCS404_SNOC_INT_1, 8, 100, 131, QCS404_SNOC_PNOC_SLV, QCS404_SNOC_INT_2);
-+DEFINE_QNODE(snoc_int_2, QCS404_SNOC_INT_2, 8, 134, 197, QCS404_SLAVE_QDSS_STM, QCS404_SLAVE_OCIMEM);
-+DEFINE_QNODE(slv_ebi, QCS404_SLAVE_EBI_CH0, 8, -1, 0, 0);
-+DEFINE_QNODE(slv_bimc_snoc, QCS404_BIMC_SNOC_SLV, 8, -1, 2, QCS404_BIMC_SNOC_MAS);
-+DEFINE_QNODE(slv_spdm, QCS404_SLAVE_SPDM_WRAPPER, 4, -1, -1, 0);
-+DEFINE_QNODE(slv_pdm, QCS404_SLAVE_PDM, 4, -1, 41, 0);
-+DEFINE_QNODE(slv_prng, QCS404_SLAVE_PRNG, 4, -1, 44, 0);
-+DEFINE_QNODE(slv_tcsr, QCS404_SLAVE_TCSR, 4, -1, 50, 0);
-+DEFINE_QNODE(slv_snoc_cfg, QCS404_SLAVE_SNOC_CFG, 4, -1, 70, 0);
-+DEFINE_QNODE(slv_message_ram, QCS404_SLAVE_MESSAGE_RAM, 4, -1, 55, 0);
-+DEFINE_QNODE(slv_disp_ss_cfg, QCS404_SLAVE_DISPLAY_CFG, 4, -1, -1, 0);
-+DEFINE_QNODE(slv_gpu_cfg, QCS404_SLAVE_GRAPHICS_3D_CFG, 4, -1, -1, 0);
-+DEFINE_QNODE(slv_blsp_1, QCS404_SLAVE_BLSP_1, 4, -1, 39, 0);
-+DEFINE_QNODE(slv_tlmm_north, QCS404_SLAVE_TLMM_NORTH, 4, -1, 214, 0);
-+DEFINE_QNODE(slv_pcie, QCS404_SLAVE_PCIE_1, 4, -1, -1, 0);
-+DEFINE_QNODE(slv_ethernet, QCS404_SLAVE_EMAC_CFG, 4, -1, -1, 0);
-+DEFINE_QNODE(slv_blsp_2, QCS404_SLAVE_BLSP_2, 4, -1, 37, 0);
-+DEFINE_QNODE(slv_tlmm_east, QCS404_SLAVE_TLMM_EAST, 4, -1, 213, 0);
-+DEFINE_QNODE(slv_tcu, QCS404_SLAVE_TCU, 8, -1, -1, 0);
-+DEFINE_QNODE(slv_pmic_arb, QCS404_SLAVE_PMIC_ARB, 4, -1, 59, 0);
-+DEFINE_QNODE(slv_sdcc_1, QCS404_SLAVE_SDCC_1, 4, -1, 31, 0);
-+DEFINE_QNODE(slv_sdcc_2, QCS404_SLAVE_SDCC_2, 4, -1, 33, 0);
-+DEFINE_QNODE(slv_tlmm_south, QCS404_SLAVE_TLMM_SOUTH, 4, -1, -1, 0);
-+DEFINE_QNODE(slv_usb_hs, QCS404_SLAVE_USB_HS, 4, -1, 40, 0);
-+DEFINE_QNODE(slv_usb3, QCS404_SLAVE_USB3, 4, -1, 22, 0);
-+DEFINE_QNODE(slv_crypto_0_cfg, QCS404_SLAVE_CRYPTO_0_CFG, 4, -1, 52, 0);
-+DEFINE_QNODE(slv_pcnoc_snoc, QCS404_PNOC_SNOC_SLV, 8, -1, 45, QCS404_PNOC_SNOC_MAS);
-+DEFINE_QNODE(slv_kpss_ahb, QCS404_SLAVE_APPSS, 4, -1, -1, 0);
-+DEFINE_QNODE(slv_wcss, QCS404_SLAVE_WCSS, 4, -1, 23, 0);
-+DEFINE_QNODE(slv_snoc_bimc_1, QCS404_SNOC_BIMC_1_SLV, 8, -1, 104, QCS404_SNOC_BIMC_1_MAS);
-+DEFINE_QNODE(slv_imem, QCS404_SLAVE_OCIMEM, 8, -1, 26, 0);
-+DEFINE_QNODE(slv_snoc_pcnoc, QCS404_SNOC_PNOC_SLV, 8, -1, 28, QCS404_SNOC_PNOC_MAS);
-+DEFINE_QNODE(slv_qdss_stm, QCS404_SLAVE_QDSS_STM, 4, -1, 30, 0);
-+DEFINE_QNODE(slv_cats_0, QCS404_SLAVE_CATS_128, 16, -1, -1, 0);
-+DEFINE_QNODE(slv_cats_1, QCS404_SLAVE_OCMEM_64, 8, -1, -1, 0);
-+DEFINE_QNODE(slv_lpass, QCS404_SLAVE_LPASS, 4, -1, -1, 0);
-+
-+static struct qcom_icc_node *qcs404_bimc_nodes[] = {
-+	[MASTER_AMPSS_M0] = &mas_apps_proc,
-+	[MASTER_OXILI] = &mas_oxili,
-+	[MASTER_MDP_PORT0] = &mas_mdp,
-+	[MASTER_SNOC_BIMC_1] = &mas_snoc_bimc_1,
-+	[MASTER_TCU_0] = &mas_tcu_0,
-+	[SLAVE_EBI_CH0] = &slv_ebi,
-+	[SLAVE_BIMC_SNOC] = &slv_bimc_snoc,
-+};
-+
-+static struct qcom_icc_desc qcs404_bimc = {
-+	.nodes = qcs404_bimc_nodes,
-+	.num_nodes = ARRAY_SIZE(qcs404_bimc_nodes),
-+};
-+
-+static struct qcom_icc_node *qcs404_pcnoc_nodes[] = {
-+	[MASTER_SPDM] = &mas_spdm,
-+	[MASTER_BLSP_1] = &mas_blsp_1,
-+	[MASTER_BLSP_2] = &mas_blsp_2,
-+	[MASTER_XI_USB_HS1] = &mas_xi_usb_hs1,
-+	[MASTER_CRYPT0] = &mas_crypto,
-+	[MASTER_SDCC_1] = &mas_sdcc_1,
-+	[MASTER_SDCC_2] = &mas_sdcc_2,
-+	[MASTER_SNOC_PCNOC] = &mas_snoc_pcnoc,
-+	[MASTER_QPIC] = &mas_qpic,
-+	[PCNOC_INT_0] = &pcnoc_int_0,
-+	[PCNOC_INT_2] = &pcnoc_int_2,
-+	[PCNOC_INT_3] = &pcnoc_int_3,
-+	[PCNOC_S_0] = &pcnoc_s_0,
-+	[PCNOC_S_1] = &pcnoc_s_1,
-+	[PCNOC_S_2] = &pcnoc_s_2,
-+	[PCNOC_S_3] = &pcnoc_s_3,
-+	[PCNOC_S_4] = &pcnoc_s_4,
-+	[PCNOC_S_6] = &pcnoc_s_6,
-+	[PCNOC_S_7] = &pcnoc_s_7,
-+	[PCNOC_S_8] = &pcnoc_s_8,
-+	[PCNOC_S_9] = &pcnoc_s_9,
-+	[PCNOC_S_10] = &pcnoc_s_10,
-+	[PCNOC_S_11] = &pcnoc_s_11,
-+	[SLAVE_SPDM] = &slv_spdm,
-+	[SLAVE_PDM] = &slv_pdm,
-+	[SLAVE_PRNG] = &slv_prng,
-+	[SLAVE_TCSR] = &slv_tcsr,
-+	[SLAVE_SNOC_CFG] = &slv_snoc_cfg,
-+	[SLAVE_MESSAGE_RAM] = &slv_message_ram,
-+	[SLAVE_DISP_SS_CFG] = &slv_disp_ss_cfg,
-+	[SLAVE_GPU_CFG] = &slv_gpu_cfg,
-+	[SLAVE_BLSP_1] = &slv_blsp_1,
-+	[SLAVE_BLSP_2] = &slv_blsp_2,
-+	[SLAVE_TLMM_NORTH] = &slv_tlmm_north,
-+	[SLAVE_PCIE] = &slv_pcie,
-+	[SLAVE_ETHERNET] = &slv_ethernet,
-+	[SLAVE_TLMM_EAST] = &slv_tlmm_east,
-+	[SLAVE_TCU] = &slv_tcu,
-+	[SLAVE_PMIC_ARB] = &slv_pmic_arb,
-+	[SLAVE_SDCC_1] = &slv_sdcc_1,
-+	[SLAVE_SDCC_2] = &slv_sdcc_2,
-+	[SLAVE_TLMM_SOUTH] = &slv_tlmm_south,
-+	[SLAVE_USB_HS] = &slv_usb_hs,
-+	[SLAVE_USB3] = &slv_usb3,
-+	[SLAVE_CRYPTO_0_CFG] = &slv_crypto_0_cfg,
-+	[SLAVE_PCNOC_SNOC] = &slv_pcnoc_snoc,
-+};
-+
-+static struct qcom_icc_desc qcs404_pcnoc = {
-+	.nodes = qcs404_pcnoc_nodes,
-+	.num_nodes = ARRAY_SIZE(qcs404_pcnoc_nodes),
-+};
-+
-+static struct qcom_icc_node *qcs404_snoc_nodes[] = {
-+	[MASTER_QDSS_BAM] = &mas_qdss_bam,
-+	[MASTER_BIMC_SNOC] = &mas_bimc_snoc,
-+	[MASTER_PCNOC_SNOC] = &mas_pcnoc_snoc,
-+	[MASTER_QDSS_ETR] = &mas_qdss_etr,
-+	[MASTER_EMAC] = &mas_emac,
-+	[MASTER_PCIE] = &mas_pcie,
-+	[MASTER_USB3] = &mas_usb3,
-+	[QDSS_INT] = &qdss_int,
-+	[SNOC_INT_0] = &snoc_int_0,
-+	[SNOC_INT_1] = &snoc_int_1,
-+	[SNOC_INT_2] = &snoc_int_2,
-+	[SLAVE_KPSS_AHB] = &slv_kpss_ahb,
-+	[SLAVE_WCSS] = &slv_wcss,
-+	[SLAVE_SNOC_BIMC_1] = &slv_snoc_bimc_1,
-+	[SLAVE_IMEM] = &slv_imem,
-+	[SLAVE_SNOC_PCNOC] = &slv_snoc_pcnoc,
-+	[SLAVE_QDSS_STM] = &slv_qdss_stm,
-+	[SLAVE_CATS_0] = &slv_cats_0,
-+	[SLAVE_CATS_1] = &slv_cats_1,
-+	[SLAVE_LPASS] = &slv_lpass,
-+};
-+
-+static struct qcom_icc_desc qcs404_snoc = {
-+	.nodes = qcs404_snoc_nodes,
-+	.num_nodes = ARRAY_SIZE(qcs404_snoc_nodes),
-+};
-+
-+static int qcom_icc_aggregate(struct icc_node *node, u32 avg_bw, u32 peak_bw,
-+			      u32 *agg_avg, u32 *agg_peak)
-+{
-+	*agg_avg += avg_bw;
-+	*agg_peak = max(*agg_peak, peak_bw);
-+
-+	return 0;
-+}
-+
-+static int qcom_icc_rpm_smd_send(int ctx, int rsc_type, int id, u32 val)
-+{
-+	struct icc_rpm_smd_req req = {
-+		.key = cpu_to_le32(RPM_KEY_BW),
-+		.nbytes = cpu_to_le32(sizeof(u32)),
-+		.value = cpu_to_le32(val),
++soc {
++	...
++	bimc_qos: interconnect@400000 {
++		compatible = "qcom,qcs404-bimc-qos";
++		reg = <0x400000 0x80000>;
++		clock-names = "bus_clk", "bus_a_clk";
++		clocks = <&rpmcc RPM_SMD_BIMC_CLK>,
++			<&rpmcc RPM_SMD_BIMC_A_CLK>;
 +	};
 +
-+	return qcom_rpm_smd_write(rpm, ctx, rsc_type, id, &req,
-+				  sizeof(req));
-+}
++	pcnoc_qos: interconnect@500000 {
++		compatible = "qcom,qcs404-pcnoc-qos";
++		reg = <0x500000 0x15080>;
++		clock-names = "bus_clk", "bus_a_clk";
++		clocks = <&rpmcc RPM_SMD_PNOC_CLK>,
++			<&rpmcc RPM_SMD_PNOC_A_CLK>;
++	};
 +
-+static int qcom_icc_set(struct icc_node *src, struct icc_node *dst)
-+{
-+	struct qcom_icc_provider *qp;
-+	struct qcom_icc_node *qn;
-+	struct icc_provider *provider;
-+	struct icc_node *n;
-+	u64 sum_bw;
-+	u64 max_peak_bw;
-+	u64 rate;
-+	u32 agg_avg = 0;
-+	u32 agg_peak = 0;
-+	int ret, i;
-+
-+	qn = src->data;
-+	provider = src->provider;
-+	qp = to_qcom_provider(provider);
-+
-+	list_for_each_entry(n, &provider->nodes, node_list)
-+		qcom_icc_aggregate(n, n->avg_bw, n->peak_bw,
-+				   &agg_avg, &agg_peak);
-+
-+	sum_bw = icc_units_to_bps(agg_avg);
-+	max_peak_bw = icc_units_to_bps(agg_peak);
-+
-+	/* send bandwidth request message to the RPM processor */
-+	if (qn->mas_rpm_id != -1) {
-+		ret = qcom_icc_rpm_smd_send(QCOM_SMD_RPM_ACTIVE_STATE,
-+					    RPM_BUS_MASTER_REQ,
-+					    qn->mas_rpm_id,
-+					    sum_bw);
-+		if (ret) {
-+			pr_err("qcom_icc_rpm_smd_send mas %d error %d\n",
-+			       qn->mas_rpm_id, ret);
-+			return ret;
-+		}
-+	}
-+
-+	if (qn->slv_rpm_id != -1) {
-+		ret = qcom_icc_rpm_smd_send(QCOM_SMD_RPM_ACTIVE_STATE,
-+					    RPM_BUS_SLAVE_REQ,
-+					    qn->slv_rpm_id,
-+					    sum_bw);
-+		if (ret) {
-+			pr_err("qcom_icc_rpm_smd_send slv error %d\n",
-+			       ret);
-+			return ret;
-+		}
-+	}
-+
-+	rate = max(sum_bw, max_peak_bw);
-+
-+	do_div(rate, qn->buswidth);
-+
-+	if (qn->rate == rate)
-+		return 0;
-+
-+	for (i = 0; i < qp->num_clks; i++) {
-+		ret = clk_set_rate(qp->bus_clks[i].clk, rate);
-+		if (ret) {
-+			pr_err("%s clk_set_rate error: %d\n",
-+			       qp->bus_clks[i].id, ret);
-+			return ret;
-+		}
-+	}
-+
-+	qn->rate = rate;
-+
-+	return 0;
-+}
-+
-+static int qnoc_probe(struct platform_device *pdev)
-+{
-+	struct device *dev = &pdev->dev;
-+	const struct qcom_icc_desc *desc;
-+	struct icc_onecell_data *data;
-+	struct icc_provider *provider;
-+	struct qcom_icc_node **qnodes;
-+	struct qcom_icc_provider *qp;
-+	struct icc_node *node;
-+	size_t num_nodes, i;
-+	int ret;
-+
-+	rpm = dev_get_drvdata(dev->parent);
-+	if (!rpm) {
-+		dev_err(dev, "unable to retrieve handle to RPM\n");
-+		return -ENODEV;
-+	}
-+
-+	desc = of_device_get_match_data(dev);
-+	if (!desc)
-+		return -EINVAL;
-+
-+	qnodes = desc->nodes;
-+	num_nodes = desc->num_nodes;
-+
-+	qp = devm_kzalloc(dev, sizeof(*qp), GFP_KERNEL);
-+	if (!qp)
-+		return -ENOMEM;
-+
-+	data = devm_kcalloc(dev, num_nodes, sizeof(*node), GFP_KERNEL);
-+	if (!data)
-+		return -ENOMEM;
-+
-+	qp->bus_clks = devm_kmemdup(dev, bus_clocks, sizeof(bus_clocks),
-+				    GFP_KERNEL);
-+	if (!qp->bus_clks)
-+		return -ENOMEM;
-+
-+	qp->num_clks = ARRAY_SIZE(bus_clocks);
-+	ret = devm_clk_bulk_get(dev, qp->num_clks, qp->bus_clks);
-+	if (ret)
-+		return ret;
-+
-+	ret = clk_bulk_prepare_enable(qp->num_clks, qp->bus_clks);
-+	if (ret)
-+		return ret;
-+
-+	provider = &qp->provider;
-+	INIT_LIST_HEAD(&provider->nodes);
-+	provider->dev = dev;
-+	provider->set = qcom_icc_set;
-+	provider->aggregate = qcom_icc_aggregate;
-+	provider->xlate = of_icc_xlate_onecell;
-+	provider->data = data;
-+
-+	ret = icc_provider_add(provider);
-+	if (ret) {
-+		dev_err(dev, "error adding interconnect provider: %d\n", ret);
-+		clk_bulk_disable_unprepare(qp->num_clks, qp->bus_clks);
-+		return ret;
-+	}
-+
-+	for (i = 0; i < num_nodes; i++) {
-+		size_t j;
-+
-+		node = icc_node_create(qnodes[i]->id);
-+		if (IS_ERR(node)) {
-+			ret = PTR_ERR(node);
-+			goto err;
-+		}
-+
-+		node->name = qnodes[i]->name;
-+		node->data = qnodes[i];
-+		icc_node_add(node, provider);
-+
-+		dev_dbg(dev, "registered node %s\n", node->name);
-+
-+		/* populate links */
-+		for (j = 0; j < qnodes[i]->num_links; j++)
-+			icc_link_create(node, qnodes[i]->links[j]);
-+
-+		data->nodes[i] = node;
-+	}
-+	data->num_nodes = num_nodes;
-+
-+	platform_set_drvdata(pdev, qp);
-+
-+	return 0;
-+err:
-+	list_for_each_entry(node, &provider->nodes, node_list) {
-+		icc_node_del(node);
-+		icc_node_destroy(node->id);
-+	}
-+	clk_bulk_disable_unprepare(qp->num_clks, qp->bus_clks);
-+	icc_provider_del(provider);
-+
-+	return ret;
-+}
-+
-+static int qnoc_remove(struct platform_device *pdev)
-+{
-+	struct qcom_icc_provider *qp = platform_get_drvdata(pdev);
-+	struct icc_provider *provider = &qp->provider;
-+	struct icc_node *n;
-+
-+	list_for_each_entry(n, &provider->nodes, node_list) {
-+		icc_node_del(n);
-+		icc_node_destroy(n->id);
-+	}
-+	clk_bulk_disable_unprepare(qp->num_clks, qp->bus_clks);
-+
-+	return icc_provider_del(provider);
-+}
-+
-+static const struct of_device_id qcs404_noc_of_match[] = {
-+	{ .compatible = "qcom,qcs404-bimc", .data = &qcs404_bimc },
-+	{ .compatible = "qcom,qcs404-pcnoc", .data = &qcs404_pcnoc },
-+	{ .compatible = "qcom,qcs404-snoc", .data = &qcs404_snoc },
-+	{ },
++	snoc_qos: interconnect@580000 {
++		compatible = "qcom,qcs404-snoc-qos";
++		reg = <0x580000 0x14000>;
++		clock-names = "bus_clk", "bus_a_clk";
++		clocks = <&rpmcc RPM_SMD_SNOC_CLK>,
++			<&rpmcc RPM_SMD_SNOC_A_CLK>;
++	};
 +};
-+MODULE_DEVICE_TABLE(of, qcs404_noc_of_match);
 +
-+static struct platform_driver qnoc_driver = {
-+	.probe = qnoc_probe,
-+	.remove = qnoc_remove,
-+	.driver = {
-+		.name = "qnoc-qcs404",
-+		.of_match_table = qcs404_noc_of_match,
-+	},
-+};
-+module_platform_driver(qnoc_driver);
-+MODULE_DESCRIPTION("Qualcomm QCS404 NoC driver");
-+MODULE_LICENSE("GPL v2");
-diff --git a/include/dt-bindings/interconnect/qcom,qcs404.h b/include/dt-bindings/interconnect/qcom,qcs404.h
-new file mode 100644
-index 000000000000..960f6e39c5f2
---- /dev/null
-+++ b/include/dt-bindings/interconnect/qcom,qcs404.h
-@@ -0,0 +1,88 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Qualcomm interconnect IDs
-+ *
-+ * Copyright (c) 2019, Linaro Ltd.
-+ * Author: Georgi Djakov <georgi.djakov@linaro.org>
-+ */
-+
-+#ifndef __DT_BINDINGS_INTERCONNECT_QCOM_QCS404_H
-+#define __DT_BINDINGS_INTERCONNECT_QCOM_QCS404_H
-+
-+#define MASTER_AMPSS_M0			0
-+#define MASTER_OXILI			1
-+#define MASTER_MDP_PORT0		2
-+#define MASTER_SNOC_BIMC_1		3
-+#define MASTER_TCU_0			4
-+#define SLAVE_EBI_CH0			5
-+#define SLAVE_BIMC_SNOC			6
-+
-+#define MASTER_SPDM			0
-+#define MASTER_BLSP_1			1
-+#define MASTER_BLSP_2			2
-+#define MASTER_XI_USB_HS1		3
-+#define MASTER_CRYPT0			4
-+#define MASTER_SDCC_1			5
-+#define MASTER_SDCC_2			6
-+#define MASTER_SNOC_PCNOC		7
-+#define MASTER_QPIC			8
-+#define PCNOC_INT_0			9
-+#define PCNOC_INT_2			10
-+#define PCNOC_INT_3			11
-+#define PCNOC_S_0			12
-+#define PCNOC_S_1			13
-+#define PCNOC_S_2			14
-+#define PCNOC_S_3			15
-+#define PCNOC_S_4			16
-+#define PCNOC_S_6			17
-+#define PCNOC_S_7			18
-+#define PCNOC_S_8			19
-+#define PCNOC_S_9			20
-+#define PCNOC_S_10			21
-+#define PCNOC_S_11			22
-+#define SLAVE_SPDM			23
-+#define SLAVE_PDM			24
-+#define SLAVE_PRNG			25
-+#define SLAVE_TCSR			26
-+#define SLAVE_SNOC_CFG			27
-+#define SLAVE_MESSAGE_RAM		28
-+#define SLAVE_DISP_SS_CFG		29
-+#define SLAVE_GPU_CFG			30
-+#define SLAVE_BLSP_1			31
-+#define SLAVE_BLSP_2			32
-+#define SLAVE_TLMM_NORTH		33
-+#define SLAVE_PCIE			34
-+#define SLAVE_ETHERNET			35
-+#define SLAVE_TLMM_EAST			36
-+#define SLAVE_TCU			37
-+#define SLAVE_PMIC_ARB			38
-+#define SLAVE_SDCC_1			39
-+#define SLAVE_SDCC_2			40
-+#define SLAVE_TLMM_SOUTH		41
-+#define SLAVE_USB_HS			42
-+#define SLAVE_USB3			43
-+#define SLAVE_CRYPTO_0_CFG		44
-+#define SLAVE_PCNOC_SNOC		45
-+
-+#define MASTER_QDSS_BAM			0
-+#define MASTER_BIMC_SNOC		1
-+#define MASTER_PCNOC_SNOC		2
-+#define MASTER_QDSS_ETR			3
-+#define MASTER_EMAC			4
-+#define MASTER_PCIE			5
-+#define MASTER_USB3			6
-+#define QDSS_INT			7
-+#define SNOC_INT_0			8
-+#define SNOC_INT_1			9
-+#define SNOC_INT_2			10
-+#define SLAVE_KPSS_AHB			11
-+#define SLAVE_WCSS			12
-+#define SLAVE_SNOC_BIMC_1		13
-+#define SLAVE_IMEM			14
-+#define SLAVE_SNOC_PCNOC		15
-+#define SLAVE_QDSS_STM			16
-+#define SLAVE_CATS_0			17
-+#define SLAVE_CATS_1			18
-+#define SLAVE_LPASS			19
-+
-+#endif
+ rpm-glink {
+ 	...
+ 	rpm_requests: glink-channel {
+@@ -24,6 +52,7 @@ rpm-glink {
+ 			clock-names = "bus_clk", "bus_a_clk";
+ 			clocks = <&rpmcc RPM_SMD_BIMC_CLK>,
+ 				<&rpmcc RPM_SMD_BIMC_A_CLK>;
++			qcom,qos = <&bimc_qos>;
+ 		};
+ 
+ 		pnoc: interconnect@1 {
+@@ -32,6 +61,7 @@ rpm-glink {
+ 			clock-names = "bus_clk", "bus_a_clk";
+ 			clocks = <&rpmcc RPM_SMD_PNOC_CLK>,
+ 				<&rpmcc RPM_SMD_PNOC_A_CLK>;
++			qcom,qos = <&pcnoc_qos>;
+ 		};
+ 
+ 		snoc: interconnect@2 {
+@@ -40,6 +70,7 @@ rpm-glink {
+ 			clock-names = "bus_clk", "bus_a_clk";
+ 			clocks = <&rpmcc RPM_SMD_SNOC_CLK>,
+ 				<&rpmcc RPM_SMD_SNOC_A_CLK>;
++			qcom,qos = <&snoc_qos>;
+ 		};
+ 	};
+ };
