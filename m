@@ -2,108 +2,187 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B16FC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:57:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AC101C10F11
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:57:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 698DC2073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:57:29 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555322249;
-	bh=tzAFElsxQrgJpUG+1qxU8C+cjRQJgT3tTkZVygVsHFU=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=wwFfPF++XztmDk9MFYQV58wYn7fSSBcIqgPtbmXXda2C6gW5kWj+HQhq3pOlI5HP/
-	 3rCx3r3bT0vbcBGhABhjr2gLm6VwpuYAUZZMoiJjv7yVIk8Ns7nzbrGJMWx10F911Z
-	 cSyDppYqjXeWKQWALfRsocMI7jo2N+atdvAvYAak=
+	by mail.kernel.org (Postfix) with ESMTP id 7FDBA20848
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:57:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726949AbfDOJ52 (ORCPT
+        id S1727182AbfDOJ5d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 05:57:28 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:58224 "EHLO
-        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725885AbfDOJ52 (ORCPT
+        Mon, 15 Apr 2019 05:57:33 -0400
+Received: from smtp2200-217.mail.aliyun.com ([121.197.200.217]:55919 "EHLO
+        smtp2200-217.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726964AbfDOJ5b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 05:57:28 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=4dZvQl7YlF1yV7q9JfMz8fqbxH6iZxjZSrNpsjltjOU=; b=bOrVI8L6VnBjzWrXIpJvJBcWf
-        y5d6so1DAotWuNuaeRYDQEn5nB/F6W3y7511gjtwGCMXnloFBK9NpxuceRTuxJrbNxbmxRt0iOGqb
-        B1pshqDMVUiKnTmw5483fg8V78FTBXqsD916u6fStl36WvANBnU0su0Zu21cDvNrUCPzw=;
-Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
-        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
-        (envelope-from <broonie@sirena.org.uk>)
-        id 1hFyMY-000083-IJ; Mon, 15 Apr 2019 09:57:18 +0000
-Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id D0C4B11279E1; Mon, 15 Apr 2019 10:57:17 +0100 (BST)
-Date:   Mon, 15 Apr 2019 10:57:17 +0100
-From:   Mark Brown <broonie@kernel.org>
-To:     Pascal PAILLET-LME <p.paillet@st.com>
-Cc:     "lgirdwood@gmail.com" <lgirdwood@gmail.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2 2/2] regulator: Add support for stm32 power regulators
-Message-ID: <20190415095717.GA6880@sirena.org.uk>
-References: <1555319855-2982-1-git-send-email-p.paillet@st.com>
- <1555319855-2982-3-git-send-email-p.paillet@st.com>
-MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha512;
-        protocol="application/pgp-signature"; boundary="ibTvN161/egqYuK8"
-Content-Disposition: inline
-In-Reply-To: <1555319855-2982-3-git-send-email-p.paillet@st.com>
-X-Cookie: There's no time like the pleasant.
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Mon, 15 Apr 2019 05:57:31 -0400
+X-Alimail-AntiSpam: AC=CONTINUE;BC=0.07442588|-1;CH=green;DM=CONTINUE|CONTINUE|true|0.365205-0.0142482-0.620547;FP=0|0|0|0|0|-1|-1|-1;HT=e02c03310;MF=han_mao@c-sky.com;NM=1;PH=DS;RN=6;RT=6;SR=0;TI=SMTPD_---.ELcAdAb_1555322249;
+Received: from localhost(mailfrom:han_mao@c-sky.com fp:SMTPD_---.ELcAdAb_1555322249)
+          by smtp.aliyun-inc.com(10.147.44.129);
+          Mon, 15 Apr 2019 17:57:29 +0800
+From:   Mao Han <han_mao@c-sky.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Mao Han <han_mao@c-sky.com>, Palmer Dabbelt <palmer@sifive.com>,
+        linux-riscv <linux-riscv@lists.infradead.org>,
+        Christoph Hellwig <hch@lst.de>, Guo Ren <guoren@kernel.org>
+Subject: [PATCH v2 2/3] riscv: Add support for perf registers sampling
+Date:   Mon, 15 Apr 2019 17:52:12 +0800
+Message-Id: <5c198c932960666df1d145e777e42333cb6e377d.1555320740.git.han_mao@c-sky.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <cover.1555320740.git.han_mao@c-sky.com>
+References: <cover.1555320740.git.han_mao@c-sky.com>
+In-Reply-To: <cover.1555320740.git.han_mao@c-sky.com>
+References: <cover.1555320740.git.han_mao@c-sky.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This patch implements the perf registers sampling and validation API
+for riscv arch. The valid registers and their register ID are defined in
+perf_regs.h. Perf tool can backtrace in userspace with unwind library
+and the registers/user stack dump support.
 
---ibTvN161/egqYuK8
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
+Signed-off-by: Mao Han <han_mao@c-sky.com>
+CC: Palmer Dabbelt <palmer@sifive.com>
+CC: linux-riscv<linux-riscv@lists.infradead.org>
+CC: Christoph Hellwig <hch@lst.de>
+CC: Guo Ren <guoren@kernel.org>
+---
+ arch/riscv/Kconfig                      |  2 ++
+ arch/riscv/include/uapi/asm/perf_regs.h | 42 +++++++++++++++++++++++++++++++
+ arch/riscv/kernel/Makefile              |  1 +
+ arch/riscv/kernel/perf_regs.c           | 44 +++++++++++++++++++++++++++++++++
+ 4 files changed, 89 insertions(+)
+ create mode 100644 arch/riscv/include/uapi/asm/perf_regs.h
+ create mode 100644 arch/riscv/kernel/perf_regs.c
 
-On Mon, Apr 15, 2019 at 09:17:38AM +0000, Pascal PAILLET-LME wrote:
+diff --git a/arch/riscv/Kconfig b/arch/riscv/Kconfig
+index eb56c82..effd157 100644
+--- a/arch/riscv/Kconfig
++++ b/arch/riscv/Kconfig
+@@ -33,6 +33,8 @@ config RISCV
+ 	select HAVE_DMA_CONTIGUOUS
+ 	select HAVE_FUTEX_CMPXCHG if FUTEX
+ 	select HAVE_PERF_EVENTS
++	select HAVE_PERF_REGS
++	select HAVE_PERF_USER_STACK_DUMP
+ 	select HAVE_SYSCALL_TRACEPOINTS
+ 	select IRQ_DOMAIN
+ 	select RISCV_ISA_A if SMP
+diff --git a/arch/riscv/include/uapi/asm/perf_regs.h b/arch/riscv/include/uapi/asm/perf_regs.h
+new file mode 100644
+index 0000000..df1a581
+--- /dev/null
++++ b/arch/riscv/include/uapi/asm/perf_regs.h
+@@ -0,0 +1,42 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/* Copyright (C) 2019 Hangzhou C-SKY Microsystems co.,ltd. */
++
++#ifndef _ASM_RISCV_PERF_REGS_H
++#define _ASM_RISCV_PERF_REGS_H
++
++enum perf_event_riscv_regs {
++	PERF_REG_RISCV_PC,
++	PERF_REG_RISCV_RA,
++	PERF_REG_RISCV_SP,
++	PERF_REG_RISCV_GP,
++	PERF_REG_RISCV_TP,
++	PERF_REG_RISCV_T0,
++	PERF_REG_RISCV_T1,
++	PERF_REG_RISCV_T2,
++	PERF_REG_RISCV_S0,
++	PERF_REG_RISCV_S1,
++	PERF_REG_RISCV_A0,
++	PERF_REG_RISCV_A1,
++	PERF_REG_RISCV_A2,
++	PERF_REG_RISCV_A3,
++	PERF_REG_RISCV_A4,
++	PERF_REG_RISCV_A5,
++	PERF_REG_RISCV_A6,
++	PERF_REG_RISCV_A7,
++	PERF_REG_RISCV_S2,
++	PERF_REG_RISCV_S3,
++	PERF_REG_RISCV_S4,
++	PERF_REG_RISCV_S5,
++	PERF_REG_RISCV_S6,
++	PERF_REG_RISCV_S7,
++	PERF_REG_RISCV_S8,
++	PERF_REG_RISCV_S9,
++	PERF_REG_RISCV_S10,
++	PERF_REG_RISCV_S11,
++	PERF_REG_RISCV_T3,
++	PERF_REG_RISCV_T4,
++	PERF_REG_RISCV_T5,
++	PERF_REG_RISCV_T6,
++	PERF_REG_RISCV_MAX,
++};
++#endif /* _ASM_RISCV_PERF_REGS_H */
+diff --git a/arch/riscv/kernel/Makefile b/arch/riscv/kernel/Makefile
+index dd2ba44..024badc 100644
+--- a/arch/riscv/kernel/Makefile
++++ b/arch/riscv/kernel/Makefile
+@@ -39,5 +39,6 @@ obj-$(CONFIG_DYNAMIC_FTRACE)	+= mcount-dyn.o
+ 
+ obj-$(CONFIG_PERF_EVENTS)	+= perf_event.o
+ obj-$(CONFIG_PERF_EVENTS)	+= perf_callchain.o
++obj-$(CONFIG_HAVE_PERF_REGS)	+= perf_regs.o
+ 
+ clean:
+diff --git a/arch/riscv/kernel/perf_regs.c b/arch/riscv/kernel/perf_regs.c
+new file mode 100644
+index 0000000..04a38fb
+--- /dev/null
++++ b/arch/riscv/kernel/perf_regs.c
+@@ -0,0 +1,44 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Copyright (C) 2019 Hangzhou C-SKY Microsystems co.,ltd. */
++
++#include <linux/errno.h>
++#include <linux/kernel.h>
++#include <linux/perf_event.h>
++#include <linux/bug.h>
++#include <asm/perf_regs.h>
++#include <asm/ptrace.h>
++
++u64 perf_reg_value(struct pt_regs *regs, int idx)
++{
++	if (WARN_ON_ONCE((u32)idx >= PERF_REG_RISCV_MAX))
++		return 0;
++
++	return ((unsigned long *)regs)[idx];
++}
++
++#define REG_RESERVED (~((1ULL << PERF_REG_RISCV_MAX) - 1))
++
++int perf_reg_validate(u64 mask)
++{
++	if (!mask || mask & REG_RESERVED)
++		return -EINVAL;
++
++	return 0;
++}
++
++u64 perf_reg_abi(struct task_struct *task)
++{
++#if __riscv_xlen == 64
++	return PERF_SAMPLE_REGS_ABI_64;
++#else
++	return PERF_SAMPLE_REGS_ABI_32;
++#endif
++}
++
++void perf_get_regs_user(struct perf_regs *regs_user,
++			struct pt_regs *regs,
++			struct pt_regs *regs_user_copy)
++{
++	regs_user->regs = task_pt_regs(current);
++	regs_user->abi = perf_reg_abi(current);
++}
+-- 
+2.7.4
 
-> +int stm32_pwr_reg_is_ready(struct regulator_dev *rdev)
-> +{
-> +	struct stm32_pwr_reg *priv = rdev_get_drvdata(rdev);
-> +	u32 val;
-> +
-> +	val = readl_relaxed(priv->base + REG_PWR_CR3);
-> +
-> +	return (val & priv->ready_mask);
-> +}
-
-You should probably add a get_status() callback using this.
-
---ibTvN161/egqYuK8
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAly0VX0ACgkQJNaLcl1U
-h9AwaAf/aToCo2Lpwde4IyVS0Xah6RImQN5eFMHjqU/CAVzhfuHyxA3nncqEftbR
-Ekr+CFAMrmjVYKnK4Qor47WwRDcGVkHgnlT3RqIMg7DlEUEdtgJm0ODNYQ53arhU
-IaBwLKcv0/swlrt7tv0Bx2nB2BjTTE1DorL6DYw2fxhJ8o28FWgL4y+J/ZD6NUQB
-KoiAe6vs/G1Wiyj3HRv+wd8nppNLHw6WCYdKUUOT6ApeTBfTmpMvuxGz2XLKrL3Q
-/Aj8MN6dy6hLwwDZWtSV7UgcFkx/GpoMDORtFadEX9lyO0KcThiXKHh24D5MVFkd
-mwSQr2AdZEEN8mMT8ZU8+gjOa3gVOg==
-=JHeU
------END PGP SIGNATURE-----
-
---ibTvN161/egqYuK8--
