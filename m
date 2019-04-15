@@ -4,51 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 994C9C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:03:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4152EC282DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:03:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6886A2087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:03:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0DFA9218A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:03:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355028;
-	bh=ql1tjAa0nD6jAbAc6C4t4vMQZMq5/nysHOewJu/DL6c=;
+	s=default; t=1555355032;
+	bh=ntpPcM1V/BIhkPV9FiA3vFDNNLlDpabPpDnNOY+lKqA=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=q/gL7ZUCSxpkL9s7+m0PqNUteS/l1VCDXIfkSAsq/ALTaDW24uAcA80IFqk4ZxLCT
-	 g1SEXaL6ew4PZje9rNcGFXSl9NiOTkJTXoUIN1K0JI7OlootD8YevQDzcW8fsAb5Hk
-	 c0roAqNYSGYX+a3n4ULDJb4u04YLoal55S+j0LEo=
+	b=SNAwJAPBHefbAvAtOV+n6jXlHePqvEEruNRLnx5XM8r8jSg3rS3cb0HhbBACdWO57
+	 X49KTI7Zzou/oDsC6z9DtZoBIKWQl051NVNgh8ufazuq8kPXAR742B6hQGS+Bw1MIY
+	 iiq0JtDtlZZ7KFARc8XUHV/RXMkknXYntcxcU3sA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729332AbfDOTDr (ORCPT
+        id S1729363AbfDOTDv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:03:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35790 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:03:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:35948 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729312AbfDOTDm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:03:42 -0400
+        id S1729312AbfDOTDs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:03:48 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8D9E6218FE;
-        Mon, 15 Apr 2019 19:03:41 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id B9DBD2087C;
+        Mon, 15 Apr 2019 19:03:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355022;
-        bh=ql1tjAa0nD6jAbAc6C4t4vMQZMq5/nysHOewJu/DL6c=;
+        s=default; t=1555355027;
+        bh=ntpPcM1V/BIhkPV9FiA3vFDNNLlDpabPpDnNOY+lKqA=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=XbSocjekMEZWHsUEUTTna4e60+T9y1ZIIM7CrG89qTgPbdFBFg0TAiuhnp9V4gbWq
-         qlkZoYBgNHIaVPzig9RKNzJ1jWn+lC5n3lrJ3bKqiqqAT6DJVS5bnf3CbkBCAf/k/V
-         pRX7mp0QW7OgNVyp4E9wwJbVtlwo5+zQPD9MK40I=
+        b=Yy9/uJUf44hSU86fMSdHp+f3cViZFSCnxPhsQnjl8vlCbNvDUAO4dqwfIx/DBz7iy
+         cVgmMnzv7Zf++XtJVDe30Id26Efm4kaznWIdxdOOKEJOizLhdFE9UGjeV9yb5rMyKN
+         DNWKYPfSwCncpopzHhKebUVGlpLanLui2GTT7Trc=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Cornelia Huck <cohuck@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Halil Pasic <pasic@linux.ibm.com>,
-        Jens Freimann <jfreimann@redhat.com>
-Subject: [PATCH 4.14 53/69] virtio: Honour may_reduce_num in vring_create_virtqueue
-Date:   Mon, 15 Apr 2019 20:59:11 +0200
-Message-Id: <20190415183734.540083630@linuxfoundation.org>
+        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Tony Lindgren <tony@atomide.com>, Stable@vger.kernel.org
+Subject: [PATCH 4.14 55/69] ARM: dts: am335x-evm: Correct the regulators for the audio codec
+Date:   Mon, 15 Apr 2019 20:59:13 +0200
+Message-Id: <20190415183734.874067906@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183726.036654568@linuxfoundation.org>
 References: <20190415183726.036654568@linuxfoundation.org>
@@ -61,60 +58,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Cornelia Huck <cohuck@redhat.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-commit cf94db21905333e610e479688add629397a4b384 upstream.
+commit 4f96dc0a3e79ec257a2b082dab3ee694ff88c317 upstream.
 
-vring_create_virtqueue() allows the caller to specify via the
-may_reduce_num parameter whether the vring code is allowed to
-allocate a smaller ring than specified.
+Correctly map the regulators used by tlv320aic3106.
+Both 1.8V and 3.3V for the codec is derived from VBAT via fixed regulators.
 
-However, the split ring allocation code tries to allocate a
-smaller ring on allocation failure regardless of what the
-caller specified. This may cause trouble for e.g. virtio-pci
-in legacy mode, which does not support ring resizing. (The
-packed ring code does not resize in any case.)
-
-Let's fix this by bailing out immediately in the split ring code
-if the requested size cannot be allocated and may_reduce_num has
-not been specified.
-
-While at it, fix a typo in the usage instructions.
-
-Fixes: 2a2d1382fe9d ("virtio: Add improved queue allocation API")
-Cc: stable@vger.kernel.org # v4.6+
-Signed-off-by: Cornelia Huck <cohuck@redhat.com>
-Signed-off-by: Michael S. Tsirkin <mst@redhat.com>
-Reviewed-by: Halil Pasic <pasic@linux.ibm.com>
-Reviewed-by: Jens Freimann <jfreimann@redhat.com>
+Cc: <Stable@vger.kernel.org> # v4.14+
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/virtio/virtio_ring.c |    2 ++
- include/linux/virtio_ring.h  |    2 +-
- 2 files changed, 3 insertions(+), 1 deletion(-)
+ arch/arm/boot/dts/am335x-evm.dts |   26 ++++++++++++++++++++++----
+ 1 file changed, 22 insertions(+), 4 deletions(-)
 
---- a/drivers/virtio/virtio_ring.c
-+++ b/drivers/virtio/virtio_ring.c
-@@ -1087,6 +1087,8 @@ struct virtqueue *vring_create_virtqueue
- 					  GFP_KERNEL|__GFP_NOWARN|__GFP_ZERO);
- 		if (queue)
- 			break;
-+		if (!may_reduce_num)
-+			return NULL;
- 	}
+--- a/arch/arm/boot/dts/am335x-evm.dts
++++ b/arch/arm/boot/dts/am335x-evm.dts
+@@ -57,6 +57,24 @@
+ 		enable-active-high;
+ 	};
  
- 	if (!num)
---- a/include/linux/virtio_ring.h
-+++ b/include/linux/virtio_ring.h
-@@ -63,7 +63,7 @@ struct virtqueue;
- /*
-  * Creates a virtqueue and allocates the descriptor ring.  If
-  * may_reduce_num is set, then this may allocate a smaller ring than
-- * expected.  The caller should query virtqueue_get_ring_size to learn
-+ * expected.  The caller should query virtqueue_get_vring_size to learn
-  * the actual size of the ring.
-  */
- struct virtqueue *vring_create_virtqueue(unsigned int index,
++	/* TPS79501 */
++	v1_8d_reg: fixedregulator-v1_8d {
++		compatible = "regulator-fixed";
++		regulator-name = "v1_8d";
++		vin-supply = <&vbat>;
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++	};
++
++	/* TPS79501 */
++	v3_3d_reg: fixedregulator-v3_3d {
++		compatible = "regulator-fixed";
++		regulator-name = "v3_3d";
++		vin-supply = <&vbat>;
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
+ 	matrix_keypad: matrix_keypad0 {
+ 		compatible = "gpio-matrix-keypad";
+ 		debounce-delay-ms = <5>;
+@@ -492,10 +510,10 @@
+ 		status = "okay";
+ 
+ 		/* Regulators */
+-		AVDD-supply = <&vaux2_reg>;
+-		IOVDD-supply = <&vaux2_reg>;
+-		DRVDD-supply = <&vaux2_reg>;
+-		DVDD-supply = <&vbat>;
++		AVDD-supply = <&v3_3d_reg>;
++		IOVDD-supply = <&v3_3d_reg>;
++		DRVDD-supply = <&v3_3d_reg>;
++		DVDD-supply = <&v1_8d_reg>;
+ 	};
+ };
+ 
 
 
