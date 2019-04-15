@@ -2,173 +2,130 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 015D9C10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:15:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DA03C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:16:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C6B4820645
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:15:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C82B920645
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:16:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="AFS5IiI7"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="csR2oOnG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727536AbfDOMPn (ORCPT
+        id S1727378AbfDOMQx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 08:15:43 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:37514 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727506AbfDOMPl (ORCPT
+        Mon, 15 Apr 2019 08:16:53 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:41045 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726785AbfDOMQx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 08:15:41 -0400
-Received: by mail-pl1-f193.google.com with SMTP id w23so8490711ply.4
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 05:15:41 -0700 (PDT)
+        Mon, 15 Apr 2019 08:16:53 -0400
+Received: by mail-wr1-f66.google.com with SMTP id r4so21620491wrq.8
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 05:16:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :in-reply-to:references;
-        bh=FU8i9sjlSh306RyY3KlsqQMktsvNVB138smTRNfYHGU=;
-        b=AFS5IiI7xOQqGJvdX3jWPeHMgEaddq60Wu+mQTWo9KU//G0mncQiIddMO45w+tjPA+
-         Kv3+9yZefuPBQeli3eiNPKZqkd8JNSY4QuxA6x4tLrpRpTL9T89A6scpglan6YaBRyZj
-         gChs7FtshKwf/UtqCecWfo393HIOS3cc53Nq54k39Zf5AKKQ7C0w8GCK/RIZFsXU+Ng3
-         imk61hg41zMEk1DH96nE5Jn+jGjJAq1Ow+yVNBB13nOVKc3FS9P+Xm+830WtjJYASdp+
-         AR0CJWj7vwkz5MWIPEAGve53UGAvZ3V0KUy+v3HUG6rY5S6cd+nnQ0x6Zl7pXuPqfKjL
-         dnZw==
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=oZQ9jNFjXa22UEvVc9ReDINqabzL0slMZxy7p+uxC8M=;
+        b=csR2oOnGe5LDdDcKwkh5nQgfP+DgSksP/yi/UqY1kG/vgmF17D9M6rGAx1GnDpf6H1
+         4U48vL2wPWgdiJMKyy6fXjrTzMT8cptntUe8TxrqQCjIe1IaU6xqhRSVV9reN1QsbkSV
+         VlojhnCFi0c/BlM2mR//0a5T+nEpxrQ7OJyyKI4F/mUQUrOeGj4PWPFDh1SRe/EMFKtj
+         lhIeNOkcXi3SElL81vU3Y5G2KZzIWYLXRNLmbZn4lHbIotdCahCf5m3EbBfHSgurtB0k
+         cfIwfIOWnqwKm3JAJYg3PWZWivfu7EzrQW2PrQGcXZkqxstJ5UjSXMdG9YsPdapDudRi
+         sU1Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:in-reply-to:references;
-        bh=FU8i9sjlSh306RyY3KlsqQMktsvNVB138smTRNfYHGU=;
-        b=jsXGi6R7h2lFeuXi1Cmvcg/lK1rLxDb2ry+3at98eOKrGzydK1+5uAZjCPBDpe9LoY
-         JssRBYV7jNGadLg8BcxzZmHaV8/YjHZ0Ft6DfaMPlPb0HbYxlk57CnseMeXqiD30JroX
-         NQ1ZXSzJqubpwtxgilsAuoFsWbDBX+FlbrUd8oHbW5OG+BqlIkV6vjpfh2qHsTLZLzm8
-         skIeQ/bWyuu/PCasXUPL9Pd/UmcxG0yV0DUd+plkDTXFfPkIo2RQtAP+15WwXbs49mfA
-         7cntMhueYNpEmFboAQHt7wLrL7Yc2fXuwAptwQhvzqoHUcexs5X1OoxVIYBxPP00oIfD
-         iatw==
-X-Gm-Message-State: APjAAAV8Rb/slZ0CDlQTusevcU/s9TuPkDH8nxx90ZqgiFC4DQuuKVwq
-        ZFkPD50y+q3ixdSNAl0nAA8Z3Q==
-X-Google-Smtp-Source: APXvYqyjtYWF0hbMw90duq0+/dpp5oFpiJeExGC/I4MZEP6GJXBrPIFhLbOlqjDD1GmeOvdA12BVVg==
-X-Received: by 2002:a17:902:32b:: with SMTP id 40mr53043634pld.204.1555330540739;
-        Mon, 15 Apr 2019 05:15:40 -0700 (PDT)
-Received: from baolinwangubtpc.spreadtrum.com ([117.18.48.102])
-        by smtp.gmail.com with ESMTPSA id 6sm64157155pfj.95.2019.04.15.05.15.37
-        (version=TLS1 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Mon, 15 Apr 2019 05:15:40 -0700 (PDT)
-From:   Baolin Wang <baolin.wang@linaro.org>
-To:     dan.j.williams@intel.com, vkoul@kernel.org
-Cc:     eric.long@unisoc.com, orsonzhai@gmail.com, zhang.lyra@gmail.com,
-        broonie@kernel.org, baolin.wang@linaro.org,
-        dmaengine@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH 7/7] dmaengine: sprd: Add interrupt support for 2-stage transfer
-Date:   Mon, 15 Apr 2019 20:15:01 +0800
-Message-Id: <07c070b4397296a4500d04abe16dfd8a71a2f211.1555330115.git.baolin.wang@linaro.org>
-X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <cover.1555330115.git.baolin.wang@linaro.org>
-References: <cover.1555330115.git.baolin.wang@linaro.org>
-In-Reply-To: <cover.1555330115.git.baolin.wang@linaro.org>
-References: <cover.1555330115.git.baolin.wang@linaro.org>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=oZQ9jNFjXa22UEvVc9ReDINqabzL0slMZxy7p+uxC8M=;
+        b=DTf9+Uql/vRPQyAuZDe6BHkWsQoXvX2t39vptMQzajoyvZoKHfnUbZJJ2RQ652iJsb
+         euB0FrL2uun81PwWydgLCT0ntJ8GCaHkDpIZ/SkOTb4vc+BCKOz/BztrYJriMliwpFXk
+         QhishzHf4B0+PvBOMKrfGzTYtawkykwtW3ynokm/1hVJCTam7YpO4tLM4KOvJUkGSAvv
+         vPXf76B7GeOHL8plSQjtJa5ua7a+KUdxftLXap+g7DdmS05mCSQlGYjXOd0gn1kEHLEx
+         Zvos9pKj+FoQGe84EZAeMtf5qpsBrcYBhA2RjFWrFsU1dFE3gT2D0dfjIBOR/JBBO3FA
+         pUtQ==
+X-Gm-Message-State: APjAAAXToSmvb0Mhlidk879DGa6AHR+C15P7qjMeLXKx+QeBbEkl/op4
+        DHkuuona4PpVknUgVZ+o1xK2I4Dc04s=
+X-Google-Smtp-Source: APXvYqytId0xb31cZs55y29TPkLOmaX8XyST/BTtHnaDwRikTsTlmBTBNH0A4AdmeOBA/944UdYVKg==
+X-Received: by 2002:adf:f88c:: with SMTP id u12mr10802190wrp.235.1555330611076;
+        Mon, 15 Apr 2019 05:16:51 -0700 (PDT)
+Received: from [192.168.0.41] (4.112.130.77.rev.sfr.net. [77.130.112.4])
+        by smtp.googlemail.com with ESMTPSA id d6sm12065156wrp.9.2019.04.15.05.16.49
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Apr 2019 05:16:50 -0700 (PDT)
+Subject: Re: [PATCH 7/7] clocksource/arm_arch_timer: Use
+ arch_timer_read_counter to access stable counters
+To:     Marc Zyngier <marc.zyngier@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Cc:     Russell King <linux@arm.linux.org.uk>,
+        Will Deacon <will.deacon@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Valentin Schneider <valentin.schneider@arm.com>
+References: <20190408154907.223536-1-marc.zyngier@arm.com>
+ <20190408154907.223536-8-marc.zyngier@arm.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <2a60a031-1eab-2d5e-89ff-b5d516545eeb@linaro.org>
+Date:   Mon, 15 Apr 2019 14:16:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190408154907.223536-8-marc.zyngier@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For 2-stage transfer, some users like Audio still need transaction interrupt
-to notify when the 2-stage transfer is completed. Thus we should enable
-2-stage transfer interrupt to support this feature.
+On 08/04/2019 17:49, Marc Zyngier wrote:
+> Instead of always going via arch_counter_get_cntvct_stable to
+> access the counter workaround, let's have arch_timer_read_counter
+> to point to the right method.
+> 
+> For that, we need to track whether any CPU in the system has a
+> workaround for the counter. This is done by having an atomic
+> variable tracking this.
+> 
+> Signed-off-by: Marc Zyngier <marc.zyngier@arm.com>
+> ---
 
-Signed-off-by: Baolin Wang <baolin.wang@linaro.org>
----
- drivers/dma/sprd-dma.c |   22 +++++++++++++++++++++-
- 1 file changed, 21 insertions(+), 1 deletion(-)
+[ ... ]
 
-diff --git a/drivers/dma/sprd-dma.c b/drivers/dma/sprd-dma.c
-index cc9c24d..4c18f44 100644
---- a/drivers/dma/sprd-dma.c
-+++ b/drivers/dma/sprd-dma.c
-@@ -62,6 +62,8 @@
- /* SPRD_DMA_GLB_2STAGE_GRP register definition */
- #define SPRD_DMA_GLB_2STAGE_EN		BIT(24)
- #define SPRD_DMA_GLB_CHN_INT_MASK	GENMASK(23, 20)
-+#define SPRD_DMA_GLB_DEST_INT		BIT(22)
-+#define SPRD_DMA_GLB_SRC_INT		BIT(20)
- #define SPRD_DMA_GLB_LIST_DONE_TRG	BIT(19)
- #define SPRD_DMA_GLB_TRANS_DONE_TRG	BIT(18)
- #define SPRD_DMA_GLB_BLOCK_DONE_TRG	BIT(17)
-@@ -135,6 +137,7 @@
- /* define DMA channel mode & trigger mode mask */
- #define SPRD_DMA_CHN_MODE_MASK		GENMASK(7, 0)
- #define SPRD_DMA_TRG_MODE_MASK		GENMASK(7, 0)
-+#define SPRD_DMA_INT_TYPE_MASK		GENMASK(7, 0)
- 
- /* define the DMA transfer step type */
- #define SPRD_DMA_NONE_STEP		0
-@@ -190,6 +193,7 @@ struct sprd_dma_chn {
- 	u32			dev_id;
- 	enum sprd_dma_chn_mode	chn_mode;
- 	enum sprd_dma_trg_mode	trg_mode;
-+	enum sprd_dma_int_type	int_type;
- 	struct sprd_dma_desc	*cur_desc;
- };
- 
-@@ -429,6 +433,9 @@ static int sprd_dma_set_2stage_config(struct sprd_dma_chn *schan)
- 		val = chn & SPRD_DMA_GLB_SRC_CHN_MASK;
- 		val |= BIT(schan->trg_mode - 1) << SPRD_DMA_GLB_TRG_OFFSET;
- 		val |= SPRD_DMA_GLB_2STAGE_EN;
-+		if (schan->int_type != SPRD_DMA_NO_INT)
-+			val |= SPRD_DMA_GLB_SRC_INT;
-+
- 		sprd_dma_glb_update(sdev, SPRD_DMA_GLB_2STAGE_GRP1, val, val);
- 		break;
- 
-@@ -436,6 +443,9 @@ static int sprd_dma_set_2stage_config(struct sprd_dma_chn *schan)
- 		val = chn & SPRD_DMA_GLB_SRC_CHN_MASK;
- 		val |= BIT(schan->trg_mode - 1) << SPRD_DMA_GLB_TRG_OFFSET;
- 		val |= SPRD_DMA_GLB_2STAGE_EN;
-+		if (schan->int_type != SPRD_DMA_NO_INT)
-+			val |= SPRD_DMA_GLB_SRC_INT;
-+
- 		sprd_dma_glb_update(sdev, SPRD_DMA_GLB_2STAGE_GRP2, val, val);
- 		break;
- 
-@@ -443,6 +453,9 @@ static int sprd_dma_set_2stage_config(struct sprd_dma_chn *schan)
- 		val = (chn << SPRD_DMA_GLB_DEST_CHN_OFFSET) &
- 			SPRD_DMA_GLB_DEST_CHN_MASK;
- 		val |= SPRD_DMA_GLB_2STAGE_EN;
-+		if (schan->int_type != SPRD_DMA_NO_INT)
-+			val |= SPRD_DMA_GLB_DEST_INT;
-+
- 		sprd_dma_glb_update(sdev, SPRD_DMA_GLB_2STAGE_GRP1, val, val);
- 		break;
- 
-@@ -450,6 +463,9 @@ static int sprd_dma_set_2stage_config(struct sprd_dma_chn *schan)
- 		val = (chn << SPRD_DMA_GLB_DEST_CHN_OFFSET) &
- 			SPRD_DMA_GLB_DEST_CHN_MASK;
- 		val |= SPRD_DMA_GLB_2STAGE_EN;
-+		if (schan->int_type != SPRD_DMA_NO_INT)
-+			val |= SPRD_DMA_GLB_DEST_INT;
-+
- 		sprd_dma_glb_update(sdev, SPRD_DMA_GLB_2STAGE_GRP2, val, val);
- 		break;
- 
-@@ -911,11 +927,15 @@ static int sprd_dma_fill_linklist_desc(struct dma_chan *chan,
- 		schan->linklist.virt_addr = 0;
- 	}
- 
--	/* Set channel mode and trigger mode for 2-stage transfer */
-+	/*
-+	 * Set channel mode, interrupt mode and trigger mode for 2-stage
-+	 * transfer.
-+	 */
- 	schan->chn_mode =
- 		(flags >> SPRD_DMA_CHN_MODE_SHIFT) & SPRD_DMA_CHN_MODE_MASK;
- 	schan->trg_mode =
- 		(flags >> SPRD_DMA_TRG_MODE_SHIFT) & SPRD_DMA_TRG_MODE_MASK;
-+	schan->int_type = flags & SPRD_DMA_INT_TYPE_MASK;
- 
- 	sdesc = kzalloc(sizeof(*sdesc), GFP_NOWAIT);
- 	if (!sdesc)
+> +
+>  /*
+>   * Default to cp15 based access because arm64 uses this function for
+>   * sched_clock() before DT is probed and the cp15 method is guaranteed
+> @@ -372,6 +392,7 @@ static u32 notrace sun50i_a64_read_cntv_tval_el0(void)
+>  DEFINE_PER_CPU(const struct arch_timer_erratum_workaround *, timer_unstable_counter_workaround);
+>  EXPORT_SYMBOL_GPL(timer_unstable_counter_workaround);
+>  
+> +static atomic_t timer_unstable_counter_workaround_in_use = ATOMIC_INIT(0);
+
+Wouldn't make sense to READ_ONCE / WRITE_ONCE instead of using an atomic?
+
+>  static void erratum_set_next_event_tval_generic(const int access, unsigned long evt,
+>  						struct clock_event_device *clk)
+> @@ -550,6 +571,9 @@ void arch_timer_enable_workaround(const struct arch_timer_erratum_workaround *wa
+>  			per_cpu(timer_unstable_counter_workaround, i) = wa;
+>  	}
+>  
+> +	if (wa->read_cntvct_el0 || wa->read_cntpct_el0)
+> +		atomic_set(&timer_unstable_counter_workaround_in_use, 1);
+> +
+
+[ ... ]
+
 -- 
-1.7.9.5
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
