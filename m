@@ -2,226 +2,97 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 496CBC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 01:52:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0CB52C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 01:57:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17FCC20833
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 01:52:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6C90206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 01:57:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=castello.eng.br header.i=@castello.eng.br header.b="r+jxGqJ7"
+	dkim=pass (1024-bit key) header.d=microchiptechnology.onmicrosoft.com header.i=@microchiptechnology.onmicrosoft.com header.b="e2EtH93a"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726803AbfDOBwF (ORCPT
+        id S1726810AbfDOB55 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 21:52:05 -0400
-Received: from gateway24.websitewelcome.com ([192.185.51.61]:26769 "EHLO
-        gateway24.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725975AbfDOBwE (ORCPT
+        Sun, 14 Apr 2019 21:57:57 -0400
+Received: from esa4.microchip.iphmx.com ([68.232.154.123]:19772 "EHLO
+        esa4.microchip.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725789AbfDOB55 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 21:52:04 -0400
-X-Greylist: delayed 1494 seconds by postgrey-1.27 at vger.kernel.org; Sun, 14 Apr 2019 21:52:03 EDT
-Received: from cm16.websitewelcome.com (cm16.websitewelcome.com [100.42.49.19])
-        by gateway24.websitewelcome.com (Postfix) with ESMTP id 76C1F51D0
-        for <linux-kernel@vger.kernel.org>; Sun, 14 Apr 2019 20:27:08 -0500 (CDT)
-Received: from br164.hostgator.com.br ([192.185.176.180])
-        by cmsmtp with SMTP
-        id FqOqh0GfI4FKpFqOqhTtDr; Sun, 14 Apr 2019 20:27:08 -0500
-X-Authority-Reason: nr=8
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=castello.eng.br; s=default; h=References:In-Reply-To:Message-Id:Date:
-        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=HbUN1dkFsSC6BI7XO52/1sf3MtLPus2m67WaPbKxaeM=; b=r+jxGqJ74k69+sNIaFym6CTH8
-        r8SWqWm4a6ZchcL/ZFLH+xYQdxHTv7sguflHZz6firABom7LMFUetp5UvwCSq2jiVQh/1N3VcNsSx
-        jiT1b7Q4pYNQXwM2D81sGfkKYU40h5E+Hp+Lh69sP3xOHMecRsd6Ah2VfBYYBT3LSCCAf5vVUMqLL
-        8AmKUxA3hMSjOs83WToLbuhCmh5RnfUuFd0wOPd4l8ikdDB4cjNLLdVVth2Seip4FE3Ex8rFaR7Ig
-        nfyKpXmhQ3G/5PzLyi2lrAhYLGobLMqtW48g/RICFRcpTbWvYe0VfPZpzYswwH4bDdVH/G2e8Ug+S
-        DeyCbMhdQ==;
-Received: from [191.191.240.251] (port=33232 helo=localhost.localdomain)
-        by br164.hostgator.com.br with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
-        (Exim 4.91)
-        (envelope-from <matheus@castello.eng.br>)
-        id 1hFqOp-000Uj7-OV; Sun, 14 Apr 2019 22:27:08 -0300
-From:   Matheus Castello <matheus@castello.eng.br>
-To:     sre@kernel.org, krzk@kernel.org, robh+dt@kernel.org
-Cc:     mark.rutland@arm.com, cw00.choi@samsung.com,
-        b.zolnierkie@samsung.com, lee.jones@linaro.org,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Matheus Castello <matheus@castello.eng.br>
-Subject: [PATCH v2 1/4] power: supply: max17040: Add IRQ handler for low SOC alert
-Date:   Sun, 14 Apr 2019 22:26:32 -0300
-Message-Id: <20190415012635.6369-2-matheus@castello.eng.br>
-X-Mailer: git-send-email 2.17.0
-In-Reply-To: <20190415012635.6369-1-matheus@castello.eng.br>
-References: <CAJKOXPfvs=uETF0-xpwCWc5khSpWjpz2zz354Jcx1bVjm9cG2A@mail.gmail.com>
- <20190415012635.6369-1-matheus@castello.eng.br>
-X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
-X-AntiAbuse: Primary Hostname - br164.hostgator.com.br
-X-AntiAbuse: Original Domain - vger.kernel.org
-X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
-X-AntiAbuse: Sender Address Domain - castello.eng.br
-X-BWhitelist: no
-X-Source-IP: 191.191.240.251
-X-Source-L: No
-X-Exim-ID: 1hFqOp-000Uj7-OV
-X-Source: 
-X-Source-Args: 
-X-Source-Dir: 
-X-Source-Sender: (localhost.localdomain) [191.191.240.251]:33232
-X-Source-Auth: matheus@castello.eng.br
-X-Email-Count: 22
-X-Source-Cap: Y2FzdGUyNDg7Y2FzdGUyNDg7YnIxNjQuaG9zdGdhdG9yLmNvbS5icg==
-X-Local-Domain: yes
+        Sun, 14 Apr 2019 21:57:57 -0400
+X-IronPort-AV: E=Sophos;i="5.60,351,1549954800"; 
+   d="scan'208";a="29910893"
+Received: from smtpout.microchip.com (HELO email.microchip.com) ([198.175.253.82])
+  by esa4.microchip.iphmx.com with ESMTP/TLS/DHE-RSA-AES256-SHA; 14 Apr 2019 18:57:55 -0700
+Received: from NAM02-SN1-obe.outbound.protection.outlook.com (10.10.215.89) by
+ email.microchip.com (10.10.76.107) with Microsoft SMTP Server (TLS) id
+ 14.3.352.0; Sun, 14 Apr 2019 18:57:55 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=microchiptechnology.onmicrosoft.com;
+ s=selector1-microchiptechnology-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=U07ejqDZiCKTqP9ieSe72XCsEstQcTWZySqTKr1Exuk=;
+ b=e2EtH93aE21PqfMHf2vQWlURqpmDvGZSvBAt1m+LuiU+FRJU0zbnTQAoRX5a2gnHoqlZJrcTR/BULEHiuMlLzK+kbqbvmcM9GVmGPAPIzvHBWTcaWEcwvDYoUucs60oonqAhIiTnQQQlcoZKQzPiy/kR5B2ejdjOvl1hfRuGKdo=
+Received: from BN6PR1101MB2130.namprd11.prod.outlook.com (10.174.239.148) by
+ BN6PR1101MB2242.namprd11.prod.outlook.com (10.174.116.19) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1792.14; Mon, 15 Apr 2019 01:57:50 +0000
+Received: from BN6PR1101MB2130.namprd11.prod.outlook.com
+ ([fe80::4d14:ae52:3fbe:ecad]) by BN6PR1101MB2130.namprd11.prod.outlook.com
+ ([fe80::4d14:ae52:3fbe:ecad%3]) with mapi id 15.20.1792.018; Mon, 15 Apr 2019
+ 01:57:50 +0000
+From:   <Woojung.Huh@microchip.com>
+To:     <lukas.bulwahn@gmail.com>
+CC:     <UNGLinuxDriver@microchip.com>, <netdev@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH] MAINTAINERS: normalize Woojung Huh's email address
+Thread-Topic: [PATCH] MAINTAINERS: normalize Woojung Huh's email address
+Thread-Index: AQHU8c3YTbAxIjIkPkKxJ+Nj35yJPqY8eVGg
+Date:   Mon, 15 Apr 2019 01:57:50 +0000
+Message-ID: <BN6PR1101MB213052D211A593D0B2EA8C8CE72B0@BN6PR1101MB2130.namprd11.prod.outlook.com>
+References: <20190413075215.11889-1-lukas.bulwahn@gmail.com>
+In-Reply-To: <20190413075215.11889-1-lukas.bulwahn@gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=Woojung.Huh@microchip.com; 
+x-originating-ip: [67.81.18.121]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 113d887a-af8a-4315-fe61-08d6c145c43e
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600140)(711020)(4605104)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BN6PR1101MB2242;
+x-ms-traffictypediagnostic: BN6PR1101MB2242:
+x-microsoft-antispam-prvs: <BN6PR1101MB2242D915C3A0121BEDBEF60FE72B0@BN6PR1101MB2242.namprd11.prod.outlook.com>
+x-forefront-prvs: 000800954F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(39850400004)(376002)(136003)(346002)(366004)(199004)(189003)(6506007)(72206003)(97736004)(54906003)(256004)(6916009)(102836004)(68736007)(229853002)(25786009)(558084003)(71200400001)(71190400001)(86362001)(52536014)(53936002)(105586002)(3846002)(478600001)(99286004)(6116002)(106356001)(7696005)(316002)(8936002)(8676002)(81156014)(486006)(66066001)(26005)(6436002)(5660300002)(2906002)(4326008)(14454004)(186003)(6246003)(446003)(33656002)(476003)(76176011)(7736002)(9686003)(74316002)(11346002)(81166006)(305945005)(55016002);DIR:OUT;SFP:1101;SCL:1;SRVR:BN6PR1101MB2242;H:BN6PR1101MB2130.namprd11.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: microchip.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: GhVs9tmHVxx07Cwmmj4zQx56egM/4Dj+RQPjTp60H8zCSuRNISszTcJb/8G2vbbnSQcxnRqFa9q5iu0llEMFHjN9WsdAS4QQHQK4bNC7867dqk7AHZG8kGKWwiEGARYtAw6ndnRROosoaZXGrNAA4Lm3CG5K11bcNIinMVy3071N01QR4kJibqIEfX1Cw+x+6Zg/HFkgYjxZhkWIoG6HWg78d4qzC9df6ucb8/phdqvIiAuiD5CElyQcGjxCP/v/d6U14diyabr4plr0P5pHRoRRA7oL9oQv1IU6/ycDOa1cCoVxN6vX0++WuyqZGv4cfzmBZbFKktGEKbNuRbzijsDWaN6p1qng9zMMRnX4RCm1TBJc61sBLwBYEnU8jKmFjzTJeM9Dv8s7MCsa3zeczIg4evn2VnKWGinSbq+N2wo=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
+MIME-Version: 1.0
+X-MS-Exchange-CrossTenant-Network-Message-Id: 113d887a-af8a-4315-fe61-08d6c145c43e
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Apr 2019 01:57:50.6198
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 3f4057f3-b418-4d4e-ba84-d55b4e897d88
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR1101MB2242
+X-OriginatorOrg: microchip.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-According datasheet max17040 has a pin for alert host for low SOC.
-This pin can be used as external interrupt, so we need to check for
-interrupts assigned for device and handle it.
+> MAINTAINERS contains a lower-case and upper-case variant of
+> Woojung Huh' s email address.
+>=20
+> Only keep the lower-case variant in MAINTAINERS.
+>=20
+> Signed-off-by: Lukas Bulwahn <lukas.bulwahn@gmail.com>
 
-In hadler we are checking and storing fuel gauge registers values
-and send an uevent to notificate user space, so user space can decide
-save work or turn off since the alert demonstrate that the battery may
-no have the power to keep the system turned on for much longer.
-
-Signed-off-by: Matheus Castello <matheus@castello.eng.br>
----
- drivers/power/supply/max17040_battery.c | 69 +++++++++++++++++++++++--
- 1 file changed, 64 insertions(+), 5 deletions(-)
-
-diff --git a/drivers/power/supply/max17040_battery.c b/drivers/power/supply/max17040_battery.c
-index 91cafc7bed30..8d2f8ed3f44c 100644
---- a/drivers/power/supply/max17040_battery.c
-+++ b/drivers/power/supply/max17040_battery.c
-@@ -13,6 +13,7 @@
- #include <linux/err.h>
- #include <linux/i2c.h>
- #include <linux/delay.h>
-+#include <linux/interrupt.h>
- #include <linux/power_supply.h>
- #include <linux/max17040_battery.h>
- #include <linux/slab.h>
-@@ -160,21 +161,40 @@ static void max17040_get_status(struct i2c_client *client)
- 		chip->status = POWER_SUPPLY_STATUS_FULL;
- }
- 
-+static void max17040_check_changes(struct i2c_client *client)
-+{
-+	max17040_get_vcell(client);
-+	max17040_get_soc(client);
-+	max17040_get_online(client);
-+	max17040_get_status(client);
-+}
-+
- static void max17040_work(struct work_struct *work)
- {
- 	struct max17040_chip *chip;
- 
- 	chip = container_of(work, struct max17040_chip, work.work);
--
--	max17040_get_vcell(chip->client);
--	max17040_get_soc(chip->client);
--	max17040_get_online(chip->client);
--	max17040_get_status(chip->client);
-+	max17040_check_changes(chip->client);
- 
- 	queue_delayed_work(system_power_efficient_wq, &chip->work,
- 			   MAX17040_DELAY);
- }
- 
-+static irqreturn_t max17040_thread_handler(int id, void *dev)
-+{
-+	struct max17040_chip *chip = dev;
-+	struct i2c_client *client = chip->client;
-+
-+	dev_warn(&client->dev, "IRQ: Alert battery low level");
-+	/* read registers */
-+	max17040_check_changes(chip->client);
-+
-+	/* send uevent */
-+	power_supply_changed(chip->battery);
-+
-+	return IRQ_HANDLED;
-+}
-+
- static enum power_supply_property max17040_battery_props[] = {
- 	POWER_SUPPLY_PROP_STATUS,
- 	POWER_SUPPLY_PROP_ONLINE,
-@@ -217,6 +237,27 @@ static int max17040_probe(struct i2c_client *client,
- 		return PTR_ERR(chip->battery);
- 	}
- 
-+	/* check interrupt */
-+	if (client->irq) {
-+		int ret;
-+		unsigned int flags;
-+
-+		dev_info(&client->dev, "IRQ: enabled\n");
-+		flags = IRQF_TRIGGER_FALLING | IRQF_ONESHOT;
-+
-+		ret = devm_request_threaded_irq(&client->dev, client->irq, NULL,
-+						max17040_thread_handler, flags,
-+						chip->battery->desc->name,
-+						chip);
-+
-+		if (ret) {
-+			client->irq = 0;
-+			if (ret != -EBUSY)
-+				dev_warn(&client->dev,
-+					"Failed to get IRQ err %d\n", ret);
-+		}
-+	}
-+
- 	max17040_reset(client);
- 	max17040_get_version(client);
- 
-@@ -224,6 +265,8 @@ static int max17040_probe(struct i2c_client *client,
- 	queue_delayed_work(system_power_efficient_wq, &chip->work,
- 			   MAX17040_DELAY);
- 
-+	device_init_wakeup(&client->dev, 1);
-+
- 	return 0;
- }
- 
-@@ -244,6 +287,14 @@ static int max17040_suspend(struct device *dev)
- 	struct max17040_chip *chip = i2c_get_clientdata(client);
- 
- 	cancel_delayed_work(&chip->work);
-+
-+	if (client->irq) {
-+		if (device_may_wakeup(dev))
-+			enable_irq_wake(client->irq);
-+		else
-+			disable_irq_wake(client->irq);
-+	}
-+
- 	return 0;
- }
- 
-@@ -254,6 +305,14 @@ static int max17040_resume(struct device *dev)
- 
- 	queue_delayed_work(system_power_efficient_wq, &chip->work,
- 			   MAX17040_DELAY);
-+
-+	if (client->irq) {
-+		if (device_may_wakeup(dev))
-+			disable_irq_wake(client->irq);
-+		else
-+			enable_irq_wake(client->irq);
-+	}
-+
- 	return 0;
- }
- 
--- 
-2.17.0
-
+Acked-by: Woojung Huh <woojung.huh@microchip.com>
