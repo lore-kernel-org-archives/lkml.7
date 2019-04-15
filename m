@@ -2,176 +2,78 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E266C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:46:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DD2CC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:47:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4AE8620833
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:46:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08FA020833
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 09:47:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=codeweavers.com header.i=@codeweavers.com header.b="q6XInizr"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726897AbfDOJqg (ORCPT
+        id S1727018AbfDOJro (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 05:46:36 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:47824 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1725816AbfDOJqg (ORCPT
+        Mon, 15 Apr 2019 05:47:44 -0400
+Received: from 50-203-203-244-static.hfc.comcastbusiness.net ([50.203.203.244]:59106
+        "EHLO mail.codeweavers.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1725798AbfDOJro (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 05:46:36 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3F9kURb096571
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 05:46:34 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2rvpaa429p-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 05:46:32 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <tmricht@linux.ibm.com>;
-        Mon, 15 Apr 2019 10:46:27 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Mon, 15 Apr 2019 10:46:23 +0100
-Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3F9kM4K34144298
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Mon, 15 Apr 2019 09:46:22 GMT
-Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 9740D5204E;
-        Mon, 15 Apr 2019 09:46:22 +0000 (GMT)
-Received: from tuxmaker.boeblingen.de.ibm.com (unknown [9.152.85.9])
-        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 4956E52052;
-        Mon, 15 Apr 2019 09:46:22 +0000 (GMT)
-From:   Thomas Richter <tmricht@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
-        acme@kernel.org
-Cc:     brueckner@linux.vnet.ibm.com, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com, Thomas Richter <tmricht@linux.ibm.com>
-Subject: [PATCH] perf/report: Report OOM in perf report status line
-Date:   Mon, 15 Apr 2019 11:46:17 +0200
-X-Mailer: git-send-email 2.16.4
-X-TM-AS-GCONF: 00
-x-cbid: 19041509-0016-0000-0000-0000026EE9B0
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19041509-0017-0000-0000-000032CB2D8A
-Message-Id: <20190415094617.30150-1-tmricht@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-15_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904150068
+        Mon, 15 Apr 2019 05:47:44 -0400
+X-Greylist: delayed 1013 seconds by postgrey-1.27 at vger.kernel.org; Mon, 15 Apr 2019 05:47:43 EDT
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=codeweavers.com; s=6377696661; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=hNO72mY6owZc9BbDkbkB6z1MumKqdRQ98mR/U6MEzko=; b=q6XInizrZMsjXaI5QsIP0B2zq
+        bNLE+82bw2qRak7Auo29DUAx+nKMkn9AdFa0uJz77YL2JUCo1MDH/GvA6RIb0VAc69uyEnV/OrdOl
+        AIFqaL1Z2X87ZTiV8bRcmH/aTS4pocqTAltHifuoGYBiOU4ZettOdUT88/rJPZOmQCQ2M=;
+Received: from merlot.physics.ox.ac.uk ([163.1.241.98] helo=merlot)
+        by mail.codeweavers.com with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <huw@codeweavers.com>)
+        id 1hFxx3-0008JV-VR; Mon, 15 Apr 2019 04:30:59 -0500
+Received: from daviesh by merlot with local (Exim 4.90_1)
+        (envelope-from <huw@codeweavers.com>)
+        id 1hFxwp-0005h8-KS; Mon, 15 Apr 2019 10:30:43 +0100
+Date:   Mon, 15 Apr 2019 10:30:43 +0100
+From:   Huw Davies <huw@codeweavers.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     linux kernel <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Vincenzo Frascino <vincenzo.frascino@arm.com>
+Subject: Re: [PATCH 2/3] x86/vdso: Allow clock specific mult and shift values
+Message-ID: <20190415093042.GA21726@merlot.physics.ox.ac.uk>
+References: <20190411101205.10006-1-huw@codeweavers.com>
+ <20190411101205.10006-3-huw@codeweavers.com>
+ <alpine.DEB.2.21.1904141229380.4917@nanos.tec.linutronix.de>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1904141229380.4917@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-An -ENOMEM error is not reported in the GTK GUI.
-Instead this error message pops up on the screen:
+On Sun, Apr 14, 2019 at 12:53:32PM +0200, Thomas Gleixner wrote:
+> So it stays in the same cache line, but as we move the VDSO to generic
+> code, the mask field needs to stay and this will make basetime[CLOCK_MONOTONIC] 
+> overlap into the next cache line.
 
-[root@m35lp76 perf]# ./perf  report -i perf.data.error68-1
+Thanks for the great review; this is a good point.
 
-	Processing events... [974K/3M]
-	Error:failed to process sample
+> See https://lkml.kernel.org/r/alpine.DEB.2.21.1902231727060.1666@nanos.tec.linutronix.de
+> for an alternate solution to this problem, which avoids this and just gives
+> CLOCK_MONOTONIC_RAW a separate storage space alltogether.
 
-	0xf4198 [0x8]: failed to process type: 68
+I can certainly do this for the x86 vdso.  Would that be useful or
+should I wait for Vincenzo's work on the generic vdso first?
 
-However when I use the same perf.data file with --stdio it works:
-
-[root@m35lp76 perf]# ./perf  report -i perf.data.error68-1 --stdio \
-		| head -12
-
-  # Total Lost Samples: 0
-  #
-  # Samples: 76K of event 'cycles'
-  # Event count (approx.): 99056160000
-  #
-  # Overhead  Command          Shared Object      Symbol
-  # ........  ...............  .................  .........
-  #
-     8.81%  find             [kernel.kallsyms]  [k] ftrace_likely_update
-     8.74%  swapper          [kernel.kallsyms]  [k] ftrace_likely_update
-     8.34%  sshd             [kernel.kallsyms]  [k] ftrace_likely_update
-     2.19%  kworker/u512:1-  [kernel.kallsyms]  [k] ftrace_likely_update
-
-The sample precentage is a bit low.....
-
-The GUI always fails in the FINISHED_ROUND event (68) and does not
-indicate the reason why.
-
-When happened is the following. Perf report calls a lot of functions and
-down deep when a FINISHED_ROUND event is processed, these functions are
-called:
-
-  perf_session__process_event()
-  + perf_session__process_user_event()
-    + process_finished_round()
-      + ordered_events__flush()
-        + __ordered_events__flush()
-	  + do_flush()
-	    + ordered_events__deliver_event()
-	      + perf_session__deliver_event()
-	        + machine__deliver_event()
-	          + perf_evlist__deliver_event()
-	            + process_sample_event()
-	              + hist_entry_iter_add() --> only called in GUI case!!!
-	                + hist_iter__report__callback()
-	                  + symbol__inc_addr_sample()
-
-	                    Now this functions runs out of memory and
-			    returns -ENOMEM. This is reported all the way up
-			    until function
-
-perf_session__process_event() returns to its caller, where -ENOMEM is
-changed to -EINVAL and processing stops:
-
- if ((skip = perf_session__process_event(session, event, head)) < 0) {
-      pr_err("%#" PRIx64 " [%#x]: failed to process type: %d\n",
-	     head, event->header.size, event->header.type);
-      err = -EINVAL;
-      goto out_err;
- }
-
-This occurred in the FINISHED_ROUND event when it has to process some
-10000 entries and ran out of memory.
-
-This patch indicates the root cause and displays it in the status line
-of ther perf report GUI.
-
-Output before (on GUI status line):
-0xf4198 [0x8]: failed to process type: 68
-
-Output after:
-0xf4198 [0x8]: failed to process type: 68 [not enough memory]
-
-Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
-Reviewed-by: Jiri Olsa <jolsa@redhat.com>
----
- tools/perf/util/session.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
-index b17f1c9bc965..e89716175588 100644
---- a/tools/perf/util/session.c
-+++ b/tools/perf/util/session.c
-@@ -1930,10 +1930,10 @@ reader__process_events(struct reader *rd, struct perf_session *session,
- 
- 	if (size < sizeof(struct perf_event_header) ||
- 	    (skip = rd->process(session, event, file_pos)) < 0) {
--		pr_err("%#" PRIx64 " [%#x]: failed to process type: %d\n",
-+		pr_err("%#" PRIx64 " [%#x]: failed to process type: %d [%s]\n",
- 		       file_offset + head, event->header.size,
--		       event->header.type);
--		err = -EINVAL;
-+		       event->header.type, strerror(-skip));
-+		err = skip;
- 		goto out;
- 	}
- 
--- 
-2.16.4
-
+Many thanks,
+Huw.
