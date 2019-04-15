@@ -2,53 +2,56 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 816B7C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:07:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C22F8C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4FFA421900
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:07:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8A215218DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:07:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355239;
-	bh=R9Ud+9zrGfWDWV7gWM/wQHsWNy9WLdmxSnhwN6502iA=;
+	s=default; t=1555355244;
+	bh=RTssTxgPQRGedkSR8HxC3pFnGGFA9F1OIfxTQgxgMvo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VYLhZRfTOsn0Hd6NXtKKcsfZsmoSLbV6ZNAlBzD39ySUkY2ecAnE4Qh+a38CCRsUI
-	 SyMhhGhg5kwnb6i1oabf/J36WrBwtSpAWMybshw9Z2oAKbFMz4o7NCWY15tShRJ7rZ
-	 vWgPWEqMfiyhk5xo437MtP81SzcGgtYbI5M7l+aw=
+	b=f20lAw1HC20cO9SaiZHEDUYkXgQlvZ/ErSOsTkx4dpV3SjPjZiTdjbNaKL7FJ+hqh
+	 lQImakeK9hzyCDp1YIzGuCRPNK+sJ2IIonCSvUJMR7jwmrvy4+0BTAIfLv3eqdH4EJ
+	 U75kOzoBvNZ0DYeV2KPnHdKU+/m3aW+2sYPifTE8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730155AbfDOTHR (ORCPT
+        id S1730166AbfDOTHX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:07:17 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42068 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:07:23 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42118 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730120AbfDOTHP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:07:15 -0400
+        id S1730120AbfDOTHR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:07:17 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 2084820880;
-        Mon, 15 Apr 2019 19:07:13 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id ABD0D218FF;
+        Mon, 15 Apr 2019 19:07:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355234;
-        bh=R9Ud+9zrGfWDWV7gWM/wQHsWNy9WLdmxSnhwN6502iA=;
+        s=default; t=1555355237;
+        bh=RTssTxgPQRGedkSR8HxC3pFnGGFA9F1OIfxTQgxgMvo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BWQAQXLEIFCJpTIoCWIW6jYGZtO/6HdZjWI5M5C7aE7OC0gBZ1W262zfmiyWvcSK5
-         WNrQedV31n86cnl2fnse7U1633MNQsQA4HKyZkwS/DwEq1PmL/OuxBE0flx9pWKOVr
-         3O83uPpUfPvBNqK1KMW3GmxKVXEL7j80QI28vSx4=
+        b=yDBwHn9ZFj2P6cfKX3OaNnJC4BRRlcP881HtxGq8Dg5Y1u4ZkJMqHxL4on1nVTsNH
+         +bKCzN44MX9jRQK4oE0alvEcrXjq5pWGqQshNMVeDhNoIKtAGiiCbmC1RiLtWl7pjw
+         C8UEd1uyT2HRiWiGIk7F8nCukfv0uFJHCKlgvb80=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         stable@vger.kernel.org,
-        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 031/101] net: ip6_gre: fix possible use-after-free in ip6erspan_rcv
-Date:   Mon, 15 Apr 2019 20:58:29 +0200
-Message-Id: <20190415183742.094876291@linuxfoundation.org>
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Chandan Rajendra <chandan@linux.ibm.com>,
+        Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>
+Subject: [PATCH 4.19 054/101] mm/huge_memory.c: fix modifying of page protection by insert_pfn_pmd()
+Date:   Mon, 15 Apr 2019 20:58:52 +0200
+Message-Id: <20190415183743.399884137@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183740.341577907@linuxfoundation.org>
 References: <20190415183740.341577907@linuxfoundation.org>
@@ -61,88 +64,109 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 2a3cabae4536edbcb21d344e7aa8be7a584d2afb ]
+From: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
 
-erspan_v6 tunnels run __iptunnel_pull_header on received skbs to remove
-erspan header. This can determine a possible use-after-free accessing
-pkt_md pointer in ip6erspan_rcv since the packet will be 'uncloned'
-running pskb_expand_head if it is a cloned gso skb (e.g if the packet has
-been sent though a veth device). Fix it resetting pkt_md pointer after
-__iptunnel_pull_header
+commit c6f3c5ee40c10bb65725047a220570f718507001 upstream.
 
-Fixes: 1d7e2ed22f8d ("net: erspan: refactor existing erspan code")
-Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
+With some architectures like ppc64, set_pmd_at() cannot cope with a
+situation where there is already some (different) valid entry present.
+
+Use pmdp_set_access_flags() instead to modify the pfn which is built to
+deal with modifying existing PMD entries.
+
+This is similar to commit cae85cb8add3 ("mm/memory.c: fix modifying of
+page protection by insert_pfn()")
+
+We also do similar update w.r.t insert_pfn_pud eventhough ppc64 don't
+support pud pfn entries now.
+
+Without this patch we also see the below message in kernel log "BUG:
+non-zero pgtables_bytes on freeing mm:"
+
+Link: http://lkml.kernel.org/r/20190402115125.18803-1-aneesh.kumar@linux.ibm.com
+Signed-off-by: Aneesh Kumar K.V <aneesh.kumar@linux.ibm.com>
+Reported-by: Chandan Rajendra <chandan@linux.ibm.com>
+Reviewed-by: Jan Kara <jack@suse.cz>
+Cc: Dan Williams <dan.j.williams@intel.com>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Andrew Morton <akpm@linux-foundation.org>
+Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
+Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+
 ---
- net/ipv6/ip6_gre.c | 21 +++++++++++++--------
- 1 file changed, 13 insertions(+), 8 deletions(-)
+ mm/huge_memory.c |   36 ++++++++++++++++++++++++++++++++++++
+ 1 file changed, 36 insertions(+)
 
-diff --git a/net/ipv6/ip6_gre.c b/net/ipv6/ip6_gre.c
-index faed98dab913..c4a7db62658e 100644
---- a/net/ipv6/ip6_gre.c
-+++ b/net/ipv6/ip6_gre.c
-@@ -540,11 +540,10 @@ static int ip6gre_rcv(struct sk_buff *skb, const struct tnl_ptk_info *tpi)
- 	return PACKET_REJECT;
+--- a/mm/huge_memory.c
++++ b/mm/huge_memory.c
+@@ -734,6 +734,21 @@ static void insert_pfn_pmd(struct vm_are
+ 	spinlock_t *ptl;
+ 
+ 	ptl = pmd_lock(mm, pmd);
++	if (!pmd_none(*pmd)) {
++		if (write) {
++			if (pmd_pfn(*pmd) != pfn_t_to_pfn(pfn)) {
++				WARN_ON_ONCE(!is_huge_zero_pmd(*pmd));
++				goto out_unlock;
++			}
++			entry = pmd_mkyoung(*pmd);
++			entry = maybe_pmd_mkwrite(pmd_mkdirty(entry), vma);
++			if (pmdp_set_access_flags(vma, addr, pmd, entry, 1))
++				update_mmu_cache_pmd(vma, addr, pmd);
++		}
++
++		goto out_unlock;
++	}
++
+ 	entry = pmd_mkhuge(pfn_t_pmd(pfn, prot));
+ 	if (pfn_t_devmap(pfn))
+ 		entry = pmd_mkdevmap(entry);
+@@ -745,11 +760,16 @@ static void insert_pfn_pmd(struct vm_are
+ 	if (pgtable) {
+ 		pgtable_trans_huge_deposit(mm, pmd, pgtable);
+ 		mm_inc_nr_ptes(mm);
++		pgtable = NULL;
+ 	}
+ 
+ 	set_pmd_at(mm, addr, pmd, entry);
+ 	update_mmu_cache_pmd(vma, addr, pmd);
++
++out_unlock:
+ 	spin_unlock(ptl);
++	if (pgtable)
++		pte_free(mm, pgtable);
  }
  
--static int ip6erspan_rcv(struct sk_buff *skb, int gre_hdr_len,
--			 struct tnl_ptk_info *tpi)
-+static int ip6erspan_rcv(struct sk_buff *skb, struct tnl_ptk_info *tpi,
-+			 int gre_hdr_len)
- {
- 	struct erspan_base_hdr *ershdr;
--	struct erspan_metadata *pkt_md;
- 	const struct ipv6hdr *ipv6h;
- 	struct erspan_md2 *md2;
- 	struct ip6_tnl *tunnel;
-@@ -563,18 +562,16 @@ static int ip6erspan_rcv(struct sk_buff *skb, int gre_hdr_len,
- 		if (unlikely(!pskb_may_pull(skb, len)))
- 			return PACKET_REJECT;
+ vm_fault_t vmf_insert_pfn_pmd(struct vm_area_struct *vma, unsigned long addr,
+@@ -800,6 +820,20 @@ static void insert_pfn_pud(struct vm_are
+ 	spinlock_t *ptl;
  
--		ershdr = (struct erspan_base_hdr *)skb->data;
--		pkt_md = (struct erspan_metadata *)(ershdr + 1);
--
- 		if (__iptunnel_pull_header(skb, len,
- 					   htons(ETH_P_TEB),
- 					   false, false) < 0)
- 			return PACKET_REJECT;
- 
- 		if (tunnel->parms.collect_md) {
-+			struct erspan_metadata *pkt_md, *md;
- 			struct metadata_dst *tun_dst;
- 			struct ip_tunnel_info *info;
--			struct erspan_metadata *md;
-+			unsigned char *gh;
- 			__be64 tun_id;
- 			__be16 flags;
- 
-@@ -587,6 +584,14 @@ static int ip6erspan_rcv(struct sk_buff *skb, int gre_hdr_len,
- 			if (!tun_dst)
- 				return PACKET_REJECT;
- 
-+			/* skb can be uncloned in __iptunnel_pull_header, so
-+			 * old pkt_md is no longer valid and we need to reset
-+			 * it
-+			 */
-+			gh = skb_network_header(skb) +
-+			     skb_network_header_len(skb);
-+			pkt_md = (struct erspan_metadata *)(gh + gre_hdr_len +
-+							    sizeof(*ershdr));
- 			info = &tun_dst->u.tun_info;
- 			md = ip_tunnel_info_opts(info);
- 			md->version = ver;
-@@ -623,7 +628,7 @@ static int gre_rcv(struct sk_buff *skb)
- 
- 	if (unlikely(tpi.proto == htons(ETH_P_ERSPAN) ||
- 		     tpi.proto == htons(ETH_P_ERSPAN2))) {
--		if (ip6erspan_rcv(skb, hdr_len, &tpi) == PACKET_RCVD)
-+		if (ip6erspan_rcv(skb, &tpi, hdr_len) == PACKET_RCVD)
- 			return 0;
- 		goto out;
+ 	ptl = pud_lock(mm, pud);
++	if (!pud_none(*pud)) {
++		if (write) {
++			if (pud_pfn(*pud) != pfn_t_to_pfn(pfn)) {
++				WARN_ON_ONCE(!is_huge_zero_pud(*pud));
++				goto out_unlock;
++			}
++			entry = pud_mkyoung(*pud);
++			entry = maybe_pud_mkwrite(pud_mkdirty(entry), vma);
++			if (pudp_set_access_flags(vma, addr, pud, entry, 1))
++				update_mmu_cache_pud(vma, addr, pud);
++		}
++		goto out_unlock;
++	}
++
+ 	entry = pud_mkhuge(pfn_t_pud(pfn, prot));
+ 	if (pfn_t_devmap(pfn))
+ 		entry = pud_mkdevmap(entry);
+@@ -809,6 +843,8 @@ static void insert_pfn_pud(struct vm_are
  	}
--- 
-2.19.1
-
+ 	set_pud_at(mm, addr, pud, entry);
+ 	update_mmu_cache_pud(vma, addr, pud);
++
++out_unlock:
+ 	spin_unlock(ptl);
+ }
+ 
 
 
