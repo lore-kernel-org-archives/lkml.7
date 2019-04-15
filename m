@@ -2,173 +2,108 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5E6F5C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:44:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B71C7C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:46:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 27DCB20684
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:44:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (4096-bit key) header.d=d-silva.org header.i=@d-silva.org header.b="WHu+KTZy"
+	by mail.kernel.org (Postfix) with ESMTP id 851D520684
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:46:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727338AbfDOKow (ORCPT
+        id S1727209AbfDOKq4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 06:44:52 -0400
-Received: from ushosting.nmnhosting.com ([167.160.173.127]:48702 "EHLO
-        ushosting.nmnhosting.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726214AbfDOKov (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 06:44:51 -0400
-Received: from mail2.nmnhosting.com (unknown [202.169.106.97])
-        by ushosting.nmnhosting.com (Postfix) with ESMTPS id BA4442F28FBB;
-        Mon, 15 Apr 2019 06:44:49 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=d-silva.org;
-        s=201810a; t=1555325090;
-        bh=HuPaY1jTKMqMghnD8FnwoCRKDZ3v7xanfe1QMzwaou4=;
-        h=From:To:Cc:References:In-Reply-To:Subject:Date:From;
-        b=WHu+KTZyqfxQTeThrxJekeyaf3OMzDdprmPkpEWPEmpv5nMYM3uN7jsG3CkrkOkjZ
-         Nq340tAKCdRug+7CHZMmow4NDp86wM9atvR5Q5ELHqe18uG6m7Vt4fgUnIhx/Ar9dO
-         kYixS4/B0GUXe2kyYnCYRUacwcpS6xGEHs65tM1ZmRI9xmqLYgGeVCh6nJwLjIC5hk
-         B1EoCpEsyaPrIoTkQkvzY+esx/37HgsK88CVeMVRNPP76XwdPP5FDJ8W0bVFtj7WL8
-         SlsJWlUd0CJ+6jRvuG3/Z6RcCGje648f5HeRsScmmIkGbYyua7vuKaXEe+MReLFWTa
-         k5HN86fPaZ+kSodUU+74lqceLIuXDc0uZJPNMURoBw+fqiBrOUncmGtytvTs2GEDlt
-         lPgQhp/l+Lb+7TFuFATfSQgZTD7ETg9qw2l/66oT6UYS0xG7JVZAFFqUM71YK/3sV9
-         x4iBFr3SbFC+zO3UU3q8L8EB51PNLtWTuPzlnlmFIgfvcjZuWbOhz+04+48FjqNy5e
-         syyuKvLc9bZNlZgAZCJwYpK/8m/UhdoZd4nTYUy0S1zw/u/7oaw4SMJWklhnuek/fR
-         tkPSUB6NJ09+WoSMTnUjScXaR/1CWJT8Hd/7eUFmEq8jVriI/cU6XMV4sg8LiSDahN
-         LqjsAS9CTq/Si3isZUrn+tzU=
-Received: from Hawking (ntp.lan [10.0.1.1])
-        (authenticated bits=0)
-        by mail2.nmnhosting.com (8.15.2/8.15.2) with ESMTPSA id x3FAifoE038671
-        (version=TLSv1.2 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Mon, 15 Apr 2019 20:44:41 +1000 (AEST)
-        (envelope-from alastair@d-silva.org)
-From:   "Alastair D'Silva" <alastair@d-silva.org>
-To:     "'David Laight'" <David.Laight@ACULAB.COM>,
-        "'Petr Mladek'" <pmladek@suse.com>
-Cc:     "'Alastair D'Silva'" <alastair@au1.ibm.com>,
-        "'Jani Nikula'" <jani.nikula@linux.intel.com>,
-        "'Joonas Lahtinen'" <joonas.lahtinen@linux.intel.com>,
-        "'Rodrigo Vivi'" <rodrigo.vivi@intel.com>,
-        "'David Airlie'" <airlied@linux.ie>,
-        "'Daniel Vetter'" <daniel@ffwll.ch>,
-        "'Karsten Keil'" <isdn@linux-pingi.de>,
-        "'Jassi Brar'" <jassisinghbrar@gmail.com>,
-        "'Tom Lendacky'" <thomas.lendacky@amd.com>,
-        "'David S. Miller'" <davem@davemloft.net>,
-        "'Jose Abreu'" <Jose.Abreu@synopsys.com>,
-        "'Kalle Valo'" <kvalo@codeaurora.org>,
-        "'Stanislaw Gruszka'" <sgruszka@redhat.com>,
-        "'Benson Leung'" <bleung@chromium.org>,
-        "'Enric Balletbo i Serra'" <enric.balletbo@collabora.com>,
-        "'James E.J. Bottomley'" <jejb@linux.ibm.com>,
-        "'Martin K. Petersen'" <martin.petersen@oracle.com>,
-        "'Greg Kroah-Hartman'" <gregkh@linuxfoundation.org>,
-        "'Alexander Viro'" <viro@zeniv.linux.org.uk>,
-        "'Sergey Senozhatsky'" <sergey.senozhatsky@gmail.com>,
-        "'Steven Rostedt'" <rostedt@goodmis.org>,
-        "'Andrew Morton'" <akpm@linux-foundation.org>,
-        <intel-gfx@lists.freedesktop.org>,
-        <dri-devel@lists.freedesktop.org>, <linux-kernel@vger.kernel.org>,
-        <netdev@vger.kernel.org>, <ath10k@lists.infradead.org>,
-        <linux-wireless@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
-        <linux-fbdev@vger.kernel.org>, <devel@driverdev.osuosl.org>,
-        <linux-fsdevel@vger.kernel.org>
-References: <20190410031720.11067-1-alastair@au1.ibm.com> <20190410031720.11067-4-alastair@au1.ibm.com> <20190412141211.lvnz6wb7mwkykmxf@pathway.suse.cz> <093301d4f187$da0756a0$8e1603e0$@d-silva.org> <20190415092424.qos7d54nbyr5hphu@pathway.suse.cz> <0da301d4f373$01d5bb80$05813280$@d-silva.org> <10c791893f034c26b4fee1a4659133e5@AcuMS.aculab.com>
-In-Reply-To: <10c791893f034c26b4fee1a4659133e5@AcuMS.aculab.com>
-Subject: RE: [PATCH 3/4] lib/hexdump.c: Replace ascii bool in hex_dump_to_buffer with flags
-Date:   Mon, 15 Apr 2019 20:44:39 +1000
-Message-ID: <0db501d4f378$3bd50bb0$b37f2310$@d-silva.org>
+        Mon, 15 Apr 2019 06:46:56 -0400
+Received: from szxga04-in.huawei.com ([45.249.212.190]:6184 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725939AbfDOKq4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 06:46:56 -0400
+Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 56F919E4758F6FA5716B;
+        Mon, 15 Apr 2019 18:46:53 +0800 (CST)
+Received: from localhost.localdomain.localdomain (10.175.113.25) by
+ DGGEMS408-HUB.china.huawei.com (10.3.19.208) with Microsoft SMTP Server id
+ 14.3.408.0; Mon, 15 Apr 2019 18:46:45 +0800
+From:   Chen Zhou <chenzhou10@huawei.com>
+To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
+        <ebiederm@xmission.com>, <rppt@linux.ibm.com>,
+        <catalin.marinas@arm.com>, <will.deacon@arm.com>,
+        <akpm@linux-foundation.org>, <ard.biesheuvel@linaro.org>
+CC:     <horms@verge.net.au>, <takahiro.akashi@linaro.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
+        <linux-mm@kvack.org>, <wangkefeng.wang@huawei.com>,
+        Chen Zhou <chenzhou10@huawei.com>
+Subject: [PATCH v4 0/5] support reserving crashkernel above 4G on arm64 kdump 
+Date:   Mon, 15 Apr 2019 18:57:20 +0800
+Message-ID: <20190415105725.22088-1-chenzhou10@huawei.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain;
-        charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-X-Mailer: Microsoft Outlook 16.0
-Thread-Index: AQMagew30YCVD5mEhyHx4HPts9xr1ALvlgN3AdorRAgCCza9VAHVj+h+AtHj3ewBiV+EcKNJu02w
-Content-Language: en-au
-X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.6.2 (mail2.nmnhosting.com [10.0.1.20]); Mon, 15 Apr 2019 20:44:44 +1000 (AEST)
+Content-Transfer-Encoding: 7BIT
+Content-Type:   text/plain; charset=US-ASCII
+X-Originating-IP: [10.175.113.25]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> -----Original Message-----
-> From: David Laight <David.Laight@ACULAB.COM>
-> Sent: Monday, 15 April 2019 8:21 PM
-> To: 'Alastair D'Silva' <alastair@d-silva.org>; 'Petr Mladek'
-> <pmladek@suse.com>
-> Cc: 'Alastair D'Silva' <alastair@au1.ibm.com>; 'Jani Nikula'
-> <jani.nikula@linux.intel.com>; 'Joonas Lahtinen'
-> <joonas.lahtinen@linux.intel.com>; 'Rodrigo Vivi' =
-<rodrigo.vivi@intel.com>;
-> 'David Airlie' <airlied@linux.ie>; 'Daniel Vetter' <daniel@ffwll.ch>; =
-'Karsten
-> Keil' <isdn@linux-pingi.de>; 'Jassi Brar' <jassisinghbrar@gmail.com>; =
-'Tom
-> Lendacky' <thomas.lendacky@amd.com>; 'David S. Miller'
-> <davem@davemloft.net>; 'Jose Abreu' <Jose.Abreu@synopsys.com>; 'Kalle
-> Valo' <kvalo@codeaurora.org>; 'Stanislaw Gruszka' =
-<sgruszka@redhat.com>;
-> 'Benson Leung' <bleung@chromium.org>; 'Enric Balletbo i Serra'
-> <enric.balletbo@collabora.com>; 'James E.J. Bottomley'
-> <jejb@linux.ibm.com>; 'Martin K. Petersen' =
-<martin.petersen@oracle.com>;
-> 'Greg Kroah-Hartman' <gregkh@linuxfoundation.org>; 'Alexander Viro'
-> <viro@zeniv.linux.org.uk>; 'Sergey Senozhatsky'
-> <sergey.senozhatsky@gmail.com>; 'Steven Rostedt'
-> <rostedt@goodmis.org>; 'Andrew Morton' <akpm@linux-foundation.org>;
-> intel-gfx@lists.freedesktop.org; dri-devel@lists.freedesktop.org; =
-linux-
-> kernel@vger.kernel.org; netdev@vger.kernel.org;
-> ath10k@lists.infradead.org; linux-wireless@vger.kernel.org; linux-
-> scsi@vger.kernel.org; linux-fbdev@vger.kernel.org;
-> devel@driverdev.osuosl.org; linux-fsdevel@vger.kernel.org
-> Subject: RE: [PATCH 3/4] lib/hexdump.c: Replace ascii bool in
-> hex_dump_to_buffer with flags
->=20
-> From: Alastair D'Silva
-> > Sent: 15 April 2019 11:07
-> ...
-> > In the above example the author only wants the hex output, while in
-> > other situations, both hex & ASCII output is desirable. If you just
-> > want ASCII output, the caller should just use a printk or one of =
-it's
-> wrappers.
->=20
-> Hexdump will 'sanitise' the ASCII.
->=20
+When crashkernel is reserved above 4G in memory, kernel should reserve
+some amount of low memory for swiotlb and some DMA buffers. So there may
+be two crash kernel regions, one is below 4G, the other is above 4G.
 
-This is functionality that doesn't exist in the current hexdump =
-implementation (you always get the hex version).
+Crash dump kernel reads more than one crash kernel regions via a dtb
+property under node /chosen,
+linux,usable-memory-range = <BASE1 SIZE1 [BASE2 SIZE2]>.
 
-I think a better option would be to factor out the sanitisation and =
-expose that as a separate function.
+Besides, we need to modify kexec-tools:
+  arm64: support more than one crash kernel regions(see [1])
 
-> Although I think you'd want a 'no hex' flag to suppress the hex.
->=20
-> Probably more useful flags are ones to suppress the address column.
+Changes since [v3]
+- Add memblock_cap_memory_ranges for multiple ranges.
+- Split patch "arm64: kdump: support more than one crash kernel regions"
+as two. One is above "Add memblock_cap_memory_ranges", the other is using
+memblock_cap_memory_ranges to support multiple crash kernel regions.
+- Fix some compiling warnings.
 
-This is already supported by the prefix_type parameter - are you =
-proposing that we eliminate the parameter & combine it with flags?
+Changes since [v2]
+- Split patch "arm64: kdump: support reserving crashkernel above 4G" as
+  two. Put "move reserve_crashkernel_low() into kexec_core.c" in a separate
+  patch.
 
-> I've also used flags to enable (or disable) suppression of multiple =
-lines of
-> zeros of constant bytes.
-> In that case you may want hexdump to return the flags for the next =
-call when
-> a large buffer is being dumped in fragments.
-=20
-I'm afraid I don't quite follow here, hex_dump_to_buffer doesn't alter =
-the flags, so the caller already knows it.=20
+Changes since [v1]:
+- Move common reserve_crashkernel_low() code into kernel/kexec_core.c.
+- Remove memblock_cap_memory_ranges() i added in v1 and implement that
+  in fdt_enforce_memory_region().
+  There are at most two crash kernel regions, for two crash kernel regions
+  case, we cap the memory range [min(regs[*].start), max(regs[*].end)]
+  and then remove the memory range in the middle.
 
---=20
-Alastair D'Silva           mob: 0423 762 819
-skype: alastair_dsilva     msn: alastair@d-silva.org
-blog: http://alastair.d-silva.org    Twitter: @EvilDeece
+[1]: http://lists.infradead.org/pipermail/kexec/2019-April/022792.html
+[v1]: https://lkml.org/lkml/2019/4/8/628
+[v2]: https://lkml.org/lkml/2019/4/9/86
+[V3]: https://lkml.org/lkml/2019/4/15/6
 
+Chen Zhou (5):
+  x86: kdump: move reserve_crashkernel_low() into kexec_core.c
+  arm64: kdump: support reserving crashkernel above 4G
+  memblock: add memblock_cap_memory_ranges for multiple ranges
+  arm64: kdump: support more than one crash kernel regions
+  kdump: update Documentation about crashkernel on arm64
 
+ Documentation/admin-guide/kernel-parameters.txt |  4 +-
+ arch/arm64/include/asm/kexec.h                  |  3 ++
+ arch/arm64/kernel/setup.c                       |  3 ++
+ arch/arm64/mm/init.c                            | 59 ++++++++++++++++------
+ arch/x86/include/asm/kexec.h                    |  3 ++
+ arch/x86/kernel/setup.c                         | 66 +++----------------------
+ include/linux/kexec.h                           |  5 ++
+ include/linux/memblock.h                        |  2 +-
+ kernel/kexec_core.c                             | 56 +++++++++++++++++++++
+ mm/memblock.c                                   | 56 +++++++++++++++------
+ 10 files changed, 166 insertions(+), 91 deletions(-)
 
+-- 
+2.7.4
 
