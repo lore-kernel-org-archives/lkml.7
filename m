@@ -2,69 +2,116 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51874C282DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:16:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D6A56C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 271FF20880
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:16:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ADDEE2075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 10:17:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727247AbfDOKQB (ORCPT
+        id S1726964AbfDOKRh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 06:16:01 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:50727 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725885AbfDOKQA (ORCPT
+        Mon, 15 Apr 2019 06:17:37 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54192 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726034AbfDOKRh (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 06:16:00 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hFyeZ-0004iv-K2; Mon, 15 Apr 2019 10:15:55 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Inaky Perez-Gonzalez <inaky.perez-gonzalez@intel.com>,
-        linux-wimax@intel.com, "David S . Miller" <davem@davemloft.net>,
-        netdev@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] wimax/i2400m: fix spelling mistake "accesibility" -> "accessibility"
-Date:   Mon, 15 Apr 2019 11:15:55 +0100
-Message-Id: <20190415101555.10584-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Mon, 15 Apr 2019 06:17:37 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3FADucl077115
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 06:17:36 -0400
+Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rvqm89h7t-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 06:17:35 -0400
+Received: from localhost
+        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <brueckner@linux.ibm.com>;
+        Mon, 15 Apr 2019 11:17:33 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
+        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Mon, 15 Apr 2019 11:17:30 +0100
+Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3FAHTL055181500
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Mon, 15 Apr 2019 10:17:29 GMT
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 4932FAE055;
+        Mon, 15 Apr 2019 10:17:29 +0000 (GMT)
+Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3C77BAE04D;
+        Mon, 15 Apr 2019 10:17:29 +0000 (GMT)
+Received: from lynx.boeblingen.de.ibm.com (unknown [9.152.224.20])
+        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Mon, 15 Apr 2019 10:17:29 +0000 (GMT)
+Received: from brueckh by lynx.boeblingen.de.ibm.com with local (Exim 4.90_1)
+        (envelope-from <brueckner@linux.ibm.com>)
+        id 1hFyg4-0001Oz-R9; Mon, 15 Apr 2019 12:17:28 +0200
+Date:   Mon, 15 Apr 2019 12:17:28 +0200
+From:   Hendrik Brueckner <brueckner@linux.ibm.com>
+To:     Thomas Richter <tmricht@linux.ibm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-perf-users@vger.kernel.org,
+        acme@kernel.org, brueckner@linux.vnet.ibm.com,
+        schwidefsky@de.ibm.com, heiko.carstens@de.ibm.com
+Subject: Re: [PATCH] perf/report: Report OOM in perf report status line
+References: <20190415094617.30150-1-tmricht@linux.ibm.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190415094617.30150-1-tmricht@linux.ibm.com>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-TM-AS-GCONF: 00
+x-cbid: 19041510-0020-0000-0000-0000032FEBFC
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19041510-0021-0000-0000-000021822A6D
+Message-Id: <20190415101728.GA6966@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-15_05:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904150073
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+Thomas,
 
-There is a spelling mistake in the I2400M_MS_ACCESSIBILITY_ERROR message
-string, fix this.
+On Mon, Apr 15, 2019 at 11:46:17AM +0200, Thomas Richter wrote:
+[...]
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/net/wimax/i2400m/control.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+> Signed-off-by: Thomas Richter <tmricht@linux.ibm.com>
+> Reviewed-by: Jiri Olsa <jolsa@redhat.com>
+> ---
+>  tools/perf/util/session.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/tools/perf/util/session.c b/tools/perf/util/session.c
+> index b17f1c9bc965..e89716175588 100644
+> --- a/tools/perf/util/session.c
+> +++ b/tools/perf/util/session.c
+> @@ -1930,10 +1930,10 @@ reader__process_events(struct reader *rd, struct perf_session *session,
+> 
+>  	if (size < sizeof(struct perf_event_header) ||
+>  	    (skip = rd->process(session, event, file_pos)) < 0) {
+> -		pr_err("%#" PRIx64 " [%#x]: failed to process type: %d\n",
+> +		pr_err("%#" PRIx64 " [%#x]: failed to process type: %d [%s]\n",
+>  		       file_offset + head, event->header.size,
+> -		       event->header.type);
+> -		err = -EINVAL;
+> +		       event->header.type, strerror(-skip));
+> +		err = skip;
+>  		goto out;
+>  	}
+> 
 
-diff --git a/drivers/net/wimax/i2400m/control.c b/drivers/net/wimax/i2400m/control.c
-index ef298d8525c5..6837fac3987b 100644
---- a/drivers/net/wimax/i2400m/control.c
-+++ b/drivers/net/wimax/i2400m/control.c
-@@ -254,7 +254,7 @@ static const struct
- 	[I2400M_MS_ILLEGAL_VALUE] = { "illegal value", -EINVAL },
- 	[I2400M_MS_MISSING_PARAMS] = { "missing parameters", -ENOMSG },
- 	[I2400M_MS_VERSION_ERROR] = { "bad version", -EIO },
--	[I2400M_MS_ACCESSIBILITY_ERROR] = { "accesibility error", -EIO },
-+	[I2400M_MS_ACCESSIBILITY_ERROR] = { "accessibility error", -EIO },
- 	[I2400M_MS_BUSY] = { "busy", -EBUSY },
- 	[I2400M_MS_CORRUPTED_TLV] = { "corrupted TLV", -EILSEQ },
- 	[I2400M_MS_UNINITIALIZED] = { "uninitialized", -EILSEQ },
--- 
-2.20.1
+Thanks for solving this issue.
+
+Reviewed-by: Hendrik Brueckner <brueckner@linux.ibm.com>
 
