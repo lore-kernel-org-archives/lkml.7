@@ -2,89 +2,118 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE3B9C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:16:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5538BC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:17:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B3ACD21900
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:16:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F012206B6
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:17:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727702AbfDOQQH (ORCPT
+        id S1727764AbfDOQRC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 12:16:07 -0400
-Received: from relay9-d.mail.gandi.net ([217.70.183.199]:60903 "EHLO
-        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726522AbfDOQQG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 12:16:06 -0400
-X-Originating-IP: 93.29.109.196
-Received: from localhost.localdomain (196.109.29.93.rev.sfr.net [93.29.109.196])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id A07F1FF811;
-        Mon, 15 Apr 2019 16:16:02 +0000 (UTC)
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>, Chen-Yu Tsai <wens@csie.org>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-Subject: [PATCH] drm/sun4i: Use DRM_GEM_CMA_VMAP_DRIVER_OPS for GEM operations
-Date:   Mon, 15 Apr 2019 18:15:43 +0200
-Message-Id: <20190415161543.13831-1-paul.kocialkowski@bootlin.com>
-X-Mailer: git-send-email 2.21.0
+        Mon, 15 Apr 2019 12:17:02 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:59206 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726522AbfDOQRC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 12:17:02 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 9970C30B27AE;
+        Mon, 15 Apr 2019 16:17:01 +0000 (UTC)
+Received: from treble (ovpn-120-105.rdu2.redhat.com [10.10.120.105])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 8B65A19C77;
+        Mon, 15 Apr 2019 16:16:59 +0000 (UTC)
+Date:   Mon, 15 Apr 2019 11:16:57 -0500
+From:   Josh Poimboeuf <jpoimboe@redhat.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Andy Lutomirski <luto@kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
+        Sean Christopherson <sean.j.christopherson@intel.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Pekka Enberg <penberg@kernel.org>,
+        Linux-MM <linux-mm@kvack.org>
+Subject: Re: [patch V4 01/32] mm/slab: Fix broken stack trace storage
+Message-ID: <20190415161657.2zwboghblj5ducux@treble>
+References: <20190414155936.679808307@linutronix.de>
+ <20190414160143.591255977@linutronix.de>
+ <CALCETrUhVc_u3HL-x7wMnk9ukEbwQPvc9N5Na-Q55se0VwcCpw@mail.gmail.com>
+ <alpine.DEB.2.21.1904141832400.4917@nanos.tec.linutronix.de>
+ <alpine.DEB.2.21.1904151101100.1729@nanos.tec.linutronix.de>
+ <20190415132339.wiqyzygqklliyml7@treble>
+ <alpine.DEB.2.21.1904151804460.1895@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1904151804460.1895@nanos.tec.linutronix.de>
+User-Agent: NeoMutt/20180716
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Mon, 15 Apr 2019 16:17:02 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Our driver makes a typical use of CMA, with GEM object allocated as
-GEM CMA objects. Use DRM_GEM_CMA_VMAP_DRIVER_OPS to describe the ops
-instead of duplicating them.
+On Mon, Apr 15, 2019 at 06:07:44PM +0200, Thomas Gleixner wrote:
+> On Mon, 15 Apr 2019, Josh Poimboeuf wrote:
+> > On Mon, Apr 15, 2019 at 11:02:58AM +0200, Thomas Gleixner wrote:
+> > >  	addr = (unsigned long *)&((char *)addr)[obj_offset(cachep)];
+> > >  
+> > > -	if (size < 5 * sizeof(unsigned long))
+> > > +	if (size < 5)
+> > >  		return;
+> > >  
+> > >  	*addr++ = 0x12345678;
+> > >  	*addr++ = caller;
+> > >  	*addr++ = smp_processor_id();
+> > > -	size -= 3 * sizeof(unsigned long);
+> > > +	size -= 3;
+> > > +#ifdef CONFIG_STACKTRACE
+> > >  	{
+> > > -		unsigned long *sptr = &caller;
+> > > -		unsigned long svalue;
+> > > -
+> > > -		while (!kstack_end(sptr)) {
+> > > -			svalue = *sptr++;
+> > > -			if (kernel_text_address(svalue)) {
+> > > -				*addr++ = svalue;
+> > > -				size -= sizeof(unsigned long);
+> > > -				if (size <= sizeof(unsigned long))
+> > > -					break;
+> > > -			}
+> > > -		}
+> > > +		struct stack_trace trace = {
+> > > +			/* Leave one for the end marker below */
+> > > +			.max_entries	= size - 1,
+> > > +			.entries	= addr,
+> > > +			.skip		= 3,
+> > > +		};
+> > >  
+> > > +		save_stack_trace(&trace);
+> > > +		addr += trace.nr_entries;
+> > >  	}
+> > > -	*addr++ = 0x87654321;
+> > > +#endif
+> > > +	*addr = 0x87654321;
+> > 
+> > Looks like stack_trace.nr_entries isn't initialized?  (though this code
+> > gets eventually replaced by a later patch)
+> 
+> struct initializer initialized the non mentioned fields to 0, if I'm not
+> totally mistaken.
 
-Because DRM_GEM_CMA_VMAP_DRIVER_OPS implements a gem_create_object op
-which sets per-object funcs (drm_cma_gem_default_funcs), we can also
-get rid of free_object_unlocked and gem_vm_ops, which are superseded
-by the object funcs.
+Hm, it seems you are correct.  And I thought I knew C.
 
-Signed-off-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
----
- drivers/gpu/drm/sun4i/sun4i_drv.c | 16 +---------------
- 1 file changed, 1 insertion(+), 15 deletions(-)
+> > Who actually reads this stack trace?  I couldn't find a consumer.
+> 
+> It's stored directly in the memory pointed to by @addr and that's the freed
+> cache memory. If that is used later (UAF) then the stack trace can be
+> printed to see where it was freed.
 
-diff --git a/drivers/gpu/drm/sun4i/sun4i_drv.c b/drivers/gpu/drm/sun4i/sun4i_drv.c
-index 3ebd9f5e2719..453b94f9a5b7 100644
---- a/drivers/gpu/drm/sun4i/sun4i_drv.c
-+++ b/drivers/gpu/drm/sun4i/sun4i_drv.c
-@@ -53,21 +53,7 @@ static struct drm_driver sun4i_drv_driver = {
- 
- 	/* GEM Operations */
- 	.dumb_create		= drm_sun4i_gem_dumb_create,
--	.gem_free_object_unlocked = drm_gem_cma_free_object,
--	.gem_vm_ops		= &drm_gem_cma_vm_ops,
--
--	/* PRIME Operations */
--	.prime_handle_to_fd	= drm_gem_prime_handle_to_fd,
--	.prime_fd_to_handle	= drm_gem_prime_fd_to_handle,
--	.gem_prime_import	= drm_gem_prime_import,
--	.gem_prime_export	= drm_gem_prime_export,
--	.gem_prime_get_sg_table	= drm_gem_cma_prime_get_sg_table,
--	.gem_prime_import_sg_table = drm_gem_cma_prime_import_sg_table,
--	.gem_prime_vmap		= drm_gem_cma_prime_vmap,
--	.gem_prime_vunmap	= drm_gem_cma_prime_vunmap,
--	.gem_prime_mmap		= drm_gem_cma_prime_mmap,
--
--	/* Frame Buffer Operations */
-+	DRM_GEM_CMA_VMAP_DRIVER_OPS,
- };
- 
- static int sun4i_drv_bind(struct device *dev)
+Right... but who reads it?
+
 -- 
-2.21.0
-
+Josh
