@@ -7,47 +7,47 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C8C0DC10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:07:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 38A59C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:07:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D62E20880
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:07:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05E4B20880
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:07:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355220;
-	bh=EgYgkLnUqtVpIAwaB9qjdHKIqfOCQFk2iDa5+b95ydg=;
+	s=default; t=1555355229;
+	bh=HCyf28W2q6RYFGzfHnn73T0o6U1pk2uCmy6mOPUU+D4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=inQVrQ9VeLYnYliBffioWpCQSz8pWdVF8CR+SJrgaWghsT/8o4EOKdIlRtb9PcQBG
-	 ZK1d5oPDRxfGabnjnzTLVZNFECEOovdws/SV7nGN7hMIOw94eBu2h8pnfUUDJztBcu
-	 6VJK30XHzEBb2S7BudlrWc4Q/86CYKfsaKQAfpKM=
+	b=qttpAJ1YktQ+pNT6xf6RufSO1Y8QaJX1bz30lIiIeOexBysphBQSKhQF0ju8LOvif
+	 rPHArKXpgDCn2OKXns5AxjeXqeYEUDc1ssKJolmF2ik86N4CgspnqfvBeGmv12KQ5e
+	 I+3+30zhMqCKvO2vrlwNnJEStLDLNO/m37qxKZvI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730084AbfDOTG7 (ORCPT
+        id S1730097AbfDOTHI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:06:59 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41514 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:07:08 -0400
+Received: from mail.kernel.org ([198.145.29.99]:41764 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730058AbfDOTGw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:06:52 -0400
+        id S1729325AbfDOTHF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:07:05 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 36FEE20880;
-        Mon, 15 Apr 2019 19:06:51 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id EE9782087C;
+        Mon, 15 Apr 2019 19:07:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355211;
-        bh=EgYgkLnUqtVpIAwaB9qjdHKIqfOCQFk2iDa5+b95ydg=;
+        s=default; t=1555355224;
+        bh=HCyf28W2q6RYFGzfHnn73T0o6U1pk2uCmy6mOPUU+D4=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=Fm/xtMSjFOtmZqCXvlnB+pHRTblBKnMXSa5duQP28Vq0j6IEQ9GMj/Ey5w2F0ebA9
-         H6cFOFAirg3nxzwR481p+lA5Bg+ml1nX/KdYhJRoh8lfSy49wdN7/8wH18CZPpB0f2
-         OXGrjqAX3e1XryJAQevDTRPvbOQ6RcqWQ505sVq0=
+        b=Fps9GXCc9/plEyj+lmG6ZHcieHnE7pkwPhgpLG8R/b22YhZQa+P5Fv0jtJxsVVCzG
+         wSeD7Bg7jyyJnMZtF9+mZq9AJU/zEiUCknvYHbqSo2mIxZYs2zulU0tGCizT2mS8t5
+         crii3p4GuKcBHIWARAV/aOZ9x4LjYz7qyzoxqmY8=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Huy Nguyen <huyn@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
+        stable@vger.kernel.org, Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 4.19 035/101] net/mlx5e: Update xoff formula
-Date:   Mon, 15 Apr 2019 20:58:33 +0200
-Message-Id: <20190415183742.320063071@linuxfoundation.org>
+Subject: [PATCH 4.19 037/101] kbuild: deb-pkg: fix bindeb-pkg breakage when O= is used
+Date:   Mon, 15 Apr 2019 20:58:35 +0200
+Message-Id: <20190415183742.418747020@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183740.341577907@linuxfoundation.org>
 References: <20190415183740.341577907@linuxfoundation.org>
@@ -60,47 +60,66 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 5ec983e924c7978aaec3cf8679ece9436508bb20 ]
+[ Upstream commit 02826a6ba301b72461c3706e1cc66d5571cd327e ]
 
-Set minimum speed in xoff threshold formula to 40Gbps
+Ard Biesheuvel reports bindeb-pkg with O= option is broken in the
+following way:
 
-Fixes: 0696d60853d5 ("net/mlx5e: Receive buffer configuration")
-Signed-off-by: Huy Nguyen <huyn@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+  ...
+    LD [M]  sound/soc/rockchip/snd-soc-rk3399-gru-sound.ko
+    LD [M]  sound/soc/rockchip/snd-soc-rockchip-pcm.ko
+    LD [M]  sound/soc/rockchip/snd-soc-rockchip-rt5645.ko
+    LD [M]  sound/soc/rockchip/snd-soc-rockchip-spdif.ko
+    LD [M]  sound/soc/sh/rcar/snd-soc-rcar.ko
+   fakeroot -u debian/rules binary
+  make KERNELRELEASE=4.19.0-12677-g19beffaf7a99-dirty ARCH=arm64 KBUILD_SRC= intdeb-pkg
+  /bin/bash /home/ard/linux/scripts/package/builddeb
+  Makefile:600: include/config/auto.conf: No such file or directory
+  ***
+  *** Configuration file ".config" not found!
+  ***
+  *** Please run some configurator (e.g. "make oldconfig" or
+  *** "make menuconfig" or "make xconfig").
+  ***
+  make[12]: *** [syncconfig] Error 1
+  make[11]: *** [syncconfig] Error 2
+  make[10]: *** [include/config/auto.conf] Error 2
+  make[9]: *** [__sub-make] Error 2
+  ...
+
+Prior to commit 80463f1b7bf9 ("kbuild: add --include-dir flag only
+for out-of-tree build"), both srctree and objtree were added to
+--include-dir redundantly, and the wrong code '$MAKE image_name'
+was working by relying on that. Now, the potential issue that had
+previously been hidden just showed up.
+
+'$MAKE image_name' recurses to the generated $(objtree)/Makefile and
+ends up with running in srctree, which is incorrect. It should be
+invoked with '-f $srctree/Makefile' (or KBUILD_SRC=) to be executed
+in objtree.
+
+Fixes: 80463f1b7bf9 ("kbuild: add --include-dir flag only for out-of-tree build")
+Reported-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Signed-off-by: Masahiro Yamada <yamada.masahiro@socionext.com>
+Tested-by: Ard Biesheuvel <ard.biesheuvel@linaro.org>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/mellanox/mlx5/core/en/port_buffer.c  | 11 ++++++-----
- 1 file changed, 6 insertions(+), 5 deletions(-)
+ scripts/package/builddeb | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/port_buffer.c b/drivers/net/ethernet/mellanox/mlx5/core/en/port_buffer.c
-index eac245a93f91..f00de0c987cd 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en/port_buffer.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en/port_buffer.c
-@@ -122,7 +122,9 @@ static int port_set_buffer(struct mlx5e_priv *priv,
- 	return err;
- }
+diff --git a/scripts/package/builddeb b/scripts/package/builddeb
+index 90c9a8ac7adb..0b31f4f1f92c 100755
+--- a/scripts/package/builddeb
++++ b/scripts/package/builddeb
+@@ -81,7 +81,7 @@ else
+ 	cp System.map "$tmpdir/boot/System.map-$version"
+ 	cp $KCONFIG_CONFIG "$tmpdir/boot/config-$version"
+ fi
+-cp "$($MAKE -s image_name)" "$tmpdir/$installed_image_path"
++cp "$($MAKE -s -f $srctree/Makefile image_name)" "$tmpdir/$installed_image_path"
  
--/* xoff = ((301+2.16 * len [m]) * speed [Gbps] + 2.72 MTU [B]) */
-+/* xoff = ((301+2.16 * len [m]) * speed [Gbps] + 2.72 MTU [B])
-+ * minimum speed value is 40Gbps
-+ */
- static u32 calculate_xoff(struct mlx5e_priv *priv, unsigned int mtu)
- {
- 	u32 speed;
-@@ -130,10 +132,9 @@ static u32 calculate_xoff(struct mlx5e_priv *priv, unsigned int mtu)
- 	int err;
- 
- 	err = mlx5e_port_linkspeed(priv->mdev, &speed);
--	if (err) {
--		mlx5_core_warn(priv->mdev, "cannot get port speed\n");
--		return 0;
--	}
-+	if (err)
-+		speed = SPEED_40000;
-+	speed = max_t(u32, speed, SPEED_40000);
- 
- 	xoff = (301 + 216 * priv->dcbx.cable_len / 100) * speed / 1000 + 272 * mtu / 100;
- 
+ if grep -q "^CONFIG_OF=y" $KCONFIG_CONFIG ; then
+ 	# Only some architectures with OF support have this target
 -- 
 2.19.1
 
