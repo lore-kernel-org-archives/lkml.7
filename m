@@ -2,97 +2,136 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 97532C10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:06:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1303CC282DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:07:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66A5A218D3
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:06:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="i3wHdbvu"
+	by mail.kernel.org (Postfix) with ESMTP id DC1D2218A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:07:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728021AbfDOSGu (ORCPT
+        id S1728030AbfDOSG7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 14:06:50 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:39941 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727746AbfDOSGt (ORCPT
+        Mon, 15 Apr 2019 14:06:59 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:39914 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1725786AbfDOSG7 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 14:06:49 -0400
-Received: by mail-wr1-f68.google.com with SMTP id h4so23166271wre.7
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 11:06:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EkcG1ecxbRvbtTZp8pykP1WrSpDo5FL3IoRO1jdwX4A=;
-        b=i3wHdbvuoVxt1LC2EUpNdj3M95LS7TyzrhgbGppZWVWnHDaHBVWDrEBfZItz/IEpmj
-         3eCG15hLn0pJiWlrRV0+/QJzosPkdKhD8R6kRPMC3v+mXlBk/eWJiZbDkXeYXRyJgvnA
-         kFO3X/OQADph8cOzNyl8ghHq8eNls4gmuYn3zD2caH4i6SyW+Lz1//QnXAwxHIkvF4yW
-         6dchgbPcTwSNCBiTbGIMuTBmkEquKlAdwic7WWO4NAIKMXyOPJrP9171Uf2VUg0A4RJs
-         SaNGmeLRvjUCJHdxf/+If6oudX4GNonpbvKHjIGuAQV4fGGVw/oJLm0PXWjpHiFZjgfU
-         tL9g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=EkcG1ecxbRvbtTZp8pykP1WrSpDo5FL3IoRO1jdwX4A=;
-        b=jFQGdQNSEcrZbXxxRCetejXl39byvwEnF1faq98YrcukD5xdwYpnsDxu6tIKG7R1PM
-         WjRAnfoigdP6sUpNG7gNMwiRrMAqJbittVkTQ51N4yF7G3wTm1WMdJCN9EpZQP+vzws3
-         OuFJHVETG6OlrWqlXiK8rOGqIZJgDdmuAilUq4HNgPuGMGYnyzUVTPdAUTW10EGeKdug
-         VgT0du5okpuT2ysYWAoR7cwaQfcqBpDbEFqlXhzAxi3ZLA68ewLyrbsQxwi9RLcyc0Ab
-         hfweg87+8vFWIOw0e4c8WcYXUe1nK7Pp7hXLG359dqoy4ZEc5OUIAjBX2zH+dvaU63D/
-         cMqw==
-X-Gm-Message-State: APjAAAVVVZF1psLp81uad6oN4RW4ee16k8Ef74GBlFQng0PLybsRO+Ph
-        ktCl+/AvBgBkpPzKHpBcFdX9nbSHYZor7XD/qa/TPA==
-X-Google-Smtp-Source: APXvYqzVHTURCpFodSDEVwDlFPrvJXAWwZaZ1ZcGTLFFboOAeqzMpHqKjqAGWTImBYBNh9/uPFXAlPRrxNpPAja/0iQ=
-X-Received: by 2002:a5d:68cd:: with SMTP id p13mr12937108wrw.22.1555351607916;
- Mon, 15 Apr 2019 11:06:47 -0700 (PDT)
+        Mon, 15 Apr 2019 14:06:59 -0400
+Received: (qmail 6419 invoked by uid 2102); 15 Apr 2019 14:06:58 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 15 Apr 2019 14:06:58 -0400
+Date:   Mon, 15 Apr 2019 14:06:58 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Andrey Konovalov <andreyknvl@google.com>
+cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <gustavo@embeddedor.com>,
+        Kernel development list <linux-kernel@vger.kernel.org>,
+        USB list <linux-usb@vger.kernel.org>,
+        syzkaller-bugs <syzkaller-bugs@googlegroups.com>
+Subject: Re: INFO: task hung in usb_kill_urb
+In-Reply-To: <CAAeHK+wrF8Oh7ur+BcuyARvm2sx6KNVGFxqKHoyajApN+tOA_g@mail.gmail.com>
+Message-ID: <Pine.LNX.4.44L0.1904151357540.1575-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
-References: <20190411184741.27540-1-tmurphy@arista.com> <20190411184741.27540-10-tmurphy@arista.com>
- <20190415062316.GC18154@infradead.org>
-In-Reply-To: <20190415062316.GC18154@infradead.org>
-From:   Tom Murphy <tmurphy@arista.com>
-Date:   Mon, 15 Apr 2019 19:06:36 +0100
-Message-ID: <CAPL0++4cvqD1gg=mDASrLRBv69ei75v-g3BWWW+Poz3_TUOkbQ@mail.gmail.com>
-Subject: Re: [PATCH 9/9] iommu/amd: Add allocated domain to global list earlier
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     iommu@lists.linux-foundation.org, Heiko Stuebner <heiko@sntech.de>,
-        Will Deacon <will.deacon@arm.com>,
-        David Brown <david.brown@linaro.org>,
-        linux-samsung-soc@vger.kernel.org,
-        Dmitry Safonov <dima@arista.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-rockchip@lists.infradead.org, Kukjin Kim <kgene@kernel.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Tom Murphy <murphyt7@tcd.ie>,
-        Robin Murphy <robin.murphy@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
->This seems like a fix to the existing code and should probably go out first.
+On Mon, 15 Apr 2019, Andrey Konovalov wrote:
 
-I'll send this patch out on it's own now.
-
-On Mon, Apr 15, 2019 at 7:23 AM Christoph Hellwig <hch@infradead.org> wrote:
->
-> On Thu, Apr 11, 2019 at 07:47:38PM +0100, Tom Murphy via iommu wrote:
-> > dma_ops_domain_free() expects domain to be in a global list.
-> > Arguably, could be called before protection_domain_init().
+> On Fri, Apr 12, 2019 at 9:46 PM Alan Stern <stern@rowland.harvard.edu> wrote:
 > >
-> > Signed-off-by: Dmitry Safonov <dima@arista.com>
-> > Signed-off-by: Tom Murphy <tmurphy@arista.com>
->
-> This seems like a fix to the existing code and should probably go
-> out first.
+> > Andrey:
+> >
+> > It's really hard to tell just what's going on here.
+> >
+> > On Fri, 12 Apr 2019, syzbot wrote:
+> >
+> > > Hello,
+> > >
+> > > syzbot found the following crash on:
+> > >
+> > > HEAD commit:    9a33b369 usb-fuzzer: main usb gadget fuzzer driver
+> > > git tree:       https://github.com/google/kasan/tree/usb-fuzzer
+> > > console output: https://syzkaller.appspot.com/x/log.txt?x=14c4c1af200000
+> > > kernel config:  https://syzkaller.appspot.com/x/.config?x=23e37f59d94ddd15
+> > > dashboard link: https://syzkaller.appspot.com/bug?extid=d919b0f29d7b5a4994b9
+> > > compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> > > syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14410dbb200000
+> > > C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=12f0acd3200000
+> > >
+> > > IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> > > Reported-by: syzbot+d919b0f29d7b5a4994b9@syzkaller.appspotmail.com
+> > >
+> > > usb-fuzzer-gadget dummy_udc.0: failed to start USB fuzzer: -22
+> > > usb-fuzzer-gadget dummy_udc.0: failed to start USB fuzzer: -22
+> > > usb-fuzzer-gadget dummy_udc.0: failed to start USB fuzzer: -22
+> > > usb-fuzzer-gadget dummy_udc.0: failed to start USB fuzzer: -22
+> > > usb-fuzzer-gadget dummy_udc.0: failed to start USB fuzzer: -22
+> > > INFO: task kworker/0:2:532 blocked for more than 143 seconds.
+> > >        Not tainted 5.1.0-rc4-319354-g9a33b36 #3
+> > > "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> > > kworker/0:2     D26656   532      2 0x80000000
+> > > Workqueue: usb_hub_wq hub_event
+> > > Call Trace:
+> > >   schedule+0x8f/0x180 kernel/sched/core.c:3562
+> > >   usb_kill_urb drivers/usb/core/urb.c:695 [inline]
+> > >   usb_kill_urb+0x22a/0x2c0 drivers/usb/core/urb.c:687
+> > >   usb_start_wait_urb+0x257/0x4d0 drivers/usb/core/message.c:63
+> > >   usb_internal_control_msg drivers/usb/core/message.c:101 [inline]
+> > >   usb_control_msg+0x321/0x4a0 drivers/usb/core/message.c:152
+> >
+> > It looks like something is stuck waiting for usb_kill_urb() to finish.
+> > But what happened before that?
+> 
+> This crash is somewhat special. It happens quite often during USB
+> fuzzing, but at the same time it's a hang, which makes it a bit harder
+> debug. I initially thought that is somehow related to my custom USB
+> fuzzing kernel patches, but then I saw that someone else hit this
+> issue while doing USB fuzzing in a completely different way that
+> doesn't require kernel modifications. So it might be an actual issue
+> in the kernel.
+> 
+> The full console output is provided by the syzbot, but I guess it's
+> not very useful in this case. I've just made sure that this issue is
+> manually reproducible, so we can easily retest it with debug patches
+> (syzbot should be also able to do that via the syz test command). Or
+> is there a way to turn on some verbose mode to see some USB debug
+> messages?
+
+If I were doing this manually, I would run the following commands after
+loading the dummy-hcd driver but before starting the main test
+(requires CONFIG_USB_MON; you can skip the modprobe if
+CONFIG_USB_MON=y):
+
+	modprobe usbmon
+	cat /sys/kernel/debug/usb/usbmon/Nu >/tmp/mon.out &
+
+where N is the USB bus number corresponding to the dummy-hcd bus.  
+Then after the test hangs, on another VT kill the "cat" process and
+examine the contents of /tmp/mon.out.
+
+Maybe you can do the equivalent with syzkaller?  If necessary, you can 
+start the "cat" before loading dummy-hcd and specify a bus number of 0.
+That will capture data for all the USB buses, including the dummy-hcd 
+bus when it gets added (I think -- I haven't actually tried it).
+
+Alan
+
+> > I can't tell from the reproducer source, because it uses a bunch of
+> > special stuff you added in your usb-fuzzer tree.
+> >
+> > Alan Stern
+> >
+> 
+> I understand, for now I guess the simpler way to debug this is to run
+> the reproducer. I'll write you and Greg a separate email regarding all
+> that special stuff that I added.
+> 
+> Thanks!
+
