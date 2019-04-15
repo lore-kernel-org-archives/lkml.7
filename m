@@ -3,132 +3,153 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44162C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:04:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12445C282DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:05:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1DCA420684
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:04:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E090821873
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:05:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727781AbfDOQES (ORCPT
+        id S1727803AbfDOQFH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 12:04:18 -0400
-Received: from v5prod-smtp1bis.alinto.net ([83.145.109.218]:42510 "EHLO
-        smtpoutv5.alinto.net" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727213AbfDOQER (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 12:04:17 -0400
-X-Virus-Scanned: amavisd-new at localdomain
-Received: from smtpoutv5.alinto.net ([127.0.0.1])
-        by localhost (v5prod-smtp1.alinto.net [127.0.0.1]) (amavisd-new, port 10050)
-        with LMTP id IrGZ-KNelxOW; Mon, 15 Apr 2019 18:04:12 +0200 (CEST)
-Received: from jona.localnet (unknown [80.254.183.189])
-        (Authenticated sender: brunner@stettbacher.ch)
-        by smtpoutv5.alinto.net (Postfix) with ESMTPA id 44jYGN1Jklz85c;
-        Mon, 15 Apr 2019 18:04:12 +0200 (CEST)
-From:   Patrick Brunner <brunner@stettbacher.ch>
-To:     linux-kernel@vger.kernel.org
-Subject: IOMMU Page faults when running DMA transfers from PCIe device
-Date:   Mon, 15 Apr 2019 18:04:11 +0200
-Message-ID: <2987837.CvKyUSae8N@jona>
-Organization: Stettbacher Signal Processing
+        Mon, 15 Apr 2019 12:05:07 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:51482 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726034AbfDOQFH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 12:05:07 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C6CB5307D868;
+        Mon, 15 Apr 2019 16:05:05 +0000 (UTC)
+Received: from [10.36.112.50] (ovpn-112-50.ams2.redhat.com [10.36.112.50])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C18FB5D710;
+        Mon, 15 Apr 2019 16:04:48 +0000 (UTC)
+Subject: Re: [PATCH 0/6] Add Hygon SEV support
+To:     Pascal Van Leeuwen <pvanleeuwen@insidesecure.com>,
+        Hao Feng <fenghao@hygon.cn>,
+        'Tom Lendacky ' <thomas.lendacky@amd.com>,
+        'Gary Hook ' <gary.hook@amd.com>,
+        'Herbert Xu ' <herbert@gondor.apana.org.au>,
+        "' David S. Miller '" <davem@davemloft.net>,
+        'Janakarajan Natarajan ' <Janakarajan.Natarajan@amd.com>,
+        'Joerg Roedel ' <joro@8bytes.org>,
+        =?UTF-8?B?JyBSYWRpbSBLcsSNbcOhxZkgJw==?= <rkrcmar@redhat.com>,
+        'Thomas Gleixner ' <tglx@linutronix.de>,
+        'Ingo Molnar ' <mingo@redhat.com>,
+        'Borislav Petkov ' <bp@alien8.de>,
+        "' H. Peter Anvin '" <hpa@zytor.com>
+Cc:     'Zhaohui Du ' <duzhaohui@hygon.cn>,
+        'Zhiwei Ying ' <yingzhiwei@hygon.cn>,
+        'Wen Pu ' <puwen@hygon.cn>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1555329868-17895-1-git-send-email-fenghao@hygon.cn>
+ <3a1288ab-8e18-5421-05b4-4f4ef2fc531c@redhat.com>
+ <AM6PR09MB35237F925CF4C82FBBA53862D22B0@AM6PR09MB3523.eurprd09.prod.outlook.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=pbonzini@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ uUHgL9dKIfvpm+rNXRn9wAwGjk0X/A==
+Message-ID: <fda47663-9536-0d36-5a0e-c6da77e21209@redhat.com>
+Date:   Mon, 15 Apr 2019 18:04:46 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7Bit
-Content-Type: text/plain; charset="us-ascii"
+In-Reply-To: <AM6PR09MB35237F925CF4C82FBBA53862D22B0@AM6PR09MB3523.eurprd09.prod.outlook.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Mon, 15 Apr 2019 16:05:06 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Dear all,
+On 15/04/19 17:51, Pascal Van Leeuwen wrote:
+> I don't know about SM2, but both SM3 and SM4 are already implemented in
+> the kernel tree as generic C code and covered by the testmgr.
 
-I'm encountering very nasty problems regarding DMA transfers from an external 
-PCIe device to the main memory while the IOMMU is enabled, and I'm running out 
-of ideas. I'm not even sure, whether it's a kernel issue or not. But I would 
-highly appreciate any hints from experienced developers how to proceed to 
-solve that issue.
+I stand corrected.
 
-The problem: An FPGA (see details below) should write a small amount of data 
-(~128 bytes) over a PCIe 2.0 x1 link to an address in the CPU's memory space. 
-The destination address (64 bits) for the Mem Write TLP is written to a BAR-
-mapped register before-hand.
+> There also has been quite some analysis done on them (Google is your
+> friend) and they are generally considered secure.
 
-On the system side, the driver consists of the usual setup code:
-- request PCI regions
-- pci_set_master
-- I/O remapping of BARs
-- setting DMA mask (dma_set_mask_and_coherent), tried both 32/64 bits
-- allocating DMA buffers with dma_alloc_coherent (4096 bytes, but also tried 
-smaller numbers)
-- allocating IRQ lines (MSI) with pci_alloc_irq_vectors and pci_irq_vector
-- writing the DMA buffers' logical address (as returned in dma_handle_t from 
-dma_alloc_coherent) to a BAR-mapped register
+Good.
 
-There is also an IRQ handler dumping the first 2 DWs from the DMA buffer when 
-triggered.
+> Besides that, they are
+> in heavy practical use in mainland China, usually as direct replacements
+> for SHA2-256 and AES in whatever protocol or use case you need: IPsec,
+> TLS, WPA2, XTS for disk encryption, you name it.
 
-The FPGA part will initiate following transfers at an interval of 2.5ms:
-- Memory write to DMA address
-- Send MSI (to signal that transfer is done)
-- Memory read from DMA address+offset
+How should that mean anything?
 
-And now, the clue: everything works fine with the IOMMU disabled (iommu=off), 
-i.e. the 2 DWs dumped in the ISR handler contain valid data. But if the IOMMU 
-is enabled (iommu=soft or force), I receive an IO page fault (sometimes even 
-more, depending on the payload size) on every transfer, and the data is all 
-zeros:
+>> Because as far as I know, they could be just as secure as double rot13.
+> 
+> You could educate yourself first instead of just making assumptions?
+I did educate myself a bit, but I'm not an expert in cryptography, so I
+would like to be sure that these are not another Speck or DUAL-EC-DRBG.
+ "SM2 is based on ECC(Elliptic Curve Cryptography), and uses a special
+curve" is enough for me to see warning signs, at least without further
+explanations, and so does the fact that the initial SM3 values were
+changed from SHA-2 and AFAICT there is no public justification for that.
 
-[   49.001605] IO_PAGE_FAULT device=00:00.0 domain=0x0000 
-address=0x00000000ffbf8000 flags=0x0070]
-
-Where the device ID corresponds to the Host bridge, and the address 
-corresponds to the DMA handle I got from dma_alloc_coherent respectively.
-
-The big question is: what do I need to do to convince the IOMMU that my DMA 
-transfer is legal? To my understanding, the IOMMU should be completely 
-transparent as regarded from my device driver. What am I missing?
-
-Some notes:
-- disabling the IOMMU is not an option, as otherwise only 1 of the 2 MSIs on 
-the FPGA is recognised by pci_alloc_irq_vectors. This is another problem I 
-don't understand. Well, if I would get both IRQs working, I could disable the 
-IOMMU for good...
-- The second MSI is used for some UARTs in the FPGA, not related to the DMA-
-part.
-- The kernel device driver code is based on example code by Lattice for a demo 
-based on the ECP3.
-- The same system includes a CAN-adapter on a Mini-PCIe-Card where the driver 
-code runs basically the same initialisation sequence (see above), including 
-setup of the DMA buffer address via BAR-mapped register. This adapter is based 
-on an ECP3 FPGA too. I don't see any IO page faults for this adapter though, 
-when the IOMMU is enabled.
-- When performing a Mem Read from the FPGA, no IO page faults are issued.
-- The same approach was used in 3 other designs (various combos of CPUs, RAM 
-and x86, some with ECP3, others with ECP5) without any problems, but none so 
-far had an IOMMU involved.
-
-System/FPGA details:
-- CPU: AMD Embedded R-Series RX-416GD Radeon R6 (family: 0x15, model: 0x60, 
-stepping: 0x1)
-- FPGA: Lattice ECP5-45 with Lattice PCIe x1 Endpoint IP
-- Kernel: 4.9.80 (same results with 4.20.17)
-
-Note: Need to use that older kernel version as the final design must be 
-patched with the RTAI extension.
-
-I'm quite desperate at this point, after spending days of trying out various 
-stuff, reading driver code for several similar devices, crawling through 
-hundreds of google search results. All to no avail... So, sorry for the noise, 
-but I'd be much obliged for any help/directions.
-
-I'm happily providing more details such as the full driver code if someone is 
-willing to take a deeper look.
-
-Thanks and best regards,
-
-Patrick
-
-
-
-
+Paolo
