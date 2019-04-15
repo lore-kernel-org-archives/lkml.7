@@ -2,119 +2,98 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6AACC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 03:06:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47FFBC10F13
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 03:07:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7158C21473
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 03:06:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 134D02077C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 03:07:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="pEpd3TxU"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="M6e+n60g"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726835AbfDODGO (ORCPT
+        id S1727011AbfDODHS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 23:06:14 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:34941 "EHLO ozlabs.org"
+        Sun, 14 Apr 2019 23:07:18 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:32810 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725972AbfDODGO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 23:06:14 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44jD0g1Ccgz9s0W;
-        Mon, 15 Apr 2019 13:06:11 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1555297572;
-        bh=0ykiVWvQy0kVCQjQbOXBXXBNW2ew5lv9aSRv+xw+CFA=;
-        h=Date:From:To:Cc:Subject:From;
-        b=pEpd3TxUxlNgrruvxVv6deBSHWtAiljXTGmzlHwGq+8ecA9r9lEkfrFEKJbFnSE7D
-         s5SDc2THWkDQQjJIVvT3KhJaBrLLSABRavDyjTdHQLkjzJDqA9PhNEi4S9hOOi2ZDd
-         Lq580cMyiWUnFCMEwxlq7GrKQWk12xBY8MIvCVJpdoc15cRzGcZSr4jChTJd7x5vSR
-         xAKMXiMxCFXLnls07AHaChEVZ/ebAB8ZBFIhW+F68kKJS823DAyONQXm8UkdgFLLJF
-         tsPXRnrpmpz+2d/mSo3HXY0a978vrduOKlrwYdnCqMFzN1hGd83T1aKNjfruGnr22L
-         U79P2D7CF4WAQ==
-Date:   Mon, 15 Apr 2019 13:06:08 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Jens Axboe <axboe@kernel.dk>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ming Lei <ming.lei@redhat.com>, Christoph Hellwig <hch@lst.de>
-Subject: linux-next: manual merge of the block tree with Linus' tree
-Message-ID: <20190415130608.02fabb3e@canb.auug.org.au>
+        id S1725789AbfDODHR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Apr 2019 23:07:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=oKpgIhBVpDdsPi4+lN5iHvcrVeFVVmNwfzgBgdJt0VY=; b=M6e+n60gBT5jacB71pxCFeYkll
+        DCcM1PM75WDyJvfwavaySVuzEZSJG5etfpL1IgbjB9H0G++TFW+NwGVvTueHEz3NNOc5kHueJvu0D
+        b7UHakcXGdRpNn+ItdeSocmhnzy7jD4/O/5sFS5Ej2wpcNZEe3XW27XKZxgZtOp25/JM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hFrxe-0006e3-DJ; Mon, 15 Apr 2019 05:07:10 +0200
+Date:   Mon, 15 Apr 2019 05:07:10 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Florian Fainelli <f.fainelli@gmail.com>, vivien.didelot@gmail.com,
+        davem@davemloft.net, netdev <netdev@vger.kernel.org>,
+        linux-kernel@vger.kernel.org,
+        Georg Waibel <georg.waibel@sensor-technik.de>
+Subject: Re: [PATCH v3 net-next 18/24] net: dsa: sja1105: Add support for
+ traffic through standalone ports
+Message-ID: <20190415030710.GC24455@lunn.ch>
+References: <20190413012822.30931-1-olteanv@gmail.com>
+ <20190413012822.30931-19-olteanv@gmail.com>
+ <20190413163754.GG17901@lunn.ch>
+ <CA+h21hpKJS=TKGoMJMvsmK1DAtgciDsLOHAawqsKQ0xGW5dF6w@mail.gmail.com>
+ <CA+h21hp=_LrGDZo3Jmoe2hNKqx7nrdqRbK3UWYntN-9My-z5Hg@mail.gmail.com>
+ <CA+h21hp47bOwvEdF5KCV0bAo01mv+K11JSuP9AzEoWHTjmVAtQ@mail.gmail.com>
+ <20190414161757.GB10323@lunn.ch>
+ <CA+h21ho9AKSmX=6CU1P_fddcYSGB-DN0T-XqVYg8GnTRfuShVw@mail.gmail.com>
+ <20190414191318.GE10323@lunn.ch>
+ <CA+h21hrGPfo4-QxMjG9hqitd6qBWEpcYHeqvyPzYMFpkSLbBQw@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/=J8r8IqDgri+FzYRlvZxeQ7"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CA+h21hrGPfo4-QxMjG9hqitd6qBWEpcYHeqvyPzYMFpkSLbBQw@mail.gmail.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/=J8r8IqDgri+FzYRlvZxeQ7
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+> It fails to decode the frames, obviously. But so does any other EtherType.
 
-Hi all,
+> Florian was hinting
+> (https://lwn.net/ml/netdev/b52f4cdf-edcf-0757-1d6e-d4a831ec7943@gmail.com/)
+> at the recent pull requests submitted to tcpdump and libpcap that make
+> it possible to decode based on the string in
+> /sys/class/net/${master}/dsa/tagging. I admit I haven't actually
+> tested or studied those closely yet (there are more important things
+> to focus on ATM), but since my driver returns "8021q" in sysfs and
+> yours returns "edsa", I would presume tcpdump could use that
+> information.
 
-Today's linux-next merge of the block tree got a conflict in:
+No it does not. It is a valid EtherType, that is what is used to
+trigger the decoding, it takes no notice of what is in
+/sys/class/net/${master}/dsa/tagging, nor the extra meta-data added to
+the pcap file. There is no need. you can identify it is a Marvell EDSA
+header from the EtherType.
 
-  include/linux/bvec.h
+In fact, this tcpdump code for decoding EDSA pre-dated Florians
+patches by a few years.
 
-between commit:
+You only need the code which Florian added when you cannot identify
+the header directly from the packet. And that is true for most of the
+tagging protocols. But EDSA you can.
 
-  1200e07f3ad4 ("block: don't use for-inside-for in bio_for_each_segment_al=
-l")
+> Anyway, since you obviously know more on this topic than I do,
+> please make me understand what are the real problems in spoofing the
+> Ethertype as a Marvell one.
 
-from Linus' tree and commit:
+Despite there being an EDSA EtherType in the frame, what follows is
+not an ESDA header. It is like having the IPv4 EtherType but what
+following is not an IP header. Broken.
 
-  52d52d1c98a9 ("block: only allow contiguous page structs in a bio_vec")
-
-from the block tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc include/linux/bvec.h
-index 3bc91879e1e2,44b0f4684190..000000000000
---- a/include/linux/bvec.h
-+++ b/include/linux/bvec.h
-@@@ -156,8 -151,8 +151,8 @@@ static inline void bvec_advance(const s
-  {
-  	struct bio_vec *bv =3D &iter_all->bv;
- =20
- -	if (bv->bv_page) {
- +	if (iter_all->done) {
-- 		bv->bv_page =3D nth_page(bv->bv_page, 1);
-+ 		bv->bv_page++;
-  		bv->bv_offset =3D 0;
-  	} else {
-  		bv->bv_page =3D bvec->bv_page;
-
---Sig_/=J8r8IqDgri+FzYRlvZxeQ7
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAlyz9SEACgkQAVBC80lX
-0Gxv8Qf9HviITxbq1Z99gQvQYXLk/ueVvIET4kSn0+uHxpmVPv2VGvYzhxJSeTrM
-qXNk3LhSDkK5hsRppwZVUr046VW730r2ZgFZM/kwsyJidlf1BPhLJP8r7H6quGN6
-ROloInRb0awkKlYfl0UjMkWnmFvQnStyu2IkL8cW7rhTPt4fgUXGB/2sfTZw+g/J
-Iqj/f/XPufg4AsuZ+HlElg5+pMKRNB13eg4Go46wUlRqujdF9dGMm6wwA0uG43SN
-kKUvRA568jhn0kkFwCikQ0kZw1/ncAxYNDzPrx09YNoLtz/1s5mpi9Kn7Ri9gzyf
-AZJnqjze2CIV9x2jo0VfwmBtl6qKaw==
-=z3TK
------END PGP SIGNATURE-----
-
---Sig_/=J8r8IqDgri+FzYRlvZxeQ7--
+    Andrew
