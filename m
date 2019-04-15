@@ -2,109 +2,177 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.7 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,FROM_EXCESS_BASE64,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9E0EC10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:28:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A9B33C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:30:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2E9920818
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:28:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7181A2087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:30:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MWSPCu7e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727643AbfDOQ2M (ORCPT
+        id S1727661AbfDOQaX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 12:28:12 -0400
-Received: from mga14.intel.com ([192.55.52.115]:17796 "EHLO mga14.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726034AbfDOQ2M (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 12:28:12 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga008.fm.intel.com ([10.253.24.58])
-  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Apr 2019 09:28:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,354,1549958400"; 
-   d="scan'208";a="140856676"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by fmsmga008.fm.intel.com with ESMTP; 15 Apr 2019 09:28:10 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@intel.com>)
-        id 1hG4Sn-0005D1-25; Mon, 15 Apr 2019 19:28:09 +0300
-Date:   Mon, 15 Apr 2019 19:28:09 +0300
-From:   Andy Shevchenko <andriy.shevchenko@intel.com>
-To:     Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>
-Cc:     rui.zhang@intel.com, edubezval@gmail.com,
-        daniel.lezcano@linaro.org, srinivas.pandruvada@linux.intel.com,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] thermal: intel: int340x: processor_thermal_device:
- simplify to get driver data
-Message-ID: <20190415162809.GU9224@smile.fi.intel.com>
-References: <1555339710-28028-1-git-send-email-sumeet.r.pawnikar@intel.com>
+        Mon, 15 Apr 2019 12:30:23 -0400
+Received: from mail-yw1-f67.google.com ([209.85.161.67]:42070 "EHLO
+        mail-yw1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727164AbfDOQaW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 12:30:22 -0400
+Received: by mail-yw1-f67.google.com with SMTP id e76so6226921ywa.9;
+        Mon, 15 Apr 2019 09:30:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=jmJTeCCNuzsXQTWNvvDVEtGTkZad8yB68DhpEubY4qk=;
+        b=MWSPCu7eLnGKKYiQD5ba21pFh91Etdf3EyCl5G7cT1fVJpEO5a1oftiaJSKMyRnoTg
+         pcuIHqe5+2dHQ0tXKadW2d8Jb/2yZGciRmPeDME0uknwJ6skDaKhrWfxeX+vvR//os30
+         yO2JvHpaoO6Ct0T+IViPzDNgDBOvhy5yt1HY1+V0amPV36REVzPaUB4SbSfFqSag8mfe
+         YOcIl24x70JaoGDevKey/iaddERvCF89eCJoWDkx8csw7niyxYMKTGJlSwTw+QWeYUxt
+         rtV8+AxUTLgMyIa8jtjFZOndbot3IqRYputHiepGx4fz90w4yyh3zDhfembExVgMy9uW
+         85hg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=jmJTeCCNuzsXQTWNvvDVEtGTkZad8yB68DhpEubY4qk=;
+        b=VISzeWfZ5b9/03H41B+HBdr1+/f0IeMTNt0fpPR/HuU0ql80XPEYqokeTL3oZBF7su
+         7lHJx3tTltgwnY9oLdZU8crihGIwCSedkGBv+WPERbpVQqWruUsjQixX6oPbKl0eCoHL
+         vAztbriYGiKRk73t140dWapR8TgHNKwIJw++n7RHp99loVoi5eQwwgeeZ8ISzchL3jbS
+         iZmm9fwVE2w2KpuZaVuu0S4BV1Ptg1q+Ya9REtg9Ej+u0iaFyXsn0O4fo5jzTRWomxZv
+         5XcAZdPFGHawoQuxf3s8jnj9gO4uZ+/nh0QE3UIOFhPQ7MCl6IJwSNtTiPCnxPXDJz24
+         UITQ==
+X-Gm-Message-State: APjAAAVaMLHKoLZCrvQJCJBFqeJJmZcnXANGjqgDyUHD2PSY5IN0/nGo
+        dlKN1ffey4ymGIoBXtKpWbVefaoI4oX1kzFx/Jc=
+X-Google-Smtp-Source: APXvYqxRT9bwHk1Prfzd3DmiP5H71iF+NNsQ/ei+bA5QUHeQYxO1F20xhpn/FWltbUK+cwayhtkrVlntNYTh+xx4uQo=
+X-Received: by 2002:a81:7509:: with SMTP id q9mr60379351ywc.216.1555345821706;
+ Mon, 15 Apr 2019 09:30:21 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1555339710-28028-1-git-send-email-sumeet.r.pawnikar@intel.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190411214422.2267-1-peron.clem@gmail.com> <20190411214422.2267-2-peron.clem@gmail.com>
+ <20190415080443.frubh4ln4agrdsfe@flea> <CAJiuCcc0Q8rh8u_30gKi8o07k0+e35UR99ZBHtCjx-DPkJEtdw@mail.gmail.com>
+ <20190415081816.2pay4pioc5d4mojf@flea> <CAJiuCcedNF0xYSa_+Zfwj-vqYsbjfEpRqisOhEvuitYALMsyjw@mail.gmail.com>
+ <20190415145135.fjbcaldwy7w3eqcs@flea>
+In-Reply-To: <20190415145135.fjbcaldwy7w3eqcs@flea>
+From:   =?UTF-8?B?Q2zDqW1lbnQgUMOpcm9u?= <peron.clem@gmail.com>
+Date:   Mon, 15 Apr 2019 18:30:10 +0200
+Message-ID: <CAJiuCcdrQ64jC8UH1eDKKhFdcOtk=bkWTAzoYOQ1ut3He+j2GQ@mail.gmail.com>
+Subject: Re: [PATCH 1/4] dt-bindings: sound: sun4i-spdif: Add Allwinner H6 compatible
+To:     Maxime Ripard <maxime.ripard@bootlin.com>
+Cc:     Rob Herring <robh+dt@kernel.org>, Chen-Yu Tsai <wens@csie.org>,
+        Icenowy Zheng <icenowy@aosc.io>,
+        Jagan Teki <jagan@amarulasolutions.com>,
+        Jernej Skrabec <jernej.skrabec@siol.net>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        linux-sunxi <linux-sunxi@googlegroups.com>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 08:18:30PM +0530, Sumeet Pawnikar wrote:
-> From: "Pawnikar, Sumeet R" <sumeet.r.pawnikar@intel.com>
-> 
-> This simplifies getting the 'driver_data' from 'struct device' directly.
-> Going through platform_device or pci_dev is not required. Also removes
-> condition check as the private data stored with dev pointer, means
-> irrespective of enumeration mode, we can use dev_get_drvdata().
-> This removes the unnecessary step back and forth.
-> 
+Hi,
 
-Indeed, good clean up!
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@intel.com>
+On Mon, 15 Apr 2019 at 16:51, Maxime Ripard <maxime.ripard@bootlin.com> wro=
+te:
+>
+> On Mon, Apr 15, 2019 at 10:30:38AM +0200, Cl=C3=A9ment P=C3=A9ron wrote:
+> > On Mon, 15 Apr 2019 at 10:18, Maxime Ripard <maxime.ripard@bootlin.com>=
+ wrote:
+> > >
+> > > On Mon, Apr 15, 2019 at 10:09:11AM +0200, Cl=C3=A9ment P=C3=A9ron wro=
+te:
+> > > > Hi,
+> > > >
+> > > > On Mon, 15 Apr 2019 at 10:04, Maxime Ripard <maxime.ripard@bootlin.=
+com> wrote:
+> > > > >
+> > > > > Hi,
+> > > > >
+> > > > > On Thu, Apr 11, 2019 at 11:44:19PM +0200, Cl=C3=A9ment P=C3=A9ron=
+ wrote:
+> > > > > > Allwinner H6 has a SPDIF controller with an increase of the fif=
+o
+> > > > > > size and the possibility to output the master clock.
+> > > > > > However it's still compatible with the already existing driver =
+for
+> > > > > > Allwiner H3.
+> > > > > >
+> > > > > > Add this compatible in the device-tree bindings documentation.
+> > > > >
+> > > > > How was this tested?
+> > > >
+> > > > Using Alsa utils on a Beelink GS1 and I check correct output sound =
+on
+> > > > my home cinema.
+> > > >
+> > > > > After looking at the datasheet, it looks like it's still signific=
+antly
+> > > > > different. In particular:
+> > > > >
+> > > > >   - The MCLK divider isn't at the same offset
+> > > >
+> > > > We don't use the MCLK
+> > > >
+> > > > >   - The bits to flush the FIFO aren't at the same offset
+> > > > >   - The FIFO trigger levels aren't at the same offset
+> > > > >   - The FIFO status register layout is almost entirely different
+> > > >
+> > > > We use DMA not FIFO
+> > >
+> > > Well, DMA still uses the FIFOs. And even then, you're kind of missing
+> > > the point. The device tree's compatible is about whether a particular
+> > > device can be used as another one. How you are using it in the driver
+> > > is completely irrelevant.
+> >
+> > Sorry I meant " We use DMA not PIO".
+>
+> I'm still not quite sure what you mean. Both DMA and PIO would be
+> using the FIFOs.
 
-> Signed-off-by: Sumeet Pawnikar <sumeet.r.pawnikar@intel.com>
-> ---
->  .../int340x_thermal/processor_thermal_device.c     |   11 +----------
->  1 file changed, 1 insertion(+), 10 deletions(-)
-> 
-> diff --git a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
-> index 8e1cf4d..2a7cbaa 100644
-> --- a/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
-> +++ b/drivers/thermal/intel/int340x_thermal/processor_thermal_device.c
-> @@ -81,22 +81,13 @@ enum proc_thermal_emum_mode_type {
->  					struct device_attribute *attr, \
->  					char *buf) \
->  { \
-> -	struct pci_dev *pci_dev; \
-> -	struct platform_device *pdev; \
-> -	struct proc_thermal_device *proc_dev; \
-> +	struct proc_thermal_device *proc_dev = dev_get_drvdata(dev); \
->  	\
->  	if (proc_thermal_emum_mode == PROC_THERMAL_NONE) { \
->  		dev_warn(dev, "Attempted to get power limit before device was initialized!\n"); \
->  		return 0; \
->  	} \
->  	\
-> -	if (proc_thermal_emum_mode == PROC_THERMAL_PLATFORM_DEV) { \
-> -		pdev = to_platform_device(dev); \
-> -		proc_dev = platform_get_drvdata(pdev); \
-> -	} else { \
-> -		pci_dev = to_pci_dev(dev); \
-> -		proc_dev = pci_get_drvdata(pci_dev); \
-> -	} \
->  	return sprintf(buf, "%lu\n",\
->  	(unsigned long)proc_dev->power_limits[index].suffix * 1000); \
->  }
-> -- 
-> 1.7.9.5
-> 
+Just correcting myself but yes we use FIFO with the DMA.
 
--- 
-With Best Regards,
-Andy Shevchenko
+>
+> > I didn't change the driver and the SPDIF is working what's irrelevant
+> > in declaring the driver as compatible ?
+>
+> It's working by accident.
+>
+> This won't work for example:
+> https://elixir.bootlin.com/linux/latest/source/sound/soc/sunxi/sun4i-spdi=
+f.c#L181
+>
+> > If some feature are missing they can be introduce later as there is a
+> > special binding for H6 no ?
+>
+> Again, that's irrelevant. The only question you need to ask yourself
+> is whether, if you take an imaginary source code that would support
+> all the H3 SPDIF features and run it on an H6, it works just as well.
+>
+> The examples above that it's not the case, so you can't claim that the
+> device is compatible.
+
+Is it ok if I fix the TX Fifo flush bit and remove the compatible with H3 ?
+(Looking at the driver this is the only bit used that is incompatible with =
+H6)
+
+Or should I send a new driver with the correct mapping ?
+
+Thanks
+Cl=C3=A9ment
 
 
+>
+> Maxime
+>
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
