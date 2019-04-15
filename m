@@ -2,116 +2,124 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C687C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDD6AC282DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:45:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 089AE206B6
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:43:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B8232077C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 12:45:03 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fc6Erbs9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727535AbfDOMnM (ORCPT
+        id S1727586AbfDOMpC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 08:43:12 -0400
-Received: from foss.arm.com ([217.140.101.70]:34106 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727214AbfDOMnL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 08:43:11 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4A1B8374;
-        Mon, 15 Apr 2019 05:43:11 -0700 (PDT)
-Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 992253F706;
-        Mon, 15 Apr 2019 05:43:09 -0700 (PDT)
-Subject: Re: [PATCH v4 00/10] support wakeup capable GPIOs
-To:     Lina Iyer <ilina@codeaurora.org>, swboyd@chromium.org,
-        evgreen@chromium.org
-Cc:     linux-kernel@vger.kernel.org, rplsssn@codeaurora.org,
-        linux-arm-msm@vger.kernel.org, thierry.reding@gmail.com,
-        bjorn.andersson@linaro.org, dianders@chromium.org,
-        linus.walleij@linaro.org
-References: <20190313211844.29416-1-ilina@codeaurora.org>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: ARM Ltd
-Message-ID: <d0ef548a-6721-056b-4394-6e5658b32880@arm.com>
-Date:   Mon, 15 Apr 2019 13:43:08 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Mon, 15 Apr 2019 08:45:02 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:37500 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727340AbfDOMpC (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 08:45:02 -0400
+Received: by mail-pg1-f194.google.com with SMTP id e6so8536099pgc.4;
+        Mon, 15 Apr 2019 05:45:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=j2Jbk+XA0OWjgXCKKQtMT9pUcI5jesaoAegi8Sx+lEQ=;
+        b=fc6Erbs9Y5DyxddYgwY58UwwzLc5ZzUNN8Sr8k7iCEiFzjmFS2GSX4KJPAbKBEQM/J
+         sAcbusbZEKPj+1/6BaFJICColzz9Jw7HQcqHkxM/lFnAEeO8CBMfBN3QX1h6gYAqO/sI
+         RSVorg+ud1lylvgFYOl1LtU1BQsuvMWzxzNF5lXA5UlpX4eftrEhhUBdUdH61LTlh2oz
+         QnMsIyj9LDsjtjimJRN5fiJ47vaqtqCBIxa+kpyaDRG8BMaOK0uK3b9eaLB+pnc+7+nw
+         E1CEvDYyL5A2iKPXcx2FVLlyct7dDR6+GLoU4N0vL1MBeEyXxxMgdU05RKpON25ml5Ye
+         YZnw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=j2Jbk+XA0OWjgXCKKQtMT9pUcI5jesaoAegi8Sx+lEQ=;
+        b=EjpDb1CO1e+HFd/3IbiZIRNM3NyodkuGxWvuubp7Dlodo6XlTZ77nLArCbC2xauzUd
+         vkyMUct3/s6kOXiGTVciIqfDnYneKDVuz73odT7/a9iwaJ55DgC2dbzLfiCuC/gIVHNG
+         /7MYBBeSwCNrDLxlVVfJ/pblBWfIdy/xnneuchXKGb4gVFP1JYUh4hk6BjDD6L2kz0KT
+         5gPSYVxY8Zu2f/KqHP9hp31uRhjvfe7GAEtqaAUKdHTBW5YhsBALAmQdor1a4HAQiMaE
+         +0ibFkPmKKtc61FtMU2ttuWniYW2D/lIBtqCNXfHBs8lDPmGWuXAFv1sg3f7t6mW33dX
+         2w2g==
+X-Gm-Message-State: APjAAAVQ1SNVhMfdJtFS08CdFowEqta0n8j2Z5iV5gQ6Pyo9wZ/1rGek
+        QgieZ9vZ+FI1ZwSGSucTKn7A6YaPKnKgOplrXYQ=
+X-Google-Smtp-Source: APXvYqzKWmdgMxkzRSfGD+9ho2+CpaMZP3G+svhEOce4rzr315M0JBKyY0wKP8Wqwf1/MAiAEultZoehgVlG81SX8qU=
+X-Received: by 2002:a62:448d:: with SMTP id m13mr75740560pfi.182.1555332301258;
+ Mon, 15 Apr 2019 05:45:01 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190313211844.29416-1-ilina@codeaurora.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <20190403124019.8947-1-wsa+renesas@sang-engineering.com> <20190403124019.8947-5-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20190403124019.8947-5-wsa+renesas@sang-engineering.com>
+From:   Andy Shevchenko <andy.shevchenko@gmail.com>
+Date:   Mon, 15 Apr 2019 15:44:50 +0300
+Message-ID: <CAHp75Vfp_1g-DuTx1mR3bF21qxj47d-+N-JhQyBaXD9cumPB6Q@mail.gmail.com>
+Subject: Re: [PATCH 04/12] i2c: mux: populate the new *_atomic callbacks
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
+Cc:     linux-i2c <linux-i2c@vger.kernel.org>,
+        Linux-Renesas <linux-renesas-soc@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-arm Mailing List <linux-arm-kernel@lists.infradead.org>,
+        Peter Rosin <peda@axentia.se>,
+        Stefan Lengfeld <contact@stefanchrist.eu>,
+        Linux OMAP Mailing List <linux-omap@vger.kernel.org>,
+        linux-tegra@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/03/2019 21:18, Lina Iyer wrote:
-> Hi all,
-> 
-> This series adds support for wakeup capable GPIOs. It is based on Thierry's
-> hiearchical GPIO domains. This approach is based on Stephen's idea [1]. The SoC
-> that is used for this development is a QCOM SDM845. The current patchset is
-> rebased on top of 5.0 and adds documentation for the wakeup-parent and
-> irqdomain-map DT properties along with the the optional irqdomain-map-mask and
-> irqdomain-map-pass-thru properties. Also incorporating comments from Marc on
-> the earlier submission [2]. I cleaned up some of the change history in these
-> patches to match the version number with that of the submission.
-> 
-> The dtsi patches are based on Bjorn's changes for increased address and cell
-> size [3] and [4].
-> 
-> Kindly review the series.
+On Wed, Apr 3, 2019 at 3:42 PM Wolfram Sang
+<wsa+renesas@sang-engineering.com> wrote:
+>
+> If the parent adapter has atomic_xfer callbacks, populate them for the
+> mux adapter as well. We can use the same translation function as for the
+> non-atomic xfer callback.
+>
 
-What the status of this? What is the expected merge strategy?
+Reviewed-by Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-Thanks,
 
-	M.
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+> ---
+>  drivers/i2c/i2c-mux.c | 6 ++++++
+>  1 file changed, 6 insertions(+)
+>
+> diff --git a/drivers/i2c/i2c-mux.c b/drivers/i2c/i2c-mux.c
+> index f330690b4125..603252fa1284 100644
+> --- a/drivers/i2c/i2c-mux.c
+> +++ b/drivers/i2c/i2c-mux.c
+> @@ -310,12 +310,18 @@ int i2c_mux_add_adapter(struct i2c_mux_core *muxc,
+>                 else
+>                         priv->algo.master_xfer = __i2c_mux_master_xfer;
+>         }
+> +       if (parent->algo->master_xfer_atomic)
+> +               priv->algo.master_xfer_atomic = priv->algo.master_xfer;
+> +
+>         if (parent->algo->smbus_xfer) {
+>                 if (muxc->mux_locked)
+>                         priv->algo.smbus_xfer = i2c_mux_smbus_xfer;
+>                 else
+>                         priv->algo.smbus_xfer = __i2c_mux_smbus_xfer;
+>         }
+> +       if (parent->algo->smbus_xfer_atomic)
+> +               priv->algo.smbus_xfer_atomic = priv->algo.smbus_xfer;
+> +
+>         priv->algo.functionality = i2c_mux_functionality;
+>
+>         /* Now fill out new adapter structure */
+> --
+> 2.11.0
+>
+
+
 -- 
-Jazz is not dead. It just smells funny...
+With Best Regards,
+Andy Shevchenko
