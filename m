@@ -4,48 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E876C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 583DEC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:02:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 421D8218FC
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:02:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1AD1321902
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:02:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555354969;
-	bh=vKgfG1AmS+te3HdJREXVT6S4yM3AS8G45p75f6/j1A8=;
+	s=default; t=1555354973;
+	bh=IQgSzUX6w2VqmF/8+jZIK+yRqaY3i6wK5OLNRCWeUuo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VMR3cENM/kqL09qhVqqsmIuSPMmgml+Zpw5pc/oh2psk1tjAF1IrJBtupYspRP19f
-	 ZII5HJIvcIyET6FPqslGnbnsIuBZNyaOAbho6oUT7nZXdS4iUmDtDl+m966WN5qtJF
-	 Fn1iUaAbWctWhJQnWTUc7h+nf0W6vO7Xy5wFAwL8=
+	b=nzpsFeA5SLW/b2OimyUHeQ8kinfK1RAaf1S8hat3ajRlxLprwSFW12dJ7nRCKNIER
+	 yC3EeF7+7xCCyGywpLwvjsQ7eu68cpt7zcWcPlgzsdlfoSgkIYZLFOgb69tvIMCS93
+	 CoVC3gr8i3nxjDGqAuI6dcrc2LyHTOb9ObnsJYao=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729004AbfDOTCs (ORCPT
+        id S1729031AbfDOTCv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:02:48 -0400
-Received: from mail.kernel.org ([198.145.29.99]:33794 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:02:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34060 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728826AbfDOTCj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:02:39 -0400
+        id S1728999AbfDOTCr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:02:47 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 5D93D2087C;
-        Mon, 15 Apr 2019 19:02:38 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 3532D218A1;
+        Mon, 15 Apr 2019 19:02:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555354958;
-        bh=vKgfG1AmS+te3HdJREXVT6S4yM3AS8G45p75f6/j1A8=;
+        s=default; t=1555354966;
+        bh=IQgSzUX6w2VqmF/8+jZIK+yRqaY3i6wK5OLNRCWeUuo=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=EAnKZDqbIjwI87Szmk67khSiUe3O9Na/jrYabkH7bqPmoFu7HeCXpsUh64kJW7XEX
-         MdxQ0jZTCAPbxmdaMtiCAqDaNqiw6rrxPy8L/y3KWPYLac/p9cTaUAjvCJmiI/DSdt
-         O7eyg0drb1y5P+JMoTHt+zCXMqHS5OiVbZGmIuV8=
+        b=cZ9ZUz1JSYlIcYJNU7fBZLlNgEprvW2pJqDWUOQ+5fPd4rL9qQONlMPHAOSZXE4Fs
+         pEtr8lXviISop1pqTHAVfZibIvAb6fUCgfewfHx9boq/Eq/AmjcFDQBAdpiBoEFhgy
+         /kE32ZZ8TcLz4tmywMiT9voxkOjLuPkwxt1Tjxes=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jann Horn <jannh@google.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: [PATCH 4.14 14/69] tty: mark Siemens R3964 line discipline as BROKEN
-Date:   Mon, 15 Apr 2019 20:58:32 +0200
-Message-Id: <20190415183729.513873058@linuxfoundation.org>
+        stable@vger.kernel.org, Jianlin Shi <jishi@redhat.com>,
+        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
+        "David S. Miller" <davem@davemloft.net>
+Subject: [PATCH 4.14 17/69] ipv6: sit: reset ip header pointer in ipip6_rcv
+Date:   Mon, 15 Apr 2019 20:58:35 +0200
+Message-Id: <20190415183729.853786962@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183726.036654568@linuxfoundation.org>
 References: <20190415183726.036654568@linuxfoundation.org>
@@ -58,45 +60,116 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+From: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
 
-commit c7084edc3f6d67750f50d4183134c4fb5712a5c8 upstream.
+[ Upstream commit bb9bd814ebf04f579be466ba61fc922625508807 ]
 
-The n_r3964 line discipline driver was written in a different time, when
-SMP machines were rare, and users were trusted to do the right thing.
-Since then, the world has moved on but not this code, it has stayed
-rooted in the past with its lovely hand-crafted list structures and
-loads of "interesting" race conditions all over the place.
+ipip6 tunnels run iptunnel_pull_header on received skbs. This can
+determine the following use-after-free accessing iph pointer since
+the packet will be 'uncloned' running pskb_expand_head if it is a
+cloned gso skb (e.g if the packet has been sent though a veth device)
 
-After attempting to clean up most of the issues, I just gave up and am
-now marking the driver as BROKEN so that hopefully someone who has this
-hardware will show up out of the woodwork (I know you are out there!)
-and will help with debugging a raft of changes that I had laying around
-for the code, but was too afraid to commit as odds are they would break
-things.
+[  706.369655] BUG: KASAN: use-after-free in ipip6_rcv+0x1678/0x16e0 [sit]
+[  706.449056] Read of size 1 at addr ffffe01b6bd855f5 by task ksoftirqd/1/=
+[  706.669494] Hardware name: HPE ProLiant m400 Server/ProLiant m400 Server, BIOS U02 08/19/2016
+[  706.771839] Call trace:
+[  706.801159]  dump_backtrace+0x0/0x2f8
+[  706.845079]  show_stack+0x24/0x30
+[  706.884833]  dump_stack+0xe0/0x11c
+[  706.925629]  print_address_description+0x68/0x260
+[  706.982070]  kasan_report+0x178/0x340
+[  707.025995]  __asan_report_load1_noabort+0x30/0x40
+[  707.083481]  ipip6_rcv+0x1678/0x16e0 [sit]
+[  707.132623]  tunnel64_rcv+0xd4/0x200 [tunnel4]
+[  707.185940]  ip_local_deliver_finish+0x3b8/0x988
+[  707.241338]  ip_local_deliver+0x144/0x470
+[  707.289436]  ip_rcv_finish+0x43c/0x14b0
+[  707.335447]  ip_rcv+0x628/0x1138
+[  707.374151]  __netif_receive_skb_core+0x1670/0x2600
+[  707.432680]  __netif_receive_skb+0x28/0x190
+[  707.482859]  process_backlog+0x1d0/0x610
+[  707.529913]  net_rx_action+0x37c/0xf68
+[  707.574882]  __do_softirq+0x288/0x1018
+[  707.619852]  run_ksoftirqd+0x70/0xa8
+[  707.662734]  smpboot_thread_fn+0x3a4/0x9e8
+[  707.711875]  kthread+0x2c8/0x350
+[  707.750583]  ret_from_fork+0x10/0x18
 
-Many thanks to Jann and Linus for pointing out the initial problems in
-this codebase, as well as many reviews of my attempts to fix the issues.
-It was a case of whack-a-mole, and as you can see, the mole won.
+[  707.811302] Allocated by task 16982:
+[  707.854182]  kasan_kmalloc.part.1+0x40/0x108
+[  707.905405]  kasan_kmalloc+0xb4/0xc8
+[  707.948291]  kasan_slab_alloc+0x14/0x20
+[  707.994309]  __kmalloc_node_track_caller+0x158/0x5e0
+[  708.053902]  __kmalloc_reserve.isra.8+0x54/0xe0
+[  708.108280]  __alloc_skb+0xd8/0x400
+[  708.150139]  sk_stream_alloc_skb+0xa4/0x638
+[  708.200346]  tcp_sendmsg_locked+0x818/0x2b90
+[  708.251581]  tcp_sendmsg+0x40/0x60
+[  708.292376]  inet_sendmsg+0xf0/0x520
+[  708.335259]  sock_sendmsg+0xac/0xf8
+[  708.377096]  sock_write_iter+0x1c0/0x2c0
+[  708.424154]  new_sync_write+0x358/0x4a8
+[  708.470162]  __vfs_write+0xc4/0xf8
+[  708.510950]  vfs_write+0x12c/0x3d0
+[  708.551739]  ksys_write+0xcc/0x178
+[  708.592533]  __arm64_sys_write+0x70/0xa0
+[  708.639593]  el0_svc_handler+0x13c/0x298
+[  708.686646]  el0_svc+0x8/0xc
 
-Reported-by: Jann Horn <jannh@google.com>
+[  708.739019] Freed by task 17:
+[  708.774597]  __kasan_slab_free+0x114/0x228
+[  708.823736]  kasan_slab_free+0x10/0x18
+[  708.868703]  kfree+0x100/0x3d8
+[  708.905320]  skb_free_head+0x7c/0x98
+[  708.948204]  skb_release_data+0x320/0x490
+[  708.996301]  pskb_expand_head+0x60c/0x970
+[  709.044399]  __iptunnel_pull_header+0x3b8/0x5d0
+[  709.098770]  ipip6_rcv+0x41c/0x16e0 [sit]
+[  709.146873]  tunnel64_rcv+0xd4/0x200 [tunnel4]
+[  709.200195]  ip_local_deliver_finish+0x3b8/0x988
+[  709.255596]  ip_local_deliver+0x144/0x470
+[  709.303692]  ip_rcv_finish+0x43c/0x14b0
+[  709.349705]  ip_rcv+0x628/0x1138
+[  709.388413]  __netif_receive_skb_core+0x1670/0x2600
+[  709.446943]  __netif_receive_skb+0x28/0x190
+[  709.497120]  process_backlog+0x1d0/0x610
+[  709.544169]  net_rx_action+0x37c/0xf68
+[  709.589131]  __do_softirq+0x288/0x1018
+
+[  709.651938] The buggy address belongs to the object at ffffe01b6bd85580
+                which belongs to the cache kmalloc-1024 of size 1024
+[  709.804356] The buggy address is located 117 bytes inside of
+                1024-byte region [ffffe01b6bd85580, ffffe01b6bd85980)
+[  709.946340] The buggy address belongs to the page:
+[  710.003824] page:ffff7ff806daf600 count:1 mapcount:0 mapping:ffffe01c4001f600 index:0x0
+[  710.099914] flags: 0xfffff8000000100(slab)
+[  710.149059] raw: 0fffff8000000100 dead000000000100 dead000000000200 ffffe01c4001f600
+[  710.242011] raw: 0000000000000000 0000000000380038 00000001ffffffff 0000000000000000
+[  710.334966] page dumped because: kasan: bad access detected
+
+Fix it resetting iph pointer after iptunnel_pull_header
+
+Fixes: a09a4c8dd1ec ("tunnels: Remove encapsulation offloads on decap")
+Tested-by: Jianlin Shi <jishi@redhat.com>
+Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Signed-off-by: Linus Torvalds <torvalds@linux-foundation.org>
-
 ---
- drivers/char/Kconfig |    2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ net/ipv6/sit.c |    4 ++++
+ 1 file changed, 4 insertions(+)
 
---- a/drivers/char/Kconfig
-+++ b/drivers/char/Kconfig
-@@ -380,7 +380,7 @@ config XILINX_HWICAP
+--- a/net/ipv6/sit.c
++++ b/net/ipv6/sit.c
+@@ -661,6 +661,10 @@ static int ipip6_rcv(struct sk_buff *skb
+ 		    !net_eq(tunnel->net, dev_net(tunnel->dev))))
+ 			goto out;
  
- config R3964
- 	tristate "Siemens R3964 line discipline"
--	depends on TTY
-+	depends on TTY && BROKEN
- 	---help---
- 	  This driver allows synchronous communication with devices using the
- 	  Siemens R3964 packet protocol. Unless you are dealing with special
++		/* skb can be uncloned in iptunnel_pull_header, so
++		 * old iph is no longer valid
++		 */
++		iph = (const struct iphdr *)skb_mac_header(skb);
+ 		err = IP_ECN_decapsulate(iph, skb);
+ 		if (unlikely(err)) {
+ 			if (log_ecn_error)
 
 
