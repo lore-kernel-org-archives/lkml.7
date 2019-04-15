@@ -2,103 +2,95 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61F50C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 11:18:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B720C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 11:23:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 350BF2073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 11:18:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 523EB2073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 11:23:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555327400;
+	bh=TOsxNDNb4tufRLm0bSvz5mHfP+hx6oEAUOc7J13dQ6E=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hhy3lJPts6TfmYvNYobAEt1zVEIFRE5sQ9vu66IOIQjCOvuSq/vDU2hJtZ3jDUGQ7
+	 pXDF+06w+8oqhGxZPPgsRWT/emVorhUg4S5c1MdFB48w+zhj0WuZT4Bv7ZUtYCla/b
+	 poifsg8NijRE1UHegkH4lEaBaLlygRR/CQ5opfoI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727349AbfDOLSF (ORCPT
+        id S1727212AbfDOLXS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 07:18:05 -0400
-Received: from relay.sw.ru ([185.231.240.75]:55742 "EHLO relay.sw.ru"
+        Mon, 15 Apr 2019 07:23:18 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39274 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726556AbfDOLSF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 07:18:05 -0400
-Received: from [10.94.4.83] (helo=finist-ce7.sw.ru)
-        by relay.sw.ru with esmtp (Exim 4.91)
-        (envelope-from <khorenko@virtuozzo.com>)
-        id 1hFzcb-00083d-45; Mon, 15 Apr 2019 14:17:57 +0300
-From:   Konstantin Khorenko <khorenko@virtuozzo.com>
-To:     Adam Borowski <kilobyte@angband.pl>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Konstantin Khorenko <khorenko@virtuozzo.com>,
-        linux-kernel@vger.kernel.org, Jiri Slaby <jslaby@suse.com>
-Subject: [PATCH] tty/vt: avoid high order pages allocation on GIO_UNIMAP ioctl
-Date:   Mon, 15 Apr 2019 14:17:55 +0300
-Message-Id: <20190415111755.9471-1-khorenko@virtuozzo.com>
-X-Mailer: git-send-email 2.15.1
+        id S1726034AbfDOLXS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 07:23:18 -0400
+Received: from linux-8ccs (ip5f5adbb4.dynamic.kabel-deutschland.de [95.90.219.180])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id D460A2073F;
+        Mon, 15 Apr 2019 11:23:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555327397;
+        bh=TOsxNDNb4tufRLm0bSvz5mHfP+hx6oEAUOc7J13dQ6E=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=XjDjCatQXhdeiib8jtliErHparazKgKQyWr8sQa/XvzIa01zFus3BC5HbpnlVFpPI
+         1HD6w75cL8hu76TWH06xCcB9RRdAO/N0hocuPGgvBkNCg32DpS52G9nyi5xGuO/MyM
+         64Z0s8fHzZ3FyLfRfnktGWwkGtUDkWwFO5Z3CCKY=
+Date:   Mon, 15 Apr 2019 13:23:13 +0200
+From:   Jessica Yu <jeyu@kernel.org>
+To:     Prarit Bhargava <prarit@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, cavery@redhat.com
+Subject: Re: [PATCH] modules: Only return -EEXIST for modules that have
+ finished loading
+Message-ID: <20190415112313.GA4080@linux-8ccs>
+References: <20190402133916.13513-1-prarit@redhat.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <20190402133916.13513-1-prarit@redhat.com>
+X-OS:   Linux linux-8ccs 5.1.0-rc1-lp150.12.28-default+ x86_64
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-GIO_UNIMAP can easily result in a high order allocation,
-seen 6th order allocation on radeondrmfb:
++++ Prarit Bhargava [02/04/19 09:39 -0400]:
+>Microsoft HyperV disables the X86_FEATURE_SMCA bit on AMD systems, and
+>linux guests boot with repeated errors:
+>
+>amd64_edac_mod: Unknown symbol amd_unregister_ecc_decoder (err -2)
+>amd64_edac_mod: Unknown symbol amd_register_ecc_decoder (err -2)
+>amd64_edac_mod: Unknown symbol amd_report_gart_errors (err -2)
+>amd64_edac_mod: Unknown symbol amd_unregister_ecc_decoder (err -2)
+>amd64_edac_mod: Unknown symbol amd_register_ecc_decoder (err -2)
+>amd64_edac_mod: Unknown symbol amd_report_gart_errors (err -2)
+>
+>The warnings occur because the module code erroneously returns -EEXIST
+>for modules that have failed to load and are in the process of being
+>removed from the module list.
+>
+>module amd64_edac_mod has a dependency on module edac_mce_amd.  Using
+>modules.dep, systemd will load edac_mce_amd for every request of
+>amd64_edac_mod.  When the edac_mce_amd module loads, the module has
+>state MODULE_STATE_UNFORMED and once the module load fails and the state
+>becomes MODULE_STATE_GOING.  Another request for edac_mce_amd module
+>executes and add_unformed_module() will erroneously return -EEXIST even
+>though the previous instance of edac_mce_amd has MODULE_STATE_GOING.
+>Upon receiving -EEXIST, systemd attempts to load amd64_edac_mod, which
+>fails because of unknown symbols from edac_mce_amd.
+>
+>add_unformed_module() must wait to return for any case other than
+>MODULE_STATE_LIVE to prevent a race between multiple loads of
+>dependent modules.
+>
+>Signed-off-by: Prarit Bhargava <prarit@redhat.com>
+>Reported-by: Cathy Avery <cavery@redhat.com>
+>Cc: Jessica Yu <jeyu@kernel.org>
 
-  fbcon: radeondrmfb (fb0) is primary device
-  Console: switching to colour frame buffer device 160x64
-  radeon 0000:01:05.0: fb0: radeondrmfb frame buffer device
-  WARNING: CPU: 0 PID: 78661 at mm/page_alloc.c:3532
-        __alloc_pages_nodemask+0x1b1/0x600
-  order 6 >= 3, gfp 0x40d0
+Applied to modules-next. Thanks Prarit!
 
-The warning is generated by a debug patch.
-
-At the same time it's safe to use kvmalloc() for allocation in
-con_get_unimap(), so let's do the substitution.
-
-And do the same for con_set_unimap().
-
-Signed-off-by: Konstantin Khorenko <khorenko@virtuozzo.com>
----
- drivers/tty/vt/consolemap.c | 8 ++++----
- 1 file changed, 4 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/tty/vt/consolemap.c b/drivers/tty/vt/consolemap.c
-index 7c7ada0b3ea0..b28aa0d289f8 100644
---- a/drivers/tty/vt/consolemap.c
-+++ b/drivers/tty/vt/consolemap.c
-@@ -542,7 +542,7 @@ int con_set_unimap(struct vc_data *vc, ushort ct, struct unipair __user *list)
- 	if (!ct)
- 		return 0;
- 
--	unilist = memdup_user(list, ct * sizeof(struct unipair));
-+	unilist = vmemdup_user(list, ct * sizeof(struct unipair));
- 	if (IS_ERR(unilist))
- 		return PTR_ERR(unilist);
- 
-@@ -641,7 +641,7 @@ int con_set_unimap(struct vc_data *vc, ushort ct, struct unipair __user *list)
- 
- out_unlock:
- 	console_unlock();
--	kfree(unilist);
-+	kvfree(unilist);
- 	return err;
- }
- 
-@@ -743,7 +743,7 @@ int con_get_unimap(struct vc_data *vc, ushort ct, ushort __user *uct, struct uni
- 	struct uni_pagedir *p;
- 	struct unipair *unilist;
- 
--	unilist = kmalloc_array(ct, sizeof(struct unipair), GFP_KERNEL);
-+	unilist = kvmalloc_array(ct, sizeof(struct unipair), GFP_KERNEL);
- 	if (!unilist)
- 		return -ENOMEM;
- 
-@@ -775,7 +775,7 @@ int con_get_unimap(struct vc_data *vc, ushort ct, ushort __user *uct, struct uni
- 	if (copy_to_user(list, unilist, min(ect, ct) * sizeof(struct unipair)))
- 		ret = -EFAULT;
- 	put_user(ect, uct);
--	kfree(unilist);
-+	kvfree(unilist);
- 	return ret ? ret : (ect <= ct) ? 0 : -ENOMEM;
- }
- 
--- 
-2.15.1
+Jessica
 
