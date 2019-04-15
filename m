@@ -4,50 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EED3C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:08:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0871C10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:08:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12C5320880
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:08:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E82D20880
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:08:48 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355326;
-	bh=alvu8yXsL40D3/oWrozhqoH3ZUKn3MO5ypKF9biZPuY=;
+	s=default; t=1555355328;
+	bh=3Pxt6gOqhfzSCNY5/W6IQrsN2AnltGLY5PSa9Q8aslI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=SHvRYdfyG2rEdZP4bHfTOWFgjZIQRYjwPu1Lah4KnXdIy9OX+ilu36RzCWdwb38Sl
-	 zLz/ASewafpnCNOU0+INKZvYe3LEE0IIM50xarz/YdOlZRNO1wnYrTnea//22E9pqI
-	 WnCppEWlb7VanEJC2QsC6MBw96dDkqmwePFamVUI=
+	b=EsimnaswYPocM2gvb4qZYuCjDE6Du/rqPvBuJ4MP6tgzLlAvz0WD23re0UXo66R0g
+	 xlUUIY9+HLPo0jWsGUoxVFjA3eVhqSngNLQ22ie+Wzw5WGGSKhnnKY+uXbSzasBD8/
+	 At0zSPvgIpemitBBc+gg+2CMGVf7R7NUa6iUl7fw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730544AbfDOTIp (ORCPT
+        id S1730560AbfDOTIr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:08:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44228 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:08:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:44264 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729986AbfDOTIl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:08:41 -0400
+        id S1730528AbfDOTIn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:08:43 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D981B2087C;
-        Mon, 15 Apr 2019 19:08:39 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 937F620880;
+        Mon, 15 Apr 2019 19:08:42 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355320;
-        bh=alvu8yXsL40D3/oWrozhqoH3ZUKn3MO5ypKF9biZPuY=;
+        s=default; t=1555355323;
+        bh=3Pxt6gOqhfzSCNY5/W6IQrsN2AnltGLY5PSa9Q8aslI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=tJBXVNmrNiQeLQySI254PT9pHm8Iu4zE99u6/9y4dxkAsqu+1Z/Hmogm9gBSeh8Ti
-         0XVEPy3exzz7LMUzmoJNfMcYwuwOAlWjv5zaw7KNANu9lj0JI7P2t37k3ipb2wEuPJ
-         e+c8xA6G4Wkpj6pWI21X8JrTZ40LOK7/qINkUDlU=
+        b=sElG8bML6ZmojJjjG/DZfTZH8baCCm18j9i0S5iT/GbWPgQ/XNvY62geEeTZ/2akM
+         RaicqZgdmjqeR7Fu1LICNMeTZ4DPnokGNx2V5NwZz9iT+HeBLKaFvP75fqH1ByFWDS
+         l1DYxI5DEc7d/pIAbAJalC4aI8Vk/oNQl4BOKLrs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Mikulas Patocka <mpatocka@redhat.com>,
-        Ming Lei <ming.lei@redhat.com>,
-        Mike Snitzer <snitzer@redhat.com>
-Subject: [PATCH 4.19 094/101] dm: revert 8f50e358153d ("dm: limit the max bio size as BIO_MAX_PAGES * PAGE_SIZE")
-Date:   Mon, 15 Apr 2019 20:59:32 +0200
-Message-Id: <20190415183745.344840516@linuxfoundation.org>
+        stable@vger.kernel.org, Peter Ujfalusi <peter.ujfalusi@ti.com>,
+        Tony Lindgren <tony@atomide.com>, Stable@vger.kernel.org
+Subject: [PATCH 4.19 077/101] ARM: dts: am335x-evmsk: Correct the regulators for the audio codec
+Date:   Mon, 15 Apr 2019 20:59:15 +0200
+Message-Id: <20190415183744.517812629@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183740.341577907@linuxfoundation.org>
 References: <20190415183740.341577907@linuxfoundation.org>
@@ -60,53 +58,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Mikulas Patocka <mpatocka@redhat.com>
+From: Peter Ujfalusi <peter.ujfalusi@ti.com>
 
-commit 75ae193626de3238ca5fb895868ec91c94e63b1b upstream.
+commit 6691370646e844be98bb6558c024269791d20bd7 upstream.
 
-The limit was already incorporated to dm-crypt with commit 4e870e948fba
-("dm crypt: fix error with too large bios"), so we don't need to apply
-it globally to all targets. The quantity BIO_MAX_PAGES * PAGE_SIZE is
-wrong anyway because the variable ti->max_io_len it is supposed to be in
-the units of 512-byte sectors not in bytes.
+Correctly map the regulators used by tlv320aic3106.
+Both 1.8V and 3.3V for the codec is derived from VBAT via fixed regulators.
 
-Reduction of the limit to 1048576 sectors could even cause data
-corruption in rare cases - suppose that we have a dm-striped device with
-stripe size 768MiB. The target will call dm_set_target_max_io_len with
-the value 1572864. The buggy code would reduce it to 1048576. Now, the
-dm-core will errorneously split the bios on 1048576-sector boundary
-insetad of 1572864-sector boundary and pass these stripe-crossing bios
-to the striped target.
-
-Cc: stable@vger.kernel.org # v4.16+
-Fixes: 8f50e358153d ("dm: limit the max bio size as BIO_MAX_PAGES * PAGE_SIZE")
-Signed-off-by: Mikulas Patocka <mpatocka@redhat.com>
-Acked-by: Ming Lei <ming.lei@redhat.com>
-Signed-off-by: Mike Snitzer <snitzer@redhat.com>
+Cc: <Stable@vger.kernel.org> # v4.14+
+Signed-off-by: Peter Ujfalusi <peter.ujfalusi@ti.com>
+Signed-off-by: Tony Lindgren <tony@atomide.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- drivers/md/dm.c |   10 +---------
- 1 file changed, 1 insertion(+), 9 deletions(-)
+ arch/arm/boot/dts/am335x-evmsk.dts |   26 ++++++++++++++++++++++----
+ 1 file changed, 22 insertions(+), 4 deletions(-)
 
---- a/drivers/md/dm.c
-+++ b/drivers/md/dm.c
-@@ -1007,15 +1007,7 @@ int dm_set_target_max_io_len(struct dm_t
- 		return -EINVAL;
- 	}
+--- a/arch/arm/boot/dts/am335x-evmsk.dts
++++ b/arch/arm/boot/dts/am335x-evmsk.dts
+@@ -73,6 +73,24 @@
+ 		enable-active-high;
+ 	};
  
--	/*
--	 * BIO based queue uses its own splitting. When multipage bvecs
--	 * is switched on, size of the incoming bio may be too big to
--	 * be handled in some targets, such as crypt.
--	 *
--	 * When these targets are ready for the big bio, we can remove
--	 * the limit.
--	 */
--	ti->max_io_len = min_t(uint32_t, len, BIO_MAX_PAGES * PAGE_SIZE);
-+	ti->max_io_len = (uint32_t) len;
++	/* TPS79518 */
++	v1_8d_reg: fixedregulator-v1_8d {
++		compatible = "regulator-fixed";
++		regulator-name = "v1_8d";
++		vin-supply = <&vbat>;
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++	};
++
++	/* TPS78633 */
++	v3_3d_reg: fixedregulator-v3_3d {
++		compatible = "regulator-fixed";
++		regulator-name = "v3_3d";
++		vin-supply = <&vbat>;
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
+ 	leds {
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&user_leds_s0>;
+@@ -501,10 +519,10 @@
+ 		status = "okay";
  
- 	return 0;
- }
+ 		/* Regulators */
+-		AVDD-supply = <&vaux2_reg>;
+-		IOVDD-supply = <&vaux2_reg>;
+-		DRVDD-supply = <&vaux2_reg>;
+-		DVDD-supply = <&vbat>;
++		AVDD-supply = <&v3_3d_reg>;
++		IOVDD-supply = <&v3_3d_reg>;
++		DRVDD-supply = <&v3_3d_reg>;
++		DVDD-supply = <&v1_8d_reg>;
+ 	};
+ };
+ 
 
 
