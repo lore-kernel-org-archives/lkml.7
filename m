@@ -2,191 +2,122 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B388AC10F13
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 00:01:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34025C10F13
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 00:27:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 68CF020850
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 00:01:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555286472;
-	bh=b+z9tLwoAjLetdAKKEPLgTCmxa1G/MBrrJFLMasb/yk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=rweY8wSDqSwmQgjHB1HndMvCL/mkEeuX43OwZAGvy1++Yc8JSuRX+ZdM6LWzxigjt
-	 VNvQeJEcf39EXhwte8GpD0dsFyG0jrxsGIvACPFvGlO8tgDtITwYDkbY7vzngPIHFP
-	 U1+e2YvMjhxgAu7DRbD7sZVL10aQdaJr7lP0qw/M=
+	by mail.kernel.org (Postfix) with ESMTP id DB1392084E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 00:27:56 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=Sony.onmicrosoft.com header.i=@Sony.onmicrosoft.com header.b="GuJpItaT"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726111AbfDNXyx (ORCPT
+        id S1726313AbfDOA1x (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Sun, 14 Apr 2019 19:54:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35954 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725372AbfDNXyw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Sun, 14 Apr 2019 19:54:52 -0400
-Received: from devnote2 (NE2965lan1.rev.em-net.ne.jp [210.141.244.193])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 21DC12084E;
-        Sun, 14 Apr 2019 23:54:48 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555286091;
-        bh=b+z9tLwoAjLetdAKKEPLgTCmxa1G/MBrrJFLMasb/yk=;
-        h=Date:From:To:Cc:Subject:In-Reply-To:References:From;
-        b=GCWgOO/8IbdmH+E/JEWGJJiO0iXkXMALXZkdelMaAQBQQ+AiagAfLNZm1oifPe6N6
-         fjZ+rie7ZFRYEpMlmbwayffw+PTEv1dMNWZRDf2bnhoxUnAEyigJZuTTSdM7/gikjg
-         dkyZs6mjWStul/6aZhgw0XtEQxwOITEsPRj2LwGU=
-Date:   Mon, 15 Apr 2019 08:54:46 +0900
-From:   Masami Hiramatsu <mhiramat@kernel.org>
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Stefan Agner <stefan@agner.ch>, Arnd Bergmann <arnd@arndb.de>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        linux-arm-kernel@lists.infradead.org, naresh.kamboju@linaro.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: Kconfig dependency issue on function-graph tracer and frame
- pointer on arm
-Message-Id: <20190415085446.52f6b515f6eb2e85c0df7dc8@kernel.org>
-In-Reply-To: <20190414153704.7xlyluams3rl2mvo@shell.armlinux.org.uk>
-References: <20190414194705.2e10802aca2df36c8f27f349@kernel.org>
-        <20190414133458.zxdekgx6qwd562qa@shell.armlinux.org.uk>
-        <20190414235238.e860b1ce234752eff2b8c61c@kernel.org>
-        <20190414153704.7xlyluams3rl2mvo@shell.armlinux.org.uk>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Sun, 14 Apr 2019 20:27:53 -0400
+Received: from mail-eopbgr750123.outbound.protection.outlook.com ([40.107.75.123]:20703
+        "EHLO NAM02-BL2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725795AbfDOA1w (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Sun, 14 Apr 2019 20:27:52 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=Sony.onmicrosoft.com;
+ s=selector1-Sony-onmicrosoft-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=ZgAwppD5yICrzY8xg8UsrGia/T63ZzUOT8OEF1JOhhc=;
+ b=GuJpItaTOF1w2Ulo+QzbgmLSM+d9u3xrERsFLvjNi37wSScurHkn6fgZgQXkGIXHOvVeOaYmG5Dl4je17yBhSzmszKyo8zC2CVJ+tRvcvOn/jRV8Qkk4h5IWN1EvZ6TjkAaIhLxkTwHEyk4EiUlUWc7n1dS+5n+gVqSYoXL7e5E=
+Received: from BN6PR1301CA0025.namprd13.prod.outlook.com
+ (2603:10b6:405:29::38) by BN6PR13MB3121.namprd13.prod.outlook.com
+ (2603:10b6:405:7e::37) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id 15.20.1813.9; Mon, 15 Apr
+ 2019 00:27:49 +0000
+Received: from SN1NAM02FT059.eop-nam02.prod.protection.outlook.com
+ (2a01:111:f400:7e44::207) by BN6PR1301CA0025.outlook.office365.com
+ (2603:10b6:405:29::38) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1813.9 via Frontend
+ Transport; Mon, 15 Apr 2019 00:27:48 +0000
+Authentication-Results: spf=pass (sender IP is 117.103.190.44)
+ smtp.mailfrom=sony.com; lists.one-eyed-alien.net; dkim=none (message not
+ signed) header.d=none;lists.one-eyed-alien.net; dmarc=bestguesspass
+ action=none header.from=sony.com;
+Received-SPF: Pass (protection.outlook.com: domain of sony.com designates
+ 117.103.190.44 as permitted sender) receiver=protection.outlook.com;
+ client-ip=117.103.190.44; helo=jp.sony.com;
+Received: from jp.sony.com (117.103.190.44) by
+ SN1NAM02FT059.mail.protection.outlook.com (10.152.72.177) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.1771.16 via Frontend Transport; Mon, 15 Apr 2019 00:27:48 +0000
+Received: from JPYOKXHT107.jp.sony.com (117.103.191.54) by
+ JPYOKXEG104.jp.sony.com (117.103.190.44) with Microsoft SMTP Server (TLS) id
+ 14.3.439.0; Mon, 15 Apr 2019 00:27:44 +0000
+Received: from JPYOKXMS103.jp.sony.com ([169.254.3.121]) by
+ JPYOKXHT107.jp.sony.com ([117.103.191.54]) with mapi id 14.03.0439.000; Mon,
+ 15 Apr 2019 00:27:44 +0000
+From:   <Kento.A.Kobayashi@sony.com>
+To:     <stern@rowland.harvard.edu>, <bvanassche@acm.org>
+CC:     <martin.petersen@oracle.com>, <jejb@linux.ibm.com>,
+        <oneukum@suse.com>, <gregkh@linuxfoundation.org>,
+        <usb-storage@lists.one-eyed-alien.net>, <Jacky.Cao@sony.com>,
+        <linux-kernel@vger.kernel.org>, <linux-scsi@vger.kernel.org>,
+        <linux-usb@vger.kernel.org>
+Subject: RE: [PATCH] usb: uas: fix usb subsystem hang after power off hub
+ port
+Thread-Topic: [PATCH] usb: uas: fix usb subsystem hang after power off hub
+ port
+Thread-Index: AdTVjvFIkAhaIt3DQTSj1OrTHxvrsgAQFLsAAIWEBcAAQQqsgAB7RvcAAgdcBTAAAJSpAACOr4UQABH/lYAA3G8Q4AAdt7kAAE4ci4AAIMlyAADXFiz8ABpB6wAAASSCgAADHJ6AAQuMo2A=
+Date:   Mon, 15 Apr 2019 00:27:43 +0000
+Message-ID: <AE5419EAB4965843B3C0C1FE29F1FFE5899C80@JPYOKXMS103.jp.sony.com>
+References: <1554823007.161891.6.camel@acm.org>
+ <Pine.LNX.4.44L0.1904091232370.1599-100000@iolanthe.rowland.org>
+In-Reply-To: <Pine.LNX.4.44L0.1904091232370.1599-100000@iolanthe.rowland.org>
+Accept-Language: ja-JP, en-US
+Content-Language: ja-JP
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [2001:cf8:1:539:0:dddd:1bac:d758]
+Content-Type: text/plain; charset="us-ascii"
+MIME-Version: 1.0
+X-EOPAttributedMessage: 0
+X-MS-Office365-Filtering-HT: Tenant
+X-Forefront-Antispam-Report: CIP:117.103.190.44;IPV:NLI;CTRY:JP;EFV:NLI;SFV:NSPM;SFS:(10019020)(39860400002)(396003)(136003)(346002)(376002)(2980300002)(189003)(199004)(7416002)(37786003)(4744005)(5660300002)(23726003)(2906002)(72206003)(106466001)(14444005)(33656002)(55016002)(2876002)(478600001)(26005)(86152003)(97756001)(102836004)(55846006)(4326008)(6116002)(186003)(77096007)(16586007)(110136005)(54906003)(47776003)(316002)(50466002)(426003)(305945005)(8676002)(8936002)(76176011)(106002)(356004)(6246003)(7636002)(2171002)(86362001)(476003)(246002)(229853002)(336012)(46406003)(7696005)(7736002)(446003)(126002)(486006)(11346002);DIR:OUT;SFP:1102;SCL:1;SRVR:BN6PR13MB3121;H:jp.sony.com;FPR:;SPF:Pass;LANG:en;PTR:jpyokxeg104.jp.sony.com;MX:1;A:1;
+X-MS-PublicTrafficType: Email
+X-MS-Office365-Filtering-Correlation-Id: 87ff734f-bcab-427d-afa7-08d6c1393045
+X-Microsoft-Antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600140)(711020)(4605104)(4709054)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:BN6PR13MB3121;
+X-MS-TrafficTypeDiagnostic: BN6PR13MB3121:
+X-Microsoft-Antispam-PRVS: <BN6PR13MB3121F32466B22BE8A165D03FC92B0@BN6PR13MB3121.namprd13.prod.outlook.com>
+X-Forefront-PRVS: 000800954F
+X-MS-Exchange-SenderADCheck: 1
+X-Microsoft-Antispam-Message-Info: 0JWlszs4Lfwpjw61pARfDEEb7cwiQXvJVAsAHjys3dSM/koOqVmqzxOoD080dhTarT0Ekk15VveWEMBQtiYXCM966vLm4ZUS7rPD9IeKDrBsxhUPQdg4FMvu2k5qroL68+G1oOJgURwLcTUGdYWf+1d2qXYTf3TZ/HRRBVN4Ny1thcFecc5RiJYMvw3XGfZfFKLfPuYIiGSwXe251HiPfocEuC/qhiEkref/JZyciHznmBAargDXgXqtAWWRlsCuBPzOMqtAr9JzCIx0NpXh5RFz7qDVM0e5TrnJ2RdP65udZqMZF8eoZqyBOexP1aLq9fhJ0d+G2+kMoMKcrJYKp6QcL8x/1CIPCJuk51dsrn6SMf2yx3qE1tLAXIdq+BXFAvGZpnpgah4uCaNqvbJoRwOuAVtJX6NH21gnoyDePSI=
+X-OriginatorOrg: sony.com
+X-MS-Exchange-CrossTenant-OriginalArrivalTime: 15 Apr 2019 00:27:48.1629
+ (UTC)
+X-MS-Exchange-CrossTenant-Network-Message-Id: 87ff734f-bcab-427d-afa7-08d6c1393045
+X-MS-Exchange-CrossTenant-Id: 66c65d8a-9158-4521-a2d8-664963db48e4
+X-MS-Exchange-CrossTenant-OriginalAttributedTenantConnectingIp: TenantId=66c65d8a-9158-4521-a2d8-664963db48e4;Ip=[117.103.190.44];Helo=[jp.sony.com]
+X-MS-Exchange-CrossTenant-FromEntityHeader: HybridOnPrem
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: BN6PR13MB3121
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, 14 Apr 2019 16:37:04 +0100
-Russell King - ARM Linux admin <linux@armlinux.org.uk> wrote:
+Hi
 
-> On Sun, Apr 14, 2019 at 11:52:38PM +0900, Masami Hiramatsu wrote:
-> > On Sun, 14 Apr 2019 14:34:58 +0100
-> > Russell King - ARM Linux admin <linux@armlinux.org.uk> wrote:
-> > 
-> > > On Sun, Apr 14, 2019 at 07:47:05PM +0900, Masami Hiramatsu wrote:
-> > > > Hello,
-> > > > 
-> > > > Recently, Naresh reported that the function-graph tracer on the latest
-> > > > kernel crashes on arm. I could reproduce it and bisected. I finally found
-> > > > the commit f9b58e8c7d03 ("ARM: 8800/1: use choice for kernel unwinders")
-> > > > was the first bad commit.
-> > > 
-> > > I don't think that littering the rest of the kernel Kconfig with ARM
-> > > specific stuff is really a viable solution to this.
-> > > 
-> > > If we examine the current situation, we have:
-> > > 
-> > > - THUMB2_KERNEL selecting ARM_UNWIND when enabled.
-> > > - UNWINDER_FRAME_POINTER disabled if THUMB2_KERNEL is enabled, provided
-> > >   we're not using Clang.  This leaves UNWINDER_ARM as the only choice,
-> > >   which also selects ARM_UNWIND.
-> > > - The default choice is dependent on the settings of AEABI and
-> > >   FUNCTION_GRAPH_TRACER.
-> > > - HAVE_FUNCTION_GRAPH_TRACER is disabled if THUMB2_KERNEL is enabled.
-> > > 
-> > > which seems to be _way_ too messy.
-> > > 
-> > > Looking back before this commit, the function graph tracer never had a
-> > > strong dependence on frame pointers being enabled in the kernel, but it
-> > > seems the code relies upon them (see ftrace_return_to_handler() in
-> > > kernel/trace/ and return_to_handler in arch/arm/kernel/entry-frace.S).
-> > > There is also the __ftrace_graph_caller macro which seems to rely on it.
-> > 
-> > Yes, so I think similar bug is hiding in other LTS kernels. It should
-> > have a dependency to FRAME_POINTER on arm.
-> > 
-> > > Since Clang does not support frame pointers, we shouldn't even offer
-> > > the function graph tracer for Clang compilers, so let's do that with
-> > > the first hunk of the patch below.
-> > > 
-> > > The subsequent hunks remove the defaulting of the choice according to
-> > > the function graph tracer - this is not a "hint" where the user can
-> > > still choose either option irrespective of the state of the function
-> > > graph tracer.  They should only be able to select the frame pointer
-> > > option in that case.
-> > 
-> > Agreed. Using default for making dependency is wrong.
-> > 
-> > > 
-> > > Another way forward would be for someone to put the work in to making
-> > > the function graph tracer work without frame pointers.
-> > 
-> > Yes, we eventually need that. But for fixing current released kernel
-> > (this bug is in v5.0 series), I think Kconfig fix is needed.
-> > 
-> > > 
-> > > So, how about this:
-> > > 
-> > > diff --git a/arch/arm/Kconfig b/arch/arm/Kconfig
-> > > index 850b4805e2d1..9aed25a6019b 100644
-> > > --- a/arch/arm/Kconfig
-> > > +++ b/arch/arm/Kconfig
-> > > @@ -73,7 +73,7 @@ config ARM
-> > >  	select HAVE_EFFICIENT_UNALIGNED_ACCESS if (CPU_V6 || CPU_V6K || CPU_V7) && MMU
-> > >  	select HAVE_EXIT_THREAD
-> > >  	select HAVE_FTRACE_MCOUNT_RECORD if !XIP_KERNEL
-> > > -	select HAVE_FUNCTION_GRAPH_TRACER if !THUMB2_KERNEL
-> > > +	select HAVE_FUNCTION_GRAPH_TRACER if !THUMB2_KERNEL && !CC_IS_CLANG
-> > >  	select HAVE_FUNCTION_TRACER if !XIP_KERNEL
-> > >  	select HAVE_GCC_PLUGINS
-> > >  	select HAVE_HW_BREAKPOINT if PERF_EVENTS && (CPU_V6 || CPU_V6K || CPU_V7)
-> > > diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-> > > index 6d6e0330930b..e388af4594a6 100644
-> > > --- a/arch/arm/Kconfig.debug
-> > > +++ b/arch/arm/Kconfig.debug
-> > > @@ -47,8 +47,8 @@ config DEBUG_WX
-> > >  
-> > >  choice
-> > >  	prompt "Choose kernel unwinder"
-> > > -	default UNWINDER_ARM if AEABI && !FUNCTION_GRAPH_TRACER
-> > > -	default UNWINDER_FRAME_POINTER if !AEABI || FUNCTION_GRAPH_TRACER
-> > > +	default UNWINDER_ARM if AEABI
-> > > +	default UNWINDER_FRAME_POINTER if !AEABI
-> > 
-> > If UNWINDER_ARM depends on ARM EABI, would we really need this "if !AEABI"?
-> > (I doubt we need these default...)
-> > 
-> > >  	help
-> > >  	  This determines which method will be used for unwinding kernel stack
-> > >  	  traces for panics, oopses, bugs, warnings, perf, /proc/<pid>/stack,
-> > > @@ -65,7 +65,7 @@ config UNWINDER_FRAME_POINTER
-> > >  
-> > >  config UNWINDER_ARM
-> > >  	bool "ARM EABI stack unwinder"
-> > > -	depends on AEABI
-> > > +	depends on AEABI && !FUNCTION_GRAPH_TRACER
-> > 
-> > Hmm, AFAIK, FUNCTION_GRAPH_TRACER only depends on FRAME_POINTER, but not
-> > UNWINDER_FRAME_POINTER. So can user still choose UNWINDER_ARM even if
-> > FUNCTION_GRAPH_TRACER=y ? (Of course that may not be a meaningful option)
-> 
-> The UNWINDER_* options do not control anything except whether
-> FRAME_POINTER is enabled or not.  FRAME_POINTER controls not only
-> whether we build with frame pointers, but also how we unwind.
-> If both ARM_UNWIND and FRAME_POINTER are set, the kernel will
-> fail to link due to a multiple definition of unwind_frame().
+>The unbind happens from inside the SCSI EH callback.  If that really is not allowed, we'll need to change it.  Or we can just change it regardless, since the effort required is pretty small.
+>
+>Kento, please try the patch below.  Does it help with your problem?
 
-Thank you for the explanation :) got it.
+Thank you for suggestion about this problem.
+I confirmed your patch fixes this problem.
+I think you change policy for error handler to not calling unbind, right?
+In addition, I have a question about this patch.
+Could you please tell me why it should not be allowed that the unbind is occurred from eh callback?
 
-> 
-> The UNWINDER_* symbols were added in the commit you referenced
-> merely to select which of ARM_UNWIND or FRAME_POINTER are
-> enabled.
+This patch will ignore all error which is returned from usb_reset_and_verify_device.
+But my patch will ignore error only being returned ENODEV case.
+I think side effect of your patch is bigger than my patch.
+So I want to know why the unbind is occurred from eh callback should not be allowed.
 
-OK, this looks good to me.
-
-Reviewed-by: Masami Hiramatsu <mhiramat@kernel.org>
-Tested-by: Masami Hiramatsu <mhiramat@kernel.org>
-
-Thank you!
-
-
--- 
-Masami Hiramatsu <mhiramat@kernel.org>
+Regards,
+Kento Kobayashi
