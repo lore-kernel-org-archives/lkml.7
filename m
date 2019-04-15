@@ -2,28 +2,29 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7092CC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:09:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D81BAC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:09:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4BF2B20818
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:09:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC1C520818
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:09:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727588AbfDOPJM (ORCPT
+        id S1727629AbfDOPJP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 11:09:12 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:58013 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726094AbfDOPJL (ORCPT
+        Mon, 15 Apr 2019 11:09:15 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:34783 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727050AbfDOPJM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 11:09:11 -0400
+        Mon, 15 Apr 2019 11:09:12 -0400
+X-Originating-IP: 109.212.207.226
 Received: from localhost (alyon-652-1-176-226.w109-212.abo.wanadoo.fr [109.212.207.226])
         (Authenticated sender: alexandre.belloni@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 0B3D3240015;
-        Mon, 15 Apr 2019 15:09:07 +0000 (UTC)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id E88EDFF80B;
+        Mon, 15 Apr 2019 15:09:09 +0000 (UTC)
 From:   Alexandre Belloni <alexandre.belloni@bootlin.com>
 To:     Daniel Lezcano <daniel.lezcano@linaro.org>
 Cc:     Thomas Gleixner <tglx@linutronix.de>,
@@ -31,11 +32,15 @@ Cc:     Thomas Gleixner <tglx@linutronix.de>,
         Alexander Dahl <ada@thorsis.com>,
         Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
         linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Alexandre Belloni <alexandre.belloni@bootlin.com>
-Subject: [PATCH v2 0/9] clocksource: improve Atmel TCB timer driver
-Date:   Mon, 15 Apr 2019 17:08:47 +0200
-Message-Id: <20190415150856.9384-1-alexandre.belloni@bootlin.com>
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH v2 1/9] ARM: at91: move SoC specific definitions to SoC folder
+Date:   Mon, 15 Apr 2019 17:08:48 +0200
+Message-Id: <20190415150856.9384-2-alexandre.belloni@bootlin.com>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190415150856.9384-1-alexandre.belloni@bootlin.com>
+References: <20190415150856.9384-1-alexandre.belloni@bootlin.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -43,60 +48,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+Move linux/atmel_tc.h to the SoC specific folder include/soc/at91.
 
-This series immproves the Atmel TCB clocksource driver to address the
-most urgent shortcomings:
- - the current tcb_clksrc driver is probed too late to be able to be used at
-   boot and we now have SoCs that don't have a PIT. They currently are not able
-   to boot an upstream kernel.
- - using the PIT doesn't work well with preempt-rt because its interrupt is
-   shared (in particular with the UART) and their interrupt flags are
-   incompatible). This also happen with the threadedirq command line
-   switch.
- - there is currently no high resolution sched_clock.
-
-The plan is to get those changes upstream as soon as possible as they are fixing
-real issues that people are facing. There are further changes needed on the
-clocksource driver to try to stop wasting a TCB channel.
-The PWM TCB driver will also be changed to actually use the reviewed binding
-and this will allow to get rid of atmel_tclib.
-
-Changes in v2:
- - collected acks from Thierry and Arnd
- - dropped most of the atmel_tclib changes that coud be separated.
- - added a patch from kbuild
- - dropped the patch removing the PIT from the defconfig
- - moved the atmel_tcb.h inclusion in drivers/pwm/pwm-atmel-tcb.c as requested
-   by Thierry
- - stopped using atmel_tcb_config
- - reworked the irq number parsing to only care for channel 2
-
-Alexandre Belloni (8):
-  ARM: at91: move SoC specific definitions to SoC folder
-  clocksource/drivers/tcb_clksrc: stop depending on atmel_tclib
-  clocksource/drivers/tcb_clksrc: Use tcb as sched_clock
-  ARM: at91: Implement clocksource selection
-  clocksource/drivers/tcb_clksrc: move Kconfig option
-  clocksource/drivers/timer-atmel-pit: rework Kconfig option
-  clocksource/drivers/tcb_clksrc: Rename the file for consistency
-  misc: atmel_tclib: do not probe already used TCBs
-
-kbuild test robot (1):
-  clocksource/drivers/timer-atmel-tcb: tc_clksrc_suspend() can be static
-
- arch/arm/mach-at91/Kconfig                    |  23 ++++
- drivers/clocksource/Kconfig                   |  12 +-
- drivers/clocksource/Makefile                  |   2 +-
- .../{tcb_clksrc.c => timer-atmel-tcb.c}       | 130 ++++++++++++------
- drivers/misc/Kconfig                          |  24 ----
- drivers/misc/atmel_tclib.c                    |   5 +-
- drivers/pwm/pwm-atmel-tcb.c                   |   2 +-
- .../atmel_tc.h => soc/at91/atmel_tcb.h}       |   4 +-
- 8 files changed, 129 insertions(+), 73 deletions(-)
- rename drivers/clocksource/{tcb_clksrc.c => timer-atmel-tcb.c} (79%)
+Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
+Acked-by: Thierry Reding <thierry.reding@gmail.com>
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+---
+ drivers/clocksource/tcb_clksrc.c                   | 2 +-
+ drivers/misc/atmel_tclib.c                         | 2 +-
+ drivers/pwm/pwm-atmel-tcb.c                        | 2 +-
+ include/{linux/atmel_tc.h => soc/at91/atmel_tcb.h} | 4 ++--
+ 4 files changed, 5 insertions(+), 5 deletions(-)
  rename include/{linux/atmel_tc.h => soc/at91/atmel_tcb.h} (99%)
 
+diff --git a/drivers/clocksource/tcb_clksrc.c b/drivers/clocksource/tcb_clksrc.c
+index 43f4d5c4d6fa..138a12090149 100644
+--- a/drivers/clocksource/tcb_clksrc.c
++++ b/drivers/clocksource/tcb_clksrc.c
+@@ -11,7 +11,7 @@
+ #include <linux/io.h>
+ #include <linux/platform_device.h>
+ #include <linux/syscore_ops.h>
+-#include <linux/atmel_tc.h>
++#include <soc/at91/atmel_tcb.h>
+ 
+ 
+ /*
+diff --git a/drivers/misc/atmel_tclib.c b/drivers/misc/atmel_tclib.c
+index ac24a4bd63f7..194f774ab3a1 100644
+--- a/drivers/misc/atmel_tclib.c
++++ b/drivers/misc/atmel_tclib.c
+@@ -1,4 +1,3 @@
+-#include <linux/atmel_tc.h>
+ #include <linux/clk.h>
+ #include <linux/err.h>
+ #include <linux/init.h>
+@@ -10,6 +9,7 @@
+ #include <linux/slab.h>
+ #include <linux/export.h>
+ #include <linux/of.h>
++#include <soc/at91/atmel_tcb.h>
+ 
+ /*
+  * This is a thin library to solve the problem of how to portably allocate
+diff --git a/drivers/pwm/pwm-atmel-tcb.c b/drivers/pwm/pwm-atmel-tcb.c
+index 0d0f8376bc35..7da1fdb4d269 100644
+--- a/drivers/pwm/pwm-atmel-tcb.c
++++ b/drivers/pwm/pwm-atmel-tcb.c
+@@ -17,10 +17,10 @@
+ #include <linux/ioport.h>
+ #include <linux/io.h>
+ #include <linux/platform_device.h>
+-#include <linux/atmel_tc.h>
+ #include <linux/pwm.h>
+ #include <linux/of_device.h>
+ #include <linux/slab.h>
++#include <soc/at91/atmel_tcb.h>
+ 
+ #define NPWM	6
+ 
+diff --git a/include/linux/atmel_tc.h b/include/soc/at91/atmel_tcb.h
+similarity index 99%
+rename from include/linux/atmel_tc.h
+rename to include/soc/at91/atmel_tcb.h
+index 468fdfa643f0..c3c7200ce151 100644
+--- a/include/linux/atmel_tc.h
++++ b/include/soc/at91/atmel_tcb.h
+@@ -7,8 +7,8 @@
+  * (at your option) any later version.
+  */
+ 
+-#ifndef ATMEL_TC_H
+-#define ATMEL_TC_H
++#ifndef __SOC_ATMEL_TCB_H
++#define __SOC_ATMEL_TCB_H
+ 
+ #include <linux/compiler.h>
+ #include <linux/list.h>
 -- 
 2.20.1
 
