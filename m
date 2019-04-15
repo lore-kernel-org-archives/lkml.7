@@ -2,110 +2,153 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22325C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 11:33:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6199C10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 11:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C9C0820818
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 11:33:53 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555328033;
-	bh=JHQIUt+pJVTvzwRcGMr0Hls+2ghZW5jDIP3wSHGjHwE=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=NtIeAo2Ya6GrbbUdblolBEC+btgw7bObEHQVC2Fp7u4G6CPxihYZD52S5Vk56Ychk
-	 Tsqk61wlVAIzcf2s40wdf9iCxY2N54sRE/4wYkfJZOvv5/TsP7XtS0qhvw6p9RMMna
-	 lD/KcjfJIv09I7vla8PvhMS9bji2Psuc33EuP4PI=
+	by mail.kernel.org (Postfix) with ESMTP id C22F62087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 11:33:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727263AbfDOLdw (ORCPT
+        id S1727303AbfDOLd7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 07:33:52 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42804 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726042AbfDOLdw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 07:33:52 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id D551420818;
-        Mon, 15 Apr 2019 11:33:49 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555328031;
-        bh=JHQIUt+pJVTvzwRcGMr0Hls+2ghZW5jDIP3wSHGjHwE=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=zalJlVgIPDjxzyTOy3N33/n8rjzaVE6LIUnF70smuV3E7dfHcQYR8uzYohptNIPWQ
-         laIv+MTCgpyQ70drsgm71GnOFL1571ptcDWP1+Xcl6iEBsG0wkZ/mzOoYYK1W9NNFp
-         JTnKvgwYFqdZrrqj405XNeYvEHADC/rrBKRd+pRY=
-Date:   Mon, 15 Apr 2019 13:33:47 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Johannes Berg <johannes@sipsolutions.net>
-cc:     Emmanuel Grumbach <emmanuel.grumbach@intel.com>,
-        Luca Coelho <luciano.coelho@intel.com>,
-        Intel Linux Wireless <linuxwifi@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        "David S. Miller" <davem@davemloft.net>, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v5.1-rc] iwlwifi: make locking in iwl_mvm_tx_mpdu()
- BH-safe
-In-Reply-To: <24e05607b902e811d1142e3bd345af021fd3d077.camel@sipsolutions.net>
-Message-ID: <nycvar.YFH.7.76.1904151328270.9803@cbobk.fhfr.pm>
-References: <nycvar.YFH.7.76.1904151300160.9803@cbobk.fhfr.pm> <24e05607b902e811d1142e3bd345af021fd3d077.camel@sipsolutions.net>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Mon, 15 Apr 2019 07:33:59 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:36912 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726042AbfDOLd5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 07:33:57 -0400
+Received: by mail-qt1-f193.google.com with SMTP id z16so18631031qtn.4
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 04:33:56 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wyxXG08I749BVZKb6n+KIukzHoQH6bVLQs+c2la1Kt4=;
+        b=npGq86pXCsw+bKnt/crpfOLEBkVuseI5B6XoCMqlzvjqWeRXmYHlKMv+QKenE9ENTU
+         XVNC4aYpwW5sgAmL2pdsvZwAjcWYq5vAk6n/6IFILT/CQ2rgglhOW9q7rL1aLfZl0DVV
+         UvGe1GbBH1GL/wb1JFq/KGhPSjXRLMhuJ7NIpqLu8+uRQLYOeita/hNbWT/rzuH6HpKZ
+         ltVADgsgU68ltFC2IaMsjwXugcJn95rTEgXQrEHdIar57GBo9jUaXx7/sLk7tlnQXBwx
+         qi6WJZmo0Cth7W5uhoeariuDFpNwJND8M06kp3U/ZNht3i9IwK/ju+KOG/Wm721vehUO
+         dIiw==
+X-Gm-Message-State: APjAAAW/vpO5okDcpD5heEk9SGHiDKSvuVeDdv7BBQTIaFu/wfocnLsT
+        pofbYoJ/fLR0DdqYz2u/EB2i4w==
+X-Google-Smtp-Source: APXvYqz0E+G9/vI3Lq1QgK3aHjV5v3wYOKa+dxh6IVd+Ohms+DT0iKZeJuLFD0Sdxoa8qi0lp83kRQ==
+X-Received: by 2002:a0c:81a9:: with SMTP id 38mr58546761qvd.208.1555328036171;
+        Mon, 15 Apr 2019 04:33:56 -0700 (PDT)
+Received: from t460s.bristot.redhat.com (host237-128-dynamic.51-79-r.retail.telecomitalia.it. [79.51.128.237])
+        by smtp.gmail.com with ESMTPSA id s64sm27133050qkc.39.2019.04.15.04.33.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Apr 2019 04:33:55 -0700 (PDT)
+Subject: Re: [PATCH V5 4/7] jump_label: Sort entries of the same key by the
+ code
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        "Steven Rostedt (VMware)" <rostedt@goodmis.org>,
+        Jiri Kosina <jkosina@suse.cz>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Chris von Recklinghausen <crecklin@redhat.com>,
+        Jason Baron <jbaron@akamai.com>, Scott Wood <swood@redhat.com>,
+        Marcelo Tosatti <mtosatti@redhat.com>,
+        Clark Williams <williams@redhat.com>, x86@kernel.org
+References: <cover.1554106794.git.bristot@redhat.com>
+ <d89001dfd5429567a4c54ff6667986ecaed9900b.1554106794.git.bristot@redhat.com>
+ <20190415105529.GJ11158@hirez.programming.kicks-ass.net>
+From:   Daniel Bristot de Oliveira <bristot@redhat.com>
+Message-ID: <b6e3350b-8d27-bac6-f3b3-2d98638bada1@redhat.com>
+Date:   Mon, 15 Apr 2019 13:33:49 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <20190415105529.GJ11158@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 15 Apr 2019, Johannes Berg wrote:
-
-> (FWIW, would be good to cc linux-wireless, but no need for linux-kernel
-> I guess :-) )
-
-Hm, no idea where I lost that ML from the get_maintainer output, sorry for 
-that.
-
-> > iwl_mvm_sta->lock can be taken from BH, and therefore BH must be 
-> > disabled if taking it from other contexts.
-> > 
-> > This fixes the lockdep warning below.
+On 4/15/19 12:55 PM, Peter Zijlstra wrote:
+> On Mon, Apr 01, 2019 at 10:58:16AM +0200, Daniel Bristot de Oliveira wrote:
+>> In the batching mode, entries with the same key should also be sorted by the
+>> code, enabling a bsearch() of a code/addr when updating a key.
 > 
-> I don't think this is the right fix.
+> Might be good to explain *why*.
 > 
-> The only problem is this path:
+> We can see what the code does, explaining why we do things is what we
+> have Changelogs for.
 
-Agreed, that seems to be the only culprit.
+Ack! I will explain why,
 
-> >      SOFTIRQ-ON-W at:
-> >                        _raw_spin_lock+0x35/0x50
-> >                        iwl_mvm_tx_mpdu+0xae/0x5f0 [iwlmvm]
-> >                        iwl_mvm_tx_skb+0x200/0x470 [iwlmvm]
-> >                        iwl_mvm_mac_itxq_xmit+0xd5/0x1f0 [iwlmvm]
-> >                        iwl_mvm_add_new_dqa_stream_wk+0x34c/0x910 [iwlmvm]
-> >                        process_one_work+0x1f0/0x5b0
+>> Signed-off-by: Daniel Bristot de Oliveira <bristot@redhat.com>
+>> Cc: Thomas Gleixner <tglx@linutronix.de>
+>> Cc: Ingo Molnar <mingo@redhat.com>
+>> Cc: Borislav Petkov <bp@alien8.de>
+>> Cc: "H. Peter Anvin" <hpa@zytor.com>
+>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Cc: Masami Hiramatsu <mhiramat@kernel.org>
+>> Cc: "Steven Rostedt (VMware)" <rostedt@goodmis.org>
+>> Cc: Jiri Kosina <jkosina@suse.cz>
+>> Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+>> Cc: "Peter Zijlstra (Intel)" <peterz@infradead.org>
+>> Cc: Chris von Recklinghausen <crecklin@redhat.com>
+>> Cc: Jason Baron <jbaron@akamai.com>
+>> Cc: Scott Wood <swood@redhat.com>
+>> Cc: Marcelo Tosatti <mtosatti@redhat.com>
+>> Cc: Clark Williams <williams@redhat.com>
+>> Cc: x86@kernel.org
+>> Cc: linux-kernel@vger.kernel.org
+>> ---
+>>  kernel/jump_label.c | 16 ++++++++++++++++
+>>  1 file changed, 16 insertions(+)
+>>
+>> diff --git a/kernel/jump_label.c b/kernel/jump_label.c
+>> index e666a4d6642a..8b7bfbba4cef 100644
+>> --- a/kernel/jump_label.c
+>> +++ b/kernel/jump_label.c
+>> @@ -36,12 +36,28 @@ static int jump_label_cmp(const void *a, const void *b)
+>>  	const struct jump_entry *jea = a;
+>>  	const struct jump_entry *jeb = b;
+>>  
+>> +	/*
+>> +	 * Entrires are sorted by key.
+>> +	 */
+
+and this the typo above (just noticed),
+
+>>  	if (jump_entry_key(jea) < jump_entry_key(jeb))
+>>  		return -1;
+>>  
+>>  	if (jump_entry_key(jea) > jump_entry_key(jeb))
+>>  		return 1;
+>>  
+>> +#ifdef HAVE_JUMP_LABEL_BATCH
+>> +	/*
+>> +	 * In the batching mode, entries should also be sorted by the code
+>> +	 * inside the already sorted list of entries, enabling a bsearch in
+>> +	 * the vector.
+>> +	 */
+>> +	if (jump_entry_code(jea) < jump_entry_code(jeb))
+>> +		return -1;
+>> +
+>> +	if (jump_entry_code(jea) > jump_entry_code(jeb))
+>> +		return 1;
+>> +#endif
+>> +
+>>  	return 0;
+>>  }
 > 
-> which I believe we just made use local_bh_disable() since there are
-> other reasons as well for that, IIRC.
-> 
-> Yes, here's the fix:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/kvalo/wireless-drivers.git/commit/?id=f5ae2f932e2f8f4f79796f44832ae8fca26f188a
-> 
-> It's on the way upstream.
+> The secondary sort order doesn't hurt, so we could leave the #ifdef out,
+> not sure.
 
-If there are other reasons why disable BH for the whole function (are 
-there?), then this bigger hammer works as well of course.
+and remove the #ifdef, unless someone else things we need to keep it.
 
-	Tested-by: Jiri Kosina <jkosina@suse.cz>
-
-> Thanks for the patch/report though!
-
-Thanks,
-
--- 
-Jiri Kosina
-SUSE Labs
-
+-- Daniel
