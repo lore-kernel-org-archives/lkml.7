@@ -4,52 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CB7C10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:17:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A99FAC10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:17:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 530452073F
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:17:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 73CB42073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:17:30 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355844;
-	bh=vzYCNknAcHI6ANSWfRgMCdjBUVN9rwhNis3Yne9SqaE=;
+	s=default; t=1555355850;
+	bh=hotzOfjDzbhKyCQdEKu20YFM9oNVe/K5KONzulO77qI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=qvtIhBqIqwuBxJARrT/AYjaWDIpsoknjyYrxqMvLkzH9UYe2PBN+mgk3ieRkZPPcX
-	 B1RALzWgGWRR8yCmPJ+RyZ4pibMR8k0K91igwXLLRs2ZhnGtw0HmXbfvrdSXnc1x/D
-	 ENzTuO6kzgC9tXgqtgsUENoGOjHbMywCsQeiYdRk=
+	b=OY6b32mQggJRQOO1WqmEJlMaF6TJ+fJ+esuHljaRpw3o0twBeDzilYNi9uKLYB/mG
+	 n6iR8Acu/sXaqStkvl+PB7s9huvOegHNHQIiPkTiDC0eSoJWRynhUcSMlzbxRI4hct
+	 DcEznsrQNnJMRjpb38fCvat7EZ8idm73C7N9Mpf4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731394AbfDOTMZ (ORCPT
+        id S1731701AbfDOTR3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:12:25 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49718 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:17:29 -0400
+Received: from mail.kernel.org ([198.145.29.99]:49642 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731377AbfDOTMW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:12:22 -0400
+        id S1730445AbfDOTMU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:12:20 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 42D44218D3;
-        Mon, 15 Apr 2019 19:12:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B854218DA;
+        Mon, 15 Apr 2019 19:12:18 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355541;
-        bh=vzYCNknAcHI6ANSWfRgMCdjBUVN9rwhNis3Yne9SqaE=;
+        s=default; t=1555355539;
+        bh=hotzOfjDzbhKyCQdEKu20YFM9oNVe/K5KONzulO77qI=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=C4UbdiRBhr7yDpf1VOJ5ggwcdaSeLA5RboFR3LCpDc1UIsBZueKeWZBNfyUSI1CYe
-         P1461pFKe6MQyDJivTTTbjcC7Wr7NgNCKv3fJ9+0WI0NrQztXAZ+X4e96UXr7WUbQb
-         0f9gRhhVJ6tIbhBhlEg8rtdwvxTNkqjr053cJoeg=
+        b=lAjDQ98jwWKKJgOrgpUERdB1D3tBhWfcN4UMVGwRWnOckuHO75F+FhtacFsX3pTMA
+         aWCtddfslPkzTrpDUFhxuFFRVwXEAcfg6uP/FSUX2dGFD28ZekvxUnaQuToHAhMCvY
+         okZCzwqEdP+7msqwbUgeV9R24Rf9bqYAKbejo23c=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        "Darrick J. Wong" <darrick.wong@oracle.com>,
-        Nikolay Borisov <nborisov@suse.com>,
-        Filipe Manana <fdmanana@suse.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.0 074/117] Btrfs: do not allow trimming when a fs is mounted with the nologreplay option
-Date:   Mon, 15 Apr 2019 21:00:44 +0200
-Message-Id: <20190415183748.703487287@linuxfoundation.org>
+        stable@vger.kernel.org, Fabio Estevam <festevam@gmail.com>,
+        Nicolin Chen <nicoleotsuka@gmail.com>,
+        Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Mark Brown <broonie@kernel.org>
+Subject: [PATCH 5.0 073/117] ASoC: fsl_esai: fix channel swap issue when stream starts
+Date:   Mon, 15 Apr 2019 21:00:43 +0200
+Message-Id: <20190415183748.658411826@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183744.887851196@linuxfoundation.org>
 References: <20190415183744.887851196@linuxfoundation.org>
@@ -62,53 +60,130 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Filipe Manana <fdmanana@suse.com>
+From: S.j. Wang <shengjiu.wang@nxp.com>
 
-commit f35f06c35560a86e841631f0243b83a984dc11a9 upstream.
+commit 0ff4e8c61b794a4bf6c854ab071a1abaaa80f358 upstream.
 
-Whan a filesystem is mounted with the nologreplay mount option, which
-requires it to be mounted in RO mode as well, we can not allow discard on
-free space inside block groups, because log trees refer to extents that
-are not pinned in a block group's free space cache (pinning the extents is
-precisely the first phase of replaying a log tree).
+There is very low possibility ( < 0.1% ) that channel swap happened
+in beginning when multi output/input pin is enabled. The issue is
+that hardware can't send data to correct pin in the beginning with
+the normal enable flow.
 
-So do not allow the fitrim ioctl to do anything when the filesystem is
-mounted with the nologreplay option, because later it can be mounted RW
-without that option, which causes log replay to happen and result in
-either a failure to replay the log trees (leading to a mount failure), a
-crash or some silent corruption.
+This is hardware issue, but there is no errata, the workaround flow
+is that: Each time playback/recording, firstly clear the xSMA/xSMB,
+then enable TE/RE, then enable xSMB and xSMA (xSMB must be enabled
+before xSMA). Which is to use the xSMA as the trigger start register,
+previously the xCR_TE or xCR_RE is the bit for starting.
 
-Reported-by: Darrick J. Wong <darrick.wong@oracle.com>
-Fixes: 96da09192cda ("btrfs: Introduce new mount option to disable tree log replay")
-CC: stable@vger.kernel.org # 4.9+
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Signed-off-by: Filipe Manana <fdmanana@suse.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Fixes commit 43d24e76b698 ("ASoC: fsl_esai: Add ESAI CPU DAI driver")
+Cc: <stable@vger.kernel.org>
+Reviewed-by: Fabio Estevam <festevam@gmail.com>
+Acked-by: Nicolin Chen <nicoleotsuka@gmail.com>
+Signed-off-by: Shengjiu Wang <shengjiu.wang@nxp.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/ioctl.c |   10 ++++++++++
- 1 file changed, 10 insertions(+)
+ sound/soc/fsl/fsl_esai.c |   47 +++++++++++++++++++++++++++++++++++++----------
+ 1 file changed, 37 insertions(+), 10 deletions(-)
 
---- a/fs/btrfs/ioctl.c
-+++ b/fs/btrfs/ioctl.c
-@@ -501,6 +501,16 @@ static noinline int btrfs_ioctl_fitrim(s
- 	if (!capable(CAP_SYS_ADMIN))
- 		return -EPERM;
+--- a/sound/soc/fsl/fsl_esai.c
++++ b/sound/soc/fsl/fsl_esai.c
+@@ -54,6 +54,8 @@ struct fsl_esai {
+ 	u32 fifo_depth;
+ 	u32 slot_width;
+ 	u32 slots;
++	u32 tx_mask;
++	u32 rx_mask;
+ 	u32 hck_rate[2];
+ 	u32 sck_rate[2];
+ 	bool hck_dir[2];
+@@ -361,21 +363,13 @@ static int fsl_esai_set_dai_tdm_slot(str
+ 	regmap_update_bits(esai_priv->regmap, REG_ESAI_TCCR,
+ 			   ESAI_xCCR_xDC_MASK, ESAI_xCCR_xDC(slots));
  
-+	/*
-+	 * If the fs is mounted with nologreplay, which requires it to be
-+	 * mounted in RO mode as well, we can not allow discard on free space
-+	 * inside block groups, because log trees refer to extents that are not
-+	 * pinned in a block group's free space cache (pinning the extents is
-+	 * precisely the first phase of replaying a log tree).
-+	 */
-+	if (btrfs_test_opt(fs_info, NOLOGREPLAY))
-+		return -EROFS;
+-	regmap_update_bits(esai_priv->regmap, REG_ESAI_TSMA,
+-			   ESAI_xSMA_xS_MASK, ESAI_xSMA_xS(tx_mask));
+-	regmap_update_bits(esai_priv->regmap, REG_ESAI_TSMB,
+-			   ESAI_xSMB_xS_MASK, ESAI_xSMB_xS(tx_mask));
+-
+ 	regmap_update_bits(esai_priv->regmap, REG_ESAI_RCCR,
+ 			   ESAI_xCCR_xDC_MASK, ESAI_xCCR_xDC(slots));
+ 
+-	regmap_update_bits(esai_priv->regmap, REG_ESAI_RSMA,
+-			   ESAI_xSMA_xS_MASK, ESAI_xSMA_xS(rx_mask));
+-	regmap_update_bits(esai_priv->regmap, REG_ESAI_RSMB,
+-			   ESAI_xSMB_xS_MASK, ESAI_xSMB_xS(rx_mask));
+-
+ 	esai_priv->slot_width = slot_width;
+ 	esai_priv->slots = slots;
++	esai_priv->tx_mask = tx_mask;
++	esai_priv->rx_mask = rx_mask;
+ 
+ 	return 0;
+ }
+@@ -596,6 +590,7 @@ static int fsl_esai_trigger(struct snd_p
+ 	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
+ 	u8 i, channels = substream->runtime->channels;
+ 	u32 pins = DIV_ROUND_UP(channels, esai_priv->slots);
++	u32 mask;
+ 
+ 	switch (cmd) {
+ 	case SNDRV_PCM_TRIGGER_START:
+@@ -608,15 +603,38 @@ static int fsl_esai_trigger(struct snd_p
+ 		for (i = 0; tx && i < channels; i++)
+ 			regmap_write(esai_priv->regmap, REG_ESAI_ETDR, 0x0);
+ 
++		/*
++		 * When set the TE/RE in the end of enablement flow, there
++		 * will be channel swap issue for multi data line case.
++		 * In order to workaround this issue, we switch the bit
++		 * enablement sequence to below sequence
++		 * 1) clear the xSMB & xSMA: which is done in probe and
++		 *                           stop state.
++		 * 2) set TE/RE
++		 * 3) set xSMB
++		 * 4) set xSMA:  xSMA is the last one in this flow, which
++		 *               will trigger esai to start.
++		 */
+ 		regmap_update_bits(esai_priv->regmap, REG_ESAI_xCR(tx),
+ 				   tx ? ESAI_xCR_TE_MASK : ESAI_xCR_RE_MASK,
+ 				   tx ? ESAI_xCR_TE(pins) : ESAI_xCR_RE(pins));
++		mask = tx ? esai_priv->tx_mask : esai_priv->rx_mask;
 +
- 	rcu_read_lock();
- 	list_for_each_entry_rcu(device, &fs_info->fs_devices->devices,
- 				dev_list) {
++		regmap_update_bits(esai_priv->regmap, REG_ESAI_xSMB(tx),
++				   ESAI_xSMB_xS_MASK, ESAI_xSMB_xS(mask));
++		regmap_update_bits(esai_priv->regmap, REG_ESAI_xSMA(tx),
++				   ESAI_xSMA_xS_MASK, ESAI_xSMA_xS(mask));
++
+ 		break;
+ 	case SNDRV_PCM_TRIGGER_SUSPEND:
+ 	case SNDRV_PCM_TRIGGER_STOP:
+ 	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
+ 		regmap_update_bits(esai_priv->regmap, REG_ESAI_xCR(tx),
+ 				   tx ? ESAI_xCR_TE_MASK : ESAI_xCR_RE_MASK, 0);
++		regmap_update_bits(esai_priv->regmap, REG_ESAI_xSMA(tx),
++				   ESAI_xSMA_xS_MASK, 0);
++		regmap_update_bits(esai_priv->regmap, REG_ESAI_xSMB(tx),
++				   ESAI_xSMB_xS_MASK, 0);
+ 
+ 		/* Disable and reset FIFO */
+ 		regmap_update_bits(esai_priv->regmap, REG_ESAI_xFCR(tx),
+@@ -906,6 +924,15 @@ static int fsl_esai_probe(struct platfor
+ 		return ret;
+ 	}
+ 
++	esai_priv->tx_mask = 0xFFFFFFFF;
++	esai_priv->rx_mask = 0xFFFFFFFF;
++
++	/* Clear the TSMA, TSMB, RSMA, RSMB */
++	regmap_write(esai_priv->regmap, REG_ESAI_TSMA, 0);
++	regmap_write(esai_priv->regmap, REG_ESAI_TSMB, 0);
++	regmap_write(esai_priv->regmap, REG_ESAI_RSMA, 0);
++	regmap_write(esai_priv->regmap, REG_ESAI_RSMB, 0);
++
+ 	ret = devm_snd_soc_register_component(&pdev->dev, &fsl_esai_component,
+ 					      &fsl_esai_dai, 1);
+ 	if (ret) {
 
 
