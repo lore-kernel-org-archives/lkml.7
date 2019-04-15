@@ -2,197 +2,287 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8168FC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 13:43:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E4001C10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 13:43:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 42EF520833
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 13:43:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE3AA20684
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 13:43:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727375AbfDONnE convert rfc822-to-8bit (ORCPT
+        id S1727330AbfDONni (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 09:43:04 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:1815 "EHLO mx1.redhat.com"
+        Mon, 15 Apr 2019 09:43:38 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46682 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726696AbfDONnD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 09:43:03 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        id S1725789AbfDONni (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 09:43:38 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C4A364E92B;
-        Mon, 15 Apr 2019 13:43:02 +0000 (UTC)
-Received: from llong.remote.csb (ovpn-122-46.rdu2.redhat.com [10.10.122.46])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 5A8F619C56;
-        Mon, 15 Apr 2019 13:43:01 +0000 (UTC)
-Subject: Re: [PATCH-tip v3 02/14] locking/rwsem: Make owner available even if
- !CONFIG_RWSEM_SPIN_ON_OWNER
-From:   Waiman Long <longman@redhat.com>
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
-References: <20190410184231.6748-1-longman@redhat.com>
- <20190410184231.6748-3-longman@redhat.com>
- <20190411081224.GB4038@hirez.programming.kicks-ass.net>
- <29aca54a-536e-6e46-7e18-658914c34548@redhat.com>
- <20190412070209.GC129493@gmail.com>
- <20190412070545.GF11158@hirez.programming.kicks-ass.net>
- <20190412070904.GA45214@gmail.com>
- <b97eb5d5-1658-c405-e52e-2d20c4840948@redhat.com>
- <33b0111b-fe0f-eefc-59f4-f06d84d9cacc@redhat.com>
- <277e9c8e-8913-b251-4c98-dd2d4997d643@redhat.com>
- <20190412164123.GA119547@gmail.com>
- <4aefd2cd-f303-99ed-ada9-e7ba2ae9cd3c@redhat.com>
- <00ce3ea9-0046-740f-6a6c-3b4aff2c3c6e@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- weim8xU=
-Organization: Red Hat
-Message-ID: <d012c68e-4c43-04af-3505-4c980e2d00a5@redhat.com>
-Date:   Mon, 15 Apr 2019 09:43:00 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        by mx1.redhat.com (Postfix) with ESMTPS id 5DB1DF74D8;
+        Mon, 15 Apr 2019 13:43:37 +0000 (UTC)
+Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.38])
+        by smtp.corp.redhat.com (Postfix) with SMTP id C04AB5C223;
+        Mon, 15 Apr 2019 13:43:32 +0000 (UTC)
+Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
+        oleg@redhat.com; Mon, 15 Apr 2019 15:43:37 +0200 (CEST)
+Date:   Mon, 15 Apr 2019 15:43:31 +0200
+From:   Oleg Nesterov <oleg@redhat.com>
+To:     Casey Schaufler <casey@schaufler-ca.com>
+Cc:     "chengjian (D)" <cj.chengjian@huawei.com>, neilb@suse.com,
+        Anna.Schumaker@Netapp.com, keescook@chromium.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        viro@zeniv.linux.org.uk,
+        "Xiexiuqi (Xie XiuQi)" <xiexiuqi@huawei.com>,
+        Li Bin <huawei.libin@huawei.com>, yanaijie@huawei.com,
+        peterz@infradead.org, mingo@redhat.com,
+        Linux Security Module list 
+        <linux-security-module@vger.kernel.org>, selinux@vger.kernel.org
+Subject: Re: kernel BUG at kernel/cred.c:434!
+Message-ID: <20190415134331.GC22204@redhat.com>
+References: <6e4428ca-3da1-a033-08f7-a51e57503989@huawei.com>
+ <b1575d02-fd88-65e6-2f16-70a96985087e@schaufler-ca.com>
 MIME-Version: 1.0
-In-Reply-To: <00ce3ea9-0046-740f-6a6c-3b4aff2c3c6e@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Mon, 15 Apr 2019 13:43:03 +0000 (UTC)
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <b1575d02-fd88-65e6-2f16-70a96985087e@schaufler-ca.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Mon, 15 Apr 2019 13:43:37 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/12/2019 10:24 PM, Waiman Long wrote:
-> On 04/12/2019 02:05 PM, Waiman Long wrote:
->
->>>  [locking/rwsem] adc32e8877: will-it-scale.per_thread_ops -21.0% regression
->> Will look into that also.
-> I can reproduce the regression on the same skylake system.
->
-> The results of the page_fault1 will-it-scale test are as follows:
->
-> Â ThreadsÂ Â  K2Â Â Â Â Â  K3Â Â Â Â Â Â  K4Â Â Â Â Â Â  K5
-> Â -------Â Â  --Â Â Â Â Â  --Â Â Â Â Â Â  --Â Â Â Â Â Â  --
-> Â Â Â  20Â  5549772Â  5550332Â  5463961Â  5400064
-> Â Â Â  40Â  9540445 10286071Â  9705062Â  7706082
-> Â Â Â  60Â  8187245Â  8212307Â  7777247Â  6647705
-> Â Â Â  89Â  8390758Â  9619271Â  9019454Â  7124407
->
-> So the wake-all-reader patch is good for this benchmark. The performance
-> was reduced a bit with the reader-spin-on-writer patch. It got even worse
-> with the writer-spin-on-reader patch.
->
-> I looked at the perf output, rwsem contention accounted for less than
-> 1% of the total cpu cycles. So I believe the regression was caused by
-> the behavior change introduced by the two reader optimistic spinning
-> patches. These patch will make writer less preferred than before. I
-> think the performance of this microbenchmark may be more dependent on
-> writer performance.
->
-> Looking at the lock event counts for K5:
->
-> Â rwsem_opt_fail=253647
-> Â rwsem_opt_nospin=8776
-> Â rwsem_opt_rlock=259941
-> Â rwsem_opt_wlock=2543
-> Â rwsem_rlock=237747
-> Â rwsem_rlock_fail=0
-> Â rwsem_rlock_fast=0
-> Â rwsem_rlock_handoff=0
-> Â rwsem_sleep_reader=237747
-> Â rwsem_sleep_writer=23098
-> Â rwsem_wake_reader=6033
-> Â rwsem_wake_writer=47032
-> Â rwsem_wlock=15890
-> Â rwsem_wlock_fail=10
-> Â rwsem_wlock_handoff=3991
->
-> For K4, it was
->
-> Â rwsem_opt_fail=479626
-> Â rwsem_opt_rlock=8877
-> Â rwsem_opt_wlock=114
-> Â rwsem_rlock=453874
-> Â rwsem_rlock_fail=0
-> Â rwsem_rlock_fast=1234
-> Â rwsem_rlock_handoff=0
-> Â rwsem_sleep_reader=453058
-> Â rwsem_sleep_writer=25836
-> Â rwsem_wake_reader=11054
-> Â rwsem_wake_writer=71568
-> Â rwsem_wlock=24515
-> Â rwsem_wlock_fail=3
-> Â rwsem_wlock_handoff=5245
->
-> It can be seen that a lot more readers got the lock via optimistic
-> spinning.Â  One possibility is that reader optimistic spinning causes
-> readers to spread out into more lock acquisition groups than without. The
-> K3 results show that grouping more readers into one lock acquisition
-> group help to improve performance for this microbenchmark. I will need
-> to run more tests to find out the root cause of this regression. It is
-> not an easy problem to solve.
+Well, acct("/proc/self/attr/current") doesn't look like a good idea, but I do
+not know where should we put the additional check... And probably
+"echo /proc/self/attr/current > /proc/sys/kernel/core_pattern" can hit the
+same problem, do_coredump() does override_creds() too.
 
-Just an update on my will-it-scale regression investigation. I have
-tried various ways to tune the rwsem code to get more performance out
-from this benchmark. I got some minor improvements but nothing major. So
-it looks like that there are some workloads that have performance hurted
-by reader optimistic spinning and this benchmark is one of them. Now I
-am testing an adaptive reader optimistic spinning disabling patch that
-shows great promise as I was able to bring back a major portion of the
-lost performance. I will try to make the patch more aggressive to see if
-it can bring most of the lost performance back.
+May be just add
 
-Cheers,
-Longman
+	if (current->cred != current->real_cred)
+		return -EACCES;
+
+into proc_pid_attr_write(), I dunno.
+
+
+
+On 04/12, Casey Schaufler wrote:
+>
+> On 4/11/2019 11:21 PM, chengjian (D) wrote:
+> 
+> Added LSM and SELinux lists.
+> 
+> 
+> >Hi.
+> >
+> >
+> >syzkaller reported the following BUG:
+> >
+> >[   73.146973] kernel BUG at kernel/cred.c:434!
+> >[   73.150231] invalid opcode: 0000 [#1] SMP KASAN PTI
+> >[   73.151928] CPU: 2 PID: 4058 Comm: syz-executor.6 Not tainted
+> >5.1.0-rc4-00062-g2d06b235815e-dirty #2
+> >[   73.155174] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS
+> >rel-1.12.1-0-ga5cab58e9a3f-prebuilt.qemu.org 04/01/2014
+> >[   73.159798] RIP: 0010:commit_creds+0xadb/0xe50
+> >[   73.161426] Code: 8b 5b 20 48 c1 ea 03 0f b6 04 02 84 c0 74 08 3c 03 0f
+> >8e 06 03 00 00 39 5d 20 0f 85 ff fa ff ff e9 0c fb ff ff e8 05 a2 25 00
+> ><0f> 0b 48 c7 c7 80 56 c0 83 e8 95 22 b1 00 e8 f2 a1 25 00 0f 0b 48
+> >[   73.167852] RSP: 0000:ffff88836e65f5d0 EFLAGS: 00010293
+> >[   73.169636] RAX: ffff8883767b0000 RBX: ffff88837f111300 RCX:
+> >ffffffff8124b5db
+> >[   73.171962] RDX: 0000000000000000 RSI: ffffffff83c9b140 RDI:
+> >ffff88837f111300
+> >[   73.174310] RBP: ffff888376610400 R08: 0000000000000000 R09:
+> >0000000000000004
+> >[   73.176646] R10: 0000000000000001 R11: ffffed107c655acf R12:
+> >ffff8883767b0000
+> >[   73.178527] Process accounting resumed
+> >[   73.179021] R13: ffff88837f111900 R14: ffff88837f111300 R15:
+> >ffff8883767b0ac0
+> >[   73.179029] FS:  00007f2d207f9700(0000) GS:ffff8883e3280000(0000)
+> >knlGS:0000000000000000
+> >[   73.179034] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> >[   73.179039] CR2: 00007f1500bd36c0 CR3: 00000003df304003 CR4:
+> >00000000000206e0
+> >[   73.179047] Call Trace:
+> >[   73.190461]  selinux_setprocattr+0x2ea/0x8f0
+> >[   73.191925]  ? ptrace_parent_sid+0x530/0x530
+> >[   73.193436]  ? proc_pid_attr_write+0x185/0x5a0
+> >[   73.194967]  security_setprocattr+0xa1/0x100
+> >[   73.196408]  proc_pid_attr_write+0x307/0x5a0
+> >[   73.197869]  ? mem_read+0x40/0x40
+> >[   73.199013]  __vfs_write+0x81/0x100
+> >[   73.200222]  __kernel_write+0xf8/0x330
+> >[   73.201562]  do_acct_process+0xca5/0x1340
+> >[   73.202969]  ? __ia32_sys_acct+0x1e0/0x1e0
+> >[   73.204498]  ? find_held_lock+0x2f/0x1e0
+> >[   73.205857]  ? rcu_irq_exit+0xec/0x2c0
+> >[   73.207160]  ? lock_downgrade+0x630/0x630
+> >[   73.208541]  acct_pin_kill+0x63/0x150
+> >[   73.209816]  pin_kill+0x16d/0x7c0
+> >[   73.210934]  ? lockdep_hardirqs_on+0x5e0/0x5e0
+> >[   73.212452]  ? xas_start+0x155/0x510
+> >[   73.213705]  ? pin_insert+0x50/0x50
+> >[   73.214903]  ? finish_wait+0x270/0x270
+> >[   73.216213]  ? cpumask_next+0x57/0x90
+> >[   73.217442]  ? mnt_pin_kill+0x68/0x1d0
+> >[   73.218851]  mnt_pin_kill+0x68/0x1d0
+> >[   73.220398]  cleanup_mnt+0x11b/0x150
+> >[   73.221970]  task_work_run+0x136/0x1b0
+> >[   73.223427]  do_exit+0x830/0x2ca0
+> >[   73.224586]  ? trace_hardirqs_off+0x3b/0x180
+> >[   73.226088]  ? mm_update_next_owner+0x6a0/0x6a0
+> >[   73.227622]  ? find_held_lock+0x2f/0x1e0
+> >[   73.228954]  ? get_signal+0x2cf/0x1c00
+> >[   73.230236]  ? lock_downgrade+0x630/0x630
+> >[   73.231628]  ? rwlock_bug.part.0+0x90/0x90
+> >[   73.233020]  do_group_exit+0x106/0x2f0
+> >[   73.234330]  get_signal+0x325/0x1c00
+> >[   73.235571]  do_signal+0x97/0x1670
+> >[   73.236739]  ? do_send_specific+0x12d/0x220
+> >[   73.238213]  ? lock_downgrade+0x630/0x630
+> >[   73.239566]  ? setup_sigcontext+0x820/0x820
+> >[   73.240982]  ? check_kill_permission+0x4a/0x510
+> >[   73.242509]  ? do_send_specific+0x156/0x220
+> >[   73.243905]  ? do_tkill+0x1c4/0x260
+> >[   73.245081]  ? do_send_specific+0x220/0x220
+> >[   73.246514]  ? trace_hardirqs_on_thunk+0x1a/0x1c
+> >[   73.248061]  ? exit_to_usermode_loop+0x97/0x1d0
+> >[   73.249619]  exit_to_usermode_loop+0x108/0x1d0
+> >[   73.251129]  do_syscall_64+0x461/0x580
+> >[   73.252454]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+> >[   73.254219] RIP: 0033:0x462eb9
+> >[   73.255327] Code: Bad RIP value.
+> >[   73.256539] RSP: 002b:00007f2d207f8c58 EFLAGS: 00000246 ORIG_RAX:
+> >00000000000000c8
+> >[   73.259454] RAX: 0000000000000000 RBX: 000000000073bf00 RCX:
+> >0000000000462eb9
+> >[   73.262309] RDX: 0000000000000000 RSI: 000000000000001e RDI:
+> >0000000000000005
+> >[   73.265064] RBP: 0000000000000002 R08: 0000000000000000 R09:
+> >0000000000000000
+> >[   73.267774] R10: 0000000000000000 R11: 0000000000000246 R12:
+> >00007f2d207f96bc
+> >[   73.270546] R13: 00000000004c5509 R14: 00000000007042f0 R15:
+> >00000000ffffffff
+> >[   73.273542] Modules linked in:
+> >[   73.274670] Dumping ftrace buffer:
+> >[   73.275852]    (ftrace buffer empty)
+> >[   73.277187] ---[ end trace dde36a95f458175d ]---
+> >[   73.278834] RIP: 0010:commit_creds+0xadb/0xe50
+> >[   73.280549] Code: 8b 5b 20 48 c1 ea 03 0f b6 04 02 84 c0 74 08 3c 03 0f
+> >8e 06 03 00 00 39 5d 20 0f 85 ff fa ff ff e9 0c fb ff ff e8 05 a2 25 00
+> ><0f> 0b 48 c7 c7 80 56 c0 83 e8 95 22 b1 00 e8 f2 a1 25 00 0f 0b 48
+> >[   73.287090] RSP: 0000:ffff88836e65f5d0 EFLAGS: 00010293
+> >[   73.288917] RAX: ffff8883767b0000 RBX: ffff88837f111300 RCX:
+> >ffffffff8124b5db
+> >[   73.291390] RDX: 0000000000000000 RSI: ffffffff83c9b140 RDI:
+> >ffff88837f111300
+> >[   73.293864] RBP: ffff888376610400 R08: 0000000000000000 R09:
+> >0000000000000004
+> >[   73.296370] R10: 0000000000000001 R11: ffffed107c655acf R12:
+> >ffff8883767b0000
+> >[   73.299275] R13: ffff88837f111900 R14: ffff88837f111300 R15:
+> >ffff8883767b0ac0
+> >[   73.301351] Process accounting resumed
+> >[   73.301822] FS:  00007f2d207f9700(0000) GS:ffff8883e3280000(0000)
+> >knlGS:0000000000000000
+> >[   73.301827] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+> >[   73.301832] CR2: 0000000000462e8f CR3: 0000000003a18002 CR4:
+> >00000000000206e0
+> >[   73.301850] Kernel panic - not syncing: Fatal exception
+> >[   73.310719] Process accounting resumed
+> >[   73.311515] Process accounting resumed
+> >[   73.318916] Dumping ftrace buffer:
+> >[   73.318921]    (ftrace buffer empty)
+> >[   73.318945] Kernel Offset: disabled
+> >[   73.328061] Rebooting in 10 seconds..
+> >
+> >
+> >425 int commit_creds(struct cred *new)
+> >426 {
+> >427         struct task_struct *task = current;
+> >428         const struct cred *old = task->real_cred;
+> >429
+> >430         kdebug("commit_creds(%p{%d,%d})", new,
+> >431                atomic_read(&new->usage),
+> >432                read_cred_subscribers(new));
+> >433
+> >434         BUG_ON(task->cred != old);  // BUG here
+> >
+> >
+> >I find that the call chain which triggered the BUG is :
+> >
+> >do_exit
+> >    |-=> acct_process
+> >    |    -=> do_acct_process
+> >    |        -=> orig_cred = override_creds(file->f_cred); // cred =
+> >ffff8883c1878900/real_cred = ffff8883c1878900
+> >    |        -=>  if (file_start_write_trylock(file))
+> >{__kernel_write(file, &ac, sizeof(acct_t), &pos);}
+> >    |               -=> __kernel_write+0xf8/0x330
+> >    |                    -=> __vfs_write+0x81/0x100
+> >    |                           -=> proc_pid_attr_write+0x307/0x5a0
+> >    |                                -=> security_setprocattr+0xa1/0x100
+> >    | -=>selinux_setprocattr+0x2ea/0x8f0
+> >    | -=>commit_creds+0xd97/0x1080  // cred = ffff888379a79c00/real_cred =
+> >ffff888379a79c00
+> >    |       -=> revert_creds(orig_cred);   // cred =
+> >ffff8883c1878900/real_cred = ffff888379a79c00
+> >    |-=> task_work_run
+> >           -=> cleanup_mnt+0x11b/0x150
+> >                -=> mnt_pin_kill+0x68/0x1d0
+> >                    -=> pin_kill+0x16d/0x7c0
+> >                    -=> acct_pin_kill+0x2e/0x100
+> >                    -=> do_acct_process+0x1a0/0x1340
+> >                          -=> override_creds+0x18a/0x1c0   // cred =
+> >ffff8883c1878900/real_cred = ffff888379a79c00
+> >                          -=>  if (file_start_write_trylock(file))
+> >{__kernel_write(file, &ac, sizeof(acct_t), &pos);}
+> >                                    -=>   ......
+> >-=>commit_creds+0xd97/0x1080   // new = ffff888379a6bb00, cred =
+> >ffff8883c1878900, real_ceed = ffff888379a79c00 BUG here
+> >                          -=> revert_creds(orig_cred);
+> >
+> >
+> >Syzkaller Report Testcase:
+> >
+> >cat crash.log
+> >
+> >04:05:28 executing program 3:
+> >clone(0x24100, 0x0, 0x0, 0x0, 0x0)
+> >r0 = gettid()
+> >perf_event_open(&(0x7f00000000c0)={0x2, 0x70, 0x4, 0x2, 0x0, 0x0, 0x0,
+> >0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
+> >0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0, 0x0,
+> >0x0, 0x0, 0x0, 0x0, @perf_bp={0x0}}, 0x0, 0xffffffffffffffff,
+> >0xffffffffffffffff, 0x0)
+> >acct(&(0x7f0000000000)='./file0\x00')
+> >r1 = openat$smack_thread_current(0xffffffffffffff9c,
+> >&(0x7f0000000000)='/proc/thread-self/attr/current\x00', 0x2, 0x0)
+> >fcntl$setown(r1, 0x8, r0)
+> >rt_tgsigqueueinfo(r0, r0, 0x1e, &(0x7f00000002c0))
+> >tkill(r0, 0x1e)
+> >
+> >
+> >Reproduce this BUG:
+> >./syz-execprog -executor=./syz-executor -repeat=0 -procs=16 -cover=0
+> >./crash.log
+> >
+> >
+> >Can anyone help me ?
+> >
+> >
+> >Thanks,
+> >
+> >        Cheng Jian.
+> >
+> >
 
