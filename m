@@ -2,121 +2,76 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB2C6C282DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:20:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E518BC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:20:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AA45A20643
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:20:10 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555356010;
-	bh=IcOgI36IU+CW+mQj8RxaffjRlbGVcxc3SHzcArx/FtM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cUQ45fpIqmL0zt+fqs1kpCbfK8rChbcGRiZQ/bnf8B/tJcoez9mjiK6hYyqPmT8sI
-	 CMz+d9OlC10P2ayl0dvVaUYWsYeLqyD3p+u64jj/aBb/TqWUbK+Th0aSp3W9bE0Tc2
-	 Q0cV/85zwfl4XsabSfB0oHvhcDJvxwsczDYLju0s=
+	by mail.kernel.org (Postfix) with ESMTP id A0D922075B
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:20:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="QuTwox4f"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730858AbfDOTKE (ORCPT
+        id S1731369AbfDOTUU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:10:04 -0400
-Received: from mail.kernel.org ([198.145.29.99]:45880 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730841AbfDOTJ6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:09:58 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B34F520651;
-        Mon, 15 Apr 2019 19:09:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355398;
-        bh=IcOgI36IU+CW+mQj8RxaffjRlbGVcxc3SHzcArx/FtM=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=AxszNn9ldJhqzSkqoZ/0kjCcM3D78gVrOyVuYBbAAD07bpQOHQiYn+xeOgrCkWODl
-         FPKQpbHRVpn2uQrZ48qa41guSB1+g01XKtu/AkbKYPGLpHhR8hcTRbKqJO+815qKwl
-         IUPMdBRV4opCZSwTd2Vw7YpfhkDd5rcRyFFV5g08=
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     linux-kernel@vger.kernel.org
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org,
-        =?UTF-8?q?Bj=C3=B8rn=20Mork?= <bjorn@mork.no>,
-        "David S. Miller" <davem@davemloft.net>,
-        Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 020/117] qmi_wwan: add Olicard 600
-Date:   Mon, 15 Apr 2019 20:59:50 +0200
-Message-Id: <20190415183745.927194425@linuxfoundation.org>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190415183744.887851196@linuxfoundation.org>
-References: <20190415183744.887851196@linuxfoundation.org>
-User-Agent: quilt/0.66
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+        Mon, 15 Apr 2019 15:20:20 -0400
+Received: from smtprelay.synopsys.com ([198.182.60.111]:57328 "EHLO
+        smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728091AbfDOTUS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:20:18 -0400
+Received: from mailhost1.synopsys.com (mailhost1.synopsys.com [10.12.238.239])
+        by smtprelay.synopsys.com (Postfix) with ESMTP id 5E8AA10C10A5;
+        Mon, 15 Apr 2019 12:20:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1555356018; bh=HRXqFmPCXEH7TTVf3uZt+wISGcBLOQ+X33KGrRmTZYo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=QuTwox4fImyg10VuN2qmFVPzfB/7glcjeHNogLyaMZqWZFMIwQ302pJLoqWkROn8i
+         j786ZXD1IDL/cNYpLd9m5kjvKEoPaX9fOtIOWDhZ7NjvXO9GRpo4VP8Elyi7FesauT
+         /gcAg0oxndbUVjjic9g2iD4EM5D3D6fe+H0nwyiPvZVKUqzgu9DewZaFomxYbKU6yp
+         BkTmqrAUWYwHv4P6mSijDiCEBbgQ0nE9SqUL+ul9ZC30NoNqApIPatDjFlMYc9QO1u
+         Y43WzRG9fHXjTaPWTVlGof6jmC26ufY1/OF1zroNOiJhx9YBmYNKIgoEh3qGwPQhIK
+         V4mnuHYnxYqfw==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost1.synopsys.com (Postfix) with ESMTP id CF2CD5467;
+        Mon, 15 Apr 2019 12:19:43 -0700 (PDT)
+From:   Vitor Soares <vitor.soares@synopsys.com>
+To:     linux-iio@vger.kernel.org, linux-i3c@lists.infradead.org,
+        linux-kernel@vger.kernel.org
+Cc:     pmeerw@pmeerw.net, lars@metafoo.de, knaack.h@gmx.de,
+        jic23@kernel.org, lorenzo.bianconi83@gmail.com,
+        bbrezillon@kernel.org, rafael@kernel.org,
+        gregkh@linuxfoundation.org, broonie@kernel.org,
+        joao.pinto@synopsys.com, Vitor Soares <vitor.soares@synopsys.com>
+Subject: [PATCH 0/3] Add ST lsm6dso i3c suppport
+Date:   Mon, 15 Apr 2019 21:19:38 +0200
+Message-Id: <cover.1555354268.git.vitor.soares@synopsys.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit 6289d0facd9ebce4cc83e5da39e15643ee998dc5 ]
+Vitor Soares (3):
+  remap: Add i3c bus support
+  i3c: Add i3c_get_device_id helper
+  iio: imu: st_lsm6dsx: Add i3c basic support
 
-This is a Qualcomm based device with a QMI function on interface 4.
-It is mode switched from 2020:2030 using a standard eject message.
+ drivers/base/regmap/Kconfig                 |  6 ++-
+ drivers/base/regmap/Makefile                |  1 +
+ drivers/base/regmap/regmap-i3c.c            | 62 ++++++++++++++++++++++++++
+ drivers/i3c/device.c                        |  8 ++++
+ drivers/iio/imu/st_lsm6dsx/Kconfig          |  8 +++-
+ drivers/iio/imu/st_lsm6dsx/Makefile         |  1 +
+ drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c | 67 +++++++++++++++++++++++++++++
+ include/linux/i3c/device.h                  |  1 +
+ include/linux/regmap.h                      | 20 +++++++++
+ 9 files changed, 172 insertions(+), 2 deletions(-)
+ create mode 100644 drivers/base/regmap/regmap-i3c.c
+ create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c
 
-T:  Bus=01 Lev=01 Prnt=01 Port=00 Cnt=01 Dev#=  6 Spd=480  MxCh= 0
-D:  Ver= 2.00 Cls=00(>ifc ) Sub=00 Prot=00 MxPS=64 #Cfgs=  1
-P:  Vendor=2020 ProdID=2031 Rev= 2.32
-S:  Manufacturer=Mobile Connect
-S:  Product=Mobile Connect
-S:  SerialNumber=0123456789ABCDEF
-C:* #Ifs= 6 Cfg#= 1 Atr=80 MxPwr=500mA
-I:* If#= 0 Alt= 0 #EPs= 2 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
-E:  Ad=81(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=01(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 1 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
-E:  Ad=83(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
-E:  Ad=82(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=02(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 2 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
-E:  Ad=85(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
-E:  Ad=84(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=03(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 3 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=00 Prot=00 Driver=(none)
-E:  Ad=87(I) Atr=03(Int.) MxPS=  10 Ivl=32ms
-E:  Ad=86(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=04(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 4 Alt= 0 #EPs= 3 Cls=ff(vend.) Sub=ff Prot=ff Driver=(none)
-E:  Ad=89(I) Atr=03(Int.) MxPS=   8 Ivl=32ms
-E:  Ad=88(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=05(O) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-I:* If#= 5 Alt= 0 #EPs= 2 Cls=08(stor.) Sub=06 Prot=50 Driver=(none)
-E:  Ad=8a(I) Atr=02(Bulk) MxPS= 512 Ivl=0ms
-E:  Ad=06(O) Atr=02(Bulk) MxPS= 512 Ivl=125us
-
-Signed-off-by: Bjørn Mork <bjorn@mork.no>
-Signed-off-by: David S. Miller <davem@davemloft.net>
-Signed-off-by: Sasha Levin <sashal@kernel.org>
----
- drivers/net/usb/qmi_wwan.c | 1 +
- 1 file changed, 1 insertion(+)
-
-diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
-index 74bebbdb4b15..9195f3476b1d 100644
---- a/drivers/net/usb/qmi_wwan.c
-+++ b/drivers/net/usb/qmi_wwan.c
-@@ -1203,6 +1203,7 @@ static const struct usb_device_id products[] = {
- 	{QMI_FIXED_INTF(0x19d2, 0x2002, 4)},	/* ZTE (Vodafone) K3765-Z */
- 	{QMI_FIXED_INTF(0x2001, 0x7e19, 4)},	/* D-Link DWM-221 B1 */
- 	{QMI_FIXED_INTF(0x2001, 0x7e35, 4)},	/* D-Link DWM-222 */
-+	{QMI_FIXED_INTF(0x2020, 0x2031, 4)},	/* Olicard 600 */
- 	{QMI_FIXED_INTF(0x2020, 0x2033, 4)},	/* BroadMobi BM806U */
- 	{QMI_FIXED_INTF(0x0f3d, 0x68a2, 8)},    /* Sierra Wireless MC7700 */
- 	{QMI_FIXED_INTF(0x114f, 0x68a2, 8)},    /* Sierra Wireless MC7750 */
 -- 
-2.19.1
-
-
+2.7.4
 
