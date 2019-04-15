@@ -2,196 +2,135 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 392A0C10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:05:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02D4FC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:06:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 001692087C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:05:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3AF92087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 14:06:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="NCEoz5IK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sa7nrG2n"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727585AbfDOOFf (ORCPT
+        id S1727605AbfDOOGB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 10:05:35 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:42415 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727371AbfDOOFe (ORCPT
+        Mon, 15 Apr 2019 10:06:01 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51026 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727588AbfDOOGB (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 10:05:34 -0400
-Received: by mail-pf1-f193.google.com with SMTP id w25so8637450pfi.9
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 07:05:34 -0700 (PDT)
+        Mon, 15 Apr 2019 10:06:01 -0400
+Received: by mail-wm1-f66.google.com with SMTP id z11so20943378wmi.0;
+        Mon, 15 Apr 2019 07:05:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=0WDxr7x++wyxZBE+48i+O5ufisb7Dj38JxloaCZIM1g=;
-        b=NCEoz5IKT8jCnPgqYIAWnJK8ysRkcxML7a53/BSGxcv4hkvYLWrjZ9Yscpy5OoTZmA
-         UgA88NzFVWuBs/mro+fu0DELzgUH7DgwJ5zjtM7kJcbbLgKxwADikls2Zbhp3rfQYvmU
-         FalL6hftLUMqTQUZXUZEJVGJILFdgUIyMhags=
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=t1nPpstrlJM5kBs2fqSCtG3M2bij+WTmTrEa9fXX0WE=;
+        b=sa7nrG2n2XdYRLO5bcWtTP0XQ/lCvo4C79lFXbdXSFCqqVsNcaYey1KISdEKzy6Tvd
+         bporXZcI2YQkAlrWHS2w2q23pOVp4EXpIg7QSZP/oyATlNrOiiuI/X8S6vmTXvzcWO/R
+         weF/G03rKwakeB78XfDZfeDvVXpqZKBmT67wEo9L9/8rewWpFKBLMcUYYNI/YJL74s9Q
+         1LFi+2QGIyc3WkjSuCO3CjnO0UEGEFtQehVK/rv2kGTzOXQOue/6vcjUi96uMShvuDWp
+         nbodecL6cPu0Q57Ad33sTStodLzNp6p9jjQIbe5zudH8E4GYMuzcz2kA2XsxVBB+3Rk5
+         bWeQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=0WDxr7x++wyxZBE+48i+O5ufisb7Dj38JxloaCZIM1g=;
-        b=MrC3mZEQ/SGa3ui65b4rXeUN1IJYUphjUal1adehlXGqY7JJPCxgrGl4YAZi3tTplH
-         se4KkF6AeADKUN5a6F5kOWsDxD0zcJqyozRRY8eijVNAdYtQyrNtRIaeA4rYUcaUSeZi
-         eVN1Gkn0AxwjSuzAkLAGd3uqqimziFUQmblAf3lzIgxIsq97rW90b/qg0TVfvHnxpuz4
-         /bHkBTgVTvObdyZiMjoe6UASwCBhGvoi+Uf33ZUUAsRmYA8EkkMhCx0skV+muwkPGeU2
-         XqNncmEhGsm3/J9ZryOdCDWGEdT9S00WYnyxNl5vFMQybDw4V8ddDTWLFwyMzi656kMB
-         8Jzg==
-X-Gm-Message-State: APjAAAVHftm2/8hAhsySRolg4pA4KQuDMQT3ZbAwnNkc4AGyCNNrzDha
-        4KecU0jlVJizNeOtJ6UoAxL/8g==
-X-Google-Smtp-Source: APXvYqyLhgQVBx81W0JcBdv3yAJYu5l22G1X1P7p/QGvIEXEqRq+ou1HUwmoW8xJZITy8HzRTkNEJg==
-X-Received: by 2002:a63:5149:: with SMTP id r9mr67474876pgl.177.1555337133723;
-        Mon, 15 Apr 2019 07:05:33 -0700 (PDT)
-Received: from localhost ([2620:15c:6:12:9c46:e0da:efbf:69cc])
-        by smtp.gmail.com with ESMTPSA id d69sm35046794pfg.24.2019.04.15.07.05.32
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 15 Apr 2019 07:05:32 -0700 (PDT)
-Date:   Mon, 15 Apr 2019 10:05:31 -0400
-From:   Joel Fernandes <joel@joelfernandes.org>
-To:     Olof Johansson <olof@lixom.net>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Manoj Rao <linux@manojrajarao.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        atish patra <atishp04@gmail.com>,
-        Daniel Colascione <dancol@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Kees Cook <keescook@chromium.org>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
-Subject: Re: [PATCH v5 1/3] Provide in-kernel headers to make extending
- kernel easier
-Message-ID: <20190415140531.GB205801@google.com>
-References: <20190320163116.39275-1-joel@joelfernandes.org>
- <CAOesGMheoZda84OSz9spQ7p66wot5S_9aaqaKC=QYp+8utASXA@mail.gmail.com>
- <20190408203601.GF133872@google.com>
- <CAOesGMibHCuMPCYkc8V++Z2Kuf3YQf_OjYn18GvDgzTy6ubV=g@mail.gmail.com>
- <CAJWu+or0hWce9+7aEfTHoOR8cptRbzHYVL-bPdJWGZH20dbo7Q@mail.gmail.com>
- <CAOesGMiuGK-Sbqo2z=1ab070JONav1LF82MRRLCdX-4+14_XZA@mail.gmail.com>
- <20190411031540.ehezr6kq7ouobpzx@ast-mbp.dhcp.thefacebook.com>
- <CAOesGMgiPB=7FE7tXXHes7WSLfByyPxirOStoH21NZqMwaUihQ@mail.gmail.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOesGMgiPB=7FE7tXXHes7WSLfByyPxirOStoH21NZqMwaUihQ@mail.gmail.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=t1nPpstrlJM5kBs2fqSCtG3M2bij+WTmTrEa9fXX0WE=;
+        b=crAFI0KQkZsyCadi6iLbfHHlog5DgDuTZ6uixN59BS/a0PSjxy7kR948PJew4rj+52
+         j8cWAV3lLDtjvWX88cudYo044ty2515xNOKU2wp3j9gffBx7Dm6mLTFrI2N9pNOPNp/b
+         FKSUBPqZEERBpgd6C5NN9+FULbIVW2bUwaXybEGlKYO5OCTT1WRAvhpTDgp6luT77biw
+         yNwpqBiq/J1xxWSaYdanguVuobbtRC5BfetMKv2aRg/kS9GKCLbg/WY6/InMuhv7Fenc
+         oNaZhQkJEF5kdxPeD0OpknoUxruFJe084vSPMcYP/aQ3Q5sfN7BpSvCrGs9G62/iR1er
+         drCQ==
+X-Gm-Message-State: APjAAAXu4uIifE4A7mhHAbl39fT+askUT4mF2jkONQwouboEEllcCiAp
+        U5zwiCVOmLz2kVdMMFm8y4uuMrlF
+X-Google-Smtp-Source: APXvYqz3DuIshr47RqymvoprLqcQpOaDYluoOEIPrMeRm+UD4ljTQlaCmwlyf/u68QsVS+DC05S+aw==
+X-Received: by 2002:a1c:b646:: with SMTP id g67mr23515676wmf.125.1555337158495;
+        Mon, 15 Apr 2019 07:05:58 -0700 (PDT)
+Received: from 640k.lan ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id z84sm22034053wmg.24.2019.04.15.07.05.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Apr 2019 07:05:57 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     Sean Christopherson <sean.j.christopherson@intel.com>
+Subject: [PATCH] KVM: nVMX: always use early vmcs check when EPT is disabled
+Date:   Mon, 15 Apr 2019 16:05:56 +0200
+Message-Id: <1555337156-37142-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 14, 2019 at 12:38:34PM -0700, Olof Johansson wrote:
-> On Wed, Apr 10, 2019 at 8:15 PM Alexei Starovoitov
-> <alexei.starovoitov@gmail.com> wrote:
-> >
-> > On Wed, Apr 10, 2019 at 09:34:49AM -0700, Olof Johansson wrote:
-> > > On Wed, Apr 10, 2019 at 8:51 AM Joel Fernandes <joelaf@google.com> wrote:
-> > > >
-> > > > On Wed, Apr 10, 2019 at 11:07 AM Olof Johansson <olof@lixom.net> wrote:
-> > > > [snip]
-> > > > > > > Wouldn't it be more convenient to provide it in a standardized format
-> > > > > > > such that you won't have to take an additional step, and always have
-> > > > > > > This is that form IMO.
-> > ...
-> > > Compared to:
-> > >  - Extract tarball
-> > >  - Build and load
-> > >  - Remove file tree from filesystem
-> >
-> > I think there are too many assumptions in this thread in regard to what
-> > is more convenient for user space.
-> > I think bcc should try to avoid extracting tarball into file system.
-> > For example libbcc can uncompress kheader.tar.xz into virtual file system
-> > of clang front-end. It's more or less std::map<string, string>
-> > with key=path, value=content of the file. Access to such in-memory
-> > 'files' is obviously faster than doing open/read syscalls.
-> 
-> I think performance is a red herring, especially since you have to
-> uncompress it on every compiler invocation. With this you'd need to
-> read/touch/write _all_ header files, not just the one your current
-> compiler invocation will use.
-> 
-> In the grand scheme of things, open/mmap syscalls wouldn't necessarily
-> be slower.
+The remaining failures of vmx.flat when EPT is disabled are caused by
+incorrectly reflecting VMfails to the L1 hypervisor.  What happens is
+that nested_vmx_restore_host_state corrupts the guest CR3, reloading it
+with the host's shadow CR3 instead, because it blindly loads GUEST_CR3
+from the vmcs01.
 
-Agreed.
+For simplicity let's just always use hardware VMCS checks when EPT is
+disabled.  This way, nested_vmx_restore_host_state is not reached at
+all (or at least shouldn't be reached).
+---
+ arch/x86/include/uapi/asm/vmx.h |  1 +
+ arch/x86/kvm/vmx/nested.c       | 22 ++++++++++++++++++++--
+ 2 files changed, 21 insertions(+), 2 deletions(-)
 
-> > bcc already uses this approach for some bcc internal 'files' that
-> > it passes to clang during compilation.
-> > All of /proc/kheaders.tar.xz files can be passed the same way
-> > without extracting them into real file system.
-> 
-> This is now a circular argument. Joel was stating that the plain text
-> headers took up too much memory, but now it's preferred to create such
-> filesystem in userspace memory on *every compiler invocation*?
-> That's... not better. And definitely worse if you want to compile in
-> parallel.
-
-The BCC patch does not extract purely into memory, but uses temporary
-directory: https://github.com/iovisor/bcc/pull/2312
-I believe this is a good approach.
-
-> From my perspective, this is where we're at:
-> 
-> This patch seems to have been met with a lot of responses in the tone
-> of "this is not an appealing solution". Meanwhile, some of the
-> suggested alternative solutions have not worked out, and we are now at
-> a point where there's less interest in exploring alternatives and
-> arguments to merge as-is with only minor adjustments.
-> 
-> I understand the desire to solve this. It'd be really convenient to
-> have a way to runtime build against the same structure layouts that
-> the kernel was built with. But I haven't heard anyone say that they
-
-About structure layouts, I'm assuming you mean compiler generated debug info.
-That does not work for eBPF tools as was mentioned previously in these threads:
-https://lkml.org/lkml/2019/3/11/1358
-https://lkml.org/lkml/2019/3/11/1363
-
-> *like* the solution proposed, and I haven't seen many of those
-> expressing concerns being converted to support it.
-
-IMHO there has been good number of people on both sides of the argument. If
-it were as strong of an opposition as you think, then I would have personally
-not wanted this merged tbh. We do want a solution that is clean and works, and
-I think this is a candidate.
-
-[snip]
-> I'd be a *lot* less hesitant if this went into debugfs or another
-> location than /proc, which is one of the most regression-sensitive
-> interfaces we have in the kernel.
-
-The solution should be regression-sensitive imho, we don't want the tracing
-tools to break, people use them. And their usability and robustness is
-important which prompted these patches. For some time we have been hosting
-downloadable headers for popular kernels (such as LTS versions) to workaround
-this issue, but this both a maintenance issue and non-scalable, and not
-robust (someone boots a custom kernel or we forget to update headers for a
-future LTS release and the tools break).
-
-thanks,
-
- - Joel
+diff --git a/arch/x86/include/uapi/asm/vmx.h b/arch/x86/include/uapi/asm/vmx.h
+index f0b0c90dd398..d213ec5c3766 100644
+--- a/arch/x86/include/uapi/asm/vmx.h
++++ b/arch/x86/include/uapi/asm/vmx.h
+@@ -146,6 +146,7 @@
+ 
+ #define VMX_ABORT_SAVE_GUEST_MSR_FAIL        1
+ #define VMX_ABORT_LOAD_HOST_PDPTE_FAIL       2
++#define VMX_ABORT_VMCS_CORRUPTED             3
+ #define VMX_ABORT_LOAD_HOST_MSR_FAIL         4
+ 
+ #endif /* _UAPIVMX_H */
+diff --git a/arch/x86/kvm/vmx/nested.c b/arch/x86/kvm/vmx/nested.c
+index a22af5a85540..6401eb7ef19c 100644
+--- a/arch/x86/kvm/vmx/nested.c
++++ b/arch/x86/kvm/vmx/nested.c
+@@ -3796,8 +3796,18 @@ static void nested_vmx_restore_host_state(struct kvm_vcpu *vcpu)
+ 	vmx_set_cr4(vcpu, vmcs_readl(CR4_READ_SHADOW));
+ 
+ 	nested_ept_uninit_mmu_context(vcpu);
+-	vcpu->arch.cr3 = vmcs_readl(GUEST_CR3);
+-	__set_bit(VCPU_EXREG_CR3, (ulong *)&vcpu->arch.regs_avail);
++
++	/*
++	 * This is only valid if EPT is in use, otherwise the vmcs01 GUEST_CR3
++	 * points to shadow pages!  Fortunately we only get here after a WARN_ON
++	 * if EPT is disabled, so a VMabort is perfectly fine.
++	 */
++	if (enable_ept) {
++		vcpu->arch.cr3 = vmcs_readl(GUEST_CR3);
++		__set_bit(VCPU_EXREG_CR3, (ulong *)&vcpu->arch.regs_avail);
++	} else {
++		nested_vmx_abort(vcpu, VMX_ABORT_VMCS_CORRUPTED);
++	}
+ 
+ 	/*
+ 	 * Use ept_save_pdptrs(vcpu) to load the MMU's cached PDPTRs
+@@ -5745,6 +5755,14 @@ __init int nested_vmx_hardware_setup(int (*exit_handlers[])(struct kvm_vcpu *))
+ {
+ 	int i;
+ 
++	/*
++	 * Without EPT it is not possible to restore L1's CR3 and PDPTR on
++	 * VMfail, because they are not available in vmcs01.  Just always
++	 * use hardware checks.
++	 */
++	if (!enable_ept)
++		nested_early_check = 1;
++
+ 	if (!cpu_has_vmx_shadow_vmcs())
+ 		enable_shadow_vmcs = 0;
+ 	if (enable_shadow_vmcs) {
+-- 
+1.8.3.1
 
