@@ -2,245 +2,106 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E99CC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BAF5C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:58:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B4402070D
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:57:52 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="B7orOxy/"
+	by mail.kernel.org (Postfix) with ESMTP id 2628A20854
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:58:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728986AbfDOT5u (ORCPT
+        id S1729051AbfDOT6P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:57:50 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:44735 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728774AbfDOT5u (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:57:50 -0400
-Received: by mail-lj1-f194.google.com with SMTP id h16so16840348ljg.11
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 12:57:48 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=from:subject:to:cc:references:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=H1MMV0mrpetojB6wkoeaHxVzGhoDBvvAhfwEHNFpeNg=;
-        b=B7orOxy/CPdQGiyRKz3VaPZPbyqvFvxsSjgAa/OzKviEfARbjiccjYRd85Sfq7Xskp
-         XqH6YBxyfheIMnVeJjwkmrZhGkjcxBg4f3amuJbg/JRiQbfdBgUBINWnCmB0wX3G0PJi
-         mCGxOxTlA2VVdv1YfWWtTIWYA59IRiWSJVYSzrvyRKJ2L2kx12Um5kBZKeA1o0HeA7/G
-         r6X021NWrEJnnQGQTj1Vl/FeLNQjtS8fonFwUfPrsGhBCzBwe1Dot4IoQH1D5NW1ykSL
-         RyxiJ5/7qqB+SuRISY0idSfVSrt+7nLHpjb1MpztGgHZ8dunmmKvshtHu1b3mQTtodd0
-         E/Bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:subject:to:cc:references:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=H1MMV0mrpetojB6wkoeaHxVzGhoDBvvAhfwEHNFpeNg=;
-        b=IJkMrK2Mz7FQsCQIrIdw3g00Myh7q3DOdTog5KPS8UyP+7jfwa7HzIZYygExhTqT/Q
-         pJSgYaNuP6FCql5ljnuItABgyDV4/g3DwRsFTWoFKMkd1abl0dtbZ9qRjVDf816bU+qi
-         C9c4YZMNBNL/81zzcoNJPWpSLQrGKEZ1SYIKLUw8qC1nwqqaGDHYmc6tYqX3gS1vdf6Q
-         p9yElyBvY3Sp3cBdihyGrVs6xaAK7v19cbbgAct7mrxdTIszRQdljzbD2ehjacjY36xj
-         ygfgM1cnt1ixq8w6N++TCkGvsnLJRWnjBJ8Z10wbF1gK4L3+nxDg0pVe0uY2OJOY0zTn
-         il4g==
-X-Gm-Message-State: APjAAAVz7KQhta7wwLTDTPin5X9wMqOL5uB48OkFjz9TloJccEnU+hwz
-        wKf60pj/YHIPifKAWt4ShAnH3Q==
-X-Google-Smtp-Source: APXvYqzuApBgmMNGPYTpGaX2JM/hPR8Eymqv0HeFTK7bnzToX69hgX82bDRKVYj0WPAiXD6hce9jlg==
-X-Received: by 2002:a2e:9d99:: with SMTP id c25mr15789356ljj.159.1555358267348;
-        Mon, 15 Apr 2019 12:57:47 -0700 (PDT)
-Received: from wasted.cogentembedded.com ([31.173.85.61])
-        by smtp.gmail.com with ESMTPSA id x72sm1073507lfa.58.2019.04.15.12.57.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Apr 2019 12:57:46 -0700 (PDT)
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Subject: Re: [PATCH v10 1/3] mfd: Add Renesas R-Car Gen3 RPC-IF MFD controller
- driver
-To:     Mason Yang <masonccyang@mxic.com.tw>, broonie@kernel.org,
-        marek.vasut@gmail.com, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, bbrezillon@kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org
-Cc:     juliensu@mxic.com.tw, Simon Horman <horms@verge.net.au>
-References: <1555313834-15107-1-git-send-email-masonccyang@mxic.com.tw>
- <1555313834-15107-2-git-send-email-masonccyang@mxic.com.tw>
-Organization: Cogent Embedded
-Message-ID: <935046cc-e2e5-b9b8-0c94-1be5ae604276@cogentembedded.com>
-Date:   Mon, 15 Apr 2019 22:57:45 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        Mon, 15 Apr 2019 15:58:15 -0400
+Received: from mail-eopbgr760093.outbound.protection.outlook.com ([40.107.76.93]:33793
+        "EHLO NAM02-CY1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728548AbfDOT6P (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:58:15 -0400
+Received: from CO2PR01MB2168.prod.exchangelabs.com (10.166.200.9) by
+ CO2PR01MB2008.prod.exchangelabs.com (10.166.90.149) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1792.19; Mon, 15 Apr 2019 19:58:09 +0000
+Received: from CO2PR01MB2168.prod.exchangelabs.com
+ ([fe80::f12d:c6a7:1b65:a199]) by CO2PR01MB2168.prod.exchangelabs.com
+ ([fe80::f12d:c6a7:1b65:a199%4]) with mapi id 15.20.1792.018; Mon, 15 Apr 2019
+ 19:58:09 +0000
+From:   Hartley Sweeten <HartleyS@visionengravers.com>
+To:     Arnd Bergmann <arnd@arndb.de>
+CC:     Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Stefan Agner <stefan@agner.ch>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        "linux-input@vger.kernel.org" <linux-input@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH 2/4] ARM: ep93xx: keypad: stop using mach/platform.h
+Thread-Topic: [PATCH 2/4] ARM: ep93xx: keypad: stop using mach/platform.h
+Thread-Index: AQHU88FusCfPFHtDSUOfLafK2JkH0qY9nThggAADYoCAAAD/kA==
+Date:   Mon, 15 Apr 2019 19:58:09 +0000
+Message-ID: <CO2PR01MB2168426AD665DC2C8DAA1040D02B0@CO2PR01MB2168.prod.exchangelabs.com>
+References: <20190415192734.935387-1-arnd@arndb.de>
+ <20190415192734.935387-2-arnd@arndb.de>
+ <CO2PR01MB21683E465191EA8246503774D02B0@CO2PR01MB2168.prod.exchangelabs.com>
+ <CAK8P3a1DSN3jcfGngrJFp93Mt98qsibvKvtJGtjHYjOmcM1kNQ@mail.gmail.com>
+In-Reply-To: <CAK8P3a1DSN3jcfGngrJFp93Mt98qsibvKvtJGtjHYjOmcM1kNQ@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=HartleyS@visionengravers.com; 
+x-originating-ip: [63.230.248.205]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 19116ec6-e98c-4159-d18d-08d6c1dcaf15
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(7021145)(8989299)(5600140)(711020)(4605104)(4534185)(7022145)(4603075)(4627221)(201702281549075)(8990200)(7048125)(7024125)(7027125)(7023125)(2017052603328)(7193020);SRVR:CO2PR01MB2008;
+x-ms-traffictypediagnostic: CO2PR01MB2008:
+x-microsoft-antispam-prvs: <CO2PR01MB20087B8E6C3378039972BDF1D02B0@CO2PR01MB2008.prod.exchangelabs.com>
+x-forefront-prvs: 000800954F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(346002)(136003)(396003)(366004)(39840400004)(376002)(189003)(199004)(71190400001)(55016002)(71200400001)(52536014)(25786009)(80792005)(26005)(93886005)(6116002)(9686003)(3846002)(102836004)(186003)(2906002)(74316002)(5660300002)(33656002)(6436002)(97736004)(72206003)(229853002)(7696005)(7736002)(54906003)(14454004)(316002)(66066001)(99286004)(11346002)(476003)(305945005)(8676002)(76176011)(81166006)(446003)(81156014)(6506007)(68736007)(486006)(6246003)(106356001)(105586002)(256004)(4326008)(86362001)(6916009)(53936002)(53546011)(508600001)(8936002);DIR:OUT;SFP:1102;SCL:1;SRVR:CO2PR01MB2008;H:CO2PR01MB2168.prod.exchangelabs.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: visionengravers.com does not
+ designate permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: m6pEkoSjpodbYmgYfe8hkOxQfT3yJRlIBx3d9nky2PqRBzeotVeEnkOCjy7yjIdmH9O1feHOkL8h9Hpaz3LniFdQm/9HI1t4tGY+E2OHcspaHUYWOH8Io+z/p66U2YQQIQsYR+YGXoWQv7CqZyHVxuO3/faw34nMlVuoQOMhDWGdYUdkvM/f+Cj0Qi9e2LwcycXLMp5F0yzyLT/OkX4tvHtaPKtHfLwexQRe4aw1kU0jBL2T6Ga5g2v77cQz+rQ2NOUUfJ9FFNLPF48PyC1BrGIfsDm7CheInvwZjlWAN9kRb8yEdxA5jl68TySffAcRuJRXjJWo0TxByGGo2kYhzrmsenj0sFj3/izNDVNZ2z8GtWgHPnscCzlKIh1Iq9wb3jv2yr1ya6KtGM6pvkDL57ytLB9NHNGpsXzj8bm/QI0=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-In-Reply-To: <1555313834-15107-2-git-send-email-masonccyang@mxic.com.tw>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
-Content-Transfer-Encoding: 7bit
+X-OriginatorOrg: visionengravers.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 19116ec6-e98c-4159-d18d-08d6c1dcaf15
+X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Apr 2019 19:58:09.1850
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: d698601f-af92-4269-8099-fd6f11636477
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: CO2PR01MB2008
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The patch name is somewhat misleading -- there's no "MFD controller".
-
-On 04/15/2019 10:37 AM, Mason Yang wrote:
-
-> Add a driver for Renesas R-Car Gen3 RPC-IF MFD controller.
-> 
-> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-[...]
-> diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
-> index 26ad646..7914349 100644
-> --- a/drivers/mfd/Kconfig
-> +++ b/drivers/mfd/Kconfig
-> @@ -978,6 +978,15 @@ config MFD_RDC321X
->  	  southbridge which provides access to GPIOs and Watchdog using the
->  	  southbridge PCI device configuration space.
->  
-> +config MFD_RENESAS_RPC
-> +	tristate "Renesas R-Car Gen3 RPC-IF MFD driver"
-> +	select MFD_CORE
-> +	depends on ARCH_RENESAS
-> +	help
-> +	  This supports for Renesas R-Car Gen3 RPC-IF multifunction device
-
-   "For" node needed here.
-
-> +	  controller which provides either SPI host controller or HyperFlash.
-> +	  You have to select individual components under the corresponding menu.
-> +
->  config MFD_RT5033
->  	tristate "Richtek RT5033 Power Management IC"
->  	depends on I2C
-[...]
-> diff --git a/drivers/mfd/renesas-rpc.c b/drivers/mfd/renesas-rpc.c
-> new file mode 100644
-> index 0000000..a565f31
-> --- /dev/null
-> +++ b/drivers/mfd/renesas-rpc.c
-> @@ -0,0 +1,128 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +//
-> +// Copyright (C) 2018 ~ 2019 Renesas Solutions Corp.
-> +// Copyright (C) 2019 Macronix International Co., Ltd.
-> +//
-> +// R-Car Gen3 RPC-IF MFD driver
-> +//
-> +// Author:
-> +//	Mason Yang <masonccyang@mxic.com.tw>
-> +//
-> +
-> +#include <linux/mfd/renesas-rpc.h>
-> +#include <linux/mfd/core.h>
-> +
-> +static const struct mfd_cell rpc_hf_ctlr = {
-> +	.name = "rpc-hf",
-> +	.of_compatible = "renesas,rcar-rpc-hf",
-
-   Don't need this line any more...
-
-> +};
-> +
-> +static const struct mfd_cell rpc_spi_ctlr = {
-> +	.name = "rpc-spi",
-> +	.of_compatible = "renesas,rcar-rpc-spi",
-
-   ... and this too.
-
-[...]
-> +static int rpc_mfd_probe(struct platform_device *pdev)
-> +{
-> +	struct device_node *flash;
-> +	const struct mfd_cell *cell;
-> +	struct resource *res;
-> +	struct rpc_mfd *rpc;
-> +	void __iomem *base;
-> +	int ret;
-> +
-> +	flash = of_get_next_child(pdev->dev.of_node, NULL);
-> +	if (!flash) {
-> +		dev_warn(&pdev->dev, "no flash node found\n");
-> +		return -ENODEV;
-> +	}
-> +
-> +	ret = of_device_is_compatible(flash, "jedec,spi-nor");
-> +	if (ret) {
-> +		cell = &rpc_spi_ctlr;
-> +	} else {
-> +		ret = of_device_is_compatible(flash, "cfi-flash");
-> +		if (ret) {
-> +			cell = &rpc_hf_ctlr;
-> +		} else {
-> +			dev_warn(&pdev->dev, "no jedec spi/cfi device found\n");
-> +			return -ENODEV;
-> +		}
-> +	}
-
-
-   This definitely should look simpler, like below:
-
-	if (of_device_is_compatible(flash, "jedec,spi-nor")) {
- 		cell = &rpc_spi_ctlr;
-	} else if (of_device_is_compatible(flash, "cfi-flash")) {
-		cell = &rpc_hf_ctlr;
- 	} else {
-		dev_warn(&pdev->dev, "unknown flash type\n");
-		return -ENODEV;
-	}
-
-[...]
-
-> +	ret = devm_mfd_add_devices(&pdev->dev, -1, cell, 1, NULL, 0, NULL);
-> +
-> +	return ret;
-
-	return devm_mfd_add_devices(&pdev->dev, -1, cell, 1, NULL, 0, NULL);
-
-[...]
-> diff --git a/include/linux/mfd/renesas-rpc.h b/include/linux/mfd/renesas-rpc.h
-> new file mode 100644
-> index 0000000..61ada14
-> --- /dev/null
-> +++ b/include/linux/mfd/renesas-rpc.h
-> @@ -0,0 +1,153 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +//
-> +// Copyright (C) 2018 ~ 2019 Renesas Solutions Corp.
-> +// Copyright (C) 2019 Macronix International Co., Ltd.
-> +//
-> +// R-Car Gen3 RPC-IF MFD driver
-> +//
-> +// Author:
-> +//	Mason Yang <masonccyang@mxic.com.tw>
-> +//
-> +
-> +#ifndef __MFD_RENESAS_RPC_H
-> +#define __MFD_RENESAS_RPC_H
-> +
-> +#include <linux/clk.h>
-> +#include <linux/io.h>
-> +#include <linux/log2.h>
-> +#include <linux/iopoll.h>
-> +#include <linux/module.h>
-> +#include <linux/mtd/mtd.h>
-> +#include <linux/platform_device.h>
-> +#include <linux/pm_runtime.h>
-> +#include <linux/of.h>
-> +#include <linux/regmap.h>
-> +#include <linux/reset.h>
-
-   NAK. I have already told you that these #include's are only needed in the
-drivers, not in this header.
-
-   My idea is to contain all hardware manipulation in the MFD driver,
-with SPI/HF drivers calling that code via a set of APIs declared in this header.
-The registers (declared below) would end up only needed by that common MFD driver...
-
-[...]
-
-MBR, Sergei
+T24gTW9uZGF5LCBBcHJpbCAxNSwgMjAxOSAxMjo0NyBQTSwgQXJuZCBCZXJnbWFubiB3cm90ZToN
+Cj4gT24gTW9uLCBBcHIgMTUsIDIwMTkgYXQgOTozOSBQTSBIYXJ0bGV5IFN3ZWV0ZW4gPEhhcnRs
+ZXlTQHZpc2lvbmVuZ3JhdmVycy5jb20+IHdyb3RlOg0KPj4+IC0jZGVmaW5lIEVQOTNYWF9LRVlQ
+QURfS0RJViAgICAgICAgICAgKDE8PDQpICAvKiAxLzQgY2xvY2sgb3IgMS8xNiBjbG9jayAqLw0K
+Pj4+IC0jZGVmaW5lIEVQOTNYWF9LRVlQQURfQVVUT1JFUEVBVCAgICAgKDE8PDUpICAvKiBlbmFi
+bGUga2V5IGF1dG9yZXBlYXQgKi8NCj4+PiArI2RlZmluZSBFUDkzWFhfS0VZUEFEX0FVVE9SRVBF
+QVQgICAgICgxPDw0KSAgLyogZW5hYmxlIGtleSBhdXRvcmVwZWF0ICovDQo+Pg0KPj4gWW91IGhh
+dmUgcmUtZGVmaW5lZCB0aGUga2V5cGFkIHJlZ2lzdGVyIGJpdHMgaGVyZS4NCj4+DQo+PiBUaGUg
+S0RJViBiaXQgY2hhbmdlcyB0aGUgY2xvY2sgcmF0ZS4gVGhlIEFVVE9SRVBFQVQgYml0IGVuYWJs
+ZXMga2V5IGF1dG9yZXBlYXQuDQo+DQo+IEFzIGZhciBhcyBJIGNhbiB0ZWxsLCB0aGV5IGFyZSBu
+b3QgcmVnaXN0ZXIgYml0cywganVzdCBzb2Z0d2FyZSBmbGFncyBmb3IgY29tbXVuaWNhdGluZyBi
+ZXR3ZWVuIGENCj4gYm9hcmQgZmlsZSBhbmQgdGhlIGRyaXZlciwgc28gSSBhc3N1bWVkIEkgY291
+bGQgZnJlZWx5IHJlb3JnYW5pemUgdGhlbS4NCj4NCj4gRGlkIEkgbWlzcyBzb21ldGhpbmc/DQoN
+ClVnaC4uIEl0J3MgYmVlbiBxdWl0ZSBhIHdoaWxlIHNpbmNlIEkgbG9va2VkIGF0IHRoYXQgY29k
+ZS4uLg0KDQpZb3VyIGNvcnJlY3QsIHRoZXNlIGFyZSBqdXN0IGZsYWdzIHRvIHRoZSBkcml2ZXIu
+DQoNClRoZSBLZXlTY2FuSW5pdCByZWdpc3RlciBkb2VzIGhhdmUgc29tZSBiaXRzIHRoYXQgdGhl
+c2UgZmxhZ3MgZWZmZWN0IGJ1dCB0aGUgZHJpdmVyIGRlYWxzDQp3aXRoIHRoZW0uDQoNCkkgaGF2
+ZSBiZWVuIGJ1cmllZCB1cGRhdGluZyBhbiBvbGQgUG93ZXJQQyBoYXJkd2FyZS9zb2Z0d2FyZSBk
+ZXNpZ24gYW5kIGhhdmVuJ3QgbG9va2VkDQphdCB0aGUgRVA5M3h4IGxhdGVseS4gTXkgRVA5MzA3
+IGJvYXJkIGRvZXMgaGF2ZSB0aGUga2V5cGFkIGludGVyZmFjZS4gSG9wZWZ1bGx5IEkgd2lsbCBn
+ZXQNCnNvbWUgdGltZSB0byBjaGVjayB0aGUgbGF0ZXN0IG1haW5saW5lIG9uIGl0IHNvbWV0aW1l
+IHNvb24uDQoNCk92ZXJhbGwgdGhlc2UgcGF0Y2hlcyBsb29rIGdvb2QuIFNvLCBmb3IgdGhlIHNl
+cmllcy4uLg0KDQpBY2tlZC1ieTogSCBIYXJ0bGV5IFN3ZWV0ZW4gPGhzd2VldGVuQHZpc2lvbmVu
+Z3JhdmVycy5jb20+DQoNCg==
