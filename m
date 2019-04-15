@@ -4,49 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EA9EC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:13:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6CCC1C282DA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:13:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EEA1218DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:13:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 375E421908
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:13:37 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355614;
-	bh=VaXOLE2WGm9xCzg1zqcLDIlB8qNwohGne1xxPBGKNy0=;
+	s=default; t=1555355617;
+	bh=5GZ5Wh4d/QgkqSK0Izs+bx9+bQTROocV45gMGvNpQ4E=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=AjdowZeYOYVBYthBhM+v+XyvejLKCQVRxyz1RVo1Y8AHF0X37ddXrG0Y4xWnW9a8P
-	 HxcST7MaPWct1AIFwNOdoifJO/xAOyNuw0CHkiSWcpleKF6WF1iiwFUgwu2Ta3C747
-	 Q6geigg4Q80pVaoBVTMj/1bT96P7A1laKAivtjQc=
+	b=vzv3iRxHjSyq2vGnokD5wK8DDHMTYPovUdMeoHV4QlWAiw5X4LdmyryfUg+SBI/+T
+	 7K8nRbY26MBdlSxQh+sn/B3V5WuMOYM2z9I0uvLwoDiJF0jnhwSrGDIp3nsVMfXmiJ
+	 Y0EwstIcjgtFLKEQau1xLt2awRFgR50DnsczXpSU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731232AbfDOTNc (ORCPT
+        id S1731597AbfDOTNg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:13:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51280 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:13:36 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51366 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731210AbfDOTNa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:13:30 -0400
+        id S1731584AbfDOTNd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:13:33 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 330CB218A1;
-        Mon, 15 Apr 2019 19:13:29 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id CA2C1218A1;
+        Mon, 15 Apr 2019 19:13:31 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355609;
-        bh=VaXOLE2WGm9xCzg1zqcLDIlB8qNwohGne1xxPBGKNy0=;
+        s=default; t=1555355612;
+        bh=5GZ5Wh4d/QgkqSK0Izs+bx9+bQTROocV45gMGvNpQ4E=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=0huUfHaXj9c76cE/wJs9k2+KNcUQnbCttPEaAXlZa69SClZ0M89UIZJt2SajMmctB
-         zhke1TXbHpfmHEeld42NhkHLB3TWwN89KId7/pdIZU37GlHzxrXxalFwsvYmhyL65V
-         0hYH2W66usXD5BS9a812Om3JFy+O3f98PvxAc2R0=
+        b=Mvys08iAOPtCZy7BiPaS4nDX/obb3CBFUSWxugZed4AePssLxcTdA8THxNofNUcFb
+         lNjfSQtTujU6FE+yeWIBwzq8bART8q8N680SB/5uBCDmJ77ytfOLhzy+d8JzmgZjfz
+         c9hdxF/obrrM+VJL8lD6kEOKdlFQVtyOGWpOpM6s=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Nikolay Borisov <nborisov@suse.com>,
-        Anand Jain <anand.jain@oracle.com>,
-        David Sterba <dsterba@suse.com>
-Subject: [PATCH 5.0 076/117] btrfs: prop: fix vanished compression property after failed set
-Date:   Mon, 15 Apr 2019 21:00:46 +0200
-Message-Id: <20190415183748.795758618@linuxfoundation.org>
+        stable@vger.kernel.org, Peter Geis <pgwipeout@gmail.com>,
+        Heiko Stuebner <heiko@sntech.de>
+Subject: [PATCH 5.0 093/117] arm64: dts: rockchip: fix rk3328 rgmii high tx error rate
+Date:   Mon, 15 Apr 2019 21:01:03 +0200
+Message-Id: <20190415183749.584956970@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183744.887851196@linuxfoundation.org>
 References: <20190415183744.887851196@linuxfoundation.org>
@@ -59,53 +58,121 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Anand Jain <anand.jain@oracle.com>
+From: Peter Geis <pgwipeout@gmail.com>
 
-commit 272e5326c7837697882ce3162029ba893059b616 upstream.
+commit 6fd8b9780ec1a49ac46e0aaf8775247205e66231 upstream.
 
-The compression property resets to NULL, instead of the old value if we
-fail to set the new compression parameter.
+Several rk3328 based boards experience high rgmii tx error rates.
+This is due to several pins in the rk3328.dtsi rgmii pinmux that are
+missing a defined pull strength setting.
+This causes the pinmux driver to default to 2ma (bit mask 00).
 
-  $ btrfs prop get /btrfs compression
-    compression=lzo
-  $ btrfs prop set /btrfs compression zli
-    ERROR: failed to set compression for /btrfs: Invalid argument
-  $ btrfs prop get /btrfs compression
+These pins are only defined in the rk3328.dtsi, and are not listed in
+the rk3328 specification.
+The TRM only lists them as "Reserved"
+(RK3328 TRM V1.1, 3.3.3 Detail Register Description, GRF_GPIO0B_IOMUX,
+GRF_GPIO0C_IOMUX, GRF_GPIO0D_IOMUX).
+However, removal of these pins from the rgmii pinmux definition causes
+the interface to fail to transmit.
 
-This is because the compression property ->validate() is successful for
-'zli' as the strncmp() used the length passed from the userspace.
+Also, the rgmii tx and rx pins defined in the dtsi are not consistent
+with the rk3328 specification, with tx pins currently set to 12ma and
+rx pins set to 2ma.
 
-Fix it by using the expected string length in strncmp().
+Fix this by setting tx pins to 8ma and the rx pins to 4ma, consistent
+with the specification.
+Defining the drive strength for the undefined pins eliminated the high
+tx packet error rate observed under heavy data transfers.
+Aligning the drive strength to the TRM values eliminated the occasional
+packet retry errors under iperf3 testing.
+This allows much higher data rates with no recorded tx errors.
 
-Fixes: 63541927c8d1 ("Btrfs: add support for inode properties")
-Fixes: 5c1aab1dd544 ("btrfs: Add zstd support")
-CC: stable@vger.kernel.org # 4.14+
-Reviewed-by: Nikolay Borisov <nborisov@suse.com>
-Signed-off-by: Anand Jain <anand.jain@oracle.com>
-Reviewed-by: David Sterba <dsterba@suse.com>
-Signed-off-by: David Sterba <dsterba@suse.com>
+Tested on the rk3328-roc-cc board.
+
+Fixes: 52e02d377a72 ("arm64: dts: rockchip: add core dtsi file for RK3328 SoCs")
+Cc: stable@vger.kernel.org
+Signed-off-by: Peter Geis <pgwipeout@gmail.com>
+Signed-off-by: Heiko Stuebner <heiko@sntech.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 
 ---
- fs/btrfs/props.c |    6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ arch/arm64/boot/dts/rockchip/rk3328.dtsi |   44 +++++++++++++++----------------
+ 1 file changed, 22 insertions(+), 22 deletions(-)
 
---- a/fs/btrfs/props.c
-+++ b/fs/btrfs/props.c
-@@ -366,11 +366,11 @@ int btrfs_subvol_inherit_props(struct bt
+--- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+@@ -1628,50 +1628,50 @@
+ 			rgmiim1_pins: rgmiim1-pins {
+ 				rockchip,pins =
+ 					/* mac_txclk */
+-					<1 RK_PB4 2 &pcfg_pull_none_12ma>,
++					<1 RK_PB4 2 &pcfg_pull_none_8ma>,
+ 					/* mac_rxclk */
+-					<1 RK_PB5 2 &pcfg_pull_none_2ma>,
++					<1 RK_PB5 2 &pcfg_pull_none_4ma>,
+ 					/* mac_mdio */
+-					<1 RK_PC3 2 &pcfg_pull_none_2ma>,
++					<1 RK_PC3 2 &pcfg_pull_none_4ma>,
+ 					/* mac_txen */
+-					<1 RK_PD1 2 &pcfg_pull_none_12ma>,
++					<1 RK_PD1 2 &pcfg_pull_none_8ma>,
+ 					/* mac_clk */
+-					<1 RK_PC5 2 &pcfg_pull_none_2ma>,
++					<1 RK_PC5 2 &pcfg_pull_none_4ma>,
+ 					/* mac_rxdv */
+-					<1 RK_PC6 2 &pcfg_pull_none_2ma>,
++					<1 RK_PC6 2 &pcfg_pull_none_4ma>,
+ 					/* mac_mdc */
+-					<1 RK_PC7 2 &pcfg_pull_none_2ma>,
++					<1 RK_PC7 2 &pcfg_pull_none_4ma>,
+ 					/* mac_rxd1 */
+-					<1 RK_PB2 2 &pcfg_pull_none_2ma>,
++					<1 RK_PB2 2 &pcfg_pull_none_4ma>,
+ 					/* mac_rxd0 */
+-					<1 RK_PB3 2 &pcfg_pull_none_2ma>,
++					<1 RK_PB3 2 &pcfg_pull_none_4ma>,
+ 					/* mac_txd1 */
+-					<1 RK_PB0 2 &pcfg_pull_none_12ma>,
++					<1 RK_PB0 2 &pcfg_pull_none_8ma>,
+ 					/* mac_txd0 */
+-					<1 RK_PB1 2 &pcfg_pull_none_12ma>,
++					<1 RK_PB1 2 &pcfg_pull_none_8ma>,
+ 					/* mac_rxd3 */
+-					<1 RK_PB6 2 &pcfg_pull_none_2ma>,
++					<1 RK_PB6 2 &pcfg_pull_none_4ma>,
+ 					/* mac_rxd2 */
+-					<1 RK_PB7 2 &pcfg_pull_none_2ma>,
++					<1 RK_PB7 2 &pcfg_pull_none_4ma>,
+ 					/* mac_txd3 */
+-					<1 RK_PC0 2 &pcfg_pull_none_12ma>,
++					<1 RK_PC0 2 &pcfg_pull_none_8ma>,
+ 					/* mac_txd2 */
+-					<1 RK_PC1 2 &pcfg_pull_none_12ma>,
++					<1 RK_PC1 2 &pcfg_pull_none_8ma>,
  
- static int prop_compression_validate(const char *value, size_t len)
- {
--	if (!strncmp("lzo", value, len))
-+	if (!strncmp("lzo", value, 3))
- 		return 0;
--	else if (!strncmp("zlib", value, len))
-+	else if (!strncmp("zlib", value, 4))
- 		return 0;
--	else if (!strncmp("zstd", value, len))
-+	else if (!strncmp("zstd", value, 4))
- 		return 0;
+ 					/* mac_txclk */
+-					<0 RK_PB0 1 &pcfg_pull_none>,
++					<0 RK_PB0 1 &pcfg_pull_none_8ma>,
+ 					/* mac_txen */
+-					<0 RK_PB4 1 &pcfg_pull_none>,
++					<0 RK_PB4 1 &pcfg_pull_none_8ma>,
+ 					/* mac_clk */
+-					<0 RK_PD0 1 &pcfg_pull_none>,
++					<0 RK_PD0 1 &pcfg_pull_none_4ma>,
+ 					/* mac_txd1 */
+-					<0 RK_PC0 1 &pcfg_pull_none>,
++					<0 RK_PC0 1 &pcfg_pull_none_8ma>,
+ 					/* mac_txd0 */
+-					<0 RK_PC1 1 &pcfg_pull_none>,
++					<0 RK_PC1 1 &pcfg_pull_none_8ma>,
+ 					/* mac_txd3 */
+-					<0 RK_PC7 1 &pcfg_pull_none>,
++					<0 RK_PC7 1 &pcfg_pull_none_8ma>,
+ 					/* mac_txd2 */
+-					<0 RK_PC6 1 &pcfg_pull_none>;
++					<0 RK_PC6 1 &pcfg_pull_none_8ma>;
+ 			};
  
- 	return -EINVAL;
+ 			rmiim1_pins: rmiim1-pins {
 
 
