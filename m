@@ -7,51 +7,50 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1BCFC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:10:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1E54C10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:10:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC44120880
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:10:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A450E218FF
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:10:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355430;
-	bh=ddEPkb7PkS4u48aS1aum227k0xsYown690wReFvfg0M=;
+	s=default; t=1555355434;
+	bh=euxiEE9mGW5edvcTO9UyaWyRCQtvvLraettsbVP26T0=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uq28lgLSMzCSIEySiF1ngZaHtX29ifPZa4DagkwAE3J48suI+VJV9D847Odkk6pwq
-	 tbh7SZTEnVKw1yCU9lFtBrjKn4pU1sKKjVAo6xCTbahplrrZMD3WLHIG6242x6hM0I
-	 kWAA9HZVWnC0sFa69hSMMQk7EcKEQCydZ03J2Rso=
+	b=GUgMfEz4N3qA+FikTm6hwfogwgABJrlMBLrBCgtdcPwYbfqKcC83roxuxWXjN7zf8
+	 bO1JSHb9UM/zrYrDzynmH0ocjQAAIclXnByO0ywhV0sdhhTSgbg3p4yiL7Gk5gebxN
+	 zCiGgahWIu3qWnVASurLnxy91KeV+LJnxP/GpzL0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728756AbfDOTK3 (ORCPT
+        id S1731038AbfDOTKd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:10:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46660 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:10:33 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46806 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730093AbfDOTKW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:10:22 -0400
+        id S1730467AbfDOTK2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:10:28 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6055C20880;
-        Mon, 15 Apr 2019 19:10:21 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B27020880;
+        Mon, 15 Apr 2019 19:10:26 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355421;
-        bh=ddEPkb7PkS4u48aS1aum227k0xsYown690wReFvfg0M=;
+        s=default; t=1555355427;
+        bh=euxiEE9mGW5edvcTO9UyaWyRCQtvvLraettsbVP26T0=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=nv0HmmVK/EpDOSaNsxuEQzQIRAloxmKz6rtCTYLDyZ/4r7pdSmZgHUpULhi+z8WrQ
-         WLHvBoS3h17mKSkeYDaIuleUF040F3mjTAEAfY6GRjkUtfOT7mYdrcV/5VqR6iogMz
-         PjZDHaqrLovG9SLvNZs1U5Sx8ZO7SecDDquqdOfI=
+        b=gq8np6RVzy0LK81kuDwLPaBL0Nyp72IW42bl4LfXUqBEEkq8zmAQ+zcB0FA0M/qtV
+         qZlke/WIxLb60tnnEdnFtM1SB7M+rrYEkjxe8tmXHy+UkJqXI50LOVZg3ENvTDyY2m
+         dwz5tToPC6bhhpHixPsNMJ6CB74L+5F70PoB77K0=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Artemy Kovalyov <artemyko@mellanox.com>,
-        Moni Shoua <monis@mellanox.com>,
-        Leon Romanovsky <leonro@mellanox.com>,
-        Shalom Toledo <shalomt@mellanox.com>,
-        Or Gerlitz <ogerlitz@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
+        stable@vger.kernel.org,
+        Santosh Shilimkar <santosh.shilimkar@oracle.com>,
+        Hulk Robot <hulkci@huawei.com>,
+        Mao Wenan <maowenan@huawei.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 014/117] net/mlx5: Decrease default mr cache size
-Date:   Mon, 15 Apr 2019 20:59:44 +0200
-Message-Id: <20190415183745.623539384@linuxfoundation.org>
+Subject: [PATCH 5.0 016/117] net: rds: force to destroy connection if t_sock is NULL in rds_tcp_kill_sock().
+Date:   Mon, 15 Apr 2019 20:59:46 +0200
+Message-Id: <20190415183745.728238190@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183744.887851196@linuxfoundation.org>
 References: <20190415183744.887851196@linuxfoundation.org>
@@ -64,58 +63,145 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e8b26b2135dedc0284490bfeac06dfc4418d0105 ]
+[ Upstream commit cb66ddd156203daefb8d71158036b27b0e2caf63 ]
 
-Delete initialization of high order entries in mr cache to decrease initial
-memory footprint. When required, the administrator can populate the
-entries with memory keys via the /sys interface.
+When it is to cleanup net namespace, rds_tcp_exit_net() will call
+rds_tcp_kill_sock(), if t_sock is NULL, it will not call
+rds_conn_destroy(), rds_conn_path_destroy() and rds_tcp_conn_free() to free
+connection, and the worker cp_conn_w is not stopped, afterwards the net is freed in
+net_drop_ns(); While cp_conn_w rds_connect_worker() will call rds_tcp_conn_path_connect()
+and reference 'net' which has already been freed.
 
-This approach is very helpful to significantly reduce the per HW function
-memory footprint in virtualization environments such as SRIOV.
+In rds_tcp_conn_path_connect(), rds_tcp_set_callbacks() will set t_sock = sock before
+sock->ops->connect, but if connect() is failed, it will call
+rds_tcp_restore_callbacks() and set t_sock = NULL, if connect is always
+failed, rds_connect_worker() will try to reconnect all the time, so
+rds_tcp_kill_sock() will never to cancel worker cp_conn_w and free the
+connections.
 
-Fixes: 9603b61de1ee ("mlx5: Move pci device handling from mlx5_ib to mlx5_core")
-Signed-off-by: Artemy Kovalyov <artemyko@mellanox.com>
-Signed-off-by: Moni Shoua <monis@mellanox.com>
-Signed-off-by: Leon Romanovsky <leonro@mellanox.com>
-Reported-by:  Shalom Toledo <shalomt@mellanox.com>
-Acked-by: Or Gerlitz <ogerlitz@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+Therefore, the condition !tc->t_sock is not needed if it is going to do
+cleanup_net->rds_tcp_exit_net->rds_tcp_kill_sock, because tc->t_sock is always
+NULL, and there is on other path to cancel cp_conn_w and free
+connection. So this patch is to fix this.
+
+rds_tcp_kill_sock():
+...
+if (net != c_net || !tc->t_sock)
+...
+Acked-by: Santosh Shilimkar <santosh.shilimkar@oracle.com>
+
+==================================================================
+BUG: KASAN: use-after-free in inet_create+0xbcc/0xd28
+net/ipv4/af_inet.c:340
+Read of size 4 at addr ffff8003496a4684 by task kworker/u8:4/3721
+
+CPU: 3 PID: 3721 Comm: kworker/u8:4 Not tainted 5.1.0 #11
+Hardware name: linux,dummy-virt (DT)
+Workqueue: krdsd rds_connect_worker
+Call trace:
+ dump_backtrace+0x0/0x3c0 arch/arm64/kernel/time.c:53
+ show_stack+0x28/0x38 arch/arm64/kernel/traps.c:152
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0x120/0x188 lib/dump_stack.c:113
+ print_address_description+0x68/0x278 mm/kasan/report.c:253
+ kasan_report_error mm/kasan/report.c:351 [inline]
+ kasan_report+0x21c/0x348 mm/kasan/report.c:409
+ __asan_report_load4_noabort+0x30/0x40 mm/kasan/report.c:429
+ inet_create+0xbcc/0xd28 net/ipv4/af_inet.c:340
+ __sock_create+0x4f8/0x770 net/socket.c:1276
+ sock_create_kern+0x50/0x68 net/socket.c:1322
+ rds_tcp_conn_path_connect+0x2b4/0x690 net/rds/tcp_connect.c:114
+ rds_connect_worker+0x108/0x1d0 net/rds/threads.c:175
+ process_one_work+0x6e8/0x1700 kernel/workqueue.c:2153
+ worker_thread+0x3b0/0xdd0 kernel/workqueue.c:2296
+ kthread+0x2f0/0x378 kernel/kthread.c:255
+ ret_from_fork+0x10/0x18 arch/arm64/kernel/entry.S:1117
+
+Allocated by task 687:
+ save_stack mm/kasan/kasan.c:448 [inline]
+ set_track mm/kasan/kasan.c:460 [inline]
+ kasan_kmalloc+0xd4/0x180 mm/kasan/kasan.c:553
+ kasan_slab_alloc+0x14/0x20 mm/kasan/kasan.c:490
+ slab_post_alloc_hook mm/slab.h:444 [inline]
+ slab_alloc_node mm/slub.c:2705 [inline]
+ slab_alloc mm/slub.c:2713 [inline]
+ kmem_cache_alloc+0x14c/0x388 mm/slub.c:2718
+ kmem_cache_zalloc include/linux/slab.h:697 [inline]
+ net_alloc net/core/net_namespace.c:384 [inline]
+ copy_net_ns+0xc4/0x2d0 net/core/net_namespace.c:424
+ create_new_namespaces+0x300/0x658 kernel/nsproxy.c:107
+ unshare_nsproxy_namespaces+0xa0/0x198 kernel/nsproxy.c:206
+ ksys_unshare+0x340/0x628 kernel/fork.c:2577
+ __do_sys_unshare kernel/fork.c:2645 [inline]
+ __se_sys_unshare kernel/fork.c:2643 [inline]
+ __arm64_sys_unshare+0x38/0x58 kernel/fork.c:2643
+ __invoke_syscall arch/arm64/kernel/syscall.c:35 [inline]
+ invoke_syscall arch/arm64/kernel/syscall.c:47 [inline]
+ el0_svc_common+0x168/0x390 arch/arm64/kernel/syscall.c:83
+ el0_svc_handler+0x60/0xd0 arch/arm64/kernel/syscall.c:129
+ el0_svc+0x8/0xc arch/arm64/kernel/entry.S:960
+
+Freed by task 264:
+ save_stack mm/kasan/kasan.c:448 [inline]
+ set_track mm/kasan/kasan.c:460 [inline]
+ __kasan_slab_free+0x114/0x220 mm/kasan/kasan.c:521
+ kasan_slab_free+0x10/0x18 mm/kasan/kasan.c:528
+ slab_free_hook mm/slub.c:1370 [inline]
+ slab_free_freelist_hook mm/slub.c:1397 [inline]
+ slab_free mm/slub.c:2952 [inline]
+ kmem_cache_free+0xb8/0x3a8 mm/slub.c:2968
+ net_free net/core/net_namespace.c:400 [inline]
+ net_drop_ns.part.6+0x78/0x90 net/core/net_namespace.c:407
+ net_drop_ns net/core/net_namespace.c:406 [inline]
+ cleanup_net+0x53c/0x6d8 net/core/net_namespace.c:569
+ process_one_work+0x6e8/0x1700 kernel/workqueue.c:2153
+ worker_thread+0x3b0/0xdd0 kernel/workqueue.c:2296
+ kthread+0x2f0/0x378 kernel/kthread.c:255
+ ret_from_fork+0x10/0x18 arch/arm64/kernel/entry.S:1117
+
+The buggy address belongs to the object at ffff8003496a3f80
+ which belongs to the cache net_namespace of size 7872
+The buggy address is located 1796 bytes inside of
+ 7872-byte region [ffff8003496a3f80, ffff8003496a5e40)
+The buggy address belongs to the page:
+page:ffff7e000d25a800 count:1 mapcount:0 mapping:ffff80036ce4b000
+index:0x0 compound_mapcount: 0
+flags: 0xffffe0000008100(slab|head)
+raw: 0ffffe0000008100 dead000000000100 dead000000000200 ffff80036ce4b000
+raw: 0000000000000000 0000000080040004 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8003496a4580: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8003496a4600: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+>ffff8003496a4680: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                   ^
+ ffff8003496a4700: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+ ffff8003496a4780: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+==================================================================
+
+Fixes: 467fa15356ac("RDS-TCP: Support multiple RDS-TCP listen endpoints, one per netns.")
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: Mao Wenan <maowenan@huawei.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../net/ethernet/mellanox/mlx5/core/main.c    | 20 -------------------
- 1 file changed, 20 deletions(-)
+ net/rds/tcp.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/main.c b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-index be81b319b0dc..694edd899322 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/main.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/main.c
-@@ -163,26 +163,6 @@ static struct mlx5_profile profile[] = {
- 			.size	= 8,
- 			.limit	= 4
- 		},
--		.mr_cache[16]	= {
--			.size	= 8,
--			.limit	= 4
--		},
--		.mr_cache[17]	= {
--			.size	= 8,
--			.limit	= 4
--		},
--		.mr_cache[18]	= {
--			.size	= 8,
--			.limit	= 4
--		},
--		.mr_cache[19]	= {
--			.size	= 4,
--			.limit	= 2
--		},
--		.mr_cache[20]	= {
--			.size	= 4,
--			.limit	= 2
--		},
- 	},
- };
+diff --git a/net/rds/tcp.c b/net/rds/tcp.c
+index c16f0a362c32..a729c47db781 100644
+--- a/net/rds/tcp.c
++++ b/net/rds/tcp.c
+@@ -600,7 +600,7 @@ static void rds_tcp_kill_sock(struct net *net)
+ 	list_for_each_entry_safe(tc, _tc, &rds_tcp_conn_list, t_tcp_node) {
+ 		struct net *c_net = read_pnet(&tc->t_cpath->cp_conn->c_net);
  
+-		if (net != c_net || !tc->t_sock)
++		if (net != c_net)
+ 			continue;
+ 		if (!list_has_conn(&tmp_list, tc->t_cpath->cp_conn)) {
+ 			list_move_tail(&tc->t_tcp_node, &tmp_list);
 -- 
 2.19.1
 
