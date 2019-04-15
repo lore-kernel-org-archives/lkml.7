@@ -4,50 +4,53 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18730C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:11:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3082C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:11:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CD709218DA
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:11:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81940218A1
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:11:03 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555355461;
-	bh=jPh/LBMZd5CCRnp+pjxE6K4YrEXRxU1+eqjr84U295c=;
+	s=default; t=1555355463;
+	bh=RxmhoD7iN2p20KN+Q7FzLox2pJoY6NFWM2QIuenuGVQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=pEDFOVDwnPeEoP1o9JioJkUZQUoKTOY7qO4hsItRnvfp41UochEAFbfVyozb/sR1/
-	 XBCicIM3+cV393/bhmsNiu6mFgFN/USv9QLZW8M21vA43qnBUxB7AL1/Ee3gAxBUss
-	 xpXKEey266M0Ox98SRYy04lsFEAsktnqdjRIkmTU=
+	b=qGOdzBCWCjrNaOjD558YQTCz1FIIPaL3oY+mnFN+maTHgzVtYXto4IJf+z+gdMGs3
+	 HGGc5mb9nyeF9ms307ODdSMWWdfjpBbHvaHsPodwY09acJ9Dusci+rEcEBknZ7QXNR
+	 9DRgysBkdFy098ziEKbvWhPsfUI1LUQSH3Mg2Z8Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731134AbfDOTLA (ORCPT
+        id S1731148AbfDOTLC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:11:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:47610 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:11:02 -0400
+Received: from mail.kernel.org ([198.145.29.99]:47756 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730270AbfDOTKz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:10:55 -0400
+        id S1731128AbfDOTK7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:10:59 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 7060D21903;
-        Mon, 15 Apr 2019 19:10:53 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id D3CA9218DA;
+        Mon, 15 Apr 2019 19:10:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555355453;
-        bh=jPh/LBMZd5CCRnp+pjxE6K4YrEXRxU1+eqjr84U295c=;
+        s=default; t=1555355459;
+        bh=RxmhoD7iN2p20KN+Q7FzLox2pJoY6NFWM2QIuenuGVQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=J2D91kk/Ljopy+QkdsOV0lSKMtN1SYILneRTRiFxTMSu3wIGhEjPRUvvUaDV59r1D
-         uYXnhi6kPbChUE8IuXrmD8kw6QVkxOxfJUFLur1VZTnSyG/w+7VlimA7ptTZ4Onv5x
-         LrbF2fXG6/W7eGbfgoIzGwnQA1WXqZG+Bw19BnaE=
+        b=2K5Q1bc1LR6jtBQmzrDdsntjXWg8TUhU8OK997IXlhJYRhF+cKSWZU0X8OHk9J6Wb
+         od/Nmpfd35P7b3JUTslIVDCcaC1Uh5DhbZR4pbiJP89ll3AEDShEJhHKfJm2RwLLBl
+         RLbW/cYsmraSnAdiSMk+nR/s89vOJ7RCvGigxLUw=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Huy Nguyen <huyn@mellanox.com>,
-        Saeed Mahameed <saeedm@mellanox.com>,
+        stable@vger.kernel.org,
+        Jakub Kicinski <jakub.kicinski@netronome.com>,
+        John Hurley <john.hurley@netronome.com>,
+        Simon Horman <simon.horman@netronome.com>,
+        "David S. Miller" <davem@davemloft.net>,
         Sasha Levin <sashal@kernel.org>
-Subject: [PATCH 5.0 041/117] net/mlx5e: Update xon formula
-Date:   Mon, 15 Apr 2019 21:00:11 +0200
-Message-Id: <20190415183747.118018756@linuxfoundation.org>
+Subject: [PATCH 5.0 029/117] nfp: disable netpoll on representors
+Date:   Mon, 15 Apr 2019 20:59:59 +0200
+Message-Id: <20190415183746.370604794@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183744.887851196@linuxfoundation.org>
 References: <20190415183744.887851196@linuxfoundation.org>
@@ -60,145 +63,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-[ Upstream commit e28408e98bced123038857b6e3c81fa12a2e3e68 ]
+[ Upstream commit c3e1f7fff69c78169c8ac40cc74ac4307f74e36d ]
 
-Set xon = xoff - netdev's max_mtu.
-netdev's max_mtu will give enough time for the pause frame to
-arrive at the sender.
+NFP reprs are software device on top of the PF's vNIC.
+The comment above __dev_queue_xmit() sayeth:
 
-Fixes: 0696d60853d5 ("net/mlx5e: Receive buffer configuration")
-Signed-off-by: Huy Nguyen <huyn@mellanox.com>
-Signed-off-by: Saeed Mahameed <saeedm@mellanox.com>
+ When calling this method, interrupts MUST be enabled.  This is because
+ the BH enable code must have IRQs enabled so that it will not deadlock.
+
+For netconsole we can't guarantee IRQ state, let's just
+disable netpoll on representors to be on the safe side.
+
+When the initial implementation of NFP reprs was added by the
+commit 5de73ee46704 ("nfp: general representor implementation")
+.ndo_poll_controller was required for netpoll to be enabled.
+
+Fixes: ac3d9dd034e5 ("netpoll: make ndo_poll_controller() optional")
+Signed-off-by: Jakub Kicinski <jakub.kicinski@netronome.com>
+Reviewed-by: John Hurley <john.hurley@netronome.com>
+Reviewed-by: Simon Horman <simon.horman@netronome.com>
+Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Sasha Levin <sashal@kernel.org>
 ---
- .../mellanox/mlx5/core/en/port_buffer.c       | 28 +++++++++++--------
- 1 file changed, 16 insertions(+), 12 deletions(-)
+ drivers/net/ethernet/netronome/nfp/nfp_net_repr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en/port_buffer.c b/drivers/net/ethernet/mellanox/mlx5/core/en/port_buffer.c
-index f00de0c987cd..4ab0d030b544 100644
---- a/drivers/net/ethernet/mellanox/mlx5/core/en/port_buffer.c
-+++ b/drivers/net/ethernet/mellanox/mlx5/core/en/port_buffer.c
-@@ -143,7 +143,7 @@ static u32 calculate_xoff(struct mlx5e_priv *priv, unsigned int mtu)
- }
+diff --git a/drivers/net/ethernet/netronome/nfp/nfp_net_repr.c b/drivers/net/ethernet/netronome/nfp/nfp_net_repr.c
+index 7d62e3698f08..73db94e55fd0 100644
+--- a/drivers/net/ethernet/netronome/nfp/nfp_net_repr.c
++++ b/drivers/net/ethernet/netronome/nfp/nfp_net_repr.c
+@@ -384,7 +384,7 @@ int nfp_repr_init(struct nfp_app *app, struct net_device *netdev,
+ 	netdev->features &= ~(NETIF_F_TSO | NETIF_F_TSO6);
+ 	netdev->gso_max_segs = NFP_NET_LSO_MAX_SEGS;
  
- static int update_xoff_threshold(struct mlx5e_port_buffer *port_buffer,
--				 u32 xoff, unsigned int mtu)
-+				 u32 xoff, unsigned int max_mtu)
- {
- 	int i;
+-	netdev->priv_flags |= IFF_NO_QUEUE;
++	netdev->priv_flags |= IFF_NO_QUEUE | IFF_DISABLE_NETPOLL;
+ 	netdev->features |= NETIF_F_LLTX;
  
-@@ -155,11 +155,12 @@ static int update_xoff_threshold(struct mlx5e_port_buffer *port_buffer,
- 		}
- 
- 		if (port_buffer->buffer[i].size <
--		    (xoff + mtu + (1 << MLX5E_BUFFER_CELL_SHIFT)))
-+		    (xoff + max_mtu + (1 << MLX5E_BUFFER_CELL_SHIFT)))
- 			return -ENOMEM;
- 
- 		port_buffer->buffer[i].xoff = port_buffer->buffer[i].size - xoff;
--		port_buffer->buffer[i].xon  = port_buffer->buffer[i].xoff - mtu;
-+		port_buffer->buffer[i].xon  =
-+			port_buffer->buffer[i].xoff - max_mtu;
- 	}
- 
- 	return 0;
-@@ -167,7 +168,7 @@ static int update_xoff_threshold(struct mlx5e_port_buffer *port_buffer,
- 
- /**
-  * update_buffer_lossy()
-- *   mtu: device's MTU
-+ *   max_mtu: netdev's max_mtu
-  *   pfc_en: <input> current pfc configuration
-  *   buffer: <input> current prio to buffer mapping
-  *   xoff:   <input> xoff value
-@@ -184,7 +185,7 @@ static int update_xoff_threshold(struct mlx5e_port_buffer *port_buffer,
-  *     Return 0 if no error.
-  *     Set change to true if buffer configuration is modified.
-  */
--static int update_buffer_lossy(unsigned int mtu,
-+static int update_buffer_lossy(unsigned int max_mtu,
- 			       u8 pfc_en, u8 *buffer, u32 xoff,
- 			       struct mlx5e_port_buffer *port_buffer,
- 			       bool *change)
-@@ -221,7 +222,7 @@ static int update_buffer_lossy(unsigned int mtu,
- 	}
- 
- 	if (changed) {
--		err = update_xoff_threshold(port_buffer, xoff, mtu);
-+		err = update_xoff_threshold(port_buffer, xoff, max_mtu);
- 		if (err)
- 			return err;
- 
-@@ -231,6 +232,7 @@ static int update_buffer_lossy(unsigned int mtu,
- 	return 0;
- }
- 
-+#define MINIMUM_MAX_MTU 9216
- int mlx5e_port_manual_buffer_config(struct mlx5e_priv *priv,
- 				    u32 change, unsigned int mtu,
- 				    struct ieee_pfc *pfc,
-@@ -242,12 +244,14 @@ int mlx5e_port_manual_buffer_config(struct mlx5e_priv *priv,
- 	bool update_prio2buffer = false;
- 	u8 buffer[MLX5E_MAX_PRIORITY];
- 	bool update_buffer = false;
-+	unsigned int max_mtu;
- 	u32 total_used = 0;
- 	u8 curr_pfc_en;
- 	int err;
- 	int i;
- 
- 	mlx5e_dbg(HW, priv, "%s: change=%x\n", __func__, change);
-+	max_mtu = max_t(unsigned int, priv->netdev->max_mtu, MINIMUM_MAX_MTU);
- 
- 	err = mlx5e_port_query_buffer(priv, &port_buffer);
- 	if (err)
-@@ -255,7 +259,7 @@ int mlx5e_port_manual_buffer_config(struct mlx5e_priv *priv,
- 
- 	if (change & MLX5E_PORT_BUFFER_CABLE_LEN) {
- 		update_buffer = true;
--		err = update_xoff_threshold(&port_buffer, xoff, mtu);
-+		err = update_xoff_threshold(&port_buffer, xoff, max_mtu);
- 		if (err)
- 			return err;
- 	}
-@@ -265,7 +269,7 @@ int mlx5e_port_manual_buffer_config(struct mlx5e_priv *priv,
- 		if (err)
- 			return err;
- 
--		err = update_buffer_lossy(mtu, pfc->pfc_en, buffer, xoff,
-+		err = update_buffer_lossy(max_mtu, pfc->pfc_en, buffer, xoff,
- 					  &port_buffer, &update_buffer);
- 		if (err)
- 			return err;
-@@ -277,8 +281,8 @@ int mlx5e_port_manual_buffer_config(struct mlx5e_priv *priv,
- 		if (err)
- 			return err;
- 
--		err = update_buffer_lossy(mtu, curr_pfc_en, prio2buffer, xoff,
--					  &port_buffer, &update_buffer);
-+		err = update_buffer_lossy(max_mtu, curr_pfc_en, prio2buffer,
-+					  xoff, &port_buffer, &update_buffer);
- 		if (err)
- 			return err;
- 	}
-@@ -302,7 +306,7 @@ int mlx5e_port_manual_buffer_config(struct mlx5e_priv *priv,
- 			return -EINVAL;
- 
- 		update_buffer = true;
--		err = update_xoff_threshold(&port_buffer, xoff, mtu);
-+		err = update_xoff_threshold(&port_buffer, xoff, max_mtu);
- 		if (err)
- 			return err;
- 	}
-@@ -310,7 +314,7 @@ int mlx5e_port_manual_buffer_config(struct mlx5e_priv *priv,
- 	/* Need to update buffer configuration if xoff value is changed */
- 	if (!update_buffer && xoff != priv->dcbx.xoff) {
- 		update_buffer = true;
--		err = update_xoff_threshold(&port_buffer, xoff, mtu);
-+		err = update_xoff_threshold(&port_buffer, xoff, max_mtu);
- 		if (err)
- 			return err;
- 	}
+ 	if (nfp_app_has_tc(app)) {
 -- 
 2.19.1
 
