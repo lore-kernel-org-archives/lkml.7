@@ -2,168 +2,141 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 93DF7C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 22:53:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E856CC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 22:57:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6041820854
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 22:53:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA94320880
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 22:57:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Cb7aaKwi"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J3ez7IM/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728220AbfDOWxJ (ORCPT
+        id S1727564AbfDOW5L (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 18:53:09 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35320 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728193AbfDOWxH (ORCPT
+        Mon, 15 Apr 2019 18:57:11 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:54299 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726041AbfDOW5K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 18:53:07 -0400
-Received: by mail-io1-f68.google.com with SMTP id p16so16076747iod.2
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 15:53:07 -0700 (PDT)
+        Mon, 15 Apr 2019 18:57:10 -0400
+Received: by mail-wm1-f66.google.com with SMTP id c1so22661459wml.4
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 15:57:09 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=gdPoW9mhfi6soRZh5xEBsWtXHQf+l0G2eEYMV2IVYv0=;
-        b=Cb7aaKwiFDjPX1hsQVWMdhof7UfTrhdSCipGghOvpHM29X6Q378GE+rYJ2MwWdc7HY
-         7dxPhWQlRxoHIRBqY6cPWEYLJrSuzKU7zWvZlV4718swC2FM1unKHfUCW5Q+HqrhHski
-         dowZmxjew6PmHD6wB8n6+BWB8tbCaur4x8a7w=
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:message-id:date:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=4m5cRpZV4vqK4PwyhZwTZq0EuEvBEKQazFbGo6vEKss=;
+        b=J3ez7IM/meghOUXIEmxPBzwoG4ZKCiWYscdUrJWP5opt1t5LUwy/IecKxxS2wAa5kJ
+         6eXN7AqA2w9WvH4YxInCP7q4+Gova8D5RGPMMk2cKucjnA4FaO1PsE8VIcXdCtw2aWBJ
+         uBPwmeDFZ4eGhwGs5GXKpLEFIt1ss+CpPkm/gC3F2cbS2IvW1jvaNB3PTN93sGHH5thr
+         E8X+zR9p3bGja6RRN5ZaXx9ow5ak4vqV6dP6hzX19e3alNNC+eA4kjCMIaKyC7HRhUrs
+         rc6pnsj5eb4JGvlfkMtDDbzIhVIjgosyi5RrmoadMK7iIuTd0Qbnj7vI5UB7lSDOxInr
+         1DCg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=gdPoW9mhfi6soRZh5xEBsWtXHQf+l0G2eEYMV2IVYv0=;
-        b=TcgSYQrQRvGWMbze4Io9QyXjiTRWYDBV0/2PQP/zDQaHo2ExVN2SmeNhIXZgdJ8CZ/
-         mKIHhy2L+d8dFc3o+ZGUKjq6aIee9E5uZNSApegK+gEK4gmIJhdX/UPNttZJeAgLaKoQ
-         j6mcS+yj3HBZdPqU4pWXBZIpzygiMlItJ6iPJ2wG1CF34hvQRSQxH25ziXYu78iqTP44
-         BucHW0TEGWpgo+vHsLae+TG7MTJATLzsFqdP968OYkEBmIEsJg+wObqARaP6AXk/s3vc
-         KbFaygL5SqhvD/Pqv2XWvLagjfBcZ9i2vD/hgjgNOrA4qtJgyl1Gcxuvp/nZ/Ig3yoEH
-         F5Qw==
-X-Gm-Message-State: APjAAAVivx1+ipoeZxXPTmNIOT3K3PC0JwY98VCO9YZC3xO3mkgYRzmx
-        chaR65yPyUItSD/XdoU//kf5yg==
-X-Google-Smtp-Source: APXvYqyIPAyjx9oo54Bkr5S/JXYCCCJH5bow3kmenuIuyOIAUJLE4RhXwJ7MoxLERPst/6T7sucEIQ==
-X-Received: by 2002:a5d:8b87:: with SMTP id p7mr16062565iol.64.1555368787253;
-        Mon, 15 Apr 2019 15:53:07 -0700 (PDT)
-Received: from localhost ([2620:15c:183:0:20b8:dee7:5447:d05])
-        by smtp.gmail.com with ESMTPSA id t142sm8558391ita.38.2019.04.15.15.53.06
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=4m5cRpZV4vqK4PwyhZwTZq0EuEvBEKQazFbGo6vEKss=;
+        b=WK1qONkpKkpSIPVsC6yr2g5eOx+GSsKpzN/FiMWwrUH01QFq2pN42RBR5e3g+clycL
+         Vp6yJlg2XzuipdNNzcP/BCxMwaATvnh6JEeFLgMt5+ZXllEjVHtY4gadS2XJ7yuToqgC
+         30LZ/D20SgLPVOCArIyPndRN+1XvJ4D31UO+m2MzHYDJncDGgGaQRCWV0vH2lipwZJnE
+         PbZ4TA6AbRIOyFYsKFmmpxQDz+qL3XYJHMhAXCbCE/5efZjHWlx7go+bYaNlg8gVbEMC
+         bHbPeGRJ1gFrJMqw9WqcAYFKLPAN3Y419AekncS1ZpYy0G0uwQvPCXtqKiqXvIjDi9CM
+         bzAg==
+X-Gm-Message-State: APjAAAV5mpsT9pVPf7UJPvVl0+YZle13xCMTIJH+blC+EKBaZOhZyQq3
+        giNe0sFp/kmOIX54vK0Rq4AO+Ew=
+X-Google-Smtp-Source: APXvYqzApjixKuIgtajIkzWOdw0r8VyefOdSWZJHvs7OkAOIK5QQ2vjgDBEmaYxdkmB0jTb9SjiEQQ==
+X-Received: by 2002:a05:600c:2293:: with SMTP id 19mr24102917wmf.77.1555369028638;
+        Mon, 15 Apr 2019 15:57:08 -0700 (PDT)
+Received: from localhost (186.red-83-33-157.dynamicip.rima-tde.net. [83.33.157.186])
+        by smtp.gmail.com with ESMTPSA id u14sm45638049wrr.1.2019.04.15.15.57.07
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Apr 2019 15:53:06 -0700 (PDT)
-From:   Raul E Rangel <rrangel@chromium.org>
-To:     linux-mmc@vger.kernel.org, linux-trace-devel@vger.kernel.org
-Cc:     djkurtz@chromium.org, zwisler@chromium.org,
-        Raul E Rangel <rrangel@chromium.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        hongjiefang <hongjiefang@asrmicro.com>,
-        Jennifer Dahm <jennifer.dahm@ni.com>,
-        linux-kernel@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>,
-        Kyle Roeschley <kyle.roeschley@ni.com>,
-        Ingo Molnar <mingo@redhat.com>,
-        Avri Altman <avri.altman@wdc.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>,
-        Simon Horman <horms+renesas@verge.net.au>
-Subject: [PATCH v1 4/4] mmc: core: Add trace event for CSD response
-Date:   Mon, 15 Apr 2019 16:52:41 -0600
-Message-Id: <20190415225241.70088-4-rrangel@chromium.org>
-X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
-In-Reply-To: <20190415225241.70088-1-rrangel@chromium.org>
-References: <20190415225241.70088-1-rrangel@chromium.org>
+        Mon, 15 Apr 2019 15:57:07 -0700 (PDT)
+Subject: Re: [PATCH] x86/mm: Prevent bogus warnings with "noexec=off"
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86 team <x86@kernel.org>
+References: <c090ad3c-1f2f-c148-dd44-a58df0788588@gmail.com>
+ <alpine.DEB.2.21.1904141158400.4917@nanos.tec.linutronix.de>
+ <92ac69b8-7e29-50e1-f460-4e7ac8c6b7ac@gmail.com>
+ <alpine.DEB.2.21.1904151037530.1729@nanos.tec.linutronix.de>
+From:   Xose Vazquez Perez <xose.vazquez@gmail.com>
+Message-ID: <20066a63-4d7e-c0e9-23fa-4653d1dae8df@gmail.com>
+Date:   Tue, 16 Apr 2019 00:57:06 +0200
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <alpine.DEB.2.21.1904151037530.1729@nanos.tec.linutronix.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Example:
-mmc_csd: mmc0: struct: 0, cmdclass: 0x5b5, raw: {0x400e0032,0x5b590000,0x3b4b7f80,0xa404000}
+On 4/15/19 10:46 AM, Thomas Gleixner wrote:
 
-Signed-off-by: Raul E Rangel <rrangel@chromium.org>
----
+> Xose reported warnings when NX is disabled on the kernel command line.
 
- drivers/mmc/core/mmc.c     |  4 ++++
- drivers/mmc/core/sd.c      |  2 ++
- include/trace/events/mmc.h | 28 ++++++++++++++++++++++++++++
- 3 files changed, 34 insertions(+)
+Thank you for doing the dirty work.
 
-diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
-index 3e786ba204c3..46ce894f7c03 100644
---- a/drivers/mmc/core/mmc.c
-+++ b/drivers/mmc/core/mmc.c
-@@ -20,6 +20,8 @@
- #include <linux/mmc/card.h>
- #include <linux/mmc/mmc.h>
- 
-+#include <trace/events/mmc.h>
-+
- #include "core.h"
- #include "card.h"
- #include "host.h"
-@@ -182,6 +184,8 @@ static int mmc_decode_csd(struct mmc_card *card)
- 		csd->erase_size <<= csd->write_blkbits - 9;
- 	}
- 
-+	trace_mmc_csd(card);
-+
- 	return 0;
- }
- 
-diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
-index cc33a4f96c6a..4e704a7280ba 100644
---- a/drivers/mmc/core/sd.c
-+++ b/drivers/mmc/core/sd.c
-@@ -183,6 +183,8 @@ static int mmc_decode_csd(struct mmc_card *card)
- 
- 	card->erase_size = csd->erase_size;
- 
-+	trace_mmc_csd(card);
-+
- 	return 0;
- }
- 
-diff --git a/include/trace/events/mmc.h b/include/trace/events/mmc.h
-index fa82c010ae4e..58f6f7808974 100644
---- a/include/trace/events/mmc.h
-+++ b/include/trace/events/mmc.h
-@@ -174,6 +174,34 @@ TRACE_EVENT(sd_ssr,
- 	)
- );
- 
-+TRACE_EVENT(mmc_csd,
-+
-+	TP_PROTO(struct mmc_card *card),
-+
-+	TP_ARGS(card),
-+
-+	TP_STRUCT__entry(
-+		__array(u32,			raw,	4)
-+		__field(unsigned char,		structure)
-+		__field(unsigned short,		cmdclass)
-+		__string(name,			mmc_hostname(card->host))
-+	),
-+
-+	TP_fast_assign(
-+		__entry->structure = card->csd.structure;
-+		__entry->cmdclass = card->csd.cmdclass;
-+		memcpy(__entry->raw, card->raw_csd, sizeof(card->raw_csd));
-+		__assign_str(name, mmc_hostname(card->host));
-+	),
-+
-+	TP_printk("%s: struct: %d, cmdclass: %#x, raw: %s",
-+		  __get_str(name),
-+		  __entry->structure,
-+		  __entry->cmdclass,
-+		  __print_array(__entry->raw, 4, sizeof(u32))
-+	)
-+);
-+
- TRACE_EVENT(mmc_request_start,
- 
- 	TP_PROTO(struct mmc_host *host, struct mmc_request *mrq),
--- 
-2.21.0.392.gf8f6787159e-goog
+> 
+> __early_set_fixmap() triggers:
+> 
+>   attempted to set unsupported pgprot:    8000000000000163
+>   	       	   	       bits:      8000000000000000
+> 			       supported: 7fffffffffffffff
+> 
+>   WARNING: CPU: 0 PID: 0 at arch/x86/include/asm/pgtable.h:537
+>   	   	       	    __early_set_fixmap+0xa2/0xff
+> 
+> because it uses __default_kernel_pte_mask to mask out unsupported bits.
+> 
+> Use __supported_pte_mask instead.
+> 
+> Disabling NX on the command line also triggers the NX warning in the page
+> table mapping check:
+> 
+>   WARNING: CPU: 1 PID: 1 at arch/x86/mm/dump_pagetables.c:262 note_page+0x2ae/0x650
+>   ....
+> 
+> Make the warning depend on NX set in __supported_pte_mask.
+> 
+> Reported-by: Xose Vazquez Perez <xose.vazquez@gmail.com>
+
+And
+Tested-by: Xose Vazquez Perez <xose.vazquez@gmail.com>
+
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+>  arch/x86/mm/dump_pagetables.c |    3 ++-
+>  arch/x86/mm/ioremap.c         |    2 +-
+>  2 files changed, 3 insertions(+), 2 deletions(-)
+> 
+> --- a/arch/x86/mm/dump_pagetables.c
+> +++ b/arch/x86/mm/dump_pagetables.c
+> @@ -259,7 +259,8 @@ static void note_wx(struct pg_state *st)
+>  #endif
+>  	/* Account the WX pages */
+>  	st->wx_pages += npages;
+> -	WARN_ONCE(1, "x86/mm: Found insecure W+X mapping at address %pS\n",
+> +	WARN_ONCE(__supported_pte_mask & _PAGE_NX,
+> +		  "x86/mm: Found insecure W+X mapping at address %pS\n",
+>  		  (void *)st->start_address);
+>  }
+>  
+> --- a/arch/x86/mm/ioremap.c
+> +++ b/arch/x86/mm/ioremap.c
+> @@ -825,7 +825,7 @@ void __init __early_set_fixmap(enum fixe
+>  	pte = early_ioremap_pte(addr);
+>  
+>  	/* Sanitize 'prot' against any unsupported bits: */
+> -	pgprot_val(flags) &= __default_kernel_pte_mask;
+> +	pgprot_val(flags) &= __supported_pte_mask;
+>  
+>  	if (pgprot_val(flags))
+>  		set_pte(pte, pfn_pte(phys >> PAGE_SHIFT, flags));
+> 
 
