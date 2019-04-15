@@ -2,286 +2,269 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55823C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:49:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B2BDC10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:49:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 103822077C
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:49:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBC722077C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 16:49:32 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="lKiG0NU7";
-	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="iaQh6zZT"
+	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="iD7RiUb6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727505AbfDOQt0 (ORCPT
+        id S1727738AbfDOQtb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 12:49:26 -0400
-Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:47866 "EHLO
-        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725972AbfDOQt0 (ORCPT
+        Mon, 15 Apr 2019 12:49:31 -0400
+Received: from mail-it1-f196.google.com ([209.85.166.196]:56209 "EHLO
+        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727604AbfDOQt3 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 12:49:26 -0400
-Received: from pps.filterd (m0044008.ppops.net [127.0.0.1])
-        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3FGiHEs032436;
-        Mon, 15 Apr 2019 09:49:06 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=facebook;
- bh=TEHzZEZdrC/d6Tz1Tbgw+1V5dE4hw4LpftnJuRBmkIk=;
- b=lKiG0NU7AuW8j5d9CbQnIdh6q/xCFGANTsZBbtH4YLENqLbbay2H21q86xfSdv0H5298
- OopqPUMmfBMgE+Y5rX+NQDliMb8fp8/uLIjG4e0WEu1i+wUXjJJaB7G6PVgxQPb0PzJe
- OfLxCRLy8U5pIQynvnx/ZuoY3tSR0TfKDgU= 
-Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
-        by mx0a-00082601.pphosted.com with ESMTP id 2rvn2fhrdm-2
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
-        Mon, 15 Apr 2019 09:49:06 -0700
-Received: from prn-mbx02.TheFacebook.com (2620:10d:c081:6::16) by
- prn-hub04.TheFacebook.com (2620:10d:c081:35::128) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Mon, 15 Apr 2019 09:49:05 -0700
-Received: from prn-hub02.TheFacebook.com (2620:10d:c081:35::126) by
- prn-mbx02.TheFacebook.com (2620:10d:c081:6::16) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.1.1713.5; Mon, 15 Apr 2019 09:49:04 -0700
-Received: from NAM02-CY1-obe.outbound.protection.outlook.com (192.168.54.28)
- by o365-in.thefacebook.com (192.168.16.26) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
- via Frontend Transport; Mon, 15 Apr 2019 09:49:04 -0700
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
- s=selector1-fb-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TEHzZEZdrC/d6Tz1Tbgw+1V5dE4hw4LpftnJuRBmkIk=;
- b=iaQh6zZTAg6UtBTRAjBuRwznQrkN+Omt+83Y9bzYViZezciqaoQdNMVqt+Xw1SQW+okUsrQylXbtEddKB+y1p/Y2jNzsmUoZkrz9ZMwL3Yj0eu/3K1VrrDDTnTnE3q7w2pm3VPH06OoSVfRE+8wcn+VRgyY/hnjSyXEvTLJnU4Q=
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.2.19) by
- MWHPR15MB1533.namprd15.prod.outlook.com (10.173.235.18) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1792.15; Mon, 15 Apr 2019 16:48:49 +0000
-Received: from MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::5185:8137:2f1d:7171]) by MWHPR15MB1165.namprd15.prod.outlook.com
- ([fe80::5185:8137:2f1d:7171%2]) with mapi id 15.20.1792.018; Mon, 15 Apr 2019
- 16:48:49 +0000
-From:   Song Liu <songliubraving@fb.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-CC:     Ingo Molnar <mingo@redhat.com>,
-        "vincent.guittot@linaro.org" <vincent.guittot@linaro.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Morten Rasmussen" <morten.rasmussen@arm.com>,
-        Kernel Team <Kernel-team@fb.com>,
-        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 0/7] introduce cpu.headroom knob to cpu controller
-Thread-Topic: [PATCH 0/7] introduce cpu.headroom knob to cpu controller
-Thread-Index: AQHU7lSD68FtcB4UGUOYupgC9AfmOKY9eYgA
-Date:   Mon, 15 Apr 2019 16:48:49 +0000
-Message-ID: <2A377F4D-8A84-4D90-9C59-48B865EB34D1@fb.com>
-References: <20190408214539.2705660-1-songliubraving@fb.com>
-In-Reply-To: <20190408214539.2705660-1-songliubraving@fb.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-mailer: Apple Mail (2.3445.104.8)
-x-originating-ip: [2620:10d:c090:180::76d3]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: cc90bf8f-5a2b-4629-47ff-08d6c1c23bdf
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600140)(711020)(4605104)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:MWHPR15MB1533;
-x-ms-traffictypediagnostic: MWHPR15MB1533:
-x-microsoft-antispam-prvs: <MWHPR15MB153399D188B2D4D504964D62B32B0@MWHPR15MB1533.namprd15.prod.outlook.com>
-x-forefront-prvs: 000800954F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(366004)(346002)(396003)(376002)(136003)(199004)(189003)(2616005)(86362001)(11346002)(229853002)(83716004)(76176011)(446003)(102836004)(6506007)(53546011)(50226002)(186003)(2906002)(14444005)(81156014)(46003)(106356001)(14454004)(486006)(476003)(256004)(4326008)(81166006)(99286004)(105586002)(6486002)(82746002)(8936002)(5660300002)(478600001)(54906003)(7736002)(6246003)(6916009)(8676002)(316002)(68736007)(305945005)(71200400001)(6512007)(6436002)(36756003)(53936002)(97736004)(33656002)(25786009)(57306001)(71190400001)(6116002);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1533;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: fb.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: 0WFKGP2sv9F7vMcUYy7KhQA5YG/n5LyddVmbGpdqRBafndF/ezYjNR1YtZwCLAZSCpiVcb8EMUE6rhfFlAJozixFeEdH3VzwL39ICNFCCsEzvi7ue7gQlnF1GS4oiz44vyWvAXy3l7TcdtsXKq3zmWpJutG3xO8uYh3fx1gmvUZuIDmoe5zujFsBX+8XoEM8m+NYjxX9N1EOTJIyHY0YFAm0tnoNEpRTZWiwjZKCe4k/suj9i1aRAB5el+8LlaIS0c2HmjOvL7KbVuT6gRLAuEHdKoDUmrqPVXGP9KIgd+VaVTGEaqpew4ZYMFxzzUmLLod4n4yTYhblAkk4LwmHPmRlfn53XJ8gp6VqgXpd2NKp9uoTYoM9qrHQFUoslmVPwtBE/hdJgXe3+4Md0yCKjl7PH7FAuDZIiGT7oFNzouk=
-Content-Type: text/plain; charset="us-ascii"
-Content-ID: <DA114A4AFB606A44AAE4F9B2F011544F@namprd15.prod.outlook.com>
-Content-Transfer-Encoding: quoted-printable
+        Mon, 15 Apr 2019 12:49:29 -0400
+Received: by mail-it1-f196.google.com with SMTP id y134so28097726itc.5
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 09:49:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-language:content-transfer-encoding;
+        bh=zPfgrP+xMGw2jpeJZAt0Vf1te85+6udsGgr2e/tUZvk=;
+        b=iD7RiUb66BNtjmp0f5xXv6gywfXIZPZUW0du5mq78eAFjsNUlF6i/oRG3O60BW6gfh
+         bCZ1rp8UIVNMbLtGLsPOfX8uiewS2E579Ely88/5eMTQHi/bL8ZOnu5ax8nmKuEAOXoC
+         WL7/nEXFarHSKdmlzUa6yxMAcLgh5wZZc9wjdjzaFhlbh9dUyYBbyiZhpE5kSBId7EIM
+         pUlWjnnc/hqyo6nohvdVNCxwFg+hoWQHIbAyol95ahNjOysd3yjy4ExO/CThBf5P+5c+
+         nkNcWFy/kctIOKZlO0EuWUceYruKtO8qNWa5dG1Kca4yb4UT5ZNa/YJECow54nF0El6B
+         KTRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=zPfgrP+xMGw2jpeJZAt0Vf1te85+6udsGgr2e/tUZvk=;
+        b=kzhoq8VfmGIvYflvGm+/obxk2t36FVole2wDJn7kp3rs1jYDQ1wcmoQKPDCGKZ11CI
+         BzjNab+EunvgY1mFQLehGfvynJtlH/3xMmEOhWFjtmi6R6AIhQu6vZoz8J83pC9JVs8l
+         r+k5JGXfOJ/PdRG1o2xwTlxrwwDyWtvI5yct7BXqELN4fZ4CiX9D6kD2YWYWi2ycwx4m
+         zU+qSdGPUMFJvVwCwvxX1TrC2bIS51gzrw8YOr+T5JbINMASX7bIwL23ndreZX0yvj1x
+         58HpriI/j5fEy4Dqfl/BKDdT50eE3+yXYopFXBJJnBYXjcFhyy0pfxxW+8IqwKDogEcx
+         jYbg==
+X-Gm-Message-State: APjAAAVKpM7W/KvzGRhPjE4ztfXPea3JbwY4Ulp+K+SsExq/gtFXlaHG
+        KbVDranI16fTnRUTXElaUaCBlnr9RRZTcA==
+X-Google-Smtp-Source: APXvYqyUwUQTh3kPrNpu5wsDhzJ388E+zYD+z5THBnUw7KntWxmU99ke6YzNWHZKVNpLGhMMZXEzyw==
+X-Received: by 2002:a24:1342:: with SMTP id 63mr26075175itz.69.1555346968015;
+        Mon, 15 Apr 2019 09:49:28 -0700 (PDT)
+Received: from [192.168.1.158] ([216.160.245.98])
+        by smtp.gmail.com with ESMTPSA id u66sm19127979ioe.74.2019.04.15.09.49.25
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Apr 2019 09:49:26 -0700 (PDT)
+Subject: Re: INFO: task hung in __io_uring_register
+To:     syzbot <syzbot+16dc03452dee970a0c3e@syzkaller.appspotmail.com>,
+        linux-block@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-kernel@vger.kernel.org, syzkaller-bugs@googlegroups.com,
+        viro@zeniv.linux.org.uk
+References: <0000000000003393e6058691f589@google.com>
+From:   Jens Axboe <axboe@kernel.dk>
+Message-ID: <0ed0d88e-268b-fc1c-0273-2f4063cf75a1@kernel.dk>
+Date:   Mon, 15 Apr 2019 10:49:25 -0600
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-X-MS-Exchange-CrossTenant-Network-Message-Id: cc90bf8f-5a2b-4629-47ff-08d6c1c23bdf
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Apr 2019 16:48:49.0557
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1533
-X-OriginatorOrg: fb.com
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-15_06:,,
- signatures=0
-X-Proofpoint-Spam-Reason: safe
-X-FB-Internal: Safe
+In-Reply-To: <0000000000003393e6058691f589@google.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Peter,
+On 4/15/19 7:52 AM, syzbot wrote:
+> syzbot has found a reproducer for the following crash on:
+> 
+> HEAD commit:    dc4060a5 Linux 5.1-rc5
+> git tree:       upstream
+> console output: https://syzkaller.appspot.com/x/log.txt?x=17eacddd200000
+> kernel config:  https://syzkaller.appspot.com/x/.config?x=856fc6d0fbbeede9
+> dashboard link: https://syzkaller.appspot.com/bug?extid=16dc03452dee970a0c3e
+> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+> userspace arch: i386
+> syz repro:      https://syzkaller.appspot.com/x/repro.syz?x=14eb47ed200000
+> C reproducer:   https://syzkaller.appspot.com/x/repro.c?x=112175dd200000
+> 
+> IMPORTANT: if you fix the bug, please add the following tag to the commit:
+> Reported-by: syzbot+16dc03452dee970a0c3e@syzkaller.appspotmail.com
+> 
+> INFO: task syz-executor043:8083 blocked for more than 143 seconds.
+>        Not tainted 5.1.0-rc5 #68
+> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> syz-executor043 D29912  8083   8063 0x20020004
+> Call Trace:
+>   context_switch kernel/sched/core.c:2877 [inline]
+>   __schedule+0x813/0x1cc0 kernel/sched/core.c:3518
+>   schedule+0x92/0x180 kernel/sched/core.c:3562
+>   schedule_timeout+0x8ca/0xfd0 kernel/time/timer.c:1779
+>   do_wait_for_common kernel/sched/completion.c:83 [inline]
+>   __wait_for_common kernel/sched/completion.c:104 [inline]
+>   wait_for_common kernel/sched/completion.c:115 [inline]
+>   wait_for_completion+0x29c/0x440 kernel/sched/completion.c:136
+>   __io_uring_register+0xb6/0x1fd0 fs/io_uring.c:2929
+>   __do_sys_io_uring_register fs/io_uring.c:2979 [inline]
+>   __se_sys_io_uring_register fs/io_uring.c:2961 [inline]
+>   __ia32_sys_io_uring_register+0x193/0x1f0 fs/io_uring.c:2961
+>   do_syscall_32_irqs_on arch/x86/entry/common.c:326 [inline]
+>   do_fast_syscall_32+0x281/0xc98 arch/x86/entry/common.c:397
+>   entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
+> RIP: 0023:0xf7f06869
+> Code: Bad RIP value.
+> RSP: 002b:00000000f7f021ec EFLAGS: 00000296 ORIG_RAX: 00000000000001ab
+> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000000001
+> RDX: 0000000000000000 RSI: 0000000000000000 RDI: 000000000000014a
+> RBP: 00000000200000c0 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+> R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+> INFO: task syz-executor043:8084 blocked for more than 143 seconds.
+>        Not tainted 5.1.0-rc5 #68
+> "echo 0 > /proc/sys/kernel/hung_task_timeout_secs" disables this message.
+> syz-executor043 D30320  8084   8063 0x20020004
+> Call Trace:
+>   context_switch kernel/sched/core.c:2877 [inline]
+>   __schedule+0x813/0x1cc0 kernel/sched/core.c:3518
+>   schedule+0x92/0x180 kernel/sched/core.c:3562
+>   schedule_preempt_disabled+0x13/0x20 kernel/sched/core.c:3620
+>   __mutex_lock_common kernel/locking/mutex.c:1002 [inline]
+>   __mutex_lock+0x726/0x1310 kernel/locking/mutex.c:1072
+>   mutex_lock_nested+0x16/0x20 kernel/locking/mutex.c:1087
+>   __do_sys_io_uring_enter fs/io_uring.c:2678 [inline]
+>   __se_sys_io_uring_enter fs/io_uring.c:2637 [inline]
+>   __ia32_sys_io_uring_enter+0x67f/0xac0 fs/io_uring.c:2637
+>   do_syscall_32_irqs_on arch/x86/entry/common.c:326 [inline]
+>   do_fast_syscall_32+0x281/0xc98 arch/x86/entry/common.c:397
+>   entry_SYSENTER_compat+0x70/0x7f arch/x86/entry/entry_64_compat.S:139
+> RIP: 0023:0xf7f06869
+> Code: Bad RIP value.
+> RSP: 002b:00000000f7ee11ec EFLAGS: 00000292 ORIG_RAX: 00000000000001aa
+> RAX: ffffffffffffffda RBX: 0000000000000003 RCX: 0000000000010005
+> RDX: 0000000000000002 RSI: 0000000000000003 RDI: 0000000000000000
+> RBP: 0000000000000000 R08: 0000000000000000 R09: 0000000000000000
+> R10: 0000000000000000 R11: 0000000000000000 R12: 0000000000000000
+> R13: 0000000000000000 R14: 0000000000000000 R15: 0000000000000000
+> 
+> Showing all locks held in the system:
+> 1 lock held by khungtaskd/1042:
+>   #0: 00000000fbdbf33e (rcu_read_lock){....}, at:  
+> debug_show_all_locks+0x5f/0x27e kernel/locking/lockdep.c:5056
+> 2 locks held by rsyslogd/7952:
+>   #0: 000000001bb2c5a7 (&f->f_pos_lock){+.+.}, at: __fdget_pos+0xee/0x110  
+> fs/file.c:801
+>   #1: 000000007392ce44 (fs_reclaim){+.+.}, at: is_bpf_text_address+0x0/0x170  
+> kernel/bpf/core.c:697
+> 2 locks held by getty/8041:
+>   #0: 00000000e7d67802 (&tty->ldisc_sem){++++}, at:  
+> ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+>   #1: 0000000026520570 (&ldata->atomic_read_lock){+.+.}, at:  
+> n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+> 2 locks held by getty/8042:
+>   #0: 000000004426012c (&tty->ldisc_sem){++++}, at:  
+> ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+>   #1: 0000000004c02a9e (&ldata->atomic_read_lock){+.+.}, at:  
+> n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+> 2 locks held by getty/8043:
+>   #0: 00000000e0209856 (&tty->ldisc_sem){++++}, at:  
+> ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+>   #1: 000000009f921bda (&ldata->atomic_read_lock){+.+.}, at:  
+> n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+> 2 locks held by getty/8044:
+>   #0: 0000000000de2ea5 (&tty->ldisc_sem){++++}, at:  
+> ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+>   #1: 000000002674bf52 (&ldata->atomic_read_lock){+.+.}, at:  
+> n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+> 2 locks held by getty/8045:
+>   #0: 00000000abbba1ef (&tty->ldisc_sem){++++}, at:  
+> ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+>   #1: 00000000ef32475e (&ldata->atomic_read_lock){+.+.}, at:  
+> n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+> 2 locks held by getty/8046:
+>   #0: 000000008d742c83 (&tty->ldisc_sem){++++}, at:  
+> ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+>   #1: 00000000fa255b8a (&ldata->atomic_read_lock){+.+.}, at:  
+> n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+> 2 locks held by getty/8047:
+>   #0: 00000000d3d56b2b (&tty->ldisc_sem){++++}, at:  
+> ldsem_down_read+0x33/0x40 drivers/tty/tty_ldsem.c:341
+>   #1: 0000000015242045 (&ldata->atomic_read_lock){+.+.}, at:  
+> n_tty_read+0x232/0x1b70 drivers/tty/n_tty.c:2156
+> 1 lock held by syz-executor043/8083:
+>   #0: 000000005524ed18 (&ctx->uring_lock){+.+.}, at:  
+> __do_sys_io_uring_register fs/io_uring.c:2978 [inline]
+>   #0: 000000005524ed18 (&ctx->uring_lock){+.+.}, at:  
+> __se_sys_io_uring_register fs/io_uring.c:2961 [inline]
+>   #0: 000000005524ed18 (&ctx->uring_lock){+.+.}, at:  
+> __ia32_sys_io_uring_register+0x182/0x1f0 fs/io_uring.c:2961
+> 1 lock held by syz-executor043/8084:
+>   #0: 000000005524ed18 (&ctx->uring_lock){+.+.}, at: __do_sys_io_uring_enter  
+> fs/io_uring.c:2678 [inline]
+>   #0: 000000005524ed18 (&ctx->uring_lock){+.+.}, at: __se_sys_io_uring_enter  
+> fs/io_uring.c:2637 [inline]
+>   #0: 000000005524ed18 (&ctx->uring_lock){+.+.}, at:  
+> __ia32_sys_io_uring_enter+0x67f/0xac0 fs/io_uring.c:2637
+> 
+> =============================================
+> 
+> NMI backtrace for cpu 1
+> CPU: 1 PID: 1042 Comm: khungtaskd Not tainted 5.1.0-rc5 #68
+> Hardware name: Google Google Compute Engine/Google Compute Engine, BIOS  
+> Google 01/01/2011
+> Call Trace:
+>   __dump_stack lib/dump_stack.c:77 [inline]
+>   dump_stack+0x172/0x1f0 lib/dump_stack.c:113
+>   nmi_cpu_backtrace.cold+0x63/0xa4 lib/nmi_backtrace.c:101
+>   nmi_trigger_cpumask_backtrace+0x1be/0x236 lib/nmi_backtrace.c:62
+>   arch_trigger_cpumask_backtrace+0x14/0x20 arch/x86/kernel/apic/hw_nmi.c:38
+>   trigger_all_cpu_backtrace include/linux/nmi.h:146 [inline]
+>   check_hung_uninterruptible_tasks kernel/hung_task.c:204 [inline]
+>   watchdog+0x9b7/0xec0 kernel/hung_task.c:288
+>   kthread+0x357/0x430 kernel/kthread.c:253
+>   ret_from_fork+0x3a/0x50 arch/x86/entry/entry_64.S:352
+> Sending NMI from CPU 1 to CPUs 0:
 
-> On Apr 8, 2019, at 2:45 PM, Song Liu <songliubraving@fb.com> wrote:
->=20
-> Servers running latency sensitive workload usually aren't fully loaded fo=
-r=20
-> various reasons including disaster readiness. The machines running our=20
-> interactive workloads (referred as main workload) have a lot of spare CPU=
-=20
-> cycles that we would like to use for optimistic side jobs like video=20
-> encoding. However, our experiments show that the side workload has strong
-> impact on the latency of main workload:
->=20
->  side-job   main-load-level   main-avg-latency
->     none          1.0              1.00
->     none          1.1              1.10
->     none          1.2              1.10=20
->     none          1.3              1.10
->     none          1.4              1.15
->     none          1.5              1.24
->     none          1.6              1.74
->=20
->     ffmpeg        1.0              1.82
->     ffmpeg        1.1              2.74
->=20
-> Note: both the main-load-level and the main-avg-latency numbers are
-> _normalized_.
->=20
-> In these experiments, ffmpeg is put in a cgroup with cpu.weight of 1=20
-> (lowest priority). However, it consumes all idle CPU cycles in the=20
-> system and causes high latency for the main workload. Further experiments
-> and analysis (more details below) shows that, for the main workload to me=
-et
-> its latency targets, it is necessary to limit the CPU usage of the side
-> workload so that there are some _idle_ CPU. There are various reasons
-> behind the need of idle CPU time. First, shared CPU resouce saturation=20
-> starts to happen way before time-measured utilization reaches 100%.=20
-> Secondly, scheduling latency starts to impact the main workload as CPU=20
-> reaches full utilization.=20
->=20
-> Currently, the cpu controller provides two mechanisms to protect the main=
-=20
-> workload: cpu.weight and cpu.max. However, neither of them is sufficient=
-=20
-> in these use cases. As shown in the experiments above, side workload with=
-=20
-> cpu.weight of 1 (lowest priority) would still consume all idle CPU and ad=
-d=20
-> unacceptable latency to the main workload. cpu.max can throttle the CPU=20
-> usage of the side workload and preserve some idle CPU. However, cpu.max=20
-> cannot react to changes in load levels. For example, when the main=20
-> workload uses 40% of CPU, cpu.max of 30% for the side workload would yiel=
-d=20
-> good latencies for the main workload. However, when the workload=20
-> experiences higher load levels and uses more CPU, the same setting (cpu.m=
-ax=20
-> of 30%) would cause the interactive workload to miss its latency target.=
-=20
->=20
-> These experiments demonstrated the need for a mechanism to effectively=20
-> throttle CPU usage of the side workload and preserve idle CPU cycles.=20
-> The mechanism should be able to adjust the level of throttling based on
-> the load level of the main workload.=20
->=20
-> This patchset introduces a new knob for cpu controller: cpu.headroom.=20
-> cgroup of the main workload uses cpu.headroom to ensure side workload to=
-=20
-> use limited CPU cycles. For example, if a main workload has a cpu.headroo=
-m=20
-> of 30%. The side workload will be throttled to give 30% overall idle CPU.=
-=20
-> If the main workload uses more than 70% of CPU, the side workload will on=
-ly=20
-> run with configurable minimal cycles. This configurable minimal cycles is
-> referred as "tolerance" of the main workload.=20
->=20
-> The following is a detailed example:
->=20
-> main/cpu.headroom    main-cpu-load    low-pri-cpu-cycle   idle-cpu
->      30%                 30%                40%              30%
->      30%                 40%                30%              30%
->      30%                 50%                20%              30%
->      30%                 60%                10%              30%
->      30%                 70%                minimal          ~30%
->      30%                 80%                minimal          ~20%
->=20
-> In the example, we use a constant cpu.headroom setting of 30%. As main jo=
-b
-> experiences different level of load, the cpu controller adjusts CPU cycle=
-s
-> used by the low-pri jobs.
->=20
-> We experiemented with a web server as the main workload and ffmpeg as the=
-=20
-> side workload. The following table compares latency impact on the main=20
-> workload under different cpu.headroom settings and load levels. In all=20
-> tests, the side workload cgroup is configured with cpu.weight of 1. When=
-=20
-> throttled, the side workload can only run 1ms per 100ms period.
->=20
->                               average-latency
-> main-load-level   w/o-side    w/-side-      w/-side-       w/-side-
->                            no-headroom   30%-headroom   20%-headroom
->     1.0            1.00       1.82          1.26           1.14          =
-           =20
->     1.1            1.10       2.74          1.26           1.32          =
-           =20
->     1.2            1.10                     1.29           1.38          =
-           =20
->     1.3            1.10                     1.32           1.49          =
-           =20
->     1.4            1.15                     1.29           1.85          =
-           =20
->     1.5            1.24                     1.32                         =
-      =20
->     1.6            1.74                     1.50                         =
-    =20
->=20
-> Each row of the table shows a normalized load level and average latencies=
-=20
-> for 4 scenarios: w/o side workload, w/ side workload but no headroom; w/=
-=20
-> side workload and 30% headroom; with side workload and 20% headroom.=20
->=20
->=20
-> When there is no side workload, average latency of main job falls in the=
-=20
-> 0.7x range, except the very high load scenarios. When there is side=20
-> workload but no headroom, latency of the main job goes very high at=20
-> moderate load levels. With 30% headroom, the average latency falls in the=
-=20
-> 0.8x range. With 20% headroom, the average latency falls in the 0.9x to=20
-> 1.x range. We didn't finish tests in some cases with high load, because=20
-> the latency is too high.=20
->=20
-> This experiment demonstrated cpu.headroom is an effective and efficient
-> knob to control the latency of the main job.
->=20
-> Thanks!
+This is a deadlock due to io_uring_register() waiting for existing
+users to exit. But it does so with the io_uring mutex held, and
+existing callers to io_uring_enter() may need that mutex to make
+progress. Hence we're deadlocked - one side holding the mutex and
+waiting for users to exit, the other side waiting on the mutex
+to make progress and then exit.
 
-Could you please kindly share your feedback and comments on this work?
+This should fix it.
 
-Thanks and Regards,
-Song
 
-> Song Liu (7):
->  sched: refactor tg_set_cfs_bandwidth()
->  cgroup: introduce hook css_has_tasks_changed
->  cgroup: introduce cgroup_parse_percentage
->  sched, cgroup: add entry cpu.headroom
->  sched/fair: global idleness counter for cpu.headroom
->  sched/fair: throttle task runtime based on cpu.headroom
->  Documentation: cgroup-v2: add information for cpu.headroom
->=20
-> Documentation/admin-guide/cgroup-v2.rst |  18 +
-> fs/proc/stat.c                          |   4 +-
-> include/linux/cgroup-defs.h             |   2 +
-> include/linux/cgroup.h                  |   1 +
-> include/linux/kernel_stat.h             |   2 +
-> kernel/cgroup/cgroup.c                  |  51 +++
-> kernel/sched/core.c                     | 425 ++++++++++++++++++++++--
-> kernel/sched/fair.c                     | 143 +++++++-
-> kernel/sched/sched.h                    |  30 ++
-> 9 files changed, 634 insertions(+), 42 deletions(-)
->=20
-> --=20
-> 2.17.1
->=20
+diff --git a/fs/io_uring.c b/fs/io_uring.c
+index f4ddb9d23241..b35300e4c9a7 100644
+--- a/fs/io_uring.c
++++ b/fs/io_uring.c
+@@ -2929,11 +2929,23 @@ SYSCALL_DEFINE2(io_uring_setup, u32, entries,
+ 
+ static int __io_uring_register(struct io_ring_ctx *ctx, unsigned opcode,
+ 			       void __user *arg, unsigned nr_args)
++	__releases(ctx->uring_lock)
++	__acquires(ctx->uring_lock)
+ {
+ 	int ret;
+ 
+ 	percpu_ref_kill(&ctx->refs);
++
++	/*
++	 * Drop uring mutex before waiting for references to exit. If another
++	 * thread is currently inside io_uring_enter() it might need to grab
++	 * the uring_lock to make progress. If we hold it here across the drain
++	 * wait, then we can deadlock. It's safe to drop the mutex here, since
++	 * no new references will come in after we've killed the percpu ref.
++	 */
++	mutex_unlock(&ctx->uring_lock);
+ 	wait_for_completion(&ctx->ctx_done);
++	mutex_lock(&ctx->uring_lock);
+ 
+ 	switch (opcode) {
+ 	case IORING_REGISTER_BUFFERS:
+
+-- 
+Jens Axboe
 
