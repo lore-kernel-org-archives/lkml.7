@@ -2,122 +2,361 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C2B7FC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 06:25:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AFB84C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 06:28:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75911206B7
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 06:25:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="vt7wwIPL"
+	by mail.kernel.org (Postfix) with ESMTP id 60A4520825
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 06:28:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555309716;
+	bh=/wFgb+3kpwuAEzHNzIFgWV58Rb7g7mRG14TDGPLj4wI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=c+qZNNl1gM2A1Ccha978VfEMhBqrIGAF/kHID6VNUXunDrK7HWSSXSgbw75E68kt9
+	 hePRRL7O8cv47a71V2i69Mr6NL+9vaYuZ50I6tYv8E+40o5Ovu0EotwcbdW7gwLdgC
+	 uZAmS4KOfRr4CvHP3rvDg2xTp6LsM968RX1qgv7Y=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726140AbfDOGZt (ORCPT
+        id S1726173AbfDOG2f (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 02:25:49 -0400
-Received: from mail-eopbgr680040.outbound.protection.outlook.com ([40.107.68.40]:45062
-        "EHLO NAM04-BN3-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725779AbfDOGZs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 02:25:48 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=dsKfwvPsKfGvRfoeHounTts2DPM07zgWkP+fBBADs50=;
- b=vt7wwIPLajicitHqHoxn/+5GNt6PiE63MjlDZSKjC5MknAaqzXglUheFUxbfp8E8MTLIMTukHk/gikQhy4G3ek/Dd3JRPH4YSxNc8aADZlJKYQOjS69ek14HPf5KYF5hh8w3tyahvhCKwc59aauVS/AdUe+Jtu9SPpLOcqjNmsk=
-Received: from DM5PR12MB1546.namprd12.prod.outlook.com (10.172.36.23) by
- DM5PR12MB1276.namprd12.prod.outlook.com (10.168.239.146) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1792.17; Mon, 15 Apr 2019 06:25:44 +0000
-Received: from DM5PR12MB1546.namprd12.prod.outlook.com
- ([fe80::70fc:f26c:1e22:73ba]) by DM5PR12MB1546.namprd12.prod.outlook.com
- ([fe80::70fc:f26c:1e22:73ba%10]) with mapi id 15.20.1792.018; Mon, 15 Apr
- 2019 06:25:44 +0000
-From:   "Koenig, Christian" <Christian.Koenig@amd.com>
-To:     Brian Yip <itsbriany@gmail.com>
-CC:     "Huang, Ray" <Ray.Huang@amd.com>,
-        "Zhang, Jerry" <Jerry.Zhang@amd.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "daniel@ffwll.ch" <daniel@ffwll.ch>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 1/3] drm/ttm: Reset num_zones on ttm_mem_global cleanup
-Thread-Topic: [PATCH 1/3] drm/ttm: Reset num_zones on ttm_mem_global cleanup
-Thread-Index: AQHU8xsVkppUOh5tgkmztN8e236zqqY8wdaA
-Date:   Mon, 15 Apr 2019 06:25:44 +0000
-Message-ID: <0de8d12a-06b8-c4f7-e22e-77a00905ae5f@amd.com>
-References: <20190414233729.17956-1-itsbriany@gmail.com>
- <20190414233729.17956-2-itsbriany@gmail.com>
-In-Reply-To: <20190414233729.17956-2-itsbriany@gmail.com>
-Accept-Language: de-DE, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-x-originating-ip: [2a02:908:1252:fb60:be8a:bd56:1f94:86e7]
-x-clientproxiedby: AM6P193CA0074.EURP193.PROD.OUTLOOK.COM
- (2603:10a6:209:88::15) To DM5PR12MB1546.namprd12.prod.outlook.com
- (2603:10b6:4:8::23)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Christian.Koenig@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 5306c4c6-ef07-4380-11f9-08d6c16b3086
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600140)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DM5PR12MB1276;
-x-ms-traffictypediagnostic: DM5PR12MB1276:
-x-microsoft-antispam-prvs: <DM5PR12MB12769B4EDB90FC959493A9C3832B0@DM5PR12MB1276.namprd12.prod.outlook.com>
-x-forefront-prvs: 000800954F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(396003)(136003)(39860400002)(346002)(366004)(376002)(199004)(189003)(43544003)(46003)(81156014)(71190400001)(6486002)(31696002)(36756003)(99286004)(71200400001)(6436002)(86362001)(186003)(1411001)(97736004)(14454004)(316002)(54906003)(2616005)(476003)(58126008)(486006)(11346002)(446003)(229853002)(106356001)(6916009)(65806001)(65956001)(5660300002)(105586002)(8676002)(81166006)(31686004)(305945005)(7736002)(76176011)(8936002)(386003)(2906002)(4326008)(53936002)(102836004)(256004)(6506007)(25786009)(6246003)(68736007)(52116002)(64126003)(65826007)(478600001)(72206003)(6512007)(6116002);DIR:OUT;SFP:1101;SCL:1;SRVR:DM5PR12MB1276;H:DM5PR12MB1546.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: HtY0J9op9BlQm9lHxhLp4ik4sWmcY+aNN9OxEdMV2iO77VMYzplwsef69BycNGVmv3dx+OZCGyR9cxDV6oBBDcJjYwkGvMiTKtkhEigUqVC1vSBsnxdpocAZbYU6wprNBE8QlzzcZQL7b2EQSlDxHE34uhJ7m50UlcbUoxxUOxNtc2IZuPHqFVuXtUuotfIgL/bzckpHW9zrNX0KDmr7/9c9grf3Rq8bSYnNpqMCi3PFwtxROPE4/saNpPLPPi0OTH9Q/BbjsIGrSdaWBPXOFsNWGcg5t1vgU+O29Fwv/d61ZJuSsNDLCkl1r/BE+frBBswF3hchEbVUiA8PLIbi9tSBq2irOlb6/GDCbFII0w1dwIM11EiRaGT8+eZbiIsN3DtUy7tXhLpUsic1USTDCnOJmEizMTW8dS2s0e7v8MA=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <E37D89E3EF23C24DBB848DCCD5F9ECE0@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 15 Apr 2019 02:28:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:43254 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725794AbfDOG2e (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 02:28:34 -0400
+Received: from guoren-Inspiron-7460 (23.83.240.247.16clouds.com [23.83.240.247])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 4B8E820674;
+        Mon, 15 Apr 2019 06:28:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555309713;
+        bh=/wFgb+3kpwuAEzHNzIFgWV58Rb7g7mRG14TDGPLj4wI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=UYtgC2Dj6mG9c6WsQtYdpVlbinVFPnzsihb3EjsHYRdZn4N6g5TpnWGnCb2nwm1lG
+         Kg6wnj7a1VMJbRlRlbta/G9NzKMymjUUiiSBv1P74dZoENYV0ubLdlZYRfJ/h8Bf4e
+         4SJ1XO0hHJKr6kwGTWo/DW2yhXLXYTrCGvYaJfLk=
+Date:   Mon, 15 Apr 2019 14:28:06 +0800
+From:   Guo Ren <guoren@kernel.org>
+To:     Mao Han <han_mao@c-sky.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>
+Subject: Re: [PATCH v4 3/3] csky: Add support for libdw
+Message-ID: <20190415062806.GA1720@guoren-Inspiron-7460>
+References: <cover.1554967684.git.han_mao@c-sky.com>
+ <7901e20b00a9186a5314999ba05b4e5ab2c4d19f.1554967684.git.han_mao@c-sky.com>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 5306c4c6-ef07-4380-11f9-08d6c16b3086
-X-MS-Exchange-CrossTenant-originalarrivaltime: 15 Apr 2019 06:25:44.7134
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM5PR12MB1276
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <7901e20b00a9186a5314999ba05b4e5ab2c4d19f.1554967684.git.han_mao@c-sky.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-QW0gMTUuMDQuMTkgdW0gMDE6Mzcgc2NocmllYiBCcmlhbiBZaXA6DQo+IG51bV96b25lcyBpbiB0
-aGUgdHRtX21lbV9nbG9iYWwgc3RydWN0dXJlIHdhcyBuZXZlciByZXNldCBhZnRlciBjYWxsaW5n
-DQo+IHR0bV9tZW1fZ2xvYmFsX3JlbGVhc2UoKS4gQ29uc2VxdWVudGx5LCB3aGVuIG11bHRpcGxl
-IEdQVSBkcml2ZXJzDQo+IGFyZSBsb2FkZWQsIGFuZCB0aGUgZmlyc3Qgb25lIGZhaWxzIHRvIGxv
-YWQgaXRzIGZpcm13YXJlLCB0aGUgc2Vjb25kDQo+IGRyaXZlciB3aWxsIGF0dGVtcHQgdG8gbG9h
-ZCBpdHMgb3duIGZpcm13YXJlLiBJbml0aWFsaXppbmcgdGhlDQo+IHNlY29uZCBkcml2ZXIgaW52
-b2tlcyB0dG1fbWVtX2dsb2JhbF9pbml0IHdoZXJlIHR0bV9tZW1fZ2xvYmFsLm51bV96b25lcw0K
-PiBpcyBldmVudHVhbGx5IGluY3JlbWVudGVkIGJleW9uZCBUVE1fTUVNX01BWF9aT05FUy4NCj4g
-dHRtX21lbV9nbG9iYWwubnVtX3pvbmVzIGlzIHRoZW4gdXNlZCB0byBkZXJlZmVyZW5jZSBhIHR0
-bV9tZW1fem9uZSBiZXlvbmQNCj4gdGhlIGFtb3VudCBvZiB0dG1fbWVtX3pvbmVzIGFsbG9jYXRl
-ZCwgcmVzdWx0aW5nIGluIGEgY3Jhc2guDQo+DQo+IFNpZ25lZC1vZmYtYnk6IEJyaWFuIFlpcCA8
-aXRzYnJpYW55QGdtYWlsLmNvbT4NCj4gLS0tDQo+ICAgZHJpdmVycy9ncHUvZHJtL3R0bS90dG1f
-bWVtb3J5LmMgfCAzICsrKw0KPiAgIDEgZmlsZSBjaGFuZ2VkLCAzIGluc2VydGlvbnMoKykNCj4N
-Cj4gZGlmZiAtLWdpdCBhL2RyaXZlcnMvZ3B1L2RybS90dG0vdHRtX21lbW9yeS5jIGIvZHJpdmVy
-cy9ncHUvZHJtL3R0bS90dG1fbWVtb3J5LmMNCj4gaW5kZXggNjk5ZmVkOWUwOGVlLi41NWNjYjk4
-MDA4OTMgMTAwNjQ0DQo+IC0tLSBhL2RyaXZlcnMvZ3B1L2RybS90dG0vdHRtX21lbW9yeS5jDQo+
-ICsrKyBiL2RyaXZlcnMvZ3B1L2RybS90dG0vdHRtX21lbW9yeS5jDQo+IEBAIC00NzgsNiArNDc4
-LDkgQEAgdm9pZCB0dG1fbWVtX2dsb2JhbF9yZWxlYXNlKHN0cnVjdCB0dG1fbWVtX2dsb2JhbCAq
-Z2xvYikNCj4gICAJCQl9DQo+ICAgCWtvYmplY3RfZGVsKCZnbG9iLT5rb2JqKTsNCj4gICAJa29i
-amVjdF9wdXQoJmdsb2ItPmtvYmopOw0KPiArDQo+ICsJaWYgKCFrcmVmX3JlYWQoJmdsb2ItPmtv
-Ymoua3JlZikpDQo+ICsJCWdsb2ItPm51bV96b25lcyA9IDA7DQoNCk5BSy4gSXQncyBuaWNlIHRv
-IHNlZSB0aGF0IHNvbWVib2R5IHRyaWVzIHRvIHRha2UgY2FyZSBvZiB0aGlzIHByb2JsZW0sIA0K
-YnV0IHRoaXMgaXMgY2VydGFpbmx5IG5vdCB0aGUgcmlnaHQgZml4Lg0KDQpJbnN0ZWFkIG9mIGFs
-bCBvZiB0aGlzIHRoZSBwcm9ibGVtIGlzIHNpbXBseSB0aGF0IHRoZSBnbG9iIHN0cnVjdHVyZSBp
-cyANCm5vdCB6ZXJvIGluaXRpYWxpemVkIGluIHR0bV9tZW1fZ2xvYmFsX2luaXQoKSwgYSBzaW1w
-bGUgbWVtc2V0IHNob3VsZCBkbyANCnRoZSB0cmljay4NCg0KUmVnYXJkcywNCkNocmlzdGlhbi4N
-Cg0KPiAgIH0NCj4gICANCj4gICBzdGF0aWMgdm9pZCB0dG1fY2hlY2tfc3dhcHBpbmcoc3RydWN0
-IHR0bV9tZW1fZ2xvYmFsICpnbG9iKQ0KDQo=
+On Thu, Apr 11, 2019 at 03:45:01PM +0800, Mao Han wrote:
+> This patch add support for DWARF register mappings and libdw registers
+> initialization, which is used by perf callchain analyzing when
+> --call-graph=dwarf is given.
+> 
+> CC: Peter Zijlstra <peterz@infradead.org>
+> CC: Ingo Molnar <mingo@redhat.com>
+> CC: Arnaldo Carvalho de Melo <acme@kernel.org>
+> CC: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> CC: Jiri Olsa <jolsa@redhat.com>
+> CC: Namhyung Kim <namhyung@kernel.org>
+> 
+> Signed-off-by: Mao Han <han_mao@c-sky.com>
+> ---
+>  tools/arch/csky/include/uapi/asm/perf_regs.h |  51 ++++++++++++++
+>  tools/perf/Makefile.config                   |   6 +-
+>  tools/perf/arch/csky/Build                   |   1 +
+>  tools/perf/arch/csky/Makefile                |   3 +
+>  tools/perf/arch/csky/include/perf_regs.h     | 100 +++++++++++++++++++++++++++
+>  tools/perf/arch/csky/util/Build              |   2 +
+>  tools/perf/arch/csky/util/dwarf-regs.c       |  49 +++++++++++++
+>  tools/perf/arch/csky/util/unwind-libdw.c     |  78 +++++++++++++++++++++
+>  8 files changed, 289 insertions(+), 1 deletion(-)
+>  create mode 100644 tools/arch/csky/include/uapi/asm/perf_regs.h
+>  create mode 100644 tools/perf/arch/csky/Build
+>  create mode 100644 tools/perf/arch/csky/Makefile
+>  create mode 100644 tools/perf/arch/csky/include/perf_regs.h
+>  create mode 100644 tools/perf/arch/csky/util/Build
+>  create mode 100644 tools/perf/arch/csky/util/dwarf-regs.c
+>  create mode 100644 tools/perf/arch/csky/util/unwind-libdw.c
+> 
+> diff --git a/tools/arch/csky/include/uapi/asm/perf_regs.h b/tools/arch/csky/include/uapi/asm/perf_regs.h
+> new file mode 100644
+> index 0000000..ee323d8
+> --- /dev/null
+> +++ b/tools/arch/csky/include/uapi/asm/perf_regs.h
+> @@ -0,0 +1,51 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +// Copyright (C) 2019 Hangzhou C-SKY Microsystems co.,ltd.
+> +
+> +#ifndef _ASM_CSKY_PERF_REGS_H
+> +#define _ASM_CSKY_PERF_REGS_H
+> +
+> +/* Index of struct pt_regs */
+> +enum perf_event_csky_regs {
+> +	PERF_REG_CSKY_TLS,
+> +	PERF_REG_CSKY_LR,
+> +	PERF_REG_CSKY_PC,
+> +	PERF_REG_CSKY_SR,
+> +	PERF_REG_CSKY_SP,
+> +	PERF_REG_CSKY_ORIG_A0,
+> +	PERF_REG_CSKY_A0,
+> +	PERF_REG_CSKY_A1,
+> +	PERF_REG_CSKY_A2,
+> +	PERF_REG_CSKY_A3,
+> +	PERF_REG_CSKY_REGS0,
+> +	PERF_REG_CSKY_REGS1,
+> +	PERF_REG_CSKY_REGS2,
+> +	PERF_REG_CSKY_REGS3,
+> +	PERF_REG_CSKY_REGS4,
+> +	PERF_REG_CSKY_REGS5,
+> +	PERF_REG_CSKY_REGS6,
+> +	PERF_REG_CSKY_REGS7,
+> +	PERF_REG_CSKY_REGS8,
+> +	PERF_REG_CSKY_REGS9,
+> +#if defined(__CSKYABIV2__)
+> +	PERF_REG_CSKY_EXREGS0,
+> +	PERF_REG_CSKY_EXREGS1,
+> +	PERF_REG_CSKY_EXREGS2,
+> +	PERF_REG_CSKY_EXREGS3,
+> +	PERF_REG_CSKY_EXREGS4,
+> +	PERF_REG_CSKY_EXREGS5,
+> +	PERF_REG_CSKY_EXREGS6,
+> +	PERF_REG_CSKY_EXREGS7,
+> +	PERF_REG_CSKY_EXREGS8,
+> +	PERF_REG_CSKY_EXREGS9,
+> +	PERF_REG_CSKY_EXREGS10,
+> +	PERF_REG_CSKY_EXREGS11,
+> +	PERF_REG_CSKY_EXREGS12,
+> +	PERF_REG_CSKY_EXREGS13,
+> +	PERF_REG_CSKY_EXREGS14,
+> +	PERF_REG_CSKY_HI,
+> +	PERF_REG_CSKY_LO,
+> +	PERF_REG_CSKY_DCSR,
+> +#endif
+> +	PERF_REG_CSKY_MAX,
+> +};
+> +#endif /* _ASM_CSKY_PERF_REGS_H */
+> diff --git a/tools/perf/Makefile.config b/tools/perf/Makefile.config
+> index fe3f97e..42985ae 100644
+> --- a/tools/perf/Makefile.config
+> +++ b/tools/perf/Makefile.config
+> @@ -59,6 +59,10 @@ ifeq ($(SRCARCH),arm64)
+>    LIBUNWIND_LIBS = -lunwind -lunwind-aarch64
+>  endif
+>  
+> +ifeq ($(SRCARCH),csky)
+> +  NO_PERF_REGS := 0
+> +endif
+> +
+>  ifeq ($(ARCH),s390)
+>    NO_PERF_REGS := 0
+>    NO_SYSCALL_TABLE := 0
+> @@ -77,7 +81,7 @@ endif
+>  # Disable it on all other architectures in case libdw unwind
+>  # support is detected in system. Add supported architectures
+>  # to the check.
+> -ifneq ($(SRCARCH),$(filter $(SRCARCH),x86 arm arm64 powerpc s390))
+> +ifneq ($(SRCARCH),$(filter $(SRCARCH),x86 arm arm64 powerpc s390 csky))
+>    NO_LIBDW_DWARF_UNWIND := 1
+>  endif
+>  
+> diff --git a/tools/perf/arch/csky/Build b/tools/perf/arch/csky/Build
+> new file mode 100644
+> index 0000000..e4e5f33
+> --- /dev/null
+> +++ b/tools/perf/arch/csky/Build
+> @@ -0,0 +1 @@
+> +perf-y += util/
+> diff --git a/tools/perf/arch/csky/Makefile b/tools/perf/arch/csky/Makefile
+> new file mode 100644
+> index 0000000..7fbca17
+> --- /dev/null
+> +++ b/tools/perf/arch/csky/Makefile
+> @@ -0,0 +1,3 @@
+> +ifndef NO_DWARF
+> +PERF_HAVE_DWARF_REGS := 1
+> +endif
+> diff --git a/tools/perf/arch/csky/include/perf_regs.h b/tools/perf/arch/csky/include/perf_regs.h
+> new file mode 100644
+> index 0000000..8f336ea
+> --- /dev/null
+> +++ b/tools/perf/arch/csky/include/perf_regs.h
+> @@ -0,0 +1,100 @@
+> +/* SPDX-License-Identifier: GPL-2.0 */
+> +// Copyright (C) 2019 Hangzhou C-SKY Microsystems co.,ltd.
+> +
+> +#ifndef ARCH_PERF_REGS_H
+> +#define ARCH_PERF_REGS_H
+> +
+> +#include <stdlib.h>
+> +#include <linux/types.h>
+> +#include <asm/perf_regs.h>
+> +
+> +#define PERF_REGS_MASK	((1ULL << PERF_REG_CSKY_MAX) - 1)
+> +#define PERF_REGS_MAX	PERF_REG_CSKY_MAX
+> +#define PERF_SAMPLE_REGS_ABI	PERF_SAMPLE_REGS_ABI_32
+> +
+> +#define PERF_REG_IP	PERF_REG_CSKY_PC
+> +#define PERF_REG_SP	PERF_REG_CSKY_SP
+> +
+> +static inline const char *perf_reg_name(int id)
+> +{
+> +	switch (id) {
+> +	case PERF_REG_CSKY_A0:
+> +		return "a0";
+> +	case PERF_REG_CSKY_A1:
+> +		return "a1";
+> +	case PERF_REG_CSKY_A2:
+> +		return "a2";
+> +	case PERF_REG_CSKY_A3:
+> +		return "a3";
+> +	case PERF_REG_CSKY_REGS0:
+> +		return "regs0";
+> +	case PERF_REG_CSKY_REGS1:
+> +		return "regs1";
+> +	case PERF_REG_CSKY_REGS2:
+> +		return "regs2";
+> +	case PERF_REG_CSKY_REGS3:
+> +		return "regs3";
+> +	case PERF_REG_CSKY_REGS4:
+> +		return "regs4";
+> +	case PERF_REG_CSKY_REGS5:
+> +		return "regs5";
+> +	case PERF_REG_CSKY_REGS6:
+> +		return "regs6";
+> +	case PERF_REG_CSKY_REGS7:
+> +		return "regs7";
+> +	case PERF_REG_CSKY_REGS8:
+> +		return "regs8";
+> +	case PERF_REG_CSKY_REGS9:
+> +		return "regs9";
+> +	case PERF_REG_CSKY_SP:
+> +		return "sp";
+> +	case PERF_REG_CSKY_LR:
+> +		return "lr";
+> +	case PERF_REG_CSKY_PC:
+> +		return "pc";
+> +#if defined(__CSKYABIV2__)
+> +	case PERF_REG_CSKY_EXREGS0:
+> +		return "exregs0";
+> +	case PERF_REG_CSKY_EXREGS1:
+> +		return "exregs1";
+> +	case PERF_REG_CSKY_EXREGS2:
+> +		return "exregs2";
+> +	case PERF_REG_CSKY_EXREGS3:
+> +		return "exregs3";
+> +	case PERF_REG_CSKY_EXREGS4:
+> +		return "exregs4";
+> +	case PERF_REG_CSKY_EXREGS5:
+> +		return "exregs5";
+> +	case PERF_REG_CSKY_EXREGS6:
+> +		return "exregs6";
+> +	case PERF_REG_CSKY_EXREGS7:
+> +		return "exregs7";
+> +	case PERF_REG_CSKY_EXREGS8:
+> +		return "exregs8";
+> +	case PERF_REG_CSKY_EXREGS9:
+> +		return "exregs9";
+> +	case PERF_REG_CSKY_EXREGS10:
+> +		return "exregs10";
+> +	case PERF_REG_CSKY_EXREGS11:
+> +		return "exregs11";
+> +	case PERF_REG_CSKY_EXREGS12:
+> +		return "exregs12";
+> +	case PERF_REG_CSKY_EXREGS13:
+> +		return "exregs13";
+> +	case PERF_REG_CSKY_EXREGS14:
+> +		return "exregs14";
+> +	case PERF_REG_CSKY_TLS:
+> +		return "tls";
+> +	case PERF_REG_CSKY_HI:
+> +		return "hi";
+> +	case PERF_REG_CSKY_LO:
+> +		return "lo";
+> +#endif
+> +	default:
+> +		return NULL;
+> +	}
+> +
+> +	return NULL;
+> +}
+> +
+> +#endif /* ARCH_PERF_REGS_H */
+> diff --git a/tools/perf/arch/csky/util/Build b/tools/perf/arch/csky/util/Build
+> new file mode 100644
+> index 0000000..1160bb2
+> --- /dev/null
+> +++ b/tools/perf/arch/csky/util/Build
+> @@ -0,0 +1,2 @@
+> +perf-$(CONFIG_DWARF) += dwarf-regs.o
+> +perf-$(CONFIG_LIBDW_DWARF_UNWIND) += unwind-libdw.o
+> diff --git a/tools/perf/arch/csky/util/dwarf-regs.c b/tools/perf/arch/csky/util/dwarf-regs.c
+> new file mode 100644
+> index 0000000..3591ca1
+> --- /dev/null
+> +++ b/tools/perf/arch/csky/util/dwarf-regs.c
+> @@ -0,0 +1,49 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +// Copyright (C) 2019 Hangzhou C-SKY Microsystems co.,ltd.
+> +// Mapping of DWARF debug register numbers into register names.
+> +
+> +#include <stddef.h>
+> +#include <dwarf-regs.h>
+> +
+> +#if defined(__CSKYABIV2__)
+> +#define CSKY_MAX_REGS 71
+> +const char *csky_dwarf_regs_table[CSKY_MAX_REGS] = {
+> +	/* r0 ~ r8 */
+> +	"%a0", "%a1", "%a2", "%a3", "%regs0", "%regs1", "%regs2", "%regs3",
+> +	/* r9 ~ r15 */
+> +	"%regs4", "%regs5", "%regs6", "%regs7", "%regs8", "%regs9", "%sp",
+> +	"%lr",
+> +	/* r16 ~ r23 */
+> +	"%exregs0", "%exregs1", "%exregs2", "%exregs3", "%exregs4",
+> +	"%exregs5", "%exregs6", "%exregs7",
+> +	/* r24 ~ r31 */
+> +	"%exregs8", "%exregs9", "%exregs10", "%exregs11", "%exregs12",
+> +	"%exregs13", "%exregs14", "%tls",
+> +	"%pc", "%cc", "%hi", "%lo", NULL, NULL, NULL, NULL,
+> +	NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+> +	NULL, NULL, NULL, NULL, "%vr0", "%vr1", "%vr2", "%vr3",
+> +	"%vr4", "%vr5", "%vr6", "%vr7", "%vr8", "%vr9", "%vr10", "%vr11",
+> +	"%vr12", "%vr13", "%vr14", "%vr15", NULL, NULL, "%epc",
+Remove vr0-vr15 first.
+
+> +};
+> +#else
+> +#define CSKY_MAX_REGS 70
+> +const char *csky_dwarf_regs_table[CSKY_MAX_REGS] = {
+> +	/* r0 ~ r8 */
+> +	"%sp", "%regs9", "%a0", "%a1", "%a2", "%a3", "%regs0", "%regs1",
+> +	/* r9 ~ r15 */
+> +	"%regs2", "%regs3", "%regs4", "%regs5", "%regs6", "%regs7", "%regs8",
+> +	"%lr",
+> +	NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+> +	NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL,
+> +	"%vap", "%cc", "%vfp", "%epc", "%hi", "%lo", "%fr0", "%fr1",
+> +	"%fr2", "%fr3", "%fr4", "%fr5", "%fr6", "%fr7", "%fr8", "%fr9",
+> +	"%fr10", "%fr11", "%fr12", "%fr13", "%fr14", "%fr15", "%fr16", "%fr17",
+> +	"%fr18", "%fr19", "%fr20", "%fr21", "%fr22", "%fr23", "%fr24", "%fr25",
+> +	"%fr26", "%fr27", "%fr28", "%fr29", "%fr30", "%fr31"
+Please remove vap cc vfp hi lo fr0~fr31, current abiv1 linux couldn't
+suppport them.
+
+Best Regards
+ Guo Ren
