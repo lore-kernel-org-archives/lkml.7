@@ -2,164 +2,127 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A603FC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:43:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D05A7C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:43:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8022221904
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:43:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9DEDA2073F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:43:34 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="cQZzVKfd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728202AbfDOSn1 (ORCPT
+        id S1728238AbfDOSnd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 14:43:27 -0400
-Received: from mga05.intel.com ([192.55.52.43]:30899 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727913AbfDOSn0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 14:43:26 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga006.jf.intel.com ([10.7.209.51])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Apr 2019 11:43:26 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,354,1549958400"; 
-   d="scan'208";a="136032391"
-Received: from otc-lr-04.jf.intel.com ([10.54.39.141])
-  by orsmga006.jf.intel.com with ESMTP; 15 Apr 2019 11:43:26 -0700
-From:   kan.liang@linux.intel.com
-To:     peterz@infradead.org, tglx@linutronix.de, mingo@redhat.com,
+        Mon, 15 Apr 2019 14:43:33 -0400
+Received: from smtprelay2.synopsys.com ([198.182.60.111]:55492 "EHLO
+        smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727913AbfDOSn3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 14:43:29 -0400
+Received: from mailhost1.synopsys.com (mailhost1.synopsys.com [10.12.238.239])
+        by smtprelay.synopsys.com (Postfix) with ESMTP id 90C0A10C128D;
+        Mon, 15 Apr 2019 11:43:28 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1555353808; bh=n6inYUl0YHNqBHgFN/exfZfs4AjaXGG9AEqyDA7rheA=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
+         References:From;
+        b=cQZzVKfd+n/2dfvFGDG6h39QJI2hl2FzbE88UblayWzoAnSLOfgVvs20ii/6gII1G
+         7QvHs2XJS1ElPfiBpz1dOFZxFMNz8GJdmQW+9urldkK6mqGWLHUwvat+MBwloB3Ne5
+         XFXHtPFJSaBUmRfU1inlYlsSwwDx2O2OKQrpR8/j6CulC7W9W/cxpGNeOgsUJi28u+
+         /JKoLvY/sHQbKevqDOkWynHeHyssU++MMXbf7HBwNTC29Je9Hkvgz8+WrCJMzOgSCn
+         R6DONdpzCQ1+2Ad4yghEUgjDZ0U+9+4EZIkWVDQUmv2qnWsGHnxPRHvXTIJ3NCOE9E
+         Hd3iGYtZKaTgA==
+Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
+        by mailhost1.synopsys.com (Postfix) with ESMTP id AEF455B65;
+        Mon, 15 Apr 2019 11:42:57 -0700 (PDT)
+From:   Vitor Soares <vitor.soares@synopsys.com>
+To:     vitor.soares@synopsys.com
+Cc:     Vitor Soares <vitor.soares@synopsys.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
         linux-kernel@vger.kernel.org
-Cc:     acme@kernel.org, eranian@google.com, ak@linux.intel.com,
-        Kan Liang <kan.liang@linux.intel.com>
-Subject: [PATCH 2/5] perf/x86/intel/uncore: Extract codes of box ref/unref
-Date:   Mon, 15 Apr 2019 11:41:53 -0700
-Message-Id: <1555353716-35041-2-git-send-email-kan.liang@linux.intel.com>
+Subject: [PATCH 2/3] i3c: add mixed limited bus mode
+Date:   Mon, 15 Apr 2019 20:42:46 +0200
+Message-Id: <a3bf32dadd9b0135442526cc77fec5726e6e617d.1555350118.git.vitor.soares@synopsys.com>
 X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1555353716-35041-1-git-send-email-kan.liang@linux.intel.com>
-References: <1555353716-35041-1-git-send-email-kan.liang@linux.intel.com>
+In-Reply-To: <cover.1555350118.git.vitor.soares@synopsys.com>
+References: <cover.1555350118.git.vitor.soares@synopsys.com>
+In-Reply-To: <cover.1555350118.git.vitor.soares@synopsys.com>
+References: <cover.1555350118.git.vitor.soares@synopsys.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Kan Liang <kan.liang@linux.intel.com>
+The i3c bus spec define a bus configuration where the i2c devices
+doesn't have the 50ns filter yet they allow the SDR max speed.
 
-For uncore box which can only be accessed by MSR, its reference
-box->refcnt is updated in CPU hot plug. The uncore boxes needs to be
-init/exit accordingly for the first/last CPU of a socket.
-Starts from Snow Ridge server, a new type of uncore box is introduced,
-which can only be accessed by MMIO. The driver needs to map/unmap
-MMIO space for the first/last CPU of a socket.
+This patch introduce the limited bus mode so the users can use
+a higher speed on presence of i2c devices index 1.
 
-Extract the codes of box ref/unref and init/exit for reuse later.
-
-There is no functional change.
-
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
+Cc: Boris Brezillon <bbrezillon@kernel.org>
+Cc: <linux-kernel@vger.kernel.org>
 ---
- arch/x86/events/intel/uncore.c | 55 +++++++++++++++++++++++++++---------------
- 1 file changed, 36 insertions(+), 19 deletions(-)
+ drivers/i3c/master.c       | 5 +++++
+ include/linux/i3c/master.h | 5 +++++
+ 2 files changed, 10 insertions(+)
 
-diff --git a/arch/x86/events/intel/uncore.c b/arch/x86/events/intel/uncore.c
-index ee23b50..0b72ca5 100644
---- a/arch/x86/events/intel/uncore.c
-+++ b/arch/x86/events/intel/uncore.c
-@@ -1140,12 +1140,27 @@ static void uncore_change_context(struct intel_uncore_type **uncores,
- 		uncore_change_type_ctx(*uncores, old_cpu, new_cpu);
- }
+diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
+index 1c4a86a..46d3774 100644
+--- a/drivers/i3c/master.c
++++ b/drivers/i3c/master.c
+@@ -463,6 +463,7 @@ static int i3c_bus_init(struct i3c_bus *i3cbus)
+ static const char * const i3c_bus_mode_strings[] = {
+ 	[I3C_BUS_MODE_PURE] = "pure",
+ 	[I3C_BUS_MODE_MIXED_FAST] = "mixed-fast",
++	[I3C_BUS_MODE_MIXED_LIMITED] = "mixed-limited",
+ 	[I3C_BUS_MODE_MIXED_SLOW] = "mixed-slow",
+ };
  
--static int uncore_event_cpu_offline(unsigned int cpu)
-+static void uncore_box_unref(struct intel_uncore_type **types, int id)
- {
--	struct intel_uncore_type *type, **types = uncore_msr_uncores;
-+	struct intel_uncore_type *type;
- 	struct intel_uncore_pmu *pmu;
- 	struct intel_uncore_box *box;
--	int i, pkg, target;
-+	int i;
-+
-+	for (; *types; types++) {
-+		type = *types;
-+		pmu = type->pmus;
-+		for (i = 0; i < type->num_boxes; i++, pmu++) {
-+			box = pmu->boxes[id];
-+			if (box && atomic_dec_return(&box->refcnt) == 0)
-+				uncore_box_exit(box);
-+		}
-+	}
-+}
-+
-+static int uncore_event_cpu_offline(unsigned int cpu)
-+{
-+	int pkg, target;
+@@ -575,6 +576,7 @@ int i3c_bus_set_mode(struct i3c_bus *i3cbus, enum i3c_bus_mode mode,
+ 			i3cbus->scl_rate.i3c = I3C_BUS_TYP_I3C_SCL_RATE;
+ 		break;
+ 	case I3C_BUS_MODE_MIXED_FAST:
++	case I3C_BUS_MODE_MIXED_LIMITED:
+ 		if (!i3cbus->scl_rate.i3c)
+ 			i3cbus->scl_rate.i3c = I3C_BUS_TYP_I3C_SCL_RATE;
+ 		if (!i3cbus->scl_rate.i2c)
+@@ -2481,6 +2483,9 @@ int i3c_master_register(struct i3c_master_controller *master,
+ 				mode = I3C_BUS_MODE_MIXED_FAST;
+ 			break;
+ 		case I3C_LVR_I2C_INDEX(1):
++			if (mode < I3C_BUS_MODE_MIXED_LIMITED)
++				mode = I3C_BUS_MODE_MIXED_LIMITED;
++			break;
+ 		case I3C_LVR_I2C_INDEX(2):
+ 			if (mode < I3C_BUS_MODE_MIXED_SLOW)
+ 				mode = I3C_BUS_MODE_MIXED_SLOW;
+diff --git a/include/linux/i3c/master.h b/include/linux/i3c/master.h
+index 44fb3cf..740235e 100644
+--- a/include/linux/i3c/master.h
++++ b/include/linux/i3c/master.h
+@@ -250,12 +250,17 @@ struct i3c_device {
+  *			     the bus. The only impact in this mode is that the
+  *			     high SCL pulse has to stay below 50ns to trick I2C
+  *			     devices when transmitting I3C frames
++ * @I3C_BUS_MODE_MIXED_LIMITED: I2C devices without 50ns spike filter are
++ *				present on the bus. However they allows
++ *				compliance up to the maximum SDR SCL clock
++ *				frequency.
+  * @I3C_BUS_MODE_MIXED_SLOW: I2C devices without 50ns spike filter are present
+  *			     on the bus
+  */
+ enum i3c_bus_mode {
+ 	I3C_BUS_MODE_PURE,
+ 	I3C_BUS_MODE_MIXED_FAST,
++	I3C_BUS_MODE_MIXED_LIMITED,
+ 	I3C_BUS_MODE_MIXED_SLOW,
+ };
  
- 	/* Check if exiting cpu is used for collecting uncore events */
- 	if (!cpumask_test_and_clear_cpu(cpu, &uncore_cpu_mask))
-@@ -1165,15 +1180,7 @@ static int uncore_event_cpu_offline(unsigned int cpu)
- unref:
- 	/* Clear the references */
- 	pkg = topology_logical_package_id(cpu);
--	for (; *types; types++) {
--		type = *types;
--		pmu = type->pmus;
--		for (i = 0; i < type->num_boxes; i++, pmu++) {
--			box = pmu->boxes[pkg];
--			if (box && atomic_dec_return(&box->refcnt) == 0)
--				uncore_box_exit(box);
--		}
--	}
-+	uncore_box_unref(uncore_msr_uncores, pkg);
- 	return 0;
- }
- 
-@@ -1215,16 +1222,15 @@ static int allocate_boxes(struct intel_uncore_type **types,
- 	}
- 	return -ENOMEM;
- }
--
--static int uncore_event_cpu_online(unsigned int cpu)
-+static int uncore_box_ref(struct intel_uncore_type **types,
-+			  int id, unsigned int cpu)
- {
--	struct intel_uncore_type *type, **types = uncore_msr_uncores;
-+	struct intel_uncore_type *type;
- 	struct intel_uncore_pmu *pmu;
- 	struct intel_uncore_box *box;
--	int i, ret, pkg, target;
-+	int i, ret;
- 
--	pkg = topology_logical_package_id(cpu);
--	ret = allocate_boxes(types, pkg, cpu);
-+	ret = allocate_boxes(types, id, cpu);
- 	if (ret)
- 		return ret;
- 
-@@ -1232,11 +1238,22 @@ static int uncore_event_cpu_online(unsigned int cpu)
- 		type = *types;
- 		pmu = type->pmus;
- 		for (i = 0; i < type->num_boxes; i++, pmu++) {
--			box = pmu->boxes[pkg];
-+			box = pmu->boxes[id];
- 			if (box && atomic_inc_return(&box->refcnt) == 1)
- 				uncore_box_init(box);
- 		}
- 	}
-+	return 0;
-+}
-+
-+static int uncore_event_cpu_online(unsigned int cpu)
-+{
-+	int ret, pkg, target;
-+
-+	pkg = topology_logical_package_id(cpu);
-+	ret = uncore_box_ref(uncore_msr_uncores, pkg, cpu);
-+	if (ret)
-+		return ret;
- 
- 	/*
- 	 * Check if there is an online cpu in the package
 -- 
 2.7.4
 
