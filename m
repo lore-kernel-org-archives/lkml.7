@@ -2,93 +2,100 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 123EBC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:50:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E779C10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:51:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAE3620880
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:50:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBA2020880
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:51:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727520AbfDOPug (ORCPT
+        id S1727608AbfDOPvP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 11:50:36 -0400
-Received: from mail.hallyn.com ([178.63.66.53]:40858 "EHLO mail.hallyn.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726034AbfDOPug (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 11:50:36 -0400
-Received: by mail.hallyn.com (Postfix, from userid 1001)
-        id 69909978; Mon, 15 Apr 2019 10:50:34 -0500 (CDT)
-Date:   Mon, 15 Apr 2019 10:50:34 -0500
-From:   "Serge E. Hallyn" <serge@hallyn.com>
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     Christian Brauner <christian@brauner.io>,
-        torvalds@linux-foundation.org, viro@zeniv.linux.org.uk,
-        jannh@google.com, dhowells@redhat.com, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org, serge@hallyn.com, luto@kernel.org,
-        arnd@arndb.de, ebiederm@xmission.com, keescook@chromium.org,
-        tglx@linutronix.de, mtk.manpages@gmail.com,
-        akpm@linux-foundation.org, oleg@redhat.com, cyphar@cyphar.com,
-        joel@joelfernandes.org, dancol@google.com
-Subject: Re: RFC: on adding new CLONE_* flags [WAS Re: [PATCH 0/4] clone: add
- CLONE_PIDFD]
-Message-ID: <20190415155034.GA25351@mail.hallyn.com>
-References: <20190414201436.19502-1-christian@brauner.io>
- <dc05ffe3-c2ff-8b3e-d181-e0cc620bf91d@metux.net>
+        Mon, 15 Apr 2019 11:51:15 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:34000 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726034AbfDOPvP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 11:51:15 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 5BDF17F7799A833B01C0;
+        Mon, 15 Apr 2019 23:51:10 +0800 (CST)
+Received: from [127.0.0.1] (10.184.38.59) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.408.0; Mon, 15 Apr 2019
+ 23:51:04 +0800
+Subject: Re: [PATCH] sched/fair: Use 'unsigned long' for
+ group_shares,group_runnable
+To:     Peter Zijlstra <peterz@infradead.org>
+CC:     <huawei.libin@huawei.com>, <xiexiuqi@huawei.com>,
+        <yangyingliang@huawei.com>, <mingo@redhat.com>,
+        <linux-kernel@vger.kernel.org>,
+        "chengjian (D)" <cj.chengjian@huawei.com>
+References: <20190413033234.30002-1-cj.chengjian@huawei.com>
+ <20190415124617.GP11158@hirez.programming.kicks-ass.net>
+ <eb7dede4-9668-9252-b95a-e20e313c5890@huawei.com>
+ <20190415152549.GQ11158@hirez.programming.kicks-ass.net>
+From:   "chengjian (D)" <cj.chengjian@huawei.com>
+Message-ID: <8c8e96d0-226b-de46-d498-0d8a6947b4c9@huawei.com>
+Date:   Mon, 15 Apr 2019 23:50:49 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.2
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <dc05ffe3-c2ff-8b3e-d181-e0cc620bf91d@metux.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190415152549.GQ11158@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset="UTF-8"; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Originating-IP: [10.184.38.59]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 12:08:09PM +0200, Enrico Weigelt, metux IT consult wrote:
-> On 14.04.19 22:14, Christian Brauner wrote:
-> 
-> Hi folks,
-> 
-> > This patchset makes it possible to retrieve pid file descriptors at
-> > process creation time by introducing the new flag CLONE_PIDFD to the
-> > clone() system call as previously discussed.
-> 
-> Sorry, for highjacking this thread, but I'm curious on what things to
-> consider when introducing new CLONE_* flags.
-> 
-> The reason I'm asking is:
-> 
-> I'm working on implementing plan9-like fs namespaces, where unprivileged
-> processes can change their own namespace at will. For that, certain
 
-Is there any place where we can see previous discussion about this?
+On 2019/4/15 23:25, Peter Zijlstra wrote:
+> On Mon, Apr 15, 2019 at 11:20:31PM +0800, chengjian (D) wrote:
+>> Hi, Peter
+>>
+>>
+>> On 2019/4/15 20:46, Peter Zijlstra wrote:
+>>
+>> I write a demo about this, which I described it as overflow.
+> I'm not saying there's no overflow, I'm saying there's nothing UB about
+> it.
+>
 
-> traditional unix'ish things have to be disabled, most notably suid.
+Yeah. I got it.
 
-If you have to disable suid anyway, then is there any reason why the
-existing ability to do this in a private user namespace, with only
-your own uid mapped (which you can do without any privilege) does
-not suffice?  That was actually one of the main design goals of user
-namespaces, to be able to clone(CLONE_NEWUSER), map your current uid,
-then clone(CLONE_NEWNS) and bind mount at will.
+This may not be an undefined behavior,
 
-> As forbidding suid can be helpful in other scenarios, too, I thought
-> about making this its own feature. Doing that switch on clone() seems
-> a nice place for that, IMHO.
-> 
-> As there might be potentially even more CLONE_* flags in the future,
-> and the bitmask size is limited, this raises the question on how to
-> proceed with those flag additions in the future.
-> 
-> What's your thoughts on that ?
-> 
-> 
-> --mtx
-> 
-> -- 
-> Enrico Weigelt, metux IT consult
-> Free software and Linux embedded engineering
-> info@metux.net -- +49-151-27565287
+but rather a bug or logic error caused by overflow.
+
+
+```cpp
+
+
+static long calc_group_shares(struct cfs_rq *cfs_rq)
+{
+
+     // ......
+
+     shares = (tg_shares * load);   // 1048576 * 9144968455305  = 
+-8857549630719655936 (OVERFLOW)
+     if (tg_weight)                         // assume tg_weight is 3
+         shares /= tg_weight;         //  0xd7068dd8c2daaaab shoule be 
+0x2c5be32e18300000
+}
+
+```
+
+
+It will cause `se->runnable_weight` to have an incorrect value in 
+reweight_entity().
+
+
+Thanks.
+
+CHENG Jian
+
+
