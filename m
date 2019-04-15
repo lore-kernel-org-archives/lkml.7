@@ -4,50 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 583DEC10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:02:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B8D6FC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1AD1321902
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:02:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E4FC2087C
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 19:02:56 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555354973;
-	bh=IQgSzUX6w2VqmF/8+jZIK+yRqaY3i6wK5OLNRCWeUuo=;
+	s=default; t=1555354976;
+	bh=1/SyIu0OXXX2OtItZtMTZDyFUPZSjpx3GPUXkohNUIQ=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=nzpsFeA5SLW/b2OimyUHeQ8kinfK1RAaf1S8hat3ajRlxLprwSFW12dJ7nRCKNIER
-	 yC3EeF7+7xCCyGywpLwvjsQ7eu68cpt7zcWcPlgzsdlfoSgkIYZLFOgb69tvIMCS93
-	 CoVC3gr8i3nxjDGqAuI6dcrc2LyHTOb9ObnsJYao=
+	b=tbk6ffm250bEYlocV/PJ5rr0MPp+MmhZvH8zXO5aNMjPU/I4H8mQgnmCqTl4vPWwo
+	 eF3LewIaqTrgBUX2cVBdC9Sv0g5gGsy07csK6cWpTuW95YVS0YgqFtql93hLqB0r1t
+	 gQ07cv+fn0teYSnSkO91FBpHPl4BXgMm6XaCQdcQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729031AbfDOTCv (ORCPT
+        id S1729056AbfDOTCz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 15:02:51 -0400
-Received: from mail.kernel.org ([198.145.29.99]:34060 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 15:02:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:34228 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728999AbfDOTCr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 15:02:47 -0400
+        id S1728999AbfDOTCw (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 15:02:52 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3532D218A1;
-        Mon, 15 Apr 2019 19:02:46 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 696C6218FC;
+        Mon, 15 Apr 2019 19:02:51 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555354966;
-        bh=IQgSzUX6w2VqmF/8+jZIK+yRqaY3i6wK5OLNRCWeUuo=;
+        s=default; t=1555354971;
+        bh=1/SyIu0OXXX2OtItZtMTZDyFUPZSjpx3GPUXkohNUIQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=cZ9ZUz1JSYlIcYJNU7fBZLlNgEprvW2pJqDWUOQ+5fPd4rL9qQONlMPHAOSZXE4Fs
-         pEtr8lXviISop1pqTHAVfZibIvAb6fUCgfewfHx9boq/Eq/AmjcFDQBAdpiBoEFhgy
-         /kE32ZZ8TcLz4tmywMiT9voxkOjLuPkwxt1Tjxes=
+        b=hwgo/u2oIn4Ag9Hvdveg9OPW1AZN2ihbNKPuSV9OGByOYcfbIc5LoCN8tP30+ogdA
+         9942jpRTJPqaTB2LVnHQ/feTOCqRxk+MpI1bn0IXnhR6EDuKxKFgNzfU9LKz+oh+j7
+         aKLroT0zr6xsqy4uTcbQF5y8atWXaVZ+yDb+C1vo=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Jianlin Shi <jishi@redhat.com>,
-        Lorenzo Bianconi <lorenzo.bianconi@redhat.com>,
+        stable@vger.kernel.org,
+        Koen De Schepper <koen.de_schepper@nokia-bell-labs.com>,
+        Olivier Tilmans <olivier.tilmans@nokia-bell-labs.com>,
+        Bob Briscoe <research@bobbriscoe.net>,
+        Lawrence Brakmo <brakmo@fb.com>,
+        Florian Westphal <fw@strlen.de>,
+        Daniel Borkmann <borkmann@iogearbox.net>,
+        Yuchung Cheng <ycheng@google.com>,
+        Neal Cardwell <ncardwell@google.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Andrew Shewmaker <agshew@gmail.com>,
+        Glenn Judd <glenn.judd@morganstanley.com>,
+        Daniel Borkmann <daniel@iogearbox.net>,
         "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.14 17/69] ipv6: sit: reset ip header pointer in ipip6_rcv
-Date:   Mon, 15 Apr 2019 20:58:35 +0200
-Message-Id: <20190415183729.853786962@linuxfoundation.org>
+Subject: [PATCH 4.14 26/69] tcp: Ensure DCTCP reacts to losses
+Date:   Mon, 15 Apr 2019 20:58:44 +0200
+Message-Id: <20190415183731.114640169@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183726.036654568@linuxfoundation.org>
 References: <20190415183726.036654568@linuxfoundation.org>
@@ -60,116 +71,139 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+From: Koen De Schepper <koen.de_schepper@nokia-bell-labs.com>
 
-[ Upstream commit bb9bd814ebf04f579be466ba61fc922625508807 ]
+[ Upstream commit aecfde23108b8e637d9f5c5e523b24fb97035dc3 ]
 
-ipip6 tunnels run iptunnel_pull_header on received skbs. This can
-determine the following use-after-free accessing iph pointer since
-the packet will be 'uncloned' running pskb_expand_head if it is a
-cloned gso skb (e.g if the packet has been sent though a veth device)
+RFC8257 §3.5 explicitly states that "A DCTCP sender MUST react to
+loss episodes in the same way as conventional TCP".
 
-[  706.369655] BUG: KASAN: use-after-free in ipip6_rcv+0x1678/0x16e0 [sit]
-[  706.449056] Read of size 1 at addr ffffe01b6bd855f5 by task ksoftirqd/1/=
-[  706.669494] Hardware name: HPE ProLiant m400 Server/ProLiant m400 Server, BIOS U02 08/19/2016
-[  706.771839] Call trace:
-[  706.801159]  dump_backtrace+0x0/0x2f8
-[  706.845079]  show_stack+0x24/0x30
-[  706.884833]  dump_stack+0xe0/0x11c
-[  706.925629]  print_address_description+0x68/0x260
-[  706.982070]  kasan_report+0x178/0x340
-[  707.025995]  __asan_report_load1_noabort+0x30/0x40
-[  707.083481]  ipip6_rcv+0x1678/0x16e0 [sit]
-[  707.132623]  tunnel64_rcv+0xd4/0x200 [tunnel4]
-[  707.185940]  ip_local_deliver_finish+0x3b8/0x988
-[  707.241338]  ip_local_deliver+0x144/0x470
-[  707.289436]  ip_rcv_finish+0x43c/0x14b0
-[  707.335447]  ip_rcv+0x628/0x1138
-[  707.374151]  __netif_receive_skb_core+0x1670/0x2600
-[  707.432680]  __netif_receive_skb+0x28/0x190
-[  707.482859]  process_backlog+0x1d0/0x610
-[  707.529913]  net_rx_action+0x37c/0xf68
-[  707.574882]  __do_softirq+0x288/0x1018
-[  707.619852]  run_ksoftirqd+0x70/0xa8
-[  707.662734]  smpboot_thread_fn+0x3a4/0x9e8
-[  707.711875]  kthread+0x2c8/0x350
-[  707.750583]  ret_from_fork+0x10/0x18
+Currently, Linux DCTCP performs no cwnd reduction when losses
+are encountered. Optionally, the dctcp_clamp_alpha_on_loss resets
+alpha to its maximal value if a RTO happens. This behavior
+is sub-optimal for at least two reasons: i) it ignores losses
+triggering fast retransmissions; and ii) it causes unnecessary large
+cwnd reduction in the future if the loss was isolated as it resets
+the historical term of DCTCP's alpha EWMA to its maximal value (i.e.,
+denoting a total congestion). The second reason has an especially
+noticeable effect when using DCTCP in high BDP environments, where
+alpha normally stays at low values.
 
-[  707.811302] Allocated by task 16982:
-[  707.854182]  kasan_kmalloc.part.1+0x40/0x108
-[  707.905405]  kasan_kmalloc+0xb4/0xc8
-[  707.948291]  kasan_slab_alloc+0x14/0x20
-[  707.994309]  __kmalloc_node_track_caller+0x158/0x5e0
-[  708.053902]  __kmalloc_reserve.isra.8+0x54/0xe0
-[  708.108280]  __alloc_skb+0xd8/0x400
-[  708.150139]  sk_stream_alloc_skb+0xa4/0x638
-[  708.200346]  tcp_sendmsg_locked+0x818/0x2b90
-[  708.251581]  tcp_sendmsg+0x40/0x60
-[  708.292376]  inet_sendmsg+0xf0/0x520
-[  708.335259]  sock_sendmsg+0xac/0xf8
-[  708.377096]  sock_write_iter+0x1c0/0x2c0
-[  708.424154]  new_sync_write+0x358/0x4a8
-[  708.470162]  __vfs_write+0xc4/0xf8
-[  708.510950]  vfs_write+0x12c/0x3d0
-[  708.551739]  ksys_write+0xcc/0x178
-[  708.592533]  __arm64_sys_write+0x70/0xa0
-[  708.639593]  el0_svc_handler+0x13c/0x298
-[  708.686646]  el0_svc+0x8/0xc
+This patch replace the clamping of alpha by setting ssthresh to
+half of cwnd for both fast retransmissions and RTOs, at most once
+per RTT. Consequently, the dctcp_clamp_alpha_on_loss module parameter
+has been removed.
 
-[  708.739019] Freed by task 17:
-[  708.774597]  __kasan_slab_free+0x114/0x228
-[  708.823736]  kasan_slab_free+0x10/0x18
-[  708.868703]  kfree+0x100/0x3d8
-[  708.905320]  skb_free_head+0x7c/0x98
-[  708.948204]  skb_release_data+0x320/0x490
-[  708.996301]  pskb_expand_head+0x60c/0x970
-[  709.044399]  __iptunnel_pull_header+0x3b8/0x5d0
-[  709.098770]  ipip6_rcv+0x41c/0x16e0 [sit]
-[  709.146873]  tunnel64_rcv+0xd4/0x200 [tunnel4]
-[  709.200195]  ip_local_deliver_finish+0x3b8/0x988
-[  709.255596]  ip_local_deliver+0x144/0x470
-[  709.303692]  ip_rcv_finish+0x43c/0x14b0
-[  709.349705]  ip_rcv+0x628/0x1138
-[  709.388413]  __netif_receive_skb_core+0x1670/0x2600
-[  709.446943]  __netif_receive_skb+0x28/0x190
-[  709.497120]  process_backlog+0x1d0/0x610
-[  709.544169]  net_rx_action+0x37c/0xf68
-[  709.589131]  __do_softirq+0x288/0x1018
+The table below shows experimental results where we measured the
+drop probability of a PIE AQM (not applying ECN marks) at a
+bottleneck in the presence of a single TCP flow with either the
+alpha-clamping option enabled or the cwnd halving proposed by this
+patch. Results using reno or cubic are given for comparison.
 
-[  709.651938] The buggy address belongs to the object at ffffe01b6bd85580
-                which belongs to the cache kmalloc-1024 of size 1024
-[  709.804356] The buggy address is located 117 bytes inside of
-                1024-byte region [ffffe01b6bd85580, ffffe01b6bd85980)
-[  709.946340] The buggy address belongs to the page:
-[  710.003824] page:ffff7ff806daf600 count:1 mapcount:0 mapping:ffffe01c4001f600 index:0x0
-[  710.099914] flags: 0xfffff8000000100(slab)
-[  710.149059] raw: 0fffff8000000100 dead000000000100 dead000000000200 ffffe01c4001f600
-[  710.242011] raw: 0000000000000000 0000000000380038 00000001ffffffff 0000000000000000
-[  710.334966] page dumped because: kasan: bad access detected
+                          |  Link   |   RTT    |    Drop
+                 TCP CC   |  speed  | base+AQM | probability
+        ==================|=========|==========|============
+                    CUBIC |  40Mbps |  7+20ms  |    0.21%
+                     RENO |         |          |    0.19%
+        DCTCP-CLAMP-ALPHA |         |          |   25.80%
+         DCTCP-HALVE-CWND |         |          |    0.22%
+        ------------------|---------|----------|------------
+                    CUBIC | 100Mbps |  7+20ms  |    0.03%
+                     RENO |         |          |    0.02%
+        DCTCP-CLAMP-ALPHA |         |          |   23.30%
+         DCTCP-HALVE-CWND |         |          |    0.04%
+        ------------------|---------|----------|------------
+                    CUBIC | 800Mbps |   1+1ms  |    0.04%
+                     RENO |         |          |    0.05%
+        DCTCP-CLAMP-ALPHA |         |          |   18.70%
+         DCTCP-HALVE-CWND |         |          |    0.06%
 
-Fix it resetting iph pointer after iptunnel_pull_header
+We see that, without halving its cwnd for all source of losses,
+DCTCP drives the AQM to large drop probabilities in order to keep
+the queue length under control (i.e., it repeatedly faces RTOs).
+Instead, if DCTCP reacts to all source of losses, it can then be
+controlled by the AQM using similar drop levels than cubic or reno.
 
-Fixes: a09a4c8dd1ec ("tunnels: Remove encapsulation offloads on decap")
-Tested-by: Jianlin Shi <jishi@redhat.com>
-Signed-off-by: Lorenzo Bianconi <lorenzo.bianconi@redhat.com>
+Signed-off-by: Koen De Schepper <koen.de_schepper@nokia-bell-labs.com>
+Signed-off-by: Olivier Tilmans <olivier.tilmans@nokia-bell-labs.com>
+Cc: Bob Briscoe <research@bobbriscoe.net>
+Cc: Lawrence Brakmo <brakmo@fb.com>
+Cc: Florian Westphal <fw@strlen.de>
+Cc: Daniel Borkmann <borkmann@iogearbox.net>
+Cc: Yuchung Cheng <ycheng@google.com>
+Cc: Neal Cardwell <ncardwell@google.com>
+Cc: Eric Dumazet <edumazet@google.com>
+Cc: Andrew Shewmaker <agshew@gmail.com>
+Cc: Glenn Judd <glenn.judd@morganstanley.com>
+Acked-by: Florian Westphal <fw@strlen.de>
+Acked-by: Neal Cardwell <ncardwell@google.com>
+Acked-by: Daniel Borkmann <daniel@iogearbox.net>
 Signed-off-by: David S. Miller <davem@davemloft.net>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- net/ipv6/sit.c |    4 ++++
- 1 file changed, 4 insertions(+)
+ net/ipv4/tcp_dctcp.c |   36 ++++++++++++++++++------------------
+ 1 file changed, 18 insertions(+), 18 deletions(-)
 
---- a/net/ipv6/sit.c
-+++ b/net/ipv6/sit.c
-@@ -661,6 +661,10 @@ static int ipip6_rcv(struct sk_buff *skb
- 		    !net_eq(tunnel->net, dev_net(tunnel->dev))))
- 			goto out;
+--- a/net/ipv4/tcp_dctcp.c
++++ b/net/ipv4/tcp_dctcp.c
+@@ -66,11 +66,6 @@ static unsigned int dctcp_alpha_on_init
+ module_param(dctcp_alpha_on_init, uint, 0644);
+ MODULE_PARM_DESC(dctcp_alpha_on_init, "parameter for initial alpha value");
  
-+		/* skb can be uncloned in iptunnel_pull_header, so
-+		 * old iph is no longer valid
-+		 */
-+		iph = (const struct iphdr *)skb_mac_header(skb);
- 		err = IP_ECN_decapsulate(iph, skb);
- 		if (unlikely(err)) {
- 			if (log_ecn_error)
+-static unsigned int dctcp_clamp_alpha_on_loss __read_mostly;
+-module_param(dctcp_clamp_alpha_on_loss, uint, 0644);
+-MODULE_PARM_DESC(dctcp_clamp_alpha_on_loss,
+-		 "parameter for clamping alpha on loss");
+-
+ static struct tcp_congestion_ops dctcp_reno;
+ 
+ static void dctcp_reset(const struct tcp_sock *tp, struct dctcp *ca)
+@@ -211,21 +206,23 @@ static void dctcp_update_alpha(struct so
+ 	}
+ }
+ 
+-static void dctcp_state(struct sock *sk, u8 new_state)
++static void dctcp_react_to_loss(struct sock *sk)
+ {
+-	if (dctcp_clamp_alpha_on_loss && new_state == TCP_CA_Loss) {
+-		struct dctcp *ca = inet_csk_ca(sk);
++	struct dctcp *ca = inet_csk_ca(sk);
++	struct tcp_sock *tp = tcp_sk(sk);
+ 
+-		/* If this extension is enabled, we clamp dctcp_alpha to
+-		 * max on packet loss; the motivation is that dctcp_alpha
+-		 * is an indicator to the extend of congestion and packet
+-		 * loss is an indicator of extreme congestion; setting
+-		 * this in practice turned out to be beneficial, and
+-		 * effectively assumes total congestion which reduces the
+-		 * window by half.
+-		 */
+-		ca->dctcp_alpha = DCTCP_MAX_ALPHA;
+-	}
++	ca->loss_cwnd = tp->snd_cwnd;
++	tp->snd_ssthresh = max(tp->snd_cwnd >> 1U, 2U);
++}
++
++static void dctcp_state(struct sock *sk, u8 new_state)
++{
++	if (new_state == TCP_CA_Recovery &&
++	    new_state != inet_csk(sk)->icsk_ca_state)
++		dctcp_react_to_loss(sk);
++	/* We handle RTO in dctcp_cwnd_event to ensure that we perform only
++	 * one loss-adjustment per RTT.
++	 */
+ }
+ 
+ static void dctcp_cwnd_event(struct sock *sk, enum tcp_ca_event ev)
+@@ -237,6 +234,9 @@ static void dctcp_cwnd_event(struct sock
+ 	case CA_EVENT_ECN_NO_CE:
+ 		dctcp_ce_state_1_to_0(sk);
+ 		break;
++	case CA_EVENT_LOSS:
++		dctcp_react_to_loss(sk);
++		break;
+ 	default:
+ 		/* Don't care for the rest. */
+ 		break;
 
 
