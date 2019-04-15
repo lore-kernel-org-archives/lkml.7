@@ -2,120 +2,112 @@ Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D17D0C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:43:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DBD19C10F12
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:43:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B48520880
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:43:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="gDi7sxor"
+	by mail.kernel.org (Postfix) with ESMTP id AC3B22183F
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 15:43:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727627AbfDOPnP (ORCPT
+        id S1727669AbfDOPnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 11:43:15 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:42187 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726034AbfDOPnO (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 11:43:14 -0400
-Received: by mail-ed1-f67.google.com with SMTP id x61so15097894edc.9
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 08:43:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=iLYihP302CGl8iTQsNLBRNlcVyDiev3EggGLEBc+/gI=;
-        b=gDi7sxorGTkR2q9v33CbnX2EyIeoqv+LqksDSF6JPHC7OrQx7RojkMUqKKAzzStKoH
-         5VxTpx6LXWI7J1OhDfyFeuDPvNwbz57GmTGiXzfCvgbu2j6WPYmctQdB3s7iIXuVn8vU
-         KiGgjd4B+4a4EooYFiZZyhOtr254TTx9+J6NQ=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=iLYihP302CGl8iTQsNLBRNlcVyDiev3EggGLEBc+/gI=;
-        b=qqqMRhIfzgru/57IBrbW0ieSnlcgx8gYdWkGl9/f4fGaEGLBLELnhPoleyZ1qTeIej
-         hVW7tPnpRgVxkWEJEl/CgwBmAmJHpOTLKxuUkuKuTK9QJq2HU9/zIQn/23OJSXH4GpsA
-         Cbxdy5n2J9k2+5pI1PeaipR5e48EzGrqKFV0uyydAEv+oOaeawddRLHdbVQig1ILsSly
-         3xbgJKgmf13M8kCN6NFLZs1uvqaswDHYlys1g6go9zU7SsTTKmrb+FNPbpK2jLtB8d8k
-         Qhrr+fQsxr+2RRZY35J5xz8oBEw6oqJNIvE3RIHrzxncwylrIqgCI6RA2GKXO+QC7kCz
-         W+oQ==
-X-Gm-Message-State: APjAAAWYUkEZJiBnddmUxRsq1N+p+ntmdKZbd9D9B5Heor8VfbuzvNCg
-        IB93Ljfn+OVbDdtfgOGc02wVBA==
-X-Google-Smtp-Source: APXvYqwSzqhsGy+qrknAlCrRdFnySI5FKubXKvL9RIrrOZs+p/TXDcooSzr8qHvsdtMiYEa1h8R6dg==
-X-Received: by 2002:a50:95ed:: with SMTP id x42mr9082352eda.92.1555342993199;
-        Mon, 15 Apr 2019 08:43:13 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id z3sm7749660eja.32.2019.04.15.08.43.11
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 15 Apr 2019 08:43:12 -0700 (PDT)
-Date:   Mon, 15 Apr 2019 17:43:10 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Joel Stanley <joel@jms.id.au>
-Cc:     David Airlie <airlied@linux.ie>, Andrew Jeffery <andrew@aj.id.au>,
-        =?iso-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel test robot <lkp@intel.com>,
-        Daniel Vetter <daniel@ffwll.ch>
-Subject: Re: [PATCH v2] drm: aspeed: Clean up Kconfig options
-Message-ID: <20190415154310.GA2665@phenom.ffwll.local>
-Mail-Followup-To: Joel Stanley <joel@jms.id.au>,
-        David Airlie <airlied@linux.ie>, Andrew Jeffery <andrew@aj.id.au>,
-        =?iso-8859-1?Q?C=E9dric?= Le Goater <clg@kaod.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        dri-devel@lists.freedesktop.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        kernel test robot <lkp@intel.com>
-References: <20190405081117.27339-1-joel@jms.id.au>
- <20190415093012.GX2665@phenom.ffwll.local>
- <CACPK8XcT4Z-9mbqc0obteWKOoLYke+gR4Hd0rZ-C=g0NgSNd0A@mail.gmail.com>
+        Mon, 15 Apr 2019 11:43:20 -0400
+Received: from mga17.intel.com ([192.55.52.151]:2008 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726034AbfDOPnT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 11:43:19 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Apr 2019 08:43:19 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,354,1549958400"; 
+   d="scan'208";a="142906558"
+Received: from unknown (HELO [10.7.201.126]) ([10.7.201.126])
+  by orsmga003.jf.intel.com with ESMTP; 15 Apr 2019 08:43:18 -0700
+Subject: Re: [PATCH 0/2] x86, numa: always initialize all possible nodes
+To:     Michal Hocko <mhocko@kernel.org>, linux-mm@kvack.org
+Cc:     Pingfan Liu <kernelfans@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Tony Luck <tony.luck@intel.com>, linuxppc-dev@lists.ozlabs.org,
+        linux-ia64@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@elte.hu>
+References: <20190212095343.23315-1-mhocko@kernel.org>
+ <20190226131201.GA10588@dhcp22.suse.cz>
+ <20190415114209.GJ3366@dhcp22.suse.cz>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <77b364e5-a30c-964a-6985-00b759dac128@intel.com>
+Date:   Mon, 15 Apr 2019 08:43:18 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACPK8XcT4Z-9mbqc0obteWKOoLYke+gR4Hd0rZ-C=g0NgSNd0A@mail.gmail.com>
-X-Operating-System: Linux phenom 4.19.0-1-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190415114209.GJ3366@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 06:41:48PM +0800, Joel Stanley wrote:
-> On Mon., 15 Apr. 2019, 17:32 Daniel Vetter, <daniel@ffwll.ch> wrote:
-> 
-> > On Fri, Apr 05, 2019 at 06:41:17PM +1030, Joel Stanley wrote:
-> > > The GFX IP is inside of the ASPEED BMC SoC so there is little use
-> > > enabling it on a kernel that does not support ASPEED.
-> > >
-> > > When building with COMPILE_TEST the architecture many not have CMA
-> > > support, so to avoid breaking the build we only select these options if
-> > > the architecture supports the contiguous allocator.
-> > >
-> > > I suspect the DRM_PANEL came from a cut/paste error.
-> > >
-> > > Fixes: 4f2a8f5898ec ("drm: Add ASPEED GFX driver")
-> > > Reported-by: Stephen Rothwell <sfr@canb.auug.org.au>
-> > > Reported-by: kernel test robot <lkp@intel.com>
-> > > Signed-off-by: Joel Stanley <joel@jms.id.au>
-> >
-> > Acked-by: Daniel Vetter <daniel.vetter@ffwll.ch>
-> >
-> > Iirc you have commit rights, right?
-> >
-> 
-> Can you please apply this one for me? I'm traveling and don't have my keys
-> with me.
+On 4/15/19 4:42 AM, Michal Hocko wrote:
+>> Friendly ping. I haven't heard any complains so can we route this via
+>> tip/x86/mm or should we go via mmotm.
+> It seems that Dave is busy. Let's add Andrew. Can we get this [1] merged
+> finally, please?
 
-Ok, since it's holding up linux-next testing I've applied, in general it's
-ok to just wait until you're back I think.
--Daniel
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Sorry these slipped through the cracks.
+
+These look sane to me.  Because it pokes around mm/page_alloc.c a bit,
+and could impact other architectures, my preference would be for Andrew
+to pick these up for -mm.  But, I don't feel that strongly about it.
+
+Reviewed-by: Dave Hansen <dave.hansen@intel.com>
