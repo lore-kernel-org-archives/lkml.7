@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 790D6C10F12
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:47:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B727FC10F0E
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:47:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46AD7218FE
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:47:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79AA9218EA
+	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 18:47:59 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555354074;
-	bh=/djra96ESKAR8279YAcz6FaVbmTLbnPyz9Fu0HNKhRs=;
+	s=default; t=1555354079;
+	bh=Z+0BH9rrIJ2/xEPwPe5vRIkDigzEUH1mKpbqEuDS2NU=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=jwG/0KvaYDLmDoID8IO1dVV5GCaBWN6I0EajC2NYOIsfb2p0fXjzeO9UtLOwW+x+2
-	 NXE1Uwiy9UZdN1dbo/H70R+XQR/qvoNdX79EGEYLihZyS5fhfbbNc2vTPAhduVqJEr
-	 Kola11uksPELL57tvGpecVowbYK5w6iAI/yH6Z9s=
+	b=GFsSWb3Lqg7fGW25ibG2JRnfzQEbveqICttO30rsmI8jWtBwfdgI/GtZ/naYz+VGr
+	 jsSWUoZ8oxqlPsf0w6z8jV/C17o1t1p0kQ+6MyJnGv9eszGEe/W56F8Pupniypgt4j
+	 X5qTsbd3R/waw495ow3U03U0+BRpMOi/ChHJXKAo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729008AbfDOSrx (ORCPT
+        id S1729025AbfDOSr6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 14:47:53 -0400
-Received: from mail.kernel.org ([198.145.29.99]:51440 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 14:47:58 -0400
+Received: from mail.kernel.org ([198.145.29.99]:51600 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728992AbfDOSru (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 14:47:50 -0400
+        id S1728992AbfDOSrz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 14:47:55 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id B7B1B2087C;
-        Mon, 15 Apr 2019 18:47:48 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 14996218EA;
+        Mon, 15 Apr 2019 18:47:53 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555354069;
-        bh=/djra96ESKAR8279YAcz6FaVbmTLbnPyz9Fu0HNKhRs=;
+        s=default; t=1555354074;
+        bh=Z+0BH9rrIJ2/xEPwPe5vRIkDigzEUH1mKpbqEuDS2NU=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=wLs2R1Qt5nSH2HROH5ByxlIqZffJWFthK7euRMDU4pfzjZYLK/2o10Qehu4P9exmt
-         tmGXCbLVsboJFgIxT7057WrIL0mn6s9UcmWet0TWvXyVaBJA9lYq8Z0xDkxl4J09qg
-         MmCYFTLgJuFN84uO4+CPfAUvBJUIqlQRcMSPTx4g=
+        b=lfPL0eyLnhwm5KAvIcoDJ1RjDs7rsZgAZqf97+hU/CWSlxryZwwfUsXTFsMSXmVrs
+         1kZqx/7SjqfM93QtB38H1eaAES5idxmdx4AxXfnP89SN12FTj/0bLQw72HiFePmpJG
+         x0WwPm9iidWt2jnaBI3Y27v+P6xQApz33AFHAVzs=
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     linux-kernel@vger.kernel.org
 Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        stable@vger.kernel.org, Li RongQing <lirongqing@baidu.com>,
-        Wang Li <wangli39@baidu.com>,
-        Michal Kubecek <mkubecek@suse.cz>,
-        "David S. Miller" <davem@davemloft.net>
-Subject: [PATCH 4.9 61/76] net: ethtool: not call vzalloc for zero sized memory request
-Date:   Mon, 15 Apr 2019 20:44:25 +0200
-Message-Id: <20190415183725.347326538@linuxfoundation.org>
+        stable@vger.kernel.org, Zubin Mithra <zsm@chromium.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Takashi Iwai <tiwai@suse.de>
+Subject: [PATCH 4.9 63/76] ALSA: seq: Fix OOB-reads from strlcpy
+Date:   Mon, 15 Apr 2019 20:44:27 +0200
+Message-Id: <20190415183725.660783720@linuxfoundation.org>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190415183707.712011689@linuxfoundation.org>
 References: <20190415183707.712011689@linuxfoundation.org>
@@ -60,117 +60,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Li RongQing <lirongqing@baidu.com>
+From: Zubin Mithra <zsm@chromium.org>
 
-[ Upstream commit 3d8830266ffc28c16032b859e38a0252e014b631 ]
+commit 212ac181c158c09038c474ba68068be49caecebb upstream.
 
-NULL or ZERO_SIZE_PTR will be returned for zero sized memory
-request, and derefencing them will lead to a segfault
+When ioctl calls are made with non-null-terminated userspace strings,
+strlcpy causes an OOB-read from within strlen. Fix by changing to use
+strscpy instead.
 
-so it is unnecessory to call vzalloc for zero sized memory
-request and not call functions which maybe derefence the
-NULL allocated memory
-
-this also fixes a possible memory leak if phy_ethtool_get_stats
-returns error, memory should be freed before exit
-
-Signed-off-by: Li RongQing <lirongqing@baidu.com>
-Reviewed-by: Wang Li <wangli39@baidu.com>
-Reviewed-by: Michal Kubecek <mkubecek@suse.cz>
-Signed-off-by: David S. Miller <davem@davemloft.net>
+Signed-off-by: Zubin Mithra <zsm@chromium.org>
+Reviewed-by: Guenter Roeck <groeck@chromium.org>
+Cc: <stable@vger.kernel.org>
+Signed-off-by: Takashi Iwai <tiwai@suse.de>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- net/core/ethtool.c |   49 +++++++++++++++++++++++++++++++------------------
- 1 file changed, 31 insertions(+), 18 deletions(-)
 
---- a/net/core/ethtool.c
-+++ b/net/core/ethtool.c
-@@ -1801,17 +1801,22 @@ static int ethtool_get_strings(struct ne
+---
+ sound/core/seq/seq_clientmgr.c |    6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+--- a/sound/core/seq/seq_clientmgr.c
++++ b/sound/core/seq/seq_clientmgr.c
+@@ -1249,7 +1249,7 @@ static int snd_seq_ioctl_set_client_info
  
- 	gstrings.len = ret;
+ 	/* fill the info fields */
+ 	if (client_info->name[0])
+-		strlcpy(client->name, client_info->name, sizeof(client->name));
++		strscpy(client->name, client_info->name, sizeof(client->name));
  
--	data = kcalloc(gstrings.len, ETH_GSTRING_LEN, GFP_USER);
--	if (!data)
--		return -ENOMEM;
-+	if (gstrings.len) {
-+		data = kcalloc(gstrings.len, ETH_GSTRING_LEN, GFP_USER);
-+		if (!data)
-+			return -ENOMEM;
+ 	client->filter = client_info->filter;
+ 	client->event_lost = client_info->event_lost;
+@@ -1527,7 +1527,7 @@ static int snd_seq_ioctl_create_queue(st
+ 	/* set queue name */
+ 	if (!info->name[0])
+ 		snprintf(info->name, sizeof(info->name), "Queue-%d", q->queue);
+-	strlcpy(q->name, info->name, sizeof(q->name));
++	strscpy(q->name, info->name, sizeof(q->name));
+ 	snd_use_lock_free(&q->use_lock);
  
--	__ethtool_get_strings(dev, gstrings.string_set, data);
-+		__ethtool_get_strings(dev, gstrings.string_set, data);
-+	} else {
-+		data = NULL;
-+	}
+ 	return 0;
+@@ -1589,7 +1589,7 @@ static int snd_seq_ioctl_set_queue_info(
+ 		queuefree(q);
+ 		return -EPERM;
+ 	}
+-	strlcpy(q->name, info->name, sizeof(q->name));
++	strscpy(q->name, info->name, sizeof(q->name));
+ 	queuefree(q);
  
- 	ret = -EFAULT;
- 	if (copy_to_user(useraddr, &gstrings, sizeof(gstrings)))
- 		goto out;
- 	useraddr += sizeof(gstrings);
--	if (copy_to_user(useraddr, data, gstrings.len * ETH_GSTRING_LEN))
-+	if (gstrings.len &&
-+	    copy_to_user(useraddr, data, gstrings.len * ETH_GSTRING_LEN))
- 		goto out;
- 	ret = 0;
- 
-@@ -1899,17 +1904,21 @@ static int ethtool_get_stats(struct net_
- 		return -EFAULT;
- 
- 	stats.n_stats = n_stats;
--	data = kmalloc(n_stats * sizeof(u64), GFP_USER);
--	if (!data)
--		return -ENOMEM;
-+	if (n_stats) {
-+		data = kmalloc(n_stats * sizeof(u64), GFP_USER);
-+		if (!data)
-+			return -ENOMEM;
- 
--	ops->get_ethtool_stats(dev, &stats, data);
-+		ops->get_ethtool_stats(dev, &stats, data);
-+	} else {
-+		data = NULL;
-+	}
- 
- 	ret = -EFAULT;
- 	if (copy_to_user(useraddr, &stats, sizeof(stats)))
- 		goto out;
- 	useraddr += sizeof(stats);
--	if (copy_to_user(useraddr, data, stats.n_stats * sizeof(u64)))
-+	if (n_stats && copy_to_user(useraddr, data, n_stats * sizeof(u64)))
- 		goto out;
- 	ret = 0;
- 
-@@ -1938,19 +1947,23 @@ static int ethtool_get_phy_stats(struct
- 		return -EFAULT;
- 
- 	stats.n_stats = n_stats;
--	data = kmalloc_array(n_stats, sizeof(u64), GFP_USER);
--	if (!data)
--		return -ENOMEM;
--
--	mutex_lock(&phydev->lock);
--	phydev->drv->get_stats(phydev, &stats, data);
--	mutex_unlock(&phydev->lock);
-+	if (n_stats) {
-+		data = kmalloc_array(n_stats, sizeof(u64), GFP_USER);
-+		if (!data)
-+			return -ENOMEM;
-+
-+		mutex_lock(&phydev->lock);
-+		phydev->drv->get_stats(phydev, &stats, data);
-+		mutex_unlock(&phydev->lock);
-+	} else {
-+		data = NULL;
-+	}
- 
- 	ret = -EFAULT;
- 	if (copy_to_user(useraddr, &stats, sizeof(stats)))
- 		goto out;
- 	useraddr += sizeof(stats);
--	if (copy_to_user(useraddr, data, stats.n_stats * sizeof(u64)))
-+	if (n_stats && copy_to_user(useraddr, data, n_stats * sizeof(u64)))
- 		goto out;
- 	ret = 0;
- 
+ 	return 0;
 
 
