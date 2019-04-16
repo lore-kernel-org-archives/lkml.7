@@ -7,62 +7,65 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C95F5C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 12:46:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5376DC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 12:47:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9559020868
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 12:46:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FAED205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 12:47:02 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ArR+V5ww"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PK1cKNoN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729275AbfDPMq4 (ORCPT
+        id S1729309AbfDPMrA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 08:46:56 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:41303 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729131AbfDPMqx (ORCPT
+        Tue, 16 Apr 2019 08:47:00 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:36932 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729041AbfDPMqw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 08:46:53 -0400
-Received: by mail-wr1-f67.google.com with SMTP id r4so26854846wrq.8
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 05:46:52 -0700 (PDT)
+        Tue, 16 Apr 2019 08:46:52 -0400
+Received: by mail-wm1-f66.google.com with SMTP id v14so25265773wmf.2
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 05:46:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=linaro.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=pUZNmtUp8w0ve+d9Kspes7pbniIquQvm2umi/KT+H7I=;
-        b=ArR+V5ww45wsYMYtzRXHaS4Y1f49Y8P5vdyWngOTaqv8zJPsX8TEMvW84OcIfTjYdS
-         8z1ySXMmuxz+2IeeGdQvhIDFLL28iS2AUy1Wf9yhh249yAQCbN1j+rWKLNEjtbIQqtJy
-         ae3wRSpKgdZYQyZdrAsJUPZ3lpClKIqTESCfYpvg777OCxgwYOoiCqIQrS8pyk4tox7x
-         ib1DHLtl/lW5y91zYKbFzJG5KyHVO6UBXVhPgFwcgoFUlyL+Jj5a6KySV1uUxovzcfdP
-         d0wnPBtaW5qqoqfz1PC27k45v/6qyzlepHzXgASGZAWNW/zGnvK1cI6+J6YDUm1cVfkR
-         FMrQ==
+        bh=KINNwFG/iIOr+44tFPkVT2Gr4tEIy3ljx/6ulQdSFwc=;
+        b=PK1cKNoNOC1SksVgIDu+870gB3TvUFca/U2d83NkOYPFVtl0P4SqqcbevFtUS+q1Nk
+         M1bIVnL9aicMFFlDE+1ZcyzkyqxNxK0CM68jZ+SasnMfjWdEMCapZKcTZbJr3lhuN+5K
+         UxbrpjEXvVtIyE1Y7ZuB2TnnIb1wFE2ZXP+wYDf1CAhTZffRcI1eYNm3F4+FpScnUk8Z
+         WKgzMM0xseDsA1Qq8UD4wat54oDj9etePoKOgNzEAhK9xam7SwTKlX4vaKYWml5yan/q
+         IpFdKVT1lnvbHawNbbFDdTdUg6hS+cBFiFy5HyQgd1LP+ZB5nx7SNXkTe0uwielFgzE4
+         qK8g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=pUZNmtUp8w0ve+d9Kspes7pbniIquQvm2umi/KT+H7I=;
-        b=WL6fkNWJBixmIMoNx87yc2iT7xYagePP1YVRIqLFZqVcWPlAINFYVq4JfiyZ59dkow
-         4/QgUB2VFHkq3wEEyWCNUKOa91DEuZm9CYN+PM2Y3YpEHz93Sgu7z9fld2I1xz9/YwCt
-         zDW07Na9FjGVoPda/U2PpSZ5oO8/wpklz8DlyMT4ygTMgQO2+Ig4lX9WxrYKfE9c0uZr
-         CFBdC0VfSpz+KZY0lcOAKdYwXh80uSi0FgPbVl/C8nyjeIrUjUsLhWxsxellurpdPmf2
-         jSmeVhspeAR5M2fpD4GQtCvoKxis66GxJyiEn2g3hr2TK7qr+BUeqSoq3fRocBrotLRW
-         R+DA==
-X-Gm-Message-State: APjAAAWSohwl9tDMz5PwyqsVwEBzS2b4J2QlVkI9DcctA2whMM797KPG
-        ch3u4emxdGcnoOtXa9GV2eUVANUre2Q=
-X-Google-Smtp-Source: APXvYqz9yqaQui5JDwglsEipJxzXhe+poXIi39JmETZKpFmOeU3T/yA3X18d3FSqlimY+JYgywHtSw==
-X-Received: by 2002:a5d:6150:: with SMTP id y16mr29924698wrt.13.1555418811640;
-        Tue, 16 Apr 2019 05:46:51 -0700 (PDT)
+        bh=KINNwFG/iIOr+44tFPkVT2Gr4tEIy3ljx/6ulQdSFwc=;
+        b=kJTuPmGZDKmXz+zOLkmdE9lnVZc6DVY+bkUxKS2q16k3FXKAhGgksXOH0TWdRgN3Oh
+         NlkgG1wP4nDgvrh2zuG9QQyUxMvQy7XHlwt+Fqv1dxHAieF6Grr3q7eIHzJwn6vk/jV2
+         kF+YYZtMBrwYEKibnR6HsjKi2YEC+G2s2Fg70xAsG7d+lLMrUHsg9kUp5nNjQGMhy3jU
+         bleOCg3pbNg48pT7FNlE1OElA3CPDzHLJOF89Z2DFYzTcYYuWV4NDH0yrgMboqHPyIBx
+         X87P1UxRusb9g3mLGchKxxcaf1uXP1GlgAcQj7lom5skU/q3Xggz5Rny0kQKtZkK1OJg
+         gufA==
+X-Gm-Message-State: APjAAAUUem1j6zUHAJeNlghNSVxmLvE8+8iVGtxA+br2WvY1yH2BlPWl
+        DQoy7JWB2BfXYLgPj1oaoL1Fuw==
+X-Google-Smtp-Source: APXvYqwQ4Wg/kWlIQ2GZdMVpYhRuIFtZYXlaGEe8yW8ZljhPM32ws1+skqMhu6VBK5/ZTOEir2VakA==
+X-Received: by 2002:a1c:eb07:: with SMTP id j7mr25481124wmh.138.1555418810253;
+        Tue, 16 Apr 2019 05:46:50 -0700 (PDT)
 Received: from mai.imgcgcw.net (50.251.95.92.rev.sfr.net. [92.95.251.50])
-        by smtp.gmail.com with ESMTPSA id p6sm42823732wrs.6.2019.04.16.05.46.50
+        by smtp.gmail.com with ESMTPSA id p6sm42823732wrs.6.2019.04.16.05.46.48
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 05:46:51 -0700 (PDT)
+        Tue, 16 Apr 2019 05:46:49 -0700 (PDT)
 From:   Daniel Lezcano <daniel.lezcano@linaro.org>
 To:     tglx@linutronix.de
 Cc:     linux-kernel@vger.kernel.org,
-        Nathan Chancellor <natechancellor@gmail.com>,
-        Tony Lindgren <tony@atomide.com>
-Subject: [PATCH 4/4] clocksource/drivers/timer-ti-dm: Remove omap_dm_timer_set_load_start
-Date:   Tue, 16 Apr 2019 14:46:40 +0200
-Message-Id: <20190416124640.20058-4-daniel.lezcano@linaro.org>
+        Neil Armstrong <narmstrong@baylibre.com>,
+        Daniel Golle <daniel@makrotopia.org>,
+        linux-arm-kernel@lists.infradead.org (moderated list:ARM/OXNAS platform
+        support),
+        linux-oxnas@groups.io (moderated list:ARM/OXNAS platform support)
+Subject: [PATCH 3/4] clocksource/drivers/oxnas: Fix OX820 compatible
+Date:   Tue, 16 Apr 2019 14:46:39 +0200
+Message-Id: <20190416124640.20058-3-daniel.lezcano@linaro.org>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190416124640.20058-1-daniel.lezcano@linaro.org>
 References: <92427592-507b-e280-01bf-763d795c8a2f@linaro.org>
@@ -72,71 +75,28 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Nathan Chancellor <natechancellor@gmail.com>
+From: Neil Armstrong <narmstrong@baylibre.com>
 
-Commit 008258d995a6 ("clocksource/drivers/timer-ti-dm: Make
-omap_dm_timer_set_load_start() static") made omap_dm_time_set_load_start
-static because its prototype was not defined in a header. Unfortunately,
-this causes a build warning on multi_v7_defconfig because this function
-is not used anywhere in this translation unit:
+The OX820 compatible is wrong is the driver, fix it.
 
-drivers/clocksource/timer-ti-dm.c:589:12: error: unused function
-'omap_dm_timer_set_load_start' [-Werror,-Wunused-function]
-
-In fact, omap_dm_timer_set_load_start hasn't been used anywhere since
-commit f190be7f39a5 ("staging: tidspbridge: remove driver") and the
-prototype was removed in commit 592ea6bd1fad ("clocksource: timer-ti-dm:
-Make unexported functions static"), which is probably where this should
-have happened.
-
-Fixes: 592ea6bd1fad ("clocksource: timer-ti-dm: Make unexported functions static")
-Fixes: 008258d995a6 ("clocksource/drivers/timer-ti-dm: Make omap_dm_timer_set_load_start() static")
-Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
-Acked-by: Tony Lindgren <tony@atomide.com>
+Fixes: 2ea3401e2a84 ("clocksource/drivers/oxnas: Add OX820 compatible")
+Reported-by: Daniel Golle <daniel@makrotopia.org>
+Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
 Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 ---
- drivers/clocksource/timer-ti-dm.c | 28 ----------------------------
- 1 file changed, 28 deletions(-)
+ drivers/clocksource/timer-oxnas-rps.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/clocksource/timer-ti-dm.c b/drivers/clocksource/timer-ti-dm.c
-index 3352da6ed61f..ee8ec5a8cb16 100644
---- a/drivers/clocksource/timer-ti-dm.c
-+++ b/drivers/clocksource/timer-ti-dm.c
-@@ -585,34 +585,6 @@ static int omap_dm_timer_set_load(struct omap_dm_timer *timer, int autoreload,
- 	return 0;
- }
- 
--/* Optimized set_load which removes costly spin wait in timer_start */
--static int omap_dm_timer_set_load_start(struct omap_dm_timer *timer,
--					int autoreload, unsigned int load)
--{
--	u32 l;
--
--	if (unlikely(!timer))
--		return -EINVAL;
--
--	omap_dm_timer_enable(timer);
--
--	l = omap_dm_timer_read_reg(timer, OMAP_TIMER_CTRL_REG);
--	if (autoreload) {
--		l |= OMAP_TIMER_CTRL_AR;
--		omap_dm_timer_write_reg(timer, OMAP_TIMER_LOAD_REG, load);
--	} else {
--		l &= ~OMAP_TIMER_CTRL_AR;
--	}
--	l |= OMAP_TIMER_CTRL_ST;
--
--	__omap_dm_timer_load_start(timer, l, load, timer->posted);
--
--	/* Save the context */
--	timer->context.tclr = l;
--	timer->context.tldr = load;
--	timer->context.tcrr = load;
--	return 0;
--}
- static int omap_dm_timer_set_match(struct omap_dm_timer *timer, int enable,
- 				   unsigned int match)
- {
+diff --git a/drivers/clocksource/timer-oxnas-rps.c b/drivers/clocksource/timer-oxnas-rps.c
+index eed6feff8b5f..30c6f4ce672b 100644
+--- a/drivers/clocksource/timer-oxnas-rps.c
++++ b/drivers/clocksource/timer-oxnas-rps.c
+@@ -296,4 +296,4 @@ static int __init oxnas_rps_timer_init(struct device_node *np)
+ TIMER_OF_DECLARE(ox810se_rps,
+ 		       "oxsemi,ox810se-rps-timer", oxnas_rps_timer_init);
+ TIMER_OF_DECLARE(ox820_rps,
+-		       "oxsemi,ox820se-rps-timer", oxnas_rps_timer_init);
++		       "oxsemi,ox820-rps-timer", oxnas_rps_timer_init);
 -- 
 2.17.1
 
