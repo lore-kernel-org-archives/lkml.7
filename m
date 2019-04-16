@@ -2,217 +2,107 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1895EC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:35:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9B2EC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:35:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E193120821
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:35:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 995842077C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:35:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="uAkPAF7d"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729289AbfDPLfT (ORCPT
+        id S1729292AbfDPLfb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 07:35:19 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:45047 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726241AbfDPLfQ (ORCPT
+        Tue, 16 Apr 2019 07:35:31 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:46847 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726838AbfDPLfa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 07:35:16 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3GBZ1ff3428210
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 16 Apr 2019 04:35:01 -0700
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3GBZ1ic3428207;
-        Tue, 16 Apr 2019 04:35:01 -0700
-Date:   Tue, 16 Apr 2019 04:35:01 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Andi Kleen <tipbot@zytor.com>
-Message-ID: <tip-48f38aa4cc5a48bc0fe85c5c4b1ab171fbb539b6@git.kernel.org>
-Cc:     peterz@infradead.org, acme@redhat.com, tglx@linutronix.de,
-        alexander.shishkin@linux.intel.com, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, mingo@kernel.org, hpa@zytor.com,
-        jolsa@redhat.com, vincent.weaver@maine.edu, ak@linux.intel.com,
-        kan.liang@linux.intel.com, eranian@google.com
-Reply-To: mingo@kernel.org, torvalds@linux-foundation.org,
-          linux-kernel@vger.kernel.org, peterz@infradead.org,
-          alexander.shishkin@linux.intel.com, tglx@linutronix.de,
-          acme@redhat.com, kan.liang@linux.intel.com, eranian@google.com,
-          ak@linux.intel.com, hpa@zytor.com, vincent.weaver@maine.edu,
-          jolsa@redhat.com
-In-Reply-To: <20190402194509.2832-4-kan.liang@linux.intel.com>
-References: <20190402194509.2832-4-kan.liang@linux.intel.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf/x86/intel: Extract memory code PEBS parser for
- reuse
-Git-Commit-ID: 48f38aa4cc5a48bc0fe85c5c4b1ab171fbb539b6
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Tue, 16 Apr 2019 07:35:30 -0400
+Received: by mail-qt1-f196.google.com with SMTP id z17so22749915qts.13
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 04:35:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=hSpo+70L4YJM4x7lQl+FUrrPu4xrwP39JfmZPu4VWYs=;
+        b=uAkPAF7dOR9jOlKZHaZlfPEmIS/RgB3aBfFO5ISaEvVTkkpTDvtkqE2+IQYHm0wHm5
+         /JBoItz2UeYc0L3twdTNDOrT5Dd554Zs4I2/01JHZitwI53wuFt+wPWE4zEiuA+3Qr5H
+         rIds5Z/hzLd3dkP4kkNvvu2g0wxgF91M/KviRxEqjsDwiw/wRFOCpm7rYVanNETHs5Rb
+         Pzb8ZoCM1QC9DbqOBucMusuhjLWbwGd9l4mQv4sjPgA9/6Zy2pkpG/VXW3srkREJE2lv
+         GUVSsmJqW9TZJwvLVCVmuXOOWWE/sj2pMwDNwvOWY355/IBgBeAD8FJmLLp+Vdhb9Mi2
+         RkqA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=hSpo+70L4YJM4x7lQl+FUrrPu4xrwP39JfmZPu4VWYs=;
+        b=nMMqnEoYdmeJfatiJI/28XOHYGQAEhsa4bZbsK9I19GYAI8HnNBx28ePs+vsc2Qdt5
+         gBW0t7lARvxEcFqxymx1mQWchFP6a9J4UmqpRLrjQwD7aB3GDf9Q6mIM7GrzZX8g/b90
+         2iTN+ISJIsAH9YhHAM6+oxGJ9Ne3J4Z3xqMsbDqiYErZDAZVWrkUORKDQWyPfZ6JgnYN
+         ag5XH+UkPHSf85iPXouwU0hU4GHh1KcPBIm94OINNAhvOaD7sl4Got0WlXni1RE925sL
+         yae3SwCsdQqNysGk5g3HefZbtExdo+voP2yvhyUVUoMbFF6KlUDTNS0S0mRcjRv+4oZo
+         aUlw==
+X-Gm-Message-State: APjAAAWYYp2GpXmyee65g7o8S5t3E8oIe1uCXh7s8GgpAnDdiZMRGgit
+        hOS65GrZXB82w3lnjlSgQtPdjIbnpeLtZer/8cGdcg==
+X-Google-Smtp-Source: APXvYqzNI5yfa49bSXSBniO2uM3TwMAMktYM04Sc142dyQ9kAJmI7sym+gBLu3fMdqLnJJIPfXaYpyZLnqtpzhPApSA=
+X-Received: by 2002:ac8:3789:: with SMTP id d9mr17158568qtc.34.1555414529821;
+ Tue, 16 Apr 2019 04:35:29 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+References: <20190412080152.3718-1-jian-hong@endlessm.com> <tip-0082517fa4bce073e7cf542633439f26538a14cc@git.kernel.org>
+ <20190416082042.GA69717@gmail.com>
+In-Reply-To: <20190416082042.GA69717@gmail.com>
+From:   Daniel Drake <drake@endlessm.com>
+Date:   Tue, 16 Apr 2019 19:35:18 +0800
+Message-ID: <CAD8Lp44pQRYdw4cbfMt3uOSO23dzy_mWTt5T-Zjft08WWu_yUA@mail.gmail.com>
+Subject: Re: EFI reboot vs. ACPI reboot (was: Re: [tip:x86/urgent] x86/reboot,
+ efi: Use EFI reboot for Acer TravelMate X514-51T)
+To:     Ingo Molnar <mingo@kernel.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jian-Hong Pan <jian-hong@endlessm.com>,
+        matt@codeblueprint.co.uk,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>, hpa@zytor.com,
+        linux-efi@vger.kernel.org, Len Brown <len.brown@intel.com>,
+        linux-tip-commits@vger.kernel.org,
+        Endless Linux Upstreaming Team <linux@endlessm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  48f38aa4cc5a48bc0fe85c5c4b1ab171fbb539b6
-Gitweb:     https://git.kernel.org/tip/48f38aa4cc5a48bc0fe85c5c4b1ab171fbb539b6
-Author:     Andi Kleen <ak@linux.intel.com>
-AuthorDate: Tue, 2 Apr 2019 12:45:00 -0700
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Tue, 16 Apr 2019 12:19:39 +0200
+On Tue, Apr 16, 2019 at 4:20 PM Ingo Molnar <mingo@kernel.org> wrote:
+> I wanted to get a second opinion from the EFI folks for this whole
+> concept. On x86 we default to ACPI reboot on modern systems, and we
+> default to EFI reboot on modern EFI systems, via the
+> efi_reboot_required() method which keys off on acpi_gbl_reduced_hardware
+> to create a barrier for older ACPI systems.
 
-perf/x86/intel: Extract memory code PEBS parser for reuse
+So if acpi_gbl_reduced_hardware is set, we are on a "modern EFI
+system", and EFI reboot is used.
 
-Extract some code related to memory profiling from the PEBS record
-parser into separate functions. It can be reused by the upcoming
-adaptive PEBS parser. No functional changes.
-Rename intel_hsw_weight to intel_get_tsx_weight, and
-intel_hsw_transaction to intel_get_tsx_transaction. Because the input is
-not the hsw pebs format anymore.
+> It appears that Acer TravelMate X514-51T systems get marked as
+> 'acpi_gbl_reduced_hardware' which enables ACPI-reboot, but they require
+> EFI-reboot.
 
-Signed-off-by: Andi Kleen <ak@linux.intel.com>
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
-Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
-Cc: Jiri Olsa <jolsa@redhat.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: acme@kernel.org
-Cc: jolsa@kernel.org
-Link: https://lkml.kernel.org/r/20190402194509.2832-4-kan.liang@linux.intel.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/events/intel/ds.c | 63 +++++++++++++++++++++++++---------------------
- 1 file changed, 34 insertions(+), 29 deletions(-)
+We will double check, but in this case I believe the system is *not*
+marked as reduced hardware, which is why ACPI reboot is used.
 
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index f57e6cb7fd99..2f80b7e282ff 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -1125,34 +1125,50 @@ static int intel_pmu_pebs_fixup_ip(struct pt_regs *regs)
- 	return 0;
- }
- 
--static inline u64 intel_hsw_weight(struct pebs_record_skl *pebs)
-+static inline u64 intel_get_tsx_weight(u64 tsx_tuning)
- {
--	if (pebs->tsx_tuning) {
--		union hsw_tsx_tuning tsx = { .value = pebs->tsx_tuning };
-+	if (tsx_tuning) {
-+		union hsw_tsx_tuning tsx = { .value = tsx_tuning };
- 		return tsx.cycles_last_block;
- 	}
- 	return 0;
- }
- 
--static inline u64 intel_hsw_transaction(struct pebs_record_skl *pebs)
-+static inline u64 intel_get_tsx_transaction(u64 tsx_tuning, u64 ax)
- {
--	u64 txn = (pebs->tsx_tuning & PEBS_HSW_TSX_FLAGS) >> 32;
-+	u64 txn = (tsx_tuning & PEBS_HSW_TSX_FLAGS) >> 32;
- 
- 	/* For RTM XABORTs also log the abort code from AX */
--	if ((txn & PERF_TXN_TRANSACTION) && (pebs->ax & 1))
--		txn |= ((pebs->ax >> 24) & 0xff) << PERF_TXN_ABORT_SHIFT;
-+	if ((txn & PERF_TXN_TRANSACTION) && (ax & 1))
-+		txn |= ((ax >> 24) & 0xff) << PERF_TXN_ABORT_SHIFT;
- 	return txn;
- }
- 
-+#define PERF_X86_EVENT_PEBS_HSW_PREC \
-+		(PERF_X86_EVENT_PEBS_ST_HSW | \
-+		 PERF_X86_EVENT_PEBS_LD_HSW | \
-+		 PERF_X86_EVENT_PEBS_NA_HSW)
-+
-+static u64 get_data_src(struct perf_event *event, u64 aux)
-+{
-+	u64 val = PERF_MEM_NA;
-+	int fl = event->hw.flags;
-+	bool fst = fl & (PERF_X86_EVENT_PEBS_ST | PERF_X86_EVENT_PEBS_HSW_PREC);
-+
-+	if (fl & PERF_X86_EVENT_PEBS_LDLAT)
-+		val = load_latency_data(aux);
-+	else if (fst && (fl & PERF_X86_EVENT_PEBS_HSW_PREC))
-+		val = precise_datala_hsw(event, aux);
-+	else if (fst)
-+		val = precise_store_data(aux);
-+	return val;
-+}
-+
- static void setup_pebs_sample_data(struct perf_event *event,
- 				   struct pt_regs *iregs, void *__pebs,
- 				   struct perf_sample_data *data,
- 				   struct pt_regs *regs)
- {
--#define PERF_X86_EVENT_PEBS_HSW_PREC \
--		(PERF_X86_EVENT_PEBS_ST_HSW | \
--		 PERF_X86_EVENT_PEBS_LD_HSW | \
--		 PERF_X86_EVENT_PEBS_NA_HSW)
- 	/*
- 	 * We cast to the biggest pebs_record but are careful not to
- 	 * unconditionally access the 'extra' entries.
-@@ -1160,17 +1176,13 @@ static void setup_pebs_sample_data(struct perf_event *event,
- 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
- 	struct pebs_record_skl *pebs = __pebs;
- 	u64 sample_type;
--	int fll, fst, dsrc;
--	int fl = event->hw.flags;
-+	int fll;
- 
- 	if (pebs == NULL)
- 		return;
- 
- 	sample_type = event->attr.sample_type;
--	dsrc = sample_type & PERF_SAMPLE_DATA_SRC;
--
--	fll = fl & PERF_X86_EVENT_PEBS_LDLAT;
--	fst = fl & (PERF_X86_EVENT_PEBS_ST | PERF_X86_EVENT_PEBS_HSW_PREC);
-+	fll = event->hw.flags & PERF_X86_EVENT_PEBS_LDLAT;
- 
- 	perf_sample_data_init(data, 0, event->hw.last_period);
- 
-@@ -1185,16 +1197,8 @@ static void setup_pebs_sample_data(struct perf_event *event,
- 	/*
- 	 * data.data_src encodes the data source
- 	 */
--	if (dsrc) {
--		u64 val = PERF_MEM_NA;
--		if (fll)
--			val = load_latency_data(pebs->dse);
--		else if (fst && (fl & PERF_X86_EVENT_PEBS_HSW_PREC))
--			val = precise_datala_hsw(event, pebs->dse);
--		else if (fst)
--			val = precise_store_data(pebs->dse);
--		data->data_src.val = val;
--	}
-+	if (sample_type & PERF_SAMPLE_DATA_SRC)
-+		data->data_src.val = get_data_src(event, pebs->dse);
- 
- 	/*
- 	 * We must however always use iregs for the unwinder to stay sane; the
-@@ -1281,10 +1285,11 @@ static void setup_pebs_sample_data(struct perf_event *event,
- 	if (x86_pmu.intel_cap.pebs_format >= 2) {
- 		/* Only set the TSX weight when no memory weight. */
- 		if ((sample_type & PERF_SAMPLE_WEIGHT) && !fll)
--			data->weight = intel_hsw_weight(pebs);
-+			data->weight = intel_get_tsx_weight(pebs->tsx_tuning);
- 
- 		if (sample_type & PERF_SAMPLE_TRANSACTION)
--			data->txn = intel_hsw_transaction(pebs);
-+			data->txn = intel_get_tsx_transaction(pebs->tsx_tuning,
-+							      pebs->ax);
- 	}
- 
- 	/*
+> Should we perhaps re-think the boundary between EFI-reboot and
+> ACPI-reboot systems? I.e. if the EFI runtime is enabled, shouldn't we
+> just use the EFI reboot method?
+
+I agree this is a good question.
+
+We also previously hit a similar issue for shutdown on Acer laptops
+which is still unresolved.
+https://marc.info/?l=linux-acpi&m=148857214431346&w=2
+
+Daniel
