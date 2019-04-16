@@ -2,349 +2,268 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	UPPERCASE_50_75,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8D20C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:34:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A45F1C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B125C21773
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:34:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75D502077C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:34:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729242AbfDPLeB (ORCPT
+        id S1729003AbfDPLeI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 07:34:01 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:49948 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726241AbfDPLeA (ORCPT
+        Tue, 16 Apr 2019 07:34:08 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:36723 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726241AbfDPLeH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 07:34:00 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 25EDD281C61
-Subject: Re: [PATCH v5] chrome/platform: cros_ec_proto: Add trace event to
- trace EC commands
-To:     Raul E Rangel <rrangel@chromium.org>,
-        linux-trace-devel@vger.kernel.org
-Cc:     eballetbo@gmail.com, zwisler@chromium.org, djkurtz@chromium.org,
-        Ross Zwisler <zwisler@google.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        linux-kernel@vger.kernel.org, Benson Leung <bleung@chromium.org>
-References: <20190415205704.46726-1-rrangel@chromium.org>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <dd557117-647c-f324-7c18-60bc28aba483@collabora.com>
-Date:   Tue, 16 Apr 2019 13:33:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 16 Apr 2019 07:34:07 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3GBXgqO3428098
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 16 Apr 2019 04:33:42 -0700
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3GBXgUR3428095;
+        Tue, 16 Apr 2019 04:33:42 -0700
+Date:   Tue, 16 Apr 2019 04:33:42 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Stephane Eranian <tipbot@zytor.com>
+Message-ID: <tip-f447e4eb3ad1e60d173ca997fcb2ef2a66f12574@git.kernel.org>
+Cc:     acme@redhat.com, vincent.weaver@maine.edu, eranian@google.com,
+        mingo@kernel.org, alexander.shishkin@linux.intel.com,
+        peterz@infradead.org, tglx@linutronix.de,
+        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        jolsa@redhat.com, hpa@zytor.com
+Reply-To: vincent.weaver@maine.edu, mingo@kernel.org, eranian@google.com,
+          peterz@infradead.org, alexander.shishkin@linux.intel.com,
+          acme@redhat.com, hpa@zytor.com, torvalds@linux-foundation.org,
+          tglx@linutronix.de, linux-kernel@vger.kernel.org,
+          jolsa@redhat.com
+In-Reply-To: <20190408173252.37932-3-eranian@google.com>
+References: <20190408173252.37932-3-eranian@google.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/core] perf/x86/intel: Force resched when TFA sysctl is
+ modified
+Git-Commit-ID: f447e4eb3ad1e60d173ca997fcb2ef2a66f12574
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <20190415205704.46726-1-rrangel@chromium.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Raul,
+Commit-ID:  f447e4eb3ad1e60d173ca997fcb2ef2a66f12574
+Gitweb:     https://git.kernel.org/tip/f447e4eb3ad1e60d173ca997fcb2ef2a66f12574
+Author:     Stephane Eranian <eranian@google.com>
+AuthorDate: Mon, 8 Apr 2019 10:32:52 -0700
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Tue, 16 Apr 2019 12:19:35 +0200
 
-I really like the idea to have trace functionality in cros-ec. Only some few
-comments below and the patch looks good to me.
+perf/x86/intel: Force resched when TFA sysctl is modified
 
-On 15/4/19 22:57, Raul E Rangel wrote:
-> This is useful to see which EC commands are being executed and when.
-> 
-> To enable:
-> 
->     echo 'cros_ec:*' >> /sys/kernel/debug/tracing/set_event
-> 
+This patch provides guarantee to the sysadmin that when TFA is disabled, no PMU
+event is using PMC3 when the echo command returns. Vice-Versa, when TFA
+is enabled, PMU can use PMC3 immediately (to eliminate possible multiplexing).
 
-For next version could you use the "new" way as suggested by Steven?
+  $ perf stat -a -I 1000 --no-merge -e branches,branches,branches,branches
+     1.000123979    125,768,725,208      branches
+     1.000562520    125,631,000,456      branches
+     1.000942898    125,487,114,291      branches
+     1.001333316    125,323,363,620      branches
+     2.004721306    125,514,968,546      branches
+     2.005114560    125,511,110,861      branches
+     2.005482722    125,510,132,724      branches
+     2.005851245    125,508,967,086      branches
+     3.006323475    125,166,570,648      branches
+     3.006709247    125,165,650,056      branches
+     3.007086605    125,164,639,142      branches
+     3.007459298    125,164,402,912      branches
+     4.007922698    125,045,577,140      branches
+     4.008310775    125,046,804,324      branches
+     4.008670814    125,048,265,111      branches
+     4.009039251    125,048,677,611      branches
+     5.009503373    125,122,240,217      branches
+     5.009897067    125,122,450,517      branches
 
-> Example:
-> 
->     /* cros_ec_cmd: version: 0, command: EC_CMD_GET_VERSION */
->     /* cros_ec_cmd: version: 0, command: EC_CMD_GET_PROTOCOL_INFO */
->     /* cros_ec_cmd: version: 1, command: EC_CMD_GET_CMD_VERSIONS */
->     /* cros_ec_cmd: version: 1, command: EC_CMD_USB_PD_CONTROL */
-> 
-> Signed-off-by: Raul E Rangel <rrangel@chromium.org>
-> Reviewed-by: Ross Zwisler <zwisler@google.com>
-> ---
-> 
-> Changes in v5:
-> - Rebased on upstream/master. It turns out upstream/master is missing a
->   lot of changes to cros_ec_commands.h.
-> - Replace SYM with SYMBOL in macro name.
-> 
-> Changes in v4:
-> - Use the full command name so go to definition continues to work in my
-> editor.
-> 
-> Changes in v3:
-> - Use a macro to avoid duplicating the ec command names.
-> 
-> Changes in v2:
-> - Changed comment style to match other cros_ec files.
-> - Fixed commit tag.
-> 
->  drivers/platform/chrome/Makefile        |   4 +-
->  drivers/platform/chrome/cros_ec_proto.c |   4 +
->  drivers/platform/chrome/cros_ec_trace.c | 121 ++++++++++++++++++++++++
->  drivers/platform/chrome/cros_ec_trace.h |  51 ++++++++++
->  4 files changed, 179 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/platform/chrome/cros_ec_trace.c
->  create mode 100644 drivers/platform/chrome/cros_ec_trace.h
-> 
-> diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
-> index 1e2f0029b597..e542268454a4 100644
-> --- a/drivers/platform/chrome/Makefile
-> +++ b/drivers/platform/chrome/Makefile
-> @@ -3,12 +3,14 @@
->  obj-$(CONFIG_CHROMEOS_LAPTOP)		+= chromeos_laptop.o
->  obj-$(CONFIG_CHROMEOS_PSTORE)		+= chromeos_pstore.o
->  obj-$(CONFIG_CHROMEOS_TBMC)		+= chromeos_tbmc.o
-> +# tell define_trace.h where to find the cros ec trace header
-> +CFLAGS_cros_ec_trace.o:=		-I$(src)
+Then on another connection, sysadmin does:
 
-Add this on top of the file, just below the SPDX license comment
+  $ echo  1 >/sys/devices/cpu/allow_tsx_force_abort
 
->  obj-$(CONFIG_CROS_EC_I2C)		+= cros_ec_i2c.o
->  obj-$(CONFIG_CROS_EC_SPI)		+= cros_ec_spi.o
->  cros_ec_lpcs-objs			:= cros_ec_lpc.o cros_ec_lpc_reg.o
->  cros_ec_lpcs-$(CONFIG_CROS_EC_LPC_MEC)	+= cros_ec_lpc_mec.o
->  obj-$(CONFIG_CROS_EC_LPC)		+= cros_ec_lpcs.o
-> -obj-$(CONFIG_CROS_EC_PROTO)		+= cros_ec_proto.o
-> +obj-$(CONFIG_CROS_EC_PROTO)		+= cros_ec_proto.o cros_ec_trace.o
->  obj-$(CONFIG_CROS_KBD_LED_BACKLIGHT)	+= cros_kbd_led_backlight.o
->  obj-$(CONFIG_CROS_EC_LIGHTBAR)		+= cros_ec_lightbar.o
->  obj-$(CONFIG_CROS_EC_VBC)		+= cros_ec_vbc.o
-> diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
-> index 97a068dff192..3d02c8259ac6 100644
-> --- a/drivers/platform/chrome/cros_ec_proto.c
-> +++ b/drivers/platform/chrome/cros_ec_proto.c
-> @@ -10,6 +10,8 @@
->  #include <linux/slab.h>
->  #include <asm/unaligned.h>
->  
-> +#include "cros_ec_trace.h"
-> +
->  #define EC_COMMAND_RETRIES	50
->  
->  static int prepare_packet(struct cros_ec_device *ec_dev,
-> @@ -51,6 +53,8 @@ static int send_command(struct cros_ec_device *ec_dev,
->  	int ret;
->  	int (*xfer_fxn)(struct cros_ec_device *ec, struct cros_ec_command *msg);
->  
-> +	trace_cros_ec_cmd(msg);
-> +
->  	if (ec_dev->proto_version > 2)
->  		xfer_fxn = ec_dev->pkt_xfer;
->  	else
-> diff --git a/drivers/platform/chrome/cros_ec_trace.c b/drivers/platform/chrome/cros_ec_trace.c
-> new file mode 100644
-> index 000000000000..68f429f3c5f5
-> --- /dev/null
-> +++ b/drivers/platform/chrome/cros_ec_trace.c
-> @@ -0,0 +1,121 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +// Trace events for the ChromeOS Embedded Controller
-> +//
-> +// Copyright 2019 Google LLC.
-> +
+Then perf stat adjusts the events immediately:
 
-#include <linux/mfd/cros_ec_commands.h> ?
+     5.010286029    125,121,393,483      branches
+     5.010646308    125,120,556,786      branches
+     6.011113588    124,963,351,832      branches
+     6.011510331    124,964,267,566      branches
+     6.011889913    124,964,829,130      branches
+     6.012262996    124,965,841,156      branches
+     7.012708299    124,419,832,234      branches [79.69%]
+     7.012847908    124,416,363,853      branches [79.73%]
+     7.013225462    124,400,723,712      branches [79.73%]
+     7.013598191    124,376,154,434      branches [79.70%]
+     8.014089834    124,250,862,693      branches [74.98%]
+     8.014481363    124,267,539,139      branches [74.94%]
+     8.014856006    124,259,519,786      branches [74.98%]
+     8.014980848    124,225,457,969      branches [75.04%]
+     9.015464576    124,204,235,423      branches [75.03%]
+     9.015858587    124,204,988,490      branches [75.04%]
+     9.016243680    124,220,092,486      branches [74.99%]
+     9.016620104    124,231,260,146      branches [74.94%]
 
-> +#define TRACE_SYMBOL(a) {a, #a}
-> +
-> +#define ec_cmds \
-> +	TRACE_SYMBOL(EC_CMD_PROTO_VERSION), \
-> +	TRACE_SYMBOL(EC_CMD_HELLO), \
-> +	TRACE_SYMBOL(EC_CMD_GET_VERSION), \
-> +	TRACE_SYMBOL(EC_CMD_READ_TEST), \
-> +	TRACE_SYMBOL(EC_CMD_GET_BUILD_INFO), \
-> +	TRACE_SYMBOL(EC_CMD_GET_CHIP_INFO), \
-> +	TRACE_SYMBOL(EC_CMD_GET_BOARD_VERSION), \
-> +	TRACE_SYMBOL(EC_CMD_READ_MEMMAP), \
-> +	TRACE_SYMBOL(EC_CMD_GET_CMD_VERSIONS), \
-> +	TRACE_SYMBOL(EC_CMD_GET_COMMS_STATUS), \
-> +	TRACE_SYMBOL(EC_CMD_TEST_PROTOCOL), \
-> +	TRACE_SYMBOL(EC_CMD_GET_PROTOCOL_INFO), \
-> +	TRACE_SYMBOL(EC_CMD_GSV_PAUSE_IN_S5), \
-> +	TRACE_SYMBOL(EC_CMD_GET_FEATURES), \
-> +	TRACE_SYMBOL(EC_CMD_FLASH_INFO), \
-> +	TRACE_SYMBOL(EC_CMD_FLASH_READ), \
-> +	TRACE_SYMBOL(EC_CMD_FLASH_WRITE), \
-> +	TRACE_SYMBOL(EC_CMD_FLASH_ERASE), \
-> +	TRACE_SYMBOL(EC_CMD_FLASH_PROTECT), \
-> +	TRACE_SYMBOL(EC_CMD_FLASH_REGION_INFO), \
-> +	TRACE_SYMBOL(EC_CMD_VBNV_CONTEXT), \
-> +	TRACE_SYMBOL(EC_CMD_PWM_GET_FAN_TARGET_RPM), \
-> +	TRACE_SYMBOL(EC_CMD_PWM_SET_FAN_TARGET_RPM), \
-> +	TRACE_SYMBOL(EC_CMD_PWM_GET_KEYBOARD_BACKLIGHT), \
-> +	TRACE_SYMBOL(EC_CMD_PWM_SET_KEYBOARD_BACKLIGHT), \
-> +	TRACE_SYMBOL(EC_CMD_PWM_SET_FAN_DUTY), \
-> +	TRACE_SYMBOL(EC_CMD_PWM_SET_DUTY), \
-> +	TRACE_SYMBOL(EC_CMD_PWM_GET_DUTY), \
-> +	TRACE_SYMBOL(EC_CMD_LIGHTBAR_CMD), \
-> +	TRACE_SYMBOL(EC_CMD_LED_CONTROL), \
-> +	TRACE_SYMBOL(EC_CMD_VBOOT_HASH), \
-> +	TRACE_SYMBOL(EC_CMD_MOTION_SENSE_CMD), \
-> +	TRACE_SYMBOL(EC_CMD_USB_CHARGE_SET_MODE), \
-> +	TRACE_SYMBOL(EC_CMD_PSTORE_INFO), \
-> +	TRACE_SYMBOL(EC_CMD_PSTORE_READ), \
-> +	TRACE_SYMBOL(EC_CMD_PSTORE_WRITE), \
-> +	TRACE_SYMBOL(EC_CMD_RTC_GET_VALUE), \
-> +	TRACE_SYMBOL(EC_CMD_RTC_GET_ALARM), \
-> +	TRACE_SYMBOL(EC_CMD_RTC_SET_VALUE), \
-> +	TRACE_SYMBOL(EC_CMD_RTC_SET_ALARM), \
-> +	TRACE_SYMBOL(EC_CMD_PORT80_READ), \
-> +	TRACE_SYMBOL(EC_CMD_THERMAL_SET_THRESHOLD), \
-> +	TRACE_SYMBOL(EC_CMD_THERMAL_GET_THRESHOLD), \
-> +	TRACE_SYMBOL(EC_CMD_THERMAL_AUTO_FAN_CTRL), \
-> +	TRACE_SYMBOL(EC_CMD_TMP006_GET_CALIBRATION), \
-> +	TRACE_SYMBOL(EC_CMD_TMP006_SET_CALIBRATION), \
-> +	TRACE_SYMBOL(EC_CMD_TMP006_GET_RAW), \
-> +	TRACE_SYMBOL(EC_CMD_MKBP_STATE), \
-> +	TRACE_SYMBOL(EC_CMD_MKBP_INFO), \
-> +	TRACE_SYMBOL(EC_CMD_MKBP_SIMULATE_KEY), \
-> +	TRACE_SYMBOL(EC_CMD_MKBP_SET_CONFIG), \
-> +	TRACE_SYMBOL(EC_CMD_MKBP_GET_CONFIG), \
-> +	TRACE_SYMBOL(EC_CMD_KEYSCAN_SEQ_CTRL), \
-> +	TRACE_SYMBOL(EC_CMD_GET_NEXT_EVENT), \
-> +	TRACE_SYMBOL(EC_CMD_TEMP_SENSOR_GET_INFO), \
-> +	TRACE_SYMBOL(EC_CMD_ACPI_READ), \
-> +	TRACE_SYMBOL(EC_CMD_ACPI_WRITE), \
-> +	TRACE_SYMBOL(EC_CMD_ACPI_QUERY_EVENT), \
-> +	TRACE_SYMBOL(EC_CMD_HOST_EVENT_GET_B), \
-> +	TRACE_SYMBOL(EC_CMD_HOST_EVENT_GET_SMI_MASK), \
-> +	TRACE_SYMBOL(EC_CMD_HOST_EVENT_GET_SCI_MASK), \
-> +	TRACE_SYMBOL(EC_CMD_HOST_EVENT_SET_SMI_MASK), \
-> +	TRACE_SYMBOL(EC_CMD_HOST_EVENT_SET_SCI_MASK), \
-> +	TRACE_SYMBOL(EC_CMD_HOST_EVENT_CLEAR), \
-> +	TRACE_SYMBOL(EC_CMD_HOST_EVENT_GET_WAKE_MASK), \
-> +	TRACE_SYMBOL(EC_CMD_HOST_EVENT_SET_WAKE_MASK), \
-> +	TRACE_SYMBOL(EC_CMD_HOST_EVENT_CLEAR_B), \
-> +	TRACE_SYMBOL(EC_CMD_SWITCH_ENABLE_BKLIGHT), \
-> +	TRACE_SYMBOL(EC_CMD_SWITCH_ENABLE_WIRELESS), \
-> +	TRACE_SYMBOL(EC_CMD_GPIO_SET), \
-> +	TRACE_SYMBOL(EC_CMD_GPIO_GET), \
-> +	TRACE_SYMBOL(EC_CMD_I2C_READ), \
-> +	TRACE_SYMBOL(EC_CMD_I2C_WRITE), \
-> +	TRACE_SYMBOL(EC_CMD_CHARGE_CONTROL), \
-> +	TRACE_SYMBOL(EC_CMD_CONSOLE_SNAPSHOT), \
-> +	TRACE_SYMBOL(EC_CMD_CONSOLE_READ), \
-> +	TRACE_SYMBOL(EC_CMD_BATTERY_CUT_OFF), \
-> +	TRACE_SYMBOL(EC_CMD_USB_MUX), \
-> +	TRACE_SYMBOL(EC_CMD_LDO_SET), \
-> +	TRACE_SYMBOL(EC_CMD_LDO_GET), \
-> +	TRACE_SYMBOL(EC_CMD_POWER_INFO), \
-> +	TRACE_SYMBOL(EC_CMD_I2C_PASSTHRU), \
-> +	TRACE_SYMBOL(EC_CMD_HANG_DETECT), \
-> +	TRACE_SYMBOL(EC_CMD_CHARGE_STATE), \
-> +	TRACE_SYMBOL(EC_CMD_CHARGE_CURRENT_LIMIT), \
-> +	TRACE_SYMBOL(EC_CMD_EXTERNAL_POWER_LIMIT), \
-> +	TRACE_SYMBOL(EC_CMD_HOST_SLEEP_EVENT), \
-> +	TRACE_SYMBOL(EC_CMD_SB_READ_WORD), \
-> +	TRACE_SYMBOL(EC_CMD_SB_WRITE_WORD), \
-> +	TRACE_SYMBOL(EC_CMD_SB_READ_BLOCK), \
-> +	TRACE_SYMBOL(EC_CMD_SB_WRITE_BLOCK), \
-> +	TRACE_SYMBOL(EC_CMD_BATTERY_VENDOR_PARAM), \
-> +	TRACE_SYMBOL(EC_CMD_CEC_WRITE_MSG), \
-> +	TRACE_SYMBOL(EC_CMD_CEC_SET), \
-> +	TRACE_SYMBOL(EC_CMD_CEC_GET), \
-> +	TRACE_SYMBOL(EC_CMD_CODEC_I2S), \
-> +	TRACE_SYMBOL(EC_CMD_REBOOT), \
-> +	TRACE_SYMBOL(EC_CMD_REBOOT_EC), \
-> +	TRACE_SYMBOL(EC_CMD_GET_PANIC_INFO), \
-> +	TRACE_SYMBOL(EC_CMD_RESEND_RESPONSE), \
-> +	TRACE_SYMBOL(EC_CMD_VERSION0), \
-> +	TRACE_SYMBOL(EC_CMD_PD_EXCHANGE_STATUS), \
-> +	TRACE_SYMBOL(EC_CMD_USB_PD_CONTROL), \
-> +	TRACE_SYMBOL(EC_CMD_USB_PD_PORTS), \
-> +	TRACE_SYMBOL(EC_CMD_USB_PD_POWER_INFO), \
-> +	TRACE_SYMBOL(EC_CMD_CHARGE_PORT_COUNT), \
-> +	TRACE_SYMBOL(EC_CMD_USB_PD_DISCOVERY), \
-> +	TRACE_SYMBOL(EC_CMD_PD_CHARGE_PORT_OVERRIDE), \
-> +	TRACE_SYMBOL(EC_CMD_PD_GET_LOG_ENTRY), \
-> +	TRACE_SYMBOL(EC_CMD_USB_PD_MUX_INFO)
-> +
+And vice-versa if the syadmin does:
 
-I suspect that maintain sync this will be a pain, can we have, at least, a
-script that parses cros_ec_commands.h and generates automatically this define?
+  $ echo  0 >/sys/devices/cpu/allow_tsx_force_abort
 
-grep "#define EC_CMD_" include/linux/mfd/cros_ec_commands.h | awk '{print $2}' >
-a.txt
+Events are again spread over the 4 counters:
 
-grep "EC_CMD_" drivers/platform/chrome/cros_ec_trace.c | awk '{print $2}' | sed
-s/TRACE_SYMBOL\(//g | sed s/\).*//g > b.txt
+    10.017096277    124,276,230,565      branches [74.96%]
+    10.017237209    124,228,062,171      branches [75.03%]
+    10.017478637    124,178,780,626      branches [75.03%]
+    10.017853402    124,198,316,177      branches [75.03%]
+    11.018334423    124,602,418,933      branches [85.40%]
+    11.018722584    124,602,921,320      branches [85.42%]
+    11.019095621    124,603,956,093      branches [85.42%]
+    11.019467742    124,595,273,783      branches [85.42%]
+    12.019945736    125,110,114,864      branches
+    12.020330764    125,109,334,472      branches
+    12.020688740    125,109,818,865      branches
+    12.021054020    125,108,594,014      branches
+    13.021516774    125,109,164,018      branches
+    13.021903640    125,108,794,510      branches
+    13.022270770    125,107,756,978      branches
+    13.022630819    125,109,380,471      branches
+    14.023114989    125,133,140,817      branches
+    14.023501880    125,133,785,858      branches
+    14.023868339    125,133,852,700      branches
 
-diff a.txt b.txt
+Signed-off-by: Stephane Eranian <eranian@google.com>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Vince Weaver <vincent.weaver@maine.edu>
+Cc: kan.liang@intel.com
+Cc: nelson.dsouza@intel.com
+Cc: tonyj@suse.com
+Link: https://lkml.kernel.org/r/20190408173252.37932-3-eranian@google.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/events/core.c       |  4 ++++
+ arch/x86/events/intel/core.c | 50 ++++++++++++++++++++++++++++++++++++++++++--
+ arch/x86/events/perf_event.h |  1 +
+ 3 files changed, 53 insertions(+), 2 deletions(-)
 
-Shows few differences and we can go crazy in the future :-)
-
-> +#define CREATE_TRACE_POINTS
-> +#include "cros_ec_trace.h"
-> diff --git a/drivers/platform/chrome/cros_ec_trace.h b/drivers/platform/chrome/cros_ec_trace.h
-> new file mode 100644
-> index 000000000000..86ef52f96fd4
-> --- /dev/null
-> +++ b/drivers/platform/chrome/cros_ec_trace.h
-> @@ -0,0 +1,51 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Trace events for the ChromeOS Embedded Controller
-> + *
-> + * Copyright 2019 Google LLC.
-> + */
-> +
-> +#undef TRACE_SYSTEM
-> +#define TRACE_SYSTEM cros_ec
-> +
-> +#if !defined(_CROS_EC_TRACE_H_) || defined(TRACE_HEADER_MULTI_READ)
-> +#define _CROS_EC_TRACE_H_
-> +
-> +#include <linux/types.h>
-> +#include <linux/mfd/cros_ec.h>
-> +
-> +#include <linux/tracepoint.h>
-> +
-> +DECLARE_EVENT_CLASS(cros_ec_cmd_class,
-> +	TP_PROTO(struct cros_ec_command *cmd),
-> +	TP_ARGS(cmd),
-> +	TP_STRUCT__entry(
-> +		__field(uint32_t, version)
-> +		__field(uint32_t, command)
-> +	),
-> +	TP_fast_assign(
-> +		__entry->version = cmd->version;
-> +		__entry->command = cmd->command;
-> +	),
-> +	TP_printk("version: %u, command: %s", __entry->version,
-> +		  __print_symbolic(__entry->command, ec_cmds))
-> +);
-> +
-> +
-> +DEFINE_EVENT(cros_ec_cmd_class, cros_ec_cmd,
-> +	TP_PROTO(struct cros_ec_command *cmd),
-> +	TP_ARGS(cmd)
-> +);
-> +
-> +
-> +#endif /* _CROS_EC_TRACE_H_ */
-> +
-> +/* this part must be outside header guard */
-> +
-> +#undef TRACE_INCLUDE_PATH
-> +#define TRACE_INCLUDE_PATH .
-> +
-> +#undef TRACE_INCLUDE_FILE
-> +#define TRACE_INCLUDE_FILE cros_ec_trace
-> +
-> +#include <trace/define_trace.h>
-> 
-
-Thanks,
- Enric
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 87b50f4be201..fdd106267fd2 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -661,6 +661,10 @@ static inline int is_x86_event(struct perf_event *event)
+ 	return event->pmu == &pmu;
+ }
+ 
++struct pmu *x86_get_pmu(void)
++{
++	return &pmu;
++}
+ /*
+  * Event scheduler state:
+  *
+diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
+index 1bb59c4c59f2..8265b5026a19 100644
+--- a/arch/x86/events/intel/core.c
++++ b/arch/x86/events/intel/core.c
+@@ -4156,6 +4156,50 @@ done:
+ 	return count;
+ }
+ 
++static void update_tfa_sched(void *ignored)
++{
++	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
++
++	/*
++	 * check if PMC3 is used
++	 * and if so force schedule out for all event types all contexts
++	 */
++	if (test_bit(3, cpuc->active_mask))
++		perf_pmu_resched(x86_get_pmu());
++}
++
++static ssize_t show_sysctl_tfa(struct device *cdev,
++			      struct device_attribute *attr,
++			      char *buf)
++{
++	return snprintf(buf, 40, "%d\n", allow_tsx_force_abort);
++}
++
++static ssize_t set_sysctl_tfa(struct device *cdev,
++			      struct device_attribute *attr,
++			      const char *buf, size_t count)
++{
++	bool val;
++	ssize_t ret;
++
++	ret = kstrtobool(buf, &val);
++	if (ret)
++		return ret;
++
++	/* no change */
++	if (val == allow_tsx_force_abort)
++		return count;
++
++	allow_tsx_force_abort = val;
++
++	get_online_cpus();
++	on_each_cpu(update_tfa_sched, NULL, 1);
++	put_online_cpus();
++
++	return count;
++}
++
++
+ static DEVICE_ATTR_RW(freeze_on_smi);
+ 
+ static ssize_t branches_show(struct device *cdev,
+@@ -4188,7 +4232,9 @@ static struct attribute *intel_pmu_caps_attrs[] = {
+        NULL
+ };
+ 
+-static DEVICE_BOOL_ATTR(allow_tsx_force_abort, 0644, allow_tsx_force_abort);
++static DEVICE_ATTR(allow_tsx_force_abort, 0644,
++		   show_sysctl_tfa,
++		   set_sysctl_tfa);
+ 
+ static struct attribute *intel_pmu_attrs[] = {
+ 	&dev_attr_freeze_on_smi.attr,
+@@ -4697,7 +4743,7 @@ __init int intel_pmu_init(void)
+ 			x86_pmu.get_event_constraints = tfa_get_event_constraints;
+ 			x86_pmu.enable_all = intel_tfa_pmu_enable_all;
+ 			x86_pmu.commit_scheduling = intel_tfa_commit_scheduling;
+-			intel_pmu_attrs[1] = &dev_attr_allow_tsx_force_abort.attr.attr;
++			intel_pmu_attrs[1] = &dev_attr_allow_tsx_force_abort.attr;
+ 		}
+ 
+ 		pr_cont("Skylake events, ");
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index e544d83ea4b4..9e474a5f3b86 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -713,6 +713,7 @@ static struct perf_pmu_events_ht_attr event_attr_##v = {		\
+ 	.event_str_ht	= ht,						\
+ }
+ 
++struct pmu *x86_get_pmu(void);
+ extern struct x86_pmu x86_pmu __read_mostly;
+ 
+ static inline bool x86_pmu_has_lbr_callstack(void)
