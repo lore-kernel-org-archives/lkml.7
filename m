@@ -6,4568 +6,7020 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C307BC10F12
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C14C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:00:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1872620656
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:00:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B93A120818
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:00:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555383643;
-	bh=uU669Sri60T2Nll30vehusPbFoZRwA+fWORmJF16xCw=;
+	s=default; t=1555383648;
+	bh=y3shU4l+Ton5tbjtAxK7JkaASI/z5kd5cykcBOnIEuo=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=1eeNo8M91dy8nzRIh5Fgga0TCfWVX3sjghbb42hBQzYLgY91KwLvYa+MfuRBEk4F8
-	 ctRdUxjCOGVJobTFMIkwL25GLzH2miDfsl/5AzOZ2P6QxPcKKO4b00vssZPFvRTxuZ
-	 dWO3pwNSXx/p/IYYTzEHABBcLHoWKoQ43fT5Np0w=
+	b=w4GlL3v7j//UOAHjZNqslxFOklVNkLZN6jahH1m+kaTTJqv5Gyu2z2/YmArjawEHR
+	 7R18+c7T32R5gVceq417OjfEY7ZesdxfpJI+/kh2Aq1RlGeDLb5MH+4UyzC4TAlHhG
+	 +gp9Oa3BkzmbaSeC3PIomduAG032JDMRJp5PfAeM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728528AbfDPDAl (ORCPT
+        id S1728560AbfDPDAo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 23:00:41 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44094 "EHLO
+        Mon, 15 Apr 2019 23:00:44 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44066 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726770AbfDPC4d (ORCPT
+        with ESMTP id S1726753AbfDPC4d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 15 Apr 2019 22:56:33 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
-        To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=AcU9bKZrtCiz/BGViKRBuObFzl3zwu0FHXR5msF2Qzk=; b=pu9VCncTo0Cu/NVOYXMY9AVrK3
-        o3qITp/K1zcn7Oj9MP2CKRJi6aSg7UWMubR1S5ZsM1XpE5c3Mz98cD75HY9bGJtl8AKNjnHK0msWU
-        vzs8XvSmd+kBq44f+1Gg6auTaSDwBevwSyA2tXXXCuQz8YfH2foWzzIZAuubJzJP32ClzqYbvYA+z
-        ivTAjSFHy9atOrbosfoyOeBna6ts3DuO6AveoKMfaAgR94G+XQog8tZ6dg2HTelBhklvEaauCU1pe
-        r7AzBX0QzJJJPft278bb8oR/BlWi7no4BSyqy/FPPkIvx1xlN9TAZzjqoknFnclRTt1Qc/StJjv3T
-        sjgtp65Q==;
+        bh=0zZPnNccfVItryEsk5QG8dgJDIEdtZaRaXUtZypXnmY=; b=rYF2bQKmQqDWthQwyAOmBgh4Ds
+        EgAFy5UPgajyjEmJpK1V9H7DxHbyNzCUvj7AEOMVWoYZBPUhMSPlMi2r7kFM5xTzaoEQsVZ6UDtk7
+        ibFE+43lSw8aM+2XPxBYMHu0e0eHo4YVYhBU8kzIbUDNYYlxRKU83sVrHm39i2/lHdcLG4dHg7Lqq
+        kTcwiR5zjfjeAj52uuWCuiBrRfraQMM/vLrTLnxC/ayahEXsTqVe16UnyI/6bSNKCPt3QW9+dtK6S
+        p0c06lP+zhqkiNUmH7NbXZ/aiQduWEgPW30eUcaUjsRs7gWCNpFobJN7mHMWn2CQWSoHdhwP9D8a4
+        Guz+MjGQ==;
 Received: from 177.205.118.176.dynamic.adsl.gvt.net.br ([177.205.118.176] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hGEGp-0007aU-S0; Tue, 16 Apr 2019 02:56:30 +0000
+        id 1hGEGp-0007am-RK; Tue, 16 Apr 2019 02:56:30 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hGEGn-0001lt-7Y; Mon, 15 Apr 2019 23:56:25 -0300
+        id 1hGEGn-0001oI-O9; Mon, 15 Apr 2019 23:56:25 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        dri-devel@lists.freedesktop.org, linux-fbdev@vger.kernel.org
-Subject: [PATCH 13/57] docs: fb: convert documentation to ReST format
-Date:   Mon, 15 Apr 2019 23:55:38 -0300
-Message-Id: <f282cbd57dcee9d598c13d8b1e4ea4cc1459b8ad.1555382110.git.mchehab+samsung@kernel.org>
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: [PATCH 31/57] docs: s390: convert text files to ReST format
+Date:   Mon, 15 Apr 2019 23:55:56 -0300
+Message-Id: <216b8dd7f5a696cf7207e75131dfb94f965d1f3e.1555382110.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1555382110.git.mchehab+samsung@kernel.org>
 References: <cover.1555382110.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert all documents here from plain txt to ReST format, in
-order to allow parsing them with the documentation build
-system.
+Convert all text files with s390 documentation to ReST format.
+
+Tried to preserve as much as possible the original document
+format. Still, some of the files required some work in order
+for it to be visible on both plain text and after converted
+to html.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/fb/api.txt         |  29 +-
- Documentation/fb/arkfb.txt       |   8 +-
- Documentation/fb/aty128fb.txt    |  31 +-
- Documentation/fb/cirrusfb.txt    |  47 ++-
- Documentation/fb/cmap_xfbdev.txt |  57 ++--
- Documentation/fb/deferred_io.txt |  28 +-
- Documentation/fb/efifb.txt       |  18 +-
- Documentation/fb/ep93xx-fb.txt   |  25 +-
- Documentation/fb/fbcon.txt       | 177 ++++++-----
- Documentation/fb/framebuffer.txt |  79 +++--
- Documentation/fb/gxfb.txt        |  22 +-
- Documentation/fb/intel810.txt    |  77 +++--
- Documentation/fb/intelfb.txt     |  62 ++--
- Documentation/fb/internals.txt   |  24 +-
- Documentation/fb/lxfb.txt        |  23 +-
- Documentation/fb/matroxfb.txt    | 526 ++++++++++++++++---------------
- Documentation/fb/metronomefb.txt |   8 +-
- Documentation/fb/modedb.txt      |  44 +--
- Documentation/fb/pvr2fb.txt      |  55 ++--
- Documentation/fb/pxafb.txt       |  81 +++--
- Documentation/fb/s3fb.txt        |   8 +-
- Documentation/fb/sa1100fb.txt    |  23 +-
- Documentation/fb/sh7760fb.txt    | 153 +++++----
- Documentation/fb/sisfb.txt       |  40 +--
- Documentation/fb/sm501.txt       |   7 +-
- Documentation/fb/sm712fb.txt     |  18 +-
- Documentation/fb/sstfb.txt       | 231 ++++++++------
- Documentation/fb/tgafb.txt       |  30 +-
- Documentation/fb/tridentfb.txt   |  34 +-
- Documentation/fb/udlfb.txt       |  55 ++--
- Documentation/fb/uvesafb.txt     | 128 ++++----
- Documentation/fb/vesafb.txt      | 121 +++----
- Documentation/fb/viafb.txt       | 393 +++++++++++++----------
- Documentation/fb/vt8623fb.txt    |  10 +-
- 34 files changed, 1455 insertions(+), 1217 deletions(-)
+ Documentation/s390/3270.txt         |   85 +-
+ Documentation/s390/CommonIO         |   47 +-
+ Documentation/s390/DASD             |   33 +-
+ Documentation/s390/Debugging390.txt | 2389 ++++++++++++++++-----------
+ Documentation/s390/cds.txt          |  354 ++--
+ Documentation/s390/driver-model.txt |  179 +-
+ Documentation/s390/monreader.txt    |   85 +-
+ Documentation/s390/qeth.txt         |   36 +-
+ Documentation/s390/s390dbf.txt      |  781 +++++----
+ Documentation/s390/vfio-ap.txt      |  487 +++---
+ Documentation/s390/vfio-ccw.txt     |   88 +-
+ Documentation/s390/zfcpdump.txt     |    2 +
+ 12 files changed, 2686 insertions(+), 1880 deletions(-)
 
-diff --git a/Documentation/fb/api.txt b/Documentation/fb/api.txt
-index d52cf1e3b975..79ec33dded74 100644
---- a/Documentation/fb/api.txt
-+++ b/Documentation/fb/api.txt
-@@ -1,5 +1,6 @@
--			The Frame Buffer Device API
--			---------------------------
-+===========================
-+The Frame Buffer Device API
-+===========================
+diff --git a/Documentation/s390/3270.txt b/Documentation/s390/3270.txt
+index 7c715de99774..e09e77954238 100644
+--- a/Documentation/s390/3270.txt
++++ b/Documentation/s390/3270.txt
+@@ -1,13 +1,17 @@
++===============================
+ IBM 3270 Display System support
++===============================
  
- Last revised: June 21, 2011
- 
-@@ -21,13 +22,13 @@ deal with different behaviours.
- ---------------
- 
- Device and driver capabilities are reported in the fixed screen information
--capabilities field.
-+capabilities field::
- 
--struct fb_fix_screeninfo {
-+  struct fb_fix_screeninfo {
- 	...
- 	__u16 capabilities;		/* see FB_CAP_*			*/
- 	...
--};
-+  };
- 
- Application should use those capabilities to find out what features they can
- expect from the device and driver.
-@@ -151,9 +152,9 @@ fb_fix_screeninfo and fb_var_screeninfo structure respectively.
- struct fb_fix_screeninfo stores device independent unchangeable information
- about the frame buffer device and the current format. Those information can't
- be directly modified by applications, but can be changed by the driver when an
--application modifies the format.
-+application modifies the format::
- 
--struct fb_fix_screeninfo {
-+  struct fb_fix_screeninfo {
- 	char id[16];			/* identification string eg "TT Builtin" */
- 	unsigned long smem_start;	/* Start of frame buffer mem */
- 					/* (physical address) */
-@@ -172,13 +173,13 @@ struct fb_fix_screeninfo {
- 					/*  specific chip/card we have	*/
- 	__u16 capabilities;		/* see FB_CAP_*			*/
- 	__u16 reserved[2];		/* Reserved for future compatibility */
--};
-+  };
- 
- struct fb_var_screeninfo stores device independent changeable information
- about a frame buffer device, its current format and video mode, as well as
--other miscellaneous parameters.
-+other miscellaneous parameters::
- 
--struct fb_var_screeninfo {
-+  struct fb_var_screeninfo {
- 	__u32 xres;			/* visible resolution		*/
- 	__u32 yres;
- 	__u32 xres_virtual;		/* virtual resolution		*/
-@@ -216,7 +217,7 @@ struct fb_var_screeninfo {
- 	__u32 rotate;			/* angle we rotate counter clockwise */
- 	__u32 colorspace;		/* colorspace for FOURCC-based modes */
- 	__u32 reserved[4];		/* Reserved for future compatibility */
--};
-+  };
- 
- To modify variable information, applications call the FBIOPUT_VSCREENINFO
- ioctl with a pointer to a fb_var_screeninfo structure. If the call is
-@@ -255,14 +256,14 @@ monochrome, grayscale or pseudocolor visuals, although this is not required.
- 
- - For truecolor and directcolor formats, applications set the grayscale field
-   to zero, and the red, blue, green and transp fields to describe the layout of
--  color components in memory.
-+  color components in memory::
- 
--struct fb_bitfield {
-+    struct fb_bitfield {
- 	__u32 offset;			/* beginning of bitfield	*/
- 	__u32 length;			/* length of bitfield		*/
- 	__u32 msb_right;		/* != 0 : Most significant bit is */
- 					/* right */
--};
-+    };
- 
-   Pixel values are bits_per_pixel wide and are split in non-overlapping red,
-   green, blue and alpha (transparency) components. Location and size of each
-diff --git a/Documentation/fb/arkfb.txt b/Documentation/fb/arkfb.txt
-index e8487a9d6a05..aeca8773dd7e 100644
---- a/Documentation/fb/arkfb.txt
-+++ b/Documentation/fb/arkfb.txt
-@@ -1,6 +1,6 @@
--
--	arkfb - fbdev driver for ARK Logic chips
--	========================================
-+========================================
-+arkfb - fbdev driver for ARK Logic chips
-+========================================
- 
- 
- Supported Hardware
-@@ -47,7 +47,7 @@ Missing Features
- (alias TODO list)
- 
- 	* secondary (not initialized by BIOS) device support
--   	* big endian support
-+	* big endian support
- 	* DPMS support
- 	* MMIO support
- 	* interlaced mode variant
-diff --git a/Documentation/fb/aty128fb.txt b/Documentation/fb/aty128fb.txt
-index b605204fcfe1..e3859071270f 100644
---- a/Documentation/fb/aty128fb.txt
-+++ b/Documentation/fb/aty128fb.txt
-@@ -1,8 +1,9 @@
--[This file is cloned from VesaFB/matroxfb]
--
-+=================
- What is aty128fb?
- =================
- 
-+.. [This file is cloned from VesaFB/matroxfb]
+ This file describes the driver that supports local channel attachment
+ of IBM 3270 devices.  It consists of three sections:
 +
- This is a driver for a graphic framebuffer for ATI Rage128 based devices
- on Intel and PPC boxes.
+ 	* Introduction
+ 	* Installation
+ 	* Operation
  
-@@ -24,14 +25,14 @@ How to use it?
- ==============
  
- Switching modes is done using the  video=aty128fb:<resolution>... modedb
--boot parameter or using `fbset' program.
-+boot parameter or using `fbset` program.
- 
- See Documentation/fb/modedb.txt for more information on modedb
- resolutions.
- 
- You should compile in both vgacon (to boot if you remove your Rage128 from
- box) and aty128fb (for graphics mode). You should not compile-in vesafb
--unless you have primary display on non-Rage128 VBE2.0 device (see 
-+unless you have primary display on non-Rage128 VBE2.0 device (see
- Documentation/fb/vesafb.txt for details).
- 
- 
-@@ -48,16 +49,18 @@ Configuration
- =============
- 
- You can pass kernel command line options to vesafb with
--`video=aty128fb:option1,option2:value2,option3' (multiple options should
--be separated by comma, values are separated from options by `:'). 
-+`video=aty128fb:option1,option2:value2,option3` (multiple options should
-+be separated by comma, values are separated from options by `:`).
- Accepted options:
- 
--noaccel  - do not use acceleration engine. It is default.
--accel    - use acceleration engine. Not finished.
--vmode:x  - chooses PowerMacintosh video mode <x>. Deprecated.
--cmode:x  - chooses PowerMacintosh colour mode <x>. Deprecated.
--<XxX@X>  - selects startup videomode. See modedb.txt for detailed
--	   explanation. Default is 640x480x8bpp.
-+========= =======================================================
-+noaccel   do not use acceleration engine. It is default.
-+accel     use acceleration engine. Not finished.
-+vmode:x   chooses PowerMacintosh video mode <x>. Deprecated.
-+cmode:x   chooses PowerMacintosh colour mode <x>. Deprecated.
-+<XxX@X>   selects startup videomode. See modedb.txt for detailed
-+	  explanation. Default is 640x480x8bpp.
-+========= =======================================================
- 
- 
- Limitations
-@@ -65,8 +68,8 @@ Limitations
- 
- There are known and unknown bugs, features and misfeatures.
- Currently there are following known bugs:
-- + This driver is still experimental and is not finished.  Too many
-+
-+ - This driver is still experimental and is not finished.  Too many
-    bugs/errata to list here.
- 
----
- Brad Douglas <brad@neruo.com>
-diff --git a/Documentation/fb/cirrusfb.txt b/Documentation/fb/cirrusfb.txt
-index f75950d330a4..8c3e6c6cb114 100644
---- a/Documentation/fb/cirrusfb.txt
-+++ b/Documentation/fb/cirrusfb.txt
-@@ -1,32 +1,32 @@
-+============================================
-+Framebuffer driver for Cirrus Logic chipsets
-+============================================
- 
--		Framebuffer driver for Cirrus Logic chipsets
--		Copyright 1999 Jeff Garzik <jgarzik@pobox.com>
-+Copyright 1999 Jeff Garzik <jgarzik@pobox.com>
- 
- 
--
--{ just a little something to get people going; contributors welcome! }
--
-+.. just a little something to get people going; contributors welcome!
- 
- 
- Chip families supported:
--	SD64
--	Piccolo
--	Picasso
--	Spectrum
--	Alpine (GD-543x/4x)
--	Picasso4 (GD-5446)
--	GD-5480
--	Laguna (GD-546x)
-+	- SD64
-+	- Piccolo
-+	- Picasso
-+	- Spectrum
-+	- Alpine (GD-543x/4x)
-+	- Picasso4 (GD-5446)
-+	- GD-5480
-+	- Laguna (GD-546x)
- 
- Bus's supported:
--	PCI
--	Zorro
-+	- PCI
-+	- Zorro
- 
- Architectures supported:
--	i386
--	Alpha
--	PPC (Motorola Powerstack)
--	m68k (Amiga)
-+	- i386
-+	- Alpha
-+	- PPC (Motorola Powerstack)
-+	- m68k (Amiga)
- 
- 
- 
-@@ -34,10 +34,9 @@ Default video modes
- -------------------
- At the moment, there are two kernel command line arguments supported:
- 
--mode:640x480
--mode:800x600
--	or
--mode:1024x768
-+- mode:640x480
-+- mode:800x600
-+- mode:1024x768
- 
- Full support for startup video modes (modedb) will be integrated soon.
- 
-@@ -93,5 +92,3 @@ Version 1.9.4
- Version 1.9.3
- -------------
- * Bundled with kernel 2.3.14-pre1 or later.
--
--
-diff --git a/Documentation/fb/cmap_xfbdev.txt b/Documentation/fb/cmap_xfbdev.txt
-index 55e1f0a3d2b4..5db5e9787361 100644
---- a/Documentation/fb/cmap_xfbdev.txt
-+++ b/Documentation/fb/cmap_xfbdev.txt
-@@ -1,26 +1,29 @@
-+==========================
- Understanding fbdev's cmap
----------------------------
-+==========================
- 
- These notes explain how X's dix layer uses fbdev's cmap structures.
- 
--*. example of relevant structures in fbdev as used for a 3-bit grayscale cmap
--struct fb_var_screeninfo {
--        .bits_per_pixel = 8,
--        .grayscale      = 1,
--        .red =          { 4, 3, 0 },
--        .green =        { 0, 0, 0 },
--        .blue =         { 0, 0, 0 },
--}
--struct fb_fix_screeninfo {
--        .visual =       FB_VISUAL_STATIC_PSEUDOCOLOR,
--}
--for (i = 0; i < 8; i++)
-+-  example of relevant structures in fbdev as used for a 3-bit grayscale cmap::
-+
-+    struct fb_var_screeninfo {
-+	    .bits_per_pixel = 8,
-+	    .grayscale      = 1,
-+	    .red =          { 4, 3, 0 },
-+	    .green =        { 0, 0, 0 },
-+	    .blue =         { 0, 0, 0 },
-+    }
-+    struct fb_fix_screeninfo {
-+	    .visual =       FB_VISUAL_STATIC_PSEUDOCOLOR,
-+    }
-+    for (i = 0; i < 8; i++)
- 	info->cmap.red[i] = (((2*i)+1)*(0xFFFF))/16;
--memcpy(info->cmap.green, info->cmap.red, sizeof(u16)*8);
--memcpy(info->cmap.blue, info->cmap.red, sizeof(u16)*8);
-+    memcpy(info->cmap.green, info->cmap.red, sizeof(u16)*8);
-+    memcpy(info->cmap.blue, info->cmap.red, sizeof(u16)*8);
- 
--*. X11 apps do something like the following when trying to use grayscale.
--for (i=0; i < 8; i++) {
-+-  X11 apps do something like the following when trying to use grayscale::
-+
-+    for (i=0; i < 8; i++) {
- 	char colorspec[64];
- 	memset(colorspec,0,64);
- 	sprintf(colorspec, "rgb:%x/%x/%x", i*36,i*36,i*36);
-@@ -28,26 +31,26 @@ for (i=0; i < 8; i++) {
- 		printf("Can't get color %s\n",colorspec);
- 	XAllocColor(outputDisplay, testColormap, &wantedColor);
- 	grays[i] = wantedColor;
--}
-+    }
-+
- There's also named equivalents like gray1..x provided you have an rgb.txt.
- 
- Somewhere in X's callchain, this results in a call to X code that handles the
- colormap. For example, Xfbdev hits the following:
- 
--xc-011010/programs/Xserver/dix/colormap.c:
-+xc-011010/programs/Xserver/dix/colormap.c::
- 
--FindBestPixel(pentFirst, size, prgb, channel)
-+  FindBestPixel(pentFirst, size, prgb, channel)
- 
--dr = (long) pent->co.local.red - prgb->red;
--dg = (long) pent->co.local.green - prgb->green;
--db = (long) pent->co.local.blue - prgb->blue;
--sq = dr * dr;
--UnsignedToBigNum (sq, &sum);
--BigNumAdd (&sum, &temp, &sum);
-+  dr = (long) pent->co.local.red - prgb->red;
-+  dg = (long) pent->co.local.green - prgb->green;
-+  db = (long) pent->co.local.blue - prgb->blue;
-+  sq = dr * dr;
-+  UnsignedToBigNum (sq, &sum);
-+  BigNumAdd (&sum, &temp, &sum);
- 
- co.local.red are entries that were brought in through FBIOGETCMAP which come
- directly from the info->cmap.red that was listed above. The prgb is the rgb
- that the app wants to match to. The above code is doing what looks like a least
- squares matching function. That's why the cmap entries can't be set to the left
- hand side boundaries of a color range.
--
-diff --git a/Documentation/fb/deferred_io.txt b/Documentation/fb/deferred_io.txt
-index 748328370250..7300cff255a3 100644
---- a/Documentation/fb/deferred_io.txt
-+++ b/Documentation/fb/deferred_io.txt
-@@ -1,5 +1,6 @@
-+===========
- Deferred IO
-------------
-+===========
- 
- Deferred IO is a way to delay and repurpose IO. It uses host memory as a
- buffer and the MMU pagefault as a pretrigger for when to perform the device
-@@ -16,7 +17,7 @@ works:
- - app continues writing to that page with no additional cost. this is
-   the key benefit.
- - the workqueue task comes in and mkcleans the pages on the list, then
-- completes the work associated with updating the framebuffer. this is
-+  completes the work associated with updating the framebuffer. this is
-   the real work talking to the device.
- - app tries to write to the address (that has now been mkcleaned)
- - get pagefault and the above sequence occurs again
-@@ -47,29 +48,32 @@ How to use it: (for fbdev drivers)
- ----------------------------------
- The following example may be helpful.
- 
--1. Setup your structure. Eg:
-+1. Setup your structure. Eg::
- 
--static struct fb_deferred_io hecubafb_defio = {
--	.delay		= HZ,
--	.deferred_io	= hecubafb_dpy_deferred_io,
--};
-+	static struct fb_deferred_io hecubafb_defio = {
-+		.delay		= HZ,
-+		.deferred_io	= hecubafb_dpy_deferred_io,
-+	};
- 
- The delay is the minimum delay between when the page_mkwrite trigger occurs
- and when the deferred_io callback is called. The deferred_io callback is
- explained below.
- 
--2. Setup your deferred IO callback. Eg:
--static void hecubafb_dpy_deferred_io(struct fb_info *info,
--				struct list_head *pagelist)
-+2. Setup your deferred IO callback. Eg::
-+
-+	static void hecubafb_dpy_deferred_io(struct fb_info *info,
-+					     struct list_head *pagelist)
- 
- The deferred_io callback is where you would perform all your IO to the display
- device. You receive the pagelist which is the list of pages that were written
- to during the delay. You must not modify this list. This callback is called
- from a workqueue.
- 
--3. Call init
-+3. Call init::
-+
- 	info->fbdefio = &hecubafb_defio;
- 	fb_deferred_io_init(info);
- 
--4. Call cleanup
-+4. Call cleanup::
-+
- 	fb_deferred_io_cleanup(info);
-diff --git a/Documentation/fb/efifb.txt b/Documentation/fb/efifb.txt
-index 1a85c1bdaf38..04840331a00e 100644
---- a/Documentation/fb/efifb.txt
-+++ b/Documentation/fb/efifb.txt
-@@ -1,6 +1,6 @@
--
-+==============
- What is efifb?
--===============
-+==============
- 
- This is a generic EFI platform driver for Intel based Apple computers.
- efifb is only for EFI booted Intel Macs.
-@@ -8,16 +8,17 @@ efifb is only for EFI booted Intel Macs.
- Supported Hardware
- ==================
- 
--iMac 17"/20"
--Macbook
--Macbook Pro 15"/17"
--MacMini
-+- iMac 17"/20"
-+- Macbook
-+- Macbook Pro 15"/17"
-+- MacMini
- 
- How to use it?
- ==============
- 
- efifb does not have any kind of autodetection of your machine.
--You have to add the following kernel parameters in your elilo.conf:
-+You have to add the following kernel parameters in your elilo.conf::
-+
- 	Macbook :
- 		video=efifb:macbook
- 	MacMini :
-@@ -29,9 +30,10 @@ You have to add the following kernel parameters in your elilo.conf:
- 
- Accepted options:
- 
-+======= ===========================================================
- nowc	Don't map the framebuffer write combined. This can be used
- 	to workaround side-effects and slowdowns on other CPU cores
- 	when large amounts of console data are written.
-+======= ===========================================================
- 
----
- Edgar Hucek <gimli@dark-green.com>
-diff --git a/Documentation/fb/ep93xx-fb.txt b/Documentation/fb/ep93xx-fb.txt
-index 5af1bd9effae..50b6f8103a49 100644
---- a/Documentation/fb/ep93xx-fb.txt
-+++ b/Documentation/fb/ep93xx-fb.txt
-@@ -4,7 +4,7 @@ Driver for EP93xx LCD controller
- 
- The EP93xx LCD controller can drive both standard desktop monitors and
- embedded LCD displays. If you have a standard desktop monitor then you
--can use the standard Linux video mode database. In your board file:
-+can use the standard Linux video mode database. In your board file::
- 
- 	static struct ep93xxfb_mach_info some_board_fb_info = {
- 		.num_modes	= EP93XXFB_USE_MODEDB,
-@@ -12,7 +12,7 @@ can use the standard Linux video mode database. In your board file:
- 	};
- 
- If you have an embedded LCD display then you need to define a video
--mode for it as follows:
-+mode for it as follows::
- 
- 	static struct fb_videomode some_board_video_modes[] = {
- 		{
-@@ -27,7 +27,7 @@ are in pixel clocks. See Documentation/fb/framebuffer.txt for further
- details.
- 
- The ep93xxfb_mach_info structure for your board should look like the
--following:
-+following::
- 
- 	static struct ep93xxfb_mach_info some_board_fb_info = {
- 		.num_modes	= ARRAY_SIZE(some_board_video_modes),
-@@ -37,7 +37,7 @@ following:
- 	};
- 
- The framebuffer device can be registered by adding the following to
--your board initialisation function:
-+your board initialisation function::
- 
- 	ep93xx_register_fb(&some_board_fb_info);
- 
-@@ -50,6 +50,7 @@ to configure the controller. The video attributes flags are fully
- documented in section 7 of the EP93xx users' guide. The following
- flags are available:
- 
-+=============================== ==========================================
- EP93XXFB_PCLK_FALLING		Clock data on the falling edge of the
- 				pixel clock. The default is to clock
- 				data on the rising edge.
-@@ -62,10 +63,12 @@ EP93XXFB_SYNC_HORIZ_HIGH	Horizontal sync is active high. By
- 
- EP93XXFB_SYNC_VERT_HIGH		Vertical sync is active high. By
- 				default the vertical sync is active high.
-+=============================== ==========================================
- 
- The physical address of the framebuffer can be controlled using the
- following flags:
- 
-+=============================== ======================================
- EP93XXFB_USE_SDCSN0		Use SDCSn[0] for the framebuffer. This
- 				is the default setting.
- 
-@@ -74,6 +77,7 @@ EP93XXFB_USE_SDCSN1		Use SDCSn[1] for the framebuffer.
- EP93XXFB_USE_SDCSN2		Use SDCSn[2] for the framebuffer.
- 
- EP93XXFB_USE_SDCSN3		Use SDCSn[3] for the framebuffer.
-+=============================== ======================================
- 
- ==================
- Platform callbacks
-@@ -87,7 +91,7 @@ blanked or unblanked.
- 
- The setup and teardown devices pass the platform_device structure as
- an argument. The fb_info and ep93xxfb_mach_info structures can be
--obtained as follows:
-+obtained as follows::
- 
- 	static int some_board_fb_setup(struct platform_device *pdev)
- 	{
-@@ -101,17 +105,17 @@ obtained as follows:
- Setting the video mode
- ======================
- 
--The video mode is set using the following syntax:
-+The video mode is set using the following syntax::
- 
- 	video=XRESxYRES[-BPP][@REFRESH]
- 
- If the EP93xx video driver is built-in then the video mode is set on
--the Linux kernel command line, for example:
-+the Linux kernel command line, for example::
- 
- 	video=ep93xx-fb:800x600-16@60
- 
- If the EP93xx video driver is built as a module then the video mode is
--set when the module is installed:
-+set when the module is installed::
- 
- 	modprobe ep93xx-fb video=320x240
- 
-@@ -121,13 +125,14 @@ Screenpage bug
- 
- At least on the EP9315 there is a silicon bug which causes bit 27 of
- the VIDSCRNPAGE (framebuffer physical offset) to be tied low. There is
--an unofficial errata for this bug at:
-+an unofficial errata for this bug at::
-+
- 	http://marc.info/?l=linux-arm-kernel&m=110061245502000&w=2
- 
- By default the EP93xx framebuffer driver checks if the allocated physical
- address has bit 27 set. If it does, then the memory is freed and an
- error is returned. The check can be disabled by adding the following
--option when loading the driver:
-+option when loading the driver::
- 
-       ep93xx-fb.check_screenpage_bug=0
- 
-diff --git a/Documentation/fb/fbcon.txt b/Documentation/fb/fbcon.txt
-index 60a5ec04e8f0..cfb9f7c38f18 100644
---- a/Documentation/fb/fbcon.txt
-+++ b/Documentation/fb/fbcon.txt
-@@ -1,39 +1,41 @@
-+=======================
- The Framebuffer Console
- =======================
- 
--	The framebuffer console (fbcon), as its name implies, is a text
-+The framebuffer console (fbcon), as its name implies, is a text
- console running on top of the framebuffer device. It has the functionality of
- any standard text console driver, such as the VGA console, with the added
- features that can be attributed to the graphical nature of the framebuffer.
- 
--	 In the x86 architecture, the framebuffer console is optional, and
-+In the x86 architecture, the framebuffer console is optional, and
- some even treat it as a toy. For other architectures, it is the only available
- display device, text or graphical.
- 
--	 What are the features of fbcon?  The framebuffer console supports
-+What are the features of fbcon?  The framebuffer console supports
- high resolutions, varying font types, display rotation, primitive multihead,
- etc. Theoretically, multi-colored fonts, blending, aliasing, and any feature
- made available by the underlying graphics card are also possible.
- 
- A. Configuration
-+================
- 
--	The framebuffer console can be enabled by using your favorite kernel
-+The framebuffer console can be enabled by using your favorite kernel
- configuration tool.  It is under Device Drivers->Graphics Support->Frame
- buffer Devices->Console display driver support->Framebuffer Console Support.
- Select 'y' to compile support statically or 'm' for module support.  The
- module will be fbcon.
- 
--	In order for fbcon to activate, at least one framebuffer driver is
-+In order for fbcon to activate, at least one framebuffer driver is
- required, so choose from any of the numerous drivers available. For x86
- systems, they almost universally have VGA cards, so vga16fb and vesafb will
- always be available. However, using a chipset-specific driver will give you
- more speed and features, such as the ability to change the video mode
- dynamically.
- 
--	To display the penguin logo, choose any logo available in Graphics
-+To display the penguin logo, choose any logo available in Graphics
- support->Bootup logo.
- 
--	Also, you will need to select at least one compiled-in font, but if
-+Also, you will need to select at least one compiled-in font, but if
- you don't do anything, the kernel configuration tool will select one for you,
- usually an 8x16 font.
- 
-@@ -44,6 +46,7 @@ fortunate to have a driver that does not alter the graphics chip, then you
- will still get a VGA console.
- 
- B. Loading
-+==========
- 
- Possible scenarios:
- 
-@@ -72,33 +75,33 @@ Possible scenarios:
- 
- C. Boot options
- 
--         The framebuffer console has several, largely unknown, boot options
--         that can change its behavior.
-+	 The framebuffer console has several, largely unknown, boot options
-+	 that can change its behavior.
- 
- 1. fbcon=font:<name>
- 
--        Select the initial font to use. The value 'name' can be any of the
--        compiled-in fonts: 10x18, 6x10, 7x14, Acorn8x8, MINI4x6,
--        PEARL8x8, ProFont6x11, SUN12x22, SUN8x16, VGA8x16, VGA8x8.
-+	Select the initial font to use. The value 'name' can be any of the
-+	compiled-in fonts: 10x18, 6x10, 7x14, Acorn8x8, MINI4x6,
-+	PEARL8x8, ProFont6x11, SUN12x22, SUN8x16, VGA8x16, VGA8x8.
- 
- 	Note, not all drivers can handle font with widths not divisible by 8,
--        such as vga16fb.
-+	such as vga16fb.
- 
- 2. fbcon=scrollback:<value>[k]
- 
--        The scrollback buffer is memory that is used to preserve display
--        contents that has already scrolled past your view.  This is accessed
--        by using the Shift-PageUp key combination.  The value 'value' is any
--        integer. It defaults to 32KB.  The 'k' suffix is optional, and will
--        multiply the 'value' by 1024.
-+	The scrollback buffer is memory that is used to preserve display
-+	contents that has already scrolled past your view.  This is accessed
-+	by using the Shift-PageUp key combination.  The value 'value' is any
-+	integer. It defaults to 32KB.  The 'k' suffix is optional, and will
-+	multiply the 'value' by 1024.
- 
- 3. fbcon=map:<0123>
- 
--        This is an interesting option. It tells which driver gets mapped to
--        which console. The value '0123' is a sequence that gets repeated until
--        the total length is 64 which is the number of consoles available. In
--        the above example, it is expanded to 012301230123... and the mapping
--        will be:
-+	This is an interesting option. It tells which driver gets mapped to
-+	which console. The value '0123' is a sequence that gets repeated until
-+	the total length is 64 which is the number of consoles available. In
-+	the above example, it is expanded to 012301230123... and the mapping
-+	will be::
- 
- 		tty | 1 2 3 4 5 6 7 8 9 ...
- 		fb  | 0 1 2 3 0 1 2 3 0 ...
-@@ -126,20 +129,20 @@ C. Boot options
- 
- 4. fbcon=rotate:<n>
- 
--        This option changes the orientation angle of the console display. The
--        value 'n' accepts the following:
-+	This option changes the orientation angle of the console display. The
-+	value 'n' accepts the following:
- 
--	      0 - normal orientation (0 degree)
--	      1 - clockwise orientation (90 degrees)
--	      2 - upside down orientation (180 degrees)
--	      3 - counterclockwise orientation (270 degrees)
-+	    - 0 - normal orientation (0 degree)
-+	    - 1 - clockwise orientation (90 degrees)
-+	    - 2 - upside down orientation (180 degrees)
-+	    - 3 - counterclockwise orientation (270 degrees)
- 
- 	The angle can be changed anytime afterwards by 'echoing' the same
- 	numbers to any one of the 2 attributes found in
- 	/sys/class/graphics/fbcon:
- 
--		rotate     - rotate the display of the active console
--		rotate_all - rotate the display of all consoles
-+		- rotate     - rotate the display of the active console
-+		- rotate_all - rotate the display of all consoles
- 
- 	Console rotation will only become available if Framebuffer Console
- 	Rotation support is compiled in your kernel.
-@@ -177,9 +180,9 @@ Before going on to how to attach, detach and unload the framebuffer console, an
- illustration of the dependencies may help.
- 
- The console layer, as with most subsystems, needs a driver that interfaces with
--the hardware. Thus, in a VGA console:
-+the hardware. Thus, in a VGA console::
- 
--console ---> VGA driver ---> hardware.
-+	console ---> VGA driver ---> hardware.
- 
- Assuming the VGA driver can be unloaded, one must first unbind the VGA driver
- from the console layer before unloading the driver.  The VGA driver cannot be
-@@ -187,9 +190,9 @@ unloaded if it is still bound to the console layer. (See
- Documentation/console/console.txt for more information).
- 
- This is more complicated in the case of the framebuffer console (fbcon),
--because fbcon is an intermediate layer between the console and the drivers:
-+because fbcon is an intermediate layer between the console and the drivers::
- 
--console ---> fbcon ---> fbdev drivers ---> hardware
-+	console ---> fbcon ---> fbdev drivers ---> hardware
- 
- The fbdev drivers cannot be unloaded if bound to fbcon, and fbcon cannot
- be unloaded if it's bound to the console layer.
-@@ -204,12 +207,12 @@ So, how do we unbind fbcon from the console? Part of the answer is in
- Documentation/console/console.txt. To summarize:
- 
- Echo a value to the bind file that represents the framebuffer console
--driver. So assuming vtcon1 represents fbcon, then:
-+driver. So assuming vtcon1 represents fbcon, then::
- 
--echo 1 > sys/class/vtconsole/vtcon1/bind - attach framebuffer console to
--                                           console layer
--echo 0 > sys/class/vtconsole/vtcon1/bind - detach framebuffer console from
--                                           console layer
-+  echo 1 > sys/class/vtconsole/vtcon1/bind - attach framebuffer console to
-+					     console layer
-+  echo 0 > sys/class/vtconsole/vtcon1/bind - detach framebuffer console from
-+					     console layer
- 
- If fbcon is detached from the console layer, your boot console driver (which is
- usually VGA text mode) will take over.  A few drivers (rivafb and i810fb) will
-@@ -223,19 +226,19 @@ restored properly. The following is one of the several methods that you can do:
- 2. In your kernel configuration, ensure that CONFIG_FRAMEBUFFER_CONSOLE is set
-    to 'y' or 'm'. Enable one or more of your favorite framebuffer drivers.
- 
--3. Boot into text mode and as root run:
-+3. Boot into text mode and as root run::
- 
- 	vbetool vbestate save > <vga state file>
- 
--	The above command saves the register contents of your graphics
--	hardware to <vga state file>.  You need to do this step only once as
--	the state file can be reused.
-+   The above command saves the register contents of your graphics
-+   hardware to <vga state file>.  You need to do this step only once as
-+   the state file can be reused.
- 
--4. If fbcon is compiled as a module, load fbcon by doing:
-+4. If fbcon is compiled as a module, load fbcon by doing::
- 
-        modprobe fbcon
- 
--5. Now to detach fbcon:
-+5. Now to detach fbcon::
- 
-        vbetool vbestate restore < <vga state file> && \
-        echo 0 > /sys/class/vtconsole/vtcon1/bind
-@@ -243,7 +246,7 @@ restored properly. The following is one of the several methods that you can do:
- 6. That's it, you're back to VGA mode. And if you compiled fbcon as a module,
-    you can unload it by 'rmmod fbcon'.
- 
--7. To reattach fbcon:
-+7. To reattach fbcon::
- 
-        echo 1 > /sys/class/vtconsole/vtcon1/bind
- 
-@@ -266,82 +269,82 @@ the following:
- 
- Variation 1:
- 
--    a. Before detaching fbcon, do
-+    a. Before detaching fbcon, do::
- 
--       vbetool vbemode save > <vesa state file> # do once for each vesafb mode,
--						# the file can be reused
-+	vbetool vbemode save > <vesa state file> # do once for each vesafb mode,
-+						 # the file can be reused
- 
-     b. Detach fbcon as in step 5.
- 
--    c. Attach fbcon
-+    c. Attach fbcon::
- 
--        vbetool vbestate restore < <vesa state file> && \
-+	vbetool vbestate restore < <vesa state file> && \
- 	echo 1 > /sys/class/vtconsole/vtcon1/bind
- 
- Variation 2:
- 
--    a. Before detaching fbcon, do:
-+    a. Before detaching fbcon, do::
-+
- 	echo <ID> > /sys/class/tty/console/bind
- 
--
--       vbetool vbemode get
-+	vbetool vbemode get
- 
-     b. Take note of the mode number
- 
-     b. Detach fbcon as in step 5.
- 
--    c. Attach fbcon:
-+    c. Attach fbcon::
- 
--       vbetool vbemode set <mode number> && \
--       echo 1 > /sys/class/vtconsole/vtcon1/bind
-+	vbetool vbemode set <mode number> && \
-+	echo 1 > /sys/class/vtconsole/vtcon1/bind
- 
- Samples:
- ========
- 
- Here are 2 sample bash scripts that you can use to bind or unbind the
--framebuffer console driver if you are on an X86 box:
-+framebuffer console driver if you are on an X86 box::
- 
-----------------------------------------------------------------------------
--#!/bin/bash
--# Unbind fbcon
-+  #!/bin/bash
-+  # Unbind fbcon
- 
--# Change this to where your actual vgastate file is located
--# Or Use VGASTATE=$1 to indicate the state file at runtime
--VGASTATE=/tmp/vgastate
-+  # Change this to where your actual vgastate file is located
-+  # Or Use VGASTATE=$1 to indicate the state file at runtime
-+  VGASTATE=/tmp/vgastate
- 
--# path to vbetool
--VBETOOL=/usr/local/bin
-+  # path to vbetool
-+  VBETOOL=/usr/local/bin
- 
- 
--for (( i = 0; i < 16; i++))
--do
--  if test -x /sys/class/vtconsole/vtcon$i; then
--      if [ `cat /sys/class/vtconsole/vtcon$i/name | grep -c "frame buffer"` \
--           = 1 ]; then
-+  for (( i = 0; i < 16; i++))
-+  do
-+    if test -x /sys/class/vtconsole/vtcon$i; then
-+	if [ `cat /sys/class/vtconsole/vtcon$i/name | grep -c "frame buffer"` \
-+	     = 1 ]; then
- 	    if test -x $VBETOOL/vbetool; then
- 	       echo Unbinding vtcon$i
- 	       $VBETOOL/vbetool vbestate restore < $VGASTATE
- 	       echo 0 > /sys/class/vtconsole/vtcon$i/bind
- 	    fi
--      fi
--  fi
--done
-+	fi
-+    fi
-+  done
- 
- ---------------------------------------------------------------------------
--#!/bin/bash
--# Bind fbcon
- 
--for (( i = 0; i < 16; i++))
--do
--  if test -x /sys/class/vtconsole/vtcon$i; then
--      if [ `cat /sys/class/vtconsole/vtcon$i/name | grep -c "frame buffer"` \
--           = 1 ]; then
-+::
-+
-+  #!/bin/bash
-+  # Bind fbcon
-+
-+  for (( i = 0; i < 16; i++))
-+  do
-+    if test -x /sys/class/vtconsole/vtcon$i; then
-+	if [ `cat /sys/class/vtconsole/vtcon$i/name | grep -c "frame buffer"` \
-+	     = 1 ]; then
- 	  echo Unbinding vtcon$i
- 	  echo 1 > /sys/class/vtconsole/vtcon$i/bind
--      fi
--  fi
--done
-----------------------------------------------------------------------------
-+	fi
-+    fi
-+  done
- 
----
- Antonino Daplas <adaplas@pol.net>
-diff --git a/Documentation/fb/framebuffer.txt b/Documentation/fb/framebuffer.txt
-index 58c5ae2e9f59..b50b8268de92 100644
---- a/Documentation/fb/framebuffer.txt
-+++ b/Documentation/fb/framebuffer.txt
-@@ -1,5 +1,6 @@
--			The Frame Buffer Device
--			-----------------------
-+=======================
-+The Frame Buffer Device
-+=======================
- 
- Maintained by Geert Uytterhoeven <geert@linux-m68k.org>
- Last revised: May 10, 2001
-@@ -26,7 +27,7 @@ other device in /dev. It's a character device using major 29; the minor
- specifies the frame buffer number.
- 
- By convention, the following device nodes are used (numbers indicate the device
--minor numbers):
-+minor numbers)::
- 
-       0 = /dev/fb0	First frame buffer
-       1 = /dev/fb1	Second frame buffer
-@@ -34,15 +35,15 @@ minor numbers):
-      31 = /dev/fb31	32nd frame buffer
- 
- For backwards compatibility, you may want to create the following symbolic
--links:
-+links::
- 
-     /dev/fb0current -> fb0
-     /dev/fb1current -> fb1
- 
- and so on...
- 
--The frame buffer devices are also `normal' memory devices, this means, you can
--read and write their contents. You can, for example, make a screen snapshot by
-+The frame buffer devices are also `normal` memory devices, this means, you can
-+read and write their contents. You can, for example, make a screen snapshot by::
- 
-   cp /dev/fb0 myfile
- 
-@@ -54,11 +55,11 @@ Application software that uses the frame buffer device (e.g. the X server) will
- use /dev/fb0 by default (older software uses /dev/fb0current). You can specify
- an alternative frame buffer device by setting the environment variable
- $FRAMEBUFFER to the path name of a frame buffer device, e.g. (for sh/bash
--users):
-+users)::
- 
-     export FRAMEBUFFER=/dev/fb1
- 
--or (for csh users):
-+or (for csh users)::
- 
-     setenv FRAMEBUFFER /dev/fb1
- 
-@@ -90,9 +91,9 @@ which data structures they work. Here's just a brief overview:
-     possible).
- 
-   - You can get and set parts of the color map. Communication is done with 16
--    bits per color part (red, green, blue, transparency) to support all 
--    existing hardware. The driver does all the computations needed to apply 
--    it to the hardware (round it down to less bits, maybe throw away 
-+    bits per color part (red, green, blue, transparency) to support all
-+    existing hardware. The driver does all the computations needed to apply
-+    it to the hardware (round it down to less bits, maybe throw away
-     transparency).
- 
- All this hardware abstraction makes the implementation of application programs
-@@ -113,10 +114,10 @@ much trouble...
- 3. Frame Buffer Resolution Maintenance
- --------------------------------------
- 
--Frame buffer resolutions are maintained using the utility `fbset'. It can
-+Frame buffer resolutions are maintained using the utility `fbset`. It can
- change the video mode properties of a frame buffer device. Its main usage is
--to change the current video mode, e.g. during boot up in one of your /etc/rc.*
--or /etc/init.d/* files.
-+to change the current video mode, e.g. during boot up in one of your `/etc/rc.*`
-+or `/etc/init.d/*` files.
- 
- Fbset uses a video mode database stored in a configuration file, so you can
- easily add your own modes and refer to them with a simple identifier.
-@@ -129,8 +130,8 @@ The X server (XF68_FBDev) is the most notable application program for the frame
- buffer device. Starting with XFree86 release 3.2, the X server is part of
- XFree86 and has 2 modes:
- 
--  - If the `Display' subsection for the `fbdev' driver in the /etc/XF86Config
--    file contains a
-+  - If the `Display` subsection for the `fbdev` driver in the /etc/XF86Config
-+    file contains a::
- 
- 	Modes "default"
- 
-@@ -146,7 +147,7 @@ XFree86 and has 2 modes:
-     same virtual desktop size. The frame buffer device that's used is still
-     /dev/fb0current (or $FRAMEBUFFER), but the available resolutions are
-     defined by /etc/XF86Config now. The disadvantage is that you have to
--    specify the timings in a different format (but `fbset -x' may help).
-+    specify the timings in a different format (but `fbset -x` may help).
- 
- To tune a video mode, you can use fbset or xvidtune. Note that xvidtune doesn't
- work 100% with XF68_FBDev: the reported clock values are always incorrect.
-@@ -172,29 +173,29 @@ retrace, the electron beam is turned off (blanked).
- 
- The speed at which the electron beam paints the pixels is determined by the
- dotclock in the graphics board. For a dotclock of e.g. 28.37516 MHz (millions
--of cycles per second), each pixel is 35242 ps (picoseconds) long:
-+of cycles per second), each pixel is 35242 ps (picoseconds) long::
- 
-     1/(28.37516E6 Hz) = 35.242E-9 s
- 
--If the screen resolution is 640x480, it will take
-+If the screen resolution is 640x480, it will take::
- 
-     640*35.242E-9 s = 22.555E-6 s
- 
- to paint the 640 (xres) pixels on one scanline. But the horizontal retrace
--also takes time (e.g. 272 `pixels'), so a full scanline takes
-+also takes time (e.g. 272 `pixels`), so a full scanline takes::
- 
-     (640+272)*35.242E-9 s = 32.141E-6 s
- 
--We'll say that the horizontal scanrate is about 31 kHz:
-+We'll say that the horizontal scanrate is about 31 kHz::
- 
-     1/(32.141E-6 s) = 31.113E3 Hz
- 
- A full screen counts 480 (yres) lines, but we have to consider the vertical
--retrace too (e.g. 49 `lines'). So a full screen will take
-+retrace too (e.g. 49 `lines`). So a full screen will take::
- 
-     (480+49)*32.141E-6 s = 17.002E-3 s
- 
--The vertical scanrate is about 59 Hz:
-+The vertical scanrate is about 59 Hz::
- 
-     1/(17.002E-3 s) = 58.815 Hz
- 
-@@ -212,7 +213,7 @@ influenced by the moments at which the synchronization pulses occur.
- The following picture summarizes all timings. The horizontal retrace time is
- the sum of the left margin, the right margin and the hsync length, while the
- vertical retrace time is the sum of the upper margin, the lower margin and the
--vsync length.
-+vsync length::
- 
-   +----------+---------------------------------------------+----------+-------+
-   |          |                ↑                            |          |       |
-@@ -256,7 +257,8 @@ The frame buffer device expects all horizontal timings in number of dotclocks
- 6. Converting XFree86 timing values info frame buffer device timings
- --------------------------------------------------------------------
- 
--An XFree86 mode line consists of the following fields:
-+An XFree86 mode line consists of the following fields::
-+
-  "800x600"     50      800  856  976 1040    600  637  643  666
-  < name >     DCF       HR  SH1  SH2  HFL     VR  SV1  SV2  VFL
- 
-@@ -271,19 +273,27 @@ The frame buffer device uses the following fields:
-   - vsync_len: length of vertical sync
- 
- 1) Pixelclock:
-+
-    xfree: in MHz
-+
-    fb: in picoseconds (ps)
- 
-    pixclock = 1000000 / DCF
- 
- 2) horizontal timings:
-+
-    left_margin = HFL - SH2
-+
-    right_margin = SH1 - HR
-+
-    hsync_len = SH2 - SH1
- 
- 3) vertical timings:
-+
-    upper_margin = VFL - SV2
-+
-    lower_margin = SV1 - VR
-+
-    vsync_len = SV2 - SV1
- 
- Good examples for VESA timings can be found in the XFree86 source tree,
-@@ -303,9 +313,10 @@ and to the following documentation:
-   - The manual pages for fbset: fbset(8), fb.modes(5)
-   - The manual pages for XFree86: XF68_FBDev(1), XF86Config(4/5)
-   - The mighty kernel sources:
--      o linux/drivers/video/
--      o linux/include/linux/fb.h
--      o linux/include/video/
-+
-+      - linux/drivers/video/
-+      - linux/include/linux/fb.h
-+      - linux/include/video/
- 
- 
- 
-@@ -330,14 +341,14 @@ and on its mirrors.
- 
- The latest version of fbset can be found at
- 
--    http://www.linux-fbdev.org/ 
-+    http://www.linux-fbdev.org/
-+
-+
-+10. Credits
-+-----------
- 
--  
--10. Credits                                                       
------------                                                       
--                
- This readme was written by Geert Uytterhoeven, partly based on the original
--`X-framebuffer.README' by Roman Hodek and Martin Schaller. Section 6 was
-+`X-framebuffer.README` by Roman Hodek and Martin Schaller. Section 6 was
- provided by Frank Neumann.
- 
- The frame buffer device abstraction was designed by Martin Schaller.
-diff --git a/Documentation/fb/gxfb.txt b/Documentation/fb/gxfb.txt
-index 2f640903bbb2..eecbb4026ccb 100644
---- a/Documentation/fb/gxfb.txt
-+++ b/Documentation/fb/gxfb.txt
-@@ -1,7 +1,8 @@
--[This file is cloned from VesaFB/aty128fb]
--
-+=============
- What is gxfb?
--=================
-+=============
-+
-+.. [This file is cloned from VesaFB/aty128fb]
- 
- This is a graphics framebuffer driver for AMD Geode GX2 based processors.
- 
-@@ -23,7 +24,7 @@ How to use it?
- ==============
- 
- Switching modes is done using  gxfb.mode_option=<resolution>... boot
--parameter or using `fbset' program.
-+parameter or using `fbset` program.
- 
- See Documentation/fb/modedb.txt for more information on modedb
- resolutions.
-@@ -42,11 +43,12 @@ You can pass kernel command line options to gxfb with gxfb.<option>.
- For example, gxfb.mode_option=800x600@75.
- Accepted options:
- 
--mode_option	- specify the video mode.  Of the form
--		  <x>x<y>[-<bpp>][@<refresh>]
--vram		- size of video ram (normally auto-detected)
--vt_switch	- enable vt switching during suspend/resume.  The vt
--		  switch is slow, but harmless.
-+================ ==================================================
-+mode_option	 specify the video mode.  Of the form
-+		 <x>x<y>[-<bpp>][@<refresh>]
-+vram		 size of video ram (normally auto-detected)
-+vt_switch	 enable vt switching during suspend/resume.  The vt
-+		 switch is slow, but harmless.
-+================ ==================================================
- 
----
- Andres Salomon <dilinger@debian.org>
-diff --git a/Documentation/fb/intel810.txt b/Documentation/fb/intel810.txt
-index a8e9f5bca6f3..54f00c0c0309 100644
---- a/Documentation/fb/intel810.txt
-+++ b/Documentation/fb/intel810.txt
-@@ -1,26 +1,31 @@
-+================================
- Intel 810/815 Framebuffer driver
-- 	Tony Daplas <adaplas@pol.net>
--	http://i810fb.sourceforge.net
-+================================
- 
--	March 17, 2002
-+Tony Daplas <adaplas@pol.net>
- 
--	First Released: July 2001
--	Last Update:    September 12, 2005
--================================================================
-+http://i810fb.sourceforge.net
-+
-+March 17, 2002
-+
-+First Released: July 2001
-+Last Update:    September 12, 2005
- 
- A. Introduction
-+===============
- 
- 	This is a framebuffer driver for various Intel 810/815 compatible
- 	graphics devices.  These include:
- 
--	Intel 810
--	Intel 810E
--	Intel 810-DC100
--	Intel 815 Internal graphics only, 100Mhz FSB
--	Intel 815 Internal graphics only
--	Intel 815 Internal graphics and AGP
-+	- Intel 810
-+	- Intel 810E
-+	- Intel 810-DC100
-+	- Intel 815 Internal graphics only, 100Mhz FSB
-+	- Intel 815 Internal graphics only
-+	- Intel 815 Internal graphics and AGP
- 
- B.  Features
+-INTRODUCTION.
++Introduction
 +============
  
- 	- Choice of using Discrete Video Timings, VESA Generalized Timing
- 	  Formula, or a framebuffer specific database to set the video mode
-@@ -45,10 +50,11 @@ B.  Features
- 	- Can concurrently run with xfree86 running with native i810 drivers
+ This paper describes installing and operating 3270 devices under
+ Linux/390.  A 3270 device is a block-mode rows-and-columns terminal of
+@@ -17,12 +21,12 @@ twenty and thirty years ago.
+ You may have 3270s in-house and not know it.  If you're using the
+ VM-ESA operating system, define a 3270 to your virtual machine by using
+ the command "DEF GRAF <hex-address>"  This paper presumes you will be
+-defining four 3270s with the CP/CMS commands
++defining four 3270s with the CP/CMS commands:
  
- 	- Hardware Cursor Support
+-	DEF GRAF 620
+-	DEF GRAF 621
+-	DEF GRAF 622
+-	DEF GRAF 623
++	- DEF GRAF 620
++	- DEF GRAF 621
++	- DEF GRAF 622
++	- DEF GRAF 623
+ 
+ Your network connection from VM-ESA allows you to use x3270, tn3270, or
+ another 3270 emulator, started from an xterm window on your PC or
+@@ -34,7 +38,8 @@ This paper covers installation of the driver and operation of a
+ dialed-in x3270.
+ 
+ 
+-INSTALLATION.
++Installation
++============
+ 
+ You install the driver by installing a patch, doing a kernel build, and
+ running the configuration script (config3270.sh, in this directory).
+@@ -59,13 +64,15 @@ Use #CP TERM CONMODE 3270 to change it to 3270.  If you generate only
+ at boot time to a 3270 if it is a 3215.
+ 
+ In brief, these are the steps:
++
+ 	1. Install the tub3270 patch
+-	2. (If a module) add a line to a file in /etc/modprobe.d/*.conf
++	2. (If a module) add a line to a file in `/etc/modprobe.d/*.conf`
+ 	3. (If VM) define devices with DEF GRAF
+ 	4. Reboot
+ 	5. Configure
+ 
+ To test that everything works, assuming VM and x3270,
++
+ 	1. Bring up an x3270 window.
+ 	2. Use the DIAL command in that window.
+ 	3. You should immediately see a Linux login screen.
+@@ -74,7 +81,8 @@ Here are the installation steps in detail:
+ 
+ 	1.  The 3270 driver is a part of the official Linux kernel
+ 	source.  Build a tree with the kernel source and any necessary
+-	patches.  Then do
++	patches.  Then do::
++
+ 		make oldconfig
+ 		(If you wish to disable 3215 console support, edit
+ 		.config; change CONFIG_TN3215's value to "n";
+@@ -84,20 +92,22 @@ Here are the installation steps in detail:
+ 		make modules_install
+ 
+ 	2. (Perform this step only if you have configured tub3270 as a
+-	module.)  Add a line to a file /etc/modprobe.d/*.conf to automatically
++	module.)  Add a line to a file `/etc/modprobe.d/*.conf` to automatically
+ 	load the driver when it's needed.  With this line added, you will see
+ 	login prompts appear on your 3270s as soon as boot is complete (or
+ 	with emulated 3270s, as soon as you dial into your vm guest using the
+ 	command "DIAL <vmguestname>").  Since the line-mode major number is
+-	227, the line to add should be:
++	227, the line to add should be::
++
+ 		alias char-major-227 tub3270
+ 
+ 	3. Define graphic devices to your vm guest machine, if you
+ 	haven't already.  Define them before you reboot (reipl):
+-		DEFINE GRAF 620
+-		DEFINE GRAF 621
+-		DEFINE GRAF 622
+-		DEFINE GRAF 623
++
++		- DEFINE GRAF 620
++		- DEFINE GRAF 621
++		- DEFINE GRAF 622
++		- DEFINE GRAF 623
+ 
+ 	4. Reboot.  The reboot process scans hardware devices, including
+ 	3270s, and this enables the tub3270 driver once loaded to respond
+@@ -107,21 +117,23 @@ Here are the installation steps in detail:
+ 
+ 	5. Run the 3270 configuration script config3270.  It is
+ 	distributed in this same directory, Documentation/s390, as
+-	config3270.sh.	Inspect the output script it produces,
++	config3270.sh.  Inspect the output script it produces,
+ 	/tmp/mkdev3270, and then run that script.  This will create the
+ 	necessary character special device files and make the necessary
+ 	changes to /etc/inittab.
+ 
+ 	Then notify /sbin/init that /etc/inittab has changed, by issuing
+-	the telinit command with the q operand:
++	the telinit command with the q operand::
++
+ 		cd Documentation/s390
+ 		sh config3270.sh
+ 		sh /tmp/mkdev3270
+ 		telinit q
+ 
+-	This should be sufficient for your first time.	If your 3270
++	This should be sufficient for your first time.  If your 3270
+ 	configuration has changed and you're reusing config3270, you
+-	should follow these steps:
++	should follow these steps::
++
+ 		Change 3270 configuration
+ 		Reboot
+ 		Run config3270 and /tmp/mkdev3270
+@@ -132,8 +144,10 @@ Here are the testing steps in detail:
+ 	1. Bring up an x3270 window, or use an actual hardware 3278 or
+ 	3279, or use the 3270 emulator of your choice.  You would be
+ 	running the emulator on your PC or workstation.  You would use
+-	the command, for example,
++	the command, for example::
++
+ 		x3270 vm-esa-domain-name &
++
+ 	if you wanted a 3278 Model 4 with 43 rows of 80 columns, the
+ 	default model number.  The driver does not take advantage of
+ 	extended attributes.
+@@ -144,7 +158,8 @@ Here are the testing steps in detail:
+ 
+ 	2. Use the DIAL command instead of the LOGIN command to connect
+ 	to one of the virtual 3270s you defined with the DEF GRAF
+-	commands:
++	commands::
++
+ 		dial my-vm-guest-name
+ 
+ 	3. You should immediately see a login prompt from your
+@@ -171,14 +186,17 @@ Here are the testing steps in detail:
+ 	Wrong major number?  Wrong minor number?  There's your
+ 	problem!
+ 
+-	D. Do you get the message
++	D. Do you get the message::
++
+ 		 "HCPDIA047E my-vm-guest-name 0620 does not exist"?
++
+ 	If so, you must issue the command "DEF GRAF 620" from your VM
+ 	3215 console and then reboot the system.
+ 
+ 
+ 
+ OPERATION.
++==========
+ 
+ The driver defines three areas on the 3270 screen:  the log area, the
+ input area, and the status area.
+@@ -203,8 +221,10 @@ which indicates no scrolling will occur.  (If you hit ENTER with "Linux
+ Running" and nothing typed, the application receives a newline.)
+ 
+ You may change the scrolling timeout value.  For example, the following
+-command line:
++command line::
++
+ 	echo scrolltime=60 > /proc/tty/driver/tty3270
++
+ changes the scrolling timeout value to 60 sec.  Set scrolltime to 0 if
+ you wish to prevent scrolling entirely.
+ 
+@@ -228,7 +248,8 @@ cause an EOF also by typing "^D" and hitting ENTER.
+ No PF key is preassigned to cause a job suspension, but you may cause a
+ job suspension by typing "^Z" and hitting ENTER.  You may wish to
+ assign this function to a PF key.  To make PF7 cause job suspension,
+-execute the command:
++execute the command::
++
+ 	echo pf7=^z > /proc/tty/driver/tty3270
+ 
+ If the input you type does not end with the two characters "^n", the
+@@ -243,8 +264,10 @@ command is entered into the stack only when the input area is not made
+ invisible (such as for password entry) and it is not identical to the
+ current top entry.  PF10 rotates backward through the command stack;
+ PF11 rotates forward.  You may assign the backward function to any PF
+-key (or PA key, for that matter), say, PA3, with the command:
++key (or PA key, for that matter), say, PA3, with the command::
++
+ 	echo -e pa3=\\033k > /proc/tty/driver/tty3270
++
+ This assigns the string ESC-k to PA3.  Similarly, the string ESC-j
+ performs the forward function.  (Rationale:  In bash with vi-mode line
+ editing, ESC-k and ESC-j retrieve backward and forward history.
+@@ -252,15 +275,19 @@ Suggestions welcome.)
+ 
+ Is a stack size of twenty commands not to your liking?  Change it on
+ the fly.  To change to saving the last 100 commands, execute the
+-command:
++command::
++
+ 	echo recallsize=100 > /proc/tty/driver/tty3270
+ 
+ Have a command you issue frequently?  Assign it to a PF or PA key!  Use
+-the command
+-	echo pf24="mkdir foobar; cd foobar" > /proc/tty/driver/tty3270 
++the command::
++
++	echo pf24="mkdir foobar; cd foobar" > /proc/tty/driver/tty3270
++
+ to execute the commands mkdir foobar and cd foobar immediately when you
+ hit PF24.  Want to see the command line first, before you execute it?
+-Use the -n option of the echo command:
++Use the -n option of the echo command::
++
+ 	echo -n pf24="mkdir foo; cd foo" > /proc/tty/driver/tty3270
+ 
+ 
+diff --git a/Documentation/s390/CommonIO b/Documentation/s390/CommonIO
+index 6e0f63f343b4..bcc34954bd4b 100644
+--- a/Documentation/s390/CommonIO
++++ b/Documentation/s390/CommonIO
+@@ -1,5 +1,9 @@
+-S/390 common I/O-Layer - command line parameters, procfs and debugfs entries
+-============================================================================
++======================
++S/390 common I/O-Layer
++======================
++
++command line parameters, procfs and debugfs entries
++===================================================
+ 
+ Command line parameters
+ -----------------------
+@@ -13,7 +17,7 @@ Command line parameters
+ 	device := {all | [!]ipldev | [!]condev | [!]<devno> | [!]<devno>-<devno>}
+ 
+   The given devices will be ignored by the common I/O-layer; no detection
+-  and device sensing will be done on any of those devices. The subchannel to 
++  and device sensing will be done on any of those devices. The subchannel to
+   which the device in question is attached will be treated as if no device was
+   attached.
+ 
+@@ -28,14 +32,20 @@ Command line parameters
+   keywords can be used to refer to the CCW based boot device and CCW console
+   device respectively (these are probably useful only when combined with the '!'
+   operator). The '!' operator will cause the I/O-layer to _not_ ignore a device.
+-  The command line is parsed from left to right.
++  The command line
++  is parsed from left to right.
++
++  For example::
+ 
+-  For example, 
+ 	cio_ignore=0.0.0023-0.0.0042,0.0.4711
++
+   will ignore all devices ranging from 0.0.0023 to 0.0.0042 and the device
+   0.0.4711, if detected.
+-  As another example,
++
++  As another example::
++
+ 	cio_ignore=all,!0.0.4711,!0.0.fd00-0.0.fd02
++
+   will ignore all devices but 0.0.4711, 0.0.fd00, 0.0.fd01, 0.0.fd02.
+ 
+   By default, no devices are ignored.
+@@ -48,40 +58,45 @@ Command line parameters
+ 
+   Lists the ranges of devices (by bus id) which are ignored by common I/O.
+ 
+-  You can un-ignore certain or all devices by piping to /proc/cio_ignore. 
+-  "free all" will un-ignore all ignored devices, 
++  You can un-ignore certain or all devices by piping to /proc/cio_ignore.
++  "free all" will un-ignore all ignored devices,
+   "free <device range>, <device range>, ..." will un-ignore the specified
+   devices.
+ 
+   For example, if devices 0.0.0023 to 0.0.0042 and 0.0.4711 are ignored,
++
+   - echo free 0.0.0030-0.0.0032 > /proc/cio_ignore
+     will un-ignore devices 0.0.0030 to 0.0.0032 and will leave devices 0.0.0023
+     to 0.0.002f, 0.0.0033 to 0.0.0042 and 0.0.4711 ignored;
+   - echo free 0.0.0041 > /proc/cio_ignore will furthermore un-ignore device
+     0.0.0041;
+-  - echo free all > /proc/cio_ignore will un-ignore all remaining ignored 
++  - echo free all > /proc/cio_ignore will un-ignore all remaining ignored
+     devices.
+ 
+-  When a device is un-ignored, device recognition and sensing is performed and 
++  When a device is un-ignored, device recognition and sensing is performed and
+   the device driver will be notified if possible, so the device will become
+   available to the system. Note that un-ignoring is performed asynchronously.
+ 
+-  You can also add ranges of devices to be ignored by piping to 
++  You can also add ranges of devices to be ignored by piping to
+   /proc/cio_ignore; "add <device range>, <device range>, ..." will ignore the
+   specified devices.
+ 
+   Note: While already known devices can be added to the list of devices to be
+-        ignored, there will be no effect on then. However, if such a device
++	ignored, there will be no effect on then. However, if such a device
+ 	disappears and then reappears, it will then be ignored. To make
+ 	known devices go away, you need the "purge" command (see below).
+ 
+-  For example,
++  For example::
++
+ 	"echo add 0.0.a000-0.0.accc, 0.0.af00-0.0.afff > /proc/cio_ignore"
++
+   will add 0.0.a000-0.0.accc and 0.0.af00-0.0.afff to the list of ignored
+   devices.
+ 
+-  You can remove already known but now ignored devices via
++  You can remove already known but now ignored devices via::
++
+ 	"echo purge > /proc/cio_ignore"
++
+   All devices ignored but still registered and not online (= not in use)
+   will be deregistered and thus removed from the system.
+ 
+@@ -115,11 +130,11 @@ debugfs entries
+     Various debug messages from the common I/O-layer.
+ 
+   - /sys/kernel/debug/s390dbf/cio_trace/hex_ascii
+-    Logs the calling of functions in the common I/O-layer and, if applicable, 
++    Logs the calling of functions in the common I/O-layer and, if applicable,
+     which subchannel they were called for, as well as dumps of some data
+     structures (like irb in an error case).
+ 
+-  The level of logging can be changed to be more or less verbose by piping to 
++  The level of logging can be changed to be more or less verbose by piping to
+   /sys/kernel/debug/s390dbf/cio_*/level a number between 0 and 6; see the
+   documentation on the S/390 debug feature (Documentation/s390/s390dbf.txt)
+   for details.
+diff --git a/Documentation/s390/DASD b/Documentation/s390/DASD
+index 9963f1e9c98a..9e22247285c8 100644
+--- a/Documentation/s390/DASD
++++ b/Documentation/s390/DASD
+@@ -1,4 +1,6 @@
++==================
+ DASD device driver
++==================
+ 
+ S/390's disk devices (DASDs) are managed by Linux via the DASD device
+ driver. It is valid for all types of DASDs and represents them to
+@@ -14,14 +16,14 @@ parameters are to be given in hexadecimal notation without a leading
+ If you supply kernel parameters the different instances are processed
+ in order of appearance and a minor number is reserved for any device
+ covered by the supplied range up to 64 volumes. Additional DASDs are
+-ignored. If you do not supply the 'dasd=' kernel parameter at all, the 
++ignored. If you do not supply the 'dasd=' kernel parameter at all, the
+ DASD driver registers all supported DASDs of your system to a minor
+ number in ascending order of the subchannel number.
+ 
+ The driver currently supports ECKD-devices and there are stubs for
+ support of the FBA and CKD architectures. For the FBA architecture
+ only some smart data structures are missing to make the support
+-complete. 
++complete.
+ We performed our testing on 3380 and 3390 type disks of different
+ sizes, under VM and on the bare hardware (LPAR), using internal disks
+ of the multiprise as well as a RAMAC virtual array. Disks exported by
+@@ -34,19 +36,22 @@ accessibility of the DASD from other OSs. In a later stage we will
+ provide support of partitions, maybe VTOC oriented or using a kind of
+ partition table in the label record.
+ 
+-USAGE
++Usage
++=====
+ 
+ -Low-level format (?CKD only)
+ For using an ECKD-DASD as a Linux harddisk you have to low-level
+ format the tracks by issuing the BLKDASDFORMAT-ioctl on that
+ device. This will erase any data on that volume including IBM volume
+-labels, VTOCs etc. The ioctl may take a 'struct format_data *' or
+-'NULL' as an argument.  
+-typedef struct {
++labels, VTOCs etc. The ioctl may take a `struct format_data *` or
++'NULL' as an argument::
++
++  typedef struct {
+ 	int start_unit;
+ 	int stop_unit;
+ 	int blksize;
+-} format_data_t;
++  } format_data_t;
++
+ When a NULL argument is passed to the BLKDASDFORMAT ioctl the whole
+ disk is formatted to a blocksize of 1024 bytes. Otherwise start_unit
+ and stop_unit are the first and last track to be formatted. If
+@@ -56,17 +61,23 @@ up to the last track. blksize can be any power of two between 512 and
+ 1kB blocks anyway and you gain approx. 50% of capacity increasing your
+ blksize from 512 byte to 1kB.
+ 
+--Make a filesystem
++Make a filesystem
++=================
++
+ Then you can mk??fs the filesystem of your choice on that volume or
+ partition. For reasons of sanity you should build your filesystem on
+-the partition /dev/dd?1 instead of the whole volume. You only lose 3kB	
++the partition /dev/dd?1 instead of the whole volume. You only lose 3kB
+ but may be sure that you can reuse your data after introduction of a
+ real partition table.
+ 
+-BUGS:
++Bugs
++====
++
+ - Performance sometimes is rather low because we don't fully exploit clustering
+ 
+-TODO-List:
++TODO-List
++=========
++
+ - Add IBM'S Disk layout to genhd
+ - Enhance driver to use more than one major number
+ - Enable usage as a module
+diff --git a/Documentation/s390/Debugging390.txt b/Documentation/s390/Debugging390.txt
+index c35804c238ad..d49305fd5e1a 100644
+--- a/Documentation/s390/Debugging390.txt
++++ b/Documentation/s390/Debugging390.txt
+@@ -1,9 +1,12 @@
++=============================================
++Debugging on Linux for s/390 & z/Architecture
++=============================================
+ 
+-		  Debugging on Linux for s/390 & z/Architecture
+-				       by
+-	  Denis Joseph Barrow (djbarrow@de.ibm.com,barrow_dj@yahoo.com)
+-    Copyright (C) 2000-2001 IBM Deutschland Entwicklung GmbH, IBM Corporation
+-			Best viewed with fixed width fonts
++Denis Joseph Barrow (djbarrow@de.ibm.com,barrow_dj@yahoo.com)
++
++Copyright (C) 2000-2001 IBM Deutschland Entwicklung GmbH, IBM Corporation
++
++.. Best viewed with fixed width fonts
+ 
+ Overview of Document:
+ =====================
+@@ -17,32 +20,32 @@ It is intended like the Enterprise Systems Architecture/390 Reference Summary
+ to be printed out & used as a quick cheat sheet self help style reference when
+ problems occur.
+ 
+-Contents
+-========
+-Register Set
+-Address Spaces on Intel Linux
+-Address Spaces on Linux for s/390 & z/Architecture
+-The Linux for s/390 & z/Architecture Kernel Task Structure
+-Register Usage & Stackframes on Linux for s/390 & z/Architecture
+-A sample program with comments
+-Compiling programs for debugging on Linux for s/390 & z/Architecture
+-Debugging under VM
+-s/390 & z/Architecture IO Overview
+-Debugging IO on s/390 & z/Architecture under VM
+-GDB on s/390 & z/Architecture
+-Stack chaining in gdb by hand
+-Examining core dumps
+-ldd
+-Debugging modules
+-The proc file system
+-SysRq
+-References
+-Special Thanks
++.. Contents
++   ========
++   Register Set
++   Address Spaces on Intel Linux
++   Address Spaces on Linux for s/390 & z/Architecture
++   The Linux for s/390 & z/Architecture Kernel Task Structure
++   Register Usage & Stackframes on Linux for s/390 & z/Architecture
++   A sample program with comments
++   Compiling programs for debugging on Linux for s/390 & z/Architecture
++   Debugging under VM
++   s/390 & z/Architecture IO Overview
++   Debugging IO on s/390 & z/Architecture under VM
++   GDB on s/390 & z/Architecture
++   Stack chaining in gdb by hand
++   Examining core dumps
++   ldd
++   Debugging modules
++   The proc file system
++   SysRq
++   References
++   Special Thanks
+ 
+ Register Set
+ ============
+ The current architectures have the following registers.
 - 
 +
- 	- Supports EDID probing either by DDC/I2C or through the BIOS
- 
- C.  List of available options
-+=============================
- 
-    a. "video=i810fb"
- 	enables the i810 driver
-@@ -158,7 +164,7 @@ C.  List of available options
- 	(default = not set)
- 
-    n. "dcolor"
--        Use directcolor visual instead of truecolor for pixel depths greater
-+	Use directcolor visual instead of truecolor for pixel depths greater
- 	than 8 bpp.  Useful for color tuning, such as gamma control.
- 
- 	Recommendation: do not set
-@@ -170,32 +176,34 @@ C.  List of available options
- 	Documentation/fb/modedb.txt for usage.
- 
- D. Kernel booting
-+=================
- 
- Separate each option/option-pair by commas (,) and the option from its value
--with a colon (:) as in the following:
-+with a colon (:) as in the following::
- 
--video=i810fb:option1,option2:value2
-+	video=i810fb:option1,option2:value2
- 
- Sample Usage
- ------------
- 
--In /etc/lilo.conf, add the line:
-+In /etc/lilo.conf, add the line::
- 
--append="video=i810fb:vram:2,xres:1024,yres:768,bpp:8,hsync1:30,hsync2:55, \
--        vsync1:50,vsync2:85,accel,mtrr"
-+  append="video=i810fb:vram:2,xres:1024,yres:768,bpp:8,hsync1:30,hsync2:55, \
-+	  vsync1:50,vsync2:85,accel,mtrr"
- 
- This will initialize the framebuffer to 1024x768 at 8bpp.  The framebuffer
- will use 2 MB of System RAM. MTRR support will be enabled. The refresh rate
- will be computed based on the hsync1/hsync2 and vsync1/vsync2 values.
- 
- IMPORTANT:
--You must include hsync1, hsync2, vsync1 and vsync2 to enable video modes
--better than 640x480 at 60Hz. HOWEVER, if your chipset/display combination
--supports I2C and has an EDID block, you can safely exclude hsync1, hsync2,
--vsync1 and vsync2 parameters.  These parameters will be taken from the EDID
--block.
-+  You must include hsync1, hsync2, vsync1 and vsync2 to enable video modes
-+  better than 640x480 at 60Hz. HOWEVER, if your chipset/display combination
-+  supports I2C and has an EDID block, you can safely exclude hsync1, hsync2,
-+  vsync1 and vsync2 parameters.  These parameters will be taken from the EDID
-+  block.
- 
- E.  Module options
-+==================
- 
- The module parameters are essentially similar to the kernel
- parameters. The main difference is that you need to include a Boolean value
-@@ -206,31 +214,32 @@ Example, to enable MTRR, include "mtrr=1".
- Sample Usage
- ------------
- 
--Using the same setup as described above, load the module like this:
-+Using the same setup as described above, load the module like this::
- 
- 	modprobe i810fb vram=2 xres=1024 bpp=8 hsync1=30 hsync2=55 vsync1=50 \
--	         vsync2=85 accel=1 mtrr=1
-+		 vsync2=85 accel=1 mtrr=1
- 
--Or just add the following to a configuration file in /etc/modprobe.d/
-+Or just add the following to a configuration file in /etc/modprobe.d/::
- 
- 	options i810fb vram=2 xres=1024 bpp=16 hsync1=30 hsync2=55 vsync1=50 \
- 	vsync2=85 accel=1 mtrr=1
- 
--and just do a
-+and just do a::
- 
- 	modprobe i810fb
- 
- 
- F.  Setup
-+=========
- 
--	a. Do your usual method of configuring the kernel.
-+	a. Do your usual method of configuring the kernel
- 
--	make menuconfig/xconfig/config
-+	   make menuconfig/xconfig/config
- 
- 	b. Under "Code maturity level options" enable "Prompt for development
- 	   and/or incomplete code/drivers".
- 
-- 	c. Enable agpgart support for the Intel 810/815 on-board graphics.
-+	c. Enable agpgart support for the Intel 810/815 on-board graphics.
- 	   This is required.  The option is under "Character Devices".
- 
- 	d. Under "Graphics Support", select "Intel 810/815" either statically
-@@ -242,7 +251,7 @@ F.  Setup
- 	   set 'Enable DDC Support' to 'y'. To make this option appear, set
- 	   'use VESA Generalized Timing Formula' to 'y'.
- 
--        f. If you want a framebuffer console, enable it under "Console
-+	f. If you want a framebuffer console, enable it under "Console
- 	   Drivers".
- 
- 	g. Compile your kernel.
-@@ -253,6 +262,7 @@ F.  Setup
- 	    patch to see the chipset in action (or inaction :-).
- 
- G.  Acknowledgment:
-+===================
- 
- 	1.  Geert Uytterhoeven - his excellent howto and the virtual
- 	    framebuffer driver code made this possible.
-@@ -269,10 +279,9 @@ G.  Acknowledgment:
- 	   optimizations possible.
- 
- H.  Home Page:
-+==============
- 
- 	A more complete, and probably updated information is provided at
- 	http://i810fb.sourceforge.net.
- 
--###########################
- Tony
--
-diff --git a/Documentation/fb/intelfb.txt b/Documentation/fb/intelfb.txt
-index feac4e4d6968..e2d0903f4efb 100644
---- a/Documentation/fb/intelfb.txt
-+++ b/Documentation/fb/intelfb.txt
-@@ -1,24 +1,28 @@
-+=============================================================
- Intel 830M/845G/852GM/855GM/865G/915G/945G Framebuffer driver
--================================================================
-+=============================================================
- 
- A. Introduction
--	This is a framebuffer driver for various Intel 8xx/9xx compatible
-+===============
-+
-+This is a framebuffer driver for various Intel 8xx/9xx compatible
- graphics devices.  These would include:
- 
--	Intel 830M
--	Intel 845G
--	Intel 852GM
--	Intel 855GM
--	Intel 865G
--	Intel 915G
--	Intel 915GM
--	Intel 945G
--	Intel 945GM
--	Intel 945GME
--	Intel 965G
--	Intel 965GM
-+	- Intel 830M
-+	- Intel 845G
-+	- Intel 852GM
-+	- Intel 855GM
-+	- Intel 865G
-+	- Intel 915G
-+	- Intel 915GM
-+	- Intel 945G
-+	- Intel 945GM
-+	- Intel 945GME
-+	- Intel 965G
-+	- Intel 965GM
- 
- B.  List of available options
-+=============================
- 
-    a. "video=intelfb"
- 	enables the intelfb driver
-@@ -39,12 +43,12 @@ B.  List of available options
- 	(default = 4 MB)
- 
-    d. "voffset=<value>"
--        select at what offset in MB of the logical memory to allocate the
-+	select at what offset in MB of the logical memory to allocate the
- 	framebuffer memory.  The intent is to avoid the memory blocks
- 	used by standard graphics applications (XFree86). Depending on your
--        usage, adjust the value up or down, (0 for maximum usage, 63/127 MB
--        for the least amount).  Note, an arbitrary setting may conflict
--        with XFree86.
-+	usage, adjust the value up or down, (0 for maximum usage, 63/127 MB
-+	for the least amount).  Note, an arbitrary setting may conflict
-+	with XFree86.
- 
- 	Recommendation: do not set
- 	(default = 48 MB)
-@@ -80,18 +84,19 @@ B.  List of available options
-    The default parameter (not named) is the mode.
- 
- C. Kernel booting
-+=================
- 
- Separate each option/option-pair by commas (,) and the option from its value
--with an equals sign (=) as in the following:
-+with an equals sign (=) as in the following::
- 
--video=intelfb:option1,option2=value2
-+	video=intelfb:option1,option2=value2
- 
- Sample Usage
- ------------
- 
--In /etc/lilo.conf, add the line:
-+In /etc/lilo.conf, add the line::
- 
--append="video=intelfb:mode=800x600-32@75,accel,hwcursor,vram=8"
-+	append="video=intelfb:mode=800x600-32@75,accel,hwcursor,vram=8"
- 
- This will initialize the framebuffer to 800x600 at 32bpp and 75Hz. The
- framebuffer will use 8 MB of System RAM. hw acceleration of text and cursor
-@@ -106,8 +111,9 @@ in this directory.
- 
- 
- D.  Module options
-+==================
- 
--	The module parameters are essentially similar to the kernel
-+The module parameters are essentially similar to the kernel
- parameters. The main difference is that you need to include a Boolean value
- (1 for TRUE, and 0 for FALSE) for those options which don't need a value.
- 
-@@ -116,23 +122,24 @@ Example, to enable MTRR, include "mtrr=1".
- Sample Usage
- ------------
- 
--Using the same setup as described above, load the module like this:
-+Using the same setup as described above, load the module like this::
- 
- 	modprobe intelfb mode=800x600-32@75 vram=8 accel=1 hwcursor=1
- 
--Or just add the following to a configuration file in /etc/modprobe.d/
-+Or just add the following to a configuration file in /etc/modprobe.d/::
- 
- 	options intelfb mode=800x600-32@75 vram=8 accel=1 hwcursor=1
- 
--and just do a
-+and just do a::
- 
- 	modprobe intelfb
- 
- 
- E.  Acknowledgment:
-+===================
- 
- 	1.  Geert Uytterhoeven - his excellent howto and the virtual
--                                 framebuffer driver code made this possible.
-+	    framebuffer driver code made this possible.
- 
- 	2.  Jeff Hartmann for his agpgart code.
- 
-@@ -145,5 +152,4 @@ E.  Acknowledgment:
- 
- 	6.  Andrew Morton for his kernel patches maintenance.
- 
--###########################
- Sylvain
-diff --git a/Documentation/fb/internals.txt b/Documentation/fb/internals.txt
-index 9b2a2b2f3e57..696b50aa7c24 100644
---- a/Documentation/fb/internals.txt
-+++ b/Documentation/fb/internals.txt
-@@ -1,13 +1,19 @@
-+=============================
-+Frame Buffer device internals
-+=============================
- 
- This is a first start for some documentation about frame buffer device
- internals.
- 
--Geert Uytterhoeven <geert@linux-m68k.org>, 21 July 1998
--James Simmons <jsimmons@user.sf.net>, Nov 26 2002
-+Authors:
-+
-+- Geert Uytterhoeven <geert@linux-m68k.org>, 21 July 1998
-+- James Simmons <jsimmons@user.sf.net>, Nov 26 2002
- 
- --------------------------------------------------------------------------------
- 
--	    ***  STRUCTURES USED BY THE FRAME BUFFER DEVICE API  ***
-+Structures used by the frame buffer device API
-+==============================================
- 
- The following structures play a role in the game of frame buffer devices. They
- are defined in <linux/fb.h>.
-@@ -40,19 +46,18 @@ are defined in <linux/fb.h>.
-     Generic information, API and low level information about a specific frame
-     buffer device instance (slot number, board address, ...).
- 
--  - struct `par'
-+  - struct `par`
- 
-     Device dependent information that uniquely defines the video mode for this
-     particular piece of hardware.
- 
- 
----------------------------------------------------------------------------------
--
--	    ***  VISUALS USED BY THE FRAME BUFFER DEVICE API  ***
-+Visuals used by the frame buffer device API
-+===========================================
- 
- 
- Monochrome (FB_VISUAL_MONO01 and FB_VISUAL_MONO10)
---------------------------------------------------
-+--------------------------------------------------
- Each pixel is either black or white.
- 
- 
-@@ -70,7 +75,7 @@ The pixel value is broken up into red, green, and blue fields.
- 
- Direct color (FB_VISUAL_DIRECTCOLOR)
- ------------------------------------
--The pixel value is broken up into red, green, and blue fields, each of which 
-+The pixel value is broken up into red, green, and blue fields, each of which
- are looked up in separate red, green, and blue lookup tables.
- 
- 
-@@ -79,4 +84,3 @@ Grayscale displays
- Grayscale and static grayscale are special variants of pseudo color and static
- pseudo color, where the red, green and blue components are always equal to
- each other.
--
-diff --git a/Documentation/fb/lxfb.txt b/Documentation/fb/lxfb.txt
-index 38b3ca6f6ca7..796172f261cb 100644
---- a/Documentation/fb/lxfb.txt
-+++ b/Documentation/fb/lxfb.txt
-@@ -1,7 +1,9 @@
--[This file is cloned from VesaFB/aty128fb]
--
-+=============
- What is lxfb?
--=================
-+=============
-+
-+.. [This file is cloned from VesaFB/aty128fb]
-+
- 
- This is a graphics framebuffer driver for AMD Geode LX based processors.
- 
-@@ -23,7 +25,7 @@ How to use it?
- ==============
- 
- Switching modes is done using  lxfb.mode_option=<resolution>... boot
--parameter or using `fbset' program.
-+parameter or using `fbset` program.
- 
- See Documentation/fb/modedb.txt for more information on modedb
- resolutions.
-@@ -42,11 +44,12 @@ You can pass kernel command line options to lxfb with lxfb.<option>.
- For example, lxfb.mode_option=800x600@75.
- Accepted options:
- 
--mode_option	- specify the video mode.  Of the form
--		  <x>x<y>[-<bpp>][@<refresh>]
--vram		- size of video ram (normally auto-detected)
--vt_switch	- enable vt switching during suspend/resume.  The vt
--		  switch is slow, but harmless.
-+================ ==================================================
-+mode_option	 specify the video mode.  Of the form
-+		 <x>x<y>[-<bpp>][@<refresh>]
-+vram		 size of video ram (normally auto-detected)
-+vt_switch	 enable vt switching during suspend/resume.  The vt
-+		 switch is slow, but harmless.
-+================ ==================================================
- 
----
- Andres Salomon <dilinger@debian.org>
-diff --git a/Documentation/fb/matroxfb.txt b/Documentation/fb/matroxfb.txt
-index b95f5bb522f2..c5a290ddb480 100644
---- a/Documentation/fb/matroxfb.txt
-+++ b/Documentation/fb/matroxfb.txt
-@@ -1,8 +1,10 @@
--[This file is cloned from VesaFB. Thanks go to Gerd Knorr]
--
-+=================
- What is matroxfb?
- =================
- 
-+.. [This file is cloned from VesaFB. Thanks go to Gerd Knorr]
-+
-+
- This is a driver for a graphic framebuffer for Matrox devices on
- Alpha, Intel and PPC boxes.
- 
-@@ -23,57 +25,66 @@ How to use it?
- ==============
- 
- Switching modes is done using the video=matroxfb:vesa:... boot parameter
--or using `fbset' program.
-+or using `fbset` program.
- 
- If you want, for example, enable a resolution of 1280x1024x24bpp you should
- pass to the kernel this command line: "video=matroxfb:vesa:0x1BB".
- 
- You should compile in both vgacon (to boot if you remove you Matrox from
- box) and matroxfb (for graphics mode). You should not compile-in vesafb
--unless you have primary display on non-Matrox VBE2.0 device (see 
-+unless you have primary display on non-Matrox VBE2.0 device (see
- Documentation/fb/vesafb.txt for details).
- 
- Currently supported video modes are (through vesa:... interface, PowerMac
- has [as addon] compatibility code):
- 
- 
--[Graphic modes]
--
--bpp | 640x400  640x480  768x576  800x600  960x720
------+--------------------------------------------
--  4 |            0x12             0x102            
--  8 |  0x100    0x101    0x180    0x103    0x188   
-- 15 |           0x110    0x181    0x113    0x189   
-- 16 |           0x111    0x182    0x114    0x18A   
-- 24 |           0x1B2    0x184    0x1B5    0x18C   
-- 32 |           0x112    0x183    0x115    0x18B   
--
--
--[Graphic modes (continued)]
--
--bpp | 1024x768 1152x864 1280x1024 1408x1056 1600x1200
------+------------------------------------------------
--  4 |   0x104             0x106
--  8 |   0x105    0x190    0x107     0x198     0x11C
-- 15 |   0x116    0x191    0x119     0x199     0x11D
-- 16 |   0x117    0x192    0x11A     0x19A     0x11E
-- 24 |   0x1B8    0x194    0x1BB     0x19C     0x1BF
-- 32 |   0x118    0x193    0x11B     0x19B
--
--
--[Text modes]
--
--text | 640x400  640x480  1056x344  1056x400  1056x480
-------+------------------------------------------------
-- 8x8 |  0x1C0    0x108     0x10A     0x10B     0x10C
--8x16 | 2, 3, 7                       0x109
--
--You can enter these number either hexadecimal (leading `0x') or decimal
-+Graphic modes
-+-------------
-+
-+===  =======  =======  =======  =======  =======
-+bpp  640x400  640x480  768x576  800x600  960x720
-+===  =======  =======  =======  =======  =======
-+  4             0x12             0x102
-+  8   0x100    0x101    0x180    0x103    0x188
-+ 15            0x110    0x181    0x113    0x189
-+ 16            0x111    0x182    0x114    0x18A
-+ 24            0x1B2    0x184    0x1B5    0x18C
-+ 32            0x112    0x183    0x115    0x18B
-+===  =======  =======  =======  =======  =======
-+
-+
-+Graphic modes (continued)
-+-------------------------
-+
-+===  ======== ======== ========= ========= =========
-+bpp  1024x768 1152x864 1280x1024 1408x1056 1600x1200
-+===  ======== ======== ========= ========= =========
-+  4    0x104             0x106
-+  8    0x105    0x190    0x107     0x198     0x11C
-+ 15    0x116    0x191    0x119     0x199     0x11D
-+ 16    0x117    0x192    0x11A     0x19A     0x11E
-+ 24    0x1B8    0x194    0x1BB     0x19C     0x1BF
-+ 32    0x118    0x193    0x11B     0x19B
-+===  ======== ======== ========= ========= =========
-+
-+
-+Text modes
-+----------
-+
-+==== =======  =======  ========  ========  ========
-+text 640x400  640x480  1056x344  1056x400  1056x480
-+==== =======  =======  ========  ========  ========
-+ 8x8   0x1C0    0x108     0x10A     0x10B     0x10C
-+8x16 2, 3, 7                        0x109
-+==== =======  =======  ========  ========  ========
-+
-+You can enter these number either hexadecimal (leading `0x`) or decimal
- (0x100 = 256). You can also use value + 512 to achieve compatibility
- with your old number passed to vesafb.
- 
- Non-listed number can be achieved by more complicated command-line, for
--example 1600x1200x32bpp can be specified by `video=matroxfb:vesa:0x11C,depth:32'.
-+example 1600x1200x32bpp can be specified by `video=matroxfb:vesa:0x11C,depth:32`.
- 
- 
- X11
-@@ -85,7 +96,7 @@ works fine.
- 
- Running another (accelerated) X-Server like XF86_SVGA works too. But (at least)
- XFree servers have big troubles in multihead configurations (even on first
--head, not even talking about second). Running XFree86 4.x accelerated mga 
-+head, not even talking about second). Running XFree86 4.x accelerated mga
- driver is possible, but you must not enable DRI - if you do, resolution and
- color depth of your X desktop must match resolution and color depths of your
- virtual consoles, otherwise X will corrupt accelerator settings.
-@@ -96,7 +107,7 @@ SVGALib
- 
- Driver contains SVGALib compatibility code. It is turned on by choosing textual
- mode for console. You can do it at boot time by using videomode
--2,3,7,0x108-0x10C or 0x1C0. At runtime, `fbset -depth 0' does this work.
-+2,3,7,0x108-0x10C or 0x1C0. At runtime, `fbset -depth 0` does this work.
- Unfortunately, after SVGALib application exits, screen contents is corrupted.
- Switching to another console and back fixes it. I hope that it is SVGALib's
- problem and not mine, but I'm not sure.
-@@ -106,175 +117,188 @@ Configuration
- =============
- 
- You can pass kernel command line options to matroxfb with
--`video=matroxfb:option1,option2:value2,option3' (multiple options should be 
--separated by comma, values are separated from options by `:'). 
-+`video=matroxfb:option1,option2:value2,option3` (multiple options should be
-+separated by comma, values are separated from options by `:`).
- Accepted options:
- 
--mem:X    - size of memory (X can be in megabytes, kilobytes or bytes)
--           You can only decrease value determined by driver because of
--	   it always probe for memory. Default is to use whole detected
--	   memory usable for on-screen display (i.e. max. 8 MB).
--disabled - do not load driver; you can use also `off', but `disabled'
--           is here too.
--enabled  - load driver, if you have `video=matroxfb:disabled' in LILO
--           configuration, you can override it by this (you cannot override
--	   `off'). It is default.
--noaccel  - do not use acceleration engine. It does not work on Alphas.
--accel    - use acceleration engine. It is default.
--nopan    - create initial consoles with vyres = yres, thus disabling virtual
--           scrolling.
--pan      - create initial consoles as tall as possible (vyres = memory/vxres).
--           It is default.
--nopciretry - disable PCI retries. It is needed for some broken chipsets,
--           it is autodetected for intel's 82437. In this case device does
--	   not comply to PCI 2.1 specs (it will not guarantee that every
--	   transaction terminate with success or retry in 32 PCLK).
--pciretry - enable PCI retries. It is default, except for intel's 82437.
--novga    - disables VGA I/O ports. It is default if BIOS did not enable device.
--           You should not use this option, some boards then do not restart
--	   without power off.
--vga      - preserve state of VGA I/O ports. It is default. Driver does not
--           enable VGA I/O if BIOS did not it (it is not safe to enable it in
--	   most cases).
--nobios   - disables BIOS ROM. It is default if BIOS did not enable BIOS itself.
--           You should not use this option, some boards then do not restart
--	   without power off.
--bios     - preserve state of BIOS ROM. It is default. Driver does not enable
--           BIOS if BIOS was not enabled before.
--noinit   - tells driver, that devices were already initialized. You should use
--           it if you have G100 and/or if driver cannot detect memory, you see
--	   strange pattern on screen and so on. Devices not enabled by BIOS
--	   are still initialized. It is default.
--init     - driver initializes every device it knows about.
--memtype  - specifies memory type, implies 'init'. This is valid only for G200 
--           and G400 and has following meaning:
--             G200: 0 -> 2x128Kx32 chips, 2MB onboard, probably sgram
--                   1 -> 2x128Kx32 chips, 4MB onboard, probably sgram
--                   2 -> 2x256Kx32 chips, 4MB onboard, probably sgram
--                   3 -> 2x256Kx32 chips, 8MB onboard, probably sgram
--                   4 -> 2x512Kx16 chips, 8/16MB onboard, probably sdram only
--                   5 -> same as above
--                   6 -> 4x128Kx32 chips, 4MB onboard, probably sgram
--                   7 -> 4x128Kx32 chips, 8MB onboard, probably sgram
--             G400: 0 -> 2x512Kx16 SDRAM, 16/32MB
--                        2x512Kx32 SGRAM, 16/32MB
--                   1 -> 2x256Kx32 SGRAM, 8/16MB
--                   2 -> 4x128Kx32 SGRAM, 8/16MB
--                   3 -> 4x512Kx32 SDRAM, 32MB
--                   4 -> 4x256Kx32 SGRAM, 16/32MB
--                   5 -> 2x1Mx32 SDRAM, 32MB
--                   6 -> reserved
--                   7 -> reserved
--           You should use sdram or sgram parameter in addition to memtype 
--           parameter.
--nomtrr   - disables write combining on frame buffer. This slows down driver but
--           there is reported minor incompatibility between GUS DMA and XFree
--	   under high loads if write combining is enabled (sound dropouts).
--mtrr     - enables write combining on frame buffer. It speeds up video accesses
--           much. It is default. You must have MTRR support enabled in kernel
--	   and your CPU must have MTRR (f.e. Pentium II have them).
--sgram    - tells to driver that you have Gxx0 with SGRAM memory. It has no
--           effect without `init'.
--sdram    - tells to driver that you have Gxx0 with SDRAM memory.
--           It is a default.
--inv24    - change timings parameters for 24bpp modes on Millennium and
--           Millennium II. Specify this if you see strange color shadows around
--	   characters.
--noinv24  - use standard timings. It is the default.
--inverse  - invert colors on screen (for LCD displays)
--noinverse - show true colors on screen. It is default.
--dev:X    - bind driver to device X. Driver numbers device from 0 up to N,
--           where device 0 is first `known' device found, 1 second and so on.
--	   lspci lists devices in this order.
--	   Default is `every' known device.
--nohwcursor - disables hardware cursor (use software cursor instead).
--hwcursor - enables hardware cursor. It is default. If you are using
--           non-accelerated mode (`noaccel' or `fbset -accel false'), software
--	   cursor is used (except for text mode).
--noblink  - disables cursor blinking. Cursor in text mode always blinks (hw
--           limitation).
--blink    - enables cursor blinking. It is default.
--nofastfont - disables fastfont feature. It is default.
--fastfont:X - enables fastfont feature. X specifies size of memory reserved for
--             font data, it must be >= (fontwidth*fontheight*chars_in_font)/8.
-+============ ===================================================================
-+mem:X        size of memory (X can be in megabytes, kilobytes or bytes)
-+	     You can only decrease value determined by driver because of
-+	     it always probe for memory. Default is to use whole detected
-+	     memory usable for on-screen display (i.e. max. 8 MB).
-+disabled     do not load driver; you can use also `off`, but `disabled`
-+	     is here too.
-+enabled      load driver, if you have `video=matroxfb:disabled` in LILO
-+	     configuration, you can override it by this (you cannot override
-+	     `off`). It is default.
-+noaccel      do not use acceleration engine. It does not work on Alphas.
-+accel        use acceleration engine. It is default.
-+nopan        create initial consoles with vyres = yres, thus disabling virtual
-+	     scrolling.
-+pan          create initial consoles as tall as possible (vyres = memory/vxres).
-+	     It is default.
-+nopciretry   disable PCI retries. It is needed for some broken chipsets,
-+	     it is autodetected for intel's 82437. In this case device does
-+	     not comply to PCI 2.1 specs (it will not guarantee that every
-+	     transaction terminate with success or retry in 32 PCLK).
-+pciretry     enable PCI retries. It is default, except for intel's 82437.
-+novga        disables VGA I/O ports. It is default if BIOS did not enable
-+	     device. You should not use this option, some boards then do not
-+	     restart without power off.
-+vga          preserve state of VGA I/O ports. It is default. Driver does not
-+	     enable VGA I/O if BIOS did not it (it is not safe to enable it in
-+	     most cases).
-+nobios       disables BIOS ROM. It is default if BIOS did not enable BIOS
-+	     itself. You should not use this option, some boards then do not
-+	     restart without power off.
-+bios         preserve state of BIOS ROM. It is default. Driver does not enable
-+	     BIOS if BIOS was not enabled before.
-+noinit       tells driver, that devices were already initialized. You should use
-+	     it if you have G100 and/or if driver cannot detect memory, you see
-+	     strange pattern on screen and so on. Devices not enabled by BIOS
-+	     are still initialized. It is default.
-+init         driver initializes every device it knows about.
-+memtype      specifies memory type, implies 'init'. This is valid only for G200
-+	     and G400 and has following meaning:
-+
-+	       G200:
-+		 -  0 -> 2x128Kx32 chips, 2MB onboard, probably sgram
-+		 -  1 -> 2x128Kx32 chips, 4MB onboard, probably sgram
-+		 -  2 -> 2x256Kx32 chips, 4MB onboard, probably sgram
-+		 -  3 -> 2x256Kx32 chips, 8MB onboard, probably sgram
-+		 -  4 -> 2x512Kx16 chips, 8/16MB onboard, probably sdram only
-+		 -  5 -> same as above
-+		 -  6 -> 4x128Kx32 chips, 4MB onboard, probably sgram
-+		 -  7 -> 4x128Kx32 chips, 8MB onboard, probably sgram
-+	       G400:
-+		 -  0 -> 2x512Kx16 SDRAM, 16/32MB
-+		 -	 2x512Kx32 SGRAM, 16/32MB
-+		 -  1 -> 2x256Kx32 SGRAM, 8/16MB
-+		 -  2 -> 4x128Kx32 SGRAM, 8/16MB
-+		 -  3 -> 4x512Kx32 SDRAM, 32MB
-+		 -  4 -> 4x256Kx32 SGRAM, 16/32MB
-+		 -  5 -> 2x1Mx32 SDRAM, 32MB
-+		 -  6 -> reserved
-+		 -  7 -> reserved
-+
-+	     You should use sdram or sgram parameter in addition to memtype
-+	     parameter.
-+nomtrr       disables write combining on frame buffer. This slows down driver
-+	     but there is reported minor incompatibility between GUS DMA and
-+	     XFree under high loads if write combining is enabled (sound
-+	     dropouts).
-+mtrr         enables write combining on frame buffer. It speeds up video
-+	     accesses much. It is default. You must have MTRR support enabled
-+	     in kernel and your CPU must have MTRR (f.e. Pentium II have them).
-+sgram        tells to driver that you have Gxx0 with SGRAM memory. It has no
-+	     effect without `init`.
-+sdram        tells to driver that you have Gxx0 with SDRAM memory.
-+	     It is a default.
-+inv24        change timings parameters for 24bpp modes on Millennium and
-+	     Millennium II. Specify this if you see strange color shadows
-+	     around  characters.
-+noinv24      use standard timings. It is the default.
-+inverse      invert colors on screen (for LCD displays)
-+noinverse    show true colors on screen. It is default.
-+dev:X        bind driver to device X. Driver numbers device from 0 up to N,
-+	     where device 0 is first `known` device found, 1 second and so on.
-+	     lspci lists devices in this order.
-+	     Default is `every` known device.
-+nohwcursor   disables hardware cursor (use software cursor instead).
-+hwcursor     enables hardware cursor. It is default. If you are using
-+	     non-accelerated mode (`noaccel` or `fbset -accel false`), software
-+	     cursor is used (except for text mode).
-+noblink      disables cursor blinking. Cursor in text mode always blinks (hw
-+	     limitation).
-+blink        enables cursor blinking. It is default.
-+nofastfont   disables fastfont feature. It is default.
-+fastfont:X   enables fastfont feature. X specifies size of memory reserved for
-+	     font data, it must be >= (fontwidth*fontheight*chars_in_font)/8.
- 	     It is faster on Gx00 series, but slower on older cards.
--grayscale - enable grayscale summing. It works in PSEUDOCOLOR modes (text,
--            4bpp, 8bpp). In DIRECTCOLOR modes it is limited to characters
--	    displayed through putc/putcs. Direct accesses to framebuffer
--	    can paint colors.
--nograyscale - disable grayscale summing. It is default.
--cross4MB - enables that pixel line can cross 4MB boundary. It is default for
--           non-Millennium.
--nocross4MB - pixel line must not cross 4MB boundary. It is default for
--             Millennium I or II, because of these devices have hardware
-+grayscale    enable grayscale summing. It works in PSEUDOCOLOR modes (text,
-+	     4bpp, 8bpp). In DIRECTCOLOR modes it is limited to characters
-+	     displayed through putc/putcs. Direct accesses to framebuffer
-+	     can paint colors.
-+nograyscale  disable grayscale summing. It is default.
-+cross4MB     enables that pixel line can cross 4MB boundary. It is default for
-+	     non-Millennium.
-+nocross4MB   pixel line must not cross 4MB boundary. It is default for
-+	     Millennium I or II, because of these devices have hardware
- 	     limitations which do not allow this. But this option is
- 	     incompatible with some (if not all yet released) versions of
- 	     XF86_FBDev.
--dfp      - enables digital flat panel interface. This option is incompatible with
--           secondary (TV) output - if DFP is active, TV output must be
--	   inactive and vice versa. DFP always uses same timing as primary
--	   (monitor) output.
--dfp:X    - use settings X for digital flat panel interface. X is number from
--           0 to 0xFF, and meaning of each individual bit is described in
--	   G400 manual, in description of DAC register 0x1F. For normal operation
--	   you should set all bits to zero, except lowest bit. This lowest bit
--	   selects who is source of display clocks, whether G400, or panel.
--	   Default value is now read back from hardware - so you should specify
--	   this value only if you are also using `init' parameter.
--outputs:XYZ - set mapping between CRTC and outputs. Each letter can have value
--           of 0 (for no CRTC), 1 (CRTC1) or 2 (CRTC2), and first letter corresponds
--	   to primary analog output, second letter to the secondary analog output
--	   and third letter to the DVI output. Default setting is 100 for
--	   cards below G400 or G400 without DFP, 101 for G400 with DFP, and
--	   111 for G450 and G550. You can set mapping only on first card,
--	   use matroxset for setting up other devices.
--vesa:X   - selects startup videomode. X is number from 0 to 0x1FF, see table
--           above for detailed explanation. Default is 640x480x8bpp if driver
--	   has 8bpp support. Otherwise first available of 640x350x4bpp,
--	   640x480x15bpp, 640x480x24bpp, 640x480x32bpp or 80x25 text
--	   (80x25 text is always available).
-+dfp          enables digital flat panel interface. This option is incompatible
-+	     with secondary (TV) output - if DFP is active, TV output must be
-+	     inactive and vice versa. DFP always uses same timing as primary
-+	     (monitor) output.
-+dfp:X        use settings X for digital flat panel interface. X is number from
-+	     0 to 0xFF, and meaning of each individual bit is described in
-+	     G400 manual, in description of DAC register 0x1F. For normal
-+	     operation you should set all bits to zero, except lowest bit. This
-+	     lowest bit selects who is source of display clocks, whether G400,
-+	     or panel. Default value is now read back from hardware - so you
-+	     should specify this value only if you are also using `init`
-+	     parameter.
-+outputs:XYZ  set mapping between CRTC and outputs. Each letter can have value
-+	     of 0 (for no CRTC), 1 (CRTC1) or 2 (CRTC2), and first letter
-+	     corresponds to primary analog output, second letter to the
-+	     secondary analog output and third letter to the DVI output.
-+	     Default setting is 100 for cards below G400 or G400 without DFP,
-+	     101 for G400 with DFP, and 111 for G450 and G550. You can set
-+	     mapping only on first card, use matroxset for setting up other
-+	     devices.
-+vesa:X       selects startup videomode. X is number from 0 to 0x1FF, see table
-+	     above for detailed explanation. Default is 640x480x8bpp if driver
-+	     has 8bpp support. Otherwise first available of 640x350x4bpp,
-+	     640x480x15bpp, 640x480x24bpp, 640x480x32bpp or 80x25 text
-+	     (80x25 text is always available).
-+============ ===================================================================
- 
--If you are not satisfied with videomode selected by `vesa' option, you
-+If you are not satisfied with videomode selected by `vesa` option, you
- can modify it with these options:
- 
--xres:X   - horizontal resolution, in pixels. Default is derived from `vesa'
--           option.
--yres:X   - vertical resolution, in pixel lines. Default is derived from `vesa'
--           option.
--upper:X  - top boundary: lines between end of VSYNC pulse and start of first
--           pixel line of picture. Default is derived from `vesa' option.
--lower:X  - bottom boundary: lines between end of picture and start of VSYNC
--           pulse. Default is derived from `vesa' option.
--vslen:X  - length of VSYNC pulse, in lines. Default is derived from `vesa'
--           option.
--left:X   - left boundary: pixels between end of HSYNC pulse and first pixel.
--           Default is derived from `vesa' option.
--right:X  - right boundary: pixels between end of picture and start of HSYNC
--           pulse. Default is derived from `vesa' option.
--hslen:X  - length of HSYNC pulse, in pixels. Default is derived from `vesa'
--           option.
--pixclock:X - dotclocks, in ps (picoseconds). Default is derived from `vesa'
--             option and from `fh' and `fv' options.
--sync:X   - sync. pulse - bit 0 inverts HSYNC polarity, bit 1 VSYNC polarity.
--           If bit 3 (value 0x08) is set, composite sync instead of HSYNC is
--	   generated. If bit 5 (value 0x20) is set, sync on green is turned on.
--	   Do not forget that if you want sync on green, you also probably
--	   want composite sync.
--	   Default depends on `vesa'.
--depth:X  - Bits per pixel: 0=text, 4,8,15,16,24 or 32. Default depends on
--           `vesa'.
-+============ ===================================================================
-+xres:X       horizontal resolution, in pixels. Default is derived from `vesa`
-+	     option.
-+yres:X       vertical resolution, in pixel lines. Default is derived from `vesa`
-+	     option.
-+upper:X      top boundary: lines between end of VSYNC pulse and start of first
-+	     pixel line of picture. Default is derived from `vesa` option.
-+lower:X      bottom boundary: lines between end of picture and start of VSYNC
-+	     pulse. Default is derived from `vesa` option.
-+vslen:X      length of VSYNC pulse, in lines. Default is derived from `vesa`
-+	     option.
-+left:X       left boundary: pixels between end of HSYNC pulse and first pixel.
-+	     Default is derived from `vesa` option.
-+right:X      right boundary: pixels between end of picture and start of HSYNC
-+	     pulse. Default is derived from `vesa` option.
-+hslen:X      length of HSYNC pulse, in pixels. Default is derived from `vesa`
-+	     option.
-+pixclock:X   dotclocks, in ps (picoseconds). Default is derived from `vesa`
-+	     option and from `fh` and `fv` options.
-+sync:X       sync. pulse - bit 0 inverts HSYNC polarity, bit 1 VSYNC polarity.
-+	     If bit 3 (value 0x08) is set, composite sync instead of HSYNC is
-+	     generated. If bit 5 (value 0x20) is set, sync on green is turned
-+	     on. Do not forget that if you want sync on green, you also probably
-+	     want composite sync.
-+	     Default depends on `vesa`.
-+depth:X      Bits per pixel: 0=text, 4,8,15,16,24 or 32. Default depends on
-+	     `vesa`.
-+============ ===================================================================
- 
- If you know capabilities of your monitor, you can specify some (or all) of
--`maxclk', `fh' and `fv'. In this case, `pixclock' is computed so that
-+`maxclk`, `fh` and `fv`. In this case, `pixclock` is computed so that
- pixclock <= maxclk, real_fh <= fh and real_fv <= fv.
- 
--maxclk:X - maximum dotclock. X can be specified in MHz, kHz or Hz. Default is
--           `don't care'.
--fh:X     - maximum horizontal synchronization frequency. X can be specified
--           in kHz or Hz. Default is `don't care'.
--fv:X     - maximum vertical frequency. X must be specified in Hz. Default is
--           70 for modes derived from `vesa' with yres <= 400, 60Hz for
--	   yres > 400.
-+============ ==================================================================
-+maxclk:X     maximum dotclock. X can be specified in MHz, kHz or Hz. Default is
-+	     `don`t care`.
-+fh:X         maximum horizontal synchronization frequency. X can be specified
-+	     in kHz or Hz. Default is `don't care`.
-+fv:X         maximum vertical frequency. X must be specified in Hz. Default is
-+	     70 for modes derived from `vesa` with yres <= 400, 60Hz for
-+	     yres > 400.
-+============ ==================================================================
- 
- 
- Limitations
-@@ -282,51 +306,58 @@ Limitations
- 
- There are known and unknown bugs, features and misfeatures.
- Currently there are following known bugs:
-- + SVGALib does not restore screen on exit
-- + generic fbcon-cfbX procedures do not work on Alphas. Due to this,
--   `noaccel' (and cfb4 accel) driver does not work on Alpha. So everyone
--   with access to /dev/fb* on Alpha can hang machine (you should restrict
--   access to /dev/fb* - everyone with access to this device can destroy
-+
-+ - SVGALib does not restore screen on exit
-+ - generic fbcon-cfbX procedures do not work on Alphas. Due to this,
-+   `noaccel` (and cfb4 accel) driver does not work on Alpha. So everyone
-+   with access to `/dev/fb*` on Alpha can hang machine (you should restrict
-+   access to `/dev/fb*` - everyone with access to this device can destroy
-    your monitor, believe me...).
-- + 24bpp does not support correctly XF-FBDev on big-endian architectures.
-- + interlaced text mode is not supported; it looks like hardware limitation,
-+ - 24bpp does not support correctly XF-FBDev on big-endian architectures.
-+ - interlaced text mode is not supported; it looks like hardware limitation,
-    but I'm not sure.
-- + Gxx0 SGRAM/SDRAM is not autodetected.
-- + If you are using more than one framebuffer device, you must boot kernel
-+ - Gxx0 SGRAM/SDRAM is not autodetected.
-+ - If you are using more than one framebuffer device, you must boot kernel
-    with 'video=scrollback:0'.
-- + maybe more...
-+ - maybe more...
-+
- And following misfeatures:
-- + SVGALib does not restore screen on exit.
-- + pixclock for text modes is limited by hardware to
--    83 MHz on G200
--    66 MHz on Millennium I
--    60 MHz on Millennium II
-+
-+ - SVGALib does not restore screen on exit.
-+ - pixclock for text modes is limited by hardware to
-+
-+    - 83 MHz on G200
-+    - 66 MHz on Millennium I
-+    - 60 MHz on Millennium II
-+
-    Because I have no access to other devices, I do not know specific
-    frequencies for them. So driver does not check this and allows you to
-    set frequency higher that this. It causes sparks, black holes and other
-    pretty effects on screen. Device was not destroyed during tests. :-)
-- + my Millennium G200 oscillator has frequency range from 35 MHz to 380 MHz
-+ - my Millennium G200 oscillator has frequency range from 35 MHz to 380 MHz
-    (and it works with 8bpp on about 320 MHz dotclocks (and changed mclk)).
-    But Matrox says on product sheet that VCO limit is 50-250 MHz, so I believe
-    them (maybe that chip overheats, but it has a very big cooler (G100 has
-    none), so it should work).
-- + special mixed video/graphics videomodes of Mystique and Gx00 - 2G8V16 and
-+ - special mixed video/graphics videomodes of Mystique and Gx00 - 2G8V16 and
-    G16V16 are not supported
-- + color keying is not supported
-- + feature connector of Mystique and Gx00 is set to VGA mode (it is disabled
-+ - color keying is not supported
-+ - feature connector of Mystique and Gx00 is set to VGA mode (it is disabled
-    by BIOS)
-- + DDC (monitor detection) is supported through dualhead driver
-- + some check for input values are not so strict how it should be (you can
-+ - DDC (monitor detection) is supported through dualhead driver
-+ - some check for input values are not so strict how it should be (you can
-    specify vslen=4000 and so on).
-- + maybe more...
-+ - maybe more...
-+
- And following features:
-- + 4bpp is available only on Millennium I and Millennium II. It is hardware
-+
-+ - 4bpp is available only on Millennium I and Millennium II. It is hardware
-    limitation.
-- + selection between 1:5:5:5 and 5:6:5 16bpp videomode is done by -rgba 
-+ - selection between 1:5:5:5 and 5:6:5 16bpp videomode is done by -rgba
-    option of fbset: "fbset -depth 16 -rgba 5,5,5" selects 1:5:5:5, anything
-    else selects 5:6:5 mode.
-- + text mode uses 6 bit VGA palette instead of 8 bit (one of 262144 colors
--   instead of one of 16M colors). It is due to hardware limitation of 
-+ - text mode uses 6 bit VGA palette instead of 8 bit (one of 262144 colors
-+   instead of one of 16M colors). It is due to hardware limitation of
-    Millennium I/II and SVGALib compatibility.
- 
- 
-@@ -334,42 +365,42 @@ Benchmarks
- ==========
- It is time to redraw whole screen 1000 times in 1024x768, 60Hz. It is
- time for draw 6144000 characters on screen through /dev/vcsa
--(for 32bpp it is about 3GB of data (exactly 3000 MB); for 8x16 font in 
-+(for 32bpp it is about 3GB of data (exactly 3000 MB); for 8x16 font in
- 16 seconds, i.e. 187 MBps).
- Times were obtained from one older version of driver, now they are about 3%
- faster, it is kernel-space only time on P-II/350 MHz, Millennium I in 33 MHz
--PCI slot, G200 in AGP 2x slot. I did not test vgacon.
-+PCI slot, G200 in AGP 2x slot. I did not test vgacon::
- 
--NOACCEL
--        8x16                 12x22
--        Millennium I  G200   Millennium I  G200
--8bpp    16.42         9.54   12.33         9.13
--16bpp   21.00        15.70   19.11        15.02
--24bpp   36.66        36.66   35.00        35.00
--32bpp   35.00        30.00   33.85        28.66
-+  NOACCEL
-+	8x16                 12x22
-+	Millennium I  G200   Millennium I  G200
-+  8bpp    16.42         9.54   12.33         9.13
-+  16bpp   21.00        15.70   19.11        15.02
-+  24bpp   36.66        36.66   35.00        35.00
-+  32bpp   35.00        30.00   33.85        28.66
- 
--ACCEL, nofastfont
--        8x16                 12x22                6x11
-+  ACCEL, nofastfont
-+	8x16                 12x22                6x11
- 	Millennium I  G200   Millennium I  G200   Millennium I  G200
--8bpp     7.79         7.24   13.55         7.78   30.00        21.01
--16bpp    9.13         7.78   16.16         7.78   30.00        21.01
--24bpp   14.17        10.72   18.69        10.24   34.99        21.01
--32bpp   16.15	     16.16   18.73        13.09   34.99        21.01
-+  8bpp     7.79         7.24   13.55         7.78   30.00        21.01
-+  16bpp    9.13         7.78   16.16         7.78   30.00        21.01
-+  24bpp   14.17        10.72   18.69        10.24   34.99        21.01
-+  32bpp   16.15	     16.16   18.73        13.09   34.99        21.01
- 
--ACCEL, fastfont
--        8x16                 12x22                6x11
-+  ACCEL, fastfont
-+	8x16                 12x22                6x11
- 	Millennium I  G200   Millennium I  G200   Millennium I  G200
--8bpp     8.41         6.01    6.54         4.37   16.00        10.51
--16bpp    9.54         9.12    8.76         6.17   17.52        14.01
--24bpp   15.00        12.36   11.67        10.00   22.01        18.32
--32bpp   16.18        18.29*  12.71        12.74   24.44        21.00
-+  8bpp     8.41         6.01    6.54         4.37   16.00        10.51
-+  16bpp    9.54         9.12    8.76         6.17   17.52        14.01
-+  24bpp   15.00        12.36   11.67        10.00   22.01        18.32
-+  32bpp   16.18        18.29*  12.71        12.74   24.44        21.00
- 
--TEXT
--        8x16
-+  TEXT
-+	8x16
- 	Millennium I  G200
--TEXT     3.29         1.50
-+  TEXT     3.29         1.50
- 
--* Yes, it is slower than Millennium I.
-+  * Yes, it is slower than Millennium I.
- 
- 
- Dualhead G400
-@@ -408,6 +439,5 @@ Driver supports dualhead G450 with some limitations:
-  + kernel is not fully multihead ready, so some things are impossible to do.
-  + if you compiled it as module, you must insert matroxfb_g450 and matroxfb_crtc2
-    into kernel.
--	
----
-+
- Petr Vandrovec <vandrove@vc.cvut.cz>
-diff --git a/Documentation/fb/metronomefb.txt b/Documentation/fb/metronomefb.txt
-index 237ca412582d..63e1d31a7e54 100644
---- a/Documentation/fb/metronomefb.txt
-+++ b/Documentation/fb/metronomefb.txt
-@@ -1,6 +1,9 @@
--			Metronomefb
--			-----------
-+===========
-+Metronomefb
-+===========
-+
- Maintained by Jaya Kumar <jayakumar.lkml.gmail.com>
-+
- Last revised: Mar 10, 2008
- 
- Metronomefb is a driver for the Metronome display controller. The controller
-@@ -33,4 +36,3 @@ the physical media.
- Metronomefb uses the deferred IO interface so that it can provide a memory
- mappable frame buffer. It has been tested with tinyx (Xfbdev). It is known
- to work at this time with xeyes, xclock, xloadimage, xpdf.
--
-diff --git a/Documentation/fb/modedb.txt b/Documentation/fb/modedb.txt
-index 16aa08453911..3c2397293977 100644
---- a/Documentation/fb/modedb.txt
-+++ b/Documentation/fb/modedb.txt
-@@ -1,6 +1,6 @@
--
--
--			modedb default video mode support
-+=================================
-+modedb default video mode support
-+=================================
- 
- 
- Currently all frame buffer device drivers have their own video mode databases,
-@@ -18,7 +18,7 @@ When a frame buffer device receives a video= option it doesn't know, it should
- consider that to be a video mode option. If no frame buffer device is specified
- in a video= option, fbmem considers that to be a global video mode option.
- 
--Valid mode specifiers (mode_option argument):
-+Valid mode specifiers (mode_option argument)::
- 
-     <xres>x<yres>[M][R][-<bpp>][@<refresh>][i][m][eDd]
-     <name>[-<bpp>][@<refresh>]
-@@ -45,15 +45,18 @@ signals (e.g. HDMI and DVI-I). For other outputs it behaves like 'e'. If 'd'
- is specified the output is disabled.
- 
- You can additionally specify which output the options matches to.
--To force the VGA output to be enabled and drive a specific mode say:
-+To force the VGA output to be enabled and drive a specific mode say::
-+
-     video=VGA-1:1280x1024@60me
- 
--Specifying the option multiple times for different ports is possible, e.g.:
-+Specifying the option multiple times for different ports is possible, e.g.::
-+
-     video=LVDS-1:d video=HDMI-1:D
- 
--***** oOo ***** oOo ***** oOo ***** oOo ***** oOo ***** oOo ***** oOo *****
-+-----------------------------------------------------------------------------
- 
- What is the VESA(TM) Coordinated Video Timings (CVT)?
-+=====================================================
- 
- From the VESA(TM) Website:
- 
-@@ -90,14 +93,14 @@ determined from its EDID. The version 1.3 of the EDID has extra 128-byte
- blocks where additional timing information is placed.  As of this time, there
- is no support yet in the layer to parse this additional blocks.)
- 
--CVT also introduced a new naming convention (should be seen from dmesg output):
-+CVT also introduced a new naming convention (should be seen from dmesg output)::
- 
-     <pix>M<a>[-R]
- 
-     where: pix = total amount of pixels in MB (xres x yres)
--           M   = always present
--           a   = aspect ratio (3 - 4:3; 4 - 5:4; 9 - 15:9, 16:9; A - 16:10)
--          -R   = reduced blanking
-+	   M   = always present
-+	   a   = aspect ratio (3 - 4:3; 4 - 5:4; 9 - 15:9, 16:9; A - 16:10)
-+	  -R   = reduced blanking
- 
- 	  example:  .48M3-R - 800x600 with reduced blanking
- 
-@@ -110,15 +113,15 @@ Note: VESA(TM) has restrictions on what is a standard CVT timing:
- If one of the above are not satisfied, the kernel will print a warning but the
- timings will still be calculated.
- 
--***** oOo ***** oOo ***** oOo ***** oOo ***** oOo ***** oOo ***** oOo *****
-+-----------------------------------------------------------------------------
- 
--To find a suitable video mode, you just call
-+To find a suitable video mode, you just call::
- 
--int __init fb_find_mode(struct fb_var_screeninfo *var,
--                        struct fb_info *info, const char *mode_option,
--                        const struct fb_videomode *db, unsigned int dbsize,
--                        const struct fb_videomode *default_mode,
--                        unsigned int default_bpp)
-+  int __init fb_find_mode(struct fb_var_screeninfo *var,
-+			  struct fb_info *info, const char *mode_option,
-+			  const struct fb_videomode *db, unsigned int dbsize,
-+			  const struct fb_videomode *default_mode,
-+			  unsigned int default_bpp)
- 
- with db/dbsize your non-standard video mode database, or NULL to use the
- standard video mode database.
-@@ -127,12 +130,13 @@ fb_find_mode() first tries the specified video mode (or any mode that matches,
- e.g. there can be multiple 640x480 modes, each of them is tried). If that
- fails, the default mode is tried. If that fails, it walks over all modes.
- 
--To specify a video mode at bootup, use the following boot options:
-+To specify a video mode at bootup, use the following boot options::
-+
-     video=<driver>:<xres>x<yres>[-<bpp>][@refresh]
- 
- where <driver> is a name from the table below.  Valid default modes can be
- found in linux/drivers/video/modedb.c.  Check your driver's documentation.
--There may be more modes.
-+There may be more modes::
- 
-     Drivers that support modedb boot options
-     Boot Name	  Cards Supported
-diff --git a/Documentation/fb/pvr2fb.txt b/Documentation/fb/pvr2fb.txt
-index 36bdeff585e2..fcf2c21c8fcf 100644
---- a/Documentation/fb/pvr2fb.txt
-+++ b/Documentation/fb/pvr2fb.txt
-@@ -1,5 +1,4 @@
--$Id: pvr2fb.txt,v 1.1 2001/05/24 05:09:16 mrbrown Exp $
--
-+===============
- What is pvr2fb?
- ===============
- 
-@@ -21,37 +20,40 @@ Configuration
- =============
- 
- You can pass kernel command line options to pvr2fb with
--`video=pvr2fb:option1,option2:value2,option3' (multiple options should be
--separated by comma, values are separated from options by `:').
-+`video=pvr2fb:option1,option2:value2,option3` (multiple options should be
-+separated by comma, values are separated from options by `:`).
-+
- Accepted options:
- 
--font:X    - default font to use. All fonts are supported, including the
--            SUN12x22 font which is very nice at high resolutions.
-+==========  ==================================================================
-+font:X      default font to use. All fonts are supported, including the
-+	    SUN12x22 font which is very nice at high resolutions.
- 
--	    
--mode:X    - default video mode with format [xres]x[yres]-<bpp>@<refresh rate>
--            The following video modes are supported:
--            640x640-16@60, 640x480-24@60, 640x480-32@60. The Dreamcast
--            defaults to 640x480-16@60. At the time of writing the
--            24bpp and 32bpp modes function poorly. Work to fix that is
--            ongoing
- 
--            Note: the 640x240 mode is currently broken, and should not be
--            used for any reason. It is only mentioned here as a reference.
-+mode:X      default video mode with format [xres]x[yres]-<bpp>@<refresh rate>
-+	    The following video modes are supported:
-+	    640x640-16@60, 640x480-24@60, 640x480-32@60. The Dreamcast
-+	    defaults to 640x480-16@60. At the time of writing the
-+	    24bpp and 32bpp modes function poorly. Work to fix that is
-+	    ongoing
- 
--inverse   - invert colors on screen (for LCD displays)
-+	    Note: the 640x240 mode is currently broken, and should not be
-+	    used for any reason. It is only mentioned here as a reference.
- 
--nomtrr    - disables write combining on frame buffer. This slows down driver
--            but there is reported minor incompatibility between GUS DMA and
--            XFree under high loads if write combining is enabled (sound
--            dropouts). MTRR is enabled by default on systems that have it
--            configured and that support it.
-+inverse     invert colors on screen (for LCD displays)
- 
--cable:X   - cable type. This can be any of the following: vga, rgb, and
--            composite. If none is specified, we guess.
-+nomtrr      disables write combining on frame buffer. This slows down driver
-+	    but there is reported minor incompatibility between GUS DMA and
-+	    XFree under high loads if write combining is enabled (sound
-+	    dropouts). MTRR is enabled by default on systems that have it
-+	    configured and that support it.
- 
--output:X  - output type. This can be any of the following: pal, ntsc, and
--            vga. If none is specified, we guess.
-+cable:X     cable type. This can be any of the following: vga, rgb, and
-+	    composite. If none is specified, we guess.
-+
-+output:X    output type. This can be any of the following: pal, ntsc, and
-+	    vga. If none is specified, we guess.
-+==========  ==================================================================
- 
- X11
- ===
-@@ -59,7 +61,6 @@ X11
- XF86_FBDev has been shown to work on the Dreamcast in the past - though not yet
- on any 2.6 series kernel.
- 
----
- Paul Mundt <lethal@linuxdc.org>
-+
- Updated by Adrian McMenamin <adrian@mcmen.demon.co.uk>
--
-diff --git a/Documentation/fb/pxafb.txt b/Documentation/fb/pxafb.txt
-index d143a0a749f9..90177f5e7e76 100644
---- a/Documentation/fb/pxafb.txt
-+++ b/Documentation/fb/pxafb.txt
-@@ -1,59 +1,82 @@
-+================================
- Driver for PXA25x LCD controller
- ================================
- 
- The driver supports the following options, either via
- options=<OPTIONS> when modular or video=pxafb:<OPTIONS> when built in.
- 
--For example:
-+For example::
-+
- 	modprobe pxafb options=vmem:2M,mode:640x480-8,passive
--or on the kernel command line
-+
-+or on the kernel command line::
-+
- 	video=pxafb:vmem:2M,mode:640x480-8,passive
- 
- vmem: VIDEO_MEM_SIZE
-+
- 	Amount of video memory to allocate (can be suffixed with K or M
- 	for kilobytes or megabytes)
- 
- mode:XRESxYRES[-BPP]
-+
- 	XRES == LCCR1_PPL + 1
-+
- 	YRES == LLCR2_LPP + 1
-+
- 		The resolution of the display in pixels
-+
- 	BPP == The bit depth. Valid values are 1, 2, 4, 8 and 16.
- 
- pixclock:PIXCLOCK
-+
- 	Pixel clock in picoseconds
- 
- left:LEFT == LCCR1_BLW + 1
-+
- right:RIGHT == LCCR1_ELW + 1
-+
- hsynclen:HSYNC == LCCR1_HSW + 1
-+
- upper:UPPER == LCCR2_BFW
-+
- lower:LOWER == LCCR2_EFR
-+
- vsynclen:VSYNC == LCCR2_VSW + 1
-+
- 	Display margins and sync times
- 
- color | mono => LCCR0_CMS
-+
- 	umm...
- 
- active | passive => LCCR0_PAS
-+
- 	Active (TFT) or Passive (STN) display
- 
- single | dual => LCCR0_SDS
-+
- 	Single or dual panel passive display
- 
- 4pix | 8pix => LCCR0_DPD
-+
- 	4 or 8 pixel monochrome single panel data
- 
--hsync:HSYNC
--vsync:VSYNC
-+hsync:HSYNC, vsync:VSYNC
-+
- 	Horizontal and vertical sync. 0 => active low, 1 => active
- 	high.
- 
- dpc:DPC
-+
- 	Double pixel clock. 1=>true, 0=>false
- 
- outputen:POLARITY
-+
- 	Output Enable Polarity. 0 => active low, 1 => active high
- 
- pixclockpol:POLARITY
-+
- 	pixel clock polarity
- 	0 => falling edge, 1 => rising edge
- 
-@@ -76,44 +99,50 @@ Overlay Support for PXA27x and later LCD controllers
-      not for such purpose).
- 
-   2. overlay framebuffer is allocated dynamically according to specified
--     'struct fb_var_screeninfo', the amount is decided by:
-+     'struct fb_var_screeninfo', the amount is decided by::
- 
--        var->xres_virtual * var->yres_virtual * bpp
-+	var->xres_virtual * var->yres_virtual * bpp
- 
-      bpp = 16 -- for RGB565 or RGBT555
--         = 24 -- for YUV444 packed
--         = 24 -- for YUV444 planar
--	 = 16 -- for YUV422 planar (1 pixel = 1 Y + 1/2 Cb + 1/2 Cr)
--	 = 12 -- for YUV420 planar (1 pixel = 1 Y + 1/4 Cb + 1/4 Cr)
-+
-+     bpp = 24 -- for YUV444 packed
-+
-+     bpp = 24 -- for YUV444 planar
-+
-+     bpp = 16 -- for YUV422 planar (1 pixel = 1 Y + 1/2 Cb + 1/2 Cr)
-+
-+     bpp = 12 -- for YUV420 planar (1 pixel = 1 Y + 1/4 Cb + 1/4 Cr)
- 
-      NOTE:
- 
-      a. overlay does not support panning in x-direction, thus
--        var->xres_virtual will always be equal to var->xres
-+	var->xres_virtual will always be equal to var->xres
- 
-      b. line length of overlay(s) must be on a 32-bit word boundary,
--        for YUV planar modes, it is a requirement for the component
-+	for YUV planar modes, it is a requirement for the component
- 	with minimum bits per pixel,  e.g. for YUV420, Cr component
- 	for one pixel is actually 2-bits, it means the line length
- 	should be a multiple of 16-pixels
- 
-      c. starting horizontal position (XPOS) should start on a 32-bit
--        word boundary, otherwise the fb_check_var() will just fail.
-+	word boundary, otherwise the fb_check_var() will just fail.
- 
-      d. the rectangle of the overlay should be within the base plane,
--        otherwise fail
-+	otherwise fail
- 
-      Applications should follow the sequence below to operate an overlay
-      framebuffer:
- 
--         a. open("/dev/fb[1-2]", ...)
-+	 a. open("/dev/fb[1-2]", ...)
- 	 b. ioctl(fd, FBIOGET_VSCREENINFO, ...)
- 	 c. modify 'var' with desired parameters:
-+
- 	    1) var->xres and var->yres
- 	    2) larger var->yres_virtual if more memory is required,
- 	       usually for double-buffering
- 	    3) var->nonstd for starting (x, y) and color format
- 	    4) var->{red, green, blue, transp} if RGB mode is to be used
-+
- 	 d. ioctl(fd, FBIOPUT_VSCREENINFO, ...)
- 	 e. ioctl(fd, FBIOGET_FSCREENINFO, ...)
- 	 f. mmap
-@@ -124,19 +153,21 @@ Overlay Support for PXA27x and later LCD controllers
-      and lengths of each component within the framebuffer.
- 
-   4. var->nonstd is used to pass starting (x, y) position and color format,
--     the detailed bit fields are shown below:
-+     the detailed bit fields are shown below::
- 
--    31                23  20         10          0
--     +-----------------+---+----------+----------+
--     |  ... unused ... |FOR|   XPOS   |   YPOS   |
--     +-----------------+---+----------+----------+
-+      31                23  20         10          0
-+       +-----------------+---+----------+----------+
-+       |  ... unused ... |FOR|   XPOS   |   YPOS   |
-+       +-----------------+---+----------+----------+
- 
-      FOR  - color format, as defined by OVERLAY_FORMAT_* in pxafb.h
--            0 - RGB
--	    1 - YUV444 PACKED
--	    2 - YUV444 PLANAR
--	    3 - YUV422 PLANAR
--	    4 - YUR420 PLANAR
-+
-+	  - 0 - RGB
-+	  - 1 - YUV444 PACKED
-+	  - 2 - YUV444 PLANAR
-+	  - 3 - YUV422 PLANAR
-+	  - 4 - YUR420 PLANAR
- 
-      XPOS - starting horizontal position
-+
-      YPOS - starting vertical position
-diff --git a/Documentation/fb/s3fb.txt b/Documentation/fb/s3fb.txt
-index 2c97770bdbaa..e809d69c21a7 100644
---- a/Documentation/fb/s3fb.txt
-+++ b/Documentation/fb/s3fb.txt
-@@ -1,6 +1,6 @@
--
--	s3fb - fbdev driver for S3 Trio/Virge chips
--	===========================================
-+===========================================
-+s3fb - fbdev driver for S3 Trio/Virge chips
-+===========================================
- 
- 
- Supported Hardware
-@@ -56,7 +56,7 @@ Missing Features
- (alias TODO list)
- 
- 	* secondary (not initialized by BIOS) device support
--   	* big endian support
-+	* big endian support
- 	* Zorro bus support
- 	* MMIO support
- 	* 24 bpp mode support on more cards
-diff --git a/Documentation/fb/sa1100fb.txt b/Documentation/fb/sa1100fb.txt
-index f1b4220464df..67e2650e017d 100644
---- a/Documentation/fb/sa1100fb.txt
-+++ b/Documentation/fb/sa1100fb.txt
-@@ -1,17 +1,19 @@
--[This file is cloned from VesaFB/matroxfb]
--
-+=================
- What is sa1100fb?
- =================
- 
-+.. [This file is cloned from VesaFB/matroxfb]
-+
-+
- This is a driver for a graphic framebuffer for the SA-1100 LCD
- controller.
- 
- Configuration
- ==============
- 
--For most common passive displays, giving the option
-+For most common passive displays, giving the option::
- 
--video=sa1100fb:bpp:<value>,lccr0:<value>,lccr1:<value>,lccr2:<value>,lccr3:<value>
-+  video=sa1100fb:bpp:<value>,lccr0:<value>,lccr1:<value>,lccr2:<value>,lccr3:<value>
- 
- on the kernel command line should be enough to configure the
- controller. The bits per pixel (bpp) value should be 4, 8, 12, or
-@@ -27,13 +29,12 @@ sa1100fb_init_fbinfo(), sa1100fb_activate_var(),
- sa1100fb_disable_lcd_controller(), and sa1100fb_enable_lcd_controller()
- will probably be necessary.
- 
--Accepted options:
-+Accepted options::
- 
--bpp:<value>	Configure for <value> bits per pixel
--lccr0:<value>	Configure LCD control register 0 (11.7.3)
--lccr1:<value>	Configure LCD control register 1 (11.7.4)
--lccr2:<value>	Configure LCD control register 2 (11.7.5)
--lccr3:<value>	Configure LCD control register 3 (11.7.6)
-+	bpp:<value>	Configure for <value> bits per pixel
-+	lccr0:<value>	Configure LCD control register 0 (11.7.3)
-+	lccr1:<value>	Configure LCD control register 1 (11.7.4)
-+	lccr2:<value>	Configure LCD control register 2 (11.7.5)
-+	lccr3:<value>	Configure LCD control register 3 (11.7.6)
- 
----
- Mark Huang <mhuang@livetoy.com>
-diff --git a/Documentation/fb/sh7760fb.txt b/Documentation/fb/sh7760fb.txt
-index b994c3b10549..5b0a822e166f 100644
---- a/Documentation/fb/sh7760fb.txt
-+++ b/Documentation/fb/sh7760fb.txt
-@@ -1,3 +1,4 @@
-+================================================
- SH7760/SH7763 integrated LCDC Framebuffer driver
- ================================================
- 
-@@ -8,6 +9,7 @@ supports (in theory) resolutions ranging from 1x1 to 1024x1024,
- with color depths ranging from 1 to 16 bits, on STN, DSTN and TFT Panels.
- 
- Caveats:
-+
- * Framebuffer memory must be a large chunk allocated at the top
-   of Area3 (HW requirement). Because of this requirement you should NOT
-   make the driver a module since at runtime it may become impossible to
-@@ -23,9 +25,10 @@ Caveats:
- * Rotation works only 90degress clockwise, and only if horizontal
-   resolution is <= 320 pixels.
- 
--files:   drivers/video/sh7760fb.c
--        include/asm-sh/sh7760fb.h
--        Documentation/fb/sh7760fb.txt
-+Files:
-+	- drivers/video/sh7760fb.c
-+	- include/asm-sh/sh7760fb.h
-+	- Documentation/fb/sh7760fb.txt
- 
- 1. Platform setup
+ 16 General propose registers, 32 bit on s/390 and 64 bit on z/Architecture,
+ r0-r15 (or gpr0-gpr15), used for arithmetic and addressing.
+ 
+@@ -59,20 +62,22 @@ Access register 0 (and access register 1 on z/Architecture, which needs a
+ 64 bit pointer) is currently used by the pthread library as a pointer to
+ the current running threads private area.
+ 
+-16 64 bit floating point registers (fp0-fp15 ) IEEE & HFP floating 
+-point format compliant on G5 upwards & a Floating point control reg (FPC) 
+-4  64 bit registers (fp0,fp2,fp4 & fp6) HFP only on older machines.
++16 64-bit floating point registers (fp0-fp15 ) IEEE & HFP floating
++point format compliant on G5 upwards & a Floating point control reg (FPC)
++
++4  64-bit registers (fp0,fp2,fp4 & fp6) HFP only on older machines.
++
+ Note:
+-Linux (currently) always uses IEEE & emulates G5 IEEE format on older machines,
+-( provided the kernel is configured for this ).
++   Linux (currently) always uses IEEE & emulates G5 IEEE format on older
++   machines, ( provided the kernel is configured for this ).
+ 
+ 
+ The PSW is the most important register on the machine it
+-is 64 bit on s/390 & 128 bit on z/Architecture & serves the roles of 
++is 64 bit on s/390 & 128 bit on z/Architecture & serves the roles of
+ a program counter (pc), condition code register,memory space designator.
+ In IBM standard notation I am counting bit 0 as the MSB.
+ It has several advantages over a normal program counter
+-in that you can change address translation & program counter 
++in that you can change address translation & program counter
+ in a single instruction. To change address translation,
+ e.g. switching address translation off requires that you
+ have a logical=physical mapping for the address you are
+@@ -206,14 +211,18 @@ It exists between the real addresses 0-4096 on s/390 and between 0-8192 on
+ z/Architecture and is exchanged with one page on s/390 or two pages on
+ z/Architecture in absolute storage by the set prefix instruction during Linux
+ startup.
++
+ This page is mapped to a different prefix for each processor in an SMP
+ configuration (assuming the OS designer is sane of course).
++
+ Bytes 0-512 (200 hex) on s/390 and 0-512, 4096-4544, 4604-5119 currently on
+ z/Architecture are used by the processor itself for holding such information
+ as exception indications and entry points for exceptions.
++
+ Bytes after 0xc00 hex are used by linux for per processor globals on s/390 and
+ z/Architecture (there is a gap on z/Architecture currently between 0xc00 and
+ 0x1000, too, which is used by Linux).
++
+ The closest thing to this on traditional architectures is the interrupt
+ vector table. This is a good thing & does simplify some of the kernel coding
+ however it means that we now cannot catch stray NULL pointers in the
+@@ -225,27 +234,29 @@ Address Spaces on Intel Linux
+ =============================
+ 
+ The traditional Intel Linux is approximately mapped as follows forgive
+-the ascii art.
+-0xFFFFFFFF 4GB Himem		*****************
+-				*		*
+-				* Kernel Space	*
+-				*		*
+-				*****************	  ****************
+-User Space Himem		*  User Stack	*	  *		 *
+-(typically 0xC0000000 3GB )	*****************	  *		 *
+-				*  Shared Libs	*	  * Next Process *
+-				*****************	  *	to	 *
+-				*		*   <==   *	Run	 *  <==
+-				*  User Program *	  *		 *
+-				*   Data BSS	*	  *		 *
+-				*    Text	*	  *		 *
+-				*   Sections	*	  *		 *
+-0x00000000			*****************	  ****************
++the ascii art::
++
++  0xFFFFFFFF 4GB Himem          *****************
++				*               *
++				* Kernel Space  *
++				*               *
++				*****************         ****************
++  User Space Himem              *  User Stack   *         *              *
++  (typically 0xC0000000 3GB )   *****************         *              *
++				*  Shared Libs  *         * Next Process *
++				*****************         *     to       *
++				*               *   <==   *     Run      *  <==
++				*  User Program *         *              *
++				*   Data BSS    *         *              *
++				*    Text       *         *              *
++				*   Sections    *         *              *
++  0x00000000                    *****************         ****************
+ 
+ Now it is easy to see that on Intel it is quite easy to recognise a kernel
+ address as being one greater than user space himem (in this case 0xC0000000),
+ and addresses of less than this are the ones in the current running program on
+ this processor (if an smp box).
++
+ If using the virtual machine ( VM ) as a debugger it is quite difficult to
+ know which user process is running as the address space you are looking at
+ could be from any process in the run queue.
+@@ -256,6 +267,7 @@ of Real Address=Virtual Address-User Space Himem.
+ This means that on Intel the kernel linux can typically only address
+ Himem=0xFFFFFFFF-0xC0000000=1GB & this is all the RAM these machines
+ can typically use.
++
+ They can lower User Himem to 2GB or lower & thus be
+ able to use 2GB of RAM however this shrinks the maximum size
+ of User Space from 3GB to 2GB they have a no win limit of 4GB unless
+@@ -264,31 +276,31 @@ they go to 64 Bit.
+ 
+ On 390 our limitations & strengths make us slightly different.
+ For backward compatibility we are only allowed use 31 bits (2GB)
+-of our 32 bit addresses, however, we use entirely separate address 
++of our 32 bit addresses, however, we use entirely separate address
+ spaces for the user & kernel.
+ 
+ This means we can support 2GB of non Extended RAM on s/390, & more
+-with the Extended memory management swap device & 
++with the Extended memory management swap device &
+ currently 4TB of physical memory currently on z/Architecture.
+ 
+ 
+ Address Spaces on Linux for s/390 & z/Architecture
+ ==================================================
+ 
+-Our addressing scheme is basically as follows:
++Our addressing scheme is basically as follows::
+ 
+-				   Primary Space	       Home Space
+-Himem 0x7fffffff 2GB on s/390    *****************          ****************
+-currently 0x3ffffffffff (2^42)-1 *  User Stack   *          *              *
+-on z/Architecture.		 *****************          *              *
+-				 *  Shared Libs  *	    *		   *
+-				 *****************	    *		   *
+-			         *               *          *    Kernel    *  
+-		                 *  User Program *          *              *
+-		                 *   Data BSS    *          *              *
+-                                 *    Text       *          *              *
+-            			 *   Sections    *          *              *
+-0x00000000                       *****************          ****************
++				   Primary Space               Home Space
++  Himem 0x7fffffff 2GB on s/390    *****************          ****************
++  currently 0x3ffffffffff (2^42)-1 *  User Stack   *          *              *
++  on z/Architecture.               *****************          *              *
++				   *  Shared Libs  *          *              *
++				   *****************          *              *
++				   *               *          *    Kernel    *
++				   *  User Program *          *              *
++				   *   Data BSS    *          *              *
++				   *    Text       *          *              *
++				   *   Sections    *          *              *
++  0x00000000                       *****************          ****************
+ 
+ This also means that we need to look at the PSW problem state bit and the
+ addressing mode to decide whether we are looking at user or kernel space.
+@@ -304,20 +316,25 @@ instruction on a user space address is performed.
+ When also looking at the ASCE control registers, this means:
+ 
+ User space:
++
+ - runs in primary or access register mode
+ - cr1 contains the user asce
+ - cr7 contains the user asce
+ - cr13 contains the kernel asce
+ 
+ Kernel space:
++
+ - runs in home space mode
+ - cr1 contains the user or kernel asce
+-  -> the kernel asce is loaded when a uaccess requires primary or
+-     secondary address mode
++
++  - the kernel asce is loaded when a uaccess requires primary or
++    secondary address mode
++
+ - cr7 contains the user or kernel asce, (changed with set_fs())
+ - cr13 contains the kernel asce
+ 
+ In case of uaccess the kernel changes to:
++
+ - primary space mode in case of a uaccess (copy_to_user) and uses
+   e.g. the mvcp instruction to access user space. However the kernel
+   will stay in home space mode if the mvcos instruction is available
+@@ -337,41 +354,44 @@ Virtual Addresses on s/390 & z/Architecture
+ A virtual address on s/390 is made up of 3 parts
+ The SX (segment index, roughly corresponding to the PGD & PMD in Linux
+ terminology) being bits 1-11.
++
+ The PX (page index, corresponding to the page table entry (pte) in Linux
+ terminology) being bits 12-19.
++
+ The remaining bits BX (the byte index are the offset in the page )
+ i.e. bits 20 to 31.
+ 
+ On z/Architecture in linux we currently make up an address from 4 parts.
+-The region index bits (RX) 0-32 we currently use bits 22-32
+-The segment index (SX) being bits 33-43
+-The page index (PX) being bits  44-51
+-The byte index (BX) being bits  52-63
++
++- The region index bits (RX) 0-32 we currently use bits 22-32
++- The segment index (SX) being bits 33-43
++- The page index (PX) being bits  44-51
++- The byte index (BX) being bits  52-63
+ 
+ Notes:
+-1) s/390 has no PMD so the PMD is really the PGD also.
+-A lot of this stuff is defined in pgtable.h.
++  1) s/390 has no PMD so the PMD is really the PGD also.
++     A lot of this stuff is defined in pgtable.h.
+ 
+-2) Also seeing as s/390's page indexes are only 1k  in size 
+-(bits 12-19 x 4 bytes per pte ) we use 1 ( page 4k )
+-to make the best use of memory by updating 4 segment indices 
+-entries each time we mess with a PMD & use offsets 
+-0,1024,2048 & 3072 in this page as for our segment indexes.
+-On z/Architecture our page indexes are now 2k in size
+-( bits 12-19 x 8 bytes per pte ) we do a similar trick
+-but only mess with 2 segment indices each time we mess with
+-a PMD.
++  2) Also seeing as s/390's page indexes are only 1k  in size
++     (bits 12-19 x 4 bytes per pte ) we use 1 ( page 4k )
++     to make the best use of memory by updating 4 segment indices
++     entries each time we mess with a PMD & use offsets
++     0,1024,2048 & 3072 in this page as for our segment indexes.
++     On z/Architecture our page indexes are now 2k in size
++     ( bits 12-19 x 8 bytes per pte ) we do a similar trick
++     but only mess with 2 segment indices each time we mess with
++     a PMD.
++
++  3) As z/Architecture supports up to a massive 5-level page table lookup we
++     can only use 3 currently on Linux ( as this is all the generic kernel
++     currently supports ) however this may change in future
++     this allows us to access ( according to my sums )
++     4TB of virtual storage per process i.e.
++     4096*512(PTES)*1024(PMDS)*2048(PGD) = 4398046511104 bytes,
++     enough for another 2 or 3 of years I think :-).
++     to do this we use a region-third-table designation type in
++     our address space control registers.
+ 
+-3) As z/Architecture supports up to a massive 5-level page table lookup we
+-can only use 3 currently on Linux ( as this is all the generic kernel
+-currently supports ) however this may change in future
+-this allows us to access ( according to my sums )
+-4TB of virtual storage per process i.e.
+-4096*512(PTES)*1024(PMDS)*2048(PGD) = 4398046511104 bytes,
+-enough for another 2 or 3 of years I think :-).
+-to do this we use a region-third-table designation type in
+-our address space control registers.
+- 
+ 
+ The Linux for s/390 & z/Architecture Kernel Task Structure
+ ==========================================================
+@@ -382,42 +402,43 @@ the __LC_KERNEL_STACK variable in the spare prefix area for this cpu
+ (which we use for per-processor globals).
+ 
+ The kernel stack pointer is intimately tied with the task structure for
+-each processor as follows.
++each processor as follows::
+ 
+-                      s/390
+-            ************************
+-            *  1 page kernel stack *
+-	    *        ( 4K )        *
+-            ************************
+-            *   1 page task_struct *        
+-            *        ( 4K )        *
+-8K aligned  ************************ 
++			s/390
++	      ************************
++	      *  1 page kernel stack *
++	      *        ( 4K )        *
++	      ************************
++	      *   1 page task_struct *
++	      *        ( 4K )        *
++  8K aligned  ************************
+ 
+-                 z/Architecture
+-            ************************
+-            *  2 page kernel stack *
+-	    *        ( 8K )        *
+-            ************************
+-            *  2 page task_struct  *        
+-            *        ( 8K )        *
+-16K aligned ************************ 
++		   z/Architecture
++	      ************************
++	      *  2 page kernel stack *
++	      *        ( 8K )        *
++	      ************************
++	      *  2 page task_struct  *
++	      *        ( 8K )        *
++  16K aligned ************************
+ 
+ What this means is that we don't need to dedicate any register or global
+ variable to point to the current running process & can retrieve it with the
+-following very simple construct for s/390 & one very similar for z/Architecture.
++following very simple construct for s/390 & one very similar for
++z/Architecture::
+ 
+-static inline struct task_struct * get_current(void)
+-{
+-        struct task_struct *current;
+-        __asm__("lhi   %0,-8192\n\t"
+-                "nr    %0,15"
+-                : "=r" (current) );
+-        return current;
+-}
++  static inline struct task_struct * get_current(void)
++  {
++	struct task_struct *current;
++	__asm__("lhi   %0,-8192\n\t"
++		"nr    %0,15"
++		: "=r" (current) );
++	return current;
++  }
+ 
+ i.e. just anding the current kernel stack pointer with the mask -8192.
+ Thankfully because Linux doesn't have support for nested IO interrupts
+-& our devices have large buffers can survive interrupts being shut for 
++& our devices have large buffers can survive interrupts being shut for
+ short amounts of time we don't need a separate stack for interrupts.
+ 
+ 
+@@ -428,7 +449,7 @@ Register Usage & Stackframes on Linux for s/390 & z/Architecture
+ Overview:
+ ---------
+ This is the code that gcc produces at the top & the bottom of
+-each function. It usually is fairly consistent & similar from 
++each function. It usually is fairly consistent & similar from
+ function to function & if you know its layout you can probably
+ make some headway in finding the ultimate cause of a problem
+ after a crash without a source level debugger.
+@@ -443,87 +464,95 @@ didn't have to maintain compatibility with older linkage formats.
+ Glossary:
+ ---------
+ alloca:
+-This is a built in compiler function for runtime allocation
+-of extra space on the callers stack which is obviously freed
+-up on function exit ( e.g. the caller may choose to allocate nothing
+-of a buffer of 4k if required for temporary purposes ), it generates 
+-very efficient code ( a few cycles  ) when compared to alternatives 
+-like malloc.
++  This is a built in compiler function for runtime allocation
++  of extra space on the callers stack which is obviously freed
++  up on function exit ( e.g. the caller may choose to allocate nothing
++  of a buffer of 4k if required for temporary purposes ), it generates
++  very efficient code ( a few cycles  ) when compared to alternatives
++  like malloc.
+ 
+-automatics: These are local variables on the stack,
+-i.e they aren't in registers & they aren't static.
++automatics:
++  These are local variables on the stack, i.e they aren't in registers &
++  they aren't static.
+ 
+ back-chain:
+-This is a pointer to the stack pointer before entering a
+-framed functions ( see frameless function ) prologue got by 
+-dereferencing the address of the current stack pointer,
+- i.e. got by accessing the 32 bit value at the stack pointers
+-current location.
++  This is a pointer to the stack pointer before entering a
++  framed functions ( see frameless function ) prologue got by
++  dereferencing the address of the current stack pointer,
++  i.e. got by accessing the 32 bit value at the stack pointers
++  current location.
+ 
+ base-pointer:
+-This is a pointer to the back of the literal pool which
+-is an area just behind each procedure used to store constants
+-in each function.
++  This is a pointer to the back of the literal pool which
++  is an area just behind each procedure used to store constants
++  in each function.
+ 
+-call-clobbered: The caller probably needs to save these registers if there 
+-is something of value in them, on the stack or elsewhere before making a 
+-call to another procedure so that it can restore it later.
++call-clobbered:
++  The caller probably needs to save these registers if there
++  is something of value in them, on the stack or elsewhere before making a
++  call to another procedure so that it can restore it later.
+ 
+ epilogue:
+-The code generated by the compiler to return to the caller.
++  The code generated by the compiler to return to the caller.
+ 
+-frameless-function
+-A frameless function in Linux for s390 & z/Architecture is one which doesn't 
+-need more than the register save area (96 bytes on s/390, 160 on z/Architecture)
+-given to it by the caller.
+-A frameless function never:
+-1) Sets up a back chain.
+-2) Calls alloca.
+-3) Calls other normal functions
+-4) Has automatics.
++frameless-function:
++  A frameless function in Linux for s390 & z/Architecture is one which doesn't
++  need more than the register save area (96 bytes on s/390, 160 on z/Architecture)
++  given to it by the caller.
++
++  A frameless function never:
++
++  1) Sets up a back chain.
++  2) Calls alloca.
++  3) Calls other normal functions
++  4) Has automatics.
+ 
+ GOT-pointer:
+-This is a pointer to the global-offset-table in ELF
+-( Executable Linkable Format, Linux'es most common executable format ),
+-all globals & shared library objects are found using this pointer.
++  This is a pointer to the global-offset-table in ELF
++  ( Executable Linkable Format, Linux'es most common executable format ),
++  all globals & shared library objects are found using this pointer.
+ 
+ lazy-binding
+-ELF shared libraries are typically only loaded when routines in the shared
+-library are actually first called at runtime. This is lazy binding.
++  ELF shared libraries are typically only loaded when routines in the shared
++  library are actually first called at runtime. This is lazy binding.
+ 
+ procedure-linkage-table
+-This is a table found from the GOT which contains pointers to routines
+-in other shared libraries which can't be called to by easier means.
++  This is a table found from the GOT which contains pointers to routines
++  in other shared libraries which can't be called to by easier means.
+ 
+ prologue:
+-The code generated by the compiler to set up the stack frame.
++  The code generated by the compiler to set up the stack frame.
+ 
+ outgoing-args:
+-This is extra area allocated on the stack of the calling function if the
+-parameters for the callee's cannot all be put in registers, the same
+-area can be reused by each function the caller calls.
++  This is extra area allocated on the stack of the calling function if the
++  parameters for the callee's cannot all be put in registers, the same
++  area can be reused by each function the caller calls.
+ 
+ routine-descriptor:
+-A COFF  executable format based concept of a procedure reference 
+-actually being 8 bytes or more as opposed to a simple pointer to the routine.
+-This is typically defined as follows
+-Routine Descriptor offset 0=Pointer to Function
+-Routine Descriptor offset 4=Pointer to Table of Contents
+-The table of contents/TOC is roughly equivalent to a GOT pointer.
+-& it means that shared libraries etc. can be shared between several
+-environments each with their own TOC.
++  A COFF  executable format based concept of a procedure reference
++  actually being 8 bytes or more as opposed to a simple pointer to the routine.
++  This is typically defined as follows:
+ 
+- 
+-static-chain: This is used in nested functions a concept adopted from pascal 
+-by gcc not used in ansi C or C++ ( although quite useful ), basically it
+-is a pointer used to reference local variables of enclosing functions.
+-You might come across this stuff once or twice in your lifetime.
++  - Routine Descriptor offset 0=Pointer to Function
++  - Routine Descriptor offset 4=Pointer to Table of Contents
+ 
+-e.g.
+-The function below should return 11 though gcc may get upset & toss warnings 
+-about unused variables.
+-int FunctionA(int a)
+-{
++  The table of contents/TOC is roughly equivalent to a GOT pointer.
++  & it means that shared libraries etc. can be shared between several
++  environments each with their own TOC.
++
++static-chain:
++  This is used in nested functions a concept adopted from pascal
++  by gcc not used in ansi C or C++ ( although quite useful ), basically it
++  is a pointer used to reference local variables of enclosing functions.
++  You might come across this stuff once or twice in your lifetime.
++
++  e.g.
++
++  The function below should return 11 though gcc may get upset & toss warnings
++  about unused variables::
++
++    int FunctionA(int a)
++    {
+ 	int b;
+ 	FunctionC(int c)
+ 	{
+@@ -531,19 +560,21 @@ int FunctionA(int a)
+ 	}
+ 	FunctionC(10);
+ 	return(b);
+-}
++    }
+ 
+ 
+ s/390 & z/Architecture Register usage
+ =====================================
++
++======== ========================================== ===============
+ r0       used by syscalls/assembly                  call-clobbered
+-r1	 used by syscalls/assembly                  call-clobbered
++r1       used by syscalls/assembly                  call-clobbered
+ r2       argument 0 / return value 0                call-clobbered
+ r3       argument 1 / return value 1 (if long long) call-clobbered
+ r4       argument 2                                 call-clobbered
+ r5       argument 3                                 call-clobbered
+-r6	 argument 4				    saved
+-r7       pointer-to arguments 5 to ...              saved      
++r6       argument 4                                 saved
++r7       pointer-to arguments 5 to ...              saved
+ r8       this & that                                saved
+ r9       this & that                                saved
+ r10      static-chain ( if nested function )        saved
+@@ -557,65 +588,74 @@ f0       argument 0 / return value ( float/double ) call-clobbered
+ f2       argument 1                                 call-clobbered
+ f4       z/Architecture argument 2                  saved
+ f6       z/Architecture argument 3                  saved
++======== ========================================== ===============
++
+ The remaining floating points
+ f1,f3,f5 f7-f15 are call-clobbered.
+ 
+ Notes:
+ ------
+ 1) The only requirement is that registers which are used
+-by the callee are saved, e.g. the compiler is perfectly
+-capable of using r11 for purposes other than a frame a
+-frame pointer if a frame pointer is not needed.
+-2) In functions with variable arguments e.g. printf the calling procedure 
+-is identical to one without variable arguments & the same number of 
+-parameters. However, the prologue of this function is somewhat more
+-hairy owing to it having to move these parameters to the stack to
+-get va_start, va_arg & va_end to work.
++   by the callee are saved, e.g. the compiler is perfectly
++   capable of using r11 for purposes other than a frame a
++   frame pointer if a frame pointer is not needed.
++2) In functions with variable arguments e.g. printf the calling procedure
++   is identical to one without variable arguments & the same number of
++   parameters. However, the prologue of this function is somewhat more
++   hairy owing to it having to move these parameters to the stack to
++   get va_start, va_arg & va_end to work.
+ 3) Access registers are currently unused by gcc but are used in
+-the kernel. Possibilities exist to use them at the moment for
+-temporary storage but it isn't recommended.
++   the kernel. Possibilities exist to use them at the moment for
++   temporary storage but it isn't recommended.
+ 4) Only 4 of the floating point registers are used for
+-parameter passing as older machines such as G3 only have only 4
+-& it keeps the stack frame compatible with other compilers.
+-However with IEEE floating point emulation under linux on the
+-older machines you are free to use the other 12.
+-5) A long long or double parameter cannot be have the 
+-first 4 bytes in a register & the second four bytes in the 
+-outgoing args area. It must be purely in the outgoing args
+-area if crossing this boundary.
++   parameter passing as older machines such as G3 only have only 4
++   & it keeps the stack frame compatible with other compilers.
++   However with IEEE floating point emulation under linux on the
++   older machines you are free to use the other 12.
++5) A long long or double parameter cannot be have the
++   first 4 bytes in a register & the second four bytes in the
++   outgoing args area. It must be purely in the outgoing args
++   area if crossing this boundary.
+ 6) Floating point parameters are mixed with outgoing args
+-on the outgoing args area in the order the are passed in as parameters.
+-7) Floating point arguments 2 & 3 are saved in the outgoing args area for 
+-z/Architecture
++   on the outgoing args area in the order the are passed in as parameters.
++7) Floating point arguments 2 & 3 are saved in the outgoing args area for
++   z/Architecture
+ 
+ 
+ Stack Frame Layout
+ ------------------
++
++========= ============== ======================================================
+ s/390     z/Architecture
+-0         0             back chain ( a 0 here signifies end of back chain )
+-4         8             eos ( end of stack, not used on Linux for S390 used in other linkage formats )
+-8         16            glue used in other s/390 linkage formats for saved routine descriptors etc.
+-12        24            glue used in other s/390 linkage formats for saved routine descriptors etc.
+-16        32            scratch area
+-20        40            scratch area
+-24        48            saved r6 of caller function
+-28        56            saved r7 of caller function
+-32        64            saved r8 of caller function
+-36        72            saved r9 of caller function
+-40        80            saved r10 of caller function
+-44        88            saved r11 of caller function
+-48        96            saved r12 of caller function
+-52        104           saved r13 of caller function
+-56        112           saved r14 of caller function
+-60        120           saved r15 of caller function
+-64        128           saved f4 of caller function
+-72        132           saved f6 of caller function
+-80                      undefined
+-96        160           outgoing args passed from caller to callee
+-96+x      160+x         possible stack alignment ( 8 bytes desirable )
+-96+x+y    160+x+y       alloca space of caller ( if used )
+-96+x+y+z  160+x+y+z     automatics of caller ( if used )
+-0                       back-chain
++========= ============== ======================================================
++0         0              back chain ( a 0 here signifies end of back chain )
++4         8              eos ( end of stack, not used on Linux for S390 used
++			 in other linkage formats )
++8         16             glue used in other s/390 linkage formats for saved
++			 routine descriptors etc.
++12        24             glue used in other s/390 linkage formats for saved
++			 routine descriptors etc.
++16        32             scratch area
++20        40             scratch area
++24        48             saved r6 of caller function
++28        56             saved r7 of caller function
++32        64             saved r8 of caller function
++36        72             saved r9 of caller function
++40        80             saved r10 of caller function
++44        88             saved r11 of caller function
++48        96             saved r12 of caller function
++52        104            saved r13 of caller function
++56        112            saved r14 of caller function
++60        120            saved r15 of caller function
++64        128            saved f4 of caller function
++72        132            saved f6 of caller function
++80                       undefined
++96        160            outgoing args passed from caller to callee
++96+x      160+x          possible stack alignment ( 8 bytes desirable )
++96+x+y    160+x+y        alloca space of caller ( if used )
++96+x+y+z  160+x+y+z      automatics of caller ( if used )
++0                        back-chain
++========= ============== ======================================================
+ 
+ A sample program with comments.
+ ===============================
+@@ -623,82 +663,86 @@ A sample program with comments.
+ Comments on the function test
+ -----------------------------
+ 1) It didn't need to set up a pointer to the constant pool gpr13 as it is not
+-used ( :-( ).
++   used ( :-( ).
+ 2) This is a frameless function & no stack is bought.
+ 3) The compiler was clever enough to recognise that it could return the
+-value in r2 as well as use it for the passed in parameter ( :-) ).
+-4) The basr ( branch relative & save ) trick works as follows the instruction 
+-has a special case with r0,r0 with some instruction operands is understood as 
+-the literal value 0, some risc architectures also do this ). So now
+-we are branching to the next address & the address new program counter is
+-in r13,so now we subtract the size of the function prologue we have executed
+-+ the size of the literal pool to get to the top of the literal pool
+-0040037c int test(int b)
+-{                                                          # Function prologue below
+-  40037c:	90 de f0 34 	stm	%r13,%r14,52(%r15) # Save registers r13 & r14
+-  400380:	0d d0       	basr	%r13,%r0           # Set up pointer to constant pool using
+-  400382:	a7 da ff fa 	ahi	%r13,-6            # basr trick
++   value in r2 as well as use it for the passed in parameter ( :-) ).
++4) The basr ( branch relative & save ) trick works as follows the instruction
++   has a special case with r0,r0 with some instruction operands is understood as
++   the literal value 0, some risc architectures also do this ). So now
++   we are branching to the next address & the address new program counter is
++   in r13,so now we subtract the size of the function prologue we have executed
++   the size of the literal pool to get to the top of the literal pool::
++
++
++     0040037c int test(int b)
++     {                                                     # Function prologue below
++       40037c:  90 de f0 34     stm     %r13,%r14,52(%r15) # Save registers r13 & r14
++       400380:  0d d0           basr    %r13,%r0           # Set up pointer to constant pool using
++       400382:  a7 da ff fa     ahi     %r13,-6            # basr trick
+ 	return(5+b);
+-	                                                   # Huge main program
+-  400386:	a7 2a 00 05 	ahi	%r2,5              # add 5 to r2
++							   # Huge main program
++       400386:  a7 2a 00 05     ahi     %r2,5              # add 5 to r2
+ 
+-                                                           # Function epilogue below 
+-  40038a:	98 de f0 34 	lm	%r13,%r14,52(%r15) # restore registers r13 & 14
+-  40038e:	07 fe       	br	%r14               # return
+-}
++							   # Function epilogue below
++       40038a:  98 de f0 34     lm      %r13,%r14,52(%r15) # restore registers r13 & 14
++       40038e:  07 fe           br      %r14               # return
++     }
+ 
+ Comments on the function main
+ -----------------------------
+-1) The compiler did this function optimally ( 8-) )
++1) The compiler did this function optimally ( 8-) )::
+ 
+-Literal pool for main.
+-400390:	ff ff ff ec 	.long 0xffffffec
+-main(int argc,char *argv[])
+-{                                                          # Function prologue below
+-  400394:	90 bf f0 2c 	stm	%r11,%r15,44(%r15) # Save necessary registers
+-  400398:	18 0f       	lr	%r0,%r15           # copy stack pointer to r0
+-  40039a:	a7 fa ff a0 	ahi	%r15,-96           # Make area for callee saving 
+-  40039e:	0d d0       	basr	%r13,%r0           # Set up r13 to point to
+-  4003a0:	a7 da ff f0 	ahi	%r13,-16           # literal pool
+-  4003a4:	50 00 f0 00 	st	%r0,0(%r15)        # Save backchain
++     Literal pool for main.
++     400390:    ff ff ff ec     .long 0xffffffec
++     main(int argc,char *argv[])
++     {                                                     # Function prologue below
++       400394:  90 bf f0 2c     stm     %r11,%r15,44(%r15) # Save necessary registers
++       400398:  18 0f           lr      %r0,%r15           # copy stack pointer to r0
++       40039a:  a7 fa ff a0     ahi     %r15,-96           # Make area for callee saving
++       40039e:  0d d0           basr    %r13,%r0           # Set up r13 to point to
++       4003a0:  a7 da ff f0     ahi     %r13,-16           # literal pool
++       4003a4:  50 00 f0 00     st      %r0,0(%r15)        # Save backchain
+ 
+ 	return(test(5));                                   # Main Program Below
+-  4003a8:	58 e0 d0 00 	l	%r14,0(%r13)       # load relative address of test from
+-						           # literal pool
+-  4003ac:	a7 28 00 05 	lhi	%r2,5              # Set first parameter to 5
+-  4003b0:	4d ee d0 00 	bas	%r14,0(%r14,%r13)  # jump to test setting r14 as return
++       4003a8:  58 e0 d0 00     l       %r14,0(%r13)       # load relative address of test from
++							   # literal pool
++       4003ac:  a7 28 00 05     lhi     %r2,5              # Set first parameter to 5
++       4003b0:  4d ee d0 00     bas     %r14,0(%r14,%r13)  # jump to test setting r14 as return
+ 							   # address using branch & save instruction.
+ 
+ 							   # Function Epilogue below
+-  4003b4:	98 bf f0 8c 	lm	%r11,%r15,140(%r15)# Restore necessary registers.
+-  4003b8:	07 fe       	br	%r14               # return to do program exit 
+-}
++       4003b4:  98 bf f0 8c     lm      %r11,%r15,140(%r15)# Restore necessary registers.
++       4003b8:  07 fe           br      %r14               # return to do program exit
++     }
+ 
+ 
+ Compiler updates
+ ----------------
+ 
+-main(int argc,char *argv[])
+-{
+-  4004fc:	90 7f f0 1c       	stm	%r7,%r15,28(%r15)
+-  400500:	a7 d5 00 04       	bras	%r13,400508 <main+0xc>
+-  400504:	00 40 04 f4       	.long	0x004004f4 
+-  # compiler now puts constant pool in code to so it saves an instruction 
+-  400508:	18 0f             	lr	%r0,%r15
+-  40050a:	a7 fa ff a0       	ahi	%r15,-96
+-  40050e:	50 00 f0 00       	st	%r0,0(%r15)
++::
++
++  main(int argc,char *argv[])
++  {
++    4004fc:     90 7f f0 1c             stm     %r7,%r15,28(%r15)
++    400500:     a7 d5 00 04             bras    %r13,400508 <main+0xc>
++    400504:     00 40 04 f4             .long   0x004004f4
++    # compiler now puts constant pool in code to so it saves an instruction
++    400508:     18 0f                   lr      %r0,%r15
++    40050a:     a7 fa ff a0             ahi     %r15,-96
++    40050e:     50 00 f0 00             st      %r0,0(%r15)
+ 	return(test(5));
+-  400512:	58 10 d0 00       	l	%r1,0(%r13)
+-  400516:	a7 28 00 05       	lhi	%r2,5
+-  40051a:	0d e1             	basr	%r14,%r1
+-  # compiler adds 1 extra instruction to epilogue this is done to
+-  # avoid processor pipeline stalls owing to data dependencies on g5 &
+-  # above as register 14 in the old code was needed directly after being loaded 
+-  # by the lm	%r11,%r15,140(%r15) for the br %14.
+-  40051c:	58 40 f0 98       	l	%r4,152(%r15)
+-  400520:	98 7f f0 7c       	lm	%r7,%r15,124(%r15)
+-  400524:	07 f4             	br	%r4
+-}
++    400512:     58 10 d0 00             l       %r1,0(%r13)
++    400516:     a7 28 00 05             lhi     %r2,5
++    40051a:     0d e1                   basr    %r14,%r1
++    # compiler adds 1 extra instruction to epilogue this is done to
++    # avoid processor pipeline stalls owing to data dependencies on g5 &
++    # above as register 14 in the old code was needed directly after being loaded
++    # by the lm %r11,%r15,140(%r15) for the br %14.
++    40051c:     58 40 f0 98             l       %r4,152(%r15)
++    400520:     98 7f f0 7c             lm      %r7,%r15,124(%r15)
++    400524:     07 f4                   br      %r4
++  }
+ 
+ 
+ Hartmut ( our compiler developer ) also has been threatening to take out the
+@@ -709,38 +753,39 @@ have been warned.
+ --------------------------------------
+ 
+ If you understand the stuff above you'll understand the stuff
+-below too so I'll avoid repeating myself & just say that 
++below too so I'll avoid repeating myself & just say that
+ some of the instructions have g's on the end of them to indicate
+-they are 64 bit & the stack offsets are a bigger, 
++they are 64 bit & the stack offsets are a bigger,
+ the only other difference you'll find between 32 & 64 bit is that
+-we now use f4 & f6 for floating point arguments on 64 bit.
+-00000000800005b0 <test>:
+-int test(int b)
+-{
++we now use f4 & f6 for floating point arguments on 64 bit::
++
++  00000000800005b0 <test>:
++  int test(int b)
++  {
+ 	return(5+b);
+-    800005b0:	a7 2a 00 05       	ahi	%r2,5
+-    800005b4:	b9 14 00 22       	lgfr	%r2,%r2 # downcast to integer
+-    800005b8:	07 fe             	br	%r14
+-    800005ba:	07 07             	bcr	0,%r7
++      800005b0: a7 2a 00 05             ahi     %r2,5
++      800005b4: b9 14 00 22             lgfr    %r2,%r2 # downcast to integer
++      800005b8: 07 fe                   br      %r14
++      800005ba: 07 07                   bcr     0,%r7
+ 
+ 
+-}
++  }
+ 
+-00000000800005bc <main>:
+-main(int argc,char *argv[])
+-{ 
+-    800005bc:	eb bf f0 58 00 24 	stmg	%r11,%r15,88(%r15)
+-    800005c2:	b9 04 00 1f       	lgr	%r1,%r15
+-    800005c6:	a7 fb ff 60       	aghi	%r15,-160
+-    800005ca:	e3 10 f0 00 00 24 	stg	%r1,0(%r15)
++  00000000800005bc <main>:
++  main(int argc,char *argv[])
++  {
++      800005bc: eb bf f0 58 00 24       stmg    %r11,%r15,88(%r15)
++      800005c2: b9 04 00 1f             lgr     %r1,%r15
++      800005c6: a7 fb ff 60             aghi    %r15,-160
++      800005ca: e3 10 f0 00 00 24       stg     %r1,0(%r15)
+ 	return(test(5));
+-    800005d0:	a7 29 00 05       	lghi	%r2,5
+-    # brasl allows jumps > 64k & is overkill here bras would do fune
+-    800005d4:	c0 e5 ff ff ff ee 	brasl	%r14,800005b0 <test> 
+-    800005da:	e3 40 f1 10 00 04 	lg	%r4,272(%r15)
+-    800005e0:	eb bf f0 f8 00 04 	lmg	%r11,%r15,248(%r15)
+-    800005e6:	07 f4             	br	%r4
+-}
++      800005d0: a7 29 00 05             lghi    %r2,5
++      # brasl allows jumps > 64k & is overkill here bras would do fune
++      800005d4: c0 e5 ff ff ff ee       brasl   %r14,800005b0 <test>
++      800005da: e3 40 f1 10 00 04       lg      %r4,272(%r15)
++      800005e0: eb bf f0 f8 00 04       lmg     %r11,%r15,248(%r15)
++      800005e6: 07 f4                   br      %r4
++  }
+ 
+ 
+ 
+@@ -749,15 +794,15 @@ Compiling programs for debugging on Linux for s/390 & z/Architecture
+ -gdwarf-2 now works it should be considered the default debugging
+ format for s/390 & z/Architecture as it is more reliable for debugging
+ shared libraries,  normal -g debugging works much better now
+-Thanks to the IBM java compiler developers bug reports. 
++Thanks to the IBM java compiler developers bug reports.
+ 
+-This is typically done adding/appending the flags -g or -gdwarf-2 to the 
++This is typically done adding/appending the flags -g or -gdwarf-2 to the
+ CFLAGS & LDFLAGS variables Makefile of the program concerned.
+ 
+ If using gdb & you would like accurate displays of registers &
+- stack traces compile without optimisation i.e make sure
++stack traces compile without optimisation i.e make sure
+ that there is no -O2 or similar on the CFLAGS line of the Makefile &
+-the emitted gcc commands, obviously this will produce worse code 
++the emitted gcc commands, obviously this will produce worse code
+ ( not advisable for shipment ) but it is an  aid to the debugging process.
+ 
+ This aids debugging because the compiler will copy parameters passed in
+@@ -766,7 +811,7 @@ parameters will work, however some larger programs which use inline functions
+ will not compile without optimisation.
+ 
+ Debugging with optimisation has since much improved after fixing
+-some bugs, please make sure you are using gdb-5.0 or later developed 
++some bugs, please make sure you are using gdb-5.0 or later developed
+ after Nov'2000.
+ 
+ 
+@@ -779,7 +824,7 @@ Notes
+ Addresses & values in the VM debugger are always hex never decimal
+ Address ranges are of the format <HexValue1>-<HexValue2> or
+ <HexValue1>.<HexValue2>
+-For example, the address range	0x2000 to 0x3000 can be described as 2000-3000
++For example, the address range  0x2000 to 0x3000 can be described as 2000-3000
+ or 2000.1000
+ 
+ The VM Debugger is case insensitive.
+@@ -798,27 +843,31 @@ operands are nibble (half byte aligned).
+ So if you have an objdump listing by hand, it is quite easy to follow, and if
+ you don't have an objdump listing keep a copy of the s/390 Reference Summary
+ or alternatively the s/390 principles of operation next to you.
+-e.g. even I can guess that 
++e.g. even I can guess that
+ 0001AFF8' LR    180F        CC 0
+-is a ( load register ) lr r0,r15 
++is a ( load register ) lr r0,r15
+ 
+ Also it is very easy to tell the length of a 390 instruction from the 2 most
+ significant bits in the instruction (not that this info is really useful except
+ if you are trying to make sense of a hexdump of code).
+ Here is a table
++
++======================= ==================
+ Bits                    Instruction Length
+-------------------------------------------
++======================= ==================
+ 00                          2 Bytes
+ 01                          4 Bytes
+ 10                          4 Bytes
+ 11                          6 Bytes
++======================= ==================
+ 
+ The debugger also displays other useful info on the same line such as the
+ addresses being operated on destination addresses of branches & condition codes.
+-e.g.  
+-00019736' AHI   A7DAFF0E    CC 1
+-000198BA' BRC   A7840004 -> 000198C2'   CC 0
+-000198CE' STM   900EF068 >> 0FA95E78    CC 2
++e.g.::
++
++  00019736' AHI   A7DAFF0E    CC 1
++  000198BA' BRC   A7840004 -> 000198C2'   CC 0
++  000198CE' STM   900EF068 >> 0FA95E78    CC 2
+ 
+ 
+ 
+@@ -826,54 +875,79 @@ Useful VM debugger commands
+ ---------------------------
+ 
+ I suppose I'd better mention this before I start
+-to list the current active traces do 
+-Q TR
++to list the current active traces do::
++
++	Q TR
++
+ there can be a maximum of 255 of these per set
+ ( more about trace sets later ).
+-To stop traces issue a
+-TR END.
+-To delete a particular breakpoint issue
+-TR DEL <breakpoint number>
++
++To stop traces issue a::
++
++	TR END.
++
++To delete a particular breakpoint issue::
++
++	TR DEL <breakpoint number>
+ 
+ The PA1 key drops to CP mode so you can issue debugger commands,
+-Doing alt c (on my 3270 console at least ) clears the screen. 
++Doing alt c (on my 3270 console at least ) clears the screen.
++
+ hitting b <enter> comes back to the running operating system
+ from cp mode ( in our case linux ).
++
+ It is typically useful to add shortcuts to your profile.exec file
+ if you have one ( this is roughly equivalent to autoexec.bat in DOS ).
+-file here are a few from mine.
+-/* this gives me command history on issuing f12 */
+-set pf12 retrieve 
+-/* this continues */
+-set pf8 imm b
+-/* goes to trace set a */
+-set pf1 imm tr goto a
+-/* goes to trace set b */
+-set pf2 imm tr goto b
+-/* goes to trace set c */
+-set pf3 imm tr goto c
++file here are a few from mine::
++
++  /* this gives me command history on issuing f12 */
++  set pf12 retrieve
++  /* this continues */
++  set pf8 imm b
++  /* goes to trace set a */
++  set pf1 imm tr goto a
++  /* goes to trace set b */
++  set pf2 imm tr goto b
++  /* goes to trace set c */
++  set pf3 imm tr goto c
+ 
+ 
+ 
+ Instruction Tracing
+ -------------------
+-Setting a simple breakpoint
+-TR I PSWA <address>
+-To debug a particular function try
+-TR I R <function address range>
+-TR I on its own will single step.
+-TR I DATA <MNEMONIC> <OPTIONAL RANGE> will trace for particular mnemonics
+-e.g.
+-TR I DATA 4D R 0197BC.4000
++Setting a simple breakpoint::
++
++	TR I PSWA <address>
++
++To debug a particular function try::
++
++  TR I R <function address range>
++  TR I on its own will single step.
++  TR I DATA <MNEMONIC> <OPTIONAL RANGE> will trace for particular mnemonics
++
++e.g.::
++
++  TR I DATA 4D R 0197BC.4000
++
+ will trace for BAS'es ( opcode 4D ) in the range 0197BC.4000
++
+ if you were inclined you could add traces for all branch instructions &
+-suffix them with the run prefix so you would have a backtrace on screen 
+-when a program crashes.
+-TR BR <INTO OR FROM> will trace branches into or out of an address.
+-e.g.
+-TR BR INTO 0 is often quite useful if a program is getting awkward & deciding
++suffix them with the run prefix so you would have a backtrace on screen
++when a program crashes::
++
++	TR BR <INTO OR FROM> will trace branches into or out of an address.
++
++e.g.::
++
++	TR BR INTO 0
++
++is often quite useful if a program is getting awkward & deciding
+ to branch to 0 & crashing as this will stop at the address before in jumps to 0.
+-TR I R <address range> RUN cmd d g
++
++::
++
++	TR I R <address range> RUN cmd d g
++
+ single steps a range of addresses but stays running &
+ displays the gprs on each step.
+ 
+@@ -881,93 +955,129 @@ displays the gprs on each step.
+ 
+ Displaying & modifying Registers
+ --------------------------------
+-D G will display all the gprs
+-Adding a extra G to all the commands is necessary to access the full 64 bit 
++D G
++	will display all the gprs
++
++Adding a extra G to all the commands is necessary to access the full 64 bit
+ content in VM on z/Architecture. Obviously this isn't required for access
+ registers as these are still 32 bit.
+-e.g. DGG instead of DG 
+-D X will display all the control registers
+-D AR will display all the access registers
+-D AR4-7 will display access registers 4 to 7
+-CPU ALL D G will display the GRPS of all CPUS in the configuration
+-D PSW will display the current PSW
+-st PSW 2000 will put the value 2000 into the PSW &
+-cause crash your machine.
+-D PREFIX displays the prefix offset
++
++e.g.
++
++DGG
++	instead of DG
++
++D X
++	will display all the control registers
++D AR
++	will display all the access registers
++D AR4-7
++	will display access registers 4 to 7
++CPU ALL D G
++	will display the GRPS of all CPUS in the configuration
++D PSW
++	will display the current PSW
++st PSW 2000
++	will put the value 2000 into the PSW & cause crash your machine.
++D PREFIX
++	displays the prefix offset
+ 
+ 
+ Displaying Memory
  -----------------
-@@ -50,82 +53,78 @@ Suggest you take a closer look at the SH7760 Manual, Section 30.
- (http://documentation.renesas.com/eng/products/mpumcu/e602291_sh7760.pdf)
+-To display memory mapped using the current PSW's mapping try
+-D <range>
++To display memory mapped using the current PSW's mapping try::
++
++   D <range>
++
+ To make VM display a message each time it hits a particular address and
+-continue try
+-D I<range> will disassemble/display a range of instructions.
+-ST addr 32 bit word will store a 32 bit aligned address
+-D T<range> will display the EBCDIC in an address (if you are that way inclined)
+-D R<range> will display real addresses ( without DAT ) but with prefixing.
++continue try:
++
++D I<range>
++	will disassemble/display a range of instructions.
++
++ST addr 32 bit word
++	will store a 32 bit aligned address
++D T<range>
++	will display the EBCDIC in an address (if you are that way inclined)
++D R<range>
++	will display real addresses ( without DAT ) but with prefixing.
++
+ There are other complex options to display if you need to get at say home space
+ but are in primary space the easiest thing to do is to temporarily
+ modify the PSW to the other addressing mode, display the stuff & then
+ restore it.
  
- The following code illustrates what needs to be done to
--get the framebuffer working on a 640x480 TFT:
-+get the framebuffer working on a 640x480 TFT::
  
--====================== cut here ======================================
-+  #include <linux/fb.h>
-+  #include <asm/sh7760fb.h>
+- 
++
+ Hints
+ -----
+ If you want to issue a debugger command without halting your virtual machine
+-with the PA1 key try prefixing the command with #CP e.g.
+-#cp tr i pswa 2000
++with the PA1 key try prefixing the command with #CP e.g.::
++
++	#cp tr i pswa 2000
++
+ also suffixing most debugger commands with RUN will cause them not
+ to stop just display the mnemonic at the current instruction on the console.
++
+ If you have several breakpoints you want to put into your program &
+ you get fed up of cross referencing with System.map
+ you can do the following trick for several symbols.
+-grep do_signal System.map 
+-which emits the following among other things
+-0001f4e0 T do_signal 
+-now you can do
  
--#include <linux/fb.h>
--#include <asm/sh7760fb.h>
-+  /*
-+   * NEC NL6440bc26-01 640x480 TFT
-+   * dotclock 25175 kHz
-+   * Xres                640     Yres            480
-+   * Htotal      800     Vtotal          525
-+   * HsynStart   656     VsynStart       490
-+   * HsynLenn    30      VsynLenn        2
-+   *
-+   * The linux framebuffer layer does not use the syncstart/synclen
-+   * values but right/left/upper/lower margin values. The comments
-+   * for the x_margin explain how to calculate those from given
-+   * panel sync timings.
-+   */
-+  static struct fb_videomode nl6448bc26 = {
-+         .name           = "NL6448BC26",
-+         .refresh        = 60,
-+         .xres           = 640,
-+         .yres           = 480,
-+         .pixclock       = 39683,        /* in picoseconds! */
-+         .hsync_len      = 30,
-+         .vsync_len      = 2,
-+         .left_margin    = 114,  /* HTOT - (HSYNSLEN + HSYNSTART) */
-+         .right_margin   = 16,   /* HSYNSTART - XRES */
-+         .upper_margin   = 33,   /* VTOT - (VSYNLEN + VSYNSTART) */
-+         .lower_margin   = 10,   /* VSYNSTART - YRES */
-+         .sync           = FB_SYNC_HOR_HIGH_ACT | FB_SYNC_VERT_HIGH_ACT,
-+         .vmode          = FB_VMODE_NONINTERLACED,
-+         .flag           = 0,
-+  };
+-TR I PSWA 0001f4e0 cmd msg * do_signal
++::
++
++	grep do_signal System.map
++
++which emits the following among other things::
++
++	0001f4e0 T do_signal
++
++now you can do::
++
++	TR I PSWA 0001f4e0 cmd msg * do_signal
++
+ This sends a message to your own console each time do_signal is entered.
+ ( As an aside I wrote a perl script once which automatically generated a REXX
+ script with breakpoints on every kernel procedure, this isn't a good idea
+ because there are thousands of these routines & VM can only set 255 breakpoints
+-at a time so you nearly had to spend as long pruning the file down as you would 
++at a time so you nearly had to spend as long pruning the file down as you would
+ entering the msgs by hand), however, the trick might be useful for a single
+ object file. In the 3270 terminal emulator x3270 there is a very useful option
+ in the file menu called "Save Screen In File" - this is very good for keeping a
+ copy of traces.
  
+-From CMS help <command name> will give you online help on a particular command. 
+-e.g. 
+-HELP DISPLAY
++From CMS help <command name> will give you online help on a particular command.
++e.g.::
++
++	HELP DISPLAY
+ 
+ Also CP has a file called profile.exec which automatically gets called
+ on startup of CMS ( like autoexec.bat ), keeping on a DOS analogy session
+ CP has a feature similar to doskey, it may be useful for you to
+-use profile.exec to define some keystrokes. 
+-e.g.
++use profile.exec to define some keystrokes.
++
+ SET PF9 IMM B
+-This does a single step in VM on pressing F8. 
++	This does a single step in VM on pressing F8.
++
+ SET PF10  ^
+-This sets up the ^ key.
+-which can be used for ^c (ctrl-c),^z (ctrl-z) which can't be typed directly
+-into some 3270 consoles.
++	This sets up the ^ key.
++	which can be used for ^c (ctrl-c),^z (ctrl-z) which can't be typed
++	directly into some 3270 consoles.
++
+ SET PF11 ^-
+-This types the starting keystrokes for a sysrq see SysRq below.
++	This types the starting keystrokes for a sysrq see SysRq below.
+ SET PF12 RETRIEVE
+-This retrieves command history on pressing F12.
++	This retrieves command history on pressing F12.
+ 
+ 
+ Sometimes in VM the display is set up to scroll automatically this
+ can be very annoying if there are messages you wish to look at
+ to stop this do
++
+ TERM MORE 255 255
+-This will nearly stop automatic screen updates, however it will
+-cause a denial of service if lots of messages go to the 3270 console,
+-so it would be foolish to use this as the default on a production machine.
+- 
++  This will nearly stop automatic screen updates, however it will
++  cause a denial of service if lots of messages go to the 3270 console,
++  so it would be foolish to use this as the default on a production machine.
++
+ 
+ Tracing particular processes
+ ----------------------------
+@@ -976,69 +1086,116 @@ very seldom collide with text segments of user programs ( thanks Martin ),
+ this simplifies debugging the kernel.
+ However it is quite common for user processes to have addresses which collide
+ this can make debugging a particular process under VM painful under normal
+-circumstances as the process may change when doing a 
+-TR I R <address range>.
++circumstances as the process may change when doing a::
++
++	TR I R <address range>.
++
+ Thankfully after reading VM's online help I figured out how to debug
+ I particular process.
+ 
+ Your first problem is to find the STD ( segment table designation )
+ of the program you wish to debug.
+ There are several ways you can do this here are a few
+-1) objdump --syms <program to be debugged> | grep main
+-To get the address of main in the program.
+-tr i pswa <address of main>
++
++Run::
++
++	objdump --syms <program to be debugged> | grep main
++
++To get the address of main in the program. Then::
++
++	tr i pswa <address of main>
++
+ Start the program, if VM drops to CP on what looks like the entry
+ point of the main function this is most likely the process you wish to debug.
+ Now do a D X13 or D XG13 on z/Architecture.
+-On 31 bit the STD is bits 1-19 ( the STO segment table origin ) 
++
++On 31 bit the STD is bits 1-19 ( the STO segment table origin )
+ & 25-31 ( the STL segment table length ) of CR13.
+-now type
+-TR I R STD <CR13's value> 0.7fffffff
+-e.g.
+-TR I R STD 8F32E1FF 0.7fffffff
+-Another very useful variation is
+-TR STORE INTO STD <CR13's value> <address range>
++
++now type::
++
++	TR I R STD <CR13's value> 0.7fffffff
++
++e.g.::
++
++	TR I R STD 8F32E1FF 0.7fffffff
++
++Another very useful variation is::
++
++	TR STORE INTO STD <CR13's value> <address range>
++
+ for finding out when a particular variable changes.
+ 
+-An alternative way of finding the STD of a currently running process 
++An alternative way of finding the STD of a currently running process
+ is to do the following, ( this method is more complex but
+ could be quite convenient if you aren't updating the kernel much &
+ so your kernel structures will stay constant for a reasonable period of
+ time ).
+ 
+-grep task /proc/<pid>/status
+-from this you should see something like
+-task: 0f160000 ksp: 0f161de8 pt_regs: 0f161f68
++::
++
++	grep task /proc/<pid>/status
++
++from this you should see something like::
++
++	task: 0f160000 ksp: 0f161de8 pt_regs: 0f161f68
++
+ This now gives you a pointer to the task structure.
+-Now make CC:="s390-gcc -g" kernel/sched.s
++
++Now make::
++
++	CC:="s390-gcc -g" kernel/sched.s
++
+ To get the task_struct stabinfo.
++
+ ( task_struct is defined in include/linux/sched.h ).
++
+ Now we want to look at
+ task->active_mm->pgd
++
+ on my machine the active_mm in the task structure stab is
+ active_mm:(4,12),672,32
++
+ its offset is 672/8=84=0x54
++
+ the pgd member in the mm_struct stab is
+ pgd:(4,6)=*(29,5),96,32
+ so its offset is 96/8=12=0xc
+ 
+-so we'll
+-hexdump -s 0xf160054 /dev/mem | more
++so we'll::
++
++	hexdump -s 0xf160054 /dev/mem | more
++
+ i.e. task_struct+active_mm offset
+-to look at the active_mm member
+-f160054 0fee cc60 0019 e334 0000 0000 0000 0011
+-hexdump -s 0x0feecc6c /dev/mem | more
+-i.e. active_mm+pgd offset
+-feecc6c 0f2c 0000 0000 0001 0000 0001 0000 0010
++to look at the active_mm member::
++
++	f160054 0fee cc60 0019 e334 0000 0000 0000 0011
++
++::
++
++	hexdump -s 0x0feecc6c /dev/mem | more
++
++i.e. active_mm+pgd offset::
++
++	feecc6c 0f2c 0000 0000 0001 0000 0001 0000 0010
++
+ we get something like
+-now do 
+-TR I R STD <pgd|0x7f> 0.7fffffff
++now do::
++
++	TR I R STD <pgd|0x7f> 0.7fffffff
++
+ i.e. the 0x7f is added because the pgd only
+ gives the page table origin & we need to set the low bits
+ to the maximum possible segment table length.
+-TR I R STD 0f2c007f 0.7fffffff
+-on z/Architecture you'll probably need to do
+-TR I R STD <pgd|0x7> 0.ffffffffffffffff
++
++::
++
++	TR I R STD 0f2c007f 0.7fffffff
++
++on z/Architecture you'll probably need to do::
++
++	TR I R STD <pgd|0x7> 0.ffffffffffffffff
++
+ to set the TableType to 0x1 & the Table length to 3.
+ 
+ 
+@@ -1051,40 +1208,51 @@ You can restart linux & trace these using the tr prog <range or value> trace
+ option.
+ 
+ 
+-The most common ones you will normally be tracing for is
+-1=operation exception
+-2=privileged operation exception
+-4=protection exception
+-5=addressing exception
+-6=specification exception
+-10=segment translation exception
+-11=page translation exception
++The most common ones you will normally be tracing for is:
++
++- 1=operation exception
++- 2=privileged operation exception
++- 4=protection exception
++- 5=addressing exception
++- 6=specification exception
++- 10=segment translation exception
++- 11=page translation exception
+ 
+ The full list of these is on page 22 of the current s/390 Reference Summary.
+ e.g.
++
+ tr prog 10 will trace segment translation exceptions.
++
+ tr prog on its own will trace all program interruption codes.
+ 
+ Trace Sets
+ ----------
+ On starting VM you are initially in the INITIAL trace set.
+ You can do a Q TR to verify this.
+-If you have a complex tracing situation where you wish to wait for instance 
++If you have a complex tracing situation where you wish to wait for instance
+ till a driver is open before you start tracing IO, but know in your
+ heart that you are going to have to make several runs through the code till you
+-have a clue whats going on. 
++have a clue whats going on.
++
++What you can do is::
++
++	TR I PSWA <Driver open address>
+ 
+-What you can do is
+-TR I PSWA <Driver open address>
+ hit b to continue till breakpoint
++
+ reach the breakpoint
+-now do your
+-TR GOTO B 
+-TR IO 7c08-7c09 inst int run 
++
++now do your::
++
++	TR GOTO B
++	TR IO 7c08-7c09 inst int run
++
+ or whatever the IO channels you wish to trace are & hit b
+ 
+-To got back to the initial trace set do
+-TR GOTO INITIAL
++To got back to the initial trace set do::
++
++	TR GOTO INITIAL
++
+ & the TR I PSWA <Driver open address> will be the only active breakpoint again.
+ 
+ 
+@@ -1093,11 +1261,14 @@ Tracing linux syscalls under VM
+ Syscalls are implemented on Linux for S390 by the Supervisor call instruction
+ (SVC). There 256 possibilities of these as the instruction is made up of a 0xA
+ opcode and the second byte being the syscall number. They are traced using the
+-simple command:
+-TR SVC  <Optional value or range>
++simple command::
++
++	TR SVC  <Optional value or range>
++
+ the syscalls are defined in linux/arch/s390/include/asm/unistd.h
+-e.g. to trace all file opens just do
+-TR SVC 5 ( as this is the syscall number of open )
++e.g. to trace all file opens just do::
++
++	TR SVC 5 ( as this is the syscall number of open )
+ 
+ 
+ SMP Specific commands
+@@ -1105,33 +1276,51 @@ SMP Specific commands
+ To find out how many cpus you have
+ Q CPUS displays all the CPU's available to your virtual machine
+ To find the cpu that the current cpu VM debugger commands are being directed at
+-do Q CPU to change the current cpu VM debugger commands are being directed at do
+-CPU <desired cpu no>
++do Q CPU to change the current cpu VM debugger commands are being directed at
++do::
++
++	CPU <desired cpu no>
+ 
+ On a SMP guest issue a command to all CPUs try prefixing the command with cpu
+-all. To issue a command to a particular cpu try cpu <cpu number> e.g.
+-CPU 01 TR I R 2000.3000
++all. To issue a command to a particular cpu try cpu <cpu number> e.g.::
++
++	CPU 01 TR I R 2000.3000
++
+ If you are running on a guest with several cpus & you have a IO related problem
+ & cannot follow the flow of code but you know it isn't smp related.
+-from the bash prompt issue
+-shutdown -h now or halt.
+-do a Q CPUS to find out how many cpus you have
+-detach each one of them from cp except cpu 0 
+-by issuing a 
+-DETACH CPU 01-(number of cpus in configuration)
++
++from the bash prompt issue::
++
++	shutdown -h now or halt.
++
++do a::
++
++	Q CPUS
++
++to find out how many cpus you have detach each one of them from cp except
++cpu 0 by issuing a::
++
++	DETACH CPU 01-(number of cpus in configuration)
++
+ & boot linux again.
+-TR SIGP will trace inter processor signal processor instructions.
+-DEFINE CPU 01-(number in configuration) 
+-will get your guests cpus back.
++
++TR SIGP
++	will trace inter processor signal processor instructions.
++
++DEFINE CPU 01-(number in configuration)
++	will get your guests cpus back.
+ 
+ 
+ Help for displaying ascii textstrings
+ -------------------------------------
+ On the very latest VM Nucleus'es VM can now display ascii
+-( thanks Neale for the hint ) by doing
+-D TX<lowaddr>.<len>
+-e.g.
+-D TX0.100
++( thanks Neale for the hint ) by doing::
++
++	D TX<lowaddr>.<len>
++
++e.g.::
++
++	D TX0.100
+ 
+ Alternatively
+ =============
+@@ -1143,66 +1332,85 @@ to your xterm if you are debugging from a linuxbox.
+ This is quite useful when looking at a parameter passed in as a text string
+ under VM ( unless you are good at decoding ASCII in your head ).
+ 
+-e.g. consider tracing an open syscall
+-TR SVC 5
+-We have stopped at a breakpoint
+-000151B0' SVC   0A05     -> 0001909A'   CC 0
++e.g. consider tracing an open syscall::
++
++	TR SVC 5
++
++We have stopped at a breakpoint::
++
++	000151B0' SVC   0A05     -> 0001909A'   CC 0
+ 
+ D 20.8 to check the SVC old psw in the prefix area and see was it from userspace
+ (for the layout of the prefix area consult the "Fixed Storage Locations"
+ chapter of the s/390 Reference Summary if you have it available).
+-V00000020  070C2000 800151B2
++
++::
++
++  V00000020  070C2000 800151B2
++
+ The problem state bit wasn't set &  it's also too early in the boot sequence
+-for it to be a userspace SVC if it was we would have to temporarily switch the 
++for it to be a userspace SVC if it was we would have to temporarily switch the
+ psw to user space addressing so we could get at the first parameter of the open
+ in gpr2.
+-Next do a 
+-D G2
+-GPR  2 =  00014CB4
+-Now display what gpr2 is pointing to
+-D 00014CB4.20
+-V00014CB4  2F646576 2F636F6E 736F6C65 00001BF5
+-V00014CC4  FC00014C B4001001 E0001000 B8070707
++
++Next do a::
++
++	D G2
++	GPR  2 =  00014CB4
++
++Now display what gpr2 is pointing to::
++
++	D 00014CB4.20
++	V00014CB4  2F646576 2F636F6E 736F6C65 00001BF5
++	V00014CC4  FC00014C B4001001 E0001000 B8070707
++
+ Now copy the text till the first 00 hex ( which is the end of the string
+-to an xterm & do hex2ascii on it.
+-hex2ascii 2F646576 2F636F6E 736F6C65 00 
+-outputs
+-Decoded Hex:=/ d e v / c o n s o l e 0x00 
++to an xterm & do hex2ascii on it::
++
++	hex2ascii 2F646576 2F636F6E 736F6C65 00
++
++outputs::
++
++	Decoded Hex:=/ d e v / c o n s o l e 0x00
++
+ We were opening the console device,
+ 
+ You can compile the code below yourself for practice :-),
 -/*
-- * NEC NL6440bc26-01 640x480 TFT
-- * dotclock 25175 kHz
-- * Xres                640     Yres            480
-- * Htotal      800     Vtotal          525
-- * HsynStart   656     VsynStart       490
-- * HsynLenn    30      VsynLenn        2
+- *    hex2ascii.c
+- *    a useful little tool for converting a hexadecimal command line to ascii
 - *
-- * The linux framebuffer layer does not use the syncstart/synclen
-- * values but right/left/upper/lower margin values. The comments
-- * for the x_margin explain how to calculate those from given
-- * panel sync timings.
-- */
--static struct fb_videomode nl6448bc26 = {
--       .name           = "NL6448BC26",
--       .refresh        = 60,
--       .xres           = 640,
--       .yres           = 480,
--       .pixclock       = 39683,        /* in picoseconds! */
--       .hsync_len      = 30,
--       .vsync_len      = 2,
--       .left_margin    = 114,  /* HTOT - (HSYNSLEN + HSYNSTART) */
--       .right_margin   = 16,   /* HSYNSTART - XRES */
--       .upper_margin   = 33,   /* VTOT - (VSYNLEN + VSYNSTART) */
--       .lower_margin   = 10,   /* VSYNSTART - YRES */
--       .sync           = FB_SYNC_HOR_HIGH_ACT | FB_SYNC_VERT_HIGH_ACT,
--       .vmode          = FB_VMODE_NONINTERLACED,
--       .flag           = 0,
--};
-+  static struct sh7760fb_platdata sh7760fb_nl6448 = {
-+         .def_mode       = &nl6448bc26,
-+         .ldmtr          = LDMTR_TFT_COLOR_16,   /* 16bit TFT panel */
-+         .lddfr          = LDDFR_8BPP,           /* we want 8bit output */
-+         .ldpmmr         = 0x0070,
-+         .ldpspr         = 0x0500,
-+         .ldaclnr        = 0,
-+         .ldickr         = LDICKR_CLKSRC(LCDC_CLKSRC_EXTERNAL) |
-+			 LDICKR_CLKDIV(1),
-+         .rotate         = 0,
-+         .novsync        = 1,
-+         .blank          = NULL,
-+  };
+- *    Author(s): Denis Joseph Barrow (djbarrow@de.ibm.com,barrow_dj@yahoo.com)
+- *    (C) 2000 IBM Deutschland Entwicklung GmbH, IBM Corporation.
+- */   
+-#include <stdio.h>
  
--static struct sh7760fb_platdata sh7760fb_nl6448 = {
--       .def_mode       = &nl6448bc26,
--       .ldmtr          = LDMTR_TFT_COLOR_16,   /* 16bit TFT panel */
--       .lddfr          = LDDFR_8BPP,           /* we want 8bit output */
--       .ldpmmr         = 0x0070,
--       .ldpspr         = 0x0500,
--       .ldaclnr        = 0,
--       .ldickr         = LDICKR_CLKSRC(LCDC_CLKSRC_EXTERNAL) |
--                         LDICKR_CLKDIV(1),
--       .rotate         = 0,
--       .novsync        = 1,
--       .blank          = NULL,
--};
-+  /* SH7760:
-+   * 0xFE300800: 256 * 4byte xRGB palette ram
-+   * 0xFE300C00: 42 bytes ctrl registers
+-int main(int argc,char *argv[])
+-{
+-  int cnt1,cnt2,len,toggle=0;
+-  int startcnt=1;
+-  unsigned char c,hex;
+-  
+-  if(argc>1&&(strcmp(argv[1],"-a")==0))
+-     startcnt=2;
+-  printf("Decoded Hex:=");
+-  for(cnt1=startcnt;cnt1<argc;cnt1++)
++::
++
++  /*
++   *    hex2ascii.c
++   *    a useful little tool for converting a hexadecimal command line to ascii
++   *
++   *    Author(s): Denis Joseph Barrow (djbarrow@de.ibm.com,barrow_dj@yahoo.com)
++   *    (C) 2000 IBM Deutschland Entwicklung GmbH, IBM Corporation.
 +   */
-+  static struct resource sh7760_lcdc_res[] = {
-+         [0] = {
-+	       .start  = 0xFE300800,
-+	       .end    = 0xFE300CFF,
-+	       .flags  = IORESOURCE_MEM,
-+         },
-+         [1] = {
-+	       .start  = 65,
-+	       .end    = 65,
-+	       .flags  = IORESOURCE_IRQ,
-+         },
-+  };
++  #include <stdio.h>
++
++  int main(int argc,char *argv[])
+   {
+-    len=strlen(argv[cnt1]);
+-    for(cnt2=0;cnt2<len;cnt2++)
++    int cnt1,cnt2,len,toggle=0;
++    int startcnt=1;
++    unsigned char c,hex;
++
++    if(argc>1&&(strcmp(argv[1],"-a")==0))
++       startcnt=2;
++    printf("Decoded Hex:=");
++    for(cnt1=startcnt;cnt1<argc;cnt1++)
+     {
+-       c=argv[cnt1][cnt2];
+-       if(c>='0'&&c<='9')
++      len=strlen(argv[cnt1]);
++      for(cnt2=0;cnt2<len;cnt2++)
++      {
++	 c=argv[cnt1][cnt2];
++	 if(c>='0'&&c<='9')
+ 	  c=c-'0';
+-       if(c>='A'&&c<='F')
++	 if(c>='A'&&c<='F')
+ 	  c=c-'A'+10;
+-       if(c>='a'&&c<='f')
++	 if(c>='a'&&c<='f')
+ 	  c=c-'a'+10;
+-       switch(toggle)
+-       {
++	 switch(toggle)
++	 {
+ 	  case 0:
+ 	     hex=c<<4;
+ 	     toggle=1;
+@@ -1224,11 +1432,11 @@ int main(int argc,char *argv[])
+ 	     }
+ 	     toggle=0;
+ 	  break;
+-       }
++	 }
++      }
+     }
++    printf("\n");
+   }
+-  printf("\n");
+-}
  
--/* SH7760:
-- * 0xFE300800: 256 * 4byte xRGB palette ram
-- * 0xFE300C00: 42 bytes ctrl registers
-- */
--static struct resource sh7760_lcdc_res[] = {
--       [0] = {
--               .start  = 0xFE300800,
--               .end    = 0xFE300CFF,
--               .flags  = IORESOURCE_MEM,
--       },
--       [1] = {
--               .start  = 65,
--               .end    = 65,
--               .flags  = IORESOURCE_IRQ,
--       },
--};
+ 
+ 
+@@ -1248,48 +1456,58 @@ should be able to sniff further back if you follow the following tricks.
+ 1) A kernel address should be easy to recognise since it is in
+ primary space & the problem state bit isn't set & also
+ The Hi bit of the address is set.
+-2) Another backchain should also be easy to recognise since it is an 
++2) Another backchain should also be easy to recognise since it is an
+ address pointing to another address approximately 100 bytes or 0x70 hex
+ behind the current stackpointer.
+ 
+ 
+ Here is some practice.
++
+ boot the kernel & hit PA1 at some random time
+-d g to display the gprs, this should display something like
+-GPR  0 =  00000001  00156018  0014359C  00000000
+-GPR  4 =  00000001  001B8888  000003E0  00000000
+-GPR  8 =  00100080  00100084  00000000  000FE000
+-GPR 12 =  00010400  8001B2DC  8001B36A  000FFED8
++
++d g to display the gprs, this should display something like::
++
++  GPR  0 =  00000001  00156018  0014359C  00000000
++  GPR  4 =  00000001  001B8888  000003E0  00000000
++  GPR  8 =  00100080  00100084  00000000  000FE000
++  GPR 12 =  00010400  8001B2DC  8001B36A  000FFED8
++
+ Note that GPR14 is a return address but as we are real men we are going to
+ trace the stack.
+-display 0x40 bytes after the stack pointer.
++display 0x40 bytes after the stack pointer::
+ 
+-V000FFED8  000FFF38 8001B838 80014C8E 000FFF38
+-V000FFEE8  00000000 00000000 000003E0 00000000
+-V000FFEF8  00100080 00100084 00000000 000FE000
+-V000FFF08  00010400 8001B2DC 8001B36A 000FFED8
++  V000FFED8  000FFF38 8001B838 80014C8E 000FFF38
++  V000FFEE8  00000000 00000000 000003E0 00000000
++  V000FFEF8  00100080 00100084 00000000 000FE000
++  V000FFF08  00010400 8001B2DC 8001B36A 000FFED8
+ 
+ 
+ Ah now look at whats in sp+56 (sp+0x38) this is 8001B36A our saved r14 if
+ you look above at our stackframe & also agrees with GPR14.
+ 
+-now backchain 
+-d 000FFF38.40
+-we now are taking the contents of SP to get our first backchain.
++now backchain::
+ 
+-V000FFF38  000FFFA0 00000000 00014995 00147094
+-V000FFF48  00147090 001470A0 000003E0 00000000
+-V000FFF58  00100080 00100084 00000000 001BF1D0
+-V000FFF68  00010400 800149BA 80014CA6 000FFF38
++	d 000FFF38.40
++
++we now are taking the contents of SP to get our first backchain::
++
++  V000FFF38  000FFFA0 00000000 00014995 00147094
++  V000FFF48  00147090 001470A0 000003E0 00000000
++  V000FFF58  00100080 00100084 00000000 001BF1D0
++  V000FFF68  00010400 800149BA 80014CA6 000FFF38
+ 
+ This displays a 2nd return address of 80014CA6
+ 
+-now do d 000FFFA0.40 for our 3rd backchain
++now do::
+ 
+-V000FFFA0  04B52002 0001107F 00000000 00000000
+-V000FFFB0  00000000 00000000 FF000000 0001107F
+-V000FFFC0  00000000 00000000 00000000 00000000
+-V000FFFD0  00010400 80010802 8001085A 000FFFA0
++	d 000FFFA0.40
++
++for our 3rd backchain::
++
++  V000FFFA0  04B52002 0001107F 00000000 00000000
++  V000FFFB0  00000000 00000000 FF000000 0001107F
++  V000FFFC0  00000000 00000000 00000000 00000000
++  V000FFFD0  00010400 80010802 8001085A 000FFFA0
+ 
+ 
+ our 3rd return address is 8001085A
+@@ -1297,23 +1515,35 @@ our 3rd return address is 8001085A
+ as the 04B52002 looks suspiciously like rubbish it is fair to assume that the
+ kernel entry routines for the sake of optimisation don't set up a backchain.
+ 
+-now look at System.map to see if the addresses make any sense.
++now look at System.map to see if the addresses make any sense::
++
++	grep -i 0001b3 System.map
++
++outputs among other things::
++
++	0001b304 T cpu_idle
+ 
+-grep -i 0001b3 System.map
+-outputs among other things
+-0001b304 T cpu_idle 
+ so 8001B36A
+ is cpu_idle+0x66 ( quiet the cpu is asleep, don't wake it )
+ 
++::
++
++	grep -i 00014 System.map
++
++produces among other things::
++
++	00014a78 T start_kernel
+ 
+-grep -i 00014 System.map 
+-produces among other things
+-00014a78 T start_kernel  
+ so 0014CA6 is start_kernel+some hex number I can't add in my head.
+ 
+-grep -i 00108 System.map 
+-this produces
+-00010800 T _stext
++::
++
++	grep -i 00108 System.map
++
++this produces::
++
++	00010800 T _stext
++
+ so   8001085A is _stext+0x5a
+ 
+ Congrats you've done your first backchain.
+@@ -1337,47 +1567,49 @@ system might be choking with around 64.
+ Here is some of the common IO terminology:
+ 
+ Subchannel:
+-This is the logical number most IO commands use to talk to an IO device. There
+-can be up to 0x10000 (65536) of these in a configuration, typically there are a
+-few hundred. Under VM for simplicity they are allocated contiguously, however
+-on the native hardware they are not. They typically stay consistent between
+-boots provided no new hardware is inserted or removed.
+-Under Linux for s390 we use these as IRQ's and also when issuing an IO command
+-(CLEAR SUBCHANNEL, HALT SUBCHANNEL, MODIFY SUBCHANNEL, RESUME SUBCHANNEL,
+-START SUBCHANNEL, STORE SUBCHANNEL and TEST SUBCHANNEL). We use this as the ID
+-of the device we wish to talk to. The most important of these instructions are
+-START SUBCHANNEL (to start IO), TEST SUBCHANNEL (to check whether the IO
+-completed successfully) and HALT SUBCHANNEL (to kill IO). A subchannel can have
+-up to 8 channel paths to a device, this offers redundancy if one is not
+-available.
++  This is the logical number most IO commands use to talk to an IO device. There
++  can be up to 0x10000 (65536) of these in a configuration, typically there are a
++  few hundred. Under VM for simplicity they are allocated contiguously, however
++  on the native hardware they are not. They typically stay consistent between
++  boots provided no new hardware is inserted or removed.
++
++  Under Linux for s390 we use these as IRQ's and also when issuing an IO command
++  (CLEAR SUBCHANNEL, HALT SUBCHANNEL, MODIFY SUBCHANNEL, RESUME SUBCHANNEL,
++  START SUBCHANNEL, STORE SUBCHANNEL and TEST SUBCHANNEL). We use this as the ID
++  of the device we wish to talk to. The most important of these instructions are
++  START SUBCHANNEL (to start IO), TEST SUBCHANNEL (to check whether the IO
++  completed successfully) and HALT SUBCHANNEL (to kill IO). A subchannel can have
++  up to 8 channel paths to a device, this offers redundancy if one is not
++  available.
+ 
+ Device Number:
+-This number remains static and is closely tied to the hardware. There are 65536
+-of these, made up of a CHPID (Channel Path ID, the most significant 8 bits) and
+-another lsb 8 bits. These remain static even if more devices are inserted or
+-removed from the hardware. There is a 1 to 1 mapping between subchannels and
+-device numbers, provided devices aren't inserted or removed.
++  This number remains static and is closely tied to the hardware. There are 65536
++  of these, made up of a CHPID (Channel Path ID, the most significant 8 bits) and
++  another lsb 8 bits. These remain static even if more devices are inserted or
++  removed from the hardware. There is a 1 to 1 mapping between subchannels and
++  device numbers, provided devices aren't inserted or removed.
+ 
+ Channel Control Words:
+-CCWs are linked lists of instructions initially pointed to by an operation
+-request block (ORB), which is initially given to Start Subchannel (SSCH)
+-command along with the subchannel number for the IO subsystem to process
+-while the CPU continues executing normal code.
+-CCWs come in two flavours, Format 0 (24 bit for backward compatibility) and
+-Format 1 (31 bit). These are typically used to issue read and write (and many
+-other) instructions. They consist of a length field and an absolute address
+-field.
+-Each IO typically gets 1 or 2 interrupts, one for channel end (primary status)
+-when the channel is idle, and the second for device end (secondary status).
+-Sometimes you get both concurrently. You check how the IO went on by issuing a
+-TEST SUBCHANNEL at each interrupt, from which you receive an Interruption
+-response block (IRB). If you get channel and device end status in the IRB
+-without channel checks etc. your IO probably went okay. If you didn't you
+-probably need to examine the IRB, extended status word etc.
+-If an error occurs, more sophisticated control units have a facility known as
+-concurrent sense. This means that if an error occurs Extended sense information
+-will be presented in the Extended status word in the IRB. If not you have to
+-issue a subsequent SENSE CCW command after the test subchannel.
++  CCWs are linked lists of instructions initially pointed to by an operation
++  request block (ORB), which is initially given to Start Subchannel (SSCH)
++  command along with the subchannel number for the IO subsystem to process
++  while the CPU continues executing normal code.
++  CCWs come in two flavours, Format 0 (24 bit for backward compatibility) and
++  Format 1 (31 bit). These are typically used to issue read and write (and many
++  other) instructions. They consist of a length field and an absolute address
++  field.
++
++  Each IO typically gets 1 or 2 interrupts, one for channel end (primary status)
++  when the channel is idle, and the second for device end (secondary status).
++  Sometimes you get both concurrently. You check how the IO went on by issuing a
++  TEST SUBCHANNEL at each interrupt, from which you receive an Interruption
++  response block (IRB). If you get channel and device end status in the IRB
++  without channel checks etc. your IO probably went okay. If you didn't you
++  probably need to examine the IRB, extended status word etc.
++  If an error occurs, more sophisticated control units have a facility known as
++  concurrent sense. This means that if an error occurs Extended sense information
++  will be presented in the Extended status word in the IRB. If not you have to
++  issue a subsequent SENSE CCW command after the test subchannel.
+ 
+ 
+ TPI (Test pending interrupt) can also be used for polled IO, but in
+@@ -1388,58 +1620,62 @@ Store Subchannel and Modify Subchannel can be used to examine and modify
+ operating characteristics of a subchannel (e.g. channel paths).
+ 
+ Other IO related Terms:
+-Sysplex: S390's Clustering Technology
+-QDIO: S390's new high speed IO architecture to support devices such as gigabit
+-ethernet, this architecture is also designed to be forward compatible with
+-upcoming 64 bit machines.
+ 
++Sysplex:
++  S390's Clustering Technology
++QDIO:
++  S390's new high speed IO architecture to support devices such as gigabit
++  ethernet, this architecture is also designed to be forward compatible with
++  upcoming 64 bit machines.
+ 
+-General Concepts 
++
++General Concepts
++----------------
+ 
+ Input Output Processors (IOP's) are responsible for communicating between
+ the mainframe CPU's & the channel & relieve the mainframe CPU's from the
+-burden of communicating with IO devices directly, this allows the CPU's to 
+-concentrate on data processing. 
++burden of communicating with IO devices directly, this allows the CPU's to
++concentrate on data processing.
+ 
+-IOP's can use one or more links ( known as channel paths ) to talk to each 
++IOP's can use one or more links ( known as channel paths ) to talk to each
+ IO device. It first checks for path availability & chooses an available one,
+ then starts ( & sometimes terminates IO ).
+ There are two types of channel path: ESCON & the Parallel IO interface.
+ 
+ IO devices are attached to control units, control units provide the
+-logic to interface the channel paths & channel path IO protocols to 
++logic to interface the channel paths & channel path IO protocols to
+ the IO devices, they can be integrated with the devices or housed separately
+-& often talk to several similar devices ( typical examples would be raid 
+-controllers or a control unit which connects to 1000 3270 terminals ).
++& often talk to several similar devices ( typical examples would be raid
++controllers or a control unit which connects to 1000 3270 terminals )::
+ 
+ 
+-    +---------------------------------------------------------------+
+-    | +-----+ +-----+ +-----+ +-----+  +----------+  +----------+   |
+-    | | CPU | | CPU | | CPU | | CPU |  |  Main    |  | Expanded |   |
+-    | |     | |     | |     | |     |  |  Memory  |  |  Storage |   |
+-    | +-----+ +-----+ +-----+ +-----+  +----------+  +----------+   | 
+-    |---------------------------------------------------------------+
+-    |   IOP        |      IOP      |       IOP                      |
+-    |---------------------------------------------------------------
+-    | C | C | C | C | C | C | C | C | C | C | C | C | C | C | C | C | 
+-    ----------------------------------------------------------------
+-         ||                                              ||
+-         ||  Bus & Tag Channel Path                      || ESCON
+-         ||  ======================                      || Channel
+-         ||  ||                  ||                      || Path
+-    +----------+               +----------+         +----------+
+-    |          |               |          |         |          |
+-    |    CU    |               |    CU    |         |    CU    |
+-    |          |               |          |         |          |
+-    +----------+               +----------+         +----------+
+-       |      |                     |                |       |
+-+----------+ +----------+      +----------+   +----------+ +----------+
+-|I/O Device| |I/O Device|      |I/O Device|   |I/O Device| |I/O Device|
+-+----------+ +----------+      +----------+   +----------+ +----------+
+-  CPU = Central Processing Unit    
+-  C = Channel                      
+-  IOP = IP Processor               
+-  CU = Control Unit
++      +---------------------------------------------------------------+
++      | +-----+ +-----+ +-----+ +-----+  +----------+  +----------+   |
++      | | CPU | | CPU | | CPU | | CPU |  |  Main    |  | Expanded |   |
++      | |     | |     | |     | |     |  |  Memory  |  |  Storage |   |
++      | +-----+ +-----+ +-----+ +-----+  +----------+  +----------+   |
++      |---------------------------------------------------------------+
++      |   IOP        |      IOP      |       IOP                      |
++      |---------------------------------------------------------------
++      | C | C | C | C | C | C | C | C | C | C | C | C | C | C | C | C |
++      ----------------------------------------------------------------
++	   ||                                              ||
++	   ||  Bus & Tag Channel Path                      || ESCON
++	   ||  ======================                      || Channel
++	   ||  ||                  ||                      || Path
++      +----------+               +----------+         +----------+
++      |          |               |          |         |          |
++      |    CU    |               |    CU    |         |    CU    |
++      |          |               |          |         |          |
++      +----------+               +----------+         +----------+
++	 |      |                     |                |       |
++  +----------+ +----------+      +----------+   +----------+ +----------+
++  |I/O Device| |I/O Device|      |I/O Device|   |I/O Device| |I/O Device|
++  +----------+ +----------+      +----------+   +----------+ +----------+
++    CPU = Central Processing Unit
++    C = Channel
++    IOP = IP Processor
++    CU = Control Unit
+ 
+ The 390 IO systems come in 2 flavours the current 390 machines support both
+ 
+@@ -1447,7 +1683,7 @@ The Older 360 & 370 Interface,sometimes called the Parallel I/O interface,
+ sometimes called Bus-and Tag & sometimes Original Equipment Manufacturers
+ Interface (OEMI).
+ 
+-This byte wide Parallel channel path/bus has parity & data on the "Bus" cable 
++This byte wide Parallel channel path/bus has parity & data on the "Bus" cable
+ and control lines on the "Tag" cable. These can operate in byte multiplex mode
+ for sharing between several slow devices or burst mode and monopolize the
+ channel for the whole burst. Up to 256 devices can be addressed on one of these
+@@ -1459,13 +1695,13 @@ support only transfer rates of 3.0, 2.0 & 1.0 MB/sec.
+ One of these paths can be daisy chained to up to 8 control units.
+ 
+ 
+-ESCON if fibre optic it is also called FICON 
++ESCON if fibre optic it is also called FICON
+ Was introduced by IBM in 1990. Has 2 fibre optic cables and uses either leds or
+ lasers for communication at a signaling rate of up to 200 megabits/sec. As
+ 10bits are transferred for every 8 bits info this drops to 160 megabits/sec
+ and to 18.6 Megabytes/sec once control info and CRC are added. ESCON only
+ operates in burst mode.
+- 
++
+ ESCONs typical max cable length is 3km for the led version and 20km for the
+ laser version known as XDF (extended distance facility). This can be further
+ extended by using an ESCON director which triples the above mentioned ranges.
+@@ -1489,31 +1725,29 @@ Debugging IO on s/390 & z/Architecture under VM
+ 
+ Now we are ready to go on with IO tracing commands under VM
+ 
+-A few self explanatory queries:
+-Q OSA
+-Q CTC
+-Q DISK ( This command is CMS specific )
+-Q DASD
++A few self explanatory queries::
+ 
++	Q OSA
++	Q CTC
++	Q DISK ( This command is CMS specific )
++	Q DASD
+ 
++Q OSA on my machine returns::
+ 
 -
--static struct platform_device sh7760_lcdc_dev = {
--       .dev    = {
--               .platform_data = &sh7760fb_nl6448,
--       },
--       .name           = "sh7760-lcdc",
--       .id             = -1,
--       .resource       = sh7760_lcdc_res,
--       .num_resources  = ARRAY_SIZE(sh7760_lcdc_res),
--};
 -
--====================== cut here ======================================
-+  static struct platform_device sh7760_lcdc_dev = {
-+         .dev    = {
-+	       .platform_data = &sh7760fb_nl6448,
-+         },
-+         .name           = "sh7760-lcdc",
-+         .id             = -1,
-+         .resource       = sh7760_lcdc_res,
-+         .num_resources  = ARRAY_SIZE(sh7760_lcdc_res),
-+  };
-diff --git a/Documentation/fb/sisfb.txt b/Documentation/fb/sisfb.txt
-index 2e68e503e72f..8f4e502ea12e 100644
---- a/Documentation/fb/sisfb.txt
-+++ b/Documentation/fb/sisfb.txt
-@@ -1,4 +1,4 @@
 -
-+==============
- What is sisfb?
+-Q OSA on my machine returns
+-OSA  7C08 ON OSA   7C08 SUBCHANNEL = 0000
+-OSA  7C09 ON OSA   7C09 SUBCHANNEL = 0001
+-OSA  7C14 ON OSA   7C14 SUBCHANNEL = 0002
+-OSA  7C15 ON OSA   7C15 SUBCHANNEL = 0003
++	OSA  7C08 ON OSA   7C08 SUBCHANNEL = 0000
++	OSA  7C09 ON OSA   7C09 SUBCHANNEL = 0001
++	OSA  7C14 ON OSA   7C14 SUBCHANNEL = 0002
++	OSA  7C15 ON OSA   7C15 SUBCHANNEL = 0003
+ 
+ If you have a guest with certain privileges you may be able to see devices
+ which don't belong to you. To avoid this, add the option V.
+-e.g.
+-Q V OSA
++e.g.::
++
++	Q V OSA
+ 
+ Now using the device numbers returned by this command we will
+ Trace the io starting up on the first device 7c08 & 7c09
+-In our simplest case we can trace the 
++In our simplest case we can trace the
+ start subchannels
+ like TR SSCH 7C08-7C09
+ or the halt subchannels
+@@ -1524,34 +1758,47 @@ A good trick is tracing all the IO's and CCWS and spooling them into the reader
+ of another VM guest so he can ftp the logfile back to his own machine. I'll do
+ a small bit of this and give you a look at the output.
+ 
+-1) Spool stdout to VM reader
+-SP PRT TO (another vm guest ) or * for the local vm guest
+-2) Fill the reader with the trace
+-TR IO 7c08-7c09 INST INT CCW PRT RUN
+-3) Start up linux 
+-i 00c  
+-4) Finish the trace
+-TR END
+-5) close the reader
+-C PRT
+-6) list reader contents
+-RDRLIST
+-7) copy it to linux4's minidisk 
+-RECEIVE / LOG TXT A1 ( replace
++1) Spool stdout to VM reader::
++
++	SP PRT TO (another vm guest ) or * for the local vm guest
++
++2) Fill the reader with the trace::
++
++	TR IO 7c08-7c09 INST INT CCW PRT RUN
++
++3) Start up linux::
++
++	i 00c
++4) Finish the trace::
++
++	TR END
++
++5) close the reader::
++
++	C PRT
++
++6) list reader contents::
++
++	RDRLIST
++
++7) copy it to linux4's minidisk::
++
++	RECEIVE / LOG TXT A1 ( replace
++
+ 8)
+ filel & press F11 to look at it
+-You should see something like:
++You should see something like::
+ 
+-00020942' SSCH  B2334000    0048813C    CC 0    SCH 0000    DEV 7C08
+-          CPA 000FFDF0   PARM 00E2C9C4    KEY 0  FPI C0  LPM 80
+-          CCW    000FFDF0  E4200100 00487FE8   0000  E4240100 ........
+-          IDAL                                      43D8AFE8
+-          IDAL                                      0FB76000
+-00020B0A'   I/O DEV 7C08 -> 000197BC'   SCH 0000   PARM 00E2C9C4
+-00021628' TSCH  B2354000 >> 00488164    CC 0    SCH 0000    DEV 7C08
+-          CCWA 000FFDF8   DEV STS 0C  SCH STS 00  CNT 00EC
+-           KEY 0   FPI C0  CC 0   CTLS 4007
+-00022238' STSCH B2344000 >> 00488108    CC 0    SCH 0000    DEV 7C08
++  00020942' SSCH  B2334000    0048813C    CC 0    SCH 0000    DEV 7C08
++	    CPA 000FFDF0   PARM 00E2C9C4    KEY 0  FPI C0  LPM 80
++	    CCW    000FFDF0  E4200100 00487FE8   0000  E4240100 ........
++	    IDAL                                      43D8AFE8
++	    IDAL                                      0FB76000
++  00020B0A'   I/O DEV 7C08 -> 000197BC'   SCH 0000   PARM 00E2C9C4
++  00021628' TSCH  B2354000 >> 00488164    CC 0    SCH 0000    DEV 7C08
++	    CCWA 000FFDF8   DEV STS 0C  SCH STS 00  CNT 00EC
++	     KEY 0   FPI C0  CC 0   CTLS 4007
++  00022238' STSCH B2344000 >> 00488108    CC 0    SCH 0000    DEV 7C08
+ 
+ If you don't like messing up your readed ( because you possibly booted from it )
+ you can alternatively spool it to another readers guest.
+@@ -1563,43 +1810,58 @@ These commands are listed only because they have
+ been of use to me in the past & may be of use to
+ you too. For more complete info on each of the commands
+ use type HELP <command> from CMS.
+-detaching devices
+-DET <devno range>
+-ATT <devno range> <guest> 
++
++detaching devices::
++
++	DET <devno range>
++	ATT <devno range> <guest>
++
+ attach a device to guest * for your own guest
+-READY <devno> cause VM to issue a fake interrupt.
+ 
+-The VARY command is normally only available to VM administrators.
+-VARY ON PATH <path> TO <devno range>
+-VARY OFF PATH <PATH> FROM <devno range>
++READY <devno>
++	cause VM to issue a fake interrupt.
++
++The VARY command is normally only available to VM administrators::
++
++	VARY ON PATH <path> TO <devno range>
++	VARY OFF PATH <PATH> FROM <devno range>
++
+ This is used to switch on or off channel paths to devices.
+ 
+ Q CHPID <channel path ID>
+-This displays state of devices using this channel path
++   This displays state of devices using this channel path
++
+ D SCHIB <subchannel>
+-This displays the subchannel information SCHIB block for the device.
+-this I believe is also only available to administrators.
++   This displays the subchannel information SCHIB block for the device.
++   this I believe is also only available to administrators.
++
+ DEFINE CTC <devno>
+-defines a virtual CTC channel to channel connection
+-2 need to be defined on each guest for the CTC driver to use.
++  defines a virtual CTC channel to channel connection
++  2 need to be defined on each guest for the CTC driver to use.
++
+ COUPLE  devno userid remote devno
+-Joins a local virtual device to a remote virtual device
+-( commonly used for the CTC driver ).
++  Joins a local virtual device to a remote virtual device
++  ( commonly used for the CTC driver ).
++
++Building a VM ramdisk under CMS which linux can use::
++
++	def vfb-<blocksize> <subchannel> <number blocks>
+ 
+-Building a VM ramdisk under CMS which linux can use
+-def vfb-<blocksize> <subchannel> <number blocks>
+ blocksize is commonly 4096 for linux.
+-Formatting it
+-format <subchannel> <driver letter e.g. x> (blksize <blocksize>
+ 
+-Sharing a disk between multiple guests
+-LINK userid devno1 devno2 mode password
++Formatting it::
++
++	format <subchannel> <driver letter e.g. x> (blksize <blocksize>
++
++Sharing a disk between multiple guests::
++
++	LINK userid devno1 devno2 mode password
+ 
+ 
+ 
+ GDB on S390
+ ===========
+-N.B. if compiling for debugging gdb works better without optimisation 
++N.B. if compiling for debugging gdb works better without optimisation
+ ( see Compiling programs for debugging )
+ 
+ invocation
+@@ -1609,113 +1871,169 @@ gdb <victim program> <optional corefile>
+ Online help
+ -----------
+ help: gives help on commands
+-e.g.
+-help
+-help display
++
++e.g.::
++
++	help
++	help display
++
+ Note gdb's online help is very good use it.
+ 
+ 
+ Assembly
+ --------
+-info registers: displays registers other than floating point.
+-info all-registers: displays floating points as well.
+-disassemble: disassembles
+-e.g.
+-disassemble without parameters will disassemble the current function
+-disassemble $pc $pc+10 
++info registers:
++  displays registers other than floating point.
++
++info all-registers:
++  displays floating points as well.
++
++disassemble:
++  disassembles
++
++e.g.::
++
++	disassemble without parameters will disassemble the current function
++	disassemble $pc $pc+10
+ 
+ Viewing & modifying variables
+ -----------------------------
+-print or p: displays variable or register
++print or p:
++  displays variable or register
++
+ e.g. p/x $sp will display the stack pointer
+ 
+-display: prints variable or register each time program stops
+-e.g.
+-display/x $pc will display the program counter
+-display argc
++display:
++  prints variable or register each time program stops
+ 
+-undisplay : undo's display's
++e.g.::
+ 
+-info breakpoints: shows all current breakpoints
++	display/x $pc will display the program counter
++	display argc
+ 
+-info stack: shows stack back trace (if this doesn't work too well, I'll show
+-you the stacktrace by hand below).
++undisplay:
++  undo's display's
+ 
+-info locals: displays local variables.
++info breakpoints:
++  shows all current breakpoints
+ 
+-info args: display current procedure arguments.
++info stack:
++  shows stack back trace (if this doesn't work too well, I'll show
++  you the stacktrace by hand below).
+ 
+-set args: will set argc & argv each time the victim program is invoked.
++info locals:
++  displays local variables.
+ 
+-set <variable>=value
+-set argc=100
+-set $pc=0
++info args:
++  display current procedure arguments.
++
++set args:
++  will set argc & argv each time the victim program is invoked
++
++e.g.::
++
++	set <variable>=value
++	set argc=100
++	set $pc=0
+ 
+ 
+ 
+ Modifying execution
+ -------------------
+-step: steps n lines of sourcecode
+-step steps 1 line.
+-step 100 steps 100 lines of code.
++step:
++  steps n lines of sourcecode
+ 
+-next: like step except this will not step into subroutines
++step
++  steps 1 line.
+ 
+-stepi: steps a single machine code instruction.
+-e.g. stepi 100
++step 100
++  steps 100 lines of code.
+ 
+-nexti: steps a single machine code instruction but will not step into
+-subroutines.
++next:
++	like step except this will not step into subroutines
+ 
+-finish: will run until exit of the current routine
++stepi:
++	steps a single machine code instruction.
+ 
+-run: (re)starts a program
++e.g.::
+ 
+-cont: continues a program
++	stepi 100
+ 
+-quit: exits gdb.
++nexti:
++	steps a single machine code instruction but will not step into
++	subroutines.
++
++finish:
++	will run until exit of the current routine
++
++run:
++	(re)starts a program
++
++cont:
++	continues a program
++
++quit:
++	exits gdb.
+ 
+ 
+ breakpoints
+ ------------
+ 
+ break
+-sets a breakpoint
+-e.g.
++  sets a breakpoint
+ 
+-break main
++e.g.::
+ 
+-break *$pc
+-
+-break *0x400618
++	break main
++	break *$pc
++	break *0x400618
+ 
+ Here's a really useful one for large programs
++
+ rbr
+-Set a breakpoint for all functions matching REGEXP
+-e.g.
+-rbr 390
++	Set a breakpoint for all functions matching REGEXP
++
++e.g.::
++
++	rbr 390
++
+ will set a breakpoint with all functions with 390 in their name.
+ 
+ info breakpoints
+-lists all breakpoints
++	lists all breakpoints
++
++delete:
++	delete breakpoint by number or delete them all
+ 
+-delete: delete breakpoint by number or delete them all
+ e.g.
+-delete 1 will delete the first breakpoint
+-delete will delete them all
+ 
+-watch: This will set a watchpoint ( usually hardware assisted ),
++delete 1
++	will delete the first breakpoint
++
++
++delete
++	will delete them all
++
++watch:
++	This will set a watchpoint ( usually hardware assisted ),
++
+ This will watch a variable till it changes
++
+ e.g.
+-watch cnt, will watch the variable cnt till it changes.
++
++watch cnt
++	will watch the variable cnt till it changes.
++
+ As an aside unfortunately gdb's, architecture independent watchpoint code
+ is inconsistent & not very good, watchpoints usually work but not always.
+ 
+-info watchpoints: Display currently active watchpoints
++info watchpoints:
++	Display currently active watchpoints
+ 
+ condition: ( another useful one )
+-Specify breakpoint number N to break only if COND is true.
+-Usage is `condition N COND', where N is an integer and COND is an
++	Specify breakpoint number N to break only if COND is true.
++
++Usage is `condition N COND`, where N is an integer and COND is an
+ expression to be evaluated whenever breakpoint N is reached.
+ 
+ 
+@@ -1723,41 +2041,51 @@ expression to be evaluated whenever breakpoint N is reached.
+ User defined functions/macros
+ -----------------------------
+ define: ( Note this is very very useful,simple & powerful )
++
+ usage define <name> <list of commands> end
+ 
+-examples which you should consider putting into .gdbinit in your home directory
+-define d
+-stepi
+-disassemble $pc $pc+10
+-end
++examples which you should consider putting into .gdbinit in your home
++directory::
+ 
+-define e
+-nexti
+-disassemble $pc $pc+10
+-end
++	define d
++	stepi
++	disassemble $pc $pc+10
++	end
++	define e
++	nexti
++	disassemble $pc $pc+10
++	end
+ 
+ 
+ Other hard to classify stuff
+ ----------------------------
+ signal n:
+-sends the victim program a signal.
+-e.g. signal 3 will send a SIGQUIT.
++   sends the victim program a signal.
++
++e.g. `signal 3` will send a SIGQUIT.
+ 
+ info signals:
+-what gdb does when the victim receives certain signals.
++	what gdb does when the victim receives certain signals.
+ 
+ list:
+-e.g.
+-list lists current function source
+-list 1,10 list first 10 lines of current file.
++
++e.g.:
++
++list
++	lists current function source
++list 1,10
++	list first 10 lines of current file.
++
+ list test.c:1,10
+ 
+ 
+ directory:
+-Adds directories to be searched for source if gdb cannot find the source.
+-(note it is a bit sensitive about slashes)
+-e.g. To add the root of the filesystem to the searchpath do
+-directory //
++  Adds directories to be searched for source if gdb cannot find the source.
++  (note it is a bit sensitive about slashes)
++
++e.g. To add the root of the filesystem to the searchpath do::
++
++	directory //
+ 
+ 
+ call <function>
+@@ -1765,153 +2093,205 @@ This calls a function in the victim program, this is pretty powerful
+ e.g.
+ (gdb) call printf("hello world")
+ outputs:
+-$1 = 11 
++$1 = 11
+ 
+ You might now be thinking that the line above didn't work, something extra had
+ to be done.
+ (gdb) call fflush(stdout)
+ hello world$2 = 0
+-As an aside the debugger also calls malloc & free under the hood 
++As an aside the debugger also calls malloc & free under the hood
+ to make space for the "hello world" string.
+ 
+ 
+ 
+ hints
+ -----
+-1) command completion works just like bash 
+-( if you are a bad typist like me this really helps )
++1) command completion works just like bash
++   ( if you are a bad typist like me this really helps )
++
+ e.g. hit br <TAB> & cursor up & down :-).
+ 
+ 2) if you have a debugging problem that takes a few steps to recreate
+ put the steps into a file called .gdbinit in your current working directory
+-if you have defined a few extra useful user defined commands put these in 
++if you have defined a few extra useful user defined commands put these in
+ your home directory & they will be read each time gdb is launched.
+ 
+-A typical .gdbinit file might be.
+-break main
+-run
+-break runtime_exception
+-cont 
++A typical .gdbinit file might be.::
++
++	break main
++	run
++	break runtime_exception
++	cont
+ 
+ 
+ stack chaining in gdb by hand
+ -----------------------------
+-This is done using a the same trick described for VM 
+-p/x (*($sp+56))&0x7fffffff get the first backchain.
++This is done using a the same trick described for VM::
++
++	p/x (*($sp+56))&0x7fffffff
++
++get the first backchain.
+ 
+ For z/Architecture
+ Replace 56 with 112 & ignore the &0x7fffffff
+ in the macros below & do nasty casts to longs like the following
+ as gdb unfortunately deals with printed arguments as ints which
+ messes up everything.
+-i.e. here is a 3rd backchain dereference
+-p/x *(long *)(***(long ***)$sp+112)
+ 
++i.e. here is a 3rd backchain dereference::
++
++	p/x *(long *)(***(long ***)$sp+112)
++
++
++this outputs::
++
++	$5 = 0x528f18
+ 
+-this outputs 
+-$5 = 0x528f18 
+ on my machine.
+-Now you can use 
+-info symbol (*($sp+56))&0x7fffffff 
+-you might see something like.
+-rl_getc + 36 in section .text  telling you what is located at address 0x528f18
+-Now do.
+-p/x (*(*$sp+56))&0x7fffffff 
+-This outputs
+-$6 = 0x528ed0
+-Now do.
+-info symbol (*(*$sp+56))&0x7fffffff
+-rl_read_key + 180 in section .text
+-now do
+-p/x (*(**$sp+56))&0x7fffffff
++
++Now you can use::
++
++	info symbol (*($sp+56))&0x7fffffff
++
++you might see something like::
++
++	rl_getc + 36 in section .text
++
++telling you what is located at address 0x528f18
++Now do::
++
++	p/x (*(*$sp+56))&0x7fffffff
++
++This outputs::
++
++	$6 = 0x528ed0
++
++Now do::
++
++	info symbol (*(*$sp+56))&0x7fffffff
++	rl_read_key + 180 in section .text
++
++now do::
++
++	p/x (*(**$sp+56))&0x7fffffff
++
+ & so on.
+ 
+ Disassembling instructions without debug info
+ ---------------------------------------------
+ gdb typically complains if there is a lack of debugging
+-symbols in the disassemble command with 
++symbols in the disassemble command with
+ "No function contains specified address." To get around
+-this do 
+-x/<number lines to disassemble>xi <address>
+-e.g.
+-x/20xi 0x400730
++this do::
+ 
++	x/<number lines to disassemble>xi <address>
+ 
++e.g.::
+ 
+-Note: Remember gdb has history just like bash you don't need to retype the
+-whole line just use the up & down arrows.
++	x/20xi 0x400730
++
++
++
++Note:
++  Remember gdb has history just like bash you don't need to retype the
++  whole line just use the up & down arrows.
+ 
+ 
+ 
+ For more info
+ -------------
+-From your linuxbox do 
+-man gdb or info gdb.
++From your linuxbox do::
++
++	man gdb
++
++or::
++
++	info gdb.
+ 
+ core dumps
+ ----------
+-What a core dump ?,
++
++What a core dump ?
++^^^^^^^^^^^^^^^^^^
++
+ A core dump is a file generated by the kernel (if allowed) which contains the
+ registers and all active pages of the program which has crashed.
++
+ From this file gdb will allow you to look at the registers, stack trace and
+ memory of the program as if it just crashed on your system. It is usually
+ called core and created in the current working directory.
++
+ This is very useful in that a customer can mail a core dump to a technical
+ support department and the technical support department can reconstruct what
+ happened. Provided they have an identical copy of this program with debugging
+ symbols compiled in and the source base of this build is available.
++
+ In short it is far more useful than something like a crash log could ever hope
+ to be.
+ 
+-Why have I never seen one ?.
+-Probably because you haven't used the command 
+-ulimit -c unlimited in bash
+-to allow core dumps, now do 
+-ulimit -a 
++Why have I never seen one ?
++^^^^^^^^^^^^^^^^^^^^^^^^^^^
++
++Probably because you haven't used the command::
++
++	ulimit -c unlimited in bash
++
++to allow core dumps, now do::
++
++	ulimit -a
++
+ to verify that the limit was accepted.
+ 
+ A sample core dump
+-To create this I'm going to do
+-ulimit -c unlimited
+-gdb 
+-to launch gdb (my victim app. ) now be bad & do the following from another 
+-telnet/xterm session to the same machine
+-ps -aux | grep gdb
+-kill -SIGSEGV <gdb's pid>
+-or alternatively use killall -SIGSEGV gdb if you have the killall command.
+-Now look at the core dump.
+-./gdb core
+-Displays the following
+-GNU gdb 4.18
+-Copyright 1998 Free Software Foundation, Inc.
+-GDB is free software, covered by the GNU General Public License, and you are
+-welcome to change it and/or distribute copies of it under certain conditions.
+-Type "show copying" to see the conditions.
+-There is absolutely no warranty for GDB.  Type "show warranty" for details.
+-This GDB was configured as "s390-ibm-linux"...
+-Core was generated by `./gdb'.
+-Program terminated with signal 11, Segmentation fault.
+-Reading symbols from /usr/lib/libncurses.so.4...done.
+-Reading symbols from /lib/libm.so.6...done.
+-Reading symbols from /lib/libc.so.6...done.
+-Reading symbols from /lib/ld-linux.so.2...done.
+-#0  0x40126d1a in read () from /lib/libc.so.6
+-Setting up the environment for debugging gdb.
+-Breakpoint 1 at 0x4dc6f8: file utils.c, line 471.
+-Breakpoint 2 at 0x4d87a4: file top.c, line 2609.
+-(top-gdb) info stack
+-#0  0x40126d1a in read () from /lib/libc.so.6
+-#1  0x528f26 in rl_getc (stream=0x7ffffde8) at input.c:402
+-#2  0x528ed0 in rl_read_key () at input.c:381
+-#3  0x5167e6 in readline_internal_char () at readline.c:454
+-#4  0x5168ee in readline_internal_charloop () at readline.c:507
+-#5  0x51692c in readline_internal () at readline.c:521
+-#6  0x5164fe in readline (prompt=0x7ffff810)
+-    at readline.c:349
+-#7  0x4d7a8a in command_line_input (prompt=0x564420 "(gdb) ", repeat=1,
+-    annotation_suffix=0x4d6b44 "prompt") at top.c:2091
+-#8  0x4d6cf0 in command_loop () at top.c:1345
+-#9  0x4e25bc in main (argc=1, argv=0x7ffffdf4) at main.c:635
++   To create this I'm going to do::
++
++	ulimit -c unlimited
++	gdb
++
++to launch gdb (my victim app. ) now be bad & do the following from another
++telnet/xterm session to the same machine::
++
++	ps -aux | grep gdb
++	kill -SIGSEGV <gdb's pid>
++
++or alternatively use `killall -SIGSEGV gdb` if you have the killall command.
++
++Now look at the core dump::
++
++	./gdb core
++
++Displays the following::
++
++  GNU gdb 4.18
++  Copyright 1998 Free Software Foundation, Inc.
++  GDB is free software, covered by the GNU General Public License, and you are
++  welcome to change it and/or distribute copies of it under certain conditions.
++  Type "show copying" to see the conditions.
++  There is absolutely no warranty for GDB.  Type "show warranty" for details.
++  This GDB was configured as "s390-ibm-linux"...
++  Core was generated by `./gdb'.
++  Program terminated with signal 11, Segmentation fault.
++  Reading symbols from /usr/lib/libncurses.so.4...done.
++  Reading symbols from /lib/libm.so.6...done.
++  Reading symbols from /lib/libc.so.6...done.
++  Reading symbols from /lib/ld-linux.so.2...done.
++  #0  0x40126d1a in read () from /lib/libc.so.6
++  Setting up the environment for debugging gdb.
++  Breakpoint 1 at 0x4dc6f8: file utils.c, line 471.
++  Breakpoint 2 at 0x4d87a4: file top.c, line 2609.
++  (top-gdb) info stack
++  #0  0x40126d1a in read () from /lib/libc.so.6
++  #1  0x528f26 in rl_getc (stream=0x7ffffde8) at input.c:402
++  #2  0x528ed0 in rl_read_key () at input.c:381
++  #3  0x5167e6 in readline_internal_char () at readline.c:454
++  #4  0x5168ee in readline_internal_charloop () at readline.c:507
++  #5  0x51692c in readline_internal () at readline.c:521
++  #6  0x5164fe in readline (prompt=0x7ffff810)
++      at readline.c:349
++  #7  0x4d7a8a in command_line_input (prompt=0x564420 "(gdb) ", repeat=1,
++      annotation_suffix=0x4d6b44 "prompt") at top.c:2091
++  #8  0x4d6cf0 in command_loop () at top.c:1345
++  #9  0x4e25bc in main (argc=1, argv=0x7ffffdf4) at main.c:635
+ 
+ 
+ LDD
+@@ -1919,27 +2299,32 @@ LDD
+ This is a program which lists the shared libraries which a library needs,
+ Note you also get the relocations of the shared library text segments which
+ help when using objdump --source.
+-e.g.
+- ldd ./gdb
+-outputs
+-libncurses.so.4 => /usr/lib/libncurses.so.4 (0x40018000)
+-libm.so.6 => /lib/libm.so.6 (0x4005e000)
+-libc.so.6 => /lib/libc.so.6 (0x40084000)
+-/lib/ld-linux.so.2 => /lib/ld-linux.so.2 (0x40000000)
++
++e.g.::
++
++	ldd ./gdb
++
++outputs::
++
++  libncurses.so.4 => /usr/lib/libncurses.so.4 (0x40018000)
++  libm.so.6 => /lib/libm.so.6 (0x4005e000)
++  libc.so.6 => /lib/libc.so.6 (0x40084000)
++  /lib/ld-linux.so.2 => /lib/ld-linux.so.2 (0x40000000)
+ 
+ 
+ Debugging shared libraries
+ ==========================
+ Most programs use shared libraries, however it can be very painful
+-when you single step instruction into a function like printf for the 
++when you single step instruction into a function like printf for the
+ first time & you end up in functions like _dl_runtime_resolve this is
+-the ld.so doing lazy binding, lazy binding is a concept in ELF where 
+-shared library functions are not loaded into memory unless they are 
++the ld.so doing lazy binding, lazy binding is a concept in ELF where
++shared library functions are not loaded into memory unless they are
+ actually used, great for saving memory but a pain to debug.
+-To get around this either relink the program -static or exit gdb type 
+-export LD_BIND_NOW=true this will stop lazy binding & restart the gdb'ing 
++
++To get around this either relink the program -static or exit gdb type
++export LD_BIND_NOW=true this will stop lazy binding & restart the gdb'ing
+ the program in question.
+- 
++
+ 
+ 
+ Debugging modules
+@@ -1955,106 +2340,127 @@ It is a filesystem created by the kernel with files which are created on demand
+ by the kernel if read, or can be used to modify kernel parameters,
+ it is a powerful concept.
+ 
+-e.g.
+-
+-cat /proc/sys/net/ipv4/ip_forward 
+-On my machine outputs 
+-0 
+-telling me ip_forwarding is not on to switch it on I can do
+-echo 1 >  /proc/sys/net/ipv4/ip_forward
+-cat it again
+-cat /proc/sys/net/ipv4/ip_forward 
+-On my machine now outputs
+-1
++e.g.::
++
++	cat /proc/sys/net/ipv4/ip_forward
++
++On my machine outputs::
++
++	0
++
++telling me ip_forwarding is not on to switch it on I can do::
++
++	echo 1 >  /proc/sys/net/ipv4/ip_forward
++
++cat it again::
++
++	cat /proc/sys/net/ipv4/ip_forward
++
++On my machine now outputs::
++
++	1
++
+ IP forwarding is on.
++
+ There is a lot of useful info in here best found by going in and having a look
+ around, so I'll take you through some entries I consider important.
+ 
+ All the processes running on the machine have their own entry defined by
+ /proc/<pid>
+-So lets have a look at the init process
+-cd /proc/1
+ 
+-cat cmdline
+-emits
+-init [2]
++So lets have a look at the init process::
++
++	cd /proc/1
++	cat cmdline
++
++emits::
++
++	init [2]
++
++::
++
++	cd /proc/1/fd
+ 
+-cd /proc/1/fd
+ This contains numerical entries of all the open files,
+-some of these you can cat e.g. stdout (2)
++some of these you can cat e.g. stdout (2)::
+ 
+-cat /proc/29/maps
+-on my machine emits
++	cat /proc/29/maps
+ 
+-00400000-00478000 r-xp 00000000 5f:00 4103       /bin/bash
+-00478000-0047e000 rw-p 00077000 5f:00 4103       /bin/bash
+-0047e000-00492000 rwxp 00000000 00:00 0
+-40000000-40015000 r-xp 00000000 5f:00 14382      /lib/ld-2.1.2.so
+-40015000-40016000 rw-p 00014000 5f:00 14382      /lib/ld-2.1.2.so
+-40016000-40017000 rwxp 00000000 00:00 0
+-40017000-40018000 rw-p 00000000 00:00 0
+-40018000-4001b000 r-xp 00000000 5f:00 14435      /lib/libtermcap.so.2.0.8
+-4001b000-4001c000 rw-p 00002000 5f:00 14435      /lib/libtermcap.so.2.0.8
+-4001c000-4010d000 r-xp 00000000 5f:00 14387      /lib/libc-2.1.2.so
+-4010d000-40111000 rw-p 000f0000 5f:00 14387      /lib/libc-2.1.2.so
+-40111000-40114000 rw-p 00000000 00:00 0
+-40114000-4011e000 r-xp 00000000 5f:00 14408      /lib/libnss_files-2.1.2.so
+-4011e000-4011f000 rw-p 00009000 5f:00 14408      /lib/libnss_files-2.1.2.so
+-7fffd000-80000000 rwxp ffffe000 00:00 0
++on my machine emits::
++
++  00400000-00478000 r-xp 00000000 5f:00 4103       /bin/bash
++  00478000-0047e000 rw-p 00077000 5f:00 4103       /bin/bash
++  0047e000-00492000 rwxp 00000000 00:00 0
++  40000000-40015000 r-xp 00000000 5f:00 14382      /lib/ld-2.1.2.so
++  40015000-40016000 rw-p 00014000 5f:00 14382      /lib/ld-2.1.2.so
++  40016000-40017000 rwxp 00000000 00:00 0
++  40017000-40018000 rw-p 00000000 00:00 0
++  40018000-4001b000 r-xp 00000000 5f:00 14435      /lib/libtermcap.so.2.0.8
++  4001b000-4001c000 rw-p 00002000 5f:00 14435      /lib/libtermcap.so.2.0.8
++  4001c000-4010d000 r-xp 00000000 5f:00 14387      /lib/libc-2.1.2.so
++  4010d000-40111000 rw-p 000f0000 5f:00 14387      /lib/libc-2.1.2.so
++  40111000-40114000 rw-p 00000000 00:00 0
++  40114000-4011e000 r-xp 00000000 5f:00 14408      /lib/libnss_files-2.1.2.so
++  4011e000-4011f000 rw-p 00009000 5f:00 14408      /lib/libnss_files-2.1.2.so
++  7fffd000-80000000 rwxp ffffe000 00:00 0
+ 
+ 
+ Showing us the shared libraries init uses where they are in memory
+ & memory access permissions for each virtual memory area.
+ 
+ /proc/1/cwd is a softlink to the current working directory.
+-/proc/1/root is the root of the filesystem for this process. 
++
++/proc/1/root is the root of the filesystem for this process.
+ 
+ /proc/1/mem is the current running processes memory which you
+ can read & write to like a file.
++
+ strace uses this sometimes as it is a bit faster than the
+ rather inefficient ptrace interface for peeking at DATA.
+ 
++::
+ 
+-cat status 
++  cat status
+ 
+-Name:   init
+-State:  S (sleeping)
+-Pid:    1
+-PPid:   0
+-Uid:    0       0       0       0
+-Gid:    0       0       0       0
+-Groups:
+-VmSize:      408 kB
+-VmLck:         0 kB
+-VmRSS:       208 kB
+-VmData:       24 kB
+-VmStk:         8 kB
+-VmExe:       368 kB
+-VmLib:         0 kB
+-SigPnd: 0000000000000000
+-SigBlk: 0000000000000000
+-SigIgn: 7fffffffd7f0d8fc
+-SigCgt: 00000000280b2603
+-CapInh: 00000000fffffeff
+-CapPrm: 00000000ffffffff
+-CapEff: 00000000fffffeff
++  Name:   init
++  State:  S (sleeping)
++  Pid:    1
++  PPid:   0
++  Uid:    0       0       0       0
++  Gid:    0       0       0       0
++  Groups:
++  VmSize:      408 kB
++  VmLck:         0 kB
++  VmRSS:       208 kB
++  VmData:       24 kB
++  VmStk:         8 kB
++  VmExe:       368 kB
++  VmLib:         0 kB
++  SigPnd: 0000000000000000
++  SigBlk: 0000000000000000
++  SigIgn: 7fffffffd7f0d8fc
++  SigCgt: 00000000280b2603
++  CapInh: 00000000fffffeff
++  CapPrm: 00000000ffffffff
++  CapEff: 00000000fffffeff
++
++  User PSW:    070de000 80414146
++  task: 004b6000 tss: 004b62d8 ksp: 004b7ca8 pt_regs: 004b7f68
++  User GPRS:
++  00000400  00000000  0000000b  7ffffa90
++  00000000  00000000  00000000  0045d9f4
++  0045cafc  7ffffa90  7fffff18  0045cb08
++  00010400  804039e8  80403af8  7ffff8b0
++  User ACRS:
++  00000000  00000000  00000000  00000000
++  00000001  00000000  00000000  00000000
++  00000000  00000000  00000000  00000000
++  00000000  00000000  00000000  00000000
++  Kernel BackChain  CallChain    BackChain  CallChain
++	 004b7ca8   8002bd0c     004b7d18   8002b92c
++	 004b7db8   8005cd50     004b7e38   8005d12a
++	 004b7f08   80019114
+ 
+-User PSW:    070de000 80414146
+-task: 004b6000 tss: 004b62d8 ksp: 004b7ca8 pt_regs: 004b7f68
+-User GPRS:
+-00000400  00000000  0000000b  7ffffa90
+-00000000  00000000  00000000  0045d9f4
+-0045cafc  7ffffa90  7fffff18  0045cb08
+-00010400  804039e8  80403af8  7ffff8b0
+-User ACRS:
+-00000000  00000000  00000000  00000000
+-00000001  00000000  00000000  00000000
+-00000000  00000000  00000000  00000000
+-00000000  00000000  00000000  00000000
+-Kernel BackChain  CallChain    BackChain  CallChain
+-       004b7ca8   8002bd0c     004b7d18   8002b92c
+-       004b7db8   8005cd50     004b7e38   8005d12a
+-       004b7f08   80019114                     
+ Showing among other things memory usage & status of some signals &
+ the processes'es registers from the kernel task_structure
+ as well as a backchain which may be useful if a process crashes
+@@ -2067,11 +2473,16 @@ debug feature
+ Some of our drivers now support a "debug feature" in
+ /proc/s390dbf see s390dbf.txt in the linux/Documentation directory
+ for more info.
+-e.g. 
+-to switch on the lcs "debug feature"
+-echo 5 > /proc/s390dbf/lcs/level
+-& then after the error occurred.
+-cat /proc/s390dbf/lcs/sprintf >/logfile
++
++e.g.
++to switch on the lcs "debug feature"::
++
++	echo 5 > /proc/s390dbf/lcs/level
++
++& then after the error occurred::
++
++	cat /proc/s390dbf/lcs/sprintf >/logfile
++
+ the logfile now contains some information which may help
+ tech support resolve a problem in the field.
+ 
+@@ -2083,35 +2494,50 @@ ifconfig is a quite useful command
+ it gives the current state of network drivers.
+ 
+ If you suspect your network device driver is dead
+-one way to check is type 
+-ifconfig <network device> 
++one way to check is type::
++
++	ifconfig <network device>
++
+ e.g. tr0
+-You should see something like
+-tr0       Link encap:16/4 Mbps Token Ring (New)  HWaddr 00:04:AC:20:8E:48
+-          inet addr:9.164.185.132  Bcast:9.164.191.255  Mask:255.255.224.0
+-          UP BROADCAST RUNNING MULTICAST  MTU:2000  Metric:1
+-          RX packets:246134 errors:0 dropped:0 overruns:0 frame:0
+-          TX packets:5 errors:0 dropped:0 overruns:0 carrier:0
+-          collisions:0 txqueuelen:100
++
++You should see something like::
++
++	ifconfig tr0
++	tr0      Link encap:16/4 Mbps Token Ring (New)  HWaddr 00:04:AC:20:8E:48
++		inet addr:9.164.185.132  Bcast:9.164.191.255  Mask:255.255.224.0
++		UP BROADCAST RUNNING MULTICAST  MTU:2000  Metric:1
++		RX packets:246134 errors:0 dropped:0 overruns:0 frame:0
++		TX packets:5 errors:0 dropped:0 overruns:0 carrier:0
++		collisions:0 txqueuelen:100
+ 
+ if the device doesn't say up
+-try
+-/etc/rc.d/init.d/network start 
++try::
++
++	/etc/rc.d/init.d/network start
++
+ ( this starts the network stack & hopefully calls ifconfig tr0 up ).
+ ifconfig looks at the output of /proc/net/dev and presents it in a more
+ presentable form.
++
+ Now ping the device from a machine in the same subnet.
++
+ if the RX packets count & TX packets counts don't increment you probably
+ have problems.
+-next 
+-cat /proc/net/arp
++
++next::
++
++	cat /proc/net/arp
++
+ Do you see any hardware addresses in the cache if not you may have problems.
+-Next try
+-ping -c 5 <broadcast_addr> i.e. the Bcast field above in the output of
++Next try::
++
++	ping -c 5 <broadcast_addr>
++
++i.e. the Bcast field above in the output of
+ ifconfig. Do you see any replies from machines other than the local machine
+ if not you may have problems. also if the TX packets count in ifconfig
+-hasn't incremented either you have serious problems in your driver 
+-(e.g. the txbusy field of the network device being stuck on ) 
++hasn't incremented either you have serious problems in your driver
++(e.g. the txbusy field of the network device being stuck on )
+ or you may have multiple network devices connected.
+ 
+ 
+@@ -2119,28 +2545,43 @@ chandev
+ -------
+ There is a new device layer for channel devices, some
+ drivers e.g. lcs are registered with this layer.
++
+ If the device uses the channel device layer you'll be
+-able to find what interrupts it uses & the current state 
++able to find what interrupts it uses & the current state
+ of the device.
++
+ See the manpage chandev.8 &type cat /proc/chandev for more info.
+ 
+ 
+ SysRq
+ =====
+ This is now supported by linux for s/390 & z/Architecture.
+-To enable it do compile the kernel with 
+-Kernel Hacking -> Magic SysRq Key Enabled
+-echo "1" > /proc/sys/kernel/sysrq
+-also type
+-echo "8" >/proc/sys/kernel/printk
++
++To enable it do compile the kernel with::
++
++	Kernel Hacking -> Magic SysRq Key Enabled
++
++Then::
++
++	echo "1" > /proc/sys/kernel/sysrq
++
++also type::
++
++	echo "8" >/proc/sys/kernel/printk
++
+ To make printk output go to console.
+-On 390 all commands are prefixed with
+-^-
+-e.g.
+-^-t will show tasks.
+-^-? or some unknown command will display help.
++
++On 390 all commands are prefixed with::
++
++	^-
++
++e.g.::
++
++	^-t will show tasks.
++	^-? or some unknown command will display help.
++
+ The sysrq key reading is very picky ( I have to type the keys in an
+- xterm session & paste them  into the x3270 console )
++xterm session & paste them  into the x3270 console )
+ & it may be wise to predefine the keys as described in the VM hints above
+ 
+ This is particularly useful for syncing disks unmounting & rebooting
+@@ -2150,19 +2591,19 @@ Read Documentation/admin-guide/sysrq.rst for more info
+ 
+ References:
+ ===========
+-Enterprise Systems Architecture Reference Summary
+-Enterprise Systems Architecture Principles of Operation
+-Hartmut Penners s390 stack frame sheet.
+-IBM Mainframe Channel Attachment a technology brief from a CISCO webpage
+-Various bits of man & info pages of Linux.
+-Linux & GDB source.
+-Various info & man pages.
+-CMS Help on tracing commands.
+-Linux for s/390 Elf Application Binary Interface
+-Linux for z/Series Elf Application Binary Interface ( Both Highly Recommended )
+-z/Architecture Principles of Operation SA22-7832-00
+-Enterprise Systems Architecture/390 Reference Summary SA22-7209-01 & the
+-Enterprise Systems Architecture/390 Principles of Operation SA22-7201-05
++- Enterprise Systems Architecture Reference Summary
++- Enterprise Systems Architecture Principles of Operation
++- Hartmut Penners s390 stack frame sheet.
++- IBM Mainframe Channel Attachment a technology brief from a CISCO webpage
++- Various bits of man & info pages of Linux.
++- Linux & GDB source.
++- Various info & man pages.
++- CMS Help on tracing commands.
++- Linux for s/390 Elf Application Binary Interface
++- Linux for z/Series Elf Application Binary Interface ( Both Highly Recommended )
++- z/Architecture Principles of Operation SA22-7832-00
++- Enterprise Systems Architecture/390 Reference Summary SA22-7209-01 & the
++- Enterprise Systems Architecture/390 Principles of Operation SA22-7201-05
+ 
+ Special Thanks
  ==============
+diff --git a/Documentation/s390/cds.txt b/Documentation/s390/cds.txt
+index 480a78ef5a1e..973f90b2c941 100644
+--- a/Documentation/s390/cds.txt
++++ b/Documentation/s390/cds.txt
+@@ -1,14 +1,18 @@
++===========================
+ Linux for S/390 and zSeries
++===========================
  
-@@ -41,11 +41,11 @@ statement to add the parameters to the kernel command line. Please see lilo's
- parameters are given with the modprobe (or insmod) command.
+ Common Device Support (CDS)
+ Device Driver I/O Support Routines
  
- Example for sisfb as part of the static kernel: Add the following line to your
--lilo.conf:
-+lilo.conf::
+-Authors : Ingo Adlung
+-	  Cornelia Huck
++Authors:
++	- Ingo Adlung
++	- Cornelia Huck
  
-      append="video=sisfb:mode:1024x768x16,mem:12288,rate:75"
- 
--Example for sisfb as a module: Start sisfb by typing
-+Example for sisfb as a module: Start sisfb by typing::
- 
-      modprobe sisfb mode=1024x768x16 rate=75 mem=12288
- 
-@@ -57,7 +57,7 @@ described above or the vesa keyword instead of mode). If compiled as a module,
- the parameter format reads mode=none or mode=1024x768x16 (or whatever mode you
- want to use). Using a "=" for a ":" (and vice versa) is a huge difference!
- Additionally: If you give more than one argument to the in-kernel sisfb, the
--arguments are separated with ",". For example:
-+arguments are separated with ",". For example::
- 
-    video=sisfb:mode:1024x768x16,rate:75,mem:12288
- 
-@@ -73,6 +73,7 @@ supported options including some explanation.
- 
- The desired display mode can be specified using the keyword "mode" with
- a parameter in one of the following formats:
-+
-   - XxYxDepth or
-   - XxY-Depth or
-   - XxY-Depth@Rate or
-@@ -130,29 +131,30 @@ Configuration
- 
- (Some) accepted options:
- 
--off      - Disable sisfb. This option is only understood if sisfb is
--           in-kernel, not a module.
--mem:X    - size of memory for the console, rest will be used for DRI/DRM. X
--           is in kilobytes. On 300 series, the default is 4096, 8192 or
-+=========  ==================================================================
-+off        Disable sisfb. This option is only understood if sisfb is
-+	   in-kernel, not a module.
-+mem:X      size of memory for the console, rest will be used for DRI/DRM. X
-+	   is in kilobytes. On 300 series, the default is 4096, 8192 or
- 	   16384 (each in kilobyte) depending on how much video ram the card
--           has. On 315/330 series, the default is the maximum available ram
-+	   has. On 315/330 series, the default is the maximum available ram
- 	   (since DRI/DRM is not supported for these chipsets).
--noaccel  - do not use 2D acceleration engine. (Default: use acceleration)
--noypan   - disable y-panning and scroll by redrawing the entire screen.
--           This is much slower than y-panning. (Default: use y-panning)
--vesa:X   - selects startup videomode. X is number from 0 to 0x1FF and
--           represents the VESA mode number (can be given in decimal or
-+noaccel    do not use 2D acceleration engine. (Default: use acceleration)
-+noypan     disable y-panning and scroll by redrawing the entire screen.
-+	   This is much slower than y-panning. (Default: use y-panning)
-+vesa:X     selects startup videomode. X is number from 0 to 0x1FF and
-+	   represents the VESA mode number (can be given in decimal or
- 	   hexadecimal form, the latter prefixed with "0x").
--mode:X   - selects startup videomode. Please see above for the format of
--           "X".
-+mode:X     selects startup videomode. Please see above for the format of
-+	   "X".
-+=========  ==================================================================
- 
- Boolean options such as "noaccel" or "noypan" are to be given without a
- parameter if sisfb is in-kernel (for example "video=sisfb:noypan). If
- sisfb is a module, these are to be set to 1 (for example "modprobe sisfb
- noypan=1").
- 
----
-+
- Thomas Winischhofer <thomas@winischhofer.net>
-+
- May 27, 2004
--
--
-diff --git a/Documentation/fb/sm501.txt b/Documentation/fb/sm501.txt
-index 187f3b3ccb6c..03e02c8042a7 100644
---- a/Documentation/fb/sm501.txt
-+++ b/Documentation/fb/sm501.txt
-@@ -1,6 +1,11 @@
-+=======
-+sm501fb
-+=======
-+
- Configuration:
- 
--You can pass the following kernel command line options to sm501 videoframebuffer:
-+You can pass the following kernel command line options to sm501
-+videoframebuffer::
- 
- 	sm501fb.bpp=	SM501 Display driver:
- 			Specify bits-per-pixel if not specified by 'mode'
-diff --git a/Documentation/fb/sm712fb.txt b/Documentation/fb/sm712fb.txt
-index c388442edf51..994dad3b0238 100644
---- a/Documentation/fb/sm712fb.txt
-+++ b/Documentation/fb/sm712fb.txt
-@@ -1,5 +1,6 @@
-+================
- What is sm712fb?
--=================
-+================
- 
- This is a graphics framebuffer driver for Silicon Motion SM712 based processors.
- 
-@@ -15,13 +16,16 @@ You should not compile-in vesafb.
- 
- Currently supported video modes are:
- 
--[Graphic modes]
-+Graphic modes
-+-------------
- 
--bpp | 640x480  800x600  1024x768  1280x1024
------+--------------------------------------------
--  8 | 0x301    0x303    0x305    0x307
-- 16 | 0x311    0x314    0x317    0x31A
-- 24 | 0x312    0x315    0x318    0x31B
-+===  =======  =======  ========  =========
-+bpp  640x480  800x600  1024x768  1280x1024
-+===  =======  =======  ========  =========
-+  8  0x301    0x303    0x305     0x307
-+ 16  0x311    0x314    0x317     0x31A
-+ 24  0x312    0x315    0x318     0x31B
-+===  =======  =======  ========  =========
- 
- Missing Features
- ================
-diff --git a/Documentation/fb/sstfb.txt b/Documentation/fb/sstfb.txt
-index 13db1075e4a5..8e8c1b940359 100644
---- a/Documentation/fb/sstfb.txt
-+++ b/Documentation/fb/sstfb.txt
-@@ -1,93 +1,114 @@
-+=====
-+sstfb
-+=====
+ Copyright, IBM Corp. 1999-2002
  
  Introduction
 +============
  
--	  This is a frame buffer device driver for 3dfx' Voodoo Graphics 
--	(aka voodoo 1, aka sst1) and Voodoo² (aka Voodoo 2, aka CVG) based 
--	video boards. It's highly experimental code, but is guaranteed to work
--	on my computer, with my "Maxi Gamer 3D" and "Maxi Gamer 3d²" boards,
--	and with me "between chair and keyboard". Some people tested other
--	combinations and it seems that it works.
--	  The main page is located at <http://sstfb.sourceforge.net>, and if
--	you want the latest version, check out the CVS, as the driver is a work
--	in progress, I feel uncomfortable with releasing tarballs of something
--	not completely working...Don't worry, it's still more than usable
--	(I eat my own dog food)
-+This is a frame buffer device driver for 3dfx' Voodoo Graphics
-+(aka voodoo 1, aka sst1) and Voodoo² (aka Voodoo 2, aka CVG) based
-+video boards. It's highly experimental code, but is guaranteed to work
-+on my computer, with my "Maxi Gamer 3D" and "Maxi Gamer 3d²" boards,
-+and with me "between chair and keyboard". Some people tested other
-+combinations and it seems that it works.
-+The main page is located at <http://sstfb.sourceforge.net>, and if
-+you want the latest version, check out the CVS, as the driver is a work
-+in progress, I feel uncomfortable with releasing tarballs of something
-+not completely working...Don't worry, it's still more than usable
-+(I eat my own dog food)
+ This document describes the common device support routines for Linux/390.
+ Different than other hardware architectures, ESA/390 has defined a unified
+@@ -27,18 +31,20 @@ Operation manual (IBM Form. No. SA22-7201).
  
--	  Please read the Bug section, and report any success or failure to me
--	(Ghozlane Toumi <gtoumi@laposte.net>).
--	  BTW, If you have only one monitor , and you don't feel like playing
--	with the vga passthrou cable, I can only suggest borrowing a screen
--	somewhere... 
-+Please read the Bug section, and report any success or failure to me
-+(Ghozlane Toumi <gtoumi@laposte.net>).
-+BTW, If you have only one monitor , and you don't feel like playing
-+with the vga passthrou cable, I can only suggest borrowing a screen
-+somewhere...
+ In order to build common device support for ESA/390 I/O interfaces, a
+ functional layer was introduced that provides generic I/O access methods to
+-the hardware. 
++the hardware.
+ 
+-The common device support layer comprises the I/O support routines defined 
+-below. Some of them implement common Linux device driver interfaces, while 
++The common device support layer comprises the I/O support routines defined
++below. Some of them implement common Linux device driver interfaces, while
+ some of them are ESA/390 platform specific.
+ 
+ Note:
+-In order to write a driver for S/390, you also need to look into the interface
+-described in Documentation/s390/driver-model.txt.
++  In order to write a driver for S/390, you also need to look into the interface
++  described in Documentation/s390/driver-model.txt.
+ 
+ Note for porting drivers from 2.4:
++
+ The major changes are:
++
+ * The functions use a ccw_device instead of an irq (subchannel).
+ * All drivers must define a ccw_driver (see driver-model.txt) and the associated
+   functions.
+@@ -57,19 +63,16 @@ The major changes are:
+ ccw_device_get_ciw()
+    get commands from extended sense data.
+ 
+-ccw_device_start()	
+-ccw_device_start_timeout()
+-ccw_device_start_key()
+-ccw_device_start_key_timeout()
++ccw_device_start(), ccw_device_start_timeout(), ccw_device_start_key(), ccw_device_start_key_timeout()
+    initiate an I/O request.
+ 
+ ccw_device_resume()
+    resume channel program execution.
+ 
+-ccw_device_halt()	
++ccw_device_halt()
+    terminate the current I/O request processed on the device.
+ 
+-do_IRQ()	
++do_IRQ()
+    generic interrupt routine. This function is called by the interrupt entry
+    routine whenever an I/O interrupt is presented to the system. The do_IRQ()
+    routine determines the interrupt status and calls the device specific
+@@ -82,12 +85,15 @@ first level interrupt handler only and does not comprise a device driver
+ callable interface. Instead, the functional description of do_IO() also
+ describes the input to the device specific interrupt handler.
+ 
+-Note: All explanations apply also to the 64 bit architecture s390x.
++Note:
++	All explanations apply also to the 64 bit architecture s390x.
  
  
--Installation 
-+Installation
-+============
+ Common Device Support (CDS) for Linux/390 Device Drivers
++========================================================
  
--	  This driver (should) work on ix86, with "late" 2.2.x kernel (tested
--	with x = 19) and "recent" 2.4.x kernel, as a module or compiled in.
--	  It has been included in mainstream kernel since the infamous 2.4.10.
--	  You can apply the patches found in sstfb/kernel/*-2.{2|4}.x.patch,
--	and copy sstfb.c to linux/drivers/video/, or apply a single patch, 
--	sstfb/patch-2.{2|4}.x-sstfb-yymmdd to your linux source tree.
-+This driver (should) work on ix86, with "late" 2.2.x kernel (tested
-+with x = 19) and "recent" 2.4.x kernel, as a module or compiled in.
-+It has been included in mainstream kernel since the infamous 2.4.10.
-+You can apply the patches found in `sstfb/kernel/*-2.{2|4}.x.patch`,
-+and copy sstfb.c to linux/drivers/video/, or apply a single patch,
-+`sstfb/patch-2.{2|4}.x-sstfb-yymmdd` to your linux source tree.
+ General Information
++-------------------
  
--	  Then configure your kernel as usual: choose "m" or "y" to 3Dfx Voodoo
--	Graphics in section "console". Compile, install, have fun... and please
--	drop me a report :)
-+Then configure your kernel as usual: choose "m" or "y" to 3Dfx Voodoo
-+Graphics in section "console". Compile, install, have fun... and please
-+drop me a report :)
+ The following chapters describe the I/O related interface routines the
+ Linux/390 common device support (CDS) provides to allow for device specific
+@@ -101,6 +107,7 @@ can be found in the architecture specific C header file
+ linux/arch/s390/include/asm/irq.h.
+ 
+ Overview of CDS interface concepts
++----------------------------------
+ 
+ Different to other hardware platforms, the ESA/390 architecture doesn't define
+ interrupt lines managed by a specific interrupt controller and bus systems
+@@ -126,7 +133,7 @@ has to call every single device driver registered on this IRQ in order to
+ determine the device driver owning the device that raised the interrupt.
+ 
+ Up to kernel 2.4, Linux/390 used to provide interfaces via the IRQ (subchannel).
+-For internal use of the common I/O layer, these are still there. However, 
++For internal use of the common I/O layer, these are still there. However,
+ device drivers should use the new calling interface via the ccw_device only.
+ 
+ During its startup the Linux/390 system checks for peripheral devices. Each
+@@ -134,7 +141,7 @@ of those devices is uniquely defined by a so called subchannel by the ESA/390
+ channel subsystem. While the subchannel numbers are system generated, each
+ subchannel also takes a user defined attribute, the so called device number.
+ Both subchannel number and device number cannot exceed 65535. During sysfs
+-initialisation, the information about control unit type and device types that 
++initialisation, the information about control unit type and device types that
+ imply specific I/O commands (channel command words - CCWs) in order to operate
+ the device are gathered. Device drivers can retrieve this set of hardware
+ information during their initialization step to recognize the devices they
+@@ -164,18 +171,26 @@ get_ciw() - get command information word
+ This call enables a device driver to get information about supported commands
+ from the extended SenseID data.
+ 
+-struct ciw *
+-ccw_device_get_ciw(struct ccw_device *cdev, __u32 cmd);
++::
+ 
+-cdev - The ccw_device for which the command is to be retrieved.
+-cmd  - The command type to be retrieved.
++  struct ciw *
++  ccw_device_get_ciw(struct ccw_device *cdev, __u32 cmd);
++
++====  ========================================================
++cdev  The ccw_device for which the command is to be retrieved.
++cmd   The command type to be retrieved.
++====  ========================================================
+ 
+ ccw_device_get_ciw() returns:
+-NULL    - No extended data available, invalid device or command not found.
+-!NULL   - The command requested.
+ 
++=====  ================================================================
++ NULL  No extended data available, invalid device or command not found.
++!NULL  The command requested.
++=====  ================================================================
+ 
+-ccw_device_start() - Initiate I/O Request
++::
++
++  ccw_device_start() - Initiate I/O Request
+ 
+ The ccw_device_start() routines is the I/O request front-end processor. All
+ device driver I/O requests must be issued using this routine. A device driver
+@@ -186,93 +201,105 @@ This description also covers the status information passed to the device
+ driver's interrupt handler as this is related to the rules (flags) defined
+ with the associated I/O request when calling ccw_device_start().
+ 
+-int ccw_device_start(struct ccw_device *cdev,
+-		     struct ccw1 *cpa,
+-		     unsigned long intparm,
+-		     __u8 lpm,
+-		     unsigned long flags);
+-int ccw_device_start_timeout(struct ccw_device *cdev,
+-			     struct ccw1 *cpa,
+-			     unsigned long intparm,
+-			     __u8 lpm,
+-			     unsigned long flags,
+-			     int expires);
+-int ccw_device_start_key(struct ccw_device *cdev,
+-			 struct ccw1 *cpa,
+-			 unsigned long intparm,
+-			 __u8 lpm,
+-			 __u8 key,
+-			 unsigned long flags);
+-int ccw_device_start_key_timeout(struct ccw_device *cdev,
+-				 struct ccw1 *cpa,
+-				 unsigned long intparm,
+-				 __u8 lpm,
+-				 __u8 key,
+-				 unsigned long flags,
+-				 int expires);
++::
+ 
+-cdev         : ccw_device the I/O is destined for
+-cpa          : logical start address of channel program
+-user_intparm : user specific interrupt information; will be presented
+-	       back to the device driver's interrupt handler. Allows a
+-               device driver to associate the interrupt with a
+-               particular I/O request.
+-lpm          : defines the channel path to be used for a specific I/O
+-               request. A value of 0 will make cio use the opm.
+-key	     : the storage key to use for the I/O (useful for operating on a
+-	       storage with a storage key != default key)
+-flag         : defines the action to be performed for I/O processing
+-expires      : timeout value in jiffies. The common I/O layer will terminate
+-	       the running program after this and call the interrupt handler
+-	       with ERR_PTR(-ETIMEDOUT) as irb.
++  int ccw_device_start(struct ccw_device *cdev,
++		       struct ccw1 *cpa,
++		       unsigned long intparm,
++		       __u8 lpm,
++		       unsigned long flags);
++  int ccw_device_start_timeout(struct ccw_device *cdev,
++			       struct ccw1 *cpa,
++			       unsigned long intparm,
++			       __u8 lpm,
++			       unsigned long flags,
++			       int expires);
++  int ccw_device_start_key(struct ccw_device *cdev,
++			   struct ccw1 *cpa,
++			   unsigned long intparm,
++			   __u8 lpm,
++			   __u8 key,
++			   unsigned long flags);
++  int ccw_device_start_key_timeout(struct ccw_device *cdev,
++				   struct ccw1 *cpa,
++				   unsigned long intparm,
++				   __u8 lpm,
++				   __u8 key,
++				   unsigned long flags,
++				   int expires);
+ 
+-Possible flag values are :
++============= =============================================================
++cdev          ccw_device the I/O is destined for
++cpa           logical start address of channel program
++user_intparm  user specific interrupt information; will be presented
++	      back to the device driver's interrupt handler. Allows a
++	      device driver to associate the interrupt with a
++	      particular I/O request.
++lpm           defines the channel path to be used for a specific I/O
++	      request. A value of 0 will make cio use the opm.
++key           the storage key to use for the I/O (useful for operating on a
++	      storage with a storage key != default key)
++flag          defines the action to be performed for I/O processing
++expires       timeout value in jiffies. The common I/O layer will terminate
++	      the running program after this and call the interrupt handler
++	      with ERR_PTR(-ETIMEDOUT) as irb.
++============= =============================================================
+ 
+-DOIO_ALLOW_SUSPEND       - channel program may become suspended
+-DOIO_DENY_PREFETCH       - don't allow for CCW prefetch; usually
+-                           this implies the channel program might
+-                           become modified
+-DOIO_SUPPRESS_INTER     - don't call the handler on intermediate status
++Possible flag values are:
+ 
+-The cpa parameter points to the first format 1 CCW of a channel program :
++========================= =============================================
++DOIO_ALLOW_SUSPEND        channel program may become suspended
++DOIO_DENY_PREFETCH        don't allow for CCW prefetch; usually
++			  this implies the channel program might
++			  become modified
++DOIO_SUPPRESS_INTER       don't call the handler on intermediate status
++========================= =============================================
+ 
+-struct ccw1 {
+-      __u8  cmd_code;/* command code */
+-      __u8  flags;   /* flags, like IDA addressing, etc. */
+-      __u16 count;   /* byte count */
+-      __u32 cda;     /* data address */
+-} __attribute__ ((packed,aligned(8)));
++The cpa parameter points to the first format 1 CCW of a channel program::
+ 
+-with the following CCW flags values defined :
++  struct ccw1 {
++	__u8  cmd_code;/* command code */
++	__u8  flags;   /* flags, like IDA addressing, etc. */
++	__u16 count;   /* byte count */
++	__u32 cda;     /* data address */
++  } __attribute__ ((packed,aligned(8)));
+ 
+-CCW_FLAG_DC        - data chaining
+-CCW_FLAG_CC        - command chaining
+-CCW_FLAG_SLI       - suppress incorrect length
+-CCW_FLAG_SKIP      - skip
+-CCW_FLAG_PCI       - PCI
+-CCW_FLAG_IDA       - indirect addressing
+-CCW_FLAG_SUSPEND   - suspend
++with the following CCW flags values defined:
++
++=================== =========================
++CCW_FLAG_DC         data chaining
++CCW_FLAG_CC         command chaining
++CCW_FLAG_SLI        suppress incorrect length
++CCW_FLAG_SKIP       skip
++CCW_FLAG_PCI        PCI
++CCW_FLAG_IDA        indirect addressing
++CCW_FLAG_SUSPEND    suspend
++=================== =========================
  
  
- Module Usage
+ Via ccw_device_set_options(), the device driver may specify the following
+ options for the device:
+ 
+-DOIO_EARLY_NOTIFICATION  - allow for early interrupt notification
+-DOIO_REPORT_ALL          - report all interrupt conditions
++========================= ======================================
++DOIO_EARLY_NOTIFICATION   allow for early interrupt notification
++DOIO_REPORT_ALL           report all interrupt conditions
++========================= ======================================
+ 
+ 
+-The ccw_device_start() function returns :
++The ccw_device_start() function returns:
+ 
+-      0 - successful completion or request successfully initiated
+--EBUSY	- The device is currently processing a previous I/O request, or there is
+-          a status pending at the device.
+--ENODEV - cdev is invalid, the device is not operational or the ccw_device is
+-          not online.
++======== ======================================================================
++      0  successful completion or request successfully initiated
++ -EBUSY  The device is currently processing a previous I/O request, or there is
++	 a status pending at the device.
++-ENODEV  cdev is invalid, the device is not operational or the ccw_device is
++	 not online.
++======== ======================================================================
+ 
+ When the I/O request completes, the CDS first level interrupt handler will
+ accumulate the status in a struct irb and then call the device interrupt handler.
+-The intparm field will contain the value the device driver has associated with a 
+-particular I/O request. If a pending device status was recognized, 
++The intparm field will contain the value the device driver has associated with a
++particular I/O request. If a pending device status was recognized,
+ intparm will be set to 0 (zero). This may happen during I/O initiation or delayed
+ by an alert status notification. In any case this status is not related to the
+ current (last) I/O request. In case of a delayed status notification no special
+@@ -282,9 +309,11 @@ never started, even though ccw_device_start() returned with successful completio
+ The irb may contain an error value, and the device driver should check for this
+ first:
+ 
+--ETIMEDOUT: the common I/O layer terminated the request after the specified
+-            timeout value
+--EIO:       the common I/O layer terminated the request due to an error state
++========== =================================================================
++-ETIMEDOUT the common I/O layer terminated the request after the specified
++	   timeout value
++-EIO       the common I/O layer terminated the request due to an error state
++========== =================================================================
+ 
+ If the concurrent sense flag in the extended status word (esw) in the irb is
+ set, the field erw.scnt in the esw describes the number of device specific
+@@ -294,6 +323,7 @@ sensing by the device driver itself is required.
+ The device interrupt handler can use the following definitions to investigate
+ the primary unit check source coded in sense byte 0 :
+ 
++======================= ====
+ SNS0_CMD_REJECT         0x80
+ SNS0_INTERVENTION_REQ   0x40
+ SNS0_BUS_OUT_CHECK      0x20
+@@ -301,36 +331,41 @@ SNS0_EQUIPMENT_CHECK    0x10
+ SNS0_DATA_CHECK         0x08
+ SNS0_OVERRUN            0x04
+ SNS0_INCOMPL_DOMAIN     0x01
++======================= ====
+ 
+ Depending on the device status, multiple of those values may be set together.
+ Please refer to the device specific documentation for details.
+ 
+ The irb->scsw.cstat field provides the (accumulated) subchannel status :
+ 
+-SCHN_STAT_PCI            - program controlled interrupt
+-SCHN_STAT_INCORR_LEN     - incorrect length
+-SCHN_STAT_PROG_CHECK     - program check
+-SCHN_STAT_PROT_CHECK     - protection check
+-SCHN_STAT_CHN_DATA_CHK   - channel data check
+-SCHN_STAT_CHN_CTRL_CHK   - channel control check
+-SCHN_STAT_INTF_CTRL_CHK  - interface control check
+-SCHN_STAT_CHAIN_CHECK    - chaining check
++========================= ============================
++SCHN_STAT_PCI             program controlled interrupt
++SCHN_STAT_INCORR_LEN      incorrect length
++SCHN_STAT_PROG_CHECK      program check
++SCHN_STAT_PROT_CHECK      protection check
++SCHN_STAT_CHN_DATA_CHK    channel data check
++SCHN_STAT_CHN_CTRL_CHK    channel control check
++SCHN_STAT_INTF_CTRL_CHK   interface control check
++SCHN_STAT_CHAIN_CHECK     chaining check
++========================= ============================
+ 
+ The irb->scsw.dstat field provides the (accumulated) device status :
+ 
+-DEV_STAT_ATTENTION   - attention
+-DEV_STAT_STAT_MOD    - status modifier
+-DEV_STAT_CU_END      - control unit end
+-DEV_STAT_BUSY        - busy
+-DEV_STAT_CHN_END     - channel end
+-DEV_STAT_DEV_END     - device end
+-DEV_STAT_UNIT_CHECK  - unit check
+-DEV_STAT_UNIT_EXCEP  - unit exception
++===================== =================
++DEV_STAT_ATTENTION    attention
++DEV_STAT_STAT_MOD     status modifier
++DEV_STAT_CU_END       control unit end
++DEV_STAT_BUSY         busy
++DEV_STAT_CHN_END      channel end
++DEV_STAT_DEV_END      device end
++DEV_STAT_UNIT_CHECK   unit check
++DEV_STAT_UNIT_EXCEP   unit exception
++===================== =================
+ 
+ Please see the ESA/390 Principles of Operation manual for details on the
+ individual flag meanings.
+ 
+-Usage Notes :
++Usage Notes:
+ 
+ ccw_device_start() must be called disabled and with the ccw device lock held.
+ 
+@@ -374,32 +409,39 @@ secondary status without error (alert status) is presented, this indicates
+ successful completion for all overlapping ccw_device_start() requests that have
+ been issued since the last secondary (final) status.
+ 
+-Channel programs that intend to set the suspend flag on a channel command word 
+-(CCW)  must start the I/O operation with the DOIO_ALLOW_SUSPEND option or the 
+-suspend flag will cause a channel program check. At the time the channel program 
+-becomes suspended an intermediate interrupt will be generated by the channel 
++Channel programs that intend to set the suspend flag on a channel command word
++(CCW)  must start the I/O operation with the DOIO_ALLOW_SUSPEND option or the
++suspend flag will cause a channel program check. At the time the channel program
++becomes suspended an intermediate interrupt will be generated by the channel
+ subsystem.
+ 
+-ccw_device_resume() - Resume Channel Program Execution 
++ccw_device_resume() - Resume Channel Program Execution
+ 
+-If a device driver chooses to suspend the current channel program execution by 
+-setting the CCW suspend flag on a particular CCW, the channel program execution 
+-is suspended. In order to resume channel program execution the CIO layer 
+-provides the ccw_device_resume() routine. 
++If a device driver chooses to suspend the current channel program execution by
++setting the CCW suspend flag on a particular CCW, the channel program execution
++is suspended. In order to resume channel program execution the CIO layer
++provides the ccw_device_resume() routine.
+ 
+-int ccw_device_resume(struct ccw_device *cdev);
++::
+ 
+-cdev - ccw_device the resume operation is requested for
++  int ccw_device_resume(struct ccw_device *cdev);
++
++====  ================================================
++cdev  ccw_device the resume operation is requested for
++====  ================================================
+ 
+ The ccw_device_resume() function returns:
+ 
+-        0  - suspended channel program is resumed
+--EBUSY     - status pending
+--ENODEV    - cdev invalid or not-operational subchannel 
+--EINVAL    - resume function not applicable  
+--ENOTCONN  - there is no I/O request pending for completion 
++=========   ==============================================
++	0   suspended channel program is resumed
++   -EBUSY   status pending
++  -ENODEV   cdev invalid or not-operational subchannel
++  -EINVAL   resume function not applicable
++-ENOTCONN   there is no I/O request pending for completion
++=========   ==============================================
+ 
+ Usage Notes:
++
+ Please have a look at the ccw_device_start() usage notes for more details on
+ suspended channel programs.
+ 
+@@ -412,22 +454,28 @@ command is provided.
+ 
+ ccw_device_halt() must be called disabled and with the ccw device lock held.
+ 
+-int ccw_device_halt(struct ccw_device *cdev,
+-                    unsigned long intparm);
++::
+ 
+-cdev    : ccw_device the halt operation is requested for
+-intparm : interruption parameter; value is only used if no I/O
+-          is outstanding, otherwise the intparm associated with
+-          the I/O request is returned
++  int ccw_device_halt(struct ccw_device *cdev,
++		      unsigned long intparm);
+ 
+-The ccw_device_halt() function returns :
++=======  =====================================================
++cdev     ccw_device the halt operation is requested for
++intparm  interruption parameter; value is only used if no I/O
++	 is outstanding, otherwise the intparm associated with
++	 the I/O request is returned
++=======  =====================================================
+ 
+-      0 - request successfully initiated
+--EBUSY  - the device is currently busy, or status pending.
+--ENODEV - cdev invalid.
+--EINVAL - The device is not operational or the ccw device is not online.
++The ccw_device_halt() function returns:
+ 
+-Usage Notes :
++=======  ==============================================================
++      0  request successfully initiated
++-EBUSY   the device is currently busy, or status pending.
++-ENODEV  cdev invalid.
++-EINVAL  The device is not operational or the ccw device is not online.
++=======  ==============================================================
++
++Usage Notes:
+ 
+ A device driver may write a never-ending channel program by writing a channel
+ program that at its end loops back to its beginning by means of a transfer in
+@@ -438,25 +486,34 @@ can then perform an appropriate action. Prior to interrupt of an outstanding
+ read to a network device (with or without PCI flag) a ccw_device_halt()
+ is required to end the pending operation.
+ 
+-ccw_device_clear() - Terminage I/O Request Processing
++::
++
++  ccw_device_clear() - Terminage I/O Request Processing
+ 
+ In order to terminate all I/O processing at the subchannel, the clear subchannel
+ (CSCH) command is used. It can be issued via ccw_device_clear().
+ 
+ ccw_device_clear() must be called disabled and with the ccw device lock held.
+ 
+-int ccw_device_clear(struct ccw_device *cdev, unsigned long intparm);
++::
+ 
+-cdev:	 ccw_device the clear operation is requested for
+-intparm: interruption parameter (see ccw_device_halt())
++  int ccw_device_clear(struct ccw_device *cdev, unsigned long intparm);
++
++======= ===============================================
++cdev    ccw_device the clear operation is requested for
++intparm interruption parameter (see ccw_device_halt())
++======= ===============================================
+ 
+ The ccw_device_clear() function returns:
+ 
+-      0 - request successfully initiated
+--ENODEV - cdev invalid
+--EINVAL - The device is not operational or the ccw device is not online.
++=======  ==============================================================
++      0  request successfully initiated
++-ENODEV  cdev invalid
++-EINVAL  The device is not operational or the ccw device is not online.
++=======  ==============================================================
+ 
+ Miscellaneous Support Routines
++------------------------------
+ 
+ This chapter describes various routines to be used in a Linux/390 device
+ driver programming environment.
+@@ -466,7 +523,8 @@ get_ccwdev_lock()
+ Get the address of the device specific lock. This is then used in
+ spin_lock() / spin_unlock() calls.
+ 
++::
+ 
+-__u8 ccw_device_get_path_mask(struct ccw_device *cdev);
++  __u8 ccw_device_get_path_mask(struct ccw_device *cdev);
+ 
+ Get the mask of the path currently available for cdev.
+diff --git a/Documentation/s390/driver-model.txt b/Documentation/s390/driver-model.txt
+index ed265cf54cde..ad4bc2dbea43 100644
+--- a/Documentation/s390/driver-model.txt
++++ b/Documentation/s390/driver-model.txt
+@@ -1,5 +1,6 @@
++=============================
+ S/390 driver model interfaces
+------------------------------
++=============================
+ 
+ 1. CCW devices
+ --------------
+@@ -7,13 +8,13 @@ S/390 driver model interfaces
+ All devices which can be addressed by means of ccws are called 'CCW devices' -
+ even if they aren't actually driven by ccws.
+ 
+-All ccw devices are accessed via a subchannel, this is reflected in the 
+-structures under devices/:
++All ccw devices are accessed via a subchannel, this is reflected in the
++structures under devices/::
+ 
+-devices/
++  devices/
+      - system/
+      - css0/
+-           - 0.0.0000/0.0.0815/
++	   - 0.0.0000/0.0.0815/
+ 	   - 0.0.0001/0.0.4711/
+ 	   - 0.0.0002/
+ 	   - 0.1.0000/0.1.1234/
+@@ -35,14 +36,18 @@ be found under bus/ccw/devices/.
+ 
+ All ccw devices export some data via sysfs.
+ 
+-cutype:	    The control unit type / model.
++cutype:
++	The control unit type / model.
+ 
+-devtype:    The device type / model, if applicable.
++devtype:
++	The device type / model, if applicable.
+ 
+-availability: Can be 'good' or 'boxed'; 'no path' or 'no device' for
++availability:
++	      Can be 'good' or 'boxed'; 'no path' or 'no device' for
+ 	      disconnected devices.
+ 
+-online:     An interface to set the device online and offline.
++online:
++	    An interface to set the device online and offline.
+ 	    In the special case of the device being disconnected (see the
+ 	    notify function under 1.2), piping 0 to online will forcibly delete
+ 	    the device.
+@@ -52,9 +57,11 @@ The device drivers can add entries to export per-device data and interfaces.
+ There is also some data exported on a per-subchannel basis (see under
+ bus/css/devices/):
+ 
+-chpids:	    Via which chpids the device is connected.
++chpids:
++	Via which chpids the device is connected.
+ 
+-pimpampom:  The path installed, path available and path operational masks.
++pimpampom:
++	The path installed, path available and path operational masks.
+ 
+ There also might be additional data, for example for block devices.
+ 
+@@ -74,77 +81,93 @@ b. After a. has been performed, if necessary, the device is finally brought up
+ ------------------------------------
+ 
+ The basic struct ccw_device and struct ccw_driver data structures can be found
+-under include/asm/ccwdev.h.
++under include/asm/ccwdev.h::
+ 
+-struct ccw_device {
+-        spinlock_t *ccwlock;
+-        struct ccw_device_private *private;
+-	struct ccw_device_id id;	
++  struct ccw_device {
++	spinlock_t *ccwlock;
++	struct ccw_device_private *private;
++	struct ccw_device_id id;
+ 
+-	struct ccw_driver *drv;		
+-	struct device dev;		
++	struct ccw_driver *drv;
++	struct device dev;
+ 	int online;
+ 
+ 	void (*handler) (struct ccw_device *dev, unsigned long intparm,
+-                         struct irb *irb);
+-};
++			 struct irb *irb);
++  };
+ 
+-struct ccw_driver {
+-	struct module *owner;		
+-	struct ccw_device_id *ids;	
+-	int (*probe) (struct ccw_device *); 
++  struct ccw_driver {
++	struct module *owner;
++	struct ccw_device_id *ids;
++	int (*probe) (struct ccw_device *);
+ 	int (*remove) (struct ccw_device *);
+ 	int (*set_online) (struct ccw_device *);
+ 	int (*set_offline) (struct ccw_device *);
+ 	int (*notify) (struct ccw_device *, int);
+ 	struct device_driver driver;
+ 	char *name;
+-};
++  };
+ 
+ The 'private' field contains data needed for internal i/o operation only, and
+ is not available to the device driver.
+ 
+ Each driver should declare in a MODULE_DEVICE_TABLE into which CU types/models
+ and/or device types/models it is interested. This information can later be found
+-in the struct ccw_device_id fields:
++in the struct ccw_device_id fields::
+ 
+-struct ccw_device_id {
+-	__u16	match_flags;	
++  struct ccw_device_id {
++	__u16   match_flags;
+ 
+-	__u16	cu_type;	
+-	__u16	dev_type;	
+-	__u8	cu_model;	
+-	__u8	dev_model;	
++	__u16   cu_type;
++	__u16   dev_type;
++	__u8    cu_model;
++	__u8    dev_model;
+ 
+ 	unsigned long driver_info;
+-};
++  };
+ 
+ The functions in ccw_driver should be used in the following way:
+-probe:   This function is called by the device layer for each device the driver
++
++probe:
++	 This function is called by the device layer for each device the driver
+ 	 is interested in. The driver should only allocate private structures
+ 	 to put in dev->driver_data and create attributes (if needed). Also,
+ 	 the interrupt handler (see below) should be set here.
+ 
+-int (*probe) (struct ccw_device *cdev); 
++::
+ 
+-Parameters:  cdev     - the device to be probed.
++  int (*probe) (struct ccw_device *cdev);
+ 
++Parameters:
++		cdev
++			- the device to be probed.
+ 
+-remove:  This function is called by the device layer upon removal of the driver,
++
++remove:
++	 This function is called by the device layer upon removal of the driver,
+ 	 the device or the module. The driver should perform cleanups here.
+ 
+-int (*remove) (struct ccw_device *cdev);
++::
+ 
+-Parameters:   cdev    - the device to be removed.
++  int (*remove) (struct ccw_device *cdev);
+ 
++Parameters:
++		cdev
++			- the device to be removed.
+ 
+-set_online: This function is called by the common I/O layer when the device is
++
++set_online:
++	    This function is called by the common I/O layer when the device is
+ 	    activated via the 'online' attribute. The driver should finally
+ 	    setup and activate the device here.
+ 
+-int (*set_online) (struct ccw_device *);
++::
+ 
+-Parameters:   cdev	- the device to be activated. The common layer has
++  int (*set_online) (struct ccw_device *);
++
++Parameters:
++		cdev
++			- the device to be activated. The common layer has
+ 			  verified that the device is not already online.
+ 
+ 
+@@ -152,15 +175,22 @@ set_offline: This function is called by the common I/O layer when the device is
+ 	     de-activated via the 'online' attribute. The driver should shut
+ 	     down the device, but not de-allocate its private data.
+ 
+-int (*set_offline) (struct ccw_device *);
++::
+ 
+-Parameters:   cdev       - the device to be deactivated. The common layer has
++  int (*set_offline) (struct ccw_device *);
++
++Parameters:
++		cdev
++			- the device to be deactivated. The common layer has
+ 			   verified that the device is online.
+ 
+ 
+-notify: This function is called by the common I/O layer for some state changes
++notify:
++	This function is called by the common I/O layer for some state changes
+ 	of the device.
++
+ 	Signalled to the driver are:
++
+ 	* In online state, device detached (CIO_GONE) or last path gone
+ 	  (CIO_NO_PATH). The driver must return !0 to keep the device; for
+ 	  return code 0, the device will be deleted as usual (also when no
+@@ -173,32 +203,40 @@ notify: This function is called by the common I/O layer for some state changes
+ 	  return code of the notify function the device driver signals if it
+ 	  wants the device back: !0 for keeping, 0 to make the device being
+ 	  removed and re-registered.
 -	
--	Warnings.
--	# You should read completely this section before issuing any command.
--	# If you have only one monitor to play with, once you insmod the
-+============
-+
-+.. warning::
-+
-+       #. You should read completely this section before issuing any command.
-+
-+       #. If you have only one monitor to play with, once you insmod the
- 	  module, the 3dfx takes control of the output, so you'll have to
- 	  plug the monitor to the "normal" video board in order to issue
- 	  the commands, or you can blindly use sst_dbg_vgapass
--          in the tools directory (See Tools). The latest solution is pass the
-+	  in the tools directory (See Tools). The latest solution is pass the
- 	  parameter vgapass=1 when insmodding the driver. (See Kernel/Modules
- 	  Options)
+-int (*notify) (struct ccw_device *, int);
  
--	Module insertion:
--	# insmod sstfb.o
--	  you should see some strange output from the board: 
-+Module insertion
-+----------------
+-Parameters:   cdev    - the device whose state changed.
+-	      event   - the event that happened. This can be one of CIO_GONE,
+-		        CIO_NO_PATH or CIO_OPER.
++::
 +
-+       #. insmod sstfb.o
++  int (*notify) (struct ccw_device *, int);
 +
-+	  you should see some strange output from the board:
- 	  a big blue square, a green and a red small squares and a vertical
- 	  white rectangle. why? the function's name is self-explanatory:
- 	  "sstfb_test()"...
- 	  (if you don't have a second monitor, you'll have to plug your monitor
- 	  directly to the 2D videocard to see what you're typing)
--	# con2fb /dev/fbx /dev/ttyx
++Parameters:
++		cdev
++			- the device whose state changed.
 +
-+       #. con2fb /dev/fbx /dev/ttyx
-+
- 	  bind a tty to the new frame buffer. if you already have a frame
--	  buffer driver, the voodoo fb will likely be /dev/fb1. if not, 
--	  the device will be /dev/fb0. You can check this by doing a 
-+	  buffer driver, the voodoo fb will likely be /dev/fb1. if not,
-+	  the device will be /dev/fb0. You can check this by doing a
- 	  cat /proc/fb. You can find a copy of con2fb in tools/ directory.
- 	  if you don't have another fb device, this step is superfluous,
- 	  as the console subsystem automagicaly binds ttys to the fb.
--	# switch to the virtual console you just mapped. "tadaaa" ...
-+       #. switch to the virtual console you just mapped. "tadaaa" ...
-+
-+Module removal
-+--------------
-+
-+       #. con2fb /dev/fbx /dev/ttyx
++		event
++			- the event that happened. This can be one of CIO_GONE,
++			  CIO_NO_PATH or CIO_OPER.
  
--	Module removal:
--	# con2fb /dev/fbx /dev/ttyx
- 	  bind the tty to the old frame buffer so the module can be removed.
- 	  (how does it work with vgacon ? short answer : it doesn't work)
--	# rmmod sstfb
+ The handler field of the struct ccw_device is meant to be set to the interrupt
+-handler for the device. In order to accommodate drivers which use several 
++handler for the device. In order to accommodate drivers which use several
+ distinct handlers (e.g. multi subchannel devices), this is a member of ccw_device
+ instead of ccw_driver.
+ The handler is registered with the common layer during set_online() processing
+ before the driver is called, and is deregistered during set_offline() after the
+-driver has been called. Also, after registering / before deregistering, path 
++driver has been called. Also, after registering / before deregistering, path
+ grouping resp. disbanding of the path group (if applicable) are performed.
+ 
+-void (*handler) (struct ccw_device *dev, unsigned long intparm, struct irb *irb);
++::
+ 
+-Parameters:	dev	- the device the handler is called for
++  void (*handler) (struct ccw_device *dev, unsigned long intparm, struct irb *irb);
 +
-+       #. rmmod sstfb
++Parameters:     dev     - the device the handler is called for
+ 		intparm - the intparm which allows the device driver to identify
+-                          the i/o the interrupt is associated with, or to recognize
+-                          the interrupt as unsolicited.
+-                irb     - interruption response block which contains the accumulated
+-                          status.
++			  the i/o the interrupt is associated with, or to recognize
++			  the interrupt as unsolicited.
++		irb     - interruption response block which contains the accumulated
++			  status.
+ 
+-The device driver is called from the common ccw_device layer and can retrieve 
++The device driver is called from the common ccw_device layer and can retrieve
+ information about the interrupt from the irb parameter.
  
  
- Kernel/Modules Options
-+----------------------
+@@ -237,23 +275,27 @@ only the logical state and not the physical state, since we cannot track the
+ latter consistently due to lacking machine support (we don't need to be aware
+ of it anyway).
  
--	You can pass some options to the sstfb module, and via the kernel 
--	command line when the driver is compiled in:
--	for module : insmod sstfb.o option1=value1 option2=value2 ...
--	in kernel :  video=sstfb:option1,option2:value2,option3 ...
--	
--	sstfb supports the following options :
-+You can pass some options to the sstfb module, and via the kernel
-+command line when the driver is compiled in:
-+for module : insmod sstfb.o option1=value1 option2=value2 ...
-+in kernel :  video=sstfb:option1,option2:value2,option3 ...
+-status - Can be 'online' or 'offline'.
++status
++       - Can be 'online' or 'offline'.
+ 	 Piping 'on' or 'off' sets the chpid logically online/offline.
+ 	 Piping 'on' to an online chpid triggers path reprobing for all devices
+ 	 the chpid connects to. This can be used to force the kernel to re-use
+ 	 a channel path the user knows to be online, but the machine hasn't
+ 	 created a machine check for.
  
-+sstfb supports the following options:
-+
-+=============== =============== ===============================================
- Module		Kernel		Description
+-type - The physical type of the channel path.
++type
++       - The physical type of the channel path.
+ 
+-shared - Whether the channel path is shared.
++shared
++       - Whether the channel path is shared.
+ 
+-cmg - The channel measurement group.
++cmg
++       - The channel measurement group.
+ 
+ 3. System devices
+ -----------------
+ 
+-3.1 xpram 
++3.1 xpram
+ ---------
+ 
+ xpram shows up under devices/system/ as 'xpram'.
+@@ -279,9 +321,8 @@ Netiucv connections show up under devices/iucv/ as "netiucv<ifnum>". The interfa
+ number is assigned sequentially to the connections defined via the 'connection'
+ attribute.
+ 
+-user			  - shows the connection partner.
 -
-+=============== =============== ===============================================
- vgapass=0	vganopass	Enable or disable VGA passthrou cable.
- vgapass=1	vgapass		When enabled, the monitor will get the signal
- 				from the VGA board and not from the voodoo.
-+
- 				Default: nopass
- 
- mem=x		mem:x		Force frame buffer memory in MiB
- 				allowed values: 0, 1, 2, 4.
-+
- 				Default: 0 (= autodetect)
- 
- inverse=1	inverse		Supposed to enable inverse console.
-@@ -96,79 +117,91 @@ inverse=1	inverse		Supposed to enable inverse console.
- clipping=1	clipping	Enable or disable clipping.
- clipping=0	noclipping	With clipping enabled, all offscreen
- 				reads and writes are discarded.
-+
- 				Default: enable clipping.
- 
- gfxclk=x	gfxclk:x	Force graphic clock frequency (in MHz).
- 				Be careful with this option, it may be
- 				DANGEROUS.
--				Default: auto 
--					50Mhz for Voodoo 1,
--					75MHz for Voodoo 2. 
-+
-+				Default: auto
-+
-+					- 50Mhz for Voodoo 1,
-+					- 75MHz for Voodoo 2.
- 
- slowpci=1	fastpci		Enable or disable fast PCI read/writes.
- slowpci=1	slowpci		Default : fastpci
- 
- dev=x		dev:x		Attach the driver to device number x.
--				0 is the first compatible board (in 
-+				0 is the first compatible board (in
- 				lspci order)
-+=============== =============== ===============================================
- 
- Tools
-+=====
- 
--	These tools are mostly for debugging purposes, but you can 
--	find some of these interesting :
--	 - con2fb , maps a tty to a fbramebuffer .
--		con2fb /dev/fb1 /dev/tty5
--	 - sst_dbg_vgapass , changes vga passthrou. You have to recompile the
--	driver with SST_DEBUG and SST_DEBUG_IOCTL set to 1
--		sst_dbg_vgapass /dev/fb1 1 (enables vga cable)
--		sst_dbg_vgapass /dev/fb1 0 (disables vga cable)
--	 - glide_reset , resets the voodoo using glide
--		use this after rmmoding sstfb, if the module refuses to
--		reinsert .
-+These tools are mostly for debugging purposes, but you can
-+find some of these interesting:
-+
-+- `con2fb`, maps a tty to a fbramebuffer::
-+
-+	con2fb /dev/fb1 /dev/tty5
-+
-+- `sst_dbg_vgapass`, changes vga passthrou. You have to recompile the
-+  driver with SST_DEBUG and SST_DEBUG_IOCTL set to 1::
-+
-+	sst_dbg_vgapass /dev/fb1 1 (enables vga cable)
-+	sst_dbg_vgapass /dev/fb1 0 (disables vga cable)
-+
-+- `glide_reset`, resets the voodoo using glide
-+  use this after rmmoding sstfb, if the module refuses to
-+  reinsert.
- 
- Bugs
-+====
- 
--	- DO NOT use glide while the sstfb module is in, you'll most likely
--	hang your computer.
--	- If you see some artefacts (pixels not cleaning and stuff like that), 
--	try turning off clipping (clipping=0), and/or using slowpci
--	- the driver don't detect the 4Mb frame buffer voodoos, it seems that
--	the 2 last Mbs wrap around. looking into that .
--	- The driver is 16 bpp only, 24/32 won't work.
--	- The driver is not your_favorite_toy-safe. this includes SMP...
--          [Actually from inspection it seems to be safe - Alan]
--	- When using XFree86 FBdev (X over fbdev) you may see strange color
--	patterns at the border of your windows (the pixels lose the lowest
--	byte -> basically the blue component and some of the green). I'm unable
--	to reproduce this with XFree86-3.3, but one of the testers has this
--	problem with XFree86-4. Apparently recent Xfree86-4.x solve this
--	problem.
--	- I didn't really test changing the palette, so you may find some weird
--	things when playing with that.
--	- Sometimes the driver will not recognise the DAC, and the
--        initialisation will fail. This is specifically true for
--	voodoo 2 boards, but it should be solved in recent versions. Please
--	contact me.
--	- The 24/32 is not likely to work anytime soon, knowing that the
--	hardware does ... unusual things in 24/32 bpp.
--	- When used with another video board, current limitations of the linux
--	console subsystem can cause some troubles, specifically, you should
--	disable software scrollback, as it can oops badly ...
-+- DO NOT use glide while the sstfb module is in, you'll most likely
-+  hang your computer.
-+- If you see some artefacts (pixels not cleaning and stuff like that),
-+  try turning off clipping (clipping=0), and/or using slowpci
-+- the driver don't detect the 4Mb frame buffer voodoos, it seems that
-+  the 2 last Mbs wrap around. looking into that .
-+- The driver is 16 bpp only, 24/32 won't work.
-+- The driver is not your_favorite_toy-safe. this includes SMP...
-+
-+	[Actually from inspection it seems to be safe - Alan]
-+
-+- When using XFree86 FBdev (X over fbdev) you may see strange color
-+  patterns at the border of your windows (the pixels lose the lowest
-+  byte -> basically the blue component and some of the green). I'm unable
-+  to reproduce this with XFree86-3.3, but one of the testers has this
-+  problem with XFree86-4. Apparently recent Xfree86-4.x solve this
-+  problem.
-+- I didn't really test changing the palette, so you may find some weird
-+  things when playing with that.
-+- Sometimes the driver will not recognise the DAC, and the
-+  initialisation will fail. This is specifically true for
-+  voodoo 2 boards, but it should be solved in recent versions. Please
-+  contact me.
-+- The 24/32 is not likely to work anytime soon, knowing that the
-+  hardware does ... unusual things in 24/32 bpp.
-+- When used with another video board, current limitations of the linux
-+  console subsystem can cause some troubles, specifically, you should
-+  disable software scrollback, as it can oops badly ...
- 
- Todo
-+====
- 
--	- Get rid of the previous paragraph.
--	- Buy more coffee.
--	- test/port to other arch.
--	- try to add panning using tweeks with front and back buffer .
--	- try to implement accel on voodoo2, this board can actually do a 
--	  lot in 2D even if it was sold as a 3D only board ...
-+- Get rid of the previous paragraph.
-+- Buy more coffee.
-+- test/port to other arch.
-+- try to add panning using tweeks with front and back buffer .
-+- try to implement accel on voodoo2, this board can actually do a
-+  lot in 2D even if it was sold as a 3D only board ...
- 
--ghoz.
+-buffer			  - maximum buffer size.
+-			    Pipe to it to change buffer size.
 -
---- 
- Ghozlane Toumi <gtoumi@laposte.net>
++user
++    - shows the connection partner.
  
++buffer
++    - maximum buffer size. Pipe to it to change buffer size.
+diff --git a/Documentation/s390/monreader.txt b/Documentation/s390/monreader.txt
+index d3729585fdb0..1e857575c113 100644
+--- a/Documentation/s390/monreader.txt
++++ b/Documentation/s390/monreader.txt
+@@ -1,24 +1,26 @@
++=================================================
++Linux API for read access to z/VM Monitor Records
++=================================================
  
--$Date: 2002/05/09 20:11:45 $
-+Date: 2002/05/09 20:11:45
+ Date  : 2004-Nov-26
 +
- http://sstfb.sourceforge.net/README
-diff --git a/Documentation/fb/tgafb.txt b/Documentation/fb/tgafb.txt
-index 250083ada8fb..0c50d2134aa4 100644
---- a/Documentation/fb/tgafb.txt
-+++ b/Documentation/fb/tgafb.txt
-@@ -1,15 +1,14 @@
--$Id: tgafb.txt,v 1.1.2.2 2000/04/04 06:50:18 mato Exp $
+ Author: Gerald Schaefer (geraldsc@de.ibm.com)
+ 
+ 
+-             Linux API for read access to z/VM Monitor Records
+-             =================================================
+ 
+ 
+ Description
+ ===========
+ This item delivers a new Linux API in the form of a misc char device that is
+ usable from user space and allows read access to the z/VM Monitor Records
+-collected by the *MONITOR System Service of z/VM.
++collected by the `*MONITOR` System Service of z/VM.
+ 
+ 
+ User Requirements
+ =================
+ The z/VM guest on which you want to access this API needs to be configured in
+-order to allow IUCV connections to the *MONITOR service, i.e. it needs the
+-IUCV *MONITOR statement in its user entry. If the monitor DCSS to be used is
++order to allow IUCV connections to the `*MONITOR` service, i.e. it needs the
++IUCV `*MONITOR` statement in its user entry. If the monitor DCSS to be used is
+ restricted (likely), you also need the NAMESAVE <DCSS NAME> statement.
+ This item will use the IUCV device driver to access the z/VM services, so you
+ need a kernel with IUCV support. You also need z/VM version 4.4 or 5.1.
+@@ -50,7 +52,9 @@ Your guest virtual storage has to end below the starting address of the DCSS
+ and you have to specify the "mem=" kernel parameter in your parmfile with a
+ value greater than the ending address of the DCSS.
+ 
+-Example: DEF STOR 140M
++Example::
++
++	DEF STOR 140M
+ 
+ This defines 140MB storage size for your guest, the parameter "mem=160M" is
+ added to the parmfile.
+@@ -66,24 +70,27 @@ kernel, the kernel parameter "monreader.mondcss=<DCSS NAME>" can be specified
+ in the parmfile.
+ 
+ The default name for the DCSS is "MONDCSS" if none is specified. In case that
+-there are other users already connected to the *MONITOR service (e.g.
++there are other users already connected to the `*MONITOR` service (e.g.
+ Performance Toolkit), the monitor DCSS is already defined and you have to use
+ the same DCSS. The CP command Q MONITOR (Class E privileged) shows the name
+ of the monitor DCSS, if already defined, and the users connected to the
+-*MONITOR service.
++`*MONITOR` service.
+ Refer to the "z/VM Performance" book (SC24-6109-00) on how to create a monitor
+ DCSS if your z/VM doesn't have one already, you need Class E privileges to
+ define and save a DCSS.
+ 
+ Example:
+ --------
+-modprobe monreader mondcss=MYDCSS
++
++::
++
++	modprobe monreader mondcss=MYDCSS
+ 
+ This loads the module and sets the DCSS name to "MYDCSS".
+ 
+ NOTE:
+ -----
+-This API provides no interface to control the *MONITOR service, e.g. specify
++This API provides no interface to control the `*MONITOR` service, e.g. specify
+ which data should be collected. This can be done by the CP command MONITOR
+ (Class E privileged), see "CP Command and Utility Reference".
+ 
+@@ -98,6 +105,7 @@ If your distribution does not support udev, a device node will not be created
+ automatically and you have to create it manually after loading the module.
+ Therefore you need to know the major and minor numbers of the device. These
+ numbers can be found in /sys/class/misc/monreader/dev.
++
+ Typing cat /sys/class/misc/monreader/dev will give an output of the form
+ <major>:<minor>. The device node can be created via the mknod command, enter
+ mknod <name> c <major> <minor>, where <name> is the name of the device node
+@@ -105,10 +113,13 @@ to be created.
+ 
+ Example:
+ --------
+-# modprobe monreader
+-# cat /sys/class/misc/monreader/dev
+-10:63
+-# mknod /dev/monreader c 10 63
++
++::
++
++	# modprobe monreader
++	# cat /sys/class/misc/monreader/dev
++	10:63
++	# mknod /dev/monreader c 10 63
+ 
+ This loads the module with the default monitor DCSS (MONDCSS) and creates a
+ device node.
+@@ -133,20 +144,21 @@ last byte of data. The start address is needed to handle "end-of-frame" records
+ correctly (domain 1, record 13), i.e. it can be used to determine the record
+ start offset relative to a 4K page (frame) boundary.
+ 
+-See "Appendix A: *MONITOR" in the "z/VM Performance" document for a description
++See "Appendix A: `*MONITOR`" in the "z/VM Performance" document for a description
+ of the monitor control element layout. The layout of the monitor records can
+ be found here (z/VM 5.1): http://www.vm.ibm.com/pubs/mon510/index.html
+ 
+-The layout of the data stream provided by the monreader device is as follows:
+-...
+-<0 byte read>
+-<first MCE>              \
+-<first set of records>    |
+-...                       |- data set
+-<last MCE>                |
+-<last set of records>    /
+-<0 byte read>
+-...
++The layout of the data stream provided by the monreader device is as follows::
++
++	...
++	<0 byte read>
++	<first MCE>              \
++	<first set of records>    |
++	...                       |- data set
++	<last MCE>                |
++	<last set of records>    /
++	<0 byte read>
++	...
+ 
+ There may be more than one combination of MCE and corresponding record set
+ within one data set and the end of each data set is indicated by a successful
+@@ -165,15 +177,19 @@ As with most char devices, error conditions are indicated by returning a
+ negative value for the number of bytes read. In this case, the errno variable
+ indicates the error condition:
+ 
+-EIO: reply failed, read data is invalid and the application
++EIO:
++     reply failed, read data is invalid and the application
+      should discard the data read since the last successful read with 0 size.
+-EFAULT: copy_to_user failed, read data is invalid and the application should
+-        discard the data read since the last successful read with 0 size.
+-EAGAIN: occurs on a non-blocking read if there is no data available at the
+-        moment. There is no data missing or corrupted, just try again or rather
+-        use polling for non-blocking reads.
+-EOVERFLOW: message limit reached, the data read since the last successful
+-           read with 0 size is valid but subsequent records may be missing.
++EFAULT:
++	copy_to_user failed, read data is invalid and the application should
++	discard the data read since the last successful read with 0 size.
++EAGAIN:
++	occurs on a non-blocking read if there is no data available at the
++	moment. There is no data missing or corrupted, just try again or rather
++	use polling for non-blocking reads.
++EOVERFLOW:
++	   message limit reached, the data read since the last successful
++	   read with 0 size is valid but subsequent records may be missing.
+ 
+ In the last case (EOVERFLOW) there may be missing data, in the first two cases
+ (EIO, EFAULT) there will be missing data. It's up to the application if it will
+@@ -183,7 +199,7 @@ Open:
+ -----
+ Only one user is allowed to open the char device. If it is already in use, the
+ open function will fail (return a negative value) and set errno to EBUSY.
+-The open function may also fail if an IUCV connection to the *MONITOR service
++The open function may also fail if an IUCV connection to the `*MONITOR` service
+ cannot be established. In this case errno will be set to EIO and an error
+ message with an IPUSER SEVER code will be printed into syslog. The IPUSER SEVER
+ codes are described in the "z/VM Performance" book, Appendix A.
+@@ -194,4 +210,3 @@ As soon as the device is opened, incoming messages will be accepted and they
+ will account for the message limit, i.e. opening the device without reading
+ from it will provoke the "message limit reached" error (EOVERFLOW error code)
+ eventually.
 -
-+==============
- What is tgafb?
--===============
-+==============
- 
- This is a driver for DECChip 21030 based graphics framebuffers, a.k.a. TGA
- cards, which are usually found in older Digital Alpha systems. The
- following models are supported:
- 
--ZLxP-E1 (8bpp, 2 MB VRAM)
--ZLxP-E2 (32bpp, 8 MB VRAM)
--ZLxP-E3 (32bpp, 16 MB VRAM, Zbuffer)
-+- ZLxP-E1 (8bpp, 2 MB VRAM)
-+- ZLxP-E2 (32bpp, 8 MB VRAM)
-+- ZLxP-E3 (32bpp, 16 MB VRAM, Zbuffer)
- 
- This version is an almost complete rewrite of the code written by Geert
- Uytterhoeven, which was based on the original TGA console code written by
-@@ -18,7 +17,7 @@ Jay Estabrook.
- Major new features since Linux 2.0.x:
- 
-  * Support for multiple resolutions
-- * Support for fixed-frequency and other oddball monitors 
-+ * Support for fixed-frequency and other oddball monitors
-    (by allowing the video mode to be set at boot time)
- 
- User-visible changes since Linux 2.2.x:
-@@ -36,19 +35,22 @@ Configuration
- =============
- 
- You can pass kernel command line options to tgafb with
--`video=tgafb:option1,option2:value2,option3' (multiple options should be
--separated by comma, values are separated from options by `:').
-+`video=tgafb:option1,option2:value2,option3` (multiple options should be
-+separated by comma, values are separated from options by `:`).
-+
- Accepted options:
- 
--font:X    - default font to use. All fonts are supported, including the
--            SUN12x22 font which is very nice at high resolutions.
-+==========  ============================================================
-+font:X      default font to use. All fonts are supported, including the
-+	    SUN12x22 font which is very nice at high resolutions.
- 
--mode:X    - default video mode. The following video modes are supported:
--            640x480-60, 800x600-56, 640x480-72, 800x600-60, 800x600-72, 
-+mode:X      default video mode. The following video modes are supported:
-+	    640x480-60, 800x600-56, 640x480-72, 800x600-60, 800x600-72,
- 	    1024x768-60, 1152x864-60, 1024x768-70, 1024x768-76,
- 	    1152x864-70, 1280x1024-61, 1024x768-85, 1280x1024-70,
- 	    1152x864-84, 1280x1024-76, 1280x1024-85
-- 
-+==========  ============================================================
-+
- 
- Known Issues
- ============
-diff --git a/Documentation/fb/tridentfb.txt b/Documentation/fb/tridentfb.txt
-index 45d9de5b13a3..d651157f7486 100644
---- a/Documentation/fb/tridentfb.txt
-+++ b/Documentation/fb/tridentfb.txt
-@@ -1,3 +1,7 @@
-+=========
-+Tridentfb
-+=========
-+
- Tridentfb is a framebuffer driver for some Trident chip based cards.
- 
- The following list of chips is thought to be supported although not all are
-@@ -17,6 +21,7 @@ limited comparing to the range if acceleration is disabled (see list
- of parameters below).
- 
- Known bugs:
-+
- 1. The driver randomly locks up on 3DImage975 chip with acceleration
-    enabled. The same happens in X11 (Xorg).
- 2. The ramdac speeds require some more fine tuning. It is possible to
-@@ -26,28 +31,30 @@ Known bugs:
- How to use it?
- ==============
- 
--When booting you can pass the video parameter.
--video=tridentfb
-+When booting you can pass the video parameter::
- 
--The parameters for tridentfb are concatenated with a ':' as in this example.
-+	video=tridentfb
- 
--video=tridentfb:800x600-16@75,noaccel
-+The parameters for tridentfb are concatenated with a ':' as in this example::
-+
-+	video=tridentfb:800x600-16@75,noaccel
- 
- The second level parameters that tridentfb understands are:
- 
--noaccel - turns off acceleration (when it doesn't work for your card)
-+========  =====================================================================
-+noaccel   turns off acceleration (when it doesn't work for your card)
- 
--fp	- use flat panel related stuff
--crt 	- assume monitor is present instead of fp
-+fp	  use flat panel related stuff
-+crt 	  assume monitor is present instead of fp
- 
--center 	- for flat panels and resolutions smaller than native size center the
-+center 	  for flat panels and resolutions smaller than native size center the
- 	  image, otherwise use
- stretch
- 
--memsize - integer value in KB, use if your card's memory size is misdetected.
-+memsize   integer value in KB, use if your card's memory size is misdetected.
- 	  look at the driver output to see what it says when initializing.
- 
--memdiff - integer value in KB, should be nonzero if your card reports
-+memdiff   integer value in KB, should be nonzero if your card reports
- 	  more memory than it actually has. For instance mine is 192K less than
- 	  detection says in all three BIOS selectable situations 2M, 4M, 8M.
- 	  Only use if your video memory is taken from main memory hence of
-@@ -56,12 +63,13 @@ memdiff - integer value in KB, should be nonzero if your card reports
- 	  at the bottom this might help by not letting change to that mode
- 	  anymore.
- 
--nativex - the width in pixels of the flat panel.If you know it (usually 1024
-+nativex   the width in pixels of the flat panel.If you know it (usually 1024
- 	  800 or 1280) and it is not what the driver seems to detect use it.
- 
--bpp	- bits per pixel (8,16 or 32)
--mode	- a mode name like 800x600-8@75 as described in
-+bpp	  bits per pixel (8,16 or 32)
-+mode	  a mode name like 800x600-8@75 as described in
- 	  Documentation/fb/modedb.txt
-+========  =====================================================================
- 
- Using insane values for the above parameters will probably result in driver
- misbehaviour so take care(for instance memsize=12345678 or memdiff=23784 or
-diff --git a/Documentation/fb/udlfb.txt b/Documentation/fb/udlfb.txt
-index c985cb65dd06..732b37db3504 100644
---- a/Documentation/fb/udlfb.txt
-+++ b/Documentation/fb/udlfb.txt
-@@ -1,6 +1,6 @@
--
-+==============
- What is udlfb?
--===============
-+==============
- 
- This is a driver for DisplayLink USB 2.0 era graphics chips.
- 
-@@ -100,6 +100,7 @@ options udlfb fb_defio=0 console=1 shadow=1
- 
- Accepted boolean options:
- 
-+=============== ================================================================
- fb_defio	Make use of the fb_defio (CONFIG_FB_DEFERRED_IO) kernel
- 		module to track changed areas of the framebuffer by page faults.
- 		Standard fbdev applications that use mmap but that do not
-@@ -109,7 +110,7 @@ fb_defio	Make use of the fb_defio (CONFIG_FB_DEFERRED_IO) kernel
- 		more stable, and higher performance.
- 		default: fb_defio=1
- 
--console	Allow fbcon to attach to udlfb provided framebuffers.
-+console		Allow fbcon to attach to udlfb provided framebuffers.
- 		Can be disabled if fbcon and other clients
- 		(e.g. X with --shared-vt) are in conflict.
- 		default: console=1
-@@ -119,6 +120,7 @@ shadow		Allocate a 2nd framebuffer to shadow what's currently across
- 		do not transmit. Spends host memory to save USB transfers.
- 		Enabled by default. Only disable on very low memory systems.
- 		default: shadow=1
-+=============== ================================================================
- 
- Sysfs Attributes
- ================
-@@ -126,34 +128,35 @@ Sysfs Attributes
- Udlfb creates several files in /sys/class/graphics/fb?
- Where ? is the sequential framebuffer id of the particular DisplayLink device
- 
--edid	       		If a valid EDID blob is written to this file (typically
--			by a udev rule), then udlfb will use this EDID as a
--			backup in case reading the actual EDID of the monitor
--			attached to the DisplayLink device fails. This is
--			especially useful for fixed panels, etc. that cannot
--			communicate their capabilities via EDID. Reading
--			this file returns the current EDID of the attached
--			monitor (or last backup value written). This is
--			useful to get the EDID of the attached monitor,
--			which can be passed to utilities like parse-edid.
-+======================== ========================================================
-+edid			 If a valid EDID blob is written to this file (typically
-+			 by a udev rule), then udlfb will use this EDID as a
-+			 backup in case reading the actual EDID of the monitor
-+			 attached to the DisplayLink device fails. This is
-+			 especially useful for fixed panels, etc. that cannot
-+			 communicate their capabilities via EDID. Reading
-+			 this file returns the current EDID of the attached
-+			 monitor (or last backup value written). This is
-+			 useful to get the EDID of the attached monitor,
-+			 which can be passed to utilities like parse-edid.
- 
--metrics_bytes_rendered	32-bit count of pixel bytes rendered
-+metrics_bytes_rendered	 32-bit count of pixel bytes rendered
- 
--metrics_bytes_identical 32-bit count of how many of those bytes were found to be
--			unchanged, based on a shadow framebuffer check
-+metrics_bytes_identical  32-bit count of how many of those bytes were found to be
-+			 unchanged, based on a shadow framebuffer check
- 
--metrics_bytes_sent	32-bit count of how many bytes were transferred over
--			USB to communicate the resulting changed pixels to the
--			hardware. Includes compression and protocol overhead
-+metrics_bytes_sent	 32-bit count of how many bytes were transferred over
-+			 USB to communicate the resulting changed pixels to the
-+			 hardware. Includes compression and protocol overhead
- 
- metrics_cpu_kcycles_used 32-bit count of CPU cycles used in processing the
--			above pixels (in thousands of cycles).
-+			 above pixels (in thousands of cycles).
- 
--metrics_reset		Write-only. Any write to this file resets all metrics
--			above to zero.  Note that the 32-bit counters above
--			roll over very quickly. To get reliable results, design
--			performance tests to start and finish in a very short
--			period of time (one minute or less is safe).
-+metrics_reset		 Write-only. Any write to this file resets all metrics
-+			 above to zero.  Note that the 32-bit counters above
-+			 roll over very quickly. To get reliable results, design
-+			 performance tests to start and finish in a very short
-+			 period of time (one minute or less is safe).
-+======================== ========================================================
- 
----
- Bernie Thompson <bernie@plugable.com>
-diff --git a/Documentation/fb/uvesafb.txt b/Documentation/fb/uvesafb.txt
-index aa924196c366..d1c2523fbb33 100644
---- a/Documentation/fb/uvesafb.txt
-+++ b/Documentation/fb/uvesafb.txt
-@@ -1,4 +1,4 @@
--
-+==========================================================
- uvesafb - A Generic Driver for VBE2+ compliant video cards
- ==========================================================
- 
-@@ -49,7 +49,7 @@ The most important limitations are:
- 
- uvesafb can be compiled either as a module, or directly into the kernel.
- In both cases it supports the same set of configuration options, which
--are either given on the kernel command line or as module parameters, e.g.:
-+are either given on the kernel command line or as module parameters, e.g.::
- 
-  video=uvesafb:1024x768-32,mtrr:3,ywrap (compiled into the kernel)
- 
-@@ -57,85 +57,90 @@ are either given on the kernel command line or as module parameters, e.g.:
- 
- Accepted options:
- 
-+======= =========================================================
- ypan    Enable display panning using the VESA protected mode
--        interface.  The visible screen is just a window of the
--        video memory, console scrolling is done by changing the
--        start of the window.  This option is available on x86
--        only and is the default option on that architecture.
-+	interface.  The visible screen is just a window of the
-+	video memory, console scrolling is done by changing the
-+	start of the window.  This option is available on x86
-+	only and is the default option on that architecture.
- 
- ywrap   Same as ypan, but assumes your gfx board can wrap-around
--        the video memory (i.e. starts reading from top if it
--        reaches the end of video memory).  Faster than ypan.
--        Available on x86 only.
-+	the video memory (i.e. starts reading from top if it
-+	reaches the end of video memory).  Faster than ypan.
-+	Available on x86 only.
- 
- redraw  Scroll by redrawing the affected part of the screen, this
--        is the default on non-x86.
-+	is the default on non-x86.
-+======= =========================================================
- 
- (If you're using uvesafb as a module, the above three options are
-- used a parameter of the scroll option, e.g. scroll=ypan.)
-+used a parameter of the scroll option, e.g. scroll=ypan.)
- 
--vgapal  Use the standard VGA registers for palette changes.
-+=========== ====================================================================
-+vgapal      Use the standard VGA registers for palette changes.
- 
--pmipal  Use the protected mode interface for palette changes.
--        This is the default if the protected mode interface is
--        available.  Available on x86 only.
-+pmipal      Use the protected mode interface for palette changes.
-+            This is the default if the protected mode interface is
-+            available.  Available on x86 only.
- 
--mtrr:n  Setup memory type range registers for the framebuffer
--        where n:
--              0 - disabled (equivalent to nomtrr)
--              3 - write-combining (default)
-+mtrr:n      Setup memory type range registers for the framebuffer
-+            where n:
- 
--	Values other than 0 and 3 will result in a warning and will be
--	treated just like 3.
-+                - 0 - disabled (equivalent to nomtrr)
-+                - 3 - write-combining (default)
- 
--nomtrr  Do not use memory type range registers.
-+            Values other than 0 and 3 will result in a warning and will be
-+            treated just like 3.
-+
-+nomtrr      Do not use memory type range registers.
- 
- vremap:n
--        Remap 'n' MiB of video RAM.  If 0 or not specified, remap memory
--        according to video mode.
-+            Remap 'n' MiB of video RAM.  If 0 or not specified, remap memory
-+            according to video mode.
- 
--vtotal:n
--        If the video BIOS of your card incorrectly determines the total
--        amount of video RAM, use this option to override the BIOS (in MiB).
-+vtotal:n    If the video BIOS of your card incorrectly determines the total
-+            amount of video RAM, use this option to override the BIOS (in MiB).
- 
--<mode>  The mode you want to set, in the standard modedb format.  Refer to
--        modedb.txt for a detailed description.  When uvesafb is compiled as
--        a module, the mode string should be provided as a value of the
--        'mode_option' option.
-+<mode>      The mode you want to set, in the standard modedb format.  Refer to
-+            modedb.txt for a detailed description.  When uvesafb is compiled as
-+            a module, the mode string should be provided as a value of the
-+            'mode_option' option.
- 
--vbemode:x
--        Force the use of VBE mode x.  The mode will only be set if it's
--        found in the VBE-provided list of supported modes.
--        NOTE: The mode number 'x' should be specified in VESA mode number
--        notation, not the Linux kernel one (eg. 257 instead of 769).
--        HINT: If you use this option because normal <mode> parameter does
--        not work for you and you use a X server, you'll probably want to
--        set the 'nocrtc' option to ensure that the video mode is properly
--        restored after console <-> X switches.
-+vbemode:x   Force the use of VBE mode x.  The mode will only be set if it's
-+            found in the VBE-provided list of supported modes.
-+            NOTE: The mode number 'x' should be specified in VESA mode number
-+            notation, not the Linux kernel one (eg. 257 instead of 769).
-+            HINT: If you use this option because normal <mode> parameter does
-+            not work for you and you use a X server, you'll probably want to
-+            set the 'nocrtc' option to ensure that the video mode is properly
-+            restored after console <-> X switches.
- 
--nocrtc  Do not use CRTC timings while setting the video mode.  This option
--        has any effect only if the Video BIOS is VBE 3.0 compliant.  Use it
--        if you have problems with modes set the standard way.  Note that
--        using this option implies that any refresh rate adjustments will
--        be ignored and the refresh rate will stay at your BIOS default (60 Hz).
-+nocrtc      Do not use CRTC timings while setting the video mode.  This option
-+            has any effect only if the Video BIOS is VBE 3.0 compliant.  Use it
-+            if you have problems with modes set the standard way.  Note that
-+            using this option implies that any refresh rate adjustments will
-+            be ignored and the refresh rate will stay at your BIOS default
-+            (60 Hz).
- 
--noedid  Do not try to fetch and use EDID-provided modes.
-+noedid      Do not try to fetch and use EDID-provided modes.
- 
--noblank Disable hardware blanking.
-+noblank     Disable hardware blanking.
- 
--v86d:path
--        Set path to the v86d executable. This option is only available as
--        a module parameter, and not as a part of the video= string.  If you
--        need to use it and have uvesafb built into the kernel, use
--        uvesafb.v86d="path".
-+v86d:path   Set path to the v86d executable. This option is only available as
-+            a module parameter, and not as a part of the video= string.  If you
-+            need to use it and have uvesafb built into the kernel, use
-+            uvesafb.v86d="path".
-+=========== ====================================================================
- 
- Additionally, the following parameters may be provided.  They all override the
- EDID-provided values and BIOS defaults.  Refer to your monitor's specs to get
- the correct values for maxhf, maxvf and maxclk for your hardware.
- 
-+=========== ======================================
- maxhf:n     Maximum horizontal frequency (in kHz).
- maxvf:n     Maximum vertical frequency (in Hz).
- maxclk:n    Maximum pixel clock (in MHz).
-+=========== ======================================
- 
- 4. The sysfs interface
- ----------------------
-@@ -146,27 +151,26 @@ additional information.
- Driver attributes:
- 
- /sys/bus/platform/drivers/uvesafb
--  - v86d (default: /sbin/v86d)
-+  v86d
-+    (default: /sbin/v86d)
-+
-     Path to the v86d executable. v86d is started by uvesafb
-     if an instance of the daemon isn't already running.
- 
- Device attributes:
- 
- /sys/bus/platform/drivers/uvesafb/uvesafb.0
--  - nocrtc
-+  nocrtc
-     Use the default refresh rate (60 Hz) if set to 1.
- 
--  - oem_product_name
--  - oem_product_rev
--  - oem_string
--  - oem_vendor
-+  oem_product_name, oem_product_rev, oem_string, oem_vendor
-     Information about the card and its maker.
- 
--  - vbe_modes
-+  vbe_modes
-     A list of video modes supported by the Video BIOS along with their
-     VBE mode numbers in hex.
- 
--  - vbe_version
-+  vbe_version
-     A BCD value indicating the implemented VBE standard.
- 
- 5. Miscellaneous
-@@ -176,9 +180,9 @@ Uvesafb will set a video mode with the default refresh rate and timings
- from the Video BIOS if you set pixclock to 0 in fb_var_screeninfo.
- 
- 
----
-+
-  Michal Januszewski <spock@gentoo.org>
-+
-  Last updated: 2017-10-10
- 
-  Documentation of the uvesafb options is loosely based on vesafb.txt.
--
-diff --git a/Documentation/fb/vesafb.txt b/Documentation/fb/vesafb.txt
-index 413bb73235be..2ed0dfb661cf 100644
---- a/Documentation/fb/vesafb.txt
-+++ b/Documentation/fb/vesafb.txt
-@@ -1,4 +1,4 @@
--
-+===============
- What is vesafb?
- ===============
- 
-@@ -40,30 +40,35 @@ The graphic modes are NOT in the list which you get if you boot with
- vga=ask and hit return. The mode you wish to use is derived from the
- VESA mode number. Here are those VESA mode numbers:
- 
--    | 640x480  800x600  1024x768 1280x1024
------+-------------------------------------
--256 |  0x101    0x103    0x105    0x107   
--32k |  0x110    0x113    0x116    0x119   
--64k |  0x111    0x114    0x117    0x11A   
--16M |  0x112    0x115    0x118    0x11B   
-+====== =======  =======  ======== =========
-+colors 640x480  800x600  1024x768 1280x1024
-+====== =======  =======  ======== =========
-+256    0x101    0x103    0x105    0x107
-+32k    0x110    0x113    0x116    0x119
-+64k    0x111    0x114    0x117    0x11A
-+16M    0x112    0x115    0x118    0x11B
-+====== =======  =======  ======== =========
-+
- 
- The video mode number of the Linux kernel is the VESA mode number plus
--0x200.
-- 
-+0x200:
-+
-  Linux_kernel_mode_number = VESA_mode_number + 0x200
- 
- So the table for the Kernel mode numbers are:
- 
--    | 640x480  800x600  1024x768 1280x1024
------+-------------------------------------
--256 |  0x301    0x303    0x305    0x307   
--32k |  0x310    0x313    0x316    0x319   
--64k |  0x311    0x314    0x317    0x31A   
--16M |  0x312    0x315    0x318    0x31B   
-+====== =======  =======  ======== =========
-+colors 640x480  800x600  1024x768 1280x1024
-+====== =======  =======  ======== =========
-+256    0x301    0x303    0x305    0x307
-+32k    0x310    0x313    0x316    0x319
-+64k    0x311    0x314    0x317    0x31A
-+16M    0x312    0x315    0x318    0x31B
-+====== =======  =======  ======== =========
- 
- To enable one of those modes you have to specify "vga=ask" in the
- lilo.conf file and rerun LILO. Then you can type in the desired
--mode at the "vga=ask" prompt. For example if you like to use 
-+mode at the "vga=ask" prompt. For example if you like to use
- 1024x768x256 colors you have to say "305" at this prompt.
- 
- If this does not work, this might be because your BIOS does not support
-@@ -72,10 +77,10 @@ Even if your board does, it might be the BIOS which does not.  VESA BIOS
- Extensions v2.0 are required, 1.2 is NOT sufficient.  You will get a
- "bad mode number" message if something goes wrong.
- 
--1. Note: LILO cannot handle hex, for booting directly with 
--         "vga=mode-number" you have to transform the numbers to decimal.
-+1. Note: LILO cannot handle hex, for booting directly with
-+   "vga=mode-number" you have to transform the numbers to decimal.
- 2. Note: Some newer versions of LILO appear to work with those hex values,
--         if you set the 0x in front of the numbers.
-+   if you set the 0x in front of the numbers.
- 
- X11
- ===
-@@ -120,62 +125,68 @@ Accepted options:
- 
- inverse	use inverse color map
- 
--ypan	enable display panning using the VESA protected mode 
--	interface.  The visible screen is just a window of the
--	video memory, console scrolling is done by changing the
--	start of the window.
--	pro:	* scrolling (fullscreen) is fast, because there is
-+========= ======================================================================
-+ypan	  enable display panning using the VESA protected mode
-+          interface.  The visible screen is just a window of the
-+          video memory, console scrolling is done by changing the
-+          start of the window.
-+
-+          pro:
-+
-+                * scrolling (fullscreen) is fast, because there is
- 		  no need to copy around data.
- 		* You'll get scrollback (the Shift-PgUp thing),
- 		  the video memory can be used as scrollback buffer
--	kontra: * scrolling only parts of the screen causes some
-+
-+          kontra:
-+
-+		* scrolling only parts of the screen causes some
- 		  ugly flicker effects (boot logo flickers for
- 		  example).
- 
--ywrap	Same as ypan, but assumes your gfx board can wrap-around 
--	the video memory (i.e. starts reading from top if it
--	reaches the end of video memory).  Faster than ypan.
-+ywrap	  Same as ypan, but assumes your gfx board can wrap-around
-+          the video memory (i.e. starts reading from top if it
-+          reaches the end of video memory).  Faster than ypan.
- 
--redraw	scroll by redrawing the affected part of the screen, this
--	is the safe (and slow) default.
-+redraw	  Scroll by redrawing the affected part of the screen, this
-+          is the safe (and slow) default.
- 
- 
--vgapal	Use the standard vga registers for palette changes.
--	This is the default.
--pmipal	Use the protected mode interface for palette changes.
-+vgapal	  Use the standard vga registers for palette changes.
-+          This is the default.
-+pmipal    Use the protected mode interface for palette changes.
- 
--mtrr:n	setup memory type range registers for the vesafb framebuffer
--	where n:
--	      0 - disabled (equivalent to nomtrr) (default)
--	      1 - uncachable
--	      2 - write-back
--	      3 - write-combining
--	      4 - write-through
-+mtrr:n	  Setup memory type range registers for the vesafb framebuffer
-+          where n:
- 
--	If you see the following in dmesg, choose the type that matches the
--	old one. In this example, use "mtrr:2".
-+              - 0 - disabled (equivalent to nomtrr) (default)
-+              - 1 - uncachable
-+              - 2 - write-back
-+              - 3 - write-combining
-+              - 4 - write-through
-+
-+          If you see the following in dmesg, choose the type that matches the
-+          old one. In this example, use "mtrr:2".
- ...
--mtrr: type mismatch for e0000000,8000000 old: write-back new: write-combining
-+mtrr:     type mismatch for e0000000,8000000 old: write-back new:
-+	  write-combining
- ...
- 
--nomtrr  disable mtrr
-+nomtrr    disable mtrr
- 
- vremap:n
--        remap 'n' MiB of video RAM. If 0 or not specified, remap memory
--	according to video mode. (2.5.66 patch/idea by Antonino Daplas
--	reversed to give override possibility (allocate more fb memory
--	than the kernel would) to 2.4 by tmb@iki.fi)
-+          Remap 'n' MiB of video RAM. If 0 or not specified, remap memory
-+          according to video mode. (2.5.66 patch/idea by Antonino Daplas
-+          reversed to give override possibility (allocate more fb memory
-+          than the kernel would) to 2.4 by tmb@iki.fi)
- 
--vtotal:n
--        if the video BIOS of your card incorrectly determines the total
--        amount of video RAM, use this option to override the BIOS (in MiB).
-+vtotal:n  If the video BIOS of your card incorrectly determines the total
-+          amount of video RAM, use this option to override the BIOS (in MiB).
-+========= ======================================================================
- 
- Have fun!
- 
--  Gerd
--
----
- Gerd Knorr <kraxel@goldbach.in-berlin.de>
- 
--Minor (mostly typo) changes 
-+Minor (mostly typo) changes
- by Nico Schmoigl <schmoigl@rumms.uni-mannheim.de>
-diff --git a/Documentation/fb/viafb.txt b/Documentation/fb/viafb.txt
-index 1cb2462a71ce..8eb7a3bb068c 100644
---- a/Documentation/fb/viafb.txt
-+++ b/Documentation/fb/viafb.txt
-@@ -1,165 +1,185 @@
-+=======================================================
-+VIA Integration Graphic Chip Console Framebuffer Driver
-+=======================================================
- 
--        VIA Integration Graphic Chip Console Framebuffer Driver
--
--[Platform]
-------------------------
-+Platform
-+--------
-     The console framebuffer driver is for graphics chips of
--    VIA UniChrome Family(CLE266, PM800 / CN400 / CN300,
--                        P4M800CE / P4M800Pro / CN700 / VN800,
--                        CX700 / VX700, K8M890, P4M890,
--                        CN896 / P4M900, VX800, VX855)
-+    VIA UniChrome Family
-+    (CLE266, PM800 / CN400 / CN300,
-+    P4M800CE / P4M800Pro / CN700 / VN800,
-+    CX700 / VX700, K8M890, P4M890,
-+    CN896 / P4M900, VX800, VX855)
- 
--[Driver features]
--------------------------
-+Driver features
-+---------------
-     Device: CRT, LCD, DVI
- 
--    Support viafb_mode:
--        CRT:
--            640x480(60, 75, 85, 100, 120 Hz), 720x480(60 Hz),
--            720x576(60 Hz), 800x600(60, 75, 85, 100, 120 Hz),
--            848x480(60 Hz), 856x480(60 Hz), 1024x512(60 Hz),
--            1024x768(60, 75, 85, 100 Hz), 1152x864(75 Hz),
--            1280x768(60 Hz), 1280x960(60 Hz), 1280x1024(60, 75, 85 Hz),
--            1440x1050(60 Hz), 1600x1200(60, 75 Hz), 1280x720(60 Hz),
--            1920x1080(60 Hz), 1400x1050(60 Hz), 800x480(60 Hz)
-+    Support viafb_mode::
-+
-+	CRT:
-+	    640x480(60, 75, 85, 100, 120 Hz), 720x480(60 Hz),
-+	    720x576(60 Hz), 800x600(60, 75, 85, 100, 120 Hz),
-+	    848x480(60 Hz), 856x480(60 Hz), 1024x512(60 Hz),
-+	    1024x768(60, 75, 85, 100 Hz), 1152x864(75 Hz),
-+	    1280x768(60 Hz), 1280x960(60 Hz), 1280x1024(60, 75, 85 Hz),
-+	    1440x1050(60 Hz), 1600x1200(60, 75 Hz), 1280x720(60 Hz),
-+	    1920x1080(60 Hz), 1400x1050(60 Hz), 800x480(60 Hz)
- 
-     color depth: 8 bpp, 16 bpp, 32 bpp supports.
- 
-     Support 2D hardware accelerator.
- 
--[Using the viafb module]
---- -- --------------------
--    Start viafb with default settings:
--        #modprobe viafb
-+Using the viafb module
-+----------------------
-+    Start viafb with default settings::
- 
--    Start viafb with user options:
--        #modprobe viafb viafb_mode=800x600 viafb_bpp=16 viafb_refresh=60
--                  viafb_active_dev=CRT+DVI viafb_dvi_port=DVP1
--                  viafb_mode1=1024x768 viafb_bpp=16 viafb_refresh1=60
--                  viafb_SAMM_ON=1
-+	#modprobe viafb
-+
-+    Start viafb with user options::
-+
-+	#modprobe viafb viafb_mode=800x600 viafb_bpp=16 viafb_refresh=60
-+		  viafb_active_dev=CRT+DVI viafb_dvi_port=DVP1
-+		  viafb_mode1=1024x768 viafb_bpp=16 viafb_refresh1=60
-+		  viafb_SAMM_ON=1
- 
-     viafb_mode:
--        640x480 (default)
--        720x480
--        800x600
--        1024x768
--        ......
-+	- 640x480 (default)
-+	- 720x480
-+	- 800x600
-+	- 1024x768
- 
-     viafb_bpp:
--        8, 16, 32 (default:32)
-+	- 8, 16, 32 (default:32)
- 
-     viafb_refresh:
--        60, 75, 85, 100, 120 (default:60)
-+	- 60, 75, 85, 100, 120 (default:60)
- 
-     viafb_lcd_dsp_method:
--        0 : expansion (default)
--        1 : centering
-+	- 0 : expansion (default)
-+	- 1 : centering
- 
-     viafb_lcd_mode:
--        0 : LCD panel with LSB data format input (default)
--        1 : LCD panel with MSB data format input
-+	0 : LCD panel with LSB data format input (default)
-+	1 : LCD panel with MSB data format input
- 
-     viafb_lcd_panel_id:
--        0 : Resolution: 640x480, Channel: single, Dithering: Enable
--        1 : Resolution: 800x600, Channel: single, Dithering: Enable
--        2 : Resolution: 1024x768, Channel: single, Dithering: Enable (default)
--        3 : Resolution: 1280x768, Channel: single, Dithering: Enable
--        4 : Resolution: 1280x1024, Channel: dual, Dithering: Enable
--        5 : Resolution: 1400x1050, Channel: dual, Dithering: Enable
--        6 : Resolution: 1600x1200, Channel: dual, Dithering: Enable
-+	- 0 : Resolution: 640x480, Channel: single, Dithering: Enable
-+	- 1 : Resolution: 800x600, Channel: single, Dithering: Enable
-+	- 2 : Resolution: 1024x768, Channel: single, Dithering: Enable (default)
-+	- 3 : Resolution: 1280x768, Channel: single, Dithering: Enable
-+	- 4 : Resolution: 1280x1024, Channel: dual, Dithering: Enable
-+	- 5 : Resolution: 1400x1050, Channel: dual, Dithering: Enable
-+	- 6 : Resolution: 1600x1200, Channel: dual, Dithering: Enable
- 
--        8 : Resolution: 800x480, Channel: single, Dithering: Enable
--        9 : Resolution: 1024x768, Channel: dual, Dithering: Enable
--        10: Resolution: 1024x768, Channel: single, Dithering: Disable
--        11: Resolution: 1024x768, Channel: dual, Dithering: Disable
--        12: Resolution: 1280x768, Channel: single, Dithering: Disable
--        13: Resolution: 1280x1024, Channel: dual, Dithering: Disable
--        14: Resolution: 1400x1050, Channel: dual, Dithering: Disable
--        15: Resolution: 1600x1200, Channel: dual, Dithering: Disable
--        16: Resolution: 1366x768, Channel: single, Dithering: Disable
--        17: Resolution: 1024x600, Channel: single, Dithering: Enable
--        18: Resolution: 1280x768, Channel: dual, Dithering: Enable
--        19: Resolution: 1280x800, Channel: single, Dithering: Enable
-+	- 8 : Resolution: 800x480, Channel: single, Dithering: Enable
-+	- 9 : Resolution: 1024x768, Channel: dual, Dithering: Enable
-+	- 10: Resolution: 1024x768, Channel: single, Dithering: Disable
-+	- 11: Resolution: 1024x768, Channel: dual, Dithering: Disable
-+	- 12: Resolution: 1280x768, Channel: single, Dithering: Disable
-+	- 13: Resolution: 1280x1024, Channel: dual, Dithering: Disable
-+	- 14: Resolution: 1400x1050, Channel: dual, Dithering: Disable
-+	- 15: Resolution: 1600x1200, Channel: dual, Dithering: Disable
-+	- 16: Resolution: 1366x768, Channel: single, Dithering: Disable
-+	- 17: Resolution: 1024x600, Channel: single, Dithering: Enable
-+	- 18: Resolution: 1280x768, Channel: dual, Dithering: Enable
-+	- 19: Resolution: 1280x800, Channel: single, Dithering: Enable
- 
-     viafb_accel:
--        0 : No 2D Hardware Acceleration
--        1 : 2D Hardware Acceleration (default)
-+	- 0 : No 2D Hardware Acceleration
-+	- 1 : 2D Hardware Acceleration (default)
- 
-     viafb_SAMM_ON:
--        0 : viafb_SAMM_ON disable (default)
--        1 : viafb_SAMM_ON enable
-+	- 0 : viafb_SAMM_ON disable (default)
-+	- 1 : viafb_SAMM_ON enable
- 
-     viafb_mode1: (secondary display device)
--        640x480 (default)
--        720x480
--        800x600
--        1024x768
--        ... ...
-+	- 640x480 (default)
-+	- 720x480
-+	- 800x600
-+	- 1024x768
- 
-     viafb_bpp1: (secondary display device)
--        8, 16, 32 (default:32)
-+	- 8, 16, 32 (default:32)
- 
-     viafb_refresh1: (secondary display device)
--        60, 75, 85, 100, 120 (default:60)
-+	- 60, 75, 85, 100, 120 (default:60)
- 
-     viafb_active_dev:
--        This option is used to specify active devices.(CRT, DVI, CRT+LCD...)
--        DVI stands for DVI or HDMI, E.g., If you want to enable HDMI,
--        set viafb_active_dev=DVI. In SAMM case, the previous of
--        viafb_active_dev is primary device, and the following is
--        secondary device.
--
--        For example:
--        To enable one device, such as DVI only, we can use:
--            modprobe viafb viafb_active_dev=DVI
--        To enable two devices, such as CRT+DVI:
--            modprobe viafb viafb_active_dev=CRT+DVI;
--
--        For DuoView case, we can use:
--            modprobe viafb viafb_active_dev=CRT+DVI
--            OR
--            modprobe viafb viafb_active_dev=DVI+CRT...
--
--        For SAMM case:
--        If CRT is primary and DVI is secondary, we should use:
--            modprobe viafb viafb_active_dev=CRT+DVI viafb_SAMM_ON=1...
--        If DVI is primary and CRT is secondary, we should use:
--            modprobe viafb viafb_active_dev=DVI+CRT viafb_SAMM_ON=1...
-+	This option is used to specify active devices.(CRT, DVI, CRT+LCD...)
-+	DVI stands for DVI or HDMI, E.g., If you want to enable HDMI,
-+	set viafb_active_dev=DVI. In SAMM case, the previous of
-+	viafb_active_dev is primary device, and the following is
-+	secondary device.
-+
-+	For example:
-+
-+	To enable one device, such as DVI only, we can use::
-+
-+	    modprobe viafb viafb_active_dev=DVI
-+
-+	To enable two devices, such as CRT+DVI::
-+
-+	    modprobe viafb viafb_active_dev=CRT+DVI;
-+
-+	For DuoView case, we can use::
-+
-+	    modprobe viafb viafb_active_dev=CRT+DVI
-+
-+	OR::
-+
-+	    modprobe viafb viafb_active_dev=DVI+CRT...
-+
-+	For SAMM case:
-+
-+	If CRT is primary and DVI is secondary, we should use::
-+
-+	    modprobe viafb viafb_active_dev=CRT+DVI viafb_SAMM_ON=1...
-+
-+	If DVI is primary and CRT is secondary, we should use::
-+
-+	    modprobe viafb viafb_active_dev=DVI+CRT viafb_SAMM_ON=1...
- 
-     viafb_display_hardware_layout:
--        This option is used to specify display hardware layout for CX700 chip.
--        1 : LCD only
--        2 : DVI only
--        3 : LCD+DVI (default)
--        4 : LCD1+LCD2 (internal + internal)
--        16: LCD1+ExternalLCD2 (internal + external)
-+	This option is used to specify display hardware layout for CX700 chip.
-+
-+	- 1 : LCD only
-+	- 2 : DVI only
-+	- 3 : LCD+DVI (default)
-+	- 4 : LCD1+LCD2 (internal + internal)
-+	- 16: LCD1+ExternalLCD2 (internal + external)
- 
-     viafb_second_size:
--        This option is used to set second device memory size(MB) in SAMM case.
--        The minimal size is 16.
-+	This option is used to set second device memory size(MB) in SAMM case.
-+	The minimal size is 16.
- 
-     viafb_platform_epia_dvi:
--        This option is used to enable DVI on EPIA - M
--        0 : No DVI on EPIA - M (default)
--        1 : DVI on EPIA - M
-+	This option is used to enable DVI on EPIA - M
-+
-+	- 0 : No DVI on EPIA - M (default)
-+	- 1 : DVI on EPIA - M
- 
-     viafb_bus_width:
--        When using 24 - Bit Bus Width Digital Interface,
--        this option should be set.
--        12: 12-Bit LVDS or 12-Bit TMDS (default)
--        24: 24-Bit LVDS or 24-Bit TMDS
-+	When using 24 - Bit Bus Width Digital Interface,
-+	this option should be set.
-+
-+	- 12: 12-Bit LVDS or 12-Bit TMDS (default)
-+	- 24: 24-Bit LVDS or 24-Bit TMDS
- 
-     viafb_device_lcd_dualedge:
--        When using Dual Edge Panel, this option should be set.
--        0 : No Dual Edge Panel (default)
--        1 : Dual Edge Panel
-+	When using Dual Edge Panel, this option should be set.
-+
-+	- 0 : No Dual Edge Panel (default)
-+	- 1 : Dual Edge Panel
- 
-     viafb_lcd_port:
--        This option is used to specify LCD output port,
--        available values are "DVP0" "DVP1" "DFP_HIGHLOW" "DFP_HIGH" "DFP_LOW".
--        for external LCD + external DVI on CX700(External LCD is on DVP0),
--        we should use:
--            modprobe viafb viafb_lcd_port=DVP0...
-+	This option is used to specify LCD output port,
-+	available values are "DVP0" "DVP1" "DFP_HIGHLOW" "DFP_HIGH" "DFP_LOW".
-+
-+	for external LCD + external DVI on CX700(External LCD is on DVP0),
-+	we should use::
-+
-+	    modprobe viafb viafb_lcd_port=DVP0...
- 
- Notes:
-     1. CRT may not display properly for DuoView CRT & DVI display at
-@@ -176,77 +196,102 @@ Notes:
-        viafb doesn't support multi-head well, or it will cause screen crush.
- 
- 
--[Configure viafb with "fbset" tool]
-------------------------------------
-+Configure viafb with "fbset" tool
-+---------------------------------
-+
-     "fbset" is an inbox utility of Linux.
--    1. Inquire current viafb information, type,
--           # fbset -i
- 
--    2. Set various resolutions and viafb_refresh rates,
--           # fbset <resolution-vertical_sync>
-+    1. Inquire current viafb information, type::
-+
-+	   # fbset -i
-+
-+    2. Set various resolutions and viafb_refresh rates::
-+
-+	   # fbset <resolution-vertical_sync>
-+
-+       example::
-+
-+	   # fbset "1024x768-75"
-+
-+       or::
-+
-+	   # fbset -g 1024 768 1024 768 32
- 
--       example,
--           # fbset "1024x768-75"
--       or
--           # fbset -g 1024 768 1024 768 32
-        Check the file "/etc/fb.modes" to find display modes available.
- 
--    3. Set the color depth,
--           # fbset -depth <value>
-+    3. Set the color depth::
- 
--       example,
--           # fbset -depth 16
-+	   # fbset -depth <value>
- 
-+       example::
- 
--[Configure viafb via /proc]
-----------------------------
-+	   # fbset -depth 16
-+
-+
-+Configure viafb via /proc
-+-------------------------
-     The following files exist in /proc/viafb
- 
-     supported_output_devices
-+	This read-only file contains a full ',' separated list containing all
-+	output devices that could be available on your platform. It is likely
-+	that not all of those have a connector on your hardware but it should
-+	provide a good starting point to figure out which of those names match
-+	a real connector.
-+
-+	Example::
-+
-+		# cat /proc/viafb/supported_output_devices
-+
-+    iga1/output_devices, iga2/output_devices
-+	These two files are readable and writable. iga1 and iga2 are the two
-+	independent units that produce the screen image. Those images can be
-+	forwarded to one or more output devices. Reading those files is a way
-+	to query which output devices are currently used by an iga.
-+
-+	Example::
-+
-+		# cat /proc/viafb/iga1/output_devices
-+
-+	If there are no output devices printed the output of this iga is lost.
-+	This can happen for example if only one (the other) iga is used.
-+	Writing to these files allows adjusting the output devices during
-+	runtime. One can add new devices, remove existing ones or switch
-+	between igas. Essentially you can write a ',' separated list of device
-+	names (or a single one) in the same format as the output to those
-+	files. You can add a '+' or '-' as a prefix allowing simple addition
-+	and removal of devices. So a prefix '+' adds the devices from your list
-+	to the already existing ones, '-' removes the listed devices from the
-+	existing ones and if no prefix is given it replaces all existing ones
-+	with the listed ones. If you remove devices they are expected to turn
-+	off. If you add devices that are already part of the other iga they are
-+	removed there and added to the new one.
-+
-+	Examples:
-+
-+	Add CRT as output device to iga1::
-+
-+		# echo +CRT > /proc/viafb/iga1/output_devices
-+
-+	Remove (turn off) DVP1 and LVDS1 as output devices of iga2::
-+
-+		# echo -DVP1,LVDS1 > /proc/viafb/iga2/output_devices
-+
-+	Replace all iga1 output devices by CRT::
-+
-+		# echo CRT > /proc/viafb/iga1/output_devices
-+
-+
-+Bootup with viafb
-+-----------------
-+
-+Add the following line to your grub.conf::
- 
--        This read-only file contains a full ',' separated list containing all
--        output devices that could be available on your platform. It is likely
--        that not all of those have a connector on your hardware but it should
--        provide a good starting point to figure out which of those names match
--        a real connector.
--        Example:
--        # cat /proc/viafb/supported_output_devices
--
--    iga1/output_devices
--    iga2/output_devices
--
--        These two files are readable and writable. iga1 and iga2 are the two
--        independent units that produce the screen image. Those images can be
--        forwarded to one or more output devices. Reading those files is a way
--        to query which output devices are currently used by an iga.
--        Example:
--        # cat /proc/viafb/iga1/output_devices
--        If there are no output devices printed the output of this iga is lost.
--        This can happen for example if only one (the other) iga is used.
--        Writing to these files allows adjusting the output devices during
--        runtime. One can add new devices, remove existing ones or switch
--        between igas. Essentially you can write a ',' separated list of device
--        names (or a single one) in the same format as the output to those
--        files. You can add a '+' or '-' as a prefix allowing simple addition
--        and removal of devices. So a prefix '+' adds the devices from your list
--        to the already existing ones, '-' removes the listed devices from the
--        existing ones and if no prefix is given it replaces all existing ones
--        with the listed ones. If you remove devices they are expected to turn
--        off. If you add devices that are already part of the other iga they are
--        removed there and added to the new one.
--        Examples:
--        Add CRT as output device to iga1
--        # echo +CRT > /proc/viafb/iga1/output_devices
--
--        Remove (turn off) DVP1 and LVDS1 as output devices of iga2
--        # echo -DVP1,LVDS1 > /proc/viafb/iga2/output_devices
--
--        Replace all iga1 output devices by CRT
--        # echo CRT > /proc/viafb/iga1/output_devices
--
--
--[Bootup with viafb]:
----------------------
--    Add the following line to your grub.conf:
-     append = "video=viafb:viafb_mode=1024x768,viafb_bpp=32,viafb_refresh=85"
- 
-+
-+VIA Framebuffer modes
-+=====================
-+
-+.. include:: viafb.modes
-+   :literal:
-diff --git a/Documentation/fb/vt8623fb.txt b/Documentation/fb/vt8623fb.txt
-index f654576c56b7..ba1730937dd8 100644
---- a/Documentation/fb/vt8623fb.txt
-+++ b/Documentation/fb/vt8623fb.txt
-@@ -1,13 +1,13 @@
--
--	vt8623fb - fbdev driver for graphics core in VIA VT8623 chipset
--	===============================================================
-+===============================================================
-+vt8623fb - fbdev driver for graphics core in VIA VT8623 chipset
-+===============================================================
- 
- 
- Supported Hardware
+diff --git a/Documentation/s390/qeth.txt b/Documentation/s390/qeth.txt
+index aa06fcf5f8c2..f02fdaa68de0 100644
+--- a/Documentation/s390/qeth.txt
++++ b/Documentation/s390/qeth.txt
+@@ -1,8 +1,12 @@
++=============================
+ IBM s390 QDIO Ethernet Driver
++=============================
+ 
+ OSA and HiperSockets Bridge Port Support
++========================================
+ 
+ Uevents
++-------
+ 
+ To generate the events the device must be assigned a role of either
+ a primary or a secondary Bridge Port. For more information, see
+@@ -13,12 +17,15 @@ of some configured Bridge Port device on the channel changes, a udev
+ event with ACTION=CHANGE is emitted on behalf of the corresponding
+ ccwgroup device. The event has the following attributes:
+ 
+-BRIDGEPORT=statechange -  indicates that the Bridge Port device changed
++BRIDGEPORT=statechange
++  indicates that the Bridge Port device changed
+   its state.
+ 
+-ROLE={primary|secondary|none} - the role assigned to the port.
++ROLE={primary|secondary|none}
++  the role assigned to the port.
+ 
+-STATE={active|standby|inactive} - the newly assumed state of the port.
++STATE={active|standby|inactive}
++  the newly assumed state of the port.
+ 
+ When run on HiperSockets Bridge Capable Port hardware with host address
+ notifications enabled, a udev event with ACTION=CHANGE is emitted.
+@@ -26,25 +33,32 @@ It is emitted on behalf of the corresponding ccwgroup device when a host
+ or a VLAN is registered or unregistered on the network served by the device.
+ The event has the following attributes:
+ 
+-BRIDGEDHOST={reset|register|deregister|abort} - host address
++BRIDGEDHOST={reset|register|deregister|abort}
++  host address
+   notifications are started afresh, a new host or VLAN is registered or
+   deregistered on the Bridge Port HiperSockets channel, or address
+   notifications are aborted.
+ 
+-VLAN=numeric-vlan-id - VLAN ID on which the event occurred. Not included
++VLAN=numeric-vlan-id
++  VLAN ID on which the event occurred. Not included
+   if no VLAN is involved in the event.
+ 
+-MAC=xx:xx:xx:xx:xx:xx - MAC address of the host that is being registered
++MAC=xx:xx:xx:xx:xx:xx
++  MAC address of the host that is being registered
+   or deregistered from the HiperSockets channel. Not reported if the
+   event reports the creation or destruction of a VLAN.
+ 
+-NTOK_BUSID=x.y.zzzz - device bus ID (CSSID, SSID and device number).
++NTOK_BUSID=x.y.zzzz
++  device bus ID (CSSID, SSID and device number).
+ 
+-NTOK_IID=xx - device IID.
++NTOK_IID=xx
++  device IID.
+ 
+-NTOK_CHPID=xx - device CHPID.
++NTOK_CHPID=xx
++  device CHPID.
+ 
+-NTOK_CHID=xxxx - device channel ID.
++NTOK_CHID=xxxx
++  device channel ID.
+ 
+-Note that the NTOK_* attributes refer to devices other than  the one
++Note that the `NTOK_*` attributes refer to devices other than  the one
+ connected to the system on which the OS is running.
+diff --git a/Documentation/s390/s390dbf.txt b/Documentation/s390/s390dbf.txt
+index 61329fd62e89..549dba50fc3b 100644
+--- a/Documentation/s390/s390dbf.txt
++++ b/Documentation/s390/s390dbf.txt
+@@ -1,34 +1,38 @@
++==================
+ S390 Debug Feature
  ==================
  
--	VIA VT8623 [CLE266] chipset and	its graphics core
--		(known as CastleRock or Unichrome)
-+VIA VT8623 [CLE266] chipset and	its graphics core
-+(known as CastleRock or Unichrome)
+-files: arch/s390/kernel/debug.c
+-       arch/s390/include/asm/debug.h
++files:
++      - arch/s390/kernel/debug.c
++      - arch/s390/include/asm/debug.h
  
- I tested vt8623fb on VIA EPIA ML-6000
+ Description:
+ ------------
+-The goal of this feature is to provide a kernel debug logging API 
+-where log records can be stored efficiently in memory, where each component 
++The goal of this feature is to provide a kernel debug logging API
++where log records can be stored efficiently in memory, where each component
+ (e.g. device drivers) can have one separate debug log.
+ One purpose of this is to inspect the debug logs after a production system crash
+ in order to analyze the reason for the crash.
++
+ If the system still runs but only a subcomponent which uses dbf fails,
+ it is possible to look at the debug logs on a live system via the Linux
+ debugfs filesystem.
++
+ The debug feature may also very useful for kernel and driver development.
  
+ Design:
+ -------
+-Kernel components (e.g. device drivers) can register themselves at the debug 
+-feature with the function call debug_register(). This function initializes a 
+-debug log for the caller. For each debug log exists a number of debug areas 
++Kernel components (e.g. device drivers) can register themselves at the debug
++feature with the function call debug_register(). This function initializes a
++debug log for the caller. For each debug log exists a number of debug areas
+ where exactly one is active at one time.  Each debug area consists of contiguous
+ pages in memory. In the debug areas there are stored debug entries (log records)
+-which are written by event- and exception-calls. 
++which are written by event- and exception-calls.
+ 
+ An event-call writes the specified debug entry to the active debug
+-area and updates the log pointer for the active area. If the end 
+-of the active debug area is reached, a wrap around is done (ring buffer) 
+-and the next debug entry will be written at the beginning of the active 
++area and updates the log pointer for the active area. If the end
++of the active debug area is reached, a wrap around is done (ring buffer)
++and the next debug entry will be written at the beginning of the active
+ debug area.
+ 
+ An exception-call writes the specified debug entry to the log and
+@@ -37,7 +41,7 @@ that the records which describe the origin of the exception are not
+ overwritten when a wrap around for the current area occurs.
+ 
+ The debug areas themselves are also ordered in form of a ring buffer.
+-When an exception is thrown in the last debug area, the following debug 
++When an exception is thrown in the last debug area, the following debug
+ entries are then written again in the very first area.
+ 
+ There are three versions for the event- and exception-calls: One for
+@@ -76,22 +80,25 @@ through writing a number string "x" to the 'level' debugfs file which is
+ provided for every debug log. Debugging can be switched off completely
+ by using "-" on the 'level' debugfs file.
+ 
+-Example:
++Example::
+ 
+-> echo "-" > /sys/kernel/debug/s390dbf/dasd/level
++	> echo "-" > /sys/kernel/debug/s390dbf/dasd/level
+ 
+ It is also possible to deactivate the debug feature globally for every
+ debug log. You can change the behavior using  2 sysctl parameters in
+ /proc/sys/s390dbf:
++
+ There are currently 2 possible triggers, which stop the debug feature
+ globally. The first possibility is to use the "debug_active" sysctl. If
+ set to 1 the debug feature is running. If "debug_active" is set to 0 the
+ debug feature is turned off.
++
+ The second trigger which stops the debug feature is a kernel oops.
+ That prevents the debug feature from overwriting debug information that
+ happened before the oops. After an oops you can reactivate the debug feature
+ by piping 1 to /proc/sys/s390dbf/debug_active. Nevertheless, its not
+ suggested to use an oopsed kernel in a production environment.
++
+ If you want to disallow the deactivation of the debug feature, you can use
+ the "debug_stoppable" sysctl. If you set "debug_stoppable" to 0 the debug
+ feature cannot be stopped. If the debug feature is already stopped, it
+@@ -101,219 +108,322 @@ Kernel Interfaces:
+ ------------------
+ 
+ ----------------------------------------------------------------------------
+-debug_info_t *debug_register(char *name, int pages, int nr_areas,
+-                             int buf_size);
+ 
+-Parameter:    name:        Name of debug log (e.g. used for debugfs entry)
+-              pages:       number of pages, which will be allocated per area
+-              nr_areas:    number of debug areas
+-              buf_size:    size of data area in each debug entry
++::
+ 
+-Return Value: Handle for generated debug area   
+-              NULL if register failed 
++  debug_info_t *debug_register(char *name, int pages, int nr_areas,
++			       int buf_size);
+ 
+-Description:  Allocates memory for a debug log     
+-              Must not be called within an interrupt handler 
++Parameter:
++	      name:
++			   Name of debug log (e.g. used for debugfs entry)
++	      pages:
++			   Number of pages, which will be allocated per area
++	      nr_areas:
++			   Number of debug areas
++	      buf_size:
++			   Size of data area in each debug entry
+ 
+-----------------------------------------------------------------------------
+-debug_info_t *debug_register_mode(char *name, int pages, int nr_areas,
+-				  int buf_size, mode_t mode, uid_t uid,
+-				  gid_t gid);
++Return Value:
++	Handle for generated debug area
+ 
+-Parameter:    name:	   Name of debug log (e.g. used for debugfs entry)
+-	      pages:	   Number of pages, which will be allocated per area
+-	      nr_areas:    Number of debug areas
+-	      buf_size:    Size of data area in each debug entry
+-	      mode:	   File mode for debugfs files. E.g. S_IRWXUGO
+-	      uid:	   User ID for debugfs files. Currently only 0 is
+-			   supported.
+-	      gid:	   Group ID for debugfs files. Currently only 0 is
+-			   supported.
+-
+-Return Value: Handle for generated debug area
+-	      NULL if register failed
++	  NULL if register failed
+ 
+ Description:  Allocates memory for a debug log
+ 	      Must not be called within an interrupt handler
+ 
++----------------------------------------------------------------------------
++
++::
++
++  debug_info_t *debug_register_mode(char *name, int pages, int nr_areas,
++				    int buf_size, mode_t mode, uid_t uid,
++				    gid_t gid);
++
++Parameter:
++	      name:
++			   Name of debug log (e.g. used for debugfs entry)
++	      pages:
++			   Number of pages, which will be allocated per area
++	      nr_areas:
++			   Number of debug areas
++	      buf_size:
++			   Size of data area in each debug entry
++	      mode:
++			   File mode for debugfs files. E.g. S_IRWXUGO
++	      uid:
++			   User ID for debugfs files. Currently only 0 is
++			   supported.
++	      gid:
++			   Group ID for debugfs files. Currently only 0 is
++			   supported.
++
++Return Value:
++	      Handle for generated debug area
++
++		NULL if register failed
++
++Description:
++	      Allocates memory for a debug log
++	      Must not be called within an interrupt handler
++
+ ---------------------------------------------------------------------------
+-void debug_unregister (debug_info_t * id);
+ 
+-Parameter:     id:   handle for debug log  
++::
+ 
+-Return Value:  none 
++  void debug_unregister (debug_info_t * id);
+ 
+-Description:   frees memory for a debug log and removes all registered debug
++Parameter:
++	       id:
++		    handle for debug log
++
++Return Value:
++	       none
++
++Description:
++	       frees memory for a debug log and removes all registered debug
+ 	       views.
+-               Must not be called within an interrupt handler 
++
++	       Must not be called within an interrupt handler
+ 
+ ---------------------------------------------------------------------------
+-void debug_set_level (debug_info_t * id, int new_level);
+ 
+-Parameter:     id:        handle for debug log  
+-               new_level: new debug level 
++::
++
++  void debug_set_level (debug_info_t * id, int new_level);
++
++Parameter:     id:        handle for debug log
++	       new_level: new debug level
+ 
+-Return Value:  none 
++Return Value:
++	       none
+ 
+-Description:   Sets new actual debug level if new_level is valid. 
++Description:
++	       Sets new actual debug level if new_level is valid.
+ 
+ ---------------------------------------------------------------------------
+-bool debug_level_enabled (debug_info_t * id, int level);
+ 
+-Parameter:    id:	  handle for debug log
+-	      level:	  debug level
++::
++
++  bool debug_level_enabled (debug_info_t * id, int level);
++
++Parameter:
++	      id:
++			  handle for debug log
++	      level:
++			  debug level
+ 
+-Return Value: True if level is less or equal to the current debug level.
++Return Value:
++	      True if level is less or equal to the current debug level.
+ 
+-Description:  Returns true if debug events for the specified level would be
++Description:
++	      Returns true if debug events for the specified level would be
+ 	      logged. Otherwise returns false.
++
+ ---------------------------------------------------------------------------
+-void debug_stop_all(void);
+ 
+-Parameter:     none
++::
++
++  void debug_stop_all(void);
++
++Parameter:
++	       none
+ 
+-Return Value:  none
++Return Value:
++	       none
+ 
+-Description:   stops the debug feature if stopping is allowed. Currently
+-               used in case of a kernel oops.
++Description:
++	       stops the debug feature if stopping is allowed. Currently
++	       used in case of a kernel oops.
+ 
+ ---------------------------------------------------------------------------
+-debug_entry_t* debug_event (debug_info_t* id, int level, void* data, 
+-                            int length);
+ 
+-Parameter:     id:     handle for debug log  
+-               level:  debug level           
+-               data:   pointer to data for debug entry  
+-               length: length of data in bytes       
++::
++
++  debug_entry_t* debug_event (debug_info_t* id, int level, void* data,
++			      int length);
++
++Parameter:
++	       id:
++		       handle for debug log
++	       level:
++		       debug level
++	       data:
++		       pointer to data for debug entry
++	       length:
++		       length of data in bytes
+ 
+-Return Value:  Address of written debug entry 
++Return Value:
++	       Address of written debug entry
+ 
+-Description:   writes debug entry to active debug area (if level <= actual 
+-               debug level)    
++Description:
++	       writes debug entry to active debug area (if level <= actual
++	       debug level)
+ 
+ ---------------------------------------------------------------------------
+-debug_entry_t* debug_int_event (debug_info_t * id, int level, 
+-                                unsigned int data);
+-debug_entry_t* debug_long_event(debug_info_t * id, int level,
+-                                unsigned long data);
+ 
+-Parameter:     id:     handle for debug log  
+-               level:  debug level           
+-               data:   integer value for debug entry           
++::
+ 
+-Return Value:  Address of written debug entry 
++  debug_entry_t* debug_int_event (debug_info_t * id, int level,
++				  unsigned int data);
++  debug_entry_t* debug_long_event(debug_info_t * id, int level,
++				  unsigned long data);
+ 
+-Description:   writes debug entry to active debug area (if level <= actual 
+-               debug level)    
++Parameter:
++	       id:
++		       handle for debug log
++	       level:
++		       debug level
++	       data:
++		       integer value for debug entry
++
++Return Value:
++	       Address of written debug entry
++
++Description:
++	       writes debug entry to active debug area (if level <= actual
++	       debug level)
+ 
+ ---------------------------------------------------------------------------
+-debug_entry_t* debug_text_event (debug_info_t * id, int level, 
+-                                 const char* data);
+ 
+-Parameter:     id:     handle for debug log  
+-               level:  debug level           
+-               data:   string for debug entry  
++::
++
++  debug_entry_t* debug_text_event (debug_info_t * id, int level,
++				   const char* data);
++
++Parameter:
++	       id:
++		       handle for debug log
++	       level:
++		       debug level
++	       data:
++		       string for debug entry
+ 
+-Return Value:  Address of written debug entry 
++Return Value:
++	       Address of written debug entry
+ 
+-Description:   writes debug entry in ascii format to active debug area 
+-               (if level <= actual debug level)     
++Description:
++	       writes debug entry in ascii format to active debug area
++	       (if level <= actual debug level)
+ 
+ ---------------------------------------------------------------------------
+-debug_entry_t* debug_sprintf_event (debug_info_t * id, int level, 
+-                                    char* string,...);
+ 
+-Parameter:     id:    handle for debug log 
+-               level: debug level
+-               string: format string for debug entry 
+-               ...: varargs used as in sprintf()
++::
++
++  debug_entry_t* debug_sprintf_event (debug_info_t * id, int level,
++				      char* string,...);
++
++Parameter:
++	       id:
++		      handle for debug log
++	       level:
++		      debug level
++	       string:
++		      format string for debug entry
++	       ...:
++		      varargs used as in sprintf()
+ 
+ Return Value:  Address of written debug entry
+ 
+-Description:   writes debug entry with format string and varargs (longs) to 
+-               active debug area (if level $<=$ actual debug level). 
+-               floats and long long datatypes cannot be used as varargs.
++Description:
++	       writes debug entry with format string and varargs (longs) to
++	       active debug area (if level $<=$ actual debug level).
++	       floats and long long datatypes cannot be used as varargs.
+ 
+ ---------------------------------------------------------------------------
+ 
+-debug_entry_t* debug_exception (debug_info_t* id, int level, void* data, 
+-                                int length);
++::
+ 
+-Parameter:     id:     handle for debug log  
+-               level:  debug level           
+-               data:   pointer to data for debug entry  
+-               length: length of data in bytes       
++  debug_entry_t* debug_exception (debug_info_t* id, int level, void* data,
++				  int length);
+ 
+-Return Value:  Address of written debug entry 
++Parameter:
++	       id:
++		       handle for debug log
++	       level:
++		       debug level
++	       data:
++		       pointer to data for debug entry
++	       length:
++		       length of data in bytes
+ 
+-Description:   writes debug entry to active debug area (if level <= actual 
+-               debug level) and switches to next debug area  
++Return Value:
++	       Address of written debug entry
++
++Description:
++	       writes debug entry to active debug area (if level <= actual
++	       debug level) and switches to next debug area
+ 
+ ---------------------------------------------------------------------------
+-debug_entry_t* debug_int_exception (debug_info_t * id, int level, 
+-                                    unsigned int data);
+-debug_entry_t* debug_long_exception(debug_info_t * id, int level,
+-                                    unsigned long data);
+ 
+-Parameter:     id:     handle for debug log  
+-               level:  debug level           
+-               data:   integer value for debug entry           
++::
++  debug_entry_t* debug_int_exception (debug_info_t * id, int level,
++				      unsigned int data);
++  debug_entry_t* debug_long_exception(debug_info_t * id, int level,
++				      unsigned long data);
++
++Parameter:     id:     handle for debug log
++	       level:  debug level
++	       data:   integer value for debug entry
+ 
+-Return Value:  Address of written debug entry 
++Return Value:  Address of written debug entry
+ 
+-Description:   writes debug entry to active debug area (if level <= actual 
+-               debug level) and switches to next debug area  
++Description:   writes debug entry to active debug area (if level <= actual
++	       debug level) and switches to next debug area
+ 
+ ---------------------------------------------------------------------------
+-debug_entry_t* debug_text_exception (debug_info_t * id, int level, 
+-                                     const char* data);
+ 
+-Parameter:     id:     handle for debug log  
+-               level:  debug level           
+-               data:   string for debug entry  
++debug_entry_t* debug_text_exception (debug_info_t * id, int level,
++				     const char* data);
++
++Parameter:     id:     handle for debug log
++	       level:  debug level
++	       data:   string for debug entry
+ 
+-Return Value:  Address of written debug entry 
++Return Value:  Address of written debug entry
+ 
+-Description:   writes debug entry in ascii format to active debug area 
+-               (if level <= actual debug level) and switches to next debug 
+-               area  
++Description:   writes debug entry in ascii format to active debug area
++	       (if level <= actual debug level) and switches to next debug
++	       area
+ 
+ ---------------------------------------------------------------------------
++
+ debug_entry_t* debug_sprintf_exception (debug_info_t * id, int level,
+-                                        char* string,...);
++					char* string,...);
+ 
+-Parameter:     id:    handle for debug log  
+-               level: debug level  
+-               string: format string for debug entry  
+-               ...: varargs used as in sprintf()
++Parameter:     id:    handle for debug log
++	       level: debug level
++	       string: format string for debug entry
++	       ...: varargs used as in sprintf()
+ 
+-Return Value:  Address of written debug entry 
++Return Value:  Address of written debug entry
+ 
+-Description:   writes debug entry with format string and varargs (longs) to 
+-               active debug area (if level $<=$ actual debug level) and
+-               switches to next debug area. 
+-               floats and long long datatypes cannot be used as varargs.
++Description:   writes debug entry with format string and varargs (longs) to
++	       active debug area (if level $<=$ actual debug level) and
++	       switches to next debug area.
++	       floats and long long datatypes cannot be used as varargs.
+ 
+ ---------------------------------------------------------------------------
+ 
+ int debug_register_view (debug_info_t * id, struct debug_view *view);
+ 
+-Parameter:     id:    handle for debug log  
+-               view:  pointer to debug view struct 
++Parameter:     id:    handle for debug log
++	       view:  pointer to debug view struct
+ 
+-Return Value:  0  : ok 
+-               < 0: Error 
++Return Value:  0  : ok
++	       < 0: Error
+ 
+ Description:   registers new debug view and creates debugfs dir entry
+ 
+ ---------------------------------------------------------------------------
+-int debug_unregister_view (debug_info_t * id, struct debug_view *view); 
+ 
+-Parameter:     id:    handle for debug log  
+-               view:  pointer to debug view struct 
++int debug_unregister_view (debug_info_t * id, struct debug_view *view);
+ 
+-Return Value:  0  : ok 
+-               < 0: Error 
++Parameter:     id:    handle for debug log
++	       view:  pointer to debug view struct
++
++Return Value:  0  : ok
++	       < 0: Error
+ 
+ Description:   unregisters debug view and removes debugfs dir entry
+ 
+@@ -323,113 +433,117 @@ Predefined views:
+ -----------------
+ 
+ extern struct debug_view debug_hex_ascii_view;
++
+ extern struct debug_view debug_raw_view;
++
+ extern struct debug_view debug_sprintf_view;
+ 
+ Examples
+ --------
+ 
+-/*
+- * hex_ascii- + raw-view Example
+- */
++::
+ 
+-#include <linux/init.h>
+-#include <asm/debug.h>
++  /*
++   * hex_ascii- + raw-view Example
++   */
+ 
+-static debug_info_t* debug_info;
++  #include <linux/init.h>
++  #include <asm/debug.h>
+ 
+-static int init(void)
+-{
+-    /* register 4 debug areas with one page each and 4 byte data field */
++  static debug_info_t* debug_info;
+ 
+-    debug_info = debug_register ("test", 1, 4, 4 );
+-    debug_register_view(debug_info,&debug_hex_ascii_view);
+-    debug_register_view(debug_info,&debug_raw_view);
++  static int init(void)
++  {
++      /* register 4 debug areas with one page each and 4 byte data field */
+ 
+-    debug_text_event(debug_info, 4 , "one ");
+-    debug_int_exception(debug_info, 4, 4711);
+-    debug_event(debug_info, 3, &debug_info, 4);
++      debug_info = debug_register ("test", 1, 4, 4 );
++      debug_register_view(debug_info,&debug_hex_ascii_view);
++      debug_register_view(debug_info,&debug_raw_view);
+ 
+-    return 0;
+-}
++      debug_text_event(debug_info, 4 , "one ");
++      debug_int_exception(debug_info, 4, 4711);
++      debug_event(debug_info, 3, &debug_info, 4);
+ 
+-static void cleanup(void)
+-{
+-    debug_unregister (debug_info);
+-}
++      return 0;
++  }
+ 
+-module_init(init);
+-module_exit(cleanup);
++  static void cleanup(void)
++  {
++      debug_unregister (debug_info);
++  }
++
++  module_init(init);
++  module_exit(cleanup);
+ 
+ ---------------------------------------------------------------------------
+ 
+-/*
+- * sprintf-view Example
+- */
++::
+ 
+-#include <linux/init.h>
+-#include <asm/debug.h>
++  /*
++   * sprintf-view Example
++   */
+ 
+-static debug_info_t* debug_info;
++  #include <linux/init.h>
++  #include <asm/debug.h>
+ 
+-static int init(void)
+-{
+-    /* register 4 debug areas with one page each and data field for */
+-    /* format string pointer + 2 varargs (= 3 * sizeof(long))       */
++  static debug_info_t* debug_info;
+ 
+-    debug_info = debug_register ("test", 1, 4, sizeof(long) * 3);
+-    debug_register_view(debug_info,&debug_sprintf_view);
++  static int init(void)
++  {
++      /* register 4 debug areas with one page each and data field for */
++      /* format string pointer + 2 varargs (= 3 * sizeof(long))       */
+ 
+-    debug_sprintf_event(debug_info, 2 , "first event in %s:%i\n",__FILE__,__LINE__);
+-    debug_sprintf_exception(debug_info, 1, "pointer to debug info: %p\n",&debug_info);
++      debug_info = debug_register ("test", 1, 4, sizeof(long) * 3);
++      debug_register_view(debug_info,&debug_sprintf_view);
+ 
+-    return 0;
+-}
++      debug_sprintf_event(debug_info, 2 , "first event in %s:%i\n",__FILE__,__LINE__);
++      debug_sprintf_exception(debug_info, 1, "pointer to debug info: %p\n",&debug_info);
+ 
+-static void cleanup(void)
+-{
+-    debug_unregister (debug_info);
+-}
+-
+-module_init(init);
+-module_exit(cleanup);
++      return 0;
++  }
+ 
++  static void cleanup(void)
++  {
++      debug_unregister (debug_info);
++  }
+ 
++  module_init(init);
++  module_exit(cleanup);
+ 
+ Debugfs Interface
+-----------------
+-Views to the debug logs can be investigated through reading the corresponding 
++-----------------
++Views to the debug logs can be investigated through reading the corresponding
+ debugfs-files:
+ 
+-Example:
++Example::
+ 
+-> ls /sys/kernel/debug/s390dbf/dasd
+-flush  hex_ascii  level pages raw
+-> cat /sys/kernel/debug/s390dbf/dasd/hex_ascii | sort -k2,2 -s
+-00 00974733272:680099 2 - 02 0006ad7e  07 ea 4a 90 | ....
+-00 00974733272:682210 2 - 02 0006ade6  46 52 45 45 | FREE
+-00 00974733272:682213 2 - 02 0006adf6  07 ea 4a 90 | ....
+-00 00974733272:682281 1 * 02 0006ab08  41 4c 4c 43 | EXCP 
+-01 00974733272:682284 2 - 02 0006ab16  45 43 4b 44 | ECKD
+-01 00974733272:682287 2 - 02 0006ab28  00 00 00 04 | ....
+-01 00974733272:682289 2 - 02 0006ab3e  00 00 00 20 | ... 
+-01 00974733272:682297 2 - 02 0006ad7e  07 ea 4a 90 | ....
+-01 00974733272:684384 2 - 00 0006ade6  46 52 45 45 | FREE
+-01 00974733272:684388 2 - 00 0006adf6  07 ea 4a 90 | ....
++  > ls /sys/kernel/debug/s390dbf/dasd
++  flush  hex_ascii  level pages raw
++  > cat /sys/kernel/debug/s390dbf/dasd/hex_ascii | sort -k2,2 -s
++  00 00974733272:680099 2 - 02 0006ad7e  07 ea 4a 90 | ....
++  00 00974733272:682210 2 - 02 0006ade6  46 52 45 45 | FREE
++  00 00974733272:682213 2 - 02 0006adf6  07 ea 4a 90 | ....
++  00 00974733272:682281 1 * 02 0006ab08  41 4c 4c 43 | EXCP
++  01 00974733272:682284 2 - 02 0006ab16  45 43 4b 44 | ECKD
++  01 00974733272:682287 2 - 02 0006ab28  00 00 00 04 | ....
++  01 00974733272:682289 2 - 02 0006ab3e  00 00 00 20 | ...
++  01 00974733272:682297 2 - 02 0006ad7e  07 ea 4a 90 | ....
++  01 00974733272:684384 2 - 00 0006ade6  46 52 45 45 | FREE
++  01 00974733272:684388 2 - 00 0006adf6  07 ea 4a 90 | ....
+ 
+ See section about predefined views for explanation of the above output!
+ 
+ Changing the debug level
+ ------------------------
+ 
+-Example:
++Example::
+ 
+ 
+-> cat /sys/kernel/debug/s390dbf/dasd/level
+-3
+-> echo "5" > /sys/kernel/debug/s390dbf/dasd/level
+-> cat /sys/kernel/debug/s390dbf/dasd/level
+-5
++  > cat /sys/kernel/debug/s390dbf/dasd/level
++  3
++  > echo "5" > /sys/kernel/debug/s390dbf/dasd/level
++  > cat /sys/kernel/debug/s390dbf/dasd/level
++  5
+ 
+ Flushing debug areas
+ --------------------
+@@ -439,11 +553,13 @@ are flushed.
+ 
+ Examples:
+ 
+-1. Flush debug area 0:
+-> echo "0" > /sys/kernel/debug/s390dbf/dasd/flush
++1. Flush debug area 0::
+ 
+-2. Flush all debug areas:
+-> echo "-" > /sys/kernel/debug/s390dbf/dasd/flush
++     > echo "0" > /sys/kernel/debug/s390dbf/dasd/flush
++
++2. Flush all debug areas::
++
++     > echo "-" > /sys/kernel/debug/s390dbf/dasd/flush
+ 
+ Changing the size of debug areas
+ ------------------------------------
+@@ -453,23 +569,27 @@ also flush the debug areas.
+ 
+ Example:
+ 
+-Define 4 pages for the debug areas of debug feature "dasd":
+-> echo "4" > /sys/kernel/debug/s390dbf/dasd/pages
++Define 4 pages for the debug areas of debug feature "dasd"::
++
++  > echo "4" > /sys/kernel/debug/s390dbf/dasd/pages
+ 
+ Stooping the debug feature
+ --------------------------
+ Example:
+ 
+-1. Check if stopping is allowed
+-> cat /proc/sys/s390dbf/debug_stoppable
+-2. Stop debug feature
+-> echo 0 > /proc/sys/s390dbf/debug_active
++1. Check if stopping is allowed::
++
++     > cat /proc/sys/s390dbf/debug_stoppable
++
++2. Stop debug feature::
++
++     > echo 0 > /proc/sys/s390dbf/debug_active
+ 
+ lcrash Interface
+ ----------------
+ It is planned that the dump analysis tool lcrash gets an additional command
+-'s390dbf' to display all the debug logs. With this tool it will be possible 
+-to investigate the debug logs on a live system and with a memory dump after 
++'s390dbf' to display all the debug logs. With this tool it will be possible
++to investigate the debug logs on a live system and with a memory dump after
+ a system crash.
+ 
+ Investigating raw memory
+@@ -494,32 +614,35 @@ order to see the debug entries well formatted.
+ Predefined Views
+ ----------------
+ 
+-There are three predefined views: hex_ascii, raw and sprintf. 
+-The hex_ascii view shows the data field in hex and ascii representation 
+-(e.g. '45 43 4b 44 | ECKD'). 
++There are three predefined views: hex_ascii, raw and sprintf.
++The hex_ascii view shows the data field in hex and ascii representation
++(e.g. '45 43 4b 44 | ECKD').
+ The raw view returns a bytestream as the debug areas are stored in memory.
+ 
+ The sprintf view formats the debug entries in the same way as the sprintf
+ function would do. The sprintf event/exception functions write to the
+-debug entry a pointer to the format string (size = sizeof(long)) 
+-and for each vararg a long value. So e.g. for a debug entry with a format 
+-string plus two varargs one would need to allocate a (3 * sizeof(long)) 
++debug entry a pointer to the format string (size = sizeof(long))
++and for each vararg a long value. So e.g. for a debug entry with a format
++string plus two varargs one would need to allocate a (3 * sizeof(long))
+ byte data area in the debug_register() function.
+ 
+-IMPORTANT: Using "%s" in sprintf event functions is dangerous. You can only
+-use "%s" in the sprintf event functions, if the memory for the passed string is
+-available as long as the debug feature exists. The reason behind this is that
+-due to performance considerations only a pointer to the string is stored in
+-the debug feature. If you log a string that is freed afterwards, you will get
+-an OOPS when inspecting the debug feature, because then the debug feature will
+-access the already freed memory.
++IMPORTANT:
++  Using "%s" in sprintf event functions is dangerous. You can only
++  use "%s" in the sprintf event functions, if the memory for the passed string
++  is available as long as the debug feature exists. The reason behind this is
++  that due to performance considerations only a pointer to the string is stored
++  in  the debug feature. If you log a string that is freed afterwards, you will
++  get an OOPS when inspecting the debug feature, because then the debug feature
++  will access the already freed memory.
+ 
+-NOTE: If using the sprintf view do NOT use other event/exception functions
+-than the sprintf-event and -exception functions.
++NOTE:
++  If using the sprintf view do NOT use other event/exception functions
++  than the sprintf-event and -exception functions.
+ 
+ The format of the hex_ascii and sprintf view is as follows:
++
+ - Number of area
+-- Timestamp (formatted as seconds and microseconds since 00:00:00 Coordinated 
++- Timestamp (formatted as seconds and microseconds since 00:00:00 Coordinated
+   Universal Time (UTC), January 1, 1970)
+ - level of debug entry
+ - Exception flag (* = Exception)
+@@ -528,140 +651,144 @@ The format of the hex_ascii and sprintf view is as follows:
+ - data field
+ 
+ The format of the raw view is:
++
+ - Header as described in debug.h
+-- datafield 
++- datafield
+ 
+-A typical line of the hex_ascii view will look like the following (first line 
++A typical line of the hex_ascii view will look like the following (first line
+ is only for explanation and will not be displayed when 'cating' the view):
+ 
+ area  time           level exception cpu caller    data (hex + ascii)
+ --------------------------------------------------------------------------
+-00    00964419409:440690 1 -         00  88023fe   
++00    00964419409:440690 1 -         00  88023fe
+ 
+ 
+ Defining views
+ --------------
+ 
+ Views are specified with the 'debug_view' structure. There are defined
+-callback functions which are used for reading and writing the debugfs files:
++callback functions which are used for reading and writing the debugfs files::
+ 
+-struct debug_view {
+-        char name[DEBUG_MAX_PROCF_LEN];  
+-        debug_prolog_proc_t* prolog_proc; 
+-        debug_header_proc_t* header_proc;
+-        debug_format_proc_t* format_proc;
+-        debug_input_proc_t*  input_proc;
++  struct debug_view {
++	char name[DEBUG_MAX_PROCF_LEN];
++	debug_prolog_proc_t* prolog_proc;
++	debug_header_proc_t* header_proc;
++	debug_format_proc_t* format_proc;
++	debug_input_proc_t*  input_proc;
+ 	void*                private_data;
+-};
++  };
+ 
+-where
++where::
+ 
+-typedef int (debug_header_proc_t) (debug_info_t* id,
+-                                   struct debug_view* view,
+-                                   int area,
+-                                   debug_entry_t* entry,
+-                                   char* out_buf);
++  typedef int (debug_header_proc_t) (debug_info_t* id,
++				     struct debug_view* view,
++				     int area,
++				     debug_entry_t* entry,
++				     char* out_buf);
+ 
+-typedef int (debug_format_proc_t) (debug_info_t* id,
+-                                   struct debug_view* view, char* out_buf,
+-                                   const char* in_buf);
+-typedef int (debug_prolog_proc_t) (debug_info_t* id,
+-                                   struct debug_view* view,
+-                                   char* out_buf);
+-typedef int (debug_input_proc_t) (debug_info_t* id,
+-                                  struct debug_view* view,
+-                                  struct file* file, const char* user_buf,
+-                                  size_t in_buf_size, loff_t* offset);
++  typedef int (debug_format_proc_t) (debug_info_t* id,
++				     struct debug_view* view, char* out_buf,
++				     const char* in_buf);
++  typedef int (debug_prolog_proc_t) (debug_info_t* id,
++				     struct debug_view* view,
++				     char* out_buf);
++  typedef int (debug_input_proc_t) (debug_info_t* id,
++				    struct debug_view* view,
++				    struct file* file, const char* user_buf,
++				    size_t in_buf_size, loff_t* offset);
+ 
+ 
+ The "private_data" member can be used as pointer to view specific data.
+ It is not used by the debug feature itself.
+ 
+-The output when reading a debugfs file is structured like this:
++The output when reading a debugfs file is structured like this::
+ 
+-"prolog_proc output"
++  "prolog_proc output"
+ 
+-"header_proc output 1"  "format_proc output 1"
+-"header_proc output 2"  "format_proc output 2"
+-"header_proc output 3"  "format_proc output 3"
+-...
++  "header_proc output 1"  "format_proc output 1"
++  "header_proc output 2"  "format_proc output 2"
++  "header_proc output 3"  "format_proc output 3"
++  ...
+ 
+ When a view is read from the debugfs, the Debug Feature calls the
+ 'prolog_proc' once for writing the prolog.
+-Then 'header_proc' and 'format_proc' are called for each 
++Then 'header_proc' and 'format_proc' are called for each
+ existing debug entry.
+ 
+-The input_proc can be used to implement functionality when it is written to 
++The input_proc can be used to implement functionality when it is written to
+ the view (e.g. like with 'echo "0" > /sys/kernel/debug/s390dbf/dasd/level).
+ 
+ For header_proc there can be used the default function
+ debug_dflt_header_fn() which is defined in debug.h.
+ and which produces the same header output as the predefined views.
+-E.g:
+-00 00964419409:440761 2 - 00 88023ec
++E.g::
++
++  00 00964419409:440761 2 - 00 88023ec
+ 
+ In order to see how to use the callback functions check the implementation
+ of the default views!
+ 
+-Example
++Example::
+ 
+-#include <asm/debug.h>
++  #include <asm/debug.h>
+ 
+-#define UNKNOWNSTR "data: %08x"
++  #define UNKNOWNSTR "data: %08x"
+ 
+-const char* messages[] =
+-{"This error...........\n",
+- "That error...........\n",
+- "Problem..............\n",
+- "Something went wrong.\n",
+- "Everything ok........\n",
+- NULL
+-};
++  const char* messages[] =
++  {"This error...........\n",
++   "That error...........\n",
++   "Problem..............\n",
++   "Something went wrong.\n",
++   "Everything ok........\n",
++   NULL
++  };
+ 
+-static int debug_test_format_fn(
+-   debug_info_t * id, struct debug_view *view, 
+-   char *out_buf, const char *in_buf
+-)
+-{
+-  int i, rc = 0;
++  static int debug_test_format_fn(
++     debug_info_t * id, struct debug_view *view,
++     char *out_buf, const char *in_buf
++  )
++  {
++    int i, rc = 0;
+ 
+-  if(id->buf_size >= 4) {
+-     int msg_nr = *((int*)in_buf);
+-     if(msg_nr < sizeof(messages)/sizeof(char*) - 1)
+-        rc += sprintf(out_buf, "%s", messages[msg_nr]);	
+-     else
+-        rc += sprintf(out_buf, UNKNOWNSTR, msg_nr);
++    if(id->buf_size >= 4) {
++       int msg_nr = *((int*)in_buf);
++       if(msg_nr < sizeof(messages)/sizeof(char*) - 1)
++	  rc += sprintf(out_buf, "%s", messages[msg_nr]);
++       else
++	  rc += sprintf(out_buf, UNKNOWNSTR, msg_nr);
++    }
++   out:
++     return rc;
+   }
+- out:
+-   return rc;
+-}
+ 
+-struct debug_view debug_test_view = {
+-  "myview",                 /* name of view */
+-  NULL,                     /* no prolog */
+-  &debug_dflt_header_fn,    /* default header for each entry */
+-  &debug_test_format_fn,    /* our own format function */
+-  NULL,                     /* no input function */
+-  NULL                      /* no private data */
+-};
++  struct debug_view debug_test_view = {
++    "myview",                 /* name of view */
++    NULL,                     /* no prolog */
++    &debug_dflt_header_fn,    /* default header for each entry */
++    &debug_test_format_fn,    /* our own format function */
++    NULL,                     /* no input function */
++    NULL                      /* no private data */
++  };
+ 
+-=====
+ test:
+ =====
+-debug_info_t *debug_info;
+-...
+-debug_info = debug_register ("test", 0, 4, 4 ));
+-debug_register_view(debug_info, &debug_test_view);
+-for(i = 0; i < 10; i ++) debug_int_event(debug_info, 1, i);
+ 
+-> cat /sys/kernel/debug/s390dbf/test/myview
+-00 00964419734:611402 1 - 00 88042ca   This error...........
+-00 00964419734:611405 1 - 00 88042ca   That error...........
+-00 00964419734:611408 1 - 00 88042ca   Problem..............
+-00 00964419734:611411 1 - 00 88042ca   Something went wrong.
+-00 00964419734:611414 1 - 00 88042ca   Everything ok........
+-00 00964419734:611417 1 - 00 88042ca   data: 00000005
+-00 00964419734:611419 1 - 00 88042ca   data: 00000006
+-00 00964419734:611422 1 - 00 88042ca   data: 00000007
+-00 00964419734:611425 1 - 00 88042ca   data: 00000008
+-00 00964419734:611428 1 - 00 88042ca   data: 00000009
++::
++
++  debug_info_t *debug_info;
++  ...
++  debug_info = debug_register ("test", 0, 4, 4 ));
++  debug_register_view(debug_info, &debug_test_view);
++  for(i = 0; i < 10; i ++) debug_int_event(debug_info, 1, i);
++
++  > cat /sys/kernel/debug/s390dbf/test/myview
++  00 00964419734:611402 1 - 00 88042ca   This error...........
++  00 00964419734:611405 1 - 00 88042ca   That error...........
++  00 00964419734:611408 1 - 00 88042ca   Problem..............
++  00 00964419734:611411 1 - 00 88042ca   Something went wrong.
++  00 00964419734:611414 1 - 00 88042ca   Everything ok........
++  00 00964419734:611417 1 - 00 88042ca   data: 00000005
++  00 00964419734:611419 1 - 00 88042ca   data: 00000006
++  00 00964419734:611422 1 - 00 88042ca   data: 00000007
++  00 00964419734:611425 1 - 00 88042ca   data: 00000008
++  00 00964419734:611428 1 - 00 88042ca   data: 00000009
+diff --git a/Documentation/s390/vfio-ap.txt b/Documentation/s390/vfio-ap.txt
+index 65167cfe4485..b5c51f7c748d 100644
+--- a/Documentation/s390/vfio-ap.txt
++++ b/Documentation/s390/vfio-ap.txt
+@@ -1,4 +1,9 @@
+-Introduction:
++===============================
++Adjunct Processor (AP) facility
++===============================
++
++
++Introduction
+ ============
+ The Adjunct Processor (AP) facility is an IBM Z cryptographic facility comprised
+ of three AP instructions and from 1 up to 256 PCIe cryptographic adapter cards.
+@@ -11,7 +16,7 @@ framework. This implementation relies considerably on the s390 virtualization
+ facilities which do most of the hard work of providing direct access to AP
+ devices.
+ 
+-AP Architectural Overview:
++AP Architectural Overview
+ =========================
+ To facilitate the comprehension of the design, let's start with some
+ definitions:
+@@ -31,13 +36,13 @@ definitions:
+   in the LPAR, the AP bus detects the AP adapter cards assigned to the LPAR and
+   creates a sysfs device for each assigned adapter. For example, if AP adapters
+   4 and 10 (0x0a) are assigned to the LPAR, the AP bus will create the following
+-  sysfs device entries:
++  sysfs device entries::
+ 
+     /sys/devices/ap/card04
+     /sys/devices/ap/card0a
+ 
+   Symbolic links to these devices will also be created in the AP bus devices
+-  sub-directory:
++  sub-directory::
+ 
+     /sys/bus/ap/devices/[card04]
+     /sys/bus/ap/devices/[card04]
+@@ -84,7 +89,7 @@ definitions:
+   the cross product of the AP adapter and usage domain numbers detected when the
+   AP bus module is loaded. For example, if adapters 4 and 10 (0x0a) and usage
+   domains 6 and 71 (0x47) are assigned to the LPAR, the AP bus will create the
+-  following sysfs entries:
++  following sysfs entries::
+ 
+     /sys/devices/ap/card04/04.0006
+     /sys/devices/ap/card04/04.0047
+@@ -92,7 +97,7 @@ definitions:
+     /sys/devices/ap/card0a/0a.0047
+ 
+   The following symbolic links to these devices will be created in the AP bus
+-  devices subdirectory:
++  devices subdirectory::
+ 
+     /sys/bus/ap/devices/[04.0006]
+     /sys/bus/ap/devices/[04.0047]
+@@ -112,7 +117,7 @@ definitions:
+   domain that is not one of the usage domains, but the modified domain
+   must be one of the control domains.
+ 
+-AP and SIE:
++AP and SIE
+ ==========
+ Let's now take a look at how AP instructions executed on a guest are interpreted
+ by the hardware.
+@@ -153,7 +158,7 @@ and 2 and usage domains 5 and 6 are assigned to a guest, the APQNs (1,5), (1,6),
+ 
+ The APQNs can provide secure key functionality - i.e., a private key is stored
+ on the adapter card for each of its domains - so each APQN must be assigned to
+-at most one guest or to the linux host.
++at most one guest or to the linux host::
+ 
+    Example 1: Valid configuration:
+    ------------------------------
+@@ -181,8 +186,8 @@ at most one guest or to the linux host.
+    This is an invalid configuration because both guests have access to
+    APQN (1,6).
+ 
+-The Design:
+-===========
++The Design
++==========
+ The design introduces three new objects:
+ 
+ 1. AP matrix device
+@@ -205,43 +210,43 @@ The VFIO AP (vfio_ap) device driver serves the following purposes:
+ Reserve APQNs for exclusive use of KVM guests
+ ---------------------------------------------
+ The following block diagram illustrates the mechanism by which APQNs are
+-reserved:
++reserved::
+ 
+-                              +------------------+
+-               7 remove       |                  |
+-         +--------------------> cex4queue driver |
+-         |                    |                  |
+-         |                    +------------------+
+-         |
+-         |
+-         |                    +------------------+          +-----------------+
+-         |  5 register driver |                  | 3 create |                 |
+-         |   +---------------->   Device core    +---------->  matrix device  |
+-         |   |                |                  |          |                 |
+-         |   |                +--------^---------+          +-----------------+
+-         |   |                         |
+-         |   |                         +-------------------+
+-         |   | +-----------------------------------+       |
+-         |   | |      4 register AP driver         |       | 2 register device
+-         |   | |                                   |       |
+-+--------+---+-v---+                      +--------+-------+-+
+-|                  |                      |                  |
+-|      ap_bus      +--------------------- >  vfio_ap driver  |
+-|                  |       8 probe        |                  |
+-+--------^---------+                      +--^--^------------+
+-6 edit   |                                   |  |
+-  apmask |     +-----------------------------+  | 9 mdev create
+-  aqmask |     |           1 modprobe           |
+-+--------+-----+---+           +----------------+-+         +------------------+
+-|                  |           |                  |8 create |     mediated     |
+-|      admin       |           | VFIO device core |--------->     matrix       |
+-|                  +           |                  |         |     device       |
+-+------+-+---------+           +--------^---------+         +--------^---------+
+-       | |                              |                            |
+-       | | 9 create vfio_ap-passthrough |                            |
+-       | +------------------------------+                            |
+-       +-------------------------------------------------------------+
+-                   10  assign adapter/domain/control domain
++				+------------------+
++		 7 remove       |                  |
++	   +--------------------> cex4queue driver |
++	   |                    |                  |
++	   |                    +------------------+
++	   |
++	   |
++	   |                    +------------------+          +----------------+
++	   |  5 register driver |                  | 3 create |                |
++	   |   +---------------->   Device core    +---------->  matrix device |
++	   |   |                |                  |          |                |
++	   |   |                +--------^---------+          +----------------+
++	   |   |                         |
++	   |   |                         +-------------------+
++	   |   | +-----------------------------------+       |
++	   |   | |      4 register AP driver         |       | 2 register device
++	   |   | |                                   |       |
++  +--------+---+-v---+                      +--------+-------+-+
++  |                  |                      |                  |
++  |      ap_bus      +--------------------- >  vfio_ap driver  |
++  |                  |       8 probe        |                  |
++  +--------^---------+                      +--^--^------------+
++  6 edit   |                                   |  |
++    apmask |     +-----------------------------+  | 9 mdev create
++    aqmask |     |           1 modprobe           |
++  +--------+-----+---+           +----------------+-+         +----------------+
++  |                  |           |                  |8 create |     mediated   |
++  |      admin       |           | VFIO device core |--------->     matrix     |
++  |                  +           |                  |         |     device     |
++  +------+-+---------+           +--------^---------+         +--------^-------+
++	 | |                              |                            |
++	 | | 9 create vfio_ap-passthrough |                            |
++	 | +------------------------------+                            |
++	 +-------------------------------------------------------------+
++		     10  assign adapter/domain/control domain
+ 
+ The process for reserving an AP queue for use by a KVM guest is:
+ 
+@@ -250,7 +255,7 @@ The process for reserving an AP queue for use by a KVM guest is:
+    device with the device core. This will serve as the parent device for
+    all mediated matrix devices used to configure an AP matrix for a guest.
+ 3. The /sys/devices/vfio_ap/matrix device is created by the device core
+-4  The vfio_ap device driver will register with the AP bus for AP queue devices
++4. The vfio_ap device driver will register with the AP bus for AP queue devices
+    of type 10 and higher (CEX4 and newer). The driver will provide the vfio_ap
+    driver's probe and remove callback interfaces. Devices older than CEX4 queues
+    are not supported to simplify the implementation by not needlessly
+@@ -266,13 +271,14 @@ The process for reserving an AP queue for use by a KVM guest is:
+    it.
+ 9. The administrator creates a passthrough type mediated matrix device to be
+    used by a guest
+-10 The administrator assigns the adapters, usage domains and control domains
+-   to be exclusively used by a guest.
++10. The administrator assigns the adapters, usage domains and control domains
++    to be exclusively used by a guest.
+ 
+ Set up the VFIO mediated device interfaces
+ ------------------------------------------
+ The VFIO AP device driver utilizes the common interface of the VFIO mediated
+ device core driver to:
++
+ * Register an AP mediated bus driver to add a mediated matrix device to and
+   remove it from a VFIO group.
+ * Create and destroy a mediated matrix device
+@@ -280,25 +286,25 @@ device core driver to:
+ * Add a mediated matrix device to and remove it from an IOMMU group
+ 
+ The following high-level block diagram shows the main components and interfaces
+-of the VFIO AP mediated matrix device driver:
++of the VFIO AP mediated matrix device driver::
+ 
+- +-------------+
+- |             |
+- | +---------+ | mdev_register_driver() +--------------+
+- | |  Mdev   | +<-----------------------+              |
+- | |  bus    | |                        | vfio_mdev.ko |
+- | | driver  | +----------------------->+              |<-> VFIO user
+- | +---------+ |    probe()/remove()    +--------------+    APIs
+- |             |
+- |  MDEV CORE  |
+- |   MODULE    |
+- |   mdev.ko   |
+- | +---------+ | mdev_register_device() +--------------+
+- | |Physical | +<-----------------------+              |
+- | | device  | |                        |  vfio_ap.ko  |<-> matrix
+- | |interface| +----------------------->+              |    device
+- | +---------+ |       callback         +--------------+
+- +-------------+
++   +-------------+
++   |             |
++   | +---------+ | mdev_register_driver() +--------------+
++   | |  Mdev   | +<-----------------------+              |
++   | |  bus    | |                        | vfio_mdev.ko |
++   | | driver  | +----------------------->+              |<-> VFIO user
++   | +---------+ |    probe()/remove()    +--------------+    APIs
++   |             |
++   |  MDEV CORE  |
++   |   MODULE    |
++   |   mdev.ko   |
++   | +---------+ | mdev_register_device() +--------------+
++   | |Physical | +<-----------------------+              |
++   | | device  | |                        |  vfio_ap.ko  |<-> matrix
++   | |interface| +----------------------->+              |    device
++   | +---------+ |       callback         +--------------+
++   +-------------+
+ 
+ During initialization of the vfio_ap module, the matrix device is registered
+ with an 'mdev_parent_ops' structure that provides the sysfs attribute
+@@ -306,7 +312,8 @@ structures, mdev functions and callback interfaces for managing the mediated
+ matrix device.
+ 
+ * sysfs attribute structures:
+-  * supported_type_groups
++
++  supported_type_groups
+     The VFIO mediated device framework supports creation of user-defined
+     mediated device types. These mediated device types are specified
+     via the 'supported_type_groups' structure when a device is registered
+@@ -318,61 +325,72 @@ matrix device.
+ 
+     The VFIO AP device driver will register one mediated device type for
+     passthrough devices:
++
+       /sys/devices/vfio_ap/matrix/mdev_supported_types/vfio_ap-passthrough
++
+     Only the read-only attributes required by the VFIO mdev framework will
+-    be provided:
+-        ... name
+-        ... device_api
+-        ... available_instances
+-        ... device_api
+-        Where:
+-        * name: specifies the name of the mediated device type
+-        * device_api: the mediated device type's API
+-        * available_instances: the number of mediated matrix passthrough devices
+-                               that can be created
+-        * device_api: specifies the VFIO API
+-  * mdev_attr_groups
++    be provided::
++
++	... name
++	... device_api
++	... available_instances
++	... device_api
++
++    Where:
++
++	* name:
++	    specifies the name of the mediated device type
++	* device_api:
++	    the mediated device type's API
++	* available_instances:
++	    the number of mediated matrix passthrough devices
++	    that can be created
++	* device_api:
++	    specifies the VFIO API
++  mdev_attr_groups
+     This attribute group identifies the user-defined sysfs attributes of the
+     mediated device. When a device is registered with the VFIO mediated device
+     framework, the sysfs attribute files identified in the 'mdev_attr_groups'
+     structure will be created in the mediated matrix device's directory. The
+     sysfs attributes for a mediated matrix device are:
+-    * assign_adapter:
+-    * unassign_adapter:
++
++    assign_adapter / unassign_adapter:
+       Write-only attributes for assigning/unassigning an AP adapter to/from the
+       mediated matrix device. To assign/unassign an adapter, the APID of the
+       adapter is echoed to the respective attribute file.
+-    * assign_domain:
+-    * unassign_domain:
++    assign_domain / unassign_domain:
+       Write-only attributes for assigning/unassigning an AP usage domain to/from
+       the mediated matrix device. To assign/unassign a domain, the domain
+       number of the the usage domain is echoed to the respective attribute
+       file.
+-    * matrix:
++    matrix:
+       A read-only file for displaying the APQNs derived from the cross product
+       of the adapter and domain numbers assigned to the mediated matrix device.
+-    * assign_control_domain:
+-    * unassign_control_domain:
++    assign_control_domain / unassign_control_domain:
+       Write-only attributes for assigning/unassigning an AP control domain
+       to/from the mediated matrix device. To assign/unassign a control domain,
+       the ID of the domain to be assigned/unassigned is echoed to the respective
+       attribute file.
+-    * control_domains:
++    control_domains:
+       A read-only file for displaying the control domain numbers assigned to the
+       mediated matrix device.
+ 
+ * functions:
+-  * create:
++
++  create:
+     allocates the ap_matrix_mdev structure used by the vfio_ap driver to:
++
+     * Store the reference to the KVM structure for the guest using the mdev
+     * Store the AP matrix configuration for the adapters, domains, and control
+       domains assigned via the corresponding sysfs attributes files
+-  * remove:
++
++  remove:
+     deallocates the mediated matrix device's ap_matrix_mdev structure. This will
+     be allowed only if a running guest is not using the mdev.
+ 
+ * callback interfaces
+-  * open:
++
++  open:
+     The vfio_ap driver uses this callback to register a
+     VFIO_GROUP_NOTIFY_SET_KVM notifier callback function for the mdev matrix
+     device. The open is invoked when QEMU connects the VFIO iommu group
+@@ -380,16 +398,17 @@ matrix device.
+     to configure the KVM guest is provided via this callback. The KVM structure,
+     is used to configure the guest's access to the AP matrix defined via the
+     mediated matrix device's sysfs attribute files.
+-  * release:
++  release:
+     unregisters the VFIO_GROUP_NOTIFY_SET_KVM notifier callback function for the
+     mdev matrix device and deconfigures the guest's AP matrix.
+ 
+-Configure the APM, AQM and ADM in the CRYCB:
++Configure the APM, AQM and ADM in the CRYCB
+ -------------------------------------------
+ Configuring the AP matrix for a KVM guest will be performed when the
+ VFIO_GROUP_NOTIFY_SET_KVM notifier callback is invoked. The notifier
+ function is called when QEMU connects to KVM. The guest's AP matrix is
+ configured via it's CRYCB by:
++
+ * Setting the bits in the APM corresponding to the APIDs assigned to the
+   mediated matrix device via its 'assign_adapter' interface.
+ * Setting the bits in the AQM corresponding to the domains assigned to the
+@@ -418,12 +437,12 @@ available to a KVM guest via the following CPU model features:
+ 
+ Note: If the user chooses to specify a CPU model different than the 'host'
+ model to QEMU, the CPU model features and facilities need to be turned on
+-explicitly; for example:
++explicitly; for example::
+ 
+      /usr/bin/qemu-system-s390x ... -cpu z13,ap=on,apqci=on,apft=on
+ 
+ A guest can be precluded from using AP features/facilities by turning them off
+-explicitly; for example:
++explicitly; for example::
+ 
+      /usr/bin/qemu-system-s390x ... -cpu host,ap=off,apqci=off,apft=off
+ 
+@@ -435,7 +454,7 @@ the APFT facility is not installed on the guest, then the probe of device
+ drivers will fail since only type 10 and newer devices can be configured for
+ guest use.
+ 
+-Example:
++Example
+ =======
+ Let's now provide an example to illustrate how KVM guests may be given
+ access to AP facilities. For this example, we will show how to configure
+@@ -444,30 +463,36 @@ look like this:
+ 
+ Guest1
+ ------
++=========== ===== ============
+ CARD.DOMAIN TYPE  MODE
+-------------------------------
++=========== ===== ============
+ 05          CEX5C CCA-Coproc
+ 05.0004     CEX5C CCA-Coproc
+ 05.00ab     CEX5C CCA-Coproc
+ 06          CEX5A Accelerator
+ 06.0004     CEX5A Accelerator
+ 06.00ab     CEX5C CCA-Coproc
++=========== ===== ============
+ 
+ Guest2
+ ------
++=========== ===== ============
+ CARD.DOMAIN TYPE  MODE
+-------------------------------
++=========== ===== ============
+ 05          CEX5A Accelerator
+ 05.0047     CEX5A Accelerator
+ 05.00ff     CEX5A Accelerator
++=========== ===== ============
+ 
+ Guest2
+ ------
++=========== ===== ============
+ CARD.DOMAIN TYPE  MODE
+-------------------------------
++=========== ===== ============
+ 06          CEX5A Accelerator
+ 06.0047     CEX5A Accelerator
+ 06.00ff     CEX5A Accelerator
++=========== ===== ============
+ 
+ These are the steps:
+ 
+@@ -492,25 +517,26 @@ These are the steps:
+    * VFIO_MDEV_DEVICE
+    * KVM
+ 
+-   If using make menuconfig select the following to build the vfio_ap module:
+-   -> Device Drivers
+-      -> IOMMU Hardware Support
+-         select S390 AP IOMMU Support
+-      -> VFIO Non-Privileged userspace driver framework
+-         -> Mediated device driver frramework
+-            -> VFIO driver for Mediated devices
+-   -> I/O subsystem
+-      -> VFIO support for AP devices
++   If using make menuconfig select the following to build the vfio_ap module::
++
++     -> Device Drivers
++	-> IOMMU Hardware Support
++	   select S390 AP IOMMU Support
++	-> VFIO Non-Privileged userspace driver framework
++	   -> Mediated device driver frramework
++	      -> VFIO driver for Mediated devices
++     -> I/O subsystem
++	-> VFIO support for AP devices
+ 
+ 2. Secure the AP queues to be used by the three guests so that the host can not
+    access them. To secure them, there are two sysfs files that specify
+    bitmasks marking a subset of the APQN range as 'usable by the default AP
+    queue device drivers' or 'not usable by the default device drivers' and thus
+    available for use by the vfio_ap device driver'. The location of the sysfs
+-   files containing the masks are:
++   files containing the masks are::
+ 
+-   /sys/bus/ap/apmask
+-   /sys/bus/ap/aqmask
++     /sys/bus/ap/apmask
++     /sys/bus/ap/aqmask
+ 
+    The 'apmask' is a 256-bit mask that identifies a set of AP adapter IDs
+    (APID). Each bit in the mask, from left to right (i.e., from most significant
+@@ -526,7 +552,7 @@ These are the steps:
+    queue device drivers; otherwise, the APQI is usable by the vfio_ap device
+    driver.
+ 
+-   Take, for example, the following mask:
++   Take, for example, the following mask::
+ 
+       0x7dffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+ 
+@@ -548,68 +574,70 @@ These are the steps:
+       respective sysfs mask file in one of two formats:
+ 
+       * An absolute hex string starting with 0x - like "0x12345678" - sets
+-        the mask. If the given string is shorter than the mask, it is padded
+-        with 0s on the right; for example, specifying a mask value of 0x41 is
+-        the same as specifying:
++	the mask. If the given string is shorter than the mask, it is padded
++	with 0s on the right; for example, specifying a mask value of 0x41 is
++	the same as specifying::
+ 
+-           0x4100000000000000000000000000000000000000000000000000000000000000
++	   0x4100000000000000000000000000000000000000000000000000000000000000
+ 
+-        Keep in mind that the mask reads from left to right (i.e., most
+-        significant to least significant bit in big endian order), so the mask
+-        above identifies device numbers 1 and 7 (01000001).
++	Keep in mind that the mask reads from left to right (i.e., most
++	significant to least significant bit in big endian order), so the mask
++	above identifies device numbers 1 and 7 (01000001).
+ 
+-        If the string is longer than the mask, the operation is terminated with
+-        an error (EINVAL).
++	If the string is longer than the mask, the operation is terminated with
++	an error (EINVAL).
+ 
+       * Individual bits in the mask can be switched on and off by specifying
+-        each bit number to be switched in a comma separated list. Each bit
+-        number string must be prepended with a ('+') or minus ('-') to indicate
+-        the corresponding bit is to be switched on ('+') or off ('-'). Some
+-        valid values are:
++	each bit number to be switched in a comma separated list. Each bit
++	number string must be prepended with a ('+') or minus ('-') to indicate
++	the corresponding bit is to be switched on ('+') or off ('-'). Some
++	valid values are:
+ 
+-           "+0"    switches bit 0 on
+-           "-13"   switches bit 13 off
+-           "+0x41" switches bit 65 on
+-           "-0xff" switches bit 255 off
++	   - "+0"    switches bit 0 on
++	   - "-13"   switches bit 13 off
++	   - "+0x41" switches bit 65 on
++	   - "-0xff" switches bit 255 off
+ 
+-           The following example:
+-              +0,-6,+0x47,-0xf0
++	The following example:
+ 
+-              Switches bits 0 and 71 (0x47) on
+-              Switches bits 6 and 240 (0xf0) off
++	      +0,-6,+0x47,-0xf0
+ 
+-        Note that the bits not specified in the list remain as they were before
+-        the operation.
++	Switches bits 0 and 71 (0x47) on
++
++	Switches bits 6 and 240 (0xf0) off
++
++	Note that the bits not specified in the list remain as they were before
++	the operation.
+ 
+    2. The masks can also be changed at boot time via parameters on the kernel
+       command line like this:
+ 
+-         ap.apmask=0xffff ap.aqmask=0x40
++	 ap.apmask=0xffff ap.aqmask=0x40
+ 
+-         This would create the following masks:
++	 This would create the following masks::
+ 
+-            apmask:
+-            0xffff000000000000000000000000000000000000000000000000000000000000
++	    apmask:
++	    0xffff000000000000000000000000000000000000000000000000000000000000
+ 
+-            aqmask:
+-            0x4000000000000000000000000000000000000000000000000000000000000000
++	    aqmask:
++	    0x4000000000000000000000000000000000000000000000000000000000000000
+ 
+-         Resulting in these two pools:
++	 Resulting in these two pools::
+ 
+-            default drivers pool:    adapter 0-15, domain 1
+-            alternate drivers pool:  adapter 16-255, domains 0, 2-255
++	    default drivers pool:    adapter 0-15, domain 1
++	    alternate drivers pool:  adapter 16-255, domains 0, 2-255
+ 
+-   Securing the APQNs for our example:
+-   ----------------------------------
++Securing the APQNs for our example
++----------------------------------
+    To secure the AP queues 05.0004, 05.0047, 05.00ab, 05.00ff, 06.0004, 06.0047,
+    06.00ab, and 06.00ff for use by the vfio_ap device driver, the corresponding
+-   APQNs can either be removed from the default masks:
++   APQNs can either be removed from the default masks::
+ 
+       echo -5,-6 > /sys/bus/ap/apmask
+ 
+       echo -4,-0x47,-0xab,-0xff > /sys/bus/ap/aqmask
+ 
+-   Or the masks can be set as follows:
++   Or the masks can be set as follows::
+ 
+       echo 0xf9ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff \
+       > apmask
+@@ -620,19 +648,19 @@ These are the steps:
+    This will result in AP queues 05.0004, 05.0047, 05.00ab, 05.00ff, 06.0004,
+    06.0047, 06.00ab, and 06.00ff getting bound to the vfio_ap device driver. The
+    sysfs directory for the vfio_ap device driver will now contain symbolic links
+-   to the AP queue devices bound to it:
++   to the AP queue devices bound to it::
+ 
+-   /sys/bus/ap
+-   ... [drivers]
+-   ...... [vfio_ap]
+-   ......... [05.0004]
+-   ......... [05.0047]
+-   ......... [05.00ab]
+-   ......... [05.00ff]
+-   ......... [06.0004]
+-   ......... [06.0047]
+-   ......... [06.00ab]
+-   ......... [06.00ff]
++     /sys/bus/ap
++     ... [drivers]
++     ...... [vfio_ap]
++     ......... [05.0004]
++     ......... [05.0047]
++     ......... [05.00ab]
++     ......... [05.00ff]
++     ......... [06.0004]
++     ......... [06.0047]
++     ......... [06.00ab]
++     ......... [06.00ff]
+ 
+    Keep in mind that only type 10 and newer adapters (i.e., CEX4 and later)
+    can be bound to the vfio_ap device driver. The reason for this is to
+@@ -645,96 +673,96 @@ These are the steps:
+    queue device can be read from the parent card's sysfs directory. For example,
+    to see the hardware type of the queue 05.0004:
+ 
+-   cat /sys/bus/ap/devices/card05/hwtype
++     cat /sys/bus/ap/devices/card05/hwtype
+ 
+    The hwtype must be 10 or higher (CEX4 or newer) in order to be bound to the
+    vfio_ap device driver.
+ 
+ 3. Create the mediated devices needed to configure the AP matrixes for the
+    three guests and to provide an interface to the vfio_ap driver for
+-   use by the guests:
++   use by the guests::
+ 
+-   /sys/devices/vfio_ap/matrix/
+-   --- [mdev_supported_types]
+-   ------ [vfio_ap-passthrough] (passthrough mediated matrix device type)
+-   --------- create
+-   --------- [devices]
++     /sys/devices/vfio_ap/matrix/
++     --- [mdev_supported_types]
++     ------ [vfio_ap-passthrough] (passthrough mediated matrix device type)
++     --------- create
++     --------- [devices]
+ 
+-   To create the mediated devices for the three guests:
++   To create the mediated devices for the three guests::
+ 
+ 	uuidgen > create
+ 	uuidgen > create
+ 	uuidgen > create
+ 
+-        or
++	or
+ 
+-        echo $uuid1 > create
+-        echo $uuid2 > create
+-        echo $uuid3 > create
++	echo $uuid1 > create
++	echo $uuid2 > create
++	echo $uuid3 > create
+ 
+    This will create three mediated devices in the [devices] subdirectory named
+    after the UUID written to the create attribute file. We call them $uuid1,
+-   $uuid2 and $uuid3 and this is the sysfs directory structure after creation:
++   $uuid2 and $uuid3 and this is the sysfs directory structure after creation::
+ 
+-   /sys/devices/vfio_ap/matrix/
+-   --- [mdev_supported_types]
+-   ------ [vfio_ap-passthrough]
+-   --------- [devices]
+-   ------------ [$uuid1]
+-   --------------- assign_adapter
+-   --------------- assign_control_domain
+-   --------------- assign_domain
+-   --------------- matrix
+-   --------------- unassign_adapter
+-   --------------- unassign_control_domain
+-   --------------- unassign_domain
++     /sys/devices/vfio_ap/matrix/
++     --- [mdev_supported_types]
++     ------ [vfio_ap-passthrough]
++     --------- [devices]
++     ------------ [$uuid1]
++     --------------- assign_adapter
++     --------------- assign_control_domain
++     --------------- assign_domain
++     --------------- matrix
++     --------------- unassign_adapter
++     --------------- unassign_control_domain
++     --------------- unassign_domain
+ 
+-   ------------ [$uuid2]
+-   --------------- assign_adapter
+-   --------------- assign_control_domain
+-   --------------- assign_domain
+-   --------------- matrix
+-   --------------- unassign_adapter
+-   ----------------unassign_control_domain
+-   ----------------unassign_domain
++     ------------ [$uuid2]
++     --------------- assign_adapter
++     --------------- assign_control_domain
++     --------------- assign_domain
++     --------------- matrix
++     --------------- unassign_adapter
++     ----------------unassign_control_domain
++     ----------------unassign_domain
+ 
+-   ------------ [$uuid3]
+-   --------------- assign_adapter
+-   --------------- assign_control_domain
+-   --------------- assign_domain
+-   --------------- matrix
+-   --------------- unassign_adapter
+-   ----------------unassign_control_domain
+-   ----------------unassign_domain
++     ------------ [$uuid3]
++     --------------- assign_adapter
++     --------------- assign_control_domain
++     --------------- assign_domain
++     --------------- matrix
++     --------------- unassign_adapter
++     ----------------unassign_control_domain
++     ----------------unassign_domain
+ 
+ 4. The administrator now needs to configure the matrixes for the mediated
+    devices $uuid1 (for Guest1), $uuid2 (for Guest2) and $uuid3 (for Guest3).
+ 
+-   This is how the matrix is configured for Guest1:
++   This is how the matrix is configured for Guest1::
+ 
+       echo 5 > assign_adapter
+       echo 6 > assign_adapter
+       echo 4 > assign_domain
+       echo 0xab > assign_domain
+ 
+-      Control domains can similarly be assigned using the assign_control_domain
+-      sysfs file.
++   Control domains can similarly be assigned using the assign_control_domain
++   sysfs file.
+ 
+-      If a mistake is made configuring an adapter, domain or control domain,
+-      you can use the unassign_xxx files to unassign the adapter, domain or
+-      control domain.
++   If a mistake is made configuring an adapter, domain or control domain,
++   you can use the unassign_xxx files to unassign the adapter, domain or
++   control domain.
+ 
+-      To display the matrix configuration for Guest1:
++   To display the matrix configuration for Guest1::
+ 
+-         cat matrix
++	 cat matrix
+ 
+-   This is how the matrix is configured for Guest2:
++   This is how the matrix is configured for Guest2::
+ 
+       echo 5 > assign_adapter
+       echo 0x47 > assign_domain
+       echo 0xff > assign_domain
+ 
+-   This is how the matrix is configured for Guest3:
++   This is how the matrix is configured for Guest3::
+ 
+       echo 6 > assign_adapter
+       echo 0x47 > assign_domain
+@@ -783,24 +811,24 @@ These are the steps:
+    configured for the system. If a control domain number higher than the maximum
+    is specified, the operation will terminate with an error (ENODEV).
+ 
+-5. Start Guest1:
++5. Start Guest1::
+ 
+-   /usr/bin/qemu-system-s390x ... -cpu host,ap=on,apqci=on,apft=on \
+-      -device vfio-ap,sysfsdev=/sys/devices/vfio_ap/matrix/$uuid1 ...
++     /usr/bin/qemu-system-s390x ... -cpu host,ap=on,apqci=on,apft=on \
++	-device vfio-ap,sysfsdev=/sys/devices/vfio_ap/matrix/$uuid1 ...
+ 
+-7. Start Guest2:
++7. Start Guest2::
+ 
+-   /usr/bin/qemu-system-s390x ... -cpu host,ap=on,apqci=on,apft=on \
+-      -device vfio-ap,sysfsdev=/sys/devices/vfio_ap/matrix/$uuid2 ...
++     /usr/bin/qemu-system-s390x ... -cpu host,ap=on,apqci=on,apft=on \
++	-device vfio-ap,sysfsdev=/sys/devices/vfio_ap/matrix/$uuid2 ...
+ 
+-7. Start Guest3:
++7. Start Guest3::
+ 
+-   /usr/bin/qemu-system-s390x ... -cpu host,ap=on,apqci=on,apft=on \
+-      -device vfio-ap,sysfsdev=/sys/devices/vfio_ap/matrix/$uuid3 ...
++     /usr/bin/qemu-system-s390x ... -cpu host,ap=on,apqci=on,apft=on \
++	-device vfio-ap,sysfsdev=/sys/devices/vfio_ap/matrix/$uuid3 ...
+ 
+ When the guest is shut down, the mediated matrix devices may be removed.
+ 
+-Using our example again, to remove the mediated matrix device $uuid1:
++Using our example again, to remove the mediated matrix device $uuid1::
+ 
+    /sys/devices/vfio_ap/matrix/
+       --- [mdev_supported_types]
+@@ -809,18 +837,19 @@ Using our example again, to remove the mediated matrix device $uuid1:
+       ------------ [$uuid1]
+       --------------- remove
+ 
++::
+ 
+    echo 1 > remove
+ 
+-   This will remove all of the mdev matrix device's sysfs structures including
+-   the mdev device itself. To recreate and reconfigure the mdev matrix device,
+-   all of the steps starting with step 3 will have to be performed again. Note
+-   that the remove will fail if a guest using the mdev is still running.
++This will remove all of the mdev matrix device's sysfs structures including
++the mdev device itself. To recreate and reconfigure the mdev matrix device,
++all of the steps starting with step 3 will have to be performed again. Note
++that the remove will fail if a guest using the mdev is still running.
+ 
+-   It is not necessary to remove an mdev matrix device, but one may want to
+-   remove it if no guest will use it during the remaining lifetime of the linux
+-   host. If the mdev matrix device is removed, one may want to also reconfigure
+-   the pool of adapters and queues reserved for use by the default drivers.
++It is not necessary to remove an mdev matrix device, but one may want to
++remove it if no guest will use it during the remaining lifetime of the linux
++host. If the mdev matrix device is removed, one may want to also reconfigure
++the pool of adapters and queues reserved for use by the default drivers.
+ 
+ Limitations
+ ===========
+diff --git a/Documentation/s390/vfio-ccw.txt b/Documentation/s390/vfio-ccw.txt
+index 2be11ad864ff..6278466dd9b1 100644
+--- a/Documentation/s390/vfio-ccw.txt
++++ b/Documentation/s390/vfio-ccw.txt
+@@ -1,3 +1,4 @@
++==================================
+ vfio-ccw: the basic infrastructure
+ ==================================
+ 
+@@ -11,9 +12,11 @@ virtual machine, while vfio is the means.
+ Different than other hardware architectures, s390 has defined a unified
+ I/O access method, which is so called Channel I/O. It has its own access
+ patterns:
++
+ - Channel programs run asynchronously on a separate (co)processor.
+ - The channel subsystem will access any memory designated by the caller
+   in the channel program directly, i.e. there is no iommu involved.
++
+ Thus when we introduce vfio support for these devices, we realize it
+ with a mediated device (mdev) implementation. The vfio mdev will be
+ added to an iommu group, so as to make itself able to be managed by the
+@@ -24,6 +27,7 @@ to perform I/O instructions.
+ 
+ This document does not intend to explain the s390 I/O architecture in
+ every detail. More information/reference could be found here:
++
+ - A good start to know Channel I/O in general:
+   https://en.wikipedia.org/wiki/Channel_I/O
+ - s390 architecture:
+@@ -80,6 +84,7 @@ until interrupted. The I/O completion result is received by the
+ interrupt handler in the form of interrupt response block (IRB).
+ 
+ Back to vfio-ccw, in short:
++
+ - ORBs and channel programs are built in guest kernel (with guest
+   physical addresses).
+ - ORBs and channel programs are passed to the host kernel.
+@@ -106,6 +111,7 @@ it gets sent to hardware.
+ 
+ Within this implementation, we have two drivers for two types of
+ devices:
++
+ - The vfio_ccw driver for the physical subchannel device.
+   This is an I/O subchannel driver for the real subchannel device.  It
+   realizes a group of callbacks and registers to the mdev framework as a
+@@ -137,7 +143,7 @@ devices:
+   vfio_pin_pages and a vfio_unpin_pages interfaces from the vfio iommu
+   backend for the physical devices to pin and unpin pages by demand.
+ 
+-Below is a high Level block diagram.
++Below is a high Level block diagram::
+ 
+  +-------------+
+  |             |
+@@ -158,6 +164,7 @@ Below is a high Level block diagram.
+  +-------------+
+ 
+ The process of how these work together.
++
+ 1. vfio_ccw.ko drives the physical I/O subchannel, and registers the
+    physical device (with callbacks) to mdev framework.
+    When vfio_ccw probing the subchannel device, it registers device
+@@ -178,17 +185,17 @@ vfio-ccw I/O region
+ 
+ An I/O region is used to accept channel program request from user
+ space and store I/O interrupt result for user space to retrieve. The
+-definition of the region is:
++definition of the region is::
+ 
+-struct ccw_io_region {
+-#define ORB_AREA_SIZE 12
+-	__u8	orb_area[ORB_AREA_SIZE];
+-#define SCSW_AREA_SIZE 12
+-	__u8	scsw_area[SCSW_AREA_SIZE];
+-#define IRB_AREA_SIZE 96
+-	__u8	irb_area[IRB_AREA_SIZE];
+-	__u32	ret_code;
+-} __packed;
++  struct ccw_io_region {
++  #define ORB_AREA_SIZE 12
++	  __u8    orb_area[ORB_AREA_SIZE];
++  #define SCSW_AREA_SIZE 12
++	  __u8    scsw_area[SCSW_AREA_SIZE];
++  #define IRB_AREA_SIZE 96
++	  __u8    irb_area[IRB_AREA_SIZE];
++	  __u32   ret_code;
++  } __packed;
+ 
+ While starting an I/O request, orb_area should be filled with the
+ guest ORB, and scsw_area should be filled with the SCSW of the Virtual
+@@ -205,7 +212,7 @@ vfio-ccw follows what vfio-pci did on the s390 platform and uses
+ vfio-iommu-type1 as the vfio iommu backend.
+ 
+ * CCW translation APIs
+-  A group of APIs (start with 'cp_') to do CCW translation. The CCWs
++  A group of APIs (start with `cp_`) to do CCW translation. The CCWs
+   passed in by a user space program are organized with their guest
+   physical memory addresses. These APIs will copy the CCWs into kernel
+   space, and assemble a runnable kernel channel program by updating the
+@@ -217,12 +224,14 @@ vfio-iommu-type1 as the vfio iommu backend.
+   This driver utilizes the CCW translation APIs and introduces
+   vfio_ccw, which is the driver for the I/O subchannel devices you want
+   to pass through.
+-  vfio_ccw implements the following vfio ioctls:
++  vfio_ccw implements the following vfio ioctls::
++
+     VFIO_DEVICE_GET_INFO
+     VFIO_DEVICE_GET_IRQ_INFO
+     VFIO_DEVICE_GET_REGION_INFO
+     VFIO_DEVICE_RESET
+     VFIO_DEVICE_SET_IRQS
++
+   This provides an I/O region, so that the user space program can pass a
+   channel program to the kernel, to do further CCW translation before
+   issuing them to a real device.
+@@ -236,32 +245,49 @@ bit more detail how an I/O request triggered by the QEMU guest will be
+ handled (without error handling).
+ 
+ Explanation:
+-Q1-Q7: QEMU side process.
+-K1-K5: Kernel side process.
+ 
+-Q1. Get I/O region info during initialization.
+-Q2. Setup event notifier and handler to handle I/O completion.
++- Q1-Q7: QEMU side process.
++- K1-K5: Kernel side process.
++
++Q1.
++    Get I/O region info during initialization.
++
++Q2.
++    Setup event notifier and handler to handle I/O completion.
+ 
+ ... ...
+ 
+-Q3. Intercept a ssch instruction.
+-Q4. Write the guest channel program and ORB to the I/O region.
+-    K1. Copy from guest to kernel.
+-    K2. Translate the guest channel program to a host kernel space
+-        channel program, which becomes runnable for a real device.
+-    K3. With the necessary information contained in the orb passed in
+-        by QEMU, issue the ccwchain to the device.
+-    K4. Return the ssch CC code.
+-Q5. Return the CC code to the guest.
++Q3.
++    Intercept a ssch instruction.
++Q4.
++    Write the guest channel program and ORB to the I/O region.
++
++    K1.
++	Copy from guest to kernel.
++    K2.
++	Translate the guest channel program to a host kernel space
++	channel program, which becomes runnable for a real device.
++    K3.
++	With the necessary information contained in the orb passed in
++	by QEMU, issue the ccwchain to the device.
++    K4.
++	Return the ssch CC code.
++Q5.
++    Return the CC code to the guest.
+ 
+ ... ...
+ 
+-    K5. Interrupt handler gets the I/O result and write the result to
+-        the I/O region.
+-    K6. Signal QEMU to retrieve the result.
+-Q6. Get the signal and event handler reads out the result from the I/O
++    K5.
++	Interrupt handler gets the I/O result and write the result to
++	the I/O region.
++    K6.
++	Signal QEMU to retrieve the result.
++
++Q6.
++    Get the signal and event handler reads out the result from the I/O
+     region.
+-Q7. Update the irb for the guest.
++Q7.
++    Update the irb for the guest.
+ 
+ Limitations
+ -----------
+diff --git a/Documentation/s390/zfcpdump.txt b/Documentation/s390/zfcpdump.txt
+index b064aa59714d..54e8e7caf7e7 100644
+--- a/Documentation/s390/zfcpdump.txt
++++ b/Documentation/s390/zfcpdump.txt
+@@ -1,4 +1,6 @@
++==================================
+ The s390 SCSI dump tool (zfcpdump)
++==================================
+ 
+ System z machines (z900 or higher) provide hardware support for creating system
+ dumps on SCSI disks. The dump process is initiated by booting a dump tool, which
 -- 
 2.20.1
 
