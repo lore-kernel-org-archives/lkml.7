@@ -3,232 +3,96 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2248DC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:59:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 754EEC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 04:02:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D978D2075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:59:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47F852075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 04:02:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726774AbfDPD7w (ORCPT
+        id S1726000AbfDPECm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 23:59:52 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:45153 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726208AbfDPD7w (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 23:59:52 -0400
-Received: from mail-pg1-f199.google.com ([209.85.215.199])
-        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
-        (Exim 4.76)
-        (envelope-from <kai.heng.feng@canonical.com>)
-        id 1hGFG8-0000jf-VM
-        for linux-kernel@vger.kernel.org; Tue, 16 Apr 2019 03:59:49 +0000
-Received: by mail-pg1-f199.google.com with SMTP id d15so11710388pgt.14
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 20:59:48 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=68oTKaAoNg7fVjI4faua647nBiot/HFTwVUmGhgg+CQ=;
-        b=VRfXhtBEkhLPRoU2bBA2FTFKvmc+F8R3V/aCL//g367VhNjkLUvTIMWK1929kWjIKR
-         yCpz3quZm2VimswrTLlWxbXMs3fX/N/c1LuVW5koObIed1GeU8w7syadtIO+oF92N1XL
-         xStucoNn+ZQheQsfqMgBDZTgXwgZ/NI/RsJuLFQUJO0jwhkuTaSOvXu0DuUc9azs97z6
-         9F51iI6xT2N88hGN4Uw9b5N4msA4RMCKIyuO9QSSejx8sKR3boAMRxh2gl1BhBAyRbgz
-         d40wiM/AlqUoGuFwQK6LhfsdAoWgwUA/sx+guaDilQxXWmpYuPHoi/g/QNorRRnPIGsj
-         x3Zg==
-X-Gm-Message-State: APjAAAVFXdhvtMjUi49WqvzmRsPAs7E7DxZLJgvLqs6Z2twuiB2MIRVI
-        kuCYizWVjQBib/4mC8ha5ejF4tJimycwz8tzq1gArJAgXSH9gkwswwmC0kcbEUlGGbjSgnLlQdh
-        pwzYIlOlRG2DxGQGlCRc+mRYcJR66yWENpJvSJOaIDA==
-X-Received: by 2002:a65:6289:: with SMTP id f9mr74935170pgv.380.1555387187330;
-        Mon, 15 Apr 2019 20:59:47 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqzcmIE04TYq5rjK9FIFnjxj+8Xczz76yCIBjHWuT/NKHioNqXniIoDcEWYVWVhym0C5TJ+cfA==
-X-Received: by 2002:a65:6289:: with SMTP id f9mr74935152pgv.380.1555387186918;
-        Mon, 15 Apr 2019 20:59:46 -0700 (PDT)
-Received: from 2001-b011-380f-14b9-3d07-9ba6-aef3-fb55.dynamic-ip6.hinet.net (2001-b011-380f-14b9-3d07-9ba6-aef3-fb55.dynamic-ip6.hinet.net. [2001:b011:380f:14b9:3d07:9ba6:aef3:fb55])
-        by smtp.gmail.com with ESMTPSA id z13sm72473622pgc.25.2019.04.15.20.59.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Apr 2019 20:59:45 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8;
-        delsp=yes;
-        format=flowed
-Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
-Subject: Re: [PATCH] ELAN touchpad i2c_hid bugs fix
-From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
-In-Reply-To: <b495a521-16b5-8005-16be-e0b899f954f7@redhat.com>
-Date:   Tue, 16 Apr 2019 11:59:42 +0800
-Cc:     hotwater438@tutanota.com, Dmitry Torokhov <dtor@chromium.org>,
-        Vladislav Dalechyn <vlad.dalechin@gmail.com>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Jiri Kosina <jikos@kernel.org>, Swboyd <swboyd@chromium.org>,
-        Bigeasy <bigeasy@linutronix.de>,
-        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>
-Content-Transfer-Encoding: 8bit
-Message-Id: <31D4FB07-B7E4-4A51-B191-44F92B229CB4@canonical.com>
-References: <CAE_wzQ8Aep1FOONeCUxvjBFbgKcVRWP5mUuwQnDxzfemUw-eaA@mail.gmail.com>
- <a2952bc4-0ad0-c8a0-5a5b-13a279023455@redhat.com>
- <CAE_wzQ8sYcMVYLmnctw_UQuvn0B8U2CU2dNeg-9sh85AL_CfgQ@mail.gmail.com>
- <abe3eccb-1490-e088-1fd8-6af4dc1bd2ec@redhat.com> <LbI7kio--3-1@tutanota.com>
- <a58ebeb8-10fd-29d0-1562-4ed8d84f2239@redhat.com> <LbZjy9p--3-1@tutanota.com>
- <B7A141A3-613C-4EB8-8BB4-F845A0AC8F23@canonical.com>
- <LcKqhgD--3-1@tutanota.com>
- <385F448C-463D-4EF0-BCFB-8386D043F189@canonical.com>
- <LcVmBjG--3-1@tutanota.com> <b495a521-16b5-8005-16be-e0b899f954f7@redhat.com>
-To:     Hans de Goede <hdegoede@redhat.com>
-X-Mailer: Apple Mail (2.3445.104.8)
+        Tue, 16 Apr 2019 00:02:42 -0400
+Received: from www.osadl.org ([62.245.132.105]:49136 "EHLO www.osadl.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725648AbfDPECm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 00:02:42 -0400
+Received: from debian01.hofrr.at (178.115.242.59.static.drei.at [178.115.242.59])
+        by www.osadl.org (8.13.8/8.13.8/OSADL-2007092901) with ESMTP id x3G427M9032015;
+        Tue, 16 Apr 2019 06:02:07 +0200
+From:   Nicholas Mc Guire <hofrat@osadl.org>
+To:     Jason Cooper <jason@lakedaemon.net>
+Cc:     Andrew Lunn <andrew@lunn.ch>,
+        Gregory Clement <gregory.clement@bootlin.com>,
+        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Nicholas Mc Guire <hofrat@osadl.org>
+Subject: [PATCH V2] ARM: mvebu: at least report the kzalloc failure
+Date:   Tue, 16 Apr 2019 05:56:31 +0200
+Message-Id: <1555386991-8855-1-git-send-email-hofrat@osadl.org>
+X-Mailer: git-send-email 2.1.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-at 19:42, Hans de Goede <hdegoede@redhat.com> wrote:
+Although it is very unlikely that the allocation during init would
+fail any such failure should point to the original cause to allow
+easier understanding of the ensuing null-pointer dereference splat.
 
-> Hi,
->
-> On 15-04-19 13:36, hotwater438@tutanota.com wrote:
->> Sorry for the delay.
->> By applying this patch I get next results:
->> Five finger tap and two finger scroll issues disappear, but after  
->> suspend touchpad dies. Restarting module doesn't help.
->
-> So bascally the same results as with the edge-triggered interrupt  
-> patch/hack,
-> right?
->
-> Are you still using the edge-triggered interrupt patch, or just the new
-> patch Kai-Heng Feng provided.
->
-> To me it sounds like the patch Kai-Heng Feng provided at least removes
-> the need for the edge-triggered interrupt patch/hack and what remains to
-> be solved is the suspend/resume issues.
+Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
+---
 
-Great! I’ll send a patch to address this issue.
+Problem located with experimental coccinelle script
 
-Kai-Heng
+V2: Russell King <linux@armlinux.org.uk> pointed out that the use of
+    WARN_ON() would result in a stack trace followed by the oops due
+    to dereferencing of the NULL pointer and so make it even less
+    likely that users would uncover the actual cause - so drop the
+    WARN_ON() and use a short pr_err() message that points to the
+    oops cause directly.
 
->
-> Regards,
->
-> Hans
->
->
->
->> Here's the log:
->> Apr 15 14:35:54 parrot sudo[3473]: h0tw4t3r : TTY=pts/1 ;  
->> PWD=/home/h0tw4t3r ; USER=root ; COMMAND=/sbin/rmmod i2c_hid
->> Apr 15 14:35:54 parrot sudo[3478]: h0tw4t3r : TTY=pts/1 ;  
->> PWD=/home/h0tw4t3r ; USER=root ; COMMAND=/sbin/modprobe i2c_hid
->> Apr 15 14:35:54 parrot kernel: i2c_hid i2c-ELAN1200:00: i2c-ELAN1200:00  
->> supply vdd not found, using dummy regulator
->> Apr 15 14:35:54 parrot kernel: i2c_hid i2c-ELAN1200:00: i2c-ELAN1200:00  
->> supply vddl not found, using dummy regulator
->> Could you please explain what this patch does?
->> Regards,
->> Vladislav.
->> Apr 13, 2019, 11:42 AM by kai.heng.feng@canonical.com:
->>     at 16:40, <hotwater438@tutanota.com <mailto:hotwater438@tutanota.com>> <hotwater438@tutanota.com <mailto:hotwater438@tutanota.com>> wrote:
->>         Hi.
->>         I've applied this patch, but still getting incomplete report messages.
->>     Does the patch fix the other two issues:
->>     - Five finger tap kill's module so you have to restart it;
->>     - Two finger scoll is working incorrect and sometimes even when you
->>     raised one of two finger still thinks that you are scrolling.
->>     Kai-Heng
->>         Regards,
->>         Vladislav
->>         Apr 11, 2019, 7:17 PM by kai.heng.feng@canonical.com <mailto:kai.heng.feng@canonical.com>:
->>         Hi,
->>         at 05:18, <hotwater438@tutanota.com <mailto:hotwater438@tutanota.com>> <hotwater438@tutanota.com <mailto:hotwater438@tutanota.com>> wrote:
->>         Hi.
->>         1) Run "cat /proc/interrupts | grep ELAN" , note down the value
->>         2) Very quickly/briefly touch the touchpad once
->>         3) Run "cat /proc/interrupts | grep ELAN" , note down the value again
->>         4) Subtract result from 1. from result from 3, this difference is
->>         the value we are interested in. E.g. my testing got 254 and 257, so
->>         a difference of 3.
->>         I've tested that, main diffs are 30, 24, 16 (the most frequent), 2 (the least frequent).
->>         I was using 4.19.13 kernel, because I use ParrotOS (which happens to be Debian distribution).
->>         But I've installed experimental 5.0.0 kernel and I can't say right now if suspend problem is resolved (i have to rebuild latest kernel with patch).
->>         Can you try below fix?
->>         This can solve what commit 1475af255e18 ("HID: i2c-hid: Ignore input report if there's no data present on Elan touchpanels”) tries to workaround.
->>         diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
->>         index c19a4c45f7bb..30e3664f1ae5 100644
->>         --- a/drivers/pinctrl/intel/pinctrl-intel.c
->>         +++ b/drivers/pinctrl/intel/pinctrl-intel.c
->>         @@ -957,6 +957,10 @@ static void intel_gpio_irq_mask_unmask(struct irq_data *d, bool mask)
->>         reg = community->regs + community->ie_offset + gpp * 4;
->>         raw_spin_lock_irqsave(&pctrl->lock, flags);
->>         +
->>         + if (!mask)
->>         + writel(BIT(gpp_offset), community->regs + community->is_offset + gpp * 4);
->>         +
->>         value = readl(reg);
->>         if (mask)
->>         value &= ~BIT(gpp_offset);
->>         Regards,
->>         Vladislav.
->>         Apr 3, 2019, 2:18 PM by hdegoede@redhat.com <mailto:hdegoede@redhat.com>:
->>         Hi,
->>         On 31-03-19 11:50, hotwater438@tutanota.com <mailto:hotwater438@tutanota.com> wrote:
->>         Hi. I've done everything you said, here are results:
->>         Vladislav can you check the output of /cat/interrupts on a kernel
->>         without the patch and while *not* using the touchpad; and check
->>         if the amount of touchpads-interrupts still keeps increasing in this
->>         case?
->>         IWI or IRQ work interrupts keep increasing with speed at least 3 interrupts/s.
->>         I'm really only interested in the touchpad related IRQs, so e.g. the line
->>         about "intel-gpio 129 ELAN1200:00", if you're seeing 3 interrupts/s on
->>         some others that is fine, so I take it the ELAN1200:00 interrupt count
->>         does not increase on an *unpatched* kernel, unless you use the touchpad?
->>         Also when I am moving touchpad IR-IO-APIC 14-fasteoi INT345D:00 get's triggered and increased.
->>         That is the GPIO controller interrupt, so that one increasing is normal.
->>         If I understand things correctly then this all means that the IRQ indeed
->>         is a normal level IRQ and Dmitry is likely correct that there is an
->>         pinctrl / gpiochip driver problem here.
->>         Can you try the following with an *unpatched* kernel? :
->>         1) Run "cat /proc/interrupts | grep ELAN" , note down the value
->>         2) Very quickly/briefly touch the touchpad once
->>         3) Run "cat /proc/interrupts | grep ELAN" , note down the value again
->>         4) Subtract result from 1. from result from 3, this difference is
->>         the value we are interested in. E.g. my testing got 254 and 257, so
->>         a difference of 3.
->>         The goal here is to get an as low as possible difference. Feel free
->>         to repeat this a couple of times.
->>         On an Apollo Lake laptop with an I2C hid mt touchpad I can get the
->>         amount of interrupts triggered for a single touch down to 3,
->>         given the huge interrupt counts of 130000+ reported in:
->>         https://bugzilla.redhat.com/show_bug.cgi?id=1543769
->>         I expect you to get a much bigger smallest possible difference
->>         between 2 "cat /proc/interrupts | grep ELAN" commands, note a
->>         difference of 0 means your touch did not register.
->>         Assuming you indeed see much more interrupts for a very quick
->>         touch + release, then we indeed have an interrupt handling problem
->>         we need to investigate further.
->>         I don't know if it's important or not, but for some reason these interrupts keep popping only on CPU2 (i have 4cpu processor).
->>         That does not matter.
->>         1) Suspending the machine by selecting suspend from a menu in your
->>         desktop environment, or by briefly pressing the power-button, do
->>         not close the lid
->>         2) As soon as the system starts suspending and while it is suspended, move
->>         your finger around the touchpad
->>         3) Wake the system up with the powerbutton while moving your finger around
->>         4) Check if the touchpad still works after this
->>         It works, but as it seems, looses edge. JournalCTL is being flooded with i2c_hid_get_input: incomplete report (16/65535)
->>         That is probably a different issue. If you loose the edge IRQ, then the touchpad
->>         would stop working without any messages. I believe that the suspend / resume
->>         issue may be fixed by:
->>         https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=52cf93e63ee672a92f349edc6ddad86ec8808fd8
->>         Does your kernel have this commit? (please always use the latest kernel while
->>         testing).
->>         Also a thing to notice, that after manually removing and modprobing i2c_hid module, it says next in journalctl:
->>         i2c_hid i2c-ELAN1200:00: i2c-ELAN1200:00 supply vdd not found, using dummy regulator
->>         i2c_hid i2c-ELAN1200:00: i2c-ELAN1200:00 supply vddl not found, using dummy regulator
->>         Those messages can safely be ignored.
->>         Regards,
->>         Hans
+Note that this will trigger a checkpatch WARNING
+"WARNING: Possible unnecessary 'out of memory' message"
+but comparing the oops with an without the one-line pr_err I would
+argue that it makes sense to include it:
+<snip>
+[ 8061.514840] shared page allocation failure in hello_init()
+[ 8113.563239] BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
+[ 8113.563250] #PF error: [WRITE]
+[ 8113.563255] PGD 8000000129993067 P4D 8000000129993067 PUD 129992067 PMD 0
+[ 8113.563267] Oops: 0002 [#1] SMP PTI
+[ 8113.563276] CPU: 2 PID: 2656 Comm: bash Tainted: G        W  O      5.0.0-rc3livepatchtest-next-20190123+ #4
+[ 8113.563280] Hardware name: Quanta TWH/TWH, BIOS QU221 10/14/2011
+[ 8113.563292] RIP: 0010:foo_store+0x3a/0x90 [hello_chardev]
+...
+<snip>
 
+Patch was compile-tested: mvebu_v7_defconfig (implies MACH_MVEBU_ANY=y)
+(with some unrelated sparse warnings about missing syscalls)
+
+Patch is against 5.1-rc4 (localversion-next is 20190415)
+
+ arch/arm/mach-mvebu/board-v7.c | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/arch/arm/mach-mvebu/board-v7.c b/arch/arm/mach-mvebu/board-v7.c
+index 0b10acd..df84cb6 100644
+--- a/arch/arm/mach-mvebu/board-v7.c
++++ b/arch/arm/mach-mvebu/board-v7.c
+@@ -128,6 +128,9 @@ static void __init i2c_quirk(void)
+ 		struct property *new_compat;
+ 
+ 		new_compat = kzalloc(sizeof(*new_compat), GFP_KERNEL);
++		if (!new_compat)
++			pr_err("new_compat allocation failure in %s()\n",
++				__func__);
+ 
+ 		new_compat->name = kstrdup("compatible", GFP_KERNEL);
+ 		new_compat->length = sizeof("marvell,mv78230-a0-i2c");
+-- 
+2.1.4
 
