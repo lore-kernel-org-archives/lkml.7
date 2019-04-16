@@ -6,26 +6,26 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A31EBC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:29:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D19BCC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:29:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7BE4120651
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:29:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B16A2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:29:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728887AbfDPJ14 (ORCPT
+        id S1729156AbfDPJ30 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 05:27:56 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:5951 "EHLO
+        Tue, 16 Apr 2019 05:29:26 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:52119 "EHLO
         mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727037AbfDPJ1y (ORCPT
+        with ESMTP id S1728401AbfDPJ14 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 05:27:54 -0400
-X-UUID: c3b05c6c9835452683c34ab9e03557c6-20190416
-X-UUID: c3b05c6c9835452683c34ab9e03557c6-20190416
+        Tue, 16 Apr 2019 05:27:56 -0400
+X-UUID: 0910c9081d414f32855ce253ad23b823-20190416
+X-UUID: 0910c9081d414f32855ce253ad23b823-20190416
 Received: from mtkcas06.mediatek.inc [(172.21.101.30)] by mailgw02.mediatek.com
         (envelope-from <stu.hsieh@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 406228047; Tue, 16 Apr 2019 17:27:48 +0800
+        with ESMTP id 2101077926; Tue, 16 Apr 2019 17:27:48 +0800
 Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
  mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
  15.0.1395.4; Tue, 16 Apr 2019 17:27:47 +0800
@@ -42,9 +42,9 @@ CC:     Mark Rutland <mark.rutland@arm.com>,
         <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>
-Subject: [PATCH v2 05/15] [media] mtk-mipicsi: get the w/h/bytepwerline for mtk_mipicsi
-Date:   Tue, 16 Apr 2019 17:27:33 +0800
-Message-ID: <1555406863-18069-6-git-send-email-stu.hsieh@mediatek.com>
+Subject: [PATCH v2 04/15] [media] mtk-mipicsi: add color format support for mt2712
+Date:   Tue, 16 Apr 2019 17:27:32 +0800
+Message-ID: <1555406863-18069-5-git-send-email-stu.hsieh@mediatek.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1555406863-18069-1-git-send-email-stu.hsieh@mediatek.com>
 References: <1555406863-18069-1-git-send-email-stu.hsieh@mediatek.com>
@@ -56,84 +56,51 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch get the w/h/bytepwerline to save in mtk_mipicsi.
+This patch add color format support for mt2712
 
 Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
 ---
- .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 39 +++++++++++++++++++
- 1 file changed, 39 insertions(+)
+ .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 20 +++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
 diff --git a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-index 16f6bc480f4e..10782fccca79 100644
+index ec4f6b503b32..16f6bc480f4e 100644
 --- a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
 +++ b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-@@ -99,6 +99,9 @@ struct mtk_mipicsi_dev {
- 	u32 id;
- 	int clk_num;
- 	struct clk		*clk[MIPICSI_CLK];
-+	u32 width;
-+	u32 height;
-+	u32 bytesperline;
- };
+@@ -138,6 +138,20 @@ static void mtk_mipicsi_remove_device(struct soc_camera_device *icd)
+ 	(void)pm_runtime_put_sync(icd->parent);
+ }
  
- #define MTK_MIPICSI_BUS_PARAM (V4L2_MBUS_MASTER |	\
-@@ -110,13 +113,36 @@ struct mtk_mipicsi_dev {
- 		V4L2_MBUS_PCLK_SAMPLE_FALLING |	\
- 		V4L2_MBUS_DATA_ACTIVE_HIGH)
- 
-+static u32 get_bytesperline(const u32 fmt, const u32 width)
++static bool is_supported(const u32 pixformat)
 +{
-+	u32 bytesperline = 0;
-+
-+	switch (fmt) {
-+	case MEDIA_BUS_FMT_UYVY8_2X8:
-+	case MEDIA_BUS_FMT_VYUY8_2X8:
-+	case MEDIA_BUS_FMT_YUYV8_2X8:
-+	case MEDIA_BUS_FMT_YVYU8_2X8:
-+		bytesperline = width * 2U;
-+		break;
-+	default:
-+		break;
++	switch (pixformat) {
++	/* YUV422 */
++	case V4L2_PIX_FMT_YUYV:
++	case V4L2_PIX_FMT_UYVY:
++	case V4L2_PIX_FMT_YVYU:
++	case V4L2_PIX_FMT_VYUY:
++		return true;
 +	}
 +
-+	return bytesperline;
++	return false;
 +}
 +
- static int mtk_mipicsi_add_device(struct soc_camera_device *icd)
+ static int mtk_mipicsi_set_fmt(struct soc_camera_device *icd,
+ 				struct v4l2_format *f)
  {
-+	struct soc_camera_host *ici = to_soc_camera_host(icd->parent);
-+	struct mtk_mipicsi_dev *mipicsi = ici->priv;
- 	struct v4l2_subdev *sd = soc_camera_to_subdev(icd);
- 	struct v4l2_subdev_format format = {
- 		.which = V4L2_SUBDEV_FORMAT_ACTIVE,
- 	};
- 	int ret;
-+	u32 width;
-+	u32 height;
-+	u32 fmt;
+@@ -153,6 +167,12 @@ static int mtk_mipicsi_set_fmt(struct soc_camera_device *icd,
+ 	struct v4l2_mbus_framefmt *mf = &format.format;
+ 	int ret = 0;
  
- 	/* Get width/height info from subdev. Then use them to set register */
- 	ret = v4l2_subdev_call(sd, pad, get_fmt, NULL, &format);
-@@ -125,6 +151,19 @@ static int mtk_mipicsi_add_device(struct soc_camera_device *icd)
- 		return ret;
- 	}
- 
-+	width = format.format.width;
-+	height = format.format.height;
-+	fmt = format.format.code;
-+	mipicsi->bytesperline = get_bytesperline(fmt, width);
-+	if ((width == 0U) || (height == 0U) || (mipicsi->bytesperline == 0U)) {
-+		dev_err(icd->parent, "invalid sub device width/height/bytesperline %d/%d/%d\n",
-+			width, height, mipicsi->bytesperline);
-+		return -EINVAL;
++	if (!is_supported(pix->pixelformat)) {
++		dev_err(dev, "Format %x not support. set V4L2_PIX_FMT_YUYV as default\n",
++			pix->pixelformat);
++		pix->pixelformat = V4L2_PIX_FMT_YUYV;
 +	}
 +
-+	mipicsi->width = width;
-+	mipicsi->height = height;
-+
- 	/*
- 	 * If power domain was closed before, it will be open.
- 	 * Then clock will be open and register will be set
+ 	xlate = soc_camera_xlate_by_fourcc(icd, pix->pixelformat);
+ 	if (xlate == NULL) {
+ 		dev_err(dev, "Format 0x%x not found\n", pix->pixelformat);
 -- 
 2.18.0
 
