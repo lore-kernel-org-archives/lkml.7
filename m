@@ -6,70 +6,65 @@ X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF4BAC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:07:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC214C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:09:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5B8E204FD
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:07:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A057F204FD
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:09:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729482AbfDPPH5 (ORCPT
+        id S1729629AbfDPPJA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 11:07:57 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:42826 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1725796AbfDPPH5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 11:07:57 -0400
-Received: (qmail 5569 invoked by uid 2102); 16 Apr 2019 11:07:56 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 16 Apr 2019 11:07:56 -0400
-Date:   Tue, 16 Apr 2019 11:07:56 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     "zhuyan (M)" <zhuyan34@huawei.com>
-cc:     Greg KH <gregkh@linuxfoundation.org>,
-        "anton@enomsg.org" <anton@enomsg.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] usb:host: fix divide-by-zero in function fhci_queue_urb
-In-Reply-To: <c2bfec411cb742ec9aca66d278cca93f@huawei.com>
-Message-ID: <Pine.LNX.4.44L0.1904161102400.1605-100000@iolanthe.rowland.org>
+        Tue, 16 Apr 2019 11:09:00 -0400
+Received: from ms.lwn.net ([45.79.88.28]:39034 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725796AbfDPPJA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 11:09:00 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id 452DE738;
+        Tue, 16 Apr 2019 15:08:59 +0000 (UTC)
+Date:   Tue, 16 Apr 2019 09:08:58 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Tom Zanussi <tom.zanussi@linux.intel.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Masanari Iida <standby24x7@gmail.com>,
+        "Joel Fernandes (Google)" <joel@joelfernandes.org>
+Subject: Re: [PATCH] docs: trace: fix some Sphinx warnings
+Message-ID: <20190416090858.3cebacfe@lwn.net>
+In-Reply-To: <20190415183451.506a4b6a@gandalf.local.home>
+References: <466439c96cc753254dc0fab97902d3d12aaf1e6a.1555358399.git.mchehab+samsung@kernel.org>
+        <20190415183451.506a4b6a@gandalf.local.home>
+Organization: LWN.net
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Apr 2019, zhuyan (M) wrote:
+On Mon, 15 Apr 2019 18:34:51 -0400
+Steven Rostedt <rostedt@goodmis.org> wrote:
 
-> On Tue, 16 Apr 2019 at 11:45:45 +0200, Greg KH wrote:
-> > On Tue, Apr 09, 2019 at 10:37:12PM +0800, zhuyan wrote:
-> > > In function fhci_queue_urb, the divisor of expression 
-> > > (urb->transfer_buffer_length % usb_maxpacket(urb->dev, urb->pipe,
-> > > usb_pipeout(urb->pipe))) may be zero.
-> > 
-> > How can you hit that?
-> > 
-> > > When it is zero, unexpected results may occur, so it is necessary to 
-> > > ensure that the divisor is not zero.
-> > > 
-> > > Signed-off-by: zhuyan <zhuyan34@huawei.com>
-> > 
-> > I need a "Full" name here, not just a single name.  Whatever you use to sign documents is good.
-> > 
-> > thanks,
-> > 
-> > greg k-h
+> On Mon, 15 Apr 2019 17:00:05 -0300
+> Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
 > 
-> In function usb_maxpacket, when ep is NULL, its return value is 0.  
+> > There are some warnings produced when building trace. Fix them.
+> > 
+> > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>  
+> 
+> Acked-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> 
+> Jon,
+> 
+> Care to take this through your tree?
 
-fhci_queue_urb() shouldn't use urb->pipe to compute the maxpacket size 
-anyway.  It should use usb_endpoint_maxp(&urb->ep->desc).
+I've applied it, thanks.
 
-Alan Stern
-
-> Then, in function fhci_queue_urb, the divisor of expression  
-> (urb->transfer_buffer_length % usb_maxpacket(urb->dev, urb->pipe, usb_pipeout(urb->pipe))) 
-> is zero. It will lead to unpredictable results.
-
+jon
