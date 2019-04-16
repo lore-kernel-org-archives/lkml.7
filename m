@@ -2,109 +2,115 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12FB1C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:27:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA91EC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:31:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D72F320693
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:27:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bfjobO7B"
+	by mail.kernel.org (Postfix) with ESMTP id C61A320693
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:31:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729149AbfDPK1r (ORCPT
+        id S1728665AbfDPKbY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 06:27:47 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:33643 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727783AbfDPK1q (ORCPT
+        Tue, 16 Apr 2019 06:31:24 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:38671 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726905AbfDPKbY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 06:27:46 -0400
-Received: by mail-pl1-f193.google.com with SMTP id t16so10132521plo.0;
-        Tue, 16 Apr 2019 03:27:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=71Ay+/zwy6XGeLFqR6I9o/UAfQvlsfkRImmq55N6HYE=;
-        b=bfjobO7BODZtTTJtH8FQa62BBjBHo44LqIeIbe5f8evThlje9rN/z++qtiz6o9KIr7
-         Xs02giTpx7c2A/EWUDKTDwn3AabXjI/ewknVqNtPp74oseHuwYDAHT5seOwxpLuD0Lgj
-         vbhNPh+Ew0QQ4Tj+8rDdsxHSiUHgGcx9E7tZL8rviiYxOtyTKX/U0bpYJpTizLl4qx8T
-         M8AfU6cMKDD1GXLSsn+j2ksaow4BrTjw3bDtGqxwOIUqgjY4T1gvyILQf2RpiYyZE4iY
-         87JkSWInMHwYhm29X1sJR/iyeublZw9p+tAcsc1bfHxQGMgZowsSgKy0klbN/possTMz
-         ByIA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=71Ay+/zwy6XGeLFqR6I9o/UAfQvlsfkRImmq55N6HYE=;
-        b=kPJChGOf9mKlfbbefoxjui9PkP+I0b7oVJ7E8jkGfjNTApg7RzyxjjCaFlX5jZys89
-         Dmnk3TWQcNkuEBVbCYTdxUmAdsqFD7vW8m+F5lcb7/Ofi3itMVI9gTXGnL6WDgGrGy8R
-         d9tC5w17D6KAmQp3qegu1s8M0yzpbB4ZQRYcX4YJFKsS3l3BMa+YSg8DTB4OHcgF57BO
-         iWkPu4nJorq4Kiy1XGgAce+quUiF13Ktp7FVSS/cV+HVBYhrE6IRyVbqzGQYp6mdgvTY
-         HoJYq8FwT4XUOMevUZX1GUTUaqKvb0uzuMHx0ek3mEs8aKuOLpSEkutHE+00koGLfVzx
-         f6ew==
-X-Gm-Message-State: APjAAAUczXMyujVNYX/0X+xNK4YeqOWqN3qJn0K0Pz1+hyQgwYwX7XOk
-        lVNl3Cok6itnPv1Nb1nlbsnPC9vY
-X-Google-Smtp-Source: APXvYqzJG64MRiqfSOWxuaFtDytFRUFz5WhqBXJiT1XKDNs0hlrdOs0NmZ2iiYro0oQNl4dZj58Mxw==
-X-Received: by 2002:a17:902:6b03:: with SMTP id o3mr81520527plk.226.1555410465610;
-        Tue, 16 Apr 2019 03:27:45 -0700 (PDT)
-Received: from icarus ([2001:268:c1c2:6e92:c70:4af9:86e2:2])
-        by smtp.gmail.com with ESMTPSA id q11sm69363540pgs.94.2019.04.16.03.27.40
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 16 Apr 2019 03:27:45 -0700 (PDT)
-Date:   Tue, 16 Apr 2019 19:28:39 +0900
-From:   William Breathitt Gray <vilhelm.gray@gmail.com>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>
-Cc:     linux-watchdog@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Guenter Roeck <linux@roeck-us.net>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 05/16] watchdog: ebc-c384_wdt: drop warning after
- calling watchdog_init_timeout
-Message-ID: <20190416102839.GA6046@icarus>
-References: <20190416102515.12269-1-wsa+renesas@sang-engineering.com>
- <20190416102515.12269-6-wsa+renesas@sang-engineering.com>
+        Tue, 16 Apr 2019 06:31:24 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3GAV1Nt3408636
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 16 Apr 2019 03:31:01 -0700
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3GAV02M3408631;
+        Tue, 16 Apr 2019 03:31:00 -0700
+Date:   Tue, 16 Apr 2019 03:31:00 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Vitaly Kuznetsov <tipbot@zytor.com>
+Message-ID: <tip-ba696429d290690db967e5f49463df4b2c1314a4@git.kernel.org>
+Cc:     longli@microsoft.com, bp@alien8.de, kys@microsoft.com,
+        hpa@zytor.com, sthemmin@microsoft.com, peterz@infradead.org,
+        mingo@kernel.org, torvalds@linux-foundation.org,
+        linux-kernel@vger.kernel.org, sixiao@microsoft.com,
+        tglx@linutronix.de, sashal@kernel.org, haiyangz@microsoft.com,
+        vkuznets@redhat.com, Michael.H.Kelley@microsoft.com
+Reply-To: Michael.H.Kelley@microsoft.com, vkuznets@redhat.com,
+          haiyangz@microsoft.com, sashal@kernel.org, tglx@linutronix.de,
+          sixiao@microsoft.com, torvalds@linux-foundation.org,
+          linux-kernel@vger.kernel.org, peterz@infradead.org,
+          mingo@kernel.org, sthemmin@microsoft.com, hpa@zytor.com,
+          kys@microsoft.com, bp@alien8.de, longli@microsoft.com
+In-Reply-To: <20190403170309.4107-1-vkuznets@redhat.com>
+References: <20190403170309.4107-1-vkuznets@redhat.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/platform] x86/hyper-v: Implement EOI assist
+Git-Commit-ID: ba696429d290690db967e5f49463df4b2c1314a4
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
 Content-Disposition: inline
-In-Reply-To: <20190416102515.12269-6-wsa+renesas@sang-engineering.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 12:25:04PM +0200, Wolfram Sang wrote:
-> The core will print out details now.
-> 
-> Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> ---
->  drivers/watchdog/ebc-c384_wdt.c | 5 +----
->  1 file changed, 1 insertion(+), 4 deletions(-)
-> 
-> diff --git a/drivers/watchdog/ebc-c384_wdt.c b/drivers/watchdog/ebc-c384_wdt.c
-> index 4c4c8ce78021..c176f59fea28 100644
-> --- a/drivers/watchdog/ebc-c384_wdt.c
-> +++ b/drivers/watchdog/ebc-c384_wdt.c
-> @@ -117,10 +117,7 @@ static int ebc_c384_wdt_probe(struct device *dev, unsigned int id)
->  	wdd->max_timeout = WATCHDOG_MAX_TIMEOUT;
->  
->  	watchdog_set_nowayout(wdd, nowayout);
-> -
-> -	if (watchdog_init_timeout(wdd, timeout, dev))
-> -		dev_warn(dev, "Invalid timeout (%u seconds), using default (%u seconds)\n",
-> -			timeout, WATCHDOG_TIMEOUT);
-> +	watchdog_init_timeout(wdd, timeout, dev);
->  
->  	return devm_watchdog_register_device(dev, wdd);
->  }
-> -- 
-> 2.11.0
+Commit-ID:  ba696429d290690db967e5f49463df4b2c1314a4
+Gitweb:     https://git.kernel.org/tip/ba696429d290690db967e5f49463df4b2c1314a4
+Author:     Vitaly Kuznetsov <vkuznets@redhat.com>
+AuthorDate: Wed, 3 Apr 2019 19:03:09 +0200
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Tue, 16 Apr 2019 12:28:23 +0200
 
-Acked-by: William Breathitt Gray <vilhelm.gray@gmail.com>
+x86/hyper-v: Implement EOI assist
+
+Hyper-V TLFS suggests an optimization to avoid imminent VMExit on EOI:
+"The OS performs an EOI by atomically writing zero to the EOI Assist field
+of the virtual VP assist page and checking whether the "No EOI required"
+field was previously zero. If it was, the OS must write to the
+HV_X64_APIC_EOI MSR thereby triggering an intercept into the hypervisor."
+
+Implement the optimization in Linux.
+
+Tested-by: Long Li <longli@microsoft.com>
+Signed-off-by: Vitaly Kuznetsov <vkuznets@redhat.com>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Haiyang Zhang <haiyangz@microsoft.com>
+Cc: K. Y. Srinivasan <kys@microsoft.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Michael Kelley (EOSG) <Michael.H.Kelley@microsoft.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Sasha Levin <sashal@kernel.org>
+Cc: Simon Xiao <sixiao@microsoft.com>
+Cc: Stephen Hemminger <sthemmin@microsoft.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-hyperv@vger.kernel.org
+Link: http://lkml.kernel.org/r/20190403170309.4107-1-vkuznets@redhat.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/hyperv/hv_apic.c | 5 +++++
+ 1 file changed, 5 insertions(+)
+
+diff --git a/arch/x86/hyperv/hv_apic.c b/arch/x86/hyperv/hv_apic.c
+index 8eb6fbee8e13..5c056b8aebef 100644
+--- a/arch/x86/hyperv/hv_apic.c
++++ b/arch/x86/hyperv/hv_apic.c
+@@ -86,6 +86,11 @@ static void hv_apic_write(u32 reg, u32 val)
+ 
+ static void hv_apic_eoi_write(u32 reg, u32 val)
+ {
++	struct hv_vp_assist_page *hvp = hv_vp_assist_page[smp_processor_id()];
++
++	if (hvp && (xchg(&hvp->apic_assist, 0) & 0x1))
++		return;
++
+ 	wrmsr(HV_X64_MSR_EOI, val, 0);
+ }
+ 
