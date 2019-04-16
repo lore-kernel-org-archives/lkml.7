@@ -2,78 +2,93 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC543C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:36:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A166EC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:40:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 81A4420652
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:36:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6154D20652
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:40:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ttl2ml0j"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="bjNw7WrL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729044AbfDPJgk (ORCPT
+        id S1728620AbfDPJk1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 05:36:40 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:50180 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728748AbfDPJgh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 05:36:37 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=p6lz7Wbd96oL4yTRFGFSupuDTjAEPYWCuPOmnA8Ap9s=; b=ttl2ml0jYeWFr+XJeaHxjn6jP
-        2S8sUaSKZt7msTHXpYjlOanLT2cCo0rPhZGpgoByzVlTb9tay2hgM1aKnfSWDoAyqiPCy7FLSEfsS
-        0YmAD8t1jZuqM7sr5oFwyLzcK7rGpDUL72XrRyaFDF82WVnDfMddsXBMXmyhO7rYaG1NvqQQw8wmy
-        dPoR3KQlkatoey6v3k+AEgfH8vVsYB+gaxnari/JfVMnVXzmfYrY6T1WsbB4XY3Z1kcU1ZlpDHOk6
-        Fbow8dQLdKgf2AULri5prz8sJ6v4nZY4TfWaReqJkNWPwHiQfxE1RQZszQfBH+NErzP0oLzr8Pb+K
-        twXcrgGjg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hGKW3-0001ry-Ll; Tue, 16 Apr 2019 09:36:36 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2F1ED29B5EFA0; Tue, 16 Apr 2019 11:36:34 +0200 (CEST)
-Date:   Tue, 16 Apr 2019 11:36:34 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     bigeasy@linutronix.de, hpa@zytor.com, mingo@kernel.org,
-        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        tglx@linutronix.de, john.ogness@linutronix.de
-Cc:     linux-tip-commits@vger.kernel.org
-Subject: Re: [tip:sched/core] sched/core: Document that RT task priorities
- are 1...99
-Message-ID: <20190416093634.GS11158@hirez.programming.kicks-ass.net>
-References: <20190403210821.10916-1-bigeasy@linutronix.de>
- <tip-37a8f8590f307db8f8cfa62dfd82b3fc0978607c@git.kernel.org>
+        Tue, 16 Apr 2019 05:40:27 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:45886 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726702AbfDPJk1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 05:40:27 -0400
+Received: from zn.tnic (p200300EC2F0D6900D0FA583685BBD9D6.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:6900:d0fa:5836:85bb:d9d6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1D30C1EC030F;
+        Tue, 16 Apr 2019 11:40:25 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1555407625;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=f8up/2b93O/sh2BiKrHbGXEHljq83o9oPq4lXtZEX5c=;
+        b=bjNw7WrLN/qbMbOQ8bmAtnmQFu6+cn8qLYv7REb7nI6lVT9LlnDXM4voa3tS5Y0edWsHdd
+        J2SiEs8NEsJztAWL8HdbAin0eztRe3GR6I1bf6zgLguFMF25ukKxutUgH9+uoVvDNdBCC/
+        sz2fbCjr04iG8jn5UHWhZo4FwSCTbls=
+Date:   Tue, 16 Apr 2019 11:40:25 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Junichi Nomura <j-nomura@ce.jp.nec.com>
+Cc:     Dave Young <dyoung@redhat.com>,
+        Chao Fan <fanc.fnst@cn.fujitsu.com>,
+        Baoquan He <bhe@redhat.com>, Kairui Song <kasong@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4] x86/boot: Use efi_setup_data for searching RSDP on
+ kexec-ed kernel
+Message-ID: <20190416094024.GE27892@zn.tnic>
+References: <e88fda9c-bd5a-d263-cd8a-380828dd6a93@ce.jp.nec.com>
+ <C54C5A30-62D9-45C4-8036-88D255FD92A1@alien8.de>
+ <20190411125822.GE30080@zn.tnic>
+ <20190412025416.GA11070@jeru.linux.bs1.fc.nec.co.jp>
+ <20190412084956.GC19808@zn.tnic>
+ <20190412133528.GD19808@zn.tnic>
+ <cc2c1dbe-4fb3-fb7d-0540-c04734fc15cb@ce.jp.nec.com>
+ <20190415090717.GA29317@zn.tnic>
+ <20190415102525.GB29317@zn.tnic>
+ <23309b73-d135-a207-564b-6003cee39184@ce.jp.nec.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
-In-Reply-To: <tip-37a8f8590f307db8f8cfa62dfd82b3fc0978607c@git.kernel.org>
+In-Reply-To: <23309b73-d135-a207-564b-6003cee39184@ce.jp.nec.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 01:13:11AM -0700, tip-bot for Sebastian Andrzej Siewior wrote:
-> Commit-ID:  37a8f8590f307db8f8cfa62dfd82b3fc0978607c
-> Gitweb:     https://git.kernel.org/tip/37a8f8590f307db8f8cfa62dfd82b3fc0978607c
-> Author:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-> AuthorDate: Wed, 3 Apr 2019 23:08:21 +0200
-> Committer:  Ingo Molnar <mingo@kernel.org>
-> CommitDate: Tue, 16 Apr 2019 10:06:08 +0200
-> 
-> sched/core: Document that RT task priorities are 1...99
-> 
-> John identified three files which claim that RT task priorities start at
-> zero. As far as I understand, 0 is used for DL and has nothing to do
-> wihich RT priorities as identified by the RT policy.
+On Mon, Apr 15, 2019 at 11:00:25PM +0000, Junichi Nomura wrote:
+> I thought we should hang here instead of return so that we
+> don't run into efi_get_rsdp_addr() in case of kexec.
 
-DL is -1, 0 is still very much FIFO/FF
+Hanging that early without debug output is not very friendly to
+debuggers, methinks.
 
+> > +	ei = &boot_params->efi_info;
+> > +	sig = (char *)&ei->efi_loader_signature;
+> > +	if (strncmp(sig, EFI64_LOADER_SIGNATURE, 4)) {
+> > +		debug_putstr("Wrong kexec EFI loader signature.\n");
+> > +		return 0;
+> > +	}
+> 
+> Same here.
+
+Ditto.
+
+You get the idea.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
