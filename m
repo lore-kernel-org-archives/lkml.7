@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8402DC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:55:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DADF3C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:55:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5936E2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:55:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB7682087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:55:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730681AbfDPRzn (ORCPT
+        id S1730688AbfDPRzv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 13:55:43 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:57674 "EHLO
+        Tue, 16 Apr 2019 13:55:51 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:57686 "EHLO
         ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730335AbfDPRxt (ORCPT
+        with ESMTP id S1728468AbfDPRxt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 16 Apr 2019 13:53:49 -0400
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hGSHD-0005ZH-AP; Tue, 16 Apr 2019 17:53:47 +0000
+        id 1hGSHD-0005Za-NF; Tue, 16 Apr 2019 17:53:47 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [RFC PATCH 48/62] ntfs: switch to ->free_inode()
-Date:   Tue, 16 Apr 2019 18:53:26 +0100
-Message-Id: <20190416175340.21068-48-viro@ZenIV.linux.org.uk>
+Subject: [RFC PATCH 51/62] btrfs: use ->free_inode()
+Date:   Tue, 16 Apr 2019 18:53:29 +0100
+Message-Id: <20190416175340.21068-51-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190416175340.21068-1-viro@ZenIV.linux.org.uk>
 References: <20190416174900.GT2217@ZenIV.linux.org.uk>
@@ -41,81 +41,72 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-move the synchronous stuff from ->destroy_inode() to ->evict_inode(),
-turn the RCU-delayed part into ->free_inode()
+a lot of stuff remains in ->destroy_inode()
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- fs/ntfs/inode.c | 17 ++++-------------
- fs/ntfs/inode.h |  2 +-
- fs/ntfs/super.c |  2 +-
- 3 files changed, 6 insertions(+), 15 deletions(-)
+ fs/btrfs/ctree.h | 1 +
+ fs/btrfs/inode.c | 7 ++-----
+ fs/btrfs/super.c | 1 +
+ 3 files changed, 4 insertions(+), 5 deletions(-)
 
-diff --git a/fs/ntfs/inode.c b/fs/ntfs/inode.c
-index bd3221cbdd95..fb1a2b49a5da 100644
---- a/fs/ntfs/inode.c
-+++ b/fs/ntfs/inode.c
-@@ -332,23 +332,11 @@ struct inode *ntfs_alloc_big_inode(struct super_block *sb)
- 	return NULL;
+diff --git a/fs/btrfs/ctree.h b/fs/btrfs/ctree.h
+index b3642367a595..5260a9263d73 100644
+--- a/fs/btrfs/ctree.h
++++ b/fs/btrfs/ctree.h
+@@ -3267,6 +3267,7 @@ void btrfs_evict_inode(struct inode *inode);
+ int btrfs_write_inode(struct inode *inode, struct writeback_control *wbc);
+ struct inode *btrfs_alloc_inode(struct super_block *sb);
+ void btrfs_destroy_inode(struct inode *inode);
++void btrfs_free_inode(struct inode *inode);
+ int btrfs_drop_inode(struct inode *inode);
+ int __init btrfs_init_cachep(void);
+ void __cold btrfs_destroy_cachep(void);
+diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+index 82fdda8ff5ab..aeb31c2dc14e 100644
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -9206,9 +9206,8 @@ void btrfs_test_destroy_inode(struct inode *inode)
  }
+ #endif
  
--static void ntfs_i_callback(struct rcu_head *head)
-+void ntfs_free_big_inode(struct inode *inode)
+-static void btrfs_i_callback(struct rcu_head *head)
++void btrfs_free_inode(struct inode *inode)
  {
 -	struct inode *inode = container_of(head, struct inode, i_rcu);
- 	kmem_cache_free(ntfs_big_inode_cache, NTFS_I(inode));
+ 	kmem_cache_free(btrfs_inode_cachep, BTRFS_I(inode));
  }
  
--void ntfs_destroy_big_inode(struct inode *inode)
--{
--	ntfs_inode *ni = NTFS_I(inode);
--
--	ntfs_debug("Entering.");
--	BUG_ON(ni->page);
--	if (!atomic_dec_and_test(&ni->count))
--		BUG();
--	call_rcu(&inode->i_rcu, ntfs_i_callback);
--}
--
- static inline ntfs_inode *ntfs_alloc_extent_inode(void)
- {
- 	ntfs_inode *ni;
-@@ -2287,6 +2275,9 @@ void ntfs_evict_big_inode(struct inode *vi)
- 			ni->ext.base_ntfs_ino = NULL;
- 		}
- 	}
-+	BUG_ON(ni->page);
-+	if (!atomic_dec_and_test(&ni->count))
-+		BUG();
- 	return;
+@@ -9234,7 +9233,7 @@ void btrfs_destroy_inode(struct inode *inode)
+ 	 * created.
+ 	 */
+ 	if (!root)
+-		goto free;
++		return;
+ 
+ 	while (1) {
+ 		ordered = btrfs_lookup_first_ordered_extent(inode, (u64)-1);
+@@ -9252,8 +9251,6 @@ void btrfs_destroy_inode(struct inode *inode)
+ 	btrfs_qgroup_check_reserved_leak(inode);
+ 	inode_tree_del(inode);
+ 	btrfs_drop_extent_cache(BTRFS_I(inode), 0, (u64)-1, 0);
+-free:
+-	call_rcu(&inode->i_rcu, btrfs_i_callback);
  }
  
-diff --git a/fs/ntfs/inode.h b/fs/ntfs/inode.h
-index b3c3469de6cb..58c8fd2948d3 100644
---- a/fs/ntfs/inode.h
-+++ b/fs/ntfs/inode.h
-@@ -278,7 +278,7 @@ extern struct inode *ntfs_index_iget(struct inode *base_vi, ntfschar *name,
- 		u32 name_len);
- 
- extern struct inode *ntfs_alloc_big_inode(struct super_block *sb);
--extern void ntfs_destroy_big_inode(struct inode *inode);
-+extern void ntfs_free_big_inode(struct inode *inode);
- extern void ntfs_evict_big_inode(struct inode *vi);
- 
- extern void __ntfs_init_inode(struct super_block *sb, ntfs_inode *ni);
-diff --git a/fs/ntfs/super.c b/fs/ntfs/super.c
-index bb7159f697f2..887ea8b3b000 100644
---- a/fs/ntfs/super.c
-+++ b/fs/ntfs/super.c
-@@ -2676,7 +2676,7 @@ static int ntfs_write_inode(struct inode *vi, struct writeback_control *wbc)
-  */
- static const struct super_operations ntfs_sops = {
- 	.alloc_inode	= ntfs_alloc_big_inode,	  /* VFS: Allocate new inode. */
--	.destroy_inode	= ntfs_destroy_big_inode, /* VFS: Deallocate inode. */
-+	.free_inode	= ntfs_free_big_inode, /* VFS: Deallocate inode. */
- #ifdef NTFS_RW
- 	.write_inode	= ntfs_write_inode,	/* VFS: Write dirty inode to
- 						   disk. */
+ int btrfs_drop_inode(struct inode *inode)
+diff --git a/fs/btrfs/super.c b/fs/btrfs/super.c
+index 120e4340792a..236f812091a3 100644
+--- a/fs/btrfs/super.c
++++ b/fs/btrfs/super.c
+@@ -2298,6 +2298,7 @@ static const struct super_operations btrfs_super_ops = {
+ 	.show_devname	= btrfs_show_devname,
+ 	.alloc_inode	= btrfs_alloc_inode,
+ 	.destroy_inode	= btrfs_destroy_inode,
++	.free_inode	= btrfs_free_inode,
+ 	.statfs		= btrfs_statfs,
+ 	.remount_fs	= btrfs_remount,
+ 	.freeze_fs	= btrfs_freeze,
 -- 
 2.11.0
 
