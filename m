@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C271FC282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:24:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC245C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:24:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 95BFC20880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:24:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B36902087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:24:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="IA4PRQ9y"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OLB0j0ha"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730226AbfDPSYX (ORCPT
+        id S1730253AbfDPSY0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 14:24:23 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44820 "EHLO
+        Tue, 16 Apr 2019 14:24:26 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44826 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730173AbfDPSYW (ORCPT
+        with ESMTP id S1728839AbfDPSYZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 14:24:22 -0400
+        Tue, 16 Apr 2019 14:24:25 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=sthWR51Wk1+6wSetYhsXxusjcoDDbiMV15mbRBcTPPM=; b=IA4PRQ9y0pzhyiEKXPXJ2CaUlA
-        V+ZxH5un+zAZJcf22YYiN0PeoZRS0HRRjb5GWRaQIHC/FgGwpvbwqQpGcf+Aqf+DdDpHisiQMO50D
-        QAKxo9t/1Vq7lj0wxoGbZXtEXKyEURnKEXBjgXYARPVBt2VtD47r9yjuCMw//D8pnUdnVpZw+WIF3
-        /JL+DwyRzeTuc9kbuKpBITF5yEQf8QJNg3Eq6Ukjym1H9Sd5E7re/SKJhWt4PX+YOglKYdJ1AdpPB
-        ffE7VPlCBiia6ZDG32eZyVgFhxMFYTE6lkpOrLIJSu2LeRnY2mELvBLj9mzAwCLZzyT0a4UGId1MR
-        ED+a7Q+Q==;
+        bh=oGWIvDWHpGEpQusWH5QfN5rD9gp1ljz+CdOv8bdUgOQ=; b=OLB0j0haRCPUeKqKcdzfuXIT4t
+        Vg0QVxaMFc1OQJU9k2sJIvYHHboNN4N+g8y/PqHHMicOt+loh9nyIyHHFdyr+KYyh02XHR9YS7tdn
+        WUC5p2Xwo5j/lt4EJ0/U/J7cpcIogSq2Kq3TMMkniqWpZN3HsD6oK5SUspX9vmMs+4IIG8MlHGKNo
+        mWFG/Ok+2WjNm29o54AAap5SgHxmQhCdRs9Z+a5FdaXLxM745FnbW8gS95vP2aN4S94uULDNsXSDi
+        MIWLSF/CqMVNLPqFkA9SYm3FW8Nw6S0ovuWrfnwMAAkK189vF3yxVCeIZ4PcrlohpBtvkbIAXMmnr
+        V/t1CDLQ==;
 Received: from 213-225-15-255.nat.highway.a1.net ([213.225.15.255] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hGSkn-00076a-GX; Tue, 16 Apr 2019 18:24:21 +0000
+        id 1hGSkq-00076w-5B; Tue, 16 Apr 2019 18:24:24 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     "David S. Miller" <davem@davemloft.net>
 Cc:     Guenter Roeck <linux@roeck-us.net>, sparclinux@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 3/9] sparc/iommu: merge iommu_release_one and sbus_iommu_unmap_page
-Date:   Tue, 16 Apr 2019 20:23:41 +0200
-Message-Id: <20190416182347.18441-4-hch@lst.de>
+Subject: [PATCH 4/9] sparc/iommu: create a common helper for map_sg
+Date:   Tue, 16 Apr 2019 20:23:42 +0200
+Message-Id: <20190416182347.18441-5-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190416182347.18441-1-hch@lst.de>
 References: <20190416182347.18441-1-hch@lst.de>
@@ -56,57 +56,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There is only one caller of iommu_release_one left, so merge it into
-that one to clean things up a bit.
+Share the code for the global and per-page flush map_sg loops using a
+simple bool parameter to disable the per-page flush for the former
+variant.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Reported-by: Guenter Roeck <linux@roeck-us.net>
 ---
- arch/sparc/mm/iommu.c | 21 +++++++--------------
- 1 file changed, 7 insertions(+), 14 deletions(-)
+ arch/sparc/mm/iommu.c | 37 +++++++++++++++++--------------------
+ 1 file changed, 17 insertions(+), 20 deletions(-)
 
 diff --git a/arch/sparc/mm/iommu.c b/arch/sparc/mm/iommu.c
-index f47a6ce0acaa..7cb9ddda7531 100644
+index 7cb9ddda7531..f90d943a3a27 100644
 --- a/arch/sparc/mm/iommu.c
 +++ b/arch/sparc/mm/iommu.c
-@@ -291,14 +291,17 @@ static int sbus_iommu_map_sg_pflush(struct device *dev, struct scatterlist *sgl,
+@@ -241,25 +241,9 @@ static dma_addr_t sbus_iommu_map_page_pflush(struct device *dev,
+ 	return __sbus_iommu_map_page(dev, page, offset, len);
+ }
+ 
+-static int sbus_iommu_map_sg_gflush(struct device *dev, struct scatterlist *sgl,
+-		int nents, enum dma_data_direction dir, unsigned long attrs)
+-{
+-	struct scatterlist *sg;
+-	int i, n;
+-
+-	flush_page_for_dma(0);
+-
+-	for_each_sg(sgl, sg, nents, i) {
+-		n = (sg->length + sg->offset + PAGE_SIZE-1) >> PAGE_SHIFT;
+-		sg->dma_address = iommu_get_one(dev, sg_page(sg), n) + sg->offset;
+-		sg->dma_length = sg->length;
+-	}
+-
+-	return nents;
+-}
+-
+-static int sbus_iommu_map_sg_pflush(struct device *dev, struct scatterlist *sgl,
+-		int nents, enum dma_data_direction dir, unsigned long attrs)
++static int __sbus_iommu_map_sg(struct device *dev, struct scatterlist *sgl,
++		int nents, enum dma_data_direction dir, unsigned long attrs,
++		bool per_page_flush)
+ {
+ 	unsigned long page, oldpage = 0;
+ 	struct scatterlist *sg;
+@@ -273,7 +257,7 @@ static int sbus_iommu_map_sg_pflush(struct device *dev, struct scatterlist *sgl,
+ 		 * XXX Is this a good assumption?
+ 		 * XXX What if someone else unmaps it here and races us?
+ 		 */
+-		if (!PageHighMem(sg_page(sg))) {
++		if (per_page_flush && !PageHighMem(sg_page(sg))) {
+ 			page = (unsigned long)page_address(sg_page(sg));
+ 			for (i = 0; i < n; i++) {
+ 				if (page != oldpage) {	/* Already flushed? */
+@@ -291,6 +275,19 @@ static int sbus_iommu_map_sg_pflush(struct device *dev, struct scatterlist *sgl,
  	return nents;
  }
  
--static void iommu_release_one(struct device *dev, u32 busa, int npages)
-+static void sbus_iommu_unmap_page(struct device *dev, dma_addr_t dma_addr,
-+		size_t len, enum dma_data_direction dir, unsigned long attrs)
- {
- 	struct iommu_struct *iommu = dev->archdata.iommu;
--	int ioptex;
--	int i;
-+	unsigned int busa = dma_addr & PAGE_MASK;
-+	unsigned long off = dma_addr & ~PAGE_MASK;
-+	unsigned int npages = (off + len + PAGE_SIZE-1) >> PAGE_SHIFT;
-+	unsigned int ioptex = (busa - iommu->start) >> PAGE_SHIFT;
-+	unsigned int i;
- 
- 	BUG_ON(busa < iommu->start);
--	ioptex = (busa - iommu->start) >> PAGE_SHIFT;
- 	for (i = 0; i < npages; i++) {
- 		iopte_val(iommu->page_table[ioptex + i]) = 0;
- 		iommu_invalidate_page(iommu->regs, busa);
-@@ -307,16 +310,6 @@ static void iommu_release_one(struct device *dev, u32 busa, int npages)
- 	bit_map_clear(&iommu->usemap, ioptex, npages);
- }
- 
--static void sbus_iommu_unmap_page(struct device *dev, dma_addr_t dma_addr,
--		size_t len, enum dma_data_direction dir, unsigned long attrs)
--{
--	unsigned long off = dma_addr & ~PAGE_MASK;
--	int npages;
--
--	npages = (off + len + PAGE_SIZE-1) >> PAGE_SHIFT;
--	iommu_release_one(dev, dma_addr & PAGE_MASK, npages);
--}
--
- static void sbus_iommu_unmap_sg(struct device *dev, struct scatterlist *sgl,
- 		int nents, enum dma_data_direction dir, unsigned long attrs)
++static int sbus_iommu_map_sg_gflush(struct device *dev, struct scatterlist *sgl,
++		int nents, enum dma_data_direction dir, unsigned long attrs)
++{
++	flush_page_for_dma(0);
++	return __sbus_iommu_map_sg(dev, sgl, nents, dir, attrs, false);
++}
++
++static int sbus_iommu_map_sg_pflush(struct device *dev, struct scatterlist *sgl,
++		int nents, enum dma_data_direction dir, unsigned long attrs)
++{
++	return __sbus_iommu_map_sg(dev, sgl, nents, dir, attrs, true);
++}
++
+ static void sbus_iommu_unmap_page(struct device *dev, dma_addr_t dma_addr,
+ 		size_t len, enum dma_data_direction dir, unsigned long attrs)
  {
 -- 
 2.20.1
