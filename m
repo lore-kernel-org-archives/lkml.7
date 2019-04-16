@@ -2,188 +2,129 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A034FC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:52:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 104DAC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:53:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 772622073F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:52:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D09392073F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:53:20 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555401200;
+	bh=eQCS9OI+Bp7Wb7eoXbJCTx3kmFFYpndKv4AGrQ4GKak=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jVLih5PCAd/oNXziUbzzDOuVDnPonlvZMYhmzJMo6KgFWiTwm6jxJtMczZcFY/eib
+	 hc/IbjFdIM+OBS5jh8ASJfXM7uKdFr+TvqJhd8/BqXiYsseBNniCK+61mf98sQcAo7
+	 XsdSBNZ5aewXnHVuHrUuani5GZA0Hdj+bfyCd/h0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728627AbfDPHwh (ORCPT
+        id S1728643AbfDPHxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 03:52:37 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44524 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1727856AbfDPHwg (ORCPT
+        Tue, 16 Apr 2019 03:53:19 -0400
+Received: from mail-wr1-f50.google.com ([209.85.221.50]:32991 "EHLO
+        mail-wr1-f50.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726837AbfDPHxT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 03:52:36 -0400
-Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3G7iYVh010585
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 03:52:34 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rw8xs59wm-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 03:52:34 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Tue, 16 Apr 2019 08:52:32 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 16 Apr 2019 08:52:29 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3G7qRcN31457382
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 Apr 2019 07:52:27 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8FAE8A4053;
-        Tue, 16 Apr 2019 07:52:27 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EC35EA404D;
-        Tue, 16 Apr 2019 07:52:26 +0000 (GMT)
-Received: from [9.152.222.226] (unknown [9.152.222.226])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 16 Apr 2019 07:52:26 +0000 (GMT)
-Reply-To: pmorel@linux.ibm.com
-Subject: Re: [PATCH 1/7] s390: zcrypt: driver callback to indicate resource in
- use
-To:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
-        frankja@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com
-References: <1555016604-2008-1-git-send-email-akrowiak@linux.ibm.com>
- <1555016604-2008-2-git-send-email-akrowiak@linux.ibm.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Date:   Tue, 16 Apr 2019 09:52:26 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 16 Apr 2019 03:53:19 -0400
+Received: by mail-wr1-f50.google.com with SMTP id q1so25614990wrp.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 00:53:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=7AtvdLQ8r/r2oUMJZEOAWKWVBTL+hHZQKqbS/QA8PKA=;
+        b=sVPTdWijV9y0T8kjYNRPvvanhGy+KW3GTbMANtMgn+jqH6+tmGDQPuBcV7xykd9IMW
+         oMb28AXVSdO9X5kA8TquApRd78w4JCPoNrZNEzngNPj5zwe3cAU+3vDwUKON0kHHiy2p
+         HGNQdeltXRqGW7u64uweVaLOdc6DfLX45w2PWpAYAk4Ce+Jf2k2KJRPF0zICzTCg+3I4
+         2IeaQ00D4+x7RXieP4w11xSvhikHrYB//lNJgMo0PNyYBk+A82BwoINecbmSiEaOe9aJ
+         Es1t8XYxZ/Pq6007ZT2oFKa4Wx3Uq9klxRHQdDdtOn2XWbrEJs8KYnp7BULrNPSxsa1m
+         olxw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=7AtvdLQ8r/r2oUMJZEOAWKWVBTL+hHZQKqbS/QA8PKA=;
+        b=K3/m9fHZdPUvRGHJwuUUUmMC0bw8v+sVQxuXNT6HzOEIT1P3IrT1PwYaj1J56B/UVO
+         lmG8/Od07vDRo4tNAt1CTbQvhjYsx6ydKtBncnpOrAmhQywUzx3w+C1ALPdl695A9JZy
+         N66OEyfYvA/LYjK6odchRULFIF0cKsE9hJEWkORYUhn6ZWlsJiXWinzN3jpJV9n713Bj
+         nKEhkPXe/LyMY4uJDqgvEugZpVdRTQtIIIcYR1nahnm3zCgkqAuc0yuzmtdeRLWLnWnn
+         QmQI5/hW3UReKOuSrO22nIeIwE374Kn6FrvWBXmIQWd2Jl2V/CvYBsuwzKDdw0XzP+5h
+         5qvQ==
+X-Gm-Message-State: APjAAAVJm/G50ro9ur/BESW4UR95acL6SHAjMM0+PVi+x4rfYwdlj0vx
+        liCs5b8cXrDfd7gTNtVzx/M=
+X-Google-Smtp-Source: APXvYqxE9YF8tZam55DRWyPmjvHwUT3FhBbZcvKC1Uhs1aw3dmtB6Eios1iXV/om5r+LMFxN/P91uQ==
+X-Received: by 2002:a5d:6a4f:: with SMTP id t15mr30590222wrw.156.1555401197040;
+        Tue, 16 Apr 2019 00:53:17 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id a6sm43174186wrp.49.2019.04.16.00.53.15
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 16 Apr 2019 00:53:16 -0700 (PDT)
+Date:   Tue, 16 Apr 2019 09:53:13 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+Subject: Re: [PATCH-tip v3 02/14] locking/rwsem: Make owner available even if
+ !CONFIG_RWSEM_SPIN_ON_OWNER
+Message-ID: <20190416075313.GA34215@gmail.com>
+References: <20190412070209.GC129493@gmail.com>
+ <20190412070545.GF11158@hirez.programming.kicks-ass.net>
+ <20190412070904.GA45214@gmail.com>
+ <b97eb5d5-1658-c405-e52e-2d20c4840948@redhat.com>
+ <33b0111b-fe0f-eefc-59f4-f06d84d9cacc@redhat.com>
+ <277e9c8e-8913-b251-4c98-dd2d4997d643@redhat.com>
+ <20190412164123.GA119547@gmail.com>
+ <4aefd2cd-f303-99ed-ada9-e7ba2ae9cd3c@redhat.com>
+ <00ce3ea9-0046-740f-6a6c-3b4aff2c3c6e@redhat.com>
+ <d012c68e-4c43-04af-3505-4c980e2d00a5@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <1555016604-2008-2-git-send-email-akrowiak@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19041607-0016-0000-0000-0000026F4A20
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19041607-0017-0000-0000-000032CB92F1
-Message-Id: <c575e772-59e2-9fed-5ade-24701d4f2b49@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-16_02:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904160054
+In-Reply-To: <d012c68e-4c43-04af-3505-4c980e2d00a5@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/04/2019 23:03, Tony Krowiak wrote:
-> Introduces a new driver callback to prevent a root user from unbinding
-> an AP queue from its device driver if the queue is in use. This prevents
-> a root user from inadvertently taking a queue away from a guest and
-> giving it to the host, or vice versa. The callback will be invoked
-> whenever a change to the AP bus's apmask or aqmask sysfs interfaces may
-> result in one or more AP queues being removed from its driver. If the
-> callback responds in the affirmative for any driver queried, the change
-> to the apmask or aqmask will be rejected with a device in use error.
+
+* Waiman Long <longman@redhat.com> wrote:
+
+> > It can be seen that a lot more readers got the lock via optimistic
+> > spinning.  One possibility is that reader optimistic spinning causes
+> > readers to spread out into more lock acquisition groups than without. The
+> > K3 results show that grouping more readers into one lock acquisition
+> > group help to improve performance for this microbenchmark. I will need
+> > to run more tests to find out the root cause of this regression. It is
+> > not an easy problem to solve.
 > 
-> For this patch, only non-default drivers will be queried. Currently,
-> there is only one non-default driver, the vfio_ap device driver. The
-> vfio_ap device driver manages AP queues passed through to one or more
-> guests and we don't want to unexpectedly take AP resources away from
-> guests which are most likely independently administered.
-> 
-> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
-> ---
->   drivers/s390/crypto/ap_bus.c | 138 +++++++++++++++++++++++++++++++++++++++++--
->   drivers/s390/crypto/ap_bus.h |   3 +
->   2 files changed, 135 insertions(+), 6 deletions(-)
-> 
-> diff --git a/drivers/s390/crypto/ap_bus.c b/drivers/s390/crypto/ap_bus.c
-> index 1546389d71db..66a5a9d9fae6 100644
-> --- a/drivers/s390/crypto/ap_bus.c
-> +++ b/drivers/s390/crypto/ap_bus.c
-> @@ -35,6 +35,7 @@
->   #include <linux/mod_devicetable.h>
->   #include <linux/debugfs.h>
->   #include <linux/ctype.h>
-> +#include <linux/module.h>
->   
->   #include "ap_bus.h"
->   #include "ap_debug.h"
-> @@ -980,9 +981,11 @@ int ap_parse_mask_str(const char *str,
->   	newmap = kmalloc(size, GFP_KERNEL);
->   	if (!newmap)
->   		return -ENOMEM;
-> -	if (mutex_lock_interruptible(lock)) {
-> -		kfree(newmap);
-> -		return -ERESTARTSYS;
-> +	if (lock) {
-> +		if (mutex_lock_interruptible(lock)) {
-> +			kfree(newmap);
-> +			return -ERESTARTSYS;
-> +		}
->   	}
->   
->   	if (*str == '+' || *str == '-') {
-> @@ -994,7 +997,10 @@ int ap_parse_mask_str(const char *str,
->   	}
->   	if (rc == 0)
->   		memcpy(bitmap, newmap, size);
-> -	mutex_unlock(lock);
-> +
-> +	if (lock)
-> +		mutex_unlock(lock);
-> +
->   	kfree(newmap);
->   	return rc;
->   }
-> @@ -1181,12 +1187,72 @@ static ssize_t apmask_show(struct bus_type *bus, char *buf)
->   	return rc;
->   }
->   
-> +static int __verify_card_reservations(struct device_driver *drv, void *data)
-> +{
-> +	int rc = 0;
-> +	struct ap_driver *ap_drv = to_ap_drv(drv);
-> +	unsigned long *newapm = (unsigned long *)data;
-> +
-> +	/*
-> +	 * If the reserved bits do not identify cards reserved for use by the
-> +	 * non-default driver, there is no need to verify the driver is using
-> +	 * the queues.
-> +	 */
-> +	if (ap_drv->flags & AP_DRIVER_FLAG_DEFAULT)
-> +		return 0;
+> Just an update on my will-it-scale regression investigation. I have
+> tried various ways to tune the rwsem code to get more performance out
+> from this benchmark. I got some minor improvements but nothing major. So
+> it looks like that there are some workloads that have performance hurted
+> by reader optimistic spinning and this benchmark is one of them. Now I
+> am testing an adaptive reader optimistic spinning disabling patch that
+> shows great promise as I was able to bring back a major portion of the
+> lost performance. I will try to make the patch more aggressive to see if
+> it can bring most of the lost performance back.
 
-I prefer you suppress this asymmetry with the assumption that the 
-"default driver" will not register a "in_use" callback.
+Thank you!
 
+I've applied your two latest patches to WIP.locking/core as well, to keep 
+it all tested and to see whether there's any other regressions. It's all 
+looking good so far in my dogfood testing.
 
-> +
-> +	/* Pin the driver's module code */
-> +	if (!try_module_get(drv->owner))
-> +		return 0;
-> +
-> +	if (ap_drv->in_use)
-> +		if (ap_drv->in_use(newapm, ap_perms.aqm))
-> +			rc = -EADDRINUSE;
-> +
-> +	module_put(drv->owner);
-> +
-> +	return rc;
-> +}
-> +
+Thanks,
 
--- 
-Pierre Morel
-Linux/KVM/QEMU in BÃ¶blingen - Germany
-
+	Ingo
