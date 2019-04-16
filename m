@@ -2,103 +2,134 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4D091C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:54:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 44C5DC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:54:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D304204EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:54:44 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="iReIt/iS"
+	by mail.kernel.org (Postfix) with ESMTP id 1D6102087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:54:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729855AbfDPPym (ORCPT
+        id S1729773AbfDPPyr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 11:54:42 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:34162 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727063AbfDPPyl (ORCPT
+        Tue, 16 Apr 2019 11:54:47 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:55427 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727063AbfDPPyq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 11:54:41 -0400
-Received: by mail-pf1-f195.google.com with SMTP id b3so10629789pfd.1;
-        Tue, 16 Apr 2019 08:54:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=X+kQOpGQoB0mHY+DaeDL24lqqbk2b3IZaG62Ox3ZM4U=;
-        b=iReIt/iSYCUQM7iP3b8le9JrXulcx1Ip+Dovv9g1K2+dLiuezPUGHaC+W6m4DZFla5
-         uAlJmcsGHBRxg+jpf19gera/lz2kAc7Ts5r2+LzCsTjt/5ZiX5fnQnQybJpv7p7jFzU2
-         rIznU4RxqQMvr/fPJ5aonF/K9pRexVRoQlGUzCoTZm6A5nvI7fByHJSCnqmsthG9n5/4
-         n2l40ETK3BLsQzb6U+9el+DTMjrWr6LmxoMDqvyty0DAr2U2B3o+EIYAVPPGTiwz1B7L
-         kkwGz+r63pKu3tr7/BmJstZTY7cgQM9ybAkPNHCiFh5wuDAmzP0W/mMXHR+QU7d1XLpm
-         xz7Q==
+        Tue, 16 Apr 2019 11:54:46 -0400
+Received: by mail-it1-f195.google.com with SMTP id y134so33792049itc.5;
+        Tue, 16 Apr 2019 08:54:45 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=X+kQOpGQoB0mHY+DaeDL24lqqbk2b3IZaG62Ox3ZM4U=;
-        b=UqmAbKcwUg0lt6P1SWR2g/FX0WnpJdZZ5AgFTeD+TPDQNz1jQBJcZjqehd5chMCdQW
-         fH/jaXuPwtrEQ3uCEINW/GqVi5oT4BrE3BMNV95x697DC5JXDo+GqO7vwLczw6FgFKuw
-         qOH8LYHLIjCRtGOaFQcfkL2XZ7esc1ZAzda0v9mX4325egHavQ0SN+c4MM5uCbyLbe/8
-         ZMKQSD1YcYzWea6WM6MFGY79nsDCFGm9BEnzGkWF88alRGDeVTDYY/Oqg3KYg9jx8ShN
-         Hxj/Vb9ToubNEK1ZYAi+/XTpvhLUsjNOd8vMBR/2dXT4iZKQ93xH8aUFHzp8bj2+TFr2
-         n4Lw==
-X-Gm-Message-State: APjAAAWgU93Z5AyXegvKvaxixEQMGvtQwUm7F2GnJfNPv23/pZyXv5Z0
-        s4SdC1MpxNwoYcrt21F8aKo=
-X-Google-Smtp-Source: APXvYqyhgMXHNoDdGqrIQaDWxNvdrFfJ7Db48ijWu3Ts6moK69mo+008a9MAEMItzt0Dj0AAWL0ndA==
-X-Received: by 2002:a65:6410:: with SMTP id a16mr64133469pgv.315.1555430080695;
-        Tue, 16 Apr 2019 08:54:40 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id w3sm101593169pfn.179.2019.04.16.08.54.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 08:54:39 -0700 (PDT)
-Date:   Tue, 16 Apr 2019 08:54:39 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Patrick Venture <venture@google.com>
-Cc:     robh+dt@kernel.org, mark.rutland@arm.com, trivial@kernel.org,
-        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/2] dt-bindings: Add isl68137 as a trivial device
-Message-ID: <20190416155439.GB8871@roeck-us.net>
-References: <20190416154147.125602-1-venture@google.com>
+        h=x-gm-message-state:mime-version:from:date:message-id:subject:to:cc;
+        bh=c2mOD6byB4CWn0ecgDDCpY49m/bQo1yaNH6qFccDId8=;
+        b=KrhFi+XthEXO8QBQf/ES+fzl2QjMRlpAszI1zWf1TgnTCszZ684/GxNzoSoHkzMutD
+         5nIyxDMZTcAnob2xX8H8p0Bu70ncmgs/VofZzeqiUnq8+BCEx/G2RvjlEboDV/3GgJm/
+         Wa7t3Fmyf1uZYIHxYlgR+vmubZa5WOq1sQTiByNBwBo5atydHL6KBTtbydb5Q1L/zDsW
+         8m1VVWRSsPqQU/3m2Ht6Hd0R06ehDhp7XhM2zXomP1NrOTzkSx4F0MOrPUCT8X8vT/Y8
+         Q7mR8jxcAIruZlKtGGh/bbIc8giOuFVMiSJvjTJmSPF7VGFp7GVbHYBRTEN8vbvxFe7X
+         OQ9w==
+X-Gm-Message-State: APjAAAVHPicWxnrqoQeq/sU8bNaihfUg3RIYeHLn+VYrRqQF40JdiHrg
+        5KnTmRqfiVOzZhMkOixmhI9pk9NZN2aBBuKPpE4=
+X-Google-Smtp-Source: APXvYqz2SB4xo8d+Vg52el11JGNW5UnUTM3cVCcceeaVa7Fv/abnC6j3J3eVTdluayNFGIt0MH7s6iIQoY9l37WjBVQ=
+X-Received: by 2002:a24:3c51:: with SMTP id m78mr27986523ita.119.1555430085417;
+ Tue, 16 Apr 2019 08:54:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190416154147.125602-1-venture@google.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+From:   Francis Deslauriers <francis.deslauriers@efficios.com>
+Date:   Tue, 16 Apr 2019 11:54:34 -0400
+Message-ID: <CADcCL0irokZ8Xp7S3eBV728qpL5yipwW+=2QvwiZrixqSdtBog@mail.gmail.com>
+Subject: Tracing Summit 2019: Announcement and Call for Proposals, August
+ 20th, 2019, San Diego, CA
+To:     diamon-discuss@lists.linuxfoundation.org,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-perf-users@vger.kernel.org,
+        linux-trace-devel@vger.kernel.org,
+        linux-trace-users@vger.kernel.org, linuxtools-dev@eclipse.org,
+        lttng-dev <lttng-dev@lists.lttng.org>, lwn@lwn.net,
+        tracecompass-dev@eclipse.org
+Cc:     Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        info@tracingsummit.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 08:41:47AM -0700, Patrick Venture wrote:
-> The isl68137 is a digital output 7-phrase configurable PWM controller
-> with an AVSBus interface from Intersil.
-> 
-> Signed-off-by: Patrick Venture <venture@google.com>
+Hi all,
 
-Acked-by: Guenter Roeck <linux@roeck-us.net>
+This is a Call for Proposals for the Tracing Summit 2019 [0] which
+will be held in San Diego, California, USA at the Hilton San Diego
+Bayfront, co-located with the Open Source Summit & Embedded Linux
+Conference North America 2019 [1] on August 20th, 2019.
 
-> ---
->  Documentation/devicetree/bindings/trivial-devices.yaml | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
-> index 92184ef0db2e..747fd3f689dc 100644
-> --- a/Documentation/devicetree/bindings/trivial-devices.yaml
-> +++ b/Documentation/devicetree/bindings/trivial-devices.yaml
-> @@ -104,6 +104,8 @@ properties:
->            - isil,isl29028
->              # Intersil ISL29030 Ambient Light and Proximity Sensor
->            - isil,isl29030
-> +            # Intersil ISL68137 Digital Output Configurable PWM Controller
-> +          - isil,isl68137
->              # 5 Bit Programmable, Pulse-Width Modulator
->            - maxim,ds1050
->              # Low-Power, 4-/12-Channel, 2-Wire Serial, 12-Bit ADCs
-> -- 
-> 2.21.0.392.gf8f6787159e-goog
-> 
+You can subscribe to our mailing list ot get the latest info on the event: [2]
+
+The Tracing Summit is single-day, single-track conference on the topic
+of tracing. The event focuses on the field of software and hardware
+tracing, gathering developers and end-users of tracing and trace
+analysis tools. The main goal of the Tracing Summit is to provide
+space for discussion between people of the various areas that benefit
+from tracing, namely parallel, distributed and/or real-time systems,
+as well as kernel development.
+
+We are welcoming 30 minute presentations from both end users and
+developers, on topics covering, but not limited to:
+-Investigation workflow of Real-Time, latency, and throughput issues,
+-Trace collection and extraction,
+-Trace filtering,
+-Trace aggregation,
+-Trace formats,
+-Tracing multi-core systems,
+-Trace abstraction,
+-Trace modeling,
+-Automated trace analysis (e.g. dependency analysis),
+-Tracing large clusters and distributed systems,
+-Hardware-level tracing (e.g. DSP, GPU, bare-metal),
+-Trace visualisation,
+-Interaction between debugging and tracing,
+-Tracing remote control,
+-Analysis of large trace datasets,
+-Cloud trace collection and analysis,
+-Integration between trace tools,
+-Live tracing & monitoring,
+-Programmable tracing (e.g. eBPF).
+
+Those can cover recently available technologies, ongoing work, and yet
+non-existing technologies (which are compellingly interesting to
+end-users). Please understand that this open forum is not the proper
+place to present sales or marketing pitches, nor technologies which
+are prevented from being freely used in open source.
+
+* Submit you talk today using this form: https://forms.gle/L6mR2ZN3Nt7bUxY98 *
+
+The submission deadline is July 1st 2019 at 23:59 EST.
+
+This year tickets are $100 and seating is limited to 100 people. To
+register, you can add the Tracing Summit as an addon to your Open
+Source Summit ticket [3] or use this link [4] to register solely for
+the Tracing Summit.
+
+The Tracing Summit is sponsored by EfficiOS. We are actively looking
+for sponsors to support the Tracing Summit. Contact us at
+info@tracingsummit.org.
+
+Please send any query about this conference to info@tracingsummit.org.
+
+This event is organized by Francis Deslauriers and Mathieu Desnoyers
+on the behalf of the Linux Foundation Diagnostic and Monitoring
+Workgroup [5].
+
+[0] : https://tracingsummit.org
+[1]: https://events.linuxfoundation.org/events/open-source-summit-north-america-2019
+[2]: http://eepurl.com/goakfv
+[3]: https://www.cvent.com/events/open-source-summit-embedded-linux-conference-north-america-2019/registration-0ed1330c38bd4845be29b91c9d2444ce.aspx?fqp=true
+[4]: https://www.cvent.com/events/tracing-summit-2019/registration-63351d06945a46d890b8e5a200dbc0fc.aspx?fqp=true
+[5]: https://diamon.org
+
+--
+Francis Deslauriers
+Computer Engineer
+EfficiOS inc.
