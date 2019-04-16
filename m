@@ -2,2079 +2,3244 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,LOTS_OF_MONEY,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3566C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:01:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1B396C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:01:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3529720656
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:01:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93CA520656
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:01:34 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555383683;
-	bh=Gny2mAzrcJJ/WO9FhVkH7D4SZMOUB6GYeRohbl3dHtw=;
+	s=default; t=1555383694;
+	bh=X7a+YxlbSDc1zfVp/FrV/zBOgMb08mdePyyqgqwAm9A=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=VTGPAbh6SPEeC37hg54i0Rr1WlMvtNIupzEyuX1yfxDG3IvBTgEb3k1hiFsiAUNrn
-	 rfnU8PF7S9ko/VRdaf5Nl6429Xd6xP03xfn9Iie6aX3f8H4TKJYJ+iQXghO7MqxgK8
-	 7+Zf48i8ndHhnSCoZEivGm/TcKr/0YtxxDxSj3Pg=
+	b=EMLqbHi0JVBXhUL/mw/IywMYHb17ziMJ0JGEC6i0vTVrftHNMXWpY5xvp0GWuPTdc
+	 iozrN1J5Q/ijJeomQO2YmzBro18v1CnekBMx1j4OiYX8umjaU3/fcBFFZADyBX2WVT
+	 pdZzzlYv8HJ+D6UoNVYF/EK5/3dtxSOEPEqSAGY8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726927AbfDPDBW (ORCPT
+        id S1728836AbfDPDBU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 23:01:22 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44056 "EHLO
+        Mon, 15 Apr 2019 23:01:20 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44076 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726748AbfDPC4c (ORCPT
+        with ESMTP id S1726761AbfDPC4c (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 15 Apr 2019 22:56:32 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
-        To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=0LVaIPv25qRN8N02KeqxSQjXvf9lSl6Mwr/xCE1Pkms=; b=vAAsKIBqBYYbZ2plaEJAWlAm3J
-        5fxu68+tclqJIAl+2Aj2WRS0nD8hKgUWzKDEBLU/xVa0NyO3LUEgB4R5weUwmLsEGCFdhAlHG+Tu1
-        /dDE1SQc7l2ETmvp7VbuvFqUanlDmLDZY/Wy8wRISuHO1EIOt48LnQ75ZpE2HmU0BiXnO94qL8r16
-        nGuXkaWTLjTeSoHXNl3PCn75CdqYzPj0jSomETEeC0zaWOp4vzrpovi4+dkLX8WDsnXNxXmo5JJS/
-        wjvaNcATUNcVhvGRxKLT29+H8IGNJsL+GEM52WYGDljnfbVvjZqWyNCRpgm524Dr5ysEKLGykuCh/
-        IsxzzLmg==;
+        bh=ZoZdA0oK6m8yyR2ic0jSeDxCigKd0Eo6aCUTBzz2luM=; b=S5IaQTUs5+i6dCqhpkmr0v3g6U
+        52hcyKjmg1kbBzrzsz4gxgiEw9duOMwKuUSBQRm3PhFF10EdrjFic8QwnS4wd1YFHU3a63UtZc0U2
+        w7Ksf0bW6hlw5wRE/PWQPIsd5nCFOFa3Rf5wqRnJNhWNrDN703xCSOrY9lEujgC/xVDTkIiOMbo/P
+        POpNTdeIR6oiSoxrYJkkjbCeH3Cd+DEfYoR2Gg2yc6Gu0gZ7OHnS3HQvpetqEiU4DMmVUjadu+Ude
+        pCQws5ODJdtKg8GR26xXWdQXdI364YFW7NVDo/lwbwAvtFlc6Mpu/9yzALMkz7Xuej11ePp99NVmR
+        ZnI+3DmA==;
 Received: from 177.205.118.176.dynamic.adsl.gvt.net.br ([177.205.118.176] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hGEGp-0007aP-Sq; Tue, 16 Apr 2019 02:56:29 +0000
+        id 1hGEGp-0007aR-T7; Tue, 16 Apr 2019 02:56:30 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hGEGm-0001l8-Ub; Mon, 15 Apr 2019 23:56:24 -0300
+        id 1hGEGn-0001lX-4g; Mon, 15 Apr 2019 23:56:25 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-arm-kernel@lists.infradead.org
-Subject: [PATCH 04/57] docs: arm64: convert documentation to ReST format
-Date:   Mon, 15 Apr 2019 23:55:29 -0300
-Message-Id: <28364c5fbae3e857d5d6b44c13b97b6d0d78e14d.1555382110.git.mchehab+samsung@kernel.org>
+        Alasdair Kergon <agk@redhat.com>,
+        Mike Snitzer <snitzer@redhat.com>, dm-devel@redhat.com
+Subject: [PATCH 10/57] docs: device-mapper: convert it to ReST format
+Date:   Mon, 15 Apr 2019 23:55:35 -0300
+Message-Id: <9dd3c4eca01489bd67ea6de88dfedef8b0e81901.1555382110.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1555382110.git.mchehab+samsung@kernel.org>
 References: <cover.1555382110.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The documentation is in pretty much ReST format. Just some
-small adjustments in order to fix tables and to make Sphinx
-to recognize certain format blocks are required.
+Convert the Device Mapper documentation to ReST.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/arm64/acpi_object_usage.txt     | 288 ++++++++++++------
- Documentation/arm64/arm-acpi.txt              | 153 +++++-----
- Documentation/arm64/booting.txt               |  91 ++++--
- Documentation/arm64/cpu-feature-registers.txt | 190 ++++++------
- Documentation/arm64/elf_hwcaps.txt            |  50 +--
- Documentation/arm64/hugetlbpage.txt           |   7 +-
- Documentation/arm64/legacy_instructions.txt   |  43 ++-
- Documentation/arm64/memory.txt                |  91 +++---
- .../arm64/pointer-authentication.txt          |   2 +
- Documentation/arm64/silicon-errata.txt        |  63 +++-
- Documentation/arm64/sve.txt                   |  10 +-
- Documentation/arm64/tagged-pointers.txt       |   6 +-
- arch/arm64/kernel/kexec_image.c               |   2 +-
- 13 files changed, 595 insertions(+), 401 deletions(-)
+ .../device-mapper/cache-policies.txt          |  24 +-
+ Documentation/device-mapper/cache.txt         | 206 +++++++++-------
+ Documentation/device-mapper/delay.txt         |  29 ++-
+ Documentation/device-mapper/dm-crypt.txt      |  57 +++--
+ Documentation/device-mapper/dm-flakey.txt     |  45 ++--
+ Documentation/device-mapper/dm-init.txt       |  75 +++---
+ Documentation/device-mapper/dm-integrity.txt  |  55 +++--
+ Documentation/device-mapper/dm-io.txt         |  14 +-
+ Documentation/device-mapper/dm-log.txt        |   5 +-
+ .../device-mapper/dm-queue-length.txt         |  25 +-
+ Documentation/device-mapper/dm-raid.txt       | 225 +++++++++++-------
+ .../device-mapper/dm-service-time.txt         |  68 +++---
+ Documentation/device-mapper/dm-uevent.txt     | 143 ++++++-----
+ Documentation/device-mapper/dm-zoned.txt      |  10 +-
+ Documentation/device-mapper/era.txt           |  36 +--
+ Documentation/device-mapper/kcopyd.txt        |  10 +-
+ Documentation/device-mapper/linear.txt        | 100 ++++----
+ Documentation/device-mapper/log-writes.txt    |  91 +++----
+ .../device-mapper/persistent-data.txt         |   4 +
+ Documentation/device-mapper/snapshot.txt      | 116 ++++-----
+ Documentation/device-mapper/statistics.txt    |  62 ++---
+ Documentation/device-mapper/striped.txt       |  68 +++---
+ Documentation/device-mapper/switch.txt        |  47 ++--
+ .../device-mapper/thin-provisioning.txt       |  68 ++++--
+ Documentation/device-mapper/unstriped.txt     | 111 +++++----
+ Documentation/device-mapper/verity.txt        |  20 +-
+ Documentation/device-mapper/writecache.txt    |  13 +-
+ Documentation/device-mapper/zero.txt          |  14 +-
+ 28 files changed, 1012 insertions(+), 729 deletions(-)
 
-diff --git a/Documentation/arm64/acpi_object_usage.txt b/Documentation/arm64/acpi_object_usage.txt
-index c77010c5c1f0..d51b69dc624d 100644
---- a/Documentation/arm64/acpi_object_usage.txt
-+++ b/Documentation/arm64/acpi_object_usage.txt
-@@ -1,5 +1,7 @@
-+===========
- ACPI Tables
-------------
-+===========
-+
- The expectations of individual ACPI tables are discussed in the list that
- follows.
- 
-@@ -11,54 +13,71 @@ outside of the UEFI Forum (see Section 5.2.6 of the specification).
- 
- For ACPI on arm64, tables also fall into the following categories:
- 
--       -- Required: DSDT, FADT, GTDT, MADT, MCFG, RSDP, SPCR, XSDT
-+       -  Required: DSDT, FADT, GTDT, MADT, MCFG, RSDP, SPCR, XSDT
- 
--       -- Recommended: BERT, EINJ, ERST, HEST, PCCT, SSDT
-+       -  Recommended: BERT, EINJ, ERST, HEST, PCCT, SSDT
- 
--       -- Optional: BGRT, CPEP, CSRT, DBG2, DRTM, ECDT, FACS, FPDT, IORT,
-+       -  Optional: BGRT, CPEP, CSRT, DBG2, DRTM, ECDT, FACS, FPDT, IORT,
-           MCHI, MPST, MSCT, NFIT, PMTT, RASF, SBST, SLIT, SPMI, SRAT, STAO,
- 	  TCPA, TPM2, UEFI, XENV
- 
--       -- Not supported: BOOT, DBGP, DMAR, ETDT, HPET, IBFT, IVRS, LPIT,
-+       -  Not supported: BOOT, DBGP, DMAR, ETDT, HPET, IBFT, IVRS, LPIT,
-           MSDM, OEMx, PSDT, RSDT, SLIC, WAET, WDAT, WDRT, WPBT
- 
-+====== ========================================================================
- Table  Usage for ARMv8 Linux
-------  ----------------------------------------------------------------
-+====== ========================================================================
- BERT   Section 18.3 (signature == "BERT")
--       == Boot Error Record Table ==
-+
-+       **Boot Error Record Table**
-+
-        Must be supplied if RAS support is provided by the platform.  It
-        is recommended this table be supplied.
- 
- BOOT   Signature Reserved (signature == "BOOT")
--       == simple BOOT flag table ==
-+
-+       **simple BOOT flag table**
-+
-        Microsoft only table, will not be supported.
- 
- BGRT   Section 5.2.22 (signature == "BGRT")
--       == Boot Graphics Resource Table ==
-+
-+       **Boot Graphics Resource Table**
-+
-        Optional, not currently supported, with no real use-case for an
-        ARM server.
- 
- CPEP   Section 5.2.18 (signature == "CPEP")
--       == Corrected Platform Error Polling table ==
-+
-+       **Corrected Platform Error Polling table**
-+
-        Optional, not currently supported, and not recommended until such
-        time as ARM-compatible hardware is available, and the specification
-        suitably modified.
- 
- CSRT   Signature Reserved (signature == "CSRT")
--       == Core System Resources Table ==
-+
-+       **Core System Resources Table**
-+
-        Optional, not currently supported.
- 
- DBG2   Signature Reserved (signature == "DBG2")
--       == DeBuG port table 2 ==
-+
-+       **DeBuG port table 2**
-+
-        License has changed and should be usable.  Optional if used instead
-        of earlycon=<device> on the command line.
- 
- DBGP   Signature Reserved (signature == "DBGP")
--       == DeBuG Port table ==
-+
-+       **DeBuG Port table**
-+
-        Microsoft only table, will not be supported.
- 
- DSDT   Section 5.2.11.1 (signature == "DSDT")
--       == Differentiated System Description Table ==
-+
-+       **Differentiated System Description Table**
-+
-        A DSDT is required; see also SSDT.
- 
-        ACPI tables contain only one DSDT but can contain one or more SSDTs,
-@@ -66,22 +85,30 @@ DSDT   Section 5.2.11.1 (signature == "DSDT")
-        but cannot modify or replace anything in the DSDT.
- 
- DMAR   Signature Reserved (signature == "DMAR")
--       == DMA Remapping table ==
-+
-+       **DMA Remapping table**
-+
-        x86 only table, will not be supported.
- 
- DRTM   Signature Reserved (signature == "DRTM")
--       == Dynamic Root of Trust for Measurement table ==
-+
-+       **Dynamic Root of Trust for Measurement table**
-+
-        Optional, not currently supported.
- 
- ECDT   Section 5.2.16 (signature == "ECDT")
--       == Embedded Controller Description Table ==
-+
-+       **Embedded Controller Description Table**
-+
-        Optional, not currently supported, but could be used on ARM if and
-        only if one uses the GPE_BIT field to represent an IRQ number, since
-        there are no GPE blocks defined in hardware reduced mode.  This would
-        need to be modified in the ACPI specification.
- 
- EINJ   Section 18.6 (signature == "EINJ")
--       == Error Injection table ==
-+
-+       **Error Injection table**
-+
-        This table is very useful for testing platform response to error
-        conditions; it allows one to inject an error into the system as
-        if it had actually occurred.  However, this table should not be
-@@ -89,27 +116,35 @@ EINJ   Section 18.6 (signature == "EINJ")
-        and executed with the ACPICA tools only during testing.
- 
- ERST   Section 18.5 (signature == "ERST")
--       == Error Record Serialization Table ==
-+
-+       **Error Record Serialization Table**
-+
-        On a platform supports RAS, this table must be supplied if it is not
-        UEFI-based; if it is UEFI-based, this table may be supplied. When this
-        table is not present, UEFI run time service will be utilized to save
-        and retrieve hardware error information to and from a persistent store.
- 
- ETDT   Signature Reserved (signature == "ETDT")
--       == Event Timer Description Table ==
-+
-+       **Event Timer Description Table**
-+
-        Obsolete table, will not be supported.
- 
- FACS   Section 5.2.10 (signature == "FACS")
--       == Firmware ACPI Control Structure ==
-+
-+       **Firmware ACPI Control Structure**
-+
-        It is unlikely that this table will be terribly useful.  If it is
-        provided, the Global Lock will NOT be used since it is not part of
-        the hardware reduced profile, and only 64-bit address fields will
-        be considered valid.
- 
- FADT   Section 5.2.9 (signature == "FACP")
--       == Fixed ACPI Description Table ==
-+
-+       **Fixed ACPI Description Table**
-        Required for arm64.
- 
-+
-        The HW_REDUCED_ACPI flag must be set.  All of the fields that are
-        to be ignored when HW_REDUCED_ACPI is set are expected to be set to
-        zero.
-@@ -118,22 +153,28 @@ FADT   Section 5.2.9 (signature == "FACP")
-        used, not FIRMWARE_CTRL.
- 
-        If PSCI is used (as is recommended), make sure that ARM_BOOT_ARCH is
--       filled in properly -- that the PSCI_COMPLIANT flag is set and that
-+       filled in properly - that the PSCI_COMPLIANT flag is set and that
-        PSCI_USE_HVC is set or unset as needed (see table 5-37).
- 
-        For the DSDT that is also required, the X_DSDT field is to be used,
-        not the DSDT field.
- 
- FPDT   Section 5.2.23 (signature == "FPDT")
--       == Firmware Performance Data Table ==
-+
-+       **Firmware Performance Data Table**
-+
-        Optional, not currently supported.
- 
- GTDT   Section 5.2.24 (signature == "GTDT")
--       == Generic Timer Description Table ==
-+
-+       **Generic Timer Description Table**
-+
-        Required for arm64.
- 
- HEST   Section 18.3.2 (signature == "HEST")
--       == Hardware Error Source Table ==
-+
-+       **Hardware Error Source Table**
-+
-        ARM-specific error sources have been defined; please use those or the
-        PCI types such as type 6 (AER Root Port), 7 (AER Endpoint), or 8 (AER
-        Bridge), or use type 9 (Generic Hardware Error Source).  Firmware first
-@@ -144,122 +185,174 @@ HEST   Section 18.3.2 (signature == "HEST")
-        is recommended this table be supplied.
- 
- HPET   Signature Reserved (signature == "HPET")
--       == High Precision Event timer Table ==
-+
-+       **High Precision Event timer Table**
-+
-        x86 only table, will not be supported.
- 
- IBFT   Signature Reserved (signature == "IBFT")
--       == iSCSI Boot Firmware Table ==
-+
-+       **iSCSI Boot Firmware Table**
-+
-        Microsoft defined table, support TBD.
- 
- IORT   Signature Reserved (signature == "IORT")
--       == Input Output Remapping Table ==
-+
-+       **Input Output Remapping Table**
-+
-        arm64 only table, required in order to describe IO topology, SMMUs,
-        and GIC ITSs, and how those various components are connected together,
-        such as identifying which components are behind which SMMUs/ITSs.
-        This table will only be required on certain SBSA platforms (e.g.,
--       when using GICv3-ITS and an SMMU); on SBSA Level 0 platforms, it 
-+       when using GICv3-ITS and an SMMU); on SBSA Level 0 platforms, it
-        remains optional.
- 
- IVRS   Signature Reserved (signature == "IVRS")
--       == I/O Virtualization Reporting Structure ==
-+
-+       **I/O Virtualization Reporting Structure**
-+
-        x86_64 (AMD) only table, will not be supported.
- 
- LPIT   Signature Reserved (signature == "LPIT")
--       == Low Power Idle Table ==
-+
-+       **Low Power Idle Table**
-+
-        x86 only table as of ACPI 5.1; starting with ACPI 6.0, processor
-        descriptions and power states on ARM platforms should use the DSDT
-        and define processor container devices (_HID ACPI0010, Section 8.4,
-        and more specifically 8.4.3 and and 8.4.4).
- 
- MADT   Section 5.2.12 (signature == "APIC")
--       == Multiple APIC Description Table ==
-+
-+       **Multiple APIC Description Table**
-+
-        Required for arm64.  Only the GIC interrupt controller structures
-        should be used (types 0xA - 0xF).
- 
- MCFG   Signature Reserved (signature == "MCFG")
--       == Memory-mapped ConFiGuration space ==
-+
-+       **Memory-mapped ConFiGuration space**
-+
-        If the platform supports PCI/PCIe, an MCFG table is required.
- 
- MCHI   Signature Reserved (signature == "MCHI")
--       == Management Controller Host Interface table ==
-+
-+       **Management Controller Host Interface table**
-+
-        Optional, not currently supported.
- 
- MPST   Section 5.2.21 (signature == "MPST")
--       == Memory Power State Table ==
-+
-+       **Memory Power State Table**
-+
-        Optional, not currently supported.
- 
- MSCT   Section 5.2.19 (signature == "MSCT")
--       == Maximum System Characteristic Table ==
-+
-+       **Maximum System Characteristic Table**
-+
-        Optional, not currently supported.
- 
- MSDM   Signature Reserved (signature == "MSDM")
--       == Microsoft Data Management table ==
-+
-+       **Microsoft Data Management table**
-+
-        Microsoft only table, will not be supported.
- 
- NFIT   Section 5.2.25 (signature == "NFIT")
--       == NVDIMM Firmware Interface Table ==
-+
-+       **NVDIMM Firmware Interface Table**
-+
-        Optional, not currently supported.
- 
- OEMx   Signature of "OEMx" only
--       == OEM Specific Tables ==
-+
-+       **OEM Specific Tables**
-+
-        All tables starting with a signature of "OEM" are reserved for OEM
-        use.  Since these are not meant to be of general use but are limited
-        to very specific end users, they are not recommended for use and are
-        not supported by the kernel for arm64.
- 
- PCCT   Section 14.1 (signature == "PCCT)
--       == Platform Communications Channel Table ==
-+
-+       **Platform Communications Channel Table**
-+
-        Recommend for use on arm64; use of PCC is recommended when using CPPC
-        to control performance and power for platform processors.
- 
- PMTT   Section 5.2.21.12 (signature == "PMTT")
--       == Platform Memory Topology Table ==
-+
-+       **Platform Memory Topology Table**
-+
-        Optional, not currently supported.
- 
- PSDT   Section 5.2.11.3 (signature == "PSDT")
--       == Persistent System Description Table ==
-+
-+       **Persistent System Description Table**
-+
-        Obsolete table, will not be supported.
- 
- RASF   Section 5.2.20 (signature == "RASF")
--       == RAS Feature table ==
-+
-+       **RAS Feature table**
-+
-        Optional, not currently supported.
- 
- RSDP   Section 5.2.5 (signature == "RSD PTR")
--       == Root System Description PoinTeR ==
-+
-+       **Root System Description PoinTeR**
-+
-        Required for arm64.
- 
- RSDT   Section 5.2.7 (signature == "RSDT")
--       == Root System Description Table ==
-+
-+       **Root System Description Table**
-+
-        Since this table can only provide 32-bit addresses, it is deprecated
-        on arm64, and will not be used.  If provided, it will be ignored.
- 
- SBST   Section 5.2.14 (signature == "SBST")
--       == Smart Battery Subsystem Table ==
-+
-+       **Smart Battery Subsystem Table**
-+
-        Optional, not currently supported.
- 
- SLIC   Signature Reserved (signature == "SLIC")
--       == Software LIcensing table ==
-+
-+       **Software LIcensing table**
-+
-        Microsoft only table, will not be supported.
- 
- SLIT   Section 5.2.17 (signature == "SLIT")
--       == System Locality distance Information Table ==
-+
-+       **System Locality distance Information Table**
-+
-        Optional in general, but required for NUMA systems.
- 
- SPCR   Signature Reserved (signature == "SPCR")
--       == Serial Port Console Redirection table ==
-+
-+       **Serial Port Console Redirection table**
-+
-        Required for arm64.
- 
- SPMI   Signature Reserved (signature == "SPMI")
--       == Server Platform Management Interface table ==
-+
-+       **Server Platform Management Interface table**
-+
-        Optional, not currently supported.
- 
- SRAT   Section 5.2.16 (signature == "SRAT")
--       == System Resource Affinity Table ==
-+
-+       **System Resource Affinity Table**
-+
-        Optional, but if used, only the GICC Affinity structures are read.
-        To support arm64 NUMA, this table is required.
- 
- SSDT   Section 5.2.11.2 (signature == "SSDT")
--       == Secondary System Description Table ==
-+
-+       **Secondary System Description Table**
-+
-        These tables are a continuation of the DSDT; these are recommended
-        for use with devices that can be added to a running system, but can
-        also serve the purpose of dividing up device descriptions into more
-@@ -272,49 +365,69 @@ SSDT   Section 5.2.11.2 (signature == "SSDT")
-        one DSDT but can contain many SSDTs.
- 
- STAO   Signature Reserved (signature == "STAO")
--       == _STA Override table ==
-+
-+       **_STA Override table**
-+
-        Optional, but only necessary in virtualized environments in order to
-        hide devices from guest OSs.
- 
- TCPA   Signature Reserved (signature == "TCPA")
--       == Trusted Computing Platform Alliance table ==
-+
-+       **Trusted Computing Platform Alliance table**
-+
-        Optional, not currently supported, and may need changes to fully
-        interoperate with arm64.
- 
- TPM2   Signature Reserved (signature == "TPM2")
--       == Trusted Platform Module 2 table ==
-+
-+       **Trusted Platform Module 2 table**
-+
-        Optional, not currently supported, and may need changes to fully
-        interoperate with arm64.
- 
- UEFI   Signature Reserved (signature == "UEFI")
--       == UEFI ACPI data table ==
-+
-+       **UEFI ACPI data table**
-+
-        Optional, not currently supported.  No known use case for arm64,
-        at present.
- 
- WAET   Signature Reserved (signature == "WAET")
--       == Windows ACPI Emulated devices Table ==
-+
-+       **Windows ACPI Emulated devices Table**
-+
-        Microsoft only table, will not be supported.
- 
- WDAT   Signature Reserved (signature == "WDAT")
--       == Watch Dog Action Table ==
-+
-+       **Watch Dog Action Table**
-+
-        Microsoft only table, will not be supported.
- 
- WDRT   Signature Reserved (signature == "WDRT")
--       == Watch Dog Resource Table ==
-+
-+       **Watch Dog Resource Table**
-+
-        Microsoft only table, will not be supported.
- 
- WPBT   Signature Reserved (signature == "WPBT")
--       == Windows Platform Binary Table ==
-+
-+       **Windows Platform Binary Table**
-+
-        Microsoft only table, will not be supported.
- 
- XENV   Signature Reserved (signature == "XENV")
--       == Xen project table ==
-+
-+       **Xen project table**
-+
-        Optional, used only by Xen at present.
- 
- XSDT   Section 5.2.8 (signature == "XSDT")
--       == eXtended System Description Table ==
-+
-+       **eXtended System Description Table**
-+
-        Required for arm64.
--
-+====== ========================================================================
- 
- ACPI Objects
- ------------
-@@ -323,10 +436,11 @@ shown in the list that follows; any object not explicitly mentioned below
- should be used as needed for a particular platform or particular subsystem,
- such as power management or PCI.
- 
-+===== ================ ========================================================
- Name   Section         Usage for ARMv8 Linux
------   ------------    -------------------------------------------------
-+===== ================ ========================================================
- _CCA   6.2.17          This method must be defined for all bus masters
--                       on arm64 -- there are no assumptions made about
-+                       on arm64 - there are no assumptions made about
-                        whether such devices are cache coherent or not.
-                        The _CCA value is inherited by all descendants of
-                        these devices so it does not need to be repeated.
-@@ -422,8 +536,8 @@ _OSC   6.2.11          This method can be a global method in ACPI (i.e.,
-                        by the kernel community, then register it with the
-                        UEFI Forum.
- 
--\_OSI  5.7.2           Deprecated on ARM64.  As far as ACPI firmware is 
--		       concerned, _OSI is not to be used to determine what 
-+\_OSI  5.7.2           Deprecated on ARM64.  As far as ACPI firmware is
-+		       concerned, _OSI is not to be used to determine what
- 		       sort of system is being used or what functionality
- 		       is provided.  The _OSC method is to be used instead.
- 
-@@ -447,7 +561,7 @@ _PSx   7.3.2-5         Use as needed; power management specific.  If _PS0 is
-                        usage, change them in these methods.
- 
- _RDI   8.4.4.4         Recommended for use with processor definitions (_HID
--		       ACPI0010) on arm64.  This should only be used in 
-+		       ACPI0010) on arm64.  This should only be used in
- 		       conjunction with _LPI.
- 
- \_REV  5.7.4           Always returns the latest version of ACPI supported.
-@@ -476,6 +590,7 @@ _SWS   7.4.3           Use as needed; power management specific; this may
- 
- _UID   6.1.12          Recommended for distinguishing devices of the same
-                        class; define it if at all possible.
-+===== ================ ========================================================
- 
- 
- 
-@@ -488,7 +603,7 @@ platforms, ACPI events must be signaled differently.
- 
- There are two options: GPIO-signaled interrupts (Section 5.6.5), and
- interrupt-signaled events (Section 5.6.9).  Interrupt-signaled events are a
--new feature in the ACPI 6.1 specification.  Either -- or both -- can be used
-+new feature in the ACPI 6.1 specification.  Either - or both - can be used
- on a given platform, and which to use may be dependent of limitations in any
- given SoC.  If possible, interrupt-signaled events are recommended.
- 
-@@ -564,39 +679,40 @@ supported.
- 
- The following classes of objects are not supported:
- 
--       -- Section 9.2: ambient light sensor devices
-+       -  Section 9.2: ambient light sensor devices
- 
--       -- Section 9.3: battery devices
-+       -  Section 9.3: battery devices
- 
--       -- Section 9.4: lids (e.g., laptop lids)
-+       -  Section 9.4: lids (e.g., laptop lids)
- 
--       -- Section 9.8.2: IDE controllers
-+       -  Section 9.8.2: IDE controllers
- 
--       -- Section 9.9: floppy controllers
-+       -  Section 9.9: floppy controllers
- 
--       -- Section 9.10: GPE block devices
-+       -  Section 9.10: GPE block devices
- 
--       -- Section 9.15: PC/AT RTC/CMOS devices
-+       -  Section 9.15: PC/AT RTC/CMOS devices
- 
--       -- Section 9.16: user presence detection devices
-+       -  Section 9.16: user presence detection devices
- 
--       -- Section 9.17: I/O APIC devices; all GICs must be enumerable via MADT
-+       -  Section 9.17: I/O APIC devices; all GICs must be enumerable via MADT
- 
--       -- Section 9.18: time and alarm devices (see 9.15)
-+       -  Section 9.18: time and alarm devices (see 9.15)
- 
--       -- Section 10: power source and power meter devices
-+       -  Section 10: power source and power meter devices
- 
--       -- Section 11: thermal management
-+       -  Section 11: thermal management
- 
--       -- Section 12: embedded controllers interface
-+       -  Section 12: embedded controllers interface
- 
--       -- Section 13: SMBus interfaces
-+       -  Section 13: SMBus interfaces
- 
- 
- This also means that there is no support for the following objects:
- 
-+====   =========================== ====   ==========
- Name   Section                     Name   Section
------   ------------                ----   ------------
-+====   =========================== ====   ==========
- _ALC   9.3.4                       _FDM   9.10.3
- _ALI   9.3.2                       _FIX   6.2.7
- _ALP   9.3.6                       _GAI   10.4.5
-@@ -619,4 +735,4 @@ _DCK   6.5.2                       _UPD   9.16.1
- _EC    12.12                       _UPP   9.16.2
- _FDE   9.10.1                      _WPC   10.5.2
- _FDI   9.10.2                      _WPP   10.5.3
--
-+====   =========================== ====   ==========
-diff --git a/Documentation/arm64/arm-acpi.txt b/Documentation/arm64/arm-acpi.txt
-index 1a74a041a443..f9341b71344b 100644
---- a/Documentation/arm64/arm-acpi.txt
-+++ b/Documentation/arm64/arm-acpi.txt
-@@ -1,5 +1,7 @@
-+=====================
- ACPI on ARMv8 Servers
-----------------------
-+=====================
-+
- ACPI can be used for ARMv8 general purpose servers designed to follow
- the ARM SBSA (Server Base System Architecture) [0] and SBBR (Server
- Base Boot Requirements) [1] specifications.  Please note that the SBBR
-@@ -34,28 +36,28 @@ of the summary text almost directly, to be honest.
- 
- The short form of the rationale for ACPI on ARM is:
- 
---- ACPI’s byte code (AML) allows the platform to encode hardware behavior,
-+-  ACPI’s byte code (AML) allows the platform to encode hardware behavior,
-    while DT explicitly does not support this.  For hardware vendors, being
-    able to encode behavior is a key tool used in supporting operating
-    system releases on new hardware.
- 
---- ACPI’s OSPM defines a power management model that constrains what the
-+-  ACPI’s OSPM defines a power management model that constrains what the
-    platform is allowed to do into a specific model, while still providing
-    flexibility in hardware design.
- 
---- In the enterprise server environment, ACPI has established bindings (such
-+-  In the enterprise server environment, ACPI has established bindings (such
-    as for RAS) which are currently used in production systems.  DT does not.
-    Such bindings could be defined in DT at some point, but doing so means ARM
-    and x86 would end up using completely different code paths in both firmware
-    and the kernel.
- 
---- Choosing a single interface to describe the abstraction between a platform
-+-  Choosing a single interface to describe the abstraction between a platform
-    and an OS is important.  Hardware vendors would not be required to implement
-    both DT and ACPI if they want to support multiple operating systems.  And,
-    agreeing on a single interface instead of being fragmented into per OS
-    interfaces makes for better interoperability overall.
- 
---- The new ACPI governance process works well and Linux is now at the same
-+-  The new ACPI governance process works well and Linux is now at the same
-    table as hardware vendors and other OS vendors.  In fact, there is no
-    longer any reason to feel that ACPI only belongs to Windows or that
-    Linux is in any way secondary to Microsoft in this arena.  The move of
-@@ -169,31 +171,31 @@ For the ACPI core to operate properly, and in turn provide the information
- the kernel needs to configure devices, it expects to find the following
- tables (all section numbers refer to the ACPI 6.1 specification):
- 
--    -- RSDP (Root System Description Pointer), section 5.2.5
-+    -  RSDP (Root System Description Pointer), section 5.2.5
- 
--    -- XSDT (eXtended System Description Table), section 5.2.8
-+    -  XSDT (eXtended System Description Table), section 5.2.8
- 
--    -- FADT (Fixed ACPI Description Table), section 5.2.9
-+    -  FADT (Fixed ACPI Description Table), section 5.2.9
- 
--    -- DSDT (Differentiated System Description Table), section
-+    -  DSDT (Differentiated System Description Table), section
-        5.2.11.1
- 
--    -- MADT (Multiple APIC Description Table), section 5.2.12
-+    -  MADT (Multiple APIC Description Table), section 5.2.12
- 
--    -- GTDT (Generic Timer Description Table), section 5.2.24
-+    -  GTDT (Generic Timer Description Table), section 5.2.24
- 
--    -- If PCI is supported, the MCFG (Memory mapped ConFiGuration
-+    -  If PCI is supported, the MCFG (Memory mapped ConFiGuration
-        Table), section 5.2.6, specifically Table 5-31.
- 
--    -- If booting without a console=<device> kernel parameter is
-+    -  If booting without a console=<device> kernel parameter is
-        supported, the SPCR (Serial Port Console Redirection table),
-        section 5.2.6, specifically Table 5-31.
- 
--    -- If necessary to describe the I/O topology, SMMUs and GIC ITSs,
-+    -  If necessary to describe the I/O topology, SMMUs and GIC ITSs,
-        the IORT (Input Output Remapping Table, section 5.2.6, specifically
-        Table 5-31).
- 
--    -- If NUMA is supported, the SRAT (System Resource Affinity Table)
-+    -  If NUMA is supported, the SRAT (System Resource Affinity Table)
-        and SLIT (System Locality distance Information Table), sections
-        5.2.16 and 5.2.17, respectively.
- 
-@@ -269,9 +271,9 @@ describes how to define the structure of an object returned via _DSD, and
- how specific data structures are defined by specific UUIDs.  Linux should
- only use the _DSD Device Properties UUID [5]:
- 
--   -- UUID: daffd814-6eba-4d8c-8a91-bc9bbf4aa301
-+   - UUID: daffd814-6eba-4d8c-8a91-bc9bbf4aa301
- 
--   -- http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf
-+   - http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf
- 
- The UEFI Forum provides a mechanism for registering device properties [4]
- so that they may be used across all operating systems supporting ACPI.
-@@ -327,10 +329,10 @@ turning a device full off.
- 
- There are two options for using those Power Resources.  They can:
- 
--   -- be managed in a _PSx method which gets called on entry to power
-+   -  be managed in a _PSx method which gets called on entry to power
-       state Dx.
- 
--   -- be declared separately as power resources with their own _ON and _OFF
-+   -  be declared separately as power resources with their own _ON and _OFF
-       methods.  They are then tied back to D-states for a particular device
-       via _PRx which specifies which power resources a device needs to be on
-       while in Dx.  Kernel then tracks number of devices using a power resource
-@@ -339,16 +341,16 @@ There are two options for using those Power Resources.  They can:
- The kernel ACPI code will also assume that the _PSx methods follow the normal
- ACPI rules for such methods:
- 
--   -- If either _PS0 or _PS3 is implemented, then the other method must also
-+   -  If either _PS0 or _PS3 is implemented, then the other method must also
-       be implemented.
- 
--   -- If a device requires usage or setup of a power resource when on, the ASL
-+   -  If a device requires usage or setup of a power resource when on, the ASL
-       should organize that it is allocated/enabled using the _PS0 method.
- 
--   -- Resources allocated or enabled in the _PS0 method should be disabled
-+   -  Resources allocated or enabled in the _PS0 method should be disabled
-       or de-allocated in the _PS3 method.
- 
--   -- Firmware will leave the resources in a reasonable state before handing
-+   -  Firmware will leave the resources in a reasonable state before handing
-       over control to the kernel.
- 
- Such code in _PSx methods will of course be very platform specific.  But,
-@@ -394,52 +396,52 @@ else must be discovered by the driver probe function.  Then, have the rest
- of the driver operate off of the contents of that struct.  Doing so should
- allow most divergence between ACPI and DT functionality to be kept local to
- the probe function instead of being scattered throughout the driver.  For
--example:
-+example::
- 
--static int device_probe_dt(struct platform_device *pdev)
--{
--       /* DT specific functionality */
--       ...
--}
-+  static int device_probe_dt(struct platform_device *pdev)
-+  {
-+         /* DT specific functionality */
-+         ...
-+  }
- 
--static int device_probe_acpi(struct platform_device *pdev)
--{
--       /* ACPI specific functionality */
--       ...
--}
-+  static int device_probe_acpi(struct platform_device *pdev)
-+  {
-+         /* ACPI specific functionality */
-+         ...
-+  }
- 
--static int device_probe(struct platform_device *pdev)
--{
--       ...
--       struct device_node node = pdev->dev.of_node;
--       ...
-+  static int device_probe(struct platform_device *pdev)
-+  {
-+         ...
-+         struct device_node node = pdev->dev.of_node;
-+         ...
- 
--       if (node)
--               ret = device_probe_dt(pdev);
--       else if (ACPI_HANDLE(&pdev->dev))
--               ret = device_probe_acpi(pdev);
--       else
--               /* other initialization */
--               ...
--       /* Continue with any generic probe operations */
--       ...
--}
-+         if (node)
-+                 ret = device_probe_dt(pdev);
-+         else if (ACPI_HANDLE(&pdev->dev))
-+                 ret = device_probe_acpi(pdev);
-+         else
-+                 /* other initialization */
-+                 ...
-+         /* Continue with any generic probe operations */
-+         ...
-+  }
- 
- DO keep the MODULE_DEVICE_TABLE entries together in the driver to make it
- clear the different names the driver is probed for, both from DT and from
--ACPI:
-+ACPI::
- 
--static struct of_device_id virtio_mmio_match[] = {
--        { .compatible = "virtio,mmio", },
--        { }
--};
--MODULE_DEVICE_TABLE(of, virtio_mmio_match);
-+  static struct of_device_id virtio_mmio_match[] = {
-+          { .compatible = "virtio,mmio", },
-+          { }
-+  };
-+  MODULE_DEVICE_TABLE(of, virtio_mmio_match);
- 
--static const struct acpi_device_id virtio_mmio_acpi_match[] = {
--        { "LNRO0005", },
--        { }
--};
--MODULE_DEVICE_TABLE(acpi, virtio_mmio_acpi_match);
-+  static const struct acpi_device_id virtio_mmio_acpi_match[] = {
-+          { "LNRO0005", },
-+          { }
-+  };
-+  MODULE_DEVICE_TABLE(acpi, virtio_mmio_acpi_match);
- 
- 
- ASWG
-@@ -471,7 +473,8 @@ Linux Code
- Individual items specific to Linux on ARM, contained in the the Linux
- source code, are in the list that follows:
- 
--ACPI_OS_NAME           This macro defines the string to be returned when
-+ACPI_OS_NAME
-+                       This macro defines the string to be returned when
-                        an ACPI method invokes the _OS method.  On ARM64
-                        systems, this macro will be "Linux" by default.
-                        The command line parameter acpi_os=<string>
-@@ -487,33 +490,39 @@ Documentation/arm64/acpi_object_usage.txt.
- 
- References
- ----------
--[0] http://silver.arm.com -- document ARM-DEN-0029, or newer
-+[0] http://silver.arm.com
-+    document ARM-DEN-0029, or newer:
-     "Server Base System Architecture", version 2.3, dated 27 Mar 2014
- 
- [1] http://infocenter.arm.com/help/topic/com.arm.doc.den0044a/Server_Base_Boot_Requirements.pdf
-     Document ARM-DEN-0044A, or newer: "Server Base Boot Requirements, System
-     Software on ARM Platforms", dated 16 Aug 2014
- 
--[2] http://www.secretlab.ca/archives/151, 10 Jan 2015, Copyright (c) 2015,
-+[2] http://www.secretlab.ca/archives/151,
-+    10 Jan 2015, Copyright (c) 2015,
-     Linaro Ltd., written by Grant Likely.
- 
--[3] AMD ACPI for Seattle platform documentation:
-+[3] AMD ACPI for Seattle platform documentation
-     http://amd-dev.wpengine.netdna-cdn.com/wordpress/media/2012/10/Seattle_ACPI_Guide.pdf
- 
--[4] http://www.uefi.org/acpi -- please see the link for the "ACPI _DSD Device
-+
-+[4] http://www.uefi.org/acpi
-+    please see the link for the "ACPI _DSD Device
-     Property Registry Instructions"
- 
--[5] http://www.uefi.org/acpi -- please see the link for the "_DSD (Device
-+[5] http://www.uefi.org/acpi
-+    please see the link for the "_DSD (Device
-     Specific Data) Implementation Guide"
- 
--[6] Kernel code for the unified device property interface can be found in
-+[6] Kernel code for the unified device
-+    property interface can be found in
-     include/linux/property.h and drivers/base/property.c.
- 
- 
- Authors
- -------
--Al Stone <al.stone@linaro.org>
--Graeme Gregory <graeme.gregory@linaro.org>
--Hanjun Guo <hanjun.guo@linaro.org>
-+- Al Stone <al.stone@linaro.org>
-+- Graeme Gregory <graeme.gregory@linaro.org>
-+- Hanjun Guo <hanjun.guo@linaro.org>
- 
--Grant Likely <grant.likely@linaro.org>, for the "Why ACPI on ARM?" section
-+- Grant Likely <grant.likely@linaro.org>, for the "Why ACPI on ARM?" section
-diff --git a/Documentation/arm64/booting.txt b/Documentation/arm64/booting.txt
-index fbab7e21d116..3d041d0d16e8 100644
---- a/Documentation/arm64/booting.txt
-+++ b/Documentation/arm64/booting.txt
-@@ -1,7 +1,9 @@
--			Booting AArch64 Linux
--			=====================
-+=====================
-+Booting AArch64 Linux
-+=====================
- 
- Author: Will Deacon <will.deacon@arm.com>
-+
- Date  : 07 September 2012
- 
- This document is based on the ARM booting document by Russell King and
-@@ -12,7 +14,7 @@ The AArch64 exception model is made up of a number of exception levels
- counterpart.  EL2 is the hypervisor level and exists only in non-secure
- mode. EL3 is the highest priority level and exists only in secure mode.
- 
--For the purposes of this document, we will use the term `boot loader'
-+For the purposes of this document, we will use the term `boot loader`
- simply to define all software that executes on the CPU(s) before control
- is passed to the Linux kernel.  This may include secure monitor and
- hypervisor code, or it may just be a handful of instructions for
-@@ -70,7 +72,7 @@ Image target is available instead.
- 
- Requirement: MANDATORY
- 
--The decompressed kernel image contains a 64-byte header as follows:
-+The decompressed kernel image contains a 64-byte header as follows::
- 
-   u32 code0;			/* Executable code */
-   u32 code1;			/* Executable code */
-@@ -103,19 +105,26 @@ Header notes:
- 
- - The flags field (introduced in v3.17) is a little-endian 64-bit field
-   composed as follows:
--  Bit 0:	Kernel endianness.  1 if BE, 0 if LE.
--  Bit 1-2:	Kernel Page size.
--			0 - Unspecified.
--			1 - 4K
--			2 - 16K
--			3 - 64K
--  Bit 3:	Kernel physical placement
--			0 - 2MB aligned base should be as close as possible
--			    to the base of DRAM, since memory below it is not
--			    accessible via the linear mapping
--			1 - 2MB aligned base may be anywhere in physical
--			    memory
--  Bits 4-63:	Reserved.
-+
-+  ============= ===============================================================
-+  Bit 0		Kernel endianness.  1 if BE, 0 if LE.
-+  Bit 1-2	Kernel Page size.
-+
-+			* 0 - Unspecified.
-+			* 1 - 4K
-+			* 2 - 16K
-+			* 3 - 64K
-+  Bit 3		Kernel physical placement
-+
-+			0
-+			  2MB aligned base should be as close as possible
-+			  to the base of DRAM, since memory below it is not
-+			  accessible via the linear mapping
-+			1
-+			  2MB aligned base may be anywhere in physical
-+			  memory
-+  Bits 4-63	Reserved.
-+  ============= ===============================================================
- 
- - When image_size is zero, a bootloader should attempt to keep as much
-   memory as possible free for use by the kernel immediately after the
-@@ -147,19 +156,22 @@ Before jumping into the kernel, the following conditions must be met:
-   corrupted by bogus network packets or disk data.  This will save
-   you many hours of debug.
- 
--- Primary CPU general-purpose register settings
--  x0 = physical address of device tree blob (dtb) in system RAM.
--  x1 = 0 (reserved for future use)
--  x2 = 0 (reserved for future use)
--  x3 = 0 (reserved for future use)
-+- Primary CPU general-purpose register settings:
-+
-+    - x0 = physical address of device tree blob (dtb) in system RAM.
-+    - x1 = 0 (reserved for future use)
-+    - x2 = 0 (reserved for future use)
-+    - x3 = 0 (reserved for future use)
- 
- - CPU mode
-+
-   All forms of interrupts must be masked in PSTATE.DAIF (Debug, SError,
-   IRQ and FIQ).
-   The CPU must be in either EL2 (RECOMMENDED in order to have access to
-   the virtualisation extensions) or non-secure EL1.
- 
- - Caches, MMUs
-+
-   The MMU must be off.
-   Instruction cache may be on or off.
-   The address range corresponding to the loaded kernel image must be
-@@ -172,18 +184,21 @@ Before jumping into the kernel, the following conditions must be met:
-   operations (not recommended) must be configured and disabled.
- 
- - Architected timers
-+
-   CNTFRQ must be programmed with the timer frequency and CNTVOFF must
-   be programmed with a consistent value on all CPUs.  If entering the
-   kernel at EL1, CNTHCTL_EL2 must have EL1PCTEN (bit 0) set where
-   available.
- 
- - Coherency
-+
-   All CPUs to be booted by the kernel must be part of the same coherency
-   domain on entry to the kernel.  This may require IMPLEMENTATION DEFINED
-   initialisation to enable the receiving of maintenance operations on
-   each CPU.
- 
- - System registers
-+
-   All writable architected system registers at the exception level where
-   the kernel image will be entered must be initialised by software at a
-   higher exception level to prevent execution in an UNKNOWN state.
-@@ -195,28 +210,40 @@ Before jumping into the kernel, the following conditions must be met:
- 
-   For systems with a GICv3 interrupt controller to be used in v3 mode:
-   - If EL3 is present:
--    ICC_SRE_EL3.Enable (bit 3) must be initialiased to 0b1.
--    ICC_SRE_EL3.SRE (bit 0) must be initialised to 0b1.
-+
-+      - ICC_SRE_EL3.Enable (bit 3) must be initialiased to 0b1.
-+      - ICC_SRE_EL3.SRE (bit 0) must be initialised to 0b1.
-+
-   - If the kernel is entered at EL1:
--    ICC.SRE_EL2.Enable (bit 3) must be initialised to 0b1
--    ICC_SRE_EL2.SRE (bit 0) must be initialised to 0b1.
-+
-+      - ICC.SRE_EL2.Enable (bit 3) must be initialised to 0b1
-+      - ICC_SRE_EL2.SRE (bit 0) must be initialised to 0b1.
-+
-   - The DT or ACPI tables must describe a GICv3 interrupt controller.
- 
-   For systems with a GICv3 interrupt controller to be used in
-   compatibility (v2) mode:
-+
-   - If EL3 is present:
--    ICC_SRE_EL3.SRE (bit 0) must be initialised to 0b0.
-+
-+      ICC_SRE_EL3.SRE (bit 0) must be initialised to 0b0.
-+
-   - If the kernel is entered at EL1:
--    ICC_SRE_EL2.SRE (bit 0) must be initialised to 0b0.
-+
-+      ICC_SRE_EL2.SRE (bit 0) must be initialised to 0b0.
-+
-   - The DT or ACPI tables must describe a GICv2 interrupt controller.
- 
-   For CPUs with pointer authentication functionality:
-   - If EL3 is present:
--    SCR_EL3.APK (bit 16) must be initialised to 0b1
--    SCR_EL3.API (bit 17) must be initialised to 0b1
-+
-+    - SCR_EL3.APK (bit 16) must be initialised to 0b1
-+    - SCR_EL3.API (bit 17) must be initialised to 0b1
-+
-   - If the kernel is entered at EL1:
--    HCR_EL2.APK (bit 40) must be initialised to 0b1
--    HCR_EL2.API (bit 41) must be initialised to 0b1
-+
-+    - HCR_EL2.APK (bit 40) must be initialised to 0b1
-+    - HCR_EL2.API (bit 41) must be initialised to 0b1
- 
- The requirements described above for CPU mode, caches, MMUs, architected
- timers, coherency and system registers apply to all CPUs.  All CPUs must
-diff --git a/Documentation/arm64/cpu-feature-registers.txt b/Documentation/arm64/cpu-feature-registers.txt
-index d4b4dd1fe786..251174aaa8ea 100644
---- a/Documentation/arm64/cpu-feature-registers.txt
-+++ b/Documentation/arm64/cpu-feature-registers.txt
-@@ -1,5 +1,6 @@
--		ARM64 CPU Feature Registers
--		===========================
-+===========================
-+ARM64 CPU Feature Registers
-+===========================
- 
- Author: Suzuki K Poulose <suzuki.poulose@arm.com>
- 
-@@ -9,7 +10,7 @@ registers to userspace. The availability of this ABI is advertised
- via the HWCAP_CPUID in HWCAPs.
- 
- 1. Motivation
-----------------
-+-------------
- 
- The ARM architecture defines a set of feature registers, which describe
- the capabilities of the CPU/system. Access to these system registers is
-@@ -33,9 +34,10 @@ there are some issues with their usage.
- 
- 
- 2. Requirements
-------------------
-+---------------
-+
-+ a) Safety:
- 
-- a) Safety :
-     Applications should be able to use the information provided by the
-     infrastructure to run safely across the system. This has greater
-     implications on a system with heterogeneous CPUs.
-@@ -47,7 +49,8 @@ there are some issues with their usage.
-     Otherwise an application could crash when scheduled on the CPU
-     which doesn't support CRC32.
- 
-- b) Security :
-+ b) Security:
-+
-     Applications should only be able to receive information that is
-     relevant to the normal operation in userspace. Hence, some of the
-     fields are masked out(i.e, made invisible) and their values are set to
-@@ -58,10 +61,12 @@ there are some issues with their usage.
-     (even when the CPU provides it).
- 
-  c) Implementation Defined Features
-+
-     The infrastructure doesn't expose any register which is
-     IMPLEMENTATION DEFINED as per ARMv8-A Architecture.
- 
-- d) CPU Identification :
-+ d) CPU Identification:
-+
-     MIDR_EL1 is exposed to help identify the processor. On a
-     heterogeneous system, this could be racy (just like getcpu()). The
-     process could be migrated to another CPU by the time it uses the
-@@ -70,7 +75,7 @@ there are some issues with their usage.
-     currently executing on. The REVIDR is not exposed due to this
-     constraint, as REVIDR makes sense only in conjunction with the
-     MIDR. Alternately, MIDR_EL1 and REVIDR_EL1 are exposed via sysfs
--    at:
-+    at::
- 
- 	/sys/devices/system/cpu/cpu$ID/regs/identification/
- 	                                              \- midr
-@@ -85,7 +90,8 @@ exception and ends up in SIGILL being delivered to the process.
- The infrastructure hooks into the exception handler and emulates the
- operation if the source belongs to the supported system register space.
- 
--The infrastructure emulates only the following system register space:
-+The infrastructure emulates only the following system register space::
-+
- 	Op0=3, Op1=0, CRn=0, CRm=0,4,5,6,7
- 
- (See Table C5-6 'System instruction encodings for non-Debug System
-@@ -107,73 +113,76 @@ infrastructure:
- -------------------------------------------
- 
-   1) ID_AA64ISAR0_EL1 - Instruction Set Attribute Register 0
--     x--------------------------------------------------x
-+
-+     +------------------------------+---------+---------+
-      | Name                         |  bits   | visible |
--     |--------------------------------------------------|
-+     +------------------------------+---------+---------+
-      | TS                           | [55-52] |    y    |
--     |--------------------------------------------------|
-+     +------------------------------+---------+---------+
-      | FHM                          | [51-48] |    y    |
--     |--------------------------------------------------|
-+     +------------------------------+---------+---------+
-      | DP                           | [47-44] |    y    |
--     |--------------------------------------------------|
-+     +------------------------------+---------+---------+
-      | SM4                          | [43-40] |    y    |
--     |--------------------------------------------------|
-+     +------------------------------+---------+---------+
-      | SM3                          | [39-36] |    y    |
--     |--------------------------------------------------|
-+     +------------------------------+---------+---------+
-      | SHA3                         | [35-32] |    y    |
--     |--------------------------------------------------|
-+     +------------------------------+---------+---------+
-      | RDM                          | [31-28] |    y    |
--     |--------------------------------------------------|
-+     +------------------------------+---------+---------+
-      | ATOMICS                      | [23-20] |    y    |
--     |--------------------------------------------------|
-+     +------------------------------+---------+---------+
-      | CRC32                        | [19-16] |    y    |
--     |--------------------------------------------------|
-+     +------------------------------+---------+---------+
-      | SHA2                         | [15-12] |    y    |
--     |--------------------------------------------------|
-+     +------------------------------+---------+---------+
-      | SHA1                         | [11-8]  |    y    |
--     |--------------------------------------------------|
-+     +------------------------------+---------+---------+
-      | AES                          | [7-4]   |    y    |
--     x--------------------------------------------------x
-+     +------------------------------+---------+---------+
- 
- 
-   2) ID_AA64PFR0_EL1 - Processor Feature Register 0
--     x--------------------------------------------------x
-+
-+     +------------------------------+---------+---------+
-      | Name                         |  bits   | visible |
--     |--------------------------------------------------|
-+     +------------------------------+---------+---------+
-      | DIT                          | [51-48] |    y    |
--     |--------------------------------------------------|
-+     +------------------------------+---------+---------+
-      | SVE                          | [35-32] |    y    |
--     |--------------------------------------------------|
-+     +------------------------------+---------+---------+
-      | GIC                          | [27-24] |    n    |
--     |--------------------------------------------------|
-+     +------------------------------+---------+---------+
-      | AdvSIMD                      | [23-20] |    y    |
--     |--------------------------------------------------|
-+     +------------------------------+---------+---------+
-      | FP                           | [19-16] |    y    |
--     |--------------------------------------------------|
-+     +------------------------------+---------+---------+
-      | EL3                          | [15-12] |    n    |
--     |--------------------------------------------------|
-+     +------------------------------+---------+---------+
-      | EL2                          | [11-8]  |    n    |
--     |--------------------------------------------------|
-+     +------------------------------+---------+---------+
-      | EL1                          | [7-4]   |    n    |
--     |--------------------------------------------------|
-+     +------------------------------+---------+---------+
-      | EL0                          | [3-0]   |    n    |
--     x--------------------------------------------------x
-+     +------------------------------+---------+---------+
- 
- 
-   3) MIDR_EL1 - Main ID Register
--     x--------------------------------------------------x
-+
-+     +------------------------------+---------+---------+
-      | Name                         |  bits   | visible |
--     |--------------------------------------------------|
-+     +------------------------------+---------+---------+
-      | Implementer                  | [31-24] |    y    |
--     |--------------------------------------------------|
-+     +------------------------------+---------+---------+
-      | Variant                      | [23-20] |    y    |
--     |--------------------------------------------------|
-+     +------------------------------+---------+---------+
-      | Architecture                 | [19-16] |    y    |
--     |--------------------------------------------------|
-+     +------------------------------+---------+---------+
-      | PartNum                      | [15-4]  |    y    |
--     |--------------------------------------------------|
-+     +------------------------------+---------+---------+
-      | Revision                     | [3-0]   |    y    |
--     x--------------------------------------------------x
-+     +------------------------------+---------+---------+
- 
-    NOTE: The 'visible' fields of MIDR_EL1 will contain the value
-    as available on the CPU where it is fetched and is not a system
-@@ -181,74 +190,76 @@ infrastructure:
- 
-   4) ID_AA64ISAR1_EL1 - Instruction set attribute register 1
- 
--     x--------------------------------------------------x
-+     +------------------------------+---------+---------+
-      | Name                         |  bits   | visible |
--     |--------------------------------------------------|
-+     +------------------------------+---------+---------+
-      | GPI                          | [31-28] |    y    |
--     |--------------------------------------------------|
-+     +------------------------------+---------+---------+
-      | GPA                          | [27-24] |    y    |
--     |--------------------------------------------------|
-+     +------------------------------+---------+---------+
-      | LRCPC                        | [23-20] |    y    |
--     |--------------------------------------------------|
-+     +------------------------------+---------+---------+
-      | FCMA                         | [19-16] |    y    |
--     |--------------------------------------------------|
-+     +------------------------------+---------+---------+
-      | JSCVT                        | [15-12] |    y    |
--     |--------------------------------------------------|
-+     +------------------------------+---------+---------+
-      | API                          | [11-8]  |    y    |
--     |--------------------------------------------------|
-+     +------------------------------+---------+---------+
-      | APA                          | [7-4]   |    y    |
--     |--------------------------------------------------|
-+     +------------------------------+---------+---------+
-      | DPB                          | [3-0]   |    y    |
--     x--------------------------------------------------x
-+     +------------------------------+---------+---------+
- 
-   5) ID_AA64MMFR2_EL1 - Memory model feature register 2
- 
--     x--------------------------------------------------x
-+     +------------------------------+---------+---------+
-      | Name                         |  bits   | visible |
--     |--------------------------------------------------|
-+     +------------------------------+---------+---------+
-      | AT                           | [35-32] |    y    |
--     x--------------------------------------------------x
-+     +------------------------------+---------+---------+
- 
- Appendix I: Example
-----------------------------
-+-------------------
- 
--/*
-- * Sample program to demonstrate the MRS emulation ABI.
-- *
-- * Copyright (C) 2015-2016, ARM Ltd
-- *
-- * Author: Suzuki K Poulose <suzuki.poulose@arm.com>
-- *
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- * This program is free software; you can redistribute it and/or modify
-- * it under the terms of the GNU General Public License version 2 as
-- * published by the Free Software Foundation.
-- *
-- * This program is distributed in the hope that it will be useful,
-- * but WITHOUT ANY WARRANTY; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-- * GNU General Public License for more details.
-- */
-+::
- 
--#include <asm/hwcap.h>
--#include <stdio.h>
--#include <sys/auxv.h>
-+  /*
-+   * Sample program to demonstrate the MRS emulation ABI.
-+   *
-+   * Copyright (C) 2015-2016, ARM Ltd
-+   *
-+   * Author: Suzuki K Poulose <suzuki.poulose@arm.com>
-+   *
-+   * This program is free software; you can redistribute it and/or modify
-+   * it under the terms of the GNU General Public License version 2 as
-+   * published by the Free Software Foundation.
-+   *
-+   * This program is distributed in the hope that it will be useful,
-+   * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+   * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+   * GNU General Public License for more details.
-+   * This program is free software; you can redistribute it and/or modify
-+   * it under the terms of the GNU General Public License version 2 as
-+   * published by the Free Software Foundation.
-+   *
-+   * This program is distributed in the hope that it will be useful,
-+   * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+   * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+   * GNU General Public License for more details.
-+   */
- 
--#define get_cpu_ftr(id) ({					\
-+  #include <asm/hwcap.h>
-+  #include <stdio.h>
-+  #include <sys/auxv.h>
-+
-+  #define get_cpu_ftr(id) ({					\
- 		unsigned long __val;				\
- 		asm("mrs %0, "#id : "=r" (__val));		\
- 		printf("%-20s: 0x%016lx\n", #id, __val);	\
- 	})
- 
--int main(void)
--{
-+  int main(void)
-+  {
- 
- 	if (!(getauxval(AT_HWCAP) & HWCAP_CPUID)) {
- 		fputs("CPUID registers unavailable\n", stderr);
-@@ -268,13 +279,10 @@ int main(void)
- 	get_cpu_ftr(MPIDR_EL1);
- 	get_cpu_ftr(REVIDR_EL1);
- 
--#if 0
-+  #if 0
- 	/* Unexposed register access causes SIGILL */
- 	get_cpu_ftr(ID_MMFR0_EL1);
--#endif
-+  #endif
- 
- 	return 0;
--}
--
--
--
-+  }
-diff --git a/Documentation/arm64/elf_hwcaps.txt b/Documentation/arm64/elf_hwcaps.txt
-index 13d6691b37be..e624d6bd89f2 100644
---- a/Documentation/arm64/elf_hwcaps.txt
-+++ b/Documentation/arm64/elf_hwcaps.txt
+diff --git a/Documentation/device-mapper/cache-policies.txt b/Documentation/device-mapper/cache-policies.txt
+index 86786d87d9a8..b17fe352fc41 100644
+--- a/Documentation/device-mapper/cache-policies.txt
++++ b/Documentation/device-mapper/cache-policies.txt
 @@ -1,3 +1,4 @@
-+================
- ARM64 ELF hwcaps
- ================
++=============================
+ Guidance for writing policies
+ =============================
  
-@@ -15,16 +16,16 @@ of flags called hwcaps, exposed in the auxilliary vector.
+@@ -30,7 +31,7 @@ multiqueue (mq)
  
- Userspace software can test for features by acquiring the AT_HWCAP entry
- of the auxilliary vector, and testing whether the relevant flags are
--set, e.g.
-+set, e.g.::
+ This policy is now an alias for smq (see below).
  
--bool floating_point_is_present(void)
--{
--	unsigned long hwcaps = getauxval(AT_HWCAP);
--	if (hwcaps & HWCAP_FP)
--		return true;
-+	bool floating_point_is_present(void)
-+	{
-+		unsigned long hwcaps = getauxval(AT_HWCAP);
-+		if (hwcaps & HWCAP_FP)
-+			return true;
+-The following tunables are accepted, but have no effect:
++The following tunables are accepted, but have no effect::
  
--	return false;
--}
-+		return false;
-+	}
+ 	'sequential_threshold <#nr_sequential_ios>'
+ 	'random_threshold <#nr_random_ios>'
+@@ -56,7 +57,9 @@ mq policy's hints to be dropped.  Also, performance of the cache may
+ degrade slightly until smq recalculates the origin device's hotspots
+ that should be cached.
  
- Where software relies on a feature described by a hwcap, it should check
- the relevant hwcap flag to verify that the feature is present before
-@@ -45,7 +46,7 @@ userspace code at EL0. These hwcaps are defined in terms of ID register
- fields, and should be interpreted with reference to the definition of
- these fields in the ARM Architecture Reference Manual (ARM ARM).
+-Memory usage:
++Memory usage
++^^^^^^^^^^^^
++
+ The mq policy used a lot of memory; 88 bytes per cache block on a 64
+ bit machine.
  
--Such hwcaps are described below in the form:
-+Such hwcaps are described below in the form::
+@@ -69,7 +72,9 @@ cache block).
+ All this means smq uses ~25bytes per cache block.  Still a lot of
+ memory, but a substantial improvement nontheless.
  
-     Functionality implied by idreg.field == val.
+-Level balancing:
++Level balancing
++^^^^^^^^^^^^^^^
++
+ mq placed entries in different levels of the multiqueue structures
+ based on their hit count (~ln(hit count)).  This meant the bottom
+ levels generally had the most entries, and the top ones had very
+@@ -94,7 +99,9 @@ is used to decide which blocks to promote.  If the hotspot queue is
+ performing badly then it starts moving entries more quickly between
+ levels.  This lets it adapt to new IO patterns very quickly.
  
-@@ -64,133 +65,102 @@ reference to ID registers, and may refer to other documentation.
- ---------------------------------
+-Performance:
++Performance
++^^^^^^^^^^^
++
+ Testing smq shows substantially better performance than mq.
  
- HWCAP_FP
--
-     Functionality implied by ID_AA64PFR0_EL1.FP == 0b0000.
+ cleaner
+@@ -105,16 +112,19 @@ The cleaner writes back all dirty blocks in a cache to decommission it.
+ Examples
+ ========
  
- HWCAP_ASIMD
--
-     Functionality implied by ID_AA64PFR0_EL1.AdvSIMD == 0b0000.
+-The syntax for a table is:
++The syntax for a table is::
++
+ 	cache <metadata dev> <cache dev> <origin dev> <block size>
+ 	<#feature_args> [<feature arg>]*
+ 	<policy> <#policy_args> [<policy arg>]*
  
- HWCAP_EVTSTRM
--
-     The generic timer is configured to generate events at a frequency of
-     approximately 100KHz.
+-The syntax to send a message using the dmsetup command is:
++The syntax to send a message using the dmsetup command is::
++
+ 	dmsetup message <mapped device> 0 sequential_threshold 1024
+ 	dmsetup message <mapped device> 0 random_threshold 8
  
- HWCAP_AES
--
-     Functionality implied by ID_AA64ISAR0_EL1.AES == 0b0001.
- 
- HWCAP_PMULL
--
-     Functionality implied by ID_AA64ISAR0_EL1.AES == 0b0010.
- 
- HWCAP_SHA1
--
-     Functionality implied by ID_AA64ISAR0_EL1.SHA1 == 0b0001.
- 
- HWCAP_SHA2
--
-     Functionality implied by ID_AA64ISAR0_EL1.SHA2 == 0b0001.
- 
- HWCAP_CRC32
--
-     Functionality implied by ID_AA64ISAR0_EL1.CRC32 == 0b0001.
- 
- HWCAP_ATOMICS
--
-     Functionality implied by ID_AA64ISAR0_EL1.Atomic == 0b0010.
- 
- HWCAP_FPHP
--
-     Functionality implied by ID_AA64PFR0_EL1.FP == 0b0001.
- 
- HWCAP_ASIMDHP
--
-     Functionality implied by ID_AA64PFR0_EL1.AdvSIMD == 0b0001.
- 
- HWCAP_CPUID
--
-     EL0 access to certain ID registers is available, to the extent
-     described by Documentation/arm64/cpu-feature-registers.txt.
- 
-     These ID registers may imply the availability of features.
- 
- HWCAP_ASIMDRDM
--
-     Functionality implied by ID_AA64ISAR0_EL1.RDM == 0b0001.
- 
- HWCAP_JSCVT
--
-     Functionality implied by ID_AA64ISAR1_EL1.JSCVT == 0b0001.
- 
- HWCAP_FCMA
--
-     Functionality implied by ID_AA64ISAR1_EL1.FCMA == 0b0001.
- 
- HWCAP_LRCPC
--
-     Functionality implied by ID_AA64ISAR1_EL1.LRCPC == 0b0001.
- 
- HWCAP_DCPOP
--
-     Functionality implied by ID_AA64ISAR1_EL1.DPB == 0b0001.
- 
- HWCAP_SHA3
--
-     Functionality implied by ID_AA64ISAR0_EL1.SHA3 == 0b0001.
- 
- HWCAP_SM3
--
-     Functionality implied by ID_AA64ISAR0_EL1.SM3 == 0b0001.
- 
- HWCAP_SM4
--
-     Functionality implied by ID_AA64ISAR0_EL1.SM4 == 0b0001.
- 
- HWCAP_ASIMDDP
--
-     Functionality implied by ID_AA64ISAR0_EL1.DP == 0b0001.
- 
- HWCAP_SHA512
--
-     Functionality implied by ID_AA64ISAR0_EL1.SHA2 == 0b0010.
- 
- HWCAP_SVE
--
-     Functionality implied by ID_AA64PFR0_EL1.SVE == 0b0001.
- 
- HWCAP_ASIMDFHM
--
-    Functionality implied by ID_AA64ISAR0_EL1.FHM == 0b0001.
- 
- HWCAP_DIT
--
-     Functionality implied by ID_AA64PFR0_EL1.DIT == 0b0001.
- 
- HWCAP_USCAT
--
-     Functionality implied by ID_AA64MMFR2_EL1.AT == 0b0001.
- 
- HWCAP_ILRCPC
--
-     Functionality implied by ID_AA64ISAR1_EL1.LRCPC == 0b0010.
- 
- HWCAP_FLAGM
--
-     Functionality implied by ID_AA64ISAR0_EL1.TS == 0b0001.
- 
- HWCAP_SSBS
--
-     Functionality implied by ID_AA64PFR1_EL1.SSBS == 0b0010.
- 
- HWCAP_PACA
--
-     Functionality implied by ID_AA64ISAR1_EL1.APA == 0b0001 or
-     ID_AA64ISAR1_EL1.API == 0b0001, as described by
-     Documentation/arm64/pointer-authentication.txt.
- 
- HWCAP_PACG
--
-     Functionality implied by ID_AA64ISAR1_EL1.GPA == 0b0001 or
-     ID_AA64ISAR1_EL1.GPI == 0b0001, as described by
-     Documentation/arm64/pointer-authentication.txt.
-diff --git a/Documentation/arm64/hugetlbpage.txt b/Documentation/arm64/hugetlbpage.txt
-index cfae87dc653b..b44f939e5210 100644
---- a/Documentation/arm64/hugetlbpage.txt
-+++ b/Documentation/arm64/hugetlbpage.txt
-@@ -1,3 +1,4 @@
-+====================
- HugeTLBpage on ARM64
- ====================
- 
-@@ -31,8 +32,10 @@ and level of the page table.
- 
- The following hugepage sizes are supported -
- 
--         CONT PTE    PMD    CONT PMD    PUD
--         --------    ---    --------    ---
-+  ====== ========   ====    ========    ===
-+  -      CONT PTE    PMD    CONT PMD    PUD
-+  ====== ========   ====    ========    ===
-   4K:         64K     2M         32M     1G
-   16K:         2M    32M          1G
-   64K:         2M   512M         16G
-+  ====== ========   ====    ========    ===
-diff --git a/Documentation/arm64/legacy_instructions.txt b/Documentation/arm64/legacy_instructions.txt
-index 01bf3d9fac85..54401b22cb8f 100644
---- a/Documentation/arm64/legacy_instructions.txt
-+++ b/Documentation/arm64/legacy_instructions.txt
+-Using dmsetup:
++Using dmsetup::
++
+ 	dmsetup create blah --table "0 268435456 cache /dev/sdb /dev/sdc \
+ 	    /dev/sdd 512 0 mq 4 sequential_threshold 1024 random_threshold 8"
+ 	creates a 128GB large mapped device named 'blah' with the
+diff --git a/Documentation/device-mapper/cache.txt b/Documentation/device-mapper/cache.txt
+index 8ae1cf8e94da..f15e5254d05b 100644
+--- a/Documentation/device-mapper/cache.txt
++++ b/Documentation/device-mapper/cache.txt
 @@ -1,3 +1,7 @@
-+===================
-+Legacy instructions
-+===================
++=====
++Cache
++=====
 +
- The arm64 port of the Linux kernel provides infrastructure to support
- emulation of instructions which have been deprecated, or obsoleted in
- the architecture. The infrastructure code uses undefined instruction
-@@ -9,19 +13,22 @@ The emulation mode can be controlled by writing to sysctl nodes
- behaviours and the corresponding values of the sysctl nodes -
+ Introduction
+ ============
  
- * Undef
--  Value: 0
-+    Value: 0
-+
-   Generates undefined instruction abort. Default for instructions that
-   have been obsoleted in the architecture, e.g., SWP
+@@ -24,10 +28,13 @@ scenarios (eg. a vm image server).
+ Glossary
+ ========
  
- * Emulate
--  Value: 1
-+    Value: 1
-+
-   Uses software emulation. To aid migration of software, in this mode
-   usage of emulated instruction is traced as well as rate limited
-   warnings are issued. This is the default for deprecated
-   instructions, .e.g., CP15 barriers
+-  Migration -  Movement of the primary copy of a logical block from one
++  Migration
++	       Movement of the primary copy of a logical block from one
+ 	       device to the other.
+-  Promotion -  Migration from slow device to fast device.
+-  Demotion  -  Migration from fast device to slow device.
++  Promotion
++	       Migration from slow device to fast device.
++  Demotion
++	       Migration from fast device to slow device.
  
- * Hardware Execution
--  Value: 2
-+    Value: 2
-+
-   Although marked as deprecated, some implementations may support the
-   enabling/disabling of hardware support for the execution of these
-   instructions. Using hardware execution generally provides better
-@@ -38,20 +45,24 @@ individual instruction notes for further information.
- Supported legacy instructions
- -----------------------------
- * SWP{B}
--Node: /proc/sys/abi/swp
--Status: Obsolete
--Default: Undef (0)
-+
-+:Node: /proc/sys/abi/swp
-+:Status: Obsolete
-+:Default: Undef (0)
+ The origin device always contains a copy of the logical block, which
+ may be out of date or kept in sync with the copy on the cache device
+@@ -169,45 +176,53 @@ Target interface
+ Constructor
+ -----------
  
- * CP15 Barriers
--Node: /proc/sys/abi/cp15_barrier
--Status: Deprecated
--Default: Emulate (1)
-+
-+:Node: /proc/sys/abi/cp15_barrier
-+:Status: Deprecated
-+:Default: Emulate (1)
+- cache <metadata dev> <cache dev> <origin dev> <block size>
+-       <#feature args> [<feature arg>]*
+-       <policy> <#policy args> [policy args]*
++  ::
  
- * SETEND
--Node: /proc/sys/abi/setend
--Status: Deprecated
--Default: Emulate (1)*
--Note: All the cpus on the system must have mixed endian support at EL0
--for this feature to be enabled. If a new CPU - which doesn't support mixed
--endian - is hotplugged in after this feature has been enabled, there could
--be unexpected results in the application.
+- metadata dev    : fast device holding the persistent metadata
+- cache dev	 : fast device holding cached data blocks
+- origin dev	 : slow device holding original data blocks
+- block size      : cache unit size in sectors
++   cache <metadata dev> <cache dev> <origin dev> <block size>
++         <#feature args> [<feature arg>]*
++         <policy> <#policy args> [policy args]*
+ 
+- #feature args   : number of feature arguments passed
+- feature args    : writethrough or passthrough (The default is writeback.)
++ ================ =======================================================
++ metadata dev     fast device holding the persistent metadata
++ cache dev	  fast device holding cached data blocks
++ origin dev	  slow device holding original data blocks
++ block size       cache unit size in sectors
+ 
+- policy          : the replacement policy to use
+- #policy args    : an even number of arguments corresponding to
+-                   key/value pairs passed to the policy
+- policy args     : key/value pairs passed to the policy
+-		   E.g. 'sequential_threshold 1024'
+-		   See cache-policies.txt for details.
++ #feature args    number of feature arguments passed
++ feature args     writethrough or passthrough (The default is writeback.)
 +
-+:Node: /proc/sys/abi/setend
-+:Status: Deprecated
-+:Default: Emulate (1)*
++ policy           the replacement policy to use
++ #policy args     an even number of arguments corresponding to
++                  key/value pairs passed to the policy
++ policy args      key/value pairs passed to the policy
++		  E.g. 'sequential_threshold 1024'
++		  See cache-policies.txt for details.
++ ================ =======================================================
+ 
+ Optional feature arguments are:
+-   writethrough  : write through caching that prohibits cache block
+-		   content from being different from origin block content.
+-		   Without this argument, the default behaviour is to write
+-		   back cache block contents later for performance reasons,
+-		   so they may differ from the corresponding origin blocks.
+ 
+-   passthrough	 : a degraded mode useful for various cache coherency
+-		   situations (e.g., rolling back snapshots of
+-		   underlying storage).	 Reads and writes always go to
+-		   the origin.	If a write goes to a cached origin
+-		   block, then the cache block is invalidated.
+-		   To enable passthrough mode the cache must be clean.
+ 
+-   metadata2	: use version 2 of the metadata.  This stores the dirty bits
+-                  in a separate btree, which improves speed of shutting
+-		  down the cache.
++   ==================== ========================================================
++   writethrough		write through caching that prohibits cache block
++			content from being different from origin block content.
++			Without this argument, the default behaviour is to write
++			back cache block contents later for performance reasons,
++			so they may differ from the corresponding origin blocks.
+ 
+-   no_discard_passdown	: disable passing down discards from the cache
+-			  to the origin's data device.
++   passthrough		a degraded mode useful for various cache coherency
++			situations (e.g., rolling back snapshots of
++			underlying storage).	 Reads and writes always go to
++			the origin.	If a write goes to a cached origin
++			block, then the cache block is invalidated.
++			To enable passthrough mode the cache must be clean.
 +
-+  Note: All the cpus on the system must have mixed endian support at EL0
-+  for this feature to be enabled. If a new CPU - which doesn't support mixed
-+  endian - is hotplugged in after this feature has been enabled, there could
-+  be unexpected results in the application.
-diff --git a/Documentation/arm64/memory.txt b/Documentation/arm64/memory.txt
-index c5dab30d3389..464b880fc4b7 100644
---- a/Documentation/arm64/memory.txt
-+++ b/Documentation/arm64/memory.txt
++   metadata2		use version 2 of the metadata.  This stores the dirty
++			bits in a separate btree, which improves speed of
++			shutting down the cache.
++
++   no_discard_passdown	disable passing down discards from the cache
++			to the origin's data device.
++   ==================== ========================================================
+ 
+ A policy called 'default' is always registered.  This is an alias for
+ the policy we currently think is giving best all round performance.
+@@ -218,54 +233,61 @@ the characteristics of a specific policy, always request it by name.
+ Status
+ ------
+ 
+-<metadata block size> <#used metadata blocks>/<#total metadata blocks>
+-<cache block size> <#used cache blocks>/<#total cache blocks>
+-<#read hits> <#read misses> <#write hits> <#write misses>
+-<#demotions> <#promotions> <#dirty> <#features> <features>*
+-<#core args> <core args>* <policy name> <#policy args> <policy args>*
+-<cache metadata mode>
++::
+ 
+-metadata block size	 : Fixed block size for each metadata block in
+-			     sectors
+-#used metadata blocks	 : Number of metadata blocks used
+-#total metadata blocks	 : Total number of metadata blocks
+-cache block size	 : Configurable block size for the cache device
+-			     in sectors
+-#used cache blocks	 : Number of blocks resident in the cache
+-#total cache blocks	 : Total number of cache blocks
+-#read hits		 : Number of times a READ bio has been mapped
+-			     to the cache
+-#read misses		 : Number of times a READ bio has been mapped
+-			     to the origin
+-#write hits		 : Number of times a WRITE bio has been mapped
+-			     to the cache
+-#write misses		 : Number of times a WRITE bio has been
+-			     mapped to the origin
+-#demotions		 : Number of times a block has been removed
+-			     from the cache
+-#promotions		 : Number of times a block has been moved to
+-			     the cache
+-#dirty			 : Number of blocks in the cache that differ
+-			     from the origin
+-#feature args		 : Number of feature args to follow
+-feature args		 : 'writethrough' (optional)
+-#core args		 : Number of core arguments (must be even)
+-core args		 : Key/value pairs for tuning the core
+-			     e.g. migration_threshold
+-policy name		 : Name of the policy
+-#policy args		 : Number of policy arguments to follow (must be even)
+-policy args		 : Key/value pairs e.g. sequential_threshold
+-cache metadata mode      : ro if read-only, rw if read-write
+-	In serious cases where even a read-only mode is deemed unsafe
+-	no further I/O will be permitted and the status will just
+-	contain the string 'Fail'.  The userspace recovery tools
+-	should then be used.
+-needs_check		 : 'needs_check' if set, '-' if not set
+-	A metadata operation has failed, resulting in the needs_check
+-	flag being set in the metadata's superblock.  The metadata
+-	device must be deactivated and checked/repaired before the
+-	cache can be made fully operational again.  '-' indicates
+-	needs_check is not set.
++  <metadata block size> <#used metadata blocks>/<#total metadata blocks>
++  <cache block size> <#used cache blocks>/<#total cache blocks>
++  <#read hits> <#read misses> <#write hits> <#write misses>
++  <#demotions> <#promotions> <#dirty> <#features> <features>*
++  <#core args> <core args>* <policy name> <#policy args> <policy args>*
++  <cache metadata mode>
++
++
++========================= =====================================================
++metadata block size	  Fixed block size for each metadata block in
++			  sectors
++#used metadata blocks	  Number of metadata blocks used
++#total metadata blocks	  Total number of metadata blocks
++cache block size	  Configurable block size for the cache device
++			  in sectors
++#used cache blocks	  Number of blocks resident in the cache
++#total cache blocks	  Total number of cache blocks
++#read hits		  Number of times a READ bio has been mapped
++			  to the cache
++#read misses		  Number of times a READ bio has been mapped
++			  to the origin
++#write hits		  Number of times a WRITE bio has been mapped
++			  to the cache
++#write misses		  Number of times a WRITE bio has been
++			  mapped to the origin
++#demotions		  Number of times a block has been removed
++			  from the cache
++#promotions		  Number of times a block has been moved to
++			  the cache
++#dirty			  Number of blocks in the cache that differ
++			  from the origin
++#feature args		  Number of feature args to follow
++feature args		  'writethrough' (optional)
++#core args		  Number of core arguments (must be even)
++core args		  Key/value pairs for tuning the core
++			  e.g. migration_threshold
++policy name		  Name of the policy
++#policy args		  Number of policy arguments to follow (must be even)
++policy args		  Key/value pairs e.g. sequential_threshold
++cache metadata mode       ro if read-only, rw if read-write
++
++			  In serious cases where even a read-only mode is
++			  deemed unsafe no further I/O will be permitted and
++			  the status will just contain the string 'Fail'.
++			  The userspace recovery tools should then be used.
++needs_check		  'needs_check' if set, '-' if not set
++			  A metadata operation has failed, resulting in the
++			  needs_check flag being set in the metadata's
++			  superblock.  The metadata device must be
++			  deactivated and checked/repaired before the
++			  cache can be made fully operational again.
++			  '-' indicates	needs_check is not set.
++========================= =====================================================
+ 
+ Messages
+ --------
+@@ -274,11 +296,12 @@ Policies will have different tunables, specific to each one, so we
+ need a generic way of getting and setting these.  Device-mapper
+ messages are used.  (A sysfs interface would also be possible.)
+ 
+-The message format is:
++The message format is::
+ 
+    <key> <value>
+ 
+-E.g.
++E.g.::
++
+    dmsetup message my_cache 0 sequential_threshold 1024
+ 
+ 
+@@ -290,11 +313,12 @@ of values from 5 to 9.  Each cblock must be expressed as a decimal
+ value, in the future a variant message that takes cblock ranges
+ expressed in hexadecimal may be needed to better support efficient
+ invalidation of larger caches.  The cache must be in passthrough mode
+-when invalidate_cblocks is used.
++when invalidate_cblocks is used::
+ 
+    invalidate_cblocks [<cblock>|<cblock begin>-<cblock end>]*
+ 
+-E.g.
++E.g.::
++
+    dmsetup message my_cache 0 invalidate_cblocks 2345 3456-4567 5678-6789
+ 
+ Examples
+@@ -304,8 +328,10 @@ The test suite can be found here:
+ 
+ https://github.com/jthornber/device-mapper-test-suite
+ 
+-dmsetup create my_cache --table '0 41943040 cache /dev/mapper/metadata \
+-	/dev/mapper/ssd /dev/mapper/origin 512 1 writeback default 0'
+-dmsetup create my_cache --table '0 41943040 cache /dev/mapper/metadata \
+-	/dev/mapper/ssd /dev/mapper/origin 1024 1 writeback \
+-	mq 4 sequential_threshold 1024 random_threshold 8'
++::
++
++  dmsetup create my_cache --table '0 41943040 cache /dev/mapper/metadata \
++	  /dev/mapper/ssd /dev/mapper/origin 512 1 writeback default 0'
++  dmsetup create my_cache --table '0 41943040 cache /dev/mapper/metadata \
++	  /dev/mapper/ssd /dev/mapper/origin 1024 1 writeback \
++	  mq 4 sequential_threshold 1024 random_threshold 8'
+diff --git a/Documentation/device-mapper/delay.txt b/Documentation/device-mapper/delay.txt
+index 6426c45273cb..917ba8c33359 100644
+--- a/Documentation/device-mapper/delay.txt
++++ b/Documentation/device-mapper/delay.txt
+@@ -1,10 +1,12 @@
++========
+ dm-delay
+ ========
+ 
+ Device-Mapper's "delay" target delays reads and/or writes
+ and maps them to different devices.
+ 
+-Parameters:
++Parameters::
++
+     <device> <offset> <delay> [<write_device> <write_offset> <write_delay>
+ 			       [<flush_device> <flush_offset> <flush_delay>]]
+ 
+@@ -14,15 +16,16 @@ Delays are specified in milliseconds.
+ 
+ Example scripts
+ ===============
+-[[
+-#!/bin/sh
+-# Create device delaying rw operation for 500ms
+-echo "0 `blockdev --getsz $1` delay $1 0 500" | dmsetup create delayed
+-]]
+-
+-[[
+-#!/bin/sh
+-# Create device delaying only write operation for 500ms and
+-# splitting reads and writes to different devices $1 $2
+-echo "0 `blockdev --getsz $1` delay $1 0 0 $2 0 500" | dmsetup create delayed
+-]]
++
++::
++
++	#!/bin/sh
++	# Create device delaying rw operation for 500ms
++	echo "0 `blockdev --getsz $1` delay $1 0 500" | dmsetup create delayed
++
++::
++
++	#!/bin/sh
++	# Create device delaying only write operation for 500ms and
++	# splitting reads and writes to different devices $1 $2
++	echo "0 `blockdev --getsz $1` delay $1 0 0 $2 0 500" | dmsetup create delayed
+diff --git a/Documentation/device-mapper/dm-crypt.txt b/Documentation/device-mapper/dm-crypt.txt
+index 3b3e1de21c9c..8f4a3f889d43 100644
+--- a/Documentation/device-mapper/dm-crypt.txt
++++ b/Documentation/device-mapper/dm-crypt.txt
 @@ -1,5 +1,6 @@
--		     Memory Layout on AArch64 Linux
--		     ==============================
++========
+ dm-crypt
+-=========
++========
+ 
+ Device-Mapper's "crypt" target provides transparent encryption of block devices
+ using the kernel crypto API.
+@@ -7,15 +8,20 @@ using the kernel crypto API.
+ For a more detailed description of supported parameters see:
+ https://gitlab.com/cryptsetup/cryptsetup/wikis/DMCrypt
+ 
+-Parameters: <cipher> <key> <iv_offset> <device path> \
++Parameters::
++
++	      <cipher> <key> <iv_offset> <device path> \
+ 	      <offset> [<#opt_params> <opt_params>]
+ 
+ <cipher>
+     Encryption cipher, encryption mode and Initial Vector (IV) generator.
+ 
+-    The cipher specifications format is:
++    The cipher specifications format is::
++
+        cipher[:keycount]-chainmode-ivmode[:ivopts]
+-    Examples:
++
++    Examples::
++
+        aes-cbc-essiv:sha256
+        aes-xts-plain64
+        serpent-xts-plain64
+@@ -25,12 +31,17 @@ Parameters: <cipher> <key> <iv_offset> <device path> \
+     as for the first format type.
+     This format is mainly used for specification of authenticated modes.
+ 
+-    The crypto API cipher specifications format is:
++    The crypto API cipher specifications format is::
++
+         capi:cipher_api_spec-ivmode[:ivopts]
+-    Examples:
++
++    Examples::
++
+         capi:cbc(aes)-essiv:sha256
+         capi:xts(aes)-plain64
+-    Examples of authenticated modes:
++
++    Examples of authenticated modes::
++
+         capi:gcm(aes)-random
+         capi:authenc(hmac(sha256),xts(aes))-random
+         capi:rfc7539(chacha20,poly1305)-random
+@@ -142,21 +153,21 @@ LUKS (Linux Unified Key Setup) is now the preferred way to set up disk
+ encryption with dm-crypt using the 'cryptsetup' utility, see
+ https://gitlab.com/cryptsetup/cryptsetup
+ 
+-[[
+-#!/bin/sh
+-# Create a crypt device using dmsetup
+-dmsetup create crypt1 --table "0 `blockdev --getsz $1` crypt aes-cbc-essiv:sha256 babebabebabebabebabebabebabebabe 0 $1 0"
+-]]
++::
+ 
+-[[
+-#!/bin/sh
+-# Create a crypt device using dmsetup when encryption key is stored in keyring service
+-dmsetup create crypt2 --table "0 `blockdev --getsize $1` crypt aes-cbc-essiv:sha256 :32:logon:my_prefix:my_key 0 $1 0"
+-]]
++	#!/bin/sh
++	# Create a crypt device using dmsetup
++	dmsetup create crypt1 --table "0 `blockdev --getsz $1` crypt aes-cbc-essiv:sha256 babebabebabebabebabebabebabebabe 0 $1 0"
+ 
+-[[
+-#!/bin/sh
+-# Create a crypt device using cryptsetup and LUKS header with default cipher
+-cryptsetup luksFormat $1
+-cryptsetup luksOpen $1 crypt1
+-]]
++::
++
++	#!/bin/sh
++	# Create a crypt device using dmsetup when encryption key is stored in keyring service
++	dmsetup create crypt2 --table "0 `blockdev --getsize $1` crypt aes-cbc-essiv:sha256 :32:logon:my_prefix:my_key 0 $1 0"
++
++::
++
++	#!/bin/sh
++	# Create a crypt device using cryptsetup and LUKS header with default cipher
++	cryptsetup luksFormat $1
++	cryptsetup luksOpen $1 crypt1
+diff --git a/Documentation/device-mapper/dm-flakey.txt b/Documentation/device-mapper/dm-flakey.txt
+index 9f0e247d0877..86138735879d 100644
+--- a/Documentation/device-mapper/dm-flakey.txt
++++ b/Documentation/device-mapper/dm-flakey.txt
+@@ -1,3 +1,4 @@
++=========
+ dm-flakey
+ =========
+ 
+@@ -15,17 +16,26 @@ underlying devices.
+ 
+ Table parameters
+ ----------------
++
++::
++
+   <dev path> <offset> <up interval> <down interval> \
+     [<num_features> [<feature arguments>]]
+ 
+ Mandatory parameters:
+-    <dev path>: Full pathname to the underlying block-device, or a
+-                "major:minor" device-number.
+-    <offset>: Starting sector within the device.
+-    <up interval>: Number of seconds device is available.
+-    <down interval>: Number of seconds device returns errors.
++
++    <dev path>:
++        Full pathname to the underlying block-device, or a
++        "major:minor" device-number.
++    <offset>:
++        Starting sector within the device.
++    <up interval>:
++        Number of seconds device is available.
++    <down interval>:
++        Number of seconds device returns errors.
+ 
+ Optional feature parameters:
++
+   If no feature parameters are present, during the periods of
+   unreliability, all I/O returns errors.
+ 
+@@ -41,17 +51,24 @@ Optional feature parameters:
+ 	During <down interval>, replace <Nth_byte> of the data of
+ 	each matching bio with <value>.
+ 
+-    <Nth_byte>: The offset of the byte to replace.
+-		Counting starts at 1, to replace the first byte.
+-    <direction>: Either 'r' to corrupt reads or 'w' to corrupt writes.
+-		 'w' is incompatible with drop_writes.
+-    <value>: The value (from 0-255) to write.
+-    <flags>: Perform the replacement only if bio->bi_opf has all the
+-	     selected flags set.
++    <Nth_byte>:
++	The offset of the byte to replace.
++	Counting starts at 1, to replace the first byte.
++    <direction>:
++	Either 'r' to corrupt reads or 'w' to corrupt writes.
++	'w' is incompatible with drop_writes.
++    <value>:
++	The value (from 0-255) to write.
++    <flags>:
++	Perform the replacement only if bio->bi_opf has all the
++	selected flags set.
+ 
+ Examples:
++
++Replaces the 32nd byte of READ bios with the value 1::
++
+   corrupt_bio_byte 32 r 1 0
+-	- replaces the 32nd byte of READ bios with the value 1
++
++Replaces the 224th byte of REQ_META (=32) bios with the value 0::
+ 
+   corrupt_bio_byte 224 w 0 32
+-	- replaces the 224th byte of REQ_META (=32) bios with the value 0
+diff --git a/Documentation/device-mapper/dm-init.txt b/Documentation/device-mapper/dm-init.txt
+index 8464ee7c01b8..a0db2f30030e 100644
+--- a/Documentation/device-mapper/dm-init.txt
++++ b/Documentation/device-mapper/dm-init.txt
+@@ -1,5 +1,6 @@
++================================
+ Early creation of mapped devices
+-====================================
++================================
+ 
+ It is possible to configure a device-mapper device to act as the root device for
+ your system in two ways.
+@@ -12,15 +13,17 @@ The second is to create one or more device-mappers using the module parameter
+ 
+ The format is specified as a string of data separated by commas and optionally
+ semi-colons, where:
++
+  - a comma is used to separate fields like name, uuid, flags and table
+    (specifies one device)
+  - a semi-colon is used to separate devices.
+ 
+-So the format will look like this:
++So the format will look like this::
+ 
+  dm-mod.create=<name>,<uuid>,<minor>,<flags>,<table>[,<table>+][;<name>,<uuid>,<minor>,<flags>,<table>[,<table>+]+]
+ 
+-Where,
++Where::
++
+ 	<name>		::= The device name.
+ 	<uuid>		::= xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx | ""
+ 	<minor>		::= The device minor number | ""
+@@ -29,7 +32,7 @@ Where,
+ 	<target_type>	::= "verity" | "linear" | ... (see list below)
+ 
+ The dm line should be equivalent to the one used by the dmsetup tool with the
+---concise argument.
++`--concise` argument.
+ 
+ Target types
+ ============
+@@ -38,32 +41,34 @@ Not all target types are available as there are serious risks in allowing
+ activation of certain DM targets without first using userspace tools to check
+ the validity of associated metadata.
+ 
+-	"cache":		constrained, userspace should verify cache device
+-	"crypt":		allowed
+-	"delay":		allowed
+-	"era":			constrained, userspace should verify metadata device
+-	"flakey":		constrained, meant for test
+-	"linear":		allowed
+-	"log-writes":		constrained, userspace should verify metadata device
+-	"mirror":		constrained, userspace should verify main/mirror device
+-	"raid":			constrained, userspace should verify metadata device
+-	"snapshot":		constrained, userspace should verify src/dst device
+-	"snapshot-origin":	allowed
+-	"snapshot-merge":	constrained, userspace should verify src/dst device
+-	"striped":		allowed
+-	"switch":		constrained, userspace should verify dev path
+-	"thin":			constrained, requires dm target message from userspace
+-	"thin-pool":		constrained, requires dm target message from userspace
+-	"verity":		allowed
+-	"writecache":		constrained, userspace should verify cache device
+-	"zero":			constrained, not meant for rootfs
++======================= =======================================================
++`cache`			constrained, userspace should verify cache device
++`crypt`			allowed
++`delay`			allowed
++`era`			constrained, userspace should verify metadata device
++`flakey`		constrained, meant for test
++`linear`		allowed
++`log-writes`		constrained, userspace should verify metadata device
++`mirror`		constrained, userspace should verify main/mirror device
++`raid`			constrained, userspace should verify metadata device
++`snapshot`		constrained, userspace should verify src/dst device
++`snapshot-origin`	allowed
++`snapshot-merge`	constrained, userspace should verify src/dst device
++`striped`		allowed
++`switch`		constrained, userspace should verify dev path
++`thin`			constrained, requires dm target message from userspace
++`thin-pool`		constrained, requires dm target message from userspace
++`verity`		allowed
++`writecache`		constrained, userspace should verify cache device
++`zero`			constrained, not meant for rootfs
++======================= =======================================================
+ 
+ If the target is not listed above, it is constrained by default (not tested).
+ 
+ Examples
+ ========
+ An example of booting to a linear array made up of user-mode linux block
+-devices:
++devices::
+ 
+   dm-mod.create="lroot,,,rw, 0 4096 linear 98:16 0, 4096 4096 linear 98:32 0" root=/dev/dm-0
+ 
+@@ -71,8 +76,8 @@ This will boot to a rw dm-linear target of 8192 sectors split across two block
+ devices identified by their major:minor numbers.  After boot, udev will rename
+ this target to /dev/mapper/lroot (depending on the rules). No uuid was assigned.
+ 
+-An example of multiple device-mappers, with the dm-mod.create="..." contents is shown here
+-split on multiple lines for readability:
++An example of multiple device-mappers, with the dm-mod.create="..." contents
++is shown here split on multiple lines for readability::
+ 
+   vroot,,,ro,
+     0 1740800 verity 254:0 254:0 1740800 sha1
+@@ -84,30 +89,36 @@ split on multiple lines for readability:
+ 
+ Other examples (per target):
+ 
+-"crypt":
++"crypt"::
++
+   dm-crypt,,8,ro,
+     0 1048576 crypt aes-xts-plain64
+     babebabebabebabebabebabebabebabebabebabebabebabebabebabebabebabe 0
+     /dev/sda 0 1 allow_discards
+ 
+-"delay":
++"delay"::
++
+   dm-delay,,4,ro,0 409600 delay /dev/sda1 0 500
+ 
+-"linear":
++"linear"::
++
+   dm-linear,,,rw,
+     0 32768 linear /dev/sda1 0,
+     32768 1024000 linear /dev/sda2 0,
+     1056768 204800 linear /dev/sda3 0,
+     1261568 512000 linear /dev/sda4 0
+ 
+-"snapshot-origin":
++"snapshot-origin"::
++
+   dm-snap-orig,,4,ro,0 409600 snapshot-origin 8:2
+ 
+-"striped":
++"striped"::
++
+   dm-striped,,4,ro,0 1638400 striped 4 4096
+   /dev/sda1 0 /dev/sda2 0 /dev/sda3 0 /dev/sda4 0
+ 
+-"verity":
++"verity"::
++
+   dm-verity,,4,ro,
+     0 1638400 verity 1 8:1 8:2 4096 4096 204800 1 sha256
+     fb1a5a0f00deb908d8b53cb270858975e76cf64105d412ce764225d53b8f3cfd
+diff --git a/Documentation/device-mapper/dm-integrity.txt b/Documentation/device-mapper/dm-integrity.txt
+index 297251b0d2d5..4fa8d2939d46 100644
+--- a/Documentation/device-mapper/dm-integrity.txt
++++ b/Documentation/device-mapper/dm-integrity.txt
+@@ -1,3 +1,7 @@
++============
++dm-integrity
++============
++
+ The dm-integrity target emulates a block device that has additional
+ per-sector tags that can be used for storing integrity information.
+ 
+@@ -28,15 +32,16 @@ zeroes. If the superblock is neither valid nor zeroed, the dm-integrity
+ target can't be loaded.
+ 
+ To use the target for the first time:
++
+ 1. overwrite the superblock with zeroes
+ 2. load the dm-integrity target with one-sector size, the kernel driver
+-	will format the device
++   will format the device
+ 3. unload the dm-integrity target
+ 4. read the "provided_data_sectors" value from the superblock
+ 5. load the dm-integrity target with the the target size
+-	"provided_data_sectors"
++   "provided_data_sectors"
+ 6. if you want to use dm-integrity with dm-crypt, load the dm-crypt target
+-	with the size "provided_data_sectors"
++   with the size "provided_data_sectors"
+ 
+ 
+ Target arguments:
+@@ -44,22 +49,26 @@ Target arguments:
+ 1. the underlying block device
+ 
+ 2. the number of reserved sector at the beginning of the device - the
+-	dm-integrity won't read of write these sectors
++   dm-integrity won't read of write these sectors
+ 
+ 3. the size of the integrity tag (if "-" is used, the size is taken from
+-	the internal-hash algorithm)
++   the internal-hash algorithm)
+ 
+ 4. mode:
+-	D - direct writes (without journal) - in this mode, journaling is
++
++	D - direct writes (without journal)
++		in this mode, journaling is
+ 		not used and data sectors and integrity tags are written
+ 		separately. In case of crash, it is possible that the data
+ 		and integrity tag doesn't match.
+-	J - journaled writes - data and integrity tags are written to the
++	J - journaled writes
++		data and integrity tags are written to the
+ 		journal and atomicity is guaranteed. In case of crash,
+ 		either both data and tag or none of them are written. The
+ 		journaled mode degrades write throughput twice because the
+ 		data have to be written twice.
+-	R - recovery mode - in this mode, journal is not replayed,
++	R - recovery mode
++		in this mode, journal is not replayed,
+ 		checksums are not checked and writes to the device are not
+ 		allowed. This mode is useful for data recovery if the
+ 		device cannot be activated in any of the other standard
+@@ -154,9 +163,12 @@ and the reloaded target would be non-functional.
+ 
+ 
+ The layout of the formatted block device:
+-* reserved sectors (they are not used by this target, they can be used for
+-  storing LUKS metadata or for other purpose), the size of the reserved
+-  area is specified in the target arguments
++
++* reserved sectors
++    (they are not used by this target, they can be used for
++    storing LUKS metadata or for other purpose), the size of the reserved
++    area is specified in the target arguments
++
+ * superblock (4kiB)
+ 	* magic string - identifies that the device was formatted
+ 	* version
+@@ -168,34 +180,47 @@ The layout of the formatted block device:
+ 	  metadata and padding). The user of this target should not send
+ 	  bios that access data beyond the "provided data sectors" limit.
+ 	* flags - a flag is set if journal_mac is used
++
+ * journal
+ 	The journal is divided into sections, each section contains:
++
+ 	* metadata area (4kiB), it contains journal entries
+-	  every journal entry contains:
++
++	  - every journal entry contains:
++
+ 		* logical sector (specifies where the data and tag should
+ 		  be written)
+ 		* last 8 bytes of data
+ 		* integrity tag (the size is specified in the superblock)
+-	    every metadata sector ends with
++
++	  - every metadata sector ends with
++
+ 		* mac (8-bytes), all the macs in 8 metadata sectors form a
+ 		  64-byte value. It is used to store hmac of sector
+ 		  numbers in the journal section, to protect against a
+ 		  possibility that the attacker tampers with sector
+ 		  numbers in the journal.
+ 		* commit id
++
+ 	* data area (the size is variable; it depends on how many journal
+ 	  entries fit into the metadata area)
+-	    every sector in the data area contains:
++
++	    - every sector in the data area contains:
++
+ 		* data (504 bytes of data, the last 8 bytes are stored in
+ 		  the journal entry)
+ 		* commit id
++
+ 	To test if the whole journal section was written correctly, every
+ 	512-byte sector of the journal ends with 8-byte commit id. If the
+ 	commit id matches on all sectors in a journal section, then it is
+ 	assumed that the section was written correctly. If the commit id
+ 	doesn't match, the section was written partially and it should not
+ 	be replayed.
+-* one or more runs of interleaved tags and data. Each run contains:
++
++* one or more runs of interleaved tags and data.
++    Each run contains:
++
+ 	* tag area - it contains integrity tags. There is one tag for each
+ 	  sector in the data area
+ 	* data area - it contains data sectors. The number of data sectors
+diff --git a/Documentation/device-mapper/dm-io.txt b/Documentation/device-mapper/dm-io.txt
+index 3b5d9a52cdcf..d2492917a1f5 100644
+--- a/Documentation/device-mapper/dm-io.txt
++++ b/Documentation/device-mapper/dm-io.txt
+@@ -1,3 +1,4 @@
++=====
+ dm-io
+ =====
+ 
+@@ -7,7 +8,7 @@ version.
+ 
+ The user must set up an io_region structure to describe the desired location
+ of the I/O. Each io_region indicates a block-device along with the starting
+-sector and size of the region.
++sector and size of the region::
+ 
+    struct io_region {
+       struct block_device *bdev;
+@@ -19,7 +20,7 @@ Dm-io can read from one io_region or write to one or more io_regions. Writes
+ to multiple regions are specified by an array of io_region structures.
+ 
+ The first I/O service type takes a list of memory pages as the data buffer for
+-the I/O, along with an offset into the first page.
++the I/O, along with an offset into the first page::
+ 
+    struct page_list {
+       struct page_list *next;
+@@ -35,7 +36,7 @@ the I/O, along with an offset into the first page.
+ 
+ The second I/O service type takes an array of bio vectors as the data buffer
+ for the I/O. This service can be handy if the caller has a pre-assembled bio,
+-but wants to direct different portions of the bio to different devices.
++but wants to direct different portions of the bio to different devices::
+ 
+    int dm_io_sync_bvec(unsigned int num_regions, struct io_region *where,
+                        int rw, struct bio_vec *bvec,
+@@ -47,7 +48,7 @@ but wants to direct different portions of the bio to different devices.
+ The third I/O service type takes a pointer to a vmalloc'd memory buffer as the
+ data buffer for the I/O. This service can be handy if the caller needs to do
+ I/O to a large region but doesn't want to allocate a large number of individual
+-memory pages.
++memory pages::
+ 
+    int dm_io_sync_vm(unsigned int num_regions, struct io_region *where, int rw,
+                      void *data, unsigned long *error_bits);
+@@ -55,11 +56,11 @@ memory pages.
+                       void *data, io_notify_fn fn, void *context);
+ 
+ Callers of the asynchronous I/O services must include the name of a completion
+-callback routine and a pointer to some context data for the I/O.
++callback routine and a pointer to some context data for the I/O::
+ 
+    typedef void (*io_notify_fn)(unsigned long error, void *context);
+ 
+-The "error" parameter in this callback, as well as the "*error" parameter in
++The "error" parameter in this callback, as well as the `*error` parameter in
+ all of the synchronous versions, is a bitset (instead of a simple error value).
+ In the case of an write-I/O to multiple regions, this bitset allows dm-io to
+ indicate success or failure on each individual region.
+@@ -72,4 +73,3 @@ always available in order to avoid unnecessary waiting while performing I/O.
+ When the user is finished using the dm-io services, they should call
+ dm_io_put() and specify the same number of pages that were given on the
+ dm_io_get() call.
+-
+diff --git a/Documentation/device-mapper/dm-log.txt b/Documentation/device-mapper/dm-log.txt
+index c155ac569c44..ba4fce39bc27 100644
+--- a/Documentation/device-mapper/dm-log.txt
++++ b/Documentation/device-mapper/dm-log.txt
+@@ -1,3 +1,4 @@
++=====================
+ Device-Mapper Logging
+ =====================
+ The device-mapper logging code is used by some of the device-mapper
+@@ -16,11 +17,13 @@ dm_dirty_log_type in include/linux/dm-dirty-log.h).  Various different
+ logging implementations are available and provide different
+ capabilities.  The list includes:
+ 
++==============	==============================================================
+ Type		Files
+-====		=====
++==============	==============================================================
+ disk		drivers/md/dm-log.c
+ core		drivers/md/dm-log.c
+ userspace	drivers/md/dm-log-userspace* include/linux/dm-log-userspace.h
++==============	==============================================================
+ 
+ The "disk" log type
+ -------------------
+diff --git a/Documentation/device-mapper/dm-queue-length.txt b/Documentation/device-mapper/dm-queue-length.txt
+index f4db2562175c..d8e381c1cb02 100644
+--- a/Documentation/device-mapper/dm-queue-length.txt
++++ b/Documentation/device-mapper/dm-queue-length.txt
+@@ -1,3 +1,4 @@
++===============
+ dm-queue-length
+ ===============
+ 
+@@ -6,12 +7,18 @@ which selects a path with the least number of in-flight I/Os.
+ The path selector name is 'queue-length'.
+ 
+ Table parameters for each path: [<repeat_count>]
++
++::
++
+ 	<repeat_count>: The number of I/Os to dispatch using the selected
+ 			path before switching to the next path.
+ 			If not given, internal default is used. To check
+ 			the default value, see the activated table.
+ 
+ Status for each path: <status> <fail-count> <in-flight>
++
++::
++
+ 	<status>: 'A' if the path is active, 'F' if the path is failed.
+ 	<fail-count>: The number of path failures.
+ 	<in-flight>: The number of in-flight I/Os on the path.
+@@ -29,11 +36,13 @@ Examples
+ ========
+ In case that 2 paths (sda and sdb) are used with repeat_count == 128.
+ 
+-# echo "0 10 multipath 0 0 1 1 queue-length 0 2 1 8:0 128 8:16 128" \
+-  dmsetup create test
+-#
+-# dmsetup table
+-test: 0 10 multipath 0 0 1 1 queue-length 0 2 1 8:0 128 8:16 128
+-#
+-# dmsetup status
+-test: 0 10 multipath 2 0 0 0 1 1 E 0 2 1 8:0 A 0 0 8:16 A 0 0
++::
++
++  # echo "0 10 multipath 0 0 1 1 queue-length 0 2 1 8:0 128 8:16 128" \
++    dmsetup create test
++  #
++  # dmsetup table
++  test: 0 10 multipath 0 0 1 1 queue-length 0 2 1 8:0 128 8:16 128
++  #
++  # dmsetup status
++  test: 0 10 multipath 2 0 0 0 1 1 E 0 2 1 8:0 A 0 0 8:16 A 0 0
+diff --git a/Documentation/device-mapper/dm-raid.txt b/Documentation/device-mapper/dm-raid.txt
+index 2355bef14653..2fe255b130fb 100644
+--- a/Documentation/device-mapper/dm-raid.txt
++++ b/Documentation/device-mapper/dm-raid.txt
+@@ -1,3 +1,4 @@
++=======
+ dm-raid
+ =======
+ 
+@@ -8,49 +9,66 @@ interface.
+ 
+ Mapping Table Interface
+ -----------------------
+-The target is named "raid" and it accepts the following parameters:
++The target is named "raid" and it accepts the following parameters::
+ 
+   <raid_type> <#raid_params> <raid_params> \
+     <#raid_devs> <metadata_dev0> <dev0> [.. <metadata_devN> <devN>]
+ 
+ <raid_type>:
++
++  ============= ===============================================================
+   raid0		RAID0 striping (no resilience)
+   raid1		RAID1 mirroring
+   raid4		RAID4 with dedicated last parity disk
+   raid5_n 	RAID5 with dedicated last parity disk supporting takeover
+ 		Same as raid4
+-		-Transitory layout
++
++		- Transitory layout
+   raid5_la	RAID5 left asymmetric
++
+ 		- rotating parity 0 with data continuation
+   raid5_ra	RAID5 right asymmetric
++
+ 		- rotating parity N with data continuation
+   raid5_ls	RAID5 left symmetric
++
+ 		- rotating parity 0 with data restart
+   raid5_rs 	RAID5 right symmetric
++
+ 		- rotating parity N with data restart
+   raid6_zr	RAID6 zero restart
++
+ 		- rotating parity zero (left-to-right) with data restart
+   raid6_nr	RAID6 N restart
++
+ 		- rotating parity N (right-to-left) with data restart
+   raid6_nc	RAID6 N continue
++
+ 		- rotating parity N (right-to-left) with data continuation
+   raid6_n_6	RAID6 with dedicate parity disks
++
+ 		- parity and Q-syndrome on the last 2 disks;
+ 		  layout for takeover from/to raid4/raid5_n
+   raid6_la_6	Same as "raid_la" plus dedicated last Q-syndrome disk
++
+ 		- layout for takeover from raid5_la from/to raid6
+   raid6_ra_6	Same as "raid5_ra" dedicated last Q-syndrome disk
++
+ 		- layout for takeover from raid5_ra from/to raid6
+   raid6_ls_6	Same as "raid5_ls" dedicated last Q-syndrome disk
++
+ 		- layout for takeover from raid5_ls from/to raid6
+   raid6_rs_6	Same as "raid5_rs" dedicated last Q-syndrome disk
++
+ 		- layout for takeover from raid5_rs from/to raid6
+   raid10        Various RAID10 inspired algorithms chosen by additional params
+ 		(see raid10_format and raid10_copies below)
++
+ 		- RAID10: Striped Mirrors (aka 'Striping on top of mirrors')
+ 		- RAID1E: Integrated Adjacent Stripe Mirroring
+ 		- RAID1E: Integrated Offset Stripe Mirroring
+-		-  and other similar RAID10 variants
++		- and other similar RAID10 variants
++  ============= ===============================================================
+ 
+   Reference: Chapter 4 of
+   http://www.snia.org/sites/default/files/SNIA_DDF_Technical_Position_v2.0.pdf
+@@ -58,33 +76,41 @@ The target is named "raid" and it accepts the following parameters:
+ <#raid_params>: The number of parameters that follow.
+ 
+ <raid_params> consists of
++
+     Mandatory parameters:
+-        <chunk_size>: Chunk size in sectors.  This parameter is often known as
++        <chunk_size>:
++		      Chunk size in sectors.  This parameter is often known as
+ 		      "stripe size".  It is the only mandatory parameter and
+ 		      is placed first.
+ 
+     followed by optional parameters (in any order):
+-	[sync|nosync]   Force or prevent RAID initialization.
++	[sync|nosync]
++		Force or prevent RAID initialization.
+ 
+-	[rebuild <idx>]	Rebuild drive number 'idx' (first drive is 0).
++	[rebuild <idx>]
++		Rebuild drive number 'idx' (first drive is 0).
+ 
+ 	[daemon_sleep <ms>]
+ 		Interval between runs of the bitmap daemon that
+ 		clear bits.  A longer interval means less bitmap I/O but
+ 		resyncing after a failure is likely to take longer.
+ 
+-	[min_recovery_rate <kB/sec/disk>]  Throttle RAID initialization
+-	[max_recovery_rate <kB/sec/disk>]  Throttle RAID initialization
+-	[write_mostly <idx>]		   Mark drive index 'idx' write-mostly.
+-	[max_write_behind <sectors>]       See '--write-behind=' (man mdadm)
+-	[stripe_cache <sectors>]           Stripe cache size (RAID 4/5/6 only)
++	[min_recovery_rate <kB/sec/disk>]
++		Throttle RAID initialization
++	[max_recovery_rate <kB/sec/disk>]
++		Throttle RAID initialization
++	[write_mostly <idx>]
++		Mark drive index 'idx' write-mostly.
++	[max_write_behind <sectors>]
++		See '--write-behind=' (man mdadm)
++	[stripe_cache <sectors>]
++		Stripe cache size (RAID 4/5/6 only)
+ 	[region_size <sectors>]
+ 		The region_size multiplied by the number of regions is the
+ 		logical size of the array.  The bitmap records the device
+ 		synchronisation state for each region.
+ 
+-        [raid10_copies   <# copies>]
+-        [raid10_format   <near|far|offset>]
++        [raid10_copies   <# copies>], [raid10_format   <near|far|offset>]
+ 		These two options are used to alter the default layout of
+ 		a RAID10 configuration.  The number of copies is can be
+ 		specified, but the default is 2.  There are also three
+@@ -93,13 +119,17 @@ The target is named "raid" and it accepts the following parameters:
+ 		respect to mirroring.  If these options are left unspecified,
+ 		or 'raid10_copies 2' and/or 'raid10_format near' are given,
+ 		then the layouts for 2, 3 and 4 devices	are:
++
++		========	 ==========	   ==============
+ 		2 drives         3 drives          4 drives
+-		--------         ----------        --------------
++		========	 ==========	   ==============
+ 		A1  A1           A1  A1  A2        A1  A1  A2  A2
+ 		A2  A2           A2  A3  A3        A3  A3  A4  A4
+ 		A3  A3           A4  A4  A5        A5  A5  A6  A6
+ 		A4  A4           A5  A6  A6        A7  A7  A8  A8
+ 		..  ..           ..  ..  ..        ..  ..  ..  ..
++		========	 ==========	   ==============
++
+ 		The 2-device layout is equivalent 2-way RAID1.  The 4-device
+ 		layout is what a traditional RAID10 would look like.  The
+ 		3-device layout is what might be called a 'RAID1E - Integrated
+@@ -107,8 +137,10 @@ The target is named "raid" and it accepts the following parameters:
+ 
+ 		If 'raid10_copies 2' and 'raid10_format far', then the layouts
+ 		for 2, 3 and 4 devices are:
++
++		========	     ============	  ===================
+ 		2 drives             3 drives             4 drives
+-		--------             --------------       --------------------
++		========	     ============	  ===================
+ 		A1  A2               A1   A2   A3         A1   A2   A3   A4
+ 		A3  A4               A4   A5   A6         A5   A6   A7   A8
+ 		A5  A6               A7   A8   A9         A9   A10  A11  A12
+@@ -117,11 +149,14 @@ The target is named "raid" and it accepts the following parameters:
+ 		A4  A3               A6   A4   A5         A6   A5   A8   A7
+ 		A6  A5               A9   A7   A8         A10  A9   A12  A11
+ 		..  ..               ..   ..   ..         ..   ..   ..   ..
++		========	     ============	  ===================
+ 
+ 		If 'raid10_copies 2' and 'raid10_format offset', then the
+ 		layouts for 2, 3 and 4 devices are:
++
++		========       ==========         ================
+ 		2 drives       3 drives           4 drives
+-		--------       ------------       -----------------
++		========       ==========         ================
+ 		A1  A2         A1  A2  A3         A1  A2  A3  A4
+ 		A2  A1         A3  A1  A2         A2  A1  A4  A3
+ 		A3  A4         A4  A5  A6         A5  A6  A7  A8
+@@ -129,6 +164,8 @@ The target is named "raid" and it accepts the following parameters:
+ 		A5  A6         A7  A8  A9         A9  A10 A11 A12
+ 		A6  A5         A9  A7  A8         A10 A9  A12 A11
+ 		..  ..         ..  ..  ..         ..  ..  ..  ..
++		========       ==========         ================
++
+ 		Here we see layouts closely akin to 'RAID1E - Integrated
+ 		Offset Stripe Mirroring'.
+ 
+@@ -190,22 +227,25 @@ The target is named "raid" and it accepts the following parameters:
+ 
+ Example Tables
+ --------------
+-# RAID4 - 4 data drives, 1 parity (no metadata devices)
+-# No metadata devices specified to hold superblock/bitmap info
+-# Chunk size of 1MiB
+-# (Lines separated for easy reading)
+ 
+-0 1960893648 raid \
+-        raid4 1 2048 \
+-        5 - 8:17 - 8:33 - 8:49 - 8:65 - 8:81
++::
+ 
+-# RAID4 - 4 data drives, 1 parity (with metadata devices)
+-# Chunk size of 1MiB, force RAID initialization,
+-#       min recovery rate at 20 kiB/sec/disk
++  # RAID4 - 4 data drives, 1 parity (no metadata devices)
++  # No metadata devices specified to hold superblock/bitmap info
++  # Chunk size of 1MiB
++  # (Lines separated for easy reading)
+ 
+-0 1960893648 raid \
+-        raid4 4 2048 sync min_recovery_rate 20 \
+-        5 8:17 8:18 8:33 8:34 8:49 8:50 8:65 8:66 8:81 8:82
++  0 1960893648 raid \
++          raid4 1 2048 \
++          5 - 8:17 - 8:33 - 8:49 - 8:65 - 8:81
++
++  # RAID4 - 4 data drives, 1 parity (with metadata devices)
++  # Chunk size of 1MiB, force RAID initialization,
++  #       min recovery rate at 20 kiB/sec/disk
++
++  0 1960893648 raid \
++          raid4 4 2048 sync min_recovery_rate 20 \
++          5 8:17 8:18 8:33 8:34 8:49 8:50 8:65 8:66 8:81 8:82
+ 
+ 
+ Status Output
+@@ -219,41 +259,58 @@ Arguments that can be repeated are ordered by value.
+ 
+ 'dmsetup status' yields information on the state and health of the array.
+ The output is as follows (normally a single line, but expanded here for
+-clarity):
+-1: <s> <l> raid \
+-2:      <raid_type> <#devices> <health_chars> \
+-3:      <sync_ratio> <sync_action> <mismatch_cnt>
++clarity)::
++
++  1: <s> <l> raid \
++  2:      <raid_type> <#devices> <health_chars> \
++  3:      <sync_ratio> <sync_action> <mismatch_cnt>
+ 
+ Line 1 is the standard output produced by device-mapper.
+-Line 2 & 3 are produced by the raid target and are best explained by example:
++
++Line 2 & 3 are produced by the raid target and are best explained by example::
++
+         0 1960893648 raid raid4 5 AAAAA 2/490221568 init 0
++
+ Here we can see the RAID type is raid4, there are 5 devices - all of
+ which are 'A'live, and the array is 2/490221568 complete with its initial
+ recovery.  Here is a fuller description of the individual fields:
++
++	=============== =========================================================
+ 	<raid_type>     Same as the <raid_type> used to create the array.
+-	<health_chars>  One char for each device, indicating: 'A' = alive and
+-			in-sync, 'a' = alive but not in-sync, 'D' = dead/failed.
++	<health_chars>  One char for each device, indicating:
++
++			- 'A' = alive and in-sync
++			- 'a' = alive but not in-sync
++			- 'D' = dead/failed.
+ 	<sync_ratio>    The ratio indicating how much of the array has undergone
+ 			the process described by 'sync_action'.  If the
+ 			'sync_action' is "check" or "repair", then the process
+ 			of "resync" or "recover" can be considered complete.
+ 	<sync_action>   One of the following possible states:
+-			idle    - No synchronization action is being performed.
+-			frozen  - The current action has been halted.
+-			resync  - Array is undergoing its initial synchronization
++
++			idle
++				- No synchronization action is being performed.
++			frozen
++				- The current action has been halted.
++			resync
++				- Array is undergoing its initial synchronization
+ 				  or is resynchronizing after an unclean shutdown
+ 				  (possibly aided by a bitmap).
+-			recover - A device in the array is being rebuilt or
++			recover
++				- A device in the array is being rebuilt or
+ 				  replaced.
+-			check   - A user-initiated full check of the array is
++			check
++				- A user-initiated full check of the array is
+ 				  being performed.  All blocks are read and
+ 				  checked for consistency.  The number of
+ 				  discrepancies found are recorded in
+ 				  <mismatch_cnt>.  No changes are made to the
+ 				  array by this action.
+-			repair  - The same as "check", but discrepancies are
++			repair
++				- The same as "check", but discrepancies are
+ 				  corrected.
+-			reshape - The array is undergoing a reshape.
++			reshape
++				- The array is undergoing a reshape.
+ 	<mismatch_cnt>  The number of discrepancies found between mirror copies
+ 			in RAID1/10 or wrong parity values found in RAID4/5/6.
+ 			This value is valid only after a "check" of the array
+@@ -261,10 +318,11 @@ recovery.  Here is a fuller description of the individual fields:
+ 	<data_offset>   The current data offset to the start of the user data on
+ 			each component device of a raid set (see the respective
+ 			raid parameter to support out-of-place reshaping).
+-	<journal_char>	'A' - active write-through journal device.
+-			'a' - active write-back journal device.
+-			'D' - dead journal device.
+-			'-' - no journal device.
++	<journal_char>	- 'A' - active write-through journal device.
++			- 'a' - active write-back journal device.
++			- 'D' - dead journal device.
++			- '-' - no journal device.
++	=============== =========================================================
+ 
+ 
+ Message Interface
+@@ -272,12 +330,15 @@ Message Interface
+ The dm-raid target will accept certain actions through the 'message' interface.
+ ('man dmsetup' for more information on the message interface.)  These actions
+ include:
+-	"idle"   - Halt the current sync action.
+-	"frozen" - Freeze the current sync action.
+-	"resync" - Initiate/continue a resync.
+-	"recover"- Initiate/continue a recover process.
+-	"check"  - Initiate a check (i.e. a "scrub") of the array.
+-	"repair" - Initiate a repair of the array.
++
++	========= ================================================
++	"idle"    Halt the current sync action.
++	"frozen"  Freeze the current sync action.
++	"resync"  Initiate/continue a resync.
++	"recover" Initiate/continue a recover process.
++	"check"   Initiate a check (i.e. a "scrub") of the array.
++	"repair"  Initiate a repair of the array.
++	========= ================================================
+ 
+ 
+ Discard Support
+@@ -307,48 +368,52 @@ increasingly whitelisted in the kernel and can thus be trusted.
+ 
+ For trusted devices, the following dm-raid module parameter can be set
+ to safely enable discard support for RAID 4/5/6:
++
+     'devices_handle_discards_safely'
+ 
+ 
+ Version History
+ ---------------
+-1.0.0	Initial version.  Support for RAID 4/5/6
+-1.1.0	Added support for RAID 1
+-1.2.0	Handle creation of arrays that contain failed devices.
+-1.3.0	Added support for RAID 10
+-1.3.1	Allow device replacement/rebuild for RAID 10
+-1.3.2   Fix/improve redundancy checking for RAID10
+-1.4.0	Non-functional change.  Removes arg from mapping function.
+-1.4.1   RAID10 fix redundancy validation checks (commit 55ebbb5).
+-1.4.2   Add RAID10 "far" and "offset" algorithm support.
+-1.5.0   Add message interface to allow manipulation of the sync_action.
++
++::
++
++ 1.0.0	Initial version.  Support for RAID 4/5/6
++ 1.1.0	Added support for RAID 1
++ 1.2.0	Handle creation of arrays that contain failed devices.
++ 1.3.0	Added support for RAID 10
++ 1.3.1	Allow device replacement/rebuild for RAID 10
++ 1.3.2	Fix/improve redundancy checking for RAID10
++ 1.4.0	Non-functional change.  Removes arg from mapping function.
++ 1.4.1	RAID10 fix redundancy validation checks (commit 55ebbb5).
++ 1.4.2	Add RAID10 "far" and "offset" algorithm support.
++ 1.5.0	Add message interface to allow manipulation of the sync_action.
+ 	New status (STATUSTYPE_INFO) fields: sync_action and mismatch_cnt.
+-1.5.1   Add ability to restore transiently failed devices on resume.
+-1.5.2   'mismatch_cnt' is zero unless [last_]sync_action is "check".
+-1.6.0   Add discard support (and devices_handle_discard_safely module param).
+-1.7.0   Add support for MD RAID0 mappings.
+-1.8.0   Explicitly check for compatible flags in the superblock metadata
++ 1.5.1	Add ability to restore transiently failed devices on resume.
++ 1.5.2	'mismatch_cnt' is zero unless [last_]sync_action is "check".
++ 1.6.0	Add discard support (and devices_handle_discard_safely module param).
++ 1.7.0	Add support for MD RAID0 mappings.
++ 1.8.0	Explicitly check for compatible flags in the superblock metadata
+ 	and reject to start the raid set if any are set by a newer
+ 	target version, thus avoiding data corruption on a raid set
+ 	with a reshape in progress.
+-1.9.0   Add support for RAID level takeover/reshape/region size
++ 1.9.0	Add support for RAID level takeover/reshape/region size
+ 	and set size reduction.
+-1.9.1   Fix activation of existing RAID 4/10 mapped devices
+-1.9.2   Don't emit '- -' on the status table line in case the constructor
++ 1.9.1	Fix activation of existing RAID 4/10 mapped devices
++ 1.9.2	Don't emit '- -' on the status table line in case the constructor
+ 	fails reading a superblock. Correctly emit 'maj:min1 maj:min2' and
+ 	'D' on the status line.  If '- -' is passed into the constructor, emit
+ 	'- -' on the table line and '-' as the status line health character.
+-1.10.0  Add support for raid4/5/6 journal device
+-1.10.1  Fix data corruption on reshape request
+-1.11.0  Fix table line argument order
++ 1.10.0	Add support for raid4/5/6 journal device
++ 1.10.1	Fix data corruption on reshape request
++ 1.11.0	Fix table line argument order
+ 	(wrong raid10_copies/raid10_format sequence)
+-1.11.1  Add raid4/5/6 journal write-back support via journal_mode option
+-1.12.1  Fix for MD deadlock between mddev_suspend() and md_write_start() available
+-1.13.0  Fix dev_health status at end of "recover" (was 'a', now 'A')
+-1.13.1  Fix deadlock caused by early md_stop_writes().  Also fix size an
++ 1.11.1	Add raid4/5/6 journal write-back support via journal_mode option
++ 1.12.1	Fix for MD deadlock between mddev_suspend() and md_write_start() available
++ 1.13.0	Fix dev_health status at end of "recover" (was 'a', now 'A')
++ 1.13.1	Fix deadlock caused by early md_stop_writes().  Also fix size an
+ 	state races.
+-1.13.2  Fix raid redundancy validation and avoid keeping raid set frozen
+-1.14.0  Fix reshape race on small devices.  Fix stripe adding reshape
++ 1.13.2	Fix raid redundancy validation and avoid keeping raid set frozen
++ 1.14.0	Fix reshape race on small devices.  Fix stripe adding reshape
+ 	deadlock/potential data corruption.  Update superblock when
+ 	specific devices are requested via rebuild.  Fix RAID leg
+ 	rebuild errors.
+diff --git a/Documentation/device-mapper/dm-service-time.txt b/Documentation/device-mapper/dm-service-time.txt
+index fb1d4a0cf122..facf277fc13c 100644
+--- a/Documentation/device-mapper/dm-service-time.txt
++++ b/Documentation/device-mapper/dm-service-time.txt
+@@ -1,3 +1,4 @@
++===============
+ dm-service-time
+ ===============
+ 
+@@ -12,25 +13,34 @@ in a path-group, and it can be specified as a table argument.
+ 
+ The path selector name is 'service-time'.
+ 
+-Table parameters for each path: [<repeat_count> [<relative_throughput>]]
+-	<repeat_count>: The number of I/Os to dispatch using the selected
++Table parameters for each path:
++
++    [<repeat_count> [<relative_throughput>]]
++	<repeat_count>:
++			The number of I/Os to dispatch using the selected
+ 			path before switching to the next path.
+ 			If not given, internal default is used.  To check
+ 			the default value, see the activated table.
+-	<relative_throughput>: The relative throughput value of the path
++	<relative_throughput>:
++			The relative throughput value of the path
+ 			among all paths in the path-group.
+ 			The valid range is 0-100.
+ 			If not given, minimum value '1' is used.
+ 			If '0' is given, the path isn't selected while
+ 			other paths having a positive value are available.
+ 
+-Status for each path: <status> <fail-count> <in-flight-size> \
+-		      <relative_throughput>
+-	<status>: 'A' if the path is active, 'F' if the path is failed.
+-	<fail-count>: The number of path failures.
+-	<in-flight-size>: The size of in-flight I/Os on the path.
+-	<relative_throughput>: The relative throughput value of the path
+-			among all paths in the path-group.
++Status for each path:
++
++    <status> <fail-count> <in-flight-size> <relative_throughput>
++	<status>:
++		'A' if the path is active, 'F' if the path is failed.
++	<fail-count>:
++		The number of path failures.
++	<in-flight-size>:
++		The size of in-flight I/Os on the path.
++	<relative_throughput>:
++		The relative throughput value of the path
++		among all paths in the path-group.
+ 
+ 
+ Algorithm
+@@ -39,7 +49,7 @@ Algorithm
+ dm-service-time adds the I/O size to 'in-flight-size' when the I/O is
+ dispatched and subtracts when completed.
+ Basically, dm-service-time selects a path having minimum service time
+-which is calculated by:
++which is calculated by::
+ 
+ 	('in-flight-size' + 'size-of-incoming-io') / 'relative_throughput'
+ 
+@@ -67,25 +77,25 @@ Examples
+ ========
+ In case that 2 paths (sda and sdb) are used with repeat_count == 128
+ and sda has an average throughput 1GB/s and sdb has 4GB/s,
+-'relative_throughput' value may be '1' for sda and '4' for sdb.
++'relative_throughput' value may be '1' for sda and '4' for sdb::
+ 
+-# echo "0 10 multipath 0 0 1 1 service-time 0 2 2 8:0 128 1 8:16 128 4" \
+-  dmsetup create test
+-#
+-# dmsetup table
+-test: 0 10 multipath 0 0 1 1 service-time 0 2 2 8:0 128 1 8:16 128 4
+-#
+-# dmsetup status
+-test: 0 10 multipath 2 0 0 0 1 1 E 0 2 2 8:0 A 0 0 1 8:16 A 0 0 4
++  # echo "0 10 multipath 0 0 1 1 service-time 0 2 2 8:0 128 1 8:16 128 4" \
++    dmsetup create test
++  #
++  # dmsetup table
++  test: 0 10 multipath 0 0 1 1 service-time 0 2 2 8:0 128 1 8:16 128 4
++  #
++  # dmsetup status
++  test: 0 10 multipath 2 0 0 0 1 1 E 0 2 2 8:0 A 0 0 1 8:16 A 0 0 4
+ 
+ 
+-Or '2' for sda and '8' for sdb would be also true.
++Or '2' for sda and '8' for sdb would be also true::
+ 
+-# echo "0 10 multipath 0 0 1 1 service-time 0 2 2 8:0 128 2 8:16 128 8" \
+-  dmsetup create test
+-#
+-# dmsetup table
+-test: 0 10 multipath 0 0 1 1 service-time 0 2 2 8:0 128 2 8:16 128 8
+-#
+-# dmsetup status
+-test: 0 10 multipath 2 0 0 0 1 1 E 0 2 2 8:0 A 0 0 2 8:16 A 0 0 8
++  # echo "0 10 multipath 0 0 1 1 service-time 0 2 2 8:0 128 2 8:16 128 8" \
++    dmsetup create test
++  #
++  # dmsetup table
++  test: 0 10 multipath 0 0 1 1 service-time 0 2 2 8:0 128 2 8:16 128 8
++  #
++  # dmsetup status
++  test: 0 10 multipath 2 0 0 0 1 1 E 0 2 2 8:0 A 0 0 2 8:16 A 0 0 8
+diff --git a/Documentation/device-mapper/dm-uevent.txt b/Documentation/device-mapper/dm-uevent.txt
+index 07edbd85c714..4a8ee8d069c9 100644
+--- a/Documentation/device-mapper/dm-uevent.txt
++++ b/Documentation/device-mapper/dm-uevent.txt
+@@ -1,3 +1,7 @@
++====================
++device-mapper uevent
++====================
++
+ The device-mapper uevent code adds the capability to device-mapper to create
+ and send kobject uevents (uevents).  Previously device-mapper events were only
+ available through the ioctl interface.  The advantage of the uevents interface
+@@ -6,92 +10,101 @@ the event avoiding the need to query the state of the device-mapper device after
+ the event is received.
+ 
+ There are two functions currently for device-mapper events.  The first function
+-listed creates the event and the second function sends the event(s).
++listed creates the event and the second function sends the event(s)::
+ 
+-void dm_path_uevent(enum dm_uevent_type event_type, struct dm_target *ti,
+-                    const char *path, unsigned nr_valid_paths)
++  void dm_path_uevent(enum dm_uevent_type event_type, struct dm_target *ti,
++                      const char *path, unsigned nr_valid_paths)
+ 
+-void dm_send_uevents(struct list_head *events, struct kobject *kobj)
++  void dm_send_uevents(struct list_head *events, struct kobject *kobj)
+ 
+ 
+ The variables added to the uevent environment are:
+ 
+ Variable Name: DM_TARGET
+-Uevent Action(s): KOBJ_CHANGE
+-Type: string
+-Description:
+-Value: Name of device-mapper target that generated the event.
++------------------------
++:Uevent Action(s): KOBJ_CHANGE
++:Type: string
++:Description:
++:Value: Name of device-mapper target that generated the event.
+ 
+ Variable Name: DM_ACTION
+-Uevent Action(s): KOBJ_CHANGE
+-Type: string
+-Description:
+-Value: Device-mapper specific action that caused the uevent action.
+-	PATH_FAILED - A path has failed.
++------------------------
++:Uevent Action(s): KOBJ_CHANGE
++:Type: string
++:Description:
++:Value: Device-mapper specific action that caused the uevent action.
++	PATH_FAILED - A path has failed;
+ 	PATH_REINSTATED - A path has been reinstated.
+ 
+ Variable Name: DM_SEQNUM
+-Uevent Action(s): KOBJ_CHANGE
+-Type: unsigned integer
+-Description: A sequence number for this specific device-mapper device.
+-Value: Valid unsigned integer range.
++------------------------
++:Uevent Action(s): KOBJ_CHANGE
++:Type: unsigned integer
++:Description: A sequence number for this specific device-mapper device.
++:Value: Valid unsigned integer range.
+ 
+ Variable Name: DM_PATH
+-Uevent Action(s): KOBJ_CHANGE
+-Type: string
+-Description: Major and minor number of the path device pertaining to this
+-event.
+-Value: Path name in the form of "Major:Minor"
++----------------------
++:Uevent Action(s): KOBJ_CHANGE
++:Type: string
++:Description: Major and minor number of the path device pertaining to this
++	      event.
++:Value: Path name in the form of "Major:Minor"
+ 
+ Variable Name: DM_NR_VALID_PATHS
+-Uevent Action(s): KOBJ_CHANGE
+-Type: unsigned integer
+-Description:
+-Value: Valid unsigned integer range.
++--------------------------------
++:Uevent Action(s): KOBJ_CHANGE
++:Type: unsigned integer
++:Description:
++:Value: Valid unsigned integer range.
+ 
+ Variable Name: DM_NAME
+-Uevent Action(s): KOBJ_CHANGE
+-Type: string
+-Description: Name of the device-mapper device.
+-Value: Name
++----------------------
++:Uevent Action(s): KOBJ_CHANGE
++:Type: string
++:Description: Name of the device-mapper device.
++:Value: Name
+ 
+ Variable Name: DM_UUID
+-Uevent Action(s): KOBJ_CHANGE
+-Type: string
+-Description: UUID of the device-mapper device.
+-Value: UUID. (Empty string if there isn't one.)
++----------------------
++:Uevent Action(s): KOBJ_CHANGE
++:Type: string
++:Description: UUID of the device-mapper device.
++:Value: UUID. (Empty string if there isn't one.)
+ 
+ An example of the uevents generated as captured by udevmonitor is shown
+-below.
++below
+ 
+-1.) Path failure.
+-UEVENT[1192521009.711215] change@/block/dm-3
+-ACTION=change
+-DEVPATH=/block/dm-3
+-SUBSYSTEM=block
+-DM_TARGET=multipath
+-DM_ACTION=PATH_FAILED
+-DM_SEQNUM=1
+-DM_PATH=8:32
+-DM_NR_VALID_PATHS=0
+-DM_NAME=mpath2
+-DM_UUID=mpath-35333333000002328
+-MINOR=3
+-MAJOR=253
+-SEQNUM=1130
++1.) Path failure::
+ 
+-2.) Path reinstate.
+-UEVENT[1192521132.989927] change@/block/dm-3
+-ACTION=change
+-DEVPATH=/block/dm-3
+-SUBSYSTEM=block
+-DM_TARGET=multipath
+-DM_ACTION=PATH_REINSTATED
+-DM_SEQNUM=2
+-DM_PATH=8:32
+-DM_NR_VALID_PATHS=1
+-DM_NAME=mpath2
+-DM_UUID=mpath-35333333000002328
+-MINOR=3
+-MAJOR=253
+-SEQNUM=1131
++	UEVENT[1192521009.711215] change@/block/dm-3
++	ACTION=change
++	DEVPATH=/block/dm-3
++	SUBSYSTEM=block
++	DM_TARGET=multipath
++	DM_ACTION=PATH_FAILED
++	DM_SEQNUM=1
++	DM_PATH=8:32
++	DM_NR_VALID_PATHS=0
++	DM_NAME=mpath2
++	DM_UUID=mpath-35333333000002328
++	MINOR=3
++	MAJOR=253
++	SEQNUM=1130
++
++2.) Path reinstate::
++
++	UEVENT[1192521132.989927] change@/block/dm-3
++	ACTION=change
++	DEVPATH=/block/dm-3
++	SUBSYSTEM=block
++	DM_TARGET=multipath
++	DM_ACTION=PATH_REINSTATED
++	DM_SEQNUM=2
++	DM_PATH=8:32
++	DM_NR_VALID_PATHS=1
++	DM_NAME=mpath2
++	DM_UUID=mpath-35333333000002328
++	MINOR=3
++	MAJOR=253
++	SEQNUM=1131
+diff --git a/Documentation/device-mapper/dm-zoned.txt b/Documentation/device-mapper/dm-zoned.txt
+index 736fcc78d193..07f56ebc1730 100644
+--- a/Documentation/device-mapper/dm-zoned.txt
++++ b/Documentation/device-mapper/dm-zoned.txt
+@@ -1,3 +1,4 @@
++========
+ dm-zoned
+ ========
+ 
+@@ -133,12 +134,13 @@ A zoned block device must first be formatted using the dmzadm tool. This
+ will analyze the device zone configuration, determine where to place the
+ metadata sets on the device and initialize the metadata sets.
+ 
+-Ex:
++Ex::
+ 
+-dmzadm --format /dev/sdxx
++	dmzadm --format /dev/sdxx
+ 
+ For a formatted device, the target can be created normally with the
+ dmsetup utility. The only parameter that dm-zoned requires is the
+-underlying zoned block device name. Ex:
++underlying zoned block device name. Ex::
+ 
+-echo "0 `blockdev --getsize ${dev}` zoned ${dev}" | dmsetup create dmz-`basename ${dev}`
++	echo "0 `blockdev --getsize ${dev}` zoned ${dev}" | \
++	dmsetup create dmz-`basename ${dev}`
+diff --git a/Documentation/device-mapper/era.txt b/Documentation/device-mapper/era.txt
+index 3c6d01be3560..90dd5c670b9f 100644
+--- a/Documentation/device-mapper/era.txt
++++ b/Documentation/device-mapper/era.txt
+@@ -1,3 +1,7 @@
++======
++dm-era
++======
++
+ Introduction
+ ============
+ 
+@@ -14,12 +18,14 @@ coherency after rolling back a vendor snapshot.
+ Constructor
+ ===========
+ 
+- era <metadata dev> <origin dev> <block size>
++era <metadata dev> <origin dev> <block size>
+ 
+- metadata dev    : fast device holding the persistent metadata
+- origin dev	 : device holding data blocks that may change
+- block size      : block size of origin data device, granularity that is
+-		     tracked by the target
++ ================ ======================================================
++ metadata dev     fast device holding the persistent metadata
++ origin dev	  device holding data blocks that may change
++ block size       block size of origin data device, granularity that is
++		  tracked by the target
++ ================ ======================================================
+ 
+ Messages
+ ========
+@@ -49,14 +55,16 @@ Status
+ <metadata block size> <#used metadata blocks>/<#total metadata blocks>
+ <current era> <held metadata root | '-'>
+ 
+-metadata block size	 : Fixed block size for each metadata block in
+-			     sectors
+-#used metadata blocks	 : Number of metadata blocks used
+-#total metadata blocks	 : Total number of metadata blocks
+-current era		 : The current era
+-held metadata root	 : The location, in blocks, of the metadata root
+-			     that has been 'held' for userspace read
+-			     access. '-' indicates there is no held root
++========================= ==============================================
++metadata block size	  Fixed block size for each metadata block in
++			  sectors
++#used metadata blocks	  Number of metadata blocks used
++#total metadata blocks	  Total number of metadata blocks
++current era		  The current era
++held metadata root	  The location, in blocks, of the metadata root
++			  that has been 'held' for userspace read
++			  access. '-' indicates there is no held root
++========================= ==============================================
+ 
+ Detailed use case
+ =================
+@@ -88,7 +96,7 @@ Memory usage
+ 
+ The target uses a bitset to record writes in the current era.  It also
+ has a spare bitset ready for switching over to a new era.  Other than
+-that it uses a few 4k blocks for updating metadata.
++that it uses a few 4k blocks for updating metadata::
+ 
+    (4 * nr_blocks) bytes + buffers
+ 
+diff --git a/Documentation/device-mapper/kcopyd.txt b/Documentation/device-mapper/kcopyd.txt
+index 820382c4cecf..7651d395127f 100644
+--- a/Documentation/device-mapper/kcopyd.txt
++++ b/Documentation/device-mapper/kcopyd.txt
+@@ -1,3 +1,4 @@
++======
+ kcopyd
+ ======
+ 
+@@ -7,7 +8,7 @@ notification. It is used by dm-snapshot and dm-mirror.
+ 
+ Users of kcopyd must first create a client and indicate how many memory pages
+ to set aside for their copy jobs. This is done with a call to
+-kcopyd_client_create().
++kcopyd_client_create()::
+ 
+    int kcopyd_client_create(unsigned int num_pages,
+                             struct kcopyd_client **result);
+@@ -16,7 +17,7 @@ To start a copy job, the user must set up io_region structures to describe
+ the source and destinations of the copy. Each io_region indicates a
+ block-device along with the starting sector and size of the region. The source
+ of the copy is given as one io_region structure, and the destinations of the
+-copy are given as an array of io_region structures.
++copy are given as an array of io_region structures::
+ 
+    struct io_region {
+       struct block_device *bdev;
+@@ -26,7 +27,7 @@ copy are given as an array of io_region structures.
+ 
+ To start the copy, the user calls kcopyd_copy(), passing in the client
+ pointer, pointers to the source and destination io_regions, the name of a
+-completion callback routine, and a pointer to some context data for the copy.
++completion callback routine, and a pointer to some context data for the copy::
+ 
+    int kcopyd_copy(struct kcopyd_client *kc, struct io_region *from,
+                    unsigned int num_dests, struct io_region *dests,
+@@ -41,7 +42,6 @@ write error occurred during the copy.
+ 
+ When a user is done with all their copy jobs, they should call
+ kcopyd_client_destroy() to delete the kcopyd client, which will release the
+-associated memory pages.
++associated memory pages::
+ 
+    void kcopyd_client_destroy(struct kcopyd_client *kc);
+-
+diff --git a/Documentation/device-mapper/linear.txt b/Documentation/device-mapper/linear.txt
+index 7cb98d89d3f8..9d17fc6e64a9 100644
+--- a/Documentation/device-mapper/linear.txt
++++ b/Documentation/device-mapper/linear.txt
+@@ -1,3 +1,4 @@
++=========
+ dm-linear
+ =========
+ 
+@@ -6,56 +7,57 @@ device onto a linear range of another device.  This is the basic building
+ block of logical volume managers.
+ 
+ Parameters: <dev path> <offset>
+-    <dev path>: Full pathname to the underlying block-device, or a
+-                "major:minor" device-number.
+-    <offset>: Starting sector within the device.
++    <dev path>:
++	Full pathname to the underlying block-device, or a
++        "major:minor" device-number.
++    <offset>:
++	Starting sector within the device.
+ 
+ 
+ Example scripts
+ ===============
+-[[
+-#!/bin/sh
+-# Create an identity mapping for a device
+-echo "0 `blockdev --getsz $1` linear $1 0" | dmsetup create identity
+-]]
+-
+-
+-[[
+-#!/bin/sh
+-# Join 2 devices together
+-size1=`blockdev --getsz $1`
+-size2=`blockdev --getsz $2`
+-echo "0 $size1 linear $1 0
+-$size1 $size2 linear $2 0" | dmsetup create joined
+-]]
+-
+-
+-[[
+-#!/usr/bin/perl -w
+-# Split a device into 4M chunks and then join them together in reverse order.
+-
+-my $name = "reverse";
+-my $extent_size = 4 * 1024 * 2;
+-my $dev = $ARGV[0];
+-my $table = "";
+-my $count = 0;
+-
+-if (!defined($dev)) {
+-        die("Please specify a device.\n");
+-}
+-
+-my $dev_size = `blockdev --getsz $dev`;
+-my $extents = int($dev_size / $extent_size) -
+-              (($dev_size % $extent_size) ? 1 : 0);
+-
+-while ($extents > 0) {
+-        my $this_start = $count * $extent_size;
+-        $extents--;
+-        $count++;
+-        my $this_offset = $extents * $extent_size;
+-
+-        $table .= "$this_start $extent_size linear $dev $this_offset\n";
+-}
+-
+-`echo \"$table\" | dmsetup create $name`;
+-]]
++
++::
++
++  #!/bin/sh
++  # Create an identity mapping for a device
++  echo "0 `blockdev --getsz $1` linear $1 0" | dmsetup create identity
++
++::
++
++  #!/bin/sh
++  # Join 2 devices together
++  size1=`blockdev --getsz $1`
++  size2=`blockdev --getsz $2`
++  echo "0 $size1 linear $1 0
++  $size1 $size2 linear $2 0" | dmsetup create joined
++
++::
++
++  #!/usr/bin/perl -w
++  # Split a device into 4M chunks and then join them together in reverse order.
++
++  my $name = "reverse";
++  my $extent_size = 4 * 1024 * 2;
++  my $dev = $ARGV[0];
++  my $table = "";
++  my $count = 0;
++
++  if (!defined($dev)) {
++          die("Please specify a device.\n");
++  }
++
++  my $dev_size = `blockdev --getsz $dev`;
++  my $extents = int($dev_size / $extent_size) -
++                (($dev_size % $extent_size) ? 1 : 0);
++
++  while ($extents > 0) {
++          my $this_start = $count * $extent_size;
++          $extents--;
++          $count++;
++          my $this_offset = $extents * $extent_size;
++
++          $table .= "$this_start $extent_size linear $dev $this_offset\n";
++  }
++
++  `echo \"$table\" | dmsetup create $name`;
+diff --git a/Documentation/device-mapper/log-writes.txt b/Documentation/device-mapper/log-writes.txt
+index b638d124be6a..23141f2ffb7c 100644
+--- a/Documentation/device-mapper/log-writes.txt
++++ b/Documentation/device-mapper/log-writes.txt
+@@ -1,3 +1,4 @@
++=============
+ dm-log-writes
+ =============
+ 
+@@ -25,11 +26,11 @@ completed WRITEs, at the time the REQ_PREFLUSH is issued, are added in order to
+ simulate the worst case scenario with regard to power failures.  Consider the
+ following example (W means write, C means complete):
+ 
+-W1,W2,W3,C3,C2,Wflush,C1,Cflush
++	W1,W2,W3,C3,C2,Wflush,C1,Cflush
+ 
+-The log would show the following
++The log would show the following:
+ 
+-W3,W2,flush,W1....
++	W3,W2,flush,W1....
+ 
+ Again this is to simulate what is actually on disk, this allows us to detect
+ cases where a power failure at a particular point in time would create an
+@@ -42,11 +43,11 @@ Any REQ_OP_DISCARD requests are treated like WRITE requests.  Otherwise we would
+ have all the DISCARD requests, and then the WRITE requests and then the FLUSH
+ request.  Consider the following example:
+ 
+-WRITE block 1, DISCARD block 1, FLUSH
++	WRITE block 1, DISCARD block 1, FLUSH
+ 
+-If we logged DISCARD when it completed, the replay would look like this
++If we logged DISCARD when it completed, the replay would look like this:
+ 
+-DISCARD 1, WRITE 1, FLUSH
++	DISCARD 1, WRITE 1, FLUSH
+ 
+ which isn't quite what happened and wouldn't be caught during the log replay.
+ 
+@@ -57,15 +58,19 @@ i) Constructor
+ 
+    log-writes <dev_path> <log_dev_path>
+ 
+-   dev_path	: Device that all of the IO will go to normally.
+-   log_dev_path : Device where the log entries are written to.
++   ============= ==============================================
++   dev_path	 Device that all of the IO will go to normally.
++   log_dev_path  Device where the log entries are written to.
++   ============= ==============================================
+ 
+ ii) Status
+ 
+     <#logged entries> <highest allocated sector>
+ 
+-    #logged entries	       : Number of logged entries
+-    highest allocated sector   : Highest allocated sector
++    =========================== ========================
++    #logged entries	        Number of logged entries
++    highest allocated sector    Highest allocated sector
++    =========================== ========================
+ 
+ iii) Messages
+ 
+@@ -75,15 +80,15 @@ iii) Messages
+ 	For example say you want to fsck a file system after every
+ 	write, but first you need to replay up to the mkfs to make sure
+ 	we're fsck'ing something reasonable, you would do something like
+-	this:
++	this::
+ 
+ 	  mkfs.btrfs -f /dev/mapper/log
+ 	  dmsetup message log 0 mark mkfs
+ 	  <run test>
+ 
+-	  This would allow you to replay the log up to the mkfs mark and
+-	  then replay from that point on doing the fsck check in the
+-	  interval that you want.
++	This would allow you to replay the log up to the mkfs mark and
++	then replay from that point on doing the fsck check in the
++	interval that you want.
+ 
+ 	Every log has a mark at the end labeled "dm-log-writes-end".
+ 
+@@ -97,42 +102,42 @@ Example usage
+ =============
+ 
+ Say you want to test fsync on your file system.  You would do something like
+-this:
++this::
+ 
+-TABLE="0 $(blockdev --getsz /dev/sdb) log-writes /dev/sdb /dev/sdc"
+-dmsetup create log --table "$TABLE"
+-mkfs.btrfs -f /dev/mapper/log
+-dmsetup message log 0 mark mkfs
++  TABLE="0 $(blockdev --getsz /dev/sdb) log-writes /dev/sdb /dev/sdc"
++  dmsetup create log --table "$TABLE"
++  mkfs.btrfs -f /dev/mapper/log
++  dmsetup message log 0 mark mkfs
+ 
+-mount /dev/mapper/log /mnt/btrfs-test
+-<some test that does fsync at the end>
+-dmsetup message log 0 mark fsync
+-md5sum /mnt/btrfs-test/foo
+-umount /mnt/btrfs-test
++  mount /dev/mapper/log /mnt/btrfs-test
++  <some test that does fsync at the end>
++  dmsetup message log 0 mark fsync
++  md5sum /mnt/btrfs-test/foo
++  umount /mnt/btrfs-test
+ 
+-dmsetup remove log
+-replay-log --log /dev/sdc --replay /dev/sdb --end-mark fsync
+-mount /dev/sdb /mnt/btrfs-test
+-md5sum /mnt/btrfs-test/foo
+-<verify md5sum's are correct>
++  dmsetup remove log
++  replay-log --log /dev/sdc --replay /dev/sdb --end-mark fsync
++  mount /dev/sdb /mnt/btrfs-test
++  md5sum /mnt/btrfs-test/foo
++  <verify md5sum's are correct>
+ 
+-Another option is to do a complicated file system operation and verify the file
+-system is consistent during the entire operation.  You could do this with:
++  Another option is to do a complicated file system operation and verify the file
++  system is consistent during the entire operation.  You could do this with:
+ 
+-TABLE="0 $(blockdev --getsz /dev/sdb) log-writes /dev/sdb /dev/sdc"
+-dmsetup create log --table "$TABLE"
+-mkfs.btrfs -f /dev/mapper/log
+-dmsetup message log 0 mark mkfs
++  TABLE="0 $(blockdev --getsz /dev/sdb) log-writes /dev/sdb /dev/sdc"
++  dmsetup create log --table "$TABLE"
++  mkfs.btrfs -f /dev/mapper/log
++  dmsetup message log 0 mark mkfs
+ 
+-mount /dev/mapper/log /mnt/btrfs-test
+-<fsstress to dirty the fs>
+-btrfs filesystem balance /mnt/btrfs-test
+-umount /mnt/btrfs-test
+-dmsetup remove log
++  mount /dev/mapper/log /mnt/btrfs-test
++  <fsstress to dirty the fs>
++  btrfs filesystem balance /mnt/btrfs-test
++  umount /mnt/btrfs-test
++  dmsetup remove log
+ 
+-replay-log --log /dev/sdc --replay /dev/sdb --end-mark mkfs
+-btrfsck /dev/sdb
+-replay-log --log /dev/sdc --replay /dev/sdb --start-mark mkfs \
++  replay-log --log /dev/sdc --replay /dev/sdb --end-mark mkfs
++  btrfsck /dev/sdb
++  replay-log --log /dev/sdc --replay /dev/sdb --start-mark mkfs \
+ 	--fsck "btrfsck /dev/sdb" --check fua
+ 
+ And that will replay the log until it sees a FUA request, run the fsck command
+diff --git a/Documentation/device-mapper/persistent-data.txt b/Documentation/device-mapper/persistent-data.txt
+index a333bcb3a6c2..2065c3c5a091 100644
+--- a/Documentation/device-mapper/persistent-data.txt
++++ b/Documentation/device-mapper/persistent-data.txt
+@@ -1,3 +1,7 @@
++===============
++Persistent data
++===============
++
+ Introduction
+ ============
+ 
+diff --git a/Documentation/device-mapper/snapshot.txt b/Documentation/device-mapper/snapshot.txt
+index b8bbb516f989..4c53304e72f1 100644
+--- a/Documentation/device-mapper/snapshot.txt
++++ b/Documentation/device-mapper/snapshot.txt
+@@ -1,15 +1,16 @@
 +==============================
-+Memory Layout on AArch64 Linux
-+==============================
+ Device-mapper snapshot support
+ ==============================
  
- Author: Catalin Marinas <catalin.marinas@arm.com>
+ Device-mapper allows you, without massive data copying:
  
-@@ -21,69 +22,69 @@ The swapper_pg_dir address is written to TTBR1 and never written to
- TTBR0.
+-*) To create snapshots of any block device i.e. mountable, saved states of
+-the block device which are also writable without interfering with the
+-original content;
+-*) To create device "forks", i.e. multiple different versions of the
+-same data stream.
+-*) To merge a snapshot of a block device back into the snapshot's origin
+-device.
++-  To create snapshots of any block device i.e. mountable, saved states of
++   the block device which are also writable without interfering with the
++   original content;
++-  To create device "forks", i.e. multiple different versions of the
++   same data stream.
++-  To merge a snapshot of a block device back into the snapshot's origin
++   device.
  
+ In the first two cases, dm copies only the chunks of data that get
+ changed and uses a separate copy-on-write (COW) block device for
+@@ -22,7 +23,7 @@ the origin device.
+ There are three dm targets available:
+ snapshot, snapshot-origin, and snapshot-merge.
  
--AArch64 Linux memory layout with 4KB pages + 3 levels:
-+AArch64 Linux memory layout with 4KB pages + 3 levels::
+-*) snapshot-origin <origin>
++-  snapshot-origin <origin>
  
--Start			End			Size		Use
-------------------------------------------------------------------------
--0000000000000000	0000007fffffffff	 512GB		user
--ffffff8000000000	ffffffffffffffff	 512GB		kernel
-+  Start			End			Size		Use
-+  -----------------------------------------------------------------------
-+  0000000000000000	0000007fffffffff	 512GB		user
-+  ffffff8000000000	ffffffffffffffff	 512GB		kernel
- 
- 
--AArch64 Linux memory layout with 4KB pages + 4 levels:
-+AArch64 Linux memory layout with 4KB pages + 4 levels::
- 
--Start			End			Size		Use
-------------------------------------------------------------------------
--0000000000000000	0000ffffffffffff	 256TB		user
--ffff000000000000	ffffffffffffffff	 256TB		kernel
-+  Start			End			Size		Use
-+  -----------------------------------------------------------------------
-+  0000000000000000	0000ffffffffffff	 256TB		user
-+  ffff000000000000	ffffffffffffffff	 256TB		kernel
- 
- 
--AArch64 Linux memory layout with 64KB pages + 2 levels:
-+AArch64 Linux memory layout with 64KB pages + 2 levels::
- 
--Start			End			Size		Use
-------------------------------------------------------------------------
--0000000000000000	000003ffffffffff	   4TB		user
--fffffc0000000000	ffffffffffffffff	   4TB		kernel
-+  Start			End			Size		Use
-+  -----------------------------------------------------------------------
-+  0000000000000000	000003ffffffffff	   4TB		user
-+  fffffc0000000000	ffffffffffffffff	   4TB		kernel
+ which will normally have one or more snapshots based on it.
+ Reads will be mapped directly to the backing device. For each write, the
+@@ -30,7 +31,7 @@ original data will be saved in the <COW device> of each snapshot to keep
+ its visible content unchanged, at least until the <COW device> fills up.
  
  
--AArch64 Linux memory layout with 64KB pages + 3 levels:
-+AArch64 Linux memory layout with 64KB pages + 3 levels::
+-*) snapshot <origin> <COW device> <persistent?> <chunksize>
++-  snapshot <origin> <COW device> <persistent?> <chunksize>
  
--Start			End			Size		Use
-------------------------------------------------------------------------
--0000000000000000	0000ffffffffffff	 256TB		user
--ffff000000000000	ffffffffffffffff	 256TB		kernel
-+  Start			End			Size		Use
-+  -----------------------------------------------------------------------
-+  0000000000000000	0000ffffffffffff	 256TB		user
-+  ffff000000000000	ffffffffffffffff	 256TB		kernel
+ A snapshot of the <origin> block device is created. Changed chunks of
+ <chunksize> sectors will be stored on the <COW device>.  Writes will
+@@ -83,25 +84,25 @@ When you create the first LVM2 snapshot of a volume, four dm devices are used:
+    source volume), whose table is replaced by a "snapshot-origin" mapping
+    from device #1.
  
+-A fixed naming scheme is used, so with the following commands:
++A fixed naming scheme is used, so with the following commands::
  
- For details of the virtual kernel memory layout please see the kernel
- booting log.
+-lvcreate -L 1G -n base volumeGroup
+-lvcreate -L 100M --snapshot -n snap volumeGroup/base
++  lvcreate -L 1G -n base volumeGroup
++  lvcreate -L 100M --snapshot -n snap volumeGroup/base
  
+-we'll have this situation (with volumes in above order):
++we'll have this situation (with volumes in above order)::
  
--Translation table lookup with 4KB pages:
-+Translation table lookup with 4KB pages::
+-# dmsetup table|grep volumeGroup
++  # dmsetup table|grep volumeGroup
  
--+--------+--------+--------+--------+--------+--------+--------+--------+
--|63    56|55    48|47    40|39    32|31    24|23    16|15     8|7      0|
--+--------+--------+--------+--------+--------+--------+--------+--------+
-- |                 |         |         |         |         |
-- |                 |         |         |         |         v
-- |                 |         |         |         |   [11:0]  in-page offset
-- |                 |         |         |         +-> [20:12] L3 index
-- |                 |         |         +-----------> [29:21] L2 index
-- |                 |         +---------------------> [38:30] L1 index
-- |                 +-------------------------------> [47:39] L0 index
-- +-------------------------------------------------> [63] TTBR0/1
-+  +--------+--------+--------+--------+--------+--------+--------+--------+
-+  |63    56|55    48|47    40|39    32|31    24|23    16|15     8|7      0|
-+  +--------+--------+--------+--------+--------+--------+--------+--------+
-+   |                 |         |         |         |         |
-+   |                 |         |         |         |         v
-+   |                 |         |         |         |   [11:0]  in-page offset
-+   |                 |         |         |         +-> [20:12] L3 index
-+   |                 |         |         +-----------> [29:21] L2 index
-+   |                 |         +---------------------> [38:30] L1 index
-+   |                 +-------------------------------> [47:39] L0 index
-+   +-------------------------------------------------> [63] TTBR0/1
+-volumeGroup-base-real: 0 2097152 linear 8:19 384
+-volumeGroup-snap-cow: 0 204800 linear 8:19 2097536
+-volumeGroup-snap: 0 2097152 snapshot 254:11 254:12 P 16
+-volumeGroup-base: 0 2097152 snapshot-origin 254:11
++  volumeGroup-base-real: 0 2097152 linear 8:19 384
++  volumeGroup-snap-cow: 0 204800 linear 8:19 2097536
++  volumeGroup-snap: 0 2097152 snapshot 254:11 254:12 P 16
++  volumeGroup-base: 0 2097152 snapshot-origin 254:11
  
- 
--Translation table lookup with 64KB pages:
-+Translation table lookup with 64KB pages::
- 
--+--------+--------+--------+--------+--------+--------+--------+--------+
--|63    56|55    48|47    40|39    32|31    24|23    16|15     8|7      0|
--+--------+--------+--------+--------+--------+--------+--------+--------+
-- |                 |    |               |              |
-- |                 |    |               |              v
-- |                 |    |               |            [15:0]  in-page offset
-- |                 |    |               +----------> [28:16] L3 index
-- |                 |    +--------------------------> [41:29] L2 index
-- |                 +-------------------------------> [47:42] L1 index
-- +-------------------------------------------------> [63] TTBR0/1
-+  +--------+--------+--------+--------+--------+--------+--------+--------+
-+  |63    56|55    48|47    40|39    32|31    24|23    16|15     8|7      0|
-+  +--------+--------+--------+--------+--------+--------+--------+--------+
-+   |                 |    |               |              |
-+   |                 |    |               |              v
-+   |                 |    |               |            [15:0]  in-page offset
-+   |                 |    |               +----------> [28:16] L3 index
-+   |                 |    +--------------------------> [41:29] L2 index
-+   |                 +-------------------------------> [47:42] L1 index
-+   +-------------------------------------------------> [63] TTBR0/1
+-# ls -lL /dev/mapper/volumeGroup-*
+-brw-------  1 root root 254, 11 29 ago 18:15 /dev/mapper/volumeGroup-base-real
+-brw-------  1 root root 254, 12 29 ago 18:15 /dev/mapper/volumeGroup-snap-cow
+-brw-------  1 root root 254, 13 29 ago 18:15 /dev/mapper/volumeGroup-snap
+-brw-------  1 root root 254, 10 29 ago 18:14 /dev/mapper/volumeGroup-base
++  # ls -lL /dev/mapper/volumeGroup-*
++  brw-------  1 root root 254, 11 29 ago 18:15 /dev/mapper/volumeGroup-base-real
++  brw-------  1 root root 254, 12 29 ago 18:15 /dev/mapper/volumeGroup-snap-cow
++  brw-------  1 root root 254, 13 29 ago 18:15 /dev/mapper/volumeGroup-snap
++  brw-------  1 root root 254, 10 29 ago 18:14 /dev/mapper/volumeGroup-base
  
  
- When using KVM without the Virtualization Host Extensions, the
-diff --git a/Documentation/arm64/pointer-authentication.txt b/Documentation/arm64/pointer-authentication.txt
-index 5baca42ba146..f8b9af8b6490 100644
---- a/Documentation/arm64/pointer-authentication.txt
-+++ b/Documentation/arm64/pointer-authentication.txt
-@@ -1,7 +1,9 @@
-+=======================================
- Pointer authentication in AArch64 Linux
- =======================================
+ How snapshot-merge is used by LVM2
+@@ -114,27 +115,28 @@ merging snapshot after it completes.  The "snapshot" that hands over its
+ COW device to the "snapshot-merge" is deactivated (unless using lvchange
+ --refresh); but if it is left active it will simply return I/O errors.
  
- Author: Mark Rutland <mark.rutland@arm.com>
+-A snapshot will merge into its origin with the following command:
++A snapshot will merge into its origin with the following command::
+ 
+-lvconvert --merge volumeGroup/snap
++  lvconvert --merge volumeGroup/snap
+ 
+-we'll now have this situation:
++we'll now have this situation::
+ 
+-# dmsetup table|grep volumeGroup
++  # dmsetup table|grep volumeGroup
+ 
+-volumeGroup-base-real: 0 2097152 linear 8:19 384
+-volumeGroup-base-cow: 0 204800 linear 8:19 2097536
+-volumeGroup-base: 0 2097152 snapshot-merge 254:11 254:12 P 16
++  volumeGroup-base-real: 0 2097152 linear 8:19 384
++  volumeGroup-base-cow: 0 204800 linear 8:19 2097536
++  volumeGroup-base: 0 2097152 snapshot-merge 254:11 254:12 P 16
+ 
+-# ls -lL /dev/mapper/volumeGroup-*
+-brw-------  1 root root 254, 11 29 ago 18:15 /dev/mapper/volumeGroup-base-real
+-brw-------  1 root root 254, 12 29 ago 18:16 /dev/mapper/volumeGroup-base-cow
+-brw-------  1 root root 254, 10 29 ago 18:16 /dev/mapper/volumeGroup-base
++  # ls -lL /dev/mapper/volumeGroup-*
++  brw-------  1 root root 254, 11 29 ago 18:15 /dev/mapper/volumeGroup-base-real
++  brw-------  1 root root 254, 12 29 ago 18:16 /dev/mapper/volumeGroup-base-cow
++  brw-------  1 root root 254, 10 29 ago 18:16 /dev/mapper/volumeGroup-base
+ 
+ 
+ How to determine when a merging is complete
+ ===========================================
+ The snapshot-merge and snapshot status lines end with:
 +
- Date: 2017-07-19
+   <sectors_allocated>/<total_sectors> <metadata_sectors>
  
- This document briefly describes the provision of pointer authentication
-diff --git a/Documentation/arm64/silicon-errata.txt b/Documentation/arm64/silicon-errata.txt
-index c00efb639e46..926b2ef62cd2 100644
---- a/Documentation/arm64/silicon-errata.txt
-+++ b/Documentation/arm64/silicon-errata.txt
-@@ -1,7 +1,9 @@
--                Silicon Errata and Software Workarounds
--                =======================================
-+=======================================
-+Silicon Errata and Software Workarounds
-+=======================================
+ Both <sectors_allocated> and <total_sectors> include both data and metadata.
+@@ -142,35 +144,37 @@ During merging, the number of sectors allocated gets smaller and
+ smaller.  Merging has finished when the number of sectors holding data
+ is zero, in other words <sectors_allocated> == <metadata_sectors>.
  
- Author: Will Deacon <will.deacon@arm.com>
+-Here is a practical example (using a hybrid of lvm and dmsetup commands):
++Here is a practical example (using a hybrid of lvm and dmsetup commands)::
+ 
+-# lvs
+-  LV      VG          Attr   LSize Origin  Snap%  Move Log Copy%  Convert
+-  base    volumeGroup owi-a- 4.00g
+-  snap    volumeGroup swi-a- 1.00g base  18.97
++  # lvs
++    LV      VG          Attr   LSize Origin  Snap%  Move Log Copy%  Convert
++    base    volumeGroup owi-a- 4.00g
++    snap    volumeGroup swi-a- 1.00g base  18.97
+ 
+-# dmsetup status volumeGroup-snap
+-0 8388608 snapshot 397896/2097152 1560
+-                                  ^^^^ metadata sectors
++  # dmsetup status volumeGroup-snap
++  0 8388608 snapshot 397896/2097152 1560
++                                    ^^^^ metadata sectors
+ 
+-# lvconvert --merge -b volumeGroup/snap
+-  Merging of volume snap started.
++  # lvconvert --merge -b volumeGroup/snap
++    Merging of volume snap started.
+ 
+-# lvs volumeGroup/snap
+-  LV      VG          Attr   LSize Origin  Snap%  Move Log Copy%  Convert
+-  base    volumeGroup Owi-a- 4.00g          17.23
++  # lvs volumeGroup/snap
++    LV      VG          Attr   LSize Origin  Snap%  Move Log Copy%  Convert
++    base    volumeGroup Owi-a- 4.00g          17.23
+ 
+-# dmsetup status volumeGroup-base
+-0 8388608 snapshot-merge 281688/2097152 1104
++  # dmsetup status volumeGroup-base
++  0 8388608 snapshot-merge 281688/2097152 1104
+ 
+-# dmsetup status volumeGroup-base
+-0 8388608 snapshot-merge 180480/2097152 712
++  # dmsetup status volumeGroup-base
++  0 8388608 snapshot-merge 180480/2097152 712
+ 
+-# dmsetup status volumeGroup-base
+-0 8388608 snapshot-merge 16/2097152 16
++  # dmsetup status volumeGroup-base
++  0 8388608 snapshot-merge 16/2097152 16
+ 
+ Merging has finished.
+ 
+-# lvs
+-  LV      VG          Attr   LSize Origin  Snap%  Move Log Copy%  Convert
+-  base    volumeGroup owi-a- 4.00g
++::
 +
- Date  : 27 November 2015
++  # lvs
++    LV      VG          Attr   LSize Origin  Snap%  Move Log Copy%  Convert
++    base    volumeGroup owi-a- 4.00g
+diff --git a/Documentation/device-mapper/statistics.txt b/Documentation/device-mapper/statistics.txt
+index 170ac02a1f50..3d80a9f850cc 100644
+--- a/Documentation/device-mapper/statistics.txt
++++ b/Documentation/device-mapper/statistics.txt
+@@ -1,3 +1,4 @@
++=============
+ DM statistics
+ =============
  
- It is an unfortunate fact of life that hardware is often produced with
-@@ -9,11 +11,13 @@ so-called "errata", which can cause it to deviate from the architecture
- under specific circumstances.  For hardware produced by ARM, these
- errata are broadly classified into the following categories:
+@@ -11,7 +12,7 @@ Individual statistics will be collected for each step-sized area within
+ the range specified.
  
--  Category A: A critical error without a viable workaround.
--  Category B: A significant or critical error with an acceptable
-+  ==========  ========================================================
-+  Category A  A critical error without a viable workaround.
-+  Category B  A significant or critical error with an acceptable
-               workaround.
--  Category C: A minor error that is not expected to occur under normal
-+  Category C  A minor error that is not expected to occur under normal
-               operation.
-+  ==========  ========================================================
- 
- For more information, consult one of the "Software Developers Errata
- Notice" documents available on infocenter.arm.com (registration
-@@ -42,45 +46,82 @@ file acts as a registry of software workarounds in the Linux Kernel and
- will be updated when new workarounds are committed and backported to
- stable kernels.
- 
-++----------------+-----------------+-----------------+-----------------------------+
- | Implementor    | Component       | Erratum ID      | Kconfig                     |
--+----------------+-----------------+-----------------+-----------------------------+
-++================+=================+=================+=============================+
- | Allwinner      | A64/R18         | UNKNOWN1        | SUN50I_ERRATUM_UNKNOWN1     |
--|                |                 |                 |                             |
-++----------------+-----------------+-----------------+-----------------------------+
-++----------------+-----------------+-----------------+-----------------------------+
- | ARM            | Cortex-A53      | #826319         | ARM64_ERRATUM_826319        |
-++----------------+-----------------+-----------------+-----------------------------+
- | ARM            | Cortex-A53      | #827319         | ARM64_ERRATUM_827319        |
-++----------------+-----------------+-----------------+-----------------------------+
- | ARM            | Cortex-A53      | #824069         | ARM64_ERRATUM_824069        |
-++----------------+-----------------+-----------------+-----------------------------+
- | ARM            | Cortex-A53      | #819472         | ARM64_ERRATUM_819472        |
-++----------------+-----------------+-----------------+-----------------------------+
- | ARM            | Cortex-A53      | #845719         | ARM64_ERRATUM_845719        |
-++----------------+-----------------+-----------------+-----------------------------+
- | ARM            | Cortex-A53      | #843419         | ARM64_ERRATUM_843419        |
-++----------------+-----------------+-----------------+-----------------------------+
- | ARM            | Cortex-A57      | #832075         | ARM64_ERRATUM_832075        |
-++----------------+-----------------+-----------------+-----------------------------+
- | ARM            | Cortex-A57      | #852523         | N/A                         |
-++----------------+-----------------+-----------------+-----------------------------+
- | ARM            | Cortex-A57      | #834220         | ARM64_ERRATUM_834220        |
-++----------------+-----------------+-----------------+-----------------------------+
- | ARM            | Cortex-A72      | #853709         | N/A                         |
-++----------------+-----------------+-----------------+-----------------------------+
- | ARM            | Cortex-A73      | #858921         | ARM64_ERRATUM_858921        |
-++----------------+-----------------+-----------------+-----------------------------+
- | ARM            | Cortex-A55      | #1024718        | ARM64_ERRATUM_1024718       |
-++----------------+-----------------+-----------------+-----------------------------+
- | ARM            | Cortex-A76      | #1188873        | ARM64_ERRATUM_1188873       |
-++----------------+-----------------+-----------------+-----------------------------+
- | ARM            | Cortex-A76      | #1165522        | ARM64_ERRATUM_1165522       |
-++----------------+-----------------+-----------------+-----------------------------+
- | ARM            | Cortex-A76      | #1286807        | ARM64_ERRATUM_1286807       |
-++----------------+-----------------+-----------------+-----------------------------+
- | ARM            | MMU-500         | #841119,#826419 | N/A                         |
--|                |                 |                 |                             |
-++----------------+-----------------+-----------------+-----------------------------+
-++----------------+-----------------+-----------------+-----------------------------+
- | Cavium         | ThunderX ITS    | #22375, #24313  | CAVIUM_ERRATUM_22375        |
-++----------------+-----------------+-----------------+-----------------------------+
- | Cavium         | ThunderX ITS    | #23144          | CAVIUM_ERRATUM_23144        |
-++----------------+-----------------+-----------------+-----------------------------+
- | Cavium         | ThunderX GICv3  | #23154          | CAVIUM_ERRATUM_23154        |
-++----------------+-----------------+-----------------+-----------------------------+
- | Cavium         | ThunderX Core   | #27456          | CAVIUM_ERRATUM_27456        |
-++----------------+-----------------+-----------------+-----------------------------+
- | Cavium         | ThunderX Core   | #30115          | CAVIUM_ERRATUM_30115        |
-++----------------+-----------------+-----------------+-----------------------------+
- | Cavium         | ThunderX SMMUv2 | #27704          | N/A                         |
-++----------------+-----------------+-----------------+-----------------------------+
- | Cavium         | ThunderX2 SMMUv3| #74             | N/A                         |
-++----------------+-----------------+-----------------+-----------------------------+
- | Cavium         | ThunderX2 SMMUv3| #126            | N/A                         |
--|                |                 |                 |                             |
-++----------------+-----------------+-----------------+-----------------------------+
-++----------------+-----------------+-----------------+-----------------------------+
- | Freescale/NXP  | LS2080A/LS1043A | A-008585        | FSL_ERRATUM_A008585         |
--|                |                 |                 |                             |
-++----------------+-----------------+-----------------+-----------------------------+
-++----------------+-----------------+-----------------+-----------------------------+
- | Hisilicon      | Hip0{5,6,7}     | #161010101      | HISILICON_ERRATUM_161010101 |
-++----------------+-----------------+-----------------+-----------------------------+
- | Hisilicon      | Hip0{6,7}       | #161010701      | N/A                         |
-++----------------+-----------------+-----------------+-----------------------------+
- | Hisilicon      | Hip07           | #161600802      | HISILICON_ERRATUM_161600802 |
-++----------------+-----------------+-----------------+-----------------------------+
- | Hisilicon      | Hip08 SMMU PMCG | #162001800      | N/A                         |
--|                |                 |                 |                             |
-++----------------+-----------------+-----------------+-----------------------------+
-++----------------+-----------------+-----------------+-----------------------------+
- | Qualcomm Tech. | Kryo/Falkor v1  | E1003           | QCOM_FALKOR_ERRATUM_1003    |
-++----------------+-----------------+-----------------+-----------------------------+
- | Qualcomm Tech. | Falkor v1       | E1009           | QCOM_FALKOR_ERRATUM_1009    |
-++----------------+-----------------+-----------------+-----------------------------+
- | Qualcomm Tech. | QDF2400 ITS     | E0065           | QCOM_QDF2400_ERRATUM_0065   |
-++----------------+-----------------+-----------------+-----------------------------+
- | Qualcomm Tech. | Falkor v{1,2}   | E1041           | QCOM_FALKOR_ERRATUM_1041    |
-++----------------+-----------------+-----------------+-----------------------------+
-++----------------+-----------------+-----------------+-----------------------------+
- | Fujitsu        | A64FX           | E#010001        | FUJITSU_ERRATUM_010001      |
-++----------------+-----------------+-----------------+-----------------------------+
-diff --git a/Documentation/arm64/sve.txt b/Documentation/arm64/sve.txt
-index 7169a0ec41d8..d73c8e04b22b 100644
---- a/Documentation/arm64/sve.txt
-+++ b/Documentation/arm64/sve.txt
-@@ -1,7 +1,9 @@
--            Scalable Vector Extension support for AArch64 Linux
--            ===================================================
-+===================================================
-+Scalable Vector Extension support for AArch64 Linux
-+===================================================
- 
- Author: Dave Martin <Dave.Martin@arm.com>
+ The I/O statistics counters for each step-sized area of a region are
+-in the same format as /sys/block/*/stat or /proc/diskstats (see:
++in the same format as `/sys/block/*/stat` or `/proc/diskstats` (see:
+ Documentation/iostats.txt).  But two extra counters (12 and 13) are
+ provided: total time spent reading and writing.  When the histogram
+ argument is used, the 14th parameter is reported that represents the
+@@ -32,40 +33,45 @@ on each other's data.
+ The creation of DM statistics will allocate memory via kmalloc or
+ fallback to using vmalloc space.  At most, 1/4 of the overall system
+ memory may be allocated by DM statistics.  The admin can see how much
+-memory is used by reading
+-/sys/module/dm_mod/parameters/stats_current_allocated_bytes
++memory is used by reading:
 +
- Date:   4 August 2017
++	/sys/module/dm_mod/parameters/stats_current_allocated_bytes
  
- This document outlines briefly the interface provided to userspace by Linux in
-@@ -409,7 +411,7 @@ In A64 state, SVE adds the following:
+ Messages
+ ========
  
- * FPSR and FPCR are retained from ARMv8-A, and interact with SVE floating-point
-   operations in a similar way to the way in which they interact with ARMv8
--  floating-point operations.
-+  floating-point operations::
+-    @stats_create <range> <step>
+-		[<number_of_optional_arguments> <optional_arguments>...]
+-		[<program_id> [<aux_data>]]
+-
++    @stats_create <range> <step> [<number_of_optional_arguments> <optional_arguments>...] [<program_id> [<aux_data>]]
+ 	Create a new region and return the region_id.
  
-          8VL-1                       128               0  bit index
-         +----          ////            -----------------+
-@@ -466,6 +468,8 @@ ARMv8-A defines the following floating-point / SIMD register state:
- * 32 128-bit vector registers V0..V31
- * 2 32-bit status/control registers FPSR, FPCR
+ 	<range>
+-	  "-" - whole device
+-	  "<start_sector>+<length>" - a range of <length> 512-byte sectors
+-				      starting with <start_sector>.
++	  "-"
++		whole device
++	  "<start_sector>+<length>"
++		a range of <length> 512-byte sectors
++		starting with <start_sector>.
+ 
+ 	<step>
+-	  "<area_size>" - the range is subdivided into areas each containing
+-			  <area_size> sectors.
+-	  "/<number_of_areas>" - the range is subdivided into the specified
+-				 number of areas.
++	  "<area_size>"
++		the range is subdivided into areas each containing
++		<area_size> sectors.
++	  "/<number_of_areas>"
++		the range is subdivided into the specified
++		number of areas.
+ 
+ 	<number_of_optional_arguments>
+ 	  The number of optional arguments
+ 
+ 	<optional_arguments>
+-	  The following optional arguments are supported
+-	  precise_timestamps - use precise timer with nanosecond resolution
++	  The following optional arguments are supported:
++
++	  precise_timestamps
++		use precise timer with nanosecond resolution
+ 		instead of the "jiffies" variable.  When this argument is
+ 		used, the resulting times are in nanoseconds instead of
+ 		milliseconds.  Precise timestamps are a little bit slower
+ 		to obtain than jiffies-based timestamps.
+-	  histogram:n1,n2,n3,n4,... - collect histogram of latencies.  The
++	  histogram:n1,n2,n3,n4,...
++		collect histogram of latencies.  The
+ 		numbers n1, n2, etc are times that represent the boundaries
+ 		of the histogram.  If precise_timestamps is not used, the
+ 		times are in milliseconds, otherwise they are in
+@@ -96,21 +102,18 @@ Messages
+ 	  @stats_list message, but it doesn't use this value for anything.
+ 
+     @stats_delete <region_id>
+-
+ 	Delete the region with the specified id.
+ 
+ 	<region_id>
+ 	  region_id returned from @stats_create
+ 
+     @stats_clear <region_id>
+-
+ 	Clear all the counters except the in-flight i/o counters.
+ 
+ 	<region_id>
+ 	  region_id returned from @stats_create
+ 
+     @stats_list [<program_id>]
+-
+ 	List all regions registered with @stats_create.
+ 
+ 	<program_id>
+@@ -127,7 +130,6 @@ Messages
+ 	if they were specified when creating the region.
+ 
+     @stats_print <region_id> [<starting_line> <number_of_lines>]
+-
+ 	Print counters for each step-sized area of a region.
+ 
+ 	<region_id>
+@@ -143,10 +145,11 @@ Messages
+ 
+ 	Output format for each step-sized area of a region:
+ 
+-	  <start_sector>+<length> counters
++	  <start_sector>+<length>
++		counters
+ 
+ 	  The first 11 counters have the same meaning as
+-	  /sys/block/*/stat or /proc/diskstats.
++	  `/sys/block/*/stat or /proc/diskstats`.
+ 
+ 	  Please refer to Documentation/iostats.txt for details.
+ 
+@@ -163,11 +166,11 @@ Messages
+ 	  11. the weighted number of milliseconds spent doing I/Os
+ 
+ 	  Additional counters:
++
+ 	  12. the total time spent reading in milliseconds
+ 	  13. the total time spent writing in milliseconds
+ 
+     @stats_print_clear <region_id> [<starting_line> <number_of_lines>]
+-
+ 	Atomically print and then clear all the counters except the
+ 	in-flight i/o counters.	 Useful when the client consuming the
+ 	statistics does not want to lose any statistics (those updated
+@@ -185,7 +188,6 @@ Messages
+ 	  If omitted, all lines are printed and then cleared.
+ 
+     @stats_set_aux <region_id> <aux_data>
+-
+ 	Store auxiliary data aux_data for the specified region.
+ 
+ 	<region_id>
+@@ -201,23 +203,23 @@ Examples
+ ========
+ 
+ Subdivide the DM device 'vol' into 100 pieces and start collecting
+-statistics on them:
++statistics on them::
+ 
+   dmsetup message vol 0 @stats_create - /100
+ 
+ Set the auxiliary data string to "foo bar baz" (the escape for each
+-space must also be escaped, otherwise the shell will consume them):
++space must also be escaped, otherwise the shell will consume them)::
+ 
+   dmsetup message vol 0 @stats_set_aux 0 foo\\ bar\\ baz
+ 
+-List the statistics:
++List the statistics::
+ 
+   dmsetup message vol 0 @stats_list
+ 
+-Print the statistics:
++Print the statistics::
+ 
+   dmsetup message vol 0 @stats_print 0
+ 
+-Delete the statistics:
++Delete the statistics::
+ 
+   dmsetup message vol 0 @stats_delete 0
+diff --git a/Documentation/device-mapper/striped.txt b/Documentation/device-mapper/striped.txt
+index 07ec492cceee..e9a8da192ae1 100644
+--- a/Documentation/device-mapper/striped.txt
++++ b/Documentation/device-mapper/striped.txt
+@@ -1,3 +1,4 @@
++=========
+ dm-stripe
+ =========
+ 
+@@ -8,12 +9,16 @@ potentially provide improved I/O throughput by utilizing several physical
+ devices in parallel.
+ 
+ Parameters: <num devs> <chunk size> [<dev path> <offset>]+
+-    <num devs>: Number of underlying devices.
+-    <chunk size>: Size of each chunk of data. Must be at least as
+-                  large as the system's PAGE_SIZE.
+-    <dev path>: Full pathname to the underlying block-device, or a
+-                "major:minor" device-number.
+-    <offset>: Starting sector within the device.
++    <num devs>:
++	Number of underlying devices.
++    <chunk size>:
++	Size of each chunk of data. Must be at least as
++        large as the system's PAGE_SIZE.
++    <dev path>:
++	Full pathname to the underlying block-device, or a
++	"major:minor" device-number.
++    <offset>:
++	Starting sector within the device.
+ 
+ One or more underlying devices can be specified. The striped device size must
+ be a multiple of the chunk size multiplied by the number of underlying devices.
+@@ -22,36 +27,35 @@ be a multiple of the chunk size multiplied by the number of underlying devices.
+ Example scripts
+ ===============
+ 
+-[[
+-#!/usr/bin/perl -w
+-# Create a striped device across any number of underlying devices. The device
+-# will be called "stripe_dev" and have a chunk-size of 128k.
++::
+ 
+-my $chunk_size = 128 * 2;
+-my $dev_name = "stripe_dev";
+-my $num_devs = @ARGV;
+-my @devs = @ARGV;
+-my ($min_dev_size, $stripe_dev_size, $i);
++  #!/usr/bin/perl -w
++  # Create a striped device across any number of underlying devices. The device
++  # will be called "stripe_dev" and have a chunk-size of 128k.
+ 
+-if (!$num_devs) {
+-        die("Specify at least one device\n");
+-}
++  my $chunk_size = 128 * 2;
++  my $dev_name = "stripe_dev";
++  my $num_devs = @ARGV;
++  my @devs = @ARGV;
++  my ($min_dev_size, $stripe_dev_size, $i);
+ 
+-$min_dev_size = `blockdev --getsz $devs[0]`;
+-for ($i = 1; $i < $num_devs; $i++) {
+-        my $this_size = `blockdev --getsz $devs[$i]`;
+-        $min_dev_size = ($min_dev_size < $this_size) ?
+-                        $min_dev_size : $this_size;
+-}
++  if (!$num_devs) {
++          die("Specify at least one device\n");
++  }
+ 
+-$stripe_dev_size = $min_dev_size * $num_devs;
+-$stripe_dev_size -= $stripe_dev_size % ($chunk_size * $num_devs);
++  $min_dev_size = `blockdev --getsz $devs[0]`;
++  for ($i = 1; $i < $num_devs; $i++) {
++          my $this_size = `blockdev --getsz $devs[$i]`;
++          $min_dev_size = ($min_dev_size < $this_size) ?
++                          $min_dev_size : $this_size;
++  }
+ 
+-$table = "0 $stripe_dev_size striped $num_devs $chunk_size";
+-for ($i = 0; $i < $num_devs; $i++) {
+-        $table .= " $devs[$i] 0";
+-}
++  $stripe_dev_size = $min_dev_size * $num_devs;
++  $stripe_dev_size -= $stripe_dev_size % ($chunk_size * $num_devs);
+ 
+-`echo $table | dmsetup create $dev_name`;
+-]]
++  $table = "0 $stripe_dev_size striped $num_devs $chunk_size";
++  for ($i = 0; $i < $num_devs; $i++) {
++          $table .= " $devs[$i] 0";
++  }
+ 
++  `echo $table | dmsetup create $dev_name`;
+diff --git a/Documentation/device-mapper/switch.txt b/Documentation/device-mapper/switch.txt
+index 5bd4831db4a8..7dde06be1a4f 100644
+--- a/Documentation/device-mapper/switch.txt
++++ b/Documentation/device-mapper/switch.txt
+@@ -1,3 +1,4 @@
++=========
+ dm-switch
+ =========
+ 
+@@ -67,27 +68,25 @@ b-tree can achieve.
+ Construction Parameters
+ =======================
+ 
+-    <num_paths> <region_size> <num_optional_args> [<optional_args>...]
+-    [<dev_path> <offset>]+
++    <num_paths> <region_size> <num_optional_args> [<optional_args>...] [<dev_path> <offset>]+
++	<num_paths>
++	    The number of paths across which to distribute the I/O.
+ 
+-<num_paths>
+-    The number of paths across which to distribute the I/O.
++	<region_size>
++	    The number of 512-byte sectors in a region. Each region can be redirected
++	    to any of the available paths.
+ 
+-<region_size>
+-    The number of 512-byte sectors in a region. Each region can be redirected
+-    to any of the available paths.
++	<num_optional_args>
++	    The number of optional arguments. Currently, no optional arguments
++	    are supported and so this must be zero.
+ 
+-<num_optional_args>
+-    The number of optional arguments. Currently, no optional arguments
+-    are supported and so this must be zero.
++	<dev_path>
++	    The block device that represents a specific path to the device.
+ 
+-<dev_path>
+-    The block device that represents a specific path to the device.
+-
+-<offset>
+-    The offset of the start of data on the specific <dev_path> (in units
+-    of 512-byte sectors). This number is added to the sector number when
+-    forwarding the request to the specific path. Typically it is zero.
++	<offset>
++	    The offset of the start of data on the specific <dev_path> (in units
++	    of 512-byte sectors). This number is added to the sector number when
++	    forwarding the request to the specific path. Typically it is zero.
+ 
+ Messages
+ ========
+@@ -122,17 +121,21 @@ Example
+ Assume that you have volumes vg1/switch0 vg1/switch1 vg1/switch2 with
+ the same size.
+ 
+-Create a switch device with 64kB region size:
++Create a switch device with 64kB region size::
++
+     dmsetup create switch --table "0 `blockdev --getsz /dev/vg1/switch0`
+ 	switch 3 128 0 /dev/vg1/switch0 0 /dev/vg1/switch1 0 /dev/vg1/switch2 0"
+ 
+ Set mappings for the first 7 entries to point to devices switch0, switch1,
+-switch2, switch0, switch1, switch2, switch1:
++switch2, switch0, switch1, switch2, switch1::
++
+     dmsetup message switch 0 set_region_mappings 0:0 :1 :2 :0 :1 :2 :1
+ 
+-Set repetitive mapping. This command:
++Set repetitive mapping. This command::
++
+     dmsetup message switch 0 set_region_mappings 1000:1 :2 R2,10
+-is equivalent to:
++
++is equivalent to::
++
+     dmsetup message switch 0 set_region_mappings 1000:1 :2 :1 :2 :1 :2 :1 :2 \
+ 	:1 :2 :1 :2 :1 :2 :1 :2 :1 :2
+-
+diff --git a/Documentation/device-mapper/thin-provisioning.txt b/Documentation/device-mapper/thin-provisioning.txt
+index 883e7ca5f745..bafebf79da4b 100644
+--- a/Documentation/device-mapper/thin-provisioning.txt
++++ b/Documentation/device-mapper/thin-provisioning.txt
+@@ -1,3 +1,7 @@
++=================
++Thin provisioning
++=================
++
+ Introduction
+ ============
+ 
+@@ -95,6 +99,8 @@ previously.)
+ Using an existing pool device
+ -----------------------------
  
 +::
 +
-          127           0  bit index
-         +---------------+
-      V0 |               |
-diff --git a/Documentation/arm64/tagged-pointers.txt b/Documentation/arm64/tagged-pointers.txt
-index a25a99e82bb1..2acdec3ebbeb 100644
---- a/Documentation/arm64/tagged-pointers.txt
-+++ b/Documentation/arm64/tagged-pointers.txt
-@@ -1,7 +1,9 @@
--		Tagged virtual addresses in AArch64 Linux
--		=========================================
-+=========================================
-+Tagged virtual addresses in AArch64 Linux
-+=========================================
+     dmsetup create pool \
+ 	--table "0 20971520 thin-pool $metadata_dev $data_dev \
+ 		 $data_block_size $low_water_mark"
+@@ -154,7 +160,7 @@ Thin provisioning
+ i) Creating a new thinly-provisioned volume.
  
- Author: Will Deacon <will.deacon@arm.com>
+   To create a new thinly- provisioned volume you must send a message to an
+-  active pool device, /dev/mapper/pool in this example.
++  active pool device, /dev/mapper/pool in this example::
+ 
+     dmsetup message /dev/mapper/pool 0 "create_thin 0"
+ 
+@@ -164,7 +170,7 @@ i) Creating a new thinly-provisioned volume.
+ 
+ ii) Using a thinly-provisioned volume.
+ 
+-  Thinly-provisioned volumes are activated using the 'thin' target:
++  Thinly-provisioned volumes are activated using the 'thin' target::
+ 
+     dmsetup create thin --table "0 2097152 thin /dev/mapper/pool 0"
+ 
+@@ -181,6 +187,8 @@ i) Creating an internal snapshot.
+   must suspend it before creating the snapshot to avoid corruption.
+   This is NOT enforced at the moment, so please be careful!
+ 
++  ::
 +
- Date  : 12 June 2013
+     dmsetup suspend /dev/mapper/thin
+     dmsetup message /dev/mapper/pool 0 "create_snap 1 0"
+     dmsetup resume /dev/mapper/thin
+@@ -198,14 +206,14 @@ ii) Using an internal snapshot.
+   activating or removing them both.  (This differs from conventional
+   device-mapper snapshots.)
  
- This document briefly describes the provision of tagged virtual
-diff --git a/arch/arm64/kernel/kexec_image.c b/arch/arm64/kernel/kexec_image.c
-index 07bf740bea91..31cc2f423aa8 100644
---- a/arch/arm64/kernel/kexec_image.c
-+++ b/arch/arm64/kernel/kexec_image.c
-@@ -53,7 +53,7 @@ static void *image_load(struct kimage *image,
+-  Activate it exactly the same way as any other thinly-provisioned volume:
++  Activate it exactly the same way as any other thinly-provisioned volume::
  
- 	/*
- 	 * We require a kernel with an unambiguous Image header. Per
--	 * Documentation/booting.txt, this is the case when image_size
-+	 * Documentation/arm64/booting.txt, this is the case when image_size
- 	 * is non-zero (practically speaking, since v3.17).
- 	 */
- 	h = (struct arm64_image_header *)kernel;
+     dmsetup create snap --table "0 2097152 thin /dev/mapper/pool 1"
+ 
+ External snapshots
+ ------------------
+ 
+-You can use an external _read only_ device as an origin for a
++You can use an external **read only** device as an origin for a
+ thinly-provisioned volume.  Any read to an unprovisioned area of the
+ thin device will be passed through to the origin.  Writes trigger
+ the allocation of new blocks as usual.
+@@ -223,11 +231,13 @@ i) Creating a snapshot of an external device
+   This is the same as creating a thin device.
+   You don't mention the origin at this stage.
+ 
++  ::
++
+     dmsetup message /dev/mapper/pool 0 "create_thin 0"
+ 
+ ii) Using a snapshot of an external device.
+ 
+-  Append an extra parameter to the thin target specifying the origin:
++  Append an extra parameter to the thin target specifying the origin::
+ 
+     dmsetup create snap --table "0 2097152 thin /dev/mapper/pool 0 /dev/image"
+ 
+@@ -240,6 +250,8 @@ Deactivation
+ All devices using a pool must be deactivated before the pool itself
+ can be.
+ 
++::
++
+     dmsetup remove thin
+     dmsetup remove snap
+     dmsetup remove pool
+@@ -252,25 +264,32 @@ Reference
+ 
+ i) Constructor
+ 
+-    thin-pool <metadata dev> <data dev> <data block size (sectors)> \
+-	      <low water mark (blocks)> [<number of feature args> [<arg>]*]
++    ::
++
++      thin-pool <metadata dev> <data dev> <data block size (sectors)> \
++	        <low water mark (blocks)> [<number of feature args> [<arg>]*]
+ 
+     Optional feature arguments:
+ 
+-      skip_block_zeroing: Skip the zeroing of newly-provisioned blocks.
++      skip_block_zeroing:
++	Skip the zeroing of newly-provisioned blocks.
+ 
+-      ignore_discard: Disable discard support.
++      ignore_discard:
++	Disable discard support.
+ 
+-      no_discard_passdown: Don't pass discards down to the underlying
+-			   data device, but just remove the mapping.
++      no_discard_passdown:
++	Don't pass discards down to the underlying
++	data device, but just remove the mapping.
+ 
+-      read_only: Don't allow any changes to be made to the pool
++      read_only:
++		 Don't allow any changes to be made to the pool
+ 		 metadata.  This mode is only available after the
+ 		 thin-pool has been created and first used in full
+ 		 read/write mode.  It cannot be specified on initial
+ 		 thin-pool creation.
+ 
+-      error_if_no_space: Error IOs, instead of queueing, if no space.
++      error_if_no_space:
++	Error IOs, instead of queueing, if no space.
+ 
+     Data block size must be between 64KB (128 sectors) and 1GB
+     (2097152 sectors) inclusive.
+@@ -278,10 +297,12 @@ i) Constructor
+ 
+ ii) Status
+ 
+-    <transaction id> <used metadata blocks>/<total metadata blocks>
+-    <used data blocks>/<total data blocks> <held metadata root>
+-    ro|rw|out_of_data_space [no_]discard_passdown [error|queue]_if_no_space
+-    needs_check|- metadata_low_watermark
++    ::
++
++      <transaction id> <used metadata blocks>/<total metadata blocks>
++      <used data blocks>/<total data blocks> <held metadata root>
++      ro|rw|out_of_data_space [no_]discard_passdown [error|queue]_if_no_space
++      needs_check|- metadata_low_watermark
+ 
+     transaction id:
+ 	A 64-bit number used by userspace to help synchronise with metadata
+@@ -336,13 +357,11 @@ ii) Status
+ iii) Messages
+ 
+     create_thin <dev id>
+-
+ 	Create a new thinly-provisioned device.
+ 	<dev id> is an arbitrary unique 24-bit identifier chosen by
+ 	the caller.
+ 
+     create_snap <dev id> <origin id>
+-
+ 	Create a new snapshot of another thinly-provisioned device.
+ 	<dev id> is an arbitrary unique 24-bit identifier chosen by
+ 	the caller.
+@@ -350,11 +369,9 @@ iii) Messages
+ 	of which the new device will be a snapshot.
+ 
+     delete <dev id>
+-
+ 	Deletes a thin device.  Irreversible.
+ 
+     set_transaction_id <current id> <new id>
+-
+ 	Userland volume managers, such as LVM, need a way to
+ 	synchronise their external metadata with the internal metadata of the
+ 	pool target.  The thin-pool target offers to store an
+@@ -364,14 +381,12 @@ iii) Messages
+ 	compare-and-swap message.
+ 
+     reserve_metadata_snap
+-
+         Reserve a copy of the data mapping btree for use by userland.
+         This allows userland to inspect the mappings as they were when
+         this message was executed.  Use the pool's status command to
+         get the root block associated with the metadata snapshot.
+ 
+     release_metadata_snap
+-
+         Release a previously reserved copy of the data mapping btree.
+ 
+ 'thin' target
+@@ -379,7 +394,9 @@ iii) Messages
+ 
+ i) Constructor
+ 
+-    thin <pool dev> <dev id> [<external origin dev>]
++    ::
++
++        thin <pool dev> <dev id> [<external origin dev>]
+ 
+     pool dev:
+ 	the thin-pool device, e.g. /dev/mapper/my_pool or 253:0
+@@ -401,8 +418,7 @@ provisioned as and when needed.
+ 
+ ii) Status
+ 
+-     <nr mapped sectors> <highest mapped sector>
+-
++    <nr mapped sectors> <highest mapped sector>
+ 	If the pool has encountered device errors and failed, the status
+ 	will just contain the string 'Fail'.  The userspace recovery
+ 	tools should then be used.
+diff --git a/Documentation/device-mapper/unstriped.txt b/Documentation/device-mapper/unstriped.txt
+index 0b2a306c54ee..0a8d3eb3f072 100644
+--- a/Documentation/device-mapper/unstriped.txt
++++ b/Documentation/device-mapper/unstriped.txt
+@@ -1,3 +1,7 @@
++================================
++Device-mapper "unstriped" target
++================================
++
+ Introduction
+ ============
+ 
+@@ -34,46 +38,46 @@ striped target to combine the 4 devices into one.  It then will use
+ the unstriped target ontop of the striped device to access the
+ individual backing loop devices.  We write data to the newly exposed
+ unstriped devices and verify the data written matches the correct
+-underlying device on the striped array.
+-
+-#!/bin/bash
+-
+-MEMBER_SIZE=$((128 * 1024 * 1024))
+-NUM=4
+-SEQ_END=$((${NUM}-1))
+-CHUNK=256
+-BS=4096
+-
+-RAID_SIZE=$((${MEMBER_SIZE}*${NUM}/512))
+-DM_PARMS="0 ${RAID_SIZE} striped ${NUM} ${CHUNK}"
+-COUNT=$((${MEMBER_SIZE} / ${BS}))
+-
+-for i in $(seq 0 ${SEQ_END}); do
+-  dd if=/dev/zero of=member-${i} bs=${MEMBER_SIZE} count=1 oflag=direct
+-  losetup /dev/loop${i} member-${i}
+-  DM_PARMS+=" /dev/loop${i} 0"
+-done
+-
+-echo $DM_PARMS | dmsetup create raid0
+-for i in $(seq 0 ${SEQ_END}); do
+-  echo "0 1 unstriped ${NUM} ${CHUNK} ${i} /dev/mapper/raid0 0" | dmsetup create set-${i}
+-done;
+-
+-for i in $(seq 0 ${SEQ_END}); do
+-  dd if=/dev/urandom of=/dev/mapper/set-${i} bs=${BS} count=${COUNT} oflag=direct
+-  diff /dev/mapper/set-${i} member-${i}
+-done;
+-
+-for i in $(seq 0 ${SEQ_END}); do
+-  dmsetup remove set-${i}
+-done
+-
+-dmsetup remove raid0
+-
+-for i in $(seq 0 ${SEQ_END}); do
+-  losetup -d /dev/loop${i}
+-  rm -f member-${i}
+-done
++underlying device on the striped array::
++
++  #!/bin/bash
++
++  MEMBER_SIZE=$((128 * 1024 * 1024))
++  NUM=4
++  SEQ_END=$((${NUM}-1))
++  CHUNK=256
++  BS=4096
++
++  RAID_SIZE=$((${MEMBER_SIZE}*${NUM}/512))
++  DM_PARMS="0 ${RAID_SIZE} striped ${NUM} ${CHUNK}"
++  COUNT=$((${MEMBER_SIZE} / ${BS}))
++
++  for i in $(seq 0 ${SEQ_END}); do
++    dd if=/dev/zero of=member-${i} bs=${MEMBER_SIZE} count=1 oflag=direct
++    losetup /dev/loop${i} member-${i}
++    DM_PARMS+=" /dev/loop${i} 0"
++  done
++
++  echo $DM_PARMS | dmsetup create raid0
++  for i in $(seq 0 ${SEQ_END}); do
++    echo "0 1 unstriped ${NUM} ${CHUNK} ${i} /dev/mapper/raid0 0" | dmsetup create set-${i}
++  done;
++
++  for i in $(seq 0 ${SEQ_END}); do
++    dd if=/dev/urandom of=/dev/mapper/set-${i} bs=${BS} count=${COUNT} oflag=direct
++    diff /dev/mapper/set-${i} member-${i}
++  done;
++
++  for i in $(seq 0 ${SEQ_END}); do
++    dmsetup remove set-${i}
++  done
++
++  dmsetup remove raid0
++
++  for i in $(seq 0 ${SEQ_END}); do
++    losetup -d /dev/loop${i}
++    rm -f member-${i}
++  done
+ 
+ Another example
+ ---------------
+@@ -81,7 +85,7 @@ Another example
+ Intel NVMe drives contain two cores on the physical device.
+ Each core of the drive has segregated access to its LBA range.
+ The current LBA model has a RAID 0 128k chunk on each core, resulting
+-in a 256k stripe across the two cores:
++in a 256k stripe across the two cores::
+ 
+    Core 0:       Core 1:
+   __________    __________
+@@ -108,17 +112,24 @@ Example dmsetup usage
+ 
+ unstriped ontop of Intel NVMe device that has 2 cores
+ -----------------------------------------------------
+-dmsetup create nvmset0 --table '0 512 unstriped 2 256 0 /dev/nvme0n1 0'
+-dmsetup create nvmset1 --table '0 512 unstriped 2 256 1 /dev/nvme0n1 0'
++
++::
++
++  dmsetup create nvmset0 --table '0 512 unstriped 2 256 0 /dev/nvme0n1 0'
++  dmsetup create nvmset1 --table '0 512 unstriped 2 256 1 /dev/nvme0n1 0'
+ 
+ There will now be two devices that expose Intel NVMe core 0 and 1
+-respectively:
+-/dev/mapper/nvmset0
+-/dev/mapper/nvmset1
++respectively::
++
++  /dev/mapper/nvmset0
++  /dev/mapper/nvmset1
+ 
+ unstriped ontop of striped with 4 drives using 128K chunk size
+ --------------------------------------------------------------
+-dmsetup create raid_disk0 --table '0 512 unstriped 4 256 0 /dev/mapper/striped 0'
+-dmsetup create raid_disk1 --table '0 512 unstriped 4 256 1 /dev/mapper/striped 0'
+-dmsetup create raid_disk2 --table '0 512 unstriped 4 256 2 /dev/mapper/striped 0'
+-dmsetup create raid_disk3 --table '0 512 unstriped 4 256 3 /dev/mapper/striped 0'
++
++::
++
++  dmsetup create raid_disk0 --table '0 512 unstriped 4 256 0 /dev/mapper/striped 0'
++  dmsetup create raid_disk1 --table '0 512 unstriped 4 256 1 /dev/mapper/striped 0'
++  dmsetup create raid_disk2 --table '0 512 unstriped 4 256 2 /dev/mapper/striped 0'
++  dmsetup create raid_disk3 --table '0 512 unstriped 4 256 3 /dev/mapper/striped 0'
+diff --git a/Documentation/device-mapper/verity.txt b/Documentation/device-mapper/verity.txt
+index b3d2e4a42255..a4d1c1476d72 100644
+--- a/Documentation/device-mapper/verity.txt
++++ b/Documentation/device-mapper/verity.txt
+@@ -1,5 +1,6 @@
++=========
+ dm-verity
+-==========
++=========
+ 
+ Device-Mapper's "verity" target provides transparent integrity checking of
+ block devices using a cryptographic digest provided by the kernel crypto API.
+@@ -7,6 +8,9 @@ This target is read-only.
+ 
+ Construction Parameters
+ =======================
++
++::
++
+     <version> <dev> <hash_dev>
+     <data_block_size> <hash_block_size>
+     <num_data_blocks> <hash_start_block>
+@@ -160,7 +164,9 @@ calculating the parent node.
+ 
+ The tree looks something like:
+ 
+-alg = sha256, num_blocks = 32768, block_size = 4096
++	alg = sha256, num_blocks = 32768, block_size = 4096
++
++::
+ 
+                                  [   root    ]
+                                 /    . . .    \
+@@ -189,6 +195,7 @@ block boundary) are the hash blocks which are stored a depth at a time
+ 
+ The full specification of kernel parameters and on-disk metadata format
+ is available at the cryptsetup project's wiki page
++
+   https://gitlab.com/cryptsetup/cryptsetup/wikis/DMVerity
+ 
+ Status
+@@ -198,7 +205,8 @@ If any check failed, C (for Corruption) is returned.
+ 
+ Example
+ =======
+-Set up a device:
++Set up a device::
++
+   # dmsetup create vroot --readonly --table \
+     "0 2097152 verity 1 /dev/sda1 /dev/sda2 4096 4096 262144 1 sha256 "\
+     "4392712ba01368efdf14b05c76f9e4df0d53664630b5d48632ed17a137f39076 "\
+@@ -209,11 +217,13 @@ the hash tree or activate the kernel device. This is available from
+ the cryptsetup upstream repository https://gitlab.com/cryptsetup/cryptsetup/
+ (as a libcryptsetup extension).
+ 
+-Create hash on the device:
++Create hash on the device::
++
+   # veritysetup format /dev/sda1 /dev/sda2
+   ...
+   Root hash: 4392712ba01368efdf14b05c76f9e4df0d53664630b5d48632ed17a137f39076
+ 
+-Activate the device:
++Activate the device::
++
+   # veritysetup create vroot /dev/sda1 /dev/sda2 \
+     4392712ba01368efdf14b05c76f9e4df0d53664630b5d48632ed17a137f39076
+diff --git a/Documentation/device-mapper/writecache.txt b/Documentation/device-mapper/writecache.txt
+index 01532b3008ae..d3d7690f5e8d 100644
+--- a/Documentation/device-mapper/writecache.txt
++++ b/Documentation/device-mapper/writecache.txt
+@@ -1,3 +1,7 @@
++=================
++Writecache target
++=================
++
+ The writecache target caches writes on persistent memory or on SSD. It
+ doesn't cache reads because reads are supposed to be cached in page cache
+ in normal RAM.
+@@ -6,15 +10,18 @@ When the device is constructed, the first sector should be zeroed or the
+ first sector should contain valid superblock from previous invocation.
+ 
+ Constructor parameters:
++
+ 1. type of the cache device - "p" or "s"
+-	p - persistent memory
+-	s - SSD
++
++	- p - persistent memory
++	- s - SSD
+ 2. the underlying device that will be cached
+ 3. the cache device
+ 4. block size (4096 is recommended; the maximum block size is the page
+    size)
+ 5. the number of optional parameters (the parameters with an argument
+    count as two)
++
+ 	start_sector n		(default: 0)
+ 		offset from the start of cache device in 512-byte sectors
+ 	high_watermark n	(default: 50)
+@@ -43,6 +50,7 @@ Constructor parameters:
+ 		applicable only to persistent memory - don't use the FUA
+ 		flag when writing back data and send the FLUSH request
+ 		afterwards
++
+ 		- some underlying devices perform better with fua, some
+ 		  with nofua. The user should test it
+ 
+@@ -60,6 +68,7 @@ Messages:
+ 		flush the cache device on next suspend. Use this message
+ 		when you are going to remove the cache device. The proper
+ 		sequence for removing the cache device is:
++
+ 		1. send the "flush_on_suspend" message
+ 		2. load an inactive table with a linear target that maps
+ 		   to the underlying device
+diff --git a/Documentation/device-mapper/zero.txt b/Documentation/device-mapper/zero.txt
+index 20fb38e7fa7e..11fb5cf4597c 100644
+--- a/Documentation/device-mapper/zero.txt
++++ b/Documentation/device-mapper/zero.txt
+@@ -1,3 +1,4 @@
++=======
+ dm-zero
+ =======
+ 
+@@ -18,20 +19,19 @@ filesystem limitations.
+ 
+ To create a sparse device, start by creating a dm-zero device that's the
+ desired size of the sparse device. For this example, we'll assume a 10TB
+-sparse device.
++sparse device::
+ 
+-TEN_TERABYTES=`expr 10 \* 1024 \* 1024 \* 1024 \* 2`   # 10 TB in sectors
+-echo "0 $TEN_TERABYTES zero" | dmsetup create zero1
++  TEN_TERABYTES=`expr 10 \* 1024 \* 1024 \* 1024 \* 2`   # 10 TB in sectors
++  echo "0 $TEN_TERABYTES zero" | dmsetup create zero1
+ 
+ Then create a snapshot of the zero device, using any available block-device as
+ the COW device. The size of the COW device will determine the amount of real
+ space available to the sparse device. For this example, we'll assume /dev/sdb1
+-is an available 10GB partition.
++is an available 10GB partition::
+ 
+-echo "0 $TEN_TERABYTES snapshot /dev/mapper/zero1 /dev/sdb1 p 128" | \
+-   dmsetup create sparse1
++  echo "0 $TEN_TERABYTES snapshot /dev/mapper/zero1 /dev/sdb1 p 128" | \
++     dmsetup create sparse1
+ 
+ This will create a 10TB sparse device called /dev/mapper/sparse1 that has
+ 10GB of actual storage space available. If more than 10GB of data is written
+ to this device, it will start returning I/O errors.
+-
 -- 
 2.20.1
 
