@@ -2,76 +2,74 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C875FC282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:34:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F29C282DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:35:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9A78C20880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:34:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555439649;
-	bh=P4+RnJCuebIn4tzI6w3JMJbpiPt+/6YEXBgeVkZBjaw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=WuJEXf765VsHecAy5VfF1mG4RUyTZVbBMc483OzzQoSobEZ6a8Vmd66d39G/ENw1s
-	 qAZ4z5TsboVbtxVKd03iOW5kahlRz88zmiSo1zXt6uTW7GKi+4hLnd2d97dbz4FeR+
-	 osqg+V8u9H1EmqJYEV5HERTpeivYTk6ujfk60Edk=
+	by mail.kernel.org (Postfix) with ESMTP id 878E220449
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:35:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729975AbfDPSeI (ORCPT
+        id S1729762AbfDPSfv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 14:34:08 -0400
-Received: from mx2.suse.de ([195.135.220.15]:55898 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727180AbfDPSeH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 14:34:07 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 919C9AC58;
-        Tue, 16 Apr 2019 18:34:06 +0000 (UTC)
-Date:   Tue, 16 Apr 2019 20:34:04 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Yang Shi <yang.shi@linux.alibaba.com>, mgorman@techsingularity.net,
-        riel@surriel.com, hannes@cmpxchg.org, akpm@linux-foundation.org,
-        keith.busch@intel.com, dan.j.williams@intel.com,
-        fengguang.wu@intel.com, fan.du@intel.com, ying.huang@intel.com,
-        ziy@nvidia.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [v2 RFC PATCH 0/9] Another Approach to Use PMEM as NUMA Node
-Message-ID: <20190416183404.GA655@dhcp22.suse.cz>
-References: <1554955019-29472-1-git-send-email-yang.shi@linux.alibaba.com>
- <20190412084702.GD13373@dhcp22.suse.cz>
- <a68137bb-dcd8-4e4a-b3a9-69a66f9dccaf@linux.alibaba.com>
- <20190416074714.GD11561@dhcp22.suse.cz>
- <b9b40585-cb59-3d42-bcf8-e59bff77c663@intel.com>
- <20190416143958.GI11561@dhcp22.suse.cz>
- <bddc3469-2984-2d32-f2cf-e1d0cc64f1e8@intel.com>
+        Tue, 16 Apr 2019 14:35:51 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:50183 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726860AbfDPSfv (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 14:35:51 -0400
+Received: from pd9ef12d2.dip0.t-ipconnect.de ([217.239.18.210] helo=nanos.glx-home)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hGSvi-0001D1-V8; Tue, 16 Apr 2019 20:35:39 +0200
+Date:   Tue, 16 Apr 2019 20:35:38 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Nishad Kamdar <nishadkamdar@gmail.com>
+cc:     Greentime Hu <green.hu@gmail.com>,
+        Vincent Chen <deanbo422@gmail.com>,
+        Oleg Nesterov <oleg@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.vnet.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Nick Piggin <npiggin@gmail.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>,
+        =?ISO-8859-15?Q?Uwe_Kleine-K=F6nig?= 
+        <u.kleine-koenig@pengutronix.de>, linux-kernel@vger.kernel.org,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org
+Subject: Re: [PATCH v3 2/5] nds32: Use the correct style for SPDX License
+ Identifier
+In-Reply-To: <f6a7c31f4e8b743a2877875ac3fc49ecb8b9eb0c.1555427419.git.nishadkamdar@gmail.com>
+Message-ID: <alpine.DEB.2.21.1904162034260.1780@nanos.tec.linutronix.de>
+References: <cover.1555427418.git.nishadkamdar@gmail.com> <f6a7c31f4e8b743a2877875ac3fc49ecb8b9eb0c.1555427419.git.nishadkamdar@gmail.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <bddc3469-2984-2d32-f2cf-e1d0cc64f1e8@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 16-04-19 08:46:56, Dave Hansen wrote:
-> On 4/16/19 7:39 AM, Michal Hocko wrote:
-> >> Strict binding also doesn't keep another app from moving the
-> >> memory.
-> > I would consider that a bug.
-> 
-> A bug where, though?  Certainly not in the kernel.
+On Tue, 16 Apr 2019, Nishad Kamdar wrote:
 
-Kernel should refrain from moving explicitly bound memory nilly willy. I
-certainly agree that there are corner cases. E.g. memory hotplug. We do
-break CPU affinity for CPU offline as well. So this is something user
-should expect. But the kernel shouldn't move explicitly bound pages to a
-different node implicitly. I am not sure whether we even do that during
-compaction if we do then I would consider _this_ to be a bug. And NUMA
-rebalancing under memory pressure falls into the same category IMO.
--- 
-Michal Hocko
-SUSE Labs
+> This patch corrects the SPDX License Identifier style
+> in the nds32 Hardware Architecture related files.
+> 
+> Suggested-by: Joe Perches <joe@perches.com>
+> Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+
+Actually instead of doing that we should fix the documentation. The
+requirement came from older binutils because they barfed on // style
+comments in ASM files. That's history as we upped the minimal binutil
+requirement.
+
+Thanks,
+
+	tglx
