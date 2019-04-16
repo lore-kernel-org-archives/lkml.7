@@ -2,157 +2,158 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4C1C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:23:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA08C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:23:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 211D32077C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:23:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vd9fvU4P"
+	by mail.kernel.org (Postfix) with ESMTP id C8A832077C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:23:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729397AbfDPNXL (ORCPT
+        id S1729403AbfDPNXb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 09:23:11 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:37378 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726986AbfDPNXL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 09:23:11 -0400
-Received: by mail-pg1-f196.google.com with SMTP id e6so10351500pgc.4;
-        Tue, 16 Apr 2019 06:23:10 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=YTcai3ILqiFQ0jFaP1rQRFUTWlngnMBopiXkVQbHRlg=;
-        b=Vd9fvU4PnFlrh7s4E9wblubIalsFj6J4baNeHXwlb3AczNr8RgDAu/YRUss1UCR64g
-         pGwioKEcPOLA04UDvylIKl82yGaZKpe+zrg+1uO5RUjIanfDWwOAqlIake46qjztHvcT
-         snBnRngHxgGU4rDBziicd3ce68ENZybhlHAFsytWQxiZmk4IR+A1aSBBEbBHtN80/lJl
-         DP0LjDsxuuvi3Pbm9lTuPMnEaZOJUSmh6b5rbYN1ad8Eq/aXhRHx3jiSIKyzdf3TwoYi
-         egDt7q9k12VD6UDgfyUIYIwPjdMwqV8SU7MyIEKrXTeVa0zFlNIBmGzm3p3PSUgwtaqn
-         FlhA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=YTcai3ILqiFQ0jFaP1rQRFUTWlngnMBopiXkVQbHRlg=;
-        b=Ye8uTQ7mVBJV1XezRF7kQNWO2Vy8T18iU3rZ4x6vRXGMIx+io5w9uqpv2icZURZ8So
-         Fe/mP2KDD8weKGoXkWaKdaDZzG3PZaOoxTPCNW8fAZzuvuZD+ap1c94XFFgs+vhMgb3t
-         PI+TjmPMiQRiVvrIE1BTZOs8ek8FZqG4XQYM7XLs4Icf3eEIpc7Qk8cQpiwkQXOGZs5w
-         hg+FivC2ZBH8d4c1JqwKlbO5kWS0IHAlj0xDyaJaTkCdbUVF7KJrkZcqIIEv5GShGCop
-         XOesiIy8xup1hUnSe6h7IG8v1tWcXaHqJZ4DlCTq2qpHk3ITIhZ8vA2NrSSoBhoLRWWk
-         prXw==
-X-Gm-Message-State: APjAAAUlWysS7jTxmBcXNUgRVZZkChLMkas2+ULQ+XIYLuSSGNjM69Pk
-        JqVBgMZCxvqXugX6m6uE81V3oDKT
-X-Google-Smtp-Source: APXvYqw/s3TXNvlgP5EucJboiFEgnGRxmVa5YbwHQmHCMJ+PyxRciRx5Z27Yv0WpDVaXKq83xM7ylA==
-X-Received: by 2002:a63:6844:: with SMTP id d65mr77767431pgc.393.1555420990346;
-        Tue, 16 Apr 2019 06:23:10 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id l1sm66358724pgo.13.2019.04.16.06.23.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 06:23:09 -0700 (PDT)
-Subject: Re: [PATCH v2 01/16] watchdog: refactor watchdog_init_timeout
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-watchdog@vger.kernel.org
-Cc:     linux-renesas-soc@vger.kernel.org,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-kernel@vger.kernel.org
-References: <20190416102515.12269-1-wsa+renesas@sang-engineering.com>
- <20190416102515.12269-2-wsa+renesas@sang-engineering.com>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <b65ae931-bfb3-acb4-8097-da4b81be1ea5@roeck-us.net>
-Date:   Tue, 16 Apr 2019 06:23:08 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 16 Apr 2019 09:23:31 -0400
+Received: from foss.arm.com ([217.140.101.70]:54918 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725981AbfDPNXb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 09:23:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 84D25EBD;
+        Tue, 16 Apr 2019 06:23:30 -0700 (PDT)
+Received: from e107155-lin (e107155-lin.cambridge.arm.com [10.1.196.42])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B05E23F557;
+        Tue, 16 Apr 2019 06:23:26 -0700 (PDT)
+Date:   Tue, 16 Apr 2019 14:23:24 +0100
+From:   Sudeep Holla <sudeep.holla@arm.com>
+To:     Atish Patra <atish.patra@wdc.com>
+Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Jeffrey Hugo <jhugo@codeaurora.org>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Anup Patel <anup@brainfault.org>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        Dmitriy Cherkasov <dmitriy@oss-tech.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Jeremy Linton <jeremy.linton@arm.com>,
+        Johan Hovold <johan@kernel.org>,
+        "linux-riscv@lists.infradead.org" <linux-riscv@lists.infradead.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Otto Sabart <ottosabart@seberm.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Paul Walmsley <paul.walmsley@sifive.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>,
+        Will Deacon <will.deacon@arm.com>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [RFT/RFC PATCH v3 3/5] cpu-topology: Move cpu topology code to
+ common code.
+Message-ID: <20190416132324.GB24669@e107155-lin>
+References: <20190320234806.19748-1-atish.patra@wdc.com>
+ <20190320234806.19748-4-atish.patra@wdc.com>
+ <20190415152741.GA28623@e107155-lin>
+ <5c5b720f-414a-706c-3415-642c27baef1f@wdc.com>
 MIME-Version: 1.0
-In-Reply-To: <20190416102515.12269-2-wsa+renesas@sang-engineering.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5c5b720f-414a-706c-3415-642c27baef1f@wdc.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/16/19 3:25 AM, Wolfram Sang wrote:
-> The function is not easy to read and has a problem: -EINVAL is returned
-> when the module parameter is invalid but the DT parameter is OK.
-> 
-> Refactor the code to have the same pattern of checks for the module
-> parameter and DT. Further ones can be easily added in the future if the
-> need arises. The above mentioned problem is fixed, too.
-> 
-> Some documentation is added to describe the different handlings of '0'
-> for the module parameter and the DT property.
-> 
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+On Mon, Apr 15, 2019 at 03:08:45PM -0700, Atish Patra wrote:
+> On 4/15/19 8:27 AM, Sudeep Holla wrote:
+> > Hi Atish,
+> >
+> > Thanks again for doing this. Overall changes look good except a couple
+> > of minor nit, see below.
+> >
+> > On Wed, Mar 20, 2019 at 04:48:04PM -0700, Atish Patra wrote:
+> > > Both RISC-V & ARM64 are using cpu-map device tree to describe
+> > > their cpu topology. It's better to move the relevant code to
+> > > a common place instead of duplicate code.
+> > >
+> > > Signed-off-by: Atish Patra <atish.patra@wdc.com>
+> > > Tested-by: Jeffrey Hugo <jhugo@codeaurora.org>
+> > > ---
+> > >   arch/arm64/include/asm/topology.h |  23 ---
+> > >   arch/arm64/kernel/topology.c      | 303 +-----------------------------
+> > >   drivers/base/arch_topology.c      | 298 ++++++++++++++++++++++++++++-
+> > >   drivers/base/topology.c           |   1 +
+> > >   include/linux/arch_topology.h     |  28 +++
+> > >   5 files changed, 330 insertions(+), 323 deletions(-)
+> > >
+> >
+> > [...]
+> >
+> > > diff --git a/drivers/base/arch_topology.c b/drivers/base/arch_topology.c
+> > > index edfcf8d9..6cc6a860 100644
+> > > --- a/drivers/base/arch_topology.c
+> > > +++ b/drivers/base/arch_topology.c
+> > > @@ -6,8 +6,8 @@
+> > >    * Written by: Juri Lelli, ARM Ltd.
+> > >    */
+> > > -#include <linux/acpi.h>
+> > >   #include <linux/arch_topology.h>
+> > > +#include <linux/acpi.h>
+> > >   #include <linux/cpu.h>
+> > >   #include <linux/cpufreq.h>
+> > >   #include <linux/device.h>
+> > > @@ -16,6 +16,11 @@
+> > >   #include <linux/string.h>
+> > >   #include <linux/sched/topology.h>
+> > >   #include <linux/cpuset.h>
+> > > +#include <linux/cpumask.h>
+> > > +#include <linux/init.h>
+> > > +#include <linux/percpu.h>
+> > > +#include <linux/sched.h>
+> > > +#include <linux/smp.h>
+> > >   DEFINE_PER_CPU(unsigned long, freq_scale) = SCHED_CAPACITY_SCALE;
+> > > @@ -278,3 +283,294 @@ static void parsing_done_workfn(struct work_struct *work)
+> > >   #else
+> > >   core_initcall(free_raw_capacity);
+> > >   #endif
+> > > +
+> > > +#if defined(CONFIG_ARM64) || defined(CONFIG_RISCV)
+> >
+> > Why can't the above one be just GENERIC_ARCH_TOPOLOGY ?
+> > I may be missing to find it myself, but would like to know.
+> >
+> GENERIC_ARCH_TOPOLOGY is now used for both RISCV, ARM & ARM64.
+> The below functions under this #ifdef have different implementation for ARM
+> and ARM64.
+>
+> parse_dt_topology
+> cpu_coregroup_mask
+> update_siblings_masks
+>
+> While we can combine the later two functions and move them to common code as
+> well, parse_dt_topology is significantly different.
+>
 
-Reviewed-by: Guenter Roeck <linux@roeck-us.net>
+Sure, had a quick glance and indeed they may look different, but won't
+it defeat the purpose of this binding consolidation ?
 
-> ---
->   drivers/watchdog/watchdog_core.c | 33 +++++++++++++++++++--------------
->   1 file changed, 19 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/watchdog/watchdog_core.c b/drivers/watchdog/watchdog_core.c
-> index eb8fa25f8eb2..21e53cc49977 100644
-> --- a/drivers/watchdog/watchdog_core.c
-> +++ b/drivers/watchdog/watchdog_core.c
-> @@ -105,9 +105,12 @@ static void watchdog_check_min_max_timeout(struct watchdog_device *wdd)
->    * timeout module parameter (if it is valid value) or the timeout-sec property
->    * (only if it is a valid value and the timeout_parm is out of bounds).
->    * If none of them are valid then we keep the old value (which should normally
-> - * be the default timeout value).
-> + * be the default timeout value). Note that for the module parameter, '0' means
-> + * 'use default' while it is an invalid value for the timeout-sec property.
-> + * It should simply be dropped if you want to use the default value then.
->    *
-> - * A zero is returned on success and -EINVAL for failure.
-> + * A zero is returned on success or -EINVAL if all provided values are out of
-> + * bounds.
->    */
->   int watchdog_init_timeout(struct watchdog_device *wdd,
->   				unsigned int timeout_parm, struct device *dev)
-> @@ -117,22 +120,24 @@ int watchdog_init_timeout(struct watchdog_device *wdd,
->   
->   	watchdog_check_min_max_timeout(wdd);
->   
-> -	/* try to get the timeout module parameter first */
-> -	if (!watchdog_timeout_invalid(wdd, timeout_parm) && timeout_parm) {
-> -		wdd->timeout = timeout_parm;
-> -		return ret;
-> -	}
-> -	if (timeout_parm)
-> +	/* check the driver supplied value (likely a module parameter) first */
-> +	if (timeout_parm) {
-> +		if (!watchdog_timeout_invalid(wdd, timeout_parm)) {
-> +			wdd->timeout = timeout_parm;
-> +			return 0;
-> +		}
->   		ret = -EINVAL;
-> +	}
->   
->   	/* try to get the timeout_sec property */
-> -	if (dev == NULL || dev->of_node == NULL)
-> -		return ret;
-> -	of_property_read_u32(dev->of_node, "timeout-sec", &t);
-> -	if (!watchdog_timeout_invalid(wdd, t) && t)
-> -		wdd->timeout = t;
-> -	else
-> +	if (dev && dev->of_node &&
-> +	    of_property_read_u32(dev->of_node, "timeout-sec", &t) == 0) {
-> +		if (t && !watchdog_timeout_invalid(wdd, t)) {
-> +			wdd->timeout = t;
-> +			return 0;
-> +		}
->   		ret = -EINVAL;
-> +	}
->   
->   	return ret;
->   }
-> 
+> That's why we need some kind of #ifdef or renaming of parse_dt_topology for
+> ARM32 code.
+>
 
+I am fine if we want to take this up later to keep the impact minimum.
+But cpu_coregroup_mask and update_siblings_masks can and must be unified.
+In fact the existing generic version must work on ARM32 too.
+
+> Thanks for the review!!
+>
+
+You are welcome.
+
+--
+Regards,
+Sudeep
