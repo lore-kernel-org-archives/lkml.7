@@ -2,121 +2,298 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C850AC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:50:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65B62C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:52:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 89ED920684
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:50:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2881920684
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:52:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="hkWSChtL"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="BU5hSv7D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728686AbfDPJuf (ORCPT
+        id S1728518AbfDPJwM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 05:50:35 -0400
-Received: from bilbo.ozlabs.org ([203.11.71.1]:36349 "EHLO ozlabs.org"
+        Tue, 16 Apr 2019 05:52:12 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:47548 "EHLO mail.skyhub.de"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726739AbfDPJue (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 05:50:34 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        id S1726739AbfDPJwM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 05:52:12 -0400
+Received: from zn.tnic (p200300EC2F0D6900D0FA583685BBD9D6.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:6900:d0fa:5836:85bb:d9d6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44k0wl6VLFz9s00;
-        Tue, 16 Apr 2019 19:50:31 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1555408232;
-        bh=FhaAi/UdIsuMVIMyShMCKj8q2XBVunudT8LzXWzosUI=;
-        h=Date:From:To:Cc:Subject:From;
-        b=hkWSChtLwt93z+1Sf+lQ+n0fx2jXPPhwgSr/qBNhJzXyxhuF6HHFknFRE8j0KxKIV
-         FyLhzpdv3nvBmdheZw26WcAIoEM4IYg0Lb16jAhd5rWF2UW5ODRN92dGcuKyH2wzPB
-         qmuDd9iw3Ll5rkHoT0IztNSFbxRtq2f1+2XG23LCwpbkQbxJTMqrISKcMUzBD0BWUD
-         mCl7H58tnGWN8p0WKSvJUmSlDkqdS/Nu3OQSSQqs0dDY6V3VXakjxfdbbTW/D8Qt7+
-         VHpsrsCTbs31c166lGNUMjPMlTmI/HyB274GUGOjlwIudLuELT61SJHwnW1sifEK01
-         fI0lCCPuV7YCw==
-Date:   Tue, 16 Apr 2019 19:50:29 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
-        Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>
-Subject: [PATCH v2] kernel/compat.c: mark expected switch fall-throughs
-Message-ID: <20190416195029.004b7ab4@canb.auug.org.au>
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 882B51EC0104;
+        Tue, 16 Apr 2019 11:52:09 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1555408329;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=e3CuOjvPRQJV4O4/Bc9rmmHJAOVv9hvCYhm4YDwsLTY=;
+        b=BU5hSv7DIJcwM+IDtyZ3D7RDJGfLDCDNiV92v8BNEdB4b/ui+a9Q/Ji/AszdP2dcKpEXUl
+        XxQxPalaxjBagHKqOZE69XwlnQkf8SSPSIp4ex/q18pr0O9qUztsyJs3IEUXRP247jbAIE
+        aUvGUMFcjZcIFzB286U1lGs5Gzzfzdw=
+Date:   Tue, 16 Apr 2019 11:52:09 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Junichi Nomura <j-nomura@ce.jp.nec.com>
+Cc:     Dave Young <dyoung@redhat.com>,
+        Chao Fan <fanc.fnst@cn.fujitsu.com>,
+        Baoquan He <bhe@redhat.com>, Kairui Song <kasong@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: [PATCH] x86/boot: Use efi_setup_data for searching RSDP on kexec-ed
+ kernels
+Message-ID: <20190416095209.GG27892@zn.tnic>
+References: <C54C5A30-62D9-45C4-8036-88D255FD92A1@alien8.de>
+ <20190411125822.GE30080@zn.tnic>
+ <20190412025416.GA11070@jeru.linux.bs1.fc.nec.co.jp>
+ <20190412084956.GC19808@zn.tnic>
+ <20190412133528.GD19808@zn.tnic>
+ <cc2c1dbe-4fb3-fb7d-0540-c04734fc15cb@ce.jp.nec.com>
+ <20190415090717.GA29317@zn.tnic>
+ <20190415102525.GB29317@zn.tnic>
+ <23309b73-d135-a207-564b-6003cee39184@ce.jp.nec.com>
+ <20190416094024.GE27892@zn.tnic>
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/9ZAiCiAxpMGP9lVgOhjImwf"; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190416094024.GE27892@zn.tnic>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/9ZAiCiAxpMGP9lVgOhjImwf
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+I'll queue the below in the next days if there are no more complaints:
 
-In preparation to enabling -Wimplicit-fallthrough, mark switch cases
-where we are expecting to fall through.
-
-This patch aims to suppress 3 missing-break-in-switch false positives
-on some architectures.
-
-Acked-by: Arnd Bergmann <arnd@arndb.de>
-Cc: Deepa Dinamani <deepa.kernel@gmail.com>
-Cc: Gustavo A. R. Silva <gustavo@embeddedor.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Jann Horn <jannh@google.com>
-Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
 ---
- kernel/compat.c | 3 +++
- 1 file changed, 3 insertions(+)
+From: Junichi Nomura <j-nomura@ce.jp.nec.com>
 
-  v2 - split the comments on to new lines to match commit 89976005536c
-("include/linux/compat.h: mark expected switch fall-throughs").  (Arnd
-Bergmann)
+Commit
 
-diff --git a/kernel/compat.c b/kernel/compat.c
-index d8a36c6ad7c9..b5f7063c0db6 100644
---- a/kernel/compat.c
-+++ b/kernel/compat.c
-@@ -346,8 +346,11 @@ get_compat_sigset(sigset_t *set, const compat_sigset_t=
- __user *compat)
- 		return -EFAULT;
- 	switch (_NSIG_WORDS) {
- 	case 4: set->sig[3] =3D v.sig[6] | (((long)v.sig[7]) << 32 );
-+		/* fall through */
- 	case 3: set->sig[2] =3D v.sig[4] | (((long)v.sig[5]) << 32 );
-+		/* fall through */
- 	case 2: set->sig[1] =3D v.sig[2] | (((long)v.sig[3]) << 32 );
-+		/* fall through */
- 	case 1: set->sig[0] =3D v.sig[0] | (((long)v.sig[1]) << 32 );
+  3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in boot_params")
+
+broke kexec boot on EFI systems. efi_get_rsdp_addr() in the early
+parsing code tries to search RSDP from the EFI tables but that will
+crash because the table address is virtual when the kernel was booted by
+kexec (set_virtual_address_map() has run in the first kernel and cannot
+be run again in the second kernel).
+
+In the case of kexec, the physical address of EFI tables is provided via
+efi_setup_data in boot_params, which is set up by kexec(1).
+
+Factor out the table parsing code and use different pointers depending
+on whether the kernel is booted by kexec or not.
+
+ [ bp: Massage. ]
+
+Fixes: 3a63f70bf4c3a ("x86/boot: Early parse RSDP and save it in boot_params")
+Signed-off-by: Jun'ichi Nomura <j-nomura@ce.jp.nec.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
+Cc: Borislav Petkov <bp@suse.de>
+Cc: Dave Young <dyoung@redhat.com>
+Link: https://lkml.kernel.org/r/20190408231011.GA5402@jeru.linux.bs1.fc.nec.co.jp
+---
+ arch/x86/boot/compressed/acpi.c | 143 ++++++++++++++++++++++++--------
+ 1 file changed, 107 insertions(+), 36 deletions(-)
+
+diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
+index 0ef4ad55b29b..8cecce1ac0cd 100644
+--- a/arch/x86/boot/compressed/acpi.c
++++ b/arch/x86/boot/compressed/acpi.c
+@@ -44,17 +44,109 @@ static acpi_physical_address get_acpi_rsdp(void)
+ 	return addr;
+ }
+ 
+-/* Search EFI system tables for RSDP. */
+-static acpi_physical_address efi_get_rsdp_addr(void)
++/*
++ * Search EFI system tables for RSDP.  If both ACPI_20_TABLE_GUID and
++ * ACPI_TABLE_GUID are found, take the former, which has more features.
++ */
++static acpi_physical_address
++__efi_get_rsdp_addr(unsigned long config_tables, unsigned int nr_tables,
++		    bool efi_64)
+ {
+ 	acpi_physical_address rsdp_addr = 0;
+ 
+ #ifdef CONFIG_EFI
+-	unsigned long systab, systab_tables, config_tables;
++	int i;
++
++	/* Get EFI tables from systab. */
++	for (i = 0; i < nr_tables; i++) {
++		acpi_physical_address table;
++		efi_guid_t guid;
++
++		if (efi_64) {
++			efi_config_table_64_t *tbl = (efi_config_table_64_t *) config_tables + i;
++
++			guid  = tbl->guid;
++			table = tbl->table;
++
++			if (!IS_ENABLED(CONFIG_X86_64) && table >> 32) {
++				debug_putstr("Error getting RSDP address: EFI config table located above 4GB.\n");
++				return 0;
++			}
++		} else {
++			efi_config_table_32_t *tbl = (efi_config_table_32_t *) config_tables + i;
++
++			guid  = tbl->guid;
++			table = tbl->table;
++		}
++
++		if (!(efi_guidcmp(guid, ACPI_TABLE_GUID)))
++			rsdp_addr = table;
++		else if (!(efi_guidcmp(guid, ACPI_20_TABLE_GUID)))
++			return table;
++	}
++#endif
++	return rsdp_addr;
++}
++
++/* EFI/kexec support is 64-bit only. */
++#ifdef CONFIG_X86_64
++static struct efi_setup_data *get_kexec_setup_data_addr(void)
++{
++	struct setup_data *data;
++	u64 pa_data;
++
++	pa_data = boot_params->hdr.setup_data;
++	while (pa_data) {
++		data = (struct setup_data *)pa_data;
++		if (data->type == SETUP_EFI)
++			return (struct efi_setup_data *)(pa_data + sizeof(struct setup_data));
++
++		pa_data = data->next;
++	}
++	return NULL;
++}
++
++static acpi_physical_address kexec_get_rsdp_addr(void)
++{
++	efi_system_table_64_t *systab;
++	struct efi_setup_data *esd;
++	struct efi_info *ei;
++	char *sig;
++
++	esd = (struct efi_setup_data *)get_kexec_setup_data_addr();
++	if (!esd)
++		return 0;
++
++	if (!esd->tables) {
++		debug_putstr("Wrong kexec SETUP_EFI data.\n");
++		return 0;
++	}
++
++	ei = &boot_params->efi_info;
++	sig = (char *)&ei->efi_loader_signature;
++	if (strncmp(sig, EFI64_LOADER_SIGNATURE, 4)) {
++		debug_putstr("Wrong kexec EFI loader signature.\n");
++		return 0;
++	}
++
++	/* Get systab from boot params. */
++	systab = (efi_system_table_64_t *) (ei->efi_systab | ((__u64)ei->efi_systab_hi << 32));
++	if (!systab)
++		error("EFI system table not found in kexec boot_params.");
++
++	return __efi_get_rsdp_addr((unsigned long)esd->tables, systab->nr_tables, true);
++}
++#else
++static acpi_physical_address kexec_get_rsdp_addr(void) { return 0; }
++#endif /* CONFIG_X86_64 */
++
++static acpi_physical_address efi_get_rsdp_addr(void)
++{
++#ifdef CONFIG_EFI
++	unsigned long systab, config_tables;
+ 	unsigned int nr_tables;
+ 	struct efi_info *ei;
+ 	bool efi_64;
+-	int size, i;
+ 	char *sig;
+ 
+ 	ei = &boot_params->efi_info;
+@@ -88,49 +180,20 @@ static acpi_physical_address efi_get_rsdp_addr(void)
+ 
+ 		config_tables	= stbl->tables;
+ 		nr_tables	= stbl->nr_tables;
+-		size		= sizeof(efi_config_table_64_t);
+ 	} else {
+ 		efi_system_table_32_t *stbl = (efi_system_table_32_t *)systab;
+ 
+ 		config_tables	= stbl->tables;
+ 		nr_tables	= stbl->nr_tables;
+-		size		= sizeof(efi_config_table_32_t);
  	}
- #else
---=20
-2.20.1
+ 
+ 	if (!config_tables)
+ 		error("EFI config tables not found.");
+ 
+-	/* Get EFI tables from systab. */
+-	for (i = 0; i < nr_tables; i++) {
+-		acpi_physical_address table;
+-		efi_guid_t guid;
+-
+-		config_tables += size;
+-
+-		if (efi_64) {
+-			efi_config_table_64_t *tbl = (efi_config_table_64_t *)config_tables;
+-
+-			guid  = tbl->guid;
+-			table = tbl->table;
+-
+-			if (!IS_ENABLED(CONFIG_X86_64) && table >> 32) {
+-				debug_putstr("Error getting RSDP address: EFI config table located above 4GB.\n");
+-				return 0;
+-			}
+-		} else {
+-			efi_config_table_32_t *tbl = (efi_config_table_32_t *)config_tables;
+-
+-			guid  = tbl->guid;
+-			table = tbl->table;
+-		}
+-
+-		if (!(efi_guidcmp(guid, ACPI_TABLE_GUID)))
+-			rsdp_addr = table;
+-		else if (!(efi_guidcmp(guid, ACPI_20_TABLE_GUID)))
+-			return table;
+-	}
++	return __efi_get_rsdp_addr(config_tables, nr_tables, efi_64);
++#else
++	return 0;
+ #endif
+-	return rsdp_addr;
+ }
+ 
+ static u8 compute_checksum(u8 *buffer, u32 length)
+@@ -220,6 +283,14 @@ acpi_physical_address get_rsdp_addr(void)
+ 	if (!pa)
+ 		pa = boot_params->acpi_rsdp_addr;
+ 
++	/*
++	 * Try to get EFI data from setup_data. This can happen when we're a
++	 * kexec'ed kernel and kexec(1) has passed all the required EFI info to
++	 * us.
++	 */
++	if (!pa)
++		pa = kexec_get_rsdp_addr();
++
+ 	if (!pa)
+ 		pa = efi_get_rsdp_addr();
+ 
+-- 
+2.21.0
 
---=20
-Cheers,
-Stephen Rothwell
 
---Sig_/9ZAiCiAxpMGP9lVgOhjImwf
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
+-- 
+Regards/Gruss,
+    Boris.
 
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAly1pWUACgkQAVBC80lX
-0GwWhwgAo4C/AGvlYBHX9bzhV9/DelOpVkiLbCsR3zMJeqaRt7qLW2EgxM5x4hfE
-vyS7NdU+O55BlmDHW1n48kMe9MzcHCfjzEMxiAp0ZIgrG7vLuQrBp7Ofk8DebVmV
-3FHSX0+ck4+aOE+FlcMLhkGhG+ynATfIzo9zPc1a3N/4u5E+VkyB3mPV0RpG3uje
-usvk9G+rO0Oeqy26uK4mXGHafPWqTSwox2hBU4xJ5ls5qoH2bxu898DuO79k4a6B
-SsxoeuHtXshr5ZEDy5YyJjDGHGdwcFN4xJyZ4jGs9LoUZ7OBkZrsV4X2d9lPeNSA
-A5ylhB6z9TLtA3qE0/Lz9mVgTMJRnw==
-=Fb9G
------END PGP SIGNATURE-----
-
---Sig_/9ZAiCiAxpMGP9lVgOhjImwf--
+Good mailing practices for 400: avoid top-posting and trim the reply.
