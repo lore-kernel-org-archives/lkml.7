@@ -2,110 +2,129 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UPPERCASE_50_75,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 962A6C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 01:09:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DE4D2C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 01:15:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D4872073F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 01:09:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B142C2084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 01:15:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728283AbfDPBJh (ORCPT
+        id S1728247AbfDPBPa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 21:09:37 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:2536 "EHLO huawei.com"
+        Mon, 15 Apr 2019 21:15:30 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:37174 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726527AbfDPBJh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 21:09:37 -0400
-Received: from dggeml405-hub.china.huawei.com (unknown [172.30.72.55])
-        by Forcepoint Email with ESMTP id 36ED998C1695B1094E73;
-        Tue, 16 Apr 2019 09:09:34 +0800 (CST)
-Received: from DGGEML422-HUB.china.huawei.com (10.1.199.39) by
- dggeml405-hub.china.huawei.com (10.3.17.49) with Microsoft SMTP Server (TLS)
- id 14.3.439.0; Tue, 16 Apr 2019 09:09:33 +0800
-Received: from DGGEML522-MBS.china.huawei.com ([169.254.8.248]) by
- dggeml422-hub.china.huawei.com ([10.1.199.39]) with mapi id 14.03.0439.000;
- Tue, 16 Apr 2019 09:09:33 +0800
-From:   Linhaifeng <haifeng.lin@huawei.com>
-To:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
-        Paul Clarke <pc@us.ibm.com>
-CC:     "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: perf tools:Is there any tools to found out the max latency by
- irq or cpu idle
-Thread-Topic: perf tools:Is there any tools to found out the max latency by
- irq or cpu idle
-Thread-Index: AQHU8TjwQPH5fZKzxkKUF8YFzmG5zqY5l6vwgAMUFYCAAFWIgIAA+83Q
-Date:   Tue, 16 Apr 2019 01:09:33 +0000
-Message-ID: <4099DE2E54AFAD489356C6C9161D53339592850D@dggeml522-mbs.china.huawei.com>
-References: <4099DE2E54AFAD489356C6C9161D53339591D64A@DGGEML502-MBX.china.huawei.com>
- <8ce8c596-123e-1342-5ccc-06a5fd8a60ec@redhat.com>
- <4099DE2E54AFAD489356C6C9161D53339591DE6D@DGGEML502-MBX.china.huawei.com>
- <6e6a98a4-a442-1e10-cf5a-56b6792d42ba@us.ibm.com>
- <20190415175907.GC11294@kernel.org>
-In-Reply-To: <20190415175907.GC11294@kernel.org>
-Accept-Language: en-GB, zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.177.20.223]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        id S1726038AbfDPBP3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 21:15:29 -0400
+Received: from DGGEMS403-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id 1D7E444D2C81D07869D2;
+        Tue, 16 Apr 2019 09:15:27 +0800 (CST)
+Received: from [127.0.0.1] (10.57.71.8) by DGGEMS403-HUB.china.huawei.com
+ (10.3.19.203) with Microsoft SMTP Server id 14.3.408.0; Tue, 16 Apr 2019
+ 09:15:11 +0800
+Subject: Re: [PATCH v2] irqchip/gicv3-its: fix some definitions of inner
+ cacheability attributes
+From:   Yao HongBo <yaohongbo@huawei.com>
+To:     <marc.zyngier@arm.com>, <linuxarm@huawei.com>,
+        <yangyingliang@huawei.com>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>
+References: <20190408140103.131554-1-yaohongbo@huawei.com>
+Message-ID: <311479a8-0d6f-ec17-8f51-a4545e0929b1@huawei.com>
+Date:   Tue, 16 Apr 2019 09:14:49 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.0
 MIME-Version: 1.0
+In-Reply-To: <20190408140103.131554-1-yaohongbo@huawei.com>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.57.71.8]
 X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksDQoNClRoYW5rIHlvdSBldmVyeSBtdWNoIQ0KSSBmb3VuZCBNU0kgaW4gbXkgc3lzdGVtIHRv
-byBhbmQgdGhlcmUgYXJlIHNvbWUgZXJyb3JzIGZvdW5kIGluIGJpb3MgbG9nLiBSZXBsYWNlIHRo
-ZSBtZW1vcnlzIGNhbiBmaXggaXQuDQoNCg0KTDJHV18yNjgwOi9ob21lL2ZzcC95Y2IgIyBwZXJm
-IHN0YXQgLUMgMS0xMSwxNC0yNSwyOS0zOSw0Mi01MiAtLXNtaS1jb3N0DQpeQw0KUGVyZm9ybWFu
-Y2UgY291bnRlciBzdGF0cyBmb3IgJ0NQVShzKSAxLTExLDE0LTI1LDI5LTM5LDQyLTUyJzoNCg0K
-U01JIGN5Y2xlcyUgU01JIyANCi0wLjIlIDkwIA0KDQo0NDcyLjQ4MzQxMzcxMiBzZWNvbmRzIHRp
-bWUgZWxhcHNlZA0KDQoNCi0tLS0tT3JpZ2luYWwgTWVzc2FnZS0tLS0tDQpGcm9tOiBBcm5hbGRv
-IENhcnZhbGhvIGRlIE1lbG8gW21haWx0bzphcm5hbGRvLm1lbG9AZ21haWwuY29tXSANClNlbnQ6
-IDIwMTnlubQ05pyIMTbml6UgMTo1OQ0KVG86IFBhdWwgQ2xhcmtlIDxwY0B1cy5pYm0uY29tPg0K
-Q2M6IExpbmhhaWZlbmcgPGhhaWZlbmcubGluQGh1YXdlaS5jb20+OyBsaW51eC1wZXJmLXVzZXJz
-QHZnZXIua2VybmVsLm9yZzsgbGludXgta2VybmVsQHZnZXIua2VybmVsLm9yZw0KU3ViamVjdDog
-UmU6IHBlcmYgdG9vbHM6SXMgdGhlcmUgYW55IHRvb2xzIHRvIGZvdW5kIG91dCB0aGUgbWF4IGxh
-dGVuY3kgYnkgaXJxIG9yIGNwdSBpZGxlDQoNCkVtIE1vbiwgQXByIDE1LCAyMDE5IGF0IDA3OjUy
-OjU5QU0gLTA1MDAsIFBhdWwgQ2xhcmtlIGVzY3JldmV1Og0KPiBPbiA0LzEzLzE5IDE6MDEgQU0s
-IExpbmhhaWZlbmcgd3JvdGU6DQo+ID4gU29ycnksIHRoZSB2YWx1ZSAxMzEwODE0MDggaXMganVz
-dCBmb3IgZXhhbXBsZS4gQWN0dWFsbHkgdGhlIHJlc3VsdCBpcyBsaWtlIHRoaXM6DQo+ID4gIHNx
-cnQgMjAxOS0wNC0xMCAyMzo1Mzo1MDogNDM5NjgNCj4gPiAgc3FydCAyMDE5LTA0LTEwIDIzOjUz
-OjUxOiA0NDA2MA0KPiA+ICBzcXJ0IDIwMTktMDQtMTAgMjM6NTM6NTI6IDQ5MDEyDQo+ID4gIHNx
-cnQgMjAxOS0wNC0xMCAyMzo1Mzo1MzogMzgxNzINCj4gPiAgc3FydCAyMDE5LTA0LTEwIDIzOjUz
-OjU0OiAxMzEwODE0MDggIHNxcnQgMjAxOS0wNC0xMCAyMzo1Mzo1NTogDQo+ID4gNDM2MDAgIHNx
-cnQgMjAxOS0wNC0xMCAyMzo1Mzo1NjogNDY3MDQgIHNxcnQgMjAxOS0wNC0xMCAyMzo1Mzo1Nzog
-DQo+ID4gNDY4ODAgIHNxcnQgMjAxOS0wNC0xMCAyMzo1Mzo1ODogNDQzMzIgIOKApuKApiAgc3Fy
-dCAyMDE5LTA0LTEwIA0KPiA+IDAyOjE3OjE1OiAxMzYzNDU4NzYgIOKApuKApiAgc3FydCAyMDE5
-LTA0LTEwIDA0OjQwOjM1OiAxMzYzMzU2NDQgIOKApuKApg0KPiANCj4gR2l2ZW4gdGhlIHBlcmlv
-ZGljaXR5LCBJJ20gd29uZGVyaW5nIGlmIGl0IGNvdWxkIGJlIFN5c3RlbSBNYW5hZ2VtZW50IElu
-dGVycnVwdHMgKFNNSXMpPw0KPiANCj4gSWYgc28sIHNvbWUgQklPU2VzIGhhdmUgc2V0dGluZ3Mg
-dG8gbWl0aWdhdGUsIG90aGVyd2lzZSwgdGhlcmUncyBub3QgbXVjaCB0aGF0IGNhbiBiZSBkb25l
-LCBwZXIgbXkgdW5kZXJzdGFuZGluZy4NCg0KW3Jvb3RAcXVhY28gcGVyZl0jIHBlcmYgbGlzdCBz
-bWkNCg0KTGlzdCBvZiBwcmUtZGVmaW5lZCBldmVudHMgKHRvIGJlIHVzZWQgaW4gLWUpOg0KDQog
-IG1zci9zbWkvICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgIFtLZXJu
-ZWwgUE1VIGV2ZW50XQ0KDQogIHN1bnJwYzp4cHJ0X3RyYW5zbWl0ICAgICAgICAgICAgICAgICAg
-ICAgICAgICAgICAgIFtUcmFjZXBvaW50IGV2ZW50XQ0KICB0Y3A6dGNwX3JldHJhbnNtaXRfc2ti
-ICAgICAgICAgICAgICAgICAgICAgICAgICAgICBbVHJhY2Vwb2ludCBldmVudF0NCiAgdGNwOnRj
-cF9yZXRyYW5zbWl0X3N5bmFjayAgICAgICAgICAgICAgICAgICAgICAgICAgW1RyYWNlcG9pbnQg
-ZXZlbnRdDQoNCiAgc2R0X3FlbXU6cW1wX2Jsb2NrX2pvYl9kaXNtaXNzICAgICAgICAgICAgICAg
-ICAgICAgW1NEVCBldmVudF0NCiAgc2R0X3FlbXU6cW1wX2pvYl9kaXNtaXNzICAgICAgICAgICAg
-ICAgICAgICAgICAgICAgW1NEVCBldmVudF0NCg0KTWV0cmljIEdyb3VwczoNCg0KW3Jvb3RAcXVh
-Y28gcGVyZl0jDQoNCkhlcmUsIHVzaW5nIGl0Og0KDQpbcm9vdEBxdWFjbyBwZXJmXSMgcGVyZiBz
-dGF0IC1JIDEwMDAgLWUgbXNyL3NtaS8NCiMgICAgICAgICAgIHRpbWUgICAgICAgICAgICAgY291
-bnRzIHVuaXQgZXZlbnRzDQogICAgIDEuMDAwOTE5ODE5ICAgICAgICAgICAgICAgICAgMCAgICAg
-IG1zci9zbWkvICAgICAgICAgICAgICAgICANCiAgICAgMi4wMDE2ODk5NTAgICAgICAgICAgICAg
-ICAgICAwICAgICAgbXNyL3NtaS8gICAgICAgICAgICAgICAgIA0KICAgICAzLjAwMjI2Njk4OCAg
-ICAgICAgICAgICAgICAgIDAgICAgICBtc3Ivc21pLyAgICAgICAgICAgICAgICAgDQogICAgIDQu
-MDAzMDQ5NDM5ICAgICAgICAgICAgICAgICAxNiAgICAgIG1zci9zbWkvICAgICAgICAgICAgICAg
-ICANCiAgICAgNS4wMDM2NzYwNjQgICAgICAgICAgICAgICAgICAwICAgICAgbXNyL3NtaS8gICAg
-ICAgICAgICAgICAgIA0KICAgICA2LjAwNDQyMDYxMyAgICAgICAgICAgICAgICAgMTYgICAgICBt
-c3Ivc21pLyAgICAgICAgICAgICAgICAgDQpeQyAgICAgNi42MDk0MDU2NjYgICAgICAgICAgICAg
-ICAgICAwICAgICAgbXNyL3NtaS8gICAgICAgICAgICAgICAgIA0KDQpbcm9vdEBxdWFjbyBwZXJm
-XSMgDQoNCg0KSW4gdGhpcyBMZW5vdm8gVDQ4MHMgSSBnZW5lcmF0ZSBTTUlzIGJ5IHByZXNzaW5n
-IHRoZSBtdXRlIGJ1dHRvbiA6LSkNCg0KLSBBcm5hbGRvDQo=
+Hi Marc,
+
+sorry for ping you...
+
+What's your suggestion for this patch? I look forward to your reply.
+
+Thanks,
+Hongbo.
+
+On 4/8/2019 10:01 PM, Hongbo Yao wrote:
+> Some definitions of Inner Cacheability attibutes need to be corrected.
+> 
+> Fixes: 8c828a535e29f ("irqchip/gicv3-its: Restore all cacheability
+> attributes")
+> 
+> Signed-off-by: Hongbo Yao <yaohongbo@huawei.com>
+> ---
+>  include/linux/irqchip/arm-gic-v3.h | 12 ++++++------
+>  1 file changed, 6 insertions(+), 6 deletions(-)
+> 
+> diff --git a/include/linux/irqchip/arm-gic-v3.h b/include/linux/irqchip/arm-gic-v3.h
+> index 95b69d3006ee..1f33daa5c674 100644
+> --- a/include/linux/irqchip/arm-gic-v3.h
+> +++ b/include/linux/irqchip/arm-gic-v3.h
+> @@ -165,7 +165,7 @@
+>  #define GICR_PROPBASER_nCnB	GIC_BASER_CACHEABILITY(GICR_PROPBASER, INNER, nCnB)
+>  #define GICR_PROPBASER_nC 	GIC_BASER_CACHEABILITY(GICR_PROPBASER, INNER, nC)
+>  #define GICR_PROPBASER_RaWt	GIC_BASER_CACHEABILITY(GICR_PROPBASER, INNER, RaWt)
+> -#define GICR_PROPBASER_RaWb	GIC_BASER_CACHEABILITY(GICR_PROPBASER, INNER, RaWt)
+> +#define GICR_PROPBASER_RaWb	GIC_BASER_CACHEABILITY(GICR_PROPBASER, INNER, RaWb)
+>  #define GICR_PROPBASER_WaWt	GIC_BASER_CACHEABILITY(GICR_PROPBASER, INNER, WaWt)
+>  #define GICR_PROPBASER_WaWb	GIC_BASER_CACHEABILITY(GICR_PROPBASER, INNER, WaWb)
+>  #define GICR_PROPBASER_RaWaWt	GIC_BASER_CACHEABILITY(GICR_PROPBASER, INNER, RaWaWt)
+> @@ -192,7 +192,7 @@
+>  #define GICR_PENDBASER_nCnB	GIC_BASER_CACHEABILITY(GICR_PENDBASER, INNER, nCnB)
+>  #define GICR_PENDBASER_nC 	GIC_BASER_CACHEABILITY(GICR_PENDBASER, INNER, nC)
+>  #define GICR_PENDBASER_RaWt	GIC_BASER_CACHEABILITY(GICR_PENDBASER, INNER, RaWt)
+> -#define GICR_PENDBASER_RaWb	GIC_BASER_CACHEABILITY(GICR_PENDBASER, INNER, RaWt)
+> +#define GICR_PENDBASER_RaWb	GIC_BASER_CACHEABILITY(GICR_PENDBASER, INNER, RaWb)
+>  #define GICR_PENDBASER_WaWt	GIC_BASER_CACHEABILITY(GICR_PENDBASER, INNER, WaWt)
+>  #define GICR_PENDBASER_WaWb	GIC_BASER_CACHEABILITY(GICR_PENDBASER, INNER, WaWb)
+>  #define GICR_PENDBASER_RaWaWt	GIC_BASER_CACHEABILITY(GICR_PENDBASER, INNER, RaWaWt)
+> @@ -251,7 +251,7 @@
+>  #define GICR_VPROPBASER_nCnB	GIC_BASER_CACHEABILITY(GICR_VPROPBASER, INNER, nCnB)
+>  #define GICR_VPROPBASER_nC 	GIC_BASER_CACHEABILITY(GICR_VPROPBASER, INNER, nC)
+>  #define GICR_VPROPBASER_RaWt	GIC_BASER_CACHEABILITY(GICR_VPROPBASER, INNER, RaWt)
+> -#define GICR_VPROPBASER_RaWb	GIC_BASER_CACHEABILITY(GICR_VPROPBASER, INNER, RaWt)
+> +#define GICR_VPROPBASER_RaWb	GIC_BASER_CACHEABILITY(GICR_VPROPBASER, INNER, RaWb)
+>  #define GICR_VPROPBASER_WaWt	GIC_BASER_CACHEABILITY(GICR_VPROPBASER, INNER, WaWt)
+>  #define GICR_VPROPBASER_WaWb	GIC_BASER_CACHEABILITY(GICR_VPROPBASER, INNER, WaWb)
+>  #define GICR_VPROPBASER_RaWaWt	GIC_BASER_CACHEABILITY(GICR_VPROPBASER, INNER, RaWaWt)
+> @@ -277,7 +277,7 @@
+>  #define GICR_VPENDBASER_nCnB	GIC_BASER_CACHEABILITY(GICR_VPENDBASER, INNER, nCnB)
+>  #define GICR_VPENDBASER_nC 	GIC_BASER_CACHEABILITY(GICR_VPENDBASER, INNER, nC)
+>  #define GICR_VPENDBASER_RaWt	GIC_BASER_CACHEABILITY(GICR_VPENDBASER, INNER, RaWt)
+> -#define GICR_VPENDBASER_RaWb	GIC_BASER_CACHEABILITY(GICR_VPENDBASER, INNER, RaWt)
+> +#define GICR_VPENDBASER_RaWb	GIC_BASER_CACHEABILITY(GICR_VPENDBASER, INNER, RaWb)
+>  #define GICR_VPENDBASER_WaWt	GIC_BASER_CACHEABILITY(GICR_VPENDBASER, INNER, WaWt)
+>  #define GICR_VPENDBASER_WaWb	GIC_BASER_CACHEABILITY(GICR_VPENDBASER, INNER, WaWb)
+>  #define GICR_VPENDBASER_RaWaWt	GIC_BASER_CACHEABILITY(GICR_VPENDBASER, INNER, RaWaWt)
+> @@ -351,7 +351,7 @@
+>  #define GITS_CBASER_nCnB	GIC_BASER_CACHEABILITY(GITS_CBASER, INNER, nCnB)
+>  #define GITS_CBASER_nC		GIC_BASER_CACHEABILITY(GITS_CBASER, INNER, nC)
+>  #define GITS_CBASER_RaWt	GIC_BASER_CACHEABILITY(GITS_CBASER, INNER, RaWt)
+> -#define GITS_CBASER_RaWb	GIC_BASER_CACHEABILITY(GITS_CBASER, INNER, RaWt)
+> +#define GITS_CBASER_RaWb	GIC_BASER_CACHEABILITY(GITS_CBASER, INNER, RaWb)
+>  #define GITS_CBASER_WaWt	GIC_BASER_CACHEABILITY(GITS_CBASER, INNER, WaWt)
+>  #define GITS_CBASER_WaWb	GIC_BASER_CACHEABILITY(GITS_CBASER, INNER, WaWb)
+>  #define GITS_CBASER_RaWaWt	GIC_BASER_CACHEABILITY(GITS_CBASER, INNER, RaWaWt)
+> @@ -375,7 +375,7 @@
+>  #define GITS_BASER_nCnB		GIC_BASER_CACHEABILITY(GITS_BASER, INNER, nCnB)
+>  #define GITS_BASER_nC		GIC_BASER_CACHEABILITY(GITS_BASER, INNER, nC)
+>  #define GITS_BASER_RaWt		GIC_BASER_CACHEABILITY(GITS_BASER, INNER, RaWt)
+> -#define GITS_BASER_RaWb		GIC_BASER_CACHEABILITY(GITS_BASER, INNER, RaWt)
+> +#define GITS_BASER_RaWb		GIC_BASER_CACHEABILITY(GITS_BASER, INNER, RaWb)
+>  #define GITS_BASER_WaWt		GIC_BASER_CACHEABILITY(GITS_BASER, INNER, WaWt)
+>  #define GITS_BASER_WaWb		GIC_BASER_CACHEABILITY(GITS_BASER, INNER, WaWb)
+>  #define GITS_BASER_RaWaWt	GIC_BASER_CACHEABILITY(GITS_BASER, INNER, RaWaWt)
+> 
+
