@@ -2,109 +2,88 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EC4DC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:17:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B968C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:18:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 363DD223EA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:17:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CEB51223EA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:18:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="uJcRR0v5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729060AbfDPOR3 (ORCPT
+        id S1729467AbfDPOSE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 10:17:29 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6750 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725796AbfDPOR3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 10:17:29 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id 7E3794A23C65E2F5F2B6;
-        Tue, 16 Apr 2019 22:17:04 +0800 (CST)
-Received: from [127.0.0.1] (10.184.189.20) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.408.0; Tue, 16 Apr 2019
- 22:16:55 +0800
-Subject: Re: some trouble when using vrf
-To:     <mmanning@vyatta.att-mail.com>,
-        David Ahern <dsa@cumulusnetworks.com>, <shrijeet@gmail.com>,
-        <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Mingfangsen <mingfangsen@huawei.com>
-References: <15adf635-a74b-e9e3-5dad-b35890f0a746@huawei.com>
- <1057be5b-8792-cf39-286b-f49bc6286117@vyatta.att-mail.com>
-From:   linmiaohe <linmiaohe@huawei.com>
-Message-ID: <a9fad2f4-f2a6-2daf-3e61-54e286afc2a7@huawei.com>
-Date:   Tue, 16 Apr 2019 22:16:22 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Tue, 16 Apr 2019 10:18:04 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:46282 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbfDPOSE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 10:18:04 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=lqJk8B1z7WsrVbN/AIY5pxzP/xd/p69LBwimCXdctj4=; b=uJcRR0v5GLXsxy1ONeAX6yWQY
+        CLJIRtdmuzytkV6NyDnJAmZjquKL5vNPaqZ/HpbpnFRF75I5lME1noEimr6zivLY6HJDZa11KUOrI
+        lyiv00u/v7Knu7K6kNWjbd0/0yg3QuhN6PQze1xRO9l2Gt4pX3on8I0Vrfof4q7gjJP6QddSX9AIp
+        pYWtivIjiqCemHKzNY8Ne1iaLnelSHIxNeojk9lSDMFwsZMM+K6AgG5IzSSZzsDrxz/4viEaJq/l3
+        bhSJp0BXMw3IuDoeuV4Jpo1hc6X/21Ih0NRXsitG3gZ6f6Pj5GG1LpEwfnuIv3hw6DlPWn1XBgr6W
+        rtRQJM/MA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hGOuE-0003Bs-11; Tue, 16 Apr 2019 14:17:50 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7B33D28B8C290; Tue, 16 Apr 2019 16:17:47 +0200 (CEST)
+Date:   Tue, 16 Apr 2019 16:17:47 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+Subject: Re: [PATCH-tip 0/2] locking/rwsem: Rwsem rearchitecture part 2
+ follow-up patches
+Message-ID: <20190416141747.GN4038@hirez.programming.kicks-ass.net>
+References: <20190415205829.32707-1-longman@redhat.com>
+ <20190416131047.GW11158@hirez.programming.kicks-ass.net>
+ <4747d10b-e9a4-f453-ab4e-13fc984a4067@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <1057be5b-8792-cf39-286b-f49bc6286117@vyatta.att-mail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.184.189.20]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <4747d10b-e9a4-f453-ab4e-13fc984a4067@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-
-On 2019/4/16 20:11, Mike Manning wrote:
-> On 16/04/2019 12:26, linmiaohe wrote:
->> Hi all:
->>     I meet some trouble when using vrf, it's very nice of you if you
->> can help me fix it.
->>
->>     1.If I bind a vrf address before I set SO_BINDTODEVICE opts to bind an
->> enslaved device, "Cannot assign requested address" will occurs. It's
->> because only after we set SO_BINDTODEVICE opts to bind an enslaved device,
->> then we can lookup the route in the specified l3mdev domain.
->>     I think we couldn't limit the order of bind ip addr and SO_BINDTODEVICE opts
->> otherwise many vrf unaware apps many need to change their code.
->>     I can't find a convenient way to fix it.Here is an example:
->>
->>     ...
->>     bind(sock_fd, (struct sockaddr *)&addr_serv, sizeof(addr_serv));
->>     ...
->>     ret = setsockopt(sock_fd, SOL_SOCKET, SO_BINDTODEVICE, bind_dev, strlen(bind_dev)+1);
->>     ...
->>     This code snipet doesn't work if the ip address of addr_serv is not in default vrf. And
->> "Cannot assign requested address" will occurs.
-> Or you can run instances of vrf-unaware applications per VRF with 'sudo
-> ip vrf exec <vrf> <cmd>', with the 3 sysctl you indicate below set to 0.
->>     2.When I run a udp server in default vrf and set net.ipv4.udp_l3mdev_accept=1,
->> it's supposed to work accorss VRFs.
->>     But it occurs when udp server received a packet, it sends back with the source
->> ip address from default vrf which is supposed to from the specified l3mdev domain.
->> And the connection between server and client is broken. It's because udp server
->> run in default vrf and doesn't bind the enslaved device, so only the route table in
->> default vrf is avaliable.
->>
->>     For example,I run a udp server in default vrf and set net.ipv4.udp_l3mdev_accept=1:
->>     [root@localhost vrf]# sysctl -a | grep l3mdev
->>     net.ipv4.raw_l3mdev_accept = 1
->>     net.ipv4.tcp_l3mdev_accept = 1
->>     net.ipv4.udp_l3mdev_accept = 1
->>
->>     Then connect the server and send a udp packet to the specified vrf. Here is tcpdump output:
->>     17:28:54.925417 IP 10.0.0.2.43003 > 10.0.0.1.irdmi: UDP, length 17
->>     17:28:54.925953 IP 9.85.153.236.irdmi > 10.0.0.2.43003: UDP, length 17
->>     ps. 10.0.0.2 is client ip, 10.0.0.1 is specified vrf ip, and 9.85.153.236 is default vrf ip.
->>     10.0.0.1 and 9.85.153.236 are in the same host.
->>
->> Thanks a lot if you can help me fix these. Have a nice day.
->>
->>
->>
+On Tue, Apr 16, 2019 at 09:18:50AM -0400, Waiman Long wrote:
+> On 04/16/2019 09:10 AM, Peter Zijlstra wrote:
+> > On Mon, Apr 15, 2019 at 04:58:27PM -0400, Waiman Long wrote:
+> >> This series contain 2 follow-up patches to alleviate the performance
+> >> regression found in the page_fault1 test of the will-it-scale benchmark.
+> >> This does not recover all the lost performance, but reclaim a sizeable
+> >> portion of it.
+> >>
+> >> The regression was found on an Intel system. I have run the test on
+> >> an AMD system. The regression wasn't seen there.  There are only minor
+> >> variations in performance. Perhaps the page fault path is quite different
+> >> between Intel and AMD systems.
+> > Can you please just fold this back into the appropriate patches? Trying
+> > to review all the back and forth is painful.
 > 
-> 
-> .
-> 
-    Thanks for your reply. Run instances of vrf-unaware applications per VRF is an optional solution for problem 1.
-But maybe it will limits the applications supposed to accross VRFS can't coexist with per VRF applications as
-udp_l3mdev_accept is globally effective.
-    And what about problem 2?
-    Thanks again.
+> I will send out an update part 2 patch with patch 1 of this series
+> merged into the writer spinning on reader patch. Patch 2 of this series
+> will be a standalone one.
 
+Hmm, in that case I can fold it back too. So hold off on sending it.
+
+I thought #2 was a fixup for an earlier patch as well.
