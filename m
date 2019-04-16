@@ -2,101 +2,127 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5376DC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 12:47:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E295BC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 12:47:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FAED205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 12:47:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AB83E20868
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 12:47:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="PK1cKNoN"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="EbpZGFaJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729309AbfDPMrA (ORCPT
+        id S1729336AbfDPMrF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 08:47:00 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:36932 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729041AbfDPMqw (ORCPT
+        Tue, 16 Apr 2019 08:47:05 -0400
+Received: from mail-ot1-f67.google.com ([209.85.210.67]:40967 "EHLO
+        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729131AbfDPMrA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 08:46:52 -0400
-Received: by mail-wm1-f66.google.com with SMTP id v14so25265773wmf.2
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 05:46:51 -0700 (PDT)
+        Tue, 16 Apr 2019 08:47:00 -0400
+Received: by mail-ot1-f67.google.com with SMTP id 64so17422055otb.8
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 05:46:59 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=KINNwFG/iIOr+44tFPkVT2Gr4tEIy3ljx/6ulQdSFwc=;
-        b=PK1cKNoNOC1SksVgIDu+870gB3TvUFca/U2d83NkOYPFVtl0P4SqqcbevFtUS+q1Nk
-         M1bIVnL9aicMFFlDE+1ZcyzkyqxNxK0CM68jZ+SasnMfjWdEMCapZKcTZbJr3lhuN+5K
-         UxbrpjEXvVtIyE1Y7ZuB2TnnIb1wFE2ZXP+wYDf1CAhTZffRcI1eYNm3F4+FpScnUk8Z
-         WKgzMM0xseDsA1Qq8UD4wat54oDj9etePoKOgNzEAhK9xam7SwTKlX4vaKYWml5yan/q
-         IpFdKVT1lnvbHawNbbFDdTdUg6hS+cBFiFy5HyQgd1LP+ZB5nx7SNXkTe0uwielFgzE4
-         qK8g==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:reply-to:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=ThPXTkU7uyFA4dHQXvmrVmc59qRYZafQp+cpAEUbGoU=;
+        b=EbpZGFaJTfwjypX5KwG0X9QAo8sEHWhsEPNnxFjqz9OzFJKq5z5hjzGBaes0AZ84yv
+         WeRu8v9fGaJLf/u0EVSaEUkqnj5UJ6KexqMaEScqYQ4jazgirTVnnhjJM2HZQF4zHVHD
+         Rmw8F4onIwOYhqwKM8hIdkl2ftLIjU3NbdFzKTxkPwuxvzYL4PBes+t5IfkWFou4UOiU
+         Xq9Vx08Ywa157t8CM4UqcMRVDjFRFrMy9SbYDsDFbgBhDp0lY/6PG5PppA+KYDfawzxn
+         HZ79guD/cnuXa3ZDpYHcVlsW5SQWqgpLA6xB8662lQi9n1YEbhTQW7XBAZbKW66ZhZQs
+         LJjw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=KINNwFG/iIOr+44tFPkVT2Gr4tEIy3ljx/6ulQdSFwc=;
-        b=kJTuPmGZDKmXz+zOLkmdE9lnVZc6DVY+bkUxKS2q16k3FXKAhGgksXOH0TWdRgN3Oh
-         NlkgG1wP4nDgvrh2zuG9QQyUxMvQy7XHlwt+Fqv1dxHAieF6Grr3q7eIHzJwn6vk/jV2
-         kF+YYZtMBrwYEKibnR6HsjKi2YEC+G2s2Fg70xAsG7d+lLMrUHsg9kUp5nNjQGMhy3jU
-         bleOCg3pbNg48pT7FNlE1OElA3CPDzHLJOF89Z2DFYzTcYYuWV4NDH0yrgMboqHPyIBx
-         X87P1UxRusb9g3mLGchKxxcaf1uXP1GlgAcQj7lom5skU/q3Xggz5Rny0kQKtZkK1OJg
-         gufA==
-X-Gm-Message-State: APjAAAUUem1j6zUHAJeNlghNSVxmLvE8+8iVGtxA+br2WvY1yH2BlPWl
-        DQoy7JWB2BfXYLgPj1oaoL1Fuw==
-X-Google-Smtp-Source: APXvYqwQ4Wg/kWlIQ2GZdMVpYhRuIFtZYXlaGEe8yW8ZljhPM32ws1+skqMhu6VBK5/ZTOEir2VakA==
-X-Received: by 2002:a1c:eb07:: with SMTP id j7mr25481124wmh.138.1555418810253;
-        Tue, 16 Apr 2019 05:46:50 -0700 (PDT)
-Received: from mai.imgcgcw.net (50.251.95.92.rev.sfr.net. [92.95.251.50])
-        by smtp.gmail.com with ESMTPSA id p6sm42823732wrs.6.2019.04.16.05.46.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 05:46:49 -0700 (PDT)
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-To:     tglx@linutronix.de
-Cc:     linux-kernel@vger.kernel.org,
-        Neil Armstrong <narmstrong@baylibre.com>,
-        Daniel Golle <daniel@makrotopia.org>,
-        linux-arm-kernel@lists.infradead.org (moderated list:ARM/OXNAS platform
-        support),
-        linux-oxnas@groups.io (moderated list:ARM/OXNAS platform support)
-Subject: [PATCH 3/4] clocksource/drivers/oxnas: Fix OX820 compatible
-Date:   Tue, 16 Apr 2019 14:46:39 +0200
-Message-Id: <20190416124640.20058-3-daniel.lezcano@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190416124640.20058-1-daniel.lezcano@linaro.org>
-References: <92427592-507b-e280-01bf-763d795c8a2f@linaro.org>
- <20190416124640.20058-1-daniel.lezcano@linaro.org>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :reply-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=ThPXTkU7uyFA4dHQXvmrVmc59qRYZafQp+cpAEUbGoU=;
+        b=oY/AwYX4X2nIaynvqHk8tArRDWFQ8lkGg6l/cMnyrpPA/xzC9UyLM7/PF8TFJn1wRU
+         gT/4Aqrt8eCLLZ2XKHF7Ny1aNOLueB622DZfh96+hhSd/Hk5oq8iXihhP4oAFfY6lTUF
+         fBzmLpj98g0S8mXFkLDpXZFz5TbqSkSx1qj076jNtEcuZDnIKfvODgmSj8UkvuuvorjH
+         U8PVK03W9zSAj939s6lgRllND9z3nIgLVjRinvlE01Ah3IkJMh973wXfaKbWJDvYdBuy
+         Iwluj3MFbEmyvMXZX2crkypMyCh0totsYBuLP1hdXEDyklKUmtcHzQ5I19XwEOyr+neU
+         MQTA==
+X-Gm-Message-State: APjAAAVQTCwaXCahhMUbfR/p603g2OF5F/u4XYDnaFqAzfMBaIivbMr7
+        aByPl2/kz9xqesnmBJxb4Q==
+X-Google-Smtp-Source: APXvYqxvePDCandHH7AxWcS2ap424PnssZ0DJM41P2WuqnRu3r6PjhSMkgtWCU+eddCWfYfYolil2g==
+X-Received: by 2002:a9d:7f90:: with SMTP id t16mr53082381otp.9.1555418819197;
+        Tue, 16 Apr 2019 05:46:59 -0700 (PDT)
+Received: from serve.minyard.net ([47.184.134.43])
+        by smtp.gmail.com with ESMTPSA id y14sm20555731oie.15.2019.04.16.05.46.58
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 16 Apr 2019 05:46:58 -0700 (PDT)
+Received: from minyard.net (unknown [IPv6:2001:470:b8f6:1b:d5e:aa5a:44d8:6907])
+        by serve.minyard.net (Postfix) with ESMTPSA id C51131800CB;
+        Tue, 16 Apr 2019 12:46:57 +0000 (UTC)
+Date:   Tue, 16 Apr 2019 07:46:56 -0500
+From:   Corey Minyard <minyard@acm.org>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
+        openipmi-developer@lists.sourceforge.net,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] ipmi: avoid atomic_inc in exit function
+Message-ID: <20190416124656.GI4121@minyard.net>
+Reply-To: minyard@acm.org
+References: <20190415155509.3565087-1-arnd@arndb.de>
+ <20190415164022.GA32090@infradead.org>
+ <20190415173935.GE4121@minyard.net>
+ <CAK8P3a0MN0U1cZac2t-SE4=nzWfJ-WJCAz=zHAcAKofD_sM1_Q@mail.gmail.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <CAK8P3a0MN0U1cZac2t-SE4=nzWfJ-WJCAz=zHAcAKofD_sM1_Q@mail.gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Neil Armstrong <narmstrong@baylibre.com>
+On Mon, Apr 15, 2019 at 09:00:46PM +0200, Arnd Bergmann wrote:
+> On Mon, Apr 15, 2019 at 7:39 PM Corey Minyard <minyard@acm.org> wrote:
+> >
+> > On Mon, Apr 15, 2019 at 09:40:22AM -0700, Christoph Hellwig wrote:
+> > > On Mon, Apr 15, 2019 at 05:55:00PM +0200, Arnd Bergmann wrote:
+> > > > This causes a link failure on ARM in certain configurations,
+> > > > when we reference each atomic operation from .alt.smp.init in
+> > > > order to patch out atomics on non-SMP systems:
+> > > >
+> > > > `.exit.text' referenced in section `.alt.smp.init' of drivers/char/ipmi/ipmi_msghandler.o: defined in discarded section `.exit.text' of drivers/char/ipmi/ipmi_msghandler.o
+> > > >
+> > > > In this case, we can trivially replace the atomic_inc() with
+> > > > an atomic_set() that has the same effect and does not require
+> > > > a fixup.
+> > >
+> > > I'd rather fіx the arm section management.  Using atomic in exit
+> > > routines is perfectly valid, and it would seem odd to forbid it.
+> >
+> > That was my first thought, too.  It's kind of hard to believe that
+> > the IPMI driver is the only thing that does an atomic_inc() in the
+> > exit code.
+> 
+> That's what I had thought as well at first, and I carried a patch
+> to work around this by not dropping the .text.exit section on ARM
+> when SMP patching is enabled for a few years. I never sent this
+> because that can waste a significant amount of kernel memory,
+> and I knew the warning is harmless.
+> 
+> When revisiting it now, I found that this one was the only instance
+> I ever hit. It seems to be that using atomics in module_exit() is
+> indeed odd, because the function is rarely concurrent with anything
+> else.
 
-The OX820 compatible is wrong is the driver, fix it.
+I've added the change to my tree; it actually makes a little more
+sense, so I'm ok with it.
 
-Fixes: 2ea3401e2a84 ("clocksource/drivers/oxnas: Add OX820 compatible")
-Reported-by: Daniel Golle <daniel@makrotopia.org>
-Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
-Signed-off-by: Daniel Lezcano <daniel.lezcano@linaro.org>
----
- drivers/clocksource/timer-oxnas-rps.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I guess it's up to you to deal with any new ones that happen in
+the future ;-).
 
-diff --git a/drivers/clocksource/timer-oxnas-rps.c b/drivers/clocksource/timer-oxnas-rps.c
-index eed6feff8b5f..30c6f4ce672b 100644
---- a/drivers/clocksource/timer-oxnas-rps.c
-+++ b/drivers/clocksource/timer-oxnas-rps.c
-@@ -296,4 +296,4 @@ static int __init oxnas_rps_timer_init(struct device_node *np)
- TIMER_OF_DECLARE(ox810se_rps,
- 		       "oxsemi,ox810se-rps-timer", oxnas_rps_timer_init);
- TIMER_OF_DECLARE(ox820_rps,
--		       "oxsemi,ox820se-rps-timer", oxnas_rps_timer_init);
-+		       "oxsemi,ox820-rps-timer", oxnas_rps_timer_init);
--- 
-2.17.1
-
+-corey
