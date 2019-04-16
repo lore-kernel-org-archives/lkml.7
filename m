@@ -3,111 +3,132 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 45581C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 21:07:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CE8C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 21:07:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1F1C720821
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 21:07:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 470BD20868
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 21:07:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729420AbfDPVHK (ORCPT
+        id S1729970AbfDPVH3 convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 17:07:10 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:33899 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727136AbfDPVHJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 17:07:09 -0400
-Received: from [192.168.1.110] ([95.117.99.70]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MHmuE-1h1hxX3V7W-00EsBJ; Tue, 16 Apr 2019 23:05:46 +0200
-Subject: Re: [PATCH v11 3/7] anybus-s: support the Arcx anybus controller
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com,
-        =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>,
-        treding@nvidia.com, David Lechner <david@lechnology.com>,
-        noralf@tronnes.org, johan@kernel.org,
-        Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg KH <gregkh@linuxfoundation.org>, john.garry@huawei.com,
-        geert+renesas@glider.be, robin.murphy@arm.com,
-        Paul Gortmaker <paul.gortmaker@windriver.com>,
-        sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io,
-        Stuart Yoder <stuyoder@gmail.com>,
-        "J. Kiszka" <jan.kiszka@siemens.com>, maxime.ripard@bootlin.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-References: <20190416155618.1369-1-TheSven73@gmail.com>
- <20190416155618.1369-4-TheSven73@gmail.com>
- <2caf5f92-164a-3723-e2ef-42e4045d2ec3@metux.net>
- <CAGngYiXZSaUwrCiqavMGDRb5Vuo2x8fTjDetT00PAjjtrYW+NA@mail.gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <bd36b798-d129-c81a-ab2d-22a5b46567f6@metux.net>
-Date:   Tue, 16 Apr 2019 23:05:40 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Tue, 16 Apr 2019 17:07:29 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60334 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727136AbfDPVH2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 17:07:28 -0400
+Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 40E31307D979;
+        Tue, 16 Apr 2019 21:07:28 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-47.bos.redhat.com [10.18.17.47])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 035C860C43;
+        Tue, 16 Apr 2019 21:07:26 +0000 (UTC)
+Subject: Re: [PATCH v4 07/16] locking/rwsem: Implement lock handoff to prevent
+ lock starvation
+From:   Waiman Long <longman@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+References: <20190413172259.2740-1-longman@redhat.com>
+ <20190413172259.2740-8-longman@redhat.com>
+ <20190416141205.GK12232@hirez.programming.kicks-ass.net>
+ <4b36b0a5-8507-f90c-d4a7-3f821ee8da6d@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ weim8xU=
+Organization: Red Hat
+Message-ID: <55474839-269f-4dbc-23af-a9c873db6c66@redhat.com>
+Date:   Tue, 16 Apr 2019 17:07:26 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <CAGngYiXZSaUwrCiqavMGDRb5Vuo2x8fTjDetT00PAjjtrYW+NA@mail.gmail.com>
+In-Reply-To: <4b36b0a5-8507-f90c-d4a7-3f821ee8da6d@redhat.com>
 Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8BIT
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:N0VxcQu82aAgMiEqC4L+bfbIsBSqRwOxoMy01xoQIaOGixpdLmu
- 66N0T6Qygcujlv6RWaQEb0ayUiFq6l/i2pS91aI7lDeZFSaybc15aAbJAfXYAn/Yr7QoGWZ
- qPbBehORZwxM2X1g2oNFxnf58nO0Ux/3JttiVgxo3CNjwZ8T80/SroNzsG8wj/8reeIFIzz
- p1DgF3B7phcqKSL0X4Y6Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:qh5Ackg+LjA=:NggQbzG/2NNVewG9Xip3AM
- GFw86HOzNqDXSYSGj5aiGhPU1vMYONKfIYgz18wQuZf4/eZ3lg6C0plc97LwU+eN8wr/tOpma
- 9S9XO7RdKSFZnt3/lGxp22iWfgpVjSm6dUkoEHI9mJzzZjO/4Q5sjZH+9Q7VziueQR7Ru5zLj
- c+wgsM1GLIDRf6moxugh+ueCtLf2liXzt+JNYD44xbbMgxSxFdBWWC2/Ht5E71W29MZiRyI5X
- CdXpDLVhivwxtbz1zAs15UTN+5U/d2x2lkdvs5CPashV1x8UhF1MzeHLb1m5BT71FiOl0InTy
- Vl+Yjmlr2VAXTnBhyobnUcgXnnQR5E87fSXsecr331VaSy4oT+NjWUdDP6mjeOZCme1SFxzU0
- ylC8hWzxYqxwm8WLuiE3+qpUreku2l/KCF12aq8CC37d/XNsOx16R6jjEDL+G6ZDJy3/tnyJs
- H/2de2VlUVas0suAH4Jjet0WkHwLAzcp4gItIqPXJYwUCCtin//U7lF4rAjNBkwJpSkImzVCL
- AWdcUTPW8d7x9gYaZVE9FHwo7QJqUjqgMjPCAJvgaOfp0Fwxy9sOtG9wIwQR4hL5TMccy3IEx
- x2JB3AYYIAyub24No1/GNU8T9buZPoC2VAEP/gEX87QTbsJ/BrMRvSpKwMBdIm2hfWRYImuYv
- OMpqb/TpU+rvt0RtKnaBtJhqnv/mRW5HioMKGDW0tS98wfFbi34l0Pdy134YSDfyEf2lssl1W
- nd/nzGcbVreEnDD0uCa5rEZDMn8pTeFgwlFxYKOEffxvRpyhTjeUFIyafhg=
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Tue, 16 Apr 2019 21:07:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16.04.19 20:35, Sven Van Asbroeck wrote:
+On 04/16/2019 04:26 PM, Waiman Long wrote:
+> On 04/16/2019 10:12 AM, Peter Zijlstra wrote:
+>> On Sat, Apr 13, 2019 at 01:22:50PM -0400, Waiman Long wrote:
+>>> +/*
+>>> + * The typical HZ value is either 250 or 1000. So set the minimum waiting
+>>> + * time to 4ms in the wait queue before initiating the handoff protocol.
+>>> + */
+>>> +#define RWSEM_WAIT_TIMEOUT	(HZ/250)
+>> That seems equally unfortunate. For HZ=100 that results in 0ms, and for
+>> HZ=300 that results in 3 1/3-rd ms.
+>>
+>> (and this is not considering Alpha,ARM and MIPS, who all have various
+>> other 'creative' HZ values)
+>>
+>> In general aiming for sub 10ms timing using jiffies seems 'optimistic'.
+> I see your point. I will change it to use sched_clock() instead.
+>
 
-Hi,
+Thinking about it again. I think I will just change its definition to
+"((HZ + 249)/250)" for now to make sure that it is at least 1. The
+handoff waiting period isn't as important in the overall scheme. Using
+sched_clock() will definitely have a higher overhead than reading
+jiffies. I want to minimize delay before the waiter can attempt to steal
+the lock in the slowpath. That is the main reason I use this simple
+scheme. We can certain change it later on if we choose to, but I would
+like to focus on other more important things first.
 
-> The "CAN stuff" is just a binary power read-out, routed from an external CAN
-> card, which may or may not be present. The CAN card is not accessed from
-> within this driver. This situation arises because our h/w developer team
-> decided to integrate various unrelated pieces of functionality into the
-> same hardware card (even into the same 8-bit register).
+Cheers,
+Longman
 
-BRRR!
-
-> This arcx-anybus controller card has two unrelated pieces of functionality:
-> 1. implements an anybus-s slot
-> 2. implements a power read-out from an external CAN card
-
-So, it's an mfd (multi function device) ... hmm.
-
-By the grey theory it would be better to split it into two separate
-drivers. But obviously, they need need a common part (a third piece).
-
-Does it ever make sense to only use one of two functionalities ?
-
-Does this power read-out involve some CAN traffic, or is it just
-fetching from some card that just happens to be some CAN interface ?
-(IOW: is cansocket needed for that ?)
-
-
---mtx
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
