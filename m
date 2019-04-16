@@ -2,33 +2,32 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC51C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:40:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ED797C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5BBD2073F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:40:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE18620868
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:40:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555396833;
-	bh=leU528GPgbbl6FZ0hvYD1ThhlYXuBMbC39ljevMevzM=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=WTeVaxVnMcGk7b7H/xlCeZx2q6ZtHMMl/QgQFZFO624oQBmorLNvSy2d+0PG8JQAR
-	 gAIwGYPMfL4oSgK/t1xqfwHZ6wSC4Yi8EHh8K7SEZYfzPq7DGXxV/1nNhYZ1iRyJCp
-	 Ak+u644kJHxI0gISPRzn7kXlHW3Or0W/+gz4gnJ8=
+	s=default; t=1555396836;
+	bh=21eCalijzpnbUiZFgwTmPWuqg67VdgS0gxCWjhVjFpQ=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=rUwdgD4C98OO2MLkyRM8vYgd15FBUIzit/8RTWW9BJJq3uT9OWx6rWQcRG3ZCaV5h
+	 KVOEdHkCtsF/Qdx/iG1T5zPyumDEJ2rqm1y37rjfC+JcoSQjXpaZuxmhPhJk5N6PJA
+	 tPRz/HiTr+R+ZraN4rZ5dsiKhaIiSIOIlPt2itAM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728515AbfDPGkd (ORCPT
+        id S1728547AbfDPGkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 02:40:33 -0400
-Received: from mirror2.csie.ntu.edu.tw ([140.112.30.76]:33982 "EHLO
+        Tue, 16 Apr 2019 02:40:35 -0400
+Received: from mirror2.csie.ntu.edu.tw ([140.112.30.76]:33970 "EHLO
         wens.csie.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726147AbfDPGk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        id S1727130AbfDPGk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 16 Apr 2019 02:40:29 -0400
 Received: by wens.csie.org (Postfix, from userid 1000)
-        id 8C7A95FD9F; Tue, 16 Apr 2019 14:40:25 +0800 (CST)
+        id 84CFD5FB5E; Tue, 16 Apr 2019 14:40:25 +0800 (CST)
 From:   Chen-Yu Tsai <wens@kernel.org>
 To:     Maxime Ripard <maxime.ripard@bootlin.com>,
         Sebastian Reichel <sre@kernel.org>
@@ -36,12 +35,10 @@ Cc:     Chen-Yu Tsai <wens@csie.org>, linux-pm@vger.kernel.org,
         devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
         linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
         Hans de Goede <hdegoede@redhat.com>
-Subject: [PATCH v4 2/7] power: supply: axp20x_usb_power: Fix typo in VBUS current limit macros
-Date:   Tue, 16 Apr 2019 14:40:19 +0800
-Message-Id: <20190416064024.20414-3-wens@kernel.org>
+Subject: [PATCH v4 0/7] ARM: sun8i: a83t: Enable USB OTG
+Date:   Tue, 16 Apr 2019 14:40:17 +0800
+Message-Id: <20190416064024.20414-1-wens@kernel.org>
 X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190416064024.20414-1-wens@kernel.org>
-References: <20190416064024.20414-1-wens@kernel.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -51,58 +48,130 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Chen-Yu Tsai <wens@csie.org>
 
-The VBUS current limit value macros have VBUS typed as VBUC, while
-the bitmask macro is named correctly. Fix it.
+Hi everyone,
 
-Fixes: 69fb4dcada77 ("power: Add an axp20x-usb-power driver")
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
----
- drivers/power/supply/axp20x_usb_power.c | 16 ++++++++--------
- 1 file changed, 8 insertions(+), 8 deletions(-)
+This is v4 of my A83T USB power supply / OTG series. Hopefully this is
+the last revision even though it's kind of late in the -rc cycle for
+the patches to make the next release. Fingers crossed.
 
-diff --git a/drivers/power/supply/axp20x_usb_power.c b/drivers/power/supply/axp20x_usb_power.c
-index f52fe77edb6f..cd9b90d79839 100644
---- a/drivers/power/supply/axp20x_usb_power.c
-+++ b/drivers/power/supply/axp20x_usb_power.c
-@@ -36,10 +36,10 @@
- #define AXP20X_VBUS_VHOLD_MASK		GENMASK(5, 3)
- #define AXP20X_VBUS_VHOLD_OFFSET	3
- #define AXP20X_VBUS_CLIMIT_MASK		3
--#define AXP20X_VBUC_CLIMIT_900mA	0
--#define AXP20X_VBUC_CLIMIT_500mA	1
--#define AXP20X_VBUC_CLIMIT_100mA	2
--#define AXP20X_VBUC_CLIMIT_NONE		3
-+#define AXP20X_VBUS_CLIMIT_900mA	0
-+#define AXP20X_VBUS_CLIMIT_500mA	1
-+#define AXP20X_VBUS_CLIMIT_100mA	2
-+#define AXP20X_VBUS_CLIMIT_NONE		3
- 
- #define AXP20X_ADC_EN1_VBUS_CURR	BIT(2)
- #define AXP20X_ADC_EN1_VBUS_VOLT	BIT(3)
-@@ -107,19 +107,19 @@ static int axp20x_usb_power_get_property(struct power_supply *psy,
- 			return ret;
- 
- 		switch (v & AXP20X_VBUS_CLIMIT_MASK) {
--		case AXP20X_VBUC_CLIMIT_100mA:
-+		case AXP20X_VBUS_CLIMIT_100mA:
- 			if (power->axp20x_id == AXP221_ID)
- 				val->intval = -1; /* No 100mA limit */
- 			else
- 				val->intval = 100000;
- 			break;
--		case AXP20X_VBUC_CLIMIT_500mA:
-+		case AXP20X_VBUS_CLIMIT_500mA:
- 			val->intval = 500000;
- 			break;
--		case AXP20X_VBUC_CLIMIT_900mA:
-+		case AXP20X_VBUS_CLIMIT_900mA:
- 			val->intval = 900000;
- 			break;
--		case AXP20X_VBUC_CLIMIT_NONE:
-+		case AXP20X_VBUS_CLIMIT_NONE:
- 			val->intval = -1;
- 			break;
- 		}
+Changes since v3:
+
+  - Dropped patch for disabling current limit
+  - Dropped mfd patch as it is already merged
+
+Changes since v2:
+
+  - Added Rob's ack for dt bindings patch
+  - Rebased onto v5.1-rc1
+
+Changes since v1:
+
+  - Added Lee's ack for mfd patch
+  - Make axp803_usb_power_supply_resources[] const
+
+This series has since been tested. Both host mode and gadget mode work
+well. However this SoC seems to have a glitch in hardware. After host
+mode is used by plugging in a host mode cable, the hardware will not
+revert back to gadget mode if a standard USB cable is plugged in. Host
+mode continues to work however. This will likely have to be addressed
+with some workaround in either the musb driver or our USB PHY driver.
+
+The patches have no cross-tree dependencies, so each part can go through
+their respective trees (power-supply / arm-soc).
+
+I also have some follow-up patches to enable the USB power supply on
+AXP803 / A64. It's the boiler-plate mfd cell and device node addition.
+
+Original cover letter follows:
+
+This series enables USB OTG on the A83T boards. The AXP813/AXP818 PMICs
+used with the A83T have the same behavior as the AXP221 and AXP223,
+where if the N_VBUSEN pin is driven high, the VBUS sensing interrupts
+stop working. In the past Hans made a polling workaround in the USB PHY
+driver. In this series polling is added to the power supply driver.
+
+The power supply driver work was started by Quentin, and shared with me
+when I expressed interest in getting USB OTG to work some time ago.
+Neither of us got around to finishing it, until now that is.
+
+Patch 1 adds a new compatible string for the AXP813 VBUS power supply
+part.
+
+Patch 2 is a bit of cleanup work for the driver.
+
+Patch 3 allows disabling VBUS input current limiting on the AXP20x /
+AXP22x PMICs. While not strictly related to this series, I found it
+easier to just send everything together. This patch depends on the
+previous one.
+
+Patch 4 adds the VBUS status polling feature. This is enabled on AXP221
+and all later PMICs.
+
+Patch 5 factors out code to read out the configured input current limit
+for the AXP20x and AXP22x PMICs. As the AXP813 uses different values,
+factoring out the code based on model will make the main function more
+readable.
+
+Patch 6 adds support for the AXP813 VBUS power supply. checkpatch.pl
+reports a few warnings for this patch:
+
+    WARNING: Possible switch case/default not preceded by break or
+    fallthrough comment
+    #100: FILE: drivers/power/supply/axp20x_usb_power.c:306:
+    +       case 1500000:
+
+    WARNING: Possible switch case/default not preceded by break or
+    fallthrough comment
+    #101: FILE: drivers/power/supply/axp20x_usb_power.c:307:
+    +       case 2000000:
+
+    WARNING: Possible switch case/default not preceded by break or
+    fallthrough comment
+    #102: FILE: drivers/power/supply/axp20x_usb_power.c:308:
+    +       case 2500000:
+
+However they seem to be a false positive. The preceding line of the
+reported lines is a return statement, which is definitely not a
+fallthrough.
+
+Patch 7 adds an mfd cell for the newly supported VBUS power supply.
+
+Patch 8 adds a device node for the VBUS power supply to the common
+axp81x dtsi file.
+
+Patch 9 enables USB OTG on the Cubietruck Plus and Bananapi M3.
+
+Please have a look, and also test it on boards you have, and don't
+limit it to just the A83T ones. As mentioned above, the polling feature
+affects all boards that have an AXP221 or newer PMIC.
+
+I haven't removed the polling workaround from the USB PHY driver yet.
+That would be the next step after this series is merged, and preferrably
+a release has passed.
+
+
+Regards
+ChenYu
+
+Chen-Yu Tsai (4):
+  dt-bindings: power: supply: axp20x_usb_power: add axp813 compatible
+  power: supply: axp20x_usb_power: Fix typo in VBUS current limit macros
+  power: supply: axp20x_usb_power: use polling to detect vbus status
+    change
+  ARM: dts: sun8i: a83t: Enable USB OTG controller on some boards
+
+Quentin Schulz (3):
+  power: supply: axp20x_usb_power: add function to get max current
+  power: supply: axp20x_usb_power: add support for AXP813
+  ARM: dtsi: axp81x: add USB power supply node
+
+ .../power/supply/axp20x_usb_power.txt         |   1 +
+ arch/arm/boot/dts/axp81x.dtsi                 |   4 +
+ arch/arm/boot/dts/sun8i-a83t-bananapi-m3.dts  |  12 ++
+ .../boot/dts/sun8i-a83t-cubietruck-plus.dts   |  12 ++
+ drivers/power/supply/axp20x_usb_power.c       | 179 +++++++++++++++---
+ 5 files changed, 181 insertions(+), 27 deletions(-)
+
 -- 
 2.20.1
 
