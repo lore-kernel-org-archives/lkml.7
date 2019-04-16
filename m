@@ -2,69 +2,142 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3300BC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:06:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6409C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:07:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 06E38223C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:06:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7841223C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:07:49 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ikd0o67Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727240AbfDPOGy (ORCPT
+        id S1728970AbfDPOHs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 10:06:54 -0400
-Received: from foss.arm.com ([217.140.101.70]:55862 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726037AbfDPOGy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 10:06:54 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 09179EBD;
-        Tue, 16 Apr 2019 07:06:54 -0700 (PDT)
-Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.37])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9B6753F59C;
-        Tue, 16 Apr 2019 07:06:52 -0700 (PDT)
-From:   Valentin Schneider <valentin.schneider@arm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     mingo@redhat.com, peterz@infradead.org, morten.rasmussen@arm.com,
-        quentin.perret@arm.com, Dietmar.Eggemann@arm.com
-Subject: [PATCH RESEND] sched/fair: Remove unneeded prototype of capacity_of()
-Date:   Tue, 16 Apr 2019 15:06:21 +0100
-Message-Id: <20190416140621.19884-1-valentin.schneider@arm.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Tue, 16 Apr 2019 10:07:48 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:44402 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726713AbfDPOHr (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 10:07:47 -0400
+Received: by mail-wr1-f65.google.com with SMTP id y7so27232809wrn.11;
+        Tue, 16 Apr 2019 07:07:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=2+D4bewqFy4nGLicEOZn/Id12fvAtNwEFAcyOEIgm4I=;
+        b=Ikd0o67ZrKxOaHpUssQg/OnYxGqylkllsNPGtrxJcnLkit4UW56jW+4/EbOSUKwKQH
+         dS8NsY3nLTC+oAModX+id5nPXiuxtVNWmbXFA4o4LhP1xsTND+/EdAoYuRReX8DsKQ+7
+         HJGChT42xfQwZFBgdkUHYD3zgcKVylkTp0ubKpp8BHl6ZJs9SRe0oN1/05XmgDOarRnF
+         def1zr018F8pYwKaEdlUJR7V403ZLpsDclfIjpv0141MLBdOlJxo/rUp+xehxozjm3Pq
+         XQU84t3teNr/8xeu3GRtJ74afsG4VNDqSsmD2BD2Cppa2kWI5r++czp1eO2l90yT6v/x
+         PiZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=2+D4bewqFy4nGLicEOZn/Id12fvAtNwEFAcyOEIgm4I=;
+        b=VPNVvMKaeSE2kXHUxlGxamAch5DJWwey91eVzoHku88QWovXPt6HfHxlRkyytZWZ3Q
+         Og0th2aUYDh5Tv8GLGIQnJ4dIwrpU/TSVk31KaO8PAZZSqLlOmOByuFys5G7+fMqDQug
+         cYZ1O26rNY5i6DZKr98mG49KsdXm0hrC/UH+93m0ZPlXsUcOj00Ha8RQ8y8Vyr2skGal
+         K0quxLaO2pFgMVH3j91p/1L4Z0u9ttCvWpHXDOZAwMFH5hX+4qsbhYLex+D5Z14tuUEi
+         ZSXMpYTCsdHZefLaPmIthPkJAZL6jkQOitW01ZcOP7Wdl/wxpQ9igWiR7OeIqYnJza0V
+         9fMA==
+X-Gm-Message-State: APjAAAXm0a/76DPjgnEi94Di3lwl1n7Qh3UmNwZ0xc0al4dCnkxjENTW
+        Q8vACSJzRNYcE/QfRNd3OcQ=
+X-Google-Smtp-Source: APXvYqwu2QX5QEz/JV3kPKI8dNHgOVqeHbvceTAs9Qx1OK5IqI+3fzyTpfshEBPokoK0R7pQAJHS1Q==
+X-Received: by 2002:a5d:424b:: with SMTP id s11mr43565750wrr.158.1555423666052;
+        Tue, 16 Apr 2019 07:07:46 -0700 (PDT)
+Received: from 5WDYG62.mdi (static-css-cqn-143221.business.bouyguestelecom.com. [176.149.143.221])
+        by smtp.gmail.com with ESMTPSA id v192sm24008494wme.24.2019.04.16.07.07.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Apr 2019 07:07:45 -0700 (PDT)
+From:   Romain Izard <romain.izard.pro@gmail.com>
+To:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrzej Pietrasiewicz <andrzej.p@samsung.com>
+Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Romain Izard <romain.izard.pro@gmail.com>
+Subject: [PATCH 1/2] usb: gadget: f_ncm: Fix NTP-32 support
+Date:   Tue, 16 Apr 2019 16:07:31 +0200
+Message-Id: <20190416140732.21941-1-romain.izard.pro@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The prototype of that function was already hoisted up in
+When connecting a CDC-NCM gadget to an host that uses the NTP-32 mode,
+or that relies on the default CRC setting, the current implementation gets
+confused, and does not expect the correct signature for its packets.
 
-  commit 3b1baa6496e6 ("sched/fair: Add 'group_misfit_task' load-balance type")
+Fix this, by ensuring that the ndp_sign member in the f_ncm structure
+always contain a valid value.
 
-but that seems to have been missed. Get rid of the extra prototype.
-
-Fixes: 2802bf3cd936 ("sched/fair: Add over-utilization/tipping point indicator")
-Acked-by: Quentin Perret <quentin.perret@arm.com>
-Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+Signed-off-by: Romain Izard <romain.izard.pro@gmail.com>
 ---
- kernel/sched/fair.c | 1 -
- 1 file changed, 1 deletion(-)
+ drivers/usb/gadget/function/f_ncm.c | 10 +++-------
+ 1 file changed, 3 insertions(+), 7 deletions(-)
 
-diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
-index ed7f5f8107b7..b6cc0703b850 100644
---- a/kernel/sched/fair.c
-+++ b/kernel/sched/fair.c
-@@ -5116,7 +5116,6 @@ static inline void hrtick_update(struct rq *rq)
+diff --git a/drivers/usb/gadget/function/f_ncm.c b/drivers/usb/gadget/function/f_ncm.c
+index 5780fba620ab..d5c47e7a7f61 100644
+--- a/drivers/usb/gadget/function/f_ncm.c
++++ b/drivers/usb/gadget/function/f_ncm.c
+@@ -35,9 +35,7 @@
  
- #ifdef CONFIG_SMP
- static inline unsigned long cpu_util(int cpu);
--static unsigned long capacity_of(int cpu);
+ /* to trigger crc/non-crc ndp signature */
  
- static inline bool cpu_overutilized(int cpu)
+-#define NCM_NDP_HDR_CRC_MASK	0x01000000
+ #define NCM_NDP_HDR_CRC		0x01000000
+-#define NCM_NDP_HDR_NOCRC	0x00000000
+ 
+ enum ncm_notify_state {
+ 	NCM_NOTIFY_NONE,		/* don't notify */
+@@ -526,6 +524,7 @@ static inline void ncm_reset_values(struct f_ncm *ncm)
  {
+ 	ncm->parser_opts = &ndp16_opts;
+ 	ncm->is_crc = false;
++	ncm->ndp_sign = ncm->parser_opts->ndp_sign;
+ 	ncm->port.cdc_filter = DEFAULT_FILTER;
+ 
+ 	/* doesn't make sense for ncm, fixed size used */
+@@ -805,25 +804,20 @@ static int ncm_setup(struct usb_function *f, const struct usb_ctrlrequest *ctrl)
+ 	case ((USB_DIR_OUT | USB_TYPE_CLASS | USB_RECIP_INTERFACE) << 8)
+ 		| USB_CDC_SET_CRC_MODE:
+ 	{
+-		int ndp_hdr_crc = 0;
+-
+ 		if (w_length != 0 || w_index != ncm->ctrl_id)
+ 			goto invalid;
+ 		switch (w_value) {
+ 		case 0x0000:
+ 			ncm->is_crc = false;
+-			ndp_hdr_crc = NCM_NDP_HDR_NOCRC;
+ 			DBG(cdev, "non-CRC mode selected\n");
+ 			break;
+ 		case 0x0001:
+ 			ncm->is_crc = true;
+-			ndp_hdr_crc = NCM_NDP_HDR_CRC;
+ 			DBG(cdev, "CRC mode selected\n");
+ 			break;
+ 		default:
+ 			goto invalid;
+ 		}
+-		ncm->ndp_sign = ncm->parser_opts->ndp_sign | ndp_hdr_crc;
+ 		value = 0;
+ 		break;
+ 	}
+@@ -840,6 +834,8 @@ static int ncm_setup(struct usb_function *f, const struct usb_ctrlrequest *ctrl)
+ 			ctrl->bRequestType, ctrl->bRequest,
+ 			w_value, w_index, w_length);
+ 	}
++	ncm->ndp_sign = ncm->parser_opts->ndp_sign |
++		(ncm->is_crc ? NCM_NDP_HDR_CRC : 0);
+ 
+ 	/* respond with data transfer or status phase? */
+ 	if (value >= 0) {
 -- 
-2.20.1
+2.17.1
 
