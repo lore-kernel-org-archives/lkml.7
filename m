@@ -2,134 +2,164 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B33A1C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 02:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 30E2AC10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 02:24:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 82AA420656
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 02:24:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="igGEhHvR"
+	by mail.kernel.org (Postfix) with ESMTP id F3E1520656
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 02:24:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726377AbfDPCYN (ORCPT
+        id S1726599AbfDPCYz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 22:24:13 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:43123 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725308AbfDPCYM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 22:24:12 -0400
-Received: by mail-qt1-f193.google.com with SMTP id v32so21614122qtc.10;
-        Mon, 15 Apr 2019 19:24:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=LlTDpZuIFjJuPEuqIHHIv28pYged3rMJDHnhIBi9hTo=;
-        b=igGEhHvR7MJdsRxBMXLI3mZ3XmsAXXT1eiEMHpzUxAqq/evYvm4VyWflG6XueKQzAw
-         TmB3OxhvJIyycr4WRRuNhclWVTw2zS+83fE4La+iw9gyZtO77XzsTMeICxfRmufhSOU9
-         gydbAEq9fGMG7cvYp3KGAwIQN7NGBT6N0cIrRrTwdi7/7lykTSOVw6Ro9OBnlu/RHFJE
-         MzLgrf5CPTnJxVnQ0YWdC9WZ41yZiUJnwgDiPTOvQ9q15d6KlcAWzAmiXkfTsl8HXD2/
-         //Nxz4CLycF3lh1seTa40sXfYHNYpf8FS+3eI4lYzWe/s1UPnciu+fjwDNfTukQOl1Db
-         dR/Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=LlTDpZuIFjJuPEuqIHHIv28pYged3rMJDHnhIBi9hTo=;
-        b=gjjtyaGi/Fj7ioWfLG4ynP4erh1Dk3h+lR8B4D5AJcQU1KNYEBz/NVNaPGipBwcyXX
-         LlGjQgsMSDMNUoP6UiW9UY6xuOV2swDG0O8Sr1kjv4DgMQzrXyXcPsoKidhSgB7rq8fU
-         g5z9kbiu8B0fX7bXFKmu8JQj7Qz2/Aaom2aTTZIbet6YWlvsZxYNA0JHnBdZj7LW/LSS
-         stv0r/+m6gI7ppQfiIHjMljCyyCT6WIaaDJgwNDqpf3QhBEZj5dCSQQu55PLY8EJxFje
-         K3Cq4396W3GJlXvU6mUGZTeFswc2liFbgaDDrYngVtScxi9GDJIB2JO400pHmGGSXqm1
-         FJow==
-X-Gm-Message-State: APjAAAVw9eEegfGABdhnOrIZSQQr1NgHE5bRycyl/YYLzbPzoMmmD/7B
-        X9BWfgquSitS4GzAEWBBpA0sCxmFMnI=
-X-Google-Smtp-Source: APXvYqx/v1FTGjwJVx8XTbRt+L9HNwoLa1wX/QlBcoLg/mvjiZodgUFrFKoPzlbbXURqiKRgYNlLwQ==
-X-Received: by 2002:ac8:372e:: with SMTP id o43mr63440214qtb.74.1555381450962;
-        Mon, 15 Apr 2019 19:24:10 -0700 (PDT)
-Received: from laptop (189.26.177.132.dynamic.adsl.gvt.net.br. [189.26.177.132])
-        by smtp.gmail.com with ESMTPSA id h186sm32147647qke.45.2019.04.15.19.24.07
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 15 Apr 2019 19:24:09 -0700 (PDT)
-Date:   Mon, 15 Apr 2019 23:23:55 -0300
-From:   Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-To:     Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-Cc:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Jens Axboe <axboe@kernel.dk>,
-        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>
-Subject: Re: [PATCH 2/3] blk-mq.c: Rework documention of blk_mq_init_sq_queue
- function
-Message-ID: <20190416022315.GA153476@laptop>
-References: <20190414031055.26350-1-marcos.souza.org@gmail.com>
- <20190414031055.26350-2-marcos.souza.org@gmail.com>
- <SN6PR04MB4527248A7EC22784AE6C0836862A0@SN6PR04MB4527.namprd04.prod.outlook.com>
+        Mon, 15 Apr 2019 22:24:55 -0400
+Received: from mga07.intel.com ([134.134.136.100]:52608 "EHLO mga07.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725308AbfDPCYz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 22:24:55 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Apr 2019 19:24:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,355,1549958400"; 
+   d="scan'208";a="131706467"
+Received: from allen-box.sh.intel.com (HELO [10.239.159.136]) ([10.239.159.136])
+  by orsmga007.jf.intel.com with ESMTP; 15 Apr 2019 19:24:52 -0700
+Cc:     baolu.lu@linux.intel.com, iommu@lists.linux-foundation.org,
+        Tom Murphy <tmurphy@arista.com>,
+        Dmitry Safonov <dima@arista.com>,
+        Jacob Pan <jacob.jun.pan@linux.intel.com>,
+        linux-kernel@vger.kernel.org, Ashok Raj <ashok.raj@intel.com>,
+        "Tian, Kevin" <kevin.tian@intel.com>
+Subject: Re: [PATCH v2 3/7] iommu/vt-d: Expose ISA direct mapping region via
+ iommu_get_resv_regions
+To:     James Sewart <jamessewart@arista.com>
+References: <0F0C82BE-86E5-4BAC-938C-6F7629E18D27@arista.com>
+ <83B82113-8AE5-4B0C-A079-F389520525BD@arista.com>
+ <F531CABB-FFDA-4E0A-A3D5-095FF338DD5A@arista.com>
+ <b6b3dda7-31e3-c1e8-16cb-07feb7d5431d@linux.intel.com>
+ <A489539F-4DD4-438A-AD9A-1A2F50404DB9@arista.com>
+ <fb1565dc-d991-acf9-e275-c0090f69f47e@linux.intel.com>
+ <445F31EA-20F3-481C-B1DF-8B163791FF8C@arista.com>
+ <cf43d26b-f1ee-8469-c17a-e5c412dcfeab@linux.intel.com>
+ <6C211BF1-B5A0-4821-AB42-092B573DE667@arista.com>
+ <8B1FC0C7-9BAC-498D-B1F0-0138EACF75C2@arista.com>
+ <ddcaa472-7bff-ddd3-0518-f2ba694b3279@linux.intel.com>
+ <9AECB54A-2DA7-4ABD-A9B5-0549E108D1AF@arista.com>
+ <abbfecda-8990-315c-ac7a-7f571e86aba2@linux.intel.com>
+ <1D51CB31-089A-4D71-A9C1-E54E50A56C46@arista.com>
+From:   Lu Baolu <baolu.lu@linux.intel.com>
+Message-ID: <1b7d37da-5660-f635-cd2f-619e5573d35a@linux.intel.com>
+Date:   Tue, 16 Apr 2019 10:18:51 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <SN6PR04MB4527248A7EC22784AE6C0836862A0@SN6PR04MB4527.namprd04.prod.outlook.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <1D51CB31-089A-4D71-A9C1-E54E50A56C46@arista.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 14, 2019 at 09:02:13PM +0000, Chaitanya Kulkarni wrote:
-> On 4/13/19 8:11 PM, Marcos Paulo de Souza wrote:
-> > Describing better what the function does, and what the arguments are
-> > meant for.
-> > 
-> > Signed-off-by: Marcos Paulo de Souza <marcos.souza.org@gmail.com>
-> > ---
-> >   block/blk-mq.c | 17 ++++++++++++++---
-> >   1 file changed, 14 insertions(+), 3 deletions(-)
-> > 
-> > diff --git a/block/blk-mq.c b/block/blk-mq.c
-> > index 4a8277a54c03..fd0bf89b8a73 100644
-> > --- a/block/blk-mq.c
-> > +++ b/block/blk-mq.c
-> > @@ -2675,9 +2675,20 @@ struct request_queue *blk_mq_init_queue(struct blk_mq_tag_set *set)
-> >   }
-> >   EXPORT_SYMBOL(blk_mq_init_queue);
-> >   
-> > -/*
-> > - * Helper for setting up a queue with mq ops, given queue depth, and
-> > - * the passed in mq ops flags.
-> > +/**
-> Is following line beyond 80 columns ?
+Hi James,
 
-Actually it hit the limit of 80 columns.
-
-> > + * blk_mq_init_sq_queue - Create a new request queue with a SQ queue and tag set
-> It will be great if we describe what SQ in the above line, otherwise we 
-> stating just obvious here.
-
-You're right, I will change the "SQ" for "only one hw_queue (SQ)", to describe
-what is the SQ.
-
-> > + * @set: tag set to be associated by the newly created request queue
-> > + * @ops: operations to be associated with @set
-> > + * @queue_depth: number of tags of @set
-> > + * @set_flags: flags of @set
-> > + *
-> > + * Description:
-> > + * @set is initialized using @ops, @queue_depth, @set_flags, and using only one
-> > + * hw_queue (SQ). Later on blk_mq_alloc_tag_set() is called to validate and/or
-> > + * adjust values of the tag set. blk_mq_init_queue() is called passing @set as
-> > + * argument, returning a new request queue with @set associated.
-> > + *
-> > + * Returns the newly created request queue on success, or ERR_PTR() on failure.
-> >    */
-> >   struct request_queue *blk_mq_init_sq_queue(struct blk_mq_tag_set *set,
-> >   					   const struct blk_mq_ops *ops,
-> > 
+On 4/15/19 10:16 PM, James Sewart wrote:
+> Hey Lu,
 > 
+>> On 10 Apr 2019, at 06:22, Lu Baolu <baolu.lu@linux.intel.com> wrote:
+>>
+>> Hi James,
+>>
+>> On 4/6/19 2:02 AM, James Sewart wrote:
+>>> Hey Lu,
+>>> My bad, did some debugging on my end. The issue was swapping out
+>>> find_domain for iommu_get_domain_for_dev. It seems in some situations the
+>>> domain is not attached to the group but the device is expected to have the
+>>> domain still stored in its archdata.
+>>> I’ve attached the final patch with find_domain unremoved which seems to
+>>> work in my testing.
+>>
+>> Just looked into your v3 patch set and some thoughts from my end posted
+>> here just for your information.
+>>
+>> Let me post the problems we want to address.
+>>
+>> 1. When allocating a new group for a device, how should we determine the
+>> type of the default domain?
+>>
+>> 2. If we need to put a device into an existing group which uses a
+>> different type of domain from what the device desires to use, we might
+>> break the functionality of the device.
+>>
+>> My new thought is letting the iommu generic code to determine the
+>> default domain type (hence my proposed vendor specific default domain
+>> type patches could be dropped).
+>>
+>> If the default domain type is dynamical mapping, and later in iommu_no_mapping(), we determines that we must use an identity domain,
+>> we then call iommu_request_dm_for_dev(dev).
+>>
+>> If the default domain type is identity mapping, and later in
+>> iommu_no_mapping(), we determined that we must use a dynamical domain,
+>> we then call iommu_request_dma_domain_for_dev(dev).
+>>
+>> We already have iommu_request_dm_for_dev() in iommu.c. We only need to
+>> implement iommu_request_dma_domain_for_dev().
+>>
+>> With this done, your patch titled "Create an IOMMU group for devices
+>> that require an identity map" could also be dropped.
+>>
+>> Any thoughts?
+> 
+> Theres a couple issues I can think of. iommu_request_dm_for_dev changes
+> the domain for all devices within the devices group, if we may have
+> devices with different domain requirements in the same group then only the
+> last initialised device will get the domain it wants. If we want to add
+> iommu_request_dma_domain_for_dev then we would still need another IOMMU
+> group for identity domain devices.
 
--- 
-Thanks,
-Marcos
+Current solution (a.k.a. v3) for this is to assign a new group to the
+device which requires an identity mapped domain. This will break the
+functionality of device direct pass-through (to user level). The iommu
+group represents the minimum granularity of iommu isolation and
+protection. The requirement of identity mapped domain should not be a
+factor for a new group.
+
+Both iomm_request_dma_domain_for_dev() or iommu_request_dm_for_dev()
+only support groups with a single device in it.
+
+The users could choose between domains of DMA type or IDENTITY type for
+a group. If multiple devices share a single group and both don't work
+for them, they have to disable the IOMMU. This isn't a valid
+configuration from IOMMU's point of view.
+
+> 
+> Both with v3 and the proposed method here, iommu_should_identity_map is
+> determining whether the device requires an identity map. In v3 this is
+> called once up front by the generic code to determine for the IOMMU group
+> which domain type to use. In the proposed method I think this would happen
+> after initial domain allocation and would trigger the domain to be
+> replaced with a different domain.
+> 
+> I prefer the solution in v3. What do you think?
+
+The only concern of solution in v3 from my point of view is some kind of
+duplication. Even we can ask the Intel IOMMU driver to tell the default
+domain type, we might change it after boot up. For example, for 32-bit
+pci devices, we don't know whether it's 64-bit or 32-bit capable during
+IOMMU initialization, so we might tell iommu.c to use identity mapped
+domain. After boot up, we check it again, and find out that it's only
+32-bit capable (hence only can access physical memory below 4G) and the
+default identity domain doesn't work. And we have to change it to DMA
+domain via iommu_request_dma_domain_for_dev().
+
+So to make it simple and straight-forward, we can just let iommu.c to
+determine the default domain type and after that the Intel IOMMU driver
+could tweak it according to the quirk bits in the driver.
+
+Best regards,
+Lu Baolu
