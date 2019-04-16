@@ -2,67 +2,174 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 17F5CC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 04:28:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC53C282DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 04:29:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D806820821
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 04:28:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6CB9420868
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 04:29:37 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Gg1FzgWN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726299AbfDPE2W (ORCPT
+        id S1726675AbfDPE3g (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 00:28:22 -0400
-Received: from www.osadl.org ([62.245.132.105]:49482 "EHLO www.osadl.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725770AbfDPE2W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 00:28:22 -0400
-Received: from debian01.hofrr.at (178.115.242.59.static.drei.at [178.115.242.59])
-        by www.osadl.org (8.13.8/8.13.8/OSADL-2007092901) with ESMTP id x3G4S2TI017591;
-        Tue, 16 Apr 2019 06:28:03 +0200
-From:   Nicholas Mc Guire <hofrat@osadl.org>
-To:     "David S. Miller" <davem@davemloft.net>
-Cc:     Linus Walleij <linus.walleij@linaro.org>,
-        Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        "Paul E. McKenney" <paulmck@linux.ibm.com>,
-        linux-kernel@vger.kernel.org, Nicholas Mc Guire <hofrat@osadl.org>
-Subject: [PATCH] MAINTAINERS: add soc/ux500
-Date:   Tue, 16 Apr 2019 06:22:42 +0200
-Message-Id: <1555388562-9454-1-git-send-email-hofrat@osadl.org>
-X-Mailer: git-send-email 2.1.4
+        Tue, 16 Apr 2019 00:29:36 -0400
+Received: from mail-lf1-f67.google.com ([209.85.167.67]:35428 "EHLO
+        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725648AbfDPE3f (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 00:29:35 -0400
+Received: by mail-lf1-f67.google.com with SMTP id j20so1979256lfh.2
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 21:29:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=/+ifBXEJ4n8haRZlqyLnigtDv3lKxJOg0M4uc1Mkir4=;
+        b=Gg1FzgWNDtN2vGXRbYzT0wIvHzKhihYHfEx2LNHGol7e6Komzz2aDtVRUxZbxmgb1L
+         +HKb67IoNhi30Q6KHN2dOZ5028D/rglqamoijrG84w/3YRoaxjYggaF38Hx2bqCPnoWl
+         42LSiRGss2EMu0v60SS6xguqlxSja4QvyAGH95t5mtitvmmT0sW0njin6Yzc6tUQ4d3q
+         +LUqoxJBtJzZdoSFn3SCsFStKaF3Cvb5BfH0AUsra4jWHmfwDae/byKBj3YNq/2RgQDl
+         v8Z/JVsEMmctYEJjGVRTk4Hnb01Luh6wJHaYNPd6qUnesBT7P86z99EMDhUQHEGrnRu/
+         C7Tg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=/+ifBXEJ4n8haRZlqyLnigtDv3lKxJOg0M4uc1Mkir4=;
+        b=ikYzBaRnYl7jAKLqMkT3mN9cLboeZf642phvPSJ29Gc8nmdKa96PHfcXXCYIPTp0aT
+         bzYQNNiCX7pP3qeossBdN7ooVh0vmjQrpvaCDVJtXhDYNG/fxmZjflTu+A2Cg8bWpFYp
+         m0v6kAFHKpxqRh7OLrhzAdT+gbhR+CP58/XeA6r7XnKAgRSJh6PbVOlTFW9iiQN4jzHm
+         Yj/Ns3sYFye6wCq6D1mVBOlJJ8tJ2V08XqTAbIs1VQzkJwc6RdZPBQ7Xtwj1D3km6eRC
+         vDSEcLHbY2GZgmsLcAy+TnkLpcuXEsnpaPqK9JDkQWYYRQnpAn4v7VSATS7zmtcrLRM3
+         4uyA==
+X-Gm-Message-State: APjAAAXQoOu3+dsRmc1lVhrb3qgzRZ4VXu5N+Om6yCWnnXBcywvF8SJM
+        84c2h+iMbWRD8XfKcna4spjOGrkuP6GDbU1MBzvAoxkZcO8=
+X-Google-Smtp-Source: APXvYqzN2Dvn1B8OUajSL5eTujnuhQeOcG8aNnoJvXQchq6YO6DHFCbbnlXUqr8/TuirI50QnfOnM4L/39nr/zGK7E4=
+X-Received: by 2002:ac2:53a4:: with SMTP id j4mr42957001lfh.106.1555388973567;
+ Mon, 15 Apr 2019 21:29:33 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190415183726.036654568@linuxfoundation.org>
+In-Reply-To: <20190415183726.036654568@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 16 Apr 2019 09:59:22 +0530
+Message-ID: <CA+G9fYvUAfvcFp0p4=ANA1VeoyGEMsLZa6VYN5h7M0dO-BZzyA@mail.gmail.com>
+Subject: Re: [PATCH 4.14 00/69] 4.14.112-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        lkft-triage@lists.linaro.org,
+        linux- stable <stable@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-get_maintainer.pl only returns linux-kernel@vger.kernel.org for the
-drivers/soc/ux500/ files - fix it by adding drivers/soc/ux500/ entry
+On Tue, 16 Apr 2019 at 00:32, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
+>
+> This is the start of the stable review cycle for the 4.14.112 release.
+> There are 69 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed Apr 17 18:36:38 UTC 2019.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.14.112-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.14.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
+>
 
-Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
-Suggested-by: Ulf Hansson <ulf.hansson@linaro.org>
----
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Patch is aginst 5.1-rc4 (localversion-next is 20190415)
+Summary
+------------------------------------------------------------------------
 
- MAINTAINERS | 1 +
- 1 file changed, 1 insertion(+)
+kernel: 4.14.112-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.14.y
+git commit: 58023abef2c4691261db5b40563dc18cc95f3c37
+git describe: v4.14.111-70-g58023abef2c4
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
+ild/v4.14.111-70-g58023abef2c4
 
-diff --git a/MAINTAINERS b/MAINTAINERS
-index 002d564..7961bb6 100644
---- a/MAINTAINERS
-+++ b/MAINTAINERS
-@@ -1881,6 +1881,7 @@ S:	Maintained
- F:	arch/arm/mach-nomadik/
- F:	arch/arm/mach-u300/
- F:	arch/arm/mach-ux500/
-+F:	drivers/soc/ux500/
- F:	arch/arm/boot/dts/ste-*
- F:	drivers/clk/clk-nomadik.c
- F:	drivers/clk/clk-u300.c
--- 
-2.1.4
+No regressions (compared to build v4.14.111)
 
+No fixes (compared to build v4.14.111)
+
+Ran 23296 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* boot
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fs-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-sched-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* kvm-unit-tests
+* ltp-cap_bounds-tests
+* ltp-cpuhotplug-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-securebits-tests
+* ltp-open-posix-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
