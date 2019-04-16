@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9CB28C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:41:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88AA7C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:41:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 593FF20868
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:41:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5916E20868
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:41:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="loGj1EBL"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TvUJrQw2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729192AbfDPPln (ORCPT
+        id S1729481AbfDPPlw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 11:41:43 -0400
-Received: from mail-vs1-f73.google.com ([209.85.217.73]:56829 "EHLO
-        mail-vs1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725852AbfDPPlm (ORCPT
+        Tue, 16 Apr 2019 11:41:52 -0400
+Received: from mail-pf1-f201.google.com ([209.85.210.201]:47909 "EHLO
+        mail-pf1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729226AbfDPPlv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 11:41:42 -0400
-Received: by mail-vs1-f73.google.com with SMTP id 2so4258622vsp.23
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 08:41:42 -0700 (PDT)
+        Tue, 16 Apr 2019 11:41:51 -0400
+Received: by mail-pf1-f201.google.com with SMTP id n63so14325807pfb.14
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 08:41:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:message-id:mime-version:subject:from:to:cc;
-        bh=qsoE5OiVz6XGcPcZ4g01Dbmxl7qj2D8ouBvqI5bOjD4=;
-        b=loGj1EBLulC3ulxRnibA6isQIAmg/rDKWJ5Od9OycGiqocd+UJHwagpQ7WPMRBSwIp
-         33hQn2kFt4Ufos79Ev3h2L2J1zSuyI5bJvOFMYog883flLhAgQmnvvn/JDIvgJGjg29Q
-         NIdxsUgUtvZDDYvCBQL8IN2gPlJVGPOw2M4aZOfLHjAicJP0L8gWaLuvRtQ91jMWupTG
-         Sn1Z3UfxW2QUho1WVPd+Z3lDaXQe+ooow+mguGRVXJwXonLlAk3gbrNurNAcZJ0Z4Kqw
-         Q99qPOyB3YbJanCin6S9NzILYCkWQo0iBMW31RNbceobKydM+8+haJcxkPogQZp5W7oW
-         XRwQ==
+        bh=volERb+tc6n70vCQmrKM17XlywoBF9avKxr4ny+kra4=;
+        b=TvUJrQw2whCWS8/qe5IgMgEwqgmHSFUxtfR9tpPUYzAixaCSA5wS0tvuMMOgpCZMbI
+         g8DOy9/GVpL6iS72hH63C9B4/sfUbBlWhofgPgsvZAKG2CEKTOp4A9Qb2ImDUp6z+IAi
+         zfXwLkwYtSbXyJLCx0Fsc46h76PADuZSWTNEKw2Blue74AuosRHkH4SBv8UTXL8b02G1
+         D3cPz3zJbwzgMSBmKZpI+tsf6+eO5jNUUJP8dPqayXXH69DArJlt2WtqH3Qoe7yXxKL5
+         YUFyE2r393N2CL2RiQldjvw3AZc01zoYWQA4EOdhguDPdEfsfykOaD1cjP6CtTzLHXpo
+         kUug==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=qsoE5OiVz6XGcPcZ4g01Dbmxl7qj2D8ouBvqI5bOjD4=;
-        b=KF7/7mEJf4qVC+kda8i01qKcr0E/vX8Q0naEqsC5aQBjtRN3IqmdswDHfTwij4DqZw
-         ojqfGRNwH0EqIJsYHenEA0tZZjaFw6f6/FoI/SQi+iy9L25NU8yLS1bqOqLXf6CFnatB
-         j4ph6lHU06WDeq527z7OqgInbMLEJGEqB21JP4TP/WleJWW6X0kpqKNlBDXykeuZJ6dZ
-         roMNMVbgqswjxaWTvAAvQQjvc2BmH/MUyWcor45Oh9x6mdh0r9jGhsvmGEwH2acv2yfO
-         Q1ffX37EGj5y833Rlq4+f9KVgRtgIhaY0ZusybJoiUk/TiGDAp3U08oNisfl0kfsLH3F
-         uh1A==
-X-Gm-Message-State: APjAAAV9DypVvkF1eNSOw8PVqtnDroYlr6qNbINEAFN+m7v+UlxMjXPV
-        UHIuKket9YntCm9sw02T77kueeJNULeZ
-X-Google-Smtp-Source: APXvYqxikGMaB3WlJ/aqRCYxtxl7eXmll9UtFU0sLOGx/4l9vZxkYG99O7gKhLx0hTgZplHdOZwZmquF990v
-X-Received: by 2002:a67:e2d2:: with SMTP id i18mr8789830vsm.16.1555429301712;
- Tue, 16 Apr 2019 08:41:41 -0700 (PDT)
-Date:   Tue, 16 Apr 2019 08:41:38 -0700
-Message-Id: <20190416154138.124734-1-venture@google.com>
+        bh=volERb+tc6n70vCQmrKM17XlywoBF9avKxr4ny+kra4=;
+        b=poqDhcUuPtMP2DUhMM3i1/sDSRNXrQkqOZgNm8WZVJubFW3lFhEkeFE2HyFhDvM3hb
+         RT7bdEDyRczaQSh/YZ57u+fGtlGNG3W/aR/5x8cNZJ1LSoQsG5Z1X6sNUFWR/SWfmEz9
+         g/EsydUoEphgP43LyX8ja9zC5UcEMU8J/Hd9Is4n3wMK9mbfHIp0chwaqQS4M2tG+zLA
+         AKUJDU0un5HJZhEN243nmY8DPaLPfSXNxU6QV8gJFTir8JTmu9LgQ6tnMaW5oM75UCW2
+         35UMC79yukZ2sohGutP4Q1XN7CKk/xRwKnmr1IHids5YOqQ3pXRoK4Y9RrfNQS7G2I+S
+         mZWQ==
+X-Gm-Message-State: APjAAAWkqtGgAJqUM7tkqlLpx0JalvmQabAIiMcrBZ0wP8YsxQrD6XRr
+        dh6kN7mkCfiWWjpxfy23xjH3pgkokcPc
+X-Google-Smtp-Source: APXvYqxsAQNeiU/3KrJrdjH7s1jTNT8zrNzD5GlDSa4XwR4oUjuT5WS8bSuuCdf0jkJhjfmai23ujoRsvgsH
+X-Received: by 2002:a63:f47:: with SMTP id 7mr1180315pgp.75.1555429310637;
+ Tue, 16 Apr 2019 08:41:50 -0700 (PDT)
+Date:   Tue, 16 Apr 2019 08:41:47 -0700
+Message-Id: <20190416154147.125602-1-venture@google.com>
 Mime-Version: 1.0
 X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
-Subject: [PATCH 1/2] dt-bindings: Add ir38064 as a trivial device
+Subject: [PATCH 2/2] dt-bindings: Add isl68137 as a trivial device
 From:   Patrick Venture <venture@google.com>
 To:     venture@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
         trivial@kernel.org, linux@roeck-us.net
@@ -65,7 +65,8 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ir38064 is a voltage regulator from Infineon.
+The isl68137 is a digital output 7-phrase configurable PWM controller
+with an AVSBus interface from Intersil.
 
 Signed-off-by: Patrick Venture <venture@google.com>
 ---
@@ -73,18 +74,18 @@ Signed-off-by: Patrick Venture <venture@google.com>
  1 file changed, 2 insertions(+)
 
 diff --git a/Documentation/devicetree/bindings/trivial-devices.yaml b/Documentation/devicetree/bindings/trivial-devices.yaml
-index d79fb22bde39..92184ef0db2e 100644
+index 92184ef0db2e..747fd3f689dc 100644
 --- a/Documentation/devicetree/bindings/trivial-devices.yaml
 +++ b/Documentation/devicetree/bindings/trivial-devices.yaml
-@@ -92,6 +92,8 @@ properties:
-           - fsl,sgtl5000
-             # G751: Digital Temperature Sensor and Thermal Watchdog with Two-Wire Interface
-           - gmt,g751
-+            # Infineon IR38064 Voltage Regulator
-+          - infineon,ir38064
-             # Infineon SLB9635 (Soft-) I2C TPM (old protocol, max 100khz)
-           - infineon,slb9635tt
-             # Infineon SLB9645 I2C TPM (new protocol, max 400khz)
+@@ -104,6 +104,8 @@ properties:
+           - isil,isl29028
+             # Intersil ISL29030 Ambient Light and Proximity Sensor
+           - isil,isl29030
++            # Intersil ISL68137 Digital Output Configurable PWM Controller
++          - isil,isl68137
+             # 5 Bit Programmable, Pulse-Width Modulator
+           - maxim,ds1050
+             # Low-Power, 4-/12-Channel, 2-Wire Serial, 12-Bit ADCs
 -- 
 2.21.0.392.gf8f6787159e-goog
 
