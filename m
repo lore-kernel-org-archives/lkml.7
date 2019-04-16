@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 35556C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:33:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E9AAC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:33:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05DEC20821
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:33:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D09C2087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:33:40 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555432419;
-	bh=BQPAzr5WzgXgH2YJazr01VNZEEprkcs5f2qi+L5TbiM=;
+	s=default; t=1555432420;
+	bh=jmcNCty7MrLVCFvc4I2FMdfAS2cgsxS7LLz25V+rews=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=WpkFH7uXoNhEZlUSvRISz2fU29LkswT/VybNOi11u93bGXRlRHbTdJ1Ntpt+umQWj
-	 JShnmLXU8oLyTQq1nwz3euKEepaJvMqbLafVY3Oz6sC0CoJCw9vMOTlHJEmlriVcVV
-	 BznLZIQ9LIMzC9KOxdVKgoJ4arMV7kjM6T5C8v+Q=
+	b=1zt40vcnduhCQBzkSVnoiHXvm57bldbhJCzcWI1gKG+Bgs9UT4z/r/rJBqoyOkDcF
+	 4eT0wuUoMTfTtPd7GHipR2fxTvu0Bih/eF39R4oIC0d4xm+LSzRLTt7OjjtSd3bEVE
+	 98Nvnob267pKk2euOy0UFGFke7eLCU2IT3LURyzg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730150AbfDPQdh (ORCPT
+        id S1730163AbfDPQdj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 12:33:37 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:32926 "EHLO
+        Tue, 16 Apr 2019 12:33:39 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:32932 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729590AbfDPQdI (ORCPT
+        with ESMTP id S1730056AbfDPQdI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 16 Apr 2019 12:33:08 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,26 +34,30 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=Wo0sVACoFrCfFfioVnuxDvOFgZJ7gyY9v/MD9nVKifI=; b=bZAMUKnZY8U2
-        ObnaOponI6nWiVGGx77nbGpnlmDxYKb/UUuN/b/NxV0ghoYqaQ8+IGFk4qELWzGmQ4rilvcnujg48
-        jyNoNGjP9g4jddsqE/rlOAGqsoKoF6uIPwFbYOiYeNc22/pGGxUwsRxOINi8KgpQQ3PhO+SI0DBMh
-        tae3o=;
+        List-Archive; bh=HasmYPso/HswrCemgixI5x5Bnosx1VD+Hs/I5qoo6XA=; b=YzVdrTKeFU8g
+        Y/fv9EzUcI+9YxrjijCVdtd7GGURHQmT4tETHvbnxF3Fzt6CnpfZFvOpFPhTawEfHWcKtoqpWeF9O
+        TzoSDXUJt5bMsQ51eat2N9zktPBO211QRIs7F5lyLvPKy8UZDpuVAAfWay01t9kBUZH6wRIQ66Kfs
+        L6//s=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hGR15-0007rj-AH; Tue, 16 Apr 2019 16:33:03 +0000
+        id 1hGR0z-0007rY-8l; Tue, 16 Apr 2019 16:32:57 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 26F6B1128283; Tue, 16 Apr 2019 17:32:57 +0100 (BST)
+        id 644B01128088; Tue, 16 Apr 2019 17:32:56 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     alsa-devel@alsa-project.org,
+        Cosmin Samoila <cosmin.samoila@nxp.com>,
+        Fabio Estevam <festevam@gmail.com>,
         Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: tps80031: Remove unused *rdev from struct tps80031_regulator" to the regulator tree
-In-Reply-To: <20190416101729.26330-1-axel.lin@ingics.com>
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Shengjiu Wang <shengjiu.wang@nxp.com>
+Subject: Applied "ASoC: imx: fix fiq dependencies" to the asoc tree
+In-Reply-To: <20190416131242.1232143-1-arnd@arndb.de>
 X-Patchwork-Hint: ignore
-Message-Id: <20190416163257.26F6B1128283@debutante.sirena.org.uk>
-Date:   Tue, 16 Apr 2019 17:32:57 +0100 (BST)
+Message-Id: <20190416163256.644B01128088@debutante.sirena.org.uk>
+Date:   Tue, 16 Apr 2019 17:32:56 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -61,11 +65,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: tps80031: Remove unused *rdev from struct tps80031_regulator
+   ASoC: imx: fix fiq dependencies
 
-has been applied to the regulator tree at
+has been applied to the asoc tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.2
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/sound.git for-5.2
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -86,40 +90,67 @@ to this mail.
 Thanks,
 Mark
 
-From de110f387371337cf90f40055cf1ebdf01b6f427 Mon Sep 17 00:00:00 2001
-From: Axel Lin <axel.lin@ingics.com>
-Date: Tue, 16 Apr 2019 18:17:27 +0800
-Subject: [PATCH] regulator: tps80031: Remove unused *rdev from struct
- tps80031_regulator
+From 46ad66d5b2e4a658e11affef65e4753f4b6ee375 Mon Sep 17 00:00:00 2001
+From: Arnd Bergmann <arnd@arndb.de>
+Date: Tue, 16 Apr 2019 15:12:23 +0200
+Subject: [PATCH] ASoC: imx: fix fiq dependencies
 
-The ri-rdev is assigend but not used, so remove it.
+During randconfig builds, I occasionally run into an invalid configuration
+of the freescale FIQ sound support:
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
+WARNING: unmet direct dependencies detected for SND_SOC_IMX_PCM_FIQ
+  Depends on [m]: SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_IMX_SOC [=m]
+  Selected by [y]:
+  - SND_SOC_FSL_SPDIF [=y] && SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_IMX_SOC [=m]!=n && (MXC_TZIC [=n] || MXC_AVIC [=y])
+
+sound/soc/fsl/imx-ssi.o: In function `imx_ssi_remove':
+imx-ssi.c:(.text+0x28): undefined reference to `imx_pcm_fiq_exit'
+sound/soc/fsl/imx-ssi.o: In function `imx_ssi_probe':
+imx-ssi.c:(.text+0xa64): undefined reference to `imx_pcm_fiq_init'
+
+The Kconfig warning is a result of the symbol being defined inside of
+the "if SND_IMX_SOC" block, and is otherwise harmless. The link error
+is more tricky and happens with SND_SOC_IMX_SSI=y, which may or may not
+imply FIQ support. However, if SND_SOC_FSL_SSI is set to =m at the same
+time, that selects SND_SOC_IMX_PCM_FIQ as a loadable module dependency,
+which then causes a link failure from imx-ssi.
+
+The solution here is to make SND_SOC_IMX_PCM_FIQ built-in whenever
+one of its potential users is built-in.
+
+Fixes: ff40260f79dc ("ASoC: fsl: refine DMA/FIQ dependencies")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/tps80031-regulator.c | 2 --
- 1 file changed, 2 deletions(-)
+ sound/soc/fsl/Kconfig | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/regulator/tps80031-regulator.c b/drivers/regulator/tps80031-regulator.c
-index 1001147404c3..d97cd55b6850 100644
---- a/drivers/regulator/tps80031-regulator.c
-+++ b/drivers/regulator/tps80031-regulator.c
-@@ -85,7 +85,6 @@ struct tps80031_regulator_info {
+diff --git a/sound/soc/fsl/Kconfig b/sound/soc/fsl/Kconfig
+index d87c842806bd..55ed47c599e2 100644
+--- a/sound/soc/fsl/Kconfig
++++ b/sound/soc/fsl/Kconfig
+@@ -189,16 +189,17 @@ config SND_MPC52xx_SOC_EFIKA
  
- struct tps80031_regulator {
- 	struct device			*dev;
--	struct regulator_dev		*rdev;
- 	struct tps80031_regulator_info	*rinfo;
+ endif # SND_POWERPC_SOC
  
- 	u8				device_flags;
-@@ -736,7 +735,6 @@ static int tps80031_regulator_probe(struct platform_device *pdev)
- 					ri->rinfo->desc.name);
- 			return PTR_ERR(rdev);
- 		}
--		ri->rdev = rdev;
- 	}
++config SND_SOC_IMX_PCM_FIQ
++	tristate
++	default y if SND_SOC_IMX_SSI=y && (SND_SOC_FSL_SSI=m || SND_SOC_FSL_SPDIF=m) && (MXC_TZIC || MXC_AVIC)
++	select FIQ
++
+ if SND_IMX_SOC
  
- 	platform_set_drvdata(pdev, pmic);
+ config SND_SOC_IMX_SSI
+ 	tristate
+ 	select SND_SOC_FSL_UTILS
+ 
+-config SND_SOC_IMX_PCM_FIQ
+-	tristate
+-	select FIQ
+-
+ comment "SoC Audio support for Freescale i.MX boards:"
+ 
+ config SND_MXC_SOC_WM1133_EV1
 -- 
 2.20.1
 
