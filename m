@@ -2,168 +2,125 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68A85C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:46:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7BC15C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3676C206B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:46:50 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bNr3ipc+"
+	by mail.kernel.org (Postfix) with ESMTP id 5351B206B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:47:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729832AbfDPQqt (ORCPT
+        id S1729986AbfDPQrC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 12:46:49 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:42658 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726647AbfDPQqs (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 12:46:48 -0400
-Received: by mail-pl1-f193.google.com with SMTP id cv12so10629845plb.9;
-        Tue, 16 Apr 2019 09:46:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=tsRRbr6q8xRXitr55R13RaRnWMNI10aBLSKNBEpEchc=;
-        b=bNr3ipc+CTaD4tGwxY593FZ31O0Q+j30oQunL6fN8Vg0xCvAYTGAxMwgcM1dx/yFiQ
-         oTEP218jHO8Bh/SJrnsLp+RLHMFHpGDZ2sAhk4s5lrnEFd4bEhOdzK9BBEsC00gTv/uK
-         f0UPbPgI8yfgcdY2frZaz3Da+5lJrbMl1s9/ipTk2kUPr/2ACbJKu6S591w4v7cVg+/G
-         FqmZDUWsBY4E0rsIV81PUtAlklcD/JPtgIDebrWF6VDuxB3L4aJC1JqFoFkS+DeeZpU+
-         nbtDmpZqvNOKIE1c0PrkvwxSncnbgoH46Q+rQXjeq8XF8E+m24vWux1IvBhBoDM05yCw
-         2DYw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=tsRRbr6q8xRXitr55R13RaRnWMNI10aBLSKNBEpEchc=;
-        b=YPlQop5wzVUcD7iE7ODAT1NX9MlfF8PxLb2YhuGu8yLvxHumLA1ujesF9ri1OcSwXr
-         NkAdefbh0tXUfIVK94lpPGsfIoSwyMJEc1wmddzvRPa8Ct2Mb4snaCNIhWEpgCxIbOgP
-         wdtAGZPC0UVeExSHjm/cDyiSncEaQTh1bvFTFasYwuNPYoBnAbgaaQIJBXy8SOJjicER
-         h9/T1s21XEvXZ8G3XZ0RoULcy1T2c8BHJuVE5SxEYIJ7kpcQGhz9R3d4nRXh1DyyIXJL
-         WJ3TSMuHzfFmfokzAYB4Ua/0Jmj3UwaVr8zKTuxdpYDf2iZn3fRIW4fEwZj72UIGrBdZ
-         jkDg==
-X-Gm-Message-State: APjAAAX5ZgcXOi+8xT0G+PMVz/oUV1/gtV/hm2TnR+aAGO3wwzdsLbkc
-        8cdjm9OtjRK+gqOITi4bEx8=
-X-Google-Smtp-Source: APXvYqycLPTnCJjorVt5WrPnSxjhN+rl+70wG9AE7X9KBWwv+DIFsTHVGERTLukm36AlWNbl9Fwlmg==
-X-Received: by 2002:a17:902:2965:: with SMTP id g92mr66980230plb.267.1555433206864;
-        Tue, 16 Apr 2019 09:46:46 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:200::1:601e])
-        by smtp.gmail.com with ESMTPSA id x16sm121234803pge.27.2019.04.16.09.46.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 09:46:45 -0700 (PDT)
-Date:   Tue, 16 Apr 2019 09:46:44 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     Steven Rostedt <rostedt@goodmis.org>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Kees Cook <keescook@chromium.org>,
-        Olof Johansson <olof@lixom.net>,
-        Joel Fernandes <joelaf@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Manoj Rao <linux@manojrajarao.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        atish patra <atishp04@gmail.com>,
-        Daniel Colascione <dancol@google.com>,
+        Tue, 16 Apr 2019 12:47:02 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37732 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726647AbfDPQrB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 12:47:01 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3126AAAC3;
+        Tue, 16 Apr 2019 16:46:59 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id A0DBB1E15B4; Tue, 16 Apr 2019 18:46:58 +0200 (CEST)
+Date:   Tue, 16 Apr 2019 18:46:58 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Jerome Glisse <jglisse@redhat.com>
+Cc:     Jan Kara <jack@suse.cz>, linux-kernel@vger.kernel.org,
+        linux-fsdevel@vger.kernel.org, linux-block@vger.kernel.org,
+        linux-mm@kvack.org, John Hubbard <jhubbard@nvidia.com>,
         Dan Williams <dan.j.williams@intel.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
-Subject: Re: [PATCH v5 1/3] Provide in-kernel headers to make extending
- kernel easier
-Message-ID: <20190416164642.krptlz32zusr4pgn@ast-mbp.dhcp.thefacebook.com>
-References: <20190411031540.ehezr6kq7ouobpzx@ast-mbp.dhcp.thefacebook.com>
- <CAOesGMgiPB=7FE7tXXHes7WSLfByyPxirOStoH21NZqMwaUihQ@mail.gmail.com>
- <20190415104109.64d914f3@gandalf.local.home>
- <CAGXu5j+KPVRcOJ3Ue9ZQF93GyaDhvCnFCvJ_C3WKCx2=SNdDyg@mail.gmail.com>
- <20190416083306.5646a687@gandalf.local.home>
- <20190416124939.GB6027@kroah.com>
- <20190416130440.GA7944@localhost>
- <f8b15e31-1aab-ab2c-d44d-47325faab67d@opersys.com>
- <20190416094509.1af6326b@gandalf.local.home>
- <20190416142240.GA31920@kroah.com>
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Ming Lei <ming.lei@redhat.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH v1 10/15] block: add gup flag to
+ bio_add_page()/bio_add_pc_page()/__bio_add_page()
+Message-ID: <20190416164658.GB17148@quack2.suse.cz>
+References: <20190411210834.4105-1-jglisse@redhat.com>
+ <20190411210834.4105-11-jglisse@redhat.com>
+ <20190415145952.GE13684@quack2.suse.cz>
+ <20190415152433.GB3436@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190416142240.GA31920@kroah.com>
-User-Agent: NeoMutt/20180223
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190415152433.GB3436@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 04:22:40PM +0200, Greg Kroah-Hartman wrote:
-> On Tue, Apr 16, 2019 at 09:45:09AM -0400, Steven Rostedt wrote:
-> > On Tue, 16 Apr 2019 09:32:37 -0400
-> > Karim Yaghmour <karim.yaghmour@opersys.com> wrote:
+On Mon 15-04-19 11:24:33, Jerome Glisse wrote:
+> On Mon, Apr 15, 2019 at 04:59:52PM +0200, Jan Kara wrote:
+> > Hi Jerome!
 > > 
-> > > >>> Then we should perhaps make a new file system call tarballs ;-)
-> > > >>>
-> > > >>>   /sys/kernel/tarballs/
-> > > >>>
-> > > >>> and place everything there. That way it removes it from /proc (which is
-> > > >>> the worse place for that) and also makes it something other than debug.
-> > > >>> That's what I did for tracefs.  
-> > > >>
-> > > >> As horrible as that suggestion is, it does kind of make sense :)
-> > > >>
-> > > >> We can't put this in debugfs as that's only for debugging and systems
-> > > >> should never have that mounted for normal operations (users want to
-> > > >> build ebpf programs), and /proc really should be for processes but that
-> > > >> horse is long left the barn.
-> > > >>
-> > > >> But, I'm willing to consider putting this either in a system-fs-like
-> > > >> filesystem, or just in sysfs itself, we do have /sys/kernel/ to play
-> > > >> around in if the main objection is that we should not be cluttering up
-> > > >> /proc with stuff like this.
-> > > >>  
-> > > > 
-> > > > I am ok with the suggestion of /sys/kernel for the archive. That also seems
-> > > > to fit well with the idea that the headers are kernel related and probably
-> > > > belong here more strictly speaking, than /proc.  
+> > On Thu 11-04-19 17:08:29, jglisse@redhat.com wrote:
+> > > From: Jérôme Glisse <jglisse@redhat.com>
 > > > 
-> > > This makes sense. And if it alleviates concerns regarding extending 
-> > > /proc ABIs then might as well switch to this.
-> > > 
-> > > Olof, what do you think of this?
+> > > We want to keep track of how we got a reference on page added to bio_vec
+> > > ie wether the page was reference through GUP (get_user_page*) or not. So
+> > > add a flag to bio_add_page()/bio_add_pc_page()/__bio_add_page() to that
+> > > effect.
 > > 
-> > BTW, the name "tarballs" was kind of a joke. Probably should come up
-> > with a better name. Although, I'm fine with tarballsfs ;-)
+> > Thanks for writing this patch set! Looking through patches like this one,
+> > I'm a bit concerned. With so many bio_add_page() callers it's difficult to
+> > get things right and not regress in the future. I'm wondering whether the
+> > things won't be less error-prone if we required that all page reference
+> > from bio are gup-like (not necessarily taken by GUP, if creator of the bio
+> > gets to struct page he needs via some other means (e.g. page cache lookup),
+> > he could just use get_gup_pin() helper we'd provide).  After all, a page
+> > reference in bio means that the page is pinned for the duration of IO and
+> > can be DMAed to/from so it even makes some sense to track the reference
+> > like that. Then bio_put() would just unconditionally do put_user_page() and
+> > we won't have to propagate the information in the bio.
+> > 
+> > Do you think this would be workable and easier?
 > 
-> No need to have this be a separate filesystem, we can use a binary sysfs
-> file in /sys/kernel/ for this as the kernel is not doing any "parsing"
-> of the data, it is just dumping it out to userspace.
+> It might be workable but i am not sure it is any simpler. bio_add_page*()
+> does not take page reference it is up to the caller to take the proper
+> page reference so the complexity would be push there (just in a different
+> place) so i don't think it would be any simpler. This means that we would
+> have to update more code than this patchset does.
 
-What folks keep saying that an fs of header files is easier to use
-than tarball from bcc and cleaner from architectural pov.
-That's not the case.
-From bcc side I'd rather have a single precompiled headers blob
-that I can feed into clang and improve bpf program compilation time.
-Having a set of headers is a step to generate such .pch file,
-but once generated the headers can be removed from fs and kheaders
-module unloaded.
-The sequence is: bcc checks standard /lib/module location,
-if not there loads kheader mod, extracts into known location, and unloads.
-The extraced headers are in plain fs cache and will be evicted from memory
-when bcc is done compiling progs.
-imo much cleaner than kernel maintaining headers-fs and wasting memory.
+I agree that the amount of work in this patch set is about the same
+(although you don't have to pass the information about reference type in
+the biovec so you save the complexities there). But for the future the
+rule that "bio references must be gup-pins" is IMO easier to grasp for
+developers and you can reasonably assert it in bio_add_page().
 
-Where kheaders.tar.xz is placed doesn't really matter.
-/proc or /sys/kernel makes no real difference.
+> This present patch is just a coccinelle semantic patch and even if it
+> is scary to see that many call site, they are not that many that need
+> to worry about the GUP parameter and they all are in patch 11, 12, 13
+> and 14.
+> 
+> So i believe this patchset is simpler than converting everyone to take
+> a GUP like page reference. Also doing so means we loose the information
+> about GUP kind of defeat the purpose. So i believe it would be better
+> to limit special reference to GUP only pages.
 
+So what's the difference whether the page reference has been acquired via
+GUP or via some other means? I don't think that really matters. If say
+infiniband introduced new ioctl() that takes file descriptor, offset, and
+length and just takes pages from page cache and attaches them to their RDMA
+scatter-gather lists, then they'd need to use 'pin' references anyway...
+
+Then why do we work on differentiating between GUP pins and other page
+references?  Because it matters what the reference is going to be used for
+and what is it's lifetime. And generally GUP references are used to do IO
+to/from page and may even be controlled by userspace so that's why we need
+to make them different. But in principle the 'gup-pin' reference is not about
+the fact that the reference has been obtained from GUP but about the fact
+that it is used to do IO. Hence I think that the rule "bio references must
+be gup-pins" makes some sense.
+
+								Honza
+-- 
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
