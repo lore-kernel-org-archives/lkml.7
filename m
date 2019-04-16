@@ -3,93 +3,86 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E7A2C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 12:25:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9A553C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 12:25:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 367A320693
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 12:25:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7169F206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 12:25:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727952AbfDPMZY (ORCPT
+        id S1728630AbfDPMZr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 08:25:24 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:35471 "EHLO
+        Tue, 16 Apr 2019 08:25:47 -0400
+Received: from mout.kundenserver.de ([217.72.192.75]:55245 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726241AbfDPMZX (ORCPT
+        with ESMTP id S1726241AbfDPMZq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 08:25:23 -0400
+        Tue, 16 Apr 2019 08:25:46 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1Mpkwn-1gUhzM1wir-00q8ZO; Tue, 16 Apr 2019 14:25:09 +0200
+ (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MBUuP-1h8ymA11DD-00Cvb6; Tue, 16 Apr 2019 14:25:41 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
-To:     Lee Jones <lee.jones@linaro.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] mfd: sun6i-prcm: fix build warning for non-OF configurations
-Date:   Tue, 16 Apr 2019 14:24:59 +0200
-Message-Id: <20190416122506.3180853-1-arnd@arndb.de>
+To:     Felipe Balbi <balbi@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Dmitry Osipenko <digetx@gmail.com>,
+        Anders Roxell <anders.roxell@linaro.org>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] usb: gadget: fsl: fix link error against usb-gadget module
+Date:   Tue, 16 Apr 2019 14:25:32 +0200
+Message-Id: <20190416122540.3222314-1-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:uXt/bVk7UTlZHOx7EaNNOcd19LgXvMFy/q7rIR2NeYH3g+eBN47
- iVj22SmLi34fvCBHRZE/yVS8mP1GRXu+Iy/YdkF8BbAlh7sgVOy7ZLKTLRmzTpy6TZhT6GF
- JuWhI3sIkK1PYsWhhuWcXjxhRaqPqTcOQ37mJaFLcvfcDKRqyBwD+Gilc2ZFKHp+Jf4Ugou
- LS3zqEuOdibC1sdbrU+Ng==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:n2VucTqvRDQ=:V8AVL2eVTQrJ2oHu6N7SOo
- mC2DoPUWc4toGE4L6YtWz73DFiFNNXIQGkC9gBCVil0dPdHu99V7sqsjU1gwD7Nm7K8/UZzL6
- 8jH4drfoXx0UotQ6tzhd/YK6jIwDKdpfC8ImBEYdg+b+mA6USYSj/VvotelqkkHY0L2gpLyxL
- dZCl7qSKqrmPw2mO8Y13p4WUBq6HRXT+QdWZsJQiL12o5ucw3Ig20HEBnNviVgat/bKMplDm4
- MTdUKdC3Lk71L8bXgVonPe80qtrheX3UIV/5PfqJ2abBMG1/qcPNnGLFrEHY5PhLrr+75gWKY
- o00dyEU+ZlVn0/7UE6JDRetCLN0GVAj47ZnvvEE+jqCcPw3wZL/QBUhPNNMPaPDl/n0UOR1sZ
- TXOHnJXSmoHcHiCCG7lbntd+aqDxBULBAjNuEaZsyhHTdaiKqB1I6ONGq2xID5BP3rx7snH6E
- g2nKp3FtbN6Uolm8XxtyF1R1hQHCKfJfC+baVHziFS6E/9vzYMvJWICZ8iBF5XZ8Xu1mfx1op
- N3jkfU9HFoNBw9nKY1xJNg4TxdxN2hgSIw2BbeiAco7skt1SBdFlayZdFlBfxjT+BEmihHLnh
- EoHF99FlQ36K3HhLmlxcBj3GHJPGc/eH6HdmF8raOXWkFUQK9HE8jfjDrs4JXNgmLFPaLGMui
- dh7lv4F+B/FPTE98eFFdDfxiMtvfjIEPET5H45eTqYyUgjZ60+WUMwInst8snKnS9NssHpHOK
- BtY9oUaA56T/Q8Urp3KlQTS9QSf0mlHHIPYN1Q==
+X-Provags-ID: V03:K1:Z4JFO1al4yfSeyJC5wJvaU8oqEG+h5zWrHcjZ9c6Ssu2yjAVBAr
+ ThIugfScLvblwnGiSRGC035AhzKBggc7kSlIl78J21iJCaBy6yH9+qib4NRuoHL0ohjaln9
+ Yt3IMODEbPE+NjYoHZYf+0EGGUeUIHcVAc6adrvMaw1nceaLXtftb42l2uEpuwtmiarHTgm
+ 0j4inZ97tjJhfgqn1CXUA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:7jqD/e/gBYQ=:7qJWDYZ662F5UrEt1A33CS
+ 6R37CMcqiVU4ykjOj0GXK4oq4taWNstVQxoS7qwZ68/X8w0+XMfsthgwNWXn+5oOu5r7t/t33
+ aobcyYCn9n911nDzjEpQ5rh+NRsJNWjz9UtrwXuYJOqxZ+yBkn5uafgHU7zaQe47vsT8DeY3N
+ Tuac9tsfiGklUHDvIn+y1Ccti2W3H8kqSPe6MKXh/4lVuXZLjdrioHmCfqQ6hMdWdaKExsa/V
+ SOQ0VOLPjhXTkGqfy0CP569HW/mYFG6hB82CkPf5QAPl/iewQ7M5oo6/kyM8Fk2JqSq2R8J+u
+ pjd3nIzWRzj8paS1PDxdc3j0m9HYExFpb5tECmmpVYN2OkC5a6nB0mGQjxbu0Nw+tQov3xxk0
+ JjwDIhpI0I8lHWPANrA9btZksNuJozgZMeuO+yXho5p1rDuQPZ28Vm62YAAjmDMO10OcVmBIV
+ k2j41w3+UsfQZxbJVtqZmzg2ZV1jH5PFW44Js79fUzhFgpggvpfBqyiF+7np8cIGEFYEcYsBo
+ WS9RqHTHBDv0Z5MSk9yzT5nGZefv6wdr2ce0PqlKCfMW8VJrQQeCnQTgzM6AFXQp/9A4y1KFz
+ d6ub3sN5PCC5vDm8lXVlS3odkDuMRn2sdpYf10Y0Sn0cV7aqmNua8HuuJdSAKLzVCFS1FOh05
+ NAzy6dsDOzwZuv9MXod2yoPuUH+SKWLNqoGXgyVkq5Ac+ws07Svy563v5uUzzWm4Jj+JJQBrB
+ OV1YOw5Btxlkn9+ze5BKRiP88lt9i+oTVbu3ow==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When CONFIG_OF is disabled, we get a harmless warning about an
-unused variable:
+The dependency to ensure this driver links correctly fails since
+it can not be a loadable module:
 
-drivers/mfd/sun6i-prcm.c: In function 'sun6i_prcm_probe':
-drivers/mfd/sun6i-prcm.c:151:22: error: unused variable 'np' [-Werror=unused-variable]
+drivers/usb/phy/phy-fsl-usb.o: In function `fsl_otg_set_peripheral':
+phy-fsl-usb.c:(.text+0x2224): undefined reference to `usb_gadget_vbus_disconnect'
 
-Remove the variable and open-code the value in the only place
-it is used, so it can get left out as well without CONFIG_OF.
+Make the option 'tristate' so it can work correctly.
 
-Fixes: a05a2e7998ab ("mfd: sun6i-prcm: Allow to compile with COMPILE_TEST")
+Fixes: 5a8d651a2bde ("usb: gadget: move gadget API functions to udc-core")
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/mfd/sun6i-prcm.c | 3 +--
- 1 file changed, 1 insertion(+), 2 deletions(-)
+ drivers/usb/phy/Kconfig | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
 
-diff --git a/drivers/mfd/sun6i-prcm.c b/drivers/mfd/sun6i-prcm.c
-index 2b658bed47db..2f12a415b807 100644
---- a/drivers/mfd/sun6i-prcm.c
-+++ b/drivers/mfd/sun6i-prcm.c
-@@ -148,13 +148,12 @@ static const struct of_device_id sun6i_prcm_dt_ids[] = {
+diff --git a/drivers/usb/phy/Kconfig b/drivers/usb/phy/Kconfig
+index 8c509b060c09..24b4f091acb8 100644
+--- a/drivers/usb/phy/Kconfig
++++ b/drivers/usb/phy/Kconfig
+@@ -21,7 +21,7 @@ config AB8500_USB
+ 	  in host mode, low speed.
  
- static int sun6i_prcm_probe(struct platform_device *pdev)
- {
--	struct device_node *np = pdev->dev.of_node;
- 	const struct of_device_id *match;
- 	const struct prcm_data *data;
- 	struct resource *res;
- 	int ret;
- 
--	match = of_match_node(sun6i_prcm_dt_ids, np);
-+	match = of_match_node(sun6i_prcm_dt_ids, pdev->dev.of_node);
- 	if (!match)
- 		return -EINVAL;
- 
+ config FSL_USB2_OTG
+-	bool "Freescale USB OTG Transceiver Driver"
++	tristate "Freescale USB OTG Transceiver Driver"
+ 	depends on USB_EHCI_FSL && USB_FSL_USB2 && USB_OTG_FSM=y && PM
+ 	depends on USB_GADGET || !USB_GADGET # if USB_GADGET=m, this can't be 'y'
+ 	select USB_PHY
 -- 
 2.20.0
 
