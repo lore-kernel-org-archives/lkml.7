@@ -2,147 +2,152 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 771B6C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:38:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 745A0C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:39:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40A6D217F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:38:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2B76620872
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:39:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="nmIYEBBt"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="c+KzIPMg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729407AbfDPNiG (ORCPT
+        id S1729311AbfDPNjI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 09:38:06 -0400
-Received: from mta-p3.oit.umn.edu ([134.84.196.203]:54582 "EHLO
-        mta-p3.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727136AbfDPNiF (ORCPT
+        Tue, 16 Apr 2019 09:39:08 -0400
+Received: from mail.efficios.com ([167.114.142.138]:51050 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726751AbfDPNjH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 09:38:05 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mta-p3.oit.umn.edu (Postfix) with ESMTP id E3BDE64B;
-        Tue, 16 Apr 2019 13:38:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=umn.edu; h=
-        content-type:content-type:subject:subject:message-id:date:date
-        :from:from:in-reply-to:references:mime-version:received:received
-        :received; s=20160920; t=1555421883; x=1557236284; bh=WzjzsrMyXY
-        cT9KJtQRB01ZKYuznxJd30kyzyfTnBhNc=; b=nmIYEBBt2rLaGbmbQ0td8AZ5LZ
-        rlTV8+cZz0//TsrxTKQz/rNRP8sb5CzST8QMfRI6GK/rCYSozVQRZPKX5iJEUHD2
-        4m3odC6R2aHaCwvU1blyj4aFUwtw9sNsoszs6RcdBzZTctEf8LKHR/GLAjn70twT
-        HoejYfr+pdRY62QEfPpZCN2uYW5GrfjonZVWCP1ipDgPm7L/DEOlwc8RzHLSe6oe
-        WisCwzFE4HxEQ/3/KV79EgR9ftZesm/PUPDzQEQMBsrgkBQhd1Le1pNIl6Ose4w4
-        YyrcwOXXqNze+LPa+Kt7qorGumXx4ZRFeOoR0gmEEXjja5Gd6vADQr8lbAxg==
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p3.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p3.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id zFND8aQT-eRu; Tue, 16 Apr 2019 08:38:03 -0500 (CDT)
-Received: from mail-io1-f41.google.com (mail-io1-f41.google.com [209.85.166.41])
-        (using TLSv1 with cipher AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wang6495)
-        by mta-p3.oit.umn.edu (Postfix) with ESMTPSA id A5806516;
-        Tue, 16 Apr 2019 08:38:03 -0500 (CDT)
-Received: by mail-io1-f41.google.com with SMTP id f6so17645999iop.3;
-        Tue, 16 Apr 2019 06:38:03 -0700 (PDT)
-X-Gm-Message-State: APjAAAU5HFRWUg8R9xzxb/zEkbG5rRPOp6ht2YG0xVtmz0vEbNTqpbAj
-        qsmawl9cQOZcHP7CQaUazUaIcVBho68tK9yhQEg=
-X-Google-Smtp-Source: APXvYqz7SALzDJjOI9laFzjwuWIy+oYeJC5AJHqwqI0m0tbuyP1Yoj9TOl3G2RLLWuF2sdwuTn9fhouYeergHn8DlCg=
-X-Received: by 2002:a6b:e50a:: with SMTP id y10mr1277286ioc.91.1555421883470;
- Tue, 16 Apr 2019 06:38:03 -0700 (PDT)
+        Tue, 16 Apr 2019 09:39:07 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 41F231D5242;
+        Tue, 16 Apr 2019 09:39:06 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id nx1MfGZV-vBi; Tue, 16 Apr 2019 09:39:05 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 8A9221D523B;
+        Tue, 16 Apr 2019 09:39:05 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 8A9221D523B
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1555421945;
+        bh=VxAu5hG50WaJc5UU7p5s1ar49Jh8R6cbGrkcRYIcoTg=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=c+KzIPMgj7WvNfy+8IkrmFC2OjigfduQvjCdy0wSlqMc1FMpIu0AJHcu51asg0j0U
+         GkbWURpadCV8WPwuNJ4UxHOvcucOIpp0XEXVNygbLbk6Ws3Wsf75ILb3i+kj2Un/YB
+         T+C270boXrRrWIHbhxcjlORj0rKVXV6sXWJEMRiMe9mJY6VLVmGV6m8PHarvcE466j
+         bp6Im4eukc9ImehXMe2yxLBeTGp6hnqrfx8CnznhQORJudHuFS3TJVMIPr0kACkEi4
+         W2bnDmV9PJFrVWO5af20QRMBUGRGbGtn0zmOAAKnErmyEdf3QRQbErG3B+PvoJXgTE
+         JlQR7AECfkR9w==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id rF2XJ213UZf4; Tue, 16 Apr 2019 09:39:05 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id 6C2061D5232;
+        Tue, 16 Apr 2019 09:39:05 -0400 (EDT)
+Date:   Tue, 16 Apr 2019 09:39:05 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     peter maydell <peter.maydell@linaro.org>
+Cc:     Will Deacon <will.deacon@arm.com>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        carlos <carlos@redhat.com>,
+        richard earnshaw <richard.earnshaw@arm.com>
+Message-ID: <755179555.1337.1555421945337.JavaMail.zimbra@efficios.com>
+In-Reply-To: <71495082.295.1555335441325.JavaMail.zimbra@efficios.com>
+References: <1050734985.2625.1554838340011.JavaMail.zimbra@efficios.com> <1933578130.3292.1554928159928.JavaMail.zimbra@efficios.com> <20190411164219.GE29081@fuggles.cambridge.arm.com> <1469455003.811.1555005112414.JavaMail.zimbra@efficios.com> <CAFEAcA849mmSds9euyvR2uLWqEeA2eedkmcq1O4pT6-S0oK8BA@mail.gmail.com> <936773156.261.1555333890988.JavaMail.zimbra@efficios.com> <CAFEAcA8YP5vvZpa_5dvv00koupsry9_3x2EB0cjvE6vtoi8sog@mail.gmail.com> <71495082.295.1555335441325.JavaMail.zimbra@efficios.com>
+Subject: Re: rseq/arm32: choosing rseq code signature
 MIME-Version: 1.0
-References: <1555340058-3065-1-git-send-email-wang6495@umn.edu> <20190416072327.GA127769@gmail.com>
-In-Reply-To: <20190416072327.GA127769@gmail.com>
-From:   Wenwen Wang <wang6495@umn.edu>
-Date:   Tue, 16 Apr 2019 08:37:27 -0500
-X-Gmail-Original-Message-ID: <CAAa=b7fEt9AZVp5VLWwubvAsvFit3V8D4EOD3H=vTaF3RJ_D5A@mail.gmail.com>
-Message-ID: <CAAa=b7fEt9AZVp5VLWwubvAsvFit3V8D4EOD3H=vTaF3RJ_D5A@mail.gmail.com>
-Subject: Re: [PATCH] x86/PCI: fix a memory leak bug
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" 
-        <linux-kernel@vger.kernel.org>, Wenwen Wang <wang6495@umn.edu>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
+Thread-Topic: rseq/arm32: choosing rseq code signature
+Thread-Index: VZEg1Ag6Z/BBTTsrujcfED6/RqHFqguSNqiG
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 2:23 AM Ingo Molnar <mingo@kernel.org> wrote:
->
->
-> * Wenwen Wang <wang6495@umn.edu> wrote:
->
-> > In pcibios_irq_init(), the PCI IRQ routing table 'pirq_table' is firstly
-> > found through pirq_find_routing_table(). If the table is not found and
-> > 'CONFIG_PCI_BIOS' is defined, the table is then allocated in
-> > pcibios_get_irq_routing_table() using kmalloc(). In the following
-> > execution, if the I/O APIC is used, this table is actually not used.
-> > However, in that case, the allocated table is not freed, which can lead to
-> > a memory leak bug.
-> >
-> > To fix this issue, this patch frees the allocated table if it is not used.
-> >
-> > Signed-off-by: Wenwen Wang <wang6495@umn.edu>
-> > ---
-> >  arch/x86/pci/irq.c | 10 ++++++++--
-> >  1 file changed, 8 insertions(+), 2 deletions(-)
-> >
-> > diff --git a/arch/x86/pci/irq.c b/arch/x86/pci/irq.c
-> > index 52e5510..d9bcb96 100644
-> > --- a/arch/x86/pci/irq.c
-> > +++ b/arch/x86/pci/irq.c
-> > @@ -1119,6 +1119,8 @@ static const struct dmi_system_id pciirq_dmi_table[] __initconst = {
-> >
-> >  void __init pcibios_irq_init(void)
-> >  {
-> > +     struct irq_routing_table *itable = NULL;
-> > +
->
-> Minor style nit: the canonical name of irq_routing_table local variables
-> is usually 'rtable' or 'rt' - let's not add a third naming variant with
-> 'itable'?
->
+----- On Apr 15, 2019, at 9:37 AM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
 
-Thanks for your comment! I will rework the patch.
+> ----- On Apr 15, 2019, at 9:30 AM, peter maydell peter.maydell@linaro.org wrote:
+> 
+>> On Mon, 15 Apr 2019 at 14:11, Mathieu Desnoyers
+>> <mathieu.desnoyers@efficios.com> wrote:
+>>>
+>>> ----- On Apr 11, 2019, at 3:55 PM, peter maydell peter.maydell@linaro.org wrote:
+>>>
+>>> > On Thu, 11 Apr 2019 at 18:51, Mathieu Desnoyers
+>>> > <mathieu.desnoyers@efficios.com> wrote:
+>>> >>  * This translates to the following instruction pattern in the T16 instruction
+>>> >>  * set:
+>>> >>  *
+>>> >>  * little endian:
+>>> >>  * def3        udf    #243      ; 0xf3
+>>> >>  * e7f5        b.n    <7f5>
+>>> >>  *
+>>> >>  * big endian:
+>>> >>  * e7f5        b.n    <7f5>
+>>> >>  * def3        udf    #243      ; 0xf3
+>>> >
+>>> > Do we really care about big-endian instruction-ordering for Thumb?
+>>> > It requires (AIUI) either an ARMv7R CPU which implements and sets
+>>> > SCTLR.IE to 1, or a v6-or-earlier CPU using BE32, and it's going to
+>>> > be even rarer than normal BE8 big-endian...
+>>>
+>>> I don't think we care enough about it to look for a trick to
+>>> turn the branch into something else (which would not branch away from the
+>>> udf instruction), but considering this signature will be ABI, it's good to
+>>> be thorough documentation-wise and cover all existing cases.
+>> 
+>> I think if you want to document it it would be helpful to
+>> readers to make it clear that this is the ultra-rare
+>> big-endian-instruction-order "big endian Thumb", not the only
+>> moderately-rare little-endian-instructions-big-endian-data
+>> "big endian Thumb".
+> 
+> I'm actually very much concerned about environments with big endian
+> data and little endian code. Which gcc compiler flags do I need to
+> use to test it ?
+> 
+> I'm concerned about a signature mismatch between what is passed to
+> the rseq system call ("data-endian signature") and what is generated
+> in the code ("instruction-endian signature").
 
-Wenwen
+Based on this page: http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0360f/CDFBBCHB.html
 
-> >       DBG(KERN_DEBUG "PCI: IRQ init\n");
-> >
-> >       if (raw_pci_ops == NULL)
-> > @@ -1129,8 +1131,10 @@ void __init pcibios_irq_init(void)
-> >       pirq_table = pirq_find_routing_table();
-> >
-> >  #ifdef CONFIG_PCI_BIOS
-> > -     if (!pirq_table && (pci_probe & PCI_BIOS_IRQ_SCAN))
-> > +     if (!pirq_table && (pci_probe & PCI_BIOS_IRQ_SCAN)) {
-> >               pirq_table = pcibios_get_irq_routing_table();
-> > +             itable = pirq_table;
-> > +     }
-> >  #endif
-> >       if (pirq_table) {
-> >               pirq_peer_trick();
-> > @@ -1145,8 +1149,10 @@ void __init pcibios_irq_init(void)
-> >                * If we're using the I/O APIC, avoid using the PCI IRQ
-> >                * routing table
-> >                */
-> > -             if (io_apic_assign_pci_irqs)
-> > +             if (io_apic_assign_pci_irqs) {
-> > +                     kfree(itable);
-> >                       pirq_table = NULL;
-> > +             }
->
-> Reviewed-by: Ingo Molnar <mingo@kernel.org>
->
-> Thanks,
->
->         Ingo
+My understanding is that the situation is as follows (please confirm):
+
+- Prior to ARMv6, you could build and run code that is either big or little endian,
+  given you had a matching Linux kernel endianness. Code and data endianness needed
+  to match,
+- Starting from ARMv6, only little endian code is supported. The endianness for data
+  access can be changed through bit [9], the E bit, of the Program Status Register,
+  (mixed endianness)
+
+Looking at ARM build options for gcc, it seems you can select either big or little
+endian (-mbig-endian or -mlittle-endian (default)) which affects both instruction and
+data endianness. So I suspect the -mbig-endian option is really only useful for
+pre-ARMv6.
+
+For ARMv6+ mixed-endianness, it seems to be a mode that temporarily swap endianness
+of load/store instructions for specific memory accesses communicating with DMA devices,
+so I don't see any scenario where we can generate a binary that has little endian code
+and big endian data. If that is true, then it should be fine to declare the signature
+with ".arm .inst" and expect the data endianness to be the same as code endianness.
+
+Am I missing something ?
+
+Thanks,
+
+Mathieu
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
