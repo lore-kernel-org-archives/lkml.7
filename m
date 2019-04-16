@@ -2,85 +2,319 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B7ABC282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:50:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F42EC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:51:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AE092075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:50:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 739A1206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:51:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729897AbfDPSug (ORCPT
+        id S1730218AbfDPSvK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 14:50:36 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:50229 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726860AbfDPSuf (ORCPT
+        Tue, 16 Apr 2019 14:51:10 -0400
+Received: from rcdn-iport-4.cisco.com ([173.37.86.75]:18672 "EHLO
+        rcdn-iport-4.cisco.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726860AbfDPSvK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 14:50:35 -0400
-Received: from pd9ef12d2.dip0.t-ipconnect.de ([217.239.18.210] helo=nanos.glx-home)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hGT9z-0001fF-2f; Tue, 16 Apr 2019 20:50:23 +0200
-Date:   Tue, 16 Apr 2019 20:50:22 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Vlastimil Babka <vbabka@suse.cz>
-cc:     Qian Cai <cai@lca.pw>, akpm@linux-foundation.org, luto@kernel.org,
-        jpoimboe@redhat.com, sean.j.christopherson@intel.com,
-        penberg@kernel.org, rientjes@google.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] slab: remove store_stackinfo()
-In-Reply-To: <902fed9c-9655-a241-677d-5fa11b6c95a1@suse.cz>
-Message-ID: <alpine.DEB.2.21.1904162040570.1780@nanos.tec.linutronix.de>
-References: <20190416142258.18694-1-cai@lca.pw> <902fed9c-9655-a241-677d-5fa11b6c95a1@suse.cz>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+        Tue, 16 Apr 2019 14:51:10 -0400
+X-Greylist: delayed 425 seconds by postgrey-1.27 at vger.kernel.org; Tue, 16 Apr 2019 14:51:10 EDT
+X-IronPort-Anti-Spam-Filtered: true
+X-IronPort-Anti-Spam-Result: =?us-ascii?q?A0CDAAAKIrZc/51dJa1mHQEBBQEHBQG?=
+ =?us-ascii?q?BUwYBCwGCEIE5MyiyEIF7EIRthgkjNgcOAQMBAQoBAgECbSiFeFIpgRUTgyK?=
+ =?us-ascii?q?CCatWM4owFIEeAYZzhFYXgX+EYYQeG4VsA5F/gQuTLAmCCFOROidrlAugLoF?=
+ =?us-ascii?q?WAi+BVjMaCBsVgyeQbB8DMI4hglEBAQ?=
+X-IronPort-AV: E=Sophos;i="5.60,358,1549929600"; 
+   d="scan'208";a="548151376"
+Received: from rcdn-core-6.cisco.com ([173.37.93.157])
+  by rcdn-iport-4.cisco.com with ESMTP/TLS/DHE-RSA-SEED-SHA; 16 Apr 2019 18:44:04 +0000
+Received: from tusi.cisco.com (tusi.cisco.com [172.24.98.27])
+        by rcdn-core-6.cisco.com (8.15.2/8.15.2) with ESMTP id x3GIi30W026006;
+        Tue, 16 Apr 2019 18:44:03 GMT
+From:   Ruslan Babayev <ruslan@babayev.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     xe-linux-external@cisco.com, Jean Delvare <jdelvare@suse.com>,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/4] hwmon: (pmbus) add support for output voltage registers
+Date:   Tue, 16 Apr 2019 11:36:16 -0700
+Message-Id: <20190416183620.39950-1-ruslan@babayev.com>
+X-Mailer: git-send-email 2.17.1
+X-Auto-Response-Suppress: DR, OOF, AutoReply
+X-Outbound-SMTP-Client: 172.24.98.27, tusi.cisco.com
+X-Outbound-Node: rcdn-core-6.cisco.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Apr 2019, Vlastimil Babka wrote:
+Registers VOUT_COMMAND, VOUT_MARGIN_HIGH and VOUT_MARGIN_LOW are
+described in PMBUS Spec Part II Rev 1.2. Exposing them in the PMBUS
+core allows the drivers to turn them on with a corresponding
+PMBUS_HAVE_VOUT_... flags.
 
-> On 4/16/19 4:22 PM, Qian Cai wrote:
-> > store_stackinfo() does not seem used in actual SLAB debugging.
-> > Potentially, it could be added to check_poison_obj() to provide more
-> > information, but this seems like an overkill due to the declining
-> > popularity of the SLAB, so just remove it instead.
-> > 
-> > Signed-off-by: Qian Cai <cai@lca.pw>
-> 
-> I've acked Thomas' version already which was narrower, but no objection
-> to remove more stuff on top of that. Linus (and I later in another
-> thread) already pointed out /proc/slab_allocators. It only takes a look
-> at add_caller() there to not regret removing that one.
+Cc: xe-linux-external@cisco.com
+Signed-off-by: Ruslan Babayev <ruslan@babayev.com>
+---
+ drivers/hwmon/pmbus/pmbus.h      |   7 ++
+ drivers/hwmon/pmbus/pmbus_core.c | 183 +++++++++++++++++++++++++++++++
+ 2 files changed, 190 insertions(+)
 
-The issue why I was looking at this was a krobot complaint about the kernel
-crashing in that stack store function with my stackguard series applied. It
-was broken before the stackguard pages already, it just went unnoticed.
+diff --git a/drivers/hwmon/pmbus/pmbus.h b/drivers/hwmon/pmbus/pmbus.h
+index 1d24397d36ec..723648b3da36 100644
+--- a/drivers/hwmon/pmbus/pmbus.h
++++ b/drivers/hwmon/pmbus/pmbus.h
+@@ -223,6 +223,9 @@ enum pmbus_regs {
+  * OPERATION
+  */
+ #define PB_OPERATION_CONTROL_ON		BIT(7)
++#define PB_OPERATION_MARGIN_HIGH	BIT(5)
++#define PB_OPERATION_MARGIN_LOW		BIT(4)
++#define PB_OPERATION_ACT_ON_FAULT	BIT(3)
+ 
+ /*
+  * CAPABILITY
+@@ -291,6 +294,7 @@ enum pmbus_fan_mode { percent = 0, rpm };
+ /*
+  * STATUS_VOUT, STATUS_INPUT
+  */
++#define PB_VOLTAGE_MAX_WARNING		BIT(3)
+ #define PB_VOLTAGE_UV_FAULT		BIT(4)
+ #define PB_VOLTAGE_UV_WARNING		BIT(5)
+ #define PB_VOLTAGE_OV_WARNING		BIT(6)
+@@ -371,6 +375,9 @@ enum pmbus_sensor_classes {
+ #define PMBUS_HAVE_STATUS_VMON	BIT(19)
+ #define PMBUS_HAVE_PWM12	BIT(20)
+ #define PMBUS_HAVE_PWM34	BIT(21)
++#define PMBUS_HAVE_VOUT_COMMAND		BIT(22)
++#define PMBUS_HAVE_VOUT_MARGIN_HIGH	BIT(23)
++#define PMBUS_HAVE_VOUT_MARGIN_LOW	BIT(24)
+ 
+ #define PMBUS_PAGE_VIRTUAL	BIT(31)
+ 
+diff --git a/drivers/hwmon/pmbus/pmbus_core.c b/drivers/hwmon/pmbus/pmbus_core.c
+index 2e2b5851139c..f35b239961e3 100644
+--- a/drivers/hwmon/pmbus/pmbus_core.c
++++ b/drivers/hwmon/pmbus/pmbus_core.c
+@@ -89,6 +89,14 @@ struct pmbus_label {
+ #define to_pmbus_label(_attr) \
+ 	container_of(_attr, struct pmbus_label, attribute)
+ 
++struct pmbus_operation {
++	char name[PMBUS_NAME_SIZE];	/* sysfs label name */
++	struct sensor_device_attribute attribute;
++	u8 page;
++};
++#define to_pmbus_operation(_attr) \
++	container_of(_attr, struct pmbus_operation, attribute)
++
+ struct pmbus_data {
+ 	struct device *dev;
+ 	struct device *hwmon_dev;
+@@ -1004,6 +1012,65 @@ static ssize_t pmbus_show_label(struct device *dev,
+ 	return snprintf(buf, PAGE_SIZE, "%s\n", label->label);
+ }
+ 
++static ssize_t pmbus_show_operation(struct device *dev,
++				    struct device_attribute *devattr, char *buf)
++{
++	struct sensor_device_attribute *attr = to_sensor_dev_attr(devattr);
++	struct pmbus_operation *operation = to_pmbus_operation(attr);
++	struct i2c_client *client = to_i2c_client(dev->parent);
++	int ret;
++
++	ret = pmbus_read_byte_data(client, operation->page, PMBUS_OPERATION);
++	if (ret < 0)
++		return ret;
++
++	if (ret & PB_OPERATION_CONTROL_ON) {
++		if (ret & PB_OPERATION_MARGIN_HIGH)
++			return snprintf(buf, PAGE_SIZE, "high\n");
++		else if (ret & PB_OPERATION_MARGIN_LOW)
++			return snprintf(buf, PAGE_SIZE, "low\n");
++		else
++			return snprintf(buf, PAGE_SIZE, "on\n");
++	} else {
++			return snprintf(buf, PAGE_SIZE, "off\n");
++	}
++}
++
++static ssize_t pmbus_set_operation(struct device *dev,
++				   struct device_attribute *devattr,
++				   const char *buf, size_t count)
++{
++	struct sensor_device_attribute *attr = to_sensor_dev_attr(devattr);
++	struct pmbus_operation *operation = to_pmbus_operation(attr);
++	struct i2c_client *client = to_i2c_client(dev->parent);
++	int ret;
++	u8 val;
++
++	/*
++	 * sysfs_streq() doesn't need the \n's, but we add them so the strings
++	 * will be shared with pmbus_show_operation() above.
++	 */
++	if (sysfs_streq(buf, "on\n"))
++		val = PB_OPERATION_CONTROL_ON;
++	else if (sysfs_streq(buf, "off\n"))
++		val = 0;
++	else if (sysfs_streq(buf, "high\n"))
++		val = PB_OPERATION_CONTROL_ON | PB_OPERATION_ACT_ON_FAULT |
++		      PB_OPERATION_MARGIN_HIGH;
++	else if (sysfs_streq(buf, "low\n"))
++		val = PB_OPERATION_CONTROL_ON | PB_OPERATION_ACT_ON_FAULT |
++		      PB_OPERATION_MARGIN_LOW;
++	else
++		return -EINVAL;
++
++	ret = pmbus_write_byte_data(client, operation->page,
++				    PMBUS_OPERATION, val);
++	if (ret < 0)
++		return ret;
++
++	return count;
++}
++
+ static int pmbus_add_attribute(struct pmbus_data *data, struct attribute *attr)
+ {
+ 	if (data->num_attributes >= data->max_attributes - 1) {
+@@ -1143,6 +1210,29 @@ static int pmbus_add_label(struct pmbus_data *data,
+ 	return pmbus_add_attribute(data, &a->attr);
+ }
+ 
++static int pmbus_add_operation(struct pmbus_data *data, const char *name,
++			       int seq, int page)
++{
++	struct pmbus_operation *operation;
++	struct sensor_device_attribute *a;
++
++	operation = devm_kzalloc(data->dev, sizeof(*operation), GFP_KERNEL);
++	if (!operation)
++		return -ENOMEM;
++
++	a = &operation->attribute;
++
++	snprintf(operation->name, sizeof(operation->name), "%s%d_operation",
++		 name, seq);
++
++	operation->page = page;
++
++	pmbus_attr_init(a, operation->name, S_IRUGO | S_IWUSR,
++			pmbus_show_operation, pmbus_set_operation, seq);
++
++	return pmbus_add_attribute(data, &a->dev_attr.attr);
++}
++
+ /*
+  * Search for attributes. Allocate sensors, booleans, and labels as needed.
+  */
+@@ -1901,6 +1991,93 @@ static int pmbus_add_fan_attributes(struct i2c_client *client,
+ 	return 0;
+ }
+ 
++static const struct pmbus_limit_attr vout_cmd_limit_attrs[] = {
++	{
++		.reg = PMBUS_VOUT_MAX,
++		.attr = "max",
++		.alarm = "max_alarm",
++		.sbit = PB_VOLTAGE_MAX_WARNING,
++	}
++};
++
++static const struct pmbus_sensor_attr vout_attributes[] = {
++	{
++		.reg = PMBUS_VOUT_COMMAND,
++		.class = PSC_VOLTAGE_OUT,
++		.label = "command",
++		.paged = true,
++		.func = PMBUS_HAVE_VOUT_COMMAND,
++		.sfunc = PMBUS_HAVE_STATUS_VOUT,
++		.sbase = PB_STATUS_VOUT_BASE,
++		.gbit = PB_STATUS_VOUT_OV,
++		.limit = vout_cmd_limit_attrs,
++		.nlimit = ARRAY_SIZE(vout_cmd_limit_attrs),
++	}, {
++		.reg = PMBUS_VOUT_MARGIN_HIGH,
++		.class = PSC_VOLTAGE_OUT,
++		.label = "margin_high",
++		.paged = true,
++		.func = PMBUS_HAVE_VOUT_MARGIN_HIGH,
++	}, {
++		.reg = PMBUS_VOUT_MARGIN_LOW,
++		.class = PSC_VOLTAGE_OUT,
++		.label = "margin_low",
++		.paged = true,
++		.func = PMBUS_HAVE_VOUT_MARGIN_LOW,
++	}
++};
++
++static int pmbus_add_vout_attrs(struct i2c_client *client,
++				struct pmbus_data *data,
++				const char *name,
++				const struct pmbus_sensor_attr *attr,
++				int nattrs)
++{
++	const struct pmbus_driver_info *info = data->info;
++	struct pmbus_sensor *base;
++	int i, ret, index, page, pages;
++
++	index = 1;
++	for (page = 0; page < info->pages; page++) {
++		if (!pmbus_check_byte_register(client, page, PMBUS_OPERATION))
++			continue;
++		ret = pmbus_add_operation(data, name, index, page);
++		if (ret)
++			return ret;
++		index++;
++	}
++
++	for (i = 0; i < nattrs; i++) {
++		index = 1;
++		pages = attr->paged ? info->pages : 1;
++		for (page = 0; page < pages; page++) {
++			if (!(info->func[page] & attr->func))
++				continue;
++
++			if (!pmbus_check_word_register(client, page, attr->reg))
++				continue;
++
++			base = pmbus_add_sensor(data, name, attr->label, index,
++						page, attr->reg, attr->class,
++						true, false, true);
++			if (!base)
++				return -ENOMEM;
++
++			if (attr->sfunc) {
++				ret = pmbus_add_limit_attrs(client, data, info,
++							    name, index, page,
++							    base, attr);
++				if (ret < 0)
++					return ret;
++			}
++
++			index++;
++		}
++		attr++;
++	}
++	return 0;
++}
++
+ static int pmbus_find_attributes(struct i2c_client *client,
+ 				 struct pmbus_data *data)
+ {
+@@ -1912,6 +2089,12 @@ static int pmbus_find_attributes(struct i2c_client *client,
+ 	if (ret)
+ 		return ret;
+ 
++	/* Output Voltage sensors */
++	ret = pmbus_add_vout_attrs(client, data, "out", vout_attributes,
++				   ARRAY_SIZE(vout_attributes));
++	if (ret)
++		return ret;
++
+ 	/* Current sensors */
+ 	ret = pmbus_add_sensor_attrs(client, data, "curr", current_attributes,
+ 				     ARRAY_SIZE(current_attributes));
+-- 
+2.17.1
 
-As you explained, nobody is caring about DEBUG_SLAB + DEBUG_PAGEALLOC
-anyway, so I'm happy to not care about krobot tripping over it either.
-
-So we have 3 options:
-
-   1) I ignore it and merge the stack guard series w/o it
-
-   2) I can carry the minimal fix or Qian's version in the stackguard
-      branch
-
-   3) We ship that minimal fix to Linus right now and then everyone can
-      base their stuff on top independently.
-
-#3 is probably the right thing to do.
-
-Thanks,
-
-	tglx
