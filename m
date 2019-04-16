@@ -2,117 +2,99 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B31CC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:31:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 251BAC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:31:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D22720868
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:31:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555446696;
-	bh=guNqNmDD90m6Dxpy5lwwkbAOV+qQQDQzRqzAmRH6YIY=;
-	h=Date:From:To:cc:Subject:In-Reply-To:References:List-ID:From;
-	b=WGrgHmiUrIoOh894rV2cUA2XmQnduWMVzf/t2Q9l9U+rNnt4gDiv3gzfT/opIMwiZ
-	 PSFdKHlhjjQpPfHSZbyTsATYLiRdp5nTxZkRTVWlbuT5mYWezefZPq56UPfE8xb8xX
-	 ZfxHbmpVraDFpmrcdoR/W9uvGARxqiKqhmO0jlBI=
+	by mail.kernel.org (Postfix) with ESMTP id EC7B920880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:31:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730723AbfDPUbf (ORCPT
+        id S1730768AbfDPUbw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 16:31:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:37908 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728466AbfDPUbe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 16:31:34 -0400
-Received: from pobox.suse.cz (prg-ext-pat.suse.com [213.151.95.130])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BCBAC20663;
-        Tue, 16 Apr 2019 20:31:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555446693;
-        bh=guNqNmDD90m6Dxpy5lwwkbAOV+qQQDQzRqzAmRH6YIY=;
-        h=Date:From:To:cc:Subject:In-Reply-To:References:From;
-        b=rrVovOzUYGfP61k5urmNDdXALZi/woXaMj2Scx68wYp07N6NQVVJo6WjBL7MXozQR
-         zlJ3I4IErCi92KnrUW0cPNPoTw5fEhmoBu8zERbmdDlmr6fQDljhTsKgWnePw5ojdt
-         3kgROB3+0M12LauMWlIf3+eIZqMo2Blkb2GHCnkQ=
-Date:   Tue, 16 Apr 2019 22:31:24 +0200 (CEST)
-From:   Jiri Kosina <jikos@kernel.org>
-To:     Arnd Bergmann <arnd@arndb.de>
-cc:     Alexander Viro <viro@zeniv.linux.org.uk>,
-        linux-fsdevel@vger.kernel.org, y2038@lists.linaro.org,
-        linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>,
-        Jason Gunthorpe <jgg@mellanox.com>,
-        Sudip Mukherjee <sudipm.mukherjee@gmail.com>,
-        Peter Huewe <peterhuewe@gmx.de>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Stefan Richter <stefanr@s5r6.in-berlin.de>,
-        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Tomas Winkler <tomas.winkler@intel.com>,
-        Artem Bityutskiy <dedekind1@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Alex Williamson <alex.williamson@redhat.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>,
-        OGAWA Hirofumi <hirofumi@mail.parknet.co.jp>,
+        Tue, 16 Apr 2019 16:31:52 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:43555 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730325AbfDPUbw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 16:31:52 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1N2mS2-1grMbt2AaS-0134ab; Tue, 16 Apr 2019 22:31:45 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     "David S. Miller" <davem@davemloft.net>,
+        Eric Dumazet <edumazet@google.com>,
         Willem de Bruijn <willemb@google.com>,
-        linux-integrity@vger.kernel.org,
-        linux1394-devel@lists.sourceforge.net, linux-usb@vger.kernel.org,
-        linux-input@vger.kernel.org,
-        linux-stm32@st-md-mailman.stormreply.com,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mtd@lists.infradead.org, netdev@vger.kernel.org,
-        devel@driverdev.osuosl.org, kvm@vger.kernel.org,
-        virtualization@lists.linux-foundation.org
-Subject: Re: [PATCH v3 09/26] compat_ioctl: move drivers to
- compat_ptr_ioctl
-In-Reply-To: <20190416202013.4034148-10-arnd@arndb.de>
-Message-ID: <nycvar.YFH.7.76.1904162230560.9803@cbobk.fhfr.pm>
-References: <20190416202013.4034148-1-arnd@arndb.de> <20190416202013.4034148-10-arnd@arndb.de>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        Arnd Bergmann <arnd@arndb.de>
+Cc:     Yafang Shao <laoar.shao@gmail.com>, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH net] socket: fix compat SO_RCVTIMEO_NEW/SO_SNDTIMEO_NEW
+Date:   Tue, 16 Apr 2019 22:31:14 +0200
+Message-Id: <20190416203143.408835-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:Gr+wKH+d/ofnFqh9hLhzKvW3GV6jgcB8Gk07iFcnWJLu7KZp6KQ
+ T0DZ2ua5K4qyTidoFk2vc5V09AexvVg9OsVbQ5ZddpsrKi4T71xjHf/0pU/stJGwMTSVPLO
+ DDg8OI/horOdut6seP63iljYhZwtKseZDwtf2NaSQyBSWYVzzm9mK4WqKKnTIuW3OFSPyGv
+ awUJYR+6iO/0EO2KvXcoA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:8nIufYNRBU0=:gBihqo+8yzCf1wLnfqevyu
+ ERX87mA2zQfsckvPNyRxkKNeKO/i8jG8mqtbtBPO9fiyRCf7X1lehH9KQUCfdzhXIUya/P0bK
+ ATPrPzj8NbNdEnB7Vz/MFIE0eJTuLNFz2g0BLlWe9UhGU226x13xT0sw2jRjZsOnCeB9nv+fj
+ feMMPSHbBWkKWpYUNw+5DfK7h/r8Dax3RKY+zdvvBrkpFZl6ujT++zrgzeKdHHAsaZoWthYz4
+ dwhUkfxo+TJY+SZ/tMHR18IvB/gbhtx7c1ngxbNA3Jishnghs0aiqxLT9P4xpsjJCMMhnT+MJ
+ Hjk54o6PhkJ6I+COIzp4wjpNLprdcMDRdeUMeyoJLs47i/hiLkaxonG6FtD6rGCHL6tKmaVSZ
+ JKBJJ4UFABFgz0Yoozju9+fZ05lQxWXZMiW3FX9bx+rVQLTp3RRw+T04Pg3I8YlenfsK92hoC
+ lg2XOb6RuRlq7Iw9YUzYD8BN6mutmknLeNcrjNhJxZ2AmrmfmpElSZCL0706BZjrPBIup8xMx
+ Y5M697YAkKQs3d/nWRui7VXb4uwbUkWWs4/adHSP07igGSLHYA2oQ4hKBD/ssNGMAQz0cTbVu
+ rWNxZnveX7F1ho0d8CqvodhZvq77cNRrYY8nQ9Y32OyejouQDYgIwci2lomay/niUsdU6rMcl
+ zL05yptiDxxd6JHAPUXWc/dPdiVBTE2CKRH+YUkeIs3Vj0OolE923AdbOy97JoFg8iMmNr4g2
+ n0scb2LnGNwkLXcAuxQ3ENQCFM3cTRY1zUfVgQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Apr 2019, Arnd Bergmann wrote:
+It looks like the new socket options only work correctly
+for native execution, but in case of compat mode fall back
+to the old behavior as we ignore the 'old_timeval' flag.
 
-> Each of these drivers has a copy of the same trivial helper function to
-> convert the pointer argument and then call the native ioctl handler.
-> 
-> We now have a generic implementation of that, so use it.
-> 
-> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Reviewed-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-> Reviewed-by: Jason Gunthorpe <jgg@mellanox.com>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  drivers/char/ppdev.c              | 12 +---------
->  drivers/char/tpm/tpm_vtpm_proxy.c | 12 +---------
->  drivers/firewire/core-cdev.c      | 12 +---------
->  drivers/hid/usbhid/hiddev.c       | 11 +--------
+Rework so we treat SO_RCVTIMEO_NEW/SO_SNDTIMEO_NEW the
+same way in compat and native 32-bit mode.
 
-For hiddev.c:
+Cc: Deepa Dinamani <deepa.kernel@gmail.com>
+Fixes: a9beb86ae6e5 ("sock: Add SO_RCVTIMEO_NEW and SO_SNDTIMEO_NEW")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
 
-Reviewed-by: Jiri Kosina <jkosina@suse.cz> 
+ net/core/sock.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
+diff --git a/net/core/sock.c b/net/core/sock.c
+index dc7c31d66200..1e418c0b3b73 100644
+--- a/net/core/sock.c
++++ b/net/core/sock.c
+@@ -348,7 +348,7 @@ static int sock_get_timeout(long timeo, void *optval, bool old_timeval)
+ 		tv.tv_usec = ((timeo % HZ) * USEC_PER_SEC) / HZ;
+ 	}
+ 
+-	if (in_compat_syscall() && !COMPAT_USE_64BIT_TIME) {
++	if (old_timeval && in_compat_syscall() && !COMPAT_USE_64BIT_TIME) {
+ 		struct old_timeval32 tv32 = { tv.tv_sec, tv.tv_usec };
+ 		*(struct old_timeval32 *)optval = tv32;
+ 		return sizeof(tv32);
+@@ -372,7 +372,7 @@ static int sock_set_timeout(long *timeo_p, char __user *optval, int optlen, bool
+ {
+ 	struct __kernel_sock_timeval tv;
+ 
+-	if (in_compat_syscall() && !COMPAT_USE_64BIT_TIME) {
++	if (old_timeval && in_compat_syscall() && !COMPAT_USE_64BIT_TIME) {
+ 		struct old_timeval32 tv32;
+ 
+ 		if (optlen < sizeof(tv32))
 -- 
-Jiri Kosina
-SUSE Labs
+2.20.0
 
