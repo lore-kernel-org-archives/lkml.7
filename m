@@ -2,185 +2,158 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E3AAC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:37:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 12D7BC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:38:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3DD3B217F4
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:37:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="oIazGa6n"
+	by mail.kernel.org (Postfix) with ESMTP id E1EB121741
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:38:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730412AbfDPUh5 (ORCPT
+        id S1730500AbfDPUiW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 16:37:57 -0400
-Received: from mail-oi1-f196.google.com ([209.85.167.196]:40309 "EHLO
-        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727180AbfDPUh5 (ORCPT
+        Tue, 16 Apr 2019 16:38:22 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:34213 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727136AbfDPUiW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 16:37:57 -0400
-Received: by mail-oi1-f196.google.com with SMTP id f196so7419216oib.7
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 13:37:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=kESGNo57Cjdjom3sqIgs25kzW/oD38ix2MJXU54+Oao=;
-        b=oIazGa6nnJVvoYkG7mNV2WNlpGJfqHsF0E0RN3GayPHtNU3/pwAL+PIyUc0GKQe4vf
-         ohvhxF2zTTwKwYsvDfrhsFQ81AdN/wM0le+6KiaNb+VC3u9FmuRlkgRlIhdKYRxjH+p9
-         0Bol3sQctYe19VTBZbD3tvdQD76Z1bi6GTflqo1yuWCFtGSrZfAwHy+eiTrsqRvQQ1/T
-         Ugjt+WIIkpRfp1tY6yV86d1XVRjSRxiweFY3eAmXuv0rC5K1oyE0yLiayNTVsAVBud4Z
-         iQkOxxfgl1VFvfhXqbH6IIg9gfY7b6RAwzXep7wNiaU/P0RJjLLlrNxJgdfq/nbnSF8j
-         JSMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=kESGNo57Cjdjom3sqIgs25kzW/oD38ix2MJXU54+Oao=;
-        b=JPQM+sjyFUVYV2O2P2MEBuFlLRriS2EloqBDMoOMM75+IFggzg1fipfywxefWdGo1r
-         lahd5RXyIjMQkhsaFwiGJR+zdVwJ21cN7KWtFWqOfaa7gttd2TjQ32J/wlDWFNXVYnHR
-         vg/9agT9BGpaM/T/dSHNkrSfV1jIimX+dfmTBSBXNCBSV044jkTEu7eVevrlH5+dkPlt
-         s9/v+bz9l2ouomZBGiZ0vzSQDWafevnX550Z72H4MeM2LKkq5/DEWtpweJweBV+wVZKE
-         gSlro5QZN6LD/CRJ19jG3UoDy+xLyYQVXZQVF7dgxaGpk0Ij/r2uGKyeEN6ux2RETO45
-         zx7Q==
-X-Gm-Message-State: APjAAAVKEIAs5A7GJV2bwtxTFEO5RHzxtuugDxJoUK2S7+jghUPUq/eH
-        gUUrb+RoKJgHD7XU9I9j6ws5pCH4gKvnnNmdTW/qVQ==
-X-Google-Smtp-Source: APXvYqw7V/mV/hj3PlwGwhy1yqqT1RCIXP0GlYeYGAGC/wQ5FjmPA0iCHxGxRX93xqLwhW1UoKdyhYlKGvcxoTNbSkM=
-X-Received: by 2002:aca:aa57:: with SMTP id t84mr25917903oie.149.1555447076327;
- Tue, 16 Apr 2019 13:37:56 -0700 (PDT)
+        Tue, 16 Apr 2019 16:38:22 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1N0nOF-1gtrD33xzx-00wlMo; Tue, 16 Apr 2019 22:37:37 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Tony Luck <tony.luck@intel.com>, Fenghua Yu <fenghua.yu@intel.com>,
+        "James E.J. Bottomley" <James.Bottomley@HansenPartnership.com>,
+        Helge Deller <deller@gmx.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        x86@kernel.org, Arnd Bergmann <arnd@arndb.de>
+Cc:     "H. Peter Anvin" <hpa@zytor.com>, linux-ia64@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-parisc@vger.kernel.org,
+        sparclinux@vger.kernel.org
+Subject: [PATCH net-next 2/3] asm-generic: generalize asm/sockios.h
+Date:   Tue, 16 Apr 2019 22:32:49 +0200
+Message-Id: <20190416203620.539628-2-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20190416203620.539628-1-arnd@arndb.de>
+References: <20190416203620.539628-1-arnd@arndb.de>
 MIME-Version: 1.0
-References: <20190215185151.GG7897@sirena.org.uk> <20190226155948.299aa894a5576e61dda3e5aa@linux-foundation.org>
- <CAPcyv4ivjC8fNkfjdFyaYCAjGh7wtvFQnoPpOcR=VNZ=c6d6Rg@mail.gmail.com>
- <20190228151438.fc44921e66f2f5d393c8d7b4@linux-foundation.org>
- <CAPcyv4hDmmK-L=0txw7L9O8YgvAQxZfVFiSoB4LARRnGQ3UC7Q@mail.gmail.com>
- <026b5082-32f2-e813-5396-e4a148c813ea@collabora.com> <20190301124100.62a02e2f622ff6b5f178a7c3@linux-foundation.org>
- <3fafb552-ae75-6f63-453c-0d0e57d818f3@collabora.com> <CAPcyv4hMNiiM11ULjbOnOf=9N=yCABCRsAYLpjXs+98bRoRpCA@mail.gmail.com>
- <36faea07-139c-b97d-3585-f7d6d362abc3@collabora.com> <20190306140529.GG3549@rapoport-lnx>
- <21d138a5-13e4-9e83-d7fe-e0639a8d180a@collabora.com> <CAPcyv4jBjUScKExK09VkL8XKibNcbw11ET4WNUWUWbPXeT9DFQ@mail.gmail.com>
- <CAGXu5jLAPKBE-EdfXkg2AK5P=qZktW6ow4kN5Yzc0WU2rtG8LQ@mail.gmail.com>
- <CABXOdTdVvFn=Nbd_Anhz7zR1H-9QeGByF3HFg4ZFt58R8=H6zA@mail.gmail.com>
- <CAGXu5j+Sw2FyMc8L+8hTpEKbOsySFGrCmFtVP5gt9y2pJhYVUw@mail.gmail.com>
- <CABXOdTcXWf9iReoocaj9rZ7z17zt-62iPDuvQQSrQRtMeeZNiA@mail.gmail.com>
- <CAPcyv4i8xhA6B5e=YBq2Z5kooyUpYZ8Bv9qov-mvqm4Uz=KLWQ@mail.gmail.com>
- <CABXOdTc5=J7ZFgbiwahVind-SNt7+G_-TVO=v-Y5SBVPLdUFog@mail.gmail.com>
- <CAPcyv4gxk9xbsP3YSKzxu5Yp9FTefyxHc6xC33GwZ3Zf9_eeKA@mail.gmail.com> <CABXOdTd-cqHM_feAO1tvwn4Z=kM6WHKYAbDJ7LGfMvRPRPG7GA@mail.gmail.com>
-In-Reply-To: <CABXOdTd-cqHM_feAO1tvwn4Z=kM6WHKYAbDJ7LGfMvRPRPG7GA@mail.gmail.com>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 16 Apr 2019 13:37:45 -0700
-Message-ID: <CAPcyv4hyOtJsnM6qqey7ADY=7brzVQ5TH3URrofmsQ57t1=WbQ@mail.gmail.com>
-Subject: Re: next/master boot bisection: next-20190215 on beaglebone-black
-To:     Guenter Roeck <groeck@google.com>
-Cc:     Kees Cook <keescook@chromium.org>, kernelci@groups.io,
-        Guillaume Tucker <guillaume.tucker@collabora.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Mark Brown <broonie@kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Matt Hart <matthew.hart@linaro.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Richard Guy Briggs <rgb@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>, info@kernelci.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:xkQvlCVeFcocDpA6GJ/DsjcZtCWIXeVY+jedgURaIidy1n6x1Kb
+ BCAE2c/OSfq+6+LMaeMdLasPUB8BXpIiI4kJcPRn1psjavRjkQNWtoLHFHBquvN+A0tx5u7
+ TSZBiCV/8sJDSXRpWq7wEwvhBdqcQKVD8mVjIeVeYCCbXmLJCToXe0hc+Af+dn8FCVyrwnr
+ 41KEsBlq3Nw5UQWS7DZOQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:3iqgD1Uyltk=:WCHkFy9q6gsfLPH0m+BbiN
+ t/q/aOoKGcnKY99gsEtrbeZgrOPp0ab9lBVlK3EsCSzVNW969D3JvskrQ36TaSSyBOaJHiiJP
+ ExgjiCTocbmlHlifIKdCGfUFliohx8fs2nBjf+/+yhtYCVX9ktuPHqg3leyPWULiK0dakEPGH
+ Ghgz3NUvLIHYpF6MrdBy2hhVHxg8+8fEWlLFe6BWO6/kDAgVkcoFc3o7ul+6dNj9PZVyCYUZI
+ NdHPeg6jLi+JkwkpR5w94Ufs0Hn05SeNhd3UujlkJNLo1tR2reA4hN3nOSxjxWcuhqeEcrM2S
+ w5J71TD30FaWXsXVf0fpjXwgvjmMKNMKhbpjQK/YIQuZde0dvlu5v9KwWalh9t2TYXYGwtPue
+ YawvYtgnEXQfQ2X6olFLPHTPTYVsGWDL61tQaS/aaPh4nPWsOtiQ1Kzo9PNfoSb/JReRqebuh
+ OfdgAVW8Wx/kkSDARcc0LjmXJxZIPawxuIHDmUVWL6pi1cch4vN2y/Ee8kdxHsoxH2IuSRaaM
+ zmWjmm8UHwvAEZbNzKcrg4+wCjE8T5CE/qH7im/5jtmmQcXQUHVWoeDtzS/29duTWKvyFG7wH
+ lBK/NyjsfRcD7JJ5czYNpbnyao+Ccz987DButlaqs5ymuy6MNHsoibsGu6+AjgKi17pGYby7/
+ 4aPCkxgKYW7ybsa1dajubIGLO5pPV1Gnen7CvkdokmZE7aGF57m+ARMLCzPUBMuLmsW6e25Xw
+ ZNrAMimAYwcq9Lz+ljDHDNVq5AO4VMIZi8GQaA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 12:34 PM Guenter Roeck <groeck@google.com> wrote:
->
-> On Tue, Apr 16, 2019 at 11:54 AM Dan Williams <dan.j.williams@intel.com> wrote:
-> >
-> > On Thu, Apr 11, 2019 at 1:54 PM Guenter Roeck <groeck@google.com> wrote:
-> > [..]
-> > > > > Boot tests report
-> > > > >
-> > > > > Qemu test results:
-> > > > >     total: 345 pass: 345 fail: 0
-> > > > >
-> > > > > This is on top of next-20190410 with CONFIG_SHUFFLE_PAGE_ALLOCATOR=y
-> > > > > and the known crashes fixed.
-> > > >
-> > > > In addition to CONFIG_SHUFFLE_PAGE_ALLOCATOR=y you also need the
-> > > > kernel command line option "page_alloc.shuffle=1"
-> > > >
-> > > > ...so I doubt you are running with shuffling enabled. Another way to
-> > > > double check is:
-> > > >
-> > > >    cat /sys/module/page_alloc/parameters/shuffle
-> > >
-> > > Yes, you are right. Because, with it enabled, I see:
-> > >
-> > > Kernel command line: rdinit=/sbin/init page_alloc.shuffle=1 panic=-1
-> > > console=ttyAMA0,115200 page_alloc.shuffle=1
-> > > ------------[ cut here ]------------
-> > > WARNING: CPU: 0 PID: 0 at ./include/linux/jump_label.h:303
-> > > page_alloc_shuffle+0x12c/0x1ac
-> > > static_key_enable(): static key 'page_alloc_shuffle_key+0x0/0x4' used
-> > > before call to jump_label_init()
-> >
-> > This looks to be specific to ARM never having had to deal with
-> > DEFINE_STATIC_KEY_TRUE in the past.
-> >
->
-> This affects almost all architectures, not just arm, presumably
-> because parse_args() is called before jump_label_init() in
-> start_kernel().
+ia64, parisc and sparc just use a copy of the generic version
+of asm/sockios.h, and x86 is a redirect to the same file, so we
+can just let the header file be generated.
 
-Hmm, you're right, but this should effect *every* architecture not
-just ARM. Why is it not screaming at me on x86?
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ arch/ia64/include/uapi/asm/sockios.h   | 21 ---------------------
+ arch/parisc/include/uapi/asm/sockios.h | 14 --------------
+ arch/sparc/include/uapi/asm/sockios.h  | 15 ---------------
+ arch/x86/include/uapi/asm/sockios.h    |  1 -
+ 4 files changed, 51 deletions(-)
+ delete mode 100644 arch/ia64/include/uapi/asm/sockios.h
+ delete mode 100644 arch/parisc/include/uapi/asm/sockios.h
+ delete mode 100644 arch/sparc/include/uapi/asm/sockios.h
+ delete mode 100644 arch/x86/include/uapi/asm/sockios.h
 
-> I did not bother to report back with further details
-> after someone stated that qemu doesn't support omap2, and the context
-> seemed to suggest that running any other tests would not add any
-> value.
->
-> > I am able to avoid this warning by simply not enabling JUMP_LABEL
-> > support in my build.
-> >
->
-> Fine with me, as long as CONFIG_SHUFFLE_PAGE_ALLOCATOR=y is not
-> enabled by default, or if it is made dependent on !JUMP_LABEL.
-
-Ah, no, the problem is that jump_label_init() is called by
-setup_arch() on x86, and smp_prepare_boot_cpu() on powerpc, but not
-until after parse_args() on ARM.
-
-Given it appears to be safe to call jump_label_init() early how about
-something like the following?
-
-diff --git a/init/main.c b/init/main.c
-index 598e278b46f7..7d4025d665eb 100644
---- a/init/main.c
-+++ b/init/main.c
-@@ -582,6 +582,8 @@ asmlinkage __visible void __init start_kernel(void)
-        page_alloc_init();
-
-        pr_notice("Kernel command line: %s\n", boot_command_line);
-+       /* parameters may set static keys */
-+       jump_label_init();
-        parse_early_param();
-        after_dashes = parse_args("Booting kernel",
-                                  static_command_line, __start___param,
-@@ -591,8 +593,6 @@ asmlinkage __visible void __init start_kernel(void)
-                parse_args("Setting init args", after_dashes, NULL, 0, -1, -1,
-                           NULL, set_init_arg);
-
--       jump_label_init();
+diff --git a/arch/ia64/include/uapi/asm/sockios.h b/arch/ia64/include/uapi/asm/sockios.h
+deleted file mode 100644
+index f27a12f95d20..000000000000
+--- a/arch/ia64/include/uapi/asm/sockios.h
++++ /dev/null
+@@ -1,21 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+-#ifndef _ASM_IA64_SOCKIOS_H
+-#define _ASM_IA64_SOCKIOS_H
 -
-        /*
-         * These use large bootmem allocations and must precede
-         * kmem_cache_init()
+-/*
+- * Socket-level I/O control calls.
+- *
+- * Based on <asm-i386/sockios.h>.
+- *
+- * Modified 1998, 1999
+- *	David Mosberger-Tang <davidm@hpl.hp.com>, Hewlett-Packard Co
+- */
+-#define FIOSETOWN 	0x8901
+-#define SIOCSPGRP	0x8902
+-#define FIOGETOWN	0x8903
+-#define SIOCGPGRP	0x8904
+-#define SIOCATMARK	0x8905
+-#define SIOCGSTAMP	0x8906		/* Get stamp (timeval) */
+-#define SIOCGSTAMPNS	0x8907		/* Get stamp (timespec) */
+-
+-#endif /* _ASM_IA64_SOCKIOS_H */
+diff --git a/arch/parisc/include/uapi/asm/sockios.h b/arch/parisc/include/uapi/asm/sockios.h
+deleted file mode 100644
+index 66a3ba64d53f..000000000000
+--- a/arch/parisc/include/uapi/asm/sockios.h
++++ /dev/null
+@@ -1,14 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+-#ifndef __ARCH_PARISC_SOCKIOS__
+-#define __ARCH_PARISC_SOCKIOS__
+-
+-/* Socket-level I/O control calls. */
+-#define FIOSETOWN 	0x8901
+-#define SIOCSPGRP	0x8902
+-#define FIOGETOWN	0x8903
+-#define SIOCGPGRP	0x8904
+-#define SIOCATMARK	0x8905
+-#define SIOCGSTAMP	0x8906		/* Get stamp (timeval) */
+-#define SIOCGSTAMPNS	0x8907		/* Get stamp (timespec) */
+-
+-#endif
+diff --git a/arch/sparc/include/uapi/asm/sockios.h b/arch/sparc/include/uapi/asm/sockios.h
+deleted file mode 100644
+index 18a3ec14a847..000000000000
+--- a/arch/sparc/include/uapi/asm/sockios.h
++++ /dev/null
+@@ -1,15 +0,0 @@
+-/* SPDX-License-Identifier: GPL-2.0 WITH Linux-syscall-note */
+-#ifndef _ASM_SPARC_SOCKIOS_H
+-#define _ASM_SPARC_SOCKIOS_H
+-
+-/* Socket-level I/O control calls. */
+-#define FIOSETOWN 	0x8901
+-#define SIOCSPGRP	0x8902
+-#define FIOGETOWN	0x8903
+-#define SIOCGPGRP	0x8904
+-#define SIOCATMARK	0x8905
+-#define SIOCGSTAMP	0x8906		/* Get stamp (timeval) */
+-#define SIOCGSTAMPNS	0x8907		/* Get stamp (timespec) */
+-
+-#endif /* !(_ASM_SPARC_SOCKIOS_H) */
+-
+diff --git a/arch/x86/include/uapi/asm/sockios.h b/arch/x86/include/uapi/asm/sockios.h
+deleted file mode 100644
+index def6d4746ee7..000000000000
+--- a/arch/x86/include/uapi/asm/sockios.h
++++ /dev/null
+@@ -1 +0,0 @@
+-#include <asm-generic/sockios.h>
+-- 
+2.20.0
+
