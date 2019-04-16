@@ -2,230 +2,303 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99848C282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:34:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40449C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:34:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 554F7206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:34:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0B319206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:34:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="MzP4vtEY"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=goldelico.com header.i=@goldelico.com header.b="eFBrPRw3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730107AbfDPTeE (ORCPT
+        id S1730282AbfDPTeS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 15:34:04 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:43463 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726860AbfDPTeE (ORCPT
+        Tue, 16 Apr 2019 15:34:18 -0400
+Received: from mo4-p01-ob.smtp.rzone.de ([85.215.255.50]:32549 "EHLO
+        mo4-p01-ob.smtp.rzone.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726860AbfDPTeR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 15:34:04 -0400
-Received: by mail-yw1-f68.google.com with SMTP id j66so7741729ywc.10
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 12:34:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=2pcrWK7hCpkY/y4maWmP20jsXAzKSTIpeBj4ebY6vg8=;
-        b=MzP4vtEY4aNAYMlO1dqgSCu8GyyvIWJL/MdR0YHpQaZfCAfz6Q8K0BtCBMGIcKAlu/
-         haijVwv4XhteRRR+Nc/SUc7SLdmaLxEPfbwF0H2USDIQZ9ZgCzS4NmG3Om9+EduKt9EQ
-         M5iL+4p8OubZAnwhnXf9axXFlLTvlc2f8QTUz4sSlunAP2af+iFWvka3s4rJnFvuI8bO
-         7CEkS5GwzHLehLh0fGnRuVSBsiZAq0jb+xomqitM8p/9eIz/rCMtQ3oMQqqXZaYGzvyY
-         MmjzMvqO0Twb4I3ZBJeLUIQlBtyNVDSQKpy0WwgpkAEvr+fmCYHEP4h4FDcNkJciQMp5
-         JmpQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=2pcrWK7hCpkY/y4maWmP20jsXAzKSTIpeBj4ebY6vg8=;
-        b=UcuXhmKnneBnqmOnV6JicchTjAnVPdIato6afgTy8n2rtcvMKkJrlxmt9JvL1OGBZi
-         SEsZE9ClUBqf+DAPGQ3YEG9enYT//UkGcDNA+MzFYs1nYQnNYeVl2ZqYafj5icdDrukL
-         pUIK6Go1UqYixqjrAC89WAWdiLqWOLAtmuK2/njc4dffyElReBVA8Hw/cRzwUCjQbpTN
-         RxmbKyGXoX50ZawKO3kJYVnmUNImLxQP6aKhdAYCUJzwNAW4Ii62pdu8Io9FgduvkGqM
-         puOjWT8l21LtAykf1UR/oDYl0ecjmGOapyDFVoxzLDHMW0s0DC8i2C+QDJSrC2IzqDIg
-         PLAA==
-X-Gm-Message-State: APjAAAWIpL4d3QY41cykpdeKhfgQnkvuZ1Dsfk/YB6zcPBJ8XJg2tgtb
-        PywE1TAM4kpMBQpL/5XPiNIReSMkzAHuGAVCwxoRXg==
-X-Google-Smtp-Source: APXvYqxy3IhU/rOjP2fyBjRPZUkaZUbky9eDqfe6MtHtfDwZF6hRPVx7wnGZGKhTXQzlwxe+tVvEAxBZD4iiJfiEfs4=
-X-Received: by 2002:a0d:dd4c:: with SMTP id g73mr63071918ywe.145.1555443243096;
- Tue, 16 Apr 2019 12:34:03 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190215185151.GG7897@sirena.org.uk> <20190226155948.299aa894a5576e61dda3e5aa@linux-foundation.org>
- <CAPcyv4ivjC8fNkfjdFyaYCAjGh7wtvFQnoPpOcR=VNZ=c6d6Rg@mail.gmail.com>
- <20190228151438.fc44921e66f2f5d393c8d7b4@linux-foundation.org>
- <CAPcyv4hDmmK-L=0txw7L9O8YgvAQxZfVFiSoB4LARRnGQ3UC7Q@mail.gmail.com>
- <026b5082-32f2-e813-5396-e4a148c813ea@collabora.com> <20190301124100.62a02e2f622ff6b5f178a7c3@linux-foundation.org>
- <3fafb552-ae75-6f63-453c-0d0e57d818f3@collabora.com> <CAPcyv4hMNiiM11ULjbOnOf=9N=yCABCRsAYLpjXs+98bRoRpCA@mail.gmail.com>
- <36faea07-139c-b97d-3585-f7d6d362abc3@collabora.com> <20190306140529.GG3549@rapoport-lnx>
- <21d138a5-13e4-9e83-d7fe-e0639a8d180a@collabora.com> <CAPcyv4jBjUScKExK09VkL8XKibNcbw11ET4WNUWUWbPXeT9DFQ@mail.gmail.com>
- <CAGXu5jLAPKBE-EdfXkg2AK5P=qZktW6ow4kN5Yzc0WU2rtG8LQ@mail.gmail.com>
- <CABXOdTdVvFn=Nbd_Anhz7zR1H-9QeGByF3HFg4ZFt58R8=H6zA@mail.gmail.com>
- <CAGXu5j+Sw2FyMc8L+8hTpEKbOsySFGrCmFtVP5gt9y2pJhYVUw@mail.gmail.com>
- <CABXOdTcXWf9iReoocaj9rZ7z17zt-62iPDuvQQSrQRtMeeZNiA@mail.gmail.com>
- <CAPcyv4i8xhA6B5e=YBq2Z5kooyUpYZ8Bv9qov-mvqm4Uz=KLWQ@mail.gmail.com>
- <CABXOdTc5=J7ZFgbiwahVind-SNt7+G_-TVO=v-Y5SBVPLdUFog@mail.gmail.com> <CAPcyv4gxk9xbsP3YSKzxu5Yp9FTefyxHc6xC33GwZ3Zf9_eeKA@mail.gmail.com>
-In-Reply-To: <CAPcyv4gxk9xbsP3YSKzxu5Yp9FTefyxHc6xC33GwZ3Zf9_eeKA@mail.gmail.com>
-From:   Guenter Roeck <groeck@google.com>
-Date:   Tue, 16 Apr 2019 12:33:51 -0700
-Message-ID: <CABXOdTd-cqHM_feAO1tvwn4Z=kM6WHKYAbDJ7LGfMvRPRPG7GA@mail.gmail.com>
-Subject: Re: next/master boot bisection: next-20190215 on beaglebone-black
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Kees Cook <keescook@chromium.org>, kernelci@groups.io,
-        Guillaume Tucker <guillaume.tucker@collabora.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Mark Brown <broonie@kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Matt Hart <matthew.hart@linaro.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        Dominik Brodowski <linux@dominikbrodowski.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Adrian Reber <adrian@lisas.de>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Linux MM <linux-mm@kvack.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Richard Guy Briggs <rgb@redhat.com>,
-        "Peter Zijlstra (Intel)" <peterz@infradead.org>, info@kernelci.org
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 16 Apr 2019 15:34:17 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; t=1555443250;
+        s=strato-dkim-0002; d=goldelico.com;
+        h=To:References:Message-Id:Cc:Date:In-Reply-To:From:Subject:
+        X-RZG-CLASS-ID:X-RZG-AUTH:From:Subject:Sender;
+        bh=M7EdJiDTEkfj562k6hqu0RD6IoPp+y9i1vhxR3af4K0=;
+        b=eFBrPRw3rqAyl1vtq0UUEAYUu7Pc4pBQVwYl9pktzR5qiGCqIjy7oGiFfRtIrrnp2/
+        F0ezXqlPmXe5JC5Dw0QJOk/NwvbtG7dzeSqbSJrpEhnO0v32zzWR9IJKpo59Vi1RhTWi
+        iQY2PiXqNRP0bgTrEcDEZkVK95KpTI7Mg9j9BQjT31eUCoTHRhev/HgCbMAkBtYRF//X
+        CLYXO4qdtaTm5xVavpRwkvWV3ERmuvgvcJXugkJaTCzG3xg8aouk47Zokp05vLTcgKiC
+        cVRCBVxB5c+oY1RDuqSbZCbUhsmaqoadPTPeXwqo+HqhBl4p8UqnYh26mx4+0JGX+YSm
+        EDwA==
+X-RZG-AUTH: ":JGIXVUS7cutRB/49FwqZ7WcJeFKiMgPgp8VKxflSZ1P34KBj7wpz8NMGH/vswDCqEi8="
+X-RZG-CLASS-ID: mo00
+Received: from imac.fritz.box
+        by smtp.strato.de (RZmta 44.18 DYNA|AUTH)
+        with ESMTPSA id j04dc1v3GJXcdgj
+        (using TLSv1 with cipher ECDHE-RSA-AES256-SHA (curve secp521r1 with 521 ECDH bits, eq. 15360 bits RSA))
+        (Client did not present a certificate);
+        Tue, 16 Apr 2019 21:33:38 +0200 (CEST)
+Content-Type: text/plain; charset=us-ascii
+Mime-Version: 1.0 (Mac OS X Mail 9.3 \(3124\))
+Subject: Re: [RFC v3] iio: input-bridge: optionally bridge iio acceleometers to create a /dev/input interface
+From:   "H. Nikolaus Schaller" <hns@goldelico.com>
+In-Reply-To: <0189da8d91652dd3ecf729b03029ab9db5a24f99.camel@hadess.net>
+Date:   Tue, 16 Apr 2019 21:33:38 +0200
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Eric Piel <eric.piel@tremplin-utc.net>,
+        linux-input@vger.kernel.org, letux-kernel@openphoenux.org,
+        kernel@pyra-handheld.com, Hartmut Knaack <knaack.h@gmx.de>,
+        Lars-Peter Clausen <lars@metafoo.de>,
+        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
+        linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <AA2B43FE-E196-4FEC-B4C5-897D0F44A76F@goldelico.com>
+References: <d52cf9ee5944c90c69f6e74a46d844cef51e487e.1555362312.git.hns@goldelico.com> <0189da8d91652dd3ecf729b03029ab9db5a24f99.camel@hadess.net>
+To:     Bastien Nocera <hadess@hadess.net>
+X-Mailer: Apple Mail (2.3124)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 11:54 AM Dan Williams <dan.j.williams@intel.com> wrote:
->
-> On Thu, Apr 11, 2019 at 1:54 PM Guenter Roeck <groeck@google.com> wrote:
-> [..]
-> > > > Boot tests report
-> > > >
-> > > > Qemu test results:
-> > > >     total: 345 pass: 345 fail: 0
-> > > >
-> > > > This is on top of next-20190410 with CONFIG_SHUFFLE_PAGE_ALLOCATOR=y
-> > > > and the known crashes fixed.
-> > >
-> > > In addition to CONFIG_SHUFFLE_PAGE_ALLOCATOR=y you also need the
-> > > kernel command line option "page_alloc.shuffle=1"
-> > >
-> > > ...so I doubt you are running with shuffling enabled. Another way to
-> > > double check is:
-> > >
-> > >    cat /sys/module/page_alloc/parameters/shuffle
-> >
-> > Yes, you are right. Because, with it enabled, I see:
-> >
-> > Kernel command line: rdinit=/sbin/init page_alloc.shuffle=1 panic=-1
-> > console=ttyAMA0,115200 page_alloc.shuffle=1
-> > ------------[ cut here ]------------
-> > WARNING: CPU: 0 PID: 0 at ./include/linux/jump_label.h:303
-> > page_alloc_shuffle+0x12c/0x1ac
-> > static_key_enable(): static key 'page_alloc_shuffle_key+0x0/0x4' used
-> > before call to jump_label_init()
->
-> This looks to be specific to ARM never having had to deal with
-> DEFINE_STATIC_KEY_TRUE in the past.
->
+Hi Bastien,
 
-This affects almost all architectures, not just arm, presumably
-because parse_args() is called before jump_label_init() in
-start_kernel(). I did not bother to report back with further details
-after someone stated that qemu doesn't support omap2, and the context
-seemed to suggest that running any other tests would not add any
-value.
+> Am 16.04.2019 um 18:04 schrieb Bastien Nocera <hadess@hadess.net>:
+>=20
+> Having written a "bridge" myself (I called it a "proxy"[1]), I have a
+> few comments.
+>=20
+> [1]: https://github.com/hadess/iio-sensor-proxy
 
-> I am able to avoid this warning by simply not enabling JUMP_LABEL
-> support in my build.
->
+Nice work!
 
-Fine with me, as long as CONFIG_SHUFFLE_PAGE_ALLOCATOR=y is not
-enabled by default, or if it is made dependent on !JUMP_LABEL.
+>=20
+> Let's start with the easy ones ;) there's a typo in the subject line.
+>=20
+> The subject line also says "optionally" but there doesn't seem to be
+> any ways to disable the feature if it's shipped by the kernel used.
 
-Guenter
+Well, the "optionally" refers to that this can be completely disabled
+by a Kconfig option. Maybe it is the wrong wording for this and should
+be changed.
 
-> > Modules linked in:
-> > CPU: 0 PID: 0 Comm: swapper Not tainted
-> > 5.1.0-rc4-next-20190410-00003-g3367c36ce744 #1
-> > Hardware name: ARM Integrator/CP (Device Tree)
-> > [<c0011c68>] (unwind_backtrace) from [<c000ec48>] (show_stack+0x10/0x18)
-> > [<c000ec48>] (show_stack) from [<c07e9710>] (dump_stack+0x18/0x24)
-> > [<c07e9710>] (dump_stack) from [<c001bb1c>] (__warn+0xe0/0x108)
-> > [<c001bb1c>] (__warn) from [<c001bb88>] (warn_slowpath_fmt+0x44/0x6c)
-> > [<c001bb88>] (warn_slowpath_fmt) from [<c0b0c4a8>]
-> > (page_alloc_shuffle+0x12c/0x1ac)
-> > [<c0b0c4a8>] (page_alloc_shuffle) from [<c0b0c550>] (shuffle_store+0x28/0x48)
-> > [<c0b0c550>] (shuffle_store) from [<c003e6a0>] (parse_args+0x1f4/0x350)
-> > [<c003e6a0>] (parse_args) from [<c0ac3c00>] (start_kernel+0x1c0/0x488)
-> > [<c0ac3c00>] (start_kernel) from [<00000000>] (  (null))
-> >
-> > I'll re-run the test, but I suspect it will drown in warnings.
->
-> I slogged through getting a Beagle Bone Black up and running with a
-> Yocto build and it is not failing. I have tried apply the patches on
-> top of v5.1-rc5 as well as re-testing next-20190215 label, no
-> reproduction. The shuffle appears to avoid anything sensitive by
-> default, below are the shuffle actions that were taken relative to
-> iomem. Can someone with a failure reproduction please send me more
-> details about their configuration? It would also help to get a failing
-> boot log with the pr_debug() statements in mm/shuffle.c enabled to see
-> if the failure is correlated with any unexpected shuffle actions.
->
-> 80000000-9fffffff : System RAM
->   80008000-809fffff : Kernel code
->   80b00000-812be523 : Kernel data
->
-> [    0.086469] __shuffle_zone: swap: 0x81800 -> 0x99800
-> [    0.086558] __shuffle_zone: swap: 0x82000 -> 0x88800
-> [    0.086575] __shuffle_zone: swap: 0x82800 -> 0x89800
-> [    0.086591] __shuffle_zone: swap: 0x83000 -> 0x89000
-> [    0.086606] __shuffle_zone: swap: 0x83800 -> 0x8a800
-> [    0.086621] __shuffle_zone: swap: 0x84000 -> 0x93800
-> [    0.086636] __shuffle_zone: swap: 0x84800 -> 0x83000
-> [    0.086651] __shuffle_zone: swap: 0x85000 -> 0x8f000
-> [    0.086666] __shuffle_zone: swap: 0x85800 -> 0x88000
-> [    0.086689] __shuffle_zone: swap: 0x86000 -> 0x84000
-> [    0.086704] __shuffle_zone: swap: 0x86800 -> 0x8c800
-> [    0.086719] __shuffle_zone: swap: 0x87000 -> 0x93000
-> [    0.086735] __shuffle_zone: swap: 0x87800 -> 0x94000
-> [    0.086751] __shuffle_zone: swap: 0x88000 -> 0x90800
-> [    0.086766] __shuffle_zone: swap: 0x88800 -> 0x9d000
-> [    0.086781] __shuffle_zone: swap: 0x89000 -> 0x82800
-> [    0.086796] __shuffle_zone: swap: 0x89800 -> 0x95800
-> [    0.086811] __shuffle_zone: swap: 0x8a000 -> 0x98000
-> [    0.086826] __shuffle_zone: swap: 0x8a800 -> 0x89000
-> [    0.086842] __shuffle_zone: swap: 0x8b000 -> 0x81800
-> [    0.086857] __shuffle_zone: swap: 0x8b800 -> 0x88800
-> [    0.086872] __shuffle_zone: swap: 0x8c000 -> 0x8a000
-> [    0.086891] __shuffle_zone: swap: 0x8c800 -> 0x84800
-> [    0.086906] __shuffle_zone: swap: 0x8d000 -> 0x95000
-> [    0.086921] __shuffle_zone: swap: 0x8d800 -> 0x8d000
-> [    0.086935] __shuffle_zone: swap: 0x8e000 -> 0x8e800
-> [    0.086950] __shuffle_zone: swap: 0x8e800 -> 0x99000
-> [    0.086964] __shuffle_zone: swap: 0x8f000 -> 0x8d000
-> [    0.086979] __shuffle_zone: swap: 0x90000 -> 0x91000
-> [    0.086994] __shuffle_zone: swap: 0x90800 -> 0x83000
-> [    0.087009] __shuffle_zone: swap: 0x91000 -> 0x91800
-> [    0.087025] __shuffle_zone: swap: 0x91800 -> 0x8d800
-> [    0.087040] __shuffle_zone: swap: 0x92000 -> 0x86800
-> [    0.087054] __shuffle_zone: swap: 0x92800 -> 0x92000
-> [    0.087070] __shuffle_zone: swap: 0x93000 -> 0x91000
-> [    0.087088] __shuffle_zone: swap: 0x93800 -> 0x85000
-> [    0.087103] __shuffle_zone: swap: 0x94000 -> 0x8b800
-> [    0.087117] __shuffle_zone: swap: 0x94800 -> 0x96000
-> [    0.087132] __shuffle_zone: swap: 0x95000 -> 0x91000
-> [    0.087147] __shuffle_zone: swap: 0x95800 -> 0x8e000
-> [    0.087161] __shuffle_zone: swap: 0x96000 -> 0x95800
-> [    0.087179] __shuffle_zone: swap: 0x96800 -> 0x8c800
-> [    0.087193] __shuffle_zone: swap: 0x97000 -> 0x89000
-> [    0.087208] __shuffle_zone: swap: 0x97800 -> 0x85000
-> [    0.087224] __shuffle_zone: swap: 0x98000 -> 0x85000
-> [    0.087239] __shuffle_zone: swap: 0x98800 -> 0x93000
-> [    0.087255] __shuffle_zone: swap: 0x99000 -> 0x94800
-> [    0.087269] __shuffle_zone: swap: 0x99800 -> 0x94000
+>=20
+> On Mon, 2019-04-15 at 23:05 +0200, H. Nikolaus Schaller wrote:
+>> Some user spaces (e.g. some Android devices) use /dev/input/event*
+>> for handling
+>> the 3D position of the device with respect to the center of gravity
+>> (earth).
+>> This can be used for gaming input, auto-rotation of screens etc.
+>>=20
+>> This interface should be the standard for such use cases because it
+>> is an abstraction
+>> of how orientation data is acquired from sensor chips. Sensor chips
+>> may be connected
+>> through different interfaces and in different positions. They may
+>> also have different
+>> parameters. And, if a chip is replaced by a different one, the values
+>> reported by
+>> the device position interface should remain the same, provided the
+>> device tree reflects
+>> the changed chip.
+>=20
+> I don't understand this section of the commit message. The IIO drivers
+> are already that abstraction interface, no?
+
+IIO is also some abstraction but a different one than input =
+accelerometers.
+
+IIO reports physical measurement data in some standardized way reporting =
+value,
+scale, units, type of measurement. But this has no inherent purpose.
+
+Accelerator input events are something different. They report the =
+orientation
+of a handheld device in space relative to center of earth. They may be =
+implemented
+through iio drivers but do not need to.
+
+You will find several non-iio accelerometer drivers in =
+drivers/input/misc and
+elsewhere.
+
+>=20
+>> This did initially lead to input accelerometer drivers like
+>> drivers/input/misc/bma150.c
+>> or drivers/misc/lis3lv02d/
+>>=20
+>> But nowadays, new accelerometer chips mostly get iio drivers and
+>> rarely input drivers.
+>>=20
+>> Therefore we need something like a protocol stack which bridges raw
+>> data and input devices.
+>> It can be seen as a similar layering like TCP/IP vs. bare Ethernet.
+>> Or keyboard
+>> input events vs. raw gpio or raw USB access.
+>=20
+> This can be done in user-space, reading the data from the IIO driver,
+> and using uinput to feed it back. Why is doing this at the kernel =
+level
+> better?
+
+Well, I'd estimate that >80% of the current kernel could be done in =
+user-space
+(but not at the same speed/quality).
+
+E.g. TCP could most likely be done by directly accessing the Ethernet =
+layer and
+providing other processes access through named pipes instead of sockets.
+
+But usually a user-space daemon feeding things back into the kernel is =
+slower
+(because it is scheduled differently) and needs more resources for =
+running the
+process and IPC and is less protected against hickups and deadlocks.
+
+Two more aspects come to my mind from reading your project page:
+
+a) "It requires libgudev and systemd"
+b) "Note that a number of kernel bugs will prevent it from working =
+correctly"
+
+a) this makes quite significant assumptions about the user-space while a =
+kernel
+   driver can be kept independent of this
+b) if it is in-kernel it will be kept in sync with kernel changes and =
+such bugs
+   are less likely
+
+>=20
+>> This patch bridges the gap between raw iio data and the input device
+>> abstraction
+>> so that accelerometer measurements can additionally be presented as
+>> X/Y/Z accelerometer
+>> channels (INPUT_PROP_ACCELEROMETER) through /dev/input/event*.
+>>=20
+>> There are no special requirements or changes needed for an iio
+>> driver.
+>=20
+> The user-space daemon I wrote supports both IIO drivers and input
+> drivers for accelerometers. How do I know from user-space whether a
+> device is proxied or not?
+
+Since my proposal does not stop direct iio access, I assume that your
+daemon will simply continue to work as is.
+
+>=20
+>> There is no need to define a mapping (e.g. in device tree).
+>>=20
+>> This driver simply collects the first 3 accelerometer channels as X,
+>> Y and Z.
+>> If only 1 or 2 channels are available, they are used for X and Y
+>> only. Additional
+>> channels are ignored.
+>=20
+> In what cases are 2 dimensional accelerometers used?
+
+I don't know. This is just a description that there will be a graceful
+behavior, if some accelerometer has less or more than 3 channels. So
+the driver will segfault or panic the kernel...
+
+>=20
+>> Scaling is done automatically so that 1g is represented by value 256
+>> and
+>> range is assumed to be -511 .. +511 which gives a reasonable
+>> precision as an
+>> input device.
+>>=20
+>> If a mount-matrix is provided by the iio driver, it is also taken
+>> into account
+>> so that the input event automatically gets the correct orientation
+>> with respect
+>> to the device.
+>>=20
+>> If this extension is not configured into the kernel it takes no
+>> resources (except
+>> source code).
+>>=20
+>> If it is configured, but there is no accelerometer, there is only a
+>> tiny penalty
+>> for scanning for accelerometer channels once during probe of each iio
+>> device.
+>>=20
+>> If it runs, the driver polls the device(s) once every 100 ms. A mode
+>> where the
+>> iio device defines the update rate is not implemented and for further
+>> study.
+>>=20
+>> If there is no user-space client, polling is not running.
+>=20
+> Is the bridge going to modify the IIO device's settings behind other
+> possible consumer's backs, such as threshold values, and triggers?
+
+No. The bridge only transforms values.
+
+For other parameters it takes what the iio device has been initialized =
+to
+Or if they are changed dynamically through the iio API, it uses new =
+parameters.
+
+>=20
+>> The driver is capable to handle multiple iio accelerometers and they
+>> are
+>> presented by unique /dev/input/event* files. The iio chip name is
+>> used to define
+>> the input device name so that it can be identified (e.g. by udev
+>> rules or evtest).
+>=20
+> As you can probably guess, I'm not overly enthusiastic about this =
+piece
+> of code. If it had existed 5 years ago, I probably wouldn't have
+> written iio-sensor-proxy, but then somebody else would have had to for
+> the rest of the IIO sensors that can be consumed.
+
+I have looked into your work and get the impression that my proposal is
+not contradicting your work.
+
+You still need mechanisms to rotate e.g. the display if the device is
+rotated. This is not done by this kernel code.
+
+This is a similar situation that a keyboard driver reports key event
+codes but does not draw glyphs.
+
+The bridge provides a different (and well established) higher-level API
+for accelerometers than iio.
+
+So you may check if it simplifies your code by using this higher-layer =
+interface
+(input event). =46rom my rough check it appears to me that you can for =
+example
+remove the mount-matrix handling from your code because it would be done =
+by
+this bridge.
+
+> To me, this bridge has all the drawbacks of a simple user-space
+> implementation using uinput, without much of the benefits of being an
+> exclusive user of the IIO accelerometers, such as being able to change
+> the update rate, or using triggers depending on the usage.
+>=20
+> What am I missing? Why shouldn't this live in user-space?
+
+That's a pretty biased question...
+
+It's a matter of philosophy whether you want a microkernel + user-space =
+daemons
+or a kernel that prebakes many things to make user-space daemons easier =
+or
+even superfluous.
+
+In the other extreme you could even get rid of iio and directly access =
+the
+sensors through /dev/i2c from user-space daemon.
+
+So I can't give you a technical answer for that and since I am not a
+maintainer I can't answer it at all.
+
+BR and thanks,
+Nikolaus
+
