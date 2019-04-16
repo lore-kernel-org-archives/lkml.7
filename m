@@ -2,110 +2,96 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,UNPARSEABLE_RELAY autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C163C282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 02:18:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 327CCC10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 02:21:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D726204EC
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 02:18:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F119220652
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 02:21:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="egV7tTkp"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="mShZUEjj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726181AbfDPCS6 (ORCPT
+        id S1726275AbfDPCVG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 22:18:58 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40842 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725308AbfDPCS5 (ORCPT
+        Mon, 15 Apr 2019 22:21:06 -0400
+Received: from aserp2130.oracle.com ([141.146.126.79]:35358 "EHLO
+        aserp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725308AbfDPCVF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 22:18:57 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=UCqn4xJsfn6LSF38geTP0GiT3GQOfaOQ+QhzCgzo1co=; b=egV7tTkpiN9UWTV3PXo4mGfLW
-        tbeL71ZPBs4HFrlSAHPfvTx5o1bsD58ovucaD2v+AGmrP7XvuU7izDvOhAY3sqSPXU42U8Gb3pycu
-        wXJ3K6Vbk/xXJ/HQYyn/Gwpw5kM8HAqi3pC7vlMBhzuPKGe5T9e9FP5ZkfxJ25pivvxM5iwZqz9jd
-        ZHZ6gy1YHEIcLju7XgZkwVQMjQCOOBqM9z3F+MXW/gnUI1bRcGIBJr83/OlHMDhbi4wTOaFHLYIRc
-        meSEFn5Bbi+peV/JaPozGSUudMpsq8SkY17MhfLYr+A6jeSyE/r2AzgFz9MxL4aYdkeFilGuP/jN3
-        YBRDv9a/A==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hGDgS-0004Ef-Gw; Tue, 16 Apr 2019 02:18:52 +0000
-Date:   Mon, 15 Apr 2019 19:18:52 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Herbert Xu <herbert@gondor.apana.org.au>
-Cc:     Kees Cook <keescook@chromium.org>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        linux-crypto <linux-crypto@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>, linux-mm@kvack.org
-Subject: Re: [PATCH] crypto: testmgr - allocate buffers with __GFP_COMP
-Message-ID: <20190416021852.GA18616@bombadil.infradead.org>
-References: <20190411192607.GD225654@gmail.com>
- <20190411192827.72551-1-ebiggers@kernel.org>
- <CAGXu5jJ8k7fP5Vb=ygmQ0B45GfrK2PeaV04bPWmcZ6Vb+swgyA@mail.gmail.com>
- <20190415022412.GA29714@bombadil.infradead.org>
- <20190415024615.f765e7oagw26ezam@gondor.apana.org.au>
+        Mon, 15 Apr 2019 22:21:05 -0400
+Received: from pps.filterd (aserp2130.oracle.com [127.0.0.1])
+        by aserp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3G2J2pW127381;
+        Tue, 16 Apr 2019 02:20:58 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=to : cc : subject :
+ from : references : date : in-reply-to : message-id : mime-version :
+ content-type; s=corp-2018-07-02;
+ bh=2VFrU1+5VfifqXMGiGwx+FoOx6doPhBgE/2f6VuZCWE=;
+ b=mShZUEjjPvY8hzYJSK4DtHXoqdSv/gLR0Wi/j/oDg2WNFoZjED3qMFqvpG2jhWjKr0uD
+ sTpE6aGwnqJRjB/iW61lcSnlz6EHzIZtfIGeGJsO99+ipt0RN1WzlKyhZ42KhTXKyn0W
+ NH4WTQufMHlv8mH2z+aFJou8bBqqPQMF2xD0UQAh2pg3ODLoCQsSUxdAXR0i35G0cxy5
+ g2TEl4E3gRu1UynAM8FeL2kNJ8DRmg6R3h3SUvuklQV8+VowV9jAQyI3CS73qelpvo5s
+ ov2+wjEdE32NRx7wUWStlV1nO1hXJDduuyzFlaaJT0YJatKttoZ+zJK4yVq5TD5SMpYM iw== 
+Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
+        by aserp2130.oracle.com with ESMTP id 2ru59d1xtp-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 16 Apr 2019 02:20:58 +0000
+Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
+        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3G2KvW4056429;
+        Tue, 16 Apr 2019 02:20:57 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by userp3030.oracle.com with ESMTP id 2ru4vsx9vb-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 16 Apr 2019 02:20:56 +0000
+Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x3G2KphN017856;
+        Tue, 16 Apr 2019 02:20:51 GMT
+Received: from ca-mkp.ca.oracle.com (/10.159.214.123)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Mon, 15 Apr 2019 19:20:50 -0700
+To:     Yue Haibing <yuehaibing@huawei.com>
+Cc:     <kashyap.desai@broadcom.com>, <sumit.saxena@broadcom.com>,
+        <shivasharan.srikanteshwara@broadcom.com>, <jejb@linux.ibm.com>,
+        <martin.petersen@oracle.com>, <linux-kernel@vger.kernel.org>,
+        <linux-scsi@vger.kernel.org>, <megaraidlinux.pdl@broadcom.com>
+Subject: Re: [PATCH -next] scsi: megaraid_sas: Make megasas_host_device_list_query() static
+From:   "Martin K. Petersen" <martin.petersen@oracle.com>
+Organization: Oracle Corporation
+References: <20190413142138.33336-1-yuehaibing@huawei.com>
+Date:   Mon, 15 Apr 2019 22:20:48 -0400
+In-Reply-To: <20190413142138.33336-1-yuehaibing@huawei.com> (Yue Haibing's
+        message of "Sat, 13 Apr 2019 22:21:38 +0800")
+Message-ID: <yq1wojug073.fsf@oracle.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1.92 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190415024615.f765e7oagw26ezam@gondor.apana.org.au>
-User-Agent: Mutt/1.9.2 (2017-12-15)
+Content-Type: text/plain
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9228 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904160014
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9228 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904160015
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 10:46:15AM +0800, Herbert Xu wrote:
-> On Sun, Apr 14, 2019 at 07:24:12PM -0700, Matthew Wilcox wrote:
-> > On Thu, Apr 11, 2019 at 01:32:32PM -0700, Kees Cook wrote:
-> > > > @@ -156,7 +156,8 @@ static int __testmgr_alloc_buf(char *buf[XBUFSIZE], int order)
-> > > >         int i;
-> > > >
-> > > >         for (i = 0; i < XBUFSIZE; i++) {
-> > > > -               buf[i] = (char *)__get_free_pages(GFP_KERNEL, order);
-> > > > +               buf[i] = (char *)__get_free_pages(GFP_KERNEL | __GFP_COMP,
-> > > > +                                                 order);
-> > > 
-> > > Is there a reason __GFP_COMP isn't automatically included in all page
-> > > allocations? (Or rather, it seems like the exception is when things
-> > > should NOT be considered part of the same allocation, so something
-> > > like __GFP_SINGLE should exist?.)
-> > 
-> > The question is not whether or not things should be considered part of the
-> > same allocation.  The question is whether the allocation is of a compound
-> > page or of N consecutive pages.  Now you're asking what the difference is,
-> > and it's whether you need to be able to be able to call compound_head(),
-> > compound_order(), PageTail() or use a compound_dtor.  If you don't, then
-> > you can save some time at allocation & free by not specifying __GFP_COMP.
-> 
-> Thanks for clarifying Matthew.
-> 
-> Eric, this means that we should not use __GFP_COMP here just to
-> silent what is clearly a broken warning.
 
-I agree; if the crypto code is never going to try to go from the address of
-a byte in the allocation back to the head page, then there's no need to
-specify GFP_COMP.
+Yue,
 
-But that leaves us in the awkward situation where
-HARDENED_USERCOPY_PAGESPAN does need to be able to figure out whether
-'ptr + n - 1' lies within the same allocation as ptr.  Without using
-a compound page, there's no indication in the VM structures that these
-two pages were allocated as part of the same allocation.
+> Fix sparse warning:
+>
+> drivers/scsi/megaraid/megaraid_sas_base.c:4652:1: warning:
+>  symbol 'megasas_host_device_list_query' was not declared. Should it be static?
 
-We could force all multi-page allocations to be compound pages if
-HARDENED_USERCOPY_PAGESPAN is enabled, but I worry that could break
-something.  We could make it catch fewer problems by succeeding if the
-page is not compound.  I don't know, these all seem like bad choices
-to me.
+Applied to 5.2/scsi-queue. Thanks!
+
+-- 
+Martin K. Petersen	Oracle Linux Engineering
