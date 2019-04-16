@@ -6,53 +6,55 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D74E1C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 02:56:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A01BC282DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 02:56:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A51EB2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 02:56:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 491692084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 02:56:38 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555383389;
-	bh=X7TEI2XUO5nXn8BhZ0KveyAJCvK3WrEmqRwAf0x1IDw=;
+	s=default; t=1555383398;
+	bh=6BqLgbp0ViFLOjonMFlu+nsmM5na3d+g5jBMvxA3GBI=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=gqzYg/nDYlDfeHd2Fs5wmfDTfNiuOoRlpxqq7GMxGgJYphPdNp0QQUnEu1/fLaYLm
-	 7VUevK3Kpp4o7R1gzJFAQoHqN0Rvkazu2Yfbsrq9zXfqO5v/gDrCmZ9Ox9M4Ged7n0
-	 fkCm83Du83G23ry4BGPFbavicYPz+xRJSbbCPFfQ=
+	b=2hDp8I+N4y2dUAE+Mz6f26HhsSm+YWfJYiN4v6ErMOEI3o5VF7y4SFioDQ7boq0Z2
+	 tV590wXxfnwSn0SKVawcg4Yd5pjNOLm3qgO0uveAEbpyBqBNi35qLOllUD+l2g44ps
+	 5J4K34JgZRPxwgxu6tQCajIXiNZJHK41JF5pmXF4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726611AbfDPC42 (ORCPT
+        id S1726994AbfDPC4h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 22:56:28 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:43962 "EHLO
+        Mon, 15 Apr 2019 22:56:37 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:43976 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbfDPC42 (ORCPT
+        with ESMTP id S1725796AbfDPC43 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 22:56:28 -0400
+        Mon, 15 Apr 2019 22:56:29 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ACbVHtBxLhrCBDhqA3rheQIYn6ZENVo512ct8LevMBM=; b=Yso8SgFI5QZG/c6ZV9kK5uBCK1
-        6gY0Ehddua/CvdAzc39bxJQEmRM2piyJKMYEjG0oxQWPNoDtNq2CpjDlNe7ZvU+dcHseFLTF5hXtT
-        hP3YcrHFtrdAjmuMQ3YtjcYVvJqKMLEl8EXDAHeho0sRyDnGQDersAswkFaKpAP/57q9u7/FEVJH6
-        Drpk2F3T+ccyPa0pH6ElABoImi/kyuVvF4nyKJ5tmWb9XKHIcYmwz+vMsmRuvmsCFf7WqWvAkf7BO
-        1zSv2Ekgnu8ih0aWu1WpMHpSEAcB3XeBc6eumTCO7/0Tuqrt4HIYFCU/mPKze1InwjY5FudscWHVF
-        Qt7eiO7A==;
+        bh=bMA8GC5+AjUSoe7wkFA4yS0uBjN1cENYUWkXHu91bVo=; b=m5QFNdbfev0PVlMDAtvdKbzjnE
+        LDtsV6DlrobVu03TbwILB6aVTJHv/W0P50KTSHO1JWQNwX92r9rgAakKwQBClzmcvObWujzjjxKnA
+        vAWtdGVN3eNdif3oo+tDmXnymCUm809IFeVVMNouX5o2w6orwiSA/nNEa/LDtk1c+ZvXQ7kICQE4v
+        jpKIwZRfjimvd6hhhLKOjaK7P6yon6k8m0ntit9+rrTn2ONUr24hGw7/CBqV4SadnNr6tYEJUIH8F
+        kLn8R+fF9TGEqPtAyXE0WejGGfAT+qIKGSxIogasD3mPzplObLG0UGySeUMAYJEafF3fc0YWiDXUf
+        xuQtRobA==;
 Received: from 177.205.118.176.dynamic.adsl.gvt.net.br ([177.205.118.176] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hGEGp-0007aM-Sx; Tue, 16 Apr 2019 02:56:27 +0000
+        id 1hGEGp-0007aS-RV; Tue, 16 Apr 2019 02:56:27 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hGEGn-0001lO-2m; Mon, 15 Apr 2019 23:56:25 -0300
+        id 1hGEGn-0001la-5Y; Mon, 15 Apr 2019 23:56:25 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 08/57] docs: cgroup-v1/blkio-controller.rst: add a note about CFQ scheduler
-Date:   Mon, 15 Apr 2019 23:55:33 -0300
-Message-Id: <2551b8c383cbd7f5c730bef8d83d66712c9b2d5b.1555382110.git.mchehab+samsung@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org
+Subject: [PATCH 11/57] docs: extcon: move it to acpi dir and convert it to ReST
+Date:   Mon, 15 Apr 2019 23:55:36 -0300
+Message-Id: <ecd6b6bcbd5831241609f32ddf5ab484da145959.1555382110.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1555382110.git.mchehab+samsung@kernel.org>
 References: <cover.1555382110.git.mchehab+samsung@kernel.org>
@@ -63,51 +65,76 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The CFQ scheduler was removed on this changeset:
+The intel-int3496.txt file is a documentation for an ACPI driver.
 
-  commit f382fb0bcef4c37dc049e9f6963e3baf204d815c
-  Author: Jens Axboe <axboe@kernel.dk>
-  Date:   Fri Oct 12 10:14:46 2018 -0600
+There's no reason to keep it on a separate directory.
 
-    block: remove legacy IO schedulers
+So, instead of keeping it on some random location, move it
+to a sub-directory inside the ACPI documentation dir.
 
-    Retain the deadline documentation, as that carries over to mq-deadline
-    as well.
-
-    Tested-by: Ming Lei <ming.lei@redhat.com>
-    Reviewed-by: Omar Sandoval <osandov@fb.com>
-    Signed-off-by: Jens Axboe <axboe@kernel.dk>
-
-However, the cgroups-v1 documentation still mentions it and points
-to a removed file that used to belong to such scheduler.
-
-Add a note about that, as someone needs to fix the document pointing
-to another scheduler, if cgroups-v1 blockio is not dependent of
-CFQ scheduler.
+For now, keep it with .txt extension, in order to avoid
+Sphinx build noise. A later patch should change it to .rst
+and movin it to be together with other acpi docs.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/cgroup-v1/blkio-controller.txt | 7 +++++++
- 1 file changed, 7 insertions(+)
+ .../drivers/extcon-intel-int3496.txt}              | 14 ++++++++++----
+ MAINTAINERS                                        |  2 +-
+ 2 files changed, 11 insertions(+), 5 deletions(-)
+ rename Documentation/{extcon/intel-int3496.txt => acpi/drivers/extcon-intel-int3496.txt} (66%)
 
-diff --git a/Documentation/cgroup-v1/blkio-controller.txt b/Documentation/cgroup-v1/blkio-controller.txt
-index 2c1b907afc14..2836c2c31e63 100644
---- a/Documentation/cgroup-v1/blkio-controller.txt
-+++ b/Documentation/cgroup-v1/blkio-controller.txt
-@@ -17,6 +17,13 @@ one is throttling policy which can be used to specify upper IO rate limits
- on devices. This policy is implemented in generic block layer and can be
- used on leaf nodes as well as higher level logical devices like device mapper.
+diff --git a/Documentation/extcon/intel-int3496.txt b/Documentation/acpi/drivers/extcon-intel-int3496.txt
+similarity index 66%
+rename from Documentation/extcon/intel-int3496.txt
+rename to Documentation/acpi/drivers/extcon-intel-int3496.txt
+index 8155dbc7fad3..5137ca834b54 100644
+--- a/Documentation/extcon/intel-int3496.txt
++++ b/Documentation/acpi/drivers/extcon-intel-int3496.txt
+@@ -1,5 +1,6 @@
++=====================================================
+ Intel INT3496 ACPI device extcon driver documentation
+------------------------------------------------------
++=====================================================
  
-+.. note::
+ The Intel INT3496 ACPI device extcon driver is a driver for ACPI
+ devices with an acpi-id of INT3496, such as found for example on
+@@ -13,15 +14,20 @@ between an USB host and an USB peripheral controller.
+ The ACPI devices exposes this functionality by returning an array with up
+ to 3 gpio descriptors from its ACPI _CRS (Current Resource Settings) call:
+ 
+-Index 0: The input gpio for the id-pin, this is always present and valid
+-Index 1: The output gpio for enabling Vbus output from the device to the otg
++=======  =====================================================================
++Index 0  The input gpio for the id-pin, this is always present and valid
++Index 1  The output gpio for enabling Vbus output from the device to the otg
+          port, write 1 to enable the Vbus output (this gpio descriptor may
+          be absent or invalid)
+-Index 2: The output gpio for muxing of the data pins between the USB host and
++Index 2  The output gpio for muxing of the data pins between the USB host and
+          the USB peripheral controller, write 1 to mux to the peripheral
+          controller
++=======  =====================================================================
+ 
+ There is a mapping between indices and GPIO connection IDs as follows
 +
-+   While this document mentions the CFQ scheduler, it got removed at
-+   Kernel 4.20, as there are other schedulers that are more efficient.
-+
-+   Someone needs to update this file in order to reflect such change.
-+
- HOWTO
- =====
- Proportional Weight division of bandwidth
++	======= =======
+ 	id	index 0
+ 	vbus	index 1
+ 	mux	index 2
++	======= =======
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 8de292192227..99822421b447 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -5958,7 +5958,7 @@ S:	Maintained
+ F:	drivers/extcon/
+ F:	include/linux/extcon/
+ F:	include/linux/extcon.h
+-F:	Documentation/extcon/
++F:	Documentation/acpi/drivers/extcon-intel-int3496.txt
+ F:	Documentation/devicetree/bindings/extcon/
+ 
+ EXYNOS DP DRIVER
 -- 
 2.20.1
 
