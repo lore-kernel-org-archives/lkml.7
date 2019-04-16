@@ -2,153 +2,284 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+X-Spam-Status: No, score=-5.1 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URG_BIZ autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B10E8C282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:48:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2EAEAC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:49:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 822852075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:48:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HtiwMYst"
+	by mail.kernel.org (Postfix) with ESMTP id CAFF52075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:49:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729393AbfDPUsS (ORCPT
+        id S1729934AbfDPUtc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 16:48:18 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:45302 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727136AbfDPUsR (ORCPT
+        Tue, 16 Apr 2019 16:49:32 -0400
+Received: from gateway34.websitewelcome.com ([192.185.150.107]:21164 "EHLO
+        gateway34.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728000AbfDPUtc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 16:48:17 -0400
-Received: by mail-pg1-f193.google.com with SMTP id y3so10890553pgk.12;
-        Tue, 16 Apr 2019 13:48:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bPUQAgQ+R6PmJiarC6uQozwPmwGhpVf3N2CyetrS5X0=;
-        b=HtiwMYstcKX7egS+8iz1zj+lxFEpEOcRu+tq0cLRJlurgMtvY+hkN+tHhOkBDx13fZ
-         I/y5f7+XGPGcHDgFlirweCAuWfHZlHwCoKJlafqG/KExpQOSGqckh0G/b53i+P5MPPZZ
-         ThEaNiCEE5WitBYXInmVpHxViKNH3h5Nv6+7I9hP7VE7Rw6ekfdPKQbqO32gO3/+ac16
-         W+9ggHBoxeDqKcU8GBqaM4QhV37JZvxUuiCAZWFf40lNHpYvtjFCO4OG9vamyi14Sotw
-         hZzqe56EOfqBqenAQHDya3G7M1Dxl31nFshPkdKEHD2e82AMnNowUcYK9MBLxIUOr/Fb
-         ifIQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bPUQAgQ+R6PmJiarC6uQozwPmwGhpVf3N2CyetrS5X0=;
-        b=E50W8QALul0DuUvSrewCF69QkkL3Ye3M3yoM2mZorifngw922oq6oTkjPauPbtWL64
-         lQHiaUsdQLJ2xKpTqpGGdp9DJv2e1Xev8LG6fR3GQXfyDGDRa4UU8ltBUFTDP6FGA5zL
-         4a5dUnyHzAjthoGvX2tIgWTrcV/jMyL5KauUqiNc53hFlzS/LIwQXGGvQzPZzmmxJU33
-         EzDegF5O7HVMrqH6DkWkRZhIv+5wlb/PmmglVNDFdej9fKlqwtNqb0GN3kGR6makeza2
-         TwCzqB/M+7xfT3vEs05SmDGQHUjPGBx3oPr4u0eId2syBykA4U94+LNJ5Q0eQrnRQ4Dl
-         DqBA==
-X-Gm-Message-State: APjAAAWLkmUrcALRBRUPTFXBqASyjFqVVS52vkMuPz8tTr32fMnzLF/R
-        5YjVye7RxWtm834uRpJPp5csfqpi
-X-Google-Smtp-Source: APXvYqz1bL7uIcfqj8he/AxkJWqYNkZe/yuNEqjxcsZZ3BXL3yBXjHWozHifgIFqeqY79BI3dxEQGA==
-X-Received: by 2002:a63:f44:: with SMTP id 4mr74566124pgp.324.1555447695919;
-        Tue, 16 Apr 2019 13:48:15 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id b26sm87234639pgn.4.2019.04.16.13.48.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 13:48:15 -0700 (PDT)
-Date:   Tue, 16 Apr 2019 13:48:14 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Jerry Hoemann <jerry.hoemann@hpe.com>
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-watchdog@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v2 06/16] watchdog: hpwdt: drop warning after calling
- watchdog_init_timeout
-Message-ID: <20190416204814.GA26442@roeck-us.net>
-References: <20190416102515.12269-1-wsa+renesas@sang-engineering.com>
- <20190416102515.12269-7-wsa+renesas@sang-engineering.com>
- <20190416203431.GA20072@anatevka>
+        Tue, 16 Apr 2019 16:49:32 -0400
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway34.websitewelcome.com (Postfix) with ESMTP id 76BB13E3CF4
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 15:49:30 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id GV1GhdLjViQerGV1GhLodR; Tue, 16 Apr 2019 15:49:30 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.55.242] (port=42122 helo=[192.168.43.131])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hGV1F-002k31-Mr; Tue, 16 Apr 2019 15:49:30 -0500
+To:     Miquel Raynal <miquel.raynal@bootlin.com>
+Cc:     David Woodhouse <dwmw2@infradead.org>,
+        Brian Norris <computersforpeace@gmail.com>,
+        Boris Brezillon <bbrezillon@kernel.org>,
+        Marek Vasut <marek.vasut@gmail.com>,
+        Richard Weinberger <richard@nod.at>,
+        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>
+References: <20190208180202.GA16603@embeddedor>
+ <69083203-0720-1943-8549-ddf3cea6060e@embeddedor.com>
+ <71df15e7-af2e-0326-78fe-0271a1e240fe@embeddedor.com>
+ <20190415104458.7faeec57@xps13>
+ <ee1f8c4a-92b0-db9d-6110-3acadeb9e457@embeddedor.com>
+ <20190416192408.0e321563@xps13>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Subject: Re: [PATCH] mtd: cfi_util: mark expected switch fall-throughs
+Message-ID: <8df20a3a-3068-1fb7-0421-e6c417550125@embeddedor.com>
+Date:   Tue, 16 Apr 2019 15:49:20 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190416203431.GA20072@anatevka>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190416192408.0e321563@xps13>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.55.242
+X-Source-L: No
+X-Exim-ID: 1hGV1F-002k31-Mr
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.131]) [189.250.55.242]:42122
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 8
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 02:34:31PM -0600, Jerry Hoemann wrote:
-> On Tue, Apr 16, 2019 at 12:25:05PM +0200, Wolfram Sang wrote:
-> > The core will print out details now.
-> > 
-> > Reviewed-by: Guenter Roeck <linux@roeck-us.net>
-> > Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> > ---
-> >  drivers/watchdog/hpwdt.c | 3 +--
-> >  1 file changed, 1 insertion(+), 2 deletions(-)
-> > 
-> > diff --git a/drivers/watchdog/hpwdt.c b/drivers/watchdog/hpwdt.c
-> > index ef30c7e9728d..db1bf6f546ae 100644
-> > --- a/drivers/watchdog/hpwdt.c
-> > +++ b/drivers/watchdog/hpwdt.c
-> > @@ -311,8 +311,7 @@ static int hpwdt_init_one(struct pci_dev *dev,
-> >  		goto error_init_nmi_decoding;
-> >  
-> >  	watchdog_set_nowayout(&hpwdt_dev, nowayout);
-> > -	if (watchdog_init_timeout(&hpwdt_dev, soft_margin, NULL))
-> > -		dev_warn(&dev->dev, "Invalid soft_margin: %d.\n", soft_margin);
-> > +	watchdog_init_timeout(&hpwdt_dev, soft_margin, NULL);
-> 
-> I applied patches 1,2 & 6 in testing.
-> 
-> Note, that hpwdt is passing NULL as the third parameter to watchdog_init_timeout().
-> 
-> The second patch in this series is using "dev" as input to dev_err and dev_warn.
-> 
-> This results in the following in dmesg when trying to load hpwdt w/ an invalid soft_margin:
-> 
-> 
-> [   80.848160] (NULL device *): driver supplied timeout (4294967295) out of range
-> [   80.855429] (NULL device *): falling back to default timeout (30)
-> 
-Good find. Thanks a lot for testing!
+Hi Miquel,
 
-We'll have to address this. Wolfram - it looks like we'll need
-separate error message handling for situations where dev is NULL.
-We may have to leave it up to the parent after all to display
-a message in that case (since we do want to see the driver name).
+On 4/16/19 12:24 PM, Miquel Raynal wrote:
+> Hi Gustavo,
+> 
+> "Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote on Mon, 15 Apr
+> 2019 07:57:11 -0500:
+> 
+>> Hi Miquel,
+>>
+>> On 4/15/19 3:44 AM, Miquel Raynal wrote:
+>>> Hi Gustavo,
+>>>
+>>> "Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote on Wed, 10 Apr
+>>> 2019 16:16:51 -0500:
+>>>   
+>>>> Hi all,
+>>>>
+>>>> If no one cares I'll add this to my tree for 5.2.  
+>>>
+>>> Which tree are you talking about?
+>>>   
+>>
+>> This one:
+>>
+>> https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git/log/?h=for-next/kspp
+>>
+>>> Please let the MTD maintainers take patches through their tree. We
+>>> might be late but this is definitely not a good reason to bypass us.
+>>>   
+>> It's a bit confusing when patches are being ignored for more than two
+>> months:
+>>
+>> https://lore.kernel.org/patchwork/patch/1040099/
+>> https://lore.kernel.org/patchwork/patch/1040100/
+>> https://lore.kernel.org/patchwork/patch/1040098/
+>>
+> 
+> Patches posted at -rc6 right before the last release? Come on! Gustavo,
+> we always spend more time for you than for other contributors because we
+> do not trust your changes. We could apply them blindly but we don't do
+> that for other (worthy) contributions, so why shall we do it for you?
+> 
 
-> 
-> if the call in hpwdt driver is changed to:
-> 
-> 	if (watchdog_init_timeout(&hpwdt_dev, soft_margin, &dev->dev))
-> 
-> 
-> We see the message like we'd desire:
-> 
-> [ 2061.167100] hpwdt 0000:01:00.0: driver supplied timeout (4294967295) out of range
-> [ 2061.174633] hpwdt 0000:01:00.0: falling back to default timeout (30)
-> 
-> 
-> 
-> watchdog_init_timeout() uses dev to "try to get the timeout_sec property"
-> 
-> I am not familiar with this part of the core and what effect having the hpwdt
-> driver pass in dev to watchdog_init_timeout would have.  (I.e. is the
-> change safe?)
-> 
-Yes, in general it is safe. watchdog_init_timeout() only uses dev to extract
-a timeout value from devicetree (and now to display error messages).
+Oh, I didn't know about that. You don't have to blindly trust me.
+I sincerely think people should always double check any changes,
+regardless of their level of trust in a particular person/entity.
 
-> Guenter, can you help on this question?
-> 
-> Note, hpwdt isn't the only watch dog device that is passing NULL to
-> watchdog_init_timeout.
-> 
-That is indeed a problem: the pointer will be NULL if there is no parent
-device (such as in softdog.c). Otherwise it should never be NULL.
+Anyway, I really appreciate your sincerity because now I think we can
+come up with a good strategy to collaborate with each other smoothly.
 
-Thanks,
-Guenter
+It seems to me that the root cause for this lack of trust, and, maybe
+even despite towards these type of patches, is basically misunderstanding
+of what I'm trying to accomplish and, more importantly, how I do it.
+
+> I think you could at least flag these changes as "automatic and
+> unverified" in the commit log so that when git blaming, people could
+> know that the additional explicit /* fallthrough */ comment might be
+> wrong and was just added in order to limit the number of warnings when
+> enabling the extra GCC warning.
+> 
+
+I don't do that because that's not how I'm tackling this task.
+
+I'm not sending these patches with the intention of merely accumulate
+contributions --and I'm not saying you say so, this is just for
+clarification-- or because of a lack of more technically interesting
+things to do in the kernel --this is certainly not the only thing I'm
+working on.  What I'm trying to accomplish is to be able to add
+-Wimplicit-fallthrough to the build so that the kernel will stay
+entirely free of this class of bug going forward; is that simple. Now,
+why is that? because sometimes people forget to place a break/return
+and a bug is introduced, and it could take up to 7 years to fix it [1].
+
+Now, I really try to determine if I'm dealing with a false positive or
+an actual bug every time. I read the code and try to understand the
+context around which each warning is reported. You can tell it's not
+the most sexy and glamorous thing. And a static analyzer is clearly not
+sophisticated enough to spot actual bugs in this situation, not even
+the Coccinelle tool.
+
+I had a similar conversation with a wireless maintainer a while ago. He
+claimed I was not even looking at the code and that I was blindly using
+a transformation tool [2]. Please, take a look at it, so you can better
+understand my workflow.
+
+I have gone through this process of reading code all over the tree and
+trying to understand it hundreds of times; there were more than 2000 of
+these warnings at the time I started working on this, and there are are
+around 50 left in linux-next.  Of course, the vast majority of cases have
+resulted to be obvious false positives, but it's me who have determined
+that, by auditing each case, so I haven't blindly placed any fall-through
+comment.
+
+Now, have I made any mistake? Of course! but I have also amended it
+immediately [3][4]. And the number of bugs I have fixed while working
+on this task is much bigger.  A clear example of how hard this can be is
+documented in this thread, in which you, being an MTD maintainer, cannot
+clearly determine if this is a false positive or an actual bug [5]. It
+can be troublesome for you for a number of reasons --I'm not judging that.
+I'm trying to illustrate the magnitude of the task as a whole.
+
+So, this patches together with the related bugfixes are part of that
+whole. And, although sometimes painful for everyone, that whole is
+what's important, and worth it.
+
+>> Certainly, Richard Weinberger replied to this one. But I couldn't
+>> find a tree to which this patch was applied, in case it actually
+>> was.
+>>
+>> It's a common practice for maintainers to reply saying that a patch
+>> has been finally applied, and in most cases they also explicitly
+>> mention the tree and branch to which it was applied. All this info
+>> is really helpful for people working all over the tree.
+> 
+> It is common practice for contributors to understand what they
+> are doing before submitting a change and this is something that you
+> clearly don't try to do.
+> 
+
+This is too much to say, and sadly, it's not uncommon for even the most
+senior people to assume others don't even make an effort to think through
+their work, before at least asking. But I have already explained myself
+above.
+
+Regarding this:
+
+> Patches posted at -rc6 right before the last release? Come on! Gustavo,
+
+I don't expect people to send an urgent pull-request to merge this
+patches into mainline as soon as they arrive, and I have never requested
+such thing.
+
+Lastly, what I really want we *all* get out of this conversation is a
+better way to collaborate with each other.  For me, and I guess for most
+contributors, it's good enough to have a confirmation that the accepted
+patch has been applied to a certain branch in a certain tree. I understand
+this may sound like an special request, in particular because, currently,
+the number of people working all over the tree is not that big, so it
+is not that critical for maintainers to adopt certain practices that
+benefits this small group of contributors, but thanks to recent initiatives
+as The Linux Kernel Mentorship project I think this is going to change and
+it will force us all to evolve in the right direction.
+
+By the way, notice that these are the last patches for MTD. :)
+
+Thank you
+--
+Gustavo
+
+References:
+
+[1] https://lore.kernel.org/patchwork/patch/1042976/
+[2] https://lore.kernel.org/patchwork/patch/1002568/
+[3] https://lore.kernel.org/patchwork/patch/970617/
+[4] https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?h=v5.1-rc5&id=ad0eaee6195db1db1749dd46b9e6f4466793d178
+[5] https://lore.kernel.org/patchwork/patch/1036251/
+
+
+
