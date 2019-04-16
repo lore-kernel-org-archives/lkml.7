@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D72C7C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:46:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 761E4C282DD
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:46:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9D274222AE
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:46:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3A68C222B7
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:46:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729478AbfDPNqs (ORCPT
+        id S1729504AbfDPNqx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 09:46:48 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54072 "EHLO
+        Tue, 16 Apr 2019 09:46:53 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53410 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726641AbfDPNqr (ORCPT
+        by vger.kernel.org with ESMTP id S1729489AbfDPNqv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 09:46:47 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3GDkSdw022204
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:46:46 -0400
-Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rwe8rwbwm-1
+        Tue, 16 Apr 2019 09:46:51 -0400
+Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3GDkSZZ132311
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:46:50 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rwdd2qvhm-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:46:45 -0400
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:46:44 -0400
 Received: from localhost
-        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <ldufour@linux.ibm.com>;
-        Tue, 16 Apr 2019 14:46:36 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Tue, 16 Apr 2019 14:46:01 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 16 Apr 2019 14:46:26 +0100
+        Tue, 16 Apr 2019 14:45:51 +0100
 Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3GDkPQA33620156
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3GDjneJ48103450
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 Apr 2019 13:46:25 GMT
+        Tue, 16 Apr 2019 13:45:49 GMT
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 19B424C040;
-        Tue, 16 Apr 2019 13:46:25 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 5AF6A4C05A;
+        Tue, 16 Apr 2019 13:45:49 +0000 (GMT)
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id A7D134C046;
-        Tue, 16 Apr 2019 13:46:23 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id DE2934C059;
+        Tue, 16 Apr 2019 13:45:47 +0000 (GMT)
 Received: from nimbus.lab.toulouse-stg.fr.ibm.com (unknown [9.101.4.33])
         by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 16 Apr 2019 13:46:23 +0000 (GMT)
+        Tue, 16 Apr 2019 13:45:47 +0000 (GMT)
 From:   Laurent Dufour <ldufour@linux.ibm.com>
 To:     akpm@linux-foundation.org, mhocko@kernel.org, peterz@infradead.org,
         kirill@shutemov.name, ak@linux.intel.com, dave@stgolabs.net,
@@ -78,223 +78,224 @@ Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         haren@linux.vnet.ibm.com, npiggin@gmail.com,
         paulmck@linux.vnet.ibm.com, Tim Chen <tim.c.chen@linux.intel.com>,
         linuxppc-dev@lists.ozlabs.org, x86@kernel.org
-Subject: [PATCH v12 21/31] mm: Introduce find_vma_rcu()
-Date:   Tue, 16 Apr 2019 15:45:12 +0200
+Subject: [PATCH v12 09/31] mm: VMA sequence count
+Date:   Tue, 16 Apr 2019 15:45:00 +0200
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190416134522.17540-1-ldufour@linux.ibm.com>
 References: <20190416134522.17540-1-ldufour@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19041613-4275-0000-0000-000003287656
+x-cbid: 19041613-0012-0000-0000-0000030F6EFB
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19041613-4276-0000-0000-00003837A75D
-Message-Id: <20190416134522.17540-22-ldufour@linux.ibm.com>
+x-cbparentid: 19041613-0013-0000-0000-00002147A858
+Message-Id: <20190416134522.17540-10-ldufour@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-16_05:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=961 adultscore=0 classifier=spam adjust=0 reason=mlx
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1810050000 definitions=main-1904160093
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows to search for a VMA structure without holding the mmap_sem.
+From: Peter Zijlstra <peterz@infradead.org>
 
-The search is repeated while the mm seqlock is changing and until we found
-a valid VMA.
+Wrap the VMA modifications (vma_adjust/unmap_page_range) with sequence
+counts such that we can easily test if a VMA is changed.
 
-While under the RCU protection, a reference is taken on the VMA, so the
-caller must call put_vma() once it not more need the VMA structure.
+The calls to vm_write_begin/end() in unmap_page_range() are
+used to detect when a VMA is being unmap and thus that new page fault
+should not be satisfied for this VMA. If the seqcount hasn't changed when
+the page table are locked, this means we are safe to satisfy the page
+fault.
 
-At the time a VMA is inserted in the MM RB tree, in vma_rb_insert(), a
-reference is taken to the VMA by calling get_vma().
+The flip side is that we cannot distinguish between a vma_adjust() and
+the unmap_page_range() -- where with the former we could have
+re-checked the vma bounds against the address.
 
-When removing a VMA from the MM RB tree, the VMA is not release immediately
-but at the end of the RCU grace period through vm_rcu_put(). This ensures
-that the VMA remains allocated until the end the RCU grace period.
+The VMA's sequence counter is also used to detect change to various VMA's
+fields used during the page fault handling, such as:
+ - vm_start, vm_end
+ - vm_pgoff
+ - vm_flags, vm_page_prot
+ - anon_vma
+ - vm_policy
 
-Since the vm_file pointer, if valid, is released in put_vma(), there is no
-guarantee that the file pointer will be valid on the returned VMA.
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 
+[Port to 4.12 kernel]
+[Build depends on CONFIG_SPECULATIVE_PAGE_FAULT]
+[Introduce vm_write_* inline function depending on
+ CONFIG_SPECULATIVE_PAGE_FAULT]
+[Fix lock dependency between mapping->i_mmap_rwsem and vma->vm_sequence by
+ using vm_raw_write* functions]
+[Fix a lock dependency warning in mmap_region() when entering the error
+ path]
+[move sequence initialisation INIT_VMA()]
+[Review the patch description about unmap_page_range()]
 Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
 ---
- include/linux/mm_types.h |  1 +
- mm/internal.h            |  5 ++-
- mm/mmap.c                | 76 ++++++++++++++++++++++++++++++++++++++--
- 3 files changed, 78 insertions(+), 4 deletions(-)
+ include/linux/mm.h       | 44 ++++++++++++++++++++++++++++++++++++++++
+ include/linux/mm_types.h |  3 +++
+ mm/memory.c              |  2 ++
+ mm/mmap.c                | 30 +++++++++++++++++++++++++++
+ 4 files changed, 79 insertions(+)
 
+diff --git a/include/linux/mm.h b/include/linux/mm.h
+index 2ceb1d2869a6..906b9e06f18e 100644
+--- a/include/linux/mm.h
++++ b/include/linux/mm.h
+@@ -1410,6 +1410,9 @@ struct zap_details {
+ static inline void INIT_VMA(struct vm_area_struct *vma)
+ {
+ 	INIT_LIST_HEAD(&vma->anon_vma_chain);
++#ifdef CONFIG_SPECULATIVE_PAGE_FAULT
++	seqcount_init(&vma->vm_sequence);
++#endif
+ }
+ 
+ struct page *_vm_normal_page(struct vm_area_struct *vma, unsigned long addr,
+@@ -1534,6 +1537,47 @@ static inline void unmap_shared_mapping_range(struct address_space *mapping,
+ 	unmap_mapping_range(mapping, holebegin, holelen, 0);
+ }
+ 
++#ifdef CONFIG_SPECULATIVE_PAGE_FAULT
++static inline void vm_write_begin(struct vm_area_struct *vma)
++{
++	write_seqcount_begin(&vma->vm_sequence);
++}
++static inline void vm_write_begin_nested(struct vm_area_struct *vma,
++					 int subclass)
++{
++	write_seqcount_begin_nested(&vma->vm_sequence, subclass);
++}
++static inline void vm_write_end(struct vm_area_struct *vma)
++{
++	write_seqcount_end(&vma->vm_sequence);
++}
++static inline void vm_raw_write_begin(struct vm_area_struct *vma)
++{
++	raw_write_seqcount_begin(&vma->vm_sequence);
++}
++static inline void vm_raw_write_end(struct vm_area_struct *vma)
++{
++	raw_write_seqcount_end(&vma->vm_sequence);
++}
++#else
++static inline void vm_write_begin(struct vm_area_struct *vma)
++{
++}
++static inline void vm_write_begin_nested(struct vm_area_struct *vma,
++					 int subclass)
++{
++}
++static inline void vm_write_end(struct vm_area_struct *vma)
++{
++}
++static inline void vm_raw_write_begin(struct vm_area_struct *vma)
++{
++}
++static inline void vm_raw_write_end(struct vm_area_struct *vma)
++{
++}
++#endif /* CONFIG_SPECULATIVE_PAGE_FAULT */
++
+ extern int access_process_vm(struct task_struct *tsk, unsigned long addr,
+ 		void *buf, int len, unsigned int gup_flags);
+ extern int access_remote_vm(struct mm_struct *mm, unsigned long addr,
 diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 6a6159e11a3f..9af6694cb95d 100644
+index fd7d38ee2e33..e78f72eb2576 100644
 --- a/include/linux/mm_types.h
 +++ b/include/linux/mm_types.h
-@@ -287,6 +287,7 @@ struct vm_area_struct {
- 
- #ifdef CONFIG_SPECULATIVE_PAGE_FAULT
- 	atomic_t vm_ref_count;
-+	struct rcu_head vm_rcu;
+@@ -337,6 +337,9 @@ struct vm_area_struct {
+ 	struct mempolicy *vm_policy;	/* NUMA policy for the VMA */
  #endif
- 	struct rb_node vm_rb;
+ 	struct vm_userfaultfd_ctx vm_userfaultfd_ctx;
++#ifdef CONFIG_SPECULATIVE_PAGE_FAULT
++	seqcount_t vm_sequence;
++#endif
+ } __randomize_layout;
  
-diff --git a/mm/internal.h b/mm/internal.h
-index 302382bed406..1e368e4afe3c 100644
---- a/mm/internal.h
-+++ b/mm/internal.h
-@@ -55,7 +55,10 @@ static inline void put_vma(struct vm_area_struct *vma)
- 		__free_vma(vma);
+ struct core_thread {
+diff --git a/mm/memory.c b/mm/memory.c
+index d5bebca47d98..423fa8ea0569 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -1256,6 +1256,7 @@ void unmap_page_range(struct mmu_gather *tlb,
+ 	unsigned long next;
+ 
+ 	BUG_ON(addr >= end);
++	vm_write_begin(vma);
+ 	tlb_start_vma(tlb, vma);
+ 	pgd = pgd_offset(vma->vm_mm, addr);
+ 	do {
+@@ -1265,6 +1266,7 @@ void unmap_page_range(struct mmu_gather *tlb,
+ 		next = zap_p4d_range(tlb, vma, pgd, addr, next, details);
+ 	} while (pgd++, addr = next, addr != end);
+ 	tlb_end_vma(tlb, vma);
++	vm_write_end(vma);
  }
  
--#else
-+extern struct vm_area_struct *find_vma_rcu(struct mm_struct *mm,
-+					   unsigned long addr);
-+
-+#else /* CONFIG_SPECULATIVE_PAGE_FAULT */
  
- static inline void get_vma(struct vm_area_struct *vma)
- {
 diff --git a/mm/mmap.c b/mm/mmap.c
-index c106440dcae7..34bf261dc2c8 100644
+index 5ad3a3228d76..a4e4d52a5148 100644
 --- a/mm/mmap.c
 +++ b/mm/mmap.c
-@@ -179,6 +179,18 @@ static inline void mm_write_sequnlock(struct mm_struct *mm)
- {
- 	write_sequnlock(&mm->mm_seq);
- }
-+
-+static void __vm_rcu_put(struct rcu_head *head)
-+{
-+	struct vm_area_struct *vma = container_of(head, struct vm_area_struct,
-+						  vm_rcu);
-+	put_vma(vma);
-+}
-+static void vm_rcu_put(struct vm_area_struct *vma)
-+{
-+	VM_BUG_ON_VMA(!RB_EMPTY_NODE(&vma->vm_rb), vma);
-+	call_rcu(&vma->vm_rcu, __vm_rcu_put);
-+}
- #else
- static inline void mm_write_seqlock(struct mm_struct *mm)
- {
-@@ -190,6 +202,8 @@ static inline void mm_write_sequnlock(struct mm_struct *mm)
+@@ -726,6 +726,30 @@ int __vma_adjust(struct vm_area_struct *vma, unsigned long start,
+ 	long adjust_next = 0;
+ 	int remove_next = 0;
  
- void __free_vma(struct vm_area_struct *vma)
- {
-+	if (IS_ENABLED(CONFIG_SPECULATIVE_PAGE_FAULT))
-+		VM_BUG_ON_VMA(!RB_EMPTY_NODE(&vma->vm_rb), vma);
- 	mpol_put(vma_policy(vma));
- 	vm_area_free(vma);
- }
-@@ -197,11 +211,24 @@ void __free_vma(struct vm_area_struct *vma)
- /*
-  * Close a vm structure and free it, returning the next.
-  */
--static struct vm_area_struct *remove_vma(struct vm_area_struct *vma)
-+static struct vm_area_struct *__remove_vma(struct vm_area_struct *vma)
- {
- 	struct vm_area_struct *next = vma->vm_next;
- 
- 	might_sleep();
-+	if (IS_ENABLED(CONFIG_SPECULATIVE_PAGE_FAULT) &&
-+	    !RB_EMPTY_NODE(&vma->vm_rb)) {
-+		/*
-+		 * If the VMA is still linked in the RB tree, we must release
-+		 * that reference by calling put_vma().
-+		 * This should only happen when called from exit_mmap().
-+		 * We forcely clear the node to satisfy the chec in
-+		 * __free_vma(). This is safe since the RB tree is not walked
-+		 * anymore.
-+		 */
-+		RB_CLEAR_NODE(&vma->vm_rb);
-+		put_vma(vma);
-+	}
- 	if (vma->vm_ops && vma->vm_ops->close)
- 		vma->vm_ops->close(vma);
- 	if (vma->vm_file)
-@@ -211,6 +238,13 @@ static struct vm_area_struct *remove_vma(struct vm_area_struct *vma)
- 	return next;
- }
- 
-+static struct vm_area_struct *remove_vma(struct vm_area_struct *vma)
-+{
-+	if (IS_ENABLED(CONFIG_SPECULATIVE_PAGE_FAULT))
-+		VM_BUG_ON_VMA(!RB_EMPTY_NODE(&vma->vm_rb), vma);
-+	return __remove_vma(vma);
-+}
-+
- static int do_brk_flags(unsigned long addr, unsigned long request, unsigned long flags,
- 		struct list_head *uf);
- SYSCALL_DEFINE1(brk, unsigned long, brk)
-@@ -475,7 +509,7 @@ static inline void vma_rb_insert(struct vm_area_struct *vma,
- 
- 	/* All rb_subtree_gap values must be consistent prior to insertion */
- 	validate_mm_rb(root, NULL);
--
-+	get_vma(vma);
- 	rb_insert_augmented(&vma->vm_rb, root, &vma_gap_callbacks);
- }
- 
-@@ -491,6 +525,14 @@ static void __vma_rb_erase(struct vm_area_struct *vma, struct mm_struct *mm)
- 	mm_write_seqlock(mm);
- 	rb_erase_augmented(&vma->vm_rb, root, &vma_gap_callbacks);
- 	mm_write_sequnlock(mm);	/* wmb */
-+#ifdef CONFIG_SPECULATIVE_PAGE_FAULT
 +	/*
-+	 * Ensure the removal is complete before clearing the node.
-+	 * Matched by vma_has_changed()/handle_speculative_fault().
++	 * Why using vm_raw_write*() functions here to avoid lockdep's warning ?
++	 *
++	 * Locked is complaining about a theoretical lock dependency, involving
++	 * 3 locks:
++	 *   mapping->i_mmap_rwsem --> vma->vm_sequence --> fs_reclaim
++	 *
++	 * Here are the major path leading to this dependency :
++	 *  1. __vma_adjust() mmap_sem  -> vm_sequence -> i_mmap_rwsem
++	 *  2. move_vmap() mmap_sem -> vm_sequence -> fs_reclaim
++	 *  3. __alloc_pages_nodemask() fs_reclaim -> i_mmap_rwsem
++	 *  4. unmap_mapping_range() i_mmap_rwsem -> vm_sequence
++	 *
++	 * So there is no way to solve this easily, especially because in
++	 * unmap_mapping_range() the i_mmap_rwsem is grab while the impacted
++	 * VMAs are not yet known.
++	 * However, the way the vm_seq is used is guarantying that we will
++	 * never block on it since we just check for its value and never wait
++	 * for it to move, see vma_has_changed() and handle_speculative_fault().
 +	 */
-+	RB_CLEAR_NODE(&vma->vm_rb);
-+	vm_rcu_put(vma);
-+#endif
- }
++	vm_raw_write_begin(vma);
++	if (next)
++		vm_raw_write_begin(next);
++
+ 	if (next && !insert) {
+ 		struct vm_area_struct *exporter = NULL, *importer = NULL;
  
- static __always_inline void vma_rb_erase_ignore(struct vm_area_struct *vma,
-@@ -2331,6 +2373,34 @@ struct vm_area_struct *find_vma(struct mm_struct *mm, unsigned long addr)
+@@ -950,6 +974,8 @@ int __vma_adjust(struct vm_area_struct *vma, unsigned long start,
+ 			 * "vma->vm_next" gap must be updated.
+ 			 */
+ 			next = vma->vm_next;
++			if (next)
++				vm_raw_write_begin(next);
+ 		} else {
+ 			/*
+ 			 * For the scope of the comment "next" and
+@@ -996,6 +1022,10 @@ int __vma_adjust(struct vm_area_struct *vma, unsigned long start,
+ 	if (insert && file)
+ 		uprobe_mmap(insert);
  
- EXPORT_SYMBOL(find_vma);
++	if (next && next != vma)
++		vm_raw_write_end(next);
++	vm_raw_write_end(vma);
++
+ 	validate_mm(mm);
  
-+#ifdef CONFIG_SPECULATIVE_PAGE_FAULT
-+/*
-+ * Like find_vma() but under the protection of RCU and the mm sequence counter.
-+ * The vma returned has to be relaesed by the caller through the call to
-+ * put_vma()
-+ */
-+struct vm_area_struct *find_vma_rcu(struct mm_struct *mm, unsigned long addr)
-+{
-+	struct vm_area_struct *vma = NULL;
-+	unsigned int seq;
-+
-+	do {
-+		if (vma)
-+			put_vma(vma);
-+
-+		seq = read_seqbegin(&mm->mm_seq);
-+
-+		rcu_read_lock();
-+		vma = find_vma(mm, addr);
-+		if (vma)
-+			get_vma(vma);
-+		rcu_read_unlock();
-+	} while (read_seqretry(&mm->mm_seq, seq));
-+
-+	return vma;
-+}
-+#endif
-+
- /*
-  * Same as find_vma, but also return a pointer to the previous VMA in *pprev.
-  */
-@@ -3231,7 +3301,7 @@ void exit_mmap(struct mm_struct *mm)
- 	while (vma) {
- 		if (vma->vm_flags & VM_ACCOUNT)
- 			nr_accounted += vma_pages(vma);
--		vma = remove_vma(vma);
-+		vma = __remove_vma(vma);
- 	}
- 	vm_unacct_memory(nr_accounted);
- }
+ 	return 0;
 -- 
 2.21.0
 
