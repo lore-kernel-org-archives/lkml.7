@@ -2,263 +2,152 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E973C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:51:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 784E9C282DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:51:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6D24620868
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:51:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4A25420684
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:51:56 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555447916;
+	bh=kBcrF9neRSWS6nM9tksG/1DcGAum+/LO2r2bCCps/rs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=OF0IRIhdQtaokcFfn1aikssAuwj6vxalNTCRmYJPkdowJJ1av/cPKoai+c4umsJ1s
+	 FDhBiSMofuhuhoCKEBjfEwC8MqolkSKtLZGr5Km/RoYgG++AG8EF7Lev1+Uf1Vrpuo
+	 nof+pRnhu5++89hBUeziswIRsd10igKdjRxf2JBU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729690AbfDPUvZ (ORCPT
+        id S1730325AbfDPUvz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 16:51:25 -0400
-Received: from mga09.intel.com ([134.134.136.24]:52816 "EHLO mga09.intel.com"
+        Tue, 16 Apr 2019 16:51:55 -0400
+Received: from mail.kernel.org ([198.145.29.99]:50336 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728405AbfDPUvY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 16:51:24 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga002.jf.intel.com ([10.7.209.21])
-  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Apr 2019 13:51:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,359,1549958400"; 
-   d="scan'208";a="151438904"
-Received: from xshen14-mobl.ccr.corp.intel.com (HELO [10.254.213.238]) ([10.254.213.238])
-  by orsmga002.jf.intel.com with ESMTP; 16 Apr 2019 13:51:19 -0700
-Subject: Re: [PATCH 2/2] x86/resctrl: Initialize new resource group with
- default MBA values
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
-        tony.luck@intel.com, fenghua.yu@intel.com,
-        reinette.chatre@intel.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, pei.p.jia@intel.com,
-        xiaochen.shen@intel.com
-References: <1554839728-5544-1-git-send-email-xiaochen.shen@intel.com>
- <20190415113405.GC29317@zn.tnic>
-From:   Xiaochen Shen <xiaochen.shen@intel.com>
-Message-ID: <9e99ed5f-d60a-717c-9322-c6f0b8090d6b@intel.com>
-Date:   Wed, 17 Apr 2019 04:51:18 +0800
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:52.0) Gecko/20100101
- Thunderbird/52.8.0
+        id S1728405AbfDPUvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 16:51:54 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9054520684;
+        Tue, 16 Apr 2019 20:51:53 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555447913;
+        bh=kBcrF9neRSWS6nM9tksG/1DcGAum+/LO2r2bCCps/rs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=GjbRAlqmFkRcwj0VfnT3QWcNVLPrZwo8ZeKgNeX7rwL2Yum7gQ7F5s2djZX0F7cn5
+         HMTAygLxGrY9HqtfNvkSgVaOfGkFSSvymucxse3Z6J/C+T0ecdgHI7DkiUGFPuNFKg
+         mw3tDPhXrq+3URzkc6fF2L35R/MLRRTcQz14VbiY=
+Date:   Tue, 16 Apr 2019 15:51:49 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     sundeep.lkml@gmail.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sean.stalley@intel.com, sgoutham@marvell.com,
+        Subbaraya Sundeep <sbhatta@marvell.com>
+Subject: Re: [v3 PATCH 1/2] PCI: read fixed bus numbers in EA for type 1
+ functions
+Message-ID: <20190416205149.GP126710@google.com>
+References: <1548249481-24645-1-git-send-email-sundeep.lkml@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190415113405.GC29317@zn.tnic>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1548249481-24645-1-git-send-email-sundeep.lkml@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Boris,
+On Wed, Jan 23, 2019 at 06:48:00PM +0530, sundeep.lkml@gmail.com wrote:
+> From: Subbaraya Sundeep <sbhatta@marvell.com>
+> 
+> As per the spec - ECN_Enhanced_Allocation_23_Oct_2014_Final
+> and section 6.9.1.2, EA capability contains fixed secondary
+> and subordinate bus numbers for type 1 functions.
+> This patch adds support to read the fixed bus numbers
+> from EA capability for bridge.
 
-Thank you very much for code review.
-I will fix these issues in v2 patch.
+Section 6.9.1.2 "Enhanced Allocation Capability Second DW [Type 1
+Functions Only]" is in the ECN (approved 23 Oct 2014), but is not in
+the PCIe r4.0 spec, and is *STILL* not in the draft PCIe r5.0 spec, as
+far as I can tell.
 
-Please find more comments inline.
-Thank you.
+I thought we had a plan to get the spec updated?  Maybe that was
+wishful thinking on my part.
 
-On 4/15/2019 19:34, Borislav Petkov wrote:
-> On Wed, Apr 10, 2019 at 03:55:28AM +0800, Xiaochen Shen wrote:
->> Currently when a new resource group is created, the allocation values
->> of MBA resource are not initialized and remain meaningless data.
->>
->> For example:
->> mkdir /sys/fs/resctrl/p1
->> cat /sys/fs/resctrl/p1/schemata
->> MB:0=100;1=100
->>
->> echo "MB:0=10;1=20" > /sys/fs/resctrl/p1/schemata
->> cat /sys/fs/resctrl/p1/schemata
->> MB:0= 10;1= 20
->>
->> rmdir /sys/fs/resctrl/p1
->> mkdir /sys/fs/resctrl/p2
->> cat /sys/fs/resctrl/p2/schemata
->> MB:0= 10;1= 20
->>
->> When the new group is created, it is reasonable to initialize MBA
->> resource with default values.
->>
->> Initialize MBA resource and cache resources in separate functions.
+> Signed-off-by: Subbaraya Sundeep <sbhatta@marvell.com>
+> ---
+> v3:
+>   As per Bjorn's suggestion placed EA stuff in pci_ea_init and
+>   captured bus numbers in pci_dev
+> v2:
+>   None just added Sean
 > 
-> Please format your commit message by indenting the examples:
-
-OK. Thank you.
-
+>  drivers/pci/pci.c             | 10 ++++++++--
+>  include/linux/pci.h           |  4 ++++
+>  include/uapi/linux/pci_regs.h |  4 ++++
+>  3 files changed, 16 insertions(+), 2 deletions(-)
 > 
-> x86/resctrl: Initialize a new resource group with default MBA values
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index c25acac..484b63e 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -2909,6 +2909,7 @@ void pci_ea_init(struct pci_dev *dev)
+>  	u8 num_ent;
+>  	int offset;
+>  	int i;
+> +	u32 dw;
+>  
+>  	/* find PCI EA capability in list */
+>  	ea = pci_find_capability(dev, PCI_CAP_ID_EA);
+> @@ -2922,9 +2923,14 @@ void pci_ea_init(struct pci_dev *dev)
+>  
+>  	offset = ea + PCI_EA_FIRST_ENT;
+>  
+> -	/* Skip DWORD 2 for type 1 functions */
+> -	if (dev->hdr_type == PCI_HEADER_TYPE_BRIDGE)
+> +	/* Note fixed bus numbers for type 1 functions */
+> +	if (dev->hdr_type == PCI_HEADER_TYPE_BRIDGE) {
+> +		pci_read_config_dword(dev, offset, &dw);
+> +		dev->fixed_sec_busnr = dw & PCI_EA_FIXED_SEC_BUS;
+> +		dev->fixed_sub_busnr = (dw & PCI_EA_FIXED_SUB_BUS) >>
+> +					PCI_EA_FIXED_SUB_SHIFT;
+>  		offset += 4;
+> +	}
+>  
+>  	/* parse each EA entry */
+>  	for (i = 0; i < num_ent; ++i)
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 65f1d8c..3e9a3ae 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -459,6 +459,10 @@ struct pci_dev {
+>  	char		*driver_override; /* Driver name to force a match */
+>  
+>  	unsigned long	priv_flags;	/* Private flags for the PCI driver */
+> +
+> +	/* bus numbers from EA capability if this device is a bridge */
+> +	u8 fixed_sec_busnr; /* Fixed Secondary Bus number */
+> +	u8 fixed_sub_busnr; /* Fixed Subordinate Bus number */
+>  };
+>  
+>  static inline struct pci_dev *pci_physfn(struct pci_dev *dev)
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index e1e9888..51e9ac0 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -372,6 +372,10 @@
+>  #define PCI_EA_FIRST_ENT_BRIDGE	8	/* First EA Entry for Bridges */
+>  #define  PCI_EA_ES		0x00000007 /* Entry Size */
+>  #define  PCI_EA_BEI		0x000000f0 /* BAR Equivalent Indicator */
+> +/* Fixed Secondary and Subordinate bus numbers in EA for Bridge */
+> +#define   PCI_EA_FIXED_SEC_BUS		0xff
+> +#define   PCI_EA_FIXED_SUB_BUS		0xff00
+> +#define   PCI_EA_FIXED_SUB_SHIFT	8
+>  /* 0-5 map to BARs 0-5 respectively */
+>  #define   PCI_EA_BEI_BAR0		0
+>  #define   PCI_EA_BEI_BAR5		5
+> -- 
+> 1.8.3.1
 > 
-> Currently, when a new resource group is created, the allocation values
-> of the MBA resource are not initialized and remain meaningless data.
-> 
-> For example:
-> 
->    mkdir /sys/fs/resctrl/p1
->    cat /sys/fs/resctrl/p1/schemata
->    MB:0=100;1=100
-> 
->    echo "MB:0=10;1=20" > /sys/fs/resctrl/p1/schemata
->    cat /sys/fs/resctrl/p1/schemata
->    MB:0= 10;1= 20
-> 
->    rmdir /sys/fs/resctrl/p1
->    mkdir /sys/fs/resctrl/p2
->    cat /sys/fs/resctrl/p2/schemata
->    MB:0= 10;1= 20
-> 
-> Therefore, when the new group is created, it is reasonable to initialize
-> MBA resource with default values.
-> 
-> Initialize the MBA resource and cache resources in separate functions."
-> 
-> Thx.
-> 
->>
->> Signed-off-by: Xiaochen Shen <xiaochen.shen@intel.com>
->> Reviewed-by: Fenghua Yu <fenghua.yu@intel.com>
->> Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
->> ---
->>   arch/x86/kernel/cpu/resctrl/ctrlmondata.c |   4 +-
->>   arch/x86/kernel/cpu/resctrl/rdtgroup.c    | 139 ++++++++++++++++--------------
->>   2 files changed, 75 insertions(+), 68 deletions(-)
->>
->> diff --git a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
->> index 2dbd990..576bb6a 100644
->> --- a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
->> +++ b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
->> @@ -342,10 +342,10 @@ int update_domains(struct rdt_resource *r, int closid)
->>   	if (cpumask_empty(cpu_mask) || mba_sc)
->>   		goto done;
->>   	cpu = get_cpu();
->> -	/* Update CBM on this cpu if it's in cpu_mask. */
->> +	/* Update resource control msr on this cpu if it's in cpu_mask. */
-> 
-> s/cpu/CPU/g
-> 
-
-OK.
-
->>   	if (cpumask_test_cpu(cpu, cpu_mask))
->>   		rdt_ctrl_update(&msr_param);
->> -	/* Update CBM on other cpus. */
->> +	/* Update resource control msr on other cpus. */
-> 
-> Ditto.
-
-OK.
-
-> 
->>   	smp_call_function_many(cpu_mask, rdt_ctrl_update, &msr_param, 1);
->>   	put_cpu();
->>   
->> diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
->> index 08e0333..9f12a02 100644
->> --- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
->> +++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
->> @@ -2516,8 +2516,8 @@ static void cbm_ensure_valid(u32 *_val, struct rdt_resource *r)
->>   	bitmap_clear(val, zero_bit, cbm_len - zero_bit);
->>   }
->>   
->> -/**
->> - * rdtgroup_init_alloc - Initialize the new RDT group's allocations
->> +/*
->> + * Initialize cache resources with default values.
->>    *
->>    * A new RDT group is being created on an allocation capable (CAT)
->>    * supporting system. Set this group up to start off with all usable
->> @@ -2526,85 +2526,92 @@ static void cbm_ensure_valid(u32 *_val, struct rdt_resource *r)
->>    * All-zero CBM is invalid. If there are no more shareable bits available
->>    * on any domain then the entire allocation will fail.
->>    */
->> -static int rdtgroup_init_alloc(struct rdtgroup *rdtgrp)
->> +static int rdtgroup_init_cat(struct rdt_resource *r, u32 closid)
->>   {
->>   	struct rdt_resource *r_cdp = NULL;
->>   	struct rdt_domain *d_cdp = NULL;
->>   	u32 used_b = 0, unused_b = 0;
->> -	u32 closid = rdtgrp->closid;
->> -	struct rdt_resource *r;
->>   	unsigned long tmp_cbm;
->>   	enum rdtgrp_mode mode;
->>   	struct rdt_domain *d;
->>   	u32 peer_ctl, *ctrl;
->> -	int i, ret;
->> +	int i;
->>   
->> -	for_each_alloc_enabled_rdt_resource(r) {
->> +	list_for_each_entry(d, &r->domains, list) {
->> +		rdt_cdp_peer_get(r, d, &r_cdp, &d_cdp);
->> +		d->have_new_ctrl = false;
->> +		d->new_ctrl = r->cache.shareable_bits;
->> +		used_b = r->cache.shareable_bits;
->> +		ctrl = d->ctrl_val;
->> +		for (i = 0; i < closids_supported(); i++, ctrl++) {
->> +			if (closid_allocated(i) && i != closid) {
->> +				mode = rdtgroup_mode_by_closid(i);
->> +				if (mode == RDT_MODE_PSEUDO_LOCKSETUP)
->> +					break;
->> +				/*
->> +				 * If CDP is active include peer
->> +				 * domain's usage to ensure there
->> +				 * is no overlap with an exclusive
->> +				 * group.
->> +				 */
->> +				if (d_cdp)
->> +					peer_ctl = d_cdp->ctrl_val[i];
->> +				else
->> +					peer_ctl = 0;
->> +				used_b |= *ctrl | peer_ctl;
->> +				if (mode == RDT_MODE_SHAREABLE)
->> +					d->new_ctrl |= *ctrl | peer_ctl;
->> +			}
->> +		}
->> +		if (d->plr && d->plr->cbm > 0)
->> +			used_b |= d->plr->cbm;
->> +		unused_b = used_b ^ (BIT_MASK(r->cache.cbm_len) - 1);
->> +		unused_b &= BIT_MASK(r->cache.cbm_len) - 1;
->> +		d->new_ctrl |= unused_b;
->> +		cbm_ensure_valid(&d->new_ctrl, r);
->>   		/*
->> -		 * Only initialize default allocations for CBM cache
->> -		 * resources
->> +		 * Assign the u32 CBM to an unsigned long to ensure
->> +		 * that bitmap_weight() does not access out-of-bound
->> +		 * memory.
->>   		 */
-> 
-> So all this code working on a rdt_domain *d pointer could be carved out
-> into a separate function called something like:
-> 
-> 	__init_one_rdt_domain(d, ...)
-> 
-> and this will make the code more readable and save us at least 2
-> indentation levels.
-> 
-> Please do that in a preparatory patch.
-
-Good suggestion. I will do it in v2 patch.
-
-> 
->> -		if (r->rid == RDT_RESOURCE_MBA)
->> -			continue;
-> 
-> Then, after having done that, it would be very obvious when you do this
-> above because you won't be calling that __init_one_rdt_domain() function
-> for an MBA anyway. >
-> Thx.
-> 
-
-In this patch we initialize MBA resource and cache resources in separate 
-functions rdtgroup_init_cat() and rdtgroup_init_mba(). If 
-__init_one_rdt_domain() is only called by rdtgroup_init_cat(), how about 
-using function name "__init_one_rdt_domain_cat()"?
-
-Thank you.
-
-Best regards,
-Xiaochen
-
