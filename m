@@ -2,103 +2,194 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 48500C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:10:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 302BFC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:10:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 12B23206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:10:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555402212;
-	bh=omy8/etVNGwu4Qd+wMmhCrZqRi6mgdzE98GMd5ctQCs=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=qtOGkVoY7/DxSmzybzf6O+kdHe7KTYN+4Rl5MHgbH2B8obNyDH/JbislNeX8RdT7i
-	 LeJbspiROdy7w0vzR5WpBuEi4GsYONyqN82U9KUA/PCfOzKuILfXZc8faUTSOBaPko
-	 V2ySK1TzBqJVVk+Lyj8CvHFvH75rqsncGB+T8rMQ=
+	by mail.kernel.org (Postfix) with ESMTP id F103C2073F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:10:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728733AbfDPIKL (ORCPT
+        id S1728767AbfDPIK2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 04:10:11 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:39703 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728654AbfDPIKK (ORCPT
+        Tue, 16 Apr 2019 04:10:28 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:52143 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727326AbfDPIK2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 04:10:10 -0400
-Received: by mail-ot1-f65.google.com with SMTP id f10so16844003otb.6;
-        Tue, 16 Apr 2019 01:10:09 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=omy8/etVNGwu4Qd+wMmhCrZqRi6mgdzE98GMd5ctQCs=;
-        b=koGTuLTwGVBjZhhLtrTWwu/l83Jez8UezZKVuTQswqLJeEIgG1KFZPQrxqDXw7nxKE
-         lmDl2yJt8ty5M3u1PpzarAdxu2s8Q9sMQz1OiulusYQreluZRess0T3hFLFaLeHz/e52
-         nfYJLw2ny4VA0o0FNjcN5bqb/ms1iwL3QGUKMz7KY2y8lTXLAYCruQbEC7rTNGTHD0R6
-         hxbpT5jZYls6JX0R0nVffqEbGuMEMv/3703ylwsXedWx5OMpqo/8UwEePyZ2qJgfmDnI
-         2DHK4ghf/ypqcZy6UMuNQTqibDVWhIiHv3W4C+NdA5+hStDROhaBh5wdZp06fjjfFWFW
-         pBJA==
-X-Gm-Message-State: APjAAAVsO/0KX470PhIXciTMtAuM9VJ3themCbO/FRi7Bhef1RdYGGJB
-        sqMVe/d0v3tqK4nStB8wZAZfIrGPXp9Y2J+bNN4=
-X-Google-Smtp-Source: APXvYqzJya6FMiPevXlWBCEOghCT3aGYfbfMgS3t85w/PXsrmJJP4ikN5Ta4nO+RhsPbvP5ijAmvOFNotGgziuQbS6o=
-X-Received: by 2002:a05:6830:11d0:: with SMTP id v16mr16449079otq.159.1555402209366;
- Tue, 16 Apr 2019 01:10:09 -0700 (PDT)
+        Tue, 16 Apr 2019 04:10:28 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212])
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hGJAf-0002PE-Ow; Tue, 16 Apr 2019 08:10:25 +0000
+Subject: Re: [PATCH] mwifiex: fix spelling mistake "capabilties" ->
+ "capabilities"
+To:     Mukesh Ojha <mojha@codeaurora.org>,
+        Amitkumar Karwar <amitkarwar@gmail.com>,
+        Nishant Sarmukadam <nishants@marvell.com>,
+        Ganapathi Bhat <gbhat@marvell.com>,
+        Xinming Hu <huxinming820@gmail.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190415142649.18452-1-colin.king@canonical.com>
+ <9347fb11-1c45-3db5-da6b-593dcdc4c2f9@codeaurora.org>
+From:   Colin Ian King <colin.king@canonical.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=colin.king@canonical.com; prefer-encrypt=mutual; keydata=
+ mQINBE6TJCgBEACo6nMNvy06zNKj5tiwDsXXS+LhT+LwtEsy9EnraKYXAf2xwazcICSjX06e
+ fanlyhB0figzQO0n/tP7BcfMVNG7n1+DC71mSyRK1ZERcG1523ajvdZOxbBCTvTitYOy3bjs
+ +LXKqeVMhK3mRvdTjjmVpWnWqJ1LL+Hn12ysDVVfkbtuIm2NoaSEC8Ae8LSSyCMecd22d9Pn
+ LR4UeFgrWEkQsqROq6ZDJT9pBLGe1ZS0pVGhkRyBP9GP65oPev39SmfAx9R92SYJygCy0pPv
+ BMWKvEZS/7bpetPNx6l2xu9UvwoeEbpzUvH26PHO3DDAv0ynJugPCoxlGPVf3zcfGQxy3oty
+ dNTWkP6Wh3Q85m+AlifgKZudjZLrO6c+fAw/jFu1UMjNuyhgShtFU7NvEzL3RqzFf9O1qM2m
+ uj83IeFQ1FZ65QAiCdTa3npz1vHc7N4uEQBUxyXgXfCI+A5yDnjHwzU0Y3RYS52TA3nfa08y
+ LGPLTf5wyAREkFYou20vh5vRvPASoXx6auVf1MuxokDShVhxLpryBnlKCobs4voxN54BUO7m
+ zuERXN8kadsxGFzItAyfKYzEiJrpUB1yhm78AecDyiPlMjl99xXk0zs9lcKriaByVUv/NsyJ
+ FQj/kmdxox3XHi9K29kopFszm1tFiDwCFr/xumbZcMY17Yi2bQARAQABtCVDb2xpbiBLaW5n
+ IDxjb2xpbi5raW5nQGNhbm9uaWNhbC5jb20+iQI2BBMBCAAhBQJOkyQoAhsDBQsJCAcDBRUK
+ CQgLBRYCAwEAAh4BAheAAAoJEGjCh9/GqAImsBcP9i6C/qLewfi7iVcOwqF9avfGzOPf7CVr
+ n8CayQnlWQPchmGKk6W2qgnWI2YLIkADh53TS0VeSQ7Tetj8f1gV75eP0Sr/oT/9ovn38QZ2
+ vN8hpZp0GxOUrzkvvPjpH+zdmKSaUsHGp8idfPpZX7XeBO0yojAs669+3BrnBcU5wW45SjSV
+ nfmVj1ZZj3/yBunb+hgNH1QRcm8ZPICpjvSsGFClTdB4xu2AR28eMiL/TTg9k8Gt72mOvhf0
+ fS0/BUwcP8qp1TdgOFyiYpI8CGyzbfwwuGANPSupGaqtIRVf+/KaOdYUM3dx/wFozZb93Kws
+ gXR4z6tyvYCkEg3x0Xl9BoUUyn9Jp5e6FOph2t7TgUvv9dgQOsZ+V9jFJplMhN1HPhuSnkvP
+ 5/PrX8hNOIYuT/o1AC7K5KXQmr6hkkxasjx16PnCPLpbCF5pFwcXc907eQ4+b/42k+7E3fDA
+ Erm9blEPINtt2yG2UeqEkL+qoebjFJxY9d4r8PFbEUWMT+t3+dmhr/62NfZxrB0nTHxDVIia
+ u8xM+23iDRsymnI1w0R78yaa0Eea3+f79QsoRW27Kvu191cU7QdW1eZm05wO8QUvdFagVVdW
+ Zg2DE63Fiin1AkGpaeZG9Dw8HL3pJAJiDe0KOpuq9lndHoGHs3MSa3iyQqpQKzxM6sBXWGfk
+ EkK5Ag0ETpMkKAEQAMX6HP5zSoXRHnwPCIzwz8+inMW7mJ60GmXSNTOCVoqExkopbuUCvinN
+ 4Tg+AnhnBB3R1KTHreFGoz3rcV7fmJeut6CWnBnGBtsaW5Emmh6gZbO5SlcTpl7QDacgIUuT
+ v1pgewVHCcrKiX0zQDJkcK8FeLUcB2PXuJd6sJg39kgsPlI7R0OJCXnvT/VGnd3XPSXXoO4K
+ cr5fcjsZPxn0HdYCvooJGI/Qau+imPHCSPhnX3WY/9q5/WqlY9cQA8tUC+7mgzt2VMjFft1h
+ rp/CVybW6htm+a1d4MS4cndORsWBEetnC6HnQYwuC4bVCOEg9eXMTv88FCzOHnMbE+PxxHzW
+ 3Gzor/QYZGcis+EIiU6hNTwv4F6fFkXfW6611JwfDUQCAHoCxF3B13xr0BH5d2EcbNB6XyQb
+ IGngwDvnTyKHQv34wE+4KtKxxyPBX36Z+xOzOttmiwiFWkFp4c2tQymHAV70dsZTBB5Lq06v
+ 6nJs601Qd6InlpTc2mjd5mRZUZ48/Y7i+vyuNVDXFkwhYDXzFRotO9VJqtXv8iqMtvS4xPPo
+ 2DtJx6qOyDE7gnfmk84IbyDLzlOZ3k0p7jorXEaw0bbPN9dDpw2Sh9TJAUZVssK119DJZXv5
+ 2BSc6c+GtMqkV8nmWdakunN7Qt/JbTcKlbH3HjIyXBy8gXDaEto5ABEBAAGJAh8EGAEIAAkF
+ Ak6TJCgCGwwACgkQaMKH38aoAiZ4lg/+N2mkx5vsBmcsZVd3ys3sIsG18w6RcJZo5SGMxEBj
+ t1UgyIXWI9lzpKCKIxKx0bskmEyMy4tPEDSRfZno/T7p1mU7hsM4owi/ic0aGBKP025Iok9G
+ LKJcooP/A2c9dUV0FmygecRcbIAUaeJ27gotQkiJKbi0cl2gyTRlolKbC3R23K24LUhYfx4h
+ pWj8CHoXEJrOdHO8Y0XH7059xzv5oxnXl2SD1dqA66INnX+vpW4TD2i+eQNPgfkECzKzGj+r
+ KRfhdDZFBJj8/e131Y0t5cu+3Vok1FzBwgQqBnkA7dhBsQm3V0R8JTtMAqJGmyOcL+JCJAca
+ 3Yi81yLyhmYzcRASLvJmoPTsDp2kZOdGr05Dt8aGPRJL33Jm+igfd8EgcDYtG6+F8MCBOult
+ TTAu+QAijRPZv1KhEJXwUSke9HZvzo1tNTlY3h6plBsBufELu0mnqQvHZmfa5Ay99dF+dL1H
+ WNp62+mTeHsX6v9EACH4S+Cw9Q1qJElFEu9/1vFNBmGY2vDv14gU2xEiS2eIvKiYl/b5Y85Q
+ QLOHWV8up73KK5Qq/6bm4BqVd1rKGI9un8kezUQNGBKre2KKs6wquH8oynDP/baoYxEGMXBg
+ GF/qjOC6OY+U7kNUW3N/A7J3M2VdOTLu3hVTzJMZdlMmmsg74azvZDV75dUigqXcwjE=
+Message-ID: <0850a0e3-6128-5b6e-8f13-30e333919b79@canonical.com>
+Date:   Tue, 16 Apr 2019 09:10:24 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190415151857.25531-1-pierre-louis.bossart@linux.intel.com> <20190416032923.GQ28103@vkoul-mobl>
-In-Reply-To: <20190416032923.GQ28103@vkoul-mobl>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 16 Apr 2019 10:09:57 +0200
-Message-ID: <CAJZ5v0jOkQ7aWn6B_yVTYd7y+78mpGSzBoGuWe3uCdzDRNE94Q@mail.gmail.com>
-Subject: Re: [PATCH] ACPI / device_sysfs: change _ADR representation to 64 bits
-To:     Vinod Koul <vkoul@kernel.org>
-Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
-        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
-        <alsa-devel@alsa-project.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Takashi Iwai <tiwai@suse.de>, Mark Brown <broonie@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
-        jank@cadence.com, Joe Perches <joe@perches.com>,
-        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>,
-        Robert Moore <robert.moore@intel.com>,
-        Erik Schmauss <erik.schmauss@intel.com>,
-        "open list:ACPI" <linux-acpi@vger.kernel.org>,
-        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <9347fb11-1c45-3db5-da6b-593dcdc4c2f9@codeaurora.org>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 5:29 AM Vinod Koul <vkoul@kernel.org> wrote:
->
-> On 15-04-19, 10:18, Pierre-Louis Bossart wrote:
-> > Standards such as the MIPI DisCo for SoundWire 1.0 specification
-> > assume the _ADR field is 64 bits.
-> >
-> > _ADR is defined as an "Integer" represented as 64 bits since ACPI 2.0
-> > released in 2002. The low levels already use _ADR as 64 bits, e.g. in
-> > struct acpi_device_info.
-> >
-> > This patch bumps the representation used for sysfs to 64 bits.
-> >
-> > Example with a SoundWire device, the results show the complete
-> > vendorID and linkID which were omitted before:
-> >
-> > Before:
-> > $ more /sys/bus/acpi/devices/device\:38/adr
-> > 0x5d070000
-> > After:
-> > $ more /sys/bus/acpi/devices/device\:38/adr
-> > 0x000010025d070000
->
-> This looks fine but the sysfs file is an ABI. Not sure if we can modify
-> the value returned this way.. Though it should not cause userspace
-> reading 32bits to break...
+On 16/04/2019 08:02, Mukesh Ojha wrote:
+> 
+> On 4/15/2019 7:56 PM, Colin King wrote:
+>> From: Colin Ian King <colin.king@canonical.com>
+>>
+>> There various spelling mistakes in function names and in message
+>> text. Fix these.
+>>
+>> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> 
+> 
+> I am hoping you have done the compilation test.
 
-Well, IIRC using "08" instead of "016" in the format field would
-preserve the existing behavior for 32-bit values, wouldn't it?
+Indeed. It builds fine.
+
+> 
+> Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+> 
+> Cheers,
+> -Mukesh
+> 
+>> ---
+>>   drivers/net/wireless/marvell/mwifiex/sta_event.c | 12 ++++++------
+>>   drivers/net/wireless/marvell/mwifiex/uap_event.c |  8 ++++----
+>>   2 files changed, 10 insertions(+), 10 deletions(-)
+>>
+>> diff --git a/drivers/net/wireless/marvell/mwifiex/sta_event.c
+>> b/drivers/net/wireless/marvell/mwifiex/sta_event.c
+>> index a327fc5b36e3..8b3123cb84c8 100644
+>> --- a/drivers/net/wireless/marvell/mwifiex/sta_event.c
+>> +++ b/drivers/net/wireless/marvell/mwifiex/sta_event.c
+>> @@ -27,9 +27,9 @@
+>>     #define MWIFIEX_IBSS_CONNECT_EVT_FIX_SIZE    12
+>>   -static int mwifiex_check_ibss_peer_capabilties(struct
+>> mwifiex_private *priv,
+>> -                           struct mwifiex_sta_node *sta_ptr,
+>> -                           struct sk_buff *event)
+>> +static int mwifiex_check_ibss_peer_capabilities(struct
+>> mwifiex_private *priv,
+>> +                            struct mwifiex_sta_node *sta_ptr,
+>> +                            struct sk_buff *event)
+>>   {
+>>       int evt_len, ele_len;
+>>       u8 *curr;
+>> @@ -42,7 +42,7 @@ static int
+>> mwifiex_check_ibss_peer_capabilties(struct mwifiex_private *priv,
+>>       evt_len = event->len;
+>>       curr = event->data;
+>>   -    mwifiex_dbg_dump(priv->adapter, EVT_D, "ibss peer capabilties:",
+>> +    mwifiex_dbg_dump(priv->adapter, EVT_D, "ibss peer capabilities:",
+>>                event->data, event->len);
+>>         skb_push(event, MWIFIEX_IBSS_CONNECT_EVT_FIX_SIZE);
+>> @@ -937,8 +937,8 @@ int mwifiex_process_sta_event(struct
+>> mwifiex_private *priv)
+>>                   ibss_sta_addr);
+>>           sta_ptr = mwifiex_add_sta_entry(priv, ibss_sta_addr);
+>>           if (sta_ptr && adapter->adhoc_11n_enabled) {
+>> -            mwifiex_check_ibss_peer_capabilties(priv, sta_ptr,
+>> -                                adapter->event_skb);
+>> +            mwifiex_check_ibss_peer_capabilities(priv, sta_ptr,
+>> +                                 adapter->event_skb);
+>>               if (sta_ptr->is_11n_enabled)
+>>                   for (i = 0; i < MAX_NUM_TID; i++)
+>>                       sta_ptr->ampdu_sta[i] =
+>> diff --git a/drivers/net/wireless/marvell/mwifiex/uap_event.c
+>> b/drivers/net/wireless/marvell/mwifiex/uap_event.c
+>> index ca759d9c0253..86bfa1b9ef9d 100644
+>> --- a/drivers/net/wireless/marvell/mwifiex/uap_event.c
+>> +++ b/drivers/net/wireless/marvell/mwifiex/uap_event.c
+>> @@ -23,8 +23,8 @@
+>>     #define MWIFIEX_BSS_START_EVT_FIX_SIZE    12
+>>   -static int mwifiex_check_uap_capabilties(struct mwifiex_private *priv,
+>> -                     struct sk_buff *event)
+>> +static int mwifiex_check_uap_capabilities(struct mwifiex_private *priv,
+>> +                      struct sk_buff *event)
+>>   {
+>>       int evt_len;
+>>       u8 *curr;
+>> @@ -38,7 +38,7 @@ static int mwifiex_check_uap_capabilties(struct
+>> mwifiex_private *priv,
+>>       evt_len = event->len;
+>>       curr = event->data;
+>>   -    mwifiex_dbg_dump(priv->adapter, EVT_D, "uap capabilties:",
+>> +    mwifiex_dbg_dump(priv->adapter, EVT_D, "uap capabilities:",
+>>                event->data, event->len);
+>>         skb_push(event, MWIFIEX_BSS_START_EVT_FIX_SIZE);
+>> @@ -201,7 +201,7 @@ int mwifiex_process_uap_event(struct
+>> mwifiex_private *priv)
+>>                  ETH_ALEN);
+>>           if (priv->hist_data)
+>>               mwifiex_hist_data_reset(priv);
+>> -        mwifiex_check_uap_capabilties(priv, adapter->event_skb);
+>> +        mwifiex_check_uap_capabilities(priv, adapter->event_skb);
+>>           break;
+>>       case EVENT_UAP_MIC_COUNTERMEASURES:
+>>           /* For future development */
+
