@@ -2,268 +2,101 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CFEB4C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B76EC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:22:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93555206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:21:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DA117206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:22:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="e06ZkOP5"
+	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="VHHqaZIy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729015AbfDPKVg (ORCPT
+        id S1728870AbfDPKWw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 06:21:36 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:52196 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726716AbfDPKVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 06:21:35 -0400
-Received: from zn.tnic (p200300EC2F0D6900D0FA583685BBD9D6.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:6900:d0fa:5836:85bb:d9d6])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 10D431EC05B8;
-        Tue, 16 Apr 2019 12:21:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1555410094;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=twtafEGma0Y1kHnv3Dz1XbORQn9UB5SYl9Cz+oclGPk=;
-        b=e06ZkOP5D2I5VB3VppNLBFsj2bzfNmd5gBxlmNDX50n4PKwMOQtiq3poFc3izhc+GO7e1g
-        1QL7PjWDFGeXGEHoYkCeTiOU8g8wY4roAgj08URrK+WP7plu7H9CQyul7Lf58LszXJVA1Q
-        YoUi+5H/TXpJOvSMgraL1JfckXcIM2c=
-Date:   Tue, 16 Apr 2019 12:21:30 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
-Cc:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "bp@suse.de" <bp@suse.de>,
-        "tony.luck@intel.com" <tony.luck@intel.com>,
-        "x86@kernel.org" <x86@kernel.org>
-Subject: Re: [PATCH v2 2/6] x86/MCE: Handle MCA controls in a per_cpu way
-Message-ID: <20190416102130.GB31772@zn.tnic>
-References: <20190411201743.43195-1-Yazen.Ghannam@amd.com>
- <20190411201743.43195-3-Yazen.Ghannam@amd.com>
+        Tue, 16 Apr 2019 06:22:52 -0400
+Received: from smtp89.ord1c.emailsrvr.com ([108.166.43.89]:39153 "EHLO
+        smtp89.ord1c.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726686AbfDPKWw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 06:22:52 -0400
+Received: from smtp28.relay.ord1c.emailsrvr.com (localhost [127.0.0.1])
+        by smtp28.relay.ord1c.emailsrvr.com (SMTP Server) with ESMTP id 3C599401AA;
+        Tue, 16 Apr 2019 06:22:51 -0400 (EDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
+        s=20190130-41we5z8j; t=1555410171;
+        bh=XE36eOwio0qqT02qNb8G8G4AEDiof3c3gM18Ev+F4ek=;
+        h=Subject:To:From:Date:From;
+        b=VHHqaZIyBXpiqCbSJ0eoCXuvXoSnSkQIJdKmKC01/ghzjcvpe52wjT30K9fI0gXlo
+         /lYr2QPPsZlhZTs/hj6k6wLRA1Kr60GqbMwSbwvYkvS9dHk/VFEm3+Z8PwC/dnqeN8
+         SOS4mcTiZ5e8VKrJrDPmewCH2GJ2mRHC2yLkfb4A=
+X-Auth-ID: abbotti@mev.co.uk
+Received: by smtp28.relay.ord1c.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 41E944011E;
+        Tue, 16 Apr 2019 06:22:50 -0400 (EDT)
+X-Sender-Id: abbotti@mev.co.uk
+Received: from [10.0.0.62] (remote.quintadena.com [81.133.34.160])
+        (using TLSv1.2 with cipher AES128-SHA)
+        by 0.0.0.0:465 (trex/5.7.12);
+        Tue, 16 Apr 2019 06:22:51 -0400
+Subject: Re: [PATCH] staging: comedi: adv_pci1710: fix spelling mistake:
+ "droput" -> "dropout"
+To:     Colin King <colin.king@canonical.com>,
+        H Hartley Sweeten <hsweeten@visionengravers.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        devel@driverdev.osuosl.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190415174945.32712-1-colin.king@canonical.com>
+From:   Ian Abbott <abbotti@mev.co.uk>
+Organization: MEV Ltd.
+Message-ID: <dbe5e3b9-0653-53ec-1371-88c29aed7b8d@mev.co.uk>
+Date:   Tue, 16 Apr 2019 11:22:49 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190411201743.43195-3-Yazen.Ghannam@amd.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190415174945.32712-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 08:18:01PM +0000, Ghannam, Yazen wrote:
->  arch/x86/kernel/cpu/mce/core.c | 77 ++++++++++++++++++++++------------
->  1 file changed, 51 insertions(+), 26 deletions(-)
+On 15/04/2019 18:49, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
-> index 8d0d1e8425db..aa41f41e5931 100644
-> --- a/arch/x86/kernel/cpu/mce/core.c
-> +++ b/arch/x86/kernel/cpu/mce/core.c
-> @@ -64,16 +64,21 @@ static DEFINE_MUTEX(mce_sysfs_mutex);
->  
->  DEFINE_PER_CPU(unsigned, mce_exception_count);
->  
-> +struct mce_bank {
-> +	u64	ctl;	/* subevents to enable */
-> +	bool	init;	/* initialise bank? */
-> +};
+> There is a spelling mistake in a dev_error message. Fix it.
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-Pls keep original members alignment.
+Looks good, thanks!
 
-> +static DEFINE_PER_CPU_READ_MOSTLY(struct mce_bank *, mce_banks);
-> +
->  #define ATTR_LEN               16
->  /* One object for each MCE bank, shared by all CPUs */
-> -struct mce_bank {
-> -	u64			ctl;			/* subevents to enable */
-> -	bool			init;			/* initialise bank? */
-> +struct mce_bank_dev {
->  	struct device_attribute	attr;			/* device attribute */
->  	char			attrname[ATTR_LEN];	/* attribute name */
-> +	u8			bank;			/* bank number */
->  };
-> +static struct mce_bank_dev mce_bank_devs[MAX_NR_BANKS];
->  
-> -static struct mce_bank *mce_banks __read_mostly;
->  struct mce_vendor_flags mce_flags __read_mostly;
->  
->  struct mca_config mca_cfg __read_mostly = {
-> @@ -695,7 +700,7 @@ bool machine_check_poll(enum mcp_flags flags, mce_banks_t *b)
->  		m.tsc = rdtsc();
->  
->  	for (i = 0; i < mca_cfg.banks; i++) {
-> -		if (!mce_banks[i].ctl || !test_bit(i, *b))
-> +		if (!this_cpu_read(mce_banks)[i].ctl || !test_bit(i, *b))
->  			continue;
->  
->  		m.misc = 0;
-> @@ -1138,7 +1143,7 @@ static void __mc_scan_banks(struct mce *m, struct mce *final,
->  		if (!test_bit(i, valid_banks))
->  			continue;
->  
-> -		if (!mce_banks[i].ctl)
-> +		if (!this_cpu_read(mce_banks)[i].ctl)
->  			continue;
->  
->  		m->misc = 0;
-> @@ -1475,16 +1480,19 @@ static int __mcheck_cpu_mce_banks_init(void)
->  {
->  	int i;
->  
-> -	mce_banks = kcalloc(MAX_NR_BANKS, sizeof(struct mce_bank), GFP_KERNEL);
-> -	if (!mce_banks)
-> +	per_cpu(mce_banks, smp_processor_id()) =
-> +		kcalloc(MAX_NR_BANKS, sizeof(struct mce_bank), GFP_KERNEL);
-> +
-> +	if (!this_cpu_read(mce_banks))
->  		return -ENOMEM;
->  
->  	for (i = 0; i < MAX_NR_BANKS; i++) {
-> -		struct mce_bank *b = &mce_banks[i];
-> +		struct mce_bank *b = &this_cpu_read(mce_banks)[i];
->  
->  		b->ctl = -1ULL;
->  		b->init = 1;
->  	}
-> +
->  	return 0;
->  }
+Reviewed-by: Ian Abbott <abbotti@mev.co.uk>
 
-Instead of doing all those per-CPU accesses in the function, you can use
-a local pointer and assign it once in the end, before returning.
+> ---
+>   drivers/staging/comedi/drivers/adv_pci1710.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/staging/comedi/drivers/adv_pci1710.c b/drivers/staging/comedi/drivers/adv_pci1710.c
+> index 6a93b04f1fdf..dbff0f7e7cf5 100644
+> --- a/drivers/staging/comedi/drivers/adv_pci1710.c
+> +++ b/drivers/staging/comedi/drivers/adv_pci1710.c
+> @@ -317,7 +317,7 @@ static int pci1710_ai_read_sample(struct comedi_device *dev,
+>   		chan = sample >> 12;
+>   		if (chan != devpriv->act_chanlist[cur_chan]) {
+>   			dev_err(dev->class_dev,
+> -				"A/D data droput: received from channel %d, expected %d\n",
+> +				"A/D data dropout: received from channel %d, expected %d\n",
+>   				chan, devpriv->act_chanlist[cur_chan]);
+>   			return -ENODATA;
+>   		}
+> 
 
-Also, fix the similar situation where you have multiple per-CPU accesses
-in a single function - assign to a local pointer instead and do all the
-accesses through it.
-
-> @@ -1504,7 +1512,7 @@ static int __mcheck_cpu_cap_init(void)
->  
->  	mca_cfg.banks = max(mca_cfg.banks, b);
->  
-> -	if (!mce_banks) {
-> +	if (!this_cpu_read(mce_banks)) {
->  		int err = __mcheck_cpu_mce_banks_init();
->  		if (err)
->  			return err;
-> @@ -1547,7 +1555,7 @@ static void __mcheck_cpu_init_clear_banks(void)
->  	int i;
->  
->  	for (i = 0; i < mca_cfg.banks; i++) {
-> -		struct mce_bank *b = &mce_banks[i];
-> +		struct mce_bank *b = &this_cpu_read(mce_banks)[i];
->  
->  		if (!b->init)
->  			continue;
-> @@ -1602,7 +1610,7 @@ static int __mcheck_cpu_apply_quirks(struct cpuinfo_x86 *c)
->  			 * trips off incorrectly with the IOMMU & 3ware
->  			 * & Cerberus:
->  			 */
-> -			clear_bit(10, (unsigned long *)&mce_banks[4].ctl);
-> +			clear_bit(10, (unsigned long *)&this_cpu_read(mce_banks)[4].ctl);
->  		}
->  		if (c->x86 < 0x11 && cfg->bootlog < 0) {
->  			/*
-> @@ -1616,7 +1624,7 @@ static int __mcheck_cpu_apply_quirks(struct cpuinfo_x86 *c)
->  		 * by default.
->  		 */
->  		if (c->x86 == 6 && cfg->banks > 0)
-> -			mce_banks[0].ctl = 0;
-> +			this_cpu_read(mce_banks)[0].ctl = 0;
->  
->  		/*
->  		 * overflow_recov is supported for F15h Models 00h-0fh
-> @@ -1638,7 +1646,7 @@ static int __mcheck_cpu_apply_quirks(struct cpuinfo_x86 *c)
->  		 */
->  
->  		if (c->x86 == 6 && c->x86_model < 0x1A && cfg->banks > 0)
-> -			mce_banks[0].init = 0;
-> +			this_cpu_read(mce_banks)[0].init = 0;
->  
->  		/*
->  		 * All newer Intel systems support MCE broadcasting. Enable
-> @@ -1952,7 +1960,7 @@ static void mce_disable_error_reporting(void)
->  	int i;
->  
->  	for (i = 0; i < mca_cfg.banks; i++) {
-> -		struct mce_bank *b = &mce_banks[i];
-> +		struct mce_bank *b = &this_cpu_read(mce_banks)[i];
->  
->  		if (b->init)
->  			wrmsrl(msr_ops.ctl(i), 0);
-> @@ -2051,26 +2059,41 @@ static struct bus_type mce_subsys = {
->  
->  DEFINE_PER_CPU(struct device *, mce_device);
->  
-> -static inline struct mce_bank *attr_to_bank(struct device_attribute *attr)
-> +static inline struct mce_bank_dev *attr_to_bank(struct device_attribute *attr)
->  {
-> -	return container_of(attr, struct mce_bank, attr);
-> +	return container_of(attr, struct mce_bank_dev, attr);
->  }
->  
->  static ssize_t show_bank(struct device *s, struct device_attribute *attr,
->  			 char *buf)
->  {
-> -	return sprintf(buf, "%llx\n", attr_to_bank(attr)->ctl);
-> +	struct mce_bank *b;
-> +	u8 bank = attr_to_bank(attr)->bank;
-
-Please sort function local variables declaration in a reverse christmas
-tree order:
-
-	<type A> longest_variable_name;
-	<type B> shorter_var_name;
-	<type C> even_shorter;
-	<type D> i;
-
-> +
-> +	if (bank >= mca_cfg.banks)
-> +		return -EINVAL;
-> +
-> +	b = &per_cpu(mce_banks, s->id)[bank];
-> +
-> +	return sprintf(buf, "%llx\n", b->ctl);
->  }
->  
->  static ssize_t set_bank(struct device *s, struct device_attribute *attr,
->  			const char *buf, size_t size)
->  {
->  	u64 new;
-> +	struct mce_bank *b;
-> +	u8 bank = attr_to_bank(attr)->bank;
-
-Ditto.
-
->  	if (kstrtou64(buf, 0, &new) < 0)
->  		return -EINVAL;
->  
-> -	attr_to_bank(attr)->ctl = new;
-> +	if (bank >= mca_cfg.banks)
-> +		return -EINVAL;
-> +
-> +	b = &per_cpu(mce_banks, s->id)[bank];
-> +
-> +	b->ctl = new;
->  	mce_restart();
->  
->  	return size;
-> @@ -2185,7 +2208,7 @@ static void mce_device_release(struct device *dev)
->  	kfree(dev);
->  }
->  
-> -/* Per cpu device init. All of the cpus still share the same ctrl bank: */
-> +/* Per cpu device init. All of the cpus still share the same bank device: */
-
-s/cpu/CPU/g, while at it.
 
 -- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+-=( Ian Abbott <abbotti@mev.co.uk> || Web: www.mev.co.uk )=-
+-=( MEV Ltd. is a company registered in England & Wales. )=-
+-=( Registered number: 02862268.  Registered address:    )=-
+-=( 15 West Park Road, Bramhall, STOCKPORT, SK7 3JZ, UK. )=-
