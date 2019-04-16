@@ -7,44 +7,44 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DC245C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:24:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B6A4C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:24:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B36902087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:24:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4DAD020880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:24:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="OLB0j0ha"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="NL6x667D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730253AbfDPSY0 (ORCPT
+        id S1730281AbfDPSYa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 14:24:26 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44826 "EHLO
+        Tue, 16 Apr 2019 14:24:30 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44844 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728839AbfDPSYZ (ORCPT
+        with ESMTP id S1728839AbfDPSY1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 14:24:25 -0400
+        Tue, 16 Apr 2019 14:24:27 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
         MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:Sender
         :Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From
         :Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=oGWIvDWHpGEpQusWH5QfN5rD9gp1ljz+CdOv8bdUgOQ=; b=OLB0j0haRCPUeKqKcdzfuXIT4t
-        Vg0QVxaMFc1OQJU9k2sJIvYHHboNN4N+g8y/PqHHMicOt+loh9nyIyHHFdyr+KYyh02XHR9YS7tdn
-        WUC5p2Xwo5j/lt4EJ0/U/J7cpcIogSq2Kq3TMMkniqWpZN3HsD6oK5SUspX9vmMs+4IIG8MlHGKNo
-        mWFG/Ok+2WjNm29o54AAap5SgHxmQhCdRs9Z+a5FdaXLxM745FnbW8gS95vP2aN4S94uULDNsXSDi
-        MIWLSF/CqMVNLPqFkA9SYm3FW8Nw6S0ovuWrfnwMAAkK189vF3yxVCeIZ4PcrlohpBtvkbIAXMmnr
-        V/t1CDLQ==;
+        bh=W1KMMjMMYjh5aoz7WBFfS5OP0Gny+UzRR9uwG3wwQHo=; b=NL6x667Dk+RFYVCOIkt8OEaNtl
+        jA3FHRwpy4XLeYdYF/7wZ4AUI4X1P6qX3O4rZQcLv25YBUiVzQU/V8qlksOg10sYpaRKU2/F+EhzY
+        FORozJjv6+nRV8AFyD9syhLkclwRnDLCGAJCWnmCh22Hzr9MeKBvh+A8YM369bYrRokIPwZl75Nc8
+        iZghh8W5JkhZg/d30IadtqA5zuTSIECzNx2HE4yO6kONWARHn4jeAV8+qO0z8hJ9jZRl8HyYnmMep
+        5ksu8/UWhOM3bT5Wy4rc6v0NosTXnkpi89FG3KL8RbW71OYwGfK9gnNxsOk8A+9rzCz8HuAoWi2Zj
+        7VcdwEBg==;
 Received: from 213-225-15-255.nat.highway.a1.net ([213.225.15.255] helo=localhost)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hGSkq-00076w-5B; Tue, 16 Apr 2019 18:24:24 +0000
+        id 1hGSks-00077B-Rf; Tue, 16 Apr 2019 18:24:27 +0000
 From:   Christoph Hellwig <hch@lst.de>
 To:     "David S. Miller" <davem@davemloft.net>
 Cc:     Guenter Roeck <linux@roeck-us.net>, sparclinux@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 4/9] sparc/iommu: create a common helper for map_sg
-Date:   Tue, 16 Apr 2019 20:23:42 +0200
-Message-Id: <20190416182347.18441-5-hch@lst.de>
+Subject: [PATCH 5/9] sparc/iommu: pass a physical address to iommu_get_one
+Date:   Tue, 16 Apr 2019 20:23:43 +0200
+Message-Id: <20190416182347.18441-6-hch@lst.de>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190416182347.18441-1-hch@lst.de>
 References: <20190416182347.18441-1-hch@lst.de>
@@ -56,78 +56,71 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Share the code for the global and per-page flush map_sg loops using a
-simple bool parameter to disable the per-page flush for the former
-variant.
+No need for the page structure, just the paddr / pfn.  This is
+going to simplify fixes to the callers.
 
 Signed-off-by: Christoph Hellwig <hch@lst.de>
 Reported-by: Guenter Roeck <linux@roeck-us.net>
 ---
- arch/sparc/mm/iommu.c | 37 +++++++++++++++++--------------------
- 1 file changed, 17 insertions(+), 20 deletions(-)
+ arch/sparc/mm/iommu.c | 13 +++++++------
+ 1 file changed, 7 insertions(+), 6 deletions(-)
 
 diff --git a/arch/sparc/mm/iommu.c b/arch/sparc/mm/iommu.c
-index 7cb9ddda7531..f90d943a3a27 100644
+index f90d943a3a27..19d9266e4049 100644
 --- a/arch/sparc/mm/iommu.c
 +++ b/arch/sparc/mm/iommu.c
-@@ -241,25 +241,9 @@ static dma_addr_t sbus_iommu_map_page_pflush(struct device *dev,
- 	return __sbus_iommu_map_page(dev, page, offset, len);
+@@ -175,16 +175,17 @@ static void iommu_flush_iotlb(iopte_t *iopte, unsigned int niopte)
+ 	}
  }
  
--static int sbus_iommu_map_sg_gflush(struct device *dev, struct scatterlist *sgl,
--		int nents, enum dma_data_direction dir, unsigned long attrs)
--{
--	struct scatterlist *sg;
--	int i, n;
--
--	flush_page_for_dma(0);
--
--	for_each_sg(sgl, sg, nents, i) {
--		n = (sg->length + sg->offset + PAGE_SIZE-1) >> PAGE_SHIFT;
+-static u32 iommu_get_one(struct device *dev, struct page *page, int npages)
++static u32 iommu_get_one(struct device *dev, phys_addr_t paddr, int npages)
+ {
+ 	struct iommu_struct *iommu = dev->archdata.iommu;
+ 	int ioptex;
+ 	iopte_t *iopte, *iopte0;
+ 	unsigned int busa, busa0;
++	unsigned long pfn = __phys_to_pfn(paddr);
+ 	int i;
+ 
+ 	/* page color = pfn of page */
+-	ioptex = bit_map_string_get(&iommu->usemap, npages, page_to_pfn(page));
++	ioptex = bit_map_string_get(&iommu->usemap, npages, pfn);
+ 	if (ioptex < 0)
+ 		panic("iommu out");
+ 	busa0 = iommu->start + (ioptex << PAGE_SHIFT);
+@@ -193,11 +194,11 @@ static u32 iommu_get_one(struct device *dev, struct page *page, int npages)
+ 	busa = busa0;
+ 	iopte = iopte0;
+ 	for (i = 0; i < npages; i++) {
+-		iopte_val(*iopte) = MKIOPTE(page_to_pfn(page), IOPERM);
++		iopte_val(*iopte) = MKIOPTE(pfn, IOPERM);
+ 		iommu_invalidate_page(iommu->regs, busa);
+ 		busa += PAGE_SIZE;
+ 		iopte++;
+-		page++;
++		pfn++;
+ 	}
+ 
+ 	iommu_flush_iotlb(iopte0, npages);
+@@ -215,7 +216,7 @@ static dma_addr_t __sbus_iommu_map_page(struct device *dev, struct page *page,
+ 	/* XXX So what is maxphys for us and how do drivers know it? */
+ 	if (!len || len > 256 * 1024)
+ 		return DMA_MAPPING_ERROR;
+-	return iommu_get_one(dev, virt_to_page(vaddr), npages) + off;
++	return iommu_get_one(dev, virt_to_phys(vaddr), npages) + off;
+ }
+ 
+ static dma_addr_t sbus_iommu_map_page_gflush(struct device *dev,
+@@ -268,7 +269,7 @@ static int __sbus_iommu_map_sg(struct device *dev, struct scatterlist *sgl,
+ 			}
+ 		}
+ 
 -		sg->dma_address = iommu_get_one(dev, sg_page(sg), n) + sg->offset;
--		sg->dma_length = sg->length;
--	}
--
--	return nents;
--}
--
--static int sbus_iommu_map_sg_pflush(struct device *dev, struct scatterlist *sgl,
--		int nents, enum dma_data_direction dir, unsigned long attrs)
-+static int __sbus_iommu_map_sg(struct device *dev, struct scatterlist *sgl,
-+		int nents, enum dma_data_direction dir, unsigned long attrs,
-+		bool per_page_flush)
- {
- 	unsigned long page, oldpage = 0;
- 	struct scatterlist *sg;
-@@ -273,7 +257,7 @@ static int sbus_iommu_map_sg_pflush(struct device *dev, struct scatterlist *sgl,
- 		 * XXX Is this a good assumption?
- 		 * XXX What if someone else unmaps it here and races us?
- 		 */
--		if (!PageHighMem(sg_page(sg))) {
-+		if (per_page_flush && !PageHighMem(sg_page(sg))) {
- 			page = (unsigned long)page_address(sg_page(sg));
- 			for (i = 0; i < n; i++) {
- 				if (page != oldpage) {	/* Already flushed? */
-@@ -291,6 +275,19 @@ static int sbus_iommu_map_sg_pflush(struct device *dev, struct scatterlist *sgl,
- 	return nents;
- }
++		sg->dma_address = iommu_get_one(dev, sg_phys(sg), n) + sg->offset;
+ 		sg->dma_length = sg->length;
+ 	}
  
-+static int sbus_iommu_map_sg_gflush(struct device *dev, struct scatterlist *sgl,
-+		int nents, enum dma_data_direction dir, unsigned long attrs)
-+{
-+	flush_page_for_dma(0);
-+	return __sbus_iommu_map_sg(dev, sgl, nents, dir, attrs, false);
-+}
-+
-+static int sbus_iommu_map_sg_pflush(struct device *dev, struct scatterlist *sgl,
-+		int nents, enum dma_data_direction dir, unsigned long attrs)
-+{
-+	return __sbus_iommu_map_sg(dev, sgl, nents, dir, attrs, true);
-+}
-+
- static void sbus_iommu_unmap_page(struct device *dev, dma_addr_t dma_addr,
- 		size_t len, enum dma_data_direction dir, unsigned long attrs)
- {
 -- 
 2.20.1
 
