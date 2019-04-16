@@ -4,577 +4,366 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7875BC10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:02:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA8CC10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:02:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 326A420656
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:02:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 402DF20656
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:02:54 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555383766;
-	bh=vJqvU6T8BVR0S/S2mhzfU1duZ8qqr4enneiUrtLWWyw=;
+	s=default; t=1555383774;
+	bh=+5cLUwta2EtLhhJcezvYMGCIvdYhdLRdNmhuYSt8rkE=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=uGgNAp2F1etzAbwC0eBt2yoyn73HV64nWyraV+68OciEVuXpy8sYf7ErijsBGZJXj
-	 nMfXZjWXmKmWb0DK7zZI4R1IbEn4D6H6ER7rI/GqqJhd6s0ZySjeJ/w9hgnrEk4qSo
-	 hrkhd8+EOahp7o5xs0evtCDGwClVFf3tKPOd1V8k=
+	b=DYZLNMIT9Luuyoh2U0y/eRqRutWQsR9IGPqQqwKnQtLx+ywMMPuLAjsDF0j5iTdGl
+	 wT9lpdnQFkghjIrSe34b7NcdkMkLxr8pVKnRB0FjnvCcjDIEdRri8pRKGVa/69D1cU
+	 avMN7IwVVDiPUmVodj3YrHBGCv9e1b539QqsxSzI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728399AbfDPDCo (ORCPT
+        id S1728658AbfDPDCw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 23:02:44 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:43990 "EHLO
+        Mon, 15 Apr 2019 23:02:52 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:43978 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726676AbfDPC4a (ORCPT
+        with ESMTP id S1726628AbfDPC43 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 22:56:30 -0400
+        Mon, 15 Apr 2019 22:56:29 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
+        To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=1AUs7l8doB7HbS3wx4Ir5Qt3dZPsE6U0/pdjbofYfos=; b=lOLSuryslmdqXF7g7wG0cJFQ1/
-        /P6C3XBigAaFeeLOPisZ54KRZ7/gn3O2rIgqg4Isck6O7A8SKaY7MI0Yv+tqzja6jD0V8SZoKpF+A
-        mlS5LxX8sdza/vXu1CAbQ6pLfkymWXB/6FRp84wVuGFmmnngJN8+vZCjUofg4XbcRZb81rJPQB5q2
-        yhDFX5h25s9pV9UBoHjChfnNxwIxvvqkytxItH+dpbRRcQ1j2wMyWaJuXkVGXB9VMiIOkmrh4paXv
-        qMVCl8aaa1uBqYGwHKJzmWp8rJStOZwXjKeKvljNHluNvH0VZ83bKuiIDm24K5Ea/8GiHMQ5lVH9T
-        zd3xGjbA==;
+        bh=ROo0V5tASYYmluZFwiPFZ4NY6wYz8FNHFQgcBBsMV7A=; b=t5vR29FecUN28nSqP3q2fiI1xc
+        Gljlzhs4hp+WeQOk29GLneTJ4OT9t+xlpAUEImcXYrXXldCGRJpWwq9ZCNok+iYfM+fn/WKgRV6vq
+        jy7CPvckA59bC8T+jS2Ulx01wyyzA51cgDMv3yUZEvvQDtnssB3F3qZMpA9+scZCO/otsO9uNHFlB
+        aRikCFTrVmBwjnVv7o2Wp5Tgc9MzKp4evbdxRoPS3FJSVdo7V07v0YDMZVhewpRR5I/cW5/0I8Amu
+        c+Wda7DdLCTARgWOBcCg0A9F4eURnb8CUgz1jQC+GZsK4ymetlRsaoe66/APKf44hb4I9oR8xKJ4F
+        yVbRAofQ==;
 Received: from 177.205.118.176.dynamic.adsl.gvt.net.br ([177.205.118.176] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hGEGp-0007aO-SC; Tue, 16 Apr 2019 02:56:28 +0000
+        id 1hGEGp-0007aq-W7; Tue, 16 Apr 2019 02:56:28 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hGEGn-0001lG-0w; Mon, 15 Apr 2019 23:56:25 -0300
+        id 1hGEGn-0001oc-Rs; Mon, 15 Apr 2019 23:56:25 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Jens Axboe <axboe@kernel.dk>
-Subject: [PATCH 06/57] docs: cdrom: convert remaining files to ReST
-Date:   Mon, 15 Apr 2019 23:55:31 -0300
-Message-Id: <47029462b62c4c99e3976926fad2538ffd28f0cd.1555382110.git.mchehab+samsung@kernel.org>
+        Thomas Gleixner <tglx@linutronix.de>
+Subject: [PATCH 35/57] docs: timers: convert documentation to ReST
+Date:   Mon, 15 Apr 2019 23:56:00 -0300
+Message-Id: <cb53bf2e4b00c9ba398e17079b3fb4f86d081a47.1555382110.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1555382110.git.mchehab+samsung@kernel.org>
 References: <cover.1555382110.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The stuff there is almost already at ReST format. A
-conversion for them is trivial: just add a missing titles
-and fix some scape codes for them to match ReST syntax.
+The conversion here is really trivial: just a bunch of title
+markups and very few puntual changes is enough to make it to
+be parsed by Sphinx and generate a nice html.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/cdrom/ide-cd             | 178 +++++++++++++------------
- Documentation/cdrom/packet-writing.txt |  27 ++--
- 2 files changed, 108 insertions(+), 97 deletions(-)
+ Documentation/timers/NO_HZ.txt        | 40 ++++++++++++++++-----------
+ Documentation/timers/highres.txt      | 11 ++++----
+ Documentation/timers/hpet.txt         |  4 ++-
+ Documentation/timers/hrtimers.txt     |  6 ++--
+ Documentation/timers/timekeeping.txt  |  3 +-
+ Documentation/timers/timers-howto.txt | 15 +++++++---
+ 6 files changed, 49 insertions(+), 30 deletions(-)
 
-diff --git a/Documentation/cdrom/ide-cd b/Documentation/cdrom/ide-cd
-index a5f2a7f1ff46..dadc94ef6b6c 100644
---- a/Documentation/cdrom/ide-cd
-+++ b/Documentation/cdrom/ide-cd
-@@ -1,18 +1,20 @@
- IDE-CD driver documentation
--Originally by scott snyder  <snyder@fnald0.fnal.gov> (19 May 1996)
--Carrying on the torch is: Erik Andersen <andersee@debian.org>
--New maintainers (19 Oct 1998): Jens Axboe <axboe@image.dk>
-+===========================
+diff --git a/Documentation/timers/NO_HZ.txt b/Documentation/timers/NO_HZ.txt
+index 9591092da5e0..065db217cb04 100644
+--- a/Documentation/timers/NO_HZ.txt
++++ b/Documentation/timers/NO_HZ.txt
+@@ -1,4 +1,6 @@
+-		NO_HZ: Reducing Scheduling-Clock Ticks
++﻿======================================
++NO_HZ: Reducing Scheduling-Clock Ticks
++======================================
+ 
+ 
+ This document describes Kconfig options and boot parameters that can
+@@ -28,7 +30,8 @@ by a third section on RCU-specific considerations, a fourth section
+ discussing testing, and a fifth and final section listing known issues.
+ 
+ 
+-NEVER OMIT SCHEDULING-CLOCK TICKS
++Never Omit Scheduling-Clock Ticks
++=================================
+ 
+ Very old versions of Linux from the 1990s and the very early 2000s
+ are incapable of omitting scheduling-clock ticks.  It turns out that
+@@ -59,7 +62,8 @@ degrade your applications performance.  If this describes your workload,
+ you should read the following two sections.
+ 
+ 
+-OMIT SCHEDULING-CLOCK TICKS FOR IDLE CPUs
++Omit Scheduling-Clock Ticks For Idle CPUs
++=========================================
+ 
+ If a CPU is idle, there is little point in sending it a scheduling-clock
+ interrupt.  After all, the primary purpose of a scheduling-clock interrupt
+@@ -97,7 +101,8 @@ By default, CONFIG_NO_HZ_IDLE=y kernels boot with "nohz=on", enabling
+ dyntick-idle mode.
+ 
+ 
+-OMIT SCHEDULING-CLOCK TICKS FOR CPUs WITH ONLY ONE RUNNABLE TASK
++Omit Scheduling-Clock Ticks For CPUs With Only One Runnable Task
++================================================================
+ 
+ If a CPU has only one runnable task, there is little point in sending it
+ a scheduling-clock interrupt because there is no other task to switch to.
+@@ -174,7 +179,8 @@ However, the drawbacks listed above mean that adaptive ticks should not
+ (yet) be enabled by default.
+ 
+ 
+-RCU IMPLICATIONS
++RCU Implications
++================
+ 
+ There are situations in which idle CPUs cannot be permitted to
+ enter either dyntick-idle mode or adaptive-tick mode, the most
+@@ -199,7 +205,8 @@ scheduler will decide where to run them, which might or might not be
+ where you want them to run.
+ 
+ 
+-TESTING
++Testing
++=======
+ 
+ So you enable all the OS-jitter features described in this document,
+ but do not see any change in your workload's behavior.  Is this because
+@@ -222,9 +229,10 @@ We do not currently have a good way to remove OS jitter from single-CPU
+ systems.
+ 
+ 
+-KNOWN ISSUES
++Known Issues
++============
+ 
+-o	Dyntick-idle slows transitions to and from idle slightly.
++*	Dyntick-idle slows transitions to and from idle slightly.
+ 	In practice, this has not been a problem except for the most
+ 	aggressive real-time workloads, which have the option of disabling
+ 	dyntick-idle mode, an option that most of them take.  However,
+@@ -248,13 +256,13 @@ o	Dyntick-idle slows transitions to and from idle slightly.
+ 		this parameter effectively disables Turbo Mode on Intel
+ 		CPUs, which can significantly reduce maximum performance.
+ 
+-o	Adaptive-ticks slows user/kernel transitions slightly.
++*	Adaptive-ticks slows user/kernel transitions slightly.
+ 	This is not expected to be a problem for computationally intensive
+ 	workloads, which have few such transitions.  Careful benchmarking
+ 	will be required to determine whether or not other workloads
+ 	are significantly affected by this effect.
+ 
+-o	Adaptive-ticks does not do anything unless there is only one
++*	Adaptive-ticks does not do anything unless there is only one
+ 	runnable task for a given CPU, even though there are a number
+ 	of other situations where the scheduling-clock tick is not
+ 	needed.  To give but one example, consider a CPU that has one
+@@ -275,7 +283,7 @@ o	Adaptive-ticks does not do anything unless there is only one
+ 
+ 	Better handling of these sorts of situations is future work.
+ 
+-o	A reboot is required to reconfigure both adaptive idle and RCU
++*	A reboot is required to reconfigure both adaptive idle and RCU
+ 	callback offloading.  Runtime reconfiguration could be provided
+ 	if needed, however, due to the complexity of reconfiguring RCU at
+ 	runtime, there would need to be an earthshakingly good reason.
+@@ -283,12 +291,12 @@ o	A reboot is required to reconfigure both adaptive idle and RCU
+ 	simply offloading RCU callbacks from all CPUs and pinning them
+ 	where you want them whenever you want them pinned.
+ 
+-o	Additional configuration is required to deal with other sources
++*	Additional configuration is required to deal with other sources
+ 	of OS jitter, including interrupts and system-utility tasks
+ 	and processes.  This configuration normally involves binding
+ 	interrupts and tasks to particular CPUs.
+ 
+-o	Some sources of OS jitter can currently be eliminated only by
++*	Some sources of OS jitter can currently be eliminated only by
+ 	constraining the workload.  For example, the only way to eliminate
+ 	OS jitter due to global TLB shootdowns is to avoid the unmapping
+ 	operations (such as kernel module unload operations) that
+@@ -299,17 +307,17 @@ o	Some sources of OS jitter can currently be eliminated only by
+ 	helpful, especially when combined with the mlock() and mlockall()
+ 	system calls.
+ 
+-o	Unless all CPUs are idle, at least one CPU must keep the
++*	Unless all CPUs are idle, at least one CPU must keep the
+ 	scheduling-clock interrupt going in order to support accurate
+ 	timekeeping.
+ 
+-o	If there might potentially be some adaptive-ticks CPUs, there
++*	If there might potentially be some adaptive-ticks CPUs, there
+ 	will be at least one CPU keeping the scheduling-clock interrupt
+ 	going, even if all CPUs are otherwise idle.
+ 
+ 	Better handling of this situation is ongoing work.
+ 
+-o	Some process-handling operations still require the occasional
++*	Some process-handling operations still require the occasional
+ 	scheduling-clock tick.	These operations include calculating CPU
+ 	load, maintaining sched average, computing CFS entity vruntime,
+ 	computing avenrun, and carrying out load balancing.  They are
+diff --git a/Documentation/timers/highres.txt b/Documentation/timers/highres.txt
+index 8f9741592123..f93528e6f1c8 100644
+--- a/Documentation/timers/highres.txt
++++ b/Documentation/timers/highres.txt
+@@ -1,5 +1,6 @@
++=====================================================
+ High resolution timers and dynamic ticks design notes
+------------------------------------------------------
++=====================================================
+ 
+ Further information can be found in the paper of the OLS 2006 talk "hrtimers
+ and beyond". The paper is part of the OLS 2006 Proceedings Volume 1, which can
+@@ -35,6 +36,7 @@ also figure #2 (OLS slides p. 15)
+ 
+ The main differences to the timer wheel, which holds the armed timer_list type
+ timers are:
 +
-+:Originally by: scott snyder  <snyder@fnald0.fnal.gov> (19 May 1996)
-+:Carrying on the torch is: Erik Andersen <andersee@debian.org>
-+:New maintainers (19 Oct 1998): Jens Axboe <axboe@image.dk>
+        - time ordered enqueueing into a rb-tree
+        - independent of ticks (the processing is based on nanoseconds)
  
- 1. Introduction
- ---------------
+@@ -55,7 +57,8 @@ merged into the 2.6.18 kernel.
  
--The ide-cd driver should work with all ATAPI ver 1.2 to ATAPI 2.6 compliant 
-+The ide-cd driver should work with all ATAPI ver 1.2 to ATAPI 2.6 compliant
- CDROM drives which attach to an IDE interface.  Note that some CDROM vendors
- (including Mitsumi, Sony, Creative, Aztech, and Goldstar) have made
- both ATAPI-compliant drives and drives which use a proprietary
- interface.  If your drive uses one of those proprietary interfaces,
- this driver will not work with it (but one of the other CDROM drivers
--probably will).  This driver will not work with `ATAPI' drives which
-+probably will).  This driver will not work with `ATAPI` drives which
- attach to the parallel port.  In addition, there is at least one drive
- (CyCDROM CR520ie) which attaches to the IDE port but is not ATAPI;
- this driver will not work with drives like that either (but see the
-@@ -31,7 +33,7 @@ This driver provides the following features:
-    from audio tracks.  The program cdda2wav can be used for this.
-    Note, however, that only some drives actually support this.
- 
-- - There is now support for CDROM changers which comply with the 
-+ - There is now support for CDROM changers which comply with the
-    ATAPI 2.6 draft standard (such as the NEC CDR-251).  This additional
-    functionality includes a function call to query which slot is the
-    currently selected slot, a function call to query which slots contain
-@@ -49,11 +51,11 @@ This driver provides the following features:
-    driver.
- 
- 1. Make sure that the ide and ide-cd drivers are compiled into the
--   kernel you're using.  When configuring the kernel, in the section 
--   entitled "Floppy, IDE, and other block devices", say either `Y' 
--   (which will compile the support directly into the kernel) or `M'
-+   kernel you're using.  When configuring the kernel, in the section
-+   entitled "Floppy, IDE, and other block devices", say either `Y`
-+   (which will compile the support directly into the kernel) or `M`
-    (to compile support as a module which can be loaded and unloaded)
--   to the options: 
-+   to the options::
- 
-       ATA/ATAPI/MFM/RLL support
-       Include IDE/ATAPI CDROM support
-@@ -72,35 +74,35 @@ This driver provides the following features:
-    address and an IRQ number, the standard assignments being
-    0x1f0 and 14 for the primary interface and 0x170 and 15 for the
-    secondary interface.  Each interface can control up to two devices,
--   where each device can be a hard drive, a CDROM drive, a floppy drive, 
--   or a tape drive.  The two devices on an interface are called `master'
--   and `slave'; this is usually selectable via a jumper on the drive.
-+   where each device can be a hard drive, a CDROM drive, a floppy drive,
-+   or a tape drive.  The two devices on an interface are called `master`
-+   and `slave`; this is usually selectable via a jumper on the drive.
- 
-    Linux names these devices as follows.  The master and slave devices
--   on the primary IDE interface are called `hda' and `hdb',
-+   on the primary IDE interface are called `hda` and `hdb`,
-    respectively.  The drives on the secondary interface are called
--   `hdc' and `hdd'.  (Interfaces at other locations get other letters
-+   `hdc` and `hdd`.  (Interfaces at other locations get other letters
-    in the third position; see Documentation/ide/ide.txt.)
- 
-    If you want your CDROM drive to be found automatically by the
-    driver, you should make sure your IDE interface uses either the
-    primary or secondary addresses mentioned above.  In addition, if
-    the CDROM drive is the only device on the IDE interface, it should
--   be jumpered as `master'.  (If for some reason you cannot configure
-+   be jumpered as `master`.  (If for some reason you cannot configure
-    your system in this manner, you can probably still use the driver.
-    You may have to pass extra configuration information to the kernel
-    when you boot, however.  See Documentation/ide/ide.txt for more
-    information.)
- 
- 4. Boot the system.  If the drive is recognized, you should see a
--   message which looks like
-+   message which looks like::
- 
-      hdb: NEC CD-ROM DRIVE:260, ATAPI CDROM drive
- 
-    If you do not see this, see section 5 below.
- 
- 5. You may want to create a symbolic link /dev/cdrom pointing to the
--   actual device.  You can do this with the command
-+   actual device.  You can do this with the command::
- 
-      ln -s  /dev/hdX  /dev/cdrom
- 
-@@ -108,14 +110,14 @@ This driver provides the following features:
-    drive is installed.
- 
- 6. You should be able to see any error messages from the driver with
--   the `dmesg' command.
-+   the `dmesg` command.
- 
- 
- 3. Basic usage
- --------------
- 
--An ISO 9660 CDROM can be mounted by putting the disc in the drive and 
--typing (as root)
-+An ISO 9660 CDROM can be mounted by putting the disc in the drive and
-+typing (as root)::
- 
-   mount -t iso9660 /dev/cdrom /mnt/cdrom
- 
-@@ -123,7 +125,7 @@ where it is assumed that /dev/cdrom is a link pointing to the actual
- device (as described in step 5 of the last section) and /mnt/cdrom is
- an empty directory.  You should now be able to see the contents of the
- CDROM under the /mnt/cdrom directory.  If you want to eject the CDROM,
--you must first dismount it with a command like
-+you must first dismount it with a command like::
- 
-   umount /mnt/cdrom
- 
-@@ -148,7 +150,7 @@ such as cdda2wav.  The only types of drive which I've heard support
- this are Sony and Toshiba drives.  You will get errors if you try to
- use this function on a drive which does not support it.
- 
--For supported changers, you can use the `cdchange' program (appended to
-+For supported changers, you can use the `cdchange` program (appended to
- the end of this file) to switch between changer slots.  Note that the
- drive should be unmounted before attempting this.  The program takes
- two arguments:  the CDROM device, and the slot number to which you wish
-@@ -165,7 +167,7 @@ Documentation/ide/ide.txt for current information about the underlying
- IDE support code.  Some of these items apply only to earlier versions
- of the driver, but are mentioned here for completeness.
- 
--In most cases, you should probably check with `dmesg' for any errors
-+In most cases, you should probably check with `dmesg` for any errors
- from the driver.
- 
- a. Drive is not detected during booting.
-@@ -184,9 +186,9 @@ a. Drive is not detected during booting.
- 
-    - If the autoprobing is not finding your drive, you can tell the
-      driver to assume that one exists by using a lilo option of the
--     form `hdX=cdrom', where X is the drive letter corresponding to
--     where your drive is installed.  Note that if you do this and you 
--     see a boot message like
-+     form `hdX=cdrom`, where X is the drive letter corresponding to
-+     where your drive is installed.  Note that if you do this and you
-+     see a boot message like::
- 
-        hdX: ATAPI cdrom (?)
- 
-@@ -220,7 +222,7 @@ b. Timeout/IRQ errors.
-     probably not making it to the host.
- 
-   - IRQ problems may also be indicated by the message
--    `IRQ probe failed (<n>)' while booting.  If <n> is zero, that
-+    `IRQ probe failed (<n>)` while booting.  If <n> is zero, that
-     means that the system did not see an interrupt from the drive when
-     it was expecting one (on any feasible IRQ).  If <n> is negative,
-     that means the system saw interrupts on multiple IRQ lines, when
-@@ -240,27 +242,27 @@ b. Timeout/IRQ errors.
-     there are hardware problems with the interrupt setup; they
-     apparently don't use interrupts.
- 
--  - If you own a Pioneer DR-A24X, you _will_ get nasty error messages 
-+  - If you own a Pioneer DR-A24X, you _will_ get nasty error messages
-     on boot such as "irq timeout: status=0x50 { DriveReady SeekComplete }"
-     The Pioneer DR-A24X CDROM drives are fairly popular these days.
-     Unfortunately, these drives seem to become very confused when we perform
-     the standard Linux ATA disk drive probe. If you own one of these drives,
--    you can bypass the ATA probing which confuses these CDROM drives, by 
--    adding `append="hdX=noprobe hdX=cdrom"' to your lilo.conf file and running 
--    lilo (again where X is the drive letter corresponding to where your drive 
-+    you can bypass the ATA probing which confuses these CDROM drives, by
-+    adding `append="hdX=noprobe hdX=cdrom"` to your lilo.conf file and running
-+    lilo (again where X is the drive letter corresponding to where your drive
-     is installed.)
--    
+ Further information about the Generic Time Of Day framework is available in the
+ OLS 2005 Proceedings Volume 1:
+-http://www.linuxsymposium.org/2005/linuxsymposium_procv1.pdf
 +
- c. System hangups.
++	http://www.linuxsymposium.org/2005/linuxsymposium_procv1.pdf
  
-   - If the system locks up when you try to access the CDROM, the most
-     likely cause is that you have a buggy IDE adapter which doesn't
-     properly handle simultaneous transactions on multiple interfaces.
-     The most notorious of these is the CMD640B chip.  This problem can
--    be worked around by specifying the `serialize' option when
-+    be worked around by specifying the `serialize` option when
-     booting.  Recent kernels should be able to detect the need for
-     this automatically in most cases, but the detection is not
-     foolproof.  See Documentation/ide/ide.txt for more information
--    about the `serialize' option and the CMD640B.
-+    about the `serialize` option and the CMD640B.
+ The paper "We Are Not Getting Any Younger: A New Approach to Time and
+ Timers" was written by J. Stultz, D.V. Hart, & N. Aravamudan.
+@@ -100,6 +103,7 @@ accounting, profiling, and high resolution timers.
  
-   - Note that many MS-DOS CDROM drivers will work with such buggy
-     hardware, apparently because they never attempt to overlap CDROM
-@@ -269,14 +271,14 @@ c. System hangups.
- 
- d. Can't mount a CDROM.
- 
--  - If you get errors from mount, it may help to check `dmesg' to see
-+  - If you get errors from mount, it may help to check `dmesg` to see
-     if there are any more specific errors from the driver or from the
-     filesystem.
- 
-   - Make sure there's a CDROM loaded in the drive, and that's it's an
-     ISO 9660 disc.  You can't mount an audio CD.
- 
--  - With the CDROM in the drive and unmounted, try something like
-+  - With the CDROM in the drive and unmounted, try something like::
- 
-       cat /dev/cdrom | od | more
- 
-@@ -284,9 +286,9 @@ d. Can't mount a CDROM.
-     OK, and the problem is at the filesystem level (i.e., the CDROM is
-     not ISO 9660 or has errors in the filesystem structure).
- 
--  - If you see `not a block device' errors, check that the definitions
-+  - If you see `not a block device` errors, check that the definitions
-     of the device special files are correct.  They should be as
--    follows:
-+    follows::
- 
-       brw-rw----   1 root     disk       3,   0 Nov 11 18:48 /dev/hda
-       brw-rw----   1 root     disk       3,  64 Nov 11 18:48 /dev/hdb
-@@ -301,7 +303,7 @@ d. Can't mount a CDROM.
-     If you have a /dev/cdrom symbolic link, check that it is pointing
-     to the correct device file.
- 
--    If you hear people talking of the devices `hd1a' and `hd1b', these
-+    If you hear people talking of the devices `hd1a` and `hd1b`, these
-     were old names for what are now called hdc and hdd.  Those names
-     should be considered obsolete.
- 
-@@ -311,8 +313,8 @@ d. Can't mount a CDROM.
-     always give meaningful error messages.
- 
- 
--e. Directory listings are unpredictably truncated, and `dmesg' shows
--   `buffer botch' error messages from the driver.
-+e. Directory listings are unpredictably truncated, and `dmesg` shows
-+   `buffer botch` error messages from the driver.
- 
-   - There was a bug in the version of the driver in 1.2.x kernels
-     which could cause this.  It was fixed in 1.3.0.  If you can't
-@@ -335,34 +337,36 @@ f. Data corruption.
- 5. cdchange.c
- -------------
- 
--/*
-- * cdchange.c  [-v]  <device>  [<slot>]
-- *
-- * This loads a CDROM from a specified slot in a changer, and displays 
-- * information about the changer status.  The drive should be unmounted before 
-- * using this program.
-- *
-- * Changer information is displayed if either the -v flag is specified
-- * or no slot was specified.
-- *
-- * Based on code originally from Gerhard Zuber <zuber@berlin.snafu.de>.
-- * Changer status information, and rewrite for the new Uniform CDROM driver
-- * interface by Erik Andersen <andersee@debian.org>.
-- */
-+::
- 
--#include <stdio.h>
--#include <stdlib.h>
--#include <errno.h>
--#include <string.h>
--#include <unistd.h>
--#include <fcntl.h>
--#include <sys/ioctl.h>
--#include <linux/cdrom.h>
-+  /*
-+   * cdchange.c  [-v]  <device>  [<slot>]
-+   *
-+   * This loads a CDROM from a specified slot in a changer, and displays
-+   * information about the changer status.  The drive should be unmounted before
-+   * using this program.
-+   *
-+   * Changer information is displayed if either the -v flag is specified
-+   * or no slot was specified.
-+   *
-+   * Based on code originally from Gerhard Zuber <zuber@berlin.snafu.de>.
-+   * Changer status information, and rewrite for the new Uniform CDROM driver
-+   * interface by Erik Andersen <andersee@debian.org>.
-+   */
- 
-+  #include <stdio.h>
-+  #include <stdlib.h>
-+  #include <errno.h>
-+  #include <string.h>
-+  #include <unistd.h>
-+  #include <fcntl.h>
-+  #include <sys/ioctl.h>
-+  #include <linux/cdrom.h>
- 
--int
--main (int argc, char **argv)
--{
+ The management layer assigns one or more of the following functions to a clock
+ event device:
 +
-+  int
-+  main (int argc, char **argv)
-+  {
- 	char *program;
- 	char *device;
- 	int fd;           /* file descriptor for CD-ROM device */
-@@ -382,30 +386,30 @@ main (int argc, char **argv)
- 		fprintf (stderr, "       Slots are numbered 1 -- n.\n");
- 		exit (1);
- 	}
-- 
+       - system global periodic tick (jiffies update)
+       - cpu local update_process_times
+       - cpu local profiling
+@@ -244,6 +248,3 @@ extended to x86_64 and ARM already. Initial (work in progress) support is also
+ available for MIPS and PowerPC.
+ 
+ 	  Thomas, Ingo
+-
+-
+-
+diff --git a/Documentation/timers/hpet.txt b/Documentation/timers/hpet.txt
+index 895345ec513b..c9d05d3caaca 100644
+--- a/Documentation/timers/hpet.txt
++++ b/Documentation/timers/hpet.txt
+@@ -1,4 +1,6 @@
+-		High Precision Event Timer Driver for Linux
++===========================================
++High Precision Event Timer Driver for Linux
++===========================================
+ 
+ The High Precision Event Timer (HPET) hardware follows a specification
+ by Intel and Microsoft, revision 1.
+diff --git a/Documentation/timers/hrtimers.txt b/Documentation/timers/hrtimers.txt
+index 588d85724f10..c1c20a693e8f 100644
+--- a/Documentation/timers/hrtimers.txt
++++ b/Documentation/timers/hrtimers.txt
+@@ -1,6 +1,6 @@
+-
++======================================================
+ hrtimers - subsystem for high-resolution kernel timers
+-----------------------------------------------------
++======================================================
+ 
+ This patch introduces a new subsystem for high-resolution kernel timers.
+ 
+@@ -146,7 +146,7 @@ the clock_getres() interface. This will return whatever real resolution
+ a given clock has - be it low-res, high-res, or artificially-low-res.
+ 
+ hrtimers - testing and verification
+-----------------------------------
++-----------------------------------
+ 
+ We used the high-resolution clock subsystem ontop of hrtimers to verify
+ the hrtimer implementation details in praxis, and we also ran the posix
+diff --git a/Documentation/timers/timekeeping.txt b/Documentation/timers/timekeeping.txt
+index 2d1732b0a868..f83e98852e2c 100644
+--- a/Documentation/timers/timekeeping.txt
++++ b/Documentation/timers/timekeeping.txt
+@@ -1,5 +1,6 @@
++===========================================================
+ Clock sources, Clock events, sched_clock() and delay timers
+------------------------------------------------------------
++===========================================================
+ 
+ This document tries to briefly explain some basic kernel timekeeping
+ abstractions. It partly pertains to the drivers usually found in
+diff --git a/Documentation/timers/timers-howto.txt b/Documentation/timers/timers-howto.txt
+index 038f8c77a076..7e3167bec2b1 100644
+--- a/Documentation/timers/timers-howto.txt
++++ b/Documentation/timers/timers-howto.txt
+@@ -1,5 +1,6 @@
++===================================================================
+ delays - Information on the various kernel delay / sleep mechanisms
+--------------------------------------------------------------------
++===================================================================
+ 
+ This document seeks to answer the common question: "What is the
+ RightWay (TM) to insert a delay?"
+@@ -17,7 +18,7 @@ code in an atomic context?"  This should be followed closely by "Does
+ it really need to delay in atomic context?" If so...
+ 
+ ATOMIC CONTEXT:
+-	You must use the *delay family of functions. These
++	You must use the `*delay` family of functions. These
+ 	functions use the jiffie estimation of clock speed
+ 	and will busy wait for enough loop cycles to achieve
+ 	the desired delay:
+@@ -35,21 +36,26 @@ ATOMIC CONTEXT:
+ 	be refactored to allow for the use of msleep.
+ 
+ NON-ATOMIC CONTEXT:
+-	You should use the *sleep[_range] family of functions.
++	You should use the `*sleep[_range]` family of functions.
+ 	There are a few more options here, while any of them may
+ 	work correctly, using the "right" sleep function will
+ 	help the scheduler, power management, and just make your
+ 	driver better :)
+ 
+ 	-- Backed by busy-wait loop:
 +
-        if (strcmp (argv[0], "-v") == 0) {
-                 verbose = 1;
-                 ++argv;
-                 --argc;
-         }
-- 
+ 		udelay(unsigned long usecs)
 +
- 	device = argv[0];
-- 
+ 	-- Backed by hrtimers:
 +
- 	if (argc == 2)
- 		slot = atoi (argv[1]) - 1;
- 
--	/* open device */ 
-+	/* open device */
- 	fd = open(device, O_RDONLY | O_NONBLOCK);
- 	if (fd < 0) {
--		fprintf (stderr, "%s: open failed for `%s': %s\n",
-+		fprintf (stderr, "%s: open failed for `%s`: %s\n",
- 			 program, device, strerror (errno));
- 		exit (1);
- 	}
- 
--	/* Check CD player status */ 
-+	/* Check CD player status */
- 	total_slots_available = ioctl (fd, CDROM_CHANGER_NSLOTS);
- 	if (total_slots_available <= 1 ) {
--		fprintf (stderr, "%s: Device `%s' is not an ATAPI "
-+		fprintf (stderr, "%s: Device `%s` is not an ATAPI "
- 			"compliant CD changer.\n", program, device);
- 		exit (1);
- 	}
-@@ -418,7 +422,7 @@ main (int argc, char **argv)
- 			exit (1);
- 		}
- 
--		/* load */ 
-+		/* load */
- 		slot=ioctl (fd, CDROM_SELECT_DISC, slot);
- 		if (slot<0) {
- 			fflush(stdout);
-@@ -462,14 +466,14 @@ main (int argc, char **argv)
- 
- 		for (x_slot=0; x_slot<total_slots_available; x_slot++) {
- 			printf ("Slot %2d: ", x_slot+1);
--             		status = ioctl (fd, CDROM_DRIVE_STATUS, x_slot);
--             		if (status<0) {
--             		     perror(" CDROM_DRIVE_STATUS");
--             		} else switch(status) {
-+			status = ioctl (fd, CDROM_DRIVE_STATUS, x_slot);
-+			if (status<0) {
-+			     perror(" CDROM_DRIVE_STATUS");
-+			} else switch(status) {
- 			case CDS_DISC_OK:
- 				printf ("Disc present.");
- 				break;
--			case CDS_NO_DISC: 
-+			case CDS_NO_DISC:
- 				printf ("Empty slot.");
- 				break;
- 			case CDS_TRAY_OPEN:
-@@ -507,11 +511,11 @@ main (int argc, char **argv)
- 				break;
- 			}
- 			}
--                  	status = ioctl (fd, CDROM_MEDIA_CHANGED, x_slot);
--                  	if (status<0) {
-+			status = ioctl (fd, CDROM_MEDIA_CHANGED, x_slot);
-+			if (status<0) {
- 				perror(" CDROM_MEDIA_CHANGED");
--                  	}
--		  	switch (status) {
-+			}
-+			switch (status) {
- 			case 1:
- 				printf ("Changed.\n");
- 				break;
-@@ -525,10 +529,10 @@ main (int argc, char **argv)
- 	/* close device */
- 	status = close (fd);
- 	if (status != 0) {
--		fprintf (stderr, "%s: close failed for `%s': %s\n",
-+		fprintf (stderr, "%s: close failed for `%s`: %s\n",
- 			 program, device, strerror (errno));
- 		exit (1);
- 	}
-- 
+ 		usleep_range(unsigned long min, unsigned long max)
 +
- 	exit (0);
--}
-+  }
-diff --git a/Documentation/cdrom/packet-writing.txt b/Documentation/cdrom/packet-writing.txt
-index 2834170d821e..c5c957195a5a 100644
---- a/Documentation/cdrom/packet-writing.txt
-+++ b/Documentation/cdrom/packet-writing.txt
-@@ -1,3 +1,7 @@
-+==============
-+Packet writing
-+==============
+ 	-- Backed by jiffies / legacy_timers
 +
- Getting started quick
- ---------------------
+ 		msleep(unsigned long msecs)
+ 		msleep_interruptible(unsigned long msecs)
  
-@@ -10,13 +14,16 @@ Getting started quick
-   Download from http://sourceforge.net/projects/linux-udf/
+-	Unlike the *delay family, the underlying mechanism
++	Unlike the `*delay` family, the underlying mechanism
+ 	driving each of these calls varies, thus there are
+ 	quirks you should be aware of.
  
- - Grab a new CD-RW disc and format it (assuming CD-RW is hdc, substitute
--  as appropriate):
-+  as appropriate)::
+@@ -70,6 +76,7 @@ NON-ATOMIC CONTEXT:
+ 		- Why not msleep for (1ms - 20ms)?
+ 			Explained originally here:
+ 				http://lkml.org/lkml/2007/8/3/250
 +
- 	# cdrwtool -d /dev/hdc -q
- 
--- Setup your writer
-+- Setup your writer::
-+
- 	# pktsetup dev_name /dev/hdc
- 
--- Now you can mount /dev/pktcdvd/dev_name and copy files to it. Enjoy!
-+- Now you can mount /dev/pktcdvd/dev_name and copy files to it. Enjoy::
-+
- 	# mount /dev/pktcdvd/dev_name /cdrom -t udf -o rw,noatime
- 
- 
-@@ -25,11 +32,11 @@ Packet writing for DVD-RW media
- 
- DVD-RW discs can be written to much like CD-RW discs if they are in
- the so called "restricted overwrite" mode. To put a disc in restricted
--overwrite mode, run:
-+overwrite mode, run::
- 
- 	# dvd+rw-format /dev/hdc
- 
--You can then use the disc the same way you would use a CD-RW disc:
-+You can then use the disc the same way you would use a CD-RW disc::
- 
- 	# pktsetup dev_name /dev/hdc
- 	# mount /dev/pktcdvd/dev_name /cdrom -t udf -o rw,noatime
-@@ -41,7 +48,7 @@ Packet writing for DVD+RW media
- According to the DVD+RW specification, a drive supporting DVD+RW discs
- shall implement "true random writes with 2KB granularity", which means
- that it should be possible to put any filesystem with a block size >=
--2KB on such a disc. For example, it should be possible to do:
-+2KB on such a disc. For example, it should be possible to do::
- 
- 	# dvd+rw-format /dev/hdc   (only needed if the disc has never
- 	                            been formatted)
-@@ -54,7 +61,7 @@ follow the specification, but suffer bad performance problems if the
- writes are not 32KB aligned.
- 
- Both problems can be solved by using the pktcdvd driver, which always
--generates aligned writes.
-+generates aligned writes::
- 
- 	# dvd+rw-format /dev/hdc
- 	# pktsetup dev_name /dev/hdc
-@@ -83,7 +90,7 @@ Notes
- 
- - Since the pktcdvd driver makes the disc appear as a regular block
-   device with a 2KB block size, you can put any filesystem you like on
--  the disc. For example, run:
-+  the disc. For example, run::
- 
- 	# /sbin/mke2fs /dev/pktcdvd/dev_name
- 
-@@ -97,7 +104,7 @@ Since Linux 2.6.20, the pktcdvd module has a sysfs interface
- and can be controlled by it. For example the "pktcdvd" tool uses
- this interface. (see http://tom.ist-im-web.de/download/pktcdvd )
- 
--"pktcdvd" works similar to "pktsetup", e.g.:
-+"pktcdvd" works similar to "pktsetup", e.g.::
- 
- 	# pktcdvd -a dev_name /dev/hdc
- 	# mkudffs /dev/pktcdvd/dev_name
-@@ -115,7 +122,7 @@ For a description of the sysfs interface look into the file:
- Using the pktcdvd debugfs interface
- -----------------------------------
- 
--To read pktcdvd device infos in human readable form, do:
-+To read pktcdvd device infos in human readable form, do::
- 
- 	# cat /sys/kernel/debug/pktcdvd/pktcdvd[0-7]/info
- 
+ 			msleep(1~20) may not do what the caller intends, and
+ 			will often sleep longer (~20 ms actual sleep for any
+ 			value given in the 1~20ms range). In many cases this
 -- 
 2.20.1
 
