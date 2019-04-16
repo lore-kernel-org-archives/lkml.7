@@ -6,102 +6,259 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B019C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:57:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 798B9C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 56F8E2073F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:57:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 418222073F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:57:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730331AbfDPT5n (ORCPT
+        id S1730389AbfDPT5u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 15:57:43 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:47519 "EHLO
+        Tue, 16 Apr 2019 15:57:50 -0400
+Received: from mout.kundenserver.de ([217.72.192.74]:47829 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728781AbfDPT5m (ORCPT
+        with ESMTP id S1728770AbfDPT5n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 15:57:42 -0400
+        Tue, 16 Apr 2019 15:57:43 -0400
 Received: from orion.localdomain ([95.117.99.70]) by mrelayeu.kundenserver.de
  (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1N4i7l-1gosy33tjz-011f1Y; Tue, 16 Apr 2019 21:57:41 +0200
+ 1MFba4-1h3nQ232Q2-00H953; Tue, 16 Apr 2019 21:57:40 +0200
 From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
 To:     linux-kernel@vger.kernel.org
 Cc:     dmitry.torokhov@gmail.com, linux-input@vger.kernel.org
-Subject: [PATCH 4/4] input: keyboard: gpio-keys-polled: skip oftree code when CONFIG_OF disabled
-Date:   Tue, 16 Apr 2019 21:57:25 +0200
-Message-Id: <1555444645-15156-5-git-send-email-info@metux.net>
+Subject: [PATCH 3/4] input: keyboard: gpio_keys_polled: use gpio lookup table
+Date:   Tue, 16 Apr 2019 21:57:24 +0200
+Message-Id: <1555444645-15156-4-git-send-email-info@metux.net>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1555444645-15156-1-git-send-email-info@metux.net>
 References: <1555444645-15156-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:mvqVlM/Ve9qfMnQh0P0SBJ3tmiUqICi2lk/C5OUytIrVpdTa4SZ
- LsNBXSDfD8Za8Tf6lGTRsF24S9BNAvpOieRP2KaFttZ0QDI4qXyQSKbN+ROP5jOI0KoClKN
- GPAHcZYMMwelHcbFbikWVGTAUEqrsfQL5NuAmVHdsOmwiQqKdWtrgOOhSnTeNp+4D+ZmTfb
- hfYxVgvuCVXgHxjdw8VkQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:YJ/bmDr3HXk=:0CtQ9OEf8RQvJuxyTHOS7u
- A/yRQaovxLUYV1fMit9AUL+62hbqa0enIxs9Dd8WHt+eZUzeo4AapTN6ylg0lgYN0K9oOPYG3
- rqjpXesJJ7rs37XEsK04ryHUazH27PogxzWucXVQcF1I/vbpL5GqpR7kp79i2a/P4775tSVOl
- GHvsTU0IlwrRMyGKr4ThFXK7K4O0U7lgVhLvSPZJt48rHsMEgOVRpToQH96PVwQE1tAcdod70
- wwVb0ccnncfrsm/mHaPH6WTxzRty1H3PoOXXZ1TO+cnLW4ERcN5LrbNl00Z21918nom2u6PDt
- IuYjA44Z3Y22dQx/ldKvF/KMASYRLGjSR6PWcRrPLZFhVP1HTWoK9zRQB5tUHajIbOT984Zko
- 3VrGahkMDbxz+vhCeCyz/JvZOlRz494DUVYF4Bagxn3Exq6/HzI3gUIiIw2KOomriiHbXEvFm
- a4Staq2gwN/MCCVKEgZLu1vY433NuP+GGo/KAPN7NaJqH/KOAWbiQ2C2Q/Mjw8t6r0z2oRcOZ
- a8jH/JSNku1uu8HZh1Tlnntgmz0PygKthFpWoksezYDoJDDkoQr1EUlSODWlMuhHwd3stWxHn
- OqrceO8Acj4GjQvrjhjtE276SwJR1wa/M6wiaBTT3CC1GITRX21/4P7jheajxwhzyqEbx1f8y
- pAaz5glwSSe1AjPqMwjEuNC/sKZ7gK0XBx9HCl/3oz/YVKPbHt4bbXl71bWXMXK3pfyrc04LO
- DVlmujk8pDHga75iiCg5ZV8Ph7cOuBOBn4Lk/Q==
+X-Provags-ID: V03:K1:CPdYnkIO5e3+kGA3V5cgWPn219nnvvi9Vdoo5187xAQ3g86z9ws
+ qx6blkrm47RdLkPQQIivKqVU7Wl4lX20IoBHCZehiAAdhZY9CPjX0BlqdqObnLavXuLjl2W
+ wfKdKd/6kk4wm9v4nEw0c7CbZtsrE7lG+7krm8I24pm6jdBaBgxWuiMUE4i3GDLMB75ertY
+ a+4Jdh8OrPuBX2MVy3X3A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:7gvHo7+nZ8g=:KlQ5qqE6dQ5s7ISN0gBmqb
+ 0pmgssOVIDVjTQlfZSA8qsNRaMT/gBzaVsaXv71O56PuElkEAqk4mJVB2zdo89UchHmXAdB22
+ mWGnh6rZqMtQccU+Cyq710hl8vMZ62iulBU/X7EdAnPEnAoj/z/mHLHoMPa32xQ0a/KXH6GW/
+ JiEvfnOmF62fnpQACGo8JeumuQiVMSzy3684J/x67lsiuryVv5HQnejeHZ/AkdAtu2cXZbD+A
+ SErWcew2FK+PFrACgddyl/fKe8nPQplf85G2jmSjA4687uVCVNb5WIIIjUKBPKAb33zAHRg3a
+ iiCdaL7M1zzOzP3VhPYcpLNa0vnCEkJIeqW5ytij6HUjyTLal9/6aJQzVIZ4thq1shTklcW0B
+ aBDscLcd/h+WL2t8iyR75crHfudk+iOJwdbfcB1HmSNYHjZl7/HqDxtmJ7pZdRqEtX0cr36IE
+ 4cYw+F61D0/590dRPNdB7Twq5b0YSpVWeOle3xapSylhhebKQbky5MEddAOSUxn209r0UVKOt
+ 5mNso6azkUQAHb8FBH/zY/lW/jNBSTlWCYqF7J8hVipNRfYS2Rljx5mqqKh0Af8ROFCOYcKFK
+ eg3QmWUbvBezfCv1ks/b1BKRqX9HqIODUqaUzmJJFtx8BRxI4WMTiPBzkdnicXAInnjgi7bay
+ o98fcCuRx/Ox/NqhgDgPh5ZgSX9RWnxUacEB2jvUYZKjkoUQoAvdZW9f+rM5zQ/JdYqyTYokS
+ VbutjSQ58A6zI/GIAbsRGK3Bj3Pyp+3i9ephMw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-we don't need to build in oftree probing stuff when oftree isn't
-enabled at all.
+Support the recently introduced gpio lookup tables for
+attaching to gpio lines. So, harcoded gpio numbers aren't
+needed anymore.
 
+Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc: linux-input@vger.kernel.org
 Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
 ---
- drivers/input/keyboard/gpio_keys_polled.c | 8 +++++++-
- 1 file changed, 7 insertions(+), 1 deletion(-)
+ drivers/input/keyboard/gpio_keys_polled.c | 167 +++++++++++++++++++++---------
+ 1 file changed, 119 insertions(+), 48 deletions(-)
 
 diff --git a/drivers/input/keyboard/gpio_keys_polled.c b/drivers/input/keyboard/gpio_keys_polled.c
-index 3f773b2..fbccb89 100644
+index 3312186..3f773b2 100644
 --- a/drivers/input/keyboard/gpio_keys_polled.c
 +++ b/drivers/input/keyboard/gpio_keys_polled.c
-@@ -147,6 +147,7 @@ static void gpio_keys_polled_close(struct input_polled_dev *dev)
- static struct gpio_keys_platform_data *
- gpio_keys_polled_get_devtree_pdata(struct device *dev)
- {
-+#ifdef CONFIG_OF
- 	struct gpio_keys_platform_data *pdata;
- 	struct gpio_keys_button *button;
- 	struct fwnode_handle *child;
-@@ -200,6 +201,9 @@ static void gpio_keys_polled_close(struct input_polled_dev *dev)
- 	}
+@@ -24,6 +24,7 @@
+ #include <linux/platform_device.h>
+ #include <linux/gpio.h>
+ #include <linux/gpio/consumer.h>
++#include <linux/gpio/machine.h>
+ #include <linux/gpio_keys.h>
+ #include <linux/property.h>
  
- 	return pdata;
-+#else /* CONFIG_OF */
+@@ -227,6 +228,119 @@ static void gpio_keys_polled_set_abs_params(struct input_dev *input,
+ };
+ MODULE_DEVICE_TABLE(of, gpio_keys_polled_of_match);
+ 
++static struct gpio_desc *gpio_keys_polled_get_gpiod_fwnode(
++	struct device *dev,
++	int idx,
++	const char *desc)
++{
++	struct gpio_desc *gpiod;
++	struct fwnode_handle *child;
++	int x;
++
++	/* get the idx'th child node */
++	child = device_get_next_child_node(dev, NULL);
++	while (child && x) {
++		child = device_get_next_child_node(dev, child);
++		x--;
++	}
++
++	if (!child) {
++		dev_err(dev, "missing oftree child node #%d\n", idx);
++		return ERR_PTR(-EINVAL);
++	}
++
++	gpiod = devm_fwnode_get_gpiod_from_child(dev,
++						 NULL,
++						 child,
++						 GPIOD_IN,
++						 desc);
++	if (IS_ERR(gpiod)) {
++		if (PTR_ERR(gpiod) != -EPROBE_DEFER)
++			dev_err(dev,
++				"failed to get gpio: %ld\n",
++				PTR_ERR(gpiod));
++		fwnode_handle_put(child);
++		return gpiod;
++	}
++
++	return gpiod;
++}
++
++static struct gpio_desc *gpio_keys_polled_get_gpiod_legacy(
++	struct device *dev,
++	int idx,
++	const struct gpio_keys_button *button)
++{
++	/*
++	 * Legacy GPIO number so request the GPIO here and
++	 * convert it to descriptor.
++	 */
++	unsigned int flags = GPIOF_IN;
++	struct gpio_desc *gpiod;
++	int error;
++
++	dev_info(dev, "hardcoded gpio IDs are deprecated.\n");
++
++	if (button->active_low)
++		flags |= GPIOF_ACTIVE_LOW;
++
++	error = devm_gpio_request_one(dev, button->gpio,
++			flags, button->desc ? : DRV_NAME);
++	if (error) {
++		dev_err(dev,
++			"unable to claim gpio %u, err=%d\n",
++			button->gpio, error);
++		return ERR_PTR(error);
++	}
++
++	gpiod = gpio_to_desc(button->gpio);
++	if (!gpiod) {
++		dev_err(dev,
++			"unable to convert gpio %u to descriptor\n",
++			button->gpio);
++		return ERR_PTR(-EINVAL);
++	}
++
++	return gpiod;
++}
++
++static struct gpio_desc *gpio_keys_polled_get_gpiod(
++	struct device *dev,
++	int idx,
++	const struct gpio_keys_button *button)
++{
++	struct gpio_desc *gpiod = NULL;
++	int error;
++
++	/* No legacy static platform data - use oftree */
++	if (!dev_get_platdata(dev)) {
++		return gpio_keys_polled_get_gpiod_fwnode(
++			dev, idx, button->desc);
++	}
++
++	gpiod = devm_gpiod_get_index(dev, NULL, idx, GPIOF_IN);
++
++	if (!IS_ERR(gpiod)) {
++		dev_info(dev, "picked gpiod idx %d from gpio table\n", idx);
++		gpiod_set_consumer_name(gpiod, button->desc ? : DRV_NAME);
++		return gpiod;
++	}
++
++	if (PTR_ERR(gpiod) != -ENOENT) {
++		dev_err(dev, "failed fetching gpiod #%d: %d\n",
++			idx, PTR_ERR(gpiod));
++		return gpiod;
++	}
++
++	/* Use legacy gpio id, if defined */
++	if (gpio_is_valid(button->gpio)) {
++		return gpio_keys_polled_get_gpiod_legacy(
++			dev, idx, button);
++	}
++
 +	return ERR_PTR(-ENOENT);
-+#endif /* CONFIG_OF */
- }
++}
++
+ static int gpio_keys_polled_probe(struct platform_device *pdev)
+ {
+ 	struct device *dev = &pdev->dev;
+@@ -291,57 +405,14 @@ static int gpio_keys_polled_probe(struct platform_device *pdev)
  
- static void gpio_keys_polled_set_abs_params(struct input_dev *input,
-@@ -226,7 +230,7 @@ static void gpio_keys_polled_set_abs_params(struct input_dev *input,
- 	{ .compatible = "gpio-keys-polled", },
- 	{ },
- };
--MODULE_DEVICE_TABLE(of, gpio_keys_polled_of_match);
-+MODULE_DEVICE_TABLE_OF(gpio_keys_polled_of_match);
+ 		if (button->wakeup) {
+ 			dev_err(dev, DRV_NAME " does not support wakeup\n");
+-			fwnode_handle_put(child);
+ 			return -EINVAL;
+ 		}
  
- static struct gpio_desc *gpio_keys_polled_get_gpiod_fwnode(
- 	struct device *dev,
-@@ -452,7 +456,9 @@ static int gpio_keys_polled_probe(struct platform_device *pdev)
- 	.probe	= gpio_keys_polled_probe,
- 	.driver	= {
- 		.name	= DRV_NAME,
-+#ifdef CONFIG_OF
- 		.of_match_table = gpio_keys_polled_of_match,
-+#endif /* CONFIG_OF */
- 	},
- };
- module_platform_driver(gpio_keys_polled_driver);
+-		if (!dev_get_platdata(dev)) {
+-			/* No legacy static platform data */
+-			child = device_get_next_child_node(dev, child);
+-			if (!child) {
+-				dev_err(dev, "missing child device node\n");
+-				return -EINVAL;
+-			}
+-
+-			bdata->gpiod = devm_fwnode_get_gpiod_from_child(dev,
+-								NULL, child,
+-								GPIOD_IN,
+-								button->desc);
+-			if (IS_ERR(bdata->gpiod)) {
+-				error = PTR_ERR(bdata->gpiod);
+-				if (error != -EPROBE_DEFER)
+-					dev_err(dev,
+-						"failed to get gpio: %d\n",
+-						error);
+-				fwnode_handle_put(child);
+-				return error;
+-			}
+-		} else if (gpio_is_valid(button->gpio)) {
+-			/*
+-			 * Legacy GPIO number so request the GPIO here and
+-			 * convert it to descriptor.
+-			 */
+-			unsigned flags = GPIOF_IN;
+-
+-			if (button->active_low)
+-				flags |= GPIOF_ACTIVE_LOW;
+-
+-			error = devm_gpio_request_one(dev, button->gpio,
+-					flags, button->desc ? : DRV_NAME);
+-			if (error) {
+-				dev_err(dev,
+-					"unable to claim gpio %u, err=%d\n",
+-					button->gpio, error);
+-				return error;
+-			}
+-
+-			bdata->gpiod = gpio_to_desc(button->gpio);
+-			if (!bdata->gpiod) {
+-				dev_err(dev,
+-					"unable to convert gpio %u to descriptor\n",
+-					button->gpio);
+-				return -EINVAL;
+-			}
++		bdata->gpiod = gpio_keys_polled_get_gpiod(dev, i, button);
++
++		if (IS_ERR(bdata->gpiod)) {
++			dev_err(dev, "failed to fetch gpiod #%d\n", i);
++			return PTR_ERR(bdata->gpiod);
+ 		}
+ 
+ 		bdata->last_state = -1;
 -- 
 1.9.1
 
