@@ -2,125 +2,194 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9668EC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:22:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB9AC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:22:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65C1520870
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:22:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="eDeFtamR";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="WEgle5Q2"
+	by mail.kernel.org (Postfix) with ESMTP id EF60420821
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:22:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729346AbfDPNWc (ORCPT
+        id S1729360AbfDPNWo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 09:22:32 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:38270 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbfDPNWb (ORCPT
+        Tue, 16 Apr 2019 09:22:44 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:44217 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbfDPNWo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 09:22:31 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 33A6D60850; Tue, 16 Apr 2019 13:22:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1555420950;
-        bh=gi2J4a/2Nij7yX8j5xCIPPYNVO9kPoojH67qEMuF4Uo=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=eDeFtamRVyEP2mn5Nj9NApLfUMJLugdmn3Vx5ttdh1Q0IQNaaFzsOM8EQKhwoo/uH
-         GCPM4nBjzClwoxw70AdcIepizqgXMKzhLEGEPOTnvvLQEJ07CekOjN0rgVDdQa8+4L
-         /fhH92tDuHOFbUyrNygsAZnJJ2+ix091Du/es0FA=
-Received: from [10.204.79.15] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id 8FCCF60E5F;
-        Tue, 16 Apr 2019 13:22:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1555420948;
-        bh=gi2J4a/2Nij7yX8j5xCIPPYNVO9kPoojH67qEMuF4Uo=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=WEgle5Q2qi3VMM6TMmxm2Xr/YID6QJlMljoUtzxtH88R0Zj89D2/7MVJ8ifU6xtiy
-         QhKKs2oyuQ2/UHs3UA8/nASLkg6jP2yunKbFii7Grmts6+njl8vxXmPq1c2g6t1Y08
-         Mo70LucO7SXLDoGaJhisOsgehYR5le4as0VJaLno=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 8FCCF60E5F
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH] clk: mvebu: fix spelling mistake "gatable" -> "gateable"
-To:     Colin King <colin.king@canonical.com>,
-        Michael Turquette <mturquette@baylibre.com>,
-        Stephen Boyd <sboyd@kernel.org>, linux-clk@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190416115616.31861-1-colin.king@canonical.com>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <9b9e2152-d99b-4edd-762d-da59134c2ec0@codeaurora.org>
-Date:   Tue, 16 Apr 2019 18:52:24 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 16 Apr 2019 09:22:44 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
+ 1MMXYN-1hX5JC1fF9-00Ja2i; Tue, 16 Apr 2019 15:22:13 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     arm@kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>, Greg Ungerer <gerg@uclinux.org>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        Guenter Roeck <linux@roeck-us.net>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-watchdog@vger.kernel.org
+Subject: [PATCH 1/6 v2] ARM: ks8695: watchdog: stop using mach/*.h
+Date:   Tue, 16 Apr 2019 15:21:41 +0200
+Message-Id: <20190416132207.1304277-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20190415202501.941196-1-arnd@arndb.de>
+References: <20190415202501.941196-1-arnd@arndb.de>
 MIME-Version: 1.0
-In-Reply-To: <20190416115616.31861-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:uqfgWOfOCLOa4nYg5G/1yN5YmkVEzPGjOL6IbNCxYpSeD28aL8L
+ DYqyxCrtfdMCsLI7XiHS/rY0b6QJ6fcEhrF1XMS8e1Gu/6chVpUfT1k/V5G6iQAzLjcJYKn
+ DIVPMNu0r0K/b5le/HrM4L4qB7QpD+1jf8fKufGe6k4FrdUATrBWts4949DzIiFIViKG1PR
+ Mpdt2qwUjQNk8LOQxK3xw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:tw6p5CP/Xp8=:gSEDkRYFWUz05sDaS4HxlS
+ bUB/iq/Wn7XUFIWst0ZunMDqnS7nczFxHMb1wJLQp2Js76TLVn6jbPmKW4mPkU9sB85qu6Klg
+ UklO6CvX5ot0/anHOM79vw8j5pYTz/WMdhJ0xkVFu5681uj2jUWWOnSQT2K5XSNvcDvkclIUy
+ vj43s0/ySU8V9md7QIA6SWrcJbpUEmt/nMmScfpX5yzzPcCV2QGm/HrfKOovLCHja4dniRgO0
+ OCws+0trVHa4nhDhcjLoTm5nR/Z+DONka75h+5xWpWv0bXkvB6/aPQzmpl3eSDhVKTyMQRG3a
+ yfcq7gLc2VFDFjwDoAHFo2b5lSiFrZZQ8/7gCkqXrnLrcHkR1oiUDgZp10j/hTBB7YvtcmS1w
+ WEclfnJ9VO9aR0fD0XrHdWZ1ENAaP94CPF5zpQOav5VlKx7YTP4TtG6d9uhm9nsBjx/QwgXOy
+ R13CxxgahMFV6yVYgCCqUvnEteplkgpgFg8935Us2riUBb66ZBNRN0tNCeeP11BUnQPfQTrQs
+ EWwn9mZWh6BidKbO5WS+pjFtVoxIQaIqO0/2j+cJ+ERqQT8ZallQOaroi1L3f2sJijIyHnLKr
+ 4HxJZW8rxCSSD6TQfNoiLDhVuCFkX8LIt0rzSoJ5qWvmJpqus4xXx8UiyNp+lKOz4QDuHI57u
+ gYWTTI1pHiWWc6vsSP9MmltRFZ2B1Qe4Q5IeUqwqcj7IXCzh0zrZEEMwQLZ/4c2pxZzCIm+kf
+ Q9Hk1XX+JVquIOcq3wy6wv5F1dNPkij0uAyegA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+drivers should not rely on machine specific headers but
+get their information from the platform device.
 
-On 4/16/2019 5:26 PM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
->
-> There are a few spelling mistakes in comments and a pr_err
-> error message. Fix these.
->
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ arch/arm/mach-ks8695/devices.c | 13 ++++++++++++-
+ drivers/watchdog/Kconfig       |  2 +-
+ drivers/watchdog/ks8695_wdt.c  | 29 ++++++++++++++++-------------
+ 3 files changed, 29 insertions(+), 15 deletions(-)
 
+diff --git a/arch/arm/mach-ks8695/devices.c b/arch/arm/mach-ks8695/devices.c
+index 15afeb964280..ba9d0f0f47ac 100644
+--- a/arch/arm/mach-ks8695/devices.c
++++ b/arch/arm/mach-ks8695/devices.c
+@@ -169,11 +169,22 @@ void __init ks8696_add_device_hpna(void)
+ /* --------------------------------------------------------------------
+  *  Watchdog
+  * -------------------------------------------------------------------- */
++#define KS8695_TMR_OFFSET      (0xF0000 + 0xE400)
++#define KS8695_TMR_PA          (KS8695_IO_PA + KS8695_TMR_OFFSET)
++static struct resource ks8695_wdt_resources[] = {
++	[0] = {
++		.name	= "tmr",
++		.start	= KS8695_TMR_PA,
++		.end	= KS8695_TMR_PA + 0xf,
++		.flags	= IORESOURCE_MEM,
++	},
++};
+ 
+ static struct platform_device ks8695_wdt_device = {
+ 	.name		= "ks8695_wdt",
+ 	.id		= -1,
+-	.num_resources	= 0,
++	.resource	= ks8695_wdt_resources,
++	.num_resources	= ARRAY_SIZE(ks8695_wdt_resources),
+ };
+ 
+ static void __init ks8695_add_device_watchdog(void)
+diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
+index 242eea859637..046e01daef57 100644
+--- a/drivers/watchdog/Kconfig
++++ b/drivers/watchdog/Kconfig
+@@ -397,7 +397,7 @@ config IXP4XX_WATCHDOG
+ 
+ config KS8695_WATCHDOG
+ 	tristate "KS8695 watchdog"
+-	depends on ARCH_KS8695
++	depends on ARCH_KS8695 || COMPILE_TEST
+ 	help
+ 	  Watchdog timer embedded into KS8695 processor. This will reboot your
+ 	  system when the timeout is reached.
+diff --git a/drivers/watchdog/ks8695_wdt.c b/drivers/watchdog/ks8695_wdt.c
+index 1e41818a44bc..2a11cdfe2ab1 100644
+--- a/drivers/watchdog/ks8695_wdt.c
++++ b/drivers/watchdog/ks8695_wdt.c
+@@ -23,10 +23,8 @@
+ #include <linux/watchdog.h>
+ #include <linux/io.h>
+ #include <linux/uaccess.h>
+-#include <mach/hardware.h>
+ 
+-#define KS8695_TMR_OFFSET	(0xF0000 + 0xE400)
+-#define KS8695_TMR_VA		(KS8695_IO_VA + KS8695_TMR_OFFSET)
++#define KS8695_CLOCK_RATE  25000000
+ 
+ /*
+  * Timer registers
+@@ -57,6 +55,7 @@ MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
+ 
+ static unsigned long ks8695wdt_busy;
+ static DEFINE_SPINLOCK(ks8695_lock);
++static void __iomem *tmr_reg;
+ 
+ /* ......................................................................... */
+ 
+@@ -69,8 +68,8 @@ static inline void ks8695_wdt_stop(void)
+ 
+ 	spin_lock(&ks8695_lock);
+ 	/* disable timer0 */
+-	tmcon = __raw_readl(KS8695_TMR_VA + KS8695_TMCON);
+-	__raw_writel(tmcon & ~TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
++	tmcon = __raw_readl(tmr_reg + KS8695_TMCON);
++	__raw_writel(tmcon & ~TMCON_T0EN, tmr_reg + KS8695_TMCON);
+ 	spin_unlock(&ks8695_lock);
+ }
+ 
+@@ -84,15 +83,15 @@ static inline void ks8695_wdt_start(void)
+ 
+ 	spin_lock(&ks8695_lock);
+ 	/* disable timer0 */
+-	tmcon = __raw_readl(KS8695_TMR_VA + KS8695_TMCON);
+-	__raw_writel(tmcon & ~TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
++	tmcon = __raw_readl(tmr_reg + KS8695_TMCON);
++	__raw_writel(tmcon & ~TMCON_T0EN, tmr_reg + KS8695_TMCON);
+ 
+ 	/* program timer0 */
+-	__raw_writel(tval | T0TC_WATCHDOG, KS8695_TMR_VA + KS8695_T0TC);
++	__raw_writel(tval | T0TC_WATCHDOG, tmr_reg + KS8695_T0TC);
+ 
+ 	/* re-enable timer0 */
+-	tmcon = __raw_readl(KS8695_TMR_VA + KS8695_TMCON);
+-	__raw_writel(tmcon | TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
++	tmcon = __raw_readl(tmr_reg + KS8695_TMCON);
++	__raw_writel(tmcon | TMCON_T0EN, tmr_reg + KS8695_TMCON);
+ 	spin_unlock(&ks8695_lock);
+ }
+ 
+@@ -105,9 +104,9 @@ static inline void ks8695_wdt_reload(void)
+ 
+ 	spin_lock(&ks8695_lock);
+ 	/* disable, then re-enable timer0 */
+-	tmcon = __raw_readl(KS8695_TMR_VA + KS8695_TMCON);
+-	__raw_writel(tmcon & ~TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
+-	__raw_writel(tmcon | TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
++	tmcon = __raw_readl(tmr_reg + KS8695_TMCON);
++	__raw_writel(tmcon & ~TMCON_T0EN, tmr_reg + KS8695_TMCON);
++	__raw_writel(tmcon | TMCON_T0EN, tmr_reg + KS8695_TMCON);
+ 	spin_unlock(&ks8695_lock);
+ }
+ 
+@@ -239,6 +238,10 @@ static int ks8695wdt_probe(struct platform_device *pdev)
+ {
+ 	int res;
+ 
++	tmr_reg = devm_platform_ioremap_resource(pdev, 0);
++	if (!tmr_reg)
++		return -ENXIO;
++
+ 	if (ks8695wdt_miscdev.parent)
+ 		return -EBUSY;
+ 	ks8695wdt_miscdev.parent = &pdev->dev;
+-- 
+2.20.0
 
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
-
-Cheers,
--Mukesh
-
-> ---
->   drivers/clk/mvebu/common.c                  | 2 +-
->   drivers/clk/mvebu/cp110-system-controller.c | 4 ++--
->   2 files changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/clk/mvebu/common.c b/drivers/clk/mvebu/common.c
-> index 6ab3c2e627c7..785dbede4835 100644
-> --- a/drivers/clk/mvebu/common.c
-> +++ b/drivers/clk/mvebu/common.c
-> @@ -240,7 +240,7 @@ void __init mvebu_clk_gating_setup(struct device_node *np,
->   	int n;
->   
->   	if (ctrl) {
-> -		pr_err("mvebu-clk-gating: cannot instantiate more than one gatable clock device\n");
-> +		pr_err("mvebu-clk-gating: cannot instantiate more than one gateable clock device\n");
->   		return;
->   	}
->   
-> diff --git a/drivers/clk/mvebu/cp110-system-controller.c b/drivers/clk/mvebu/cp110-system-controller.c
-> index 9235a331b588..b6de283f45e3 100644
-> --- a/drivers/clk/mvebu/cp110-system-controller.c
-> +++ b/drivers/clk/mvebu/cp110-system-controller.c
-> @@ -21,7 +21,7 @@
->    *    - Equal to SDIO clock
->    *    - 2/5 PLL0
->    *
-> - * CP110 has 32 gatable clocks, for the various peripherals in the IP.
-> + * CP110 has 32 gateable clocks, for the various peripherals in the IP.
->    */
->   
->   #define pr_fmt(fmt) "cp110-system-controller: " fmt
-> @@ -57,7 +57,7 @@ enum {
->   #define CP110_CORE_NAND			4
->   #define CP110_CORE_SDIO			5
->   
-> -/* A number of gatable clocks need special handling */
-> +/* A number of gateable clocks need special handling */
->   #define CP110_GATE_AUDIO		0
->   #define CP110_GATE_COMM_UNIT		1
->   #define CP110_GATE_NAND			2
