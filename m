@@ -2,122 +2,103 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C803C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:17:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 92C57C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:18:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1A05620652
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:17:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="yrBQcedA"
+	by mail.kernel.org (Postfix) with ESMTP id 6177120652
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:18:02 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555409882;
+	bh=A11U6XtF16mtIgkSQnvQoL6KOzQ42fHOAUmaQVsPCQ8=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=FosM6K8BOs+fy/dEoYt2bDLhE3OpixNzqgphWeW3waxyNZk1tMmNBrBWfabRyJedc
+	 1DleWCWM6WfGFRBmSERPUxW2Xyygvug2TOiRGBLpszw05B866KbXhJPgUUFm0SNY8g
+	 VrKeejPbbz52+m/rPvTTONUw4Cfg8+ryXflYeBIs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728979AbfDPKRr (ORCPT
+        id S1729007AbfDPKSB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 06:17:47 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:42365 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726638AbfDPKRp (ORCPT
+        Tue, 16 Apr 2019 06:18:01 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:38319 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726638AbfDPKSA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 06:17:45 -0400
-Received: by mail-pl1-f196.google.com with SMTP id cv12so10120080plb.9
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 03:17:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ingics-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=b9sQ2yqIbNA41Ye8NU58Qav1m5dawFkcSpL9ONWZnsM=;
-        b=yrBQcedAyZeYLykXpT+24N2LC1E0y4ac6amOHbsNv9pfJIlFKyYrA9QXYlCTiQfoIN
-         HcMpxRjDlPKuvQXFRkJ31AfIINycjkQ0OG/oyjnRyOH6+8ANFJFg9skbaKkVmjyOjDvX
-         yzmzdTqglaEtcjfym2mGA6YLCQqYp8WxBN5YUYiJmHkhpCq3qpY44GL3EoSSF2SrNg/0
-         4o4RZbNPEmBpbJZn/39Wy8n/XNB3pNHMgHeGy3s8dnvyKVVHJq7QBryu4ps3iW9meZ/g
-         iU5ck1F5EU2/GCgHc+/SMKC0fpAZmqizTCYiUA0l880wnTpPPdoGUr7+X4Ty5Pdjx+8P
-         CGUw==
+        Tue, 16 Apr 2019 06:18:00 -0400
+Received: by mail-oi1-f194.google.com with SMTP id a6so16448323oie.5;
+        Tue, 16 Apr 2019 03:18:00 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=b9sQ2yqIbNA41Ye8NU58Qav1m5dawFkcSpL9ONWZnsM=;
-        b=ey9OE9y5XrDqaK/D3mGsbHzmfKnHRveWpXxeJf6gAqY0xeTLR6P0391lXuDR7raGXg
-         cbl5C6SQ3xMTqDyzglcWXk6y68jUG9kuazv/6tvbVvuG/G/Qtnm3V+Juth5qQ5ZTVbFq
-         00EdaovbuGIjrCzRZxg8TFZXvj5Wv6Fb/LH8pJ/QGG1CuRiaGfJ67pYuUVdsGbSgDXXx
-         c1E7FBA2IBSi3gPT3ruYwTJUTGa2F58hoUl+qxXFJj2ByyaelQjtrZ4xv3+rUDq8lxZo
-         4/0y23kOsMDS8kkDafWptfiznyfuQ5Lszd8HQbV6e/vGuR1cY9Oyf6T/VMf6BcOPmMDr
-         1vAQ==
-X-Gm-Message-State: APjAAAUJqSGoQHDU6yQccY7aF4ntgbOe2yckgZ2G4mxpxvToZ2AJH+o7
-        Hrf24EaIIDZa2kZO3iV4R8n0uQ==
-X-Google-Smtp-Source: APXvYqwxBBsi6zGmBbZeNTQReoLTuyyHTpTWVVlpiOGHWR3CBmjVxLriApd3Jc1Pw7ca5tXZ+Rnjzw==
-X-Received: by 2002:a17:902:e101:: with SMTP id cc1mr81997702plb.129.1555409864242;
-        Tue, 16 Apr 2019 03:17:44 -0700 (PDT)
-Received: from localhost.localdomain (118-171-129-145.dynamic-ip.hinet.net. [118.171.129.145])
-        by smtp.gmail.com with ESMTPSA id h187sm105434588pfc.52.2019.04.16.03.17.41
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 03:17:43 -0700 (PDT)
-From:   Axel Lin <axel.lin@ingics.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH 3/3] regulator: tps80031: Switch to SPDX identifier
-Date:   Tue, 16 Apr 2019 18:17:29 +0800
-Message-Id: <20190416101729.26330-3-axel.lin@ingics.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190416101729.26330-1-axel.lin@ingics.com>
-References: <20190416101729.26330-1-axel.lin@ingics.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=0TuyvSOa9yABxybjHPN+lmbVTaeXDs+z8tLDKxQyOJo=;
+        b=c1WCu5y/ZIWdKORNsJeBsFE9s0N21B9UIsT2bSdXRr+jcnLFzPozQVbzLclnDI+9Ak
+         j35iJmCLTjjtL6/7lb8VSFc/YOVZqpkfzcUhZOsW6DZCKYvvG1snkIhiPFpkHza91oBG
+         CGQ7TK/sEAhQHPJSsMRiASIEqK1OsI4JsYTWIslbiThc2bQoGRbqeMEKWSqgaNwxsqgd
+         E5QNWv8hTWPhnTtoFIZq5EY7LZwnGIoVJdrONJ/RngEhTFWZodozGVT7N+5vsSpyWyLT
+         xshjeXXL7a2uPs4MzT94cb3JWwSxLgM0RXluhMDxCe+GMvSTftl8Zd1lC54lM8i4BioE
+         gnVw==
+X-Gm-Message-State: APjAAAWoLIvDBVRISOB6U0VKv+B7qzAJ8tYfS7evlqeVtmJvXHfHtOSG
+        gpoxenwMkzIAV3dpHKYdW3sXQqbUW4w1VQe9+fY=
+X-Google-Smtp-Source: APXvYqzDFE+wwUBZuvDJuLyi664UF43IBwogfYvWVIFa0AQREjcnET7HQE6+BT+o2CEPrwFMNGXMn32G3ipyXIR19Oc=
+X-Received: by 2002:aca:4c08:: with SMTP id z8mr17331578oia.30.1555409879608;
+ Tue, 16 Apr 2019 03:17:59 -0700 (PDT)
+MIME-Version: 1.0
+References: <cover.1555382110.git.mchehab+samsung@kernel.org>
+ <10802a7ac16958a2786c2fc083fb5cb50eb7ebb9.1555382110.git.mchehab+samsung@kernel.org>
+ <CAJZ5v0hZK07zQzmD6J0J5dBUAecpE_31_W5Ade5UpWrsWBeU+Q@mail.gmail.com> <20190416065444.2460d3a3@coco.lan>
+In-Reply-To: <20190416065444.2460d3a3@coco.lan>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 16 Apr 2019 12:17:48 +0200
+Message-ID: <CAJZ5v0i3-VCxNvp5v2wUOeaCUJcJUXLZzHFNJiFH5FG-Negpdw@mail.gmail.com>
+Subject: Re: [PATCH 02/57] docs: acpi: convert text files to ReST
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>,
+        Changbin Du <changbin.du@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
----
- drivers/regulator/tps80031-regulator.c | 34 ++++++++------------------
- 1 file changed, 10 insertions(+), 24 deletions(-)
+On Tue, Apr 16, 2019 at 11:54 AM Mauro Carvalho Chehab
+<mchehab+samsung@kernel.org> wrote:
+>
+> Em Tue, 16 Apr 2019 10:17:11 +0200
+> "Rafael J. Wysocki" <rafael@kernel.org> escreveu:
+>
+> > On Tue, Apr 16, 2019 at 5:02 AM Mauro Carvalho Chehab
+> > <mchehab+samsung@kernel.org> wrote:
+> > >
+> > > Most of the files are already in good shape, making easier to
+> > > convert them to ReST by adding proper title markups and
+> > > addressing some identation and markups to properly format the
+> > > document.
+> >
+> > There is concurrent work on this under way, please see
+> > https://marc.info/?t=155381845300002&r=2&w=2
+> >
+> > I'd prefer that one to continue, honestly.
+>
+> Agreed. I didn't notice the patchset.
+>
+> Btw, please notice patch 11/57:
+>
+>         Subject: [PATCH 11/57] docs: extcon: move it to acpi dir and convert it to ReST
+>
+> IMO, it makes sense to move the extcon driver to ACPI, as it sounds
+> to be just another ACPI driver.
 
-diff --git a/drivers/regulator/tps80031-regulator.c b/drivers/regulator/tps80031-regulator.c
-index 8e65a13e2ef5..85a6a8ca8c1b 100644
---- a/drivers/regulator/tps80031-regulator.c
-+++ b/drivers/regulator/tps80031-regulator.c
-@@ -1,27 +1,13 @@
--/*
-- * tps80031-regulator.c -- TI TPS80031 regulator driver.
-- *
-- * Regulator driver for TI TPS80031/TPS80032 Fully Integrated Power
-- * Management with Power Path and Battery Charger.
-- *
-- * Copyright (c) 2012, NVIDIA Corporation.
-- *
-- * Author: Laxman Dewangan <ldewangan@nvidia.com>
-- *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License as
-- * published by the Free Software Foundation version 2.
-- *
-- * This program is distributed "as is" WITHOUT ANY WARRANTY of any kind,
-- * whether express or implied; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-- * General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-- * 02111-1307, USA
-- */
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// tps80031-regulator.c -- TI TPS80031 regulator driver.
-+//
-+// Regulator driver for TI TPS80031/TPS80032 Fully Integrated Power
-+// Management with Power Path and Battery Charger.
-+//
-+// Copyright (c) 2012, NVIDIA Corporation.
-+//
-+// Author: Laxman Dewangan <ldewangan@nvidia.com>
- 
- #include <linux/delay.h>
- #include <linux/err.h>
--- 
-2.17.1
+But that can be done later, on top of the Changbin Du's changes.
 
+Thanks,
+Rafael
