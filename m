@@ -2,135 +2,134 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6356BC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:32:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8875BC282DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:32:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32ACD20449
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:32:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Shbst0wP"
+	by mail.kernel.org (Postfix) with ESMTP id 65DC420449
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:32:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729457AbfDPScZ (ORCPT
+        id S1730070AbfDPScg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 14:32:25 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:48976 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727136AbfDPScZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 14:32:25 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=206h0/9hPA4lvpNEgZ78QSxcM/D41aVlr4WnnQxt/0E=; b=Shbst0wP7VG8Lyk0C7d9p+SJY
-        zTMZ3F+eAxj5Qk35dHvxXOD/i8JPpo2Y3+fv0ui+oJt5lvwCHIZSNyCSmWJb+LkmJr9WRDYRCz9vT
-        8IxbzckqXtcwl1cNhMFlzpW62x5K279g5tuHAsjW9qR6o0De8vdLuvcnQqFy2hS/AstFBesKx1wTb
-        Whs2RilIWKthfL7BcdHURjmuepTlGCE0Q8kw6YoWNYON8e2ZU4wzMtnnCmc1pmYv7KTrXbH1hf/dh
-        54e1budAGM9RyygCm6+LVlV1g+AWwpbEtrVeMR4vE8/TB1NHMLz02QRSvN/cpFfdSZogSc8ZfT/Nm
-        fZr36SHgQ==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hGSsT-0005PZ-Ah; Tue, 16 Apr 2019 18:32:17 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 1D53A238A887D; Tue, 16 Apr 2019 20:32:16 +0200 (CEST)
-Date:   Tue, 16 Apr 2019 20:32:16 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
-Subject: Re: [PATCH v4 07/16] locking/rwsem: Implement lock handoff to
- prevent lock starvation
-Message-ID: <20190416183216.GV4038@hirez.programming.kicks-ass.net>
-References: <20190413172259.2740-1-longman@redhat.com>
- <20190413172259.2740-8-longman@redhat.com>
- <20190416154937.GL12232@hirez.programming.kicks-ass.net>
- <d10586ae-cd86-2992-766b-1ba4a4807b6a@redhat.com>
+        Tue, 16 Apr 2019 14:32:36 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:53094 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727136AbfDPScf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 14:32:35 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8C77630018F6;
+        Tue, 16 Apr 2019 18:32:34 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.236])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id C0FA360142;
+        Tue, 16 Apr 2019 18:32:30 +0000 (UTC)
+Date:   Tue, 16 Apr 2019 14:32:29 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Jan Kara <jack@suse.cz>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-mm@kvack.org,
+        John Hubbard <jhubbard@nvidia.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Ming Lei <ming.lei@redhat.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH v1 10/15] block: add gup flag to
+ bio_add_page()/bio_add_pc_page()/__bio_add_page()
+Message-ID: <20190416183228.GA21526@redhat.com>
+References: <20190411210834.4105-1-jglisse@redhat.com>
+ <20190411210834.4105-11-jglisse@redhat.com>
+ <20190415145952.GE13684@quack2.suse.cz>
+ <20190416002203.GA3158@redhat.com>
+ <20190416165206.GC17148@quack2.suse.cz>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <d10586ae-cd86-2992-766b-1ba4a4807b6a@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190416165206.GC17148@quack2.suse.cz>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 16 Apr 2019 18:32:35 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 02:16:11PM -0400, Waiman Long wrote:
-
-> >> @@ -665,9 +751,34 @@ __rwsem_down_write_failed_common(struct rw_semaphore *sem, int state)
-> >>  			lockevent_inc(rwsem_sleep_writer);
-> >>  			set_current_state(state);
-> >>  			count = atomic_long_read(&sem->count);
-> >> +
-> >> +			if ((wstate == WRITER_NOT_FIRST) &&
-> >> +			    rwsem_waiter_is_first(sem, &waiter))
-> >> +				wstate = WRITER_FIRST;
-> >> +
-> >> +			if (!RWSEM_COUNT_LOCKED(count))
-> >> +				break;
-> >> +
-> >> +			/*
-> >> +			 * An RT task sets the HANDOFF bit immediately.
-> >> +			 * Non-RT task will wait a while before doing so.
-> > Again, this describes what we already read the code to do; but doesn't
-> > add anything.
+On Tue, Apr 16, 2019 at 06:52:06PM +0200, Jan Kara wrote:
+> On Mon 15-04-19 20:22:04, Jerome Glisse wrote:
+> > On Mon, Apr 15, 2019 at 04:59:52PM +0200, Jan Kara wrote:
+> > > Hi Jerome!
+> > > 
+> > > On Thu 11-04-19 17:08:29, jglisse@redhat.com wrote:
+> > > > From: Jérôme Glisse <jglisse@redhat.com>
+> > > > 
+> > > > We want to keep track of how we got a reference on page added to bio_vec
+> > > > ie wether the page was reference through GUP (get_user_page*) or not. So
+> > > > add a flag to bio_add_page()/bio_add_pc_page()/__bio_add_page() to that
+> > > > effect.
+> > > 
+> > > Thanks for writing this patch set! Looking through patches like this one,
+> > > I'm a bit concerned. With so many bio_add_page() callers it's difficult to
+> > > get things right and not regress in the future. I'm wondering whether the
+> > > things won't be less error-prone if we required that all page reference
+> > > from bio are gup-like (not necessarily taken by GUP, if creator of the bio
+> > > gets to struct page he needs via some other means (e.g. page cache lookup),
+> > > he could just use get_gup_pin() helper we'd provide).  After all, a page
+> > > reference in bio means that the page is pinned for the duration of IO and
+> > > can be DMAed to/from so it even makes some sense to track the reference
+> > > like that. Then bio_put() would just unconditionally do put_user_page() and
+> > > we won't have to propagate the information in the bio.
+> > > 
+> > > Do you think this would be workable and easier?
+> > 
+> > Thinking again on this, i can drop that patch and just add a new
+> > bio_add_page_from_gup() and then it would be much more obvious that
+> > only very few places need to use that new version and they are mostly
+> > obvious places. It is usualy GUP then right away add the pages to bio
+> > or bvec.
 > 
-> Will remove that.
+> Yes, that's another option. Probably second preferred by me after my own
+> proposal ;)
 > 
-> >> +			 *
-> >> +			 * The setting of the handoff bit is deferred
-> >> +			 * until rwsem_try_write_lock() is called.
-> >> +			 */
-> >> +			if ((wstate == WRITER_FIRST) && (rt_task(current) ||
-> >> +			    time_after(jiffies, waiter.timeout))) {
-> >> +				wstate = WRITER_HANDOFF;
-> >> +				lockevent_inc(rwsem_wlock_handoff);
-> >> +				/*
-> >> +				 * Break out to call rwsem_try_write_lock().
-> >> +				 */
-> > Another exceedingly useful comment.
-> >
-> >> +				break;
-> >> +			}
-> >> +		}
-> >>  
-> >>  		raw_spin_lock_irq(&sem->wait_lock);
-> >> +		count = atomic_long_read(&sem->count);
-> >>  	}
-> >>  	__set_current_state(TASK_RUNNING);
-> >>  	list_del(&waiter.list);
-> >> @@ -680,6 +791,12 @@ __rwsem_down_write_failed_common(struct rw_semaphore *sem, int state)
-> >>  	__set_current_state(TASK_RUNNING);
-> >>  	raw_spin_lock_irq(&sem->wait_lock);
-> >>  	list_del(&waiter.list);
-> >> +	/*
-> >> +	 * If handoff bit has been set by this waiter, make sure that the
-> >> +	 * clearing of it is seen by others before proceeding.
-> >> +	 */
-> >> +	if (unlikely(wstate == WRITER_HANDOFF))
-> >> +		atomic_long_add_return(-RWSEM_FLAG_HANDOFF,  &sem->count);
-> > _AGAIN_ no explanation what so ff'ing ever.
-> >
-> > And why add_return() if you ignore the return value.
-> >
+> > We can probably add documentation around GUP explaining that if you
+> > want to build a bio or bvec from GUP you must pay attention to which
+> > function you use.
 > 
-> OK, will remove those.
+> Yes, although we both know how careful people are in reading
+> documentation...
 
-I'm not saying to remove them, although for at least the break one that
-is fine. But do try and write comments that _add_ something to the code,
-explain _why_ instead of state what (which we can trivially see from the
-code).
+Yes i know this is a sad state, but if enough people see comments in
+enough places we should end up with more eyes aware of the gotcha and
+hopefully increase the likelyhood of catching any new user.
 
-Locking code in general is tricky enough, and comments are good, and
-more comments are more good, but only if they explain why.
+> 
+> > Also pages going in a bio are not necessarily written too, they can
+> > be use as source (writting to block) or as destination (reading from
+> > block). So having all of them with refcount bias as GUP would muddy
+> > the water somemore between pages we can no longer clean (ie GUPed)
+> > and those that are just being use in regular read or write operation.
+> 
+> Why would the difference matter here?
+
+Restricting GUP like status to GUP insure that we only ever back-off
+because of GUP and not because of some innocuous I/O.
+
+I am working on a v2 that just add a new variant to add page, but i
+will have to run (x)fstest before re-posting.
+
+I also have the scatterlist convertion mostly ready:
+
+https://cgit.freedesktop.org/~glisse/linux/log/?h=gup-scatterlist-v1
+
+After that GUP is mostly isolated to individual driver and much easier
+to track and update.
+
+Cheers,
+Jérôme
