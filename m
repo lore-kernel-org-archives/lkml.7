@@ -2,151 +2,90 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57FF0C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:26:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B58CC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:28:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 32A7C2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:26:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EDBA620821
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:28:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=maine.edu header.i=@maine.edu header.b="e+MVs7DE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729321AbfDPQ0t (ORCPT
+        id S1729828AbfDPQ2G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 12:26:49 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:59180 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726230AbfDPQ0t (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 12:26:49 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9E4D980D;
-        Tue, 16 Apr 2019 09:26:48 -0700 (PDT)
-Received: from [10.37.12.3] (unknown [10.37.12.3])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 52A753F59C;
-        Tue, 16 Apr 2019 09:26:46 -0700 (PDT)
-Subject: Re: [PATCH v3 2/2] perf/arm-ccn: Clean up CPU hotplug handling
-To:     robin.murphy@arm.com, will.deacon@arm.com
-Cc:     mark.rutland@arm.com, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        bigeasy@linutronix.de, peterz@infradead.org,
-        clabbe.montjoie@gmail.com, Meng.Li@windriver.com
-References: <cover.1555427430.git.robin.murphy@arm.com>
- <918d9bb287b1086d62415030139204aab44c2221.1555427430.git.robin.murphy@arm.com>
-From:   Suzuki K Poulose <suzuki.poulose@arm.com>
-Message-ID: <aa07acc9-dd1a-8953-279e-b98cdc035665@arm.com>
-Date:   Tue, 16 Apr 2019 17:29:06 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.7.0
+        Tue, 16 Apr 2019 12:28:06 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:45112 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726860AbfDPQ2G (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 12:28:06 -0400
+Received: by mail-qt1-f195.google.com with SMTP id v20so23951861qtv.12
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:28:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=maine.edu; s=google;
+        h=from:date:to:cc:subject:in-reply-to:message-id:references
+         :user-agent:mime-version;
+        bh=Hbq+cj0kC2CgcN1sfaQg89cNt6bp/FWiwQZ/y/75Yrg=;
+        b=e+MVs7DEl9pMknHJp2ULh6x0xG554YmlN9KPgj/g7GE/hh3FP7sD5tvbsBKxZUp2yz
+         fWUsPuckbpnTzsgIdRONt2ZsbvHOhI+O8uv5jv/SjohRWKbHyURTbFnM2Yb03/G6bPpk
+         GFmAamuOkhxrSqi+3xXlbvQ4VFqu1+AQa4A7I=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:in-reply-to:message-id
+         :references:user-agent:mime-version;
+        bh=Hbq+cj0kC2CgcN1sfaQg89cNt6bp/FWiwQZ/y/75Yrg=;
+        b=ewKgPs8CeCWubVc5VewSBu/D5CAt8+pXKKdLz/GanHMYwA8YgB61cHPG6iHdjlYzqx
+         DBo73UH949g2QDuz0T1Ii9cRZuI27lQv9gLv4KF7XtMQ+MQzPUI0OdUZrtYTRG6cHJVR
+         0zfMHUlSxysdgn3syP1/lonvVxr4YIdq0MYJgYI3QDle3e5HhglNqiQ5fsRUz/QewE3i
+         j69A71hMLSAQI/b3byD9bz2tUdJeE93yKPzoZ4KL0Gq2MzGyapt07ZWAeOgnXQO9+zG8
+         XAHXGHAP2XZCnIklMFsQGX2OJfWRN1PfKQjqF821Nw0RgVTeEpyovlguPjbJSLSkz2qZ
+         gDLw==
+X-Gm-Message-State: APjAAAU/CQPlgW7LhvqpJNBSccMrcp9QtsuwAltAtbGfcrbY7v0PTfsf
+        JLnxwIeuwNtUD7awqN1Er6UUIA==
+X-Google-Smtp-Source: APXvYqypqGPacDCwA5sK33jUO1jgCMNrbBKeagAr+Y2WgjlFGcEAn9bov9i1MY8JAOAPsXyprkoOug==
+X-Received: by 2002:a0c:f806:: with SMTP id r6mr64322040qvn.188.1555432085802;
+        Tue, 16 Apr 2019 09:28:05 -0700 (PDT)
+Received: from macbook-air (weaver.eece.maine.edu. [130.111.218.23])
+        by smtp.gmail.com with ESMTPSA id 46sm37538023qtz.87.2019.04.16.09.28.03
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 16 Apr 2019 09:28:04 -0700 (PDT)
+From:   Vince Weaver <vincent.weaver@maine.edu>
+X-Google-Original-From: Vince Weaver <vince@maine.edu>
+Date:   Tue, 16 Apr 2019 12:28:00 -0400 (EDT)
+X-X-Sender: vince@macbook-air
+To:     vincent.weaver@maine.edu, mingo@kernel.org, eranian@google.com,
+        peterz@infradead.org, alexander.shishkin@linux.intel.com,
+        acme@redhat.com, hpa@zytor.com, torvalds@linux-foundation.org,
+        tglx@linutronix.de, linux-kernel@vger.kernel.org, jolsa@redhat.com
+cc:     linux-tip-commits@vger.kernel.org
+Subject: Re: [tip:perf/core] perf/x86/intel: Force resched when TFA sysctl
+ is modified
+In-Reply-To: <tip-f447e4eb3ad1e60d173ca997fcb2ef2a66f12574@git.kernel.org>
+Message-ID: <alpine.DEB.2.21.1904161227001.20764@macbook-air>
+References: <20190408173252.37932-3-eranian@google.com> <tip-f447e4eb3ad1e60d173ca997fcb2ef2a66f12574@git.kernel.org>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-In-Reply-To: <918d9bb287b1086d62415030139204aab44c2221.1555427430.git.robin.murphy@arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/16/2019 04:24 PM, Robin Murphy wrote:
-> Like arm-cci, arm-ccn has the same issue of disabling preemption around
-> operations which can take mutexes. Again, remove the definite bug by
-> simply not trying to fight the theoretical races. And since we are
-> touching the hotplug handling code, take the opportunity to streamline
-> it, as there's really no need to store a full-sized cpumask to keep
-> track of a single CPU ID.
-> 
-> Signed-off-by: Robin Murphy <robin.murphy@arm.com>
-> ---
->   drivers/perf/arm-ccn.c | 25 +++++++++++++------------
->   1 file changed, 13 insertions(+), 12 deletions(-)
-> 
-> diff --git a/drivers/perf/arm-ccn.c b/drivers/perf/arm-ccn.c
-> index 2ae76026e947..0bb52d9bdcf7 100644
-> --- a/drivers/perf/arm-ccn.c
-> +++ b/drivers/perf/arm-ccn.c
-> @@ -167,7 +167,7 @@ struct arm_ccn_dt {
->   
->   	struct hrtimer hrtimer;
->   
-> -	cpumask_t cpu;
-> +	unsigned int cpu;
->   	struct hlist_node node;
->   
->   	struct pmu pmu;
-> @@ -559,7 +559,7 @@ static ssize_t arm_ccn_pmu_cpumask_show(struct device *dev,
->   {
->   	struct arm_ccn *ccn = pmu_to_arm_ccn(dev_get_drvdata(dev));
->   
-> -	return cpumap_print_to_pagebuf(true, buf, &ccn->dt.cpu);
-> +	return cpumap_print_to_pagebuf(true, buf, cpumask_of(ccn->dt.cpu));
->   }
->   
->   static struct device_attribute arm_ccn_pmu_cpumask_attr =
-> @@ -759,7 +759,7 @@ static int arm_ccn_pmu_event_init(struct perf_event *event)
->   	 * mitigate this, we enforce CPU assignment to one, selected
->   	 * processor (the one described in the "cpumask" attribute).
->   	 */
-> -	event->cpu = cpumask_first(&ccn->dt.cpu);
-> +	event->cpu = ccn->dt.cpu;
->   
->   	node_xp = CCN_CONFIG_NODE(event->attr.config);
->   	type = CCN_CONFIG_TYPE(event->attr.config);
-> @@ -1215,15 +1215,15 @@ static int arm_ccn_pmu_offline_cpu(unsigned int cpu, struct hlist_node *node)
->   	struct arm_ccn *ccn = container_of(dt, struct arm_ccn, dt);
->   	unsigned int target;
->   
-> -	if (!cpumask_test_and_clear_cpu(cpu, &dt->cpu))
-> +	if (cpu != dt->cpu)
->   		return 0;
->   	target = cpumask_any_but(cpu_online_mask, cpu);
->   	if (target >= nr_cpu_ids)
->   		return 0;
->   	perf_pmu_migrate_context(&dt->pmu, cpu, target);
-> -	cpumask_set_cpu(target, &dt->cpu);
-> +	dt->cpu = target;
->   	if (ccn->irq)
-> -		WARN_ON(irq_set_affinity_hint(ccn->irq, &dt->cpu) != 0);
-> +		WARN_ON(irq_set_affinity_hint(ccn->irq, cpumask_of(dt->cpu)));
->   	return 0;
->   }
->   
-> @@ -1299,29 +1299,30 @@ static int arm_ccn_pmu_init(struct arm_ccn *ccn)
->   	}
->   
->   	/* Pick one CPU which we will use to collect data from CCN... */
-> -	cpumask_set_cpu(get_cpu(), &ccn->dt.cpu);
-> +	ccn->dt.cpu = raw_smp_processor_id();
->   
->   	/* Also make sure that the overflow interrupt is handled by this CPU */
->   	if (ccn->irq) {
-> -		err = irq_set_affinity_hint(ccn->irq, &ccn->dt.cpu);
-> +		err = irq_set_affinity_hint(ccn->irq, cpumask_of(ccn->dt.cpu));
->   		if (err) {
->   			dev_err(ccn->dev, "Failed to set interrupt affinity!\n");
->   			goto error_set_affinity;
->   		}
->   	}
->   
-> +	cpuhp_state_add_instance_nocalls(CPUHP_AP_PERF_ARM_CCN_ONLINE,
-> +					 &ccn->dt.node);
-> +
->   	err = perf_pmu_register(&ccn->dt.pmu, name, -1);
->   	if (err)
->   		goto error_pmu_register;
->   
-> -	cpuhp_state_add_instance_nocalls(CPUHP_AP_PERF_ARM_CCN_ONLINE,
-> -					 &ccn->dt.node);
-> -	put_cpu();
->   	return 0;
->   
->   error_pmu_register:
-> +	cpuhp_state_remove_instance_nocalls(CPUHP_AP_PERF_ARM_CCN_ONLINE,
-> +					    &ccn->dt.node);
->   error_set_affinity:
-> -	put_cpu();
+On Tue, 16 Apr 2019, tip-bot for Stephane Eranian wrote:
 
-Super minor nit: We don't need the error_set_affinity label anymore, as
-we don't do anything here. Otherwise:
+> Commit-ID:  f447e4eb3ad1e60d173ca997fcb2ef2a66f12574
+> Gitweb:     https://git.kernel.org/tip/f447e4eb3ad1e60d173ca997fcb2ef2a66f12574
+> Author:     Stephane Eranian <eranian@google.com>
+> AuthorDate: Mon, 8 Apr 2019 10:32:52 -0700
+> Committer:  Ingo Molnar <mingo@kernel.org>
+> CommitDate: Tue, 16 Apr 2019 12:19:35 +0200
+> 
+> perf/x86/intel: Force resched when TFA sysctl is modified
 
-Reviewed-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+What's TFA?  Tuna-fish-alarm?  Nowhere in the commit or in the code does 
+it ever say what a TFA is or why we'd want to resched when it is modified.
+
+Vince
