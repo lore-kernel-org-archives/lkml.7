@@ -2,101 +2,83 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8EAA1C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:38:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCEBBC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:38:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 54A632075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:38:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="qp4/53S3"
+	by mail.kernel.org (Postfix) with ESMTP id AA28120449
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:38:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730237AbfDPSiA (ORCPT
+        id S1730259AbfDPSiO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 14:38:00 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:36163 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728203AbfDPSiA (ORCPT
+        Tue, 16 Apr 2019 14:38:14 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:46353 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729764AbfDPSiO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 14:38:00 -0400
-Received: by mail-lf1-f67.google.com with SMTP id u17so16836533lfi.3
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 11:37:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:organization:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=ywrdJvPrPR6BkjnuUMR3wLp2mpzMq5QkUh5noAhBhws=;
-        b=qp4/53S3EuIaKQsmF4kgtaBK3Xv8HsU28uDa3XAZYZNftQcAa6ZgWR6SwgyvDBtwv2
-         L76BB6oRW6On+Wq79h8Z4VRIhkUwoKalo5pe2nI5ps+c1r4U/+ybRAEifQgDPaeH+jUt
-         JeFFj0hcURij+Uff06eNztvC9tZegTeVjObXcS4yT/wVnPeZ7xu/4ezpsl7pbTB+pZia
-         J6Qjo31L3J8GMEdf7NbIoxTDQc5VVYTgZgzi1RW2F0eMXZzvEdT3oNfFR7OOAQK7ippC
-         PsLSqRLRNX1dc+YyPVdQB1ViqCEkAeD0q5V70kioe0ln3OReF7WdW0qkwuZi+WJcsT5m
-         8NMA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:organization
-         :message-id:date:user-agent:mime-version:in-reply-to
-         :content-language:content-transfer-encoding;
-        bh=ywrdJvPrPR6BkjnuUMR3wLp2mpzMq5QkUh5noAhBhws=;
-        b=DeKgSPYJJyW2fmRER75OhhhZez6xUhN2bxPzB4f/RTtQVaBpc6nP7g8h0/vCcvqwHr
-         W+LXPD8KQjtbV4vGT6aBNVL0aOtjQyOYqvOGOwGSzOQAOlhas/FLg4CQhMbggBZXT1Xb
-         y2YRsLYBbQeBeStJkZHvlNIGkIaVtSUgp6Gr1QJ5HUuZnwuEh207SHAyhPD/CVOzVrl6
-         MKNsNLBDt/K/S+2ojREBUsjuc5+cwn4n8mbcVjLZovEeMlM1ywpf0aVyCjYQ9ZgzTrGr
-         AATXZ1AInUChQIil5U4RbpZMtYFMg6MC0KG/sX0ztUIwgkniha4D6mDoTTwupfyATaMx
-         nKjg==
-X-Gm-Message-State: APjAAAUGK/B8OzogUli40Gh3f+NuKzsEe4U3O9iO+4tOpyWKgKZOAP2x
-        F2qcjAulYEZFaxwwqcRjp8eHJw==
-X-Google-Smtp-Source: APXvYqw4AHvywwm0li5okPBHWZAvZvWaBkUlo3Cram8Ex/99VpJ+tScGFXniu+eAybMoYF2XDDImeg==
-X-Received: by 2002:a19:6619:: with SMTP id a25mr45791298lfc.21.1555439878242;
-        Tue, 16 Apr 2019 11:37:58 -0700 (PDT)
-Received: from wasted.cogentembedded.com ([31.173.81.184])
-        by smtp.gmail.com with ESMTPSA id 77sm10558717ljc.69.2019.04.16.11.37.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 11:37:56 -0700 (PDT)
-Subject: Re: [PATCH v10 2/3] spi: Add Renesas R-Car Gen3 RPC-IF SPI controller
- driver
-To:     Mason Yang <masonccyang@mxic.com.tw>, broonie@kernel.org,
-        marek.vasut@gmail.com, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, bbrezillon@kernel.org,
-        linux-renesas-soc@vger.kernel.org,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        lee.jones@linaro.org, robh+dt@kernel.org, mark.rutland@arm.com,
-        devicetree@vger.kernel.org
-Cc:     juliensu@mxic.com.tw, Simon Horman <horms@verge.net.au>
-References: <1555313834-15107-1-git-send-email-masonccyang@mxic.com.tw>
- <1555313834-15107-3-git-send-email-masonccyang@mxic.com.tw>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Organization: Cogent Embedded
-Message-ID: <490f6e80-3930-2885-a08f-93596e210f88@cogentembedded.com>
-Date:   Tue, 16 Apr 2019 21:37:55 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.2.1
+        Tue, 16 Apr 2019 14:38:14 -0400
+Received: from [192.168.1.110] ([95.117.99.70]) by mrelayeu.kundenserver.de
+ (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MrQ2R-1gSozg0JMN-00oWuz; Tue, 16 Apr 2019 20:37:35 +0200
+Subject: Re: RFC: on adding new CLONE_* flags [WAS Re: [PATCH 0/4] clone: add
+ CLONE_PIDFD]
+To:     Aleksa Sarai <cyphar@cyphar.com>
+Cc:     Christian Brauner <christian@brauner.io>,
+        torvalds@linux-foundation.org, viro@zeniv.linux.org.uk,
+        jannh@google.com, dhowells@redhat.com, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org, serge@hallyn.com, luto@kernel.org,
+        arnd@arndb.de, ebiederm@xmission.com, keescook@chromium.org,
+        tglx@linutronix.de, mtk.manpages@gmail.com,
+        akpm@linux-foundation.org, oleg@redhat.com, joel@joelfernandes.org,
+        dancol@google.com
+References: <20190414201436.19502-1-christian@brauner.io>
+ <dc05ffe3-c2ff-8b3e-d181-e0cc620bf91d@metux.net>
+ <20190415195911.z7b7miwsj67ha54y@yavin>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <8d1d47cf-3bf1-6c39-c02c-941515be1586@metux.net>
+Date:   Tue, 16 Apr 2019 20:37:33 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-In-Reply-To: <1555313834-15107-3-git-send-email-masonccyang@mxic.com.tw>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-MW
+In-Reply-To: <20190415195911.z7b7miwsj67ha54y@yavin>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:JcoF7ruGi9WnDSkbUJzxBWeTBFSuLepW2wpkuMV9h8I4206Tf/A
+ aj/UHWl0DjblOhYGJsqXUeilFPE83wD1NFDNj7ERp6e37Y3ZhQqAK7cMKx6Da3oXve9qabT
+ 1oQ+CSh6Hg+H2vfSYmRx33KgtX8GS0LGge6Uy+3RvV48tQbtHIsp+azEkUsERMthsR3qNgl
+ sJ3ydc3LuuNZOnzgwTBRw==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:08X1fIcby/k=:/ft9IaL0MpfzKxtwBnk8Yh
+ Tm6QMTDRLconR/xjQ1ehvfHkf1xAbpiHDmxq5E42ywAmWLk+jyXW3bWYu0IXxGzosDCCV9dWk
+ 5IcbfDeqmEVbQz40H01tSjro5tUoCSxsFz5v7CNoASqL/VBxGSiC9/qCCa5z5Xgq5DQr0RbkG
+ nyy4L9zYPSE4MiMs465Fc7CIcSyJTr1pmsA5mtJKaGjaM21DATN248S2E5PNq2f1fxRS0UIec
+ dGzZ3VGXCmGj66pqEuRZLRsZcWE9OkZtCkFy7B506ebn+ERJUmZv3vB3OGAPGipASPkcaOXCz
+ V0IniNDIYrEQMP/iM4tD6n8Rn1Bq4Utv9mUtTwwNq6WgMv1MnREikLq10Hu/90Jj3QwLxJQjw
+ h05RfaXJ//qBW/AbRjWhXeMeB9WOkIru0aNq+43vt+L6YJNjk53y4CE/poZSt/SCgU3E6DR4k
+ Tz8V8//aLu8ofVg7oJrXXo93Fz6SXGOR2tuAAkbUw2lLj+fY7bvTiNXO8ZM2i5g98Exon4F9W
+ KzUEw+ZTeo9aK493OhIFOWxMndgupEjLzAqx/YR9t3m2XI8DS+axhNpa9G67w6YBgP8KPzvyF
+ 8BEvbyGiXgJ9dV0bOPp2KbgSANhvCZ2Z2dTrPSM5T84s0Za+XfTbJqWO9iPy+9DIz9Xtr9iPN
+ cYuruDODnvIv4QhO/hnaWlDX2mGQwV6ldMqk5TUaXZTiRPJcvGiJzdBuKiqYp8kNWTMPbLUEY
+ aJdPo92nHhfM8DN6xlkbvrduiJxuGgpKpViLlhvAtOqe2UpemmFYz0lY0gI=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/15/2019 10:37 AM, Mason Yang wrote:
+On 15.04.19 21:59, Aleksa Sarai wrote:
 
-> Add a driver for Renesas R-Car Gen3 RPC-IF SPI controller.
-> 
-> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
-> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+> Just spit-balling -- is no_new_privs not sufficient for this usecase?> Not granting privileges such as setuid during execve(2) is the main>
+point of that flag.
+Oh, I wasn't aware of that. Thanks.
 
-   This patch looked good to me (you seem to have incorporated another patch of mine
-here :-)). Since the patch is already carrying my signoff, I wouldn't add a Reviewed-by:
-tag.
-   However, I believe that all manipulations with the RPC-IF hardware need to be moved
-to the MFD driver, to be called from the SPI and HF subdrivers... doesn't seem an easy
-task though...
 
-MBR, Sergei
+--mtx
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
