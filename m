@@ -7,48 +7,48 @@ X-Spam-Status: No, score=-12.0 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A17C6C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:35:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 25DDFC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:37:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79E1E2077C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:35:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EAD5B20857
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:37:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729316AbfDPLf5 (ORCPT
+        id S1728569AbfDPLhP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 07:35:57 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:58031 "EHLO
+        Tue, 16 Apr 2019 07:37:15 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:36951 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726838AbfDPLf4 (ORCPT
+        with ESMTP id S1726408AbfDPLhP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 07:35:56 -0400
+        Tue, 16 Apr 2019 07:37:15 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3GBZfQb3428348
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3GBb0Ub3428649
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 16 Apr 2019 04:35:41 -0700
+        Tue, 16 Apr 2019 04:37:00 -0700
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3GBZeLb3428345;
-        Tue, 16 Apr 2019 04:35:40 -0700
-Date:   Tue, 16 Apr 2019 04:35:40 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3GBb0Dl3428646;
+        Tue, 16 Apr 2019 04:37:00 -0700
+Date:   Tue, 16 Apr 2019 04:37:00 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Kan Liang <tipbot@zytor.com>
-Message-ID: <tip-477f00f9617009a9a3a9271885231573b728ca4f@git.kernel.org>
-Cc:     eranian@google.com, tglx@linutronix.de, mingo@kernel.org,
-        kan.liang@linux.intel.com, jolsa@redhat.com,
-        torvalds@linux-foundation.org, peterz@infradead.org,
-        linux-kernel@vger.kernel.org, hpa@zytor.com,
-        vincent.weaver@maine.edu, alexander.shishkin@linux.intel.com,
-        acme@redhat.com
-Reply-To: eranian@google.com, tglx@linutronix.de, mingo@kernel.org,
-          peterz@infradead.org, linux-kernel@vger.kernel.org,
-          kan.liang@linux.intel.com, torvalds@linux-foundation.org,
-          jolsa@redhat.com, vincent.weaver@maine.edu, hpa@zytor.com,
-          acme@redhat.com, alexander.shishkin@linux.intel.com
-In-Reply-To: <20190402194509.2832-5-kan.liang@linux.intel.com>
-References: <20190402194509.2832-5-kan.liang@linux.intel.com>
+From:   tip-bot for Andi Kleen <tipbot@zytor.com>
+Message-ID: <tip-d3617b98b04583df222f34992e65712862a77bf1@git.kernel.org>
+Cc:     eranian@google.com, alexander.shishkin@linux.intel.com,
+        linux-kernel@vger.kernel.org, vincent.weaver@maine.edu,
+        ak@linux.intel.com, tglx@linutronix.de, mingo@kernel.org,
+        hpa@zytor.com, torvalds@linux-foundation.org, acme@redhat.com,
+        peterz@infradead.org, jolsa@redhat.com, kan.liang@linux.intel.com
+Reply-To: peterz@infradead.org, kan.liang@linux.intel.com,
+          jolsa@redhat.com, torvalds@linux-foundation.org, hpa@zytor.com,
+          acme@redhat.com, vincent.weaver@maine.edu,
+          linux-kernel@vger.kernel.org, mingo@kernel.org,
+          tglx@linutronix.de, ak@linux.intel.com, eranian@google.com,
+          alexander.shishkin@linux.intel.com
+In-Reply-To: <20190402194509.2832-7-kan.liang@linux.intel.com>
+References: <20190402194509.2832-7-kan.liang@linux.intel.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf/x86/intel/ds: Extract code of event update in
- short period
-Git-Commit-ID: 477f00f9617009a9a3a9271885231573b728ca4f
+Subject: [tip:perf/core] perf/x86/lbr: Avoid reading the LBRs when adaptive
+ PEBS handles them
+Git-Commit-ID: d3617b98b04583df222f34992e65712862a77bf1
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -62,22 +62,22 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  477f00f9617009a9a3a9271885231573b728ca4f
-Gitweb:     https://git.kernel.org/tip/477f00f9617009a9a3a9271885231573b728ca4f
-Author:     Kan Liang <kan.liang@linux.intel.com>
-AuthorDate: Tue, 2 Apr 2019 12:45:01 -0700
+Commit-ID:  d3617b98b04583df222f34992e65712862a77bf1
+Gitweb:     https://git.kernel.org/tip/d3617b98b04583df222f34992e65712862a77bf1
+Author:     Andi Kleen <ak@linux.intel.com>
+AuthorDate: Tue, 2 Apr 2019 12:45:03 -0700
 Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Tue, 16 Apr 2019 12:19:39 +0200
+CommitDate: Tue, 16 Apr 2019 12:26:17 +0200
 
-perf/x86/intel/ds: Extract code of event update in short period
+perf/x86/lbr: Avoid reading the LBRs when adaptive PEBS handles them
 
-The drain_pebs() could be called twice in a short period for auto-reload
-event in pmu::read(). The intel_pmu_save_and_restart_reload() should be
-called to update the event->count.
+With adaptive PEBS the CPU can directly supply the LBR information,
+so we don't need to read it again. But the LBRs still need to be
+enabled. Add a special count to the cpuc that distinguishes these
+two cases, and avoid reading the LBRs unnecessarily when PEBS is
+active.
 
-This case should also be handled on Icelake. Extract the code for
-later reuse.
-
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
@@ -90,60 +90,62 @@ Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Vince Weaver <vincent.weaver@maine.edu>
 Cc: acme@kernel.org
 Cc: jolsa@kernel.org
-Link: https://lkml.kernel.org/r/20190402194509.2832-5-kan.liang@linux.intel.com
+Link: https://lkml.kernel.org/r/20190402194509.2832-7-kan.liang@linux.intel.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/events/intel/ds.c | 33 ++++++++++++++++++++-------------
- 1 file changed, 20 insertions(+), 13 deletions(-)
+ arch/x86/events/intel/lbr.c  | 13 ++++++++++++-
+ arch/x86/events/perf_event.h |  1 +
+ 2 files changed, 13 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index 2f80b7e282ff..9ac73860645d 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -1491,6 +1491,25 @@ static void intel_pmu_drain_pebs_core(struct pt_regs *iregs)
- 	__intel_pmu_pebs_event(event, iregs, at, top, 0, n);
+diff --git a/arch/x86/events/intel/lbr.c b/arch/x86/events/intel/lbr.c
+index 07b7175fc378..6f814a27416b 100644
+--- a/arch/x86/events/intel/lbr.c
++++ b/arch/x86/events/intel/lbr.c
+@@ -488,6 +488,8 @@ void intel_pmu_lbr_add(struct perf_event *event)
+ 	 * be 'new'. Conversely, a new event can get installed through the
+ 	 * context switch path for the first time.
+ 	 */
++	if (x86_pmu.intel_cap.pebs_baseline && event->attr.precise_ip > 0)
++		cpuc->lbr_pebs_users++;
+ 	perf_sched_cb_inc(event->ctx->pmu);
+ 	if (!cpuc->lbr_users++ && !event->total_time_running)
+ 		intel_pmu_lbr_reset();
+@@ -507,8 +509,11 @@ void intel_pmu_lbr_del(struct perf_event *event)
+ 		task_ctx->lbr_callstack_users--;
+ 	}
+ 
++	if (x86_pmu.intel_cap.pebs_baseline && event->attr.precise_ip > 0)
++		cpuc->lbr_pebs_users--;
+ 	cpuc->lbr_users--;
+ 	WARN_ON_ONCE(cpuc->lbr_users < 0);
++	WARN_ON_ONCE(cpuc->lbr_pebs_users < 0);
+ 	perf_sched_cb_dec(event->ctx->pmu);
  }
  
-+static void intel_pmu_pebs_event_update_no_drain(struct cpu_hw_events *cpuc, int size)
-+{
-+	struct perf_event *event;
-+	int bit;
-+
-+	/*
-+	 * The drain_pebs() could be called twice in a short period
-+	 * for auto-reload event in pmu::read(). There are no
-+	 * overflows have happened in between.
-+	 * It needs to call intel_pmu_save_and_restart_reload() to
-+	 * update the event->count for this case.
-+	 */
-+	for_each_set_bit(bit, (unsigned long *)&cpuc->pebs_enabled, size) {
-+		event = cpuc->events[bit];
-+		if (event->hw.flags & PERF_X86_EVENT_AUTO_RELOAD)
-+			intel_pmu_save_and_restart_reload(event, 0);
-+	}
-+}
-+
- static void intel_pmu_drain_pebs_nhm(struct pt_regs *iregs)
+@@ -658,7 +663,13 @@ void intel_pmu_lbr_read(void)
  {
  	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
-@@ -1518,19 +1537,7 @@ static void intel_pmu_drain_pebs_nhm(struct pt_regs *iregs)
- 	}
  
- 	if (unlikely(base >= top)) {
--		/*
--		 * The drain_pebs() could be called twice in a short period
--		 * for auto-reload event in pmu::read(). There are no
--		 * overflows have happened in between.
--		 * It needs to call intel_pmu_save_and_restart_reload() to
--		 * update the event->count for this case.
--		 */
--		for_each_set_bit(bit, (unsigned long *)&cpuc->pebs_enabled,
--				 size) {
--			event = cpuc->events[bit];
--			if (event->hw.flags & PERF_X86_EVENT_AUTO_RELOAD)
--				intel_pmu_save_and_restart_reload(event, 0);
--		}
-+		intel_pmu_pebs_event_update_no_drain(cpuc, size);
+-	if (!cpuc->lbr_users)
++	/*
++	 * Don't read when all LBRs users are using adaptive PEBS.
++	 *
++	 * This could be smarter and actually check the event,
++	 * but this simple approach seems to work for now.
++	 */
++	if (!cpuc->lbr_users || cpuc->lbr_users == cpuc->lbr_pebs_users)
  		return;
- 	}
  
+ 	if (x86_pmu.intel_cap.lbr_format == LBR_FORMAT_32)
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index 2059c143946f..dced91582147 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -233,6 +233,7 @@ struct cpu_hw_events {
+ 	 * Intel LBR bits
+ 	 */
+ 	int				lbr_users;
++	int				lbr_pebs_users;
+ 	struct perf_branch_stack	lbr_stack;
+ 	struct perf_branch_entry	lbr_entries[MAX_LBR_ENTRIES];
+ 	struct er_account		*lbr_sel;
