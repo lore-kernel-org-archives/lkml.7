@@ -2,128 +2,135 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BF45C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:38:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 13CA9C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:40:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE4A92086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:38:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="IldO9Sf2"
+	by mail.kernel.org (Postfix) with ESMTP id CAE662086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:40:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555396829;
+	bh=LprYqWAwQlV4mdWW7mU+WdVxasqOzsOCbNzRMa+yKgY=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=xBYQy5LnhTVUtW5Mi8R8T7pktxgozFw4ZLPxyG16rQO2dO28cT9gPrE576XqKh1a8
+	 DsFIiUJRiRQ23y7CYgEqFmVIsL0JXWIhcgfWTYS/dlEBTg9zGF+bssNBp2s/h68Tgc
+	 40EXzsoztGq8jsxFyHtCylzCai8Mic2O2ffj5Nys=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728488AbfDPGi1 (ORCPT
+        id S1728385AbfDPGk2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 02:38:27 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:41576 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728239AbfDPGiL (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 02:38:11 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 188so9869288pfd.8
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 23:38:11 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=pRnfcxxF0jHSMVn1cI2h6p5u4B1/Qp7ZEUiQb3IP4N8=;
-        b=IldO9Sf2gqvOSJpttM174k/AU0g3FJCl/jzWlikMspbRM9oUC+M3iqPg11MScFEvh6
-         MyaIgJgY354EyXwtIZB8GsGDFDvleouT6+HNjc9Wcr1FGZOBW0x63gDLT9IwChHuimp7
-         g4bAWg3EB9z+6PEWXWqvbVXRk/91hjtlwhfdC6NkOqkTdt82X2Yf6wXFX1DDJu5JUr6t
-         HLmFH6x4Z3QIvjXVASOg+GZFCdIMZIGIiA1UuwrKZH4s3L6/NRi3/kxwtFPpJwdG6LG9
-         3boQt/HxOnMv6oCIarE/8Q4oPMtmb7Ba5Pimp1vCN1dP/Th60Rig9owkmb485XizIMuP
-         7Vfw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=pRnfcxxF0jHSMVn1cI2h6p5u4B1/Qp7ZEUiQb3IP4N8=;
-        b=M5qO48KCf3bcZpJ+Q5r1KwMiDEcn4Kf1WuxbfmKfv94Y2YIEP1DU2M3wKC6YiabOF3
-         d8DnzdXQSwNaerN/PXZqgSqgT59jD37en/z+SB1uVmcGTqLKDhqdwlL4QvPBJOrNnQ3H
-         jXMNUh+xp7ObNDdVUsB3BVL1bdhlqvm4F9/bSilBjoHYjRWdwG/IDPRzumzPP8Oj47id
-         E7MpcIztg/ATC+v1JFUI2/i4L9992WaFwmG90qAxAvJRA6nhTM+J23gtRdjv624Bl8L8
-         vn6b8Ye7oBrETy93qmsOJkEMZPEABAzU9EpZmSuc0B2nQmMDoXNjoQVBIkJLetHnojaC
-         uK7Q==
-X-Gm-Message-State: APjAAAUsnfdhS6Qq/Fq0+A5e1lwVGvUW3DV2OZqZTv9WbIyqi19ZXJoQ
-        OD+caNsk40rSqYbIStAnVZ0=
-X-Google-Smtp-Source: APXvYqxpcPQ6v0supFxmpQnl9spvdYjlqKeTpygjMk+tRcfrQcvY8zYXpDoLk+V8jSu2kT4VQxLtkQ==
-X-Received: by 2002:a63:5b4d:: with SMTP id l13mr71347994pgm.160.1555396690705;
-        Mon, 15 Apr 2019 23:38:10 -0700 (PDT)
-Received: from localhost ([2601:648:8303:5c60:bc53:6e04:b584:e900])
-        by smtp.gmail.com with ESMTPSA id c17sm75365649pfd.76.2019.04.15.23.38.09
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 15 Apr 2019 23:38:10 -0700 (PDT)
-From:   Yury Norov <yury.norov@gmail.com>
-X-Google-Original-From: Yury Norov <ynorov@marvell.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Mike Travis <travis@sgi.com>,
-        Guenter Roeck <linux@roeck-us.net>
-Cc:     Yury Norov <ynorov@marvell.com>, Yury Norov <yury.norov@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH 3/5] lib/test_bitmap: switch test_bitmap_parselist to ktime_get()
-Date:   Mon, 15 Apr 2019 23:37:59 -0700
-Message-Id: <20190416063801.20134-4-ynorov@marvell.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190416063801.20134-1-ynorov@marvell.com>
-References: <20190416063801.20134-1-ynorov@marvell.com>
+        Tue, 16 Apr 2019 02:40:28 -0400
+Received: from mirror2.csie.ntu.edu.tw ([140.112.30.76]:33988 "EHLO
+        wens.csie.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727180AbfDPGk2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 02:40:28 -0400
+Received: by wens.csie.org (Postfix, from userid 1000)
+        id 9AF5260292; Tue, 16 Apr 2019 14:40:25 +0800 (CST)
+From:   Chen-Yu Tsai <wens@kernel.org>
+To:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sebastian Reichel <sre@kernel.org>
+Cc:     Quentin Schulz <quentin.schulz@bootlin.com>,
+        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-sunxi@googlegroups.com, Hans de Goede <hdegoede@redhat.com>,
+        Chen-Yu Tsai <wens@csie.org>
+Subject: [PATCH v4 4/7] power: supply: axp20x_usb_power: add function to get max current
+Date:   Tue, 16 Apr 2019 14:40:21 +0800
+Message-Id: <20190416064024.20414-5-wens@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190416064024.20414-1-wens@kernel.org>
+References: <20190416064024.20414-1-wens@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Yury Norov <ynorov@marvell.com>
+From: Quentin Schulz <quentin.schulz@bootlin.com>
 
-test_bitmap_parselist currently uses get_cycles which is not
-implemented on some platforms, so use ktime_get() instead.
+To prepare for a new PMIC, factor out the code responsible of returning
+the maximum current to axp20x_get_current_max.
 
-Signed-off-by: Yury Norov <ynorov@marvell.com>
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
+Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- lib/test_bitmap.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/power/supply/axp20x_usb_power.c | 52 ++++++++++++++-----------
+ 1 file changed, 30 insertions(+), 22 deletions(-)
 
-diff --git a/lib/test_bitmap.c b/lib/test_bitmap.c
-index 792d90608052..63d4a21955f0 100644
---- a/lib/test_bitmap.c
-+++ b/lib/test_bitmap.c
-@@ -268,15 +268,15 @@ static void __init test_bitmap_parselist(void)
- {
- 	int i;
- 	int err;
--	cycles_t cycles;
-+	ktime_t time;
- 	DECLARE_BITMAP(bmap, 2048);
- 
- 	for (i = 0; i < ARRAY_SIZE(parselist_tests); i++) {
- #define ptest parselist_tests[i]
- 
--		cycles = get_cycles();
-+		time = ktime_get();
- 		err = bitmap_parselist(ptest.in, bmap, ptest.nbits);
--		cycles = get_cycles() - cycles;
-+		time = ktime_get() - time;
- 
- 		if (err != ptest.errno) {
- 			pr_err("test %d: input is %s, errno is %d, expected %d\n",
-@@ -293,8 +293,7 @@ static void __init test_bitmap_parselist(void)
- 
- 		if (ptest.flags & PARSE_TIME)
- 			pr_err("test %d: input is '%s' OK, Time: %llu\n",
--					i, ptest.in,
--					(unsigned long long)cycles);
-+					i, ptest.in, time);
- 	}
+diff --git a/drivers/power/supply/axp20x_usb_power.c b/drivers/power/supply/axp20x_usb_power.c
+index 290028aed230..04c2cafbe8e6 100644
+--- a/drivers/power/supply/axp20x_usb_power.c
++++ b/drivers/power/supply/axp20x_usb_power.c
+@@ -102,6 +102,35 @@ static bool axp20x_usb_vbus_needs_polling(struct axp20x_usb_power *power)
+ 	return false;
  }
  
++static int axp20x_get_current_max(struct axp20x_usb_power *power, int *val)
++{
++	unsigned int v;
++	int ret = regmap_read(power->regmap, AXP20X_VBUS_IPSOUT_MGMT, &v);
++
++	if (ret)
++		return ret;
++
++	switch (v & AXP20X_VBUS_CLIMIT_MASK) {
++	case AXP20X_VBUS_CLIMIT_100mA:
++		if (power->axp20x_id == AXP221_ID)
++			*val = -1; /* No 100mA limit */
++		else
++			*val = 100000;
++		break;
++	case AXP20X_VBUS_CLIMIT_500mA:
++		*val = 500000;
++		break;
++	case AXP20X_VBUS_CLIMIT_900mA:
++		*val = 900000;
++		break;
++	case AXP20X_VBUS_CLIMIT_NONE:
++		*val = -1;
++		break;
++	}
++
++	return 0;
++}
++
+ static int axp20x_usb_power_get_property(struct power_supply *psy,
+ 	enum power_supply_property psp, union power_supply_propval *val)
+ {
+@@ -140,28 +169,7 @@ static int axp20x_usb_power_get_property(struct power_supply *psy,
+ 		val->intval = ret * 1700; /* 1 step = 1.7 mV */
+ 		return 0;
+ 	case POWER_SUPPLY_PROP_CURRENT_MAX:
+-		ret = regmap_read(power->regmap, AXP20X_VBUS_IPSOUT_MGMT, &v);
+-		if (ret)
+-			return ret;
+-
+-		switch (v & AXP20X_VBUS_CLIMIT_MASK) {
+-		case AXP20X_VBUS_CLIMIT_100mA:
+-			if (power->axp20x_id == AXP221_ID)
+-				val->intval = -1; /* No 100mA limit */
+-			else
+-				val->intval = 100000;
+-			break;
+-		case AXP20X_VBUS_CLIMIT_500mA:
+-			val->intval = 500000;
+-			break;
+-		case AXP20X_VBUS_CLIMIT_900mA:
+-			val->intval = 900000;
+-			break;
+-		case AXP20X_VBUS_CLIMIT_NONE:
+-			val->intval = -1;
+-			break;
+-		}
+-		return 0;
++		return axp20x_get_current_max(power, &val->intval);
+ 	case POWER_SUPPLY_PROP_CURRENT_NOW:
+ 		if (IS_ENABLED(CONFIG_AXP20X_ADC)) {
+ 			ret = iio_read_channel_processed(power->vbus_i,
 -- 
-2.17.1
+2.20.1
 
