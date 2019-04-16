@@ -2,106 +2,95 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B47C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:55:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29AB8C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:56:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ABB7820870
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:55:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DE37020868
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:56:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="r/ujkBlR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728878AbfDPIzE (ORCPT
+        id S1728841AbfDPI4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 04:55:04 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:56796 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726576AbfDPIzC (ORCPT
+        Tue, 16 Apr 2019 04:56:12 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:39964 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726576AbfDPI4M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 04:55:02 -0400
-X-UUID: 693e98bd81254991b05e96e47a91bcc1-20190416
-X-UUID: 693e98bd81254991b05e96e47a91bcc1-20190416
-Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
-        (envelope-from <jitao.shi@mediatek.com>)
-        (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 196416271; Tue, 16 Apr 2019 16:54:56 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33DR.mediatek.inc
- (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 16 Apr
- 2019 16:54:54 +0800
-Received: from mszsdclx1018.gcn.mediatek.inc (172.27.4.253) by
- MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1395.4 via Frontend Transport; Tue, 16 Apr 2019 16:54:53 +0800
-From:   Jitao Shi <jitao.shi@mediatek.com>
-To:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Ian Campbell <ijc+devicetree@hellion.org.uk>,
-        Kumar Gala <galak@codeaurora.org>, <linux-pwm@vger.kernel.org>,
-        David Airlie <airlied@linux.ie>,
-        Matthias Brugger <matthias.bgg@gmail.com>
-CC:     Jitao Shi <jitao.shi@mediatek.com>,
-        Thierry Reding <treding@nvidia.com>,
-        Ajay Kumar <ajaykumar.rs@samsung.com>,
-        Inki Dae <inki.dae@samsung.com>,
-        Rahul Sharma <rahul.sharma@samsung.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Vincent Palatin <vpalatin@chromium.org>,
-        Andy Yan <andy.yan@rock-chips.com>,
-        Philipp Zabel <p.zabel@pengutronix.de>,
-        Russell King <rmk+kernel@arm.linux.org.uk>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <srv_heupstream@mediatek.com>,
-        Sascha Hauer <kernel@pengutronix.de>,
-        <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
-        <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
-        <ck.hu@mediatek.com>, <stonea168@163.com>
-Subject: [PATCH 2/2] arm64: dts: mt8183: add pwm0 node
-Date:   Tue, 16 Apr 2019 16:54:46 +0800
-Message-ID: <20190416085446.84071-3-jitao.shi@mediatek.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190416085446.84071-1-jitao.shi@mediatek.com>
-References: <20190416085446.84071-1-jitao.shi@mediatek.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-MTK:  N
+        Tue, 16 Apr 2019 04:56:12 -0400
+Received: by mail-wm1-f67.google.com with SMTP id z24so24361073wmi.5
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 01:56:11 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=X/fS4B4TQYLCt/1NT/s+qwpNcuJkf+cjzjwlLPIrmXk=;
+        b=r/ujkBlRMalnyNsSMrJkbDzZmSBJYtfYmn+wrTwKsrNw4+UOgJgYNo72ff6me+emOf
+         /hQWXyXr6NuhGgzFUr6sZf/WwQ2DJIesjZZJfkxChHCxFr06nU9F9ssdZJBpBYxXcwN3
+         PrsuipRwWACBX2DmyRmj/hOlZLR9tfoDdAXwm0wmGSB61icv7AOkU3NkTp4/+fYn+ORX
+         g4qRRZEEGUaQSQ2ecH/PgwNWD5saE06cInQV2r2DLTrUs1RHA3z0YPRPG34ln4sSoqCm
+         Y25lHfrnv2qumHG4VYFlcFVPcGGdDtVmZVtCm4+wK76HDAUrCM29We6tiyMes2VfhClu
+         0EZA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=X/fS4B4TQYLCt/1NT/s+qwpNcuJkf+cjzjwlLPIrmXk=;
+        b=qLYkM/rBdNdwqO93rV+uhrVefCUnXJeJLIj7biQss7rffp1QNYY2lD0L2QlJ9OFJZM
+         1s+FV1yeSggwWBxBx1GG+SWuj4vKDydbmvRGVtKG5Jngj7CIrqQ/gymgBg4wae2jn7Is
+         rq9rWwY90k3nYcwks1MagpAY6G0HjGU+DisCVTqehD23E3b2FBqjr4I/6p89SJLzIpnR
+         3OeeKDC4nKj0kEBH/xP4kTamYhA/NUXTPuLnOhkmjopYA7v57h/wXm+HVYg+ELRRB3Of
+         AXkh/Ex4YQbV5M0X7M2B08s4FfDXBYgL/gLhXKLKxuZocOtCs5Jgo25TrScTDvYUyBHk
+         JaVQ==
+X-Gm-Message-State: APjAAAW/oyPwVP1lA0KrgzIaGsflWWVHCNf59YlYKm2eo2fpRyRTmH7w
+        mwrUY61z7j20kaEKYO4bT+4DGdJ5
+X-Google-Smtp-Source: APXvYqwIdb675g+5InaMGc4AgnwvxPshGNlOuuKsIDCo0bpe+7bB9FlmWugCKrLF+0MgqMJzthqNPg==
+X-Received: by 2002:a1c:ac07:: with SMTP id v7mr1086053wme.49.1555404970420;
+        Tue, 16 Apr 2019 01:56:10 -0700 (PDT)
+Received: from 640k.lan ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id e1sm86288374wrw.66.2019.04.16.01.56.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Apr 2019 01:56:09 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Andrea Parri <andrea.parri@amarulasolutions.com>, mst@redhat.com,
+        jasowang@redhat.com, stefanha@redhat.com,
+        virtualization@lists.linux-foundation.org
+Subject: [PATCH] vhost-scsi: remove incorrect memory barrier
+Date:   Tue, 16 Apr 2019 10:56:08 +0200
+Message-Id: <1555404968-39927-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add pwm0 node to the mt8183
+At this point, vs_tpg is not public at all; tv_tpg_vhost_count
+is accessed under tpg->tv_tpg_mutex; tpg->vhost_scsi is
+accessed under vhost_scsi_mutex.  Therefor there are no atomic
+operations involved at all here, just remove the barrier.
 
-Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+Reported-by: Andrea Parri <andrea.parri@amarulasolutions.com>
+Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
 ---
- arch/arm64/boot/dts/mediatek/mt8183.dtsi | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ drivers/vhost/scsi.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-index 80929a0e5a6f..2830008c4921 100644
---- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-+++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
-@@ -323,6 +323,17 @@
- 			status = "disabled";
- 		};
- 
-+		pwm0: pwm@1100e000 {
-+			compatible = "mediatek,mt8183-disp-pwm";
-+			reg = <0 0x1100e000 0 0x1000>;
-+			interrupts = <GIC_SPI 128 IRQ_TYPE_LEVEL_LOW>;
-+			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
-+			#pwm-cells = <2>;
-+			clocks = <&topckgen CLK_TOP_MUX_DISP_PWM>,
-+					<&infracfg CLK_INFRA_DISP_PWM>;
-+			clock-names = "main", "mm";
-+		};
-+
- 		audiosys: syscon@11220000 {
- 			compatible = "mediatek,mt8183-audiosys", "syscon";
- 			reg = <0 0x11220000 0 0x1000>;
+diff --git a/drivers/vhost/scsi.c b/drivers/vhost/scsi.c
+index 618fb6461017..c090d177bd75 100644
+--- a/drivers/vhost/scsi.c
++++ b/drivers/vhost/scsi.c
+@@ -1443,7 +1443,6 @@ static void vhost_scsi_flush(struct vhost_scsi *vs)
+ 			tpg->tv_tpg_vhost_count++;
+ 			tpg->vhost_scsi = vs;
+ 			vs_tpg[tpg->tport_tpgt] = tpg;
+-			smp_mb__after_atomic();
+ 			match = true;
+ 		}
+ 		mutex_unlock(&tpg->tv_tpg_mutex);
 -- 
-2.21.0
+1.8.3.1
 
