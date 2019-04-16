@@ -2,114 +2,95 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 464EDC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:17:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D197CC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:18:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1489A20821
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:17:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="cH/4NAbM";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="cH/4NAbM"
+	by mail.kernel.org (Postfix) with ESMTP id A5CF32077C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:18:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729268AbfDPNRm (ORCPT
+        id S1729330AbfDPNSD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 09:17:42 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:36092 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726796AbfDPNRl (ORCPT
+        Tue, 16 Apr 2019 09:18:03 -0400
+Received: from mout.kundenserver.de ([217.72.192.73]:45223 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726796AbfDPNSD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 09:17:41 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 7F8506119F; Tue, 16 Apr 2019 13:17:40 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1555420660;
-        bh=z3ndeu30m7fA4kT+0k5LNWnkWoyl3MPtE622MvKZJZE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=cH/4NAbMjnhImtksVWztciKFaioLgGD/ct+VKwWRYGWa8/53V6GFENjC9urHtjFzE
-         rtgsp27JKefY6wvZ6p6Ohlre1xI6wabdslsWn0AEJJnuLIg2KTWOZirqA9spwtMx7y
-         VZqyh5seBL1BX6QeV6IL0TFzNScR3Ins1bHmtnds=
-Received: from [10.204.79.15] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id C026060FEA;
-        Tue, 16 Apr 2019 13:17:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1555420660;
-        bh=z3ndeu30m7fA4kT+0k5LNWnkWoyl3MPtE622MvKZJZE=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=cH/4NAbMjnhImtksVWztciKFaioLgGD/ct+VKwWRYGWa8/53V6GFENjC9urHtjFzE
-         rtgsp27JKefY6wvZ6p6Ohlre1xI6wabdslsWn0AEJJnuLIg2KTWOZirqA9spwtMx7y
-         VZqyh5seBL1BX6QeV6IL0TFzNScR3Ins1bHmtnds=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org C026060FEA
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH] reiserfs: fix spelling mistake "enrty" -> "entry"
-To:     Colin King <colin.king@canonical.com>,
-        reiserfs-devel@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190416112549.25175-1-colin.king@canonical.com>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <240c2888-01a9-184f-7f29-eb603bdd36c4@codeaurora.org>
-Date:   Tue, 16 Apr 2019 18:47:36 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 16 Apr 2019 09:18:03 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MPXQi-1hU3CQ4A9S-00MbZQ; Tue, 16 Apr 2019 15:17:49 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     arm@kernel.org
+Cc:     Arnd Bergmann <arnd@arndb.de>, Baruch Siach <baruch@tkos.co.il>,
+        Russell King <linux@armlinux.org.uk>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ARM: debug-ll: add default address for digicolor
+Date:   Tue, 16 Apr 2019 15:17:30 +0200
+Message-Id: <20190416131746.1303495-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-In-Reply-To: <20190416112549.25175-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:fwTdw+l9kVa6fOtmnIO52nhUJMcaPosyBl1f+hU03D9+UXyS4oT
+ oC6YMst8gZVfVL2ovllRDbGPcqN+sJSrhg0uhwD183hxpk26+mYzVsajxe9sZCCCrKU88Er
+ ZCkXMcp4AtDLN6ZLGG91kULXwmfpqatn0KkoGD7AsAUSHN5F1C8hzo/UMn72OHe10dobIOy
+ B2j4qGajZCit1IbQ29lNQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:vaTzPpgMRbA=:NqXmIO/mq/mvAFXCpgYiF+
+ 9zHN3YIE2mhVOF0AtMt8npzcbj+8HT64MwVdY6x0MnC2s6nt+kKfwBqu84UUrt/JHMYTHt1Om
+ 1XbrVOZGWqTAx9He6IUvLwPRVAN8mGEeoB1qHr+FBG4rLYXguS6OMhH0890YRb5q9uZDw9E90
+ rzPmOHjKlihvrze5lzATCfUNFtG0LnohNPn1ie3JZeCTue7lNfMVdeiZbi8W8gRdh7re6X8bM
+ h7XXk+sYC1XNI4ME584KGNGWHudOjuKUp05gtobjUYWIw8WtgbHKTN/jzzhKSkeuDfWWE9cVk
+ gCZai57nPmtRx4oIDhJnxRz7VLJu9yE8/MRucEdddVfXuf9N5MZRG6h13ougi9gQ84trEr5Bv
+ fM8KTR92Wc2ml2ltmKmJODGM7AEX22S8AU1VhmcRvbc4QwHzhF80aorPWi8j1/0Odw1WdeTQR
+ UDPpLvs1UjtIbspCNd19ZrMTrDTRD65T66tXtO39ey0dDD/KQ/xe79idkrw8C5qVW/BoZ19Y+
+ rbIatp77zZ36IGehJX+7o3umDK/iI24LWc71ujHhyROllz7om0T8b6u+9PEclAXO5mmL6rV6m
+ 8olZae1jqBunOSt/wb2U3JYJJn4MVA1Eaz9ajUf1D66CBZGrs7bSa2vGq2hsbe4CLtm1cV2x5
+ MWTtQDC8CukD8xLWfwuk6ZVtlD07OwuRJ17N9txPMErdHM7NtpsWQomznreTURSPbA3Sc7tr2
+ Rtd3zz8My3FMcBGjOofWeN/6hMUioOMO5I7glA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The digicolor platform has three UARTs, but the Kconfig.debug
+file explicitly lists port zero as the one to be used for the
+console, while not providing any default values.
 
-On 4/16/2019 4:55 PM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
->
-> There are a couple of spelling mistakes, fix these.
->
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+This can get an automated randconfig build stuck in a loop
+waiting for the user to input the number. As we already know
+the physical address, this patch provides that number as
+default, along with a reasonable default value for the virtual
+address.
 
+Cc: Baruch Siach <baruch@tkos.co.il>
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ arch/arm/Kconfig.debug | 2 ++
+ 1 file changed, 2 insertions(+)
 
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
+index a8a1e14f20ab..e5f0b36d797f 100644
+--- a/arch/arm/Kconfig.debug
++++ b/arch/arm/Kconfig.debug
+@@ -1676,6 +1676,7 @@ config DEBUG_UART_PHYS
+ 	default 0xe6e68000 if DEBUG_RCAR_GEN2_SCIF1
+ 	default 0xe6ee0000 if DEBUG_RCAR_GEN2_SCIF4
+ 	default 0xe8008000 if DEBUG_R7S72100_SCIF2
++	default 0xf0000740 if DEBUG_DIGICOLOR_UA0
+ 	default 0xf0000be0 if ARCH_EBSA110
+ 	default 0xf1012000 if DEBUG_MVEBU_UART0_ALTERNATE
+ 	default 0xf1012100 if DEBUG_MVEBU_UART1_ALTERNATE
+@@ -1785,6 +1786,7 @@ config DEBUG_UART_VIRT
+ 	default 0xfd012000 if DEBUG_MVEBU_UART0_ALTERNATE && ARCH_MV78XX0
+ 	default 0xfd883000 if DEBUG_ALPINE_UART0
+ 	default 0xfde12000 if DEBUG_MVEBU_UART0_ALTERNATE && ARCH_DOVE
++	default 0xfe000740 if DEBUG_DIGICOLOR_UA0
+ 	default 0xfe012000 if DEBUG_MVEBU_UART0_ALTERNATE && ARCH_ORION5X
+ 	default 0xfe017000 if DEBUG_MMP_UART2
+ 	default 0xfe018000 if DEBUG_MMP_UART3
+-- 
+2.20.0
 
-Cheers,
--Mukesh
-
-> ---
->   fs/reiserfs/lbalance.c | 2 +-
->   fs/reiserfs/namei.c    | 2 +-
->   2 files changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/fs/reiserfs/lbalance.c b/fs/reiserfs/lbalance.c
-> index f5cebd70d903..e7cebd05a882 100644
-> --- a/fs/reiserfs/lbalance.c
-> +++ b/fs/reiserfs/lbalance.c
-> @@ -1164,7 +1164,7 @@ void leaf_cut_from_buffer(struct buffer_info *bi, int cut_item_num,
->   		if (pos_in_item == 0) {
->   			/* change key */
->   			RFALSE(cut_item_num,
-> -			       "when 0-th enrty of item is cut, that item must be first in the node, not %d-th",
-> +			       "when 0-th entry of item is cut, that item must be first in the node, not %d-th",
->   			       cut_item_num);
->   			/* change item key by key of first entry in the item */
->   			set_le_ih_k_offset(ih, deh_offset(B_I_DEH(bh, ih)));
-> diff --git a/fs/reiserfs/namei.c b/fs/reiserfs/namei.c
-> index 97f3fc4fdd79..c97c36b4a31c 100644
-> --- a/fs/reiserfs/namei.c
-> +++ b/fs/reiserfs/namei.c
-> @@ -536,7 +536,7 @@ static int reiserfs_add_entry(struct reiserfs_transaction_handle *th,
->   		pathrelse(&path);
->   		return -EBUSY;
->   	}
-> -	/* adjust offset of directory enrty */
-> +	/* adjust offset of directory entry */
->   	put_deh_offset(deh, SET_GENERATION_NUMBER(deh_offset(deh), gen_number));
->   	set_cpu_key_k_offset(&entry_key, deh_offset(deh));
->   
