@@ -2,68 +2,65 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 37C74C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:58:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D947AC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0C20920821
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:58:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A77782073F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:01:50 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728625AbfDPK6E (ORCPT
+        id S1727929AbfDPLBt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 06:58:04 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:56470 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726796AbfDPK6D (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 06:58:03 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hGLmh-0007HM-Ds; Tue, 16 Apr 2019 10:57:51 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>, x86@kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] x86/Kconfig: fix spelling mistake "effectivness" -> "effectiveness"
-Date:   Tue, 16 Apr 2019 11:57:51 +0100
-Message-Id: <20190416105751.18899-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 16 Apr 2019 07:01:49 -0400
+Received: from mga09.intel.com ([134.134.136.24]:12063 "EHLO mga09.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726313AbfDPLBt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 07:01:49 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga102.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Apr 2019 04:01:48 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,357,1549958400"; 
+   d="scan'208";a="165171621"
+Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
+  by fmsmga001.fm.intel.com with SMTP; 16 Apr 2019 04:01:45 -0700
+Received: by lahna (sSMTP sendmail emulation); Tue, 16 Apr 2019 14:01:44 +0300
+Date:   Tue, 16 Apr 2019 14:01:44 +0300
+From:   Mika Westerberg <mika.westerberg@linux.intel.com>
+To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
+Cc:     gregkh@linuxfoundation.org, maxime.ripard@bootlin.com,
+        gkohli@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2] nvmem: core: add NVMEM_SYSFS Kconfig
+Message-ID: <20190416110144.GS2654@lahna.fi.intel.com>
+References: <20190416095924.17428-1-srinivas.kandagatla@linaro.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190416095924.17428-1-srinivas.kandagatla@linaro.org>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Tue, Apr 16, 2019 at 10:59:24AM +0100, Srinivas Kandagatla wrote:
+> Many nvmem providers are not very keen on having default sysfs
+> nvmem entry, as most of the usecases for them are inside kernel
+> itself. And in some cases read/writes to some areas in nvmem are
+> restricted and trapped at secure monitor level, so accessing them
+> from userspace would result in board reboots.
+> 
+> This patch adds new NVMEM_SYSFS Kconfig to make binary sysfs entry
+> an optional one. This provision will give more flexibility to users.
+> This patch also moves existing sysfs code to a new file so that its
+> not compiled in when its not really required.
+> 
+> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
 
-The Kconfig text contains a spelling mistake, fix it.
-
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- arch/x86/Kconfig | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
-
-diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
-index bbd26f68ef56..baefe76481b8 100644
---- a/arch/x86/Kconfig
-+++ b/arch/x86/Kconfig
-@@ -1502,7 +1502,7 @@ config X86_CPA_STATISTICS
- 	depends on DEBUG_FS
- 	---help---
- 	  Expose statistics about the Change Page Attribute mechanims, which
--	  helps to determine the effectivness of preserving large and huge
-+	  helps to determine the effectiveness of preserving large and huge
- 	  page mappings when mapping protections are changed.
- 
- config ARCH_HAS_MEM_ENCRYPT
--- 
-2.20.1
-
+Reviewed-by: Mika Westerberg <mika.westerberg@linux.intel.com>
