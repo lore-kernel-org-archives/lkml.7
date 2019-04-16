@@ -2,194 +2,93 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DB9AC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:22:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B49CAC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:22:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF60420821
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:22:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86F252077C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:22:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="UK9baa0u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729360AbfDPNWo (ORCPT
+        id S1729368AbfDPNWx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 09:22:44 -0400
-Received: from mout.kundenserver.de ([212.227.126.187]:44217 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbfDPNWo (ORCPT
+        Tue, 16 Apr 2019 09:22:53 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:38567 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728149AbfDPNWw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 09:22:44 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MMXYN-1hX5JC1fF9-00Ja2i; Tue, 16 Apr 2019 15:22:13 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     arm@kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, Greg Ungerer <gerg@uclinux.org>,
-        Wim Van Sebroeck <wim@linux-watchdog.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-watchdog@vger.kernel.org
-Subject: [PATCH 1/6 v2] ARM: ks8695: watchdog: stop using mach/*.h
-Date:   Tue, 16 Apr 2019 15:21:41 +0200
-Message-Id: <20190416132207.1304277-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20190415202501.941196-1-arnd@arndb.de>
-References: <20190415202501.941196-1-arnd@arndb.de>
+        Tue, 16 Apr 2019 09:22:52 -0400
+Received: by mail-wm1-f65.google.com with SMTP id w15so25431323wmc.3
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 06:22:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=arista.com; s=googlenew;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fE3sq5IU7oDGUhvdqyQ/p1pwHsr+y+10jDtlKyi9nIM=;
+        b=UK9baa0upvt8kExaNicRl4IW8pn8XtS1HGiXYDh/Cjh2In4WEONLA/YoRLDoQzJ8Vz
+         PdVkVuOvfMVv5w4vUtdenpqz87O0364ncPkGp5V542ls7ftS3zZv6exRl2fjhcvDhsFO
+         3kMGLNzDEN6PoD5wBYvbqj+cF33P3YKcjyEX6n0BEKE3pBXOF/yodJqYUnf2jHnNfCmk
+         QZAp54PLBFZF2yttlJPMVIacIIQ5GnxIDa/xhqCLY41O8pLQVwhxzxCHbAnLPou7yTVc
+         pYDxjwquiphiT/LmMpi76FuotYfoSeZoAjMTVdtujWTGpLoYutrlZEcGpwdTAxrxWVG5
+         bicw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fE3sq5IU7oDGUhvdqyQ/p1pwHsr+y+10jDtlKyi9nIM=;
+        b=A22bUlbyOPoSjUEYb8vP9ARgfDkXSMpxK63oZUMa4Yhf0P74uK9oeoMoppiMtkFv1V
+         UfZYIj9VyRYqdekNugW92NB6AGSw1hvc6Ctp5A7DKVKXGObHGOHASRZa3sNocE7xcRHv
+         60Z6+38wgxmmQDNAtOaslX1x5oB1uKg/SwDoWrFIQSKFPAHMEspWN3HKRLuq56spC28j
+         tvlIBftnp2+gv1AmlGqCCYN9Tez3/rTRdgLSaJSpSidjreVrupr7tAuFC2CB9EDeJ4vn
+         fgyRD7rs+0uul1qGrzaJWKyZUkMtzQ06bcN0AKxvTJyfGQyRB6gZji46iNDNpN8t+ALi
+         2PSQ==
+X-Gm-Message-State: APjAAAUWYz/H4by9adLRQ5VsowbRXcWZOcMAKHlKEgf7brV+OPn5QqMt
+        96vWj7FA+CB4yMoubLmIGOaKmCZjIRh2dSOmOP+bJQ==
+X-Google-Smtp-Source: APXvYqxvliQB0p1msg/Kb91zHRXg1vpQBmsWsVI/s/OgwCDG1cNmK+qljRBsZ92RcWqDc4Oa8eQSKty5sw59nUVcpPQ=
+X-Received: by 2002:a1c:9617:: with SMTP id y23mr26196661wmd.31.1555420970525;
+ Tue, 16 Apr 2019 06:22:50 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:uqfgWOfOCLOa4nYg5G/1yN5YmkVEzPGjOL6IbNCxYpSeD28aL8L
- DYqyxCrtfdMCsLI7XiHS/rY0b6QJ6fcEhrF1XMS8e1Gu/6chVpUfT1k/V5G6iQAzLjcJYKn
- DIVPMNu0r0K/b5le/HrM4L4qB7QpD+1jf8fKufGe6k4FrdUATrBWts4949DzIiFIViKG1PR
- Mpdt2qwUjQNk8LOQxK3xw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:tw6p5CP/Xp8=:gSEDkRYFWUz05sDaS4HxlS
- bUB/iq/Wn7XUFIWst0ZunMDqnS7nczFxHMb1wJLQp2Js76TLVn6jbPmKW4mPkU9sB85qu6Klg
- UklO6CvX5ot0/anHOM79vw8j5pYTz/WMdhJ0xkVFu5681uj2jUWWOnSQT2K5XSNvcDvkclIUy
- vj43s0/ySU8V9md7QIA6SWrcJbpUEmt/nMmScfpX5yzzPcCV2QGm/HrfKOovLCHja4dniRgO0
- OCws+0trVHa4nhDhcjLoTm5nR/Z+DONka75h+5xWpWv0bXkvB6/aPQzmpl3eSDhVKTyMQRG3a
- yfcq7gLc2VFDFjwDoAHFo2b5lSiFrZZQ8/7gCkqXrnLrcHkR1oiUDgZp10j/hTBB7YvtcmS1w
- WEclfnJ9VO9aR0fD0XrHdWZ1ENAaP94CPF5zpQOav5VlKx7YTP4TtG6d9uhm9nsBjx/QwgXOy
- R13CxxgahMFV6yVYgCCqUvnEteplkgpgFg8935Us2riUBb66ZBNRN0tNCeeP11BUnQPfQTrQs
- EWwn9mZWh6BidKbO5WS+pjFtVoxIQaIqO0/2j+cJ+ERqQT8ZallQOaroi1L3f2sJijIyHnLKr
- 4HxJZW8rxCSSD6TQfNoiLDhVuCFkX8LIt0rzSoJ5qWvmJpqus4xXx8UiyNp+lKOz4QDuHI57u
- gYWTTI1pHiWWc6vsSP9MmltRFZ2B1Qe4Q5IeUqwqcj7IXCzh0zrZEEMwQLZ/4c2pxZzCIm+kf
- Q9Hk1XX+JVquIOcq3wy6wv5F1dNPkij0uAyegA==
+References: <20190411184741.27540-1-tmurphy@arista.com> <20190411184741.27540-4-tmurphy@arista.com>
+ <20190415063134.GB1377@infradead.org>
+In-Reply-To: <20190415063134.GB1377@infradead.org>
+From:   Tom Murphy <tmurphy@arista.com>
+Date:   Tue, 16 Apr 2019 14:22:38 +0100
+Message-ID: <CAPL0++7Z=EMpYOvUn8yvcRqRT5iwJMD8zLhmFr4uFbH7W3WqXQ@mail.gmail.com>
+Subject: Re: [PATCH 3/9] iommu/dma-iommu: Add iommu_dma_copy_reserved_iova,
+ iommu_dma_apply_resv_region to the dma-iommu api
+To:     Christoph Hellwig <hch@infradead.org>
+Cc:     iommu@lists.linux-foundation.org, Heiko Stuebner <heiko@sntech.de>,
+        Will Deacon <will.deacon@arm.com>,
+        David Brown <david.brown@linaro.org>,
+        linux-samsung-soc@vger.kernel.org,
+        Dmitry Safonov <dima@arista.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-rockchip@lists.infradead.org, Kukjin Kim <kgene@kernel.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Tom Murphy <murphyt7@tcd.ie>,
+        Robin Murphy <robin.murphy@arm.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-drivers should not rely on machine specific headers but
-get their information from the platform device.
+I hoped this could be an exception, it's easier to grok without the
+line break and isn't crazy long. Because you mentioned it I'll fix it.
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/arm/mach-ks8695/devices.c | 13 ++++++++++++-
- drivers/watchdog/Kconfig       |  2 +-
- drivers/watchdog/ks8695_wdt.c  | 29 ++++++++++++++++-------------
- 3 files changed, 29 insertions(+), 15 deletions(-)
-
-diff --git a/arch/arm/mach-ks8695/devices.c b/arch/arm/mach-ks8695/devices.c
-index 15afeb964280..ba9d0f0f47ac 100644
---- a/arch/arm/mach-ks8695/devices.c
-+++ b/arch/arm/mach-ks8695/devices.c
-@@ -169,11 +169,22 @@ void __init ks8696_add_device_hpna(void)
- /* --------------------------------------------------------------------
-  *  Watchdog
-  * -------------------------------------------------------------------- */
-+#define KS8695_TMR_OFFSET      (0xF0000 + 0xE400)
-+#define KS8695_TMR_PA          (KS8695_IO_PA + KS8695_TMR_OFFSET)
-+static struct resource ks8695_wdt_resources[] = {
-+	[0] = {
-+		.name	= "tmr",
-+		.start	= KS8695_TMR_PA,
-+		.end	= KS8695_TMR_PA + 0xf,
-+		.flags	= IORESOURCE_MEM,
-+	},
-+};
- 
- static struct platform_device ks8695_wdt_device = {
- 	.name		= "ks8695_wdt",
- 	.id		= -1,
--	.num_resources	= 0,
-+	.resource	= ks8695_wdt_resources,
-+	.num_resources	= ARRAY_SIZE(ks8695_wdt_resources),
- };
- 
- static void __init ks8695_add_device_watchdog(void)
-diff --git a/drivers/watchdog/Kconfig b/drivers/watchdog/Kconfig
-index 242eea859637..046e01daef57 100644
---- a/drivers/watchdog/Kconfig
-+++ b/drivers/watchdog/Kconfig
-@@ -397,7 +397,7 @@ config IXP4XX_WATCHDOG
- 
- config KS8695_WATCHDOG
- 	tristate "KS8695 watchdog"
--	depends on ARCH_KS8695
-+	depends on ARCH_KS8695 || COMPILE_TEST
- 	help
- 	  Watchdog timer embedded into KS8695 processor. This will reboot your
- 	  system when the timeout is reached.
-diff --git a/drivers/watchdog/ks8695_wdt.c b/drivers/watchdog/ks8695_wdt.c
-index 1e41818a44bc..2a11cdfe2ab1 100644
---- a/drivers/watchdog/ks8695_wdt.c
-+++ b/drivers/watchdog/ks8695_wdt.c
-@@ -23,10 +23,8 @@
- #include <linux/watchdog.h>
- #include <linux/io.h>
- #include <linux/uaccess.h>
--#include <mach/hardware.h>
- 
--#define KS8695_TMR_OFFSET	(0xF0000 + 0xE400)
--#define KS8695_TMR_VA		(KS8695_IO_VA + KS8695_TMR_OFFSET)
-+#define KS8695_CLOCK_RATE  25000000
- 
- /*
-  * Timer registers
-@@ -57,6 +55,7 @@ MODULE_PARM_DESC(nowayout, "Watchdog cannot be stopped once started (default="
- 
- static unsigned long ks8695wdt_busy;
- static DEFINE_SPINLOCK(ks8695_lock);
-+static void __iomem *tmr_reg;
- 
- /* ......................................................................... */
- 
-@@ -69,8 +68,8 @@ static inline void ks8695_wdt_stop(void)
- 
- 	spin_lock(&ks8695_lock);
- 	/* disable timer0 */
--	tmcon = __raw_readl(KS8695_TMR_VA + KS8695_TMCON);
--	__raw_writel(tmcon & ~TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
-+	tmcon = __raw_readl(tmr_reg + KS8695_TMCON);
-+	__raw_writel(tmcon & ~TMCON_T0EN, tmr_reg + KS8695_TMCON);
- 	spin_unlock(&ks8695_lock);
- }
- 
-@@ -84,15 +83,15 @@ static inline void ks8695_wdt_start(void)
- 
- 	spin_lock(&ks8695_lock);
- 	/* disable timer0 */
--	tmcon = __raw_readl(KS8695_TMR_VA + KS8695_TMCON);
--	__raw_writel(tmcon & ~TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
-+	tmcon = __raw_readl(tmr_reg + KS8695_TMCON);
-+	__raw_writel(tmcon & ~TMCON_T0EN, tmr_reg + KS8695_TMCON);
- 
- 	/* program timer0 */
--	__raw_writel(tval | T0TC_WATCHDOG, KS8695_TMR_VA + KS8695_T0TC);
-+	__raw_writel(tval | T0TC_WATCHDOG, tmr_reg + KS8695_T0TC);
- 
- 	/* re-enable timer0 */
--	tmcon = __raw_readl(KS8695_TMR_VA + KS8695_TMCON);
--	__raw_writel(tmcon | TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
-+	tmcon = __raw_readl(tmr_reg + KS8695_TMCON);
-+	__raw_writel(tmcon | TMCON_T0EN, tmr_reg + KS8695_TMCON);
- 	spin_unlock(&ks8695_lock);
- }
- 
-@@ -105,9 +104,9 @@ static inline void ks8695_wdt_reload(void)
- 
- 	spin_lock(&ks8695_lock);
- 	/* disable, then re-enable timer0 */
--	tmcon = __raw_readl(KS8695_TMR_VA + KS8695_TMCON);
--	__raw_writel(tmcon & ~TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
--	__raw_writel(tmcon | TMCON_T0EN, KS8695_TMR_VA + KS8695_TMCON);
-+	tmcon = __raw_readl(tmr_reg + KS8695_TMCON);
-+	__raw_writel(tmcon & ~TMCON_T0EN, tmr_reg + KS8695_TMCON);
-+	__raw_writel(tmcon | TMCON_T0EN, tmr_reg + KS8695_TMCON);
- 	spin_unlock(&ks8695_lock);
- }
- 
-@@ -239,6 +238,10 @@ static int ks8695wdt_probe(struct platform_device *pdev)
- {
- 	int res;
- 
-+	tmr_reg = devm_platform_ioremap_resource(pdev, 0);
-+	if (!tmr_reg)
-+		return -ENXIO;
-+
- 	if (ks8695wdt_miscdev.parent)
- 		return -EBUSY;
- 	ks8695wdt_miscdev.parent = &pdev->dev;
--- 
-2.20.0
-
+On Mon, Apr 15, 2019 at 7:31 AM Christoph Hellwig <hch@infradead.org> wrote:
+>
+> On Thu, Apr 11, 2019 at 07:47:32PM +0100, Tom Murphy via iommu wrote:
+> > +
+> > +     WARN_ON_ONCE(iommu_dma_reserve_iova(domain, region->start, end) == NULL);
+>
+> Overly long line..
