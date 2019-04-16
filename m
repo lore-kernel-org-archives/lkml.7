@@ -2,104 +2,121 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 62D47C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:49:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C850AC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:50:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 391BF20693
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:49:05 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 89ED920684
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:50:36 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="hkWSChtL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729013AbfDPJtD (ORCPT
+        id S1728686AbfDPJuf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 05:49:03 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:46752 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728556AbfDPJst (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 05:48:49 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3G9ie1r104286
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 05:48:48 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rwb22cf7g-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 05:48:48 -0400
-Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <anju@linux.vnet.ibm.com>;
-        Tue, 16 Apr 2019 10:48:46 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 16 Apr 2019 10:48:44 +0100
-Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3G9mhSE53805120
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 Apr 2019 09:48:43 GMT
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id BC4A24C04A;
-        Tue, 16 Apr 2019 09:48:43 +0000 (GMT)
-Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 928D14C04E;
-        Tue, 16 Apr 2019 09:48:42 +0000 (GMT)
-Received: from localhost.localdomain.com (unknown [9.145.144.43])
-        by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 16 Apr 2019 09:48:42 +0000 (GMT)
-From:   Anju T Sudhakar <anju@linux.vnet.ibm.com>
-To:     mpe@ellerman.id.au
-Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        maddy@linux.vnet.ibm.com, anju@linux.vnet.ibm.com
-Subject: [PATCH v4 3/5] powerpc/perf: Add privileged access check for thread_imc
-Date:   Tue, 16 Apr 2019 15:18:29 +0530
-X-Mailer: git-send-email 2.17.2
-In-Reply-To: <20190416094831.7264-1-anju@linux.vnet.ibm.com>
-References: <20190416094831.7264-1-anju@linux.vnet.ibm.com>
-X-TM-AS-GCONF: 00
-x-cbid: 19041609-0008-0000-0000-000002DA583E
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19041609-0009-0000-0000-000022468FDA
-Message-Id: <20190416094831.7264-4-anju@linux.vnet.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-16_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904160067
+        Tue, 16 Apr 2019 05:50:35 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:36349 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726739AbfDPJue (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 05:50:34 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44k0wl6VLFz9s00;
+        Tue, 16 Apr 2019 19:50:31 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1555408232;
+        bh=FhaAi/UdIsuMVIMyShMCKj8q2XBVunudT8LzXWzosUI=;
+        h=Date:From:To:Cc:Subject:From;
+        b=hkWSChtLwt93z+1Sf+lQ+n0fx2jXPPhwgSr/qBNhJzXyxhuF6HHFknFRE8j0KxKIV
+         FyLhzpdv3nvBmdheZw26WcAIoEM4IYg0Lb16jAhd5rWF2UW5ODRN92dGcuKyH2wzPB
+         qmuDd9iw3Ll5rkHoT0IztNSFbxRtq2f1+2XG23LCwpbkQbxJTMqrISKcMUzBD0BWUD
+         mCl7H58tnGWN8p0WKSvJUmSlDkqdS/Nu3OQSSQqs0dDY6V3VXakjxfdbbTW/D8Qt7+
+         VHpsrsCTbs31c166lGNUMjPMlTmI/HyB274GUGOjlwIudLuELT61SJHwnW1sifEK01
+         fI0lCCPuV7YCw==
+Date:   Tue, 16 Apr 2019 19:50:29 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>
+Subject: [PATCH v2] kernel/compat.c: mark expected switch fall-throughs
+Message-ID: <20190416195029.004b7ab4@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/9ZAiCiAxpMGP9lVgOhjImwf"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
+--Sig_/9ZAiCiAxpMGP9lVgOhjImwf
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Add code to restrict user access to thread_imc pmu since
-some event report privilege level information.
+In preparation to enabling -Wimplicit-fallthrough, mark switch cases
+where we are expecting to fall through.
 
-Fixes: f74c89bd80fb3 ('powerpc/perf: Add thread IMC PMU support')
-Signed-off-by: Madhavan Srinivasan <maddy@linux.vnet.ibm.com>
-Signed-off-by: Anju T Sudhakar <anju@linux.vnet.ibm.com>
+This patch aims to suppress 3 missing-break-in-switch false positives
+on some architectures.
+
+Acked-by: Arnd Bergmann <arnd@arndb.de>
+Cc: Deepa Dinamani <deepa.kernel@gmail.com>
+Cc: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Cc: Kees Cook <keescook@chromium.org>
+Cc: Jann Horn <jannh@google.com>
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
 ---
- arch/powerpc/perf/imc-pmu.c | 3 +++
+ kernel/compat.c | 3 +++
  1 file changed, 3 insertions(+)
 
-diff --git a/arch/powerpc/perf/imc-pmu.c b/arch/powerpc/perf/imc-pmu.c
-index 51f1d3eaaa6d..7fe258e17dfe 100644
---- a/arch/powerpc/perf/imc-pmu.c
-+++ b/arch/powerpc/perf/imc-pmu.c
-@@ -859,6 +859,9 @@ static int thread_imc_event_init(struct perf_event *event)
- 	if (event->attr.type != event->pmu->type)
- 		return -ENOENT;
- 
-+	if (!capable(CAP_SYS_ADMIN))
-+		return -EACCES;
-+
- 	/* Sampling not supported */
- 	if (event->hw.sample_period)
- 		return -EINVAL;
--- 
-2.17.2
+  v2 - split the comments on to new lines to match commit 89976005536c
+("include/linux/compat.h: mark expected switch fall-throughs").  (Arnd
+Bergmann)
 
+diff --git a/kernel/compat.c b/kernel/compat.c
+index d8a36c6ad7c9..b5f7063c0db6 100644
+--- a/kernel/compat.c
++++ b/kernel/compat.c
+@@ -346,8 +346,11 @@ get_compat_sigset(sigset_t *set, const compat_sigset_t=
+ __user *compat)
+ 		return -EFAULT;
+ 	switch (_NSIG_WORDS) {
+ 	case 4: set->sig[3] =3D v.sig[6] | (((long)v.sig[7]) << 32 );
++		/* fall through */
+ 	case 3: set->sig[2] =3D v.sig[4] | (((long)v.sig[5]) << 32 );
++		/* fall through */
+ 	case 2: set->sig[1] =3D v.sig[2] | (((long)v.sig[3]) << 32 );
++		/* fall through */
+ 	case 1: set->sig[0] =3D v.sig[0] | (((long)v.sig[1]) << 32 );
+ 	}
+ #else
+--=20
+2.20.1
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/9ZAiCiAxpMGP9lVgOhjImwf
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAly1pWUACgkQAVBC80lX
+0GwWhwgAo4C/AGvlYBHX9bzhV9/DelOpVkiLbCsR3zMJeqaRt7qLW2EgxM5x4hfE
+vyS7NdU+O55BlmDHW1n48kMe9MzcHCfjzEMxiAp0ZIgrG7vLuQrBp7Ofk8DebVmV
+3FHSX0+ck4+aOE+FlcMLhkGhG+ynATfIzo9zPc1a3N/4u5E+VkyB3mPV0RpG3uje
+usvk9G+rO0Oeqy26uK4mXGHafPWqTSwox2hBU4xJ5ls5qoH2bxu898DuO79k4a6B
+SsxoeuHtXshr5ZEDy5YyJjDGHGdwcFN4xJyZ4jGs9LoUZ7OBkZrsV4X2d9lPeNSA
+A5ylhB6z9TLtA3qE0/Lz9mVgTMJRnw==
+=Fb9G
+-----END PGP SIGNATURE-----
+
+--Sig_/9ZAiCiAxpMGP9lVgOhjImwf--
