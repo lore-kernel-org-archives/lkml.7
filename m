@@ -4,34 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9074CC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:05:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E95B0C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:05:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 691A120868
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:05:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C39C52086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:05:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728363AbfDPGFj (ORCPT
+        id S1728161AbfDPGFf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 02:05:39 -0400
-Received: from mailgw02.mediatek.com ([1.203.163.81]:26029 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727125AbfDPGFe (ORCPT
+        Tue, 16 Apr 2019 02:05:35 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:4511 "EHLO
+        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726857AbfDPGFb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 02:05:34 -0400
-X-UUID: b311651f4b72470e83bba3cb81d39b38-20190416
-X-UUID: b311651f4b72470e83bba3cb81d39b38-20190416
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
+        Tue, 16 Apr 2019 02:05:31 -0400
+X-UUID: 1d047712a3804885ad598c0563298001-20190416
+X-UUID: 1d047712a3804885ad598c0563298001-20190416
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
         (envelope-from <jitao.shi@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 7089935; Tue, 16 Apr 2019 14:05:23 +0800
+        with ESMTP id 1988392532; Tue, 16 Apr 2019 14:05:19 +0800
 Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33N2.mediatek.inc
  (172.27.4.76) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 16 Apr
- 2019 14:05:22 +0800
+ 2019 14:05:18 +0800
 Received: from mszsdclx1018.gcn.mediatek.inc (172.27.4.253) by
  MTKCAS32.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1395.4 via Frontend Transport; Tue, 16 Apr 2019 14:05:20 +0800
+ 15.0.1395.4 via Frontend Transport; Tue, 16 Apr 2019 14:05:16 +0800
 From:   Jitao Shi <jitao.shi@mediatek.com>
 To:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -58,9 +58,9 @@ CC:     Jitao Shi <jitao.shi@mediatek.com>,
         <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
         <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
         <ck.hu@mediatek.com>, <stonea168@163.com>
-Subject: [v2 5/5] drm/mediatek: add mt8183 dsi driver support
-Date:   Tue, 16 Apr 2019 14:05:01 +0800
-Message-ID: <20190416060501.76276-6-jitao.shi@mediatek.com>
+Subject: [v2 3/5] drm/mediatek: add dsi reg commit control
+Date:   Tue, 16 Apr 2019 14:04:59 +0800
+Message-ID: <20190416060501.76276-4-jitao.shi@mediatek.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190416060501.76276-1-jitao.shi@mediatek.com>
 References: <20190416060501.76276-1-jitao.shi@mediatek.com>
@@ -73,37 +73,49 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add mt8183 dsi driver data. Enable size control and
-reg commit control.
+New DSI IP has shadow register and working reg. The register
+values are writen to shadow register. And then trigger with
+commit reg, the register values will be moved working register.
 
 Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_dsi.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+ drivers/gpu/drm/mediatek/mtk_dsi.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
 diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-index 458a700ce74c..f0b36ec38e4f 100644
+index 573e6bec6d36..be42405a0a78 100644
 --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
 +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-@@ -1104,11 +1104,19 @@ static const struct mtk_dsi_driver_data mt2701_dsi_driver_data = {
- 	.reg_cmdq_off = 0x180,
+@@ -131,6 +131,10 @@
+ #define VM_CMD_EN			BIT(0)
+ #define TS_VFP_EN			BIT(5)
+ 
++#define DSI_SHADOW_DEBUG	0x190U
++#define FORCE_COMMIT		BIT(0)
++#define BYPASS_SHADOW		BIT(1)
++
+ #define CONFIG				(0xff << 0)
+ #define SHORT_PACKET			0
+ #define LONG_PACKET			2
+@@ -157,6 +161,7 @@ struct phy;
+ 
+ struct mtk_dsi_driver_data {
+ 	const u32 reg_cmdq_off;
++	bool has_shadow_ctl;
  };
  
-+static const struct mtk_dsi_driver_data mt8183_dsi_driver_data = {
-+	.reg_cmdq_off = 0x200,
-+	.has_shadow_ctl = true,
-+	.has_size_ctl = true,
-+};
+ struct mtk_dsi {
+@@ -594,6 +599,11 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
+ 	}
+ 
+ 	mtk_dsi_enable(dsi);
 +
- static const struct of_device_id mtk_dsi_of_match[] = {
- 	{ .compatible = "mediatek,mt2701-dsi",
- 	  .data = &mt2701_dsi_driver_data },
- 	{ .compatible = "mediatek,mt8173-dsi",
- 	  .data = &mt8173_dsi_driver_data },
-+	{ .compatible = "mediatek,mt8183-dsi",
-+	  .data = &mt8183_dsi_driver_data },
- 	{ },
- };
++	if (dsi->driver_data->has_shadow_ctl)
++		writel(FORCE_COMMIT | BYPASS_SHADOW,
++		       dsi->regs + DSI_SHADOW_DEBUG);
++
+ 	mtk_dsi_reset_engine(dsi);
+ 	mtk_dsi_phy_timconfig(dsi);
  
 -- 
 2.21.0
