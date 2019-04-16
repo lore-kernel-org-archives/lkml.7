@@ -2,124 +2,136 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AE5FDC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 23:48:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D3054C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 23:48:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A3C320880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 23:48:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A184D20880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 23:48:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PXlVS4Jm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730910AbfDPXsA (ORCPT
+        id S1730935AbfDPXsI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 19:48:00 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:47642 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728373AbfDPXsA (ORCPT
+        Tue, 16 Apr 2019 19:48:08 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:43930 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728373AbfDPXsI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 19:48:00 -0400
-Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3GNhqZm001087
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 19:47:58 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2rwqqujb29-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 19:47:58 -0400
-Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <andrew.donnellan@au1.ibm.com>;
-        Wed, 17 Apr 2019 00:47:56 +0100
-Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 17 Apr 2019 00:47:53 +0100
-Received: from d06av26.portsmouth.uk.ibm.com (d06av26.portsmouth.uk.ibm.com [9.149.105.62])
-        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3GNlq4M43450506
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 Apr 2019 23:47:52 GMT
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C50A5AE051;
-        Tue, 16 Apr 2019 23:47:52 +0000 (GMT)
-Received: from d06av26.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 72567AE04D;
-        Tue, 16 Apr 2019 23:47:52 +0000 (GMT)
-Received: from ozlabs.au.ibm.com (unknown [9.192.253.14])
-        by d06av26.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 16 Apr 2019 23:47:52 +0000 (GMT)
-Received: from [9.81.213.15] (unknown [9.81.213.15])
-        (using TLSv1.2 with cipher AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        by ozlabs.au.ibm.com (Postfix) with ESMTPSA id 95970A010A;
-        Wed, 17 Apr 2019 09:47:50 +1000 (AEST)
-Subject: Re: [PATCH v3 3/5] powerpc: Use the correct style for SPDX License
- Identifier
-To:     Nishad Kamdar <nishadkamdar@gmail.com>,
-        Frederic Barrat <fbarrat@linux.ibm.com>
-Cc:     Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>,
-        =?UTF-8?Q?Uwe_Kleine-K=c3=b6nig?= <u.kleine-koenig@pengutronix.de>,
-        linuxppc-dev@lists.ozlabs.org, linux-kernel@vger.kernel.org
-References: <cover.1555427418.git.nishadkamdar@gmail.com>
- <5c04f72569b508cd5477fa1bf15f0166d376cd3a.1555427420.git.nishadkamdar@gmail.com>
-From:   Andrew Donnellan <andrew.donnellan@au1.ibm.com>
-Date:   Wed, 17 Apr 2019 09:47:47 +1000
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 16 Apr 2019 19:48:08 -0400
+Received: by mail-pl1-f193.google.com with SMTP id n8so11082627plp.10;
+        Tue, 16 Apr 2019 16:48:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=9wyq3kUHuGwvr+9CjqgddgW7KbiEbZO6JB9QFwOEOvg=;
+        b=PXlVS4JmP65ypGP/9vE4xctXnQ56BIUroIJYJGjl+aCA8BzeXt/DIp0F0dfy8wUFUV
+         bQT9EtIrfVNjogPm9tcj1G3FM4gbsj92hxr454yFcWslmMA63v98TWTeS13ZEshKOOfg
+         p8eqdKujZd+T0cv8Sg709zmVPnqLRPf7UFcHO9SaT4EChQIRYuV60p0YLa0Lna67Ldik
+         xLthHcTxisDGVJzqaQ1s+vQinby6o0cP00iwD1VGGqDvH0a0S3MzJWCSkNQPnO0HyHAF
+         c4QdnZmkeWM4UFx9jVk+BgNuraqNVnCUyZYLNE03qoPLx8RAx4EMEaW6ONMj7IIgHuXK
+         6bZw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=9wyq3kUHuGwvr+9CjqgddgW7KbiEbZO6JB9QFwOEOvg=;
+        b=kgk6cdB22SagtD1VOL9HqOpOeC2qS+dWR6ORT5R2AfC8HF+9lpVC/TCACdOcrl+mzT
+         g1JukGus95P/3HWqFiYiJ0n2KFXin8YPiiOKkKzEGKu1EI0VCC3sZL4tj2C5ek49sFiI
+         kiDg/OMOJpGSMmpzUIeArOu135ZmK8M5gSs8QvAj0KKjBj9dzMoXH3X8daVWOqIQSzEi
+         f+9p31HFVMkY8aYseOXUCs21VDXAS0Zkt1o+1nenP6dxQiMp/bq1KVQb+wLKYT85rXvC
+         0D+iwZUVnsEDh8b3XAfn5EneHkGb7iIBSQyxDUNyyfYq7IRMBASIcPebNipvLdi3tEy7
+         ZaBg==
+X-Gm-Message-State: APjAAAX4Lay0IamoNOHfCAT+0LJinSyiLbvVwehI7ApBHzeGWigxa1PO
+        k08bb2bRO/E5NhfCHV00cgVifunMpy8NN8XFgX0=
+X-Google-Smtp-Source: APXvYqw4U9FSVpLoth7Um/ZpHGYuAiY4To3MrdLixk+MUWXN4kNwdVP1hcj2DaZkWQL8+5CIcnn5Qr8aoXmh6XJEFVw=
+X-Received: by 2002:a17:902:9a89:: with SMTP id w9mr86405813plp.126.1555458487202;
+ Tue, 16 Apr 2019 16:48:07 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <5c04f72569b508cd5477fa1bf15f0166d376cd3a.1555427420.git.nishadkamdar@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-AU
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19041623-0016-0000-0000-0000026F9D47
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19041623-0017-0000-0000-000032CBEB0D
-Message-Id: <fa1a2e97-75d0-32f1-c897-4111d950a07d@au1.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-16_09:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=802 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904160141
+References: <20190416012001.5338-1-xiyou.wangcong@gmail.com>
+ <20190416090726.GD27892@zn.tnic> <20190416221852.GA10781@agluck-desk>
+ <CAM_iQpWit6gHTEFPB5cN3XuHQjeR4mBSb03wRc1F44WEQfNH_w@mail.gmail.com> <20190416232833.GA17372@agluck-desk>
+In-Reply-To: <20190416232833.GA17372@agluck-desk>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Tue, 16 Apr 2019 16:47:55 -0700
+Message-ID: <CAM_iQpXBJ2eAz4TW_GmOWRLrkyJcO=u-8VSnmv91ZABG-21Agg@mail.gmail.com>
+Subject: Re: [PATCH 1/2] ras: fix an off-by-one error in __find_elem()
+To:     "Luck, Tony" <tony.luck@intel.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        LKML <linux-kernel@vger.kernel.org>, linux-edac@vger.kernel.org,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/4/19 1:28 am, Nishad Kamdar wrote:
-> This patch corrects the SPDX License Identifier style
-> in the powerpc Hardware Architecture related files.
-> 
-> Suggested-by: Joe Perches <joe@perches.com>
-> Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
-> ---
-TIL there's a different style for source vs headers... sigh. :( Thanks 
-for fixing.
+On Tue, Apr 16, 2019 at 4:28 PM Luck, Tony <tony.luck@intel.com> wrote:
+>
+> On Tue, Apr 16, 2019 at 04:18:57PM -0700, Cong Wang wrote:
+> > > The problem case occurs when we've seen enough distinct
+> > > errors that we have filled every entry, then we try to
+> > > look up a pfn that is larger that any seen before.
+> > >
+> > > The loop:
+> > >
+> > >         while (min < max) {
+> > >                 ...
+> > >         }
+> > >
+> > > will terminate with "min" set to MAX_ELEMS. Then we
+> > > execute:
+> > >
+> > >         this_pfn = PFN(ca->array[min]);
+> > >
+> > > which references beyond the end of the space allocated
+> > > for ca->array.
+> >
+> > Exactly.
+>
+> Hmmm. But can we ever really have this happen?  The call
+> sequence to get here looks like:
+>
+>
+>         mutex_lock(&ce_mutex);
+>
+>         if (ca->n == MAX_ELEMS)
+>                 WARN_ON(!del_lru_elem_unlocked(ca));
+>
+>         ret = find_elem(ca, pfn, &to);
+>
+> I.e. if the array was all the way full, we delete one element
+> before calling find_elem().  So when we get here:
+>
+> static int __find_elem(struct ce_array *ca, u64 pfn, unsigned int *to)
+> {
+>         u64 this_pfn;
+>         int min = 0, max = ca->n;
+>
+> The biggest value "max" can have is MAX_ELEMS-1
 
-Acked-by: Andrew Donnellan <andrew.donnellan@au1.ibm.com>
+This is exactly the explanation for why the crash is inside
+memmove() rather than inside find_elem(). del_elem() actually
+accesses off-by-two once we pass its 'if' check in line 232:
 
->   arch/powerpc/include/asm/pnv-ocxl.h | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/arch/powerpc/include/asm/pnv-ocxl.h b/arch/powerpc/include/asm/pnv-ocxl.h
-> index 208b5503f4ed..7de82647e761 100644
-> --- a/arch/powerpc/include/asm/pnv-ocxl.h
-> +++ b/arch/powerpc/include/asm/pnv-ocxl.h
-> @@ -1,4 +1,4 @@
-> -// SPDX-License-Identifier: GPL-2.0+
-> +/* SPDX-License-Identifier: GPL-2.0+ */
->   // Copyright 2017 IBM Corp.
->   #ifndef _ASM_PNV_OCXL_H
->   #define _ASM_PNV_OCXL_H
-> 
+229 static void del_elem(struct ce_array *ca, int idx)
+230 {
+231         /* Save us a function call when deleting the last element. */
+232         if (ca->n - (idx + 1))
+233                 memmove((void *)&ca->array[idx],
+234                         (void *)&ca->array[idx + 1],
+235                         (ca->n - (idx + 1)) * sizeof(u64));
+236
+237         ca->n--;
+238 }
 
--- 
-Andrew Donnellan              OzLabs, ADL Canberra
-andrew.donnellan@au1.ibm.com  IBM Australia Limited
+idx is ca->n and ca->n is MAX_ELEMS-1, then the above if statement
+becomes true, therefore idx+1 is MAX_ELEMS which is just beyond
+the valid range.
 
+Thanks.
