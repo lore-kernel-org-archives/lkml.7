@@ -2,68 +2,85 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5FCEEC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A1C54C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:06:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3E0E42063F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:06:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 741AA2087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:06:42 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="do4KGfFS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730298AbfDPSGA (ORCPT
+        id S1730312AbfDPSGl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 14:06:00 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:38394 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729468AbfDPSF7 (ORCPT
+        Tue, 16 Apr 2019 14:06:41 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:45836 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727490AbfDPSGk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 14:05:59 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hGSSy-0004ol-PX; Tue, 16 Apr 2019 18:05:56 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Linus Walleij <linus.walleij@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>,
-        linux-arm-kernel@lists.infradead.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] mfd: ab8500-debugfs: fix spelling mistake "intefer" -> "interfere"
-Date:   Tue, 16 Apr 2019 19:05:56 +0100
-Message-Id: <20190416180556.18458-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 16 Apr 2019 14:06:40 -0400
+Received: by mail-pl1-f194.google.com with SMTP id bf11so10703490plb.12;
+        Tue, 16 Apr 2019 11:06:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=y2U6piKmCXuthXhtzKPuF9xcIED8L2ChcKUQw0IQFHg=;
+        b=do4KGfFSoeMQssYLpt4TXa1gJ6k+JkJJQ4B4yHt074Rf8RyL+7Wn/P4xmSCp+ODW++
+         M2Rg+2ARz0y43fp1KNKapMvkSiuM8RwgQHEftKup3+0Ayx48MQw8oHOOrf3SaKD+Tdmt
+         xWaxA/VX45BEkPffChuPbHuTZSG8YHpUGMxktjuTQm/NpPgvD6FKtP2FxpYhZzFu9Bjb
+         kqQF4EHG2yDj6/Hpjb7KRQJYZCGxgjkcUAwaLvCkAd76rNibwWS1m+Hyh/l17SrdbtKq
+         p4hVnorAP8jHv+fdz1L7xl15cf6k6pyqHmSDwJ/D1tK4AK0/1juoZR7OHdShQJTJN8mG
+         EtTw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=y2U6piKmCXuthXhtzKPuF9xcIED8L2ChcKUQw0IQFHg=;
+        b=aqhPrDKfRk4/gR9l2Yu9dqRixMJt3caPtYv05AQM+Jc7xDMI38Yp5guIpOXg25JU+u
+         fGI+oSvL5zZ4uKnP+yTL3nrGoe8kcLxsloikI/scuF1CdAY/v18NXNqCYaC92v63ow3f
+         Jh+XroxOnFnZqOvKT3s8kv11fLNDLgLXZrBYucpZf6dE44rI1IrDJQxLqp2yTbNUgjqk
+         3LOJoOdK7rTOr8H1K6V6CfnZL3ulOZz9EZOqcaA/z43uZV4jDLOXQhPgpuGsgv1Cd1K7
+         pmN1vMkWQFg04xYixKWmYkkugE2h9AHLgbn6J9EGb/VrRuknCByWv2gizYTN7momW6Sw
+         XOTA==
+X-Gm-Message-State: APjAAAVaNGsOot0xDrayVrOqYFq3sjfRTG+okvd83SoQ4iNABZvYHLKU
+        gAWPsgV004ZVuG2i6z+4EF0XU0Vkgsns1eeJgmY=
+X-Google-Smtp-Source: APXvYqy6WspfDtNZ4xyqcUo0hfCiHTRfvlXA1yICwWpZ87s6Gu4wTtyw4Uq84d7f/QjwWfceUsHUwhCs0By9WAEDQt0=
+X-Received: by 2002:a17:902:2965:: with SMTP id g92mr67419593plb.267.1555438000086;
+ Tue, 16 Apr 2019 11:06:40 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+References: <20190416012001.5338-1-xiyou.wangcong@gmail.com>
+ <20190416012001.5338-2-xiyou.wangcong@gmail.com> <20190416095852.GA31772@zn.tnic>
+ <CAM_iQpU6+xD+LmVtd=GPVp2zXgmLjT8tstRa7ia0pNgO0AcaPA@mail.gmail.com>
+ <20190416174259.GK31772@zn.tnic> <CAM_iQpWPq8p3L1v_h0_iEkq4Lcw=E84boZEQYUJxxuJtgHDo9w@mail.gmail.com>
+In-Reply-To: <CAM_iQpWPq8p3L1v_h0_iEkq4Lcw=E84boZEQYUJxxuJtgHDo9w@mail.gmail.com>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Tue, 16 Apr 2019 11:06:28 -0700
+Message-ID: <CAM_iQpWnM9ZRon8RALSCTD3RDxgLmBaDFNMgJtP0OVVu8zO95Q@mail.gmail.com>
+Subject: Re: [PATCH 2/2] ras: close the race condition with timer
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-edac@vger.kernel.org,
+        Tony Luck <tony.luck@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Tue, Apr 16, 2019 at 11:00 AM Cong Wang <xiyou.wangcong@gmail.com> wrote:
+>
+> As far as I understand, two works in the global workqueue could
+> be still ran in parallel on different CPU's, this is why I said it has to
+> be an ordered queue to guarantee the serialization.
 
-There is a spelling mistake in a dev_warn message, fix this.
+Never mind, I think we both agree to hold the mutex inside the work
+too. I misunderstood it.
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/mfd/ab8500-debugfs.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+I will update my patch to use delayed work.
 
-diff --git a/drivers/mfd/ab8500-debugfs.c b/drivers/mfd/ab8500-debugfs.c
-index 8d652b2f9d14..8394a0712ac6 100644
---- a/drivers/mfd/ab8500-debugfs.c
-+++ b/drivers/mfd/ab8500-debugfs.c
-@@ -1600,7 +1600,7 @@ static int ab8500_modem_show(struct seq_file *s, void *p)
- 	u32 reg;
- 
- 	ab8500 = dev_get_drvdata(dev->parent);
--	dev_warn(dev, "WARNING! This operation can interfer with modem side\n"
-+	dev_warn(dev, "WARNING! This operation can interfere with modem side\n"
- 		"and should only be done with care\n");
- 
- 	err = abx500_get_register_interruptible(dev,
--- 
-2.20.1
-
+Thanks.
