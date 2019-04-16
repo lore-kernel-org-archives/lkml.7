@@ -2,101 +2,115 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B76EC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:22:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67BCEC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:25:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA117206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:22:53 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=mev.co.uk header.i=@mev.co.uk header.b="VHHqaZIy"
+	by mail.kernel.org (Postfix) with ESMTP id 438BC206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:25:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728870AbfDPKWw (ORCPT
+        id S1728873AbfDPKZ0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 06:22:52 -0400
-Received: from smtp89.ord1c.emailsrvr.com ([108.166.43.89]:39153 "EHLO
-        smtp89.ord1c.emailsrvr.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726686AbfDPKWw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 06:22:52 -0400
-Received: from smtp28.relay.ord1c.emailsrvr.com (localhost [127.0.0.1])
-        by smtp28.relay.ord1c.emailsrvr.com (SMTP Server) with ESMTP id 3C599401AA;
-        Tue, 16 Apr 2019 06:22:51 -0400 (EDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=mev.co.uk;
-        s=20190130-41we5z8j; t=1555410171;
-        bh=XE36eOwio0qqT02qNb8G8G4AEDiof3c3gM18Ev+F4ek=;
-        h=Subject:To:From:Date:From;
-        b=VHHqaZIyBXpiqCbSJ0eoCXuvXoSnSkQIJdKmKC01/ghzjcvpe52wjT30K9fI0gXlo
-         /lYr2QPPsZlhZTs/hj6k6wLRA1Kr60GqbMwSbwvYkvS9dHk/VFEm3+Z8PwC/dnqeN8
-         SOS4mcTiZ5e8VKrJrDPmewCH2GJ2mRHC2yLkfb4A=
-X-Auth-ID: abbotti@mev.co.uk
-Received: by smtp28.relay.ord1c.emailsrvr.com (Authenticated sender: abbotti-AT-mev.co.uk) with ESMTPSA id 41E944011E;
-        Tue, 16 Apr 2019 06:22:50 -0400 (EDT)
-X-Sender-Id: abbotti@mev.co.uk
-Received: from [10.0.0.62] (remote.quintadena.com [81.133.34.160])
-        (using TLSv1.2 with cipher AES128-SHA)
-        by 0.0.0.0:465 (trex/5.7.12);
-        Tue, 16 Apr 2019 06:22:51 -0400
-Subject: Re: [PATCH] staging: comedi: adv_pci1710: fix spelling mistake:
- "droput" -> "dropout"
-To:     Colin King <colin.king@canonical.com>,
-        H Hartley Sweeten <hsweeten@visionengravers.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190415174945.32712-1-colin.king@canonical.com>
-From:   Ian Abbott <abbotti@mev.co.uk>
-Organization: MEV Ltd.
-Message-ID: <dbe5e3b9-0653-53ec-1371-88c29aed7b8d@mev.co.uk>
-Date:   Tue, 16 Apr 2019 11:22:49 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190415174945.32712-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+        Tue, 16 Apr 2019 06:25:26 -0400
+Received: from sauhun.de ([88.99.104.3]:48624 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726686AbfDPKZZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 06:25:25 -0400
+Received: from localhost (p54B332D3.dip0.t-ipconnect.de [84.179.50.211])
+        by pokefinder.org (Postfix) with ESMTPSA id 963382E404E;
+        Tue, 16 Apr 2019 12:25:23 +0200 (CEST)
+From:   Wolfram Sang <wsa+renesas@sang-engineering.com>
+To:     linux-watchdog@vger.kernel.org
+Cc:     linux-renesas-soc@vger.kernel.org,
+        Guenter Roeck <linux@roeck-us.net>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2 01/16] watchdog: refactor watchdog_init_timeout
+Date:   Tue, 16 Apr 2019 12:25:00 +0200
+Message-Id: <20190416102515.12269-2-wsa+renesas@sang-engineering.com>
+X-Mailer: git-send-email 2.11.0
+In-Reply-To: <20190416102515.12269-1-wsa+renesas@sang-engineering.com>
+References: <20190416102515.12269-1-wsa+renesas@sang-engineering.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15/04/2019 18:49, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
-> 
-> There is a spelling mistake in a dev_error message. Fix it.
-> 
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+The function is not easy to read and has a problem: -EINVAL is returned
+when the module parameter is invalid but the DT parameter is OK.
 
-Looks good, thanks!
+Refactor the code to have the same pattern of checks for the module
+parameter and DT. Further ones can be easily added in the future if the
+need arises. The above mentioned problem is fixed, too.
 
-Reviewed-by: Ian Abbott <abbotti@mev.co.uk>
+Some documentation is added to describe the different handlings of '0'
+for the module parameter and the DT property.
 
-> ---
->   drivers/staging/comedi/drivers/adv_pci1710.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/staging/comedi/drivers/adv_pci1710.c b/drivers/staging/comedi/drivers/adv_pci1710.c
-> index 6a93b04f1fdf..dbff0f7e7cf5 100644
-> --- a/drivers/staging/comedi/drivers/adv_pci1710.c
-> +++ b/drivers/staging/comedi/drivers/adv_pci1710.c
-> @@ -317,7 +317,7 @@ static int pci1710_ai_read_sample(struct comedi_device *dev,
->   		chan = sample >> 12;
->   		if (chan != devpriv->act_chanlist[cur_chan]) {
->   			dev_err(dev->class_dev,
-> -				"A/D data droput: received from channel %d, expected %d\n",
-> +				"A/D data dropout: received from channel %d, expected %d\n",
->   				chan, devpriv->act_chanlist[cur_chan]);
->   			return -ENODATA;
->   		}
-> 
+Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
+---
+ drivers/watchdog/watchdog_core.c | 33 +++++++++++++++++++--------------
+ 1 file changed, 19 insertions(+), 14 deletions(-)
 
-
+diff --git a/drivers/watchdog/watchdog_core.c b/drivers/watchdog/watchdog_core.c
+index eb8fa25f8eb2..21e53cc49977 100644
+--- a/drivers/watchdog/watchdog_core.c
++++ b/drivers/watchdog/watchdog_core.c
+@@ -105,9 +105,12 @@ static void watchdog_check_min_max_timeout(struct watchdog_device *wdd)
+  * timeout module parameter (if it is valid value) or the timeout-sec property
+  * (only if it is a valid value and the timeout_parm is out of bounds).
+  * If none of them are valid then we keep the old value (which should normally
+- * be the default timeout value).
++ * be the default timeout value). Note that for the module parameter, '0' means
++ * 'use default' while it is an invalid value for the timeout-sec property.
++ * It should simply be dropped if you want to use the default value then.
+  *
+- * A zero is returned on success and -EINVAL for failure.
++ * A zero is returned on success or -EINVAL if all provided values are out of
++ * bounds.
+  */
+ int watchdog_init_timeout(struct watchdog_device *wdd,
+ 				unsigned int timeout_parm, struct device *dev)
+@@ -117,22 +120,24 @@ int watchdog_init_timeout(struct watchdog_device *wdd,
+ 
+ 	watchdog_check_min_max_timeout(wdd);
+ 
+-	/* try to get the timeout module parameter first */
+-	if (!watchdog_timeout_invalid(wdd, timeout_parm) && timeout_parm) {
+-		wdd->timeout = timeout_parm;
+-		return ret;
+-	}
+-	if (timeout_parm)
++	/* check the driver supplied value (likely a module parameter) first */
++	if (timeout_parm) {
++		if (!watchdog_timeout_invalid(wdd, timeout_parm)) {
++			wdd->timeout = timeout_parm;
++			return 0;
++		}
+ 		ret = -EINVAL;
++	}
+ 
+ 	/* try to get the timeout_sec property */
+-	if (dev == NULL || dev->of_node == NULL)
+-		return ret;
+-	of_property_read_u32(dev->of_node, "timeout-sec", &t);
+-	if (!watchdog_timeout_invalid(wdd, t) && t)
+-		wdd->timeout = t;
+-	else
++	if (dev && dev->of_node &&
++	    of_property_read_u32(dev->of_node, "timeout-sec", &t) == 0) {
++		if (t && !watchdog_timeout_invalid(wdd, t)) {
++			wdd->timeout = t;
++			return 0;
++		}
+ 		ret = -EINVAL;
++	}
+ 
+ 	return ret;
+ }
 -- 
--=( Ian Abbott <abbotti@mev.co.uk> || Web: www.mev.co.uk )=-
--=( MEV Ltd. is a company registered in England & Wales. )=-
--=( Registered number: 02862268.  Registered address:    )=-
--=( 15 West Park Road, Bramhall, STOCKPORT, SK7 3JZ, UK. )=-
+2.11.0
+
