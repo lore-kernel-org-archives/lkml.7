@@ -7,39 +7,38 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13CA9C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:40:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC51C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:40:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAE662086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:40:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C5BBD2073F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:40:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555396829;
-	bh=LprYqWAwQlV4mdWW7mU+WdVxasqOzsOCbNzRMa+yKgY=;
+	s=default; t=1555396833;
+	bh=leU528GPgbbl6FZ0hvYD1ThhlYXuBMbC39ljevMevzM=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=xBYQy5LnhTVUtW5Mi8R8T7pktxgozFw4ZLPxyG16rQO2dO28cT9gPrE576XqKh1a8
-	 DsFIiUJRiRQ23y7CYgEqFmVIsL0JXWIhcgfWTYS/dlEBTg9zGF+bssNBp2s/h68Tgc
-	 40EXzsoztGq8jsxFyHtCylzCai8Mic2O2ffj5Nys=
+	b=WTeVaxVnMcGk7b7H/xlCeZx2q6ZtHMMl/QgQFZFO624oQBmorLNvSy2d+0PG8JQAR
+	 gAIwGYPMfL4oSgK/t1xqfwHZ6wSC4Yi8EHh8K7SEZYfzPq7DGXxV/1nNhYZ1iRyJCp
+	 Ak+u644kJHxI0gISPRzn7kXlHW3Or0W/+gz4gnJ8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728385AbfDPGk2 (ORCPT
+        id S1728515AbfDPGkd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 02:40:28 -0400
-Received: from mirror2.csie.ntu.edu.tw ([140.112.30.76]:33988 "EHLO
+        Tue, 16 Apr 2019 02:40:33 -0400
+Received: from mirror2.csie.ntu.edu.tw ([140.112.30.76]:33982 "EHLO
         wens.csie.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727180AbfDPGk2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 02:40:28 -0400
+        id S1726147AbfDPGk3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 02:40:29 -0400
 Received: by wens.csie.org (Postfix, from userid 1000)
-        id 9AF5260292; Tue, 16 Apr 2019 14:40:25 +0800 (CST)
+        id 8C7A95FD9F; Tue, 16 Apr 2019 14:40:25 +0800 (CST)
 From:   Chen-Yu Tsai <wens@kernel.org>
 To:     Maxime Ripard <maxime.ripard@bootlin.com>,
         Sebastian Reichel <sre@kernel.org>
-Cc:     Quentin Schulz <quentin.schulz@bootlin.com>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com, Hans de Goede <hdegoede@redhat.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH v4 4/7] power: supply: axp20x_usb_power: add function to get max current
-Date:   Tue, 16 Apr 2019 14:40:21 +0800
-Message-Id: <20190416064024.20414-5-wens@kernel.org>
+Cc:     Chen-Yu Tsai <wens@csie.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        Hans de Goede <hdegoede@redhat.com>
+Subject: [PATCH v4 2/7] power: supply: axp20x_usb_power: Fix typo in VBUS current limit macros
+Date:   Tue, 16 Apr 2019 14:40:19 +0800
+Message-Id: <20190416064024.20414-3-wens@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190416064024.20414-1-wens@kernel.org>
 References: <20190416064024.20414-1-wens@kernel.org>
@@ -50,87 +49,60 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quentin Schulz <quentin.schulz@bootlin.com>
+From: Chen-Yu Tsai <wens@csie.org>
 
-To prepare for a new PMIC, factor out the code responsible of returning
-the maximum current to axp20x_get_current_max.
+The VBUS current limit value macros have VBUS typed as VBUC, while
+the bitmask macro is named correctly. Fix it.
 
-Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
+Fixes: 69fb4dcada77 ("power: Add an axp20x-usb-power driver")
 Signed-off-by: Chen-Yu Tsai <wens@csie.org>
 ---
- drivers/power/supply/axp20x_usb_power.c | 52 ++++++++++++++-----------
- 1 file changed, 30 insertions(+), 22 deletions(-)
+ drivers/power/supply/axp20x_usb_power.c | 16 ++++++++--------
+ 1 file changed, 8 insertions(+), 8 deletions(-)
 
 diff --git a/drivers/power/supply/axp20x_usb_power.c b/drivers/power/supply/axp20x_usb_power.c
-index 290028aed230..04c2cafbe8e6 100644
+index f52fe77edb6f..cd9b90d79839 100644
 --- a/drivers/power/supply/axp20x_usb_power.c
 +++ b/drivers/power/supply/axp20x_usb_power.c
-@@ -102,6 +102,35 @@ static bool axp20x_usb_vbus_needs_polling(struct axp20x_usb_power *power)
- 	return false;
- }
+@@ -36,10 +36,10 @@
+ #define AXP20X_VBUS_VHOLD_MASK		GENMASK(5, 3)
+ #define AXP20X_VBUS_VHOLD_OFFSET	3
+ #define AXP20X_VBUS_CLIMIT_MASK		3
+-#define AXP20X_VBUC_CLIMIT_900mA	0
+-#define AXP20X_VBUC_CLIMIT_500mA	1
+-#define AXP20X_VBUC_CLIMIT_100mA	2
+-#define AXP20X_VBUC_CLIMIT_NONE		3
++#define AXP20X_VBUS_CLIMIT_900mA	0
++#define AXP20X_VBUS_CLIMIT_500mA	1
++#define AXP20X_VBUS_CLIMIT_100mA	2
++#define AXP20X_VBUS_CLIMIT_NONE		3
  
-+static int axp20x_get_current_max(struct axp20x_usb_power *power, int *val)
-+{
-+	unsigned int v;
-+	int ret = regmap_read(power->regmap, AXP20X_VBUS_IPSOUT_MGMT, &v);
-+
-+	if (ret)
-+		return ret;
-+
-+	switch (v & AXP20X_VBUS_CLIMIT_MASK) {
-+	case AXP20X_VBUS_CLIMIT_100mA:
-+		if (power->axp20x_id == AXP221_ID)
-+			*val = -1; /* No 100mA limit */
-+		else
-+			*val = 100000;
-+		break;
-+	case AXP20X_VBUS_CLIMIT_500mA:
-+		*val = 500000;
-+		break;
-+	case AXP20X_VBUS_CLIMIT_900mA:
-+		*val = 900000;
-+		break;
-+	case AXP20X_VBUS_CLIMIT_NONE:
-+		*val = -1;
-+		break;
-+	}
-+
-+	return 0;
-+}
-+
- static int axp20x_usb_power_get_property(struct power_supply *psy,
- 	enum power_supply_property psp, union power_supply_propval *val)
- {
-@@ -140,28 +169,7 @@ static int axp20x_usb_power_get_property(struct power_supply *psy,
- 		val->intval = ret * 1700; /* 1 step = 1.7 mV */
- 		return 0;
- 	case POWER_SUPPLY_PROP_CURRENT_MAX:
--		ret = regmap_read(power->regmap, AXP20X_VBUS_IPSOUT_MGMT, &v);
--		if (ret)
--			return ret;
--
--		switch (v & AXP20X_VBUS_CLIMIT_MASK) {
--		case AXP20X_VBUS_CLIMIT_100mA:
--			if (power->axp20x_id == AXP221_ID)
--				val->intval = -1; /* No 100mA limit */
--			else
--				val->intval = 100000;
--			break;
--		case AXP20X_VBUS_CLIMIT_500mA:
--			val->intval = 500000;
--			break;
--		case AXP20X_VBUS_CLIMIT_900mA:
--			val->intval = 900000;
--			break;
--		case AXP20X_VBUS_CLIMIT_NONE:
--			val->intval = -1;
--			break;
--		}
--		return 0;
-+		return axp20x_get_current_max(power, &val->intval);
- 	case POWER_SUPPLY_PROP_CURRENT_NOW:
- 		if (IS_ENABLED(CONFIG_AXP20X_ADC)) {
- 			ret = iio_read_channel_processed(power->vbus_i,
+ #define AXP20X_ADC_EN1_VBUS_CURR	BIT(2)
+ #define AXP20X_ADC_EN1_VBUS_VOLT	BIT(3)
+@@ -107,19 +107,19 @@ static int axp20x_usb_power_get_property(struct power_supply *psy,
+ 			return ret;
+ 
+ 		switch (v & AXP20X_VBUS_CLIMIT_MASK) {
+-		case AXP20X_VBUC_CLIMIT_100mA:
++		case AXP20X_VBUS_CLIMIT_100mA:
+ 			if (power->axp20x_id == AXP221_ID)
+ 				val->intval = -1; /* No 100mA limit */
+ 			else
+ 				val->intval = 100000;
+ 			break;
+-		case AXP20X_VBUC_CLIMIT_500mA:
++		case AXP20X_VBUS_CLIMIT_500mA:
+ 			val->intval = 500000;
+ 			break;
+-		case AXP20X_VBUC_CLIMIT_900mA:
++		case AXP20X_VBUS_CLIMIT_900mA:
+ 			val->intval = 900000;
+ 			break;
+-		case AXP20X_VBUC_CLIMIT_NONE:
++		case AXP20X_VBUS_CLIMIT_NONE:
+ 			val->intval = -1;
+ 			break;
+ 		}
 -- 
 2.20.1
 
