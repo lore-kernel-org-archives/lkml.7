@@ -6,139 +6,325 @@ X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D53C3C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:00:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A8B27C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:03:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AC10F2073F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:00:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60B252073F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:03:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727059AbfDPGAz (ORCPT
+        id S1727110AbfDPGD5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 02:00:55 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:48166 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726590AbfDPGAz (ORCPT
+        Tue, 16 Apr 2019 02:03:57 -0400
+Received: from mail-out.m-online.net ([212.18.0.9]:32954 "EHLO
+        mail-out.m-online.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726590AbfDPGD5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 02:00:55 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:b93f:9fae:b276:a89a])
+        Tue, 16 Apr 2019 02:03:57 -0400
+Received: from frontend01.mail.m-online.net (unknown [192.168.8.182])
+        by mail-out.m-online.net (Postfix) with ESMTP id 44jvvC5JZbz1rK4G;
+        Tue, 16 Apr 2019 08:03:51 +0200 (CEST)
+Received: from localhost (dynscan1.mnet-online.de [192.168.6.70])
+        by mail.m-online.net (Postfix) with ESMTP id 44jvvC4CJGz1rVwL;
+        Tue, 16 Apr 2019 08:03:51 +0200 (CEST)
+X-Virus-Scanned: amavisd-new at mnet-online.de
+Received: from mail.mnet-online.de ([192.168.8.182])
+        by localhost (dynscan1.mail.m-online.net [192.168.6.70]) (amavisd-new, port 10024)
+        with ESMTP id JHL0kH-_a42y; Tue, 16 Apr 2019 08:03:49 +0200 (CEST)
+X-Auth-Info: /FVBNWmgyxmqtXsnYZmWT9j8d/z4a6s6ZmAfMoDILR0=
+Received: from jawa (85-222-111-42.dynamic.chello.pl [85.222.111.42])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 4F4A6260C42;
-        Tue, 16 Apr 2019 07:00:53 +0100 (BST)
-Date:   Tue, 16 Apr 2019 08:00:49 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Vitor Soares <vitor.soares@synopsys.com>
-Cc:     linux-i3c@lists.infradead.org, joao.pinto@synopsys.com,
+        by mail.mnet-online.de (Postfix) with ESMTPSA;
+        Tue, 16 Apr 2019 08:03:49 +0200 (CEST)
+Date:   Tue, 16 Apr 2019 08:03:39 +0200
+From:   Lukasz Majewski <lukma@denx.de>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     Hartley Sweeten <hsweeten@visionengravers.com>,
+        Alexander Sverdlin <alexander.sverdlin@gmail.com>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Olof Johansson <olof@lixom.net>,
+        Mark Brown <broonie@kernel.org>,
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Laurent Pinchart <laurent.pinchart+renesas@ideasonboard.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
         Boris Brezillon <bbrezillon@kernel.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/3] i3c: add mixed limited bus mode
-Message-ID: <20190416080049.5a6053b0@collabora.com>
-In-Reply-To: <a3bf32dadd9b0135442526cc77fec5726e6e617d.1555350118.git.vitor.soares@synopsys.com>
-References: <cover.1555350118.git.vitor.soares@synopsys.com>
-        <a3bf32dadd9b0135442526cc77fec5726e6e617d.1555350118.git.vitor.soares@synopsys.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 4/4] ARM: ep93xx: move private headers out of mach/*
+Message-ID: <20190416080339.5360befd@jawa>
+In-Reply-To: <20190415193231.936070-1-arnd@arndb.de>
+References: <20190415192734.935387-1-arnd@arndb.de>
+        <20190415193231.936070-1-arnd@arndb.de>
+Organization: denx.de
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/2+fZ2yzH1wC4rEYfmZTC2NA"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vitor,
+--Sig_/2+fZ2yzH1wC4rEYfmZTC2NA
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On Mon, 15 Apr 2019 20:46:42 +0200
-Vitor Soares <vitor.soares@synopsys.com> wrote:
+On Mon, 15 Apr 2019 21:31:50 +0200
+Arnd Bergmann <arnd@arndb.de> wrote:
 
-> The i3c bus spec define a bus configuration where the i2c devices
-
-		   ^defines			    I2C devices...
-
-> doesn't have the 50ns filter yet they allow the SDR max speed.
-
-  ^don't	^ a 50ns filter but support SCL running at SDR max
-rate (12MHz).
-
-> 
-> This patch introduce the limited bus mode so the users can use
-
-	     ^introduces		    ^ so that users
-
-> a higher speed on presence of i2c devices index 1.
-
-		 ^in
-
-> 
-> Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
-> Cc: Boris Brezillon <bbrezillon@kernel.org>
-> Cc: <linux-kernel@vger.kernel.org>
+> gpio-ep93xx.h, hardware.h, and platform.h are only used in
+> arch/arm/mach-ep93xx, so we can move them one there and no
+> longer expose them to device drivers.
+>=20
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 > ---
->  drivers/i3c/master.c       | 5 +++++
->  include/linux/i3c/master.h | 5 +++++
->  2 files changed, 10 insertions(+)
-> 
-> diff --git a/drivers/i3c/master.c b/drivers/i3c/master.c
-> index 1c4a86a..46d3774 100644
-> --- a/drivers/i3c/master.c
-> +++ b/drivers/i3c/master.c
-> @@ -463,6 +463,7 @@ static int i3c_bus_init(struct i3c_bus *i3cbus)
->  static const char * const i3c_bus_mode_strings[] = {
->  	[I3C_BUS_MODE_PURE] = "pure",
->  	[I3C_BUS_MODE_MIXED_FAST] = "mixed-fast",
-> +	[I3C_BUS_MODE_MIXED_LIMITED] = "mixed-limited",
->  	[I3C_BUS_MODE_MIXED_SLOW] = "mixed-slow",
->  };
->  
-> @@ -575,6 +576,7 @@ int i3c_bus_set_mode(struct i3c_bus *i3cbus, enum i3c_bus_mode mode,
->  			i3cbus->scl_rate.i3c = I3C_BUS_TYP_I3C_SCL_RATE;
->  		break;
->  	case I3C_BUS_MODE_MIXED_FAST:
-> +	case I3C_BUS_MODE_MIXED_LIMITED:
->  		if (!i3cbus->scl_rate.i3c)
->  			i3cbus->scl_rate.i3c = I3C_BUS_TYP_I3C_SCL_RATE;
->  		if (!i3cbus->scl_rate.i2c)
-> @@ -2481,6 +2483,9 @@ int i3c_master_register(struct i3c_master_controller *master,
->  				mode = I3C_BUS_MODE_MIXED_FAST;
->  			break;
->  		case I3C_LVR_I2C_INDEX(1):
-> +			if (mode < I3C_BUS_MODE_MIXED_LIMITED)
-> +				mode = I3C_BUS_MODE_MIXED_LIMITED;
-> +			break;
->  		case I3C_LVR_I2C_INDEX(2):
->  			if (mode < I3C_BUS_MODE_MIXED_SLOW)
->  				mode = I3C_BUS_MODE_MIXED_SLOW;
-> diff --git a/include/linux/i3c/master.h b/include/linux/i3c/master.h
-> index 44fb3cf..740235e 100644
-> --- a/include/linux/i3c/master.h
-> +++ b/include/linux/i3c/master.h
-> @@ -250,12 +250,17 @@ struct i3c_device {
->   *			     the bus. The only impact in this mode is that the
->   *			     high SCL pulse has to stay below 50ns to trick I2C
->   *			     devices when transmitting I3C frames
-> + * @I3C_BUS_MODE_MIXED_LIMITED: I2C devices without 50ns spike filter are
-> + *				present on the bus. However they allows
-> + *				compliance up to the maximum SDR SCL clock
-> + *				frequency.
+>  arch/arm/mach-ep93xx/adssphere.c                      | 2 +-
+>  arch/arm/mach-ep93xx/clock.c                          | 2 +-
+>  arch/arm/mach-ep93xx/core.c                           | 6 +++---
+>  arch/arm/mach-ep93xx/dma.c                            | 2 +-
+>  arch/arm/mach-ep93xx/edb93xx.c                        | 4 ++--
+>  arch/arm/mach-ep93xx/gesbc9312.c                      | 2 +-
+>  arch/arm/mach-ep93xx/{include/mach =3D> }/gpio-ep93xx.h | 0
+>  arch/arm/mach-ep93xx/{include/mach =3D> }/hardware.h    | 2 +-
+>  arch/arm/mach-ep93xx/micro9.c                         | 2 +-
+>  arch/arm/mach-ep93xx/{include/mach =3D> }/platform.h    | 0
+>  arch/arm/mach-ep93xx/simone.c                         | 4 ++--
+>  arch/arm/mach-ep93xx/snappercl15.c                    | 4 ++--
+>  arch/arm/mach-ep93xx/ts72xx.c                         | 4 ++--
+>  arch/arm/mach-ep93xx/vision_ep9307.c                  | 4 ++--
+>  14 files changed, 19 insertions(+), 19 deletions(-)
+>  rename arch/arm/mach-ep93xx/{include/mach =3D> }/gpio-ep93xx.h (100%)
+>  rename arch/arm/mach-ep93xx/{include/mach =3D> }/hardware.h (96%)
+>  rename arch/arm/mach-ep93xx/{include/mach =3D> }/platform.h (100%)
+>=20
 
-						    However they support
-				SCL clock running at maximum SDR rate
-				(12.5MHz).
+Reviewed-by: Lukasz Majewski <lukma@denx.de>
 
->   * @I3C_BUS_MODE_MIXED_SLOW: I2C devices without 50ns spike filter are present
->   *			     on the bus
+> diff --git a/arch/arm/mach-ep93xx/adssphere.c
+> b/arch/arm/mach-ep93xx/adssphere.c index bda6c3a5c923..5d3a3e302012
+> 100644 --- a/arch/arm/mach-ep93xx/adssphere.c
+> +++ b/arch/arm/mach-ep93xx/adssphere.c
+> @@ -15,7 +15,7 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/sizes.h>
+> =20
+> -#include <mach/hardware.h>
+> +#include "hardware.h"
+> =20
+>  #include <asm/mach-types.h>
+>  #include <asm/mach/arch.h>
+> diff --git a/arch/arm/mach-ep93xx/clock.c
+> b/arch/arm/mach-ep93xx/clock.c index 9f43362eb62d..b9f523d9dc8c 100644
+> --- a/arch/arm/mach-ep93xx/clock.c
+> +++ b/arch/arm/mach-ep93xx/clock.c
+> @@ -22,7 +22,7 @@
+>  #include <linux/clkdev.h>
+>  #include <linux/soc/cirrus/ep93xx.h>
+> =20
+> -#include <mach/hardware.h>
+> +#include "hardware.h"
+> =20
+>  #include <asm/div64.h>
+> =20
+> diff --git a/arch/arm/mach-ep93xx/core.c b/arch/arm/mach-ep93xx/core.c
+> index 3d245668846d..cc1382f879af 100644
+> --- a/arch/arm/mach-ep93xx/core.c
+> +++ b/arch/arm/mach-ep93xx/core.c
+> @@ -39,13 +39,13 @@
+>  #include <linux/usb/ohci_pdriver.h>
+>  #include <linux/random.h>
+> =20
+> -#include <mach/hardware.h>
+> +#include "hardware.h"
+>  #include <linux/platform_data/video-ep93xx.h>
+>  #include <linux/platform_data/keypad-ep93xx.h>
+>  #include <linux/platform_data/spi-ep93xx.h>
+>  #include <linux/soc/cirrus/ep93xx.h>
+> =20
+> -#include <mach/gpio-ep93xx.h>
+> +#include "gpio-ep93xx.h"
+> =20
+>  #include <asm/mach/arch.h>
+>  #include <asm/mach/map.h>
+> @@ -125,7 +125,7 @@ void ep93xx_devcfg_set_clear(unsigned int
+> set_bits, unsigned int clear_bits) /**
+>   * ep93xx_chip_revision() - returns the EP93xx chip revision
+>   *
+> - * See <mach/platform.h> for more information.
+> + * See "platform.h" for more information.
 >   */
->  enum i3c_bus_mode {
->  	I3C_BUS_MODE_PURE,
->  	I3C_BUS_MODE_MIXED_FAST,
-> +	I3C_BUS_MODE_MIXED_LIMITED,
->  	I3C_BUS_MODE_MIXED_SLOW,
->  };
->  
+>  unsigned int ep93xx_chip_revision(void)
+>  {
+> diff --git a/arch/arm/mach-ep93xx/dma.c b/arch/arm/mach-ep93xx/dma.c
+> index 88a4c9b089a5..821427107b11 100644
+> --- a/arch/arm/mach-ep93xx/dma.c
+> +++ b/arch/arm/mach-ep93xx/dma.c
+> @@ -26,7 +26,7 @@
+>  #include <linux/platform_device.h>
+> =20
+>  #include <linux/platform_data/dma-ep93xx.h>
+> -#include <mach/hardware.h>
+> +#include "hardware.h"
+> =20
+>  #include "soc.h"
+> =20
+> diff --git a/arch/arm/mach-ep93xx/edb93xx.c
+> b/arch/arm/mach-ep93xx/edb93xx.c index 8e89ec8b6f0f..d96dd014dd23
+> 100644 --- a/arch/arm/mach-ep93xx/edb93xx.c
+> +++ b/arch/arm/mach-ep93xx/edb93xx.c
+> @@ -32,10 +32,10 @@
+> =20
+>  #include <sound/cs4271.h>
+> =20
+> -#include <mach/hardware.h>
+> +#include "hardware.h"
+>  #include <linux/platform_data/video-ep93xx.h>
+>  #include <linux/platform_data/spi-ep93xx.h>
+> -#include <mach/gpio-ep93xx.h>
+> +#include "gpio-ep93xx.h"
+> =20
+>  #include <asm/mach-types.h>
+>  #include <asm/mach/arch.h>
+> diff --git a/arch/arm/mach-ep93xx/gesbc9312.c
+> b/arch/arm/mach-ep93xx/gesbc9312.c index 0cca5b183309..ac48e3476587
+> 100644 --- a/arch/arm/mach-ep93xx/gesbc9312.c
+> +++ b/arch/arm/mach-ep93xx/gesbc9312.c
+> @@ -15,7 +15,7 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/sizes.h>
+> =20
+> -#include <mach/hardware.h>
+> +#include "hardware.h"
+> =20
+>  #include <asm/mach-types.h>
+>  #include <asm/mach/arch.h>
+> diff --git a/arch/arm/mach-ep93xx/include/mach/gpio-ep93xx.h
+> b/arch/arm/mach-ep93xx/gpio-ep93xx.h similarity index 100%
+> rename from arch/arm/mach-ep93xx/include/mach/gpio-ep93xx.h
+> rename to arch/arm/mach-ep93xx/gpio-ep93xx.h
+> diff --git a/arch/arm/mach-ep93xx/include/mach/hardware.h
+> b/arch/arm/mach-ep93xx/hardware.h similarity index 96%
+> rename from arch/arm/mach-ep93xx/include/mach/hardware.h
+> rename to arch/arm/mach-ep93xx/hardware.h
+> index 8938906e780a..e7d850e04782 100644
+> --- a/arch/arm/mach-ep93xx/include/mach/hardware.h
+> +++ b/arch/arm/mach-ep93xx/hardware.h
+> @@ -6,7 +6,7 @@
+>  #ifndef __ASM_ARCH_HARDWARE_H
+>  #define __ASM_ARCH_HARDWARE_H
+> =20
+> -#include <mach/platform.h>
+> +#include "platform.h"
+> =20
+>  /*
+>   * The EP93xx has two external crystal oscillators.  To generate the
+> diff --git a/arch/arm/mach-ep93xx/micro9.c
+> b/arch/arm/mach-ep93xx/micro9.c index 373583c29825..c7f64e4ff6c7
+> 100644 --- a/arch/arm/mach-ep93xx/micro9.c
+> +++ b/arch/arm/mach-ep93xx/micro9.c
+> @@ -16,7 +16,7 @@
+>  #include <linux/platform_device.h>
+>  #include <linux/io.h>
+> =20
+> -#include <mach/hardware.h>
+> +#include "hardware.h"
+> =20
+>  #include <asm/mach-types.h>
+>  #include <asm/mach/arch.h>
+> diff --git a/arch/arm/mach-ep93xx/include/mach/platform.h
+> b/arch/arm/mach-ep93xx/platform.h similarity index 100%
+> rename from arch/arm/mach-ep93xx/include/mach/platform.h
+> rename to arch/arm/mach-ep93xx/platform.h
+> diff --git a/arch/arm/mach-ep93xx/simone.c
+> b/arch/arm/mach-ep93xx/simone.c index 80ccb984d521..adc17289cc23
+> 100644 --- a/arch/arm/mach-ep93xx/simone.c
+> +++ b/arch/arm/mach-ep93xx/simone.c
+> @@ -27,8 +27,8 @@
+>  #include <linux/gpio.h>
+>  #include <linux/gpio/machine.h>
+> =20
+> -#include <mach/hardware.h>
+> -#include <mach/gpio-ep93xx.h>
+> +#include "hardware.h"
+> +#include "gpio-ep93xx.h"
+> =20
+>  #include <asm/mach-types.h>
+>  #include <asm/mach/arch.h>
+> diff --git a/arch/arm/mach-ep93xx/snappercl15.c
+> b/arch/arm/mach-ep93xx/snappercl15.c index cf0cb58b3454..f8f89551dbed
+> 100644 --- a/arch/arm/mach-ep93xx/snappercl15.c
+> +++ b/arch/arm/mach-ep93xx/snappercl15.c
+> @@ -25,9 +25,9 @@
+> =20
+>  #include <linux/mtd/platnand.h>
+> =20
+> -#include <mach/hardware.h>
+> +#include "hardware.h"
+>  #include <linux/platform_data/video-ep93xx.h>
+> -#include <mach/gpio-ep93xx.h>
+> +#include "gpio-ep93xx.h"
+> =20
+>  #include <asm/mach-types.h>
+>  #include <asm/mach/arch.h>
+> diff --git a/arch/arm/mach-ep93xx/ts72xx.c
+> b/arch/arm/mach-ep93xx/ts72xx.c index 85b74ac943f0..bba6aa5d7106
+> 100644 --- a/arch/arm/mach-ep93xx/ts72xx.c
+> +++ b/arch/arm/mach-ep93xx/ts72xx.c
+> @@ -23,8 +23,8 @@
+>  #include <linux/mmc/host.h>
+>  #include <linux/platform_data/spi-ep93xx.h>
+> =20
+> -#include <mach/gpio-ep93xx.h>
+> -#include <mach/hardware.h>
+> +#include "gpio-ep93xx.h"
+> +#include "hardware.h"
+>  #include <mach/irqs.h>
+> =20
+>  #include <asm/mach-types.h>
+> diff --git a/arch/arm/mach-ep93xx/vision_ep9307.c
+> b/arch/arm/mach-ep93xx/vision_ep9307.c index
+> 767ee64628dc..66e2b34aa779 100644 ---
+> a/arch/arm/mach-ep93xx/vision_ep9307.c +++
+> b/arch/arm/mach-ep93xx/vision_ep9307.c @@ -31,10 +31,10 @@
+> =20
+>  #include <sound/cs4271.h>
+> =20
+> -#include <mach/hardware.h>
+> +#include "hardware.h"
+>  #include <linux/platform_data/video-ep93xx.h>
+>  #include <linux/platform_data/spi-ep93xx.h>
+> -#include <mach/gpio-ep93xx.h>
+> +#include "gpio-ep93xx.h"
+> =20
+>  #include <asm/mach-types.h>
+>  #include <asm/mach/map.h>
 
-The code itself looks good.
 
-Thanks,
 
-Boris
+
+Best regards,
+
+Lukasz Majewski
+
+--
+
+DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
+HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
+Phone: (+49)-8142-66989-59 Fax: (+49)-8142-66989-80 Email: lukma@denx.de
+
+--Sig_/2+fZ2yzH1wC4rEYfmZTC2NA
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEEgAyFJ+N6uu6+XupJAR8vZIA0zr0FAly1cDsACgkQAR8vZIA0
+zr1h5wf/TVNGxggOkqNutSR8OEZ3D+ASURYBFO4Kb9VDFPJ/El9iIHLy3YYol5sH
+8bcDFugmU4t7xPdzXMv6IGs2eMc0qn7aYP2hCy6foiFrZ9LVRSEufvBw3wRVJ4+V
+52l1k7oOIjWjK8heGskII6t+S263AKOQT1zveshZitnpYbsAIZMaFANAoCnXZ1Aj
+WdJRvspqNcSLWpvraYJK5kolBxOC5zZXwl1boC74ODRv8vu5RH7holHEcBPF6Y/Z
+6KA91poJVeNLO+A4zBbq8CZvKGx5UBiqFR2oZCxORVDpvKeQFgf/1eR7ihiq58+M
+GFpupmFttekI62lrNdQdPFLyweqMpQ==
+=jsjH
+-----END PGP SIGNATURE-----
+
+--Sig_/2+fZ2yzH1wC4rEYfmZTC2NA--
