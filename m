@@ -2,81 +2,82 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C24F8C282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:49:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F34DC282DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:50:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9744A20821
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:49:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D2BD720821
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:50:33 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rsPDXNF9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729493AbfDPLts (ORCPT
+        id S1729260AbfDPLuc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 07:49:48 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:32856 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726672AbfDPLts (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 07:49:48 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1832459460;
-        Tue, 16 Apr 2019 11:49:47 +0000 (UTC)
-Received: from oldenburg2.str.redhat.com (unknown [10.36.118.39])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 1FFA45D71A;
-        Tue, 16 Apr 2019 11:49:40 +0000 (UTC)
-From:   Florian Weimer <fweimer@redhat.com>
-To:     Steve Grubb <sgrubb@redhat.com>
-Cc:     Jan Kara <jack@suse.cz>,
-        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mic@digikod.net>,
-        linux-kernel@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        James Morris <jmorris@namei.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        =?utf-8?Q?Micka=C3=ABl_Sala=C3=BCn?= <mickael.salaun@ssi.gouv.fr>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        Philippe =?utf-8?Q?Tr=C3=A9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>, Shuah Khan <shuah@kernel.org>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        Yves-Alexis Perez <yves-alexis.perez@ssi.gouv.fr>,
-        kernel-hardening@lists.openwall.com, linux-api@vger.kernel.org,
-        linux-security-module@vger.kernel.org,
-        linux-fsdevel@vger.kernel.org,
-        Matthew Bobrowski <mbobrowski@mbobrowski.org>
-Subject: Re: [RFC PATCH v1 1/5] fs: Add support for an O_MAYEXEC flag on sys_open()
-References: <20181212081712.32347-1-mic@digikod.net>
-        <20181212081712.32347-2-mic@digikod.net>
-        <20181212144306.GA19945@quack2.suse.cz> <3452959.b6JmBh7Lnt@x2>
-Date:   Tue, 16 Apr 2019 13:49:39 +0200
-In-Reply-To: <3452959.b6JmBh7Lnt@x2> (Steve Grubb's message of "Mon, 15 Apr
-        2019 14:47:49 -0400")
-Message-ID: <87wojuxj8s.fsf@oldenburg2.str.redhat.com>
-User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
+        Tue, 16 Apr 2019 07:50:32 -0400
+Received: from mail-lj1-f193.google.com ([209.85.208.193]:46110 "EHLO
+        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbfDPLuc (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 07:50:32 -0400
+Received: by mail-lj1-f193.google.com with SMTP id h21so18773101ljk.13
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 04:50:30 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=uDEUUJoJSi6YoYZnXF5gY1Gw6oRcZMS/KEqiS2IofEw=;
+        b=rsPDXNF9+dl3oAKvj65WtlpVCuxrIRVUMzeWCW4rQ9psniXY0agR7uWZ5X97MiZb9g
+         5mX0FokaIVnOlrBYcEU33PN5y1KAKJeoC6GtA09jPcl2nriWpXCJjwh9MBiAdfWR1y1+
+         2VaZlIWuFx5cCWdpKl2w4Qw7exA3RALxHWtlfV9+NWL1ueM72Db8686gSU4h6l8x2sB2
+         CBlAHO5FDMghLTIpi1C/fWkNk+OoseKrKasC8kHc6xEUmgz+pX7bvojN4tQgNYOZnmOZ
+         Ch3rZUQ+gDZUzseSTn++30M1liZx3hFgalWVxeJ3V1TiaUV+GNbawVu2741rRCHUXzKS
+         3vkA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=uDEUUJoJSi6YoYZnXF5gY1Gw6oRcZMS/KEqiS2IofEw=;
+        b=S64WZk8xx/9T87El25gH3w87jCMHiAfgqqsNK/81WNDpY+nFk/9Nae9kjdZVyHfvoa
+         ETk/ji+qcSS8+TWtiyGnEbMUY94sjxh3wh188sXLeGIJy/DkYpMadDJPpatlf6dUSofM
+         fS4IYhcsnlt/L5exiqUm4Ir1/v2InrsbsJFsrGoYHjlP5bhCQ5Zg6aIDD5zcBnULepzI
+         72yGRtqgJa53GWR0GQWkTopmAJzkVh5vIsXrDttffnDDmWUnkDXFt/POg7zMTmyrywnm
+         tw2bWGK9oeNINdVOJX380r/zQkZBHdICxGS7XbGrwycmvIDVGlxFGXSkJvi3nwQAQXH1
+         Zdpw==
+X-Gm-Message-State: APjAAAVhTUZFHpqYsfvalxEzJEdTuG1lxeFuXKrf6OikH1eRmZXkQQ5T
+        2m+N2t7sQFau7hVE9sdK6RjdGZi5pgdkgox017UR1w==
+X-Google-Smtp-Source: APXvYqzvLM2iOlhUPlFbXzBTzgB6hvGmlBsofIrhBUB/mzmiP5PZfWnXeTzIL/nFkAY+oDiKxJDWdnDygL3sklKEDlI=
+X-Received: by 2002:a2e:3512:: with SMTP id z18mr42249075ljz.25.1555415430079;
+ Tue, 16 Apr 2019 04:50:30 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Tue, 16 Apr 2019 11:49:47 +0000 (UTC)
+References: <1555257218-3830-1-git-send-email-mohankumar718@gmail.com>
+In-Reply-To: <1555257218-3830-1-git-send-email-mohankumar718@gmail.com>
+From:   Linus Walleij <linus.walleij@linaro.org>
+Date:   Tue, 16 Apr 2019 13:50:18 +0200
+Message-ID: <CACRpkdY5cX=aP9nNwWeUd0Nx33MS0QJDnLKzbajADRsKCUVbOA@mail.gmail.com>
+Subject: Re: [RESEND PATCH] drivers/iio/gyro/mpu3050-core.c: This patch fix
+ the following checkpatch warning.
+To:     Mohan Kumar <mohankumar718@gmail.com>
+Cc:     Jonathan Cameron <jic23@kernel.org>,
+        Hartmut Knaack <knaack.h@gmx.de>, linux-iio@vger.kernel.org,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-* Steve Grubb:
+On Sun, Apr 14, 2019 at 5:53 PM Mohan Kumar <mohankumar718@gmail.com> wrote:
 
-> This flag that is being proposed means that you would have to patch all 
-> interpreters to use it. If you are sure that upstreams will accept that, why 
-> not just change the policy to interpreters shouldn't execute anything unless 
-> the execute bit is set? That is simpler and doesn't need a kernel change. And 
-> setting the execute bit is an auditable event.
+> As per Documentation/timers/timers-howto.txt Msleep < 20ms can sleep for
+> up to 20ms. so use usleep_range.
+>
+> Signed-off-by: Mohan Kumar <mohankumar718@gmail.com>
 
-I think we need something like O_MAYEXEC so that security policies can
-be enforced and noexec mounts can be detected.  I don't think it's a
-good idea to do this in userspace, especially the latter.
+All right, should work as fine.
+Acked-by: Linus Walleij <linus.walleij@linaro.org>
 
-Thanks,
-Florian
+Yours,
+Linus Walleij
