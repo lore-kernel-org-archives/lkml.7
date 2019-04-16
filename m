@@ -2,100 +2,91 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 73EA9C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:13:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 83218C282DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 38498223DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:13:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51951223DC
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:15:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="eN8163vG"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="KLNwVFFD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729508AbfDPONl (ORCPT
+        id S1727915AbfDPOPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 10:13:41 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:59698 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725861AbfDPONl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 10:13:41 -0400
-Received: from zn.tnic (p200300EC2F0D690030B3A6530520175E.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:6900:30b3:a653:520:175e])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id F12A61EC014A;
-        Tue, 16 Apr 2019 16:13:38 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1555424019;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=MjSrdPG/qxoojY+cSE8D0mGCXzVEJH/6dETPRQXfO5M=;
-        b=eN8163vGykLsHoaVJy4OVNqUnXuafeDFkAPyWXWlwU1w2O+A+q/q0yFjvSNJwMLZONvbJQ
-        ch/I/d6cp/pPXq1esWfJ1lnYM9hf3Qziq9fTkzspTsda1x2XxB9dEg1nFOrWxz/yClEm9i
-        DpFmzA4Snh7NNveygCgCT8NWdB2G5wg=
-Date:   Tue, 16 Apr 2019 16:13:35 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Waiman Long <longman@redhat.com>,
-        Andrea Arcangeli <aarcange@redhat.com>,
-        Jon Masters <jcm@redhat.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org,
-        Martin Schwidefsky <schwidefsky@de.ibm.com>,
-        Heiko Carstens <heiko.carstens@de.ibm.com>,
-        linux-s390@vger.kernel.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Tyler Hicks <tyhicks@canonical.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Steven Price <steven.price@arm.com>,
-        Phil Auld <pauld@redhat.com>
-Subject: Re: [PATCH v2 1/5] cpu/speculation: Add 'mitigations=' cmdline option
-Message-ID: <20190416141335.GH31772@zn.tnic>
-References: <cover.1555085500.git.jpoimboe@redhat.com>
- <b07a8ef9b7c5055c3a4637c87d07c296d5016fe0.1555085500.git.jpoimboe@redhat.com>
+        Tue, 16 Apr 2019 10:15:25 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:1980 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725861AbfDPOPY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 10:15:24 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cb5e3790000>; Tue, 16 Apr 2019 07:15:21 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 16 Apr 2019 07:15:24 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 16 Apr 2019 07:15:24 -0700
+Received: from HQMAIL111.nvidia.com (172.20.187.18) by HQMAIL106.nvidia.com
+ (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 16 Apr
+ 2019 14:15:23 +0000
+Received: from HQMAIL103.nvidia.com (172.20.187.11) by HQMAIL111.nvidia.com
+ (172.20.187.18) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 16 Apr
+ 2019 14:15:23 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL103.nvidia.com
+ (172.20.187.11) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 16 Apr 2019 14:15:23 +0000
+Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
+        id <B5cb5e3780000>; Tue, 16 Apr 2019 07:15:23 -0700
+From:   Vidya Sagar <vidyas@nvidia.com>
+To:     <jingoohan1@gmail.com>, <gustavo.pimentel@synopsys.com>,
+        <lorenzo.pieralisi@arm.com>, <bhelgaas@google.com>,
+        <Jisheng.Zhang@synaptics.com>, <thierry.reding@gmail.com>
+CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <kthota@nvidia.com>, <mmaddireddy@nvidia.com>,
+        <sagar.tv@gmail.com>, <vidyas@nvidia.com>
+Subject: [PATCH V2 0/2] PCI: dwc: Export symbols to support module build
+Date:   Tue, 16 Apr 2019 19:45:14 +0530
+Message-ID: <20190416141516.23908-1-vidyas@nvidia.com>
+X-Mailer: git-send-email 2.17.1
+X-NVConfidentiality: public
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <b07a8ef9b7c5055c3a4637c87d07c296d5016fe0.1555085500.git.jpoimboe@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1555424121; bh=+pBwCWTKln8bF+APdRIZAUrNKPPT8pHzC9TPDFoIYjk=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
+         X-NVConfidentiality:MIME-Version:Content-Type;
+        b=KLNwVFFDTgX9tUoz4K00aPpTiib+08396YVsB78WHYYpnpZ6ThfAzlagS+hJuYKa6
+         t/7entEb+G2ylVPClkqj1zkywqHAJKgjNGlW4UaMTIQ5PAu0nh1RMdNRaxRC+ubZC0
+         g1Vj3OQOurj29N5hzSDAgKC8XSyC0NukZNHUQJySf3agWeZ24gE0ba4TFRL33ePUT/
+         Sd0TfnwrL6u+fB9XVq8skasCjCKHOtF37Ip96Te+BpY7yVWxI/FE9orxQk+El6wHns
+         Y/N40BRKOlasDgkJMC6YVyrZCHIMt6zVhXx3QlvKtxx9eubqZsUJI2kKEGdm+eYGXr
+         VYfId/Ip0rM1A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 03:39:28PM -0500, Josh Poimboeuf wrote:
-> diff --git a/kernel/cpu.c b/kernel/cpu.c
-> index 38890f62f9a8..aed9083f8eac 100644
-> --- a/kernel/cpu.c
-> +++ b/kernel/cpu.c
-> @@ -2320,3 +2320,18 @@ void __init boot_cpu_hotplug_init(void)
->  #endif
->  	this_cpu_write(cpuhp_state.state, CPUHP_ONLINE);
->  }
-> +
-> +enum cpu_mitigations cpu_mitigations __ro_after_init = CPU_MITIGATIONS_AUTO;
-> +
-> +static int __init mitigations_cmdline(char *arg)
+This patch set is based on Jisheng Zhang's <Jisheng.Zhang@synaptics.com>
+patch set to support implementing .remove() hook in host controller
+drivers of DesignWare based implementations.
+Jisheng's patches: https://patchwork.kernel.org/project/linux-pci/list/?series=98559
+This patch set moves config space APIs which are inlined in headers to
+source files and exports them along with the other required APIs to
+support building host controller drivers as modules.
 
-Forgot the verb: "mitigations_parse_cmdline".
+Vidya Sagar (2):
+  PCI: dwc: Add API support to de-initialize host
+  PCI: dwc: Export APIs to support .remove() implementation
+
+ .../pci/controller/dwc/pcie-designware-host.c | 11 +++++
+ drivers/pci/controller/dwc/pcie-designware.c  | 38 ++++++++++++++++++
+ drivers/pci/controller/dwc/pcie-designware.h  | 40 +++++--------------
+ 3 files changed, 60 insertions(+), 29 deletions(-)
 
 -- 
-Regards/Gruss,
-    Boris.
+2.17.1
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
