@@ -2,166 +2,100 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C76C4C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:16:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D14FC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:17:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 950312087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:16:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="k8rWEmIu"
+	by mail.kernel.org (Postfix) with ESMTP id D0CA720868
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:17:17 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555431437;
+	bh=d3lU4jz0nSeIVmTDC88Q3+CkAqeb5VngB5XFPce+uAk=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=GorinBq+MYfwZ4szmvy7Z3WNx+PxOzY5C8P9hkVURSOFNA6zQNbEt7EAvH1Nqb+Me
+	 JXL9dSUOeVT52IxgzXSsRrMUHtBbkGA8Kc501p1Rw5CnWHiLo16FhCTOr22x1nK/bT
+	 eqMMFNVscllIJgp7Vv2lGCjJ3AGcbYV866fRPxcM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729911AbfDPQQU (ORCPT
+        id S1729931AbfDPQRQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 12:16:20 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:39977 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbfDPQQS (ORCPT
+        Tue, 16 Apr 2019 12:17:16 -0400
+Received: from mail-lj1-f196.google.com ([209.85.208.196]:44504 "EHLO
+        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726037AbfDPQRQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 12:16:18 -0400
-Received: by mail-pf1-f195.google.com with SMTP id c207so10645330pfc.7
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:16:17 -0700 (PDT)
+        Tue, 16 Apr 2019 12:17:16 -0400
+Received: by mail-lj1-f196.google.com with SMTP id h16so19631544ljg.11
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:17:14 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qKe2ycREilj9tfPYoXzW7gTBCUBKFGtqznaVigWaJlE=;
-        b=k8rWEmIuHTsiRuEjSErSov1sgVwSlfO+TBL6QvMWwlP3fBa2gEkmvG448MOcwN5EST
-         TUZv1JzITqWhpjCFCakeYKGGrfbo7TA0sIQSOlj3WvyfDu23QITXimwYxCsV6AAsm6ge
-         DB8pp2Q7yocDR5x8sFl5c3BuClKeFr8u8s1N6y57lCAn6lp6zd8oePmDfC1Vz6GXPPtn
-         eOPbxOWQ/cGUY6HO4q7P6iEe4zD1Zt2zLOPSd63QEDqkZFn1bConVqhFC2t4CeWpy3vJ
-         QNO2mkcyLgs+MC7+TloIyWfUTnU5ZabB3g1XI3j8rICSxEur91aL7rVY7L/TvK6z/eHA
-         LRQQ==
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=V2Gvpl6BGIA50/J1TX+cezdKN7xZ09Bpr+WtIIhOiv4=;
+        b=XzbrhfFZ8OS7iWU4+Ot2qCi8GDzOl8LZ+PFEFwbbzp+ZEfUBCTsRIpNXElHDgsIV2L
+         /GZceDRcsSgDdjbXqwKZCKwqhqI6RM1jNizxdsPnFcPXot7htZ3epCEvP28wpbOGCkjM
+         nPkDoXjHG1od/d361Iu2znwwPWcNKfzjg4IFA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qKe2ycREilj9tfPYoXzW7gTBCUBKFGtqznaVigWaJlE=;
-        b=srxxtKfNolFdYBnev/waV2znt3uOLJzij3f266zbjKksO/5lZwgYgWl6656El+jOMC
-         fQIbp2xtdpa/JK/WWYiUGd1c94SaeetIKC2EcbJsUirDF7ZXugjYpSPcxI8L9df1aaIq
-         r+LrlCcr062OS1HQicCzG7/j59cGMug+8fVunbVINhXzGosAhi61b0ySflQ9s+4n+lzV
-         W3JMPQI1pgqiqZ5OXeJonc/LUUqgnT9kL98KyXEdheSLO6cxznu1EwgRw6c5ek2AYOIf
-         cF82DSZRbvNZtOtpEjIjuKXghHQPsgStPE1uQbMcNd7ayG/ChWYau9cIZB/UaSeLyp7Z
-         a9kA==
-X-Gm-Message-State: APjAAAWVCq/cfQeg6UA26v/S7/PQ5MwHCSuCjoy84fmV3sxXCm3XAy6I
-        zTPMiaO3biz5641S39G/ubI=
-X-Google-Smtp-Source: APXvYqxU0C1ZDa+VKiXqjglgvttNG03GkEuzBcD7HJDjZ0O+X6CjZgbPyOiVFscxaZdTm/2TN2mknw==
-X-Received: by 2002:aa7:820c:: with SMTP id k12mr82777918pfi.177.1555431377103;
-        Tue, 16 Apr 2019 09:16:17 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:200::1:601e])
-        by smtp.gmail.com with ESMTPSA id z14sm79273847pfn.161.2019.04.16.09.16.15
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=V2Gvpl6BGIA50/J1TX+cezdKN7xZ09Bpr+WtIIhOiv4=;
+        b=eoioDBMYcep9WvNJKcJFTeu3W13Vvah78LYC3lZkikJhfjsfenLosUWaqPBn5FnMg2
+         GZAq0sMSK6eaC912GSO/Gr1NHzucnKks5mOJhNarzHccwQH54PkWszOdyjlRPtJh/QW5
+         9SvnaiVzyYFfcTkLEw6kZr3v68SZilG4tt8iF95q1NFOADftLL47m8rHn1sVzDMc7c9/
+         ZsS65y0JYVH0A2Os3fJmPxpyBGMRc+utNzFaxRHCjnpHE62BXi3cLT2mBgVctGJpKCrF
+         XDlW+ughzpQWhSpGpyqDxgC+wz9s4/i8ZR9EkS1o2ceukVRIg/8xiKiM5vNJsjADm+af
+         zTUg==
+X-Gm-Message-State: APjAAAWF6CoFOJrkArdE/+x9ifUAbO2LaiQSoBpxKxqXw4YDK5/+h8ub
+        AC9SQSONHctuFf2G2tlkBGjvypmSWPs=
+X-Google-Smtp-Source: APXvYqzKwHRxWSrq+JmrIVweUM5VQFw++RnYwOUCSjhl4QL6lRgW3W4GuJcrhTrOpIGgoD2ETck7wg==
+X-Received: by 2002:a2e:5dd2:: with SMTP id v79mr43376702lje.22.1555431433455;
+        Tue, 16 Apr 2019 09:17:13 -0700 (PDT)
+Received: from mail-lj1-f171.google.com (mail-lj1-f171.google.com. [209.85.208.171])
+        by smtp.gmail.com with ESMTPSA id f1sm10169443ljc.73.2019.04.16.09.17.11
+        for <linux-kernel@vger.kernel.org>
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 09:16:16 -0700 (PDT)
-Date:   Tue, 16 Apr 2019 09:16:14 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Kairui Song <kasong@redhat.com>
-Cc:     Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Dave Young <dyoung@redhat.com>,
-        guro@fb.com, yhs@fb.com, brendan.d.gregg@gmail.com
-Subject: Re: [RFC PATCH v2] perf/x86: make perf callchain work without
- CONFIG_FRAME_POINTER
-Message-ID: <20190416161612.zgavfk4teqmumk5n@ast-mbp.dhcp.thefacebook.com>
-References: <20190408165942.23640-1-kasong@redhat.com>
- <20190415153622.GG12232@hirez.programming.kicks-ass.net>
- <20190415165859.ul7i2w3lai3umgik@treble>
- <CACPcB9f8OJmk++54YwW3yhrnohj31+oJcxfesJbNbNSGk9WUQQ@mail.gmail.com>
+        Tue, 16 Apr 2019 09:17:12 -0700 (PDT)
+Received: by mail-lj1-f171.google.com with SMTP id f18so19650305lja.10
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:17:11 -0700 (PDT)
+X-Received: by 2002:a2e:8108:: with SMTP id d8mr18152714ljg.57.1555431431532;
+ Tue, 16 Apr 2019 09:17:11 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CACPcB9f8OJmk++54YwW3yhrnohj31+oJcxfesJbNbNSGk9WUQQ@mail.gmail.com>
-User-Agent: NeoMutt/20180223
+References: <CAHk-=wjvcuyCQGnfOhooaL1H4H63qXO=xgo+9yncSOG=eK+kbA@mail.gmail.com>
+ <20190415051919.GA31481@infradead.org> <CAHk-=wj7jgMOVFW0tiU-X+zhg6+Rn7mEBTej+f26rV3zXezOSA@mail.gmail.com>
+ <20190416110906.6c773aff@mschwideX1> <20190416140658.2cb73a3f@mschwideX1>
+In-Reply-To: <20190416140658.2cb73a3f@mschwideX1>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 16 Apr 2019 09:16:55 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wjKi5C+Onhp5Vs5BQxHbaBud9M3cTS-S6Tr9yDY4dS-Sw@mail.gmail.com>
+Message-ID: <CAHk-=wjKi5C+Onhp5Vs5BQxHbaBud9M3cTS-S6Tr9yDY4dS-Sw@mail.gmail.com>
+Subject: Re: Linux 5.1-rc5
+To:     Martin Schwidefsky <schwidefsky@de.ibm.com>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-s390 <linux-s390@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 07:30:07PM +0800, Kairui Song wrote:
-> On Tue, Apr 16, 2019 at 12:59 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> >
-> > On Mon, Apr 15, 2019 at 05:36:22PM +0200, Peter Zijlstra wrote:
-> > >
-> > > I'll mostly defer to Josh on unwinding, but a few comments below.
-> > >
-> > > On Tue, Apr 09, 2019 at 12:59:42AM +0800, Kairui Song wrote:
-> > > > diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> > > > index e2b1447192a8..6075a4f94376 100644
-> > > > --- a/arch/x86/events/core.c
-> > > > +++ b/arch/x86/events/core.c
-> > > > @@ -2355,6 +2355,12 @@ void arch_perf_update_userpage(struct perf_event *event,
-> > > >     cyc2ns_read_end();
-> > > >  }
-> > > >
-> > > > +static inline int
-> > > > +valid_perf_registers(struct pt_regs *regs)
-> > > > +{
-> > > > +   return (regs->ip && regs->bp && regs->sp);
-> > > > +}
-> > >
-> > > I'm unconvinced by this, with both guess and orc having !bp is perfectly
-> > > valid.
-> > >
-> > > >  void
-> > > >  perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs)
-> > > >  {
-> > > > @@ -2366,11 +2372,17 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
-> > > >             return;
-> > > >     }
-> > > >
-> > > > -   if (perf_callchain_store(entry, regs->ip))
-> > > > +   if (valid_perf_registers(regs)) {
-> > > > +           if (perf_callchain_store(entry, regs->ip))
-> > > > +                   return;
-> > > > +           unwind_start(&state, current, regs, NULL);
-> > > > +   } else if (regs->sp) {
-> > > > +           unwind_start(&state, current, NULL, (unsigned long *)regs->sp);
-> > > > +   } else {
-> > > >             return;
-> > > > +   }
-> > >
-> > > AFAICT if we, by pure accident, end up with !bp for ORC, then we
-> > > initialize the unwind wrong.
-> > >
-> > > Note that @regs is mostly trivially correct, except for that tracepoint
-> > > case. So I don't think we should magic here.
-> >
-> > Ah, I didn't quite understand this code before, and I still don't
-> > really, but I guess the issue is that @regs can be either real or fake.
-> >
-> > In the real @regs case, we just want to always unwind starting from
-> > regs->sp.
-> >
-> > But in the fake @regs case, we should instead unwind from the current
-> > frame, skipping all frames until we hit the fake regs->sp.  Because
-> > starting from fake/incomplete regs is most likely going to cause
-> > problems with ORC (or DWARF for other arches).
-> >
-> > The idea of a fake regs is fragile and confusing.  Is it possible to
-> > just pass in the "skip" stack pointer directly instead?  That should
-> > work for both FP and non-FP.  And I _think_ there's no need to ever
-> > capture regs->bp anyway -- the stack pointer should be sufficient.
-> 
-> Hi, that will break some other usage, if perf_callchain_kernel is
-> called but it won't unwind to the callsite (could be produced by
-> attach an ebpf call to kprobe), things will also go wrong. It should
-> start with given registers when the register is valid.
-> And it's true with omit frame pointer BP value could be anything, so 0
-> is also valid, I think I need to find a better way to tell if we could
-> start with the registers value or direct start unwinding and skip
-> until got the stack.
+On Tue, Apr 16, 2019 at 5:08 AM Martin Schwidefsky
+<schwidefsky@de.ibm.com> wrote:
+>
+> This is not nice, would a patch like the following be acceptable?
 
-Hey, what is the status of the fix?
-We're hitting it from bpf as well.
-kernel stack traces are not working in tracepoints.
+Umm.
 
+We actually already *have* this function.
+
+It's called "gup_fast_permitted()" and it's used by x86-64 to verify
+the proper address range. Exactly like s390 needs..
+
+Could you please use that instead?
+
+            Linus
