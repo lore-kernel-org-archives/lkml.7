@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7378EC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:48:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA070C282DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:48:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 435FD2232D
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:48:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BCD37222DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:48:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729777AbfDPNsV (ORCPT
+        id S1729665AbfDPNsc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 09:48:21 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:57572 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729665AbfDPNre (ORCPT
+        Tue, 16 Apr 2019 09:48:32 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60654 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1729623AbfDPNrX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 09:47:34 -0400
-Received: from pps.filterd (m0098393.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3GDke9v133023
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:47:32 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rwdd2qwj3-1
+        Tue, 16 Apr 2019 09:47:23 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3GDlDVa060537
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:47:23 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rwe3k5vjj-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:47:20 -0400
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:47:17 -0400
 Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <ldufour@linux.ibm.com>;
-        Tue, 16 Apr 2019 14:46:52 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Tue, 16 Apr 2019 14:46:55 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 16 Apr 2019 14:46:42 +0100
+        Tue, 16 Apr 2019 14:46:43 +0100
 Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3GDkeG417104934
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3GDkgCs32833784
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 Apr 2019 13:46:41 GMT
+        Tue, 16 Apr 2019 13:46:42 GMT
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id CF1644C05C;
-        Tue, 16 Apr 2019 13:46:39 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 5135C4C04E;
+        Tue, 16 Apr 2019 13:46:42 +0000 (GMT)
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 60C684C058;
-        Tue, 16 Apr 2019 13:46:38 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id DDCD34C05A;
+        Tue, 16 Apr 2019 13:46:40 +0000 (GMT)
 Received: from nimbus.lab.toulouse-stg.fr.ibm.com (unknown [9.101.4.33])
         by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 16 Apr 2019 13:46:38 +0000 (GMT)
+        Tue, 16 Apr 2019 13:46:40 +0000 (GMT)
 From:   Laurent Dufour <ldufour@linux.ibm.com>
 To:     akpm@linux-foundation.org, mhocko@kernel.org, peterz@infradead.org,
         kirill@shutemov.name, ak@linux.intel.com, dave@stgolabs.net,
@@ -78,18 +78,18 @@ Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         haren@linux.vnet.ibm.com, npiggin@gmail.com,
         paulmck@linux.vnet.ibm.com, Tim Chen <tim.c.chen@linux.intel.com>,
         linuxppc-dev@lists.ozlabs.org, x86@kernel.org
-Subject: [PATCH v12 26/31] perf tools: add support for the SPF perf event
-Date:   Tue, 16 Apr 2019 15:45:17 +0200
+Subject: [PATCH v12 27/31] mm: add speculative page fault vmstats
+Date:   Tue, 16 Apr 2019 15:45:18 +0200
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190416134522.17540-1-ldufour@linux.ibm.com>
 References: <20190416134522.17540-1-ldufour@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19041613-0020-0000-0000-00000330705D
+x-cbid: 19041613-0016-0000-0000-0000026F7280
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19041613-0021-0000-0000-00002182B50A
-Message-Id: <20190416134522.17540-27-ldufour@linux.ibm.com>
+x-cbparentid: 19041613-0017-0000-0000-000032CBBD97
+Message-Id: <20190416134522.17540-28-ldufour@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-16_05:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
@@ -102,81 +102,62 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support for the new speculative faults event.
+Add speculative_pgfault vmstat counter to count successful speculative page
+fault handling.
 
-Acked-by: David Rientjes <rientjes@google.com>
+Also fixing a minor typo in include/linux/vm_event_item.h.
+
 Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
 ---
- tools/include/uapi/linux/perf_event.h | 1 +
- tools/perf/util/evsel.c               | 1 +
- tools/perf/util/parse-events.c        | 4 ++++
- tools/perf/util/parse-events.l        | 1 +
- tools/perf/util/python.c              | 1 +
- 5 files changed, 8 insertions(+)
+ include/linux/vm_event_item.h | 3 +++
+ mm/memory.c                   | 3 +++
+ mm/vmstat.c                   | 5 ++++-
+ 3 files changed, 10 insertions(+), 1 deletion(-)
 
-diff --git a/tools/include/uapi/linux/perf_event.h b/tools/include/uapi/linux/perf_event.h
-index 7198ddd0c6b1..3b4356c55caa 100644
---- a/tools/include/uapi/linux/perf_event.h
-+++ b/tools/include/uapi/linux/perf_event.h
-@@ -112,6 +112,7 @@ enum perf_sw_ids {
- 	PERF_COUNT_SW_EMULATION_FAULTS		= 8,
- 	PERF_COUNT_SW_DUMMY			= 9,
- 	PERF_COUNT_SW_BPF_OUTPUT		= 10,
-+	PERF_COUNT_SW_SPF			= 11,
- 
- 	PERF_COUNT_SW_MAX,			/* non-ABI */
+diff --git a/include/linux/vm_event_item.h b/include/linux/vm_event_item.h
+index 47a3441cf4c4..137666e91074 100644
+--- a/include/linux/vm_event_item.h
++++ b/include/linux/vm_event_item.h
+@@ -109,6 +109,9 @@ enum vm_event_item { PGPGIN, PGPGOUT, PSWPIN, PSWPOUT,
+ #ifdef CONFIG_SWAP
+ 		SWAP_RA,
+ 		SWAP_RA_HIT,
++#endif
++#ifdef CONFIG_SPECULATIVE_PAGE_FAULT
++		SPECULATIVE_PGFAULT,
+ #endif
+ 		NR_VM_EVENT_ITEMS
  };
-diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-index 66d066f18b5b..1f3bea4379b2 100644
---- a/tools/perf/util/evsel.c
-+++ b/tools/perf/util/evsel.c
-@@ -435,6 +435,7 @@ const char *perf_evsel__sw_names[PERF_COUNT_SW_MAX] = {
- 	"alignment-faults",
- 	"emulation-faults",
- 	"dummy",
-+	"speculative-faults",
- };
+diff --git a/mm/memory.c b/mm/memory.c
+index 509851ad7c95..c65e8011d285 100644
+--- a/mm/memory.c
++++ b/mm/memory.c
+@@ -4367,6 +4367,9 @@ vm_fault_t __handle_speculative_fault(struct mm_struct *mm,
  
- static const char *__perf_evsel__sw_name(u64 config)
-diff --git a/tools/perf/util/parse-events.c b/tools/perf/util/parse-events.c
-index 5ef4939408f2..effa8929cc90 100644
---- a/tools/perf/util/parse-events.c
-+++ b/tools/perf/util/parse-events.c
-@@ -140,6 +140,10 @@ struct event_symbol event_symbols_sw[PERF_COUNT_SW_MAX] = {
- 		.symbol = "bpf-output",
- 		.alias  = "",
- 	},
-+	[PERF_COUNT_SW_SPF] = {
-+		.symbol = "speculative-faults",
-+		.alias	= "spf",
-+	},
- };
+ 	put_vma(vma);
  
- #define __PERF_EVENT_FIELD(config, name) \
-diff --git a/tools/perf/util/parse-events.l b/tools/perf/util/parse-events.l
-index 7805c71aaae2..d28a6edd0a95 100644
---- a/tools/perf/util/parse-events.l
-+++ b/tools/perf/util/parse-events.l
-@@ -324,6 +324,7 @@ emulation-faults				{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_EM
- dummy						{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_DUMMY); }
- duration_time					{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_DUMMY); }
- bpf-output					{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_BPF_OUTPUT); }
-+speculative-faults|spf				{ return sym(yyscanner, PERF_TYPE_SOFTWARE, PERF_COUNT_SW_SPF); }
- 
++	if (ret != VM_FAULT_RETRY)
++		count_vm_event(SPECULATIVE_PGFAULT);
++
  	/*
- 	 * We have to handle the kernel PMU event cycles-ct/cycles-t/mem-loads/mem-stores separately.
-diff --git a/tools/perf/util/python.c b/tools/perf/util/python.c
-index dda0ac978b1e..c617a4751549 100644
---- a/tools/perf/util/python.c
-+++ b/tools/perf/util/python.c
-@@ -1200,6 +1200,7 @@ static struct {
- 	PERF_CONST(COUNT_SW_ALIGNMENT_FAULTS),
- 	PERF_CONST(COUNT_SW_EMULATION_FAULTS),
- 	PERF_CONST(COUNT_SW_DUMMY),
-+	PERF_CONST(COUNT_SW_SPF),
+ 	 * The task may have entered a memcg OOM situation but
+ 	 * if the allocation error was handled gracefully (no
+diff --git a/mm/vmstat.c b/mm/vmstat.c
+index a7d493366a65..93f54b31e150 100644
+--- a/mm/vmstat.c
++++ b/mm/vmstat.c
+@@ -1288,7 +1288,10 @@ const char * const vmstat_text[] = {
+ 	"swap_ra",
+ 	"swap_ra_hit",
+ #endif
+-#endif /* CONFIG_VM_EVENTS_COUNTERS */
++#ifdef CONFIG_SPECULATIVE_PAGE_FAULT
++	"speculative_pgfault",
++#endif
++#endif /* CONFIG_VM_EVENT_COUNTERS */
+ };
+ #endif /* CONFIG_PROC_FS || CONFIG_SYSFS || CONFIG_NUMA */
  
- 	PERF_CONST(SAMPLE_IP),
- 	PERF_CONST(SAMPLE_TID),
 -- 
 2.21.0
 
