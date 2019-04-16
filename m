@@ -2,71 +2,83 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DAF86C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:03:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2FC7C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:03:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ADFCD2073F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:03:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E2F52073F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:03:53 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KMLq8vBC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728539AbfDPIDY (ORCPT
+        id S1728587AbfDPIDw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 04:03:24 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:47912 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726890AbfDPIDY (ORCPT
+        Tue, 16 Apr 2019 04:03:52 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:42050 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726890AbfDPIDv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 04:03:24 -0400
-Received: from bigeasy by Galois.linutronix.de with local (Exim 4.80)
-        (envelope-from <bigeasy@linutronix.de>)
-        id 1hGJ3p-00012Y-P3; Tue, 16 Apr 2019 10:03:21 +0200
-Date:   Tue, 16 Apr 2019 10:03:21 +0200
-From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-To:     "Paul E. McKenney" <paulmck@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: Alleged fix for writer stall on -rcu branch dev
-Message-ID: <20190416080321.6avfc4zne6kwzynm@linutronix.de>
-References: <20190410181538.3ocva5lmh7ghrisr@linutronix.de>
- <20190410184105.GR14111@linux.ibm.com>
- <20190410191918.g2yqnsmuqukmzdfe@linutronix.de>
- <20190410203302.GT14111@linux.ibm.com>
- <20190411000610.GA3867@linux.ibm.com>
- <20190413142153.GA17704@linux.ibm.com>
- <20190415104047.mrtmv6w6kq5m44fp@linutronix.de>
- <20190415105645.GQ14111@linux.ibm.com>
- <20190415110403.4yivka4cofckgxwb@linutronix.de>
- <20190415222652.GB14111@linux.ibm.com>
+        Tue, 16 Apr 2019 04:03:51 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=Content-Type:MIME-Version:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:In-Reply-To:References:List-Id:List-Help:List-Unsubscribe:
+        List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=TW8PGBx7kunZJN2Y1HJoHs2KrbhzullLyGfZjeeHZdA=; b=KMLq8vBC2cp3ng50OTZORdsI22
+        x6drZIuzUTj1OQU5IHmc12LWrtXTK7r1HVw3hEP8GVvsQeDyNn3dpVd9cxebIUDrmIsnras6G8cOX
+        63x52qmjEMsYFp3FhmJvDsDjVLOh4bqBrEavGkjL0M/GTVO2uPo0ziTR2c7Ebfxlpxih9Z1mSOdTX
+        j/1paH1dKN28B1MG+up5Yur/5q3CaQWl4JrzrT1Ll2eHCRZIzzOVsWQ6mc5A4HNBJWWXu6qle7QE/
+        NH3Lkb3dBrR8axBjHCIxXBrSC6Qb5PcAD6/1gK36+MhC4aDFqwrJazZd5MHKmumEJSvDKs75k5uws
+        uKIGYwzA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=worktop.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hGJ47-0000mC-9E; Tue, 16 Apr 2019 08:03:40 +0000
+Received: by worktop.programming.kicks-ass.net (Postfix, from userid 1000)
+        id ED591981E5B; Tue, 16 Apr 2019 10:03:35 +0200 (CEST)
+Date:   Tue, 16 Apr 2019 10:03:35 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-kernel@vger.kernel.org, Andy Lutomirski <luto@kernel.org>,
+        Nadav Amit <namit@vmware.com>,
+        Dave Hansen <dave.hansen@intel.com>
+Subject: [PATCH] x86/tlb: Revert: Align TLB invalidation info
+Message-ID: <20190416080335.GM7905@worktop.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190415222652.GB14111@linux.ibm.com>
-User-Agent: NeoMutt/20180716
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-04-15 15:26:52 [-0700], Paul E. McKenney wrote:
-> I feel a bit guilty monopolizing your system...
 
-Don't be. In the end I want my stuff merged without causing any
-regressions.
+It was found that under some .config options (notably L1_CACHE_SHIFT=7)
+and compiler combinations this on-stack alignment leads to a 320 byte
+stack usage, which then triggers a KASAN stack warning elsewhere.
 
-> I have accumulated a collection of forward-progress ideas, so one approach
-> would be for me to get those written, then running well on my systems, and
-> then ask for some testing on your systems.  Would that be a reasonable
-> approach?
+Using 320 bytes of stack space for a 40 byte structure is ludicrous and
+clearly not right.
 
-Sure.
-
-> Might make anyone else wanting to use that system in the near term more
-> happy as well.  ;-)
-
-:)
-
-> 							Thanx, Paul
-
-Sebastian
+Fixes: 515ab7c41306 ("x86/mm: Align TLB invalidation info")
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+---
+Index: linux-2.6/arch/x86/mm/tlb.c
+===================================================================
+--- linux-2.6.orig/arch/x86/mm/tlb.c
++++ linux-2.6/arch/x86/mm/tlb.c
+@@ -728,7 +728,7 @@ void flush_tlb_mm_range(struct mm_struct
+ {
+ 	int cpu;
+ 
+-	struct flush_tlb_info info __aligned(SMP_CACHE_BYTES) = {
++	struct flush_tlb_info info = {
+ 		.mm = mm,
+ 		.stride_shift = stride_shift,
+ 		.freed_tables = freed_tables,
