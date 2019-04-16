@@ -2,174 +2,133 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FFD3C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:44:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2AE6CC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:45:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3168321741
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:44:49 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="WC9dm58W"
+	by mail.kernel.org (Postfix) with ESMTP id 0359920868
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:45:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729873AbfDPPos (ORCPT
+        id S1729881AbfDPPpW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 11:44:48 -0400
-Received: from userp2120.oracle.com ([156.151.31.85]:34636 "EHLO
-        userp2120.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729859AbfDPPop (ORCPT
+        Tue, 16 Apr 2019 11:45:22 -0400
+Received: from outgoing-auth-1.mit.edu ([18.9.28.11]:36943 "EHLO
+        outgoing.mit.edu" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726178AbfDPPpW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 11:44:45 -0400
-Received: from pps.filterd (userp2120.oracle.com [127.0.0.1])
-        by userp2120.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3GFi0NI017535;
-        Tue, 16 Apr 2019 15:44:30 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=pmzFJQSVTt2TMA1nNYmW6amCdNAiHpeqIW9A+IwR/28=;
- b=WC9dm58WZm5YVkj7SL5T0xxTycwioRGt+n2re6mT1LL6O2wTr4I3VAHKH4l2ZT6uFO4N
- kx8j3wstmngibdK3zElQO3qXGBqnZmWPLGVsPxRuoNCjWbdFFbFvoMIF//0ShFNSVurw
- mBmBVCVpMgjaCzd4pWILcjBdCm6oZVFx+HgVg/77EYYbR05HY/GaBBE+99RyJdnkjlPC
- QBi86i39/EjvdLzaZUZ6SadTsrNAzGtCulSluEnUSqE0ruZcojrLSPNmSEDuuWrga6LK
- CIlNDsutKjYjhh9mY9RoMYcLIkhinDh5mqVt+5f8l3uT78gpN7VyyHNSGP6nMT1GULOu oA== 
-Received: from aserp3030.oracle.com (aserp3030.oracle.com [141.146.126.71])
-        by userp2120.oracle.com with ESMTP id 2rusneuj2h-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 Apr 2019 15:44:30 +0000
-Received: from pps.filterd (aserp3030.oracle.com [127.0.0.1])
-        by aserp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3GFi6uJ086020;
-        Tue, 16 Apr 2019 15:44:29 GMT
-Received: from userv0122.oracle.com (userv0122.oracle.com [156.151.31.75])
-        by aserp3030.oracle.com with ESMTP id 2rwe79vdcd-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 Apr 2019 15:44:29 +0000
-Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
-        by userv0122.oracle.com (8.14.4/8.14.4) with ESMTP id x3GFiPS8004757;
-        Tue, 16 Apr 2019 15:44:25 GMT
-Received: from dhcp-burlington7-2nd-B-east-10-152-55-162.usdhcp.oraclecorp.com (/10.152.32.65)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 16 Apr 2019 08:44:25 -0700
-Subject: Re: [PATCH -next] xen-swiotlb: Make two functions static
-To:     Yue Haibing <yuehaibing@huawei.com>, konrad.wilk@oracle.com,
-        jgross@suse.com, sstabellini@kernel.org
-Cc:     linux-kernel@vger.kernel.org, iommu@lists.linux-foundation.org,
-        xen-devel@lists.xenproject.org, Christoph Hellwig <hch@lst.de>
-References: <20190416144950.37952-1-yuehaibing@huawei.com>
-From:   Boris Ostrovsky <boris.ostrovsky@oracle.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=boris.ostrovsky@oracle.com; prefer-encrypt=mutual; keydata=
- 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
- Jg6OxFYd01z+a+oL
-Message-ID: <2ea8f27b-3c1b-7491-f02a-1473476fdcdd@oracle.com>
-Date:   Tue, 16 Apr 2019 11:44:22 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Tue, 16 Apr 2019 11:45:22 -0400
+Received: from callcc.thunk.org (guestnat-104-133-0-109.corp.google.com [104.133.0.109] (may be forged))
+        (authenticated bits=0)
+        (User authenticated as tytso@ATHENA.MIT.EDU)
+        by outgoing.mit.edu (8.14.7/8.12.4) with ESMTP id x3GFhn5A012294
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
+        Tue, 16 Apr 2019 11:43:51 -0400
+Received: by callcc.thunk.org (Postfix, from userid 15806)
+        id 1C364420497; Tue, 16 Apr 2019 11:43:49 -0400 (EDT)
+Date:   Tue, 16 Apr 2019 11:43:49 -0400
+From:   "Theodore Ts'o" <tytso@mit.edu>
+To:     David Laight <David.Laight@ACULAB.COM>
+Cc:     "'Peter Zijlstra'" <peterz@infradead.org>,
+        "Reshetova, Elena" <elena.reshetova@intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "luto@amacapital.net" <luto@amacapital.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "jannh@google.com" <jannh@google.com>,
+        "Perla, Enrico" <enrico.perla@intel.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
+Message-ID: <20190416154348.GB3004@mit.edu>
+Mail-Followup-To: Theodore Ts'o <tytso@mit.edu>,
+        David Laight <David.Laight@ACULAB.COM>,
+        'Peter Zijlstra' <peterz@infradead.org>,
+        "Reshetova, Elena" <elena.reshetova@intel.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        "luto@kernel.org" <luto@kernel.org>,
+        "luto@amacapital.net" <luto@amacapital.net>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "jannh@google.com" <jannh@google.com>,
+        "Perla, Enrico" <enrico.perla@intel.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+References: <20190415060918.3766-1-elena.reshetova@intel.com>
+ <20190415072535.GA51449@gmail.com>
+ <2236FBA76BA1254E88B949DDB74E612BA4C4F90F@IRSMSX102.ger.corp.intel.com>
+ <20190416073444.GC127769@gmail.com>
+ <2236FBA76BA1254E88B949DDB74E612BA4C51962@IRSMSX102.ger.corp.intel.com>
+ <20190416120822.GV11158@hirez.programming.kicks-ass.net>
+ <01914abbfc1a4053897d8d87a63e3411@AcuMS.aculab.com>
 MIME-Version: 1.0
-In-Reply-To: <20190416144950.37952-1-yuehaibing@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9228 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904160105
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9228 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904160105
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <01914abbfc1a4053897d8d87a63e3411@AcuMS.aculab.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/16/19 10:49 AM, Yue Haibing wrote:
-> From: YueHaibing <yuehaibing@huawei.com>
->
-> Fix sparse warnings:
->
-> drivers/xen/swiotlb-xen.c:489:1: warning:
->  symbol 'xen_swiotlb_sync_single_for_cpu' was not declared. Should it be static?
-> drivers/xen/swiotlb-xen.c:496:1: warning:
->  symbol 'xen_swiotlb_sync_single_for_device' was not declared. Should it be static?
->
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+So a couple of comments; I wasn't able to find the full context for
+this patch, and looking over the thread on kernel-hardening from late
+February still left me confused exactly what attacks this would help
+us protect against (since this isn't my area and I didn't take the
+time to read all of the links to slide decks, etc.)
 
+So I'm not going to comment on the utility of this patch, but just on
+the random number generator issues.  If you're only going to be using
+the low 8 bits of the output of get_prandom_u32(), even if two
+adjacent calls to get_prandom_u32() (for which only the low 8 bits are
+revealed) can be used to precisely identify which set of 2**120
+potential prandom states could have generate that pair of states, it's
+still going to take a lot of calls before you'd be able to figure out
+the prandom's internal state.
 
-I think latest patches from Christoph take care of this.
+It seems though the assumption that we're assuming the attacker has
+arbitrary ability to get the low bits of the stack, so *if* that's
+true, then eventually, you'd be able to get enough samples that you
+could reverse engineer the prandom state.  This could take long enough
+that the process will have gotten rescheduled to another CPU, and
+since the prandom state is per-cpu, that adds another wrinkle.
 
--boris
+> > So the argument against using TSC directly was that it might be easy to
+> > guess most of the TSC bits in timing attack. But IIRC there is fairly
+> > solid evidence that the lowest TSC bits are very hard to guess and might
+> > in fact be a very good random source.
+> > 
+> > So what one could do, is for each invocation mix in the low (2?) bits of
+> > the TSC into a per-cpu/task PRNG state. By always adding some fresh
+> > entropy it would become very hard indeed to predict the outcome, even
+> > for otherwise 'trivial' PRNGs.
+> 
+> You could just feed 8 bits of TSC into a CRC.  Or even xor the
+> entire TSC over a CRC state and then cycle it at least 6 bits.
+> Probably doesn't matter which CRC - but you may want one that is
+> cheap in software.  Even a 16bit CRC might be enough.
 
+Do we only care about x86 in this discussion?  Given "x86/entry/64",
+I'm guessing the answer we're not trying to worry about how to protect
+other architectures, like say ARM, that don't have a TSC?
 
-> ---
->  drivers/xen/swiotlb-xen.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
->
-> diff --git a/drivers/xen/swiotlb-xen.c b/drivers/xen/swiotlb-xen.c
-> index 877baf2..e741df4 100644
-> --- a/drivers/xen/swiotlb-xen.c
-> +++ b/drivers/xen/swiotlb-xen.c
-> @@ -485,14 +485,14 @@ xen_swiotlb_sync_single(struct device *hwdev, dma_addr_t dev_addr,
->  		xen_dma_sync_single_for_device(hwdev, dev_addr, size, dir);
->  }
->  
-> -void
-> +static void
->  xen_swiotlb_sync_single_for_cpu(struct device *hwdev, dma_addr_t dev_addr,
->  				size_t size, enum dma_data_direction dir)
->  {
->  	xen_swiotlb_sync_single(hwdev, dev_addr, size, dir, SYNC_FOR_CPU);
->  }
->  
-> -void
-> +static void
->  xen_swiotlb_sync_single_for_device(struct device *hwdev, dma_addr_t dev_addr,
->  				   size_t size, enum dma_data_direction dir)
->  {
+If we do care about architectures w/o a TSC, how much cost are we
+willing to pay as far as system call overhead is concerned?
 
+If it's x86 specific, maybe the simplest thing to do is to use RDRAND
+if it exists, and fall back to something involving a TSC and maybe
+prandom_u32 (assuming on how bad you think the stack leak is going to
+be) if RDRAND isn't available?
+
+					- Ted
