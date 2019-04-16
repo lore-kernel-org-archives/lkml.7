@@ -2,174 +2,227 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DCE7C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:20:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 26EFAC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 298E720821
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:20:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E0BD920821
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:20:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555402850;
+	bh=Fgqp50wzoMN/wPDFGd4giwXwxVX4UTerBJpnsEIC93U=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HHEGvGEfPkJg8RBLXefEW3mFaRQ4E4TNCAxqFrLSciPfVOXK5bSQnsOSYzUK4lQU4
+	 Ahv5ucK0USwGX8OMUY0e0HND15xsRrVuo0LlEY3Tjo9sncfjHiakByXh1V4x6qq741
+	 /le3JO45svWa80kbZsSU3Qeezoiyjx08awiNdI4U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728341AbfDPIU3 (ORCPT
+        id S1728628AbfDPIUt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 04:20:29 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:59814 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726346AbfDPIU3 (ORCPT
+        Tue, 16 Apr 2019 04:20:49 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33620 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726346AbfDPIUs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 04:20:29 -0400
-X-UUID: e6fa0494077c4f54bf6c241b6378b75d-20190416
-X-UUID: e6fa0494077c4f54bf6c241b6378b75d-20190416
-Received: from mtkexhb02.mediatek.inc [(172.21.101.103)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 843081156; Tue, 16 Apr 2019 16:20:22 +0800
-Received: from mtkcas08.mediatek.inc (172.21.101.126) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 16 Apr 2019 16:20:20 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas08.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 16 Apr 2019 16:20:20 +0800
-Message-ID: <1555402820.11519.6.camel@mtksdaap41>
-Subject: Re: [PATCH v2 20/25] drm/mediatek: add ovl0/ovl0_2l usecase
-From:   CK Hu <ck.hu@mediatek.com>
-To:     <yongqiang.niu@mediatek.com>
-CC:     <p.zabel@pengutronix.de>, <robh+dt@kernel.org>,
-        <matthias.bgg@gmail.com>, <airlied@linux.ie>,
-        <mark.rutland@arm.com>, <dri-devel@lists.freedesktop.org>,
-        <devicetree@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <Bibby.Hsieh@mediatek.com>,
-        <yt.shen@mediatek.com>
-Date:   Tue, 16 Apr 2019 16:20:20 +0800
-In-Reply-To: <1553667561-25447-21-git-send-email-yongqiang.niu@mediatek.com>
-References: <1553667561-25447-1-git-send-email-yongqiang.niu@mediatek.com>
-         <1553667561-25447-21-git-send-email-yongqiang.niu@mediatek.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Tue, 16 Apr 2019 04:20:48 -0400
+Received: by mail-wr1-f66.google.com with SMTP id q1so25733611wrp.0;
+        Tue, 16 Apr 2019 01:20:46 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=A/LQGl+57vb0DNBtCvhMhddw0SYTDbgAb9CDuz3nEDU=;
+        b=NilpAz68ovtaOg5hMP+g+4C35gPQIIEddgT4G7gXfJOOpIOAVhgUFKlTQgX/P6N9Kz
+         Tbm5U6/excnkBMMnujU+K4YWrmjLCzoUZxneDEqidY3Qw6uieZ0PPmigRhIB1BkqeUxH
+         iufG2ZdRDUg0Qm5dnINMud/DsR4K/o4ShwV6XW3nTaR+MYErxIBg3bDag8AL5eg4FRUh
+         71lkynoId1vHuRFI2UiC84pCcmtJvmFa6NwFSKMTFu7JMjzCRzgT8on1Y1kB8Hj8QalF
+         CpYhLa3QNoVXuveNoYToHhCNqCq5W5p8mJm6QAvjCoEuhNzjYfO3jfzV37NmP1imeOSs
+         OJ2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=A/LQGl+57vb0DNBtCvhMhddw0SYTDbgAb9CDuz3nEDU=;
+        b=h9P7zIgU9QFL0rOABAvR4CuDA0MqbF1xRhO/NR8H2pU47LJ4/8klWXOAHuOvm1i0pD
+         Psi+SctXCpn/4pe8K+1AHComfB8t3dDMTP4ee5Y2XQPL4kkXnSiQahe4XuhaR9hqhbgl
+         SruXAIohuwEQPjnKacmSbn/BG5vTYDGHIEYOV8Pum+F0ur8tbFcLobgYnBH28qkG5dsQ
+         K5tgyoGpdTM8iggHLh7/dSn1pobAJAu3eGVCiNN1s7NjGh6xcZt+9rZQLIYbYYucd3q4
+         WMPVhaKpKWhYmVMWn5arF21tWZRZsjuA2CpT2KIk3SHfDC02mSmxQ7jjk2w5VwDH0xKL
+         j0UQ==
+X-Gm-Message-State: APjAAAX+L9zIhMC0n4rSJCyVnzdCCEOmRcQNfVXiJ3/bQpc2o+CogioI
+        hRaXGQN0O7R/5OihJC4TEsQ=
+X-Google-Smtp-Source: APXvYqwcBUsxHe4rv7UNbhkmIk6U7n+81AnsNjGloqRrJau9mi+uFQln9B3dx06uI0X6l7DzFgLWXQ==
+X-Received: by 2002:adf:e9c1:: with SMTP id l1mr41120236wrn.270.1555402845910;
+        Tue, 16 Apr 2019 01:20:45 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id 4sm17756809wmi.14.2019.04.16.01.20.44
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 16 Apr 2019 01:20:45 -0700 (PDT)
+Date:   Tue, 16 Apr 2019 10:20:42 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     peterz@infradead.org, bp@alien8.de, drake@endlessm.com,
+        tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        torvalds@linux-foundation.org, jian-hong@endlessm.com,
+        matt@codeblueprint.co.uk, ard.biesheuvel@linaro.org, hpa@zytor.com,
+        linux-efi@vger.kernel.org, Len Brown <len.brown@intel.com>
+Cc:     linux-tip-commits@vger.kernel.org
+Subject: EFI reboot vs. ACPI reboot (was: Re: [tip:x86/urgent] x86/reboot,
+ efi: Use EFI reboot for Acer TravelMate X514-51T)
+Message-ID: <20190416082042.GA69717@gmail.com>
+References: <20190412080152.3718-1-jian-hong@endlessm.com>
+ <tip-0082517fa4bce073e7cf542633439f26538a14cc@git.kernel.org>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-TM-SNTS-SMTP: D68842F30C2C648042C0CC41937EAAE749373DA8BAE550AA7CE1E7C7F05966A42000:8
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <tip-0082517fa4bce073e7cf542633439f26538a14cc@git.kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Yongqiang:
 
-On Wed, 2019-03-27 at 14:19 +0800, yongqiang.niu@mediatek.com wrote:
-> From: Yongqiang Niu <yongqiang.niu@mediatek.com>
+(Cc:-ed EFI and ACPI folks.)
+
+* tip-bot for Jian-Hong Pan <tipbot@zytor.com> wrote:
+
+> Commit-ID:  0082517fa4bce073e7cf542633439f26538a14cc
+> Gitweb:     https://git.kernel.org/tip/0082517fa4bce073e7cf542633439f26538a14cc
+> Author:     Jian-Hong Pan <jian-hong@endlessm.com>
+> AuthorDate: Fri, 12 Apr 2019 16:01:53 +0800
+> Committer:  Ingo Molnar <mingo@kernel.org>
+> CommitDate: Tue, 16 Apr 2019 10:01:24 +0200
 > 
-> This patch add ovl0/ovl0_2l usecase
-> in ovl->ovl0_2l direct link usecase:
-> 1. the crtc support layer number will 4+2
-> 2. ovl0_2l background color input select ovl0 when crtc init
-> and disable it when crtc finish
-> 3. config ovl0_2l layer, if crtc config layer number is
-> bigger than ovl0 support layers(max is 4)
+> x86/reboot, efi: Use EFI reboot for Acer TravelMate X514-51T
 > 
-> Signed-off-by: Yongqiang Niu <yongqiang.niu@mediatek.com>
+> Upon reboot, the Acer TravelMate X514-51T laptop appears to complete the
+> shutdown process, but then it hangs in BIOS POST with a black screen.
+> 
+> The problem is intermittent - at some points it has appeared related to
+> Secure Boot settings or different kernel builds, but ultimately we have
+> not been able to identify the exact conditions that trigger the issue to
+> come and go.
+> 
+> Besides, the EFI mode cannot be disabled in the BIOS of this model.
+> 
+> However, after extensive testing, we observe that using the EFI reboot
+> method reliably avoids the issue in all cases.
+> 
+> So add a boot time quirk to use EFI reboot on such systems.
+> 
+> Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=203119
+> Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+> Signed-off-by: Daniel Drake <drake@endlessm.com>
+> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> Cc: Borislav Petkov <bp@alien8.de>
+> Cc: Linus Torvalds <torvalds@linux-foundation.org>
+> Cc: Matt Fleming <matt@codeblueprint.co.uk>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+> Cc: Thomas Gleixner <tglx@linutronix.de>
+> Cc: linux-efi@vger.kernel.org
+> Cc: linux@endlessm.com
+> Link: http://lkml.kernel.org/r/20190412080152.3718-1-jian-hong@endlessm.com
+> [ Fix !CONFIG_EFI build failure, clarify the code and the changelog a bit. ]
+> Signed-off-by: Ingo Molnar <mingo@kernel.org>
 > ---
->  drivers/gpu/drm/mediatek/mtk_drm_crtc.c | 38 +++++++++++++++++++++++++++++++--
->  1 file changed, 36 insertions(+), 2 deletions(-)
+>  arch/x86/kernel/reboot.c | 21 +++++++++++++++++++++
+>  include/linux/efi.h      |  7 ++++++-
+>  2 files changed, 27 insertions(+), 1 deletion(-)
 > 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> index 11e3404..0f97ee3 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_drm_crtc.c
-> @@ -283,6 +283,13 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
+> diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
+> index 725624b6c0c0..8fd3cedd9acc 100644
+> --- a/arch/x86/kernel/reboot.c
+> +++ b/arch/x86/kernel/reboot.c
+> @@ -81,6 +81,19 @@ static int __init set_bios_reboot(const struct dmi_system_id *d)
+>  	return 0;
+>  }
 >  
->  	for (i = 0; i < mtk_crtc->ddp_comp_nr; i++) {
->  		struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[i];
-> +		enum mtk_ddp_comp_id prev;
+> +/*
+> + * Some machines don't handle the default ACPI reboot method and
+> + * require the EFI reboot method:
+> + */
+> +static int __init set_efi_reboot(const struct dmi_system_id *d)
+> +{
+> +	if (reboot_type != BOOT_EFI && !efi_runtime_disabled()) {
+> +		reboot_type = BOOT_EFI;
+> +		pr_info("%s series board detected. Selecting EFI-method for reboot.\n", d->ident);
+> +	}
+> +	return 0;
+> +}
 > +
-> +		if (i > 0)
-> +			prev = mtk_crtc->ddp_comp[i - 1]->id;
-> +		else
-> +			prev = DDP_COMPONENT_ID_MAX;
-> +		mtk_ddp_comp_bgclr_in_on(comp, prev);
+>  void __noreturn machine_real_restart(unsigned int type)
+>  {
+>  	local_irq_disable();
+> @@ -166,6 +179,14 @@ static const struct dmi_system_id reboot_dmi_table[] __initconst = {
+>  			DMI_MATCH(DMI_PRODUCT_NAME, "AOA110"),
+>  		},
+>  	},
+> +	{	/* Handle reboot issue on Acer TravelMate X514-51T */
+> +		.callback = set_efi_reboot,
+> +		.ident = "Acer TravelMate X514-51T",
+> +		.matches = {
+> +			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
+> +			DMI_MATCH(DMI_PRODUCT_NAME, "TravelMate X514-51T"),
+> +		},
+> +	},
 >  
->  		mtk_ddp_comp_config(comp, width, height, vrefresh, bpc);
->  		mtk_ddp_comp_start(comp);
-> @@ -292,9 +299,18 @@ static int mtk_crtc_ddp_hw_init(struct mtk_drm_crtc *mtk_crtc)
->  	for (i = 0; i < mtk_crtc->layer_nr; i++) {
->  		struct drm_plane *plane = &mtk_crtc->planes[i];
->  		struct mtk_plane_state *plane_state;
-> +		struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
-> +		unsigned int comp_layer_nr = mtk_ddp_comp_layer_nr(comp);
-> +		unsigned int local_layer;
+>  	/* Apple */
+>  	{	/* Handle problems with rebooting on Apple MacBook5 */
+> diff --git a/include/linux/efi.h b/include/linux/efi.h
+> index 54357a258b35..6ebc2098cfe1 100644
+> --- a/include/linux/efi.h
+> +++ b/include/linux/efi.h
+> @@ -1611,7 +1611,12 @@ efi_status_t efi_setup_gop(efi_system_table_t *sys_table_arg,
+>  			   struct screen_info *si, efi_guid_t *proto,
+>  			   unsigned long size);
 >  
->  		plane_state = to_mtk_plane_state(plane->state);
-> -		mtk_ddp_comp_layer_config(mtk_crtc->ddp_comp[0], i,
+> -bool efi_runtime_disabled(void);
+> +#ifdef CONFIG_EFI
+> +extern bool efi_runtime_disabled(void);
+> +#else
+> +static inline bool efi_runtime_disabled(void) { return true; }
+> +#endif
 > +
-> +		if (i >= comp_layer_nr) {
-> +			comp = mtk_crtc->ddp_comp[1];
-> +			local_layer = i - comp_layer_nr;
-> +                } else
-> +			local_layer = i;
-> +		mtk_ddp_comp_layer_config(comp , local_layer,
->  					  plane_state);
->  	}
->  
-> @@ -320,6 +336,7 @@ static void mtk_crtc_ddp_hw_fini(struct mtk_drm_crtc *mtk_crtc)
->  					   mtk_crtc->ddp_comp[i]->id);
->  	mtk_disp_mutex_disable(mtk_crtc->mutex);
->  	for (i = 0; i < mtk_crtc->ddp_comp_nr - 1; i++) {
-> +		mtk_ddp_comp_bgclr_in_off(mtk_crtc->ddp_comp[i]);
->  		mtk_ddp_remove_comp_from_path(mtk_crtc->config_regs,
->  					      mtk_crtc->mmsys_reg_data,
->  					      mtk_crtc->ddp_comp[i]->id,
-> @@ -340,6 +357,8 @@ static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
->  	struct mtk_crtc_state *state = to_mtk_crtc_state(mtk_crtc->base.state);
->  	struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[0];
->  	unsigned int i;
-> +	unsigned int comp_layer_nr = mtk_ddp_comp_layer_nr(comp);
-> +	unsigned int local_layer;
->  
->  	/*
->  	 * TODO: instead of updating the registers here, we should prepare
-> @@ -362,7 +381,14 @@ static void mtk_crtc_ddp_config(struct drm_crtc *crtc)
->  			plane_state = to_mtk_plane_state(plane->state);
->  
->  			if (plane_state->pending.config) {
-> -				mtk_ddp_comp_layer_config(comp, i, plane_state);
-> +				if (i >= comp_layer_nr) {
-> +					comp = mtk_crtc->ddp_comp[1];
-> +					local_layer = i - comp_layer_nr;
-> +                                } else
-> +					local_layer = i;
-> +
-> +				mtk_ddp_comp_layer_config(comp, local_layer,
-> +							  plane_state);
->  				plane_state->pending.config = false;
->  			}
->  		}
-> @@ -604,6 +630,14 @@ int mtk_drm_crtc_create(struct drm_device *drm_dev,
->  	}
->  
->  	mtk_crtc->layer_nr = mtk_ddp_comp_layer_nr(mtk_crtc->ddp_comp[0]);
-> +        if (mtk_crtc->ddp_comp_nr > 1) {
-> +		struct mtk_ddp_comp *comp = mtk_crtc->ddp_comp[1];
-> +		enum mtk_ddp_comp_type comp_type;
-> +
-> +		comp_type = mtk_ddp_comp_get_type(comp->id);
-> +		if (comp_type == MTK_DISP_OVL || comp_type == MTK_DISP_OVL_2L)
 
-I think you need not to invent the function mtk_ddp_comp_get_type() to
-get the type. Only the component implementing bgclr_in_on() has the
-ability to the extend the ovl layer, so you could judge bgclr_in_on()
-exist or not to extend the ovl layer.
+1)
 
-Regards,
-CK
+Small build fix:
 
-> +			mtk_crtc->layer_nr += mtk_ddp_comp_layer_nr(comp);
-> +        }
->  	mtk_crtc->planes = devm_kcalloc(dev, mtk_crtc->layer_nr,
->  					sizeof(struct drm_plane),
->  					GFP_KERNEL);
+I added the efi.h bit to make it build on !CONFIG_EFI. Turns out 
+efi_runtime_disabled() was already used in !CONFIG_EFI code, but its 
+usage was masked by efi_reboot_required():
+
+        if (!rv && efi_reboot_required() && !efi_runtime_disabled())
 
 
+2)
+
+I wanted to get a second opinion from the EFI folks for this whole 
+concept. On x86 we default to ACPI reboot on modern systems, and we 
+default to EFI reboot on modern EFI systems, via the 
+efi_reboot_required() method which keys off on acpi_gbl_reduced_hardware 
+to create a barrier for older ACPI systems.
+
+It appears that Acer TravelMate X514-51T systems get marked as 
+'acpi_gbl_reduced_hardware' which enables ACPI-reboot, but they require 
+EFI-reboot.
+
+Should we perhaps re-think the boundary between EFI-reboot and 
+ACPI-reboot systems? I.e. if the EFI runtime is enabled, shouldn't we 
+just use the EFI reboot method?
+
+What does Windows do (which is really the standard test desktop PC makers 
+use) - do they use the EFI reboot method unconditionally, or do they have 
+more complex quirks as well?
+
+Anyway, I applied the patch because it solves a spurious reboot hang bug 
+on these systems, but wanted to raise this whole EFI reboot vs. ACPI 
+reboot issue, as quirks are generally not overly precise in identifying 
+the true scope of problems.
+
+Thanks,
+
+	Ingo
