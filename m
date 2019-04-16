@@ -4,43 +4,40 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 14053C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:28:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD591C282DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:28:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC2EF206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:28:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B4BD206B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:28:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="WPYT0BEa"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="YVS88fLy"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730567AbfDPT2t (ORCPT
+        id S1729063AbfDPT2z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 15:28:49 -0400
-Received: from hqemgate15.nvidia.com ([216.228.121.64]:6742 "EHLO
-        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728734AbfDPT2r (ORCPT
+        Tue, 16 Apr 2019 15:28:55 -0400
+Received: from hqemgate16.nvidia.com ([216.228.121.65]:2816 "EHLO
+        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727647AbfDPT2y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 15:28:47 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cb62cda0001>; Tue, 16 Apr 2019 12:28:26 -0700
+        Tue, 16 Apr 2019 15:28:54 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cb62cf30001>; Tue, 16 Apr 2019 12:28:51 -0700
 Received: from hqmail.nvidia.com ([172.20.161.6])
   by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 16 Apr 2019 12:28:46 -0700
+  Tue, 16 Apr 2019 12:28:54 -0700
 X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 16 Apr 2019 12:28:46 -0700
-Received: from HQMAIL110.nvidia.com (172.18.146.15) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 16 Apr
- 2019 19:28:46 +0000
-Received: from HQMAIL108.nvidia.com (172.18.146.13) by hqmail110.nvidia.com
- (172.18.146.15) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 16 Apr
- 2019 19:28:39 +0000
-Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL108.nvidia.com
- (172.18.146.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
- Transport; Tue, 16 Apr 2019 19:28:39 +0000
+        by hqpgpgate101.nvidia.com on Tue, 16 Apr 2019 12:28:54 -0700
+Received: from HQMAIL107.nvidia.com (172.20.187.13) by HQMAIL106.nvidia.com
+ (172.18.146.12) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 16 Apr
+ 2019 19:28:53 +0000
+Received: from hqnvemgw01.nvidia.com (172.20.150.20) by HQMAIL107.nvidia.com
+ (172.20.187.13) with Microsoft SMTP Server (TLS) id 15.0.1473.3 via Frontend
+ Transport; Tue, 16 Apr 2019 19:28:53 +0000
 Received: from vidyas-desktop.nvidia.com (Not Verified[10.24.37.38]) by hqnvemgw01.nvidia.com with Trustwave SEG (v7,5,8,10121)
-        id <B5cb62ce10000>; Tue, 16 Apr 2019 12:28:38 -0700
+        id <B5cb62cf00000>; Tue, 16 Apr 2019 12:28:53 -0700
 From:   Vidya Sagar <vidyas@nvidia.com>
 To:     <bhelgaas@google.com>, <robh+dt@kernel.org>,
         <mark.rutland@arm.com>, <thierry.reding@gmail.com>,
@@ -52,9 +49,9 @@ CC:     <mperttunen@nvidia.com>, <linux-pci@vger.kernel.org>,
         <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
         <mmaddireddy@nvidia.com>, <vidyas@nvidia.com>, <sagar.tv@gmail.com>
-Subject: [PATCH V3 08/16] PCI: dwc: Add support to enable CDM register check
-Date:   Wed, 17 Apr 2019 00:57:22 +0530
-Message-ID: <20190416192730.15681-9-vidyas@nvidia.com>
+Subject: [PATCH V3 10/16] dt-bindings: PCI: tegra: Add device tree support for T194
+Date:   Wed, 17 Apr 2019 00:57:24 +0530
+Message-ID: <20190416192730.15681-11-vidyas@nvidia.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190416192730.15681-1-vidyas@nvidia.com>
 References: <20190416192730.15681-1-vidyas@nvidia.com>
@@ -62,73 +59,245 @@ X-NVConfidentiality: public
 MIME-Version: 1.0
 Content-Type: text/plain
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1555442906; bh=Wo5s7qFXVF6yP4raZG59sUaja/C5ExrZQIki8sI6xLA=;
+        t=1555442931; bh=FVaYKy4qqO8PmcgTVxvhjGSCQ0JhbW3BEp2yROdHw+U=;
         h=X-PGP-Universal:From:To:CC:Subject:Date:Message-ID:X-Mailer:
          In-Reply-To:References:X-NVConfidentiality:MIME-Version:
          Content-Type;
-        b=WPYT0BEaKyXBakDHkBpcPJa1GAO7/CsVD4CSsTM8e/YYBHBwGpcY+GGtYhRSLWgoW
-         S3dDCciCPFRK9ON4+A27BnS/4i18zL4Wlf0qKGyFUzKaKj/gMZRqjCh9dZ3jg3cMXV
-         xVzSHhqJJO7fyKUk6UjfFtomChaxRgwQKFlZ76fAvB+5xv4mT9lDTUbqLphg4MtnU6
-         giNc+mh+J1sMkHgfgEZAbbLtkVV2bFoKA91264ydF5yX+DyPw/Sy2Iu0BKKRx42uq0
-         ppwDAWWRF7YWqt6ptFoKiHAHDdWkCmkQbVfUXQmi2BLSNjaoUdMP3388jtvL4DhOjN
-         S+m/bDTNrQmhQ==
+        b=YVS88fLy75gpdfz6yi7xMAQDKwUqo2zr4IHfbfgo5jfrKWmfAblHneyXdyh8kzRhe
+         mDFB2EG5cvqlv2Onmuiy/hA+nD5aCUHG9Ep6vDZuMq7bf0QFPifLfDSk29TK8M099Q
+         8aqMviBznpkdSJi/CGF7pVLYOln2Pg3/TKeQAO8i8sNGMfKkPrzP2ugUAxRsYJTCAA
+         A+9KFr/AUrdVVRWSmmhaedqzz66PGAhORo0mcdcqHIIHcky/2eJi8B+N5q0z651sf7
+         25tYxQdw1A+sMQoSxDzIiEaXZQOPWTg9ms/DCoDcUKusPXN0Cc6vVTSNKoeu085E7t
+         /eM38iGuWl26A==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add support to enable CDM (Configuration Dependent Module) register check
-for any data corruption based on the device-tree flag 'enable-cdm-check'.
+Add support for Tegra194 PCIe controllers. These controllers are based
+on Synopsys DesignWare core IP.
 
 Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
 ---
 Changes since [v2]:
-* Changed code and commit description to reflect change in flag from
-  'cdm-check' to 'enable-cdm-check'
+* Using only 'Cx' (x-being controller number) format to represent a controller
+* Changed to 'value: description' format where applicable
+* Changed 'nvidia,init-speed' to 'nvidia,init-link-speed'
+* Provided more documentation for 'nvidia,init-link-speed' property
+* Changed 'nvidia,pex-wake' to 'nvidia,wake-gpios'
 
 Changes since [v1]:
-* This is a new patch in v2 series
+* Added documentation for 'power-domains' property
+* Removed 'window1' and 'window2' properties
+* Removed '_clk' and '_rst' from clock and reset names
+* Dropped 'pcie' from phy-names
+* Added entry for BPMP-FW handle
+* Removed offsets for some of the registers and added them in code and would be pickedup based on
+  controller ID
+* Changed 'nvidia,max-speed' to 'max-link-speed' and is made as an optional
+* Changed 'nvidia,disable-clock-request' to 'supports-clkreq' with inverted operation
+* Added more documentation for 'nvidia,update-fc-fixup' property
+* Removed 'nvidia,enable-power-down' and 'nvidia,plat-gpios' properties
+* Added '-us' to all properties that represent time in microseconds
+* Moved P2U documentation to a separate file
 
- drivers/pci/controller/dwc/pcie-designware.c | 7 +++++++
- drivers/pci/controller/dwc/pcie-designware.h | 9 +++++++++
- 2 files changed, 16 insertions(+)
+ .../bindings/pci/nvidia,tegra194-pcie.txt     | 187 ++++++++++++++++++
+ 1 file changed, 187 insertions(+)
+ create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
 
-diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/controller/dwc/pcie-designware.c
-index 44c0ba078452..5b416f483426 100644
---- a/drivers/pci/controller/dwc/pcie-designware.c
-+++ b/drivers/pci/controller/dwc/pcie-designware.c
-@@ -503,4 +503,11 @@ void dw_pcie_setup(struct dw_pcie *pci)
- 		break;
- 	}
- 	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
+diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+new file mode 100644
+index 000000000000..208dff126108
+--- /dev/null
++++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
+@@ -0,0 +1,187 @@
++NVIDIA Tegra PCIe controller (Synopsys DesignWare Core based)
 +
-+	if (of_property_read_bool(np, "enable-cdm-check")) {
-+		val = dw_pcie_readl_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS);
-+		val |= PCIE_PL_CHK_REG_CHK_REG_CONTINUOUS |
-+		       PCIE_PL_CHK_REG_CHK_REG_START;
-+		dw_pcie_writel_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS, val);
-+	}
- }
-diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/controller/dwc/pcie-designware.h
-index fa41d675c48f..7f57fe019fbf 100644
---- a/drivers/pci/controller/dwc/pcie-designware.h
-+++ b/drivers/pci/controller/dwc/pcie-designware.h
-@@ -83,6 +83,15 @@
- #define PCIE_MISC_CONTROL_1_OFF		0x8BC
- #define PCIE_DBI_RO_WR_EN		BIT(0)
- 
-+#define PCIE_PL_CHK_REG_CONTROL_STATUS			0xB20
-+#define PCIE_PL_CHK_REG_CHK_REG_START			BIT(0)
-+#define PCIE_PL_CHK_REG_CHK_REG_CONTINUOUS		BIT(1)
-+#define PCIE_PL_CHK_REG_CHK_REG_COMPARISON_ERROR	BIT(16)
-+#define PCIE_PL_CHK_REG_CHK_REG_LOGIC_ERROR		BIT(17)
-+#define PCIE_PL_CHK_REG_CHK_REG_COMPLETE		BIT(18)
++This PCIe host controller is based on the Synopsis Designware PCIe IP
++and thus inherits all the common properties defined in designware-pcie.txt.
 +
-+#define PCIE_PL_CHK_REG_ERR_ADDR			0xB28
++Required properties:
++- compatible: For Tegra19x, must contain "nvidia,tegra194-pcie".
++- device_type: Must be "pci"
++- power-domains: A phandle to the node that controls power to the respective
++  PCIe controller and a specifier name for the PCIe controller. Following are
++  the specifiers for the different PCIe controllers
++    TEGRA194_POWER_DOMAIN_PCIEX8B: C0
++    TEGRA194_POWER_DOMAIN_PCIEX1A: C1
++    TEGRA194_POWER_DOMAIN_PCIEX1A: C2
++    TEGRA194_POWER_DOMAIN_PCIEX1A: C3
++    TEGRA194_POWER_DOMAIN_PCIEX4A: C4
++    TEGRA194_POWER_DOMAIN_PCIEX8A: C5
++  these specifiers are defined in
++  "include/dt-bindings/power/tegra194-powergate.h" file.
++- reg: A list of physical base address and length for each set of controller
++  registers. Must contain an entry for each entry in the reg-names property.
++- reg-names: Must include the following entries:
++  "appl": Controller's application logic registers
++  "config": As per the definition in designware-pcie.txt
++  "atu_dma": iATU and DMA registers. This is where the iATU (internal Address
++             Translation Unit) registers of the PCIe core are made available
++             fow SW access.
++  "dbi": The aperture where root port's own configuration registers are
++         available
++- interrupts: A list of interrupt outputs of the controller. Must contain an
++  entry for each entry in the interrupt-names property.
++- interrupt-names: Must include the following entries:
++  "intr": The Tegra interrupt that is asserted for controller interrupts
++  "msi": The Tegra interrupt that is asserted when an MSI is received
++- bus-range: Range of bus numbers associated with this controller
++- #address-cells: Address representation for root ports (must be 3)
++  - cell 0 specifies the bus and device numbers of the root port:
++    [23:16]: bus number
++    [15:11]: device number
++  - cell 1 denotes the upper 32 address bits and should be 0
++  - cell 2 contains the lower 32 address bits and is used to translate to the
++    CPU address space
++- #size-cells: Size representation for root ports (must be 2)
++- ranges: Describes the translation of addresses for root ports and standard
++  PCI regions. The entries must be 7 cells each, where the first three cells
++  correspond to the address as described for the #address-cells property
++  above, the fourth and fifth cells are for the physical CPU address to
++  translate to and the sixth and seventh cells are as described for the
++  #size-cells property above.
++  - Entries setup the mapping for the standard I/O, memory and
++    prefetchable PCI regions. The first cell determines the type of region
++    that is setup:
++    - 0x81000000: I/O memory region
++    - 0x82000000: non-prefetchable memory region
++    - 0xc2000000: prefetchable memory region
++  Please refer to the standard PCI bus binding document for a more detailed
++  explanation.
++- #interrupt-cells: Size representation for interrupts (must be 1)
++- interrupt-map-mask and interrupt-map: Standard PCI IRQ mapping properties
++  Please refer to the standard PCI bus binding document for a more detailed
++  explanation.
++- clocks: Must contain an entry for each entry in clock-names.
++  See ../clocks/clock-bindings.txt for details.
++- clock-names: Must include the following entries:
++  - core
++- resets: Must contain an entry for each entry in reset-names.
++  See ../reset/reset.txt for details.
++- reset-names: Must include the following entries:
++  - core_apb
++  - core
++- phys: Must contain a phandle to P2U PHY for each entry in phy-names.
++- phy-names: Must include an entry for each active lane.
++  "p2u-N": where N ranges from 0 to one less than the total number of lanes
++- nvidia,bpmp: Must contain a phandle to BPMP controller node.
++- nvidia,controller-id : Controller specific ID
++    0: C0
++    1: C1
++    2: C2
++    3: C3
++    4: C4
++    5: C5
++- vddio-pex-ctl-supply: Regulator supply for PCIe side band signals
 +
- /*
-  * iATU Unroll-specific register definitions
-  * From 4.80 core version the address translation will be made by unroll
++Optional properties:
++- max-link-speed: Limits controllers max speed to this value. For more info,
++    please refer to Documentation/devicetree/bindings/pci/pci.txt file.
++- nvidia,init-link-speed: Limits controllers init speed to this value. It means
++    that link is brought up to the speed specified by this property initially by
++    hardware (provided connected end point also supports that). Since the
++    controller continues to advertise maximum supported link speed set up
++    through max-link-speed property (Gen-4 if max-link-speed is not present) in
++    its configuration space, software can take link the desired speed at a later
++    point of time by spec defined speed change mechanism.
++    1: Gen-1 (2.5 GT/s)
++    2: Gen-2 (5 GT/s)
++    3: Gen-3 (8 GT/s)
++    4: Gen-4 (16 GT/s)
++- nvidia,disable-aspm-states: Controls advertisement of ASPM states
++    bit-0 to '1': Disables advertisement of ASPM-L0s
++    bit-1 to '1': Disables advertisement of ASPM-L1. This also disables
++                   advertisement of ASPM-L1.1 and ASPM-L1.2
++    bit-2 to '1': Disables advertisement of ASPM-L1.1
++    bit-3 to '1': Disables advertisement of ASPM-L1.2
++- supports-clkreq: Refer to Documentation/devicetree/bindings/pci/pci.txt
++- nvidia,update-fc-fixup: This is a boolean property and needs to be present to
++    improve perf when a platform is designed in such a way that it satisfies at
++    least one of the following conditions thereby enabling root port to
++    exchange optimum number of FC (Flow Control) credits with downstream devices
++    1. If C0/C4/C5 run at x1/x2 link widths (irrespective of speed and MPS)
++    2. If C0/C1/C2/C3/C4/C5 operate at their respective max link widths and
++       a) speed is Gen-2 and MPS is 256B
++       b) speed is >= Gen-3 with any MPS
++- "nvidia,wake-gpios": Add PEX_WAKE GPIO pin. It contains phandle to GPIO
++    controller followed by GPIO specifier.
++    Refer ../gpio/nvidia,tegra186-gpio.txt for more info.
++- "nvidia,aspm-cmrt-us": Common Mode Restore time for proper operation of ASPM
++   to be specified in microseconds
++- "nvidia,aspm-pwr-on-t-us": Power On time for proper operation of ASPM to be
++   specified in microseconds
++- "nvidia,aspm-l0s-entrance-latency-us": ASPM L0s entrance latency to be
++   specified in microseconds
++
++Examples:
++=========
++
++Tegra194:
++--------
++
++SoC DTSI:
++
++	pcie@14180000 {
++		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
++		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8B>;
++		reg = <0x00 0x14180000 0x0 0x00020000   /* appl registers (128K)      */
++		       0x00 0x38000000 0x0 0x00040000   /* configuration space (256K) */
++		       0x00 0x38040000 0x0 0x00040000>; /* iATU_DMA reg space (256K)  */
++		reg-names = "appl", "config", "atu_dma";
++
++		status = "disabled";
++
++		#address-cells = <3>;
++		#size-cells = <2>;
++		device_type = "pci";
++		num-lanes = <8>;
++		linux,pci-domain = <0>;
++
++		clocks = <&bpmp TEGRA194_CLK_PEX0_CORE_0>;
++		clock-names = "core";
++
++		resets = <&bpmp TEGRA194_RESET_PEX0_CORE_0_APB>,
++			 <&bpmp TEGRA194_RESET_PEX0_CORE_0>;
++		reset-names = "core_apb", "core";
++
++		interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,	/* controller interrupt */
++			     <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;	/* MSI interrupt */
++		interrupt-names = "intr", "msi";
++
++		#interrupt-cells = <1>;
++		interrupt-map-mask = <0 0 0 0>;
++		interrupt-map = <0 0 0 0 &gic 0 72 0x04>;
++
++		nvidia,bpmp = <&bpmp>;
++
++		supports-clkreq;
++		nvidia,disable-aspm-states = <0xf>;
++		nvidia,controller-id = <0>;
++		nvidia,aspm-cmrt-us = <60>;
++		nvidia,aspm-pwr-on-t-us = <20>;
++		nvidia,aspm-l0s-entrance-latency-us = <3>;
++
++		bus-range = <0x0 0xff>;
++		ranges = <0x81000000 0x0 0x38100000 0x0 0x38100000 0x0 0x00100000      /* downstream I/O (1MB) */
++			  0x82000000 0x0 0x38200000 0x0 0x38200000 0x0 0x01E00000      /* non-prefetchable memory (30MB) */
++			  0xc2000000 0x18 0x00000000 0x18 0x00000000 0x4 0x00000000>;  /* prefetchable memory (16GB) */
++	};
++
++Board DTS:
++
++	pcie@14180000 {
++		status = "okay";
++
++		vddio-pex-ctl-supply = <&vdd_1v8ao>;
++
++		phys = <&p2u_hsio_2>, <&p2u_hsio_3>, <&p2u_hsio_4>,
++		       <&p2u_hsio_5>;
++		phy-names = "p2u-0", "p2u-1", "p2u-2", "p2u-3";
++	};
 -- 
 2.17.1
 
