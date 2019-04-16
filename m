@@ -2,301 +2,233 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BFB5C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:27:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 409C1C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:29:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 240642073F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:27:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBBD52073F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:29:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="KdJaQVIr"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="bUpIHbP/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728740AbfDPI1M (ORCPT
+        id S1728588AbfDPI3s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 04:27:12 -0400
-Received: from mail-pg1-f194.google.com ([209.85.215.194]:33977 "EHLO
-        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727195AbfDPI1K (ORCPT
+        Tue, 16 Apr 2019 04:29:48 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:42336 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725840AbfDPI3s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 04:27:10 -0400
-Received: by mail-pg1-f194.google.com with SMTP id v12so9981317pgq.1;
-        Tue, 16 Apr 2019 01:27:10 -0700 (PDT)
+        Tue, 16 Apr 2019 04:29:48 -0400
+Received: by mail-ed1-f67.google.com with SMTP id x61so17101154edc.9;
+        Tue, 16 Apr 2019 01:29:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=uhAEkyyjkNnZbB0S3fzuTsDrada7JnXbrIJMvnrBSrI=;
-        b=KdJaQVIrbFlAZU1oWu6iHq0Mj3DGxdpIxkVS/fchNgdNzh3Y1bwSDEg6/AzfXu9oq/
-         pzd8ZWXE8MwHJg7agrQWGKDIUi5YMls3FRjjjKv3ZBE8bYtpPYrmGu817ttu6zg0Fu8l
-         5+2KToS1+o6eh61WVQmIY1xFxu94TRP5Qt6HEVftCPnlhstjeBmgQ0tzCqPGDFdm4Rvi
-         rQpbBGx90IRjwAHSe2q4lmaBJnnu7n6Ldyzai1B5zsB7WGyg6aI/22fSItPd6htsh9oV
-         CSk/IuoG2IvzwdZmbbvYR8Ti8ojzUqMumGzmSYaGVG0dTP+b3GL1k/mgcSuLG2XDMynk
-         fZhw==
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=CEse08fHyMQxCuUQxwb8gyqoLBoTiNc1R5Pfyn9T4XE=;
+        b=bUpIHbP/gZfsu1aHjOlCQIxGiOC6mvO7iWC/q9vccg5oYPicE68pHclDIUIoHbWq5w
+         EMG0QCRs8R0bmkJuYIjnx0j/0GKerPekIavWi6ld9HiKTuDUQUb3kLcreZmlcSoXtrSl
+         E/Qis6lVWUrE1nIOr0k9qhJiuHknynu7W/r+0KEPMpNdF9ALnFwL9jXOahTzxqNiXwPI
+         yLwWOx8q1H79qsM3YFY/0W+LlJ+ggySNJ7Z1oMOEjsyjCFE5vLq8qqhyW1K3SujVBTqD
+         TCFoL5nWw5oC+/Dpa1QCek+ArgJb4LoS+5YDI3szUXoCM4h12vnksLSDyb75oNE7d7nr
+         oBFw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=uhAEkyyjkNnZbB0S3fzuTsDrada7JnXbrIJMvnrBSrI=;
-        b=PyS+LACe5eU88Bx1Fh3ebvCcJ0AqCyg0Cl8TyrG+RyHg9rNbnj6G/1mNoDSIlK5uMc
-         VKGifa6XDh6r52t/bJxzAnlXkDiVBbDm5AYdkR3JASyULX+bUI6kN91D3SepTK2dwipI
-         1P5ksNFKrnrhguc95qp88q+yXiawYiqK3Qz3ytUlH79tKHd6Nl5SLRUNR6PrLhaV+t1T
-         yjI4MA76j7jay+IVCVV1U2ngcbLeAQJtP6fEWPlYqHU7QbEdAZiqC98KN8Vn50mxXjwM
-         0MrpI4c4yEHa8OIi35mtjO0xcJsD64GwH24wKrIqOCOqu0C4JVdB1o8L4AUM7L+PxFL0
-         9nGA==
-X-Gm-Message-State: APjAAAXZz2ieYXTnqcYViyiCCyW3qfEN1q8x14V8qA6EgE6GWXy3CZJs
-        v3nTy4Ivw69PFWFcg3EKVMa9y9cI
-X-Google-Smtp-Source: APXvYqyUSMKnqCZoxSun45hgeV9BOtz5Hrr2nbAqLEzPXmLGnCL+4AZHiwU177fj41velZ7pkqz13g==
-X-Received: by 2002:a65:6144:: with SMTP id o4mr74941023pgv.247.1555403229593;
-        Tue, 16 Apr 2019 01:27:09 -0700 (PDT)
-Received: from localhost (59-120-186-245.HINET-IP.hinet.net. [59.120.186.245])
-        by smtp.gmail.com with ESMTPSA id w1sm47325757pfw.101.2019.04.16.01.27.08
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 01:27:09 -0700 (PDT)
-From:   "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>
-X-Google-Original-From: "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
-To:     peter_hong@fintek.com.tw, johan@kernel.org,
-        gregkh@linuxfoundation.org
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>,
-        Oliver Neukum <oneukum@suse.com>
-Subject: [PATCH V7 1/4] USB: serial: f81232: clear overrun flag
-Date:   Tue, 16 Apr 2019 16:27:02 +0800
-Message-Id: <1555403225-3430-1-git-send-email-hpeter+linux_kernel@gmail.com>
-X-Mailer: git-send-email 2.7.4
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=CEse08fHyMQxCuUQxwb8gyqoLBoTiNc1R5Pfyn9T4XE=;
+        b=Ierlb5l9QmgCFkjtqlmbbf5kOcAP5bvopM7la6PF38tdBbmyOcaOGWBUrI4KQUWPW+
+         6Yw8wybn+iUCvU+setDM8KM5gQX/TIOJcxqA9lDKmNlxmp0wYr8tyILANNZEJdcwJPZt
+         8RkAaClW/v3fDtt8Ex6m+vEGEM9yP7uGp2EngT5oH8oduAxKf+yrxlVjLD/h+CirED3J
+         Xb5DytFEx4Wt9KUlZGgU2xBLWqEkjwYpZ2Sr1I8ZNe9N3PfWYQrasfnJxltM2gZGIVHV
+         IG3eGqnIwCEL29Bzu/jNoBy/FSEnP7SYR8bcS5MLXlUtByQqiNbUprtJb46Y6QBb1kwD
+         31WA==
+X-Gm-Message-State: APjAAAVEoz0nwULWzRtOSH8rXInNWCGDJFP4XYBVb6ToqgBzXQ9UDpqh
+        dF1T5bP5Zi4/7xhWR8LbQy4=
+X-Google-Smtp-Source: APXvYqzu180CZUQTAc2vOR5wpNHhhrrv9tyobty2T7SY8tV4p10RAtoZNL+eQogLFjaEqwhBjOiHfA==
+X-Received: by 2002:a17:906:1d0f:: with SMTP id n15mr31831120ejh.83.1555403384903;
+        Tue, 16 Apr 2019 01:29:44 -0700 (PDT)
+Received: from ziggy.stardust ([37.223.141.112])
+        by smtp.gmail.com with ESMTPSA id a9sm3750004edt.93.2019.04.16.01.29.43
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Apr 2019 01:29:44 -0700 (PDT)
+Subject: Re: [PATCH v9] arm64: dts: Add Mediatek SoC MT8183 and evaluation
+ board dts and Makefile
+To:     Erin Lo <erin.lo@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, mars.cheng@mediatek.com,
+        eddie.huang@mediatek.com, Ben Ho <Ben.Ho@mediatek.com>,
+        Seiya Wang <seiya.wang@mediatek.com>,
+        Weiyi Lu <weiyi.lu@mediatek.com>,
+        Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
+        Stephen Boyd <sboyd@codeaurora.org>
+References: <1552898552-13045-2-git-send-email-erin.lo@mediatek.com>
+ <201903190247.QZDwfpLQ%lkp@intel.com>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ jrHWeQEI2ucSKsNa8FllDmG/fQ==
+Message-ID: <135d7e3a-d5a3-0f13-05c9-4a8ec0524256@gmail.com>
+Date:   Tue, 16 Apr 2019 10:29:42 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <201903190247.QZDwfpLQ%lkp@intel.com>
+Content-Type: text/plain; charset=windows-1252
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The F81232 will report data and LSR with bulk like following format:
-bulk-in data: [LSR(1Byte)+DATA(1Byte)][LSR(1Byte)+DATA(1Byte)]...
 
-LSR will auto clear frame/parity/break error flag when reading by H/W,
-but overrrun will only cleared when reading LSR. So this patch add a
-worker to read LSR when overrun and flush the worker on close() &
-suspend().
 
-Cc: Oliver Neukum <oneukum@suse.com>
-Signed-off-by: Ji-Ze Hong (Peter Hong) <hpeter+linux_kernel@gmail.com>
----
-v7:
-	1: Remove serial->suspending check
-	2: Add port priv is_port_open to save port open state. We'll
-	   register interrupt-in urb in f81232_resume() when port is
-	   opened.
-	3: Using usb_kill_urb for read/interrupt urb to ensure urb
-	   stopped.
+On 18/03/2019 19:42, kbuild test robot wrote:
+> Hi Erin,
+> 
+> Thank you for the patch! Yet something to improve:
+> 
+> [auto build test ERROR on robh/for-next]
+> [also build test ERROR on v5.1-rc1 next-20190318]
+> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+> 
+> url:    https://github.com/0day-ci/linux/commits/Erin-Lo/arm64-dts-Add-Mediatek-SoC-MT8183-and-evaluation-board-dts-and-Makefile/20190318-170422
+> base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+> config: arm64-allyesconfig (attached as .config)
+> compiler: aarch64-linux-gnu-gcc (Debian 7.2.0-11) 7.2.0
+> reproduce:
+>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>         chmod +x ~/bin/make.cross
+>         # save the attached .config to linux build tree
+>         GCC_VERSION=7.2.0 make.cross ARCH=arm64 
+> 
+> All errors (new ones prefixed by >>):
+> 
+>    In file included from arch/arm64/boot/dts/mediatek/mt8183-evb.dts:9:0:
+>>> arch/arm64/boot/dts/mediatek/mt8183.dtsi:8:10: fatal error: dt-bindings/clock/mt8183-clk.h: No such file or directory
+>     #include <dt-bindings/clock/mt8183-clk.h>
+>              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>    compilation terminated.
+> 
+> vim +8 arch/arm64/boot/dts/mediatek/mt8183.dtsi
+> 
+>    > 8	#include <dt-bindings/clock/mt8183-clk.h>
+>      9	#include <dt-bindings/interrupt-controller/arm-gic.h>
+>     10	#include <dt-bindings/interrupt-controller/irq.h>
+>     11	
+> 
 
-V6:
-	1: Add deferred_lsr_work_needed to re-trigger when f81232_resume()
+Stephen queued the corresponding patch for v5.2.
+I propose we wait for v5.2-rc1 and then apply the basic support and the others
+based on this one.
 
-v5:
-	1: Source code base revert to v3 and remove all v4 changes.
-	2: Add serial->suspending check in f81232_process_read_urb()
-	   before schedule_work(&priv->lsr_work) to avoid race condition.
+Erin: There are may mt8183 dts patches floating around that depend on this or
+more patches. Can you coordinate with your colleagues to resend them as a
+series? Then it will be easier for me to take them for v5.3, as some have
+dependencies on other series etc.
 
-v4:
-	1: Add serial->suspending check in f81232_lsr_worker() to avoid
-	   re-trigger
-	2: Add port_priv-lsr_work_resched to re-trigger LSR worker
-
-v3:
-	1: Add flush_work(&port_priv->lsr_work) in f81232_suspend().
-
-v2:
-	1: Add flush_work(&port_priv->lsr_work) in f81232_close().
-
- drivers/usb/serial/f81232.c | 97 +++++++++++++++++++++++++++++++++++++++++----
- 1 file changed, 89 insertions(+), 8 deletions(-)
-
-diff --git a/drivers/usb/serial/f81232.c b/drivers/usb/serial/f81232.c
-index 0dcdcb4b2cde..18d3fcf2907a 100644
---- a/drivers/usb/serial/f81232.c
-+++ b/drivers/usb/serial/f81232.c
-@@ -41,12 +41,15 @@ MODULE_DEVICE_TABLE(usb, id_table);
- #define FIFO_CONTROL_REGISTER		(0x02 + SERIAL_BASE_ADDRESS)
- #define LINE_CONTROL_REGISTER		(0x03 + SERIAL_BASE_ADDRESS)
- #define MODEM_CONTROL_REGISTER		(0x04 + SERIAL_BASE_ADDRESS)
-+#define LINE_STATUS_REGISTER		(0x05 + SERIAL_BASE_ADDRESS)
- #define MODEM_STATUS_REGISTER		(0x06 + SERIAL_BASE_ADDRESS)
- 
- struct f81232_private {
- 	struct mutex lock;
- 	u8 modem_control;
- 	u8 modem_status;
-+	bool is_port_open;
-+	struct work_struct lsr_work;
- 	struct work_struct interrupt_work;
- 	struct usb_serial_port *port;
- };
-@@ -282,6 +285,7 @@ static void f81232_read_int_callback(struct urb *urb)
- static void f81232_process_read_urb(struct urb *urb)
- {
- 	struct usb_serial_port *port = urb->context;
-+	struct f81232_private *priv = usb_get_serial_port_data(port);
- 	unsigned char *data = urb->transfer_buffer;
- 	char tty_flag;
- 	unsigned int i;
-@@ -315,6 +319,7 @@ static void f81232_process_read_urb(struct urb *urb)
- 
- 			if (lsr & UART_LSR_OE) {
- 				port->icount.overrun++;
-+				schedule_work(&priv->lsr_work);
- 				tty_insert_flip_char(&port->port, 0,
- 						TTY_OVERRUN);
- 			}
-@@ -528,37 +533,52 @@ static int f81232_tiocmset(struct tty_struct *tty,
- 
- static int f81232_open(struct tty_struct *tty, struct usb_serial_port *port)
- {
--	int result;
--
--	result = f81232_port_enable(port);
--	if (result)
--		return result;
-+	struct f81232_private *port_priv = usb_get_serial_port_data(port);
-+	int result = 0;
- 
- 	/* Setup termios */
- 	if (tty)
- 		f81232_set_termios(tty, port, NULL);
- 
-+	mutex_lock(&port_priv->lock);
-+
-+	result = f81232_port_enable(port);
-+	if (result)
-+		goto end;
-+
- 	result = usb_submit_urb(port->interrupt_in_urb, GFP_KERNEL);
- 	if (result) {
- 		dev_err(&port->dev, "%s - failed submitting interrupt urb,"
- 			" error %d\n", __func__, result);
--		return result;
-+		goto end;
- 	}
- 
- 	result = usb_serial_generic_open(tty, port);
- 	if (result) {
- 		usb_kill_urb(port->interrupt_in_urb);
--		return result;
-+		goto end;
- 	}
- 
--	return 0;
-+	port_priv->is_port_open = true;
-+end:
-+	mutex_unlock(&port_priv->lock);
-+
-+	return result;
- }
- 
- static void f81232_close(struct usb_serial_port *port)
- {
-+	struct f81232_private *port_priv = usb_get_serial_port_data(port);
-+
-+	mutex_lock(&port_priv->lock);
-+
- 	f81232_port_disable(port);
- 	usb_serial_generic_close(port);
- 	usb_kill_urb(port->interrupt_in_urb);
-+	flush_work(&port_priv->lsr_work);
-+	port_priv->is_port_open = false;
-+
-+	mutex_unlock(&port_priv->lock);
- }
- 
- static void f81232_dtr_rts(struct usb_serial_port *port, int on)
-@@ -603,6 +623,21 @@ static void  f81232_interrupt_work(struct work_struct *work)
- 	f81232_read_msr(priv->port);
- }
- 
-+static void f81232_lsr_worker(struct work_struct *work)
-+{
-+	struct f81232_private *priv;
-+	struct usb_serial_port *port;
-+	int status;
-+	u8 tmp;
-+
-+	priv = container_of(work, struct f81232_private, lsr_work);
-+	port = priv->port;
-+
-+	status = f81232_get_register(port, LINE_STATUS_REGISTER, &tmp);
-+	if (status)
-+		dev_warn(&port->dev, "read LSR failed: %d\n", status);
-+}
-+
- static int f81232_port_probe(struct usb_serial_port *port)
- {
- 	struct f81232_private *priv;
-@@ -613,6 +648,7 @@ static int f81232_port_probe(struct usb_serial_port *port)
- 
- 	mutex_init(&priv->lock);
- 	INIT_WORK(&priv->interrupt_work,  f81232_interrupt_work);
-+	INIT_WORK(&priv->lsr_work, f81232_lsr_worker);
- 
- 	usb_set_serial_port_data(port, priv);
- 
-@@ -632,6 +668,49 @@ static int f81232_port_remove(struct usb_serial_port *port)
- 	return 0;
- }
- 
-+static int f81232_suspend(struct usb_serial *serial, pm_message_t message)
-+{
-+	struct usb_serial_port *port = serial->port[0];
-+	struct f81232_private *port_priv = usb_get_serial_port_data(port);
-+	int i;
-+
-+	for (i = 0; i < ARRAY_SIZE(port->read_urbs); ++i)
-+		usb_kill_urb(port->read_urbs[i]);
-+
-+	usb_kill_urb(port->interrupt_in_urb);
-+
-+	if (port_priv)
-+		flush_work(&port_priv->lsr_work);
-+
-+	return 0;
-+}
-+
-+static int f81232_resume(struct usb_serial *serial)
-+{
-+	struct usb_serial_port *port = serial->port[0];
-+	struct f81232_private *port_priv = usb_get_serial_port_data(port);
-+	int result = 0;
-+
-+	mutex_lock(&port_priv->lock);
-+
-+	if (port_priv && port_priv->is_port_open) {
-+		result = usb_submit_urb(port->interrupt_in_urb, GFP_KERNEL);
-+		if (result) {
-+			dev_err(&port->dev,
-+					"%s: submit interrupt urb failed: %d",
-+					__func__, result);
-+			goto end;
-+		}
-+	}
-+
-+	result = usb_serial_generic_resume(serial);
-+
-+end:
-+	mutex_unlock(&port_priv->lock);
-+
-+	return result;
-+}
-+
- static struct usb_serial_driver f81232_device = {
- 	.driver = {
- 		.owner =	THIS_MODULE,
-@@ -655,6 +734,8 @@ static struct usb_serial_driver f81232_device = {
- 	.read_int_callback =	f81232_read_int_callback,
- 	.port_probe =		f81232_port_probe,
- 	.port_remove =		f81232_port_remove,
-+	.suspend =		f81232_suspend,
-+	.resume =		f81232_resume,
- };
- 
- static struct usb_serial_driver * const serial_drivers[] = {
--- 
-2.7.4
-
+Thanks a lot.
+Matthias
