@@ -2,87 +2,93 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7D5DC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 21:39:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DC16AC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 21:39:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6C26B2075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 21:39:09 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555450749;
-	bh=2Mahu5HQEdZA1joMA/Et56WMDKQSYhLB4bMyLQv181w=;
-	h=Subject:To:Cc:References:From:Date:In-Reply-To:List-ID:From;
-	b=vU/IGukijpeTnWhUUprAiFni/RoobRw9Qi4+L31l01BbxyQVzuPKLOJY65bpyOolK
-	 GzNRcig4sTeMNpQEWEOVHTYYb3IPAXLyUNBa0QIlb71/wmpM12KUl1HgwwT/4JvUqJ
-	 QL7PxWwdYITH2sOYNr6S2YjyW+U/gOVUh8DjSuCo=
+	by mail.kernel.org (Postfix) with ESMTP id A608C20684
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 21:39:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730078AbfDPVjI (ORCPT
+        id S1730419AbfDPVjc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 17:39:08 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49890 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726986AbfDPVjH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 17:39:07 -0400
-Received: from [192.168.1.112] (c-24-9-64-241.hsd1.co.comcast.net [24.9.64.241])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 8F7B320684;
-        Tue, 16 Apr 2019 21:39:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555450747;
-        bh=2Mahu5HQEdZA1joMA/Et56WMDKQSYhLB4bMyLQv181w=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=aq26KcWCyIqBScqnvALWF5Cu1rKVt1uQl64sgK1bT/5aqRvqV20xhJhNfnPRJ3J4b
-         F5J1NafmdoynqvPUmTRG+AO6VCe/TJQZKdZCCj78poI/SDFufgwxEG3hlKyRStsd87
-         G9L2G3JnVUSH0/mtB5IVwQotsc1Z/WSlcUqFIn0U=
-Subject: Re: [PATCH 4.9 00/76] 4.9.169-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        linux@roeck-us.net, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org, shuah <shuah@kernel.org>
-References: <20190415183707.712011689@linuxfoundation.org>
-From:   shuah <shuah@kernel.org>
-Message-ID: <15ee3269-0b12-c5b4-a566-af8c9f831c8e@kernel.org>
-Date:   Tue, 16 Apr 2019 15:39:05 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 16 Apr 2019 17:39:32 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:35292 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726986AbfDPVjb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 17:39:31 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id C98EE15A2;
+        Tue, 16 Apr 2019 14:39:30 -0700 (PDT)
+Received: from brain-police (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6781C3F59C;
+        Tue, 16 Apr 2019 14:39:24 -0700 (PDT)
+Date:   Tue, 16 Apr 2019 22:39:21 +0100
+From:   Will Deacon <will.deacon@arm.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Josh Poimboeuf <jpoimboe@redhat.com>, linux-kernel@vger.kernel.org,
+        x86@kernel.org, Ingo Molnar <mingo@kernel.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Jiri Kosina <jikos@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Jon Masters <jcm@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-s390@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Steven Price <steven.price@arm.com>,
+        Phil Auld <pauld@redhat.com>
+Subject: Re: [PATCH v2 5/5] arm64/speculation: Support 'mitigations=' cmdline
+ option
+Message-ID: <20190416213920.GC11724@brain-police>
+References: <cover.1555085500.git.jpoimboe@redhat.com>
+ <24039e1370ed57e8075730c0b88c505afd9e0ab7.1555085500.git.jpoimboe@redhat.com>
+ <alpine.DEB.2.21.1904162124020.1780@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-In-Reply-To: <20190415183707.712011689@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1904162124020.1780@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/15/19 12:43 PM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.9.169 release.
-> There are 76 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On Tue, Apr 16, 2019 at 09:26:13PM +0200, Thomas Gleixner wrote:
+> On Fri, 12 Apr 2019, Josh Poimboeuf wrote:
 > 
-> Responses should be made by Wed Apr 17 18:36:37 UTC 2019.
-> Anything received after that time might be too late.
+> > Configure arm64 runtime CPU speculation bug mitigations in accordance
+> > with the 'mitigations=' cmdline option.  This affects Meltdown, Spectre
+> > v2, and Speculative Store Bypass.
+> > 
+> > The default behavior is unchanged.
+> > 
+> > Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> > ---
+> > NOTE: This is based on top of Jeremy Linton's patches:
+> >       https://lkml.kernel.org/r/20190410231237.52506-1-jeremy.linton@arm.com
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-4.9.169-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-4.9.y
-> and the diffstat can be found below.
-> 
-> thanks,
-> 
-> greg k-h
-> 
+> So I keep that out and we have to revisit that once the ARM64 stuff hits a
+> tree, right? I can have a branch with just the 4 first patches applied
+> which ARM64 folks can pull in when they apply Jeremy's patches before te
+> merge window.
 
-Compiled and booted on my test system. No dmesg regressions.
+Yes, that would work for us, cheers. I should get to Jeremy's latest version
+next week and I'm certainly planning to get them queued up for 5.2.
 
-thanks,
--- Shuah
-
+Will
