@@ -2,92 +2,95 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 724EEC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84089C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:55:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4706A2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:55:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 584232087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:55:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="haQ6q1Ao"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730467AbfDPRza (ORCPT
+        id S1730667AbfDPRzh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 13:55:30 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:57710 "EHLO
-        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730364AbfDPRxu (ORCPT
+        Tue, 16 Apr 2019 13:55:37 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:36008 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730382AbfDPRz1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 13:53:50 -0400
-Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hGSHE-0005aB-KI; Tue, 16 Apr 2019 17:53:48 +0000
-From:   Al Viro <viro@ZenIV.linux.org.uk>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [RFC PATCH 57/62] overlayfs: make use of ->free_inode()
-Date:   Tue, 16 Apr 2019 18:53:35 +0100
-Message-Id: <20190416175340.21068-57-viro@ZenIV.linux.org.uk>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190416175340.21068-1-viro@ZenIV.linux.org.uk>
-References: <20190416174900.GT2217@ZenIV.linux.org.uk>
- <20190416175340.21068-1-viro@ZenIV.linux.org.uk>
+        Tue, 16 Apr 2019 13:55:27 -0400
+Received: by mail-oi1-f194.google.com with SMTP id l203so17759911oia.3
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 10:55:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=android.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Rggm1Kxj05oLW+KL1Dix3OtkMuVAkLzMX1FlGZIH8ZA=;
+        b=haQ6q1Ao7eAttMhzROptXuOk6UCHBp9JLawViZNxngHGb80kOGxmW1IxoEoBYKyKNO
+         T3EB46aTrzEyWNgQu8u70h3DVUo3HU+qbEtJT7oYTiQ25S7LxDQ5ulOd3eVd+tVrx004
+         1RYHxryN4wfRutFTo9bd+68a1AGDfMLEeZCxYlYtCEx9xoTQ7+EcYxHy1ho59/pdXj1P
+         pC+Me5o62B9Za8dL1uv89zGHJ6tozpALgcDBo7mgQaZPzKe2n4TVkbn1lin7illoHKgW
+         kbU2yYdCqzMq4sgW9yVmYOPNqS+aoSXAlVoBIEBzz+6nnIxfwUecxP6A93VPAb+tcDin
+         NGKA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Rggm1Kxj05oLW+KL1Dix3OtkMuVAkLzMX1FlGZIH8ZA=;
+        b=ZCg4G9PN1YTOlM2rb5cJj+FjkWrN1m0H4hoFHV/ohQA2WqRY8TKHwRc5CXTzyloqgq
+         OUbQTmKQVFYSSAoCxFKtR/oyYJmT/D0INLNpI5AdKwYIgwuhSlVL6za62zc7Z/tnhc1d
+         bADpjZzyk2gDq3zk4pKP+bpszteTN3I8cyVhoUkvz0z0I0PCp10EJKS7hJhM1or1g62Q
+         vUusRFIj2PrfkFeRLGUuUeMmlrkYKf9xQynb2JNUaHIDNx8Aja/csIQwieCi2glXaJD6
+         5sLtR1vjdF+tFnRWNoSatFcaaFb44Xk2ZQ4ZbFal6LmG9z+BjOpamfaOKl9nKOga6n/7
+         1DwQ==
+X-Gm-Message-State: APjAAAXBT5rPj8KQ+gv0CVNha8X7aOOI28nJqcEW0RMVmNu/mCjvp5Q6
+        28QppdxkspCpn02RgXzMvIBiST53ZtBMfmVzGHelIA==
+X-Google-Smtp-Source: APXvYqyYFZypH449B/ExTKV2GpUf5HF/8jTIQoEX4L0LNHe2Jk3bL0Ar20kmaYYm5163IdcoJFOJ9qTmlHiWTeEVG2Q=
+X-Received: by 2002:aca:cc8c:: with SMTP id c134mr25211836oig.172.1555437326583;
+ Tue, 16 Apr 2019 10:55:26 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190415142229.GA14330@linux-8ccs> <20190415181833.101222-1-trong@android.com>
+ <20190416152144.GA1419@linux-8ccs>
+In-Reply-To: <20190416152144.GA1419@linux-8ccs>
+From:   Tri Vo <trong@android.com>
+Date:   Tue, 16 Apr 2019 10:55:15 -0700
+Message-ID: <CANA+-vDxLy7A7aEDsHS4y7ujwN5atzkGrVwSvDs-U3Oa_5oLFg@mail.gmail.com>
+Subject: Re: [PATCH v2] module: add stubs for within_module functions
+To:     Jessica Yu <jeyu@kernel.org>
+Cc:     Nick Desaulniers <ndesaulniers@google.com>,
+        Greg Hackmann <ghackmann@android.com>, linux-mm@kvack.org,
+        kbuild-all@01.org, Randy Dunlap <rdunlap@infradead.org>,
+        kbuild test robot <lkp@intel.com>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Petri Gynther <pgynther@google.com>, willy@infradead.org,
+        Peter Oberparleiter <oberpar@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Al Viro <viro@zeniv.linux.org.uk>
+On Tue, Apr 16, 2019 at 8:21 AM Jessica Yu <jeyu@kernel.org> wrote:
+>
+> +++ Tri Vo [15/04/19 11:18 -0700]:
+> >Provide stubs for within_module_core(), within_module_init(), and
+> >within_module() to prevent build errors when !CONFIG_MODULES.
+> >
+> >v2:
+> >- Generalized commit message, as per Jessica.
+> >- Stubs for within_module_core() and within_module_init(), as per Nick.
+> >
+> >Suggested-by: Matthew Wilcox <willy@infradead.org>
+> >Reported-by: Randy Dunlap <rdunlap@infradead.org>
+> >Reported-by: kbuild test robot <lkp@intel.com>
+> >Link: https://marc.info/?l=linux-mm&m=155384681109231&w=2
+> >Signed-off-by: Tri Vo <trong@android.com>
+>
+> Applied, thanks!
 
-synchronous parts are left in ->destroy_inode()
-
-Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
----
- fs/overlayfs/super.c | 13 ++++++-------
- 1 file changed, 6 insertions(+), 7 deletions(-)
-
-diff --git a/fs/overlayfs/super.c b/fs/overlayfs/super.c
-index 0116735cc321..5ec4fc2f5d7e 100644
---- a/fs/overlayfs/super.c
-+++ b/fs/overlayfs/super.c
-@@ -190,11 +190,13 @@ static struct inode *ovl_alloc_inode(struct super_block *sb)
- 	return &oi->vfs_inode;
- }
- 
--static void ovl_i_callback(struct rcu_head *head)
-+static void ovl_free_inode(struct inode *inode)
- {
--	struct inode *inode = container_of(head, struct inode, i_rcu);
-+	struct ovl_inode *oi = OVL_I(inode);
- 
--	kmem_cache_free(ovl_inode_cachep, OVL_I(inode));
-+	kfree(oi->redirect);
-+	mutex_destroy(&oi->lock);
-+	kmem_cache_free(ovl_inode_cachep, oi);
- }
- 
- static void ovl_destroy_inode(struct inode *inode)
-@@ -207,10 +209,6 @@ static void ovl_destroy_inode(struct inode *inode)
- 		ovl_dir_cache_free(inode);
- 	else
- 		iput(oi->lowerdata);
--	kfree(oi->redirect);
--	mutex_destroy(&oi->lock);
--
--	call_rcu(&inode->i_rcu, ovl_i_callback);
- }
- 
- static void ovl_free_fs(struct ovl_fs *ofs)
-@@ -377,6 +375,7 @@ static int ovl_remount(struct super_block *sb, int *flags, char *data)
- 
- static const struct super_operations ovl_super_operations = {
- 	.alloc_inode	= ovl_alloc_inode,
-+	.free_inode	= ovl_free_inode,
- 	.destroy_inode	= ovl_destroy_inode,
- 	.drop_inode	= generic_delete_inode,
- 	.put_super	= ovl_put_super,
--- 
-2.11.0
-
+Thank you!
