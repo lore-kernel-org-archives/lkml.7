@@ -4,51 +4,49 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F63DC282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:32:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93F39C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:33:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA1F32073F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:32:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 685D52077C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:33:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729193AbfDPLcp (ORCPT
+        id S1729197AbfDPLdZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 07:32:45 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:58699 "EHLO
+        Tue, 16 Apr 2019 07:33:25 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:46341 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726408AbfDPLco (ORCPT
+        with ESMTP id S1726241AbfDPLdY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 07:32:44 -0400
+        Tue, 16 Apr 2019 07:33:24 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3GBWNWE3427793
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3GBX2Ht3427966
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 16 Apr 2019 04:32:23 -0700
+        Tue, 16 Apr 2019 04:33:02 -0700
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3GBWNE13427790;
-        Tue, 16 Apr 2019 04:32:23 -0700
-Date:   Tue, 16 Apr 2019 04:32:23 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3GBX2pR3427953;
+        Tue, 16 Apr 2019 04:33:02 -0700
+Date:   Tue, 16 Apr 2019 04:33:02 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Kan Liang <tipbot@zytor.com>
-Message-ID: <tip-9d5dcc93a6ddfc78124f006ccd3637ce070ef2fc@git.kernel.org>
-Cc:     eranian@google.com, alexander.shishkin@linux.intel.com,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        torvalds@linux-foundation.org, hpa@zytor.com, acme@redhat.com,
-        peterz@infradead.org, stable@vger.kernel.org, jolsa@redhat.com,
-        kan.liang@linux.intel.com, vincent.weaver@maine.edu,
-        mingo@kernel.org
-Reply-To: eranian@google.com, tglx@linutronix.de,
-          linux-kernel@vger.kernel.org, alexander.shishkin@linux.intel.com,
-          vincent.weaver@maine.edu, mingo@kernel.org,
-          kan.liang@linux.intel.com, acme@redhat.com, hpa@zytor.com,
-          torvalds@linux-foundation.org, peterz@infradead.org,
-          stable@vger.kernel.org, jolsa@redhat.com
-In-Reply-To: <20190402194509.2832-2-kan.liang@linux.intel.com>
-References: <20190402194509.2832-2-kan.liang@linux.intel.com>
+From:   tip-bot for Stephane Eranian <tipbot@zytor.com>
+Message-ID: <tip-c68d224e5ed15605e651e2482c6ffd95915ddf58@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de, jolsa@redhat.com,
+        vincent.weaver@maine.edu, eranian@google.com, acme@redhat.com,
+        hpa@zytor.com, mingo@kernel.org, torvalds@linux-foundation.org,
+        alexander.shishkin@linux.intel.com, peterz@infradead.org
+Reply-To: mingo@kernel.org, torvalds@linux-foundation.org,
+          alexander.shishkin@linux.intel.com, peterz@infradead.org,
+          vincent.weaver@maine.edu, linux-kernel@vger.kernel.org,
+          tglx@linutronix.de, jolsa@redhat.com, acme@redhat.com,
+          eranian@google.com, hpa@zytor.com
+In-Reply-To: <20190408173252.37932-2-eranian@google.com>
+References: <20190408173252.37932-2-eranian@google.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf/x86: Fix incorrect PEBS_REGS
-Git-Commit-ID: 9d5dcc93a6ddfc78124f006ccd3637ce070ef2fc
+Subject: [tip:perf/core] perf/core: Add perf_pmu_resched() as global
+ function
+Git-Commit-ID: c68d224e5ed15605e651e2482c6ffd95915ddf58
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -62,106 +60,72 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  9d5dcc93a6ddfc78124f006ccd3637ce070ef2fc
-Gitweb:     https://git.kernel.org/tip/9d5dcc93a6ddfc78124f006ccd3637ce070ef2fc
-Author:     Kan Liang <kan.liang@linux.intel.com>
-AuthorDate: Tue, 2 Apr 2019 12:44:58 -0700
+Commit-ID:  c68d224e5ed15605e651e2482c6ffd95915ddf58
+Gitweb:     https://git.kernel.org/tip/c68d224e5ed15605e651e2482c6ffd95915ddf58
+Author:     Stephane Eranian <eranian@google.com>
+AuthorDate: Mon, 8 Apr 2019 10:32:51 -0700
 Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Tue, 16 Apr 2019 12:13:58 +0200
+CommitDate: Tue, 16 Apr 2019 12:19:34 +0200
 
-perf/x86: Fix incorrect PEBS_REGS
+perf/core: Add perf_pmu_resched() as global function
 
-PEBS_REGS used as mask for the supported registers for large PEBS.
-However, the mask cannot filter the sample_regs_user/sample_regs_intr
-correctly.
+This patch add perf_pmu_resched() a global function that can be called
+to force rescheduling of events for a given PMU. The function locks
+both cpuctx and task_ctx internally. This will be used by a subsequent
+patch.
 
-(1ULL << PERF_REG_X86_*) should be used to replace PERF_REG_X86_*, which
-is only the index.
-
-Rename PEBS_REGS to PEBS_GP_REGS, because the mask is only for general
-purpose registers.
-
-Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+Signed-off-by: Stephane Eranian <eranian@google.com>
+[ Simplified the calling convention. ]
 Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Cc: <stable@vger.kernel.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
 Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Stephane Eranian <eranian@google.com>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Vince Weaver <vincent.weaver@maine.edu>
-Cc: acme@kernel.org
-Cc: jolsa@kernel.org
-Fixes: 2fe1bc1f501d ("perf/x86: Enable free running PEBS for REGS_USER/INTR")
-Link: https://lkml.kernel.org/r/20190402194509.2832-2-kan.liang@linux.intel.com
-[ Renamed it to PEBS_GP_REGS - as 'GPRS' is used elsewhere ;-) ]
+Cc: kan.liang@intel.com
+Cc: nelson.dsouza@intel.com
+Cc: tonyj@suse.com
+Link: https://lkml.kernel.org/r/20190408173252.37932-2-eranian@google.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/events/intel/core.c |  2 +-
- arch/x86/events/perf_event.h | 38 +++++++++++++++++++-------------------
- 2 files changed, 20 insertions(+), 20 deletions(-)
+ include/linux/perf_event.h |  3 +++
+ kernel/events/core.c       | 10 ++++++++++
+ 2 files changed, 13 insertions(+)
 
-diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index f61dcbef20ff..f9451566cd9b 100644
---- a/arch/x86/events/intel/core.c
-+++ b/arch/x86/events/intel/core.c
-@@ -3131,7 +3131,7 @@ static unsigned long intel_pmu_large_pebs_flags(struct perf_event *event)
- 		flags &= ~PERF_SAMPLE_TIME;
- 	if (!event->attr.exclude_kernel)
- 		flags &= ~PERF_SAMPLE_REGS_USER;
--	if (event->attr.sample_regs_user & ~PEBS_REGS)
-+	if (event->attr.sample_regs_user & ~PEBS_GP_REGS)
- 		flags &= ~(PERF_SAMPLE_REGS_USER | PERF_SAMPLE_REGS_INTR);
- 	return flags;
+diff --git a/include/linux/perf_event.h b/include/linux/perf_event.h
+index 085a95e2582a..f3864e1c5569 100644
+--- a/include/linux/perf_event.h
++++ b/include/linux/perf_event.h
+@@ -888,6 +888,9 @@ extern void perf_sched_cb_dec(struct pmu *pmu);
+ extern void perf_sched_cb_inc(struct pmu *pmu);
+ extern int perf_event_task_disable(void);
+ extern int perf_event_task_enable(void);
++
++extern void perf_pmu_resched(struct pmu *pmu);
++
+ extern int perf_event_refresh(struct perf_event *event, int refresh);
+ extern void perf_event_update_userpage(struct perf_event *event);
+ extern int perf_event_release_kernel(struct perf_event *event);
+diff --git a/kernel/events/core.c b/kernel/events/core.c
+index 30a572e4c6f1..abbd4b3b96c2 100644
+--- a/kernel/events/core.c
++++ b/kernel/events/core.c
+@@ -2478,6 +2478,16 @@ static void ctx_resched(struct perf_cpu_context *cpuctx,
+ 	perf_pmu_enable(cpuctx->ctx.pmu);
  }
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index a75955741c50..1e98a42b560a 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -96,25 +96,25 @@ struct amd_nb {
- 	PERF_SAMPLE_REGS_INTR | PERF_SAMPLE_REGS_USER | \
- 	PERF_SAMPLE_PERIOD)
  
--#define PEBS_REGS \
--	(PERF_REG_X86_AX | \
--	 PERF_REG_X86_BX | \
--	 PERF_REG_X86_CX | \
--	 PERF_REG_X86_DX | \
--	 PERF_REG_X86_DI | \
--	 PERF_REG_X86_SI | \
--	 PERF_REG_X86_SP | \
--	 PERF_REG_X86_BP | \
--	 PERF_REG_X86_IP | \
--	 PERF_REG_X86_FLAGS | \
--	 PERF_REG_X86_R8 | \
--	 PERF_REG_X86_R9 | \
--	 PERF_REG_X86_R10 | \
--	 PERF_REG_X86_R11 | \
--	 PERF_REG_X86_R12 | \
--	 PERF_REG_X86_R13 | \
--	 PERF_REG_X86_R14 | \
--	 PERF_REG_X86_R15)
-+#define PEBS_GP_REGS			\
-+	((1ULL << PERF_REG_X86_AX)    | \
-+	 (1ULL << PERF_REG_X86_BX)    | \
-+	 (1ULL << PERF_REG_X86_CX)    | \
-+	 (1ULL << PERF_REG_X86_DX)    | \
-+	 (1ULL << PERF_REG_X86_DI)    | \
-+	 (1ULL << PERF_REG_X86_SI)    | \
-+	 (1ULL << PERF_REG_X86_SP)    | \
-+	 (1ULL << PERF_REG_X86_BP)    | \
-+	 (1ULL << PERF_REG_X86_IP)    | \
-+	 (1ULL << PERF_REG_X86_FLAGS) | \
-+	 (1ULL << PERF_REG_X86_R8)    | \
-+	 (1ULL << PERF_REG_X86_R9)    | \
-+	 (1ULL << PERF_REG_X86_R10)   | \
-+	 (1ULL << PERF_REG_X86_R11)   | \
-+	 (1ULL << PERF_REG_X86_R12)   | \
-+	 (1ULL << PERF_REG_X86_R13)   | \
-+	 (1ULL << PERF_REG_X86_R14)   | \
-+	 (1ULL << PERF_REG_X86_R15))
- 
++void perf_pmu_resched(struct pmu *pmu)
++{
++	struct perf_cpu_context *cpuctx = this_cpu_ptr(pmu->pmu_cpu_context);
++	struct perf_event_context *task_ctx = cpuctx->task_ctx;
++
++	perf_ctx_lock(cpuctx, task_ctx);
++	ctx_resched(cpuctx, task_ctx, EVENT_ALL|EVENT_CPU);
++	perf_ctx_unlock(cpuctx, task_ctx);
++}
++
  /*
-  * Per register state.
+  * Cross CPU call to install and enable a performance event
+  *
