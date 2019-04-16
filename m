@@ -2,101 +2,245 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 599E0C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 22:12:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A426C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 22:13:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2470520880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 22:12:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C3BE620880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 22:13:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RT1NF72z"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OPga+VFE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730634AbfDPWMx (ORCPT
+        id S1730693AbfDPWNY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 18:12:53 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:45015 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726287AbfDPWMx (ORCPT
+        Tue, 16 Apr 2019 18:13:24 -0400
+Received: from mail-ot1-f68.google.com ([209.85.210.68]:43405 "EHLO
+        mail-ot1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728264AbfDPWNX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 18:12:53 -0400
-Received: by mail-oi1-f195.google.com with SMTP id i21so18343370oib.11;
-        Tue, 16 Apr 2019 15:12:53 -0700 (PDT)
+        Tue, 16 Apr 2019 18:13:23 -0400
+Received: by mail-ot1-f68.google.com with SMTP id u15so18976069otq.10
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 15:13:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=NyKcBBFFHBSCWRfWOZJFD9fDiNalkHlRy8goLyKtRyQ=;
-        b=RT1NF72zlI1gmTng8YXqf44en1YQwu5qdA9d+Yyefi/zJeCGvJPE2WIUNp/tHX7zb1
-         XCVOxhchspmvyD9+nI9fXzpO1YUpFyoVPdoj9BJrzDOPDrierfrLoZhKaA7KQYcuOD9F
-         ztvtUk2NGMh+VIgPKk6vBajs959F+vY+vZqf2ArzzwbeD+DIog1EiBlxxuaBiifqHmob
-         AI/7s+dhcYWWHiRzZRXQF98GlMFS/JAnxajXQu6+/p69TVCqsgq5GG8wdBmdMyI8++rl
-         83UDgXyilJH0mXDhDhlHDul00BfIWj+0+jJDS6sthVHF6kdw6s4WhiUvUAS4MFIo1xjJ
-         oUPw==
+        h=from:to:cc:subject:date:message-id;
+        bh=++JuYrY4aGlXaxg8i0H6LdoBIIR70Dii6585qdh5fcA=;
+        b=OPga+VFE0XS84FvEFutL08MwYwo1W/CJXdCYjuGTUbCA+Zt/qM5Ka268e5eUJZQ3mD
+         BTjkAe75X3BIPZgOW4mGYe7cawRJMX4nppF8k801KzTjVwRswuJvOhe9j6Z7WDqXCv7X
+         7FbBP1HEDQkCgF9QngI1+6WyQBda9IWEGBpaOTYGoBfkeV/nhOLiQK6ZdTcZe67DI79D
+         /Jk+HFjc3CobbaSlz/zy56E942kWElY2GvStQHMLt+pEILtcBDGRIj8d1Z7yrp92jaYw
+         tasXgVk75awB9qI7c6a5u6gubMyvAxkXIKYRTfFp7ebGtR4gBMbDQBJXv6GL0T2+4Gfj
+         ORWw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=NyKcBBFFHBSCWRfWOZJFD9fDiNalkHlRy8goLyKtRyQ=;
-        b=uDX7DZgquk7GptlrDARBo6IH6sIy89o99Y30K64KafqFMeRUrg06n8aHt2hl3TlteY
-         jLbY1V+Eseh1JyQq5vH6UbuPids35IvKwyU1LinZSCFIB/O4DMbGpRy/VurnJb4SK5r/
-         nf6RRl5TtJpvUIdSK7Wpzsa0v+nfInnJN1VupupUymLVFk8YXQSYsDkLpuwHDTE1v1JP
-         8cXNmjEAoop8JQRqjKu/Vas88GMZlwhSKhUC/nnTM4V5UPzXklNBuarN36oBQPNKeodh
-         uIu99wW5rXnIdsm7SBQwz2K58Jh4+A8YaZHMHLXbEgIu4LUdqdF8/KTiMQm8TycJudHp
-         4lXg==
-X-Gm-Message-State: APjAAAVnfG41bnJYLBVTsRRQvFpKbPKAA1nK4LFQHKz6PCQt3OH7Udpf
-        C7mOkDsOfw+KgWfHFW0PP1ccn71w+UO3jr0jYQQ=
-X-Google-Smtp-Source: APXvYqyOgkdmPawPcF5ek+c7K54m9smC68N61NZlptZXmyl7lZx+ktR4RAx7uEUN8135qhShSUBXgrPv/FxUsyb6SoE=
-X-Received: by 2002:aca:be46:: with SMTP id o67mr24164790oif.92.1555452772469;
- Tue, 16 Apr 2019 15:12:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190409144250.7237-1-TheSven73@gmail.com> <982e69c6-4e68-6f62-8bed-cd5a1802272b@metux.net>
- <CAGngYiUTHZFFY=H7xXHzZnN4pS0jAqWBTrcw04hjf5S-ykxC9w@mail.gmail.com>
- <c1831703-a476-8870-0a5f-9060bda0f669@metux.net> <CAGngYiXx2eKR7DnHm9sNWVC+B1F2N6uUNXqZAq4rey2yjU1RyA@mail.gmail.com>
- <23a25601-ed98-5348-9bac-bf8fc2baea5e@metux.net>
-In-Reply-To: <23a25601-ed98-5348-9bac-bf8fc2baea5e@metux.net>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Tue, 16 Apr 2019 18:12:41 -0400
-Message-ID: <CAGngYiVJwRh_ESLfSYWak4RU60T2D1HW0-3Hg1CZbRjWhaSN5Q@mail.gmail.com>
-Subject: Re: [PATCH v10 0/7] Add Fieldbus subsystem + support HMS Profinet card
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com,
-        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
-        treding@nvidia.com, David Lechner <david@lechnology.com>,
-        noralf@tronnes.org, johan@kernel.org,
-        Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg KH <gregkh@linuxfoundation.org>, john.garry@huawei.com,
-        geert+renesas@glider.be, robin.murphy@arm.com,
-        Paul Gortmaker <paul.gortmaker@windriver.com>,
-        sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io,
-        Stuart Yoder <stuyoder@gmail.com>,
-        "J. Kiszka" <jan.kiszka@siemens.com>, maxime.ripard@bootlin.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=++JuYrY4aGlXaxg8i0H6LdoBIIR70Dii6585qdh5fcA=;
+        b=icFo1gjXtbQSfwm7rd6YzkbGYEy4wBNR76lTIDOXdErfXABbNI+xo5sIzrepi3yedJ
+         wLcNhdNiv/eJef2cOvFg+UIwSthKrmuFFz9C5dsV3PV5lE+E4R02xmbKpSZlkdo4NML5
+         sXDf1t+Xh614Y55WlRZN0m6zMboGJrG59cnpDHV4+X4LLMQAX/If+ljvTxhtkzSKCeL+
+         r16Iy6c1+pWpY5bTP85uTSa3PLGdhLD9mJYLW52ksXz29moxSO/hnOqLo7s+HnTBHWv+
+         kClz7SWouKXUvE6T+x/jMLtl7/FUTC3IVVmJrG7cQqGtqrtoSBnZnhGDs34Ifn7HmMJD
+         J0lg==
+X-Gm-Message-State: APjAAAXUCHaC3NiO/RhqkzYF1ReYlXM8L6XHd4f349yfm3y5LKotubt4
+        Fob3+FSEGAX6BxMtQeeXvN5SjjygiO8qCQ==
+X-Google-Smtp-Source: APXvYqyMl+C4F7QLnmHeKYYjCKcJIDdp56tXvtYvHemNFumRHtjPRMabbpTZ05gscj6I994xMoR7Uw==
+X-Received: by 2002:a9d:7f90:: with SMTP id t16mr55175462otp.9.1555452802667;
+        Tue, 16 Apr 2019 15:13:22 -0700 (PDT)
+Received: from madhuleo ([2605:6000:1023:606d:cc4c:ef29:9735:1b8b])
+        by smtp.gmail.com with ESMTPSA id m124sm21894520oia.3.2019.04.16.15.13.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 16 Apr 2019 15:13:21 -0700 (PDT)
+From:   Madhumitha Prabakaran <madhumithabiw@gmail.com>
+To:     johan@kernel.org, elder@kernel.org, gregkh@linuxfoundation.org,
+        greybus-dev@lists.linaro.org, devel@driverdev.osuosl.org,
+        linux-kernel@vger.kernel.org
+Cc:     Madhumitha Prabakaran <madhumithabiw@gmail.com>
+Subject: [PATCH v2] Staging: greybus: Cleanup in greybus driver
+Date:   Tue, 16 Apr 2019 17:13:18 -0500
+Message-Id: <20190416221318.21161-1-madhumithabiw@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 5:21 PM Enrico Weigelt, metux IT consult
-<lkml@metux.net> wrote:
->
->
-> Yet another question: does each fieldbus_dev instance talk to exactly
-> one plc process memory, or can there be many ?
->
-> Having separate device nodes per plc process memory seems a good idea
-> for finer access control (via chown+friends).
->
+Fix a blank line after structure declarations. Also, convert
+macros into inline functions in order to maintain Linux kernel
+coding style based on which the inline function is
+preferable over the macro.
 
-PS do you have a specific fieldbus device in mind which could be added
-to Linux? Would it support multiple plc process memories?
+Blank line fixes are suggested by checkpatch.pl
 
-Sven
+Signed-off-by: Madhumitha Prabakaran <madhumithabiw@gmail.com>
+
+Changes in v2:
+- To maintain consistency in driver greybus, all the instances of macro
+with container_of are fixed in a single patch.
+---
+ drivers/staging/greybus/bundle.h    |  6 +++++-
+ drivers/staging/greybus/control.h   |  6 +++++-
+ drivers/staging/greybus/gbphy.h     | 12 ++++++++++--
+ drivers/staging/greybus/greybus.h   |  6 +++++-
+ drivers/staging/greybus/hd.h        |  6 +++++-
+ drivers/staging/greybus/interface.h |  6 +++++-
+ drivers/staging/greybus/module.h    |  6 +++++-
+ drivers/staging/greybus/svc.h       |  6 +++++-
+ 8 files changed, 45 insertions(+), 9 deletions(-)
+
+diff --git a/drivers/staging/greybus/bundle.h b/drivers/staging/greybus/bundle.h
+index 8734d2055657..84956eedb1c4 100644
+--- a/drivers/staging/greybus/bundle.h
++++ b/drivers/staging/greybus/bundle.h
+@@ -31,7 +31,11 @@ struct gb_bundle {
+ 
+ 	struct list_head	links;	/* interface->bundles */
+ };
+-#define to_gb_bundle(d) container_of(d, struct gb_bundle, dev)
++
++static inline struct gb_bundle *to_gb_bundle(struct device *d)
++{
++	return container_of(d, struct gb_bundle, dev);
++}
+ 
+ /* Greybus "private" definitions" */
+ struct gb_bundle *gb_bundle_create(struct gb_interface *intf, u8 bundle_id,
+diff --git a/drivers/staging/greybus/control.h b/drivers/staging/greybus/control.h
+index 3a29ec05f631..a681ef74e7fe 100644
+--- a/drivers/staging/greybus/control.h
++++ b/drivers/staging/greybus/control.h
+@@ -24,7 +24,11 @@ struct gb_control {
+ 	char *vendor_string;
+ 	char *product_string;
+ };
+-#define to_gb_control(d) container_of(d, struct gb_control, dev)
++
++static inline struct gb_control *to_gb_control(struct device *d)
++{
++	return container_of(d, struct gb_control, dev);
++}
+ 
+ struct gb_control *gb_control_create(struct gb_interface *intf);
+ int gb_control_enable(struct gb_control *control);
+diff --git a/drivers/staging/greybus/gbphy.h b/drivers/staging/greybus/gbphy.h
+index 99463489d7d6..20307f6dfcb9 100644
+--- a/drivers/staging/greybus/gbphy.h
++++ b/drivers/staging/greybus/gbphy.h
+@@ -15,7 +15,11 @@ struct gbphy_device {
+ 	struct list_head list;
+ 	struct device dev;
+ };
+-#define to_gbphy_dev(d) container_of(d, struct gbphy_device, dev)
++
++static inline struct gbphy_device *to_gbphy_dev(struct device *d)
++{
++	return container_of(d, struct gbphy_device, dev);
++}
+ 
+ static inline void *gb_gbphy_get_data(struct gbphy_device *gdev)
+ {
+@@ -43,7 +47,11 @@ struct gbphy_driver {
+ 
+ 	struct device_driver driver;
+ };
+-#define to_gbphy_driver(d) container_of(d, struct gbphy_driver, driver)
++
++static inline struct gbphy_driver *to_gbphy_driver(struct device_driver *d)
++{
++	return container_of(d, struct gbphy_driver, driver);
++}
+ 
+ int gb_gbphy_register_driver(struct gbphy_driver *driver,
+ 			     struct module *owner, const char *mod_name);
+diff --git a/drivers/staging/greybus/greybus.h b/drivers/staging/greybus/greybus.h
+index d03ddb7c9df0..a82d5002b4d5 100644
+--- a/drivers/staging/greybus/greybus.h
++++ b/drivers/staging/greybus/greybus.h
+@@ -64,7 +64,11 @@ struct greybus_driver {
+ 
+ 	struct device_driver driver;
+ };
+-#define to_greybus_driver(d) container_of(d, struct greybus_driver, driver)
++
++static inline struct greybus_driver *to_greybus_driver(struct device_driver *d)
++{
++	return container_of(d, struct greybus_driver, driver);
++}
+ 
+ static inline void greybus_set_drvdata(struct gb_bundle *bundle, void *data)
+ {
+diff --git a/drivers/staging/greybus/hd.h b/drivers/staging/greybus/hd.h
+index 6cf024a20a58..de7c49d05266 100644
+--- a/drivers/staging/greybus/hd.h
++++ b/drivers/staging/greybus/hd.h
+@@ -57,7 +57,11 @@ struct gb_host_device {
+ 	/* Private data for the host driver */
+ 	unsigned long hd_priv[0] __aligned(sizeof(s64));
+ };
+-#define to_gb_host_device(d) container_of(d, struct gb_host_device, dev)
++
++static inline struct gb_host_device *to_gb_host_device(struct device *d)
++{
++	return container_of(d, struct gb_host_device, dev);
++}
+ 
+ int gb_hd_cport_reserve(struct gb_host_device *hd, u16 cport_id);
+ void gb_hd_cport_release_reserved(struct gb_host_device *hd, u16 cport_id);
+diff --git a/drivers/staging/greybus/interface.h b/drivers/staging/greybus/interface.h
+index 1c00c5bb3ec9..f86c0d596dbe 100644
+--- a/drivers/staging/greybus/interface.h
++++ b/drivers/staging/greybus/interface.h
+@@ -63,7 +63,11 @@ struct gb_interface {
+ 	struct work_struct mode_switch_work;
+ 	struct completion mode_switch_completion;
+ };
+-#define to_gb_interface(d) container_of(d, struct gb_interface, dev)
++
++static inline struct gb_interface *to_gb_interface(struct device *d)
++{
++	return container_of(d, struct gb_interface, dev);
++}
+ 
+ struct gb_interface *gb_interface_create(struct gb_module *module,
+ 					 u8 interface_id);
+diff --git a/drivers/staging/greybus/module.h b/drivers/staging/greybus/module.h
+index b1ebcc6636db..c427b788b677 100644
+--- a/drivers/staging/greybus/module.h
++++ b/drivers/staging/greybus/module.h
+@@ -22,7 +22,11 @@ struct gb_module {
+ 
+ 	struct gb_interface *interfaces[0];
+ };
+-#define to_gb_module(d) container_of(d, struct gb_module, dev)
++
++static inline struct gb_module *to_gb_module(struct device *d)
++{
++	return container_of(d, struct gb_module, dev);
++}
+ 
+ struct gb_module *gb_module_create(struct gb_host_device *hd, u8 module_id,
+ 				   size_t num_interfaces);
+diff --git a/drivers/staging/greybus/svc.h b/drivers/staging/greybus/svc.h
+index ad01783bac9c..4e35ac9ed0ff 100644
+--- a/drivers/staging/greybus/svc.h
++++ b/drivers/staging/greybus/svc.h
+@@ -52,7 +52,11 @@ struct gb_svc {
+ 	struct dentry *debugfs_dentry;
+ 	struct svc_debugfs_pwrmon_rail *pwrmon_rails;
+ };
+-#define to_gb_svc(d) container_of(d, struct gb_svc, dev)
++
++static inline struct gb_svc *to_gb_svc(struct device *d)
++{
++	return container_of(d, struct gb_svc, dev);
++}
+ 
+ struct gb_svc *gb_svc_create(struct gb_host_device *hd);
+ int gb_svc_add(struct gb_svc *svc);
+-- 
+2.17.1
+
