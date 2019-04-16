@@ -2,130 +2,126 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4CD5C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:47:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id ACACAC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:47:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD65A20821
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:47:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7B10A2075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:47:34 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555411654;
+	bh=ZysEG2qkoKPL4wwKL3WOmlFeiOmGIDTYhuy2UwyNzCU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=q2noSTJeBHvuTgs4gVfTPnZ3I0Hj0GjE4PYW5i//RzhSpKOG9bu510hL5Y+uWeDN7
+	 iQ5UKq7ko0Q3R/iAEBqIFiIxPxajei4XQyuz3DzqHYyTW5igeUH1nkpXdN8SMQ8obw
+	 /9VDYObkdrWUaJlCJ/IWZ7RkPYwF4ZmzHybyaaUw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728328AbfDPKrW (ORCPT
+        id S1728778AbfDPKrd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 06:47:22 -0400
-Received: from mail2.sp2max.com.br ([138.185.4.9]:58652 "EHLO
-        mail2.sp2max.com.br" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726347AbfDPKrW (ORCPT
+        Tue, 16 Apr 2019 06:47:33 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:44774 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727783AbfDPKrd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 06:47:22 -0400
-Received: from [172.17.0.2] (unknown [186.137.130.251])
-        (Authenticated sender: pablo@fliagreco.com.ar)
-        by mail2.sp2max.com.br (Postfix) with ESMTPA id 5B7377B0148;
-        Tue, 16 Apr 2019 07:47:11 -0300 (-03)
-Subject: Re: [PATCH v2 2/6] ARM: dts: sun8i: v40: bananapi-m2-berry: Enable
- GMAC ethernet controller
-To:     maxime.ripard@bootlin.com
-Cc:     linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-References: <1555065186-8154-1-git-send-email-pgreco@centosproject.org>
- <1555065186-8154-3-git-send-email-pgreco@centosproject.org>
- <20190415075309.p7pgj62mmtmxsnnr@flea>
-From:   =?UTF-8?Q?Pablo_Sebasti=c3=a1n_Greco?= <pgreco@centosproject.org>
-Message-ID: <eb80d64f-7355-071b-c1d1-04e0eb4475ce@centosproject.org>
-Date:   Tue, 16 Apr 2019 07:47:09 -0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 16 Apr 2019 06:47:33 -0400
+Received: by mail-oi1-f195.google.com with SMTP id i21so16494616oib.11;
+        Tue, 16 Apr 2019 03:47:32 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=yWXhi339mwAqDrCT7JrSf4caIHpti1OuTxdcqSXGDS0=;
+        b=JlYD3/f4LWKj1l1OqNqiK0SSsK81giN4hJxQyWL8sogCfloPoWOjFSZgwpvQkK1/Zf
+         fhz3MCtoR7qEgymBbg2BlgKxNVouejFdXftnfnSsID+5fYa0JpCQDBIBe3Fvqmr0Wj0e
+         Wg/Y23ojqv0uUy2Tq1aG96qa6Id9tK1CdFIcYIj5J/Qh6RGOh0VEA61pfd2FwOsMhKzR
+         bmnYeIRUHO6TXcA30Etdlh0klOp2+vKZoSHeqRzVxTaeF6bTVS7hg/sIg5im1cWKoAUP
+         wyJMZERhy/0jyfkRyIOqdmzROr2vv7DrHZG80/dQWaEymSoUHgY+isx2lSiJDhu219f7
+         IMGg==
+X-Gm-Message-State: APjAAAXNaCK2AovnLZCJuAZXh7DWLP+Ud8+oZxhuS2s2vTCQNOAKKXAF
+        T5iFKZqa1iYzqXTZ44jujrp9urHV73IvdUE8SutTVQ==
+X-Google-Smtp-Source: APXvYqw7XW41k4tZG5i/11Wt7jrrozjQbfMgUmHErB4gC1Qb+YQzOQuVYtyD5Ox4U+o2jKR+PzfeSad6f3z/UdxsTDs=
+X-Received: by 2002:aca:4c08:: with SMTP id z8mr17409050oia.30.1555411651913;
+ Tue, 16 Apr 2019 03:47:31 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190415075309.p7pgj62mmtmxsnnr@flea>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-SP2Max-MailScanner-Information: Please contact the ISP for more information
-X-SP2Max-MailScanner-ID: 5B7377B0148.AE739
-X-SP2Max-MailScanner: Sem Virus encontrado
-X-SP2Max-MailScanner-SpamCheck: nao spam, SpamAssassin (not cached,
-        escore=-2.9, requerido 6, autolearn=not spam, ALL_TRUSTED -1.00,
-        BAYES_00 -1.90)
-X-SP2Max-MailScanner-From: pgreco@centosproject.org
+References: <cover.1555382110.git.mchehab+samsung@kernel.org>
+ <cfab8842b681a84518b327980b08aee95d159605.1555382110.git.mchehab+samsung@kernel.org>
+ <1616669.eeiCRjss8h@kreacher> <20190416074137.53873332@coco.lan>
+In-Reply-To: <20190416074137.53873332@coco.lan>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 16 Apr 2019 12:47:21 +0200
+Message-ID: <CAJZ5v0gSP3URj4imX1wroC9bBurbWQ0GVF9F_0e+FpXuHQfODQ@mail.gmail.com>
+Subject: Re: [PATCH 25/57] docs: power: convert docs to ReST
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Len Brown <len.brown@intel.com>, Pavel Machek <pavel@ucw.cz>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        Mark Brown <broonie@kernel.org>,
+        Linux PM <linux-pm@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Apr 16, 2019 at 12:41 PM Mauro Carvalho Chehab
+<mchehab+samsung@kernel.org> wrote:
+>
+> Em Tue, 16 Apr 2019 10:59:23 +0200
+> "Rafael J. Wysocki" <rjw@rjwysocki.net> escreveu:
+>
+> > On Tuesday, April 16, 2019 4:55:50 AM CEST Mauro Carvalho Chehab wrote:
+> > > Convert the PM documents to ReST, in order to allow them to
+> > > build with Sphinx.
+> >
+> > And what exactly is the motivation for doing that?
+>
+> Providing a little of context, I tried to submit a patchset that would
+> just place existing documents on a sort of "staging" way, without
+> actually reformatting:
+>
+>         https://lkml.org/lkml/2019/4/10/244
+>
+> Jon had some concerns about such approach.
+>
+> So, I split into one patch per subsystem. Then, I looked on each, and
+> opted to do the conversion, as, on several cases, the conversion
+> seemed to be easy enough.
+>
+> My selfish motivation is that I was returning from vacations and wanted to
+> review some stuff at the Kernel docs, but, discovered that, despite we
+> started migrating the documentation on May, 2016, still the vast
+> majority of documents that weren't converted.
+>
+> For me, the main motivation for the conversion are:
+>
+> 1) Documents will be grouped into books and chapters,
+>    with makes easier to study them;
+> 2) The Sphinx javascript is very convenient for seeking a
+>    document and a keyword within the body of the document;
+> 3) Using a browser to read documentation allows to better
+>    scale the document to the screen I'm using.
+>
+> That's said, sometimes I just prefer to convert the document
+> to a PDF and read it on my tablet. PDF tools also provide
+> similar features.
+>
+> In other words, for my own consumption, I prefer reading
+> documents using document tools, instead of reading in plain
+> text.
 
-El 15/4/19 a las 04:53, Maxime Ripard escribió:
-> On Fri, Apr 12, 2019 at 07:33:01AM -0300, Pablo Greco wrote:
->> Just like the Bananapi M2 Ultra, the Bananapi M2 Berry has a Realtek
->> RTL8211E RGMII PHY tied to the GMAC.
->> The PMIC's DC1SW output provides power for the PHY, while the ALDO2
->> output provides I/O voltages on both sides.
->>
->> Signed-off-by: Pablo Greco <pgreco@centosproject.org>
->> ---
->>   arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts | 30 +++++++++++++++++++++++
->>   1 file changed, 30 insertions(+)
->>
->> diff --git a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
->> index f05cabd..0d79e91 100644
->> --- a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
->> +++ b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
->> @@ -50,6 +50,7 @@
->>   	compatible = "sinovoip,bpi-m2-berry", "allwinner,sun8i-r40";
->>
->>   	aliases {
->> +		ethernet0 = &gmac;
->>   		serial0 = &uart0;
->>   	};
->>
->> @@ -92,6 +93,22 @@
->>   	status = "okay";
->>   };
->>
->> +&gmac {
->> +	pinctrl-names = "default";
->> +	pinctrl-0 = <&gmac_rgmii_pins>;
->> +	phy-handle = <&phy1>;
->> +	phy-mode = "rgmii";
->> +	phy-supply = <&reg_dc1sw>;
->> +	status = "okay";
->> +};
->> +
->> +&gmac_mdio {
->> +	phy1: ethernet-phy@1 {
->> +		compatible = "ethernet-phy-ieee802.3-c22";
->> +		reg = <1>;
->> +	};
->> +};
->> +
->>   &i2c0 {
->>   	status = "okay";
->>
->> @@ -123,6 +140,13 @@
->>   	status = "okay";
->>   };
->>
->> +&reg_aldo2 {
->> +	regulator-always-on;
->> +	regulator-min-microvolt = <2500000>;
->> +	regulator-max-microvolt = <2500000>;
->> +	regulator-name = "vcc-pa";
->> +};
->> +
-> If this one provides power to the pins, it should be tied to the PIO
-> node.
-In that case, I should fix the bananapi-m2-ultra the same way. Do you 
-prefer me to add those fixes to this series?
-Or is it better to apply this like it is, and I fix both together in a 
-separated series?
-> Maxime
+I see, thanks!
+
+> > There are plans for some of these files to be converted already, some of them need to be merged or split and it just is not worth it to convert some others.
 >
-> --
-> Maxime Ripard, Bootlin
-> Embedded Linux and Kernel engineering
-> https://bootlin.com
->
-Pablo.
+> Feel free to use this patch as an starting point. If you prefer,
+> I can split into smaller sets, but my main goal here is just
+> to help to speedup the conversion.
+
+OK, we'll see.  Thank you!
