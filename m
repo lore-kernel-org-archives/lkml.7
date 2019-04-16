@@ -2,185 +2,131 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD480C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:53:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FBA3C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:53:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93B1820821
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:53:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48D7220821
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:53:20 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AexG369C"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728725AbfDPLxL (ORCPT
+        id S1729116AbfDPLxT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 07:53:11 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:53478 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725787AbfDPLxL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 07:53:11 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5BF87EBD;
-        Tue, 16 Apr 2019 04:53:10 -0700 (PDT)
-Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 6BF693F706;
-        Tue, 16 Apr 2019 04:53:08 -0700 (PDT)
-Date:   Tue, 16 Apr 2019 12:53:06 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Julien Grall <julien.grall@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        ard.biesheuvel@linaro.org, julien.thierry@arm.com,
-        marc.zyngier@arm.com, catalin.marinas@arm.com,
-        suzuki.poulose@arm.com, will.deacon@arm.com,
-        christoffer.dall@arm.com, james.morse@arm.com
-Subject: Re: [PATCH v2 2/3] arch/arm64: fpsimd: Introduce
- fpsimd_save_and_flush_cpu_state() and use it
-Message-ID: <20190416115305.GL3567@e103592.cambridge.arm.com>
-References: <20190412171420.29065-1-julien.grall@arm.com>
- <20190412171420.29065-3-julien.grall@arm.com>
+        Tue, 16 Apr 2019 07:53:19 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:46346 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725787AbfDPLxS (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 07:53:18 -0400
+Received: by mail-lj1-f194.google.com with SMTP id h21so18779834ljk.13
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 04:53:17 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KKzZteUoYnB5M237F7sqY6QAfVxuQBuI8uPlIgH6EB8=;
+        b=AexG369CRYdQCmr2MCGtQwtEEQx51bM9f4Xn4DgQRM6+k/mRU1AjaTjYJlC5pU6XIA
+         frIIKaCU7cSQRr+L4f7mAM4/jS5wRKX/xp8V26G9NJltRlQnVqRK9hNfEZfBdnOIUe/t
+         o1ktJVGtaAlPj9yNa0YIXAGHpnh1VJgHrY6+sce+U3rFbRzUhYKNVjiSEia3p7234jbL
+         tX4KjthMsFuJ6qd8XBWP/uqjFPhpt3D0f3ndge416XVhG1aH8ln3OKfWjuI1668QchcW
+         DgGzGVcF6z6ixg6sjob/m5ryRjvMXkbHcWGeXgmzNWgrWSRXx1aS9fUTWoxIpHplghAP
+         eqdw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KKzZteUoYnB5M237F7sqY6QAfVxuQBuI8uPlIgH6EB8=;
+        b=BpQ4vWLc2wOOa6TLvVy8NJMNdQM/y4YHq/h9ff7MR7bPd5GyBiLEn61vth5yZdB0cU
+         zyZScVnOsOLI8ZNfCBcFVcuo7iU25+QqsAISVTPVkITRYRCCrLTlNteD2D4/zw61VENv
+         GS6gsHnuRNb9FNHLFypO6gC2N49/Qs7beAX7nritdw4txyJ+cH7IlJ+S9wrzUJoFBuHG
+         eDMAdjdUcTcbfsky+ZPDUp8FQyOuvBBwlhvXw7NqnIktFHp9p23M1jHnrYKZyZJ30PEM
+         udYcvhI/bqtlJrqDx641vxSYIzsiIkGmE3WvEFc0+DcP7xRqhN79JSM/kvIwf14k+yx2
+         McHg==
+X-Gm-Message-State: APjAAAWxkCSFI+jaTdb6Qf2bURw8W686n+Csdvw0W/dCB6MagEScbic3
+        XeRsms8q3MrfrlUTcGBqTIhxANk7V98ApjaVuCY=
+X-Google-Smtp-Source: APXvYqxge93svZowgv91Dkpb96fUdPqdxOnDktjzjMVWKb6/20Z1ct2f2WwVtHQRhs/0falbb/y90TlxkcqW/bbrWKo=
+X-Received: by 2002:a2e:99c5:: with SMTP id l5mr15298405ljj.55.1555415596572;
+ Tue, 16 Apr 2019 04:53:16 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190412171420.29065-3-julien.grall@arm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <1554557789-9474-1-git-send-email-jrdr.linux@gmail.com> <e7de2c3d-01cf-52fb-f00a-2c4321009d08@codeaurora.org>
+In-Reply-To: <e7de2c3d-01cf-52fb-f00a-2c4321009d08@codeaurora.org>
+From:   Souptick Joarder <jrdr.linux@gmail.com>
+Date:   Tue, 16 Apr 2019 17:27:53 +0530
+Message-ID: <CAFqt6zaX5LT79o7exTxVQhLiSwBRFqtqmaJNwuE+hqs3j-XZdA@mail.gmail.com>
+Subject: Re: [PATCH] perf: Remove duplicate headers
+To:     Mukesh Ojha <mojha@codeaurora.org>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>, acme@kernel.org,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        namhyung@kernel.org, ak@linux.intel.com,
+        Stephane Eranian <eranian@google.com>,
+        linux-kernel@vger.kernel.org,
+        Sabyasachi Gupta <sabyasachi.linux@gmail.com>,
+        Brajeswar Ghosh <brajeswar.linux@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 06:14:19PM +0100, Julien Grall wrote:
-> The only external user of fpsimd_save() and fpsimd_flush_cpu_state() is
-> the KVM FPSIMD code.
-> 
-> A follow-up patch will mandate hold of the FPSIMD context while
+On Sun, Apr 7, 2019 at 12:20 AM Mukesh Ojha <mojha@codeaurora.org> wrote:
+>
+>
+> On 4/6/2019 7:06 PM, Souptick Joarder wrote:
+> > Removed duplicate headers which are included twice.
+> > Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
+> Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 
-This is a bit hard to read without understanding the following patch.
+If no further comment, can we get this patch in queue for 5.2 ?
 
-Maybe elaborate a bit with something like
-
-"The following patch will introduce a mechanism to acquire ownership of the FPSIMD/SVE context for performing context management operations. Rather than having to export this [...]"
-
-> modifying it. Rather than having to export the new helpers to get/put
-> the context, we can just introduce a new function to combine
-> fpsimd_save() and fpsimd_flush_cpu_state().
-> 
-> This has also the advantage to remove any external call of fpsimd_save()
-> and fpsimd_flush_cpu_state(), so they can be turned static.
-> 
-> Lastly, the new function can also be used in the PM notifier.
-> 
-> Signed-off-by: Julien Grall <julien.grall@arm.com>
-> 
-> ---
->     Changes in v2:
->         - Patch added
-> ---
->  arch/arm64/include/asm/fpsimd.h |  5 ++---
->  arch/arm64/kernel/fpsimd.c      | 17 +++++++++++++----
->  arch/arm64/kvm/fpsimd.c         |  3 +--
->  3 files changed, 16 insertions(+), 9 deletions(-)
-> 
-> diff --git a/arch/arm64/include/asm/fpsimd.h b/arch/arm64/include/asm/fpsimd.h
-> index 32abbfd852e8..88c223f6ded6 100644
-> --- a/arch/arm64/include/asm/fpsimd.h
-> +++ b/arch/arm64/include/asm/fpsimd.h
-> @@ -48,11 +48,11 @@ struct task_struct;
->  extern void fpsimd_save_state(struct user_fpsimd_state *state);
->  extern void fpsimd_load_state(struct user_fpsimd_state *state);
->  
-> -extern void fpsimd_save(void);
-> -
->  extern void fpsimd_thread_switch(struct task_struct *next);
->  extern void fpsimd_flush_thread(void);
->  
-> +extern void fpsimd_save_and_flush_cpu_state(void);
-> +
-
-Nit, bit I think this makes more sense alongside the other flush
-functions.
-
-Can you just drop this new declaration in place of the old declaration
-for sve_flush_cpu_state()?
-
->  extern void fpsimd_signal_preserve_current_state(void);
->  extern void fpsimd_preserve_current_state(void);
->  extern void fpsimd_restore_current_state(void);
-> @@ -63,7 +63,6 @@ extern void fpsimd_bind_state_to_cpu(struct user_fpsimd_state *state,
->  				     void *sve_state, unsigned int sve_vl);
->  
->  extern void fpsimd_flush_task_state(struct task_struct *target);
-> -extern void fpsimd_flush_cpu_state(void);
->  
->  /* Maximum VL that SVE VL-agnostic software can transparently support */
->  #define SVE_VL_ARCH_MAX 0x100
-> diff --git a/arch/arm64/kernel/fpsimd.c b/arch/arm64/kernel/fpsimd.c
-> index 577296bba730..9e4e4b6acd93 100644
-> --- a/arch/arm64/kernel/fpsimd.c
-> +++ b/arch/arm64/kernel/fpsimd.c
-> @@ -241,7 +241,7 @@ static void task_fpsimd_load(void)
->   *
->   * Softirqs (and preemption) must be disabled.
->   */
-> -void fpsimd_save(void)
-> +static void fpsimd_save(void)
->  {
->  	struct fpsimd_last_state_struct const *last =
->  		this_cpu_ptr(&fpsimd_last_state);
-> @@ -1117,12 +1117,22 @@ void fpsimd_flush_task_state(struct task_struct *t)
->   * Invalidate any task's FPSIMD state that is present on this cpu.
->   * This function must be called with softirqs disabled.
->   */
-> -void fpsimd_flush_cpu_state(void)
-> +static void fpsimd_flush_cpu_state(void)
->  {
->  	__this_cpu_write(fpsimd_last_state.st, NULL);
->  	set_thread_flag(TIF_FOREIGN_FPSTATE);
->  }
->  
-> +/*
-> + * Save the FPSIMD state to memory and invalidate cpu view.
-> + * This function must be called with softirqs (and preemption) disabled.
-> + */
-> +void fpsimd_save_and_flush_cpu_state(void)
-> +{
-> +	fpsimd_save();
-> +	fpsimd_flush_cpu_state();
-> +}
-> +
->  #ifdef CONFIG_KERNEL_MODE_NEON
->  
->  DEFINE_PER_CPU(bool, kernel_neon_busy);
-> @@ -1279,8 +1289,7 @@ static int fpsimd_cpu_pm_notifier(struct notifier_block *self,
->  {
->  	switch (cmd) {
->  	case CPU_PM_ENTER:
-> -		fpsimd_save();
-> -		fpsimd_flush_cpu_state();
-> +		fpsimd_save_and_flush_cpu_state();
-
-Any reason not to do this in kernel_neon_begin() too?
-
->  		break;
->  	case CPU_PM_EXIT:
->  		break;
-> diff --git a/arch/arm64/kvm/fpsimd.c b/arch/arm64/kvm/fpsimd.c
-> index 6e3c9c8b2df9..01bd2e862506 100644
-> --- a/arch/arm64/kvm/fpsimd.c
-> +++ b/arch/arm64/kvm/fpsimd.c
-> @@ -113,8 +113,7 @@ void kvm_arch_vcpu_put_fp(struct kvm_vcpu *vcpu)
->  		u64 *guest_zcr = &vcpu->arch.ctxt.sys_regs[ZCR_EL1];
->  
->  		/* Clean guest FP state to memory and invalidate cpu view */
-
-You can lose the comment here, since the call is now self-explanatory.
-
-> -		fpsimd_save();
-> -		fpsimd_flush_cpu_state();
-> +		fpsimd_save_and_flush_cpu_state();
-
-[...]
-
-Otherwise, looks sensible.
-
-Cheers
----Dave
+>
+> Cheers,
+> -Mukesh
+>
+> > ---
+> >   tools/perf/util/data.c                 | 1 -
+> >   tools/perf/util/get_current_dir_name.c | 1 -
+> >   tools/perf/util/stat-display.c         | 1 -
+> >   3 files changed, 3 deletions(-)
+> >
+> > diff --git a/tools/perf/util/data.c b/tools/perf/util/data.c
+> > index 6a64f71..509a41e 100644
+> > --- a/tools/perf/util/data.c
+> > +++ b/tools/perf/util/data.c
+> > @@ -8,7 +8,6 @@
+> >   #include <unistd.h>
+> >   #include <string.h>
+> >   #include <asm/bug.h>
+> > -#include <sys/types.h>
+> >   #include <dirent.h>
+> >
+> >   #include "data.h"
+> > diff --git a/tools/perf/util/get_current_dir_name.c b/tools/perf/util/get_current_dir_name.c
+> > index 267aa60..ebb80cd 100644
+> > --- a/tools/perf/util/get_current_dir_name.c
+> > +++ b/tools/perf/util/get_current_dir_name.c
+> > @@ -5,7 +5,6 @@
+> >   #include "util.h"
+> >   #include <unistd.h>
+> >   #include <stdlib.h>
+> > -#include <stdlib.h>
+> >
+> >   /* Android's 'bionic' library, for one, doesn't have this */
+> >
+> > diff --git a/tools/perf/util/stat-display.c b/tools/perf/util/stat-display.c
+> > index 6d043c7..7b3a16c 100644
+> > --- a/tools/perf/util/stat-display.c
+> > +++ b/tools/perf/util/stat-display.c
+> > @@ -12,7 +12,6 @@
+> >   #include "string2.h"
+> >   #include "sane_ctype.h"
+> >   #include "cgroup.h"
+> > -#include <math.h>
+> >   #include <api/fs/fs.h>
+> >
+> >   #define CNTR_NOT_SUPPORTED  "<not supported>"
