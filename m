@@ -2,221 +2,120 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 414D3C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:33:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 093A8C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:33:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0902920449
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:33:26 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="PU7Tpr+z"
+	by mail.kernel.org (Postfix) with ESMTP id CC71B20449
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:33:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730299AbfDPSdU (ORCPT
+        id S1730359AbfDPSdg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 14:33:20 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:34344 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730248AbfDPSdQ (ORCPT
+        Tue, 16 Apr 2019 14:33:36 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:46897 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730286AbfDPSdg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 14:33:16 -0400
-Received: by mail-io1-f68.google.com with SMTP id n11so18481835ioh.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 11:33:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=sCg1+4C/3BXdYjyRhbyWaAnGRGTGFQ1Fry4WA2G26j8=;
-        b=PU7Tpr+zhZjEs++hYXr1ScD7vT5qTwF4iKMM54vbh1iAZj7lEoQcejtgtaQhzuS/m4
-         7ph6PU9mzpswJ/0piM1OfkTxjZEVdYXDUIgk6FJAXXqyk2er7UyajgIrCgY5CTodvohj
-         Vs2f+81sG2Dt4EU5tnveamavMeTdrPSwmOM4c=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=sCg1+4C/3BXdYjyRhbyWaAnGRGTGFQ1Fry4WA2G26j8=;
-        b=t/DV1eCHIZdNm/fy1T5mZPJH/TMi4xReHxlehlvs7v1saPkv5byzYdfYBx/fQW+qWX
-         vRjRdP/eqYEcB99/gofVl1voYL82iaQJjA7zlYdCNzWC7ooTjglE3v7E90JqiC1BAurO
-         ypy5sQrSha4QOmWAPRuM45DDBgcFvQLI1MJFw2y4En8RTZzKgZ7IKRVXlhNKa+K1RW4k
-         9ZAafk/PADgPnJlESCdi9IhRKqJHBO4Y/xCGl/Pr4KTVF72Rvo7+ONPA/lirOtjRhY8n
-         nXq1ZEQt0/Nirp/zONiLCZBxneLhbjgFCKFIk8avLg1KKx25F+lNMED/cHZS4H1kmIJX
-         npGA==
-X-Gm-Message-State: APjAAAXGRdvhoZVmVT3YFP5/psIAUHppttq7VpG0frTFvAS8XLvv+Glq
-        RDMy4CuqynQfSraGYzvHyQGsWw==
-X-Google-Smtp-Source: APXvYqxe51A2j3HQNDba4Y1SRCrfzq3onNi4ynJVohVbf4X4syGAVuNhE3mopOvgQvF7pjvzYVE5iw==
-X-Received: by 2002:a6b:4e10:: with SMTP id c16mr9806791iob.18.1555439595207;
-        Tue, 16 Apr 2019 11:33:15 -0700 (PDT)
-Received: from localhost ([2620:15c:183:0:20b8:dee7:5447:d05])
-        by smtp.gmail.com with ESMTPSA id k18sm19887735iob.60.2019.04.16.11.33.14
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 11:33:14 -0700 (PDT)
-From:   Raul E Rangel <rrangel@chromium.org>
-To:     linux-mmc@vger.kernel.org, linux-trace-devel@vger.kernel.org
-Cc:     djkurtz@chromium.org, zwisler@chromium.org,
-        Raul E Rangel <rrangel@chromium.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH v2 3/4] mmc: core: Add trace event for SD OCR response
-Date:   Tue, 16 Apr 2019 12:32:56 -0600
-Message-Id: <20190416183257.247902-4-rrangel@chromium.org>
-X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
-In-Reply-To: <20190416183257.247902-1-rrangel@chromium.org>
-References: <20190416183257.247902-1-rrangel@chromium.org>
+        Tue, 16 Apr 2019 14:33:36 -0400
+Received: from [192.168.1.110] ([95.117.99.70]) by mrelayeu.kundenserver.de
+ (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MXH3e-1hLU9S3cvm-00YfCs; Tue, 16 Apr 2019 20:32:53 +0200
+Subject: Re: RFC: on adding new CLONE_* flags [WAS Re: [PATCH 0/4] clone: add
+ CLONE_PIDFD]
+To:     "Serge E. Hallyn" <serge@hallyn.com>
+Cc:     Christian Brauner <christian@brauner.io>,
+        torvalds@linux-foundation.org, viro@zeniv.linux.org.uk,
+        jannh@google.com, dhowells@redhat.com, linux-api@vger.kernel.org,
+        linux-kernel@vger.kernel.org, luto@kernel.org, arnd@arndb.de,
+        ebiederm@xmission.com, keescook@chromium.org, tglx@linutronix.de,
+        mtk.manpages@gmail.com, akpm@linux-foundation.org, oleg@redhat.com,
+        cyphar@cyphar.com, joel@joelfernandes.org, dancol@google.com
+References: <20190414201436.19502-1-christian@brauner.io>
+ <dc05ffe3-c2ff-8b3e-d181-e0cc620bf91d@metux.net>
+ <20190415155034.GA25351@mail.hallyn.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <000a64d6-1e22-21bf-f232-15f141092e44@metux.net>
+Date:   Tue, 16 Apr 2019 20:32:50 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190415155034.GA25351@mail.hallyn.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:idE9K/WQ5QvXO0GQUgKPPOXnURDmwBfbTQPPulkXHuxDXT9GYUO
+ LPw5vgoEhKwXDluN/3BoulMwRZKmvyk3SSX6AUmsye0TT6WDJRCWYX6NkUzRSekO+0f8S5c
+ ZL/sOOSXRkzPZxHtAnSQd+0usHn3VL8U1MCIOAsoHXjjaw6pggbr3OpU1DHY9MmUmcoYGkB
+ 22Vgx0eafWk8cb+CNSk0A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:xCVq+f5vwCI=:X0A1NubqmRzmVILUpG0wQ2
+ 7sLI2bE9mgh1HsyCg+SKr1C9bW7FIlG83Y9i5u06CAdOwSsfxjzIhuPlkKtfgPbTYQsQlrtlz
+ Lfe2AiGzi0uIjKxEn7UZfrP41vDvF8reqaVF+lX6/xvNd5+UL02rwUyS2Gi/i2sT7iclx1drV
+ tTTLug0fp+mkrzglDFcliI2kT0Cf0IFvgsjWoTJCZT4ZrXYC9G5mOXiHUAigOi3ieMv0SxJC+
+ VNe/rBIk65lJFzb5Z4tuoAfuwtI2HyZdqJS9NIsVrqNLDla1fyDZaropEtPK42JvcI/JBoUST
+ 1sAVhwPmxJJ2Pu2jX8aJASvuXZ+mKYk1TMvrlCX6evGrHVMC+oHDj58asQFlkG3VLKgYyntSs
+ R6K3JvzK101b8Iod2QLBGDH91XpuPE16hNvcX1NdXEOrgFQip30utGr0h56VuMKZPZk5mjjBB
+ QgB+8HCYgRgOo1iMzux7E6pZKblX80Ie2kKUc12zHmZG434iJlnOSkUrETuNMbVL4bIX5Tzz5
+ Fmag5pFauq7WmIUYA25aKiJn0/9TH8AHUkj5dtnewk6dkDwSjBjj3unIjedMdHRsdbZ6EhMyw
+ zE63/1BrZ7G0Qo3itzwHNaouHy0XosjYZQGSZlJt4vifgRE3b9OJrULoL2xUUrR2BCwoLmhq3
+ gajd5UhOLOS5kiH5VfEmgdQgeKmlIC8dKJ8pkTYt8DLu2eWD1T2ENnaxu3jN3tAdsFAFGgK/W
+ uRoLim+vGPUnmY+nzvG/hGhqmU0KDct2909hpcUYQLc/cSXfnamFWJQfaZ8=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Example:
-sd_ocr_request: mmc0: 0x0 []
-sd_ocr_request: mmc0: 0x51200000 [SDHC or SDXC Supported (HCS) | Maximum Performance (XPC) | Switch to 1.8V (S18R) | 3.3 ~ 3.4]
-sd_ocr_response: mmc0: 0xff8000 [2.7 ~ 2.8 | 2.8 ~ 2.9 | 2.9 ~ 3.0 | 3.0 ~ 3.1 | 3.1 ~ 3.2 | 3.2 ~ 3.3 | 3.3 ~ 3.4 | 3.4 ~ 3.5 | 3.5 ~ 3.6]
+On 15.04.19 17:50, Serge E. Hallyn wrote:
 
-Signed-off-by: Raul E Rangel <rrangel@chromium.org>
----
+Hi,
 
- drivers/mmc/core/sd_ops.c  |  6 +++
- include/trace/events/mmc.h | 92 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 98 insertions(+)
+>> I'm working on implementing plan9-like fs namespaces, where unprivileged>> processes can change their own namespace at will. For that, certain>
+> Is there any place where we can see previous discussion about this?
+Yes, lkml and constainers list.
+It's stalled since few month, as I'm too busy w/ other things.
 
-diff --git a/drivers/mmc/core/sd_ops.c b/drivers/mmc/core/sd_ops.c
-index 0bb0b8419016..4cf0f040f896 100644
---- a/drivers/mmc/core/sd_ops.c
-+++ b/drivers/mmc/core/sd_ops.c
-@@ -19,6 +19,8 @@
- #include <linux/mmc/mmc.h>
- #include <linux/mmc/sd.h>
- 
-+#include <trace/events/mmc.h>
-+
- #include "core.h"
- #include "sd_ops.h"
- 
-@@ -130,11 +132,15 @@ int mmc_send_app_op_cond(struct mmc_host *host, u32 ocr, u32 *rocr)
- 		cmd.arg = ocr;
- 	cmd.flags = MMC_RSP_SPI_R1 | MMC_RSP_R3 | MMC_CMD_BCR;
- 
-+	trace_sd_ocr_request(host, ocr);
-+
- 	for (i = 100; i; i--) {
- 		err = mmc_wait_for_app_cmd(host, NULL, &cmd);
- 		if (err)
- 			break;
- 
-+		trace_sd_ocr_response(host, cmd.resp[0]);
-+
- 		/* if we're just probing, do a single pass */
- 		if (ocr == 0)
- 			break;
-diff --git a/include/trace/events/mmc.h b/include/trace/events/mmc.h
-index 463cf318d762..8d97810221cd 100644
---- a/include/trace/events/mmc.h
-+++ b/include/trace/events/mmc.h
-@@ -10,6 +10,98 @@
- #include <linux/mmc/host.h>
- #include <linux/tracepoint.h>
- 
-+
-+#define SD_OCR_REQUEST \
-+	{SD_OCR_CCS, "SDHC or SDXC Supported (HCS)"}, \
-+	{SD_OCR_XPC, "Maximum Performance (XPC)"}, \
-+	{SD_ROCR_S18A, "Switch to 1.8V (S18R)"}, \
-+	{MMC_VDD_165_195, "1.65 - 1.95"}, \
-+	{MMC_VDD_20_21, "2.0 ~ 2.1"}, \
-+	{MMC_VDD_21_22, "2.1 ~ 2.2"}, \
-+	{MMC_VDD_22_23, "2.2 ~ 2.3"}, \
-+	{MMC_VDD_23_24, "2.3 ~ 2.4"}, \
-+	{MMC_VDD_24_25, "2.4 ~ 2.5"}, \
-+	{MMC_VDD_25_26, "2.5 ~ 2.6"}, \
-+	{MMC_VDD_26_27, "2.6 ~ 2.7"}, \
-+	{MMC_VDD_27_28, "2.7 ~ 2.8"}, \
-+	{MMC_VDD_28_29, "2.8 ~ 2.9"}, \
-+	{MMC_VDD_29_30, "2.9 ~ 3.0"}, \
-+	{MMC_VDD_30_31, "3.0 ~ 3.1"}, \
-+	{MMC_VDD_31_32, "3.1 ~ 3.2"}, \
-+	{MMC_VDD_32_33, "3.2 ~ 3.3"}, \
-+	{MMC_VDD_33_34, "3.3 ~ 3.4"}, \
-+	{MMC_VDD_34_35, "3.4 ~ 3.5"}, \
-+	{MMC_VDD_35_36, "3.5 ~ 3.6"} \
-+
-+TRACE_EVENT(sd_ocr_request,
-+
-+	TP_PROTO(struct mmc_host *host, u32 ocr),
-+
-+	TP_ARGS(host, ocr),
-+
-+	TP_STRUCT__entry(
-+		__field(u32,			ocr)
-+		__string(name,			mmc_hostname(host))
-+	),
-+
-+	TP_fast_assign(
-+		__entry->ocr = ocr;
-+		__assign_str(name, mmc_hostname(host));
-+	),
-+
-+	TP_printk("%s: %#x [%s]",
-+		  __get_str(name),
-+		  __entry->ocr,
-+		  __print_flags(__entry->ocr, " | ", SD_OCR_REQUEST)
-+	)
-+);
-+
-+#define SD_OCR_RESPONSE \
-+	{MMC_CARD_BUSY, "Ready"}, \
-+	{SD_OCR_CCS, "SDHC or SDXC (CCS)"}, \
-+	{(1<<29), "UHS-II Card"}, \
-+	{SD_ROCR_S18A, "1.8V Accepted (S18A)"}, \
-+	{MMC_VDD_165_195, "1.65 - 1.95"}, \
-+	{MMC_VDD_20_21, "2.0 ~ 2.1"}, \
-+	{MMC_VDD_21_22, "2.1 ~ 2.2"}, \
-+	{MMC_VDD_22_23, "2.2 ~ 2.3"}, \
-+	{MMC_VDD_23_24, "2.3 ~ 2.4"}, \
-+	{MMC_VDD_24_25, "2.4 ~ 2.5"}, \
-+	{MMC_VDD_25_26, "2.5 ~ 2.6"}, \
-+	{MMC_VDD_26_27, "2.6 ~ 2.7"}, \
-+	{MMC_VDD_27_28, "2.7 ~ 2.8"}, \
-+	{MMC_VDD_28_29, "2.8 ~ 2.9"}, \
-+	{MMC_VDD_29_30, "2.9 ~ 3.0"}, \
-+	{MMC_VDD_30_31, "3.0 ~ 3.1"}, \
-+	{MMC_VDD_31_32, "3.1 ~ 3.2"}, \
-+	{MMC_VDD_32_33, "3.2 ~ 3.3"}, \
-+	{MMC_VDD_33_34, "3.3 ~ 3.4"}, \
-+	{MMC_VDD_34_35, "3.4 ~ 3.5"}, \
-+	{MMC_VDD_35_36, "3.5 ~ 3.6"}
-+
-+TRACE_EVENT(sd_ocr_response,
-+
-+	TP_PROTO(struct mmc_host *host, u32 ocr),
-+
-+	TP_ARGS(host, ocr),
-+
-+	TP_STRUCT__entry(
-+		__field(u32,			ocr)
-+		__string(name,			mmc_hostname(host))
-+	),
-+
-+	TP_fast_assign(
-+		__entry->ocr = ocr;
-+		__assign_str(name, mmc_hostname(host));
-+	),
-+
-+	TP_printk("%s: %#x [%s]",
-+		  __get_str(name),
-+		  __entry->ocr,
-+		  __print_flags(__entry->ocr, " | ", SD_OCR_RESPONSE)
-+	)
-+);
-+
- #define SD_SCR_WIDTH_FLAGS		\
- 	{SD_SCR_BUS_WIDTH_1, "1-BIT"},	\
- 	{SD_SCR_BUS_WIDTH_4, "4-BIT"}
+> If you have to disable suid anyway, then is there any reason why the> existing ability to do this in a private user namespace, with only>
+your own uid mapped (which you can do without any privilege) does> not
+suffice?  That was actually one of the main design goals of user>
+namespaces, to be able to clone(CLONE_NEWUSER), map your current uid,>
+then clone(CLONE_NEWNS) and bind mount at will.
+Well, it's not that easy ... maybe I should explain a bit more about how
+Plan9 works, and how I intent to map it into Linux:
+
+* on plan9, anybody can alter his own fs namespace (bind and mount), as
+  well as spawning new ones
+* basically anything is coming from some fileserver - even devices
+  (eg. there is no such thing like device nodes)
+* access control is done by the individual fileservers, based on the
+  initial authentication (on connecting to the server, before mounting)
+* all users are equal - no root at all. the only exception is the
+  initial process, which gets the kernel devices mounted into his
+  namespace.
+
+What I'd like to achieve on Linux:
+
+* unprivileged users can have their own mount namespace, where they
+  can mount at will (maybe just 9P).
+* but they still appear as the same normal users to the rest of the
+  system
+* 9p programs (compiled for Linux ABI) can run parallel to traditional
+  linux programs within the same user and sessions (eg. from a terminal,
+  i can call both the same way)
+* namespace modifications affect both equally (eg. I could run ff in
+  an own ns)
+* these namespaces exist as long as there's one process alive in here
+* creating a new ns can be done by unprivileged user
+ One of the things to make this work (w/o introducing a massive security
+hole) is disable suid for those processes (actually, one day i'd like to
+get rid of it completely, but that's another story).
+
+
+--mtx
+
 -- 
-2.21.0.392.gf8f6787159e-goog
-
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
