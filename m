@@ -3,51 +3,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA070C282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:48:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF72C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:48:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BCD37222DF
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:48:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AE5C8222DF
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:48:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729665AbfDPNsc (ORCPT
+        id S1729579AbfDPNrM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 09:48:32 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:60654 "EHLO
+        Tue, 16 Apr 2019 09:47:12 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:35346 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729623AbfDPNrX (ORCPT
+        by vger.kernel.org with ESMTP id S1729558AbfDPNrI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 09:47:23 -0400
-Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3GDlDVa060537
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:47:23 -0400
+        Tue, 16 Apr 2019 09:47:08 -0400
+Received: from pps.filterd (m0098416.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3GDkXhi178394
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:47:06 -0400
 Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2rwe3k5vjj-1
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rwfpusg9n-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:47:17 -0400
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:47:05 -0400
 Received: from localhost
         by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <ldufour@linux.ibm.com>;
-        Tue, 16 Apr 2019 14:46:55 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        Tue, 16 Apr 2019 14:46:58 +0100
+Received: from b06cxnps3074.portsmouth.uk.ibm.com (9.149.109.194)
         by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 16 Apr 2019 14:46:43 +0100
+        Tue, 16 Apr 2019 14:46:47 +0100
 Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3GDkgCs32833784
+        by b06cxnps3074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3GDkjdC54067278
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 Apr 2019 13:46:42 GMT
+        Tue, 16 Apr 2019 13:46:45 GMT
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5135C4C04E;
-        Tue, 16 Apr 2019 13:46:42 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id E76AD4C05C;
+        Tue, 16 Apr 2019 13:46:44 +0000 (GMT)
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DDCD34C05A;
-        Tue, 16 Apr 2019 13:46:40 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 6053D4C052;
+        Tue, 16 Apr 2019 13:46:43 +0000 (GMT)
 Received: from nimbus.lab.toulouse-stg.fr.ibm.com (unknown [9.101.4.33])
         by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 16 Apr 2019 13:46:40 +0000 (GMT)
+        Tue, 16 Apr 2019 13:46:43 +0000 (GMT)
 From:   Laurent Dufour <ldufour@linux.ibm.com>
 To:     akpm@linux-foundation.org, mhocko@kernel.org, peterz@infradead.org,
         kirill@shutemov.name, ak@linux.intel.com, dave@stgolabs.net,
@@ -78,18 +78,18 @@ Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         haren@linux.vnet.ibm.com, npiggin@gmail.com,
         paulmck@linux.vnet.ibm.com, Tim Chen <tim.c.chen@linux.intel.com>,
         linuxppc-dev@lists.ozlabs.org, x86@kernel.org
-Subject: [PATCH v12 27/31] mm: add speculative page fault vmstats
-Date:   Tue, 16 Apr 2019 15:45:18 +0200
+Subject: [PATCH v12 28/31] x86/mm: add speculative pagefault handling
+Date:   Tue, 16 Apr 2019 15:45:19 +0200
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190416134522.17540-1-ldufour@linux.ibm.com>
 References: <20190416134522.17540-1-ldufour@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19041613-0016-0000-0000-0000026F7280
+x-cbid: 19041613-0016-0000-0000-0000026F7281
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19041613-0017-0000-0000-000032CBBD97
-Message-Id: <20190416134522.17540-28-ldufour@linux.ibm.com>
+x-cbparentid: 19041613-0017-0000-0000-000032CBBD98
+Message-Id: <20190416134522.17540-29-ldufour@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-16_05:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
@@ -102,62 +102,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add speculative_pgfault vmstat counter to count successful speculative page
-fault handling.
+From: Peter Zijlstra <peterz@infradead.org>
 
-Also fixing a minor typo in include/linux/vm_event_item.h.
+Try a speculative fault before acquiring mmap_sem, if it returns with
+VM_FAULT_RETRY continue with the mmap_sem acquisition and do the
+traditional fault.
 
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+
+[Clearing of FAULT_FLAG_ALLOW_RETRY is now done in
+ handle_speculative_fault()]
+[Retry with usual fault path in the case VM_ERROR is returned by
+ handle_speculative_fault(). This allows signal to be delivered]
+[Don't build SPF call if !CONFIG_SPECULATIVE_PAGE_FAULT]
+[Handle memory protection key fault]
 Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
 ---
- include/linux/vm_event_item.h | 3 +++
- mm/memory.c                   | 3 +++
- mm/vmstat.c                   | 5 ++++-
- 3 files changed, 10 insertions(+), 1 deletion(-)
+ arch/x86/mm/fault.c | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
 
-diff --git a/include/linux/vm_event_item.h b/include/linux/vm_event_item.h
-index 47a3441cf4c4..137666e91074 100644
---- a/include/linux/vm_event_item.h
-+++ b/include/linux/vm_event_item.h
-@@ -109,6 +109,9 @@ enum vm_event_item { PGPGIN, PGPGOUT, PSWPIN, PSWPOUT,
- #ifdef CONFIG_SWAP
- 		SWAP_RA,
- 		SWAP_RA_HIT,
-+#endif
-+#ifdef CONFIG_SPECULATIVE_PAGE_FAULT
-+		SPECULATIVE_PGFAULT,
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index 667f1da36208..4390d207a7a1 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -1401,6 +1401,18 @@ void do_user_addr_fault(struct pt_regs *regs,
+ 	}
  #endif
- 		NR_VM_EVENT_ITEMS
- };
-diff --git a/mm/memory.c b/mm/memory.c
-index 509851ad7c95..c65e8011d285 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -4367,6 +4367,9 @@ vm_fault_t __handle_speculative_fault(struct mm_struct *mm,
  
- 	put_vma(vma);
- 
-+	if (ret != VM_FAULT_RETRY)
-+		count_vm_event(SPECULATIVE_PGFAULT);
++	/*
++	 * Do not try to do a speculative page fault if the fault was due to
++	 * protection keys since it can't be resolved.
++	 */
++	if (!(hw_error_code & X86_PF_PK)) {
++		fault = handle_speculative_fault(mm, address, flags);
++		if (fault != VM_FAULT_RETRY) {
++			perf_sw_event(PERF_COUNT_SW_SPF, 1, regs, address);
++			goto done;
++		}
++	}
 +
  	/*
- 	 * The task may have entered a memcg OOM situation but
- 	 * if the allocation error was handled gracefully (no
-diff --git a/mm/vmstat.c b/mm/vmstat.c
-index a7d493366a65..93f54b31e150 100644
---- a/mm/vmstat.c
-+++ b/mm/vmstat.c
-@@ -1288,7 +1288,10 @@ const char * const vmstat_text[] = {
- 	"swap_ra",
- 	"swap_ra_hit",
- #endif
--#endif /* CONFIG_VM_EVENTS_COUNTERS */
-+#ifdef CONFIG_SPECULATIVE_PAGE_FAULT
-+	"speculative_pgfault",
-+#endif
-+#endif /* CONFIG_VM_EVENT_COUNTERS */
- };
- #endif /* CONFIG_PROC_FS || CONFIG_SYSFS || CONFIG_NUMA */
+ 	 * Kernel-mode access to the user address space should only occur
+ 	 * on well-defined single instructions listed in the exception
+@@ -1499,6 +1511,8 @@ void do_user_addr_fault(struct pt_regs *regs,
+ 	}
  
+ 	up_read(&mm->mmap_sem);
++
++done:
+ 	if (unlikely(fault & VM_FAULT_ERROR)) {
+ 		mm_fault_error(regs, hw_error_code, address, fault);
+ 		return;
 -- 
 2.21.0
 
