@@ -2,113 +2,102 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-13.5 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D097C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:20:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 65FE3C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:21:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 18A4A20868
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:20:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4505020868
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:21:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729513AbfDPSUT (ORCPT
+        id S1729719AbfDPSVp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 14:20:19 -0400
-Received: from mga07.intel.com ([134.134.136.100]:46945 "EHLO mga07.intel.com"
+        Tue, 16 Apr 2019 14:21:45 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:58376 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727067AbfDPSUT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 14:20:19 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Apr 2019 11:20:18 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,358,1549958400"; 
-   d="scan'208";a="316507663"
-Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
-  by orsmga005.jf.intel.com with ESMTP; 16 Apr 2019 11:20:18 -0700
-Date:   Tue, 16 Apr 2019 11:20:18 -0700
-From:   Sean Christopherson <sean.j.christopherson@intel.com>
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
-        Andy Lutomirski <luto@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>
-Subject: Re: [patch V3 11/32] x86/exceptions: Add structs for exception stacks
-Message-ID: <20190416182018.GC21674@linux.intel.com>
-References: <20190414155936.679808307@linutronix.de>
- <20190414160144.506807893@linutronix.de>
+        id S1727180AbfDPSVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 14:21:44 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AC539F74B3;
+        Tue, 16 Apr 2019 18:21:43 +0000 (UTC)
+Received: from krava (ovpn-204-66.brq.redhat.com [10.40.204.66])
+        by smtp.corp.redhat.com (Postfix) with SMTP id 2AE7D19C71;
+        Tue, 16 Apr 2019 18:21:39 +0000 (UTC)
+Date:   Tue, 16 Apr 2019 20:21:39 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Stanislav Fomichev <sdf@fomichev.me>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andi Kleen <ak@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Song Liu <songliubraving@fb.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>
+Subject: Re: [PATCH 02/12] perf tools: Separate generic code in
+ dso_cache__read
+Message-ID: <20190416182139.GC10125@krava>
+References: <20190416160127.30203-1-jolsa@kernel.org>
+ <20190416160127.30203-3-jolsa@kernel.org>
+ <20190416171712.GB8631@mini-arch.hsd1.ca.comcast.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190414160144.506807893@linutronix.de>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190416171712.GB8631@mini-arch.hsd1.ca.comcast.net>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Tue, 16 Apr 2019 18:21:44 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 14, 2019 at 05:59:47PM +0200, Thomas Gleixner wrote:
-> At the moment everything assumes a full linear mapping of the various
-> exception stacks. Adding guard pages to the cpu entry area mapping of the
-> exception stacks will break that assumption.
-> 
-> As a preparatory step convert both the real storage and the effective
-> mapping in the cpu entry area from character arrays to structures.
-> 
-> To ensure that both arrays have the same ordering and the same size of the
-> individual stacks fill the members with a macro. The guard size is the only
-> difference between the two resulting structures. For now both have guard
-> size 0 until the preparation of all usage sites is done.
-> 
-> Provide a couple of helper macros which are used in the following
-> conversions.
-> 
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> ---
+On Tue, Apr 16, 2019 at 10:17:13AM -0700, Stanislav Fomichev wrote:
+> On 04/16, Jiri Olsa wrote:
+> > Moving file specific code in dso_cache__read function
+> > into separate file_read function. I'll add bpf specific
+> > code in following patches.
+> > 
+> > Link: http://lkml.kernel.org/n/tip-7f7d717uzrqt5ka2xp29ige3@git.kernel.org
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > ---
+> >  tools/perf/util/dso.c | 47 ++++++++++++++++++++++++-------------------
+> >  1 file changed, 26 insertions(+), 21 deletions(-)
+> > 
+> > diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
+> > index cb6199c1390a..6baad22ec8a9 100644
+> > --- a/tools/perf/util/dso.c
+> > +++ b/tools/perf/util/dso.c
+> > @@ -794,6 +794,30 @@ dso_cache__memcpy(struct dso_cache *cache, u64 offset,
+> >  	return cache_size;
+> >  }
+> >  
+> > +static ssize_t file_read(struct dso *dso, struct machine *machine,
+> > +			 u64 offset, char *data)
+> > +{
+> > +	ssize_t ret;
+> > +
+> > +	pthread_mutex_lock(&dso__data_open_lock);
+> > +
+> > +	/*
+> > +	 * dso->data.fd might be closed if other thread opened another
+> > +	 * file (dso) due to open file limit (RLIMIT_NOFILE).
+> > +	 */
+> > +	try_to_open_dso(dso, machine);
+> > +
+> > +	if (dso->data.fd < 0) {
+> > +		dso->data.status = DSO_DATA_STATUS_ERROR;
+> pthread_mutex_unlock(&dso__data_open_lock) here?
 
-One comment nit below, but other than that:
+oops, yea.. thanks
 
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
-
-> V2 -> V3: Move the guards below the stacks and add a top guard. Fix the
->       	  TOP() macro.
-> ---
->  arch/x86/include/asm/cpu_entry_area.h |   52 ++++++++++++++++++++++++++++++----
->  arch/x86/kernel/cpu/common.c          |    2 -
->  arch/x86/mm/cpu_entry_area.c          |    8 +----
->  3 files changed, 51 insertions(+), 11 deletions(-)
-> 
-> --- a/arch/x86/include/asm/cpu_entry_area.h
-> +++ b/arch/x86/include/asm/cpu_entry_area.h
-> @@ -7,6 +7,51 @@
->  #include <asm/processor.h>
->  #include <asm/intel_ds.h>
->  
-> +#ifdef CONFIG_X86_64
-> +
-> +/* Macro to enforce the same ordering and stack sizes */
-> +#define ESTACKS_MEMBERS(guardsize)		\
-> +	char	DF_stack_guard[guardsize];	\
-> +	char	DF_stack[EXCEPTION_STKSZ];	\
-> +	char	NMI_stack_guard[guardsize];	\
-> +	char	NMI_stack[EXCEPTION_STKSZ];	\
-> +	char	DB_stack_guard[guardsize];	\
-> +	char	DB_stack[DEBUG_STKSZ];		\
-> +	char	MCE_stack_guard[guardsize];	\
-> +	char	MCE_stack[EXCEPTION_STKSZ];	\
-> +	char	IST_top_guard[guardsize];	\
-> +
-> +/* The exception stacks linear storage. No guard pages required */
-
-How about s/linear/physical?  "linear" is confusing for us Intel wonks
-(or maybe just me) because in Intel's parlance it means virtual addresses
-for all intents and purposes.  And an apostrophe to show possession would
-help readability, e.g.:
-
-  /* The exception stacks' physical storage. No guard pages required */
-
-> +struct exception_stacks {
-> +	ESTACKS_MEMBERS(0)
-> +};
-> 
+jirka
