@@ -2,391 +2,122 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A04C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:18:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B25C1C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:18:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 93FD62077C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:18:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 86C942077C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:18:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729384AbfDPNSN (ORCPT
+        id S1726786AbfDPNSx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 09:18:13 -0400
-Received: from mga04.intel.com ([192.55.52.120]:40565 "EHLO mga04.intel.com"
+        Tue, 16 Apr 2019 09:18:53 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:60936 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726796AbfDPNSM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 09:18:12 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Apr 2019 06:18:12 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,357,1549958400"; 
-   d="scan'208";a="162369180"
-Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
-  by fmsmga004.fm.intel.com with ESMTP; 16 Apr 2019 06:18:09 -0700
-Received: from andy by smile with local (Exim 4.92)
-        (envelope-from <andriy.shevchenko@linux.intel.com>)
-        id 1hGNyS-0003PI-1R; Tue, 16 Apr 2019 16:18:08 +0300
-Date:   Tue, 16 Apr 2019 16:18:08 +0300
-From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-To:     Yury Norov <yury.norov@gmail.com>
-Cc:     Andrew Morton <akpm@linux-foundation.org>,
-        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Wilcox <willy@infradead.org>,
-        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
-        Mike Travis <travis@sgi.com>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Yury Norov <ynorov@marvell.com>, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 2/5] lib: rework bitmap_parselist
-Message-ID: <20190416131808.GF9224@smile.fi.intel.com>
-References: <20190416063801.20134-1-ynorov@marvell.com>
- <20190416063801.20134-3-ynorov@marvell.com>
+        id S1725796AbfDPNSx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 09:18:53 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 87D2E3086232;
+        Tue, 16 Apr 2019 13:18:52 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-47.bos.redhat.com [10.18.17.47])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 5B64260139;
+        Tue, 16 Apr 2019 13:18:51 +0000 (UTC)
+Subject: Re: [PATCH-tip 0/2] locking/rwsem: Rwsem rearchitecture part 2
+ follow-up patches
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+References: <20190415205829.32707-1-longman@redhat.com>
+ <20190416131047.GW11158@hirez.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ weim8xU=
+Organization: Red Hat
+Message-ID: <4747d10b-e9a4-f453-ab4e-13fc984a4067@redhat.com>
+Date:   Tue, 16 Apr 2019 09:18:50 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190416063801.20134-3-ynorov@marvell.com>
-Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190416131047.GW11158@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Tue, 16 Apr 2019 13:18:52 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 11:37:58PM -0700, Yury Norov wrote:
-> From: Yury Norov <ynorov@marvell.com>
-> 
-> Remove __bitmap_parselist helper and split the function to logical
-> parts.
-> 
+On 04/16/2019 09:10 AM, Peter Zijlstra wrote:
+> On Mon, Apr 15, 2019 at 04:58:27PM -0400, Waiman Long wrote:
+>> This series contain 2 follow-up patches to alleviate the performance
+>> regression found in the page_fault1 test of the will-it-scale benchmark.
+>> This does not recover all the lost performance, but reclaim a sizeable
+>> portion of it.
+>>
+>> The regression was found on an Intel system. I have run the test on
+>> an AMD system. The regression wasn't seen there.  There are only minor
+>> variations in performance. Perhaps the page fault path is quite different
+>> between Intel and AMD systems.
+> Can you please just fold this back into the appropriate patches? Trying
+> to review all the back and forth is painful.
 
-One comment below.
+I will send out an update part 2 patch with patch 1 of this series
+merged into the writer spinning on reader patch. Patch 2 of this series
+will be a standalone one.
 
-Overall looks good to me, thanks!
-Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-
-> Signed-off-by: Yury Norov <ynorov@marvell.com>
-> ---
->  lib/bitmap.c | 255 ++++++++++++++++++++++++++++-----------------------
->  1 file changed, 142 insertions(+), 113 deletions(-)
-> 
-> diff --git a/lib/bitmap.c b/lib/bitmap.c
-> index c63ddd06a5da..f235434df87b 100644
-> --- a/lib/bitmap.c
-> +++ b/lib/bitmap.c
-> @@ -20,6 +20,8 @@
->  
->  #include <asm/page.h>
->  
-> +#include "kstrtox.h"
-> +
->  /**
->   * DOC: bitmap introduction
->   *
-> @@ -477,12 +479,128 @@ int bitmap_print_to_pagebuf(bool list, char *buf, const unsigned long *maskp,
->  }
->  EXPORT_SYMBOL(bitmap_print_to_pagebuf);
->  
-> +/*
-> + * Region 9-38:4/10 describes the following bitmap structure:
-> + * 0	   9  12    18			38
-> + * .........****......****......****......
-> + *	    ^  ^     ^			 ^
-> + *      start  off   group_len	       end
-> + */
-> +struct region {
-> +	unsigned int start;
-> +	unsigned int off;
-> +	unsigned int group_len;
-> +	unsigned int end;
-> +};
-> +
-> +static int bitmap_set_region(const struct region *r,
-> +				unsigned long *bitmap, int nbits)
-> +{
-> +	unsigned int start;
-> +
-> +	if (r->end >= nbits)
-> +		return -ERANGE;
-> +
-> +	for (start = r->start; start <= r->end; start += r->group_len)
-> +		bitmap_set(bitmap, start, min(r->end - start + 1, r->off));
-> +
-> +	return 0;
-> +}
-> +
-> +static int bitmap_check_region(const struct region *r)
-> +{
-> +	if (r->start > r->end || r->group_len == 0 || r->off > r->group_len)
-> +		return -EINVAL;
-> +
-> +	return 0;
-> +}
-> +
-> +static const char *bitmap_getnum(const char *str, unsigned int *num)
-> +{
-> +	unsigned long long n;
-> +	unsigned int len;
-> +
-
-> +	len = _parse_integer(str, 10, &n);
-
-I think we are good here, since it's only for use inside lib itself.
-
-> +	if (!len)
-> +		return ERR_PTR(-EINVAL);
-
-> +	if (len & KSTRTOX_OVERFLOW || n != (unsigned int)n)
-
-Second part is simple to compare to UINT_MAX: "n > UINT_MAX", or
-"upper_32_bits(n)" would work as well.
-
-Among all I would rather go to comparison with limits, i.e. UINT_MAX.
-
-> +		return ERR_PTR(-EOVERFLOW);
-> +
-> +	*num = n;
-> +	return str + len;
-> +}
-> +
-> +static inline bool end_of_str(char c)
-> +{
-> +	return c == '\0' || c == '\n';
-> +}
-> +
-> +static inline bool __end_of_region(char c)
-> +{
-> +	return isspace(c) || c == ',';
-> +}
-> +
-> +static inline bool end_of_region(char c)
-> +{
-> +	return __end_of_region(c) || end_of_str(c);
-> +}
-> +
-> +/*
-> + * The format allows commas and whitespases at the beginning
-> + * of the region.
-> + */
-> +static const char *bitmap_find_region(const char *str)
-> +{
-> +	while (__end_of_region(*str))
-> +		str++;
-> +
-> +	return end_of_str(*str) ? NULL : str;
-> +}
-> +
-> +static const char *bitmap_parse_region(const char *str, struct region *r)
-> +{
-> +	str = bitmap_getnum(str, &r->start);
-> +	if (IS_ERR(str))
-> +		return str;
-> +
-> +	if (end_of_region(*str))
-> +		goto no_end;
-> +
-> +	if (*str != '-')
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	str = bitmap_getnum(str + 1, &r->end);
-> +	if (IS_ERR(str))
-> +		return str;
-> +
-> +	if (end_of_region(*str))
-> +		goto no_pattern;
-> +
-> +	if (*str != ':')
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	str = bitmap_getnum(str + 1, &r->off);
-> +	if (IS_ERR(str))
-> +		return str;
-> +
-> +	if (*str != '/')
-> +		return ERR_PTR(-EINVAL);
-> +
-> +	return bitmap_getnum(str + 1, &r->group_len);
-> +
-> +no_end:
-> +	r->end = r->start;
-> +no_pattern:
-> +	r->off = r->end + 1;
-> +	r->group_len = r->end + 1;
-> +
-> +	return end_of_str(*str) ? NULL : str;
-> +}
-> +
->  /**
-> - * __bitmap_parselist - convert list format ASCII string to bitmap
-> - * @buf: read nul-terminated user string from this buffer
-> - * @buflen: buffer size in bytes.  If string is smaller than this
-> - *    then it must be terminated with a \0.
-> - * @is_user: location of buffer, 0 indicates kernel space
-> + * bitmap_parselist - convert list format ASCII string to bitmap
-> + * @buf: read user string from this buffer; must be terminated
-> + *    with a \0 or \n.
->   * @maskp: write resulting mask here
->   * @nmaskbits: number of bits in mask to be written
->   *
-> @@ -498,127 +616,38 @@ EXPORT_SYMBOL(bitmap_print_to_pagebuf);
->   *
->   * Returns: 0 on success, -errno on invalid input strings. Error values:
->   *
-> - *   - ``-EINVAL``: second number in range smaller than first
-> + *   - ``-EINVAL``: wrong region format
->   *   - ``-EINVAL``: invalid character in string
->   *   - ``-ERANGE``: bit number specified too large for mask
-> + *   - ``-EOVERFLOW``: integer overflow in the input parameters
->   */
-> -static int __bitmap_parselist(const char *buf, unsigned int buflen,
-> -		int is_user, unsigned long *maskp,
-> -		int nmaskbits)
-> +int bitmap_parselist(const char *buf, unsigned long *maskp, int nmaskbits)
->  {
-> -	unsigned int a, b, old_a, old_b;
-> -	unsigned int group_size, used_size, off;
-> -	int c, old_c, totaldigits, ndigits;
-> -	const char __user __force *ubuf = (const char __user __force *)buf;
-> -	int at_start, in_range, in_partial_range;
-> +	struct region r;
-> +	long ret;
->  
-> -	totaldigits = c = 0;
-> -	old_a = old_b = 0;
-> -	group_size = used_size = 0;
->  	bitmap_zero(maskp, nmaskbits);
-> -	do {
-> -		at_start = 1;
-> -		in_range = 0;
-> -		in_partial_range = 0;
-> -		a = b = 0;
-> -		ndigits = totaldigits;
-> -
-> -		/* Get the next cpu# or a range of cpu#'s */
-> -		while (buflen) {
-> -			old_c = c;
-> -			if (is_user) {
-> -				if (__get_user(c, ubuf++))
-> -					return -EFAULT;
-> -			} else
-> -				c = *buf++;
-> -			buflen--;
-> -			if (isspace(c))
-> -				continue;
->  
-> -			/* A '\0' or a ',' signal the end of a cpu# or range */
-> -			if (c == '\0' || c == ',')
-> -				break;
-> -			/*
-> -			* whitespaces between digits are not allowed,
-> -			* but it's ok if whitespaces are on head or tail.
-> -			* when old_c is whilespace,
-> -			* if totaldigits == ndigits, whitespace is on head.
-> -			* if whitespace is on tail, it should not run here.
-> -			* as c was ',' or '\0',
-> -			* the last code line has broken the current loop.
-> -			*/
-> -			if ((totaldigits != ndigits) && isspace(old_c))
-> -				return -EINVAL;
-> -
-> -			if (c == '/') {
-> -				used_size = a;
-> -				at_start = 1;
-> -				in_range = 0;
-> -				a = b = 0;
-> -				continue;
-> -			}
-> +	while (buf) {
-> +		buf = bitmap_find_region(buf);
-> +		if (buf == NULL)
-> +			return 0;
->  
-> -			if (c == ':') {
-> -				old_a = a;
-> -				old_b = b;
-> -				at_start = 1;
-> -				in_range = 0;
-> -				in_partial_range = 1;
-> -				a = b = 0;
-> -				continue;
-> -			}
-> +		buf = bitmap_parse_region(buf, &r);
-> +		if (IS_ERR(buf))
-> +			return PTR_ERR(buf);
->  
-> -			if (c == '-') {
-> -				if (at_start || in_range)
-> -					return -EINVAL;
-> -				b = 0;
-> -				in_range = 1;
-> -				at_start = 1;
-> -				continue;
-> -			}
-> +		ret = bitmap_check_region(&r);
-> +		if (ret)
-> +			return ret;
->  
-> -			if (!isdigit(c))
-> -				return -EINVAL;
-> +		ret = bitmap_set_region(&r, maskp, nmaskbits);
-> +		if (ret)
-> +			return ret;
-> +	}
->  
-> -			b = b * 10 + (c - '0');
-> -			if (!in_range)
-> -				a = b;
-> -			at_start = 0;
-> -			totaldigits++;
-> -		}
-> -		if (ndigits == totaldigits)
-> -			continue;
-> -		if (in_partial_range) {
-> -			group_size = a;
-> -			a = old_a;
-> -			b = old_b;
-> -			old_a = old_b = 0;
-> -		} else {
-> -			used_size = group_size = b - a + 1;
-> -		}
-> -		/* if no digit is after '-', it's wrong*/
-> -		if (at_start && in_range)
-> -			return -EINVAL;
-> -		if (!(a <= b) || group_size == 0 || !(used_size <= group_size))
-> -			return -EINVAL;
-> -		if (b >= nmaskbits)
-> -			return -ERANGE;
-> -		while (a <= b) {
-> -			off = min(b - a + 1, used_size);
-> -			bitmap_set(maskp, a, off);
-> -			a += group_size;
-> -		}
-> -	} while (buflen && c == ',');
->  	return 0;
->  }
-> -
-> -int bitmap_parselist(const char *bp, unsigned long *maskp, int nmaskbits)
-> -{
-> -	char *nl  = strchrnul(bp, '\n');
-> -	int len = nl - bp;
-> -
-> -	return __bitmap_parselist(bp, len, 0, maskp, nmaskbits);
-> -}
->  EXPORT_SYMBOL(bitmap_parselist);
->  
->  
-> -- 
-> 2.17.1
-> 
-
--- 
-With Best Regards,
-Andy Shevchenko
-
+Cheers,
+Longman
 
