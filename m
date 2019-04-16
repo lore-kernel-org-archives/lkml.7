@@ -2,102 +2,117 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 92A0CC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A83B3C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:12:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6378B20693
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:12:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HkiYGAvX"
+	by mail.kernel.org (Postfix) with ESMTP id 81AF120693
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:12:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729339AbfDPNMm (ORCPT
+        id S1729359AbfDPNMx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 09:12:42 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:37996 "EHLO
-        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727228AbfDPNMl (ORCPT
+        Tue, 16 Apr 2019 09:12:53 -0400
+Received: from mout.kundenserver.de ([212.227.17.13]:36975 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727030AbfDPNMw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 09:12:41 -0400
-Received: by mail-pg1-f193.google.com with SMTP id j26so10327188pgl.5;
-        Tue, 16 Apr 2019 06:12:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=IRRRdCJvUfQO42fbWalJ527OXsT9rWyVvHgcaJXy4Uw=;
-        b=HkiYGAvX/TMTWxrYjkngKojO4SEKOHRAjpA5zkTIQCEWb2XFzYtxgdaKh2HneY0qQx
-         UW9IX0byeLiV4aWIXmC7RVuRB0OUWsaOOLVF5Chz2vxeTajVWgyhh4Kp1D9FuyzH2VNk
-         6RAEa/SDUY02nSM9KRLL4V5VjYAI5posC+7ClEFFJCkICza6y9JkOMUPxrkyXtPUUZ4e
-         k3XlysnPqmemXqueJdKLP8aVt+Wg9UtHTnCOc4mh18De28mAcjQVq0IGBLimDC7ZBG7J
-         6d5MahuuzI5EcMI3vSP9Ho0a7gVWm74SbTgFsVJr4IvF7aJ+fOcfGAuq4wiwzT/IUDi1
-         CSCg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
-         :date:user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=IRRRdCJvUfQO42fbWalJ527OXsT9rWyVvHgcaJXy4Uw=;
-        b=RDD/96gH/R9I/fNlGP+4mk6NGWPMUP+pIOwKoQ5Kr3CwyUFxaaTJALR6gF4ZCgqiUR
-         aUJNieWlsjmEfef5DqxURvFnRc8sdGURljQfO2jqXFx6aMX7sDzqKirurUkq/mVoVr2q
-         BdsqP1E/2Mj0gYUHmLZbvDR3oKQ92/bpOJs0TRxdKaJPJKytgwJoCORolECu/VZtZCuq
-         sbNye+ASl2zk2/EtEGbXK3DMPL/xHALfqIAKcnajGPicDUH0JcXiNQQVR5I0dd67TmGC
-         YlAn80OivIhHwr9zk85i07Ks37fM6NFTFp3+Dr0mCG6vbuGZl/RR0UK4ds8Hzte9dfSI
-         t7uA==
-X-Gm-Message-State: APjAAAWcihAy9vSJrz5YTn5VQEH+r4rU9bK552OOE6CM9HlecSkpSOQM
-        QJwWdLLJz7+21qpJsSF7H6lanSkS
-X-Google-Smtp-Source: APXvYqwI+bHbN/n/+j/sw03Cxn5CLCg+ueiIkvSR1BqPsmP+8EB7LExpJb4VehHEhT2Z1kD30UhgQQ==
-X-Received: by 2002:a63:78b:: with SMTP id 133mr43804637pgh.307.1555420360223;
-        Tue, 16 Apr 2019 06:12:40 -0700 (PDT)
-Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id w1sm49525890pfw.101.2019.04.16.06.12.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 06:12:39 -0700 (PDT)
-Subject: Re: [PATCH 4.9 00/76] 4.9.169-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
-        shuah@kernel.org, patches@kernelci.org,
-        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
-        stable@vger.kernel.org
-References: <20190415183707.712011689@linuxfoundation.org>
-From:   Guenter Roeck <linux@roeck-us.net>
-Message-ID: <a8d1657b-065b-c81a-743b-d73c683a46cd@roeck-us.net>
-Date:   Tue, 16 Apr 2019 06:12:37 -0700
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 16 Apr 2019 09:12:52 -0400
+Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.145]) with ESMTPA (Nemesis) id
+ 1MDyoU-1h6W081KSK-009x0E; Tue, 16 Apr 2019 15:12:44 +0200
+From:   Arnd Bergmann <arnd@arndb.de>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Arnd Bergmann <arnd@arndb.de>, Liam Girdwood <lgirdwood@gmail.com>,
+        Cosmin Samoila <cosmin.samoila@nxp.com>,
+        Shengjiu Wang <shengjiu.wang@nxp.com>,
+        Shawn Guo <shawnguo@kernel.org>,
+        Fabio Estevam <festevam@gmail.com>,
+        alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] ASoC: imx: fix fiq dependencies
+Date:   Tue, 16 Apr 2019 15:12:23 +0200
+Message-Id: <20190416131242.1232143-1-arnd@arndb.de>
+X-Mailer: git-send-email 2.20.0
 MIME-Version: 1.0
-In-Reply-To: <20190415183707.712011689@linuxfoundation.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:lo7UpILhnUjahKQUzMx0hhOZaj8tlRqnUxInMnO4970rBZihFAd
+ Q6+qcs5UL6fqyp38A5oD5MoWREFXriz25NtTWSn9o36XmxUvbVBJd2SgIuyOxhOWUxdX2DP
+ cp0cS4OCK+ARYNPXyBW7chp6PbVGTpLugO4uu/Kq6B1zpWbaTa6EF+CtzMxBZe9CDqI338Z
+ v+LVzlWrAINohJAcg85uA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:W7rEIcSTWOs=:tV2qJnFWm4UexhcqSh3KJX
+ NBaEOlR9+H+7g0BC5yzESIW5OPA+E986MFpN2HQlwELuwsntUJAzv7w4NOgKjrVnu+dbO4tra
+ 2xri4956DU37qJoxybc32+M2bU/aX68aLTPlhPmdm4gQJZCb6lAypA6tmi6riM/5Lvk4vkH2G
+ IYS4tYV8MtTP/noNbkbYy0rKwVNLiYIg8FeRhQUrihtY+tZbrq/RdtozHJReWeIyd72sHEEoe
+ jsh6PkmUPkDMTbgMD1WZ2aHODRtIu/Cdk4xny6qeKfexMdvVe6C21yYSuQJ3aeFXoDdyNYEvH
+ Ijs1FMCuABxGbQ4l1V6sSAgwoclijevqwTZrnwcthae4DRIY0+XO9kpYJL0KFwLuPcJwQIvpJ
+ pkjFJDlSU0uUbfHNHSVJi96qg/cKW8gzzkACd8SP7pzl0kGxAOEo82VoGlwbtm95iyFHR50ea
+ CgJZPvvBHAUC3+8WM+pkght3/DjZwbW7Ryo/ZIM7JAdu6PiTBWh9XqXcTyYpKJkpoQPCCWjOJ
+ sQErxqL91TBdoy7NqhkfFGJsr1Syt5vI91R12jFslUJbThIxoG3btOSk2MGx4NTIh5ERq5CVb
+ 6kQrZJFMkR6NxWk8sT9bgdzYA8FLXvdR++eALMuggRh+PWOP+19VgF0DA3cLmNK057mpueAX0
+ /Ua7ksicjfE2+hqNnlH1sgONSiVhUOPtF6nzdEmv6nPVGAgfesTJdAjcv4i8gRBFKvpDWUYob
+ bpDg2ZSJHjW4SPmzc0NxbFdeiSMD0bP67igstQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/15/19 11:43 AM, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 4.9.169 release.
-> There are 76 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
-> 
-> Responses should be made by Wed Apr 17 18:36:37 UTC 2019.
-> Anything received after that time might be too late.
-> 
+During randconfig builds, I occasionally run into an invalid configuration
+of the freescale FIQ sound support:
 
-Building parisc:defconfig ... failed
---------------
-Error log:
-arch/parisc/kernel/setup.c: In function 'start_parisc':
-arch/parisc/kernel/setup.c:407:2: error: 'running_on_qemu' undeclared
+WARNING: unmet direct dependencies detected for SND_SOC_IMX_PCM_FIQ
+  Depends on [m]: SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_IMX_SOC [=m]
+  Selected by [y]:
+  - SND_SOC_FSL_SPDIF [=y] && SOUND [=y] && !UML && SND [=y] && SND_SOC [=y] && SND_IMX_SOC [=m]!=n && (MXC_TZIC [=n] || MXC_AVIC [=y])
 
-This affects all parisc builds.
+sound/soc/fsl/imx-ssi.o: In function `imx_ssi_remove':
+imx-ssi.c:(.text+0x28): undefined reference to `imx_pcm_fiq_exit'
+sound/soc/fsl/imx-ssi.o: In function `imx_ssi_probe':
+imx-ssi.c:(.text+0xa64): undefined reference to `imx_pcm_fiq_init'
 
-Final results follow later.
+The Kconfig warning is a result of the symbol being defined inside of
+the "if SND_IMX_SOC" block, and is otherwise harmless. The link error
+is more tricky and happens with SND_SOC_IMX_SSI=y, which may or may not
+imply FIQ support. However, if SND_SOC_FSL_SSI is set to =m at the same
+time, that selects SND_SOC_IMX_PCM_FIQ as a loadable module dependency,
+which then causes a link failure from imx-ssi.
 
-Guenter
+The solution here is to make SND_SOC_IMX_PCM_FIQ built-in whenever
+one of its potential users is built-in.
+
+Fixes: ff40260f79dc ("ASoC: fsl: refine DMA/FIQ dependencies")
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ sound/soc/fsl/Kconfig | 9 +++++----
+ 1 file changed, 5 insertions(+), 4 deletions(-)
+
+diff --git a/sound/soc/fsl/Kconfig b/sound/soc/fsl/Kconfig
+index 7b1d9970be8b..1f65cf555ebe 100644
+--- a/sound/soc/fsl/Kconfig
++++ b/sound/soc/fsl/Kconfig
+@@ -182,16 +182,17 @@ config SND_MPC52xx_SOC_EFIKA
+ 
+ endif # SND_POWERPC_SOC
+ 
++config SND_SOC_IMX_PCM_FIQ
++	tristate
++	default y if SND_SOC_IMX_SSI=y && (SND_SOC_FSL_SSI=m || SND_SOC_FSL_SPDIF=m) && (MXC_TZIC || MXC_AVIC)
++	select FIQ
++
+ if SND_IMX_SOC
+ 
+ config SND_SOC_IMX_SSI
+ 	tristate
+ 	select SND_SOC_FSL_UTILS
+ 
+-config SND_SOC_IMX_PCM_FIQ
+-	tristate
+-	select FIQ
+-
+ comment "SoC Audio support for Freescale i.MX boards:"
+ 
+ config SND_MXC_SOC_WM1133_EV1
+-- 
+2.20.0
 
