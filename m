@@ -2,106 +2,146 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AED48C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:07:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDC46C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:07:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 685CB20872
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:07:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="awmgR1Sq"
+	by mail.kernel.org (Postfix) with ESMTP id B3C1F20880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:07:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729559AbfDPRHG (ORCPT
+        id S1730056AbfDPRHa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 13:07:06 -0400
-Received: from mail-pg1-f202.google.com ([209.85.215.202]:33568 "EHLO
-        mail-pg1-f202.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726860AbfDPRHG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 13:07:06 -0400
-Received: by mail-pg1-f202.google.com with SMTP id z14so12963142pgv.0
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 10:07:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:cc;
-        bh=4Xb9r78wtIVQzgmRj/VCgw4LZC1bfVVf3fvkPEzLd58=;
-        b=awmgR1SqRft96tF11fLis6fySJvqzKmNhUU819y72B0Uc/AXwrgcSzgUS3d433pf7r
-         Gs8y6uUypBao06/6SFdepc+TrlHh6BIrVPIhomcLccrDjZMVZJOatfdPC5U0p+uuT1nP
-         HU5+QOTw02RV+amffH9xg4bQg2rKR1kDumUv7qVGK+Qib1Lxji/MAAOSvO5vQMafVc4p
-         wOfUGB583jCBi2Q1487B/zOfTR/2yBQOTTO2Yt3td/NqvRMtdeB1DZxpGUwGIFaznfr0
-         AxOTO9180WBZStmOrp+Ta+GVEBq1xMHOOmpOxVvxDdSu3av1u9zM/QoT9BTVTjLm3h89
-         b/Uw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:cc;
-        bh=4Xb9r78wtIVQzgmRj/VCgw4LZC1bfVVf3fvkPEzLd58=;
-        b=UAsBRtrdXUzLlmAl6bYJnM9dN7hHiXtAfLvb46tlxl/CJkyNXyGHNeF1FhYddrLbe+
-         XHSMNpAR6lsSeJl8z1YitHUPz92XUiMNlkPj7H1jwDdeZFVMiH2JIncT6bzk4oUB8S+J
-         iLhvmvIGujFkwVnpMou6sgrmJwYJ+AL0Gf7aCmFpTG3VHn9Upe8RmSZqzsHLmHw6frZJ
-         5nvZFa+rh8MQ+9RszTEpf5ebs5fUaDKW7x1vejGOx6EOTNGDIrnol0R/er48tVKeqFwD
-         1mj27IA4VeEtfUGR9xheR+lLuEQscOlml0HWdpBPBvdA5vzt9V/H0rgOIE0EVT6tWWNv
-         hf0Q==
-X-Gm-Message-State: APjAAAUIbdtlhEbSWk20k8gi6ovrN7BFz5Dh6Zk4aJXfK4RUlqhi1F6d
-        Q0Br2aTZMp3xXd9g4y3Hu27gMOA=
-X-Google-Smtp-Source: APXvYqyp4OsxYT3O1FTi/ApB87QHW+yAfOoWi6Na2nZkx3UnUx8MDXjqNDeT3KTH3l6je8QwZV4WmYA=
-X-Received: by 2002:a63:2356:: with SMTP id u22mr1748062pgm.2.1555434425401;
- Tue, 16 Apr 2019 10:07:05 -0700 (PDT)
-Date:   Tue, 16 Apr 2019 10:07:01 -0700
-Message-Id: <20190416170701.50333-1-wvw@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
-Subject: [PATCH] thermal: core: skip update disabled thermal zones after suspend
-From:   Wei Wang <wvw@google.com>
-Cc:     wei.vince.wang@gmail.com, Wei Wang <wvw@google.com>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
-To:     unlisted-recipients:; (no To-header on input)
+        Tue, 16 Apr 2019 13:07:30 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:55938 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726230AbfDPRH3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 13:07:29 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 6F60F88317;
+        Tue, 16 Apr 2019 17:07:29 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.236])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D0B2419C71;
+        Tue, 16 Apr 2019 17:07:25 +0000 (UTC)
+Date:   Tue, 16 Apr 2019 13:07:24 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Jan Kara <jack@suse.cz>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-mm@kvack.org,
+        John Hubbard <jhubbard@nvidia.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Ming Lei <ming.lei@redhat.com>,
+        Dave Chinner <david@fromorbit.com>,
+        Jason Gunthorpe <jgg@ziepe.ca>,
+        Matthew Wilcox <willy@infradead.org>
+Subject: Re: [PATCH v1 10/15] block: add gup flag to
+ bio_add_page()/bio_add_pc_page()/__bio_add_page()
+Message-ID: <20190416170723.GC3254@redhat.com>
+References: <20190411210834.4105-1-jglisse@redhat.com>
+ <20190411210834.4105-11-jglisse@redhat.com>
+ <20190415145952.GE13684@quack2.suse.cz>
+ <20190415152433.GB3436@redhat.com>
+ <20190416164658.GB17148@quack2.suse.cz>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190416164658.GB17148@quack2.suse.cz>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Tue, 16 Apr 2019 17:07:29 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-It is unnecessary to update disabled thermal zones post suspend and
-sometimes leads error/warning in bad behaved thermal drivers.
+On Tue, Apr 16, 2019 at 06:46:58PM +0200, Jan Kara wrote:
+> On Mon 15-04-19 11:24:33, Jerome Glisse wrote:
+> > On Mon, Apr 15, 2019 at 04:59:52PM +0200, Jan Kara wrote:
+> > > Hi Jerome!
+> > > 
+> > > On Thu 11-04-19 17:08:29, jglisse@redhat.com wrote:
+> > > > From: Jérôme Glisse <jglisse@redhat.com>
+> > > > 
+> > > > We want to keep track of how we got a reference on page added to bio_vec
+> > > > ie wether the page was reference through GUP (get_user_page*) or not. So
+> > > > add a flag to bio_add_page()/bio_add_pc_page()/__bio_add_page() to that
+> > > > effect.
+> > > 
+> > > Thanks for writing this patch set! Looking through patches like this one,
+> > > I'm a bit concerned. With so many bio_add_page() callers it's difficult to
+> > > get things right and not regress in the future. I'm wondering whether the
+> > > things won't be less error-prone if we required that all page reference
+> > > from bio are gup-like (not necessarily taken by GUP, if creator of the bio
+> > > gets to struct page he needs via some other means (e.g. page cache lookup),
+> > > he could just use get_gup_pin() helper we'd provide).  After all, a page
+> > > reference in bio means that the page is pinned for the duration of IO and
+> > > can be DMAed to/from so it even makes some sense to track the reference
+> > > like that. Then bio_put() would just unconditionally do put_user_page() and
+> > > we won't have to propagate the information in the bio.
+> > > 
+> > > Do you think this would be workable and easier?
+> > 
+> > It might be workable but i am not sure it is any simpler. bio_add_page*()
+> > does not take page reference it is up to the caller to take the proper
+> > page reference so the complexity would be push there (just in a different
+> > place) so i don't think it would be any simpler. This means that we would
+> > have to update more code than this patchset does.
+> 
+> I agree that the amount of work in this patch set is about the same
+> (although you don't have to pass the information about reference type in
+> the biovec so you save the complexities there). But for the future the
+> rule that "bio references must be gup-pins" is IMO easier to grasp for
+> developers and you can reasonably assert it in bio_add_page().
+> 
+> > This present patch is just a coccinelle semantic patch and even if it
+> > is scary to see that many call site, they are not that many that need
+> > to worry about the GUP parameter and they all are in patch 11, 12, 13
+> > and 14.
+> > 
+> > So i believe this patchset is simpler than converting everyone to take
+> > a GUP like page reference. Also doing so means we loose the information
+> > about GUP kind of defeat the purpose. So i believe it would be better
+> > to limit special reference to GUP only pages.
+> 
+> So what's the difference whether the page reference has been acquired via
+> GUP or via some other means? I don't think that really matters. If say
+> infiniband introduced new ioctl() that takes file descriptor, offset, and
+> length and just takes pages from page cache and attaches them to their RDMA
+> scatter-gather lists, then they'd need to use 'pin' references anyway...
+> 
+> Then why do we work on differentiating between GUP pins and other page
+> references?  Because it matters what the reference is going to be used for
+> and what is it's lifetime. And generally GUP references are used to do IO
+> to/from page and may even be controlled by userspace so that's why we need
+> to make them different. But in principle the 'gup-pin' reference is not about
+> the fact that the reference has been obtained from GUP but about the fact
+> that it is used to do IO. Hence I think that the rule "bio references must
+> be gup-pins" makes some sense.
 
-Signed-off-by: Wei Wang <wvw@google.com>
----
- drivers/thermal/thermal_core.c | 8 ++++++++
- 1 file changed, 8 insertions(+)
+It will break things like page protection i am working on (KSM for file
+back page). Pages can go through bio for mundane reasons (crypto, network,
+gpu, ...) that have nothing to do with I/O for fs and do not have to block
+any of the fs operation. If we GUP bias all those pages then we will
+effectively make the situation worse in that pages will have a high likely-
+hood to always look GUPed while it is just going through some bio for one
+of those mundane reasons (and page is not being written to just use as
+a source).
 
-diff --git a/drivers/thermal/thermal_core.c b/drivers/thermal/thermal_core.c
-index 6590bb5cb688..5baf5cfab999 100644
---- a/drivers/thermal/thermal_core.c
-+++ b/drivers/thermal/thermal_core.c
-@@ -1494,6 +1494,7 @@ static int thermal_pm_notify(struct notifier_block *nb,
- 			     unsigned long mode, void *_unused)
- {
- 	struct thermal_zone_device *tz;
-+	enum thermal_device_mode tz_mode;
- 
- 	switch (mode) {
- 	case PM_HIBERNATION_PREPARE:
-@@ -1506,6 +1507,13 @@ static int thermal_pm_notify(struct notifier_block *nb,
- 	case PM_POST_SUSPEND:
- 		atomic_set(&in_suspend, 0);
- 		list_for_each_entry(tz, &thermal_tz_list, node) {
-+			tz_mode = THERMAL_DEVICE_ENABLED;
-+			if (tz->ops->get_mode)
-+				tz->ops->get_mode(tz, &tz_mode);
-+
-+			if (tz_mode == THERMAL_DEVICE_DISABLED)
-+				continue;
-+
- 			thermal_zone_device_init(tz);
- 			thermal_zone_device_update(tz,
- 						   THERMAL_EVENT_UNSPECIFIED);
--- 
-2.21.0.392.gf8f6787159e-goog
+I understand why conceptualy it looks appealing but we would be loosing
+information here. I really want to be able to determine if a page is GUPed
+or not. If we GUP bias everyone in bio then we loose that.
 
+Also i want to point out that the complexity of biasing all page in bio
+are much bigger than this patchset it will require changes to all call
+site of bio_add_page*() at very least.
+
+Cheers,
+Jérôme
