@@ -2,146 +2,88 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10FF2C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E7056C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:31:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DCE8220821
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:30:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF7262073F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:31:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728230AbfDPLaU (ORCPT
+        id S1728773AbfDPLbD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 07:30:20 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:34911 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726672AbfDPLaU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 07:30:20 -0400
-Received: by mail-io1-f67.google.com with SMTP id p16so17339344iod.2
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 04:30:19 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=8kncRXSaDmHAz0vEzoPgmtt9ZkL84kbgi+tbCTlVlZg=;
-        b=ApQRI9fWUYRLLPs58NNTurTxHnFiW36N/Cu4OnwjpbGDyeg12RDrUw3v0fllz/7bnC
-         PnXfPYJqe3NbsoErjUakamZIaNFKp49aeffYaWY0cUrdoxB5ojEnTZuR/yX8jHpPWpkp
-         NLduZ4EPngI6MIG173MfhEzylFRkyZeb9gI6mQ2uhnt63Y8UovaBT4jpxA6p7rg/tpw7
-         w8GUzhOWrSHPxbquzvZOA6mrutrhc9sgcsTKaoL78rAyM2rQea59fJAOBQ+mQTnsft4b
-         kr9TtosQ9p/5M3KjX4UuwBILDPuy3ipsWxu2Dsxx4tP90YbTJ7Tr0WvkYB9uP+LYcyxN
-         g4+Q==
-X-Gm-Message-State: APjAAAVKkQZOmgkFp0cNCckIC85OVOjquYxWMCEfzieaecgBPL6jmLJt
-        p5Jsi61Lei1Q+QJWkaPj8pS2Q9upkKhsGaqb7gIKTQ==
-X-Google-Smtp-Source: APXvYqxd3Uwa1yI6uLSuvIcq9kBKgnvusjWCX2A01vpAJJPor/2NbCMGhCaBPPW6B20RtItNF7YZ42poPqL+Ylo9MKE=
-X-Received: by 2002:a6b:7218:: with SMTP id n24mr13899663ioc.112.1555414219274;
- Tue, 16 Apr 2019 04:30:19 -0700 (PDT)
+        Tue, 16 Apr 2019 07:31:03 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:52774 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726672AbfDPLbC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 07:31:02 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 46DF980D;
+        Tue, 16 Apr 2019 04:31:02 -0700 (PDT)
+Received: from arrakis.emea.arm.com (arrakis.cambridge.arm.com [10.1.196.78])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E40093F68F;
+        Tue, 16 Apr 2019 04:31:00 -0700 (PDT)
+Date:   Tue, 16 Apr 2019 12:30:58 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Miles Chen <miles.chen@mediatek.com>
+Cc:     Will Deacon <will.deacon@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, wsd_upstream@mediatek.com,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Subject: Re: [PATCH] arm64: mm: check virtual addr in virt_to_page() if
+ CONFIG_DEBUG_VIRTUAL=y
+Message-ID: <20190416113057.GA28994@arrakis.emea.arm.com>
+References: <1555349796-9456-1-git-send-email-miles.chen@mediatek.com>
 MIME-Version: 1.0
-References: <20190408165942.23640-1-kasong@redhat.com> <20190415153622.GG12232@hirez.programming.kicks-ass.net>
- <20190415165859.ul7i2w3lai3umgik@treble>
-In-Reply-To: <20190415165859.ul7i2w3lai3umgik@treble>
-From:   Kairui Song <kasong@redhat.com>
-Date:   Tue, 16 Apr 2019 19:30:07 +0800
-Message-ID: <CACPcB9f8OJmk++54YwW3yhrnohj31+oJcxfesJbNbNSGk9WUQQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v2] perf/x86: make perf callchain work without CONFIG_FRAME_POINTER
-To:     Josh Poimboeuf <jpoimboe@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Kairui Song <kasong@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Dave Young <dyoung@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1555349796-9456-1-git-send-email-miles.chen@mediatek.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 12:59 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
->
-> On Mon, Apr 15, 2019 at 05:36:22PM +0200, Peter Zijlstra wrote:
-> >
-> > I'll mostly defer to Josh on unwinding, but a few comments below.
-> >
-> > On Tue, Apr 09, 2019 at 12:59:42AM +0800, Kairui Song wrote:
-> > > diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> > > index e2b1447192a8..6075a4f94376 100644
-> > > --- a/arch/x86/events/core.c
-> > > +++ b/arch/x86/events/core.c
-> > > @@ -2355,6 +2355,12 @@ void arch_perf_update_userpage(struct perf_event *event,
-> > >     cyc2ns_read_end();
-> > >  }
-> > >
-> > > +static inline int
-> > > +valid_perf_registers(struct pt_regs *regs)
-> > > +{
-> > > +   return (regs->ip && regs->bp && regs->sp);
-> > > +}
-> >
-> > I'm unconvinced by this, with both guess and orc having !bp is perfectly
-> > valid.
-> >
-> > >  void
-> > >  perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs)
-> > >  {
-> > > @@ -2366,11 +2372,17 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
-> > >             return;
-> > >     }
-> > >
-> > > -   if (perf_callchain_store(entry, regs->ip))
-> > > +   if (valid_perf_registers(regs)) {
-> > > +           if (perf_callchain_store(entry, regs->ip))
-> > > +                   return;
-> > > +           unwind_start(&state, current, regs, NULL);
-> > > +   } else if (regs->sp) {
-> > > +           unwind_start(&state, current, NULL, (unsigned long *)regs->sp);
-> > > +   } else {
-> > >             return;
-> > > +   }
-> >
-> > AFAICT if we, by pure accident, end up with !bp for ORC, then we
-> > initialize the unwind wrong.
-> >
-> > Note that @regs is mostly trivially correct, except for that tracepoint
-> > case. So I don't think we should magic here.
->
-> Ah, I didn't quite understand this code before, and I still don't
-> really, but I guess the issue is that @regs can be either real or fake.
->
-> In the real @regs case, we just want to always unwind starting from
-> regs->sp.
->
-> But in the fake @regs case, we should instead unwind from the current
-> frame, skipping all frames until we hit the fake regs->sp.  Because
-> starting from fake/incomplete regs is most likely going to cause
-> problems with ORC (or DWARF for other arches).
->
-> The idea of a fake regs is fragile and confusing.  Is it possible to
-> just pass in the "skip" stack pointer directly instead?  That should
-> work for both FP and non-FP.  And I _think_ there's no need to ever
-> capture regs->bp anyway -- the stack pointer should be sufficient.
+On Tue, Apr 16, 2019 at 01:36:36AM +0800, Miles Chen wrote:
+> This change uses the original virt_to_page() (the one with __pa()) to
+> check the given virtual address if CONFIG_DEBUG_VIRTUAL=y.
+> 
+> Recently, I worked on a bug: a driver passes a symbol address to
+> dma_map_single() and the virt_to_page() (called by dma_map_single())
+> does not work for non-linear addresses after commit 9f2875912dac
+> ("arm64: mm: restrict virt_to_page() to the linear mapping").
+> 
+> I tried to trap the bug by enabling CONFIG_DEBUG_VIRTUAL but it
+> did not work - bacause the commit removes the __pa() from
+> virt_to_page() but CONFIG_DEBUG_VIRTUAL checks the virtual address
+> in __pa()/__virt_to_phys().
+> 
+> A simple solution is to use the original virt_to_page()
+> (the one with__pa()) if CONFIG_DEBUG_VIRTUAL=y.
+> 
+> Signed-off-by: Miles Chen <miles.chen@mediatek.com>
+> Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> ---
+>  arch/arm64/include/asm/memory.h | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/arch/arm64/include/asm/memory.h b/arch/arm64/include/asm/memory.h
+> index 290195168bb3..2cb8248fa2c8 100644
+> --- a/arch/arm64/include/asm/memory.h
+> +++ b/arch/arm64/include/asm/memory.h
+> @@ -302,7 +302,7 @@ static inline void *phys_to_virt(phys_addr_t x)
+>   */
+>  #define ARCH_PFN_OFFSET		((unsigned long)PHYS_PFN_OFFSET)
+>  
+> -#ifndef CONFIG_SPARSEMEM_VMEMMAP
+> +#if !defined(CONFIG_SPARSEMEM_VMEMMAP) || defined(CONFIG_DEBUG_VIRTUAL)
+>  #define virt_to_page(kaddr)	pfn_to_page(__pa(kaddr) >> PAGE_SHIFT)
+>  #define _virt_addr_valid(kaddr)	pfn_valid(__pa(kaddr) >> PAGE_SHIFT)
+>  #else
 
-Hi, that will break some other usage, if perf_callchain_kernel is
-called but it won't unwind to the callsite (could be produced by
-attach an ebpf call to kprobe), things will also go wrong. It should
-start with given registers when the register is valid.
-And it's true with omit frame pointer BP value could be anything, so 0
-is also valid, I think I need to find a better way to tell if we could
-start with the registers value or direct start unwinding and skip
-until got the stack.
+IIUC, this shouldn't change the behaviour of virt_addr_valid(). The
+patch looks fine to me.
 
->
-> In other words, either regs should be "real", and skip_sp is NULL; or
-> regs should be NULL and skip_sp should have a value.
->
-> --
-> Josh
---
-Best Regards,
-Kairui Song
+Acked-by: Catalin Marinas <catalin.marinas@arm.com>
