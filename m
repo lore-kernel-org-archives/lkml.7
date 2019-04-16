@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 42B48C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:58:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A94F5C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1CD0A206B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:58:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 84753206B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:58:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730735AbfDPR6l (ORCPT
+        id S1730572AbfDPR6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 13:58:41 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:57574 "EHLO
+        Tue, 16 Apr 2019 13:58:54 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:57568 "EHLO
         ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730250AbfDPRxp (ORCPT
+        with ESMTP id S1730248AbfDPRxp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 16 Apr 2019 13:53:45 -0400
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hGSH9-0005Wa-HQ; Tue, 16 Apr 2019 17:53:43 +0000
+        id 1hGSH9-0005WU-CJ; Tue, 16 Apr 2019 17:53:43 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [RFC PATCH 23/62] hpfs: switch to ->free_inode()
-Date:   Tue, 16 Apr 2019 18:53:01 +0100
-Message-Id: <20190416175340.21068-23-viro@ZenIV.linux.org.uk>
+Subject: [RFC PATCH 22/62] hostfs: switch to ->free_inode()
+Date:   Tue, 16 Apr 2019 18:53:00 +0100
+Message-Id: <20190416175340.21068-22-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190416175340.21068-1-viro@ZenIV.linux.org.uk>
 References: <20190416174900.GT2217@ZenIV.linux.org.uk>
@@ -43,41 +43,41 @@ From: Al Viro <viro@zeniv.linux.org.uk>
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- fs/hpfs/super.c | 10 ++--------
+ fs/hostfs/hostfs_kern.c | 10 ++--------
  1 file changed, 2 insertions(+), 8 deletions(-)
 
-diff --git a/fs/hpfs/super.c b/fs/hpfs/super.c
-index f2c3ebcd309c..ed4264bca790 100644
---- a/fs/hpfs/super.c
-+++ b/fs/hpfs/super.c
-@@ -238,17 +238,11 @@ static struct inode *hpfs_alloc_inode(struct super_block *sb)
- 	return &ei->vfs_inode;
+diff --git a/fs/hostfs/hostfs_kern.c b/fs/hostfs/hostfs_kern.c
+index 444c7b170359..5a7eb0c79839 100644
+--- a/fs/hostfs/hostfs_kern.c
++++ b/fs/hostfs/hostfs_kern.c
+@@ -243,17 +243,11 @@ static void hostfs_evict_inode(struct inode *inode)
+ 	}
  }
  
--static void hpfs_i_callback(struct rcu_head *head)
-+static void hpfs_free_inode(struct inode *inode)
+-static void hostfs_i_callback(struct rcu_head *head)
++static void hostfs_free_inode(struct inode *inode)
  {
 -	struct inode *inode = container_of(head, struct inode, i_rcu);
- 	kmem_cache_free(hpfs_inode_cachep, hpfs_i(inode));
+ 	kfree(HOSTFS_I(inode));
  }
  
--static void hpfs_destroy_inode(struct inode *inode)
+-static void hostfs_destroy_inode(struct inode *inode)
 -{
--	call_rcu(&inode->i_rcu, hpfs_i_callback);
+-	call_rcu(&inode->i_rcu, hostfs_i_callback);
 -}
 -
- static void init_once(void *foo)
+ static int hostfs_show_options(struct seq_file *seq, struct dentry *root)
  {
- 	struct hpfs_inode_info *ei = (struct hpfs_inode_info *) foo;
-@@ -532,7 +526,7 @@ static int hpfs_show_options(struct seq_file *seq, struct dentry *root)
- static const struct super_operations hpfs_sops =
- {
- 	.alloc_inode	= hpfs_alloc_inode,
--	.destroy_inode	= hpfs_destroy_inode,
-+	.free_inode	= hpfs_free_inode,
- 	.evict_inode	= hpfs_evict_inode,
- 	.put_super	= hpfs_put_super,
- 	.statfs		= hpfs_statfs,
+ 	const char *root_path = root->d_sb->s_fs_info;
+@@ -270,7 +264,7 @@ static int hostfs_show_options(struct seq_file *seq, struct dentry *root)
+ 
+ static const struct super_operations hostfs_sbops = {
+ 	.alloc_inode	= hostfs_alloc_inode,
+-	.destroy_inode	= hostfs_destroy_inode,
++	.free_inode	= hostfs_free_inode,
+ 	.evict_inode	= hostfs_evict_inode,
+ 	.statfs		= hostfs_statfs,
+ 	.show_options	= hostfs_show_options,
 -- 
 2.11.0
 
