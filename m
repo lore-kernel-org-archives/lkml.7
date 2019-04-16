@@ -2,122 +2,95 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84EFCC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:26:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0ABB9C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:27:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5937E20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:26:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C898B20868
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:27:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555446469;
+	bh=BIVxOInWBhvFY+0sBypM8aHx51zctQEPdCdcZsK5o8k=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=03+FEOoRKkpOohBa0ezkAfBh4sBxopjLkxK07eqxa4AFn7GSYQwC5l3YfWdHmptIn
+	 MH1fkaS/xvvQmBQflcJ7xdg1X7CR/IYN/7AxfB31MXgGIosKjRzaxEMMbcyFvbP6bd
+	 v3phTytPR3GgixOpOVppx8n/cmaI8AoD3bJmPUyE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730309AbfDPU02 (ORCPT
+        id S1729592AbfDPU1s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 16:26:28 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55418 "EHLO mx1.redhat.com"
+        Tue, 16 Apr 2019 16:27:48 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36062 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728610AbfDPU02 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 16:26:28 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S1728373AbfDPU1s (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 16:27:48 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D162D3086273;
-        Tue, 16 Apr 2019 20:26:27 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-47.bos.redhat.com [10.18.17.47])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A127B608C1;
-        Tue, 16 Apr 2019 20:26:26 +0000 (UTC)
-Subject: Re: [PATCH v4 07/16] locking/rwsem: Implement lock handoff to prevent
- lock starvation
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
-References: <20190413172259.2740-1-longman@redhat.com>
- <20190413172259.2740-8-longman@redhat.com>
- <20190416141205.GK12232@hirez.programming.kicks-ass.net>
-From:   Waiman Long <longman@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
- xsFNBFgsZGsBEAC3l/RVYISY3M0SznCZOv8aWc/bsAgif1H8h0WPDrHnwt1jfFTB26EzhRea
- XQKAJiZbjnTotxXq1JVaWxJcNJL7crruYeFdv7WUJqJzFgHnNM/upZuGsDIJHyqBHWK5X9ZO
- jRyfqV/i3Ll7VIZobcRLbTfEJgyLTAHn2Ipcpt8mRg2cck2sC9+RMi45Epweu7pKjfrF8JUY
- r71uif2ThpN8vGpn+FKbERFt4hW2dV/3awVckxxHXNrQYIB3I/G6mUdEZ9yrVrAfLw5M3fVU
- CRnC6fbroC6/ztD40lyTQWbCqGERVEwHFYYoxrcGa8AzMXN9CN7bleHmKZrGxDFWbg4877zX
- 0YaLRypme4K0ULbnNVRQcSZ9UalTvAzjpyWnlnXCLnFjzhV7qsjozloLTkZjyHimSc3yllH7
- VvP/lGHnqUk7xDymgRHNNn0wWPuOpR97J/r7V1mSMZlni/FVTQTRu87aQRYu3nKhcNJ47TGY
- evz/U0ltaZEU41t7WGBnC7RlxYtdXziEn5fC8b1JfqiP0OJVQfdIMVIbEw1turVouTovUA39
- Qqa6Pd1oYTw+Bdm1tkx7di73qB3x4pJoC8ZRfEmPqSpmu42sijWSBUgYJwsziTW2SBi4hRjU
- h/Tm0NuU1/R1bgv/EzoXjgOM4ZlSu6Pv7ICpELdWSrvkXJIuIwARAQABzR9Mb25nbWFuIExv
- bmcgPGxsb25nQHJlZGhhdC5jb20+wsF/BBMBAgApBQJYLGRrAhsjBQkJZgGABwsJCAcDAgEG
- FQgCCQoLBBYCAwECHgECF4AACgkQbjBXZE7vHeYwBA//ZYxi4I/4KVrqc6oodVfwPnOVxvyY
- oKZGPXZXAa3swtPGmRFc8kGyIMZpVTqGJYGD9ZDezxpWIkVQDnKM9zw/qGarUVKzElGHcuFN
- ddtwX64yxDhA+3Og8MTy8+8ZucM4oNsbM9Dx171bFnHjWSka8o6qhK5siBAf9WXcPNogUk4S
- fMNYKxexcUayv750GK5E8RouG0DrjtIMYVJwu+p3X1bRHHDoieVfE1i380YydPd7mXa7FrRl
- 7unTlrxUyJSiBc83HgKCdFC8+ggmRVisbs+1clMsK++ehz08dmGlbQD8Fv2VK5KR2+QXYLU0
- rRQjXk/gJ8wcMasuUcywnj8dqqO3kIS1EfshrfR/xCNSREcv2fwHvfJjprpoE9tiL1qP7Jrq
- 4tUYazErOEQJcE8Qm3fioh40w8YrGGYEGNA4do/jaHXm1iB9rShXE2jnmy3ttdAh3M8W2OMK
- 4B/Rlr+Awr2NlVdvEF7iL70kO+aZeOu20Lq6mx4Kvq/WyjZg8g+vYGCExZ7sd8xpncBSl7b3
- 99AIyT55HaJjrs5F3Rl8dAklaDyzXviwcxs+gSYvRCr6AMzevmfWbAILN9i1ZkfbnqVdpaag
- QmWlmPuKzqKhJP+OMYSgYnpd/vu5FBbc+eXpuhydKqtUVOWjtp5hAERNnSpD87i1TilshFQm
- TFxHDzbOwU0EWCxkawEQALAcdzzKsZbcdSi1kgjfce9AMjyxkkZxcGc6Rhwvt78d66qIFK9D
- Y9wfcZBpuFY/AcKEqjTo4FZ5LCa7/dXNwOXOdB1Jfp54OFUqiYUJFymFKInHQYlmoES9EJEU
- yy+2ipzy5yGbLh3ZqAXyZCTmUKBU7oz/waN7ynEP0S0DqdWgJnpEiFjFN4/ovf9uveUnjzB6
- lzd0BDckLU4dL7aqe2ROIHyG3zaBMuPo66pN3njEr7IcyAL6aK/IyRrwLXoxLMQW7YQmFPSw
- drATP3WO0x8UGaXlGMVcaeUBMJlqTyN4Swr2BbqBcEGAMPjFCm6MjAPv68h5hEoB9zvIg+fq
- M1/Gs4D8H8kUjOEOYtmVQ5RZQschPJle95BzNwE3Y48ZH5zewgU7ByVJKSgJ9HDhwX8Ryuia
- 79r86qZeFjXOUXZjjWdFDKl5vaiRbNWCpuSG1R1Tm8o/rd2NZ6l8LgcK9UcpWorrPknbE/pm
- MUeZ2d3ss5G5Vbb0bYVFRtYQiCCfHAQHO6uNtA9IztkuMpMRQDUiDoApHwYUY5Dqasu4ZDJk
- bZ8lC6qc2NXauOWMDw43z9He7k6LnYm/evcD+0+YebxNsorEiWDgIW8Q/E+h6RMS9kW3Rv1N
- qd2nFfiC8+p9I/KLcbV33tMhF1+dOgyiL4bcYeR351pnyXBPA66ldNWvABEBAAHCwWUEGAEC
- AA8FAlgsZGsCGwwFCQlmAYAACgkQbjBXZE7vHeYxSQ/+PnnPrOkKHDHQew8Pq9w2RAOO8gMg
- 9Ty4L54CsTf21Mqc6GXj6LN3WbQta7CVA0bKeq0+WnmsZ9jkTNh8lJp0/RnZkSUsDT9Tza9r
- GB0svZnBJMFJgSMfmwa3cBttCh+vqDV3ZIVSG54nPmGfUQMFPlDHccjWIvTvyY3a9SLeamaR
- jOGye8MQAlAD40fTWK2no6L1b8abGtziTkNh68zfu3wjQkXk4kA4zHroE61PpS3oMD4AyI9L
- 7A4Zv0Cvs2MhYQ4Qbbmafr+NOhzuunm5CoaRi+762+c508TqgRqH8W1htZCzab0pXHRfywtv
- 0P+BMT7vN2uMBdhr8c0b/hoGqBTenOmFt71tAyyGcPgI3f7DUxy+cv3GzenWjrvf3uFpxYx4
- yFQkUcu06wa61nCdxXU/BWFItryAGGdh2fFXnIYP8NZfdA+zmpymJXDQeMsAEHS0BLTVQ3+M
- 7W5Ak8p9V+bFMtteBgoM23bskH6mgOAw6Cj/USW4cAJ8b++9zE0/4Bv4iaY5bcsL+h7TqQBH
- Lk1eByJeVooUa/mqa2UdVJalc8B9NrAnLiyRsg72Nurwzvknv7anSgIkL+doXDaG21DgCYTD
- wGA5uquIgb8p3/ENgYpDPrsZ72CxVC2NEJjJwwnRBStjJOGQX4lV1uhN1XsZjBbRHdKF2W9g
- weim8xU=
-Organization: Red Hat
-Message-ID: <4b36b0a5-8507-f90c-d4a7-3f821ee8da6d@redhat.com>
-Date:   Tue, 16 Apr 2019 16:26:26 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        by mail.kernel.org (Postfix) with ESMTPSA id 3C3F720663;
+        Tue, 16 Apr 2019 20:27:47 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555446467;
+        bh=BIVxOInWBhvFY+0sBypM8aHx51zctQEPdCdcZsK5o8k=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=dT3q1uH1X6W60qNWzTxbJzGMf0nuVPZIyPky86e7pPOAWY1vlBsGVo2/M4eZNmkmz
+         0b6ipsvXhSDiytYiJKjiT0xZaY9Bdnne63KlFZoqcPb8+9kAZ+VpqykYzWODBA6TVE
+         Copg/TEmfKnMTApUOkGvc7qD1qAfmJLK4YTSXQT8=
+Date:   Tue, 16 Apr 2019 22:27:44 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, shuah@kernel.org, patches@kernelci.org,
+        ben.hutchings@codethink.co.uk, lkft-triage@lists.linaro.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH 4.9 00/76] 4.9.169-stable review
+Message-ID: <20190416202744.GA12533@kroah.com>
+References: <20190415183707.712011689@linuxfoundation.org>
+ <20190416162935.GA22656@roeck-us.net>
+ <20190416184600.GB6253@kroah.com>
+ <20190416201913.GA25517@roeck-us.net>
 MIME-Version: 1.0
-In-Reply-To: <20190416141205.GK12232@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Tue, 16 Apr 2019 20:26:28 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190416201913.GA25517@roeck-us.net>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/16/2019 10:12 AM, Peter Zijlstra wrote:
-> On Sat, Apr 13, 2019 at 01:22:50PM -0400, Waiman Long wrote:
->> +/*
->> + * The typical HZ value is either 250 or 1000. So set the minimum waiting
->> + * time to 4ms in the wait queue before initiating the handoff protocol.
->> + */
->> +#define RWSEM_WAIT_TIMEOUT	(HZ/250)
-> That seems equally unfortunate. For HZ=100 that results in 0ms, and for
-> HZ=300 that results in 3 1/3-rd ms.
->
-> (and this is not considering Alpha,ARM and MIPS, who all have various
-> other 'creative' HZ values)
->
-> In general aiming for sub 10ms timing using jiffies seems 'optimistic'.
+On Tue, Apr 16, 2019 at 01:19:13PM -0700, Guenter Roeck wrote:
+> On Tue, Apr 16, 2019 at 08:46:00PM +0200, Greg Kroah-Hartman wrote:
+> > On Tue, Apr 16, 2019 at 09:29:35AM -0700, Guenter Roeck wrote:
+> > > On Mon, Apr 15, 2019 at 08:43:24PM +0200, Greg Kroah-Hartman wrote:
+> > > > This is the start of the stable review cycle for the 4.9.169 release.
+> > > > There are 76 patches in this series, all will be posted as a response
+> > > > to this one.  If anyone has any issues with these being applied, please
+> > > > let me know.
+> > > > 
+> > > > Responses should be made by Wed Apr 17 18:36:37 UTC 2019.
+> > > > Anything received after that time might be too late.
+> > > > 
+> > > 
+> > > Build results:
+> > > 	total: 172 pass: 165 fail: 7
+> > > Failed builds: 
+> > > 	<all parisc>
+> > > Qemu test results:
+> > > 	total: 320 pass: 304 fail: 16
+> > > Failed tests: 
+> > > 	<all parisc>
+> > > 
+> > > Build failures as already reported.
+> > 
+> > I should have those build failures fixed.
+> > 
+> 
+> I didn't rebuild the other images, but parisc build and boot tests
+> are now fine (with v4.9.168-78-g6ecae2ce7b5a).
 
-I see your point. I will change it to use sched_clock() instead.
+Wonderful, thanks for testing this, and all of the others.
 
-Thanks,
-Longman
-
+greg k-h
