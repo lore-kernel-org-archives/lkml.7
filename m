@@ -2,136 +2,138 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D74C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:48:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66C6BC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 811F02075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:48:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 303602075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:48:50 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555411730;
+	bh=E5s6TWOD8eVPs3a2cr126d17+usv15M3eCkR7GF5veo=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=MijgBEOIh1z2tmL+L3tMwFGYq/zfAmUewTzyEN7ScAToXKqqhSriBRnfXUF7WTL4m
+	 1ff6/ICrYjHEm5HjcQNqufa6zea5ewjDPFdX3OLQpZ0TylZnhtZbmD6IiSWdtIDbU5
+	 QHPWxJlVJuIGVfk+thqP5Ut9nmRImNUFwR8FzBLw=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729070AbfDPKs1 (ORCPT
+        id S1729077AbfDPKst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 06:48:27 -0400
-Received: from sauhun.de ([88.99.104.3]:48906 "EHLO pokefinder.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727942AbfDPKs0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 06:48:26 -0400
-Received: from localhost (p54B332D3.dip0.t-ipconnect.de [84.179.50.211])
-        by pokefinder.org (Postfix) with ESMTPSA id 888E52C3637;
-        Tue, 16 Apr 2019 12:48:23 +0200 (CEST)
-Date:   Tue, 16 Apr 2019 12:48:23 +0200
-From:   Wolfram Sang <wsa@the-dreams.de>
-To:     Stefan Lengfeld <contact@stefanchrist.eu>
-Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        Peter Rosin <peda@axentia.se>, linux-omap@vger.kernel.org,
-        linux-tegra@vger.kernel.org,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
-Subject: Re: [PATCH 01/12] i2c: remove use of in_atomic()
-Message-ID: <20190416104823.zabxzdxarzfhdw7m@ninjato>
-References: <20190403124019.8947-1-wsa+renesas@sang-engineering.com>
- <20190403124019.8947-2-wsa+renesas@sang-engineering.com>
- <20190415215546.xr7aftkahcu4ygak@porty>
+        Tue, 16 Apr 2019 06:48:49 -0400
+Received: from mail-oi1-f195.google.com ([209.85.167.195]:42228 "EHLO
+        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726946AbfDPKss (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 06:48:48 -0400
+Received: by mail-oi1-f195.google.com with SMTP id w139so16492086oie.9;
+        Tue, 16 Apr 2019 03:48:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=RNy7+FoNOc3Uq1hh3IyW820pNO0qp+tJiGTXxfoyC3Q=;
+        b=dY+YKn33ujhHSps/Ip56A1YQo0k+uRiZtJ1Jd85cwCIi7nuwDseN8ggcEnGqH0MEKI
+         nRvZNk3XcvUl4DoTcfJDUALLw9JDERk+EpzwjqQGRkUMCo/W7rwq4YVnGMiYgY+lqbr6
+         FT5ZcYMH1EnwJYojB4jul/kPvtDScjOiczuOoiTUGKMdprOa4sHvMQv0BzhXH34XamBF
+         5RMvo1TDFAIoSFYJnJTJD0CsjBHO6BgXGG/fArL1kleIhCTmcMvO39RtXaOKLaGPpJ/b
+         3vrh+0hPWECPetfHM73fd0CGvzPMZlZTfVi86NffA3oZGoPmfLVurPEEdNWquIpD08/k
+         uPZA==
+X-Gm-Message-State: APjAAAX1ur73bAA7K6B8An+3bbBVDboTG/tw+8ai/oDC5MQ7jHBXrUic
+        zj5gDOyNlkKLPk3Adk7V3gW+D1R6kEUanobPieM=
+X-Google-Smtp-Source: APXvYqwpjC5aEl6HOqhfGrOvW0akOn408hy6N93DIIqdEgMAet3wY77afhBYUpCV8hwxn0BqC5bEm6E2cIxH8RGWT8U=
+X-Received: by 2002:aca:8d3:: with SMTP id 202mr22643049oii.76.1555411727840;
+ Tue, 16 Apr 2019 03:48:47 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
-        protocol="application/pgp-signature"; boundary="va5zqs4dempdj6of"
-Content-Disposition: inline
-In-Reply-To: <20190415215546.xr7aftkahcu4ygak@porty>
-User-Agent: NeoMutt/20170113 (1.7.2)
+References: <1555344260-12375-28-git-send-email-suzuki.poulose@arm.com> <1555411164-26399-1-git-send-email-suzuki.poulose@arm.com>
+In-Reply-To: <1555411164-26399-1-git-send-email-suzuki.poulose@arm.com>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 16 Apr 2019 12:48:36 +0200
+Message-ID: <CAJZ5v0i2-11rgH5Y+83U041Eyp=SA56oPqDmS2g24SyYYJH3jg@mail.gmail.com>
+Subject: Re: [RESEND][PATCH v2 27/36] drivers: Add a generic helper to match
+ device by fwnode handle
+To:     Suzuki K Poulose <suzuki.poulose@arm.com>
+Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        coresight@lists.linaro.org,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Mathieu Poirier <mathieu.poirier@linaro.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        ACPI Devel Maling List <linux-acpi@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Apr 16, 2019 at 12:39 PM Suzuki K Poulose
+<suzuki.poulose@arm.com> wrote:
+>
+> Make the device_fwnode_match() a generic helper to match device
+> by fwnode handle for use with bus_find_device(). This will be
+> also used by coresight.
+>
+> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+> Cc: linux-acpi@vger.kernel.org
+> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> ---
+>
+> Resending with linux-acpi in Cc, as requested by Rafael.
 
---va5zqs4dempdj6of
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Do any other patches in your series depend on this one?
 
-Hi Stefan,
-
-> Tested-by: Stefan Lengfeld <contact@stefanchrist.eu>
-
-Thanks for your comments and testing! I will fix the issues you
-mentioned and add your tags.
-
-> > +/*
-> > + * We only allow atomic transfers for very late communication, e.g. to=
- send
-> > + * the powerdown command to a PMIC. Atomic transfers are a corner case=
- and not
-> > + * for generic use!
-> > + */
-> > +static inline bool i2c_in_atomic_xfer_mode(void)
-> > +{
-> > +	return system_state > SYSTEM_RUNNING && irqs_disabled();
-> > +}
->=20
-> I agree that this code is a lot better than the previous
-> 'irqs_disabled() || in_atomic()'. It also makes clear that the atomic
-> I2C transfers is only meant for late shutdown I2C communcation.
->=20
->=20
-> After I read the article https://lwn.net/Articles/274695/ again I
-> nevertheless cannot really say whether the usage of 'irqs_disabled()' is
-> the theoretical correct approach. The article states explicitly that
-> only the caller can really decided whether the operation should be
-> atomic or not.
-
-During the discussion with Peter, he stated we need irqs_disabled()
-because 'system_state > SYSTEM_RUNNING' alone won't do.
-
-> Recap from previous discussions:
->=20
-> But then you have to patch every call site to use either a new function
-> like 'i2c_transfer_atomic()' or the extend I2C message flags. And mostly
-> also supported this trough regmap and maybe other translation layers,
-> which seems unpractical, may breaking existing usages and maybe not
-> worth the hassle.
-
-Yes, I kinda gave up on white-listing late I2C transfers. My hope is
-that not too many drivers will have an atomic callback, so the WARN will
-trigger often enough to find late transfers which are inappropriate.
-
-Another idea just popping up: Maybe we can improve that even further by
-first globally disabling atomic transfers. Drivers knowing they need
-this can then call an I2C core helper to enable them (again globally).
-Still not perfect as some unwanted late I2C transfers from another
-driver could slip through, but this should be rare enough. The pro-side
-is we will detect more unwanted late transfers if support for them is
-default off. It should be noted that "disabling" means keeping the old
-behaviour which is: we try the regular transfer but complain about it.
-Only enabling atomic will make the core quiet.
-
-Regards,
-
-   Wolfram
-
-
---va5zqs4dempdj6of
-Content-Type: application/pgp-signature; name="signature.asc"
-
------BEGIN PGP SIGNATURE-----
-
-iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAly1svMACgkQFA3kzBSg
-KbZxBRAApfDnYlIej1zlztDILL+sczBMwOC2hii04cYsWcmCh3D+0h6upc7U3ibE
-pVykQ6KN5qrvSyu07V1aw2Z/iM2T2rA/MSMKEOAKmnydQLzWGU/VpgKKXWdd6o7J
-aol3sP+ovgih1qolxcAFw9sW8EfrrkEp8AbcGcfTCALWHfEmcLWyvWcm3kedBZIX
-br6lJHvLUU4WrKZxhUsuz1VQ/wq9iIcZiG/pEbyBAD/4Yo2Ot2WyiYw4TjScxgvP
-aGWKC3+GX08/O1PMjnMVTrtGyW2LhrMcQx1w0s3We93KWsSnzRPRQjbNUa0e/uIZ
-Hes/jSfFV3a8paryTaipp2w2k4u11h3ZbLsRFrN2SXKTv3oJxrh6bcRd2j7dJB4q
-iwjOQnd5CWRjljZ1xhS2i+RY1TD2ZxspLIS4Z+PAqjE4qTGlioyqkZkH9/aC4Kb2
-kbzFu8oOzSVTptTZVslEgCZgjoNB77Z7unFDAiogat71VL1473XT7mdW4sGTT8iy
-aI60L8EXdYrsde0pcyH23v/iz9e9gV8wk4zo47v48osiPXLw59CmUqr9/8/6jnn/
-nAEKyMK5qyQkc3u792gAF9Ex7g1w3QRFBD+6ZIvY3gMeMSoHpUwoysxklQuXWE5e
-T3OfXcZ3hSYof1AUlO7BfEQ89r/Uil9mtZPrYJ0N6qDTX7eDfY8=
-=HlAN
------END PGP SIGNATURE-----
-
---va5zqs4dempdj6of--
+>  drivers/base/devcon.c    | 5 -----
+>  drivers/base/property.c  | 6 ++++++
+>  include/linux/property.h | 1 +
+>  3 files changed, 7 insertions(+), 5 deletions(-)
+>
+> diff --git a/drivers/base/devcon.c b/drivers/base/devcon.c
+> index 04db9ae..f4a9e30 100644
+> --- a/drivers/base/devcon.c
+> +++ b/drivers/base/devcon.c
+> @@ -107,11 +107,6 @@ static struct bus_type *generic_match_buses[] = {
+>         NULL,
+>  };
+>
+> -static int device_fwnode_match(struct device *dev, void *fwnode)
+> -{
+> -       return dev_fwnode(dev) == fwnode;
+> -}
+> -
+>  static void *device_connection_fwnode_match(struct device_connection *con)
+>  {
+>         struct bus_type *bus;
+> diff --git a/drivers/base/property.c b/drivers/base/property.c
+> index 8b91ab3..d10d923 100644
+> --- a/drivers/base/property.c
+> +++ b/drivers/base/property.c
+> @@ -25,6 +25,12 @@ struct fwnode_handle *dev_fwnode(struct device *dev)
+>  }
+>  EXPORT_SYMBOL_GPL(dev_fwnode);
+>
+> +int device_fwnode_match(struct device *dev, void *fwnode)
+> +{
+> +       return dev_fwnode(dev) == fwnode;
+> +}
+> +EXPORT_SYMBOL_GPL(device_fwnode_match);
+> +
+>  /**
+>   * device_property_present - check if a property of a device is present
+>   * @dev: Device whose property is being checked
+> diff --git a/include/linux/property.h b/include/linux/property.h
+> index 65d3420..c8fd3d42 100644
+> --- a/include/linux/property.h
+> +++ b/include/linux/property.h
+> @@ -34,6 +34,7 @@ enum dev_dma_attr {
+>  };
+>
+>  struct fwnode_handle *dev_fwnode(struct device *dev);
+> +int device_fwnode_match(struct device *dev, void *fwnode);
+>
+>  bool device_property_present(struct device *dev, const char *propname);
+>  int device_property_read_u8_array(struct device *dev, const char *propname,
+> --
+> 2.7.4
+>
