@@ -2,184 +2,111 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A164AC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:27:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B1FFCC282DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:28:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 633CA20693
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:27:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="SAKNrZAS"
+	by mail.kernel.org (Postfix) with ESMTP id 82F2B20693
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:28:31 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555424911;
+	bh=K6YR0frV1ogxUKl5qBR9A0xlSpniASxqyinIy0tNWEg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=rp4vX8uRXQC3mQPd20MLpOTIpdsF4ylHOo8SiZToOtx16QYOldqTquXuhrDZrtBMl
+	 TaaVIrdOAHo5d0ttLX7InO910CqEyrHb1I5xPViCpDJgYigwoCg3y8KB9iP54J3V73
+	 UnJVkUIX4oAJ4uU77zdAYyNJUEzD8CpzO/ZnGo4U=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729596AbfDPO1r (ORCPT
+        id S1729612AbfDPO2a (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 10:27:47 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39315 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725981AbfDPO1q (ORCPT
+        Tue, 16 Apr 2019 10:28:30 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:49450 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725981AbfDPO22 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 10:27:46 -0400
-Received: by mail-pf1-f196.google.com with SMTP id i17so10502085pfo.6
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 07:27:46 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=IbW3fW3dtTiI4e2mL4N5yspBvoNIWpqUcEPzc9yVMMs=;
-        b=SAKNrZAS4r5CTzxwXqAtj0J1pcFfow9Ux1ut81Z4wbTVmJ09iggBPkxknYzHAALqdW
-         Yn1z3IOdg3a/0QS86WnOTObQLtlPH+O34JzQpWis3PgycXJAljXLQ+smlf7YTVTe3Qi1
-         cjrD3Of/y8kCEARVcIICqasDTER/YF/jBGBXFF+KBE/0EmS3WReLk4rmXCrOGxIW4qTE
-         ezLmUDRBij9huULXYlEbm+2pdYP0d3alWMaB5LK7fXhqa8+gA4+NKoCppMe4bKhNTDZz
-         x33E4iWyMZ6MOiafyfJazXB/N8G3QblxaVHhgr90utbDGEXv4uEYMItE22ysEiU8V/8V
-         CLVA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IbW3fW3dtTiI4e2mL4N5yspBvoNIWpqUcEPzc9yVMMs=;
-        b=H2jdItIFszCJyT2FehNJH0VWVAM9reAX0NUFEAkvlRszjq0gzk0zZiQLFQVK4HuL6F
-         aiT8AFicBDhMkZc+MlTbo3kXl9+fSP4lmRCCyFeohvij7XlwB+dskP32GeRttV0eTuM/
-         IsTRVOvgSZAth1tkq95dUE9cw79BBuB7lvaucHktd2zHG6TlrHD0L0SDXyeuzrvoADZd
-         dhibVq769wwDd8CRpz7c2/217/bDQrsv24td29agfbPyEyPjndnNiO3mT0jNjDPzqdhB
-         eTLbw4jPEw+k3mVtf+sl6f+s85H9QUGhNgWWu+VThk3IvsuhiXNx37q7fgp7V1PQA8Nc
-         qK9w==
-X-Gm-Message-State: APjAAAWMNnBA/BJpXP6XAPAIZB9UzwB/F7REXRH+SYEZRLaUiOHHTf6g
-        JlrA0WjRk1iI7FPa+n8mTxYmK0OWct+DMAR2JTxyzA==
-X-Google-Smtp-Source: APXvYqwsR2LF2lPPNKB1bF5LsVJ5erulZSHTlwrKQn9m9P9+nkN0SdbbvNBGXz164/9dAyXWp0lHSwqDTEGcl5J9dAI=
-X-Received: by 2002:a65:4048:: with SMTP id h8mr65774740pgp.6.1555424865564;
- Tue, 16 Apr 2019 07:27:45 -0700 (PDT)
+        Tue, 16 Apr 2019 10:28:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=jGssofTgPYvFmx2NhnYdrTIvwfYqQ3p4yJez9KkF7ZM=; b=Xyw71ncmatYfMyTwOekObbCNA
+        6q1zGs8MDrVFvd/hqUql9zh555oVE7ZVtKAmAyyXPaPMWtJV6H3EDv3MF1Rn8whcfva7Qk4enleYX
+        yWfj+tRu8Q+/DVc0Cmi3yx31EiaWB3s34hxDIrj059FNgwGTnGhJbXNd5hs3AvTW6g5pw=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hGP4I-00074X-MD; Tue, 16 Apr 2019 14:28:14 +0000
+Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
+        id 23DB21127D45; Tue, 16 Apr 2019 15:28:14 +0100 (BST)
+Date:   Tue, 16 Apr 2019 15:28:14 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Matthias Brugger <matthias.bgg@gmail.com>
+Cc:     Fabien Parent <fparent@baylibre.com>, robh+dt@kernel.org,
+        mark.rutland@arm.com, sean.wang@kernel.org, ryder.lee@mediatek.com,
+        hsin-hsiung.wang@mediatek.com, wenzhen.yu@mediatek.com,
+        chaotian.jing@mediatek.com, yong.mao@mediatek.com,
+        jjian.zhou@mediatek.com, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-mmc@vger.kernel.org,
+        linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-spi@vger.kernel.org, linux-watchdog@vger.kernel.org,
+        linux-clk@vger.kernel.org, stephane.leprovost@mediatek.com
+Subject: Re: [PATCH 19/24] dt-bindings: spi: spi-mt65xx: add support for
+ MT8516
+Message-ID: <20190416142814.GB4834@sirena.org.uk>
+References: <20190323211612.860-1-fparent@baylibre.com>
+ <20190323211612.860-20-fparent@baylibre.com>
+ <5bc3fbfa-6d7e-08d3-116c-a8f78bc680cd@gmail.com>
 MIME-Version: 1.0
-References: <20190408144216.160082-1-venture@google.com> <998d869d-de1d-4ac9-b4e6-8942945912dd@www.fastmail.com>
-In-Reply-To: <998d869d-de1d-4ac9-b4e6-8942945912dd@www.fastmail.com>
-From:   Patrick Venture <venture@google.com>
-Date:   Tue, 16 Apr 2019 07:27:34 -0700
-Message-ID: <CAO=notza3Tz55_dRoTpenY+yP=J=TmvpMoWE58VQG=nvQ_Rpow@mail.gmail.com>
-Subject: Re: [PATCH v10 1/2] dt-bindings: misc: aspeed-p2a-ctrl: add support
-To:     Andrew Jeffery <andrew@aj.id.au>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devicetree@vger.kernel.org,
-        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
-        <linux-arm-kernel@lists.infradead.org>,
-        linux-aspeed@lists.ozlabs.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Rob Herring <robh@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="0eh6TmSyL6TZE2Uz"
+Content-Disposition: inline
+In-Reply-To: <5bc3fbfa-6d7e-08d3-116c-a8f78bc680cd@gmail.com>
+X-Cookie: Who messed with my anti-paranoia shot?
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 8, 2019 at 5:48 PM Andrew Jeffery <andrew@aj.id.au> wrote:
->
->
->
-> On Tue, 9 Apr 2019, at 00:12, Patrick Venture wrote:
-> > Document the ast2400, ast2500 PCI-to-AHB bridge control driver bindings.
-> >
-> > Signed-off-by: Patrick Venture <venture@google.com>
-> > Reviewed-by: Rob Herring <robh@kernel.org>
->
-> Reviewed-by: Andrew Jeffery <andrew@aj.id.au>
->
-> > ---
-> > Changes for v10:
-> >  - Chopped out nearly identical information.
-> > Changes for v9:
-> >  - Added missing details about syscon parent
-> > Changes for v8:
-> > - None
-> > Changes for v7:
-> > - Moved node under the syscon node it requires
-> > Changes for v6:
-> > - None
-> > Changes for v5:
-> > - None
-> > Changes for v4:
-> > - None
-> > Changes for v3:
-> > - None
-> > Changes for v2:
-> > - Added comment about syscon required parameter.
-> > ---
-> >  .../bindings/misc/aspeed-p2a-ctrl.txt         | 47 +++++++++++++++++++
-> >  1 file changed, 47 insertions(+)
-> >  create mode 100644 Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-> >
-> > diff --git a/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-> > b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-> > new file mode 100644
-> > index 0000000000000..854bd67ffec68
-> > --- /dev/null
-> > +++ b/Documentation/devicetree/bindings/misc/aspeed-p2a-ctrl.txt
-> > @@ -0,0 +1,47 @@
-> > +======================================================================
-> > +Device tree bindings for Aspeed AST2400/AST2500 PCI-to-AHB Bridge
-> > Control Driver
-> > +======================================================================
-> > +
-> > +The bridge is available on platforms with the VGA enabled on the
-> > Aspeed device.
-> > +In this case, the host has access to a 64KiB window into all of the
-> > BMC's
-> > +memory.  The BMC can disable this bridge.  If the bridge is enabled,
-> > the host
-> > +has read access to all the regions of memory, however the host only
-> > has read
-> > +and write access depending on a register controlled by the BMC.
-> > +
-> > +Required properties:
-> > +===================
-> > +
-> > + - compatible: must be one of:
-> > +     - "aspeed,ast2400-p2a-ctrl"
-> > +     - "aspeed,ast2500-p2a-ctrl"
-> > +
-> > +Optional properties:
-> > +===================
-> > +
-> > +- memory-region: A phandle to a reserved_memory region to be used for
-> > the PCI
-> > +             to AHB mapping
-> > +
-> > +The p2a-control node should be the child of a syscon node with the
-> > required
-> > +property:
-> > +
-> > +- compatible : Should be one of the following:
-> > +             "aspeed,ast2400-scu", "syscon", "simple-mfd"
-> > +             "aspeed,g4-scu", "syscon", "simple-mfd"
-> > +             "aspeed,ast2500-scu", "syscon", "simple-mfd"
-> > +             "aspeed,g5-scu", "syscon", "simple-mfd"
-> > +
-> > +Example
-> > +===================
-> > +
-> > +g4 Example
-> > +----------
-> > +
-> > +syscon: scu@1e6e2000 {
-> > +     compatible = "aspeed,ast2400-scu", "syscon", "simple-mfd";
-> > +     reg = <0x1e6e2000 0x1a8>;
-> > +
-> > +     p2a: p2a-control {
-> > +             compatible = "aspeed,ast2400-p2a-ctrl";
-> > +             memory-region = <&reserved_memory>;
-> > +     };
-> > +};
-> > --
-> > 2.21.0.392.gf8f6787159e-goog
-> >
-> >
 
-I'm sorry, is there something more I need to do with the patch series?
- Sometimes I miss emails.
+--0eh6TmSyL6TZE2Uz
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-Thanks,
-Patrick
+On Tue, Apr 16, 2019 at 09:55:41AM +0200, Matthias Brugger wrote:
+> On 23/03/2019 22:16, Fabien Parent wrote:
+> > Add binding documentation of spi-mt65xx for MT8516 SoC.
+
+> > Signed-off-by: Fabien Parent <fparent@baylibre.com>
+> > ---
+> >  Documentation/devicetree/bindings/spi/spi-mt65xx.txt | 1 +
+> >  1 file changed, 1 insertion(+)
+
+> applied to v5.1-next/dts64
+
+> Mark let me know if you want to take it through your tree and I drop the patch.
+
+Yes, DT bindings generally get reviewed in the subsystem :(
+
+--0eh6TmSyL6TZE2Uz
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAly15n0ACgkQJNaLcl1U
+h9DZ1gf9H2Yrq00KAenFGyeh+9in9sO60dj3xTkLjw+cqBEC68iT6kOwJF1bGe49
+cTerjLC7g1Z4O7Fas/ExIVqn6vQ2DYvGTRDEQ/3OyrGJa0mL8WZe5ZxSPBrIqFGN
+DM83Tt+WHi26ZhKZ7F3eLtoN8TZcs7mNt9OAi2YF4OnoOS51JSyrOKA1sQn00xGf
+uQi9IfnJkLOxel+qQhsefoWYKwNZFcIz2qV4K1eKjcnvZKVW+3OeZ2QJok7qWFNf
+g/JHvvdaPgHk0ObyQXGNH83a2urwHLFrWNFWZIIHlR1HfpsOUXcTy4luxYlikFxg
+1F4MbBZ6WhZuYSlOJ2pQaNJHhEamgQ==
+=t4yQ
+-----END PGP SIGNATURE-----
+
+--0eh6TmSyL6TZE2Uz--
