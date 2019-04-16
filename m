@@ -2,138 +2,139 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AC7C7C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:21:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F332CC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 759D1206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:21:12 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555410072;
-	bh=eOT/fiCyB/Ca75NjAK2xVaZhjZDIDzZrJwth6tx66P0=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=upjKtzPqW9xd3lO1NfcYA0xaQuDjbDx7if5NvYxKYoPg7aYNNBqXZIGQ3s5HQeJh/
-	 PkNy+6Yb5wu18BbiOc8XcEee5OlSXDiRUbaxW6g45DWmURcH9+yhB9jpPDJvPBvsLn
-	 pBrrvDtg+58IHncy+9bXUAfdyA5fDZCbFWzgHkG8=
+	by mail.kernel.org (Postfix) with ESMTP id B8A93206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:21:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="Czt9R0Wa"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728729AbfDPKVL (ORCPT
+        id S1728992AbfDPKVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 06:21:11 -0400
-Received: from mail-oi1-f194.google.com ([209.85.167.194]:36795 "EHLO
-        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726682AbfDPKVL (ORCPT
+        Tue, 16 Apr 2019 06:21:18 -0400
+Received: from mail1.bemta26.messagelabs.com ([85.158.142.117]:33084 "EHLO
+        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726682AbfDPKVS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 06:21:11 -0400
-Received: by mail-oi1-f194.google.com with SMTP id l203so16480525oia.3
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 03:21:10 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+F9hvZKy5g65whbbMjq1W21W0DNS+z7KxJNroquwtvI=;
-        b=OdzmFLfcp/9GdoClOzCj80QrAQVIxMuFxWKprH917uZHmh/ROqq4oPA5w1Xs5e5nn1
-         kQXQ0DzAZBNFWObMO4ULa1UdA4sVyP+FZA4QAN78p6qcScL0MbBpkn10RA6LFT4jx5EK
-         h6hTJXrt8fBIR2z1lpQ31N6nrkgB7j+xhmncRlTZ0AdT4/IretNoU0+9im4QLuotKaq8
-         vzBeMS2eyyAKlElw0lI6MA/D3xmuFwWp9dKdsZdYDrhWbRTCrt8G4JPshruUF7EVkheu
-         +R2L8k6cTRJN4CRv05xRxMtYd4YTaqbnl23O5I4/2YRXY4apTtWS8deuFH5z4bex29mR
-         kfLw==
-X-Gm-Message-State: APjAAAWlA8eOELFi9wlKpYx/gBi7OyDUQKYWWTpFPQKOg7ikxkF8OAIr
-        8QUXG+cxKYDRK+MUqZbhvrSz1mSxqbdbsDrP4bA=
-X-Google-Smtp-Source: APXvYqysPgsPaheFnGRLBFH0y3DvvWyKf8t3ZmbzBWCpjbcfhi+LH/L919n+jjVb0QoLZdvl9nFqP0c40RN7GIutHdY=
-X-Received: by 2002:aca:5c55:: with SMTP id q82mr22522949oib.95.1555410070356;
- Tue, 16 Apr 2019 03:21:10 -0700 (PDT)
+        Tue, 16 Apr 2019 06:21:18 -0400
+Received: from [85.158.142.201] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
+        by server-6.bemta.az-b.eu-central-1.aws.symcld.net id B2/47-19007-A9CA5BC5; Tue, 16 Apr 2019 10:21:14 +0000
+X-Brightmail-Tracker: H4sIAAAAAAAAA1WSe0hTYRjG/XbOjkfxyOem+SoadLLo4pazCwu
+  igrDsD0WEIkKrs3naGcxp2yyNCiPpYqVRSTYtNcpqmpU1k7yFWKE1KzOMLljLstTuQRB2Ocez
+  zP77fe/zPN/7vvDShOoqFUnzuQ7eZuUsLBVICnP8Fmqcte60uN6n0/UPr5dTeve7Dwr947pWf
+  31R94qlZOKbqotk4tf6ySmKtUqz1ZCVu0EpdD6vp7JvUrnXS3+gfNSqLESBNIkvElB2p56SHi
+  pcpIADu/YR8qMfgffKoGgLoCmsg5MjH5HEoXgL7B2tGYsT+CyC2pI+QhLUOBkuDN7ymVLgYH8
+  bIXM8vM2/O1Yn8TToLhsWwzTN4HS49NsolVU4Aa4Wuv0lDsDLYXR351gU4Wj4trNmjAkcDk8G
+  KhQSA8ZwuvkeIXMYvHv1Syn718Oetvf+cj0WPH0DSGYWqh87lTJHQ0/FfiSNADgJXI1qaRXAD
+  xCUHCvwZWeB6+hPH1vgc/GQr1cUXBtpoOTAMyV4nhQQ8gJG+HTC4wtMBtfBl6Rsuk9AbcteSt
+  4gFiqbvvh4NlRXDROH0AznhOWcE2zOCTaJGRwCnccHyEpEupDeYDObBEcmZ7ZodHFxGp1urma
+  eJj5ey23VGLR8jsbIWx02ThS13Ba71p6XabRkaK28ox6JF5SxiZzUiO6fMbWjCFrBhjHHzrvT
+  VMGGrIw8gbML6205Ft7ejqJomgVmXY2ohdh4E5+70WwRz/CvDHQQG8okSTJjz+Yy7WaTLHUhD
+  X3j1MsThIq0Zln5yHCm2SWasGQScqzjX/w95h4UHalmkJ+fnyoom7dlmh3/60MonEasmtkstQ
+  oyWx3jnYbEIRTiEEdja6QhHNw/KTIfGV8nLLasTP4V3kEeYWPmTHWwwbNTSjtmcp2B3gWrvPP
+  KIxIrDOWn9pc+2pY6uCgv+Yyp38NV997yCA3p7inndoTpV0e1Hy7uWuaN3k4mB6cumbKse2tW
+  1IuEist3W5vU31aktixOXNclVH9PGbg9GlNQFzLfNSOvZPdmqopKG17jZUm7wOlmETY79wfIg
+  0tkxwMAAA==
+X-Env-Sender: stwiss.opensource@diasemi.com
+X-Msg-Ref: server-13.tower-246.messagelabs.com!1555410073!211227!1
+X-Originating-IP: [104.47.0.57]
+X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
+X-StarScan-Received: 
+X-StarScan-Version: 9.31.5; banners=-,-,-
+X-VirusChecked: Checked
+Received: (qmail 26331 invoked from network); 16 Apr 2019 10:21:14 -0000
+Received: from mail-he1eur01lp2057.outbound.protection.outlook.com (HELO EUR01-HE1-obe.outbound.protection.outlook.com) (104.47.0.57)
+  by server-13.tower-246.messagelabs.com with AES256-GCM-SHA384 encrypted SMTP; 16 Apr 2019 10:21:14 -0000
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+ d=dialogsemiconductor.onmicrosoft.com; s=selector1-diasemi-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=po0B8nww2k/8D9Mv956Vct/2FTBKJGRwQX0tRMMuZaE=;
+ b=Czt9R0WaMVZk6rk/enhYcFCfSId7zzkZoqyFoIzS9Cy9L3+w5Dq/cY2gpilz9OunI3Y9E57RcGiAV2hM88Nx65nYPhWVVVWLLl3HRtgzZZVqNYW34JyTk+QOMwQA0dAc5qGo/zutYKjj5QByrmDahFakOJWHD8W9kdFrGGG4oi4=
+Received: from VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM (20.177.62.92) by
+ VI1PR10MB2174.EURPRD10.PROD.OUTLOOK.COM (20.177.60.28) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1792.16; Tue, 16 Apr 2019 10:21:09 +0000
+Received: from VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::acc9:6d8f:da36:9f25]) by VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM
+ ([fe80::acc9:6d8f:da36:9f25%2]) with mapi id 15.20.1813.011; Tue, 16 Apr 2019
+ 10:21:09 +0000
+From:   Steve Twiss <stwiss.opensource@diasemi.com>
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>
+CC:     "linux-renesas-soc@vger.kernel.org" 
+        <linux-renesas-soc@vger.kernel.org>,
+        Support Opensource <Support.Opensource@diasemi.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: RE: [PATCH RFT] watchdog: da9063_wdt: parse DT for timeout value, too
+Thread-Topic: [PATCH RFT] watchdog: da9063_wdt: parse DT for timeout value,
+ too
+Thread-Index: AQHU8rKQiJBjLGoJgEygrdEbYLd/faY+hb0w
+Date:   Tue, 16 Apr 2019 10:21:09 +0000
+Message-ID: <VI1PR10MB2352FEE39015BEA512B1FE61FE240@VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM>
+References: <20190414110933.30529-1-wsa+renesas@sang-engineering.com>
+In-Reply-To: <20190414110933.30529-1-wsa+renesas@sang-engineering.com>
+Accept-Language: en-GB, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-ms-exchange-messagesentrepresentingtype: 1
+x-originating-ip: [193.240.73.196]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: a9adb2a3-ed44-4580-7055-08d6c2553e68
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600140)(711020)(4605104)(2017052603328)(7193020);SRVR:VI1PR10MB2174;
+x-ms-traffictypediagnostic: VI1PR10MB2174:
+x-microsoft-antispam-prvs: <VI1PR10MB21744A21F95D9486CF5606C0F5240@VI1PR10MB2174.EURPRD10.PROD.OUTLOOK.COM>
+x-forefront-prvs: 000947967F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(346002)(366004)(396003)(376002)(136003)(189003)(199004)(53546011)(5660300002)(6246003)(229853002)(33656002)(105586002)(14454004)(54906003)(52536014)(4326008)(110136005)(478600001)(106356001)(25786009)(2906002)(6506007)(316002)(2501003)(66066001)(97736004)(6116002)(3846002)(305945005)(53936002)(74316002)(9686003)(55016002)(7736002)(81156014)(26005)(102836004)(186003)(8936002)(11346002)(446003)(8676002)(81166006)(476003)(486006)(4744005)(99286004)(68736007)(71200400001)(86362001)(256004)(6436002)(7696005)(71190400001)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR10MB2174;H:VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
+received-spf: None (protection.outlook.com: diasemi.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: ixG0ja4vr6bTm2fvGEj0p6F5liW0ZFYfbR7DdY+pUZqXAIzNHRRoVyhQO92d7320xXlj1J7OT+Er/DraImYfu94igFzfHGsDS88oXyyyWeevyIQdgLB1O1TYSVY9pz9Mq84GMHJtZ25EGdkpi7EMlyzqnO7R0mqknWrdzOfYIM20N4/kZd6ZEuX1YPoHxFBQQKpMWf5isWaK6PtgrdEREgJVbHxxM/r2xYpX4D+aoaVTSUhGWoI46afRVmU6z/ClctpP0FSeiGf6NPzJJSzYU4/bHITfwhvLJGNzT+pe/EHfYaAQI1LRZKWfO3V//c3N8U6QDcxJG2xoPTSFtqKXbYDKLVERPJM12UvfTPNALTDCgCXlshAfMSD3/Haedt9m8JTi6XhWuAs6tInYr72GDHhb5MRL2kVuVD313VWfSgk=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-References: <1555344260-12375-1-git-send-email-suzuki.poulose@arm.com> <1555344260-12375-28-git-send-email-suzuki.poulose@arm.com>
-In-Reply-To: <1555344260-12375-28-git-send-email-suzuki.poulose@arm.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 16 Apr 2019 12:20:59 +0200
-Message-ID: <CAJZ5v0jZCwPm-mg5L43RbqLKq1vB9zno85G+LPUVb+73KLimVA@mail.gmail.com>
-Subject: Re: [PATCH v2 27/36] drivers: Add a generic helper to match device by
- fwnode handle
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        coresight@lists.linaro.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        mike.leach@linaro.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        robert.walker@arm.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+X-OriginatorOrg: diasemi.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: a9adb2a3-ed44-4580-7055-08d6c2553e68
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Apr 2019 10:21:09.3023
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB2174
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 6:06 PM Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
->
-> Make the device_fwnode_match() a generic helper to match device
-> by fwnode handle for use with bus_find_device(). This will be
-> also used by coresight.
->
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+On 14 April 2019 12:10, Wolfram Sang wrote:
 
-Can you resend this with a CC to linux-acpi@vger.kernel.org, please?
-
-There's some device properties material for 5.2 collected already and
-it would be good to keep all that together.
-
+> Subject: [PATCH RFT] watchdog: da9063_wdt: parse DT for timeout value, to=
+o
+>=20
+> And make sure the final obtained value gets properly scaled. Remove two
+> empty lines to group the initialization blocks while we are here.
+>=20
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 > ---
->  drivers/base/devcon.c    | 5 -----
->  drivers/base/property.c  | 6 ++++++
->  include/linux/property.h | 1 +
->  3 files changed, 7 insertions(+), 5 deletions(-)
->
-> diff --git a/drivers/base/devcon.c b/drivers/base/devcon.c
-> index 04db9ae..f4a9e30 100644
-> --- a/drivers/base/devcon.c
-> +++ b/drivers/base/devcon.c
-> @@ -107,11 +107,6 @@ static struct bus_type *generic_match_buses[] = {
->         NULL,
->  };
->
-> -static int device_fwnode_match(struct device *dev, void *fwnode)
-> -{
-> -       return dev_fwnode(dev) == fwnode;
-> -}
-> -
->  static void *device_connection_fwnode_match(struct device_connection *con)
->  {
->         struct bus_type *bus;
-> diff --git a/drivers/base/property.c b/drivers/base/property.c
-> index 8b91ab3..d10d923 100644
-> --- a/drivers/base/property.c
-> +++ b/drivers/base/property.c
-> @@ -25,6 +25,12 @@ struct fwnode_handle *dev_fwnode(struct device *dev)
->  }
->  EXPORT_SYMBOL_GPL(dev_fwnode);
->
-> +int device_fwnode_match(struct device *dev, void *fwnode)
-> +{
-> +       return dev_fwnode(dev) == fwnode;
-> +}
-> +EXPORT_SYMBOL_GPL(device_fwnode_match);
-> +
->  /**
->   * device_property_present - check if a property of a device is present
->   * @dev: Device whose property is being checked
-> diff --git a/include/linux/property.h b/include/linux/property.h
-> index 65d3420..c8fd3d42 100644
-> --- a/include/linux/property.h
-> +++ b/include/linux/property.h
-> @@ -34,6 +34,7 @@ enum dev_dma_attr {
->  };
->
->  struct fwnode_handle *dev_fwnode(struct device *dev);
-> +int device_fwnode_match(struct device *dev, void *fwnode);
->
->  bool device_property_present(struct device *dev, const char *propname);
->  int device_property_read_u8_array(struct device *dev, const char *propname,
-> --
-> 2.7.4
->
+>=20
+> Tested with a Renesas Lager board (R-Car H2, DA9063AD), checking the init=
+ial
+> timeout value via sysfs. I didn't test handover from bootloader because m=
+y
+> bootloader neither supports WDT or I2C out of the box.
+
+Tested on git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-stagin=
+g.git
+* watchdog-next                 6829e6ef3f22 [origin/watchdog-next] watchdo=
+g: pnx4008: readout watchdog state
+
+Tested-by: Steve Twiss <stwiss.opensource@diasemi.com>
+
+Regards,
+Steve
