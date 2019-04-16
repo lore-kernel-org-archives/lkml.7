@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3762CC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:48:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C285FC282DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:48:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02D7F222D3
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:48:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9D481222CE
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:48:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729756AbfDPNr7 (ORCPT
+        id S1729765AbfDPNsH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 09:47:59 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:50818 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729660AbfDPNri (ORCPT
+        Tue, 16 Apr 2019 09:48:07 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:56922 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726645AbfDPNsG (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 09:47:38 -0400
-Received: from pps.filterd (m0098417.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3GDlDML010667
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:47:37 -0400
+        Tue, 16 Apr 2019 09:48:06 -0400
+Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3GDlTuw093894
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:48:05 -0400
 Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rwe56nx89-1
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rwe1t6d9j-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:47:34 -0400
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:47:53 -0400
 Received: from localhost
         by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <ldufour@linux.ibm.com>;
-        Tue, 16 Apr 2019 14:45:56 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        Tue, 16 Apr 2019 14:45:53 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
         by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 16 Apr 2019 14:45:46 +0100
+        Tue, 16 Apr 2019 14:45:43 +0100
 Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3GDjiab16646206
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3GDjfqs27262988
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 Apr 2019 13:45:44 GMT
+        Tue, 16 Apr 2019 13:45:41 GMT
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 5066E4C052;
-        Tue, 16 Apr 2019 13:45:44 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id C7A184C062;
+        Tue, 16 Apr 2019 13:45:41 +0000 (GMT)
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D71B34C062;
-        Tue, 16 Apr 2019 13:45:42 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 5A8EA4C058;
+        Tue, 16 Apr 2019 13:45:40 +0000 (GMT)
 Received: from nimbus.lab.toulouse-stg.fr.ibm.com (unknown [9.101.4.33])
         by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 16 Apr 2019 13:45:42 +0000 (GMT)
+        Tue, 16 Apr 2019 13:45:40 +0000 (GMT)
 From:   Laurent Dufour <ldufour@linux.ibm.com>
 To:     akpm@linux-foundation.org, mhocko@kernel.org, peterz@infradead.org,
         kirill@shutemov.name, ak@linux.intel.com, dave@stgolabs.net,
@@ -78,18 +78,18 @@ Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         haren@linux.vnet.ibm.com, npiggin@gmail.com,
         paulmck@linux.vnet.ibm.com, Tim Chen <tim.c.chen@linux.intel.com>,
         linuxppc-dev@lists.ozlabs.org, x86@kernel.org
-Subject: [PATCH v12 07/31] mm: make pte_unmap_same compatible with SPF
-Date:   Tue, 16 Apr 2019 15:44:58 +0200
+Subject: [PATCH v12 06/31] mm: introduce pte_spinlock for FAULT_FLAG_SPECULATIVE
+Date:   Tue, 16 Apr 2019 15:44:57 +0200
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190416134522.17540-1-ldufour@linux.ibm.com>
 References: <20190416134522.17540-1-ldufour@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19041613-0016-0000-0000-0000026F7268
+x-cbid: 19041613-0016-0000-0000-0000026F7267
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19041613-0017-0000-0000-000032CBBD7B
-Message-Id: <20190416134522.17540-8-ldufour@linux.ibm.com>
+x-cbparentid: 19041613-0017-0000-0000-000032CBBD77
+Message-Id: <20190416134522.17540-7-ldufour@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-16_05:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
@@ -102,130 +102,57 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pte_unmap_same() is making the assumption that the page table are still
-around because the mmap_sem is held.
-This is no more the case when running a speculative page fault and
-additional check must be made to ensure that the final page table are still
-there.
+When handling page fault without holding the mmap_sem the fetch of the
+pte lock pointer and the locking will have to be done while ensuring
+that the VMA is not touched in our back.
 
-This is now done by calling pte_spinlock() to check for the VMA's
-consistency while locking for the page tables.
+So move the fetch and locking operations in a dedicated function.
 
-This is requiring passing a vm_fault structure to pte_unmap_same() which is
-containing all the needed parameters.
-
-As pte_spinlock() may fail in the case of a speculative page fault, if the
-VMA has been touched in our back, pte_unmap_same() should now return 3
-cases :
-	1. pte are the same (0)
-	2. pte are different (VM_FAULT_PTNOTSAME)
-	3. a VMA's changes has been detected (VM_FAULT_RETRY)
-
-The case 2 is handled by the introduction of a new VM_FAULT flag named
-VM_FAULT_PTNOTSAME which is then trapped in cow_user_page().
-If VM_FAULT_RETRY is returned, it is passed up to the callers to retry the
-page fault while holding the mmap_sem.
-
-Acked-by: David Rientjes <rientjes@google.com>
 Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
 ---
- include/linux/mm_types.h |  6 +++++-
- mm/memory.c              | 37 +++++++++++++++++++++++++++----------
- 2 files changed, 32 insertions(+), 11 deletions(-)
+ mm/memory.c | 15 +++++++++++----
+ 1 file changed, 11 insertions(+), 4 deletions(-)
 
-diff --git a/include/linux/mm_types.h b/include/linux/mm_types.h
-index 8ec38b11b361..fd7d38ee2e33 100644
---- a/include/linux/mm_types.h
-+++ b/include/linux/mm_types.h
-@@ -652,6 +652,8 @@ typedef __bitwise unsigned int vm_fault_t;
-  * @VM_FAULT_NEEDDSYNC:		->fault did not modify page tables and needs
-  *				fsync() to complete (for synchronous page faults
-  *				in DAX)
-+ * @VM_FAULT_PTNOTSAME		Page table entries have changed during a
-+ *				speculative page fault handling.
-  * @VM_FAULT_HINDEX_MASK:	mask HINDEX value
-  *
-  */
-@@ -669,6 +671,7 @@ enum vm_fault_reason {
- 	VM_FAULT_FALLBACK       = (__force vm_fault_t)0x000800,
- 	VM_FAULT_DONE_COW       = (__force vm_fault_t)0x001000,
- 	VM_FAULT_NEEDDSYNC      = (__force vm_fault_t)0x002000,
-+	VM_FAULT_PTNOTSAME	= (__force vm_fault_t)0x004000,
- 	VM_FAULT_HINDEX_MASK    = (__force vm_fault_t)0x0f0000,
- };
- 
-@@ -693,7 +696,8 @@ enum vm_fault_reason {
- 	{ VM_FAULT_RETRY,               "RETRY" },	\
- 	{ VM_FAULT_FALLBACK,            "FALLBACK" },	\
- 	{ VM_FAULT_DONE_COW,            "DONE_COW" },	\
--	{ VM_FAULT_NEEDDSYNC,           "NEEDDSYNC" }
-+	{ VM_FAULT_NEEDDSYNC,           "NEEDDSYNC" },	\
-+	{ VM_FAULT_PTNOTSAME,		"PTNOTSAME" }
- 
- struct vm_special_mapping {
- 	const char *name;	/* The name, e.g. "[vdso]". */
 diff --git a/mm/memory.c b/mm/memory.c
-index 221ccdf34991..d5bebca47d98 100644
+index fc3698d13cb5..221ccdf34991 100644
 --- a/mm/memory.c
 +++ b/mm/memory.c
-@@ -2094,21 +2094,29 @@ static inline bool pte_map_lock(struct vm_fault *vmf)
-  * parts, do_swap_page must check under lock before unmapping the pte and
-  * proceeding (but do_wp_page is only called after already making such a check;
-  * and do_anonymous_page can safely check later on).
-+ *
-+ * pte_unmap_same() returns:
-+ *	0			if the PTE are the same
-+ *	VM_FAULT_PTNOTSAME	if the PTE are different
-+ *	VM_FAULT_RETRY		if the VMA has changed in our back during
-+ *				a speculative page fault handling.
-  */
--static inline int pte_unmap_same(struct mm_struct *mm, pmd_t *pmd,
--				pte_t *page_table, pte_t orig_pte)
-+static inline vm_fault_t pte_unmap_same(struct vm_fault *vmf)
- {
--	int same = 1;
-+	int ret = 0;
-+
- #if defined(CONFIG_SMP) || defined(CONFIG_PREEMPT)
- 	if (sizeof(pte_t) > sizeof(unsigned long)) {
--		spinlock_t *ptl = pte_lockptr(mm, pmd);
--		spin_lock(ptl);
--		same = pte_same(*page_table, orig_pte);
--		spin_unlock(ptl);
-+		if (pte_spinlock(vmf)) {
-+			if (!pte_same(*vmf->pte, vmf->orig_pte))
-+				ret = VM_FAULT_PTNOTSAME;
-+			spin_unlock(vmf->ptl);
-+		} else
-+			ret = VM_FAULT_RETRY;
- 	}
- #endif
--	pte_unmap(page_table);
--	return same;
-+	pte_unmap(vmf->pte);
-+	return ret;
+@@ -2073,6 +2073,13 @@ int apply_to_page_range(struct mm_struct *mm, unsigned long addr,
  }
+ EXPORT_SYMBOL_GPL(apply_to_page_range);
  
- static inline void cow_user_page(struct page *dst, struct page *src, unsigned long va, struct vm_area_struct *vma)
-@@ -2714,8 +2722,17 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
- 	int exclusive = 0;
- 	vm_fault_t ret = 0;
- 
--	if (!pte_unmap_same(vma->vm_mm, vmf->pmd, vmf->pte, vmf->orig_pte))
-+	ret = pte_unmap_same(vmf);
-+	if (ret) {
-+		/*
-+		 * If pte != orig_pte, this means another thread did the
-+		 * swap operation in our back.
-+		 * So nothing else to do.
-+		 */
-+		if (ret == VM_FAULT_PTNOTSAME)
-+			ret = 0;
++static inline bool pte_spinlock(struct vm_fault *vmf)
++{
++	vmf->ptl = pte_lockptr(vmf->vma->vm_mm, vmf->pmd);
++	spin_lock(vmf->ptl);
++	return true;
++}
++
+ static inline bool pte_map_lock(struct vm_fault *vmf)
+ {
+ 	vmf->pte = pte_offset_map_lock(vmf->vma->vm_mm, vmf->pmd,
+@@ -3656,8 +3663,8 @@ static vm_fault_t do_numa_page(struct vm_fault *vmf)
+ 	 * validation through pte_unmap_same(). It's of NUMA type but
+ 	 * the pfn may be screwed if the read is non atomic.
+ 	 */
+-	vmf->ptl = pte_lockptr(vma->vm_mm, vmf->pmd);
+-	spin_lock(vmf->ptl);
++	if (!pte_spinlock(vmf))
++		return VM_FAULT_RETRY;
+ 	if (unlikely(!pte_same(*vmf->pte, vmf->orig_pte))) {
+ 		pte_unmap_unlock(vmf->pte, vmf->ptl);
  		goto out;
-+	}
+@@ -3850,8 +3857,8 @@ static vm_fault_t handle_pte_fault(struct vm_fault *vmf)
+ 	if (pte_protnone(vmf->orig_pte) && vma_is_accessible(vmf->vma))
+ 		return do_numa_page(vmf);
  
- 	entry = pte_to_swp_entry(vmf->orig_pte);
- 	if (unlikely(non_swap_entry(entry))) {
+-	vmf->ptl = pte_lockptr(vmf->vma->vm_mm, vmf->pmd);
+-	spin_lock(vmf->ptl);
++	if (!pte_spinlock(vmf))
++		return VM_FAULT_RETRY;
+ 	entry = vmf->orig_pte;
+ 	if (unlikely(!pte_same(*vmf->pte, entry)))
+ 		goto unlock;
 -- 
 2.21.0
 
