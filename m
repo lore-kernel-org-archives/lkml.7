@@ -2,87 +2,78 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 589AEC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC543C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:36:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B4AA20652
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:35:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81A4420652
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:36:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="ttl2ml0j"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728984AbfDPJe7 (ORCPT
+        id S1729044AbfDPJgk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 05:34:59 -0400
-Received: from mga07.intel.com ([134.134.136.100]:12912 "EHLO mga07.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726739AbfDPJe7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 05:34:59 -0400
-X-Amp-Result: UNSCANNABLE
-X-Amp-File-Uploaded: False
-Received: from fmsmga001.fm.intel.com ([10.253.24.23])
-  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Apr 2019 02:34:58 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,357,1549958400"; 
-   d="scan'208";a="165154947"
-Received: from lahna.fi.intel.com (HELO lahna) ([10.237.72.157])
-  by fmsmga001.fm.intel.com with SMTP; 16 Apr 2019 02:34:55 -0700
-Received: by lahna (sSMTP sendmail emulation); Tue, 16 Apr 2019 12:34:54 +0300
-Date:   Tue, 16 Apr 2019 12:34:54 +0300
-From:   Mika Westerberg <mika.westerberg@linux.intel.com>
-To:     Gaurav Kohli <gkohli@codeaurora.org>
-Cc:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        gregkh@linuxfoundation.org, maxime.ripard@bootlin.com,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] nvmem: core: add NVMEM_SYSFS Kconfig
-Message-ID: <20190416093454.GN2654@lahna.fi.intel.com>
-References: <20190415164011.2638-1-srinivas.kandagatla@linaro.org>
- <3a66797d-347d-2414-14e1-edbcd7c39ae8@codeaurora.org>
+        Tue, 16 Apr 2019 05:36:40 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:50180 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728748AbfDPJgh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 05:36:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=p6lz7Wbd96oL4yTRFGFSupuDTjAEPYWCuPOmnA8Ap9s=; b=ttl2ml0jYeWFr+XJeaHxjn6jP
+        2S8sUaSKZt7msTHXpYjlOanLT2cCo0rPhZGpgoByzVlTb9tay2hgM1aKnfSWDoAyqiPCy7FLSEfsS
+        0YmAD8t1jZuqM7sr5oFwyLzcK7rGpDUL72XrRyaFDF82WVnDfMddsXBMXmyhO7rYaG1NvqQQw8wmy
+        dPoR3KQlkatoey6v3k+AEgfH8vVsYB+gaxnari/JfVMnVXzmfYrY6T1WsbB4XY3Z1kcU1ZlpDHOk6
+        Fbow8dQLdKgf2AULri5prz8sJ6v4nZY4TfWaReqJkNWPwHiQfxE1RQZszQfBH+NErzP0oLzr8Pb+K
+        twXcrgGjg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hGKW3-0001ry-Ll; Tue, 16 Apr 2019 09:36:36 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 2F1ED29B5EFA0; Tue, 16 Apr 2019 11:36:34 +0200 (CEST)
+Date:   Tue, 16 Apr 2019 11:36:34 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     bigeasy@linutronix.de, hpa@zytor.com, mingo@kernel.org,
+        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        tglx@linutronix.de, john.ogness@linutronix.de
+Cc:     linux-tip-commits@vger.kernel.org
+Subject: Re: [tip:sched/core] sched/core: Document that RT task priorities
+ are 1...99
+Message-ID: <20190416093634.GS11158@hirez.programming.kicks-ass.net>
+References: <20190403210821.10916-1-bigeasy@linutronix.de>
+ <tip-37a8f8590f307db8f8cfa62dfd82b3fc0978607c@git.kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <3a66797d-347d-2414-14e1-edbcd7c39ae8@codeaurora.org>
-User-Agent: Mutt/1.11.3 (2019-02-01)
+In-Reply-To: <tip-37a8f8590f307db8f8cfa62dfd82b3fc0978607c@git.kernel.org>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 10:49:22AM +0530, Gaurav Kohli wrote:
-> Hi Srinivas,
+On Tue, Apr 16, 2019 at 01:13:11AM -0700, tip-bot for Sebastian Andrzej Siewior wrote:
+> Commit-ID:  37a8f8590f307db8f8cfa62dfd82b3fc0978607c
+> Gitweb:     https://git.kernel.org/tip/37a8f8590f307db8f8cfa62dfd82b3fc0978607c
+> Author:     Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+> AuthorDate: Wed, 3 Apr 2019 23:08:21 +0200
+> Committer:  Ingo Molnar <mingo@kernel.org>
+> CommitDate: Tue, 16 Apr 2019 10:06:08 +0200
 > 
-> Thanks for the patch,
-> By default NVMEM_SYSFS should be set true, those whose don't want they can
-> disable the same.
+> sched/core: Document that RT task priorities are 1...99
 > 
-> If we go with disable option, there are chances of eeprom may break in below
-> case:
-> 
-> if (config->compat) {
->                 rval = nvmem_sysfs_setup_compat(nvmem, config); -> this will
-> return error as config is disabled.
->                 if (rval)
->                         goto err_device_del;
->         }
+> John identified three files which claim that RT task priorities start at
+> zero. As far as I understand, 0 is used for DL and has nothing to do
+> wihich RT priorities as identified by the RT policy.
 
-I also think this may cause problems with Thunderbolt devices because
-the upgradeable NVM is exposed to the userspace via these sysfs files
-and those are being used by fwupd. If the files disappear it makes NVM
-upgrade somewhat harder ;-)
+DL is -1, 0 is still very much FIFO/FF
 
-At least it would be good to include following as part of this series if
-you plan to disable the sysfs entries by default:
-
-diff --git a/drivers/thunderbolt/Kconfig b/drivers/thunderbolt/Kconfig
-index f4869c38c7e4..dd5facab0af2 100644
---- a/drivers/thunderbolt/Kconfig
-+++ b/drivers/thunderbolt/Kconfig
-@@ -7,6 +7,7 @@ menuconfig THUNDERBOLT
- 	select CRYPTO
- 	select CRYPTO_HASH
- 	select NVMEM
-+	select NVMEM_SYSFS
- 	help
- 	  Thunderbolt Controller driver. This driver is required if you
- 	  want to hotplug Thunderbolt devices on Apple hardware or on PCs
