@@ -5,63 +5,62 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A88ACC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:57:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78AA2C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 561F2206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:57:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 331F820870
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:58:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="reHsoR1Q"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="I2+y9TkC"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728635AbfDPH50 (ORCPT
+        id S1728715AbfDPH6R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 03:57:26 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:37914 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726346AbfDPH5Y (ORCPT
+        Tue, 16 Apr 2019 03:58:17 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:34010 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726890AbfDPH6Q (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 03:57:24 -0400
-Received: by mail-ed1-f67.google.com with SMTP id d13so17049874edr.5;
-        Tue, 16 Apr 2019 00:57:22 -0700 (PDT)
+        Tue, 16 Apr 2019 03:58:16 -0400
+Received: by mail-ed1-f65.google.com with SMTP id a6so5798648edv.1;
+        Tue, 16 Apr 2019 00:58:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=IGIFkTydfs/AEWS9DDMhXHwv5bgZPVoksRlPF2n9eaQ=;
-        b=reHsoR1QvMg1qcS1XIB2QYfUhIyXLgEa47JgafwItVkTFGSqkk8xGSJ4tA21R1He++
-         jEIiKVyYY5HTvLAed/7CyiFrc0pc8SDxgMXbbuemy0Uw+GO4wX/tLrjoq3xRezQEORLn
-         E/b42WCnlEfr4JJJ1EyARxIPi8J1urNQqx8/dGRhuRVc+EhLIyIQXp08M85V9IPPOAEV
-         LzG09aTiuR4IfCIYUS8QwfgdfwtKslBR96GZ/iLAlw+N/UbIbJom5eG7WvB5WuymyK38
-         tbLUxaO78PmHANpi9Be/FIZSOFWyQUq5CItHB1qnziR90KM7whFeIGQRlAFOmPbDMOD2
-         7Www==
+        bh=aDtAU7WMPbrqEjE9DnOAOJNUjSLUjIQwiYAw7Xh/PjI=;
+        b=I2+y9TkC6TzYd8jPqI5of5ieWceb3qJmLNl4k8MhKd6vnDgSDyYLzCPZNaRmA2zu7b
+         GYqmtHfwy0zqe6M8/EQhjmMdKrL4HVTx75qJCMNJAEnxIGsOXIEMam8sDn/Fu6BbzcTq
+         blBb146d/fTlXq23ARE15Nvgafkl5kuQ1EHAjwmsZ52Dg85enfWSKxILk5vsPvK1rh9E
+         gqnJ4suFqqII+VpILBaQgTuwGwrKhkJ+C7vj0VlSmAL0dKIonTIRixZimUUxQyqrN/Ly
+         kvpu2hru+rtDGv68NGoDdTEnoxVVULqT+4D7Sa5is17C9I2ZzEMtivrd+L93tyyknneb
+         75tQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=IGIFkTydfs/AEWS9DDMhXHwv5bgZPVoksRlPF2n9eaQ=;
-        b=R5XehmAqtGZsw0UKfgGnAa00d1NiuE7naHaOLSbh9Q8RIaZLkKGnTWujymWoS3lE7W
-         HNndaUwwHddVz+VqvNvn26/Q7k4U/GoCy7WWk7DRr//yEy9KXliqIwodv+dsd4IZLIiq
-         8sDvoe8XnfL5hEvsJV2yRDV4VR0OTGiJ5fS5IP75SHF0vQ2WCDv2qD5JT4IXnFuNzR4I
-         +UGHov66hqxESHq7VlWZfalBjVTrymbPT32HqR+Qa0033QXw2tmAkJljesbrLmOYzXzC
-         3YT5FLKAQPeU6TRi/YYstyQSDuW5Y9Pgbak1ls3Wlz+DcMCD3Tbhf/70z2fAkmIvRhjU
-         jgmw==
-X-Gm-Message-State: APjAAAWZcts6J+GwmlKu9WPet15N5yLpScoJsiL2dH3iDmpFjyzPEVyi
-        vkgRqN6ec4FbZ+t/iOgnBn8=
-X-Google-Smtp-Source: APXvYqxFD4eBoFk7WLgrOrhYOGHGYiLQc3AHclI1R6F8XCkM2YyCeq7ziT7rx3StKFz8lc9D7ypr+Q==
-X-Received: by 2002:a17:906:3941:: with SMTP id g1mr42390903eje.168.1555401441468;
-        Tue, 16 Apr 2019 00:57:21 -0700 (PDT)
+        bh=aDtAU7WMPbrqEjE9DnOAOJNUjSLUjIQwiYAw7Xh/PjI=;
+        b=q6G+wy7KXlNpNSyN6iPgbSeKWQ3cWU7yqaftQAkAD8imnI5WQQBEMT2nxgKuJ5XO9S
+         rRcjAfZZx9D9iVr1B0h0piezzoBJX96dlvxsQozf4nRmWQ9Mwq4MdaL5wA4yLLE4MGuv
+         SMS5Zwfib39s94ITdKfg1EGuGfdhSDrJfycDXHghgj9p92tWa2d8vE3BZiC/3jU2Toyi
+         /6tiEjvmn1Ay0BaPK2NOQW1ag+sOWGx0/CuKQNNI9JBS9iF9+1WEhTqNl4enMN9xDjiP
+         vgYDKGnOaoyKqR0w0Lt7YJJLEhvEbaDPNzdgqokYexmRs3BKBOuesUxbiZenJlV6yWNG
+         gk7A==
+X-Gm-Message-State: APjAAAWeGluyKMm1G/rX+q0ipzYlnDi3FgGgGH7veQwrdzmrNiluR3eu
+        Q1OyV95wY/WOwGtGwxTJeO/6OATmem8=
+X-Google-Smtp-Source: APXvYqznWclXfjmWGumBqx1hxx+/AR/74bx8bT0TvyE9r3Y3x4llDYvP1zL5EO9nuBWFGu1bH3zQ9A==
+X-Received: by 2002:aa7:dada:: with SMTP id x26mr15089936eds.77.1555401492609;
+        Tue, 16 Apr 2019 00:58:12 -0700 (PDT)
 Received: from ziggy.stardust ([37.223.141.112])
-        by smtp.gmail.com with ESMTPSA id k51sm3612775ede.40.2019.04.16.00.57.19
+        by smtp.gmail.com with ESMTPSA id d33sm6282859edc.45.2019.04.16.00.58.10
         (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 00:57:20 -0700 (PDT)
-Subject: Re: [PATCH 21/24] dt-bindings: irq: mtk,sysirq: add support for
- MT8516
+        Tue, 16 Apr 2019 00:58:11 -0700 (PDT)
+Subject: Re: [PATCH 22/24] dt-bindings: i2c: i2c-mtk: add support for MT8516
 To:     Fabien Parent <fparent@baylibre.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com
+        mark.rutland@arm.com, Wolfram Sang <wsa@the-dreams.de>
 Cc:     sean.wang@kernel.org, ryder.lee@mediatek.com,
         hsin-hsiung.wang@mediatek.com, wenzhen.yu@mediatek.com,
         chaotian.jing@mediatek.com, yong.mao@mediatek.com,
@@ -73,7 +72,7 @@ Cc:     sean.wang@kernel.org, ryder.lee@mediatek.com,
         linux-spi@vger.kernel.org, linux-watchdog@vger.kernel.org,
         linux-clk@vger.kernel.org, stephane.leprovost@mediatek.com
 References: <20190323211612.860-1-fparent@baylibre.com>
- <20190323211612.860-22-fparent@baylibre.com>
+ <20190323211612.860-23-fparent@baylibre.com>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
@@ -169,12 +168,12 @@ Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  pac005PuhxCWkKTJz3gCmznnoat4GCnL5gy/m0Qk45l4PFqwWXVLo9AQg2Kp3mlIFZ6fsEKI
  AN5hxlbNvNb9V2Zo5bFZjPWPFTxOteM0omUAS+QopwU0yPLLGJVf2iCmItHcUXI+r2JwH1CJ
  jrHWeQEI2ucSKsNa8FllDmG/fQ==
-Message-ID: <ba07743d-39a2-f219-fdef-f857bee1e38b@gmail.com>
-Date:   Tue, 16 Apr 2019 09:57:18 +0200
+Message-ID: <2a384e4b-a23d-450b-ee37-57af8c097bae@gmail.com>
+Date:   Tue, 16 Apr 2019 09:58:09 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190323211612.860-22-fparent@baylibre.com>
+In-Reply-To: <20190323211612.860-23-fparent@baylibre.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -186,32 +185,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 On 23/03/2019 22:16, Fabien Parent wrote:
-> Add binding documentation of mediatek,sysirq for MT8516 SoC.
+> Add binding documentation of i2c-mtk for MT8516 SoC.
 > 
 > Signed-off-by: Fabien Parent <fparent@baylibre.com>
 > ---
->  .../bindings/interrupt-controller/mediatek,sysirq.txt          | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
+>  Documentation/devicetree/bindings/i2c/i2c-mtk.txt | 1 +
+>  1 file changed, 1 insertion(+)
+> 
+
 
 applied to v5.1-next/dts64
 
-Thanks
-> 
-> diff --git a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
-> index c5d589108a94..deaaba70d548 100644
-> --- a/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
-> +++ b/Documentation/devicetree/bindings/interrupt-controller/mediatek,sysirq.txt
-> @@ -1,10 +1,11 @@
-> -+Mediatek MT65xx/MT67xx/MT81xx sysirq
-> ++Mediatek MT65xx/MT67xx/MT81xx/MT85xx sysirq
->  
->  Mediatek SOCs sysirq support controllable irq inverter for each GIC SPI
->  interrupt.
->  
->  Required properties:
->  - compatible: should be
-> +	"mediatek,mt8516-sysirq", "mediatek,mt6577-sysirq": for MT8516
->  	"mediatek,mt8173-sysirq", "mediatek,mt6577-sysirq": for MT8173
->  	"mediatek,mt8135-sysirq", "mediatek,mt6577-sysirq": for MT8135
->  	"mediatek,mt8127-sysirq", "mediatek,mt6577-sysirq": for MT8127
+Wolfram let me know if you want to take it through your tree and I drop the patch.
+
+> diff --git a/Documentation/devicetree/bindings/i2c/i2c-mtk.txt b/Documentation/devicetree/bindings/i2c/i2c-mtk.txt
+> index ee4c32454198..aac7b56f251f 100644
+> --- a/Documentation/devicetree/bindings/i2c/i2c-mtk.txt
+> +++ b/Documentation/devicetree/bindings/i2c/i2c-mtk.txt
+> @@ -12,6 +12,7 @@ Required properties:
+>        "mediatek,mt7623-i2c", "mediatek,mt6577-i2c": for MediaTek MT7623
+>        "mediatek,mt7629-i2c", "mediatek,mt2712-i2c": for MediaTek MT7629
+>        "mediatek,mt8173-i2c": for MediaTek MT8173
+> +      "mediatek,mt8516-i2c", "mediatek,mt2712-i2c": for MediaTek MT8516
+>    - reg: physical base address of the controller and dma base, length of memory
+>      mapped region.
+>    - interrupts: interrupt number to the cpu.
 > 
