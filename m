@@ -2,177 +2,211 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 34ACEC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:23:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C3D1C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:25:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0777C20868
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:23:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 34488206B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:25:16 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="giEVzNR0"
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="QUJABhXu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730054AbfDPTXE (ORCPT
+        id S1728968AbfDPTZO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 15:23:04 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42868 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728000AbfDPTXD (ORCPT
+        Tue, 16 Apr 2019 15:25:14 -0400
+Received: from mail.efficios.com ([167.114.142.138]:37380 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727136AbfDPTZO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 15:23:03 -0400
-Received: by mail-wr1-f65.google.com with SMTP id g3so28619341wrx.9
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 12:23:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=EDYx7epngbmP/CMeNw7L8ab8CPJ0bEuFj8yGq0twy/U=;
-        b=giEVzNR0s6KH9lYbUhfbWWrwojgHNm2klF7m38ladJx3vj7Iap2KT98L5xRyD5lW15
-         e1NOB8w7zJ51+kyM1bDjBf4CSYz0a7r+2j5VNaRcJtZfP/v/MrHgzlFVSuSKjrE7Suu2
-         XyekDuEAREiG8+CFuSEfWnSbNck31nWKtm0LyWbKfcTx2lJu5C4fNu9eub+EdGkrnMap
-         ayMNTl0yKLeiyLh1HZZ/YnSTXYZFRnE11Wsha3Iw/oXkRyh3xfeSc0aVdgiQcRfZ+t7a
-         IVi6dzXTsADBr1Cui3yejy0YC8gJYkp1iHG9TCkTQLiUAdfU+pEn8k09yQaYBbKu86EU
-         huVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=EDYx7epngbmP/CMeNw7L8ab8CPJ0bEuFj8yGq0twy/U=;
-        b=VDbFO6Ol/obThmxER0gCGHFymrP4D+Yid+k7aaDS9Cvi2blibEtEtBl9B3nDj4FEG+
-         HyUYUCU/NhJ1QI+DoGxoJ0N4amkgIK9dCaA6QKtz2ngzp1uZXYWkWOoSRgPNS7/Rd3UL
-         0isLDau0UbkX8j5N5DDeJliIqY+ezFYLSap9df4dgrE12EL9QMHFN+yoGLPVaSql9zFr
-         2qW7HJCYe66bxhhdM3M78yzlKl+mvlEKJMjde8ZLO3xEduc9OWvLwViMTb/FotSvVRwf
-         GGiHuV5J1HdO0+ebaPen9RRHnl4Arh4bomcGJ91xZopqwH0khP2jBoDa7inTAPTz83I7
-         4L3A==
-X-Gm-Message-State: APjAAAWpJWTlOt6dNTWUFCE2jN4vzT/GC9mzwbZBczbabAy/WHCYNwi0
-        V6ym3ZoxIKBEb1Pc6AvbkLf52NY2RnA=
-X-Google-Smtp-Source: APXvYqwvSLzXRPVwl9wYnW4Skw66lF5zMamiO/JBxgEw1HuFsoc9L+JTNJjmf6oYmZtpX543MoVudg==
-X-Received: by 2002:adf:e94d:: with SMTP id m13mr31626911wrn.141.1555442581433;
-        Tue, 16 Apr 2019 12:23:01 -0700 (PDT)
-Received: from [192.168.0.41] (50.251.95.92.rev.sfr.net. [92.95.251.50])
-        by smtp.googlemail.com with ESMTPSA id s18sm202287wmc.41.2019.04.16.12.22.59
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 12:23:00 -0700 (PDT)
-Subject: Re: [PATCH v1 1/1] thermal: rcar_gen3_thermal: request IRQ after
- device initialization
-To:     Jiada Wang <jiada_wang@mentor.com>, rui.zhang@intel.com,
-        edubezval@gmail.com
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190411100352.15977-1-jiada_wang@mentor.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <92504666-9e17-4c6d-fc74-6cf68b9f017b@linaro.org>
-Date:   Tue, 16 Apr 2019 21:22:59 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 16 Apr 2019 15:25:14 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 9D68A1D645E;
+        Tue, 16 Apr 2019 15:25:12 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id mx16-Xo3oWEX; Tue, 16 Apr 2019 15:25:12 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 037CE1D6454;
+        Tue, 16 Apr 2019 15:25:12 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 037CE1D6454
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1555442712;
+        bh=dBAHxV+5AMeW0yIbrFxTc9ZyYkcIIhy/PrmkHPHr6wE=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=QUJABhXu/WNVZ7zNbafJdZ7I78dLNA53TOuoh05mrHWGIFzEAxzioMOGQSGLnvUU8
+         VVz+4Y8GHSkXGAiG205Hp5mdM0OlQk0f4mkP4q1FdkWiD8bqED3ffXQ71Ueo9lbnVe
+         Vfn3BxKwAsaNV5mEDCWli7PpI1lmZ+q71tVuJs24yAHrPrRr8/WyNw2Mls/AyWnIxT
+         uS0dU9VFKZOag3fkYtRml29JIiQb2rs951nodm4mAEzHlXkL3CIWf0VPHaszf6GpQ9
+         wizmnVmiFXTYenblJJ1JCmn5gHzeBdwmuHIwKeO3KVrTNHbYL0J5gpmoZM1lFmFS1j
+         oHqy41bvVmK+A==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id VWNPj0DABGiH; Tue, 16 Apr 2019 15:25:11 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id C6EBE1D644A;
+        Tue, 16 Apr 2019 15:25:11 -0400 (EDT)
+Date:   Tue, 16 Apr 2019 15:25:11 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Guenter Roeck <groeck@google.com>,
+        Kees Cook <keescook@chromium.org>,
+        kernelci <kernelci@groups.io>,
+        Guillaume Tucker <guillaume.tucker@collabora.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Mark Brown <broonie@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Matt Hart <matthew.hart@linaro.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        linux <linux@dominikbrodowski.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Adrian Reber <adrian@lisas.de>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        linux-mm <linux-mm@kvack.org>,
+        Richard Guy Briggs <rgb@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        info <info@kernelci.org>, rostedt <rostedt@goodmis.org>,
+        Jason Baron <jbaron@redhat.com>, Rabin Vincent <rabin@rab.in>,
+        Russell King <rmk+kernel@arm.linux.org.uk>
+Message-ID: <2030770457.2767.1555442711654.JavaMail.zimbra@efficios.com>
+In-Reply-To: <1444448267.2739.1555442221738.JavaMail.zimbra@efficios.com>
+References: <20190215185151.GG7897@sirena.org.uk> <CABXOdTdVvFn=Nbd_Anhz7zR1H-9QeGByF3HFg4ZFt58R8=H6zA@mail.gmail.com> <CAGXu5j+Sw2FyMc8L+8hTpEKbOsySFGrCmFtVP5gt9y2pJhYVUw@mail.gmail.com> <CABXOdTcXWf9iReoocaj9rZ7z17zt-62iPDuvQQSrQRtMeeZNiA@mail.gmail.com> <CAPcyv4i8xhA6B5e=YBq2Z5kooyUpYZ8Bv9qov-mvqm4Uz=KLWQ@mail.gmail.com> <CABXOdTc5=J7ZFgbiwahVind-SNt7+G_-TVO=v-Y5SBVPLdUFog@mail.gmail.com> <CAPcyv4gxk9xbsP3YSKzxu5Yp9FTefyxHc6xC33GwZ3Zf9_eeKA@mail.gmail.com> <1444448267.2739.1555442221738.JavaMail.zimbra@efficios.com>
+Subject: Re: next/master boot bisection: next-20190215 on beaglebone-black
 MIME-Version: 1.0
-In-Reply-To: <20190411100352.15977-1-jiada_wang@mentor.com>
 Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
+Thread-Topic: next/master boot bisection: next-20190215 on beaglebone-black
+Thread-Index: o2XfqTzgA9kPUT1d7tzJPHm/yG+fqP8/3aj6
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 11/04/2019 12:03, Jiada Wang wrote:
-> Currently IRQ is remain enabled after .remove, later if device is probed,
-> IRQ is requested before .thermal_init, this may cause IRQ function be
-> triggered but not able to clear IRQ status, thus cause system to hang.
+----- On Apr 16, 2019, at 3:17 PM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
+
+> ----- On Apr 16, 2019, at 2:54 PM, Dan Williams dan.j.williams@intel.com wrote:
 > 
-> this patch by moving request of IRQ after device initialization to
-> avoid this issue.
-
-Why not disable the interrupt and clear the irq status in the .remove
-callback, so the place is clean when probing again?
-
-
-        struct rcar_gen3_thermal_priv *priv = dev_get_drvdata(dev);
-
-        rcar_thermal_irq_set(priv, false);
-
-should do the trick no ?
-
-> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
-> ---
->  drivers/thermal/rcar_gen3_thermal.c | 48 ++++++++++++++++-------------
->  1 file changed, 26 insertions(+), 22 deletions(-)
+>> On Thu, Apr 11, 2019 at 1:54 PM Guenter Roeck <groeck@google.com> wrote:
+>> [..]
+>>> > > Boot tests report
+>>> > >
+>>> > > Qemu test results:
+>>> > >     total: 345 pass: 345 fail: 0
+>>> > >
+>>> > > This is on top of next-20190410 with CONFIG_SHUFFLE_PAGE_ALLOCATOR=y
+>>> > > and the known crashes fixed.
+>>> >
+>>> > In addition to CONFIG_SHUFFLE_PAGE_ALLOCATOR=y you also need the
+>>> > kernel command line option "page_alloc.shuffle=1"
+>>> >
+>>> > ...so I doubt you are running with shuffling enabled. Another way to
+>>> > double check is:
+>>> >
+>>> >    cat /sys/module/page_alloc/parameters/shuffle
+>>>
+>>> Yes, you are right. Because, with it enabled, I see:
+>>>
+>>> Kernel command line: rdinit=/sbin/init page_alloc.shuffle=1 panic=-1
+>>> console=ttyAMA0,115200 page_alloc.shuffle=1
+>>> ------------[ cut here ]------------
+>>> WARNING: CPU: 0 PID: 0 at ./include/linux/jump_label.h:303
+>>> page_alloc_shuffle+0x12c/0x1ac
+>>> static_key_enable(): static key 'page_alloc_shuffle_key+0x0/0x4' used
+>>> before call to jump_label_init()
+>> 
+>> This looks to be specific to ARM never having had to deal with
+>> DEFINE_STATIC_KEY_TRUE in the past.
+>> 
+>> I am able to avoid this warning by simply not enabling JUMP_LABEL
+>> support in my build.
 > 
-> diff --git a/drivers/thermal/rcar_gen3_thermal.c b/drivers/thermal/rcar_gen3_thermal.c
-> index 88fa41cf16e8..4d095d7f9763 100644
-> --- a/drivers/thermal/rcar_gen3_thermal.c
-> +++ b/drivers/thermal/rcar_gen3_thermal.c
-> @@ -375,28 +375,6 @@ static int rcar_gen3_thermal_probe(struct platform_device *pdev)
->  
->  	platform_set_drvdata(pdev, priv);
->  
-> -	/*
-> -	 * Request 2 (of the 3 possible) IRQs, the driver only needs to
-> -	 * to trigger on the low and high trip points of the current
-> -	 * temp window at this point.
-> -	 */
-> -	for (i = 0; i < 2; i++) {
-> -		irq = platform_get_irq(pdev, i);
-> -		if (irq < 0)
-> -			return irq;
-> -
-> -		irqname = devm_kasprintf(dev, GFP_KERNEL, "%s:ch%d",
-> -					 dev_name(dev), i);
-> -		if (!irqname)
-> -			return -ENOMEM;
-> -
-> -		ret = devm_request_threaded_irq(dev, irq, rcar_gen3_thermal_irq,
-> -						rcar_gen3_thermal_irq_thread,
-> -						IRQF_SHARED, irqname, priv);
-> -		if (ret)
-> -			return ret;
-> -	}
-> -
->  	pm_runtime_enable(dev);
->  	pm_runtime_get_sync(dev);
->  
-> @@ -458,6 +436,32 @@ static int rcar_gen3_thermal_probe(struct platform_device *pdev)
->  		goto error_unregister;
->  	}
->  
-> +	/*
-> +	 * Request 2 (of the 3 possible) IRQs, the driver only needs to
-> +	 * to trigger on the low and high trip points of the current
-> +	 * temp window at this point.
-> +	 */
-> +	for (i = 0; i < 2; i++) {
-> +		irq = platform_get_irq(pdev, i);
-> +		if (irq < 0) {
-> +			ret = irq;
-> +			goto error_unregister;
-> +		}
-> +
-> +		irqname = devm_kasprintf(dev, GFP_KERNEL, "%s:ch%d",
-> +					 dev_name(dev), i);
-> +		if (!irqname) {
-> +			ret = -ENOMEM;
-> +			goto error_unregister;
-> +		}
-> +
-> +		ret = devm_request_threaded_irq(dev, irq, rcar_gen3_thermal_irq,
-> +						rcar_gen3_thermal_irq_thread,
-> +						IRQF_SHARED, irqname, priv);
-> +		if (ret)
-> +			goto error_unregister;
-> +	}
-> +
->  	rcar_thermal_irq_set(priv, true);
->  
->  	return 0;
+> How large is your kernel image in memory ? Is it larger than 32MB
+> by any chance ?
 > 
+> On arm, the arch_static_branch() uses a "nop" instruction, which seems
+> fine. However, I have a concern wrt arch_static_branch_jump():
+> 
+> arch/arm/include/asm/jump_label.h defines:
+> 
+> static __always_inline bool arch_static_branch_jump(struct static_key *key, bool
+> branch)
+> {
+>        asm_volatile_goto("1:\n\t"
+>                 WASM(b) " %l[l_yes]\n\t"
+>                 ".pushsection __jump_table,  \"aw\"\n\t"
+>                 ".word 1b, %l[l_yes], %c0\n\t"
+>                 ".popsection\n\t"
+>                 : :  "i" (&((char *)key)[branch]) :  : l_yes);
+> 
+>        return false;
+> l_yes:
+>        return true;
+> }
+> 
+> Which should work fine as long as the branch target is within +/-32MB range of
+> the branch instruction. However, based on
+> http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0489e/Cihfddaf.html
+> :
+> 
+> "Extending branch ranges
+> 
+> Machine-level B and BL instructions have restricted ranges from the address of
+> the current instruction. However, you can use these instructions even if label
+> is out of range. Often you do not know where the linker places label. When
+> necessary, the linker adds code to enable longer branches. The added code is
+> called a veneer."
+> 
+> So if by an odd chance this branch is turned into a longer branch by the linker,
+> then
+> the code pattern would be completely unexpected by arch/arm/kernel/jump_label.c.
+> 
+> Can you try with the following (untested) patch ?
 
+The logic in my previous patch was bogus. Here is an updated version (untested):
+
+diff --git a/arch/arm/include/asm/jump_label.h b/arch/arm/include/asm/jump_label.h
+index e12d7d096fc0..7c35f57b72c5 100644
+--- a/arch/arm/include/asm/jump_label.h
++++ b/arch/arm/include/asm/jump_label.h
+@@ -23,12 +23,21 @@ static __always_inline bool arch_static_branch(struct static_key *key, bool bran
+        return true;
+ }
+ 
++/*
++ * The linker adds veneer code if target of the branch is beyond +/-32MB
++ * range, so ensure we never patch a branch instruction which target is
++ * outside of the inline asm.
++ */
+ static __always_inline bool arch_static_branch_jump(struct static_key *key, bool branch)
+ {
+        asm_volatile_goto("1:\n\t"
++                WASM(nop) "\n\t"
++                WASM(b) "2f\n\t"
++               "3:\n\t"
+                 WASM(b) " %l[l_yes]\n\t"
++               "2:\n\t"
+                 ".pushsection __jump_table,  \"aw\"\n\t"
+-                ".word 1b, %l[l_yes], %c0\n\t"
++                ".word 1b, 3b, %c0\n\t"
+                 ".popsection\n\t"
+                 : :  "i" (&((char *)key)[branch]) :  : l_yes);
+
+Thanks,
+
+Mathieu
 
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
