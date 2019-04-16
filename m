@@ -2,160 +2,219 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDBADC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7375CC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 90CE6206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:36:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 39E3220821
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:38:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cWTlJgAn"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="R5HkoXic"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729640AbfDPTgv (ORCPT
+        id S1729370AbfDPTiq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 15:36:51 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:46094 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726860AbfDPTgu (ORCPT
+        Tue, 16 Apr 2019 15:38:46 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:40595 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726860AbfDPTip (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 15:36:50 -0400
-Received: by mail-qk1-f194.google.com with SMTP id x18so711275qkf.13
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 12:36:50 -0700 (PDT)
+        Tue, 16 Apr 2019 15:38:45 -0400
+Received: by mail-qt1-f193.google.com with SMTP id x12so24702895qts.7
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 12:38:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:date:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=mRyeopdXxSK53USmYH1b/Hy8x7B1wPcKegG51sXIj/o=;
-        b=cWTlJgAnXTG40NN/ViJfr2H+2YEoekaq6mdbBumSEs4yDmfTE/nangww0P1dw8Pqe8
-         OVYm2DgO1E+xAYw/6lYp59KmsRzo2ZB64/YjE2jtIYq8SdV2sEFLHEfsSCR3i7OO8QPS
-         JIetCKLDAT6jPwALOfNudnKOrPCl56uDadhS5KK0cm1bpDNgvY6SCTOBE8nm6fCeHj1F
-         GKiThbwRBCCKnSLjz91jNlkZtRuvZVFtOtsYrX33xPSNc2aaNZ96C8eZdesJk4fE8Rkw
-         2zkF5DSvogW2Vb8geERwm9NepRNgFscVYOXnumuC/yE1I60fvQ8311FwWHkL3ilDRseL
-         2sxw==
+        d=linaro.org; s=google;
+        h=from:to:cc:subject:date:message-id;
+        bh=7zPKiVYOMRb/49Gawr5s9BcvpDsRJmbTU2NXG9M4u58=;
+        b=R5HkoXicNriQA4sS21/zLRZ/Tn7RE9z2wwl/dmPd+FF8h1mG2SzVeDR8MHCsaOH1Hb
+         P8MekTTtWfPtCSSPlfmYkIc5uXhES1Cn88X4lMxE6epeMfT+zxpUhiA7xZ4BUm+BDRxM
+         TTUMeIRhJcIVS8V+JfeoUhE8u+asdbBQa0AtiQ4rt2GUm9HVcfNhqBSd4vyyI7I9q8r/
+         wjOFVinSOdeGgaviqNrZYqYCj+bHNztdTEPtzyGs0ID6Mhxf7crAUHJ+x5LIepbj2PXD
+         515U5xF4ouR0VfaJt5j/adMFTH67hgD9sgiXp8sRtegXQHL88f5gp4EP5LzIOAHQeJb5
+         vCRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=mRyeopdXxSK53USmYH1b/Hy8x7B1wPcKegG51sXIj/o=;
-        b=F4IF7D86ArkveQGGCOjH50z3quNQLVBzje78aXq1s/5zD+b0AcScNqoZ4PRA0zrdwJ
-         o0j26Kd6MxR3E4dQ1oC2P+fC2aasU6LkoLezurSyTMluZTeDCyVPVUIY/mt2rxdTBPTg
-         fGF3BGkvKkiMSp9o5N0cutFHCoaw9odM3BVSeN+4Bj19S71xUTAh8jUJir5UJMkP4vrV
-         tnL4iifiOa5dTPIu3iW41n5AZNP1S4rRn9Q7aUM1TxKB3k4LOKKcscPWjPAI3zDM783E
-         EjQb/K6niFY7UWuIMAhaWk87jebQDGV5O7T1YL/gw4YMetrAxoots/axyr2JIesf+Jee
-         QZMQ==
-X-Gm-Message-State: APjAAAXFZVRt3AEFjKjfcGZNUcwsaXKRTfpZ/l8r2GV+yiPjFnHl4CRf
-        2dzoOOgJ3u9Ze883XZTTp4o=
-X-Google-Smtp-Source: APXvYqy57/Tcfx88+BsSj38pVfZHr5cX3t3SaAG738jFbvtCunsKCFChB76/IM+lJ5bEKaKiFwhAMA==
-X-Received: by 2002:a37:64a:: with SMTP id 71mr61675858qkg.41.1555443409877;
-        Tue, 16 Apr 2019 12:36:49 -0700 (PDT)
-Received: from quaco.ghostprotocols.net (179-240-182-11.3g.claro.net.br. [179.240.182.11])
-        by smtp.gmail.com with ESMTPSA id h186sm33447899qke.45.2019.04.16.12.36.47
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 16 Apr 2019 12:36:48 -0700 (PDT)
-From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
-X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
-Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 29C054039C; Tue, 16 Apr 2019 16:36:45 -0300 (-03)
-Date:   Tue, 16 Apr 2019 16:36:45 -0300
-To:     Jiri Olsa <jolsa@kernel.org>
-Cc:     Song Liu <songliubraving@fb.com>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andi Kleen <ak@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        Eric Saint-Etienne <eric.saint.etienne@oracle.com>
-Subject: Re: [PATCH 09/12] perf tools: Fix map reference counting
-Message-ID: <20190416193645.GD9247@kernel.org>
-References: <20190416160127.30203-1-jolsa@kernel.org>
- <20190416160127.30203-10-jolsa@kernel.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190416160127.30203-10-jolsa@kernel.org>
-X-Url:  http://acmel.wordpress.com
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=7zPKiVYOMRb/49Gawr5s9BcvpDsRJmbTU2NXG9M4u58=;
+        b=pa/BVw9ONScb7os5sRvZmbhudCd9FOnZViDOEjSY2Gs6ebYRKyIiRGsEYl/wuasNYc
+         Uv1r+B16cKnZUifzhEw9Ldc+uIyb5Imux9kYzTVsyFPVIHfqAj9+V47TjpqTQxn9wh1Y
+         zTfmTIxIWRCD0lekAAC6xX2ZJzzA8cVA86qiw/uuImM9ckJ+7Idajx1wntC99Utza9nO
+         da9qDgkdeD+eJLVz8E4+Lu1OuPtUC3ckwJRMugo8G4IvirQvPswLJgoRFs7UA8wI6612
+         bqNXnrwdbQBydvbRAhz/jXf+8cYd5vlAlRS5im8CbOhD1riXHk2DykiqXF0nwbPgezF/
+         jd8w==
+X-Gm-Message-State: APjAAAVOZyaCeXayYPrT1HYSK88qUwfKz7VrWw0vxgdw124Vy5MRpFgn
+        xEQfwlvcsCMcOVGbzGIqe5VxYw==
+X-Google-Smtp-Source: APXvYqwzM0SGqcVZnwQSc0kZ+/IshoeR7crK9Kp2wkNonYAIDSAR8MjkpZ1vjQlqbDwz5xODsyPOJA==
+X-Received: by 2002:ad4:42cb:: with SMTP id f11mr67836908qvr.53.1555443524512;
+        Tue, 16 Apr 2019 12:38:44 -0700 (PDT)
+Received: from Thara-Work-Ubuntu.fios-router.home (pool-71-255-245-97.washdc.fios.verizon.net. [71.255.245.97])
+        by smtp.googlemail.com with ESMTPSA id k41sm46150797qtc.89.2019.04.16.12.38.43
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 16 Apr 2019 12:38:43 -0700 (PDT)
+From:   Thara Gopinath <thara.gopinath@linaro.org>
+To:     mingo@redhat.com, peterz@infradead.org, rui.zhang@intel.com
+Cc:     linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
+        viresh.kumar@linaro.org, javi.merino@kernel.org,
+        edubezval@gmail.com, daniel.lezcano@linaro.org,
+        vincent.guittot@linaro.org, nicolas.dechesne@linaro.org,
+        bjorn.andersson@linaro.org, dietmar.eggemann@arm.com
+Subject: [PATCH V2 0/3] Introduce Thermal Pressure
+Date:   Tue, 16 Apr 2019 15:38:38 -0400
+Message-Id: <1555443521-579-1-git-send-email-thara.gopinath@linaro.org>
+X-Mailer: git-send-email 2.1.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Tue, Apr 16, 2019 at 06:01:24PM +0200, Jiri Olsa escreveu:
-> By calling maps__insert we assume to get 2 references
-> on the map, which we relese within maps__remove call.
-> 
-> However if there's already same map name, we currently
-> don't bump the reference and can crash, like:
-> 
->   Program received signal SIGABRT, Aborted.
->   0x00007ffff75e60f5 in raise () from /lib64/libc.so.6
-> 
->   (gdb) bt
->   #0  0x00007ffff75e60f5 in raise () from /lib64/libc.so.6
->   #1  0x00007ffff75d0895 in abort () from /lib64/libc.so.6
->   #2  0x00007ffff75d0769 in __assert_fail_base.cold () from /lib64/libc.so.6
->   #3  0x00007ffff75de596 in __assert_fail () from /lib64/libc.so.6
->   #4  0x00000000004fc006 in refcount_sub_and_test (i=1, r=0x1224e88) at tools/include/linux/refcount.h:131
->   #5  refcount_dec_and_test (r=0x1224e88) at tools/include/linux/refcount.h:148
->   #6  map__put (map=0x1224df0) at util/map.c:299
->   #7  0x00000000004fdb95 in __maps__remove (map=0x1224df0, maps=0xb17d80) at util/map.c:953
->   #8  maps__remove (maps=0xb17d80, map=0x1224df0) at util/map.c:959
->   #9  0x00000000004f7d8a in map_groups__remove (map=<optimized out>, mg=<optimized out>) at util/map_groups.h:65
->   #10 machine__process_ksymbol_unregister (sample=<optimized out>, event=0x7ffff7279670, machine=<optimized out>) at util/machine.c:728
->   #11 machine__process_ksymbol (machine=<optimized out>, event=0x7ffff7279670, sample=<optimized out>) at util/machine.c:741
->   #12 0x00000000004fffbb in perf_session__deliver_event (session=0xb11390, event=0x7ffff7279670, tool=0x7fffffffc7b0, file_offset=13936) at util/session.c:1362
->   #13 0x00000000005039bb in do_flush (show_progress=false, oe=0xb17e80) at util/ordered-events.c:243
->   #14 __ordered_events__flush (oe=0xb17e80, how=OE_FLUSH__ROUND, timestamp=<optimized out>) at util/ordered-events.c:322
->   #15 0x00000000005005e4 in perf_session__process_user_event (session=session@entry=0xb11390, event=event@entry=0x7ffff72a4af8,
->   ...
-> 
-> Adding the map on the list and getting the reference event
-> if we find the map with same name.
+Thermal governors can respond to an overheat event of a cpu by
+capping the cpu's maximum possible frequency. This in turn
+means that the maximum available compute capacity of the
+cpu is restricted. But today in the kernel, task scheduler is 
+not notified of capping of maximum frequency of a cpu.
+In other words, scheduler is unware of maximum capacity
+restrictions placed on a cpu due to thermal activity.
+This patch series attempts to address this issue.
+The benefits identified are better task placement among available
+cpus in event of overheating which in turn leads to better
+performance numbers.
 
-Added:
+The reduction in the maximum possible capacity of a cpu due to a 
+thermal event can be considered as thermal pressure. Instantaneous
+thermal pressure is hard to record and can sometime be erroneous
+as there can be mismatch between the actual capping of capacity
+and scheduler recording it. Thus solution is to have a weighted
+average per cpu value for thermal pressure over time.
+The weight reflects the amount of time the cpu has spent at a
+capped maximum frequency. Since thermal pressure is recorded as
+an average, it must be decayed periodically. To this extent, this
+patch series defines a configurable decay period.
 
-Fixes: 1e6285699b30 ("perf symbols: Fix slowness due to -ffunction-section")
+Regarding testing, basic build, boot and sanity testing have been
+performed on hikey960 mainline kernel with debian file system.
+Further, aobench (An occlusion renderer for benchmarking realworld
+floating point performance), dhrystone and hackbench test have been
+run with the thermal pressure algorithm. During testing, due to
+constraints of step wise governor in dealing with big little systems,
+cpu cooling was disabled on little core, the idea being that
+big core will heat up and cpu cooling device will throttle the
+frequency of the big cores there by limiting the maximum available
+capacity and the scheduler will spread out tasks to little cores as well.
+Finally, this patch series has been boot tested on db410C running v5.1-rc4
+kernel.
 
-Ccing Eric Saint-Etienne <eric.saint.etienne@oracle.com>, the author of
-the patch that introduced that function.
+During the course of development various methods of capturing
+and reflecting thermal pressure were implemented.
 
-And applied to perf/urgent
- 
-> Cc: Song Liu <songliubraving@fb.com>
-> Link: http://lkml.kernel.org/n/tip-38t1ihcy32lvu4xfpm0p7yex@git.kernel.org
-> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> ---
->  tools/perf/util/map.c | 4 +---
->  1 file changed, 1 insertion(+), 3 deletions(-)
-> 
-> diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-> index 28d484ef74ae..ee71efb9db62 100644
-> --- a/tools/perf/util/map.c
-> +++ b/tools/perf/util/map.c
-> @@ -926,10 +926,8 @@ static void __maps__insert_name(struct maps *maps, struct map *map)
->  		rc = strcmp(m->dso->short_name, map->dso->short_name);
->  		if (rc < 0)
->  			p = &(*p)->rb_left;
-> -		else if (rc  > 0)
-> -			p = &(*p)->rb_right;
->  		else
-> -			return;
-> +			p = &(*p)->rb_right;
->  	}
->  	rb_link_node(&map->rb_node_name, parent, p);
->  	rb_insert_color(&map->rb_node_name, &maps->names);
-> -- 
-> 2.17.2
+The first method to be evaluated was to convert the
+capped max frequency into capacity and have the scheduler use the
+instantaneous value when updating cpu_capacity.
+This method is referenced as "Instantaneous Thermal Pressure" in the
+test results below. 
 
+The next two methods employs different methods of averaging the
+thermal pressure before applying it when updating cpu_capacity.
+The first of these methods re-used the PELT algorithm already present
+in the kernel that does the averaging of rt and dl load and utilization.
+This method is referenced as "Thermal Pressure Averaging using PELT fmwk"
+in the test results below.
+
+The final method employs an averaging algorithm that collects and
+decays thermal pressure based on the decay period. In this method,
+the decay period is configurable. This method is referenced as
+"Thermal Pressure Averaging non-PELT Algo. Decay : XXX ms" in the
+test results below.
+
+The test results below shows 3-5% improvement in performance when
+using the third solution compared to the default system today where
+scheduler is unware of cpu capacity limitations due to thermal events.
+
+
+			Hackbench: (1 group , 30000 loops, 10 runs)
+				Result            Standard Deviation
+				(Time Secs)        (% of mean)
+
+No Thermal Pressure             10.21                   7.99%
+
+Instantaneous thermal pressure  10.16                   5.36%
+
+Thermal Pressure Averaging
+using PELT fmwk                 9.88                    3.94%
+
+Thermal Pressure Averaging
+non-PELT Algo. Decay : 500 ms   9.94                    4.59%
+
+Thermal Pressure Averaging
+non-PELT Algo. Decay : 250 ms   7.52                    5.42%
+
+Thermal Pressure Averaging
+non-PELT Algo. Decay : 125 ms   9.87                    3.94%
+
+
+
+			Aobench: Size 2048 *  2048
+				Result            Standard Deviation
+				(Time Secs)        (% of mean)
+
+No Thermal Pressure             141.58          15.85%
+
+Instantaneous thermal pressure  141.63          15.03%
+
+Thermal Pressure Averaging
+using PELT fmwk                 134.48          13.16%
+
+Thermal Pressure Averaging
+non-PELT Algo. Decay : 500 ms   133.62          13.00%
+
+Thermal Pressure Averaging
+non-PELT Algo. Decay : 250 ms   137.22          15.30%
+
+Thermal Pressure Averaging
+non-PELT Algo. Decay : 125 ms   137.55          13.26%
+
+Dhrystone was run 10 times with each run spawning 20 threads of
+500 MLOOPS.The idea here is to measure the Total dhrystone run
+time and not look at individual processor performance.
+
+			Dhrystone Run Time
+				Result            Standard Deviation
+				(Time Secs)        (% of mean)
+
+No Thermal Pressure		1.14                    10.04%
+
+Instantaneous thermal pressure  1.15                    9%
+
+Thermal Pressure Averaging
+using PELT fmwk                 1.19                    11.60%
+
+Thermal Pressure Averaging
+non-PELT Algo. Decay : 500 ms   1.09                    7.51%
+
+Thermal Pressure Averaging
+non-PELT Algo. Decay : 250 ms   1.012                   7.02%
+
+Thermal Pressure Averaging
+non-PELT Algo. Decay : 125 ms   1.12                    9.02%
+
+V1->V2: Removed using Pelt framework for thermal pressure accumulation
+	and averaging. Instead implemented a weighted average algorithm.
+
+Thara Gopinath (3):
+  Calculate Thermal Pressure
+  sched/fair: update cpu_capcity to reflect thermal pressure
+  thermal/cpu-cooling: Update thermal pressure in case of a maximum
+    frequency capping
+
+ drivers/thermal/cpu_cooling.c |   4 +
+ include/linux/sched/thermal.h |  11 +++
+ kernel/sched/Makefile         |   2 +-
+ kernel/sched/fair.c           |   4 +
+ kernel/sched/thermal.c        | 220 ++++++++++++++++++++++++++++++++++++++++++
+ 5 files changed, 240 insertions(+), 1 deletion(-)
+ create mode 100644 include/linux/sched/thermal.h
+ create mode 100644 kernel/sched/thermal.c
 -- 
+2.1.4
 
-- Arnaldo
