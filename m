@@ -2,236 +2,143 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1BC14C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:45:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAEF1C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:49:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D756120663
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:45:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="qhLXc+JX"
+	by mail.kernel.org (Postfix) with ESMTP id 8742C20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:49:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730126AbfDPTpd (ORCPT
+        id S1729165AbfDPTtJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 15:45:33 -0400
-Received: from mail.efficios.com ([167.114.142.138]:39292 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728550AbfDPTpa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 15:45:30 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 531891D69A6;
-        Tue, 16 Apr 2019 15:45:28 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id zMieHQ82ZKVg; Tue, 16 Apr 2019 15:45:27 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id A152D1D699C;
-        Tue, 16 Apr 2019 15:45:27 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com A152D1D699C
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1555443927;
-        bh=+KtXHDVIW5ZnvdFUX7jsSXY+Tsxke5FypxGaUIdjB+w=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=qhLXc+JXcKC+jTBOCxXEmcdbArLuSHJ6RbO09PxrnBFtCacEr26sshYGIi2m/vNpj
-         3lwC7G3V0rcQ5DHWpKXDdGKTQZpWq4awc5/GqoARAGxSxHJouQHAFGOCKgu765cazk
-         du0RlziJwufBTJ0qHIBq5hIYku8AAxZbtZ76y6cvy46Zd6N/wS6dGU3Bio9eoA3qji
-         8e8bCKeQNeVT68FJx8VUX9nGyqy1cO0shJNQge3GMXnjiIJw15Na0XxudSiS8UyGE3
-         e+5lcDziyWSTtgr78xBiYaQzQibSF926bN1eIsNeh+uT2beaf5CU0fJHYqcSHwBoF/
-         xwYiUzKheY9bA==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id LhXW8fOS8on1; Tue, 16 Apr 2019 15:45:27 -0400 (EDT)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id 71A591D6995;
-        Tue, 16 Apr 2019 15:45:27 -0400 (EDT)
-Date:   Tue, 16 Apr 2019 15:45:27 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Guenter Roeck <groeck@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        kernelci <kernelci@groups.io>,
-        Guillaume Tucker <guillaume.tucker@collabora.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Mark Brown <broonie@kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Matt Hart <matthew.hart@linaro.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        linux <linux@dominikbrodowski.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Adrian Reber <adrian@lisas.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Richard Guy Briggs <rgb@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        info <info@kernelci.org>, rostedt <rostedt@goodmis.org>,
-        Jason Baron <jbaron@redhat.com>, Rabin Vincent <rabin@rab.in>,
-        Russell King <rmk+kernel@arm.linux.org.uk>
-Message-ID: <436115883.2781.1555443927341.JavaMail.zimbra@efficios.com>
-In-Reply-To: <2030770457.2767.1555442711654.JavaMail.zimbra@efficios.com>
-References: <20190215185151.GG7897@sirena.org.uk> <CAGXu5j+Sw2FyMc8L+8hTpEKbOsySFGrCmFtVP5gt9y2pJhYVUw@mail.gmail.com> <CABXOdTcXWf9iReoocaj9rZ7z17zt-62iPDuvQQSrQRtMeeZNiA@mail.gmail.com> <CAPcyv4i8xhA6B5e=YBq2Z5kooyUpYZ8Bv9qov-mvqm4Uz=KLWQ@mail.gmail.com> <CABXOdTc5=J7ZFgbiwahVind-SNt7+G_-TVO=v-Y5SBVPLdUFog@mail.gmail.com> <CAPcyv4gxk9xbsP3YSKzxu5Yp9FTefyxHc6xC33GwZ3Zf9_eeKA@mail.gmail.com> <1444448267.2739.1555442221738.JavaMail.zimbra@efficios.com> <2030770457.2767.1555442711654.JavaMail.zimbra@efficios.com>
-Subject: Re: next/master boot bisection: next-20190215 on beaglebone-black
+        Tue, 16 Apr 2019 15:49:09 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:43504 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727136AbfDPTtJ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 15:49:09 -0400
+Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 7877C3086218;
+        Tue, 16 Apr 2019 19:49:08 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-47.bos.redhat.com [10.18.17.47])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 6419919C67;
+        Tue, 16 Apr 2019 19:49:07 +0000 (UTC)
+Subject: Re: [PATCH-tip 0/2] locking/rwsem: Rwsem rearchitecture part 2
+ follow-up patches
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+References: <20190415205829.32707-1-longman@redhat.com>
+ <20190416131047.GW11158@hirez.programming.kicks-ass.net>
+ <4747d10b-e9a4-f453-ab4e-13fc984a4067@redhat.com>
+ <20190416141747.GN4038@hirez.programming.kicks-ass.net>
+ <18af71ce-1ef3-c6cd-4088-3b2a9bf0016e@redhat.com>
+ <20190416173700.GQ4038@hirez.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ weim8xU=
+Organization: Red Hat
+Message-ID: <2873c42c-f2a6-64e9-bf0f-9c86536984b7@redhat.com>
+Date:   Tue, 16 Apr 2019 15:49:07 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
+In-Reply-To: <20190416173700.GQ4038@hirez.programming.kicks-ass.net>
 Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
-Thread-Topic: next/master boot bisection: next-20190215 on beaglebone-black
-Thread-Index: o2XfqTzgA9kPUT1d7tzJPHm/yG+fqP8/3aj6mt0b2iM=
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.42]); Tue, 16 Apr 2019 19:49:08 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Apr 16, 2019, at 3:25 PM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
+On 04/16/2019 01:37 PM, Peter Zijlstra wrote:
+> On Tue, Apr 16, 2019 at 01:03:10PM -0400, Waiman Long wrote:
+>> On 04/16/2019 10:17 AM, Peter Zijlstra wrote:
+>>> On Tue, Apr 16, 2019 at 09:18:50AM -0400, Waiman Long wrote:
+>>>> On 04/16/2019 09:10 AM, Peter Zijlstra wrote:
+>>>>> On Mon, Apr 15, 2019 at 04:58:27PM -0400, Waiman Long wrote:
+>>>>>> This series contain 2 follow-up patches to alleviate the performance
+>>>>>> regression found in the page_fault1 test of the will-it-scale benchmark.
+>>>>>> This does not recover all the lost performance, but reclaim a sizeable
+>>>>>> portion of it.
+>>>>>>
+>>>>>> The regression was found on an Intel system. I have run the test on
+>>>>>> an AMD system. The regression wasn't seen there.  There are only minor
+>>>>>> variations in performance. Perhaps the page fault path is quite different
+>>>>>> between Intel and AMD systems.
+>>>>> Can you please just fold this back into the appropriate patches? Trying
+>>>>> to review all the back and forth is painful.
+>>>> I will send out an update part 2 patch with patch 1 of this series
+>>>> merged into the writer spinning on reader patch. Patch 2 of this series
+>>>> will be a standalone one.
+>>> Hmm, in that case I can fold it back too. So hold off on sending it.
+>>>
+>>> I thought #2 was a fixup for an earlier patch as well.
+>> #2 is a performance fix.
+> Of this patch?
+>
+> 206038 N T Apr 13 Waiman Long     (7.5K) ├─>[PATCH v4 11/16] locking/rwsem: Enable readers spinning on writer
+>
+> Fixes should have a Fixes: tag. And if the patch it fixes isn't a commit
+> yet, the patch should be refreshed to not need a fix.
 
-> ----- On Apr 16, 2019, at 3:17 PM, Mathieu Desnoyers
-> mathieu.desnoyers@efficios.com wrote:
-> 
->> ----- On Apr 16, 2019, at 2:54 PM, Dan Williams dan.j.williams@intel.com wrote:
->> 
->>> On Thu, Apr 11, 2019 at 1:54 PM Guenter Roeck <groeck@google.com> wrote:
->>> [..]
->>>> > > Boot tests report
->>>> > >
->>>> > > Qemu test results:
->>>> > >     total: 345 pass: 345 fail: 0
->>>> > >
->>>> > > This is on top of next-20190410 with CONFIG_SHUFFLE_PAGE_ALLOCATOR=y
->>>> > > and the known crashes fixed.
->>>> >
->>>> > In addition to CONFIG_SHUFFLE_PAGE_ALLOCATOR=y you also need the
->>>> > kernel command line option "page_alloc.shuffle=1"
->>>> >
->>>> > ...so I doubt you are running with shuffling enabled. Another way to
->>>> > double check is:
->>>> >
->>>> >    cat /sys/module/page_alloc/parameters/shuffle
->>>>
->>>> Yes, you are right. Because, with it enabled, I see:
->>>>
->>>> Kernel command line: rdinit=/sbin/init page_alloc.shuffle=1 panic=-1
->>>> console=ttyAMA0,115200 page_alloc.shuffle=1
->>>> ------------[ cut here ]------------
->>>> WARNING: CPU: 0 PID: 0 at ./include/linux/jump_label.h:303
->>>> page_alloc_shuffle+0x12c/0x1ac
->>>> static_key_enable(): static key 'page_alloc_shuffle_key+0x0/0x4' used
->>>> before call to jump_label_init()
->>> 
->>> This looks to be specific to ARM never having had to deal with
->>> DEFINE_STATIC_KEY_TRUE in the past.
->>> 
->>> I am able to avoid this warning by simply not enabling JUMP_LABEL
->>> support in my build.
->> 
->> How large is your kernel image in memory ? Is it larger than 32MB
->> by any chance ?
->> 
->> On arm, the arch_static_branch() uses a "nop" instruction, which seems
->> fine. However, I have a concern wrt arch_static_branch_jump():
->> 
->> arch/arm/include/asm/jump_label.h defines:
->> 
->> static __always_inline bool arch_static_branch_jump(struct static_key *key, bool
->> branch)
->> {
->>        asm_volatile_goto("1:\n\t"
->>                 WASM(b) " %l[l_yes]\n\t"
->>                 ".pushsection __jump_table,  \"aw\"\n\t"
->>                 ".word 1b, %l[l_yes], %c0\n\t"
->>                 ".popsection\n\t"
->>                 : :  "i" (&((char *)key)[branch]) :  : l_yes);
->> 
->>        return false;
->> l_yes:
->>        return true;
->> }
->> 
->> Which should work fine as long as the branch target is within +/-32MB range of
->> the branch instruction. However, based on
->> http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0489e/Cihfddaf.html
->> :
->> 
->> "Extending branch ranges
->> 
->> Machine-level B and BL instructions have restricted ranges from the address of
->> the current instruction. However, you can use these instructions even if label
->> is out of range. Often you do not know where the linker places label. When
->> necessary, the linker adds code to enable longer branches. The added code is
->> called a veneer."
->> 
->> So if by an odd chance this branch is turned into a longer branch by the linker,
->> then
->> the code pattern would be completely unexpected by arch/arm/kernel/jump_label.c.
->> 
->> Can you try with the following (untested) patch ?
-> 
+The original patch isn't wrong. This patch just introduce another idea
+to make it better. That is why I would still like to separate it as a
+distinct patch.
 
-Updated logic of arch_static_branch_jump, and adding change that covers arch_static_branch()
-as well (untested):
+Cheers,
+Longman
 
-diff --git a/arch/arm/include/asm/jump_label.h b/arch/arm/include/asm/jump_label.h
-index e12d7d096fc0..cec2f8a2b65e 100644
---- a/arch/arm/include/asm/jump_label.h
-+++ b/arch/arm/include/asm/jump_label.h
-@@ -9,12 +9,21 @@
- 
- #define JUMP_LABEL_NOP_SIZE 4
- 
-+/*
-+ * The linker adds veneer code if target of the branch is beyond +/-32MB
-+ * range (+/-16MB for THUMB2), so ensure we never patch a branch
-+ * instruction which target is outside of the inline asm.
-+ */
- static __always_inline bool arch_static_branch(struct static_key *key, bool branch)
- {
-        asm_volatile_goto("1:\n\t"
-                 WASM(nop) "\n\t"
-+                WASM(b) "2f\n\t"
-+               "3:\n\t"
-+                WASM(b) " %l[l_yes]\n\t"
-+               "2:\n\t"
-                 ".pushsection __jump_table,  \"aw\"\n\t"
--                ".word 1b, %l[l_yes], %c0\n\t"
-+                ".word 1b, 3b, %c0\n\t"
-                 ".popsection\n\t"
-                 : :  "i" (&((char *)key)[branch]) :  : l_yes);
- 
-@@ -23,12 +32,21 @@ static __always_inline bool arch_static_branch(struct static_key *key, bool bran
-        return true;
- }
- 
-+/*
-+ * The linker adds veneer code if target of the branch is beyond +/-32MB
-+ * range (+/-16MB for THUMB2), so ensure we never patch a branch
-+ * instruction which target is outside of the inline asm.
-+ */
- static __always_inline bool arch_static_branch_jump(struct static_key *key, bool branch)
- {
-        asm_volatile_goto("1:\n\t"
-+                WASM(b) "3f\n\t"
-+                WASM(b) "2f\n\t"
-+               "3:\n\t"
-                 WASM(b) " %l[l_yes]\n\t"
-+               "2:\n\t"
-                 ".pushsection __jump_table,  \"aw\"\n\t"
--                ".word 1b, %l[l_yes], %c0\n\t"
-+                ".word 1b, 3b, %c0\n\t"
-                 ".popsection\n\t"
-                 : :  "i" (&((char *)key)[branch]) :  : l_yes);
-
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
