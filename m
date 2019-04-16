@@ -2,356 +2,579 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 90190C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:00:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 47E55C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:01:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4915520652
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:00:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 044B420652
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:01:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="RtUhSSRr"
+	dkim=pass (1024-bit key) header.d=gmx.net header.i=@gmx.net header.b="MouFGr/c"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729798AbfDPPAp (ORCPT
+        id S1729927AbfDPPBD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 11:00:45 -0400
-Received: from us01smtprelay-2.synopsys.com ([198.182.60.111]:38558 "EHLO
-        smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729927AbfDPPAl (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 11:00:41 -0400
-Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay.synopsys.com (Postfix) with ESMTPS id AA7D310C1726;
-        Tue, 16 Apr 2019 08:00:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1555426840; bh=1ht5PP89NkpyCoY8M/wOtAMkEv/dFC1aR+srnh9L+xg=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=RtUhSSRrw5ae3YHIhuHWpEH1mTL6xASFn+UHKzinQOtC7IAiLHxGvFrTL08LF159c
-         4ILdo/KiBj8xBxGjI6R6j8BweplnafEcUsKbyB+jW3vVW3rji03f2eaHDiGwwytLop
-         eyyNGEB6nteScZ9KZcVTYDdkd7bVWFAJUOFf1OvLg0VBH2uz3cGT1Mafs+v/gA8JdK
-         IbZalvUiGBxk8bKq3RqJZ66v7eE5fCqwz7u/6jzXPBqzZgNLSPgnJS/9lN6DIJVXcQ
-         Rgog55Gk5bGrU28N9gb0NpnWx1F+JY3b5vw1dWfFSKN5xoeQ2m3iMnhM8Zz42O3C0s
-         Musap/Pqd2WnA==
-Received: from US01WEHTC2.internal.synopsys.com (us01wehtc2.internal.synopsys.com [10.12.239.237])
-        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id 51171A00AF;
-        Tue, 16 Apr 2019 15:00:38 +0000 (UTC)
-Received: from DE02WEHTCB.internal.synopsys.com (10.225.19.94) by
- US01WEHTC2.internal.synopsys.com (10.12.239.237) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Tue, 16 Apr 2019 08:00:38 -0700
-Received: from DE02WEMBXB.internal.synopsys.com ([fe80::95ce:118a:8321:a099])
- by DE02WEHTCB.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Tue,
- 16 Apr 2019 17:00:35 +0200
-From:   Vitor Soares <vitor.soares@synopsys.com>
-To:     Boris Brezillon <boris.brezillon@collabora.com>,
-        Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>
-CC:     Vitor Soares <vitor.soares@synopsys.com>,
-        "linux-iio@vger.kernel.org" <linux-iio@vger.kernel.org>,
-        "linux-i3c@lists.infradead.org" <linux-i3c@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jonathan Cameron <jic23@kernel.org>,
-        "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
-        "rafael@kernel.org" <rafael@kernel.org>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>,
-        "broonie@kernel.org" <broonie@kernel.org>,
-        "joao.pinto@synopsys.com" <joao.pinto@synopsys.com>
-Subject: RE: [PATCH 3/3] iio: imu: st_lsm6dsx: Add i3c basic support
-Thread-Topic: [PATCH 3/3] iio: imu: st_lsm6dsx: Add i3c basic support
-Thread-Index: AQHU88BDdPWsnuXu6UGzgTXZFjsXn6Y+MWOAgAAZ9YCAAAH9AIAAky9g
-Date:   Tue, 16 Apr 2019 15:00:35 +0000
-Message-ID: <13D59CF9CEBAF94592A12E8AE55501350A6159D0@DE02WEMBXB.internal.synopsys.com>
-References: <cover.1555354268.git.vitor.soares@synopsys.com>
-        <302f8296299d6cd25b3689f5eca1c510a3290db3.1555354268.git.vitor.soares@synopsys.com>
-        <20190416082539.2f12b38f@collabora.com>
-        <CAA2SeNJ1cTxAp6+5Q4Z5L4VFBfA3U4e11_Obpk8muD1Vh3v52A@mail.gmail.com>
- <20190416100540.7adf1fe5@collabora.com>
-In-Reply-To: <20190416100540.7adf1fe5@collabora.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcc29hcmVzXGFw?=
- =?us-ascii?Q?cGRhdGFccm9hbWluZ1wwOWQ4NDliNi0zMmQzLTRhNDAtODVlZS02Yjg0YmEy?=
- =?us-ascii?Q?OWUzNWJcbXNnc1xtc2ctNjA2ZGZkMTQtNjA1OC0xMWU5LTgyM2EtZDQ4MWQ3?=
- =?us-ascii?Q?ODUxODBmXGFtZS10ZXN0XDYwNmRmZDE1LTYwNTgtMTFlOS04MjNhLWQ0ODFk?=
- =?us-ascii?Q?Nzg1MTgwZmJvZHkudHh0IiBzej0iNjcwOCIgdD0iMTMxOTk5MDA0MzM0NDI4?=
- =?us-ascii?Q?Mzg0IiBoPSJIbVBxK21SMUY2RFNUbVVpUWhiY2x2ZGVVakE9IiBpZD0iIiBi?=
- =?us-ascii?Q?bD0iMCIgYm89IjEiIGNpPSJjQUFBQUVSSFUxUlNSVUZOQ2dVQUFCUUpBQURn?=
- =?us-ascii?Q?RUE4a1pmVFVBY3IweW1oUjZ6ZG95dlRLYUZIck4yZ09BQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBSEFBQUFDa0NBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?RUFBUUFCQUFBQVZ6ZGhHZ0FBQUFBQUFBQUFBQUFBQUo0QUFBQm1BR2tBYmdC?=
- =?us-ascii?Q?aEFHNEFZd0JsQUY4QWNBQnNBR0VBYmdCdUFHa0FiZ0JuQUY4QWR3QmhBSFFB?=
- =?us-ascii?Q?WlFCeUFHMEFZUUJ5QUdzQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFF?=
- =?us-ascii?Q?QUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdZQWJ3QjFBRzRBWkFCeUFIa0FYd0J3?=
- =?us-ascii?Q?QUdFQWNnQjBBRzRBWlFCeUFITUFYd0JuQUdZQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUNBQUFB?=
- =?us-ascii?Q?QUFDZUFBQUFaZ0J2QUhVQWJnQmtBSElBZVFCZkFIQUFZUUJ5QUhRQWJnQmxB?=
- =?us-ascii?Q?SElBY3dCZkFITUFZUUJ0QUhNQWRRQnVBR2NBWHdCakFHOEFiZ0JtQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFCbUFHOEFk?=
- =?us-ascii?Q?UUJ1QUdRQWNnQjVBRjhBY0FCaEFISUFkQUJ1QUdVQWNnQnpBRjhBY3dCaEFH?=
- =?us-ascii?Q?MEFjd0IxQUc0QVp3QmZBSElBWlFCekFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR1lBYndCMUFHNEFaQUJ5QUhrQVh3?=
- =?us-ascii?Q?QndBR0VBY2dCMEFHNEFaUUJ5QUhNQVh3QnpBRzBBYVFCakFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFBQ0FB?=
- =?us-ascii?Q?QUFBQUNlQUFBQVpnQnZBSFVBYmdCa0FISUFlUUJmQUhBQVlRQnlBSFFBYmdC?=
- =?us-ascii?Q?bEFISUFjd0JmQUhNQWRBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFBQUJtQUc4?=
- =?us-ascii?Q?QWRRQnVBR1FBY2dCNUFGOEFjQUJoQUhJQWRBQnVBR1VBY2dCekFGOEFkQUJ6?=
- =?us-ascii?Q?QUcwQVl3QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFHWUFid0IxQUc0QVpBQnlBSGtB?=
- =?us-ascii?Q?WHdCd0FHRUFjZ0IwQUc0QVpRQnlBSE1BWHdCMUFHMEFZd0FBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFBQUFD?=
- =?us-ascii?Q?QUFBQUFBQ2VBQUFBWndCMEFITUFYd0J3QUhJQWJ3QmtBSFVBWXdCMEFGOEFk?=
- =?us-ascii?Q?QUJ5QUdFQWFRQnVBR2tBYmdCbkFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFBQnpB?=
- =?us-ascii?Q?R0VBYkFCbEFITUFYd0JoQUdNQVl3QnZBSFVBYmdCMEFGOEFjQUJzQUdFQWJn?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUhNQVlRQnNBR1VBY3dCZkFI?=
- =?us-ascii?Q?RUFkUUJ2QUhRQVpRQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFB?=
- =?us-ascii?Q?QUNBQUFBQUFDZUFBQUFjd0J1QUhBQWN3QmZBR3dBYVFCakFHVUFiZ0J6QUdV?=
- =?us-ascii?Q?QVh3QjBBR1VBY2dCdEFGOEFNUUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFC?=
- =?us-ascii?Q?ekFHNEFjQUJ6QUY4QWJBQnBBR01BWlFCdUFITUFaUUJmQUhRQVpRQnlBRzBB?=
- =?us-ascii?Q?WHdCekFIUUFkUUJrQUdVQWJnQjBBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBSFlBWndCZkFHc0FaUUI1?=
- =?us-ascii?Q?QUhjQWJ3QnlBR1FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFB?=
- =?us-ascii?Q?QUFBQ0FBQUFBQUE9Ii8+PC9tZXRhPg=3D=3D?=
-x-originating-ip: [10.107.25.87]
-Content-Type: text/plain; charset="us-ascii"
+        Tue, 16 Apr 2019 11:01:03 -0400
+Received: from mout.gmx.net ([212.227.17.20]:45893 "EHLO mout.gmx.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725796AbfDPPBC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 11:01:02 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=gmx.net;
+        s=badeba3b8450; t=1555426749;
+        bh=cmq3uTCvNem4hMhZFbGqISt7XCnjnlr87tqFEthDUxc=;
+        h=X-UI-Sender-Class:From:To:Cc:Subject:Date:In-Reply-To:References;
+        b=MouFGr/c4CTHWqfu4yfrraeajvLikZEZwMBnpVz9p052qM7L7JAGkG/5Ffnai5wwh
+         XdXvSM+Be2rbduNr546iIWvqYSI9Cgyj+Co8GjDCICWErjVkG0MzYMdf5czTrPou5a
+         XLYXT5ieeMnqT6JMB2qUZNJgo5cEyYYbs6HP+iQA=
+X-UI-Sender-Class: 01bb95c1-4bf8-414a-932a-4f6e2808ef9c
+Received: from localhost.localdomain ([185.53.43.193]) by mail.gmx.com
+ (mrgmx102 [212.227.17.168]) with ESMTPSA (Nemesis) id
+ 0Mg0IT-1hSB8S09sT-00NRtT; Tue, 16 Apr 2019 16:59:09 +0200
+From:   Frank Wunderlich <frank-w@public-files.de>
+To:     CK Hu <ck.hu@mediatek.com>, Philipp Zabel <p.zabel@pengutronix.de>,
+        David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        dri-devel@lists.freedesktop.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org, chunhui dai <chunhui.dai@mediatek.com>,
+        Ryder Lee <ryder.lee@mediatek.com>,
+        Bibby Hsieh <bibby.hsieh@mediatek.com>
+Cc:     Frank Wunderlich <frank-w@public-files.de>
+Subject: [PATCH v1 2/4] arm: dts: mt7623: add display subsystem related device nodes
+Date:   Tue, 16 Apr 2019 16:58:46 +0200
+Message-Id: <20190416145848.11932-3-frank-w@public-files.de>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190416145848.11932-1-frank-w@public-files.de>
+References: <20190416145848.11932-1-frank-w@public-files.de>
+X-Provags-ID: V03:K1:xeru4vEJ5OWBm6t9PohoLIQO9YX/PIsODiQ2AJirGabJJ+r5ntM
+ mTQPLEmIrmT4fohcsGVQeIm03nx+mlF5JXmI7ZgLrXVnwQj81NwDtCjjFXguQicPmEWX3Q9
+ DYU+EVkdOd7go/bdMbHlsBix6sd8FemfReFMo6PoCxgXSqjrYdLJyYLERplM4ELc2JuhfSV
+ ifbpQvxltyYdUMzIJz1BQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:/FyxCRLIKfs=:KRERBqrBKFgNPtbtHAdCIR
+ djcqnLFI0KtjIfCgKs93O3zUggavtjNS/m2xYtCAi0Ta2yXWqzE3JqfWy38ftXw/ON8eYPnXp
+ JnRay9gDmBqPp2QxFL3r8WfFGoEcnMoFsvoP18dllPSV1JW96Q1Y11x8jvhtMuW53zIWTppAo
+ pbk283hHhzvw5nz9+G1BhQWBg5Qab5rpIE8ahanQqenEbK41JQWsL/mF5zvNdPP0abrb4ycoi
+ HhViTARGBKoo9qUHNTbXQH9a7etfbN1SdLXpwZ9EuV4Z/sqQN2U6+dS16WK7jMirmHVwetnZf
+ BKS8dmyfwhoaP6nFA5TJMRZUKnkobLxgyl7mEo39ZVxa9k5UZspqpisFONjH4cx3L6EOFJc+Z
+ wFXl7OMR3PcQpzU6W8Sw92fEpACMA6L6wTTv9fnGDh0vfLNs+72Y3lXmEYbL61kbgdJwDN6+p
+ +03WbwaMxmYjPv/5kh64B2kJpAHPtCbetmagX8e6Ga7HQEdw9UmHfqClfDlX39726C4AM3GBm
+ KsSQObaCcswPA5xOTK2Q3rHgCiQ6kCT6a9kFcI6xK93Z9DQtqmOpJ9kc18TtPEJe8nh6dk0Iz
+ KrkMaYTSB+HwwsLTdReTLFduuon2lc0xlvzWvWW5vjry9wiYlr+KuOd+IfpPy6Tp2yuKVa+im
+ Rafly169Q4IznLdGICPEgH7PuEsL+l10ynqLNu4bg+Jq3kCpvG7yAqWkObIgEn8Lss2C7h/3S
+ iE/enmUWtnf85RiVB0kcrWWFushCLsfUeQr6TDs1qYRaRqCD1vTYApVrUrIwma3DF3XcP1nyo
+ v6HX2jmc7H35ae/WRyJhKdOKbFea+Z0MbwMZn75hnskBEHp1nsGhRt9D5ef7NSXZY6ExC4BW/
+ sEv2zHU6C73I0+6K2YpQj/y4IjD7qpGHzUtJYglSLpPp7kASqvcLf3Xfn/FVoG
 Content-Transfer-Encoding: quoted-printable
-MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Boris  and Lorenzo,
+From: Ryder Lee <ryder.lee@mediatek.com>
 
-From: Boris Brezillon <boris.brezillon@collabora.com>
-Date: Tue, Apr 16, 2019 at 09:05:40
+Add display subsystem related device nodes for MT7623.
 
-> On Tue, 16 Apr 2019 09:58:33 +0200
-> Lorenzo Bianconi <lorenzo.bianconi83@gmail.com> wrote:
->=20
-> > >
-> > > On Mon, 15 Apr 2019 21:19:41 +0200
-> > > Vitor Soares <vitor.soares@synopsys.com> wrote:
-> > > =20
-> > > > For today the st_lsm6dsx driver support lsm6dso sensor only in
-> > > > spi and i2c mode.
-> > > >
-> > > > The lsm6dso is also i3c capable so lets give i3c support to it.
-> > > >
-> > > > Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
-> > > > ---
-> > > >  drivers/iio/imu/st_lsm6dsx/Kconfig          |  8 +++-
-> > > >  drivers/iio/imu/st_lsm6dsx/Makefile         |  1 +
-> > > >  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c | 67 +++++++++++++++++=
-++++++++++++
-> > > >  3 files changed, 75 insertions(+), 1 deletion(-)
-> > > >  create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c
-> > > >
-> > > > diff --git a/drivers/iio/imu/st_lsm6dsx/Kconfig b/drivers/iio/imu/s=
-t_lsm6dsx/Kconfig
-> > > > index 094fd00..1ab9bbf 100644
-> > > > --- a/drivers/iio/imu/st_lsm6dsx/Kconfig
-> > > > +++ b/drivers/iio/imu/st_lsm6dsx/Kconfig
-> > > > @@ -1,11 +1,12 @@
-> > > >
-> > > >  config IIO_ST_LSM6DSX
-> > > >       tristate "ST_LSM6DSx driver for STM 6-axis IMU MEMS sensors"
-> > > > -     depends on (I2C || SPI)
-> > > > +     depends on (I2C || SPI || I3C)
-> > > >       select IIO_BUFFER
-> > > >       select IIO_KFIFO_BUF
-> > > >       select IIO_ST_LSM6DSX_I2C if (I2C)
-> > > >       select IIO_ST_LSM6DSX_SPI if (SPI_MASTER)
-> > > > +     select IIO_ST_LSM6DSX_I3C if (I3C)
-> > > >       help
-> > > >         Say yes here to build support for STMicroelectronics LSM6DS=
-x imu
-> > > >         sensor. Supported devices: lsm6ds3, lsm6ds3h, lsm6dsl, lsm6=
-dsm,
-> > > > @@ -23,3 +24,8 @@ config IIO_ST_LSM6DSX_SPI
-> > > >       tristate
-> > > >       depends on IIO_ST_LSM6DSX
-> > > >       select REGMAP_SPI
-> > > > +
-> > > > +config IIO_ST_LSM6DSX_I3C
-> > > > +     tristate
-> > > > +     depends on IIO_ST_LSM6DSX
-> > > > +     select REGMAP_I3C
-> > > > diff --git a/drivers/iio/imu/st_lsm6dsx/Makefile b/drivers/iio/imu/=
-st_lsm6dsx/Makefile
-> > > > index e5f733c..c676965 100644
-> > > > --- a/drivers/iio/imu/st_lsm6dsx/Makefile
-> > > > +++ b/drivers/iio/imu/st_lsm6dsx/Makefile
-> > > > @@ -4,3 +4,4 @@ st_lsm6dsx-y :=3D st_lsm6dsx_core.o st_lsm6dsx_buff=
-er.o \
-> > > >  obj-$(CONFIG_IIO_ST_LSM6DSX) +=3D st_lsm6dsx.o
-> > > >  obj-$(CONFIG_IIO_ST_LSM6DSX_I2C) +=3D st_lsm6dsx_i2c.o
-> > > >  obj-$(CONFIG_IIO_ST_LSM6DSX_SPI) +=3D st_lsm6dsx_spi.o
-> > > > +obj-$(CONFIG_IIO_ST_LSM6DSX_I3C) +=3D st_lsm6dsx_i3c.o
-> > > > diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c b/drivers/=
-iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c
-> > > > new file mode 100644
-> > > > index 0000000..2df5e70
-> > > > --- /dev/null
-> > > > +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c
-> > > > @@ -0,0 +1,67 @@
-> > > > +// SPDX-License-Identifier: GPL-2.0
-> > > > +/*
-> > > > + * Copyright (c) 2018 Synopsys, Inc. and/or its affiliates.
-> > > > + *
-> > > > + * Author: Vitor Soares <vitor.soares@synopsys.com>
-> > > > + */
-> > > > +
-> > > > +#include <linux/kernel.h>
-> > > > +#include <linux/module.h>
-> > > > +#include <linux/i3c/device.h>
-> > > > +#include <linux/i3c/master.h>
-> > > > +#include <linux/slab.h>
-> > > > +#include <linux/of.h>
-> > > > +#include <linux/regmap.h>
-> > > > +
-> > > > +#include "st_lsm6dsx.h"
-> > > > +
-> > > > +#define NAME_SIZE    32
-> > > > +
-> > > > +struct st_lsm6dsx_i3c_data {
-> > > > +     char name[NAME_SIZE]; =20
-> > >
-> > >         const char *name;
+Cc: CK Hu <ck.hu@mediatek.com>
+Signed-off-by: chunhui dai <chunhui.dai@mediatek.com>
+Signed-off-by: Bibby Hsieh <bibby.hsieh@mediatek.com>
+Signed-off-by: Ryder Lee <ryder.lee@mediatek.com>
 
-I will fix this next patch.
+additional fixes:
 
-> > > =20
-> > > > +     enum st_lsm6dsx_hw_id id;
-> > > > +};
-> > > > +
-> > > > +static const struct st_lsm6dsx_i3c_data hw_data[] =3D { =20
-> > >
-> > > No need to make it an array, and it should probably be named
-> > > st_lsm6dso_data not hw_data. =20
-> >=20
-> > I guess it will be used even for future devices so I would prefer to
-> > make it an array with a 'general' name
+[hdmi,dts] fixed dts-warnings
+author: Bibby Hsieh <bibby.hsieh@mediatek.com>
 
-The idea is that one. Are you ok with hw_data name?
-Should I add the lsm6dsr support here or send in a different patch?
+[dtsi] fix dpi0-node
+author: Ryder Lee <ryder.lee@mediatek.com>
 
->=20
-> I find it more error-prone to reference an array with an opaque index
-> number than reference an instance with a name that clearly reflects
-> what HW it describes (see the I3C_DEVICE() entry at the end of the
-> driver), but okay.
+Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
+Tested-by: Frank Wunderlich <frank-w@public-files.de>
+=2D--
+ arch/arm/boot/dts/mt7623.dtsi                 | 177 ++++++++++++++++++
+ arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts |  85 +++++++++
+ arch/arm/boot/dts/mt7623n-rfb-emmc.dts        |  85 +++++++++
+ 3 files changed, 347 insertions(+)
 
-I will address this next version.
+diff --git a/arch/arm/boot/dts/mt7623.dtsi b/arch/arm/boot/dts/mt7623.dtsi
+index 59e69f3dffa2..f1880ff04193 100644
+=2D-- a/arch/arm/boot/dts/mt7623.dtsi
++++ b/arch/arm/boot/dts/mt7623.dtsi
+@@ -23,6 +23,11 @@
+ 	#address-cells =3D <2>;
+ 	#size-cells =3D <2>;
 
->=20
-> >=20
-> > Regards,
-> > Lorenzo
-> >=20
-> > > =20
-> > > > +     { ST_LSM6DSO_DEV_NAME, ST_LSM6DSO_ID },
-> > > > +};
-> > > > +
-> > > > +static const struct regmap_config st_lsm6dsx_i3c_regmap_config =3D=
- {
-> > > > +     .reg_bits =3D 8,
-> > > > +     .val_bits =3D 8,
-> > > > +};
-> > > > +
-> > > > +static int st_lsm6dsx_i3c_probe(struct i3c_device *i3cdev)
-> > > > +{
-> > > > +     const struct i3c_device_id *id =3D i3c_get_device_id(i3cdev);=
- =20
-> > >
-> > >                                          i3c_device_match_id(i3cdev,
-> > >                                                              st_lsm6d=
-sx_i3c_ids);
-> > > =20
-> > > > +     const struct st_lsm6dsx_i3c_data *hw_data =3D id->data;
-> > > > +     struct regmap *regmap;
-> > > > +
-> > > > +     regmap =3D devm_regmap_init_i3c(i3cdev, &st_lsm6dsx_i3c_regma=
-p_config);
-> > > > +     if (IS_ERR(regmap)) {
-> > > > +             dev_err(&i3cdev->dev, "Failed to register i3c regmap =
-%d\n",
-> > > > +                     (int)PTR_ERR(regmap));
-> > > > +             return PTR_ERR(regmap);
-> > > > +     }
-> > > > +
-> > > > +     return st_lsm6dsx_probe(&i3cdev->dev, 0, hw_data->id,
-> > > > +                             hw_data->name, regmap);
-> > > > +}
-> > > > +
-> > > > +
-> > > > +static const struct i3c_device_id st_lsm6dsx_i3c_ids[] =3D {
-> > > > +     I3C_DEVICE(0x0104, 0x006C, &hw_data[0]),
-> > > > +     { /* sentinel */ },
-> > > > +};
-> > > > +MODULE_DEVICE_TABLE(i3c, st_lsm6dsx_i3c_ids);
-> > > > +
-> > > > +static struct i3c_driver st_lsm6dsx_driver =3D {
-> > > > +     .driver.name =3D "st_lsm6dsx_i3c",
-> > > > +     .probe =3D st_lsm6dsx_i3c_probe,
-> > > > +     .id_table =3D st_lsm6dsx_i3c_ids, =20
-> > >
-> > > You should probably set the pm_ops here (st_lsm6dsx_pm_ops).
-> > > =20
-> > > > +};
-> > > > +module_i3c_driver(st_lsm6dsx_driver);
-> > > > +
-> > > > +MODULE_AUTHOR("Vitor Soares <vitor.soares@synopsys.com>");
-> > > > +MODULE_DESCRIPTION("STMicroelectronics st_lsm6dsx i3c driver");
-> > > > +MODULE_LICENSE("GPL v2");
-> > > > + =20
-> > >
-> > > You can remove this blank line.
-> > > =20
-> >=20
-> >=20
++	aliases {
++		rdma0 =3D &rdma0;
++		rdma1 =3D &rdma1;
++	};
++
+ 	cpu_opp_table: opp-table {
+ 		compatible =3D "operating-points-v2";
+ 		opp-shared;
+@@ -320,6 +325,25 @@
+ 		clock-names =3D "spi", "wrap";
+ 	};
 
-Best regards,
-Vitor Soares
++	mipi_tx0: mipi-dphy@10010000 {
++		compatible =3D "mediatek,mt7623-mipi-tx",
++			     "mediatek,mt2701-mipi-tx";
++		reg =3D <0 0x10010000 0 0x90>;
++		clocks =3D <&clk26m>;
++		clock-output-names =3D "mipi_tx0_pll";
++		#clock-cells =3D <0>;
++		#phy-cells =3D <0>;
++	};
++
++	cec: cec@10012000 {
++		compatible =3D "mediatek,mt7623-cec",
++			     "mediatek,mt8173-cec";
++		reg =3D <0 0x10012000 0 0xbc>;
++		interrupts =3D <GIC_SPI 182 IRQ_TYPE_LEVEL_LOW>;
++		clocks =3D <&infracfg CLK_INFRA_CEC>;
++		status =3D "disabled";
++	};
++
+ 	cir: cir@10013000 {
+ 		compatible =3D "mediatek,mt7623-cir";
+ 		reg =3D <0 0x10013000 0 0x1000>;
+@@ -368,6 +392,18 @@
+ 		#clock-cells =3D <1>;
+ 	};
+
++	hdmi_phy: phy@10209100 {
++		compatible =3D "mediatek,mt7623-hdmi-phy",
++			     "mediatek,mt2701-hdmi-phy";
++		reg =3D <0 0x10209100 0 0x24>;
++		clocks =3D <&apmixedsys CLK_APMIXED_HDMI_REF>;
++		clock-names =3D "pll_ref";
++		clock-output-names =3D "hdmitx_dig_cts";
++		#clock-cells =3D <0>;
++		#phy-cells =3D <0>;
++		status =3D "disabled";
++	};
++
+ 	rng: rng@1020f000 {
+ 		compatible =3D "mediatek,mt7623-rng";
+ 		reg =3D <0 0x1020f000 0 0x1000>;
+@@ -567,6 +603,16 @@
+ 		status =3D "disabled";
+ 	};
+
++	hdmiddc0: i2c@11013000 {
++		compatible =3D "mediatek,mt7623-hdmi-ddc",
++			     "mediatek,mt8173-hdmi-ddc";
++		interrupts =3D <GIC_SPI 81 IRQ_TYPE_LEVEL_LOW>;
++		reg =3D <0 0x11013000 0 0x1C>;
++		clocks =3D <&pericfg CLK_PERI_I2C3>;
++		clock-names =3D "ddc-i2c";
++		status =3D "disabled";
++	};
++
+ 	nor_flash: spi@11014000 {
+ 		compatible =3D "mediatek,mt7623-nor",
+ 			     "mediatek,mt8173-nor";
+@@ -741,6 +787,84 @@
+ 		#clock-cells =3D <1>;
+ 	};
+
++	display_components: dispsys@14000000 {
++		compatible =3D "mediatek,mt7623-mmsys",
++			     "mediatek,mt2701-mmsys";
++		reg =3D <0 0x14000000 0 0x1000>;
++		power-domains =3D <&scpsys MT2701_POWER_DOMAIN_DISP>;
++	};
++
++	ovl@14007000 {
++		compatible =3D "mediatek,mt7623-disp-ovl",
++			     "mediatek,mt2701-disp-ovl";
++		reg =3D <0 0x14007000 0 0x1000>;
++		interrupts =3D <GIC_SPI 153 IRQ_TYPE_LEVEL_LOW>;
++		clocks =3D <&mmsys CLK_MM_DISP_OVL>;
++		iommus =3D <&iommu MT2701_M4U_PORT_DISP_OVL_0>;
++		mediatek,larb =3D <&larb0>;
++	};
++
++	rdma0: rdma@14008000 {
++		compatible =3D "mediatek,mt7623-disp-rdma",
++			     "mediatek,mt2701-disp-rdma";
++		reg =3D <0 0x14008000 0 0x1000>;
++		interrupts =3D <GIC_SPI 152 IRQ_TYPE_LEVEL_LOW>;
++		clocks =3D <&mmsys CLK_MM_DISP_RDMA>;
++		iommus =3D <&iommu MT2701_M4U_PORT_DISP_RDMA>;
++		mediatek,larb =3D <&larb0>;
++	};
++
++	wdma@14009000 {
++		compatible =3D "mediatek,mt7623-disp-wdma",
++			     "mediatek,mt2701-disp-wdma";
++		reg =3D <0 0x14009000 0 0x1000>;
++		interrupts =3D <GIC_SPI 154 IRQ_TYPE_LEVEL_LOW>;
++		clocks =3D <&mmsys CLK_MM_DISP_WDMA>;
++		iommus =3D <&iommu MT2701_M4U_PORT_DISP_WDMA>;
++		mediatek,larb =3D <&larb0>;
++	};
++
++	bls: pwm@1400a000 {
++		compatible =3D "mediatek,mt7623-disp-pwm",
++			     "mediatek,mt2701-disp-pwm";
++		reg =3D <0 0x1400a000 0 0x1000>;
++		#pwm-cells =3D <2>;
++		clocks =3D <&mmsys CLK_MM_MDP_BLS_26M>,
++			 <&mmsys CLK_MM_DISP_BLS>;
++		clock-names =3D "main", "mm";
++		status =3D "disabled";
++	};
++
++	color@1400b000 {
++		compatible =3D "mediatek,mt7623-disp-color",
++			     "mediatek,mt2701-disp-color";
++		reg =3D <0 0x1400b000 0 0x1000>;
++		interrupts =3D <GIC_SPI 156 IRQ_TYPE_LEVEL_LOW>;
++		clocks =3D <&mmsys CLK_MM_DISP_COLOR>;
++	};
++
++	dsi: dsi@1400c000 {
++		compatible =3D "mediatek,mt7623-dsi",
++			     "mediatek,mt2701-dsi";
++		reg =3D <0 0x1400c000 0 0x1000>;
++		interrupts =3D <GIC_SPI 157 IRQ_TYPE_LEVEL_LOW>;
++		clocks =3D <&mmsys CLK_MM_DSI_ENGINE>,
++			 <&mmsys CLK_MM_DSI_DIG>,
++			 <&mipi_tx0>;
++		clock-names =3D "engine", "digital", "hs";
++		phys =3D <&mipi_tx0>;
++		phy-names =3D "dphy";
++		status =3D "disabled";
++	};
++
++	mutex: mutex@1400e000 {
++		compatible =3D "mediatek,mt7623-disp-mutex",
++			     "mediatek,mt2701-disp-mutex";
++		reg =3D <0 0x1400e000 0 0x1000>;
++		interrupts =3D <GIC_SPI 161 IRQ_TYPE_LEVEL_LOW>;
++		clocks =3D <&mmsys CLK_MM_MUTEX_32K>;
++	};
++
+ 	larb0: larb@14010000 {
+ 		compatible =3D "mediatek,mt7623-smi-larb",
+ 			     "mediatek,mt2701-smi-larb";
+@@ -753,6 +877,44 @@
+ 		power-domains =3D <&scpsys MT2701_POWER_DOMAIN_DISP>;
+ 	};
+
++	rdma1: rdma@14012000 {
++		compatible =3D "mediatek,mt7623-disp-rdma",
++			     "mediatek,mt2701-disp-rdma";
++		reg =3D <0 0x14012000 0 0x1000>;
++		interrupts =3D <GIC_SPI 164 IRQ_TYPE_LEVEL_LOW>;
++		clocks =3D <&mmsys CLK_MM_DISP_RDMA1>;
++		iommus =3D <&iommu MT2701_M4U_PORT_DISP_RDMA1>;
++		mediatek,larb =3D <&larb0>;
++	};
++
++	dpi0: dpi@14014000 {
++		compatible =3D "mediatek,mt7623-dpi",
++			     "mediatek,mt2701-dpi";
++		reg =3D <0 0x14014000 0 0x1000>;
++		interrupts =3D <GIC_SPI 194 IRQ_TYPE_LEVEL_LOW>;
++		clocks =3D <&mmsys CLK_MM_DPI1_DIGL>,
++			 <&mmsys CLK_MM_DPI1_ENGINE>,
++			 <&apmixedsys CLK_APMIXED_TVDPLL>;
++		clock-names =3D "pixel", "engine", "pll";
++		status =3D "disabled";
++	};
++
++	hdmi0: hdmi@14015000 {
++		compatible =3D "mediatek,mt7623-hdmi",
++			     "mediatek,mt8173-hdmi";
++		reg =3D <0 0x14015000 0 0x400>;
++		clocks =3D <&mmsys CLK_MM_HDMI_PIXEL>,
++			 <&mmsys CLK_MM_HDMI_PLL>,
++			 <&mmsys CLK_MM_HDMI_AUDIO>,
++			 <&mmsys CLK_MM_HDMI_SPDIF>;
++		clock-names =3D "pixel", "pll", "bclk", "spdif";
++		phys =3D <&hdmi_phy>;
++		phy-names =3D "hdmi";
++		mediatek,syscon-hdmi =3D <&mmsys 0x900>;
++		cec =3D <&cec>;
++		status =3D "disabled";
++	};
++
+ 	imgsys: syscon@15000000 {
+ 		compatible =3D "mediatek,mt7623-imgsys",
+ 			     "mediatek,mt2701-imgsys",
+@@ -1077,6 +1239,21 @@
+ 		};
+ 	};
+
++	hdmi_pins_a: hdmi-default {
++		pins-hdmi {
++			pinmux =3D <MT7623_PIN_123_HTPLG_FUNC_HTPLG>;
++			input-enable;
++			bias-pull-down;
++		};
++	};
++
++	hdmi_ddc_pins_a: hdmi_ddc-default {
++		pins-hdmi-ddc {
++			pinmux =3D <MT7623_PIN_124_GPIO124_FUNC_HDMISCK>,
++				 <MT7623_PIN_125_GPIO125_FUNC_HDMISD>;
++		};
++	};
++
+ 	i2c0_pins_a: i2c0-default {
+ 		pins-i2c0 {
+ 			pinmux =3D <MT7623_PIN_75_SDA0_FUNC_SDA0>,
+diff --git a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts b/arch/arm/boot=
+/dts/mt7623n-bananapi-bpi-r2.dts
+index 2b760f90f38c..7a1763472018 100644
+=2D-- a/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
++++ b/arch/arm/boot/dts/mt7623n-bananapi-bpi-r2.dts
+@@ -21,6 +21,19 @@
+ 		stdout-path =3D "serial2:115200n8";
+ 	};
+
++	connector {
++		compatible =3D "hdmi-connector";
++		label =3D "hdmi";
++		type =3D "d";
++		ddc-i2c-bus =3D <&hdmiddc0>;
++
++		port {
++			hdmi_connector_in: endpoint {
++				remote-endpoint =3D <&hdmi0_out>;
++			};
++		};
++	};
++
+ 	cpus {
+ 		cpu@0 {
+ 			proc-supply =3D <&mt6323_vproc_reg>;
+@@ -114,10 +127,24 @@
+ 	};
+ };
+
++&bls {
++	status =3D "okay";
++
++	port {
++		bls_out: endpoint {
++			remote-endpoint =3D <&dpi0_in>;
++		};
++	};
++};
++
+ &btif {
+ 	status =3D "okay";
+ };
+
++&cec {
++	status =3D "okay";
++};
++
+ &cir {
+ 	pinctrl-names =3D "default";
+ 	pinctrl-0 =3D <&cir_pins_a>;
+@@ -128,6 +155,28 @@
+ 	status =3D "okay";
+ };
+
++&dpi0 {
++	status =3D "okay";
++
++	ports {
++		#address-cells =3D <1>;
++		#size-cells =3D <0>;
++		port@0 {
++			reg =3D <0>;
++			dpi0_out: endpoint {
++				remote-endpoint =3D <&hdmi0_in>;
++			};
++		};
++
++		port@1 {
++			reg =3D <1>;
++			dpi0_in: endpoint {
++				remote-endpoint =3D <&bls_out>;
++			};
++		};
++	};
++};
++
+ &eth {
+ 	status =3D "okay";
+
+@@ -199,6 +248,42 @@
+ 	};
+ };
+
++&hdmi0 {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&hdmi_pins_a>;
++	status =3D "okay";
++
++	ports {
++		#address-cells =3D <1>;
++		#size-cells =3D <0>;
++		port@0 {
++			reg =3D <0>;
++			hdmi0_in: endpoint {
++				remote-endpoint =3D <&dpi0_out>;
++			};
++		};
++
++		port@1 {
++			reg =3D <1>;
++			hdmi0_out: endpoint {
++				remote-endpoint =3D <&hdmi_connector_in>;
++			};
++		};
++	};
++};
++
++&hdmiddc0 {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&hdmi_ddc_pins_a>;
++	status =3D "okay";
++};
++
++&hdmi_phy {
++	mediatek,ibias =3D <0xa>;
++	mediatek,ibias_up =3D <0x1c>;
++	status =3D "okay";
++};
++
+ &i2c0 {
+ 	pinctrl-names =3D "default";
+ 	pinctrl-0 =3D <&i2c0_pins_a>;
+diff --git a/arch/arm/boot/dts/mt7623n-rfb-emmc.dts b/arch/arm/boot/dts/mt=
+7623n-rfb-emmc.dts
+index b7606130ade9..3e5911d8d6bc 100644
+=2D-- a/arch/arm/boot/dts/mt7623n-rfb-emmc.dts
++++ b/arch/arm/boot/dts/mt7623n-rfb-emmc.dts
+@@ -24,6 +24,19 @@
+ 		stdout-path =3D "serial2:115200n8";
+ 	};
+
++	connector {
++		compatible =3D "hdmi-connector";
++		label =3D "hdmi";
++		type =3D "d";
++		ddc-i2c-bus =3D <&hdmiddc0>;
++
++		port {
++			hdmi_connector_in: endpoint {
++				remote-endpoint =3D <&hdmi0_out>;
++			};
++		};
++	};
++
+ 	cpus {
+ 		cpu@0 {
+ 			proc-supply =3D <&mt6323_vproc_reg>;
+@@ -106,10 +119,24 @@
+ 	};
+ };
+
++&bls {
++	status =3D "okay";
++
++	port {
++		bls_out: endpoint {
++			remote-endpoint =3D <&dpi0_in>;
++		};
++	};
++};
++
+ &btif {
+ 	status =3D "okay";
+ };
+
++&cec {
++	status =3D "okay";
++};
++
+ &cir {
+ 	pinctrl-names =3D "default";
+ 	pinctrl-0 =3D <&cir_pins_a>;
+@@ -120,6 +147,28 @@
+ 	status =3D "okay";
+ };
+
++&dpi0 {
++	status =3D "okay";
++
++	ports {
++		#address-cells =3D <1>;
++		#size-cells =3D <0>;
++		port@0 {
++			reg =3D <0>;
++			dpi0_out: endpoint {
++				remote-endpoint =3D <&hdmi0_in>;
++			};
++		};
++
++		port@1 {
++			reg =3D <1>;
++			dpi0_in: endpoint {
++				remote-endpoint =3D <&bls_out>;
++			};
++		};
++	};
++};
++
+ &eth {
+ 	status =3D "okay";
+
+@@ -202,6 +251,42 @@
+ 	};
+ };
+
++&hdmi0 {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&hdmi_pins_a>;
++	status =3D "okay";
++
++	ports {
++		#address-cells =3D <1>;
++		#size-cells =3D <0>;
++		port@0 {
++			reg =3D <0>;
++			hdmi0_in: endpoint {
++				remote-endpoint =3D <&dpi0_out>;
++			};
++		};
++
++		port@1 {
++			reg =3D <1>;
++			hdmi0_out: endpoint {
++				remote-endpoint =3D <&hdmi_connector_in>;
++			};
++		};
++	};
++};
++
++&hdmiddc0 {
++	pinctrl-names =3D "default";
++	pinctrl-0 =3D <&hdmi_ddc_pins_a>;
++	status =3D "okay";
++};
++
++&hdmi_phy {
++	mediatek,ibias =3D <0xa>;
++	mediatek,ibias_up =3D <0x1c>;
++	status =3D "okay";
++};
++
+ &i2c0 {
+ 	pinctrl-names =3D "default";
+ 	pinctrl-0 =3D <&i2c0_pins_a>;
+=2D-
+2.17.1
+
