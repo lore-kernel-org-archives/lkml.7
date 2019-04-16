@@ -2,108 +2,145 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4276C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:02:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6AF6C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:03:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 78912206B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:02:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555430556;
-	bh=waChlQWVC7Sjzre03+E1jPi0BdA48ZE8hdQMEn/6jCo=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0A41Jmw+KmNt1pYRhRwf4MOQ5bcSOZhkFtnyvvo5GuY4e6YmNalKHBA4zOhFytwca
-	 3nyJjtMOGR9TKF1zX/1BfqxvCB5jB9LehXKmMxeV7zWB+Wi084ePUJg5BXuKTEJF+3
-	 60FfeuMmzg0agxONO6dJPwTSSh4f2eamgnDr6S9g=
+	by mail.kernel.org (Postfix) with ESMTP id 7D6FF20821
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:03:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729943AbfDPQBs (ORCPT
+        id S1729672AbfDPQDm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 12:01:48 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56004 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729911AbfDPQBp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 12:01:45 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B553E7FDE9;
-        Tue, 16 Apr 2019 16:01:44 +0000 (UTC)
-Received: from krava.brq.redhat.com (unknown [10.43.17.48])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 698675D71A;
-        Tue, 16 Apr 2019 16:01:42 +0000 (UTC)
-From:   Jiri Olsa <jolsa@kernel.org>
-To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andi Kleen <ak@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: [PATCH 03/12] perf tools: Simplify dso_cache__read function
-Date:   Tue, 16 Apr 2019 18:01:18 +0200
-Message-Id: <20190416160127.30203-4-jolsa@kernel.org>
-In-Reply-To: <20190416160127.30203-1-jolsa@kernel.org>
-References: <20190416160127.30203-1-jolsa@kernel.org>
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Tue, 16 Apr 2019 16:01:45 +0000 (UTC)
+        Tue, 16 Apr 2019 12:03:42 -0400
+Received: from gateway32.websitewelcome.com ([192.185.145.111]:22977 "EHLO
+        gateway32.websitewelcome.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726605AbfDPQDl (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 12:03:41 -0400
+Received: from cm12.websitewelcome.com (cm12.websitewelcome.com [100.42.49.8])
+        by gateway32.websitewelcome.com (Postfix) with ESMTP id D74739AA03
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 11:03:40 -0500 (CDT)
+Received: from gator4166.hostgator.com ([108.167.133.22])
+        by cmsmtp with SMTP
+        id GQYehWvaNiQerGQYehFQk3; Tue, 16 Apr 2019 11:03:40 -0500
+X-Authority-Reason: nr=8
+Received: from [189.250.55.242] (port=37194 helo=[192.168.43.131])
+        by gator4166.hostgator.com with esmtpsa (TLSv1.2:ECDHE-RSA-AES128-GCM-SHA256:128)
+        (Exim 4.91)
+        (envelope-from <gustavo@embeddedor.com>)
+        id 1hGQYd-004FDt-U4; Tue, 16 Apr 2019 11:03:40 -0500
+Subject: Re: [PATCH wireless-drivers] rtlwifi: rtl8723ae: Fix missing break in
+ switch statement
+To:     Kalle Valo <kvalo@codeaurora.org>
+Cc:     Ping-Ke Shih <pkshih@realtek.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
+References: <20190416003626.GA16834@embeddedor>
+ <87h8ay8vu9.fsf@kamboji.qca.qualcomm.com>
+ <90c56883-6ef3-9f9e-5231-6c2fc65d747d@embeddedor.com>
+ <87ftqi54cx.fsf@kamboji.qca.qualcomm.com>
+From:   "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=gustavo@embeddedor.com; keydata=
+ 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
+ VtSixD1uOgytAP7RWS474w==
+Message-ID: <ece38547-f29e-b3a5-879e-11feb15b2c4e@embeddedor.com>
+Date:   Tue, 16 Apr 2019 11:03:34 -0500
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <87ftqi54cx.fsf@kamboji.qca.qualcomm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-AntiAbuse: This header was added to track abuse, please include it with any abuse report
+X-AntiAbuse: Primary Hostname - gator4166.hostgator.com
+X-AntiAbuse: Original Domain - vger.kernel.org
+X-AntiAbuse: Originator/Caller UID/GID - [47 12] / [47 12]
+X-AntiAbuse: Sender Address Domain - embeddedor.com
+X-BWhitelist: no
+X-Source-IP: 189.250.55.242
+X-Source-L: No
+X-Exim-ID: 1hGQYd-004FDt-U4
+X-Source: 
+X-Source-Args: 
+X-Source-Dir: 
+X-Source-Sender: ([192.168.43.131]) [189.250.55.242]:37194
+X-Source-Auth: gustavo@embeddedor.com
+X-Email-Count: 6
+X-Source-Cap: Z3V6aWRpbmU7Z3V6aWRpbmU7Z2F0b3I0MTY2Lmhvc3RnYXRvci5jb20=
+X-Local-Domain: yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There's no need for the while loop now, also we can
-connect two (ret > 0) condition legs together.
 
-Link: http://lkml.kernel.org/n/tip-2vg28bak8euojuvq33cy2hl5@git.kernel.org
-Signed-off-by: Jiri Olsa <jolsa@kernel.org>
----
- tools/perf/util/dso.c | 17 ++++++-----------
- 1 file changed, 6 insertions(+), 11 deletions(-)
 
-diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index 6baad22ec8a9..6fdff723e55a 100644
---- a/tools/perf/util/dso.c
-+++ b/tools/perf/util/dso.c
-@@ -822,25 +822,20 @@ static ssize_t
- dso_cache__read(struct dso *dso, struct machine *machine,
- 		u64 offset, u8 *data, ssize_t size)
- {
-+	u64 cache_offset = offset & DSO__DATA_CACHE_MASK;
- 	struct dso_cache *cache;
- 	struct dso_cache *old;
- 	ssize_t ret;
- 
--	do {
--		u64 cache_offset = offset & DSO__DATA_CACHE_MASK;
--
--		cache = zalloc(sizeof(*cache) + DSO__DATA_CACHE_SIZE);
--		if (!cache)
--			return -ENOMEM;
--
--		ret = file_read(dso, machine, cache_offset, cache->data);
-+	cache = zalloc(sizeof(*cache) + DSO__DATA_CACHE_SIZE);
-+	if (!cache)
-+		return -ENOMEM;
- 
-+	ret = file_read(dso, machine, cache_offset, cache->data);
-+	if (ret > 0) {
- 		cache->offset = cache_offset;
- 		cache->size   = ret;
--	} while (0);
--
- 
--	if (ret > 0) {
- 		old = dso_cache__insert(dso, cache);
- 		if (old) {
- 			/* we lose the race */
--- 
-2.17.2
+On 4/16/19 10:58 AM, Kalle Valo wrote:
 
+>>> You have marked this for wireless-drivers but the commit is 2.5 years
+>>> old, so I think wireless-drivers-next is more approriate.
+>>>
+>>
+>> Yeah. This can actually be applied to both of them.  What I'd like is
+>> to have this applied to stable, so I thought wireless-drivers was a
+>> more straightforward way.
+> 
+> Sure, makes sense. But I just want to keep the number of patches going
+> to wireless-drivers to the minimum, I really want to avoid conflicts as
+> much as possible. That's why I'm keeping the bar high for w-d.
+> 
+
+Yep. I've got it.
+
+I just sent v2:
+
+https://lore.kernel.org/patchwork/patch/1062748/
+
+Thanks
+--
+Gustavo
