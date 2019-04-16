@@ -2,82 +2,112 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 093D3C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:59:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35399C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 21:00:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C515220684
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:59:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="MQSVghb0"
+	by mail.kernel.org (Postfix) with ESMTP id 0F4B820684
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 21:00:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729072AbfDPU7f (ORCPT
+        id S1729874AbfDPVAJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 16:59:35 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:34044 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726686AbfDPU7f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 16:59:35 -0400
-Received: from zn.tnic (p200300EC2F0D69000C2D4197130645E8.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:6900:c2d:4197:1306:45e8])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 37E041EC05B8;
-        Tue, 16 Apr 2019 22:59:34 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1555448374;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=lJ14NnVJGkxm2WIFgxITzQaVRUUkoWzgo4rzlB2szOU=;
-        b=MQSVghb0YbFqaTQ3LpGm9cfm0Jvs1/X+kekhUTw9kUkO2o23DC94m51OCE8H2O4gu6n5ll
-        2UcIpTxs5viEF34Aujx18PBF76NCBGpBRRoOMrNFKvWFM1PJcmLnOYfYLNxhB7I4o0z+Pt
-        8eZ64m9aLBX/D1BmIhx0ck+ei8McYTg=
-Date:   Tue, 16 Apr 2019 22:59:26 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Xiaochen Shen <xiaochen.shen@intel.com>
-Cc:     tglx@linutronix.de, mingo@redhat.com, hpa@zytor.com,
-        tony.luck@intel.com, fenghua.yu@intel.com,
-        reinette.chatre@intel.com, x86@kernel.org,
-        linux-kernel@vger.kernel.org, pei.p.jia@intel.com
-Subject: Re: [PATCH 2/2] x86/resctrl: Initialize new resource group with
- default MBA values
-Message-ID: <20190416205926.GO31772@zn.tnic>
-References: <1554839728-5544-1-git-send-email-xiaochen.shen@intel.com>
- <20190415113405.GC29317@zn.tnic>
- <9e99ed5f-d60a-717c-9322-c6f0b8090d6b@intel.com>
+        Tue, 16 Apr 2019 17:00:09 -0400
+Received: from mout.kundenserver.de ([212.227.126.187]:52723 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728140AbfDPVAJ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 17:00:09 -0400
+Received: from [192.168.1.110] ([95.117.99.70]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1Mtf39-1gzoE93LVH-00v9wM; Tue, 16 Apr 2019 22:58:42 +0200
+Subject: Re: [PATCH v11 2/7] anybus-s: support HMS Anybus-S bus
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com,
+        =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>,
+        treding@nvidia.com, David Lechner <david@lechnology.com>,
+        noralf@tronnes.org, johan@kernel.org,
+        Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg KH <gregkh@linuxfoundation.org>, john.garry@huawei.com,
+        geert+renesas@glider.be, robin.murphy@arm.com,
+        Paul Gortmaker <paul.gortmaker@windriver.com>,
+        sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io,
+        Stuart Yoder <stuyoder@gmail.com>,
+        "J. Kiszka" <jan.kiszka@siemens.com>, maxime.ripard@bootlin.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+References: <20190416155618.1369-1-TheSven73@gmail.com>
+ <20190416155618.1369-3-TheSven73@gmail.com>
+ <4aecef30-0d64-c5f7-c4de-43b0754e2fdd@metux.net>
+ <CAGngYiX3QP25MLupsc-=gfb6CAh5wK49eGs2xqHh_5LxrKtaAA@mail.gmail.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <34a70ef9-4bb2-98f6-2344-3a0482b5cb7f@metux.net>
+Date:   Tue, 16 Apr 2019 22:58:36 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
+In-Reply-To: <CAGngYiX3QP25MLupsc-=gfb6CAh5wK49eGs2xqHh_5LxrKtaAA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <9e99ed5f-d60a-717c-9322-c6f0b8090d6b@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:BuoZ6Jzc/LxDDLv9s/Ra1L03wreYaPXLmS0WBNwBGIdmw0cjO1Q
+ 6IhUhfqFpRZ0bc17B8I1RV3F1YUKm3iDRJr21kgb/d37mF2gzdHTpVkZ6fzW7SziHl31e4H
+ crQlGTRl8wX6WKxNRJdqR8Xfm86QTwTtZf6H+hOKz+NzkGvTNrDheanvp2JGahn5ZRLCdcV
+ aO475o8vkXFeVFcCMx61A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:sY8d+Tkq0gI=:HG3UW/M8ryYsib/p+EV8IO
+ Fe/uFk6GirlBgzY4BlnU61vuyR/EpjuUwEAg55jTfyZxKmwC+e7MWRGTPBVNkP7oF3xbRVruK
+ SONjNq3dD8VjQe7bh/ndvikno01T00lOkM5MveecrxphBZ+QCL3vZfy9bUw6hMy3ohb2wxNgR
+ ytenjb0tjD7xXEP+WQHxQfQng/O4g9nBmdov3T6jucaZ2MxyFDqzYB5+X7N2zM5kHac4T6BEn
+ gQ6iQPKnMu/l0UaOS1FxJc2kDoUN95lq0fiNpTbPNNBNjAm6MKVVW+1MKat8dCu7wL39sSFZK
+ BAkWo9/z+sqjou9Xb12CH5V/I9X08pDVQltf55I3I+bZYVd0lOE97ayrkM47+ETYKwFOa7H4v
+ mkCgX7+k511loK8Frr9v+vCz9uHkagxeWWaPOeOaxEbR9Z/OjJi7mFDNpNVd36kJUwRZ0QtZw
+ 03/eFYFXZtgu9eazcptxBA9fE/6vQxa966HbDo/otgcGIRJEq5CoTabcxZpHf8IksWtUdgr5V
+ en8QZFA3VeSf6gQZjgnazUfmzmCx2B+E77VScxCZKsEQgKtwTSXEVh5v+yTw7thD/QD2T1kZF
+ 4Ci07wiZCgrbdUvTsWqbOpWQQnDMxdgQhh1GRXetnijl9KBja2FW0EE7luO5PJkPXdKgfPk1z
+ QdZDRpJjaLGGfaU3hZ2pL/wQSAqjqZsDzezCt8CUDaq3I0ZUtirT4CpoFaxxZIiOw45l3udgy
+ Cbl8deP3SJ40ocjqRK/yYjxhZNyXd9bGmb08X+fMwAiXCQOj00DJJmjnl6k=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 04:51:18AM +0800, Xiaochen Shen wrote:
-> In this patch we initialize MBA resource and cache resources in separate
-> functions rdtgroup_init_cat() and rdtgroup_init_mba(). If
-> __init_one_rdt_domain() is only called by rdtgroup_init_cat(), how about
-> using function name "__init_one_rdt_domain_cat()"?
+On 16.04.19 20:43, Sven Van Asbroeck wrote:
 
-I guess but be conservative when adding too many words to a function's
-name - that might get heavy when reading the code later.
+Hi,
 
-For example, there's an argument to not suffix it with "_cat": it is
-only called by rdtgroup_init_cat() - rdtgroup_init_mba() will not call
-it - so the path will remain unique anyway...
+> Correct on both points :)
+> The author of this proprietary standard (HMS) calls this a bus, but only
+> a single card can be connected to a slot. So it's not like pci or usb,
+> where you can connect multiple devices to a host.
 
-Anyway, something to think about - I personally don't have a strong
-preference here.
+But this port supports probing ?
+(so it's, bit like a single usb port w/o hub ;-))
 
-Thx.
+>> Maybe that deserves a bit more documentation :p
+>>
+> 
+> Sure, I can do that. What would be the best location for this?
+> The commit message? The Kconfig blurb? Comments in host.c?
+> Somewhere in Documentation/ ?
+
+In the long run, Documentation/ IMHO would be the best place
+(at least for longer explainations).
+
+OTOH, a few more precise words in the commit message would be nice, too.
+
+I guess that things like introducing new bus types or device classes
+are something that subsystem maintainers wanna be aware of :)
+
+
+--mtx
 
 -- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
