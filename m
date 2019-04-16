@@ -2,108 +2,104 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E1FEC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:34:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 59486C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:35:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D6F8206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:34:51 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="rT/hD1A+"
+	by mail.kernel.org (Postfix) with ESMTP id 0760C20693
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:35:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729101AbfDPKeu (ORCPT
+        id S1729130AbfDPKfI convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 06:34:50 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:6277 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726686AbfDPKet (ORCPT
+        Tue, 16 Apr 2019 06:35:08 -0400
+Received: from mail-sh.amlogic.com ([58.32.228.43]:44326 "EHLO
+        mail-sh.amlogic.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728625AbfDPKfI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 06:34:49 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cb5afc60000>; Tue, 16 Apr 2019 03:34:46 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 16 Apr 2019 03:34:49 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 16 Apr 2019 03:34:49 -0700
-Received: from [10.21.132.148] (172.20.13.39) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 16 Apr
- 2019 10:34:46 +0000
-Subject: Re: [PATCH 5.0 000/117] 5.0.8-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     <torvalds@linux-foundation.org>, <akpm@linux-foundation.org>,
-        <linux@roeck-us.net>, <shuah@kernel.org>, <patches@kernelci.org>,
-        <ben.hutchings@codethink.co.uk>, <lkft-triage@lists.linaro.org>,
-        <stable@vger.kernel.org>, linux-tegra <linux-tegra@vger.kernel.org>
-References: <20190415183744.887851196@linuxfoundation.org>
-From:   Jon Hunter <jonathanh@nvidia.com>
-Message-ID: <c3ff53a4-9d22-47b8-a385-e01229c43a0d@nvidia.com>
-Date:   Tue, 16 Apr 2019 11:34:44 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <20190415183744.887851196@linuxfoundation.org>
-X-Originating-IP: [172.20.13.39]
-X-ClientProxiedBy: HQMAIL103.nvidia.com (172.20.187.11) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="utf-8"
+        Tue, 16 Apr 2019 06:35:08 -0400
+X-Greylist: delayed 901 seconds by postgrey-1.27 at vger.kernel.org; Tue, 16 Apr 2019 06:35:07 EDT
+Received: from mail-sh.amlogic.com (10.18.11.5) by mail-sh.amlogic.com
+ (10.18.11.5) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1591.10; Tue, 16 Apr
+ 2019 18:20:05 +0800
+Received: from mail-sh.amlogic.com ([::1]) by mail-sh.amlogic.com ([::1]) with
+ mapi id 15.01.1591.012; Tue, 16 Apr 2019 18:20:05 +0800
+From:   Sky Zhou <Sky.Zhou@amlogic.com>
+To:     Neil Armstrong <narmstrong@baylibre.com>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>
+CC:     "linux-amlogic@lists.infradead.org" 
+        <linux-amlogic@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm/meson: add size and alignment requirements for dumb
+ buffers
+Thread-Topic: [PATCH] drm/meson: add size and alignment requirements for dumb
+ buffers
+Thread-Index: AQHU7emyYXrKpM5Hu0ukuwfto14jpw==
+Date:   Tue, 16 Apr 2019 10:20:05 +0000
+Message-ID: <cd3674423da344e0a98ca58737efc1f5@amlogic.com>
+References: <20190408090137.2402-1-narmstrong@baylibre.com>
+Accept-Language: en-US
 Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1555410886; bh=mlKHuTF769RCFEOdz5+9GjIaR+ArMMEOo/d6KLexJsc=;
-        h=X-PGP-Universal:Subject:To:CC:References:From:Message-ID:Date:
-         User-Agent:MIME-Version:In-Reply-To:X-Originating-IP:
-         X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=rT/hD1A+gIXOi/LhyHT+MuyXBPNRzi1HD+kci9uyibDCcnb04gguTCiuin52IJ0Jm
-         Y0MjJeOKyxVjHNbx56cXeNLFYjXySWcvqGmzoKtqbcsJDmy1XGeSWkIJtw81YW3/Bg
-         IthTWCpGPwGDlmTCICZUwnPjoKl8+URKA5DFm1KMGLSsULk8vWpoa0ZTHwfLVKIJmq
-         9JpXYhitFmFqbizWs5uyfE/AKxJo8/kKa/Hsf86gCpEfa9DsWG0TnVzsvOOwEFaaH6
-         6MxmrVZkMvwytbFoUtLpAuSnU7SVk1w6DGK2u1TjjLKV/Ai8AhPIjppg49KzniTdpe
-         e8No7dOgOXZCg==
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.18.29.243]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: 8BIT
+MIME-Version: 1.0
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 15/04/2019 19:59, Greg Kroah-Hartman wrote:
-> This is the start of the stable review cycle for the 5.0.8 release.
-> There are 117 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+On 2019/4/8 17:01, Neil Armstrong wrote:
+> The Amlogic SoCs Canvas buffers stride must be aligned on 64bytes
+> and overall size should be aligned on PAGE width.
 > 
-> Responses should be made by Wed Apr 17 18:36:42 UTC 2019.
-> Anything received after that time might be too late.
+> Adds a custom dumb_create op to adds these requirements.
 > 
-> The whole patch series can be found in one patch at:
-> 	https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-5.0.8-rc1.gz
-> or in the git tree and branch at:
-> 	git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable-rc.git linux-5.0.y
-> and the diffstat can be found below.
+> Fixes: bbbe775ec5b5 ("drm: Add support for Amlogic Meson Graphic Controller")
+> Suggested-by: Sky Zhou <sky.zhou@amlogic.com>
+> Signed-off-by: Neil Armstrong <narmstrong@baylibre.com>
+> ---
+>   drivers/gpu/drm/meson/meson_drv.c | 14 +++++++++++++-
+>   1 file changed, 13 insertions(+), 1 deletion(-)
 > 
-> thanks,
+> diff --git a/drivers/gpu/drm/meson/meson_drv.c b/drivers/gpu/drm/meson/meson_drv.c
+> index faf1b1b0357c..72b01e6be0d9 100644
+> --- a/drivers/gpu/drm/meson/meson_drv.c
+> +++ b/drivers/gpu/drm/meson/meson_drv.c
+> @@ -90,6 +90,18 @@ static irqreturn_t meson_irq(int irq, void *arg)
+>   	return IRQ_HANDLED;
+>   }
+>   
+> +static int meson_dumb_create(struct drm_file *file, struct drm_device *dev,
+> +			     struct drm_mode_create_dumb *args)
+> +{
+> +	/*
+> +	 * We need 64bytes aligned stride, and PAGE aligned size
+> +	 */
+> +	args->pitch = ALIGN(DIV_ROUND_UP(args->width * args->bpp, 8), SZ_64);
+> +	args->size = PAGE_ALIGN(args->pitch * args->height);
+> +
+> +	return drm_gem_cma_dumb_create_internal(file, dev, args);
+> +}
+> +
+>   DEFINE_DRM_GEM_CMA_FOPS(fops);
+>   
+>   static struct drm_driver meson_driver = {
+> @@ -112,7 +124,7 @@ static struct drm_driver meson_driver = {
+>   	.gem_prime_mmap		= drm_gem_cma_prime_mmap,
+>   
+>   	/* GEM Ops */
+> -	.dumb_create		= drm_gem_cma_dumb_create,
+> +	.dumb_create		= meson_dumb_create,
+>   	.gem_free_object_unlocked = drm_gem_cma_free_object,
+>   	.gem_vm_ops		= &drm_gem_cma_vm_ops,
+>   
 > 
-> greg k-h
 
-All tests are passing for Tegra ...
-
-Test results for stable-v5.0:
-    11 builds:	11 pass, 0 fail
-    22 boots:	22 pass, 0 fail
-    30 tests:	30 pass, 0 fail
-
-Linux version:	5.0.8-rc1-ge6fdfdb
-Boards tested:	tegra124-jetson-tk1, tegra186-p2771-0000,
-                tegra194-p2972-0000, tegra20-ventana,
-                tegra210-p2371-2180, tegra30-cardhu-a04
-
-Cheers
-Jon
-
--- 
-nvpublic
+Reviewed-by: Sky Zhou <sky.zhou@amlogic.com>
