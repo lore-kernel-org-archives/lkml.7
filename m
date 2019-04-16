@@ -2,92 +2,72 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B33F8C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:42:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58737C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:43:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 865BD206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:42:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2DEB620872
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:43:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728369AbfDPImf (ORCPT
+        id S1728543AbfDPIn4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 04:42:35 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:48842 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726857AbfDPImf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 04:42:35 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: eballetbo)
-        with ESMTPSA id 3AB10260FF2
-Subject: Re: [RESEND PATCH v3 1/2] power: supply: add input voltage limit
- property
-To:     Pavel Machek <pavel@ucw.cz>
-Cc:     linux-pm@vger.kernel.org, sre@kernel.org,
-        Sameer Nanda <snanda@chromium.org>, bleung@chromium.org,
-        rjw@rjwysocki.net, gwendal@chromium.org,
-        linux-kernel@vger.kernel.org, Len Brown <len.brown@intel.com>,
-        groeck@chromium.org, Adam.Thomson.Opensource@diasemi.com,
-        kernel@collabora.com
-References: <20190415220049.14924-1-enric.balletbo@collabora.com>
- <20190416071941.GB14538@amd>
-From:   Enric Balletbo i Serra <enric.balletbo@collabora.com>
-Message-ID: <8d1f70a7-46d6-f278-f58c-6a7e7a644d46@collabora.com>
-Date:   Tue, 16 Apr 2019 10:42:30 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 16 Apr 2019 04:43:56 -0400
+Received: from mx2.suse.de ([195.135.220.15]:59442 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726208AbfDPIn4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 04:43:56 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id B07D6ADAA;
+        Tue, 16 Apr 2019 08:43:54 +0000 (UTC)
+Date:   Tue, 16 Apr 2019 10:43:54 +0200
+From:   Petr Mladek <pmladek@suse.com>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Josh Poimboeuf <jpoimboe@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>,
+        Miroslav Benes <mbenes@suse.cz>,
+        Joe Lawrence <joe.lawrence@redhat.com>,
+        live-patching@vger.kernel.org
+Subject: Re: [PATCH 20/57] docs: livepatch: convert it to ReST format
+Message-ID: <20190416084354.ol7umvh2lmii6jbk@pathway.suse.cz>
+References: <cover.1555382110.git.mchehab+samsung@kernel.org>
+ <f8eb5302d14147f5721cce816b1d3500184ce383.1555382110.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190416071941.GB14538@amd>
-Content-Type: text/plain; charset=windows-1252
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <f8eb5302d14147f5721cce816b1d3500184ce383.1555382110.git.mchehab+samsung@kernel.org>
+User-Agent: NeoMutt/20170912 (1.9.0)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Pavel,
-
-On 16/4/19 9:19, Pavel Machek wrote:
-> Hi!
+On Mon 2019-04-15 23:55:45, Mauro Carvalho Chehab wrote:
+> Convert livepatch documentation to ReST format. The changes
+> are mostly trivial, as the documents are already on a good
+> shape. Just a few markup changes are needed for Sphinx to
+> properly parse the docs.
 > 
->> This patch exposes a new property, similar to input current limit, to
->> re-configure the maximum voltage from the external supply at runtime
->> based on system-level knowledge or user input.
-> 
-> Well, and I suspect it should expose input power limit, not input
-> voltage limit.
-> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-Oh, ok, I thought we were agree that input voltage had sense after had some
-discussion in v3. Seems that no, let me try to give you another example...
+Thanks a lot for the conversion. I tried html output and
+it looks very well.
 
-> DC-DC convertor efficiency normally does not much depend on input
-> voltage....
-> 
-> 								Pavel
-> 
+Just a question. This patch does only the formatting.
+The documentation is not really generated because the file
+is not renamed to .rst. Also it is not referenced from
+any top level documents. Is it by intention?
 
-As we said we have a heat "problem" due the internal voltage conversions.
 
-Lets assume you have a linear regulator instead with a Vin range from 5V to 9V
-and we want an output of 3.3V/1A
+I am happy even for the conversion, so:
 
-For 9V:
- Input power : P(in) = 9V x 1A = 9W
- Output power: P(out) = 3.3V x 1A = 3.3W
- Regulator power dissipated: P(reg) = P(in) - P(out) = 9W - 3.3W = 5.7W
+Reviewed-by: Petr Mladek <pmladek@suse.com>
 
-For 5V:
- Input power : P(in) = 5V x 1A = 5W
- Output power: P(out) = 3.3V x 1A = 3.3W
- Regulator power dissipated: P(reg) = P(in) - P(out) = 5W - 3.3W = 1,7W
-
-In the first case the regulator needs to dissipate more power, hence the
-temperature is greater than the second case.
-
-Thanks,
- Enric
+Best Regards,
+Petr
