@@ -2,97 +2,155 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 754EEC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 04:02:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EC24FC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 04:03:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 47F852075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 04:02:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B31F02075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 04:03:08 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ebdoGELB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726000AbfDPECm (ORCPT
+        id S1726428AbfDPEDH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 00:02:42 -0400
-Received: from www.osadl.org ([62.245.132.105]:49136 "EHLO www.osadl.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725648AbfDPECm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 00:02:42 -0400
-Received: from debian01.hofrr.at (178.115.242.59.static.drei.at [178.115.242.59])
-        by www.osadl.org (8.13.8/8.13.8/OSADL-2007092901) with ESMTP id x3G427M9032015;
-        Tue, 16 Apr 2019 06:02:07 +0200
-From:   Nicholas Mc Guire <hofrat@osadl.org>
-To:     Jason Cooper <jason@lakedaemon.net>
-Cc:     Andrew Lunn <andrew@lunn.ch>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Nicholas Mc Guire <hofrat@osadl.org>
-Subject: [PATCH V2] ARM: mvebu: at least report the kzalloc failure
-Date:   Tue, 16 Apr 2019 05:56:31 +0200
-Message-Id: <1555386991-8855-1-git-send-email-hofrat@osadl.org>
-X-Mailer: git-send-email 2.1.4
+        Tue, 16 Apr 2019 00:03:07 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:45217 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725648AbfDPEDG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 00:03:06 -0400
+Received: by mail-ua1-f68.google.com with SMTP id c13so6262539uao.12
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 21:03:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=K4Hi2EDpByuuaTOj5JqRIJr5mBTbxyLqBywD/dBt8gQ=;
+        b=ebdoGELBjqvkVlsWe7n7m/Mu2PyOKUXB+BAg5QBJOCtxizroZxIsIT1iJW3T1T6tuJ
+         pMSBIRxKS5jb0R8r4BvL2FEBW+7hjlFIImBtLKB6OusOlHm37YbAnJOjI/mVRstmoMTV
+         13w2MfqekU8ZrSVRTidvGqSBHsqioV05ciC5k=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=K4Hi2EDpByuuaTOj5JqRIJr5mBTbxyLqBywD/dBt8gQ=;
+        b=FRQ/zVtrkip0ixsetvG3VoXK7Ayg8V7yMZ8ioA6dVcVpr9C4MNYOXHutFcyXHt01rL
+         albSuQMRLfpJHFyi8wfzNvNTFoeZjOt0zYeBtchgOPKmh+5g030W79IVdKA13A5KUnQG
+         wA0V5DLFVUn5j2ANewrvvC7chxNfhAfvouofSx7api7pK5I6mbFbbj7jQePr9hc3erpP
+         jMd0q4EsHoXIKzYSqGyO00zP1e9jJ1G/4yCItfZMaprh5lvSZBjhQG4Eb3hOnRTxSCCV
+         vcn+6VnRwT8DeCb8ou0YLMIqQbOEjrbRy/IcTxasdlZ0dpEHO/l4t/WWWcFV7asSIw8X
+         Sw6g==
+X-Gm-Message-State: APjAAAUH+r/uLPloeb31srqJlk06SJ9uI+n4V38lS1qDqokIF3dMVMmg
+        gocdye6sCuUl2RhW/gUjRf83kzRQR3w=
+X-Google-Smtp-Source: APXvYqyvGA83tcZn0JySS3Dz9AEn9qEbatoRQqkbKwQoa4X6ptPgPOTQRmbuD2utZVpSRWqw6Bqj9Q==
+X-Received: by 2002:ab0:5384:: with SMTP id k4mr33707496uaa.11.1555387385999;
+        Mon, 15 Apr 2019 21:03:05 -0700 (PDT)
+Received: from mail-vk1-f180.google.com (mail-vk1-f180.google.com. [209.85.221.180])
+        by smtp.gmail.com with ESMTPSA id r21sm5407433uao.12.2019.04.15.21.03.05
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Apr 2019 21:03:05 -0700 (PDT)
+Received: by mail-vk1-f180.google.com with SMTP id s80so4129495vke.6
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 21:03:05 -0700 (PDT)
+X-Received: by 2002:a1f:264b:: with SMTP id m72mr31777915vkm.43.1555387384831;
+ Mon, 15 Apr 2019 21:03:04 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190411180117.27704-1-keescook@chromium.org> <20190411180117.27704-2-keescook@chromium.org>
+ <947dbe9a-3444-6fe4-9f79-f8f210da8960@linux.com>
+In-Reply-To: <947dbe9a-3444-6fe4-9f79-f8f210da8960@linux.com>
+From:   Kees Cook <keescook@chromium.org>
+Date:   Mon, 15 Apr 2019 23:02:53 -0500
+X-Gmail-Original-Message-ID: <CAGXu5jJTM=pdAjsC63Z6T=HaztTqSqUQQ8=GN=tqv2n6CKc3nw@mail.gmail.com>
+Message-ID: <CAGXu5jJTM=pdAjsC63Z6T=HaztTqSqUQQ8=GN=tqv2n6CKc3nw@mail.gmail.com>
+Subject: Re: [PATCH v2 1/3] security: Create "kernel hardening" config area
+To:     Alexander Popov <alex.popov@linux.com>
+Cc:     Alexander Potapenko <glider@google.com>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        James Morris <jmorris@namei.org>,
+        Nick Desaulniers <ndesaulniers@google.com>,
+        Kostya Serebryany <kcc@google.com>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Sandeep Patil <sspatil@android.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Michal Marek <michal.lkml@markovi.net>,
+        Emese Revfy <re.emese@gmail.com>,
+        "Serge E. Hallyn" <serge@hallyn.com>,
+        Kernel Hardening <kernel-hardening@lists.openwall.com>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        linux-kbuild <linux-kbuild@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Although it is very unlikely that the allocation during init would
-fail any such failure should point to the original cause to allow
-easier understanding of the ensuing null-pointer dereference splat.
+On Mon, Apr 15, 2019 at 11:44 AM Alexander Popov <alex.popov@linux.com> wrote:
+>
+> On 11.04.2019 21:01, Kees Cook wrote:
+> > Right now kernel hardening options are scattered around various Kconfig
+> > files. This can be a central place to collect these kinds of options
+> > going forward. This is initially populated with the memory initialization
+> > options from the gcc-plugins.
+> >
+> > Signed-off-by: Kees Cook <keescook@chromium.org>
+>
+> Hello Kees, hello everyone!
+>
+> After applying this series the kernel config looks like that:
+>
+> ...
+> ...
+> CONFIG_LSM="yama,loadpin,safesetid,integrity,selinux,smack,tomoyo,apparmor"
+>
+> #
+> # Kernel hardening options
+> #
+>
+> #
+> # Memory initialization
+> #
+> CONFIG_INIT_STACK_NONE=y
+> # CONFIG_GCC_PLUGIN_STRUCTLEAK_USER is not set
+> # CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF is not set
+> # CONFIG_GCC_PLUGIN_STRUCTLEAK_BYREF_ALL is not set
+> # CONFIG_GCC_PLUGIN_STACKLEAK is not set
+> CONFIG_CRYPTO=y
+>
+> #
+> # Crypto core or helper
+> #
+> CONFIG_CRYPTO_ALGAPI=y
+> ...
+> ...
+>
+> What do you think about some separator between memory initialization options and
+> CONFIG_CRYPTO?
 
-Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
----
+This was true before too:
 
-Problem located with experimental coccinelle script
-
-V2: Russell King <linux@armlinux.org.uk> pointed out that the use of
-    WARN_ON() would result in a stack trace followed by the oops due
-    to dereferencing of the NULL pointer and so make it even less
-    likely that users would uncover the actual cause - so drop the
-    WARN_ON() and use a short pr_err() message that points to the
-    oops cause directly.
-
-Note that this will trigger a checkpatch WARNING
-"WARNING: Possible unnecessary 'out of memory' message"
-but comparing the oops with an without the one-line pr_err I would
-argue that it makes sense to include it:
-<snip>
-[ 8061.514840] shared page allocation failure in hello_init()
-[ 8113.563239] BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
-[ 8113.563250] #PF error: [WRITE]
-[ 8113.563255] PGD 8000000129993067 P4D 8000000129993067 PUD 129992067 PMD 0
-[ 8113.563267] Oops: 0002 [#1] SMP PTI
-[ 8113.563276] CPU: 2 PID: 2656 Comm: bash Tainted: G        W  O      5.0.0-rc3livepatchtest-next-20190123+ #4
-[ 8113.563280] Hardware name: Quanta TWH/TWH, BIOS QU221 10/14/2011
-[ 8113.563292] RIP: 0010:foo_store+0x3a/0x90 [hello_chardev]
 ...
-<snip>
+# CONFIG_DEFAULT_SECURITY_DAC is not set
+CONFIG_LSM="yama,loadpin,safesetid,integrity,selinux,smack,tomoyo,apparmor"
+CONFIG_XOR_BLOCKS=y
+CONFIG_ASYNC_CORE=y
+CONFIG_ASYNC_MEMCPY=y
+CONFIG_ASYNC_XOR=y
+CONFIG_ASYNC_PQ=y
+CONFIG_ASYNC_RAID6_RECOV=y
+CONFIG_CRYPTO=y
+...
 
-Patch was compile-tested: mvebu_v7_defconfig (implies MACH_MVEBU_ANY=y)
-(with some unrelated sparse warnings about missing syscalls)
+Perhaps crypto/Kconfig's comment line could move to the top of the file?
 
-Patch is against 5.1-rc4 (localversion-next is 20190415)
+comment "Crypto core or helper"
 
- arch/arm/mach-mvebu/board-v7.c | 3 +++
- 1 file changed, 3 insertions(+)
+is what generates the separator...
 
-diff --git a/arch/arm/mach-mvebu/board-v7.c b/arch/arm/mach-mvebu/board-v7.c
-index 0b10acd..df84cb6 100644
---- a/arch/arm/mach-mvebu/board-v7.c
-+++ b/arch/arm/mach-mvebu/board-v7.c
-@@ -128,6 +128,9 @@ static void __init i2c_quirk(void)
- 		struct property *new_compat;
- 
- 		new_compat = kzalloc(sizeof(*new_compat), GFP_KERNEL);
-+		if (!new_compat)
-+			pr_err("new_compat allocation failure in %s()\n",
-+				__func__);
- 
- 		new_compat->name = kstrdup("compatible", GFP_KERNEL);
- 		new_compat->length = sizeof("marvell,mv78230-a0-i2c");
 -- 
-2.1.4
-
+Kees Cook
