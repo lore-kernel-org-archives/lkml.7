@@ -2,168 +2,215 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74528C282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:54:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8FFB5C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:54:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4455120872
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:54:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5283D2064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:54:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="XiH4TXKw"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="aA6EkZLZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730015AbfDPQye (ORCPT
+        id S1730105AbfDPQyw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 12:54:34 -0400
-Received: from mail-ot1-f65.google.com ([209.85.210.65]:45860 "EHLO
-        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728000AbfDPQyd (ORCPT
+        Tue, 16 Apr 2019 12:54:52 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:44808 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728478AbfDPQyv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 12:54:33 -0400
-Received: by mail-ot1-f65.google.com with SMTP id e5so3772632otk.12
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:54:33 -0700 (PDT)
+        Tue, 16 Apr 2019 12:54:51 -0400
+Received: by mail-pl1-f195.google.com with SMTP id g12so10600831pll.11
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:54:51 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=intel-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=RmInYsyxg8h8urKtwZH3h+zL0n8LmC+ntY2NSp6Dtek=;
-        b=XiH4TXKweOK5bQggdBSYG9PkGQsUrb38HXopZ3q1Zl7LpL8Vz9Am56vHXzLor2YfKP
-         d14NNntOBV+VeVjSAyF7hbvZnd4oyIfVP1AJMrea5qkoZ8uzRMhlT9UsIHy8OAGMevnY
-         jSG5bngwU/T99ckfh8BuBGBROqMO9DxVs1mUCejwOsI8x65k1rEoGTy54jsdt+Hpw7zs
-         sB/e+fJqf5dOb/NwXIlj2HpsMGHv02xjxrh0Hm839/S3kkAoTI7a6P5EQ2CdGLlSY9pT
-         h0KWnNIOm1/qHRUjHlO2gB0Phh6JAIJf29DfB2+tDk/pgc3Cy1/uYLZbTaGeLhruGElW
-         GSdw==
+        d=chromium.org; s=google;
+        h=mime-version:content-transfer-encoding:in-reply-to:references:cc
+         :from:subject:to:message-id:user-agent:date;
+        bh=CrBcSrCNlpe0AffWCVBAeUmUuQIkMGW6G+qpbcbeEas=;
+        b=aA6EkZLZI/+bJs4umWCbMabjVmqsS0VY+luaUfVxCPRVPznuZ4PN/nlYcyyR4cyRoL
+         BR46ZZrPQC78F+IRtv0mr5CEN2wStJzdWVMByJg+eYzey0VK/tzJxPkARbwwiy0gMw10
+         zQGmhT7/F+mYFkb3lqrTJ4zD68DE1O+tIItzI=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=RmInYsyxg8h8urKtwZH3h+zL0n8LmC+ntY2NSp6Dtek=;
-        b=lHihjLXz62Sgtie/vJ3kMO7KgmOfem0gbBuMJj/r5ATZgXNfM0To+kDBmEe0Pa4mHd
-         7I5Lq3b9x2qMVuwFhVuS3qXjvOSl7BYa/FBhkbLInznE6NHkVSnCoOfCIlm8M+kqnvOC
-         sH8SrV0X5SGVSCBqTv9jn3UnsfuVTaghqN+FvCqthPFLfZPfFNDi6QbdYs1eavCRJTlj
-         naH+9zY0G/ZklBOMHnB6213hmJuY+DVfg79KqRw3o17hNMUhQGWcxTKPDiaY4U09TEP3
-         u97sRmQ/bGOQgroaUr/I9fcGtODSVD4foS5NCuNUQctfD0S8880IeH63b08ISDqs40Xq
-         g2vA==
-X-Gm-Message-State: APjAAAUueh+hrk+SMTCLORT2bkLo5K1hvPMch4tYlhXHXsUxpE7Ivp04
-        9QaMwk+03VNwfyqK/BkprCC6fqFFm6bqJ2tl3FJ/Dg==
-X-Google-Smtp-Source: APXvYqzWeVXyo4E/ADEgG/n8nh9jCa0D7rEf+XyIlDFgyh9V4nSnJF66u+zrGNhC1DjMnV5te459OBss3QYmtr670ew=
-X-Received: by 2002:a9d:5c86:: with SMTP id a6mr49835114oti.118.1555433672859;
- Tue, 16 Apr 2019 09:54:32 -0700 (PDT)
+        h=x-gm-message-state:mime-version:content-transfer-encoding
+         :in-reply-to:references:cc:from:subject:to:message-id:user-agent
+         :date;
+        bh=CrBcSrCNlpe0AffWCVBAeUmUuQIkMGW6G+qpbcbeEas=;
+        b=lOXrDeY4qOAONT4KJ4ykuWu6siRdZcyYvHwLHMrX/RAvrMkyzxGFi8g1XMfBHqi3HG
+         CzOEWdzG5ZevM17rHcvk0VzoCS0pnXb9yLMUHAgGX+JWk4puOMI6U4FfvbToByKTFnAE
+         CPPcfV6N7c4NxtSkTEi0QWLCsEKYOft0hqIOD+7wLvR+AH1eFuVN/k/Rqxc+7Xvclem2
+         6q4aH+N/RFvEia8u7eRkvAzuZOVkfSLHfpg7JrD5OsNYp7iOxGvNv17dxQHP8XvSMJ7e
+         H2kmp+IsWAinX6edft4kcAJXL9aQz0HMD/K5Fv6Foq0k05XxaesBVYeBCNdfwY5mtYCL
+         zkOw==
+X-Gm-Message-State: APjAAAXGFpT6HjPtPYZ1yv4+48rGGS1ANhj0rlNhtT2HJuH0qovXmeAf
+        VD+WHkCh2Ds20rAytObc8QLRYA==
+X-Google-Smtp-Source: APXvYqz/DEX/58MZ4SZ6b3KXkK+z1Adv1m9cQg5qNd4viMoZ4E0Jxx9NEyXRKHl4D8R8vZDjINAZzw==
+X-Received: by 2002:a17:902:362:: with SMTP id 89mr84181666pld.172.1555433690799;
+        Tue, 16 Apr 2019 09:54:50 -0700 (PDT)
+Received: from localhost ([2620:15c:202:1:fa53:7765:582b:82b9])
+        by smtp.gmail.com with ESMTPSA id p9sm21941368pfi.186.2019.04.16.09.54.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 16 Apr 2019 09:54:49 -0700 (PDT)
+Content-Type: text/plain; charset="utf-8"
 MIME-Version: 1.0
-References: <20190411210834.4105-1-jglisse@redhat.com> <20190411210834.4105-11-jglisse@redhat.com>
- <20190415145952.GE13684@quack2.suse.cz> <20190415152433.GB3436@redhat.com> <20190416164658.GB17148@quack2.suse.cz>
-In-Reply-To: <20190416164658.GB17148@quack2.suse.cz>
-From:   Dan Williams <dan.j.williams@intel.com>
-Date:   Tue, 16 Apr 2019 09:54:21 -0700
-Message-ID: <CAPcyv4iKVEty4MHt+fi3Mt5qp526vVOD1Xji=wXep_KLTZ0E8A@mail.gmail.com>
-Subject: Re: [PATCH v1 10/15] block: add gup flag to bio_add_page()/bio_add_pc_page()/__bio_add_page()
-To:     Jan Kara <jack@suse.cz>
-Cc:     Jerome Glisse <jglisse@redhat.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        linux-block@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
-        John Hubbard <jhubbard@nvidia.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Johannes Thumshirn <jthumshirn@suse.de>,
-        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
-        Ming Lei <ming.lei@redhat.com>,
-        Dave Chinner <david@fromorbit.com>,
-        Jason Gunthorpe <jgg@ziepe.ca>,
-        Matthew Wilcox <willy@infradead.org>
-Content-Type: text/plain; charset="UTF-8"
 Content-Transfer-Encoding: quoted-printable
+In-Reply-To: <20190404155838.GD10883@codeaurora.org>
+References: <20190313211844.29416-1-ilina@codeaurora.org> <20190313211844.29416-4-ilina@codeaurora.org> <20190318174236.072f0a95@why.wild-wind.fr.eu.org> <20190404155838.GD10883@codeaurora.org>
+Cc:     evgreen@chromium.org, linux-kernel@vger.kernel.org,
+        rplsssn@codeaurora.org, linux-arm-msm@vger.kernel.org,
+        thierry.reding@gmail.com, bjorn.andersson@linaro.org,
+        dianders@chromium.org, linus.walleij@linaro.org,
+        Rob Herring <robh@kernel.org>
+From:   Stephen Boyd <swboyd@chromium.org>
+Subject: Re: [PATCH v4 03/10] of/irq: document properties for wakeup interrupt parent
+To:     Lina Iyer <ilina@codeaurora.org>,
+        Marc Zyngier <marc.zyngier@arm.com>
+Message-ID: <155543368899.15276.6065665159846837534@swboyd.mtv.corp.google.com>
+User-Agent: alot/0.8
+Date:   Tue, 16 Apr 2019 09:54:48 -0700
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 9:47 AM Jan Kara <jack@suse.cz> wrote:
->
-> On Mon 15-04-19 11:24:33, Jerome Glisse wrote:
-> > On Mon, Apr 15, 2019 at 04:59:52PM +0200, Jan Kara wrote:
-> > > Hi Jerome!
-> > >
-> > > On Thu 11-04-19 17:08:29, jglisse@redhat.com wrote:
-> > > > From: J=C3=A9r=C3=B4me Glisse <jglisse@redhat.com>
-> > > >
-> > > > We want to keep track of how we got a reference on page added to bi=
-o_vec
-> > > > ie wether the page was reference through GUP (get_user_page*) or no=
-t. So
-> > > > add a flag to bio_add_page()/bio_add_pc_page()/__bio_add_page() to =
-that
-> > > > effect.
-> > >
-> > > Thanks for writing this patch set! Looking through patches like this =
-one,
-> > > I'm a bit concerned. With so many bio_add_page() callers it's difficu=
-lt to
-> > > get things right and not regress in the future. I'm wondering whether=
+Quoting Lina Iyer (2019-04-04 08:58:38)
+> On Mon, Mar 18 2019 at 11:54 -0600, Marc Zyngier wrote:
+> >On Wed, 13 Mar 2019 15:18:37 -0600
+> >Lina Iyer <ilina@codeaurora.org> wrote:
+> >
+> >Please do Cc Rob when posting DT related patches.
+> >
+> >> Some interrupt controllers in a SoC, are always powered on and have a
+> >> select interrupts routed to them, so that they can wakeup the SoC from
+> >> suspend. Add wakeup-parent DT property to refer to these interrupt
+> >> controllers.
+> >>
+> >> If the interrupts routed to the wakeup parent are not sequential, than=
+ a
+> >> map needs to exist to associate the same interrupt line on multiple
+> >> interrupt controllers. Providing this map in every driver is cumbersom=
+e.
+> >> Let's add this in the device tree and document the properties to map t=
+he
+> >> interrupt specifiers
+> >>
+> >> Signed-off-by: Lina Iyer <ilina@codeaurora.org>
+> >> ---
+> >> Changes in v4:
+> >>      - Added this documentation
+> >> ---
+> >>  .../interrupt-controller/interrupts.txt       | 39 +++++++++++++++++++
+> >>  1 file changed, 39 insertions(+)
+> >>
+> >> diff --git a/Documentation/devicetree/bindings/interrupt-controller/in=
+terrupts.txt b/Documentation/devicetree/bindings/interrupt-controller/inter=
+rupts.txt
+> >> index 8a3c40829899..917b598317f5 100644
+> >> --- a/Documentation/devicetree/bindings/interrupt-controller/interrupt=
+s.txt
+> >> +++ b/Documentation/devicetree/bindings/interrupt-controller/interrupt=
+s.txt
+> >> @@ -108,3 +108,42 @@ commonly used:
+> >>                      sensitivity =3D <7>;
+> >>              };
+> >>      };
+> >> +
+> >> +3) Interrupt wakeup parent
+> >> +--------------------------
+> >> +
+> >> +Some interrupt controllers in a SoC, are always powered on and have a=
+ select
+> >> +interrupts routed to them, so that they can wakeup the SoC from suspe=
+nd. These
+> >> +interrupt controllers do not fall into the category of a parent inter=
+rupt
+> >> +controller and can be specified by the "wakeup-parent" property and c=
+ontain a
+> >> +single phandle referring to the wakeup capable interrupt controller.
+> >> +
+> >> +   Example:
+> >> +    wakeup-parent =3D <&pdc_intc>;
+> >> +
+> >> +
+> >> +4) Interrupt mapping
+> >> +--------------------
+> >> +
+> >> +Sometimes interrupts may be detected by more than one interrupt contr=
+oller
+> >> +(depending on which controller is active). The interrupt controllers =
+may not
+> >> +be in hierarchy and therefore the interrupt controller driver is requ=
+ired to
+> >> +establish the relationship between the same interrupt at different in=
+terrupt
+> >> +controllers. If these interrupts are not sequential then a map needs =
+to be
+> >> +specified to help identify these interrupts.
+> >> +
+> >> +Mapping the interrupt specifiers in the device tree can be done using=
  the
-> > > things won't be less error-prone if we required that all page referen=
-ce
-> > > from bio are gup-like (not necessarily taken by GUP, if creator of th=
-e bio
-> > > gets to struct page he needs via some other means (e.g. page cache lo=
-okup),
-> > > he could just use get_gup_pin() helper we'd provide).  After all, a p=
-age
-> > > reference in bio means that the page is pinned for the duration of IO=
- and
-> > > can be DMAed to/from so it even makes some sense to track the referen=
-ce
-> > > like that. Then bio_put() would just unconditionally do put_user_page=
-() and
-> > > we won't have to propagate the information in the bio.
-> > >
-> > > Do you think this would be workable and easier?
+> >> +"irqdomain-map" property. The property contains interrupt specifier a=
+t the
+> >> +current interrupt controller followed by the interrupt specifier at t=
+he mapped
+> >> +interrupt controller.
+> >> +
+> >> +   irqdomain-map =3D <incoming-interrupt-specifier mapped-interrupt-s=
+pecifier>
+> >> +
+> >> +The optional properties "irqdomain-map-mask" and "irqdomain-map-pass-=
+thru" may
+> >> +be provided to help interpret the valid bits of the incoming and mapp=
+ed
+> >> +interrupt specifiers respectively.
+> >> +
+> >> +   Example:
+> >> +    irqdomain-map =3D <22 0 &intc 36 0>, <24 0 &intc 37 0>;
+> >> +    irqdomain-map-mask =3D <0xff 0>;
+> >> +    irqdomain-map-pass-thru =3D <0 0xff>;
 > >
-> > It might be workable but i am not sure it is any simpler. bio_add_page*=
-()
-> > does not take page reference it is up to the caller to take the proper
-> > page reference so the complexity would be push there (just in a differe=
-nt
-> > place) so i don't think it would be any simpler. This means that we wou=
-ld
-> > have to update more code than this patchset does.
->
-> I agree that the amount of work in this patch set is about the same
-> (although you don't have to pass the information about reference type in
-> the biovec so you save the complexities there). But for the future the
-> rule that "bio references must be gup-pins" is IMO easier to grasp for
-> developers and you can reasonably assert it in bio_add_page().
->
-> > This present patch is just a coccinelle semantic patch and even if it
-> > is scary to see that many call site, they are not that many that need
-> > to worry about the GUP parameter and they all are in patch 11, 12, 13
-> > and 14.
 > >
-> > So i believe this patchset is simpler than converting everyone to take
-> > a GUP like page reference. Also doing so means we loose the information
-> > about GUP kind of defeat the purpose. So i believe it would be better
-> > to limit special reference to GUP only pages.
->
-> So what's the difference whether the page reference has been acquired via
-> GUP or via some other means? I don't think that really matters. If say
-> infiniband introduced new ioctl() that takes file descriptor, offset, and
-> length and just takes pages from page cache and attaches them to their RD=
-MA
-> scatter-gather lists, then they'd need to use 'pin' references anyway...
->
-> Then why do we work on differentiating between GUP pins and other page
-> references?  Because it matters what the reference is going to be used fo=
-r
-> and what is it's lifetime. And generally GUP references are used to do IO
-> to/from page and may even be controlled by userspace so that's why we nee=
-d
-> to make them different. But in principle the 'gup-pin' reference is not a=
-bout
-> the fact that the reference has been obtained from GUP but about the fact
-> that it is used to do IO. Hence I think that the rule "bio references mus=
-t
-> be gup-pins" makes some sense.
+> >This doesn't quite explain how the mask and pass-thru properties are
+> >used. I guess that the mask is used to define the 'useful bits' on the
+> >incoming side, but pass-thru puzzles me. In your example, does it mean
+> >that incoming lines map to outgoing interrupt <0 0>?
+> >
+> Sorry about the late reply.
+>=20
+> How about this to go with the rest of the documentation -
+>=20
+> In the above example, the input interrupt specifier map-mask <0xff 0> app=
+lied
+> on the incoming interrupt specifier of the map <22 0>, <24 0>, returns the
+> input interrupt 22, 24 etc. The second argument being irq type is immater=
+ial
+> from the map and is used from the incoming request instead. The pass-thru
+> specifier parses the output interrupt specifier from the rest of the unpa=
+rsed
+> argments from the map <&intc 36 0>, <&intc 37 0> etc to return the output
+> interrupt 36, 37 etc.
+>=20
+>=20
 
-+1 to this idea. I don't see the need to preserve the concept that
-some biovecs carry non-GUP pages.
+I see two things going on here. Do both need to happen?
+
+	#1: Specifying wakeup parent phandle
+	#2: Mapping GPIO interrupts to a parent irqdomain
+
+Do we need the method of specifying the wakeup parent if with a dt
+property if we have a way to map irqdomains from one to another? I think
+I may have already said on the list that we must have #1 but now I'm not
+so sure. It looks like we could get away with just looking into the
+irqdomain-map and then pick out the wakeup parent that way.
+
+The way the bindings are written shows one way to map interrupts between
+domains but I don't know if it lets us differentiate which irqs go from
+which domain to what other domain. It seems that we assume we're looking
+at only the GPIO to wakeup parent irqdomain mapping from the
+irqdomain-map property in this series. If we had a way to do this with
+the irqdomain map then we could avoid needing a special 'wakeup-parent'
+property.
+
