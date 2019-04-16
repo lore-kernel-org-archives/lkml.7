@@ -2,94 +2,96 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8407DC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:32:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 29DB2C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:34:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 629E020651
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:32:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EE15E20652
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:34:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729329AbfDPJb7 (ORCPT
+        id S1728797AbfDPJeN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 05:31:59 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:12402 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728847AbfDPJaX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 05:30:23 -0400
-X-UUID: 3a2d468727024d2e90db8c501d634b6e-20190416
-X-UUID: 3a2d468727024d2e90db8c501d634b6e-20190416
-Received: from mtkcas07.mediatek.inc [(172.21.101.84)] by mailgw01.mediatek.com
-        (envelope-from <stu.hsieh@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1010656295; Tue, 16 Apr 2019 17:30:18 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 16 Apr 2019 17:30:17 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 16 Apr 2019 17:30:17 +0800
-From:   Stu Hsieh <stu.hsieh@mediatek.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, CK Hu <ck.hu@mediatek.com>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Stu Hsieh <stu.hsieh@mediatek.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <srv_heupstream@mediatek.com>
-Subject: [PATCH v2 00/15] Add mediatek mipicsi driver for Mediatek SOC MT2712
-Date:   Tue, 16 Apr 2019 17:30:00 +0800
-Message-ID: <1555407015-18130-1-git-send-email-stu.hsieh@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+        Tue, 16 Apr 2019 05:34:13 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41622 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726739AbfDPJeN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 05:34:13 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C893BAE12;
+        Tue, 16 Apr 2019 09:34:11 +0000 (UTC)
+From:   Thomas Bogendoerfer <tbogendoerfer@suse.de>
+To:     Joshua Kinard <kumba@gentoo.org>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        linux-rtc@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 1/2] rtc: ds1685: remove dead code
+Date:   Tue, 16 Apr 2019 11:34:03 +0200
+Message-Id: <20190416093404.6785-1-tbogendoerfer@suse.de>
+X-Mailer: git-send-email 2.13.7
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add mediatek mipicsi driver for Mediatek SOC MT2712
+ds1685_rtc_begin_ctrl_access/ds1685_rtc_end_ctrl_access aren't used,
+so get rid of it.
 
-Change in v2:
-- Add the dt-binding document for mediatek mipicsi driver
-- Modify the logic about "is_support" function in patch
-  "[media] mtk-mipicsi: add color format support for mt2712"
+Signed-off-by: Thomas Bogendoerfer <tbogendoerfer@suse.de>
+---
+ drivers/rtc/rtc-ds1685.c | 36 ------------------------------------
+ 1 file changed, 36 deletions(-)
 
-Stu Hsieh (15):
-  dt-bindings: media: Add binding for MT2712 MIPI-CSI2
-  [media] mtk-mipicsi: add mediatek mipicsi driver for mt2712
-  [media] mtk-mipicsi: add pm function
-  [media] mtk-mipicsi: add color format support for mt2712
-  [media] mtk-mipicsi: get the w/h/bytepwerline for mtk_mipicsi
-  [media] mtk-mipicsi: add function to support SerDes for link number
-  [media] mtk-mipicsi: add mipicsi reg setting for mt2712
-  [media] mtk-mipicsi: enable/disable ana clk
-  [media] mtk-mipicsi: enable/disable cmos for mt2712
-  [media] mtk-mipicsi: add ISR for writing the data to buffer
-  [media] mtk-mipicsi: set the output address in HW reg
-  [media] mtk-mipicsi: add function to get the format
-  [media] mtk-mipicsi: add the function for Get/Set PARM for application
-  [media] mtk-mipicsi: add debug message for mipicsi driver
-  [media] mtk-mipicsi: add debugfs for mipicsi driver
-
- .../bindings/media/mediatek-mipicsi-camsv.txt |   53 +
- .../media/mediatek-mipicsi-common.txt         |   19 +
- .../bindings/media/mediatek-mipicsi.txt       |   54 +
- drivers/media/platform/mtk-mipicsi/Makefile   |    4 +
- .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 1686 +++++++++++++++++
- 5 files changed, 1816 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/media/mediatek-mipicsi-camsv.txt
- create mode 100644 Documentation/devicetree/bindings/media/mediatek-mipicsi-common.txt
- create mode 100644 Documentation/devicetree/bindings/media/mediatek-mipicsi.txt
- create mode 100644 drivers/media/platform/mtk-mipicsi/Makefile
- create mode 100644 drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-
+diff --git a/drivers/rtc/rtc-ds1685.c b/drivers/rtc/rtc-ds1685.c
+index 2f5194df239e..33781be58f16 100644
+--- a/drivers/rtc/rtc-ds1685.c
++++ b/drivers/rtc/rtc-ds1685.c
+@@ -192,42 +192,6 @@ ds1685_rtc_end_data_access(struct ds1685_priv *rtc)
+ }
+ 
+ /**
+- * ds1685_rtc_begin_ctrl_access - prepare the rtc for ctrl access.
+- * @rtc: pointer to the ds1685 rtc structure.
+- * @flags: irq flags variable for spin_lock_irqsave.
+- *
+- * This takes several steps to prepare the rtc for access to read just the
+- * control registers:
+- *  - Sets a spinlock on the rtc IRQ.
+- *  - Switches the rtc to bank 1.  This allows access to the two extended
+- *    control registers.
+- *
+- * Only use this where you are certain another lock will not be held.
+- */
+-static inline void
+-ds1685_rtc_begin_ctrl_access(struct ds1685_priv *rtc, unsigned long *flags)
+-{
+-	spin_lock_irqsave(&rtc->lock, *flags);
+-	ds1685_rtc_switch_to_bank1(rtc);
+-}
+-
+-/**
+- * ds1685_rtc_end_ctrl_access - end ctrl access on the rtc.
+- * @rtc: pointer to the ds1685 rtc structure.
+- * @flags: irq flags variable for spin_unlock_irqrestore.
+- *
+- * This ends what was started by ds1685_rtc_begin_ctrl_access:
+- *  - Switches the rtc back to bank 0.
+- *  - Unsets the spinlock on the rtc IRQ.
+- */
+-static inline void
+-ds1685_rtc_end_ctrl_access(struct ds1685_priv *rtc, unsigned long flags)
+-{
+-	ds1685_rtc_switch_to_bank0(rtc);
+-	spin_unlock_irqrestore(&rtc->lock, flags);
+-}
+-
+-/**
+  * ds1685_rtc_get_ssn - retrieve the silicon serial number.
+  * @rtc: pointer to the ds1685 rtc structure.
+  * @ssn: u8 array to hold the bits of the silicon serial number.
 -- 
-2.18.0
+2.13.7
 
