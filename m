@@ -2,184 +2,174 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 69515C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:41:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE61C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:44:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 390FA2073F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:41:07 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555396867;
-	bh=H0o5dNCLlp84SoA0n7A6haX/AtSXzPGS44dR0gQukGI=;
-	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=2ptlvhwp28Fpi3kM+Yf0efgBdONphLl8gcjS0kemLbqLCLpUOTVq9UwPmrDCK3HT7
-	 TlsFkpWW2LllO7rpldxg/vDMkmIOBvB6avg2yipuQGTpov2NyJqAhvSEwKc/2jQtZs
-	 rxbyrdWp+HtkIjQ4r7B1XNSIs0M9HoZHoRsCQIl0=
+	by mail.kernel.org (Postfix) with ESMTP id 4C9C220868
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:44:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728601AbfDPGlF (ORCPT
+        id S1728132AbfDPGoe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 02:41:05 -0400
-Received: from mirror2.csie.ntu.edu.tw ([140.112.30.76]:34020 "EHLO
-        wens.csie.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728412AbfDPGkb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 02:40:31 -0400
-Received: by wens.csie.org (Postfix, from userid 1000)
-        id A4108602AD; Tue, 16 Apr 2019 14:40:25 +0800 (CST)
-From:   Chen-Yu Tsai <wens@kernel.org>
-To:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sebastian Reichel <sre@kernel.org>
-Cc:     Quentin Schulz <quentin.schulz@bootlin.com>,
-        linux-pm@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-sunxi@googlegroups.com, Hans de Goede <hdegoede@redhat.com>,
-        Chen-Yu Tsai <wens@csie.org>
-Subject: [PATCH v4 5/7] power: supply: axp20x_usb_power: add support for AXP813
-Date:   Tue, 16 Apr 2019 14:40:22 +0800
-Message-Id: <20190416064024.20414-6-wens@kernel.org>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190416064024.20414-1-wens@kernel.org>
-References: <20190416064024.20414-1-wens@kernel.org>
+        Tue, 16 Apr 2019 02:44:34 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:40152 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726962AbfDPGod (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 02:44:33 -0400
+Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 1230D86BB2946F49AA71;
+        Tue, 16 Apr 2019 14:44:31 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS409-HUB.china.huawei.com
+ (10.3.19.209) with Microsoft SMTP Server id 14.3.408.0; Tue, 16 Apr 2019
+ 14:44:24 +0800
+From:   Yue Haibing <yuehaibing@huawei.com>
+To:     <hch@lst.de>, <jlbec@evilplan.org>, <daniel.baluta@intel.com>
+CC:     <linux-kernel@vger.kernel.org>, <mchristi@redhat.com>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] configfs: Fix possible use-after-free in configfs_register_group
+Date:   Tue, 16 Apr 2019 14:44:08 +0800
+Message-ID: <20190416064408.34512-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Quentin Schulz <quentin.schulz@bootlin.com>
+From: YueHaibing <yuehaibing@huawei.com>
 
-This adds support for AXP813 PMIC. It is almost the same as AXP22X but
-has a different current limit.
+Syzkaller report this:
 
-Signed-off-by: Quentin Schulz <quentin.schulz@bootlin.com>
-Signed-off-by: Chen-Yu Tsai <wens@csie.org>
+BUG: KASAN: use-after-free in __list_add_valid+0xd4/0xe0 lib/list_debug.c:26
+Read of size 8 at addr ffff8881ef61ae20 by task syz-executor.0/5996
+
+CPU: 1 PID: 5996 Comm: syz-executor.0 Tainted: G         C        5.0.0+ #5
+Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
+Call Trace:
+ __dump_stack lib/dump_stack.c:77 [inline]
+ dump_stack+0xa9/0x10e lib/dump_stack.c:113
+ print_address_description+0x65/0x270 mm/kasan/report.c:187
+ kasan_report+0x149/0x18d mm/kasan/report.c:317
+ __list_add_valid+0xd4/0xe0 lib/list_debug.c:26
+ __list_add include/linux/list.h:60 [inline]
+ list_add_tail include/linux/list.h:93 [inline]
+ link_obj+0xb0/0x190 fs/configfs/dir.c:759
+ link_group+0x1c/0x130 fs/configfs/dir.c:784
+ configfs_register_group+0x56/0x1e0 fs/configfs/dir.c:1751
+ configfs_register_default_group+0x72/0xc0 fs/configfs/dir.c:1834
+ ? 0xffffffffc1be0000
+ iio_sw_trigger_init+0x23/0x1000 [industrialio_sw_trigger]
+ do_one_initcall+0xbc/0x47d init/main.c:887
+ do_init_module+0x1b5/0x547 kernel/module.c:3456
+ load_module+0x6405/0x8c10 kernel/module.c:3804
+ __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
+ do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+RIP: 0033:0x462e99
+Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
+RSP: 002b:00007f494ecbcc58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
+RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
+RDX: 0000000000000000 RSI: 0000000020000180 RDI: 0000000000000003
+RBP: 00007f494ecbcc70 R08: 0000000000000000 R09: 0000000000000000
+R10: 0000000000000000 R11: 0000000000000246 R12: 00007f494ecbd6bc
+R13: 00000000004bcefa R14: 00000000006f6fb0 R15: 0000000000000004
+
+Allocated by task 5987:
+ set_track mm/kasan/common.c:87 [inline]
+ __kasan_kmalloc.constprop.3+0xa0/0xd0 mm/kasan/common.c:497
+ kmalloc include/linux/slab.h:545 [inline]
+ kzalloc include/linux/slab.h:740 [inline]
+ configfs_register_default_group+0x4c/0xc0 fs/configfs/dir.c:1829
+ 0xffffffffc1bd0023
+ do_one_initcall+0xbc/0x47d init/main.c:887
+ do_init_module+0x1b5/0x547 kernel/module.c:3456
+ load_module+0x6405/0x8c10 kernel/module.c:3804
+ __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
+ do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+Freed by task 5987:
+ set_track mm/kasan/common.c:87 [inline]
+ __kasan_slab_free+0x130/0x180 mm/kasan/common.c:459
+ slab_free_hook mm/slub.c:1429 [inline]
+ slab_free_freelist_hook mm/slub.c:1456 [inline]
+ slab_free mm/slub.c:3003 [inline]
+ kfree+0xe1/0x270 mm/slub.c:3955
+ configfs_register_default_group+0x9a/0xc0 fs/configfs/dir.c:1836
+ 0xffffffffc1bd0023
+ do_one_initcall+0xbc/0x47d init/main.c:887
+ do_init_module+0x1b5/0x547 kernel/module.c:3456
+ load_module+0x6405/0x8c10 kernel/module.c:3804
+ __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
+ do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
+ entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+The buggy address belongs to the object at ffff8881ef61ae00
+ which belongs to the cache kmalloc-192 of size 192
+The buggy address is located 32 bytes inside of
+ 192-byte region [ffff8881ef61ae00, ffff8881ef61aec0)
+The buggy address belongs to the page:
+page:ffffea0007bd8680 count:1 mapcount:0 mapping:ffff8881f6c03000 index:0xffff8881ef61a700
+flags: 0x2fffc0000000200(slab)
+raw: 02fffc0000000200 ffffea0007ca4740 0000000500000005 ffff8881f6c03000
+raw: ffff8881ef61a700 000000008010000c 00000001ffffffff 0000000000000000
+page dumped because: kasan: bad access detected
+
+Memory state around the buggy address:
+ ffff8881ef61ad00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+ ffff8881ef61ad80: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
+>ffff8881ef61ae00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+                               ^
+ ffff8881ef61ae80: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
+ ffff8881ef61af00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
+
+In configfs_register_group(), if create_default_group() failed, we
+forgot to unlink group. It will left a invalid item in parent list,
+which may trigger a use-after-free issue.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Fixes: 5cf6a51e6062 ("configfs: allow dynamic group creation")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/power/supply/axp20x_usb_power.c | 66 ++++++++++++++++++++++++-
- 1 file changed, 65 insertions(+), 1 deletion(-)
+ fs/configfs/dir.c | 17 ++++++++++++-----
+ 1 file changed, 12 insertions(+), 5 deletions(-)
 
-diff --git a/drivers/power/supply/axp20x_usb_power.c b/drivers/power/supply/axp20x_usb_power.c
-index 04c2cafbe8e6..d2b1255ee1cc 100644
---- a/drivers/power/supply/axp20x_usb_power.c
-+++ b/drivers/power/supply/axp20x_usb_power.c
-@@ -42,6 +42,11 @@
- #define AXP20X_VBUS_CLIMIT_100mA	2
- #define AXP20X_VBUS_CLIMIT_NONE		3
+diff --git a/fs/configfs/dir.c b/fs/configfs/dir.c
+index 591e82b..5e7932d 100644
+--- a/fs/configfs/dir.c
++++ b/fs/configfs/dir.c
+@@ -1757,12 +1757,19 @@ int configfs_register_group(struct config_group *parent_group,
  
-+#define AXP813_VBUS_CLIMIT_900mA	0
-+#define AXP813_VBUS_CLIMIT_1500mA	1
-+#define AXP813_VBUS_CLIMIT_2000mA	2
-+#define AXP813_VBUS_CLIMIT_2500mA	3
-+
- #define AXP20X_ADC_EN1_VBUS_CURR	BIT(2)
- #define AXP20X_ADC_EN1_VBUS_VOLT	BIT(3)
- 
-@@ -131,6 +136,31 @@ static int axp20x_get_current_max(struct axp20x_usb_power *power, int *val)
- 	return 0;
- }
- 
-+static int axp813_get_current_max(struct axp20x_usb_power *power, int *val)
-+{
-+	unsigned int v;
-+	int ret = regmap_read(power->regmap, AXP20X_VBUS_IPSOUT_MGMT, &v);
-+
+ 	inode_lock_nested(d_inode(parent), I_MUTEX_PARENT);
+ 	ret = create_default_group(parent_group, group);
+-	if (!ret) {
+-		spin_lock(&configfs_dirent_lock);
+-		configfs_dir_set_ready(group->cg_item.ci_dentry->d_fsdata);
+-		spin_unlock(&configfs_dirent_lock);
+-	}
 +	if (ret)
-+		return ret;
++		goto err_out;
 +
-+	switch (v & AXP20X_VBUS_CLIMIT_MASK) {
-+	case AXP813_VBUS_CLIMIT_900mA:
-+		*val = 900000;
-+		break;
-+	case AXP813_VBUS_CLIMIT_1500mA:
-+		*val = 1500000;
-+		break;
-+	case AXP813_VBUS_CLIMIT_2000mA:
-+		*val = 2000000;
-+		break;
-+	case AXP813_VBUS_CLIMIT_2500mA:
-+		*val = 2500000;
-+		break;
-+	}
++	spin_lock(&configfs_dirent_lock);
++	configfs_dir_set_ready(group->cg_item.ci_dentry->d_fsdata);
++	spin_unlock(&configfs_dirent_lock);
++	inode_unlock(d_inode(parent));
 +	return 0;
-+}
-+
- static int axp20x_usb_power_get_property(struct power_supply *psy,
- 	enum power_supply_property psp, union power_supply_propval *val)
- {
-@@ -169,6 +199,8 @@ static int axp20x_usb_power_get_property(struct power_supply *psy,
- 		val->intval = ret * 1700; /* 1 step = 1.7 mV */
- 		return 0;
- 	case POWER_SUPPLY_PROP_CURRENT_MAX:
-+		if (power->axp20x_id == AXP813_ID)
-+			return axp813_get_current_max(power, &val->intval);
- 		return axp20x_get_current_max(power, &val->intval);
- 	case POWER_SUPPLY_PROP_CURRENT_NOW:
- 		if (IS_ENABLED(CONFIG_AXP20X_ADC)) {
-@@ -260,6 +292,31 @@ static int axp20x_usb_power_set_voltage_min(struct axp20x_usb_power *power,
- 	return -EINVAL;
++err_out:
+ 	inode_unlock(d_inode(parent));
++	mutex_lock(&subsys->su_mutex);
++	unlink_group(group);
++	mutex_unlock(&subsys->su_mutex);
+ 	return ret;
  }
- 
-+static int axp813_usb_power_set_current_max(struct axp20x_usb_power *power,
-+					    int intval)
-+{
-+	int val;
-+
-+	switch (intval) {
-+	case 900000:
-+		return regmap_update_bits(power->regmap,
-+					  AXP20X_VBUS_IPSOUT_MGMT,
-+					  AXP20X_VBUS_CLIMIT_MASK,
-+					  AXP813_VBUS_CLIMIT_900mA);
-+	case 1500000:
-+	case 2000000:
-+	case 2500000:
-+		val = (intval - 1000000) / 500000;
-+		return regmap_update_bits(power->regmap,
-+					  AXP20X_VBUS_IPSOUT_MGMT,
-+					  AXP20X_VBUS_CLIMIT_MASK, val);
-+	default:
-+		return -EINVAL;
-+	}
-+
-+	return -EINVAL;
-+}
-+
- static int axp20x_usb_power_set_current_max(struct axp20x_usb_power *power,
- 					    int intval)
- {
-@@ -294,6 +351,9 @@ static int axp20x_usb_power_set_property(struct power_supply *psy,
- 		return axp20x_usb_power_set_voltage_min(power, val->intval);
- 
- 	case POWER_SUPPLY_PROP_CURRENT_MAX:
-+		if (power->axp20x_id == AXP813_ID)
-+			return axp813_usb_power_set_current_max(power,
-+								val->intval);
- 		return axp20x_usb_power_set_current_max(power, val->intval);
- 
- 	default:
-@@ -429,7 +489,8 @@ static int axp20x_usb_power_probe(struct platform_device *pdev)
- 		usb_power_desc = &axp20x_usb_power_desc;
- 		irq_names = axp20x_irq_names;
- 	} else if (power->axp20x_id == AXP221_ID ||
--		   power->axp20x_id == AXP223_ID) {
-+		   power->axp20x_id == AXP223_ID ||
-+		   power->axp20x_id == AXP813_ID) {
- 		usb_power_desc = &axp22x_usb_power_desc;
- 		irq_names = axp22x_irq_names;
- 	} else {
-@@ -488,6 +549,9 @@ static const struct of_device_id axp20x_usb_power_match[] = {
- 	}, {
- 		.compatible = "x-powers,axp223-usb-power-supply",
- 		.data = (void *)AXP223_ID,
-+	}, {
-+		.compatible = "x-powers,axp813-usb-power-supply",
-+		.data = (void *)AXP813_ID,
- 	}, { /* sentinel */ }
- };
- MODULE_DEVICE_TABLE(of, axp20x_usb_power_match);
+ EXPORT_SYMBOL(configfs_register_group);
 -- 
-2.20.1
+2.7.0
+
 
