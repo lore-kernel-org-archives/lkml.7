@@ -1,160 +1,70 @@
-Return-Path: <SRS0=rNeM=SR=vger.kernel.org=linux-kernel-owner@kernel.org>
+Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B33C4C10F0E
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 23:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D19C5C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 00:00:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 703D820848
-	for <linux-kernel@archiver.kernel.org>; Mon, 15 Apr 2019 23:59:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C7AB20854
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 00:00:07 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555372748;
-	bh=3+UbA1yAN3lsUeVKtHwfxlSU4L80rFsOslnpcjJt750=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=i8UynewunrG0NHTNPXj6IiS2pNfZqvv9Fo5XMIKM6sgK12wuBRJ2728NwZHfJRRoS
-	 nQcmSMyinORaFmkvb6LOaQndmrUtFLcAR3DlINoef8KzJxtpTT1b7vg6Dlu/q8DzhM
-	 HInx2EaX8jIcUD2EPiBkCw+YAHFprbUx3NuKvn/M=
+	s=default; t=1555372807;
+	bh=Ozz8BwKx4WM309cMku7xgEsukSfu4KXclYkMelFGBWE=;
+	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
+	b=TGL7GD4Z660uN12sjAPlv1/erQx+uZSq227wXMFfb4N8GzF9Qm39Iba+Ojp07sTQb
+	 YOigr/eoc7ibnU8TL5y/wM/rmRl1tTuPlCON1amp4VHNxCtm4iXm9SsLF8DCaP1NWL
+	 X2QFK7WBWp5sa4HmH4uWNFwvZi47ua1zJst+e+oQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728228AbfDOX7H (ORCPT
+        id S1728255AbfDPAAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 19:59:07 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56394 "EHLO mail.kernel.org"
+        Mon, 15 Apr 2019 20:00:06 -0400
+Received: from mail.kernel.org ([198.145.29.99]:56800 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726527AbfDOX7H (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 19:59:07 -0400
-Received: from mail-wm1-f53.google.com (mail-wm1-f53.google.com [209.85.128.53])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id A694E20854
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 23:59:05 +0000 (UTC)
+        id S1726118AbfDPAAF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 20:00:05 -0400
+Subject: Re: [GIT PULL] libnvdimm fixes for 5.1-rc6
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555372745;
-        bh=3+UbA1yAN3lsUeVKtHwfxlSU4L80rFsOslnpcjJt750=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=2l746GZFvPPC+7vZffZmakn3bmugVqUgWPhNilSMeGWIU6W3bINYR4L4o1Gki/4jF
-         +YXOpaUcrCu0dJl++3bVaEZEAq77cpFmEwhBM7jkhLAOVynQG0ZeDqUolcf3emlLFM
-         aEfmTuqEFyIo6zCLCmsdcYbNzoEwLpHJEqxS/PJQ=
-Received: by mail-wm1-f53.google.com with SMTP id q16so22813655wmj.3
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 16:59:05 -0700 (PDT)
-X-Gm-Message-State: APjAAAXTh0jX7A6YZsKBrjLYgbTm3UNy6PqiM4J3VBfazeTKyD/3llsK
-        tCQGj865uC8pGMryQXHvo9aCCNSYZnD62eMCD5i09Q==
-X-Google-Smtp-Source: APXvYqwScTPHlbRl5Ea3KnNhOpkryIK7T2poiqXouSy+lNWI+ykp+HLMjgkz/fNbgKh+kloztOoIjygR2L4r+dRL3rs=
-X-Received: by 2002:a1c:4e19:: with SMTP id g25mr25211794wmh.9.1555372744163;
- Mon, 15 Apr 2019 16:59:04 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190414201436.19502-1-christian@brauner.io> <dc05ffe3-c2ff-8b3e-d181-e0cc620bf91d@metux.net>
- <20190415195911.z7b7miwsj67ha54y@yavin> <CALCETrWxMnaPvwicqkMLswMynWvJVteazD-bFv3ZnBKWp-1joQ@mail.gmail.com>
- <CAGLj2rEOfW=3wis3YWomWK1AVDdCX6DMqbvSHXba3-x=kpkcNA@mail.gmail.com>
-In-Reply-To: <CAGLj2rEOfW=3wis3YWomWK1AVDdCX6DMqbvSHXba3-x=kpkcNA@mail.gmail.com>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Mon, 15 Apr 2019 16:58:52 -0700
-X-Gmail-Original-Message-ID: <CALCETrV42Ot+pGjeGO23WozwiEFpdaLZibSA10GXNy+Fbi-dNg@mail.gmail.com>
-Message-ID: <CALCETrV42Ot+pGjeGO23WozwiEFpdaLZibSA10GXNy+Fbi-dNg@mail.gmail.com>
-Subject: Re: RFC: on adding new CLONE_* flags [WAS Re: [PATCH 0/4] clone: add CLONE_PIDFD]
-To:     Jonathan Kowalski <bl0pbl33p@gmail.com>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        "Enrico Weigelt, metux IT consult" <lkml@metux.net>,
-        Christian Brauner <christian@brauner.io>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jann Horn <jannh@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Daniel Colascione <dancol@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        s=default; t=1555372805;
+        bh=Ozz8BwKx4WM309cMku7xgEsukSfu4KXclYkMelFGBWE=;
+        h=From:In-Reply-To:References:Date:To:Cc:From;
+        b=2kMnX27qJ6AueKTVTHQvgJWE/x0eMkIdur/K+I5beq7m+rjycUZgjqrRibePolOdD
+         zVInNsvDb6iXpFZeUwi1AOoqzUg6scm2sAru12u5f5H4bBQyK5TEiZM8MzT/8QqEeF
+         If1iUU8eEe2PvpOJyLu/oxkSpDrHKite4adWW8yM=
+From:   pr-tracker-bot@kernel.org
+In-Reply-To: <CAPcyv4gqXL4H8p-PB1196zx0Gm3+hCZcMUF5330eAGK6SWXoOw@mail.gmail.com>
+References: <CAPcyv4gqXL4H8p-PB1196zx0Gm3+hCZcMUF5330eAGK6SWXoOw@mail.gmail.com>
+X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
+X-PR-Tracked-Message-Id: <CAPcyv4gqXL4H8p-PB1196zx0Gm3+hCZcMUF5330eAGK6SWXoOw@mail.gmail.com>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm
+ tags/libnvdimm-fixes-5.1-rc6
+X-PR-Tracked-Commit-Id: 2170a0d53bee1a6c1a4ebd042f99d85aafc6c0ea
+X-PR-Merge-Tree: torvalds/linux.git
+X-PR-Merge-Refname: refs/heads/master
+X-PR-Merge-Commit-Id: 618d919cae2fcaadc752f27ddac8b939da8b441a
+Message-Id: <155537280525.2498.17068946114229367658.pr-tracker-bot@kernel.org>
+Date:   Tue, 16 Apr 2019 00:00:05 +0000
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 2:26 PM Jonathan Kowalski <bl0pbl33p@gmail.com> wrote:
->
-> On Mon, Apr 15, 2019 at 9:34 PM Andy Lutomirski <luto@kernel.org> wrote:
-> > I would personally *love* it if distros started setting no_new_privs
-> > for basically all processes.  And pidfd actually gets us part of the
-> > way toward a straightforward way to make sudo and su still work in a
-> > no_new_privs world: su could call into a daemon that would spawn the
-> > privileged task, and su would get a (read-only!) pidfd back and then
-> > wait for the fd and exit.  I suppose that, done naively, this might
-> > cause some odd effects with respect to tty handling, but I bet it's
-> > solveable.  I suppose it would be nifty if there were a way for a
->
-> Hmm, isn't what you're describing roughly what systemd-run -t does? It
-> will serialize the argument list, ask PID 1 to create a transient unit
-> (go through the polkit stuff), and then set the stdout/stderr and
-> stdin of the service to your tty, make it the controlling terminal of
-> the process and
-> reset it. So I guess it should work with sudo/su just fine too.
->
-> There is also s6-sudod (and a s6-sudoc client to it) that works in a
-> similar fashion, though it's a lot less fancy.
+The pull request you sent on Mon, 15 Apr 2019 16:30:02 -0700:
 
-Cute.  Now we just distros to work out the kinks and to ship these as
-sudo and su :)
+> git://git.kernel.org/pub/scm/linux/kernel/git/nvdimm/nvdimm tags/libnvdimm-fixes-5.1-rc6
 
->
-> > process, by mutual agreement, to reparent itself to an unrelated
-> > process.
-> >
-> > Anyway, clone(2) is an enormous mess.  Surely the right solution here
-> > is to have a whole new process creation API that takes a big,
-> > extensible struct as an argument, and supports *at least* the full
-> > abilities of posix_spawn() and ideally covers all the use cases for
-> > fork() + do stuff + exec().  It would be nifty if this API also had a
-> > way to say "add no_new_privs and therefore enable extra functionality
-> > that doesn't work without no_new_privs".  This functionality would
-> > include things like returning a future extra-privileged pidfd that
-> > gives ptrace-like access.
->
-> My idea was that this intent could be supplied at clone time, you
-> could attach ptrace access modes to a pidfd (we could make those a bit
-> granular, perhaps) and any API that takes PIDs and checks against the
-> caller's ptrace access mode could instead derive so from the pidfd.
-> Since killing is a bit convoluted due to setuid binaries, that should
-> work if one is CAP_KILL capable in the owning userns of the task, and
-> if not that, has permissions to kill and the target has NNP set.
+has been merged into torvalds/linux.git:
+https://git.kernel.org/torvalds/c/618d919cae2fcaadc752f27ddac8b939da8b441a
 
-This CAP_KILL trick makes me nervous.  This particular permission is
-really quite powerful, and it would need some analysis to conclude
-that it's not *more* powerful than CAP_KILL.
+Thank you!
 
-> This
-> would allow you to bind kill privileges in a way that is compatible
-> with both worlds, the upshot being NNP allows for the functionality to
-> be available to a lot more of userspace. Ofcourse, this would require
-> a new clone version, possibly with taking a clone2 struct which sets a
-> few parameters for the process and the flags for the pidfd.
->
-> Another point is that you have a pidfd_open (or something else) that
-> can create multiple pidfds from a pidfd obtained at clone time and
-> create pidfds with varying level of rights. It can also work by taking
-> a TID to open a pidfd for an external task (and then for all the
-> rights you wish to acquire on it, check against your ambient
-> authority).
-
-Indeed.
-
->
-> (Actually, in general, having FMODE_* style bits spanning all methods
-> a file descriptor can take (through system calls), with the type of
-> object as key (class containing a set), and be able to enable/disable
-> them and seal them would be a useful addition, this all happening at
-> the struct file level instead of inode level sealing in memfds).
-
-At the risk of saying a dirty word, the Windows API works quite a bit
-like this :)
+-- 
+Deet-doot-dot, I am a bot.
+https://korg.wiki.kernel.org/userdoc/prtracker
