@@ -2,179 +2,152 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B49B8C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 12:58:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B78FC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:01:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79A3820693
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 12:58:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="no2mkbIw"
+	by mail.kernel.org (Postfix) with ESMTP id 36A2B20693
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:01:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729304AbfDPM6i (ORCPT
+        id S1728232AbfDPNBb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 08:58:38 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:42304 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729245AbfDPM6f (ORCPT
+        Tue, 16 Apr 2019 09:01:31 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:50743 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726796AbfDPNBa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 08:58:35 -0400
-Received: by mail-pl1-f195.google.com with SMTP id cv12so10330341plb.9
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 05:58:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=hGsK6YV7IXHB4c8lI2Da0gdlOYYwotiHlsdUG3YCLQQ=;
-        b=no2mkbIwr/26h0ne0fwVsE3g77WHrGsS8dZtFzFhkv7+Vek9NYgmdAFXgl3rFZ3IIm
-         7VolCYGvyX8glfWZ/RJaG3ELvKYY0UXwnoO+RKOX8ADmV2Q3TIfP6WdOI/wz0bpaMle4
-         io4dz4yIvpdOL8SImyVvNL9Mft/miNLgQspL9kOn8ZzVwlZdv56LZLUqqh565f3/7TyW
-         9QId/XjSfyj/HjDz9MUGbJfKKfG7Y18gXuYtl6yifQU2cwoJTEBomT+yO3D0QS1ryEIm
-         URs6bVW2K9g+crZqO/UOk+eKX6kvuB9cMD5Q6E52AcIMLqmHHrV1AcS7HexJVC1Hqz9k
-         bo8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=hGsK6YV7IXHB4c8lI2Da0gdlOYYwotiHlsdUG3YCLQQ=;
-        b=Sew2w6+frN4TxdJfNjQNl8XptsAroG3oxdpctFhnTswFppQhcWCdaK9SfnbEkBnrwM
-         flrBEGXKIosHKsG0wH2+JPpcjM3gzbUMyZ//APPT5i45r4cxz9o9FKBwqLHc3D6DVQ0E
-         xh32WqUPApXhdOa8St2IdbLASFqHEi+Zhpuqflg/yvb593b/rG8fH7J+FW77YjBvx01W
-         S2vaulLQiMiOvmz58gipTC2GHLQRJjFgCgaKKU3kkO5tmsrqy/M4LzANv4EcXzd6wae1
-         OtPeQhMiWbfgu3Q1lgd4x4LvoNdDfMkq99kzIpHGwr5ik3/TtTYezY4adFcmhR4haMiw
-         UTSQ==
-X-Gm-Message-State: APjAAAXYCopNSuveH6UkDkDB7fahVAXfSDZ1EkxtDS8wg2PuCwW+IliV
-        yiF19DAPYaqiRzrMGr2rpoB9fQ==
-X-Google-Smtp-Source: APXvYqzJEKysFP2FA956JpTHNnV54f0EIGeFHV7vqQIzbffjB+78ZdznyOnnbiV1KMS7ZdUukBsXmg==
-X-Received: by 2002:a17:902:e4:: with SMTP id a91mr63753671pla.2.1555419515080;
-        Tue, 16 Apr 2019 05:58:35 -0700 (PDT)
-Received: from localhost ([43.229.100.82])
-        by smtp.gmail.com with ESMTPSA id f63sm106613082pfc.180.2019.04.16.05.58.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 16 Apr 2019 05:58:30 -0700 (PDT)
-Date:   Tue, 16 Apr 2019 18:28:25 +0530
-From:   Viresh Kumar <viresh.kumar@linaro.org>
-To:     Mohan Kumar <mohankumar718@gmail.com>
-Cc:     rjw@rjwysocki.net, linux-pm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [RESEND] drivers/cpufreq/acpi-cpufreq.c: This fixes the
- following  checkpatch warning
-Message-ID: <20190416125825.vkjjujxdls7rwnem@vireshk-mac-ubuntu>
-References: <1555326238-3612-1-git-send-email-mohankumar718@gmail.com>
+        Tue, 16 Apr 2019 09:01:30 -0400
+Received: from localhost (aaubervilliers-681-1-42-238.w90-88.abo.wanadoo.fr [90.88.160.238])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 84DE320002B;
+        Tue, 16 Apr 2019 13:00:57 +0000 (UTC)
+Date:   Tue, 16 Apr 2019 15:00:57 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Pablo =?utf-8?Q?Sebasti=C3=A1n?= Greco <pgreco@centosproject.org>
+Cc:     linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 2/6] ARM: dts: sun8i: v40: bananapi-m2-berry: Enable
+ GMAC ethernet controller
+Message-ID: <20190416130057.bjaweorywikaa6ig@flea>
+References: <1555065186-8154-1-git-send-email-pgreco@centosproject.org>
+ <1555065186-8154-3-git-send-email-pgreco@centosproject.org>
+ <20190415075309.p7pgj62mmtmxsnnr@flea>
+ <eb80d64f-7355-071b-c1d1-04e0eb4475ce@centosproject.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="2w42a2v2c5vbfesk"
 Content-Disposition: inline
-In-Reply-To: <1555326238-3612-1-git-send-email-mohankumar718@gmail.com>
-User-Agent: NeoMutt/20170609 (1.8.3)
+In-Reply-To: <eb80d64f-7355-071b-c1d1-04e0eb4475ce@centosproject.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15-04-19, 14:03, Mohan Kumar wrote:
-> WARNING: Prefer using '"%s...", __func__' to using function's name, in a
-> string
-> 
-> Switch hardcoded function name with a reference to __func__ making the
-> code more maintainable
-> 
-> Signed-off-by: Mohan Kumar <mohankumar718@gmail.com>
-> ---
->  drivers/cpufreq/acpi-cpufreq.c | 19 +++++++++----------
->  1 file changed, 9 insertions(+), 10 deletions(-)
-> 
-> diff --git a/drivers/cpufreq/acpi-cpufreq.c b/drivers/cpufreq/acpi-cpufreq.c
-> index c72258a..73bb2aa 100644
-> --- a/drivers/cpufreq/acpi-cpufreq.c
-> +++ b/drivers/cpufreq/acpi-cpufreq.c
-> @@ -366,7 +366,7 @@ static u32 get_cur_val(const struct cpumask *mask, struct acpi_cpufreq_data *dat
->  
->  	val = drv_read(data, mask);
->  
-> -	pr_debug("get_cur_val = %u\n", val);
-> +	pr_debug("%s = %u\n", __func__, val);
->  
->  	return val;
->  }
-> @@ -378,7 +378,7 @@ static unsigned int get_cur_freq_on_cpu(unsigned int cpu)
->  	unsigned int freq;
->  	unsigned int cached_freq;
->  
-> -	pr_debug("get_cur_freq_on_cpu (%d)\n", cpu);
-> +	pr_debug("%s (%d)\n", __func__, cpu);
->  
->  	policy = cpufreq_cpu_get_raw(cpu);
->  	if (unlikely(!policy))
-> @@ -458,8 +458,7 @@ static int acpi_cpufreq_target(struct cpufreq_policy *policy,
->  	if (acpi_pstate_strict) {
->  		if (!check_freqs(policy, mask,
->  				 policy->freq_table[index].frequency)) {
-> -			pr_debug("acpi_cpufreq_target failed (%d)\n",
-> -				policy->cpu);
-> +			pr_debug("%s (%d)\n", __func__, policy->cpu);
->  			result = -EAGAIN;
->  		}
->  	}
-> @@ -573,7 +572,7 @@ static int cpufreq_boost_down_prep(unsigned int cpu)
->  static int __init acpi_cpufreq_early_init(void)
->  {
->  	unsigned int i;
-> -	pr_debug("acpi_cpufreq_early_init\n");
-> +	pr_debug("%s\n", __func__);
->  
->  	acpi_perf_data = alloc_percpu(struct acpi_processor_performance);
->  	if (!acpi_perf_data) {
-> @@ -657,7 +656,7 @@ static int acpi_cpufreq_cpu_init(struct cpufreq_policy *policy)
->  	static int blacklisted;
->  #endif
->  
-> -	pr_debug("acpi_cpufreq_cpu_init\n");
-> +	pr_debug("%s\n", __func__);
->  
->  #ifdef CONFIG_SMP
->  	if (blacklisted)
-> @@ -856,7 +855,7 @@ static int acpi_cpufreq_cpu_exit(struct cpufreq_policy *policy)
->  {
->  	struct acpi_cpufreq_data *data = policy->driver_data;
->  
-> -	pr_debug("acpi_cpufreq_cpu_exit\n");
-> +	pr_debug("%s\n", __func__);
->  
->  	policy->fast_switch_possible = false;
->  	policy->driver_data = NULL;
-> @@ -881,7 +880,7 @@ static int acpi_cpufreq_resume(struct cpufreq_policy *policy)
->  {
->  	struct acpi_cpufreq_data *data = policy->driver_data;
->  
-> -	pr_debug("acpi_cpufreq_resume\n");
-> +	pr_debug("%s\n", __func__);
->  
->  	data->resume = 1;
->  
-> @@ -954,7 +953,7 @@ static int __init acpi_cpufreq_init(void)
->  	if (cpufreq_get_current_driver())
->  		return -EEXIST;
->  
-> -	pr_debug("acpi_cpufreq_init\n");
-> +	pr_debug("%s\n", __func__);
->  
->  	ret = acpi_cpufreq_early_init();
->  	if (ret)
-> @@ -991,7 +990,7 @@ static int __init acpi_cpufreq_init(void)
->  
->  static void __exit acpi_cpufreq_exit(void)
->  {
-> -	pr_debug("acpi_cpufreq_exit\n");
-> +	pr_debug("%s\n", __func__);
->  
->  	acpi_cpufreq_boost_exit();
->  
 
-Acked-by: Viresh Kumar <viresh.kumar@linaro.org>
+--2w42a2v2c5vbfesk
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
--- 
-viresh
+65;5600;1c
+On Tue, Apr 16, 2019 at 07:47:09AM -0300, Pablo Sebasti=E1n Greco wrote:
+>
+> El 15/4/19 a las 04:53, Maxime Ripard escribi=F3:
+> > On Fri, Apr 12, 2019 at 07:33:01AM -0300, Pablo Greco wrote:
+> > > Just like the Bananapi M2 Ultra, the Bananapi M2 Berry has a Realtek
+> > > RTL8211E RGMII PHY tied to the GMAC.
+> > > The PMIC's DC1SW output provides power for the PHY, while the ALDO2
+> > > output provides I/O voltages on both sides.
+> > >
+> > > Signed-off-by: Pablo Greco <pgreco@centosproject.org>
+> > > ---
+> > >   arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts | 30 ++++++++++++=
++++++++++++
+> > >   1 file changed, 30 insertions(+)
+> > >
+> > > diff --git a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts b/arch=
+/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+> > > index f05cabd..0d79e91 100644
+> > > --- a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+> > > +++ b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+> > > @@ -50,6 +50,7 @@
+> > >   	compatible =3D "sinovoip,bpi-m2-berry", "allwinner,sun8i-r40";
+> > >
+> > >   	aliases {
+> > > +		ethernet0 =3D &gmac;
+> > >   		serial0 =3D &uart0;
+> > >   	};
+> > >
+> > > @@ -92,6 +93,22 @@
+> > >   	status =3D "okay";
+> > >   };
+> > >
+> > > +&gmac {
+> > > +	pinctrl-names =3D "default";
+> > > +	pinctrl-0 =3D <&gmac_rgmii_pins>;
+> > > +	phy-handle =3D <&phy1>;
+> > > +	phy-mode =3D "rgmii";
+> > > +	phy-supply =3D <&reg_dc1sw>;
+> > > +	status =3D "okay";
+> > > +};
+> > > +
+> > > +&gmac_mdio {
+> > > +	phy1: ethernet-phy@1 {
+> > > +		compatible =3D "ethernet-phy-ieee802.3-c22";
+> > > +		reg =3D <1>;
+> > > +	};
+> > > +};
+> > > +
+> > >   &i2c0 {
+> > >   	status =3D "okay";
+> > >
+> > > @@ -123,6 +140,13 @@
+> > >   	status =3D "okay";
+> > >   };
+> > >
+> > > +&reg_aldo2 {
+> > > +	regulator-always-on;
+> > > +	regulator-min-microvolt =3D <2500000>;
+> > > +	regulator-max-microvolt =3D <2500000>;
+> > > +	regulator-name =3D "vcc-pa";
+> > > +};
+> > > +
+> > If this one provides power to the pins, it should be tied to the PIO
+> > node.
+>
+> In that case, I should fix the bananapi-m2-ultra the same way. Do you pre=
+fer
+> me to add those fixes to this series?
+
+If you have that board, then please add that yep.
+
+> Or is it better to apply this like it is, and I fix both together in a
+> separated series?
+
+No, please resend a new version.
+
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--2w42a2v2c5vbfesk
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXLXSCQAKCRDj7w1vZxhR
+xSSuAQCQ/kkSRgvp8XeaTQsZFfcjmgEBvvtjYDzpMrPJdVpClwD/Q3IuzuS0sWoE
+nYcAS9VzOQTUlt9QAbaD7EeaL/sdOQg=
+=0e9z
+-----END PGP SIGNATURE-----
+
+--2w42a2v2c5vbfesk--
