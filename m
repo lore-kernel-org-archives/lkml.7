@@ -2,187 +2,154 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B6564C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:10:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34530C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:11:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7C99F20872
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:10:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF80520872
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:11:05 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="BdNq0pIm"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wjObvgoN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730198AbfDPRKp (ORCPT
+        id S1730204AbfDPRLE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 13:10:45 -0400
-Received: from smtprelay2.synopsys.com ([198.182.60.111]:52418 "EHLO
-        smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730160AbfDPRKe (ORCPT
+        Tue, 16 Apr 2019 13:11:04 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:32812 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729936AbfDPRLE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 13:10:34 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost2.synopsys.com [10.13.135.210])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay.synopsys.com (Postfix) with ESMTPS id 74F3D10C130D;
-        Tue, 16 Apr 2019 10:10:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1555434634; bh=r/ZPkalgTfT4ORTmItFJrcwFrTVw4C497BKL2kqKcLQ=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
-        b=BdNq0pImhh0HZM5CiqH+b6smCHVZ3F/375HBiq1q2pXPPfKVpViOjGAUDIVyx8chG
-         VWGhTKWDSakln8bIcjbyg6a1Ax3QJkcp0imX53PIzHVWaZb8bWm5lHm7jbWBonw8D+
-         2N7pRtQxD2CV1fWwd+2hFWCTurRgf+lg3lJ5Bl2MeY9svCLHwayJ/SWDIa7K0f8LLe
-         so1NrPF2qLUQeCnvUUzv5L+OUQT0Sl7YO9Dv798dK83iYDw0DQx6Yfd6jOQsthB5QM
-         KZgfb5HWYDm9VPuq6DZs5ZZuKP6FAzzfDTr39NDBNwGhaNLhPG32+hcJVDODuPzLYD
-         ijgyWua72isgg==
-Received: from paltsev-e7480.internal.synopsys.com (paltsev-e7480.internal.synopsys.com [10.121.8.106])
-        by mailhost.synopsys.com (Postfix) with ESMTP id 3C964A023C;
-        Tue, 16 Apr 2019 17:10:33 +0000 (UTC)
-From:   Eugeniy Paltsev <eugeniy.paltsev@synopsys.com>
-To:     linux-snps-arc@lists.infradead.org,
-        Vineet Gupta <vineet.gupta1@synopsys.com>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexey Brodkin <alexey.brodkin@synopsys.com>,
-        Eugeniy Paltsev <eugeniy.paltsev@synopsys.com>
-Subject: [PATCH 2/3] ARC: cache: check cache configuration on each CPU
-Date:   Tue, 16 Apr 2019 20:10:20 +0300
-Message-Id: <20190416171021.20049-3-Eugeniy.Paltsev@synopsys.com>
-X-Mailer: git-send-email 2.14.5
-In-Reply-To: <20190416171021.20049-1-Eugeniy.Paltsev@synopsys.com>
-References: <20190416171021.20049-1-Eugeniy.Paltsev@synopsys.com>
+        Tue, 16 Apr 2019 13:11:04 -0400
+Received: by mail-wr1-f66.google.com with SMTP id q1so28177386wrp.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 10:11:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=oWLy0fdzoqHSqiqWsOxnepnsSX53GKH/m2bnqNBOvnY=;
+        b=wjObvgoNGZkC0yfwzDxvSqd8fli3P2CBY/+ZHqm9/9Av1TXyaQeMM7gl+Pad9bPW8X
+         9J9yyl09KCNYJ6tUnCMJz4ihKpp1cIlM6OdW3/Z8uOo6Z/naUpuMmRSKjhpuEHQ7LAU8
+         F9WyckhzyLid6QCBpjklL5tyHfh3xhcTUJTVFe6PBtIHjkbZQ2Cu0UOVdsS/NH6ua5sm
+         d3szw3aMcl0w5RqOjuBFLBbJlr7QGXeS2mCkCaxz/sZWXTDL7IrUpen6jRZLe5WsGVbA
+         +kUSiLHwFCCyKuuergCEj4MMvwE2YVlgkQPAIJFaoO0urKStxHlyFf9c1Dnt5BTGaiAs
+         EXJw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=oWLy0fdzoqHSqiqWsOxnepnsSX53GKH/m2bnqNBOvnY=;
+        b=LET5c6ZJu/RRqQtYcOHwamvt6VY5Ph1FTBsjNtU8va2YAx53W5BOswBU+lSI3GfL09
+         ttXjVSbYJqZoHAMCjX+pvuUnqRIkO7TlhNm68LPsu/3G2cBZE9Zj+7Hg7dGyKX4YK3cH
+         Fmv7QeMbdQu9cFjPNRK7vk3zgbg6/YXzFXlKloW+4cLF9ylcA9/zN7ZxbJFtQ5SgkXRA
+         rKwvokSNO0BkBFnIzHfhtgsgxqB+F7BUhJtDxHpvloeDPjRwTNBzdUejXqMKoa7W5HE+
+         ZQS5j5NKkO9oRZrhFJLiogs28E4rAEwuJH6lyFTmXHGY5chyZ9u4gu9yzw434qJYDwzD
+         Az7w==
+X-Gm-Message-State: APjAAAVOE734LA6e3ubBB+K3+HOej/7H2bS93i/bIC5KEhps6wPJVSPf
+        kIfi+2kdj8BH/DGfR+zuTou0DPQhA6I=
+X-Google-Smtp-Source: APXvYqxvDX2OR1z8qY4WaubwCqLtH7EqL84Hg+CdXAwW8c4TLExANW+XQV4iuR0Fdyr6nuqlL0T+dQ==
+X-Received: by 2002:adf:d848:: with SMTP id k8mr5243313wrl.185.1555434662189;
+        Tue, 16 Apr 2019 10:11:02 -0700 (PDT)
+Received: from [192.168.0.41] (50.251.95.92.rev.sfr.net. [92.95.251.50])
+        by smtp.googlemail.com with ESMTPSA id e7sm21648920wme.37.2019.04.16.10.11.00
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Apr 2019 10:11:01 -0700 (PDT)
+Subject: Re: [PATCH v4 10/12] thermal: qoriq: Do not report invalid
+ temperature reading
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>, linux-pm@vger.kernel.org
+Cc:     Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Angus Ainslie <angus@akkea.ca>, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org
+References: <20190413082748.29990-1-andrew.smirnov@gmail.com>
+ <20190413082748.29990-11-andrew.smirnov@gmail.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <6c07ec86-297f-01e0-f150-1b03c0a27c62@linaro.org>
+Date:   Tue, 16 Apr 2019 19:11:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190413082748.29990-11-andrew.smirnov@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ARC kernel code assumes that all cores have same cache config
-but as of today we check cache configuration only on master CPU.
-Fix that and check cache configuration on each CPU.
+On 13/04/2019 10:27, Andrey Smirnov wrote:
+> Before returning measured temperature data to upper layer we need to
+> make sure that the reading was marked as "valid" to avoid reporting
+> bogus data.
+> 
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: Eduardo Valentin <edubezval@gmail.com>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: Angus Ainslie (Purism) <angus@akkea.ca>
+> Cc: linux-imx@nxp.com
+> Cc: linux-pm@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
 
-Also while I'm at it, split cache_init_master() for two parts:
- * checks/setups related to master L1 caches
- * the rest of cache checks/setups which need to be done once
-   (like IOC / SLC / dma callbacks setup)
+Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
 
-Both of these changes are prerequisites for autodetecting cache
-line size in runtime.
 
-Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
----
- arch/arc/mm/cache.c | 66 +++++++++++++++++++++++++++++++++++------------------
- 1 file changed, 44 insertions(+), 22 deletions(-)
+>  drivers/thermal/qoriq_thermal.c | 20 ++++++++++++++++++--
+>  1 file changed, 18 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
+> index abbbfe88422e..5c459a9d0db3 100644
+> --- a/drivers/thermal/qoriq_thermal.c
+> +++ b/drivers/thermal/qoriq_thermal.c
+> @@ -37,6 +37,7 @@
+>  #define REGS_TRITSR(n)	(0x100 + 16 * (n)) /* Immediate Temperature
+>  					    * Site Register
+>  					    */
+> +#define TRITSR_V	BIT(31)
+>  #define REGS_TTRnCR(n)	(0xf10 + 4 * (n)) /* Temperature Range n
+>  					   * Control Register
+>  					   */
+> @@ -48,10 +49,25 @@ static int tmu_get_temp(int id, void *p, int *temp)
+>  {
+>  	struct qoriq_tmu_data *qdata = p;
+>  	u32 val;
+> +	/*
+> +	 * REGS_TRITSR(id) has the following layout:
+> +	 *
+> +	 * 31  ... 7 6 5 4 3 2 1 0
+> +	 *  V          TEMP
+> +	 *
+> +	 * Where V bit signifies if the measurement is ready and is
+> +	 * within sensor range. TEMP is an 8 bit value representing
+> +	 * temperature in C.
+> +	 */
+> +	if (regmap_read_poll_timeout(qdata->regmap,
+> +				     REGS_TRITSR(id),
+> +				     val,
+> +				     val & TRITSR_V,
+> +				     USEC_PER_MSEC,
+> +				     10 * USEC_PER_MSEC))
+> +		return -ENODATA;
+>  
+> -	regmap_read(qdata->regmap, REGS_TRITSR(id), &val);
+>  	*temp = (val & 0xff) * 1000;
+> -
+>  	return 0;
+>  }
+>  
+> 
 
-diff --git a/arch/arc/mm/cache.c b/arch/arc/mm/cache.c
-index 4135abec3fb0..1036bd56f518 100644
---- a/arch/arc/mm/cache.c
-+++ b/arch/arc/mm/cache.c
-@@ -1208,27 +1208,43 @@ noinline void __init arc_ioc_setup(void)
- 	__dc_enable();
- }
- 
-+#if IS_ENABLED(CONFIG_ARC_HAS_ICACHE) || IS_ENABLED(CONFIG_ARC_HAS_DCACHE)
-+static void arc_l1_line_check(unsigned int line_len, const char *cache_name)
-+{
-+	if (!line_len)
-+		panic("%s support enabled but non-existent cache\n",
-+		      cache_name);
-+
-+	if (line_len != L1_CACHE_BYTES)
-+		panic("%s line size [%u] != expected [%u]",
-+		      cache_name, line_len, L1_CACHE_BYTES);
-+}
-+#endif /* IS_ENABLED(CONFIG_ARC_HAS_ICACHE) || IS_ENABLED(CONFIG_ARC_HAS_DCACHE) */
-+
- /*
-- * Cache related boot time checks/setups only needed on master CPU:
-- *  - Geometry checks (kernel build and hardware agree: e.g. L1_CACHE_BYTES)
-- *    Assume SMP only, so all cores will have same cache config. A check on
-- *    one core suffices for all
-- *  - IOC setup / dma callbacks only need to be done once
-+ * Cache related boot time checks needed on every CPU.
-  */
--void __init arc_cache_init_master(void)
-+static void arc_l1_cache_check(unsigned int cpu)
- {
--	unsigned int __maybe_unused cpu = smp_processor_id();
-+	if (IS_ENABLED(CONFIG_ARC_HAS_ICACHE))
-+		arc_l1_line_check(cpuinfo_arc700[cpu].icache.line_len, "ICache");
-+
-+	if (IS_ENABLED(CONFIG_ARC_HAS_DCACHE))
-+		arc_l1_line_check(cpuinfo_arc700[cpu].dcache.line_len, "DCache");
-+}
- 
-+/*
-+ * L1 Cache related boot time checks/setups needed on master CPU:
-+ * This checks/setups are done in assumption that all CPU have same cache
-+ * configuration (we validate this in arc_cache_check()):
-+ *  - Geometry checks
-+ *  - L1 cache line loop callbacks
-+ */
-+void __init arc_l1_cache_init_master(unsigned int cpu)
-+{
- 	if (IS_ENABLED(CONFIG_ARC_HAS_ICACHE)) {
- 		struct cpuinfo_arc_cache *ic = &cpuinfo_arc700[cpu].icache;
- 
--		if (!ic->line_len)
--			panic("cache support enabled but non-existent cache\n");
--
--		if (ic->line_len != L1_CACHE_BYTES)
--			panic("ICache line [%d] != kernel Config [%d]",
--			      ic->line_len, L1_CACHE_BYTES);
--
- 		/*
- 		 * In MMU v4 (HS38x) the aliasing icache config uses IVIL/PTAG
- 		 * pair to provide vaddr/paddr respectively, just as in MMU v3
-@@ -1242,13 +1258,6 @@ void __init arc_cache_init_master(void)
- 	if (IS_ENABLED(CONFIG_ARC_HAS_DCACHE)) {
- 		struct cpuinfo_arc_cache *dc = &cpuinfo_arc700[cpu].dcache;
- 
--		if (!dc->line_len)
--			panic("cache support enabled but non-existent cache\n");
--
--		if (dc->line_len != L1_CACHE_BYTES)
--			panic("DCache line [%d] != kernel Config [%d]",
--			      dc->line_len, L1_CACHE_BYTES);
--
- 		/* check for D-Cache aliasing on ARCompact: ARCv2 has PIPT */
- 		if (is_isa_arcompact()) {
- 			int handled = IS_ENABLED(CONFIG_ARC_CACHE_VIPT_ALIASING);
-@@ -1271,6 +1280,14 @@ void __init arc_cache_init_master(void)
- 	 */
- 	BUILD_BUG_ON_MSG(L1_CACHE_BYTES > SMP_CACHE_BYTES,
- 			 "SMP_CACHE_BYTES must be >= any cache line length");
-+}
-+
-+/*
-+ * Cache related boot time checks/setups needed on master CPU:
-+ *  - IOC setup / SLC setup / dma callbacks only need to be done once
-+ */
-+void __init arc_cache_init_master(void)
-+{
- 	if (is_isa_arcv2() && (l2_line_sz > SMP_CACHE_BYTES))
- 		panic("L2 Cache line [%d] > kernel Config [%d]\n",
- 		      l2_line_sz, SMP_CACHE_BYTES);
-@@ -1301,11 +1318,16 @@ void __init arc_cache_init_master(void)
- 
- void __ref arc_cache_init(void)
- {
--	unsigned int __maybe_unused cpu = smp_processor_id();
-+	unsigned int cpu = smp_processor_id();
- 	char str[256];
- 
- 	pr_info("%s", arc_cache_mumbojumbo(0, str, sizeof(str)));
- 
-+	if (!cpu)
-+		arc_l1_cache_init_master(cpu);
-+
-+	arc_l1_cache_check(cpu);
-+
- 	if (!cpu)
- 		arc_cache_init_master();
- 
+
 -- 
-2.14.5
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
 
