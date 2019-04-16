@@ -2,128 +2,162 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAFB9C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 12:49:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC08CC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 12:54:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6235E205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 12:49:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7FD44205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 12:54:10 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="zZwfq7Ou"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728304AbfDPMty (ORCPT
+        id S1728684AbfDPMyI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 08:49:54 -0400
-Received: from mx0b-00191d01.pphosted.com ([67.231.157.136]:40574 "EHLO
-        mx0a-00191d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726796AbfDPMty (ORCPT
+        Tue, 16 Apr 2019 08:54:08 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:43417 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727816AbfDPMyI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 08:49:54 -0400
-X-Greylist: delayed 2264 seconds by postgrey-1.27 at vger.kernel.org; Tue, 16 Apr 2019 08:49:53 EDT
-Received: from pps.filterd (m0049462.ppops.net [127.0.0.1])
-        by m0049462.ppops.net-00191d01. (8.16.0.27/8.16.0.27) with SMTP id x3GC5rE5041088;
-        Tue, 16 Apr 2019 08:11:54 -0400
-Received: from alpi155.enaf.aldc.att.com (sbcsmtp7.sbc.com [144.160.229.24])
-        by m0049462.ppops.net-00191d01. with ESMTP id 2rwe1vh5cy-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=NOT);
-        Tue, 16 Apr 2019 08:11:53 -0400
-Received: from enaf.aldc.att.com (localhost [127.0.0.1])
-        by alpi155.enaf.aldc.att.com (8.14.5/8.14.5) with ESMTP id x3GCBr6E025673;
-        Tue, 16 Apr 2019 08:11:53 -0400
-Received: from zlp30496.vci.att.com (zlp30496.vci.att.com [135.46.181.157])
-        by alpi155.enaf.aldc.att.com (8.14.5/8.14.5) with ESMTP id x3GCBkJ4025562
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=NO);
-        Tue, 16 Apr 2019 08:11:46 -0400
-Received: from zlp30496.vci.att.com (zlp30496.vci.att.com [127.0.0.1])
-        by zlp30496.vci.att.com (Service) with ESMTP id 6EFA7400AF93;
-        Tue, 16 Apr 2019 12:11:46 +0000 (GMT)
-Received: from tlpd252.dadc.sbc.com (unknown [135.31.184.157])
-        by zlp30496.vci.att.com (Service) with ESMTP id 589D1400AF91;
-        Tue, 16 Apr 2019 12:11:46 +0000 (GMT)
-Received: from dadc.sbc.com (localhost [127.0.0.1])
-        by tlpd252.dadc.sbc.com (8.14.5/8.14.5) with ESMTP id x3GCBk3N034183;
-        Tue, 16 Apr 2019 07:11:46 -0500
-Received: from mail.eng.vyatta.net (mail.eng.vyatta.net [10.156.50.82])
-        by tlpd252.dadc.sbc.com (8.14.5/8.14.5) with ESMTP id x3GCBepL033996;
-        Tue, 16 Apr 2019 07:11:40 -0500
-Received: from [10.156.47.86] (unknown [10.156.47.86])
-        by mail.eng.vyatta.net (Postfix) with ESMTPA id A921A360045;
-        Tue, 16 Apr 2019 05:11:38 -0700 (PDT)
-Reply-To: mmanning@vyatta.att-mail.com
-Subject: Re: some trouble when using vrf
-To:     linmiaohe <linmiaohe@huawei.com>,
-        David Ahern <dsa@cumulusnetworks.com>, shrijeet@gmail.com,
-        davem@davemloft.net, netdev@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     Mingfangsen <mingfangsen@huawei.com>
-References: <15adf635-a74b-e9e3-5dad-b35890f0a746@huawei.com>
-From:   Mike Manning <mmanning@vyatta.att-mail.com>
-Message-ID: <1057be5b-8792-cf39-286b-f49bc6286117@vyatta.att-mail.com>
-Date:   Tue, 16 Apr 2019 13:11:37 +0100
+        Tue, 16 Apr 2019 08:54:08 -0400
+Received: by mail-wr1-f66.google.com with SMTP id k17so22227991wrx.10
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 05:54:06 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:cc:references:from:message-id:date:user-agent:mime-version
+         :in-reply-to:content-transfer-encoding:content-language;
+        bh=BWcySk8lamrhc4WU6Qx5+eZxxYcv/c18X8bZQyRjsbM=;
+        b=zZwfq7OuHxPyiqfcQ7YcGvUz5xjCaWEnu78yMbQ3XYsNfD5euPduUbilgr1Frj8JPH
+         4FnJEskn288kFf+VjDtM9Ch/PtgvBFFBN9XpH2eIyNvwTUsFKIFaE/JvR5szFdqGzaKK
+         uS++4cf4n8BRlwYYir8tp8OuZHVk0hjQPO2d6/12iWQdIQ6ICKZ57EzrborewtWSTy0b
+         LITQkGO8ftOGqnTEvWxwoplitCKOR1y1zWH+E5nfqj2ofnGck9lx+y7vcZnbLbFaRf4n
+         qFYT66OqVDDb8jO+3UMphDkmVeJcc+K3F+q8yw8DaEj9DpOgTIOdtuEOBgvTBKNxcTcb
+         Em2Q==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=BWcySk8lamrhc4WU6Qx5+eZxxYcv/c18X8bZQyRjsbM=;
+        b=rUd761dnhbWA0olUtXSr1F9zFd7nIkeA+RNoU6pfHNTJV7j4YgMDD4aguMj1V3jpwg
+         rp79qLXHLvVqt30aJtcmSdTKSlHQxY6faBJZJdlPH3zm/4EzK4smTt4LyW0b0Gi0HmE+
+         K9BlhZETP030v7mHgJ8iky+qNLzwnop416uCCR5VJxp21XGDGcVQ5qwzpqh8ktm7WIZj
+         0RrMxghJOucRkDtcvaaaoC2lIRrP65405bj2765dtqYJ/ZHqOwbPRGalym5mht88JQRQ
+         cnN62MXpj3DbIZ5AcFn3YZjxMBBysux6kIYhlrakkE8HK+H9LNY/YacM0YYWGl2HZ7VU
+         +a0Q==
+X-Gm-Message-State: APjAAAU4aBTDsDOkIfFiagAw4z392MwxQPJhYwXFrZ7zl1aQIpjfx6h4
+        fINudt7xZikj6P+jweGNCqPj6w==
+X-Google-Smtp-Source: APXvYqwjxhSBx1TQ0FwTkVlCv/EHY0lNAyfkS4Y0o4l7oQyDSydMPBBrfXyDWborgrE/yo6wEUuYxA==
+X-Received: by 2002:a5d:4f07:: with SMTP id c7mr23823774wru.104.1555419246257;
+        Tue, 16 Apr 2019 05:54:06 -0700 (PDT)
+Received: from [10.1.3.153] (lmontsouris-657-1-212-31.w90-63.abo.wanadoo.fr. [90.63.244.31])
+        by smtp.gmail.com with ESMTPSA id j22sm156020113wrd.91.2019.04.16.05.54.05
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Apr 2019 05:54:05 -0700 (PDT)
+Subject: Re: [PATCH 3/3] iio: Add PAT9125 optical tracker sensor
+Cc:     linux-kernel@vger.kernel.org, linux-iio@vger.kernel.org,
+        linux-input@vger.kernel.org
+References: <1554456870-8104-1-git-send-email-amergnat@baylibre.com>
+ <1554456870-8104-4-git-send-email-amergnat@baylibre.com>
+ <20190407112024.6297cbfa@archlinux>
+From:   Alexandre <amergnat@baylibre.com>
+Message-ID: <79862457-ac69-06bd-17e3-571fc763534b@baylibre.com>
+Date:   Tue, 16 Apr 2019 14:54:05 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <15adf635-a74b-e9e3-5dad-b35890f0a746@huawei.com>
-Content-Type: text/plain; charset=utf-8
+In-Reply-To: <20190407112024.6297cbfa@archlinux>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 7bit
 Content-Language: en-US
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-16_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_policy_notspam policy=outbound_policy score=0
- priorityscore=1501 malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0
- spamscore=0 clxscore=1011 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904160083
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/04/2019 12:26, linmiaohe wrote:
-> Hi all:
->     I meet some trouble when using vrf, it's very nice of you if you
-> can help me fix it.
+Hello Jonathan,
+
+On 4/7/19 12:20, Jonathan Cameron wrote:
+> Hi Alexandre,
 >
->     1.If I bind a vrf address before I set SO_BINDTODEVICE opts to bind an
-> enslaved device, "Cannot assign requested address" will occurs. It's
-> because only after we set SO_BINDTODEVICE opts to bind an enslaved device,
-> then we can lookup the route in the specified l3mdev domain.
->     I think we couldn't limit the order of bind ip addr and SO_BINDTODEVICE opts
-> otherwise many vrf unaware apps many need to change their code.
->     I can't find a convenient way to fix it.Here is an example:
+> So I have no problem with this as an IIO driver, but for devices that
+> are somewhat 'on the edge' I always like to get a clear answer to the
+> question: Why not input?
 >
->     ...
->     bind(sock_fd, (struct sockaddr *)&addr_serv, sizeof(addr_serv));
->     ...
->     ret = setsockopt(sock_fd, SOL_SOCKET, SO_BINDTODEVICE, bind_dev, strlen(bind_dev)+1);
->     ...
->     This code snipet doesn't work if the ip address of addr_serv is not in default vrf. And
-> "Cannot assign requested address" will occurs.
-Or you can run instances of vrf-unaware applications per VRF with 'sudo
-ip vrf exec <vrf> <cmd>', with the 3 sysctl you indicate below set to 0.
->     2.When I run a udp server in default vrf and set net.ipv4.udp_l3mdev_accept=1,
-> it's supposed to work accorss VRFs.
->     But it occurs when udp server received a packet, it sends back with the source
-> ip address from default vrf which is supposed to from the specified l3mdev domain.
-> And the connection between server and client is broken. It's because udp server
-> run in default vrf and doesn't bind the enslaved device, so only the route table in
-> default vrf is avaliable.
+> I would also argue that, to actually be 'useful' we would typically need
+> some representation of the 'mechanicals' that are providing the motion
+> being measured.  Looking at the datasheet this includes, rotating shafts
+> (side or end on), disk edges and flat surface tracking (mouse like).
 >
->     For example,I run a udp server in default vrf and set net.ipv4.udp_l3mdev_accept=1:
->     [root@localhost vrf]# sysctl -a | grep l3mdev
->     net.ipv4.raw_l3mdev_accept = 1
->     net.ipv4.tcp_l3mdev_accept = 1
->     net.ipv4.udp_l3mdev_accept = 1
+> That's easy enough to do with the iio in kernel consumer interface. These
+> are similar to when we handle analog electronic front ends.
 >
->     Then connect the server and send a udp packet to the specified vrf. Here is tcpdump output:
->     17:28:54.925417 IP 10.0.0.2.43003 > 10.0.0.1.irdmi: UDP, length 17
->     17:28:54.925953 IP 9.85.153.236.irdmi > 10.0.0.2.43003: UDP, length 17
->     ps. 10.0.0.2 is client ip, 10.0.0.1 is specified vrf ip, and 9.85.153.236 is default vrf ip.
->     10.0.0.1 and 9.85.153.236 are in the same host.
+> I you can, please describe what it is being used for in your application
+> as that may give us somewhere to start!
 >
-> Thanks a lot if you can help me fix these. Have a nice day.
->
->
->
+> + CC Dmitry and linux-input.
+
+I developed this driver to detect the board movement which can't be 
+detected by accelerometer (very slow motion). I admit this use case can 
+be handled by an input, and I'm agree with you, PAT9125 driver could be 
+an input. But, like you said, this chip is able to track different kind 
+of motion, and additionally have an interrupt GPIO, so using it like 
+input limit the driver potential. This chip is designed to work in 
+industrial measurement or embedded systems, and the IIO API match with 
+these environments, so it's the best way to exploit the entire potential 
+of this chip.
+
+As I understand (from 
+https://www.kernel.org/doc/html/v4.12/input/event-codes.html#mice ), 
+mouse driver must report values when the device move. This feature 
+souldn't be mandatory for an optical tracker driver, specially for cases 
+where user prefers to use buffer or poll only when he need data.
+
+> If 1 or 2, I would suggest that you provide absolute position to
+> Linux.  So add the value to a software counter and provide that.
+> 32 bits should be plenty of resolution for that.
+I can't provide absolute position, only relative. Do you mean using 
+input driver to do that ? If not, how is built the position data?
+
+> Silly question for you.  What happens if you set the delta values to 0?
+> Do we get an interrupt which is effectively data ready?
+> If we do, you might want to think about a scheme where that is an option.
+> As things currently stand we have a confusing interface where changing this
+> threshold effects the buffered data output.   That should only be the
+> case if this interface is for a trigger, not an event.
+
+I'm not sure to understand your question. Is it possible to read delta_x 
+and delta_y = 0 in special/corner case because internal value continue 
+to be updated after toggled motion_detect pin (used for IRQ) until 
+values registers are read and then motion_detect pin is released:
+
+  * Chip move (i.e. +2 on X axis and 0 on Y axis)
+  * Motion_detect IRQ trigger and internal reg value is updated (i.e.
+    delta_x = 2 and delta_y = 0)
+  * GPIO IRQ handled but read_value isn't executed yet (timing reason)
+  * Chip move back to it origin point (i.e. -2 on X axis and 0 on Y axis)
+  * Motion_detect IRQ still low because it hasn't been reset by read
+    value and internal reg value is updated (i.e. delta_x = 0 and
+    delta_y = 0)
+  * Read_value is executed, we get delta values = 0.
+
+> If it is actually not possible to report the two channels separately
+> then don't report them at all except via the buffered interface and
+> set the available scan masks so that both are on.
+I found a way to keep the consistency between delta x and delta y 
+(without losing data). The first part is to reset a value only when user 
+read it (also when it's buffered). The second part is to add the new 
+value to the old value. With these two mechanism, X and Y will always be 
+consistent:
+
+  * as possible during a move.
+  * perfectly when move is finished.
+
+
+Regards,
+
+Alexandre
 
