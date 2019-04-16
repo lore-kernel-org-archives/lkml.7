@@ -2,815 +2,91 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 243E4C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 05:19:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48A06C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 05:20:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5B6020868
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 05:19:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="RUvVWssw";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="JIMn8n6W"
+	by mail.kernel.org (Postfix) with ESMTP id 1FD842073F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 05:20:52 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726794AbfDPFTb (ORCPT
+        id S1726911AbfDPFUv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 01:19:31 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:53296 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726016AbfDPFTa (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 01:19:30 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 0EC5B602DD; Tue, 16 Apr 2019 05:19:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1555391969;
-        bh=zUqwxbKSeuZPZIc3pjmomjCDGBVwfQM3lIcesy/xgZc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=RUvVWsswcQjPaSRwkKLe52ERWlpWL2BStVjQeb0EJDx7z43irE5RWbH7IEd0t1gUu
-         N3s9JD71f5YWqu4rUfQmQRJmS+aUcAEiSJH9HVEvBfXQO3NQaIZk8rbG5YWq1sVTeg
-         rII9PhT6GEY7pPvCn85A228nVrXqNYkAfMwws58c=
-Received: from [10.204.78.109] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: gkohli@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id A5581602DD;
-        Tue, 16 Apr 2019 05:19:24 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1555391966;
-        bh=zUqwxbKSeuZPZIc3pjmomjCDGBVwfQM3lIcesy/xgZc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=JIMn8n6WXuIDq69JMp2lPEoKQmgIJZBNZ1fIV3pZIOqqE3dbuqQMDv57fa6Jl0k9b
-         OcH9t6rcjAua6OwJCtU7B1Uo4WAPbz4Vgiq+27XPaGeDICX1BuAYyY5AIUO/ZkZ2rM
-         G5u3sar1EJz43qHbBJPJ4bAeoSPIssg6cPJWPnKs=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org A5581602DD
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=gkohli@codeaurora.org
-Subject: Re: [PATCH] nvmem: core: add NVMEM_SYSFS Kconfig
-To:     Srinivas Kandagatla <srinivas.kandagatla@linaro.org>,
-        gregkh@linuxfoundation.org
-Cc:     maxime.ripard@bootlin.com, linux-arm-msm@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-References: <20190415164011.2638-1-srinivas.kandagatla@linaro.org>
-From:   Gaurav Kohli <gkohli@codeaurora.org>
-Message-ID: <3a66797d-347d-2414-14e1-edbcd7c39ae8@codeaurora.org>
-Date:   Tue, 16 Apr 2019 10:49:22 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 16 Apr 2019 01:20:51 -0400
+Received: from mx2.suse.de ([195.135.220.15]:33756 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725865AbfDPFUu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 01:20:50 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 47EBDAECD;
+        Tue, 16 Apr 2019 05:20:49 +0000 (UTC)
+Subject: Re: [PATCH] xenbus: drop useless LIST_HEAD in xenbus_write_watch()
+ and xenbus_file_write()
+To:     Mao Wenan <maowenan@huawei.com>, boris.ostrovsky@oracle.com,
+        sstabellini@kernel.org
+Cc:     xen-devel@lists.xenproject.org, linux-kernel@vger.kernel.org,
+        kernel-janitors@vger.kernel.org
+References: <20190416040651.186468-1-maowenan@huawei.com>
+From:   Juergen Gross <jgross@suse.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jgross@suse.com; prefer-encrypt=mutual; keydata=
+ mQENBFOMcBYBCACgGjqjoGvbEouQZw/ToiBg9W98AlM2QHV+iNHsEs7kxWhKMjrioyspZKOB
+ ycWxw3ie3j9uvg9EOB3aN4xiTv4qbnGiTr3oJhkB1gsb6ToJQZ8uxGq2kaV2KL9650I1SJve
+ dYm8Of8Zd621lSmoKOwlNClALZNew72NjJLEzTalU1OdT7/i1TXkH09XSSI8mEQ/ouNcMvIJ
+ NwQpd369y9bfIhWUiVXEK7MlRgUG6MvIj6Y3Am/BBLUVbDa4+gmzDC9ezlZkTZG2t14zWPvx
+ XP3FAp2pkW0xqG7/377qptDmrk42GlSKN4z76ELnLxussxc7I2hx18NUcbP8+uty4bMxABEB
+ AAG0H0p1ZXJnZW4gR3Jvc3MgPGpncm9zc0BzdXNlLmNvbT6JATkEEwECACMFAlOMcK8CGwMH
+ CwkIBwMCAQYVCAIJCgsEFgIDAQIeAQIXgAAKCRCw3p3WKL8TL8eZB/9G0juS/kDY9LhEXseh
+ mE9U+iA1VsLhgDqVbsOtZ/S14LRFHczNd/Lqkn7souCSoyWsBs3/wO+OjPvxf7m+Ef+sMtr0
+ G5lCWEWa9wa0IXx5HRPW/ScL+e4AVUbL7rurYMfwCzco+7TfjhMEOkC+va5gzi1KrErgNRHH
+ kg3PhlnRY0Udyqx++UYkAsN4TQuEhNN32MvN0Np3WlBJOgKcuXpIElmMM5f1BBzJSKBkW0Jc
+ Wy3h2Wy912vHKpPV/Xv7ZwVJ27v7KcuZcErtptDevAljxJtE7aJG6WiBzm+v9EswyWxwMCIO
+ RoVBYuiocc51872tRGywc03xaQydB+9R7BHPuQENBFOMcBYBCADLMfoA44MwGOB9YT1V4KCy
+ vAfd7E0BTfaAurbG+Olacciz3yd09QOmejFZC6AnoykydyvTFLAWYcSCdISMr88COmmCbJzn
+ sHAogjexXiif6ANUUlHpjxlHCCcELmZUzomNDnEOTxZFeWMTFF9Rf2k2F0Tl4E5kmsNGgtSa
+ aMO0rNZoOEiD/7UfPP3dfh8JCQ1VtUUsQtT1sxos8Eb/HmriJhnaTZ7Hp3jtgTVkV0ybpgFg
+ w6WMaRkrBh17mV0z2ajjmabB7SJxcouSkR0hcpNl4oM74d2/VqoW4BxxxOD1FcNCObCELfIS
+ auZx+XT6s+CE7Qi/c44ibBMR7hyjdzWbABEBAAGJAR8EGAECAAkFAlOMcBYCGwwACgkQsN6d
+ 1ii/Ey9D+Af/WFr3q+bg/8v5tCknCtn92d5lyYTBNt7xgWzDZX8G6/pngzKyWfedArllp0Pn
+ fgIXtMNV+3t8Li1Tg843EXkP7+2+CQ98MB8XvvPLYAfW8nNDV85TyVgWlldNcgdv7nn1Sq8g
+ HwB2BHdIAkYce3hEoDQXt/mKlgEGsLpzJcnLKimtPXQQy9TxUaLBe9PInPd+Ohix0XOlY+Uk
+ QFEx50Ki3rSDl2Zt2tnkNYKUCvTJq7jvOlaPd6d/W0tZqpyy7KVay+K4aMobDsodB3dvEAs6
+ ScCnh03dDAFgIq5nsB11j3KPKdVoPlfucX2c7kGNH+LUMbzqV6beIENfNexkOfxHf4kBrQQY
+ AQgAIBYhBIUSZ3Lo9gSUpdCX97DendYovxMvBQJa3fDQAhsCAIEJELDendYovxMvdiAEGRYI
+ AB0WIQRTLbB6QfY48x44uB6AXGG7T9hjvgUCWt3w0AAKCRCAXGG7T9hjvk2LAP99B/9FenK/
+ 1lfifxQmsoOrjbZtzCS6OKxPqOLHaY47BgEAqKKn36YAPpbk09d2GTVetoQJwiylx/Z9/mQI
+ CUbQMg1pNQf9EjA1bNcMbnzJCgt0P9Q9wWCLwZa01SnQWFz8Z4HEaKldie+5bHBL5CzVBrLv
+ 81tqX+/j95llpazzCXZW2sdNL3r8gXqrajSox7LR2rYDGdltAhQuISd2BHrbkQVEWD4hs7iV
+ 1KQHe2uwXbKlguKPhk5ubZxqwsg/uIHw0qZDk+d0vxjTtO2JD5Jv/CeDgaBX4Emgp0NYs8IC
+ UIyKXBtnzwiNv4cX9qKlz2Gyq9b+GdcLYZqMlIBjdCz0yJvgeb3WPNsCOanvbjelDhskx9gd
+ 6YUUFFqgsLtrKpCNyy203a58g2WosU9k9H+LcheS37Ph2vMVTISMszW9W8gyORSgmw==
+Message-ID: <545749c9-dfad-2de4-3b74-f73d78419007@suse.com>
+Date:   Tue, 16 Apr 2019 07:20:48 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190415164011.2638-1-srinivas.kandagatla@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+In-Reply-To: <20190416040651.186468-1-maowenan@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Srinivas,
-
-Thanks for the patch,
-By default NVMEM_SYSFS should be set true, those whose don't want they 
-can disable the same.
-
-If we go with disable option, there are chances of eeprom may break in 
-below case:
-
-if (config->compat) {
-                 rval = nvmem_sysfs_setup_compat(nvmem, config); -> this 
-will return error as config is disabled.
-                 if (rval)
-                         goto err_device_del;
-         }
-
-Regards
-Gaurav
-
-
-On 4/15/2019 10:10 PM, Srinivas Kandagatla wrote:
-> Many nvmem providers are not very keen on having default sysfs
-> nvmem entry, as most of the usecases for them are inside kernel
-> itself. And in some cases read/writes to some areas in nvmem are
-> restricted and trapped at secure monitor level, so accessing them
-> from userspace would result in board reboots.
+On 16/04/2019 06:06, Mao Wenan wrote:
+> Drop LIST_HEAD where the variable it declares is never used.
 > 
-> This patch adds new NVMEM_SYSFS Kconfig to make binary sysfs entry
-> an optional one. This provision will give more flexibility to users.
-> This patch also moves existing sysfs code to a new file so that its
-> not compiled in when its not really required.
+> The declarations were introduced with the file, but the declared
+> variables were not used.
 > 
-> Signed-off-by: Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-> ---
->   Documentation/ABI/stable/sysfs-bus-nvmem |   2 +
->   drivers/nvmem/Kconfig                    |   9 +
->   drivers/nvmem/Makefile                   |   3 +
->   drivers/nvmem/core.c                     | 264 +----------------------
->   drivers/nvmem/nvmem-sysfs.c              | 256 ++++++++++++++++++++++
->   drivers/nvmem/nvmem.h                    |  62 ++++++
->   6 files changed, 336 insertions(+), 260 deletions(-)
->   create mode 100644 drivers/nvmem/nvmem-sysfs.c
->   create mode 100644 drivers/nvmem/nvmem.h
-> 
-> diff --git a/Documentation/ABI/stable/sysfs-bus-nvmem b/Documentation/ABI/stable/sysfs-bus-nvmem
-> index 5923ab4620c5..9ffba8576f7b 100644
-> --- a/Documentation/ABI/stable/sysfs-bus-nvmem
-> +++ b/Documentation/ABI/stable/sysfs-bus-nvmem
-> @@ -6,6 +6,8 @@ Description:
->   		This file allows user to read/write the raw NVMEM contents.
->   		Permissions for write to this file depends on the nvmem
->   		provider configuration.
-> +		Note: This file is only present if CONFIG_NVMEM_SYSFS
-> +		is enabled
->   
->   		ex:
->   		hexdump /sys/bus/nvmem/devices/qfprom0/nvmem
-> diff --git a/drivers/nvmem/Kconfig b/drivers/nvmem/Kconfig
-> index a90e9a1ebe55..e316811e9c04 100644
-> --- a/drivers/nvmem/Kconfig
-> +++ b/drivers/nvmem/Kconfig
-> @@ -13,6 +13,15 @@ menuconfig NVMEM
->   
->   if NVMEM
->   
-> +config NVMEM_SYSFS
-> +	bool "/sys/bus/nvmem/devices/*/nvmem (sysfs interface)"
-> +	depends on SYSFS
-> +	help
-> +	 Say Y here to add a sysfs interface for NVMEM.
-> +
-> +	 This interface is mostly used by userspace applications to
-> +	 read/write directly into nvmem.
-> +
->   config NVMEM_IMX_IIM
->   	tristate "i.MX IC Identification Module support"
->   	depends on ARCH_MXC || COMPILE_TEST
-> diff --git a/drivers/nvmem/Makefile b/drivers/nvmem/Makefile
-> index 4c7ba12a7005..c1fe4768dfef 100644
-> --- a/drivers/nvmem/Makefile
-> +++ b/drivers/nvmem/Makefile
-> @@ -6,6 +6,9 @@
->   obj-$(CONFIG_NVMEM)		+= nvmem_core.o
->   nvmem_core-y			:= core.o
->   
-> +obj-$(CONFIG_NVMEM_SYSFS)	+= nvmem_sysfs.o
-> +nvmem_sysfs-y			:= nvmem-sysfs.o
-> +
->   # Devices
->   obj-$(CONFIG_NVMEM_BCM_OCOTP)	+= nvmem-bcm-ocotp.o
->   nvmem-bcm-ocotp-y		:= bcm-ocotp.o
-> diff --git a/drivers/nvmem/core.c b/drivers/nvmem/core.c
-> index 5abebf2128b8..c7892c3da91f 100644
-> --- a/drivers/nvmem/core.c
-> +++ b/drivers/nvmem/core.c
-> @@ -17,27 +17,7 @@
->   #include <linux/nvmem-provider.h>
->   #include <linux/of.h>
->   #include <linux/slab.h>
-> -
-> -struct nvmem_device {
-> -	struct module		*owner;
-> -	struct device		dev;
-> -	int			stride;
-> -	int			word_size;
-> -	int			id;
-> -	struct kref		refcnt;
-> -	size_t			size;
-> -	bool			read_only;
-> -	int			flags;
-> -	enum nvmem_type		type;
-> -	struct bin_attribute	eeprom;
-> -	struct device		*base_dev;
-> -	struct list_head	cells;
-> -	nvmem_reg_read_t	reg_read;
-> -	nvmem_reg_write_t	reg_write;
-> -	void *priv;
-> -};
-> -
-> -#define FLAG_COMPAT		BIT(0)
-> +#include "nvmem.h"
->   
->   struct nvmem_cell {
->   	const char		*name;
-> @@ -61,18 +41,7 @@ static LIST_HEAD(nvmem_lookup_list);
->   
->   static BLOCKING_NOTIFIER_HEAD(nvmem_notifier);
->   
-> -static const char * const nvmem_type_str[] = {
-> -	[NVMEM_TYPE_UNKNOWN] = "Unknown",
-> -	[NVMEM_TYPE_EEPROM] = "EEPROM",
-> -	[NVMEM_TYPE_OTP] = "OTP",
-> -	[NVMEM_TYPE_BATTERY_BACKED] = "Battery backed",
-> -};
-> -
-> -#ifdef CONFIG_DEBUG_LOCK_ALLOC
-> -static struct lock_class_key eeprom_lock_key;
-> -#endif
->   
-> -#define to_nvmem_device(d) container_of(d, struct nvmem_device, dev)
->   static int nvmem_reg_read(struct nvmem_device *nvmem, unsigned int offset,
->   			  void *val, size_t bytes)
->   {
-> @@ -91,187 +60,6 @@ static int nvmem_reg_write(struct nvmem_device *nvmem, unsigned int offset,
->   	return -EINVAL;
->   }
->   
-> -static ssize_t type_show(struct device *dev,
-> -			 struct device_attribute *attr, char *buf)
-> -{
-> -	struct nvmem_device *nvmem = to_nvmem_device(dev);
-> -
-> -	return sprintf(buf, "%s\n", nvmem_type_str[nvmem->type]);
-> -}
-> -
-> -static DEVICE_ATTR_RO(type);
-> -
-> -static struct attribute *nvmem_attrs[] = {
-> -	&dev_attr_type.attr,
-> -	NULL,
-> -};
-> -
-> -static ssize_t bin_attr_nvmem_read(struct file *filp, struct kobject *kobj,
-> -				    struct bin_attribute *attr,
-> -				    char *buf, loff_t pos, size_t count)
-> -{
-> -	struct device *dev;
-> -	struct nvmem_device *nvmem;
-> -	int rc;
-> -
-> -	if (attr->private)
-> -		dev = attr->private;
-> -	else
-> -		dev = container_of(kobj, struct device, kobj);
-> -	nvmem = to_nvmem_device(dev);
-> -
-> -	/* Stop the user from reading */
-> -	if (pos >= nvmem->size)
-> -		return 0;
-> -
-> -	if (count < nvmem->word_size)
-> -		return -EINVAL;
-> -
-> -	if (pos + count > nvmem->size)
-> -		count = nvmem->size - pos;
-> -
-> -	count = round_down(count, nvmem->word_size);
-> -
-> -	rc = nvmem_reg_read(nvmem, pos, buf, count);
-> -
-> -	if (rc)
-> -		return rc;
-> -
-> -	return count;
-> -}
-> -
-> -static ssize_t bin_attr_nvmem_write(struct file *filp, struct kobject *kobj,
-> -				     struct bin_attribute *attr,
-> -				     char *buf, loff_t pos, size_t count)
-> -{
-> -	struct device *dev;
-> -	struct nvmem_device *nvmem;
-> -	int rc;
-> -
-> -	if (attr->private)
-> -		dev = attr->private;
-> -	else
-> -		dev = container_of(kobj, struct device, kobj);
-> -	nvmem = to_nvmem_device(dev);
-> -
-> -	/* Stop the user from writing */
-> -	if (pos >= nvmem->size)
-> -		return -EFBIG;
-> -
-> -	if (count < nvmem->word_size)
-> -		return -EINVAL;
-> -
-> -	if (pos + count > nvmem->size)
-> -		count = nvmem->size - pos;
-> -
-> -	count = round_down(count, nvmem->word_size);
-> -
-> -	rc = nvmem_reg_write(nvmem, pos, buf, count);
-> -
-> -	if (rc)
-> -		return rc;
-> -
-> -	return count;
-> -}
-> -
-> -/* default read/write permissions */
-> -static struct bin_attribute bin_attr_rw_nvmem = {
-> -	.attr	= {
-> -		.name	= "nvmem",
-> -		.mode	= 0644,
-> -	},
-> -	.read	= bin_attr_nvmem_read,
-> -	.write	= bin_attr_nvmem_write,
-> -};
-> -
-> -static struct bin_attribute *nvmem_bin_rw_attributes[] = {
-> -	&bin_attr_rw_nvmem,
-> -	NULL,
-> -};
-> -
-> -static const struct attribute_group nvmem_bin_rw_group = {
-> -	.bin_attrs	= nvmem_bin_rw_attributes,
-> -	.attrs		= nvmem_attrs,
-> -};
-> -
-> -static const struct attribute_group *nvmem_rw_dev_groups[] = {
-> -	&nvmem_bin_rw_group,
-> -	NULL,
-> -};
-> -
-> -/* read only permission */
-> -static struct bin_attribute bin_attr_ro_nvmem = {
-> -	.attr	= {
-> -		.name	= "nvmem",
-> -		.mode	= 0444,
-> -	},
-> -	.read	= bin_attr_nvmem_read,
-> -};
-> -
-> -static struct bin_attribute *nvmem_bin_ro_attributes[] = {
-> -	&bin_attr_ro_nvmem,
-> -	NULL,
-> -};
-> -
-> -static const struct attribute_group nvmem_bin_ro_group = {
-> -	.bin_attrs	= nvmem_bin_ro_attributes,
-> -	.attrs		= nvmem_attrs,
-> -};
-> -
-> -static const struct attribute_group *nvmem_ro_dev_groups[] = {
-> -	&nvmem_bin_ro_group,
-> -	NULL,
-> -};
-> -
-> -/* default read/write permissions, root only */
-> -static struct bin_attribute bin_attr_rw_root_nvmem = {
-> -	.attr	= {
-> -		.name	= "nvmem",
-> -		.mode	= 0600,
-> -	},
-> -	.read	= bin_attr_nvmem_read,
-> -	.write	= bin_attr_nvmem_write,
-> -};
-> -
-> -static struct bin_attribute *nvmem_bin_rw_root_attributes[] = {
-> -	&bin_attr_rw_root_nvmem,
-> -	NULL,
-> -};
-> -
-> -static const struct attribute_group nvmem_bin_rw_root_group = {
-> -	.bin_attrs	= nvmem_bin_rw_root_attributes,
-> -	.attrs		= nvmem_attrs,
-> -};
-> -
-> -static const struct attribute_group *nvmem_rw_root_dev_groups[] = {
-> -	&nvmem_bin_rw_root_group,
-> -	NULL,
-> -};
-> -
-> -/* read only permission, root only */
-> -static struct bin_attribute bin_attr_ro_root_nvmem = {
-> -	.attr	= {
-> -		.name	= "nvmem",
-> -		.mode	= 0400,
-> -	},
-> -	.read	= bin_attr_nvmem_read,
-> -};
-> -
-> -static struct bin_attribute *nvmem_bin_ro_root_attributes[] = {
-> -	&bin_attr_ro_root_nvmem,
-> -	NULL,
-> -};
-> -
-> -static const struct attribute_group nvmem_bin_ro_root_group = {
-> -	.bin_attrs	= nvmem_bin_ro_root_attributes,
-> -	.attrs		= nvmem_attrs,
-> -};
-> -
-> -static const struct attribute_group *nvmem_ro_root_dev_groups[] = {
-> -	&nvmem_bin_ro_root_group,
-> -	NULL,
-> -};
-> -
->   static void nvmem_release(struct device *dev)
->   {
->   	struct nvmem_device *nvmem = to_nvmem_device(dev);
-> @@ -422,43 +210,6 @@ static int nvmem_add_cells(struct nvmem_device *nvmem,
->   	return rval;
->   }
->   
-> -/*
-> - * nvmem_setup_compat() - Create an additional binary entry in
-> - * drivers sys directory, to be backwards compatible with the older
-> - * drivers/misc/eeprom drivers.
-> - */
-> -static int nvmem_setup_compat(struct nvmem_device *nvmem,
-> -			      const struct nvmem_config *config)
-> -{
-> -	int rval;
-> -
-> -	if (!config->base_dev)
-> -		return -EINVAL;
-> -
-> -	if (nvmem->read_only)
-> -		nvmem->eeprom = bin_attr_ro_root_nvmem;
-> -	else
-> -		nvmem->eeprom = bin_attr_rw_root_nvmem;
-> -	nvmem->eeprom.attr.name = "eeprom";
-> -	nvmem->eeprom.size = nvmem->size;
-> -#ifdef CONFIG_DEBUG_LOCK_ALLOC
-> -	nvmem->eeprom.attr.key = &eeprom_lock_key;
-> -#endif
-> -	nvmem->eeprom.private = &nvmem->dev;
-> -	nvmem->base_dev = config->base_dev;
-> -
-> -	rval = device_create_bin_file(nvmem->base_dev, &nvmem->eeprom);
-> -	if (rval) {
-> -		dev_err(&nvmem->dev,
-> -			"Failed to create eeprom binary file %d\n", rval);
-> -		return rval;
-> -	}
-> -
-> -	nvmem->flags |= FLAG_COMPAT;
-> -
-> -	return 0;
-> -}
-> -
->   /**
->    * nvmem_register_notifier() - Register a notifier block for nvmem events.
->    *
-> @@ -651,14 +402,7 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
->   	nvmem->read_only = device_property_present(config->dev, "read-only") ||
->   			   config->read_only || !nvmem->reg_write;
->   
-> -	if (config->root_only)
-> -		nvmem->dev.groups = nvmem->read_only ?
-> -			nvmem_ro_root_dev_groups :
-> -			nvmem_rw_root_dev_groups;
-> -	else
-> -		nvmem->dev.groups = nvmem->read_only ?
-> -			nvmem_ro_dev_groups :
-> -			nvmem_rw_dev_groups;
-> +	nvmem->dev.groups = nvmem_sysfs_get_groups(nvmem, config);
->   
->   	device_initialize(&nvmem->dev);
->   
-> @@ -669,7 +413,7 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
->   		goto err_put_device;
->   
->   	if (config->compat) {
-> -		rval = nvmem_setup_compat(nvmem, config);
-> +		rval = nvmem_sysfs_setup_compat(nvmem, config);
->   		if (rval)
->   			goto err_device_del;
->   	}
-> @@ -696,7 +440,7 @@ struct nvmem_device *nvmem_register(const struct nvmem_config *config)
->   	nvmem_device_remove_all_cells(nvmem);
->   err_teardown_compat:
->   	if (config->compat)
-> -		device_remove_bin_file(nvmem->base_dev, &nvmem->eeprom);
-> +		nvmem_sysfs_remove_compat(nvmem, config);
->   err_device_del:
->   	device_del(&nvmem->dev);
->   err_put_device:
-> diff --git a/drivers/nvmem/nvmem-sysfs.c b/drivers/nvmem/nvmem-sysfs.c
-> new file mode 100644
-> index 000000000000..6f303b91f6e7
-> --- /dev/null
-> +++ b/drivers/nvmem/nvmem-sysfs.c
-> @@ -0,0 +1,256 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2019, Linaro Limited
-> + */
-> +#include "nvmem.h"
-> +
-> +static const char * const nvmem_type_str[] = {
-> +	[NVMEM_TYPE_UNKNOWN] = "Unknown",
-> +	[NVMEM_TYPE_EEPROM] = "EEPROM",
-> +	[NVMEM_TYPE_OTP] = "OTP",
-> +	[NVMEM_TYPE_BATTERY_BACKED] = "Battery backed",
-> +};
-> +
-> +#ifdef CONFIG_DEBUG_LOCK_ALLOC
-> +static struct lock_class_key eeprom_lock_key;
-> +#endif
-> +
-> +static ssize_t type_show(struct device *dev,
-> +			 struct device_attribute *attr, char *buf)
-> +{
-> +	struct nvmem_device *nvmem = to_nvmem_device(dev);
-> +
-> +	return sprintf(buf, "%s\n", nvmem_type_str[nvmem->type]);
-> +}
-> +
-> +static DEVICE_ATTR_RO(type);
-> +
-> +static struct attribute *nvmem_attrs[] = {
-> +	&dev_attr_type.attr,
-> +	NULL,
-> +};
-> +
-> +static ssize_t bin_attr_nvmem_read(struct file *filp, struct kobject *kobj,
-> +				    struct bin_attribute *attr,
-> +				    char *buf, loff_t pos, size_t count)
-> +{
-> +	struct device *dev;
-> +	struct nvmem_device *nvmem;
-> +	int rc;
-> +
-> +	if (attr->private)
-> +		dev = attr->private;
-> +	else
-> +		dev = container_of(kobj, struct device, kobj);
-> +	nvmem = to_nvmem_device(dev);
-> +
-> +	/* Stop the user from reading */
-> +	if (pos >= nvmem->size)
-> +		return 0;
-> +
-> +	if (count < nvmem->word_size)
-> +		return -EINVAL;
-> +
-> +	if (pos + count > nvmem->size)
-> +		count = nvmem->size - pos;
-> +
-> +	count = round_down(count, nvmem->word_size);
-> +
-> +	rc = nvmem->reg_read(nvmem->priv, pos, buf, count);
-> +
-> +	if (rc)
-> +		return rc;
-> +
-> +	return count;
-> +}
-> +
-> +static ssize_t bin_attr_nvmem_write(struct file *filp, struct kobject *kobj,
-> +				     struct bin_attribute *attr,
-> +				     char *buf, loff_t pos, size_t count)
-> +{
-> +	struct device *dev;
-> +	struct nvmem_device *nvmem;
-> +	int rc;
-> +
-> +	if (attr->private)
-> +		dev = attr->private;
-> +	else
-> +		dev = container_of(kobj, struct device, kobj);
-> +	nvmem = to_nvmem_device(dev);
-> +
-> +	/* Stop the user from writing */
-> +	if (pos >= nvmem->size)
-> +		return -EFBIG;
-> +
-> +	if (count < nvmem->word_size)
-> +		return -EINVAL;
-> +
-> +	if (pos + count > nvmem->size)
-> +		count = nvmem->size - pos;
-> +
-> +	count = round_down(count, nvmem->word_size);
-> +
-> +	rc = nvmem->reg_write(nvmem->priv, pos, buf, count);
-> +
-> +	if (rc)
-> +		return rc;
-> +
-> +	return count;
-> +}
-> +
-> +/* default read/write permissions */
-> +static struct bin_attribute bin_attr_rw_nvmem = {
-> +	.attr	= {
-> +		.name	= "nvmem",
-> +		.mode	= 0644,
-> +	},
-> +	.read	= bin_attr_nvmem_read,
-> +	.write	= bin_attr_nvmem_write,
-> +};
-> +
-> +static struct bin_attribute *nvmem_bin_rw_attributes[] = {
-> +	&bin_attr_rw_nvmem,
-> +	NULL,
-> +};
-> +
-> +static const struct attribute_group nvmem_bin_rw_group = {
-> +	.bin_attrs	= nvmem_bin_rw_attributes,
-> +	.attrs		= nvmem_attrs,
-> +};
-> +
-> +static const struct attribute_group *nvmem_rw_dev_groups[] = {
-> +	&nvmem_bin_rw_group,
-> +	NULL,
-> +};
-> +
-> +/* read only permission */
-> +static struct bin_attribute bin_attr_ro_nvmem = {
-> +	.attr	= {
-> +		.name	= "nvmem",
-> +		.mode	= 0444,
-> +	},
-> +	.read	= bin_attr_nvmem_read,
-> +};
-> +
-> +static struct bin_attribute *nvmem_bin_ro_attributes[] = {
-> +	&bin_attr_ro_nvmem,
-> +	NULL,
-> +};
-> +
-> +static const struct attribute_group nvmem_bin_ro_group = {
-> +	.bin_attrs	= nvmem_bin_ro_attributes,
-> +	.attrs		= nvmem_attrs,
-> +};
-> +
-> +static const struct attribute_group *nvmem_ro_dev_groups[] = {
-> +	&nvmem_bin_ro_group,
-> +	NULL,
-> +};
-> +
-> +/* default read/write permissions, root only */
-> +static struct bin_attribute bin_attr_rw_root_nvmem = {
-> +	.attr	= {
-> +		.name	= "nvmem",
-> +		.mode	= 0600,
-> +	},
-> +	.read	= bin_attr_nvmem_read,
-> +	.write	= bin_attr_nvmem_write,
-> +};
-> +
-> +static struct bin_attribute *nvmem_bin_rw_root_attributes[] = {
-> +	&bin_attr_rw_root_nvmem,
-> +	NULL,
-> +};
-> +
-> +static const struct attribute_group nvmem_bin_rw_root_group = {
-> +	.bin_attrs	= nvmem_bin_rw_root_attributes,
-> +	.attrs		= nvmem_attrs,
-> +};
-> +
-> +static const struct attribute_group *nvmem_rw_root_dev_groups[] = {
-> +	&nvmem_bin_rw_root_group,
-> +	NULL,
-> +};
-> +
-> +/* read only permission, root only */
-> +static struct bin_attribute bin_attr_ro_root_nvmem = {
-> +	.attr	= {
-> +		.name	= "nvmem",
-> +		.mode	= 0400,
-> +	},
-> +	.read	= bin_attr_nvmem_read,
-> +};
-> +
-> +static struct bin_attribute *nvmem_bin_ro_root_attributes[] = {
-> +	&bin_attr_ro_root_nvmem,
-> +	NULL,
-> +};
-> +
-> +static const struct attribute_group nvmem_bin_ro_root_group = {
-> +	.bin_attrs	= nvmem_bin_ro_root_attributes,
-> +	.attrs		= nvmem_attrs,
-> +};
-> +
-> +static const struct attribute_group *nvmem_ro_root_dev_groups[] = {
-> +	&nvmem_bin_ro_root_group,
-> +	NULL,
-> +};
-> +
-> +const struct attribute_group **nvmem_sysfs_get_groups(
-> +					struct nvmem_device *nvmem,
-> +					const struct nvmem_config *config)
-> +{
-> +	if (config->root_only)
-> +		return nvmem->read_only ?
-> +			nvmem_ro_root_dev_groups :
-> +			nvmem_rw_root_dev_groups;
-> +
-> +	return nvmem->read_only ? nvmem_ro_dev_groups : nvmem_rw_dev_groups;
-> +}
-> +
-> +/*
-> + * nvmem_setup_compat() - Create an additional binary entry in
-> + * drivers sys directory, to be backwards compatible with the older
-> + * drivers/misc/eeprom drivers.
-> + */
-> +int nvmem_sysfs_setup_compat(struct nvmem_device *nvmem,
-> +			      const struct nvmem_config *config)
-> +{
-> +	int rval;
-> +
-> +	if (!config->compat)
-> +		return 0;
-> +
-> +	if (!config->base_dev)
-> +		return -EINVAL;
-> +
-> +	if (nvmem->read_only)
-> +		nvmem->eeprom = bin_attr_ro_root_nvmem;
-> +	else
-> +		nvmem->eeprom = bin_attr_rw_root_nvmem;
-> +	nvmem->eeprom.attr.name = "eeprom";
-> +	nvmem->eeprom.size = nvmem->size;
-> +#ifdef CONFIG_DEBUG_LOCK_ALLOC
-> +	nvmem->eeprom.attr.key = &eeprom_lock_key;
-> +#endif
-> +	nvmem->eeprom.private = &nvmem->dev;
-> +	nvmem->base_dev = config->base_dev;
-> +
-> +	rval = device_create_bin_file(nvmem->base_dev, &nvmem->eeprom);
-> +	if (rval) {
-> +		dev_err(&nvmem->dev,
-> +			"Failed to create eeprom binary file %d\n", rval);
-> +		return rval;
-> +	}
-> +
-> +	nvmem->flags |= FLAG_COMPAT;
-> +
-> +	return 0;
-> +}
-> +
-> +void nvmem_sysfs_remove_compat(struct nvmem_device *nvmem,
-> +			      const struct nvmem_config *config)
-> +{
-> +	if (config->compat)
-> +		device_remove_bin_file(nvmem->base_dev, &nvmem->eeprom);
-> +}
-> diff --git a/drivers/nvmem/nvmem.h b/drivers/nvmem/nvmem.h
-> new file mode 100644
-> index 000000000000..eb8ed7121fa3
-> --- /dev/null
-> +++ b/drivers/nvmem/nvmem.h
-> @@ -0,0 +1,62 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +
-> +#ifndef _DRIVERS_NVMEM_H
-> +#define _DRIVERS_NVMEM_H
-> +
-> +#include <linux/device.h>
-> +#include <linux/fs.h>
-> +#include <linux/kref.h>
-> +#include <linux/list.h>
-> +#include <linux/nvmem-consumer.h>
-> +#include <linux/nvmem-provider.h>
-> +
-> +struct nvmem_device {
-> +	struct module		*owner;
-> +	struct device		dev;
-> +	int			stride;
-> +	int			word_size;
-> +	int			id;
-> +	struct kref		refcnt;
-> +	size_t			size;
-> +	bool			read_only;
-> +	int			flags;
-> +	enum nvmem_type		type;
-> +	struct bin_attribute	eeprom;
-> +	struct device		*base_dev;
-> +	struct list_head	cells;
-> +	nvmem_reg_read_t	reg_read;
-> +	nvmem_reg_write_t	reg_write;
-> +	void *priv;
-> +};
-> +
-> +#define to_nvmem_device(d) container_of(d, struct nvmem_device, dev)
-> +#define FLAG_COMPAT		BIT(0)
-> +
-> +#ifdef CONFIG_NVMEM_SYSFS
-> +const struct attribute_group **nvmem_sysfs_get_groups(
-> +					struct nvmem_device *nvmem,
-> +					const struct nvmem_config *config);
-> +int nvmem_sysfs_setup_compat(struct nvmem_device *nvmem,
-> +			      const struct nvmem_config *config);
-> +void nvmem_sysfs_remove_compat(struct nvmem_device *nvmem,
-> +			      const struct nvmem_config *config);
-> +#else
-> +static inline const struct attribute_group **nvmem_sysfs_get_groups(
-> +					struct nvmem_device *nvmem,
-> +					const struct nvmem_config *config)
-> +{
-> +	return NULL;
-> +}
-> +
-> +static inline int nvmem_sysfs_setup_compat(struct nvmem_device *nvmem,
-> +				      const struct nvmem_config *config)
-> +{
-> +	return -ENOSYS;
-> +}
-> +static inline void nvmem_sysfs_remove_compat(struct nvmem_device *nvmem,
-> +			      const struct nvmem_config *config)
-> +{
-> +}
-> +#endif /* CONFIG_NVMEM_SYSFS */
-> +
-> +#endif /* _DRIVERS_NVMEM_H */
-> 
+> Fixes: 1107ba885e469("xen: add xenfs to allow usermode <-> Xen interaction")
+> Signed-off-by: Mao Wenan <maowenan@huawei.com>
 
--- 
-Qualcomm India Private Limited, on behalf of Qualcomm Innovation Center,
-Inc. is a member of the Code Aurora Forum,
-a Linux Foundation Collaborative Project.
+Reviewed-by: Juergen Gross <jgross@suse.com>
+
+
+Juergen
