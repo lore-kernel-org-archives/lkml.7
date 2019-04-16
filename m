@@ -2,80 +2,98 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 21CE7C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:21:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C9D38C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:21:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E670120674
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:21:11 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555428072;
-	bh=6557F7FAe7Nccx60JnRafhCiWm1l+A2CQfVigujl1FY=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=klEQ64Q6jyd91iJXFzlGV06RB7a3+AxMA2T8BL+TbMkOP1LquUUYOgxy+sU5Df3Th
-	 MIvXpdDof3DyuxsWa4w/wcbiIcZC5Vbh/aDtZxYRy/NX1sg9yqKUFarxhjIWyu0B48
-	 c1uRpWPpKeRduHUE1KVEgmaJyGRqtSkkJqVyPW1I=
+	by mail.kernel.org (Postfix) with ESMTP id A343120656
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:21:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729732AbfDPPVL (ORCPT
+        id S1729748AbfDPPVQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 11:21:11 -0400
-Received: from mail.kernel.org ([198.145.29.99]:36110 "EHLO mail.kernel.org"
+        Tue, 16 Apr 2019 11:21:16 -0400
+Received: from foss.arm.com ([217.140.101.70]:57748 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727902AbfDPPVI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 11:21:08 -0400
-Received: from localhost (lfbn-1-18355-218.w90-101.abo.wanadoo.fr [90.101.143.218])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E306B20656;
-        Tue, 16 Apr 2019 15:21:06 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555428067;
-        bh=6557F7FAe7Nccx60JnRafhCiWm1l+A2CQfVigujl1FY=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=QNLFn50U8/ZbkzDCX3vClVO1Awzj05VaHDIUITg5yLUVF2nTmRUYafgbjzdp++cay
-         +OwW+sEytUGtqhvwFtOveiEl1lMk3U20Gyf3i78YT3hNfG3fdSASfB/8oLCOPeE6bw
-         /EYfqaeEKn8rJviwv+Y5FGQ30/c6j2LM+ax4FoPQ=
-Date:   Tue, 16 Apr 2019 17:21:04 +0200
-From:   Frederic Weisbecker <frederic@kernel.org>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH 4/4] locking/lockdep: Test all incompatible scenario at
- once in check_irq_usage()
-Message-ID: <20190416152102.GA3501@lenoir>
-References: <20190402160244.32434-1-frederic@kernel.org>
- <20190402160244.32434-5-frederic@kernel.org>
- <20190409130352.GV4038@hirez.programming.kicks-ass.net>
- <20190410022846.GA30602@lenoir>
- <20190411104632.GH4038@hirez.programming.kicks-ass.net>
- <20190413003543.GA9544@lenoir>
- <20190416112009.GT11158@hirez.programming.kicks-ass.net>
+        id S1726751AbfDPPVQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 11:21:16 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E195615A2;
+        Tue, 16 Apr 2019 08:21:15 -0700 (PDT)
+Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4233A3F59C;
+        Tue, 16 Apr 2019 08:21:14 -0700 (PDT)
+Date:   Tue, 16 Apr 2019 16:21:11 +0100
+From:   Will Deacon <will.deacon@arm.com>
+To:     Rasmus Villemoes <linux@rasmusvillemoes.dk>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vineet Gupta <vineet.gupta1@synopsys.com>,
+        Anthony Yznaga <anthony.yznaga@oracle.com>,
+        Andrey Ryabinin <aryabinin@virtuozzo.com>,
+        Pavel Machek <pavel@ucw.cz>,
+        Ido Schimmel <idosch@mellanox.com>,
+        Vadim Pasternak <vadimp@mellanox.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] bitops.h: sanitize rotate primitives
+Message-ID: <20190416152111.GC4187@fuggles.cambridge.arm.com>
+References: <20190410211906.2190-1-linux@rasmusvillemoes.dk>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190416112009.GT11158@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190410211906.2190-1-linux@rasmusvillemoes.dk>
+User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 01:20:09PM +0200, Peter Zijlstra wrote:
-> On Sat, Apr 13, 2019 at 02:35:45AM +0200, Frederic Weisbecker wrote:
-> > On Thu, Apr 11, 2019 at 12:46:32PM +0200, Peter Zijlstra wrote:
-> > Same here:
-> > 
-> >   As above, we clear bitnr0 (LOCK_*_READ off) with bitmask ops. First, for all bits
-> >   with bitnr1 set (LOCK_ENABLED_*) , add those with bitnr1 cleared (LOCK_USED_IN_*).
-> >   And then mask out all bitnr1.
+On Wed, Apr 10, 2019 at 11:19:06PM +0200, Rasmus Villemoes wrote:
+> The ror32 implementation (word >> shift) | (word << (32 - shift) has
+> undefined behaviour if shift is outside the [1, 31] range. Similarly
+> for the 64 bit variants. Most callers pass a compile-time
+> constant (naturally in that range), but there's an UBSAN report that
+> these may actually be called with a shift count of 0.
 > 
-> Ha! you failed to spot my failure, all the above should be bitnr0 of
-> course :/
+> Instead of special-casing that, we can make them DTRT for all values
+> of shift while also avoiding UB. For some reason, this was already
+> partly done for rol32 (which was well-defined for [0, 31]). gcc 8
+> recognizes these patterns as rotates, so for example
+> 
+> __u32 rol32(__u32 word, unsigned int shift)
+> {
+> 	return (word << (shift & 31)) | (word >> ((-shift) & 31));
+> }
+> 
+> compiles to
+> 
+> 0000000000000020 <rol32>:
+>   20:   89 f8                   mov    %edi,%eax
+>   22:   89 f1                   mov    %esi,%ecx
+>   24:   d3 c0                   rol    %cl,%eax
+>   26:   c3                      retq
+> 
+> Older compilers unfortunately do not do as well, but this only affects
+> the small minority of users that don't pass constants.
+> 
+> Due to integer promotions, ro[lr]8 were already well-defined for
+> shifts in [0, 8], and ro[lr]16 were mostly well-defined for shifts in
+> [0, 16] (only mostly - u16 gets promoted to _signed_ int, so if bit 15
+> is set, word << 16 is undefined). For consistency, update those as
+> well.
+> 
+> Reported-by: Ido Schimmel <idosch@mellanox.com>
+> Cc: Vadim Pasternak <vadimp@mellanox.com>
+> Signed-off-by: Rasmus Villemoes <linux@rasmusvillemoes.dk>
+> ---
+>  include/linux/bitops.h | 16 ++++++++--------
+>  1 file changed, 8 insertions(+), 8 deletions(-)
 
-Ooops, right.
+Reviewed-by: Will Deacon <will.deacon@arm.com>
 
-> Find updated below.
+I guess it would be possible to roll some of this up into macros using
+sizeof, but perhaps that would make things even more difficult for the
+compiler.
 
-Very good now, thanks a lot!
+Will
