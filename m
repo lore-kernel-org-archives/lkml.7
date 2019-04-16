@@ -2,115 +2,75 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F06EFC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:14:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B896DC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:14:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C74AD20821
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:14:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9043120675
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:14:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728907AbfDPJOP (ORCPT
+        id S1728913AbfDPJOy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 05:14:15 -0400
-Received: from foss.arm.com ([217.140.101.70]:50166 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726160AbfDPJOP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 05:14:15 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9858AEBD;
-        Tue, 16 Apr 2019 02:14:14 -0700 (PDT)
-Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4166B3F68F;
-        Tue, 16 Apr 2019 02:14:13 -0700 (PDT)
-Date:   Tue, 16 Apr 2019 10:14:10 +0100
-From:   Will Deacon <will.deacon@arm.com>
-To:     "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
-Cc:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
-        Joerg Roedel <joro@8bytes.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        iommu <iommu@lists.linux-foundation.org>,
-        Robin Murphy <robin.murphy@arm.com>,
-        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
-Subject: Re: [PATCH v2 0/2] iommu/arm-smmu-v3: make sure the kdump kernel can
- work well when smmu is enabled
-Message-ID: <20190416091410.GC31579@fuggles.cambridge.arm.com>
-References: <20190318131243.20716-1-thunder.leizhen@huawei.com>
- <20190404153031.GE27558@fuggles.cambridge.arm.com>
- <5CAAB293.3080600@huawei.com>
+        Tue, 16 Apr 2019 05:14:54 -0400
+Received: from mail-qt1-f194.google.com ([209.85.160.194]:43167 "EHLO
+        mail-qt1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726160AbfDPJOx (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 05:14:53 -0400
+Received: by mail-qt1-f194.google.com with SMTP id v32so22410671qtc.10
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 02:14:53 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=vi8vuKV7FF8LFTD9Ed1q0g3vJ+6TdGMNWOak7k27ocw=;
+        b=UO9SMGCYcZON5XfHQrhuCCmBRHROfS6/rVD3+zSUmjiH5WKM6IT7OdYpara7e31XIQ
+         gA2JgUUhsFLOKQIIPWfVQ42C3VXwbiWH1uKBXzmHikYZERNOOl8jNJaPvUE/53qW6iBs
+         cJX2rwJsBVQijfXDWJgEueshtLVVLWfxzofs6Rk8trpgApIyPcf6rjPvn70XO4uk+R/K
+         8sYz+RKLhdOD+s2F6AjLt86s2yzq1Whd5H0mRg87BsIwKv+bFp237YIejaJPiILCJct9
+         wNFh9O2ZBDr0+ArQr9hHyDCsrqkrkNc+hzECKcolCN2oWrLMTlLRiITswbui+qDBaZ8h
+         HqqA==
+X-Gm-Message-State: APjAAAVkjfswSytssnoqKj/TevPbzAcWR60gQiJt8/ACJ3P3UNJAuvmk
+        7EYcNhskIFaTobXFVpPhDutmLu3IxRaMD++LR18=
+X-Google-Smtp-Source: APXvYqxBgx0waGInw/ldbLgtjJ6hQ+aCQTBhF5b2AEyGf3wzgfednKCZAjxE18Nwx9qmdfNUADRi4CA6wrnArVoO+hY=
+X-Received: by 2002:a0c:93f2:: with SMTP id g47mr62680310qvg.22.1555406092667;
+ Tue, 16 Apr 2019 02:14:52 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5CAAB293.3080600@huawei.com>
-User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
+References: <20190416172937.6a7621f7@canb.auug.org.au> <CAK8P3a31Cp_COwjuOm6uG_23M3Ys4tJTB33jBENj-so0jkhgzg@mail.gmail.com>
+ <20190416185327.5c129073@canb.auug.org.au>
+In-Reply-To: <20190416185327.5c129073@canb.auug.org.au>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Tue, 16 Apr 2019 11:14:36 +0200
+Message-ID: <CAK8P3a2UsBYw4CVVt4Fh0NMP+sE6kQuKZ99XXpYYurYSgK2Asg@mail.gmail.com>
+Subject: Re: [PATCH] kernel/compat.c: mark expected switch fall-throughs
+To:     Stephen Rothwell <sfr@canb.auug.org.au>
+Cc:     Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Deepa Dinamani <deepa.kernel@gmail.com>,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>, Jann Horn <jannh@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 08, 2019 at 10:31:47AM +0800, Leizhen (ThunderTown) wrote:
-> On 2019/4/4 23:30, Will Deacon wrote:
-> > On Mon, Mar 18, 2019 at 09:12:41PM +0800, Zhen Lei wrote:
-> >> v1 --> v2:
-> >> 1. Drop part2. Now, we only use the SMMUv3 hardware feature STE.config=0b000
-> >> (Report abort to device, no event recorded) to suppress the event messages
-> >> caused by the unexpected devices.
-> >> 2. rewrite the patch description.
-> > 
-> > This issue came up a while back:
-> > 
-> > https://lore.kernel.org/linux-pci/20180302103032.GB19323@arm.com/
-> > 
-> > and I'd still prefer to solve it using the disable_bypass logic which we
-> > already have. Something along the lines of the diff below?
-> 
-> Yes, my patches also use disable_bypass=1(set ste.config=0b000). If
-> SMMU_IDR0.ST_LEVEL=0(Linear Stream table supported), then all STE entries
-> are allocated and initialized(set ste.config=0b000). But if SMMU_IDR0.ST_LEVEL=1
-> (2-level Stream Table), we only allocated and initialized the first level tables,
-> but leave level 2 tables dynamic allocated. That means, C_BAD_STREAMID(eventid=0x2)
-> will be reported, if an unexpeted device access memory without reinitialized in
-> kdump kernel.
+On Tue, Apr 16, 2019 at 10:54 AM Stephen Rothwell <sfr@canb.auug.org.au> wrote:
+> On Tue, 16 Apr 2019 10:32:55 +0200 Arnd Bergmann <arnd@arndb.de> wrote:
+> > We could also consider just getting rid of put_compat_sigset() and
+> > get_compat_sigset() but replacing them with a combined
+> > put_sigset()/get_sigset() that does the right thing for both native
+> > and compat tasks. This lets us kill a couple of compat system
+> > calls that only differ in their sigset_t argument. On little-endian
+> > systems (which are the vast majority of the installed base), there
+> > is no difference anyway there is no overhead anyway since
+> > native and compat sigset_t are identical.
+>
+> That sounds like a bigger patch that would require some real testing :-)
 
-So is your problem just that the C_BAD_STREAMID events are noisy? If so,
-perhaps we should be disabling fault reporting entirely in the kdump kernel.
+Yes, definitely. I mainly mentioned it in case someone wants to
+do that work anyway, as it would avoid the need for your patch.
 
-How about the update diff below? I'm keen to have this as simple as
-possible, so we don't end up introducing rarely tested, complex code on
-the crash path.
-
-Will
-
---->8
-
-diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
-index d3880010c6cf..d8b73da6447d 100644
---- a/drivers/iommu/arm-smmu-v3.c
-+++ b/drivers/iommu/arm-smmu-v3.c
-@@ -2454,13 +2454,9 @@ static int arm_smmu_device_reset(struct arm_smmu_device *smmu, bool bypass)
- 	/* Clear CR0 and sync (disables SMMU and queue processing) */
- 	reg = readl_relaxed(smmu->base + ARM_SMMU_CR0);
- 	if (reg & CR0_SMMUEN) {
--		if (is_kdump_kernel()) {
--			arm_smmu_update_gbpa(smmu, GBPA_ABORT, 0);
--			arm_smmu_device_disable(smmu);
--			return -EBUSY;
--		}
--
- 		dev_warn(smmu->dev, "SMMU currently enabled! Resetting...\n");
-+		WARN_ON(is_kdump_kernel() && !disable_bypass);
-+		arm_smmu_update_gbpa(smmu, GBPA_ABORT, 0);
- 	}
- 
- 	ret = arm_smmu_device_disable(smmu);
-@@ -2553,6 +2549,8 @@ static int arm_smmu_device_reset(struct arm_smmu_device *smmu, bool bypass)
- 		return ret;
- 	}
- 
-+	if (is_kdump_kernel())
-+		enables &= ~(CR0_EVTQEN | CR0_PRIQEN);
- 
- 	/* Enable the SMMU interface, or ensure bypass */
- 	if (!bypass || disable_bypass) {
+      Arnd
