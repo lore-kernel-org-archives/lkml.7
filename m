@@ -2,121 +2,117 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1842FC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:54:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E202DC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE4FF2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:54:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA57920880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:55:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729907AbfDPPyv (ORCPT
+        id S1729600AbfDPPzn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 11:54:51 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:54044 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729860AbfDPPyq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 11:54:46 -0400
-Received: from pps.filterd (m0098399.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3GFsTNs077876
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 11:54:45 -0400
-Received: from e34.co.us.ibm.com (e34.co.us.ibm.com [32.97.110.152])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rwh1ak9qn-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 11:54:45 -0400
-Received: from localhost
-        by e34.co.us.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <eajames@linux.ibm.com>;
-        Tue, 16 Apr 2019 16:54:44 +0100
-Received: from b03cxnp08028.gho.boulder.ibm.com (9.17.130.20)
-        by e34.co.us.ibm.com (192.168.1.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 16 Apr 2019 16:54:40 +0100
-Received: from b03ledav004.gho.boulder.ibm.com (b03ledav004.gho.boulder.ibm.com [9.17.130.235])
-        by b03cxnp08028.gho.boulder.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3GFsdnj30015564
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 Apr 2019 15:54:40 GMT
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id C30257805C;
-        Tue, 16 Apr 2019 15:54:39 +0000 (GMT)
-Received: from b03ledav004.gho.boulder.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 4E66278060;
-        Tue, 16 Apr 2019 15:54:39 +0000 (GMT)
-Received: from localhost.localdomain (unknown [9.3.116.186])
-        by b03ledav004.gho.boulder.ibm.com (Postfix) with ESMTP;
-        Tue, 16 Apr 2019 15:54:39 +0000 (GMT)
-From:   Eddie James <eajames@linux.ibm.com>
-To:     linux-kernel@vger.kernel.org
-Cc:     linux-hwmon@vger.kernel.org, linux@roeck-us.net, jdelvare@suse.com,
-        andrew@aj.id.au, mine260309@gmail.com,
-        Eddie James <eajames@linux.ibm.com>
-Subject: [PATCH v2 3/3] hwmon (occ): Add more details to Kconfig help text
-Date:   Tue, 16 Apr 2019 15:54:28 +0000
-X-Mailer: git-send-email 2.7.4
-X-TM-AS-GCONF: 00
-x-cbid: 19041615-0016-0000-0000-000009A15EC7
-X-IBM-SpamModules-Scores: 
-X-IBM-SpamModules-Versions: BY=3.00010938; HX=3.00000242; KW=3.00000007;
- PH=3.00000004; SC=3.00000284; SDB=6.01189956; UDB=6.00623519; IPR=6.00970749;
- MB=3.00026468; MTD=3.00000008; XFM=3.00000015; UTC=2019-04-16 15:54:43
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19041615-0017-0000-0000-000042D642F1
-Message-Id: <1555430068-23439-1-git-send-email-eajames@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-16_06:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904160106
+        Tue, 16 Apr 2019 11:55:43 -0400
+Received: from mga03.intel.com ([134.134.136.65]:55053 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726713AbfDPPzm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 11:55:42 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga004.jf.intel.com ([10.7.209.38])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Apr 2019 08:55:41 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,358,1549958400"; 
+   d="scan'208";a="292048862"
+Received: from ray.jf.intel.com (HELO [10.7.201.126]) ([10.7.201.126])
+  by orsmga004.jf.intel.com with ESMTP; 16 Apr 2019 08:55:41 -0700
+Subject: Re: [v2 RFC PATCH 0/9] Another Approach to Use PMEM as NUMA Node
+To:     Zi Yan <ziy@nvidia.com>
+Cc:     Michal Hocko <mhocko@kernel.org>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        mgorman@techsingularity.net, riel@surriel.com, hannes@cmpxchg.org,
+        akpm@linux-foundation.org, keith.busch@intel.com,
+        dan.j.williams@intel.com, fengguang.wu@intel.com, fan.du@intel.com,
+        ying.huang@intel.com, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org
+References: <1554955019-29472-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190412084702.GD13373@dhcp22.suse.cz>
+ <a68137bb-dcd8-4e4a-b3a9-69a66f9dccaf@linux.alibaba.com>
+ <20190416074714.GD11561@dhcp22.suse.cz>
+ <b9b40585-cb59-3d42-bcf8-e59bff77c663@intel.com>
+ <960F3918-7D2C-463C-A911-9B62CD7E5D83@nvidia.com>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ mQINBE6HMP0BEADIMA3XYkQfF3dwHlj58Yjsc4E5y5G67cfbt8dvaUq2fx1lR0K9h1bOI6fC
+ oAiUXvGAOxPDsB/P6UEOISPpLl5IuYsSwAeZGkdQ5g6m1xq7AlDJQZddhr/1DC/nMVa/2BoY
+ 2UnKuZuSBu7lgOE193+7Uks3416N2hTkyKUSNkduyoZ9F5twiBhxPJwPtn/wnch6n5RsoXsb
+ ygOEDxLEsSk/7eyFycjE+btUtAWZtx+HseyaGfqkZK0Z9bT1lsaHecmB203xShwCPT49Blxz
+ VOab8668QpaEOdLGhtvrVYVK7x4skyT3nGWcgDCl5/Vp3TWA4K+IofwvXzX2ON/Mj7aQwf5W
+ iC+3nWC7q0uxKwwsddJ0Nu+dpA/UORQWa1NiAftEoSpk5+nUUi0WE+5DRm0H+TXKBWMGNCFn
+ c6+EKg5zQaa8KqymHcOrSXNPmzJuXvDQ8uj2J8XuzCZfK4uy1+YdIr0yyEMI7mdh4KX50LO1
+ pmowEqDh7dLShTOif/7UtQYrzYq9cPnjU2ZW4qd5Qz2joSGTG9eCXLz5PRe5SqHxv6ljk8mb
+ ApNuY7bOXO/A7T2j5RwXIlcmssqIjBcxsRRoIbpCwWWGjkYjzYCjgsNFL6rt4OL11OUF37wL
+ QcTl7fbCGv53KfKPdYD5hcbguLKi/aCccJK18ZwNjFhqr4MliQARAQABtEVEYXZpZCBDaHJp
+ c3RvcGhlciBIYW5zZW4gKEludGVsIFdvcmsgQWRkcmVzcykgPGRhdmUuaGFuc2VuQGludGVs
+ LmNvbT6JAjgEEwECACIFAlQ+9J0CGwMGCwkIBwMCBhUIAgkKCwQWAgMBAh4BAheAAAoJEGg1
+ lTBwyZKwLZUP/0dnbhDc229u2u6WtK1s1cSd9WsflGXGagkR6liJ4um3XCfYWDHvIdkHYC1t
+ MNcVHFBwmQkawxsYvgO8kXT3SaFZe4ISfB4K4CL2qp4JO+nJdlFUbZI7cz/Td9z8nHjMcWYF
+ IQuTsWOLs/LBMTs+ANumibtw6UkiGVD3dfHJAOPNApjVr+M0P/lVmTeP8w0uVcd2syiaU5jB
+ aht9CYATn+ytFGWZnBEEQFnqcibIaOrmoBLu2b3fKJEd8Jp7NHDSIdrvrMjYynmc6sZKUqH2
+ I1qOevaa8jUg7wlLJAWGfIqnu85kkqrVOkbNbk4TPub7VOqA6qG5GCNEIv6ZY7HLYd/vAkVY
+ E8Plzq/NwLAuOWxvGrOl7OPuwVeR4hBDfcrNb990MFPpjGgACzAZyjdmYoMu8j3/MAEW4P0z
+ F5+EYJAOZ+z212y1pchNNauehORXgjrNKsZwxwKpPY9qb84E3O9KYpwfATsqOoQ6tTgr+1BR
+ CCwP712H+E9U5HJ0iibN/CDZFVPL1bRerHziuwuQuvE0qWg0+0SChFe9oq0KAwEkVs6ZDMB2
+ P16MieEEQ6StQRlvy2YBv80L1TMl3T90Bo1UUn6ARXEpcbFE0/aORH/jEXcRteb+vuik5UGY
+ 5TsyLYdPur3TXm7XDBdmmyQVJjnJKYK9AQxj95KlXLVO38lcuQINBFRjzmoBEACyAxbvUEhd
+ GDGNg0JhDdezyTdN8C9BFsdxyTLnSH31NRiyp1QtuxvcqGZjb2trDVuCbIzRrgMZLVgo3upr
+ MIOx1CXEgmn23Zhh0EpdVHM8IKx9Z7V0r+rrpRWFE8/wQZngKYVi49PGoZj50ZEifEJ5qn/H
+ Nsp2+Y+bTUjDdgWMATg9DiFMyv8fvoqgNsNyrrZTnSgoLzdxr89FGHZCoSoAK8gfgFHuO54B
+ lI8QOfPDG9WDPJ66HCodjTlBEr/Cwq6GruxS5i2Y33YVqxvFvDa1tUtl+iJ2SWKS9kCai2DR
+ 3BwVONJEYSDQaven/EHMlY1q8Vln3lGPsS11vSUK3QcNJjmrgYxH5KsVsf6PNRj9mp8Z1kIG
+ qjRx08+nnyStWC0gZH6NrYyS9rpqH3j+hA2WcI7De51L4Rv9pFwzp161mvtc6eC/GxaiUGuH
+ BNAVP0PY0fqvIC68p3rLIAW3f97uv4ce2RSQ7LbsPsimOeCo/5vgS6YQsj83E+AipPr09Caj
+ 0hloj+hFoqiticNpmsxdWKoOsV0PftcQvBCCYuhKbZV9s5hjt9qn8CE86A5g5KqDf83Fxqm/
+ vXKgHNFHE5zgXGZnrmaf6resQzbvJHO0Fb0CcIohzrpPaL3YepcLDoCCgElGMGQjdCcSQ+Ci
+ FCRl0Bvyj1YZUql+ZkptgGjikQARAQABiQIfBBgBAgAJBQJUY85qAhsMAAoJEGg1lTBwyZKw
+ l4IQAIKHs/9po4spZDFyfDjunimEhVHqlUt7ggR1Hsl/tkvTSze8pI1P6dGp2XW6AnH1iayn
+ yRcoyT0ZJ+Zmm4xAH1zqKjWplzqdb/dO28qk0bPso8+1oPO8oDhLm1+tY+cOvufXkBTm+whm
+ +AyNTjaCRt6aSMnA/QHVGSJ8grrTJCoACVNhnXg/R0g90g8iV8Q+IBZyDkG0tBThaDdw1B2l
+ asInUTeb9EiVfL/Zjdg5VWiF9LL7iS+9hTeVdR09vThQ/DhVbCNxVk+DtyBHsjOKifrVsYep
+ WpRGBIAu3bK8eXtyvrw1igWTNs2wazJ71+0z2jMzbclKAyRHKU9JdN6Hkkgr2nPb561yjcB8
+ sIq1pFXKyO+nKy6SZYxOvHxCcjk2fkw6UmPU6/j/nQlj2lfOAgNVKuDLothIxzi8pndB8Jju
+ KktE5HJqUUMXePkAYIxEQ0mMc8Po7tuXdejgPMwgP7x65xtfEqI0RuzbUioFltsp1jUaRwQZ
+ MTsCeQDdjpgHsj+P2ZDeEKCbma4m6Ez/YWs4+zDm1X8uZDkZcfQlD9NldbKDJEXLIjYWo1PH
+ hYepSffIWPyvBMBTW2W5FRjJ4vLRrJSUoEfJuPQ3vW9Y73foyo/qFoURHO48AinGPZ7PC7TF
+ vUaNOTjKedrqHkaOcqB185ahG2had0xnFsDPlx5y
+Message-ID: <63514bdd-313b-d42f-e582-f8cb350d0b35@intel.com>
+Date:   Tue, 16 Apr 2019 08:55:41 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <960F3918-7D2C-463C-A911-9B62CD7E5D83@nvidia.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The help text needs to spell out how the driver runs on a BMC, as it
-previously seemed to indicate it ran on a POWER processor.
+On 4/16/19 8:33 AM, Zi Yan wrote:
+>> We have a reasonable argument that demotion is better than
+>> swapping. So, we could say that even if a VMA has a strict NUMA
+>> policy, demoting pages mapped there pages still beats swapping
+>> them or tossing the page cache.  It's doing them a favor to
+>> demote them.
+> I just wonder whether page migration is always better than
+> swapping, since SSD write throughput keeps improving but page
+> migration throughput is still low. For example, my machine has a
+> SSD with 2GB/s writing throughput but the throughput of 4KB page
+> migration is less than 1GB/s, why do we want to use page migration
+> for demotion instead of swapping?
 
-Signed-off-by: Eddie James <eajames@linux.ibm.com>
----
-Changes since v1: fix Signed-off-by; git config got mixed up.
-
- drivers/hwmon/occ/Kconfig | 12 ++++++++----
- 1 file changed, 8 insertions(+), 4 deletions(-)
-
-diff --git a/drivers/hwmon/occ/Kconfig b/drivers/hwmon/occ/Kconfig
-index 2a3869f..1658634 100644
---- a/drivers/hwmon/occ/Kconfig
-+++ b/drivers/hwmon/occ/Kconfig
-@@ -9,8 +9,10 @@ config SENSORS_OCC_P8_I2C
- 	select SENSORS_OCC
- 	help
- 	 This option enables support for monitoring sensors provided by the
--	 On-Chip Controller (OCC) on a POWER8 processor. Communications with
--	 the OCC are established through I2C bus.
-+	 On-Chip Controller (OCC) on a POWER8 processor. However, this driver
-+	 can only run on a baseboard management controller (BMC) connected to
-+	 the P8, not the POWER processor itself. Communications with the OCC are
-+	 established through I2C bus.
- 
- 	 This driver can also be built as a module. If so, the module will be
- 	 called occ-p8-hwmon.
-@@ -22,8 +24,10 @@ config SENSORS_OCC_P9_SBE
- 	select SENSORS_OCC
- 	help
- 	 This option enables support for monitoring sensors provided by the
--	 On-Chip Controller (OCC) on a POWER9 processor. Communications with
--	 the OCC are established through SBE fifo on an FSI bus.
-+	 On-Chip Controller (OCC) on a POWER9 processor. However, this driver
-+	 can only run on a baseboard management controller (BMC) connected to
-+	 the P9, not the POWER processor itself. Communications with the OCC are
-+	 established through SBE fifo on an FSI bus.
- 
- 	 This driver can also be built as a module. If so, the module will be
- 	 called occ-p9-hwmon.
--- 
-2.7.4
-
+Just because we observe that page migration apparently has lower
+throughput today doesn't mean that we should consider it a dead end.
