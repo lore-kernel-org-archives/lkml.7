@@ -2,62 +2,194 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E28FDC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:28:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A293C282DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:30:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BC3F3205ED
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:28:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2625E205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:30:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726890AbfDPN25 (ORCPT
+        id S1727164AbfDPNaR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 09:28:57 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60676 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725861AbfDPN25 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 09:28:57 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 89EA5368E3;
-        Tue, 16 Apr 2019 13:28:57 +0000 (UTC)
-Received: from localhost (unknown [10.18.25.174])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id C975B608A4;
-        Tue, 16 Apr 2019 13:28:52 +0000 (UTC)
-Date:   Tue, 16 Apr 2019 09:28:52 -0400
-From:   Mike Snitzer <snitzer@redhat.com>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Alasdair Kergon <agk@redhat.com>, dm-devel@redhat.com
-Subject: Re: [PATCH 10/57] docs: device-mapper: convert it to ReST format
-Message-ID: <20190416132851.GA22497@redhat.com>
-References: <cover.1555382110.git.mchehab+samsung@kernel.org>
- <9dd3c4eca01489bd67ea6de88dfedef8b0e81901.1555382110.git.mchehab+samsung@kernel.org>
+        Tue, 16 Apr 2019 09:30:17 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55540 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1725796AbfDPNaQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 09:30:16 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 7FB99AE27;
+        Tue, 16 Apr 2019 13:30:14 +0000 (UTC)
+From:   Luis Henriques <lhenriques@suse.com>
+To:     "Yan\, Zheng" <ukernel@gmail.com>
+Cc:     "Yan\, Zheng" <zyan@redhat.com>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        ceph-devel <ceph-devel@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] ceph: Fix a memory leak in ci->i_head_snapc
+References: <20190315111107.15154-1-lhenriques@suse.com>
+        <CAAM7YAnD_dK2py+95N8Z7T+Vgr2ZbBJne+tNYivEeUGObhpiCQ@mail.gmail.com>
+        <87r2b4zd2q.fsf@suse.com>
+        <CAAM7YAkhA6ddto3KESWm8yw3D6f02ev7oYmEto=nK3mXZeUy4A@mail.gmail.com>
+        <87lg1c17b2.fsf@suse.com>
+        <CAAM7YAnhJUey6eX6zeWuPCVgyG9JghGQetJ-hk5R8nONivZzkg@mail.gmail.com>
+        <87a7hr19v7.fsf@suse.com> <87o963jkcj.fsf@suse.com>
+        <CAAM7YAko8qnfjWEdEqX=XE3azDZLpO_+egxDEsqowK9ByYZxwg@mail.gmail.com>
+        <878swre7xz.fsf@suse.com>
+Date:   Tue, 16 Apr 2019 14:30:13 +0100
+In-Reply-To: <878swre7xz.fsf@suse.com> (Luis Henriques's message of "Wed, 03
+        Apr 2019 10:47:52 +0100")
+Message-ID: <87d0lm6psq.fsf@suse.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <9dd3c4eca01489bd67ea6de88dfedef8b0e81901.1555382110.git.mchehab+samsung@kernel.org>
-User-Agent: Mutt/1.5.21 (2010-09-15)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Tue, 16 Apr 2019 13:28:57 +0000 (UTC)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15 2019 at 10:55pm -0400,
-Mauro Carvalho Chehab <mchehab+samsung@kernel.org> wrote:
+Luis Henriques <lhenriques@suse.com> writes:
 
-> Convert the Device Mapper documentation to ReST.
+> "Yan, Zheng" <ukernel@gmail.com> writes:
+>
+>> On Fri, Mar 22, 2019 at 6:04 PM Luis Henriques <lhenriques@suse.com> wrote:
+>>>
+>>> Luis Henriques <lhenriques@suse.com> writes:
+>>>
+>>> > "Yan, Zheng" <ukernel@gmail.com> writes:
+>>> >
+>>> >> On Tue, Mar 19, 2019 at 12:22 AM Luis Henriques <lhenriques@suse.com> wrote:
+>>> >>>
+>>> >>> "Yan, Zheng" <ukernel@gmail.com> writes:
+>>> >>>
+>>> >>> > On Mon, Mar 18, 2019 at 6:33 PM Luis Henriques <lhenriques@suse.com> wrote:
+>>> >>> >>
+>>> >>> >> "Yan, Zheng" <ukernel@gmail.com> writes:
+>>> >>> >>
+>>> >>> >> > On Fri, Mar 15, 2019 at 7:13 PM Luis Henriques <lhenriques@suse.com> wrote:
+>>> >>> >> >>
+>>> >>> >> >> I'm occasionally seeing a kmemleak warning in xfstest generic/013:
+>>> >>> >> >>
+>>> >>> >> >> unreferenced object 0xffff8881fccca940 (size 32):
+>>> >>> >> >>   comm "kworker/0:1", pid 12, jiffies 4295005883 (age 130.648s)
+>>> >>> >> >>   hex dump (first 32 bytes):
+>>> >>> >> >>     01 00 00 00 00 00 00 00 01 00 00 00 00 00 00 00  ................
+>>> >>> >> >>     00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00  ................
+>>> >>> >> >>   backtrace:
+>>> >>> >> >>     [<00000000d741a1ea>] build_snap_context+0x5b/0x2a0
+>>> >>> >> >>     [<0000000021a00533>] rebuild_snap_realms+0x27/0x90
+>>> >>> >> >>     [<00000000ac538600>] rebuild_snap_realms+0x42/0x90
+>>> >>> >> >>     [<000000000e955fac>] ceph_update_snap_trace+0x2ee/0x610
+>>> >>> >> >>     [<00000000a9550416>] ceph_handle_snap+0x317/0x5f3
+>>> >>> >> >>     [<00000000fc287b83>] dispatch+0x362/0x176c
+>>> >>> >> >>     [<00000000a312c741>] ceph_con_workfn+0x9ce/0x2cf0
+>>> >>> >> >>     [<000000004168e3a9>] process_one_work+0x1d4/0x400
+>>> >>> >> >>     [<000000002188e9e7>] worker_thread+0x2d/0x3c0
+>>> >>> >> >>     [<00000000b593e4b3>] kthread+0x112/0x130
+>>> >>> >> >>     [<00000000a8587dca>] ret_from_fork+0x35/0x40
+>>> >>> >> >>     [<00000000ba1c9c1d>] 0xffffffffffffffff
+>>> >>> >> >>
+>>> >>> >> >> It looks like it is possible that we miss a flush_ack from the MDS when,
+>>> >>> >> >> for example, umounting the filesystem.  In that case, we can simply drop
+>>> >>> >> >> the reference to the ceph_snap_context obtained in ceph_queue_cap_snap().
+>>> >>> >> >>
+>>> >>> >> >> Link: https://tracker.ceph.com/issues/38224
+>>> >>> >> >> Cc: stable@vger.kernel.org
+>>> >>> >> >> Signed-off-by: Luis Henriques <lhenriques@suse.com>
+>>> >>> >> >> ---
+>>> >>> >> >>  fs/ceph/caps.c | 7 +++++++
+>>> >>> >> >>  1 file changed, 7 insertions(+)
+>>> >>> >> >>
+>>> >>> >> >> diff --git a/fs/ceph/caps.c b/fs/ceph/caps.c
+>>> >>> >> >> index 36a8dc699448..208f4dc6f574 100644
+>>> >>> >> >> --- a/fs/ceph/caps.c
+>>> >>> >> >> +++ b/fs/ceph/caps.c
+>>> >>> >> >> @@ -1054,6 +1054,7 @@ int ceph_is_any_caps(struct inode *inode)
+>>> >>> >> >>  static void drop_inode_snap_realm(struct ceph_inode_info *ci)
+>>> >>> >> >>  {
+>>> >>> >> >>         struct ceph_snap_realm *realm = ci->i_snap_realm;
+>>> >>> >> >> +
+>>> >>> >> >>         spin_lock(&realm->inodes_with_caps_lock);
+>>> >>> >> >>         list_del_init(&ci->i_snap_realm_item);
+>>> >>> >> >>         ci->i_snap_realm_counter++;
+>>> >>> >> >> @@ -1063,6 +1064,12 @@ static void drop_inode_snap_realm(struct ceph_inode_info *ci)
+>>> >>> >> >>         spin_unlock(&realm->inodes_with_caps_lock);
+>>> >>> >> >>         ceph_put_snap_realm(ceph_sb_to_client(ci->vfs_inode.i_sb)->mdsc,
+>>> >>> >> >>                             realm);
+>>> >>> >> >> +       /*
+>>> >>> >> >> +        * ci->i_head_snapc should be NULL, but we may still be waiting for a
+>>> >>> >> >> +        * flush_ack from the MDS.  In that case, we still hold a ref for the
+>>> >>> >> >> +        * ceph_snap_context and we need to drop it.
+>>> >>> >> >> +        */
+>>> >>> >> >> +       ceph_put_snap_context(ci->i_head_snapc);
+>>> >>> >> >>  }
+>>> >>> >> >>
+>>> >>> >> >>  /*
+>>> >>> >> >
+>>> >>> >> > This does not seem right.  i_head_snapc is cleared when
+>>> >>> >> > (ci->i_wrbuffer_ref_head == 0 && ci->i_dirty_caps == 0 &&
+>>> >>> >> > ci->i_flushing_caps == 0) . Nothing do with dropping ci->i_snap_realm.
+>>> >>> >> > Did you see 'reconnect denied' during the test? If you did, the fix
+>>> >>> >> > should be in iterate_session_caps()
+>>> >>> >> >
+>>> >>> >>
+>>> >>> >> No, I didn't saw any 'reconnect denied' in the test.  The test actually
+>>> >>> >> seems to execute fine, except from the memory leak.
+>>> >>> >>
+>>> >>> >> It's very difficult to reproduce this issue, but last time I managed to
+>>> >>> >> get this memory leak to trigger I actually had some debugging code in
+>>> >>> >> drop_inode_snap_realm, something like:
+>>> >>> >>
+>>> >>> >>   if (ci->i_head_snapc)
+>>> >>> >>         printk("i_head_snapc: 0x%px\n", ci->i_head_snapc);
+>>> >>> >
+>>> >>> > please add code that prints i_wrbuffer_ref_head, i_dirty_caps,
+>>> >>> > i_flushing_caps. and try reproducing it again.
+>>> >>> >
+>>> >>>
+>>> >>> Ok, it took me a few hours, but I managed to reproduce the bug, with
+>>> >>> those extra printks.  All those values are set to 0 when the bug
+>>> >>> triggers (and i_head_snapc != NULL).
+>>> >>>
+>>> >>
+>>> >> Thanks, which test triggers this bug?
+>>> >
+>>> > That's generic/013.  It usually triggers after a few hours of running it
+>>> > in a loop (I'm using a vstart cluster for that).
+>>> >
+>>> >>
+>>> >> I searched that code, found we may fail to cleanup i_head_snap in two
+>>> >> places. One is in ceph_queue_cap_snap, Another is in
+>>> >> remove_session_caps_cb().
+>>> >
+>>> > Ah, great!  I spent a lot of time looking but I couldn't really find it.
+>>> > My bet was that ceph_queue_cap_snap was doing the ceph_get_snap_context
+>>> > and that the corresponding ceph_put_snap_context would be done in
+>>> > handle_cap_flush_ack. That's why I mentioned the missing flush_ack from
+>>> > MDS.
+>>>
+>>> Something that I didn't said explicitly is that I *know* that the
+>>> unbalanced ceph_get_snap_context() is the one in function
+>>> ceph_queue_cap_snap().  I know this for sure because I've managed to
+>>> reproduce the issue several times with an instrumented kernel (with
+>>> tracepoints) that allowed me to keep track of all ceph_snap_context
+>>> operations (create, get, put, delete).
+>>>
+>>
+>> Sorry for the delay. please try
+>
+> Thank you, I'll try the test with your patch applied and see if I still
+> see the issue (obviously, this will take some time as it takes several
+> hours for the bug to trigger).
 
-Can you help me understand why this is the direction text based
-Documenation is taking in the Linux kernel?  All I see is markup, and
-escaping of characters, that is a chore to administer over time.
+Ok, after several hours of running it, I confirm that I was not able to
+reproduce the issue with your patch.  It took me a while because my test
+environment changed a bit and I was failing to reproduce it even without
+the patch.
 
-Please advise, thanks.
-Mike
+Cheers,
+-- 
+Luis
