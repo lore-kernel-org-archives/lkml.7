@@ -2,361 +2,134 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AEDA2C282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:33:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DECE7C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:33:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7084A20880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:33:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ACAD920872
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:33:59 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="D0VK6UGY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729891AbfDPPdy (ORCPT
+        id S1729904AbfDPPd6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 11:33:54 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:51345 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727691AbfDPPdx (ORCPT
+        Tue, 16 Apr 2019 11:33:58 -0400
+Received: from hqemgate14.nvidia.com ([216.228.121.143]:17478 "EHLO
+        hqemgate14.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726713AbfDPPdy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 11:33:53 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3GFXWiE3495483
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 16 Apr 2019 08:33:32 -0700
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3GFXWxo3495480;
-        Tue, 16 Apr 2019 08:33:32 -0700
-Date:   Tue, 16 Apr 2019 08:33:32 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
-Message-ID: <tip-6d25be5782e482eb93e3de0c94d0a517879377d0@git.kernel.org>
-Cc:     hpa@zytor.com, bristot@redhat.com, tglx@linutronix.de,
-        jiangshanlai@gmail.com, tj@kernel.org,
-        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        bigeasy@linutronix.de, peterz@infradead.org, mingo@kernel.org
-Reply-To: linux-kernel@vger.kernel.org, peterz@infradead.org,
-          bigeasy@linutronix.de, torvalds@linux-foundation.org,
-          mingo@kernel.org, hpa@zytor.com, bristot@redhat.com,
-          jiangshanlai@gmail.com, tglx@linutronix.de, tj@kernel.org
-In-Reply-To: <ad2b29b5715f970bffc1a7026cabd6ff0b24076a.1532952814.git.bristot@redhat.com>
-References: <ad2b29b5715f970bffc1a7026cabd6ff0b24076a.1532952814.git.bristot@redhat.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:sched/core] sched/core, workqueues: Distangle worker
- accounting from rq lock
-Git-Commit-ID: 6d25be5782e482eb93e3de0c94d0a517879377d0
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Tue, 16 Apr 2019 11:33:54 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate14.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cb5f5e60001>; Tue, 16 Apr 2019 08:33:58 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 16 Apr 2019 08:33:53 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 16 Apr 2019 08:33:53 -0700
+Received: from [10.2.163.24] (10.124.1.5) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 16 Apr
+ 2019 15:33:50 +0000
+From:   Zi Yan <ziy@nvidia.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+CC:     Michal Hocko <mhocko@kernel.org>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        <mgorman@techsingularity.net>, <riel@surriel.com>,
+        <hannes@cmpxchg.org>, <akpm@linux-foundation.org>,
+        <keith.busch@intel.com>, <dan.j.williams@intel.com>,
+        <fengguang.wu@intel.com>, <fan.du@intel.com>,
+        <ying.huang@intel.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [v2 RFC PATCH 0/9] Another Approach to Use PMEM as NUMA Node
+Date:   Tue, 16 Apr 2019 11:33:48 -0400
+X-Mailer: MailMate (1.12.4r5622)
+Message-ID: <960F3918-7D2C-463C-A911-9B62CD7E5D83@nvidia.com>
+In-Reply-To: <b9b40585-cb59-3d42-bcf8-e59bff77c663@intel.com>
+References: <1554955019-29472-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190412084702.GD13373@dhcp22.suse.cz>
+ <a68137bb-dcd8-4e4a-b3a9-69a66f9dccaf@linux.alibaba.com>
+ <20190416074714.GD11561@dhcp22.suse.cz>
+ <b9b40585-cb59-3d42-bcf8-e59bff77c663@intel.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: multipart/signed;
+        boundary="=_MailMate_57E8BCAB-6C56-41AF-B3EE-B97124E8B1E5_=";
+        micalg=pgp-sha1; protocol="application/pgp-signature"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1555428838; bh=bd3kFaiRh/kYQ/VA2Yue7fpxsO8GiVa2yaT3r9nUGpA=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:X-Mailer:Message-ID:
+         In-Reply-To:References:MIME-Version:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type;
+        b=D0VK6UGYELnYUHygSl0eyMobF7vDjJmVInGEQAE2b5AzTNcYNwrcir9jTW721dQLC
+         KlUSOECLHZwckWMmSvAxeGJShPtqiUdvY3C+934PK2093dwETWwTj2HdblVYf7r4b9
+         9+Byh4SNduynLz6VwrONfBRZjT+A1eiiEG9UhWGoVhVE5vavKnhbf+7sMcrOVrzKoA
+         Fxj1nlC0vLEQa9ZBE1kpwF/B1OPnJVl0MLhCtVAy4tkUuntOP9oBsYMh2NKC3F8j2h
+         xtlyM7eQ/HXU+a4kdgkS+puU8YmaHZScYRL8Xs4PSVa/ChVR8wpdSzHYKyneUGf/KD
+         sml2IjdsrCIaQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  6d25be5782e482eb93e3de0c94d0a517879377d0
-Gitweb:     https://git.kernel.org/tip/6d25be5782e482eb93e3de0c94d0a517879377d0
-Author:     Thomas Gleixner <tglx@linutronix.de>
-AuthorDate: Wed, 13 Mar 2019 17:55:48 +0100
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Tue, 16 Apr 2019 16:55:15 +0200
+--=_MailMate_57E8BCAB-6C56-41AF-B3EE-B97124E8B1E5_=
+Content-Type: text/plain
 
-sched/core, workqueues: Distangle worker accounting from rq lock
+On 16 Apr 2019, at 10:30, Dave Hansen wrote:
 
-The worker accounting for CPU bound workers is plugged into the core
-scheduler code and the wakeup code. This is not a hard requirement and
-can be avoided by keeping track of the state in the workqueue code
-itself.
+> On 4/16/19 12:47 AM, Michal Hocko wrote:
+>> You definitely have to follow policy. You cannot demote to a node which
+>> is outside of the cpuset/mempolicy because you are breaking contract
+>> expected by the userspace. That implies doing a rmap walk.
+>
+> What *is* the contract with userspace, anyway? :)
+>
+> Obviously, the preferred policy doesn't have any strict contract.
+>
+> The strict binding has a bit more of a contract, but it doesn't prevent
+> swapping.  Strict binding also doesn't keep another app from moving the
+> memory.
+>
+> We have a reasonable argument that demotion is better than swapping.
+> So, we could say that even if a VMA has a strict NUMA policy, demoting
+> pages mapped there pages still beats swapping them or tossing the page
+> cache.  It's doing them a favor to demote them.
 
-Keep track of the sleeping state in the worker itself and call the
-notifier before entering the core scheduler. There might be false
-positives when the task is woken between that call and actually
-scheduling, but that's not really different from scheduling and being
-woken immediately after switching away. When nr_running is updated when
-the task is retunrning from schedule() then it is later compared when it
-is done from ttwu().
+I just wonder whether page migration is always better than swapping,
+since SSD write throughput keeps improving but page migration throughput
+is still low. For example, my machine has a SSD with 2GB/s writing throughput
+but the throughput of 4KB page migration is less than 1GB/s, why do we
+want to use page migration for demotion instead of swapping?
 
-[ bigeasy: preempt_disable() around wq_worker_sleeping() by Daniel Bristot de Oliveira ]
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Acked-by: Tejun Heo <tj@kernel.org>
-Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
-Cc: Lai Jiangshan <jiangshanlai@gmail.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Link: http://lkml.kernel.org/r/ad2b29b5715f970bffc1a7026cabd6ff0b24076a.1532952814.git.bristot@redhat.com
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- kernel/sched/core.c         | 88 +++++++++++----------------------------------
- kernel/workqueue.c          | 54 +++++++++++++---------------
- kernel/workqueue_internal.h |  5 +--
- 3 files changed, 48 insertions(+), 99 deletions(-)
+--
+Best Regards,
+Yan Zi
 
-diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-index 4778c48a7fda..6184a0856aab 100644
---- a/kernel/sched/core.c
-+++ b/kernel/sched/core.c
-@@ -1685,10 +1685,6 @@ static inline void ttwu_activate(struct rq *rq, struct task_struct *p, int en_fl
- {
- 	activate_task(rq, p, en_flags);
- 	p->on_rq = TASK_ON_RQ_QUEUED;
--
--	/* If a worker is waking up, notify the workqueue: */
--	if (p->flags & PF_WQ_WORKER)
--		wq_worker_waking_up(p, cpu_of(rq));
- }
- 
- /*
-@@ -2106,56 +2102,6 @@ out:
- 	return success;
- }
- 
--/**
-- * try_to_wake_up_local - try to wake up a local task with rq lock held
-- * @p: the thread to be awakened
-- * @rf: request-queue flags for pinning
-- *
-- * Put @p on the run-queue if it's not already there. The caller must
-- * ensure that this_rq() is locked, @p is bound to this_rq() and not
-- * the current task.
-- */
--static void try_to_wake_up_local(struct task_struct *p, struct rq_flags *rf)
--{
--	struct rq *rq = task_rq(p);
--
--	if (WARN_ON_ONCE(rq != this_rq()) ||
--	    WARN_ON_ONCE(p == current))
--		return;
--
--	lockdep_assert_held(&rq->lock);
--
--	if (!raw_spin_trylock(&p->pi_lock)) {
--		/*
--		 * This is OK, because current is on_cpu, which avoids it being
--		 * picked for load-balance and preemption/IRQs are still
--		 * disabled avoiding further scheduler activity on it and we've
--		 * not yet picked a replacement task.
--		 */
--		rq_unlock(rq, rf);
--		raw_spin_lock(&p->pi_lock);
--		rq_relock(rq, rf);
--	}
--
--	if (!(p->state & TASK_NORMAL))
--		goto out;
--
--	trace_sched_waking(p);
--
--	if (!task_on_rq_queued(p)) {
--		if (p->in_iowait) {
--			delayacct_blkio_end(p);
--			atomic_dec(&rq->nr_iowait);
--		}
--		ttwu_activate(rq, p, ENQUEUE_WAKEUP | ENQUEUE_NOCLOCK);
--	}
--
--	ttwu_do_wakeup(rq, p, 0, rf);
--	ttwu_stat(p, smp_processor_id(), 0);
--out:
--	raw_spin_unlock(&p->pi_lock);
--}
--
- /**
-  * wake_up_process - Wake up a specific process
-  * @p: The process to be woken up.
-@@ -3472,19 +3418,6 @@ static void __sched notrace __schedule(bool preempt)
- 				atomic_inc(&rq->nr_iowait);
- 				delayacct_blkio_start();
- 			}
--
--			/*
--			 * If a worker went to sleep, notify and ask workqueue
--			 * whether it wants to wake up a task to maintain
--			 * concurrency.
--			 */
--			if (prev->flags & PF_WQ_WORKER) {
--				struct task_struct *to_wakeup;
--
--				to_wakeup = wq_worker_sleeping(prev);
--				if (to_wakeup)
--					try_to_wake_up_local(to_wakeup, &rf);
--			}
- 		}
- 		switch_count = &prev->nvcsw;
- 	}
-@@ -3544,6 +3477,20 @@ static inline void sched_submit_work(struct task_struct *tsk)
- {
- 	if (!tsk->state || tsk_is_pi_blocked(tsk))
- 		return;
-+
-+	/*
-+	 * If a worker went to sleep, notify and ask workqueue whether
-+	 * it wants to wake up a task to maintain concurrency.
-+	 * As this function is called inside the schedule() context,
-+	 * we disable preemption to avoid it calling schedule() again
-+	 * in the possible wakeup of a kworker.
-+	 */
-+	if (tsk->flags & PF_WQ_WORKER) {
-+		preempt_disable();
-+		wq_worker_sleeping(tsk);
-+		preempt_enable_no_resched();
-+	}
-+
- 	/*
- 	 * If we are going to sleep and we have plugged IO queued,
- 	 * make sure to submit it to avoid deadlocks.
-@@ -3552,6 +3499,12 @@ static inline void sched_submit_work(struct task_struct *tsk)
- 		blk_schedule_flush_plug(tsk);
- }
- 
-+static void sched_update_worker(struct task_struct *tsk)
-+{
-+	if (tsk->flags & PF_WQ_WORKER)
-+		wq_worker_running(tsk);
-+}
-+
- asmlinkage __visible void __sched schedule(void)
- {
- 	struct task_struct *tsk = current;
-@@ -3562,6 +3515,7 @@ asmlinkage __visible void __sched schedule(void)
- 		__schedule(false);
- 		sched_preempt_enable_no_resched();
- 	} while (need_resched());
-+	sched_update_worker(tsk);
- }
- EXPORT_SYMBOL(schedule);
- 
-diff --git a/kernel/workqueue.c b/kernel/workqueue.c
-index ddee541ea97a..56180c9286f5 100644
---- a/kernel/workqueue.c
-+++ b/kernel/workqueue.c
-@@ -841,43 +841,32 @@ static void wake_up_worker(struct worker_pool *pool)
- }
- 
- /**
-- * wq_worker_waking_up - a worker is waking up
-+ * wq_worker_running - a worker is running again
-  * @task: task waking up
-- * @cpu: CPU @task is waking up to
-  *
-- * This function is called during try_to_wake_up() when a worker is
-- * being awoken.
-- *
-- * CONTEXT:
-- * spin_lock_irq(rq->lock)
-+ * This function is called when a worker returns from schedule()
-  */
--void wq_worker_waking_up(struct task_struct *task, int cpu)
-+void wq_worker_running(struct task_struct *task)
- {
- 	struct worker *worker = kthread_data(task);
- 
--	if (!(worker->flags & WORKER_NOT_RUNNING)) {
--		WARN_ON_ONCE(worker->pool->cpu != cpu);
-+	if (!worker->sleeping)
-+		return;
-+	if (!(worker->flags & WORKER_NOT_RUNNING))
- 		atomic_inc(&worker->pool->nr_running);
--	}
-+	worker->sleeping = 0;
- }
- 
- /**
-  * wq_worker_sleeping - a worker is going to sleep
-  * @task: task going to sleep
-  *
-- * This function is called during schedule() when a busy worker is
-- * going to sleep.  Worker on the same cpu can be woken up by
-- * returning pointer to its task.
-- *
-- * CONTEXT:
-- * spin_lock_irq(rq->lock)
-- *
-- * Return:
-- * Worker task on @cpu to wake up, %NULL if none.
-+ * This function is called from schedule() when a busy worker is
-+ * going to sleep.
-  */
--struct task_struct *wq_worker_sleeping(struct task_struct *task)
-+void wq_worker_sleeping(struct task_struct *task)
- {
--	struct worker *worker = kthread_data(task), *to_wakeup = NULL;
-+	struct worker *next, *worker = kthread_data(task);
- 	struct worker_pool *pool;
- 
- 	/*
-@@ -886,13 +875,15 @@ struct task_struct *wq_worker_sleeping(struct task_struct *task)
- 	 * checking NOT_RUNNING.
- 	 */
- 	if (worker->flags & WORKER_NOT_RUNNING)
--		return NULL;
-+		return;
- 
- 	pool = worker->pool;
- 
--	/* this can only happen on the local cpu */
--	if (WARN_ON_ONCE(pool->cpu != raw_smp_processor_id()))
--		return NULL;
-+	if (WARN_ON_ONCE(worker->sleeping))
-+		return;
-+
-+	worker->sleeping = 1;
-+	spin_lock_irq(&pool->lock);
- 
- 	/*
- 	 * The counterpart of the following dec_and_test, implied mb,
-@@ -906,9 +897,12 @@ struct task_struct *wq_worker_sleeping(struct task_struct *task)
- 	 * lock is safe.
- 	 */
- 	if (atomic_dec_and_test(&pool->nr_running) &&
--	    !list_empty(&pool->worklist))
--		to_wakeup = first_idle_worker(pool);
--	return to_wakeup ? to_wakeup->task : NULL;
-+	    !list_empty(&pool->worklist)) {
-+		next = first_idle_worker(pool);
-+		if (next)
-+			wake_up_process(next->task);
-+	}
-+	spin_unlock_irq(&pool->lock);
- }
- 
- /**
-@@ -4929,7 +4923,7 @@ static void rebind_workers(struct worker_pool *pool)
- 		 *
- 		 * WRITE_ONCE() is necessary because @worker->flags may be
- 		 * tested without holding any lock in
--		 * wq_worker_waking_up().  Without it, NOT_RUNNING test may
-+		 * wq_worker_running().  Without it, NOT_RUNNING test may
- 		 * fail incorrectly leading to premature concurrency
- 		 * management operations.
- 		 */
-diff --git a/kernel/workqueue_internal.h b/kernel/workqueue_internal.h
-index cb68b03ca89a..498de0e909a4 100644
---- a/kernel/workqueue_internal.h
-+++ b/kernel/workqueue_internal.h
-@@ -44,6 +44,7 @@ struct worker {
- 	unsigned long		last_active;	/* L: last active timestamp */
- 	unsigned int		flags;		/* X: flags */
- 	int			id;		/* I: worker id */
-+	int			sleeping;	/* None */
- 
- 	/*
- 	 * Opaque string set with work_set_desc().  Printed out with task
-@@ -72,8 +73,8 @@ static inline struct worker *current_wq_worker(void)
-  * Scheduler hooks for concurrency managed workqueue.  Only to be used from
-  * sched/ and workqueue.c.
-  */
--void wq_worker_waking_up(struct task_struct *task, int cpu);
--struct task_struct *wq_worker_sleeping(struct task_struct *task);
-+void wq_worker_running(struct task_struct *task);
-+void wq_worker_sleeping(struct task_struct *task);
- work_func_t wq_worker_last_func(struct task_struct *task);
- 
- #endif /* _KERNEL_WORKQUEUE_INTERNAL_H */
+--=_MailMate_57E8BCAB-6C56-41AF-B3EE-B97124E8B1E5_=
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJDBAEBAgAtFiEEh7yFAW3gwjwQ4C9anbJR82th+ooFAly19dwPHHppeUBudmlk
+aWEuY29tAAoJEJ2yUfNrYfqKA9gQAKI3aZgoIkLFQzrv57dHqxIAVc6GgDJWTE+Z
+mryinojumKMAcHTp9ZkvGszdgq+Cgt7NKecFtL1pVzue6/Gy9da8zzigfXw7el+T
+lfAWXZiV7WcRXBFhjvvYrngfJiZmlx/mFjt7euWS4dBGDiDj3Xn/Zaj0h6S+DcNS
+SqAKuhk1xIQPPXFnnkZTbSY92bHL02txpYYSd2R9rRyyTam2hPKqzyFueCZhoFlv
+zcKnaLZ0nmx/GJL9MJiIxXc5Upcbypa+y1VP3OZkh9sbcUcRAKcP/2AISMz9+TsJ
+IDnDyWsV6pO1hpAayFk9pVSuu+wZdJ2wf1anA0d+S4KygqLkq9fynRvUqP2Ch4A2
+kM48I4UaeS/c4l8lACoBAoa68edg2h+2Z+x33RM1gtfNNZivo6ZbWfNgg2MObeBZ
+IaDhwPFV2rBlM6Ol5KLMt4a/Xz0uA0aEj3cZ4udB3q6bQqtbxEvkDL7ydQ1CbcG4
+LaoEdonPBTsYwbvNE5g6Ly1b5LjGtdHLL1fSnF5JfIVPYl4d0EIa14qITDqc+j+Y
+C4JYyMbDfxzUvLtXT3B8CC2UyMEp66DKrk3Jd9doVaetfi6clonUuKzymLU2nc9M
+DU4L+APcbW2Wt6Cud+GgRoNfm2sK7YYRu+eul2YFHLfw9Ecz/uQoNK15SIsJqUcg
+WFrORWyW
+=yfKR
+-----END PGP SIGNATURE-----
+
+--=_MailMate_57E8BCAB-6C56-41AF-B3EE-B97124E8B1E5_=--
