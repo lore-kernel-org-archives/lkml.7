@@ -2,236 +2,213 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 291C6C282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41248C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:32:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA7E620872
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:30:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EC21220872
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:32:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LmPPIoBY"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="FqdjvIkH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730171AbfDPRaN (ORCPT
+        id S1729956AbfDPRcS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 13:30:13 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:43465 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbfDPRaN (ORCPT
+        Tue, 16 Apr 2019 13:32:18 -0400
+Received: from us01smtprelay-2.synopsys.com ([198.182.60.111]:54094 "EHLO
+        smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726860AbfDPRcS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 13:30:13 -0400
-Received: by mail-pl1-f196.google.com with SMTP id n8so10651709plp.10;
-        Tue, 16 Apr 2019 10:30:12 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Iqpnc2s0Tfc8ZsBxvcd2S8uzbG2y1NeocyHqqI+5Vo8=;
-        b=LmPPIoBYP2bFDkPWYAe8/d4KZPs2EzW83H8SN5RLxDeBpLcld2WFCmiyyl2UfQ4udK
-         0huYvobi96QdeOphncLz2i8MdmTpsyBs+zz05NZp4BQ0Z/rbjnTQXG8pOSJ6iyZf76y8
-         J+dwrGhypz/gSGQq1d6lLktJbG+Qt7f7eZ6+n3XVvN82za8bnQUWWa1rwcQX5ijoQ4/B
-         3HH+n5+2UTd4RR0uC8GdhlGCfZI8ofpB4VxnnL1V2+uKo3b0TE+E83foftL7ckWRaI2N
-         naVBPxLNUuErL37ELpwmsEjAEUU/3QoI2a4NPX3rQK4zLYH12XW4bQE6mjQnBM8FrGCj
-         8wRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Iqpnc2s0Tfc8ZsBxvcd2S8uzbG2y1NeocyHqqI+5Vo8=;
-        b=KqoVVDI+0s0qVBiaj3iF745UXlwiVKQYGc2Kv5TCSRoauFLm8ALnvoEHQqeJj6e9WD
-         gAggfTlrtwjfZ0h4hF2nnwcmbJubhjilx1g+kuDOMtn4SEJdh5bhhKpznTkRmVEH1B+E
-         59+UlnDuk3EkaSxtVRFCvW6YBIzgY09cHwCoNfD5NgbQ6v5Dz5D3W1zgLdLgP4b2ir2u
-         8Z9y7Vch0LyyCmQUOE7pWGv+DeIC5WW678lyhfKaHfRnqPoqNzLLsWVohIabyCGuyImJ
-         TiIf+v+TU/O/k/v8ilOVnHvUj9RzmKr+QBpsOgBlfYPFyvUAeS8Q0Qf1QBygsLF+OvRV
-         rtBw==
-X-Gm-Message-State: APjAAAWTS/AxwGHf5y+eV7S/ACYa8PZsqZE9Q+Aa8SuNZ+HTcVnvng8D
-        OuGQhylsjMUxiGirIOBD/TA=
-X-Google-Smtp-Source: APXvYqwtjHGgB+NHR2aRjLiwHLGjFTxWg+DjjTJbzFzfqAMVGpHql1gxjnFv4Ergc+JivpfX9Q2buQ==
-X-Received: by 2002:a17:902:d24:: with SMTP id 33mr85470888plu.246.1555435811811;
-        Tue, 16 Apr 2019 10:30:11 -0700 (PDT)
-Received: from ast-mbp.dhcp.thefacebook.com ([2620:10d:c090:200::1:601e])
-        by smtp.gmail.com with ESMTPSA id t64sm117503682pfa.86.2019.04.16.10.30.09
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 10:30:10 -0700 (PDT)
-Date:   Tue, 16 Apr 2019 10:30:09 -0700
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-To:     Olof Johansson <olof@lixom.net>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Kees Cook <keescook@chromium.org>,
-        Joel Fernandes <joelaf@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Manoj Rao <linux@manojrajarao.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        atish patra <atishp04@gmail.com>,
-        Daniel Colascione <dancol@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
-Subject: Re: [PATCH v5 1/3] Provide in-kernel headers to make extending
- kernel easier
-Message-ID: <20190416173006.qtssiekedr7jhcqq@ast-mbp.dhcp.thefacebook.com>
-References: <20190415104109.64d914f3@gandalf.local.home>
- <CAGXu5j+KPVRcOJ3Ue9ZQF93GyaDhvCnFCvJ_C3WKCx2=SNdDyg@mail.gmail.com>
- <20190416083306.5646a687@gandalf.local.home>
- <20190416124939.GB6027@kroah.com>
- <20190416130440.GA7944@localhost>
- <f8b15e31-1aab-ab2c-d44d-47325faab67d@opersys.com>
- <20190416094509.1af6326b@gandalf.local.home>
- <20190416142240.GA31920@kroah.com>
- <20190416164642.krptlz32zusr4pgn@ast-mbp.dhcp.thefacebook.com>
- <CAOesGMgGEZ8o-e2uAYLSGeO+RHcXAEzEoKcsjpveOLJZ5pX=4w@mail.gmail.com>
+        Tue, 16 Apr 2019 13:32:18 -0400
+Received: from mailhost.synopsys.com (dc8-mailhost1.synopsys.com [10.13.135.209])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay.synopsys.com (Postfix) with ESMTPS id 2BC9D10C0AF2;
+        Tue, 16 Apr 2019 10:32:18 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1555435938; bh=rE9xZ6ycPngSr1UCSjdw09qpxsDbA1pLJTJucvOcJ/4=;
+        h=From:To:CC:Subject:Date:References:From;
+        b=FqdjvIkHMIZjLmVij9xE4XgY0EdZwJxdi5QrlnCnS4LGhwqWvQHJh14N/JpPfgqLa
+         +Rtc7wVATkAiY1k9LbiQkyCZ68Ybibh0Sgc0Zl6l24yMy9bjkFngio/UfKDmkwtYRu
+         tCy3dwKviB/eSCyuaoPeQEYhCEikzSX5kIkYGeM2vwEqQaAb3fKlLzAztacTJHltME
+         +NLHq9eFO/8W7zCGBlbaiLAWSOwRn/kzz5cImrucOS5kfZTGx3E6qv3Py5GqbMofcZ
+         cqTRfQ+JB1OSEv6tWeS5qhmjT5HiXx5MOzfTvx6Vc6Y+MP6K0aDPWXLiOmTLaNs1aW
+         TbH2tMUojN1Dw==
+Received: from US01WEHTC2.internal.synopsys.com (us01wehtc2.internal.synopsys.com [10.12.239.237])
+        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id F2357A006A;
+        Tue, 16 Apr 2019 17:32:17 +0000 (UTC)
+Received: from us01wembx1.internal.synopsys.com ([169.254.1.223]) by
+ US01WEHTC2.internal.synopsys.com ([10.12.239.237]) with mapi id
+ 14.03.0415.000; Tue, 16 Apr 2019 10:32:15 -0700
+From:   Vineet Gupta <vineet.gupta1@synopsys.com>
+To:     Eugeniy Paltsev <eugeniy.paltsev@synopsys.com>,
+        "linux-snps-arc@lists.infradead.org" 
+        <linux-snps-arc@lists.infradead.org>
+CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "Alexey Brodkin" <alexey.brodkin@synopsys.com>
+Subject: Re: [PATCH 2/3] ARC: cache: check cache configuration on each CPU
+Thread-Topic: [PATCH 2/3] ARC: cache: check cache configuration on each CPU
+Thread-Index: AQHU9HdOIiOjMnmMG0iqFYy3fw1ZoA==
+Date:   Tue, 16 Apr 2019 17:32:14 +0000
+Message-ID: <C2D7FE5348E1B147BCA15975FBA2307501A25015EE@us01wembx1.internal.synopsys.com>
+References: <20190416171021.20049-1-Eugeniy.Paltsev@synopsys.com>
+ <20190416171021.20049-3-Eugeniy.Paltsev@synopsys.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-originating-ip: [10.13.184.19]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAOesGMgGEZ8o-e2uAYLSGeO+RHcXAEzEoKcsjpveOLJZ5pX=4w@mail.gmail.com>
-User-Agent: NeoMutt/20180223
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 09:57:08AM -0700, Olof Johansson wrote:
-> On Tue, Apr 16, 2019 at 9:46 AM Alexei Starovoitov
-> <alexei.starovoitov@gmail.com> wrote:
-> >
-> > On Tue, Apr 16, 2019 at 04:22:40PM +0200, Greg Kroah-Hartman wrote:
-> > > On Tue, Apr 16, 2019 at 09:45:09AM -0400, Steven Rostedt wrote:
-> > > > On Tue, 16 Apr 2019 09:32:37 -0400
-> > > > Karim Yaghmour <karim.yaghmour@opersys.com> wrote:
-> > > >
-> > > > > >>> Then we should perhaps make a new file system call tarballs ;-)
-> > > > > >>>
-> > > > > >>>   /sys/kernel/tarballs/
-> > > > > >>>
-> > > > > >>> and place everything there. That way it removes it from /proc (which is
-> > > > > >>> the worse place for that) and also makes it something other than debug.
-> > > > > >>> That's what I did for tracefs.
-> > > > > >>
-> > > > > >> As horrible as that suggestion is, it does kind of make sense :)
-> > > > > >>
-> > > > > >> We can't put this in debugfs as that's only for debugging and systems
-> > > > > >> should never have that mounted for normal operations (users want to
-> > > > > >> build ebpf programs), and /proc really should be for processes but that
-> > > > > >> horse is long left the barn.
-> > > > > >>
-> > > > > >> But, I'm willing to consider putting this either in a system-fs-like
-> > > > > >> filesystem, or just in sysfs itself, we do have /sys/kernel/ to play
-> > > > > >> around in if the main objection is that we should not be cluttering up
-> > > > > >> /proc with stuff like this.
-> > > > > >>
-> > > > > >
-> > > > > > I am ok with the suggestion of /sys/kernel for the archive. That also seems
-> > > > > > to fit well with the idea that the headers are kernel related and probably
-> > > > > > belong here more strictly speaking, than /proc.
-> > > > >
-> > > > > This makes sense. And if it alleviates concerns regarding extending
-> > > > > /proc ABIs then might as well switch to this.
-> > > > >
-> > > > > Olof, what do you think of this?
-> > > >
-> > > > BTW, the name "tarballs" was kind of a joke. Probably should come up
-> > > > with a better name. Although, I'm fine with tarballsfs ;-)
-> > >
-> > > No need to have this be a separate filesystem, we can use a binary sysfs
-> > > file in /sys/kernel/ for this as the kernel is not doing any "parsing"
-> > > of the data, it is just dumping it out to userspace.
-> >
-> > What folks keep saying that an fs of header files is easier to use
-> > than tarball from bcc and cleaner from architectural pov.
-> > That's not the case.
-> > From bcc side I'd rather have a single precompiled headers blob
-> > that I can feed into clang and improve bpf program compilation time.
-> > Having a set of headers is a step to generate such .pch file,
-> > but once generated the headers can be removed from fs and kheaders
-> > module unloaded.
-> > The sequence is: bcc checks standard /lib/module location,
-> > if not there loads kheader mod, extracts into known location, and unloads.
-> 
-> May I suggest keeping the bcc-populated headers somewhere else?
-
-what do you mean by bcc-populated?
-bcc keeps its own headers inside libbcc.so .data section and provides
-them to clang as 'memory buffer' in clang's virtual file system.
-
-> Ideally something cleaned out on every reboot in case kernel changes
-> without version string doing it.
-> 
-> That way you can by default prefer the module-exported tarball, and
-> fall back to /lib/module/$(uname -r)/ if not available, instead of the
-> other way around and instead of having to check creation times on the
-> dir vs boot time of the kernel, etc.
-
-the order of checks is bcc implementation detail. we can change that later.
-we've seen issues with /lib/modules/`uname -r` being corrupted by chef,
-so we might actually extract from kheaders.tar.xz all the time and more
-than once.
-Like try-compiling a simple prog and if it doesn't work, do the extract.
-
-> Anyway, that's just an implementation detail. But it's the kind of
-> detail that all tools that use this would need to get right, instead
-> of doing it right once by exporting it in a way that it can be
-> directly used.
-
-Today bcc is the only tool that interacts with clang this way.
-There is enough complexity and plenty of complex issues with
-on-the-fly recompile approach.
-I strongly suggest anyone considering new on-the-fly recompile to work
-with us on BTF instead.
-
-The set of headers is not an ultimate goal. See the example with pch. 
-bpf tracing needs three components:
-- all types and layout of datastructures;
-  including all function prototypes with arg names
-- all macros
-- all inline functions
-
-The first one is solved by BTF based solution,
-but macroses and infline functions have no substitute, but C header files.
-That is today.
-Eventually we might find a way to reduce dependency on headers and have
-macroses and infline functions represented some other way.
-Like mini-pch where only relevant bits of headers are represented as
-clang's syntax tree or mini C code.
-The key point is that having headers is not a goal.
-Making kernel maintain an fs of headers is imo a waste of kernel code.
-The most minimal approach of compressed tarball is preferred.
-
-> 
-> > The extraced headers are in plain fs cache and will be evicted from memory
-> > when bcc is done compiling progs.
-> > imo much cleaner than kernel maintaining headers-fs and wasting memory.
-> 
-> So, in my original proposal I recommended unmounting when not needing
-> it, which would remove the memory usage as well.
-
-and such header-fs would uncompress internal tarball, create inodes, dentries
-and to make sure all that stuff is cleanly refcnted and freed.
-imo that is plenty of kernel code for no good reason.
-
-> > Where kheaders.tar.xz is placed doesn't really matter.
-> > /proc or /sys/kernel makes no real difference.
-> 
-> If done in a location that isn't a perpetual ABI commitment, a tarball
-> solution is something we can work with.
-
-Fair enough. My guess that kheaders.tar.xz in this shape we would
-need for at least 5 years. After that we'll come up with better approach.
-
+On 4/16/19 10:10 AM, Eugeniy Paltsev wrote:=0A=
+> ARC kernel code assumes that all cores have same cache config=0A=
+> but as of today we check cache configuration only on master CPU.=0A=
+> Fix that and check cache configuration on each CPU.=0A=
+=0A=
+What is broken ? With current hardware it is impossible to have a SMP confi=
+g with=0A=
+different cache geometry, line size can definitely not be different.=0A=
+This is adding needless cycles  for no apparent benefit.=0A=
+=0A=
+>=0A=
+> Also while I'm at it, split cache_init_master() for two parts:=0A=
+>  * checks/setups related to master L1 caches=0A=
+>  * the rest of cache checks/setups which need to be done once=0A=
+>    (like IOC / SLC / dma callbacks setup)=0A=
+>=0A=
+> Both of these changes are prerequisites for autodetecting cache=0A=
+> line size in runtime.=0A=
+>=0A=
+> Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>=0A=
+> ---=0A=
+>  arch/arc/mm/cache.c | 66 +++++++++++++++++++++++++++++++++++------------=
+------=0A=
+>  1 file changed, 44 insertions(+), 22 deletions(-)=0A=
+>=0A=
+> diff --git a/arch/arc/mm/cache.c b/arch/arc/mm/cache.c=0A=
+> index 4135abec3fb0..1036bd56f518 100644=0A=
+> --- a/arch/arc/mm/cache.c=0A=
+> +++ b/arch/arc/mm/cache.c=0A=
+> @@ -1208,27 +1208,43 @@ noinline void __init arc_ioc_setup(void)=0A=
+>  	__dc_enable();=0A=
+>  }=0A=
+>  =0A=
+> +#if IS_ENABLED(CONFIG_ARC_HAS_ICACHE) || IS_ENABLED(CONFIG_ARC_HAS_DCACH=
+E)=0A=
+> +static void arc_l1_line_check(unsigned int line_len, const char *cache_n=
+ame)=0A=
+> +{=0A=
+> +	if (!line_len)=0A=
+> +		panic("%s support enabled but non-existent cache\n",=0A=
+> +		      cache_name);=0A=
+> +=0A=
+> +	if (line_len !=3D L1_CACHE_BYTES)=0A=
+> +		panic("%s line size [%u] !=3D expected [%u]",=0A=
+> +		      cache_name, line_len, L1_CACHE_BYTES);=0A=
+> +}=0A=
+> +#endif /* IS_ENABLED(CONFIG_ARC_HAS_ICACHE) || IS_ENABLED(CONFIG_ARC_HAS=
+_DCACHE) */=0A=
+> +=0A=
+>  /*=0A=
+> - * Cache related boot time checks/setups only needed on master CPU:=0A=
+> - *  - Geometry checks (kernel build and hardware agree: e.g. L1_CACHE_BY=
+TES)=0A=
+> - *    Assume SMP only, so all cores will have same cache config. A check=
+ on=0A=
+> - *    one core suffices for all=0A=
+> - *  - IOC setup / dma callbacks only need to be done once=0A=
+> + * Cache related boot time checks needed on every CPU.=0A=
+>   */=0A=
+> -void __init arc_cache_init_master(void)=0A=
+> +static void arc_l1_cache_check(unsigned int cpu)=0A=
+>  {=0A=
+> -	unsigned int __maybe_unused cpu =3D smp_processor_id();=0A=
+> +	if (IS_ENABLED(CONFIG_ARC_HAS_ICACHE))=0A=
+> +		arc_l1_line_check(cpuinfo_arc700[cpu].icache.line_len, "ICache");=0A=
+> +=0A=
+> +	if (IS_ENABLED(CONFIG_ARC_HAS_DCACHE))=0A=
+> +		arc_l1_line_check(cpuinfo_arc700[cpu].dcache.line_len, "DCache");=0A=
+> +}=0A=
+>  =0A=
+> +/*=0A=
+> + * L1 Cache related boot time checks/setups needed on master CPU:=0A=
+> + * This checks/setups are done in assumption that all CPU have same cach=
+e=0A=
+> + * configuration (we validate this in arc_cache_check()):=0A=
+> + *  - Geometry checks=0A=
+> + *  - L1 cache line loop callbacks=0A=
+> + */=0A=
+> +void __init arc_l1_cache_init_master(unsigned int cpu)=0A=
+> +{=0A=
+>  	if (IS_ENABLED(CONFIG_ARC_HAS_ICACHE)) {=0A=
+>  		struct cpuinfo_arc_cache *ic =3D &cpuinfo_arc700[cpu].icache;=0A=
+>  =0A=
+> -		if (!ic->line_len)=0A=
+> -			panic("cache support enabled but non-existent cache\n");=0A=
+> -=0A=
+> -		if (ic->line_len !=3D L1_CACHE_BYTES)=0A=
+> -			panic("ICache line [%d] !=3D kernel Config [%d]",=0A=
+> -			      ic->line_len, L1_CACHE_BYTES);=0A=
+> -=0A=
+>  		/*=0A=
+>  		 * In MMU v4 (HS38x) the aliasing icache config uses IVIL/PTAG=0A=
+>  		 * pair to provide vaddr/paddr respectively, just as in MMU v3=0A=
+> @@ -1242,13 +1258,6 @@ void __init arc_cache_init_master(void)=0A=
+>  	if (IS_ENABLED(CONFIG_ARC_HAS_DCACHE)) {=0A=
+>  		struct cpuinfo_arc_cache *dc =3D &cpuinfo_arc700[cpu].dcache;=0A=
+>  =0A=
+> -		if (!dc->line_len)=0A=
+> -			panic("cache support enabled but non-existent cache\n");=0A=
+> -=0A=
+> -		if (dc->line_len !=3D L1_CACHE_BYTES)=0A=
+> -			panic("DCache line [%d] !=3D kernel Config [%d]",=0A=
+> -			      dc->line_len, L1_CACHE_BYTES);=0A=
+> -=0A=
+>  		/* check for D-Cache aliasing on ARCompact: ARCv2 has PIPT */=0A=
+>  		if (is_isa_arcompact()) {=0A=
+>  			int handled =3D IS_ENABLED(CONFIG_ARC_CACHE_VIPT_ALIASING);=0A=
+> @@ -1271,6 +1280,14 @@ void __init arc_cache_init_master(void)=0A=
+>  	 */=0A=
+>  	BUILD_BUG_ON_MSG(L1_CACHE_BYTES > SMP_CACHE_BYTES,=0A=
+>  			 "SMP_CACHE_BYTES must be >=3D any cache line length");=0A=
+> +}=0A=
+> +=0A=
+> +/*=0A=
+> + * Cache related boot time checks/setups needed on master CPU:=0A=
+> + *  - IOC setup / SLC setup / dma callbacks only need to be done once=0A=
+> + */=0A=
+> +void __init arc_cache_init_master(void)=0A=
+> +{=0A=
+>  	if (is_isa_arcv2() && (l2_line_sz > SMP_CACHE_BYTES))=0A=
+>  		panic("L2 Cache line [%d] > kernel Config [%d]\n",=0A=
+>  		      l2_line_sz, SMP_CACHE_BYTES);=0A=
+> @@ -1301,11 +1318,16 @@ void __init arc_cache_init_master(void)=0A=
+>  =0A=
+>  void __ref arc_cache_init(void)=0A=
+>  {=0A=
+> -	unsigned int __maybe_unused cpu =3D smp_processor_id();=0A=
+> +	unsigned int cpu =3D smp_processor_id();=0A=
+>  	char str[256];=0A=
+>  =0A=
+>  	pr_info("%s", arc_cache_mumbojumbo(0, str, sizeof(str)));=0A=
+>  =0A=
+> +	if (!cpu)=0A=
+> +		arc_l1_cache_init_master(cpu);=0A=
+> +=0A=
+> +	arc_l1_cache_check(cpu);=0A=
+> +=0A=
+>  	if (!cpu)=0A=
+>  		arc_cache_init_master();=0A=
+>  =0A=
+=0A=
