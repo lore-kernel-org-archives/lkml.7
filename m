@@ -2,205 +2,313 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 12313C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 05:55:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6620C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 05:56:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C7B7F2075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 05:55:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 99DC420868
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 05:56:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="QTlE11rH"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="HMf2Hxia"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726959AbfDPFzk (ORCPT
+        id S1727202AbfDPF4K (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 01:55:40 -0400
-Received: from mailout2.w1.samsung.com ([210.118.77.12]:37586 "EHLO
-        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726214AbfDPFzj (ORCPT
+        Tue, 16 Apr 2019 01:56:10 -0400
+Received: from mailout1.samsung.com ([203.254.224.24]:42770 "EHLO
+        mailout1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726214AbfDPF4K (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 01:55:39 -0400
-Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
-        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190416055537euoutp02c75f1ac7d819810db073ad64d7cac20c~V3rok81zb0394803948euoutp02c
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 05:55:37 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190416055537euoutp02c75f1ac7d819810db073ad64d7cac20c~V3rok81zb0394803948euoutp02c
+        Tue, 16 Apr 2019 01:56:10 -0400
+Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
+        by mailout1.samsung.com (KnoxPortal) with ESMTP id 20190416055606epoutp010fb37c33a25394dacff06444c0706516~V3sDWqEjD1588815888epoutp01B
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 05:56:06 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout1.samsung.com 20190416055606epoutp010fb37c33a25394dacff06444c0706516~V3sDWqEjD1588815888epoutp01B
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1555394137;
-        bh=b7hY9Z4yNISntomPMw2//37eIahx2gdihHbn/58KJrA=;
+        s=mail20170921; t=1555394166;
+        bh=KsLl0ZEnr1eG05Spvk9eOasY3YZ06v7pzpNcUfVWxI8=;
         h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=QTlE11rH5g+xjhyjncu8bwLfNhLZPZPlJJoJ/4D1fpNx4IAJgSl8AcyYrwvFr2DSn
-         nKScwnBECdJkgoiUuw/5MfDGgQlxWHYV/v29jht7aR+5YAygHIh2z0IwH9CzNcDPCz
-         bzS2vuqKqotJLiv6U62ZLBj9knd32BuMUqG6fPpc=
-Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190416055536eucas1p1e0c69cb5ccca9bdaad5bf4ce1b411a79~V3rn53pBi0077300773eucas1p1o;
-        Tue, 16 Apr 2019 05:55:36 +0000 (GMT)
-Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
-        eusmges2new.samsung.com (EUCPMTA) with SMTP id 4C.C3.04377.85E65BC5; Tue, 16
-        Apr 2019 06:55:36 +0100 (BST)
-Received: from eusmtrp1.samsung.com (unknown [182.198.249.138]) by
-        eucas1p1.samsung.com (KnoxPortal) with ESMTPA id
-        20190416055535eucas1p14da3316309de64b825c4bc81afef3484~V3rnDDS9f0573705737eucas1p1O;
-        Tue, 16 Apr 2019 05:55:35 +0000 (GMT)
-Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
-        eusmtrp1.samsung.com (KnoxPortal) with ESMTP id
-        20190416055535eusmtrp176e7e243af3e1bd75becd4370372711a~V3rmulweT2260922609eusmtrp1I;
-        Tue, 16 Apr 2019 05:55:35 +0000 (GMT)
-X-AuditID: cbfec7f4-12dff70000001119-53-5cb56e58bbd0
-Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
-        eusmgms2.samsung.com (EUCPMTA) with SMTP id 9A.18.04140.75E65BC5; Tue, 16
-        Apr 2019 06:55:35 +0100 (BST)
-Received: from [106.120.51.74] (unknown [106.120.51.74]) by
-        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190416055534eusmtip1336dda4ac9ce7d0703ccd44ec7c60090~V3rmLGHw-1597215972eusmtip1h;
-        Tue, 16 Apr 2019 05:55:34 +0000 (GMT)
-Subject: Re: [PATCH v5 1/2] drm/bridge: sil_sii8620: make remote control
- optional.
-To:     "Life is hard, and then you die" <ronald@innovation.ch>
-Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
-        Henrik Rydberg <rydberg@bitmath.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Inki Dae <inki.dae@samsung.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Lukas Wunner <lukas@wunner.de>,
-        Federico Lorenzi <federico@travelground.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        linux-input@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-From:   Andrzej Hajda <a.hajda@samsung.com>
-Message-ID: <dd5189a2-8422-5e3c-1c79-d68680117deb@samsung.com>
-Date:   Tue, 16 Apr 2019 07:56:31 +0200
+        b=HMf2HxiaVK3MjfdYq3bW1Z+tLalH2KaBvTQARDsACPYc5lt5fR0wnaeUMbREplgFj
+         EWYas+zywhXXAUc8+e8/1yWt0NK4wp+iSvuQGdM13Hy+MVFja9jx9yvxHD56/quMpr
+         +yaxMLse5bFuXLrqzby2zyJdrL2n1K/OGJnBSgQc=
+Received: from epsmges1p2.samsung.com (unknown [182.195.40.157]) by
+        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
+        20190416055603epcas1p2e06db46c7b9f165a784cc875a3a9ef61~V3sAolf6c2256722567epcas1p2f;
+        Tue, 16 Apr 2019 05:56:03 +0000 (GMT)
+Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
+        epsmges1p2.samsung.com (Symantec Messaging Gateway) with SMTP id
+        84.EA.04142.07E65BC5; Tue, 16 Apr 2019 14:56:00 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p3.samsung.com (KnoxPortal) with ESMTPA id
+        20190416055600epcas1p37fea929aa4977f3dd97290f06c9ed189~V3r9zgNVz0036600366epcas1p3j;
+        Tue, 16 Apr 2019 05:56:00 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190416055600epsmtrp2631f55a6861395675bcc401479ebc372~V3r9wLSbn1282112821epsmtrp2g;
+        Tue, 16 Apr 2019 05:56:00 +0000 (GMT)
+X-AuditID: b6c32a36-cf9ff7000000102e-e8-5cb56e704f87
+Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        D1.8B.03692.F6E65BC5; Tue, 16 Apr 2019 14:56:00 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
+        20190416055559epsmtip2d0fff6bffd6d10f0113ec7b42cd6bdff~V3r9gBoLM1918319183epsmtip2j;
+        Tue, 16 Apr 2019 05:55:59 +0000 (GMT)
+Subject: Re: [PATCH v2 10/19] PM / devfreq: tegra: Drop primary interrupt
+ handler
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <93574885-d695-2288-a4c6-2b845ad8daaf@samsung.com>
+Date:   Tue, 16 Apr 2019 14:56:54 +0900
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
         Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190415232444.GB13033@innovation.ch>
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190415145505.18397-11-digetx@gmail.com>
 Content-Language: en-US
-X-Brightmail-Tracker: H4sIAAAAAAAAA01Se0hTcRjtd1+7mpPrVPZVUnQjwqC0ErlgSELU/SuKCiwtW3nRUJdtaplJ
-        PnosK1GTymkaaaTT0OacafTQkWtpbwsf6ARNx8gsdYWg1rar5H/nd75zvvMd+NG4zEqupE8q
-        UwSVUpHIUp6EsWPm/aZIZVN08LsOP+5Gzm2MM923Ia7bMUFxbxxzFJdbWU9xRdYCgrtaWCXh
-        eid/k9zn1jKKs42t4myD4xj3+vctbIcXP6Wzk3yLdkDCl2pKSL74KvDlln38i7t1Et56zYzx
-        +QYd4p8NGgh+Sr+av3PFSO5dfthze6yQeDJNUAWFH/OMzxnOliT/CDj7604+lYW65HnIgwYm
-        BB7X5CMXljHVCBpyA/KQpxNPIxj7bCbFxxSCuukyfNFxrbhrYfAQwaP8flx8jCOomXyCuVS+
-        zAEYe2YhXNiPCQN9YbfbgTOvcejtK3aLKCYQ5hp7KReWMuGgq7G4DyGY9VD+x+GO82ciwdrR
-        QIoaH7CUjLiXejDbQFc+4vbizBrIbSrFRSyHvpEKzBUGzIwEPlX8JMW7d8JoswkTsS/YzQaJ
-        iAOg8+Z1QsQXwFp9ERfNGgRNDS0LpcPAZP7oXEQ7EwKhvjVIpCOgtrIMuWhgvKFn3Ee8wRuK
-        jLdxkZaC5rJMVK8F69umhYVyePDBQRUgVrukmXZJG+2SNtr/ufcQoUNyIVWdFCeotyqFM5vV
-        iiR1qjJu84lTSXrk/Had8+bpJ6h19ng7YmjEeknp64ZoGalIU6cntSOgcdZPGhHrpKSxivRz
-        gupUjCo1UVC3o1U0wcqlGcuGomRMnCJFSBCEZEG1OMVoj5VZKONQsDEU0+1vzQkd6OnnUN3Q
-        bH3p0K5Z/fFhfxJavuc9X8sSbS9v8M/t2ZqnQVWZp4ejZqpD/mbWloQmHI0/2PXH96tNU0ls
-        Ot9mf+X4otdcipmcMJqUy8qaR3fHNH6L23Bkj3VsndJQX2uJmjf5b2SbS1BBgkfg3xUXs7ze
-        hbOEOl6xZSOuUiv+Ad104lNyAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrMIsWRmVeSWpSXmKPExsVy+t/xu7rheVtjDP5OFLbobZrOZHF40QtG
-        iytf37NZnPr6l82iefF6NotJ9yewWHROXMJucfPTN1aLy7vmsFm8eC5t8eLeWyaLE9+mMTnw
-        eHxe9YrVY+esu+wesztmsnpM6ZTwmHcy0GP/3DXsHve7jzN59G1Zxeix994WFo/Pm+Q8ZrRv
-        Yw3gjtKzKcovLUlVyMgvLrFVija0MNIztLTQMzKx1DM0No+1MjJV0rezSUnNySxLLdK3S9DL
-        aHrcyF7wTqbi44w+tgbGM+JdjJwcEgImEt1TzrB2MXJxCAksZZR4+m8WG0RCXGL3/LfMELaw
-        xJ9rXWwQRa8ZJd5M3scCkhAWCJF4vvckmC0iYC2xaeIVsEnMAueYJZZM2wU1djaTxJH1GxhB
-        qtgENCX+br4JtoJXwE5i1cqTYHEWAVWJed+/gq0TFYiQOPN+BQtEjaDEyZlPwGxOAWOJVfOe
-        gPUyC6hL/Jl3iRnClpdo3jobyhaXuPVkPtMERqFZSNpnIWmZhaRlFpKWBYwsqxhFUkuLc9Nz
-        i430ihNzi0vz0vWS83M3MQIjfNuxn1t2MHa9Cz7EKMDBqMTDm9C3JUaINbGsuDL3EKMEB7OS
-        CK9jClCINyWxsiq1KD++qDQntfgQoynQcxOZpUST84HJJ68k3tDU0NzC0tDc2NzYzEJJnPe8
-        QWWUkEB6YklqdmpqQWoRTB8TB6dUA+OBB2ems1wMTfvvEpYa3F7q4JlYFRzsL+Asz6TqOWtG
-        Ef9Dzs3l+2fkiau/uSptul3ktMq9lkvWH+YUGNeUV68u107YFyrRbLOpJTpV/PxXuZOxRtWH
-        BMr9XgedEi58OtHziL7kl9UnVGTT7cvd9zGnaMyyvbI5xfJExsPP3GevvM0xWr70khJLcUai
-        oRZzUXEiAJ15MFYGAwAA
-X-CMS-MailID: 20190416055535eucas1p14da3316309de64b825c4bc81afef3484
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA02SaUwTQRiGM+x2KcTiUEU/0CiuRwQDdinFxYDRQLSJ/CAxniGBDV0Locem
+        2xKPHwoYRUU8g1gIEsVEMQiBIlhRIiqGIEoUj6j1RKNFUDk84rntauTfM+/3zrzfNzNKQl1H
+        RShzLXbeZuFMNBVMnr8aFRMjWJozNEc+suzZT68Qu8N5gmR7Ct8HsnfdlRQ7su8aYnePOin2
+        ccFpiv3mriLZ0ro71NIgfaunBukvOD2B+n1FQ5S+1FWL9CONM9IVG/KScnjOwNsieUu21ZBr
+        MSbTK1dlpmTqEjRMDJPILqIjLZyZT6ZT09JjlueapIboyHzO5JCkdE4U6YVLkmxWh52PzLGK
+        9mSaFwwmIVGIFTmz6LAYY7Ot5sWMRhOnk4xZeTm/B8cI4UXcpuG9zcR2VB61BwUpAcdD08dz
+        hI/VuBXB0fdrZR5G8OS3fg8KlvgzgjdlBwP+bdjfWxYoFy4heN35i5IXHxBUDI6SPtckvAo8
+        d8r9hcn4F4Jhd7nCVyDwehi7csqfR+FoaH/7kPLxRDwL7n19hXyswktgoGqH/yASz4WWi1f8
+        ehheB886GxSyJxS6jvX7PUF4EXQdukzK50+FR/3HA2SeCUXNFYTc9ncK7v8wy5wKlQU1f/VJ
+        4L3hCpQ5AkaGLlEyb4UzXdf8AwAuRuBq71XIBS20nzosBSilgCiody+Us0JgaKxE4ZMBq6B4
+        p1p2z4a7zz1/by4cTu7aTckWPTz1xh9As5zjhnGOG8A5bgDn/6xqRNaiKbwgmo28yAhx49+6
+        Efm/anRCKzpxK60DYSWiJ6iUJa4MtYLLFzebOxAoCXqyaplBklQGbvMW3mbNtDlMvNiBdNJd
+        HyQiwrKt0se32DMZXZxWq2XjmQQdw9BTVfVLUzLU2MjZ+TyeF3jbv30ByqCI7ajM7fpShJt6
+        UjXVjYPfvEc8KV/b+tpG+5qm9+tmhqxLyn2pTX8hLC4eVNXwP0s1WS27zO8axuY/yLowx9Bk
+        9OLKZ6Eb1edD1OtXhN6ccIM8U3K9uDu8Yu+y+kJDXWFnzSZF0kAVwuK9ts8LFN19q+0tt6el
+        EQVrvOHbnnQkOua10qSYwzHRhE3k/gCWEOIkwAMAAA==
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprJIsWRmVeSWpSXmKPExsWy7bCSvG5B3tYYg+NOFqs/Pma0aJm1iMXi
+        bNMbdovLu+awWXzuPcJo0fllFpvF7cYVbBY/d81jsehbe4nNgdNjx90ljB47Z91l9+htfsfm
+        0bdlFaPH501yAaxRXDYpqTmZZalF+nYJXBn/335lLnhoVPGpeytzA+MMzS5GTg4JAROJ/gvT
+        2EFsIYHdjBIb5pRBxCUlpl08ytzFyAFkC0scPlzcxcgFVPKWUWLL67eMIDXCAsESdy/NYANJ
+        iAg0MUl8ftjCBJJgFoiU6H/UzQrRsY1R4nvfP7AONgEtif0vbrCB2PwCihJXfzwGi/MK2Em8
+        ntfCAmKzCKhKbN99ECwuKhAhceb9ChaIGkGJkzOfgNmcAuYSJyftY4FYpi7xZ94lZghbXOLW
+        k/lQR8hLNG+dzTyBUXgWkvZZSFpmIWmZhaRlASPLKkbJ1ILi3PTcYsMCw7zUcr3ixNzi0rx0
+        veT83E2M4AjT0tzBeHlJ/CFGAQ5GJR7ehL4tMUKsiWXFlbmHGCU4mJVEeB1TgEK8KYmVValF
+        +fFFpTmpxYcYpTlYlMR5n+YdixQSSE8sSc1OTS1ILYLJMnFwSjUwRj39ZNYcHSmQuMvjm8V7
+        y7Tvmppr+S5/YfvhVRzKGbhqnasvU/OBtQeaOXguuhm2ZWpzJf5WWGvntnOxo5n8vZebHV77
+        TVt/2PjK67WGBc3ZZ1Y9X2urwG2od+u/j8bpSo5pHcuDApzrRMzajjk8z5D5fWrZzdPeDYve
+        L3l//crN9baHHBUElFiKMxINtZiLihMBx3KtSKwCAAA=
+X-CMS-MailID: 20190416055600epcas1p37fea929aa4977f3dd97290f06c9ed189
 X-Msg-Generator: CA
 Content-Type: text/plain; charset="utf-8"
-X-RootMTR: 20190415082007epcas2p431304d9b3a9ddb13ff6b7384d7b583ac
-X-EPHeader: CA
-CMS-TYPE: 201P
-X-CMS-RootMailID: 20190415082007epcas2p431304d9b3a9ddb13ff6b7384d7b583ac
-References: <20190415081300.24831-1-ronald@innovation.ch>
-        <CGME20190415082007epcas2p431304d9b3a9ddb13ff6b7384d7b583ac@epcas2p4.samsung.com>
-        <20190415081300.24831-2-ronald@innovation.ch>
-        <76cf3079-f190-bed4-7a00-149d7fa0a650@samsung.com>
-        <20190415232444.GB13033@innovation.ch>
+CMS-TYPE: 101P
+DLP-Filter: Pass
+X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190415145737epcas1p39300df7ef83ed20bd7aaa4e920d1f475
+References: <20190415145505.18397-1-digetx@gmail.com>
+        <CGME20190415145737epcas1p39300df7ef83ed20bd7aaa4e920d1f475@epcas1p3.samsung.com>
+        <20190415145505.18397-11-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16.04.2019 01:24, Life is hard, and then you die wrote:
->   Hi Andrzej,
->
-> On Mon, Apr 15, 2019 at 10:58:09AM +0200, Andrzej Hajda wrote:
->> On 15.04.2019 10:12, Ronald Tschalär wrote:
->>> commit d6abe6df706c (drm/bridge: sil_sii8620: do not have a dependency
->>> of RC_CORE) changed the driver to select both RC_CORE and INPUT.
->>> However, this causes problems with other drivers, in particular an input
->>> driver that depends on MFD_INTEL_LPSS_PCI (to be added in a separate
->>> commit):
->>>
->>>   drivers/clk/Kconfig:9:error: recursive dependency detected!
->>>   drivers/clk/Kconfig:9:        symbol COMMON_CLK is selected by MFD_INTEL_LPSS
->>>   drivers/mfd/Kconfig:566:      symbol MFD_INTEL_LPSS is selected by MFD_INTEL_LPSS_PCI
->>>   drivers/mfd/Kconfig:580:      symbol MFD_INTEL_LPSS_PCI is implied by KEYBOARD_APPLESPI
->>>   drivers/input/keyboard/Kconfig:73:    symbol KEYBOARD_APPLESPI depends on INPUT
->>>   drivers/input/Kconfig:8:      symbol INPUT is selected by DRM_SIL_SII8620
->>>   drivers/gpu/drm/bridge/Kconfig:83:    symbol DRM_SIL_SII8620 depends on DRM_BRIDGE
->>>   drivers/gpu/drm/bridge/Kconfig:1:     symbol DRM_BRIDGE is selected by DRM_PL111
->>>   drivers/gpu/drm/pl111/Kconfig:1:      symbol DRM_PL111 depends on COMMON_CLK
->>>
->>> According to the docs and general consensus, select should only be used
->>> for non user-visible symbols, but both RC_CORE and INPUT are
->>> user-visible. Furthermore almost all other references to INPUT
->>> throughout the kernel config are depends, not selects. For this reason
->>> the first part of this change reverts commit d6abe6df706c.
->>>
->>> In order to address the original reason for commit d6abe6df706c, namely
->>> that not all boards use the remote controller functionality and hence
->>> should not need have to deal with RC_CORE, the second part of this
->>> change now makes the remote control support in the driver optional and
->>> contingent on RC_CORE being defined. And with this the hard dependency
->>> on INPUT also goes away as that is only needed if RC_CORE is defined
->>> (which in turn already depends on INPUT).
->>>
->>> CC: Inki Dae <inki.dae@samsung.com>
->>> CC: Andrzej Hajda <a.hajda@samsung.com>
->>> CC: Laurent Pinchart <laurent.pinchart@ideasonboard.com>
->>> CC: Dmitry Torokhov <dmitry.torokhov@gmail.com>
->>> Signed-off-by: Ronald Tschalär <ronald@innovation.ch>
->>
->> Reviewed-by: Andrzej Hajda <a.hajda@samsung.com>
-> Thanks for your reviews!
->
->> If there are no objections I will take it to drm-misc tomorrow.
-> This brings us back to the discussion started in response to the first
-> version of my patch (see
-> https://lore.kernel.org/lkml/20190124082423.23139-1-ronald@innovation.ch/T/#m24f45fecd987a787a9554c8088f463fd10de2b00).
-> To recap: the problem is that the applespi patch depends on this patch
-> here, as make-config will break as described above otherwise. So if
-> this patch is submitted through drm-misc, then it's unclear to me how
-> to ensure that the two patches make it upstream in proper order,
-> unless the applespi patch is also upstreamed through drm-misc, or the
-> Kconfig for applespi is (temporarily) modified to not trigger the
-> config error and another patch is later submitted to fix the Kconfig
-> again (which seems somewhat ugly to me). Assuming that consensus is to
-> merge both patches through one tree, then it would seem that because
-> this patch here is relatively small that maybe it could be merged
-> through the input tree along with the applespi patch?
+Hi,
+
+It looks good to me to drop the primary interrupt handler
+but I have some comments. Please check it.
+
+On 19. 4. 15. 오후 11:54, Dmitry Osipenko wrote:
+> There is no real need in the primary interrupt handler, hence move
+> everything to the secondary (threaded) handler. In a result locking
+> is consistent now and there are no potential races with the interrupt
+> handler because it is protected with the devfreq's mutex.
+> 
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/devfreq/tegra-devfreq.c | 61 ++++++++++++---------------------
+>  1 file changed, 22 insertions(+), 39 deletions(-)
+> 
+> diff --git a/drivers/devfreq/tegra-devfreq.c b/drivers/devfreq/tegra-devfreq.c
+> index 2a1464098200..69b557df5084 100644
+> --- a/drivers/devfreq/tegra-devfreq.c
+> +++ b/drivers/devfreq/tegra-devfreq.c
+> @@ -144,7 +144,6 @@ static struct tegra_devfreq_device_config actmon_device_configs[] = {
+>  struct tegra_devfreq_device {
+>  	const struct tegra_devfreq_device_config *config;
+>  	void __iomem *regs;
+> -	spinlock_t lock;
+>  
+>  	/* Average event count sampled in the last interrupt */
+>  	u32 avg_count;
+> @@ -249,11 +248,8 @@ static void actmon_write_barrier(struct tegra_devfreq *tegra)
+>  static void actmon_isr_device(struct tegra_devfreq *tegra,
+>  			      struct tegra_devfreq_device *dev)
+>  {
+> -	unsigned long flags;
+>  	u32 intr_status, dev_ctrl;
+>  
+> -	spin_lock_irqsave(&dev->lock, flags);
+> -
+>  	dev->avg_count = device_readl(dev, ACTMON_DEV_AVG_COUNT);
+>  	tegra_devfreq_update_avg_wmark(tegra, dev);
+>  
+> @@ -302,26 +298,6 @@ static void actmon_isr_device(struct tegra_devfreq *tegra,
+>  	device_writel(dev, ACTMON_INTR_STATUS_CLEAR, ACTMON_DEV_INTR_STATUS);
+>  
+>  	actmon_write_barrier(tegra);
+> -
+> -	spin_unlock_irqrestore(&dev->lock, flags);
+> -}
+> -
+> -static irqreturn_t actmon_isr(int irq, void *data)
+> -{
+> -	struct tegra_devfreq *tegra = data;
+> -	bool handled = false;
+> -	unsigned int i;
+> -	u32 val;
+> -
+> -	val = actmon_readl(tegra, ACTMON_GLB_STATUS);
+> -	for (i = 0; i < ARRAY_SIZE(tegra->devices); i++) {
+> -		if (val & tegra->devices[i].config->irq_mask) {
+> -			actmon_isr_device(tegra, tegra->devices + i);
+> -			handled = true;
+> -		}
+> -	}
+> -
+> -	return handled ? IRQ_WAKE_THREAD : IRQ_NONE;
+>  }
+>  
+>  static unsigned long actmon_cpu_to_emc_rate(struct tegra_devfreq *tegra,
+> @@ -348,35 +324,46 @@ static void actmon_update_target(struct tegra_devfreq *tegra,
+>  	unsigned long cpu_freq = 0;
+>  	unsigned long static_cpu_emc_freq = 0;
+>  	unsigned int avg_sustain_coef;
+> -	unsigned long flags;
+> +	u32 avg_count;
+>  
+>  	if (dev->config->avg_dependency_threshold) {
+>  		cpu_freq = cpufreq_get(0);
+>  		static_cpu_emc_freq = actmon_cpu_to_emc_rate(tegra, cpu_freq);
+>  	}
+>  
+> -	spin_lock_irqsave(&dev->lock, flags);
+> -
+> -	dev->target_freq = dev->avg_count / ACTMON_SAMPLING_PERIOD;
+> +	avg_count = dev->avg_count;
+> +	dev->target_freq = avg_count / ACTMON_SAMPLING_PERIOD;
+
+Actually, this change is not related to this patch.
+Please keep the original code.
+
+>  	avg_sustain_coef = 100 * 100 / dev->config->boost_up_threshold;
+>  	dev->target_freq = do_percent(dev->target_freq, avg_sustain_coef);
+>  	dev->target_freq += dev->boost_freq;
+>  
+> -	if (dev->avg_count >= dev->config->avg_dependency_threshold)
+> +	if (avg_count >= dev->config->avg_dependency_threshold)
+
+ditto.
+
+>  		dev->target_freq = max(dev->target_freq, static_cpu_emc_freq);
+> -
+> -	spin_unlock_irqrestore(&dev->lock, flags);
+>  }
+>  
+>  static irqreturn_t actmon_thread_isr(int irq, void *data)
+>  {
+>  	struct tegra_devfreq *tegra = data;
+> +	bool handled = false;
+> +	unsigned int i;
+> +	u32 val;
+>  
+>  	mutex_lock(&tegra->devfreq->lock);
+> -	update_devfreq(tegra->devfreq);
+> +
+> +	val = actmon_readl(tegra, ACTMON_GLB_STATUS);
+> +	for (i = 0; i < ARRAY_SIZE(tegra->devices); i++) {
+> +		if (val & tegra->devices[i].config->irq_mask) {
+> +			actmon_isr_device(tegra, tegra->devices + i);
+> +			handled = true;
+> +		}
+> +	}
+> +
+> +	if (handled)
+> +		update_devfreq(tegra->devfreq);
+> +
+>  	mutex_unlock(&tegra->devfreq->lock);
+>  
+> -	return IRQ_HANDLED;
+> +	return handled ? IRQ_HANDLED : IRQ_NONE;
+>  }
+>  
+>  static int tegra_actmon_rate_notify_cb(struct notifier_block *nb,
+> @@ -386,7 +373,6 @@ static int tegra_actmon_rate_notify_cb(struct notifier_block *nb,
+>  	struct tegra_devfreq *tegra;
+>  	struct tegra_devfreq_device *dev;
+>  	unsigned int i;
+> -	unsigned long flags;
+>  
+>  	if (action != POST_RATE_CHANGE)
+>  		return NOTIFY_OK;
+> @@ -398,9 +384,7 @@ static int tegra_actmon_rate_notify_cb(struct notifier_block *nb,
+
+When I review this patch, I have a question
+about why tegra_actmon_rate_notify_cb is needed.
+
+tegra_actmon_rate_notify_cb() do something
+when the clock rate of emc_clock is changed.
+I think that 'emc_clock' is changed by this driver.
+It means that the this driver can catch the change timing
+of emc_clock rate without notifier. 
+
+IMO, it is possible to call tegra_devfreq_update_wmark()
+directly without clock notifier before calling
+'clk_set_min_rate()/clk_set_rate()' in the tegra_devfreq_target().
+
+With clock notifier, it cannot restore something for
+tegra_devfreq_update_wmark(tegra, dev) when failed to
+set the rate of emc_clk by 'clk_set_min_rate()/clk_set_rate()'.
+
+>  	for (i = 0; i < ARRAY_SIZE(tegra->devices); i++) {
+>  		dev = &tegra->devices[i];
+>  
+> -		spin_lock_irqsave(&dev->lock, flags);
+>  		tegra_devfreq_update_wmark(tegra, dev);
+> -		spin_unlock_irqrestore(&dev->lock, flags);
+>  	}
+>  
+>  	actmon_write_barrier(tegra);
+> @@ -668,7 +652,6 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+>  		dev = tegra->devices + i;
+>  		dev->config = actmon_device_configs + i;
+>  		dev->regs = tegra->regs + dev->config->offset;
+> -		spin_lock_init(&dev->lock);
+>  
+>  		tegra_actmon_configure_device(tegra, dev);
+>  	}
+> @@ -696,8 +679,8 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
+>  		return err;
+>  	}
+>  
+> -	err = devm_request_threaded_irq(&pdev->dev, irq, actmon_isr,
+> -					actmon_thread_isr, IRQF_SHARED,
+> +	err = devm_request_threaded_irq(&pdev->dev, irq, NULL,
+> +					actmon_thread_isr, IRQF_ONESHOT,
+>  					"tegra-devfreq", tegra);
+>  	if (err) {
+>  		dev_err(&pdev->dev, "Interrupt request failed\n");
+> 
 
 
-Oh, I have forgot. Please take it then via input tree.
-
-
-Regards
-
-Andrzej
-
-
-
->
->
->   Cheers,
->
->   Ronald
->
->
->
-
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
