@@ -2,69 +2,157 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4123FC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:40:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EE8CC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:41:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E88420872
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:40:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6C38521915
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:41:48 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="sUTH3FgW"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="LaTQ/fQ3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729449AbfDPNkO (ORCPT
+        id S1728429AbfDPNlq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 09:40:14 -0400
-Received: from vps0.lunn.ch ([185.16.172.187]:34315 "EHLO vps0.lunn.ch"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727049AbfDPNkO (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 09:40:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
-        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
-        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
-        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
-        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
-        List-Post:List-Owner:List-Archive;
-        bh=qXgxswxonfoALA9eu49gtYWi5K7iw3nDhH5kLiyToos=; b=sUTH3FgWupS2U3OTbDLlMbutPs
-        qkInH9y2QVYGssXKe1gIhfqPFNltqjihyHP/y6nzggbCdd8joTGTFOJi8mslYxvOirO/YB3OUTy+U
-        T3TDbtfA+umrz1j0k57Bd0Kpma/uYKZynTgY7M+oqucJCtaRSBdPbO9tkmpzYM0cPpLU=;
-Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
-        (envelope-from <andrew@lunn.ch>)
-        id 1hGOJZ-0007z9-1G; Tue, 16 Apr 2019 15:39:57 +0200
-Date:   Tue, 16 Apr 2019 15:39:57 +0200
-From:   Andrew Lunn <andrew@lunn.ch>
-To:     Nicholas Mc Guire <hofrat@osadl.org>
-Cc:     Jason Cooper <jason@lakedaemon.net>,
-        Gregory Clement <gregory.clement@bootlin.com>,
-        Sebastian Hesselbarth <sebastian.hesselbarth@gmail.com>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH V2] ARM: mvebu: at least report the kzalloc failure
-Message-ID: <20190416133957.GB29190@lunn.ch>
-References: <1555386991-8855-1-git-send-email-hofrat@osadl.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1555386991-8855-1-git-send-email-hofrat@osadl.org>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Tue, 16 Apr 2019 09:41:46 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:36038 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726215AbfDPNlq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 09:41:46 -0400
+Received: by mail-wm1-f65.google.com with SMTP id h18so25541378wml.1;
+        Tue, 16 Apr 2019 06:41:44 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:from:to:cc:subject:date:message-id;
+        bh=F16VyIkZFmMShxfwngMVog0SLrmVBtDvqPLRbJ9ZaCk=;
+        b=LaTQ/fQ3cn/+7MJOo1n5iR2Lyd/1OS9aBbR5JHK0jFKdxoqBPsVY0GBajL/60GbdPW
+         /mhe1WDlCbRMvJBGUFVwS7SCppH1ANRmzd+Syq3dQ/0dQw1xs9QPMyyaZeSIQKVao2fz
+         x+rY0+EAbvlyuQOjH+K9QfA4DPUgflnFyc3+hEqNP+qByX6nQzbDbt2rF0LKEcSoDQgQ
+         MHPSNLP4cuRf6j8lU0DwC7ZVORAq1QYoAfCeOjyU+Gmkq5iPjGz/3cgpt0MrEmHc/wuq
+         GLsHG/xRaqCrsV3v3lC0+RQOleEGTbvIfJS3a6PoepERzlUQVrslMOwJxQ48ln4RCPzm
+         ZVIA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
+        bh=F16VyIkZFmMShxfwngMVog0SLrmVBtDvqPLRbJ9ZaCk=;
+        b=VH82i5gwBeFrbSO8RDlOb1N/WpZLYESgQxM2ws1HYYtMMrtmWCwD+gzBNH0AThcdXF
+         4D4mhRlbJjMrz6H2vAxtdum1EGu3HNbkojBifGqedQbSX19YOJ1X/RXkf2rvULuPL8r0
+         pecIIA7DL4KqYC9ES8hKA80HP7TnJHXuJoLLfbBXA4jVv/L/cQl/jr8NJvY1sfYsO+uW
+         2gnJZO/mUPR0n4lMBJTdMRaOEijvVPQaOi1mkOzapfUvYNSlMWNzaT+vIpP/T6g4HfOo
+         C6E+Als9Wpje+WkREdJfPp4Ipm4NcBB4cF210rUWD27LRQQM5/P+5MkpatTSZEyMY9He
+         hOwg==
+X-Gm-Message-State: APjAAAVagwpT8W2afTIH5fwgAJeRrolozkAyBVCPzRfU+oED+BwnWw+y
+        rJFv84Q7P2+NQZVM9nR+MIc=
+X-Google-Smtp-Source: APXvYqzgBQodhXTylxNR2aOgwc5JGnSfy12ABQI0vkWOLv9Xfzq2zeJoJ+0J+f9gcoondhxA4UMpgQ==
+X-Received: by 2002:a1c:9d4c:: with SMTP id g73mr26420791wme.48.1555422104144;
+        Tue, 16 Apr 2019 06:41:44 -0700 (PDT)
+Received: from 640k.lan ([93.56.166.5])
+        by smtp.gmail.com with ESMTPSA id x84sm30382918wmg.13.2019.04.16.06.41.42
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Apr 2019 06:41:42 -0700 (PDT)
+From:   Paolo Bonzini <pbonzini@redhat.com>
+To:     torvalds@linux-foundation.org
+Cc:     linux-kernel@vger.kernel.org, rkrcmar@redhat.com,
+        kvm@vger.kernel.org
+Subject: [GIT PULL v2] KVM changes for Linux 5.1-rc6
+Date:   Tue, 16 Apr 2019 15:41:40 +0200
+Message-Id: <1555422100-50658-1-git-send-email-pbonzini@redhat.com>
+X-Mailer: git-send-email 1.8.3.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 05:56:31AM +0200, Nicholas Mc Guire wrote:
+Linus,
 
-> Note that this will trigger a checkpatch WARNING
-> "WARNING: Possible unnecessary 'out of memory' message"
-> but comparing the oops with an without the one-line pr_err I would
-> argue that it makes sense to include it:
+The following changes since commit 771acc7e4a6e5dba779cb1a7fd851a164bc81033:
 
-Hi Nicholas
+  Bluetooth: btusb: request wake pin with NOAUTOEN (2019-04-09 17:38:24 -1000)
 
-It might be worth adding this as a comment, so that newbies don't
-submit patches removing the pr_err() because of the checkpatch
-warning.
+are available in the git repository at:
 
-       Andrew
+  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
+
+for you to fetch changes up to 7a223e06b1a411cef6c4cd7a9b9a33c8d225b10e:
+
+  KVM: x86: avoid misreporting level-triggered irqs as edge-triggered in tracing (2019-04-16 15:38:08 +0200)
+
+5.1 keeps its reputation as a big bugfix release for KVM x86.
+
+----------------------------------------------------------------
+* Fix for a memory leak introduced during the merge window
+* Fixes for nested VMX with ept=0
+* Fixes for AMD (APIC virtualization, NMI injection)
+* Fixes for Hyper-V under KVM and KVM under Hyper-V
+* Fixes for 32-bit SMM and tests for SMM virtualization
+* More array_index_nospec peppering
+
+----------------------------------------------------------------
+Ben Gardon (1):
+      kvm: mmu: Fix overflow on kvm mmu page limit calculation
+
+Hariprasad Kelam (1):
+      KVM: x86: fix warning Using plain integer as NULL pointer
+
+Liran Alon (2):
+      KVM: x86: Raise #GP when guest vCPU do not support PMU
+      KVM: nVMX: Expose RDPMC-exiting only when guest supports PMU
+
+Paolo Bonzini (5):
+      KVM: nVMX: allow tests to use bad virtual-APIC page address
+      KVM: nVMX: always use early vmcs check when EPT is disabled
+      selftests: kvm/evmcs_test: complete I/O before migrating guest state
+      selftests: kvm: fix for compilers that do not support -no-pie
+      KVM: fix spectrev1 gadgets
+
+Sean Christopherson (6):
+      KVM: x86/mmu: Fix an inverted list_empty() check when zapping sptes
+      KVM: x86: Load SMRAM in a single shot when leaving SMM
+      KVM: x86: Open code kvm_set_hflags
+      KVM: x86: clear SMM flags before loading state while leaving SMM
+      KVM: x86: Don't clear EFER during SMM transitions for 32-bit vCPU
+      KVM: x86: Always use 32-bit SMRAM save state for 32-bit kernels
+
+Suthikulpanit, Suravee (2):
+      Revert "svm: Fix AVIC incomplete IPI emulation"
+      svm/avic: Fix invalidate logical APIC id entry
+
+Vitaly Kuznetsov (3):
+      KVM: x86: svm: make sure NMI is injected after nmi_singlestep
+      selftests: kvm: add a selftest for SMM
+      KVM: x86: avoid misreporting level-triggered irqs as edge-triggered in tracing
+
+WANG Chao (1):
+      x86/kvm: move kvm_load/put_guest_xcr0 into atomic context
+
+ arch/x86/include/asm/kvm_emulate.h                 |   4 +-
+ arch/x86/include/asm/kvm_host.h                    |  17 +-
+ arch/x86/include/uapi/asm/vmx.h                    |   1 +
+ arch/x86/kvm/emulate.c                             | 191 +++++++++++----------
+ arch/x86/kvm/lapic.c                               |   4 +-
+ arch/x86/kvm/mmu.c                                 |  15 +-
+ arch/x86/kvm/mmu.h                                 |   2 +-
+ arch/x86/kvm/pmu.c                                 |   4 +
+ arch/x86/kvm/svm.c                                 |  57 +++---
+ arch/x86/kvm/trace.h                               |   4 +-
+ arch/x86/kvm/vmx/nested.c                          |  47 +++--
+ arch/x86/kvm/vmx/vmx.c                             |  35 +++-
+ arch/x86/kvm/vmx/vmx.h                             |   2 +
+ arch/x86/kvm/x86.c                                 |  64 ++++---
+ arch/x86/kvm/x86.h                                 |   2 +
+ include/linux/kvm_host.h                           |  10 +-
+ tools/testing/selftests/kvm/Makefile               |   9 +-
+ .../selftests/kvm/include/x86_64/processor.h       |  27 +++
+ tools/testing/selftests/kvm/lib/kvm_util.c         |   5 +
+ tools/testing/selftests/kvm/lib/x86_64/processor.c |  20 ++-
+ tools/testing/selftests/kvm/x86_64/evmcs_test.c    |   5 +-
+ tools/testing/selftests/kvm/x86_64/smm_test.c      | 157 +++++++++++++++++
+ tools/testing/selftests/kvm/x86_64/state_test.c    |  15 +-
+ virt/kvm/irqchip.c                                 |   5 +-
+ virt/kvm/kvm_main.c                                |   6 +-
+ 25 files changed, 496 insertions(+), 212 deletions(-)
+ create mode 100644 tools/testing/selftests/kvm/x86_64/smm_test.c
