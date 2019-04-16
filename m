@@ -2,58 +2,60 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3DC6CC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:38:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C897C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:38:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1C6F20868
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:38:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A9352073F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:38:12 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ChdvSgYf"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="R89rRBdX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727437AbfDPGiH (ORCPT
+        id S1728284AbfDPGiL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 02:38:07 -0400
-Received: from mail-pg1-f193.google.com ([209.85.215.193]:36202 "EHLO
+        Tue, 16 Apr 2019 02:38:11 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:37560 "EHLO
         mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726147AbfDPGiH (ORCPT
+        with ESMTP id S1726147AbfDPGiI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 02:38:07 -0400
-Received: by mail-pg1-f193.google.com with SMTP id 85so9824899pgc.3
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 23:38:06 -0700 (PDT)
+        Tue, 16 Apr 2019 02:38:08 -0400
+Received: by mail-pg1-f193.google.com with SMTP id e6so9824199pgc.4
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 23:38:08 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=AA1P30wTwwGvbZOQVdXv/j04659r4FkKpJqiA688gg8=;
-        b=ChdvSgYf92m138ZST0MbAiWHTOSA7gDw52S3Ec2G/0/AW2vlZwtPmmQ68H9rbK3kUX
-         kJsvnqXjyzhha6kzaOHiaU6+8Ns3d7swoqsSmVlIctx8eRbiOnzlh0wCiKd+YTRvK1ly
-         Rl34yLdLZ9+IH2F86r0S3DPK1XB+t2jVTyqGdvMNsI989eJ/j6qoXzkr8XZILtaOSKc1
-         HmWUb9D9DsE5s6s0xqN5WNh+zSZKhD9+NBeM/UUDySCvA3HgkwseLMRoavefuLTKoyCc
-         nqX3iKsn5ErvcwbZPeCFVY0J03t/V7W/cXwNTpFpl5jwwLOSp0uowLt3wthd4SRKzQxz
-         7gkg==
+        h=from:to:cc:subject:date:message-id:in-reply-to:references;
+        bh=+NaqF5nri+uM/Z7PdWzLBy5sLBZpzRLF+ZQiF2dS6/U=;
+        b=R89rRBdXKadbr+eg8z21CCGws3OhXnTFiZ0qa5/qKCwDx6ffjJU5aa+TCCOKMKPiN1
+         a62udR9B9ulkIfz5yMSBVTFkh01XwmHGr2TCdQQ5OHSeN0ly5VNUbPEdxnL9vyhL+7MC
+         BnKJvO3cI2HSl5oLqlHkdZUUypTnCdmj//OU3PskWBjHekNI393kduiNnkbqnBc3WJ2C
+         gEXMF0vvrUL/N98WXJr52APi8hMV1W4QogpMaLoOZu6mGD7fJxduFDleUiavELA2eITm
+         BPpqMWMRHmoEm7L5sGKPNML7LRlH89Qvr4j58xjBVzhKl/I0gu7vycAQTMm6T7ca/xQM
+         6AFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=AA1P30wTwwGvbZOQVdXv/j04659r4FkKpJqiA688gg8=;
-        b=ZuRYTtPN2qAO2iKZJCZ0rTqOe69croygl+9ViVtxJB2CdLiQ80LCVpA1FU/wp6ze5R
-         Uwht9asbLKJUwByR5Z/4prDYM/A5nAGRfMc8VOtr+BMqygIjBDt0hq10cN0RfKflebsI
-         FV0mtzmHR7Z/h5lgq9To1kElUGzQFCG1kyhY+el8Nmz7zx5VZQ8O0dFJsjusOzb00Zfl
-         jcBpTBbdowus87sygPndCRh3K2WHdqugy0Lct+2Dc034tKb5v80khjtc9NViIxpIbng8
-         JzeQqXhj7XErlyyzXtHtG2OAWNTE4Rc9o9H+BMjaAnBnljlXuzr51EPN4cYdt17O25U3
-         4kiw==
-X-Gm-Message-State: APjAAAUOj0x1wDTGjKEWF/73zgw4T0t9twakg4Jygr6F9zEp+esFH22R
-        N2F5xtpehUlBvMPvTAGcc24=
-X-Google-Smtp-Source: APXvYqykJtf+E7Ca9/PBZyG1JfAdF2VjI04ScHho0GktXPUhH7HgLIzMyEQcmzkgddLM0VJ3RuC/dA==
-X-Received: by 2002:a62:604:: with SMTP id 4mr81367043pfg.38.1555396686119;
-        Mon, 15 Apr 2019 23:38:06 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=+NaqF5nri+uM/Z7PdWzLBy5sLBZpzRLF+ZQiF2dS6/U=;
+        b=DhYAPwOVI6TJ5Ptf+ZQ/Z6/Ji31qgoT45xuXvkYx6X9iQUKCpAmbsL4xmpT1rAO6WG
+         lgbZAHSLkv5+sj0DU255IrGBpCZ7669z80unmXcvSrCCcEuIxEO7iDX+2gbjeIcURyNw
+         B3E3N1/VVJrgh2MZu12NNNrYZKdPUElRRy5hZR9gposZVd4yVs3UF1gD9S45LAWCTc1K
+         nncNacgrtKcc+RrtL7H2tHe8/sG34Ipu3b0O9nh6oU4lA1NIAsIJbI5dUr2bT0+t/Zt4
+         6jonLtwSlQbQ9ah2Vo2K5AjESZ7qtVEmKcmjadLPXGXT/RG6iTLibRe3S4Tyj/xODpm/
+         IcKQ==
+X-Gm-Message-State: APjAAAXgxk7wIHwOnPF3FkRb919BZKmufzLzsRgq477dHQD960zLHuiR
+        4SMkykt6kJ2DPnpFIHpv/1Y=
+X-Google-Smtp-Source: APXvYqxFUmVzuuKeq+wp3o4z1MZWxet+FU7eqxLPJOIlE7UtdlXOuRN3YKdy60iRhtltroEoeaaYwg==
+X-Received: by 2002:a62:ac08:: with SMTP id v8mr79667632pfe.42.1555396687637;
+        Mon, 15 Apr 2019 23:38:07 -0700 (PDT)
 Received: from localhost ([2601:648:8303:5c60:bc53:6e04:b584:e900])
-        by smtp.gmail.com with ESMTPSA id 6sm40196853pfp.143.2019.04.15.23.38.04
+        by smtp.gmail.com with ESMTPSA id 6sm40197080pfp.143.2019.04.15.23.38.06
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 15 Apr 2019 23:38:05 -0700 (PDT)
+        Mon, 15 Apr 2019 23:38:07 -0700 (PDT)
 From:   Yury Norov <yury.norov@gmail.com>
 X-Google-Original-From: Yury Norov <ynorov@marvell.com>
 To:     Andrew Morton <akpm@linux-foundation.org>,
@@ -67,52 +69,67 @@ To:     Andrew Morton <akpm@linux-foundation.org>,
         Guenter Roeck <linux@roeck-us.net>
 Cc:     Yury Norov <ynorov@marvell.com>, Yury Norov <yury.norov@gmail.com>,
         linux-kernel@vger.kernel.org
-Subject: [PATCH v5 0/5] lib: rework bitmap_parselist and tests
-Date:   Mon, 15 Apr 2019 23:37:56 -0700
-Message-Id: <20190416063801.20134-1-ynorov@marvell.com>
+Subject: [PATCH 1/5] lib: make bitmap_parselist_user() a wrapper on bitmap_parselist()
+Date:   Mon, 15 Apr 2019 23:37:57 -0700
+Message-Id: <20190416063801.20134-2-ynorov@marvell.com>
 X-Mailer: git-send-email 2.17.1
-X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190416063801.20134-1-ynorov@marvell.com>
+References: <20190416063801.20134-1-ynorov@marvell.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-bitmap_parselist has been evolved from a pretty simple idea for long and
-now lacks for refactoring. It is not structured, has nested loops and a
-set of opaque-named variables.
+From: Yury Norov <ynorov@marvell.com>
 
-Things are more complicated because bitmap_parselist() is a part of user
-interface, and its behavior should not change.
+Currently we parse user data byte after byte which leads to
+overcomplification of parsing algorithm. The only user of
+bitmap_parselist_user() is not performance-critical, and so we
+can duplicate user data to kernel buffer and simply call
+bitmap_parselist(). This rework lets us unify and simplify
+bitmap_parselist() and bitmap_parselist_user(), which is done
+in the following patch.
 
-In this patchset
- - bitmap_parselist_user() made a wrapper on bitmap_parselist();
- - bitmap_parselist() reworked (patch 2);
- - time measurement in test_bitmap_parselist switched to ktime_get
-   (patch 3);
- - new tests introduced (patch 4), and
- - bitmap_parselist_user() testing enabled with the same testset as
-   bitmap_parselist() (patch 5).
+Signed-off-by: Yury Norov <ynorov@marvell.com>
+---
+ lib/bitmap.c | 19 +++++++++++--------
+ 1 file changed, 11 insertions(+), 8 deletions(-)
 
-
-v1: https://lkml.org/lkml/2018/12/23/50
-v2: https://www.spinics.net/lists/kernel/msg3048976.html
-v3: https://lkml.org/lkml/2019/4/3/68
-v4: https://lkml.org/lkml/2019/4/5/640
-v5: - fix sadly missed '* step' in patch 4, as spotted by Guenter Roeck;
-    - use _parse_integer() in bitmap_getnum() to avoid opencoding
-      mentioned by Andy Shevchenko.
-
-Yury Norov (5):
-  lib: make bitmap_parselist_user() a wrapper on bitmap_parselist()
-  lib: rework bitmap_parselist
-  lib/test_bitmap: switch test_bitmap_parselist to ktime_get()
-  lib/test_bitmap: add testcases for bitmap_parselist
-  lib/test_bitmap: add tests for bitmap_parselist_user
-
- lib/bitmap.c      | 274 ++++++++++++++++++++++++++--------------------
- lib/test_bitmap.c |  67 +++++++++---
- 2 files changed, 207 insertions(+), 134 deletions(-)
-
+diff --git a/lib/bitmap.c b/lib/bitmap.c
+index 3f3b8051f342..c63ddd06a5da 100644
+--- a/lib/bitmap.c
++++ b/lib/bitmap.c
+@@ -632,19 +632,22 @@ EXPORT_SYMBOL(bitmap_parselist);
+  * @nmaskbits: size of bitmap, in bits.
+  *
+  * Wrapper for bitmap_parselist(), providing it with user buffer.
+- *
+- * We cannot have this as an inline function in bitmap.h because it needs
+- * linux/uaccess.h to get the access_ok() declaration and this causes
+- * cyclic dependencies.
+  */
+ int bitmap_parselist_user(const char __user *ubuf,
+ 			unsigned int ulen, unsigned long *maskp,
+ 			int nmaskbits)
+ {
+-	if (!access_ok(ubuf, ulen))
+-		return -EFAULT;
+-	return __bitmap_parselist((const char __force *)ubuf,
+-					ulen, 1, maskp, nmaskbits);
++	char *buf;
++	int ret;
++
++	buf = memdup_user_nul(ubuf, ulen);
++	if (IS_ERR(buf))
++		return PTR_ERR(buf);
++
++	ret = bitmap_parselist(buf, maskp, nmaskbits);
++
++	kfree(buf);
++	return ret;
+ }
+ EXPORT_SYMBOL(bitmap_parselist_user);
+ 
 -- 
 2.17.1
 
