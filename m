@@ -2,30 +2,29 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E524C10F12
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:02:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5A628C282DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:02:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CF0420656
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:02:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A96420656
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:02:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555383734;
-	bh=T88Q3anJ67jpB0REIQ/RS5fqCmqeehWTngeXF6jmrhs=;
+	s=default; t=1555383740;
+	bh=7AtojtkFdw6XusGOwC742V7Au3oPepuXcLTKcR0D/k8=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=0ov9MWlRSIwCCwPqtTVhSbYQFhnWlO0+OMAhm51/t53sGeosmx9B+Zbo6ed3T3mnf
-	 WQ/nm5+CBlPAWGOBdVLZfRnDp+iioO8Rp1UccehD4tD3uhOO/BvizNNzF3CRTRoa+l
-	 mj/AxuAzQhXU54EB4e2CzzY+Nx/4MzmrevRjwn+0=
+	b=LpE1o+1MyOA/HlqL+Oub4IeSkLinxGXR9QIT4vtvt7DxbyVX18jza8aKRiQXHm/07
+	 t2KlW882Ta5iPVqYxVkhF9N8ah95DXPjCrQUqsag2rXVnsmSJij0oyGHwOOIA/iIoL
+	 9NnaC1dwXwXD9qRpreFhD8rWdYvY3X1UJL8RgTn4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728741AbfDPDCM (ORCPT
+        id S1728714AbfDPDCJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 23:02:12 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44014 "EHLO
+        Mon, 15 Apr 2019 23:02:09 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44008 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726691AbfDPC4b (ORCPT
+        with ESMTP id S1726684AbfDPC4b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 15 Apr 2019 22:56:31 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,28 +33,27 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=Lb1CvBkrKYi+GQQcnRgIGMmigthJb6x2jCvm9OgUTJc=; b=hS5h/Mr3ejfUGhc/kptDKuIW6s
-        NXggfm8sYnyVO7dJA80+NNtq5Y2pkm5bLTiWVxEHLc458UK8YByeCbZwBaYoWSevb3hYNta6yjQnX
-        5kpgOkmcpXjpyt4CX7w4XAa6+swg0nUNcwBf14/7hJ+bLAHUTXSh2bviFMQ72kHhv6wae6s3xtb4V
-        ZTkXGYBSDX6Vwe2o1Vxn0ERHMcz3/yo7QQbdIb54cSsBJJb/Nx8GzwT0gupU3dxGh7v4EWpjwH6it
-        6EBgdgZIZQSvSN/TnJzDiOyYUM93EeqW0nQqXXvKYb7892iC1iYLXOuvbZvezQJW5ila0YLlknpC7
-        LoYfwkkw==;
+        bh=OUVT7RdfUSrKYtzIyJRmpfXvZRKk5kWp3Sy6mNjEaUo=; b=bmq7ma/jEJPTJNLufIPJLKOpOW
+        dFORF8Sfr1m9S7r4smAL4Tpj9YBbio8sSkzLzLWgjkcjvyqVWhOBtcoRSYPhyxNUTXkgoOW1iUirE
+        ZNKMXL9r5Ubvpy3+V2waRLKIUulOdXw85Iseh4Mb0oUKvQiEehd/auy21m8V1NY6wQcgpJiXLya12
+        lisJvbHcGGaoP0UrordpG484GKao34q+ut8ir8qiKM0vnXBK5ZXNBMl6i/BSW9fo/2grMMEGAEB8o
+        uAJGj63B2gWfyiLuPL9X9WnLDn3lDA3kKf0bgb9iR3YZc7QzgNFQeod2wJZCwRlKiRijrxYADm1/v
+        6H+9Xs5w==;
 Received: from 177.205.118.176.dynamic.adsl.gvt.net.br ([177.205.118.176] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hGEGp-0007aK-Sj; Tue, 16 Apr 2019 02:56:29 +0000
+        id 1hGEGp-0007aN-Rp; Tue, 16 Apr 2019 02:56:29 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hGEGm-0001l0-Sn; Mon, 15 Apr 2019 23:56:24 -0300
+        id 1hGEGm-0001lD-W7; Mon, 15 Apr 2019 23:56:25 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org
-Subject: [PATCH 02/57] docs: acpi: convert text files to ReST
-Date:   Mon, 15 Apr 2019 23:55:27 -0300
-Message-Id: <10802a7ac16958a2786c2fc083fb5cb50eb7ebb9.1555382110.git.mchehab+samsung@kernel.org>
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 05/57] docs: cdrom/cdrom-standard.tex: convert from LaTeX to ReST
+Date:   Mon, 15 Apr 2019 23:55:30 -0300
+Message-Id: <696a3110acb4a2aeb1ddf7c5b712ebcd6a32428e.1555382110.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1555382110.git.mchehab+samsung@kernel.org>
 References: <cover.1555382110.git.mchehab+samsung@kernel.org>
@@ -67,2602 +65,2167 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Most of the files are already in good shape, making easier to
-convert them to ReST by adding proper title markups and
-addressing some identation and markups to properly format the
-document.
+Instead of having a Latex document directly there, convert
+it to ReST format, as this is the Kernel format for docs.
+
+For now, let's keep the extension as .txt in order to avoid
+warnings when building the documentation with Sphinx.
+
+A later patch will rename it to .rst and add it to the
+building system.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/acpi/DSD-properties-rules.txt   |   4 +-
- Documentation/acpi/acpi-lid.txt               |  37 +-
- Documentation/acpi/aml-debugger.txt           |  31 +-
- Documentation/acpi/apei/einj.txt              |  59 ++--
- Documentation/acpi/apei/output_format.txt     | 247 +++++++-------
- Documentation/acpi/cppc_sysfs.txt             |  52 +--
- Documentation/acpi/debug.txt                  |  20 +-
- .../acpi/dsd/data-node-references.txt         |  11 +-
- Documentation/acpi/dsd/graph.txt              |  24 +-
- Documentation/acpi/dsd/leds.txt               |  18 +-
- Documentation/acpi/dsdt-override.txt          |   4 +-
- Documentation/acpi/enumeration.txt            |  42 +--
- Documentation/acpi/gpio-properties.txt        |  42 +--
- Documentation/acpi/i2c-muxes.txt              |  21 +-
- Documentation/acpi/initrd_table_override.txt  |  90 ++---
- Documentation/acpi/linuxized-acpica.txt       |  58 ++--
- Documentation/acpi/lpit.txt                   |   8 +-
- Documentation/acpi/method-customizing.txt     |  48 ++-
- Documentation/acpi/method-tracing.txt         | 132 ++++---
- Documentation/acpi/namespace.txt              | 323 +++++++++---------
- Documentation/acpi/osi.txt                    |   3 +-
- Documentation/acpi/scan_handlers.txt          |   9 +-
- Documentation/acpi/ssdt-overlays.txt          | 128 +++----
- Documentation/acpi/video_extension.txt        |  16 +-
- 24 files changed, 794 insertions(+), 633 deletions(-)
+ Documentation/cdrom/Makefile           |   21 -
+ Documentation/cdrom/cdrom-standard.tex | 1026 -----------------------
+ Documentation/cdrom/cdrom-standard.txt | 1063 ++++++++++++++++++++++++
+ drivers/cdrom/cdrom.c                  |    2 +-
+ 4 files changed, 1064 insertions(+), 1048 deletions(-)
+ delete mode 100644 Documentation/cdrom/Makefile
+ delete mode 100644 Documentation/cdrom/cdrom-standard.tex
+ create mode 100644 Documentation/cdrom/cdrom-standard.txt
 
-diff --git a/Documentation/acpi/DSD-properties-rules.txt b/Documentation/acpi/DSD-properties-rules.txt
-index 3e4862bdad98..2b0307a897c1 100644
---- a/Documentation/acpi/DSD-properties-rules.txt
-+++ b/Documentation/acpi/DSD-properties-rules.txt
-@@ -1,5 +1,6 @@
-+==================================
- _DSD Device Properties Usage Rules
------------------------------------
-+==================================
- 
- Properties, Property Sets and Property Subsets
- ----------------------------------------------
-@@ -94,4 +95,5 @@ References
- ----------
- 
- [1] http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf
-+
- [2] http://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-data-extension-UUID-v1.1.pdf
-diff --git a/Documentation/acpi/acpi-lid.txt b/Documentation/acpi/acpi-lid.txt
-index effe7af3a5af..a4bc51ee2db1 100644
---- a/Documentation/acpi/acpi-lid.txt
-+++ b/Documentation/acpi/acpi-lid.txt
-@@ -1,10 +1,14 @@
-+=========================================================
- Special Usage Model of the ACPI Control Method Lid Device
-+=========================================================
- 
- Copyright (C) 2016, Intel Corporation
--Author: Lv Zheng <lv.zheng@intel.com>
- 
-+:Author: Lv Zheng <lv.zheng@intel.com>
- 
--Abstract:
-+
-+Abstract
-+========
- 
- Platforms containing lids convey lid state (open/close) to OSPMs using a
- control method lid device. To implement this, the AML tables issue
-@@ -20,6 +24,7 @@ expections of the Linux ACPI lid device driver.
- 
- 
- 1. Restrictions of the returning value of the _LID control method
-+=================================================================
- 
- The _LID control method is described to return the "current" lid state.
- However the word of "current" has ambiguity, some buggy AML tables return
-@@ -31,6 +36,8 @@ with cached value, the initial returning value is likely not reliable.
- There are platforms always retun "closed" as initial lid state.
- 
- 2. Restrictions of the lid state change notifications
-+=====================================================
-+
- 
- There are buggy AML tables never notifying when the lid device state is
- changed to "opened". Thus the "opened" notification is not guaranteed. But
-@@ -40,26 +47,32 @@ trigger some system power saving operations on Windows. Since it is fully
- tested, it is reliable from all AML tables.
- 
- 3. Expections for the userspace users of the ACPI lid device driver
-+===================================================================
- 
- The ACPI button driver exports the lid state to the userspace via the
- following file:
-+
-   /proc/acpi/button/lid/LID0/state
-+
- This file actually calls the _LID control method described above. And given
- the previous explanation, it is not reliable enough on some platforms. So
- it is advised for the userspace program to not to solely rely on this file
- to determine the actual lid state.
- 
- The ACPI button driver emits the following input event to the userspace:
--  SW_LID
--The ACPI lid device driver is implemented to try to deliver the platform
--triggered events to the userspace. However, given the fact that the buggy
--firmware cannot make sure "opened"/"closed" events are paired, the ACPI
--button driver uses the following 3 modes in order not to trigger issues.
-+
-+SW_LID
-+  The ACPI lid device driver is implemented to try to deliver the platform
-+  triggered events to the userspace. However, given the fact that the buggy
-+  firmware cannot make sure "opened"/"closed" events are paired, the ACPI
-+  button driver uses the following 3 modes in order not to trigger issues.
- 
- If the userspace hasn't been prepared to ignore the unreliable "opened"
- events and the unreliable initial state notification, Linux users can use
- the following kernel parameters to handle the possible issues:
--A. button.lid_init_state=method:
-+
-+A. `button.lid_init_state=method`:
-+
-    When this option is specified, the ACPI button driver reports the
-    initial lid state using the returning value of the _LID control method
-    and whether the "opened"/"closed" events are paired fully relies on the
-@@ -69,7 +82,9 @@ A. button.lid_init_state=method:
-    notification is missing.
-    This option is the default behavior during the period the userspace
-    isn't ready to handle the buggy AML tables.
--B. button.lid_init_state=open:
-+
-+B. `button.lid_init_state=open`:
-+
-    When this option is specified, the ACPI button driver always reports the
-    initial lid state as "opened" and whether the "opened"/"closed" events
-    are paired fully relies on the firmware implementation.
-@@ -80,7 +95,9 @@ B. button.lid_init_state=open:
- If the userspace has been prepared to ignore the unreliable "opened" events
- and the unreliable initial state notification, Linux users should always
- use the following kernel parameter:
--C. button.lid_init_state=ignore:
-+
-+C. `button.lid_init_state=ignore`:
-+
-    When this option is specified, the ACPI button driver never reports the
-    initial lid state and there is a compensation mechanism implemented to
-    ensure that the reliable "closed" notifications can always be delievered
-diff --git a/Documentation/acpi/aml-debugger.txt b/Documentation/acpi/aml-debugger.txt
-index 75ebeb64ab29..22144e0c496d 100644
---- a/Documentation/acpi/aml-debugger.txt
-+++ b/Documentation/acpi/aml-debugger.txt
-@@ -1,6 +1,9 @@
-+================
- The AML Debugger
-+================
- 
- Copyright (C) 2016, Intel Corporation
-+
- Author: Lv Zheng <lv.zheng@intel.com>
- 
- 
-@@ -10,16 +13,16 @@ kernel.
- 1. Build the debugger
- 
-    The following kernel configuration items are required to enable the AML
--   debugger interface from the Linux kernel:
-+   debugger interface from the Linux kernel::
- 
--   CONFIG_ACPI_DEBUGGER=y
--   CONFIG_ACPI_DEBUGGER_USER=m
-+     CONFIG_ACPI_DEBUGGER=y
-+     CONFIG_ACPI_DEBUGGER_USER=m
- 
-    The userspace utilities can be built from the kernel source tree using
--   the following commands:
-+   the following commands::
- 
--   $ cd tools
--   $ make acpi
-+     $ cd tools
-+     $ make acpi
- 
-    The resultant userspace tool binary is then located at:
- 
-@@ -31,11 +34,11 @@ kernel.
- 2. Start the userspace debugger interface
- 
-    After booting the kernel with the debugger built-in, the debugger can be
--   started by using the following commands:
-+   started by using the following commands::
- 
--   # mount -t debugfs none /sys/kernel/debug
--   # modprobe acpi_dbg
--   # tools/power/acpi/acpidbg
-+     # mount -t debugfs none /sys/kernel/debug
-+     # modprobe acpi_dbg
-+     # tools/power/acpi/acpidbg
- 
-    That spawns the interactive AML debugger environment where you can execute
-    debugger commands.
-@@ -51,9 +54,9 @@ kernel.
- 3. Stop the userspace debugger interface
- 
-    The interactive debugger interface can be closed by pressing Ctrl+C or using
--   the "quit" or "exit" commands.  When finished, unload the module with:
-+   the "quit" or "exit" commands.  When finished, unload the module with::
- 
--   # rmmod acpi_dbg
-+     # rmmod acpi_dbg
- 
-    The module unloading may fail if there is an acpidbg instance running.
- 
-@@ -61,6 +64,6 @@ kernel.
- 
-    It may be useful to run the AML debugger in a test script. "acpidbg" supports
-    this in a special "batch" mode.  For example, the following command outputs
--   the entire ACPI namespace:
-+   the entire ACPI namespace::
- 
--   # acpidbg -b "namespace"
-+     # acpidbg -b "namespace"
-diff --git a/Documentation/acpi/apei/einj.txt b/Documentation/acpi/apei/einj.txt
-index e550c8b98139..4fe670dd2d4c 100644
---- a/Documentation/acpi/apei/einj.txt
-+++ b/Documentation/acpi/apei/einj.txt
-@@ -1,13 +1,14 @@
--			APEI Error INJection
--			~~~~~~~~~~~~~~~~~~~~
-+====================
-+APEI Error INJection
-+====================
- 
- EINJ provides a hardware error injection mechanism. It is very useful
- for debugging and testing APEI and RAS features in general.
- 
- You need to check whether your BIOS supports EINJ first. For that, look
--for early boot messages similar to this one:
-+for early boot messages similar to this one::
- 
--ACPI: EINJ 0x000000007370A000 000150 (v01 INTEL           00000001 INTL 00000001)
-+  ACPI: EINJ 0x000000007370A000 000150 (v01 INTEL           00000001 INTL 00000001)
- 
- which shows that the BIOS is exposing an EINJ table - it is the
- mechanism through which the injection is done.
-@@ -23,11 +24,11 @@ order to see the APEI,EINJ,... functionality supported and exposed by
- the BIOS menu.
- 
- To use EINJ, make sure the following are options enabled in your kernel
--configuration:
-+configuration::
- 
--CONFIG_DEBUG_FS
--CONFIG_ACPI_APEI
--CONFIG_ACPI_APEI_EINJ
-+  CONFIG_DEBUG_FS
-+  CONFIG_ACPI_APEI
-+  CONFIG_ACPI_APEI_EINJ
- 
- The EINJ user interface is in <debugfs mount point>/apei/einj.
- 
-@@ -37,8 +38,9 @@ The following files belong to it:
- 
-   This file shows which error types are supported:
- 
-+  ================	===================================
-   Error Type Value	Error Description
--  ================	=================
-+  ================	===================================
-   0x00000001		Processor Correctable
-   0x00000002		Processor Uncorrectable non-fatal
-   0x00000004		Processor Uncorrectable fatal
-@@ -51,6 +53,7 @@ The following files belong to it:
-   0x00000200		Platform Correctable
-   0x00000400		Platform Uncorrectable non-fatal
-   0x00000800		Platform Uncorrectable fatal
-+  ================	===================================
- 
-   The format of the file contents are as above, except present are only
-   the available error types.
-@@ -121,7 +124,7 @@ BIOS versions based on the ACPI 5.0 specification have more control over
- the target of the injection. For processor-related errors (type 0x1, 0x2
- and 0x4), you can set flags to 0x3 (param3 for bit 0, and param1 and
- param2 for bit 1) so that you have more information added to the error
--signature being injected. The actual data passed is this:
-+signature being injected. The actual data passed is this::
- 
- 	memory_address = param1;
- 	memory_address_range = param2;
-@@ -131,7 +134,7 @@ signature being injected. The actual data passed is this:
- For memory errors (type 0x8, 0x10 and 0x20) the address is set using
- param1 with a mask in param2 (0x0 is equivalent to all ones). For PCI
- express errors (type 0x40, 0x80 and 0x100) the segment, bus, device and
--function are specified using param1:
-+function are specified using param1::
- 
-          31     24 23    16 15    11 10      8  7        0
- 	+-------------------------------------------------+
-@@ -152,26 +155,26 @@ documentation for details (and expect changes to this API if vendors
- creativity in using this feature expands beyond our expectations).
- 
- 
--An error injection example:
-+An error injection example::
- 
--# cd /sys/kernel/debug/apei/einj
--# cat available_error_type		# See which errors can be injected
--0x00000002	Processor Uncorrectable non-fatal
--0x00000008	Memory Correctable
--0x00000010	Memory Uncorrectable non-fatal
--# echo 0x12345000 > param1		# Set memory address for injection
--# echo $((-1 << 12)) > param2		# Mask 0xfffffffffffff000 - anywhere in this page
--# echo 0x8 > error_type			# Choose correctable memory error
--# echo 1 > error_inject			# Inject now
-+  # cd /sys/kernel/debug/apei/einj
-+  # cat available_error_type		# See which errors can be injected
-+  0x00000002	Processor Uncorrectable non-fatal
-+  0x00000008	Memory Correctable
-+  0x00000010	Memory Uncorrectable non-fatal
-+  # echo 0x12345000 > param1		# Set memory address for injection
-+  # echo $((-1 << 12)) > param2		# Mask 0xfffffffffffff000 - anywhere in this page
-+  # echo 0x8 > error_type			# Choose correctable memory error
-+  # echo 1 > error_inject			# Inject now
- 
--You should see something like this in dmesg:
-+You should see something like this in dmesg::
- 
--[22715.830801] EDAC sbridge MC3: HANDLING MCE MEMORY ERROR
--[22715.834759] EDAC sbridge MC3: CPU 0: Machine Check Event: 0 Bank 7: 8c00004000010090
--[22715.834759] EDAC sbridge MC3: TSC 0
--[22715.834759] EDAC sbridge MC3: ADDR 12345000 EDAC sbridge MC3: MISC 144780c86
--[22715.834759] EDAC sbridge MC3: PROCESSOR 0:306e7 TIME 1422553404 SOCKET 0 APIC 0
--[22716.616173] EDAC MC3: 1 CE memory read error on CPU_SrcID#0_Channel#0_DIMM#0 (channel:0 slot:0 page:0x12345 offset:0x0 grain:32 syndrome:0x0 -  area:DRAM err_code:0001:0090 socket:0 channel_mask:1 rank:0)
-+  [22715.830801] EDAC sbridge MC3: HANDLING MCE MEMORY ERROR
-+  [22715.834759] EDAC sbridge MC3: CPU 0: Machine Check Event: 0 Bank 7: 8c00004000010090
-+  [22715.834759] EDAC sbridge MC3: TSC 0
-+  [22715.834759] EDAC sbridge MC3: ADDR 12345000 EDAC sbridge MC3: MISC 144780c86
-+  [22715.834759] EDAC sbridge MC3: PROCESSOR 0:306e7 TIME 1422553404 SOCKET 0 APIC 0
-+  [22716.616173] EDAC MC3: 1 CE memory read error on CPU_SrcID#0_Channel#0_DIMM#0 (channel:0 slot:0 page:0x12345 offset:0x0 grain:32 syndrome:0x0 -  area:DRAM err_code:0001:0090 socket:0 channel_mask:1 rank:0)
- 
- For more information about EINJ, please refer to ACPI specification
- version 4.0, section 17.5 and ACPI 5.0, section 18.6.
-diff --git a/Documentation/acpi/apei/output_format.txt b/Documentation/acpi/apei/output_format.txt
-index 0c49c197c47a..b132bdd950b8 100644
---- a/Documentation/acpi/apei/output_format.txt
-+++ b/Documentation/acpi/apei/output_format.txt
-@@ -1,128 +1,129 @@
--                     APEI output format
--                     ~~~~~~~~~~~~~~~~~~
-+==================
-+APEI output format
-+==================
- 
- APEI uses printk as hardware error reporting interface, the output
--format is as follow.
+diff --git a/Documentation/cdrom/Makefile b/Documentation/cdrom/Makefile
+deleted file mode 100644
+index a19e321928e1..000000000000
+--- a/Documentation/cdrom/Makefile
++++ /dev/null
+@@ -1,21 +0,0 @@
+-LATEXFILE = cdrom-standard
 -
--<error record> :=
--APEI generic hardware error status
--severity: <integer>, <severity string>
--section: <integer>, severity: <integer>, <severity string>
--flags: <integer>
--<section flags strings>
--fru_id: <uuid string>
--fru_text: <string>
--section_type: <section type string>
--<section data>
+-all:
+-	make clean
+-	latex $(LATEXFILE)
+-	latex $(LATEXFILE)
+-	@if [ -x `which gv` ]; then \
+-		`dvips -q -t letter -o $(LATEXFILE).ps $(LATEXFILE).dvi` ;\
+-		`gv -antialias -media letter -nocenter $(LATEXFILE).ps` ;\
+-	else \
+-		`xdvi $(LATEXFILE).dvi &` ;\
+-	fi
+-	make sortofclean
 -
--<severity string>* := recoverable | fatal | corrected | info
+-clean:
+-	rm -f $(LATEXFILE).ps $(LATEXFILE).dvi $(LATEXFILE).aux $(LATEXFILE).log 
 -
--<section flags strings># :=
--[primary][, containment warning][, reset][, threshold exceeded]\
--[, resource not accessible][, latent error]
+-sortofclean:
+-	rm -f $(LATEXFILE).aux $(LATEXFILE).log 
 -
--<section type string> := generic processor error | memory error | \
--PCIe error | unknown, <uuid string>
 -
--<section data> :=
--<generic processor section data> | <memory section data> | \
--<pcie section data> | <null>
+diff --git a/Documentation/cdrom/cdrom-standard.tex b/Documentation/cdrom/cdrom-standard.tex
+deleted file mode 100644
+index f7cd455973f7..000000000000
+--- a/Documentation/cdrom/cdrom-standard.tex
++++ /dev/null
+@@ -1,1026 +0,0 @@
+-\documentclass{article}
+-\def\version{$Id: cdrom-standard.tex,v 1.9 1997/12/28 15:42:49 david Exp $}
+-\newcommand{\newsection}[1]{\newpage\section{#1}}
 -
--<generic processor section data> :=
--[processor_type: <integer>, <proc type string>]
--[processor_isa: <integer>, <proc isa string>]
--[error_type: <integer>
--<proc error type strings>]
--[operation: <integer>, <proc operation string>]
--[flags: <integer>
--<proc flags strings>]
--[level: <integer>]
--[version_info: <integer>]
--[processor_id: <integer>]
--[target_address: <integer>]
--[requestor_id: <integer>]
--[responder_id: <integer>]
--[IP: <integer>]
+-\evensidemargin=0pt
+-\oddsidemargin=0pt
+-\topmargin=-\headheight \advance\topmargin by -\headsep
+-\textwidth=15.99cm \textheight=24.62cm % normal A4, 1'' margin
 -
--<proc type string>* := IA32/X64 | IA64
+-\def\linux{{\sc Linux}}
+-\def\cdrom{{\sc cd-rom}}
+-\def\UCD{{\sc Uniform cd-rom Driver}}
+-\def\cdromc{{\tt {cdrom.c}}}
+-\def\cdromh{{\tt {cdrom.h}}}
+-\def\fo{\sl}                    % foreign words
+-\def\ie{{\fo i.e.}}
+-\def\eg{{\fo e.g.}}
 -
--<proc isa string>* := IA32 | IA64 | X64
+-\everymath{\it} \everydisplay{\it}
+-\catcode `\_=\active \def_{\_\penalty100 }
+-\catcode`\<=\active \def<#1>{{\langle\hbox{\rm#1}\rangle}}
 -
--<processor error type strings># :=
--[cache error][, TLB error][, bus error][, micro-architectural error]
+-\begin{document}
+-\title{A \linux\ \cdrom\ standard}
+-\author{David van Leeuwen\\{\normalsize\tt david@ElseWare.cistron.nl}
+-\\{\footnotesize updated by Erik Andersen {\tt(andersee@debian.org)}}
+-\\{\footnotesize updated by Jens Axboe {\tt(axboe@image.dk)}}}
+-\date{12 March 1999}
 -
--<proc operation string>* := unknown or generic | data read | data write | \
--instruction execution
+-\maketitle
 -
--<proc flags strings># :=
--[restartable][, precise IP][, overflow][, corrected]
+-\newsection{Introduction}
 -
--<memory section data> :=
--[error_status: <integer>]
--[physical_address: <integer>]
--[physical_address_mask: <integer>]
--[node: <integer>]
--[card: <integer>]
--[module: <integer>]
--[bank: <integer>]
--[device: <integer>]
--[row: <integer>]
--[column: <integer>]
--[bit_position: <integer>]
--[requestor_id: <integer>]
--[responder_id: <integer>]
--[target_id: <integer>]
--[error_type: <integer>, <mem error type string>]
+-\linux\ is probably the Unix-like operating system that supports
+-the widest variety of hardware devices. The reasons for this are
+-presumably 
+-\begin{itemize} 
+-\item 
+-  The large list of hardware devices available for the many platforms
+-  that \linux\ now supports (\ie, i386-PCs, Sparc Suns, etc.)
+-\item 
+-  The open design of the operating system, such that anybody can write a
+-  driver for \linux.
+-\item 
+-  There is plenty of source code around as examples of how to write a driver.
+-\end{itemize}
+-The openness of \linux, and the many different types of available
+-hardware has allowed \linux\ to support many different hardware devices.
+-Unfortunately, the very openness that has allowed \linux\ to support
+-all these different devices has also allowed the behavior of each
+-device driver to differ significantly from one device to another.
+-This divergence of behavior has been very significant for \cdrom\
+-devices; the way a particular drive reacts to a `standard' $ioctl()$
+-call varies greatly from one device driver to another. To avoid making
+-their drivers totally inconsistent, the writers of \linux\ \cdrom\
+-drivers generally created new device drivers by understanding, copying,
+-and then changing an existing one. Unfortunately, this practice did not
+-maintain uniform behavior across all the \linux\ \cdrom\ drivers. 
 -
--<mem error type string>* :=
--unknown | no error | single-bit ECC | multi-bit ECC | \
--single-symbol chipkill ECC | multi-symbol chipkill ECC | master abort | \
--target abort | parity error | watchdog timeout | invalid address | \
--mirror Broken | memory sparing | scrub corrected error | \
--scrub uncorrected error
+-This document describes an effort to establish Uniform behavior across
+-all the different \cdrom\ device drivers for \linux. This document also
+-defines the various $ioctl$s, and how the low-level \cdrom\ device
+-drivers should implement them. Currently (as of the \linux\ 2.1.$x$
+-development kernels) several low-level \cdrom\ device drivers, including
+-both IDE/ATAPI and SCSI, now use this Uniform interface.
 -
--<pcie section data> :=
--[port_type: <integer>, <pcie port type string>]
--[version: <integer>.<integer>]
--[command: <integer>, status: <integer>]
--[device_id: <integer>:<integer>:<integer>.<integer>
--slot: <integer>
--secondary_bus: <integer>
--vendor_id: <integer>, device_id: <integer>
--class_code: <integer>]
--[serial number: <integer>, <integer>]
--[bridge: secondary_status: <integer>, control: <integer>]
--[aer_status: <integer>, aer_mask: <integer>
--<aer status string>
--[aer_uncor_severity: <integer>]
--aer_layer=<aer layer string>, aer_agent=<aer agent string>
--aer_tlp_header: <integer> <integer> <integer> <integer>]
+-When the \cdrom\ was developed, the interface between the \cdrom\ drive
+-and the computer was not specified in the standards. As a result, many
+-different \cdrom\ interfaces were developed. Some of them had their
+-own proprietary design (Sony, Mitsumi, Panasonic, Philips), other
+-manufacturers adopted an existing electrical interface and changed
+-the functionality (CreativeLabs/SoundBlaster, Teac, Funai) or simply
+-adapted their drives to one or more of the already existing electrical
+-interfaces (Aztech, Sanyo, Funai, Vertos, Longshine, Optics Storage and
+-most of the `NoName' manufacturers). In cases where a new drive really
+-brought its own interface or used its own command set and flow control
+-scheme, either a separate driver had to be written, or an existing
+-driver had to be enhanced. History has delivered us \cdrom\ support for
+-many of these different interfaces. Nowadays, almost all new \cdrom\
+-drives are either IDE/ATAPI or SCSI, and it is very unlikely that any
+-manufacturer will create a new interface. Even finding drives for the
+-old proprietary interfaces is getting difficult.
 -
--<pcie port type string>* := PCIe end point | legacy PCI end point | \
--unknown | unknown | root port | upstream switch port | \
--downstream switch port | PCIe to PCI/PCI-X bridge | \
--PCI/PCI-X to PCIe bridge | root complex integrated endpoint device | \
--root complex event collector
+-When (in the 1.3.70's) I looked at the existing software interface,
+-which was expressed through \cdromh, it appeared to be a rather wild
+-set of commands and data formats.\footnote{I cannot recollect what
+-kernel version I looked at, then, presumably 1.2.13 and 1.3.34---the
+-latest kernel that I was indirectly involved in.} It seemed that many
+-features of the software interface had been added to accommodate the
+-capabilities of a particular drive, in an {\fo ad hoc\/} manner. More
+-importantly, it appeared that the behavior of the `standard' commands
+-was different for most of the different drivers: \eg, some drivers
+-close the tray if an $open()$ call occurs when the tray is open, while
+-others do not. Some drivers lock the door upon opening the device, to
+-prevent an incoherent file system, but others don't, to allow software
+-ejection. Undoubtedly, the capabilities of the different drives vary,
+-but even when two drives have the same capability their drivers'
+-behavior was usually different.
 -
--if section severity is fatal or recoverable
--<aer status string># :=
--unknown | unknown | unknown | unknown | Data Link Protocol | \
--unknown | unknown | unknown | unknown | unknown | unknown | unknown | \
--Poisoned TLP | Flow Control Protocol | Completion Timeout | \
--Completer Abort | Unexpected Completion | Receiver Overflow | \
--Malformed TLP | ECRC | Unsupported Request
--else
--<aer status string># :=
--Receiver Error | unknown | unknown | unknown | unknown | unknown | \
--Bad TLP | Bad DLLP | RELAY_NUM Rollover | unknown | unknown | unknown | \
--Replay Timer Timeout | Advisory Non-Fatal
--fi
+-I decided to start a discussion on how to make all the \linux\ \cdrom\
+-drivers behave more uniformly. I began by contacting the developers of
+-the many \cdrom\ drivers found in the \linux\ kernel. Their reactions
+-encouraged me to write the \UCD\ which this document is intended to
+-describe. The implementation of the \UCD\ is in the file \cdromc. This
+-driver is intended to be an additional software layer that sits on top
+-of the low-level device drivers for each \cdrom\ drive. By adding this
+-additional layer, it is possible to have all the different \cdrom\
+-devices behave {\em exactly\/} the same (insofar as the underlying
+-hardware will allow).
 -
--<aer layer string> :=
--Physical Layer | Data Link Layer | Transaction Layer
+-The goal of the \UCD\ is {\em not\/} to alienate driver developers who
+-have not yet taken steps to support this effort. The goal of \UCD\ is
+-simply to give people writing application programs for \cdrom\ drives
+-{\em one\/} \linux\ \cdrom\ interface with consistent behavior for all
+-\cdrom\ devices. In addition, this also provides a consistent interface
+-between the low-level device driver code and the \linux\ kernel. Care
+-is taken that 100\,\% compatibility exists with the data structures and
+-programmer's interface defined in \cdromh. This guide was written to
+-help \cdrom\ driver developers adapt their code to use the \UCD\ code
+-defined in \cdromc.
 -
--<aer agent string> :=
--Receiver ID | Requester ID | Completer ID | Transmitter ID
-+format is as follow::
-+
-+  <error record> :=
-+  APEI generic hardware error status
-+  severity: <integer>, <severity string>
-+  section: <integer>, severity: <integer>, <severity string>
-+  flags: <integer>
-+  <section flags strings>
-+  fru_id: <uuid string>
-+  fru_text: <string>
-+  section_type: <section type string>
-+  <section data>
-+
-+  <severity string>* := recoverable | fatal | corrected | info
-+
-+  <section flags strings># :=
-+  [primary][, containment warning][, reset][, threshold exceeded]\
-+  [, resource not accessible][, latent error]
-+
-+  <section type string> := generic processor error | memory error | \
-+  PCIe error | unknown, <uuid string>
-+
-+  <section data> :=
-+  <generic processor section data> | <memory section data> | \
-+  <pcie section data> | <null>
-+
-+  <generic processor section data> :=
-+  [processor_type: <integer>, <proc type string>]
-+  [processor_isa: <integer>, <proc isa string>]
-+  [error_type: <integer>
-+  <proc error type strings>]
-+  [operation: <integer>, <proc operation string>]
-+  [flags: <integer>
-+  <proc flags strings>]
-+  [level: <integer>]
-+  [version_info: <integer>]
-+  [processor_id: <integer>]
-+  [target_address: <integer>]
-+  [requestor_id: <integer>]
-+  [responder_id: <integer>]
-+  [IP: <integer>]
-+
-+  <proc type string>* := IA32/X64 | IA64
-+
-+  <proc isa string>* := IA32 | IA64 | X64
-+
-+  <processor error type strings># :=
-+  [cache error][, TLB error][, bus error][, micro-architectural error]
-+
-+  <proc operation string>* := unknown or generic | data read | data write | \
-+  instruction execution
-+
-+  <proc flags strings># :=
-+  [restartable][, precise IP][, overflow][, corrected]
-+
-+  <memory section data> :=
-+  [error_status: <integer>]
-+  [physical_address: <integer>]
-+  [physical_address_mask: <integer>]
-+  [node: <integer>]
-+  [card: <integer>]
-+  [module: <integer>]
-+  [bank: <integer>]
-+  [device: <integer>]
-+  [row: <integer>]
-+  [column: <integer>]
-+  [bit_position: <integer>]
-+  [requestor_id: <integer>]
-+  [responder_id: <integer>]
-+  [target_id: <integer>]
-+  [error_type: <integer>, <mem error type string>]
-+
-+  <mem error type string>* :=
-+  unknown | no error | single-bit ECC | multi-bit ECC | \
-+  single-symbol chipkill ECC | multi-symbol chipkill ECC | master abort | \
-+  target abort | parity error | watchdog timeout | invalid address | \
-+  mirror Broken | memory sparing | scrub corrected error | \
-+  scrub uncorrected error
-+
-+  <pcie section data> :=
-+  [port_type: <integer>, <pcie port type string>]
-+  [version: <integer>.<integer>]
-+  [command: <integer>, status: <integer>]
-+  [device_id: <integer>:<integer>:<integer>.<integer>
-+  slot: <integer>
-+  secondary_bus: <integer>
-+  vendor_id: <integer>, device_id: <integer>
-+  class_code: <integer>]
-+  [serial number: <integer>, <integer>]
-+  [bridge: secondary_status: <integer>, control: <integer>]
-+  [aer_status: <integer>, aer_mask: <integer>
-+  <aer status string>
-+  [aer_uncor_severity: <integer>]
-+  aer_layer=<aer layer string>, aer_agent=<aer agent string>
-+  aer_tlp_header: <integer> <integer> <integer> <integer>]
-+
-+  <pcie port type string>* := PCIe end point | legacy PCI end point | \
-+  unknown | unknown | root port | upstream switch port | \
-+  downstream switch port | PCIe to PCI/PCI-X bridge | \
-+  PCI/PCI-X to PCIe bridge | root complex integrated endpoint device | \
-+  root complex event collector
-+
-+  if section severity is fatal or recoverable
-+  <aer status string># :=
-+  unknown | unknown | unknown | unknown | Data Link Protocol | \
-+  unknown | unknown | unknown | unknown | unknown | unknown | unknown | \
-+  Poisoned TLP | Flow Control Protocol | Completion Timeout | \
-+  Completer Abort | Unexpected Completion | Receiver Overflow | \
-+  Malformed TLP | ECRC | Unsupported Request
-+  else
-+  <aer status string># :=
-+  Receiver Error | unknown | unknown | unknown | unknown | unknown | \
-+  Bad TLP | Bad DLLP | RELAY_NUM Rollover | unknown | unknown | unknown | \
-+  Replay Timer Timeout | Advisory Non-Fatal
-+  fi
-+
-+  <aer layer string> :=
-+  Physical Layer | Data Link Layer | Transaction Layer
-+
-+  <aer agent string> :=
-+  Receiver ID | Requester ID | Completer ID | Transmitter ID
- 
- Where, [] designate corresponding content is optional
- 
-diff --git a/Documentation/acpi/cppc_sysfs.txt b/Documentation/acpi/cppc_sysfs.txt
-index f20fb445135d..e4c6bb5a3333 100644
---- a/Documentation/acpi/cppc_sysfs.txt
-+++ b/Documentation/acpi/cppc_sysfs.txt
-@@ -1,5 +1,6 @@
+-Personally, I think that the most important hardware interfaces are
+-the IDE/ATAPI drives and, of course, the SCSI drives, but as prices
+-of hardware drop continuously, it is also likely that people may have
+-more than one \cdrom\ drive, possibly of mixed types. It is important
+-that these drives behave in the same way. In December 1994, one of the
+-cheapest \cdrom\ drives was a Philips cm206, a double-speed proprietary
+-drive. In the months that I was busy writing a \linux\ driver for it,
+-proprietary drives became obsolete and IDE/ATAPI drives became the
+-standard. At the time of the last update to this document (November
+-1997) it is becoming difficult to even {\em find} anything less than a
+-16 speed \cdrom\ drive, and 24 speed drives are common.
 -
--	Collaborative Processor Performance Control (CPPC)
-+==================================================
-+Collaborative Processor Performance Control (CPPC)
-+==================================================
- 
- CPPC defined in the ACPI spec describes a mechanism for the OS to manage the
- performance of a logical processor on a contigious and abstract performance
-@@ -8,28 +9,30 @@ to request performance levels and to measure per-cpu delivered performance.
- 
- For more details on CPPC please refer to the ACPI specification at:
- 
--http://uefi.org/specifications
-+	http://uefi.org/specifications
- 
- Some of the CPPC registers are exposed via sysfs under:
- 
--/sys/devices/system/cpu/cpuX/acpi_cppc/
-+	/sys/devices/system/cpu/cpuX/acpi_cppc/
- 
- for each cpu X
- 
- --------------------------------------------------------------------------------
- 
--$ ls -lR  /sys/devices/system/cpu/cpu0/acpi_cppc/
--/sys/devices/system/cpu/cpu0/acpi_cppc/:
--total 0
---r--r--r-- 1 root root 65536 Mar  5 19:38 feedback_ctrs
---r--r--r-- 1 root root 65536 Mar  5 19:38 highest_perf
---r--r--r-- 1 root root 65536 Mar  5 19:38 lowest_freq
---r--r--r-- 1 root root 65536 Mar  5 19:38 lowest_nonlinear_perf
---r--r--r-- 1 root root 65536 Mar  5 19:38 lowest_perf
---r--r--r-- 1 root root 65536 Mar  5 19:38 nominal_freq
---r--r--r-- 1 root root 65536 Mar  5 19:38 nominal_perf
---r--r--r-- 1 root root 65536 Mar  5 19:38 reference_perf
---r--r--r-- 1 root root 65536 Mar  5 19:38 wraparound_time
+-\newsection{Standardizing through another software level}
+-\label{cdrom.c}
+-
+-At the time this document was conceived, all drivers directly
+-implemented the \cdrom\ $ioctl()$ calls through their own routines. This
+-led to the danger of different drivers forgetting to do important things
+-like checking that the user was giving the driver valid data. More
+-importantly, this led to the divergence of behavior, which has already
+-been discussed.
+-
+-For this reason, the \UCD\ was created to enforce consistent \cdrom\
+-drive behavior, and to provide a common set of services to the various
+-low-level \cdrom\ device drivers. The \UCD\ now provides another
+-software-level, that separates the $ioctl()$ and $open()$ implementation
+-from the actual hardware implementation. Note that this effort has
+-made few changes which will affect a user's application programs. The
+-greatest change involved moving the contents of the various low-level
+-\cdrom\ drivers' header files to the kernel's cdrom directory. This was
+-done to help ensure that the user is only presented with only one cdrom
+-interface, the interface defined in \cdromh.
+-
+-\cdrom\ drives are specific enough (\ie, different from other
+-block-devices such as floppy or hard disc drives), to define a set
+-of common {\em \cdrom\ device operations}, $<cdrom-device>_dops$.
+-These operations are different from the classical block-device file
+-operations, $<block-device>_fops$.
+-
+-The routines for the \UCD\ interface level are implemented in the file
+-\cdromc. In this file, the \UCD\ interfaces with the kernel as a block
+-device by registering the following general $struct\ file_operations$:
+-$$
+-\halign{$#$\ \hfil&$#$\ \hfil&$/*$ \rm# $*/$\hfil\cr
+-struct& file_operations\ cdrom_fops = \{\hidewidth\cr
+-        &NULL,                  & lseek \cr
+-        &block_read,            & read---general block-dev read \cr
+-        &block_write,           & write---general block-dev write \cr
+-        &NULL,                  & readdir \cr
+-        &NULL,                  & select \cr
+-        &cdrom_ioctl,           & ioctl \cr
+-        &NULL,                  & mmap \cr
+-        &cdrom_open,            & open \cr
+-        &cdrom_release,         & release \cr
+-        &NULL,                  & fsync \cr
+-        &NULL,                  & fasync \cr
+-        &cdrom_media_changed,   & media change \cr
+-        &NULL                   & revalidate \cr
+-\};\cr
+-}
+-$$ 
+-
+-Every active \cdrom\ device shares this $struct$. The routines
+-declared above are all implemented in \cdromc, since this file is the
+-place where the behavior of all \cdrom-devices is defined and
+-standardized. The actual interface to the various types of \cdrom\ 
+-hardware is still performed by various low-level \cdrom-device
+-drivers. These routines simply implement certain {\em capabilities\/}
+-that are common to all \cdrom\ (and really, all removable-media
+-devices).
+-
+-Registration of a low-level \cdrom\ device driver is now done through
+-the general routines in \cdromc, not through the Virtual File System
+-(VFS) any more. The interface implemented in \cdromc\ is carried out
+-through two general structures that contain information about the
+-capabilities of the driver, and the specific drives on which the
+-driver operates. The structures are:
+-\begin{description}
+-\item[$cdrom_device_ops$] 
+-  This structure contains information about the low-level driver for a
+-  \cdrom\ device. This structure is conceptually connected to the major
+-  number of the device (although some drivers may have different
+-  major numbers, as is the case for the IDE driver).
+-\item[$cdrom_device_info$] 
+-  This structure contains information about a particular \cdrom\ drive,
+-  such as its device name, speed, etc. This structure is conceptually
+-  connected to the minor number of the device.
+-\end{description}
+-
+-Registering a particular \cdrom\ drive with the \UCD\ is done by the
+-low-level device driver though a call to:
+-$$register_cdrom(struct\ cdrom_device_info * <device>_info)  
+-$$
+-The device information structure, $<device>_info$, contains all the
+-information needed for the kernel to interface with the low-level
+-\cdrom\ device driver. One of the most important entries in this
+-structure is a pointer to the $cdrom_device_ops$ structure of the
+-low-level driver.
+-
+-The device operations structure, $cdrom_device_ops$, contains a list
+-of pointers to the functions which are implemented in the low-level
+-device driver. When \cdromc\ accesses a \cdrom\ device, it does it
+-through the functions in this structure. It is impossible to know all
+-the capabilities of future \cdrom\ drives, so it is expected that this
+-list may need to be expanded from time to time as new technologies are
+-developed. For example, CD-R and CD-R/W drives are beginning to become
+-popular, and support will soon need to be added for them. For now, the
+-current $struct$ is:
+-$$
+-\halign{$#$\ \hfil&$#$\ \hfil&\hbox to 10em{$#$\hss}&
+-  $/*$ \rm# $*/$\hfil\cr
+-struct& cdrom_device_ops\ \{ \hidewidth\cr
+-  &int& (* open)(struct\ cdrom_device_info *, int)\cr
+-  &void& (* release)(struct\ cdrom_device_info *);\cr 
+-  &int& (* drive_status)(struct\ cdrom_device_info *, int);\cr     
+-  &unsigned\ int& (* check_events)(struct\ cdrom_device_info *, unsigned\ int, int);\cr
+-  &int& (* media_changed)(struct\ cdrom_device_info *, int);\cr 
+-  &int& (* tray_move)(struct\ cdrom_device_info *, int);\cr
+-  &int& (* lock_door)(struct\ cdrom_device_info *, int);\cr
+-  &int& (* select_speed)(struct\ cdrom_device_info *, int);\cr
+-  &int& (* select_disc)(struct\ cdrom_device_info *, int);\cr
+-  &int& (* get_last_session) (struct\ cdrom_device_info *, 
+-        struct\ cdrom_multisession *{});\cr
+-  &int& (* get_mcn)(struct\ cdrom_device_info *, struct\ cdrom_mcn *{});\cr
+-  &int& (* reset)(struct\ cdrom_device_info *);\cr
+-  &int& (* audio_ioctl)(struct\ cdrom_device_info *, unsigned\ int, 
+-        void *{});\cr 
+-\noalign{\medskip}
+-  &const\ int& capability;& capability flags \cr
+-  &int& (* generic_packet)(struct\ cdrom_device_info *, struct\ packet_command *{});\cr
+-\};\cr
+-}
+-$$
+-When a low-level device driver implements one of these capabilities,
+-it should add a function pointer to this $struct$. When a particular
+-function is not implemented, however, this $struct$ should contain a
+-NULL instead. The $capability$ flags specify the capabilities of the
+-\cdrom\ hardware and/or low-level \cdrom\ driver when a \cdrom\ drive
+-is registered with the \UCD.
+-
+-Note that most functions have fewer parameters than their
+-$blkdev_fops$ counterparts. This is because very little of the
+-information in the structures $inode$ and $file$ is used. For most
+-drivers, the main parameter is the $struct$ $cdrom_device_info$, from
+-which the major and minor number can be extracted. (Most low-level
+-\cdrom\ drivers don't even look at the major and minor number though,
+-since many of them only support one device.) This will be available
+-through $dev$ in $cdrom_device_info$ described below.
+-
+-The drive-specific, minor-like information that is registered with
+-\cdromc, currently contains the following fields:
+-$$
+-\halign{$#$\ \hfil&$#$\ \hfil&\hbox to 10em{$#$\hss}&
+-  $/*$ \rm# $*/$\hfil\cr
+-struct& cdrom_device_info\ \{ \hidewidth\cr
+-  & const\ struct\ cdrom_device_ops *& ops;& device operations for this major\cr
+-  & struct\ list_head& list;& linked list of all device_info\cr
+-  & struct\ gendisk *& disk;& matching block layer disk\cr
+-  & void *&  handle;& driver-dependent data\cr
+-\noalign{\medskip}
+-  & int& mask;& mask of capability: disables them \cr
+-  & int& speed;& maximum speed for reading data \cr
+-  & int& capacity;& number of discs in a jukebox \cr
+-\noalign{\medskip}
+-  &unsigned\ int& options : 30;& options flags \cr
+-  &unsigned& mc_flags : 2;& media-change buffer flags \cr
+-  &unsigned\ int& vfs_events;& cached events for vfs path\cr
+-  &unsigned\ int& ioctl_events;& cached events for ioctl path\cr
+-  & int& use_count;& number of times device is opened\cr
+-  & char& name[20];& name of the device type\cr
+-\noalign{\medskip}
+-  &__u8& sanyo_slot : 2;& Sanyo 3-CD changer support\cr
+-  &__u8& keeplocked : 1;& CDROM_LOCKDOOR status\cr
+-  &__u8& reserved : 5;& not used yet\cr
+-  & int& cdda_method;& see CDDA_* flags\cr
+-  &__u8& last_sense;& saves last sense key\cr
+-  &__u8& media_written;& dirty flag, DVD+RW bookkeeping\cr
+-  &unsigned\ short& mmc3_profile;& current MMC3 profile\cr
+-  & int& for_data;& unknown:TBD\cr
+-  & int\ (* exit)\ (struct\ cdrom_device_info *);&& unknown:TBD\cr
+-  & int& mrw_mode_page;& which MRW mode page is in use\cr
+-\}\cr
+-}$$
+-Using this $struct$, a linked list of the registered minor devices is
+-built, using the $next$ field. The device number, the device operations
+-struct and specifications of properties of the drive are stored in this
+-structure.
+-
+-The $mask$ flags can be used to mask out some of the capabilities listed
+-in $ops\to capability$, if a specific drive doesn't support a feature
+-of the driver. The value $speed$ specifies the maximum head-rate of the
+-drive, measured in units of normal audio speed (176\,kB/sec raw data or
+-150\,kB/sec file system data).  The parameters are declared $const$
+-because they describe properties of the drive, which don't change after
+-registration.
+-
+-A few registers contain variables local to the \cdrom\ drive. The
+-flags $options$ are used to specify how the general \cdrom\ routines
+-should behave. These various flags registers should provide enough
+-flexibility to adapt to the different users' wishes (and {\em not\/} the
+-`arbitrary' wishes of the author of the low-level device driver, as is
+-the case in the old scheme). The register $mc_flags$ is used to buffer
+-the information from $media_changed()$ to two separate queues. Other
+-data that is specific to a minor drive, can be accessed through $handle$,
+-which can point to a data structure specific to the low-level driver.
+-The fields $use_count$, $next$, $options$ and $mc_flags$ need not be
+-initialized.
+-
+-The intermediate software layer that \cdromc\ forms will perform some
+-additional bookkeeping. The use count of the device (the number of
+-processes that have the device opened) is registered in $use_count$. The
+-function $cdrom_ioctl()$ will verify the appropriate user-memory regions
+-for read and write, and in case a location on the CD is transferred,
+-it will `sanitize' the format by making requests to the low-level
+-drivers in a standard format, and translating all formats between the
+-user-software and low level drivers. This relieves much of the drivers'
+-memory checking and format checking and translation. Also, the necessary
+-structures will be declared on the program stack.
+-
+-The implementation of the functions should be as defined in the
+-following sections. Two functions {\em must\/} be implemented, namely
+-$open()$ and $release()$. Other functions may be omitted, their
+-corresponding capability flags will be cleared upon registration.
+-Generally, a function returns zero on success and negative on error. A
+-function call should return only after the command has completed, but of
+-course waiting for the device should not use processor time.
+-
+-\subsection{$Int\ open(struct\ cdrom_device_info * cdi, int\ purpose)$}
+-
+-$Open()$ should try to open the device for a specific $purpose$, which
+-can be either:
+-\begin{itemize}
+-\item[0] Open for reading data, as done by {\tt {mount()}} (2), or the
+-user commands {\tt {dd}} or {\tt {cat}}.  
+-\item[1] Open for $ioctl$ commands, as done by audio-CD playing
+-programs.
+-\end{itemize}
+-Notice that any strategic code (closing tray upon $open()$, etc.)\ is
+-done by the calling routine in \cdromc, so the low-level routine
+-should only be concerned with proper initialization, such as spinning
+-up the disc, etc. % and device-use count
+-
+-
+-\subsection{$Void\ release(struct\ cdrom_device_info * cdi)$}
+-
+-
+-Device-specific actions should be taken such as spinning down the device.
+-However, strategic actions such as ejection of the tray, or unlocking
+-the door, should be left over to the general routine $cdrom_release()$.
+-This is the only function returning type $void$.
+-
+-\subsection{$Int\ drive_status(struct\ cdrom_device_info * cdi, int\ slot_nr)$}
+-\label{drive status}
+-
+-The function $drive_status$, if implemented, should provide
+-information on the status of the drive (not the status of the disc,
+-which may or may not be in the drive). If the drive is not a changer,
+-$slot_nr$ should be ignored. In \cdromh\ the possibilities are listed: 
+-$$
+-\halign{$#$\ \hfil&$/*$ \rm# $*/$\hfil\cr
+-CDS_NO_INFO& no information available\cr
+-CDS_NO_DISC& no disc is inserted, tray is closed\cr
+-CDS_TRAY_OPEN& tray is opened\cr
+-CDS_DRIVE_NOT_READY& something is wrong, tray is moving?\cr
+-CDS_DISC_OK& a disc is loaded and everything is fine\cr
+-}
+-$$
+-
+-\subsection{$Int\ media_changed(struct\ cdrom_device_info * cdi, int\ disc_nr)$}
+-
+-This function is very similar to the original function in $struct\ 
+-file_operations$. It returns 1 if the medium of the device $cdi\to
+-dev$ has changed since the last call, and 0 otherwise. The parameter
+-$disc_nr$ identifies a specific slot in a juke-box, it should be
+-ignored for single-disc drives.  Note that by `re-routing' this
+-function through $cdrom_media_changed()$, we can implement separate
+-queues for the VFS and a new $ioctl()$ function that can report device
+-changes to software (\eg, an auto-mounting daemon).
+-
+-\subsection{$Int\ tray_move(struct\ cdrom_device_info * cdi, int\ position)$}
+-
+-This function, if implemented, should control the tray movement. (No
+-other function should control this.) The parameter $position$ controls
+-the desired direction of movement:
+-\begin{itemize}
+-\item[0] Close tray
+-\item[1] Open tray
+-\end{itemize}
+-This function returns 0 upon success, and a non-zero value upon
+-error. Note that if the tray is already in the desired position, no
+-action need be taken, and the return value should be 0. 
+-
+-\subsection{$Int\ lock_door(struct\ cdrom_device_info * cdi, int\ lock)$}
+-
+-This function (and no other code) controls locking of the door, if the
+-drive allows this. The value of $lock$ controls the desired locking
+-state:
+-\begin{itemize}
+-\item[0] Unlock door, manual opening is allowed
+-\item[1] Lock door, tray cannot be ejected manually
+-\end{itemize}
+-This function returns 0 upon success, and a non-zero value upon
+-error. Note that if the door is already in the requested state, no
+-action need be taken, and the return value should be 0. 
+-
+-\subsection{$Int\ select_speed(struct\ cdrom_device_info * cdi, int\ speed)$}
+-
+-Some \cdrom\ drives are capable of changing their head-speed. There
+-are several reasons for changing the speed of a \cdrom\ drive. Badly
+-pressed \cdrom s may benefit from less-than-maximum head rate. Modern
+-\cdrom\ drives can obtain very high head rates (up to $24\times$ is
+-common).  It has been reported that these drives can make reading
+-errors at these high speeds, reducing the speed can prevent data loss
+-in these circumstances.  Finally, some of these drives can
+-make an annoyingly loud noise, which a lower speed may reduce. %Finally,
+-%although the audio-low-pass filters probably aren't designed for it,
+-%more than real-time playback of audio might be used for high-speed
+-%copying of audio tracks.
+-
+-This function specifies the speed at which data is read or audio is
+-played back. The value of $speed$ specifies the head-speed of the
+-drive, measured in units of standard cdrom speed (176\,kB/sec raw data
+-or 150\,kB/sec file system data). So to request that a \cdrom\ drive
+-operate at 300\,kB/sec you would call the CDROM_SELECT_SPEED $ioctl$
+-with $speed=2$. The special value `0' means `auto-selection', \ie,
+-maximum data-rate or real-time audio rate. If the drive doesn't have
+-this `auto-selection' capability, the decision should be made on the
+-current disc loaded and the return value should be positive. A negative
+-return value indicates an error.
+-
+-\subsection{$Int\ select_disc(struct\ cdrom_device_info * cdi, int\ number)$}
+-
+-If the drive can store multiple discs (a juke-box) this function
+-will perform disc selection. It should return the number of the
+-selected disc on success, a negative value on error. Currently, only
+-the ide-cd driver supports this functionality.
+-
+-\subsection{$Int\ get_last_session(struct\ cdrom_device_info * cdi, struct\
+-  cdrom_multisession * ms_info)$}
+-
+-This function should implement the old corresponding $ioctl()$. For
+-device $cdi\to dev$, the start of the last session of the current disc
+-should be returned in the pointer argument $ms_info$. Note that
+-routines in \cdromc\ have sanitized this argument: its requested
+-format will {\em always\/} be of the type $CDROM_LBA$ (linear block
+-addressing mode), whatever the calling software requested. But
+-sanitization goes even further: the low-level implementation may
+-return the requested information in $CDROM_MSF$ format if it wishes so
+-(setting the $ms_info\rightarrow addr_format$ field appropriately, of
+-course) and the routines in \cdromc\ will make the transformation if
+-necessary. The return value is 0 upon success.
+-
+-\subsection{$Int\ get_mcn(struct\ cdrom_device_info * cdi, struct\
+-  cdrom_mcn * mcn)$}
+-
+-Some discs carry a `Media Catalog Number' (MCN), also called
+-`Universal Product Code' (UPC). This number should reflect the number
+-that is generally found in the bar-code on the product. Unfortunately,
+-the few discs that carry such a number on the disc don't even use the
+-same format. The return argument to this function is a pointer to a
+-pre-declared memory region of type $struct\ cdrom_mcn$. The MCN is
+-expected as a 13-character string, terminated by a null-character.
+-
+-\subsection{$Int\ reset(struct\ cdrom_device_info * cdi)$}
+-
+-This call should perform a hard-reset on the drive (although in
+-circumstances that a hard-reset is necessary, a drive may very well not
+-listen to commands anymore). Preferably, control is returned to the
+-caller only after the drive has finished resetting. If the drive is no
+-longer listening, it may be wise for the underlying low-level cdrom
+-driver to time out.
+-
+-\subsection{$Int\ audio_ioctl(struct\ cdrom_device_info * cdi, unsigned\
+-  int\ cmd, void * arg)$}
+-
+-Some of the \cdrom-$ioctl$s defined in \cdromh\ can be
+-implemented by the routines described above, and hence the function
+-$cdrom_ioctl$ will use those. However, most $ioctl$s deal with
+-audio-control. We have decided to leave these to be accessed through a
+-single function, repeating the arguments $cmd$ and $arg$. Note that
+-the latter is of type $void*{}$, rather than $unsigned\ long\
+-int$. The routine $cdrom_ioctl()$ does do some useful things,
+-though. It sanitizes the address format type to $CDROM_MSF$ (Minutes,
+-Seconds, Frames) for all audio calls. It also verifies the memory
+-location of $arg$, and reserves stack-memory for the argument. This
+-makes implementation of the $audio_ioctl()$ much simpler than in the
+-old driver scheme. For example, you may look up the function
+-$cm206_audio_ioctl()$ in {\tt {cm206.c}} that should be updated with
+-this documentation. 
+-
+-An unimplemented ioctl should return $-ENOSYS$, but a harmless request
+-(\eg, $CDROMSTART$) may be ignored by returning 0 (success). Other
+-errors should be according to the standards, whatever they are. When
+-an error is returned by the low-level driver, the \UCD\ tries whenever
+-possible to return the error code to the calling program. (We may decide
+-to sanitize the return value in $cdrom_ioctl()$ though, in order to
+-guarantee a uniform interface to the audio-player software.)
+-
+-\subsection{$Int\ dev_ioctl(struct\ cdrom_device_info * cdi, unsigned\ int\
+-  cmd, unsigned\ long\ arg)$}
+-
+-Some $ioctl$s seem to be specific to certain \cdrom\ drives. That is,
+-they are introduced to service some capabilities of certain drives. In
+-fact, there are 6 different $ioctl$s for reading data, either in some
+-particular kind of format, or audio data. Not many drives support
+-reading audio tracks as data, I believe this is because of protection
+-of copyrights of artists. Moreover, I think that if audio-tracks are
+-supported, it should be done through the VFS and not via $ioctl$s. A
+-problem here could be the fact that audio-frames are 2352 bytes long,
+-so either the audio-file-system should ask for 75264 bytes at once
+-(the least common multiple of 512 and 2352), or the drivers should
+-bend their backs to cope with this incoherence (to which I would be
+-opposed).  Furthermore, it is very difficult for the hardware to find
+-the exact frame boundaries, since there are no synchronization headers
+-in audio frames.  Once these issues are resolved, this code should be
+-standardized in \cdromc.
+-
+-Because there are so many $ioctl$s that seem to be introduced to
+-satisfy certain drivers,\footnote{Is there software around that
+-  actually uses these? I'd be interested!} any `non-standard' $ioctl$s
+-are routed through the call $dev_ioctl()$. In principle, `private'
+-$ioctl$s should be numbered after the device's major number, and not
+-the general \cdrom\ $ioctl$ number, {\tt {0x53}}. Currently the
+-non-supported $ioctl$s are: {\it CDROMREADMODE1, CDROMREADMODE2,
+-  CDROMREADAUDIO, CDROMREADRAW, CDROMREADCOOKED, CDROMSEEK,
+-  CDROMPLAY\-BLK and CDROM\-READALL}.
+-
+-
+-\subsection{\cdrom\ capabilities}
+-\label{capability}
+-
+-Instead of just implementing some $ioctl$ calls, the interface in
+-\cdromc\ supplies the possibility to indicate the {\em capabilities\/}
+-of a \cdrom\ drive. This can be done by ORing any number of
+-capability-constants that are defined in \cdromh\ at the registration
+-phase. Currently, the capabilities are any of:
+-$$
+-\halign{$#$\ \hfil&$/*$ \rm# $*/$\hfil\cr
+-CDC_CLOSE_TRAY& can close tray by software control\cr
+-CDC_OPEN_TRAY& can open tray\cr
+-CDC_LOCK& can lock and unlock the door\cr
+-CDC_SELECT_SPEED& can select speed, in units of $\sim$150\,kB/s\cr
+-CDC_SELECT_DISC& drive is juke-box\cr
+-CDC_MULTI_SESSION& can read sessions $>\rm1$\cr
+-CDC_MCN& can read Media Catalog Number\cr
+-CDC_MEDIA_CHANGED& can report if disc has changed\cr
+-CDC_PLAY_AUDIO& can perform audio-functions (play, pause, etc)\cr
+-CDC_RESET& hard reset device\cr
+-CDC_IOCTLS& driver has non-standard ioctls\cr
+-CDC_DRIVE_STATUS& driver implements drive status\cr
+-}
+-$$
+-The capability flag is declared $const$, to prevent drivers from
+-accidentally tampering with the contents. The capability fags actually
+-inform \cdromc\ of what the driver can do. If the drive found
+-by the driver does not have the capability, is can be masked out by
+-the $cdrom_device_info$ variable $mask$. For instance, the SCSI \cdrom\
+-driver has implemented the code for loading and ejecting \cdrom's, and
+-hence its corresponding flags in $capability$ will be set. But a SCSI
+-\cdrom\ drive might be a caddy system, which can't load the tray, and
+-hence for this drive the $cdrom_device_info$ struct will have set
+-the $CDC_CLOSE_TRAY$ bit in $mask$.
+-
+-In the file \cdromc\ you will encounter many constructions of the type
+-$$\it
+-if\ (cdo\rightarrow capability \mathrel\& \mathord{\sim} cdi\rightarrow mask 
+-   \mathrel{\&} CDC_<capability>) \ldots
+-$$
+-There is no $ioctl$ to set the mask\dots The reason is that
+-I think it is better to control the {\em behavior\/} rather than the
+-{\em capabilities}.
+-
+-\subsection{Options}
+-
+-A final flag register controls the {\em behavior\/} of the \cdrom\
+-drives, in order to satisfy different users' wishes, hopefully
+-independently of the ideas of the respective author who happened to
+-have made the drive's support available to the \linux\ community. The
+-current behavior options are:
+-$$
+-\halign{$#$\ \hfil&$/*$ \rm# $*/$\hfil\cr
+-CDO_AUTO_CLOSE& try to close tray upon device $open()$\cr
+-CDO_AUTO_EJECT& try to open tray on last device $close()$\cr
+-CDO_USE_FFLAGS& use $file_pointer\rightarrow f_flags$ to indicate
+- purpose for $open()$\cr
+-CDO_LOCK& try to lock door if device is opened\cr
+-CDO_CHECK_TYPE& ensure disc type is data if opened for data\cr
+-}
+-$$
+-
+-The initial value of this register is $CDO_AUTO_CLOSE \mathrel|
+-CDO_USE_FFLAGS \mathrel| CDO_LOCK$, reflecting my own view on user
+-interface and software standards. Before you protest, there are two
+-new $ioctl$s implemented in \cdromc, that allow you to control the
+-behavior by software. These are:
+-$$
+-\halign{$#$\ \hfil&$/*$ \rm# $*/$\hfil\cr
+-CDROM_SET_OPTIONS& set options specified in $(int)\ arg$\cr
+-CDROM_CLEAR_OPTIONS& clear options specified in $(int)\ arg$\cr
+-}
+-$$
+-One option needs some more explanation: $CDO_USE_FFLAGS$. In the next
+-newsection we explain what the need for this option is.
+-
+-A software package {\tt setcd}, available from the Debian distribution
+-and {\tt sunsite.unc.edu}, allows user level control of these flags. 
+-
+-\newsection{The need to know the purpose of opening the \cdrom\ device}
+-
+-Traditionally, Unix devices can be used in two different `modes',
+-either by reading/writing to the device file, or by issuing
+-controlling commands to the device, by the device's $ioctl()$
+-call. The problem with \cdrom\ drives, is that they can be used for
+-two entirely different purposes. One is to mount removable
+-file systems, \cdrom s, the other is to play audio CD's. Audio commands
+-are implemented entirely through $ioctl$s, presumably because the
+-first implementation (SUN?) has been such. In principle there is
+-nothing wrong with this, but a good control of the `CD player' demands
+-that the device can {\em always\/} be opened in order to give the
+-$ioctl$ commands, regardless of the state the drive is in. 
+-
+-On the other hand, when used as a removable-media disc drive (what the
+-original purpose of \cdrom s is) we would like to make sure that the
+-disc drive is ready for operation upon opening the device. In the old
+-scheme, some \cdrom\ drivers don't do any integrity checking, resulting
+-in a number of i/o errors reported by the VFS to the kernel when an
+-attempt for mounting a \cdrom\ on an empty drive occurs. This is not a
+-particularly elegant way to find out that there is no \cdrom\ inserted;
+-it more-or-less looks like the old IBM-PC trying to read an empty floppy
+-drive for a couple of seconds, after which the system complains it
+-can't read from it. Nowadays we can {\em sense\/} the existence of a
+-removable medium in a drive, and we believe we should exploit that
+-fact. An integrity check on opening of the device, that verifies the
+-availability of a \cdrom\ and its correct type (data), would be
+-desirable.
+-
+-These two ways of using a \cdrom\ drive, principally for data and
+-secondarily for playing audio discs, have different demands for the
+-behavior of the $open()$ call. Audio use simply wants to open the
+-device in order to get a file handle which is needed for issuing
+-$ioctl$ commands, while data use wants to open for correct and
+-reliable data transfer. The only way user programs can indicate what
+-their {\em purpose\/} of opening the device is, is through the $flags$
+-parameter (see {\tt {open(2)}}). For \cdrom\ devices, these flags aren't
+-implemented (some drivers implement checking for write-related flags,
+-but this is not strictly necessary if the device file has correct
+-permission flags). Most option flags simply don't make sense to
+-\cdrom\ devices: $O_CREAT$, $O_NOCTTY$, $O_TRUNC$, $O_APPEND$, and
+-$O_SYNC$ have no meaning to a \cdrom. 
+-
+-We therefore propose to use the flag $O_NONBLOCK$ to indicate
+-that the device is opened just for issuing $ioctl$
+-commands. Strictly, the meaning of $O_NONBLOCK$ is that opening and
+-subsequent calls to the device don't cause the calling process to
+-wait. We could interpret this as ``don't wait until someone has
+-inserted some valid data-\cdrom.'' Thus, our proposal of the
+-implementation for the $open()$ call for \cdrom s is:
+-\begin{itemize}
+-\item If no other flags are set than $O_RDONLY$, the device is opened
+-for data transfer, and the return value will be 0 only upon successful
+-initialization of the transfer. The call may even induce some actions
+-on the \cdrom, such as closing the tray.  
+-\item If the option flag $O_NONBLOCK$ is set, opening will always be
+-successful, unless the whole device doesn't exist. The drive will take
+-no actions whatsoever. 
+-\end{itemize}
+-
+-\subsection{And what about standards?}
+-
+-You might hesitate to accept this proposal as it comes from the
+-\linux\ community, and not from some standardizing institute. What
+-about SUN, SGI, HP and all those other Unix and hardware vendors?
+-Well, these companies are in the lucky position that they generally
+-control both the hardware and software of their supported products,
+-and are large enough to set their own standard. They do not have to
+-deal with a dozen or more different, competing hardware
+-configurations.\footnote{Incidentally, I think that SUN's approach to
+-mounting \cdrom s is very good in origin: under Solaris a
+-volume-daemon automatically mounts a newly inserted \cdrom\ under {\tt
+-{/cdrom/$<volume-name>$/}}. In my opinion they should have pushed this
+-further and have {\em every\/} \cdrom\ on the local area network be
+-mounted at the similar location, \ie, no matter in which particular
+-machine you insert a \cdrom, it will always appear at the same
+-position in the directory tree, on every system. When I wanted to
+-implement such a user-program for \linux, I came across the
+-differences in behavior of the various drivers, and the need for an
+-$ioctl$ informing about media changes.}
+-
+-We believe that using $O_NONBLOCK$ to indicate that a device is being opened
+-for $ioctl$ commands only can be easily introduced in the \linux\
+-community. All the CD-player authors will have to be informed, we can
+-even send in our own patches to the programs. The use of $O_NONBLOCK$
+-has most likely no influence on the behavior of the CD-players on
+-other operating systems than \linux. Finally, a user can always revert
+-to old behavior by a call to $ioctl(file_descriptor, CDROM_CLEAR_OPTIONS,
+-CDO_USE_FFLAGS)$. 
+-
+-\subsection{The preferred strategy of $open()$}
+-
+-The routines in \cdromc\ are designed in such a way that run-time
+-configuration of the behavior of \cdrom\ devices (of {\em any\/} type)
+-can be carried out, by the $CDROM_SET/CLEAR_OPTIONS$ $ioctls$. Thus, various
+-modes of operation can be set:
+-\begin{description}
+-\item[$CDO_AUTO_CLOSE \mathrel| CDO_USE_FFLAGS \mathrel| CDO_LOCK$] This
+-is the default setting. (With $CDO_CHECK_TYPE$ it will be better, in the
+-future.) If the device is not yet opened by any other process, and if
+-the device is being opened for data ($O_NONBLOCK$ is not set) and the
+-tray is found to be open, an attempt to close the tray is made. Then,
+-it is verified that a disc is in the drive and, if $CDO_CHECK_TYPE$ is
+-set, that it contains tracks of type `data mode 1.' Only if all tests
+-are passed is the return value zero. The door is locked to prevent file
+-system corruption. If the drive is opened for audio ($O_NONBLOCK$ is
+-set), no actions are taken and a value of 0 will be returned. 
+-\item[$CDO_AUTO_CLOSE \mathrel| CDO_AUTO_EJECT \mathrel| CDO_LOCK$] This
+-mimics the behavior of the current sbpcd-driver. The option flags are
+-ignored, the tray is closed on the first open, if necessary. Similarly,
+-the tray is opened on the last release, \ie, if a \cdrom\ is unmounted,
+-it is automatically ejected, such that the user can replace it.
+-\end{description} 
+-We hope that these option can convince everybody (both driver
+-maintainers and user program developers) to adopt the new \cdrom\
+-driver scheme and option flag interpretation.
+-
+-\newsection{Description of routines in \cdromc}
+-
+-Only a few routines in \cdromc\ are exported to the drivers. In this
+-new section we will discuss these, as well as the functions that `take
+-over' the \cdrom\ interface to the kernel. The header file belonging
+-to \cdromc\ is called \cdromh. Formerly, some of the contents of this
+-file were placed in the file {\tt {ucdrom.h}}, but this file has now been
+-merged back into \cdromh.
+-
+-\subsection{$Struct\ file_operations\ cdrom_fops$}
+-
+-The contents of this structure were described in section~\ref{cdrom.c}.
+-A pointer to this structure is assigned to the $fops$ field
+-of the $struct gendisk$.
+-
+-\subsection{$Int\ register_cdrom( struct\ cdrom_device_info\ * cdi)$}
+-
+-This function is used in about the same way one registers $cdrom_fops$
+-with the kernel, the device operations and information structures,
+-as described in section~\ref{cdrom.c}, should be registered with the
+-\UCD:
+-$$
+-register_cdrom(\&<device>_info));
+-$$
+-This function returns zero upon success, and non-zero upon
+-failure. The structure $<device>_info$ should have a pointer to the
+-driver's $<device>_dops$, as in 
+-$$
+-\vbox{\halign{&$#$\hfil\cr
+-struct\ &cdrom_device_info\ <device>_info = \{\cr
+-& <device>_dops;\cr
+-&\ldots\cr
+-\}\cr
+-}}$$
+-Note that a driver must have one static structure, $<device>_dops$, while
+-it may have as many structures $<device>_info$ as there are minor devices
+-active. $Register_cdrom()$ builds a linked list from these. 
+-
+-\subsection{$Void\ unregister_cdrom(struct\ cdrom_device_info * cdi)$}
+-
+-Unregistering device $cdi$ with minor number $MINOR(cdi\to dev)$ removes
+-the minor device from the list. If it was the last registered minor for
+-the low-level driver, this disconnects the registered device-operation
+-routines from the \cdrom\ interface. This function returns zero upon
+-success, and non-zero upon failure.
+-
+-\subsection{$Int\ cdrom_open(struct\ inode * ip, struct\ file * fp)$}
+-
+-This function is not called directly by the low-level drivers, it is
+-listed in the standard $cdrom_fops$. If the VFS opens a file, this
+-function becomes active. A strategy is implemented in this routine,
+-taking care of all capabilities and options that are set in the
+-$cdrom_device_ops$ connected to the device. Then, the program flow is
+-transferred to the device_dependent $open()$ call.
+-
+-\subsection{$Void\ cdrom_release(struct\ inode *ip, struct\ file
+-*fp)$}
+-
+-This function implements the reverse-logic of $cdrom_open()$, and then
+-calls the device-dependent $release()$ routine. When the use-count has
+-reached 0, the allocated buffers are flushed by calls to $sync_dev(dev)$
+-and $invalidate_buffers(dev)$.
+-
+-
+-\subsection{$Int\ cdrom_ioctl(struct\ inode *ip, struct\ file *fp,
+-unsigned\ int\ cmd, unsigned\ long\ arg)$}
+-\label{cdrom-ioctl}
+-
+-This function handles all the standard $ioctl$ requests for \cdrom\
+-devices in a uniform way. The different calls fall into three
+-categories: $ioctl$s that can be directly implemented by device
+-operations, ones that are routed through the call $audio_ioctl()$, and
+-the remaining ones, that are presumable device-dependent. Generally, a
+-negative return value indicates an error.
+-
+-\subsubsection{Directly implemented $ioctl$s}
+-\label{ioctl-direct}
+-
+-The following `old' \cdrom-$ioctl$s are implemented by directly
+-calling device-operations in $cdrom_device_ops$, if implemented and
+-not masked:
+-\begin{description}
+-\item[CDROMMULTISESSION] Requests the last session on a \cdrom.
+-\item[CDROMEJECT] Open tray. 
+-\item[CDROMCLOSETRAY] Close tray.
+-\item[CDROMEJECT_SW] If $arg\not=0$, set behavior to auto-close (close
+-tray on first open) and auto-eject (eject on last release), otherwise
+-set behavior to non-moving on $open()$ and $release()$ calls.
+-\item[CDROM_GET_MCN] Get the Media Catalog Number from a CD.
+-\end{description}
+-
+-\subsubsection{$Ioctl$s routed through $audio_ioctl()$}
+-\label{ioctl-audio}
+-
+-The following set of $ioctl$s are all implemented through a call to
+-the $cdrom_fops$ function $audio_ioctl()$. Memory checks and
+-allocation are performed in $cdrom_ioctl()$, and also sanitization of
+-address format ($CDROM_LBA$/$CDROM_MSF$) is done.
+-\begin{description}
+-\item[CDROMSUBCHNL] Get sub-channel data in argument $arg$ of type $struct\
+-cdrom_subchnl *{}$.
+-\item[CDROMREADTOCHDR] Read Table of Contents header, in $arg$ of type
+-$struct\ cdrom_tochdr *{}$. 
+-\item[CDROMREADTOCENTRY] Read a Table of Contents entry in $arg$ and
+-specified by $arg$ of type $struct\ cdrom_tocentry *{}$.
+-\item[CDROMPLAYMSF] Play audio fragment specified in Minute, Second,
+-Frame format, delimited by $arg$ of type $struct\ cdrom_msf *{}$.
+-\item[CDROMPLAYTRKIND] Play audio fragment in track-index format
+-delimited by $arg$ of type $struct\ \penalty-1000 cdrom_ti *{}$.
+-\item[CDROMVOLCTRL] Set volume specified by $arg$ of type $struct\
+-cdrom_volctrl *{}$.
+-\item[CDROMVOLREAD] Read volume into by $arg$ of type $struct\
+-cdrom_volctrl *{}$.
+-\item[CDROMSTART] Spin up disc.
+-\item[CDROMSTOP] Stop playback of audio fragment.
+-\item[CDROMPAUSE] Pause playback of audio fragment.
+-\item[CDROMRESUME] Resume playing.
+-\end{description}
+-
+-\subsubsection{New $ioctl$s in \cdromc}
+-
+-The following $ioctl$s have been introduced to allow user programs to
+-control the behavior of individual \cdrom\ devices. New $ioctl$
+-commands can be identified by the underscores in their names.
+-\begin{description}
+-\item[CDROM_SET_OPTIONS] Set options specified by $arg$. Returns the
+-option flag register after modification. Use  $arg = \rm0$ for reading
+-the current flags.
+-\item[CDROM_CLEAR_OPTIONS] Clear options specified by $arg$. Returns
+-  the option flag register after modification.
+-\item[CDROM_SELECT_SPEED] Select head-rate speed of disc specified as
+-  by $arg$ in units of standard cdrom speed (176\,kB/sec raw data or
+-  150\,kB/sec file system data). The value 0 means `auto-select', \ie,
+-  play audio discs at real time and data discs at maximum speed. The value
+-  $arg$ is checked against the maximum head rate of the drive found in the
+-  $cdrom_dops$.
+-\item[CDROM_SELECT_DISC] Select disc numbered $arg$ from a juke-box.
+-  First disc is numbered 0. The number $arg$ is checked against the
+-  maximum number of discs in the juke-box found in the $cdrom_dops$.
+-\item[CDROM_MEDIA_CHANGED] Returns 1 if a disc has been changed since
+-  the last call. Note that calls to $cdrom_media_changed$ by the VFS
+-  are treated by an independent queue, so both mechanisms will detect
+-  a media change once. For juke-boxes, an extra argument $arg$
+-  specifies the slot for which the information is given. The special
+-  value $CDSL_CURRENT$ requests that information about the currently
+-  selected slot be returned.
+-\item[CDROM_DRIVE_STATUS] Returns the status of the drive by a call to
+-  $drive_status()$. Return values are defined in section~\ref{drive
+-   status}. Note that this call doesn't return information on the
+-  current playing activity of the drive; this can be polled through an
+-  $ioctl$ call to $CDROMSUBCHNL$. For juke-boxes, an extra argument
+-  $arg$ specifies the slot for which (possibly limited) information is
+-  given. The special value $CDSL_CURRENT$ requests that information
+-  about the currently selected slot be returned.
+-\item[CDROM_DISC_STATUS] Returns the type of the disc currently in the
+-  drive.  It should be viewed as a complement to $CDROM_DRIVE_STATUS$.
+-  This $ioctl$ can provide \emph {some} information about the current
+-  disc that is inserted in the drive.  This functionality used to be
+-  implemented in the low level drivers, but is now carried out
+-  entirely in \UCD.
+-  
+-  The history of development of the CD's use as a carrier medium for
+-  various digital information has lead to many different disc types.
+-  This $ioctl$ is useful only in the case that CDs have \emph {only
+-    one} type of data on them.  While this is often the case, it is
+-  also very common for CDs to have some tracks with data, and some
+-  tracks with audio.  Because this is an existing interface, rather
+-  than fixing this interface by changing the assumptions it was made
+-  under, thereby breaking all user applications that use this
+-  function, the \UCD\ implements this $ioctl$ as follows: If the CD in
+-  question has audio tracks on it, and it has absolutely no CD-I, XA,
+-  or data tracks on it, it will be reported as $CDS_AUDIO$.  If it has
+-  both audio and data tracks, it will return $CDS_MIXED$.  If there
+-  are no audio tracks on the disc, and if the CD in question has any
+-  CD-I tracks on it, it will be reported as $CDS_XA_2_2$.  Failing
+-  that, if the CD in question has any XA tracks on it, it will be
+-  reported as $CDS_XA_2_1$.  Finally, if the CD in question has any
+-  data tracks on it, it will be reported as a data CD ($CDS_DATA_1$).
+-
+-  This $ioctl$ can return:
+-  $$
+-  \halign{$#$\ \hfil&$/*$ \rm# $*/$\hfil\cr
+-    CDS_NO_INFO& no information available\cr
+-    CDS_NO_DISC& no disc is inserted, or tray is opened\cr
+-    CDS_AUDIO& Audio disc (2352 audio bytes/frame)\cr
+-    CDS_DATA_1& data disc, mode 1 (2048 user bytes/frame)\cr
+-    CDS_XA_2_1& mixed data (XA), mode 2, form 1 (2048 user bytes)\cr
+-    CDS_XA_2_2& mixed data (XA), mode 2, form 1 (2324  user bytes)\cr
+-    CDS_MIXED& mixed audio/data disc\cr
+-    }
+-  $$
+-  For some information concerning frame layout of the various disc
+-  types, see a recent version of \cdromh.
+-
+-\item[CDROM_CHANGER_NSLOTS] Returns the number of slots in a
+-  juke-box. 
+-\item[CDROMRESET] Reset the drive. 
+-\item[CDROM_GET_CAPABILITY] Returns the $capability$ flags for the
+-  drive. Refer to section \ref{capability} for more information on
+-  these flags.
+-\item[CDROM_LOCKDOOR] Locks the door of the drive. $arg == \rm0$
+-  unlocks the door, any other value locks it.
+-\item[CDROM_DEBUG] Turns on debugging info. Only root is allowed
+-  to do this. Same semantics as CDROM_LOCKDOOR.
+-\end{description}
+-
+-\subsubsection{Device dependent $ioctl$s}
+-
+-Finally, all other $ioctl$s are passed to the function $dev_ioctl()$,
+-if implemented. No memory allocation or verification is carried out. 
+-
+-\newsection{How to update your driver}
+-
+-\begin{enumerate}
+-\item Make a backup of your current driver. 
+-\item Get hold of the files \cdromc\ and \cdromh, they should be in
+-  the directory tree that came with this documentation.
+-\item Make sure you include \cdromh.
+-\item Change the 3rd argument of $register_blkdev$ from
+-$\&<your-drive>_fops$ to $\&cdrom_fops$. 
+-\item Just after that line, add the following to register with the \UCD:
+-  $$register_cdrom(\&<your-drive>_info);$$
+-  Similarly, add a call to $unregister_cdrom()$ at the appropriate place.
+-\item Copy an example of the device-operations $struct$ to your
+-  source, \eg, from {\tt {cm206.c}} $cm206_dops$, and change all
+-  entries to names corresponding to your driver, or names you just
+-  happen to like. If your driver doesn't support a certain function,
+-  make the entry $NULL$. At the entry $capability$ you should list all
+-  capabilities your driver currently supports. If your driver
+-  has a capability that is not listed, please send me a message.
+-\item Copy the $cdrom_device_info$ declaration from the same example
+-  driver, and modify the entries according to your needs. If your
+-  driver dynamically determines the capabilities of the hardware, this
+-  structure should also be declared dynamically. 
+-\item Implement all functions in your $<device>_dops$ structure,
+-  according to prototypes listed in \cdromh, and specifications given
+-  in section~\ref{cdrom.c}. Most likely you have already implemented
+-  the code in a large part, and you will almost certainly need to adapt the
+-  prototype and return values.
+-\item Rename your $<device>_ioctl()$ function to $audio_ioctl$ and
+-  change the prototype a little. Remove entries listed in the first
+-  part in section~\ref{cdrom-ioctl}, if your code was OK, these are
+-  just calls to the routines you adapted in the previous step.
+-\item You may remove all remaining memory checking code in the
+-  $audio_ioctl()$ function that deals with audio commands (these are
+-  listed in the second part of section~\ref{cdrom-ioctl}). There is no
+-  need for memory allocation either, so most $case$s in the $switch$
+-  statement look similar to:
+-  $$
+-  case\ CDROMREADTOCENTRY\colon get_toc_entry\bigl((struct\ 
+-  cdrom_tocentry *{})\ arg\bigr);
+-  $$
+-\item All remaining $ioctl$ cases must be moved to a separate
+-  function, $<device>_ioctl$, the device-dependent $ioctl$s. Note that
+-  memory checking and allocation must be kept in this code!
+-\item Change the prototypes of $<device>_open()$ and
+-  $<device>_release()$, and remove any strategic code (\ie, tray
+-  movement, door locking, etc.).
+-\item Try to recompile the drivers. We advise you to use modules, both
+-  for {\tt {cdrom.o}} and your driver, as debugging is much easier this
+-  way.
+-\end{enumerate} 
+-
+-\newsection{Thanks}
+-
+-Thanks to all the people involved.  First, Erik Andersen, who has
+-taken over the torch in maintaining \cdromc\ and integrating much
+-\cdrom-related code in the 2.1-kernel.  Thanks to Scott Snyder and
+-Gerd Knorr, who were the first to implement this interface for SCSI
+-and IDE-CD drivers and added many ideas for extension of the data
+-structures relative to kernel~2.0.  Further thanks to Heiko Ei{\ss}feldt,
+-Thomas Quinot, Jon Tombs, Ken Pizzini, Eberhard M\"onkeberg and Andrew
+-Kroll, the \linux\ \cdrom\ device driver developers who were kind
+-enough to give suggestions and criticisms during the writing. Finally
+-of course, I want to thank Linus Torvalds for making this possible in
+-the first place.
+-
+-\vfill
+-$ \version\ $
+-\eject
+-\end{document}
+diff --git a/Documentation/cdrom/cdrom-standard.txt b/Documentation/cdrom/cdrom-standard.txt
+new file mode 100644
+index 000000000000..dde4f7f7fdbf
+--- /dev/null
++++ b/Documentation/cdrom/cdrom-standard.txt
+@@ -0,0 +1,1063 @@
++=======================
++A Linux CD-ROM standard
++=======================
++
++:Author: David van Leeuwen <david@ElseWare.cistron.nl>
++:Date: 12 March 1999
++:Updated by: Erik Andersen (andersee@debian.org)
++:Updated by: Jens Axboe (axboe@image.dk)
++
++
++Introduction
++============
++
++Linux is probably the Unix-like operating system that supports
++the widest variety of hardware devices. The reasons for this are
++presumably
++
++- The large list of hardware devices available for the many platforms
++  that Linux now supports (i.e., i386-PCs, Sparc Suns, etc.)
++- The open design of the operating system, such that anybody can write a
++  driver for Linux.
++- There is plenty of source code around as examples of how to write a driver.
++
++The openness of Linux, and the many different types of available
++hardware has allowed Linux to support many different hardware devices.
++Unfortunately, the very openness that has allowed Linux to support
++all these different devices has also allowed the behavior of each
++device driver to differ significantly from one device to another.
++This divergence of behavior has been very significant for CD-ROM
++devices; the way a particular drive reacts to a `standard` *ioctl()*
++call varies greatly from one device driver to another. To avoid making
++their drivers totally inconsistent, the writers of Linux CD-ROM
++drivers generally created new device drivers by understanding, copying,
++and then changing an existing one. Unfortunately, this practice did not
++maintain uniform behavior across all the Linux CD-ROM drivers.
++
++This document describes an effort to establish Uniform behavior across
++all the different CD-ROM device drivers for Linux. This document also
++defines the various *ioctl()'s*, and how the low-level CD-ROM device
++drivers should implement them. Currently (as of the Linux 2.1.\ *x*
++development kernels) several low-level CD-ROM device drivers, including
++both IDE/ATAPI and SCSI, now use this Uniform interface.
++
++When the CD-ROM was developed, the interface between the CD-ROM drive
++and the computer was not specified in the standards. As a result, many
++different CD-ROM interfaces were developed. Some of them had their
++own proprietary design (Sony, Mitsumi, Panasonic, Philips), other
++manufacturers adopted an existing electrical interface and changed
++the functionality (CreativeLabs/SoundBlaster, Teac, Funai) or simply
++adapted their drives to one or more of the already existing electrical
++interfaces (Aztech, Sanyo, Funai, Vertos, Longshine, Optics Storage and
++most of the `NoName` manufacturers). In cases where a new drive really
++brought its own interface or used its own command set and flow control
++scheme, either a separate driver had to be written, or an existing
++driver had to be enhanced. History has delivered us CD-ROM support for
++many of these different interfaces. Nowadays, almost all new CD-ROM
++drives are either IDE/ATAPI or SCSI, and it is very unlikely that any
++manufacturer will create a new interface. Even finding drives for the
++old proprietary interfaces is getting difficult.
++
++When (in the 1.3.70's) I looked at the existing software interface,
++which was expressed through `cdrom.h`, it appeared to be a rather wild
++set of commands and data formats [#f1]_. It seemed that many
++features of the software interface had been added to accommodate the
++capabilities of a particular drive, in an *ad hoc* manner. More
++importantly, it appeared that the behavior of the `standard` commands
++was different for most of the different drivers: e. g., some drivers
++close the tray if an *open()* call occurs when the tray is open, while
++others do not. Some drivers lock the door upon opening the device, to
++prevent an incoherent file system, but others don't, to allow software
++ejection. Undoubtedly, the capabilities of the different drives vary,
++but even when two drives have the same capability their drivers'
++behavior was usually different.
++
++.. [#f1]
++   I cannot recollect what kernel version I looked at, then,
++   presumably 1.2.13 and 1.3.34 --- the latest kernel that I was
++   indirectly involved in.
++
++I decided to start a discussion on how to make all the Linux CD-ROM
++drivers behave more uniformly. I began by contacting the developers of
++the many CD-ROM drivers found in the Linux kernel. Their reactions
++encouraged me to write the Uniform CD-ROM Driver which this document is
++intended to describe. The implementation of the Uniform CD-ROM Driver is
++in the file `cdrom.c`. This driver is intended to be an additional software
++layer that sits on top of the low-level device drivers for each CD-ROM drive.
++By adding this additional layer, it is possible to have all the different
++CD-ROM devices behave **exactly** the same (insofar as the underlying
++hardware will allow).
++
++The goal of the Uniform CD-ROM Driver is **not** to alienate driver developers
++whohave not yet taken steps to support this effort. The goal of Uniform CD-ROM
++Driver is simply to give people writing application programs for CD-ROM drives
++**one** Linux CD-ROM interface with consistent behavior for all
++CD-ROM devices. In addition, this also provides a consistent interface
++between the low-level device driver code and the Linux kernel. Care
++is taken that 100% compatibility exists with the data structures and
++programmer's interface defined in `cdrom.h`. This guide was written to
++help CD-ROM driver developers adapt their code to use the Uniform CD-ROM
++Driver code defined in `cdrom.c`.
++
++Personally, I think that the most important hardware interfaces are
++the IDE/ATAPI drives and, of course, the SCSI drives, but as prices
++of hardware drop continuously, it is also likely that people may have
++more than one CD-ROM drive, possibly of mixed types. It is important
++that these drives behave in the same way. In December 1994, one of the
++cheapest CD-ROM drives was a Philips cm206, a double-speed proprietary
++drive. In the months that I was busy writing a Linux driver for it,
++proprietary drives became obsolete and IDE/ATAPI drives became the
++standard. At the time of the last update to this document (November
++1997) it is becoming difficult to even **find** anything less than a
++16 speed CD-ROM drive, and 24 speed drives are common.
++
++.. _cdrom_api:
++
++Standardizing through another software level
++============================================
++
++At the time this document was conceived, all drivers directly
++implemented the CD-ROM *ioctl()* calls through their own routines. This
++led to the danger of different drivers forgetting to do important things
++like checking that the user was giving the driver valid data. More
++importantly, this led to the divergence of behavior, which has already
++been discussed.
++
++For this reason, the Uniform CD-ROM Driver was created to enforce consistent
++CD-ROM drive behavior, and to provide a common set of services to the various
++low-level CD-ROM device drivers. The Uniform CD-ROM Driver now provides another
++software-level, that separates the *ioctl()* and *open()* implementation
++from the actual hardware implementation. Note that this effort has
++made few changes which will affect a user's application programs. The
++greatest change involved moving the contents of the various low-level
++CD-ROM drivers\' header files to the kernel's cdrom directory. This was
++done to help ensure that the user is only presented with only one cdrom
++interface, the interface defined in `cdrom.h`.
++
++CD-ROM drives are specific enough (i. e., different from other
++block-devices such as floppy or hard disc drives), to define a set
++of common **CD-ROM device operations**, *<cdrom-device>_dops*.
++These operations are different from the classical block-device file
++operations, *<block-device>_fops*.
++
++The routines for the Uniform CD-ROM Driver interface level are implemented
++in the file `cdrom.c`. In this file, the Uniform CD-ROM Driver interfaces
++with the kernel as a block device by registering the following general
++*struct file_operations*::
++
++	struct file_operations cdrom_fops = {
++		NULL,			/∗ lseek ∗/
++		block _read ,		/∗ read—general block-dev read ∗/
++		block _write,		/∗ write—general block-dev write ∗/
++		NULL,			/∗ readdir ∗/
++		NULL,			/∗ select ∗/
++		cdrom_ioctl,		/∗ ioctl ∗/
++		NULL,			/∗ mmap ∗/
++		cdrom_open,		/∗ open ∗/
++		cdrom_release,		/∗ release ∗/
++		NULL,			/∗ fsync ∗/
++		NULL,			/∗ fasync ∗/
++		cdrom_media_changed,	/∗ media change ∗/
++		NULL			/∗ revalidate ∗/
++	};
++
++Every active CD-ROM device shares this *struct*. The routines
++declared above are all implemented in `cdrom.c`, since this file is the
++place where the behavior of all CD-ROM-devices is defined and
++standardized. The actual interface to the various types of CD-ROM
++hardware is still performed by various low-level CD-ROM-device
++drivers. These routines simply implement certain **capabilities**
++that are common to all CD-ROM (and really, all removable-media
++devices).
++
++Registration of a low-level CD-ROM device driver is now done through
++the general routines in `cdrom.c`, not through the Virtual File System
++(VFS) any more. The interface implemented in `cdrom.c` is carried out
++through two general structures that contain information about the
++capabilities of the driver, and the specific drives on which the
++driver operates. The structures are:
++
++cdrom_device_ops
++  This structure contains information about the low-level driver for a
++  CD-ROM device. This structure is conceptually connected to the major
++  number of the device (although some drivers may have different
++  major numbers, as is the case for the IDE driver).
++
++cdrom_device_info
++  This structure contains information about a particular CD-ROM drive,
++  such as its device name, speed, etc. This structure is conceptually
++  connected to the minor number of the device.
++
++Registering a particular CD-ROM drive with the Uniform CD-ROM Driver
++is done by the low-level device driver though a call to::
++
++	register_cdrom(struct cdrom_device_info * <device>_info)
++
++The device information structure, *<device>_info*, contains all the
++information needed for the kernel to interface with the low-level
++CD-ROM device driver. One of the most important entries in this
++structure is a pointer to the *cdrom_device_ops* structure of the
++low-level driver.
++
++The device operations structure, *cdrom_device_ops*, contains a list
++of pointers to the functions which are implemented in the low-level
++device driver. When `cdrom.c` accesses a CD-ROM device, it does it
++through the functions in this structure. It is impossible to know all
++the capabilities of future CD-ROM drives, so it is expected that this
++list may need to be expanded from time to time as new technologies are
++developed. For example, CD-R and CD-R/W drives are beginning to become
++popular, and support will soon need to be added for them. For now, the
++current *struct* is::
++
++	struct cdrom_device_ops {
++		int (*open)(struct cdrom_device_info *, int)
++		void (*release)(struct cdrom_device_info *);
++		int (*drive_status)(struct cdrom_device_info *, int);
++		unsigned int (*check_events)(struct cdrom_device_info *,
++					     unsigned int, int);
++		int (*media_changed)(struct cdrom_device_info *, int);
++		int (*tray_move)(struct cdrom_device_info *, int);
++		int (*lock_door)(struct cdrom_device_info *, int);
++		int (*select_speed)(struct cdrom_device_info *, int);
++		int (*select_disc)(struct cdrom_device_info *, int);
++		int (*get_last_session) (struct cdrom_device_info *,
++					 struct cdrom_multisession *);
++		int (*get_mcn)(struct cdrom_device_info *, struct cdrom_mcn *);
++		int (*reset)(struct cdrom_device_info *);
++		int (*audio_ioctl)(struct cdrom_device_info *,
++				   unsigned int, void *);
++		const int capability;		/* capability flags */
++		int (*generic_packet)(struct cdrom_device_info *,
++				      struct packet_command *);
++	};
++
++When a low-level device driver implements one of these capabilities,
++it should add a function pointer to this *struct*. When a particular
++function is not implemented, however, this *struct* should contain a
++NULL instead. The *capability* flags specify the capabilities of the
++CD-ROM hardware and/or low-level CD-ROM driver when a CD-ROM drive
++is registered with the Uniform CD-ROM Driver.
++
++Note that most functions have fewer parameters than their
++*blkdev_fops* counterparts. This is because very little of the
++information in the structures *inode* and *file* is used. For most
++drivers, the main parameter is the *struct* *cdrom_device_info*, from
++which the major and minor number can be extracted. (Most low-level
++CD-ROM drivers don't even look at the major and minor number though,
++since many of them only support one device.) This will be available
++through *dev* in *cdrom_device_info* described below.
++
++The drive-specific, minor-like information that is registered with
++`cdrom.c`, currently contains the following fields::
++
++  struct cdrom_device_info {
++	const struct cdrom_device_ops * ops; 	/* device operations for this major */
++	struct list_head list;			/* linked list of all device_info */
++	struct gendisk * disk;			/* matching block layer disk */
++	void *  handle;				/* driver-dependent data */
++
++	int mask; 				/* mask of capability: disables them */
++	int speed;				/* maximum speed for reading data */
++	int capacity;				/* number of discs in a jukebox */
++
++	unsigned int options:30;		/* options flags */
++	unsigned mc_flags:2;			/*  media-change buffer flags */
++	unsigned int vfs_events;		/*  cached events for vfs path */
++	unsigned int ioctl_events;		/*  cached events for ioctl path */
++	int use_count;				/*  number of times device is opened */
++	char name[20];				/*  name of the device type */
++
++	__u8 sanyo_slot : 2;			/*  Sanyo 3-CD changer support */
++	__u8 keeplocked : 1;			/*  CDROM_LOCKDOOR status */
++	__u8 reserved : 5;			/*  not used yet */
++	int cdda_method;			/*  see CDDA_* flags */
++	__u8 last_sense;			/*  saves last sense key */
++	__u8 media_written;			/*  dirty flag, DVD+RW bookkeeping */
++	unsigned short mmc3_profile;		/*  current MMC3 profile */
++	int for_data;				/*  unknown:TBD */
++	int (*exit)(struct cdrom_device_info *);/*  unknown:TBD */
++	int mrw_mode_page;			/*  which MRW mode page is in use */
++  };
++
++Using this *struct*, a linked list of the registered minor devices is
++built, using the *next* field. The device number, the device operations
++struct and specifications of properties of the drive are stored in this
++structure.
++
++The *mask* flags can be used to mask out some of the capabilities listed
++in *ops->capability*, if a specific drive doesn't support a feature
++of the driver. The value *speed* specifies the maximum head-rate of the
++drive, measured in units of normal audio speed (176kB/sec raw data or
++150kB/sec file system data). The parameters are declared *const*
++because they describe properties of the drive, which don't change after
++registration.
++
++A few registers contain variables local to the CD-ROM drive. The
++flags *options* are used to specify how the general CD-ROM routines
++should behave. These various flags registers should provide enough
++flexibility to adapt to the different users' wishes (and **not** the
++`arbitrary` wishes of the author of the low-level device driver, as is
++the case in the old scheme). The register *mc_flags* is used to buffer
++the information from *media_changed()* to two separate queues. Other
++data that is specific to a minor drive, can be accessed through *handle*,
++which can point to a data structure specific to the low-level driver.
++The fields *use_count*, *next*, *options* and *mc_flags* need not be
++initialized.
++
++The intermediate software layer that `cdrom.c` forms will perform some
++additional bookkeeping. The use count of the device (the number of
++processes that have the device opened) is registered in *use_count*. The
++function *cdrom_ioctl()* will verify the appropriate user-memory regions
++for read and write, and in case a location on the CD is transferred,
++it will `sanitize` the format by making requests to the low-level
++drivers in a standard format, and translating all formats between the
++user-software and low level drivers. This relieves much of the drivers'
++memory checking and format checking and translation. Also, the necessary
++structures will be declared on the program stack.
++
++The implementation of the functions should be as defined in the
++following sections. Two functions **must** be implemented, namely
++*open()* and *release()*. Other functions may be omitted, their
++corresponding capability flags will be cleared upon registration.
++Generally, a function returns zero on success and negative on error. A
++function call should return only after the command has completed, but of
++course waiting for the device should not use processor time.
++
 +::
 +
-+  $ ls -lR  /sys/devices/system/cpu/cpu0/acpi_cppc/
-+  /sys/devices/system/cpu/cpu0/acpi_cppc/:
-+  total 0
-+  -r--r--r-- 1 root root 65536 Mar  5 19:38 feedback_ctrs
-+  -r--r--r-- 1 root root 65536 Mar  5 19:38 highest_perf
-+  -r--r--r-- 1 root root 65536 Mar  5 19:38 lowest_freq
-+  -r--r--r-- 1 root root 65536 Mar  5 19:38 lowest_nonlinear_perf
-+  -r--r--r-- 1 root root 65536 Mar  5 19:38 lowest_perf
-+  -r--r--r-- 1 root root 65536 Mar  5 19:38 nominal_freq
-+  -r--r--r-- 1 root root 65536 Mar  5 19:38 nominal_perf
-+  -r--r--r-- 1 root root 65536 Mar  5 19:38 reference_perf
-+  -r--r--r-- 1 root root 65536 Mar  5 19:38 wraparound_time
- 
- --------------------------------------------------------------------------------
- 
-@@ -54,16 +57,17 @@ total 0
- 
- --------------------------------------------------------------------------------
- 
--		Computing Average Delivered Performance
-+Computing Average Delivered Performance
-+=======================================
- 
- Below describes the steps to compute the average performance delivered by taking
--two different snapshots of feedback counters at time T1 and T2.
-+two different snapshots of feedback counters at time T1 and T2::
- 
--T1: Read feedback_ctrs as fbc_t1
--    Wait or run some workload
--T2: Read feedback_ctrs as fbc_t2
-+  T1: Read feedback_ctrs as fbc_t1
-+      Wait or run some workload
-+  T2: Read feedback_ctrs as fbc_t2
- 
--delivered_counter_delta = fbc_t2[del] - fbc_t1[del]
--reference_counter_delta = fbc_t2[ref] - fbc_t1[ref]
-+  delivered_counter_delta = fbc_t2[del] - fbc_t1[del]
-+  reference_counter_delta = fbc_t2[ref] - fbc_t1[ref]
- 
--delivered_perf = (refernce_perf x delivered_counter_delta) / reference_counter_delta
-+  delivered_perf = (refernce_perf x delivered_counter_delta) / reference_counter_delta
-diff --git a/Documentation/acpi/debug.txt b/Documentation/acpi/debug.txt
-index 65bf47c46b6d..259a12a1e6a9 100644
---- a/Documentation/acpi/debug.txt
-+++ b/Documentation/acpi/debug.txt
-@@ -1,4 +1,6 @@
--			ACPI Debug Output
-+=================
-+ACPI Debug Output
-+=================
- 
- 
- The ACPI CA, the Linux ACPI core, and some ACPI drivers can generate debug
-@@ -33,7 +35,7 @@ to /sys/module/acpi/parameters/debug_layer.
- 
- The possible components are defined in include/acpi/acoutput.h and
- include/acpi/acpi_drivers.h.  Reading /sys/module/acpi/parameters/debug_layer
--shows the supported mask values, currently these:
-+shows the supported mask values, currently these::
- 
-     ACPI_UTILITIES                  0x00000001
-     ACPI_HARDWARE                   0x00000002
-@@ -81,7 +83,7 @@ to /sys/module/acpi/parameters/debug_level.
- 
- The possible levels are defined in include/acpi/acoutput.h.  Reading
- /sys/module/acpi/parameters/debug_level shows the supported mask values,
--currently these:
-+currently these::
- 
-     ACPI_LV_INIT                    0x00000001
-     ACPI_LV_DEBUG_OBJECT            0x00000002
-@@ -115,7 +117,7 @@ currently these:
- Examples
- --------
- 
--For example, drivers/acpi/bus.c contains this:
-+For example, drivers/acpi/bus.c contains this::
- 
-     #define _COMPONENT              ACPI_BUS_COMPONENT
-     ...
-@@ -127,22 +129,22 @@ statement uses ACPI_DB_INFO, which is macro based on the ACPI_LV_INFO
- definition.)
- 
- Enable all AML "Debug" output (stores to the Debug object while interpreting
--AML) during boot:
-+AML) during boot::
- 
-     acpi.debug_layer=0xffffffff acpi.debug_level=0x2
- 
--Enable PCI and PCI interrupt routing debug messages:
-+Enable PCI and PCI interrupt routing debug messages::
- 
-     acpi.debug_layer=0x400000 acpi.debug_level=0x4
- 
--Enable all ACPI hardware-related messages:
-+Enable all ACPI hardware-related messages::
- 
-     acpi.debug_layer=0x2 acpi.debug_level=0xffffffff
- 
--Enable all ACPI_DB_INFO messages after boot:
-+Enable all ACPI_DB_INFO messages after boot::
- 
-     # echo 0x4 > /sys/module/acpi/parameters/debug_level
- 
--Show all valid component values:
-+Show all valid component values::
- 
-     # cat /sys/module/acpi/parameters/debug_layer
-diff --git a/Documentation/acpi/dsd/data-node-references.txt b/Documentation/acpi/dsd/data-node-references.txt
-index c3871565c8cf..9ccd02bf060c 100644
---- a/Documentation/acpi/dsd/data-node-references.txt
-+++ b/Documentation/acpi/dsd/data-node-references.txt
-@@ -1,4 +1,9 @@
-+====================
-+Data Node References
-+====================
++	int open(struct cdrom_device_info *cdi, int purpose)
 +
- Copyright (C) 2018 Intel Corporation
++*Open()* should try to open the device for a specific *purpose*, which
++can be either:
 +
- Author: Sakari Ailus <sakari.ailus@linux.intel.com>
- 
- 
-@@ -30,6 +35,8 @@ extension key.
- Example
- -------
- 
++- Open for reading data, as done by `mount()` (2), or the
++  user commands `dd` or `cat`.
++- Open for *ioctl* commands, as done by audio-CD playing programs.
++
++Notice that any strategic code (closing tray upon *open()*, etc.) is
++done by the calling routine in `cdrom.c`, so the low-level routine
++should only be concerned with proper initialization, such as spinning
++up the disc, etc.
++
 +::
 +
- 	In the ASL snippet below, the "reference" _DSD property [2] contains a
- 	device object reference to DEV0 and under that device object, a
- 	hierarchical data extension key "node@1" referring to the NOD1 object
-@@ -81,9 +88,9 @@ References
- ----------
- 
- [1] Hierarchical Data Extension UUID For _DSD.
--    <URL:http://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-data-extension-UUID-v1.1.pdf>,
-+    http://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-data-extension-UUID-v1.1.pdf,
-     referenced 2018-07-17.
- 
- [2] Device Properties UUID For _DSD.
--    <URL:http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf>,
-+    http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf,
-     referenced 2016-10-04.
-diff --git a/Documentation/acpi/dsd/graph.txt b/Documentation/acpi/dsd/graph.txt
-index b9ce910781dc..618deddcf512 100644
---- a/Documentation/acpi/dsd/graph.txt
-+++ b/Documentation/acpi/dsd/graph.txt
-@@ -1,4 +1,6 @@
-+======
- Graphs
-+======
- 
- 
- _DSD
-@@ -40,7 +42,7 @@ All port nodes are located under the device's "_DSD" node in the hierarchical
- data extension tree. The data extension related to each port node must begin
- with "port" and must be followed by the "@" character and the number of the port
- as its key. The target object it refers to should be called "PRTX", where "X" is
--the number of the port. An example of such a package would be:
-+the number of the port. An example of such a package would be::
- 
-     Package() { "port@4", PRT4 }
- 
-@@ -49,7 +51,7 @@ data extension key of the endpoint nodes must begin with
- "endpoint" and must be followed by the "@" character and the number of the
- endpoint. The object it refers to should be called "EPXY", where "X" is the
- number of the port and "Y" is the number of the endpoint. An example of such a
--package would be:
-+package would be::
- 
-     Package() { "endpoint@0", EP40 }
- 
-@@ -65,7 +67,7 @@ The endpoint reference uses property extension with "remote-endpoint" property
- name followed by a reference in the same package. Such references consist of the
- the remote device reference, the first package entry of the port data extension
- reference under the device and finally the first package entry of the endpoint
--data extension reference under the port. Individual references thus appear as:
-+data extension reference under the port. Individual references thus appear as::
- 
-     Package() { device, "port@X", "endpoint@Y" }
- 
-@@ -75,7 +77,7 @@ endpoint.
- The references to endpoints must be always done both ways, to the
- remote endpoint and back from the referred remote endpoint node.
- 
--A simple example of this is show below:
-+A simple example of this is show below::
- 
-     Scope (\_SB.PCI0.I2C2)
-     {
-@@ -151,23 +153,25 @@ References
- ----------
- 
- [1] _DSD (Device Specific Data) Implementation Guide.
--    <URL:http://www.uefi.org/sites/default/files/resources/_DSD-implementation-guide-toplevel-1_1.htm>,
-+    http://www.uefi.org/sites/default/files/resources/_DSD-implementation-guide-toplevel-1_1.htm,
-     referenced 2016-10-03.
- 
--[2] Devicetree. <URL:http://www.devicetree.org>, referenced 2016-10-03.
-+[2] Devicetree.
-+    http://www.devicetree.org, referenced 2016-10-03.
- 
--[3] Documentation/devicetree/bindings/graph.txt
-+[3] Linux Kernel device tree graph rules.
-+    Documentation/devicetree/bindings/graph.txt
- 
- [4] Device Properties UUID For _DSD.
--    <URL:http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf>,
-+    http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf,
-     referenced 2016-10-04.
- 
- [5] Hierarchical Data Extension UUID For _DSD.
--    <URL:http://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-data-extension-UUID-v1.1.pdf>,
-+    URL:http://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-data-extension-UUID-v1.1.pdf,
-     referenced 2016-10-04.
- 
- [6] Advanced Configuration and Power Interface Specification.
--    <URL:http://www.uefi.org/sites/default/files/resources/ACPI_6_1.pdf>,
-+    http://www.uefi.org/sites/default/files/resources/ACPI_6_1.pdf,
-     referenced 2016-10-04.
- 
- [7] _DSD Device Properties Usage Rules.
-diff --git a/Documentation/acpi/dsd/leds.txt b/Documentation/acpi/dsd/leds.txt
-index 81a63af42ed2..82ccd5cfb1fd 100644
---- a/Documentation/acpi/dsd/leds.txt
-+++ b/Documentation/acpi/dsd/leds.txt
-@@ -1,4 +1,6 @@
-+========================================
- Describing and referring to LEDs in ACPI
-+========================================
- 
- Individual LEDs are described by hierarchical data extension [6] nodes under the
- device node, the LED driver chip. The "reg" property in the LED specific nodes
-@@ -26,7 +28,7 @@ followed by the referred object name. That object shall be named "LED" followed
- by the number of the LED.
- 
- An ASL example of a camera sensor device and a LED driver device for two LEDs.
--Objects not relevant for LEDs or the references to them have been omitted.
-+Objects not relevant for LEDs or the references to them have been omitted::
- 
- 	Device (LED)
- 	{
-@@ -72,10 +74,14 @@ Objects not relevant for LEDs or the references to them have been omitted.
- 
- where
- 
--	LED	LED driver device
--	LED0	First LED
--	LED1	Second LED
--	SEN	Camera sensor device (or another device the LED is
-+	LED
-+		LED driver device
-+	LED0
-+		First LED
-+	LED1
-+		Second LED
-+	SEN
-+		Camera sensor device (or another device the LED is
- 		related to)
- 
- [1] Device tree. <URL:http://www.devicetree.org>, referenced 2019-02-21.
-@@ -96,4 +102,4 @@ where
-     <URL:http://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-data-extension-UUID-v1.1.pdf>,
-     referenced 2019-02-21.
- 
--[7] Documentation/acpi/dsd/data-node-reference.txt
-+[7] Documentation/acpi/dsd/data-node-references.txt
-diff --git a/Documentation/acpi/dsdt-override.txt b/Documentation/acpi/dsdt-override.txt
-index 784841caa6e6..d483b1957be1 100644
---- a/Documentation/acpi/dsdt-override.txt
-+++ b/Documentation/acpi/dsdt-override.txt
-@@ -1,4 +1,6 @@
--Linux supports a method of overriding the BIOS DSDT:
-+===================================================
-+Linux supports a method of overriding the BIOS DSDT
-+===================================================
- 
- CONFIG_ACPI_CUSTOM_DSDT builds the image into the kernel.
- 
-diff --git a/Documentation/acpi/enumeration.txt b/Documentation/acpi/enumeration.txt
-index 1395b844649c..5b740fb9054b 100644
---- a/Documentation/acpi/enumeration.txt
-+++ b/Documentation/acpi/enumeration.txt
-@@ -1,5 +1,7 @@
-+=============================
- ACPI based device enumeration
--~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
-+=============================
++	void release(struct cdrom_device_info *cdi)
 +
- ACPI 5 introduced a set of new resources (UartTSerialBus, I2cSerialBus,
- SpiSerialBus, GpioIo and GpioInt) which can be used in enumerating slave
- devices behind serial bus controllers.
-@@ -11,10 +13,10 @@ that are accessed through memory-mapped registers.
- In order to support this and re-use the existing drivers as much as
- possible we decided to do following:
- 
--	o Devices that have no bus connector resource are represented as
-+	- Devices that have no bus connector resource are represented as
- 	  platform devices.
- 
--	o Devices behind real busses where there is a connector resource
-+	- Devices behind real busses where there is a connector resource
- 	  are represented as struct spi_device or struct i2c_device
- 	  (standard UARTs are not busses so there is no struct uart_device).
- 
-@@ -39,7 +41,7 @@ some other non-ACPI platform, the driver might work out of the box or needs
- some minor changes.
- 
- Adding ACPI support for an existing driver should be pretty
--straightforward. Here is the simplest example:
-+straightforward. Here is the simplest example::
- 
- 	#ifdef CONFIG_ACPI
- 	static const struct acpi_device_id mydrv_acpi_match[] = {
-@@ -66,7 +68,7 @@ DMA controllers enumerated via ACPI should be registered in the system to
- provide generic access to their resources. For example, a driver that would
- like to be accessible to slave devices via generic API call
- dma_request_slave_channel() must register itself at the end of the probe
--function like this:
-+function like this::
- 
- 	err = devm_acpi_dma_controller_register(dev, xlate_func, dw);
- 	/* Handle the error if it's not a case of !CONFIG_ACPI */
-@@ -74,7 +76,7 @@ function like this:
- and implement custom xlate function if needed (usually acpi_dma_simple_xlate()
- is enough) which converts the FixedDMA resource provided by struct
- acpi_dma_spec into the corresponding DMA channel. A piece of code for that case
--could look like:
-+could look like::
- 
- 	#ifdef CONFIG_ACPI
- 	struct filter_args {
-@@ -114,7 +116,7 @@ provided by struct acpi_dma.
- Clients must call dma_request_slave_channel() with the string parameter that
- corresponds to a specific FixedDMA resource. By default "tx" means the first
- entry of the FixedDMA resource array, "rx" means the second entry. The table
--below shows a layout:
-+below shows a layout::
- 
- 	Device (I2C0)
- 	{
-@@ -143,7 +145,7 @@ Slave devices behind SPI bus have SpiSerialBus resource attached to them.
- This is extracted automatically by the SPI core and the slave devices are
- enumerated once spi_register_master() is called by the bus driver.
- 
--Here is what the ACPI namespace for a SPI slave might look like:
-+Here is what the ACPI namespace for a SPI slave might look like::
- 
- 	Device (EEP0)
- 	{
-@@ -163,7 +165,7 @@ Here is what the ACPI namespace for a SPI slave might look like:
- 
- The SPI device drivers only need to add ACPI IDs in a similar way than with
- the platform device drivers. Below is an example where we add ACPI support
--to at25 SPI eeprom driver (this is meant for the above ACPI snippet):
-+to at25 SPI eeprom driver (this is meant for the above ACPI snippet)::
- 
- 	#ifdef CONFIG_ACPI
- 	static const struct acpi_device_id at25_acpi_match[] = {
-@@ -182,7 +184,7 @@ to at25 SPI eeprom driver (this is meant for the above ACPI snippet):
- 
- Note that this driver actually needs more information like page size of the
- eeprom etc. but at the time writing this there is no standard way of
--passing those. One idea is to return this in _DSM method like:
-+passing those. One idea is to return this in _DSM method like::
- 
- 	Device (EEP0)
- 	{
-@@ -202,7 +204,7 @@ passing those. One idea is to return this in _DSM method like:
- 		}
- 
- Then the at25 SPI driver can get this configuration by calling _DSM on its
--ACPI handle like:
-+ACPI handle like::
- 
- 	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
- 	struct acpi_object_list input;
-@@ -227,7 +229,7 @@ any slave devices behind the controller device once the adapter is
- registered.
- 
- Below is an example of how to add ACPI support to the existing mpu3050
--input driver:
-+input driver::
- 
- 	#ifdef CONFIG_ACPI
- 	static const struct acpi_device_id mpu3050_acpi_match[] = {
-@@ -257,10 +259,10 @@ and GpioInt. These resources can be used to pass GPIO numbers used by
- the device to the driver. ACPI 5.1 extended this with _DSD (Device
- Specific Data) which made it possible to name the GPIOs among other things.
- 
--For example:
-+For example::
- 
--Device (DEV)
--{
-+  Device (DEV)
-+  {
- 	Method (_CRS, 0, NotSerialized)
- 	{
- 		Name (SBUF, ResourceTemplate()
-@@ -310,7 +312,7 @@ There is a standard GPIO API for that and is documented in
- Documentation/gpio/.
- 
- In the above example we can get the corresponding two GPIO descriptors with
--a code like this:
-+a code like this::
- 
- 	#include <linux/gpio/consumer.h>
- 	...
-@@ -340,15 +342,15 @@ devices there needs to be an ACPI handle that they can use to reference
- parts of the ACPI namespace that relate to them. In the Linux MFD subsystem
- we provide two ways:
- 
--	o The children share the parent ACPI handle.
--	o The MFD cell can specify the ACPI id of the device.
-+	- The children share the parent ACPI handle.
-+	- The MFD cell can specify the ACPI id of the device.
- 
- For the first case, the MFD drivers do not need to do anything. The
- resulting child platform device will have its ACPI_COMPANION() set to point
- to the parent device.
- 
- If the ACPI namespace has a device that we can match using an ACPI id or ACPI
--adr, the cell should be set like:
-+adr, the cell should be set like::
- 
- 	static struct mfd_cell_acpi_match my_subdevice_cell_acpi_match = {
- 		.pnpid = "XYZ0001",
-@@ -412,7 +414,7 @@ will be enumerated to depends on the device ID returned by _HID.
- 
- For example, the following ACPI sample might be used to enumerate an lm75-type
- I2C temperature sensor and match it to the driver using the Device Tree
--namespace link:
-+namespace link::
- 
- 	Device (TMP0)
- 	{
-diff --git a/Documentation/acpi/gpio-properties.txt b/Documentation/acpi/gpio-properties.txt
-index 88c65cb5bf0a..d8ba7a06db73 100644
---- a/Documentation/acpi/gpio-properties.txt
-+++ b/Documentation/acpi/gpio-properties.txt
-@@ -1,5 +1,6 @@
-+======================================
- _DSD Device Properties Related to GPIO
----------------------------------------
-+======================================
- 
- With the release of ACPI 5.1, the _DSD configuration object finally
- allows names to be given to GPIOs (and other things as well) returned
-@@ -8,7 +9,7 @@ the corresponding GPIO, which is pretty error prone (it depends on
- the _CRS output ordering, for example).
- 
- With _DSD we can now query GPIOs using a name instead of an integer
--index, like the ASL example below shows:
-+index, like the ASL example below shows::
- 
-   // Bluetooth device with reset and shutdown GPIOs
-   Device (BTH)
-@@ -34,7 +35,7 @@ index, like the ASL example below shows:
-       })
-   }
- 
--The format of the supported GPIO property is:
-+The format of the supported GPIO property is::
- 
-   Package () { "name", Package () { ref, index, pin, active_low }}
- 
-@@ -55,7 +56,7 @@ It is possible to leave holes in the array of GPIOs. This is useful in
- cases like with SPI host controllers where some chip selects may be
- implemented as GPIOs and some as native signals. For example a SPI host
- controller can have chip selects 0 and 2 implemented as GPIOs and 1 as
--native:
-+native::
- 
-   Package () {
-       "cs-gpios",
-@@ -78,7 +79,7 @@ _DSD device properties for GPIO controllers:
- - input
- - line-name
- 
--Example:
-+Example::
- 
-   Name (_DSD, Package () {
-       // _DSD Hierarchical Properties Extension UUID
-@@ -100,7 +101,7 @@ Example:
- 
- - gpio-line-names
- 
--Example:
-+Example::
- 
-   Package () {
-       "gpio-line-names",
-@@ -139,16 +140,16 @@ line in that resource starting from zero, and the active-low flag for that line,
- respectively, in analogy with the _DSD GPIO property format specified above.
- 
- For the example Bluetooth device discussed previously the data structures in
--question would look like this:
-+question would look like this::
- 
--static const struct acpi_gpio_params reset_gpio = { 1, 1, false };
--static const struct acpi_gpio_params shutdown_gpio = { 0, 0, false };
-+  static const struct acpi_gpio_params reset_gpio = { 1, 1, false };
-+  static const struct acpi_gpio_params shutdown_gpio = { 0, 0, false };
- 
--static const struct acpi_gpio_mapping bluetooth_acpi_gpios[] = {
--  { "reset-gpios", &reset_gpio, 1 },
--  { "shutdown-gpios", &shutdown_gpio, 1 },
--  { },
--};
-+  static const struct acpi_gpio_mapping bluetooth_acpi_gpios[] = {
-+    { "reset-gpios", &reset_gpio, 1 },
-+    { "shutdown-gpios", &shutdown_gpio, 1 },
-+    { },
-+  };
- 
- Next, the mapping table needs to be passed as the second argument to
- acpi_dev_add_driver_gpios() that will register it with the ACPI device object
-@@ -163,7 +164,7 @@ Using the _CRS fallback
- If a device does not have _DSD or the driver does not create ACPI GPIO
- mapping, the Linux GPIO framework refuses to return any GPIOs. This is
- because the driver does not know what it actually gets. For example if we
--have a device like below:
-+have a device like below::
- 
-   Device (BTH)
-   {
-@@ -177,7 +178,7 @@ have a device like below:
-       })
-   }
- 
--The driver might expect to get the right GPIO when it does:
-+The driver might expect to get the right GPIO when it does::
- 
-   desc = gpiod_get(dev, "reset", GPIOD_OUT_LOW);
- 
-@@ -195,18 +196,21 @@ objects, as listed in the above chapter, of the device in question.
- Getting GPIO descriptor
- -----------------------
- 
--There are two main approaches to get GPIO resource from ACPI:
-+There are two main approaches to get GPIO resource from ACPI::
++Device-specific actions should be taken such as spinning down the device.
++However, strategic actions such as ejection of the tray, or unlocking
++the door, should be left over to the general routine *cdrom_release()*.
++This is the only function returning type *void*.
 +
- 	desc = gpiod_get(dev, connection_id, flags);
- 	desc = gpiod_get_index(dev, connection_id, index, flags);
- 
- We may consider two different cases here, i.e. when connection ID is
- provided and otherwise.
- 
--Case 1:
-+Case 1::
++.. _cdrom_drive_status:
 +
- 	desc = gpiod_get(dev, "non-null-connection-id", flags);
- 	desc = gpiod_get_index(dev, "non-null-connection-id", index, flags);
- 
--Case 2:
-+Case 2::
++::
 +
- 	desc = gpiod_get(dev, NULL, flags);
- 	desc = gpiod_get_index(dev, NULL, index, flags);
- 
-diff --git a/Documentation/acpi/i2c-muxes.txt b/Documentation/acpi/i2c-muxes.txt
-index 9fcc4f0b885e..5481cf1ad272 100644
---- a/Documentation/acpi/i2c-muxes.txt
-+++ b/Documentation/acpi/i2c-muxes.txt
-@@ -1,20 +1,21 @@
-+==============
- ACPI I2C Muxes
----------------
-+==============
- 
- Describing an I2C device hierarchy that includes I2C muxes requires an ACPI
- Device () scope per mux channel.
- 
--Consider this topology:
-+Consider this topology::
- 
--+------+   +------+
--| SMB1 |-->| MUX0 |--CH00--> i2c client A (0x50)
--|      |   | 0x70 |--CH01--> i2c client B (0x50)
--+------+   +------+
-+  +------+   +------+
-+  | SMB1 |-->| MUX0 |--CH00--> i2c client A (0x50)
-+  |      |   | 0x70 |--CH01--> i2c client B (0x50)
-+  +------+   +------+
- 
--which corresponds to the following ASL:
-+which corresponds to the following ASL::
- 
--Device (SMB1)
--{
-+  Device (SMB1)
-+  {
-     Name (_HID, ...)
-     Device (MUX0)
-     {
-@@ -55,4 +56,4 @@ Device (SMB1)
-             }
-         }
-     }
--}
-+  }
-diff --git a/Documentation/acpi/initrd_table_override.txt b/Documentation/acpi/initrd_table_override.txt
-index 30437a6db373..1b89103f810a 100644
---- a/Documentation/acpi/initrd_table_override.txt
-+++ b/Documentation/acpi/initrd_table_override.txt
-@@ -1,3 +1,4 @@
-+================================
- Upgrading ACPI tables via initrd
- ================================
- 
-@@ -19,12 +20,14 @@ ACPI_TABLE_OVERRIDE_VIA_BUILTIN_INITRD should also be true for this
- feature to work.
- 
- For a full list of ACPI tables that can be upgraded/installed, take a look
--at the char *table_sigs[MAX_ACPI_SIGNATURE]; definition in
-+at the `char *table_sigs[MAX_ACPI_SIGNATURE];` definition in
- drivers/acpi/tables.c.
- All ACPI tables iasl (Intel's ACPI compiler and disassembler) knows should
- be overridable, except:
++	int drive_status(struct cdrom_device_info *cdi, int slot_nr)
 +
-    - ACPI_SIG_RSDP (has a signature of 6 bytes)
-    - ACPI_SIG_FACS (does not have an ordinary ACPI table header)
++The function *drive_status*, if implemented, should provide
++information on the status of the drive (not the status of the disc,
++which may or may not be in the drive). If the drive is not a changer,
++*slot_nr* should be ignored. In `cdrom.h` the possibilities are listed::
 +
- Both could get implemented as well.
- 
- 
-@@ -50,47 +53,48 @@ change with not instrumented initrds.
- 3) How does it work
- -------------------
- 
--# Extract the machine's ACPI tables:
--cd /tmp
--acpidump >acpidump
--acpixtract -a acpidump
--# Disassemble, modify and recompile them:
--iasl -d *.dat
--# For example add this statement into a _PRT (PCI Routing Table) function
--# of the DSDT:
--Store("HELLO WORLD", debug)
--# And increase the OEM Revision. For example, before modification:
--DefinitionBlock ("DSDT.aml", "DSDT", 2, "INTEL ", "TEMPLATE", 0x00000000)
--# After modification:
--DefinitionBlock ("DSDT.aml", "DSDT", 2, "INTEL ", "TEMPLATE", 0x00000001)
--iasl -sa dsdt.dsl
--# Add the raw ACPI tables to an uncompressed cpio archive.
--# They must be put into a /kernel/firmware/acpi directory inside the cpio
--# archive. Note that if the table put here matches a platform table
--# (similar Table Signature, and similar OEMID, and similar OEM Table ID)
--# with a more recent OEM Revision, the platform table will be upgraded by
--# this table. If the table put here doesn't match a platform table
--# (dissimilar Table Signature, or dissimilar OEMID, or dissimilar OEM Table
--# ID), this table will be appended.
--mkdir -p kernel/firmware/acpi
--cp dsdt.aml kernel/firmware/acpi
--# A maximum of "NR_ACPI_INITRD_TABLES (64)" tables are currently allowed
--# (see osl.c):
--iasl -sa facp.dsl
--iasl -sa ssdt1.dsl
--cp facp.aml kernel/firmware/acpi
--cp ssdt1.aml kernel/firmware/acpi
--# The uncompressed cpio archive must be the first. Other, typically
--# compressed cpio archives, must be concatenated on top of the uncompressed
--# one. Following command creates the uncompressed cpio archive and
--# concatenates the original initrd on top:
--find kernel | cpio -H newc --create > /boot/instrumented_initrd
--cat /boot/initrd >>/boot/instrumented_initrd
--# reboot with increased acpi debug level, e.g. boot params:
--acpi.debug_level=0x2 acpi.debug_layer=0xFFFFFFFF
--# and check your syslog:
--[    1.268089] ACPI: PCI Interrupt Routing Table [\_SB_.PCI0._PRT]
--[    1.272091] [ACPI Debug]  String [0x0B] "HELLO WORLD"
-+# Extract the machine's ACPI tables::
 +
-+  cd /tmp
-+  acpidump >acpidump
-+  acpixtract -a acpidump
-+  # Disassemble, modify and recompile them:
-+  iasl -d *.dat
-+  # For example add this statement into a _PRT (PCI Routing Table) function
-+  # of the DSDT:
-+  # Store("HELLO WORLD", debug)
-+  # And increase the OEM Revision. For example, before modification:
-+  # DefinitionBlock ("DSDT.aml", "DSDT", 2, "INTEL ", "TEMPLATE", 0x00000000)
-+  # After modification:
-+  # DefinitionBlock ("DSDT.aml", "DSDT", 2, "INTEL ", "TEMPLATE", 0x00000001)
-+  iasl -sa dsdt.dsl
-+  # Add the raw ACPI tables to an uncompressed cpio archive.
-+  # They must be put into a /kernel/firmware/acpi directory inside the cpio
-+  # archive. Note that if the table put here matches a platform table
-+  # (similar Table Signature, and similar OEMID, and similar OEM Table ID)
-+  # with a more recent OEM Revision, the platform table will be upgraded by
-+  # this table. If the table put here doesn't match a platform table
-+  # (dissimilar Table Signature, or dissimilar OEMID, or dissimilar OEM Table
-+  # ID), this table will be appended.
-+  mkdir -p kernel/firmware/acpi
-+  cp dsdt.aml kernel/firmware/acpi
-+  # A maximum of "NR_ACPI_INITRD_TABLES (64)" tables are currently allowed
-+  # (see osl.c):
-+  iasl -sa facp.dsl
-+  iasl -sa ssdt1.dsl
-+  cp facp.aml kernel/firmware/acpi
-+  cp ssdt1.aml kernel/firmware/acpi
-+  # The uncompressed cpio archive must be the first. Other, typically
-+  # compressed cpio archives, must be concatenated on top of the uncompressed
-+  # one. Following command creates the uncompressed cpio archive and
-+  # concatenates the original initrd on top:
-+  find kernel | cpio -H newc --create > /boot/instrumented_initrd
-+  cat /boot/initrd >>/boot/instrumented_initrd
-+  # reboot with increased acpi debug level, e.g. boot params:
-+  acpi.debug_level=0x2 acpi.debug_layer=0xFFFFFFFF
-+  # and check your syslog:
-+  [    1.268089] ACPI: PCI Interrupt Routing Table [\_SB_.PCI0._PRT]
-+  [    1.272091] [ACPI Debug]  String [0x0B] "HELLO WORLD"
- 
- iasl is able to disassemble and recompile quite a lot different,
- also static ACPI tables.
-@@ -106,6 +110,8 @@ on SUSE).
- 
- acpidump can be found in Len Browns pmtools:
- ftp://kernel.org/pub/linux/kernel/people/lenb/acpi/utils/pmtools/acpidump
++	CDS_NO_INFO		/* no information available */
++	CDS_NO_DISC		/* no disc is inserted, tray is closed */
++	CDS_TRAY_OPEN		/* tray is opened */
++	CDS_DRIVE_NOT_READY	/* something is wrong, tray is moving? */
++	CDS_DISC_OK		/* a disc is loaded and everything is fine */
 +
- This tool is also part of the acpica package on SUSE.
++::
 +
- Alternatively, used ACPI tables can be retrieved via sysfs in latest kernels:
- /sys/firmware/acpi/tables
-diff --git a/Documentation/acpi/linuxized-acpica.txt b/Documentation/acpi/linuxized-acpica.txt
-index 3ad7b0dfb083..bb5e7e49e175 100644
---- a/Documentation/acpi/linuxized-acpica.txt
-+++ b/Documentation/acpi/linuxized-acpica.txt
-@@ -1,10 +1,14 @@
-+============================================================
- Linuxized ACPICA - Introduction to ACPICA Release Automation
-+============================================================
- 
- Copyright (C) 2013-2016, Intel Corporation
++	int media_changed(struct cdrom_device_info *cdi, int disc_nr)
 +
- Author: Lv Zheng <lv.zheng@intel.com>
- 
- 
--Abstract:
-+Abstract
-+========
- 
- This document describes the ACPICA project and the relationship between
- ACPICA and Linux.  It also describes how ACPICA code in drivers/acpi/acpica,
-@@ -13,6 +17,7 @@ upstream.
- 
- 
- 1. ACPICA Project
-+=================
- 
-    The ACPI Component Architecture (ACPICA) project provides an operating
-    system (OS)-independent reference implementation of the Advanced
-@@ -25,7 +30,7 @@ upstream.
-    supported by Intel Corporation.
- 
-    The following figure depicts the Linux ACPI subsystem where the ACPICA
--   adaptation is included:
-+   adaptation is included::
- 
-       +---------------------------------------------------------+
-       |                                                         |
-@@ -72,34 +77,43 @@ upstream.
-                  Figure 1. Linux ACPI Software Components
- 
-    NOTE:
++This function is very similar to the original function in $struct
++file_operations*. It returns 1 if the medium of the device *cdi->dev*
++has changed since the last call, and 0 otherwise. The parameter
++*disc_nr* identifies a specific slot in a juke-box, it should be
++ignored for single-disc drives. Note that by `re-routing` this
++function through *cdrom_media_changed()*, we can implement separate
++queues for the VFS and a new *ioctl()* function that can report device
++changes to software (e. g., an auto-mounting daemon).
 +
-     A. OS Service Layer - Provided by Linux to offer OS dependent
--       implementation of the predefined ACPICA interfaces (acpi_os_*).
-+       implementation of the predefined ACPICA interfaces (acpi_os_*)::
++::
 +
-          include/acpi/acpiosxf.h
-          drivers/acpi/osl.c
-          include/acpi/platform
-          include/asm/acenv.h
++	int tray_move(struct cdrom_device_info *cdi, int position)
 +
-     B. ACPICA Functionality - Released from ACPICA code base to offer
--       OS independent implementation of the ACPICA interfaces (acpi_*).
-+       OS independent implementation of the ACPICA interfaces (acpi_*)::
++This function, if implemented, should control the tray movement. (No
++other function should control this.) The parameter *position* controls
++the desired direction of movement:
 +
-          drivers/acpi/acpica
-          include/acpi/ac*.h
-          tools/power/acpi
++- 0 Close tray
++- 1 Open tray
 +
-     C. Linux/ACPI Functionality - Providing Linux specific ACPI
-        functionality to the other Linux kernel subsystems and user space
--       programs.
-+       programs::
++This function returns 0 upon success, and a non-zero value upon
++error. Note that if the tray is already in the desired position, no
++action need be taken, and the return value should be 0.
 +
-          drivers/acpi
-          include/linux/acpi.h
-          include/linux/acpi*.h
-          include/acpi
-          tools/power/acpi
++::
 +
-     D. Architecture Specific ACPICA/ACPI Functionalities - Provided by the
-        ACPI subsystem to offer architecture specific implementation of the
-        ACPI interfaces.  They are Linux specific components and are out of
--       the scope of this document.
-+       the scope of this document::
++	int lock_door(struct cdrom_device_info *cdi, int lock)
 +
-          include/asm/acpi.h
-          include/asm/acpi*.h
-          arch/*/acpi
- 
- 2. ACPICA Release
-+=================
- 
-    The ACPICA project maintains its code base at the following repository URL:
-    https://github.com/acpica/acpica.git. As a rule, a release is made every
-@@ -112,7 +126,7 @@ upstream.
-    copy the ACPICA git repository.  Each commit in the monthly release is
-    converted into a linuxized ACPICA patch.  Together, they form the monthly
-    ACPICA release patchset for the Linux ACPI community.  This process is
--   illustrated in the following figure:
-+   illustrated in the following figure::
- 
-     +-----------------------------+
-     | acpica / master (-) commits |
-@@ -154,6 +168,7 @@ upstream.
-                 Figure 2. ACPICA -> Linux Upstream Process
- 
-    NOTE:
++This function (and no other code) controls locking of the door, if the
++drive allows this. The value of *lock* controls the desired locking
++state:
 +
-     A. Linuxize Utilities - Provided by the ACPICA repository, including a
-        utility located in source/tools/acpisrc folder and a number of
-        scripts located in generate/linux folder.
-@@ -171,6 +186,7 @@ upstream.
-    CONFIG_ACPI/CONFIG_ACPI_DEBUG/CONFIG_ACPI_DEBUGGER
- 
- 3. ACPICA Divergences
-+=====================
- 
-    Ideally, all of the ACPICA commits should be converted into Linux patches
-    automatically without manual modifications, the "linux / master" tree should
-@@ -183,6 +199,7 @@ upstream.
-    "ACPICA Divergences".
- 
-    The various sources of ACPICA divergences include:
++- 0 Unlock door, manual opening is allowed
++- 1 Lock door, tray cannot be ejected manually
 +
-    1. Legacy divergences - Before the current ACPICA release process was
-       established, there already had been divergences between Linux and
-       ACPICA. Over the past several years those divergences have been greatly
-@@ -214,6 +231,7 @@ upstream.
-       divergences are generated.
- 
- 4. ACPICA Development
-+=====================
- 
-    This paragraph guides Linux developers to use the ACPICA upstream release
-    utilities to obtain Linux patches corresponding to upstream ACPICA commits
-@@ -225,11 +243,11 @@ upstream.
-    you want to cherry pick must be committed into the local repository.
- 
-    Then the gen-patch.sh command can help to cherry-pick an ACPICA commit
--   from the ACPICA local repository:
-+   from the ACPICA local repository::
- 
--   $ git clone https://github.com/acpica/acpica
--   $ cd acpica
--   $ generate/linux/gen-patch.sh -u [commit ID]
-+     $ git clone https://github.com/acpica/acpica
-+     $ cd acpica
-+     $ generate/linux/gen-patch.sh -u [commit ID]
- 
-    Here the commit ID is the ACPICA local repository commit ID you want to
-    cherry pick.  It can be omitted if the commit is "HEAD".
-@@ -240,11 +258,11 @@ upstream.
-    changes that haven't been applied to Linux yet.
- 
-    You can generate the ACPICA release series yourself and rebase your code on
--   top of the generated ACPICA release patches:
-+   top of the generated ACPICA release patches::
- 
--   $ git clone https://github.com/acpica/acpica
--   $ cd acpica
--   $ generate/linux/make-patches.sh -u [commit ID]
-+     $ git clone https://github.com/acpica/acpica
-+     $ cd acpica
-+     $ generate/linux/make-patches.sh -u [commit ID]
- 
-    The commit ID should be the last ACPICA commit accepted by Linux.  Usually,
-    it is the commit modifying ACPI_CA_VERSION.  It can be found by executing
-@@ -254,9 +272,9 @@ upstream.
-    3. Inspect the current divergences
- 
-    If you have local copies of both Linux and upstream ACPICA, you can generate
--   a diff file indicating the state of the current divergences:
-+   a diff file indicating the state of the current divergences::
- 
--   # git clone https://github.com/acpica/acpica
--   # git clone http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
--   # cd acpica
--   # generate/linux/divergences.sh -s ../linux
-+     # git clone https://github.com/acpica/acpica
-+     # git clone http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
-+     # cd acpica
-+     # generate/linux/divergences.sh -s ../linux
-diff --git a/Documentation/acpi/lpit.txt b/Documentation/acpi/lpit.txt
-index b426398d2e97..b01c97c6f739 100644
---- a/Documentation/acpi/lpit.txt
-+++ b/Documentation/acpi/lpit.txt
-@@ -1,3 +1,7 @@
-+=====================
-+Low Power Idle states
-+=====================
++This function returns 0 upon success, and a non-zero value upon
++error. Note that if the door is already in the requested state, no
++action need be taken, and the return value should be 0.
 +
- To enumerate platform Low Power Idle states, Intel platforms are using
- “Low Power Idle Table” (LPIT). More details about this table can be
- downloaded from:
-@@ -8,11 +12,13 @@ Residencies for each low power state can be read via FFH
- 
- On platforms supporting S0ix sleep states, there can be two types of
- residencies:
++::
 +
- - CPU PKG C10 (Read via FFH interface)
- - Platform Controller Hub (PCH) SLP_S0 (Read via memory mapped interface)
- 
- The following attributes are added dynamically to the cpuidle
--sysfs attribute group:
-+sysfs attribute group::
++	int select_speed(struct cdrom_device_info *cdi, int speed)
 +
- 	/sys/devices/system/cpu/cpuidle/low_power_idle_cpu_residency_us
- 	/sys/devices/system/cpu/cpuidle/low_power_idle_system_residency_us
- 
-diff --git a/Documentation/acpi/method-customizing.txt b/Documentation/acpi/method-customizing.txt
-index 7235da975f23..4a00a52e69f0 100644
---- a/Documentation/acpi/method-customizing.txt
-+++ b/Documentation/acpi/method-customizing.txt
-@@ -1,3 +1,4 @@
-+=======================================
- Linux ACPI Custom Control Method How To
- =======================================
- 
-@@ -7,47 +8,58 @@ Written by Zhang Rui <rui.zhang@intel.com>
- Linux supports customizing ACPI control methods at runtime.
- 
- Users can use this to
++Some CD-ROM drives are capable of changing their head-speed. There
++are several reasons for changing the speed of a CD-ROM drive. Badly
++pressed CD-ROM s may benefit from less-than-maximum head rate. Modern
++CD-ROM drives can obtain very high head rates (up to *24x* is
++common). It has been reported that these drives can make reading
++errors at these high speeds, reducing the speed can prevent data loss
++in these circumstances. Finally, some of these drives can
++make an annoyingly loud noise, which a lower speed may reduce.
 +
- 1. override an existing method which may not work correctly,
-    or just for debugging purposes.
- 2. insert a completely new method in order to create a missing
-    method such as _OFF, _ON, _STA, _INI, etc.
++This function specifies the speed at which data is read or audio is
++played back. The value of *speed* specifies the head-speed of the
++drive, measured in units of standard cdrom speed (176kB/sec raw data
++or 150kB/sec file system data). So to request that a CD-ROM drive
++operate at 300kB/sec you would call the CDROM_SELECT_SPEED *ioctl*
++with *speed=2*. The special value `0` means `auto-selection`, i. e.,
++maximum data-rate or real-time audio rate. If the drive doesn't have
++this `auto-selection` capability, the decision should be made on the
++current disc loaded and the return value should be positive. A negative
++return value indicates an error.
 +
- For these cases, it is far simpler to dynamically install a single
- control method rather than override the entire DSDT, because kernel
- rebuild/reboot is not needed and test result can be got in minutes.
- 
--Note: Only ACPI METHOD can be overridden, any other object types like
-+Note:
-+      Only ACPI METHOD can be overridden, any other object types like
-       "Device", "OperationRegion", are not recognized. Methods
-       declared inside scope operators are also not supported.
--Note: The same ACPI control method can be overridden for many times,
-+Note:
-+      The same ACPI control method can be overridden for many times,
-       and it's always the latest one that used by Linux/kernel.
--Note: To get the ACPI debug object output (Store (AAAA, Debug)),
-+Note:
-+      To get the ACPI debug object output (Store (AAAA, Debug)),
-       please run "echo 1 > /sys/module/acpi/parameters/aml_debug_output".
- 
- 1. override an existing method
++::
 +
-    a) get the ACPI table via ACPI sysfs I/F. e.g. to get the DSDT,
-       just run "cat /sys/firmware/acpi/tables/DSDT > /tmp/dsdt.dat"
-    b) disassemble the table by running "iasl -d dsdt.dat".
-    c) rewrite the ASL code of the method and save it in a new file,
-    d) package the new file (psr.asl) to an ACPI table format.
--      Here is an example of a customized \_SB._AC._PSR method,
-+      Here is an example of a customized \_SB._AC._PSR method::
- 
--      DefinitionBlock ("", "SSDT", 1, "", "", 0x20080715)
--      {
--	Method (\_SB_.AC._PSR, 0, NotSerialized)
--	{
-+        DefinitionBlock ("", "SSDT", 1, "", "", 0x20080715)
-+        {
-+	  Method (\_SB_.AC._PSR, 0, NotSerialized)
-+	  {
- 		Store ("In AC _PSR", Debug)
- 		Return (ACON)
--	}
--      }
-+	  }
-+        }
++	int select_disc(struct cdrom_device_info *cdi, int number)
 +
-       Note that the full pathname of the method in ACPI namespace
-       should be used.
-    e) assemble the file to generate the AML code of the method.
--      e.g. "iasl -vw 6084 psr.asl" (psr.aml is generated as a result)
--      If parameter "-vw 6084" is not supported by your iASL compiler,
-+      e.g. `iasl -vw 6084 psr.asl` (psr.aml is generated as a result)
-+      If parameter `-vw 6084` is not supported by your iASL compiler,
-       please try a newer version.
--   f) mount debugfs by "mount -t debugfs none /sys/kernel/debug"
--   g) override the old method via the debugfs by running
--      "cat /tmp/psr.aml > /sys/kernel/debug/acpi/custom_method"
-+   f) mount debugfs by running::
++If the drive can store multiple discs (a juke-box) this function
++will perform disc selection. It should return the number of the
++selected disc on success, a negative value on error. Currently, only
++the ide-cd driver supports this functionality.
 +
-+	mount -t debugfs none /sys/kernel/debug
++::
 +
-+   g) override the old method via the debugfs by running::
++	int get_last_session(struct cdrom_device_info *cdi,
++			     struct cdrom_multisession *ms_info)
 +
-+	cat /tmp/psr.aml > /sys/kernel/debug/acpi/custom_method
- 
- 2. insert a new method
-    This is easier than overriding an existing method.
-@@ -62,12 +74,14 @@ Note: To get the ACPI debug object output (Store (AAAA, Debug)),
-    and redo step c) ~ g) to override the method with the original one.
- 
- 
--Note: We can use a kernel with multiple custom ACPI method running,
-+Note:
-+      We can use a kernel with multiple custom ACPI method running,
-       But each individual write to debugfs can implement a SINGLE
-       method override. i.e. if we want to insert/override multiple
-       ACPI methods, we need to redo step c) ~ g) for multiple times.
- 
--Note: Be aware that root can mis-use this driver to modify arbitrary
-+Note:
-+      Be aware that root can mis-use this driver to modify arbitrary
-       memory and gain additional rights, if root's privileges got
-       restricted (for example if root is not allowed to load additional
-       modules after boot).
-diff --git a/Documentation/acpi/method-tracing.txt b/Documentation/acpi/method-tracing.txt
-index 0aba14c8f459..779475fecefb 100644
---- a/Documentation/acpi/method-tracing.txt
-+++ b/Documentation/acpi/method-tracing.txt
-@@ -1,15 +1,20 @@
-+=====================
- ACPICA Trace Facility
-+=====================
- 
- Copyright (C) 2015, Intel Corporation
++This function should implement the old corresponding *ioctl()*. For
++device *cdi->dev*, the start of the last session of the current disc
++should be returned in the pointer argument *ms_info*. Note that
++routines in `cdrom.c` have sanitized this argument: its requested
++format will **always** be of the type *CDROM_LBA* (linear block
++addressing mode), whatever the calling software requested. But
++sanitization goes even further: the low-level implementation may
++return the requested information in *CDROM_MSF* format if it wishes so
++(setting the *ms_info->addr_format* field appropriately, of
++course) and the routines in `cdrom.c` will make the transformation if
++necessary. The return value is 0 upon success.
 +
- Author: Lv Zheng <lv.zheng@intel.com>
- 
- 
- Abstract:
-+=========
- 
- This document describes the functions and the interfaces of the method
- tracing facility.
- 
- 1. Functionalities and usage examples:
-+======================================
- 
-    ACPICA provides method tracing capability. And two functions are
-    currently implemented using this capability.
-@@ -31,30 +36,38 @@ tracing facility.
- 
-    The following command examples illustrate the usage of the "log reducer"
-    functionality:
++::
 +
-    a. Filter out the debug layer/level matched logs when control methods
--      are being evaluated:
--      # cd /sys/module/acpi/parameters
--      # echo "0xXXXXXXXX" > trace_debug_layer
--      # echo "0xYYYYYYYY" > trace_debug_level
--      # echo "enable" > trace_state
-+      are being evaluated::
++	int get_mcn(struct cdrom_device_info *cdi,
++		    struct cdrom_mcn *mcn)
 +
-+        # cd /sys/module/acpi/parameters
-+        # echo "0xXXXXXXXX" > trace_debug_layer
-+        # echo "0xYYYYYYYY" > trace_debug_level
-+        # echo "enable" > trace_state
++Some discs carry a `Media Catalog Number` (MCN), also called
++`Universal Product Code` (UPC). This number should reflect the number
++that is generally found in the bar-code on the product. Unfortunately,
++the few discs that carry such a number on the disc don't even use the
++same format. The return argument to this function is a pointer to a
++pre-declared memory region of type *struct cdrom_mcn*. The MCN is
++expected as a 13-character string, terminated by a null-character.
 +
-    b. Filter out the debug layer/level matched logs when the specified
--      control method is being evaluated:
--      # cd /sys/module/acpi/parameters
--      # echo "0xXXXXXXXX" > trace_debug_layer
--      # echo "0xYYYYYYYY" > trace_debug_level
--      # echo "\PPPP.AAAA.TTTT.HHHH" > trace_method_name
--      # echo "method" > /sys/module/acpi/parameters/trace_state
-+      control method is being evaluated::
++::
 +
-+        # cd /sys/module/acpi/parameters
-+        # echo "0xXXXXXXXX" > trace_debug_layer
-+        # echo "0xYYYYYYYY" > trace_debug_level
-+        # echo "\PPPP.AAAA.TTTT.HHHH" > trace_method_name
-+        # echo "method" > /sys/module/acpi/parameters/trace_state
++	int reset(struct cdrom_device_info *cdi)
 +
-    c. Filter out the debug layer/level matched logs when the specified
--      control method is being evaluated for the first time:
--      # cd /sys/module/acpi/parameters
--      # echo "0xXXXXXXXX" > trace_debug_layer
--      # echo "0xYYYYYYYY" > trace_debug_level
--      # echo "\PPPP.AAAA.TTTT.HHHH" > trace_method_name
--      # echo "method-once" > /sys/module/acpi/parameters/trace_state
--   Where:
--      0xXXXXXXXX/0xYYYYYYYY: Refer to Documentation/acpi/debug.txt for
-+      control method is being evaluated for the first time::
++This call should perform a hard-reset on the drive (although in
++circumstances that a hard-reset is necessary, a drive may very well not
++listen to commands anymore). Preferably, control is returned to the
++caller only after the drive has finished resetting. If the drive is no
++longer listening, it may be wise for the underlying low-level cdrom
++driver to time out.
 +
-+        # cd /sys/module/acpi/parameters
-+        # echo "0xXXXXXXXX" > trace_debug_layer
-+        # echo "0xYYYYYYYY" > trace_debug_level
-+        # echo "\PPPP.AAAA.TTTT.HHHH" > trace_method_name
-+        # echo "method-once" > /sys/module/acpi/parameters/trace_state
++::
 +
-+      Where::
++	int audio_ioctl(struct cdrom_device_info *cdi,
++			unsigned int cmd, void *arg)
 +
-+        0xXXXXXXXX/0xYYYYYYYY: Refer to Documentation/acpi/debug.txt for
- 			     possible debug layer/level masking values.
--      \PPPP.AAAA.TTTT.HHHH: Full path of a control method that can be found
-+        \PPPP.AAAA.TTTT.HHHH: Full path of a control method that can be found
- 			    in the ACPI namespace. It needn't be an entry
- 			    of a control method evaluation.
- 
-@@ -63,7 +76,8 @@ tracing facility.
-    There are special log entries added by the method tracing facility at
-    the "trace points" the AML interpreter starts/stops to execute a control
-    method, or an AML opcode. Note that the format of the log entries are
--   subject to change:
-+   subject to change::
++Some of the CD-ROM-\ *ioctl()*\ 's defined in `cdrom.h` can be
++implemented by the routines described above, and hence the function
++*cdrom_ioctl* will use those. However, most *ioctl()*\ 's deal with
++audio-control. We have decided to leave these to be accessed through a
++single function, repeating the arguments *cmd* and *arg*. Note that
++the latter is of type *void*, rather than *unsigned long int*.
++The routine *cdrom_ioctl()* does do some useful things,
++though. It sanitizes the address format type to *CDROM_MSF* (Minutes,
++Seconds, Frames) for all audio calls. It also verifies the memory
++location of *arg*, and reserves stack-memory for the argument. This
++makes implementation of the *audio_ioctl()* much simpler than in the
++old driver scheme. For example, you may look up the function
++*cm206_audio_ioctl()* `cm206.c` that should be updated with
++this documentation.
 +
-      [    0.186427]   exdebug-0398 ex_trace_point        : Method Begin [0xf58394d8:\_SB.PCI0.LPCB.ECOK] execution.
-      [    0.186630]   exdebug-0398 ex_trace_point        : Opcode Begin [0xf5905c88:If] execution.
-      [    0.186820]   exdebug-0398 ex_trace_point        : Opcode Begin [0xf5905cc0:LEqual] execution.
-@@ -87,43 +101,54 @@ tracing facility.
- 
-    The following command examples illustrate the usage of the "AML tracer"
-    functionality:
++An unimplemented ioctl should return *-ENOSYS*, but a harmless request
++(e. g., *CDROMSTART*) may be ignored by returning 0 (success). Other
++errors should be according to the standards, whatever they are. When
++an error is returned by the low-level driver, the Uniform CD-ROM Driver
++tries whenever possible to return the error code to the calling program.
++(We may decide to sanitize the return value in *cdrom_ioctl()* though, in
++order to guarantee a uniform interface to the audio-player software.)
 +
-    a. Filter out the method start/stop "AML tracer" logs when control
--      methods are being evaluated:
--      # cd /sys/module/acpi/parameters
--      # echo "0x80" > trace_debug_layer
--      # echo "0x10" > trace_debug_level
--      # echo "enable" > trace_state
-+      methods are being evaluated::
++::
 +
-+        # cd /sys/module/acpi/parameters
-+        # echo "0x80" > trace_debug_layer
-+        # echo "0x10" > trace_debug_level
-+        # echo "enable" > trace_state
++	int dev_ioctl(struct cdrom_device_info *cdi,
++		      unsigned int cmd, unsigned long arg)
 +
-    b. Filter out the method start/stop "AML tracer" when the specified
--      control method is being evaluated:
--      # cd /sys/module/acpi/parameters
--      # echo "0x80" > trace_debug_layer
--      # echo "0x10" > trace_debug_level
--      # echo "\PPPP.AAAA.TTTT.HHHH" > trace_method_name
--      # echo "method" > trace_state
-+      control method is being evaluated::
++Some *ioctl()'s* seem to be specific to certain CD-ROM drives. That is,
++they are introduced to service some capabilities of certain drives. In
++fact, there are 6 different *ioctl()'s* for reading data, either in some
++particular kind of format, or audio data. Not many drives support
++reading audio tracks as data, I believe this is because of protection
++of copyrights of artists. Moreover, I think that if audio-tracks are
++supported, it should be done through the VFS and not via *ioctl()'s*. A
++problem here could be the fact that audio-frames are 2352 bytes long,
++so either the audio-file-system should ask for 75264 bytes at once
++(the least common multiple of 512 and 2352), or the drivers should
++bend their backs to cope with this incoherence (to which I would be
++opposed). Furthermore, it is very difficult for the hardware to find
++the exact frame boundaries, since there are no synchronization headers
++in audio frames. Once these issues are resolved, this code should be
++standardized in `cdrom.c`.
 +
-+        # cd /sys/module/acpi/parameters
-+        # echo "0x80" > trace_debug_layer
-+        # echo "0x10" > trace_debug_level
-+        # echo "\PPPP.AAAA.TTTT.HHHH" > trace_method_name
-+        # echo "method" > trace_state
++Because there are so many *ioctl()'s* that seem to be introduced to
++satisfy certain drivers [#f2]_, any non-standard *ioctl()*\ s
++are routed through the call *dev_ioctl()*. In principle, `private`
++*ioctl()*\ 's should be numbered after the device's major number, and not
++the general CD-ROM *ioctl* number, `0x53`. Currently the
++non-supported *ioctl()'s* are:
 +
-    c. Filter out the method start/stop "AML tracer" logs when the specified
-       control method is being evaluated for the first time:
--      # cd /sys/module/acpi/parameters
--      # echo "0x80" > trace_debug_layer
--      # echo "0x10" > trace_debug_level
--      # echo "\PPPP.AAAA.TTTT.HHHH" > trace_method_name
--      # echo "method-once" > trace_state
++	CDROMREADMODE1, CDROMREADMODE2, CDROMREADAUDIO, CDROMREADRAW,
++	CDROMREADCOOKED, CDROMSEEK, CDROMPLAY-BLK and CDROM-READALL
 +
-+        # cd /sys/module/acpi/parameters
-+        # echo "0x80" > trace_debug_layer
-+        # echo "0x10" > trace_debug_level
-+        # echo "\PPPP.AAAA.TTTT.HHHH" > trace_method_name
-+        # echo "method-once" > trace_state
++.. [#f2]
 +
-    d. Filter out the method/opcode start/stop "AML tracer" when the
--      specified control method is being evaluated:
--      # cd /sys/module/acpi/parameters
--      # echo "0x80" > trace_debug_layer
--      # echo "0x10" > trace_debug_level
--      # echo "\PPPP.AAAA.TTTT.HHHH" > trace_method_name
--      # echo "opcode" > trace_state
-+      specified control method is being evaluated::
++   Is there software around that actually uses these? I'd be interested!
 +
-+        # cd /sys/module/acpi/parameters
-+        # echo "0x80" > trace_debug_layer
-+        # echo "0x10" > trace_debug_level
-+        # echo "\PPPP.AAAA.TTTT.HHHH" > trace_method_name
-+        # echo "opcode" > trace_state
++.. _cdrom_capabilities:
 +
-    e. Filter out the method/opcode start/stop "AML tracer" when the
--      specified control method is being evaluated for the first time:
--      # cd /sys/module/acpi/parameters
--      # echo "0x80" > trace_debug_layer
--      # echo "0x10" > trace_debug_level
--      # echo "\PPPP.AAAA.TTTT.HHHH" > trace_method_name
--      # echo "opcode-opcode" > trace_state
-+      specified control method is being evaluated for the first time::
++CD-ROM capabilities
++-------------------
 +
-+        # cd /sys/module/acpi/parameters
-+        # echo "0x80" > trace_debug_layer
-+        # echo "0x10" > trace_debug_level
-+        # echo "\PPPP.AAAA.TTTT.HHHH" > trace_method_name
-+        # echo "opcode-opcode" > trace_state
- 
-   Note that all above method tracing facility related module parameters can
--  be used as the boot parameters, for example:
-+  be used as the boot parameters, for example::
++Instead of just implementing some *ioctl* calls, the interface in
++`cdrom.c` supplies the possibility to indicate the **capabilities**
++of a CD-ROM drive. This can be done by ORing any number of
++capability-constants that are defined in `cdrom.h` at the registration
++phase. Currently, the capabilities are any of::
 +
-       acpi.trace_debug_layer=0x80 acpi.trace_debug_level=0x10 \
-       acpi.trace_method_name=\_SB.LID0._LID acpi.trace_state=opcode-once
- 
-@@ -150,9 +175,12 @@ tracing facility.
-    trace_state
- 	The status of the tracing feature.
- 	Users can enable/disable this debug tracing feature by executing
--	the following command:
-+	the following command::
++	CDC_CLOSE_TRAY		/* can close tray by software control */
++	CDC_OPEN_TRAY		/* can open tray */
++	CDC_LOCK		/* can lock and unlock the door */
++	CDC_SELECT_SPEED	/* can select speed, in units of * sim*150 ,kB/s */
++	CDC_SELECT_DISC		/* drive is juke-box */
++	CDC_MULTI_SESSION	/* can read sessions *> rm1* */
++	CDC_MCN			/* can read Media Catalog Number */
++	CDC_MEDIA_CHANGED	/* can report if disc has changed */
++	CDC_PLAY_AUDIO		/* can perform audio-functions (play, pause, etc) */
++	CDC_RESET		/* hard reset device */
++	CDC_IOCTLS		/* driver has non-standard ioctls */
++	CDC_DRIVE_STATUS	/* driver implements drive status */
 +
- 	    # echo string > /sys/module/acpi/parameters/trace_state
++The capability flag is declared *const*, to prevent drivers from
++accidentally tampering with the contents. The capability fags actually
++inform `cdrom.c` of what the driver can do. If the drive found
++by the driver does not have the capability, is can be masked out by
++the *cdrom_device_info* variable *mask*. For instance, the SCSI CD-ROM
++driver has implemented the code for loading and ejecting CD-ROM's, and
++hence its corresponding flags in *capability* will be set. But a SCSI
++CD-ROM drive might be a caddy system, which can't load the tray, and
++hence for this drive the *cdrom_device_info* struct will have set
++the *CDC_CLOSE_TRAY* bit in *mask*.
 +
- 	Where "string" should be one of the following:
++In the file `cdrom.c` you will encounter many constructions of the type::
 +
- 	"disable"
- 	    Disable the method tracing feature.
- 	"enable"
-@@ -180,8 +208,10 @@ tracing facility.
- 	    ACPICA debugging messages matching
- 	    "trace_debug_layer/trace_debug_level" during method/opcode
- 	    execution of "trace_method_name" will be logged only once.
++	if (cdo->capability & ∼cdi->mask & CDC _⟨capability⟩) ...
 +
- 	Note that, the difference between the "enable" and other feature
-         enabling options are:
++There is no *ioctl* to set the mask... The reason is that
++I think it is better to control the **behavior** rather than the
++**capabilities**.
 +
- 	1. When "enable" is specified, since
- 	   "trace_debug_layer/trace_debug_level" shall apply to all control
- 	   method evaluations, after configuring "trace_state" to "enable",
-diff --git a/Documentation/acpi/namespace.txt b/Documentation/acpi/namespace.txt
-index 1860cb3865c6..9a6dca683fbc 100644
---- a/Documentation/acpi/namespace.txt
-+++ b/Documentation/acpi/namespace.txt
-@@ -1,10 +1,14 @@
-+===================================================
- ACPI Device Tree - Representation of ACPI Namespace
-+===================================================
- 
- Copyright (C) 2013, Intel Corporation
++Options
++-------
 +
- Author: Lv Zheng <lv.zheng@intel.com>
- 
- 
- Abstract:
-+=========
- 
- The Linux ACPI subsystem converts ACPI namespace objects into a Linux
- device tree under the /sys/devices/LNXSYSTEM:00 and updates it upon
-@@ -15,12 +19,14 @@ This document illustrates the structure of the ACPI device tree.
- 
- 
- Credit:
-+=======
- 
- Thanks for the help from Zhang Rui <rui.zhang@intel.com> and Rafael J.
- Wysocki <rafael.j.wysocki@intel.com>.
- 
- 
- 1. ACPI Definition Blocks
++A final flag register controls the **behavior** of the CD-ROM
++drives, in order to satisfy different users' wishes, hopefully
++independently of the ideas of the respective author who happened to
++have made the drive's support available to the Linux community. The
++current behavior options are::
++
++	CDO_AUTO_CLOSE	/* try to close tray upon device open() */
++	CDO_AUTO_EJECT	/* try to open tray on last device close() */
++	CDO_USE_FFLAGS	/* use file_pointer->f_flags to indicate purpose for open() */
++	CDO_LOCK	/* try to lock door if device is opened */
++	CDO_CHECK_TYPE	/* ensure disc type is data if opened for data */
++
++The initial value of this register is
++`CDO_AUTO_CLOSE | CDO_USE_FFLAGS | CDO_LOCK`, reflecting my own view on user
++interface and software standards. Before you protest, there are two
++new *ioctl()'s* implemented in `cdrom.c`, that allow you to control the
++behavior by software. These are::
++
++	CDROM_SET_OPTIONS	/* set options specified in (int)arg */
++	CDROM_CLEAR_OPTIONS	/* clear options specified in (int)arg */
++
++One option needs some more explanation: *CDO_USE_FFLAGS*. In the next
++newsection we explain what the need for this option is.
++
++A software package `setcd`, available from the Debian distribution
++and `sunsite.unc.edu`, allows user level control of these flags.
++
++
++The need to know the purpose of opening the CD-ROM device
++=========================================================
++
++Traditionally, Unix devices can be used in two different `modes`,
++either by reading/writing to the device file, or by issuing
++controlling commands to the device, by the device's *ioctl()*
++call. The problem with CD-ROM drives, is that they can be used for
++two entirely different purposes. One is to mount removable
++file systems, CD-ROM's, the other is to play audio CD's. Audio commands
++are implemented entirely through *ioctl()\'s*, presumably because the
++first implementation (SUN?) has been such. In principle there is
++nothing wrong with this, but a good control of the `CD player` demands
++that the device can **always** be opened in order to give the
++*ioctl* commands, regardless of the state the drive is in.
++
++On the other hand, when used as a removable-media disc drive (what the
++original purpose of CD-ROM s is) we would like to make sure that the
++disc drive is ready for operation upon opening the device. In the old
++scheme, some CD-ROM drivers don't do any integrity checking, resulting
++in a number of i/o errors reported by the VFS to the kernel when an
++attempt for mounting a CD-ROM on an empty drive occurs. This is not a
++particularly elegant way to find out that there is no CD-ROM inserted;
++it more-or-less looks like the old IBM-PC trying to read an empty floppy
++drive for a couple of seconds, after which the system complains it
++can't read from it. Nowadays we can **sense** the existence of a
++removable medium in a drive, and we believe we should exploit that
++fact. An integrity check on opening of the device, that verifies the
++availability of a CD-ROM and its correct type (data), would be
++desirable.
++
++These two ways of using a CD-ROM drive, principally for data and
++secondarily for playing audio discs, have different demands for the
++behavior of the *open()* call. Audio use simply wants to open the
++device in order to get a file handle which is needed for issuing
++*ioctl* commands, while data use wants to open for correct and
++reliable data transfer. The only way user programs can indicate what
++their *purpose* of opening the device is, is through the *flags*
++parameter (see `open(2)`). For CD-ROM devices, these flags aren't
++implemented (some drivers implement checking for write-related flags,
++but this is not strictly necessary if the device file has correct
++permission flags). Most option flags simply don't make sense to
++CD-ROM devices: *O_CREAT*, *O_NOCTTY*, *O_TRUNC*, *O_APPEND*, and
++*O_SYNC* have no meaning to a CD-ROM.
++
++We therefore propose to use the flag *O_NONBLOCK* to indicate
++that the device is opened just for issuing *ioctl*
++commands. Strictly, the meaning of *O_NONBLOCK* is that opening and
++subsequent calls to the device don't cause the calling process to
++wait. We could interpret this as don't wait until someone has
++inserted some valid data-CD-ROM. Thus, our proposal of the
++implementation for the *open()* call for CD-ROM s is:
++
++- If no other flags are set than *O_RDONLY*, the device is opened
++  for data transfer, and the return value will be 0 only upon successful
++  initialization of the transfer. The call may even induce some actions
++  on the CD-ROM, such as closing the tray.
++- If the option flag *O_NONBLOCK* is set, opening will always be
++  successful, unless the whole device doesn't exist. The drive will take
++  no actions whatsoever.
++
++And what about standards?
++-------------------------
++
++You might hesitate to accept this proposal as it comes from the
++Linux community, and not from some standardizing institute. What
++about SUN, SGI, HP and all those other Unix and hardware vendors?
++Well, these companies are in the lucky position that they generally
++control both the hardware and software of their supported products,
++and are large enough to set their own standard. They do not have to
++deal with a dozen or more different, competing hardware
++configurations\ [#f3]_.
++
++.. [#f3]
++
++   Incidentally, I think that SUN's approach to mounting CD-ROM s is very
++   good in origin: under Solaris a volume-daemon automatically mounts a
++   newly inserted CD-ROM under `/cdrom/*<volume-name>*`.
++
++   In my opinion they should have pushed this
++   further and have **every** CD-ROM on the local area network be
++   mounted at the similar location, i. e., no matter in which particular
++   machine you insert a CD-ROM, it will always appear at the same
++   position in the directory tree, on every system. When I wanted to
++   implement such a user-program for Linux, I came across the
++   differences in behavior of the various drivers, and the need for an
++   *ioctl* informing about media changes.
++
++We believe that using *O_NONBLOCK* to indicate that a device is being opened
++for *ioctl* commands only can be easily introduced in the Linux
++community. All the CD-player authors will have to be informed, we can
++even send in our own patches to the programs. The use of *O_NONBLOCK*
++has most likely no influence on the behavior of the CD-players on
++other operating systems than Linux. Finally, a user can always revert
++to old behavior by a call to
++*ioctl(file_descriptor, CDROM_CLEAR_OPTIONS, CDO_USE_FFLAGS)*.
++
++The preferred strategy of *open()*
++----------------------------------
++
++The routines in `cdrom.c` are designed in such a way that run-time
++configuration of the behavior of CD-ROM devices (of **any** type)
++can be carried out, by the *CDROM_SET/CLEAR_OPTIONS* *ioctls*. Thus, various
++modes of operation can be set:
++
++`CDO_AUTO_CLOSE | CDO_USE_FFLAGS | CDO_LOCK`
++   This is the default setting. (With *CDO_CHECK_TYPE* it will be better, in
++   the future.) If the device is not yet opened by any other process, and if
++   the device is being opened for data (*O_NONBLOCK* is not set) and the
++   tray is found to be open, an attempt to close the tray is made. Then,
++   it is verified that a disc is in the drive and, if *CDO_CHECK_TYPE* is
++   set, that it contains tracks of type `data mode 1`. Only if all tests
++   are passed is the return value zero. The door is locked to prevent file
++   system corruption. If the drive is opened for audio (*O_NONBLOCK* is
++   set), no actions are taken and a value of 0 will be returned.
++
++`CDO_AUTO_CLOSE | CDO_AUTO_EJECT | CDO_LOCK`
++   This mimics the behavior of the current sbpcd-driver. The option flags are
++   ignored, the tray is closed on the first open, if necessary. Similarly,
++   the tray is opened on the last release, i. e., if a CD-ROM is unmounted,
++   it is automatically ejected, such that the user can replace it.
++
++We hope that these option can convince everybody (both driver
++maintainers and user program developers) to adopt the new CD-ROM
++driver scheme and option flag interpretation.
++
++Description of routines in `cdrom.c`
++====================================
++
++Only a few routines in `cdrom.c` are exported to the drivers. In this
++new section we will discuss these, as well as the functions that `take
++over' the CD-ROM interface to the kernel. The header file belonging
++to `cdrom.c` is called `cdrom.h`. Formerly, some of the contents of this
++file were placed in the file `ucdrom.h`, but this file has now been
++merged back into `cdrom.h`.
++
++::
++
++	struct file_operations cdrom_fops
++
++The contents of this structure were described in cdrom_api_.
++A pointer to this structure is assigned to the *fops* field
++of the *struct gendisk*.
++
++::
++
++	int register_cdrom(struct cdrom_device_info *cdi)
++
++This function is used in about the same way one registers *cdrom_fops*
++with the kernel, the device operations and information structures,
++as described in cdrom_api_, should be registered with the
++Uniform CD-ROM Driver::
++
++	register_cdrom(&<device>_info);
++
++
++This function returns zero upon success, and non-zero upon
++failure. The structure *<device>_info* should have a pointer to the
++driver's *<device>_dops*, as in::
++
++	struct cdrom_device_info <device>_info = {
++		<device>_dops;
++		...
++	}
++
++Note that a driver must have one static structure, *<device>_dops*, while
++it may have as many structures *<device>_info* as there are minor devices
++active. *Register_cdrom()* builds a linked list from these.
++
++
++::
++
++	void unregister_cdrom(struct cdrom_device_info *cdi)
++
++Unregistering device *cdi* with minor number *MINOR(cdi->dev)* removes
++the minor device from the list. If it was the last registered minor for
++the low-level driver, this disconnects the registered device-operation
++routines from the CD-ROM interface. This function returns zero upon
++success, and non-zero upon failure.
++
++::
++
++	int cdrom_open(struct inode * ip, struct file * fp)
++
++This function is not called directly by the low-level drivers, it is
++listed in the standard *cdrom_fops*. If the VFS opens a file, this
++function becomes active. A strategy is implemented in this routine,
++taking care of all capabilities and options that are set in the
++*cdrom_device_ops* connected to the device. Then, the program flow is
++transferred to the device_dependent *open()* call.
++
++::
++
++	void cdrom_release(struct inode *ip, struct file *fp)
++
++This function implements the reverse-logic of *cdrom_open()*, and then
++calls the device-dependent *release()* routine. When the use-count has
++reached 0, the allocated buffers are flushed by calls to *sync_dev(dev)*
++and *invalidate_buffers(dev)*.
++
++
++.. _cdrom_ioctl:
++
++::
++
++	int cdrom_ioctl(struct inode *ip, struct file *fp,
++			unsigned int cmd, unsigned long arg)
++
++This function handles all the standard *ioctl* requests for CD-ROM
++devices in a uniform way. The different calls fall into three
++categories: *ioctl()'s* that can be directly implemented by device
++operations, ones that are routed through the call *audio_ioctl()*, and
++the remaining ones, that are presumable device-dependent. Generally, a
++negative return value indicates an error.
++
++Directly implemented *ioctl()'s*
++--------------------------------
++
++The following `old` CD-ROM *ioctl()*\ 's are implemented by directly
++calling device-operations in *cdrom_device_ops*, if implemented and
++not masked:
++
++`CDROMMULTISESSION`
++	Requests the last session on a CD-ROM.
++`CDROMEJECT`
++	Open tray.
++`CDROMCLOSETRAY`
++	Close tray.
++`CDROMEJECT_SW`
++	If *arg\not=0*, set behavior to auto-close (close
++	tray on first open) and auto-eject (eject on last release), otherwise
++	set behavior to non-moving on *open()* and *release()* calls.
++`CDROM_GET_MCN`
++	Get the Media Catalog Number from a CD.
++
++*Ioctl*s routed through *audio_ioctl()*
++---------------------------------------
++
++The following set of *ioctl()'s* are all implemented through a call to
++the *cdrom_fops* function *audio_ioctl()*. Memory checks and
++allocation are performed in *cdrom_ioctl()*, and also sanitization of
++address format (*CDROM_LBA*/*CDROM_MSF*) is done.
++
++`CDROMSUBCHNL`
++	Get sub-channel data in argument *arg* of type
++	`struct cdrom_subchnl *`.
++`CDROMREADTOCHDR`
++	Read Table of Contents header, in *arg* of type
++	`struct cdrom_tochdr *`.
++`CDROMREADTOCENTRY`
++	Read a Table of Contents entry in *arg* and specified by *arg*
++	of type `struct cdrom_tocentry *`.
++`CDROMPLAYMSF`
++	Play audio fragment specified in Minute, Second, Frame format,
++	delimited by *arg* of type `struct cdrom_msf *`.
++`CDROMPLAYTRKIND`
++	Play audio fragment in track-index format delimited by *arg*
++	of type `struct cdrom_ti *`.
++`CDROMVOLCTRL`
++	Set volume specified by *arg* of type `struct cdrom_volctrl *`.
++`CDROMVOLREAD`
++	Read volume into by *arg* of type `struct cdrom_volctrl *`.
++`CDROMSTART`
++	Spin up disc.
++`CDROMSTOP`
++	Stop playback of audio fragment.
++`CDROMPAUSE`
++	Pause playback of audio fragment.
++`CDROMRESUME`
++	Resume playing.
++
++New *ioctl()'s* in `cdrom.c`
++----------------------------
++
++The following *ioctl()'s* have been introduced to allow user programs to
++control the behavior of individual CD-ROM devices. New *ioctl*
++commands can be identified by the underscores in their names.
++
++`CDROM_SET_OPTIONS`
++	Set options specified by *arg*. Returns the option flag register
++	after modification. Use *arg = \rm0* for reading the current flags.
++`CDROM_CLEAR_OPTIONS`
++	Clear options specified by *arg*. Returns the option flag register
++	after modification.
++`CDROM_SELECT_SPEED`
++	Select head-rate speed of disc specified as by *arg* in units
++	of standard cdrom speed (176\,kB/sec raw data or
++	150kB/sec file system data). The value 0 means `auto-select`,
++	i. e., play audio discs at real time and data discs at maximum speed.
++	The value *arg* is checked against the maximum head rate of the
++	drive found in the *cdrom_dops*.
++`CDROM_SELECT_DISC`
++	Select disc numbered *arg* from a juke-box.
++
++	First disc is numbered 0. The number *arg* is checked against the
++	maximum number of discs in the juke-box found in the *cdrom_dops*.
++`CDROM_MEDIA_CHANGED`
++	Returns 1 if a disc has been changed since the last call.
++	Note that calls to *cdrom_media_changed* by the VFS are treated
++	by an independent queue, so both mechanisms will detect a
++	media change once. For juke-boxes, an extra argument *arg*
++	specifies the slot for which the information is given. The special
++	value *CDSL_CURRENT* requests that information about the currently
++	selected slot be returned.
++`CDROM_DRIVE_STATUS`
++	Returns the status of the drive by a call to
++	*drive_status()*. Return values are defined in cdrom_drive_status_.
++	Note that this call doesn't return information on the
++	current playing activity of the drive; this can be polled through
++	an *ioctl* call to *CDROMSUBCHNL*. For juke-boxes, an extra argument
++	*arg* specifies the slot for which (possibly limited) information is
++	given. The special value *CDSL_CURRENT* requests that information
++	about the currently selected slot be returned.
++`CDROM_DISC_STATUS`
++	Returns the type of the disc currently in the drive.
++	It should be viewed as a complement to *CDROM_DRIVE_STATUS*.
++	This *ioctl* can provide *some* information about the current
++	disc that is inserted in the drive. This functionality used to be
++	implemented in the low level drivers, but is now carried out
++	entirely in Uniform CD-ROM Driver.
++
++	The history of development of the CD's use as a carrier medium for
++	various digital information has lead to many different disc types.
++	This *ioctl* is useful only in the case that CDs have \emph {only
++	one} type of data on them. While this is often the case, it is
++	also very common for CDs to have some tracks with data, and some
++	tracks with audio. Because this is an existing interface, rather
++	than fixing this interface by changing the assumptions it was made
++	under, thereby breaking all user applications that use this
++	function, the Uniform CD-ROM Driver implements this *ioctl* as
++	follows: If the CD in question has audio tracks on it, and it has
++	absolutely no CD-I, XA, or data tracks on it, it will be reported
++	as *CDS_AUDIO*. If it has both audio and data tracks, it will
++	return *CDS_MIXED*. If there are no audio tracks on the disc, and
++	if the CD in question has any CD-I tracks on it, it will be
++	reported as *CDS_XA_2_2*. Failing that, if the CD in question
++	has any XA tracks on it, it will be reported as *CDS_XA_2_1*.
++	Finally, if the CD in question has any data tracks on it,
++	it will be reported as a data CD (*CDS_DATA_1*).
++
++	This *ioctl* can return::
++
++		CDS_NO_INFO	/* no information available */
++		CDS_NO_DISC	/* no disc is inserted, or tray is opened */
++		CDS_AUDIO	/* Audio disc (2352 audio bytes/frame) */
++		CDS_DATA_1	/* data disc, mode 1 (2048 user bytes/frame) */
++		CDS_XA_2_1	/* mixed data (XA), mode 2, form 1 (2048 user bytes) */
++		CDS_XA_2_2	/* mixed data (XA), mode 2, form 1 (2324 user bytes) */
++		CDS_MIXED	/* mixed audio/data disc */
++
++	For some information concerning frame layout of the various disc
++	types, see a recent version of `cdrom.h`.
++
++`CDROM_CHANGER_NSLOTS`
++	Returns the number of slots in a juke-box.
++`CDROMRESET`
++	Reset the drive.
++`CDROM_GET_CAPABILITY`
++	Returns the *capability* flags for the drive. Refer to section
++	cdrom_capabilities_ for more information on these flags.
++`CDROM_LOCKDOOR`
++	 Locks the door of the drive. `arg == 0` unlocks the door,
++	 any other value locks it.
++`CDROM_DEBUG`
++	 Turns on debugging info. Only root is allowed to do this.
++	 Same semantics as CDROM_LOCKDOOR.
++
++
++Device dependent *ioctl()'s*
++----------------------------
++
++Finally, all other *ioctl()'s* are passed to the function *dev_ioctl()*,
++if implemented. No memory allocation or verification is carried out.
++
++How to update your driver
 +=========================
- 
-    The ACPI firmware sets up RSDP (Root System Description Pointer) in the
-    system memory address space pointing to the XSDT (Extended System
-@@ -40,7 +46,7 @@ Wysocki <rafael.j.wysocki@intel.com>.
-    structure of the underlying hardware platform.
- 
-    The relationships between ACPI System Definition Tables described above
--   are illustrated in the following diagram.
-+   are illustrated in the following diagram::
- 
-      +---------+    +-------+    +--------+    +------------------------+
-      |  RSDP   | +->| XSDT  | +->|  FADT  |    |  +-------------------+ |
-@@ -68,18 +74,21 @@ Wysocki <rafael.j.wysocki@intel.com>.
- 
-                      Figure 1. ACPI Definition Blocks
- 
--   NOTE: RSDP can also contain a pointer to the RSDT (Root System
-+   NOTE:
-+         RSDP can also contain a pointer to the RSDT (Root System
-          Description Table).  Platforms provide RSDT to enable
-          compatibility with ACPI 1.0 operating systems.  The OS is expected
-          to use XSDT, if present.
- 
- 
- 2. Example ACPI Namespace
-+=========================
- 
-    All definition blocks are loaded into a single namespace.  The namespace
-    is a hierarchy of objects identified by names and paths.
-    The following naming conventions apply to object names in the ACPI
-    namespace:
 +
-    1. All names are 32 bits long.
-    2. The first byte of a name must be one of 'A' - 'Z', '_'.
-    3. Each of the remaining bytes of a name must be one of 'A' - 'Z', '0'
-@@ -91,100 +100,101 @@ Wysocki <rafael.j.wysocki@intel.com>.
-       (i.e. names prepended with '^' are relative to the parent of the
-       current namespace node).
- 
--   The figure below shows an example ACPI namespace.
-+   The figure below shows an example ACPI namespace::
- 
--   +------+
--   | \    |                     Root
--   +------+
--     |
--     | +------+
--     +-| _PR  |                 Scope(_PR): the processor namespace
--     | +------+
--     |   |
--     |   | +------+
--     |   +-| CPU0 |             Processor(CPU0): the first processor
--     |     +------+
--     |
--     | +------+
--     +-| _SB  |                 Scope(_SB): the system bus namespace
--     | +------+
--     |   |
--     |   | +------+
--     |   +-| LID0 |             Device(LID0); the lid device
--     |   | +------+
--     |   |   |
--     |   |   | +------+
--     |   |   +-| _HID |         Name(_HID, "PNP0C0D"): the hardware ID
--     |   |   | +------+
--     |   |   |
--     |   |   | +------+
--     |   |   +-| _STA |         Method(_STA): the status control method
--     |   |     +------+
--     |   |
--     |   | +------+
--     |   +-| PCI0 |             Device(PCI0); the PCI root bridge
--     |     +------+
--     |       |
--     |       | +------+
--     |       +-| _HID |         Name(_HID, "PNP0A08"): the hardware ID
--     |       | +------+
--     |       |
--     |       | +------+
--     |       +-| _CID |         Name(_CID, "PNP0A03"): the compatible ID
--     |       | +------+
--     |       |
--     |       | +------+
--     |       +-| RP03 |         Scope(RP03): the PCI0 power scope
--     |       | +------+
--     |       |   |
--     |       |   | +------+
--     |       |   +-| PXP3 |     PowerResource(PXP3): the PCI0 power resource
--     |       |     +------+
--     |       |
--     |       | +------+
--     |       +-| GFX0 |         Device(GFX0): the graphics adapter
--     |         +------+
--     |           |
--     |           | +------+
--     |           +-| _ADR |     Name(_ADR, 0x00020000): the PCI bus address
--     |           | +------+
--     |           |
--     |           | +------+
--     |           +-| DD01 |     Device(DD01): the LCD output device
--     |             +------+
--     |               |
--     |               | +------+
--     |               +-| _BCL | Method(_BCL): the backlight control method
--     |                 +------+
--     |
--     | +------+
--     +-| _TZ  |                 Scope(_TZ): the thermal zone namespace
--     | +------+
--     |   |
--     |   | +------+
--     |   +-| FN00 |             PowerResource(FN00): the FAN0 power resource
--     |   | +------+
--     |   |
--     |   | +------+
--     |   +-| FAN0 |             Device(FAN0): the FAN0 cooling device
--     |   | +------+
--     |   |   |
--     |   |   | +------+
--     |   |   +-| _HID |         Name(_HID, "PNP0A0B"): the hardware ID
--     |   |     +------+
--     |   |
--     |   | +------+
--     |   +-| TZ00 |             ThermalZone(TZ00); the FAN thermal zone
--     |     +------+
--     |
--     | +------+
--     +-| _GPE |                 Scope(_GPE): the GPE namespace
--       +------+
-+     +------+
-+     | \    |                     Root
-+     +------+
-+       |
-+       | +------+
-+       +-| _PR  |                 Scope(_PR): the processor namespace
-+       | +------+
-+       |   |
-+       |   | +------+
-+       |   +-| CPU0 |             Processor(CPU0): the first processor
-+       |     +------+
-+       |
-+       | +------+
-+       +-| _SB  |                 Scope(_SB): the system bus namespace
-+       | +------+
-+       |   |
-+       |   | +------+
-+       |   +-| LID0 |             Device(LID0); the lid device
-+       |   | +------+
-+       |   |   |
-+       |   |   | +------+
-+       |   |   +-| _HID |         Name(_HID, "PNP0C0D"): the hardware ID
-+       |   |   | +------+
-+       |   |   |
-+       |   |   | +------+
-+       |   |   +-| _STA |         Method(_STA): the status control method
-+       |   |     +------+
-+       |   |
-+       |   | +------+
-+       |   +-| PCI0 |             Device(PCI0); the PCI root bridge
-+       |     +------+
-+       |       |
-+       |       | +------+
-+       |       +-| _HID |         Name(_HID, "PNP0A08"): the hardware ID
-+       |       | +------+
-+       |       |
-+       |       | +------+
-+       |       +-| _CID |         Name(_CID, "PNP0A03"): the compatible ID
-+       |       | +------+
-+       |       |
-+       |       | +------+
-+       |       +-| RP03 |         Scope(RP03): the PCI0 power scope
-+       |       | +------+
-+       |       |   |
-+       |       |   | +------+
-+       |       |   +-| PXP3 |     PowerResource(PXP3): the PCI0 power resource
-+       |       |     +------+
-+       |       |
-+       |       | +------+
-+       |       +-| GFX0 |         Device(GFX0): the graphics adapter
-+       |         +------+
-+       |           |
-+       |           | +------+
-+       |           +-| _ADR |     Name(_ADR, 0x00020000): the PCI bus address
-+       |           | +------+
-+       |           |
-+       |           | +------+
-+       |           +-| DD01 |     Device(DD01): the LCD output device
-+       |             +------+
-+       |               |
-+       |               | +------+
-+       |               +-| _BCL | Method(_BCL): the backlight control method
-+       |                 +------+
-+       |
-+       | +------+
-+       +-| _TZ  |                 Scope(_TZ): the thermal zone namespace
-+       | +------+
-+       |   |
-+       |   | +------+
-+       |   +-| FN00 |             PowerResource(FN00): the FAN0 power resource
-+       |   | +------+
-+       |   |
-+       |   | +------+
-+       |   +-| FAN0 |             Device(FAN0): the FAN0 cooling device
-+       |   | +------+
-+       |   |   |
-+       |   |   | +------+
-+       |   |   +-| _HID |         Name(_HID, "PNP0A0B"): the hardware ID
-+       |   |     +------+
-+       |   |
-+       |   | +------+
-+       |   +-| TZ00 |             ThermalZone(TZ00); the FAN thermal zone
-+       |     +------+
-+       |
-+       | +------+
-+       +-| _GPE |                 Scope(_GPE): the GPE namespace
-+         +------+
- 
-                      Figure 2. Example ACPI Namespace
- 
- 
- 3. Linux ACPI Device Objects
-+============================
- 
-    The Linux kernel's core ACPI subsystem creates struct acpi_device
-    objects for ACPI namespace objects representing devices, power resources
-@@ -230,6 +240,7 @@ Wysocki <rafael.j.wysocki@intel.com>.
-    the basis of the contents of ACPI System Description Tables (as
-    indicated by the letter in the first column and the notation in the
-    second column of the table above):
++- Make a backup of your current driver.
++- Get hold of the files `cdrom.c` and `cdrom.h`, they should be in
++  the directory tree that came with this documentation.
++- Make sure you include `cdrom.h`.
++- Change the 3rd argument of *register_blkdev* from `&<your-drive>_fops`
++  to `&cdrom_fops`.
++- Just after that line, add the following to register with the Uniform
++  CD-ROM Driver::
 +
-    N:
-       The object's source is an ACPI namespace node (as indicated by the
-       named object's type in the second column).  In that case the object's
-@@ -256,6 +267,7 @@ Wysocki <rafael.j.wysocki@intel.com>.
- 
-    The forth column of the above table indicates the 'bus_id' generation
-    rule of the struct acpi_device object:
++	register_cdrom(&<your-drive>_info);*
 +
-    _HID:
-       _HID in the last column of the table means that the object's bus_id
-       is derived from the _HID/_CID identification objects present under
-@@ -276,6 +288,7 @@ Wysocki <rafael.j.wysocki@intel.com>.
- 
- 
- 4. Linux ACPI Physical Device Glue
-+==================================
- 
-    ACPI device (i.e. struct acpi_device) objects may be linked to other
-    objects in the Linux' device hierarchy that represent "physical" devices
-@@ -310,79 +323,83 @@ Wysocki <rafael.j.wysocki@intel.com>.
- 
- 
- 5. Example Linux ACPI Device Tree
-+=================================
- 
-    The sysfs hierarchy of struct acpi_device objects corresponding to the
-    example ACPI namespace illustrated in Figure 2 with the addition of
--   fixed PWR_BUTTON/SLP_BUTTON devices is shown below.
-+   fixed PWR_BUTTON/SLP_BUTTON devices is shown below::
- 
--   +--------------+---+-----------------+
--   | LNXSYSTEM:00 | \ | acpi:LNXSYSTEM: |
--   +--------------+---+-----------------+
--     |
--     | +-------------+-----+----------------+
--     +-| LNXPWRBN:00 | N/A | acpi:LNXPWRBN: |
--     | +-------------+-----+----------------+
--     |
--     | +-------------+-----+----------------+
--     +-| LNXSLPBN:00 | N/A | acpi:LNXSLPBN: |
--     | +-------------+-----+----------------+
--     |
--     | +-----------+------------+--------------+
--     +-| LNXCPU:00 | \_PR_.CPU0 | acpi:LNXCPU: |
--     | +-----------+------------+--------------+
--     |
--     | +-------------+-------+----------------+
--     +-| LNXSYBUS:00 | \_SB_ | acpi:LNXSYBUS: |
--     | +-------------+-------+----------------+
--     |   |
--     |   | +- - - - - - - +- - - - - - +- - - - - - - -+
--     |   +-| PNP0C0D:00 | \_SB_.LID0 | acpi:PNP0C0D: |
--     |   | +- - - - - - - +- - - - - - +- - - - - - - -+
--     |   |
--     |   | +------------+------------+-----------------------+
--     |   +-| PNP0A08:00 | \_SB_.PCI0 | acpi:PNP0A08:PNP0A03: |
--     |     +------------+------------+-----------------------+
--     |       |
--     |       | +-----------+-----------------+-----+
--     |       +-| device:00 | \_SB_.PCI0.RP03 | N/A |
--     |       | +-----------+-----------------+-----+
--     |       |   |
--     |       |   | +-------------+----------------------+----------------+
--     |       |   +-| LNXPOWER:00 | \_SB_.PCI0.RP03.PXP3 | acpi:LNXPOWER: |
--     |       |     +-------------+----------------------+----------------+
--     |       |
--     |       | +-------------+-----------------+----------------+
--     |       +-| LNXVIDEO:00 | \_SB_.PCI0.GFX0 | acpi:LNXVIDEO: |
--     |         +-------------+-----------------+----------------+
--     |           |
--     |           | +-----------+-----------------+-----+
--     |           +-| device:01 | \_SB_.PCI0.DD01 | N/A |
--     |             +-----------+-----------------+-----+
--     |
--     | +-------------+-------+----------------+
--     +-| LNXSYBUS:01 | \_TZ_ | acpi:LNXSYBUS: |
--       +-------------+-------+----------------+
--         |
--         | +-------------+------------+----------------+
--         +-| LNXPOWER:0a | \_TZ_.FN00 | acpi:LNXPOWER: |
--         | +-------------+------------+----------------+
--         |
--         | +------------+------------+---------------+
--         +-| PNP0C0B:00 | \_TZ_.FAN0 | acpi:PNP0C0B: |
--         | +------------+------------+---------------+
--         |
--         | +-------------+------------+----------------+
--         +-| LNXTHERM:00 | \_TZ_.TZ00 | acpi:LNXTHERM: |
--           +-------------+------------+----------------+
-+     +--------------+---+-----------------+
-+     | LNXSYSTEM:00 | \ | acpi:LNXSYSTEM: |
-+     +--------------+---+-----------------+
-+       |
-+       | +-------------+-----+----------------+
-+       +-| LNXPWRBN:00 | N/A | acpi:LNXPWRBN: |
-+       | +-------------+-----+----------------+
-+       |
-+       | +-------------+-----+----------------+
-+       +-| LNXSLPBN:00 | N/A | acpi:LNXSLPBN: |
-+       | +-------------+-----+----------------+
-+       |
-+       | +-----------+------------+--------------+
-+       +-| LNXCPU:00 | \_PR_.CPU0 | acpi:LNXCPU: |
-+       | +-----------+------------+--------------+
-+       |
-+       | +-------------+-------+----------------+
-+       +-| LNXSYBUS:00 | \_SB_ | acpi:LNXSYBUS: |
-+       | +-------------+-------+----------------+
-+       |   |
-+       |   | +- - - - - - - +- - - - - - +- - - - - - - -+
-+       |   +-| PNP0C0D:00 | \_SB_.LID0 | acpi:PNP0C0D: |
-+       |   | +- - - - - - - +- - - - - - +- - - - - - - -+
-+       |   |
-+       |   | +------------+------------+-----------------------+
-+       |   +-| PNP0A08:00 | \_SB_.PCI0 | acpi:PNP0A08:PNP0A03: |
-+       |     +------------+------------+-----------------------+
-+       |       |
-+       |       | +-----------+-----------------+-----+
-+       |       +-| device:00 | \_SB_.PCI0.RP03 | N/A |
-+       |       | +-----------+-----------------+-----+
-+       |       |   |
-+       |       |   | +-------------+----------------------+----------------+
-+       |       |   +-| LNXPOWER:00 | \_SB_.PCI0.RP03.PXP3 | acpi:LNXPOWER: |
-+       |       |     +-------------+----------------------+----------------+
-+       |       |
-+       |       | +-------------+-----------------+----------------+
-+       |       +-| LNXVIDEO:00 | \_SB_.PCI0.GFX0 | acpi:LNXVIDEO: |
-+       |         +-------------+-----------------+----------------+
-+       |           |
-+       |           | +-----------+-----------------+-----+
-+       |           +-| device:01 | \_SB_.PCI0.DD01 | N/A |
-+       |             +-----------+-----------------+-----+
-+       |
-+       | +-------------+-------+----------------+
-+       +-| LNXSYBUS:01 | \_TZ_ | acpi:LNXSYBUS: |
-+         +-------------+-------+----------------+
-+           |
-+           | +-------------+------------+----------------+
-+           +-| LNXPOWER:0a | \_TZ_.FN00 | acpi:LNXPOWER: |
-+           | +-------------+------------+----------------+
-+           |
-+           | +------------+------------+---------------+
-+           +-| PNP0C0B:00 | \_TZ_.FAN0 | acpi:PNP0C0B: |
-+           | +------------+------------+---------------+
-+           |
-+           | +-------------+------------+----------------+
-+           +-| LNXTHERM:00 | \_TZ_.TZ00 | acpi:LNXTHERM: |
-+             +-------------+------------+----------------+
- 
-                   Figure 3. Example Linux ACPI Device Tree
- 
--   NOTE: Each node is represented as "object/path/modalias", where:
-+   NOTE:
-+       Each node is represented as "object/path/modalias", where:
++  Similarly, add a call to *unregister_cdrom()* at the appropriate place.
++- Copy an example of the device-operations *struct* to your
++  source, e. g., from `cm206.c` *cm206_dops*, and change all
++  entries to names corresponding to your driver, or names you just
++  happen to like. If your driver doesn't support a certain function,
++  make the entry *NULL*. At the entry *capability* you should list all
++  capabilities your driver currently supports. If your driver
++  has a capability that is not listed, please send me a message.
++- Copy the *cdrom_device_info* declaration from the same example
++  driver, and modify the entries according to your needs. If your
++  driver dynamically determines the capabilities of the hardware, this
++  structure should also be declared dynamically.
++- Implement all functions in your `<device>_dops` structure,
++  according to prototypes listed in  `cdrom.h`, and specifications given
++  in cdrom_api_. Most likely you have already implemented
++  the code in a large part, and you will almost certainly need to adapt the
++  prototype and return values.
++- Rename your `<device>_ioctl()` function to *audio_ioctl* and
++  change the prototype a little. Remove entries listed in the first
++  part in cdrom_ioctl_, if your code was OK, these are
++  just calls to the routines you adapted in the previous step.
++- You may remove all remaining memory checking code in the
++  *audio_ioctl()* function that deals with audio commands (these are
++  listed in the second part of cdrom_ioctl_. There is no
++  need for memory allocation either, so most *case*s in the *switch*
++  statement look similar to::
 +
-          1. 'object' is the name of the object's directory in sysfs.
-          2. 'path' is the ACPI namespace path of the corresponding
-             ACPI namespace object, as returned by the object's 'path'
-             sysfs attribute.
-          3. 'modalias' is the value of the object's 'modalias' sysfs
-             attribute (as described earlier in this document).
--   NOTE: N/A indicates the device object does not have the 'path' or the
--         'modalias' attribute.
-+   NOTE:
-+       N/A indicates the device object does not have the 'path' or the
-+       'modalias' attribute.
-diff --git a/Documentation/acpi/osi.txt b/Documentation/acpi/osi.txt
-index 50cde0ceb9b0..401518ca15cc 100644
---- a/Documentation/acpi/osi.txt
-+++ b/Documentation/acpi/osi.txt
-@@ -1,5 +1,6 @@
-+==========================
- ACPI _OSI and _REV methods
----------------------------
-+==========================
- 
- An ACPI BIOS can use the "Operating System Interfaces" method (_OSI)
- to find out what the operating system supports. Eg. If BIOS
-diff --git a/Documentation/acpi/scan_handlers.txt b/Documentation/acpi/scan_handlers.txt
-index 3246ccf15992..fa8265f272d5 100644
---- a/Documentation/acpi/scan_handlers.txt
-+++ b/Documentation/acpi/scan_handlers.txt
-@@ -1,6 +1,9 @@
-+==================
- ACPI Scan Handlers
-+==================
- 
- Copyright (C) 2012, Intel Corporation
++	case CDROMREADTOCENTRY:
++		get_toc_entry\bigl((struct cdrom_tocentry *) arg);
 +
- Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
- 
- During system initialization and ACPI-based device hot-add, the ACPI namespace
-@@ -30,14 +33,14 @@ to configure that link so that the kernel can use it.
- Those additional configuration tasks usually depend on the type of the hardware
- component represented by the given device node which can be determined on the
- basis of the device node's hardware ID (HID).  They are performed by objects
--called ACPI scan handlers represented by the following structure:
-+called ACPI scan handlers represented by the following structure::
- 
--struct acpi_scan_handler {
-+  struct acpi_scan_handler {
- 	const struct acpi_device_id *ids;
- 	struct list_head list_node;
- 	int (*attach)(struct acpi_device *dev, const struct acpi_device_id *id);
- 	void (*detach)(struct acpi_device *dev);
--};
-+  };
- 
- where ids is the list of IDs of device nodes the given handler is supposed to
- take care of, list_node is the hook to the global list of ACPI scan handlers
-diff --git a/Documentation/acpi/ssdt-overlays.txt b/Documentation/acpi/ssdt-overlays.txt
-index 5ae13f161ea2..036ba3bb8613 100644
---- a/Documentation/acpi/ssdt-overlays.txt
-+++ b/Documentation/acpi/ssdt-overlays.txt
-@@ -1,3 +1,6 @@
-+=============
-+SSDT Overlays
-+=============
- 
- In order to support ACPI open-ended hardware configurations (e.g. development
- boards) we need a way to augment the ACPI configuration provided by the firmware
-@@ -15,10 +18,10 @@ user defined SSDT tables that contain the board specific information.
- 
- For example, to enumerate a Bosch BMA222E accelerometer on the I2C bus of the
- Minnowboard MAX development board exposed via the LSE connector [1], the
--following ASL code can be used:
-+following ASL code can be used::
- 
--DefinitionBlock ("minnowmax.aml", "SSDT", 1, "Vendor", "Accel", 0x00000003)
--{
-+  DefinitionBlock ("minnowmax.aml", "SSDT", 1, "Vendor", "Accel", 0x00000003)
-+  {
-     External (\_SB.I2C6, DeviceObj)
- 
-     Scope (\_SB.I2C6)
-@@ -45,25 +48,26 @@ DefinitionBlock ("minnowmax.aml", "SSDT", 1, "Vendor", "Accel", 0x00000003)
-             }
-         }
-     }
--}
-+  }
- 
--which can then be compiled to AML binary format:
-+which can then be compiled to AML binary format::
- 
--$ iasl minnowmax.asl
-+  $ iasl minnowmax.asl
- 
--Intel ACPI Component Architecture
--ASL Optimizing Compiler version 20140214-64 [Mar 29 2014]
--Copyright (c) 2000 - 2014 Intel Corporation
-+  Intel ACPI Component Architecture
-+  ASL Optimizing Compiler version 20140214-64 [Mar 29 2014]
-+  Copyright (c) 2000 - 2014 Intel Corporation
- 
--ASL Input:     minnomax.asl - 30 lines, 614 bytes, 7 keywords
--AML Output:    minnowmax.aml - 165 bytes, 6 named objects, 1 executable opcodes
-+  ASL Input:     minnomax.asl - 30 lines, 614 bytes, 7 keywords
-+  AML Output:    minnowmax.aml - 165 bytes, 6 named objects, 1 executable opcodes
- 
- [1] http://wiki.minnowboard.org/MinnowBoard_MAX#Low_Speed_Expansion_Connector_.28Top.29
- 
- The resulting AML code can then be loaded by the kernel using one of the methods
- below.
- 
--== Loading ACPI SSDTs from initrd ==
-+Loading ACPI SSDTs from initrd
-+==============================
- 
- This option allows loading of user defined SSDTs from initrd and it is useful
- when the system does not support EFI or when there is not enough EFI storage.
-@@ -74,23 +78,24 @@ aml code must be placed in the first, uncompressed, initrd under the
- in loading multiple tables. Only SSDT and OEM tables are allowed. See
- initrd_table_override.txt for more details.
- 
--Here is an example:
-+Here is an example::
- 
--# Add the raw ACPI tables to an uncompressed cpio archive.
--# They must be put into a /kernel/firmware/acpi directory inside the
--# cpio archive.
--# The uncompressed cpio archive must be the first.
--# Other, typically compressed cpio archives, must be
--# concatenated on top of the uncompressed one.
--mkdir -p kernel/firmware/acpi
--cp ssdt.aml kernel/firmware/acpi
-+  # Add the raw ACPI tables to an uncompressed cpio archive.
-+  # They must be put into a /kernel/firmware/acpi directory inside the
-+  # cpio archive.
-+  # The uncompressed cpio archive must be the first.
-+  # Other, typically compressed cpio archives, must be
-+  # concatenated on top of the uncompressed one.
-+  mkdir -p kernel/firmware/acpi
-+  cp ssdt.aml kernel/firmware/acpi
- 
--# Create the uncompressed cpio archive and concatenate the original initrd
--# on top:
--find kernel | cpio -H newc --create > /boot/instrumented_initrd
--cat /boot/initrd >>/boot/instrumented_initrd
-+  # Create the uncompressed cpio archive and concatenate the original initrd
-+  # on top:
-+  find kernel | cpio -H newc --create > /boot/instrumented_initrd
-+  cat /boot/initrd >>/boot/instrumented_initrd
- 
--== Loading ACPI SSDTs from EFI variables ==
-+Loading ACPI SSDTs from EFI variables
-+=====================================
- 
- This is the preferred method, when EFI is supported on the platform, because it
- allows a persistent, OS independent way of storing the user defined SSDTs. There
-@@ -116,48 +121,49 @@ include/linux/efi.h). Writing to the file must also be done with one write
- operation.
- 
- For example, you can use the following bash script to create/update an EFI
--variable with the content from a given file:
-+variable with the content from a given file::
- 
--#!/bin/sh -e
-+  #!/bin/sh -e
- 
--while ! [ -z "$1" ]; do
--        case "$1" in
--        "-f") filename="$2"; shift;;
--        "-g") guid="$2"; shift;;
--        *) name="$1";;
--        esac
--        shift
--done
-+  while ! [ -z "$1" ]; do
-+          case "$1" in
-+          "-f") filename="$2"; shift;;
-+          "-g") guid="$2"; shift;;
-+          *) name="$1";;
-+          esac
-+          shift
-+  done
- 
--usage()
--{
--        echo "Syntax: ${0##*/} -f filename [ -g guid ] name"
--        exit 1
--}
-+  usage()
-+  {
-+          echo "Syntax: ${0##*/} -f filename [ -g guid ] name"
-+          exit 1
-+  }
- 
--[ -n "$name" -a -f "$filename" ] || usage
-+  [ -n "$name" -a -f "$filename" ] || usage
- 
--EFIVARFS="/sys/firmware/efi/efivars"
-+  EFIVARFS="/sys/firmware/efi/efivars"
- 
--[ -d "$EFIVARFS" ] || exit 2
-+  [ -d "$EFIVARFS" ] || exit 2
- 
--if stat -tf $EFIVARFS | grep -q -v de5e81e4; then
--        mount -t efivarfs none $EFIVARFS
--fi
-+  if stat -tf $EFIVARFS | grep -q -v de5e81e4; then
-+          mount -t efivarfs none $EFIVARFS
-+  fi
- 
--# try to pick up an existing GUID
--[ -n "$guid" ] || guid=$(find "$EFIVARFS" -name "$name-*" | head -n1 | cut -f2- -d-)
-+  # try to pick up an existing GUID
-+  [ -n "$guid" ] || guid=$(find "$EFIVARFS" -name "$name-*" | head -n1 | cut -f2- -d-)
- 
--# use a randomly generated GUID
--[ -n "$guid" ] || guid="$(cat /proc/sys/kernel/random/uuid)"
-+  # use a randomly generated GUID
-+  [ -n "$guid" ] || guid="$(cat /proc/sys/kernel/random/uuid)"
- 
--# efivarfs expects all of the data in one write
--tmp=$(mktemp)
--/bin/echo -ne "\007\000\000\000" | cat - $filename > $tmp
--dd if=$tmp of="$EFIVARFS/$name-$guid" bs=$(stat -c %s $tmp)
--rm $tmp
-+  # efivarfs expects all of the data in one write
-+  tmp=$(mktemp)
-+  /bin/echo -ne "\007\000\000\000" | cat - $filename > $tmp
-+  dd if=$tmp of="$EFIVARFS/$name-$guid" bs=$(stat -c %s $tmp)
-+  rm $tmp
- 
--== Loading ACPI SSDTs from configfs ==
-+Loading ACPI SSDTs from configfs
-+================================
- 
- This option allows loading of user defined SSDTs from userspace via the configfs
- interface. The CONFIG_ACPI_CONFIGFS option must be select and configfs must be
-@@ -165,8 +171,8 @@ mounted. In the following examples, we assume that configfs has been mounted in
- /config.
- 
- New tables can be loading by creating new directories in /config/acpi/table/ and
--writing the SSDT aml code in the aml attribute:
-+writing the SSDT aml code in the aml attribute::
- 
--cd /config/acpi/table
--mkdir my_ssdt
--cat ~/ssdt.aml > my_ssdt/aml
-+  cd /config/acpi/table
-+  mkdir my_ssdt
-+  cat ~/ssdt.aml > my_ssdt/aml
-diff --git a/Documentation/acpi/video_extension.txt b/Documentation/acpi/video_extension.txt
-index 79bf6a4921be..7a5882a567b9 100644
---- a/Documentation/acpi/video_extension.txt
-+++ b/Documentation/acpi/video_extension.txt
-@@ -1,5 +1,6 @@
-+=====================
- ACPI video extensions
--~~~~~~~~~~~~~~~~~~~~~
-+=====================
- 
- This driver implement the ACPI Extensions For Display Adapters for
- integrated graphics devices on motherboard, as specified in ACPI 2.0
-@@ -32,10 +33,10 @@ type: firmware
- 
- Note that ACPI video backlight driver will always use index for
- brightness, actual_brightness and max_brightness. So if we have
--the following _BCL package:
-+the following _BCL package::
- 
--Method (_BCL, 0, NotSerialized)
--{
-+  Method (_BCL, 0, NotSerialized)
-+  {
- 	Return (Package (0x0C)
- 	{
- 		0x64,
-@@ -51,7 +52,7 @@ Method (_BCL, 0, NotSerialized)
- 		0x5A,
- 		0x64
- 	})
--}
-+  }
- 
- The first two levels are for when laptop are on AC or on battery and are
- not used by Linux currently. The remaining 10 levels are supported levels
-@@ -65,10 +66,11 @@ inclusive.
- 2 Notify user space about hotkey event
- 
- There are generally two cases for hotkey event reporting:
++- All remaining *ioctl* cases must be moved to a separate
++  function, *<device>_ioctl*, the device-dependent *ioctl()'s*. Note that
++  memory checking and allocation must be kept in this code!
++- Change the prototypes of *<device>_open()* and
++  *<device>_release()*, and remove any strategic code (i. e., tray
++  movement, door locking, etc.).
++- Try to recompile the drivers. We advise you to use modules, both
++  for `cdrom.o` and your driver, as debugging is much easier this
++  way.
 +
- i) For some laptops, when user presses the hotkey, a scancode will be
-    generated and sent to user space through the input device created by
-    the keyboard driver as a key type input event, with proper remap, the
--   following key code will appear to user space:
-+   following key code will appear to user space::
++Thanks
++======
++
++Thanks to all the people involved. First, Erik Andersen, who has
++taken over the torch in maintaining `cdrom.c` and integrating much
++CD-ROM-related code in the 2.1-kernel. Thanks to Scott Snyder and
++Gerd Knorr, who were the first to implement this interface for SCSI
++and IDE-CD drivers and added many ideas for extension of the data
++structures relative to kernel~2.0. Further thanks to Heiko Eißfeldt,
++Thomas Quinot, Jon Tombs, Ken Pizzini, Eberhard Mönkeberg and Andrew Kroll,
++the Linux CD-ROM device driver developers who were kind
++enough to give suggestions and criticisms during the writing. Finally
++of course, I want to thank Linus Torvalds for making this possible in
++the first place.
+diff --git a/drivers/cdrom/cdrom.c b/drivers/cdrom/cdrom.c
+index 933268b8d6a5..5d1e0a4a7d84 100644
+--- a/drivers/cdrom/cdrom.c
++++ b/drivers/cdrom/cdrom.c
+@@ -7,7 +7,7 @@
+    License.  See linux/COPYING for more information.
  
- 	EV_KEY, KEY_BRIGHTNESSUP
- 	EV_KEY, KEY_BRIGHTNESSDOWN
-@@ -82,7 +84,7 @@ ii) For some laptops, the press of the hotkey will not generate the
-     about the event. The event value is defined in the ACPI spec. ACPI
-     video driver will generate an key type input event according to the
-     notify value it received and send the event to user space through the
--    input device it created:
-+    input device it created::
+    Uniform CD-ROM driver for Linux.
+-   See Documentation/cdrom/cdrom-standard.tex for usage information.
++   See Documentation/cdrom/cdrom-standard.txt for usage information.
  
- 	event		keycode
- 	0x86		KEY_BRIGHTNESSUP
+    The routines in the file provide a uniform interface between the
+    software that uses CD-ROMs and the various low-level drivers that
 -- 
 2.20.1
 
