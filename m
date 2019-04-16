@@ -2,104 +2,105 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C0EADC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:31:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 11F61C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:31:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 94D2A20857
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:31:40 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vCuSZ21e"
+	by mail.kernel.org (Postfix) with ESMTP id D8C5C20651
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:31:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729166AbfDPJbj (ORCPT
+        id S1729083AbfDPJbr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 05:31:39 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:60586 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729026AbfDPJbe (ORCPT
+        Tue, 16 Apr 2019 05:31:47 -0400
+Received: from mailgw02.mediatek.com ([210.61.82.184]:51871 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728362AbfDPJaY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 05:31:34 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Q7Xr99zF4r6jYA93XnsTaf9Eg1/qnFu84nzVS5th2p8=; b=vCuSZ21eWSxfOySyD+iPsw857
-        AMvJ+qUqBxnOm1QhnUfyHP0U74NqJasTl26fe3D0nqAk0CRrWHJUPHnYhSxFJNxXCGJ30b3YlICuP
-        Kcn2Nwoksj5QF+MscgUGkoNAwUOX1TRjFrKmOXkGnMtEH5kKg3P6N01LMukal/4egTMti4O86pDj7
-        Qvm+10NfXHLdFUuGenZ3p2dWKhsoH9iLWveL+U1iwnxtf0oqfMJ2AuCI7MaWs4dVqohuHoUztomoN
-        kqsnkX1yLIdkbeZMAmLLi/lvHEs3mN8tr46xV6AwYVwZLwMg89aqV9wK+ArJvvMkevSqV54SToJ7l
-        Sz9ZrrVoA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hGKR3-0005vz-MZ; Tue, 16 Apr 2019 09:31:25 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5B58629B49941; Tue, 16 Apr 2019 11:31:23 +0200 (CEST)
-Date:   Tue, 16 Apr 2019 11:31:23 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
-        "riel@surriel.com" <riel@surriel.com>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
-        "luto@kernel.org" <luto@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
-        "apw@canonical.com" <apw@canonical.com>,
-        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
-        "jasowang@redhat.com" <jasowang@redhat.com>
-Subject: Re: [PATCH] smp: Do not warn if smp_call_function_single() is doing
- a self call.
-Message-ID: <20190416093123.GR11158@hirez.programming.kicks-ass.net>
-References: <20190412235341.29379-1-decui@microsoft.com>
- <20190415122128.GO11158@hirez.programming.kicks-ass.net>
- <PU1P153MB01695FDC44C6A2C32C7FB887BF2B0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+        Tue, 16 Apr 2019 05:30:24 -0400
+X-UUID: 56a609badb9c4da9a2e32137b980a5cf-20190416
+X-UUID: 56a609badb9c4da9a2e32137b980a5cf-20190416
+Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
+        (envelope-from <stu.hsieh@mediatek.com>)
+        (mhqrelay.mediatek.com ESMTP with TLS)
+        with ESMTP id 1723358284; Tue, 16 Apr 2019 17:30:18 +0800
+Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
+ mtkmbs03n1.mediatek.inc (172.21.101.181) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Tue, 16 Apr 2019 17:30:17 +0800
+Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
+ (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
+ Transport; Tue, 16 Apr 2019 17:30:17 +0800
+From:   Stu Hsieh <stu.hsieh@mediatek.com>
+To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Rob Herring <robh+dt@kernel.org>, CK Hu <ck.hu@mediatek.com>
+CC:     Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Stu Hsieh <stu.hsieh@mediatek.com>,
+        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>,
+        <linux-mediatek@lists.infradead.org>, <srv_heupstream@mediatek.com>
+Subject: [PATCH v2 04/15] [media] mtk-mipicsi: add color format support for mt2712
+Date:   Tue, 16 Apr 2019 17:30:04 +0800
+Message-ID: <1555407015-18130-5-git-send-email-stu.hsieh@mediatek.com>
+X-Mailer: git-send-email 1.9.1
+In-Reply-To: <1555407015-18130-1-git-send-email-stu.hsieh@mediatek.com>
+References: <1555407015-18130-1-git-send-email-stu.hsieh@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <PU1P153MB01695FDC44C6A2C32C7FB887BF2B0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-MTK:  N
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 11:39:57PM +0000, Dexuan Cui wrote:
-> > From: Peter Zijlstra <peterz@infradead.org>
-> > Sent: Monday, April 15, 2019 5:21 AM
-> > To: Dexuan Cui <decui@microsoft.com>
-> > 
-> > On Fri, Apr 12, 2019 at 11:53:57PM +0000, Dexuan Cui wrote:
-> > > If smp_call_function_single() is calling the function for itself, it's safe
-> > > to run with irqs_disabled() == true.
-> > >
-> > > I hit the warning because I'm in the below path in the .suspend callback of
-> > > a "syscore_ops" to support hibernation for a VM running on Hyper-V:
-> > >
-> > >   hv_synic_cleanup() ->
-> > >     clockevents_unbind_device() ->
-> > >       clockevents_unbind() ->
-> > >         smp_call_function_single().
-> > >
-> > > When the .suspend callback runs, only CPU0 is online and irqs_disabled() is
-> > > true.
-> > 
-> > Pray tell, how well do you think mutex_lock() works with interrupts
-> > disabled?
-> 
-> Good point. I realized generally speaking this patch makes no sense, so let me
-> try the solution proposed by Vitaly, i.e. fix clockevents_unbind() instead.
+This patch add color format support for mt2712
 
-That's still not the problem. You're calling clockevents_unbind_device()
-with IRQs disabled, that's not correct. It doesn't matter what
-clockevents_unbind() does thereafter.
+Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
+---
+ .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 20 +++++++++++++++++++
+ 1 file changed, 20 insertions(+)
 
-You simply cannot do any of this with IRQs disabled, end of story.
+diff --git a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
+index ec4f6b503b32..16f6bc480f4e 100644
+--- a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
++++ b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
+@@ -138,6 +138,20 @@ static void mtk_mipicsi_remove_device(struct soc_camera_device *icd)
+ 	(void)pm_runtime_put_sync(icd->parent);
+ }
+ 
++static bool is_supported(const u32 pixformat)
++{
++	switch (pixformat) {
++	/* YUV422 */
++	case V4L2_PIX_FMT_YUYV:
++	case V4L2_PIX_FMT_UYVY:
++	case V4L2_PIX_FMT_YVYU:
++	case V4L2_PIX_FMT_VYUY:
++		return true;
++	}
++
++	return false;
++}
++
+ static int mtk_mipicsi_set_fmt(struct soc_camera_device *icd,
+ 				struct v4l2_format *f)
+ {
+@@ -153,6 +167,12 @@ static int mtk_mipicsi_set_fmt(struct soc_camera_device *icd,
+ 	struct v4l2_mbus_framefmt *mf = &format.format;
+ 	int ret = 0;
+ 
++	if (!is_supported(pix->pixelformat)) {
++		dev_err(dev, "Format %x not support. set V4L2_PIX_FMT_YUYV as default\n",
++			pix->pixelformat);
++		pix->pixelformat = V4L2_PIX_FMT_YUYV;
++	}
++
+ 	xlate = soc_camera_xlate_by_fourcc(icd, pix->pixelformat);
+ 	if (xlate == NULL) {
+ 		dev_err(dev, "Format 0x%x not found\n", pix->pixelformat);
+-- 
+2.18.0
+
