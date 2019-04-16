@@ -2,140 +2,134 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD8DC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:19:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6004EC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:20:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 560AB20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:19:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1467720674
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:20:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jGdcibng"
+	dkim=pass (1024-bit key) header.d=cumulusnetworks.com header.i=@cumulusnetworks.com header.b="hk09RRut"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729510AbfDPPTs (ORCPT
+        id S1729667AbfDPPUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 11:19:48 -0400
-Received: from mail-yw1-f66.google.com ([209.85.161.66]:40867 "EHLO
-        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbfDPPTs (ORCPT
+        Tue, 16 Apr 2019 11:20:55 -0400
+Received: from mail-pl1-f171.google.com ([209.85.214.171]:45153 "EHLO
+        mail-pl1-f171.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726645AbfDPPUy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 11:19:48 -0400
-Received: by mail-yw1-f66.google.com with SMTP id p64so7431283ywg.7;
-        Tue, 16 Apr 2019 08:19:47 -0700 (PDT)
+        Tue, 16 Apr 2019 11:20:54 -0400
+Received: by mail-pl1-f171.google.com with SMTP id bf11so10487527plb.12
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 08:20:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=OGZxEZLdV/K30nuH8Uzzyz2QfjUn13BwzqKUuEx08v8=;
-        b=jGdcibngQkLqrpkdgccUSMvwK/0UdckbFQlfgM8EDx12LVwCG9IL0sOp3OeGDGUBU/
-         Oq5DCq5co7va/iZ8niqdd0iNJ9yMMoV4KZ6AIl63Lyb4KXBJkXiuMeSaxMQ7IVFgesMb
-         eg0GWphf2Z5U7JBwRGZbc6hXyiEyIoEYviVgGMFs+z8SFaGMQC4zl7AjBKOvaaghBqcv
-         9+0q9EoylYrpkC3UFdLlMMIdvB0CfqVE0LOErrdrwXDi4U7mj1FZ/bQiI/AfMZnlptLe
-         /lDg68CnMG3QF6+W1WlF4sJff0wiH7Oe3e5bnKxukTnhACkru6+7l8JAE5xSq1GgZFDQ
-         7ODQ==
+        d=cumulusnetworks.com; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=wafwPr4pnFlNxyQt1YARUoSodWDIhEBmldevuEHONFE=;
+        b=hk09RRutEdGEaqiA/Xxk0sSm2MHlYtdP0JGaoPRq/EFHRsxeAzYFB58ZCqG33AqOvJ
+         +d7j8FDze6kDqCAtZVib9zAI6NI6Itmt2HpL7K4bH2Go9qfsWs6yMPXHTT4cZzvY0JlU
+         euow+uakqlSvMJ6OgL+CXMrr7vq0qwR+XABdY=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=OGZxEZLdV/K30nuH8Uzzyz2QfjUn13BwzqKUuEx08v8=;
-        b=S0om7PQs9zwaESKK6bsJ9IEugn+YSRF7oi91eIzK0SuAKhJ+1CshLZmun8M/736cnx
-         Jrz8zHB3bLo1cff1lXFAn6FGVix1rv4kqKLUgjZNrLR+oawl8r9SBxYWJRP0Wq5bwaW7
-         8KQINC0xCNKot4AnPnqBIfOy7tEu3eHFK4Y2BOdkBY0y/bVlrL5Bgns53y1UxUTtfi+w
-         pazjN298pBghEPoonVmQ7sEJpzwT+n4R9DBdcSL81hrCX9l/73rKlVNr9hGVsLAa9rfo
-         k4kWYeJUnU0sL/j4DQLVmRhHTccZ+/bX5PuIooO0LrAAVYwePDrfEtwdkkqj+rWOKuwm
-         jPig==
-X-Gm-Message-State: APjAAAUKg8j1NEf6Td8QlCc7xEsRDBcCQzI5UBfjq005Lg90VKBnexMa
-        nr+tlBT6K6QgOsWB4WJxtKs=
-X-Google-Smtp-Source: APXvYqwlzj98lc+YXQ4mS1P9fmyLboiqYPy1lX5icf+/dyH2DLhHG/euQHfqp9q7yH/feh774Z+Lgg==
-X-Received: by 2002:a81:1693:: with SMTP id 141mr63392874yww.448.1555427987586;
-        Tue, 16 Apr 2019 08:19:47 -0700 (PDT)
-Received: from nishad ([2406:7400:54:eb3:d9be:857a:cd1e:eb7f])
-        by smtp.gmail.com with ESMTPSA id e136sm28357702ywa.102.2019.04.16.08.19.41
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 16 Apr 2019 08:19:46 -0700 (PDT)
-Date:   Tue, 16 Apr 2019 20:49:35 +0530
-From:   Nishad Kamdar <nishadkamdar@gmail.com>
-To:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Rob Herring <robh+dt@kernel.org>
-Cc:     Mark Rutland <mark.rutland@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>
-Subject: [PATCH v3 1/5] arm64: Use the correct style for SPDX License
- Identifier
-Message-ID: <ecdbe63bea1b1d2d67db6cc577aa32bf872f2310.1555427419.git.nishadkamdar@gmail.com>
-References: <cover.1555427418.git.nishadkamdar@gmail.com>
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=wafwPr4pnFlNxyQt1YARUoSodWDIhEBmldevuEHONFE=;
+        b=RqfRRjfXIQrWyXppZz50DU7SdRfASBniAWLHkZDH1jEVm4Csu09a9dQ28RMGOid44n
+         xbuRcJfKPsI9WRyybcrmhwMx4frRBVzJ7FJkZNpjxiXRE0kqR2b82zBMneQxvBTtPX6o
+         v5cFTFS3XYSO13cZmajWN4/FHVI5XtfKz1wgYIgOk+qor+p/VVr7EyFsLVvR5RfVat4b
+         KCFE5zaHR0hxKMHDICCRo3JW+9crLqKHTQHBNIZeC9jl7gIy02HEy4/Bz8xcODwaGOON
+         HgCzv9tsBIBThSVtK0DbigGBbhb3n/8jnUz9ghQWCHbIWyjkhVvSJB9O8qxu+w1G9yWR
+         y1aQ==
+X-Gm-Message-State: APjAAAWvT/2wnQvaA1ERz1b+BVVvMFq2on3BQlaKdpRRnrhidAWRci+p
+        +QRxjpJ0fJy0+n4Cvh6r9JLU+cBOESQ=
+X-Google-Smtp-Source: APXvYqyLwu8jVeYweDr/eIECdVKfGdw13T5Zjxdw3Jihi1Pwa43TFezZpQhw7yXP5QojTdei9FdHIQ==
+X-Received: by 2002:a17:902:d24:: with SMTP id 33mr84752972plu.246.1555428053846;
+        Tue, 16 Apr 2019 08:20:53 -0700 (PDT)
+Received: from ?IPv6:2601:282:800:fd80:14a8:cdd5:560c:a7cd? ([2601:282:800:fd80:14a8:cdd5:560c:a7cd])
+        by smtp.googlemail.com with ESMTPSA id t64sm117149399pfa.86.2019.04.16.08.20.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Apr 2019 08:20:53 -0700 (PDT)
+Subject: Re: some trouble when using vrf
+To:     linmiaohe <linmiaohe@huawei.com>, shrijeet@gmail.com,
+        davem@davemloft.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Cc:     Mingfangsen <mingfangsen@huawei.com>
+References: <15adf635-a74b-e9e3-5dad-b35890f0a746@huawei.com>
+From:   David Ahern <dsa@cumulusnetworks.com>
+Message-ID: <e4aa6621-8d9b-8d69-0562-610bae347ad3@cumulusnetworks.com>
+Date:   Tue, 16 Apr 2019 09:20:51 -0600
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.14; rv:52.0)
+ Gecko/20100101 Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1555427418.git.nishadkamdar@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <15adf635-a74b-e9e3-5dad-b35890f0a746@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch corrects the SPDX License Identifier style
-in the arm64 Hardware Architecture related files.
+On 4/16/19 5:26 AM, linmiaohe wrote:
+> Hi all:
+>     I meet some trouble when using vrf, it's very nice of you if you
+> can help me fix it.
+> 
+>     1.If I bind a vrf address before I set SO_BINDTODEVICE opts to bind an
+> enslaved device, "Cannot assign requested address" will occurs. It's
+> because only after we set SO_BINDTODEVICE opts to bind an enslaved device,
+> then we can lookup the route in the specified l3mdev domain.
+>     I think we couldn't limit the order of bind ip addr and SO_BINDTODEVICE opts
+> otherwise many vrf unaware apps many need to change their code.
+>     I can't find a convenient way to fix it.Here is an example:
+> 
+>     ...
+>     bind(sock_fd, (struct sockaddr *)&addr_serv, sizeof(addr_serv));
+>     ...
+>     ret = setsockopt(sock_fd, SOL_SOCKET, SO_BINDTODEVICE, bind_dev, strlen(bind_dev)+1);
+>     ...
+>     This code snipet doesn't work if the ip address of addr_serv is not in default vrf. And
+> "Cannot assign requested address" will occurs.
 
-Suggested-by: Joe Perches <joe@perches.com>
-Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
----
- arch/arm64/boot/dts/mediatek/mt2712-pinfunc.h | 2 +-
- arch/arm64/include/asm/pointer_auth.h         | 2 +-
- arch/arm64/include/asm/sdei.h                 | 2 +-
- arch/arm64/include/asm/vmap_stack.h           | 2 +-
- 4 files changed, 4 insertions(+), 4 deletions(-)
+Applications must bind to the device first and then bind to the local
+address. As I recall this applies regardless of whether it is a VRF or
+other.
 
-diff --git a/arch/arm64/boot/dts/mediatek/mt2712-pinfunc.h b/arch/arm64/boot/dts/mediatek/mt2712-pinfunc.h
-index 1b4cb0c55744..385c455a7c98 100644
---- a/arch/arm64/boot/dts/mediatek/mt2712-pinfunc.h
-+++ b/arch/arm64/boot/dts/mediatek/mt2712-pinfunc.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- /*
-  * Copyright (C) 2018 MediaTek Inc.
-  * Author: Zhiyong Tao <zhiyong.tao@mediatek.com>
-diff --git a/arch/arm64/include/asm/pointer_auth.h b/arch/arm64/include/asm/pointer_auth.h
-index 15d49515efdd..d328540cb85e 100644
---- a/arch/arm64/include/asm/pointer_auth.h
-+++ b/arch/arm64/include/asm/pointer_auth.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- #ifndef __ASM_POINTER_AUTH_H
- #define __ASM_POINTER_AUTH_H
- 
-diff --git a/arch/arm64/include/asm/sdei.h b/arch/arm64/include/asm/sdei.h
-index ffe47d766c25..63e0b92a5fbb 100644
---- a/arch/arm64/include/asm/sdei.h
-+++ b/arch/arm64/include/asm/sdei.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2017 Arm Ltd.
- #ifndef __ASM_SDEI_H
- #define __ASM_SDEI_H
-diff --git a/arch/arm64/include/asm/vmap_stack.h b/arch/arm64/include/asm/vmap_stack.h
-index 0b5ec6e08c10..0a12115d9638 100644
---- a/arch/arm64/include/asm/vmap_stack.h
-+++ b/arch/arm64/include/asm/vmap_stack.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- // Copyright (C) 2017 Arm Ltd.
- #ifndef __ASM_VMAP_STACK_H
- #define __ASM_VMAP_STACK_H
--- 
-2.17.1
+
+> 
+>     2.When I run a udp server in default vrf and set net.ipv4.udp_l3mdev_accept=1,
+> it's supposed to work accorss VRFs.
+>     But it occurs when udp server received a packet, it sends back with the source
+> ip address from default vrf which is supposed to from the specified l3mdev domain.
+> And the connection between server and client is broken. It's because udp server
+> run in default vrf and doesn't bind the enslaved device, so only the route table in
+> default vrf is avaliable.
+
+UDP applications can use cmsg with IP_PKTINFO to send the reply out the
+same device as the request was received. An app can also track the
+relationship of the enslaved device to a VRF to use a VRF based lookup
+to send a response. Choices.
+
+
+> 
+>     For example,I run a udp server in default vrf and set net.ipv4.udp_l3mdev_accept=1:
+>     [root@localhost vrf]# sysctl -a | grep l3mdev
+>     net.ipv4.raw_l3mdev_accept = 1
+>     net.ipv4.tcp_l3mdev_accept = 1
+>     net.ipv4.udp_l3mdev_accept = 1
+> 
+>     Then connect the server and send a udp packet to the specified vrf. Here is tcpdump output:
+>     17:28:54.925417 IP 10.0.0.2.43003 > 10.0.0.1.irdmi: UDP, length 17
+>     17:28:54.925953 IP 9.85.153.236.irdmi > 10.0.0.2.43003: UDP, length 17
+>     ps. 10.0.0.2 is client ip, 10.0.0.1 is specified vrf ip, and 9.85.153.236 is default vrf ip.
+>     10.0.0.1 and 9.85.153.236 are in the same host.
+> 
+> Thanks a lot if you can help me fix these. Have a nice day.
+> 
+> 
+> 
 
