@@ -2,131 +2,255 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BA58C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:44:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB579C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:44:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3F03C20693
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:44:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="nYPQUpvy"
+	by mail.kernel.org (Postfix) with ESMTP id 92C9320684
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:44:59 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728336AbfDPJoF (ORCPT
+        id S1728860AbfDPJo6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 05:44:05 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:50292 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726895AbfDPJoF (ORCPT
+        Tue, 16 Apr 2019 05:44:58 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:53696 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726895AbfDPJo5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 05:44:05 -0400
-Received: by mail-wm1-f67.google.com with SMTP id z11so24612575wmi.0
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 02:44:04 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=MfQ4ZPfq8jXM3q2KxZn6ZQmaur0tuEEWTcoJmqWC3do=;
-        b=nYPQUpvyB8mDur8wr4508xK01nv48ZRydUizGGDjA5AYID2RcTOJffL0liR2C0Ko+Y
-         cvjC05Cr2f2eRc8dpb7+JNJ1U8VZw1t/lS1YlEYMqRheTNI4/qOgu9JIRjivv0GbQJeK
-         DLYzo0ikbU/4VMGuEyyPJ/KU8exUBUxZYN4FVRb4zbSZDPuQxYHIYp/jQKVo+cq9BDaf
-         +y7VthHihzs6bp08/1oaF/KwtIcFU60v/lVbisc4AENFBNdwK+Qw1Itx02DZCcuUsOsn
-         SESSRkef0x/mHDGX6gGVTAeFQMjT3WGYnP6Q3LydgxXZVDIYM7WfRLODbO266iWWj8Fu
-         4BRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=MfQ4ZPfq8jXM3q2KxZn6ZQmaur0tuEEWTcoJmqWC3do=;
-        b=SMqcEz5d/j24FdJh6oRIYhgGUQdoeWQxyXGFoBFFXjUz2lJ9NeQfr47dJcHauYqtQl
-         RxJ+Q8bJIWcJAKwUwNjGWeLgGmnYdZZxkNj7U68TLpxgqDB8KRvPO7zryasDXDmGHq4o
-         oBziE4ZTNHhLTlCosWd8HTPMRe4ucDSDzlfONC7pZ0VurV4xCHnTRfafLjbqdxhX/E8+
-         XjZs5pWPmF87p9MxJwIHBnXK5gDM9FqmDk7OB9HL8TOr+MZSrrvoRk2vYBI5LsOl5Z7i
-         dfEhz1+d5h8usOG1WTTF2auqklTRU8Ce/yZNmZR5io2NWYWGn00Tn0F3fxNtjg7vRgbL
-         gMOA==
-X-Gm-Message-State: APjAAAVndE/olUGha4vszqSySviQNPX8qCsnXY1LoDNJNyTrq/7QVum9
-        E0dAU6maZ4rQkC/dHrw3slCkUGNXYgU=
-X-Google-Smtp-Source: APXvYqxAzc/tnA6WAOzdLFk8lE+cHhuUPfktIj1Iqv14flyD/lN0fctBwBn/s56g9Ykx4gD4k5Ul/Q==
-X-Received: by 2002:a7b:cd07:: with SMTP id f7mr26787245wmj.43.1555407843030;
-        Tue, 16 Apr 2019 02:44:03 -0700 (PDT)
-Received: from [192.168.86.34] (cpc89974-aztw32-2-0-cust43.18-1.cable.virginm.net. [86.30.250.44])
-        by smtp.googlemail.com with ESMTPSA id d14sm72678469wro.79.2019.04.16.02.44.02
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 02:44:02 -0700 (PDT)
-Subject: Re: [PATCH] nvmem: core: add NVMEM_SYSFS Kconfig
-To:     Mika Westerberg <mika.westerberg@linux.intel.com>,
-        Gaurav Kohli <gkohli@codeaurora.org>
-Cc:     gregkh@linuxfoundation.org, maxime.ripard@bootlin.com,
-        linux-arm-msm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190415164011.2638-1-srinivas.kandagatla@linaro.org>
- <3a66797d-347d-2414-14e1-edbcd7c39ae8@codeaurora.org>
- <20190416093454.GN2654@lahna.fi.intel.com>
-From:   Srinivas Kandagatla <srinivas.kandagatla@linaro.org>
-Message-ID: <66c3794b-ee84-f746-e686-e5477b78e981@linaro.org>
-Date:   Tue, 16 Apr 2019 10:44:01 +0100
+        Tue, 16 Apr 2019 05:44:57 -0400
+Received: from pps.filterd (m0098414.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3G9ie6X076402
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 05:44:56 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rwbr4tjq9-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 05:44:55 -0400
+Received: from localhost
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <anju@linux.vnet.ibm.com>;
+        Tue, 16 Apr 2019 10:44:54 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 16 Apr 2019 10:44:53 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3G9iqVS49414248
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 16 Apr 2019 09:44:52 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ED7ECA404D;
+        Tue, 16 Apr 2019 09:44:51 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 2509BA4053;
+        Tue, 16 Apr 2019 09:44:51 +0000 (GMT)
+Received: from localhost.localdomain (unknown [9.145.144.43])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 16 Apr 2019 09:44:50 +0000 (GMT)
+Subject: Re: [PATCH v4 0/5] powerpc/perf: IMC trace-mode support
+To:     mpe@ellerman.id.au
+Cc:     linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
+        maddy@linux.vnet.ibm.com
+References: <20190415101204.15125-1-anju@linux.vnet.ibm.com>
+From:   Anju T Sudhakar <anju@linux.vnet.ibm.com>
+Date:   Tue, 16 Apr 2019 15:14:49 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <20190416093454.GN2654@lahna.fi.intel.com>
+In-Reply-To: <20190415101204.15125-1-anju@linux.vnet.ibm.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-TM-AS-GCONF: 00
+x-cbid: 19041609-0008-0000-0000-000002DA57B2
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19041609-0009-0000-0000-000022468F4C
+Message-Id: <e85ee33d-9be6-e2ec-2779-c187602c547a@linux.vnet.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-16_03:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=1 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904160067
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi,
+
+Kindly ignore this series, since patch 5/5 in this series doesn't 
+incorporate the event-format change
+
+that I've done in v4 of this series.
 
 
-On 16/04/2019 10:34, Mika Westerberg wrote:
-> On Tue, Apr 16, 2019 at 10:49:22AM +0530, Gaurav Kohli wrote:
->> Hi Srinivas,
->>
->> Thanks for the patch,
->> By default NVMEM_SYSFS should be set true, those whose don't want they can
->> disable the same.
->>
->> If we go with disable option, there are chances of eeprom may break in below
->> case:
->>
->> if (config->compat) {
->>                  rval = nvmem_sysfs_setup_compat(nvmem, config); -> this will
->> return error as config is disabled.
->>                  if (rval)
->>                          goto err_device_del;
->>          }
-> 
-> I also think this may cause problems with Thunderbolt devices because
-> the upgradeable NVM is exposed to the userspace via these sysfs files
-> and those are being used by fwupd. If the files disappear it makes NVM
-> upgrade somewhat harder ;-)
-Thanks Mika and Kohli for input.
+Apologies for the inconvenience. I will post the updated v5 soon.
 
-As Kohli suggested we could make NVMEM_SYSFS default to y so that the 
-sysfs file is available by default like before and user/board specific 
-can decide to deselect it.
 
-Let me know if thats Okay with you, I can spin that in v2.
+Thanks,
 
---srini
+Anju
 
-> 
-> At least it would be good to include following as part of this series if
-> you plan to disable the sysfs entries by default:
-> 
-> diff --git a/drivers/thunderbolt/Kconfig b/drivers/thunderbolt/Kconfig
-> index f4869c38c7e4..dd5facab0af2 100644
-> --- a/drivers/thunderbolt/Kconfig
-> +++ b/drivers/thunderbolt/Kconfig
-> @@ -7,6 +7,7 @@ menuconfig THUNDERBOLT
->   	select CRYPTO
->   	select CRYPTO_HASH
->   	select NVMEM
-> +	select NVMEM_SYSFS
->   	help
->   	  Thunderbolt Controller driver. This driver is required if you
->   	  want to hotplug Thunderbolt devices on Apple hardware or on PCs
-> 
+On 4/15/19 3:41 PM, Anju T Sudhakar wrote:
+> IMC (In-Memory collection counters) is a hardware monitoring facility
+> that collects large number of hardware performance events.
+> POWER9 support two modes for IMC which are the Accumulation mode and
+> Trace mode. In Accumulation mode, event counts are accumulated in system
+> Memory. Hypervisor then reads the posted counts periodically or when
+> requested. In IMC Trace mode, the 64 bit trace scom value is initialized
+> with the event information. The CPMC*SEL and CPMC_LOAD in the trace scom, specifies
+> the event to be monitored and the sampling duration. On each overflow in the
+> CPMC*SEL, hardware snapshots the program counter along with event counts
+> and writes into memory pointed by LDBAR. LDBAR has bits to indicate whether
+> hardware is configured for accumulation or trace mode.
+> Currently the event monitored for trace-mode is fixed as cycle.
+>
+> Trace-IMC Implementation:
+> --------------------------
+> To enable trace-imc, we need to
+> 								
+> * Add trace node in the DTS file for power9, so that the new trace node can
+> be discovered by the kernel.
+> 								
+> Information included in the DTS file are as follows, (a snippet from
+> the ima-catalog)
+> 								
+> TRACE_IMC: trace-events {
+>       #address-cells = <0x1>;
+>       #size-cells = <0x1>;
+>       event at 10200000 {
+> 	 event-name = "cycles" ;
+> 	 reg = <0x10200000 0x8>;
+> 	 desc = "Reference cycles" ;
+>       };
+>   };
+>   trace@0 {
+> 	 compatible = "ibm,imc-counters";
+> 	 events-prefix = "trace_";
+> 	 reg = <0x0 0x8>;
+> 	 events = < &TRACE_IMC >;
+> 	 type = <0x2>;
+> 	 size = <0x40000>;
+>   };
+> 								
+> OP-BUILD changes needed to include the "trace node" is already pulled in
+> to the ima-catalog repo.
+> 								
+> ps://github.com/open-power/op-build/commit/d3e75dc26d1283d7d5eb444bff1ec9e40d5dfc07
+> 								
+> * Enchance the opal_imc_counters_* calls to support this new trace mode
+> in imc. Add support to initialize the trace-mode scom.
+> 								
+> TRACE_IMC_SCOM bit representation:
+> 								
+> 0:1     : SAMPSEL
+> 2:33    : CPMC_LOAD
+> 34:40   : CPMC1SEL
+> 41:47   : CPMC2SEL
+> 48:50   : BUFFERSIZE
+> 51:63   : RESERVED
+> 								
+> CPMC_LOAD contains the sampling duration. SAMPSEL and CPMC*SEL determines
+> the event to count. BUFFRSIZE indicates the memory range. On each overflow,
+> hardware snapshots program counter along with event counts and update the
+> memory and reloads the CMPC_LOAD value for the next sampling duration.
+> IMC hardware does not support exceptions, so it quietly wraps around if
+> memory buffer reaches the end.
+>
+> OPAL support for IMC trace mode is already upstream.
+>
+> * Set LDBAR spr to enable imc-trace mode.
+>                                                                               
+>    LDBAR Layout:
+>                                                                               
+>    0     : Enable/Disable
+>    1     : 0 -> Accumulation Mode
+>            1 -> Trace Mode
+>    2:3   : Reserved
+>    4-6   : PB scope
+>    7     : Reserved
+>    8:50  : Counter Address
+>    51:63 : Reserved
+>
+> ----------------------
+>
+> PMI interrupt handling is avoided, since IMC trace mode snapshots the
+> program counter and update to the memory. And this also provide a way for
+> the operating system to do instruction sampling in real time without
+> PMI(Performance Monitoring Interrupts) processing overhead.          								    					
+> Performance data using 'perf top' with and without trace-imc event:
+> 								
+> PMI interrupts count when `perf top` command is executed without trace-imc event.
+> 								
+> # cat /proc/interrupts  (a snippet from the output)
+> 9944      1072        804        804       1644        804       1306
+> 804        804        804        804        804        804        804
+> 804        804       1961       1602        804        804       1258
+> [-----------------------------------------------------------------]
+> 803        803        803        803        803        803        803
+> 803        803        803        803        804        804        804
+> 804        804        804        804        804        804        803
+> 803        803        803        803        803       1306        803
+> 803   Performance monitoring interrupts
+> 								
+> 								
+> `perf top` with trace-imc (executed right after 'perf top' without trace-imc event):
+> 								
+> # perf top -e trace_imc/trace_cycles/
+> 12.50%  [kernel]          [k] arch_cpu_idle
+> 11.81%  [kernel]          [k] __next_timer_interrupt
+> 11.22%  [kernel]          [k] rcu_idle_enter
+> 10.25%  [kernel]          [k] find_next_bit
+>   7.91%  [kernel]          [k] do_idle
+>   7.69%  [kernel]          [k] rcu_dynticks_eqs_exit
+>   5.20%  [kernel]          [k] tick_nohz_idle_stop_tick
+>       [-----------------------]
+> 								
+> # cat /proc/interrupts (a snippet from the output)
+> 								
+> 9944      1072        804        804       1644        804       1306
+> 804        804        804        804        804        804        804
+> 804        804       1961       1602        804        804       1258
+> [-----------------------------------------------------------------]
+> 803        803        803        803        803        803        803
+> 803        803        803        804        804        804        804
+> 804        804        804        804        804        804        803
+> 803        803        803        803        803       1306        803
+> 803   Performance monitoring interrupts
+> 								
+> The PMI interrupts count remains the same.
+>
+>
+> Changelog:
+> ----------
+>  From v3 -> v4:
+>
+> * trace_imc_refc is introduced. So that even if, core-imc
+> is disabled, trace-imc can be used.
+>
+> * trace_imc_pmu_sched_task is removed and opal start/stop
+> is invoked in trace_imc_event_add/del function.
+>
+>
+> Suggestions/comments are welcome.
+>
+> Anju T Sudhakar (4):
+>    powerpc/include: Add data structures and macros for IMC trace mode
+>    powerpc/perf: Rearrange setting of ldbar for thread-imc
+>    powerpc/perf: Trace imc events detection and cpuhotplug
+>    powerpc/perf: Trace imc PMU functions
+>
+> Madhavan Srinivasan (1):
+>    powerpc/perf: Add privileged access check for thread_imc
+>
+>   arch/powerpc/include/asm/imc-pmu.h        |  39 +++
+>   arch/powerpc/include/asm/opal-api.h       |   1 +
+>   arch/powerpc/perf/imc-pmu.c               | 318 +++++++++++++++++++++-
+>   arch/powerpc/platforms/powernv/opal-imc.c |   3 +
+>   include/linux/cpuhotplug.h                |   1 +
+>   5 files changed, 351 insertions(+), 11 deletions(-)
+>
+
