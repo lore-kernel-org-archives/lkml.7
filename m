@@ -2,125 +2,116 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C35C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:46:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7E971C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:47:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52F5E20868
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:46:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="N2RQr0Tg"
+	by mail.kernel.org (Postfix) with ESMTP id 4D81B20868
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:47:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729283AbfDPPq2 (ORCPT
+        id S1729524AbfDPPq7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 11:46:28 -0400
-Received: from mail-yw1-f68.google.com ([209.85.161.68]:46349 "EHLO
-        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726037AbfDPPq1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 11:46:27 -0400
-Received: by mail-yw1-f68.google.com with SMTP id v127so7458369ywe.13
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 08:46:27 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=PMY/1MQM2MS3/ywqbNOzsE5mcCaPgtitZAkH08psa60=;
-        b=N2RQr0Tg1Zir17Zu0EREHeWqdbmrBwW/4OtFubKrMRr1z4KgLtxQ8OP4Jjit6qkfQv
-         K9htk2SfTlPJ+QO0Plci+o2IuOyF1KN759hzSZFSf+cEApmfIkEZ3Cr4/i5phXOj7dh7
-         a0EICiVzw0/Vvw9b3GyyeY0xJWsq0s+Y827uTiRdbz28/UTQ6Vnvol7zEi6YNKBUYAGK
-         IZCuslHKDv0hW7U3QKzwgxpTagqw/9j/4Wd2cJIJbaPK1caGKFuvgxrLnH9VTNX2lyrI
-         urkDzNUGLY5Hvcsn/wKfZTNtyhvYO3qhfK8z423J8FQ/vY5p5a2wLJkDOk6H08bB4M0g
-         sN1A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=PMY/1MQM2MS3/ywqbNOzsE5mcCaPgtitZAkH08psa60=;
-        b=hjuNNxjmW1zBWzRXgpWNBl0F4nYKU/HDSTCD39brw9cdSwSnD/a9MAyeZ1+xopYkne
-         HXAvnpoEl2+mLcwe/DaLFQHptK6HpWyLItVTFE9qQZlmcc/C+nvWLPaMsTdCEr+LBa4/
-         S44uGKwUfl/ibfpB2Q5jdWkCb3Rhnr0SAHr43v7QAAMy/TkNg/gRe3N/01XTBahDcAyV
-         le1OvS6lpTK+Jj1NFzBjpJUxXx8KvaCFNPuCuq0sqynSksJqqYImL9JpJLWIye6DNDfJ
-         yXSwiExwjvHyxGiVEnfnUmdIad6HwjmwU18OaCB8hxj9C6R+vBNcT7f4fOImKPYQFkld
-         DduA==
-X-Gm-Message-State: APjAAAXMOqkWuaBnD7FtbsxvZ5kXu7fCyX8rDlHcLdzdNCO0Qao7lXvz
-        kOm8Zq976HtdNcbxJmq/oqE=
-X-Google-Smtp-Source: APXvYqyqyLd3pAksQDQWGrxX73V2KLOTIDtjaPe2RoXDlaD7afJTvR82HLvP2JP1diBXuPcRw79mSA==
-X-Received: by 2002:a81:3146:: with SMTP id x67mr64088185ywx.392.1555429586893;
-        Tue, 16 Apr 2019 08:46:26 -0700 (PDT)
-Received: from nishad ([2406:7400:54:eb3:d9be:857a:cd1e:eb7f])
-        by smtp.gmail.com with ESMTPSA id 129sm24968407ywv.38.2019.04.16.08.46.21
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 16 Apr 2019 08:46:26 -0700 (PDT)
-Date:   Tue, 16 Apr 2019 21:16:14 +0530
-From:   Nishad Kamdar <nishadkamdar@gmail.com>
-To:     Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>
-Cc:     Borislav Petkov <bp@alien8.de>, "H. Peter Anvin" <hpa@zytor.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Joe Perches <joe@perches.com>,
-        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
-        <u.kleine-koenig@pengutronix.de>, x86@kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH v3 5/5] x86: Use the correct style for SPDX License Identifier
-Message-ID: <697848ff866ade29e78e872525d7a3067642fd37.1555427420.git.nishadkamdar@gmail.com>
-References: <cover.1555427418.git.nishadkamdar@gmail.com>
+        Tue, 16 Apr 2019 11:46:59 -0400
+Received: from mga05.intel.com ([192.55.52.43]:42376 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726178AbfDPPq6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 11:46:58 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga002.jf.intel.com ([10.7.209.21])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Apr 2019 08:46:56 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,358,1549958400"; 
+   d="scan'208";a="151360905"
+Received: from ray.jf.intel.com (HELO [10.7.201.126]) ([10.7.201.126])
+  by orsmga002.jf.intel.com with ESMTP; 16 Apr 2019 08:46:56 -0700
+Subject: Re: [v2 RFC PATCH 0/9] Another Approach to Use PMEM as NUMA Node
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Yang Shi <yang.shi@linux.alibaba.com>, mgorman@techsingularity.net,
+        riel@surriel.com, hannes@cmpxchg.org, akpm@linux-foundation.org,
+        keith.busch@intel.com, dan.j.williams@intel.com,
+        fengguang.wu@intel.com, fan.du@intel.com, ying.huang@intel.com,
+        ziy@nvidia.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1554955019-29472-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190412084702.GD13373@dhcp22.suse.cz>
+ <a68137bb-dcd8-4e4a-b3a9-69a66f9dccaf@linux.alibaba.com>
+ <20190416074714.GD11561@dhcp22.suse.cz>
+ <b9b40585-cb59-3d42-bcf8-e59bff77c663@intel.com>
+ <20190416143958.GI11561@dhcp22.suse.cz>
+From:   Dave Hansen <dave.hansen@intel.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=dave.hansen@intel.com; keydata=
+ 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
+Message-ID: <bddc3469-2984-2d32-f2cf-e1d0cc64f1e8@intel.com>
+Date:   Tue, 16 Apr 2019 08:46:56 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <cover.1555427418.git.nishadkamdar@gmail.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <20190416143958.GI11561@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch corrects the SPDX License Identifier style
-in the x86 Hardware Architecture related files.
+On 4/16/19 7:39 AM, Michal Hocko wrote:
+>> Strict binding also doesn't keep another app from moving the
+>> memory.
+> I would consider that a bug.
 
-Suggested-by: Joe Perches <joe@perches.com>
-Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
----
- arch/x86/include/asm/cpu_entry_area.h | 2 +-
- arch/x86/include/asm/pti.h            | 2 +-
- arch/x86/kernel/process.h             | 2 +-
- 3 files changed, 3 insertions(+), 3 deletions(-)
+A bug where, though?  Certainly not in the kernel.
 
-diff --git a/arch/x86/include/asm/cpu_entry_area.h b/arch/x86/include/asm/cpu_entry_area.h
-index 29c706415443..84006ca0f17a 100644
---- a/arch/x86/include/asm/cpu_entry_area.h
-+++ b/arch/x86/include/asm/cpu_entry_area.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- 
- #ifndef _ASM_X86_CPU_ENTRY_AREA_H
- #define _ASM_X86_CPU_ENTRY_AREA_H
-diff --git a/arch/x86/include/asm/pti.h b/arch/x86/include/asm/pti.h
-index 5df09a0b80b8..07375b476c4f 100644
---- a/arch/x86/include/asm/pti.h
-+++ b/arch/x86/include/asm/pti.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- #ifndef _ASM_X86_PTI_H
- #define _ASM_X86_PTI_H
- #ifndef __ASSEMBLY__
-diff --git a/arch/x86/kernel/process.h b/arch/x86/kernel/process.h
-index 320ab978fb1f..1d0797b2338a 100644
---- a/arch/x86/kernel/process.h
-+++ b/arch/x86/kernel/process.h
-@@ -1,4 +1,4 @@
--// SPDX-License-Identifier: GPL-2.0
-+/* SPDX-License-Identifier: GPL-2.0 */
- //
- // Code shared between 32 and 64 bit
- 
--- 
-2.17.1
+I'm just saying that if an app has an assumption that strict binding
+means that its memory can *NEVER* move, then that assumption is simply
+wrong.  It's not the guarantee that we provide.  In fact, we provide
+APIs (migrate_pages() at leaset) that explicitly and intentionally break
+that guarantee.
 
+All that our NUMA APIs provide (even the strict ones) is a promise about
+where newly-allocated pages will be allocated.
