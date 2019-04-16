@@ -3,78 +3,232 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D11CC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:56:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2248DC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:59:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0CDAA20868
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:56:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D978D2075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:59:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726836AbfDPD4O (ORCPT
+        id S1726774AbfDPD7w (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 23:56:14 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:34560 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726208AbfDPD4O (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 23:56:14 -0400
-Received: from DGGEMS404-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id A9AA11633A79D2CA0A49;
-        Tue, 16 Apr 2019 11:56:11 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS404-HUB.china.huawei.com (10.3.19.204) with Microsoft SMTP Server id
- 14.3.408.0; Tue, 16 Apr 2019 11:56:09 +0800
-From:   Mao Wenan <maowenan@huawei.com>
-To:     <boris.ostrovsky@oracle.com>, <jgross@suse.com>,
-        <sstabellini@kernel.org>
-CC:     <xen-devel@lists.xenproject.org>, <linux-kernel@vger.kernel.org>,
-        <kernel-janitors@vger.kernel.org>
-Subject: [PATCH] xenbus: drop useless LIST_HEAD in xenbus_write_watch() and xenbus_file_write()
-Date:   Tue, 16 Apr 2019 12:06:51 +0800
-Message-ID: <20190416040651.186468-1-maowenan@huawei.com>
-X-Mailer: git-send-email 2.20.1
-MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+        Mon, 15 Apr 2019 23:59:52 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:45153 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726208AbfDPD7w (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 23:59:52 -0400
+Received: from mail-pg1-f199.google.com ([209.85.215.199])
+        by youngberry.canonical.com with esmtps (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <kai.heng.feng@canonical.com>)
+        id 1hGFG8-0000jf-VM
+        for linux-kernel@vger.kernel.org; Tue, 16 Apr 2019 03:59:49 +0000
+Received: by mail-pg1-f199.google.com with SMTP id d15so11710388pgt.14
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 20:59:48 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=68oTKaAoNg7fVjI4faua647nBiot/HFTwVUmGhgg+CQ=;
+        b=VRfXhtBEkhLPRoU2bBA2FTFKvmc+F8R3V/aCL//g367VhNjkLUvTIMWK1929kWjIKR
+         yCpz3quZm2VimswrTLlWxbXMs3fX/N/c1LuVW5koObIed1GeU8w7syadtIO+oF92N1XL
+         xStucoNn+ZQheQsfqMgBDZTgXwgZ/NI/RsJuLFQUJO0jwhkuTaSOvXu0DuUc9azs97z6
+         9F51iI6xT2N88hGN4Uw9b5N4msA4RMCKIyuO9QSSejx8sKR3boAMRxh2gl1BhBAyRbgz
+         d40wiM/AlqUoGuFwQK6LhfsdAoWgwUA/sx+guaDilQxXWmpYuPHoi/g/QNorRRnPIGsj
+         x3Zg==
+X-Gm-Message-State: APjAAAVFXdhvtMjUi49WqvzmRsPAs7E7DxZLJgvLqs6Z2twuiB2MIRVI
+        kuCYizWVjQBib/4mC8ha5ejF4tJimycwz8tzq1gArJAgXSH9gkwswwmC0kcbEUlGGbjSgnLlQdh
+        pwzYIlOlRG2DxGQGlCRc+mRYcJR66yWENpJvSJOaIDA==
+X-Received: by 2002:a65:6289:: with SMTP id f9mr74935170pgv.380.1555387187330;
+        Mon, 15 Apr 2019 20:59:47 -0700 (PDT)
+X-Google-Smtp-Source: APXvYqzcmIE04TYq5rjK9FIFnjxj+8Xczz76yCIBjHWuT/NKHioNqXniIoDcEWYVWVhym0C5TJ+cfA==
+X-Received: by 2002:a65:6289:: with SMTP id f9mr74935152pgv.380.1555387186918;
+        Mon, 15 Apr 2019 20:59:46 -0700 (PDT)
+Received: from 2001-b011-380f-14b9-3d07-9ba6-aef3-fb55.dynamic-ip6.hinet.net (2001-b011-380f-14b9-3d07-9ba6-aef3-fb55.dynamic-ip6.hinet.net. [2001:b011:380f:14b9:3d07:9ba6:aef3:fb55])
+        by smtp.gmail.com with ESMTPSA id z13sm72473622pgc.25.2019.04.15.20.59.44
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Apr 2019 20:59:45 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8;
+        delsp=yes;
+        format=flowed
+Mime-Version: 1.0 (Mac OS X Mail 12.4 \(3445.104.8\))
+Subject: Re: [PATCH] ELAN touchpad i2c_hid bugs fix
+From:   Kai-Heng Feng <kai.heng.feng@canonical.com>
+In-Reply-To: <b495a521-16b5-8005-16be-e0b899f954f7@redhat.com>
+Date:   Tue, 16 Apr 2019 11:59:42 +0800
+Cc:     hotwater438@tutanota.com, Dmitry Torokhov <dtor@chromium.org>,
+        Vladislav Dalechyn <vlad.dalechin@gmail.com>,
+        Benjamin Tissoires <benjamin.tissoires@redhat.com>,
+        Jiri Kosina <jikos@kernel.org>, Swboyd <swboyd@chromium.org>,
+        Bigeasy <bigeasy@linutronix.de>,
+        "open list:HID CORE LAYER" <linux-input@vger.kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>
+Content-Transfer-Encoding: 8bit
+Message-Id: <31D4FB07-B7E4-4A51-B191-44F92B229CB4@canonical.com>
+References: <CAE_wzQ8Aep1FOONeCUxvjBFbgKcVRWP5mUuwQnDxzfemUw-eaA@mail.gmail.com>
+ <a2952bc4-0ad0-c8a0-5a5b-13a279023455@redhat.com>
+ <CAE_wzQ8sYcMVYLmnctw_UQuvn0B8U2CU2dNeg-9sh85AL_CfgQ@mail.gmail.com>
+ <abe3eccb-1490-e088-1fd8-6af4dc1bd2ec@redhat.com> <LbI7kio--3-1@tutanota.com>
+ <a58ebeb8-10fd-29d0-1562-4ed8d84f2239@redhat.com> <LbZjy9p--3-1@tutanota.com>
+ <B7A141A3-613C-4EB8-8BB4-F845A0AC8F23@canonical.com>
+ <LcKqhgD--3-1@tutanota.com>
+ <385F448C-463D-4EF0-BCFB-8386D043F189@canonical.com>
+ <LcVmBjG--3-1@tutanota.com> <b495a521-16b5-8005-16be-e0b899f954f7@redhat.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+X-Mailer: Apple Mail (2.3445.104.8)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Drop LIST_HEAD where the variable it declares is never used.
+at 19:42, Hans de Goede <hdegoede@redhat.com> wrote:
 
-The declarations were introduced with the file, but the declared
-variables were not used.
+> Hi,
+>
+> On 15-04-19 13:36, hotwater438@tutanota.com wrote:
+>> Sorry for the delay.
+>> By applying this patch I get next results:
+>> Five finger tap and two finger scroll issues disappear, but after  
+>> suspend touchpad dies. Restarting module doesn't help.
+>
+> So bascally the same results as with the edge-triggered interrupt  
+> patch/hack,
+> right?
+>
+> Are you still using the edge-triggered interrupt patch, or just the new
+> patch Kai-Heng Feng provided.
+>
+> To me it sounds like the patch Kai-Heng Feng provided at least removes
+> the need for the edge-triggered interrupt patch/hack and what remains to
+> be solved is the suspend/resume issues.
 
-Fixes: 1107ba885e469("xen: add xenfs to allow usermode <-> Xen interaction")
-Signed-off-by: Mao Wenan <maowenan@huawei.com>
----
- drivers/xen/xenbus/xenbus_dev_frontend.c | 2 --
- 1 file changed, 2 deletions(-)
+Great! I’ll send a patch to address this issue.
 
-diff --git a/drivers/xen/xenbus/xenbus_dev_frontend.c b/drivers/xen/xenbus/xenbus_dev_frontend.c
-index 0782ff3..faf452d 100644
---- a/drivers/xen/xenbus/xenbus_dev_frontend.c
-+++ b/drivers/xen/xenbus/xenbus_dev_frontend.c
-@@ -465,7 +465,6 @@ static int xenbus_write_watch(unsigned msg_type, struct xenbus_file_priv *u)
- 	struct watch_adapter *watch;
- 	char *path, *token;
- 	int err, rc;
--	LIST_HEAD(staging_q);
- 
- 	path = u->u.buffer + sizeof(u->u.msg);
- 	token = memchr(path, 0, u->u.msg.len);
-@@ -523,7 +522,6 @@ static ssize_t xenbus_file_write(struct file *filp,
- 	uint32_t msg_type;
- 	int rc = len;
- 	int ret;
--	LIST_HEAD(staging_q);
- 
- 	/*
- 	 * We're expecting usermode to be writing properly formed
--- 
-2.7.4
+Kai-Heng
+
+>
+> Regards,
+>
+> Hans
+>
+>
+>
+>> Here's the log:
+>> Apr 15 14:35:54 parrot sudo[3473]: h0tw4t3r : TTY=pts/1 ;  
+>> PWD=/home/h0tw4t3r ; USER=root ; COMMAND=/sbin/rmmod i2c_hid
+>> Apr 15 14:35:54 parrot sudo[3478]: h0tw4t3r : TTY=pts/1 ;  
+>> PWD=/home/h0tw4t3r ; USER=root ; COMMAND=/sbin/modprobe i2c_hid
+>> Apr 15 14:35:54 parrot kernel: i2c_hid i2c-ELAN1200:00: i2c-ELAN1200:00  
+>> supply vdd not found, using dummy regulator
+>> Apr 15 14:35:54 parrot kernel: i2c_hid i2c-ELAN1200:00: i2c-ELAN1200:00  
+>> supply vddl not found, using dummy regulator
+>> Could you please explain what this patch does?
+>> Regards,
+>> Vladislav.
+>> Apr 13, 2019, 11:42 AM by kai.heng.feng@canonical.com:
+>>     at 16:40, <hotwater438@tutanota.com <mailto:hotwater438@tutanota.com>> <hotwater438@tutanota.com <mailto:hotwater438@tutanota.com>> wrote:
+>>         Hi.
+>>         I've applied this patch, but still getting incomplete report messages.
+>>     Does the patch fix the other two issues:
+>>     - Five finger tap kill's module so you have to restart it;
+>>     - Two finger scoll is working incorrect and sometimes even when you
+>>     raised one of two finger still thinks that you are scrolling.
+>>     Kai-Heng
+>>         Regards,
+>>         Vladislav
+>>         Apr 11, 2019, 7:17 PM by kai.heng.feng@canonical.com <mailto:kai.heng.feng@canonical.com>:
+>>         Hi,
+>>         at 05:18, <hotwater438@tutanota.com <mailto:hotwater438@tutanota.com>> <hotwater438@tutanota.com <mailto:hotwater438@tutanota.com>> wrote:
+>>         Hi.
+>>         1) Run "cat /proc/interrupts | grep ELAN" , note down the value
+>>         2) Very quickly/briefly touch the touchpad once
+>>         3) Run "cat /proc/interrupts | grep ELAN" , note down the value again
+>>         4) Subtract result from 1. from result from 3, this difference is
+>>         the value we are interested in. E.g. my testing got 254 and 257, so
+>>         a difference of 3.
+>>         I've tested that, main diffs are 30, 24, 16 (the most frequent), 2 (the least frequent).
+>>         I was using 4.19.13 kernel, because I use ParrotOS (which happens to be Debian distribution).
+>>         But I've installed experimental 5.0.0 kernel and I can't say right now if suspend problem is resolved (i have to rebuild latest kernel with patch).
+>>         Can you try below fix?
+>>         This can solve what commit 1475af255e18 ("HID: i2c-hid: Ignore input report if there's no data present on Elan touchpanels”) tries to workaround.
+>>         diff --git a/drivers/pinctrl/intel/pinctrl-intel.c b/drivers/pinctrl/intel/pinctrl-intel.c
+>>         index c19a4c45f7bb..30e3664f1ae5 100644
+>>         --- a/drivers/pinctrl/intel/pinctrl-intel.c
+>>         +++ b/drivers/pinctrl/intel/pinctrl-intel.c
+>>         @@ -957,6 +957,10 @@ static void intel_gpio_irq_mask_unmask(struct irq_data *d, bool mask)
+>>         reg = community->regs + community->ie_offset + gpp * 4;
+>>         raw_spin_lock_irqsave(&pctrl->lock, flags);
+>>         +
+>>         + if (!mask)
+>>         + writel(BIT(gpp_offset), community->regs + community->is_offset + gpp * 4);
+>>         +
+>>         value = readl(reg);
+>>         if (mask)
+>>         value &= ~BIT(gpp_offset);
+>>         Regards,
+>>         Vladislav.
+>>         Apr 3, 2019, 2:18 PM by hdegoede@redhat.com <mailto:hdegoede@redhat.com>:
+>>         Hi,
+>>         On 31-03-19 11:50, hotwater438@tutanota.com <mailto:hotwater438@tutanota.com> wrote:
+>>         Hi. I've done everything you said, here are results:
+>>         Vladislav can you check the output of /cat/interrupts on a kernel
+>>         without the patch and while *not* using the touchpad; and check
+>>         if the amount of touchpads-interrupts still keeps increasing in this
+>>         case?
+>>         IWI or IRQ work interrupts keep increasing with speed at least 3 interrupts/s.
+>>         I'm really only interested in the touchpad related IRQs, so e.g. the line
+>>         about "intel-gpio 129 ELAN1200:00", if you're seeing 3 interrupts/s on
+>>         some others that is fine, so I take it the ELAN1200:00 interrupt count
+>>         does not increase on an *unpatched* kernel, unless you use the touchpad?
+>>         Also when I am moving touchpad IR-IO-APIC 14-fasteoi INT345D:00 get's triggered and increased.
+>>         That is the GPIO controller interrupt, so that one increasing is normal.
+>>         If I understand things correctly then this all means that the IRQ indeed
+>>         is a normal level IRQ and Dmitry is likely correct that there is an
+>>         pinctrl / gpiochip driver problem here.
+>>         Can you try the following with an *unpatched* kernel? :
+>>         1) Run "cat /proc/interrupts | grep ELAN" , note down the value
+>>         2) Very quickly/briefly touch the touchpad once
+>>         3) Run "cat /proc/interrupts | grep ELAN" , note down the value again
+>>         4) Subtract result from 1. from result from 3, this difference is
+>>         the value we are interested in. E.g. my testing got 254 and 257, so
+>>         a difference of 3.
+>>         The goal here is to get an as low as possible difference. Feel free
+>>         to repeat this a couple of times.
+>>         On an Apollo Lake laptop with an I2C hid mt touchpad I can get the
+>>         amount of interrupts triggered for a single touch down to 3,
+>>         given the huge interrupt counts of 130000+ reported in:
+>>         https://bugzilla.redhat.com/show_bug.cgi?id=1543769
+>>         I expect you to get a much bigger smallest possible difference
+>>         between 2 "cat /proc/interrupts | grep ELAN" commands, note a
+>>         difference of 0 means your touch did not register.
+>>         Assuming you indeed see much more interrupts for a very quick
+>>         touch + release, then we indeed have an interrupt handling problem
+>>         we need to investigate further.
+>>         I don't know if it's important or not, but for some reason these interrupts keep popping only on CPU2 (i have 4cpu processor).
+>>         That does not matter.
+>>         1) Suspending the machine by selecting suspend from a menu in your
+>>         desktop environment, or by briefly pressing the power-button, do
+>>         not close the lid
+>>         2) As soon as the system starts suspending and while it is suspended, move
+>>         your finger around the touchpad
+>>         3) Wake the system up with the powerbutton while moving your finger around
+>>         4) Check if the touchpad still works after this
+>>         It works, but as it seems, looses edge. JournalCTL is being flooded with i2c_hid_get_input: incomplete report (16/65535)
+>>         That is probably a different issue. If you loose the edge IRQ, then the touchpad
+>>         would stop working without any messages. I believe that the suspend / resume
+>>         issue may be fixed by:
+>>         https://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git/commit/?id=52cf93e63ee672a92f349edc6ddad86ec8808fd8
+>>         Does your kernel have this commit? (please always use the latest kernel while
+>>         testing).
+>>         Also a thing to notice, that after manually removing and modprobing i2c_hid module, it says next in journalctl:
+>>         i2c_hid i2c-ELAN1200:00: i2c-ELAN1200:00 supply vdd not found, using dummy regulator
+>>         i2c_hid i2c-ELAN1200:00: i2c-ELAN1200:00 supply vddl not found, using dummy regulator
+>>         Those messages can safely be ignored.
+>>         Regards,
+>>         Hans
+
 
