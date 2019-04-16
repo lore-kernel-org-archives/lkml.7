@@ -2,56 +2,57 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 636BBC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 21:54:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D9036C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 21:54:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B45B20693
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 21:54:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A6374206B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 21:54:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RG7wZxCW"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="ejBtaPnR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730647AbfDPVyN (ORCPT
+        id S1730796AbfDPVyU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 17:54:13 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:40757 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730596AbfDPVyM (ORCPT
+        Tue, 16 Apr 2019 17:54:20 -0400
+Received: from mail-pg1-f194.google.com ([209.85.215.194]:36119 "EHLO
+        mail-pg1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730714AbfDPVyR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 17:54:12 -0400
-Received: by mail-pl1-f195.google.com with SMTP id b3so10985445plr.7
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 14:54:12 -0700 (PDT)
+        Tue, 16 Apr 2019 17:54:17 -0400
+Received: by mail-pg1-f194.google.com with SMTP id 85so10985760pgc.3
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 14:54:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9HGU4dCKpXPQnSBrDR2ECEUC1qmGkGpsIfBVYvSfbAc=;
-        b=RG7wZxCW8Z6YRFTWDTOwvUtZpsmFe9M0LLHCuTQ92Xx3GKtPCDP+vTPWgTlMTphJAG
-         K2ngJz9rExe3KSMZvT2dGJZ0UwEvJC2B5PB+FrRftE9FZZqZfUIOASNsVMCq/EAeSXLN
-         wDzRSVJYzW1w2mH49a0NUDrFuoggMbB33M2OA=
+        h=from:to:cc:subject:date:message-id:in-reply-to:references
+         :mime-version:content-transfer-encoding;
+        bh=cWXcwUO99R4dLB/IuZUC9gJlZE5FQWRDL44srQDPsqk=;
+        b=ejBtaPnR9q05b/fAPX24cAvnXMkUKl8dv74zXRQ/flOfxwW2g+52dgsY64NuNdME22
+         uPRaVNQIDZwDLbenk3fXkr5sCpbUoQQx3iz6VI/N4wTVQq5I+lf9isXR5BnHdcl04m0i
+         qMRY/ItYRRoO2Pj+l2mtAwkwcK8tNs2AKNPyA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=9HGU4dCKpXPQnSBrDR2ECEUC1qmGkGpsIfBVYvSfbAc=;
-        b=qOpEwFaMC1dff4zyY5+/jD28BNDrGofkBTPkBeXakGFkpt0mS6VwfLYv9kRut8iyhg
-         S252wtjCHjmLeASC4ueoQCHOMJBXZ0JDU6lXGSi6Wna61pYcm3A7CM3FSTU+4/sCXUAj
-         mmVlZVbVAqJXPily8ByQ551RS72e3WfoZdouR16xrlEgAz4opKriFH7Pe2FsytDldgvt
-         W2AvXJ5spSNYPulqO4FammhZqt8DXnfLNGYbmCYvzONRFhfZBCMv1vcTHMUEcVpwbn0e
-         Ufof4rhIzOmlvG63Dhs/Szl7mzYORqKiwudaUE6Bl1cfhgkupXJy4V3CsDCT1sgFjM+z
-         LVnw==
-X-Gm-Message-State: APjAAAU5GkU0IY5OOMNEJoPYHR6XHHOuVR6BPv9vyLwIXTKATW2mHV8T
-        IyZFMqUphu/0DV36enBlGsT3Yw==
-X-Google-Smtp-Source: APXvYqzyFpMWEmeYMmrX9KaorHnS7Ur0BIgPYvvV0Vvlt8QvOPOjbOuGAegmy11626TgNUuOgto1sQ==
-X-Received: by 2002:a17:902:1681:: with SMTP id h1mr71653830plh.102.1555451651706;
-        Tue, 16 Apr 2019 14:54:11 -0700 (PDT)
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=cWXcwUO99R4dLB/IuZUC9gJlZE5FQWRDL44srQDPsqk=;
+        b=l7Zs+kWEwk9VuElgdVqHC5nyQY0V4rpN1VgE29QvWBPwbT7aF0OlYW0QqhWXaan+Bf
+         FVZxZBZJiKjolCLUUqiI6mfuqPbihwJ86td+akO26VG/dhslEF1H6BA+l4kv3FlsixT6
+         jDg+vrbc4E4wUuwoefyi6kfKVahc1Z7ZU4ph5kYwhzb2zjNN8EJPReJb0Bhy85oZvJVn
+         lfBvRaGFLh2GMW6PTaFnKQWyyo9Em4m3vo43OfI44l2Lu+kBPMfjKg4D6NqElN80fAAH
+         2XN897B/ScRXLxciobACNmXI2fbb4x8+4/kFewn/7Nt5eoCN8kSj6sIG+D4KHoSi9Zzx
+         66Rw==
+X-Gm-Message-State: APjAAAWrd+CKr44RWpbnm5sH549oMuusg9k8Ce2dBjkjg/3Rhn+AY9w0
+        W1hcXINakDnsk5Ga1/mNIyqpsg==
+X-Google-Smtp-Source: APXvYqxxdYR0fLJUpsHaTgteMM1jkatPh1TgL1h1tZn2iyQSTF5t4CnY+DzCpefDu9PaKb6nKGydpA==
+X-Received: by 2002:a63:af0a:: with SMTP id w10mr54056203pge.67.1555451656875;
+        Tue, 16 Apr 2019 14:54:16 -0700 (PDT)
 Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
-        by smtp.gmail.com with ESMTPSA id b6sm8156770pgt.58.2019.04.16.14.54.10
+        by smtp.gmail.com with ESMTPSA id b6sm8156770pgt.58.2019.04.16.14.54.15
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 14:54:10 -0700 (PDT)
+        Tue, 16 Apr 2019 14:54:16 -0700 (PDT)
 From:   Douglas Anderson <dianders@chromium.org>
 To:     Rob Herring <robh+dt@kernel.org>,
         Minas Harutyunyan <hminas@synopsys.com>,
@@ -63,13 +64,14 @@ Cc:     amstan@chromium.org, linux-rockchip@lists.infradead.org,
         Elaine Zhang <zhangqing@rock-chips.com>,
         Douglas Anderson <dianders@chromium.org>,
         devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
         Mark Rutland <mark.rutland@arm.com>,
         linux-arm-kernel@lists.infradead.org
-Subject: [PATCH v2 0/4] usb: dwc2: Another attempt handling rk3288's remote wake quirk
-Date:   Tue, 16 Apr 2019 14:53:47 -0700
-Message-Id: <20190416215351.242246-1-dianders@chromium.org>
+Subject: [PATCH v2 4/4] ARM: dts: rockchip: Add quirk for resetting rk3288's dwc2 host on wakeup
+Date:   Tue, 16 Apr 2019 14:53:51 -0700
+Message-Id: <20190416215351.242246-5-dianders@chromium.org>
 X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
+In-Reply-To: <20190416215351.242246-1-dianders@chromium.org>
+References: <20190416215351.242246-1-dianders@chromium.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -77,35 +79,31 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is another attempt to upstream the code to unwedge the rk3288's
-"host" USB port when it sees a remote wakeup.  Previously I attempted
-this [1] and it appears that Randy Li made some attempts too [2] which
-resulted in at least the PHY bindings for the USB PHY landing as well
-as the USB PHY support.  Nice!
+The "host" USB port on rk3288 has a hardware errata where we've got to
+assert a PHY reset whenever we see a remote wakeup.  Add that quirk
+property to the device tree.
 
-Hopefully this addresses previous comments and could land this time?
+Signed-off-by: Douglas Anderson <dianders@chromium.org>
+Reviewed-by: Matthias Kaehlcke <mka@chromium.org>
+---
 
-[1] https://lkml.kernel.org/r/1446236275-12698-2-git-send-email-dianders@chromium.org
-[2] https://lkml.kernel.org/r/1472939729-15187-4-git-send-email-ayaka@soulik.info
+Changes in v2: None
 
-Changes in v2:
-- Cancel the work when dwc2 is freed (Matthias).
+ arch/arm/boot/dts/rk3288.dtsi | 1 +
+ 1 file changed, 1 insertion(+)
 
-Douglas Anderson (4):
-  dt-bindings: usb: dwc2: Document quirk to reset PHY upon wakeup
-  usb: dwc2: optionally assert phy reset when waking up
-  ARM: dts: rockchip: Hook resets up to USB PHYs on rk3288.
-  ARM: dts: rockchip: Add quirk for resetting rk3288's dwc2 host on
-    wakeup
-
- Documentation/devicetree/bindings/usb/dwc2.txt |  2 ++
- arch/arm/boot/dts/rk3288.dtsi                  |  7 +++++++
- drivers/usb/dwc2/core.h                        |  5 +++++
- drivers/usb/dwc2/core_intr.c                   | 12 ++++++++++++
- drivers/usb/dwc2/hcd.c                         | 18 +++++++++++++++---
- drivers/usb/dwc2/platform.c                    |  9 +++++++++
- 6 files changed, 50 insertions(+), 3 deletions(-)
-
+diff --git a/arch/arm/boot/dts/rk3288.dtsi b/arch/arm/boot/dts/rk3288.dtsi
+index 7e70ecf2b95a..aa017abf4f42 100644
+--- a/arch/arm/boot/dts/rk3288.dtsi
++++ b/arch/arm/boot/dts/rk3288.dtsi
+@@ -621,6 +621,7 @@
+ 		dr_mode = "host";
+ 		phys = <&usbphy2>;
+ 		phy-names = "usb2-phy";
++		snps,reset-phy-on-wake;
+ 		status = "disabled";
+ 	};
+ 
 -- 
 2.21.0.593.g511ec345e18-goog
 
