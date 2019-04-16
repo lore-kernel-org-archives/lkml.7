@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E95B0C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 95EE9C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:05:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C39C52086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E81120868
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:05:54 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728161AbfDPGFf (ORCPT
+        id S1728415AbfDPGFx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 02:05:35 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:4511 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726857AbfDPGFb (ORCPT
+        Tue, 16 Apr 2019 02:05:53 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:58917 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726763AbfDPGFd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 02:05:31 -0400
-X-UUID: 1d047712a3804885ad598c0563298001-20190416
-X-UUID: 1d047712a3804885ad598c0563298001-20190416
-Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        Tue, 16 Apr 2019 02:05:33 -0400
+X-UUID: 2da8e826901342509f23bd5553f90cfe-20190416
+X-UUID: 2da8e826901342509f23bd5553f90cfe-20190416
+Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
         (envelope-from <jitao.shi@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1988392532; Tue, 16 Apr 2019 14:05:19 +0800
-Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33N2.mediatek.inc
- (172.27.4.76) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 16 Apr
- 2019 14:05:18 +0800
+        with ESMTP id 1950074771; Tue, 16 Apr 2019 14:05:21 +0800
+Received: from MTKCAS32.mediatek.inc (172.27.4.184) by MTKMBS33N1.mediatek.inc
+ (172.27.4.75) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 16 Apr
+ 2019 14:05:19 +0800
 Received: from mszsdclx1018.gcn.mediatek.inc (172.27.4.253) by
  MTKCAS32.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1395.4 via Frontend Transport; Tue, 16 Apr 2019 14:05:16 +0800
+ 15.0.1395.4 via Frontend Transport; Tue, 16 Apr 2019 14:05:18 +0800
 From:   Jitao Shi <jitao.shi@mediatek.com>
 To:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -58,9 +58,9 @@ CC:     Jitao Shi <jitao.shi@mediatek.com>,
         <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
         <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
         <ck.hu@mediatek.com>, <stonea168@163.com>
-Subject: [v2 3/5] drm/mediatek: add dsi reg commit control
-Date:   Tue, 16 Apr 2019 14:04:59 +0800
-Message-ID: <20190416060501.76276-4-jitao.shi@mediatek.com>
+Subject: [v2 4/5] drm/mediatek: add frame size control
+Date:   Tue, 16 Apr 2019 14:05:00 +0800
+Message-ID: <20190416060501.76276-5-jitao.shi@mediatek.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190416060501.76276-1-jitao.shi@mediatek.com>
 References: <20190416060501.76276-1-jitao.shi@mediatek.com>
@@ -73,50 +73,44 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-New DSI IP has shadow register and working reg. The register
-values are writen to shadow register. And then trigger with
-commit reg, the register values will be moved working register.
+Our new DSI chip has frame size control.
+So add the driver data to control for different chips.
 
 Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
 ---
- drivers/gpu/drm/mediatek/mtk_dsi.c | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ drivers/gpu/drm/mediatek/mtk_dsi.c | 5 +++++
+ 1 file changed, 5 insertions(+)
 
 diff --git a/drivers/gpu/drm/mediatek/mtk_dsi.c b/drivers/gpu/drm/mediatek/mtk_dsi.c
-index 573e6bec6d36..be42405a0a78 100644
+index be42405a0a78..458a700ce74c 100644
 --- a/drivers/gpu/drm/mediatek/mtk_dsi.c
 +++ b/drivers/gpu/drm/mediatek/mtk_dsi.c
-@@ -131,6 +131,10 @@
- #define VM_CMD_EN			BIT(0)
- #define TS_VFP_EN			BIT(5)
- 
-+#define DSI_SHADOW_DEBUG	0x190U
-+#define FORCE_COMMIT		BIT(0)
-+#define BYPASS_SHADOW		BIT(1)
-+
- #define CONFIG				(0xff << 0)
- #define SHORT_PACKET			0
- #define LONG_PACKET			2
-@@ -157,6 +161,7 @@ struct phy;
- 
+@@ -78,6 +78,7 @@
+ #define DSI_VBP_NL		0x24
+ #define DSI_VFP_NL		0x28
+ #define DSI_VACT_NL		0x2C
++#define DSI_SIZE_CON		0x38
+ #define DSI_HSA_WC		0x50
+ #define DSI_HBP_WC		0x54
+ #define DSI_HFP_WC		0x58
+@@ -162,6 +163,7 @@ struct phy;
  struct mtk_dsi_driver_data {
  	const u32 reg_cmdq_off;
-+	bool has_shadow_ctl;
+ 	bool has_shadow_ctl;
++	bool has_size_ctl;
  };
  
  struct mtk_dsi {
-@@ -594,6 +599,11 @@ static int mtk_dsi_poweron(struct mtk_dsi *dsi)
- 	}
+@@ -430,6 +432,9 @@ static void mtk_dsi_config_vdo_timing(struct mtk_dsi *dsi)
+ 	writel(vm->vfront_porch, dsi->regs + DSI_VFP_NL);
+ 	writel(vm->vactive, dsi->regs + DSI_VACT_NL);
  
- 	mtk_dsi_enable(dsi);
++	if (dsi->driver_data->has_size_ctl)
++		writel(vm->vactive << 16 | vm->hactive, dsi->regs + DSI_SIZE_CON);
 +
-+	if (dsi->driver_data->has_shadow_ctl)
-+		writel(FORCE_COMMIT | BYPASS_SHADOW,
-+		       dsi->regs + DSI_SHADOW_DEBUG);
-+
- 	mtk_dsi_reset_engine(dsi);
- 	mtk_dsi_phy_timconfig(dsi);
+ 	horizontal_sync_active_byte = (vm->hsync_len * dsi_tmp_buf_bpp - 10);
  
+ 	if (dsi->mode_flags & MIPI_DSI_MODE_VIDEO_SYNC_PULSE)
 -- 
 2.21.0
 
