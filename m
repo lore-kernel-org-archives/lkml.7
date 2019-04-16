@@ -3,30 +3,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2768BC282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:15:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60DB7C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:18:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F37B22075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:15:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2869920872
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:18:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727232AbfDPGP5 (ORCPT
+        id S1727827AbfDPGSb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 02:15:57 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:48220 "EHLO
+        Tue, 16 Apr 2019 02:18:31 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:48244 "EHLO
         bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726805AbfDPGP5 (ORCPT
+        with ESMTP id S1726805AbfDPGSa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 02:15:57 -0400
+        Tue, 16 Apr 2019 02:18:30 -0400
 Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:b93f:9fae:b276:a89a])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id F0993260C42;
-        Tue, 16 Apr 2019 07:15:54 +0100 (BST)
-Date:   Tue, 16 Apr 2019 08:15:51 +0200
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 52A84260C42;
+        Tue, 16 Apr 2019 07:18:28 +0100 (BST)
+Date:   Tue, 16 Apr 2019 08:18:25 +0200
 From:   Boris Brezillon <boris.brezillon@collabora.com>
 To:     Vitor Soares <vitor.soares@synopsys.com>
 Cc:     linux-iio@vger.kernel.org, linux-i3c@lists.infradead.org,
@@ -35,11 +35,11 @@ Cc:     linux-iio@vger.kernel.org, linux-i3c@lists.infradead.org,
         bbrezillon@kernel.org, rafael@kernel.org,
         gregkh@linuxfoundation.org, broonie@kernel.org,
         joao.pinto@synopsys.com
-Subject: Re: [PATCH 1/3] remap: Add I3C bus support
-Message-ID: <20190416081551.6f21bc38@collabora.com>
-In-Reply-To: <c38e3cb9e8524af58c995a9cf1f79ddba69b47b4.1555354268.git.vitor.soares@synopsys.com>
+Subject: Re: [PATCH 2/3] i3c: Add i3c_get_device_id helper
+Message-ID: <20190416081825.2d17b771@collabora.com>
+In-Reply-To: <33ba7e13816fcece0a2f7ec917c18807359c16c7.1555354268.git.vitor.soares@synopsys.com>
 References: <cover.1555354268.git.vitor.soares@synopsys.com>
-        <c38e3cb9e8524af58c995a9cf1f79ddba69b47b4.1555354268.git.vitor.soares@synopsys.com>
+        <33ba7e13816fcece0a2f7ec917c18807359c16c7.1555354268.git.vitor.soares@synopsys.com>
 Organization: Collabora
 X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
@@ -50,170 +50,52 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Typo in the subject: s/remap/regmap/
-
-On Mon, 15 Apr 2019 21:19:39 +0200
+On Mon, 15 Apr 2019 21:19:40 +0200
 Vitor Soares <vitor.soares@synopsys.com> wrote:
 
-> Add basic support for I3C bus.
-> This is a simple implementation that only give support
-> for Read and Write commands.
+> This helper return the i3c_device_id structure in order the client
+> have access to the driver data.
 > 
 > Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
 > ---
->  drivers/base/regmap/Kconfig      |  6 +++-
->  drivers/base/regmap/Makefile     |  1 +
->  drivers/base/regmap/regmap-i3c.c | 62 ++++++++++++++++++++++++++++++++++++++++
->  include/linux/regmap.h           | 20 +++++++++++++
->  4 files changed, 88 insertions(+), 1 deletion(-)
->  create mode 100644 drivers/base/regmap/regmap-i3c.c
+>  drivers/i3c/device.c       | 8 ++++++++
+>  include/linux/i3c/device.h | 1 +
+>  2 files changed, 9 insertions(+)
 > 
-> diff --git a/drivers/base/regmap/Kconfig b/drivers/base/regmap/Kconfig
-> index 6ad5ef4..c8bbf53 100644
-> --- a/drivers/base/regmap/Kconfig
-> +++ b/drivers/base/regmap/Kconfig
-> @@ -4,7 +4,7 @@
->  # subsystems should select the appropriate symbols.
+> diff --git a/drivers/i3c/device.c b/drivers/i3c/device.c
+> index 472be99..8ab8e4c 100644
+> --- a/drivers/i3c/device.c
+> +++ b/drivers/i3c/device.c
+> @@ -235,6 +235,14 @@ struct i3c_device *dev_to_i3cdev(struct device *dev)
+>  }
+>  EXPORT_SYMBOL_GPL(dev_to_i3cdev);
 >  
->  config REGMAP
-> -	default y if (REGMAP_I2C || REGMAP_SPI || REGMAP_SPMI || REGMAP_W1 || REGMAP_AC97 || REGMAP_MMIO || REGMAP_IRQ)
-> +	default y if (REGMAP_I2C || REGMAP_SPI || REGMAP_SPMI || REGMAP_W1 || REGMAP_AC97 || REGMAP_MMIO || REGMAP_IRQ || REGMAP_I3C)
->  	select IRQ_DOMAIN if REGMAP_IRQ
->  	bool
+> +const struct i3c_device_id *i3c_get_device_id(struct i3c_device *i3cdev)
+> +{
+> +	const struct i3c_driver *i3cdrv = drv_to_i3cdrv(i3cdev->dev.driver);
+> +
+> +	return i3cdrv->id_table;
+> +}
+> +EXPORT_SYMBOL_GPL(i3c_get_device_id);
+
+I think what you want is i3c_device_match_id(). Just move the function
+to drivers/i3c/device.c, export it and define its prototype in
+include/i3c/device.h.
+
+> +
+>  /**
+>   * i3c_driver_register_with_owner() - register an I3C device driver
+>   *
+> diff --git a/include/linux/i3c/device.h b/include/linux/i3c/device.h
+> index 7ee7e30..ee48886 100644
+> --- a/include/linux/i3c/device.h
+> +++ b/include/linux/i3c/device.h
+> @@ -211,6 +211,7 @@ static inline struct i3c_driver *drv_to_i3cdrv(struct device_driver *drv)
 >  
-> @@ -49,3 +49,7 @@ config REGMAP_SOUNDWIRE
->  config REGMAP_SCCB
->  	tristate
->  	depends on I2C
-> +
-> +config REGMAP_I3C
-> +	tristate
-> +	depends on I3C
-> diff --git a/drivers/base/regmap/Makefile b/drivers/base/regmap/Makefile
-> index f5b4e88..ff6c7d8 100644
-> --- a/drivers/base/regmap/Makefile
-> +++ b/drivers/base/regmap/Makefile
-> @@ -16,3 +16,4 @@ obj-$(CONFIG_REGMAP_IRQ) += regmap-irq.o
->  obj-$(CONFIG_REGMAP_W1) += regmap-w1.o
->  obj-$(CONFIG_REGMAP_SOUNDWIRE) += regmap-sdw.o
->  obj-$(CONFIG_REGMAP_SCCB) += regmap-sccb.o
-> +obj-$(CONFIG_REGMAP_I3C) += regmap-i3c.o
-> diff --git a/drivers/base/regmap/regmap-i3c.c b/drivers/base/regmap/regmap-i3c.c
-> new file mode 100644
-> index 0000000..565997b
-> --- /dev/null
-> +++ b/drivers/base/regmap/regmap-i3c.c
-> @@ -0,0 +1,62 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Copyright (c) 2018 Synopsys, Inc. and/or its affiliates.
-> + *
-> + * Author: Vitor Soares <vitor.soares@synopsys.com>
-> + */
-> +
-> +#include <linux/regmap.h>
-> +#include <linux/i3c/device.h>
-> +#include <linux/i3c/master.h>
-> +#include <linux/module.h>
-> +
-> +static int regmap_i3c_write(void *context, const void *data, size_t count)
-> +{
-> +	struct device *dev = context;
-> +	struct i3c_device *i3c = dev_to_i3cdev(dev);
-> +	struct i3c_priv_xfer xfers[] = {
-> +		{
-> +			.rnw = false,
-> +			.len = count,
-> +			.data.out = data,
-> +		},
-> +	};
-> +
-> +	return i3c_device_do_priv_xfers(i3c, xfers, 1);
-> +}
-> +
-> +static int regmap_i3c_read(void *context,
-> +			   const void *reg, size_t reg_size,
-> +			   void *val, size_t val_size)
-> +{
-> +	struct device *dev = context;
-> +	struct i3c_device *i3c = dev_to_i3cdev(dev);
-> +	struct i3c_priv_xfer xfers[2];
-> +
-> +	xfers[0].rnw = false;
-> +	xfers[0].len = reg_size;
-> +	xfers[0].data.out = reg;
-> +
-> +	xfers[1].rnw = true;
-> +	xfers[1].len = val_size;
-> +	xfers[1].data.in = val;
-> +
-> +	return i3c_device_do_priv_xfers(i3c, xfers, 2);
-> +}
-> +
-> +static struct regmap_bus regmap_i3c = {
-> +	.write = regmap_i3c_write,
-> +	.read = regmap_i3c_read,
-> +};
-> +
-> +struct regmap *__devm_regmap_init_i3c(struct i3c_device *i3c,
-> +				      const struct regmap_config *config,
-> +				      struct lock_class_key *lock_key,
-> +				      const char *lock_name)
-> +{
-> +	return __devm_regmap_init(&i3c->dev, &regmap_i3c, &i3c->dev, config,
-> +				  lock_key, lock_name);
-> +}
-> +EXPORT_SYMBOL_GPL(__devm_regmap_init_i3c);
-> +
-> +MODULE_LICENSE("GPL");
-> diff --git a/include/linux/regmap.h b/include/linux/regmap.h
-> index daeec7d..f65984d 100644
-> --- a/include/linux/regmap.h
-> +++ b/include/linux/regmap.h
-> @@ -25,6 +25,7 @@ struct module;
->  struct clk;
->  struct device;
->  struct i2c_client;
-> +struct i3c_device;
->  struct irq_domain;
->  struct slim_device;
->  struct spi_device;
-> @@ -624,6 +625,10 @@ struct regmap *__devm_regmap_init_slimbus(struct slim_device *slimbus,
->  				 const struct regmap_config *config,
->  				 struct lock_class_key *lock_key,
->  				 const char *lock_name);
-> +struct regmap *__devm_regmap_init_i3c(struct i3c_device *i3c,
-> +				 const struct regmap_config *config,
-> +				 struct lock_class_key *lock_key,
-> +				 const char *lock_name);
->  /*
->   * Wrapper for regmap_init macros to include a unique lockdep key and name
->   * for each call. No-op if CONFIG_LOCKDEP is not set.
-> @@ -982,6 +987,21 @@ bool regmap_ac97_default_volatile(struct device *dev, unsigned int reg);
->  #define devm_regmap_init_slimbus(slimbus, config)			\
->  	__regmap_lockdep_wrapper(__devm_regmap_init_slimbus, #config,	\
->  				slimbus, config)
-> +
-> +/**
-> + * devm_regmap_init_i3c() - Initialise managed register map
-
-Maybe we should have a more specific name here, as some might want to
-access registers using HDR modes (devm_regmap_init_i3c_sdr()?)
-
-
-> + *
-> + * @i3c: Device that will be interacted with
-> + * @config: Configuration for register map
-> + *
-> + * The return value will be an ERR_PTR() on error or a valid pointer
-> + * to a struct regmap.  The regmap will be automatically freed by the
-> + * device management code.
-> + */
-> +#define devm_regmap_init_i3c(i3c, config)				\
-> +	__regmap_lockdep_wrapper(__devm_regmap_init_i3c, #config,	\
-> +				i3c, config)
-> +
->  int regmap_mmio_attach_clk(struct regmap *map, struct clk *clk);
->  void regmap_mmio_detach_clk(struct regmap *map);
->  void regmap_exit(struct regmap *map);
+>  struct device *i3cdev_to_dev(struct i3c_device *i3cdev);
+>  struct i3c_device *dev_to_i3cdev(struct device *dev);
+> +const struct i3c_device_id *i3c_get_device_id(struct i3c_device *i3cdev);
+>  
+>  static inline void i3cdev_set_drvdata(struct i3c_device *i3cdev,
+>  				      void *data)
 
