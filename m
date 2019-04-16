@@ -4,55 +4,55 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CD338C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:33:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C618FC282DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:33:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9E5DE2075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:33:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 925562075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:33:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dWPzuqsY"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CUt74S70"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730244AbfDPSdM (ORCPT
+        id S1730267AbfDPSdQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 14:33:12 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:54745 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729640AbfDPSdK (ORCPT
+        Tue, 16 Apr 2019 14:33:16 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:38924 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729640AbfDPSdO (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 14:33:10 -0400
-Received: by mail-it1-f193.google.com with SMTP id a190so349240ite.4
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 11:33:10 -0700 (PDT)
+        Tue, 16 Apr 2019 14:33:14 -0400
+Received: by mail-it1-f195.google.com with SMTP id 139so350970ita.4
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 11:33:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=bSTW7AqOpoUcz9Hrx03r2HNEdf+rvps0TZy7dgoXit4=;
-        b=dWPzuqsYZ0A9aJIn+T09ptu3fGP9572YWbPHuDZDO5nqkUIoC/Lh9WC/BmHzQeOMcB
-         Ynq3LHCSlrYYdhmf8Ca0xu0yvfIsC/SP9zpoMOd/dGucCqx4dCab5XoRIVhM7899xuON
-         SXHslIOYI5Kut/yf/VAgb/lQ6QuZdQesAmSLY=
+        bh=TIDqxxqztE2jOgZOgI8qrgI9gmHi2GmWCm0V06l/nB4=;
+        b=CUt74S70/N1xpKsCTnqgFUJlJf8322fRk0pGHzVvVRn4Qv2APnTP2H6nvTQnyhonY7
+         HlOPEne5p8nDJkvSsL8FNmWkuHODyXn7C7Smm5P97HSXfE39EbihL5+9+kVl0ZrGdFkn
+         Q03tlXUZ23xxqwOKAO5jcZyfBPymoG7vINi30=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=bSTW7AqOpoUcz9Hrx03r2HNEdf+rvps0TZy7dgoXit4=;
-        b=HZZeJBb5b7UBnL01XP9dYwANAyehnjDbW3PHGCnUTmLoiJQo9abySZe4N6Cucxz1/T
-         srYHq3RSmNBsdvj5Pt/ZWN4MWutndqTovRBiGMKjggffhCMtQ7TucagBc2DVqr1Z0OyU
-         UWUzdTrr4MAiyqjkK0Fg299QKwzfQPr9u5y31DgqGOJSvlSYqKM/IhLhJNXjCS3di2u3
-         3oeatFOEBVOpqBV5MT01pJiyxYqlwxAJ69HCuZiB1acLSCIRJ4WMVgXb8Xy+mweDQwrH
-         4EYKZdPlVrzpkuSTD5sCEBM7/qoJ6qgNR5e0DCyYMVgP6Vpn9TNDKemPILrLHZCk2QKh
-         ZMVw==
-X-Gm-Message-State: APjAAAXSAowuVghUyKQMmlH8ea1KeQMag3/Hz/9UjPX6MbXWAFYCjwmy
-        cvnGFVjVoESPNui0V0hV6k7+uw==
-X-Google-Smtp-Source: APXvYqzRn8nV7EtohhwA6QeNt4cwOH1U/CXrYp7eE+jbOyuOoGHMbrK2k+Hi/Uce9AqyTkDiZF6NzA==
-X-Received: by 2002:a24:89c3:: with SMTP id s186mr32815901itd.112.1555439590031;
-        Tue, 16 Apr 2019 11:33:10 -0700 (PDT)
+        bh=TIDqxxqztE2jOgZOgI8qrgI9gmHi2GmWCm0V06l/nB4=;
+        b=IKHy6poAEergzmE4ciw+af9bbjmFmoFXhiuvx+aKr2O3Eh3tlRVrHVvMVnloowfLin
+         DAfIubOTFiIowSQyBZCJirQHh2scHQDvBxURPXIGzEQNrEaDiqipL61DgSAQWTA0LTeB
+         jsAvx2iJS1Umrpli1kGuxKdSTtpOhmlRWR0NmcsUGIkyCIppABShW0PF821oTc+AtCx3
+         l7FU610Zlck4tN2p8DCTsrEVZIMCJdVR7uGPvbZvVL3+ke6OWtonpTjLM4szRBpvS8wT
+         ncu3dfFL1uYpXYzTOYDsF/KMoZA93bt6nBp02vSbcaFHZWHFLwD6Ve/uzpstw3ekSa+m
+         MhLg==
+X-Gm-Message-State: APjAAAXxZ9hE6+PkyFrLMANpXRUPeWb1o4VoOEE09MTDRjqXqNqBgBi6
+        8KIxIadUlhy1i3QRtWQgP1te2A==
+X-Google-Smtp-Source: APXvYqxnB/KycclqM0AuhAq3iK59bz4PqOUVtPK2s9yABsRN20ILC34p4x3ITbTV7bRxO/Zn8yeX1A==
+X-Received: by 2002:a24:bd08:: with SMTP id x8mr26681438ite.46.1555439593029;
+        Tue, 16 Apr 2019 11:33:13 -0700 (PDT)
 Received: from localhost ([2620:15c:183:0:20b8:dee7:5447:d05])
-        by smtp.gmail.com with ESMTPSA id f126sm80256ita.31.2019.04.16.11.33.09
+        by smtp.gmail.com with ESMTPSA id z24sm19096762ioi.67.2019.04.16.11.33.12
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 11:33:09 -0700 (PDT)
+        Tue, 16 Apr 2019 11:33:12 -0700 (PDT)
 From:   Raul E Rangel <rrangel@chromium.org>
 To:     linux-mmc@vger.kernel.org, linux-trace-devel@vger.kernel.org
 Cc:     djkurtz@chromium.org, zwisler@chromium.org,
@@ -60,13 +60,12 @@ Cc:     djkurtz@chromium.org, zwisler@chromium.org,
         Steven Rostedt <rostedt@goodmis.org>,
         hongjiefang <hongjiefang@asrmicro.com>,
         Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
-        Shawn Lin <shawn.lin@rock-chips.com>,
         Kyle Roeschley <kyle.roeschley@ni.com>,
         Avri Altman <avri.altman@wdc.com>,
         Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH v2 1/4] mmc: core: Add trace event for SD SCR response
-Date:   Tue, 16 Apr 2019 12:32:54 -0600
-Message-Id: <20190416183257.247902-2-rrangel@chromium.org>
+Subject: [PATCH v2 2/4] mmc: core: Add trace event for SD SSR response
+Date:   Tue, 16 Apr 2019 12:32:55 -0600
+Message-Id: <20190416183257.247902-3-rrangel@chromium.org>
 X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
 In-Reply-To: <20190416183257.247902-1-rrangel@chromium.org>
 References: <20190416183257.247902-1-rrangel@chromium.org>
@@ -78,102 +77,65 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 Example:
-sd_scr: mmc0: version: 2, spec3: 1, width: [1-BIT | 4-BIT], cmds: [], raw: {0x2b58000,0x0} */
+sd_ssr: mmc0: au: 8192, erase time: 0, erase offset: 0x0, raw: {0x0,0x3000000,0x1019000,0x10000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0}
 
 Signed-off-by: Raul E Rangel <rrangel@chromium.org>
 ---
 
- drivers/mmc/core/sd.c      |  6 +++++
- include/trace/events/mmc.h | 51 ++++++++++++++++++++++++++++++++++++++
- 2 files changed, 57 insertions(+)
+ drivers/mmc/core/sd.c      |  2 ++
+ include/trace/events/mmc.h | 32 ++++++++++++++++++++++++++++++++
+ 2 files changed, 34 insertions(+)
 
 diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
-index 265e1aeeb9d8..f1772972d6a3 100644
+index f1772972d6a3..908c3087cdcd 100644
 --- a/drivers/mmc/core/sd.c
 +++ b/drivers/mmc/core/sd.c
-@@ -21,6 +21,8 @@
- #include <linux/mmc/mmc.h>
- #include <linux/mmc/sd.h>
+@@ -292,6 +292,8 @@ static int mmc_read_ssr(struct mmc_card *card)
+ 	card->erase_arg = (card->scr.sda_specx && discard_support) ?
+ 			    SD_DISCARD_ARG : SD_ERASE_ARG;
  
-+#include <trace/events/mmc.h>
-+
- #include "core.h"
- #include "card.h"
- #include "host.h"
-@@ -200,6 +202,7 @@ static int mmc_decode_scr(struct mmc_card *card)
- 	if (scr_struct != 0) {
- 		pr_err("%s: unrecognised SCR structure version %d\n",
- 			mmc_hostname(card->host), scr_struct);
-+		trace_sd_scr(card, NULL);
- 		return -EINVAL;
- 	}
- 
-@@ -221,6 +224,9 @@ static int mmc_decode_scr(struct mmc_card *card)
- 
- 	if (scr->sda_spec3)
- 		scr->cmds = UNSTUFF_BITS(resp, 32, 2);
-+
-+	trace_sd_scr(card, scr);
++	trace_sd_ssr(card);
 +
  	return 0;
  }
  
 diff --git a/include/trace/events/mmc.h b/include/trace/events/mmc.h
-index 7b706ff21335..9761d3db16db 100644
+index 9761d3db16db..463cf318d762 100644
 --- a/include/trace/events/mmc.h
 +++ b/include/trace/events/mmc.h
-@@ -10,6 +10,57 @@
- #include <linux/mmc/host.h>
- #include <linux/tracepoint.h>
+@@ -61,6 +61,38 @@ TRACE_EVENT(sd_scr,
+ 	)
+ );
  
-+#define SD_SCR_WIDTH_FLAGS		\
-+	{SD_SCR_BUS_WIDTH_1, "1-BIT"},	\
-+	{SD_SCR_BUS_WIDTH_4, "4-BIT"}
++TRACE_EVENT(sd_ssr,
 +
-+#define SD_SCR_CMD_FLAGS		\
-+	{SD_SCR_CMD20_SUPPORT, "CMD20"},\
-+	{SD_SCR_CMD23_SUPPORT, "CMD23"}
++	TP_PROTO(struct mmc_card *card),
 +
-+TRACE_EVENT(sd_scr,
-+
-+	TP_PROTO(struct mmc_card *card, struct sd_scr *scr),
-+
-+	TP_ARGS(card, scr),
++	TP_ARGS(card),
 +
 +	TP_STRUCT__entry(
-+		__array(u32,			raw,	2)
-+		__field(unsigned char,		sda_vsn)
-+		__field(unsigned char,		sda_spec3)
-+		__field(unsigned char,		bus_widths)
-+		__field(unsigned char,		cmds)
++		__array(u32,			raw,	16)
++		__field(unsigned int,		au)
++		__field(unsigned int,		erase_timeout)
++		__field(unsigned int,		erase_offset)
 +		__string(name,			mmc_hostname(card->host))
 +	),
 +
 +	TP_fast_assign(
-+		BUILD_BUG_ON(sizeof(card->raw_scr) != sizeof(__entry->raw));
-+		memcpy(__entry->raw, card->raw_scr, sizeof(__entry->raw));
-+		if (scr) {
-+			__entry->sda_vsn = scr->sda_vsn;
-+			__entry->sda_spec3 = scr->sda_spec3;
-+			__entry->bus_widths = scr->bus_widths;
-+			__entry->cmds = scr->cmds;
-+		} else {
-+			__entry->sda_vsn = 0;
-+			__entry->sda_spec3 = 0;
-+			__entry->bus_widths = 0;
-+			__entry->cmds = 0;
-+		}
++		BUILD_BUG_ON(sizeof(card->raw_ssr) != sizeof(__entry->raw));
++		memcpy(__entry->raw, card->raw_ssr, sizeof(__entry->raw));
++		__entry->au = card->ssr.au;
++		__entry->erase_timeout = card->ssr.erase_timeout;
++		__entry->erase_offset = card->ssr.erase_offset;
 +		__assign_str(name, mmc_hostname(card->host));
 +	),
 +
-+	TP_printk("%s: version: %d, spec3: %d, width: [%s], cmds: [%s], "
-+		  "raw: %s",
++	TP_printk("%s: au: %d, erase time: %d, erase offset: %#x, raw: %s",
 +		  __get_str(name),
-+		  __entry->sda_vsn,
-+		  __entry->sda_spec3,
-+		  __print_flags(__entry->bus_widths, " | ", SD_SCR_WIDTH_FLAGS),
-+		  __print_flags(__entry->cmds, " | ", SD_SCR_CMD_FLAGS),
-+		  __print_array(__entry->raw, 2, sizeof(u32))
++		  __entry->au,
++		  __entry->erase_timeout,
++		  __entry->erase_offset,
++		  __print_array(__entry->raw, 16, sizeof(u32))
 +	)
 +);
 +
