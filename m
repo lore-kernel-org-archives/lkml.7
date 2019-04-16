@@ -2,136 +2,91 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 269F6C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:17:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 97B93C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:18:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E8290206B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:17:43 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gKbX9paO"
+	by mail.kernel.org (Postfix) with ESMTP id 6EE262087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:18:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730134AbfDPRRn (ORCPT
+        id S1729769AbfDPRSg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 13:17:43 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:33472 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728478AbfDPRRm (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 13:17:42 -0400
-Received: by mail-wr1-f68.google.com with SMTP id q1so28204587wrp.0
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 10:17:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=bKzTzl5uqTJZw1NnpSLye4rLfSAxeWSNvGIXCP2/oiw=;
-        b=gKbX9paOXwC0dXSOYoKDJV3+vydTqjtzrIbHOQEEtPpU1cJUQwtFk256a8WwBEDC+F
-         YC6fbhCBdPvWJDBcacrx8lxHoq4rN+cDClBufqVSn9rqGcEEiRt3EnKkafSHPwnreWox
-         XTn2ZklmYxRwq1vnpkLcO3HG/cg3rL0lkbKJJ2OPkz5ColWihyi/6cmfBIC3HKW9VEVj
-         AswEtbbmngy4/n0GZs8s8EvdjYtP6ekjOYbGL1DcIOFyCRKA4Z/s1ZH3Gb+CI9nNanxx
-         Be+KThAS89ZX8J0C8nmYM1qSq5P/Ie9nWItKKHnzSPvEQPRQaSichVNW8RcXmaDSTaPC
-         K8jw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=bKzTzl5uqTJZw1NnpSLye4rLfSAxeWSNvGIXCP2/oiw=;
-        b=bwuezYkQh9JPsaNda9svrvGUSl8Bfuh2gVGRB7gIi/a9HdwU7mMeIg1UfAEvfKhX30
-         ycO4zlP3hstUljzDZhJPeyarHYiTz244VQNK3IVIwOWxiK9vHQAkyTrviy3FubJhm0ON
-         p8PfZqeW5pA3c5/UNb8INM5v7Uvgqyv8kD8pRb/mbwi2WH3rROoBUlJNdZh4km9T4KH+
-         mrLUwIry65PanxCA7bvpSAFnqtBpY+qtdPXsnxoimLcaWRznt8QsE97EwQwIxZ97yK6M
-         l/eukweB0BRRbUE8Lyi9dKZpxDVmgryYBnw5hyG4ORdmnNZzI8+ADxxlh5BrKH9/Mnb2
-         CsJg==
-X-Gm-Message-State: APjAAAWVz+9Bd5kbfPLJNEJ42A/LjzPmhsiklv0AbyJweO2+mNhw/e/b
-        Wk0FD1BBd0i9VhjzQi1tWNGdXSG4QUc=
-X-Google-Smtp-Source: APXvYqwFxgPkEDbMUSKlylzoYJOW76qyULDxS3N4oLwiCnOJDs+kXQWsJ6h3McJGsCrVZlMLzTrpYQ==
-X-Received: by 2002:a05:6000:1111:: with SMTP id z17mr53046085wrw.103.1555435059861;
-        Tue, 16 Apr 2019 10:17:39 -0700 (PDT)
-Received: from [192.168.0.41] (50.251.95.92.rev.sfr.net. [92.95.251.50])
-        by smtp.googlemail.com with ESMTPSA id r16sm42679707wrx.37.2019.04.16.10.17.38
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 10:17:39 -0700 (PDT)
-Subject: Re: [PATCH v4 12/12] thermal: qoriq: Add hwmon support
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>, linux-pm@vger.kernel.org
-Cc:     Chris Healy <cphealy@gmail.com>,
-        Lucas Stach <l.stach@pengutronix.de>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Angus Ainslie <angus@akkea.ca>, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org
-References: <20190413082748.29990-1-andrew.smirnov@gmail.com>
- <20190413082748.29990-13-andrew.smirnov@gmail.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <b0fb8610-25c5-255d-8d4e-7722d37c70d7@linaro.org>
-Date:   Tue, 16 Apr 2019 19:17:37 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 16 Apr 2019 13:18:36 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:60196 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727180AbfDPRSf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 13:18:35 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CE0AF80D;
+        Tue, 16 Apr 2019 10:18:34 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id DC9F33F690;
+        Tue, 16 Apr 2019 10:18:32 -0700 (PDT)
+Date:   Tue, 16 Apr 2019 18:18:30 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Alex Matveev <alxmtvv@gmail.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Yury Norov <ynorov@caviumnetworks.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] arm64: sysreg: make mrs_s and msr_s macros work with
+ Clang and LTO
+Message-ID: <20190416171829.GD54708@lakrids.cambridge.arm.com>
+References: <20190415143821.GA46880@beast>
+ <20190415170604.GA44415@lakrids.cambridge.arm.com>
+ <CAKwvOdk_jFQKW2C2=925So_dvZ6dm03AXMZ9Nk+O1J2xyhE2EA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190413082748.29990-13-andrew.smirnov@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKwvOdk_jFQKW2C2=925So_dvZ6dm03AXMZ9Nk+O1J2xyhE2EA@mail.gmail.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 13/04/2019 10:27, Andrey Smirnov wrote:
-> Expose thermal readings as a HWMON device, so that it could be
-> accessed using lm-sensors.
+On Mon, Apr 15, 2019 at 10:22:27AM -0700, Nick Desaulniers wrote:
+> On Mon, Apr 15, 2019 at 10:06 AM Mark Rutland <mark.rutland@arm.com> wrote:
+> > On Mon, Apr 15, 2019 at 07:38:21AM -0700, Kees Cook wrote:
+> > > diff --git a/arch/arm64/include/asm/irqflags.h b/arch/arm64/include/asm/irqflags.h
+> > > index 43d8366c1e87..06d3987d1546 100644
+> > > --- a/arch/arm64/include/asm/irqflags.h
+> > > +++ b/arch/arm64/include/asm/irqflags.h
+> > > @@ -43,7 +43,9 @@ static inline void arch_local_irq_enable(void)
+> > >       asm volatile(ALTERNATIVE(
+> > >               "msr    daifclr, #2             // arch_local_irq_enable\n"
+> > >               "nop",
+> > > +             DEFINE_MSR_S
+> > >               "msr_s  " __stringify(SYS_ICC_PMR_EL1) ",%0\n"
+> > > +             UNDEFINE_MSR_S
+> >
+> > If we do need this, can we wrap this in a larger CPP macro that does the
+> > whole sequence of defining, using, and undefining the asm macros?
 > 
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: Lucas Stach <l.stach@pengutronix.de>
-> Cc: Eduardo Valentin <edubezval@gmail.com>
-> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
-> Cc: Angus Ainslie (Purism) <angus@akkea.ca>
-> Cc: linux-imx@nxp.com
-> Cc: linux-pm@vger.kernel.org
-> Cc: linux-kernel@vger.kernel.org
-> ---
+> I agree that would be cleaner.  For example, __mrs_s/__msr_s can
+> ALMOST do this (be used in arch/arm64/include/asm/irqflags.h) except
+> for the input/output constraints.  Maybe the constraints can be
+> removed from the cpp macro definition, then the constraints be left to
+> the macro expansion sites?  That way the DEFINE_MXX_S/UNDEFINE_MXX_S
+> can be hidden in the cpp macro itself.
 
-Reviewed-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+If those took the register template explicitly, i.e. something like:
 
+	__mrs_s(SYS_ICC_PMR_EL1, "%x0") 
 
->  drivers/thermal/qoriq_thermal.c | 5 +++++
->  1 file changed, 5 insertions(+)
-> 
-> diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
-> index 5c459a9d0db3..897b3424b43b 100644
-> --- a/drivers/thermal/qoriq_thermal.c
-> +++ b/drivers/thermal/qoriq_thermal.c
-> @@ -12,6 +12,7 @@
->  #include <linux/thermal.h>
->  
->  #include "thermal_core.h"
-> +#include "thermal_hwmon.h"
->  
->  #define SITES_MAX	16
->  
-> @@ -93,6 +94,10 @@ static int qoriq_tmu_register_tmu_zone(struct device *dev,
->  		case -ENODEV:
->  			continue;
->  		case 0:
-> +			ret = devm_thermal_add_hwmon_sysfs(tzd);
-> +			if (ret)
-> +				dev_warn(dev,
-> +				     "Failed to add hwmon sysfs attributes\n");
->  			break;
->  		default:
->  			regmap_write(qdata->regmap, REGS_TMR, TMR_DISABLE);
-> 
+	__msr_s("%[whatever]", SYS_FOO)
 
+... that would be more generally useful and clear, as they could be used
+in larger asm sequences.
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+Thanks,
+Mark.
