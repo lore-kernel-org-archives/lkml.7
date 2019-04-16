@@ -5,56 +5,56 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A6CDC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:56:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 99BB5C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:56:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3D1BB2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:56:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5383C20880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:56:35 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oUO5R2UH"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AX0k/eR5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729900AbfDPP43 (ORCPT
+        id S1729930AbfDPP4d (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 11:56:29 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:37686 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbfDPP41 (ORCPT
+        Tue, 16 Apr 2019 11:56:33 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:36560 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729888AbfDPP43 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 11:56:27 -0400
-Received: by mail-it1-f195.google.com with SMTP id u65so33344807itc.2;
-        Tue, 16 Apr 2019 08:56:26 -0700 (PDT)
+        Tue, 16 Apr 2019 11:56:29 -0400
+Received: by mail-io1-f66.google.com with SMTP id f6so18067306iop.3;
+        Tue, 16 Apr 2019 08:56:29 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=SqwyUldvp9p+Shmy7H3Rt0p7bor1lsw09TKpgwanjqg=;
-        b=oUO5R2UHJ8FoiUx0XbnaZ5VM7N0NaPWZTCgQxET9YvVrHW9LYOxD7EPpA3+SJtd52U
-         LLy4Gz77C/PZ5VTx22Pi5GjI4bfs4wYQ5txAofhA+HOSf9hQlPs02FOnSSg4kPC2lvuD
-         GyfXFzhhJXKM0Q4pPQvfcJ2CjaoOP33RLsqfTpY6O5NmL+20UiUBNSSCPfJDIhxBPfXd
-         lw6922ihV0v2O6XrpevJzZZEuwzTh+3Fq5w0HTEvRq2LxtqHozKFhwBt2Ugh47IvjH3K
-         rq1RP70nDc8yqTDGqbBzzf3IvBpbbimhod+Lk8S9qSTfqPxq9K4vMHYN/+8CkdRvrN0k
-         lKsA==
+        bh=OjlIJHxEpFp/A+hcc5BNKsaqXfawoe8fg2LkeNDtbf0=;
+        b=AX0k/eR5384dm7Ty80gKppvzD6Y2hPE+dktxp6u8lO2MtxKnmc0psLKUD6MF5k2fRz
+         PTd4L8arrmVpq6BSGFtno+9thUphzsV2zHPsgOoXXUnelm5dHHbz3jaDHTQduNe6CY5I
+         vgc3qSu63CgCsTdXm+pI3Xy1sMucKtYt8fMyrU6wM1CTyCnReyqTugZmAC4+Q9mDL8xN
+         ulj752qZJl64bBj8qfEFgSRToHHXp10n1e6e6fEI4zguRiZJYnG8jnZIkjVLlspsbkpO
+         UxLOUL3zY2aKHcP9VNWC6oD+sV8uPB5E1rgYba3klxWqTDE9CaGCjnpCzB2clBpCubeM
+         BZTg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=SqwyUldvp9p+Shmy7H3Rt0p7bor1lsw09TKpgwanjqg=;
-        b=UjcFEi6Hi03DnalcMOMO9cvDm/NvsrrP/YwtCsW/S64fg+suhazjFojuHMBuK8MT4d
-         mjD6jX3y2fdUYSFfGnhAI5x88p0bpMYe9djqyur+PILKC4WlXeikyVNnl2HNrUCOksBH
-         0xoA8QP3xVS3y02akF3bmnTYWDry7BhdUw22qMSSKGo3KVI2Ewkq2qUDuai14kzX6L9T
-         kJcBSGJcUuZfFJqmTGJ/+S7ozzYAzIeYRKpV5m84Cy9/THFpX2ZOweEd4qOLFnE4oDMn
-         g4m9J3bFL8Uej/9+UwLML1HX8DS1cHmx+r7C+8RsfYYhHZzYBX2C4ryw7WVqPFlIkKKt
-         ZmdA==
-X-Gm-Message-State: APjAAAV0GyZkU6jDDY8rFJc0krRas92t4twiXnv7SCSRbjNsPu0dlR3e
-        bbRJK6ggwYSbFvzQqlX9+H4=
-X-Google-Smtp-Source: APXvYqwWcjEohCCs/fQyUUJtod+ucABCCjPBxJx2m7KiAVXCfo+Xbk87vGTDDMFka16wmtKyoB+Fyg==
-X-Received: by 2002:a24:2458:: with SMTP id f85mr28989866ita.83.1555430185233;
-        Tue, 16 Apr 2019 08:56:25 -0700 (PDT)
+        bh=OjlIJHxEpFp/A+hcc5BNKsaqXfawoe8fg2LkeNDtbf0=;
+        b=rk8r3AWJSbR2acAl73skv602zEBQbVXZpJ45IMWKSoRsWv33dVSZfXeOLNZLcGf3WD
+         SqhH2uPFRkQzC0m2noBlOfm1jRHIi5u6/KYRxQYT7/aWk19jWuQBr3qccHauiGsxOWoF
+         5mzSem7PRJIaGTEOSH8JAg7ZHjO35JXAkUa8o0EBwmwDrOIAkcTw525VGCTJs01rdC+O
+         pGezjyw0sa7BRDWllcVJnneDtGXD/2blcsQNbrnifckQENcmwhjoPFyUtSA47wpeA7uG
+         0qmx4cv2L5GnxL39SuPlDoWkUPCBivqSc3+ZYhvB3evWrA8YMP/fvXB/SZK/u7LOaSXA
+         pU5g==
+X-Gm-Message-State: APjAAAXGSsXQ6a+YUXiRSgzF/HWqFoNnDItz0u6U2BWibNzRfpyijCmf
+        K/Vp9jQnTSPUepcMBojd7rc=
+X-Google-Smtp-Source: APXvYqzNInnHu0dJ3EMz8ZRAaxX6HGUZ3z+Ffeu6d+GP2TODTnyQuBe2PzCKlqYcvu3aApPwpa9PTA==
+X-Received: by 2002:a5d:9457:: with SMTP id x23mr6777004ior.271.1555430188575;
+        Tue, 16 Apr 2019 08:56:28 -0700 (PDT)
 Received: from svens-asus.arcx.com ([184.94.50.30])
-        by smtp.gmail.com with ESMTPSA id 64sm9766630ite.42.2019.04.16.08.56.23
+        by smtp.gmail.com with ESMTPSA id 64sm9766630ite.42.2019.04.16.08.56.26
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 08:56:24 -0700 (PDT)
+        Tue, 16 Apr 2019 08:56:27 -0700 (PDT)
 From:   Sven Van Asbroeck <thesven73@gmail.com>
 X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
 To:     robh+dt@kernel.org, linus.walleij@linaro.org
@@ -68,9 +68,9 @@ Cc:     lee.jones@linaro.org, mark.rutland@arm.com, afaerber@suse.de,
         stuyoder@gmail.com, jan.kiszka@siemens.com,
         maxime.ripard@bootlin.com, linux-kernel@vger.kernel.org,
         netdev@vger.kernel.org
-Subject: [PATCH v11 1/7] fieldbus_dev: add Fieldbus Device subsystem.
-Date:   Tue, 16 Apr 2019 11:56:12 -0400
-Message-Id: <20190416155618.1369-2-TheSven73@gmail.com>
+Subject: [PATCH v11 3/7] anybus-s: support the Arcx anybus controller
+Date:   Tue, 16 Apr 2019 11:56:14 -0400
+Message-Id: <20190416155618.1369-4-TheSven73@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190416155618.1369-1-TheSven73@gmail.com>
 References: <20190416155618.1369-1-TheSven73@gmail.com>
@@ -79,743 +79,468 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Fieldbus device (client) adapters allow data exchange with a PLC aka.
-"Fieldbus Controller" over a fieldbus (Profinet, FLNet, etc.)
+Add a driver for the Arcx anybus controller.
 
-They are typically used when a Linux device wants to expose itself
-as an actuator, motor, console light, switch, etc. over the fieldbus.
-
-This framework is designed to provide a generic interface to Fieldbus
-Devices from both the Linux Kernel and the userspace.
+This device implements two Anybus-S hosts (buses),
+and connects to the SoC via a parallel memory bus.
+There is also a CAN power readout, unrelated to the Anybus,
+modelled as a regulator.
 
 Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
 ---
- drivers/staging/Kconfig                       |   2 +
- drivers/staging/Makefile                      |   1 +
- .../Documentation/ABI/fieldbus-dev-cdev       |  31 ++
- .../ABI/sysfs-class-fieldbus-dev              |  62 ++++
- .../fieldbus/Documentation/fieldbus_dev.txt   |  66 ++++
- drivers/staging/fieldbus/Kconfig              |  19 +
- drivers/staging/fieldbus/Makefile             |   9 +
- drivers/staging/fieldbus/dev_core.c           | 351 ++++++++++++++++++
- drivers/staging/fieldbus/fieldbus_dev.h       | 108 ++++++
- 9 files changed, 649 insertions(+)
- create mode 100644 drivers/staging/fieldbus/Documentation/ABI/fieldbus-dev-cdev
- create mode 100644 drivers/staging/fieldbus/Documentation/ABI/sysfs-class-fieldbus-dev
- create mode 100644 drivers/staging/fieldbus/Documentation/fieldbus_dev.txt
- create mode 100644 drivers/staging/fieldbus/Kconfig
- create mode 100644 drivers/staging/fieldbus/Makefile
- create mode 100644 drivers/staging/fieldbus/dev_core.c
- create mode 100644 drivers/staging/fieldbus/fieldbus_dev.h
+ drivers/staging/fieldbus/Makefile             |   1 -
+ drivers/staging/fieldbus/anybuss/Kconfig      |  14 +
+ drivers/staging/fieldbus/anybuss/Makefile     |   2 +
+ .../staging/fieldbus/anybuss/arcx-anybus.c    | 399 ++++++++++++++++++
+ 4 files changed, 415 insertions(+), 1 deletion(-)
+ create mode 100644 drivers/staging/fieldbus/anybuss/arcx-anybus.c
 
-diff --git a/drivers/staging/Kconfig b/drivers/staging/Kconfig
-index 62951e836cbc..da58314732e1 100644
---- a/drivers/staging/Kconfig
-+++ b/drivers/staging/Kconfig
-@@ -122,4 +122,6 @@ source "drivers/staging/axis-fifo/Kconfig"
+diff --git a/drivers/staging/fieldbus/Makefile b/drivers/staging/fieldbus/Makefile
+index c21056bdb3d2..bdf645d41344 100644
+--- a/drivers/staging/fieldbus/Makefile
++++ b/drivers/staging/fieldbus/Makefile
+@@ -5,4 +5,3 @@
  
- source "drivers/staging/erofs/Kconfig"
- 
-+source "drivers/staging/fieldbus/Kconfig"
+ obj-$(CONFIG_FIELDBUS_DEV)	+= fieldbus_dev.o anybuss/
+ fieldbus_dev-y			:= dev_core.o
+-
+diff --git a/drivers/staging/fieldbus/anybuss/Kconfig b/drivers/staging/fieldbus/anybuss/Kconfig
+index 5b495f25c11e..e257f8a517bb 100644
+--- a/drivers/staging/fieldbus/anybuss/Kconfig
++++ b/drivers/staging/fieldbus/anybuss/Kconfig
+@@ -7,3 +7,17 @@ config HMS_ANYBUSS_BUS
+ 	  You can attach a single Anybus-S compatible card to it, which
+ 	  typically provides fieldbus and industrial ethernet
+ 	  functionality.
 +
- endif # STAGING
-diff --git a/drivers/staging/Makefile b/drivers/staging/Makefile
-index d1b17ddcd354..ded12bdeb1a6 100644
---- a/drivers/staging/Makefile
-+++ b/drivers/staging/Makefile
-@@ -51,3 +51,4 @@ obj-$(CONFIG_SOC_MT7621)	+= mt7621-dts/
- obj-$(CONFIG_STAGING_GASKET_FRAMEWORK)	+= gasket/
- obj-$(CONFIG_XIL_AXIS_FIFO)	+= axis-fifo/
- obj-$(CONFIG_EROFS_FS)		+= erofs/
-+obj-$(CONFIG_FIELDBUS_DEV)     += fieldbus/
-diff --git a/drivers/staging/fieldbus/Documentation/ABI/fieldbus-dev-cdev b/drivers/staging/fieldbus/Documentation/ABI/fieldbus-dev-cdev
-new file mode 100644
-index 000000000000..45f631ea32a6
---- /dev/null
-+++ b/drivers/staging/fieldbus/Documentation/ABI/fieldbus-dev-cdev
-@@ -0,0 +1,31 @@
-+What:		/dev/fieldbus_devX
-+Date:		December 2018
-+KernelVersion:	5.1 (staging)
-+Contact:	Sven Van Asbroeck <TheSven73@gmail.com>
-+Description:
-+		The cdev interface to drivers for Fieldbus Device Memory
-+			(aka. Process Memory).
++if HMS_ANYBUSS_BUS
 +
-+		The following file operations are supported:
-+
-+		open(2)
-+		Create an I/O context associated with the file descriptor.
-+
-+		read(2)
-+		Read from Process Memory's "read area".
-+		Clears POLLERR | POLLPRI from the file descriptor.
-+
-+		write(2)
-+		Write to Process Memory's "write area".
-+
-+		poll(2), select(2), epoll_wait(2) etc.
-+		When a "Process Memory Read Area Changed" event occurs,
-+		POLLERR | POLLPRI will be set on the file descriptor.
-+		Note that POLLIN | POLLOUT events are always set, because the
-+		process memory area is always readable and writable.
-+
-+		close(2)
-+		Free up the I/O context that was associated
-+		with the file descriptor.
-+
-+Users:		TBD
-diff --git a/drivers/staging/fieldbus/Documentation/ABI/sysfs-class-fieldbus-dev b/drivers/staging/fieldbus/Documentation/ABI/sysfs-class-fieldbus-dev
-new file mode 100644
-index 000000000000..439f14d33c3b
---- /dev/null
-+++ b/drivers/staging/fieldbus/Documentation/ABI/sysfs-class-fieldbus-dev
-@@ -0,0 +1,62 @@
-+What:		/sys/class/fieldbus_dev/fieldbus_devX/card_name
-+KernelVersion:	5.1 (staging)
-+Contact:	Sven Van Asbroeck <TheSven73@gmail.com>
-+Description:
-+		Human-readable name of the Fieldbus Device.
-+
-+What:		/sys/class/fieldbus_dev/fieldbus_devX/fieldbus_type
-+KernelVersion:	5.1 (staging)
-+Contact:	Sven Van Asbroeck <TheSven73@gmail.com>
-+Description:
-+		The type of fieldbus implemented by this device.
-+		Possible values:
-+			'unknown'
-+			'profinet'
-+
-+What:		/sys/class/fieldbus_dev/fieldbus_devX/fieldbus_id
-+KernelVersion:	5.1 (staging)
-+Contact:	Sven Van Asbroeck <TheSven73@gmail.com>
-+Description:
-+		The unique fieldbus id associated with this device.
-+		The exact format of this id is fieldbus type dependent, e.g.
-+		a mac address for profinet.
-+
-+What:		/sys/class/fieldbus_dev/fieldbus_devX/read_area_size
-+KernelVersion:	5.1 (staging)
-+Contact:	Sven Van Asbroeck <TheSven73@gmail.com>
-+Description:
-+		The size, in bytes, of the Process Memory read area.
-+		Note: this area is accessible by reading from the associated
-+			character device (/dev/fieldbus_devX).
-+
-+What:		/sys/class/fieldbus_dev/fieldbus_devX/write_area_size
-+KernelVersion:	5.1 (staging)
-+Contact:	Sven Van Asbroeck <TheSven73@gmail.com>
-+Description:
-+		The size, in bytes, of the Process Memory write area.
-+		Note: this area is accessible by writing to the associated
-+			character device (/dev/fieldbus_devX)
-+
-+What:		/sys/class/fieldbus_dev/fieldbus_devX/online
-+KernelVersion:	5.1 (staging)
-+Contact:	Sven Van Asbroeck <TheSven73@gmail.com>
-+Description:
-+		Whether the fieldbus is online or offline.
-+		Possible values:
-+			'1' meaning 'online'
-+			'0' meaning 'offline'
-+		Note: an uevent is generated when this property changes.
-+
-+What:		/sys/class/fieldbus_dev/fieldbus_devX/enabled
-+KernelVersion:	5.1 (staging)
-+Contact:	Sven Van Asbroeck <TheSven73@gmail.com>
-+Description:
-+		Whether the device is enabled (power on) or
-+			disabled (power off).
-+		Possible values:
-+			'1' meaning enabled
-+			'0' meaning disabled
-+		Normally a r/o property, but optionally r/w:
-+		Writing '1' enables the device (power on) with default
-+			settings.
-+		Writing '0' disables the card (power off).
-diff --git a/drivers/staging/fieldbus/Documentation/fieldbus_dev.txt b/drivers/staging/fieldbus/Documentation/fieldbus_dev.txt
-new file mode 100644
-index 000000000000..56af3f650fa3
---- /dev/null
-+++ b/drivers/staging/fieldbus/Documentation/fieldbus_dev.txt
-@@ -0,0 +1,66 @@
-+                       Fieldbus-Device Subsystem
-+               ============================================
-+
-+Part 0 - What is a Fieldbus Device ?
-+------------------------------------
-+
-+Fieldbus is the name of a family of industrial computer network protocols used
-+for real-time distributed control, standardized as IEC 61158.
-+
-+A complex automated industrial system -- such as manufacturing assembly line --
-+usually needs a distributed control system -- an organized hierarchy of
-+controller systems -- to function. In this hierarchy, there is usually a
-+Human Machine Interface (HMI) at the top, where an operator can monitor or
-+operate the system. This is typically linked to a middle layer of programmable
-+logic controllers (PLC) via a non-time-critical communications system
-+(e.g. Ethernet). At the bottom of the control chain is the fieldbus that links
-+the PLCs to the components that actually do the work, such as sensors,
-+actuators, electric motors, console lights, switches, valves and contactors.
-+
-+(Source: Wikipedia)
-+
-+A "Fieldbus Device" is such an actuator, motor, console light, switch, ...
-+controlled via the Fieldbus by a PLC aka "Fieldbus Controller".
-+
-+Communication between PLC and device typically happens via process data memory,
-+separated into input and output areas. The Fieldbus then cyclically transfers
-+the PLC's output area to the device's input area, and vice versa.
-+
-+Part I - Why do we need this subsystem?
-+---------------------------------------
-+
-+Fieldbus device (client) adapters are commercially available. They allow data
-+exchange with a PLC aka "Fieldbus Controller" via process data memory.
-+
-+They are typically used when a Linux device wants to expose itself as an
-+actuator, motor, console light, switch, etc. over the fieldbus.
-+
-+The purpose of this subsystem is:
-+a) present a general, standardized, extensible API/ABI to userspace; and
-+b) present a convenient interface to drivers.
-+
-+Part II - How can drivers use the subsystem?
-+--------------------------------------------
-+
-+Any driver that wants to register as a Fieldbus Device should allocate and
-+populate a 'struct fieldbus_dev' (from include/linux/fieldbus_dev.h).
-+Registration then happens by calling fieldbus_dev_register().
-+
-+Part III - How can userspace use the subsystem?
-+-----------------------------------------------
-+
-+Fieldbus protocols and adapters are diverse and varied. However, they share
-+a limited few common behaviours and properties. This allows us to define
-+a simple interface consisting of a character device and a set of sysfs files:
-+
-+See:
-+Documentation/ABI/testing/sysfs-class-fieldbus-dev
-+Documentation/ABI/testing/fieldbus-dev-cdev
-+
-+Note that this simple interface does not provide a way to modify adapter
-+configuration settings. It is therefore useful only for adapters that get their
-+configuration settings some other way, e.g. non-volatile memory on the adapter,
-+through the network, ...
-+
-+At a later phase, this simple interface can easily co-exist with a future
-+(netlink-based ?) configuration settings interface.
-diff --git a/drivers/staging/fieldbus/Kconfig b/drivers/staging/fieldbus/Kconfig
-new file mode 100644
-index 000000000000..b1d071cb096e
---- /dev/null
-+++ b/drivers/staging/fieldbus/Kconfig
-@@ -0,0 +1,19 @@
-+menuconfig FIELDBUS_DEV
-+	tristate "Fieldbus Device Support"
++config ARCX_ANYBUS_CONTROLLER
++	tristate "Arcx Anybus-S Controller"
++	depends on OF && GPIOLIB && HAS_IOMEM && REGULATOR
 +	help
-+	  Support for Fieldbus Device Adapters.
-+
-+	  Fieldbus device (client) adapters allow data exchange with a PLC aka.
-+	  "Fieldbus Controller" over a fieldbus (Profinet, FLNet, etc.)
-+
-+	  They are typically used when a Linux device wants to expose itself
-+	  as an actuator, motor, console light, switch, etc. over the fieldbus.
-+
-+	  This framework is designed to provide a generic interface to Fieldbus
-+	  Devices from both the Linux Kernel and the userspace.
-+
-+	  If unsure, say no.
-+
-+if FIELDBUS_DEV
++	  Select this to get support for the Arcx Anybus controller.
++	  It connects to the SoC via a parallel memory bus, and
++	  embeds up to two Anybus-S buses (slots).
++	  There is also a CAN power readout, unrelated to the Anybus,
++	  modelled as a regulator.
 +
 +endif
-diff --git a/drivers/staging/fieldbus/Makefile b/drivers/staging/fieldbus/Makefile
-new file mode 100644
-index 000000000000..23877def5803
---- /dev/null
-+++ b/drivers/staging/fieldbus/Makefile
-@@ -0,0 +1,9 @@
-+# SPDX-License-Identifier: GPL-2.0
-+#
-+# Makefile for fieldbus_dev drivers.
-+#
+diff --git a/drivers/staging/fieldbus/anybuss/Makefile b/drivers/staging/fieldbus/anybuss/Makefile
+index 236579aa7270..7198b080926b 100644
+--- a/drivers/staging/fieldbus/anybuss/Makefile
++++ b/drivers/staging/fieldbus/anybuss/Makefile
+@@ -5,3 +5,5 @@
+ 
+ obj-$(CONFIG_HMS_ANYBUSS_BUS)	+= anybuss_core.o
+ anybuss_core-y			+= host.o
 +
-+obj-$(CONFIG_FIELDBUS_DEV)	+= fieldbus_dev.o
-+fieldbus_dev-y			:= dev_core.o
-+
-+# Devices
-diff --git a/drivers/staging/fieldbus/dev_core.c b/drivers/staging/fieldbus/dev_core.c
++obj-$(CONFIG_ARCX_ANYBUS_CONTROLLER) += arcx-anybus.o
+diff --git a/drivers/staging/fieldbus/anybuss/arcx-anybus.c b/drivers/staging/fieldbus/anybuss/arcx-anybus.c
 new file mode 100644
-index 000000000000..60b85140675a
+index 000000000000..a167fb68e355
 --- /dev/null
-+++ b/drivers/staging/fieldbus/dev_core.c
-@@ -0,0 +1,351 @@
++++ b/drivers/staging/fieldbus/anybuss/arcx-anybus.c
+@@ -0,0 +1,399 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Fieldbus Device Driver Core
++ * Arcx Anybus-S Controller driver
 + *
++ * Copyright (C) 2018 Arcx Inc
 + */
 +
-+#include <linux/mutex.h>
++#include <linux/kernel.h>
 +#include <linux/module.h>
-+#include <linux/device.h>
-+#include <linux/idr.h>
-+#include <linux/fs.h>
++#include <linux/init.h>
 +#include <linux/slab.h>
-+#include <linux/poll.h>
++#include <linux/platform_device.h>
++#include <linux/gpio/consumer.h>
++#include <linux/io.h>
++#include <linux/of.h>
++#include <linux/delay.h>
++#include <linux/idr.h>
++#include <linux/mutex.h>
++#include <linux/regulator/driver.h>
++#include <linux/regulator/machine.h>
++#include <linux/regmap.h>
 +
-+/* move to <linux/fieldbus_dev.h> when taking this out of staging */
-+#include "fieldbus_dev.h"
++/* move to <linux/anybuss-controller.h> when taking this out of staging */
++#include "anybuss-controller.h"
 +
-+/* Maximum number of fieldbus devices */
-+#define MAX_FIELDBUSES		32
++#define CPLD_STATUS1		0x80
++#define CPLD_CONTROL		0x80
++#define CPLD_CONTROL_CRST	0x40
++#define CPLD_CONTROL_RST1	0x04
++#define CPLD_CONTROL_RST2	0x80
++#define CPLD_STATUS1_AB		0x02
++#define CPLD_STATUS1_CAN_POWER	0x01
++#define CPLD_DESIGN_LO		0x81
++#define CPLD_DESIGN_HI		0x82
++#define CPLD_CAP		0x83
++#define CPLD_CAP_COMPAT		0x01
++#define CPLD_CAP_SEP_RESETS	0x02
 +
-+/* the dev_t structure to store the dynamically allocated fieldbus devices */
-+static dev_t fieldbus_devt;
-+static DEFINE_IDA(fieldbus_ida);
-+static DEFINE_MUTEX(fieldbus_mtx);
++struct controller_priv {
++	struct device *class_dev;
++	bool common_reset;
++	struct gpio_desc *reset_gpiod;
++	void __iomem *cpld_base;
++	struct mutex ctrl_lock; /* protects CONTROL register */
++	u8 control_reg;
++	char version[3];
++	u16 design_no;
++};
 +
-+static const char ctrl_enabled[] = "enabled";
-+static const char ctrl_disabled[] = "disabled";
-+
-+static ssize_t online_show(struct device *dev, struct device_attribute *attr,
-+			   char *buf)
++static void do_reset(struct controller_priv *cd, u8 rst_bit, bool reset)
 +{
-+	struct fieldbus_dev *fb = dev_get_drvdata(dev);
-+
-+	return sprintf(buf, "%d\n", !!fb->online);
-+}
-+static DEVICE_ATTR_RO(online);
-+
-+static ssize_t enabled_show(struct device *dev, struct device_attribute *attr,
-+			    char *buf)
-+{
-+	struct fieldbus_dev *fb = dev_get_drvdata(dev);
-+
-+	if (!fb->enable_get)
-+		return -EINVAL;
-+	return sprintf(buf, "%d\n", !!fb->enable_get(fb));
-+}
-+
-+static ssize_t enabled_store(struct device *dev, struct device_attribute *attr,
-+			     const char *buf, size_t n)
-+{
-+	struct fieldbus_dev *fb = dev_get_drvdata(dev);
-+	bool value;
-+	int ret;
-+
-+	if (!fb->simple_enable_set)
-+		return -ENOTSUPP;
-+	ret = kstrtobool(buf, &value);
-+	if (ret)
-+		return ret;
-+	ret = fb->simple_enable_set(fb, value);
-+	if (ret < 0)
-+		return ret;
-+	return n;
-+}
-+static DEVICE_ATTR_RW(enabled);
-+
-+static ssize_t card_name_show(struct device *dev, struct device_attribute *attr,
-+			      char *buf)
-+{
-+	struct fieldbus_dev *fb = dev_get_drvdata(dev);
-+
++	mutex_lock(&cd->ctrl_lock);
 +	/*
-+	 * card_name was provided by child driver, could potentially be long.
-+	 * protect against buffer overrun.
++	 * CPLD_CONTROL is write-only, so cache its value in
++	 * cd->control_reg
 +	 */
-+	return snprintf(buf, PAGE_SIZE, "%s\n", fb->card_name);
++	if (reset)
++		cd->control_reg &= ~rst_bit;
++	else
++		cd->control_reg |= rst_bit;
++	writeb(cd->control_reg, cd->cpld_base + CPLD_CONTROL);
++	/*
++	 * h/w work-around:
++	 * the hardware is 'too fast', so a reset followed by an immediate
++	 * not-reset will _not_ change the anybus reset line in any way,
++	 * losing the reset. to prevent this from happening, introduce
++	 * a minimum reset duration.
++	 * Verified minimum safe duration required using a scope
++	 * on 14-June-2018: 100 us.
++	 */
++	if (reset)
++		usleep_range(100, 200);
++	mutex_unlock(&cd->ctrl_lock);
 +}
-+static DEVICE_ATTR_RO(card_name);
 +
-+static ssize_t read_area_size_show(struct device *dev,
-+				   struct device_attribute *attr, char *buf)
++static int anybuss_reset(struct controller_priv *cd,
++			 unsigned long id, bool reset)
 +{
-+	struct fieldbus_dev *fb = dev_get_drvdata(dev);
-+
-+	return sprintf(buf, "%zu\n", fb->read_area_sz);
++	if (id >= 2)
++		return -EINVAL;
++	if (cd->common_reset)
++		do_reset(cd, CPLD_CONTROL_CRST, reset);
++	else
++		do_reset(cd, id ? CPLD_CONTROL_RST2 : CPLD_CONTROL_RST1, reset);
++	return 0;
 +}
-+static DEVICE_ATTR_RO(read_area_size);
 +
-+static ssize_t write_area_size_show(struct device *dev,
-+				    struct device_attribute *attr, char *buf)
++static void export_reset_0(struct device *dev, bool assert)
 +{
-+	struct fieldbus_dev *fb = dev_get_drvdata(dev);
++	struct controller_priv *cd = dev_get_drvdata(dev);
 +
-+	return sprintf(buf, "%zu\n", fb->write_area_sz);
++	anybuss_reset(cd, 0, assert);
 +}
-+static DEVICE_ATTR_RO(write_area_size);
 +
-+static ssize_t fieldbus_id_show(struct device *dev,
-+				struct device_attribute *attr, char *buf)
++static void export_reset_1(struct device *dev, bool assert)
 +{
-+	struct fieldbus_dev *fb = dev_get_drvdata(dev);
++	struct controller_priv *cd = dev_get_drvdata(dev);
 +
-+	return fb->fieldbus_id_get(fb, buf, PAGE_SIZE);
++	anybuss_reset(cd, 1, assert);
 +}
-+static DEVICE_ATTR_RO(fieldbus_id);
 +
-+static ssize_t fieldbus_type_show(struct device *dev,
-+				  struct device_attribute *attr, char *buf)
++/*
++ * parallel bus limitation:
++ *
++ * the anybus is 8-bit wide. we can't assume that the hardware will translate
++ * word accesses on the parallel bus to multiple byte-accesses on the anybus.
++ *
++ * the imx WEIM bus does not provide this type of translation.
++ *
++ * to be safe, we will limit parallel bus accesses to a single byte
++ * at a time for now.
++ */
++
++static int read_reg_bus(void *context, unsigned int reg,
++			unsigned int *val)
 +{
-+	struct fieldbus_dev *fb = dev_get_drvdata(dev);
-+	const char *t;
++	void __iomem *base = context;
 +
-+	switch (fb->fieldbus_type) {
-+	case FIELDBUS_DEV_TYPE_PROFINET:
-+		t = "profinet";
++	*val = readb(base + reg);
++	return 0;
++}
++
++static int write_reg_bus(void *context, unsigned int reg,
++			 unsigned int val)
++{
++	void __iomem *base = context;
++
++	writeb(val, base + reg);
++	return 0;
++}
++
++static struct regmap *create_parallel_regmap(struct platform_device *pdev,
++					     int idx)
++{
++	struct regmap_config regmap_cfg = {
++		.reg_bits = 11,
++		.val_bits = 8,
++		/*
++		 * single-byte parallel bus accesses are atomic, so don't
++		 * require any synchronization.
++		 */
++		.disable_locking = true,
++		.reg_read = read_reg_bus,
++		.reg_write = write_reg_bus,
++	};
++	struct resource *res;
++	void __iomem *base;
++	struct device *dev = &pdev->dev;
++
++	res = platform_get_resource(pdev, IORESOURCE_MEM, idx + 1);
++	if (resource_size(res) < (1 << regmap_cfg.reg_bits))
++		return ERR_PTR(-EINVAL);
++	base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(base))
++		return ERR_CAST(base);
++	return devm_regmap_init(dev, NULL, base, &regmap_cfg);
++}
++
++static struct anybuss_host *
++create_anybus_host(struct platform_device *pdev, int idx)
++{
++	struct anybuss_ops ops = {};
++
++	switch (idx) {
++	case 0:
++		ops.reset = export_reset_0;
++		break;
++	case 1:
++		ops.reset = export_reset_1;
 +		break;
 +	default:
-+		t = "unknown";
-+		break;
++		return ERR_PTR(-EINVAL);
 +	}
-+
-+	return sprintf(buf, "%s\n", t);
++	ops.host_idx = idx;
++	ops.regmap = create_parallel_regmap(pdev, idx);
++	if (IS_ERR(ops.regmap))
++		return ERR_CAST(ops.regmap);
++	ops.irq = platform_get_irq(pdev, idx);
++	if (ops.irq <= 0)
++		return ERR_PTR(-EINVAL);
++	return devm_anybuss_host_common_probe(&pdev->dev, &ops);
 +}
-+static DEVICE_ATTR_RO(fieldbus_type);
 +
-+static struct attribute *fieldbus_attrs[] = {
-+	&dev_attr_enabled.attr,
-+	&dev_attr_card_name.attr,
-+	&dev_attr_fieldbus_id.attr,
-+	&dev_attr_read_area_size.attr,
-+	&dev_attr_write_area_size.attr,
-+	&dev_attr_online.attr,
-+	&dev_attr_fieldbus_type.attr,
++static ssize_t version_show(struct device *dev,
++			    struct device_attribute *attr, char *buf)
++{
++	struct controller_priv *cd = dev_get_drvdata(dev);
++
++	return sprintf(buf, "%s\n", cd->version);
++}
++static DEVICE_ATTR_RO(version);
++
++static ssize_t design_number_show(struct device *dev,
++				  struct device_attribute *attr, char *buf)
++{
++	struct controller_priv *cd = dev_get_drvdata(dev);
++
++	return sprintf(buf, "%d\n", cd->design_no);
++}
++static DEVICE_ATTR_RO(design_number);
++
++static struct attribute *controller_attributes[] = {
++	&dev_attr_version.attr,
++	&dev_attr_design_number.attr,
 +	NULL,
 +};
 +
-+static umode_t fieldbus_is_visible(struct kobject *kobj, struct attribute *attr,
-+				   int n)
++static struct attribute_group controller_attribute_group = {
++	.attrs = controller_attributes,
++};
++
++static const struct attribute_group *controller_attribute_groups[] = {
++	&controller_attribute_group,
++	NULL,
++};
++
++static void controller_device_release(struct device *dev)
 +{
-+	struct device *dev = container_of(kobj, struct device, kobj);
-+	struct fieldbus_dev *fb = dev_get_drvdata(dev);
-+	umode_t mode = attr->mode;
-+
-+	if (attr == &dev_attr_enabled.attr) {
-+		mode = 0;
-+		if (fb->enable_get)
-+			mode |= 0444;
-+		if (fb->simple_enable_set)
-+			mode |= 0200;
-+	}
-+
-+	return mode;
++	kfree(dev);
 +}
 +
-+static const struct attribute_group fieldbus_group = {
-+	.attrs = fieldbus_attrs,
-+	.is_visible = fieldbus_is_visible,
-+};
-+__ATTRIBUTE_GROUPS(fieldbus);
-+
-+static struct class fieldbus_class = {
-+	.name =		"fieldbus_dev",
-+	.owner =	THIS_MODULE,
-+	.dev_groups =	fieldbus_groups,
-+};
-+
-+struct fb_open_file {
-+	struct fieldbus_dev *fbdev;
-+	int dc_event;
-+};
-+
-+static int fieldbus_open(struct inode *inode, struct file *filp)
++static int can_power_is_enabled(struct regulator_dev *rdev)
 +{
-+	struct fb_open_file *of;
-+	struct fieldbus_dev *fbdev = container_of(inode->i_cdev,
-+						struct fieldbus_dev,
-+						cdev);
++	struct controller_priv *cd = rdev_get_drvdata(rdev);
 +
-+	of = kzalloc(sizeof(*of), GFP_KERNEL);
-+	if (!of)
++	return !(readb(cd->cpld_base + CPLD_STATUS1) & CPLD_STATUS1_CAN_POWER);
++}
++
++static struct regulator_ops can_power_ops = {
++	.is_enabled = can_power_is_enabled,
++};
++
++static const struct regulator_desc can_power_desc = {
++	.name = "regulator-can-power",
++	.id = -1,
++	.type = REGULATOR_VOLTAGE,
++	.owner = THIS_MODULE,
++	.ops = &can_power_ops,
++};
++
++static struct class *controller_class;
++static DEFINE_IDA(controller_index_ida);
++
++static int controller_probe(struct platform_device *pdev)
++{
++	struct controller_priv *cd;
++	struct device *dev = &pdev->dev;
++	struct regulator_config config = { };
++	struct regulator_dev *regulator;
++	int err, id;
++	struct resource *res;
++	struct anybuss_host *host;
++	u8 status1, cap;
++
++	cd = devm_kzalloc(dev, sizeof(*cd), GFP_KERNEL);
++	if (!cd)
 +		return -ENOMEM;
-+	of->fbdev = fbdev;
-+	filp->private_data = of;
++	dev_set_drvdata(dev, cd);
++	mutex_init(&cd->ctrl_lock);
++	cd->reset_gpiod = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
++	if (IS_ERR(cd->reset_gpiod))
++		return PTR_ERR(cd->reset_gpiod);
++
++	/* CPLD control memory, sits at index 0 */
++	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
++	cd->cpld_base = devm_ioremap_resource(dev, res);
++	if (IS_ERR(cd->cpld_base)) {
++		dev_err(dev,
++			"failed to map cpld base address\n");
++		err = PTR_ERR(cd->cpld_base);
++		goto out_reset;
++	}
++
++	/* identify cpld */
++	status1 = readb(cd->cpld_base + CPLD_STATUS1);
++	cd->design_no = (readb(cd->cpld_base + CPLD_DESIGN_HI) << 8) |
++				readb(cd->cpld_base + CPLD_DESIGN_LO);
++	snprintf(cd->version, sizeof(cd->version), "%c%d",
++		 'A' + ((status1 >> 5) & 0x7),
++		 (status1 >> 2) & 0x7);
++	dev_info(dev, "design number %d, revision %s\n",
++		 cd->design_no,
++		cd->version);
++	cap = readb(cd->cpld_base + CPLD_CAP);
++	if (!(cap & CPLD_CAP_COMPAT)) {
++		dev_err(dev, "unsupported controller [cap=0x%02X]", cap);
++		err = -ENODEV;
++		goto out_reset;
++	}
++
++	if (status1 & CPLD_STATUS1_AB) {
++		dev_info(dev, "has anybus-S slot(s)");
++		cd->common_reset = !(cap & CPLD_CAP_SEP_RESETS);
++		dev_info(dev, "supports %s", cd->common_reset ?
++			"a common reset" : "separate resets");
++		for (id = 0; id < 2; id++) {
++			host = create_anybus_host(pdev, id);
++			if (!IS_ERR(host))
++				continue;
++			err = PTR_ERR(host);
++			/* -ENODEV is fine, it just means no card detected */
++			if (err != -ENODEV)
++				goto out_reset;
++		}
++	}
++
++	id = ida_simple_get(&controller_index_ida, 0, 0, GFP_KERNEL);
++	if (id < 0) {
++		err = id;
++		goto out_reset;
++	}
++	/* export can power readout as a regulator */
++	config.dev = dev;
++	config.driver_data = cd;
++	regulator = devm_regulator_register(dev, &can_power_desc, &config);
++	if (IS_ERR(regulator)) {
++		err = PTR_ERR(regulator);
++		goto out_reset;
++	}
++	/* make controller info visible to userspace */
++	cd->class_dev = kzalloc(sizeof(*cd->class_dev), GFP_KERNEL);
++	if (!cd->class_dev) {
++		err = -ENOMEM;
++		goto out_ida;
++	}
++	cd->class_dev->class = controller_class;
++	cd->class_dev->groups = controller_attribute_groups;
++	cd->class_dev->parent = dev;
++	cd->class_dev->id = id;
++	cd->class_dev->release = controller_device_release;
++	dev_set_name(cd->class_dev, "%d", cd->class_dev->id);
++	dev_set_drvdata(cd->class_dev, cd);
++	err = device_register(cd->class_dev);
++	if (err)
++		goto out_dev;
++	return 0;
++out_dev:
++	put_device(cd->class_dev);
++out_ida:
++	ida_simple_remove(&controller_index_ida, id);
++out_reset:
++	gpiod_set_value_cansleep(cd->reset_gpiod, 1);
++	return err;
++}
++
++static int controller_remove(struct platform_device *pdev)
++{
++	struct controller_priv *cd = platform_get_drvdata(pdev);
++	int id = cd->class_dev->id;
++
++	device_unregister(cd->class_dev);
++	ida_simple_remove(&controller_index_ida, id);
++	gpiod_set_value_cansleep(cd->reset_gpiod, 1);
 +	return 0;
 +}
 +
-+static int fieldbus_release(struct inode *node, struct file *filp)
-+{
-+	struct fb_open_file *of = filp->private_data;
-+
-+	kfree(of);
-+	return 0;
-+}
-+
-+static ssize_t fieldbus_read(struct file *filp, char __user *buf, size_t size,
-+			     loff_t *offset)
-+{
-+	struct fb_open_file *of = filp->private_data;
-+	struct fieldbus_dev *fbdev = of->fbdev;
-+
-+	of->dc_event = fbdev->dc_event;
-+	return fbdev->read_area(fbdev, buf, size, offset);
-+}
-+
-+static ssize_t fieldbus_write(struct file *filp, const char __user *buf,
-+			      size_t size, loff_t *offset)
-+{
-+	struct fb_open_file *of = filp->private_data;
-+	struct fieldbus_dev *fbdev = of->fbdev;
-+
-+	return fbdev->write_area(fbdev, buf, size, offset);
-+}
-+
-+static unsigned int fieldbus_poll(struct file *filp, poll_table *wait)
-+{
-+	struct fb_open_file *of = filp->private_data;
-+	struct fieldbus_dev *fbdev = of->fbdev;
-+	unsigned int mask = POLLIN | POLLRDNORM | POLLOUT | POLLWRNORM;
-+
-+	poll_wait(filp, &fbdev->dc_wq, wait);
-+	/* data changed ? */
-+	if (fbdev->dc_event != of->dc_event)
-+		mask |= POLLPRI | POLLERR;
-+	return mask;
-+}
-+
-+static const struct file_operations fieldbus_fops = {
-+	.open		= fieldbus_open,
-+	.release	= fieldbus_release,
-+	.read		= fieldbus_read,
-+	.write		= fieldbus_write,
-+	.poll		= fieldbus_poll,
-+	.llseek		= generic_file_llseek,
-+	.owner		= THIS_MODULE,
++static const struct of_device_id controller_of_match[] = {
++	{ .compatible = "arcx,anybus-controller" },
++	{ }
 +};
 +
-+void fieldbus_dev_area_updated(struct fieldbus_dev *fb)
-+{
-+	fb->dc_event++;
-+	wake_up_all(&fb->dc_wq);
-+}
-+EXPORT_SYMBOL_GPL(fieldbus_dev_area_updated);
++MODULE_DEVICE_TABLE(of, controller_of_match);
 +
-+void fieldbus_dev_online_changed(struct fieldbus_dev *fb, bool online)
-+{
-+	fb->online = online;
-+	kobject_uevent(&fb->dev->kobj, KOBJ_CHANGE);
-+}
-+EXPORT_SYMBOL_GPL(fieldbus_dev_online_changed);
++static struct platform_driver controller_driver = {
++	.probe = controller_probe,
++	.remove = controller_remove,
++	.driver		= {
++		.name   = "arcx-anybus-controller",
++		.of_match_table	= of_match_ptr(controller_of_match),
++	},
++};
 +
-+static void __fieldbus_dev_unregister(struct fieldbus_dev *fb)
-+{
-+	if (!fb)
-+		return;
-+	device_destroy(&fieldbus_class, fb->cdev.dev);
-+	cdev_del(&fb->cdev);
-+	ida_simple_remove(&fieldbus_ida, fb->id);
-+}
-+
-+void fieldbus_dev_unregister(struct fieldbus_dev *fb)
-+{
-+	mutex_lock(&fieldbus_mtx);
-+	__fieldbus_dev_unregister(fb);
-+	mutex_unlock(&fieldbus_mtx);
-+}
-+EXPORT_SYMBOL_GPL(fieldbus_dev_unregister);
-+
-+static int __fieldbus_dev_register(struct fieldbus_dev *fb)
-+{
-+	dev_t devno;
-+	int err;
-+
-+	if (!fb)
-+		return -EINVAL;
-+	if (!fb->read_area || !fb->write_area || !fb->fieldbus_id_get)
-+		return -EINVAL;
-+	fb->id = ida_simple_get(&fieldbus_ida, 0, MAX_FIELDBUSES, GFP_KERNEL);
-+	if (fb->id < 0)
-+		return fb->id;
-+	devno = MKDEV(MAJOR(fieldbus_devt), fb->id);
-+	init_waitqueue_head(&fb->dc_wq);
-+	cdev_init(&fb->cdev, &fieldbus_fops);
-+	err = cdev_add(&fb->cdev, devno, 1);
-+	if (err) {
-+		pr_err("fieldbus_dev%d unable to add device %d:%d\n",
-+		       fb->id, MAJOR(fieldbus_devt), fb->id);
-+		goto err_cdev;
-+	}
-+	fb->dev = device_create(&fieldbus_class, fb->parent, devno, fb,
-+				"fieldbus_dev%d", fb->id);
-+	if (IS_ERR(fb->dev)) {
-+		err = PTR_ERR(fb->dev);
-+		goto err_dev_create;
-+	}
-+	return 0;
-+
-+err_dev_create:
-+	cdev_del(&fb->cdev);
-+err_cdev:
-+	ida_simple_remove(&fieldbus_ida, fb->id);
-+	return err;
-+}
-+
-+int fieldbus_dev_register(struct fieldbus_dev *fb)
++static int __init controller_init(void)
 +{
 +	int err;
 +
-+	mutex_lock(&fieldbus_mtx);
-+	err = __fieldbus_dev_register(fb);
-+	mutex_unlock(&fieldbus_mtx);
++	controller_class = class_create(THIS_MODULE, "arcx_anybus_controller");
++	if (IS_ERR(controller_class))
++		return PTR_ERR(controller_class);
++	err = platform_driver_register(&controller_driver);
++	if (err)
++		class_destroy(controller_class);
 +
 +	return err;
 +}
-+EXPORT_SYMBOL_GPL(fieldbus_dev_register);
 +
-+static int __init fieldbus_init(void)
++static void __exit controller_exit(void)
 +{
-+	int err;
-+
-+	err = class_register(&fieldbus_class);
-+	if (err < 0) {
-+		pr_err("fieldbus_dev: could not register class\n");
-+		return err;
-+	}
-+	err = alloc_chrdev_region(&fieldbus_devt, 0,
-+				  MAX_FIELDBUSES, "fieldbus_dev");
-+	if (err < 0) {
-+		pr_err("fieldbus_dev: unable to allocate char dev region\n");
-+		goto err_alloc;
-+	}
-+	return 0;
-+
-+err_alloc:
-+	class_unregister(&fieldbus_class);
-+	return err;
++	platform_driver_unregister(&controller_driver);
++	class_destroy(controller_class);
++	ida_destroy(&controller_index_ida);
 +}
 +
-+static void __exit fieldbus_exit(void)
-+{
-+	unregister_chrdev_region(fieldbus_devt, MAX_FIELDBUSES);
-+	class_unregister(&fieldbus_class);
-+	ida_destroy(&fieldbus_ida);
-+}
++module_init(controller_init);
++module_exit(controller_exit);
 +
-+subsys_initcall(fieldbus_init);
-+module_exit(fieldbus_exit);
-+
++MODULE_DESCRIPTION("Arcx Anybus-S Controller driver");
 +MODULE_AUTHOR("Sven Van Asbroeck <TheSven73@gmail.com>");
-+MODULE_AUTHOR("Jonathan Stiles <jonathans@arcx.com>");
-+MODULE_DESCRIPTION("Fieldbus Device Driver Core");
 +MODULE_LICENSE("GPL v2");
-diff --git a/drivers/staging/fieldbus/fieldbus_dev.h b/drivers/staging/fieldbus/fieldbus_dev.h
-new file mode 100644
-index 000000000000..a10fc3b446dc
---- /dev/null
-+++ b/drivers/staging/fieldbus/fieldbus_dev.h
-@@ -0,0 +1,108 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Fieldbus Device Driver Core
-+ *
-+ */
-+
-+#ifndef __FIELDBUS_DEV_H
-+#define __FIELDBUS_DEV_H
-+
-+#include <linux/cdev.h>
-+#include <linux/wait.h>
-+
-+enum fieldbus_dev_type {
-+	FIELDBUS_DEV_TYPE_UNKNOWN = 0,
-+	FIELDBUS_DEV_TYPE_PROFINET,
-+};
-+
-+/**
-+ * struct fieldbus_dev - Fieldbus device
-+ * @read_area:		[DRIVER] function to read the process data area of the
-+ *				 device. same parameters/return values as
-+ *				 the read function in struct file_operations
-+ * @write_area:		[DRIVER] function to write to the process data area of
-+ *				 the device. same parameters/return values as
-+ *				 the write function in struct file_operations
-+ * @write_area_sz	[DRIVER] size of the writable process data area
-+ * @read_area_sz	[DRIVER] size of the readable process data area
-+ * @card_name		[DRIVER] name of the card, e.g. "ACME Inc. profinet"
-+ * @fieldbus_type	[DRIVER] fieldbus type of this device, e.g.
-+ *					FIELDBUS_DEV_TYPE_PROFINET
-+ * @enable_get		[DRIVER] function which returns true if the card
-+ *				 is enabled, false otherwise
-+ * @fieldbus_id_get	[DRIVER] function to retrieve the unique fieldbus id
-+ *				 by which this device can be identified;
-+ *				 return value follows the snprintf convention
-+ * @simple_enable_set	[DRIVER] (optional) function to enable the device
-+ *				 according to its default settings
-+ * @parent		[DRIVER] (optional) the device's parent device
-+ */
-+struct fieldbus_dev {
-+	ssize_t (*read_area)(struct fieldbus_dev *fbdev, char __user *buf,
-+			     size_t size, loff_t *offset);
-+	ssize_t (*write_area)(struct fieldbus_dev *fbdev,
-+			      const char __user *buf, size_t size,
-+			      loff_t *offset);
-+	size_t write_area_sz, read_area_sz;
-+	const char *card_name;
-+	enum fieldbus_dev_type fieldbus_type;
-+	bool (*enable_get)(struct fieldbus_dev *fbdev);
-+	int (*fieldbus_id_get)(struct fieldbus_dev *fbdev, char *buf,
-+			       size_t max_size);
-+	int (*simple_enable_set)(struct fieldbus_dev *fbdev, bool enable);
-+	struct device *parent;
-+
-+	/* private data */
-+	int id;
-+	struct cdev cdev;
-+	struct device *dev;
-+	int dc_event;
-+	wait_queue_head_t dc_wq;
-+	bool online;
-+};
-+
-+#if IS_ENABLED(CONFIG_FIELDBUS_DEV)
-+
-+/**
-+ * fieldbus_dev_unregister()
-+ *	- unregister a previously registered fieldbus device
-+ * @fb:		Device structure previously registered
-+ **/
-+void fieldbus_dev_unregister(struct fieldbus_dev *fb);
-+
-+/**
-+ * fieldbus_dev_register()
-+ *	- register a device with the fieldbus device subsystem
-+ * @fb:		Device structure filled by the device driver
-+ **/
-+int __must_check fieldbus_dev_register(struct fieldbus_dev *fb);
-+
-+/**
-+ * fieldbus_dev_area_updated()
-+ *	- notify the subsystem that an external fieldbus controller updated
-+ *			the process data area
-+ * @fb:		Device structure
-+ **/
-+void fieldbus_dev_area_updated(struct fieldbus_dev *fb);
-+
-+/**
-+ * fieldbus_dev_online_changed()
-+ *	- notify the subsystem that the fieldbus online status changed
-+ * @fb:		Device structure
-+ **/
-+void fieldbus_dev_online_changed(struct fieldbus_dev *fb, bool online);
-+
-+#else /* IS_ENABLED(CONFIG_FIELDBUS_DEV) */
-+
-+static inline void fieldbus_dev_unregister(struct fieldbus_dev *fb) {}
-+static inline int __must_check fieldbus_dev_register(struct fieldbus_dev *fb)
-+{
-+	return -ENOTSUPP;
-+}
-+
-+static inline void fieldbus_dev_area_updated(struct fieldbus_dev *fb) {}
-+static inline void fieldbus_dev_online_changed(struct fieldbus_dev *fb,
-+					       bool online) {}
-+
-+#endif /* IS_ENABLED(CONFIG_FIELDBUS_DEV) */
-+#endif /* __FIELDBUS_DEV_H */
 -- 
 2.17.1
 
