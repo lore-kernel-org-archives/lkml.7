@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F529C282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:53:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CF98FC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:53:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5D7D52075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:53:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AC3FA2075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:53:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730431AbfDPRxx (ORCPT
+        id S1730445AbfDPRx5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 13:53:53 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:57566 "EHLO
+        Tue, 16 Apr 2019 13:53:57 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:57562 "EHLO
         ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730247AbfDPRxp (ORCPT
+        with ESMTP id S1730237AbfDPRxp (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 16 Apr 2019 13:53:45 -0400
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hGSH9-0005WO-8G; Tue, 16 Apr 2019 17:53:43 +0000
+        id 1hGSH9-0005WH-3a; Tue, 16 Apr 2019 17:53:43 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [RFC PATCH 21/62] hfsplus: switch to ->free_inode()
-Date:   Tue, 16 Apr 2019 18:52:59 +0100
-Message-Id: <20190416175340.21068-21-viro@ZenIV.linux.org.uk>
+Subject: [RFC PATCH 20/62] hfs: switch to ->free_inode()
+Date:   Tue, 16 Apr 2019 18:52:58 +0100
+Message-Id: <20190416175340.21068-20-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190416175340.21068-1-viro@ZenIV.linux.org.uk>
 References: <20190416174900.GT2217@ZenIV.linux.org.uk>
@@ -43,51 +43,36 @@ From: Al Viro <viro@zeniv.linux.org.uk>
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- fs/hfsplus/super.c | 13 +++----------
- 1 file changed, 3 insertions(+), 10 deletions(-)
+ fs/hfs/super.c | 10 ++--------
+ 1 file changed, 2 insertions(+), 8 deletions(-)
 
-diff --git a/fs/hfsplus/super.c b/fs/hfsplus/super.c
-index eb4535eba95d..0cc5feff76cd 100644
---- a/fs/hfsplus/super.c
-+++ b/fs/hfsplus/super.c
-@@ -18,7 +18,7 @@
- #include <linux/nls.h>
- 
- static struct inode *hfsplus_alloc_inode(struct super_block *sb);
--static void hfsplus_destroy_inode(struct inode *inode);
-+static void hfsplus_free_inode(struct inode *inode);
- 
- #include "hfsplus_fs.h"
- #include "xattr.h"
-@@ -361,7 +361,7 @@ static int hfsplus_remount(struct super_block *sb, int *flags, char *data)
- 
- static const struct super_operations hfsplus_sops = {
- 	.alloc_inode	= hfsplus_alloc_inode,
--	.destroy_inode	= hfsplus_destroy_inode,
-+	.free_inode	= hfsplus_free_inode,
- 	.write_inode	= hfsplus_write_inode,
- 	.evict_inode	= hfsplus_evict_inode,
- 	.put_super	= hfsplus_put_super,
-@@ -628,18 +628,11 @@ static struct inode *hfsplus_alloc_inode(struct super_block *sb)
+diff --git a/fs/hfs/super.c b/fs/hfs/super.c
+index 173876782f73..c33324686d89 100644
+--- a/fs/hfs/super.c
++++ b/fs/hfs/super.c
+@@ -167,20 +167,14 @@ static struct inode *hfs_alloc_inode(struct super_block *sb)
  	return i ? &i->vfs_inode : NULL;
  }
  
--static void hfsplus_i_callback(struct rcu_head *head)
-+static void hfsplus_free_inode(struct inode *inode)
+-static void hfs_i_callback(struct rcu_head *head)
++static void hfs_free_inode(struct inode *inode)
  {
 -	struct inode *inode = container_of(head, struct inode, i_rcu);
--
- 	kmem_cache_free(hfsplus_inode_cachep, HFSPLUS_I(inode));
+ 	kmem_cache_free(hfs_inode_cachep, HFS_I(inode));
  }
  
--static void hfsplus_destroy_inode(struct inode *inode)
+-static void hfs_destroy_inode(struct inode *inode)
 -{
--	call_rcu(&inode->i_rcu, hfsplus_i_callback);
+-	call_rcu(&inode->i_rcu, hfs_i_callback);
 -}
 -
- #define HFSPLUS_INODE_SIZE	sizeof(struct hfsplus_inode_info)
- 
- static struct dentry *hfsplus_mount(struct file_system_type *fs_type,
+ static const struct super_operations hfs_super_operations = {
+ 	.alloc_inode	= hfs_alloc_inode,
+-	.destroy_inode	= hfs_destroy_inode,
++	.free_inode	= hfs_free_inode,
+ 	.write_inode	= hfs_write_inode,
+ 	.evict_inode	= hfs_evict_inode,
+ 	.put_super	= hfs_put_super,
 -- 
 2.11.0
 
