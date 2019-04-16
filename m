@@ -2,149 +2,102 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC2DC282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:23:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B2AC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:23:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E0D62073F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:23:35 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555399415;
-	bh=JBX8ZoIdLC/6sS3DUdXQ2cvwGwXFzLiJ8t41ml+ycRA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=peCQrRtu9D6+pwHXaqj+AK4gpKzlSeV5/uTV7u7272plSsgcKlecm/gL3MuqbXtkk
-	 Of2JWRvb9KvEjBg8dDbW/3OmyYOcx/ZvqQmZdkBr0MU75xttaPtGyfhw4y1fQJar2v
-	 +0xGRkVFw8ZOlDT8XHbvJ1a60Y5uS+G1IehzOn4U=
+	by mail.kernel.org (Postfix) with ESMTP id 5C1F620870
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:23:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="h9mILkfp";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="cpImp2Jc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728516AbfDPHXd (ORCPT
+        id S1728557AbfDPHXj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 03:23:33 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:34552 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726988AbfDPHXd (ORCPT
+        Tue, 16 Apr 2019 03:23:39 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:57834 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726988AbfDPHXi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 03:23:33 -0400
-Received: by mail-wm1-f65.google.com with SMTP id r186so1652273wmf.1;
-        Tue, 16 Apr 2019 00:23:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=yrGXPuW39LplhySUkRwA1s1zOaRJ4W+2puff9jsZHPw=;
-        b=TfN/eBLvOyIk4nnfKvdEdynlMYlTstXF18x5YyAhR8W6sSTporVApePoZgai+42jsg
-         OGKPZcQCa+tqxa8vD+KEY4yrFYTGM2AnXlVq6Ttq0BqSOrlQrYHYAu5pjtUnjrCv0pNX
-         MGjSjaSEB16eqeHNjIbVmtQNPpqqbemuBXPUJBTKDmLj9JCSicQT6V66QBz37DW08Ac0
-         3o6U4KzBLHW6wlKcQ9KVI8TLtlT8P2Wqw6nF53xDwe2agINJXKkrFYbmkDIqA+dhvVwN
-         fGHNIDmLEPYWIy00qCgfJ5C2xNBgnr8kM4+sJvO/y2XyfNHP83Oe24Fa4jp8lDD9WZYO
-         3+5g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=yrGXPuW39LplhySUkRwA1s1zOaRJ4W+2puff9jsZHPw=;
-        b=uLXYq6XsYFDdiwgdYxPo16ZCLsaOFXCwa9j6CO96hH8BGoc1OjeuHbgfK1A/IHzs6b
-         Xg01Np5PSBzbiVnlGOc/4VwFqJU3kDQKfNb48oVlyHPLhdoiAw2qgqiSLfWqKgdXEZsX
-         Ip36NQErFAD1HJUqylp4PvvzrQs2QfwdQdB0/HSHd2IGFnjZgzbdI+9U1JjoDrjKQcGy
-         CRouLdnf45wb4HPPBrN4zzvWf3F0lr2bQu3Lzd8pAuP8YO3iqs8keo8crV3HnnQBZu87
-         zrts/mQL4nVPLcyyG+bcjGEAdPotLq+S2RYiIB9sT3Owzk4BBGar4FU8Hbq68Kg1MidF
-         0SjA==
-X-Gm-Message-State: APjAAAW/wofcqKNC/JnlytxzjvokhmOcYe88S1RqCgD+UQfULNavSenk
-        CjAdqcQq1KX841iw/+G4avxY+aPq
-X-Google-Smtp-Source: APXvYqwbXwkoCdEI4xj+dXxuioxHMSXvpnurkArKKHQUiSxgRqA3JDa4m6nET8w4Cmrz/qvlRVPwVA==
-X-Received: by 2002:a05:600c:2293:: with SMTP id 19mr25455436wmf.77.1555399411361;
-        Tue, 16 Apr 2019 00:23:31 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id a17sm17772101wmg.40.2019.04.16.00.23.29
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 16 Apr 2019 00:23:30 -0700 (PDT)
-Date:   Tue, 16 Apr 2019 09:23:27 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Wenwen Wang <wang6495@umn.edu>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" 
-        <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] x86/PCI: fix a memory leak bug
-Message-ID: <20190416072327.GA127769@gmail.com>
-References: <1555340058-3065-1-git-send-email-wang6495@umn.edu>
+        Tue, 16 Apr 2019 03:23:38 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 3B9E3611DC; Tue, 16 Apr 2019 07:23:37 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1555399417;
+        bh=MEWK2D9JnuIvvAB7Mp0eYbbRYcrl6WlWi/3gERSi4c0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=h9mILkfpeIPYM8g/h2KwMAyhD6zcQAm5KLuuC11xwcUzBpQC3t5KIhwgmgGjYQfrM
+         gS7mWNpf77dk5F2LIplZ98qlyZ6Cmw2p20TcpSOHXUK35vgLoVReUJ4PFZblOSoCbB
+         cCKgqxqQWYtnuhHbkyy3uBH3fcv+Uc0QuHNEEG7o=
+Received: from [10.204.79.15] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 11B9F608D4;
+        Tue, 16 Apr 2019 07:23:25 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1555399416;
+        bh=MEWK2D9JnuIvvAB7Mp0eYbbRYcrl6WlWi/3gERSi4c0=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=cpImp2JcRrO1HqbUFpVLqDZaDzaXcxZL3UbE1PmhMdPKn5MIPTa2LeDHe80817cUM
+         07Pe0BBI+O84dH2xAlmvahLogGoyaNICcYY1jCG2NCxnWRJgU0XMg87EOr7GSg+XAb
+         rLeapCVNQeoROtoX1hXOUU9eEbxiT7pmLnjJlttE=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 11B9F608D4
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH] staging: wilc1000: fix spelling mistake "dissconect" ->
+ "disconnect"
+To:     Colin King <colin.king@canonical.com>,
+        Adham Abozaeid <adham.abozaeid@microchip.com>,
+        Ajay Singh <ajay.kathat@microchip.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-wireless@vger.kernel.org, devel@driverdev.osuosl.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190415163330.28166-1-colin.king@canonical.com>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <fe128fa2-7ba3-3d56-6b97-61bd98ebebc3@codeaurora.org>
+Date:   Tue, 16 Apr 2019 12:53:22 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1555340058-3065-1-git-send-email-wang6495@umn.edu>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190415163330.28166-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-* Wenwen Wang <wang6495@umn.edu> wrote:
+On 4/15/2019 10:03 PM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> There is a spelling mistake in a netdev_err error message, fix it.
+>
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 
-> In pcibios_irq_init(), the PCI IRQ routing table 'pirq_table' is firstly
-> found through pirq_find_routing_table(). If the table is not found and
-> 'CONFIG_PCI_BIOS' is defined, the table is then allocated in
-> pcibios_get_irq_routing_table() using kmalloc(). In the following
-> execution, if the I/O APIC is used, this table is actually not used.
-> However, in that case, the allocated table is not freed, which can lead to
-> a memory leak bug.
-> 
-> To fix this issue, this patch frees the allocated table if it is not used.
-> 
-> Signed-off-by: Wenwen Wang <wang6495@umn.edu>
+Cheers,
+-Mukesh
+
 > ---
->  arch/x86/pci/irq.c | 10 ++++++++--
->  1 file changed, 8 insertions(+), 2 deletions(-)
-> 
-> diff --git a/arch/x86/pci/irq.c b/arch/x86/pci/irq.c
-> index 52e5510..d9bcb96 100644
-> --- a/arch/x86/pci/irq.c
-> +++ b/arch/x86/pci/irq.c
-> @@ -1119,6 +1119,8 @@ static const struct dmi_system_id pciirq_dmi_table[] __initconst = {
->  
->  void __init pcibios_irq_init(void)
->  {
-> +	struct irq_routing_table *itable = NULL;
-> +
-
-Minor style nit: the canonical name of irq_routing_table local variables 
-is usually 'rtable' or 'rt' - let's not add a third naming variant with 
-'itable'?
-
->  	DBG(KERN_DEBUG "PCI: IRQ init\n");
->  
->  	if (raw_pci_ops == NULL)
-> @@ -1129,8 +1131,10 @@ void __init pcibios_irq_init(void)
->  	pirq_table = pirq_find_routing_table();
->  
->  #ifdef CONFIG_PCI_BIOS
-> -	if (!pirq_table && (pci_probe & PCI_BIOS_IRQ_SCAN))
-> +	if (!pirq_table && (pci_probe & PCI_BIOS_IRQ_SCAN)) {
->  		pirq_table = pcibios_get_irq_routing_table();
-> +		itable = pirq_table;
-> +	}
->  #endif
->  	if (pirq_table) {
->  		pirq_peer_trick();
-> @@ -1145,8 +1149,10 @@ void __init pcibios_irq_init(void)
->  		 * If we're using the I/O APIC, avoid using the PCI IRQ
->  		 * routing table
->  		 */
-> -		if (io_apic_assign_pci_irqs)
-> +		if (io_apic_assign_pci_irqs) {
-> +			kfree(itable);
->  			pirq_table = NULL;
-> +		}
-
-Reviewed-by: Ingo Molnar <mingo@kernel.org>
-
-Thanks,
-
-	Ingo
+>   drivers/staging/wilc1000/host_interface.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/staging/wilc1000/host_interface.c b/drivers/staging/wilc1000/host_interface.c
+> index e1a35bb426f9..ed15bd1bcd56 100644
+> --- a/drivers/staging/wilc1000/host_interface.c
+> +++ b/drivers/staging/wilc1000/host_interface.c
+> @@ -774,7 +774,7 @@ int wilc_disconnect(struct wilc_vif *vif)
+>   	result = wilc_send_config_pkt(vif, WILC_SET_CFG, &wid, 1,
+>   				      wilc_get_vif_idx(vif));
+>   	if (result) {
+> -		netdev_err(vif->ndev, "Failed to send dissconect\n");
+> +		netdev_err(vif->ndev, "Failed to send disconnect\n");
+>   		return result;
+>   	}
+>   
