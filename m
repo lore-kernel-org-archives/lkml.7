@@ -2,119 +2,70 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7901DC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:38:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EDE7C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:39:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 416D420821
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:38:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 49F0F20821
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:39:27 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="a9/NJegz"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=lunn.ch header.i=@lunn.ch header.b="ohL171Vx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729646AbfDPQiX (ORCPT
+        id S1729966AbfDPQjZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 12:38:23 -0400
-Received: from node.akkea.ca ([192.155.83.177]:36648 "EHLO node.akkea.ca"
+        Tue, 16 Apr 2019 12:39:25 -0400
+Received: from vps0.lunn.ch ([185.16.172.187]:34493 "EHLO vps0.lunn.ch"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726816AbfDPQiW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 12:38:22 -0400
-Received: by node.akkea.ca (Postfix, from userid 33)
-        id 571D24E204B; Tue, 16 Apr 2019 16:38:22 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1555432702; bh=XLQ7M8uOdC7iqAlhAXhyGUphqNE1jJZ/aX754kOBwF0=;
-        h=To:Subject:Date:From:Cc:In-Reply-To:References;
-        b=a9/NJegzGPG5wUfgurfHTKGwhzgLn+5zffbBZGZKG8pKsVHzBqiZqQye2mcaz8K0C
-         hewibBJ/eC2VM6Nhehyexdn3IHk2+Wgz6sTzyfgsV6QLyQHoMAa8VeeTnuSGvBTj1F
-         KnkNYNx1bwtWFP4vmC+u6vtC35AppXz8ehf9IE2I=
-To:     Marco Felsch <m.felsch@pengutronix.de>
-Subject: Re: [PATCH v4 0/2] Add support for the Purism Librem5 devkit
-X-PHP-Originating-Script: 1000:rcube.php
+        id S1726816AbfDPQjZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 12:39:25 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed; d=lunn.ch;
+        s=20171124; h=In-Reply-To:Content-Type:MIME-Version:References:Message-ID:
+        Subject:Cc:To:From:Date:Sender:Reply-To:Content-Transfer-Encoding:Content-ID:
+        Content-Description:Resent-Date:Resent-From:Resent-Sender:Resent-To:Resent-Cc
+        :Resent-Message-ID:List-Id:List-Help:List-Unsubscribe:List-Subscribe:
+        List-Post:List-Owner:List-Archive;
+        bh=re+DJvTcJZ1v0YRi9X6jWYWJ+mFNWP8LTIrBgnnN28Y=; b=ohL171Vx5dA9B81E+wwfeGyPz6
+        sy/Gb57TdsOA3NDqymH1KvzjS7+g2R+4whe9oL8gBf312sK9GsbRtflxT5dC17meed3f63+ubnR9/
+        r9ljsKSOjz3E0PB0kj/6xx3teQgOotVVlVFGqXqlsudJmCIQDW0FoZ/ElpK1T4ntNkbM=;
+Received: from andrew by vps0.lunn.ch with local (Exim 4.89)
+        (envelope-from <andrew@lunn.ch>)
+        id 1hGR78-0001bS-S2; Tue, 16 Apr 2019 18:39:18 +0200
+Date:   Tue, 16 Apr 2019 18:39:18 +0200
+From:   Andrew Lunn <andrew@lunn.ch>
+To:     Antoine Tenart <antoine.tenart@bootlin.com>
+Cc:     davem@davemloft.net, f.fainelli@gmail.com, hkallweit1@gmail.com,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        thomas.petazzoni@bootlin.com, nicolas.ferre@microchip.com,
+        ludovic.desroches@microchip.com, alexandre.belloni@bootlin.com
+Subject: Re: [PATCH net-next] net: phy: micrel: add Asym Pause workaround
+Message-ID: <20190416163918.GD2890@lunn.ch>
+References: <20190416101020.22149-1-antoine.tenart@bootlin.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII;
- format=flowed
-Content-Transfer-Encoding: 7bit
-Date:   Tue, 16 Apr 2019 09:38:22 -0700
-From:   Angus Ainslie <angus@akkea.ca>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        linux-arm-kernel@lists.infradead.org
-In-Reply-To: <20190416075834.6wurd6nq4ow5woyn@pengutronix.de>
-References: <20190415235343.16565-1-angus@akkea.ca>
- <20190416075834.6wurd6nq4ow5woyn@pengutronix.de>
-Message-ID: <665773559cd9449a27fc9bc40cf73792@www.akkea.ca>
-X-Sender: angus@akkea.ca
-User-Agent: Roundcube Webmail/1.1.3
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190416101020.22149-1-antoine.tenart@bootlin.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019-04-16 00:58, Marco Felsch wrote:
-> Hi Agnus,
+On Tue, Apr 16, 2019 at 12:10:20PM +0200, Antoine Tenart wrote:
+> The Micrel KSZ9031 PHY may fail to establish a link when the Asymmetric
+> Pause capability is set. This issue is described in a Silicon Errata
+> (DS80000691D or DS80000692D), which advises to always disable the
+> capability. This patch implements the workaround by defining a KSZ9031
+> specific get_feature callback to force the Asymmetric Pause capability
+> bit to be cleared.
 > 
-> On 19-04-15 16:53, Angus Ainslie (Purism) wrote:
->> The Librem5 devkit is based on the imx8mq from NXP. This is a default
->> devicetree to boot the board to a command prompt.
+> This fixes issues where the link would not come up at boot time, or when
+> the Asym Pause bit was set later on.
 > 
-> You should also provide a patch which adds the devicetree to the yaml
-> file, see: Documentation/devicetree/bindings/arm/fsl.yaml.
-> 
+> Signed-off-by: Antoine Tenart <antoine.tenart@bootlin.com>
 
-Sure, what is that yaml file for ?
+Reviewed-by: Andrew Lunn <andrew@lunn.ch>
 
-Angus
-
-> Thanks,
->   Marco
-> 
->> 
->> Changes since v3:
->> 
->> Freshly sorted and pressed nodes.
->> Change the backlight to an interpolated scale.
->> Dropped i2c2.
->> Dropped devkit version number to match debian MR.
->> 
->> Changes since v2:
->> 
->> Fixed incorrect phy-supply for the fsl-fec.
->> Dropped unused regulator property.
->> Fixup Makefile for linux-next.
->> 
->> Changes since v1:
->> 
->> Dropped config file.
->> Updated the board compatible label.
->> Changed node names to follow naming conventions.
->> Added a more complete regulator hierachy.
->> Removed unused nodes.
->> Removed unknown devices.
->> Fixed comment style.
->> Dropped undocumented properties.
->> 
->> Angus Ainslie (Purism) (2):
->>   arm64: dts: fsl: librem5: Add a device tree for the Librem5 devkit
->>   dt-bindings: Add an entry for Purism SPC
->> 
->>  .../devicetree/bindings/vendor-prefixes.txt   |   1 +
->>  arch/arm64/boot/dts/freescale/Makefile        |   1 +
->>  .../dts/freescale/imx8mq-librem5-devkit.dts   | 822 
->> ++++++++++++++++++
->>  3 files changed, 824 insertions(+)
->>  create mode 100644 
->> arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
->> 
->> --
->> 2.17.1
->> 
->> 
->> 
-
+    Andrew
