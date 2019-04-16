@@ -2,115 +2,228 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 149C6C282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:13:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF07CC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:14:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3C5C20675
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:13:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8BD9C20675
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:14:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728816AbfDPJNr (ORCPT
+        id S1728885AbfDPJOD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 05:13:47 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:50106 "EHLO
+        Tue, 16 Apr 2019 05:14:03 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:50122 "EHLO
         foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726160AbfDPJNq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 05:13:46 -0400
+        id S1726160AbfDPJOD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 05:14:03 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 1FE8AEBD;
-        Tue, 16 Apr 2019 02:13:46 -0700 (PDT)
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CF3E9EBD;
+        Tue, 16 Apr 2019 02:14:02 -0700 (PDT)
 Received: from fuggles.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0F62C3F68F;
-        Tue, 16 Apr 2019 02:13:44 -0700 (PDT)
-Date:   Tue, 16 Apr 2019 10:13:40 +0100
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 28ED43F68F;
+        Tue, 16 Apr 2019 02:13:59 -0700 (PDT)
+Date:   Tue, 16 Apr 2019 10:13:56 +0100
 From:   Will Deacon <will.deacon@arm.com>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org, stable@vger.kernel.org,
-        stable@kernel.org
-Subject: Re: [PATCH 4.9 72/76] arm64: futex: Fix FUTEX_WAKE_OP atomic ops
- with non-zero result value
-Message-ID: <20190416091340.GA31579@fuggles.cambridge.arm.com>
-References: <20190415183707.712011689@linuxfoundation.org>
- <20190415183729.170980546@linuxfoundation.org>
- <20190415220151.GA23056@archlinux-i9>
+To:     Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
+        linux-arch <linux-arch@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        "Paul E. McKenney" <paulmck@linux.ibm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Andrea Parri <andrea.parri@amarulasolutions.com>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Daniel Lustig <dlustig@nvidia.com>,
+        David Howells <dhowells@redhat.com>,
+        Alan Stern <stern@rowland.harvard.edu>,
+        "Maciej W. Rozycki" <macro@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        Ingo Molnar <mingo@kernel.org>,
+        Yoshinori Sato <ysato@users.sourceforge.jp>,
+        Rich Felker <dalias@libc.org>, Tony Luck <tony.luck@intel.com>,
+        Mikulas Patocka <mpatocka@redhat.com>,
+        Akira Yokosawa <akiyks@gmail.com>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>
+Subject: Re: [PATCH v2 01/21] docs/memory-barriers.txt: Rewrite "KERNEL I/O
+ BARRIER EFFECTS" section
+Message-ID: <20190416091356.GB31579@fuggles.cambridge.arm.com>
+References: <20190405135936.7266-1-will.deacon@arm.com>
+ <20190405135936.7266-2-will.deacon@arm.com>
+ <080d1ec73e3e29d6ffeeeb50b39b613da28afb37.camel@kernel.crashing.org>
+ <CAHk-=wgLLOmocrOw2uH9QxsV=SK236gv0Df8SWXGS8c8LAiyCA@mail.gmail.com>
+ <e172bf1d741eafd8c056ae3692b400f24bb7c3a7.camel@kernel.crashing.org>
+ <20190412131727.GB29218@fuggles.cambridge.arm.com>
+ <7ff812ec9c1e2a8b734b90f7480752dfd74cb8ad.camel@kernel.crashing.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190415220151.GA23056@archlinux-i9>
+In-Reply-To: <7ff812ec9c1e2a8b734b90f7480752dfd74cb8ad.camel@kernel.crashing.org>
 User-Agent: Mutt/1.11.1+86 (6f28e57d73f2) ()
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 03:01:51PM -0700, Nathan Chancellor wrote:
-> On Mon, Apr 15, 2019 at 08:44:36PM +0200, Greg Kroah-Hartman wrote:
-> > From: Will Deacon <will.deacon@arm.com>
+Hi Ben,
 
-[...]
-
-> > @@ -53,29 +53,29 @@
-> >  static inline int
-> >  arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
-> >  {
-> > -	int oldval = 0, ret, tmp;
-> > +	int oldval, ret, tmp;
-> >  
-> >  	pagefault_disable();
-> >  
-> >  	switch (op) {
-> >  	case FUTEX_OP_SET:
-> > -		__futex_atomic_op("mov	%w0, %w4",
-> > +		__futex_atomic_op("mov	%w3, %w4",
-> >  				  ret, oldval, uaddr, tmp, oparg);
-> >  		break;
-> >  	case FUTEX_OP_ADD:
-> > -		__futex_atomic_op("add	%w0, %w1, %w4",
-> > +		__futex_atomic_op("add	%w3, %w1, %w4",
-> >  				  ret, oldval, uaddr, tmp, oparg);
-> >  		break;
-> >  	case FUTEX_OP_OR:
-> > -		__futex_atomic_op("orr	%w0, %w1, %w4",
-> > +		__futex_atomic_op("orr	%w3, %w1, %w4",
-> >  				  ret, oldval, uaddr, tmp, oparg);
-> >  		break;
-> >  	case FUTEX_OP_ANDN:
-> > -		__futex_atomic_op("and	%w0, %w1, %w4",
-> > +		__futex_atomic_op("and	%w3, %w1, %w4",
-> >  				  ret, oldval, uaddr, tmp, ~oparg);
-> >  		break;
-> >  	case FUTEX_OP_XOR:
-> > -		__futex_atomic_op("eor	%w0, %w1, %w4",
-> > +		__futex_atomic_op("eor	%w3, %w1, %w4",
-> >  				  ret, oldval, uaddr, tmp, oparg);
-> >  		break;
-> >  	default:
+On Mon, Apr 15, 2019 at 02:05:30PM +1000, Benjamin Herrenschmidt wrote:
+> On Fri, 2019-04-12 at 14:17 +0100, Will Deacon wrote:
 > > 
-> >
+> > +	   the same CPU thread to a particular device will arrive in program
+> > +	   order.
+> > +
+> > +	2. A writeX() by a CPU thread to the peripheral will first wait for the
+> > +	   completion of all prior writes to memory either issued by the thread
+> > +	   or issued while holding a spinlock that was subsequently taken by the
+> > +	   thread. This ensures that writes by the CPU to an outbound DMA
+> > +	   buffer allocated by dma_alloc_coherent() will be visible to a DMA
+> > +	   engine when the CPU writes to its MMIO control register to trigger
+> > +	   the transfer.
 > 
-> This causes a (false) build warning with AOSP's GCC 4.9.4 (which is
-> used to build nearly all arm64 Android kernels before 4.14):
+> Not particularily trying to be annoying here but I find the above
+> rather hard to parse :) I know what you're getting at but I'm not sure
+> somebody who doesn't will understand.
 > 
->   CC      kernel/futex.o
-> ../kernel/futex.c: In function 'do_futex':
-> ../kernel/futex.c:1492:17: warning: 'oldval' may be used uninitialized in this function [-Wmaybe-uninitialized]
->    return oldval == cmparg;
->                  ^
-> In file included from ../kernel/futex.c:69:0:
-> ../arch/arm64/include/asm/futex.h:56:6: note: 'oldval' was declared here
->   int oldval, ret, tmp;
->       ^
+> One way would be to instead prefix the whole thing with a blurb along
+> the lines of:
 > 
-> The only reason I bring this up is Qualcomm based kernels have a Python
-> script that emulates -Werror, meaning this will be fatal for a large
-> number of kernels, when this eventually gets merged into them.
+> 	readX() and writeX() provide some ordering guarantees versus
+>         each other and other memory accesses that are described below. 
+> 	Those guarantees apply to accesses performed either by the same
+>         logical thread of execution, or by different threads but while 
+>         holding the same lock (spinlock or mutex).
+> 
+> Then have as simpler description of each case. No ?
 
-Thanks. Does restoring the initial assignment of 0 suppress the bogus
-warning? If so, please could you send a patch on top for stable (assuming
-Greg is ok with the simple change for this)?
+Argh, I think we've ended up confusing two different things in our edits:
+
+  1. Ordering of readX()/writeX() between threads
+  2. Ordering of memory accesses in one thread vs readX()/writeX() in another
+
+and these are very different beasts.
+
+For (1), with my mmiowb() patches we can provide some guarantees for
+writeX() in conjunction with spinlocks. I'm not convinced we can provide
+these same guarantees for combinations involving readX(). For example:
+
+	CPU 1:
+	val1 = readl(dev_base + REG1);
+	flag = 1;
+	spin_unlock(&dev_lock);
+
+	CPU 2:
+	spin_lock(&dev_lock);
+	if (flag == 1)
+		val2 = readl(dev_base + REG2);
+
+In the case that CPU 2 sees the updated flag, do we require that CPU 1's readl()
+reads from the device first? I'm not sure that RISC-V's implementation ensures
+that readl() is ordered with a subsequent spin_unlock().
+
+For (2), we would need to make this part of LKMM if we wanted to capture
+the precise semantics here (e.g. by using the 'prop' relation to figure out
+which writes are ordered by a writel). This is a pretty significant piece of
+work, so perhaps just referring informally to propagation would be better for
+the English text.
+
+Updated diff below.
 
 Will
+
+--->8
+
+diff --git a/Documentation/memory-barriers.txt b/Documentation/memory-barriers.txt
+index 1660dde75e14..bc4c6a76c53a 100644
+--- a/Documentation/memory-barriers.txt
++++ b/Documentation/memory-barriers.txt
+@@ -2524,26 +2524,36 @@ guarantees:
+ 
+ 	1. All readX() and writeX() accesses to the same peripheral are ordered
+ 	   with respect to each other. This ensures that MMIO register writes by
+-	   the CPU to a particular device will arrive in program order.
+-
+-	2. A writeX() by the CPU to the peripheral will first wait for the
+-	   completion of all prior CPU writes to memory. This ensures that
+-	   writes by the CPU to an outbound DMA buffer allocated by
+-	   dma_alloc_coherent() will be visible to a DMA engine when the CPU
+-	   writes to its MMIO control register to trigger the transfer.
+-
+-	3. A readX() by the CPU from the peripheral will complete before any
+-	   subsequent CPU reads from memory can begin. This ensures that reads
+-	   by the CPU from an incoming DMA buffer allocated by
+-	   dma_alloc_coherent() will not see stale data after reading from the
+-	   DMA engine's MMIO status register to establish that the DMA transfer
+-	   has completed.
+-
+-	4. A readX() by the CPU from the peripheral will complete before any
+-	   subsequent delay() loop can begin execution. This ensures that two
+-	   MMIO register writes by the CPU to a peripheral will arrive at least
+-	   1us apart if the first write is immediately read back with readX()
+-	   and udelay(1) is called prior to the second writeX():
++	   the same CPU thread to a particular device will arrive in program
++	   order.
++
++	2. A writeX() issued by a CPU thread holding a spinlock is ordered
++	   before a writeX() to the same peripheral from another CPU thread
++	   issued after a later acquisition of the same spinlock. This ensures
++	   that MMIO register writes to a particular device issued while holding
++	   a spinlock will arrive in an order consistent with acquisitions of
++	   the lock.
++
++	3. A writeX() by a CPU thread to the peripheral will first wait for the
++	   completion of all prior writes to memory either issued by, or
++	   propagated to, the same thread. This ensures that writes by the CPU
++	   to an outbound DMA buffer allocated by dma_alloc_coherent() will be
++	   visible to a DMA engine when the CPU writes to its MMIO control
++	   register to trigger the transfer.
++
++	4. A readX() by a CPU thread from the peripheral will complete before
++	   any subsequent reads from memory by the same thread can begin. This
++	   ensures that reads by the CPU from an incoming DMA buffer allocated
++	   by dma_alloc_coherent() will not see stale data after reading from
++	   the DMA engine's MMIO status register to establish that the DMA
++	   transfer has completed.
++
++	5. A readX() by a CPU thread from the peripheral will complete before
++	   any subsequent delay() loop can begin execution on the same thread.
++	   This ensures that two MMIO register writes by the CPU to a peripheral
++	   will arrive at least 1us apart if the first write is immediately read
++	   back with readX() and udelay(1) is called prior to the second
++	   writeX():
+ 
+ 		writel(42, DEVICE_REGISTER_0); // Arrives at the device...
+ 		readl(DEVICE_REGISTER_0);
+@@ -2559,10 +2569,11 @@ guarantees:
+ 
+ 	These are similar to readX() and writeX(), but provide weaker memory
+ 	ordering guarantees. Specifically, they do not guarantee ordering with
+-	respect to normal memory accesses or delay() loops (i.e. bullets 2-4
+-	above) but they are still guaranteed to be ordered with respect to other
+-	accesses to the same peripheral when operating on __iomem pointers
+-	mapped with the default I/O attributes.
++	respect to locking, normal memory accesses or delay() loops (i.e.
++	bullets 2-5 above) but they are still guaranteed to be ordered with
++	respect to other accesses from the same CPU thread to the same
++	peripheral when operating on __iomem pointers mapped with the default
++	I/O attributes.
+ 
+  (*) readsX(), writesX():
+ 
+@@ -2600,8 +2611,10 @@ guarantees:
+ 	These will perform appropriately for the type of access they're actually
+ 	doing, be it inX()/outX() or readX()/writeX().
+ 
+-All of these accessors assume that the underlying peripheral is little-endian,
+-and will therefore perform byte-swapping operations on big-endian architectures.
++With the exception of the string accessors (insX(), outsX(), readsX() and
++writesX()), all of the above assume that the underlying peripheral is
++little-endian and will therefore perform byte-swapping operations on big-endian
++architectures.
+ 
+ 
+ ========================================
