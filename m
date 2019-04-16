@@ -2,153 +2,91 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 39504C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:56:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B0E8C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:56:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0211322393
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:56:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CA2F021B26
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:56:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="M8uqZ/Qj"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="v66nxs5J"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729539AbfDPNz7 (ORCPT
+        id S1729551AbfDPN4M (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 09:55:59 -0400
-Received: from mail-wm1-f66.google.com ([209.85.128.66]:54782 "EHLO
-        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729419AbfDPNz6 (ORCPT
+        Tue, 16 Apr 2019 09:56:12 -0400
+Received: from mail-vs1-f54.google.com ([209.85.217.54]:35132 "EHLO
+        mail-vs1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726827AbfDPN4M (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 09:55:58 -0400
-Received: by mail-wm1-f66.google.com with SMTP id c1so25481445wml.4
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 06:55:57 -0700 (PDT)
+        Tue, 16 Apr 2019 09:56:12 -0400
+Received: by mail-vs1-f54.google.com with SMTP id d8so11587129vsp.2
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 06:56:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:cc:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=vvFxrPLkejUPPY2g5EocpsZ0E/YogFqjIRDDqUhhQDE=;
-        b=M8uqZ/QjurmAo9MVsoTxSRZ1/uvuJ0ArTwFB959EDdwCH18/yAeZbkCzY2GVu99WC2
-         BZstzP22tBIUXNWIFfp/d6b1ae8ftpfh2MX7F0bC0kCNT4LZ8svcdPfDcRirVU1MdDcj
-         YlTvJocjW0Bs/He52sS1sgIOvJKeZE9MS/Tmlbw23sruiIi48/Qxz8yPc5L2hjsFfl+l
-         qFjQFgeVmPkNo+sT/G+cyGvWcvNGhobmbfPnmHDxgNzD0ODQQbBLNSHBfood1Mbe5nkF
-         K2cFFO9oK0SnKjvDqheB85n9kvhTAJB9CPU2JE3ZisBCoZ1WhfWleXZl4FRb0J/eS3jY
-         QLvA==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Hl1SR1d+fQ0s8rpI/iVMF3m6ctga84zjhEJtjFfUIhg=;
+        b=v66nxs5Jc88EyVLHuO7UoXfOAFHKHN8S8Au7epwUOoL6pE/GQPqRtSXYxeO5/mn/+k
+         0FgZkJusjtO5ZfPP1fNtoxCpqPy+/nEI+FMi8KbeTXDtv/uGzV1KONflPWlsJMgHq6Gx
+         PBxhK6lM0xCjTYhr/CcApRNhClj9vstEkJQmTbdGjnycCSoZgW0frJaiIGAcHndg+MJF
+         E8JPdvs+XU7eL4EawO3LvR2NPwqG/M99ujNRqn4RqvFdTuCDV69NU/vBbm06afvz7j1t
+         r76fvKxDUJJvBJGtx4Mmziq+H7SOdMYGsY/vNJL6QDp3Cqmu2/1wcd89JT199e+hFmb/
+         5Jyw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=vvFxrPLkejUPPY2g5EocpsZ0E/YogFqjIRDDqUhhQDE=;
-        b=TEegvfVuukUR6sDmEDtRIGWucEkjeukgFpRHI2blM2UkqmEruUO7DKxG6pnzhs0ZiT
-         97u4xpQZc2PbnCjUvhGK/qMCMcCkVjThh3Rs+BpnfSpAzNt/KPuieIt86XVFZCVsG/ey
-         uSRgEWmbdZ5v7Gesue16LyAVg4srNVJ8amqRdH2QrZz7rnSGs1IYZjHH5Cu/Zcnrffwo
-         vGPVRI2GAjpvXqbfNcJckE69vHuYG4BGHAg0g8UpIubB52gJQ5qrVn35VRJqq8IgdeAF
-         mPaFXbLeJBtAn+QNuCm65SRG9X3r+vm8iuW2aS9rzhzcpWSYsdOg46JLKBcipH164ctP
-         ig6g==
-X-Gm-Message-State: APjAAAV4h2oCd+BU2OoTu14HV4VGZShBPrmFmfGOW1M7+oPDRoGaDds2
-        a/oPEGgiVPgYqWwnlV6OW9nEQQ==
-X-Google-Smtp-Source: APXvYqzxyfB6HukBDgswEGVx01NxU43uiaSQckFEcvNDsWkyM1rYWCKjiV7YkogmVVtI1BQd4BfzGw==
-X-Received: by 2002:a1c:7008:: with SMTP id l8mr26239914wmc.49.1555422956628;
-        Tue, 16 Apr 2019 06:55:56 -0700 (PDT)
-Received: from [192.168.0.41] (50.251.95.92.rev.sfr.net. [92.95.251.50])
-        by smtp.googlemail.com with ESMTPSA id f11sm73524418wrm.30.2019.04.16.06.55.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 06:55:56 -0700 (PDT)
-Subject: Re: [PATCH v2 5/9] clocksource/drivers/tcb_clksrc: move Kconfig
- option
-Cc:     Alexandre Belloni <alexandre.belloni@bootlin.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Nicolas Ferre <nicolas.ferre@microchip.com>,
-        Alexander Dahl <ada@thorsis.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Arnd Bergmann <arnd.bergmann@linaro.org>
-References: <20190415150856.9384-1-alexandre.belloni@bootlin.com>
- <20190415150856.9384-6-alexandre.belloni@bootlin.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <5bf6c4e6-ed3e-491e-37be-7edaa4b8e1cc@linaro.org>
-Date:   Tue, 16 Apr 2019 15:55:54 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Hl1SR1d+fQ0s8rpI/iVMF3m6ctga84zjhEJtjFfUIhg=;
+        b=dp2Uk+6xxc6YKASLD0Z1SgByGpe3zs4daTzg6VyqVkJW1k1Wc5caETg+7t/p97aiXS
+         VxVceuDUctIzldm6lwetM29xEZzYzBE/Fa1sf9V3JYnkzNsUyUTXrfKwA8kr/H2jzciB
+         17AkGm2S4R4kPxdG0feXNy4l5zKgJJqaNcd3H4Vw2YuGVWzrD2Xg9oqG+vHIV+MCoQwR
+         rr5217qzBRTeVYdD277y8pcBmiz+2rUusG4rYgpRfRoAvhyvxitM2IcllxW9oQ/pwXPv
+         jsfoinoBAfhbsgn8ALba8cb60oxMy7JSs0P0dCKGoh8j0RQYY4ZNSY8lVRxb0Zal47Ck
+         y7pw==
+X-Gm-Message-State: APjAAAXCpMu99Zo4I0rHStrbM36dzFNoxMoAgIsBJap6c4iTFJ86m+2T
+        WZokIk7CkAPG1mtLakxdHfDQaGfjx3ScNIIPDGKBaWs6
+X-Google-Smtp-Source: APXvYqzvVRK2xLKEL2erpwTiXsTcbYgj1LVZTDlnNa8g7z5OrmEZWl54Jjf6Rr8E06SuMMeeE46mzo7NjGs+qo7Lu8A=
+X-Received: by 2002:a67:7e12:: with SMTP id z18mr21457705vsc.82.1555422970881;
+ Tue, 16 Apr 2019 06:56:10 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190415150856.9384-6-alexandre.belloni@bootlin.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-To:     unlisted-recipients:; (no To-header on input)
+References: <CAGXu5jL6LVU7KyUvwaEHWE6t2TaVBs5TWNayB5cW2=PWzSMyEw@mail.gmail.com>
+In-Reply-To: <CAGXu5jL6LVU7KyUvwaEHWE6t2TaVBs5TWNayB5cW2=PWzSMyEw@mail.gmail.com>
+From:   Kees Cook <keescook@google.com>
+Date:   Tue, 16 Apr 2019 08:55:59 -0500
+Message-ID: <CAGXu5j+Ny=1YF0BkATbU3Xb-fb=_0a1W-iZ3jYFhTcWrTPqCJQ@mail.gmail.com>
+Subject: Re: BPF RNG
+To:     Daniel Borkmann <daniel@iogearbox.net>
+Cc:     Hannes Frederic Sowa <hannes@stressinduktion.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        "Reshetova, Elena" <elena.reshetova@intel.com>,
+        Alexei Starovoitov <ast@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+[correcting Alexei's email address and resending...]
 
+On Tue, Apr 16, 2019 at 8:54 AM Kees Cook <keescook@google.com> wrote:
+>
+> Hi,
+>
+> In looking at prandom_u32() users, I noticed that BPF uses its own
+> state variable with bpf_user_rnd_u32(). It appears that this state is
+> never reseeded like regular prandom_u32(). (See __prandom_timer().) Is
+> this intentional, or should reseeding be happening?
+>
+> -Kees
+>
+> --
+> Kees Cook
 
-Arnd can you ack this patch? I would like to take the series via my tree.
-
-
-On 15/04/2019 17:08, Alexandre Belloni wrote:
-> Move the ATMEL_TCB_CLKSRC option to drivers/clocksource and make it silent
-> if COMPILE_TEST is not selected.
-> 
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> ---
->  drivers/clocksource/Kconfig |  7 +++++++
->  drivers/misc/Kconfig        | 14 --------------
->  2 files changed, 7 insertions(+), 14 deletions(-)
-> 
-> diff --git a/drivers/clocksource/Kconfig b/drivers/clocksource/Kconfig
-> index 171502a356aa..e38ef4906e30 100644
-> --- a/drivers/clocksource/Kconfig
-> +++ b/drivers/clocksource/Kconfig
-> @@ -410,6 +410,13 @@ config ATMEL_ST
->  	help
->  	  Support for the Atmel ST timer.
->  
-> +config ATMEL_TCB_CLKSRC
-> +	bool "Atmel TC Block timer driver" if COMPILE_TEST
-> +	depends on HAS_IOMEM
-> +	select TIMER_OF if OF
-> +	help
-> +	  Support for Timer Counter Blocks on Atmel SoCs.
-> +
->  config CLKSRC_EXYNOS_MCT
->  	bool "Exynos multi core timer driver" if COMPILE_TEST
->  	depends on ARM || ARM64
-> diff --git a/drivers/misc/Kconfig b/drivers/misc/Kconfig
-> index 268a01d3d6f3..c84033909395 100644
-> --- a/drivers/misc/Kconfig
-> +++ b/drivers/misc/Kconfig
-> @@ -59,20 +59,6 @@ config ATMEL_TCLIB
->  	  blocks found on many Atmel processors.  This facilitates using
->  	  these blocks by different drivers despite processor differences.
->  
-> -config ATMEL_TCB_CLKSRC
-> -	bool "TC Block Clocksource"
-> -	depends on ARCH_AT91
-> -	select TIMER_OF if OF
-> -	default y
-> -	help
-> -	  Select this to get a high precision clocksource based on a
-> -	  TC block with a 5+ MHz base clock rate.  Two timer channels
-> -	  are combined to make a single 32-bit timer.
-> -
-> -	  When GENERIC_CLOCKEVENTS is defined, the third timer channel
-> -	  may be used as a clock event device supporting oneshot mode
-> -	  (delays of up to two seconds) based on the 32 KiHz clock.
-> -
->  config DUMMY_IRQ
->  	tristate "Dummy IRQ handler"
->  	default n
-> 
 
 
 -- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+Kees Cook
