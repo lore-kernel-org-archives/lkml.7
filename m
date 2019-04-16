@@ -2,85 +2,110 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E7EAC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 21:53:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 636BBC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 21:54:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEAE82173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 21:53:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555451637;
-	bh=fHtFxcqZiZRoPr7MvBZgck05FUgpb26H/9wwwGxleaE=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=qScsGKFctIRhucZGma19fcfcjhn8PuCo1iW0UP4gPVeD1WWaP3J4dqBnDYw35j2SU
-	 dehAdvrMgbjFoUvXDet3DnzBCYQ3cjbdCT0CmL9RdaS3ZnlJvLeVCYyRSGLfWcKosK
-	 vPbuYYE0+jExz772V78jCaWMEcgSjCIDleWDrcAw=
+	by mail.kernel.org (Postfix) with ESMTP id 2B45B20693
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 21:54:14 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="RG7wZxCW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730568AbfDPVx4 (ORCPT
+        id S1730647AbfDPVyN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 17:53:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:56774 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727845AbfDPVx4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 17:53:56 -0400
-Received: from mail-qt1-f181.google.com (mail-qt1-f181.google.com [209.85.160.181])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 6814A217D4;
-        Tue, 16 Apr 2019 21:53:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555451635;
-        bh=fHtFxcqZiZRoPr7MvBZgck05FUgpb26H/9wwwGxleaE=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=FGG5Itk2GDdrKJpuK4GphzfdMXiFmKqthkXb83EeM/QxYRoCseKwsxQmieqk7xjZQ
-         21RydLUMM4s+6E2jPr6+8lnV9DnzGq8GSzlI9uPRS2vy2neJMQoJXYQzNSxQl0oszU
-         bpbRWlHN7zGTGK+ib+fMR/fku6Ql024DUFtvf83U=
-Received: by mail-qt1-f181.google.com with SMTP id v32so25125930qtc.10;
-        Tue, 16 Apr 2019 14:53:55 -0700 (PDT)
-X-Gm-Message-State: APjAAAXGBQml4bF9EZsDo5O5Y9FDuvxtb/Cs0dHum2yF2mq09D6chfEL
-        /+dFZLSgV7BiNluIYYGMI5l/dCAHabmy9JY9xw==
-X-Google-Smtp-Source: APXvYqzPHVQ59q7hpu3KnTJN+48CiCJ3Ufnseaq+9a1lVOXBt8JmQno3zdpdZU/M1JUAL3RTNbPctt7vKEvaKY5k6Bs=
-X-Received: by 2002:aed:35f7:: with SMTP id d52mr65878733qte.335.1555451634688;
- Tue, 16 Apr 2019 14:53:54 -0700 (PDT)
+        Tue, 16 Apr 2019 17:54:13 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40757 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730596AbfDPVyM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 17:54:12 -0400
+Received: by mail-pl1-f195.google.com with SMTP id b3so10985445plr.7
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 14:54:12 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9HGU4dCKpXPQnSBrDR2ECEUC1qmGkGpsIfBVYvSfbAc=;
+        b=RG7wZxCW8Z6YRFTWDTOwvUtZpsmFe9M0LLHCuTQ92Xx3GKtPCDP+vTPWgTlMTphJAG
+         K2ngJz9rExe3KSMZvT2dGJZ0UwEvJC2B5PB+FrRftE9FZZqZfUIOASNsVMCq/EAeSXLN
+         wDzRSVJYzW1w2mH49a0NUDrFuoggMbB33M2OA=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=9HGU4dCKpXPQnSBrDR2ECEUC1qmGkGpsIfBVYvSfbAc=;
+        b=qOpEwFaMC1dff4zyY5+/jD28BNDrGofkBTPkBeXakGFkpt0mS6VwfLYv9kRut8iyhg
+         S252wtjCHjmLeASC4ueoQCHOMJBXZ0JDU6lXGSi6Wna61pYcm3A7CM3FSTU+4/sCXUAj
+         mmVlZVbVAqJXPily8ByQ551RS72e3WfoZdouR16xrlEgAz4opKriFH7Pe2FsytDldgvt
+         W2AvXJ5spSNYPulqO4FammhZqt8DXnfLNGYbmCYvzONRFhfZBCMv1vcTHMUEcVpwbn0e
+         Ufof4rhIzOmlvG63Dhs/Szl7mzYORqKiwudaUE6Bl1cfhgkupXJy4V3CsDCT1sgFjM+z
+         LVnw==
+X-Gm-Message-State: APjAAAU5GkU0IY5OOMNEJoPYHR6XHHOuVR6BPv9vyLwIXTKATW2mHV8T
+        IyZFMqUphu/0DV36enBlGsT3Yw==
+X-Google-Smtp-Source: APXvYqzyFpMWEmeYMmrX9KaorHnS7Ur0BIgPYvvV0Vvlt8QvOPOjbOuGAegmy11626TgNUuOgto1sQ==
+X-Received: by 2002:a17:902:1681:: with SMTP id h1mr71653830plh.102.1555451651706;
+        Tue, 16 Apr 2019 14:54:11 -0700 (PDT)
+Received: from tictac2.mtv.corp.google.com ([2620:15c:202:1:24fa:e766:52c9:e3b2])
+        by smtp.gmail.com with ESMTPSA id b6sm8156770pgt.58.2019.04.16.14.54.10
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Apr 2019 14:54:10 -0700 (PDT)
+From:   Douglas Anderson <dianders@chromium.org>
+To:     Rob Herring <robh+dt@kernel.org>,
+        Minas Harutyunyan <hminas@synopsys.com>,
+        Heiko Stuebner <heiko@sntech.de>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>
+Cc:     amstan@chromium.org, linux-rockchip@lists.infradead.org,
+        linux-usb@vger.kernel.org, Randy Li <ayaka@soulik.info>,
+        mka@chromium.org, ryandcase@chromium.org, jwerner@chromium.org,
+        Elaine Zhang <zhangqing@rock-chips.com>,
+        Douglas Anderson <dianders@chromium.org>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Subject: [PATCH v2 0/4] usb: dwc2: Another attempt handling rk3288's remote wake quirk
+Date:   Tue, 16 Apr 2019 14:53:47 -0700
+Message-Id: <20190416215351.242246-1-dianders@chromium.org>
+X-Mailer: git-send-email 2.21.0.593.g511ec345e18-goog
 MIME-Version: 1.0
-References: <20190414183403.21538-1-andrew.smirnov@gmail.com> <20190414183403.21538-3-andrew.smirnov@gmail.com>
-In-Reply-To: <20190414183403.21538-3-andrew.smirnov@gmail.com>
-From:   Rob Herring <robh@kernel.org>
-Date:   Tue, 16 Apr 2019 16:53:43 -0500
-X-Gmail-Original-Message-ID: <CAL_Jsq+zJVUNrYiM+-93GKWtmbd9fjDSVrKpk-2sE-VqAp8LQw@mail.gmail.com>
-Message-ID: <CAL_Jsq+zJVUNrYiM+-93GKWtmbd9fjDSVrKpk-2sE-VqAp8LQw@mail.gmail.com>
-Subject: Re: [PATCH v3 3/4] dt-bindings: arm: fsl: Add support for ZII i.MX7
- RPU2 board
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>
-Cc:     Shawn Guo <shawnguo@kernel.org>, Rob Herring <robh@kernel.org>,
-        Chris Healy <cphealy@gmail.com>, Andrew Lunn <andrew@lunn.ch>,
-        Fabio Estevam <festevam@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        devicetree@vger.kernel.org
-Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 14, 2019 at 1:34 PM Andrey Smirnov <andrew.smirnov@gmail.com> wrote:
->
-> Add support for ZII i.MX7 RPU2 board.
->
-> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
-> Reviewed-by: Rob Herring <robh@kernel.org>
-> Cc: Shawn Guo <shawnguo@kernel.org>
-> Cc: Chris Healy <cphealy@gmail.com>
-> Cc: Andrew Lunn <andrew@lunn.ch>
-> Cc: Fabio Estevam <festevam@gmail.com>
-> Cc: Rob Herring <robh@kernel.org>
-> Cc: linux-kernel@vger.kernel.org
-> Cc: devicetree@vger.kernel.org
-> ---
->  Documentation/devicetree/bindings/arm/fsl.yaml | 1 +
->  1 file changed, 1 insertion(+)
+This is another attempt to upstream the code to unwedge the rk3288's
+"host" USB port when it sees a remote wakeup.  Previously I attempted
+this [1] and it appears that Randy Li made some attempts too [2] which
+resulted in at least the PHY bindings for the USB PHY landing as well
+as the USB PHY support.  Nice!
 
-Acked-by: Rob Herring <robh@kernel.org>
+Hopefully this addresses previous comments and could land this time?
+
+[1] https://lkml.kernel.org/r/1446236275-12698-2-git-send-email-dianders@chromium.org
+[2] https://lkml.kernel.org/r/1472939729-15187-4-git-send-email-ayaka@soulik.info
+
+Changes in v2:
+- Cancel the work when dwc2 is freed (Matthias).
+
+Douglas Anderson (4):
+  dt-bindings: usb: dwc2: Document quirk to reset PHY upon wakeup
+  usb: dwc2: optionally assert phy reset when waking up
+  ARM: dts: rockchip: Hook resets up to USB PHYs on rk3288.
+  ARM: dts: rockchip: Add quirk for resetting rk3288's dwc2 host on
+    wakeup
+
+ Documentation/devicetree/bindings/usb/dwc2.txt |  2 ++
+ arch/arm/boot/dts/rk3288.dtsi                  |  7 +++++++
+ drivers/usb/dwc2/core.h                        |  5 +++++
+ drivers/usb/dwc2/core_intr.c                   | 12 ++++++++++++
+ drivers/usb/dwc2/hcd.c                         | 18 +++++++++++++++---
+ drivers/usb/dwc2/platform.c                    |  9 +++++++++
+ 6 files changed, 50 insertions(+), 3 deletions(-)
+
+-- 
+2.21.0.593.g511ec345e18-goog
+
