@@ -2,211 +2,91 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6C3D1C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:25:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91B28C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:26:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 34488206B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:25:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="QUJABhXu"
+	by mail.kernel.org (Postfix) with ESMTP id 6EBF02073F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:26:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728968AbfDPTZO (ORCPT
+        id S1729505AbfDPT0l (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 15:25:14 -0400
-Received: from mail.efficios.com ([167.114.142.138]:37380 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727136AbfDPTZO (ORCPT
+        Tue, 16 Apr 2019 15:26:41 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:50360 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727136AbfDPT0k (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 15:25:14 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 9D68A1D645E;
-        Tue, 16 Apr 2019 15:25:12 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id mx16-Xo3oWEX; Tue, 16 Apr 2019 15:25:12 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 037CE1D6454;
-        Tue, 16 Apr 2019 15:25:12 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 037CE1D6454
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1555442712;
-        bh=dBAHxV+5AMeW0yIbrFxTc9ZyYkcIIhy/PrmkHPHr6wE=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=QUJABhXu/WNVZ7zNbafJdZ7I78dLNA53TOuoh05mrHWGIFzEAxzioMOGQSGLnvUU8
-         VVz+4Y8GHSkXGAiG205Hp5mdM0OlQk0f4mkP4q1FdkWiD8bqED3ffXQ71Ueo9lbnVe
-         Vfn3BxKwAsaNV5mEDCWli7PpI1lmZ+q71tVuJs24yAHrPrRr8/WyNw2Mls/AyWnIxT
-         uS0dU9VFKZOag3fkYtRml29JIiQb2rs951nodm4mAEzHlXkL3CIWf0VPHaszf6GpQ9
-         wizmnVmiFXTYenblJJ1JCmn5gHzeBdwmuHIwKeO3KVrTNHbYL0J5gpmoZM1lFmFS1j
-         oHqy41bvVmK+A==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id VWNPj0DABGiH; Tue, 16 Apr 2019 15:25:11 -0400 (EDT)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id C6EBE1D644A;
-        Tue, 16 Apr 2019 15:25:11 -0400 (EDT)
-Date:   Tue, 16 Apr 2019 15:25:11 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     Dan Williams <dan.j.williams@intel.com>
-Cc:     Guenter Roeck <groeck@google.com>,
-        Kees Cook <keescook@chromium.org>,
-        kernelci <kernelci@groups.io>,
-        Guillaume Tucker <guillaume.tucker@collabora.com>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
-        Mark Brown <broonie@kernel.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        Matt Hart <matthew.hart@linaro.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Nicholas Piggin <npiggin@gmail.com>,
-        linux <linux@dominikbrodowski.net>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Adrian Reber <adrian@lisas.de>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        linux-mm <linux-mm@kvack.org>,
-        Richard Guy Briggs <rgb@redhat.com>,
+        Tue, 16 Apr 2019 15:26:40 -0400
+Received: from pd9ef12d2.dip0.t-ipconnect.de ([217.239.18.210] helo=nanos.glx-home)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hGTih-0002JI-6E; Tue, 16 Apr 2019 21:26:15 +0200
+Date:   Tue, 16 Apr 2019 21:26:13 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+cc:     linux-kernel@vger.kernel.org, x86@kernel.org,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        "H . Peter Anvin" <hpa@zytor.com>,
+        Andy Lutomirski <luto@kernel.org>,
         Peter Zijlstra <peterz@infradead.org>,
-        info <info@kernelci.org>, rostedt <rostedt@goodmis.org>,
-        Jason Baron <jbaron@redhat.com>, Rabin Vincent <rabin@rab.in>,
-        Russell King <rmk+kernel@arm.linux.org.uk>
-Message-ID: <2030770457.2767.1555442711654.JavaMail.zimbra@efficios.com>
-In-Reply-To: <1444448267.2739.1555442221738.JavaMail.zimbra@efficios.com>
-References: <20190215185151.GG7897@sirena.org.uk> <CABXOdTdVvFn=Nbd_Anhz7zR1H-9QeGByF3HFg4ZFt58R8=H6zA@mail.gmail.com> <CAGXu5j+Sw2FyMc8L+8hTpEKbOsySFGrCmFtVP5gt9y2pJhYVUw@mail.gmail.com> <CABXOdTcXWf9iReoocaj9rZ7z17zt-62iPDuvQQSrQRtMeeZNiA@mail.gmail.com> <CAPcyv4i8xhA6B5e=YBq2Z5kooyUpYZ8Bv9qov-mvqm4Uz=KLWQ@mail.gmail.com> <CABXOdTc5=J7ZFgbiwahVind-SNt7+G_-TVO=v-Y5SBVPLdUFog@mail.gmail.com> <CAPcyv4gxk9xbsP3YSKzxu5Yp9FTefyxHc6xC33GwZ3Zf9_eeKA@mail.gmail.com> <1444448267.2739.1555442221738.JavaMail.zimbra@efficios.com>
-Subject: Re: next/master boot bisection: next-20190215 on beaglebone-black
+        Jiri Kosina <jikos@kernel.org>,
+        Waiman Long <longman@redhat.com>,
+        Andrea Arcangeli <aarcange@redhat.com>,
+        Jon Masters <jcm@redhat.com>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Paul Mackerras <paulus@samba.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-s390@vger.kernel.org,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-arch@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Tyler Hicks <tyhicks@canonical.com>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Steven Price <steven.price@arm.com>,
+        Phil Auld <pauld@redhat.com>
+Subject: Re: [PATCH v2 5/5] arm64/speculation: Support 'mitigations=' cmdline
+ option
+In-Reply-To: <24039e1370ed57e8075730c0b88c505afd9e0ab7.1555085500.git.jpoimboe@redhat.com>
+Message-ID: <alpine.DEB.2.21.1904162124020.1780@nanos.tec.linutronix.de>
+References: <cover.1555085500.git.jpoimboe@redhat.com> <24039e1370ed57e8075730c0b88c505afd9e0ab7.1555085500.git.jpoimboe@redhat.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
-Thread-Topic: next/master boot bisection: next-20190215 on beaglebone-black
-Thread-Index: o2XfqTzgA9kPUT1d7tzJPHm/yG+fqP8/3aj6
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Apr 16, 2019, at 3:17 PM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
+On Fri, 12 Apr 2019, Josh Poimboeuf wrote:
 
-> ----- On Apr 16, 2019, at 2:54 PM, Dan Williams dan.j.williams@intel.com wrote:
+> Configure arm64 runtime CPU speculation bug mitigations in accordance
+> with the 'mitigations=' cmdline option.  This affects Meltdown, Spectre
+> v2, and Speculative Store Bypass.
 > 
->> On Thu, Apr 11, 2019 at 1:54 PM Guenter Roeck <groeck@google.com> wrote:
->> [..]
->>> > > Boot tests report
->>> > >
->>> > > Qemu test results:
->>> > >     total: 345 pass: 345 fail: 0
->>> > >
->>> > > This is on top of next-20190410 with CONFIG_SHUFFLE_PAGE_ALLOCATOR=y
->>> > > and the known crashes fixed.
->>> >
->>> > In addition to CONFIG_SHUFFLE_PAGE_ALLOCATOR=y you also need the
->>> > kernel command line option "page_alloc.shuffle=1"
->>> >
->>> > ...so I doubt you are running with shuffling enabled. Another way to
->>> > double check is:
->>> >
->>> >    cat /sys/module/page_alloc/parameters/shuffle
->>>
->>> Yes, you are right. Because, with it enabled, I see:
->>>
->>> Kernel command line: rdinit=/sbin/init page_alloc.shuffle=1 panic=-1
->>> console=ttyAMA0,115200 page_alloc.shuffle=1
->>> ------------[ cut here ]------------
->>> WARNING: CPU: 0 PID: 0 at ./include/linux/jump_label.h:303
->>> page_alloc_shuffle+0x12c/0x1ac
->>> static_key_enable(): static key 'page_alloc_shuffle_key+0x0/0x4' used
->>> before call to jump_label_init()
->> 
->> This looks to be specific to ARM never having had to deal with
->> DEFINE_STATIC_KEY_TRUE in the past.
->> 
->> I am able to avoid this warning by simply not enabling JUMP_LABEL
->> support in my build.
+> The default behavior is unchanged.
 > 
-> How large is your kernel image in memory ? Is it larger than 32MB
-> by any chance ?
-> 
-> On arm, the arch_static_branch() uses a "nop" instruction, which seems
-> fine. However, I have a concern wrt arch_static_branch_jump():
-> 
-> arch/arm/include/asm/jump_label.h defines:
-> 
-> static __always_inline bool arch_static_branch_jump(struct static_key *key, bool
-> branch)
-> {
->        asm_volatile_goto("1:\n\t"
->                 WASM(b) " %l[l_yes]\n\t"
->                 ".pushsection __jump_table,  \"aw\"\n\t"
->                 ".word 1b, %l[l_yes], %c0\n\t"
->                 ".popsection\n\t"
->                 : :  "i" (&((char *)key)[branch]) :  : l_yes);
-> 
->        return false;
-> l_yes:
->        return true;
-> }
-> 
-> Which should work fine as long as the branch target is within +/-32MB range of
-> the branch instruction. However, based on
-> http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.dui0489e/Cihfddaf.html
-> :
-> 
-> "Extending branch ranges
-> 
-> Machine-level B and BL instructions have restricted ranges from the address of
-> the current instruction. However, you can use these instructions even if label
-> is out of range. Often you do not know where the linker places label. When
-> necessary, the linker adds code to enable longer branches. The added code is
-> called a veneer."
-> 
-> So if by an odd chance this branch is turned into a longer branch by the linker,
-> then
-> the code pattern would be completely unexpected by arch/arm/kernel/jump_label.c.
-> 
-> Can you try with the following (untested) patch ?
+> Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+> ---
+> NOTE: This is based on top of Jeremy Linton's patches:
+>       https://lkml.kernel.org/r/20190410231237.52506-1-jeremy.linton@arm.com
 
-The logic in my previous patch was bogus. Here is an updated version (untested):
-
-diff --git a/arch/arm/include/asm/jump_label.h b/arch/arm/include/asm/jump_label.h
-index e12d7d096fc0..7c35f57b72c5 100644
---- a/arch/arm/include/asm/jump_label.h
-+++ b/arch/arm/include/asm/jump_label.h
-@@ -23,12 +23,21 @@ static __always_inline bool arch_static_branch(struct static_key *key, bool bran
-        return true;
- }
- 
-+/*
-+ * The linker adds veneer code if target of the branch is beyond +/-32MB
-+ * range, so ensure we never patch a branch instruction which target is
-+ * outside of the inline asm.
-+ */
- static __always_inline bool arch_static_branch_jump(struct static_key *key, bool branch)
- {
-        asm_volatile_goto("1:\n\t"
-+                WASM(nop) "\n\t"
-+                WASM(b) "2f\n\t"
-+               "3:\n\t"
-                 WASM(b) " %l[l_yes]\n\t"
-+               "2:\n\t"
-                 ".pushsection __jump_table,  \"aw\"\n\t"
--                ".word 1b, %l[l_yes], %c0\n\t"
-+                ".word 1b, 3b, %c0\n\t"
-                 ".popsection\n\t"
-                 : :  "i" (&((char *)key)[branch]) :  : l_yes);
+So I keep that out and we have to revisit that once the ARM64 stuff hits a
+tree, right? I can have a branch with just the 4 first patches applied
+which ARM64 folks can pull in when they apply Jeremy's patches before te
+merge window.
 
 Thanks,
 
-Mathieu
-
--- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+	tglx
