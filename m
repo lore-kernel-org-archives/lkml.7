@@ -2,133 +2,112 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 70CE8C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 21:07:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A004EC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 21:07:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 470BD20868
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 21:07:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 783E420821
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 21:07:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729970AbfDPVH3 convert rfc822-to-8bit (ORCPT
+        id S1730251AbfDPVHv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 17:07:29 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60334 "EHLO mx1.redhat.com"
+        Tue, 16 Apr 2019 17:07:51 -0400
+Received: from mga14.intel.com ([192.55.52.115]:64442 "EHLO mga14.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727136AbfDPVH2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 17:07:28 -0400
-Received: from smtp.corp.redhat.com (int-mx02.intmail.prod.int.phx2.redhat.com [10.5.11.12])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 40E31307D979;
-        Tue, 16 Apr 2019 21:07:28 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-47.bos.redhat.com [10.18.17.47])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 035C860C43;
-        Tue, 16 Apr 2019 21:07:26 +0000 (UTC)
-Subject: Re: [PATCH v4 07/16] locking/rwsem: Implement lock handoff to prevent
- lock starvation
-From:   Waiman Long <longman@redhat.com>
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        id S1727136AbfDPVHv (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 17:07:51 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga007.fm.intel.com ([10.253.24.52])
+  by fmsmga103.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Apr 2019 14:07:50 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,359,1549958400"; 
+   d="scan'208";a="143496351"
+Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
+  by fmsmga007.fm.intel.com with ESMTP; 16 Apr 2019 14:07:50 -0700
+Subject: [PATCH] init: Initialize jump labels before command line option
+ parsing
+From:   Dan Williams <dan.j.williams@intel.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     Guenter Roeck <groeck@google.com>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
         Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
-References: <20190413172259.2740-1-longman@redhat.com>
- <20190413172259.2740-8-longman@redhat.com>
- <20190416141205.GK12232@hirez.programming.kicks-ass.net>
- <4b36b0a5-8507-f90c-d4a7-3f821ee8da6d@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- weim8xU=
-Organization: Red Hat
-Message-ID: <55474839-269f-4dbc-23af-a9c873db6c66@redhat.com>
-Date:   Tue, 16 Apr 2019 17:07:26 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Mike Rapoport <rppt@linux.ibm.com>, linux-mm@kvack.org
+Date:   Tue, 16 Apr 2019 13:54:04 -0700
+Message-ID: <155544804466.1032396.13418949511615676665.stgit@dwillia2-desk3.amr.corp.intel.com>
+User-Agent: StGit/0.18-2-gc94f
 MIME-Version: 1.0
-In-Reply-To: <4b36b0a5-8507-f90c-d4a7-3f821ee8da6d@redhat.com>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.12
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Tue, 16 Apr 2019 21:07:28 +0000 (UTC)
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/16/2019 04:26 PM, Waiman Long wrote:
-> On 04/16/2019 10:12 AM, Peter Zijlstra wrote:
->> On Sat, Apr 13, 2019 at 01:22:50PM -0400, Waiman Long wrote:
->>> +/*
->>> + * The typical HZ value is either 250 or 1000. So set the minimum waiting
->>> + * time to 4ms in the wait queue before initiating the handoff protocol.
->>> + */
->>> +#define RWSEM_WAIT_TIMEOUT	(HZ/250)
->> That seems equally unfortunate. For HZ=100 that results in 0ms, and for
->> HZ=300 that results in 3 1/3-rd ms.
->>
->> (and this is not considering Alpha,ARM and MIPS, who all have various
->> other 'creative' HZ values)
->>
->> In general aiming for sub 10ms timing using jiffies seems 'optimistic'.
-> I see your point. I will change it to use sched_clock() instead.
->
+When a module option, or core kernel argument, toggles a static-key it
+requires jump labels to be initialized early. While x86, PowerPC, and
+ARM64 arrange for jump_label_init() to be called before parse_args(),
+ARM does not.
 
-Thinking about it again. I think I will just change its definition to
-"((HZ + 249)/250)" for now to make sure that it is at least 1. The
-handoff waiting period isn't as important in the overall scheme. Using
-sched_clock() will definitely have a higher overhead than reading
-jiffies. I want to minimize delay before the waiter can attempt to steal
-the lock in the slowpath. That is the main reason I use this simple
-scheme. We can certain change it later on if we choose to, but I would
-like to focus on other more important things first.
+  Kernel command line: rdinit=/sbin/init page_alloc.shuffle=1 panic=-1 console=ttyAMA0,115200 page_alloc.shuffle=1
+  ------------[ cut here ]------------
+  WARNING: CPU: 0 PID: 0 at ./include/linux/jump_label.h:303
+  page_alloc_shuffle+0x12c/0x1ac
+  static_key_enable(): static key 'page_alloc_shuffle_key+0x0/0x4' used
+  before call to jump_label_init()
+  Modules linked in:
+  CPU: 0 PID: 0 Comm: swapper Not tainted
+  5.1.0-rc4-next-20190410-00003-g3367c36ce744 #1
+  Hardware name: ARM Integrator/CP (Device Tree)
+  [<c0011c68>] (unwind_backtrace) from [<c000ec48>] (show_stack+0x10/0x18)
+  [<c000ec48>] (show_stack) from [<c07e9710>] (dump_stack+0x18/0x24)
+  [<c07e9710>] (dump_stack) from [<c001bb1c>] (__warn+0xe0/0x108)
+  [<c001bb1c>] (__warn) from [<c001bb88>] (warn_slowpath_fmt+0x44/0x6c)
+  [<c001bb88>] (warn_slowpath_fmt) from [<c0b0c4a8>]
+  (page_alloc_shuffle+0x12c/0x1ac)
+  [<c0b0c4a8>] (page_alloc_shuffle) from [<c0b0c550>] (shuffle_store+0x28/0x48)
+  [<c0b0c550>] (shuffle_store) from [<c003e6a0>] (parse_args+0x1f4/0x350)
+  [<c003e6a0>] (parse_args) from [<c0ac3c00>] (start_kernel+0x1c0/0x488)
 
-Cheers,
-Longman
+Move the fallback call to jump_label_init() to occur before
+parse_args(). The redundant calls to jump_label_init() in other archs
+are left intact in case they have static key toggling use cases that are
+even earlier than option parsing.
+
+Reported-by: Guenter Roeck <groeck@google.com>
+Cc: Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Mike Rapoport <rppt@linux.ibm.com>
+Signed-off-by: Dan Williams <dan.j.williams@intel.com>
+---
+ init/main.c |    4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
+
+diff --git a/init/main.c b/init/main.c
+index 598e278b46f7..7d4025d665eb 100644
+--- a/init/main.c
++++ b/init/main.c
+@@ -582,6 +582,8 @@ asmlinkage __visible void __init start_kernel(void)
+ 	page_alloc_init();
+ 
+ 	pr_notice("Kernel command line: %s\n", boot_command_line);
++	/* parameters may set static keys */
++	jump_label_init();
+ 	parse_early_param();
+ 	after_dashes = parse_args("Booting kernel",
+ 				  static_command_line, __start___param,
+@@ -591,8 +593,6 @@ asmlinkage __visible void __init start_kernel(void)
+ 		parse_args("Setting init args", after_dashes, NULL, 0, -1, -1,
+ 			   NULL, set_init_arg);
+ 
+-	jump_label_init();
+-
+ 	/*
+ 	 * These use large bootmem allocations and must precede
+ 	 * kmem_cache_init()
 
