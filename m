@@ -2,368 +2,123 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1905C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:53:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CEC7C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:56:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98D1E20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:52:59 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FFmzteWL"
+	by mail.kernel.org (Postfix) with ESMTP id 3A10020663
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:56:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729276AbfDPTw6 (ORCPT
+        id S1729406AbfDPT4J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 15:52:58 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:33204 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726860AbfDPTw6 (ORCPT
+        Tue, 16 Apr 2019 15:56:09 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:40300 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727136AbfDPT4I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 15:52:58 -0400
-Received: by mail-pl1-f196.google.com with SMTP id t16so10860221plo.0;
-        Tue, 16 Apr 2019 12:52:57 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Q48l/tZXosNhmiaBqpv4IRMYrZo4BdVV+C/1sWO1DeU=;
-        b=FFmzteWLQX71u6g0B3qU3nd3dshibGWDjuRiu/bQuVgNqJnLxTln6sX9msGxI5KZ53
-         NcQWWo5srAU+KBdsSVZ7hPb11uxJLFPinAsKqp67PBaCNWFmI4mguan4QvqGXFvBRo3l
-         4QM3yTkAnDtoi7MI0emg/6Z4ccP4YGiT9kcTSEaCJtQLQL5CjPkZ8KI5YuLaRWzmVOya
-         CttqNns1z2nuyqeh1jqY+k1Ak10395fPKy0M64GOXW0BDSWAi++DRRv6GED7M79BFZPH
-         DomdnmBA9ZbPeSVUS/siWlGGzfgOP5lCDieeqDt9Komgo2Wz89x2uFldm8wVAPHSMDiG
-         BAEQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Q48l/tZXosNhmiaBqpv4IRMYrZo4BdVV+C/1sWO1DeU=;
-        b=PvxIm699VWRoUU23wbtT/Ve8dTlmunLcw0D2nkQbMfUlBbWOfA4amiwNiBJz6yYfY7
-         8wT3vGkRkWRF07+Is4IXNX1hCLaaldSEQISxAb+iex48Yod5/n+HvHhvorBNRH40ceCK
-         AYYZnEcvpVcJ5e3KvB9IUbrLoRlWg7+xYF9VfYY6Wpd2BFFtfQWE8bubpBq4dKjHMG8Y
-         EqqjRv2BbKUZDkY7Xut/CLvX62FtndStH7TNp7JVpsxpSWGCOyMdbT5p+Pciw88IUmJ3
-         pV8CqO0ByShb1qrHzXnmXDXZUOPYmVquMrLysrDH/n4opYEX3B+ZXCGkb83CuuHjjR8X
-         RyjA==
-X-Gm-Message-State: APjAAAUlivuc2unEXgfv08I+34fQ1C70RyJGZV38FjALM0mosJu+Yoy4
-        s0T5iWUBgqjYRCsQX4JW/Ks=
-X-Google-Smtp-Source: APXvYqym7VVmMWeGOVpjePDk6JJZk8F9cqYhzQnT8ktktWxO791hMV0f4X8Zo3v0sKpmhwJUwCpR1w==
-X-Received: by 2002:a17:902:2ec5:: with SMTP id r63mr30842783plb.139.1555444376899;
-        Tue, 16 Apr 2019 12:52:56 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id p9sm22419768pfi.186.2019.04.16.12.52.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 12:52:56 -0700 (PDT)
-Date:   Tue, 16 Apr 2019 12:52:55 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Ruslan Babayev <ruslan@babayev.com>
-Cc:     xe-linux-external@cisco.com, Jean Delvare <jdelvare@suse.com>,
-        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] hwmon: (pmbus) add support for output voltage
- registers
-Message-ID: <20190416195255.GC8093@roeck-us.net>
-References: <20190416183620.39950-1-ruslan@babayev.com>
+        Tue, 16 Apr 2019 15:56:08 -0400
+Received: from static-50-53-47-167.bvtn.or.frontiernet.net ([50.53.47.167] helo=[192.168.192.153])
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.76)
+        (envelope-from <john.johansen@canonical.com>)
+        id 1hGUBY-0006kd-3k; Tue, 16 Apr 2019 19:56:04 +0000
+Subject: Re: [PATCH] apparmor: fix spelling mistake "immutible" -> "immutable"
+To:     Colin King <colin.king@canonical.com>,
+        James Morris <jmorris@namei.org>,
+        "Serge E . Hallyn" <serge@hallyn.com>,
+        linux-security-module@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190416144218.1842-1-colin.king@canonical.com>
+From:   John Johansen <john.johansen@canonical.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=john.johansen@canonical.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: Canonical
+Message-ID: <bc8f189c-3f37-b6ec-3422-f14a9cf0b85b@canonical.com>
+Date:   Tue, 16 Apr 2019 12:56:00 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190416183620.39950-1-ruslan@babayev.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+In-Reply-To: <20190416144218.1842-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 11:36:16AM -0700, Ruslan Babayev wrote:
-> Registers VOUT_COMMAND, VOUT_MARGIN_HIGH and VOUT_MARGIN_LOW are
-> described in PMBUS Spec Part II Rev 1.2. Exposing them in the PMBUS
-> core allows the drivers to turn them on with a corresponding
-> PMBUS_HAVE_VOUT_... flags.
+On 4/16/19 7:42 AM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
-> Cc: xe-linux-external@cisco.com
-> Signed-off-by: Ruslan Babayev <ruslan@babayev.com>
+> There is a spelling mistake in an information message string, fix it.
+> 
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+
+Acked-by: John Johansen <john.johansen@canonical.com>
+
+I'll pull it into the apparmor tree
+
+
 > ---
->  drivers/hwmon/pmbus/pmbus.h      |   7 ++
->  drivers/hwmon/pmbus/pmbus_core.c | 183 +++++++++++++++++++++++++++++++
->  2 files changed, 190 insertions(+)
+>  security/apparmor/policy.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
 > 
-> diff --git a/drivers/hwmon/pmbus/pmbus.h b/drivers/hwmon/pmbus/pmbus.h
-> index 1d24397d36ec..723648b3da36 100644
-> --- a/drivers/hwmon/pmbus/pmbus.h
-> +++ b/drivers/hwmon/pmbus/pmbus.h
-> @@ -223,6 +223,9 @@ enum pmbus_regs {
->   * OPERATION
->   */
->  #define PB_OPERATION_CONTROL_ON		BIT(7)
-> +#define PB_OPERATION_MARGIN_HIGH	BIT(5)
-> +#define PB_OPERATION_MARGIN_LOW		BIT(4)
-> +#define PB_OPERATION_ACT_ON_FAULT	BIT(3)
->  
->  /*
->   * CAPABILITY
-> @@ -291,6 +294,7 @@ enum pmbus_fan_mode { percent = 0, rpm };
->  /*
->   * STATUS_VOUT, STATUS_INPUT
->   */
-> +#define PB_VOLTAGE_MAX_WARNING		BIT(3)
->  #define PB_VOLTAGE_UV_FAULT		BIT(4)
->  #define PB_VOLTAGE_UV_WARNING		BIT(5)
->  #define PB_VOLTAGE_OV_WARNING		BIT(6)
-> @@ -371,6 +375,9 @@ enum pmbus_sensor_classes {
->  #define PMBUS_HAVE_STATUS_VMON	BIT(19)
->  #define PMBUS_HAVE_PWM12	BIT(20)
->  #define PMBUS_HAVE_PWM34	BIT(21)
-> +#define PMBUS_HAVE_VOUT_COMMAND		BIT(22)
-> +#define PMBUS_HAVE_VOUT_MARGIN_HIGH	BIT(23)
-> +#define PMBUS_HAVE_VOUT_MARGIN_LOW	BIT(24)
->  
->  #define PMBUS_PAGE_VIRTUAL	BIT(31)
->  
-> diff --git a/drivers/hwmon/pmbus/pmbus_core.c b/drivers/hwmon/pmbus/pmbus_core.c
-> index 2e2b5851139c..f35b239961e3 100644
-> --- a/drivers/hwmon/pmbus/pmbus_core.c
-> +++ b/drivers/hwmon/pmbus/pmbus_core.c
-> @@ -89,6 +89,14 @@ struct pmbus_label {
->  #define to_pmbus_label(_attr) \
->  	container_of(_attr, struct pmbus_label, attribute)
->  
-> +struct pmbus_operation {
-> +	char name[PMBUS_NAME_SIZE];	/* sysfs label name */
-> +	struct sensor_device_attribute attribute;
-> +	u8 page;
-> +};
-> +#define to_pmbus_operation(_attr) \
-> +	container_of(_attr, struct pmbus_operation, attribute)
-> +
->  struct pmbus_data {
->  	struct device *dev;
->  	struct device *hwmon_dev;
-> @@ -1004,6 +1012,65 @@ static ssize_t pmbus_show_label(struct device *dev,
->  	return snprintf(buf, PAGE_SIZE, "%s\n", label->label);
->  }
->  
-> +static ssize_t pmbus_show_operation(struct device *dev,
-> +				    struct device_attribute *devattr, char *buf)
-> +{
-> +	struct sensor_device_attribute *attr = to_sensor_dev_attr(devattr);
-> +	struct pmbus_operation *operation = to_pmbus_operation(attr);
-> +	struct i2c_client *client = to_i2c_client(dev->parent);
-> +	int ret;
-> +
-> +	ret = pmbus_read_byte_data(client, operation->page, PMBUS_OPERATION);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	if (ret & PB_OPERATION_CONTROL_ON) {
-> +		if (ret & PB_OPERATION_MARGIN_HIGH)
-> +			return snprintf(buf, PAGE_SIZE, "high\n");
-> +		else if (ret & PB_OPERATION_MARGIN_LOW)
-> +			return snprintf(buf, PAGE_SIZE, "low\n");
-> +		else
-> +			return snprintf(buf, PAGE_SIZE, "on\n");
-> +	} else {
-> +			return snprintf(buf, PAGE_SIZE, "off\n");
-> +	}
-> +}
-> +
-> +static ssize_t pmbus_set_operation(struct device *dev,
-> +				   struct device_attribute *devattr,
-> +				   const char *buf, size_t count)
-> +{
-> +	struct sensor_device_attribute *attr = to_sensor_dev_attr(devattr);
-> +	struct pmbus_operation *operation = to_pmbus_operation(attr);
-> +	struct i2c_client *client = to_i2c_client(dev->parent);
-> +	int ret;
-> +	u8 val;
-> +
-> +	/*
-> +	 * sysfs_streq() doesn't need the \n's, but we add them so the strings
-> +	 * will be shared with pmbus_show_operation() above.
-> +	 */
-
-Saving a few bytes of data in the driver is not worth such limitations. 
-I would not want to have to deal with users sending "echo -n on" to the
-driver and complain that it doesn't work.
-
-> +	if (sysfs_streq(buf, "on\n"))
-> +		val = PB_OPERATION_CONTROL_ON;
-> +	else if (sysfs_streq(buf, "off\n"))
-> +		val = 0;
-> +	else if (sysfs_streq(buf, "high\n"))
-> +		val = PB_OPERATION_CONTROL_ON | PB_OPERATION_ACT_ON_FAULT |
-> +		      PB_OPERATION_MARGIN_HIGH;
-> +	else if (sysfs_streq(buf, "low\n"))
-> +		val = PB_OPERATION_CONTROL_ON | PB_OPERATION_ACT_ON_FAULT |
-> +		      PB_OPERATION_MARGIN_LOW;
-> +	else
-> +		return -EINVAL;
-> +
-> +	ret = pmbus_write_byte_data(client, operation->page,
-> +				    PMBUS_OPERATION, val);
-> +	if (ret < 0)
-> +		return ret;
-> +
-> +	return count;
-> +}
-> +
-I am not convinced that it is a good idea to implement this as sysfs
-attributes. It is notmally only used in manufacturing, and there the
-registers can be acccessed directly.
-
-Either case, we can not implement this in the pmbus driver as generic code.
-Operation commands are notoriously implemented with slight differences across
-different devices. It would also probably be more appropriate to implement
-as regulator, since it affects setting voltages, not limits.
-
->  static int pmbus_add_attribute(struct pmbus_data *data, struct attribute *attr)
+> diff --git a/security/apparmor/policy.c b/security/apparmor/policy.c
+> index 71a3e6291478..04f2480e8374 100644
+> --- a/security/apparmor/policy.c
+> +++ b/security/apparmor/policy.c
+> @@ -587,7 +587,7 @@ static int replacement_allowed(struct aa_profile *profile, int noreplace,
 >  {
->  	if (data->num_attributes >= data->max_attributes - 1) {
-> @@ -1143,6 +1210,29 @@ static int pmbus_add_label(struct pmbus_data *data,
->  	return pmbus_add_attribute(data, &a->attr);
->  }
->  
-> +static int pmbus_add_operation(struct pmbus_data *data, const char *name,
-> +			       int seq, int page)
-> +{
-> +	struct pmbus_operation *operation;
-> +	struct sensor_device_attribute *a;
-> +
-> +	operation = devm_kzalloc(data->dev, sizeof(*operation), GFP_KERNEL);
-> +	if (!operation)
-> +		return -ENOMEM;
-> +
-> +	a = &operation->attribute;
-> +
-> +	snprintf(operation->name, sizeof(operation->name), "%s%d_operation",
-> +		 name, seq);
-> +
-> +	operation->page = page;
-> +
-> +	pmbus_attr_init(a, operation->name, S_IRUGO | S_IWUSR,
-> +			pmbus_show_operation, pmbus_set_operation, seq);
-> +
-> +	return pmbus_add_attribute(data, &a->dev_attr.attr);
-> +}
-> +
->  /*
->   * Search for attributes. Allocate sensors, booleans, and labels as needed.
->   */
-> @@ -1901,6 +1991,93 @@ static int pmbus_add_fan_attributes(struct i2c_client *client,
->  	return 0;
->  }
->  
-> +static const struct pmbus_limit_attr vout_cmd_limit_attrs[] = {
-> +	{
-> +		.reg = PMBUS_VOUT_MAX,
-> +		.attr = "max",
-> +		.alarm = "max_alarm",
-> +		.sbit = PB_VOLTAGE_MAX_WARNING,
-> +	}
-> +};
-> +
-> +static const struct pmbus_sensor_attr vout_attributes[] = {
-> +	{
-> +		.reg = PMBUS_VOUT_COMMAND,
-> +		.class = PSC_VOLTAGE_OUT,
-> +		.label = "command",
-
-Bad name for a label.
-
-> +		.paged = true,
-> +		.func = PMBUS_HAVE_VOUT_COMMAND,
-> +		.sfunc = PMBUS_HAVE_STATUS_VOUT,
-> +		.sbase = PB_STATUS_VOUT_BASE,
-> +		.gbit = PB_STATUS_VOUT_OV,
-> +		.limit = vout_cmd_limit_attrs,
-> +		.nlimit = ARRAY_SIZE(vout_cmd_limit_attrs),
-> +	}, {
-> +		.reg = PMBUS_VOUT_MARGIN_HIGH,
-> +		.class = PSC_VOLTAGE_OUT,
-> +		.label = "margin_high",
-> +		.paged = true,
-> +		.func = PMBUS_HAVE_VOUT_MARGIN_HIGH,
-> +	}, {
-> +		.reg = PMBUS_VOUT_MARGIN_LOW,
-> +		.class = PSC_VOLTAGE_OUT,
-> +		.label = "margin_low",
-> +		.paged = true,
-> +		.func = PMBUS_HAVE_VOUT_MARGIN_LOW,
-> +	}
-> +};
-> +
-> +static int pmbus_add_vout_attrs(struct i2c_client *client,
-> +				struct pmbus_data *data,
-> +				const char *name,
-> +				const struct pmbus_sensor_attr *attr,
-> +				int nattrs)
-> +{
-> +	const struct pmbus_driver_info *info = data->info;
-> +	struct pmbus_sensor *base;
-> +	int i, ret, index, page, pages;
-> +
-> +	index = 1;
-> +	for (page = 0; page < info->pages; page++) {
-> +		if (!pmbus_check_byte_register(client, page, PMBUS_OPERATION))
-> +			continue;
-> +		ret = pmbus_add_operation(data, name, index, page);
-> +		if (ret)
-> +			return ret;
-> +		index++;
-> +	}
-> +
-> +	for (i = 0; i < nattrs; i++) {
-> +		index = 1;
-> +		pages = attr->paged ? info->pages : 1;
-> +		for (page = 0; page < pages; page++) {
-> +			if (!(info->func[page] & attr->func))
-> +				continue;
-> +
-> +			if (!pmbus_check_word_register(client, page, attr->reg))
-> +				continue;
-> +
-> +			base = pmbus_add_sensor(data, name, attr->label, index,
-> +						page, attr->reg, attr->class,
-> +						true, false, true);
-> +			if (!base)
-> +				return -ENOMEM;
-> +
-> +			if (attr->sfunc) {
-> +				ret = pmbus_add_limit_attrs(client, data, info,
-> +							    name, index, page,
-> +							    base, attr);
-> +				if (ret < 0)
-> +					return ret;
-> +			}
-> +
-> +			index++;
-> +		}
-> +		attr++;
-> +	}
-> +	return 0;
-> +}
-> +
->  static int pmbus_find_attributes(struct i2c_client *client,
->  				 struct pmbus_data *data)
->  {
-> @@ -1912,6 +2089,12 @@ static int pmbus_find_attributes(struct i2c_client *client,
->  	if (ret)
->  		return ret;
->  
-> +	/* Output Voltage sensors */
-> +	ret = pmbus_add_vout_attrs(client, data, "out", vout_attributes,
-> +				   ARRAY_SIZE(vout_attributes));
-> +	if (ret)
-> +		return ret;
-> +
-
-The sensors you are adding are not output voltage sensors. They are not
-sensors in the first place, and should probably not be reported as sensor
-values. And setting voltages as limits is really not appropriate.
-
->  	/* Current sensors */
->  	ret = pmbus_add_sensor_attrs(client, data, "curr", current_attributes,
->  				     ARRAY_SIZE(current_attributes));
-> -- 
-> 2.17.1
+>  	if (profile) {
+>  		if (profile->label.flags & FLAG_IMMUTIBLE) {
+> -			*info = "cannot replace immutible profile";
+> +			*info = "cannot replace immutable profile";
+>  			return -EPERM;
+>  		} else if (noreplace) {
+>  			*info = "profile already exists";
 > 
+
