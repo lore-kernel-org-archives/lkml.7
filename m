@@ -2,273 +2,184 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 331C0C282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:39:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A379EC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:41:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EFD0120693
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:39:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 684D220693
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:41:30 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=fb.com header.i=@fb.com header.b="jTH6BCL5";
+	dkim=pass (1024-bit key) header.d=fb.onmicrosoft.com header.i=@fb.onmicrosoft.com header.b="FQL8TA5N"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730590AbfDPUjT (ORCPT
+        id S1729679AbfDPUl3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 16:39:19 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:43053 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727136AbfDPUjS (ORCPT
+        Tue, 16 Apr 2019 16:41:29 -0400
+Received: from mx0a-00082601.pphosted.com ([67.231.145.42]:42294 "EHLO
+        mx0a-00082601.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727136AbfDPUl2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 16:39:18 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MGhi0-1h2hLx21sg-00Dq4r; Tue, 16 Apr 2019 22:38:39 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Richard Henderson <rth@twiddle.net>,
-        Ivan Kokshaysky <ink@jurassic.park.msu.ru>,
-        Matt Turner <mattst88@gmail.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Yoshinori Sato <ysato@users.sourceforge.jp>,
-        Rich Felker <dalias@libc.org>, Chris Zankel <chris@zankel.net>,
-        Max Filippov <jcmvbkbc@gmail.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "David S. Miller" <davem@davemloft.net>
-Cc:     Johannes Berg <johannes.berg@intel.com>,
-        Deepa Dinamani <deepa.kernel@gmail.com>,
-        Willem de Bruijn <willemb@google.com>,
-        linux-alpha@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-mips@vger.kernel.org, linux-sh@vger.kernel.org,
-        linux-arch@vger.kernel.org, netdev@vger.kernel.org
-Subject: [PATCH net-next 3/3] net: socket: implement 64-bit timestamps
-Date:   Tue, 16 Apr 2019 22:32:50 +0200
-Message-Id: <20190416203620.539628-3-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
-In-Reply-To: <20190416203620.539628-1-arnd@arndb.de>
-References: <20190416203620.539628-1-arnd@arndb.de>
+        Tue, 16 Apr 2019 16:41:28 -0400
+Received: from pps.filterd (m0109333.ppops.net [127.0.0.1])
+        by mx0a-00082601.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3GKZEoo031021;
+        Tue, 16 Apr 2019 13:41:05 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.com; h=from : to : cc : subject
+ : date : message-id : references : in-reply-to : content-type : content-id
+ : content-transfer-encoding : mime-version; s=facebook;
+ bh=9nAuAGUrzurPei324KCs+jDkfOHRI3N8cg159MnHCcM=;
+ b=jTH6BCL5E2W3vX1ISYW7Q4RZaNJ0/bGjHb/zVsXjgYg6K+j4/88xR4/wDInj9bgydGNh
+ sO2Thp/GPDJfvAkB9i03/+s5YUyNdjmbC7Z/570dThb8ctY0/vpsdC98B7yn3tCNXlUV
+ NHKR3ARXocK5QGtZryttKKYSQaRGgOzJnn8= 
+Received: from mail.thefacebook.com (mailout.thefacebook.com [199.201.64.23])
+        by mx0a-00082601.pphosted.com with ESMTP id 2rwp3x81e7-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-SHA384 bits=256 verify=NOT);
+        Tue, 16 Apr 2019 13:41:05 -0700
+Received: from prn-mbx06.TheFacebook.com (2620:10d:c081:6::20) by
+ prn-hub03.TheFacebook.com (2620:10d:c081:35::127) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Tue, 16 Apr 2019 13:41:05 -0700
+Received: from prn-hub03.TheFacebook.com (2620:10d:c081:35::127) by
+ prn-mbx06.TheFacebook.com (2620:10d:c081:6::20) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.1.1713.5; Tue, 16 Apr 2019 13:41:04 -0700
+Received: from NAM02-BL2-obe.outbound.protection.outlook.com (192.168.54.28)
+ by o365-in.thefacebook.com (192.168.16.27) with Microsoft SMTP Server
+ (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.1.1713.5
+ via Frontend Transport; Tue, 16 Apr 2019 13:41:04 -0700
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=fb.onmicrosoft.com;
+ s=selector1-fb-com;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=9nAuAGUrzurPei324KCs+jDkfOHRI3N8cg159MnHCcM=;
+ b=FQL8TA5NfiFHX2ilDQq+4YLxNhxg0AWWfYzHs5kRinCKafSqE1wzEKdh7chcnWhv6Rr6n1nIQV26RCpQEpUsG0A5yLwwactdu/yQ/8pnCvZnHkziOD7+w0vuSm/45ern/PSaooyIDL3GwiXqr5m87fRi9bKvFARFDYfOK4jfRzo=
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com (10.175.2.19) by
+ MWHPR15MB1918.namprd15.prod.outlook.com (10.174.100.143) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1792.19; Tue, 16 Apr 2019 20:41:01 +0000
+Received: from MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::5185:8137:2f1d:7171]) by MWHPR15MB1165.namprd15.prod.outlook.com
+ ([fe80::5185:8137:2f1d:7171%2]) with mapi id 15.20.1792.018; Tue, 16 Apr 2019
+ 20:41:01 +0000
+From:   Song Liu <songliubraving@fb.com>
+To:     Jiri Olsa <jolsa@kernel.org>
+CC:     Arnaldo Carvalho de Melo <acme@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andi Kleen <ak@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        "Daniel Borkmann" <daniel@iogearbox.net>
+Subject: Re: [PATCH 08/12] perf tools: Fix side band thread draining
+Thread-Topic: [PATCH 08/12] perf tools: Fix side band thread draining
+Thread-Index: AQHU9G3EQFEzrVhNlUqPmTqT9PA0jaY/QIoA
+Date:   Tue, 16 Apr 2019 20:41:01 +0000
+Message-ID: <B1CEB5A5-9C9F-41B8-A107-46E3CB59B314@fb.com>
+References: <20190416160127.30203-1-jolsa@kernel.org>
+ <20190416160127.30203-9-jolsa@kernel.org>
+In-Reply-To: <20190416160127.30203-9-jolsa@kernel.org>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-mailer: Apple Mail (2.3445.104.8)
+x-originating-ip: [2620:10d:c090:200::2:2171]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: cf3d65f0-e031-4a9e-2c13-08d6c2abd6af
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600140)(711020)(4605104)(2017052603328)(7193020);SRVR:MWHPR15MB1918;
+x-ms-traffictypediagnostic: MWHPR15MB1918:
+x-ms-exchange-purlcount: 1
+x-microsoft-antispam-prvs: <MWHPR15MB19182F0826C7E5D8DD100320B3240@MWHPR15MB1918.namprd15.prod.outlook.com>
+x-forefront-prvs: 000947967F
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(979002)(396003)(136003)(346002)(39860400002)(366004)(376002)(51914003)(199004)(189003)(6916009)(36756003)(446003)(11346002)(6436002)(486006)(186003)(6486002)(99286004)(316002)(7416002)(33656002)(2906002)(68736007)(6246003)(6306002)(229853002)(25786009)(86362001)(6512007)(476003)(2616005)(82746002)(4326008)(46003)(53936002)(6116002)(102836004)(5660300002)(53546011)(6506007)(83716004)(105586002)(966005)(106356001)(256004)(478600001)(71190400001)(71200400001)(14454004)(57306001)(81166006)(76176011)(97736004)(54906003)(8936002)(50226002)(7736002)(305945005)(8676002)(81156014)(14444005)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1102;SCL:1;SRVR:MWHPR15MB1918;H:MWHPR15MB1165.namprd15.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: fb.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: AZgqmE/6EmNf+VJUWdBIOvpnqMK3JkwtQKr70tpTU57EXDlR5lBKjmNbcHIsdHGKX0uPskTaLDOGgrzF//UENLOPLF4siRTqY8tps8Z2l+DVclTrDT+DnXW/kwENn2Wl+wER3HoQ3Z4W5FOfLg7TM4gpvrii8XrdMQxXis+DBlksXlMT3FAQwfo5Pf7G/MNtbXdBPuVc3CzNTH+SnKCbL/SVUdAO1qsLcQwpj9B1ryylWGhW5I9ovUtnnoC9aKFugInmiOXdFSTxKpQY86aDVObYdvlfu0k2GlyVTEW/psPKhHV+Y2UjL25mOCW/LS4EMC8x/4Rm2hdBf7/Jvza3I00wTbIGI0FJB/oHXGeWiJ1Na9FEBdfl0NgBBCimLJsGaTFqoMlyVg0bHdo4F9bK4bXxoY0NHQuUTNsZHLwmgas=
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <FDC653436E630040820F60FA75C5ED23@namprd15.prod.outlook.com>
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:sOojUxWE0R5G27Up6/kcKJOjM3sWX/4hCW0BHI4i2Axs46yRMmT
- 1/AErTd+Kl95NWKkq7HGyaxNLahAoQRPxmBpDMD2rJRylloHqsEobArb4mXK9kyZV9NnU5T
- JpdqD3UmOGrTBj8wWHxi4VCKwbX7GLO93MDXtxiCDcmWoRsUqsYyVUnhvNpe03+nWPuZUf9
- dIG33KKfDA8SPCavQw/gg==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:dfQn/jTtQK0=:UvsmhE8wgdHzpBOHdMS7JD
- aPEGPZfDIJ9vQ+BY7N9kGJf2+LS+KCIf4WdxFaF5N8XMGNnBWpotNpTsj4fm5rdrrc9VfkmQF
- 8BFYGlzh4uYA8bA1ablO4oYUNaXfEBrVeOcOzayQjQvavBA5YkZZ4vbJAOmDUcsZ0oG0pECMV
- t59tomtnNjOo6TkOHME4DjXQmOypH6bTFagQU5kmAu5CHrHShU1e2k+z8WTC+pl6ySdFbfzqZ
- ljTJpvt4vAdwIo/PDeBZrwWMmUbq/tJB5lPz1nh8XMpOEQ5J/ABWo4RWHG5RzivjFgzDn/EDj
- D+ACR83dfuff0DArZi/F5IqmfJLO4zar3HkEwXqhzhHDdfZYgGUmLyeud9aFaWFzhBhUy5juE
- 2EW2QzlSwUyueWJ/F3XLaVV6UNy8UrIsDuwFpUKKXAXn1ybVL5Gzo61DM7vKYNlfTr8IzgsUu
- kCvz/ei0HCdBFR3Ea3tOCu1MwiaSU+cX/mDBPeDN6U4DuogJc27ulWmOTwuTlXm41qCYO6hGY
- rTqXa4cLeLTUyCeFC9gMtgq1ngdItV/zZuh72TQBDcKBqWjD9QrVW78yVBti3HVfbQqnUGbp2
- 0uJZLnHImYcDHiqh5WYytnZa8bhvUbTGOnKI1+LLFGGuqtbfUIL4zvrI+9huwNLJgb81fCvyP
- Y/RRQhe2FNs91ffK4Ev2HKYNHBBJeEtaSkoKo5macJ8zUYEimdJq+rvTdCE88/B6KZencExb1
- 9tl5btr2rqCpmoKjylXLCMsW6n52eS5Ue66Clg==
+X-MS-Exchange-CrossTenant-Network-Message-Id: cf3d65f0-e031-4a9e-2c13-08d6c2abd6af
+X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Apr 2019 20:41:01.4772
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 8ae927fe-1255-47a7-a2af-5f3a069daaa2
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: MWHPR15MB1918
+X-OriginatorOrg: fb.com
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-16_08:,,
+ signatures=0
+X-Proofpoint-Spam-Reason: safe
+X-FB-Internal: Safe
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The 'timeval' and 'timespec' data structures used for socket timestamps
-are going to be redefined in user space based on 64-bit time_t in future
-versions of the C library to deal with the y2038 overflow problem,
-which breaks the ABI definition.
 
-Unlike many modern ioctl commands, SIOCGSTAMP and SIOCGSTAMPNS do not
-use the _IOR() macro to encode the size of the transferred data, so it
-remains ambiguous whether the application uses the old or new layout.
 
-The best workaround I could find is rather ugly: we redefine the command
-code based on the size of the respective data structure with a ternary
-operator. This lets it get evaluated as late as possible, hopefully after
-that structure is visible to the caller. We cannot use an #ifdef here,
-because inux/sockios.h might have been included before any libc header
-that could determine the size of time_t.
+> On Apr 16, 2019, at 9:01 AM, Jiri Olsa <jolsa@kernel.org> wrote:
+>=20
+> Current perf_evlist__poll_thread code could finish
+> without draining the data. Adding the logic that
+> makes sure we won't finish before the drain.
+>=20
+> Fixes: 657ee5531903 ("perf evlist: Introduce side band thread")
+> Link: http://lkml.kernel.org/n/tip-41i888xyim9n5ceyr44jb468@git.kernel.or=
+g
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 
-The ioctl implementation now interprets the new command codes as always
-referring to the 64-bit structure on all architectures, while the old
-architecture specific command code still refers to the old architecture
-specific layout. The new command number is only used when they are
-actually different.
+Thanks for the fix!
 
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/alpha/include/uapi/asm/sockios.h  |  4 ++--
- arch/mips/include/uapi/asm/sockios.h   |  4 ++--
- arch/sh/include/uapi/asm/sockios.h     |  5 +++--
- arch/xtensa/include/uapi/asm/sockios.h |  4 ++--
- include/uapi/asm-generic/sockios.h     |  4 ++--
- include/uapi/linux/sockios.h           | 21 +++++++++++++++++++++
- net/socket.c                           | 24 ++++++++++++++++++------
- 7 files changed, 50 insertions(+), 16 deletions(-)
+Acked-by: Song Liu <songliubraving@fb.com>
 
-diff --git a/arch/alpha/include/uapi/asm/sockios.h b/arch/alpha/include/uapi/asm/sockios.h
-index ba287e4b01bf..af92bc27c3be 100644
---- a/arch/alpha/include/uapi/asm/sockios.h
-+++ b/arch/alpha/include/uapi/asm/sockios.h
-@@ -11,7 +11,7 @@
- #define SIOCSPGRP	_IOW('s', 8, pid_t)
- #define SIOCGPGRP	_IOR('s', 9, pid_t)
- 
--#define SIOCGSTAMP	0x8906		/* Get stamp (timeval) */
--#define SIOCGSTAMPNS	0x8907		/* Get stamp (timespec) */
-+#define SIOCGSTAMP_OLD	0x8906		/* Get stamp (timeval) */
-+#define SIOCGSTAMPNS_OLD 0x8907		/* Get stamp (timespec) */
- 
- #endif /* _ASM_ALPHA_SOCKIOS_H */
-diff --git a/arch/mips/include/uapi/asm/sockios.h b/arch/mips/include/uapi/asm/sockios.h
-index 5b40a88593fa..66f60234f290 100644
---- a/arch/mips/include/uapi/asm/sockios.h
-+++ b/arch/mips/include/uapi/asm/sockios.h
-@@ -21,7 +21,7 @@
- #define SIOCSPGRP	_IOW('s', 8, pid_t)
- #define SIOCGPGRP	_IOR('s', 9, pid_t)
- 
--#define SIOCGSTAMP	0x8906		/* Get stamp (timeval) */
--#define SIOCGSTAMPNS	0x8907		/* Get stamp (timespec) */
-+#define SIOCGSTAMP_OLD	0x8906		/* Get stamp (timeval) */
-+#define SIOCGSTAMPNS_OLD 0x8907		/* Get stamp (timespec) */
- 
- #endif /* _ASM_SOCKIOS_H */
-diff --git a/arch/sh/include/uapi/asm/sockios.h b/arch/sh/include/uapi/asm/sockios.h
-index 17313d2c3527..ef18a668456d 100644
---- a/arch/sh/include/uapi/asm/sockios.h
-+++ b/arch/sh/include/uapi/asm/sockios.h
-@@ -10,6 +10,7 @@
- #define SIOCSPGRP	_IOW('s', 8, pid_t)
- #define SIOCGPGRP	_IOR('s', 9, pid_t)
- 
--#define SIOCGSTAMP	_IOR('s', 100, struct timeval) /* Get stamp (timeval) */
--#define SIOCGSTAMPNS	_IOR('s', 101, struct timespec) /* Get stamp (timespec) */
-+#define SIOCGSTAMP_OLD	_IOR('s', 100, struct timeval) /* Get stamp (timeval) */
-+#define SIOCGSTAMPNS_OLD _IOR('s', 101, struct timespec) /* Get stamp (timespec) */
-+
- #endif /* __ASM_SH_SOCKIOS_H */
-diff --git a/arch/xtensa/include/uapi/asm/sockios.h b/arch/xtensa/include/uapi/asm/sockios.h
-index fb8ac3607189..1a1f58f4b75a 100644
---- a/arch/xtensa/include/uapi/asm/sockios.h
-+++ b/arch/xtensa/include/uapi/asm/sockios.h
-@@ -26,7 +26,7 @@
- #define SIOCSPGRP	_IOW('s', 8, pid_t)
- #define SIOCGPGRP	_IOR('s', 9, pid_t)
- 
--#define SIOCGSTAMP	0x8906		/* Get stamp (timeval) */
--#define SIOCGSTAMPNS	0x8907		/* Get stamp (timespec) */
-+#define SIOCGSTAMP_OLD	0x8906		/* Get stamp (timeval) */
-+#define SIOCGSTAMPNS_OLD 0x8907		/* Get stamp (timespec) */
- 
- #endif	/* _XTENSA_SOCKIOS_H */
-diff --git a/include/uapi/asm-generic/sockios.h b/include/uapi/asm-generic/sockios.h
-index 64f658c7cec2..44fa3ed70483 100644
---- a/include/uapi/asm-generic/sockios.h
-+++ b/include/uapi/asm-generic/sockios.h
-@@ -8,7 +8,7 @@
- #define FIOGETOWN	0x8903
- #define SIOCGPGRP	0x8904
- #define SIOCATMARK	0x8905
--#define SIOCGSTAMP	0x8906		/* Get stamp (timeval) */
--#define SIOCGSTAMPNS	0x8907		/* Get stamp (timespec) */
-+#define SIOCGSTAMP_OLD	0x8906		/* Get stamp (timeval) */
-+#define SIOCGSTAMPNS_OLD 0x8907		/* Get stamp (timespec) */
- 
- #endif /* __ASM_GENERIC_SOCKIOS_H */
-diff --git a/include/uapi/linux/sockios.h b/include/uapi/linux/sockios.h
-index d393e9ed3964..7d1bccbbef78 100644
---- a/include/uapi/linux/sockios.h
-+++ b/include/uapi/linux/sockios.h
-@@ -19,6 +19,7 @@
- #ifndef _LINUX_SOCKIOS_H
- #define _LINUX_SOCKIOS_H
- 
-+#include <asm/bitsperlong.h>
- #include <asm/sockios.h>
- 
- /* Linux-specific socket ioctls */
-@@ -27,6 +28,26 @@
- 
- #define SOCK_IOC_TYPE	0x89
- 
-+/*
-+ * the timeval/timespec data structure layout is defined by libc,
-+ * so we need to cover both possible versions on 32-bit.
-+ */
-+/* Get stamp (timeval) */
-+#define SIOCGSTAMP_NEW	 _IOR(SOCK_IOC_TYPE, 0x06, long long[2])
-+/* Get stamp (timespec) */
-+#define SIOCGSTAMPNS_NEW _IOR(SOCK_IOC_TYPE, 0x07, long long[2])
-+
-+#if __BITS_PER_LONG == 64 || (defined(__x86_64__) && defined(__ILP32__))
-+/* on 64-bit and x32, avoid the ?: operator */
-+#define SIOCGSTAMP	SIOCGSTAMP_OLD
-+#define SIOCGSTAMPNS	SIOCGSTAMPNS_OLD
-+#else
-+#define SIOCGSTAMP	((sizeof(struct timeval))  == 8 ? \
-+			 SIOCGSTAMP_OLD   : SIOCGSTAMP_NEW)
-+#define SIOCGSTAMPNS	((sizeof(struct timespec)) == 8 ? \
-+			 SIOCGSTAMPNS_OLD : SIOCGSTAMPNS_NEW)
-+#endif
-+
- /* Routing table calls. */
- #define SIOCADDRT	0x890B		/* add routing table entry	*/
- #define SIOCDELRT	0x890C		/* delete routing table entry	*/
-diff --git a/net/socket.c b/net/socket.c
-index ab624d42ead5..8d9d4fc7d962 100644
---- a/net/socket.c
-+++ b/net/socket.c
-@@ -1164,14 +1164,24 @@ static long sock_ioctl(struct file *file, unsigned cmd, unsigned long arg)
- 
- 			err = open_related_ns(&net->ns, get_net_ns);
- 			break;
--		case SIOCGSTAMP:
--		case SIOCGSTAMPNS:
-+		case SIOCGSTAMP_OLD:
-+		case SIOCGSTAMPNS_OLD:
- 			if (!sock->ops->gettstamp) {
- 				err = -ENOIOCTLCMD;
- 				break;
- 			}
- 			err = sock->ops->gettstamp(sock, argp,
--						   cmd == SIOCGSTAMP, false);
-+						   cmd == SIOCGSTAMP_OLD,
-+						   !IS_ENABLED(CONFIG_64BIT));
-+		case SIOCGSTAMP_NEW:
-+		case SIOCGSTAMPNS_NEW:
-+			if (!sock->ops->gettstamp) {
-+				err = -ENOIOCTLCMD;
-+				break;
-+			}
-+			err = sock->ops->gettstamp(sock, argp,
-+						   cmd == SIOCGSTAMP_NEW,
-+						   false);
- 			break;
- 		default:
- 			err = sock_do_ioctl(net, sock, cmd, arg);
-@@ -3324,11 +3334,11 @@ static int compat_sock_ioctl_trans(struct file *file, struct socket *sock,
- 	case SIOCADDRT:
- 	case SIOCDELRT:
- 		return routing_ioctl(net, sock, cmd, argp);
--	case SIOCGSTAMP:
--	case SIOCGSTAMPNS:
-+	case SIOCGSTAMP_OLD:
-+	case SIOCGSTAMPNS_OLD:
- 		if (!sock->ops->gettstamp)
- 			return -ENOIOCTLCMD;
--		return sock->ops->gettstamp(sock, argp, cmd == SIOCGSTAMP,
-+		return sock->ops->gettstamp(sock, argp, cmd == SIOCGSTAMP_OLD,
- 					    !COMPAT_USE_64BIT_TIME);
- 
- 	case SIOCBONDSLAVEINFOQUERY:
-@@ -3348,6 +3358,8 @@ static int compat_sock_ioctl_trans(struct file *file, struct socket *sock,
- 	case SIOCADDDLCI:
- 	case SIOCDELDLCI:
- 	case SIOCGSKNS:
-+	case SIOCGSTAMP_NEW:
-+	case SIOCGSTAMPNS_NEW:
- 		return sock_ioctl(file, cmd, arg);
- 
- 	case SIOCGIFFLAGS:
--- 
-2.20.0
+> ---
+> tools/perf/util/evlist.c | 14 +++++++++-----
+> 1 file changed, 9 insertions(+), 5 deletions(-)
+>=20
+> diff --git a/tools/perf/util/evlist.c b/tools/perf/util/evlist.c
+> index f2bbae38278d..4b6783ff5813 100644
+> --- a/tools/perf/util/evlist.c
+> +++ b/tools/perf/util/evlist.c
+> @@ -1868,12 +1868,12 @@ static void *perf_evlist__poll_thread(void *arg)
+> {
+> 	struct perf_evlist *evlist =3D arg;
+> 	bool draining =3D false;
+> -	int i;
+> +	int i, done =3D 0;
+> +
+> +	while (!done) {
+> +		bool got_data =3D false;
+>=20
+> -	while (draining || !(evlist->thread.done)) {
+> -		if (draining)
+> -			draining =3D false;
+> -		else if (evlist->thread.done)
+> +		if (evlist->thread.done)
+> 			draining =3D true;
+>=20
+> 		if (!draining)
+> @@ -1894,9 +1894,13 @@ static void *perf_evlist__poll_thread(void *arg)
+> 					pr_warning("cannot locate proper evsel for the side band event\n");
+>=20
+> 				perf_mmap__consume(map);
+> +				got_data =3D true;
+> 			}
+> 			perf_mmap__read_done(map);
+> 		}
+> +
+> +		if (draining && !got_data)
+> +			break;
+> 	}
+> 	return NULL;
+> }
+> --=20
+> 2.17.2
+>=20
 
