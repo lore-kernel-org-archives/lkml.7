@@ -2,162 +2,212 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 68158C282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:47:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C7A7C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:47:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 36040206B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:47:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 60063206B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:47:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="fG2iQSaa"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="u3YzQ7Vj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730027AbfDPQr3 (ORCPT
+        id S1729751AbfDPQr5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 12:47:29 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:33268 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730007AbfDPQr2 (ORCPT
+        Tue, 16 Apr 2019 12:47:57 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:40386 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727180AbfDPQr5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 12:47:28 -0400
-Received: by mail-it1-f193.google.com with SMTP id v8so3159007itf.0
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:47:27 -0700 (PDT)
+        Tue, 16 Apr 2019 12:47:57 -0400
+Received: by mail-ed1-f66.google.com with SMTP id d46so13690580eda.7;
+        Tue, 16 Apr 2019 09:47:55 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=UNeYJRA6DqdqQQDusaGwYqXolUas5X2/Vxw7bBLr77M=;
-        b=fG2iQSaaswqIND/hiD0tQYjK/CoCissJABBrVNVJ4Lhz6IrQ1bnJ2I4a3fMEv0oX0d
-         lh1qzJeS9En6IRf/uggR/nP0q8aykjDDyc4Q8QMub7Qar0bwa8BdmY2z2lAmZn1oUM9r
-         +mrJb/fmluySDm5QrL7LKjyuID+zn7mQ9mCSK9KjmY1OLmypba0kufZSkRnsyZCL1Mrc
-         8MX9JjHZ+bY3leIxKQy4o94JjtyzZysFbL9KS8TjnXyAeHWyewW6++4s8hL1j5mTsGVZ
-         HLoQlmaSmPHOehwuw4x5MsSABF1D4OPr3ViA/1jrBxe5Z4GykW+qmLLao0Uvr69dGEem
-         gpEg==
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=ZbeA4skiXNxO1iYF0snjEHkfBR0nml9mqhKeCLbw2NI=;
+        b=u3YzQ7VjuUhA+ihj/tBV05JuV+DIrpX7tszf6cQQVUk1RCxWvxFzer4AyGTZMEyTER
+         EzOM1qO4ce6h5NgbhyrwkI82YmV2ajU+M5UtmBTE97oX/O/xidof09knZMj7yUOR9uQx
+         x4OdG/cYpKqTWYIQ5DMAdW78sYXJl45m2ZVsVjoDwmipDhPIpRcaQPZ0pwVr0XUYbFgw
+         D11tA7GGUN0mNITUl36sCmUq0he0zyM63VbvYWYz2/7qH57eHit2bDXWiQrqJh3eR07P
+         nVlW8C35EqroC2DuFnGnh17jLPwx3q5za42G1bdjQCHpt6ZYps173UQ/I1cepsutKWtZ
+         TE6w==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=UNeYJRA6DqdqQQDusaGwYqXolUas5X2/Vxw7bBLr77M=;
-        b=O4b0Q7s8l9VBEtVoTgqEj02KZ6wlbhv4CjCYw/LOO23hI4IaE1w9guj6HEL5ddtC6t
-         eTn/A+HPh8UtwzgMbJ3AGX125LNF+b7tqIDDIdsgNs/VyrmdVULs1ZheYlArJl65R3u2
-         7xhgvseZ0YtJDb7hEfr0p99k7/QXF3E+f39gNp+AZrQGwBBN0dBZkLjDE6kH17Ow+1dR
-         bCEhENf6Gyg2Lz1LlAQPRx6zdgqE5c9xR/ZuwhxAOLT10mXEpRbq6W6zR9yg+E72MZwt
-         kTbUFKUh0NL/z8tEuL+0Q3JYlD6NbdOkU+1Qo4fzlCzC7zHj9U5RFpJJmXp1UCDMnFxI
-         WD0A==
-X-Gm-Message-State: APjAAAWSbJLypnkBlBhv6MXJDW2jTe5K5f/VQnQ9pxjD7P6MUHfgRUUM
-        CRaBwNpu/KsNgNKVk57qhH8gW+Yfph/jNT8IWVHQpQ==
-X-Google-Smtp-Source: APXvYqwFUZ5eDHZPk/N8L9f/9OI8M6K3Y4t0h7t0AXKVOwqiHPmHZC1Jx6bk24cZRzHgKiz63xdvn1Z/m7ueVAyW4u8=
-X-Received: by 2002:a24:7c9:: with SMTP id f192mr31475988itf.97.1555433247471;
- Tue, 16 Apr 2019 09:47:27 -0700 (PDT)
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=ZbeA4skiXNxO1iYF0snjEHkfBR0nml9mqhKeCLbw2NI=;
+        b=Ld5IFkY66Rzdc8AkBhKtB6+0HkJpj2GkwOlgk3DZuAz2FMg0PdGgwnZvIPy1aZYo3A
+         3s0dMrJN8d3pXfm1mb4KhkMG8Z3BVMkJ92OsKO9IHsW2UeawNI9dtE/6gTeSHVu9sEo7
+         teff4goaNNBuiODjyEhK2LQGjq89neTKKKR4IkvjFZ6vEqQlL8dsTS2B8X9yvvLz7OmH
+         1UwyKOsTml+UBQZSI/z+RaUer/Rg+ESjMpGp5fCNp5KTTcKc5YS+FX5FfTxyODMoOY+a
+         nMZDceM5pc8Irv6US8ZeUziojsOAnRW/HzD9EJDTe3ZlhfqWxRbzFmJyyThwuon9I1gU
+         4cyA==
+X-Gm-Message-State: APjAAAXYs+tbsgjd7vLP9cHEs+atI72c/kgFgAjy5R77Z1e9IoUr3Cd0
+        s8d9Dh1A3OfWPKZuLOgthGE=
+X-Google-Smtp-Source: APXvYqwXBz8b+g3OQY4ABMTSG8vvvO8CKGMQIZ7SC30Nl4v3l+igwznD1AsqsnLvmuO6NSW2npypsg==
+X-Received: by 2002:a50:b4c9:: with SMTP id x9mr51827673edd.132.1555433274278;
+        Tue, 16 Apr 2019 09:47:54 -0700 (PDT)
+Received: from archlinux-i9 ([2a01:4f9:2b:2b84::2])
+        by smtp.gmail.com with ESMTPSA id j11sm7547256edk.9.2019.04.16.09.47.52
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Tue, 16 Apr 2019 09:47:53 -0700 (PDT)
+Date:   Tue, 16 Apr 2019 09:47:51 -0700
+From:   Nathan Chancellor <natechancellor@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        stable@kernel.org, Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH 4.9 72/76] arm64: futex: Fix FUTEX_WAKE_OP atomic ops
+ with non-zero result value
+Message-ID: <20190416164751.GA25801@archlinux-i9>
+References: <20190415183707.712011689@linuxfoundation.org>
+ <20190415183729.170980546@linuxfoundation.org>
+ <20190415220151.GA23056@archlinux-i9>
+ <20190416090052.GD4209@kroah.com>
 MIME-Version: 1.0
-References: <20190408203601.GF133872@google.com> <CAOesGMibHCuMPCYkc8V++Z2Kuf3YQf_OjYn18GvDgzTy6ubV=g@mail.gmail.com>
- <CAJWu+or0hWce9+7aEfTHoOR8cptRbzHYVL-bPdJWGZH20dbo7Q@mail.gmail.com>
- <CAOesGMiuGK-Sbqo2z=1ab070JONav1LF82MRRLCdX-4+14_XZA@mail.gmail.com>
- <20190411031540.ehezr6kq7ouobpzx@ast-mbp.dhcp.thefacebook.com>
- <CAOesGMgiPB=7FE7tXXHes7WSLfByyPxirOStoH21NZqMwaUihQ@mail.gmail.com>
- <20190415104109.64d914f3@gandalf.local.home> <CAGXu5j+KPVRcOJ3Ue9ZQF93GyaDhvCnFCvJ_C3WKCx2=SNdDyg@mail.gmail.com>
- <20190416083306.5646a687@gandalf.local.home> <20190416124939.GB6027@kroah.com>
- <20190416130440.GA7944@localhost> <f8b15e31-1aab-ab2c-d44d-47325faab67d@opersys.com>
-In-Reply-To: <f8b15e31-1aab-ab2c-d44d-47325faab67d@opersys.com>
-From:   Olof Johansson <olof@lixom.net>
-Date:   Tue, 16 Apr 2019 09:47:16 -0700
-Message-ID: <CAOesGMj=BKcfa4A321y43m0qTaeQeM1M8btQmGCVM1idc9_5GA@mail.gmail.com>
-Subject: Re: [PATCH v5 1/3] Provide in-kernel headers to make extending kernel easier
-To:     Karim Yaghmour <karim.yaghmour@opersys.com>
-Cc:     Joel Fernandes <joel@joelfernandes.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Kees Cook <keescook@chromium.org>,
-        Olof Johansson <olof@lixom.net>,
-        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Manoj Rao <linux@manojrajarao.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        atish patra <atishp04@gmail.com>,
-        Daniel Colascione <dancol@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190416090052.GD4209@kroah.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 6:32 AM Karim Yaghmour
-<karim.yaghmour@opersys.com> wrote:
->
->
-> On 4/16/19 9:04 AM, Joel Fernandes wrote:
-> > On Tue, Apr 16, 2019 at 02:49:39PM +0200, Greg Kroah-Hartman wrote:
-> >> On Tue, Apr 16, 2019 at 08:33:06AM -0400, Steven Rostedt wrote:
-> >>> On Mon, 15 Apr 2019 22:50:10 -0500
-> >>> Kees Cook <keescook@chromium.org> wrote:
-> >>>
-> >>>> On Mon, Apr 15, 2019 at 9:41 AM Steven Rostedt <rostedt@goodmis.org> wrote:
-> >>>>> I agree with this assessment. We shouldn't use config.gz as precedence
-> >>>>> for this solution. config.gz should have been in debugfs to begin with,
-> >>>>> but I don't believe debugfs was around when config.gz was introduced.
-> >>>>> (Don't have time to look into the history of the two).
-> >>>>
-> >>>> I don't agree with this: /proc/config.gz is used by a lot of tools
-> >>>> that do sanity-check of running systems. This isn't _debugging_...
-> >>>> it's verifying correct kernel builds. It's a fancy version of checking
-> >>>> /proc/version.
-> >>>>
-> >>>
-> >>> Then we should perhaps make a new file system call tarballs ;-)
-> >>>
-> >>>   /sys/kernel/tarballs/
-> >>>
-> >>> and place everything there. That way it removes it from /proc (which is
-> >>> the worse place for that) and also makes it something other than debug.
-> >>> That's what I did for tracefs.
-> >>
-> >> As horrible as that suggestion is, it does kind of make sense :)
-> >>
-> >> We can't put this in debugfs as that's only for debugging and systems
-> >> should never have that mounted for normal operations (users want to
-> >> build ebpf programs), and /proc really should be for processes but that
-> >> horse is long left the barn.
-> >>
-> >> But, I'm willing to consider putting this either in a system-fs-like
-> >> filesystem, or just in sysfs itself, we do have /sys/kernel/ to play
-> >> around in if the main objection is that we should not be cluttering up
-> >> /proc with stuff like this.
-> >>
-> >
-> > I am ok with the suggestion of /sys/kernel for the archive. That also seems
-> > to fit well with the idea that the headers are kernel related and probably
-> > belong here more strictly speaking, than /proc.
->
-> This makes sense. And if it alleviates concerns regarding extending
-> /proc ABIs then might as well switch to this.
->
-> Olof, what do you think of this?
+On Tue, Apr 16, 2019 at 11:00:52AM +0200, Greg Kroah-Hartman wrote:
+> On Mon, Apr 15, 2019 at 03:01:51PM -0700, Nathan Chancellor wrote:
+> > On Mon, Apr 15, 2019 at 08:44:36PM +0200, Greg Kroah-Hartman wrote:
+> > > From: Will Deacon <will.deacon@arm.com>
+> > > 
+> > > commit 045afc24124d80c6998d9c770844c67912083506 upstream.
+> > > 
+> > > Rather embarrassingly, our futex() FUTEX_WAKE_OP implementation doesn't
+> > > explicitly set the return value on the non-faulting path and instead
+> > > leaves it holding the result of the underlying atomic operation. This
+> > > means that any FUTEX_WAKE_OP atomic operation which computes a non-zero
+> > > value will be reported as having failed. Regrettably, I wrote the buggy
+> > > code back in 2011 and it was upstreamed as part of the initial arm64
+> > > support in 2012.
+> > > 
+> > > The reasons we appear to get away with this are:
+> > > 
+> > >   1. FUTEX_WAKE_OP is rarely used and therefore doesn't appear to get
+> > >      exercised by futex() test applications
+> > > 
+> > >   2. If the result of the atomic operation is zero, the system call
+> > >      behaves correctly
+> > > 
+> > >   3. Prior to version 2.25, the only operation used by GLIBC set the
+> > >      futex to zero, and therefore worked as expected. From 2.25 onwards,
+> > >      FUTEX_WAKE_OP is not used by GLIBC at all.
+> > > 
+> > > Fix the implementation by ensuring that the return value is either 0
+> > > to indicate that the atomic operation completed successfully, or -EFAULT
+> > > if we encountered a fault when accessing the user mapping.
+> > > 
+> > > Cc: <stable@kernel.org>
+> > > Fixes: 6170a97460db ("arm64: Atomic operations")
+> > > Signed-off-by: Will Deacon <will.deacon@arm.com>
+> > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > 
+> > > ---
+> > >  arch/arm64/include/asm/futex.h |   16 ++++++++--------
+> > >  1 file changed, 8 insertions(+), 8 deletions(-)
+> > > 
+> > > --- a/arch/arm64/include/asm/futex.h
+> > > +++ b/arch/arm64/include/asm/futex.h
+> > > @@ -33,8 +33,8 @@
+> > >  "	prfm	pstl1strm, %2\n"					\
+> > >  "1:	ldxr	%w1, %2\n"						\
+> > >  	insn "\n"							\
+> > > -"2:	stlxr	%w3, %w0, %2\n"						\
+> > > -"	cbnz	%w3, 1b\n"						\
+> > > +"2:	stlxr	%w0, %w3, %2\n"						\
+> > > +"	cbnz	%w0, 1b\n"						\
+> > >  "	dmb	ish\n"							\
+> > >  "3:\n"									\
+> > >  "	.pushsection .fixup,\"ax\"\n"					\
+> > > @@ -53,29 +53,29 @@
+> > >  static inline int
+> > >  arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
+> > >  {
+> > > -	int oldval = 0, ret, tmp;
+> > > +	int oldval, ret, tmp;
+> > >  
+> > >  	pagefault_disable();
+> > >  
+> > >  	switch (op) {
+> > >  	case FUTEX_OP_SET:
+> > > -		__futex_atomic_op("mov	%w0, %w4",
+> > > +		__futex_atomic_op("mov	%w3, %w4",
+> > >  				  ret, oldval, uaddr, tmp, oparg);
+> > >  		break;
+> > >  	case FUTEX_OP_ADD:
+> > > -		__futex_atomic_op("add	%w0, %w1, %w4",
+> > > +		__futex_atomic_op("add	%w3, %w1, %w4",
+> > >  				  ret, oldval, uaddr, tmp, oparg);
+> > >  		break;
+> > >  	case FUTEX_OP_OR:
+> > > -		__futex_atomic_op("orr	%w0, %w1, %w4",
+> > > +		__futex_atomic_op("orr	%w3, %w1, %w4",
+> > >  				  ret, oldval, uaddr, tmp, oparg);
+> > >  		break;
+> > >  	case FUTEX_OP_ANDN:
+> > > -		__futex_atomic_op("and	%w0, %w1, %w4",
+> > > +		__futex_atomic_op("and	%w3, %w1, %w4",
+> > >  				  ret, oldval, uaddr, tmp, ~oparg);
+> > >  		break;
+> > >  	case FUTEX_OP_XOR:
+> > > -		__futex_atomic_op("eor	%w0, %w1, %w4",
+> > > +		__futex_atomic_op("eor	%w3, %w1, %w4",
+> > >  				  ret, oldval, uaddr, tmp, oparg);
+> > >  		break;
+> > >  	default:
+> > > 
+> > >
+> > 
+> > This causes a (false) build warning with AOSP's GCC 4.9.4 (which is
+> > used to build nearly all arm64 Android kernels before 4.14):
+> > 
+> >   CC      kernel/futex.o
+> > ../kernel/futex.c: In function 'do_futex':
+> > ../kernel/futex.c:1492:17: warning: 'oldval' may be used uninitialized in this function [-Wmaybe-uninitialized]
+> >    return oldval == cmparg;
+> >                  ^
+> > In file included from ../kernel/futex.c:69:0:
+> > ../arch/arm64/include/asm/futex.h:56:6: note: 'oldval' was declared here
+> >   int oldval, ret, tmp;
+> >       ^
+> > 
+> > The only reason I bring this up is Qualcomm based kernels have a Python
+> > script that emulates -Werror, meaning this will be fatal for a large
+> > number of kernels, when this eventually gets merged into them.
+> 
+> Argh, really?  That's a buggy compiler that you have there, as oldval
+> will be set correctly if all is good, and if not, ret will be and the
+> code will error out.
+> 
 
-In practice we've been more lenient with changes to /sys over time, so
-I think this might be a reasonable compromise.
+Correct.
 
-I still think that a filesystem view is the cleanest way to do this,
-but I won't push back from this going in. It does solve a real
-problem, and if we want a different format later we can revisit it
-then.
+> Working around broken compilers is not something I really like doing :(
+> 
 
+Indeed, I wouldn't have brought it up if it wasn't the compiler for all
+Android 4.9 kernels aside from the Pixel 3 (XL).
 
--Olof
+> That being said, does this also show up in the 4.19.y and 5.0.y tree
+> right now?  If not, why not?
+> 
+
+It does.
+
+$ make ARCH=arm64 CROSS_COMPILE=<path>/bin/aarch64-linux-gnu- defconfig kernel/futex.o
+
+> thanks,
+> 
+> greg k-h
