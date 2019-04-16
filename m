@@ -2,350 +2,361 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CFD0C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:33:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AEDA2C282DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:33:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 365AE2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:33:48 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="FROUadir"
+	by mail.kernel.org (Postfix) with ESMTP id 7084A20880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:33:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729878AbfDPPdr (ORCPT
+        id S1729891AbfDPPdy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 11:33:47 -0400
-Received: from hqemgate16.nvidia.com ([216.228.121.65]:6342 "EHLO
-        hqemgate16.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726605AbfDPPdq (ORCPT
+        Tue, 16 Apr 2019 11:33:54 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:51345 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727691AbfDPPdx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 11:33:46 -0400
-Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate16.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
-        id <B5cb5f5d50000>; Tue, 16 Apr 2019 08:33:41 -0700
-Received: from hqmail.nvidia.com ([172.20.161.6])
-  by hqpgpgate101.nvidia.com (PGP Universal service);
-  Tue, 16 Apr 2019 08:33:44 -0700
-X-PGP-Universal: processed;
-        by hqpgpgate101.nvidia.com on Tue, 16 Apr 2019 08:33:44 -0700
-Received: from [10.24.45.163] (10.124.1.5) by HQMAIL101.nvidia.com
- (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 16 Apr
- 2019 15:33:39 +0000
-Subject: Re: [PATCH V2 10/16] dt-bindings: PCI: tegra: Add device tree support
- for T194
-To:     Thierry Reding <thierry.reding@gmail.com>
-CC:     <bhelgaas@google.com>, <robh+dt@kernel.org>,
-        <mark.rutland@arm.com>, <jonathanh@nvidia.com>, <kishon@ti.com>,
-        <catalin.marinas@arm.com>, <will.deacon@arm.com>,
-        <lorenzo.pieralisi@arm.com>, <jingoohan1@gmail.com>,
-        <gustavo.pimentel@synopsys.com>, <mperttunen@nvidia.com>,
-        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
-        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
-References: <1554407683-31580-1-git-send-email-vidyas@nvidia.com>
- <1554407683-31580-11-git-send-email-vidyas@nvidia.com>
- <20190415150819.GG29254@ulmo>
-X-Nvconfidentiality: public
-From:   Vidya Sagar <vidyas@nvidia.com>
-Message-ID: <94b4cf4f-8cdd-da29-6661-68ae318b58a3@nvidia.com>
-Date:   Tue, 16 Apr 2019 21:03:36 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 16 Apr 2019 11:33:53 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3GFXWiE3495483
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 16 Apr 2019 08:33:32 -0700
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3GFXWxo3495480;
+        Tue, 16 Apr 2019 08:33:32 -0700
+Date:   Tue, 16 Apr 2019 08:33:32 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
+Message-ID: <tip-6d25be5782e482eb93e3de0c94d0a517879377d0@git.kernel.org>
+Cc:     hpa@zytor.com, bristot@redhat.com, tglx@linutronix.de,
+        jiangshanlai@gmail.com, tj@kernel.org,
+        linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        bigeasy@linutronix.de, peterz@infradead.org, mingo@kernel.org
+Reply-To: linux-kernel@vger.kernel.org, peterz@infradead.org,
+          bigeasy@linutronix.de, torvalds@linux-foundation.org,
+          mingo@kernel.org, hpa@zytor.com, bristot@redhat.com,
+          jiangshanlai@gmail.com, tglx@linutronix.de, tj@kernel.org
+In-Reply-To: <ad2b29b5715f970bffc1a7026cabd6ff0b24076a.1532952814.git.bristot@redhat.com>
+References: <ad2b29b5715f970bffc1a7026cabd6ff0b24076a.1532952814.git.bristot@redhat.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:sched/core] sched/core, workqueues: Distangle worker
+ accounting from rq lock
+Git-Commit-ID: 6d25be5782e482eb93e3de0c94d0a517879377d0
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <20190415150819.GG29254@ulmo>
-X-Originating-IP: [10.124.1.5]
-X-ClientProxiedBy: HQMAIL108.nvidia.com (172.18.146.13) To
- HQMAIL101.nvidia.com (172.20.187.10)
-Content-Type: text/plain; charset="windows-1252"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
-        t=1555428821; bh=RUjBf2nT3aUBUaOQpBt8d/wB4t6UX+/ZlztWHbxa1wA=;
-        h=X-PGP-Universal:Subject:To:CC:References:X-Nvconfidentiality:From:
-         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
-         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
-         Content-Transfer-Encoding;
-        b=FROUadirmsCZLl48g8/xulRPIkoOvwm3M+e2uXFedZO4Id8Rec3VR3vXrF7bF1t+e
-         Ro2az6Na6zHbYxxTUKFcpyqF7WCEqqmpgeAznOAP/F/Z8Bn0S5ok67usZ8s8ptEMk5
-         AiiLz0oUf+Ljb3P4VkjPLbNOSAvkoFE/ArZNyj3VeOwhUVYhS3WniBV/AQvlnQManF
-         J11Yk4T0XCyle6zU+P/VCXaVa3N6Zia97k+I0Vo9IZRIxImHCL4kxR515cStqfjGfN
-         BC0hK/+CcuSHfrDB6gCgnEK/XuGJN2bPxc+iV4m2Ra7WEheVrCGtvTLITvkBXUz/Rt
-         okzoceh/C+vJg==
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/15/2019 8:38 PM, Thierry Reding wrote:
-> On Fri, Apr 05, 2019 at 01:24:37AM +0530, Vidya Sagar wrote:
->> Add support for Tegra194 PCIe controllers. These controllers are based
->> on Synopsys DesignWare core IP.
->>
->> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
->> ---
->> Changes since [v1]:
->> * Added documentation for 'power-domains' property
->> * Removed 'window1' and 'window2' properties
->> * Removed '_clk' and '_rst' from clock and reset names
->> * Dropped 'pcie' from phy-names
->> * Added entry for BPMP-FW handle
->> * Removed offsets for some of the registers and added them in code and would be pickedup based on
->>    controller ID
->> * Changed 'nvidia,max-speed' to 'max-link-speed' and is made as an optional
->> * Changed 'nvidia,disable-clock-request' to 'supports-clkreq' with inverted operation
->> * Added more documentation for 'nvidia,update-fc-fixup' property
->> * Removed 'nvidia,enable-power-down' and 'nvidia,plat-gpios' properties
->> * Added '-us' to all properties that represent time in microseconds
->> * Moved P2U documentation to a separate file
->>
->>   .../bindings/pci/nvidia,tegra194-pcie.txt          | 181 +++++++++++++++++++++
->>   1 file changed, 181 insertions(+)
->>   create mode 100644 Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
->>
->> diff --git a/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
->> new file mode 100644
->> index 000000000000..71aa01b6ccf3
->> --- /dev/null
->> +++ b/Documentation/devicetree/bindings/pci/nvidia,tegra194-pcie.txt
->> @@ -0,0 +1,181 @@
->> +NVIDIA Tegra PCIe controller (Synopsys DesignWare Core based)
->> +
->> +This PCIe host controller is based on the Synopsis Designware PCIe IP
->> +and thus inherits all the common properties defined in designware-pcie.txt.
->> +
->> +Required properties:
->> +- compatible: For Tegra19x, must contain "nvidia,tegra194-pcie".
->> +- device_type: Must be "pci"
->> +- power-domains: A phandle to the node that controls power to the respective
->> +  PCIe controller and a specifier name for the PCIe controller. Following are
->> +  the specifiers for the different PCIe controllers
->> +  - Controller-0 - TEGRA194_POWER_DOMAIN_PCIEX8B
->> +  - Controller-1 - TEGRA194_POWER_DOMAIN_PCIEX1A
->> +  - Controller-2 - TEGRA194_POWER_DOMAIN_PCIEX1A
->> +  - Controller-3 - TEGRA194_POWER_DOMAIN_PCIEX1A
->> +  - Controller-4 - TEGRA194_POWER_DOMAIN_PCIEX4A
->> +  - Controller-5 - TEGRA194_POWER_DOMAIN_PCIEX8A
-> 
-> I'm not sure if I missed it, but is there an include file that contains
-> definitions for these symbolic names? Might be worth referring to such
-> an include from this document.
-These are macros for power domains of different PCIe controller. I'll give
-the path of header where these macros are defined.
+Commit-ID:  6d25be5782e482eb93e3de0c94d0a517879377d0
+Gitweb:     https://git.kernel.org/tip/6d25be5782e482eb93e3de0c94d0a517879377d0
+Author:     Thomas Gleixner <tglx@linutronix.de>
+AuthorDate: Wed, 13 Mar 2019 17:55:48 +0100
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Tue, 16 Apr 2019 16:55:15 +0200
 
-> 
-> Also, why do we have two different ways of specifying the controllers?
-> Why are they called Controller-* in one place and PCIEX* in another? Can
-> we just pick one and stick with it?
-Since I've been using C0, C1, C2...Etc, I'll stick to it this format and PCIEX*
-is part of macro name and is used only here.
+sched/core, workqueues: Distangle worker accounting from rq lock
 
-> 
->> +- reg: A list of physical base address and length for each set of controller
->> +  registers. Must contain an entry for each entry in the reg-names property.
->> +- reg-names: Must include the following entries:
->> +  "appl": Controller's application logic registers
->> +  "config": As per the definition in designware-pcie.txt
->> +  "atu_dma": iATU and DMA registers. This is where the iATU (internal Address
->> +             Translation Unit) registers of the PCIe core are made available
->> +             fow SW access.
->> +  "dbi": The aperture where root port's own configuration registers are
->> +         available
->> +- interrupts: A list of interrupt outputs of the controller. Must contain an
->> +  entry for each entry in the interrupt-names property.
->> +- interrupt-names: Must include the following entries:
->> +  "intr": The Tegra interrupt that is asserted for controller interrupts
->> +  "msi": The Tegra interrupt that is asserted when an MSI is received
->> +- bus-range: Range of bus numbers associated with this controller
->> +- #address-cells: Address representation for root ports (must be 3)
->> +  - cell 0 specifies the bus and device numbers of the root port:
->> +    [23:16]: bus number
->> +    [15:11]: device number
->> +  - cell 1 denotes the upper 32 address bits and should be 0
->> +  - cell 2 contains the lower 32 address bits and is used to translate to the
->> +    CPU address space
->> +- #size-cells: Size representation for root ports (must be 2)
->> +- ranges: Describes the translation of addresses for root ports and standard
->> +  PCI regions. The entries must be 7 cells each, where the first three cells
->> +  correspond to the address as described for the #address-cells property
->> +  above, the fourth and fifth cells are for the physical CPU address to
->> +  translate to and the sixth and seventh cells are as described for the
->> +  #size-cells property above.
->> +  - Entries setup the mapping for the standard I/O, memory and
->> +    prefetchable PCI regions. The first cell determines the type of region
->> +    that is setup:
->> +    - 0x81000000: I/O memory region
->> +    - 0x82000000: non-prefetchable memory region
->> +    - 0xc2000000: prefetchable memory region
->> +  Please refer to the standard PCI bus binding document for a more detailed
->> +  explanation.
->> +- #interrupt-cells: Size representation for interrupts (must be 1)
->> +- interrupt-map-mask and interrupt-map: Standard PCI IRQ mapping properties
->> +  Please refer to the standard PCI bus binding document for a more detailed
->> +  explanation.
->> +- clocks: Must contain an entry for each entry in clock-names.
->> +  See ../clocks/clock-bindings.txt for details.
->> +- clock-names: Must include the following entries:
->> +  - core
->> +- resets: Must contain an entry for each entry in reset-names.
->> +  See ../reset/reset.txt for details.
->> +- reset-names: Must include the following entries:
->> +  - core_apb
->> +  - core
->> +- phys: Must contain a phandle to P2U PHY for each entry in phy-names.
->> +- phy-names: Must include an entry for each active lane.
->> +  "p2u-N": where N ranges from 0 to one less than the total number of lanes
->> +- nvidia,bpmp: Must contain a phandle to BPMP controller node.
->> +- nvidia,controller-id : Controller specific ID
->> +      0 - C0
->> +      1 - C1
->> +      2 - C2
->> +      3 - C3
->> +      4 - C4
->> +      5 - C5
-> 
-> Again, here you use a different name to refer to the controllers than
-> before, although it's fairly obvious that these correspond to the
-> earlier Controller-*. But best to pick one and stick with it.
-> 
-> Also, the list for the power-domains property has description - value,
-> whereas you have value - description here. Since eventually the device
-> tree bindings will be converted to YAML, perhaps stick with:
-> 
->      value: description
-> 
-> To help with a subsequent conversion.
-Done.
+The worker accounting for CPU bound workers is plugged into the core
+scheduler code and the wakeup code. This is not a hard requirement and
+can be avoided by keeping track of the state in the workqueue code
+itself.
 
-> 
->> +- vddio-pex-ctl-supply: Regulator supply for PCIe side band signals
->> +
->> +Optional properties:
->> +- max-link-speed: Limits controllers max speed to this value. For more info,
->> +    please refer to Documentation/devicetree/bindings/pci/pci.txt file.
->> +- nvidia,init-speed: Limits controllers init speed to this value.
->> +    1 - Gen-1 (2. 5 GT/s)
->> +    2 - Gen-2 (5 GT/s)
->> +    3 - Gen-3 (8 GT/s)
->> +    4 - Gen-4 (16 GT/s)
-> 
-> Please provide a description for when to use this and what the effects
-> are. "Limits controller's init speed" doesn't say anything about whether
-> the speed can be increased later, or whether it will always stay at this
-> speed. Also, does it actually mean "set" the initial speed, or would the
-> controller also be able to start out at a lower speed than the one given
-> by "nvidia,init-speed"? "Limits" would suggest the latter, but best to
-> clarify.
-Ok. I'll provide more details in V3 patch series.
+Keep track of the sleeping state in the worker itself and call the
+notifier before entering the core scheduler. There might be false
+positives when the task is woken between that call and actually
+scheduling, but that's not really different from scheduling and being
+woken immediately after switching away. When nr_running is updated when
+the task is retunrning from schedule() then it is later compared when it
+is done from ttwu().
 
-> 
->> +- nvidia,disable-aspm-states : Controls advertisement of ASPM states
->> +    bit-0 to '1' : Disables advertisement of ASPM-L0s
->> +    bit-1 to '1' : Disables advertisement of ASPM-L1. This also disables
->> +                   advertisement of ASPM-L1.1 and ASPM-L1.2
->> +    bit-2 to '1' : Disables advertisement of ASPM-L1.1
->> +    bit-3 to '1' : Disables advertisement of ASPM-L1.2
->> +- supports-clkreq : Refer to Documentation/devicetree/bindings/pci/pci.txt
->> +- nvidia,update-fc-fixup : This is a boolean property and needs to be present to
->> +    improve perf when a platform is designed in such a way that it satisfies at
->> +    least one of the following conditions thereby enabling root port to
->> +    exchange optimum number of FC (Flow Control) credits with downstream devices
->> +    1. If C0/C4/C5 run at x1/x2 link widths (irrespective of speed and MPS)
->> +    2. If C0/C1/C2/C3/C4/C5 operate at their respective max link widths and
->> +       a) speed is Gen-2 and MPS is 256B
->> +       b) speed is >= Gen-3 with any MPS
->> +- nvidia,cdm-check : Enables CDM checking. For more information, refer Synopsis
->> +    DesignWare Cores  PCI Express Controller Databook r4.90a Chapter S.4
->> +- "nvidia,pex-wake" : Add PEX_WAKE gpio number to provide wake support.
-> 
-> If it's a GPIO number it should have a -gpio or -gpios suffix. I think
-> -gpios is preferred. Since the parent of the property is already a PEX
-> controller, perhaps omit the pex- prefix and just call this:
-> 
->      "nvidia,wake-gpios"
-> 
-> ?Fine. I'll change it to 'nvidia,wake-gpios'.
+[ bigeasy: preempt_disable() around wq_worker_sleeping() by Daniel Bristot de Oliveira ]
 
-> 
-> Thierry
-> 
->> +- "nvidia,aspm-cmrt-us" : Common Mode Restore time for proper operation of ASPM
->> +   to be specified in microseconds
->> +- "nvidia,aspm-pwr-on-t-us" : Power On time for proper operation of ASPM to be
->> +   specified in microseconds
->> +- "nvidia,aspm-l0s-entrance-latency-us" : ASPM L0s entrance latency to be
->> +   specified in microseconds
->> +
->> +Examples:
->> +=========
->> +
->> +Tegra194:
->> +--------
->> +
->> +SoC DTSI:
->> +
->> +	pcie@14180000 {
->> +		compatible = "nvidia,tegra194-pcie", "snps,dw-pcie";
->> +		power-domains = <&bpmp TEGRA194_POWER_DOMAIN_PCIEX8B>;
->> +		reg = <0x00 0x14180000 0x0 0x00020000   /* appl registers (128K)      */
->> +		       0x00 0x38000000 0x0 0x00040000   /* configuration space (256K) */
->> +		       0x00 0x38040000 0x0 0x00040000>; /* iATU_DMA reg space (256K)  */
->> +		reg-names = "appl", "config", "atu_dma";
->> +
->> +		status = "disabled";
->> +
->> +		#address-cells = <3>;
->> +		#size-cells = <2>;
->> +		device_type = "pci";
->> +		num-lanes = <8>;
->> +		linux,pci-domain = <0>;
->> +
->> +		clocks = <&bpmp TEGRA194_CLK_PEX0_CORE_0>;
->> +		clock-names = "core";
->> +
->> +		resets = <&bpmp TEGRA194_RESET_PEX0_CORE_0_APB>,
->> +			 <&bpmp TEGRA194_RESET_PEX0_CORE_0>;
->> +		reset-names = "core_apb", "core";
->> +
->> +		interrupts = <GIC_SPI 72 IRQ_TYPE_LEVEL_HIGH>,	/* controller interrupt */
->> +			     <GIC_SPI 73 IRQ_TYPE_LEVEL_HIGH>;	/* MSI interrupt */
->> +		interrupt-names = "intr", "msi";
->> +
->> +		#interrupt-cells = <1>;
->> +		interrupt-map-mask = <0 0 0 0>;
->> +		interrupt-map = <0 0 0 0 &gic 0 72 0x04>;
->> +
->> +		nvidia,bpmp = <&bpmp>;
->> +
->> +		supports-clkreq;
->> +		nvidia,disable-aspm-states = <0xf>;
->> +		nvidia,controller-id = <0>;
->> +		nvidia,aspm-cmrt-us = <60>;
->> +		nvidia,aspm-pwr-on-t-us = <20>;
->> +		nvidia,aspm-l0s-entrance-latency-us = <3>;
->> +
->> +		bus-range = <0x0 0xff>;
->> +		ranges = <0x81000000 0x0 0x38100000 0x0 0x38100000 0x0 0x00100000      /* downstream I/O (1MB) */
->> +			  0x82000000 0x0 0x38200000 0x0 0x38200000 0x0 0x01E00000      /* non-prefetchable memory (30MB) */
->> +			  0xc2000000 0x18 0x00000000 0x18 0x00000000 0x4 0x00000000>;  /* prefetchable memory (16GB) */
->> +	};
->> +
->> +Board DTS:
->> +
->> +	pcie@14180000 {
->> +		status = "okay";
->> +
->> +		vddio-pex-ctl-supply = <&vdd_1v8ao>;
->> +
->> +		phys = <&p2u_2>,
->> +		       <&p2u_3>,
->> +		       <&p2u_4>,
->> +		       <&p2u_5>;
->> +		phy-names = "p2u-0", "p2u-1", "p2u-2", "p2u-3";
->> +	};
->> -- 
->> 2.7.4
->>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Tejun Heo <tj@kernel.org>
+Cc: Daniel Bristot de Oliveira <bristot@redhat.com>
+Cc: Lai Jiangshan <jiangshanlai@gmail.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Link: http://lkml.kernel.org/r/ad2b29b5715f970bffc1a7026cabd6ff0b24076a.1532952814.git.bristot@redhat.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ kernel/sched/core.c         | 88 +++++++++++----------------------------------
+ kernel/workqueue.c          | 54 +++++++++++++---------------
+ kernel/workqueue_internal.h |  5 +--
+ 3 files changed, 48 insertions(+), 99 deletions(-)
 
+diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+index 4778c48a7fda..6184a0856aab 100644
+--- a/kernel/sched/core.c
++++ b/kernel/sched/core.c
+@@ -1685,10 +1685,6 @@ static inline void ttwu_activate(struct rq *rq, struct task_struct *p, int en_fl
+ {
+ 	activate_task(rq, p, en_flags);
+ 	p->on_rq = TASK_ON_RQ_QUEUED;
+-
+-	/* If a worker is waking up, notify the workqueue: */
+-	if (p->flags & PF_WQ_WORKER)
+-		wq_worker_waking_up(p, cpu_of(rq));
+ }
+ 
+ /*
+@@ -2106,56 +2102,6 @@ out:
+ 	return success;
+ }
+ 
+-/**
+- * try_to_wake_up_local - try to wake up a local task with rq lock held
+- * @p: the thread to be awakened
+- * @rf: request-queue flags for pinning
+- *
+- * Put @p on the run-queue if it's not already there. The caller must
+- * ensure that this_rq() is locked, @p is bound to this_rq() and not
+- * the current task.
+- */
+-static void try_to_wake_up_local(struct task_struct *p, struct rq_flags *rf)
+-{
+-	struct rq *rq = task_rq(p);
+-
+-	if (WARN_ON_ONCE(rq != this_rq()) ||
+-	    WARN_ON_ONCE(p == current))
+-		return;
+-
+-	lockdep_assert_held(&rq->lock);
+-
+-	if (!raw_spin_trylock(&p->pi_lock)) {
+-		/*
+-		 * This is OK, because current is on_cpu, which avoids it being
+-		 * picked for load-balance and preemption/IRQs are still
+-		 * disabled avoiding further scheduler activity on it and we've
+-		 * not yet picked a replacement task.
+-		 */
+-		rq_unlock(rq, rf);
+-		raw_spin_lock(&p->pi_lock);
+-		rq_relock(rq, rf);
+-	}
+-
+-	if (!(p->state & TASK_NORMAL))
+-		goto out;
+-
+-	trace_sched_waking(p);
+-
+-	if (!task_on_rq_queued(p)) {
+-		if (p->in_iowait) {
+-			delayacct_blkio_end(p);
+-			atomic_dec(&rq->nr_iowait);
+-		}
+-		ttwu_activate(rq, p, ENQUEUE_WAKEUP | ENQUEUE_NOCLOCK);
+-	}
+-
+-	ttwu_do_wakeup(rq, p, 0, rf);
+-	ttwu_stat(p, smp_processor_id(), 0);
+-out:
+-	raw_spin_unlock(&p->pi_lock);
+-}
+-
+ /**
+  * wake_up_process - Wake up a specific process
+  * @p: The process to be woken up.
+@@ -3472,19 +3418,6 @@ static void __sched notrace __schedule(bool preempt)
+ 				atomic_inc(&rq->nr_iowait);
+ 				delayacct_blkio_start();
+ 			}
+-
+-			/*
+-			 * If a worker went to sleep, notify and ask workqueue
+-			 * whether it wants to wake up a task to maintain
+-			 * concurrency.
+-			 */
+-			if (prev->flags & PF_WQ_WORKER) {
+-				struct task_struct *to_wakeup;
+-
+-				to_wakeup = wq_worker_sleeping(prev);
+-				if (to_wakeup)
+-					try_to_wake_up_local(to_wakeup, &rf);
+-			}
+ 		}
+ 		switch_count = &prev->nvcsw;
+ 	}
+@@ -3544,6 +3477,20 @@ static inline void sched_submit_work(struct task_struct *tsk)
+ {
+ 	if (!tsk->state || tsk_is_pi_blocked(tsk))
+ 		return;
++
++	/*
++	 * If a worker went to sleep, notify and ask workqueue whether
++	 * it wants to wake up a task to maintain concurrency.
++	 * As this function is called inside the schedule() context,
++	 * we disable preemption to avoid it calling schedule() again
++	 * in the possible wakeup of a kworker.
++	 */
++	if (tsk->flags & PF_WQ_WORKER) {
++		preempt_disable();
++		wq_worker_sleeping(tsk);
++		preempt_enable_no_resched();
++	}
++
+ 	/*
+ 	 * If we are going to sleep and we have plugged IO queued,
+ 	 * make sure to submit it to avoid deadlocks.
+@@ -3552,6 +3499,12 @@ static inline void sched_submit_work(struct task_struct *tsk)
+ 		blk_schedule_flush_plug(tsk);
+ }
+ 
++static void sched_update_worker(struct task_struct *tsk)
++{
++	if (tsk->flags & PF_WQ_WORKER)
++		wq_worker_running(tsk);
++}
++
+ asmlinkage __visible void __sched schedule(void)
+ {
+ 	struct task_struct *tsk = current;
+@@ -3562,6 +3515,7 @@ asmlinkage __visible void __sched schedule(void)
+ 		__schedule(false);
+ 		sched_preempt_enable_no_resched();
+ 	} while (need_resched());
++	sched_update_worker(tsk);
+ }
+ EXPORT_SYMBOL(schedule);
+ 
+diff --git a/kernel/workqueue.c b/kernel/workqueue.c
+index ddee541ea97a..56180c9286f5 100644
+--- a/kernel/workqueue.c
++++ b/kernel/workqueue.c
+@@ -841,43 +841,32 @@ static void wake_up_worker(struct worker_pool *pool)
+ }
+ 
+ /**
+- * wq_worker_waking_up - a worker is waking up
++ * wq_worker_running - a worker is running again
+  * @task: task waking up
+- * @cpu: CPU @task is waking up to
+  *
+- * This function is called during try_to_wake_up() when a worker is
+- * being awoken.
+- *
+- * CONTEXT:
+- * spin_lock_irq(rq->lock)
++ * This function is called when a worker returns from schedule()
+  */
+-void wq_worker_waking_up(struct task_struct *task, int cpu)
++void wq_worker_running(struct task_struct *task)
+ {
+ 	struct worker *worker = kthread_data(task);
+ 
+-	if (!(worker->flags & WORKER_NOT_RUNNING)) {
+-		WARN_ON_ONCE(worker->pool->cpu != cpu);
++	if (!worker->sleeping)
++		return;
++	if (!(worker->flags & WORKER_NOT_RUNNING))
+ 		atomic_inc(&worker->pool->nr_running);
+-	}
++	worker->sleeping = 0;
+ }
+ 
+ /**
+  * wq_worker_sleeping - a worker is going to sleep
+  * @task: task going to sleep
+  *
+- * This function is called during schedule() when a busy worker is
+- * going to sleep.  Worker on the same cpu can be woken up by
+- * returning pointer to its task.
+- *
+- * CONTEXT:
+- * spin_lock_irq(rq->lock)
+- *
+- * Return:
+- * Worker task on @cpu to wake up, %NULL if none.
++ * This function is called from schedule() when a busy worker is
++ * going to sleep.
+  */
+-struct task_struct *wq_worker_sleeping(struct task_struct *task)
++void wq_worker_sleeping(struct task_struct *task)
+ {
+-	struct worker *worker = kthread_data(task), *to_wakeup = NULL;
++	struct worker *next, *worker = kthread_data(task);
+ 	struct worker_pool *pool;
+ 
+ 	/*
+@@ -886,13 +875,15 @@ struct task_struct *wq_worker_sleeping(struct task_struct *task)
+ 	 * checking NOT_RUNNING.
+ 	 */
+ 	if (worker->flags & WORKER_NOT_RUNNING)
+-		return NULL;
++		return;
+ 
+ 	pool = worker->pool;
+ 
+-	/* this can only happen on the local cpu */
+-	if (WARN_ON_ONCE(pool->cpu != raw_smp_processor_id()))
+-		return NULL;
++	if (WARN_ON_ONCE(worker->sleeping))
++		return;
++
++	worker->sleeping = 1;
++	spin_lock_irq(&pool->lock);
+ 
+ 	/*
+ 	 * The counterpart of the following dec_and_test, implied mb,
+@@ -906,9 +897,12 @@ struct task_struct *wq_worker_sleeping(struct task_struct *task)
+ 	 * lock is safe.
+ 	 */
+ 	if (atomic_dec_and_test(&pool->nr_running) &&
+-	    !list_empty(&pool->worklist))
+-		to_wakeup = first_idle_worker(pool);
+-	return to_wakeup ? to_wakeup->task : NULL;
++	    !list_empty(&pool->worklist)) {
++		next = first_idle_worker(pool);
++		if (next)
++			wake_up_process(next->task);
++	}
++	spin_unlock_irq(&pool->lock);
+ }
+ 
+ /**
+@@ -4929,7 +4923,7 @@ static void rebind_workers(struct worker_pool *pool)
+ 		 *
+ 		 * WRITE_ONCE() is necessary because @worker->flags may be
+ 		 * tested without holding any lock in
+-		 * wq_worker_waking_up().  Without it, NOT_RUNNING test may
++		 * wq_worker_running().  Without it, NOT_RUNNING test may
+ 		 * fail incorrectly leading to premature concurrency
+ 		 * management operations.
+ 		 */
+diff --git a/kernel/workqueue_internal.h b/kernel/workqueue_internal.h
+index cb68b03ca89a..498de0e909a4 100644
+--- a/kernel/workqueue_internal.h
++++ b/kernel/workqueue_internal.h
+@@ -44,6 +44,7 @@ struct worker {
+ 	unsigned long		last_active;	/* L: last active timestamp */
+ 	unsigned int		flags;		/* X: flags */
+ 	int			id;		/* I: worker id */
++	int			sleeping;	/* None */
+ 
+ 	/*
+ 	 * Opaque string set with work_set_desc().  Printed out with task
+@@ -72,8 +73,8 @@ static inline struct worker *current_wq_worker(void)
+  * Scheduler hooks for concurrency managed workqueue.  Only to be used from
+  * sched/ and workqueue.c.
+  */
+-void wq_worker_waking_up(struct task_struct *task, int cpu);
+-struct task_struct *wq_worker_sleeping(struct task_struct *task);
++void wq_worker_running(struct task_struct *task);
++void wq_worker_sleeping(struct task_struct *task);
+ work_func_t wq_worker_last_func(struct task_struct *task);
+ 
+ #endif /* _KERNEL_WORKQUEUE_INTERNAL_H */
