@@ -4,34 +4,34 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25D99C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52EF7C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:29:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E13FD20857
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:29:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 299172086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:29:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729170AbfDPJ3h (ORCPT
+        id S1729185AbfDPJ3p (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 05:29:37 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:37247 "EHLO
+        Tue, 16 Apr 2019 05:29:45 -0400
+Received: from mailgw01.mediatek.com ([210.61.82.183]:11257 "EHLO
         mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728518AbfDPJ1z (ORCPT
+        with ESMTP id S1728362AbfDPJ1z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 16 Apr 2019 05:27:55 -0400
-X-UUID: 4df1e8b92404404fb9c74b0635713e11-20190416
-X-UUID: 4df1e8b92404404fb9c74b0635713e11-20190416
+X-UUID: 9b538cc21477489ea83a74def1045696-20190416
+X-UUID: 9b538cc21477489ea83a74def1045696-20190416
 Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
         (envelope-from <stu.hsieh@mediatek.com>)
         (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 795766166; Tue, 16 Apr 2019 17:27:49 +0800
+        with ESMTP id 2040289529; Tue, 16 Apr 2019 17:27:49 +0800
 Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
  mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 16 Apr 2019 17:27:48 +0800
+ 15.0.1395.4; Tue, 16 Apr 2019 17:27:47 +0800
 Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 16 Apr 2019 17:27:48 +0800
+ Transport; Tue, 16 Apr 2019 17:27:47 +0800
 From:   Stu Hsieh <stu.hsieh@mediatek.com>
 To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
         Rob Herring <robh+dt@kernel.org>, CK Hu <ck.hu@mediatek.com>
@@ -42,9 +42,9 @@ CC:     Mark Rutland <mark.rutland@arm.com>,
         <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>
-Subject: [PATCH v2 13/15] [media] mtk-mipicsi: add the function for Get/Set PARM for application
-Date:   Tue, 16 Apr 2019 17:27:41 +0800
-Message-ID: <1555406863-18069-14-git-send-email-stu.hsieh@mediatek.com>
+Subject: [PATCH v2 08/15] [media] mtk-mipicsi: enable/disable ana clk
+Date:   Tue, 16 Apr 2019 17:27:36 +0800
+Message-ID: <1555406863-18069-9-git-send-email-stu.hsieh@mediatek.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <1555406863-18069-1-git-send-email-stu.hsieh@mediatek.com>
 References: <1555406863-18069-1-git-send-email-stu.hsieh@mediatek.com>
@@ -56,67 +56,77 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch add the function for Get/Set PARM for application.
-
-Application can get the information about number of link.
+This patch enable/disable ana clk when power on/off
 
 Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
 ---
- .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 34 +++++++++++++++++++
- 1 file changed, 34 insertions(+)
+ .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 39 +++++++++++++++++++
+ 1 file changed, 39 insertions(+)
 
 diff --git a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-index 5e4028d0d5e1..5db9c68b0da9 100644
+index c92ffe6684ef..8a4079f0ed9b 100644
 --- a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
 +++ b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-@@ -346,6 +346,38 @@ static int get_subdev_link(const struct soc_camera_device *icd,
- 	return 0;
- }
+@@ -163,6 +163,41 @@ struct mtk_mipicsi_dev {
+ 		V4L2_MBUS_PCLK_SAMPLE_FALLING |	\
+ 		V4L2_MBUS_DATA_ACTIVE_HIGH)
  
-+static int mtk_mipicsi_get_parm(struct soc_camera_device *icd,
-+	struct v4l2_streamparm *a)
++static void mtk_mipicsi_ana_clk_enable(void __iomem *base, bool enable)
 +{
-+	unsigned int link = 0U;
-+	u8 link_reg_val = 0x0U;
-+	int ret = 0;
-+
-+	/*get camera link number*/
-+	ret = get_subdev_link(icd, &link, &link_reg_val);
-+	if (ret < 0)
-+		return ret;
-+
-+	a->parm.capture.timeperframe.numerator = 1;
-+	a->parm.capture.timeperframe.denominator = 30;
-+	a->parm.capture.reserved[0] = link_reg_val;
-+	a->parm.capture.reserved[1] = (u32)(icd->use_count);
-+	dev_info(icd->parent, "use count %d\n", icd->use_count);
-+
-+	return 0;
++	if (enable) {
++		writel(1UL | readl(base + MIPI_RX_ANA00_CSI),
++			base + MIPI_RX_ANA00_CSI);
++		writel(1UL | readl(base + MIPI_RX_ANA04_CSI),
++			base + MIPI_RX_ANA04_CSI);
++		writel(1UL | readl(base + MIPI_RX_ANA08_CSI),
++			base + MIPI_RX_ANA08_CSI);
++		writel(1UL | readl(base + MIPI_RX_ANA0C_CSI),
++			base + MIPI_RX_ANA0C_CSI);
++		writel(1UL | readl(base + MIPI_RX_ANA10_CSI),
++			base + MIPI_RX_ANA10_CSI);
++		writel(1UL | readl(base + MIPI_RX_ANA20_CSI),
++			base + MIPI_RX_ANA20_CSI);
++		writel(1UL | readl(base + MIPI_RX_ANA24_CSI),
++			base + MIPI_RX_ANA24_CSI);
++	} else {
++		writel(~1UL & readl(base + MIPI_RX_ANA00_CSI),
++			base + MIPI_RX_ANA00_CSI);
++		writel(~1UL & readl(base + MIPI_RX_ANA04_CSI),
++			base + MIPI_RX_ANA04_CSI);
++		writel(~1UL & readl(base + MIPI_RX_ANA08_CSI),
++			base + MIPI_RX_ANA08_CSI);
++		writel(~1UL & readl(base + MIPI_RX_ANA0C_CSI),
++			base + MIPI_RX_ANA0C_CSI);
++		writel(~1UL & readl(base + MIPI_RX_ANA10_CSI),
++			base + MIPI_RX_ANA10_CSI);
++		writel(~1UL & readl(base + MIPI_RX_ANA20_CSI),
++			base + MIPI_RX_ANA20_CSI);
++		writel(~1UL & readl(base + MIPI_RX_ANA24_CSI),
++			base + MIPI_RX_ANA24_CSI);
++	}
 +}
 +
-+static int mtk_mipicsi_set_param(struct soc_camera_device *icd,
-+	struct v4l2_streamparm *a)
-+{
-+	struct soc_camera_host *ici = to_soc_camera_host(icd->parent);
-+
-+	if (ici->ops->get_parm == NULL)
-+		return ici->ops->get_parm(icd, a);
-+
-+	return 0;
-+}
-+
- static u32 get_bytesperline(const u32 fmt, const u32 width)
+ static int get_subdev_register(const struct soc_camera_device *icd,
+ 	struct v4l2_dbg_register *reg)
  {
- 	u32 bytesperline = 0;
-@@ -884,6 +916,8 @@ static struct soc_camera_host_ops mtk_soc_camera_host_ops = {
- 	.poll			= vb2_fop_poll,
- 	.querycap		= mtk_mipicsi_querycap,
- 	.set_bus_param		= mtk_mipicsi_set_bus_param,
-+	.get_parm		= mtk_mipicsi_get_parm,
-+	.set_parm		= mtk_mipicsi_set_param,
- };
+@@ -796,6 +831,8 @@ static int mtk_mipicsi_pm_suspend(struct device *dev)
+ 	for (i = 0; i < mipicsi->clk_num; ++i)
+ 		clk_disable_unprepare(mipicsi->clk[i]);
  
- static void mtk_mipicsi_ana_init(void __iomem *base)
++	mtk_mipicsi_ana_clk_enable(mipicsi->ana, false);
++
+ 	if (mipicsi->larb_pdev != NULL)
+ 		mtk_smi_larb_put(mipicsi->larb_pdev);
+ 
+@@ -833,6 +870,8 @@ static int mtk_mipicsi_pm_resume(struct device *dev)
+ 			return ret;
+ 	}
+ 
++	mtk_mipicsi_ana_clk_enable(mipicsi->ana, true);
++
+ 	/* enable digtal clock */
+ 	for (i = 0; i < mipicsi->clk_num; ++i)
+ 		(void)clk_prepare_enable(mipicsi->clk[i]);
 -- 
 2.18.0
 
