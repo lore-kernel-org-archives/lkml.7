@@ -2,116 +2,109 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+X-Spam-Status: No, score=-11.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
 	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F3C71C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:24:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6BC78C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:24:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CBB0D20880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:24:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BD36205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:24:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=sifive.com header.i=@sifive.com header.b="UPXo+6HR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730137AbfDPRYO convert rfc822-to-8bit (ORCPT
+        id S1730160AbfDPRYt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 13:24:14 -0400
-Received: from relay7-d.mail.gandi.net ([217.70.183.200]:37147 "EHLO
-        relay7-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726860AbfDPRYO (ORCPT
+        Tue, 16 Apr 2019 13:24:49 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:45264 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726230AbfDPRYs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 13:24:14 -0400
-X-Originating-IP: 91.224.148.103
-Received: from xps13 (unknown [91.224.148.103])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay7-d.mail.gandi.net (Postfix) with ESMTPSA id 0F28520009;
-        Tue, 16 Apr 2019 17:24:09 +0000 (UTC)
-Date:   Tue, 16 Apr 2019 19:24:08 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
-Cc:     David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        linux-mtd@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>
-Subject: Re: [PATCH] mtd: cfi_util: mark expected switch fall-throughs
-Message-ID: <20190416192408.0e321563@xps13>
-In-Reply-To: <ee1f8c4a-92b0-db9d-6110-3acadeb9e457@embeddedor.com>
-References: <20190208180202.GA16603@embeddedor>
-        <69083203-0720-1943-8549-ddf3cea6060e@embeddedor.com>
-        <71df15e7-af2e-0326-78fe-0271a1e240fe@embeddedor.com>
-        <20190415104458.7faeec57@xps13>
-        <ee1f8c4a-92b0-db9d-6110-3acadeb9e457@embeddedor.com>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+        Tue, 16 Apr 2019 13:24:48 -0400
+Received: by mail-pl1-f194.google.com with SMTP id bf11so10646285plb.12
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 10:24:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=sifive.com; s=google;
+        h=date:subject:cc:from:to:message-id;
+        bh=YpGvq/4oL3U/yzzNTEZXc9rKkrlrHrkxbsUqZXLRLyY=;
+        b=UPXo+6HRHxeuvNJHDbiyIH+rrtLJeWbMcNTKdu1SG0tj0RUml6cLQTHWcUn6eRMZ9o
+         Iv35M8aWqk7RUHlxmRwcDa6LExTPkJqUD5D1OUdJciIomLGLZOnzhqqk9zs2o7L0xraB
+         48i/5m0t/welDxRxCCKZqWdAwx71UFSp0LwKhvvvA25Q0m6P0N57480Pv/8QF4CheGya
+         EHwB1R4tlnIjHpSK18YP9lkD60pC0bsKqjzButcyR1/0gfFjDUI/GXB0i6IvDz0bGRW+
+         xfGQR35LtG6xPbh0Y57+CHBqOb1LvK87Y987vac2NabhwfEbqc4Heb0D+bPHocvV7TEL
+         OuFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:subject:cc:from:to:message-id;
+        bh=YpGvq/4oL3U/yzzNTEZXc9rKkrlrHrkxbsUqZXLRLyY=;
+        b=cV5g65M+tK4E3frE1Q8cAtHMQkveMscu9cZvo4deymCsRYWGrlKmHEimzGEWKWk4ID
+         AUWCrGxkPcWosVDGinDiG8MF51GtDE55bkN0B18Gjj/JRXP5IGuHiJ5JGMQiEkUpxj+b
+         Bx5nEEbleS35OwRmpexiJNb4KOjGu70WbMx/dwK7WFIsd+8mvDnacT+kLzCQhtpCRWWM
+         pQDbEgpNuVJBSHlCM6Nl80iZ5lDhZCgiW9YXVA0cmD21KGQ/+OSBWz7XDIkAx5505cud
+         3g9WLFzc9k6oxS4ZGF5iJW7Yg9YUwM1y1PRdyPu8fdX6Sl4G1NGN4aBdIdHe8tp/4wFf
+         82Hw==
+X-Gm-Message-State: APjAAAX9D23JwYZgmakUqGVZdemDSrkktu5OGp1fGp9OzkTe1OWia26/
+        hixoIBk38bXQFkakbyzwk35dCqih2mb68A==
+X-Google-Smtp-Source: APXvYqyfPj3ItENNvOHVzcT++xfVwXSuMHxRiNKBvmjDPjKPS8nha4+oikPZojs8BWiNh/M3j+QaCA==
+X-Received: by 2002:a17:902:b94a:: with SMTP id h10mr84224398pls.82.1555435487369;
+        Tue, 16 Apr 2019 10:24:47 -0700 (PDT)
+Received: from localhost ([12.206.222.5])
+        by smtp.gmail.com with ESMTPSA id c18sm142471563pfc.0.2019.04.16.10.24.46
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Apr 2019 10:24:46 -0700 (PDT)
+Date:   Tue, 16 Apr 2019 10:24:46 -0700 (PDT)
+X-Google-Original-Date: Tue, 16 Apr 2019 10:24:43 PDT (-0700)
+Subject: [GIT PULL] RISC-V Patches for 5.1-rc6
+CC:     linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org
+From:   Palmer Dabbelt <palmer@sifive.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Message-ID: <mhng-c5019c5a-5f6a-43a2-b376-6a29a824e260@palmer-si-x1c4>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Gustavo,
+The following changes since commit 15ade5d2e7775667cf191cf2f94327a4889f8b9d:
 
-"Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote on Mon, 15 Apr
-2019 07:57:11 -0500:
+  Linux 5.1-rc4 (2019-04-07 14:09:59 -1000)
 
-> Hi Miquel,
-> 
-> On 4/15/19 3:44 AM, Miquel Raynal wrote:
-> > Hi Gustavo,
-> > 
-> > "Gustavo A. R. Silva" <gustavo@embeddedor.com> wrote on Wed, 10 Apr
-> > 2019 16:16:51 -0500:
-> >   
-> >> Hi all,
-> >>
-> >> If no one cares I'll add this to my tree for 5.2.  
-> > 
-> > Which tree are you talking about?
-> >   
-> 
-> This one:
-> 
-> https://git.kernel.org/pub/scm/linux/kernel/git/gustavoars/linux.git/log/?h=for-next/kspp
-> 
-> > Please let the MTD maintainers take patches through their tree. We
-> > might be late but this is definitely not a good reason to bypass us.
-> >   
-> It's a bit confusing when patches are being ignored for more than two
-> months:
-> 
-> https://lore.kernel.org/patchwork/patch/1040099/
-> https://lore.kernel.org/patchwork/patch/1040100/
-> https://lore.kernel.org/patchwork/patch/1040098/
-> 
+are available in the Git repository at:
 
-Patches posted at -rc6 right before the last release? Come on! Gustavo,
-we always spend more time for you than for other contributors because we
-do not trust your changes. We could apply them blindly but we don't do
-that for other (worthy) contributions, so why shall we do it for you?
+  git://git.kernel.org/pub/scm/linux/kernel/git/palmer/riscv-linux.git tags/riscv-for-linus-5.1-rc6
 
-I think you could at least flag these changes as "automatic and
-unverified" in the commit log so that when git blaming, people could
-know that the additional explicit /* fallthrough */ comment might be
-wrong and was just added in order to limit the number of warnings when
-enabling the extra GCC warning.
+for you to fetch changes up to f05badde4e20d2e0f8c39d07a6873b2bfb0754f8:
 
-> Certainly, Richard Weinberger replied to this one. But I couldn't
-> find a tree to which this patch was applied, in case it actually
-> was.
-> 
-> It's a common practice for maintainers to reply saying that a patch
-> has been finally applied, and in most cases they also explicitly
-> mention the tree and branch to which it was applied. All this info
-> is really helpful for people working all over the tree.
+  RISC-V: Fix Maximum Physical Memory 2GiB option for 64bit systems (2019-04-10 09:41:40 -0700)
 
-It is common practice for contributors to understand what they
-are doing before submitting a change and this is something that you
-clearly don't try to do.
+----------------------------------------------------------------
+RISC-V Patches for 5.1-rc6
 
+This tag contains an assortment of RISC-V-related fixups that we found
+after rc4.  They're all really unrelated:
 
-Thanks,
-Miquèl
+* The addition of a 32-bit defconfig, to emphasize testing the 32-bit
+  port.
+* A device tree bindings patch, which is pre-work for some patches that
+  target 5.2.
+* A fix to support booting on systems with more physical memory than the
+  maximum supported by the kernel.
+
+These work for me when merged into Linus' master from this morning,
+which has no conflicts.
+
+----------------------------------------------------------------
+Anup Patel (2):
+      RISC-V: Add separate defconfig for 32bit systems
+      RISC-V: Fix Maximum Physical Memory 2GiB option for 64bit systems
+
+Paul Walmsley (1):
+      dt-bindings: clock: sifive: add FU540-C000 PRCI clock constants
+
+ arch/riscv/configs/rv32_defconfig             | 84 +++++++++++++++++++++++++++
+ arch/riscv/mm/init.c                          |  8 +++
+ include/dt-bindings/clock/sifive-fu540-prci.h | 18 ++++++
+ 3 files changed, 110 insertions(+)
+ create mode 100644 arch/riscv/configs/rv32_defconfig
+ create mode 100644 include/dt-bindings/clock/sifive-fu540-prci.h
