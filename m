@@ -2,124 +2,78 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E8AB0C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 22:15:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BBA94C282DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 22:16:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B583520880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 22:15:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8691020880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 22:16:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ahQf/nJW"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YrjdsRl4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730623AbfDPWPO (ORCPT
+        id S1729426AbfDPWQS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 18:15:14 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:34910 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727136AbfDPWPN (ORCPT
+        Tue, 16 Apr 2019 18:16:18 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:42713 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726287AbfDPWQS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 18:15:13 -0400
-Received: by mail-pl1-f194.google.com with SMTP id w24so11014456plp.2;
-        Tue, 16 Apr 2019 15:15:13 -0700 (PDT)
+        Tue, 16 Apr 2019 18:16:18 -0400
+Received: by mail-pf1-f193.google.com with SMTP id w25so11067368pfi.9;
+        Tue, 16 Apr 2019 15:16:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+        h=date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=lG6ZpAkmVc5/nyfI7ZVe1dVNTtrQrMePTJsNQFI9tc4=;
-        b=ahQf/nJWcetOPpFmYyUMzhGktABMa+/NUUtCrWSttmQhNOf+1vUFB+ia2cZQJBHIV2
-         jmko0AeEBl9tDRpHR63hvWrb/HW9Tkc276Rc0uQJ75nUZ42nBqeJRG2qfGBnyiwSKYNq
-         r2k29q1u5tV0z/rP2qSeDM0S+y8AsWHaXHA/o/F0o9GJxFX0smIvQ7F0x4SKu6MPPhCD
-         dakIKc54jrTlgmNcpiTdDzCGjeDph+vqYjn1nPGX9S7J1sK9WjlMi9PAatRBmdUlWEjn
-         a0qRxnVVSO9kzvDLHlkPpk3lECGnWFeZZno3sWiG60nJIy5wdmeiek/nswqKeqOUuzZg
-         0yuQ==
+        bh=QioTqUmDVyuW1Ci1hwYzzS1EnlQW7lyM7UzhSmP9LQI=;
+        b=YrjdsRl4PRQhoEWPZ1oQFETV70Z1GHEn3kngUhq+pHfoh4s1ozW62JgCd1ee+0CgAO
+         EGYkxgsRUZSLzoRipr/G0lWgc1WqnXBH6yK7LgdzNd079VN7ougT7H/V2F22yLhsZU2n
+         HJCqyl/qnOuB2iRrYtiLC/lmRvODUhByUAH8KQfhL8ML79P6T7S2uxgHam5EhRozJg/k
+         OemvaW6yhLGwhlA9NajZ4pM4lR622a3HmCA0BcC1RBSKNW+jaJF+hQBCTRyM92/pIGsD
+         LUS7/duE3O2ghkX0gZuFMOf/39Zj0Ywg/+EVUemuHfnKrpDu8dVvWITjIQ1uoZ5+NWKm
+         CssQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=lG6ZpAkmVc5/nyfI7ZVe1dVNTtrQrMePTJsNQFI9tc4=;
-        b=hRGRu3VPeRUm97jqq9bmhJed19CONghETBh6G3J/U2GqsQQtFAGSEAuC+kIvsiErpm
-         p/MRrABRWIpnr/cOj4/NGyB7Nfne0dGJJGGzLg/oE2VuXWeUYYjIpb+dBli1gI5QLK7V
-         5+Z+88fUYzrOVX8vZ05vjW3oPNkKYOuvLuGd6FVnam2O2DtoYsEr6kmiA+pGRydKI6rh
-         4r65Ai606B9IfpFsIl/Nx0Q6BDCZJKqVqGGyCGxEq8vAFm6Kpr2N7yNRsIFnmGkpoy0E
-         x2MAF8/PqS8NshCIUGiAIQr5GOhusjIga9hHA+F5mxjtoGX2ysrIzlNDDc0RozBTrzdQ
-         vE/g==
-X-Gm-Message-State: APjAAAVxfNhk5J1barKO9CX8N3DvlQUm37Tdq4dVgSr5uiiN+oOJ1nco
-        tVOuBGsKCulmiro1a97E2Ac=
-X-Google-Smtp-Source: APXvYqxqaGMKRtWL0tl9gxjAvnVdzTJepCLDWyUxXb5p6dX/zTaB3gZ3cEvdAkQDkGL9GZMqXNmXJA==
-X-Received: by 2002:a17:902:102a:: with SMTP id b39mr50014720pla.188.1555452912848;
-        Tue, 16 Apr 2019 15:15:12 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id v19sm96118299pfa.138.2019.04.16.15.15.11
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QioTqUmDVyuW1Ci1hwYzzS1EnlQW7lyM7UzhSmP9LQI=;
+        b=O+5WVWdy9bwAUN80wIW4v+A4njnh2D7ead1Y0zhkvg55SPsR5tHriLM0H+aCnRuGMZ
+         63aPM3EOWVJMO1OKp81qlHsTZ+AxXMnt7xZCzbbmOtiU25Ko6IuoSsXj38MAe9SVYKdO
+         o0tbo/cS7dRXDYK6W8yLpEqJEYz4nolXy1UFKklmkYAZN2mpiwOEMDe8yDnSJs3BgUjJ
+         AxkralYzM4mupGtTCFB/evXpUn5v70dCzwYq3Vie2B3/DH0OVHJPv9GiJpWXP0m5dK1x
+         l7xfNtfHUww0xT5P2xz5pjYC1fWaKj1193X3pCeAuKAyVrpEHijVYLwtNRzEtPzHLULN
+         m9cw==
+X-Gm-Message-State: APjAAAUe3PdoeA99zyAtgNANNU6KIA9zgIxbrQMBBZY0uFXVIuqLh2S+
+        m0K/NpAoVG+AV7o6RDjrjoY=
+X-Google-Smtp-Source: APXvYqyFcwBOM9VQEmWugxQV//3AuOhhnV2Fg80zLhB7aSjpvBmjRJ1IwAB/JdnlGScTJeUTkvN12w==
+X-Received: by 2002:a63:1f52:: with SMTP id q18mr81202200pgm.134.1555452977313;
+        Tue, 16 Apr 2019 15:16:17 -0700 (PDT)
+Received: from bharath12345-Inspiron-5559 ([103.110.42.31])
+        by smtp.gmail.com with ESMTPSA id v9sm764083pgf.73.2019.04.16.15.16.12
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 15:15:12 -0700 (PDT)
-Date:   Tue, 16 Apr 2019 15:15:11 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Eddie James <eajames@linux.ibm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        jdelvare@suse.com, andrew@aj.id.au, mine260309@gmail.com,
-        Eddie James <eajames@us.ibm.com>
-Subject: Re: [PATCH 3/3] hwmon (occ): Add more details to Kconfig help text
-Message-ID: <20190416221511.GA32220@roeck-us.net>
-References: <1555429430-23118-1-git-send-email-eajames@linux.ibm.com>
- <1555429430-23118-3-git-send-email-eajames@linux.ibm.com>
+        Tue, 16 Apr 2019 15:16:16 -0700 (PDT)
+Date:   Wed, 17 Apr 2019 03:46:09 +0530
+From:   Bharath Vedartham <linux.bhar@gmail.com>
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
+        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
+        patches@kernelci.org, ben.hutchings@codethink.co.uk,
+        lkft-triage@lists.linaro.org, stable@vger.kernel.org
+Subject: Re: [PATCH 4.19 000/101] 4.19.35-stable review
+Message-ID: <20190416221609.GB3502@bharath12345-Inspiron-5559>
+References: <20190415183740.341577907@linuxfoundation.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1555429430-23118-3-git-send-email-eajames@linux.ibm.com>
+In-Reply-To: <20190415183740.341577907@linuxfoundation.org>
 User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 03:43:50PM +0000, Eddie James wrote:
-> From: Eddie James <eajames@us.ibm.com>
-> 
-> The help text needs to spell out how the driver runs on a BMC, as it
-> previously seemed to indicate it ran on a POWER processor.
-> 
-> Signed-off-by: Eddie James <eajames@us.ibm.com>
-
-Applied.
-
-Thanks,
-Guenter
-
-> ---
->  drivers/hwmon/occ/Kconfig | 12 ++++++++----
->  1 file changed, 8 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/hwmon/occ/Kconfig b/drivers/hwmon/occ/Kconfig
-> index 2a3869f..1658634 100644
-> --- a/drivers/hwmon/occ/Kconfig
-> +++ b/drivers/hwmon/occ/Kconfig
-> @@ -9,8 +9,10 @@ config SENSORS_OCC_P8_I2C
->  	select SENSORS_OCC
->  	help
->  	 This option enables support for monitoring sensors provided by the
-> -	 On-Chip Controller (OCC) on a POWER8 processor. Communications with
-> -	 the OCC are established through I2C bus.
-> +	 On-Chip Controller (OCC) on a POWER8 processor. However, this driver
-> +	 can only run on a baseboard management controller (BMC) connected to
-> +	 the P8, not the POWER processor itself. Communications with the OCC are
-> +	 established through I2C bus.
->  
->  	 This driver can also be built as a module. If so, the module will be
->  	 called occ-p8-hwmon.
-> @@ -22,8 +24,10 @@ config SENSORS_OCC_P9_SBE
->  	select SENSORS_OCC
->  	help
->  	 This option enables support for monitoring sensors provided by the
-> -	 On-Chip Controller (OCC) on a POWER9 processor. Communications with
-> -	 the OCC are established through SBE fifo on an FSI bus.
-> +	 On-Chip Controller (OCC) on a POWER9 processor. However, this driver
-> +	 can only run on a baseboard management controller (BMC) connected to
-> +	 the P9, not the POWER processor itself. Communications with the OCC are
-> +	 established through SBE fifo on an FSI bus.
->  
->  	 This driver can also be built as a module. If so, the module will be
->  	 called occ-p9-hwmon.
+Compiled and Booted(defconfig) on my x86 machine. No dmesg regressions.
