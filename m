@@ -2,114 +2,174 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C99AC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:20:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B64BDC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:21:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 217E020821
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:20:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8303C20821
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:21:18 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="O0BIFAlX"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729021AbfDPLUX (ORCPT
+        id S1729090AbfDPLVR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 07:20:23 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:46253 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726313AbfDPLUX (ORCPT
+        Tue, 16 Apr 2019 07:21:17 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:45225 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728268AbfDPLVQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 07:20:23 -0400
-Received: by mail-wr1-f65.google.com with SMTP id t17so26440075wrw.13
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 04:20:22 -0700 (PDT)
+        Tue, 16 Apr 2019 07:21:16 -0400
+Received: by mail-lj1-f194.google.com with SMTP id y6so18693663ljd.12
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 04:21:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=PGlT4HNSRFUHnu8eYnaUTNe1AZmLLaNzfZhY2FWb3zU=;
+        b=O0BIFAlX4rbQklUSJZsJ7x3QG0mUffBWFIjIPQKpwf/XlD3cAlMhWY7tNrntiIvpCT
+         cQuOfSu+PxMTtkZzx5sRKvmdHXMjlKLtWvSLCEjxDkkV4D0qJwuR574NBwnzlkEh/mlo
+         /db7fb9fYRs1wqLLFj43eZ52TjpG8e/qG4pJ2zDvbQtb4sEEd0TiudShbFtHHU96ILE3
+         Xkqj9qLAB2QD+07va0U6ba7MODgjnjxjSVgtqVHR4DThiIqTM97xtWLGfpLFffVXadl/
+         sVMJWyRAIstJXzeHcI9yr7IV3DCOonjarhS7n4pmlvyEkTs2mDuL0sKN6n3FJvtKt43X
+         IdYQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
-         :message-id:mime-version;
-        bh=vX22ZljpvyzGqaDUGaMXFf3h/6G9La+s7NU9oDZqnu8=;
-        b=PB/2ffXRBzdBsn5XVLD+HHNXK+LzYee9Is513bm7MEqHmutCt8meoWVkhpl7nAEMlK
-         ORxH0tUbYVNlkG4NTSSOI5tmwN+PKLaKBDaEXMYzW9KvLBwW65Qdu27LdP1vQi+gU7hB
-         K0JGi7Gs+5RV4hVIiKVXPbvfjATGdPehCpcZQIEUdKOLl1uACs3hfwf0/D3RxHsva16x
-         PmcCgT71KCeqgTGiKDmWH4HYIZM6cK7hFDhsMaQ+kLcjOBY0dMOYNJzrfISomHyYI69j
-         eAYvI0VGrXKfY2sgQaqNNiVK5eTo/8hr39Ph2KNHz2NhSkTHPYhxqhQhaMQthvrLhMAz
-         KPCw==
-X-Gm-Message-State: APjAAAVt9PlLP1dlu/fDXoWQt/5N7hbgSp/NOfjbTUQ7pKRw99rZJHkO
-        +8TyBIQQE14eh1vpGRis0z0wrA==
-X-Google-Smtp-Source: APXvYqxj2mg+mTtpSS0BEUuEYEVSTXX6lf+1zju0o/vwNw/rdPPfOt84rnPY3PCKVl+fx/gRJLtl7g==
-X-Received: by 2002:adf:cd83:: with SMTP id q3mr49244642wrj.228.1555413621350;
-        Tue, 16 Apr 2019 04:20:21 -0700 (PDT)
-Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
-        by smtp.gmail.com with ESMTPSA id z10sm17162151wmi.15.2019.04.16.04.20.20
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 16 Apr 2019 04:20:20 -0700 (PDT)
-From:   Vitaly Kuznetsov <vkuznets@redhat.com>
-To:     Dexuan Cui <decui@microsoft.com>
-Cc:     "tglx\@linutronix.de" <tglx@linutronix.de>,
-        "riel\@surriel.com" <riel@surriel.com>,
-        "jpoimboe\@redhat.com" <jpoimboe@redhat.com>,
-        "luto\@kernel.org" <luto@kernel.org>,
-        Stephen Hemminger <sthemmin@microsoft.com>,
-        Sasha Levin <Alexander.Levin@microsoft.com>,
-        Haiyang Zhang <haiyangz@microsoft.com>,
-        KY Srinivasan <kys@microsoft.com>,
-        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Michael Kelley <mikelley@microsoft.com>,
-        "marcelo.cerri\@canonical.com" <marcelo.cerri@canonical.com>,
-        "apw\@canonical.com" <apw@canonical.com>,
-        "olaf\@aepfle.de" <olaf@aepfle.de>,
-        "jasowang\@redhat.com" <jasowang@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>
-Subject: Re: [PATCH] smp: Do not warn if smp_call_function_single() is doing a self call.
-In-Reply-To: <20190416093123.GR11158@hirez.programming.kicks-ass.net>
-References: <20190412235341.29379-1-decui@microsoft.com> <20190415122128.GO11158@hirez.programming.kicks-ass.net> <PU1P153MB01695FDC44C6A2C32C7FB887BF2B0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM> <20190416093123.GR11158@hirez.programming.kicks-ass.net>
-Date:   Tue, 16 Apr 2019 13:20:19 +0200
-Message-ID: <87o9562o3w.fsf@vitty.brq.redhat.com>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=PGlT4HNSRFUHnu8eYnaUTNe1AZmLLaNzfZhY2FWb3zU=;
+        b=RJRpbhcu1ex+13KUnX+1L+ZQ5cV5vhf+pDWUHeaPx0vnXi7iYthbnh+p6qTGoVOB2Z
+         1aZxVYtX7H4hBbQ//iBTjdOU2vjqaq/ss0LsZXTUZM4J8Ttttow+TPOKbjNSOHXcV11f
+         zPThJr6o9urRseFjht58nncXAxAEke7nLCe3S1ugfybLn7eb21hvZKzK7aCAJONzmx0d
+         Fzs4amXMRocF/4bq6mmxSB17vORyMj+cBc1tG2ZDnyjrvKVk6LI2+C7rEGomY4BeN3bt
+         EIyDeDqcwcCvp3KQWqOf+H/QGywL7vzsriESLq9MLzjaQidOiSadwKFOxXDFJJNVEqsm
+         I5XA==
+X-Gm-Message-State: APjAAAWkCgCirn8PiDUrRlYzPXyZPZt6hWMho++kFRE0OQ/JVwbs9ZyG
+        2DUpYkSPZWfez4L5BEzDgwZQJEJTi8Tsajkot3Ty/w==
+X-Google-Smtp-Source: APXvYqxvCzMCxXFXBwnK6D/2OQv4GPkcl1pOVVoSHuEBJENJ6Ch+X/Ae249q0z3cTNO+Hz7ih4GJ+07snq1ZH121548=
+X-Received: by 2002:a2e:8149:: with SMTP id t9mr45693697ljg.2.1555413674602;
+ Tue, 16 Apr 2019 04:21:14 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
+References: <20190415183740.341577907@linuxfoundation.org>
+In-Reply-To: <20190415183740.341577907@linuxfoundation.org>
+From:   Naresh Kamboju <naresh.kamboju@linaro.org>
+Date:   Tue, 16 Apr 2019 16:51:03 +0530
+Message-ID: <CA+G9fYtGYo9NLXfpO_f+GM7s1wLS_c4ida9CHgjLU5P_YseZnA@mail.gmail.com>
+Subject: Re: [PATCH 4.19 000/101] 4.19.35-stable review
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc:     open list <linux-kernel@vger.kernel.org>,
+        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
+        lkft-triage@lists.linaro.org,
+        Ben Hutchings <ben.hutchings@codethink.co.uk>,
+        linux- stable <stable@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Guenter Roeck <linux@roeck-us.net>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Peter Zijlstra <peterz@infradead.org> writes:
-
-> On Mon, Apr 15, 2019 at 11:39:57PM +0000, Dexuan Cui wrote:
->> > From: Peter Zijlstra <peterz@infradead.org>
->> > Sent: Monday, April 15, 2019 5:21 AM
->> > To: Dexuan Cui <decui@microsoft.com>
->> > 
->> > On Fri, Apr 12, 2019 at 11:53:57PM +0000, Dexuan Cui wrote:
->> > > If smp_call_function_single() is calling the function for itself, it's safe
->> > > to run with irqs_disabled() == true.
->> > >
->> > > I hit the warning because I'm in the below path in the .suspend callback of
->> > > a "syscore_ops" to support hibernation for a VM running on Hyper-V:
->> > >
->> > >   hv_synic_cleanup() ->
->> > >     clockevents_unbind_device() ->
->> > >       clockevents_unbind() ->
->> > >         smp_call_function_single().
->> > >
->> > > When the .suspend callback runs, only CPU0 is online and irqs_disabled() is
->> > > true.
->> > 
->> > Pray tell, how well do you think mutex_lock() works with interrupts
->> > disabled?
->> 
->> Good point. I realized generally speaking this patch makes no sense, so let me
->> try the solution proposed by Vitaly, i.e. fix clockevents_unbind() instead.
+On Tue, 16 Apr 2019 at 00:36, Greg Kroah-Hartman
+<gregkh@linuxfoundation.org> wrote:
 >
-> That's still not the problem. You're calling clockevents_unbind_device()
-> with IRQs disabled, that's not correct. It doesn't matter what
-> clockevents_unbind() does thereafter.
+> This is the start of the stable review cycle for the 4.19.35 release.
+> There are 101 patches in this series, all will be posted as a response
+> to this one.  If anyone has any issues with these being applied, please
+> let me know.
+>
+> Responses should be made by Wed Apr 17 18:36:40 UTC 2019.
+> Anything received after that time might be too late.
+>
+> The whole patch series can be found in one patch at:
+>         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
+4.19.35-rc1.gz
+> or in the git tree and branch at:
+>         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
+-rc.git linux-4.19.y
+> and the diffstat can be found below.
+>
+> thanks,
+>
+> greg k-h
 >
 
-True. And before we start digging deeper into this, let's step back: why
-do we need to do clockevents_unbind_device() on hybernation? Can we just
-disable the device and re-enable it back on resume?
+Results from Linaro=E2=80=99s test farm.
+No regressions on arm64, arm, x86_64, and i386.
 
-Actually, all usages of clockevents_unbind_device() in kernel are
-limited to Hyper-V and with Michael's patches moving this out of VMBus
-driver I think it can go away completely.
+Summary
+------------------------------------------------------------------------
 
--- 
-Vitaly
+kernel: 4.19.35-rc1
+git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
+le-rc.git
+git branch: linux-4.19.y
+git commit: e4f859c2cd83c05fc968871175b2a2ed5e43eb49
+git describe: v4.19.34-102-ge4f859c2cd83
+Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.19-oe/bu=
+ild/v4.19.34-102-ge4f859c2cd83
+
+No regressions (compared to build v4.19.34)
+
+No fixes (compared to build v4.19.34)
+
+Ran 23582 total tests in the following environments and test suites.
+
+Environments
+--------------
+- dragonboard-410c - arm64
+- hi6220-hikey - arm64
+- i386
+- juno-r2 - arm64
+- qemu_arm
+- qemu_arm64
+- qemu_i386
+- qemu_x86_64
+- x15 - arm
+- x86_64
+
+Test Suites
+-----------
+* boot
+* install-android-platform-tools-r2600
+* kselftest
+* libhugetlbfs
+* ltp-cap_bounds-tests
+* ltp-commands-tests
+* ltp-containers-tests
+* ltp-cpuhotplug-tests
+* ltp-cve-tests
+* ltp-dio-tests
+* ltp-fcntl-locktests-tests
+* ltp-filecaps-tests
+* ltp-fs-tests
+* ltp-fs_bind-tests
+* ltp-fs_perms_simple-tests
+* ltp-fsx-tests
+* ltp-hugetlb-tests
+* ltp-io-tests
+* ltp-ipc-tests
+* ltp-math-tests
+* ltp-mm-tests
+* ltp-nptl-tests
+* ltp-pty-tests
+* ltp-sched-tests
+* ltp-securebits-tests
+* ltp-syscalls-tests
+* ltp-timers-tests
+* perf
+* spectre-meltdown-checker-test
+* v4l2-compliance
+* kvm-unit-tests
+* ltp-open-posix-tests
+* kselftest-vsyscall-mode-native
+* kselftest-vsyscall-mode-none
+
+--=20
+Linaro LKFT
+https://lkft.linaro.org
