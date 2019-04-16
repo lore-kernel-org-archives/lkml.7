@@ -7,50 +7,51 @@ X-Spam-Status: No, score=-12.0 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C3AFC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:05:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2DDEAC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:05:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2694B206B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:05:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 084FC206B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:05:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729006AbfDPKFO (ORCPT
+        id S1728902AbfDPKFz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 06:05:14 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:55435 "EHLO
+        Tue, 16 Apr 2019 06:05:55 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:47505 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726070AbfDPKFN (ORCPT
+        with ESMTP id S1726070AbfDPKFz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 06:05:13 -0400
+        Tue, 16 Apr 2019 06:05:55 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3GA2XWo3398567
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3GA3Hhx3398833
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 16 Apr 2019 03:02:33 -0700
+        Tue, 16 Apr 2019 03:03:17 -0700
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3GA2XaQ3398562;
-        Tue, 16 Apr 2019 03:02:33 -0700
-Date:   Tue, 16 Apr 2019 03:02:33 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3GA3HhC3398830;
+        Tue, 16 Apr 2019 03:03:17 -0700
+Date:   Tue, 16 Apr 2019 03:03:17 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Waiman Long <tipbot@zytor.com>
-Message-ID: <tip-12a30a7fc142a123c61da9623bd824d95d36c12e@git.kernel.org>
-Cc:     will.deacon@arm.com, bp@alien8.de, tglx@linutronix.de,
-        longman@redhat.com, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, a.p.zijlstra@chello.nl,
-        peterz@infradead.org, linux-kernel@vger.kernel.org, hpa@zytor.com,
-        paulmck@linux.vnet.ibm.com, tim.c.chen@linux.intel.com,
-        dave@stgolabs.net, arnd@arndb.de, dbueso@suse.de, mingo@kernel.org
-Reply-To: will.deacon@arm.com, bp@alien8.de, longman@redhat.com,
-          tglx@linutronix.de, torvalds@linux-foundation.org,
-          akpm@linux-foundation.org, a.p.zijlstra@chello.nl,
-          peterz@infradead.org, linux-kernel@vger.kernel.org,
-          hpa@zytor.com, paulmck@linux.vnet.ibm.com,
-          tim.c.chen@linux.intel.com, dave@stgolabs.net, dbueso@suse.de,
-          arnd@arndb.de, mingo@kernel.org
-In-Reply-To: <20190404174320.22416-4-longman@redhat.com>
-References: <20190404174320.22416-4-longman@redhat.com>
+Message-ID: <tip-a338ecb07a338c9a8b0ca0010e862ebe598b1551@git.kernel.org>
+Cc:     paulmck@linux.vnet.ibm.com, hpa@zytor.com, a.p.zijlstra@chello.nl,
+        bp@alien8.de, dave@stgolabs.net, mingo@kernel.org,
+        torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        longman@redhat.com, peterz@infradead.org, dbueso@suse.de,
+        tglx@linutronix.de, will.deacon@arm.com,
+        linux-kernel@vger.kernel.org, tim.c.chen@linux.intel.com,
+        arnd@arndb.de
+Reply-To: will.deacon@arm.com, linux-kernel@vger.kernel.org,
+          tim.c.chen@linux.intel.com, arnd@arndb.de, longman@redhat.com,
+          peterz@infradead.org, tglx@linutronix.de, dbueso@suse.de,
+          torvalds@linux-foundation.org, mingo@kernel.org,
+          akpm@linux-foundation.org, paulmck@linux.vnet.ibm.com,
+          hpa@zytor.com, dave@stgolabs.net, bp@alien8.de,
+          a.p.zijlstra@chello.nl
+In-Reply-To: <20190404174320.22416-5-longman@redhat.com>
+References: <20190404174320.22416-5-longman@redhat.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:locking/core] locking/rwsem: Move rwsem internal function
- declarations to rwsem-xadd.h
-Git-Commit-ID: 12a30a7fc142a123c61da9623bd824d95d36c12e
+Subject: [tip:locking/core] locking/rwsem: Micro-optimize
+ rwsem_try_read_lock_unqueued()
+Git-Commit-ID: a338ecb07a338c9a8b0ca0010e862ebe598b1551
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -64,17 +65,20 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  12a30a7fc142a123c61da9623bd824d95d36c12e
-Gitweb:     https://git.kernel.org/tip/12a30a7fc142a123c61da9623bd824d95d36c12e
+Commit-ID:  a338ecb07a338c9a8b0ca0010e862ebe598b1551
+Gitweb:     https://git.kernel.org/tip/a338ecb07a338c9a8b0ca0010e862ebe598b1551
 Author:     Waiman Long <longman@redhat.com>
-AuthorDate: Thu, 4 Apr 2019 13:43:12 -0400
+AuthorDate: Thu, 4 Apr 2019 13:43:13 -0400
 Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Wed, 10 Apr 2019 10:56:00 +0200
+CommitDate: Wed, 10 Apr 2019 10:56:01 +0200
 
-locking/rwsem: Move rwsem internal function declarations to rwsem-xadd.h
+locking/rwsem: Micro-optimize rwsem_try_read_lock_unqueued()
 
-We don't need to expose rwsem internal functions which are not supposed
-to be called directly from other kernel code.
+The atomic_long_cmpxchg_acquire() in rwsem_try_read_lock_unqueued() is
+replaced by atomic_long_try_cmpxchg_acquire() to simpify the code and
+generate slightly better assembly code.
+
+There is no functional change.
 
 Signed-off-by: Waiman Long <longman@redhat.com>
 Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
@@ -89,46 +93,40 @@ Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Link: http://lkml.kernel.org/r/20190404174320.22416-4-longman@redhat.com
+Link: http://lkml.kernel.org/r/20190404174320.22416-5-longman@redhat.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- include/linux/rwsem.h  | 7 -------
- kernel/locking/rwsem.h | 7 +++++++
- 2 files changed, 7 insertions(+), 7 deletions(-)
+ kernel/locking/rwsem-xadd.c | 15 +++++----------
+ 1 file changed, 5 insertions(+), 10 deletions(-)
 
-diff --git a/include/linux/rwsem.h b/include/linux/rwsem.h
-index 0fc41062c649..b44e533235c7 100644
---- a/include/linux/rwsem.h
-+++ b/include/linux/rwsem.h
-@@ -46,13 +46,6 @@ struct rw_semaphore {
+diff --git a/kernel/locking/rwsem-xadd.c b/kernel/locking/rwsem-xadd.c
+index c213869e1aa7..f6198e1a58f6 100644
+--- a/kernel/locking/rwsem-xadd.c
++++ b/kernel/locking/rwsem-xadd.c
+@@ -259,21 +259,16 @@ static inline bool rwsem_try_write_lock(long count, struct rw_semaphore *sem)
   */
- #define RWSEM_OWNER_UNKNOWN	((struct task_struct *)-2L)
- 
--extern struct rw_semaphore *rwsem_down_read_failed(struct rw_semaphore *sem);
--extern struct rw_semaphore *rwsem_down_read_failed_killable(struct rw_semaphore *sem);
--extern struct rw_semaphore *rwsem_down_write_failed(struct rw_semaphore *sem);
--extern struct rw_semaphore *rwsem_down_write_failed_killable(struct rw_semaphore *sem);
--extern struct rw_semaphore *rwsem_wake(struct rw_semaphore *);
--extern struct rw_semaphore *rwsem_downgrade_wake(struct rw_semaphore *sem);
--
- /* In all implementations count != 0 means locked */
- static inline int rwsem_is_locked(struct rw_semaphore *sem)
+ static inline bool rwsem_try_write_lock_unqueued(struct rw_semaphore *sem)
  {
-diff --git a/kernel/locking/rwsem.h b/kernel/locking/rwsem.h
-index ee24c4f257a5..19997c82270b 100644
---- a/kernel/locking/rwsem.h
-+++ b/kernel/locking/rwsem.h
-@@ -153,6 +153,13 @@ static inline void rwsem_clear_reader_owned(struct rw_semaphore *sem)
- }
- #endif
+-	long old, count = atomic_long_read(&sem->count);
++	long count = atomic_long_read(&sem->count);
  
-+extern struct rw_semaphore *rwsem_down_read_failed(struct rw_semaphore *sem);
-+extern struct rw_semaphore *rwsem_down_read_failed_killable(struct rw_semaphore *sem);
-+extern struct rw_semaphore *rwsem_down_write_failed(struct rw_semaphore *sem);
-+extern struct rw_semaphore *rwsem_down_write_failed_killable(struct rw_semaphore *sem);
-+extern struct rw_semaphore *rwsem_wake(struct rw_semaphore *sem);
-+extern struct rw_semaphore *rwsem_downgrade_wake(struct rw_semaphore *sem);
-+
- /*
-  * lock for reading
-  */
+-	while (true) {
+-		if (!(count == 0 || count == RWSEM_WAITING_BIAS))
+-			return false;
+-
+-		old = atomic_long_cmpxchg_acquire(&sem->count, count,
+-				      count + RWSEM_ACTIVE_WRITE_BIAS);
+-		if (old == count) {
++	while (!count || count == RWSEM_WAITING_BIAS) {
++		if (atomic_long_try_cmpxchg_acquire(&sem->count, &count,
++					count + RWSEM_ACTIVE_WRITE_BIAS)) {
+ 			rwsem_set_owner(sem);
+ 			return true;
+ 		}
+-
+-		count = old;
+ 	}
++	return false;
+ }
+ 
+ static inline bool owner_on_cpu(struct task_struct *owner)
