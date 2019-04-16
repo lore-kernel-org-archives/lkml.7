@@ -2,219 +2,111 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E407FC282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E9EC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:06:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AEFBE206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:05:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F4234206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:06:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728449AbfDPIFq (ORCPT
+        id S1728451AbfDPIGc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 04:05:46 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:48630 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726277AbfDPIFq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 04:05:46 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id E02F127F05B;
-        Tue, 16 Apr 2019 09:05:43 +0100 (BST)
-Date:   Tue, 16 Apr 2019 10:05:40 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Lorenzo Bianconi <lorenzo.bianconi83@gmail.com>
-Cc:     Vitor Soares <vitor.soares@synopsys.com>,
-        linux-iio@vger.kernel.org, linux-i3c@lists.infradead.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Peter Meerwald-Stadler <pmeerw@pmeerw.net>,
-        Lars-Peter Clausen <lars@metafoo.de>,
-        Hartmut Knaack <knaack.h@gmx.de>,
-        Jonathan Cameron <jic23@kernel.org>, bbrezillon@kernel.org,
-        rafael@kernel.org, gregkh@linuxfoundation.org, broonie@kernel.org,
-        joao.pinto@synopsys.com
-Subject: Re: [PATCH 3/3] iio: imu: st_lsm6dsx: Add i3c basic support
-Message-ID: <20190416100540.7adf1fe5@collabora.com>
-In-Reply-To: <CAA2SeNJ1cTxAp6+5Q4Z5L4VFBfA3U4e11_Obpk8muD1Vh3v52A@mail.gmail.com>
-References: <cover.1555354268.git.vitor.soares@synopsys.com>
-        <302f8296299d6cd25b3689f5eca1c510a3290db3.1555354268.git.vitor.soares@synopsys.com>
-        <20190416082539.2f12b38f@collabora.com>
-        <CAA2SeNJ1cTxAp6+5Q4Z5L4VFBfA3U4e11_Obpk8muD1Vh3v52A@mail.gmail.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 16 Apr 2019 04:06:32 -0400
+Received: from foss.arm.com ([217.140.101.70]:48732 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726277AbfDPIGc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 04:06:32 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8AB57EBD;
+        Tue, 16 Apr 2019 01:06:31 -0700 (PDT)
+Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 672A53F557;
+        Tue, 16 Apr 2019 01:06:30 -0700 (PDT)
+Subject: Re: [PATCH v2] irqchip/gicv3-its: fix some definitions of inner
+ cacheability attributes
+To:     Yao HongBo <yaohongbo@huawei.com>, linuxarm@huawei.com,
+        yangyingliang@huawei.com, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+References: <20190408140103.131554-1-yaohongbo@huawei.com>
+ <311479a8-0d6f-ec17-8f51-a4545e0929b1@huawei.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: ARM Ltd
+Message-ID: <99bf3b0d-1814-7d01-0e25-5fdf6af6df04@arm.com>
+Date:   Tue, 16 Apr 2019 09:06:28 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+In-Reply-To: <311479a8-0d6f-ec17-8f51-a4545e0929b1@huawei.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
 Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Apr 2019 09:58:33 +0200
-Lorenzo Bianconi <lorenzo.bianconi83@gmail.com> wrote:
+Hi Hongbo,
 
-> >
-> > On Mon, 15 Apr 2019 21:19:41 +0200
-> > Vitor Soares <vitor.soares@synopsys.com> wrote:
-> >  
-> > > For today the st_lsm6dsx driver support lsm6dso sensor only in
-> > > spi and i2c mode.
-> > >
-> > > The lsm6dso is also i3c capable so lets give i3c support to it.
-> > >
-> > > Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
-> > > ---
-> > >  drivers/iio/imu/st_lsm6dsx/Kconfig          |  8 +++-
-> > >  drivers/iio/imu/st_lsm6dsx/Makefile         |  1 +
-> > >  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c | 67 +++++++++++++++++++++++++++++
-> > >  3 files changed, 75 insertions(+), 1 deletion(-)
-> > >  create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c
-> > >
-> > > diff --git a/drivers/iio/imu/st_lsm6dsx/Kconfig b/drivers/iio/imu/st_lsm6dsx/Kconfig
-> > > index 094fd00..1ab9bbf 100644
-> > > --- a/drivers/iio/imu/st_lsm6dsx/Kconfig
-> > > +++ b/drivers/iio/imu/st_lsm6dsx/Kconfig
-> > > @@ -1,11 +1,12 @@
-> > >
-> > >  config IIO_ST_LSM6DSX
-> > >       tristate "ST_LSM6DSx driver for STM 6-axis IMU MEMS sensors"
-> > > -     depends on (I2C || SPI)
-> > > +     depends on (I2C || SPI || I3C)
-> > >       select IIO_BUFFER
-> > >       select IIO_KFIFO_BUF
-> > >       select IIO_ST_LSM6DSX_I2C if (I2C)
-> > >       select IIO_ST_LSM6DSX_SPI if (SPI_MASTER)
-> > > +     select IIO_ST_LSM6DSX_I3C if (I3C)
-> > >       help
-> > >         Say yes here to build support for STMicroelectronics LSM6DSx imu
-> > >         sensor. Supported devices: lsm6ds3, lsm6ds3h, lsm6dsl, lsm6dsm,
-> > > @@ -23,3 +24,8 @@ config IIO_ST_LSM6DSX_SPI
-> > >       tristate
-> > >       depends on IIO_ST_LSM6DSX
-> > >       select REGMAP_SPI
-> > > +
-> > > +config IIO_ST_LSM6DSX_I3C
-> > > +     tristate
-> > > +     depends on IIO_ST_LSM6DSX
-> > > +     select REGMAP_I3C
-> > > diff --git a/drivers/iio/imu/st_lsm6dsx/Makefile b/drivers/iio/imu/st_lsm6dsx/Makefile
-> > > index e5f733c..c676965 100644
-> > > --- a/drivers/iio/imu/st_lsm6dsx/Makefile
-> > > +++ b/drivers/iio/imu/st_lsm6dsx/Makefile
-> > > @@ -4,3 +4,4 @@ st_lsm6dsx-y := st_lsm6dsx_core.o st_lsm6dsx_buffer.o \
-> > >  obj-$(CONFIG_IIO_ST_LSM6DSX) += st_lsm6dsx.o
-> > >  obj-$(CONFIG_IIO_ST_LSM6DSX_I2C) += st_lsm6dsx_i2c.o
-> > >  obj-$(CONFIG_IIO_ST_LSM6DSX_SPI) += st_lsm6dsx_spi.o
-> > > +obj-$(CONFIG_IIO_ST_LSM6DSX_I3C) += st_lsm6dsx_i3c.o
-> > > diff --git a/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c
-> > > new file mode 100644
-> > > index 0000000..2df5e70
-> > > --- /dev/null
-> > > +++ b/drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c
-> > > @@ -0,0 +1,67 @@
-> > > +// SPDX-License-Identifier: GPL-2.0
-> > > +/*
-> > > + * Copyright (c) 2018 Synopsys, Inc. and/or its affiliates.
-> > > + *
-> > > + * Author: Vitor Soares <vitor.soares@synopsys.com>
-> > > + */
-> > > +
-> > > +#include <linux/kernel.h>
-> > > +#include <linux/module.h>
-> > > +#include <linux/i3c/device.h>
-> > > +#include <linux/i3c/master.h>
-> > > +#include <linux/slab.h>
-> > > +#include <linux/of.h>
-> > > +#include <linux/regmap.h>
-> > > +
-> > > +#include "st_lsm6dsx.h"
-> > > +
-> > > +#define NAME_SIZE    32
-> > > +
-> > > +struct st_lsm6dsx_i3c_data {
-> > > +     char name[NAME_SIZE];  
-> >
-> >         const char *name;
-> >  
-> > > +     enum st_lsm6dsx_hw_id id;
-> > > +};
-> > > +
-> > > +static const struct st_lsm6dsx_i3c_data hw_data[] = {  
-> >
-> > No need to make it an array, and it should probably be named
-> > st_lsm6dso_data not hw_data.  
+On 16/04/2019 02:14, Yao HongBo wrote:
+> Hi Marc,
 > 
-> I guess it will be used even for future devices so I would prefer to
-> make it an array with a 'general' name
+> sorry for ping you...
+> 
+> What's your suggestion for this patch? I look forward to your reply.
 
-I find it more error-prone to reference an array with an opaque index
-number than reference an instance with a name that clearly reflects
-what HW it describes (see the I3C_DEVICE() entry at the end of the
-driver), but okay.
+This patch looks fine, although it doesn't fix anything as far as I know
+(doing write-through instead of write-back cannot lead to any data loss,
+and nobody reported any performance issue because of this typo).
 
-> 
-> Regards,
-> Lorenzo
-> 
-> >  
-> > > +     { ST_LSM6DSO_DEV_NAME, ST_LSM6DSO_ID },
-> > > +};
-> > > +
-> > > +static const struct regmap_config st_lsm6dsx_i3c_regmap_config = {
-> > > +     .reg_bits = 8,
-> > > +     .val_bits = 8,
-> > > +};
-> > > +
-> > > +static int st_lsm6dsx_i3c_probe(struct i3c_device *i3cdev)
-> > > +{
-> > > +     const struct i3c_device_id *id = i3c_get_device_id(i3cdev);  
-> >
-> >                                          i3c_device_match_id(i3cdev,
-> >                                                              st_lsm6dsx_i3c_ids);
-> >  
-> > > +     const struct st_lsm6dsx_i3c_data *hw_data = id->data;
-> > > +     struct regmap *regmap;
-> > > +
-> > > +     regmap = devm_regmap_init_i3c(i3cdev, &st_lsm6dsx_i3c_regmap_config);
-> > > +     if (IS_ERR(regmap)) {
-> > > +             dev_err(&i3cdev->dev, "Failed to register i3c regmap %d\n",
-> > > +                     (int)PTR_ERR(regmap));
-> > > +             return PTR_ERR(regmap);
-> > > +     }
-> > > +
-> > > +     return st_lsm6dsx_probe(&i3cdev->dev, 0, hw_data->id,
-> > > +                             hw_data->name, regmap);
-> > > +}
-> > > +
-> > > +
-> > > +static const struct i3c_device_id st_lsm6dsx_i3c_ids[] = {
-> > > +     I3C_DEVICE(0x0104, 0x006C, &hw_data[0]),
-> > > +     { /* sentinel */ },
-> > > +};
-> > > +MODULE_DEVICE_TABLE(i3c, st_lsm6dsx_i3c_ids);
-> > > +
-> > > +static struct i3c_driver st_lsm6dsx_driver = {
-> > > +     .driver.name = "st_lsm6dsx_i3c",
-> > > +     .probe = st_lsm6dsx_i3c_probe,
-> > > +     .id_table = st_lsm6dsx_i3c_ids,  
-> >
-> > You should probably set the pm_ops here (st_lsm6dsx_pm_ops).
-> >  
-> > > +};
-> > > +module_i3c_driver(st_lsm6dsx_driver);
-> > > +
-> > > +MODULE_AUTHOR("Vitor Soares <vitor.soares@synopsys.com>");
-> > > +MODULE_DESCRIPTION("STMicroelectronics st_lsm6dsx i3c driver");
-> > > +MODULE_LICENSE("GPL v2");
-> > > +  
-> >
-> > You can remove this blank line.
-> >  
-> 
-> 
+I plan to queue it for 5.2.
 
+Thanks,
+
+	M.
+-- 
+Jazz is not dead. It just smells funny...
