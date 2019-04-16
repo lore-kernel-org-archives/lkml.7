@@ -2,144 +2,135 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B5FC2C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:11:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C68DC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:12:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86297206B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:11:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B311205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:12:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=web.de header.i=@web.de header.b="Ah93HE3/"
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Jytk2YQA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729875AbfDPQLl (ORCPT
+        id S1729879AbfDPQMj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 12:11:41 -0400
-Received: from mout.web.de ([212.227.17.11]:32913 "EHLO mout.web.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728213AbfDPQLk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 12:11:40 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=web.de;
-        s=dbaedf251592; t=1555430960;
-        bh=0JYnvf64ENF937ejRJiimDrz7qQKiPdYGHBDEYD0nE0=;
-        h=X-UI-Sender-Class:To:Cc:References:Subject:From:Date:In-Reply-To;
-        b=Ah93HE3/X4A67jFQWkyPwbBsgqiTEWkbnlFSCRXGe2fIJTvnNLkeH/3WuPkC9B43Y
-         G99Mg0j7TlLvc3QCG1Rk6ZICQlpJTMdWT3dNVd5v6m4CFSXAmLjLiGrKNog8rwpoi2
-         R7e472ghEXjsxFQ+V7F9mGYi+mhV09MFCYOAvxlM=
-X-UI-Sender-Class: c548c8c5-30a9-4db5-a2e7-cb6cb037b8f9
-Received: from [192.168.1.3] ([2.244.159.183]) by smtp.web.de (mrweb101
- [213.165.67.124]) with ESMTPSA (Nemesis) id 0M25FH-1h15ch0NYp-00u5uO; Tue, 16
- Apr 2019 18:09:20 +0200
-To:     Nicholas Mc Guire <hofrat@osadl.org>,
-        Russell King <linux@armlinux.org.uk>, linux@armlinux.org.uk
-Cc:     Fabio Estevam <festevam@gmail.com>,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Mark Brown <broonie@kernel.org>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Tony Lindgren <tony@atomide.com>, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org, kernel@pengutronix.de
-References: <1555139666-948-11-git-send-email-hofrat@osadl.org>
-Subject: Re: [2/3] ARM: hisi: check of_iomap and fix missing of_node_put
-From:   Markus Elfring <Markus.Elfring@web.de>
-Openpgp: preference=signencrypt
-Autocrypt: addr=Markus.Elfring@web.de; prefer-encrypt=mutual; keydata=
- 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 FEE=
-Message-ID: <7d17a344-770d-c9a9-8d2b-d7907997ef49@web.de>
-Date:   Tue, 16 Apr 2019 18:09:17 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 16 Apr 2019 12:12:39 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:13037 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726037AbfDPQMi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 12:12:38 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cb5fee20000>; Tue, 16 Apr 2019 09:12:18 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 16 Apr 2019 09:12:37 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 16 Apr 2019 09:12:37 -0700
+Received: from [10.2.164.200] (10.124.1.5) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 16 Apr
+ 2019 16:12:35 +0000
+From:   Zi Yan <ziy@nvidia.com>
+To:     Dave Hansen <dave.hansen@intel.com>
+CC:     Michal Hocko <mhocko@kernel.org>,
+        Yang Shi <yang.shi@linux.alibaba.com>,
+        <mgorman@techsingularity.net>, <riel@surriel.com>,
+        <hannes@cmpxchg.org>, <akpm@linux-foundation.org>,
+        <keith.busch@intel.com>, <dan.j.williams@intel.com>,
+        <fengguang.wu@intel.com>, <fan.du@intel.com>,
+        <ying.huang@intel.com>, <linux-mm@kvack.org>,
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [v2 RFC PATCH 0/9] Another Approach to Use PMEM as NUMA Node
+Date:   Tue, 16 Apr 2019 12:12:33 -0400
+X-Mailer: MailMate (1.12.4r5622)
+Message-ID: <027AE219-8C81-47DC-A241-4209C3F656A0@nvidia.com>
+In-Reply-To: <63514bdd-313b-d42f-e582-f8cb350d0b35@intel.com>
+References: <1554955019-29472-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190412084702.GD13373@dhcp22.suse.cz>
+ <a68137bb-dcd8-4e4a-b3a9-69a66f9dccaf@linux.alibaba.com>
+ <20190416074714.GD11561@dhcp22.suse.cz>
+ <b9b40585-cb59-3d42-bcf8-e59bff77c663@intel.com>
+ <960F3918-7D2C-463C-A911-9B62CD7E5D83@nvidia.com>
+ <63514bdd-313b-d42f-e582-f8cb350d0b35@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <1555139666-948-11-git-send-email-hofrat@osadl.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: quoted-printable
-X-Provags-ID: V03:K1:zy9zujMe0XOd3KHJ9A0ROO+WHXHHuBHPKSK8a+LbWLiIa9DfDiX
- m6YIdZY1Pd/UM6l6DJyVQe1FR8MTRDtXK9oKuwS3AOkFcDSHtxUxtMmnfPHemR8lw1mqTPw
- HsFGi9xzdoIX9oRnRLZYcFo+0vvoj9xs6wkuP6uinL+pOoxDkPq/2y0AWChZ6k8YWOvrNTx
- 38NDAeL7kZ4m9YM0H9HkQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:1wOjl2UPsdk=:fvbkWBVRXzyiBTAxoK4NAQ
- PCWSySmRkDTyI7nB8JRWIT3xfUTh2T3ScDJaPEjb1qhN21WGPc9Po/Wvyt0buWrmkv6oYtus5
- gvUwv8wqrEZxcN3fA0GUXCyYXwabx4rGzDk7VeNiikiTVYccBpCrcAkHq0kWI1gEpoCYtZ459
- vY5+vA/8jIWs1AuBOesMpHp8XkP2D3eQVH6VWh1sMWmvx8YNX+GDYfUbYe0lS/bf3deeuadTT
- HWzUcRtVEJUlLFpFfqSya1+vHb67E8XeH9UgECDwBeNmkdimC3HGfQTcqy9a0mYa7cCkHltij
- M8PTxnHa2qAgaPZyqKzcDmOwH3NxXexa54xJ88LSXPN0/Kd0MzwEdk3Om0ZmL0aURNpqnN7UQ
- qVIHfD+uxaQ/CgcWdGmNdya8CyhXi+ubZB3Qx7a1TXgYcsga96KdiyLzsCTYvOa7XjycDiUFC
- ivr+3XgcgG5csoD2cAB4ktOjDX6PWUqueib+JpkqY39JB/cDoqYCHnHOdn7oPp48CtxopQWCn
- 89pIui+eePskWhkM1B7Jswm6JYmTHsJkbJNvcDuFKetVZJPpQVnXN0TD4qwdjR8JgZ71IgX4y
- gVD8qTYlFSKBp3MLeXPBXw9vUXzhD4p6Z9NFnK1TKwZwfWZaqpZM+3nGDd/v7I/Pa6ADNiTcB
- GS2UXT5KS9XCt48ptUhj2MhuRSAuIfXwQch0BZ89ZetoEkTDmCty4SdEI6URHwgZvYyffvIF5
- 5RecKfeAL975MsllmlhXQb0FC3aUofeZtDe6huIP2Ov3iHAcnbyJejumRccN0R8epjUPxGHF1
- RalYjxIjHaeYd/YIjkYBcvLaNB/SOGd6+pKYzkfFuxzjbPAVImaEZM4uGcEUj0Ol0XdOA/TzE
- kafTCB0DnZ0bOzZeCRDfYtqVSck1px+CKY/91l0jV8Fd8FqYyOZ4qbpBk8upqoW67CBzy8gSh
- WNrjTTeQStQ==
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: multipart/signed;
+        boundary="=_MailMate_D57647AE-4DA1-4C9B-AEDB-C24F26D9FE9B_=";
+        micalg=pgp-sha1; protocol="application/pgp-signature"
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1555431138; bh=0qG+gTlRQll235954BIuhS7cER94zkwgbFGR8CUs9fc=;
+        h=X-PGP-Universal:From:To:CC:Subject:Date:X-Mailer:Message-ID:
+         In-Reply-To:References:MIME-Version:X-Originating-IP:
+         X-ClientProxiedBy:Content-Type;
+        b=Jytk2YQA8nNJaUP8MgkVSmxdjPUeN9yqd1byaO9hk5gSDhMap8lTMNVOHtgdc1t4A
+         tdw0Ew8E0ETmE3zhpdhDUURSrICP3fjpQnG+16DTk75JmSVaUMlrgKFXdpbRMPo6fu
+         JxU3y7l9J3B8fFCNUgzpHhHUIg3oWhWwmmncSpoStJUmfg87NzfyByFXbbPMG1qJNy
+         2/JtTWTVQrpqC/6vbuArQjJX4nl2VCGdILF8gjxMdqzEoQBPLkIHfbW0MsbN7tqzp9
+         YS52pK3hp/dC5Cs8PTS2pnVOuGfmzhZCcsVRg5aV35F/qYhCrNy0apuKbAvguz24wV
+         CFrezbmidOTcw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> +++ b/arch/arm/mach-hisi/hotplug.c
-> @@ -173,11 +173,15 @@  static bool hix5hd2_hotplug_init(void)
-=E2=80=A6
-> +	ctrl_base =3D of_iomap(np, 0);
-> +	of_node_put(np);
-> +	if (!ctrl_base)
-> +		return false;
-> +
-> +	return true;
->  }
+--=_MailMate_D57647AE-4DA1-4C9B-AEDB-C24F26D9FE9B_=
+Content-Type: text/plain; markup=markdown
+
+On 16 Apr 2019, at 11:55, Dave Hansen wrote:
+
+> On 4/16/19 8:33 AM, Zi Yan wrote:
+>>> We have a reasonable argument that demotion is better than
+>>> swapping. So, we could say that even if a VMA has a strict NUMA
+>>> policy, demoting pages mapped there pages still beats swapping
+>>> them or tossing the page cache.  It's doing them a favor to
+>>> demote them.
+>> I just wonder whether page migration is always better than
+>> swapping, since SSD write throughput keeps improving but page
+>> migration throughput is still low. For example, my machine has a
+>> SSD with 2GB/s writing throughput but the throughput of 4KB page
+>> migration is less than 1GB/s, why do we want to use page migration
+>> for demotion instead of swapping?
 >
->  void hix5hd2_set_cpu(int cpu, bool enable)
+> Just because we observe that page migration apparently has lower
+> throughput today doesn't mean that we should consider it a dead end.
 
-Would the use of a ternary operator be more succinct here?
+I definitely agree. I also want to make the point that we might
+want to improve page migration as well to show that demotion via
+page migration will work. Since most of proposed demotion approaches
+use the same page replacement policy as swapping, if we do not have
+high-throughput page migration, we might draw false conclusions that
+demotion is no better than swapping but demotion can actually do
+much better. :)
 
-+	return ctrl_base ? true : false;
+--
+Best Regards,
+Yan Zi
 
-Regards,
-Markus
+--=_MailMate_D57647AE-4DA1-4C9B-AEDB-C24F26D9FE9B_=
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQJDBAEBAgAtFiEEh7yFAW3gwjwQ4C9anbJR82th+ooFAly1/vEPHHppeUBudmlk
+aWEuY29tAAoJEJ2yUfNrYfqKz9gP/13w9KgpJ81vf8ZHTOonc/BRsQrT+aFB48qF
+eFtTeeHBW7Rr5NWBjbAzFb9SkQyWCCRHMjf6wv0qqy0NWAzAGZISf5nQDfz/++vh
+j9hC7Auj8moROyrh2uXoyUGfYiRQozS2xP0idz+EGGT5G2UKRdSFLLEW4KxrAqYO
+rXezQTPLeHv4exlslF/eXuod6miV1Sq6NOSy/FbrgV6CHDPwM4NL6mBeQZHfM3Xa
+mF0CtvRhYjDR+dO/SRQkpJYs1+GbADzH23BT0wx7nUQ3mUciO2rgdizHePQllx9I
+AmDxgjjkiFjWObnkWHx5hKZ3i1Uiu9nislABm7oPsAK5qa4TvXsjHthuet5l4vc6
+s4m9aMI0ehz0yI4hGKUUYnRoWTPcbfvni8NuFfdmBxmpIgAmaBd6LS7WSbIF9Df2
+V/w0aVSI8mDHVl/9Fa+pVZQ4HJTymPD7BkNphTF692VukYVMDMaQCne3rmXotEe3
+T4Bs1MYY13ezs3VuXKymzXjjiGpML+nGBzvzj9s/Itwhk2jQXIUw2sJDaTlD6fL3
+/kbavQFu/jmpi6BF76CVSMbScnGO0hGZ+Gxhp/L55BO35cbLI/eBzbaNDNqe0z2O
+Cm4PhLlV7cOVUdaVGkkWmJ/t/NEfPtuXP85m8Suww6hfSmGBT/G/idOFIDylWBqs
+YORU6ksO
+=Car9
+-----END PGP SIGNATURE-----
+
+--=_MailMate_D57647AE-4DA1-4C9B-AEDB-C24F26D9FE9B_=--
