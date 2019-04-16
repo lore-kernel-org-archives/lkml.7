@@ -2,30 +2,29 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FBAEC10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 02:59:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CEB14C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 02:59:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C849820656
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 02:59:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 92D8520656
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 02:59:16 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555383547;
-	bh=kBIetTC1Yl5IRnekNreYadLi0Xt5VSa5z0CDFlDWJZQ=;
+	s=default; t=1555383556;
+	bh=PdofOu39qXQguo1jLQeMZJx5726DfkLbFOrhVjpqNe4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DTzJAbZB5Zh99qLO7567vUjNGfNsmLKsc5Ycr2ytnNcT1YdpSRvL/GFHBc+hKmjqI
-	 ZO6UmMg4FpsQ4pleYRJvuBz5MYow+vgY11ufCix/idQpw5GK37TUuL1qFVUdkOX2k9
-	 Y+gRRLL1/o9/cFynO0Y1kjLKMBaAhzywiLgTEjlA=
+	b=WosaMaU4rbF0D1AAoMvfIf4o7woSmxfWlHwNQXM44WDIgCWkTI7nI5wlMUWEQOiFP
+	 LO3CT3UAz8MmCIKm/s9k+YsOUxbzIW/uAD27cqf2/tmZ3xrB//CsCIczsSxPWvf+QP
+	 7LkMk2Nequc8JgJgJhCSAK6xvmhsoyxJFH/7/kQc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728708AbfDPC7F (ORCPT
+        id S1728738AbfDPC7P (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 22:59:05 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44336 "EHLO
+        Mon, 15 Apr 2019 22:59:15 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44380 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726836AbfDPC4e (ORCPT
+        with ESMTP id S1726853AbfDPC4e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 15 Apr 2019 22:56:34 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,26 +33,26 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=EKiphOA5JLu/7fhR7E9Q5hf4/ZsZYNJ2IBTR3LUVguU=; b=bN0qAVfKewa/UC0oYoF4vCaVI2
-        gdwKI0ar7JhOtmqinEEY7AyV3iznEd3tfw29+A5+PzpdYZc3/vHXpYoc/p3S5fxewEeUcfnWUucSf
-        jiCnqSr7kCTW7lkgH9nILwYO53sydK/R+3+HyliwyKMkYVk3hN6tmnAs73QXSGHft8IGovV15oDia
-        OvEc/Y026jzlrhUo6tuhCm8GUVFzKouNV1llCsSHjAJL2o4MnAh3ToXjzf03BNhFvzzIOc24xRjY+
-        fwZFxNy95RxpPSbWXe5qFVBHW68SRhhTZc1jCPIt1jsSIdE1hP1Kl4QRAQPMP/EVp9eaPfA4Fojzq
-        BCNYW6Ng==;
+        bh=+vygoZ5EUW1rBt8cw5VwfwfAzBUT8ra0kPS/Fyx1btU=; b=RLejosvSBqvqovTBJ00AQ7nA+b
+        jP2OQFPtnragxi2YBDTUqiB3+EAtdeV3PeElk8kIx8e+EV/EbPe8AivN2d6OVuopCYtbOqb9kVZZi
+        ChvU9DUGMeKP/FYUJAI4R74kuehpHRO0KQY4wuqHtkJJ5NXcJ//gcSu9IzITXzA0zLBz9kurCMAki
+        7CkjIV/Z512xuE/Pvj4iYJC7B63otzdmMrUMsHCk59d/9tk1eodDvQnVc/pEJlJvDFDuXimy3UR5d
+        unt+2qv9hOIWLzEhldGj7ocb7GuWzJaXiB5hrid0wE/Gx0pRkbVS67VsHTtliqL/mUsgjzoDfVhKK
+        VbTVcKKA==;
 Received: from 177.205.118.176.dynamic.adsl.gvt.net.br ([177.205.118.176] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hGEGu-0007ai-N3; Tue, 16 Apr 2019 02:56:32 +0000
+        id 1hGEGv-0007aN-Am; Tue, 16 Apr 2019 02:56:33 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hGEGn-0001nw-KP; Mon, 15 Apr 2019 23:56:25 -0300
+        id 1hGEGo-0001qO-Fh; Mon, 15 Apr 2019 23:56:26 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 27/57] docs: pps/pps.txt convert it to ReST and move to API book
-Date:   Mon, 15 Apr 2019 23:55:52 -0300
-Message-Id: <0d3ebd1dec9baec2f1d6cb08f86623bd5ef13139.1555382110.git.mchehab+samsung@kernel.org>
+Subject: [PATCH 56/57] docs: phy: convert samsung-usb2.txt to ReST format
+Date:   Mon, 15 Apr 2019 23:56:21 -0300
+Message-Id: <3cc9e974c100a5e92da7fca7d3aee352d0d8a68d.1555382110.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1555382110.git.mchehab+samsung@kernel.org>
 References: <cover.1555382110.git.mchehab+samsung@kernel.org>
@@ -64,155 +63,152 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This file is already in a good shape: just its title and
-adding some literal block markups is needed for it to be
-part of the document.
-
-While it has a small chapter with sysfs stuff, most of
-the document is focused on driver development.
+In order to merge it into a Sphinx book, we need first to
+convert to ReST.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/pps/pps.txt | 67 ++++++++++++++++++++-------------------
- 1 file changed, 34 insertions(+), 33 deletions(-)
+ Documentation/phy/samsung-usb2.txt | 60 +++++++++++++++---------------
+ 1 file changed, 31 insertions(+), 29 deletions(-)
 
-diff --git a/Documentation/pps/pps.txt b/Documentation/pps/pps.txt
-index 99f5d8c4c652..262151a6dad5 100644
---- a/Documentation/pps/pps.txt
-+++ b/Documentation/pps/pps.txt
-@@ -1,8 +1,8 @@
-+======================
-+PPS - Pulse Per Second
-+======================
+diff --git a/Documentation/phy/samsung-usb2.txt b/Documentation/phy/samsung-usb2.txt
+index ed12d437189d..c48c8b9797b9 100644
+--- a/Documentation/phy/samsung-usb2.txt
++++ b/Documentation/phy/samsung-usb2.txt
+@@ -1,9 +1,9 @@
+-.------------------------------------------------------------------------------+
+-|			Samsung USB 2.0 PHY adaptation layer		       |
+-+-----------------------------------------------------------------------------+'
++====================================
++Samsung USB 2.0 PHY adaptation layer
++====================================
  
--			PPS - Pulse Per Second
--			----------------------
--
--(C) Copyright 2007 Rodolfo Giometti <giometti@enneenne.com>
-+Copyright (C) 2007 Rodolfo Giometti <giometti@enneenne.com>
+-| 1. Description
+-+----------------
++1. Description
++--------------
  
- This program is free software; you can redistribute it and/or modify
- it under the terms of the GNU General Public License as published by
-@@ -88,7 +88,7 @@ Coding example
- --------------
+ The architecture of the USB 2.0 PHY module in Samsung SoCs is similar
+ among many SoCs. In spite of the similarities it proved difficult to
+@@ -14,8 +14,8 @@ the PHY powering up process had to be altered. This adaptation layer is
+ a compromise between having separate drivers and having a single driver
+ with added support for many special cases.
  
- To register a PPS source into the kernel you should define a struct
--pps_source_info as follows:
-+pps_source_info as follows::
+-| 2. Files description
+-+----------------------
++2. Files description
++--------------------
  
-     static struct pps_source_info pps_ktimer_info = {
- 	    .name         = "ktimer",
-@@ -101,12 +101,12 @@ pps_source_info as follows:
-     };
+ - phy-samsung-usb2.c
+    This is the main file of the adaptation layer. This file contains
+@@ -32,44 +32,45 @@ with added support for many special cases.
+    driver. In addition it should contain extern declarations for
+    structures that describe particular SoCs.
  
- and then calling the function pps_register_source() in your
--initialization routine as follows:
-+initialization routine as follows::
+-| 3. Supporting SoCs
+-+--------------------
++3. Supporting SoCs
++------------------
  
-     source = pps_register_source(&pps_ktimer_info,
- 			PPS_CAPTUREASSERT | PPS_OFFSETASSERT);
+ To support a new SoC a new file should be added to the drivers/phy
+ directory. Each SoC's configuration is stored in an instance of the
+-struct samsung_usb2_phy_config.
++struct samsung_usb2_phy_config::
  
--The pps_register_source() prototype is:
-+The pps_register_source() prototype is::
+-struct samsung_usb2_phy_config {
++  struct samsung_usb2_phy_config {
+ 	const struct samsung_usb2_common_phy *phys;
+ 	int (*rate_to_clk)(unsigned long, u32 *);
+ 	unsigned int num_phys;
+ 	bool has_mode_switch;
+-};
++  };
  
-   int pps_register_source(struct pps_source_info *info, int default_params)
+-The num_phys is the number of phys handled by the driver. *phys is an
++The num_phys is the number of phys handled by the driver. `*phys` is an
+ array that contains the configuration for each phy. The has_mode_switch
+ property is a boolean flag that determines whether the SoC has USB host
+ and device on a single pair of pins. If so, a special register has to
+ be modified to change the internal routing of these pins between a USB
+ device or host module.
  
-@@ -118,7 +118,7 @@ pps_source_info which describe the capabilities of the driver).
+-For example the configuration for Exynos 4210 is following:
++For example the configuration for Exynos 4210 is following::
  
- Once you have registered a new PPS source into the system you can
- signal an assert event (for example in the interrupt handler routine)
--just using:
-+just using::
- 
-     pps_event(source, &ts, PPS_CAPTUREASSERT, ptr)
- 
-@@ -134,13 +134,13 @@ Please see the file drivers/pps/clients/pps-ktimer.c for example code.
- SYSFS support
- -------------
- 
--If the SYSFS filesystem is enabled in the kernel it provides a new class:
-+If the SYSFS filesystem is enabled in the kernel it provides a new class::
- 
-    $ ls /sys/class/pps/
-    pps0/  pps1/  pps2/
- 
- Every directory is the ID of a PPS sources defined in the system and
--inside you find several files:
-+inside you find several files::
- 
-    $ ls -F /sys/class/pps/pps0/
-    assert     dev        mode       path       subsystem@
-@@ -148,7 +148,7 @@ inside you find several files:
- 
- 
- Inside each "assert" and "clear" file you can find the timestamp and a
--sequence number:
-+sequence number::
- 
-    $ cat /sys/class/pps/pps0/assert
-    1170026870.983207967#8
-@@ -175,11 +175,11 @@ and the userland tools available in your distribution's pps-tools package,
- http://linuxpps.org , or https://github.com/redlab-i/pps-tools.
- 
- Once you have enabled the compilation of pps-ktimer just modprobe it (if
--not statically compiled):
-+not statically compiled)::
- 
-    # modprobe pps-ktimer
- 
--and the run ppstest as follow:
-+and the run ppstest as follow::
- 
-    $ ./ppstest /dev/pps1
-    trying PPS source "/dev/pps1"
-@@ -204,26 +204,27 @@ nor affordable. The cheap way is to load a PPS generator on one of the
- computers (master) and PPS clients on others (slaves), and use very simple
- cables to deliver signals using parallel ports, for example.
- 
--Parallel port cable pinout:
--pin	name	master      slave
--1	STROBE	  *------     *
--2	D0	  *     |     *
--3	D1	  *     |     *
--4	D2	  *     |     *
--5	D3	  *     |     *
--6	D4	  *     |     *
--7	D5	  *     |     *
--8	D6	  *     |     *
--9	D7	  *     |     *
--10	ACK	  *     ------*
--11	BUSY	  *           *
--12	PE	  *           *
--13	SEL	  *           *
--14	AUTOFD	  *           *
--15	ERROR	  *           *
--16	INIT	  *           *
--17	SELIN	  *           *
--18-25	GND	  *-----------*
-+Parallel port cable pinout::
+-const struct samsung_usb2_phy_config exynos4210_usb2_phy_config = {
++  const struct samsung_usb2_phy_config exynos4210_usb2_phy_config = {
+ 	.has_mode_switch        = 0,
+ 	.num_phys		= EXYNOS4210_NUM_PHYS,
+ 	.phys			= exynos4210_phys,
+ 	.rate_to_clk		= exynos4210_rate_to_clk,
+-}
++  }
 +
-+	pin	name	master      slave
-+	1	STROBE	  *------     *
-+	2	D0	  *     |     *
-+	3	D1	  *     |     *
-+	4	D2	  *     |     *
-+	5	D3	  *     |     *
-+	6	D4	  *     |     *
-+	7	D5	  *     |     *
-+	8	D6	  *     |     *
-+	9	D7	  *     |     *
-+	10	ACK	  *     ------*
-+	11	BUSY	  *           *
-+	12	PE	  *           *
-+	13	SEL	  *           *
-+	14	AUTOFD	  *           *
-+	15	ERROR	  *           *
-+	16	INIT	  *           *
-+	17	SELIN	  *           *
-+	18-25	GND	  *-----------*
++- `int (*rate_to_clk)(unsigned long, u32 *)`
  
- Please note that parallel port interrupt occurs only on high->low transition,
- so it is used for PPS assert edge. PPS clear edge can be determined only
+-- int (*rate_to_clk)(unsigned long, u32 *)
+ 	The rate_to_clk callback is to convert the rate of the clock
+ 	used as the reference clock for the PHY module to the value
+ 	that should be written in the hardware register.
+ 
+-The exynos4210_phys configuration array is as follows:
++The exynos4210_phys configuration array is as follows::
+ 
+-static const struct samsung_usb2_common_phy exynos4210_phys[] = {
++  static const struct samsung_usb2_common_phy exynos4210_phys[] = {
+ 	{
+ 		.label		= "device",
+ 		.id		= EXYNOS4210_DEVICE,
+@@ -95,29 +96,30 @@ static const struct samsung_usb2_common_phy exynos4210_phys[] = {
+ 		.power_off	= exynos4210_power_off,
+ 	},
+ 	{},
+-};
++  };
++
++- `int (*power_on)(struct samsung_usb2_phy_instance *);`
++  `int (*power_off)(struct samsung_usb2_phy_instance *);`
+ 
+-- int (*power_on)(struct samsung_usb2_phy_instance *);
+-- int (*power_off)(struct samsung_usb2_phy_instance *);
+ 	These two callbacks are used to power on and power off the phy
+ 	by modifying appropriate registers.
+ 
+ Final change to the driver is adding appropriate compatible value to the
+ phy-samsung-usb2.c file. In case of Exynos 4210 the following lines were
+-added to the struct of_device_id samsung_usb2_phy_of_match[] array:
++added to the struct of_device_id samsung_usb2_phy_of_match[] array::
+ 
+-#ifdef CONFIG_PHY_EXYNOS4210_USB2
++  #ifdef CONFIG_PHY_EXYNOS4210_USB2
+ 	{
+ 		.compatible = "samsung,exynos4210-usb2-phy",
+ 		.data = &exynos4210_usb2_phy_config,
+ 	},
+-#endif
++  #endif
+ 
+ To add further flexibility to the driver the Kconfig file enables to
+ include support for selected SoCs in the compiled driver. The Kconfig
+-entry for Exynos 4210 is following:
++entry for Exynos 4210 is following::
+ 
+-config PHY_EXYNOS4210_USB2
++  config PHY_EXYNOS4210_USB2
+ 	bool "Support for Exynos 4210"
+ 	depends on PHY_SAMSUNG_USB2
+ 	depends on CPU_EXYNOS4210
+@@ -128,8 +130,8 @@ config PHY_EXYNOS4210_USB2
+ 	  phys are available - device, host, HSCI0 and HSCI1.
+ 
+ The newly created file that supports the new SoC has to be also added to the
+-Makefile. In case of Exynos 4210 the added line is following:
++Makefile. In case of Exynos 4210 the added line is following::
+ 
+-obj-$(CONFIG_PHY_EXYNOS4210_USB2)       += phy-exynos4210-usb2.o
++  obj-$(CONFIG_PHY_EXYNOS4210_USB2)       += phy-exynos4210-usb2.o
+ 
+ After completing these steps the support for the new SoC should be ready.
 -- 
 2.20.1
 
