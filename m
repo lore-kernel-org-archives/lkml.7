@@ -2,91 +2,151 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.9 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F11C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:40:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 649CCC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:41:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 320C52064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:40:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V3NZiWFN"
+	by mail.kernel.org (Postfix) with ESMTP id 3E4612064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:41:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730305AbfDPSit (ORCPT
+        id S1730197AbfDPSlk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 14:38:49 -0400
-Received: from mail-wm1-f42.google.com ([209.85.128.42]:38095 "EHLO
-        mail-wm1-f42.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727180AbfDPSis (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 14:38:48 -0400
-Received: by mail-wm1-f42.google.com with SMTP id w15so290671wmc.3;
-        Tue, 16 Apr 2019 11:38:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=aY34jbKMvKXwJq0QH5UMNn6Is3Xuqx1ETNhcjeMB2M8=;
-        b=V3NZiWFNkLwUXO4C+ITIDTipqhwCQmUSoZAI5ZL1aIwX3ps1jbWoZZU0SnBrngRq0l
-         93N9KtLJJziCs/VyxPs7Ydeo20khj+eNN65y0UOcPfAU8cH82bWCLVohfmBjwp/AC2w2
-         EN4HyhI8ZJq1Q1HGIv/fbIK/ITtj4mQSL+0kD92Kx+QdU22oWHkh/GoyDZxAQv236xVJ
-         /y21ikDm3FnemGwIDxULpqpnKGtgtQxyIx0psX8Vn9OlUbVNMzojD1BlJvwycDfRosbD
-         bAx5IVt2d0XLQ54s6s9hmA+IhIagSWQS4cg5b0dhZ/IR8MFpBf4UwHcsuRGb7LrmvsES
-         9qFQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=aY34jbKMvKXwJq0QH5UMNn6Is3Xuqx1ETNhcjeMB2M8=;
-        b=WIgwyEeu+xqljF7lTdktZ6Nlt8suZEMunJYiYQ9z/4sboV8omdya+BERKcslyADDp1
-         DUxvE/oqAdZYM2VisPcNntPaGdPEMwEhhlIHQTRN0nUyg5RifXhPyDJQ3hGldfM8t3zL
-         6l3veKvMb+VJXVgkTluhEm6MzoRAjnhbG74kFam4knFBBorS5dj+ybavqWjTZDhGzqFt
-         xyTqCuTT7UvHu5iih7KWYSEgIFcdOus9P1HevklrvD1Fw5jNNt/dOMFNJb2zetzdRI79
-         0P2vFIr4BCAAAzLvR6shTsSPRJVR/1V69Y/VhjjGCBCxqaKIRn+s3epLb+GWcdUqFKgh
-         9AvA==
-X-Gm-Message-State: APjAAAWFFRLtJTOHCmtqGtuDkXqczF/H7gOu8IlWT5WWIWhAF68k8w0V
-        pO4jmLgIbiswZWZcZzmnFzGGq8Zh
-X-Google-Smtp-Source: APXvYqzi0R5AdofszaHEIuWejJF9Gexx5H/wXrALOcBcRNSLSNnkP6WDlm6QBoh9FeZXapxhVASt+w==
-X-Received: by 2002:a1c:43c2:: with SMTP id q185mr26532146wma.53.1555439926718;
-        Tue, 16 Apr 2019 11:38:46 -0700 (PDT)
-Received: from abel.fritz.box ([2a02:908:1252:fb60:fcfa:e34f:82c0:3f66])
-        by smtp.gmail.com with ESMTPSA id m13sm128823wmg.42.2019.04.16.11.38.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 11:38:46 -0700 (PDT)
-From:   "=?UTF-8?q?Christian=20K=C3=B6nig?=" 
-        <ckoenig.leichtzumerken@gmail.com>
-X-Google-Original-From: =?UTF-8?q?Christian=20K=C3=B6nig?= <christian.koenig@amd.com>
-To:     sumit.semwal@linaro.org, linux-media@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
-        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org
-Subject: dynamic DMA-buf sharing between devices
-Date:   Tue, 16 Apr 2019 20:38:29 +0200
-Message-Id: <20190416183841.1577-1-christian.koenig@amd.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 16 Apr 2019 14:41:40 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36980 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727180AbfDPSlj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 14:41:39 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C2E8DC04AC67;
+        Tue, 16 Apr 2019 18:41:38 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-47.bos.redhat.com [10.18.17.47])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 927A15C1B4;
+        Tue, 16 Apr 2019 18:41:37 +0000 (UTC)
+Subject: Re: [PATCH v4 07/16] locking/rwsem: Implement lock handoff to prevent
+ lock starvation
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+References: <20190413172259.2740-1-longman@redhat.com>
+ <20190413172259.2740-8-longman@redhat.com>
+ <20190416154937.GL12232@hirez.programming.kicks-ass.net>
+ <20190416161522.GR14281@hirez.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ weim8xU=
+Organization: Red Hat
+Message-ID: <d199371e-b232-d34d-a4e7-452a1d929ce6@redhat.com>
+Date:   Tue, 16 Apr 2019 14:41:37 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190416161522.GR14281@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Tue, 16 Apr 2019 18:41:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi everybody,
+On 04/16/2019 12:15 PM, Peter Zijlstra wrote:
+> On Tue, Apr 16, 2019 at 05:49:37PM +0200, Peter Zijlstra wrote:
+>> See, if you first write that function in the form:
+>>
+>> 	long new;
+>>
+>> 	do {
+>> 		new = count | RWSEM_WRITER_LOCKED;
+>>
+>> 		if (count & RWSEM_LOCK_MASK)
+>> 			return false;
+>>
+>> 		if (list_is_singular(&sem->wait_list))
+>> 			new &= ~RWSEM_FLAG_WAITERS;
+>>
+>> 	} while (atomic_long_try_cmpxchg_acquire(&sem->count, &count, new));
+>>
+>> 	rwsem_set_owner(sem);
+>> 	return true;
+>>
+>> And then add the HANDOFF bits like:
+>>
+>> 	long new;
+>>
+>> 	do {
+>> +		bool has_handoff = !!(count & RWSEM_FLAG_HANDOFF);
+>>
+>> +		new = (count | RWSEM_WRITER_LOCKED) & ~RWSEM_FLAG_HANDOFF;
+>>
+>> 		if (count & RWSEM_LOCK_MASK) {
+>> +			if (has_handoff && wstate != WRITER_HANDOFF)
+>> +				return false;
+>> 			new |= RWSEM_FLAG_HANDOFF;
+>> 		}
+>>
+>> +		if (has_handoff && wstate == WRITER_NOT_FIRST)
+>> +			return false;
+>>
+>> 		if (list_is_singular(&sem->wait_list))
+>> 			new &= ~RWSEM_FLAG_WAITERS;
+>>
+>> 	} while (atomic_long_try_cmpxchg_acquire(&sem->count, &count, new));
+> obviously that should be !
+>
 
-core idea in this patch set is that DMA-buf importers can now provide an optional invalidate callback. Using this callback and the reservation object exporters can now avoid pinning DMA-buf memory for a long time while sharing it between devices.
+Right.
 
-I've already send out an older version roughly a year ago, but didn't had time to further look into cleaning this up.
-
-The last time a major problem was that we would had to fix up all drivers implementing DMA-buf at once.
-
-Now I avoid this by allowing mappings to be cached in the DMA-buf attachment and so driver can optionally move over to the new interface one by one.
-
-This is also a prerequisite to my patchset enabling sharing of device memory with DMA-buf.
-
-Please review and/or comment,
-Christian. 
-
-
+-Longman
