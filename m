@@ -2,119 +2,169 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7112C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:17:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E36BC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:19:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75DAC206B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:17:34 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555442254;
-	bh=Gyal0DJBynaOAunz+LSzA+7EJ5fZVwePBNLNCkzk9is=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=aDCX/BPJ8CHeLbUHjcCVOj8OChVgLJLQ/7kSPlX8smjC0qyNQVPOXh/76e3z4oD2i
-	 EqqRYr4CeWGTF6Gg0YHWUdtqVQ4Qgqfn1JgH5W2RJDbOBzYeF7ymnQmIlBfuTFyWns
-	 Bgo5hjLdLzhz9cVmBmGoxTdwdnuDXOYizFDKH0N8=
+	by mail.kernel.org (Postfix) with ESMTP id CF18E206B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:19:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730277AbfDPTRc (ORCPT
+        id S1729489AbfDPTTe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 15:17:32 -0400
-Received: from mail-yb1-f196.google.com ([209.85.219.196]:36718 "EHLO
-        mail-yb1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727180AbfDPTRc (ORCPT
+        Tue, 16 Apr 2019 15:19:34 -0400
+Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:42560 "EHLO
+        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727136AbfDPTTe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 15:17:32 -0400
-Received: by mail-yb1-f196.google.com with SMTP id e76so8193854ybc.3
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 12:17:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=v8LNHinSAWsRwFIAeDbz9HBGrKYVLRo7R09JylxmB0o=;
-        b=OV+0PMnNogS0CKUY/MoNhjHD9MsmHFDoB/ap24DIZmHRGdGikia0A3ajEezOy+GAsJ
-         PnVWtyrz/ZwF5PznqiFLwU1wpgBaQgLspGZWY+o4wn707WlY25KxFMGGy7gcoLHPkzxQ
-         PCfIT9mHMcJW28Z2DOdvh1So2pqxvuFTctVYAvkDx7ujnhcAkNjFVKxNXHCTmv0lFBzO
-         LBs0YE0spWnHprcM5FoLgyrgB5OwYCaJQfUxNWz/ZaT7jfG+LIW+KBarXmjln1aZdCgu
-         3p4opfmIuiB6X7bwCKWlYZ+TGJ1MAL8TxzBJKHnBuWk1ywc67HWigOYSd5BGP5uFVabu
-         rTcw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=v8LNHinSAWsRwFIAeDbz9HBGrKYVLRo7R09JylxmB0o=;
-        b=qfoMSV2NDuMdN4/89yUOWSP7o0L2F+j16IzykmduVh87Kz1Q54FMdM2EQsVuZw2QAe
-         1USrRXKogW+J/uTHZDJXMOL99+fd+2SYfmwOdjs968RgCkMybTOjYONb+AF0BtsIl3RY
-         /WSCQRu3CTEIEY3r208wPPEdeT//AIV1B06X2alJLJoTJljtqBjtmKzJ4FBXzuGCIZ+8
-         ZrROaMi0uPDDWpjUu7UQO1MMjoPCgeJu/r5r2dFjQ0GNQlLlpauuN1Vgl0GBnNNRq+0v
-         TSJUhOn+hCGbaFhvqdyumtIShAwpPhbLcxp1mJCpnQjOekzphj52nVSoGHtMzeQ7N9Kl
-         ZZ9A==
-X-Gm-Message-State: APjAAAVWfPqkl2vPBHqfXIAW0PHoUFZMfWkxHL7AjNPMM7PotYJiW1J2
-        GcPnOSqrS+gZDTFzTtpOduE=
-X-Google-Smtp-Source: APXvYqy0TSHeqXVJzhHz+a1KIAwVc+TNFvPEi2T5Yyc1KyY5zXqm32szj5JvPoV6whTEhXY2N2hpQw==
-X-Received: by 2002:a25:9703:: with SMTP id d3mr55763549ybo.113.1555442250507;
-        Tue, 16 Apr 2019 12:17:30 -0700 (PDT)
-Received: from localhost ([2620:10d:c091:200::c7e0])
-        by smtp.gmail.com with ESMTPSA id y70sm22283236ywy.86.2019.04.16.12.17.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 12:17:29 -0700 (PDT)
-Date:   Tue, 16 Apr 2019 12:17:27 -0700
-From:   Tejun Heo <tj@kernel.org>
-To:     Konstantin Khorenko <khorenko@virtuozzo.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH RFC 1/1] kernfs: keep kernfs node alive for
- __kernfs_remove()
-Message-ID: <20190416191727.GD374014@devbig004.ftw2.facebook.com>
-References: <20190416155335.14627-1-khorenko@virtuozzo.com>
- <20190416155335.14627-2-khorenko@virtuozzo.com>
+        Tue, 16 Apr 2019 15:19:34 -0400
+X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R201e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04407;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0TPUbRVj_1555442364;
+Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TPUbRVj_1555442364)
+          by smtp.aliyun-inc.com(127.0.0.1);
+          Wed, 17 Apr 2019 03:19:27 +0800
+Subject: Re: [v2 RFC PATCH 0/9] Another Approach to Use PMEM as NUMA Node
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     mgorman@techsingularity.net, riel@surriel.com, hannes@cmpxchg.org,
+        akpm@linux-foundation.org, dave.hansen@intel.com,
+        keith.busch@intel.com, dan.j.williams@intel.com,
+        fengguang.wu@intel.com, fan.du@intel.com, ying.huang@intel.com,
+        ziy@nvidia.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+References: <1554955019-29472-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190412084702.GD13373@dhcp22.suse.cz>
+ <a68137bb-dcd8-4e4a-b3a9-69a66f9dccaf@linux.alibaba.com>
+ <20190416074714.GD11561@dhcp22.suse.cz>
+From:   Yang Shi <yang.shi@linux.alibaba.com>
+Message-ID: <876768ad-a63a-99c3-59de-458403f008c4@linux.alibaba.com>
+Date:   Tue, 16 Apr 2019 12:19:21 -0700
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
+ Gecko/20100101 Thunderbird/52.7.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190416155335.14627-2-khorenko@virtuozzo.com>
-User-Agent: Mutt/1.5.21 (2010-09-15)
+In-Reply-To: <20190416074714.GD11561@dhcp22.suse.cz>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 06:53:35PM +0300, Konstantin Khorenko wrote:
-> __kernfs_remove() which is called under kernfs_mutex,
-> assumes nobody kills kernfs node whie it's working on it
-> and "get"s current kernfs node for that.
-> 
-> But we hit a warning in kernfs_get(): kn->counter == 0 already:
->   ------------[ cut here ]------------
->   WARNING: CPU: 2 PID: 63923 at fs/kernfs/dir.c:377 kernfs_get+0x2f/0x40
->   ...
->   Call Trace:
->    [<ffffffffa7f92e67>] dump_stack+0x19/0x1b
->    [<ffffffffa78987b8>] __warn+0xd8/0x100
->    [<ffffffffa78988fd>] warn_slowpath_null+0x1d/0x20
->    [<ffffffffa7aecaff>] kernfs_get+0x2f/0x40
->    [<ffffffffa7aed233>] __kernfs_remove+0x113/0x260
->    [<ffffffffa7aee201>] kernfs_remove+0x21/0x30
->    [<ffffffffa7af1010>] sysfs_remove_dir+0x50/0x80
->    [<ffffffffa7b9fb38>] kobject_del+0x18/0x50
->    [<ffffffffa7a38a4d>] sysfs_slab_remove+0x3d/0x50
->    [<ffffffffa79f1e6b>] do_kmem_cache_release+0x3b/0x70
->    [<ffffffffa79f2aa1>] memcg_destroy_kmem_caches+0xb1/0xf0
->    [<ffffffffa7a4ed5c>] mem_cgroup_css_free+0x4c/0x280
->    [<ffffffffa79377fc>] cgroup_free_fn+0x4c/0x120
->    [<ffffffffa78bc222>] process_one_work+0x182/0x440
->    [<ffffffffa78bd3d6>] worker_thread+0x126/0x3c0
->    [<ffffffffa78c4441>] kthread+0xd1/0xe0
-> 
-> This could be for example because of kernfs_notify_workfn() which
-> does kernfs_put(kn) out of kernfs_mutex held section,
-> so move kernfs_put(kn) under the mutex.
 
-This patch doesn't really make sense to me.  Can you give a more
-concrete scenario where this would help?
 
-Thanks.
+On 4/16/19 12:47 AM, Michal Hocko wrote:
+> On Mon 15-04-19 17:09:07, Yang Shi wrote:
+>>
+>> On 4/12/19 1:47 AM, Michal Hocko wrote:
+>>> On Thu 11-04-19 11:56:50, Yang Shi wrote:
+>>> [...]
+>>>> Design
+>>>> ======
+>>>> Basically, the approach is aimed to spread data from DRAM (closest to local
+>>>> CPU) down further to PMEM and disk (typically assume the lower tier storage
+>>>> is slower, larger and cheaper than the upper tier) by their hotness.  The
+>>>> patchset tries to achieve this goal by doing memory promotion/demotion via
+>>>> NUMA balancing and memory reclaim as what the below diagram shows:
+>>>>
+>>>>       DRAM <--> PMEM <--> Disk
+>>>>         ^                   ^
+>>>>         |-------------------|
+>>>>                  swap
+>>>>
+>>>> When DRAM has memory pressure, demote pages to PMEM via page reclaim path.
+>>>> Then NUMA balancing will promote pages to DRAM as long as the page is referenced
+>>>> again.  The memory pressure on PMEM node would push the inactive pages of PMEM
+>>>> to disk via swap.
+>>>>
+>>>> The promotion/demotion happens only between "primary" nodes (the nodes have
+>>>> both CPU and memory) and PMEM nodes.  No promotion/demotion between PMEM nodes
+>>>> and promotion from DRAM to PMEM and demotion from PMEM to DRAM.
+>>>>
+>>>> The HMAT is effectively going to enforce "cpu-less" nodes for any memory range
+>>>> that has differentiated performance from the conventional memory pool, or
+>>>> differentiated performance for a specific initiator, per Dan Williams.  So,
+>>>> assuming PMEM nodes are cpuless nodes sounds reasonable.
+>>>>
+>>>> However, cpuless nodes might be not PMEM nodes.  But, actually, memory
+>>>> promotion/demotion doesn't care what kind of memory will be the target nodes,
+>>>> it could be DRAM, PMEM or something else, as long as they are the second tier
+>>>> memory (slower, larger and cheaper than regular DRAM), otherwise it sounds
+>>>> pointless to do such demotion.
+>>>>
+>>>> Defined "N_CPU_MEM" nodemask for the nodes which have both CPU and memory in
+>>>> order to distinguish with cpuless nodes (memory only, i.e. PMEM nodes) and
+>>>> memoryless nodes (some architectures, i.e. Power, may have memoryless nodes).
+>>>> Typically, memory allocation would happen on such nodes by default unless
+>>>> cpuless nodes are specified explicitly, cpuless nodes would be just fallback
+>>>> nodes, so they are also as known as "primary" nodes in this patchset.  With
+>>>> two tier memory system (i.e. DRAM + PMEM), this sounds good enough to
+>>>> demonstrate the promotion/demotion approach for now, and this looks more
+>>>> architecture-independent.  But it may be better to construct such node mask
+>>>> by reading hardware information (i.e. HMAT), particularly for more complex
+>>>> memory hierarchy.
+>>> I still believe you are overcomplicating this without a strong reason.
+>>> Why cannot we start simple and build from there? In other words I do not
+>>> think we really need anything like N_CPU_MEM at all.
+>> In this patchset N_CPU_MEM is used to tell us what nodes are cpuless nodes.
+>> They would be the preferred demotion target.  Of course, we could rely on
+>> firmware to just demote to the next best node, but it may be a "preferred"
+>> node, if so I don't see too much benefit achieved by demotion. Am I missing
+>> anything?
+> Why cannot we simply demote in the proximity order? Why do you make
+> cpuless nodes so special? If other close nodes are vacant then just use
+> them.
 
--- 
-tejun
+We could. But, this raises another question, would we prefer to just 
+demote to the next fallback node (just try once), if it is contended, 
+then just swap (i.e. DRAM0 -> PMEM0 -> Swap); or would we prefer to try 
+all the nodes in the fallback order to find the first less contended one 
+(i.e. DRAM0 -> PMEM0 -> DRAM1 -> PMEM1 -> Swap)?
+
+
+|------|     |------| |------|        |------|
+|PMEM0|---|DRAM0| --- CPU0 --- CPU1 --- |DRAM1| --- |PMEM1|
+|------|     |------| |------|       |------|
+
+The first one sounds simpler, and the current implementation does so and 
+this needs find out the closest PMEM node by recognizing cpuless node.
+
+If we prefer go with the second option, it is definitely unnecessary to 
+specialize any node.
+
+>   
+>>> I would expect that the very first attempt wouldn't do much more than
+>>> migrate to-be-reclaimed pages (without an explicit binding) with a
+>> Do you mean respect mempolicy or cpuset when doing demotion? I was wondering
+>> this, but I didn't do so in the current implementation since it may need
+>> walk the rmap to retrieve the mempolicy in the reclaim path. Is there any
+>> easier way to do so?
+> You definitely have to follow policy. You cannot demote to a node which
+> is outside of the cpuset/mempolicy because you are breaking contract
+> expected by the userspace. That implies doing a rmap walk.
+
+OK, however, this may prevent from demoting unmapped page cache since 
+there is no way to find those pages' policy.
+
+And, we have to think about what we should do when the demotion target 
+has conflict with the mempolicy. The easiest way is to just skip those 
+conflict pages in demotion. Or we may have to do the demotion one page 
+by one page instead of migrating a list of pages.
+
+>
+>>> I would also not touch the numa balancing logic at this stage and rather
+>>> see how the current implementation behaves.
+>> I agree we would prefer start from something simpler and see how it works.
+>>
+>> The "twice access" optimization is aimed to reduce the PMEM bandwidth burden
+>> since the bandwidth of PMEM is scarce resource. I did compare "twice access"
+>> to "no twice access", it does save a lot bandwidth for some once-off access
+>> pattern. For example, when running stress test with mmtest's
+>> usemem-stress-numa-compact. The kernel would promote ~600,000 pages with
+>> "twice access" in 4 hours, but it would promote ~80,000,000 pages without
+>> "twice access".
+> I pressume this is a result of a synthetic workload, right? Or do you
+> have any numbers for a real life usecase?
+
+The test just uses usemem.
+
+
