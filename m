@@ -7,82 +7,82 @@ X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE166C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 22:14:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8AB0C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 22:15:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AD14F20880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 22:14:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B583520880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 22:15:15 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="myZIrROz"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ahQf/nJW"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728616AbfDPWOR (ORCPT
+        id S1730623AbfDPWPO (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 18:14:17 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:46944 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726631AbfDPWOQ (ORCPT
+        Tue, 16 Apr 2019 18:15:14 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:34910 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727136AbfDPWPN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 18:14:16 -0400
-Received: by mail-pl1-f193.google.com with SMTP id y6so10985467pll.13;
-        Tue, 16 Apr 2019 15:14:16 -0700 (PDT)
+        Tue, 16 Apr 2019 18:15:13 -0400
+Received: by mail-pl1-f194.google.com with SMTP id w24so11014456plp.2;
+        Tue, 16 Apr 2019 15:15:13 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=sender:date:from:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=F1yzREj0tSjJkhr7RflDEVx09Qn7IdKYGN6THxTDlAA=;
-        b=myZIrROzP1P+4gic7xMy/TnMO6JVyXDmV0DF3PJEDOFURDG2j+5AUKBEYri5zsVHTp
-         WUORnBmoUnELkZizVjwZggJMm9K/Im6GTCOoQ/4LjNhH0nCZ5bU1XbELcrr02HuEqgVh
-         6G933slcHM8qnV0bfS/+uDQ5v440wrqRoyVm/w9rQPa3Unkvnbl+tq56amBAPnSWu+me
-         7MRlP9knaWIRINeN3Ns5MfepKFVzsNUUORa9jflras0FvejlUjjh0HMkerr0cgFtevT8
-         n7yJyot5gzi3FFMs+jjYcSNM8iFi+SHpsBEdaeYr5LlvxYutWtXTG72jVcaPdf1hPX5a
-         ytnQ==
+        bh=lG6ZpAkmVc5/nyfI7ZVe1dVNTtrQrMePTJsNQFI9tc4=;
+        b=ahQf/nJWcetOPpFmYyUMzhGktABMa+/NUUtCrWSttmQhNOf+1vUFB+ia2cZQJBHIV2
+         jmko0AeEBl9tDRpHR63hvWrb/HW9Tkc276Rc0uQJ75nUZ42nBqeJRG2qfGBnyiwSKYNq
+         r2k29q1u5tV0z/rP2qSeDM0S+y8AsWHaXHA/o/F0o9GJxFX0smIvQ7F0x4SKu6MPPhCD
+         dakIKc54jrTlgmNcpiTdDzCGjeDph+vqYjn1nPGX9S7J1sK9WjlMi9PAatRBmdUlWEjn
+         a0qRxnVVSO9kzvDLHlkPpk3lECGnWFeZZno3sWiG60nJIy5wdmeiek/nswqKeqOUuzZg
+         0yuQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
          :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=F1yzREj0tSjJkhr7RflDEVx09Qn7IdKYGN6THxTDlAA=;
-        b=J5VCRwCC6D3ySzriP80QfkNJBtWqa0uLfwQeefJ/QGh51FaTQC+kTdaIO2RlFty2mM
-         42QvNhgJpnNJzTQyDPnIRV852A7diMOZ3bnYXDNVY3flCYuioY+KrQgWHwuDB85Tjv/K
-         ZDcpv4UMQ3IoZCNfRd7pFlUn5Ka0CiHcMebU2BCFq+MTeksVQV9/sj+pgfsyUSY0Y2+V
-         UoqnqOJVgm8UfLQN5W5Hu1Xp1ZoMV1O3SxTfh6eKDLZqgjT+naejZdtTwlSoMoN9tPAj
-         E6IOWgH9GKTqdLhOt00/cK/8uujX77Q7/uFw6bDX/fiKJhkOxLA6EmXIeSmoULHegT3l
-         OeIQ==
-X-Gm-Message-State: APjAAAVEmdw53mixXozW6fzD9JnObGIlcFH8LGE3yXl6W9KhgFzJ+mmB
-        /QrvTKaSRyXKjFmPKQ6iJjI=
-X-Google-Smtp-Source: APXvYqzWqUBvisrF6CmjmbYY2CBIiC1rH8bOVAgBcuivllZ02Vl2vAaHDcaEP5GpSikTHwmMbfD3wA==
-X-Received: by 2002:a17:902:1007:: with SMTP id b7mr60778007pla.48.1555452856265;
-        Tue, 16 Apr 2019 15:14:16 -0700 (PDT)
+        bh=lG6ZpAkmVc5/nyfI7ZVe1dVNTtrQrMePTJsNQFI9tc4=;
+        b=hRGRu3VPeRUm97jqq9bmhJed19CONghETBh6G3J/U2GqsQQtFAGSEAuC+kIvsiErpm
+         p/MRrABRWIpnr/cOj4/NGyB7Nfne0dGJJGGzLg/oE2VuXWeUYYjIpb+dBli1gI5QLK7V
+         5+Z+88fUYzrOVX8vZ05vjW3oPNkKYOuvLuGd6FVnam2O2DtoYsEr6kmiA+pGRydKI6rh
+         4r65Ai606B9IfpFsIl/Nx0Q6BDCZJKqVqGGyCGxEq8vAFm6Kpr2N7yNRsIFnmGkpoy0E
+         x2MAF8/PqS8NshCIUGiAIQr5GOhusjIga9hHA+F5mxjtoGX2ysrIzlNDDc0RozBTrzdQ
+         vE/g==
+X-Gm-Message-State: APjAAAVxfNhk5J1barKO9CX8N3DvlQUm37Tdq4dVgSr5uiiN+oOJ1nco
+        tVOuBGsKCulmiro1a97E2Ac=
+X-Google-Smtp-Source: APXvYqxqaGMKRtWL0tl9gxjAvnVdzTJepCLDWyUxXb5p6dX/zTaB3gZ3cEvdAkQDkGL9GZMqXNmXJA==
+X-Received: by 2002:a17:902:102a:: with SMTP id b39mr50014720pla.188.1555452912848;
+        Tue, 16 Apr 2019 15:15:12 -0700 (PDT)
 Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id j16sm71639467pfi.58.2019.04.16.15.14.15
+        by smtp.gmail.com with ESMTPSA id v19sm96118299pfa.138.2019.04.16.15.15.11
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 15:14:15 -0700 (PDT)
-Date:   Tue, 16 Apr 2019 15:14:14 -0700
+        Tue, 16 Apr 2019 15:15:12 -0700 (PDT)
+Date:   Tue, 16 Apr 2019 15:15:11 -0700
 From:   Guenter Roeck <linux@roeck-us.net>
 To:     Eddie James <eajames@linux.ibm.com>
 Cc:     linux-kernel@vger.kernel.org, linux-hwmon@vger.kernel.org,
-        jdelvare@suse.com, andrew@aj.id.au, mine260309@gmail.com
-Subject: Re: [PATCH 2/3] hwmon (occ): Prevent sysfs error attribute from
- returning error
-Message-ID: <20190416221414.GA32126@roeck-us.net>
+        jdelvare@suse.com, andrew@aj.id.au, mine260309@gmail.com,
+        Eddie James <eajames@us.ibm.com>
+Subject: Re: [PATCH 3/3] hwmon (occ): Add more details to Kconfig help text
+Message-ID: <20190416221511.GA32220@roeck-us.net>
 References: <1555429430-23118-1-git-send-email-eajames@linux.ibm.com>
- <1555429430-23118-2-git-send-email-eajames@linux.ibm.com>
+ <1555429430-23118-3-git-send-email-eajames@linux.ibm.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1555429430-23118-2-git-send-email-eajames@linux.ibm.com>
+In-Reply-To: <1555429430-23118-3-git-send-email-eajames@linux.ibm.com>
 User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 03:43:49PM +0000, Eddie James wrote:
-> The error sysfs attribute returns the stored error state of the OCC and
-> doesn't depend on the OCC poll response. Therefore, split the error
-> attribute into it's own function to avoid failing out of the function if
-> the poll response fails.
+On Tue, Apr 16, 2019 at 03:43:50PM +0000, Eddie James wrote:
+> From: Eddie James <eajames@us.ibm.com>
 > 
-> Signed-off-by: Eddie James <eajames@linux.ibm.com>
+> The help text needs to spell out how the driver runs on a BMC, as it
+> previously seemed to indicate it ran on a POWER processor.
+> 
+> Signed-off-by: Eddie James <eajames@us.ibm.com>
 
 Applied.
 
@@ -90,64 +90,36 @@ Thanks,
 Guenter
 
 > ---
->  drivers/hwmon/occ/sysfs.c | 19 +++++++++++++------
->  1 file changed, 13 insertions(+), 6 deletions(-)
+>  drivers/hwmon/occ/Kconfig | 12 ++++++++----
+>  1 file changed, 8 insertions(+), 4 deletions(-)
 > 
-> diff --git a/drivers/hwmon/occ/sysfs.c b/drivers/hwmon/occ/sysfs.c
-> index 1cb1e65..c73be07 100644
-> --- a/drivers/hwmon/occ/sysfs.c
-> +++ b/drivers/hwmon/occ/sysfs.c
-> @@ -63,9 +63,6 @@ static ssize_t occ_sysfs_show(struct device *dev,
->  		else
->  			val = 1;
->  		break;
-> -	case 8:
-> -		val = occ->error;
-> -		break;
->  	default:
->  		return -EINVAL;
->  	}
-> @@ -73,6 +70,16 @@ static ssize_t occ_sysfs_show(struct device *dev,
->  	return snprintf(buf, PAGE_SIZE - 1, "%d\n", val);
->  }
+> diff --git a/drivers/hwmon/occ/Kconfig b/drivers/hwmon/occ/Kconfig
+> index 2a3869f..1658634 100644
+> --- a/drivers/hwmon/occ/Kconfig
+> +++ b/drivers/hwmon/occ/Kconfig
+> @@ -9,8 +9,10 @@ config SENSORS_OCC_P8_I2C
+>  	select SENSORS_OCC
+>  	help
+>  	 This option enables support for monitoring sensors provided by the
+> -	 On-Chip Controller (OCC) on a POWER8 processor. Communications with
+> -	 the OCC are established through I2C bus.
+> +	 On-Chip Controller (OCC) on a POWER8 processor. However, this driver
+> +	 can only run on a baseboard management controller (BMC) connected to
+> +	 the P8, not the POWER processor itself. Communications with the OCC are
+> +	 established through I2C bus.
 >  
-> +static ssize_t occ_error_show(struct device *dev,
-> +			      struct device_attribute *attr, char *buf)
-> +{
-> +	struct occ *occ = dev_get_drvdata(dev);
-> +
-> +	occ_update_response(occ);
-> +
-> +	return snprintf(buf, PAGE_SIZE - 1, "%d\n", occ->error);
-> +}
-> +
->  static SENSOR_DEVICE_ATTR(occ_master, 0444, occ_sysfs_show, NULL, 0);
->  static SENSOR_DEVICE_ATTR(occ_active, 0444, occ_sysfs_show, NULL, 1);
->  static SENSOR_DEVICE_ATTR(occ_dvfs_overtemp, 0444, occ_sysfs_show, NULL, 2);
-> @@ -81,7 +88,7 @@ static SENSOR_DEVICE_ATTR(occ_mem_throttle, 0444, occ_sysfs_show, NULL, 4);
->  static SENSOR_DEVICE_ATTR(occ_quick_pwr_drop, 0444, occ_sysfs_show, NULL, 5);
->  static SENSOR_DEVICE_ATTR(occ_state, 0444, occ_sysfs_show, NULL, 6);
->  static SENSOR_DEVICE_ATTR(occs_present, 0444, occ_sysfs_show, NULL, 7);
-> -static SENSOR_DEVICE_ATTR(occ_error, 0444, occ_sysfs_show, NULL, 8);
-> +static DEVICE_ATTR_RO(occ_error);
+>  	 This driver can also be built as a module. If so, the module will be
+>  	 called occ-p8-hwmon.
+> @@ -22,8 +24,10 @@ config SENSORS_OCC_P9_SBE
+>  	select SENSORS_OCC
+>  	help
+>  	 This option enables support for monitoring sensors provided by the
+> -	 On-Chip Controller (OCC) on a POWER9 processor. Communications with
+> -	 the OCC are established through SBE fifo on an FSI bus.
+> +	 On-Chip Controller (OCC) on a POWER9 processor. However, this driver
+> +	 can only run on a baseboard management controller (BMC) connected to
+> +	 the P9, not the POWER processor itself. Communications with the OCC are
+> +	 established through SBE fifo on an FSI bus.
 >  
->  static struct attribute *occ_attributes[] = {
->  	&sensor_dev_attr_occ_master.dev_attr.attr,
-> @@ -92,7 +99,7 @@ static struct attribute *occ_attributes[] = {
->  	&sensor_dev_attr_occ_quick_pwr_drop.dev_attr.attr,
->  	&sensor_dev_attr_occ_state.dev_attr.attr,
->  	&sensor_dev_attr_occs_present.dev_attr.attr,
-> -	&sensor_dev_attr_occ_error.dev_attr.attr,
-> +	&dev_attr_occ_error.attr,
->  	NULL
->  };
->  
-> @@ -156,7 +163,7 @@ void occ_sysfs_poll_done(struct occ *occ)
->  	}
->  
->  	if (occ->error && occ->error != occ->prev_error) {
-> -		name = sensor_dev_attr_occ_error.dev_attr.attr.name;
-> +		name = dev_attr_occ_error.attr.name;
->  		sysfs_notify(&occ->bus_dev->kobj, NULL, name);
->  	}
->  
+>  	 This driver can also be built as a module. If so, the module will be
+>  	 called occ-p9-hwmon.
