@@ -2,106 +2,130 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C240C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 05:21:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 461ECC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 05:22:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D12A2073F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 05:21:36 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="n7f0b46/"
+	by mail.kernel.org (Postfix) with ESMTP id 134032073F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 05:22:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727009AbfDPFVe (ORCPT
+        id S1727083AbfDPFWK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 01:21:34 -0400
-Received: from mail-qt1-f196.google.com ([209.85.160.196]:41633 "EHLO
-        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725865AbfDPFVe (ORCPT
+        Tue, 16 Apr 2019 01:22:10 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:44214 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1726016AbfDPFWK (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 01:21:34 -0400
-Received: by mail-qt1-f196.google.com with SMTP id w30so21926617qta.8
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 22:21:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=lz9Hz4ZbqFyVEt168korXa9MrletdxQKUiTb4F1So3Q=;
-        b=n7f0b46/7gqDXlhSCN5OBr87MyNrmNa264JzuzeEKP1i5OSz4QirUYpOxH7g4EE/Sb
-         5JKARwqNSey1eqR6xOMXvulgxxnGbyCa/kf4id31WZdqOl553TuatYGpWrUFhdC+yykF
-         9g6s4+cU73kmCv9db3tavoO6PvBsiuUl0Q3Z+tvxFUihTlbMX5Cr87iA7w/+jyTYZIvB
-         Zo4OM0zK8BJDAEFM7sbJmBqChLa36pSKdScfG8WVbCf3nSzl/VrZSB6UIfkv9h6vUlM3
-         CI66rSvSoTbYlU9NtjEUrOvmR8yiLYGwqHqvf/FHeCVJr/WzSqL4oMN+lRhLsFFE4Ly4
-         J3tA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=lz9Hz4ZbqFyVEt168korXa9MrletdxQKUiTb4F1So3Q=;
-        b=ohkbaaEy/lfkR5Kzcy4jfZW+NHE2Lb5aKRNQrWENsN3SW9uVSS5l3WFX7LQK2vBE9v
-         KY4pIzeUbVLeAtF/XuqxhIKWLacIzGeIfr4XIxFVJ4+vu2prowtiNLa9o22/C7TtiDUl
-         yQ1Q6F21txep5Hjc8Kz0dIiwX54BUKk9FNnKbIKcF7dFi+KPA3mGsCa2skZqKZGxBxAn
-         RQ+BFjoMN6EsrV3MPL/3b6B6kEg54AM3ZX1DFMv52FhaEcie4Tt+czQlqRcqLx9RFbC8
-         F1ZGCN5/UTI2asWYQQMkM0K2n/0/A1LUpKZwYj9FUFfhs3A4MEwMSomdyY0fOOM/Fv20
-         tl6Q==
-X-Gm-Message-State: APjAAAU1WNESVzFSX2k9OuolEvkuiNIjp4yBrZCRW4RnujjnVkGIStdg
-        BTr8l9syGSS/+u8P4QYWHa8R697ahYj0Ww/YlHMfHA==
-X-Google-Smtp-Source: APXvYqwy9rZeeSYX+bPKjnk+yiFVc7YGa8cB4GbPEhklEUYGk38u58gjNGCG2dXm7vGdkCxJP7PD/d56qkbzru/B0UA=
-X-Received: by 2002:a0c:ba8b:: with SMTP id x11mr63127338qvf.196.1555392093573;
- Mon, 15 Apr 2019 22:21:33 -0700 (PDT)
+        Tue, 16 Apr 2019 01:22:10 -0400
+Received: from pps.filterd (m0098404.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3G5JOe3091142
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 01:22:09 -0400
+Received: from e06smtp01.uk.ibm.com (e06smtp01.uk.ibm.com [195.75.94.97])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rw870h9wy-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 01:22:09 -0400
+Received: from localhost
+        by e06smtp01.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <rppt@linux.ibm.com>;
+        Tue, 16 Apr 2019 06:22:07 +0100
+Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
+        by e06smtp01.uk.ibm.com (192.168.101.131) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 16 Apr 2019 06:22:02 +0100
+Received: from d06av25.portsmouth.uk.ibm.com (d06av25.portsmouth.uk.ibm.com [9.149.105.61])
+        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3G5M1if48234636
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 16 Apr 2019 05:22:01 GMT
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id BD35A11C058;
+        Tue, 16 Apr 2019 05:22:01 +0000 (GMT)
+Received: from d06av25.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 3C3F011C052;
+        Tue, 16 Apr 2019 05:22:01 +0000 (GMT)
+Received: from rapoport-lnx (unknown [9.148.8.112])
+        by d06av25.portsmouth.uk.ibm.com (Postfix) with ESMTPS;
+        Tue, 16 Apr 2019 05:22:01 +0000 (GMT)
+Date:   Tue, 16 Apr 2019 08:21:59 +0300
+From:   Mike Rapoport <rppt@linux.ibm.com>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH 46/57] docs: cma/debugfs.txt: convert to ReST and move to
+ admin-guide/mm
+References: <cover.1555382110.git.mchehab+samsung@kernel.org>
+ <fad74a378f3e988c9519a784bed2a5b4aa471482.1555382110.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-References: <CAD8Lp45fedoPLnK=UmUhhtkjy5u2h04sYKrx3U+m04U6FpVZ4A@mail.gmail.com>
- <alpine.DEB.2.21.1904031206440.1967@nanos.tec.linutronix.de>
- <CAD8Lp45nvFY=nj1q2wh4Y6w-8RVRfi3iJmC+xX1Vv7_VZOftdg@mail.gmail.com> <alpine.DEB.2.21.1904101442080.3479@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1904101442080.3479@nanos.tec.linutronix.de>
-From:   Daniel Drake <drake@endlessm.com>
-Date:   Tue, 16 Apr 2019 13:21:22 +0800
-Message-ID: <CAD8Lp45_JVnusGVa7CPTTd6ji3AFkFUtbPnFhpTfyvR4LPM=aQ@mail.gmail.com>
-Subject: Re: No 8254 PIT & no HPET on new Intel N3350 platforms causes kernel
- panic during early boot
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Linux Kernel <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        Hans de Goede <hdegoede@redhat.com>,
-        david.e.box@linux.intel.com,
-        Endless Linux Upstreaming Team <linux@endlessm.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>, x86@kernel.org,
-        Len Brown <lenb@kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <fad74a378f3e988c9519a784bed2a5b4aa471482.1555382110.git.mchehab+samsung@kernel.org>
+User-Agent: Mutt/1.5.24 (2015-08-30)
+X-TM-AS-GCONF: 00
+x-cbid: 19041605-4275-0000-0000-0000032842CD
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19041605-4276-0000-0000-00003837720E
+Message-Id: <20190416052159.GB27735@rapoport-lnx>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-16_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904160039
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 10, 2019 at 8:54 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> On Tue, 9 Apr 2019, Daniel Drake wrote:
-> > On Wed, Apr 3, 2019 at 7:21 PM Thomas Gleixner <tglx@linutronix.de> wrote:
-> > >          - Prevent the TSC calibration code from touching PIT/HPET. It
-> > >            should do that already when the TSC frequency can be retrieved
-> > >            via CPUID or MSR. Should work, emphasis on should ...
-> >
-> > >From above, this seems to be working acceptably already. It does touch
-> > the PIT, but ultimately ignores the information that it provided.
->
-> Yes, but we might actually be smarter than that.
+Hi Mauro,
 
-Do you have anything specific in mind?
+On Mon, Apr 15, 2019 at 11:56:11PM -0300, Mauro Carvalho Chehab wrote:
+> The debugfs interface for CMA should be there together with other
+> mm-related documents.
+> 
+> Convert this small file to ReST and move it to its rightful place.
+> 
+> The conversion is actually quite simple: just add a title for the
+> document. In order to make it to look better for the audience,
+> also mark the "echo" command as a literal block.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> ---
+>  Documentation/cma/debugfs.txt | 6 +++++-
 
-You originally laid out this idea in the context of doing this if the
-PIT/HPET is not working. However, I can't immediately see how to judge
-that because:
-- According to the analysis in my last mail, the PIT is actually
-ticking even when it is gated in the BIOS. The BIOS setting just seems
-to make it tick 4 times slower and not generate any IRQ0 interrupts.
-- TSC calibration code runs really early during boot. To make it
-detect this situation we could make it check if IRQ0 is working,
-however setup_default_timer_irq() only happens a lot later, so I'm not
-sure how this could be checked at such an early stage.
+It wasn't really moved ;-)
 
-I think I'm now fairly clear on the other suggestions you have made so
-I'll see if I can come up with some patches.
+>  1 file changed, 5 insertions(+), 1 deletion(-)
+> 
+> diff --git a/Documentation/cma/debugfs.txt b/Documentation/cma/debugfs.txt
+> index 6cef20a8cedc..4e06ffabd78a 100644
+> --- a/Documentation/cma/debugfs.txt
+> +++ b/Documentation/cma/debugfs.txt
+> @@ -1,3 +1,7 @@
+> +=====================
+> +CMA Debugfs Interface
+> +=====================
+> +
+>  The CMA debugfs interface is useful to retrieve basic information out of the
+>  different CMA areas and to test allocation/release in each of the areas.
+> 
+> @@ -12,7 +16,7 @@ The structure of the files created under that directory is as follows:
+>   - [RO] count: Amount of memory in the CMA area.
+>   - [RO] order_per_bit: Order of pages represented by one bit.
+>   - [RO] bitmap: The bitmap of page states in the zone.
+> - - [WO] alloc: Allocate N pages from that CMA area. For example:
+> + - [WO] alloc: Allocate N pages from that CMA area. For example::
+> 
+>  	echo 5 > <debugfs>/cma/cma-2/alloc
+> 
+> -- 
+> 2.20.1
+> 
 
-Thanks!
-Daniel
+-- 
+Sincerely yours,
+Mike.
+
