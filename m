@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A96AEC282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:46:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 342AAC282DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:47:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 77C5F2086A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:46:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 047D12087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:47:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="oeEcKFpL"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cU96DRv2"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729178AbfDPLq4 (ORCPT
+        id S1729259AbfDPLrF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 07:46:56 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:42001 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbfDPLqz (ORCPT
+        Tue, 16 Apr 2019 07:47:05 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:40463 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728169AbfDPLrF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 07:46:55 -0400
-Received: by mail-pf1-f196.google.com with SMTP id w25so10277604pfi.9;
-        Tue, 16 Apr 2019 04:46:55 -0700 (PDT)
+        Tue, 16 Apr 2019 07:47:05 -0400
+Received: by mail-pl1-f195.google.com with SMTP id b3so10222508plr.7;
+        Tue, 16 Apr 2019 04:47:05 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :in-reply-to:references;
-        bh=cNyFM0J2DfW9voxw9FzV7E7Y/LrzsWkGDKLqwe0d5pk=;
-        b=oeEcKFpL3vmK9+DpAkDM2pqJ4cwz8D1E2liXXkVcMS/mCROTNxreZ3tJiZU7AMhYGa
-         jdvIuxFSG51quKMSoG7eGUWo0OFVjsfwlsv0j6QgATWKo4Y/zRlxt4YEDfEpCBvwBcDU
-         oLh7KOdm3sUnBXGsWZumlJIoubWl0FlACsdqSTDMD22x9YueAbdJduUdqxf+Fzo+qE4b
-         G/2XochB6n9yIyfIIw7vwaFhmKiDJzF2ILx3ft6jONO/3Tp5olQ3mZrspX0N7+OtxUzw
-         L3gftE9ttJboi/nhCsZ8IHvh1byiu+1G+2wjx/i6t9Le5dXmn/WMY4e9g4nRHdsI6qmW
-         KGJw==
+        bh=naB3KMuHNTCaDD6/Z64EGJGrk7XQ7GW1pzVQ9Q3Vf6s=;
+        b=cU96DRv2ov3f6Cd6NK8xcTZ/pxd6ORU1P19E6pQIz3B49Xye1iNecd9iNZibBfJcjQ
+         zuIvUPJ+CLar5CQjZRDX3VQ1TZCDeFWlILHsb8dRJWggD00EqzXEkyE8uJG1kMP2eIvp
+         n24W6tCY3AanegajVewju3yYDXmhf0X9II/qFV5HCylGUkejdXzo9E/koqfyqUqq8zr9
+         mW/ZBFGmtcso0v4QTX5OavZW9KBMU22Tan8pYhZR4Ld+BqKTsHamZTqQU3PDd55gPcFI
+         MsgxhBrhXIs5Fh8xdDdB8AJYcTdBC4NqYXVKmPD9APCljql55oe+X1QMkhe2S4UTALoW
+         5KAA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:in-reply-to:references;
-        bh=cNyFM0J2DfW9voxw9FzV7E7Y/LrzsWkGDKLqwe0d5pk=;
-        b=fc3QeohuCKOjnTcS+mSS2L8jVA6sxY+DPiIhZDW4jN9c++rstgwdMSkILrA+1D6Bju
-         htCHmcC9fCb5bCith6e7K1TLwDF0b+baXmayj2/VQwqKcHg1DtcokCX+avtWJwXbzQR1
-         +X1zXbZwttVCrp0GLiwFrFw687yui65bbO3yK8wTiXQK22iuUpnxmXVzilb/FenodViB
-         MrPxt80Ip/iIHLuUIlC+pkcqYdhPjn3A2yPRpw8YirD30DIAuj1MgGtqXW/aUTArrPhX
-         Vt3QILNZuN26qrnaO6wQhKjhBqCfP8ainnooN+FL8DFdU3dpM5Dm3Wm02ts58kl13Gne
-         cZug==
-X-Gm-Message-State: APjAAAV1afdhR+X3q15iYXVN1TX+AvWgF5bTZutdQOw+tp9myC53QDEN
-        OzbKXZ7SPMth1Kz8ka8ApMA=
-X-Google-Smtp-Source: APXvYqzT/G52JjPlhhzDjlzXSHHg4UNZ4b12u0OW4Mw/nQ9ugBF4FdGP/KIWXfE/EW5Pz1mzLpMj5g==
-X-Received: by 2002:a62:6ec6:: with SMTP id j189mr346760pfc.195.1555415215118;
-        Tue, 16 Apr 2019 04:46:55 -0700 (PDT)
+        bh=naB3KMuHNTCaDD6/Z64EGJGrk7XQ7GW1pzVQ9Q3Vf6s=;
+        b=fiUXcVlwFy+SyOiTggObEjB40RVf1GEu1PEt/3SlbEcG0zBCAqO01M0vemv2jmlB1I
+         y/ZID8JVzhN/6gJpW4lX85dyG5cCzYh+1cjHD/OqxgAod2tweBAQsg0icy6iCOb55wBf
+         Oyo8N51nY0G29m3PmAEhvUDikjeSLfmLpxG4tBhmdUx47kY6LN8tS7TAHsnhKAqbWHDe
+         fOxGkfJ00oKYVt2zJ3uXQE8vAGadbiBey3vC2iKJ0+2sgzjS8fnjoU8WmGvWXmFn49ui
+         +mVSzpicuz5Ko+ftMWBKMkrwtpyteuHXqs+rkzt5WKTtoSm+9z83IvlnWlB3Q92lm0lz
+         0DSQ==
+X-Gm-Message-State: APjAAAWFsJWuSwpfCz4sEtrixzVxMwPbw3nOHNKgq9jqRVHWhOR45hYQ
+        uLIgBnzgXMM0sl0kTKUlJnw=
+X-Google-Smtp-Source: APXvYqzDjDcAV7GNAw1BnDNouVWt6jT57KNhFlyZntYAXIOvC1nqtveURqFOLb2rK8ycg0MhFKUzow==
+X-Received: by 2002:a17:902:d24:: with SMTP id 33mr83552990plu.246.1555415224705;
+        Tue, 16 Apr 2019 04:47:04 -0700 (PDT)
 Received: from jordon-HP-15-Notebook-PC.domain.name ([49.207.50.11])
-        by smtp.gmail.com with ESMTPSA id p6sm55942835pfd.122.2019.04.16.04.46.45
+        by smtp.gmail.com with ESMTPSA id p6sm55942835pfd.122.2019.04.16.04.46.55
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 16 Apr 2019 04:46:54 -0700 (PDT)
+        Tue, 16 Apr 2019 04:47:03 -0700 (PDT)
 From:   Souptick Joarder <jrdr.linux@gmail.com>
 To:     akpm@linux-foundation.org, willy@infradead.org, mhocko@suse.com,
         kirill.shutemov@linux.intel.com, vbabka@suse.cz, riel@surriel.com,
@@ -74,10 +74,10 @@ Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         linux-rockchip@lists.infradead.org, xen-devel@lists.xen.org,
         iommu@lists.linux-foundation.org, linux-media@vger.kernel.org,
         Souptick Joarder <jrdr.linux@gmail.com>
-Subject: [REBASE PATCH v5 2/9] arm: mm: dma-mapping: Convert to use vm_map_pages()
-Date:   Tue, 16 Apr 2019 17:19:43 +0530
+Subject: [REBASE PATCH v5 3/9] drivers/firewire/core-iso.c: Convert to use vm_map_pages_zero()
+Date:   Tue, 16 Apr 2019 17:19:44 +0530
 Message-Id:
- <936e5e107c746a7310e3a3c471188ca3ac8f9754.1552921225.git.jrdr.linux@gmail.com>
+ <88645f5ea8202784a8baaf389e592aeb8c505e8e.1552921225.git.jrdr.linux@gmail.com>
 X-Mailer: git-send-email 1.9.1
 In-Reply-To: <cover.1552921225.git.jrdr.linux@gmail.com>
 References: <cover.1552921225.git.jrdr.linux@gmail.com>
@@ -88,58 +88,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
-Message-ID: <20190416114943.F2scbFcDy7LLKoRdYxkTPu8lOwMwKxsmSovG5iYuyXc@z>
+Message-ID: <20190416114944.T-xqlQGxfLfUBgpsyFH2RrzMnRNBUr9-I5c9dm6R-ME@z>
 
-Convert to use vm_map_pages() to map range of kernel
-memory to user vma.
+Convert to use vm_map_pages_zero() to map range of kernel memory
+to user vma.
+
+This driver has ignored vm_pgoff and mapped the entire pages. We
+could later "fix" these drivers to behave according to the normal
+vm_pgoff offsetting simply by removing the _zero suffix on the
+function name and if that causes regressions, it gives us an easy
+way to revert.
 
 Signed-off-by: Souptick Joarder <jrdr.linux@gmail.com>
 ---
- arch/arm/mm/dma-mapping.c | 22 ++++++----------------
- 1 file changed, 6 insertions(+), 16 deletions(-)
+ drivers/firewire/core-iso.c | 15 ++-------------
+ 1 file changed, 2 insertions(+), 13 deletions(-)
 
-diff --git a/arch/arm/mm/dma-mapping.c b/arch/arm/mm/dma-mapping.c
-index f1e2922..de7c76e 100644
---- a/arch/arm/mm/dma-mapping.c
-+++ b/arch/arm/mm/dma-mapping.c
-@@ -1575,31 +1575,21 @@ static int __arm_iommu_mmap_attrs(struct device *dev, struct vm_area_struct *vma
- 		    void *cpu_addr, dma_addr_t dma_addr, size_t size,
- 		    unsigned long attrs)
+diff --git a/drivers/firewire/core-iso.c b/drivers/firewire/core-iso.c
+index 35e784c..5414eb1 100644
+--- a/drivers/firewire/core-iso.c
++++ b/drivers/firewire/core-iso.c
+@@ -107,19 +107,8 @@ int fw_iso_buffer_init(struct fw_iso_buffer *buffer, struct fw_card *card,
+ int fw_iso_buffer_map_vma(struct fw_iso_buffer *buffer,
+ 			  struct vm_area_struct *vma)
  {
--	unsigned long uaddr = vma->vm_start;
--	unsigned long usize = vma->vm_end - vma->vm_start;
- 	struct page **pages = __iommu_get_pages(cpu_addr, attrs);
- 	unsigned long nr_pages = PAGE_ALIGN(size) >> PAGE_SHIFT;
--	unsigned long off = vma->vm_pgoff;
-+	int err;
- 
- 	if (!pages)
- 		return -ENXIO;
- 
--	if (off >= nr_pages || (usize >> PAGE_SHIFT) > nr_pages - off)
-+	if (vma->vm_pgoff >= nr_pages)
- 		return -ENXIO;
- 
--	pages += off;
+-	unsigned long uaddr;
+-	int i, err;
 -
--	do {
--		int ret = vm_insert_page(vma, uaddr, *pages++);
--		if (ret) {
--			pr_err("Remapping memory failed: %d\n", ret);
--			return ret;
--		}
+-	uaddr = vma->vm_start;
+-	for (i = 0; i < buffer->page_count; i++) {
+-		err = vm_insert_page(vma, uaddr, buffer->pages[i]);
+-		if (err)
+-			return err;
+-
 -		uaddr += PAGE_SIZE;
--		usize -= PAGE_SIZE;
--	} while (usize > 0);
-+	err = vm_map_pages(vma, pages, nr_pages);
-+	if (err)
-+		pr_err("Remapping memory failed: %d\n", err);
- 
+-	}
+-
 -	return 0;
-+	return err;
++	return vm_map_pages_zero(vma, buffer->pages,
++					buffer->page_count);
  }
- static int arm_iommu_mmap_attrs(struct device *dev,
- 		struct vm_area_struct *vma, void *cpu_addr,
+ 
+ void fw_iso_buffer_destroy(struct fw_iso_buffer *buffer,
 -- 
 1.9.1
 
