@@ -2,103 +2,101 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIM_ADSP_CUSTOM_MED,
+	DKIM_INVALID,DKIM_SIGNED,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D78C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:58:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49F4FC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69F262075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:58:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 13FDE2075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:58:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="eI5lyWqX";
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VWZsRDCk"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lhcOHQSR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728177AbfDPG6O (ORCPT
+        id S1728437AbfDPG6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 02:58:14 -0400
-Received: from smtp.codeaurora.org ([198.145.29.96]:41434 "EHLO
-        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726825AbfDPG6N (ORCPT
+        Tue, 16 Apr 2019 02:58:18 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:36408 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727424AbfDPG6O (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 02:58:13 -0400
-Received: by smtp.codeaurora.org (Postfix, from userid 1000)
-        id 1540A608D4; Tue, 16 Apr 2019 06:58:13 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1555397893;
-        bh=xkYts39MEJAK8g8EIi9wJOxU/vlUuyMyWYyA/Shlmfc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=eI5lyWqXvu0CFcpMBQngaVD9C7R7BHDu2ZrkOogsXAwEYeXmOEKLkcqAvfq455dxj
-         nnPHJxKecleUKc+0OQIzAAsJ99nmWD2U4Eiwh48HlEqIJXnUzZgp8Lt8hQq23JtRj0
-         7cygBYjniZcZwGSq1wTAMlhzqZS0RYL+zV59Gxmo=
-Received: from [10.204.79.15] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: mojha@smtp.codeaurora.org)
-        by smtp.codeaurora.org (Postfix) with ESMTPSA id BA442608D4;
-        Tue, 16 Apr 2019 06:54:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
-        s=default; t=1555397892;
-        bh=xkYts39MEJAK8g8EIi9wJOxU/vlUuyMyWYyA/Shlmfc=;
-        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
-        b=VWZsRDCkvBeKkxY1l1CxhQg6wGbiJ8yAqlblexrUMGhDNZG+vKcpZA1VRfsR6Hq1B
-         M22k1eHoOB3jsRw3Jvftrd5oBDwUmbR1nZvLAhUzjGfSD0aspOlWJTFjDvx7vt1Ypp
-         muE+fW2wN49PuzWKv0ftFrWfKBj5hIqAn2nJO+uk=
-DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BA442608D4
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
-Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
-Subject: Re: [PATCH] platform/x86: thinkpad_acpi: fix spelling mistake
- "capabilites" -> "capabilities"
-To:     Colin King <colin.king@canonical.com>,
-        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        ibm-acpi-devel@lists.sourceforge.net,
-        platform-driver-x86@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190415125204.7386-1-colin.king@canonical.com>
-From:   Mukesh Ojha <mojha@codeaurora.org>
-Message-ID: <520f6626-246b-005f-53ef-df2f75a89cd9@codeaurora.org>
-Date:   Tue, 16 Apr 2019 12:24:16 +0530
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190415125204.7386-1-colin.king@canonical.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+        Tue, 16 Apr 2019 02:58:14 -0400
+Received: by mail-pl1-f194.google.com with SMTP id ck15so9857356plb.3;
+        Mon, 15 Apr 2019 23:58:13 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=+ZsCOIZmIT45BAD6e9//SaUJOakIvZeD9Y5z2a3+sZE=;
+        b=lhcOHQSRiwhdZybfOy4RXcNpyQp8VpYb272ztUaWQULr3KyYGQ+cSyJSOxXA3qDVfI
+         KODuGcK0Ue0E02iV0geulNjVS838jmCciEwX0E/vkmOl8c+vBFEuaS+CoctiFzyBmGFZ
+         1QHk7/p+Egn1JQR6w1d7BSjkz6wQE5sHy3/BsrVKYM378aHrB4J+EQTQ+uRjeU9uPmdM
+         y0845TPgInU2KRu2RpCcQZ9R75gu7PF6i76q7WA1GlT0xklqUm7r5FRzZ5JHtFtZBXuk
+         yERZWkQxZvc/ia1mAN9JFbBGGqqWeomc8Zpq23OBxAzYlR7gXd+dKLbv/1DQmoAauClJ
+         n5Hw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=+ZsCOIZmIT45BAD6e9//SaUJOakIvZeD9Y5z2a3+sZE=;
+        b=jEunenXbTXBZA/YNdOkOv8b6/udNn3IgG2sCB5AneeXm9737AbYd8wOKBjE+P5Qg1u
+         SlEWwdXDY5Jh0C0TS6cnxJQkC6VprrkAStu2QZqV859xMtFLTNkZXwR7oRsiGV3dmQ7i
+         QFbLb9lz6Q6T+EKqcsr+arXcRt8vXx6IZ1VB/o3ZkU0Tdf+La2NXNcvztBsgp3V0ax5R
+         vfYJB+R91LB9qURoPqEmlqG7jG+NRynOqO3DP5+ohe0mdbylZXMlpNmyW/DdiQ7RBC9e
+         UXWf8IQmXiUvJOwJc1pbmyDg/AutuiGviXDNEK1NydA7BdmUPckAtUW+jqwyhX8kHphZ
+         z3tQ==
+X-Gm-Message-State: APjAAAWYtk07B94hGmZVtgt9oRDGeIEcsOA3uNu15/LLeORS6SSYcRDz
+        7xZ05q1om+vhUMWlMwTRSKg=
+X-Google-Smtp-Source: APXvYqyH6ojB5pPtdfEfZFyjLShu3wBYDA26LaYZs9/7QOkpbp9OpKhzhEBhOQWWZq6C0S30ie3gAA==
+X-Received: by 2002:a17:902:7885:: with SMTP id q5mr81524780pll.12.1555397893697;
+        Mon, 15 Apr 2019 23:58:13 -0700 (PDT)
+Received: from hfq-skylake.ipads-lab.se.sjtu.edu.cn ([202.120.40.82])
+        by smtp.googlemail.com with ESMTPSA id z8sm63677356pgz.3.2019.04.15.23.58.11
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Apr 2019 23:58:13 -0700 (PDT)
+From:   Fuqian Huang <huangfq.daxian@gmail.com>
+Cc:     stable@vegr.kernel.org, gregkh@linuxfoundation.org,
+        Fuqian Huang <huangfq.daxian@gmail.com>,
+        Chas Williams <3chas3@gmail.com>,
+        linux-atm-general@lists.sourceforge.net, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH 4.14] atm:idt77252: Fix a kernel address leakage in idt77252
+Date:   Tue, 16 Apr 2019 14:57:27 +0800
+Message-Id: <20190416065727.13303-1-huangfq.daxian@gmail.com>
+X-Mailer: git-send-email 2.11.0
+To:     unlisted-recipients:; (no To-header on input)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Outputting kernel addresses will reveal the locations of kernel code
+and data. And there is no need to print the address of 
+function idt77252_init in idt77252_init. 
+This case is similar to CVE-2018-7273[1].
+Just remove the print statement.
 
-On 4/15/2019 6:22 PM, Colin King wrote:
-> From: Colin Ian King <colin.king@canonical.com>
->
-> There is a spelling mistake in a module parameter description. Fix it.
->
-> Signed-off-by: Colin Ian King <colin.king@canonical.com>
-Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+[1] https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2018-7273
 
-Cheers,
--Mukesh
+Signed-off-by: Fuqian Huang <huangfq.daxian@gmail.com>
+---
+ drivers/atm/idt77252.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-> ---
->   drivers/platform/x86/thinkpad_acpi.c | 2 +-
->   1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
-> index 57d9ae9d8e56..9192b686e9a6 100644
-> --- a/drivers/platform/x86/thinkpad_acpi.c
-> +++ b/drivers/platform/x86/thinkpad_acpi.c
-> @@ -10269,7 +10269,7 @@ MODULE_PARM_DESC(volume_mode,
->   
->   module_param_named(volume_capabilities, volume_capabilities, uint, 0444);
->   MODULE_PARM_DESC(volume_capabilities,
-> -		 "Selects the mixer capabilites: 0=auto, 1=volume and mute, 2=mute only");
-> +		 "Selects the mixer capabilities: 0=auto, 1=volume and mute, 2=mute only");
->   
->   module_param_named(volume_control, volume_control_allowed, bool, 0444);
->   MODULE_PARM_DESC(volume_control,
+diff --git a/drivers/atm/idt77252.c b/drivers/atm/idt77252.c
+index 47f3c4a..76e7736 100644
+--- a/drivers/atm/idt77252.c
++++ b/drivers/atm/idt77252.c
+@@ -3743,8 +3743,6 @@ static int __init idt77252_init(void)
+ {
+ 	struct sk_buff *skb;
+ 
+-	printk("%s: at %p\n", __func__, idt77252_init);
+-
+ 	if (sizeof(skb->cb) < sizeof(struct atm_skb_data) +
+ 			      sizeof(struct idt77252_skb_prv)) {
+ 		printk(KERN_ERR "%s: skb->cb is too small (%lu < %lu)\n",
+-- 
+2.11.0
+
