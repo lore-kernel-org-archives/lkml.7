@@ -4,49 +4,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.0 required=3.0
 	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1FBD3C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:37:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71CCDC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:38:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E59312077C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:37:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 315762077C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:38:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729244AbfDPLh4 (ORCPT
+        id S1729016AbfDPLii (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 07:37:56 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:45913 "EHLO
+        Tue, 16 Apr 2019 07:38:38 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:53561 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726241AbfDPLh4 (ORCPT
+        with ESMTP id S1726241AbfDPLii (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 07:37:56 -0400
+        Tue, 16 Apr 2019 07:38:38 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3GBbfNN3428723
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3GBcMZd3428783
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 16 Apr 2019 04:37:41 -0700
+        Tue, 16 Apr 2019 04:38:22 -0700
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3GBbfCV3428720;
-        Tue, 16 Apr 2019 04:37:41 -0700
-Date:   Tue, 16 Apr 2019 04:37:41 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3GBcL8R3428780;
+        Tue, 16 Apr 2019 04:38:21 -0700
+Date:   Tue, 16 Apr 2019 04:38:21 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Peter Zijlstra <tipbot@zytor.com>
-Message-ID: <tip-63b79f6ebc464afb730bc45762c820795e276da1@git.kernel.org>
-Cc:     acme@redhat.com, peterz@infradead.org, eranian@google.com,
-        hpa@zytor.com, mingo@kernel.org, jolsa@redhat.com,
-        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
-        kan.liang@linux.intel.com, alexander.shishkin@linux.intel.com,
-        tglx@linutronix.de, ak@linux.intel.com, vincent.weaver@maine.edu
-Reply-To: jolsa@redhat.com, torvalds@linux-foundation.org, acme@redhat.com,
-          peterz@infradead.org, eranian@google.com, mingo@kernel.org,
-          hpa@zytor.com, kan.liang@linux.intel.com, tglx@linutronix.de,
-          alexander.shishkin@linux.intel.com, ak@linux.intel.com,
-          vincent.weaver@maine.edu, linux-kernel@vger.kernel.org
-In-Reply-To: <20190402194509.2832-8-kan.liang@linux.intel.com>
-References: <20190402194509.2832-8-kan.liang@linux.intel.com>
+From:   tip-bot for Kan Liang <tipbot@zytor.com>
+Message-ID: <tip-6017608936c1825ff5d7325270484042f597edff@git.kernel.org>
+Cc:     ak@linux.intel.com, linux-kernel@vger.kernel.org,
+        torvalds@linux-foundation.org, mingo@kernel.org,
+        tglx@linutronix.de, eranian@google.com, jolsa@redhat.com,
+        peterz@infradead.org, hpa@zytor.com, vincent.weaver@maine.edu,
+        kan.liang@linux.intel.com, acme@redhat.com,
+        alexander.shishkin@linux.intel.com
+Reply-To: ak@linux.intel.com, mingo@kernel.org,
+          torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+          jolsa@redhat.com, eranian@google.com, tglx@linutronix.de,
+          acme@redhat.com, alexander.shishkin@linux.intel.com,
+          vincent.weaver@maine.edu, kan.liang@linux.intel.com,
+          peterz@infradead.org, hpa@zytor.com
+In-Reply-To: <20190402194509.2832-9-kan.liang@linux.intel.com>
+References: <20190402194509.2832-9-kan.liang@linux.intel.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/core] perf/x86: Support constraint ranges
-Git-Commit-ID: 63b79f6ebc464afb730bc45762c820795e276da1
+Subject: [tip:perf/core] perf/x86/intel: Add Icelake support
+Git-Commit-ID: 6017608936c1825ff5d7325270484042f597edff
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -60,31 +62,38 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  63b79f6ebc464afb730bc45762c820795e276da1
-Gitweb:     https://git.kernel.org/tip/63b79f6ebc464afb730bc45762c820795e276da1
-Author:     Peter Zijlstra <peterz@infradead.org>
-AuthorDate: Tue, 2 Apr 2019 12:45:04 -0700
+Commit-ID:  6017608936c1825ff5d7325270484042f597edff
+Gitweb:     https://git.kernel.org/tip/6017608936c1825ff5d7325270484042f597edff
+Author:     Kan Liang <kan.liang@linux.intel.com>
+AuthorDate: Tue, 2 Apr 2019 12:45:05 -0700
 Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Tue, 16 Apr 2019 12:26:17 +0200
+CommitDate: Tue, 16 Apr 2019 12:26:18 +0200
 
-perf/x86: Support constraint ranges
+perf/x86/intel: Add Icelake support
 
-Icelake extended the general counters to 8, even when SMT is enabled.
-However only a (large) subset of the events can be used on all 8
-counters.
+Add Icelake core PMU perf code, including constraint tables and the main
+enable code.
 
-The events that can or cannot be used on all counters are organized
-in ranges.
+Icelake expanded the generic counters to always 8 even with HT on, but a
+range of events cannot be scheduled on the extra 4 counters.
+Add new constraint ranges to describe this to the scheduler.
+The number of constraints that need to be checked is larger now than
+with earlier CPUs.
+At some point we may need a new data structure to look them up more
+efficiently than with linear search. So far it still seems to be
+acceptable however.
 
-A lot of scheduler constraints are required to handle all this.
+Icelake added a new fixed counter SLOTS. Full support for it is added
+later in the patch series.
 
-To avoid blowing up the tables add event code ranges to the constraint
-tables, and a new inline function to match them.
+The cache events table is identical to Skylake.
+
+Compare to PEBS instruction event on generic counter, fixed counter 0
+has less skid. Force instruction:ppp always in fixed counter 0.
 
 Originally-by: Andi Kleen <ak@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org> # developer hat on
 Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org> # maintainer hat on
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
 Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
 Cc: Arnaldo Carvalho de Melo <acme@redhat.com>
 Cc: Jiri Olsa <jolsa@redhat.com>
@@ -95,132 +104,252 @@ Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Vince Weaver <vincent.weaver@maine.edu>
 Cc: acme@kernel.org
 Cc: jolsa@kernel.org
-Link: https://lkml.kernel.org/r/20190402194509.2832-8-kan.liang@linux.intel.com
+Link: https://lkml.kernel.org/r/20190402194509.2832-9-kan.liang@linux.intel.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- arch/x86/events/intel/core.c |  2 +-
- arch/x86/events/intel/ds.c   |  2 +-
- arch/x86/events/perf_event.h | 43 +++++++++++++++++++++++++++++++++++++------
- 3 files changed, 39 insertions(+), 8 deletions(-)
+ arch/x86/events/intel/core.c      | 111 ++++++++++++++++++++++++++++++++++++++
+ arch/x86/events/intel/ds.c        |  25 ++++++++-
+ arch/x86/events/perf_event.h      |   2 +
+ arch/x86/include/asm/intel_ds.h   |   2 +-
+ arch/x86/include/asm/perf_event.h |   2 +-
+ 5 files changed, 138 insertions(+), 4 deletions(-)
 
 diff --git a/arch/x86/events/intel/core.c b/arch/x86/events/intel/core.c
-index bdc366d709aa..d4b52896f173 100644
+index d4b52896f173..156c6ae53d3c 100644
 --- a/arch/x86/events/intel/core.c
 +++ b/arch/x86/events/intel/core.c
-@@ -2693,7 +2693,7 @@ x86_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
- 
- 	if (x86_pmu.event_constraints) {
- 		for_each_event_constraint(c, x86_pmu.event_constraints) {
--			if ((event->hw.config & c->cmask) == c->code) {
-+			if (constraint_match(c, event->hw.config)) {
- 				event->hw.flags |= c->flags;
- 				return c;
- 			}
-diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
-index 6436452d6342..4429bfa92fbc 100644
---- a/arch/x86/events/intel/ds.c
-+++ b/arch/x86/events/intel/ds.c
-@@ -858,7 +858,7 @@ struct event_constraint *intel_pebs_constraints(struct perf_event *event)
- 
- 	if (x86_pmu.pebs_constraints) {
- 		for_each_event_constraint(c, x86_pmu.pebs_constraints) {
--			if ((event->hw.config & c->cmask) == c->code) {
-+			if (constraint_match(c, event->hw.config)) {
- 				event->hw.flags |= c->flags;
- 				return c;
- 			}
-diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
-index dced91582147..0ff0c5ae8c29 100644
---- a/arch/x86/events/perf_event.h
-+++ b/arch/x86/events/perf_event.h
-@@ -49,13 +49,19 @@ struct event_constraint {
- 		unsigned long	idxmsk[BITS_TO_LONGS(X86_PMC_IDX_MAX)];
- 		u64		idxmsk64;
- 	};
--	u64	code;
--	u64	cmask;
--	int	weight;
--	int	overlap;
--	int	flags;
-+	u64		code;
-+	u64		cmask;
-+	int		weight;
-+	int		overlap;
-+	int		flags;
-+	unsigned int	size;
+@@ -239,6 +239,35 @@ static struct extra_reg intel_skl_extra_regs[] __read_mostly = {
+ 	EVENT_EXTRA_END
  };
  
-+static inline bool constraint_match(struct event_constraint *c, u64 ecode)
-+{
-+	return ((ecode & c->cmask) - c->code) <= (u64)c->size;
-+}
++static struct event_constraint intel_icl_event_constraints[] = {
++	FIXED_EVENT_CONSTRAINT(0x00c0, 0),	/* INST_RETIRED.ANY */
++	INTEL_UEVENT_CONSTRAINT(0x1c0, 0),	/* INST_RETIRED.PREC_DIST */
++	FIXED_EVENT_CONSTRAINT(0x003c, 1),	/* CPU_CLK_UNHALTED.CORE */
++	FIXED_EVENT_CONSTRAINT(0x0300, 2),	/* CPU_CLK_UNHALTED.REF */
++	FIXED_EVENT_CONSTRAINT(0x0400, 3),	/* SLOTS */
++	INTEL_EVENT_CONSTRAINT_RANGE(0x03, 0x0a, 0xf),
++	INTEL_EVENT_CONSTRAINT_RANGE(0x1f, 0x28, 0xf),
++	INTEL_EVENT_CONSTRAINT(0x32, 0xf),	/* SW_PREFETCH_ACCESS.* */
++	INTEL_EVENT_CONSTRAINT_RANGE(0x48, 0x54, 0xf),
++	INTEL_EVENT_CONSTRAINT_RANGE(0x60, 0x8b, 0xf),
++	INTEL_UEVENT_CONSTRAINT(0x04a3, 0xff),  /* CYCLE_ACTIVITY.STALLS_TOTAL */
++	INTEL_UEVENT_CONSTRAINT(0x10a3, 0xff),  /* CYCLE_ACTIVITY.STALLS_MEM_ANY */
++	INTEL_EVENT_CONSTRAINT(0xa3, 0xf),      /* CYCLE_ACTIVITY.* */
++	INTEL_EVENT_CONSTRAINT_RANGE(0xa8, 0xb0, 0xf),
++	INTEL_EVENT_CONSTRAINT_RANGE(0xb7, 0xbd, 0xf),
++	INTEL_EVENT_CONSTRAINT_RANGE(0xd0, 0xe6, 0xf),
++	INTEL_EVENT_CONSTRAINT_RANGE(0xf0, 0xf4, 0xf),
++	EVENT_CONSTRAINT_END
++};
 +
- /*
-  * struct hw_perf_event.flags flags
-  */
-@@ -280,18 +286,29 @@ struct cpu_hw_events {
- 	void				*kfree_on_online[X86_PERF_KFREE_MAX];
- };
++static struct extra_reg intel_icl_extra_regs[] __read_mostly = {
++	INTEL_UEVENT_EXTRA_REG(0x01b7, MSR_OFFCORE_RSP_0, 0x3fffff9fffull, RSP_0),
++	INTEL_UEVENT_EXTRA_REG(0x01bb, MSR_OFFCORE_RSP_1, 0x3fffff9fffull, RSP_1),
++	INTEL_UEVENT_PEBS_LDLAT_EXTRA_REG(0x01cd),
++	INTEL_UEVENT_EXTRA_REG(0x01c6, MSR_PEBS_FRONTEND, 0x7fff17, FE),
++	EVENT_EXTRA_END
++};
++
+ EVENT_ATTR_STR(mem-loads,	mem_ld_nhm,	"event=0x0b,umask=0x10,ldlat=3");
+ EVENT_ATTR_STR(mem-loads,	mem_ld_snb,	"event=0xcd,umask=0x1,ldlat=3");
+ EVENT_ATTR_STR(mem-stores,	mem_st_snb,	"event=0xcd,umask=0x2");
+@@ -3374,6 +3403,9 @@ static struct event_constraint counter0_constraint =
+ static struct event_constraint counter2_constraint =
+ 			EVENT_CONSTRAINT(0, 0x4, 0);
  
--#define __EVENT_CONSTRAINT(c, n, m, w, o, f) {\
-+#define __EVENT_CONSTRAINT_RANGE(c, e, n, m, w, o, f) {	\
- 	{ .idxmsk64 = (n) },		\
- 	.code = (c),			\
-+	.size = (e) - (c),		\
- 	.cmask = (m),			\
- 	.weight = (w),			\
- 	.overlap = (o),			\
- 	.flags = f,			\
++static struct event_constraint fixed0_constraint =
++			FIXED_EVENT_CONSTRAINT(0x00c0, 0);
++
+ static struct event_constraint *
+ hsw_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
+ 			  struct perf_event *event)
+@@ -3392,6 +3424,21 @@ hsw_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
+ 	return c;
  }
  
-+#define __EVENT_CONSTRAINT(c, n, m, w, o, f) \
-+	__EVENT_CONSTRAINT_RANGE(c, c, n, m, w, o, f)
++static struct event_constraint *
++icl_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
++			  struct perf_event *event)
++{
++	/*
++	 * Fixed counter 0 has less skid.
++	 * Force instruction:ppp in Fixed counter 0
++	 */
++	if ((event->attr.precise_ip == 3) &&
++	    constraint_match(&fixed0_constraint, event->hw.config))
++		return &fixed0_constraint;
 +
- #define EVENT_CONSTRAINT(c, n, m)	\
- 	__EVENT_CONSTRAINT(c, n, m, HWEIGHT(n), 0, 0)
++	return hsw_get_event_constraints(cpuc, idx, event);
++}
++
+ static struct event_constraint *
+ glp_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
+ 			  struct perf_event *event)
+@@ -4124,6 +4171,42 @@ static struct attribute *hsw_tsx_events_attrs[] = {
+ 	NULL
+ };
  
-+/*
-+ * The constraint_match() function only works for 'simple' event codes
-+ * and not for extended (AMD64_EVENTSEL_EVENT) events codes.
-+ */
-+#define EVENT_CONSTRAINT_RANGE(c, e, n, m) \
-+	__EVENT_CONSTRAINT_RANGE(c, e, n, m, HWEIGHT(n), 0, 0)
++EVENT_ATTR_STR(tx-capacity-read,  tx_capacity_read,  "event=0x54,umask=0x80");
++EVENT_ATTR_STR(tx-capacity-write, tx_capacity_write, "event=0x54,umask=0x2");
++EVENT_ATTR_STR(el-capacity-read,  el_capacity_read,  "event=0x54,umask=0x80");
++EVENT_ATTR_STR(el-capacity-write, el_capacity_write, "event=0x54,umask=0x2");
 +
- #define INTEL_EXCLEVT_CONSTRAINT(c, n)	\
- 	__EVENT_CONSTRAINT(c, n, ARCH_PERFMON_EVENTSEL_EVENT, HWEIGHT(n),\
- 			   0, PERF_X86_EVENT_EXCL)
-@@ -326,6 +343,12 @@ struct cpu_hw_events {
- #define INTEL_EVENT_CONSTRAINT(c, n)	\
- 	EVENT_CONSTRAINT(c, n, ARCH_PERFMON_EVENTSEL_EVENT)
++static struct attribute *icl_events_attrs[] = {
++	EVENT_PTR(mem_ld_hsw),
++	EVENT_PTR(mem_st_hsw),
++	NULL,
++};
++
++static struct attribute *icl_tsx_events_attrs[] = {
++	EVENT_PTR(tx_start),
++	EVENT_PTR(tx_abort),
++	EVENT_PTR(tx_commit),
++	EVENT_PTR(tx_capacity_read),
++	EVENT_PTR(tx_capacity_write),
++	EVENT_PTR(tx_conflict),
++	EVENT_PTR(el_start),
++	EVENT_PTR(el_abort),
++	EVENT_PTR(el_commit),
++	EVENT_PTR(el_capacity_read),
++	EVENT_PTR(el_capacity_write),
++	EVENT_PTR(el_conflict),
++	EVENT_PTR(cycles_t),
++	EVENT_PTR(cycles_ct),
++	NULL,
++};
++
++static __init struct attribute **get_icl_events_attrs(void)
++{
++	return boot_cpu_has(X86_FEATURE_RTM) ?
++		merge_attr(icl_events_attrs, icl_tsx_events_attrs) :
++		icl_events_attrs;
++}
++
+ static ssize_t freeze_on_smi_show(struct device *cdev,
+ 				  struct device_attribute *attr,
+ 				  char *buf)
+@@ -4757,6 +4840,34 @@ __init int intel_pmu_init(void)
+ 		name = "skylake";
+ 		break;
  
-+/*
-+ * Constraint on a range of Event codes
-+ */
-+#define INTEL_EVENT_CONSTRAINT_RANGE(c, e, n)			\
-+	EVENT_CONSTRAINT_RANGE(c, e, n, ARCH_PERFMON_EVENTSEL_EVENT)
++	case INTEL_FAM6_ICELAKE_MOBILE:
++		x86_pmu.late_ack = true;
++		memcpy(hw_cache_event_ids, skl_hw_cache_event_ids, sizeof(hw_cache_event_ids));
++		memcpy(hw_cache_extra_regs, skl_hw_cache_extra_regs, sizeof(hw_cache_extra_regs));
++		hw_cache_event_ids[C(ITLB)][C(OP_READ)][C(RESULT_ACCESS)] = -1;
++		intel_pmu_lbr_init_skl();
 +
++		x86_pmu.event_constraints = intel_icl_event_constraints;
++		x86_pmu.pebs_constraints = intel_icl_pebs_event_constraints;
++		x86_pmu.extra_regs = intel_icl_extra_regs;
++		x86_pmu.pebs_aliases = NULL;
++		x86_pmu.pebs_prec_dist = true;
++		x86_pmu.flags |= PMU_FL_HAS_RSP_1;
++		x86_pmu.flags |= PMU_FL_NO_HT_SHARING;
++
++		x86_pmu.hw_config = hsw_hw_config;
++		x86_pmu.get_event_constraints = icl_get_event_constraints;
++		extra_attr = boot_cpu_has(X86_FEATURE_RTM) ?
++			hsw_format_attr : nhm_format_attr;
++		extra_attr = merge_attr(extra_attr, skl_format_attr);
++		x86_pmu.cpu_events = get_icl_events_attrs();
++		x86_pmu.rtm_abort_event = X86_CONFIG(.event=0xca, .umask=0x02);
++		x86_pmu.lbr_pt_coexist = true;
++		intel_pmu_pebs_data_source_skl(false);
++		pr_cont("Icelake events, ");
++		name = "icelake";
++		break;
++
+ 	default:
+ 		switch (x86_pmu.version) {
+ 		case 1:
+diff --git a/arch/x86/events/intel/ds.c b/arch/x86/events/intel/ds.c
+index 4429bfa92fbc..7a9f5dac5abe 100644
+--- a/arch/x86/events/intel/ds.c
++++ b/arch/x86/events/intel/ds.c
+@@ -849,6 +849,26 @@ struct event_constraint intel_skl_pebs_event_constraints[] = {
+ 	EVENT_CONSTRAINT_END
+ };
+ 
++struct event_constraint intel_icl_pebs_event_constraints[] = {
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x1c0, 0x100000000ULL),	/* INST_RETIRED.PREC_DIST */
++	INTEL_FLAGS_UEVENT_CONSTRAINT(0x0400, 0x400000000ULL),	/* SLOTS */
++
++	INTEL_PLD_CONSTRAINT(0x1cd, 0xff),			/* MEM_TRANS_RETIRED.LOAD_LATENCY */
++	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_LD(0x1d0, 0xf),	/* MEM_INST_RETIRED.LOAD */
++	INTEL_FLAGS_UEVENT_CONSTRAINT_DATALA_ST(0x2d0, 0xf),	/* MEM_INST_RETIRED.STORE */
++
++	INTEL_FLAGS_EVENT_CONSTRAINT_DATALA_LD_RANGE(0xd1, 0xd4, 0xf), /* MEM_LOAD_*_RETIRED.* */
++
++	INTEL_FLAGS_EVENT_CONSTRAINT(0xd0, 0xf),		/* MEM_INST_RETIRED.* */
++
++	/*
++	 * Everything else is handled by PMU_FL_PEBS_ALL, because we
++	 * need the full constraints from the main table.
++	 */
++
++	EVENT_CONSTRAINT_END
++};
++
+ struct event_constraint *intel_pebs_constraints(struct perf_event *event)
+ {
+ 	struct event_constraint *c;
+@@ -1053,7 +1073,7 @@ void intel_pmu_pebs_enable(struct perf_event *event)
+ 
+ 	cpuc->pebs_enabled |= 1ULL << hwc->idx;
+ 
+-	if (event->hw.flags & PERF_X86_EVENT_PEBS_LDLAT)
++	if ((event->hw.flags & PERF_X86_EVENT_PEBS_LDLAT) && (x86_pmu.version < 5))
+ 		cpuc->pebs_enabled |= 1ULL << (hwc->idx + 32);
+ 	else if (event->hw.flags & PERF_X86_EVENT_PEBS_ST)
+ 		cpuc->pebs_enabled |= 1ULL << 63;
+@@ -1105,7 +1125,8 @@ void intel_pmu_pebs_disable(struct perf_event *event)
+ 
+ 	cpuc->pebs_enabled &= ~(1ULL << hwc->idx);
+ 
+-	if (event->hw.flags & PERF_X86_EVENT_PEBS_LDLAT)
++	if ((event->hw.flags & PERF_X86_EVENT_PEBS_LDLAT) &&
++	    (x86_pmu.version < 5))
+ 		cpuc->pebs_enabled &= ~(1ULL << (hwc->idx + 32));
+ 	else if (event->hw.flags & PERF_X86_EVENT_PEBS_ST)
+ 		cpuc->pebs_enabled &= ~(1ULL << 63);
+diff --git a/arch/x86/events/perf_event.h b/arch/x86/events/perf_event.h
+index 0ff0c5ae8c29..07fc84bb85c1 100644
+--- a/arch/x86/events/perf_event.h
++++ b/arch/x86/events/perf_event.h
+@@ -999,6 +999,8 @@ extern struct event_constraint intel_bdw_pebs_event_constraints[];
+ 
+ extern struct event_constraint intel_skl_pebs_event_constraints[];
+ 
++extern struct event_constraint intel_icl_pebs_event_constraints[];
++
+ struct event_constraint *intel_pebs_constraints(struct perf_event *event);
+ 
+ void intel_pmu_pebs_add(struct perf_event *event);
+diff --git a/arch/x86/include/asm/intel_ds.h b/arch/x86/include/asm/intel_ds.h
+index ae26df1c2789..8380c3ddd4b2 100644
+--- a/arch/x86/include/asm/intel_ds.h
++++ b/arch/x86/include/asm/intel_ds.h
+@@ -8,7 +8,7 @@
+ 
+ /* The maximal number of PEBS events: */
+ #define MAX_PEBS_EVENTS		8
+-#define MAX_FIXED_PEBS_EVENTS	3
++#define MAX_FIXED_PEBS_EVENTS	4
+ 
  /*
-  * Constraint on the Event code + UMask + fixed-mask
-  *
-@@ -373,6 +396,9 @@ struct cpu_hw_events {
- #define INTEL_FLAGS_EVENT_CONSTRAINT(c, n) \
- 	EVENT_CONSTRAINT(c, n, INTEL_ARCH_EVENT_MASK|X86_ALL_EVENT_FLAGS)
+  * A debug store configuration.
+diff --git a/arch/x86/include/asm/perf_event.h b/arch/x86/include/asm/perf_event.h
+index 997a6587d7cf..04768a3a5454 100644
+--- a/arch/x86/include/asm/perf_event.h
++++ b/arch/x86/include/asm/perf_event.h
+@@ -7,7 +7,7 @@
+  */
  
-+#define INTEL_FLAGS_EVENT_CONSTRAINT_RANGE(c, e, n)			\
-+	EVENT_CONSTRAINT_RANGE(c, e, n, INTEL_ARCH_EVENT_MASK|X86_ALL_EVENT_FLAGS)
-+
- /* Check only flags, but allow all event/umask */
- #define INTEL_ALL_EVENT_CONSTRAINT(code, n)	\
- 	EVENT_CONSTRAINT(code, n, X86_ALL_EVENT_FLAGS)
-@@ -389,6 +415,11 @@ struct cpu_hw_events {
- 			  ARCH_PERFMON_EVENTSEL_EVENT|X86_ALL_EVENT_FLAGS, \
- 			  HWEIGHT(n), 0, PERF_X86_EVENT_PEBS_LD_HSW)
+ #define INTEL_PMC_MAX_GENERIC				       32
+-#define INTEL_PMC_MAX_FIXED					3
++#define INTEL_PMC_MAX_FIXED					4
+ #define INTEL_PMC_IDX_FIXED				       32
  
-+#define INTEL_FLAGS_EVENT_CONSTRAINT_DATALA_LD_RANGE(code, end, n) \
-+	__EVENT_CONSTRAINT_RANGE(code, end, n,				\
-+			  ARCH_PERFMON_EVENTSEL_EVENT|X86_ALL_EVENT_FLAGS, \
-+			  HWEIGHT(n), 0, PERF_X86_EVENT_PEBS_LD_HSW)
-+
- #define INTEL_FLAGS_EVENT_CONSTRAINT_DATALA_XLD(code, n) \
- 	__EVENT_CONSTRAINT(code, n,			\
- 			  ARCH_PERFMON_EVENTSEL_EVENT|X86_ALL_EVENT_FLAGS, \
+ #define X86_PMC_IDX_MAX					       64
