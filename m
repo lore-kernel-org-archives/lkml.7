@@ -7,172 +7,119 @@ X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 94D50C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:22:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9B4FCC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:22:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6006020868
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:22:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 68D8E21741
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:22:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="TbOLv6mZ"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="nvABPtNO"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729814AbfDPQWY (ORCPT
+        id S1729935AbfDPQW3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 12:22:24 -0400
-Received: from mail-yw1-f73.google.com ([209.85.161.73]:33837 "EHLO
-        mail-yw1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbfDPQWX (ORCPT
+        Tue, 16 Apr 2019 12:22:29 -0400
+Received: from mail-yb1-f201.google.com ([209.85.219.201]:43655 "EHLO
+        mail-yb1-f201.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729832AbfDPQW2 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 12:22:23 -0400
-Received: by mail-yw1-f73.google.com with SMTP id x66so15964247ywx.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:22:23 -0700 (PDT)
+        Tue, 16 Apr 2019 12:22:28 -0400
+Received: by mail-yb1-f201.google.com with SMTP id d2so16037160ybs.10
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:22:27 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=google.com; s=20161025;
         h=date:in-reply-to:message-id:mime-version:references:subject:from:to
          :cc;
-        bh=7F9exMRREX45C8pUViq8Do93XD3VpokDWa83r/8/32I=;
-        b=TbOLv6mZmd63hxyjHCSHuv7ywkKnUziSn/tgy31HFnxtNpgFssBiAUH4RRts4ihb4+
-         Vzz2AvNg5t1JMiMSbILV4MXLEgZ+sdI9HBCi5OA3bniDstq5Ab1hRXFQ63jMgSg83xW/
-         1iuCBy2lssUPD17tMCI9GETlCM2C4TqoTV9C+5tah7RaYs+GjW4FZTtmJfOztBfxTZOg
-         KQTNkxP4o9UUEjeNr3RCG+/feemcOMshhAnqxsedvcj/o1T8fx9IF4h3H0TILywdVog3
-         xSmJD1uiBizVOxLnjSyJsAqs5quxI8MiQalrAymJepq7BksJ3HjwUn0FBzGWWyc7ZwlX
-         vD+w==
+        bh=BelyAusOx0YfiakkT+ISkR4vR8JMKkPLQAmRbMojJck=;
+        b=nvABPtNO6Lg9G2r0uL7lHQpP3tXFz2i5Qqd2QyfCuqSD4AqUuggZKu0I48SjXBnKl/
+         +OzKJjgTExCF9MzhGXQzTe7x5CQs2P4x5C4RbGLQkyokAkkbX/zeGH1cOelAnwg2Trc9
+         k3KMjogiB8pDMRJcTR4VXPT88UZv+ocDyLfLAnoiFvj5DC1ri4lOIYxvGBtFm0HzxQX3
+         xlf3Hpe83YKyMDEaoc7iVu/9Ut2DyzW3StRq5ArUsIHiYbVPDlP19NkRrU/LgPevMdZC
+         Zva5aeBk8chzsj6Xq4FA3JsnjCWtO3mvJDQr/7jdM5rLJc2E+Rc+6k+Cu6wOpLbxHAfU
+         EAxQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:date:in-reply-to:message-id:mime-version
          :references:subject:from:to:cc;
-        bh=7F9exMRREX45C8pUViq8Do93XD3VpokDWa83r/8/32I=;
-        b=iCeOE8GtuQ4veL0HwGj4wDbxygpK9ikTlS+Y2Co5kyCXnhZ+rvJ6JtnHgPxUlkXv69
-         QR5Hx6nzsyXoPE0RvbqVQ58TddWEqWZGFN06YGlZE65MKrF8G2nKqjRbBiiIK7/k20s0
-         NmRtjm+XSz6DqAZXP0zAVUm5czX8k1+4g2VWChd7pLOAsYMJ7njt4h31KvHR4UQ7jlMG
-         MM86ZLyfypPSDMVlAFSwlSvqW5pB6SzbfssHLFDjixko4Y/e2MXRbgyhgaGrF70b81MX
-         dMcOeGEYm6kxC0gcR1bsjl6GreTJtNh2wj4je7qI6L9C2iBKuAEKUQzFE0bFsginAK/y
-         s6bw==
-X-Gm-Message-State: APjAAAXXzedImx13W6HRnxw97oOYmg32sNM7gejmREuJrakdlWLZy2BE
-        WhoBpxqLhhZkA8UuSyFwKu4Q2C+vSzIw
-X-Google-Smtp-Source: APXvYqy2qI3SZ2tJw6VpF4UtNMa11VvLM38g252ji92E3Ij0RxjO9Axjq1LQmhFPoxzNHq3TcAh4bOaB1Y2k
-X-Received: by 2002:a25:cf97:: with SMTP id f145mr989704ybg.46.1555431743090;
- Tue, 16 Apr 2019 09:22:23 -0700 (PDT)
-Date:   Tue, 16 Apr 2019 09:21:49 -0700
+        bh=BelyAusOx0YfiakkT+ISkR4vR8JMKkPLQAmRbMojJck=;
+        b=q4oDBsvhH4oOocku8hAJ83LyROX3QMrlHsZO4/aHtBwOOPDzZic7U+Z/j57Qa8861X
+         rwTktDAM6qx68atqf6JU1ibfzFfqoK/xhMDY9gaifEnoZLQvQVvJdq/fiyePB/hKUaWO
+         PGc42TXM1a4f50DtaqonTNZ1CRpFa8DdABzWGtCoTF4wlRl+q14GMIPBMMHpD6BESWRW
+         tujvWpTWpGNFovBZJ6A9VZIZfjzPqt/PqyzsfDCcGzHudLF8se5tEuKkHcoooUfsOYEh
+         8outW+UcXMski7cjUZxrsWjuJq/qOnZcGrb++JifmJ50j/RA0j8jF5ssiaedGaC74s8e
+         yuJg==
+X-Gm-Message-State: APjAAAU87+p3BQHRcdg0fVH1BzFEk3+O0gZVYuJ5UOJXaaFH3TmCeWLZ
+        tLa8lwDdpfzFhG7Mf7hGoYX5+MRHP0uh
+X-Google-Smtp-Source: APXvYqxv9nfTEuvVY34Q+m+TiayX7m8XCPbwroqmXgonTqTIk8WLKclTe6eJdFH3s97gDXhAPBvSrQXshjJd
+X-Received: by 2002:a25:3494:: with SMTP id b142mr977209yba.48.1555431747602;
+ Tue, 16 Apr 2019 09:22:27 -0700 (PDT)
+Date:   Tue, 16 Apr 2019 09:21:50 -0700
 In-Reply-To: <20190416162150.150154-1-venture@google.com>
-Message-Id: <20190416162150.150154-2-venture@google.com>
+Message-Id: <20190416162150.150154-3-venture@google.com>
 Mime-Version: 1.0
 References: <20190416162150.150154-1-venture@google.com>
 X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
-Subject: [PATCH 1/3] ARM: dts: aspeed: zaius: add Infineon and Intersil regulators
+Subject: [PATCH 2/3] ARM: dts: aspeed: zaius: update 12V brick I2C address
 From:   Patrick Venture <venture@google.com>
 To:     venture@google.com, robh+dt@kernel.org, mark.rutland@arm.com,
         joel@jms.id.au, andrew@aj.id.au
-Cc:     Maxim Sloyko <maxims@google.com>, devicetree@vger.kernel.org,
+Cc:     Robert Lippert <rlippert@google.com>, devicetree@vger.kernel.org,
         linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org,
-        Robert Lippert <rlippert@google.com>
+        linux-aspeed@lists.ozlabs.org, linux-kernel@vger.kernel.org
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Maxim Sloyko <maxims@google.com>
+From: Robert Lippert <rlippert@google.com>
 
-Add the nodes for the ir38064 and isl68137 devices on the Zaius board.
+The I2C address of the brick is different depending on the board SKU.
 
-Signed-off-by: Maxim Sloyko <maxims@google.com>
+Update the values to instantiate addresses which work for most boards.
+
 Signed-off-by: Robert Lippert <rlippert@google.com>
 Signed-off-by: Patrick Venture <venture@google.com>
 ---
- arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts | 65 ++++++++++++++++++++--
- 1 file changed, 60 insertions(+), 5 deletions(-)
+ arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts | 18 ++++++++++++++----
+ 1 file changed, 14 insertions(+), 4 deletions(-)
 
 diff --git a/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts b/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
-index 2c5aa90a546d7..63e892f16d050 100644
+index 63e892f16d050..51265af622574 100644
 --- a/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
 +++ b/arch/arm/boot/dts/aspeed-bmc-opp-zaius.dts
-@@ -296,6 +296,32 @@
- 				reg = <0x54>;
- 			};
- 		};
-+
+@@ -328,10 +328,21 @@
+ 	 *   LM5066I PMBUS @10h
+ 	 */
+ 
+-	/* 12V Quarter Brick DC/DC Converter Q54SJ12050 @61h */
+-	power-brick@61 {
++	/*
++	 * Brick will be one of these types/addresses.  Depending
++	 * on the board SKU only one is actually present and will successfully
++	 * instantiate while the others will fail the probe operation.
++	 * These are the PVT (and presumably beyond) addresses:
++	 *    12V Quarter Brick DC/DC Converter Q54SJ12050 @6Ah
++	 *    12V Quarter Brick DC/DC Converter Q54SH12050 @30h
++	 */
++	power-brick@6a {
++		compatible = "delta,dps800";
++		reg = <0x6a>;
 +	};
-+
-+	vrm@64 {
-+		compatible = "isil,isl68137";
-+		reg = <0x64>;
-+	};
-+
-+	vrm@40 {
-+		compatible = "isil,isl68137";
-+		reg = <0x40>;
-+	};
-+
-+	vrm@60 {
-+		compatible = "isil,isl68137";
-+		reg = <0x60>;
-+	};
-+
-+	vrm@43 {
-+		compatible = "infineon,ir38064";
-+		reg = <0x43>;
-+	};
-+
-+	vrm@41 {
-+		compatible = "isil,isl68137";
-+		reg = <0x41>;
++	power-brick@30 {
+ 		compatible = "delta,dps800";
+-		reg = <0x61>;
++		reg = <0x30>;
  	};
  
- 	/* Master selector PCA9541A @70h (other master: CPU0)
-@@ -311,18 +337,47 @@
  	/* CPU0 VR ISL68137 0.7V, 0.96V PMBUS @64h */
- 	/* CPU0 VR ISL68137 1.2V CH03 PMBUS @40h */
- 	/* CPU0 VR ISL68137 0.8V PMBUS @60h */
--	/* CPU0 VR 1.0V IR38064 I2C @11h, PMBUS @41h */
-+	/* CPU0 VR 1.0V IR38064 I2C @11h, PMBUS @43h */
- 	/* CPU0 VR ISL68137 1.2V CH47 PMBUS @41h */
-+	/* Master selector PCA9541A @70h (other master: CPU0)
-+	 *   LM5066I PMBUS @10h
-+	 */
-+	/* 12V SMPS Q54SH12050NNDH @61h */
+@@ -342,7 +353,6 @@
+ 	/* Master selector PCA9541A @70h (other master: CPU0)
+ 	 *   LM5066I PMBUS @10h
+ 	 */
+-	/* 12V SMPS Q54SH12050NNDH @61h */
  };
  
  &i2c8 {
- 	status = "okay";
- 
--	/* CPU1 VR ISL68137 0.7V, 0.96V PMBUS @65h */
--	/* CPU1 VR ISL68137 1.2V CH03 PMBUS @44h */
--	/* CPU1 VR ISL68137 0.8V PMBUS @61h */
-+	vrm@64 {
-+		compatible = "isil,isl68137";
-+		reg = <0x64>;
-+	};
-+
-+	vrm@40 {
-+		compatible = "isil,isl68137";
-+		reg = <0x40>;
-+	};
-+
-+	vrm@41 {
-+		compatible = "isil,isl68137";
-+		reg = <0x41>;
-+	};
-+
-+	vrm@42 {
-+		compatible = "infineon,ir38064";
-+		reg = <0x42>;
-+	};
-+
-+	vrm@60 {
-+		compatible = "isil,isl68137";
-+		reg = <0x60>;
-+	};
-+
-+	/* CPU1 VR ISL68137 0.7V, 0.96V PMBUS @64h */
-+	/* CPU1 VR ISL68137 1.2V CH03 PMBUS @40h */
-+	/* CPU1 VR ISL68137 1.2V CH47 PMBUS @41h */
- 	/* CPU1 VR 1.0V IR38064 I2C @12h, PMBUS @42h */
--	/* CPU0 VR ISL68137 1.2V CH47 PMBUS @45h */
-+	/* CPU1 VR ISL68137 0.8V PMBUS @60h */
- };
- 
- 
 -- 
 2.21.0.392.gf8f6787159e-goog
 
