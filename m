@@ -4,50 +4,50 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D1D2C282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:47:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0B88C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:47:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6B80221B68
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:47:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8FDEA21B68
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:47:03 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729531AbfDPNrA (ORCPT
+        id S1729542AbfDPNrC (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 09:47:00 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:36994 "EHLO
+        Tue, 16 Apr 2019 09:47:02 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44514 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729489AbfDPNqy (ORCPT
+        by vger.kernel.org with ESMTP id S1729522AbfDPNrA (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 09:46:54 -0400
-Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3GDknCV176700
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:46:52 -0400
-Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2rwfbatsb8-1
+        Tue, 16 Apr 2019 09:47:00 -0400
+Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3GDkR5C100070
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:46:59 -0400
+Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rwdvq705c-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:46:51 -0400
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:46:56 -0400
 Received: from localhost
-        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <ldufour@linux.ibm.com>;
-        Tue, 16 Apr 2019 14:46:09 +0100
-Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
-        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Tue, 16 Apr 2019 14:46:46 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 16 Apr 2019 14:45:59 +0100
+        Tue, 16 Apr 2019 14:46:36 +0100
 Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3GDjvHK45482116
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3GDkYua30736478
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 Apr 2019 13:45:58 GMT
+        Tue, 16 Apr 2019 13:46:34 GMT
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id D07D04C058;
-        Tue, 16 Apr 2019 13:45:57 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 623894C040;
+        Tue, 16 Apr 2019 13:46:34 +0000 (GMT)
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 27A384C05A;
-        Tue, 16 Apr 2019 13:45:55 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 8FE474C04A;
+        Tue, 16 Apr 2019 13:46:32 +0000 (GMT)
 Received: from nimbus.lab.toulouse-stg.fr.ibm.com (unknown [9.101.4.33])
         by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 16 Apr 2019 13:45:55 +0000 (GMT)
+        Tue, 16 Apr 2019 13:46:32 +0000 (GMT)
 From:   Laurent Dufour <ldufour@linux.ibm.com>
 To:     akpm@linux-foundation.org, mhocko@kernel.org, peterz@infradead.org,
         kirill@shutemov.name, ak@linux.intel.com, dave@stgolabs.net,
@@ -78,22 +78,22 @@ Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         haren@linux.vnet.ibm.com, npiggin@gmail.com,
         paulmck@linux.vnet.ibm.com, Tim Chen <tim.c.chen@linux.intel.com>,
         linuxppc-dev@lists.ozlabs.org, x86@kernel.org
-Subject: [PATCH v12 12/31] mm: protect SPF handler against anon_vma changes
-Date:   Tue, 16 Apr 2019 15:45:03 +0200
+Subject: [PATCH v12 24/31] mm: adding speculative page fault failure trace events
+Date:   Tue, 16 Apr 2019 15:45:15 +0200
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190416134522.17540-1-ldufour@linux.ibm.com>
 References: <20190416134522.17540-1-ldufour@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19041613-0016-0000-0000-0000026F7271
+x-cbid: 19041613-0008-0000-0000-000002DA6FB7
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19041613-0017-0000-0000-000032CBBD87
-Message-Id: <20190416134522.17540-13-ldufour@linux.ibm.com>
+x-cbparentid: 19041613-0009-0000-0000-00002246A840
+Message-Id: <20190416134522.17540-25-ldufour@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-16_05:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
  mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1810050000 definitions=main-1904160093
@@ -102,56 +102,292 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The speculative page fault handler must be protected against anon_vma
-changes. This is because page_add_new_anon_rmap() is called during the
-speculative path.
-
-In addition, don't try speculative page fault if the VMA don't have an
-anon_vma structure allocated because its allocation should be
-protected by the mmap_sem.
-
-In __vma_adjust() when importer->anon_vma is set, there is no need to
-protect against speculative page faults since speculative page fault
-is aborted if the vma->anon_vma is not set.
-
-When calling page_add_new_anon_rmap() vma->anon_vma is necessarily
-valid since we checked for it when locking the pte and the anon_vma is
-removed once the pte is unlocked. So even if the speculative page
-fault handler is running concurrently with do_unmap(), as the pte is
-locked in unmap_region() - through unmap_vmas() - and the anon_vma
-unlinked later, because we check for the vma sequence counter which is
-updated in unmap_page_range() before locking the pte, and then in
-free_pgtables() so when locking the pte the change will be detected.
+This patch a set of new trace events to collect the speculative page fault
+event failures.
 
 Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
 ---
- mm/memory.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ include/trace/events/pagefault.h | 80 ++++++++++++++++++++++++++++++++
+ mm/memory.c                      | 57 ++++++++++++++++++-----
+ 2 files changed, 125 insertions(+), 12 deletions(-)
+ create mode 100644 include/trace/events/pagefault.h
 
+diff --git a/include/trace/events/pagefault.h b/include/trace/events/pagefault.h
+new file mode 100644
+index 000000000000..d9438f3e6bad
+--- /dev/null
++++ b/include/trace/events/pagefault.h
+@@ -0,0 +1,80 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++#undef TRACE_SYSTEM
++#define TRACE_SYSTEM pagefault
++
++#if !defined(_TRACE_PAGEFAULT_H) || defined(TRACE_HEADER_MULTI_READ)
++#define _TRACE_PAGEFAULT_H
++
++#include <linux/tracepoint.h>
++#include <linux/mm.h>
++
++DECLARE_EVENT_CLASS(spf,
++
++	TP_PROTO(unsigned long caller,
++		 struct vm_area_struct *vma, unsigned long address),
++
++	TP_ARGS(caller, vma, address),
++
++	TP_STRUCT__entry(
++		__field(unsigned long, caller)
++		__field(unsigned long, vm_start)
++		__field(unsigned long, vm_end)
++		__field(unsigned long, address)
++	),
++
++	TP_fast_assign(
++		__entry->caller		= caller;
++		__entry->vm_start	= vma->vm_start;
++		__entry->vm_end		= vma->vm_end;
++		__entry->address	= address;
++	),
++
++	TP_printk("ip:%lx vma:%lx-%lx address:%lx",
++		  __entry->caller, __entry->vm_start, __entry->vm_end,
++		  __entry->address)
++);
++
++DEFINE_EVENT(spf, spf_vma_changed,
++
++	TP_PROTO(unsigned long caller,
++		 struct vm_area_struct *vma, unsigned long address),
++
++	TP_ARGS(caller, vma, address)
++);
++
++DEFINE_EVENT(spf, spf_vma_noanon,
++
++	TP_PROTO(unsigned long caller,
++		 struct vm_area_struct *vma, unsigned long address),
++
++	TP_ARGS(caller, vma, address)
++);
++
++DEFINE_EVENT(spf, spf_vma_notsup,
++
++	TP_PROTO(unsigned long caller,
++		 struct vm_area_struct *vma, unsigned long address),
++
++	TP_ARGS(caller, vma, address)
++);
++
++DEFINE_EVENT(spf, spf_vma_access,
++
++	TP_PROTO(unsigned long caller,
++		 struct vm_area_struct *vma, unsigned long address),
++
++	TP_ARGS(caller, vma, address)
++);
++
++DEFINE_EVENT(spf, spf_pmd_changed,
++
++	TP_PROTO(unsigned long caller,
++		 struct vm_area_struct *vma, unsigned long address),
++
++	TP_ARGS(caller, vma, address)
++);
++
++#endif /* _TRACE_PAGEFAULT_H */
++
++/* This part must be outside protection */
++#include <trace/define_trace.h>
 diff --git a/mm/memory.c b/mm/memory.c
-index 423fa8ea0569..2cf7b6185daa 100644
+index 1991da97e2db..509851ad7c95 100644
 --- a/mm/memory.c
 +++ b/mm/memory.c
-@@ -377,7 +377,9 @@ void free_pgtables(struct mmu_gather *tlb, struct vm_area_struct *vma,
- 		 * Hide vma from rmap and truncate_pagecache before freeing
- 		 * pgtables
- 		 */
-+		vm_write_begin(vma);
- 		unlink_anon_vmas(vma);
-+		vm_write_end(vma);
- 		unlink_file_vma(vma);
+@@ -81,6 +81,9 @@
  
- 		if (is_vm_hugetlb_page(vma)) {
-@@ -391,7 +393,9 @@ void free_pgtables(struct mmu_gather *tlb, struct vm_area_struct *vma,
- 			       && !is_vm_hugetlb_page(next)) {
- 				vma = next;
- 				next = vma->vm_next;
-+				vm_write_begin(vma);
- 				unlink_anon_vmas(vma);
-+				vm_write_end(vma);
- 				unlink_file_vma(vma);
- 			}
- 			free_pgd_range(tlb, addr, vma->vm_end,
+ #include "internal.h"
+ 
++#define CREATE_TRACE_POINTS
++#include <trace/events/pagefault.h>
++
+ #if defined(LAST_CPUPID_NOT_IN_PAGE_FLAGS) && !defined(CONFIG_COMPILE_TEST)
+ #warning Unfortunate NUMA and NUMA Balancing config, growing page-frame for last_cpupid.
+ #endif
+@@ -2100,8 +2103,10 @@ static bool pte_spinlock(struct vm_fault *vmf)
+ 
+ again:
+ 	local_irq_disable();
+-	if (vma_has_changed(vmf))
++	if (vma_has_changed(vmf)) {
++		trace_spf_vma_changed(_RET_IP_, vmf->vma, vmf->address);
+ 		goto out;
++	}
+ 
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+ 	/*
+@@ -2109,8 +2114,10 @@ static bool pte_spinlock(struct vm_fault *vmf)
+ 	 * is not a huge collapse operation in progress in our back.
+ 	 */
+ 	pmdval = READ_ONCE(*vmf->pmd);
+-	if (!pmd_same(pmdval, vmf->orig_pmd))
++	if (!pmd_same(pmdval, vmf->orig_pmd)) {
++		trace_spf_pmd_changed(_RET_IP_, vmf->vma, vmf->address);
+ 		goto out;
++	}
+ #endif
+ 
+ 	vmf->ptl = pte_lockptr(vmf->vma->vm_mm, vmf->pmd);
+@@ -2121,6 +2128,7 @@ static bool pte_spinlock(struct vm_fault *vmf)
+ 
+ 	if (vma_has_changed(vmf)) {
+ 		spin_unlock(vmf->ptl);
++		trace_spf_vma_changed(_RET_IP_, vmf->vma, vmf->address);
+ 		goto out;
+ 	}
+ 
+@@ -2154,8 +2162,10 @@ static bool pte_map_lock(struct vm_fault *vmf)
+ 	 */
+ again:
+ 	local_irq_disable();
+-	if (vma_has_changed(vmf))
++	if (vma_has_changed(vmf)) {
++		trace_spf_vma_changed(_RET_IP_, vmf->vma, vmf->address);
+ 		goto out;
++	}
+ 
+ #ifdef CONFIG_TRANSPARENT_HUGEPAGE
+ 	/*
+@@ -2163,8 +2173,10 @@ static bool pte_map_lock(struct vm_fault *vmf)
+ 	 * is not a huge collapse operation in progress in our back.
+ 	 */
+ 	pmdval = READ_ONCE(*vmf->pmd);
+-	if (!pmd_same(pmdval, vmf->orig_pmd))
++	if (!pmd_same(pmdval, vmf->orig_pmd)) {
++		trace_spf_pmd_changed(_RET_IP_, vmf->vma, vmf->address);
+ 		goto out;
++	}
+ #endif
+ 
+ 	/*
+@@ -2184,6 +2196,7 @@ static bool pte_map_lock(struct vm_fault *vmf)
+ 
+ 	if (vma_has_changed(vmf)) {
+ 		pte_unmap_unlock(pte, ptl);
++		trace_spf_vma_changed(_RET_IP_, vmf->vma, vmf->address);
+ 		goto out;
+ 	}
+ 
+@@ -4187,47 +4200,60 @@ vm_fault_t __handle_speculative_fault(struct mm_struct *mm,
+ 
+ 	/* rmb <-> seqlock,vma_rb_erase() */
+ 	seq = raw_read_seqcount(&vma->vm_sequence);
+-	if (seq & 1)
++	if (seq & 1) {
++		trace_spf_vma_changed(_RET_IP_, vma, address);
+ 		goto out_put;
++	}
+ 
+ 	/*
+ 	 * Can't call vm_ops service has we don't know what they would do
+ 	 * with the VMA.
+ 	 * This include huge page from hugetlbfs.
+ 	 */
+-	if (vma->vm_ops && vma->vm_ops->fault)
++	if (vma->vm_ops && vma->vm_ops->fault) {
++		trace_spf_vma_notsup(_RET_IP_, vma, address);
+ 		goto out_put;
++	}
+ 
+ 	/*
+ 	 * __anon_vma_prepare() requires the mmap_sem to be held
+ 	 * because vm_next and vm_prev must be safe. This can't be guaranteed
+ 	 * in the speculative path.
+ 	 */
+-	if (unlikely(!vma->anon_vma))
++	if (unlikely(!vma->anon_vma)) {
++		trace_spf_vma_notsup(_RET_IP_, vma, address);
+ 		goto out_put;
++	}
+ 
+ 	vmf.vma_flags = READ_ONCE(vma->vm_flags);
+ 	vmf.vma_page_prot = READ_ONCE(vma->vm_page_prot);
+ 
+ 	/* Can't call userland page fault handler in the speculative path */
+-	if (unlikely(vmf.vma_flags & VM_UFFD_MISSING))
++	if (unlikely(vmf.vma_flags & VM_UFFD_MISSING)) {
++		trace_spf_vma_notsup(_RET_IP_, vma, address);
+ 		goto out_put;
++	}
+ 
+-	if (vmf.vma_flags & VM_GROWSDOWN || vmf.vma_flags & VM_GROWSUP)
++	if (vmf.vma_flags & VM_GROWSDOWN || vmf.vma_flags & VM_GROWSUP) {
+ 		/*
+ 		 * This could be detected by the check address against VMA's
+ 		 * boundaries but we want to trace it as not supported instead
+ 		 * of changed.
+ 		 */
++		trace_spf_vma_notsup(_RET_IP_, vma, address);
+ 		goto out_put;
++	}
+ 
+ 	if (address < READ_ONCE(vma->vm_start)
+-	    || READ_ONCE(vma->vm_end) <= address)
++	    || READ_ONCE(vma->vm_end) <= address) {
++		trace_spf_vma_changed(_RET_IP_, vma, address);
+ 		goto out_put;
++	}
+ 
+ 	if (!arch_vma_access_permitted(vma, flags & FAULT_FLAG_WRITE,
+ 				       flags & FAULT_FLAG_INSTRUCTION,
+ 				       flags & FAULT_FLAG_REMOTE)) {
++		trace_spf_vma_access(_RET_IP_, vma, address);
+ 		ret = VM_FAULT_SIGSEGV;
+ 		goto out_put;
+ 	}
+@@ -4235,10 +4261,12 @@ vm_fault_t __handle_speculative_fault(struct mm_struct *mm,
+ 	/* This is one is required to check that the VMA has write access set */
+ 	if (flags & FAULT_FLAG_WRITE) {
+ 		if (unlikely(!(vmf.vma_flags & VM_WRITE))) {
++			trace_spf_vma_access(_RET_IP_, vma, address);
+ 			ret = VM_FAULT_SIGSEGV;
+ 			goto out_put;
+ 		}
+ 	} else if (unlikely(!(vmf.vma_flags & (VM_READ|VM_EXEC|VM_WRITE)))) {
++		trace_spf_vma_access(_RET_IP_, vma, address);
+ 		ret = VM_FAULT_SIGSEGV;
+ 		goto out_put;
+ 	}
+@@ -4252,8 +4280,10 @@ vm_fault_t __handle_speculative_fault(struct mm_struct *mm,
+ 	pol = __get_vma_policy(vma, address);
+ 	if (!pol)
+ 		pol = get_task_policy(current);
+-	if (pol && pol->mode == MPOL_INTERLEAVE)
++	if (pol && pol->mode == MPOL_INTERLEAVE) {
++		trace_spf_vma_notsup(_RET_IP_, vma, address);
+ 		goto out_put;
++	}
+ #endif
+ 
+ 	/*
+@@ -4326,8 +4356,10 @@ vm_fault_t __handle_speculative_fault(struct mm_struct *mm,
+ 	 * We need to re-validate the VMA after checking the bounds, otherwise
+ 	 * we might have a false positive on the bounds.
+ 	 */
+-	if (read_seqcount_retry(&vma->vm_sequence, seq))
++	if (read_seqcount_retry(&vma->vm_sequence, seq)) {
++		trace_spf_vma_changed(_RET_IP_, vma, address);
+ 		goto out_put;
++	}
+ 
+ 	mem_cgroup_enter_user_fault();
+ 	ret = handle_pte_fault(&vmf);
+@@ -4346,6 +4378,7 @@ vm_fault_t __handle_speculative_fault(struct mm_struct *mm,
+ 	return ret;
+ 
+ out_walk:
++	trace_spf_vma_notsup(_RET_IP_, vma, address);
+ 	local_irq_enable();
+ out_put:
+ 	put_vma(vma);
 -- 
 2.21.0
 
