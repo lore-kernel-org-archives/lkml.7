@@ -2,199 +2,242 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=FAKE_REPLY_C,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E7EA8C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:48:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 710C2C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:49:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAC562075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:48:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4001E2087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:49:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730180AbfDPRsq (ORCPT
+        id S1730241AbfDPRtE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 13:48:46 -0400
-Received: from smtp1.de.adit-jv.com ([93.241.18.167]:55297 "EHLO
-        smtp1.de.adit-jv.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726860AbfDPRsq (ORCPT
+        Tue, 16 Apr 2019 13:49:04 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:57418 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726860AbfDPRtD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 13:48:46 -0400
-Received: from localhost (smtp1.de.adit-jv.com [127.0.0.1])
-        by smtp1.de.adit-jv.com (Postfix) with ESMTP id 8385D3C00DD;
-        Tue, 16 Apr 2019 19:48:43 +0200 (CEST)
-Received: from smtp1.de.adit-jv.com ([127.0.0.1])
-        by localhost (smtp1.de.adit-jv.com [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id EQl5vs48MjWF; Tue, 16 Apr 2019 19:48:33 +0200 (CEST)
-Received: from HI2EXCH01.adit-jv.com (hi2exch01.adit-jv.com [10.72.92.24])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtp1.de.adit-jv.com (Postfix) with ESMTPS id 78D193C00C0;
-        Tue, 16 Apr 2019 19:48:33 +0200 (CEST)
-Received: from vmlxhi-102.adit-jv.com (10.72.93.184) by HI2EXCH01.adit-jv.com
- (10.72.92.24) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 16 Apr
- 2019 19:48:33 +0200
-Date:   Tue, 16 Apr 2019 19:48:30 +0200
-From:   Eugeniu Rosca <erosca@de.adit-jv.com>
-To:     Jiada Wang <jiada_wang@mentor.com>
-CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Simon Horman <horms+renesas@verge.net.au>,
-        Niklas =?utf-8?Q?S=C3=B6derlund?= 
-        <niklas.soderlund+renesas@ragnatech.se>,
-        Geert Uytterhoeven <geert+renesas@glider.be>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>,
-        Marek Vasut <marek.vasut+renesas@gmail.com>,
-        Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>,
-        Hien Dang <hien.dang.eb@renesas.com>,
-        Fabrizio Castro <fabrizio.castro@bp.renesas.com>,
-        Dien Pham <dien.pham.ry@renesas.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Biju Das <biju.das@bp.renesas.com>,
-        "George G. Davis" <george_davis@mentor.com>,
-        Joshua Frkuska <joshua_frkuska@mentor.com>,
-        Eugeniu Rosca <erosca@de.adit-jv.com>,
-        Eugeniu Rosca <roscaeugeniu@gmail.com>
-Subject: Re: [PATCH v1 1/1] thermal: rcar_gen3_thermal: request IRQ after
- device initialization
-Message-ID: <20190416174741.GA26470@vmlxhi-102.adit-jv.com>
+        Tue, 16 Apr 2019 13:49:03 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hGSCa-0005Jv-Sa; Tue, 16 Apr 2019 17:49:00 +0000
+Date:   Tue, 16 Apr 2019 18:49:00 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     linux-fsdevel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [RFC][PATCHSET] sorting out RCU-delayed stuff in ->destroy_inode()
+Message-ID: <20190416174900.GT2217@ZenIV.linux.org.uk>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190411100352.15977-1-jiada_wang@mentor.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Originating-IP: [10.72.93.184]
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Jiada,
+	We have a lot of boilerplate in ->destroy_inode()
+instances, and several filesystems got the things wrong
+in that area.  The patchset below attempts to deal with that.
 
-Adding below people, since they've made recent contributions to the
-driver and might be interested in your patch:
+	New method (void ->free_inode(inode)) is introduced,
+and RCU-delayed parts of ->destroy_inode() are moved there.
+The change is backwards-compatible - unmodified filesystem
+will behave as it used to.  Rules:
+	->destroy_inode		->free_inode
+	f			g		f(), rcu-delayed g()
+	f			NULL		f()
+	NULL			g		rcu-delayed g()
+	NULL			NULL		rcu-delayed free_inode_nonrcu()
+IOW, NULL/NULL acts as NULL/free_inode_nonrcu.
 
-git log master --since="1 year" -- drivers/thermal/rcar_gen3_thermal.c \
-    | grep -o "\-by:.*" | sed 's/\-by: //' | sort | uniq -c | sort -rn
-      7 Eduardo Valentin <edubezval@gmail.com>
-      6 Simon Horman <horms+renesas@verge.net.au>
-      5 Niklas Söderlund <niklas.soderlund+renesas@ragnatech.se>
-      2 Geert Uytterhoeven <geert+renesas@glider.be>
-      1 Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-      1 Marek Vasut <marek.vasut+renesas@gmail.com>
-      1 Kuninori Morimoto <kuninori.morimoto.gx@renesas.com>
-      1 Hien Dang <hien.dang.eb@renesas.com>
-      1 Fabrizio Castro <fabrizio.castro@bp.renesas.com>
-      1 Dien Pham <dien.pham.ry@renesas.com>
-      1 Daniel Lezcano <daniel.lezcano@linaro.org>
-      1 Biju Das <biju.das@bp.renesas.com>
+	For a lot of filesystems ->destroy_inode() used to consist
+only of call_rcu(foo_i_callback, &inode->i_rcu).  Those simply get
+rid of ->destroy_inode() and have the callback (with saner prototype)
+become their ->free_inode().
 
-I confirm that loading and unloading the rcar3 thermal driver in a
-loop produces soft lockup using v5.1-rc5-10-g618d919cae2f on
-H3-ES2.0-Salvator-X. 
+	Filesystems with NULL ->destroy_inode() are simply left as-is
+and so are the filesystems that don't have RCU-delayed call (pipefs,
+xfs, btrfs-tests).
 
-Full log and .config can be found here:
-https://gist.github.com/erosca/1f76b6dd897cdc39581fca475155e363
+	Filesystems that have both synchronous work and RCU-delayed
+call of a callback are more interesting.  In any case, the callback
+can be converted to ->free_inode().  Sometimes that's all we can
+reasonably do there - the rest is left in ->destroy_inode() and that's
+it.  However, for some of those we can do more:
+	* some of the synchronous stuff can just as well live in
+RCU callback; such can be moved to ->free_inode().
+	* some of the synchronous stuff is a better fit for ->evict_inode();
+e.g. the code that's undoing something done after the ->alloc_inode() or
+sanity checks on the inode state.
+	I've done that in the obvious cases; the few non-obvious are up to
+fs maintainers - they can be done as followups at any point.
 
-I post an excerpt from the above [1] (why not including it in the
-description?). Also, why not rephrasing the commit summary line in such
-a way that everybody understands this patch fixes a severe issue, e.g.
-"thermal: rcar_gen3_thermal: Fix soft lockup on probe" ?
+The series lives in vfs.git#work.icache; patchbomb in followups.  Overview:
 
-BTW, with this patch applied I left the thermal driver being
-loaded/unloaded on the target for over one hour w/o seeing the issue
-reproduced. So, while there might be slight variations in how the final
-solution looks like, I think the patch already deserves a:
+* a couple of missed fixes for ->i_link freed to early; -stable fodder:
+      securityfs: fix use-after-free on symlink traversal
+      apparmorfs: fix use-after-free on symlink traversal
+* infrastructure:
+      new inode method: ->free_inode()
+* simple conversions (->destroy_inode() consisting only of call_rcu())
+      spufs: switch to ->free_inode()
+      erofs: switch to ->free_inode()
+      9p: switch to ->free_inode()
+      adfs: switch to ->free_inode()
+      affs: switch to ->free_inode()
+      befs: switch to ->free_inode()
+      bfs: switch to ->free_inode()
+      bdev: switch to ->free_inode()
+      cifs: switch to ->free_inode()
+      debugfs: switch to ->free_inode()
+      efs: switch to ->free_inode()
+      ext2: switch to ->free_inode()
+      f2fs: switch to ->free_inode()
+      fat: switch to ->free_inode()
+      freevxfs: switch to ->free_inode()
+      gfs2: switch to ->free_inode()
+      hfs: switch to ->free_inode()
+      hfsplus: switch to ->free_inode()
+      hostfs: switch to ->free_inode()
+      hpfs: switch to ->free_inode()
+      isofs: switch to ->free_inode()
+      jffs2: switch to ->free_inode()
+      minix: switch to ->free_inode()
+      nfs{,4}: switch to ->free_inode()
+      nilfs2: switch to ->free_inode()
+      dlmfs: switch to ->free_inode()
+      ocfs2: switch to ->free_inode()
+      openpromfs: switch to ->free_inode()
+      procfs: switch to ->free_inode()
+      qnx4: switch to ->free_inode()
+      qnx6: switch to ->free_inode()
+      reiserfs: convert to ->free_inode()
+      romfs: convert to ->free_inode()
+      squashfs: switch to ->free_inode()
+      ubifs: switch to ->free_inode()
+      udf: switch to ->free_inode()
+      sysv: switch to ->free_inode()
+      coda: switch to ->free_inode()
+      ufs: switch to ->free_inode()
+      mqueue: switch to ->free_inode()
+      bpf: switch to ->free_inode()
+      rpcpipe: switch to ->free_inode()
+      apparmor: switch to ->free_inode()
+      securityfs: switch to ->free_inode()
+      ntfs: switch to ->free_inode()
+* cases where ->destroy_inode() contains both synchronous and delayed
+parts; fuse, jfs have their ->destroy_inode() dissolved and
+I'd like an ACK from their maintainers:
+      dax: make use of ->free_inode()
+      afs: switch to use of ->free_inode()
+      btrfs: use ->free_inode()
+      ceph: use ->free_inode()
+      ecryptfs: make use of ->free_inode()
+      ext4: make use of ->free_inode()
+      fuse: switch to ->free_inode()
+      jfs: switch to ->free_inode()
+      overlayfs: make use of ->free_inode()
+      hugetlb: make use of ->free_inode()
+      shmem: make use of ->free_inode()
+      orangefs: make use of ->free_inode()
+* sockets: sockfs is a case where everything can be moved to ->free_inode();
+we are RCU-delaying the freeing of socket_wq anyway, so we might as well
+combine that with freeing the socket_alloc itself.  That allows to get
+rid of separate allocations for those, which simplifies the things nicely.
+We obviously need an ACK from networking folks on the last pair of commits.
+      sockfs: switch to ->free_inode()
+      coallocate socket->wq with socket itself
 
-Tested-by: Eugeniu Rosca <erosca@de.adit-jv.com>
+I have *not* included an update of vfs.txt into that branch, since
+there's a big patchset converting it to a different format.  I have
+a tentative variant of documentation on the tail-end of inode lifecycle,
+but it still needs more work; I want to sort out the situation with
+writeback for "don't retain inodes in icache" case first...
 
-[1] Soft lockup reproduced with v5.1-rc5-10-g618d919cae2f
-
-root@rcar-gen3:~# while true; do rmmod rcar_gen3_thermal; modprobe rcar_gen3_thermal; done
-[   43.439043] rcar_gen3_thermal e6198000.thermal: TSC0: Loaded 0 trip points
-[   43.451670] rcar_gen3_thermal e6198000.thermal: TSC1: Loaded 0 trip points
-[   43.463974] rcar_gen3_thermal e6198000.thermal: TSC2: Loaded 0 trip points
-
-[..]
-
-[  553.966104] rcar_gen3_thermal e6198000.thermal: TSC0: Loaded 0 trip points
-[  553.978759] rcar_gen3_thermal e6198000.thermal: TSC1: Loaded 0 trip points
-[  553.991058] rcar_gen3_thermal e6198000.thermal: TSC2: Loaded 0 trip points
-[  562.235306] renesas_sdhi_internal_dmac ee100000.sd: timeout waiting for hardware interrupt (CMD25)
-[  567.353336] renesas_sdhi_internal_dmac ee100000.sd: timeout waiting for hardware interrupt (CMD13)
-[  572.473318] renesas_sdhi_internal_dmac ee100000.sd: timeout waiting for hardware interrupt (CMD13)
-[  577.593328] renesas_sdhi_internal_dmac ee100000.sd: timeout waiting for hardware interrupt (CMD12)
-[  579.189148] rcu: INFO: rcu_preempt self-detected stall on CPU
-[  579.195329] rcu:     0-....: (1 GPs behind) idle=b76/1/0x4000000000000004 softirq=263851/263851 fqs=6251 last_accelerate: e095/4240, Nonlazy posted: ...
-[  579.209711] rcu:      (t=25008 jiffies g=346801 q=468)
-[  579.214801] Task dump for CPU 0:
-[  579.218178] modprobe        R  running task        0  6337   1420 0x0000002a
-[  579.225514] Call trace:
-[  579.228103]  dump_backtrace+0x0/0x1dc
-[  579.231934]  show_stack+0x24/0x30
-[  579.235410]  sched_show_task+0x31c/0x36c
-[  579.239507]  dump_cpu_task+0xb0/0xc0
-[  579.243248]  rcu_dump_cpu_stacks+0x220/0x238
-[  579.247702]  rcu_sched_clock_irq+0x8a4/0x141c
-[  579.252249]  update_process_times+0x34/0x64
-[  579.256617]  tick_sched_handle+0x80/0x98
-[  579.260714]  tick_sched_timer+0x64/0xbc
-[  579.264722]  __hrtimer_run_queues+0x5c0/0xb84
-[  579.269266]  hrtimer_interrupt+0x1ec/0x454
-[  579.273547]  arch_timer_handler_phys+0x40/0x58
-[  579.278185]  handle_percpu_devid_irq+0x174/0x6e8
-[  579.282999]  generic_handle_irq+0x3c/0x54
-[  579.287185]  __handle_domain_irq+0x114/0x118
-[  579.291639]  gic_handle_irq+0x70/0xac
-[  579.295465]  el1_irq+0xbc/0x180
-[  579.298756]  __asan_load8+0x8c/0x9c
-[  579.302403]  rcu_is_watching+0x80/0x8c
-[  579.306322]  rebalance_domains+0x12c/0x584
-[  579.310599]  run_rebalance_domains+0x1f4/0x298
-[  579.315231]  __do_softirq+0x4c0/0xab8
-[  579.319061]  irq_exit+0x148/0x1d8
-[  579.322530]  __handle_domain_irq+0xc0/0x118
-[  579.326894]  gic_handle_irq+0x70/0xac
-[  579.330720]  el1_irq+0xbc/0x180
-[  579.334012]  lock_is_held_type+0xec/0x144
-[  579.338201]  rcu_read_lock_sched_held+0x90/0x98
-[  579.342927]  kmem_cache_alloc+0x328/0x3e0
-[  579.347114]  create_object+0x5c/0x39c
-[  579.350944]  kmemleak_alloc+0x54/0x88
-[  579.354774]  __kmalloc_track_caller+0x1c8/0x434
-[  579.359499]  devres_alloc_node+0x40/0x8c
-[  579.363597]  __devm_request_region+0x48/0xc8
-[  579.368055]  devm_ioremap_resource+0xcc/0x148
-[  579.372626]  rcar_gen3_thermal_probe+0x288/0x618 [rcar_gen3_thermal]
-[  579.379231]  platform_drv_probe+0x70/0xe4
-[  579.383420]  really_probe+0x2d8/0x3d8
-[  579.387249]  driver_probe_device+0x154/0x164
-[  579.391705]  device_driver_attach+0x98/0xa0
-[  579.396070]  __driver_attach+0xf0/0xf4
-[  579.399987]  bus_for_each_dev+0x114/0x13c
-[  579.404173]  driver_attach+0x38/0x44
-[  579.407912]  bus_add_driver+0x234/0x288
-[  579.411919]  driver_register+0x148/0x190
-[  579.416015]  __platform_driver_register+0x84/0x90
-[  579.420931]  rcar_gen3_thermal_driver_init+0x28/0x1000 [rcar_gen3_thermal]
-[  579.428074]  do_one_initcall+0x124/0x68c
-[  579.432173]  do_init_module+0xb4/0x300
-[  579.436090]  load_module+0x2c90/0x2f18
-[  579.440008]  __se_sys_finit_module+0x128/0x148
-[  579.444642]  __arm64_sys_finit_module+0x4c/0x5c
-[  579.449367]  el0_svc_common+0xd0/0x16c
-[  579.453283]  el0_svc_handler+0x94/0xa0
-[  579.457200]  el0_svc+0x8/0xc
-[  582.713314] renesas_sdhi_internal_dmac ee100000.sd: timeout waiting for hardware interrupt (CMD12)
-[  587.833305] renesas_sdhi_internal_dmac ee100000.sd: timeout waiting for hardware interrupt (CMD12)
-[  592.953323] renesas_sdhi_internal_dmac ee100000.sd: timeout waiting for hardware interrupt (CMD12)
-[  598.073430] renesas_sdhi_internal_dmac ee100000.sd: timeout waiting for hardware interrupt (CMD12)
-[  603.193306] renesas_sdhi_internal_dmac ee100000.sd: timeout waiting for hardware interrupt (CMD12)
-[  604.242120] watchdog: BUG: soft lockup - CPU#0 stuck for 22s! [modprobe:6337]
-[..]
-
-Best regards,
-Eugeniu.
+Diffstat:
+ Documentation/filesystems/Locking         |  2 ++
+ Documentation/filesystems/porting         | 17 ++++++++++
+ arch/powerpc/platforms/cell/spufs/inode.c | 10 ++----
+ drivers/dax/super.c                       |  7 ++--
+ drivers/net/tap.c                         |  5 ++-
+ drivers/net/tun.c                         |  8 ++---
+ drivers/staging/erofs/super.c             | 10 ++----
+ fs/9p/v9fs_vfs.h                          |  2 +-
+ fs/9p/vfs_inode.c                         | 10 ++----
+ fs/9p/vfs_super.c                         |  4 +--
+ fs/adfs/super.c                           | 10 ++----
+ fs/affs/super.c                           | 10 ++----
+ fs/afs/super.c                            |  9 +++---
+ fs/aio.c                                  |  4 +--
+ fs/befs/linuxvfs.c                        | 12 ++-----
+ fs/bfs/inode.c                            | 10 ++----
+ fs/block_dev.c                            | 14 ++------
+ fs/btrfs/ctree.h                          |  1 +
+ fs/btrfs/inode.c                          |  7 ++--
+ fs/btrfs/super.c                          |  1 +
+ fs/ceph/inode.c                           |  5 +--
+ fs/ceph/super.c                           |  1 +
+ fs/ceph/super.h                           |  1 +
+ fs/cifs/cifsfs.c                          | 12 ++-----
+ fs/coda/inode.c                           | 10 ++----
+ fs/debugfs/inode.c                        | 10 ++----
+ fs/ecryptfs/super.c                       |  5 ++-
+ fs/efs/super.c                            | 10 ++----
+ fs/ext2/super.c                           | 10 ++----
+ fs/ext4/super.c                           |  5 ++-
+ fs/f2fs/super.c                           | 10 ++----
+ fs/fat/inode.c                            | 10 ++----
+ fs/freevxfs/vxfs_super.c                  | 11 ++-----
+ fs/fuse/inode.c                           | 24 ++++++--------
+ fs/gfs2/super.c                           | 12 ++-----
+ fs/hfs/super.c                            | 10 ++----
+ fs/hfsplus/super.c                        | 13 ++------
+ fs/hostfs/hostfs_kern.c                   | 10 ++----
+ fs/hpfs/super.c                           | 10 ++----
+ fs/hugetlbfs/inode.c                      |  5 ++-
+ fs/inode.c                                | 54 ++++++++++++++++++-------------
+ fs/isofs/inode.c                          | 10 ++----
+ fs/jffs2/super.c                          | 10 ++----
+ fs/jfs/inode.c                            | 13 ++++++++
+ fs/jfs/super.c                            | 24 ++------------
+ fs/minix/inode.c                          | 10 ++----
+ fs/nfs/inode.c                            | 10 ++----
+ fs/nfs/internal.h                         |  2 +-
+ fs/nfs/nfs4super.c                        |  2 +-
+ fs/nfs/super.c                            |  2 +-
+ fs/nilfs2/nilfs.h                         |  2 --
+ fs/nilfs2/super.c                         | 11 ++-----
+ fs/ntfs/inode.c                           | 17 +++-------
+ fs/ntfs/inode.h                           |  2 +-
+ fs/ntfs/super.c                           |  2 +-
+ fs/ocfs2/dlmfs/dlmfs.c                    | 10 ++----
+ fs/ocfs2/super.c                          | 12 ++-----
+ fs/openpromfs/inode.c                     | 10 ++----
+ fs/orangefs/super.c                       |  9 ++----
+ fs/overlayfs/super.c                      | 13 ++++----
+ fs/proc/inode.c                           | 10 ++----
+ fs/qnx4/inode.c                           | 12 ++-----
+ fs/qnx6/inode.c                           | 12 ++-----
+ fs/reiserfs/super.c                       | 10 ++----
+ fs/romfs/super.c                          | 11 ++-----
+ fs/squashfs/super.c                       | 11 ++-----
+ fs/sysv/inode.c                           | 10 ++----
+ fs/ubifs/super.c                          | 10 ++----
+ fs/udf/super.c                            | 10 ++----
+ fs/ufs/super.c                            | 10 ++----
+ include/linux/fs.h                        |  1 +
+ include/linux/if_tap.h                    |  1 -
+ include/linux/net.h                       |  4 +--
+ include/net/sock.h                        |  4 +--
+ ipc/mqueue.c                              | 10 ++----
+ kernel/bpf/inode.c                        | 10 ++----
+ lib/iov_iter.c                            |  4 +++
+ mm/shmem.c                                |  5 ++-
+ net/core/sock.c                           |  2 +-
+ net/socket.c                              | 23 ++++---------
+ net/sunrpc/rpc_pipe.c                     | 11 ++-----
+ security/apparmor/apparmorfs.c            |  7 ++--
+ security/inode.c                          |  7 ++--
+ 83 files changed, 241 insertions(+), 516 deletions(-)
