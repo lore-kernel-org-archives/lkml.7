@@ -2,114 +2,149 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B796C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 21:23:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 98FC1C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 21:26:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21C1A20868
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 21:23:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 641662075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 21:26:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="qZU7uqNC"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="PcMq9iW0";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="CPHfzsx1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730170AbfDPVXm (ORCPT
+        id S1728946AbfDPV0s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 17:23:42 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:46818 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727136AbfDPVXl (ORCPT
+        Tue, 16 Apr 2019 17:26:48 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:44734 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727180AbfDPV0s (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 17:23:41 -0400
-Received: by mail-ot1-f66.google.com with SMTP id s24so18855694otk.13;
-        Tue, 16 Apr 2019 14:23:41 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=gSbt7gSTY0ZiiqAPV9bHSsOQXzLW95HIvp4EovOMx3E=;
-        b=qZU7uqNCkttnmq52a+R21NPeIub8LxD7ARToxVaPTt+wYlPtTznjyd+GRb/luQ8bkC
-         SCPwDj9YM7LbvLbdFCLxPFAlUbze8yvIUUq4nie98RjjQrnXB3JlV4ofq1hAmSqByDRr
-         2TCVev+CKiu1/b3U1dvDEupAaYaMiQpJ6k250luvpn6js5S+lNBgAiWHk6pGm1WmKfnT
-         b7qcUhmJG6JRCftUJsKHFhwLCpMnUprIGKviy3P7ce40GhS58Z8ibrO7xKisRaL8k52Q
-         l77iju8cH2JLHFwOJH1WB71W5b8rCZFV8QFQeyHKUT95ZOoS3ZWcBqKkI9BomFKLguFS
-         EC8g==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=gSbt7gSTY0ZiiqAPV9bHSsOQXzLW95HIvp4EovOMx3E=;
-        b=nWqOSw5LO6z/StuvAW/SXFEHesOxPs7l8ybbaJSiAZFWk0JpOKjlp+SPzVERBqXUPF
-         5nKgSQPQwF2fuAXD9t4eLojA/qfay/BqDWY9ZRIicB/1luI6q1oPQkQnEsGAa5oOt8ZK
-         7yX4P9ZrQOJH4apWh7jHBNdBXu7FGe2vKyQMBrruWranRarh1FmzRGW4El2aiR2Uiqql
-         jwvfxM9JAN9kyY0Lv7C/F0KxMlKrNCBJ0gtRUq0rtxw42xN4ynYhBPMS7eEldLGo74z2
-         wMmUL62C4GcCzmOAAtA/zr8CCdlgvqnEaqmyxMssBS62mr0k7zaiA10B5JGS+ZodU/Wf
-         8AWw==
-X-Gm-Message-State: APjAAAUyLXnL7PNZe66dHrM3Q76xh5y/vmhxnqhFXoAsN+7d3r0spHPW
-        fivg+g/3zl2zZL9ZWwBTNsFUUCJidm4YpWgL9l0=
-X-Google-Smtp-Source: APXvYqxRZCciYu1oN2IMm0pl7eZwo3M50MGFvrXbLWjuQqtQY3apqNG4Ia3uL/qPmmEeDD8fN68LUgnbPgd5OpgMMHE=
-X-Received: by 2002:a9d:73d0:: with SMTP id m16mr19079524otk.48.1555449820556;
- Tue, 16 Apr 2019 14:23:40 -0700 (PDT)
+        Tue, 16 Apr 2019 17:26:48 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 79D6960F3C; Tue, 16 Apr 2019 21:26:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1555450006;
+        bh=fOhYUhfsIJPeehxvWGTsKU0jH3dtNUtmltPYktKQyVI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=PcMq9iW0RgggPk23HLMAlGAGAA3X5vxETW+QAWTVf06bM2hBvBnL+aSVjoIAJCW8G
+         VcH8iOYeS5JOFstusV+bRI3QdcShP1Bw284YrCNsltI9TSV8tAsZUDDZ6kgsRt49qQ
+         1y2y/UjbY7z2DIFVjiDkFq0SnF4hMy48jcVgXsDU=
+Received: from localhost (i-global254.qualcomm.com [199.106.103.254])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: ilina@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 1FAF260746;
+        Tue, 16 Apr 2019 21:26:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1555450005;
+        bh=fOhYUhfsIJPeehxvWGTsKU0jH3dtNUtmltPYktKQyVI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=CPHfzsx1VQDdREqjE+JMmPRdCa2pA8TLSN4BQwT7HAGpzwCixeLyDsHSIywYIGipW
+         2DxLZixWVSS66Np+RQyVd9S99rs5VlmyOZ3E8d9MUBBkSO+odhk8G8dqUyiYRN4cei
+         Khs/Vv9H63TIl6+T6xHdUHmoH4o4fzhplrakI5/Y=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 1FAF260746
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=ilina@codeaurora.org
+Date:   Tue, 16 Apr 2019 15:26:44 -0600
+From:   Lina Iyer <ilina@codeaurora.org>
+To:     Stephen Boyd <swboyd@chromium.org>
+Cc:     Marc Zyngier <marc.zyngier@arm.com>, evgreen@chromium.org,
+        linux-kernel@vger.kernel.org, rplsssn@codeaurora.org,
+        linux-arm-msm@vger.kernel.org, thierry.reding@gmail.com,
+        bjorn.andersson@linaro.org, dianders@chromium.org,
+        linus.walleij@linaro.org
+Subject: Re: [PATCH v4 07/10] drivers: pinctrl: msm: setup GPIO irqchip
+ hierarchy
+Message-ID: <20190416212644.GD16124@codeaurora.org>
+References: <20190313211844.29416-1-ilina@codeaurora.org>
+ <20190313211844.29416-8-ilina@codeaurora.org>
+ <155266731117.20095.4543997300651173812@swboyd.mtv.corp.google.com>
+ <20190316113948.1d180259@why.wild-wind.fr.eu.org>
+ <155320527587.20095.3351235428610314272@swboyd.mtv.corp.google.com>
 MIME-Version: 1.0
-References: <20190416155618.1369-1-TheSven73@gmail.com> <20190416155618.1369-4-TheSven73@gmail.com>
- <2caf5f92-164a-3723-e2ef-42e4045d2ec3@metux.net> <CAGngYiXZSaUwrCiqavMGDRb5Vuo2x8fTjDetT00PAjjtrYW+NA@mail.gmail.com>
- <bd36b798-d129-c81a-ab2d-22a5b46567f6@metux.net>
-In-Reply-To: <bd36b798-d129-c81a-ab2d-22a5b46567f6@metux.net>
-From:   Sven Van Asbroeck <thesven73@gmail.com>
-Date:   Tue, 16 Apr 2019 17:23:29 -0400
-Message-ID: <CAGngYiUaUoRUAiGUGbJEWGRj0bszeSsDDBfZMwoWokQRrMUhfA@mail.gmail.com>
-Subject: Re: [PATCH v11 3/7] anybus-s: support the Arcx anybus controller
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com,
-        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
-        treding@nvidia.com, David Lechner <david@lechnology.com>,
-        noralf@tronnes.org, johan@kernel.org,
-        Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg KH <gregkh@linuxfoundation.org>, john.garry@huawei.com,
-        geert+renesas@glider.be, robin.murphy@arm.com,
-        Paul Gortmaker <paul.gortmaker@windriver.com>,
-        sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io,
-        Stuart Yoder <stuyoder@gmail.com>,
-        "J. Kiszka" <jan.kiszka@siemens.com>, maxime.ripard@bootlin.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <155320527587.20095.3351235428610314272@swboyd.mtv.corp.google.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 5:07 PM Enrico Weigelt, metux IT consult
-<lkml@metux.net> wrote:>
-> By the grey theory it would be better to split it into two separate
-> drivers. But obviously, they need need a common part (a third piece).
-
-Well yes, we could treat it as an mfd device, with a common register accessor,
-which registers anybus-s host and adc drivers, all selectable via
-Kconfig / defconfig... But that's a lot of extra code just to handle one single
-bit in a register, which is a boolean input.
-
-Can be done but is it worth it?
-
+On Thu, Mar 21 2019 at 15:54 -0600, Stephen Boyd wrote:
+>Quoting Marc Zyngier (2019-03-16 04:39:48)
+>> On Fri, 15 Mar 2019 09:28:31 -0700
+>> Stephen Boyd <swboyd@chromium.org> wrote:
+>>
+>> > Quoting Lina Iyer (2019-03-13 14:18:41)
+>> > > @@ -994,6 +1092,22 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
+>> > >         pctrl->irq_chip.irq_request_resources = msm_gpio_irq_reqres;
+>> > >         pctrl->irq_chip.irq_release_resources = msm_gpio_irq_relres;
+>> > >
+>> > > +       chip->irq.chip = &pctrl->irq_chip;
+>> > > +       chip->irq.domain_ops = &msm_gpio_domain_ops;
+>> > > +       chip->irq.handler = handle_edge_irq;
+>> > > +       chip->irq.default_type = IRQ_TYPE_EDGE_RISING;
+>> >
+>> > This also changed from v3. It used to be IRQ_TYPE_NONE. Specifying this
+>> > here seems to cause gpiolib to print a WARN.
+>> >
+>> >
+>> >         /*
+>> >          * Specifying a default trigger is a terrible idea if DT or ACPI is
+>> >          * used to configure the interrupts, as you may end up with
+>> >          * conflicting triggers. Tell the user, and reset to NONE.
+>> >          */
+>> >         if (WARN(np && type != IRQ_TYPE_NONE,
+>> >                  "%s: Ignoring %u default trigger\n", np->full_name, type))
+>> >                 type = IRQ_TYPE_NONE;
+>> >
+>> >
+>> > So I guess this change should be dropped. Or at the least, it should be
+>> > split out to it's own patch and the motivations can be discussed in the
+>> > commit text.
+>>
+>> It is something I requested (although I expected this to be a
+>> different patch, and even a clarification would have been OK).
+>>
+>> One way or another, the default trigger must match the flow handler. If
+>> we set it up with IRQ_TYPE_NONE, what does it mean? The fact that
+>> IRQ_TYPE_NONE acts as a wildcard doesn't mean the handle_edge_irq flow
+>> handler is a good match for all interrupt types (it is rarely OK for
+>> level interrupts).
 >
-> Does it ever make sense to only use one of two functionalities ?
-
-That depends on what the userspace app wants to do.
-Our userspace app always attempts to monitor the CAN readout.
-
+>I think this is a question for Thierry or Linus. I'm not sure why this
+>check was put in place in the code. I tried to dig into it really quick
+>but I didn't find anything obvious and then I gave up.
 >
-> Does this power read-out involve some CAN traffic, or is it just
-> fetching from some card that just happens to be some CAN interface ?
-> (IOW: is cansocket needed for that ?)
+>Maybe with hierarchical irqdomains we can drop this check? I don't think
+>the gpiolib core ever uses this 'default_type' or 'handler' for anything
+>once we replace the irqdomain that's used for a particular gpiochip with
+>a custom irqdomain. The only user I see, gpiochip_irq_map(), won't ever
+>be called so it really ends up being a thing that the driver specific
+>irqdomains should check for and reject when parsing the DT and it sees
+>IRQ_TYPE_NONE come out.
 >
+>------8<-------
+>diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
+>index 144af0733581..fe2f7888c473 100644
+>--- a/drivers/gpio/gpiolib.c
+>+++ b/drivers/gpio/gpiolib.c
+>@@ -1922,7 +1922,7 @@ static int gpiochip_add_irqchip(struct gpio_chip *gpiochip,
+> 	 * used to configure the interrupts, as you may end up with
+> 	 * conflicting triggers. Tell the user, and reset to NONE.
+> 	 */
+>-	if (WARN(np && type != IRQ_TYPE_NONE,
+>+	if (WARN(!gpiochip->irq.domain_ops && np && type != IRQ_TYPE_NONE,
+> 		 "%s: Ignoring %u default trigger\n", np->full_name, type))
+> 		type = IRQ_TYPE_NONE;
+>
+Linus,
 
-It is purely a boolean input. The boolean output of a voltage monitor chip.
-When our hardware is assembled, the voltage monitor input is connected
-to a signal which indicates the CAN status. In theory, it could be connected
-to the factory's light switch. It would then read out the status of the factory
-floor lights. It has no CAN functionality whatsoever.
+Any thoughts on this?
+
+-- Lina
+
