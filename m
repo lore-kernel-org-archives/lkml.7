@@ -5,63 +5,63 @@ X-Spam-Level:
 X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 046F2C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:54:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8F58C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:55:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B21E92073F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:54:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A062120868
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:55:49 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="aSDkS56B"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="D9NZQRDM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728676AbfDPHyz (ORCPT
+        id S1728680AbfDPHzs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 03:54:55 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:39323 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728153AbfDPHyx (ORCPT
+        Tue, 16 Apr 2019 03:55:48 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:32979 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726837AbfDPHzr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 03:54:53 -0400
-Received: by mail-ed1-f67.google.com with SMTP id k45so17030595edb.6;
-        Tue, 16 Apr 2019 00:54:50 -0700 (PDT)
+        Tue, 16 Apr 2019 03:55:47 -0400
+Received: by mail-ed1-f66.google.com with SMTP id d55so16248221ede.0;
+        Tue, 16 Apr 2019 00:55:45 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
          :user-agent:mime-version:in-reply-to:content-language
          :content-transfer-encoding;
-        bh=evDEiRwS3ClvWldPpjqi9JJebEll3jRWpYnzKF7i6Og=;
-        b=aSDkS56BFOF/kMnzDKY1eAbdPWEcMAJvCTGzBJQwwm0HH04KGSLgeXwiD05UmFVHfF
-         26ssToSCyNeXaSzuSDxFHUMkl5xG5puERYSCfG9m7N+vKjlBQdpDTC6x9nY/ioDO+1sc
-         0ovggY3UTJ/XDvdRTSgYcwyssFCvippaTAMduU31fgt29qZJfmq+dSgsdVzRAPwqxd0S
-         TIw/yJLS91wBAITPTUZ4fjhK3JyTVAoBS2mazk2ITd4wLpt/UPowWaFX+H4jurMcnlLN
-         CaoThhVlxZUvdp5yKvsf6Ct/qA91aJm3g7f2/balRRwlMBGIU9PNsj1PfZDdkcVJm1cq
-         dr2g==
+        bh=cMdfPRIpgJfdM28I3AuT2HDMySHAz8M6JNRV9qhsHkg=;
+        b=D9NZQRDM7ao/KuKdcfqv1HV3zv/EXGLZQnFUyLUrWCZ1A1Be9cg35OVk9M5XEqQdWV
+         4pkDRzhQXGULgPcMWEPi9jxmxxzcptyNAYbXNOF5kF3rp6cuF0aD7l2B232zldX2oBKN
+         qi+8AfCRUGU19/LyDEq2Zq/28JWc1AFxLCdHG9aov7a+/kqiRBl4WLGZDtOw+Nw7rvhK
+         TIyFfL+ijfppKHIy3dHyPYM0FpXuxAZ4mUtnC1NH5L8SEn4EatOO/QA/Ynq33izhAhpR
+         aYryQ40UPmByxRG4MUPHWd1MjB2Jbkl03bqntLC1rvTF1fLi1fX4mYNPaIT75psKAndV
+         w5Pg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
          :message-id:date:user-agent:mime-version:in-reply-to
          :content-language:content-transfer-encoding;
-        bh=evDEiRwS3ClvWldPpjqi9JJebEll3jRWpYnzKF7i6Og=;
-        b=muVFeV5OByLtOppkVcAJcdNhIRif+L+34GnEN577fuBHqAE6+pOKh8fRH55RSO+rr3
-         iMXex+lJ/r7m5u1ZIpJfMrZRc//AD8RnTwFYBx6hmWluz3GRsqhCUem+zJ9m7tVPpzEL
-         WC91EcwQt6hFXqO5hh43US94YniK0xgZEYLLEYBlLvsAW9pGZmWxxxz9Y59yyR91F86C
-         5HgXSO2PZt8X+dUN3ecmbQmdnG42U3npPmkoncrpWlSQJOUyZwnWNybqWk+TWHmp/N9f
-         HhYENovcPoPXn7UQPz9ZKT1FjaeQmwlb/+4PPh81wyS8WZC7Ov10mDoHwH+M/EjzF6pX
-         KusQ==
-X-Gm-Message-State: APjAAAUvg1hQPZvSDjs8IMeQfzlLqQYmGEuABjBB6aLkuuucqw/bBJV5
-        9/W8IqNIVGSQsTF1ZZgRlXc=
-X-Google-Smtp-Source: APXvYqxvanBjvSpfKcsECcRWbVc2rEn1NfPTzXJfDZSKVo9RdUR4u6YNseZJSzAtzDHgUlRfM19zPg==
-X-Received: by 2002:a17:906:1851:: with SMTP id w17mr42498073eje.242.1555401290092;
-        Tue, 16 Apr 2019 00:54:50 -0700 (PDT)
+        bh=cMdfPRIpgJfdM28I3AuT2HDMySHAz8M6JNRV9qhsHkg=;
+        b=fwNs4OcjFFgCcoUvN0OT+arstFxjFA2tPtiGm5dp4mWa0Lw0SB2tsAC+f0O4oDwRlr
+         dV5oykHxavRthiDC4sVYSQq+0Uxe3xyIITYeFHQtZa7eFauvCgbH2KR0wzbWAE33PUpm
+         wC7l8qUS4DfqfBLGVcK931DZsmzWK+TgPJ6z859ItXVkwVdgeRe8YL1MAhwevsJpZ5dv
+         3kXxKyAixoSt7ZKFNpRgxMc0LnG7n4jOUP6KbvDl1Ic7B2sWZvmXyGUym98M1TncS7bE
+         zHSyUJNbd4dmYzBtCvdP95yfAWnVqkbendUpQ/f3HRBSxwNFmde2d8c8+rnPN/J+zqel
+         w4UQ==
+X-Gm-Message-State: APjAAAWhMkbjj+lvxXNgg1ocacJ34GDEpZbrFesSTodCyto1XFGxIgq3
+        2gRZMLO5wUXadDGoVbVcKBk=
+X-Google-Smtp-Source: APXvYqwxCXy6hqG29q9BnX+VMSsvl9Kn7UjN1h4hMkcn+yBGYelmWZdDWRMzYBwWibTPsh0YcZjBVg==
+X-Received: by 2002:a17:906:1b03:: with SMTP id o3mr34489861ejg.201.1555401344626;
+        Tue, 16 Apr 2019 00:55:44 -0700 (PDT)
 Received: from ziggy.stardust ([37.223.141.112])
-        by smtp.gmail.com with ESMTPSA id i91sm7897921edd.72.2019.04.16.00.54.48
+        by smtp.gmail.com with ESMTPSA id t51sm1360759edb.30.2019.04.16.00.55.42
         (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 00:54:49 -0700 (PDT)
-Subject: Re: [PATCH 18/24] dt-bindings: timer: mtk-timer: add support for
+        Tue, 16 Apr 2019 00:55:44 -0700 (PDT)
+Subject: Re: [PATCH 19/24] dt-bindings: spi: spi-mt65xx: add support for
  MT8516
 To:     Fabien Parent <fparent@baylibre.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com, Daniel Lezcano <daniel.lezcano@linaro.org>
+        mark.rutland@arm.com, Mark Brown <broonie@kernel.org>
 Cc:     sean.wang@kernel.org, ryder.lee@mediatek.com,
         hsin-hsiung.wang@mediatek.com, wenzhen.yu@mediatek.com,
         chaotian.jing@mediatek.com, yong.mao@mediatek.com,
@@ -73,7 +73,7 @@ Cc:     sean.wang@kernel.org, ryder.lee@mediatek.com,
         linux-spi@vger.kernel.org, linux-watchdog@vger.kernel.org,
         linux-clk@vger.kernel.org, stephane.leprovost@mediatek.com
 References: <20190323211612.860-1-fparent@baylibre.com>
- <20190323211612.860-19-fparent@baylibre.com>
+ <20190323211612.860-20-fparent@baylibre.com>
 From:   Matthias Brugger <matthias.bgg@gmail.com>
 Openpgp: preference=signencrypt
 Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
@@ -169,12 +169,12 @@ Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
  pac005PuhxCWkKTJz3gCmznnoat4GCnL5gy/m0Qk45l4PFqwWXVLo9AQg2Kp3mlIFZ6fsEKI
  AN5hxlbNvNb9V2Zo5bFZjPWPFTxOteM0omUAS+QopwU0yPLLGJVf2iCmItHcUXI+r2JwH1CJ
  jrHWeQEI2ucSKsNa8FllDmG/fQ==
-Message-ID: <182f1ae5-9f4f-8ef4-695f-353bbd1966c6@gmail.com>
-Date:   Tue, 16 Apr 2019 09:54:46 +0200
+Message-ID: <5bc3fbfa-6d7e-08d3-116c-a8f78bc680cd@gmail.com>
+Date:   Tue, 16 Apr 2019 09:55:41 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190323211612.860-19-fparent@baylibre.com>
+In-Reply-To: <20190323211612.860-20-fparent@baylibre.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -186,28 +186,29 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 
 On 23/03/2019 22:16, Fabien Parent wrote:
-> Add binding documentation of mtk-timer for MT8516 SoC.
+> Add binding documentation of spi-mt65xx for MT8516 SoC.
 > 
 > Signed-off-by: Fabien Parent <fparent@baylibre.com>
 > ---
->  Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt | 1 +
+>  Documentation/devicetree/bindings/spi/spi-mt65xx.txt | 1 +
 >  1 file changed, 1 insertion(+)
+> 
+
 
 applied to v5.1-next/dts64
 
-Daniel let me know if you want to take it through your tree and I drop the patch.
+Mark let me know if you want to take it through your tree and I drop the patch.
 
-> 
-> diff --git a/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt b/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
-> index ff7c567a7972..74c3eadad844 100644
-> --- a/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
-> +++ b/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
-> @@ -17,6 +17,7 @@ Required properties:
->  	* "mediatek,mt8127-timer" for MT8127 compatible timers (GPT)
->  	* "mediatek,mt8135-timer" for MT8135 compatible timers (GPT)
->  	* "mediatek,mt8173-timer" for MT8173 compatible timers (GPT)
-> +	* "mediatek,mt8516-timer" for MT8516 compatible timers (GPT)
->  	* "mediatek,mt6577-timer" for MT6577 and all above compatible timers (GPT)
+> diff --git a/Documentation/devicetree/bindings/spi/spi-mt65xx.txt b/Documentation/devicetree/bindings/spi/spi-mt65xx.txt
+> index 69c356767cf8..69ac5976b952 100644
+> --- a/Documentation/devicetree/bindings/spi/spi-mt65xx.txt
+> +++ b/Documentation/devicetree/bindings/spi/spi-mt65xx.txt
+> @@ -10,6 +10,7 @@ Required properties:
+>      - mediatek,mt8135-spi: for mt8135 platforms
+>      - mediatek,mt8173-spi: for mt8173 platforms
+>      - mediatek,mt8183-spi: for mt8183 platforms
+> +    - "mediatek,mt8516-spi", "mediatek,mt2701-spi": for mt8516 platforms
 >  
->  	For those SoCs that use SYST
+>  - #address-cells: should be 1.
+>  
 > 
