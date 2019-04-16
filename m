@@ -2,137 +2,109 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-15.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26F3FC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:39:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C246C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:40:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ECB24206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:39:30 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555411171;
-	bh=qI8ahNpD1iQyrJrO5dS7vs1MPbfhBAltyfK6bwpyVu8=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=EAwnrPQq9wxLHzRGaSHAzkYQsQb/K6o2DL+28gF4Pqmz20LkQPbw/fBK9y7UVzxf1
-	 qG8/AUHTFXeaGvzcNYPpStiI/szW/XMB5/02+JJC0SOaS5HL7kKfPKSwz8obmqtkjT
-	 05P13pvUW+xjYKQTKPvXyLUZjK3zeLfgdz5i+ibg=
+	by mail.kernel.org (Postfix) with ESMTP id 66C0720693
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:40:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729163AbfDPKj3 (ORCPT
+        id S1729179AbfDPKj7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 06:39:29 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58206 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727950AbfDPKj3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 06:39:29 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 207AC20693;
-        Tue, 16 Apr 2019 10:39:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555411168;
-        bh=qI8ahNpD1iQyrJrO5dS7vs1MPbfhBAltyfK6bwpyVu8=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=tdsSlEaEBENZI8YcQxGV9E4STnKlmLWL4nTHNz3Y8/Ju6IPxMBfaCuMxcjWK69Anb
-         zy0T0g+dGD/h3tQXaQx74ugGMvckFOOj0nMSr8+nyKAJ+YfJa5sYVwhOkJk1VA9v7H
-         Wmxy8xm4nsGe1uZpBHdjjp/ZZ4VuttPOPbYYrOrA=
-Date:   Tue, 16 Apr 2019 12:30:59 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Kishon Vijay Abraham I <kishon@ti.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: Re: [GIT PULL] PHY: For 5.1 -rc
-Message-ID: <20190416103059.GA8292@kroah.com>
-References: <20190403044353.21620-1-kishon@ti.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190403044353.21620-1-kishon@ti.com>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+        Tue, 16 Apr 2019 06:39:59 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:51998 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727037AbfDPKj6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 06:39:58 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 5BD2E15A2;
+        Tue, 16 Apr 2019 03:39:58 -0700 (PDT)
+Received: from en101.cambridge.arm.com (en101.cambridge.arm.com [10.1.196.93])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id D60613F68F;
+        Tue, 16 Apr 2019 03:39:56 -0700 (PDT)
+From:   Suzuki K Poulose <suzuki.poulose@arm.com>
+To:     linux-arm-kernel@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, coresight@lists.linaro.org,
+        rafael@kernel.org, mathieu.poirier@linaro.org,
+        Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-acpi@vger.kernel.org
+Subject: [RESEND][PATCH v2 27/36] drivers: Add a generic helper to match device by fwnode handle
+Date:   Tue, 16 Apr 2019 11:39:24 +0100
+Message-Id: <1555411164-26399-1-git-send-email-suzuki.poulose@arm.com>
+X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1555344260-12375-28-git-send-email-suzuki.poulose@arm.com>
+References: <1555344260-12375-28-git-send-email-suzuki.poulose@arm.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 03, 2019 at 10:13:53AM +0530, Kishon Vijay Abraham I wrote:
-> Hi Greg,
-> 
-> Please find the pull request for 5.1 -rc cycle below.
-> 
-> It fixes PHY programming sequence in phy-ti-pipe3 driver to align with
-> TRM, requests IRQ only for OTG in phy-rcar-gen3-usb2 and a bunch of
-> other linker errors and compilation warnings seen in randconfig.
-> 
-> Please see the complete list of changes in the tag message below and let
-> me know if I have to make any modifications.
-> 
-> Thanks
-> Kishon
-> 
-> The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
-> 
->   Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
-> 
-> are available in the Git repository at:
-> 
->   git://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git tags/phy-for-5.1-rc
-> 
-> for you to fetch changes up to d5d60c3f25ab52de7c5dfd31f584f190b754629e:
-> 
->   phy: fix platform_no_drv_owner.cocci warnings (2019-04-03 10:02:20 +0530)
-> 
-> ----------------------------------------------------------------
-> phy: for 5.1-rc
-> 
->   *) Follow TRM sequence in phy-ti-pipe3 driver to ensure DPLL & PHY
->      operates correctly over the entire temperature range
->   *) Fix missing bit-wise 'OR' operator in ti-pipe3 driver
->   *) Fix to request IRQ only for OTG in phy-rcar-gen3-usb2 driver
->   *) Fix linker errors and compilation warnings got with randconfig
->   *) Fix sparse warnings and .cocci warnings
-> 
-> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-> 
-> ----------------------------------------------------------------
-> Arnd Bergmann (3):
->       phy: allwinner: allow compile testing
->       phy: ti: usb2: fix OMAP_CONTROL_PHY dependency
->       phy: mapphone-mdm6600: add gpiolib dependency
-> 
-> Colin Ian King (1):
->       phy: ti-pipe3: fix missing bit-wise or operator when assigning val
-> 
-> Fabrizio Castro (1):
->       phy: renesas: rcar-gen3-usb2: No need to request IRQ for non-OTG
-> 
-> Roger Quadros (4):
->       phy: ti-pipe3: Introduce mode property in driver data
->       phy: ti-pipe3: improve DPLL stability for SATA & USB
->       phy: ti-pipe3: Fix SATA & USB PHY power up sequence
->       phy: ti-pipe3: Fix PCIe power up sequence
-> 
-> Tony Lindgren (1):
->       phy: phy-twl4030-usb: Fix cable state handling
-> 
-> YueHaibing (3):
->       phy: rockchip-typec: Make usb3_pll_cfg and dp_pll_cfg static
->       phy: qcom-ufs: Make ufs_qcom_phy_disable_iface_clk static
->       phy: fix platform_no_drv_owner.cocci warnings
-> 
->  drivers/phy/allwinner/Kconfig              |   9 ++--
->  drivers/phy/marvell/phy-mvebu-a3700-utmi.c |   1 -
->  drivers/phy/motorola/Kconfig               |   2 +-
->  drivers/phy/qualcomm/phy-qcom-ufs.c        |   2 +-
->  drivers/phy/renesas/phy-rcar-gen3-usb2.c   |  27 ++++++------
->  drivers/phy/rockchip/phy-rockchip-typec.c  |   4 +-
->  drivers/phy/ti/Kconfig                     |   2 +-
->  drivers/phy/ti/phy-ti-pipe3.c              | 362 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----------------------------------------
+Make the device_fwnode_match() a generic helper to match device
+by fwnode handle for use with bus_find_device(). This will be
+also used by coresight.
 
-That's a lot of changes so late in the release cycle for one driver.
-Are you sure those are not 5.2-rc1 things?
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+Cc: linux-acpi@vger.kernel.org
+Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+---
 
-thanks,
+Resending with linux-acpi in Cc, as requested by Rafael.
 
-greg k-h
+ drivers/base/devcon.c    | 5 -----
+ drivers/base/property.c  | 6 ++++++
+ include/linux/property.h | 1 +
+ 3 files changed, 7 insertions(+), 5 deletions(-)
+
+diff --git a/drivers/base/devcon.c b/drivers/base/devcon.c
+index 04db9ae..f4a9e30 100644
+--- a/drivers/base/devcon.c
++++ b/drivers/base/devcon.c
+@@ -107,11 +107,6 @@ static struct bus_type *generic_match_buses[] = {
+ 	NULL,
+ };
+ 
+-static int device_fwnode_match(struct device *dev, void *fwnode)
+-{
+-	return dev_fwnode(dev) == fwnode;
+-}
+-
+ static void *device_connection_fwnode_match(struct device_connection *con)
+ {
+ 	struct bus_type *bus;
+diff --git a/drivers/base/property.c b/drivers/base/property.c
+index 8b91ab3..d10d923 100644
+--- a/drivers/base/property.c
++++ b/drivers/base/property.c
+@@ -25,6 +25,12 @@ struct fwnode_handle *dev_fwnode(struct device *dev)
+ }
+ EXPORT_SYMBOL_GPL(dev_fwnode);
+ 
++int device_fwnode_match(struct device *dev, void *fwnode)
++{
++	return dev_fwnode(dev) == fwnode;
++}
++EXPORT_SYMBOL_GPL(device_fwnode_match);
++
+ /**
+  * device_property_present - check if a property of a device is present
+  * @dev: Device whose property is being checked
+diff --git a/include/linux/property.h b/include/linux/property.h
+index 65d3420..c8fd3d42 100644
+--- a/include/linux/property.h
++++ b/include/linux/property.h
+@@ -34,6 +34,7 @@ enum dev_dma_attr {
+ };
+ 
+ struct fwnode_handle *dev_fwnode(struct device *dev);
++int device_fwnode_match(struct device *dev, void *fwnode);
+ 
+ bool device_property_present(struct device *dev, const char *propname);
+ int device_property_read_u8_array(struct device *dev, const char *propname,
+-- 
+2.7.4
+
