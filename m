@@ -2,93 +2,85 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B49CAC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BBC0C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:22:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86F252077C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6EBD82077C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:22:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=arista.com header.i=@arista.com header.b="UK9baa0u"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="oZcEH8W0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729368AbfDPNWx (ORCPT
+        id S1729388AbfDPNW4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 09:22:53 -0400
-Received: from mail-wm1-f65.google.com ([209.85.128.65]:38567 "EHLO
-        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728149AbfDPNWw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 09:22:52 -0400
-Received: by mail-wm1-f65.google.com with SMTP id w15so25431323wmc.3
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 06:22:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=arista.com; s=googlenew;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=fE3sq5IU7oDGUhvdqyQ/p1pwHsr+y+10jDtlKyi9nIM=;
-        b=UK9baa0upvt8kExaNicRl4IW8pn8XtS1HGiXYDh/Cjh2In4WEONLA/YoRLDoQzJ8Vz
-         PdVkVuOvfMVv5w4vUtdenpqz87O0364ncPkGp5V542ls7ftS3zZv6exRl2fjhcvDhsFO
-         3kMGLNzDEN6PoD5wBYvbqj+cF33P3YKcjyEX6n0BEKE3pBXOF/yodJqYUnf2jHnNfCmk
-         QZAp54PLBFZF2yttlJPMVIacIIQ5GnxIDa/xhqCLY41O8pLQVwhxzxCHbAnLPou7yTVc
-         pYDxjwquiphiT/LmMpi76FuotYfoSeZoAjMTVdtujWTGpLoYutrlZEcGpwdTAxrxWVG5
-         bicw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=fE3sq5IU7oDGUhvdqyQ/p1pwHsr+y+10jDtlKyi9nIM=;
-        b=A22bUlbyOPoSjUEYb8vP9ARgfDkXSMpxK63oZUMa4Yhf0P74uK9oeoMoppiMtkFv1V
-         UfZYIj9VyRYqdekNugW92NB6AGSw1hvc6Ctp5A7DKVKXGObHGOHASRZa3sNocE7xcRHv
-         60Z6+38wgxmmQDNAtOaslX1x5oB1uKg/SwDoWrFIQSKFPAHMEspWN3HKRLuq56spC28j
-         tvlIBftnp2+gv1AmlGqCCYN9Tez3/rTRdgLSaJSpSidjreVrupr7tAuFC2CB9EDeJ4vn
-         fgyRD7rs+0uul1qGrzaJWKyZUkMtzQ06bcN0AKxvTJyfGQyRB6gZji46iNDNpN8t+ALi
-         2PSQ==
-X-Gm-Message-State: APjAAAUWYz/H4by9adLRQ5VsowbRXcWZOcMAKHlKEgf7brV+OPn5QqMt
-        96vWj7FA+CB4yMoubLmIGOaKmCZjIRh2dSOmOP+bJQ==
-X-Google-Smtp-Source: APXvYqxvliQB0p1msg/Kb91zHRXg1vpQBmsWsVI/s/OgwCDG1cNmK+qljRBsZ92RcWqDc4Oa8eQSKty5sw59nUVcpPQ=
-X-Received: by 2002:a1c:9617:: with SMTP id y23mr26196661wmd.31.1555420970525;
- Tue, 16 Apr 2019 06:22:50 -0700 (PDT)
+        Tue, 16 Apr 2019 09:22:56 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:50758 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728550AbfDPNWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 09:22:55 -0400
+Received: from zn.tnic (p200300EC2F0D690030B3A6530520175E.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:6900:30b3:a653:520:175e])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C3E781EC0513;
+        Tue, 16 Apr 2019 15:22:53 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1555420973;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=KtFBu9fQjx20A0TaGhKyKlOM4NgYk6LNTftBoECtOos=;
+        b=oZcEH8W03c+S3Qy5sqA7Cld9gDSxMyMVLnyb3M59sKKb9R7vPjw/ZKSR4+tzlOKStLJxIs
+        4CzEU++MPdWZOlu6Fc/umlHC9OzJr6Sa2ZHrsLhLNKh2h4fQ+zswYALh+5gxVbKVKCho1O
+        kmtMCldCQ0t8WNxGLa3MZK7xIL/Rylk=
+Date:   Tue, 16 Apr 2019 15:22:53 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Dave Young <dyoung@redhat.com>
+Cc:     Junichi Nomura <j-nomura@ce.jp.nec.com>,
+        Chao Fan <fanc.fnst@cn.fujitsu.com>,
+        Baoquan He <bhe@redhat.com>, Kairui Song <kasong@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] x86/boot: Use efi_setup_data for searching RSDP on
+ kexec-ed kernels
+Message-ID: <20190416132253.GE31772@zn.tnic>
+References: <20190412025416.GA11070@jeru.linux.bs1.fc.nec.co.jp>
+ <20190412084956.GC19808@zn.tnic>
+ <20190412133528.GD19808@zn.tnic>
+ <cc2c1dbe-4fb3-fb7d-0540-c04734fc15cb@ce.jp.nec.com>
+ <20190415090717.GA29317@zn.tnic>
+ <20190415102525.GB29317@zn.tnic>
+ <23309b73-d135-a207-564b-6003cee39184@ce.jp.nec.com>
+ <20190416094024.GE27892@zn.tnic>
+ <20190416095209.GG27892@zn.tnic>
+ <20190416114133.GA7541@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
-References: <20190411184741.27540-1-tmurphy@arista.com> <20190411184741.27540-4-tmurphy@arista.com>
- <20190415063134.GB1377@infradead.org>
-In-Reply-To: <20190415063134.GB1377@infradead.org>
-From:   Tom Murphy <tmurphy@arista.com>
-Date:   Tue, 16 Apr 2019 14:22:38 +0100
-Message-ID: <CAPL0++7Z=EMpYOvUn8yvcRqRT5iwJMD8zLhmFr4uFbH7W3WqXQ@mail.gmail.com>
-Subject: Re: [PATCH 3/9] iommu/dma-iommu: Add iommu_dma_copy_reserved_iova,
- iommu_dma_apply_resv_region to the dma-iommu api
-To:     Christoph Hellwig <hch@infradead.org>
-Cc:     iommu@lists.linux-foundation.org, Heiko Stuebner <heiko@sntech.de>,
-        Will Deacon <will.deacon@arm.com>,
-        David Brown <david.brown@linaro.org>,
-        linux-samsung-soc@vger.kernel.org,
-        Dmitry Safonov <dima@arista.com>,
-        Krzysztof Kozlowski <krzk@kernel.org>,
-        linux-rockchip@lists.infradead.org, Kukjin Kim <kgene@kernel.org>,
-        Andy Gross <andy.gross@linaro.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Tom Murphy <murphyt7@tcd.ie>,
-        Robin Murphy <robin.murphy@arm.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190416114133.GA7541@dhcp-128-65.nay.redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-I hoped this could be an exception, it's easier to grok without the
-line break and isn't crazy long. Because you mentioned it I'll fix it.
+On Tue, Apr 16, 2019 at 07:41:33PM +0800, Dave Young wrote:
+> On 04/16/19 at 11:52am, Borislav Petkov wrote:
+> > I'll queue the below in the next days if there are no more complaints:
+> 
+> As for the kexec breakage, even with the V3 patch, kexec still hangs on
+> a Lenovo T420 laptop.  Kairui also reproduced the problem. So can we
+> wait a few days see if we can make some progress to find the cause?
 
-On Mon, Apr 15, 2019 at 7:31 AM Christoph Hellwig <hch@infradead.org> wrote:
->
-> On Thu, Apr 11, 2019 at 07:47:32PM +0100, Tom Murphy via iommu wrote:
-> > +
-> > +     WARN_ON_ONCE(iommu_dma_reserve_iova(domain, region->start, end) == NULL);
->
-> Overly long line..
+How is applying this patch going to change anything?
+
+I was told that the breakage is there even without it...
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
