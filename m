@@ -7,49 +7,50 @@ X-Spam-Status: No, score=-12.0 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B997CC282DC
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:03:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43541C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:04:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 812B9206B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:03:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1128520857
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:04:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728967AbfDPKDz (ORCPT
+        id S1728976AbfDPKEc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 06:03:55 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:33139 "EHLO
+        Tue, 16 Apr 2019 06:04:32 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:55659 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726796AbfDPKDz (ORCPT
+        with ESMTP id S1726070AbfDPKEc (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 06:03:55 -0400
+        Tue, 16 Apr 2019 06:04:32 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3GA16jT3396557
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3GA1nlE3397546
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 16 Apr 2019 03:01:06 -0700
+        Tue, 16 Apr 2019 03:01:49 -0700
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3GA161w3396554;
-        Tue, 16 Apr 2019 03:01:06 -0700
-Date:   Tue, 16 Apr 2019 03:01:06 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3GA1mvX3397542;
+        Tue, 16 Apr 2019 03:01:48 -0700
+Date:   Tue, 16 Apr 2019 03:01:48 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Waiman Long <tipbot@zytor.com>
-Message-ID: <tip-eecec78f777742903ec9167490c625661284155d@git.kernel.org>
-Cc:     will.deacon@arm.com, arnd@arndb.de, longman@redhat.com,
-        dave@stgolabs.net, mingo@kernel.org, tim.c.chen@linux.intel.com,
-        hpa@zytor.com, bp@alien8.de, torvalds@linux-foundation.org,
-        linux-kernel@vger.kernel.org, tglx@linutronix.de,
-        paulmck@linux.vnet.ibm.com, dbueso@suse.de, a.p.zijlstra@chello.nl,
-        peterz@infradead.org, akpm@linux-foundation.org
-Reply-To: peterz@infradead.org, akpm@linux-foundation.org,
-          a.p.zijlstra@chello.nl, tglx@linutronix.de,
-          paulmck@linux.vnet.ibm.com, dbueso@suse.de,
-          linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-          bp@alien8.de, hpa@zytor.com, mingo@kernel.org,
-          tim.c.chen@linux.intel.com, longman@redhat.com,
-          dave@stgolabs.net, arnd@arndb.de, will.deacon@arm.com
-In-Reply-To: <20190404174320.22416-2-longman@redhat.com>
-References: <20190404174320.22416-2-longman@redhat.com>
+Message-ID: <tip-c7580c1e84435c9ccc6c612d9fee8e71811f7be6@git.kernel.org>
+Cc:     longman@redhat.com, linux-kernel@vger.kernel.org,
+        will.deacon@arm.com, paulmck@linux.vnet.ibm.com, dave@stgolabs.net,
+        peterz@infradead.org, torvalds@linux-foundation.org,
+        dbueso@suse.de, bp@alien8.de, hpa@zytor.com, arnd@arndb.de,
+        tim.c.chen@linux.intel.com, a.p.zijlstra@chello.nl,
+        tglx@linutronix.de, mingo@kernel.org, akpm@linux-foundation.org
+Reply-To: linux-kernel@vger.kernel.org, will.deacon@arm.com,
+          paulmck@linux.vnet.ibm.com, longman@redhat.com,
+          peterz@infradead.org, dave@stgolabs.net, dbueso@suse.de,
+          torvalds@linux-foundation.org, tim.c.chen@linux.intel.com,
+          a.p.zijlstra@chello.nl, hpa@zytor.com, bp@alien8.de,
+          arnd@arndb.de, mingo@kernel.org, akpm@linux-foundation.org,
+          tglx@linutronix.de
+In-Reply-To: <20190404174320.22416-3-longman@redhat.com>
+References: <20190404174320.22416-3-longman@redhat.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:locking/core] locking/rwsem: Relocate rwsem_down_read_failed()
-Git-Commit-ID: eecec78f777742903ec9167490c625661284155d
+Subject: [tip:locking/core] locking/rwsem: Move owner setting code from
+ rwsem.c to rwsem.h
+Git-Commit-ID: c7580c1e84435c9ccc6c612d9fee8e71811f7be6
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -63,23 +64,23 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  eecec78f777742903ec9167490c625661284155d
-Gitweb:     https://git.kernel.org/tip/eecec78f777742903ec9167490c625661284155d
+Commit-ID:  c7580c1e84435c9ccc6c612d9fee8e71811f7be6
+Gitweb:     https://git.kernel.org/tip/c7580c1e84435c9ccc6c612d9fee8e71811f7be6
 Author:     Waiman Long <longman@redhat.com>
-AuthorDate: Thu, 4 Apr 2019 13:43:10 -0400
+AuthorDate: Thu, 4 Apr 2019 13:43:11 -0400
 Committer:  Ingo Molnar <mingo@kernel.org>
 CommitDate: Wed, 10 Apr 2019 10:55:59 +0200
 
-locking/rwsem: Relocate rwsem_down_read_failed()
+locking/rwsem: Move owner setting code from rwsem.c to rwsem.h
 
-The rwsem_down_read_failed*() functions were relocated from above the
-optimistic spinning section to below that section. This enables the
-reader functions to use optimisitic spinning in future patches. There
-is no code change.
+Move all the owner setting code closer to the rwsem-xadd fast paths
+directly within rwsem.h file as well as in the slowpaths where owner
+setting is done after acquring the lock. This will enable us to add
+DEBUG_RWSEMS check in a later patch to make sure that read lock is
+really acquired when rwsem_down_read_failed() returns, for instance.
 
 Signed-off-by: Waiman Long <longman@redhat.com>
 Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
-Acked-by: Will Deacon <will.deacon@arm.com>
 Acked-by: Davidlohr Bueso <dbueso@suse.de>
 Cc: Andrew Morton <akpm@linux-foundation.org>
 Cc: Arnd Bergmann <arnd@arndb.de>
@@ -90,199 +91,237 @@ Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Thomas Gleixner <tglx@linutronix.de>
 Cc: Tim Chen <tim.c.chen@linux.intel.com>
-Link: http://lkml.kernel.org/r/20190404174320.22416-2-longman@redhat.com
+Cc: Will Deacon <will.deacon@arm.com>
+Link: http://lkml.kernel.org/r/20190404174320.22416-3-longman@redhat.com
 Signed-off-by: Ingo Molnar <mingo@kernel.org>
 ---
- kernel/locking/rwsem-xadd.c | 172 ++++++++++++++++++++++----------------------
- 1 file changed, 86 insertions(+), 86 deletions(-)
+ kernel/locking/rwsem-xadd.c |  6 +++---
+ kernel/locking/rwsem.c      | 19 ++-----------------
+ kernel/locking/rwsem.h      | 17 +++++++++++++++--
+ 3 files changed, 20 insertions(+), 22 deletions(-)
 
 diff --git a/kernel/locking/rwsem-xadd.c b/kernel/locking/rwsem-xadd.c
-index fbe96341beee..0d518b52ade4 100644
+index 0d518b52ade4..c213869e1aa7 100644
 --- a/kernel/locking/rwsem-xadd.c
 +++ b/kernel/locking/rwsem-xadd.c
-@@ -224,92 +224,6 @@ static void __rwsem_mark_wake(struct rw_semaphore *sem,
- 		atomic_long_add(adjustment, &sem->count);
+@@ -176,9 +176,8 @@ static void __rwsem_mark_wake(struct rw_semaphore *sem,
+ 			goto try_reader_grant;
+ 		}
+ 		/*
+-		 * It is not really necessary to set it to reader-owned here,
+-		 * but it gives the spinners an early indication that the
+-		 * readers now have the lock.
++		 * Set it to reader-owned to give spinners an early
++		 * indication that readers now have the lock.
+ 		 */
+ 		__rwsem_set_reader_owned(sem, waiter->task);
+ 	}
+@@ -441,6 +440,7 @@ __rwsem_down_read_failed_common(struct rw_semaphore *sem, int state)
+ 		 */
+ 		if (atomic_long_read(&sem->count) >= 0) {
+ 			raw_spin_unlock_irq(&sem->wait_lock);
++			rwsem_set_reader_owned(sem);
+ 			return sem;
+ 		}
+ 		adjustment += RWSEM_WAITING_BIAS;
+diff --git a/kernel/locking/rwsem.c b/kernel/locking/rwsem.c
+index e586f0d03ad3..59e584895532 100644
+--- a/kernel/locking/rwsem.c
++++ b/kernel/locking/rwsem.c
+@@ -24,7 +24,6 @@ void __sched down_read(struct rw_semaphore *sem)
+ 	rwsem_acquire_read(&sem->dep_map, 0, 0, _RET_IP_);
+ 
+ 	LOCK_CONTENDED(sem, __down_read_trylock, __down_read);
+-	rwsem_set_reader_owned(sem);
  }
  
--/*
-- * Wait for the read lock to be granted
-- */
--static inline struct rw_semaphore __sched *
--__rwsem_down_read_failed_common(struct rw_semaphore *sem, int state)
--{
--	long count, adjustment = -RWSEM_ACTIVE_READ_BIAS;
--	struct rwsem_waiter waiter;
--	DEFINE_WAKE_Q(wake_q);
--
--	waiter.task = current;
--	waiter.type = RWSEM_WAITING_FOR_READ;
--
--	raw_spin_lock_irq(&sem->wait_lock);
--	if (list_empty(&sem->wait_list)) {
--		/*
--		 * In case the wait queue is empty and the lock isn't owned
--		 * by a writer, this reader can exit the slowpath and return
--		 * immediately as its RWSEM_ACTIVE_READ_BIAS has already
--		 * been set in the count.
--		 */
--		if (atomic_long_read(&sem->count) >= 0) {
--			raw_spin_unlock_irq(&sem->wait_lock);
--			return sem;
--		}
--		adjustment += RWSEM_WAITING_BIAS;
--	}
--	list_add_tail(&waiter.list, &sem->wait_list);
--
--	/* we're now waiting on the lock, but no longer actively locking */
--	count = atomic_long_add_return(adjustment, &sem->count);
--
--	/*
--	 * If there are no active locks, wake the front queued process(es).
--	 *
--	 * If there are no writers and we are first in the queue,
--	 * wake our own waiter to join the existing active readers !
--	 */
--	if (count == RWSEM_WAITING_BIAS ||
--	    (count > RWSEM_WAITING_BIAS &&
--	     adjustment != -RWSEM_ACTIVE_READ_BIAS))
--		__rwsem_mark_wake(sem, RWSEM_WAKE_ANY, &wake_q);
--
--	raw_spin_unlock_irq(&sem->wait_lock);
--	wake_up_q(&wake_q);
--
--	/* wait to be given the lock */
--	while (true) {
--		set_current_state(state);
--		if (!waiter.task)
--			break;
--		if (signal_pending_state(state, current)) {
--			raw_spin_lock_irq(&sem->wait_lock);
--			if (waiter.task)
--				goto out_nolock;
--			raw_spin_unlock_irq(&sem->wait_lock);
--			break;
--		}
--		schedule();
--	}
--
--	__set_current_state(TASK_RUNNING);
--	return sem;
--out_nolock:
--	list_del(&waiter.list);
--	if (list_empty(&sem->wait_list))
--		atomic_long_add(-RWSEM_WAITING_BIAS, &sem->count);
--	raw_spin_unlock_irq(&sem->wait_lock);
--	__set_current_state(TASK_RUNNING);
--	return ERR_PTR(-EINTR);
--}
--
--__visible struct rw_semaphore * __sched
--rwsem_down_read_failed(struct rw_semaphore *sem)
--{
--	return __rwsem_down_read_failed_common(sem, TASK_UNINTERRUPTIBLE);
--}
--EXPORT_SYMBOL(rwsem_down_read_failed);
--
--__visible struct rw_semaphore * __sched
--rwsem_down_read_failed_killable(struct rw_semaphore *sem)
--{
--	return __rwsem_down_read_failed_common(sem, TASK_KILLABLE);
--}
--EXPORT_SYMBOL(rwsem_down_read_failed_killable);
--
- /*
-  * This function must be called with the sem->wait_lock held to prevent
-  * race conditions between checking the rwsem wait list and setting the
-@@ -504,6 +418,92 @@ static inline bool rwsem_has_spinner(struct rw_semaphore *sem)
- }
- #endif
+ EXPORT_SYMBOL(down_read);
+@@ -39,7 +38,6 @@ int __sched down_read_killable(struct rw_semaphore *sem)
+ 		return -EINTR;
+ 	}
  
-+/*
-+ * Wait for the read lock to be granted
-+ */
-+static inline struct rw_semaphore __sched *
-+__rwsem_down_read_failed_common(struct rw_semaphore *sem, int state)
-+{
-+	long count, adjustment = -RWSEM_ACTIVE_READ_BIAS;
-+	struct rwsem_waiter waiter;
-+	DEFINE_WAKE_Q(wake_q);
-+
-+	waiter.task = current;
-+	waiter.type = RWSEM_WAITING_FOR_READ;
-+
-+	raw_spin_lock_irq(&sem->wait_lock);
-+	if (list_empty(&sem->wait_list)) {
-+		/*
-+		 * In case the wait queue is empty and the lock isn't owned
-+		 * by a writer, this reader can exit the slowpath and return
-+		 * immediately as its RWSEM_ACTIVE_READ_BIAS has already
-+		 * been set in the count.
-+		 */
-+		if (atomic_long_read(&sem->count) >= 0) {
-+			raw_spin_unlock_irq(&sem->wait_lock);
-+			return sem;
-+		}
-+		adjustment += RWSEM_WAITING_BIAS;
+-	rwsem_set_reader_owned(sem);
+ 	return 0;
+ }
+ 
+@@ -52,10 +50,8 @@ int down_read_trylock(struct rw_semaphore *sem)
+ {
+ 	int ret = __down_read_trylock(sem);
+ 
+-	if (ret == 1) {
++	if (ret == 1)
+ 		rwsem_acquire_read(&sem->dep_map, 0, 1, _RET_IP_);
+-		rwsem_set_reader_owned(sem);
+-	}
+ 	return ret;
+ }
+ 
+@@ -70,7 +66,6 @@ void __sched down_write(struct rw_semaphore *sem)
+ 	rwsem_acquire(&sem->dep_map, 0, 0, _RET_IP_);
+ 
+ 	LOCK_CONTENDED(sem, __down_write_trylock, __down_write);
+-	rwsem_set_owner(sem);
+ }
+ 
+ EXPORT_SYMBOL(down_write);
+@@ -88,7 +83,6 @@ int __sched down_write_killable(struct rw_semaphore *sem)
+ 		return -EINTR;
+ 	}
+ 
+-	rwsem_set_owner(sem);
+ 	return 0;
+ }
+ 
+@@ -101,10 +95,8 @@ int down_write_trylock(struct rw_semaphore *sem)
+ {
+ 	int ret = __down_write_trylock(sem);
+ 
+-	if (ret == 1) {
++	if (ret == 1)
+ 		rwsem_acquire(&sem->dep_map, 0, 1, _RET_IP_);
+-		rwsem_set_owner(sem);
+-	}
+ 
+ 	return ret;
+ }
+@@ -119,7 +111,6 @@ void up_read(struct rw_semaphore *sem)
+ 	rwsem_release(&sem->dep_map, 1, _RET_IP_);
+ 	DEBUG_RWSEMS_WARN_ON(!((unsigned long)sem->owner & RWSEM_READER_OWNED));
+ 
+-	rwsem_clear_reader_owned(sem);
+ 	__up_read(sem);
+ }
+ 
+@@ -133,7 +124,6 @@ void up_write(struct rw_semaphore *sem)
+ 	rwsem_release(&sem->dep_map, 1, _RET_IP_);
+ 	DEBUG_RWSEMS_WARN_ON(sem->owner != current);
+ 
+-	rwsem_clear_owner(sem);
+ 	__up_write(sem);
+ }
+ 
+@@ -147,7 +137,6 @@ void downgrade_write(struct rw_semaphore *sem)
+ 	lock_downgrade(&sem->dep_map, _RET_IP_);
+ 	DEBUG_RWSEMS_WARN_ON(sem->owner != current);
+ 
+-	rwsem_set_reader_owned(sem);
+ 	__downgrade_write(sem);
+ }
+ 
+@@ -161,7 +150,6 @@ void down_read_nested(struct rw_semaphore *sem, int subclass)
+ 	rwsem_acquire_read(&sem->dep_map, subclass, 0, _RET_IP_);
+ 
+ 	LOCK_CONTENDED(sem, __down_read_trylock, __down_read);
+-	rwsem_set_reader_owned(sem);
+ }
+ 
+ EXPORT_SYMBOL(down_read_nested);
+@@ -172,7 +160,6 @@ void _down_write_nest_lock(struct rw_semaphore *sem, struct lockdep_map *nest)
+ 	rwsem_acquire_nest(&sem->dep_map, 0, 0, nest, _RET_IP_);
+ 
+ 	LOCK_CONTENDED(sem, __down_write_trylock, __down_write);
+-	rwsem_set_owner(sem);
+ }
+ 
+ EXPORT_SYMBOL(_down_write_nest_lock);
+@@ -193,7 +180,6 @@ void down_write_nested(struct rw_semaphore *sem, int subclass)
+ 	rwsem_acquire(&sem->dep_map, subclass, 0, _RET_IP_);
+ 
+ 	LOCK_CONTENDED(sem, __down_write_trylock, __down_write);
+-	rwsem_set_owner(sem);
+ }
+ 
+ EXPORT_SYMBOL(down_write_nested);
+@@ -208,7 +194,6 @@ int __sched down_write_killable_nested(struct rw_semaphore *sem, int subclass)
+ 		return -EINTR;
+ 	}
+ 
+-	rwsem_set_owner(sem);
+ 	return 0;
+ }
+ 
+diff --git a/kernel/locking/rwsem.h b/kernel/locking/rwsem.h
+index 1f5775aa6a1d..ee24c4f257a5 100644
+--- a/kernel/locking/rwsem.h
++++ b/kernel/locking/rwsem.h
+@@ -160,6 +160,8 @@ static inline void __down_read(struct rw_semaphore *sem)
+ {
+ 	if (unlikely(atomic_long_inc_return_acquire(&sem->count) <= 0))
+ 		rwsem_down_read_failed(sem);
++	else
++		rwsem_set_reader_owned(sem);
+ }
+ 
+ static inline int __down_read_killable(struct rw_semaphore *sem)
+@@ -167,8 +169,9 @@ static inline int __down_read_killable(struct rw_semaphore *sem)
+ 	if (unlikely(atomic_long_inc_return_acquire(&sem->count) <= 0)) {
+ 		if (IS_ERR(rwsem_down_read_failed_killable(sem)))
+ 			return -EINTR;
++	} else {
++		rwsem_set_reader_owned(sem);
+ 	}
+-
+ 	return 0;
+ }
+ 
+@@ -182,6 +185,7 @@ static inline int __down_read_trylock(struct rw_semaphore *sem)
+ 	do {
+ 		if (atomic_long_try_cmpxchg_acquire(&sem->count, &tmp,
+ 					tmp + RWSEM_ACTIVE_READ_BIAS)) {
++			rwsem_set_reader_owned(sem);
+ 			return 1;
+ 		}
+ 	} while (tmp >= 0);
+@@ -199,6 +203,7 @@ static inline void __down_write(struct rw_semaphore *sem)
+ 					     &sem->count);
+ 	if (unlikely(tmp != RWSEM_ACTIVE_WRITE_BIAS))
+ 		rwsem_down_write_failed(sem);
++	rwsem_set_owner(sem);
+ }
+ 
+ static inline int __down_write_killable(struct rw_semaphore *sem)
+@@ -210,6 +215,7 @@ static inline int __down_write_killable(struct rw_semaphore *sem)
+ 	if (unlikely(tmp != RWSEM_ACTIVE_WRITE_BIAS))
+ 		if (IS_ERR(rwsem_down_write_failed_killable(sem)))
+ 			return -EINTR;
++	rwsem_set_owner(sem);
+ 	return 0;
+ }
+ 
+@@ -219,7 +225,11 @@ static inline int __down_write_trylock(struct rw_semaphore *sem)
+ 
+ 	tmp = atomic_long_cmpxchg_acquire(&sem->count, RWSEM_UNLOCKED_VALUE,
+ 		      RWSEM_ACTIVE_WRITE_BIAS);
+-	return tmp == RWSEM_UNLOCKED_VALUE;
++	if (tmp == RWSEM_UNLOCKED_VALUE) {
++		rwsem_set_owner(sem);
++		return true;
 +	}
-+	list_add_tail(&waiter.list, &sem->wait_list);
-+
-+	/* we're now waiting on the lock, but no longer actively locking */
-+	count = atomic_long_add_return(adjustment, &sem->count);
-+
-+	/*
-+	 * If there are no active locks, wake the front queued process(es).
-+	 *
-+	 * If there are no writers and we are first in the queue,
-+	 * wake our own waiter to join the existing active readers !
-+	 */
-+	if (count == RWSEM_WAITING_BIAS ||
-+	    (count > RWSEM_WAITING_BIAS &&
-+	     adjustment != -RWSEM_ACTIVE_READ_BIAS))
-+		__rwsem_mark_wake(sem, RWSEM_WAKE_ANY, &wake_q);
-+
-+	raw_spin_unlock_irq(&sem->wait_lock);
-+	wake_up_q(&wake_q);
-+
-+	/* wait to be given the lock */
-+	while (true) {
-+		set_current_state(state);
-+		if (!waiter.task)
-+			break;
-+		if (signal_pending_state(state, current)) {
-+			raw_spin_lock_irq(&sem->wait_lock);
-+			if (waiter.task)
-+				goto out_nolock;
-+			raw_spin_unlock_irq(&sem->wait_lock);
-+			break;
-+		}
-+		schedule();
-+	}
-+
-+	__set_current_state(TASK_RUNNING);
-+	return sem;
-+out_nolock:
-+	list_del(&waiter.list);
-+	if (list_empty(&sem->wait_list))
-+		atomic_long_add(-RWSEM_WAITING_BIAS, &sem->count);
-+	raw_spin_unlock_irq(&sem->wait_lock);
-+	__set_current_state(TASK_RUNNING);
-+	return ERR_PTR(-EINTR);
-+}
-+
-+__visible struct rw_semaphore * __sched
-+rwsem_down_read_failed(struct rw_semaphore *sem)
-+{
-+	return __rwsem_down_read_failed_common(sem, TASK_UNINTERRUPTIBLE);
-+}
-+EXPORT_SYMBOL(rwsem_down_read_failed);
-+
-+__visible struct rw_semaphore * __sched
-+rwsem_down_read_failed_killable(struct rw_semaphore *sem)
-+{
-+	return __rwsem_down_read_failed_common(sem, TASK_KILLABLE);
-+}
-+EXPORT_SYMBOL(rwsem_down_read_failed_killable);
-+
++	return false;
+ }
+ 
  /*
-  * Wait until we successfully acquire the write lock
+@@ -229,6 +239,7 @@ static inline void __up_read(struct rw_semaphore *sem)
+ {
+ 	long tmp;
+ 
++	rwsem_clear_reader_owned(sem);
+ 	tmp = atomic_long_dec_return_release(&sem->count);
+ 	if (unlikely(tmp < -1 && (tmp & RWSEM_ACTIVE_MASK) == 0))
+ 		rwsem_wake(sem);
+@@ -239,6 +250,7 @@ static inline void __up_read(struct rw_semaphore *sem)
   */
+ static inline void __up_write(struct rw_semaphore *sem)
+ {
++	rwsem_clear_owner(sem);
+ 	if (unlikely(atomic_long_sub_return_release(RWSEM_ACTIVE_WRITE_BIAS,
+ 						    &sem->count) < 0))
+ 		rwsem_wake(sem);
+@@ -259,6 +271,7 @@ static inline void __downgrade_write(struct rw_semaphore *sem)
+ 	 * write side. As such, rely on RELEASE semantics.
+ 	 */
+ 	tmp = atomic_long_add_return_release(-RWSEM_WAITING_BIAS, &sem->count);
++	rwsem_set_reader_owned(sem);
+ 	if (tmp < 0)
+ 		rwsem_downgrade_wake(sem);
+ }
