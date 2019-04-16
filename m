@@ -7,150 +7,161 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DB458C282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:20:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA3DC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:20:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A65ED22408
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:20:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 285B322400
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:20:23 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555424419;
-	bh=IY2W6JNagtS5qvKfZZCDS1NDtJL+OzlFe6fejKbJ03Q=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=A9sADu/FCgBQE6AJx+qc96Gx704SeEMDyNfHxTovvaY/IBdHsmuEgQaFjxFwjN9ex
-	 iLPnESli+GfZHvbRjfaetDYwYlXRpJu4k6YSiF420tG9LrBKbJ+nY3RE/Hw11cn+Sq
-	 wscPaV+lsh2cW2kTR4sn1GArFt+5QwKmGpu+f6NY=
+	s=default; t=1555424423;
+	bh=PM9cB3u6E0jV9mNsw91C+YufEQcVaQ/IBLLipHz/36Y=;
+	h=Date:From:To:Cc:Subject:List-ID:From;
+	b=HWKWsoQhoQRR49r2W/aZJfP+QAy5JTX6RFbnVy/RFLWkmjzuJZro6RR7d3yzqBRAK
+	 1r7t+kOQqsRxIBqvhPziMU4hDGNrYemu6lQKzXWKFgKqZycBmtkLAIzGNjMiD8rSZm
+	 l2/FNSocbeeIZCGfZuajyeJ620/kuRK43RvFuKLE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729593AbfDPOUK (ORCPT
+        id S1729605AbfDPOUW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 10:20:10 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58944 "EHLO mail.kernel.org"
+        Tue, 16 Apr 2019 10:20:22 -0400
+Received: from mail.kernel.org ([198.145.29.99]:58998 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729373AbfDPOUI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 10:20:08 -0400
+        id S1729103AbfDPOUV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 10:20:21 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id E49BC223FE;
-        Tue, 16 Apr 2019 14:20:06 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id BA9E42240F;
+        Tue, 16 Apr 2019 14:20:19 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555424407;
-        bh=IY2W6JNagtS5qvKfZZCDS1NDtJL+OzlFe6fejKbJ03Q=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=YrNaqqPzy7NPDaY+M1aiyUj7p8JqsELVY7jLnf8HT2eLC7xvNY/0+KmFvpPodF3U1
-         LJwBpgIbps45h5WsPAFPg/OEvUhucO0S7QNGziCARd6LDutTWd27ZSssO5k1tP2R8C
-         Ma8bD8dHgWZEDuZufBmu36PynsIovhdpDSYS1CPs=
-Date:   Tue, 16 Apr 2019 15:46:55 +0200
+        s=default; t=1555424420;
+        bh=PM9cB3u6E0jV9mNsw91C+YufEQcVaQ/IBLLipHz/36Y=;
+        h=Date:From:To:Cc:Subject:From;
+        b=lqIjGKJXK9g09oiiVq6hgO6BPtehWp0t9AsKswXxVok1XT8fbN8PUhSm+GXaZPu7C
+         eY+dQqrLiiTeUcCpJrYSar96/pCWmfpXkglnCx8Kx7fpb84s+Zaygnl5wrZA/lZHq+
+         zRyRSNriAzILDBibwDCDI8sMCLo1sFo+YYr0gkdA=
+Date:   Tue, 16 Apr 2019 16:15:54 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     "Life is hard, and then you die" <ronald@innovation.ch>
-Cc:     Jonathan Corbet <corbet@lwn.net>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        linux-doc@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] debugfs: make debugfs_create_u32_array() return void
-Message-ID: <20190416134655.GA21555@kroah.com>
-References: <20190415082506.25610-1-ronald@innovation.ch>
- <20190415082506.25610-3-ronald@innovation.ch>
- <20190415084844.GA26101@kroah.com>
- <20190415232959.GC13033@innovation.ch>
- <20190416132925.GA17483@kroah.com>
+To:     Jassi Brar <jassisinghbrar@gmail.com>
+Cc:     linux-kernel@vger.kernel.org
+Subject: [PATCH] mailbox: no need to check return value of debugfs_create
+ functions
+Message-ID: <20190416141554.GA30865@kroah.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190416132925.GA17483@kroah.com>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The single user of debugfs_create_u32_array() does not care about the
-return value of it, so make it return void as there is no need to do
-anything with the return value.
+When calling debugfs functions, there is no need to ever check the
+return value.  The function can work or not, but the code logic should
+never do something different based on this.
 
+Cc: Jassi Brar <jassisinghbrar@gmail.com>
 Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 ---
- Documentation/filesystems/debugfs.txt |  2 +-
- fs/debugfs/file.c                     | 13 ++++---------
- include/linux/debugfs.h               | 12 +++++-------
- 3 files changed, 10 insertions(+), 17 deletions(-)
+ drivers/mailbox/bcm-flexrm-mailbox.c | 27 +++++----------------------
+ drivers/mailbox/bcm-pdc-mailbox.c    |  8 ++------
+ 2 files changed, 7 insertions(+), 28 deletions(-)
 
-diff --git a/Documentation/filesystems/debugfs.txt b/Documentation/filesystems/debugfs.txt
-index 4f45f71149cb..6320e86d2294 100644
---- a/Documentation/filesystems/debugfs.txt
-+++ b/Documentation/filesystems/debugfs.txt
-@@ -168,7 +168,7 @@ byte offsets over a base for the register block.
+diff --git a/drivers/mailbox/bcm-flexrm-mailbox.c b/drivers/mailbox/bcm-flexrm-mailbox.c
+index a64116586b4c..d2053145f224 100644
+--- a/drivers/mailbox/bcm-flexrm-mailbox.c
++++ b/drivers/mailbox/bcm-flexrm-mailbox.c
+@@ -296,8 +296,6 @@ struct flexrm_mbox {
+ 	struct dma_pool *bd_pool;
+ 	struct dma_pool *cmpl_pool;
+ 	struct dentry *root;
+-	struct dentry *config;
+-	struct dentry *stats;
+ 	struct mbox_controller controller;
+ };
  
- If you want to dump an u32 array in debugfs, you can create file with:
+@@ -1603,7 +1601,6 @@ static int flexrm_mbox_probe(struct platform_device *pdev)
+ 					  1 << RING_CMPL_ALIGN_ORDER, 0);
+ 	if (!mbox->cmpl_pool) {
+ 		ret = -ENOMEM;
+-		goto fail_destroy_bd_pool;
+ 	}
  
--    struct dentry *debugfs_create_u32_array(const char *name, umode_t mode,
-+    void debugfs_create_u32_array(const char *name, umode_t mode,
- 			struct dentry *parent,
- 			u32 *array, u32 elements);
+ 	/* Allocate platform MSIs for each ring */
+@@ -1624,28 +1621,15 @@ static int flexrm_mbox_probe(struct platform_device *pdev)
  
-diff --git a/fs/debugfs/file.c b/fs/debugfs/file.c
-index 4fce1da7db23..2c17039c6287 100644
---- a/fs/debugfs/file.c
-+++ b/fs/debugfs/file.c
-@@ -1004,24 +1004,19 @@ static const struct file_operations u32_array_fops = {
-  * @array as data. If the @mode variable is so set it can be read from.
-  * Writing is not supported. Seek within the file is also not supported.
-  * Once array is created its size can not be changed.
-- *
-- * The function returns a pointer to dentry on success. If debugfs is not
-- * enabled in the kernel, the value -%ENODEV will be returned.
-  */
--struct dentry *debugfs_create_u32_array(const char *name, umode_t mode,
--					    struct dentry *parent,
--					    u32 *array, u32 elements)
-+void debugfs_create_u32_array(const char *name, umode_t mode,
-+			      struct dentry *parent, u32 *array, u32 elements)
- {
- 	struct array_data *data = kmalloc(sizeof(*data), GFP_KERNEL);
+ 	/* Create debugfs root entry */
+ 	mbox->root = debugfs_create_dir(dev_name(mbox->dev), NULL);
+-	if (IS_ERR_OR_NULL(mbox->root)) {
+-		ret = PTR_ERR_OR_ZERO(mbox->root);
+-		goto fail_free_msis;
+-	}
  
- 	if (data == NULL)
--		return NULL;
-+		return;
+ 	/* Create debugfs config entry */
+-	mbox->config = debugfs_create_devm_seqfile(mbox->dev,
+-						   "config", mbox->root,
+-						   flexrm_debugfs_conf_show);
+-	if (IS_ERR_OR_NULL(mbox->config)) {
+-		ret = PTR_ERR_OR_ZERO(mbox->config);
+-		goto fail_free_debugfs_root;
+-	}
++	debugfs_create_devm_seqfile(mbox->dev, "config", mbox->root,
++				    flexrm_debugfs_conf_show);
  
- 	data->array = array;
- 	data->elements = elements;
+ 	/* Create debugfs stats entry */
+-	mbox->stats = debugfs_create_devm_seqfile(mbox->dev,
+-						  "stats", mbox->root,
+-						  flexrm_debugfs_stats_show);
+-	if (IS_ERR_OR_NULL(mbox->stats)) {
+-		ret = PTR_ERR_OR_ZERO(mbox->stats);
+-		goto fail_free_debugfs_root;
+-	}
++	debugfs_create_devm_seqfile(mbox->dev, "stats", mbox->root,
++				    flexrm_debugfs_stats_show);
++
+ skip_debugfs:
  
--	return debugfs_create_file_unsafe(name, mode, parent, data,
--					&u32_array_fops);
-+	debugfs_create_file_unsafe(name, mode, parent, data, &u32_array_fops);
+ 	/* Initialize mailbox controller */
+@@ -1676,7 +1660,6 @@ static int flexrm_mbox_probe(struct platform_device *pdev)
+ 
+ fail_free_debugfs_root:
+ 	debugfs_remove_recursive(mbox->root);
+-fail_free_msis:
+ 	platform_msi_domain_free_irqs(dev);
+ fail_destroy_cmpl_pool:
+ 	dma_pool_destroy(mbox->cmpl_pool);
+diff --git a/drivers/mailbox/bcm-pdc-mailbox.c b/drivers/mailbox/bcm-pdc-mailbox.c
+index ccf3d62af7e7..a8c291386142 100644
+--- a/drivers/mailbox/bcm-pdc-mailbox.c
++++ b/drivers/mailbox/bcm-pdc-mailbox.c
+@@ -406,8 +406,6 @@ struct pdc_state {
+ 	 */
+ 	struct scatterlist *src_sg[PDC_RING_ENTRIES];
+ 
+-	struct dentry *debugfs_stats;  /* debug FS stats file for this PDC */
+-
+ 	/* counters */
+ 	u32  pdc_requests;     /* number of request messages submitted */
+ 	u32  pdc_replies;      /* number of reply messages received */
+@@ -512,9 +510,8 @@ static void pdc_setup_debugfs(struct pdc_state *pdcs)
+ 		debugfs_dir = debugfs_create_dir(KBUILD_MODNAME, NULL);
+ 
+ 	/* S_IRUSR == 0400 */
+-	pdcs->debugfs_stats = debugfs_create_file(spu_stats_name, 0400,
+-						  debugfs_dir, pdcs,
+-						  &pdc_debugfs_stats);
++	debugfs_create_file(spu_stats_name, 0400, debugfs_dir, pdcs,
++			    &pdc_debugfs_stats);
  }
- EXPORT_SYMBOL_GPL(debugfs_create_u32_array);
  
-diff --git a/include/linux/debugfs.h b/include/linux/debugfs.h
-index 3b0ba54cc4d5..58424eb3b329 100644
---- a/include/linux/debugfs.h
-+++ b/include/linux/debugfs.h
-@@ -133,9 +133,8 @@ struct dentry *debugfs_create_regset32(const char *name, umode_t mode,
- void debugfs_print_regs32(struct seq_file *s, const struct debugfs_reg32 *regs,
- 			  int nregs, void __iomem *base, char *prefix);
+ static void pdc_free_debugfs(void)
+@@ -1614,7 +1611,6 @@ static int pdc_probe(struct platform_device *pdev)
+ 	if (err)
+ 		goto cleanup_buf_pool;
  
--struct dentry *debugfs_create_u32_array(const char *name, umode_t mode,
--					struct dentry *parent,
--					u32 *array, u32 elements);
-+void debugfs_create_u32_array(const char *name, umode_t mode,
-+			      struct dentry *parent, u32 *array, u32 elements);
+-	pdcs->debugfs_stats = NULL;
+ 	pdc_setup_debugfs(pdcs);
  
- struct dentry *debugfs_create_devm_seqfile(struct device *dev, const char *name,
- 					   struct dentry *parent,
-@@ -353,11 +352,10 @@ static inline bool debugfs_initialized(void)
- 	return false;
- }
- 
--static inline struct dentry *debugfs_create_u32_array(const char *name, umode_t mode,
--					struct dentry *parent,
--					u32 *array, u32 elements)
-+static inline void debugfs_create_u32_array(const char *name, umode_t mode,
-+					    struct dentry *parent, u32 *array,
-+					    u32 elements)
- {
--	return ERR_PTR(-ENODEV);
- }
- 
- static inline struct dentry *debugfs_create_devm_seqfile(struct device *dev,
+ 	dev_dbg(dev, "pdc_probe() successful");
 -- 
 2.21.0
 
