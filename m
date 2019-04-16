@@ -2,166 +2,128 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-13.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EA3DC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:20:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F403C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:20:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 285B322400
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:20:23 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555424423;
-	bh=PM9cB3u6E0jV9mNsw91C+YufEQcVaQ/IBLLipHz/36Y=;
-	h=Date:From:To:Cc:Subject:List-ID:From;
-	b=HWKWsoQhoQRR49r2W/aZJfP+QAy5JTX6RFbnVy/RFLWkmjzuJZro6RR7d3yzqBRAK
-	 1r7t+kOQqsRxIBqvhPziMU4hDGNrYemu6lQKzXWKFgKqZycBmtkLAIzGNjMiD8rSZm
-	 l2/FNSocbeeIZCGfZuajyeJ620/kuRK43RvFuKLE=
+	by mail.kernel.org (Postfix) with ESMTP id 24DBA223F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:20:38 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nBMr/XS+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729605AbfDPOUW (ORCPT
+        id S1729624AbfDPOUh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 10:20:22 -0400
-Received: from mail.kernel.org ([198.145.29.99]:58998 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729103AbfDPOUV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 10:20:21 -0400
-Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id BA9E42240F;
-        Tue, 16 Apr 2019 14:20:19 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555424420;
-        bh=PM9cB3u6E0jV9mNsw91C+YufEQcVaQ/IBLLipHz/36Y=;
-        h=Date:From:To:Cc:Subject:From;
-        b=lqIjGKJXK9g09oiiVq6hgO6BPtehWp0t9AsKswXxVok1XT8fbN8PUhSm+GXaZPu7C
-         eY+dQqrLiiTeUcCpJrYSar96/pCWmfpXkglnCx8Kx7fpb84s+Zaygnl5wrZA/lZHq+
-         zRyRSNriAzILDBibwDCDI8sMCLo1sFo+YYr0gkdA=
-Date:   Tue, 16 Apr 2019 16:15:54 +0200
-From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jassi Brar <jassisinghbrar@gmail.com>
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] mailbox: no need to check return value of debugfs_create
- functions
-Message-ID: <20190416141554.GA30865@kroah.com>
+        Tue, 16 Apr 2019 10:20:37 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:46896 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729103AbfDPOUg (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 10:20:36 -0400
+Received: by mail-qt1-f196.google.com with SMTP id z17so23386097qts.13
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 07:20:35 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:date:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=obJaqUR8b3vMryj19dPA7um10nXOdV9Kj8upydZbIhc=;
+        b=nBMr/XS+yjytyzSw9E21ipX6De3CXfVp60RvT7s/GsNCQQunV9bpbjXMgBbT9q7SVd
+         aT6V42w3yak0kW1zQVtvfVbTeyfp18nGZJaQhaxpPMqXb2VypRa3ehlfdEqxTrLgqWPW
+         VZfFMwLD3YyzVkC9ZiQPo/xWNHXTlJkroydeKB+3/C/vFb50/udG8Vb1uUjbUEhiKwBR
+         /dUPT3qO9dRoHtIFwctYclTnSPUSofxvbnpQSDSAyDqBzKX5ha9qGmMuPWM3g3OdSxjq
+         Pz7NpBoYyPmJqtugmnuGP3AxpgcI+tyqbOO25UDGSvPguYOprv42foxh5sn3LnyIvKpZ
+         dF9g==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:date:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=obJaqUR8b3vMryj19dPA7um10nXOdV9Kj8upydZbIhc=;
+        b=NO8lXWSfvWJnIF6vxPu3Dnw29DNdd7zXOTIPr37Kx8qF5s/n8oD3ZbisUeQfZaK94l
+         Q9b6/W8ZWiMestusXNteJ6hrtJ8J08sznqMzBvpIOJwZFr/5DUgMYJuBOqjJCaUSBtPQ
+         4pF3MygRJcoJLcTLQvEkFc+iDsESY6LBLn1GOQivnmjmvtSqauXQ175WZhngrxW/X0Of
+         3FuS4ahJ7PLe/AK0WL1CRN4V1YWQg66Fa7L2Djfi/xxogKVY4FKAMLOJN4s1l/YiPr+0
+         XRjHLsljH152h54wQGTgtGXRGRQWVob9S7zqUxg0x3sBNSysTvLw95U09rlY71gWc5/G
+         juFA==
+X-Gm-Message-State: APjAAAUTrC9fbn4Tum/LrEtV1EEKVaLR1oEFCm+jRkyCSB1Vg7NkRQYS
+        5Rw5I2yNR5qatgNDbufseoePkmly
+X-Google-Smtp-Source: APXvYqzMKtQDvbIEpJlmlBt8mJD53u4QGode5WOo98DuGyZ3BOxDcMXjoS35v/wooTlKAAdSZV+tKQ==
+X-Received: by 2002:ac8:37ce:: with SMTP id e14mr61844087qtc.146.1555424434941;
+        Tue, 16 Apr 2019 07:20:34 -0700 (PDT)
+Received: from quaco.ghostprotocols.net ([190.15.121.82])
+        by smtp.gmail.com with ESMTPSA id e18sm13240487qki.82.2019.04.16.07.20.32
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 16 Apr 2019 07:20:33 -0700 (PDT)
+From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
+X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
+Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
+        id EA6344039C; Tue, 16 Apr 2019 11:20:28 -0300 (-03)
+Date:   Tue, 16 Apr 2019 11:20:28 -0300
+To:     Jiri Olsa <jolsa@kernel.org>
+Cc:     Song Liu <songliubraving@fb.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>
+Subject: Re: [PATCH] perf tools: Fix perf_env__find_bpf_prog_info rb tree
+ lookup
+Message-ID: <20190416142028.GH11294@kernel.org>
+References: <20190416134151.15282-1-jolsa@kernel.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <20190416134151.15282-1-jolsa@kernel.org>
+X-Url:  http://acmel.wordpress.com
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When calling debugfs functions, there is no need to ever check the
-return value.  The function can work or not, but the code logic should
-never do something different based on this.
+Em Tue, Apr 16, 2019 at 03:41:51PM +0200, Jiri Olsa escreveu:
+> We currently don't return NULL in case we don't find
+> the bpf_prog_info_node, fixing that.
 
-Cc: Jassi Brar <jassisinghbrar@gmail.com>
-Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
----
- drivers/mailbox/bcm-flexrm-mailbox.c | 27 +++++----------------------
- drivers/mailbox/bcm-pdc-mailbox.c    |  8 ++------
- 2 files changed, 7 insertions(+), 28 deletions(-)
+Can you please try to figure out what was the changeset that introduced
+this problem so that we can have a Fixes: tag that helps me determine if
+this should go to perf/urgent (likely) or (perf/core) and to help the
+stable guys as well?
 
-diff --git a/drivers/mailbox/bcm-flexrm-mailbox.c b/drivers/mailbox/bcm-flexrm-mailbox.c
-index a64116586b4c..d2053145f224 100644
---- a/drivers/mailbox/bcm-flexrm-mailbox.c
-+++ b/drivers/mailbox/bcm-flexrm-mailbox.c
-@@ -296,8 +296,6 @@ struct flexrm_mbox {
- 	struct dma_pool *bd_pool;
- 	struct dma_pool *cmpl_pool;
- 	struct dentry *root;
--	struct dentry *config;
--	struct dentry *stats;
- 	struct mbox_controller controller;
- };
+Thanks,
+
+- Arnaldo
  
-@@ -1603,7 +1601,6 @@ static int flexrm_mbox_probe(struct platform_device *pdev)
- 					  1 << RING_CMPL_ALIGN_ORDER, 0);
- 	if (!mbox->cmpl_pool) {
- 		ret = -ENOMEM;
--		goto fail_destroy_bd_pool;
- 	}
- 
- 	/* Allocate platform MSIs for each ring */
-@@ -1624,28 +1621,15 @@ static int flexrm_mbox_probe(struct platform_device *pdev)
- 
- 	/* Create debugfs root entry */
- 	mbox->root = debugfs_create_dir(dev_name(mbox->dev), NULL);
--	if (IS_ERR_OR_NULL(mbox->root)) {
--		ret = PTR_ERR_OR_ZERO(mbox->root);
--		goto fail_free_msis;
--	}
- 
- 	/* Create debugfs config entry */
--	mbox->config = debugfs_create_devm_seqfile(mbox->dev,
--						   "config", mbox->root,
--						   flexrm_debugfs_conf_show);
--	if (IS_ERR_OR_NULL(mbox->config)) {
--		ret = PTR_ERR_OR_ZERO(mbox->config);
--		goto fail_free_debugfs_root;
--	}
-+	debugfs_create_devm_seqfile(mbox->dev, "config", mbox->root,
-+				    flexrm_debugfs_conf_show);
- 
- 	/* Create debugfs stats entry */
--	mbox->stats = debugfs_create_devm_seqfile(mbox->dev,
--						  "stats", mbox->root,
--						  flexrm_debugfs_stats_show);
--	if (IS_ERR_OR_NULL(mbox->stats)) {
--		ret = PTR_ERR_OR_ZERO(mbox->stats);
--		goto fail_free_debugfs_root;
--	}
-+	debugfs_create_devm_seqfile(mbox->dev, "stats", mbox->root,
-+				    flexrm_debugfs_stats_show);
-+
- skip_debugfs:
- 
- 	/* Initialize mailbox controller */
-@@ -1676,7 +1660,6 @@ static int flexrm_mbox_probe(struct platform_device *pdev)
- 
- fail_free_debugfs_root:
- 	debugfs_remove_recursive(mbox->root);
--fail_free_msis:
- 	platform_msi_domain_free_irqs(dev);
- fail_destroy_cmpl_pool:
- 	dma_pool_destroy(mbox->cmpl_pool);
-diff --git a/drivers/mailbox/bcm-pdc-mailbox.c b/drivers/mailbox/bcm-pdc-mailbox.c
-index ccf3d62af7e7..a8c291386142 100644
---- a/drivers/mailbox/bcm-pdc-mailbox.c
-+++ b/drivers/mailbox/bcm-pdc-mailbox.c
-@@ -406,8 +406,6 @@ struct pdc_state {
- 	 */
- 	struct scatterlist *src_sg[PDC_RING_ENTRIES];
- 
--	struct dentry *debugfs_stats;  /* debug FS stats file for this PDC */
--
- 	/* counters */
- 	u32  pdc_requests;     /* number of request messages submitted */
- 	u32  pdc_replies;      /* number of reply messages received */
-@@ -512,9 +510,8 @@ static void pdc_setup_debugfs(struct pdc_state *pdcs)
- 		debugfs_dir = debugfs_create_dir(KBUILD_MODNAME, NULL);
- 
- 	/* S_IRUSR == 0400 */
--	pdcs->debugfs_stats = debugfs_create_file(spu_stats_name, 0400,
--						  debugfs_dir, pdcs,
--						  &pdc_debugfs_stats);
-+	debugfs_create_file(spu_stats_name, 0400, debugfs_dir, pdcs,
-+			    &pdc_debugfs_stats);
- }
- 
- static void pdc_free_debugfs(void)
-@@ -1614,7 +1611,6 @@ static int pdc_probe(struct platform_device *pdev)
- 	if (err)
- 		goto cleanup_buf_pool;
- 
--	pdcs->debugfs_stats = NULL;
- 	pdc_setup_debugfs(pdcs);
- 
- 	dev_dbg(dev, "pdc_probe() successful");
+> Cc: Song Liu <songliubraving@fb.com>
+> Link: http://lkml.kernel.org/n/tip-bp07cla6dy6ifydl1sfoiorw@git.kernel.org
+> Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> ---
+>  tools/perf/util/env.c | 4 +++-
+>  1 file changed, 3 insertions(+), 1 deletion(-)
+> 
+> diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+> index c6351b557bb0..34a363f2e71b 100644
+> --- a/tools/perf/util/env.c
+> +++ b/tools/perf/util/env.c
+> @@ -57,9 +57,11 @@ struct bpf_prog_info_node *perf_env__find_bpf_prog_info(struct perf_env *env,
+>  		else if (prog_id > node->info_linear->info.id)
+>  			n = n->rb_right;
+>  		else
+> -			break;
+> +			goto out;
+>  	}
+> +	node = NULL;
+>  
+> +out:
+>  	up_read(&env->bpf_progs.lock);
+>  	return node;
+>  }
+> -- 
+> 2.17.2
+
 -- 
-2.21.0
 
+- Arnaldo
