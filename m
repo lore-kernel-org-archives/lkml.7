@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E47BEC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:55:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDAFC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:56:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2E0D2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:55:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C9B452087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:56:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730541AbfDPRzx (ORCPT
+        id S1730709AbfDPR4J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 13:55:53 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:57682 "EHLO
+        Tue, 16 Apr 2019 13:56:09 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:57678 "EHLO
         ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730338AbfDPRxt (ORCPT
+        with ESMTP id S1730337AbfDPRxt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 16 Apr 2019 13:53:49 -0400
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hGSHD-0005ZT-KW; Tue, 16 Apr 2019 17:53:47 +0000
+        id 1hGSHD-0005ZN-FF; Tue, 16 Apr 2019 17:53:47 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [RFC PATCH 50/62] afs: switch to use of ->free_inode()
-Date:   Tue, 16 Apr 2019 18:53:28 +0100
-Message-Id: <20190416175340.21068-50-viro@ZenIV.linux.org.uk>
+Subject: [RFC PATCH 49/62] dax: make use of ->free_inode()
+Date:   Tue, 16 Apr 2019 18:53:27 +0100
+Message-Id: <20190416175340.21068-49-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190416175340.21068-1-viro@ZenIV.linux.org.uk>
 References: <20190416174900.GT2217@ZenIV.linux.org.uk>
@@ -41,58 +41,49 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-debugging printks left in ->destroy_inode() and so's the
-update of inode count; we could take the latter to RCU-delayed
-part (would take only moving the check on module exit past
-rcu_barrier() there), but debugging output ought to either
-stay where it is or go into ->evict_inode()
+we might want to drop ->destroy_inode() there - it's used only for
+WARN_ON() now, and AFAICS that could be moved to ->evict_inode()
+if we had one...
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- fs/afs/super.c | 9 ++++-----
- 1 file changed, 4 insertions(+), 5 deletions(-)
+ drivers/dax/super.c | 7 ++-----
+ 1 file changed, 2 insertions(+), 5 deletions(-)
 
-diff --git a/fs/afs/super.c b/fs/afs/super.c
-index 5adf012b8e27..bab89763119b 100644
---- a/fs/afs/super.c
-+++ b/fs/afs/super.c
-@@ -33,6 +33,7 @@ static void afs_i_init_once(void *foo);
- static void afs_kill_super(struct super_block *sb);
- static struct inode *afs_alloc_inode(struct super_block *sb);
- static void afs_destroy_inode(struct inode *inode);
-+static void afs_free_inode(struct inode *inode);
- static int afs_statfs(struct dentry *dentry, struct kstatfs *buf);
- static int afs_show_devname(struct seq_file *m, struct dentry *root);
- static int afs_show_options(struct seq_file *m, struct dentry *root);
-@@ -56,6 +57,7 @@ static const struct super_operations afs_super_ops = {
- 	.alloc_inode	= afs_alloc_inode,
- 	.drop_inode	= afs_drop_inode,
- 	.destroy_inode	= afs_destroy_inode,
-+	.free_inode	= afs_free_inode,
- 	.evict_inode	= afs_evict_inode,
- 	.show_devname	= afs_show_devname,
- 	.show_options	= afs_show_options,
-@@ -660,11 +662,9 @@ static struct inode *afs_alloc_inode(struct super_block *sb)
- 	return &vnode->vfs_inode;
+diff --git a/drivers/dax/super.c b/drivers/dax/super.c
+index 0a339b85133e..bbd57ca0634a 100644
+--- a/drivers/dax/super.c
++++ b/drivers/dax/super.c
+@@ -412,11 +412,9 @@ static struct dax_device *to_dax_dev(struct inode *inode)
+ 	return container_of(inode, struct dax_device, inode);
  }
  
--static void afs_i_callback(struct rcu_head *head)
-+static void afs_free_inode(struct inode *inode)
+-static void dax_i_callback(struct rcu_head *head)
++static void dax_free_inode(struct inode *inode)
  {
 -	struct inode *inode = container_of(head, struct inode, i_rcu);
--	struct afs_vnode *vnode = AFS_FS_I(inode);
--	kmem_cache_free(afs_inode_cachep, vnode);
-+	kmem_cache_free(afs_inode_cachep, AFS_FS_I(inode));
+ 	struct dax_device *dax_dev = to_dax_dev(inode);
+-
+ 	kfree(dax_dev->host);
+ 	dax_dev->host = NULL;
+ 	if (inode->i_rdev)
+@@ -427,16 +425,15 @@ static void dax_i_callback(struct rcu_head *head)
+ static void dax_destroy_inode(struct inode *inode)
+ {
+ 	struct dax_device *dax_dev = to_dax_dev(inode);
+-
+ 	WARN_ONCE(test_bit(DAXDEV_ALIVE, &dax_dev->flags),
+ 			"kill_dax() must be called before final iput()\n");
+-	call_rcu(&inode->i_rcu, dax_i_callback);
  }
  
- /*
-@@ -680,7 +680,6 @@ static void afs_destroy_inode(struct inode *inode)
- 
- 	ASSERTCMP(vnode->cb_interest, ==, NULL);
- 
--	call_rcu(&inode->i_rcu, afs_i_callback);
- 	atomic_dec(&afs_count_active_inodes);
- }
+ static const struct super_operations dax_sops = {
+ 	.statfs = simple_statfs,
+ 	.alloc_inode = dax_alloc_inode,
+ 	.destroy_inode = dax_destroy_inode,
++	.free_inode = dax_free_inode,
+ 	.drop_inode = generic_delete_inode,
+ };
  
 -- 
 2.11.0
