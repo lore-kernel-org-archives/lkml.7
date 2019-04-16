@@ -4,73 +4,67 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18BECC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:05:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93FCAC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:05:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D076420872
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:05:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 58C8B20872
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:05:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="Ms6gbJhV"
+	dkim=pass (2048-bit key) header.d=lca.pw header.i=@lca.pw header.b="XlrbG0dS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730127AbfDPRFN (ORCPT
+        id S1730140AbfDPRFw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 13:05:13 -0400
-Received: from mail-vs1-f68.google.com ([209.85.217.68]:35415 "EHLO
-        mail-vs1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729883AbfDPRFN (ORCPT
+        Tue, 16 Apr 2019 13:05:52 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:44177 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728809AbfDPRFv (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 13:05:13 -0400
-Received: by mail-vs1-f68.google.com with SMTP id d8so11984737vsp.2
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 10:05:12 -0700 (PDT)
+        Tue, 16 Apr 2019 13:05:51 -0400
+Received: by mail-qk1-f196.google.com with SMTP id y5so12589347qkc.11
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 10:05:50 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=Yv9QS7uzgP9GlJMFMz27LYIAGIRyKRTC6nWxsWHozIo=;
-        b=Ms6gbJhVcBtWUb691nTHIq17JkFfHLn1SaiVpLU0UyUH6jzm6h90QpYbPYTwVFsjB8
-         aXB73zVn5/hQAFdpX+i0vzwG70bM4iAUoFBhY6wHaUS8vLzEeU+ZG/jZivfr80i3kH6b
-         UtUAGmFMbJG6t44ql464erkPVWPeLZjRTjAyYXgtxqL8ukul+97vj/5InPWI5iBBmsMe
-         KmX79tJpWxt+HQqUaaLyKAJQonUmZo+hoS4KQ1qLKTkQY775XrAaV5psTPc4AQSqzJ9E
-         opmut4TXgcWdkCMQFFsueJkqHmAZHIMMwvWrs8f9eKtRKpxUxNj1mAuAziXUN5eCPlQ/
-         h9Yw==
+        d=lca.pw; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XtR+JxYWE/z/6y97hZH4+xI4vSK6w0v5+dVQRinH+Z0=;
+        b=XlrbG0dSXQaKCqJ6oDXPnysHRJQlRGQzQ/8QsS2sCiPWRvfggPR5oqp1pbLA/61dO4
+         28Jj6vdq97OzDEme/JlulXC2o+Oam0CH6Pn4H2FdvPTfqNf7aDlFuuga6NzdBtU4xaos
+         q2ZUvP/czfBCE3d2X7EginnTov2XVyHW0SbV9EJ6n5i7wi9H1eBJBn0f6oh3Jntk/WjZ
+         +pdbvyF5c4HG0mqYb+ztmuDjKuk6U1OKA13ynsSv6/7dUHTnlOjeY+bRDQLUG4xioaWi
+         KCNkrKA6RwayZlzbXhNhPJnHwRsQwEy3y1y2nD0uW6xIVsAqoKwv2+1WVt1ZA54kFKxJ
+         3hXg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=Yv9QS7uzgP9GlJMFMz27LYIAGIRyKRTC6nWxsWHozIo=;
-        b=RgWkunmTnHQHGBvgf52ETdiCRf3beV3m1lWyu2HzS5bimY6kZo0IAvne62DEV+EqRS
-         2UBpRTJBFA9uhp4+RoQ2VyPm1HIyVZtQabOWkb7xtsNSPOWjel8tgq0KdCweIKwmdv1L
-         3Lwr8opd9O3K9NMzToZ0fgvSoCHbMoD/cmu7omBVcKmvDTxN0bLjyrmwCyWe+1jlQS9v
-         Kg/0Ijgucy17jVDFxYzKus3TMaVyD5zwtFMGPI6Ms0052dgu69gEECBLU8nr/LKQuyQf
-         AQPeJgqWTRFNaSFDWTiDyIeGAs1MlOlPCmUclcDVHpdtmPBZjTFHu9LfdXGjXOhvBnrU
-         Kxkg==
-X-Gm-Message-State: APjAAAXMyGcbIXk78LvUClxKz8rA5t5zcp4xxXOEYiJAeb6VU9gd8mMw
-        l4x9Jwvbi1O+idZ+GujRwHAKaQ==
-X-Google-Smtp-Source: APXvYqyjnzYkABxQZfTflkw6ICQF1SREF83juhbHwXkQCIXLypXnovZjasuWTCqUanPKuQvCZgb+sg==
-X-Received: by 2002:a67:69d7:: with SMTP id e206mr44452168vsc.79.1555434311809;
-        Tue, 16 Apr 2019 10:05:11 -0700 (PDT)
-Received: from localhost.localdomain ([172.56.12.212])
-        by smtp.gmail.com with ESMTPSA id c192sm45178368vka.10.2019.04.16.10.05.05
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=XtR+JxYWE/z/6y97hZH4+xI4vSK6w0v5+dVQRinH+Z0=;
+        b=euPbCJ23YNGxXHW4XEvNjs1dwoCadIawKX3FCcIV3Y6pai8EWhxTapTm/QHlHPZDD6
+         9KjWxFZTwpbx6a1c386DgumjrX6nQzpPG9a0QK72TxyPOEJDcZTxohOLd3WqRD84N/0j
+         zkuN6oa882eTV/fdj8ceMfT09wHQRLrIVT9gPez0GlE9PDCpxB5gv9G3Imm1x0TC8MDs
+         7nw2mrbLq9UeWClw1ya/wnFiTQchq4JJXJYjtiA6yPKaSa7+SyPzrZ/iqkvBDh5pwXP/
+         7oJmEg//Xe8L7hjHcvz+WIgAQnpLCXpTpLew7EjfYG5Ze2JoT+AsxJz0lm4hERWnsoj8
+         hA/Q==
+X-Gm-Message-State: APjAAAWFj5sI4qv6fWL1kLo3GpwuIJiu9aRC6I1RoT4zL+t3nM106eml
+        Ff9Op1asVevF+S1SBTi9LIazBw==
+X-Google-Smtp-Source: APXvYqznAuQo6d6nHKCse/naTQKiOVz5utoPPkz+iRwwqaHCeR/aqn8tE2Mx1uKby3JEv87St1QuMw==
+X-Received: by 2002:a37:4757:: with SMTP id u84mr56641076qka.275.1555434350060;
+        Tue, 16 Apr 2019 10:05:50 -0700 (PDT)
+Received: from ovpn-120-81.rdu2.redhat.com (pool-71-184-117-43.bstnma.fios.verizon.net. [71.184.117.43])
+        by smtp.gmail.com with ESMTPSA id d205sm28157637qkg.66.2019.04.16.10.05.48
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 10:05:11 -0700 (PDT)
-From:   Christian Brauner <christian@brauner.io>
-To:     torvalds@linux-foundation.org, viro@zeniv.linux.org.uk,
-        jannh@google.com, dhowells@redhat.com, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Cc:     serge@hallyn.com, luto@kernel.org, arnd@arndb.de,
-        ebiederm@xmission.com, keescook@chromium.org, tglx@linutronix.de,
-        mtk.manpages@gmail.com, akpm@linux-foundation.org, oleg@redhat.com,
-        cyphar@cyphar.com, joel@joelfernandes.org, dancol@google.com,
-        Christian Brauner <christian@brauner.io>
-Subject: [PATCH v1 4/4] samples: show race-free pidfd metadata access
-Date:   Tue, 16 Apr 2019 19:02:33 +0200
-Message-Id: <20190416170233.10208-5-christian@brauner.io>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <20190416170233.10208-1-christian@brauner.io>
-References: <20190416170233.10208-1-christian@brauner.io>
+        Tue, 16 Apr 2019 10:05:49 -0700 (PDT)
+From:   Qian Cai <cai@lca.pw>
+To:     akpm@linux-foundation.org
+Cc:     mhocko@suse.com, osalvador@suse.de, linux-mm@kvack.org,
+        linux-kernel@vger.kernel.org, Qian Cai <cai@lca.pw>,
+        Vlastimil Babka <vbabka@suse.cz>
+Subject: [PATCH v4] mm/hotplug: treat CMA pages as unmovable
+Date:   Tue, 16 Apr 2019 13:05:10 -0400
+Message-Id: <20190416170510.20048-1-cai@lca.pw>
+X-Mailer: git-send-email 2.20.1 (Apple Git-117)
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -78,202 +72,124 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is a sample program showing userspace how to get race-free access to
-process metadata from a pidfd. It is rather easy to do and userspace can
-actually simply reuse code that currently parses a process's status file in
-procfs.
-The program can easily be extended into a generic helper suitable for
-inclusion in a libc to make it even easier for userspace to gain metadata
-access.
+has_unmovable_pages() is used by allocating CMA and gigantic pages as
+well as the memory hotplug. The later doesn't know how to offline CMA
+pool properly now, but if an unused (free) CMA page is encountered, then
+has_unmovable_pages() happily considers it as a free memory and
+propagates this up the call chain. Memory offlining code then frees the
+page without a proper CMA tear down which leads to an accounting issues.
+Moreover if the same memory range is onlined again then the memory never
+gets back to the CMA pool.
 
-Since this came up in a discussion since this API is going to be used in
-various service managers. A lot of programs will have a whitelist seccomp
-filter that returns EPERM for all new syscalls. This means that programs
-might get confused if CLONE_PIDFD works but the later pidfd_send_signal()
-syscall doesn't. Hence, here's a ahead of time check that
-pidfd_send_signal() is supported:
+State after memory offline:
+ # grep cma /proc/vmstat
+ nr_free_cma 205824
 
-bool pidfd_send_signal_supported()
-{
-        int procfd = open("/proc/self", O_DIRECTORY | O_RDONLY | O_CLOEXEC);
-        if (procfd < 0)
-                return false;
+ # cat /sys/kernel/debug/cma/cma-kvm_cma/count
+ 209920
 
-        /* pidfd_send_signal() should never fail this test. So it must
-         * mean it is not available or blocked by an LSM or seccomp or
-         * other. So * fallback to using pids in this case.
-         */
-        return pidfd_send_signal(procfd, 0, NULL, 0) == 0;
-}
+Also, kmemleak still think those memory address are reserved below but
+have already been used by the buddy allocator after onlining. This patch
+fixes the situation by treating CMA pageblocks as unmovable except when
+has_unmovable_pages() is called as part of CMA allocation.
 
-Signed-off-by: Christian Brauner <christian@brauner.io>
-Signed-off-by: Jann Horn <jann@thejh.net>
-Cc: Arnd Bergmann <arnd@arndb.de>
-Cc: "Eric W. Biederman" <ebiederm@xmission.com>
-Cc: Kees Cook <keescook@chromium.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: David Howells <dhowells@redhat.com>
-Cc: "Michael Kerrisk (man-pages)" <mtk.manpages@gmail.com>
-Cc: Andy Lutomirsky <luto@kernel.org>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Oleg Nesterov <oleg@redhat.com>
-Cc: Aleksa Sarai <cyphar@cyphar.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Al Viro <viro@zeniv.linux.org.uk>
+Offlined Pages 4096
+kmemleak: Cannot insert 0xc000201f7d040008 into the object search tree
+(overlaps existing)
+Call Trace:
+[c00000003dc2faf0] [c000000000884b2c] dump_stack+0xb0/0xf4 (unreliable)
+[c00000003dc2fb30] [c000000000424fb4] create_object+0x344/0x380
+[c00000003dc2fbf0] [c0000000003d178c] __kmalloc_node+0x3ec/0x860
+[c00000003dc2fc90] [c000000000319078] kvmalloc_node+0x58/0x110
+[c00000003dc2fcd0] [c000000000484d9c] seq_read+0x41c/0x620
+[c00000003dc2fd60] [c0000000004472bc] __vfs_read+0x3c/0x70
+[c00000003dc2fd80] [c0000000004473ac] vfs_read+0xbc/0x1a0
+[c00000003dc2fdd0] [c00000000044783c] ksys_read+0x7c/0x140
+[c00000003dc2fe20] [c00000000000b108] system_call+0x5c/0x70
+kmemleak: Kernel memory leak detector disabled
+kmemleak: Object 0xc000201cc8000000 (size 13757317120):
+kmemleak:   comm "swapper/0", pid 0, jiffies 4294937297
+kmemleak:   min_count = -1
+kmemleak:   count = 0
+kmemleak:   flags = 0x5
+kmemleak:   checksum = 0
+kmemleak:   backtrace:
+     cma_declare_contiguous+0x2a4/0x3b0
+     kvm_cma_reserve+0x11c/0x134
+     setup_arch+0x300/0x3f8
+     start_kernel+0x9c/0x6e8
+     start_here_common+0x1c/0x4b0
+kmemleak: Automatic memory scanning thread ended
+
+Acked-by: Michal Hocko <mhocko@suse.com>
+Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Signed-off-by: Qian Cai <cai@lca.pw>
 ---
-/* changelog */
-v1:
-- Christian Brauner <christian@brauner.io>:
-  - adapt sample program to changes in how CLONE_PIDFD returns the pidfd
-    With Oleg's suggestion we can simplify the program even more.
----
- samples/Makefile               |   2 +-
- samples/pidfd/Makefile         |   6 ++
- samples/pidfd/pidfd-metadata.c | 112 +++++++++++++++++++++++++++++++++
- 3 files changed, 119 insertions(+), 1 deletion(-)
- create mode 100644 samples/pidfd/Makefile
- create mode 100644 samples/pidfd/pidfd-metadata.c
 
-diff --git a/samples/Makefile b/samples/Makefile
-index b1142a958811..fadadb1c3b05 100644
---- a/samples/Makefile
-+++ b/samples/Makefile
-@@ -3,4 +3,4 @@
- obj-$(CONFIG_SAMPLES)	+= kobject/ kprobes/ trace_events/ livepatch/ \
- 			   hw_breakpoint/ kfifo/ kdb/ hidraw/ rpmsg/ seccomp/ \
- 			   configfs/ connector/ v4l/ trace_printk/ \
--			   vfio-mdev/ statx/ qmi/ binderfs/
-+			   vfio-mdev/ statx/ qmi/ binderfs/ pidfd/
-diff --git a/samples/pidfd/Makefile b/samples/pidfd/Makefile
-new file mode 100644
-index 000000000000..0ff97784177a
---- /dev/null
-+++ b/samples/pidfd/Makefile
-@@ -0,0 +1,6 @@
-+# SPDX-License-Identifier: GPL-2.0
+v4: Use is_migrate_cma_page() and update the commit log per Vlastimil.
+v3: Use a string pointer instead of an array per Michal.
+v2: Borrow some commit log texts.
+    Call dump_page() in the error path.
+
+ mm/page_alloc.c | 30 ++++++++++++++++++------------
+ 1 file changed, 18 insertions(+), 12 deletions(-)
+
+diff --git a/mm/page_alloc.c b/mm/page_alloc.c
+index d96ca5bc555b..c6ce20aaf80b 100644
+--- a/mm/page_alloc.c
++++ b/mm/page_alloc.c
+@@ -8005,7 +8005,10 @@ void *__init alloc_large_system_hash(const char *tablename,
+ bool has_unmovable_pages(struct zone *zone, struct page *page, int count,
+ 			 int migratetype, int flags)
+ {
+-	unsigned long pfn, iter, found;
++	unsigned long found;
++	unsigned long iter = 0;
++	unsigned long pfn = page_to_pfn(page);
++	const char *reason = "unmovable page";
+ 
+ 	/*
+ 	 * TODO we could make this much more efficient by not checking every
+@@ -8015,17 +8018,20 @@ bool has_unmovable_pages(struct zone *zone, struct page *page, int count,
+ 	 * can still lead to having bootmem allocations in zone_movable.
+ 	 */
+ 
+-	/*
+-	 * CMA allocations (alloc_contig_range) really need to mark isolate
+-	 * CMA pageblocks even when they are not movable in fact so consider
+-	 * them movable here.
+-	 */
+-	if (is_migrate_cma(migratetype) &&
+-			is_migrate_cma(get_pageblock_migratetype(page)))
+-		return false;
++	if (is_migrate_cma_page(page)) {
++		/*
++		 * CMA allocations (alloc_contig_range) really need to mark
++		 * isolate CMA pageblocks even when they are not movable in fact
++		 * so consider them movable here.
++		 */
++		if (is_migrate_cma(migratetype))
++			return false;
 +
-+hostprogs-y := pidfd-metadata
-+always := $(hostprogs-y)
-+HOSTCFLAGS_pidfd-metadata.o += -I$(objtree)/usr/include
-+all: pidfd-metadata
-diff --git a/samples/pidfd/pidfd-metadata.c b/samples/pidfd/pidfd-metadata.c
-new file mode 100644
-index 000000000000..bd8456fc4c0e
---- /dev/null
-+++ b/samples/pidfd/pidfd-metadata.c
-@@ -0,0 +1,112 @@
-+// SPDX-License-Identifier: GPL-2.0
-+
-+#define _GNU_SOURCE
-+#include <err.h>
-+#include <errno.h>
-+#include <fcntl.h>
-+#include <inttypes.h>
-+#include <limits.h>
-+#include <sched.h>
-+#include <signal.h>
-+#include <stdio.h>
-+#include <stdlib.h>
-+#include <string.h>
-+#include <sys/stat.h>
-+#include <sys/syscall.h>
-+#include <sys/types.h>
-+#include <sys/wait.h>
-+#include <unistd.h>
-+
-+#ifndef CLONE_PIDFD
-+#define CLONE_PIDFD 0x00001000
-+#endif
-+
-+static int do_child(void *args)
-+{
-+	printf("%d\n", getpid());
-+	_exit(EXIT_SUCCESS);
-+}
-+
-+static pid_t pidfd_clone(int flags, int *pidfd)
-+{
-+	size_t stack_size = 1024;
-+	char *stack[1024] = { 0 };
-+
-+#ifdef __ia64__
-+	return __clone2(do_child, stack, stack_size, flags | SIGCHLD, NULL, pidfd);
-+#else
-+	return clone(do_child, stack + stack_size, flags | SIGCHLD, NULL, pidfd);
-+#endif
-+}
-+
-+static inline int sys_pidfd_send_signal(int pidfd, int sig, siginfo_t *info,
-+					unsigned int flags)
-+{
-+	return syscall(__NR_pidfd_send_signal, pidfd, sig, info, flags);
-+}
-+
-+static int pidfd_metadata_fd(pid_t pid, int pidfd)
-+{
-+	int procfd, ret;
-+	char path[100];
-+
-+	snprintf(path, sizeof(path), "/proc/%d", pid);
-+	procfd = open(path, O_DIRECTORY | O_RDONLY | O_CLOEXEC);
-+	if (procfd < 0) {
-+		warn("Failed to open %s\n", path);
-+		return -1;
++		reason = "CMA page";
++		goto unmovable;
 +	}
-+
-+	/*
-+	 * Verify that the pid has not been recycled and our /proc/<pid> handle
-+	 * is still valid.
-+	 */
-+	ret = sys_pidfd_send_signal(pidfd, 0, NULL, 0);
-+	if (ret < 0) {
-+		switch (errno) {
-+		case EPERM:
-+			/* Process exists, just not allowed to signal it. */
-+			break;
-+		default:
-+			warn("Failed to signal process\n");
-+			close(procfd);
-+			procfd = -1;
-+		}
-+	}
-+
-+	return procfd;
-+}
-+
-+int main(int argc, char *argv[])
-+{
-+	int ret = EXIT_FAILURE;
-+	char buf[4096] = { 0 };
-+	pid_t pid;
-+	int pidfd, procfd, statusfd;
-+	ssize_t bytes;
-+
-+	pid = pidfd_clone(CLONE_PIDFD, &pidfd);
-+	if (pid < 0)
-+		exit(ret);
-+
-+	procfd = pidfd_metadata_fd(pid, pidfd);
-+	close(pidfd);
-+	if (procfd < 0)
-+		goto out;
-+
-+	statusfd = openat(procfd, "status", O_RDONLY | O_CLOEXEC);
-+	close(procfd);
-+	if (statusfd < 0)
-+		goto out;
-+
-+	bytes = read(statusfd, buf, sizeof(buf));
-+	if (bytes > 0)
-+		bytes = write(STDOUT_FILENO, buf, bytes);
-+	close(statusfd);
-+	ret = EXIT_SUCCESS;
-+
-+out:
-+	(void)wait(NULL);
-+
-+	exit(ret);
-+}
+ 
+-	pfn = page_to_pfn(page);
+-	for (found = 0, iter = 0; iter < pageblock_nr_pages; iter++) {
++	for (found = 0; iter < pageblock_nr_pages; iter++) {
+ 		unsigned long check = pfn + iter;
+ 
+ 		if (!pfn_valid_within(check))
+@@ -8105,7 +8111,7 @@ bool has_unmovable_pages(struct zone *zone, struct page *page, int count,
+ unmovable:
+ 	WARN_ON_ONCE(zone_idx(zone) == ZONE_MOVABLE);
+ 	if (flags & REPORT_FAILURE)
+-		dump_page(pfn_to_page(pfn+iter), "unmovable page");
++		dump_page(pfn_to_page(pfn + iter), reason);
+ 	return true;
+ }
+ 
 -- 
-2.21.0
+2.20.1 (Apple Git-117)
 
