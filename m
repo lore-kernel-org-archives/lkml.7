@@ -4,27 +4,28 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E5C32C10F12
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:02:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7875BC10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:02:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A310220656
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:02:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 326A420656
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:02:46 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555383757;
-	bh=xQceLgE4GOqmOy1EnVQPHFmfIiFb8XhkYFKH96y9I/Q=;
+	s=default; t=1555383766;
+	bh=vJqvU6T8BVR0S/S2mhzfU1duZ8qqr4enneiUrtLWWyw=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=iIlUIkS+ioPZottVRSCRrNzJPnGWplDISnXQ0lQBtagoFLLzfSwn2WR8h4JSxVd5J
-	 nWOgz/8NRuvB7ZobZMoSQaIZ/zOoqk/IXbFBqkM0M6YKjIZYN9WnK1FmRdzjiKkAp0
-	 csEAZ1mcRz3l8frbqb+yNO5tRdka+3JFszE9ppRc=
+	b=uGgNAp2F1etzAbwC0eBt2yoyn73HV64nWyraV+68OciEVuXpy8sYf7ErijsBGZJXj
+	 nMfXZjWXmKmWb0DK7zZI4R1IbEn4D6H6ER7rI/GqqJhd6s0ZySjeJ/w9hgnrEk4qSo
+	 hrkhd8+EOahp7o5xs0evtCDGwClVFf3tKPOd1V8k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727259AbfDPDCg (ORCPT
+        id S1728399AbfDPDCo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 23:02:36 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44010 "EHLO
+        Mon, 15 Apr 2019 23:02:44 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:43990 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726686AbfDPC4a (ORCPT
+        with ESMTP id S1726676AbfDPC4a (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 15 Apr 2019 22:56:30 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -33,28 +34,27 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=8VAeXYQhAceTMAWihPs9U6+XpVdyQlovkNBbfa8Vd8o=; b=MbgizJmwjYVf5poFS5o/nJeT/R
-        62PwPtjP6++x+mMwIgw70rh8rZZGBjsKBk2IwFMMX6ybHTYAVv0IF68ODf87X0vqvYCNnMUxLEvj8
-        Pk61cO9NRgSYz69toRTVqgiApG3/TxRj+dzg+hX8jtflIOWzoNp7Gdsu7FONV7t/L2Q+6Iid+cMFG
-        2/kihhKz7lK6nrQpHhW/s42gv/+I86ysWWCHeMsGA+Nw4kUKnwH8zQT4JfdudGcGDPdmYMOrYacdc
-        MB5Yt1TU+r7AFBQFeH7RuecVyMU3aabFpVkQg1WMlPXdJiAUwDkCeHM4Wy/rs8s9yGmROfm1jXVSc
-        AwVPmToA==;
+        bh=1AUs7l8doB7HbS3wx4Ir5Qt3dZPsE6U0/pdjbofYfos=; b=lOLSuryslmdqXF7g7wG0cJFQ1/
+        /P6C3XBigAaFeeLOPisZ54KRZ7/gn3O2rIgqg4Isck6O7A8SKaY7MI0Yv+tqzja6jD0V8SZoKpF+A
+        mlS5LxX8sdza/vXu1CAbQ6pLfkymWXB/6FRp84wVuGFmmnngJN8+vZCjUofg4XbcRZb81rJPQB5q2
+        yhDFX5h25s9pV9UBoHjChfnNxwIxvvqkytxItH+dpbRRcQ1j2wMyWaJuXkVGXB9VMiIOkmrh4paXv
+        qMVCl8aaa1uBqYGwHKJzmWp8rJStOZwXjKeKvljNHluNvH0VZ83bKuiIDm24K5Ea/8GiHMQ5lVH9T
+        zd3xGjbA==;
 Received: from 177.205.118.176.dynamic.adsl.gvt.net.br ([177.205.118.176] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hGEGp-0007aL-Ru; Tue, 16 Apr 2019 02:56:28 +0000
+        id 1hGEGp-0007aO-SC; Tue, 16 Apr 2019 02:56:28 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hGEGm-0001kv-Rq; Mon, 15 Apr 2019 23:56:24 -0300
+        id 1hGEGn-0001lG-0w; Mon, 15 Apr 2019 23:56:25 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Ingo Molnar <mingo@redhat.com>
-Subject: [PATCH 01/57] docs: trace: fix some Sphinx warnings
-Date:   Mon, 15 Apr 2019 23:55:26 -0300
-Message-Id: <82131a55ac990a5afc7927cd4b26620e89b2398a.1555382110.git.mchehab+samsung@kernel.org>
+        Jens Axboe <axboe@kernel.dk>
+Subject: [PATCH 06/57] docs: cdrom: convert remaining files to ReST
+Date:   Mon, 15 Apr 2019 23:55:31 -0300
+Message-Id: <47029462b62c4c99e3976926fad2538ffd28f0cd.1555382110.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1555382110.git.mchehab+samsung@kernel.org>
 References: <cover.1555382110.git.mchehab+samsung@kernel.org>
@@ -65,152 +65,516 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-There are some warnings produced when building trace. Fix them.
+The stuff there is almost already at ReST format. A
+conversion for them is trivial: just add a missing titles
+and fix some scape codes for them to match ReST syntax.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/trace/ftrace.rst    |  1 +
- Documentation/trace/histogram.rst | 86 ++++++++++++++++---------------
- 2 files changed, 45 insertions(+), 42 deletions(-)
+ Documentation/cdrom/ide-cd             | 178 +++++++++++++------------
+ Documentation/cdrom/packet-writing.txt |  27 ++--
+ 2 files changed, 108 insertions(+), 97 deletions(-)
 
-diff --git a/Documentation/trace/ftrace.rst b/Documentation/trace/ftrace.rst
-index 809b39d066ee..f60079259669 100644
---- a/Documentation/trace/ftrace.rst
-+++ b/Documentation/trace/ftrace.rst
-@@ -1435,6 +1435,7 @@ trace has provided some very helpful debugging information.
- 
- If we prefer function graph output instead of function, we can set
- display-graph option::
+diff --git a/Documentation/cdrom/ide-cd b/Documentation/cdrom/ide-cd
+index a5f2a7f1ff46..dadc94ef6b6c 100644
+--- a/Documentation/cdrom/ide-cd
++++ b/Documentation/cdrom/ide-cd
+@@ -1,18 +1,20 @@
+ IDE-CD driver documentation
+-Originally by scott snyder  <snyder@fnald0.fnal.gov> (19 May 1996)
+-Carrying on the torch is: Erik Andersen <andersee@debian.org>
+-New maintainers (19 Oct 1998): Jens Axboe <axboe@image.dk>
++===========================
 +
-  with echo 1 > options/display-graph
++:Originally by: scott snyder  <snyder@fnald0.fnal.gov> (19 May 1996)
++:Carrying on the torch is: Erik Andersen <andersee@debian.org>
++:New maintainers (19 Oct 1998): Jens Axboe <axboe@image.dk>
  
-   # tracer: irqsoff
-diff --git a/Documentation/trace/histogram.rst b/Documentation/trace/histogram.rst
-index 7612c7ad5715..2a6b23f779bb 100644
---- a/Documentation/trace/histogram.rst
-+++ b/Documentation/trace/histogram.rst
-@@ -2121,33 +2121,33 @@ The following commonly-used handler.action pairs are available:
-     the end the event that triggered the snapshot (in this case you
-     can verify the timestamps between the sched_waking and
-     sched_switch events, which should match the time displayed in the
--    global maximum):
-+    global maximum)::
+ 1. Introduction
+ ---------------
  
--    # cat /sys/kernel/debug/tracing/snapshot
-+     # cat /sys/kernel/debug/tracing/snapshot
+-The ide-cd driver should work with all ATAPI ver 1.2 to ATAPI 2.6 compliant 
++The ide-cd driver should work with all ATAPI ver 1.2 to ATAPI 2.6 compliant
+ CDROM drives which attach to an IDE interface.  Note that some CDROM vendors
+ (including Mitsumi, Sony, Creative, Aztech, and Goldstar) have made
+ both ATAPI-compliant drives and drives which use a proprietary
+ interface.  If your drive uses one of those proprietary interfaces,
+ this driver will not work with it (but one of the other CDROM drivers
+-probably will).  This driver will not work with `ATAPI' drives which
++probably will).  This driver will not work with `ATAPI` drives which
+ attach to the parallel port.  In addition, there is at least one drive
+ (CyCDROM CR520ie) which attaches to the IDE port but is not ATAPI;
+ this driver will not work with drives like that either (but see the
+@@ -31,7 +33,7 @@ This driver provides the following features:
+    from audio tracks.  The program cdda2wav can be used for this.
+    Note, however, that only some drives actually support this.
  
--     <...>-2103  [005] d..3   309.873125: sched_switch: prev_comm=cyclictest prev_pid=2103 prev_prio=19 prev_state=D ==> next_comm=swapper/5 next_pid=0 next_prio=120
--     <idle>-0     [005] d.h3   309.873611: sched_waking: comm=cyclictest pid=2102 prio=19 target_cpu=005
--     <idle>-0     [005] dNh4   309.873613: sched_wakeup: comm=cyclictest pid=2102 prio=19 target_cpu=005
--     <idle>-0     [005] d..3   309.873616: sched_switch: prev_comm=swapper/5 prev_pid=0 prev_prio=120 prev_state=S ==> next_comm=cyclictest next_pid=2102 next_prio=19
--     <...>-2102  [005] d..3   309.873625: sched_switch: prev_comm=cyclictest prev_pid=2102 prev_prio=19 prev_state=D ==> next_comm=swapper/5 next_pid=0 next_prio=120
--     <idle>-0     [005] d.h3   309.874624: sched_waking: comm=cyclictest pid=2102 prio=19 target_cpu=005
--     <idle>-0     [005] dNh4   309.874626: sched_wakeup: comm=cyclictest pid=2102 prio=19 target_cpu=005
--     <idle>-0     [005] dNh3   309.874628: sched_waking: comm=cyclictest pid=2103 prio=19 target_cpu=005
--     <idle>-0     [005] dNh4   309.874630: sched_wakeup: comm=cyclictest pid=2103 prio=19 target_cpu=005
--     <idle>-0     [005] d..3   309.874633: sched_switch: prev_comm=swapper/5 prev_pid=0 prev_prio=120 prev_state=S ==> next_comm=cyclictest next_pid=2102 next_prio=19
--     <idle>-0     [004] d.h3   309.874757: sched_waking: comm=gnome-terminal- pid=1699 prio=120 target_cpu=004
--     <idle>-0     [004] dNh4   309.874762: sched_wakeup: comm=gnome-terminal- pid=1699 prio=120 target_cpu=004
--     <idle>-0     [004] d..3   309.874766: sched_switch: prev_comm=swapper/4 prev_pid=0 prev_prio=120 prev_state=S ==> next_comm=gnome-terminal- next_pid=1699 next_prio=120
-- gnome-terminal--1699  [004] d.h2   309.874941: sched_stat_runtime: comm=gnome-terminal- pid=1699 runtime=180706 [ns] vruntime=1126870572 [ns]
--     <idle>-0     [003] d.s4   309.874956: sched_waking: comm=rcu_sched pid=9 prio=120 target_cpu=007
--     <idle>-0     [003] d.s5   309.874960: sched_wake_idle_without_ipi: cpu=7
--     <idle>-0     [003] d.s5   309.874961: sched_wakeup: comm=rcu_sched pid=9 prio=120 target_cpu=007
--     <idle>-0     [007] d..3   309.874963: sched_switch: prev_comm=swapper/7 prev_pid=0 prev_prio=120 prev_state=S ==> next_comm=rcu_sched next_pid=9 next_prio=120
--  rcu_sched-9     [007] d..3   309.874973: sched_stat_runtime: comm=rcu_sched pid=9 runtime=13646 [ns] vruntime=22531430286 [ns]
--  rcu_sched-9     [007] d..3   309.874978: sched_switch: prev_comm=rcu_sched prev_pid=9 prev_prio=120 prev_state=R+ ==> next_comm=swapper/7 next_pid=0 next_prio=120
--      <...>-2102  [005] d..4   309.874994: sched_migrate_task: comm=cyclictest pid=2103 prio=19 orig_cpu=5 dest_cpu=1
--      <...>-2102  [005] d..4   309.875185: sched_wake_idle_without_ipi: cpu=1
--     <idle>-0     [001] d..3   309.875200: sched_switch: prev_comm=swapper/1 prev_pid=0 prev_prio=120 prev_state=S ==> next_comm=cyclictest next_pid=2103 next_prio=19
-+         <...>-2103  [005] d..3   309.873125: sched_switch: prev_comm=cyclictest prev_pid=2103 prev_prio=19 prev_state=D ==> next_comm=swapper/5 next_pid=0 next_prio=120
-+         <idle>-0     [005] d.h3   309.873611: sched_waking: comm=cyclictest pid=2102 prio=19 target_cpu=005
-+         <idle>-0     [005] dNh4   309.873613: sched_wakeup: comm=cyclictest pid=2102 prio=19 target_cpu=005
-+         <idle>-0     [005] d..3   309.873616: sched_switch: prev_comm=swapper/5 prev_pid=0 prev_prio=120 prev_state=S ==> next_comm=cyclictest next_pid=2102 next_prio=19
-+         <...>-2102  [005] d..3   309.873625: sched_switch: prev_comm=cyclictest prev_pid=2102 prev_prio=19 prev_state=D ==> next_comm=swapper/5 next_pid=0 next_prio=120
-+         <idle>-0     [005] d.h3   309.874624: sched_waking: comm=cyclictest pid=2102 prio=19 target_cpu=005
-+         <idle>-0     [005] dNh4   309.874626: sched_wakeup: comm=cyclictest pid=2102 prio=19 target_cpu=005
-+         <idle>-0     [005] dNh3   309.874628: sched_waking: comm=cyclictest pid=2103 prio=19 target_cpu=005
-+         <idle>-0     [005] dNh4   309.874630: sched_wakeup: comm=cyclictest pid=2103 prio=19 target_cpu=005
-+         <idle>-0     [005] d..3   309.874633: sched_switch: prev_comm=swapper/5 prev_pid=0 prev_prio=120 prev_state=S ==> next_comm=cyclictest next_pid=2102 next_prio=19
-+         <idle>-0     [004] d.h3   309.874757: sched_waking: comm=gnome-terminal- pid=1699 prio=120 target_cpu=004
-+         <idle>-0     [004] dNh4   309.874762: sched_wakeup: comm=gnome-terminal- pid=1699 prio=120 target_cpu=004
-+         <idle>-0     [004] d..3   309.874766: sched_switch: prev_comm=swapper/4 prev_pid=0 prev_prio=120 prev_state=S ==> next_comm=gnome-terminal- next_pid=1699 next_prio=120
-+     gnome-terminal--1699  [004] d.h2   309.874941: sched_stat_runtime: comm=gnome-terminal- pid=1699 runtime=180706 [ns] vruntime=1126870572 [ns]
-+         <idle>-0     [003] d.s4   309.874956: sched_waking: comm=rcu_sched pid=9 prio=120 target_cpu=007
-+         <idle>-0     [003] d.s5   309.874960: sched_wake_idle_without_ipi: cpu=7
-+         <idle>-0     [003] d.s5   309.874961: sched_wakeup: comm=rcu_sched pid=9 prio=120 target_cpu=007
-+         <idle>-0     [007] d..3   309.874963: sched_switch: prev_comm=swapper/7 prev_pid=0 prev_prio=120 prev_state=S ==> next_comm=rcu_sched next_pid=9 next_prio=120
-+      rcu_sched-9     [007] d..3   309.874973: sched_stat_runtime: comm=rcu_sched pid=9 runtime=13646 [ns] vruntime=22531430286 [ns]
-+      rcu_sched-9     [007] d..3   309.874978: sched_switch: prev_comm=rcu_sched prev_pid=9 prev_prio=120 prev_state=R+ ==> next_comm=swapper/7 next_pid=0 next_prio=120
-+          <...>-2102  [005] d..4   309.874994: sched_migrate_task: comm=cyclictest pid=2103 prio=19 orig_cpu=5 dest_cpu=1
-+          <...>-2102  [005] d..4   309.875185: sched_wake_idle_without_ipi: cpu=1
-+         <idle>-0     [001] d..3   309.875200: sched_switch: prev_comm=swapper/1 prev_pid=0 prev_prio=120 prev_state=S ==> next_comm=cyclictest next_pid=2103 next_prio=19
+- - There is now support for CDROM changers which comply with the 
++ - There is now support for CDROM changers which comply with the
+    ATAPI 2.6 draft standard (such as the NEC CDR-251).  This additional
+    functionality includes a function call to query which slot is the
+    currently selected slot, a function call to query which slots contain
+@@ -49,11 +51,11 @@ This driver provides the following features:
+    driver.
  
-   - onchange(var).save(field,..	.)
+ 1. Make sure that the ide and ide-cd drivers are compiled into the
+-   kernel you're using.  When configuring the kernel, in the section 
+-   entitled "Floppy, IDE, and other block devices", say either `Y' 
+-   (which will compile the support directly into the kernel) or `M'
++   kernel you're using.  When configuring the kernel, in the section
++   entitled "Floppy, IDE, and other block devices", say either `Y`
++   (which will compile the support directly into the kernel) or `M`
+    (to compile support as a module which can be loaded and unloaded)
+-   to the options: 
++   to the options::
  
-@@ -2201,9 +2201,10 @@ The following commonly-used handler.action pairs are available:
-     following the rest of the fields.
+       ATA/ATAPI/MFM/RLL support
+       Include IDE/ATAPI CDROM support
+@@ -72,35 +74,35 @@ This driver provides the following features:
+    address and an IRQ number, the standard assignments being
+    0x1f0 and 14 for the primary interface and 0x170 and 15 for the
+    secondary interface.  Each interface can control up to two devices,
+-   where each device can be a hard drive, a CDROM drive, a floppy drive, 
+-   or a tape drive.  The two devices on an interface are called `master'
+-   and `slave'; this is usually selectable via a jumper on the drive.
++   where each device can be a hard drive, a CDROM drive, a floppy drive,
++   or a tape drive.  The two devices on an interface are called `master`
++   and `slave`; this is usually selectable via a jumper on the drive.
  
-     If a snaphot was taken, there is also a message indicating that,
--    along with the value and event that triggered the snapshot:
-+    along with the value and event that triggered the snapshot::
+    Linux names these devices as follows.  The master and slave devices
+-   on the primary IDE interface are called `hda' and `hdb',
++   on the primary IDE interface are called `hda` and `hdb`,
+    respectively.  The drives on the secondary interface are called
+-   `hdc' and `hdd'.  (Interfaces at other locations get other letters
++   `hdc` and `hdd`.  (Interfaces at other locations get other letters
+    in the third position; see Documentation/ide/ide.txt.)
+ 
+    If you want your CDROM drive to be found automatically by the
+    driver, you should make sure your IDE interface uses either the
+    primary or secondary addresses mentioned above.  In addition, if
+    the CDROM drive is the only device on the IDE interface, it should
+-   be jumpered as `master'.  (If for some reason you cannot configure
++   be jumpered as `master`.  (If for some reason you cannot configure
+    your system in this manner, you can probably still use the driver.
+    You may have to pass extra configuration information to the kernel
+    when you boot, however.  See Documentation/ide/ide.txt for more
+    information.)
+ 
+ 4. Boot the system.  If the drive is recognized, you should see a
+-   message which looks like
++   message which looks like::
+ 
+      hdb: NEC CD-ROM DRIVE:260, ATAPI CDROM drive
+ 
+    If you do not see this, see section 5 below.
+ 
+ 5. You may want to create a symbolic link /dev/cdrom pointing to the
+-   actual device.  You can do this with the command
++   actual device.  You can do this with the command::
+ 
+      ln -s  /dev/hdX  /dev/cdrom
+ 
+@@ -108,14 +110,14 @@ This driver provides the following features:
+    drive is installed.
+ 
+ 6. You should be able to see any error messages from the driver with
+-   the `dmesg' command.
++   the `dmesg` command.
+ 
+ 
+ 3. Basic usage
+ --------------
+ 
+-An ISO 9660 CDROM can be mounted by putting the disc in the drive and 
+-typing (as root)
++An ISO 9660 CDROM can be mounted by putting the disc in the drive and
++typing (as root)::
+ 
+   mount -t iso9660 /dev/cdrom /mnt/cdrom
+ 
+@@ -123,7 +125,7 @@ where it is assumed that /dev/cdrom is a link pointing to the actual
+ device (as described in step 5 of the last section) and /mnt/cdrom is
+ an empty directory.  You should now be able to see the contents of the
+ CDROM under the /mnt/cdrom directory.  If you want to eject the CDROM,
+-you must first dismount it with a command like
++you must first dismount it with a command like::
+ 
+   umount /mnt/cdrom
+ 
+@@ -148,7 +150,7 @@ such as cdda2wav.  The only types of drive which I've heard support
+ this are Sony and Toshiba drives.  You will get errors if you try to
+ use this function on a drive which does not support it.
+ 
+-For supported changers, you can use the `cdchange' program (appended to
++For supported changers, you can use the `cdchange` program (appended to
+ the end of this file) to switch between changer slots.  Note that the
+ drive should be unmounted before attempting this.  The program takes
+ two arguments:  the CDROM device, and the slot number to which you wish
+@@ -165,7 +167,7 @@ Documentation/ide/ide.txt for current information about the underlying
+ IDE support code.  Some of these items apply only to earlier versions
+ of the driver, but are mentioned here for completeness.
+ 
+-In most cases, you should probably check with `dmesg' for any errors
++In most cases, you should probably check with `dmesg` for any errors
+ from the driver.
+ 
+ a. Drive is not detected during booting.
+@@ -184,9 +186,9 @@ a. Drive is not detected during booting.
+ 
+    - If the autoprobing is not finding your drive, you can tell the
+      driver to assume that one exists by using a lilo option of the
+-     form `hdX=cdrom', where X is the drive letter corresponding to
+-     where your drive is installed.  Note that if you do this and you 
+-     see a boot message like
++     form `hdX=cdrom`, where X is the drive letter corresponding to
++     where your drive is installed.  Note that if you do this and you
++     see a boot message like::
+ 
+        hdX: ATAPI cdrom (?)
+ 
+@@ -220,7 +222,7 @@ b. Timeout/IRQ errors.
+     probably not making it to the host.
+ 
+   - IRQ problems may also be indicated by the message
+-    `IRQ probe failed (<n>)' while booting.  If <n> is zero, that
++    `IRQ probe failed (<n>)` while booting.  If <n> is zero, that
+     means that the system did not see an interrupt from the drive when
+     it was expecting one (on any feasible IRQ).  If <n> is negative,
+     that means the system saw interrupts on multiple IRQ lines, when
+@@ -240,27 +242,27 @@ b. Timeout/IRQ errors.
+     there are hardware problems with the interrupt setup; they
+     apparently don't use interrupts.
+ 
+-  - If you own a Pioneer DR-A24X, you _will_ get nasty error messages 
++  - If you own a Pioneer DR-A24X, you _will_ get nasty error messages
+     on boot such as "irq timeout: status=0x50 { DriveReady SeekComplete }"
+     The Pioneer DR-A24X CDROM drives are fairly popular these days.
+     Unfortunately, these drives seem to become very confused when we perform
+     the standard Linux ATA disk drive probe. If you own one of these drives,
+-    you can bypass the ATA probing which confuses these CDROM drives, by 
+-    adding `append="hdX=noprobe hdX=cdrom"' to your lilo.conf file and running 
+-    lilo (again where X is the drive letter corresponding to where your drive 
++    you can bypass the ATA probing which confuses these CDROM drives, by
++    adding `append="hdX=noprobe hdX=cdrom"` to your lilo.conf file and running
++    lilo (again where X is the drive letter corresponding to where your drive
+     is installed.)
+-    
 +
-+      # cat /sys/kernel/debug/tracing/events/tcp/tcp_probe/hist
+ c. System hangups.
  
--    # cat /sys/kernel/debug/tracing/events/tcp/tcp_probe/hist
-       { dport:       1521 } hitcount:          8
- 	changed:         10  snd_wnd:      35456  srtt:     154262  rcv_wnd:      42112
+   - If the system locks up when you try to access the CDROM, the most
+     likely cause is that you have a buggy IDE adapter which doesn't
+     properly handle simultaneous transactions on multiple interfaces.
+     The most notorious of these is the CMD640B chip.  This problem can
+-    be worked around by specifying the `serialize' option when
++    be worked around by specifying the `serialize` option when
+     booting.  Recent kernels should be able to detect the need for
+     this automatically in most cases, but the detection is not
+     foolproof.  See Documentation/ide/ide.txt for more information
+-    about the `serialize' option and the CMD640B.
++    about the `serialize` option and the CMD640B.
  
-@@ -2216,14 +2217,15 @@ The following commonly-used handler.action pairs are available:
-       { dport:        443 } hitcount:        211
- 	changed:         10  snd_wnd:      26960  srtt:      17379  rcv_wnd:      28800
+   - Note that many MS-DOS CDROM drivers will work with such buggy
+     hardware, apparently because they never attempt to overlap CDROM
+@@ -269,14 +271,14 @@ c. System hangups.
  
--    Snapshot taken (see tracing/snapshot).  Details:
-+    Snapshot taken (see tracing/snapshot).  Details::
+ d. Can't mount a CDROM.
+ 
+-  - If you get errors from mount, it may help to check `dmesg' to see
++  - If you get errors from mount, it may help to check `dmesg` to see
+     if there are any more specific errors from the driver or from the
+     filesystem.
+ 
+   - Make sure there's a CDROM loaded in the drive, and that's it's an
+     ISO 9660 disc.  You can't mount an audio CD.
+ 
+-  - With the CDROM in the drive and unmounted, try something like
++  - With the CDROM in the drive and unmounted, try something like::
+ 
+       cat /dev/cdrom | od | more
+ 
+@@ -284,9 +286,9 @@ d. Can't mount a CDROM.
+     OK, and the problem is at the filesystem level (i.e., the CDROM is
+     not ISO 9660 or has errors in the filesystem structure).
+ 
+-  - If you see `not a block device' errors, check that the definitions
++  - If you see `not a block device` errors, check that the definitions
+     of the device special files are correct.  They should be as
+-    follows:
++    follows::
+ 
+       brw-rw----   1 root     disk       3,   0 Nov 11 18:48 /dev/hda
+       brw-rw----   1 root     disk       3,  64 Nov 11 18:48 /dev/hdb
+@@ -301,7 +303,7 @@ d. Can't mount a CDROM.
+     If you have a /dev/cdrom symbolic link, check that it is pointing
+     to the correct device file.
+ 
+-    If you hear people talking of the devices `hd1a' and `hd1b', these
++    If you hear people talking of the devices `hd1a` and `hd1b`, these
+     were old names for what are now called hdc and hdd.  Those names
+     should be considered obsolete.
+ 
+@@ -311,8 +313,8 @@ d. Can't mount a CDROM.
+     always give meaningful error messages.
+ 
+ 
+-e. Directory listings are unpredictably truncated, and `dmesg' shows
+-   `buffer botch' error messages from the driver.
++e. Directory listings are unpredictably truncated, and `dmesg` shows
++   `buffer botch` error messages from the driver.
+ 
+   - There was a bug in the version of the driver in 1.2.x kernels
+     which could cause this.  It was fixed in 1.3.0.  If you can't
+@@ -335,34 +337,36 @@ f. Data corruption.
+ 5. cdchange.c
+ -------------
+ 
+-/*
+- * cdchange.c  [-v]  <device>  [<slot>]
+- *
+- * This loads a CDROM from a specified slot in a changer, and displays 
+- * information about the changer status.  The drive should be unmounted before 
+- * using this program.
+- *
+- * Changer information is displayed if either the -v flag is specified
+- * or no slot was specified.
+- *
+- * Based on code originally from Gerhard Zuber <zuber@berlin.snafu.de>.
+- * Changer status information, and rewrite for the new Uniform CDROM driver
+- * interface by Erik Andersen <andersee@debian.org>.
+- */
++::
+ 
+-#include <stdio.h>
+-#include <stdlib.h>
+-#include <errno.h>
+-#include <string.h>
+-#include <unistd.h>
+-#include <fcntl.h>
+-#include <sys/ioctl.h>
+-#include <linux/cdrom.h>
++  /*
++   * cdchange.c  [-v]  <device>  [<slot>]
++   *
++   * This loads a CDROM from a specified slot in a changer, and displays
++   * information about the changer status.  The drive should be unmounted before
++   * using this program.
++   *
++   * Changer information is displayed if either the -v flag is specified
++   * or no slot was specified.
++   *
++   * Based on code originally from Gerhard Zuber <zuber@berlin.snafu.de>.
++   * Changer status information, and rewrite for the new Uniform CDROM driver
++   * interface by Erik Andersen <andersee@debian.org>.
++   */
+ 
++  #include <stdio.h>
++  #include <stdlib.h>
++  #include <errno.h>
++  #include <string.h>
++  #include <unistd.h>
++  #include <fcntl.h>
++  #include <sys/ioctl.h>
++  #include <linux/cdrom.h>
+ 
+-int
+-main (int argc, char **argv)
+-{
 +
-         triggering value { onchange($cwnd) }:         10
-         triggered by event with key: { dport:         80 }
++  int
++  main (int argc, char **argv)
++  {
+ 	char *program;
+ 	char *device;
+ 	int fd;           /* file descriptor for CD-ROM device */
+@@ -382,30 +386,30 @@ main (int argc, char **argv)
+ 		fprintf (stderr, "       Slots are numbered 1 -- n.\n");
+ 		exit (1);
+ 	}
+- 
++
+        if (strcmp (argv[0], "-v") == 0) {
+                 verbose = 1;
+                 ++argv;
+                 --argc;
+         }
+- 
++
+ 	device = argv[0];
+- 
++
+ 	if (argc == 2)
+ 		slot = atoi (argv[1]) - 1;
  
--    Totals:
--        Hits: 414
--        Entries: 4
--        Dropped: 0
-+      Totals:
-+          Hits: 414
-+          Entries: 4
-+          Dropped: 0
+-	/* open device */ 
++	/* open device */
+ 	fd = open(device, O_RDONLY | O_NONBLOCK);
+ 	if (fd < 0) {
+-		fprintf (stderr, "%s: open failed for `%s': %s\n",
++		fprintf (stderr, "%s: open failed for `%s`: %s\n",
+ 			 program, device, strerror (errno));
+ 		exit (1);
+ 	}
  
-     In the above case, the event that triggered the snapshot has the
-     key with dport == 80.  If you look at the bucket that has 80 as
-@@ -2233,18 +2235,18 @@ The following commonly-used handler.action pairs are available:
-     the global snapshot).
+-	/* Check CD player status */ 
++	/* Check CD player status */
+ 	total_slots_available = ioctl (fd, CDROM_CHANGER_NSLOTS);
+ 	if (total_slots_available <= 1 ) {
+-		fprintf (stderr, "%s: Device `%s' is not an ATAPI "
++		fprintf (stderr, "%s: Device `%s` is not an ATAPI "
+ 			"compliant CD changer.\n", program, device);
+ 		exit (1);
+ 	}
+@@ -418,7 +422,7 @@ main (int argc, char **argv)
+ 			exit (1);
+ 		}
  
-     And finally, looking at the snapshot data should show at or near
--    the end the event that triggered the snapshot:
-+    the end the event that triggered the snapshot::
+-		/* load */ 
++		/* load */
+ 		slot=ioctl (fd, CDROM_SELECT_DISC, slot);
+ 		if (slot<0) {
+ 			fflush(stdout);
+@@ -462,14 +466,14 @@ main (int argc, char **argv)
  
--    # cat /sys/kernel/debug/tracing/snapshot
-+      # cat /sys/kernel/debug/tracing/snapshot
+ 		for (x_slot=0; x_slot<total_slots_available; x_slot++) {
+ 			printf ("Slot %2d: ", x_slot+1);
+-             		status = ioctl (fd, CDROM_DRIVE_STATUS, x_slot);
+-             		if (status<0) {
+-             		     perror(" CDROM_DRIVE_STATUS");
+-             		} else switch(status) {
++			status = ioctl (fd, CDROM_DRIVE_STATUS, x_slot);
++			if (status<0) {
++			     perror(" CDROM_DRIVE_STATUS");
++			} else switch(status) {
+ 			case CDS_DISC_OK:
+ 				printf ("Disc present.");
+ 				break;
+-			case CDS_NO_DISC: 
++			case CDS_NO_DISC:
+ 				printf ("Empty slot.");
+ 				break;
+ 			case CDS_TRAY_OPEN:
+@@ -507,11 +511,11 @@ main (int argc, char **argv)
+ 				break;
+ 			}
+ 			}
+-                  	status = ioctl (fd, CDROM_MEDIA_CHANGED, x_slot);
+-                  	if (status<0) {
++			status = ioctl (fd, CDROM_MEDIA_CHANGED, x_slot);
++			if (status<0) {
+ 				perror(" CDROM_MEDIA_CHANGED");
+-                  	}
+-		  	switch (status) {
++			}
++			switch (status) {
+ 			case 1:
+ 				printf ("Changed.\n");
+ 				break;
+@@ -525,10 +529,10 @@ main (int argc, char **argv)
+ 	/* close device */
+ 	status = close (fd);
+ 	if (status != 0) {
+-		fprintf (stderr, "%s: close failed for `%s': %s\n",
++		fprintf (stderr, "%s: close failed for `%s`: %s\n",
+ 			 program, device, strerror (errno));
+ 		exit (1);
+ 	}
+- 
++
+ 	exit (0);
+-}
++  }
+diff --git a/Documentation/cdrom/packet-writing.txt b/Documentation/cdrom/packet-writing.txt
+index 2834170d821e..c5c957195a5a 100644
+--- a/Documentation/cdrom/packet-writing.txt
++++ b/Documentation/cdrom/packet-writing.txt
+@@ -1,3 +1,7 @@
++==============
++Packet writing
++==============
++
+ Getting started quick
+ ---------------------
  
--       gnome-shell-1261  [006] dN.3    49.823113: sched_stat_runtime: comm=gnome-shell pid=1261 runtime=49347 [ns] vruntime=1835730389 [ns]
--     kworker/u16:4-773   [003] d..3    49.823114: sched_switch: prev_comm=kworker/u16:4 prev_pid=773 prev_prio=120 prev_state=R+ ==> next_comm=kworker/3:2 next_pid=135 next_prio=120
--       gnome-shell-1261  [006] d..3    49.823114: sched_switch: prev_comm=gnome-shell prev_pid=1261 prev_prio=120 prev_state=R+ ==> next_comm=kworker/6:2 next_pid=387 next_prio=120
--       kworker/3:2-135   [003] d..3    49.823118: sched_stat_runtime: comm=kworker/3:2 pid=135 runtime=5339 [ns] vruntime=17815800388 [ns]
--       kworker/6:2-387   [006] d..3    49.823120: sched_stat_runtime: comm=kworker/6:2 pid=387 runtime=9594 [ns] vruntime=14589605367 [ns]
--       kworker/6:2-387   [006] d..3    49.823122: sched_switch: prev_comm=kworker/6:2 prev_pid=387 prev_prio=120 prev_state=R+ ==> next_comm=gnome-shell next_pid=1261 next_prio=120
--       kworker/3:2-135   [003] d..3    49.823123: sched_switch: prev_comm=kworker/3:2 prev_pid=135 prev_prio=120 prev_state=T ==> next_comm=swapper/3 next_pid=0 next_prio=120
--            <idle>-0     [004] ..s7    49.823798: tcp_probe: src=10.0.0.10:54326 dest=23.215.104.193:80 mark=0x0 length=32 snd_nxt=0xe3ae2ff5 snd_una=0xe3ae2ecd snd_cwnd=10 ssthresh=2147483647 snd_wnd=28960 srtt=19604 rcv_wnd=29312
-+         gnome-shell-1261  [006] dN.3    49.823113: sched_stat_runtime: comm=gnome-shell pid=1261 runtime=49347 [ns] vruntime=1835730389 [ns]
-+       kworker/u16:4-773   [003] d..3    49.823114: sched_switch: prev_comm=kworker/u16:4 prev_pid=773 prev_prio=120 prev_state=R+ ==> next_comm=kworker/3:2 next_pid=135 next_prio=120
-+         gnome-shell-1261  [006] d..3    49.823114: sched_switch: prev_comm=gnome-shell prev_pid=1261 prev_prio=120 prev_state=R+ ==> next_comm=kworker/6:2 next_pid=387 next_prio=120
-+         kworker/3:2-135   [003] d..3    49.823118: sched_stat_runtime: comm=kworker/3:2 pid=135 runtime=5339 [ns] vruntime=17815800388 [ns]
-+         kworker/6:2-387   [006] d..3    49.823120: sched_stat_runtime: comm=kworker/6:2 pid=387 runtime=9594 [ns] vruntime=14589605367 [ns]
-+         kworker/6:2-387   [006] d..3    49.823122: sched_switch: prev_comm=kworker/6:2 prev_pid=387 prev_prio=120 prev_state=R+ ==> next_comm=gnome-shell next_pid=1261 next_prio=120
-+         kworker/3:2-135   [003] d..3    49.823123: sched_switch: prev_comm=kworker/3:2 prev_pid=135 prev_prio=120 prev_state=T ==> next_comm=swapper/3 next_pid=0 next_prio=120
-+              <idle>-0     [004] ..s7    49.823798: tcp_probe: src=10.0.0.10:54326 dest=23.215.104.193:80 mark=0x0 length=32 snd_nxt=0xe3ae2ff5 snd_una=0xe3ae2ecd snd_cwnd=10 ssthresh=2147483647 snd_wnd=28960 srtt=19604 rcv_wnd=29312
+@@ -10,13 +14,16 @@ Getting started quick
+   Download from http://sourceforge.net/projects/linux-udf/
  
- 3. User space creating a trigger
- --------------------------------
+ - Grab a new CD-RW disc and format it (assuming CD-RW is hdc, substitute
+-  as appropriate):
++  as appropriate)::
++
+ 	# cdrwtool -d /dev/hdc -q
+ 
+-- Setup your writer
++- Setup your writer::
++
+ 	# pktsetup dev_name /dev/hdc
+ 
+-- Now you can mount /dev/pktcdvd/dev_name and copy files to it. Enjoy!
++- Now you can mount /dev/pktcdvd/dev_name and copy files to it. Enjoy::
++
+ 	# mount /dev/pktcdvd/dev_name /cdrom -t udf -o rw,noatime
+ 
+ 
+@@ -25,11 +32,11 @@ Packet writing for DVD-RW media
+ 
+ DVD-RW discs can be written to much like CD-RW discs if they are in
+ the so called "restricted overwrite" mode. To put a disc in restricted
+-overwrite mode, run:
++overwrite mode, run::
+ 
+ 	# dvd+rw-format /dev/hdc
+ 
+-You can then use the disc the same way you would use a CD-RW disc:
++You can then use the disc the same way you would use a CD-RW disc::
+ 
+ 	# pktsetup dev_name /dev/hdc
+ 	# mount /dev/pktcdvd/dev_name /cdrom -t udf -o rw,noatime
+@@ -41,7 +48,7 @@ Packet writing for DVD+RW media
+ According to the DVD+RW specification, a drive supporting DVD+RW discs
+ shall implement "true random writes with 2KB granularity", which means
+ that it should be possible to put any filesystem with a block size >=
+-2KB on such a disc. For example, it should be possible to do:
++2KB on such a disc. For example, it should be possible to do::
+ 
+ 	# dvd+rw-format /dev/hdc   (only needed if the disc has never
+ 	                            been formatted)
+@@ -54,7 +61,7 @@ follow the specification, but suffer bad performance problems if the
+ writes are not 32KB aligned.
+ 
+ Both problems can be solved by using the pktcdvd driver, which always
+-generates aligned writes.
++generates aligned writes::
+ 
+ 	# dvd+rw-format /dev/hdc
+ 	# pktsetup dev_name /dev/hdc
+@@ -83,7 +90,7 @@ Notes
+ 
+ - Since the pktcdvd driver makes the disc appear as a regular block
+   device with a 2KB block size, you can put any filesystem you like on
+-  the disc. For example, run:
++  the disc. For example, run::
+ 
+ 	# /sbin/mke2fs /dev/pktcdvd/dev_name
+ 
+@@ -97,7 +104,7 @@ Since Linux 2.6.20, the pktcdvd module has a sysfs interface
+ and can be controlled by it. For example the "pktcdvd" tool uses
+ this interface. (see http://tom.ist-im-web.de/download/pktcdvd )
+ 
+-"pktcdvd" works similar to "pktsetup", e.g.:
++"pktcdvd" works similar to "pktsetup", e.g.::
+ 
+ 	# pktcdvd -a dev_name /dev/hdc
+ 	# mkudffs /dev/pktcdvd/dev_name
+@@ -115,7 +122,7 @@ For a description of the sysfs interface look into the file:
+ Using the pktcdvd debugfs interface
+ -----------------------------------
+ 
+-To read pktcdvd device infos in human readable form, do:
++To read pktcdvd device infos in human readable form, do::
+ 
+ 	# cat /sys/kernel/debug/pktcdvd/pktcdvd[0-7]/info
+ 
 -- 
 2.20.1
 
