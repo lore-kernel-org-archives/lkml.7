@@ -2,106 +2,144 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA2C6C282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 21:30:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6E580C282DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 21:30:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA57D2075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 21:30:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3BC2F20868
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 21:30:53 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="J76nAIpK"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="QT8wkxVk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730014AbfDPVaa (ORCPT
+        id S1730270AbfDPVav (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 17:30:30 -0400
-Received: from mta-p3.oit.umn.edu ([134.84.196.203]:49070 "EHLO
-        mta-p3.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726986AbfDPVaa (ORCPT
+        Tue, 16 Apr 2019 17:30:51 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:43974 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726986AbfDPVav (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 17:30:30 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by mta-p3.oit.umn.edu (Postfix) with ESMTP id C8522712;
-        Tue, 16 Apr 2019 21:30:28 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=umn.edu; h=
-        content-type:content-type:subject:subject:message-id:date:date
-        :from:from:in-reply-to:references:mime-version:received:received
-        :received; s=20160920; t=1555450228; x=1557264629; bh=SejhEAdsy0
-        bjqdzzcUyFRadn51Pa9bkvFtRS16XL79Q=; b=J76nAIpKpewq74JpuDHhvVJxpy
-        brTijYCMMqPYaKt8wMP1c3BRQpYhpgwoSqK+Cwwz1N0muZeqsjfVGtuYsIYH66E1
-        8uOt/EXw2qpQgniQUwqcKM2OFj9fJTRg23ELwzOa/SsBjSOEQ7IillAN6ZqbLyqS
-        iJu679fHPxJ+8KdtrzL8ww5H2VpXUxt1d07r5SRrpYo/D3dC1ghdEwjgyVmhb6MG
-        1etqJbSydMxKlG2vSbU1W3FwEGusuGZ9xd7VzPp1SzZ/9dPLX7VpXdBkDulogq+a
-        PDEmRNGQd0M6D+hZcMkyyBATaZd8C/bKeamFG5GNG4brv4x65dujZPRG1GTQ==
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p3.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p3.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id MaX3WBuGIlUy; Tue, 16 Apr 2019 16:30:28 -0500 (CDT)
-Received: from mail-it1-f182.google.com (mail-it1-f182.google.com [209.85.166.182])
-        (using TLSv1 with cipher AES128-SHA (128/128 bits))
-        (No client certificate requested)
-        (Authenticated sender: wang6495)
-        by mta-p3.oit.umn.edu (Postfix) with ESMTPSA id 9973C6EA;
-        Tue, 16 Apr 2019 16:30:28 -0500 (CDT)
-Received: by mail-it1-f182.google.com with SMTP id q14so1219478itk.0;
-        Tue, 16 Apr 2019 14:30:28 -0700 (PDT)
-X-Gm-Message-State: APjAAAW9bfuRhenEsITYD0WSOioh1Y3weKy1IASFaqj1L6ATPwIfr0R/
-        NpRDHSQ7Rw/uZ3Duc3xRvH1HpXR69ei2otzIROA=
-X-Google-Smtp-Source: APXvYqzZcZ0v3Zfkxa58QIKDsDcENIb48YmS+BIyLvXSnNscYH24PtSJjbMAqZ/NgefgVhzfv40RCt0Z1K1zSBg0ZaQ=
-X-Received: by 2002:a24:6b92:: with SMTP id v140mr27663327itc.161.1555450228421;
- Tue, 16 Apr 2019 14:30:28 -0700 (PDT)
+        Tue, 16 Apr 2019 17:30:51 -0400
+Received: by mail-pl1-f196.google.com with SMTP id n8so10944434plp.10;
+        Tue, 16 Apr 2019 14:30:51 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=4ivrPHA4H2+SZIz4zuqKVjysFpMX2cQ3lIocjHgPstw=;
+        b=QT8wkxVkbUHE7RknkkgEZuVEGXloJouk0CwLu4gGMEduF+EgfJmoH4mf6Xi4GiNzqf
+         DsXPKBOfUuH+eXcwdgnzf73P/l8lWOFV1SOtrwSrB5jA5i4jeDJSWPoBSG6Xpr8OAn4a
+         GsU3/oM0/hVRWczyG4hpX10JJe8X7/EYk20Ki83OtWES8BvyeQQrj+04lnUTziuvargW
+         VWrRXWOMpRFj019xjYu2vXWpvvjXt7Vqsso/rJ0CgT+483A6Uv+lTe8n2kgfcCUCSZRC
+         6OEuKOJSamoq8cmWUtbW5GHtSsbccYtW4berohhe9loKplEnSudALdpHFgjkHWJulCYB
+         40xg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=4ivrPHA4H2+SZIz4zuqKVjysFpMX2cQ3lIocjHgPstw=;
+        b=Od3EyaHLIHp8gZwnO8sEKv9W/EX5asOpBvSF3jxVgscisVE8vu5RQXeQLo63GXg0Yn
+         bQBUfPOFf/jTWAdcHfhfN9p2thkoTSeLMs6BU0o76ycgNXDTgPxNjGsgzl0hoMixQVPu
+         Gjonq4Z99Bm+0ddUnYlSwzcFlftEz7Uz0hNpZl06YrCnaF/3lmWk0cIJ+rO2B1fS+owf
+         k+dHKkQPM5+pNd3L8DlwQIJ50fxQi6MVVGuGWPzYHXqB+WVr71FnZ4pb8qzhatoFfgjA
+         BqX+y6q+R9YhWBum1ZkYernkR16ahiNU5nzAJFCMIZfCRGbJQUCSWmtonMhXeS13E4b0
+         qqUA==
+X-Gm-Message-State: APjAAAXCevnxfx4dso0hBIj/aYDDsPArtY2ZgBXUDrG7kPqSPj5dkndc
+        g029JDatp++5XrX257nNmJLK124X
+X-Google-Smtp-Source: APXvYqzp/tZnw2L+FbRaKzys8EN/Ub7gUGFmsR13ZoZVaeyaHekRlgHGQ4qszJFcWtQZmqzBmUw09w==
+X-Received: by 2002:a17:902:703:: with SMTP id 3mr85702525pli.224.1555450250682;
+        Tue, 16 Apr 2019 14:30:50 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id f63sm108827442pfc.180.2019.04.16.14.30.48
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Apr 2019 14:30:49 -0700 (PDT)
+Date:   Tue, 16 Apr 2019 14:30:48 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Ruslan Babayev <ruslan@babayev.com>
+Cc:     xe-linux-external@cisco.com, Jean Delvare <jdelvare@suse.com>,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] hwmon: (pmbus) mark registers READ_VIN and READ_IIN
+ as paged
+Message-ID: <20190416213048.GA29411@roeck-us.net>
+References: <20190416183620.39950-2-ruslan@babayev.com>
+ <20190416194032.GB8093@roeck-us.net>
 MIME-Version: 1.0
-References: <1555423298-6677-1-git-send-email-wang6495@umn.edu> <alpine.DEB.2.21.1904162155430.1780@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1904162155430.1780@nanos.tec.linutronix.de>
-From:   Wenwen Wang <wang6495@umn.edu>
-Date:   Tue, 16 Apr 2019 16:29:52 -0500
-X-Gmail-Original-Message-ID: <CAAa=b7eAtZ+dd1kfpOAoFr9unrFv--jkFXTXmtcs0=Q-pPErMg@mail.gmail.com>
-Message-ID: <CAAa=b7eAtZ+dd1kfpOAoFr9unrFv--jkFXTXmtcs0=Q-pPErMg@mail.gmail.com>
-Subject: Re: [PATCH v2] x86/PCI: fix a memory leak bug
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
-        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
-        "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" 
-        <linux-kernel@vger.kernel.org>, Wenwen Wang <wang6495@umn.edu>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190416194032.GB8093@roeck-us.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 3:33 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> On Tue, 16 Apr 2019, Wenwen Wang wrote:
->
-> > In pcibios_irq_init(), the PCI IRQ routing table 'pirq_table' is firstly
-> > found through pirq_find_routing_table(). If the table is not found and
-> > 'CONFIG_PCI_BIOS' is defined, the table is then allocated in
-> > pcibios_get_irq_routing_table() using kmalloc(). In the following
-> > execution, if the I/O APIC is used, this table is actually not used.
-> > However, in that case, the allocated table is not freed, which can lead to
-> > a memory leak bug.
->
-> s/which can lead to/which is/
->
-> There is no 'can'. It simply is a memory leak.
->
-> > To fix this issue, this patch frees the allocated table if it is not used.
->
-> To fix this issue, free the allocated table if it is not used.
->
-> 'this patch' is completely redundant information and discouraged in
-> Documentation/process/....
->
+On Tue, Apr 16, 2019 at 12:40:33PM -0700, Guenter Roeck wrote:
+> On Tue, Apr 16, 2019 at 11:36:17AM -0700, Ruslan Babayev wrote:
+> > On some devices (like IR35215) READ_VIN and READ_IIN registers are
+> > paged.
+> > 
+> > For devices where these registers are not paged the extra check
+> > ensures we expose only the registers that are actually present.
+> > 
+> > Cc: xe-linux-external@cisco.com
+> > Signed-off-by: Ruslan Babayev <ruslan@babayev.com>
+> > ---
+> >  drivers/hwmon/pmbus/pmbus_core.c | 5 +++++
+> >  1 file changed, 5 insertions(+)
+> > 
+> > diff --git a/drivers/hwmon/pmbus/pmbus_core.c b/drivers/hwmon/pmbus/pmbus_core.c
+> > index f35b239961e3..fac966967816 100644
+> > --- a/drivers/hwmon/pmbus/pmbus_core.c
+> > +++ b/drivers/hwmon/pmbus/pmbus_core.c
+> > @@ -1379,6 +1379,9 @@ static int pmbus_add_sensor_attrs(struct i2c_client *client,
+> >  		for (page = 0; page < pages; page++) {
+> >  			if (!(info->func[page] & attrs->func))
+> >  				continue;
+> > +			if (!pmbus_check_word_register(client, page,
+> > +						       attrs->reg))
+> > +				continue;
+> 
+> This won't work. Most other chips will just report the values from page 0
+> when trying to read VIN/IIN from other pages.
+> 
+Another problem is that this would change the label for non-pages devices
+to vin[0...]. I understand the need, but we'll need some means to tell the
+core that the input (voltage, current, power, ..) registers are paged.
 
-Thanks for your suggestions, Thomas. I will revise the commit's message.
+Another option, to specifically address this case, might be to report the
+second voltage as vmon or vcap (and maybe add imon / icap), but that would
+be a bit clumsy unless it is not really an "input" voltage but, for example,
+the chip's VCC.
 
-Wenwen
+It is quite unfortunate that the datasheet is not public. It would be quite
+useful to know what exactly is measured with those paged input sensors.
 
-> Other than that:
->
-> Acked-by: Thomas Gleixner <tglx@linutronix.de>
+Guenter
+
+> Guenter
+> 
+> >  			ret = pmbus_add_sensor_attrs_one(client, data, info,
+> >  							 name, index, page,
+> >  							 attrs);
+> > @@ -1498,6 +1501,7 @@ static const struct pmbus_sensor_attr voltage_attributes[] = {
+> >  		.reg = PMBUS_READ_VIN,
+> >  		.class = PSC_VOLTAGE_IN,
+> >  		.label = "vin",
+> > +		.paged = true,
+> >  		.func = PMBUS_HAVE_VIN,
+> >  		.sfunc = PMBUS_HAVE_STATUS_INPUT,
+> >  		.sbase = PB_STATUS_INPUT_BASE,
+> > @@ -1602,6 +1606,7 @@ static const struct pmbus_sensor_attr current_attributes[] = {
+> >  		.reg = PMBUS_READ_IIN,
+> >  		.class = PSC_CURRENT_IN,
+> >  		.label = "iin",
+> > +		.paged = true,
+> >  		.func = PMBUS_HAVE_IIN,
+> >  		.sfunc = PMBUS_HAVE_STATUS_INPUT,
+> >  		.sbase = PB_STATUS_INPUT_BASE,
+> > -- 
+> > 2.17.1
+> > 
