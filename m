@@ -2,89 +2,196 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT,USER_IN_DEF_DKIM_WL
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 511F3C10F12
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:00:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 344BAC10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:00:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F5732075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:00:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="fnvln70V"
+	by mail.kernel.org (Postfix) with ESMTP id E74DE20656
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:00:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555383633;
+	bh=TF7X8rSB8usO5/F6NsN6QlXy2LON0XyBBA5OJUiaR3M=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=hpnnN9CepIvGkpR/CiuaO9KVDotgChYs+Eo+6AVhoMbrsnxcFAV2fZV1P5jsE4Y0s
+	 R9Ch0/KqZwwFVbZHwgGsDktf8KbRajFcf5b++8LK+EmJIvghqLtIz0x0Ws2Cyah0SF
+	 aA1uMDFNJCRIaCRKXSbQisRcU8RsVyD5PA3eE8rA=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728485AbfDPDA0 (ORCPT
+        id S1728413AbfDPDAG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 23:00:26 -0400
-Received: from mail-yw1-f73.google.com ([209.85.161.73]:47783 "EHLO
-        mail-yw1-f73.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726775AbfDPDAX (ORCPT
+        Mon, 15 Apr 2019 23:00:06 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44310 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726814AbfDPC4d (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 23:00:23 -0400
-Received: by mail-yw1-f73.google.com with SMTP id z130so14630340ywb.14
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 20:00:23 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=date:message-id:mime-version:subject:from:to:cc;
-        bh=iuIeQUAMTWIOwz/+wMTVC2rJ1Jb9H2uzMsmhSpHr4CI=;
-        b=fnvln70VUPw8oAUv8pSlp933t24EC4v+L98kvjdUpdJV4unSaz0qaOTJ4kDANowngl
-         NtuNYmQdXEUi3aUzo8wfkTBm9Rrpk90shG1sf+UrhAN6KqHBmwdNI7Z6/j9GpEoVWfzO
-         jDWNm0mGYxWzZIb+tLycnSLI2ii0+IfKuKfQW+JKVXoc7L+SW3yybK6t5eu+loHtcS7W
-         3OOE3krCnH+4rh0WORSthgLMvG9YtQakpQmGRlGVtUKvmw/P7uMY23GVkIuGwjA6yZYI
-         pASm7Re41+k8ZTIqhR+fufOMSNYjSKowxRrqHebAZWwt98Kasc1teI2Xf/5UwSkeIFPP
-         0mGg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:message-id:mime-version:subject:from:to:cc;
-        bh=iuIeQUAMTWIOwz/+wMTVC2rJ1Jb9H2uzMsmhSpHr4CI=;
-        b=k64gljzDsNRGcl3VBkQBuVFh5BHjJqUvkHbzBVdOg/CfhjAZv9mni4CNfCScLGDauk
-         HgcIcOFU6cwGDCt42SSCNQ7WrxU9NVvEmlDjSCAeu2WX3pS7ZcI5QivnBCU7ZvVpZ2Oe
-         EYer6KqVEmhuhfJffQ3dBqG/V/qtkESZbITcKkVGP80n/mVSwEgAqWrSyMvAkl2mWs7u
-         glCVidJGJQa43X2P0LxyafmFhRXZ6EQbVynSLJbCXA6WjUdQVarb39Z0Vogxcnq2uHNn
-         kSRMIWFd/P0OgL5AwkW1LOj2mcG0owEDQJTXmmn7Lsa7S7X4EJwBKCCWdOgXSup8Npa0
-         Ak/w==
-X-Gm-Message-State: APjAAAWaiHSGdaCvSYPj4cYKAP79kb/s67tduuXtJLAkKiSFJM3yHxji
-        ZuVZU22YGqFqoAswwrMJ8BGimfS6NAE=
-X-Google-Smtp-Source: APXvYqxJ0n4CrJ+xX1bgAW5Q+EiNwMnYERC+ma2ULiuIf80Csy4LG8zlbeeW+APAZewrxoWS1g66vv4I9kA=
-X-Received: by 2002:a25:202:: with SMTP id 2mr14734788ybc.66.1555383622714;
- Mon, 15 Apr 2019 20:00:22 -0700 (PDT)
-Date:   Mon, 15 Apr 2019 19:59:34 -0700
-Message-Id: <20190416025934.115252-1-khazhy@google.com>
-Mime-Version: 1.0
-X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
-Subject: [PATCH] ext4: add cond_resched() to ext4_mb_init_backend()
-From:   Khazhismel Kumykov <khazhy@google.com>
-To:     tytso@mit.edu, adilger.kernel@dilger.ca
-Cc:     linux-ext4@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Khazhismel Kumykov <khazhy@google.com>
-Content-Type: text/plain; charset="UTF-8"
+        Mon, 15 Apr 2019 22:56:33 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=jXkdB0C3YC54scrOjj5bnKKgWfCNB6nvC4e9vjR9xpc=; b=uaIt6UabKVv8vlKA8HKuN6a6LW
+        CSSsIrzqhVrDCAy1RX6Yf5ITGrQn9UVHBmKChhdl5gNbkuoVBjpcnMhO0U3NiLLm3g4tN26dlFaRq
+        xVOGzIpn8SJZOsEvAE0+g7MLIjRY3Cy4JYik8tlXqQj+a2ytsrQpardLUc/LfDkYTKkNS6xoNeVmi
+        U2CPElbxXHzcdNlZmNweKX2X7xo+7DTSfDuDvE65wRxMrtWlYUmY5JuURLQUK7VaA17bvccogMY8V
+        i18gikBg/XPz5SB0WL8wc2OoVIJYlvp8LclU227q36ql1X5szTmGQJaussXXCJMsN3OaBJSdnrfI0
+        0RNS/dJQ==;
+Received: from 177.205.118.176.dynamic.adsl.gvt.net.br ([177.205.118.176] helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hGEGu-0007ad-Ji; Tue, 16 Apr 2019 02:56:32 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1hGEGn-0001nI-Fj; Mon, 15 Apr 2019 23:56:25 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        Sudeep Dutt <sudeep.dutt@intel.com>,
+        Ashutosh Dixit <ashutosh.dixit@intel.com>
+Subject: [PATCH 22/57] docs: mic: convert it to ReST format
+Date:   Mon, 15 Apr 2019 23:55:47 -0300
+Message-Id: <a8d9e0dee8df3b8f369543ca23f4bd0a9c6e0271.1555382110.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <cover.1555382110.git.mchehab+samsung@kernel.org>
+References: <cover.1555382110.git.mchehab+samsung@kernel.org>
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-on non-preempt kernels for filesystems with large number of groups we
-may take a long time (>50 ticks) initializing all the groups.
+Convert Intel Many Integrated Core architecture docs to ReST.
 
-Signed-off-by: Khazhismel Kumykov <khazhy@google.com>
+The conversion is trivial: just add title and literal block
+markups, and adjust some identation.
+
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- fs/ext4/mballoc.c | 1 +
- 1 file changed, 1 insertion(+)
+ Documentation/mic/mic_overview.txt  |  6 ++-
+ Documentation/mic/scif_overview.txt | 58 +++++++++++++++++------------
+ 2 files changed, 39 insertions(+), 25 deletions(-)
 
-diff --git a/fs/ext4/mballoc.c b/fs/ext4/mballoc.c
-index 8ef5f12bbee2..c89f497ccf50 100644
---- a/fs/ext4/mballoc.c
-+++ b/fs/ext4/mballoc.c
-@@ -2490,6 +2490,7 @@ static int ext4_mb_init_backend(struct super_block *sb)
- 	sbi->s_buddy_cache->i_ino = EXT4_BAD_INO;
- 	EXT4_I(sbi->s_buddy_cache)->i_disksize = 0;
- 	for (i = 0; i < ngroups; i++) {
-+		cond_resched();
- 		desc = ext4_get_group_desc(sb, i, NULL);
- 		if (desc == NULL) {
- 			ext4_msg(sb, KERN_ERR, "can't read descriptor %u", i);
+diff --git a/Documentation/mic/mic_overview.txt b/Documentation/mic/mic_overview.txt
+index 074adbdf83a4..17d956bdaf7c 100644
+--- a/Documentation/mic/mic_overview.txt
++++ b/Documentation/mic/mic_overview.txt
+@@ -1,3 +1,7 @@
++======================================================
++Intel Many Integrated Core (MIC) architecture overview
++======================================================
++
+ An Intel MIC X100 device is a PCIe form factor add-in coprocessor
+ card based on the Intel Many Integrated Core (MIC) architecture
+ that runs a Linux OS. It is a PCIe endpoint in a platform and therefore
+@@ -45,7 +49,7 @@ Here is a block diagram of the various components described above. The
+ virtio backends are situated on the host rather than the card given better
+ single threaded performance for the host compared to MIC, the ability of
+ the host to initiate DMA's to/from the card using the MIC DMA engine and
+-the fact that the virtio block storage backend can only be on the host.
++the fact that the virtio block storage backend can only be on the host::
+ 
+                +----------+           |             +----------+
+                | Card OS  |           |             | Host OS  |
+diff --git a/Documentation/mic/scif_overview.txt b/Documentation/mic/scif_overview.txt
+index 0a280d986731..4c8ad9e43706 100644
+--- a/Documentation/mic/scif_overview.txt
++++ b/Documentation/mic/scif_overview.txt
+@@ -1,3 +1,7 @@
++========================================
++Symmetric Communication Interface (SCIF)
++========================================
++
+ The Symmetric Communication Interface (SCIF (pronounced as skiff)) is a low
+ level communications API across PCIe currently implemented for MIC. Currently
+ SCIF provides inter-node communication within a single host platform, where a
+@@ -8,8 +12,11 @@ is to deliver the maximum possible performance given the communication
+ abilities of the hardware. SCIF has been used to implement an offload compiler
+ runtime and OFED support for MPI implementations for MIC coprocessors.
+ 
+-==== SCIF API Components ====
++SCIF API Components
++===================
++
+ The SCIF API has the following parts:
++
+ 1. Connection establishment using a client server model
+ 2. Byte stream messaging intended for short messages
+ 3. Node enumeration to determine online nodes
+@@ -28,9 +35,12 @@ can also register local memory which is followed by data transfer using either
+ DMA, CPU copies or remote memory mapping via mmap. SCIF supports both user and
+ kernel mode clients which are functionally equivalent.
+ 
+-==== SCIF Performance for MIC ====
++SCIF Performance for MIC
++========================
++
+ DMA bandwidth comparison between the TCP (over ethernet over PCIe) stack versus
+-SCIF shows the performance advantages of SCIF for HPC applications and runtimes.
++SCIF shows the performance advantages of SCIF for HPC applications and
++runtimes::
+ 
+              Comparison of TCP and SCIF based BW
+ 
+@@ -66,33 +76,33 @@ space API similar to the kernel API in scif.h. The SCIF user space library
+ is distributed @ https://software.intel.com/en-us/mic-developer
+ 
+ Here is some pseudo code for an example of how two applications on two PCIe
+-nodes would typically use the SCIF API:
++nodes would typically use the SCIF API::
+ 
+-Process A (on node A)			Process B (on node B)
++  Process A (on node A)			Process B (on node B)
+ 
+-/* get online node information */
+-scif_get_node_ids(..)			scif_get_node_ids(..)
+-scif_open(..)				scif_open(..)
+-scif_bind(..)				scif_bind(..)
+-scif_listen(..)
+-scif_accept(..)				scif_connect(..)
+-/* SCIF connection established */
++  /* get online node information */
++  scif_get_node_ids(..)			scif_get_node_ids(..)
++  scif_open(..)				scif_open(..)
++  scif_bind(..)				scif_bind(..)
++  scif_listen(..)
++  scif_accept(..)				scif_connect(..)
++  /* SCIF connection established */
+ 
+-/* Send and receive short messages */
+-scif_send(..)/scif_recv(..)		scif_send(..)/scif_recv(..)
++  /* Send and receive short messages */
++  scif_send(..)/scif_recv(..)		scif_send(..)/scif_recv(..)
+ 
+-/* Register memory */
+-scif_register(..)			scif_register(..)
++  /* Register memory */
++  scif_register(..)			scif_register(..)
+ 
+-/* RDMA */
+-scif_readfrom(..)/scif_writeto(..)	scif_readfrom(..)/scif_writeto(..)
++  /* RDMA */
++  scif_readfrom(..)/scif_writeto(..)	scif_readfrom(..)/scif_writeto(..)
+ 
+-/* Fence DMAs */
+-scif_fence_signal(..)			scif_fence_signal(..)
++  /* Fence DMAs */
++  scif_fence_signal(..)			scif_fence_signal(..)
+ 
+-mmap(..)				mmap(..)
++  mmap(..)				mmap(..)
+ 
+-/* Access remote registered memory */
++  /* Access remote registered memory */
+ 
+-/* Close the endpoints */
+-scif_close(..)				scif_close(..)
++  /* Close the endpoints */
++  scif_close(..)				scif_close(..)
 -- 
-2.21.0.392.gf8f6787159e-goog
+2.20.1
 
