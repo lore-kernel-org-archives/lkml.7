@@ -2,139 +2,268 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F332CC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:21:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFEB4C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:21:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8A93206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:21:19 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93555206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:21:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=dialogsemiconductor.onmicrosoft.com header.i=@dialogsemiconductor.onmicrosoft.com header.b="Czt9R0Wa"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="e06ZkOP5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728992AbfDPKVS (ORCPT
+        id S1729015AbfDPKVg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 06:21:18 -0400
-Received: from mail1.bemta26.messagelabs.com ([85.158.142.117]:33084 "EHLO
-        mail1.bemta26.messagelabs.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726682AbfDPKVS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 06:21:18 -0400
-Received: from [85.158.142.201] (using TLSv1.2 with cipher DHE-RSA-AES256-GCM-SHA384 (256 bits))
-        by server-6.bemta.az-b.eu-central-1.aws.symcld.net id B2/47-19007-A9CA5BC5; Tue, 16 Apr 2019 10:21:14 +0000
-X-Brightmail-Tracker: H4sIAAAAAAAAA1WSe0hTYRjG/XbOjkfxyOem+SoadLLo4pazCwu
-  igrDsD0WEIkKrs3naGcxp2yyNCiPpYqVRSTYtNcpqmpU1k7yFWKE1KzOMLljLstTuQRB2Ocez
-  zP77fe/zPN/7vvDShOoqFUnzuQ7eZuUsLBVICnP8Fmqcte60uN6n0/UPr5dTeve7Dwr947pWf
-  31R94qlZOKbqotk4tf6ySmKtUqz1ZCVu0EpdD6vp7JvUrnXS3+gfNSqLESBNIkvElB2p56SHi
-  pcpIADu/YR8qMfgffKoGgLoCmsg5MjH5HEoXgL7B2tGYsT+CyC2pI+QhLUOBkuDN7ymVLgYH8
-  bIXM8vM2/O1Yn8TToLhsWwzTN4HS49NsolVU4Aa4Wuv0lDsDLYXR351gU4Wj4trNmjAkcDk8G
-  KhQSA8ZwuvkeIXMYvHv1Syn718Oetvf+cj0WPH0DSGYWqh87lTJHQ0/FfiSNADgJXI1qaRXAD
-  xCUHCvwZWeB6+hPH1vgc/GQr1cUXBtpoOTAMyV4nhQQ8gJG+HTC4wtMBtfBl6Rsuk9AbcteSt
-  4gFiqbvvh4NlRXDROH0AznhOWcE2zOCTaJGRwCnccHyEpEupDeYDObBEcmZ7ZodHFxGp1urma
-  eJj5ey23VGLR8jsbIWx02ThS13Ba71p6XabRkaK28ox6JF5SxiZzUiO6fMbWjCFrBhjHHzrvT
-  VMGGrIw8gbML6205Ft7ejqJomgVmXY2ohdh4E5+70WwRz/CvDHQQG8okSTJjz+Yy7WaTLHUhD
-  X3j1MsThIq0Zln5yHCm2SWasGQScqzjX/w95h4UHalmkJ+fnyoom7dlmh3/60MonEasmtkstQ
-  oyWx3jnYbEIRTiEEdja6QhHNw/KTIfGV8nLLasTP4V3kEeYWPmTHWwwbNTSjtmcp2B3gWrvPP
-  KIxIrDOWn9pc+2pY6uCgv+Yyp38NV997yCA3p7inndoTpV0e1Hy7uWuaN3k4mB6cumbKse2tW
-  1IuEist3W5vU31aktixOXNclVH9PGbg9GlNQFzLfNSOvZPdmqopKG17jZUm7wOlmETY79wfIg
-  0tkxwMAAA==
-X-Env-Sender: stwiss.opensource@diasemi.com
-X-Msg-Ref: server-13.tower-246.messagelabs.com!1555410073!211227!1
-X-Originating-IP: [104.47.0.57]
-X-SYMC-ESS-Client-Auth: mailfrom-relay-check=pass
-X-StarScan-Received: 
-X-StarScan-Version: 9.31.5; banners=-,-,-
-X-VirusChecked: Checked
-Received: (qmail 26331 invoked from network); 16 Apr 2019 10:21:14 -0000
-Received: from mail-he1eur01lp2057.outbound.protection.outlook.com (HELO EUR01-HE1-obe.outbound.protection.outlook.com) (104.47.0.57)
-  by server-13.tower-246.messagelabs.com with AES256-GCM-SHA384 encrypted SMTP; 16 Apr 2019 10:21:14 -0000
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=dialogsemiconductor.onmicrosoft.com; s=selector1-diasemi-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=po0B8nww2k/8D9Mv956Vct/2FTBKJGRwQX0tRMMuZaE=;
- b=Czt9R0WaMVZk6rk/enhYcFCfSId7zzkZoqyFoIzS9Cy9L3+w5Dq/cY2gpilz9OunI3Y9E57RcGiAV2hM88Nx65nYPhWVVVWLLl3HRtgzZZVqNYW34JyTk+QOMwQA0dAc5qGo/zutYKjj5QByrmDahFakOJWHD8W9kdFrGGG4oi4=
-Received: from VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM (20.177.62.92) by
- VI1PR10MB2174.EURPRD10.PROD.OUTLOOK.COM (20.177.60.28) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1792.16; Tue, 16 Apr 2019 10:21:09 +0000
-Received: from VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::acc9:6d8f:da36:9f25]) by VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM
- ([fe80::acc9:6d8f:da36:9f25%2]) with mapi id 15.20.1813.011; Tue, 16 Apr 2019
- 10:21:09 +0000
-From:   Steve Twiss <stwiss.opensource@diasemi.com>
-To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
-        "linux-watchdog@vger.kernel.org" <linux-watchdog@vger.kernel.org>
-CC:     "linux-renesas-soc@vger.kernel.org" 
-        <linux-renesas-soc@vger.kernel.org>,
-        Support Opensource <Support.Opensource@diasemi.com>,
-        LKML <linux-kernel@vger.kernel.org>
-Subject: RE: [PATCH RFT] watchdog: da9063_wdt: parse DT for timeout value, too
-Thread-Topic: [PATCH RFT] watchdog: da9063_wdt: parse DT for timeout value,
- too
-Thread-Index: AQHU8rKQiJBjLGoJgEygrdEbYLd/faY+hb0w
-Date:   Tue, 16 Apr 2019 10:21:09 +0000
-Message-ID: <VI1PR10MB2352FEE39015BEA512B1FE61FE240@VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM>
-References: <20190414110933.30529-1-wsa+renesas@sang-engineering.com>
-In-Reply-To: <20190414110933.30529-1-wsa+renesas@sang-engineering.com>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [193.240.73.196]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: a9adb2a3-ed44-4580-7055-08d6c2553e68
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600140)(711020)(4605104)(2017052603328)(7193020);SRVR:VI1PR10MB2174;
-x-ms-traffictypediagnostic: VI1PR10MB2174:
-x-microsoft-antispam-prvs: <VI1PR10MB21744A21F95D9486CF5606C0F5240@VI1PR10MB2174.EURPRD10.PROD.OUTLOOK.COM>
-x-forefront-prvs: 000947967F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(39860400002)(346002)(366004)(396003)(376002)(136003)(189003)(199004)(53546011)(5660300002)(6246003)(229853002)(33656002)(105586002)(14454004)(54906003)(52536014)(4326008)(110136005)(478600001)(106356001)(25786009)(2906002)(6506007)(316002)(2501003)(66066001)(97736004)(6116002)(3846002)(305945005)(53936002)(74316002)(9686003)(55016002)(7736002)(81156014)(26005)(102836004)(186003)(8936002)(11346002)(446003)(8676002)(81166006)(476003)(486006)(4744005)(99286004)(68736007)(71200400001)(86362001)(256004)(6436002)(7696005)(71190400001)(76176011);DIR:OUT;SFP:1101;SCL:1;SRVR:VI1PR10MB2174;H:VI1PR10MB2352.EURPRD10.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:0;
-received-spf: None (protection.outlook.com: diasemi.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: ixG0ja4vr6bTm2fvGEj0p6F5liW0ZFYfbR7DdY+pUZqXAIzNHRRoVyhQO92d7320xXlj1J7OT+Er/DraImYfu94igFzfHGsDS88oXyyyWeevyIQdgLB1O1TYSVY9pz9Mq84GMHJtZ25EGdkpi7EMlyzqnO7R0mqknWrdzOfYIM20N4/kZd6ZEuX1YPoHxFBQQKpMWf5isWaK6PtgrdEREgJVbHxxM/r2xYpX4D+aoaVTSUhGWoI46afRVmU6z/ClctpP0FSeiGf6NPzJJSzYU4/bHITfwhvLJGNzT+pe/EHfYaAQI1LRZKWfO3V//c3N8U6QDcxJG2xoPTSFtqKXbYDKLVERPJM12UvfTPNALTDCgCXlshAfMSD3/Haedt9m8JTi6XhWuAs6tInYr72GDHhb5MRL2kVuVD313VWfSgk=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Tue, 16 Apr 2019 06:21:36 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:52196 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726716AbfDPKVf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 06:21:35 -0400
+Received: from zn.tnic (p200300EC2F0D6900D0FA583685BBD9D6.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:6900:d0fa:5836:85bb:d9d6])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 10D431EC05B8;
+        Tue, 16 Apr 2019 12:21:34 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1555410094;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=twtafEGma0Y1kHnv3Dz1XbORQn9UB5SYl9Cz+oclGPk=;
+        b=e06ZkOP5D2I5VB3VppNLBFsj2bzfNmd5gBxlmNDX50n4PKwMOQtiq3poFc3izhc+GO7e1g
+        1QL7PjWDFGeXGEHoYkCeTiOU8g8wY4roAgj08URrK+WP7plu7H9CQyul7Lf58LszXJVA1Q
+        YoUi+5H/TXpJOvSMgraL1JfckXcIM2c=
+Date:   Tue, 16 Apr 2019 12:21:30 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     "Ghannam, Yazen" <Yazen.Ghannam@amd.com>
+Cc:     "linux-edac@vger.kernel.org" <linux-edac@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "bp@suse.de" <bp@suse.de>,
+        "tony.luck@intel.com" <tony.luck@intel.com>,
+        "x86@kernel.org" <x86@kernel.org>
+Subject: Re: [PATCH v2 2/6] x86/MCE: Handle MCA controls in a per_cpu way
+Message-ID: <20190416102130.GB31772@zn.tnic>
+References: <20190411201743.43195-1-Yazen.Ghannam@amd.com>
+ <20190411201743.43195-3-Yazen.Ghannam@amd.com>
 MIME-Version: 1.0
-X-OriginatorOrg: diasemi.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: a9adb2a3-ed44-4580-7055-08d6c2553e68
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Apr 2019 10:21:09.3023
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 511e3c0e-ee96-486e-a2ec-e272ffa37b7c
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: VI1PR10MB2174
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190411201743.43195-3-Yazen.Ghannam@amd.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 14 April 2019 12:10, Wolfram Sang wrote:
+On Thu, Apr 11, 2019 at 08:18:01PM +0000, Ghannam, Yazen wrote:
+>  arch/x86/kernel/cpu/mce/core.c | 77 ++++++++++++++++++++++------------
+>  1 file changed, 51 insertions(+), 26 deletions(-)
+> 
+> diff --git a/arch/x86/kernel/cpu/mce/core.c b/arch/x86/kernel/cpu/mce/core.c
+> index 8d0d1e8425db..aa41f41e5931 100644
+> --- a/arch/x86/kernel/cpu/mce/core.c
+> +++ b/arch/x86/kernel/cpu/mce/core.c
+> @@ -64,16 +64,21 @@ static DEFINE_MUTEX(mce_sysfs_mutex);
+>  
+>  DEFINE_PER_CPU(unsigned, mce_exception_count);
+>  
+> +struct mce_bank {
+> +	u64	ctl;	/* subevents to enable */
+> +	bool	init;	/* initialise bank? */
+> +};
 
-> Subject: [PATCH RFT] watchdog: da9063_wdt: parse DT for timeout value, to=
-o
->=20
-> And make sure the final obtained value gets properly scaled. Remove two
-> empty lines to group the initialization blocks while we are here.
->=20
-> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
-> ---
->=20
-> Tested with a Renesas Lager board (R-Car H2, DA9063AD), checking the init=
-ial
-> timeout value via sysfs. I didn't test handover from bootloader because m=
-y
-> bootloader neither supports WDT or I2C out of the box.
+Pls keep original members alignment.
 
-Tested on git://git.kernel.org/pub/scm/linux/kernel/git/groeck/linux-stagin=
-g.git
-* watchdog-next                 6829e6ef3f22 [origin/watchdog-next] watchdo=
-g: pnx4008: readout watchdog state
+> +static DEFINE_PER_CPU_READ_MOSTLY(struct mce_bank *, mce_banks);
+> +
+>  #define ATTR_LEN               16
+>  /* One object for each MCE bank, shared by all CPUs */
+> -struct mce_bank {
+> -	u64			ctl;			/* subevents to enable */
+> -	bool			init;			/* initialise bank? */
+> +struct mce_bank_dev {
+>  	struct device_attribute	attr;			/* device attribute */
+>  	char			attrname[ATTR_LEN];	/* attribute name */
+> +	u8			bank;			/* bank number */
+>  };
+> +static struct mce_bank_dev mce_bank_devs[MAX_NR_BANKS];
+>  
+> -static struct mce_bank *mce_banks __read_mostly;
+>  struct mce_vendor_flags mce_flags __read_mostly;
+>  
+>  struct mca_config mca_cfg __read_mostly = {
+> @@ -695,7 +700,7 @@ bool machine_check_poll(enum mcp_flags flags, mce_banks_t *b)
+>  		m.tsc = rdtsc();
+>  
+>  	for (i = 0; i < mca_cfg.banks; i++) {
+> -		if (!mce_banks[i].ctl || !test_bit(i, *b))
+> +		if (!this_cpu_read(mce_banks)[i].ctl || !test_bit(i, *b))
+>  			continue;
+>  
+>  		m.misc = 0;
+> @@ -1138,7 +1143,7 @@ static void __mc_scan_banks(struct mce *m, struct mce *final,
+>  		if (!test_bit(i, valid_banks))
+>  			continue;
+>  
+> -		if (!mce_banks[i].ctl)
+> +		if (!this_cpu_read(mce_banks)[i].ctl)
+>  			continue;
+>  
+>  		m->misc = 0;
+> @@ -1475,16 +1480,19 @@ static int __mcheck_cpu_mce_banks_init(void)
+>  {
+>  	int i;
+>  
+> -	mce_banks = kcalloc(MAX_NR_BANKS, sizeof(struct mce_bank), GFP_KERNEL);
+> -	if (!mce_banks)
+> +	per_cpu(mce_banks, smp_processor_id()) =
+> +		kcalloc(MAX_NR_BANKS, sizeof(struct mce_bank), GFP_KERNEL);
+> +
+> +	if (!this_cpu_read(mce_banks))
+>  		return -ENOMEM;
+>  
+>  	for (i = 0; i < MAX_NR_BANKS; i++) {
+> -		struct mce_bank *b = &mce_banks[i];
+> +		struct mce_bank *b = &this_cpu_read(mce_banks)[i];
+>  
+>  		b->ctl = -1ULL;
+>  		b->init = 1;
+>  	}
+> +
+>  	return 0;
+>  }
 
-Tested-by: Steve Twiss <stwiss.opensource@diasemi.com>
+Instead of doing all those per-CPU accesses in the function, you can use
+a local pointer and assign it once in the end, before returning.
 
-Regards,
-Steve
+Also, fix the similar situation where you have multiple per-CPU accesses
+in a single function - assign to a local pointer instead and do all the
+accesses through it.
+
+> @@ -1504,7 +1512,7 @@ static int __mcheck_cpu_cap_init(void)
+>  
+>  	mca_cfg.banks = max(mca_cfg.banks, b);
+>  
+> -	if (!mce_banks) {
+> +	if (!this_cpu_read(mce_banks)) {
+>  		int err = __mcheck_cpu_mce_banks_init();
+>  		if (err)
+>  			return err;
+> @@ -1547,7 +1555,7 @@ static void __mcheck_cpu_init_clear_banks(void)
+>  	int i;
+>  
+>  	for (i = 0; i < mca_cfg.banks; i++) {
+> -		struct mce_bank *b = &mce_banks[i];
+> +		struct mce_bank *b = &this_cpu_read(mce_banks)[i];
+>  
+>  		if (!b->init)
+>  			continue;
+> @@ -1602,7 +1610,7 @@ static int __mcheck_cpu_apply_quirks(struct cpuinfo_x86 *c)
+>  			 * trips off incorrectly with the IOMMU & 3ware
+>  			 * & Cerberus:
+>  			 */
+> -			clear_bit(10, (unsigned long *)&mce_banks[4].ctl);
+> +			clear_bit(10, (unsigned long *)&this_cpu_read(mce_banks)[4].ctl);
+>  		}
+>  		if (c->x86 < 0x11 && cfg->bootlog < 0) {
+>  			/*
+> @@ -1616,7 +1624,7 @@ static int __mcheck_cpu_apply_quirks(struct cpuinfo_x86 *c)
+>  		 * by default.
+>  		 */
+>  		if (c->x86 == 6 && cfg->banks > 0)
+> -			mce_banks[0].ctl = 0;
+> +			this_cpu_read(mce_banks)[0].ctl = 0;
+>  
+>  		/*
+>  		 * overflow_recov is supported for F15h Models 00h-0fh
+> @@ -1638,7 +1646,7 @@ static int __mcheck_cpu_apply_quirks(struct cpuinfo_x86 *c)
+>  		 */
+>  
+>  		if (c->x86 == 6 && c->x86_model < 0x1A && cfg->banks > 0)
+> -			mce_banks[0].init = 0;
+> +			this_cpu_read(mce_banks)[0].init = 0;
+>  
+>  		/*
+>  		 * All newer Intel systems support MCE broadcasting. Enable
+> @@ -1952,7 +1960,7 @@ static void mce_disable_error_reporting(void)
+>  	int i;
+>  
+>  	for (i = 0; i < mca_cfg.banks; i++) {
+> -		struct mce_bank *b = &mce_banks[i];
+> +		struct mce_bank *b = &this_cpu_read(mce_banks)[i];
+>  
+>  		if (b->init)
+>  			wrmsrl(msr_ops.ctl(i), 0);
+> @@ -2051,26 +2059,41 @@ static struct bus_type mce_subsys = {
+>  
+>  DEFINE_PER_CPU(struct device *, mce_device);
+>  
+> -static inline struct mce_bank *attr_to_bank(struct device_attribute *attr)
+> +static inline struct mce_bank_dev *attr_to_bank(struct device_attribute *attr)
+>  {
+> -	return container_of(attr, struct mce_bank, attr);
+> +	return container_of(attr, struct mce_bank_dev, attr);
+>  }
+>  
+>  static ssize_t show_bank(struct device *s, struct device_attribute *attr,
+>  			 char *buf)
+>  {
+> -	return sprintf(buf, "%llx\n", attr_to_bank(attr)->ctl);
+> +	struct mce_bank *b;
+> +	u8 bank = attr_to_bank(attr)->bank;
+
+Please sort function local variables declaration in a reverse christmas
+tree order:
+
+	<type A> longest_variable_name;
+	<type B> shorter_var_name;
+	<type C> even_shorter;
+	<type D> i;
+
+> +
+> +	if (bank >= mca_cfg.banks)
+> +		return -EINVAL;
+> +
+> +	b = &per_cpu(mce_banks, s->id)[bank];
+> +
+> +	return sprintf(buf, "%llx\n", b->ctl);
+>  }
+>  
+>  static ssize_t set_bank(struct device *s, struct device_attribute *attr,
+>  			const char *buf, size_t size)
+>  {
+>  	u64 new;
+> +	struct mce_bank *b;
+> +	u8 bank = attr_to_bank(attr)->bank;
+
+Ditto.
+
+>  	if (kstrtou64(buf, 0, &new) < 0)
+>  		return -EINVAL;
+>  
+> -	attr_to_bank(attr)->ctl = new;
+> +	if (bank >= mca_cfg.banks)
+> +		return -EINVAL;
+> +
+> +	b = &per_cpu(mce_banks, s->id)[bank];
+> +
+> +	b->ctl = new;
+>  	mce_restart();
+>  
+>  	return size;
+> @@ -2185,7 +2208,7 @@ static void mce_device_release(struct device *dev)
+>  	kfree(dev);
+>  }
+>  
+> -/* Per cpu device init. All of the cpus still share the same ctrl bank: */
+> +/* Per cpu device init. All of the cpus still share the same bank device: */
+
+s/cpu/CPU/g, while at it.
+
+-- 
+Regards/Gruss,
+    Boris.
+
+Good mailing practices for 400: avoid top-posting and trim the reply.
