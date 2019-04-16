@@ -2,130 +2,138 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F696C282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:56:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B2AAC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:58:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2AA52206B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:56:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CDBC320674
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:58:51 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=broadcom.com header.i=@broadcom.com header.b="Y3qzE8Cu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729032AbfDPL4r (ORCPT
+        id S1728552AbfDPL6u (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 07:56:47 -0400
-Received: from atrey.karlin.mff.cuni.cz ([195.113.26.193]:59859 "EHLO
-        atrey.karlin.mff.cuni.cz" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726408AbfDPL4q (ORCPT
+        Tue, 16 Apr 2019 07:58:50 -0400
+Received: from mail-wm1-f65.google.com ([209.85.128.65]:55295 "EHLO
+        mail-wm1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726796AbfDPL6u (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 07:56:46 -0400
-Received: by atrey.karlin.mff.cuni.cz (Postfix, from userid 512)
-        id 3C900803A9; Tue, 16 Apr 2019 13:56:36 +0200 (CEST)
-Date:   Tue, 16 Apr 2019 13:56:44 +0200
-From:   Pavel Machek <pavel@denx.de>
-To:     Andy Lutomirski <luto@kernel.org>
-Cc:     Pavel Machek <pavel@denx.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        stable <stable@vger.kernel.org>,
-        Jarkko Nikula <jarkko.nikula@linux.intel.com>,
-        "Rafael J. Wysocki" <rafael.j.wysocki@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bpetkov@suse.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Zhang Rui <rui.zhang@intel.com>,
-        Ingo Molnar <mingo@kernel.org>,
-        Sasha Levin <sashal@kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH 4.14 05/69] x86/power: Make restore_processor_context()
- sane
-Message-ID: <20190416115644.GA7009@amd>
-References: <20190415183726.036654568@linuxfoundation.org>
- <20190415183727.581656002@linuxfoundation.org>
- <20190415200452.GA25908@amd>
- <CALCETrW9E8Y1vxn377jU_P2cQBw0oR2VDJGUkUKKH3RJEByiPQ@mail.gmail.com>
+        Tue, 16 Apr 2019 07:58:50 -0400
+Received: by mail-wm1-f65.google.com with SMTP id c1so24989011wml.4
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 04:58:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=broadcom.com; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=tvK2sa7exPaSAS1BCNTfVTF+f0dJduiqmdfTPCXRTxQ=;
+        b=Y3qzE8CuehoVU2JfivbphrYd1kXSDbWiJd15b0YraHpauEe4+3KgXpvysPrkt+d0+q
+         Nie2KkJCmBPzIQ1V+zNzrgXmt6Q4MZ/+r86391Oh9LisXSvHVyF1Ifnjb5usb/3vVRCO
+         +rq6v7h1N3Hztfqd3Hg9RpyDQgCgLjefkXfnE=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=tvK2sa7exPaSAS1BCNTfVTF+f0dJduiqmdfTPCXRTxQ=;
+        b=Qg+w5bSBJnJmoRT3llCi9vIQQ7MxHMA1ZGgeo8d68KbaubIP9XWu2RdlXTXc9nHoTO
+         J2IeiNR6CuPOBdIOYaQDw4MHuuEAyHK2XTgcCXYSd/WA1wDw/vpNkXpNXIVry0PtFr86
+         9KNca4/OK7UMu0sUicnkeY4J7X7atNyyzmmUKC1EVWFQL/mQV9yTU1Ry8uZbUQsOIBQX
+         T97pLITr4J8RmNFNDsuG+UliRatb4IPKpsTS5gjTc4fEaEOGT5e9Z4mgROemnvf7A4IF
+         TbWWGwuNg7o6pr9umvEUIUSqcl+vtPKd801PET+RTit2wh1KRpOl1CqjP7uPbO87hfeo
+         MMWA==
+X-Gm-Message-State: APjAAAUuTObSyt0E5LXVoPCI01uXlRleHA0Ww67Xr2LM9zLlQZkN/dpz
+        TPuA+Z9sYFPK4xaArqN8GmwB21g5nP35Gs8F65zZDA==
+X-Google-Smtp-Source: APXvYqx9pEsPdLDRVAfOZknCIo9BraQeodyvjhJEUqZ6zl8QqzmDfeG8+S2TeUCCpTnJFTA694wREsA0FbQTQGLRcEM=
+X-Received: by 2002:a1c:b088:: with SMTP id z130mr26203392wme.5.1555415928328;
+ Tue, 16 Apr 2019 04:58:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha1;
-        protocol="application/pgp-signature"; boundary="0OAP2g/MAC+5xKAE"
-Content-Disposition: inline
-In-Reply-To: <CALCETrW9E8Y1vxn377jU_P2cQBw0oR2VDJGUkUKKH3RJEByiPQ@mail.gmail.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+References: <1555038815-31916-1-git-send-email-srinath.mannam@broadcom.com> <20190412223409.GB126710@google.com>
+In-Reply-To: <20190412223409.GB126710@google.com>
+From:   Srinath Mannam <srinath.mannam@broadcom.com>
+Date:   Tue, 16 Apr 2019 17:28:36 +0530
+Message-ID: <CABe79T7h9t_Obmo3+B0MHgLZ4ff9GxpBBBLGtSf0C=zmLrWVBQ@mail.gmail.com>
+Subject: Re: [PATCH v4 0/3] PCIe Host request to reserve IOVA
+To:     Bjorn Helgaas <helgaas@kernel.org>
+Cc:     Robin Murphy <robin.murphy@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        poza@codeaurora.org, Ray Jui <rjui@broadcom.com>,
+        BCM Kernel Feedback <bcm-kernel-feedback-list@broadcom.com>,
+        linux-pci@vger.kernel.org, iommu@lists.linux-foundation.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Bjorn,
 
---0OAP2g/MAC+5xKAE
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-Content-Transfer-Encoding: quoted-printable
+Thanks for review. Please find my reply below.
 
-On Mon 2019-04-15 13:18:56, Andy Lutomirski wrote:
-> On Mon, Apr 15, 2019 at 1:04 PM Pavel Machek <pavel@denx.de> wrote:
+On Sat, Apr 13, 2019 at 4:04 AM Bjorn Helgaas <helgaas@kernel.org> wrote:
+>
+> On Fri, Apr 12, 2019 at 08:43:32AM +0530, Srinath Mannam wrote:
+> > Few SOCs have limitation that their PCIe host can't allow few inbound
+> > address ranges. Allowed inbound address ranges are listed in dma-ranges
+> > DT property and this address ranges are required to do IOVA mapping.
+> > Remaining address ranges have to be reserved in IOVA mapping.
+>
+> If I understand correctly, devices below these PCIe host bridges can
+> DMA only to the listed address ranges, and you prevent devices from
+> doing DMA to the holes between the listed ranges by reserving the
+> holes in dma-iommu.
+Yes, devices below these PCIe host bridges can DMA only to the listed
+address ranges,
+and this patch prevents to allocate DMA(IOVA) addresses in the holes
+of listed ranges.
+>
+> Apparently there's something that makes sure driver dma_map_*() always
+> goes through dma-iommu?  I traced as far as seeing that dma-iommu
+> depends on CONFIG_IOMMU_DMA, and that arm64 selects CONFIG_IOMMU_DMA
+> if CONFIG_IOMMU_SUPPORT, but then the trail got cold.  I didn't see
+> what selects CONFIG_IOMMU_SUPPORT.
+IOMMU_SUPPORT depends on MMU.
+>
+> This does look like what Robin suggested, as far as I can tell.
+> Hopefully he'll take a look and give his reviewed-by.  Thanks for
+> persevering!
+Thank you.
+
+Regards,
+Srinath.
+>
+> > PCIe Host driver of those SOCs has to list resource entries of allowed
+> > address ranges given in dma-ranges DT property in sorted order. This
+> > sorted list of resources will be processed and reserve IOVA address for
+> > inaccessible address holes while initializing IOMMU domain.
 > >
-> > On Mon 2019-04-15 20:58:23, Greg Kroah-Hartman wrote:
-> > > [ Upstream commit 7ee18d677989e99635027cee04c878950e0752b9 ]
-> > >
-> > > My previous attempt to fix a couple of bugs in __restore_processor_co=
-ntext():
-> > >
-> > >   5b06bbcfc2c6 ("x86/power: Fix some ordering bugs in __restore_proce=
-ssor_context()")
-> > >
-> > > ... introduced yet another bug, breaking suspend-resume.
-> > >
-> > > Rather than trying to come up with a minimal fix, let's try to clean =
-it up
-> > > for real.  This patch fixes quite a few things:
+> > This patch set is based on Linux-5.0-rc2.
 > >
-> > 5b06bbcfc2c6 fixed theoretical bug; rather than porting it to stable
-> > than fixing it up, it would be better not to port it to stable in the
-> > first place or simply revert it there.
->=20
-> Are you sure about that?  The bug was reported by real users who had
-> their systems really crash:
->=20
-> https://lore.kernel.org/lkml/?q=3D0fede9f9-88b0-a6e7-1027-dfb2019b8ef2%40=
-linux.intel.com
->=20
-> https://lore.kernel.org/lkml/CA+55aFwsMuHUBQz5kDNwRf17JnasXMWjvmLq5qXGH-6=
-94yeq1w@mail.gmail.com/
->=20
-> And we had a report that the bug got backported:
->=20
-> https://lore.kernel.org/stable/20190407160005.djiw4reapwvbxmgo@debian/
->=20
-> And if we're going to backport some of the fix, we should definitely
-> backport the whole set to avoid having the -stable kernels be in a
-> state that was never in any released kernel.
-
-I agree it should be all or nothing. And I may have been slightly
-confused.
-
-Anyway: 5b06bbcfc2c6 is fix for ca37e57bbe0cf, and that one is for
-"mostly harmless warning" (quoting changelog). ca37e57bbe0cf is not
-present in 4.4.178, I believe best solution is not to add that one in
-the first place, so we don't have to fix it up.
-								Pavel
-
---=20
-DENX Software Engineering GmbH,      Managing Director: Wolfgang Denk
-HRB 165235 Munich, Office: Kirchenstr.5, D-82194 Groebenzell, Germany
-
---0OAP2g/MAC+5xKAE
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: Digital signature
-
------BEGIN PGP SIGNATURE-----
-Version: GnuPG v1
-
-iEYEARECAAYFAly1wvwACgkQMOfwapXb+vLxKQCfVrQmHdUqA4Xg4gNYlrIS2QA7
-b4kAn1AGQybkO71SHNy/GRh69qnh3Qjt
-=gjmZ
------END PGP SIGNATURE-----
-
---0OAP2g/MAC+5xKAE--
+> > Changes from v3:
+> >   - Addressed Robin Murphy review comments.
+> >     - pcie-iproc: parse dma-ranges and make sorted resource list.
+> >     - dma-iommu: process list and reserve gaps between entries
+> >
+> > Changes from v2:
+> >   - Patch set rebased to Linux-5.0-rc2
+> >
+> > Changes from v1:
+> >   - Addressed Oza review comments.
+> >
+> > Srinath Mannam (3):
+> >   PCI: Add dma_ranges window list
+> >   iommu/dma: Reserve IOVA for PCIe inaccessible DMA address
+> >   PCI: iproc: Add sorted dma ranges resource entries to host bridge
+> >
+> >  drivers/iommu/dma-iommu.c           | 19 ++++++++++++++++
+> >  drivers/pci/controller/pcie-iproc.c | 44 ++++++++++++++++++++++++++++++++++++-
+> >  drivers/pci/probe.c                 |  3 +++
+> >  include/linux/pci.h                 |  1 +
+> >  4 files changed, 66 insertions(+), 1 deletion(-)
+> >
+> > --
+> > 2.7.4
+> >
