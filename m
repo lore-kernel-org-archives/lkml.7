@@ -2,94 +2,101 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BFDEC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 12:31:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BF371C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 12:33:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 08DAA206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 12:31:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93AA020868
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 12:33:13 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728644AbfDPMby (ORCPT
+        id S1728903AbfDPMdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 08:31:54 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:48499 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726796AbfDPMby (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 08:31:54 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1Mj831-1gbHjU3m3p-00fCGB; Tue, 16 Apr 2019 14:31:50 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Arnd Bergmann <arnd@arndb.de>,
-        Vincent Whitchurch <vincent.whitchurch@axis.com>,
-        Michael Ellerman <mpe@ellerman.id.au>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] kmemleak: fix unused-function warning
-Date:   Tue, 16 Apr 2019 14:31:24 +0200
-Message-Id: <20190416123148.3502045-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Tue, 16 Apr 2019 08:33:12 -0400
+Received: from mail.kernel.org ([198.145.29.99]:45322 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726796AbfDPMdL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 08:33:11 -0400
+Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 01141206BA;
+        Tue, 16 Apr 2019 12:33:08 +0000 (UTC)
+Date:   Tue, 16 Apr 2019 08:33:06 -0400
+From:   Steven Rostedt <rostedt@goodmis.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Olof Johansson <olof@lixom.net>,
+        Alexei Starovoitov <alexei.starovoitov@gmail.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Manoj Rao <linux@manojrajarao.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        atish patra <atishp04@gmail.com>,
+        Daniel Colascione <dancol@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Android Kernel Team <kernel-team@android.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
+Subject: Re: [PATCH v5 1/3] Provide in-kernel headers to make extending
+ kernel easier
+Message-ID: <20190416083306.5646a687@gandalf.local.home>
+In-Reply-To: <CAGXu5j+KPVRcOJ3Ue9ZQF93GyaDhvCnFCvJ_C3WKCx2=SNdDyg@mail.gmail.com>
+References: <20190320163116.39275-1-joel@joelfernandes.org>
+        <CAOesGMheoZda84OSz9spQ7p66wot5S_9aaqaKC=QYp+8utASXA@mail.gmail.com>
+        <20190408203601.GF133872@google.com>
+        <CAOesGMibHCuMPCYkc8V++Z2Kuf3YQf_OjYn18GvDgzTy6ubV=g@mail.gmail.com>
+        <CAJWu+or0hWce9+7aEfTHoOR8cptRbzHYVL-bPdJWGZH20dbo7Q@mail.gmail.com>
+        <CAOesGMiuGK-Sbqo2z=1ab070JONav1LF82MRRLCdX-4+14_XZA@mail.gmail.com>
+        <20190411031540.ehezr6kq7ouobpzx@ast-mbp.dhcp.thefacebook.com>
+        <CAOesGMgiPB=7FE7tXXHes7WSLfByyPxirOStoH21NZqMwaUihQ@mail.gmail.com>
+        <20190415104109.64d914f3@gandalf.local.home>
+        <CAGXu5j+KPVRcOJ3Ue9ZQF93GyaDhvCnFCvJ_C3WKCx2=SNdDyg@mail.gmail.com>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:1EvAL0ojU2Frr4q+8XD0ubRvQzid0tVwlNCSoNZpPcdhs4cXgDa
- er9JnhpiZ6+hzDmyNo90eKhBWtxDpCdIn6jqy4JCU9DrGMckNRieIrMfro3+wbktoidofOa
- 2tVttJbXVZWG//pdNS5j3Y633M1A+mZTSjYVaRthJnUD7c0O1yizfkfnXNRSg4ujEr9MH4x
- AyUceR85JAEo3Yda+Rw5Q==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:yJV3e/orw2s=:nbtkNbl92Oed8LdUTP7aNQ
- 8K1IijsNIuBoy5Titcdi7g2zqv5QUY9rX8tRXQdW8aqtnn15cD1G01zd7WNx3TfDL9xvhfIFG
- 1ItPv7GKidKCQgzBFk1xM3iBuN5nIyNOTzla1ypOnT5yGAqFwo2y88e0ZE21QSHMTTuKprRha
- ys0NCnA/4V9Q4fAq0Gdg7oBKDNIvx6FuWon6Zi/XmwyIElCZCoG4DJiEiATKCJB8GzOtgN34m
- r6j48PcG6ZM5h+Xk95gtJhBgOBO/TOsBYZXWH79pFS9v9SWRNHAvCYu26GdxorKhy31maOvff
- 954yn9NwEFJfsY1WYLJhfc9YvHYSDT+tidCsA0Z/ZNXVEfR5BGxuZCxzG8sBFdkKhdxDLaHo9
- sW+I/CRJMPxfZmXxYMmvDxNzeNTfnenr+P5xnRYKskXx6f/cdzplWjDgSExfUMqgtcgiYAh1J
- gBTzsKsuuHXqjpcxXOm+yOTP1IZjeL4ZGY2nLzwjztRU5Ywp6PaSc5iql7ZH2l9EKV+olJ7/6
- 2b4Iw/mWze/q9s1nJMhy1SBE270oK4ErvsMcyfabDRW/2nN0l8rEom5HVHJ+05QIxKrjCAaux
- qJH6kaXBYfiYJ1DvZIhcprrl+V8ulpOm2ESXBwiFzydWz1Fx0O0Re0wr22N1d6Wq+9zGsYOQP
- 7/PyT2MvXJ68UXl+/kCsbT2AYesGM637PGllo2Af6HowfEH6kwoBlchorWR3rD9byv/nWt7Un
- QpjQ4Ok9B5p1irYvm6AhvABLFng+3ZJ9Tn3SFg==
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The only references outside of the #ifdef have been removed,
-so now we get a warning in non-SMP configurations:
+On Mon, 15 Apr 2019 22:50:10 -0500
+Kees Cook <keescook@chromium.org> wrote:
 
-mm/kmemleak.c:1404:13: error: unused function 'scan_large_block' [-Werror,-Wunused-function]
+> On Mon, Apr 15, 2019 at 9:41 AM Steven Rostedt <rostedt@goodmis.org> wrote:
+> > I agree with this assessment. We shouldn't use config.gz as precedence
+> > for this solution. config.gz should have been in debugfs to begin with,
+> > but I don't believe debugfs was around when config.gz was introduced.
+> > (Don't have time to look into the history of the two).  
+> 
+> I don't agree with this: /proc/config.gz is used by a lot of tools
+> that do sanity-check of running systems. This isn't _debugging_...
+> it's verifying correct kernel builds. It's a fancy version of checking
+> /proc/version.
+> 
 
-Add a new #ifdef around it.
+Then we should perhaps make a new file system call tarballs ;-)
 
-Fixes: 298a32b13208 ("kmemleak: powerpc: skip scanning holes in the .bss section")
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- mm/kmemleak.c | 2 ++
- 1 file changed, 2 insertions(+)
+ /sys/kernel/tarballs/
 
-diff --git a/mm/kmemleak.c b/mm/kmemleak.c
-index 6c318f5ac234..2e435b8142e5 100644
---- a/mm/kmemleak.c
-+++ b/mm/kmemleak.c
-@@ -1401,6 +1401,7 @@ static void scan_block(void *_start, void *_end,
- /*
-  * Scan a large memory block in MAX_SCAN_SIZE chunks to reduce the latency.
-  */
-+#ifdef CONFIG_SMP
- static void scan_large_block(void *start, void *end)
- {
- 	void *next;
-@@ -1412,6 +1413,7 @@ static void scan_large_block(void *start, void *end)
- 		cond_resched();
- 	}
- }
-+#endif
- 
- /*
-  * Scan a memory block corresponding to a kmemleak_object. A condition is
--- 
-2.20.0
+and place everything there. That way it removes it from /proc (which is
+the worse place for that) and also makes it something other than debug.
+That's what I did for tracefs.
 
+-- Steve
