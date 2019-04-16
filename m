@@ -2,121 +2,104 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B479C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:50:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5666C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:50:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 28A8F20821
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:50:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="BXxXRUqE"
+	by mail.kernel.org (Postfix) with ESMTP id B300120821
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:50:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555404636;
+	bh=f6/YiWjBun6bQXsUksOBXHfIektNAD9DiMiA5I9IL54=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=0TBe4AV3E8j4ZcJqJ6Y5NVcGLb/8CvuqxsxSZAfVSxDmxpjOa8qVEDfAfwRhB7P0R
+	 PtRbS8iupQuQ3OjbQGLDAC7yzmAKr3rPizfWVUuEL6IW6V5vggaYO2z+s6V4lffIw6
+	 YwXiqB6f9Qy0XSQqBTo7ibXQkfmE0aMnHbk5oZmI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728654AbfDPIt7 (ORCPT
+        id S1728776AbfDPIuf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 04:49:59 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:38902 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726753AbfDPIt6 (ORCPT
+        Tue, 16 Apr 2019 04:50:35 -0400
+Received: from mail-ot1-f66.google.com ([209.85.210.66]:39299 "EHLO
+        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726753AbfDPIuf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 04:49:58 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3G8nt7o009648;
-        Tue, 16 Apr 2019 03:49:55 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1555404595;
-        bh=5etahWAr/9s/z27GeNu1kwuHjU+38k2R2fFmYCJbK0k=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=BXxXRUqEPpA+HVJkvydeFL3knHmTjVxL5al07zYc5nM9bYcdjBAJQrShWwetm4jID
-         QYbcwtoUDlAB92GwEHT56E6FQFfcox/HEJcdgxBBt26GtcVwN+nVFPfBtY7VBSUtd2
-         y+4o9TXQiU0ClHtdFZ/Ru+u5eLShRpEsxMPIPCjU=
-Received: from DLEE114.ent.ti.com (dlee114.ent.ti.com [157.170.170.25])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3G8ntAk079221
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Tue, 16 Apr 2019 03:49:55 -0500
-Received: from DLEE113.ent.ti.com (157.170.170.24) by DLEE114.ent.ti.com
- (157.170.170.25) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Tue, 16
- Apr 2019 03:49:55 -0500
-Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE113.ent.ti.com
- (157.170.170.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Tue, 16 Apr 2019 03:49:55 -0500
-Received: from [192.168.2.6] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3G8nrWF081782;
-        Tue, 16 Apr 2019 03:49:54 -0500
-Subject: Re: [PATCH] drivers: memory: This patch fix the following checkpatch
- warning.
-To:     Mohan Kumar <mohankumar718@gmail.com>
-CC:     <tony@atomide.com>, <linux-omap@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-References: <1555404372-3582-1-git-send-email-mohankumar718@gmail.com>
-From:   Roger Quadros <rogerq@ti.com>
-Message-ID: <27678553-2f8b-cd8a-c3ed-dc897922dc42@ti.com>
-Date:   Tue, 16 Apr 2019 11:49:53 +0300
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 16 Apr 2019 04:50:35 -0400
+Received: by mail-ot1-f66.google.com with SMTP id f10so16924593otb.6
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 01:50:35 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=f6/YiWjBun6bQXsUksOBXHfIektNAD9DiMiA5I9IL54=;
+        b=dAcsU2T7E5chgF6Pd8RjJKZ9qJSdzd4nhWQcfOAYfSKH421f8M5Yp00AQBod3SuPN1
+         6N14mBC18CnC3n5JP95Jfl/qwg073paHCQgkH0sEbpI6CuDEv17Qo5xwxPk4rV17Iz2x
+         Yre5odkG+CNd52p2XzYBsCsnW2ZmvXzmuKBsapDD6Fr2eHs8KcmuQnpPgY6ssOVx9YTU
+         CMw5GgHx8N5aH4f1+GxPHazNlsJAK5Db2LooGQvtbJ1BnGxJ2ElV1LC+F6NCWDYNsII6
+         aAUm6X3UpT7T5OtMwlU0zJuX8KKujDcyL+/qvY/t7wgD7wO+ixYffypD23GfJPWvLtw4
+         tViw==
+X-Gm-Message-State: APjAAAWj+2K5o3QNJwGptHRsO48Pb369ZhvJsk0xodniEUFSR0ImpJRf
+        Qv5OPrEi7yZEARb8xZTsBTKd54htirP5G2WWoLI=
+X-Google-Smtp-Source: APXvYqxzWN5QAHZQXCI6y7OzuzmQ57qwGh3/piwv712pGBmtv0/f6YXi6zGWgaeTs2jf86FBKLui+OERvxVbs5PhzFU=
+X-Received: by 2002:a05:6830:11d0:: with SMTP id v16mr16534208otq.159.1555404634514;
+ Tue, 16 Apr 2019 01:50:34 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <1555404372-3582-1-git-send-email-mohankumar718@gmail.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+References: <20190412154819.oiztq2uf4teuxewn@macpro-scc.lancs.ac.uk>
+ <CAJZ5v0hSTVHp43TtK9_yjcy2t2V9jSL6VyPJg9cQHE2SYBOejA@mail.gmail.com> <20190415152900.7axwpeczvu7i5kkj@macpro-scc.lancs.ac.uk>
+In-Reply-To: <20190415152900.7axwpeczvu7i5kkj@macpro-scc.lancs.ac.uk>
+From:   "Rafael J. Wysocki" <rafael@kernel.org>
+Date:   Tue, 16 Apr 2019 10:50:23 +0200
+Message-ID: <CAJZ5v0gj1p0KNUZkZ3JG2ppK1706GSfY3J12mDNx-E75Y_J3Cg@mail.gmail.com>
+Subject: Re: [PATCH 2/2] driver core: fix statics initilisation
+To:     Willy Wolff <willy.mh.wolff.ml@gmail.com>
+Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mohan,
+On Mon, Apr 15, 2019 at 5:29 PM Willy Wolff <willy.mh.wolff.ml@gmail.com> wrote:
+>
+> Thank you for your review.
+>
+> I follow https://kernelnewbies.org/FirstKernelPatch to write this patch.
+> It's not stated that checkpatch.pl is for new patches only. Moreover,
+> https://kernelnewbies.org/FirstKernelPatch#Running_checkpatch.pl suggest to
+> run over the entire file.
 
-On 16/04/2019 11:46, Mohan Kumar wrote:
-> Switch hardcoded function name with a reference to __func__ making the
-> code more maintainable
-> 
-> WARNING: Prefer using '"%s...", __func__' to using function's name, in a
-> string
-> 
-> Use pr_warn instead of printk
-> 
-> WARNING: Prefer [subsystem eg: netdev]_err([subsystem]dev, ...
-> then dev_err(dev, ... then pr_err(...  to printk(KERN_ERR ...
-> 
-> Signed-off-by: Mohan Kumar <mohankumar718@gmail.com>
-> ---
->  drivers/memory/omap-gpmc.c | 4 ++--
->  1 file changed, 2 insertions(+), 2 deletions(-)
-> 
-> diff --git a/drivers/memory/omap-gpmc.c b/drivers/memory/omap-gpmc.c
-> index f629759..685f422 100644
-> --- a/drivers/memory/omap-gpmc.c
-> +++ b/drivers/memory/omap-gpmc.c
-> @@ -795,7 +795,7 @@ int gpmc_cs_set_timings(int cs, const struct gpmc_timings *t,
->  #endif
->  
->  	gpmc_cs_bool_timings(cs, &t->bool_timings);
-> -	gpmc_cs_show_timings(cs, "after gpmc_cs_set_timings");
-> +	gpmc_cs_show_timings(cs, "%s", __func__);
+I'm not sure about the source of that recommendation.
 
-This will not build. gpmc_cs_show_timings only takes 2 arguments.
->  
->  	return 0;
->  }
-> @@ -1033,7 +1033,7 @@ void gpmc_cs_free(int cs)
->  
->  	spin_lock(&gpmc_mem_lock);
->  	if (cs >= gpmc_cs_num || cs < 0 || !gpmc_cs_reserved(cs)) {
-> -		printk(KERN_ERR "Trying to free non-reserved GPMC CS%d\n", cs);
-> +		pr_err("Trying to free non-reserved GPMC CS%d\n", cs);
->  		BUG();
->  		spin_unlock(&gpmc_mem_lock);
->  		return;
-> 
+In any case, running it over the entire file doesn't mean that you
+should or even need to make all of the warnings in that file go away.
 
-cheers,
--roger
--- 
-Texas Instruments Finland Oy, Porkkalankatu 22, 00180 Helsinki.
-Y-tunnus/Business ID: 0615521-4. Kotipaikka/Domicile: Helsinki
+> Also, uninitialised static global variable are initialised to 0 by default.
+> Thus, initialising driver_deferred_probe_enable to false (which is 0) is
+> redundant.
+
+Yes, it is redundant, but it also is harmless AFAICS.
+
+> As my knowledge, initialised global goes to .data section, and uninitialised
+> goes to .bss.
+>
+> What does it mean for the kernel? Is this still hold?
+
+No, I don't think so.
+
+> Are performance or memory footprint of the kernel be affected?
+
+No, they aren't.
+
+The only difference this makes is the removal of redundant
+initialization to 0, which may be regarded as a cleanup, but not as a
+fix IMO.
+
+If that's the only reason you have to change the file in question,
+doing something else instead of that may be a better allocation of
+your time.
+
+Thanks!
