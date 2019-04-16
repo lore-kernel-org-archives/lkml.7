@@ -2,79 +2,98 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A2379C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:40:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DEF9BC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:41:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7120520656
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:40:03 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555425603;
-	bh=HDsa5qjoKP54tUlI0s82vGwRG/2PTcMuJjDbzVS2PmA=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=pM7QP+2tK5kQ0zOYU3NmxAI7BFJz+SAltwuyR715kRDZ43tYK/iv0mBc/bMIqiAzj
-	 s7fh/GRRCvJ3HVhC/1JjHlbqXSLYHj9t+HIkutEcAdhW3DTqO+K/5M2cBS1qJsgTZo
-	 wKmobAlSfMMcU2JJqtsNsEf02K+U0W9gGNDWhYWs=
+	by mail.kernel.org (Postfix) with ESMTP id AAFC220656
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:41:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729652AbfDPOkB (ORCPT
+        id S1729581AbfDPOlX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 10:40:01 -0400
-Received: from mx2.suse.de ([195.135.220.15]:39840 "EHLO mx1.suse.de"
+        Tue, 16 Apr 2019 10:41:23 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:52712 "EHLO huawei.com"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726605AbfDPOkB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 10:40:01 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 366E2AE56;
-        Tue, 16 Apr 2019 14:40:00 +0000 (UTC)
-Date:   Tue, 16 Apr 2019 16:39:58 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Dave Hansen <dave.hansen@intel.com>
-Cc:     Yang Shi <yang.shi@linux.alibaba.com>, mgorman@techsingularity.net,
-        riel@surriel.com, hannes@cmpxchg.org, akpm@linux-foundation.org,
-        keith.busch@intel.com, dan.j.williams@intel.com,
-        fengguang.wu@intel.com, fan.du@intel.com, ying.huang@intel.com,
-        ziy@nvidia.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [v2 RFC PATCH 0/9] Another Approach to Use PMEM as NUMA Node
-Message-ID: <20190416143958.GI11561@dhcp22.suse.cz>
-References: <1554955019-29472-1-git-send-email-yang.shi@linux.alibaba.com>
- <20190412084702.GD13373@dhcp22.suse.cz>
- <a68137bb-dcd8-4e4a-b3a9-69a66f9dccaf@linux.alibaba.com>
- <20190416074714.GD11561@dhcp22.suse.cz>
- <b9b40585-cb59-3d42-bcf8-e59bff77c663@intel.com>
+        id S1726605AbfDPOlW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 10:41:22 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 06558FA49C04F976C176;
+        Tue, 16 Apr 2019 22:41:20 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.408.0; Tue, 16 Apr 2019
+ 22:41:13 +0800
+From:   Yue Haibing <yuehaibing@huawei.com>
+To:     <lgirdwood@gmail.com>, <broonie@kernel.org>,
+        <mcoquelin.stm32@gmail.com>, <alexandre.torgue@st.com>
+CC:     <linux-kernel@vger.kernel.org>,
+        <linux-stm32@st-md-mailman.stormreply.com>,
+        <linux-arm-kernel@lists.infradead.org>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] regulator: Make symbols static
+Date:   Tue, 16 Apr 2019 22:41:09 +0800
+Message-ID: <20190416144109.33692-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <b9b40585-cb59-3d42-bcf8-e59bff77c663@intel.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue 16-04-19 07:30:20, Dave Hansen wrote:
-> On 4/16/19 12:47 AM, Michal Hocko wrote:
-> > You definitely have to follow policy. You cannot demote to a node which
-> > is outside of the cpuset/mempolicy because you are breaking contract
-> > expected by the userspace. That implies doing a rmap walk.
-> 
-> What *is* the contract with userspace, anyway? :)
-> 
-> Obviously, the preferred policy doesn't have any strict contract.
-> 
-> The strict binding has a bit more of a contract, but it doesn't prevent
-> swapping.
+From: YueHaibing <yuehaibing@huawei.com>
 
-Yes, but swapping is not a problem for using binding for memory
-partitioning.
+Fix sparse warnings:
 
-> Strict binding also doesn't keep another app from moving the
-> memory.
+drivers/regulator/stm32-pwr.c:35:5: warning:
+ symbol 'ready_mask_table' was not declared. Should it be static?
+drivers/regulator/stm32-pwr.c:47:5: warning:
+ symbol 'stm32_pwr_reg_is_ready' was not declared. Should it be static?
+drivers/regulator/stm32-pwr.c:57:5: warning:
+ symbol 'stm32_pwr_reg_is_enabled' was not declared. Should it be static?
 
-I would consider that a bug.
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/regulator/stm32-pwr.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/regulator/stm32-pwr.c b/drivers/regulator/stm32-pwr.c
+index e434b26..222d593 100644
+--- a/drivers/regulator/stm32-pwr.c
++++ b/drivers/regulator/stm32-pwr.c
+@@ -32,7 +32,7 @@ enum {
+ 	STM32PWR_REG_NUM_REGS
+ };
+ 
+-u32 ready_mask_table[STM32PWR_REG_NUM_REGS] = {
++static u32 ready_mask_table[STM32PWR_REG_NUM_REGS] = {
+ 	[PWR_REG11] = REG_1_1_RDY,
+ 	[PWR_REG18] = REG_1_8_RDY,
+ 	[PWR_USB33] = USB_3_3_RDY,
+@@ -44,7 +44,7 @@ struct stm32_pwr_reg {
+ 	u32 ready_mask;
+ };
+ 
+-int stm32_pwr_reg_is_ready(struct regulator_dev *rdev)
++static int stm32_pwr_reg_is_ready(struct regulator_dev *rdev)
+ {
+ 	struct stm32_pwr_reg *priv = rdev_get_drvdata(rdev);
+ 	u32 val;
+@@ -54,7 +54,7 @@ int stm32_pwr_reg_is_ready(struct regulator_dev *rdev)
+ 	return (val & priv->ready_mask);
+ }
+ 
+-int stm32_pwr_reg_is_enabled(struct regulator_dev *rdev)
++static int stm32_pwr_reg_is_enabled(struct regulator_dev *rdev)
+ {
+ 	struct stm32_pwr_reg *priv = rdev_get_drvdata(rdev);
+ 	u32 val;
 -- 
-Michal Hocko
-SUSE Labs
+2.7.4
+
+
