@@ -2,120 +2,76 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 093A8C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:33:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C875FC282DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:34:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CC71B20449
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:33:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9A78C20880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:34:09 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555439649;
+	bh=P4+RnJCuebIn4tzI6w3JMJbpiPt+/6YEXBgeVkZBjaw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=WuJEXf765VsHecAy5VfF1mG4RUyTZVbBMc483OzzQoSobEZ6a8Vmd66d39G/ENw1s
+	 qAZ4z5TsboVbtxVKd03iOW5kahlRz88zmiSo1zXt6uTW7GKi+4hLnd2d97dbz4FeR+
+	 osqg+V8u9H1EmqJYEV5HERTpeivYTk6ujfk60Edk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730359AbfDPSdg (ORCPT
+        id S1729975AbfDPSeI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 14:33:36 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:46897 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730286AbfDPSdg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 14:33:36 -0400
-Received: from [192.168.1.110] ([95.117.99.70]) by mrelayeu.kundenserver.de
- (mreue009 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MXH3e-1hLU9S3cvm-00YfCs; Tue, 16 Apr 2019 20:32:53 +0200
-Subject: Re: RFC: on adding new CLONE_* flags [WAS Re: [PATCH 0/4] clone: add
- CLONE_PIDFD]
-To:     "Serge E. Hallyn" <serge@hallyn.com>
-Cc:     Christian Brauner <christian@brauner.io>,
-        torvalds@linux-foundation.org, viro@zeniv.linux.org.uk,
-        jannh@google.com, dhowells@redhat.com, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org, luto@kernel.org, arnd@arndb.de,
-        ebiederm@xmission.com, keescook@chromium.org, tglx@linutronix.de,
-        mtk.manpages@gmail.com, akpm@linux-foundation.org, oleg@redhat.com,
-        cyphar@cyphar.com, joel@joelfernandes.org, dancol@google.com
-References: <20190414201436.19502-1-christian@brauner.io>
- <dc05ffe3-c2ff-8b3e-d181-e0cc620bf91d@metux.net>
- <20190415155034.GA25351@mail.hallyn.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <000a64d6-1e22-21bf-f232-15f141092e44@metux.net>
-Date:   Tue, 16 Apr 2019 20:32:50 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Tue, 16 Apr 2019 14:34:08 -0400
+Received: from mx2.suse.de ([195.135.220.15]:55898 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727180AbfDPSeH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 14:34:07 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 919C9AC58;
+        Tue, 16 Apr 2019 18:34:06 +0000 (UTC)
+Date:   Tue, 16 Apr 2019 20:34:04 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Yang Shi <yang.shi@linux.alibaba.com>, mgorman@techsingularity.net,
+        riel@surriel.com, hannes@cmpxchg.org, akpm@linux-foundation.org,
+        keith.busch@intel.com, dan.j.williams@intel.com,
+        fengguang.wu@intel.com, fan.du@intel.com, ying.huang@intel.com,
+        ziy@nvidia.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [v2 RFC PATCH 0/9] Another Approach to Use PMEM as NUMA Node
+Message-ID: <20190416183404.GA655@dhcp22.suse.cz>
+References: <1554955019-29472-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190412084702.GD13373@dhcp22.suse.cz>
+ <a68137bb-dcd8-4e4a-b3a9-69a66f9dccaf@linux.alibaba.com>
+ <20190416074714.GD11561@dhcp22.suse.cz>
+ <b9b40585-cb59-3d42-bcf8-e59bff77c663@intel.com>
+ <20190416143958.GI11561@dhcp22.suse.cz>
+ <bddc3469-2984-2d32-f2cf-e1d0cc64f1e8@intel.com>
 MIME-Version: 1.0
-In-Reply-To: <20190415155034.GA25351@mail.hallyn.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:idE9K/WQ5QvXO0GQUgKPPOXnURDmwBfbTQPPulkXHuxDXT9GYUO
- LPw5vgoEhKwXDluN/3BoulMwRZKmvyk3SSX6AUmsye0TT6WDJRCWYX6NkUzRSekO+0f8S5c
- ZL/sOOSXRkzPZxHtAnSQd+0usHn3VL8U1MCIOAsoHXjjaw6pggbr3OpU1DHY9MmUmcoYGkB
- 22Vgx0eafWk8cb+CNSk0A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:xCVq+f5vwCI=:X0A1NubqmRzmVILUpG0wQ2
- 7sLI2bE9mgh1HsyCg+SKr1C9bW7FIlG83Y9i5u06CAdOwSsfxjzIhuPlkKtfgPbTYQsQlrtlz
- Lfe2AiGzi0uIjKxEn7UZfrP41vDvF8reqaVF+lX6/xvNd5+UL02rwUyS2Gi/i2sT7iclx1drV
- tTTLug0fp+mkrzglDFcliI2kT0Cf0IFvgsjWoTJCZT4ZrXYC9G5mOXiHUAigOi3ieMv0SxJC+
- VNe/rBIk65lJFzb5Z4tuoAfuwtI2HyZdqJS9NIsVrqNLDla1fyDZaropEtPK42JvcI/JBoUST
- 1sAVhwPmxJJ2Pu2jX8aJASvuXZ+mKYk1TMvrlCX6evGrHVMC+oHDj58asQFlkG3VLKgYyntSs
- R6K3JvzK101b8Iod2QLBGDH91XpuPE16hNvcX1NdXEOrgFQip30utGr0h56VuMKZPZk5mjjBB
- QgB+8HCYgRgOo1iMzux7E6pZKblX80Ie2kKUc12zHmZG434iJlnOSkUrETuNMbVL4bIX5Tzz5
- Fmag5pFauq7WmIUYA25aKiJn0/9TH8AHUkj5dtnewk6dkDwSjBjj3unIjedMdHRsdbZ6EhMyw
- zE63/1BrZ7G0Qo3itzwHNaouHy0XosjYZQGSZlJt4vifgRE3b9OJrULoL2xUUrR2BCwoLmhq3
- gajd5UhOLOS5kiH5VfEmgdQgeKmlIC8dKJ8pkTYt8DLu2eWD1T2ENnaxu3jN3tAdsFAFGgK/W
- uRoLim+vGPUnmY+nzvG/hGhqmU0KDct2909hpcUYQLc/cSXfnamFWJQfaZ8=
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <bddc3469-2984-2d32-f2cf-e1d0cc64f1e8@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15.04.19 17:50, Serge E. Hallyn wrote:
+On Tue 16-04-19 08:46:56, Dave Hansen wrote:
+> On 4/16/19 7:39 AM, Michal Hocko wrote:
+> >> Strict binding also doesn't keep another app from moving the
+> >> memory.
+> > I would consider that a bug.
+> 
+> A bug where, though?  Certainly not in the kernel.
 
-Hi,
-
->> I'm working on implementing plan9-like fs namespaces, where unprivileged>> processes can change their own namespace at will. For that, certain>
-> Is there any place where we can see previous discussion about this?
-Yes, lkml and constainers list.
-It's stalled since few month, as I'm too busy w/ other things.
-
-> If you have to disable suid anyway, then is there any reason why the> existing ability to do this in a private user namespace, with only>
-your own uid mapped (which you can do without any privilege) does> not
-suffice?  That was actually one of the main design goals of user>
-namespaces, to be able to clone(CLONE_NEWUSER), map your current uid,>
-then clone(CLONE_NEWNS) and bind mount at will.
-Well, it's not that easy ... maybe I should explain a bit more about how
-Plan9 works, and how I intent to map it into Linux:
-
-* on plan9, anybody can alter his own fs namespace (bind and mount), as
-  well as spawning new ones
-* basically anything is coming from some fileserver - even devices
-  (eg. there is no such thing like device nodes)
-* access control is done by the individual fileservers, based on the
-  initial authentication (on connecting to the server, before mounting)
-* all users are equal - no root at all. the only exception is the
-  initial process, which gets the kernel devices mounted into his
-  namespace.
-
-What I'd like to achieve on Linux:
-
-* unprivileged users can have their own mount namespace, where they
-  can mount at will (maybe just 9P).
-* but they still appear as the same normal users to the rest of the
-  system
-* 9p programs (compiled for Linux ABI) can run parallel to traditional
-  linux programs within the same user and sessions (eg. from a terminal,
-  i can call both the same way)
-* namespace modifications affect both equally (eg. I could run ff in
-  an own ns)
-* these namespaces exist as long as there's one process alive in here
-* creating a new ns can be done by unprivileged user
- One of the things to make this work (w/o introducing a massive security
-hole) is disable suid for those processes (actually, one day i'd like to
-get rid of it completely, but that's another story).
-
-
---mtx
-
+Kernel should refrain from moving explicitly bound memory nilly willy. I
+certainly agree that there are corner cases. E.g. memory hotplug. We do
+break CPU affinity for CPU offline as well. So this is something user
+should expect. But the kernel shouldn't move explicitly bound pages to a
+different node implicitly. I am not sure whether we even do that during
+compaction if we do then I would consider _this_ to be a bug. And NUMA
+rebalancing under memory pressure falls into the same category IMO.
 -- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Michal Hocko
+SUSE Labs
