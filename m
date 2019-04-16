@@ -2,116 +2,130 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D8EFC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:45:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4CD5C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:47:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0F1F62075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:45:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555411537;
-	bh=NFUYIbsWU5tCd9V22ixH/6+tfugKzThpAUcLcWXBaVk=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=IzFbXK/zodJlYUgsD9o2pIIocE8HW0dnX9KLfQHCIEjufMlZLcPzK26Pzf3XS4WQF
-	 3Vs/Cr+nQh8gBjD3kzp5kdrqSQg/FoWFDQqcz/Z0lLlZGXRVKg8L2GcnKtggomr1bm
-	 kfEMDmqeWEmZtPIBxe71cvzUViHsGgWwmsS5vV9s=
+	by mail.kernel.org (Postfix) with ESMTP id AD65A20821
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:47:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728461AbfDPKpf (ORCPT
+        id S1728328AbfDPKrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 06:45:35 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:45368 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726999AbfDPKpf (ORCPT
+        Tue, 16 Apr 2019 06:47:22 -0400
+Received: from mail2.sp2max.com.br ([138.185.4.9]:58652 "EHLO
+        mail2.sp2max.com.br" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726347AbfDPKrW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 06:45:35 -0400
-Received: by mail-ot1-f66.google.com with SMTP id e5so2752299otk.12
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 03:45:34 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=HvSWWHmQxiqG9m8wD5qBRV3YAhnz1X1L4u/Xdk+E8Lw=;
-        b=HF6vai4cEOR/JG43SvtPXsWVz9dwlxmVdaRFOhNP1VqUGAA9vffWkT/6KL7A+s4l/l
-         pP50x6oXKymxqTZKZ3a0wJdKL+QE9FThrOJeS3r+p0x/IMU1YTXUsR6MNyBs3pTDtWCK
-         EIiEz3A5WFqqa//RNUbPUsMpKpFXe/tBw3T35rA+JSPcGO2sGs4WKanUr/3VLneeFL2h
-         23MMgXW+/kmhnUK4k1e5QKPKRPURInfnP97+b8ATE6XOoHttispxuC0FTUALDseCq6/8
-         6vATQ8dXp1jr5yvKEeoVQuOaaUubmEXrESHmWunh/8Ke0QgAtBRAn3MPyy/e/Z9eRaLC
-         lTmA==
-X-Gm-Message-State: APjAAAU/zycs8uXuRmH4UJ1HJIrYkiWvoVkekVXzRoT78rNsaoUF7Zn0
-        cF1nYy3uS7qQB5I7Spz6RvwEx9orh6NPxPdrtqZyMuQI
-X-Google-Smtp-Source: APXvYqwt6hYDtopD64pLBRWb7M1oTCvCYD25ksuYR3GvChGA/wPYerr87Kgm3XqccmfDZYr+eDK8McjBnX+/mRp8898=
-X-Received: by 2002:a05:6830:11d0:: with SMTP id v16mr16822277otq.159.1555411534250;
- Tue, 16 Apr 2019 03:45:34 -0700 (PDT)
+        Tue, 16 Apr 2019 06:47:22 -0400
+Received: from [172.17.0.2] (unknown [186.137.130.251])
+        (Authenticated sender: pablo@fliagreco.com.ar)
+        by mail2.sp2max.com.br (Postfix) with ESMTPA id 5B7377B0148;
+        Tue, 16 Apr 2019 07:47:11 -0300 (-03)
+Subject: Re: [PATCH v2 2/6] ARM: dts: sun8i: v40: bananapi-m2-berry: Enable
+ GMAC ethernet controller
+To:     maxime.ripard@bootlin.com
+Cc:     linux-sunxi@googlegroups.com, Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Chen-Yu Tsai <wens@csie.org>, devicetree@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
+References: <1555065186-8154-1-git-send-email-pgreco@centosproject.org>
+ <1555065186-8154-3-git-send-email-pgreco@centosproject.org>
+ <20190415075309.p7pgj62mmtmxsnnr@flea>
+From:   =?UTF-8?Q?Pablo_Sebasti=c3=a1n_Greco?= <pgreco@centosproject.org>
+Message-ID: <eb80d64f-7355-071b-c1d1-04e0eb4475ce@centosproject.org>
+Date:   Tue, 16 Apr 2019 07:47:09 -0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <1555344260-12375-1-git-send-email-suzuki.poulose@arm.com>
- <1555344260-12375-28-git-send-email-suzuki.poulose@arm.com>
- <CAJZ5v0jZCwPm-mg5L43RbqLKq1vB9zno85G+LPUVb+73KLimVA@mail.gmail.com> <0e152d7f-4b5f-0b0e-ac25-94b6cefa6901@arm.com>
-In-Reply-To: <0e152d7f-4b5f-0b0e-ac25-94b6cefa6901@arm.com>
-From:   "Rafael J. Wysocki" <rafael@kernel.org>
-Date:   Tue, 16 Apr 2019 12:45:23 +0200
-Message-ID: <CAJZ5v0jrBi3oWAVsgk5hMPAudWEBshkqM8Epg0a-7zbnAMOvDg@mail.gmail.com>
-Subject: Re: [PATCH v2 27/36] drivers: Add a generic helper to match device by
- fwnode handle
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     "Rafael J. Wysocki" <rafael@kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        coresight@lists.linaro.org,
-        Mathieu Poirier <mathieu.poirier@linaro.org>,
-        mike.leach@linaro.org, "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        robert.walker@arm.com,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190415075309.p7pgj62mmtmxsnnr@flea>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
+X-SP2Max-MailScanner-Information: Please contact the ISP for more information
+X-SP2Max-MailScanner-ID: 5B7377B0148.AE739
+X-SP2Max-MailScanner: Sem Virus encontrado
+X-SP2Max-MailScanner-SpamCheck: nao spam, SpamAssassin (not cached,
+        escore=-2.9, requerido 6, autolearn=not spam, ALL_TRUSTED -1.00,
+        BAYES_00 -1.90)
+X-SP2Max-MailScanner-From: pgreco@centosproject.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 12:31 PM Suzuki K Poulose
-<suzuki.poulose@arm.com> wrote:
->
-> Hi Rafael
->
-> On 04/16/2019 11:20 AM, Rafael J. Wysocki wrote:
-> > On Mon, Apr 15, 2019 at 6:06 PM Suzuki K Poulose <suzuki.poulose@arm.com> wrote:
-> >>
-> >> Make the device_fwnode_match() a generic helper to match device
-> >> by fwnode handle for use with bus_find_device(). This will be
-> >> also used by coresight.
-> >>
-> >> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> >> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
-> >> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
-> >
-> > Can you resend this with a CC to linux-acpi@vger.kernel.org, please?
-> >
-> > There's some device properties material for 5.2 collected already and
-> > it would be good to keep all that together.
-> >
->
-> Sure, will do. Btw, I have a question w.r.t the match function.
->
-> We have :
->
->
-> class_find_device(struct class *class, struct device *start,
->                    const void *data,
->                    int (*match)(struct device *, const void *))
-> and
->
-> bus_find_device(struct bus_type *bus,
->                  struct device *start, void *data,
->                  int (*match)(struct device *dev, void *data))
->
-> Just because the "match" has slightly different constraint for the
-> data (i.e, const void * vs void *), we can't reuse the same match
-> function for class_find_device. Do you think we should converge the
-> types to reuse the same match every where (Of course in a separate
-> patch series) ?
 
-AFAICS, (void *) pointers can be passed to functions taking (const
-void *) arguments, so yes, it looks like that could be consolidated
-and it also would be a valuable cleanup IMO.
+El 15/4/19 a las 04:53, Maxime Ripard escribió:
+> On Fri, Apr 12, 2019 at 07:33:01AM -0300, Pablo Greco wrote:
+>> Just like the Bananapi M2 Ultra, the Bananapi M2 Berry has a Realtek
+>> RTL8211E RGMII PHY tied to the GMAC.
+>> The PMIC's DC1SW output provides power for the PHY, while the ALDO2
+>> output provides I/O voltages on both sides.
+>>
+>> Signed-off-by: Pablo Greco <pgreco@centosproject.org>
+>> ---
+>>   arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts | 30 +++++++++++++++++++++++
+>>   1 file changed, 30 insertions(+)
+>>
+>> diff --git a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+>> index f05cabd..0d79e91 100644
+>> --- a/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+>> +++ b/arch/arm/boot/dts/sun8i-v40-bananapi-m2-berry.dts
+>> @@ -50,6 +50,7 @@
+>>   	compatible = "sinovoip,bpi-m2-berry", "allwinner,sun8i-r40";
+>>
+>>   	aliases {
+>> +		ethernet0 = &gmac;
+>>   		serial0 = &uart0;
+>>   	};
+>>
+>> @@ -92,6 +93,22 @@
+>>   	status = "okay";
+>>   };
+>>
+>> +&gmac {
+>> +	pinctrl-names = "default";
+>> +	pinctrl-0 = <&gmac_rgmii_pins>;
+>> +	phy-handle = <&phy1>;
+>> +	phy-mode = "rgmii";
+>> +	phy-supply = <&reg_dc1sw>;
+>> +	status = "okay";
+>> +};
+>> +
+>> +&gmac_mdio {
+>> +	phy1: ethernet-phy@1 {
+>> +		compatible = "ethernet-phy-ieee802.3-c22";
+>> +		reg = <1>;
+>> +	};
+>> +};
+>> +
+>>   &i2c0 {
+>>   	status = "okay";
+>>
+>> @@ -123,6 +140,13 @@
+>>   	status = "okay";
+>>   };
+>>
+>> +&reg_aldo2 {
+>> +	regulator-always-on;
+>> +	regulator-min-microvolt = <2500000>;
+>> +	regulator-max-microvolt = <2500000>;
+>> +	regulator-name = "vcc-pa";
+>> +};
+>> +
+> If this one provides power to the pins, it should be tied to the PIO
+> node.
+In that case, I should fix the bananapi-m2-ultra the same way. Do you 
+prefer me to add those fixes to this series?
+Or is it better to apply this like it is, and I fix both together in a 
+separated series?
+> Maxime
+>
+> --
+> Maxime Ripard, Bootlin
+> Embedded Linux and Kernel engineering
+> https://bootlin.com
+>
+Pablo.
