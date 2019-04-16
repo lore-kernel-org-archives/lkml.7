@@ -2,143 +2,188 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.0 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25823C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:52:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A034FC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:52:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF3D32073F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:52:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 772622073F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:52:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728527AbfDPHwZ (ORCPT
+        id S1728627AbfDPHwh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 03:52:25 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:39273 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726895AbfDPHwZ (ORCPT
+        Tue, 16 Apr 2019 03:52:37 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:44524 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727856AbfDPHwg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 03:52:25 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3G7q8TP3338752
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 16 Apr 2019 00:52:08 -0700
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3G7q8Q93338749;
-        Tue, 16 Apr 2019 00:52:08 -0700
-Date:   Tue, 16 Apr 2019 00:52:08 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Jian-Hong Pan <tipbot@zytor.com>
-Message-ID: <tip-5767575c1211e8958e5dd80d6542998b519c8478@git.kernel.org>
-Cc:     bp@alien8.de, matt@codeblueprint.co.uk,
-        linux-kernel@vger.kernel.org, jian-hong@endlessm.com,
-        ard.biesheuvel@linaro.org, peterz@infradead.org,
-        torvalds@linux-foundation.org, tglx@linutronix.de, hpa@zytor.com,
-        mingo@kernel.org, drake@endlessm.com
-Reply-To: drake@endlessm.com, jian-hong@endlessm.com, mingo@kernel.org,
-          linux-kernel@vger.kernel.org, hpa@zytor.com,
-          matt@codeblueprint.co.uk, torvalds@linux-foundation.org,
-          bp@alien8.de, tglx@linutronix.de, ard.biesheuvel@linaro.org,
-          peterz@infradead.org
-In-Reply-To: <20190412080152.3718-1-jian-hong@endlessm.com>
-References: <20190412080152.3718-1-jian-hong@endlessm.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/urgent] x86/reboot: Use EFI reboot for Acer TravelMate
- X514-51T
-Git-Commit-ID: 5767575c1211e8958e5dd80d6542998b519c8478
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Tue, 16 Apr 2019 03:52:36 -0400
+Received: from pps.filterd (m0098421.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3G7iYVh010585
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 03:52:34 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rw8xs59wm-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 03:52:34 -0400
+Received: from localhost
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
+        Tue, 16 Apr 2019 08:52:32 +0100
+Received: from b06cxnps4074.portsmouth.uk.ibm.com (9.149.109.196)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Tue, 16 Apr 2019 08:52:29 +0100
+Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
+        by b06cxnps4074.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3G7qRcN31457382
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Tue, 16 Apr 2019 07:52:27 GMT
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 8FAE8A4053;
+        Tue, 16 Apr 2019 07:52:27 +0000 (GMT)
+Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id EC35EA404D;
+        Tue, 16 Apr 2019 07:52:26 +0000 (GMT)
+Received: from [9.152.222.226] (unknown [9.152.222.226])
+        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Tue, 16 Apr 2019 07:52:26 +0000 (GMT)
+Reply-To: pmorel@linux.ibm.com
+Subject: Re: [PATCH 1/7] s390: zcrypt: driver callback to indicate resource in
+ use
+To:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
+        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
+Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
+        frankja@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
+        heiko.carstens@de.ibm.com, pasic@linux.ibm.com,
+        alex.williamson@redhat.com, kwankhede@nvidia.com
+References: <1555016604-2008-1-git-send-email-akrowiak@linux.ibm.com>
+ <1555016604-2008-2-git-send-email-akrowiak@linux.ibm.com>
+From:   Pierre Morel <pmorel@linux.ibm.com>
+Date:   Tue, 16 Apr 2019 09:52:26 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <1555016604-2008-2-git-send-email-akrowiak@linux.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
 Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+X-TM-AS-GCONF: 00
+x-cbid: 19041607-0016-0000-0000-0000026F4A20
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19041607-0017-0000-0000-000032CB92F1
+Message-Id: <c575e772-59e2-9fed-5ade-24701d4f2b49@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-16_02:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904160054
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  5767575c1211e8958e5dd80d6542998b519c8478
-Gitweb:     https://git.kernel.org/tip/5767575c1211e8958e5dd80d6542998b519c8478
-Author:     Jian-Hong Pan <jian-hong@endlessm.com>
-AuthorDate: Fri, 12 Apr 2019 16:01:53 +0800
-Committer:  Ingo Molnar <mingo@kernel.org>
-CommitDate: Tue, 16 Apr 2019 09:49:16 +0200
+On 11/04/2019 23:03, Tony Krowiak wrote:
+> Introduces a new driver callback to prevent a root user from unbinding
+> an AP queue from its device driver if the queue is in use. This prevents
+> a root user from inadvertently taking a queue away from a guest and
+> giving it to the host, or vice versa. The callback will be invoked
+> whenever a change to the AP bus's apmask or aqmask sysfs interfaces may
+> result in one or more AP queues being removed from its driver. If the
+> callback responds in the affirmative for any driver queried, the change
+> to the apmask or aqmask will be rejected with a device in use error.
+> 
+> For this patch, only non-default drivers will be queried. Currently,
+> there is only one non-default driver, the vfio_ap device driver. The
+> vfio_ap device driver manages AP queues passed through to one or more
+> guests and we don't want to unexpectedly take AP resources away from
+> guests which are most likely independently administered.
+> 
+> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
+> ---
+>   drivers/s390/crypto/ap_bus.c | 138 +++++++++++++++++++++++++++++++++++++++++--
+>   drivers/s390/crypto/ap_bus.h |   3 +
+>   2 files changed, 135 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/s390/crypto/ap_bus.c b/drivers/s390/crypto/ap_bus.c
+> index 1546389d71db..66a5a9d9fae6 100644
+> --- a/drivers/s390/crypto/ap_bus.c
+> +++ b/drivers/s390/crypto/ap_bus.c
+> @@ -35,6 +35,7 @@
+>   #include <linux/mod_devicetable.h>
+>   #include <linux/debugfs.h>
+>   #include <linux/ctype.h>
+> +#include <linux/module.h>
+>   
+>   #include "ap_bus.h"
+>   #include "ap_debug.h"
+> @@ -980,9 +981,11 @@ int ap_parse_mask_str(const char *str,
+>   	newmap = kmalloc(size, GFP_KERNEL);
+>   	if (!newmap)
+>   		return -ENOMEM;
+> -	if (mutex_lock_interruptible(lock)) {
+> -		kfree(newmap);
+> -		return -ERESTARTSYS;
+> +	if (lock) {
+> +		if (mutex_lock_interruptible(lock)) {
+> +			kfree(newmap);
+> +			return -ERESTARTSYS;
+> +		}
+>   	}
+>   
+>   	if (*str == '+' || *str == '-') {
+> @@ -994,7 +997,10 @@ int ap_parse_mask_str(const char *str,
+>   	}
+>   	if (rc == 0)
+>   		memcpy(bitmap, newmap, size);
+> -	mutex_unlock(lock);
+> +
+> +	if (lock)
+> +		mutex_unlock(lock);
+> +
+>   	kfree(newmap);
+>   	return rc;
+>   }
+> @@ -1181,12 +1187,72 @@ static ssize_t apmask_show(struct bus_type *bus, char *buf)
+>   	return rc;
+>   }
+>   
+> +static int __verify_card_reservations(struct device_driver *drv, void *data)
+> +{
+> +	int rc = 0;
+> +	struct ap_driver *ap_drv = to_ap_drv(drv);
+> +	unsigned long *newapm = (unsigned long *)data;
+> +
+> +	/*
+> +	 * If the reserved bits do not identify cards reserved for use by the
+> +	 * non-default driver, there is no need to verify the driver is using
+> +	 * the queues.
+> +	 */
+> +	if (ap_drv->flags & AP_DRIVER_FLAG_DEFAULT)
+> +		return 0;
 
-x86/reboot: Use EFI reboot for Acer TravelMate X514-51T
+I prefer you suppress this asymmetry with the assumption that the 
+"default driver" will not register a "in_use" callback.
 
-Upon reboot, the Acer TravelMate X514-51T laptop appears to complete the
-shutdown process, but then it hangs in BIOS POST with a black screen.
 
-The problem is intermittent - at some points it has appeared related to
-Secure Boot settings or different kernel builds, but ultimately we have
-not been able to identify the exact conditions that trigger the issue to
-come and go.
+> +
+> +	/* Pin the driver's module code */
+> +	if (!try_module_get(drv->owner))
+> +		return 0;
+> +
+> +	if (ap_drv->in_use)
+> +		if (ap_drv->in_use(newapm, ap_perms.aqm))
+> +			rc = -EADDRINUSE;
+> +
+> +	module_put(drv->owner);
+> +
+> +	return rc;
+> +}
+> +
 
-Besides, the EFI mode cannot be disabled in the BIOS of this model.
+-- 
+Pierre Morel
+Linux/KVM/QEMU in Böblingen - Germany
 
-However, after extensive testing, we observe that using the EFI reboot
-method reliably avoids the issue in all cases.
-
-So add a boot time quirk to use EFI reboot on such systems.
-
-Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=203119
-Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
-Signed-off-by: Daniel Drake <drake@endlessm.com>
-Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Matt Fleming <matt@codeblueprint.co.uk>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: linux-efi@vger.kernel.org
-Cc: linux@endlessm.com
-Link: http://lkml.kernel.org/r/20190412080152.3718-1-jian-hong@endlessm.com
-[ Small clarification edits to the code and changelog. ]
-Signed-off-by: Ingo Molnar <mingo@kernel.org>
----
- arch/x86/kernel/reboot.c | 21 +++++++++++++++++++++
- 1 file changed, 21 insertions(+)
-
-diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
-index 725624b6c0c0..8fd3cedd9acc 100644
---- a/arch/x86/kernel/reboot.c
-+++ b/arch/x86/kernel/reboot.c
-@@ -81,6 +81,19 @@ static int __init set_bios_reboot(const struct dmi_system_id *d)
- 	return 0;
- }
- 
-+/*
-+ * Some machines don't handle the default ACPI reboot method and
-+ * require the EFI reboot method:
-+ */
-+static int __init set_efi_reboot(const struct dmi_system_id *d)
-+{
-+	if (reboot_type != BOOT_EFI && !efi_runtime_disabled()) {
-+		reboot_type = BOOT_EFI;
-+		pr_info("%s series board detected. Selecting EFI-method for reboot.\n", d->ident);
-+	}
-+	return 0;
-+}
-+
- void __noreturn machine_real_restart(unsigned int type)
- {
- 	local_irq_disable();
-@@ -166,6 +179,14 @@ static const struct dmi_system_id reboot_dmi_table[] __initconst = {
- 			DMI_MATCH(DMI_PRODUCT_NAME, "AOA110"),
- 		},
- 	},
-+	{	/* Handle reboot issue on Acer TravelMate X514-51T */
-+		.callback = set_efi_reboot,
-+		.ident = "Acer TravelMate X514-51T",
-+		.matches = {
-+			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
-+			DMI_MATCH(DMI_PRODUCT_NAME, "TravelMate X514-51T"),
-+		},
-+	},
- 
- 	/* Apple */
- 	{	/* Handle problems with rebooting on Apple MacBook5 */
