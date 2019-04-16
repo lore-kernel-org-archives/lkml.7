@@ -7,63 +7,63 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F5C6C10F12
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 01:51:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3A6FFC10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 01:51:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2E4D320854
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 01:51:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 070CE20854
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 01:51:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SvM6lg/9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kNK47jx/"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728394AbfDPBvM (ORCPT
+        id S1728410AbfDPBvQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 21:51:12 -0400
-Received: from mail-qk1-f193.google.com ([209.85.222.193]:45227 "EHLO
-        mail-qk1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728067AbfDPBvK (ORCPT
+        Mon, 15 Apr 2019 21:51:16 -0400
+Received: from mail-qt1-f193.google.com ([209.85.160.193]:40987 "EHLO
+        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728375AbfDPBvM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 21:51:10 -0400
-Received: by mail-qk1-f193.google.com with SMTP id z76so11156567qkb.12
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 18:51:09 -0700 (PDT)
+        Mon, 15 Apr 2019 21:51:12 -0400
+Received: by mail-qt1-f193.google.com with SMTP id w30so21561650qta.8
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 18:51:11 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=1oHXFqOI9KDRiprIDVKt7oBBW0AarM6k6RsLiI7IDnE=;
-        b=SvM6lg/9tx/MReaB+ToGJNM6hA0y0L/AH+v16wX4ilVSsOWRwzbbQzsK/Isx98NoWP
-         93tM46t6O9BtKldVvQfjaFecF0oofKyiYYrgK/TQcLd8+oHaO8zm+2GPQdoumwTiYZ7u
-         KivyuB8wpOC7xKqoj281ByQ6DTkC9l3dBFNfNIJqiN2Z50wDh4sOGVEdinZjfvQw1qyz
-         jySktoW3QjfY3XbcnACMV8dUWA3i1AcMtoZqn9ole4wrSYc7TukjnEWETr/SgunMiJIE
-         RWVmw8o8acD+mHTVSI7cVGQcoz4GQm8JxGURRQ+JavEgxN5LNr/OBKKnR1AP3taNrbCm
-         Xjuw==
+        bh=iEqK/Uere5YVpob1bLVTLrTKBhiWryemr+qiDgp/Rrk=;
+        b=kNK47jx/YNFA6rMJKCrifdOeVPbth+hFKMmdfbZ1jAWcm0ZFkGZMBUEuJhuO/iH3oh
+         g0GJeG90OWf4z3YliJOoIhrbrxNxYIlTdf+7VroGhjN3l1Pa3IVaRsupoyOE9hGmA6y4
+         kpkzG3A04Ucwsn4WgueoQTxTMFYEHHxJ8bgS11uG3H7+NnxR5Vwfeh2NZD1uCyzQm854
+         423/tyd8JEgwiLRlmV6r89oPgiYq74mwtoJ6poaMm64y++yJvGOo7Z9b9tf/ayariMQp
+         8HGF+BEx9si+QHhUYVfcibOGZ7pJNbpi9KWguKh79g+Xw9sgKlHa21UL7p1Ln+TpVbFH
+         NO1A==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=1oHXFqOI9KDRiprIDVKt7oBBW0AarM6k6RsLiI7IDnE=;
-        b=mMgcLJSP4b5RSgORBpj5u8DcCRLBJQZlpQh6vIu6ym4IYwrgf4Ddx/1hrcyGk7xdHR
-         gmkzdwv2fABs6IKt4kgTHu8MW4Ydc/4qyhGZKZzkcNe831mkVP+Nzu12L9YmFArdvkj2
-         I2AwFaaijBAc1Pc717khovyknqoc3ZZRF5MhBo3oslWX3a0J54dPN2lH/gJ8o/x0ApUC
-         MLOwyseI1IoIfwhVycmnJP89R6/vob92t+WV8TYp7mRJf79TvwY5+56R2wN28eY5UFTx
-         L42voQXOo8WjHFJXaEPO4XXuS4N3CKPq0s7HKxouOcAGcPENhpUC7Y0hNOpTufmf/BFR
-         0Nvg==
-X-Gm-Message-State: APjAAAVZ6ahUpA4lbXXIol11Rfjetf9IQRaXsy0bICFLa8A5I/Xnj0WZ
-        c/ukkb46ax9+WZCajGCPVv8=
-X-Google-Smtp-Source: APXvYqwVuQN+m5c5Pbw1F+vlwb/PbgtUHVuwiE8mOjoWaPkBe0ODoaqFX3qE/bHZBxi1AWjvZ23wPg==
-X-Received: by 2002:a05:620a:11:: with SMTP id j17mr60859083qki.111.1555379469477;
-        Mon, 15 Apr 2019 18:51:09 -0700 (PDT)
+        bh=iEqK/Uere5YVpob1bLVTLrTKBhiWryemr+qiDgp/Rrk=;
+        b=chRRKTWhvjDeppRED4ZjMCd2g/axz9EjzzyKou/eqGN8LRddt60OjjNKxoLNx7Qdsg
+         3EcwrQf7s1S2OZBwLQL+ecjICvQEgNnTF/KIFQao+QRzxHZ3UcxEBpvZLQtmugezvGkD
+         kMFkODBdtDNqgzepzR9Drmp2wSaanxLOBwySBJbpK9UlCnzIGW7dV1387FODxmpN3zY9
+         Kg7KwBdhusI3Kx72WB1fEmulBuqgy6naVXYR/t5U0kDEYG/RmSS/XUZpmZm31vgvBzB7
+         O49dA1Ef9wJ6SEREwAFD5Ag5WkVMS+Qa0qNaaRdQ5Q/6Az5Sa0hoOE4eXk6kxfv4cune
+         elUw==
+X-Gm-Message-State: APjAAAXdP/+z6AWuf+Rir2z8W375PMQK5jQyzl2RJQIjDsIBDfRvJ4CK
+        A835dVqaGBaesAhyIsp7rkk=
+X-Google-Smtp-Source: APXvYqxug9XDQ78RuQejXarhB0WYk3ATSsLUm5xhIUpe5rvuCT3z0oiNaNJWGMb34iAbveK1Id8rvA==
+X-Received: by 2002:a0c:94d0:: with SMTP id k16mr62541658qvk.158.1555379471399;
+        Mon, 15 Apr 2019 18:51:11 -0700 (PDT)
 Received: from debian (hlfxns017vw-142-68-56-253.dhcp-dynamic.fibreop.ns.bellaliant.net. [142.68.56.253])
-        by smtp.gmail.com with ESMTPSA id 194sm23092376qkd.72.2019.04.15.18.51.08
+        by smtp.gmail.com with ESMTPSA id u15sm36286465qth.54.2019.04.15.18.51.10
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Mon, 15 Apr 2019 18:51:09 -0700 (PDT)
+        Mon, 15 Apr 2019 18:51:10 -0700 (PDT)
 From:   Brian Yip <itsbriany@gmail.com>
 To:     christian.koenig@amd.com
 Cc:     ray.huang@amd.com, Jerry.Zhang@amd.com, airlied@linux.ie,
         daniel@ffwll.ch, dri-devel@lists.freedesktop.org,
         linux-kernel@vger.kernel.org, Brian Yip <itsbriany@gmail.com>
-Subject: [PATCH v2 1/2] drm/ttm: Reset ttm_mem_global when initialized
-Date:   Tue, 16 Apr 2019 01:50:34 +0000
-Message-Id: <20190416015035.1435-2-itsbriany@gmail.com>
+Subject: [PATCH v2 2/2] drm/ttm: Reset ttm_bo_glob when initialized
+Date:   Tue, 16 Apr 2019 01:50:35 +0000
+Message-Id: <20190416015035.1435-3-itsbriany@gmail.com>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190416015035.1435-1-itsbriany@gmail.com>
 References: <20190416015035.1435-1-itsbriany@gmail.com>
@@ -74,37 +74,36 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Certain attributes such as num_zones and kobj in the
-ttm_mem_global structure were never reset after calling
-ttm_mem_global_release(). Consequently, when multiple GPU drivers
-are loaded, and the first one fails to load its firmware, the second
-driver will attempt to load its own firmware. Initializing the
-second driver invokes ttm_mem_global_init where ttm_mem_global.num_zones
-is eventually incremented beyond TTM_MEM_MAX_ZONES.
-ttm_mem_global.num_zones is then used to dereference a ttm_mem_zone beyond
-the amount of ttm_mem_zones allocated, resulting in a crash.
-
-Zero initialize the ttm_mem_global structure such that its state will
-be pristine and thus, ready to be re-initialized.
+Always initialize ttm_bo_glob from a pristine state when its use_count
+is 0. Persist use_count so that ttm_bo_glob can later be released.
 
 Signed-off-by: Brian Yip <itsbriany@gmail.com>
 ---
- drivers/gpu/drm/ttm/ttm_memory.c | 2 ++
- 1 file changed, 2 insertions(+)
+ drivers/gpu/drm/ttm/ttm_bo.c | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/gpu/drm/ttm/ttm_memory.c b/drivers/gpu/drm/ttm/ttm_memory.c
-index 699fed9e08ee..73b461d5a4c0 100644
---- a/drivers/gpu/drm/ttm/ttm_memory.c
-+++ b/drivers/gpu/drm/ttm/ttm_memory.c
-@@ -419,6 +419,8 @@ int ttm_mem_global_init(struct ttm_mem_global *glob)
- 	int i;
- 	struct ttm_mem_zone *zone;
+diff --git a/drivers/gpu/drm/ttm/ttm_bo.c b/drivers/gpu/drm/ttm/ttm_bo.c
+index 988416fb8a0b..d95762a90654 100644
+--- a/drivers/gpu/drm/ttm/ttm_bo.c
++++ b/drivers/gpu/drm/ttm/ttm_bo.c
+@@ -1543,12 +1543,16 @@ static int ttm_bo_global_init(void)
+ {
+ 	struct ttm_bo_global *glob = &ttm_bo_glob;
+ 	int ret = 0;
+-	unsigned i;
++	unsigned i, uc;
  
-+	memset(glob, 0, sizeof(struct ttm_mem_global));
+ 	mutex_lock(&ttm_global_mutex);
+ 	if (++glob->use_count > 1)
+ 		goto out;
+ 
++	uc = glob->use_count;
++	memset(glob, 0, sizeof(struct ttm_bo_global));
++	glob->use_count = uc;
 +
- 	spin_lock_init(&glob->lock);
- 	glob->swap_queue = create_singlethread_workqueue("ttm_swap");
- 	INIT_WORK(&glob->work, ttm_shrink_work);
+ 	ret = ttm_mem_global_init(&ttm_mem_glob);
+ 	if (ret)
+ 		goto out;
 -- 
 2.20.1
 
