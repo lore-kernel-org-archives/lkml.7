@@ -2,81 +2,120 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3113C282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:28:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 236C0C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:30:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2BD92073F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:28:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D09F32073F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:30:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728080AbfDPG2G (ORCPT
+        id S1727980AbfDPGag (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 02:28:06 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6190 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726857AbfDPG2G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 02:28:06 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id D654AA156125666E6E8D;
-        Tue, 16 Apr 2019 14:28:03 +0800 (CST)
-Received: from [127.0.0.1] (10.63.139.185) by DGGEMS402-HUB.china.huawei.com
- (10.3.19.202) with Microsoft SMTP Server id 14.3.408.0; Tue, 16 Apr 2019
- 14:27:53 +0800
-Subject: Re: [PATCH] pci: fix warning for struct hisi_pcie_platform_ops
-To:     Mao Wenan <maowenan@huawei.com>, <lorenzo.pieralisi@arm.com>,
-        <bhelgaas@google.com>
-References: <20190415085349.161915-1-maowenan@huawei.com>
-CC:     <linux-pci@vger.kernel.org>, <linux-kernel@vger.kernel.org>
-From:   Zhou Wang <wangzhou1@hisilicon.com>
-Message-ID: <5CB575E5.7000304@hisilicon.com>
-Date:   Tue, 16 Apr 2019 14:27:49 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
- Thunderbird/38.5.1
+        Tue, 16 Apr 2019 02:30:36 -0400
+Received: from mga05.intel.com ([192.55.52.43]:5528 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726805AbfDPGaf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 02:30:35 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from orsmga007.jf.intel.com ([10.7.209.58])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Apr 2019 23:30:35 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,355,1549958400"; 
+   d="scan'208";a="131759180"
+Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
+  by orsmga007.jf.intel.com with ESMTP; 15 Apr 2019 23:30:33 -0700
+Received: from kbuild by lkp-server01 with local (Exim 4.89)
+        (envelope-from <lkp@intel.com>)
+        id 1hGHc1-0004z8-9Q; Tue, 16 Apr 2019 14:30:33 +0800
+Date:   Tue, 16 Apr 2019 14:29:33 +0800
+From:   kbuild test robot <lkp@intel.com>
+To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
+Cc:     kbuild-all@01.org, linux-fbdev@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] video: fbdev: da8xx-fb: add COMPILE_TEST support
+Message-ID: <201904161412.VEAizQ2O%lkp@intel.com>
+References: <5eba3c36-bc65-74ae-cc7c-cc45ee06ccfe@samsung.com>
 MIME-Version: 1.0
-In-Reply-To: <20190415085349.161915-1-maowenan@huawei.com>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.63.139.185]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5eba3c36-bc65-74ae-cc7c-cc45ee06ccfe@samsung.com>
+X-Patchwork-Hint: ignore
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 2019/4/15 16:53, Mao Wenan wrote:
-> There is one warning exist while compiling drivers/pci/controller/dwc/pcie-hisi.c.
-> make allmodconfig ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-
-> make C=2 drivers/pci/controller/dwc/pcie-hisi.o ARCH=arm64 CROSS_COMPILE=aarch64-linux-gnu-
-> drivers/pci/controller/dwc/pcie-hisi.c:365:21: warning: symbol 'hisi_pcie_platform_ops' was not declared. Should it be static?
-> 
-> Fixes: a2ec1996098("PCI: hisi: Add DT almost-ECAM support for Hip06/Hip07 host controllers")
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Signed-off-by: Mao Wenan <maowenan@huawei.com>
+Hi Bartlomiej,
 
-Acked-by: Zhou Wang <wangzhou1@hisilicon.com>
+I love your patch! Perhaps something to improve:
 
-Thanks,
-Zhou
+[auto build test WARNING on linus/master]
+[also build test WARNING on v5.1-rc5 next-20190415]
+[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
 
-> ---
->  drivers/pci/controller/dwc/pcie-hisi.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
-> 
-> diff --git a/drivers/pci/controller/dwc/pcie-hisi.c b/drivers/pci/controller/dwc/pcie-hisi.c
-> index 6d9e1b2..11f5ff7 100644
-> --- a/drivers/pci/controller/dwc/pcie-hisi.c
-> +++ b/drivers/pci/controller/dwc/pcie-hisi.c
-> @@ -362,7 +362,7 @@ static int hisi_pcie_platform_init(struct pci_config_window *cfg)
->  	return 0;
->  }
->  
-> -struct pci_ecam_ops hisi_pcie_platform_ops = {
-> +static struct pci_ecam_ops hisi_pcie_platform_ops = {
->  	.bus_shift    = 20,
->  	.init         =  hisi_pcie_platform_init,
->  	.pci_ops      = {
-> 
+url:    https://github.com/0day-ci/linux/commits/Bartlomiej-Zolnierkiewicz/video-fbdev-da8xx-fb-add-COMPILE_TEST-support/20190415-184308
+reproduce:
+        # apt-get install sparse
+        make ARCH=x86_64 allmodconfig
+        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
 
+
+sparse warnings: (new ones prefixed by >>)
+
+
+vim +1159 drivers/video/fbdev/da8xx-fb.c
+
+1f9c3e1f drivers/video/da8xx-fb.c Martin Ambrose        2010-05-24  1144  
+4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1145  static int fb_ioctl(struct fb_info *info, unsigned int cmd,
+4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1146  			  unsigned long arg)
+4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1147  {
+4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1148  	struct lcd_sync_arg sync_arg;
+4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1149  
+4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1150  	switch (cmd) {
+4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1151  	case FBIOGET_CONTRAST:
+4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1152  	case FBIOPUT_CONTRAST:
+4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1153  	case FBIGET_BRIGHTNESS:
+4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1154  	case FBIPUT_BRIGHTNESS:
+4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1155  	case FBIGET_COLOR:
+4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1156  	case FBIPUT_COLOR:
+2f93e8f4 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1157  		return -ENOTTY;
+4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1158  	case FBIPUT_HSYNC:
+4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22 @1159  		if (copy_from_user(&sync_arg, (char *)arg,
+4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1160  				sizeof(struct lcd_sync_arg)))
+2f93e8f4 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1161  			return -EFAULT;
+4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1162  		lcd_cfg_horizontal_sync(sync_arg.back_porch,
+4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1163  					sync_arg.pulse_width,
+4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1164  					sync_arg.front_porch);
+4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1165  		break;
+4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1166  	case FBIPUT_VSYNC:
+4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1167  		if (copy_from_user(&sync_arg, (char *)arg,
+4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1168  				sizeof(struct lcd_sync_arg)))
+2f93e8f4 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1169  			return -EFAULT;
+4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1170  		lcd_cfg_vertical_sync(sync_arg.back_porch,
+4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1171  					sync_arg.pulse_width,
+4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1172  					sync_arg.front_porch);
+4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1173  		break;
+1f9c3e1f drivers/video/da8xx-fb.c Martin Ambrose        2010-05-24  1174  	case FBIO_WAITFORVSYNC:
+1f9c3e1f drivers/video/da8xx-fb.c Martin Ambrose        2010-05-24  1175  		return fb_wait_for_vsync(info);
+4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1176  	default:
+4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1177  		return -EINVAL;
+4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1178  	}
+4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1179  	return 0;
+4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1180  }
+4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1181  
+
+:::::: The code at line 1159 was first introduced by commit
+:::::: 4ed824d9aead77a6a4eb1e89c3b3d270ba386fad davinci: fb: Frame Buffer driver for TI DA8xx/OMAP-L1xx
+
+:::::: TO: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
+:::::: CC: Linus Torvalds <torvalds@linux-foundation.org>
+
+---
+0-DAY kernel test infrastructure                Open Source Technology Center
+https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
