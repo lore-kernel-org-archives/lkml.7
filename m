@@ -2,222 +2,154 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.2 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	UNWANTED_LANGUAGE_BODY autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B8FBC282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:28:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 300EAC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 19C0A20868
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:28:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 00E6E2064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:28:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729743AbfDPP2Z (ORCPT
+        id S1729787AbfDPP2n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 11:28:25 -0400
-Received: from mx2.suse.de ([195.135.220.15]:49012 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725852AbfDPP2Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 11:28:25 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 1BAA3AE3D;
-        Tue, 16 Apr 2019 15:28:22 +0000 (UTC)
-Subject: Re: [PATCH] slab: remove store_stackinfo()
-To:     Qian Cai <cai@lca.pw>, akpm@linux-foundation.org
-Cc:     luto@kernel.org, jpoimboe@redhat.com,
-        sean.j.christopherson@intel.com, penberg@kernel.org,
-        rientjes@google.com, tglx@linutronix.de, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20190416142258.18694-1-cai@lca.pw>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Openpgp: preference=signencrypt
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <902fed9c-9655-a241-677d-5fa11b6c95a1@suse.cz>
-Date:   Tue, 16 Apr 2019 17:25:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 16 Apr 2019 11:28:43 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:59299 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729295AbfDPP2n (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 11:28:43 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3GFS7xx3494522
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 16 Apr 2019 08:28:07 -0700
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3GFS71q3494519;
+        Tue, 16 Apr 2019 08:28:07 -0700
+Date:   Tue, 16 Apr 2019 08:28:07 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   "tip-bot for Gustavo A. R. Silva" <tipbot@zytor.com>
+Message-ID: <tip-14c9b31a925a9f5c647523a12e2b575b97c0aa47@git.kernel.org>
+Cc:     acme@redhat.com, hpa@zytor.com, alexander.shishkin@linux.intel.com,
+        linux-kernel@vger.kernel.org, songliubraving@fb.com,
+        gustavo@embeddedor.com, mingo@kernel.org, tglx@linutronix.de,
+        peterz@infradead.org, jolsa@redhat.com, namhyung@kernel.org
+Reply-To: jolsa@redhat.com, namhyung@kernel.org, mingo@kernel.org,
+          peterz@infradead.org, tglx@linutronix.de,
+          alexander.shishkin@linux.intel.com, gustavo@embeddedor.com,
+          linux-kernel@vger.kernel.org, acme@redhat.com,
+          songliubraving@fb.com, hpa@zytor.com
+In-Reply-To: <20190408173355.GA10501@embeddedor>
+References: <20190408173355.GA10501@embeddedor>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:perf/urgent] perf header: Fix lock/unlock imbalances when
+ processing BPF/BTF info
+Git-Commit-ID: 14c9b31a925a9f5c647523a12e2b575b97c0aa47
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <20190416142258.18694-1-cai@lca.pw>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/16/19 4:22 PM, Qian Cai wrote:
-> store_stackinfo() does not seem used in actual SLAB debugging.
-> Potentially, it could be added to check_poison_obj() to provide more
-> information, but this seems like an overkill due to the declining
-> popularity of the SLAB, so just remove it instead.
-> 
-> Signed-off-by: Qian Cai <cai@lca.pw>
+Commit-ID:  14c9b31a925a9f5c647523a12e2b575b97c0aa47
+Gitweb:     https://git.kernel.org/tip/14c9b31a925a9f5c647523a12e2b575b97c0aa47
+Author:     Gustavo A. R. Silva <gustavo@embeddedor.com>
+AuthorDate: Mon, 8 Apr 2019 12:33:55 -0500
+Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
+CommitDate: Tue, 16 Apr 2019 11:26:43 -0300
 
-I've acked Thomas' version already which was narrower, but no objection
-to remove more stuff on top of that. Linus (and I later in another
-thread) already pointed out /proc/slab_allocators. It only takes a look
-at add_caller() there to not regret removing that one.
+perf header: Fix lock/unlock imbalances when processing BPF/BTF info
 
-> ---
->  mm/slab.c | 48 ++++++------------------------------------------
->  1 file changed, 6 insertions(+), 42 deletions(-)
-> 
-> diff --git a/mm/slab.c b/mm/slab.c
-> index 3e1b7ff0360c..20f318f4f56e 100644
-> --- a/mm/slab.c
-> +++ b/mm/slab.c
-> @@ -1467,53 +1467,17 @@ static bool is_debug_pagealloc_cache(struct kmem_cache *cachep)
->  }
->  
->  #ifdef CONFIG_DEBUG_PAGEALLOC
-> -static void store_stackinfo(struct kmem_cache *cachep, unsigned long *addr,
-> -			    unsigned long caller)
-> -{
-> -	int size = cachep->object_size;
-> -
-> -	addr = (unsigned long *)&((char *)addr)[obj_offset(cachep)];
-> -
-> -	if (size < 5 * sizeof(unsigned long))
-> -		return;
-> -
-> -	*addr++ = 0x12345678;
-> -	*addr++ = caller;
-> -	*addr++ = smp_processor_id();
-> -	size -= 3 * sizeof(unsigned long);
-> -	{
-> -		unsigned long *sptr = &caller;
-> -		unsigned long svalue;
-> -
-> -		while (!kstack_end(sptr)) {
-> -			svalue = *sptr++;
-> -			if (kernel_text_address(svalue)) {
-> -				*addr++ = svalue;
-> -				size -= sizeof(unsigned long);
-> -				if (size <= sizeof(unsigned long))
-> -					break;
-> -			}
-> -		}
-> -
-> -	}
-> -	*addr++ = 0x87654321;
-> -}
-> -
-> -static void slab_kernel_map(struct kmem_cache *cachep, void *objp,
-> -				int map, unsigned long caller)
-> +static void slab_kernel_map(struct kmem_cache *cachep, void *objp, int map)
->  {
->  	if (!is_debug_pagealloc_cache(cachep))
->  		return;
->  
-> -	if (caller)
-> -		store_stackinfo(cachep, objp, caller);
-> -
->  	kernel_map_pages(virt_to_page(objp), cachep->size / PAGE_SIZE, map);
->  }
->  
->  #else
->  static inline void slab_kernel_map(struct kmem_cache *cachep, void *objp,
-> -				int map, unsigned long caller) {}
-> +				int map) {}
->  
->  #endif
->  
-> @@ -1661,7 +1625,7 @@ static void slab_destroy_debugcheck(struct kmem_cache *cachep,
->  
->  		if (cachep->flags & SLAB_POISON) {
->  			check_poison_obj(cachep, objp);
-> -			slab_kernel_map(cachep, objp, 1, 0);
-> +			slab_kernel_map(cachep, objp, 1);
->  		}
->  		if (cachep->flags & SLAB_RED_ZONE) {
->  			if (*dbg_redzone1(cachep, objp) != RED_INACTIVE)
-> @@ -2433,7 +2397,7 @@ static void cache_init_objs_debug(struct kmem_cache *cachep, struct page *page)
->  		/* need to poison the objs? */
->  		if (cachep->flags & SLAB_POISON) {
->  			poison_obj(cachep, objp, POISON_FREE);
-> -			slab_kernel_map(cachep, objp, 0, 0);
-> +			slab_kernel_map(cachep, objp, 0);
->  		}
->  	}
->  #endif
-> @@ -2812,7 +2776,7 @@ static void *cache_free_debugcheck(struct kmem_cache *cachep, void *objp,
->  
->  	if (cachep->flags & SLAB_POISON) {
->  		poison_obj(cachep, objp, POISON_FREE);
-> -		slab_kernel_map(cachep, objp, 0, caller);
-> +		slab_kernel_map(cachep, objp, 0);
->  	}
->  	return objp;
->  }
-> @@ -3076,7 +3040,7 @@ static void *cache_alloc_debugcheck_after(struct kmem_cache *cachep,
->  		return objp;
->  	if (cachep->flags & SLAB_POISON) {
->  		check_poison_obj(cachep, objp);
-> -		slab_kernel_map(cachep, objp, 1, 0);
-> +		slab_kernel_map(cachep, objp, 1);
->  		poison_obj(cachep, objp, POISON_INUSE);
->  	}
->  	if (cachep->flags & SLAB_STORE_USER)
-> 
+Fix lock/unlock imbalances by refactoring the code a bit and adding
+calls to up_write() before return.
 
+Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Acked-by: Song Liu <songliubraving@fb.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Addresses-Coverity-ID: 1444315 ("Missing unlock")
+Addresses-Coverity-ID: 1444316 ("Missing unlock")
+Fixes: a70a1123174a ("perf bpf: Save BTF information as headers to perf.data")
+Fixes: 606f972b1361 ("perf bpf: Save bpf_prog_info information as headers to perf.data")
+Link: http://lkml.kernel.org/r/20190408173355.GA10501@embeddedor
+[ Simplified the exit path to have just one up_write() + return ]
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/header.c | 22 +++++++++++++---------
+ 1 file changed, 13 insertions(+), 9 deletions(-)
+
+diff --git a/tools/perf/util/header.c b/tools/perf/util/header.c
+index b9e693825873..2d2af2ac2b1e 100644
+--- a/tools/perf/util/header.c
++++ b/tools/perf/util/header.c
+@@ -2606,6 +2606,7 @@ static int process_bpf_prog_info(struct feat_fd *ff, void *data __maybe_unused)
+ 		perf_env__insert_bpf_prog_info(env, info_node);
+ 	}
+ 
++	up_write(&env->bpf_progs.lock);
+ 	return 0;
+ out:
+ 	free(info_linear);
+@@ -2623,7 +2624,9 @@ static int process_bpf_prog_info(struct feat_fd *ff __maybe_unused, void *data _
+ static int process_bpf_btf(struct feat_fd *ff, void *data __maybe_unused)
+ {
+ 	struct perf_env *env = &ff->ph->env;
++	struct btf_node *node = NULL;
+ 	u32 count, i;
++	int err = -1;
+ 
+ 	if (ff->ph->needs_swap) {
+ 		pr_warning("interpreting btf from systems with endianity is not yet supported\n");
+@@ -2636,31 +2639,32 @@ static int process_bpf_btf(struct feat_fd *ff, void *data __maybe_unused)
+ 	down_write(&env->bpf_progs.lock);
+ 
+ 	for (i = 0; i < count; ++i) {
+-		struct btf_node *node;
+ 		u32 id, data_size;
+ 
+ 		if (do_read_u32(ff, &id))
+-			return -1;
++			goto out;
+ 		if (do_read_u32(ff, &data_size))
+-			return -1;
++			goto out;
+ 
+ 		node = malloc(sizeof(struct btf_node) + data_size);
+ 		if (!node)
+-			return -1;
++			goto out;
+ 
+ 		node->id = id;
+ 		node->data_size = data_size;
+ 
+-		if (__do_read(ff, node->data, data_size)) {
+-			free(node);
+-			return -1;
+-		}
++		if (__do_read(ff, node->data, data_size))
++			goto out;
+ 
+ 		perf_env__insert_btf(env, node);
++		node = NULL;
+ 	}
+ 
++	err = 0;
++out:
+ 	up_write(&env->bpf_progs.lock);
+-	return 0;
++	free(node);
++	return err;
+ }
+ 
+ struct feature_ops {
