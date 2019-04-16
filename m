@@ -2,82 +2,87 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F34DC282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:50:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B0D3C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:51:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2BD720821
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:50:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="rsPDXNF9"
+	by mail.kernel.org (Postfix) with ESMTP id 2B42020821
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:51:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729260AbfDPLuc (ORCPT
+        id S1729340AbfDPLu7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 07:50:32 -0400
-Received: from mail-lj1-f193.google.com ([209.85.208.193]:46110 "EHLO
-        mail-lj1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725787AbfDPLuc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 07:50:32 -0400
-Received: by mail-lj1-f193.google.com with SMTP id h21so18773101ljk.13
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 04:50:30 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=uDEUUJoJSi6YoYZnXF5gY1Gw6oRcZMS/KEqiS2IofEw=;
-        b=rsPDXNF9+dl3oAKvj65WtlpVCuxrIRVUMzeWCW4rQ9psniXY0agR7uWZ5X97MiZb9g
-         5mX0FokaIVnOlrBYcEU33PN5y1KAKJeoC6GtA09jPcl2nriWpXCJjwh9MBiAdfWR1y1+
-         2VaZlIWuFx5cCWdpKl2w4Qw7exA3RALxHWtlfV9+NWL1ueM72Db8686gSU4h6l8x2sB2
-         CBlAHO5FDMghLTIpi1C/fWkNk+OoseKrKasC8kHc6xEUmgz+pX7bvojN4tQgNYOZnmOZ
-         Ch3rZUQ+gDZUzseSTn++30M1liZx3hFgalWVxeJ3V1TiaUV+GNbawVu2741rRCHUXzKS
-         3vkA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=uDEUUJoJSi6YoYZnXF5gY1Gw6oRcZMS/KEqiS2IofEw=;
-        b=S64WZk8xx/9T87El25gH3w87jCMHiAfgqqsNK/81WNDpY+nFk/9Nae9kjdZVyHfvoa
-         ETk/ji+qcSS8+TWtiyGnEbMUY94sjxh3wh188sXLeGIJy/DkYpMadDJPpatlf6dUSofM
-         fS4IYhcsnlt/L5exiqUm4Ir1/v2InrsbsJFsrGoYHjlP5bhCQ5Zg6aIDD5zcBnULepzI
-         72yGRtqgJa53GWR0GQWkTopmAJzkVh5vIsXrDttffnDDmWUnkDXFt/POg7zMTmyrywnm
-         tw2bWGK9oeNINdVOJX380r/zQkZBHdICxGS7XbGrwycmvIDVGlxFGXSkJvi3nwQAQXH1
-         Zdpw==
-X-Gm-Message-State: APjAAAVhTUZFHpqYsfvalxEzJEdTuG1lxeFuXKrf6OikH1eRmZXkQQ5T
-        2m+N2t7sQFau7hVE9sdK6RjdGZi5pgdkgox017UR1w==
-X-Google-Smtp-Source: APXvYqzvLM2iOlhUPlFbXzBTzgB6hvGmlBsofIrhBUB/mzmiP5PZfWnXeTzIL/nFkAY+oDiKxJDWdnDygL3sklKEDlI=
-X-Received: by 2002:a2e:3512:: with SMTP id z18mr42249075ljz.25.1555415430079;
- Tue, 16 Apr 2019 04:50:30 -0700 (PDT)
-MIME-Version: 1.0
-References: <1555257218-3830-1-git-send-email-mohankumar718@gmail.com>
-In-Reply-To: <1555257218-3830-1-git-send-email-mohankumar718@gmail.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Tue, 16 Apr 2019 13:50:18 +0200
-Message-ID: <CACRpkdY5cX=aP9nNwWeUd0Nx33MS0QJDnLKzbajADRsKCUVbOA@mail.gmail.com>
-Subject: Re: [RESEND PATCH] drivers/iio/gyro/mpu3050-core.c: This patch fix
- the following checkpatch warning.
-To:     Mohan Kumar <mohankumar718@gmail.com>
-Cc:     Jonathan Cameron <jic23@kernel.org>,
-        Hartmut Knaack <knaack.h@gmx.de>, linux-iio@vger.kernel.org,
+        Tue, 16 Apr 2019 07:50:59 -0400
+Received: from [110.188.70.11] ([110.188.70.11]:58199 "EHLO spam2.hygon.cn"
+        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728706AbfDPLu6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 07:50:58 -0400
+Received: from MK-DB.hygon.cn ([172.23.18.60])
+        by spam2.hygon.cn with ESMTP id x3GBlH8h075780;
+        Tue, 16 Apr 2019 19:47:17 +0800 (GMT-8)
+        (envelope-from fenghao@hygon.cn)
+Received: from cncheex02.Hygon.cn ([172.23.18.12])
+        by MK-DB.hygon.cn with ESMTP id x3GBl6I2045113;
+        Tue, 16 Apr 2019 19:47:06 +0800 (GMT-8)
+        (envelope-from fenghao@hygon.cn)
+Received: from [172.30.20.134] (172.23.18.44) by cncheex02.Hygon.cn
+ (172.23.18.12) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Tue, 16 Apr
+ 2019 19:47:12 +0800
+Subject: Re: [PATCH 5/6] KVM: SVM: Add support for KVM_SEV_GM_GET_DIGEST
+ command
+To:     Borislav Petkov <bp@alien8.de>
+CC:     "'Joerg Roedel '" <joro@8bytes.org>,
+        "'Paolo Bonzini '" <pbonzini@redhat.com>,
+        =?UTF-8?B?JyBSYWRpbSBLcsSNbcOhxZkgJw==?= <rkrcmar@redhat.com>,
+        "'Thomas Gleixner '" <tglx@linutronix.de>,
+        "'Ingo Molnar '" <mingo@redhat.com>,
+        "' H. Peter Anvin '" <hpa@zytor.com>,
+        Zhaohui Du <duzhaohui@hygon.cn>,
+        Zhiwei Ying <yingzhiwei@hygon.cn>, Wen Pu <puwen@hygon.cn>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+References: <1555329868-17895-1-git-send-email-fenghao@hygon.cn>
+ <1555329868-17895-6-git-send-email-fenghao@hygon.cn>
+ <20190415150910.GE29317@zn.tnic> <896956377bf441c3bfd911716418ce7e@hygon.cn>
+ <20190416081545.GA27892@zn.tnic>
+From:   Hao Feng <fenghao@hygon.cn>
+Message-ID: <d147506f-0183-f242-24ee-412bd72f99a4@hygon.cn>
+Date:   Tue, 16 Apr 2019 19:47:11 +0800
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <20190416081545.GA27892@zn.tnic>
+Content-Type: text/plain; charset="utf-8"
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [172.23.18.44]
+X-ClientProxiedBy: cncheex02.Hygon.cn (172.23.18.12) To cncheex02.Hygon.cn
+ (172.23.18.12)
+X-MAIL: spam2.hygon.cn x3GBlH8h075780
+X-DNSRBL: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sun, Apr 14, 2019 at 5:53 PM Mohan Kumar <mohankumar718@gmail.com> wrote:
+On 4/16/19 4:15 PM, Borislav Petkov wrote:
+> Yes, as long as you realize that having the From: you makes you the
+> author of the patch and Pu Wen is fine with that.
 
-> As per Documentation/timers/timers-howto.txt Msleep < 20ms can sleep for
-> up to 20ms. so use usleep_range.
->
-> Signed-off-by: Mohan Kumar <mohankumar718@gmail.com>
+Ok, will modify in next patch series.
 
-All right, should work as fine.
-Acked-by: Linus Walleij <linus.walleij@linaro.org>
+> 
+> Btw, you should fix your mailer to send plain text only and not add
+> those <mailto: > crap tags above.
+> 
 
-Yours,
-Linus Walleij
+Sorry about that, there was some incorrect configuration in my email
+client, already corrected it, thanks.
+
+
+-- 
+Thanks
+Harry
