@@ -2,93 +2,68 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 26189C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:25:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 19942C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:28:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F090E2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:25:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D62932075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:28:44 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="d4iAVZZZ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730210AbfDPSZw (ORCPT
+        id S1729887AbfDPS2n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 14:25:52 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:43456 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1728032AbfDPSZw (ORCPT
+        Tue, 16 Apr 2019 14:28:43 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:48944 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727136AbfDPS2n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 14:25:52 -0400
-Received: (qmail 10000 invoked by uid 2102); 16 Apr 2019 14:25:51 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 16 Apr 2019 14:25:51 -0400
-Date:   Tue, 16 Apr 2019 14:25:51 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     syzbot <syzbot+d919b0f29d7b5a4994b9@syzkaller.appspotmail.com>
-cc:     andreyknvl@google.com, <gregkh@linuxfoundation.org>,
-        <gustavo@embeddedor.com>, <linux-kernel@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <syzkaller-bugs@googlegroups.com>
-Subject: Re: INFO: task hung in usb_kill_urb
-In-Reply-To: <0000000000007380f90586a82005@google.com>
-Message-ID: <Pine.LNX.4.44L0.1904161421530.1605-100000@iolanthe.rowland.org>
+        Tue, 16 Apr 2019 14:28:43 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=FGAlWlRTOVmvwmqM+hUxLa/1vH+3hq7pUWAUUwCnH0g=; b=d4iAVZZZnlRAdytTea5az0d9i
+        67DlGQ+fv67YTuUYExlbmTo8Olm1TnFp6GQwhEdns2i6xoReTzSuqW1STWRRcgw6DUfygQdNkEG+g
+        r8zO6jf7cFOGTdQCC6yqBmd4or7BK+x9evNzkBcSNII83tMpKX5cDutqqesV0O5+DTirF5cGanlwz
+        LR6CkF5u6/1VT0e8+eUbOTP29I/O5NbNVSGf10I5REtisbJH/MK53QNT1tHh27CclSxMfBLKAWuYS
+        9Nug3XLoZIqYP6oGsPYZeihssLnLrAzx/WIOHpQbY5Rya6YDJTUfzWakOjrnV5IhU6CFtjMfB4mcv
+        hN4j/+cMw==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hGSor-0005Mz-Hx; Tue, 16 Apr 2019 18:28:33 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id B76D4238A887D; Tue, 16 Apr 2019 20:28:31 +0200 (CEST)
+Date:   Tue, 16 Apr 2019 20:28:31 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Andy Lutomirski <luto@kernel.org>,
+        Nadav Amit <namit@vmware.com>,
+        Dave Hansen <dave.hansen@intel.com>
+Subject: Re: [PATCH] x86/tlb: Revert: Align TLB invalidation info
+Message-ID: <20190416182831.GU4038@hirez.programming.kicks-ass.net>
+References: <20190416080335.GM7905@worktop.programming.kicks-ass.net>
+ <CAHk-=whgXyXCy9vHY2hKJ9Pa8PnwdwKo9eOQ3jDbCs_FkdDvkQ@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAHk-=whgXyXCy9vHY2hKJ9Pa8PnwdwKo9eOQ3jDbCs_FkdDvkQ@mail.gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Apr 2019, syzbot wrote:
+On Tue, Apr 16, 2019 at 10:45:05AM -0700, Linus Torvalds wrote:
+> So very much Ack on that patch, but maybe we could do a bit more cleanup here?
 
-> Hello,
-> 
-> syzbot has tested the proposed patch but the reproducer still triggered  
-> crash:
-> INFO: task hung in usb_kill_urb
-
-Okay, I think I found the problem.  dummy-hcd doesn't check for
-unsupported speeds until it is too late.  Andrey, what values does your
-usb-fuzzer gadget driver set for its max_speed field?
-
-Anyway, if I'm right then this patch should fix the bug.
-
-Alan Stern
-
-#syz test: https://github.com/google/kasan.git usb-fuzzer
-
---- a/drivers/usb/gadget/udc/dummy_hcd.c
-+++ b/drivers/usb/gadget/udc/dummy_hcd.c
-@@ -979,8 +979,18 @@ static int dummy_udc_start(struct usb_ga
- 	struct dummy_hcd	*dum_hcd = gadget_to_dummy_hcd(g);
- 	struct dummy		*dum = dum_hcd->dum;
- 
--	if (driver->max_speed == USB_SPEED_UNKNOWN)
-+	switch (driver->max_speed) {
-+	/* All the speeds we support */
-+	case USB_SPEED_LOW:
-+	case USB_SPEED_FULL:
-+	case USB_SPEED_HIGH:
-+	case USB_SPEED_SUPER:
-+		break;
-+	default:
-+		dev_err(dummy_dev(dum_hcd), "bogus driver max_speed %d\n",
-+				driver->max_speed);
- 		return -EINVAL;
-+	}
- 
- 	/*
- 	 * SLAVE side init ... the layer above hardware, which
-@@ -1785,7 +1795,8 @@ static void dummy_timer(struct timer_lis
- 		total = 490000;
- 		break;
- 	default:
--		dev_err(dummy_dev(dum_hcd), "bogus device speed\n");
-+		dev_err(dummy_dev(dum_hcd), "bogus device speed %d\n",
-+				dum->gadget.speed);
- 		return;
- 	}
- 
-
-
+Yeah, Nadav was going to try and clean that up. But I figured we should
+get this revert in and backported while it's hot :-)
