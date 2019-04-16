@@ -2,36 +2,36 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC3ACC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:54:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7B47C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:55:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DB8220868
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:54:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id ABB7820870
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:55:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728513AbfDPIy6 (ORCPT
+        id S1728878AbfDPIzE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 04:54:58 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:36956 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726576AbfDPIy5 (ORCPT
+        Tue, 16 Apr 2019 04:55:04 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:56796 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726576AbfDPIzC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 04:54:57 -0400
-X-UUID: 2d0e874b862f4271a7957c52ab1289de-20190416
-X-UUID: 2d0e874b862f4271a7957c52ab1289de-20190416
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        Tue, 16 Apr 2019 04:55:02 -0400
+X-UUID: 693e98bd81254991b05e96e47a91bcc1-20190416
+X-UUID: 693e98bd81254991b05e96e47a91bcc1-20190416
+Received: from mtkcas32.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
         (envelope-from <jitao.shi@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 527415628; Tue, 16 Apr 2019 16:54:53 +0800
-Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33N2.mediatek.inc
- (172.27.4.76) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 16 Apr
- 2019 16:54:51 +0800
+        with ESMTP id 196416271; Tue, 16 Apr 2019 16:54:56 +0800
+Received: from MTKCAS36.mediatek.inc (172.27.4.186) by MTKMBS33DR.mediatek.inc
+ (172.27.6.106) with Microsoft SMTP Server (TLS) id 15.0.1395.4; Tue, 16 Apr
+ 2019 16:54:54 +0800
 Received: from mszsdclx1018.gcn.mediatek.inc (172.27.4.253) by
  MTKCAS36.mediatek.inc (172.27.4.170) with Microsoft SMTP Server id
- 15.0.1395.4 via Frontend Transport; Tue, 16 Apr 2019 16:54:50 +0800
+ 15.0.1395.4 via Frontend Transport; Tue, 16 Apr 2019 16:54:53 +0800
 From:   Jitao Shi <jitao.shi@mediatek.com>
 To:     Rob Herring <robh+dt@kernel.org>, Pawel Moll <pawel.moll@arm.com>,
         Mark Rutland <mark.rutland@arm.com>,
@@ -58,10 +58,12 @@ CC:     Jitao Shi <jitao.shi@mediatek.com>,
         <yingjoe.chen@mediatek.com>, <eddie.huang@mediatek.com>,
         <cawa.cheng@mediatek.com>, <bibby.hsieh@mediatek.com>,
         <ck.hu@mediatek.com>, <stonea168@163.com>
-Subject: [PATCH 0/2] add dsi and pwm0 nodes to mt8183 device tree
-Date:   Tue, 16 Apr 2019 16:54:44 +0800
-Message-ID: <20190416085446.84071-1-jitao.shi@mediatek.com>
+Subject: [PATCH 2/2] arm64: dts: mt8183: add pwm0 node
+Date:   Tue, 16 Apr 2019 16:54:46 +0800
+Message-ID: <20190416085446.84071-3-jitao.shi@mediatek.com>
 X-Mailer: git-send-email 2.21.0
+In-Reply-To: <20190416085446.84071-1-jitao.shi@mediatek.com>
+References: <20190416085446.84071-1-jitao.shi@mediatek.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 7BIT
 Content-Type:   text/plain; charset=US-ASCII
@@ -71,20 +73,35 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch is based on v5.1-rc1 and these patches:
-http://lists.infradead.org/pipermail/linux-mediatek/2019-March/017963.html
-https://patchwork.kernel.org/patch/10856987/
-https://patchwork.kernel.org/cover/10879001/
-https://patchwork.kernel.org/cover/10846677/
-https://patchwork.kernel.org/patch/10893519/
+Add pwm0 node to the mt8183
 
-Jitao Shi (2):
-  arm64: dts: mt8183: add dsi node
-  arm64: dts: mt8183: add pwm0 node
+Signed-off-by: Jitao Shi <jitao.shi@mediatek.com>
+---
+ arch/arm64/boot/dts/mediatek/mt8183.dtsi | 11 +++++++++++
+ 1 file changed, 11 insertions(+)
 
- arch/arm64/boot/dts/mediatek/mt8183.dtsi | 36 ++++++++++++++++++++++++
- 1 file changed, 36 insertions(+)
-
+diff --git a/arch/arm64/boot/dts/mediatek/mt8183.dtsi b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+index 80929a0e5a6f..2830008c4921 100644
+--- a/arch/arm64/boot/dts/mediatek/mt8183.dtsi
++++ b/arch/arm64/boot/dts/mediatek/mt8183.dtsi
+@@ -323,6 +323,17 @@
+ 			status = "disabled";
+ 		};
+ 
++		pwm0: pwm@1100e000 {
++			compatible = "mediatek,mt8183-disp-pwm";
++			reg = <0 0x1100e000 0 0x1000>;
++			interrupts = <GIC_SPI 128 IRQ_TYPE_LEVEL_LOW>;
++			power-domains = <&scpsys MT8183_POWER_DOMAIN_DISP>;
++			#pwm-cells = <2>;
++			clocks = <&topckgen CLK_TOP_MUX_DISP_PWM>,
++					<&infracfg CLK_INFRA_DISP_PWM>;
++			clock-names = "main", "mm";
++		};
++
+ 		audiosys: syscon@11220000 {
+ 			compatible = "mediatek,mt8183-audiosys", "syscon";
+ 			reg = <0 0x11220000 0 0x1000>;
 -- 
 2.21.0
 
