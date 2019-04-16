@@ -7,57 +7,52 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9600C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:33:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 35556C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:33:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 959DE20821
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:33:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 05DEC20821
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:33:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555432415;
-	bh=2Jp48YOyudtsaVsYtD+v3uQMLbAyK68p4cl0+Fwd+jk=;
+	s=default; t=1555432419;
+	bh=BQPAzr5WzgXgH2YJazr01VNZEEprkcs5f2qi+L5TbiM=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=c5ketZePsxQGxcuw5Nf+W/2rKvjY/zOSkIw+HyP+MBuPGbHRba+1HB23/AtndB24X
-	 q/L9QoFCf7u2h1aXY+VaelDJTrUmtPzSuN6HpquVMmBB3wp9kJLPEHu5lPcTseEQ3i
-	 uJykB1TewXdS+SX14djILK3OB/B8dWml18pzKJYM=
+	b=WpkFH7uXoNhEZlUSvRISz2fU29LkswT/VybNOi11u93bGXRlRHbTdJ1Ntpt+umQWj
+	 JShnmLXU8oLyTQq1nwz3euKEepaJvMqbLafVY3Oz6sC0CoJCw9vMOTlHJEmlriVcVV
+	 BznLZIQ9LIMzC9KOxdVKgoJ4arMV7kjM6T5C8v+Q=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730069AbfDPQdI (ORCPT
+        id S1730150AbfDPQdh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 12:33:08 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:32804 "EHLO
+        Tue, 16 Apr 2019 12:33:37 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:32926 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730044AbfDPQdG (ORCPT
+        with ESMTP id S1729590AbfDPQdI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 12:33:06 -0400
+        Tue, 16 Apr 2019 12:33:08 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=REQ93nPRL0UNvLy2itOpFW55UCB/N4ai2/Mqhnf0V+A=; b=Z2+F2EefKBWX
-        E5Or3A25n4d4JqNNb9PEBLayt6ft6mejm11BoXuDonGiXCV3DoWSzi3hyFeAxJ6DQaFoQ96laVetP
-        N7fXGO0kiWG8qzEXcEagLWUDv/7EYFb3+FxJE5WVozqYDm2eK/nOiCbzRGivanJksM2LfAnlu0jr5
-        5MPN0=;
+        List-Archive; bh=Wo0sVACoFrCfFfioVnuxDvOFgZJ7gyY9v/MD9nVKifI=; b=bZAMUKnZY8U2
+        ObnaOponI6nWiVGGx77nbGpnlmDxYKb/UUuN/b/NxV0ghoYqaQ8+IGFk4qELWzGmQ4rilvcnujg48
+        jyNoNGjP9g4jddsqE/rlOAGqsoKoF6uIPwFbYOiYeNc22/pGGxUwsRxOINi8KgpQQ3PhO+SI0DBMh
+        tae3o=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hGR10-0007rl-D6; Tue, 16 Apr 2019 16:32:58 +0000
+        id 1hGR15-0007rj-AH; Tue, 16 Apr 2019 16:33:03 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 6B0B81128088; Tue, 16 Apr 2019 17:32:57 +0100 (BST)
+        id 26F6B1128283; Tue, 16 Apr 2019 17:32:57 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Evan Green <evgreen@chromium.org>
-Cc:     Andy Shevchenko <andriy.shevchenko@linux.intel.com>,
-        Andy Shevchenko <andy.shevchenko@gmail.com>,
-        Daniel Mack <daniel@zonque.org>,
-        Haojian Zhuang <haojian.zhuang@gmail.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        linux-spi@vger.kernel.org, Mark Brown <broonie@kernel.org>,
-        Rajat Jain <rajatja@chromium.org>,
-        Robert Jarzmik <robert.jarzmik@free.fr>
-Subject: Applied "spi: pxa2xx: Add support for Intel Comet Lake" to the spi tree
-In-Reply-To: <20190416032743.180517-1-evgreen@chromium.org>
+To:     Axel Lin <axel.lin@ingics.com>
+Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
+Subject: Applied "regulator: tps80031: Remove unused *rdev from struct tps80031_regulator" to the regulator tree
+In-Reply-To: <20190416101729.26330-1-axel.lin@ingics.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190416163257.6B0B81128088@debutante.sirena.org.uk>
+Message-Id: <20190416163257.26F6B1128283@debutante.sirena.org.uk>
 Date:   Tue, 16 Apr 2019 17:32:57 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
@@ -66,11 +61,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   spi: pxa2xx: Add support for Intel Comet Lake
+   regulator: tps80031: Remove unused *rdev from struct tps80031_regulator
 
-has been applied to the spi tree at
+has been applied to the regulator tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.2
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.2
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -91,36 +86,40 @@ to this mail.
 Thanks,
 Mark
 
-From 5127b4d69f96793dfabb602b133dc19d1aa36880 Mon Sep 17 00:00:00 2001
-From: Evan Green <evgreen@chromium.org>
-Date: Mon, 15 Apr 2019 20:27:43 -0700
-Subject: [PATCH] spi: pxa2xx: Add support for Intel Comet Lake
+From de110f387371337cf90f40055cf1ebdf01b6f427 Mon Sep 17 00:00:00 2001
+From: Axel Lin <axel.lin@ingics.com>
+Date: Tue, 16 Apr 2019 18:17:27 +0800
+Subject: [PATCH] regulator: tps80031: Remove unused *rdev from struct
+ tps80031_regulator
 
-Add PCI IDs for SPI on Comet Lake.
+The ri-rdev is assigend but not used, so remove it.
 
-Signed-off-by: Evan Green <evgreen@chromium.org>
-Acked-by: Andy Shevchenko <andy.shevchenko@gmail.com>
-Reviewed-by: Jarkko Nikula <jarkko.nikula@linux.intel.com>
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/spi/spi-pxa2xx.c | 4 ++++
- 1 file changed, 4 insertions(+)
+ drivers/regulator/tps80031-regulator.c | 2 --
+ 1 file changed, 2 deletions(-)
 
-diff --git a/drivers/spi/spi-pxa2xx.c b/drivers/spi/spi-pxa2xx.c
-index 3e6811ef37e8..f5546eeaebe4 100644
---- a/drivers/spi/spi-pxa2xx.c
-+++ b/drivers/spi/spi-pxa2xx.c
-@@ -1454,6 +1454,10 @@ static const struct pci_device_id pxa2xx_spi_pci_compound_match[] = {
- 	{ PCI_VDEVICE(INTEL, 0xa32a), LPSS_CNL_SSP },
- 	{ PCI_VDEVICE(INTEL, 0xa32b), LPSS_CNL_SSP },
- 	{ PCI_VDEVICE(INTEL, 0xa37b), LPSS_CNL_SSP },
-+	/* CML-LP */
-+	{ PCI_VDEVICE(INTEL, 0x02aa), LPSS_CNL_SSP },
-+	{ PCI_VDEVICE(INTEL, 0x02ab), LPSS_CNL_SSP },
-+	{ PCI_VDEVICE(INTEL, 0x02fb), LPSS_CNL_SSP },
- 	{ },
- };
+diff --git a/drivers/regulator/tps80031-regulator.c b/drivers/regulator/tps80031-regulator.c
+index 1001147404c3..d97cd55b6850 100644
+--- a/drivers/regulator/tps80031-regulator.c
++++ b/drivers/regulator/tps80031-regulator.c
+@@ -85,7 +85,6 @@ struct tps80031_regulator_info {
  
+ struct tps80031_regulator {
+ 	struct device			*dev;
+-	struct regulator_dev		*rdev;
+ 	struct tps80031_regulator_info	*rinfo;
+ 
+ 	u8				device_flags;
+@@ -736,7 +735,6 @@ static int tps80031_regulator_probe(struct platform_device *pdev)
+ 					ri->rinfo->desc.name);
+ 			return PTR_ERR(rdev);
+ 		}
+-		ri->rdev = rdev;
+ 	}
+ 
+ 	platform_set_drvdata(pdev, pmic);
 -- 
 2.20.1
 
