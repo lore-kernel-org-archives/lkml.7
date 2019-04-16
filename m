@@ -2,142 +2,121 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 60109C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:33:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 48797C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:33:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 21E7420872
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:33:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="X2obqZx/"
+	by mail.kernel.org (Postfix) with ESMTP id 1C8B62087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:33:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729858AbfDPPdO (ORCPT
+        id S1729871AbfDPPdW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 11:33:14 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:46210 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726946AbfDPPdL (ORCPT
+        Tue, 16 Apr 2019 11:33:22 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:52013 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726946AbfDPPdW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 11:33:11 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3GFDFHZ019039;
-        Tue, 16 Apr 2019 17:32:48 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : references : in-reply-to : content-type : content-id
- : content-transfer-encoding : mime-version; s=STMicroelectronics;
- bh=61MvAHL/EPzyX/edUQQ7IU72jytbHArLxrUanjOictU=;
- b=X2obqZx/dvmQWr7TNSs+MXgob6avjxXr59JCDfEKb03tdk+Z8TUg88ifhDMMgxMtn3Kn
- pgnfDAZb5F/9IJHulDJyrD/s1ydetoKBiFZNQB175zE+G76X+Chj/Htt9EafCRQzF10j
- xIwp/5SsHmMTMuGgE20tHmyb3smor9b9YojC33Ojgaf0s+xJft+YaaGDWI1n4bYatB2K
- hFjIBXrXuQwzGPWsJVN5DEa6j4HZyBoWJNQ8szQbylxYdc9bFfoW67UVx1CnG0kmHAl/
- ZALROHPzc3JJsSbxK7meuTbat83mKZVEoWlMvKzVZZttZdu9GgdG4ASJkcNiMUKoPEuA dQ== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2ru6ngskya-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 16 Apr 2019 17:32:48 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 0C30F31;
-        Tue, 16 Apr 2019 15:32:46 +0000 (GMT)
-Received: from Webmail-eu.st.com (sfhdag3node2.st.com [10.75.127.8])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CEE71272A;
-        Tue, 16 Apr 2019 15:32:46 +0000 (GMT)
-Received: from SFHDAG6NODE2.st.com (10.75.127.17) by SFHDAG3NODE2.st.com
- (10.75.127.8) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Tue, 16 Apr
- 2019 17:32:47 +0200
-Received: from SFHDAG6NODE2.st.com ([fe80::a56f:c186:bab7:13d6]) by
- SFHDAG6NODE2.st.com ([fe80::a56f:c186:bab7:13d6%20]) with mapi id
- 15.00.1347.000; Tue, 16 Apr 2019 17:32:46 +0200
-From:   Pascal PAILLET-LME <p.paillet@st.com>
-To:     kbuild test robot <lkp@intel.com>
-CC:     "kbuild-all@01.org" <kbuild-all@01.org>,
-        Mark Brown <broonie@kernel.org>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre TORGUE <alexandre.torgue@st.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "yuehaibing@huawei.com" <yuehaibing@huawei.com>
-Subject: Re: [RFC PATCH regulator] regulator: ready_mask_table[] can be static
-Thread-Topic: [RFC PATCH regulator] regulator: ready_mask_table[] can be
- static
-Thread-Index: AQHU9GmkqboxS7KZ10S8loxUEkpQ/w==
-Date:   Tue, 16 Apr 2019 15:32:46 +0000
-Message-ID: <5CB5F59E.6050905@st.com>
-References: <201904160046.ggavw2OV%lkp@intel.com>
- <20190415165238.GA71613@lkp-sb05>
-In-Reply-To: <20190415165238.GA71613@lkp-sb05>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Mozilla/5.0 (X11; Linux x86_64; rv:38.0) Gecko/20100101
- Thunderbird/38.3.0
-x-ms-exchange-messagesentrepresentingtype: 1
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.75.127.47]
-Content-Type: text/plain; charset="Windows-1252"
-Content-ID: <32DB909AE251DE4A918397290CA9C124@st.com>
-Content-Transfer-Encoding: quoted-printable
+        Tue, 16 Apr 2019 11:33:22 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3GFWqu63495144
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 16 Apr 2019 08:32:52 -0700
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3GFWoFJ3495141;
+        Tue, 16 Apr 2019 08:32:50 -0700
+Date:   Tue, 16 Apr 2019 08:32:50 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for luca abeni <tipbot@zytor.com>
+Message-ID: <tip-1b02cd6a2d7f3e2a6a5262887d2cb2912083e42f@git.kernel.org>
+Cc:     hpa@zytor.com, tglx@linutronix.de, torvalds@linux-foundation.org,
+        juri.lelli@redhat.com, luca.abeni@santannapisa.it,
+        peterz@infradead.org, cj.chengjian@huawei.com, mingo@kernel.org,
+        linux-kernel@vger.kernel.org
+Reply-To: peterz@infradead.org, luca.abeni@santannapisa.it,
+          juri.lelli@redhat.com, mingo@kernel.org,
+          linux-kernel@vger.kernel.org, cj.chengjian@huawei.com,
+          hpa@zytor.com, torvalds@linux-foundation.org, tglx@linutronix.de
+In-Reply-To: <20190325131530.34706-1-luca.abeni@santannapisa.it>
+References: <20190325131530.34706-1-luca.abeni@santannapisa.it>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:sched/urgent] sched/deadline: Correctly handle active 0-lag
+ timers
+Git-Commit-ID: 1b02cd6a2d7f3e2a6a5262887d2cb2912083e42f
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-16_05:,,
- signatures=0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The same patch was proposed by YueHaibing
+Commit-ID:  1b02cd6a2d7f3e2a6a5262887d2cb2912083e42f
+Gitweb:     https://git.kernel.org/tip/1b02cd6a2d7f3e2a6a5262887d2cb2912083e42f
+Author:     luca abeni <luca.abeni@santannapisa.it>
+AuthorDate: Mon, 25 Mar 2019 14:15:30 +0100
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Tue, 16 Apr 2019 16:54:58 +0200
 
-Acked-by: Pascal Paillet <p.paillet@st.com>
+sched/deadline: Correctly handle active 0-lag timers
 
-thank you,
-pascal
+syzbot reported the following warning:
 
+   [ ] WARNING: CPU: 4 PID: 17089 at kernel/sched/deadline.c:255 task_non_contending+0xae0/0x1950
 
-Le 04/15/2019 06:52 PM, kbuild test robot a =E9crit :
-> Fixes: 6cdae8173f67 ("regulator: Add support for stm32 power regulators")
-> Signed-off-by: kbuild test robot <lkp@intel.com>
-> ---
->   stm32-pwr.c |    6 +++---
->   1 file changed, 3 insertions(+), 3 deletions(-)
->
-> diff --git a/drivers/regulator/stm32-pwr.c b/drivers/regulator/stm32-pwr.=
-c
-> index e434b26..222d593 100644
-> --- a/drivers/regulator/stm32-pwr.c
-> +++ b/drivers/regulator/stm32-pwr.c
-> @@ -32,7 +32,7 @@ enum {
->   	STM32PWR_REG_NUM_REGS
->   };
->  =20
-> -u32 ready_mask_table[STM32PWR_REG_NUM_REGS] =3D {
-> +static u32 ready_mask_table[STM32PWR_REG_NUM_REGS] =3D {
->   	[PWR_REG11] =3D REG_1_1_RDY,
->   	[PWR_REG18] =3D REG_1_8_RDY,
->   	[PWR_USB33] =3D USB_3_3_RDY,
-> @@ -44,7 +44,7 @@ struct stm32_pwr_reg {
->   	u32 ready_mask;
->   };
->  =20
-> -int stm32_pwr_reg_is_ready(struct regulator_dev *rdev)
-> +static int stm32_pwr_reg_is_ready(struct regulator_dev *rdev)
->   {
->   	struct stm32_pwr_reg *priv =3D rdev_get_drvdata(rdev);
->   	u32 val;
-> @@ -54,7 +54,7 @@ int stm32_pwr_reg_is_ready(struct regulator_dev *rdev)
->   	return (val & priv->ready_mask);
->   }
->  =20
-> -int stm32_pwr_reg_is_enabled(struct regulator_dev *rdev)
-> +static int stm32_pwr_reg_is_enabled(struct regulator_dev *rdev)
->   {
->   	struct stm32_pwr_reg *priv =3D rdev_get_drvdata(rdev);
->   	u32 val;
->
+line 255 of deadline.c is:
+
+	WARN_ON(hrtimer_active(&dl_se->inactive_timer));
+
+in task_non_contending().
+
+Unfortunately, in some cases (for example, a deadline task
+continuosly blocking and waking immediately) it can happen that
+a task blocks (and task_non_contending() is called) while the
+0-lag timer is still active.
+
+In this case, the safest thing to do is to immediately decrease
+the running bandwidth of the task, without trying to re-arm the 0-lag timer.
+
+Signed-off-by: luca abeni <luca.abeni@santannapisa.it>
+Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
+Acked-by: Juri Lelli <juri.lelli@redhat.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: chengjian (D) <cj.chengjian@huawei.com>
+Link: https://lkml.kernel.org/r/20190325131530.34706-1-luca.abeni@santannapisa.it
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ kernel/sched/deadline.c | 3 +--
+ 1 file changed, 1 insertion(+), 2 deletions(-)
+
+diff --git a/kernel/sched/deadline.c b/kernel/sched/deadline.c
+index 6a73e41a2016..43901fa3f269 100644
+--- a/kernel/sched/deadline.c
++++ b/kernel/sched/deadline.c
+@@ -252,7 +252,6 @@ static void task_non_contending(struct task_struct *p)
+ 	if (dl_entity_is_special(dl_se))
+ 		return;
+ 
+-	WARN_ON(hrtimer_active(&dl_se->inactive_timer));
+ 	WARN_ON(dl_se->dl_non_contending);
+ 
+ 	zerolag_time = dl_se->deadline -
+@@ -269,7 +268,7 @@ static void task_non_contending(struct task_struct *p)
+ 	 * If the "0-lag time" already passed, decrease the active
+ 	 * utilization now, instead of starting a timer
+ 	 */
+-	if (zerolag_time < 0) {
++	if ((zerolag_time < 0) || hrtimer_active(&dl_se->inactive_timer)) {
+ 		if (dl_task(p))
+ 			sub_running_bw(dl_se, dl_rq);
+ 		if (!dl_task(p) || p->state == TASK_DEAD) {
