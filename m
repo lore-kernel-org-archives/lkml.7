@@ -7,39 +7,39 @@ X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DD973C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:38:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5F4D1C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:38:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AE61420857
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:38:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2EEDB20870
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:38:52 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555411128;
-	bh=08pqCf0mblmvYaCZiDBeQHcOa6u4+HtIRC440BSetf4=;
+	s=default; t=1555411132;
+	bh=dTCLOqJLgmceBABnPOvGU4HocMxOvoBRx6rxgvFEg5Y=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=jbCYFvknNu+hkLodPzhMXobIHP1JdV5z8cEka7bvIGajsAzeecbtVdM400ZomJIe1
-	 nV2aj8gfK4h2Evih8LKgLLPNxZn0EzQ1u9ExCUzw5D3uLPfxgsdCKb1g/RXtRv4HWs
-	 Dg7Wg8wSjl7oInSAS0tTQ+0WqeFcrHhMLbyWPtZc=
+	b=dT3Z1G2/srWM3Jv932yoqGI41sbRKWHmDGu/c758Aq+LrNXvrwRJMTlyZYWFqF3kg
+	 4VqkVW+7vZKDt6kLEj7pdDpVJpBXxCNs+SZ/2hLOGPauec2Jpa4z2oQtqns1B+jaeU
+	 WtlIxEENuhvEE7MT3AgxuVvDhaj/+g5Rh5vynniM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729096AbfDPKir (ORCPT
+        id S1729136AbfDPKiv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 06:38:47 -0400
-Received: from mail.kernel.org ([198.145.29.99]:57332 "EHLO mail.kernel.org"
+        Tue, 16 Apr 2019 06:38:51 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57404 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727950AbfDPKiq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 06:38:46 -0400
+        id S1727950AbfDPKit (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 06:38:49 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 51C0E206BA;
-        Tue, 16 Apr 2019 10:38:45 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id E827C217F9;
+        Tue, 16 Apr 2019 10:38:47 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555411125;
-        bh=08pqCf0mblmvYaCZiDBeQHcOa6u4+HtIRC440BSetf4=;
+        s=default; t=1555411128;
+        bh=dTCLOqJLgmceBABnPOvGU4HocMxOvoBRx6rxgvFEg5Y=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=Vrje8Sp9BtChWl4iBvqwAlufYFCj4JWJszjQDcaUqgY9swnCZ3Fa3A3EUG6GETvZJ
-         /FUf9k/d8TNnqszjZ+xMbaQnnHU/7Rld2lQxaUidd/ibnf3dWiiv9canJ5YehWo5LY
-         0Q4bq/4K7rCfEpupE5U/ZR538pRtp1nQ34Ua6yc8=
-Date:   Tue, 16 Apr 2019 12:12:58 +0200
+        b=q5bnxMleBXFUsq09ydLundcgYmmQMNKEtu702h+yRvUK5s810++ExYJxgNzvSs9Q4
+         ifkOcVlVknrbWaN+Oh7LtULvk+/D0YwuUoX0c1PuReuQhg98B20vGbHM+3Yzf/C4e6
+         x9omnw3aesCeC7vFYC4vUcYAr3niLarEGI3sHjzc=
+Date:   Tue, 16 Apr 2019 12:15:06 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
 Cc:     Mathias Nyman <mathias.nyman@intel.com>,
@@ -50,7 +50,7 @@ Cc:     Mathias Nyman <mathias.nyman@intel.com>,
         linux-mediatek@lists.infradead.org
 Subject: Re: [v2 PATCH 1/6] usb: xhci-mtk: get optional clock by
  devm_clk_get_optional()
-Message-ID: <20190416101258.GA26091@kroah.com>
+Message-ID: <20190416101506.GB26091@kroah.com>
 References: <bc6cdc2dce698dddbd692ba100fbf08c15c7b023.1554877692.git.chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
@@ -88,12 +88,38 @@ On Wed, Apr 10, 2019 at 02:47:24PM +0800, Chunfeng Yun wrote:
 > -	opt_clk = devm_clk_get(dev, id);
 > -	/* ignore error number except EPROBE_DEFER */
 > -	if (IS_ERR(opt_clk) && (PTR_ERR(opt_clk) != -EPROBE_DEFER))
+> -		opt_clk = NULL;
+> -
+> -	return opt_clk;
+> -}
+> -
+>  static int xhci_mtk_clks_get(struct xhci_hcd_mtk *mtk)
+>  {
+>  	struct device *dev = mtk->dev;
+> @@ -229,15 +216,15 @@ static int xhci_mtk_clks_get(struct xhci_hcd_mtk *mtk)
+>  		return PTR_ERR(mtk->sys_clk);
+>  	}
+>  
+> -	mtk->ref_clk = optional_clk_get(dev, "ref_ck");
+> +	mtk->ref_clk = devm_clk_get_optional(dev, "ref_ck");
+>  	if (IS_ERR(mtk->ref_clk))
+>  		return PTR_ERR(mtk->ref_clk);
+>  
+> -	mtk->mcu_clk = optional_clk_get(dev, "mcu_ck");
+> +	mtk->mcu_clk = devm_clk_get_optional(dev, "mcu_ck");
+>  	if (IS_ERR(mtk->mcu_clk))
+>  		return PTR_ERR(mtk->mcu_clk);
+>  
+> -	mtk->dma_clk = optional_clk_get(dev, "dma_ck");
+> +	mtk->dma_clk = devm_clk_get_optional(dev, "dma_ck");
 
-Are you sure about this?
+Also, now that this clock (and the others here) are controlled by the
+devm infrastructure, do you have to change when you were cleaning up and
+stopping the clock?  That logic seems to be the same here, which does
+not seem to be correct to me.
 
-devm_clk_get_optional() does not check for -EPROBE_DEFER, so you just
-changed the functionality of this code.  Is that ok?  If so, please call
-it out explicitly in your changelog comment when you resend this.
+Please also document that in your changelog comments when resending this
+series, as all of these patches have this issue as well.
 
 thanks,
 
