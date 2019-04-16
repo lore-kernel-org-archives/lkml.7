@@ -2,204 +2,145 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 98C26C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:14:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E32E0C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:15:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6639F2077C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:14:12 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B244E2077C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:15:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=nvidia.com header.i=@nvidia.com header.b="Hl2FL+Kg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729380AbfDPNOK (ORCPT
+        id S1729345AbfDPNPZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 09:14:10 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:37836 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727030AbfDPNOH (ORCPT
+        Tue, 16 Apr 2019 09:15:25 -0400
+Received: from hqemgate15.nvidia.com ([216.228.121.64]:2339 "EHLO
+        hqemgate15.nvidia.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727030AbfDPNPZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 09:14:07 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3GCxLrB078457
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:14:07 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rwe1t51h7-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:14:06 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <pmorel@linux.ibm.com>;
-        Tue, 16 Apr 2019 14:14:04 +0100
-Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 16 Apr 2019 14:14:01 +0100
-Received: from d06av23.portsmouth.uk.ibm.com (d06av23.portsmouth.uk.ibm.com [9.149.105.59])
-        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3GDDxxm30802022
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 Apr 2019 13:13:59 GMT
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 8ACC6A4076;
-        Tue, 16 Apr 2019 13:13:59 +0000 (GMT)
-Received: from d06av23.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id EF444A406E;
-        Tue, 16 Apr 2019 13:13:58 +0000 (GMT)
-Received: from [9.152.222.226] (unknown [9.152.222.226])
-        by d06av23.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 16 Apr 2019 13:13:58 +0000 (GMT)
-Reply-To: pmorel@linux.ibm.com
-Subject: Re: [PATCH 1/7] s390: zcrypt: driver callback to indicate resource in
- use
-To:     Tony Krowiak <akrowiak@linux.ibm.com>, linux-s390@vger.kernel.org,
-        linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     freude@linux.ibm.com, borntraeger@de.ibm.com, cohuck@redhat.com,
-        frankja@linux.ibm.com, david@redhat.com, schwidefsky@de.ibm.com,
-        heiko.carstens@de.ibm.com, pasic@linux.ibm.com,
-        alex.williamson@redhat.com, kwankhede@nvidia.com
-References: <1555016604-2008-1-git-send-email-akrowiak@linux.ibm.com>
- <1555016604-2008-2-git-send-email-akrowiak@linux.ibm.com>
- <c575e772-59e2-9fed-5ade-24701d4f2b49@linux.ibm.com>
- <8ee6f624-b698-bf83-2ae0-e292ad2512fc@linux.ibm.com>
-From:   Pierre Morel <pmorel@linux.ibm.com>
-Date:   Tue, 16 Apr 2019 15:13:58 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Tue, 16 Apr 2019 09:15:25 -0400
+Received: from hqpgpgate101.nvidia.com (Not Verified[216.228.121.13]) by hqemgate15.nvidia.com (using TLS: TLSv1.2, DES-CBC3-SHA)
+        id <B5cb5d5570000>; Tue, 16 Apr 2019 06:15:03 -0700
+Received: from hqmail.nvidia.com ([172.20.161.6])
+  by hqpgpgate101.nvidia.com (PGP Universal service);
+  Tue, 16 Apr 2019 06:15:23 -0700
+X-PGP-Universal: processed;
+        by hqpgpgate101.nvidia.com on Tue, 16 Apr 2019 06:15:23 -0700
+Received: from [10.24.45.163] (10.124.1.5) by HQMAIL101.nvidia.com
+ (172.20.187.10) with Microsoft SMTP Server (TLS) id 15.0.1473.3; Tue, 16 Apr
+ 2019 13:15:17 +0000
+Subject: Re: [PATCH V2 01/16] PCI: Add #defines for PCIe spec r4.0 features
+To:     Thierry Reding <thierry.reding@gmail.com>
+CC:     <bhelgaas@google.com>, <robh+dt@kernel.org>,
+        <mark.rutland@arm.com>, <jonathanh@nvidia.com>, <kishon@ti.com>,
+        <catalin.marinas@arm.com>, <will.deacon@arm.com>,
+        <lorenzo.pieralisi@arm.com>, <jingoohan1@gmail.com>,
+        <gustavo.pimentel@synopsys.com>, <mperttunen@nvidia.com>,
+        <linux-pci@vger.kernel.org>, <devicetree@vger.kernel.org>,
+        <linux-tegra@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
+        <linux-arm-kernel@lists.infradead.org>, <kthota@nvidia.com>,
+        <mmaddireddy@nvidia.com>, <sagar.tv@gmail.com>
+References: <1554407683-31580-1-git-send-email-vidyas@nvidia.com>
+ <1554407683-31580-2-git-send-email-vidyas@nvidia.com>
+ <20190411101353.GE4633@ulmo>
+From:   Vidya Sagar <vidyas@nvidia.com>
+X-Nvconfidentiality: public
+Message-ID: <4f672035-262b-1e53-2718-8c0c5612b3f3@nvidia.com>
+Date:   Tue, 16 Apr 2019 18:45:14 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <8ee6f624-b698-bf83-2ae0-e292ad2512fc@linux.ibm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190411101353.GE4633@ulmo>
+X-Originating-IP: [10.124.1.5]
+X-ClientProxiedBy: HQMAIL104.nvidia.com (172.18.146.11) To
+ HQMAIL101.nvidia.com (172.20.187.10)
+Content-Type: text/plain; charset="windows-1252"; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-TM-AS-GCONF: 00
-x-cbid: 19041613-0028-0000-0000-000003616D7B
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19041613-0029-0000-0000-00002420A4F4
-Message-Id: <46d627f1-9414-8636-6975-793bbe11b616@linux.ibm.com>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-16_05:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904160088
+Content-Transfer-Encoding: 7bit
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nvidia.com; s=n1;
+        t=1555420503; bh=t0GOs2azBJjgZp+xHC5CZdwgEzN9x3n9cfJyNGjL2B8=;
+        h=X-PGP-Universal:Subject:To:CC:References:From:X-Nvconfidentiality:
+         Message-ID:Date:User-Agent:MIME-Version:In-Reply-To:
+         X-Originating-IP:X-ClientProxiedBy:Content-Type:Content-Language:
+         Content-Transfer-Encoding;
+        b=Hl2FL+KgDXcmLsCOPR2ZFCWSBKk6S4/asPCeICE12zyUPJA7g3kmBg8GsNWh0nHz1
+         Xnc7JBmLbfoMn+srWMDXdLMCq5QBvJGkKVlKq7WJ/q89t6MuKfnObbxTW7UzHW9DWl
+         lCLgXbjY7Dp9pn6X0qivl02m+xn1PuvhqaDsp5hauFR98xZEOpsxkO43ttB8PZSmZZ
+         TVWHjhWrHyE/3qZPeUf1vTmkBgDUCmcbjK0LHbCxVewY8lnRhg3EiSSImO/S7OkJDF
+         rzBkr+jkUAA7CXA4nFdQyMeYGJDEf1JM+9jQqg7bIUpWAKxJ+hYIE7zKFygGavXfJj
+         4scgZjDZ8kP/w==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/04/2019 15:11, Tony Krowiak wrote:
-> On 4/16/19 3:52 AM, Pierre Morel wrote:
->> On 11/04/2019 23:03, Tony Krowiak wrote:
->>> Introduces a new driver callback to prevent a root user from unbinding
->>> an AP queue from its device driver if the queue is in use. This prevents
->>> a root user from inadvertently taking a queue away from a guest and
->>> giving it to the host, or vice versa. The callback will be invoked
->>> whenever a change to the AP bus's apmask or aqmask sysfs interfaces may
->>> result in one or more AP queues being removed from its driver. If the
->>> callback responds in the affirmative for any driver queried, the change
->>> to the apmask or aqmask will be rejected with a device in use error.
->>>
->>> For this patch, only non-default drivers will be queried. Currently,
->>> there is only one non-default driver, the vfio_ap device driver. The
->>> vfio_ap device driver manages AP queues passed through to one or more
->>> guests and we don't want to unexpectedly take AP resources away from
->>> guests which are most likely independently administered.
->>>
->>> Signed-off-by: Tony Krowiak <akrowiak@linux.ibm.com>
->>> ---
->>>   drivers/s390/crypto/ap_bus.c | 138 
->>> +++++++++++++++++++++++++++++++++++++++++--
->>>   drivers/s390/crypto/ap_bus.h |   3 +
->>>   2 files changed, 135 insertions(+), 6 deletions(-)
->>>
->>> diff --git a/drivers/s390/crypto/ap_bus.c b/drivers/s390/crypto/ap_bus.c
->>> index 1546389d71db..66a5a9d9fae6 100644
->>> --- a/drivers/s390/crypto/ap_bus.c
->>> +++ b/drivers/s390/crypto/ap_bus.c
->>> @@ -35,6 +35,7 @@
->>>   #include <linux/mod_devicetable.h>
->>>   #include <linux/debugfs.h>
->>>   #include <linux/ctype.h>
->>> +#include <linux/module.h>
->>>   #include "ap_bus.h"
->>>   #include "ap_debug.h"
->>> @@ -980,9 +981,11 @@ int ap_parse_mask_str(const char *str,
->>>       newmap = kmalloc(size, GFP_KERNEL);
->>>       if (!newmap)
->>>           return -ENOMEM;
->>> -    if (mutex_lock_interruptible(lock)) {
->>> -        kfree(newmap);
->>> -        return -ERESTARTSYS;
->>> +    if (lock) {
->>> +        if (mutex_lock_interruptible(lock)) {
->>> +            kfree(newmap);
->>> +            return -ERESTARTSYS;
->>> +        }
->>>       }
->>>       if (*str == '+' || *str == '-') {
->>> @@ -994,7 +997,10 @@ int ap_parse_mask_str(const char *str,
->>>       }
->>>       if (rc == 0)
->>>           memcpy(bitmap, newmap, size);
->>> -    mutex_unlock(lock);
->>> +
->>> +    if (lock)
->>> +        mutex_unlock(lock);
->>> +
->>>       kfree(newmap);
->>>       return rc;
->>>   }
->>> @@ -1181,12 +1187,72 @@ static ssize_t apmask_show(struct bus_type 
->>> *bus, char *buf)
->>>       return rc;
->>>   }
->>> +static int __verify_card_reservations(struct device_driver *drv, 
->>> void *data)
->>> +{
->>> +    int rc = 0;
->>> +    struct ap_driver *ap_drv = to_ap_drv(drv);
->>> +    unsigned long *newapm = (unsigned long *)data;
->>> +
->>> +    /*
->>> +     * If the reserved bits do not identify cards reserved for use 
->>> by the
->>> +     * non-default driver, there is no need to verify the driver is 
->>> using
->>> +     * the queues.
->>> +     */
->>> +    if (ap_drv->flags & AP_DRIVER_FLAG_DEFAULT)
->>> +        return 0;
+On 4/11/2019 3:43 PM, Thierry Reding wrote:
+> On Fri, Apr 05, 2019 at 01:24:28AM +0530, Vidya Sagar wrote:
+>> Add #defines for the Data Link Feature and Physical Layer 16.0 GT/s
+>> features.
 >>
->> I prefer you suppress this asymmetry with the assumption that the 
->> "default driver" will not register a "in_use" callback.
+>> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+>> ---
+>> Changes from [v1]:
+>> * None
+>>
+>>   include/uapi/linux/pci_regs.h | 22 +++++++++++++++++++++-
+>>   1 file changed, 21 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+>> index 5c98133f2c94..3e01b55d548d 100644
+>> --- a/include/uapi/linux/pci_regs.h
+>> +++ b/include/uapi/linux/pci_regs.h
+>> @@ -705,7 +705,9 @@
+>>   #define PCI_EXT_CAP_ID_DPC	0x1D	/* Downstream Port Containment */
+>>   #define PCI_EXT_CAP_ID_L1SS	0x1E	/* L1 PM Substates */
+>>   #define PCI_EXT_CAP_ID_PTM	0x1F	/* Precision Time Measurement */
+>> -#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PTM
+>> +#define PCI_EXT_CAP_ID_DLF	0x25	/* Data Link Feature */
+>> +#define PCI_EXT_CAP_ID_PL	0x26	/* Physical Layer 16.0 GT/s */
+>> +#define PCI_EXT_CAP_ID_MAX	PCI_EXT_CAP_ID_PL
+>>   
+>>   #define PCI_EXT_CAP_DSN_SIZEOF	12
+>>   #define PCI_EXT_CAP_MCAST_ENDPOINT_SIZEOF 40
+>> @@ -1045,4 +1047,22 @@
+>>   #define  PCI_L1SS_CTL1_LTR_L12_TH_SCALE	0xe0000000  /* LTR_L1.2_THRESHOLD_Scale */
+>>   #define PCI_L1SS_CTL2		0x0c	/* Control 2 Register */
+>>   
+>> +/* Data Link Feature */
+>> +#define PCI_DLF_CAP		0x04	/* Capabilities Register */
+>> +#define  PCI_DLF_LOCAL_DLF_SUP_MASK	0x007fffff  /* Local Data Link Feature Supported */
+>> +#define  PCI_DLF_EXCHANGE_ENABLE	0x80000000  /* Data Link Feature Exchange Enable */
+>> +#define PCI_DLF_STS		0x08	/* Status Register */
+>> +#define  PCI_DLF_REMOTE_DLF_SUP_MASK	0x007fffff  /* Remote Data Link Feature Supported */
+>> +#define  PCI_DLF_REMOTE_DLF_SUP_VALID	0x80000000  /* Remote Data Link Feature Support Valid */
+>> +
+>> +/* Physical Layer 16.0 GT/s */
+>> +#define PCI_PL_16GT_CAP		0x04	/* Capabilities Register */
+>> +#define PCI_PL_16GT_CTRL	0x08	/* Control Register */
+>> +#define PCI_PL_16GT_STS		0x0c	/* Status Register */
+>> +#define PCI_PL_16GT_LDPM_STS	0x10	/* Local Data Parity Mismatch Status Register */
+>> +#define PCI_PL_16GT_FRDPM_STS	0x14	/* First Retimer Data Parity Mismatch Status Register */
+>> +#define PCI_PL_16GT_SRDPM_STS	0x18	/* Second Retimer Data Parity Mismatch Status Register */
+>> +#define PCI_PL_16GT_RSVD	0x1C	/* Reserved */
+>> +#define PCI_PL_16GT_LE_CTRL	0x20	/* Lane Equalization Control Register */
 > 
-> Based on comments by Connie, I plan on removing this patch from the
-> next version.
-
-Yes it was the goal.
+> This looks correct comparing to the specification. However, this leaves
+> out some definitions, so I'm wondering if perhaps this should include
+> all field definitions. There are also extended capabilities between the
+> current maximum 0x1F and 0x25. Perhaps those should be added as well. I
+> guess this could always be done as a follow-up.
+> 
+> Perhaps it'd be better to change the subject to more accurately reflect
+> that you're only adding a couple of PCIe 4.0 features.
+I'll change subject accordingly.
 
 > 
->>
->>
->>> +
->>> +    /* Pin the driver's module code */
->>> +    if (!try_module_get(drv->owner))
->>> +        return 0;
->>> +
->>> +    if (ap_drv->in_use)
->>> +        if (ap_drv->in_use(newapm, ap_perms.aqm))
->>> +            rc = -EADDRINUSE;
->>> +
->>> +    module_put(drv->owner);
->>> +
->>> +    return rc;
->>> +}
->>> +
->>
+> Other than that:
 > 
-
-
--- 
-Pierre Morel
-Linux/KVM/QEMU in Böblingen - Germany
+> Reviewed-by: Thierry Reding <treding@nvidia.com>
+> 
 
