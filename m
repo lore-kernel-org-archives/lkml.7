@@ -2,117 +2,130 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B8322C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:46:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C392C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:47:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 953C3206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:46:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DC93820868
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:47:23 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730307AbfDPSqd (ORCPT
+        id S1730324AbfDPSrW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 14:46:33 -0400
-Received: from mout.kundenserver.de ([212.227.126.133]:60383 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727136AbfDPSqd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 14:46:33 -0400
-Received: from [192.168.1.110] ([95.117.99.70]) by mrelayeu.kundenserver.de
- (mreue010 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1MRTAj-1hSvvh3muT-00NPYB; Tue, 16 Apr 2019 20:45:45 +0200
-Subject: Re: RFC: on adding new CLONE_* flags [WAS Re: [PATCH 0/4] clone: add
- CLONE_PIDFD]
-To:     Andy Lutomirski <luto@kernel.org>, Aleksa Sarai <cyphar@cyphar.com>
-Cc:     Christian Brauner <christian@brauner.io>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jann Horn <jannh@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Daniel Colascione <dancol@google.com>
-References: <20190414201436.19502-1-christian@brauner.io>
- <dc05ffe3-c2ff-8b3e-d181-e0cc620bf91d@metux.net>
- <20190415195911.z7b7miwsj67ha54y@yavin>
- <CALCETrWxMnaPvwicqkMLswMynWvJVteazD-bFv3ZnBKWp-1joQ@mail.gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <c783a83a-01a1-9813-e2f7-0516cf7a1c16@metux.net>
-Date:   Tue, 16 Apr 2019 20:45:43 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Tue, 16 Apr 2019 14:47:22 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:54338 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727136AbfDPSrW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 14:47:22 -0400
+Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C3CA1307D846;
+        Tue, 16 Apr 2019 18:47:20 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.236])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 2644C6013D;
+        Tue, 16 Apr 2019 18:47:13 +0000 (UTC)
+Date:   Tue, 16 Apr 2019 14:47:11 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Boaz Harrosh <boaz@plexistor.com>
+Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org,
+        linux-block@vger.kernel.org, linux-mm@kvack.org,
+        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Ming Lei <ming.lei@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Matthew Wilcox <willy@infradead.org>,
+        Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org,
+        samba-technical@lists.samba.org, Yan Zheng <zyan@redhat.com>,
+        Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+        Alex Elder <elder@kernel.org>, ceph-devel@vger.kernel.org,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        Mike Marshall <hubcap@omnibond.com>,
+        Martin Brandenburg <martin@omnibond.com>,
+        devel@lists.orangefs.org,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        v9fs-developer@lists.sourceforge.net, Coly Li <colyli@suse.de>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        linux-bcache@vger.kernel.org,
+        Ernesto =?iso-8859-1?Q?A=2E_Fern=E1ndez?= 
+        <ernesto.mnd.fernandez@gmail.com>
+Subject: Re: [PATCH v1 00/15] Keep track of GUPed pages in fs and block
+Message-ID: <20190416184711.GB21526@redhat.com>
+References: <20190411210834.4105-1-jglisse@redhat.com>
+ <2c124cc4-b97e-ee28-2926-305bc6bc74bd@plexistor.com>
 MIME-Version: 1.0
-In-Reply-To: <CALCETrWxMnaPvwicqkMLswMynWvJVteazD-bFv3ZnBKWp-1joQ@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:X9Wc31OSfOB3dqfuHaYOzelhc80zfhScriOgFKi0nk/nIFZB53n
- ZgffFeJwmoPEFr/tZb6STR6CFfiusgJ/SnyOT4pcaRQt3+ORWoE4cavoyjTSxAtiBW88SQQ
- jnRDt31+/lVkio47xCjR3tgTOgJjDNZ1H2r6Lo8VOEhwaagBhmgHd7WpyTZFffW6+g9o1vg
- 0/GSWW/YZ0CN9xg5D/aig==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:grgZT6TsS78=:s0jOXq5IEMHRpNEb4eb5li
- BgNE8KmCLYc9kZo0266WGvUe7Bi842Q3ez7gEpkABk8vp3EAUVdQjym6GQwHoDcNtdQGjgPxh
- r3EVRzqPPOBARUvyd2mMCJn7MJZiL/9iA3PMsjTUHBNt4tzy1SLEkV2OZEK7AdBfvXnK8BKVt
- 7N13bF271iLEw8981aOnko3qtFS/T5TOX2o0IryN6wQhzZevTL/8Nm176gfirXtaOTa8kDm7f
- Fp9P22+Flq1HsqpcronPEwZs+0j8KdNIfRckbu8qM9mC7gF3HWD/t79baV3kM9yttVCy3yatw
- ytxlu5DRSbee7m0urDyJYECGY8om/ulkSA/Y+5tN8uAQxuwKkbs7QjTwSXV+Zot5KDAPCnRE2
- bE9cGEUYZOBs7Az5ERMFt5dHlqhlufKF4BOwsZ4gm0thpvb/GiTXrHn9vENiyEnZrAbs6D1Lb
- RVk1uRYYu4pzUsZY9HzIZyxEsL+WZhV7Jl9CIzSIwhX2wNlIRDU6dWPN2PaX4ViPrh3ky+yV9
- LvJhXWucHfomYO41s5hYCJbNy25SfFQ0Abvno4WQ1Zt2Ug8kpJURAvK50dZu47b9fUrS4KsfU
- xHiy26jObnn6jbUc4wPC4utIWSUOo4HsEEbPnxehwOTdIb4QaPxGiNO3ktdA1F/Er2wRa2hA7
- /0aqVRSSiTAuHRyKQT7O4Kl/0CkLRcX3wukwwwLud99F1VvbvN23T+dQI3eZpSCvauHM9Pq3x
- xPE8H3wmjz0tJRqd+jpgfPqPXw9M1eEUzI6/y3ZlOpPDrgtkiJMGuZOdsfY=
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <2c124cc4-b97e-ee28-2926-305bc6bc74bd@plexistor.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Tue, 16 Apr 2019 18:47:21 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15.04.19 22:29, Andy Lutomirski wrote:
+On Tue, Apr 16, 2019 at 09:35:04PM +0300, Boaz Harrosh wrote:
+> On Thu, Apr 11, 2019 at 05:08:19PM -0400, jglisse@redhat.com wrote:
+> > From: Jérôme Glisse <jglisse@redhat.com>
+> > 
+> > This patchset depends on various small fixes [1] and also on patchset
+> > which introduce put_user_page*() [2] and thus is 5.3 material as those
+> > pre-requisite will get in 5.2 at best. Nonetheless i am posting it now
+> > so that it can get review and comments on how and what should be done
+> > to test things.
+> > 
+> > For various reasons [2] [3] we want to track page reference through GUP
+> > differently than "regular" page reference. Thus we need to keep track
+> > of how we got a page within the block and fs layer. To do so this patch-
+> > set change the bio_bvec struct to store a pfn and flags instead of a
+> > direct pointer to a page. This way we can flag page that are coming from
+> > GUP.
+> > 
+> > This patchset is divided as follow:
+> >     - First part of the patchset is just small cleanup i believe they
+> >       can go in as his assuming people are ok with them.
+> 
+> 
+> >     - Second part convert bio_vec->bv_page to bio_vec->bv_pfn this is
+> >       done in multi-step, first we replace all direct dereference of
+> >       the field by call to inline helper, then we introduce macro for
+> >       bio_bvec that are initialized on the stack. Finaly we change the
+> >       bv_page field to bv_pfn.
+> 
+> Why do we need a bv_pfn. Why not just use the lowest bit of the page-ptr
+> as a flag (pointer always aligned to 64 bytes in our case).
+> 
+> So yes we need an inline helper for reference of the page but is it not clearer
+> that we assume a page* and not any kind of pfn ?
+> It will not be the first place using low bits of a pointer for flags.
 
-<snip>
+Yes i can use the lower bit of struct page * pointer it should be safe on
+all architecture. I wanted to change the bv_page field name to make sure
+that we catch anyone doing any direct dereference. Do you prefer keeping a
+page pointer there ?
 
-> I would personally *love* it if distros started setting no_new_privs> for basically all processes.
+> 
+> That said. Why we need it at all? I mean why not have it as a bio flag. If it exist
+> at all that a user has a GUP and none-GUP pages to IO at the same request he/she
+> can just submit them as two separate BIOs (chained at the block layer).
+> 
+> Many users just submit one page bios and let elevator merge them any way.
 
-Maybe a pam module for that would be fine.
-But this should be configurable per-user, as so many things still rely
-on suid.
+The issue is that bio_vec is use, on its own, outside of bios and for
+those use cases i need to track the GUP status within the bio_vec. Thus
+it is easier to use the same mechanisms for bio too as adding a flag to
+bio would mean that i also have to audit all code path that could merge
+bios. While i believe it should be restrictred to block/blk-merge.c it
+seems some block and some fs have spawn some custom bio manipulation
+(md comes to mind). So using same mechanism for bio_vec and bio seems
+like a safer and easier course of action.
 
-Actually, I'd like to move all authentication / privilege switching
-to factotum (login(1), sshd, etc then also could run as unprivileged
-users).
-
-> And pidfd actually gets us part of the> way toward a straightforward way to make sudo and su still work in a>
-no_new_privs world: su could call into a daemon that would spawn the>
-privileged task, and su would get a (read-only!) pidfd back and then>
-wait for the fd and exit.
-
-How exactly would the pidfd improve this scenario ?
-IMHO, would just need to pass the inherited fd's to that daemon (eg.
-via unix socket) which then sets them up in the new child process.
-
-> I suppose that, done naively, this might> cause some odd effects with respect to tty handling, but I bet it's>
-solveable.
-
-Yes, signals and process groups would be a bit tricky. Some signals
-could be transmitted in a similar way as ssh does.
-
-But: how can we handle things like cgroups ?
-
-
---mtx
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Cheers,
+Jérôme
