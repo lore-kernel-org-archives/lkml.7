@@ -2,173 +2,552 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E1750C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:07:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 81D98C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:07:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2A55206B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:07:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=bgdev-pl.20150623.gappssmtp.com header.i=@bgdev-pl.20150623.gappssmtp.com header.b="tfr/uVyr"
+	by mail.kernel.org (Postfix) with ESMTP id 35D70206B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:07:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729040AbfDPKHC (ORCPT
+        id S1729045AbfDPKHW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 06:07:02 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:50218 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729021AbfDPKHB (ORCPT
+        Tue, 16 Apr 2019 06:07:22 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:51793 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726312AbfDPKHW (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 06:07:01 -0400
-Received: by mail-it1-f196.google.com with SMTP id q14so16996568itk.0
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 03:07:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=bgdev-pl.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=JfxQpTeangtvJmLNkghjPnU5kjVKhb0JwW+LToQ2xBg=;
-        b=tfr/uVyrVBNlvJx6haL1gHhA01QPEKTA7Q0s2+6QvoeCrAR8woRbyVnFYoL6KRLfO8
-         WtCMNOGHTS242HbuaKRQdzgpXfu0Ne3IC47ssE1ChL9tOV2xp1YAy5sb9Dmk3JxWo9Gc
-         PmdrCCyltvzliVbpq1sWTUeVyXBSbpVYIPV6YfVC9A/U7tt8mKPafv60PfS/6UJvHrzW
-         2EvcptaZ4/Qn2SqF82XnRcZl28xJqj44gepa5kPwwyyUS0jrHfwAtbclYesNLM+WcE9Y
-         ChVavP8Tv2vKD1dwlSWRp/LRX93BkB6QpJjnUNmCRZw+4iRuSAF2eKhcYoy5pJFlRWzn
-         fhdw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=JfxQpTeangtvJmLNkghjPnU5kjVKhb0JwW+LToQ2xBg=;
-        b=bDbhjVHM+tPy941Y2ACa6BAeh7zgsW3uk/3JwHPCzAI4Z1HFKO1MWaCa24huwsT0Lg
-         Rf7uqkKoD8HtVaN/CXbhx6KcHaNnfOVxialCPSgWWbT9T1rff8nPFOdEDSLUvnKiXn5P
-         rw9waviCdTIVD+0mP0iKHik/35QJOnirry3Mw7kbD0Y7THxKjFvP8sr58h+K+uLOGfPQ
-         zYAY0NXy+W63ewVbRmWq6ACe1bPDYP0fl8GFxshZv8xf+O/lt7rmKXn1oNR0FVZdqfuL
-         yRHGjyTmTyvAGsbqO4lNK2M7vTG3bHQRJ1GuQ+DxJ2Q+44mEkC45mRKejjlN04P27FqQ
-         tfbg==
-X-Gm-Message-State: APjAAAV1AgptgpgUf/u4vQQzbUu1Fo7jKhxawWpb2XA2KWwg/eo4C89I
-        l+ufRi9EyQq805wlCnn2UFhBUrxZ7630TC9ltllcEw==
-X-Google-Smtp-Source: APXvYqxXyOiwsO2JmYFGWBTzssC8YJdTLeOy/xhq0mBAcbJCZ1PtZBNfO/zaO8loERglkgLjfJN/GA2bkXnlN630oUI=
-X-Received: by 2002:a24:ad2:: with SMTP id 201mr27583448itw.26.1555409220984;
- Tue, 16 Apr 2019 03:07:00 -0700 (PDT)
+        Tue, 16 Apr 2019 06:07:22 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3GA6CVN3400953
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 16 Apr 2019 03:06:12 -0700
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3GA6C763400950;
+        Tue, 16 Apr 2019 03:06:12 -0700
+Date:   Tue, 16 Apr 2019 03:06:12 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Waiman Long <tipbot@zytor.com>
+Message-ID: <tip-fb346fd9fc081c3d978c3f3d26d39334527a2662@git.kernel.org>
+Cc:     dbueso@suse.de, paulmck@linux.vnet.ibm.com, peterz@infradead.org,
+        tglx@linutronix.de, akpm@linux-foundation.org, hpa@zytor.com,
+        dave@stgolabs.net, tim.c.chen@linux.intel.com, mingo@kernel.org,
+        arnd@arndb.de, a.p.zijlstra@chello.nl,
+        torvalds@linux-foundation.org, linux-kernel@vger.kernel.org,
+        will.deacon@arm.com, longman@redhat.com, bp@alien8.de
+Reply-To: arnd@arndb.de, a.p.zijlstra@chello.nl,
+          torvalds@linux-foundation.org, longman@redhat.com,
+          linux-kernel@vger.kernel.org, will.deacon@arm.com, bp@alien8.de,
+          mingo@kernel.org, peterz@infradead.org, tglx@linutronix.de,
+          akpm@linux-foundation.org, dave@stgolabs.net, hpa@zytor.com,
+          tim.c.chen@linux.intel.com, dbueso@suse.de,
+          paulmck@linux.vnet.ibm.com
+In-Reply-To: <20190404174320.22416-9-longman@redhat.com>
+References: <20190404174320.22416-9-longman@redhat.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:locking/core] locking/lock_events: Make lock_events available
+ for all archs & other locks
+Git-Commit-ID: fb346fd9fc081c3d978c3f3d26d39334527a2662
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-References: <20190318122901.7231-1-brgl@bgdev.pl> <20190318122901.7231-2-brgl@bgdev.pl>
- <CAK8P3a0EhCRH7O87WSyfHujomQ_Dzz3=BT0SaXF-33Z9g0oSjA@mail.gmail.com>
- <c1fa9027-3f92-5edd-6e5b-be4889e5363c@ti.com> <CAK8P3a0xEpCQa=9=-oZDuRNmA7hexbub5k_BdO71Y7ycyV_Szg@mail.gmail.com>
- <CAMpxmJUjeLNrMsLXM4uXCX22Hytqcn9csGK4aFVGaEJwRJf9Nw@mail.gmail.com>
- <CAK8P3a2HC0PVd2iw5fVvXMedJp3PFG4zgkMqccabRGUzhddV6A@mail.gmail.com>
- <CAMpxmJVLhnEy+2hKutkeOWnPwdMJkOF5UV0pvrAk=8WVNpy8zw@mail.gmail.com> <CAK8P3a01n+Xmz_dBkAhFwGcFrpzukTAngO8DXOu2gc3SAYi4bg@mail.gmail.com>
-In-Reply-To: <CAK8P3a01n+Xmz_dBkAhFwGcFrpzukTAngO8DXOu2gc3SAYi4bg@mail.gmail.com>
-From:   Bartosz Golaszewski <brgl@bgdev.pl>
-Date:   Tue, 16 Apr 2019 12:06:50 +0200
-Message-ID: <CAMRc=MfEHbC53EpbDmpq_odrFoB6=M_CMm-4SPNFR3BH-ODEtg@mail.gmail.com>
-Subject: Re: [RESEND PATCH 1/2] ARM: davinci: support multiplatform build for
- ARM v5
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     Bartosz Golaszewski <bgolaszewski@baylibre.com>,
-        Sekhar Nori <nsekhar@ti.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        David Lechner <david@lechnology.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-pt., 12 kwi 2019 o 15:45 Arnd Bergmann <arnd@arndb.de> napisa=C5=82(a):
->
-> On Fri, Apr 12, 2019 at 3:32 PM Bartosz Golaszewski
-> <bgolaszewski@baylibre.com> wrote:
-> > pt., 12 kwi 2019 o 15:27 Arnd Bergmann <arnd@arndb.de> napisa=C5=82(a):
-> > >
-> > > On Fri, Apr 12, 2019 at 3:22 PM Bartosz Golaszewski
-> > > <bgolaszewski@baylibre.com> wrote:
-> > > > pt., 12 kwi 2019 o 15:16 Arnd Bergmann <arnd@arndb.de> napisa=C5=82=
-(a):
-> > > > > On Tue, Apr 2, 2019 at 1:03 PM Sekhar Nori <nsekhar@ti.com> wrote=
-:
-> > > > > > On 25/03/19 6:38 PM, Arnd Bergmann wrote:
-> > > > > > > On Mon, Mar 18, 2019 at 1:29 PM Bartosz Golaszewski <brgl@bgd=
-ev.pl> wrote:
-> > > > > >
-> > > > > > The timer conversion patches are pending review/rework. Will qu=
-eue once
-> > > > > > those are cleared.
-> > > > >
-> > > > > Unfortunately, after doing some more randconfig testing, I ended =
-up with
-> > > > > three build issues:
-> > > > >
-> > > > > 1. vpbe:
-> > > > > drivers/media/platform/davinci/vpbe_osd.c:29:10: fatal error:
-> > > > > 'mach/cputype.h' file not found
-> > > > > #include <mach/cputype.h>
-> > > > >          ^~~~~~~~~~~~~~~~
-> > > > > drivers/media/platform/davinci/vpbe_venc.c:26:10: fatal error:
-> > > > > 'mach/hardware.h' file not found
-> > > > > #include <mach/hardware.h>
-> > > > >          ^~~~~~~~~~~~~~~~~
-> > > > > drivers/media/platform/davinci/vpbe_display.c:31:10: fatal error:
-> > > > > 'mach/cputype.h' file not found
-> > > > >
-> > > > > 2. staging/vpfe:
-> > > > > In file included from
-> > > > > /git/arm-soc/drivers/staging/media/davinci_vpfe/dm365_isif.c:20:
-> > > > > drivers/staging/media/davinci_vpfe/dm365_isif.h:24:10: fatal erro=
-r:
-> > > > > 'mach/mux.h' file not found
-> > > > >
-> > > > > 3.
-> > > > >     davinci: fix sleep.S build error on ARMv4
-> > > > >
-> > > > >     When building a multiplatform kernel that includes armv4 supp=
-ort,
-> > > > >     the default target CPU does not support the blx instruction,
-> > > > >     which leads to a build failure:
-> > > > >
-> > > > >     arch/arm/mach-davinci/sleep.S: Assembler messages:
-> > > > >     arch/arm/mach-davinci/sleep.S:56: Error: selected processor d=
-oes
-> > > > > not support `blx ip' in ARM mode
-> > > > >
-> > > >
-> > > > Hi Arnd,
-> > > >
-> > > > are the generated configs available somewhere for download?
-> > >
-> > > No, I only keep them locally, but I would hope they are easy enough t=
-o
-> > > reproduce. If you can't figure out the problem right away, I can send
-> > > you the config files of course.
-> > >
-> > > Just noticed another issue in my logs:
-> > >
-> > > 4. ARCH_DAVINCI no longer selects RESET_CONTROLLER
-> > > drivers/clk/davinci/psc.o: In function `__davinci_psc_register_clocks=
-':
-> > > psc.c:(.text+0x3f8): undefined reference to `devm_reset_controller_re=
-gister'
-> > > drivers/clk/davinci/psc-da850.o: In function `da850_psc0_init':
-> > > psc-da850.c:(.text+0x14): undefined reference to `reset_controller_ad=
-d_lookup'
-> > >
-> > >       Arnd
-> >
-> > Thanks. Another issue that I already fixed locally is missing select
-> > for REGMAP_MMIO. Just FYI.
-> >
-> > This series is blocked by the clocksource series anyway, but I'll work
-> > towards fixing it.
->
-> Ok, sounds good. I have sent you whatever I had to work around the
-> issue locally now, as private messages. See if you can use them, or
-> ignore if you have a better fix.
->
->       Arnd
+Commit-ID:  fb346fd9fc081c3d978c3f3d26d39334527a2662
+Gitweb:     https://git.kernel.org/tip/fb346fd9fc081c3d978c3f3d26d39334527a2662
+Author:     Waiman Long <longman@redhat.com>
+AuthorDate: Thu, 4 Apr 2019 13:43:17 -0400
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Wed, 10 Apr 2019 10:56:04 +0200
 
-Will do, thanks!
+locking/lock_events: Make lock_events available for all archs & other locks
 
-Bart
+The QUEUED_LOCK_STAT option to report queued spinlocks event counts
+was previously allowed only on x86 architecture. To make the locking
+event counting code more useful, it is now renamed to a more generic
+LOCK_EVENT_COUNTS config option. This new option will be available to
+all the architectures that use qspinlock at the moment.
+
+Other locking code can now start to use the generic locking event
+counting code by including lock_events.h and put the new locking event
+names into the lock_events_list.h header file.
+
+My experience with lock event counting is that it gives valuable insight
+on how the locking code works and what can be done to make it better. I
+would like to extend this benefit to other locking code like mutex and
+rwsem in the near future.
+
+The PV qspinlock specific code will stay in qspinlock_stat.h. The
+locking event counters will now reside in the <debugfs>/lock_event_counts
+directory.
+
+Signed-off-by: Waiman Long <longman@redhat.com>
+Acked-by: Peter Zijlstra <a.p.zijlstra@chello.nl>
+Acked-by: Davidlohr Bueso <dbueso@suse.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Arnd Bergmann <arnd@arndb.de>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Davidlohr Bueso <dave@stgolabs.net>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Paul E. McKenney <paulmck@linux.vnet.ibm.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Link: http://lkml.kernel.org/r/20190404174320.22416-9-longman@redhat.com
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/Kconfig                    |  10 +++
+ arch/x86/Kconfig                |   8 ---
+ kernel/locking/Makefile         |   1 +
+ kernel/locking/lock_events.c    | 153 ++++++++++++++++++++++++++++++++++++++++
+ kernel/locking/lock_events.h    |  10 ++-
+ kernel/locking/qspinlock_stat.h | 141 ++++--------------------------------
+ 6 files changed, 183 insertions(+), 140 deletions(-)
+
+diff --git a/arch/Kconfig b/arch/Kconfig
+index 33687dddd86a..28c0f1ad80d7 100644
+--- a/arch/Kconfig
++++ b/arch/Kconfig
+@@ -901,6 +901,16 @@ config HAVE_ARCH_PREL32_RELOCATIONS
+ config ARCH_USE_MEMREMAP_PROT
+ 	bool
+ 
++config LOCK_EVENT_COUNTS
++	bool "Locking event counts collection"
++	depends on DEBUG_FS
++	depends on QUEUED_SPINLOCKS
++	---help---
++	  Enable light-weight counting of various locking related events
++	  in the system with minimal performance impact. This reduces
++	  the chance of application behavior change because of timing
++	  differences. The counts are reported via debugfs.
++
+ source "kernel/gcov/Kconfig"
+ 
+ source "scripts/gcc-plugins/Kconfig"
+diff --git a/arch/x86/Kconfig b/arch/x86/Kconfig
+index 84b184e016cd..7d160f58a8f6 100644
+--- a/arch/x86/Kconfig
++++ b/arch/x86/Kconfig
+@@ -780,14 +780,6 @@ config PARAVIRT_SPINLOCKS
+ 
+ 	  If you are unsure how to answer this question, answer Y.
+ 
+-config QUEUED_LOCK_STAT
+-	bool "Paravirt queued spinlock statistics"
+-	depends on PARAVIRT_SPINLOCKS && DEBUG_FS
+-	---help---
+-	  Enable the collection of statistical data on the slowpath
+-	  behavior of paravirtualized queued spinlocks and report
+-	  them on debugfs.
+-
+ source "arch/x86/xen/Kconfig"
+ 
+ config KVM_GUEST
+diff --git a/kernel/locking/Makefile b/kernel/locking/Makefile
+index 1af83e9ce57d..6fe2f333aecb 100644
+--- a/kernel/locking/Makefile
++++ b/kernel/locking/Makefile
+@@ -28,3 +28,4 @@ obj-$(CONFIG_DEBUG_SPINLOCK) += spinlock_debug.o
+ obj-$(CONFIG_QUEUED_RWLOCKS) += qrwlock.o
+ obj-$(CONFIG_LOCK_TORTURE_TEST) += locktorture.o
+ obj-$(CONFIG_WW_MUTEX_SELFTEST) += test-ww_mutex.o
++obj-$(CONFIG_LOCK_EVENT_COUNTS) += lock_events.o
+diff --git a/kernel/locking/lock_events.c b/kernel/locking/lock_events.c
+new file mode 100644
+index 000000000000..71c36d1fb834
+--- /dev/null
++++ b/kernel/locking/lock_events.c
+@@ -0,0 +1,153 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++/*
++ * This program is free software; you can redistribute it and/or modify
++ * it under the terms of the GNU General Public License as published by
++ * the Free Software Foundation; either version 2 of the License, or
++ * (at your option) any later version.
++ *
++ * This program is distributed in the hope that it will be useful,
++ * but WITHOUT ANY WARRANTY; without even the implied warranty of
++ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
++ * GNU General Public License for more details.
++ *
++ * Authors: Waiman Long <waiman.long@hpe.com>
++ */
++
++/*
++ * Collect locking event counts
++ */
++#include <linux/debugfs.h>
++#include <linux/sched.h>
++#include <linux/sched/clock.h>
++#include <linux/fs.h>
++
++#include "lock_events.h"
++
++#undef  LOCK_EVENT
++#define LOCK_EVENT(name)	[LOCKEVENT_ ## name] = #name,
++
++#define LOCK_EVENTS_DIR		"lock_event_counts"
++
++/*
++ * When CONFIG_LOCK_EVENT_COUNTS is enabled, event counts of different
++ * types of locks will be reported under the <debugfs>/lock_event_counts/
++ * directory. See lock_events_list.h for the list of available locking
++ * events.
++ *
++ * Writing to the special ".reset_counts" file will reset all the above
++ * locking event counts. This is a very slow operation and so should not
++ * be done frequently.
++ *
++ * These event counts are implemented as per-cpu variables which are
++ * summed and computed whenever the corresponding debugfs files are read. This
++ * minimizes added overhead making the counts usable even in a production
++ * environment.
++ */
++static const char * const lockevent_names[lockevent_num + 1] = {
++
++#include "lock_events_list.h"
++
++	[LOCKEVENT_reset_cnts] = ".reset_counts",
++};
++
++/*
++ * Per-cpu counts
++ */
++DEFINE_PER_CPU(unsigned long, lockevents[lockevent_num]);
++
++/*
++ * The lockevent_read() function can be overridden.
++ */
++ssize_t __weak lockevent_read(struct file *file, char __user *user_buf,
++			      size_t count, loff_t *ppos)
++{
++	char buf[64];
++	int cpu, id, len;
++	u64 sum = 0;
++
++	/*
++	 * Get the counter ID stored in file->f_inode->i_private
++	 */
++	id = (long)file_inode(file)->i_private;
++
++	if (id >= lockevent_num)
++		return -EBADF;
++
++	for_each_possible_cpu(cpu)
++		sum += per_cpu(lockevents[id], cpu);
++	len = snprintf(buf, sizeof(buf) - 1, "%llu\n", sum);
++
++	return simple_read_from_buffer(user_buf, count, ppos, buf, len);
++}
++
++/*
++ * Function to handle write request
++ *
++ * When idx = reset_cnts, reset all the counts.
++ */
++static ssize_t lockevent_write(struct file *file, const char __user *user_buf,
++			   size_t count, loff_t *ppos)
++{
++	int cpu;
++
++	/*
++	 * Get the counter ID stored in file->f_inode->i_private
++	 */
++	if ((long)file_inode(file)->i_private != LOCKEVENT_reset_cnts)
++		return count;
++
++	for_each_possible_cpu(cpu) {
++		int i;
++		unsigned long *ptr = per_cpu_ptr(lockevents, cpu);
++
++		for (i = 0 ; i < lockevent_num; i++)
++			WRITE_ONCE(ptr[i], 0);
++	}
++	return count;
++}
++
++/*
++ * Debugfs data structures
++ */
++static const struct file_operations fops_lockevent = {
++	.read = lockevent_read,
++	.write = lockevent_write,
++	.llseek = default_llseek,
++};
++
++/*
++ * Initialize debugfs for the locking event counts.
++ */
++static int __init init_lockevent_counts(void)
++{
++	struct dentry *d_counts = debugfs_create_dir(LOCK_EVENTS_DIR, NULL);
++	int i;
++
++	if (!d_counts)
++		goto out;
++
++	/*
++	 * Create the debugfs files
++	 *
++	 * As reading from and writing to the stat files can be slow, only
++	 * root is allowed to do the read/write to limit impact to system
++	 * performance.
++	 */
++	for (i = 0; i < lockevent_num; i++)
++		if (!debugfs_create_file(lockevent_names[i], 0400, d_counts,
++					 (void *)(long)i, &fops_lockevent))
++			goto fail_undo;
++
++	if (!debugfs_create_file(lockevent_names[LOCKEVENT_reset_cnts], 0200,
++				 d_counts, (void *)(long)LOCKEVENT_reset_cnts,
++				 &fops_lockevent))
++		goto fail_undo;
++
++	return 0;
++fail_undo:
++	debugfs_remove_recursive(d_counts);
++out:
++	pr_warn("Could not create '%s' debugfs entries\n", LOCK_EVENTS_DIR);
++	return -ENOMEM;
++}
++fs_initcall(init_lockevent_counts);
+diff --git a/kernel/locking/lock_events.h b/kernel/locking/lock_events.h
+index 4009e07b474a..feb1acc54611 100644
+--- a/kernel/locking/lock_events.h
++++ b/kernel/locking/lock_events.h
+@@ -13,6 +13,9 @@
+  * Authors: Waiman Long <longman@redhat.com>
+  */
+ 
++#ifndef __LOCKING_LOCK_EVENTS_H
++#define __LOCKING_LOCK_EVENTS_H
++
+ enum lock_events {
+ 
+ #include "lock_events_list.h"
+@@ -21,7 +24,7 @@ enum lock_events {
+ 	LOCKEVENT_reset_cnts = lockevent_num,
+ };
+ 
+-#ifdef CONFIG_QUEUED_LOCK_STAT
++#ifdef CONFIG_LOCK_EVENT_COUNTS
+ /*
+  * Per-cpu counters
+  */
+@@ -46,10 +49,11 @@ static inline void __lockevent_add(enum lock_events event, int inc)
+ 
+ #define lockevent_add(ev, c)	__lockevent_add(LOCKEVENT_ ##ev, c)
+ 
+-#else  /* CONFIG_QUEUED_LOCK_STAT */
++#else  /* CONFIG_LOCK_EVENT_COUNTS */
+ 
+ #define lockevent_inc(ev)
+ #define lockevent_add(ev, c)
+ #define lockevent_cond_inc(ev, c)
+ 
+-#endif /* CONFIG_QUEUED_LOCK_STAT */
++#endif /* CONFIG_LOCK_EVENT_COUNTS */
++#endif /* __LOCKING_LOCK_EVENTS_H */
+diff --git a/kernel/locking/qspinlock_stat.h b/kernel/locking/qspinlock_stat.h
+index 1db5b375fcf4..54152670ff24 100644
+--- a/kernel/locking/qspinlock_stat.h
++++ b/kernel/locking/qspinlock_stat.h
+@@ -9,76 +9,29 @@
+  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  * GNU General Public License for more details.
+  *
+- * Authors: Waiman Long <waiman.long@hpe.com>
++ * Authors: Waiman Long <longman@redhat.com>
+  */
+ 
+-/*
+- * When queued spinlock statistical counters are enabled, the following
+- * debugfs files will be created for reporting the counter values:
+- *
+- * <debugfs>/qlockstat/
+- *   pv_hash_hops	- average # of hops per hashing operation
+- *   pv_kick_unlock	- # of vCPU kicks issued at unlock time
+- *   pv_kick_wake	- # of vCPU kicks used for computing pv_latency_wake
+- *   pv_latency_kick	- average latency (ns) of vCPU kick operation
+- *   pv_latency_wake	- average latency (ns) from vCPU kick to wakeup
+- *   pv_lock_stealing	- # of lock stealing operations
+- *   pv_spurious_wakeup	- # of spurious wakeups in non-head vCPUs
+- *   pv_wait_again	- # of wait's after a queue head vCPU kick
+- *   pv_wait_early	- # of early vCPU wait's
+- *   pv_wait_head	- # of vCPU wait's at the queue head
+- *   pv_wait_node	- # of vCPU wait's at a non-head queue node
+- *   lock_pending	- # of locking operations via pending code
+- *   lock_slowpath	- # of locking operations via MCS lock queue
+- *   lock_use_node2	- # of locking operations that use 2nd per-CPU node
+- *   lock_use_node3	- # of locking operations that use 3rd per-CPU node
+- *   lock_use_node4	- # of locking operations that use 4th per-CPU node
+- *   lock_no_node	- # of locking operations without using per-CPU node
+- *
+- * Subtracting lock_use_node[234] from lock_slowpath will give you
+- * lock_use_node1.
+- *
+- * Writing to the special ".reset_counts" file will reset all the above
+- * counter values.
+- *
+- * These statistical counters are implemented as per-cpu variables which are
+- * summed and computed whenever the corresponding debugfs files are read. This
+- * minimizes added overhead making the counters usable even in a production
+- * environment.
+- *
+- * There may be slight difference between pv_kick_wake and pv_kick_unlock.
+- */
+ #include "lock_events.h"
+ 
+-#ifdef CONFIG_QUEUED_LOCK_STAT
++#ifdef CONFIG_LOCK_EVENT_COUNTS
++#ifdef CONFIG_PARAVIRT_SPINLOCKS
+ /*
+- * Collect pvqspinlock statistics
++ * Collect pvqspinlock locking event counts
+  */
+-#include <linux/debugfs.h>
+ #include <linux/sched.h>
+ #include <linux/sched/clock.h>
+ #include <linux/fs.h>
+ 
+ #define EVENT_COUNT(ev)	lockevents[LOCKEVENT_ ## ev]
+ 
+-#undef  LOCK_EVENT
+-#define LOCK_EVENT(name)	[LOCKEVENT_ ## name] = #name,
+-
+-static const char * const lockevent_names[lockevent_num + 1] = {
+-
+-#include "lock_events_list.h"
+-
+-	[LOCKEVENT_reset_cnts] = ".reset_counts",
+-};
+-
+ /*
+- * Per-cpu counters
++ * PV specific per-cpu counter
+  */
+-DEFINE_PER_CPU(unsigned long, lockevents[lockevent_num]);
+ static DEFINE_PER_CPU(u64, pv_kick_time);
+ 
+ /*
+- * Function to read and return the qlock statistical counter values
++ * Function to read and return the PV qspinlock counts.
+  *
+  * The following counters are handled specially:
+  * 1. pv_latency_kick
+@@ -88,8 +41,8 @@ static DEFINE_PER_CPU(u64, pv_kick_time);
+  * 3. pv_hash_hops
+  *    Average hops/hash = pv_hash_hops/pv_kick_unlock
+  */
+-static ssize_t lockevent_read(struct file *file, char __user *user_buf,
+-			      size_t count, loff_t *ppos)
++ssize_t lockevent_read(struct file *file, char __user *user_buf,
++		       size_t count, loff_t *ppos)
+ {
+ 	char buf[64];
+ 	int cpu, id, len;
+@@ -149,78 +102,6 @@ static ssize_t lockevent_read(struct file *file, char __user *user_buf,
+ 	return simple_read_from_buffer(user_buf, count, ppos, buf, len);
+ }
+ 
+-/*
+- * Function to handle write request
+- *
+- * When id = .reset_cnts, reset all the counter values.
+- */
+-static ssize_t lockevent_write(struct file *file, const char __user *user_buf,
+-			   size_t count, loff_t *ppos)
+-{
+-	int cpu;
+-
+-	/*
+-	 * Get the counter ID stored in file->f_inode->i_private
+-	 */
+-	if ((long)file_inode(file)->i_private != LOCKEVENT_reset_cnts)
+-		return count;
+-
+-	for_each_possible_cpu(cpu) {
+-		int i;
+-		unsigned long *ptr = per_cpu_ptr(lockevents, cpu);
+-
+-		for (i = 0 ; i < lockevent_num; i++)
+-			WRITE_ONCE(ptr[i], 0);
+-	}
+-	return count;
+-}
+-
+-/*
+- * Debugfs data structures
+- */
+-static const struct file_operations fops_lockevent = {
+-	.read = lockevent_read,
+-	.write = lockevent_write,
+-	.llseek = default_llseek,
+-};
+-
+-/*
+- * Initialize debugfs for the qspinlock statistical counters
+- */
+-static int __init init_qspinlock_stat(void)
+-{
+-	struct dentry *d_counts = debugfs_create_dir("qlockstat", NULL);
+-	int i;
+-
+-	if (!d_counts)
+-		goto out;
+-
+-	/*
+-	 * Create the debugfs files
+-	 *
+-	 * As reading from and writing to the stat files can be slow, only
+-	 * root is allowed to do the read/write to limit impact to system
+-	 * performance.
+-	 */
+-	for (i = 0; i < lockevent_num; i++)
+-		if (!debugfs_create_file(lockevent_names[i], 0400, d_counts,
+-					 (void *)(long)i, &fops_lockevent))
+-			goto fail_undo;
+-
+-	if (!debugfs_create_file(lockevent_names[LOCKEVENT_reset_cnts], 0200,
+-				 d_counts, (void *)(long)LOCKEVENT_reset_cnts,
+-				 &fops_lockevent))
+-		goto fail_undo;
+-
+-	return 0;
+-fail_undo:
+-	debugfs_remove_recursive(d_counts);
+-out:
+-	pr_warn("Could not create 'qlockstat' debugfs entries\n");
+-	return -ENOMEM;
+-}
+-fs_initcall(init_qspinlock_stat);
+-
+ /*
+  * PV hash hop count
+  */
+@@ -260,8 +141,10 @@ static inline void __pv_wait(u8 *ptr, u8 val)
+ #define pv_kick(c)	__pv_kick(c)
+ #define pv_wait(p, v)	__pv_wait(p, v)
+ 
+-#else /* CONFIG_QUEUED_LOCK_STAT */
++#endif /* CONFIG_PARAVIRT_SPINLOCKS */
++
++#else /* CONFIG_LOCK_EVENT_COUNTS */
+ 
+ static inline void lockevent_pv_hop(int hopcnt)	{ }
+ 
+-#endif /* CONFIG_QUEUED_LOCK_STAT */
++#endif /* CONFIG_LOCK_EVENT_COUNTS */
