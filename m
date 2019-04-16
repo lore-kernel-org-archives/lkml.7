@@ -2,112 +2,218 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CA54C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:12:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2768BC282DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:15:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEC4420868
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:12:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F37B22075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:15:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727331AbfDPGMl (ORCPT
+        id S1727232AbfDPGP5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 02:12:41 -0400
-Received: from mga17.intel.com ([192.55.52.151]:53117 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726837AbfDPGMl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 02:12:41 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from fmsmga005.fm.intel.com ([10.253.24.32])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Apr 2019 23:12:40 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,355,1549958400"; 
-   d="asc'?scan'208";a="337984849"
-Received: from pipin.fi.intel.com (HELO pipin) ([10.237.72.175])
-  by fmsmga005.fm.intel.com with ESMTP; 15 Apr 2019 23:12:36 -0700
-From:   Felipe Balbi <felipe.balbi@linux.intel.com>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Linux Doc Mailing List <linux-doc@vger.kernel.org>
-Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-usb@vger.kernel.org
-Subject: Re: [PATCH 36/57] docs: usb: convert documents to ReST
-In-Reply-To: <eaafc5741ccfe3b96ab2a9ef799c537c49ab20e5.1555382110.git.mchehab+samsung@kernel.org>
-References: <cover.1555382110.git.mchehab+samsung@kernel.org> <eaafc5741ccfe3b96ab2a9ef799c537c49ab20e5.1555382110.git.mchehab+samsung@kernel.org>
-Date:   Tue, 16 Apr 2019 09:12:32 +0300
-Message-ID: <874l6ya373.fsf@linux.intel.com>
+        Tue, 16 Apr 2019 02:15:57 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:48220 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726805AbfDPGP5 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 02:15:57 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:b93f:9fae:b276:a89a])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id F0993260C42;
+        Tue, 16 Apr 2019 07:15:54 +0100 (BST)
+Date:   Tue, 16 Apr 2019 08:15:51 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Vitor Soares <vitor.soares@synopsys.com>
+Cc:     linux-iio@vger.kernel.org, linux-i3c@lists.infradead.org,
+        linux-kernel@vger.kernel.org, pmeerw@pmeerw.net, lars@metafoo.de,
+        knaack.h@gmx.de, jic23@kernel.org, lorenzo.bianconi83@gmail.com,
+        bbrezillon@kernel.org, rafael@kernel.org,
+        gregkh@linuxfoundation.org, broonie@kernel.org,
+        joao.pinto@synopsys.com
+Subject: Re: [PATCH 1/3] remap: Add I3C bus support
+Message-ID: <20190416081551.6f21bc38@collabora.com>
+In-Reply-To: <c38e3cb9e8524af58c995a9cf1f79ddba69b47b4.1555354268.git.vitor.soares@synopsys.com>
+References: <cover.1555354268.git.vitor.soares@synopsys.com>
+        <c38e3cb9e8524af58c995a9cf1f79ddba69b47b4.1555354268.git.vitor.soares@synopsys.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: multipart/signed; boundary="=-=-=";
-        micalg=pgp-sha256; protocol="application/pgp-signature"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---=-=-=
-Content-Type: text/plain
-Content-Transfer-Encoding: quoted-printable
+Typo in the subject: s/remap/regmap/
 
-Mauro Carvalho Chehab <mchehab+samsung@kernel.org> writes:
+On Mon, 15 Apr 2019 21:19:39 +0200
+Vitor Soares <vitor.soares@synopsys.com> wrote:
 
-> Convert USB documents to ReST, in order to prepare for adding it
-> to the kernel API book, as most of the stuff there are driver or
-> subsystem-related.
->
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+> Add basic support for I3C bus.
+> This is a simple implementation that only give support
+> for Read and Write commands.
+> 
+> Signed-off-by: Vitor Soares <vitor.soares@synopsys.com>
 > ---
->  Documentation/usb/WUSB-Design-overview.txt |  56 +-
->  Documentation/usb/acm.txt                  | 156 +++---
->  Documentation/usb/authorization.txt        |  75 +--
->  Documentation/usb/chipidea.txt             | 101 ++--
->  Documentation/usb/dwc3.txt                 |  12 +-
->  Documentation/usb/ehci.txt                 |  42 +-
->  Documentation/usb/functionfs.txt           |  17 +-
->  Documentation/usb/gadget-testing.txt       | 609 ++++++++++++---------
->  Documentation/usb/gadget_configfs.txt      | 302 +++++-----
->  Documentation/usb/gadget_hid.txt           | 175 +++---
->  Documentation/usb/gadget_multi.txt         |  43 +-
->  Documentation/usb/gadget_printer.txt       | 155 +++---
->  Documentation/usb/gadget_serial.txt        |  73 +--
->  Documentation/usb/iuu_phoenix.txt          |  34 +-
->  Documentation/usb/mass-storage.txt         |  19 +-
->  Documentation/usb/misc_usbsevseg.txt       |   9 +-
->  Documentation/usb/mtouchusb.txt            |  42 +-
->  Documentation/usb/ohci.txt                 |   5 +-
->  Documentation/usb/rio.txt                  |  83 +--
->  Documentation/usb/usb-help.txt             |  21 +-
->  Documentation/usb/usb-serial.txt           | 203 ++++---
->  Documentation/usb/usbip_protocol.txt       | 552 ++++++++++---------
->  Documentation/usb/usbmon.txt               | 100 ++--
+>  drivers/base/regmap/Kconfig      |  6 +++-
+>  drivers/base/regmap/Makefile     |  1 +
+>  drivers/base/regmap/regmap-i3c.c | 62 ++++++++++++++++++++++++++++++++++++++++
+>  include/linux/regmap.h           | 20 +++++++++++++
+>  4 files changed, 88 insertions(+), 1 deletion(-)
+>  create mode 100644 drivers/base/regmap/regmap-i3c.c
+> 
+> diff --git a/drivers/base/regmap/Kconfig b/drivers/base/regmap/Kconfig
+> index 6ad5ef4..c8bbf53 100644
+> --- a/drivers/base/regmap/Kconfig
+> +++ b/drivers/base/regmap/Kconfig
+> @@ -4,7 +4,7 @@
+>  # subsystems should select the appropriate symbols.
+>  
+>  config REGMAP
+> -	default y if (REGMAP_I2C || REGMAP_SPI || REGMAP_SPMI || REGMAP_W1 || REGMAP_AC97 || REGMAP_MMIO || REGMAP_IRQ)
+> +	default y if (REGMAP_I2C || REGMAP_SPI || REGMAP_SPMI || REGMAP_W1 || REGMAP_AC97 || REGMAP_MMIO || REGMAP_IRQ || REGMAP_I3C)
+>  	select IRQ_DOMAIN if REGMAP_IRQ
+>  	bool
+>  
+> @@ -49,3 +49,7 @@ config REGMAP_SOUNDWIRE
+>  config REGMAP_SCCB
+>  	tristate
+>  	depends on I2C
+> +
+> +config REGMAP_I3C
+> +	tristate
+> +	depends on I3C
+> diff --git a/drivers/base/regmap/Makefile b/drivers/base/regmap/Makefile
+> index f5b4e88..ff6c7d8 100644
+> --- a/drivers/base/regmap/Makefile
+> +++ b/drivers/base/regmap/Makefile
+> @@ -16,3 +16,4 @@ obj-$(CONFIG_REGMAP_IRQ) += regmap-irq.o
+>  obj-$(CONFIG_REGMAP_W1) += regmap-w1.o
+>  obj-$(CONFIG_REGMAP_SOUNDWIRE) += regmap-sdw.o
+>  obj-$(CONFIG_REGMAP_SCCB) += regmap-sccb.o
+> +obj-$(CONFIG_REGMAP_I3C) += regmap-i3c.o
+> diff --git a/drivers/base/regmap/regmap-i3c.c b/drivers/base/regmap/regmap-i3c.c
+> new file mode 100644
+> index 0000000..565997b
+> --- /dev/null
+> +++ b/drivers/base/regmap/regmap-i3c.c
+> @@ -0,0 +1,62 @@
+> +// SPDX-License-Identifier: GPL-2.0
+> +/*
+> + * Copyright (c) 2018 Synopsys, Inc. and/or its affiliates.
+> + *
+> + * Author: Vitor Soares <vitor.soares@synopsys.com>
+> + */
+> +
+> +#include <linux/regmap.h>
+> +#include <linux/i3c/device.h>
+> +#include <linux/i3c/master.h>
+> +#include <linux/module.h>
+> +
+> +static int regmap_i3c_write(void *context, const void *data, size_t count)
+> +{
+> +	struct device *dev = context;
+> +	struct i3c_device *i3c = dev_to_i3cdev(dev);
+> +	struct i3c_priv_xfer xfers[] = {
+> +		{
+> +			.rnw = false,
+> +			.len = count,
+> +			.data.out = data,
+> +		},
+> +	};
+> +
+> +	return i3c_device_do_priv_xfers(i3c, xfers, 1);
+> +}
+> +
+> +static int regmap_i3c_read(void *context,
+> +			   const void *reg, size_t reg_size,
+> +			   void *val, size_t val_size)
+> +{
+> +	struct device *dev = context;
+> +	struct i3c_device *i3c = dev_to_i3cdev(dev);
+> +	struct i3c_priv_xfer xfers[2];
+> +
+> +	xfers[0].rnw = false;
+> +	xfers[0].len = reg_size;
+> +	xfers[0].data.out = reg;
+> +
+> +	xfers[1].rnw = true;
+> +	xfers[1].len = val_size;
+> +	xfers[1].data.in = val;
+> +
+> +	return i3c_device_do_priv_xfers(i3c, xfers, 2);
+> +}
+> +
+> +static struct regmap_bus regmap_i3c = {
+> +	.write = regmap_i3c_write,
+> +	.read = regmap_i3c_read,
+> +};
+> +
+> +struct regmap *__devm_regmap_init_i3c(struct i3c_device *i3c,
+> +				      const struct regmap_config *config,
+> +				      struct lock_class_key *lock_key,
+> +				      const char *lock_name)
+> +{
+> +	return __devm_regmap_init(&i3c->dev, &regmap_i3c, &i3c->dev, config,
+> +				  lock_key, lock_name);
+> +}
+> +EXPORT_SYMBOL_GPL(__devm_regmap_init_i3c);
+> +
+> +MODULE_LICENSE("GPL");
+> diff --git a/include/linux/regmap.h b/include/linux/regmap.h
+> index daeec7d..f65984d 100644
+> --- a/include/linux/regmap.h
+> +++ b/include/linux/regmap.h
+> @@ -25,6 +25,7 @@ struct module;
+>  struct clk;
+>  struct device;
+>  struct i2c_client;
+> +struct i3c_device;
+>  struct irq_domain;
+>  struct slim_device;
+>  struct spi_device;
+> @@ -624,6 +625,10 @@ struct regmap *__devm_regmap_init_slimbus(struct slim_device *slimbus,
+>  				 const struct regmap_config *config,
+>  				 struct lock_class_key *lock_key,
+>  				 const char *lock_name);
+> +struct regmap *__devm_regmap_init_i3c(struct i3c_device *i3c,
+> +				 const struct regmap_config *config,
+> +				 struct lock_class_key *lock_key,
+> +				 const char *lock_name);
+>  /*
+>   * Wrapper for regmap_init macros to include a unique lockdep key and name
+>   * for each call. No-op if CONFIG_LOCKDEP is not set.
+> @@ -982,6 +987,21 @@ bool regmap_ac97_default_volatile(struct device *dev, unsigned int reg);
+>  #define devm_regmap_init_slimbus(slimbus, config)			\
+>  	__regmap_lockdep_wrapper(__devm_regmap_init_slimbus, #config,	\
+>  				slimbus, config)
+> +
+> +/**
+> + * devm_regmap_init_i3c() - Initialise managed register map
 
-should you change extension to .rst while at that?
+Maybe we should have a more specific name here, as some might want to
+access registers using HDR modes (devm_regmap_init_i3c_sdr()?)
 
-=2D-=20
-balbi
 
---=-=-=
-Content-Type: application/pgp-signature; name="signature.asc"
+> + *
+> + * @i3c: Device that will be interacted with
+> + * @config: Configuration for register map
+> + *
+> + * The return value will be an ERR_PTR() on error or a valid pointer
+> + * to a struct regmap.  The regmap will be automatically freed by the
+> + * device management code.
+> + */
+> +#define devm_regmap_init_i3c(i3c, config)				\
+> +	__regmap_lockdep_wrapper(__devm_regmap_init_i3c, #config,	\
+> +				i3c, config)
+> +
+>  int regmap_mmio_attach_clk(struct regmap *map, struct clk *clk);
+>  void regmap_mmio_detach_clk(struct regmap *map);
+>  void regmap_exit(struct regmap *map);
 
------BEGIN PGP SIGNATURE-----
-
-iQIzBAEBCAAdFiEElLzh7wn96CXwjh2IzL64meEamQYFAly1clAACgkQzL64meEa
-mQZclRAAsO2oVxl96DdUAvZjTv2Uf+xu3KuObyLT1OjUdxMAWiZg9xBv1N65SJTh
-Tz6nDfmsYdTZPAizvKvkbNhhG4/AJ/KyGjW1dpihdmBLueibL0Yb+Q0a0hVuTFDT
-SA7peREFIlD/fyBmg8bJDpXXGlSbfQQEBxs5Mt/h1S6Bpw3P7WlkHpgAewRWSCQK
-ZNou2ty79bJEp7tRxPFDjSAIfK60tzxmOUGxkYctF2csKTWq/QF2nOgM0lh6Vcgg
-aJy8+fGTNjWvvN1oc/EJeAV0zrsaHWEn2dX/Q/adRknTAZbtLf0hvaDxDW8gzZKk
-P9NFc4T+ukPGqpehf8I5aXkRzbqCIxIoIwh14Ts49dwc+chmdfIQnc2MjxFt/rKw
-pDDYI1BSVOEFCwosnHgiK0NAn6uSZWzOv3UHartW7Jl9wfhWhL2na1tPQ66OGbA1
-MSgtuAd7pqU1N7bZ+j4l9mpPiPP/splksEvwX82iBjx/Wfn3OHWrTX44aiOIbpTX
-rB0YI6/3MslyWs4YgsyhM8FIsDIygWxKzw9dG1SvKYmSfqbpYlmwfJ135YZ/iybW
-CnqfVCP9SozE0s1e1EKCF1H/RAm828Iiooh3I09sHBNiKJhJZCrbJECi8+vcatC3
-CV1D21KnJ8sUfo+C35NK5q4YsCWIlSmUj4A5Z0P8yddcd55e/SU=
-=e70b
------END PGP SIGNATURE-----
---=-=-=--
