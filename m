@@ -2,370 +2,200 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UPPERCASE_50_75,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6309BC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 21:03:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4DCEC282DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 21:04:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D31B2075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 21:03:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6926D20684
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 21:04:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="iaM382AF"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="PJbXoVJo"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728939AbfDPVDd (ORCPT
+        id S1729745AbfDPVEX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 17:03:33 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:35756 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728000AbfDPVDd (ORCPT
+        Tue, 16 Apr 2019 17:04:23 -0400
+Received: from mail-yw1-f68.google.com ([209.85.161.68]:46331 "EHLO
+        mail-yw1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728000AbfDPVEX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 17:03:33 -0400
-Received: by mail-io1-f68.google.com with SMTP id p16so18874823iod.2
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 14:03:32 -0700 (PDT)
+        Tue, 16 Apr 2019 17:04:23 -0400
+Received: by mail-yw1-f68.google.com with SMTP id v127so7833751ywe.13
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 14:04:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=C+KGMcAwL2dava25sI3t47/wFsCGSy6YzYB0zHQQ7G4=;
-        b=iaM382AFidgEN9b+X3uGPafkGFVUJTAPVf+jGI+pljC7O5FLdbv5PWXoMXhonOCosY
-         EClQnYUuJJqAYgdquyG/8P5DxzMwNYS8y66aamY7x7eM6U8A8GQ6+H4H1aWFGuonxPlV
-         zNqnRNsJkB4Z102TTCUhXV2ju9WjWkN5p8ToM=
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=3mVw4sWA6qDIPaMdJZuToeLHe5IRdk9KdNBGER2kWPw=;
+        b=PJbXoVJo0Vst14Hk0/UANKstQkGniXTXSxKfoOfpuc/E37y4lgsr9Q4EiE6UDppkgX
+         w38peSnbKz2uF60LQ+lJGdl0t0YG7Hn3s9tsHmcxw+ubpubQLjWB4H0Z9fetLCz3y6/O
+         pI5nuojfsRxBMqnKH+uV2hDY0eu5gX8FA7rD8qI/ifSfmN7mg9BkoFaBdEqRucRfX/xL
+         A2nB5oNYltr8+D4nBVprPHRAGdlBulKIp7QXEunkHiqtkqEqXC1gGgkbZEKIb7LTIdn9
+         bMbNK/uGd0+4FIpTst7g2U8ieQ694BYR87LAkMrWB8qxQFd02llEWRhq5opMfKl55YhG
+         18og==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=C+KGMcAwL2dava25sI3t47/wFsCGSy6YzYB0zHQQ7G4=;
-        b=qLpl9GGRAMHGKYsjYOf0/Sx7DPrgdcSV7Q7it/vWUDhIXAq9RHFF8gNbNRQUIAMONs
-         xbTtwFOgBxiDlreJ9bZkVN2z9YxmaIMudhzIjj/3nenL5tiQvqvtOvOrRT+yMgJ0XLKL
-         1HYm956MCoQ8G8bfeaAbu/AvGgm8I72TuXoQcMBNPdn6ouhjac4WareC0nt/o2hYwrme
-         3s8T0zDi5dbGkfcB4rFAKsVXHv0qBl2mHGIrYAZY0XshOqmRxsOqGGFlUBd7wx45SLYC
-         5DwgFxpxS6Sxe2iAL1NDh57ZWLgSfVuViTwq8l2LKDC3Edy1Lg75MI/CmbTReBemG4J/
-         /b+g==
-X-Gm-Message-State: APjAAAUOa0zvg1NdyHnhnPd5SiPKmelD6RJlxxBdlFZSjkVl+K6yxazw
-        i71acsZtrpvBOyRbTaxtTRXOQw==
-X-Google-Smtp-Source: APXvYqyfVAoV4mzB3p97uC9+Oio+kDJWDxOmOCf+P+1fyfYfu99dLQn7hQ92G6euWHEdW1WF1lzxHg==
-X-Received: by 2002:a6b:3ec3:: with SMTP id l186mr52616806ioa.255.1555448612094;
-        Tue, 16 Apr 2019 14:03:32 -0700 (PDT)
-Received: from localhost ([2620:15c:183:0:20b8:dee7:5447:d05])
-        by smtp.gmail.com with ESMTPSA id x10sm1655022ita.4.2019.04.16.14.03.30
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 14:03:31 -0700 (PDT)
-From:   Raul E Rangel <rrangel@chromium.org>
-To:     linux-trace-devel@vger.kernel.org
-Cc:     eballetbo@gmail.com, zwisler@chromium.org, djkurtz@chromium.org,
-        Raul E Rangel <rrangel@chromium.org>,
-        Ross Zwisler <zwisler@google.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        linux-kernel@vger.kernel.org, Benson Leung <bleung@chromium.org>
-Subject: [PATCH v6] platform/chrome: cros_ec: Add trace event to trace EC commands
-Date:   Tue, 16 Apr 2019 15:03:28 -0600
-Message-Id: <20190416210328.204078-1-rrangel@chromium.org>
-X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=3mVw4sWA6qDIPaMdJZuToeLHe5IRdk9KdNBGER2kWPw=;
+        b=EtiyCu7LRsM1nJ9/E/HYYnyaesojJSI+G3yyL4V1FHeg56H3MLcKy/WbTj4AO6P42C
+         cNHzCrV52Ygq+73Yas/7L//88aGPyloM3PuvH1BsTi10IuPt06pH8acGt43g9+D8s3Mx
+         G9SqRXtoseNN04DSxVpJ5LaUDZwN96v7q6Czz/NR8iiUPbJtqGYt98Z4myStvq4LP9KI
+         jfqT0WVfhd7QWiRUCI3YX2zXye2pWPNI1eG4yqjU/2bZdqy9INKynjCX/nglxBUTO6tA
+         Fw+ypA8WUup8aXIlJhNNYQWLLAf8O/mBm4a+xphtDu+4dPzGJN1GeE2dkJ2h2dVnFHn6
+         fviA==
+X-Gm-Message-State: APjAAAU/CL3kyVOkZzfOWG8u9hWArMB4FntbKLCvPEZq10nE3NnTerTo
+        NIRYpLAOcfj45P6SQUJVxzLCy6/dT1r5PaGcYVa4GhSOk8CsQg==
+X-Google-Smtp-Source: APXvYqzxkgzQTeP/U3vWXtxhWmS8C5zVvbgwjVZE+yABxDg607Eb2ntm7uFqtPB3IgvfP2dNJSKixsP0pKGCx8Y0aRQ=
+X-Received: by 2002:a81:a18b:: with SMTP id y133mr65958783ywg.64.1555448662137;
+ Tue, 16 Apr 2019 14:04:22 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190215185151.GG7897@sirena.org.uk> <20190226155948.299aa894a5576e61dda3e5aa@linux-foundation.org>
+ <CAPcyv4ivjC8fNkfjdFyaYCAjGh7wtvFQnoPpOcR=VNZ=c6d6Rg@mail.gmail.com>
+ <20190228151438.fc44921e66f2f5d393c8d7b4@linux-foundation.org>
+ <CAPcyv4hDmmK-L=0txw7L9O8YgvAQxZfVFiSoB4LARRnGQ3UC7Q@mail.gmail.com>
+ <026b5082-32f2-e813-5396-e4a148c813ea@collabora.com> <20190301124100.62a02e2f622ff6b5f178a7c3@linux-foundation.org>
+ <3fafb552-ae75-6f63-453c-0d0e57d818f3@collabora.com> <CAPcyv4hMNiiM11ULjbOnOf=9N=yCABCRsAYLpjXs+98bRoRpCA@mail.gmail.com>
+ <36faea07-139c-b97d-3585-f7d6d362abc3@collabora.com> <20190306140529.GG3549@rapoport-lnx>
+ <21d138a5-13e4-9e83-d7fe-e0639a8d180a@collabora.com> <CAPcyv4jBjUScKExK09VkL8XKibNcbw11ET4WNUWUWbPXeT9DFQ@mail.gmail.com>
+ <CAGXu5jLAPKBE-EdfXkg2AK5P=qZktW6ow4kN5Yzc0WU2rtG8LQ@mail.gmail.com>
+ <CABXOdTdVvFn=Nbd_Anhz7zR1H-9QeGByF3HFg4ZFt58R8=H6zA@mail.gmail.com>
+ <CAGXu5j+Sw2FyMc8L+8hTpEKbOsySFGrCmFtVP5gt9y2pJhYVUw@mail.gmail.com>
+ <CABXOdTcXWf9iReoocaj9rZ7z17zt-62iPDuvQQSrQRtMeeZNiA@mail.gmail.com>
+ <CAPcyv4i8xhA6B5e=YBq2Z5kooyUpYZ8Bv9qov-mvqm4Uz=KLWQ@mail.gmail.com>
+ <CABXOdTc5=J7ZFgbiwahVind-SNt7+G_-TVO=v-Y5SBVPLdUFog@mail.gmail.com>
+ <CAPcyv4gxk9xbsP3YSKzxu5Yp9FTefyxHc6xC33GwZ3Zf9_eeKA@mail.gmail.com>
+ <CABXOdTd-cqHM_feAO1tvwn4Z=kM6WHKYAbDJ7LGfMvRPRPG7GA@mail.gmail.com> <CAPcyv4hyOtJsnM6qqey7ADY=7brzVQ5TH3URrofmsQ57t1=WbQ@mail.gmail.com>
+In-Reply-To: <CAPcyv4hyOtJsnM6qqey7ADY=7brzVQ5TH3URrofmsQ57t1=WbQ@mail.gmail.com>
+From:   Guenter Roeck <groeck@google.com>
+Date:   Tue, 16 Apr 2019 14:04:10 -0700
+Message-ID: <CABXOdTeu0WTv9b+0eLHC+0K+HdNQsRTAUaWyxXAbKxQyy_19PQ@mail.gmail.com>
+Subject: Re: next/master boot bisection: next-20190215 on beaglebone-black
+To:     Dan Williams <dan.j.williams@intel.com>
+Cc:     Kees Cook <keescook@chromium.org>, kernelci@groups.io,
+        Guillaume Tucker <guillaume.tucker@collabora.com>,
+        Mike Rapoport <rppt@linux.ibm.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Michal Hocko <mhocko@suse.com>,
+        Mark Brown <broonie@kernel.org>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
+        Matt Hart <matthew.hart@linaro.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        Kevin Hilman <khilman@baylibre.com>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        Dominik Brodowski <linux@dominikbrodowski.net>,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Adrian Reber <adrian@lisas.de>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Linux MM <linux-mm@kvack.org>,
+        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
+        Richard Guy Briggs <rgb@redhat.com>,
+        "Peter Zijlstra (Intel)" <peterz@infradead.org>, info@kernelci.org
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This is useful to see which EC commands are being executed and when.
+On Tue, Apr 16, 2019 at 1:37 PM Dan Williams <dan.j.williams@intel.com> wrote:
+>
+> On Tue, Apr 16, 2019 at 12:34 PM Guenter Roeck <groeck@google.com> wrote:
+> >
+> > On Tue, Apr 16, 2019 at 11:54 AM Dan Williams <dan.j.williams@intel.com> wrote:
+> > >
+> > > On Thu, Apr 11, 2019 at 1:54 PM Guenter Roeck <groeck@google.com> wrote:
+> > > [..]
+> > > > > > Boot tests report
+> > > > > >
+> > > > > > Qemu test results:
+> > > > > >     total: 345 pass: 345 fail: 0
+> > > > > >
+> > > > > > This is on top of next-20190410 with CONFIG_SHUFFLE_PAGE_ALLOCATOR=y
+> > > > > > and the known crashes fixed.
+> > > > >
+> > > > > In addition to CONFIG_SHUFFLE_PAGE_ALLOCATOR=y you also need the
+> > > > > kernel command line option "page_alloc.shuffle=1"
+> > > > >
+> > > > > ...so I doubt you are running with shuffling enabled. Another way to
+> > > > > double check is:
+> > > > >
+> > > > >    cat /sys/module/page_alloc/parameters/shuffle
+> > > >
+> > > > Yes, you are right. Because, with it enabled, I see:
+> > > >
+> > > > Kernel command line: rdinit=/sbin/init page_alloc.shuffle=1 panic=-1
+> > > > console=ttyAMA0,115200 page_alloc.shuffle=1
+> > > > ------------[ cut here ]------------
+> > > > WARNING: CPU: 0 PID: 0 at ./include/linux/jump_label.h:303
+> > > > page_alloc_shuffle+0x12c/0x1ac
+> > > > static_key_enable(): static key 'page_alloc_shuffle_key+0x0/0x4' used
+> > > > before call to jump_label_init()
+> > >
+> > > This looks to be specific to ARM never having had to deal with
+> > > DEFINE_STATIC_KEY_TRUE in the past.
+> > >
+> >
+> > This affects almost all architectures, not just arm, presumably
+> > because parse_args() is called before jump_label_init() in
+> > start_kernel().
+>
+> Hmm, you're right, but this should effect *every* architecture not
+> just ARM. Why is it not screaming at me on x86?
+>
+Guess you figured that out yourself...
 
-To enable:
+> > I did not bother to report back with further details
+> > after someone stated that qemu doesn't support omap2, and the context
+> > seemed to suggest that running any other tests would not add any
+> > value.
+> >
+> > > I am able to avoid this warning by simply not enabling JUMP_LABEL
+> > > support in my build.
+> > >
+> >
+> > Fine with me, as long as CONFIG_SHUFFLE_PAGE_ALLOCATOR=y is not
+> > enabled by default, or if it is made dependent on !JUMP_LABEL.
+>
+> Ah, no, the problem is that jump_label_init() is called by
+> setup_arch() on x86, and smp_prepare_boot_cpu() on powerpc, but not
+> until after parse_args() on ARM.
+>
+Anywhere but arm64, x86, and ppc, really.
 
-    echo 1 > /sys/kernel/debug/tracing/events/cros_ec/enable
+$ git grep jump_label_init arch
+arch/arm64/kernel/smp.c:        jump_label_init();
+arch/powerpc/lib/feature-fixups.c:      jump_label_init();
+arch/x86/kernel/setup.c:        jump_label_init();
 
-Example:
+> Given it appears to be safe to call jump_label_init() early how about
+> something like the following?
+>
+> diff --git a/init/main.c b/init/main.c
+> index 598e278b46f7..7d4025d665eb 100644
+> --- a/init/main.c
+> +++ b/init/main.c
+> @@ -582,6 +582,8 @@ asmlinkage __visible void __init start_kernel(void)
+>         page_alloc_init();
+>
+>         pr_notice("Kernel command line: %s\n", boot_command_line);
+> +       /* parameters may set static keys */
+> +       jump_label_init();
+>         parse_early_param();
+>         after_dashes = parse_args("Booting kernel",
+>                                   static_command_line, __start___param,
+> @@ -591,8 +593,6 @@ asmlinkage __visible void __init start_kernel(void)
+>                 parse_args("Setting init args", after_dashes, NULL, 0, -1, -1,
+>                            NULL, set_init_arg);
+>
+> -       jump_label_init();
+> -
 
-    /* cros_ec_cmd: version: 0, command: EC_CMD_GET_VERSION */
-    /* cros_ec_cmd: version: 0, command: EC_CMD_GET_PROTOCOL_INFO */
-    /* cros_ec_cmd: version: 1, command: EC_CMD_GET_CMD_VERSIONS */
-    /* cros_ec_cmd: version: 1, command: EC_CMD_USB_PD_CONTROL */
+That should work, unless there was a reason to have it that late. It
+doesn't look like that was the case, but I may be missing something.
 
-Signed-off-by: Raul E Rangel <rrangel@chromium.org>
-Reviewed-by: Ross Zwisler <zwisler@google.com>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
----
-I did not add cros_ec_commands.h as an include to cros_ec_trace.c.
-It's not strictly required because the macro doesn't get evaluated until
-after cros_ec_trace.h has been included. That transitively brings in
-cros_ec_ommands.h. I did try it, but since cros_ec_commands.h doesn't
-include linux/types.h it fails to find uint32_t. I could have included
-both headers, but since they aren't required I just skipped it.
-
-My reasoning for not putting EC_CMDS in the cros_ec_trace.h was that I
-didn't want to clutter the file. I think it's visually easier to find
-all the trace events without having to parse through all the
-implementation details.
-
-Changes in v6:
-- Added script to generate the EC_CMDS trace symbols. They were
-  originally sorted by value, now they are sorted by declaration order.
-  There is one duplicate: EC_CMD_PORT80_LAST_BOOT and
-  EC_CMD_PORT80_READ. They both resolve to the same value. Not sure if
-  this is a bug in the cros_ec_commands.h file or not. Anyway it doesn't
-  hurt anything.
-- Changed the example in the commit
-
-Changes in v5:
-- Rebased on upstream/master. It turns out upstream/master is missing a
-  lot of changes to cros_ec_commands.h.
-- Replace SYM with SYMBOL in macro name.
-
-Changes in v4:
-- Use the full command name so go to definition continues to work in my
-editor.
-
-Changes in v3:
-- Use a macro to avoid duplicating the ec command names.
-
-Changes in v2:
-- Changed comment style to match other cros_ec files.
-- Fixed commit tag.
-
- drivers/platform/chrome/Makefile        |   5 +-
- drivers/platform/chrome/cros_ec_proto.c |   4 +
- drivers/platform/chrome/cros_ec_trace.c | 124 ++++++++++++++++++++++++
- drivers/platform/chrome/cros_ec_trace.h |  51 ++++++++++
- 4 files changed, 183 insertions(+), 1 deletion(-)
- create mode 100644 drivers/platform/chrome/cros_ec_trace.c
- create mode 100644 drivers/platform/chrome/cros_ec_trace.h
-
-diff --git a/drivers/platform/chrome/Makefile b/drivers/platform/chrome/Makefile
-index 1e2f0029b597..a6c0f5438e15 100644
---- a/drivers/platform/chrome/Makefile
-+++ b/drivers/platform/chrome/Makefile
-@@ -1,5 +1,8 @@
- # SPDX-License-Identifier: GPL-2.0
- 
-+# tell define_trace.h where to find the cros ec trace header
-+CFLAGS_cros_ec_trace.o:=		-I$(src)
-+
- obj-$(CONFIG_CHROMEOS_LAPTOP)		+= chromeos_laptop.o
- obj-$(CONFIG_CHROMEOS_PSTORE)		+= chromeos_pstore.o
- obj-$(CONFIG_CHROMEOS_TBMC)		+= chromeos_tbmc.o
-@@ -8,7 +11,7 @@ obj-$(CONFIG_CROS_EC_SPI)		+= cros_ec_spi.o
- cros_ec_lpcs-objs			:= cros_ec_lpc.o cros_ec_lpc_reg.o
- cros_ec_lpcs-$(CONFIG_CROS_EC_LPC_MEC)	+= cros_ec_lpc_mec.o
- obj-$(CONFIG_CROS_EC_LPC)		+= cros_ec_lpcs.o
--obj-$(CONFIG_CROS_EC_PROTO)		+= cros_ec_proto.o
-+obj-$(CONFIG_CROS_EC_PROTO)		+= cros_ec_proto.o cros_ec_trace.o
- obj-$(CONFIG_CROS_KBD_LED_BACKLIGHT)	+= cros_kbd_led_backlight.o
- obj-$(CONFIG_CROS_EC_LIGHTBAR)		+= cros_ec_lightbar.o
- obj-$(CONFIG_CROS_EC_VBC)		+= cros_ec_vbc.o
-diff --git a/drivers/platform/chrome/cros_ec_proto.c b/drivers/platform/chrome/cros_ec_proto.c
-index 97a068dff192..3d02c8259ac6 100644
---- a/drivers/platform/chrome/cros_ec_proto.c
-+++ b/drivers/platform/chrome/cros_ec_proto.c
-@@ -10,6 +10,8 @@
- #include <linux/slab.h>
- #include <asm/unaligned.h>
- 
-+#include "cros_ec_trace.h"
-+
- #define EC_COMMAND_RETRIES	50
- 
- static int prepare_packet(struct cros_ec_device *ec_dev,
-@@ -51,6 +53,8 @@ static int send_command(struct cros_ec_device *ec_dev,
- 	int ret;
- 	int (*xfer_fxn)(struct cros_ec_device *ec, struct cros_ec_command *msg);
- 
-+	trace_cros_ec_cmd(msg);
-+
- 	if (ec_dev->proto_version > 2)
- 		xfer_fxn = ec_dev->pkt_xfer;
- 	else
-diff --git a/drivers/platform/chrome/cros_ec_trace.c b/drivers/platform/chrome/cros_ec_trace.c
-new file mode 100644
-index 000000000000..0a76412095a9
---- /dev/null
-+++ b/drivers/platform/chrome/cros_ec_trace.c
-@@ -0,0 +1,124 @@
-+// SPDX-License-Identifier: GPL-2.0
-+// Trace events for the ChromeOS Embedded Controller
-+//
-+// Copyright 2019 Google LLC.
-+
-+#define TRACE_SYMBOL(a) {a, #a}
-+
-+// Generate the list using the following script:
-+// sed -n 's/^#define \(EC_CMD_[[:alnum:]_]*\)\s.*/\tTRACE_SYMBOL(\1), \\/p' include/linux/mfd/cros_ec_commands.h
-+#define EC_CMDS \
-+	TRACE_SYMBOL(EC_CMD_PROTO_VERSION), \
-+	TRACE_SYMBOL(EC_CMD_HELLO), \
-+	TRACE_SYMBOL(EC_CMD_GET_VERSION), \
-+	TRACE_SYMBOL(EC_CMD_READ_TEST), \
-+	TRACE_SYMBOL(EC_CMD_GET_BUILD_INFO), \
-+	TRACE_SYMBOL(EC_CMD_GET_CHIP_INFO), \
-+	TRACE_SYMBOL(EC_CMD_GET_BOARD_VERSION), \
-+	TRACE_SYMBOL(EC_CMD_READ_MEMMAP), \
-+	TRACE_SYMBOL(EC_CMD_GET_CMD_VERSIONS), \
-+	TRACE_SYMBOL(EC_CMD_GET_COMMS_STATUS), \
-+	TRACE_SYMBOL(EC_CMD_TEST_PROTOCOL), \
-+	TRACE_SYMBOL(EC_CMD_GET_PROTOCOL_INFO), \
-+	TRACE_SYMBOL(EC_CMD_GSV_PAUSE_IN_S5), \
-+	TRACE_SYMBOL(EC_CMD_GET_FEATURES), \
-+	TRACE_SYMBOL(EC_CMD_FLASH_INFO), \
-+	TRACE_SYMBOL(EC_CMD_FLASH_READ), \
-+	TRACE_SYMBOL(EC_CMD_FLASH_WRITE), \
-+	TRACE_SYMBOL(EC_CMD_FLASH_ERASE), \
-+	TRACE_SYMBOL(EC_CMD_FLASH_PROTECT), \
-+	TRACE_SYMBOL(EC_CMD_FLASH_REGION_INFO), \
-+	TRACE_SYMBOL(EC_CMD_VBNV_CONTEXT), \
-+	TRACE_SYMBOL(EC_CMD_PWM_GET_FAN_TARGET_RPM), \
-+	TRACE_SYMBOL(EC_CMD_PWM_SET_FAN_TARGET_RPM), \
-+	TRACE_SYMBOL(EC_CMD_PWM_GET_KEYBOARD_BACKLIGHT), \
-+	TRACE_SYMBOL(EC_CMD_PWM_SET_KEYBOARD_BACKLIGHT), \
-+	TRACE_SYMBOL(EC_CMD_PWM_SET_FAN_DUTY), \
-+	TRACE_SYMBOL(EC_CMD_PWM_SET_DUTY), \
-+	TRACE_SYMBOL(EC_CMD_PWM_GET_DUTY), \
-+	TRACE_SYMBOL(EC_CMD_LIGHTBAR_CMD), \
-+	TRACE_SYMBOL(EC_CMD_LED_CONTROL), \
-+	TRACE_SYMBOL(EC_CMD_VBOOT_HASH), \
-+	TRACE_SYMBOL(EC_CMD_MOTION_SENSE_CMD), \
-+	TRACE_SYMBOL(EC_CMD_USB_CHARGE_SET_MODE), \
-+	TRACE_SYMBOL(EC_CMD_PSTORE_INFO), \
-+	TRACE_SYMBOL(EC_CMD_PSTORE_READ), \
-+	TRACE_SYMBOL(EC_CMD_PSTORE_WRITE), \
-+	TRACE_SYMBOL(EC_CMD_RTC_GET_VALUE), \
-+	TRACE_SYMBOL(EC_CMD_RTC_GET_ALARM), \
-+	TRACE_SYMBOL(EC_CMD_RTC_SET_VALUE), \
-+	TRACE_SYMBOL(EC_CMD_RTC_SET_ALARM), \
-+	TRACE_SYMBOL(EC_CMD_PORT80_LAST_BOOT), \
-+	TRACE_SYMBOL(EC_CMD_PORT80_READ), \
-+	TRACE_SYMBOL(EC_CMD_THERMAL_SET_THRESHOLD), \
-+	TRACE_SYMBOL(EC_CMD_THERMAL_GET_THRESHOLD), \
-+	TRACE_SYMBOL(EC_CMD_THERMAL_AUTO_FAN_CTRL), \
-+	TRACE_SYMBOL(EC_CMD_TMP006_GET_CALIBRATION), \
-+	TRACE_SYMBOL(EC_CMD_TMP006_SET_CALIBRATION), \
-+	TRACE_SYMBOL(EC_CMD_TMP006_GET_RAW), \
-+	TRACE_SYMBOL(EC_CMD_MKBP_STATE), \
-+	TRACE_SYMBOL(EC_CMD_MKBP_INFO), \
-+	TRACE_SYMBOL(EC_CMD_MKBP_SIMULATE_KEY), \
-+	TRACE_SYMBOL(EC_CMD_MKBP_SET_CONFIG), \
-+	TRACE_SYMBOL(EC_CMD_MKBP_GET_CONFIG), \
-+	TRACE_SYMBOL(EC_CMD_KEYSCAN_SEQ_CTRL), \
-+	TRACE_SYMBOL(EC_CMD_GET_NEXT_EVENT), \
-+	TRACE_SYMBOL(EC_CMD_TEMP_SENSOR_GET_INFO), \
-+	TRACE_SYMBOL(EC_CMD_HOST_EVENT_GET_B), \
-+	TRACE_SYMBOL(EC_CMD_HOST_EVENT_GET_SMI_MASK), \
-+	TRACE_SYMBOL(EC_CMD_HOST_EVENT_GET_SCI_MASK), \
-+	TRACE_SYMBOL(EC_CMD_HOST_EVENT_GET_WAKE_MASK), \
-+	TRACE_SYMBOL(EC_CMD_HOST_EVENT_SET_SMI_MASK), \
-+	TRACE_SYMBOL(EC_CMD_HOST_EVENT_SET_SCI_MASK), \
-+	TRACE_SYMBOL(EC_CMD_HOST_EVENT_CLEAR), \
-+	TRACE_SYMBOL(EC_CMD_HOST_EVENT_SET_WAKE_MASK), \
-+	TRACE_SYMBOL(EC_CMD_HOST_EVENT_CLEAR_B), \
-+	TRACE_SYMBOL(EC_CMD_SWITCH_ENABLE_BKLIGHT), \
-+	TRACE_SYMBOL(EC_CMD_SWITCH_ENABLE_WIRELESS), \
-+	TRACE_SYMBOL(EC_CMD_GPIO_SET), \
-+	TRACE_SYMBOL(EC_CMD_GPIO_GET), \
-+	TRACE_SYMBOL(EC_CMD_I2C_READ), \
-+	TRACE_SYMBOL(EC_CMD_I2C_WRITE), \
-+	TRACE_SYMBOL(EC_CMD_CHARGE_CONTROL), \
-+	TRACE_SYMBOL(EC_CMD_CONSOLE_SNAPSHOT), \
-+	TRACE_SYMBOL(EC_CMD_CONSOLE_READ), \
-+	TRACE_SYMBOL(EC_CMD_BATTERY_CUT_OFF), \
-+	TRACE_SYMBOL(EC_CMD_USB_MUX), \
-+	TRACE_SYMBOL(EC_CMD_LDO_SET), \
-+	TRACE_SYMBOL(EC_CMD_LDO_GET), \
-+	TRACE_SYMBOL(EC_CMD_POWER_INFO), \
-+	TRACE_SYMBOL(EC_CMD_I2C_PASSTHRU), \
-+	TRACE_SYMBOL(EC_CMD_HANG_DETECT), \
-+	TRACE_SYMBOL(EC_CMD_CHARGE_STATE), \
-+	TRACE_SYMBOL(EC_CMD_CHARGE_CURRENT_LIMIT), \
-+	TRACE_SYMBOL(EC_CMD_EXTERNAL_POWER_LIMIT), \
-+	TRACE_SYMBOL(EC_CMD_HOST_SLEEP_EVENT), \
-+	TRACE_SYMBOL(EC_CMD_SB_READ_WORD), \
-+	TRACE_SYMBOL(EC_CMD_SB_WRITE_WORD), \
-+	TRACE_SYMBOL(EC_CMD_SB_READ_BLOCK), \
-+	TRACE_SYMBOL(EC_CMD_SB_WRITE_BLOCK), \
-+	TRACE_SYMBOL(EC_CMD_BATTERY_VENDOR_PARAM), \
-+	TRACE_SYMBOL(EC_CMD_CODEC_I2S), \
-+	TRACE_SYMBOL(EC_CMD_REBOOT_EC), \
-+	TRACE_SYMBOL(EC_CMD_GET_PANIC_INFO), \
-+	TRACE_SYMBOL(EC_CMD_ACPI_READ), \
-+	TRACE_SYMBOL(EC_CMD_ACPI_WRITE), \
-+	TRACE_SYMBOL(EC_CMD_ACPI_QUERY_EVENT), \
-+	TRACE_SYMBOL(EC_CMD_CEC_WRITE_MSG), \
-+	TRACE_SYMBOL(EC_CMD_CEC_SET), \
-+	TRACE_SYMBOL(EC_CMD_CEC_GET), \
-+	TRACE_SYMBOL(EC_CMD_REBOOT), \
-+	TRACE_SYMBOL(EC_CMD_RESEND_RESPONSE), \
-+	TRACE_SYMBOL(EC_CMD_VERSION0), \
-+	TRACE_SYMBOL(EC_CMD_PD_EXCHANGE_STATUS), \
-+	TRACE_SYMBOL(EC_CMD_USB_PD_CONTROL), \
-+	TRACE_SYMBOL(EC_CMD_USB_PD_PORTS), \
-+	TRACE_SYMBOL(EC_CMD_USB_PD_POWER_INFO), \
-+	TRACE_SYMBOL(EC_CMD_CHARGE_PORT_COUNT), \
-+	TRACE_SYMBOL(EC_CMD_USB_PD_DISCOVERY), \
-+	TRACE_SYMBOL(EC_CMD_PD_CHARGE_PORT_OVERRIDE), \
-+	TRACE_SYMBOL(EC_CMD_PD_GET_LOG_ENTRY), \
-+	TRACE_SYMBOL(EC_CMD_USB_PD_MUX_INFO)
-+
-+#define CREATE_TRACE_POINTS
-+#include "cros_ec_trace.h"
-diff --git a/drivers/platform/chrome/cros_ec_trace.h b/drivers/platform/chrome/cros_ec_trace.h
-new file mode 100644
-index 000000000000..7ae3b89c78b9
---- /dev/null
-+++ b/drivers/platform/chrome/cros_ec_trace.h
-@@ -0,0 +1,51 @@
-+/* SPDX-License-Identifier: GPL-2.0 */
-+/*
-+ * Trace events for the ChromeOS Embedded Controller
-+ *
-+ * Copyright 2019 Google LLC.
-+ */
-+
-+#undef TRACE_SYSTEM
-+#define TRACE_SYSTEM cros_ec
-+
-+#if !defined(_CROS_EC_TRACE_H_) || defined(TRACE_HEADER_MULTI_READ)
-+#define _CROS_EC_TRACE_H_
-+
-+#include <linux/types.h>
-+#include <linux/mfd/cros_ec.h>
-+
-+#include <linux/tracepoint.h>
-+
-+DECLARE_EVENT_CLASS(cros_ec_cmd_class,
-+	TP_PROTO(struct cros_ec_command *cmd),
-+	TP_ARGS(cmd),
-+	TP_STRUCT__entry(
-+		__field(uint32_t, version)
-+		__field(uint32_t, command)
-+	),
-+	TP_fast_assign(
-+		__entry->version = cmd->version;
-+		__entry->command = cmd->command;
-+	),
-+	TP_printk("version: %u, command: %s", __entry->version,
-+		  __print_symbolic(__entry->command, EC_CMDS))
-+);
-+
-+
-+DEFINE_EVENT(cros_ec_cmd_class, cros_ec_cmd,
-+	TP_PROTO(struct cros_ec_command *cmd),
-+	TP_ARGS(cmd)
-+);
-+
-+
-+#endif /* _CROS_EC_TRACE_H_ */
-+
-+/* this part must be outside header guard */
-+
-+#undef TRACE_INCLUDE_PATH
-+#define TRACE_INCLUDE_PATH .
-+
-+#undef TRACE_INCLUDE_FILE
-+#define TRACE_INCLUDE_FILE cros_ec_trace
-+
-+#include <trace/define_trace.h>
--- 
-2.21.0.392.gf8f6787159e-goog
-
+Guenter
