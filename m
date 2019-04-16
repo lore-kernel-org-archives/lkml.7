@@ -7,43 +7,47 @@ X-Spam-Status: No, score=-12.0 required=3.0
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8D08FC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:30:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20731C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:31:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5E8FD20868
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:30:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4E6A20868
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:31:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729295AbfDPPaz (ORCPT
+        id S1729413AbfDPPbT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 11:30:55 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:41393 "EHLO
+        Tue, 16 Apr 2019 11:31:19 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:53597 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726645AbfDPPay (ORCPT
+        with ESMTP id S1726860AbfDPPbT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 11:30:54 -0400
+        Tue, 16 Apr 2019 11:31:19 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3GFU8lj3494874
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3GFUmEV3495018
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Tue, 16 Apr 2019 08:30:08 -0700
+        Tue, 16 Apr 2019 08:30:48 -0700
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3GFU8rS3494822;
-        Tue, 16 Apr 2019 08:30:08 -0700
-Date:   Tue, 16 Apr 2019 08:30:08 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3GFUl4V3495015;
+        Tue, 16 Apr 2019 08:30:47 -0700
+Date:   Tue, 16 Apr 2019 08:30:47 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Rikard Falkeborn <tipbot@zytor.com>
-Message-ID: <tip-f32c2877bcb068a718bb70094cd59ccc29d4d082@git.kernel.org>
-Cc:     linux-kernel@vger.kernel.org, rostedt@goodmis.org, hpa@zytor.com,
-        rikard.falkeborn@gmail.com, mingo@kernel.org, acme@redhat.com,
-        tglx@linutronix.de, tstoyanov@vmware.com
-Reply-To: tstoyanov@vmware.com, tglx@linutronix.de, acme@redhat.com,
-          mingo@kernel.org, rikard.falkeborn@gmail.com, hpa@zytor.com,
-          linux-kernel@vger.kernel.org, rostedt@goodmis.org
-In-Reply-To: <20190409091529.2686-1-rikard.falkeborn@gmail.com>
-References: <20190409091529.2686-1-rikard.falkeborn@gmail.com>
+From:   tip-bot for Mao Han <tipbot@zytor.com>
+Message-ID: <tip-3a5b64f05d7fe36dea0dde26423e3044fbacd482@git.kernel.org>
+Cc:     jolsa@redhat.com, eranian@google.com, tglx@linutronix.de,
+        han_mao@c-sky.com, adrian.hunter@intel.com,
+        alexander.shishkin@linux.intel.com, peterz@infradead.org,
+        hpa@zytor.com, namhyung@kernel.org, mingo@kernel.org,
+        linux-kernel@vger.kernel.org, acme@redhat.com
+Reply-To: namhyung@kernel.org, hpa@zytor.com, peterz@infradead.org,
+          alexander.shishkin@linux.intel.com, adrian.hunter@intel.com,
+          han_mao@c-sky.com, tglx@linutronix.de, eranian@google.com,
+          jolsa@redhat.com, acme@redhat.com, linux-kernel@vger.kernel.org,
+          mingo@kernel.org
+In-Reply-To: <29ad7947dc8fd1ff0abd2093a72cc27a2446be9f.1554883878.git.han_mao@c-sky.com>
+References: <29ad7947dc8fd1ff0abd2093a72cc27a2446be9f.1554883878.git.han_mao@c-sky.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:perf/urgent] tools lib traceevent: Fix missing equality check
- for strcmp
-Git-Commit-ID: f32c2877bcb068a718bb70094cd59ccc29d4d082
+Subject: [tip:perf/urgent] perf evsel: Use hweight64() instead of
+ hweight_long(attr.sample_regs_user)
+Git-Commit-ID: 3a5b64f05d7fe36dea0dde26423e3044fbacd482
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -57,60 +61,92 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  f32c2877bcb068a718bb70094cd59ccc29d4d082
-Gitweb:     https://git.kernel.org/tip/f32c2877bcb068a718bb70094cd59ccc29d4d082
-Author:     Rikard Falkeborn <rikard.falkeborn@gmail.com>
-AuthorDate: Tue, 9 Apr 2019 11:15:29 +0200
+Commit-ID:  3a5b64f05d7fe36dea0dde26423e3044fbacd482
+Gitweb:     https://git.kernel.org/tip/3a5b64f05d7fe36dea0dde26423e3044fbacd482
+Author:     Mao Han <han_mao@c-sky.com>
+AuthorDate: Wed, 10 Apr 2019 16:16:43 +0800
 Committer:  Arnaldo Carvalho de Melo <acme@redhat.com>
-CommitDate: Tue, 16 Apr 2019 11:27:36 -0300
+CommitDate: Tue, 16 Apr 2019 11:27:53 -0300
 
-tools lib traceevent: Fix missing equality check for strcmp
+perf evsel: Use hweight64() instead of hweight_long(attr.sample_regs_user)
 
-There was a missing comparison with 0 when checking if type is "s64" or
-"u64". Therefore, the body of the if-statement was entered if "type" was
-"u64" or not "s64", which made the first strcmp() redundant since if
-type is "u64", it's not "s64".
+On 32-bits platform with more than 32 registers, the 64 bits mask is
+truncate to the lower 32 bits and the return value of hweight_long will
+always smaller than 32. When kernel outputs more than 32 registers, but
+the user perf program only counts 32, there will be a data mismatch
+result to overflow check fail.
 
-If type is "s64", the body of the if-statement is not entered but since
-the remainder of the function consists of if-statements which will not
-be entered if type is "s64", we will just return "val", which is
-correct, albeit at the cost of a few more calls to strcmp(), i.e., it
-will behave just as if the if-statement was entered.
-
-If type is neither "s64" or "u64", the body of the if-statement will be
-entered incorrectly and "val" returned. This means that any type that is
-checked after "s64" and "u64" is handled the same way as "s64" and
-"u64", i.e., the limiting of "val" to fit in for example "s8" is never
-reached.
-
-This was introduced in the kernel tree when the sources were copied from
-trace-cmd in commit f7d82350e597 ("tools/events: Add files to create
-libtraceevent.a"), and in the trace-cmd repo in 1cdbae6035cei
-("Implement typecasting in parser") when the function was introduced,
-i.e., it has always behaved the wrong way.
-
-Detected by cppcheck.
-
-Signed-off-by: Rikard Falkeborn <rikard.falkeborn@gmail.com>
-Reviewed-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-Cc: Tzvetomir Stoyanov <tstoyanov@vmware.com>
-Fixes: f7d82350e597 ("tools/events: Add files to create libtraceevent.a")
-Link: http://lkml.kernel.org/r/20190409091529.2686-1-rikard.falkeborn@gmail.com
+Signed-off-by: Mao Han <han_mao@c-sky.com>
+Cc: Adrian Hunter <adrian.hunter@intel.com>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Jiri Olsa <jolsa@redhat.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Stephane Eranian <eranian@google.com>
+Fixes: 6a21c0b5c2ab ("perf tools: Add core support for sampling intr machine state regs")
+Fixes: d03f2170546d ("perf tools: Expand perf_event__synthesize_sample()")
+Fixes: 0f6a30150ca2 ("perf tools: Support user regs and stack in sample parsing")
+Link: http://lkml.kernel.org/r/29ad7947dc8fd1ff0abd2093a72cc27a2446be9f.1554883878.git.han_mao@c-sky.com
 Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 ---
- tools/lib/traceevent/event-parse.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ tools/perf/util/evsel.c | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
 
-diff --git a/tools/lib/traceevent/event-parse.c b/tools/lib/traceevent/event-parse.c
-index 87494c7c619d..981c6ce2da2c 100644
---- a/tools/lib/traceevent/event-parse.c
-+++ b/tools/lib/traceevent/event-parse.c
-@@ -2233,7 +2233,7 @@ eval_type_str(unsigned long long val, const char *type, int pointer)
- 		return val & 0xffffffff;
+diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
+index 66d066f18b5b..966360844fff 100644
+--- a/tools/perf/util/evsel.c
++++ b/tools/perf/util/evsel.c
+@@ -2368,7 +2368,7 @@ int perf_evsel__parse_sample(struct perf_evsel *evsel, union perf_event *event,
+ 		if (data->user_regs.abi) {
+ 			u64 mask = evsel->attr.sample_regs_user;
  
- 	if (strcmp(type, "u64") == 0 ||
--	    strcmp(type, "s64"))
-+	    strcmp(type, "s64") == 0)
- 		return val;
+-			sz = hweight_long(mask) * sizeof(u64);
++			sz = hweight64(mask) * sizeof(u64);
+ 			OVERFLOW_CHECK(array, sz, max_size);
+ 			data->user_regs.mask = mask;
+ 			data->user_regs.regs = (u64 *)array;
+@@ -2424,7 +2424,7 @@ int perf_evsel__parse_sample(struct perf_evsel *evsel, union perf_event *event,
+ 		if (data->intr_regs.abi != PERF_SAMPLE_REGS_ABI_NONE) {
+ 			u64 mask = evsel->attr.sample_regs_intr;
  
- 	if (strcmp(type, "s8") == 0)
+-			sz = hweight_long(mask) * sizeof(u64);
++			sz = hweight64(mask) * sizeof(u64);
+ 			OVERFLOW_CHECK(array, sz, max_size);
+ 			data->intr_regs.mask = mask;
+ 			data->intr_regs.regs = (u64 *)array;
+@@ -2552,7 +2552,7 @@ size_t perf_event__sample_event_size(const struct perf_sample *sample, u64 type,
+ 	if (type & PERF_SAMPLE_REGS_USER) {
+ 		if (sample->user_regs.abi) {
+ 			result += sizeof(u64);
+-			sz = hweight_long(sample->user_regs.mask) * sizeof(u64);
++			sz = hweight64(sample->user_regs.mask) * sizeof(u64);
+ 			result += sz;
+ 		} else {
+ 			result += sizeof(u64);
+@@ -2580,7 +2580,7 @@ size_t perf_event__sample_event_size(const struct perf_sample *sample, u64 type,
+ 	if (type & PERF_SAMPLE_REGS_INTR) {
+ 		if (sample->intr_regs.abi) {
+ 			result += sizeof(u64);
+-			sz = hweight_long(sample->intr_regs.mask) * sizeof(u64);
++			sz = hweight64(sample->intr_regs.mask) * sizeof(u64);
+ 			result += sz;
+ 		} else {
+ 			result += sizeof(u64);
+@@ -2710,7 +2710,7 @@ int perf_event__synthesize_sample(union perf_event *event, u64 type,
+ 	if (type & PERF_SAMPLE_REGS_USER) {
+ 		if (sample->user_regs.abi) {
+ 			*array++ = sample->user_regs.abi;
+-			sz = hweight_long(sample->user_regs.mask) * sizeof(u64);
++			sz = hweight64(sample->user_regs.mask) * sizeof(u64);
+ 			memcpy(array, sample->user_regs.regs, sz);
+ 			array = (void *)array + sz;
+ 		} else {
+@@ -2746,7 +2746,7 @@ int perf_event__synthesize_sample(union perf_event *event, u64 type,
+ 	if (type & PERF_SAMPLE_REGS_INTR) {
+ 		if (sample->intr_regs.abi) {
+ 			*array++ = sample->intr_regs.abi;
+-			sz = hweight_long(sample->intr_regs.mask) * sizeof(u64);
++			sz = hweight64(sample->intr_regs.mask) * sizeof(u64);
+ 			memcpy(array, sample->intr_regs.regs, sz);
+ 			array = (void *)array + sz;
+ 		} else {
