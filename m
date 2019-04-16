@@ -2,499 +2,114 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BB712C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:20:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C99AC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:20:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 729362075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:20:14 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="EH4N3pco"
+	by mail.kernel.org (Postfix) with ESMTP id 217E020821
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:20:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728471AbfDPLUN (ORCPT
+        id S1729021AbfDPLUX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 07:20:13 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:35288 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726313AbfDPLUM (ORCPT
+        Tue, 16 Apr 2019 07:20:23 -0400
+Received: from mail-wr1-f65.google.com ([209.85.221.65]:46253 "EHLO
+        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726313AbfDPLUX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 07:20:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=OmsI2+OoyNnxBzAbuvhnzYt4mkE6meUt7rwI6OycolY=; b=EH4N3pco0U+DUgoryk3hkvHNZ
-        RX+Gc7Iu+pcSWB4zIazE+0QuGchPaVMtk7owmdPkrD0u2QbhSO6ytA9c87zPTlTOWDR33gLOTkMIG
-        U9h9TShf283+tLWbcDVrv6gmP8gw1QrsXipG0G6SE58BQqEAbovnirRvRoElmcs4V1QjMIN73Z9cs
-        xndZpqxZDE8cj0UR49iE3IcuzNW3kJs5X3ZKlS75X8SSSzI63vxv6/5tQceyKPLIecpz//Q+Z18X9
-        gCZWxI7urNjhNw6MZ+NvXncmRGe/g1BAyKxe4O0aKKl6ZSQPmJ/okHgL5aBGHdCez1RLVQoGumdXz
-        d7r+HndMw==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hGM8J-0004Kk-SO; Tue, 16 Apr 2019 11:20:12 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 86422286B760E; Tue, 16 Apr 2019 13:20:09 +0200 (CEST)
-Date:   Tue, 16 Apr 2019 13:20:09 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Frederic Weisbecker <frederic@kernel.org>
-Cc:     LKML <linux-kernel@vger.kernel.org>, Ingo Molnar <mingo@kernel.org>
-Subject: Re: [PATCH 4/4] locking/lockdep: Test all incompatible scenario at
- once in check_irq_usage()
-Message-ID: <20190416112009.GT11158@hirez.programming.kicks-ass.net>
-References: <20190402160244.32434-1-frederic@kernel.org>
- <20190402160244.32434-5-frederic@kernel.org>
- <20190409130352.GV4038@hirez.programming.kicks-ass.net>
- <20190410022846.GA30602@lenoir>
- <20190411104632.GH4038@hirez.programming.kicks-ass.net>
- <20190413003543.GA9544@lenoir>
+        Tue, 16 Apr 2019 07:20:23 -0400
+Received: by mail-wr1-f65.google.com with SMTP id t17so26440075wrw.13
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 04:20:22 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:in-reply-to:references:date
+         :message-id:mime-version;
+        bh=vX22ZljpvyzGqaDUGaMXFf3h/6G9La+s7NU9oDZqnu8=;
+        b=PB/2ffXRBzdBsn5XVLD+HHNXK+LzYee9Is513bm7MEqHmutCt8meoWVkhpl7nAEMlK
+         ORxH0tUbYVNlkG4NTSSOI5tmwN+PKLaKBDaEXMYzW9KvLBwW65Qdu27LdP1vQi+gU7hB
+         K0JGi7Gs+5RV4hVIiKVXPbvfjATGdPehCpcZQIEUdKOLl1uACs3hfwf0/D3RxHsva16x
+         PmcCgT71KCeqgTGiKDmWH4HYIZM6cK7hFDhsMaQ+kLcjOBY0dMOYNJzrfISomHyYI69j
+         eAYvI0VGrXKfY2sgQaqNNiVK5eTo/8hr39Ph2KNHz2NhSkTHPYhxqhQhaMQthvrLhMAz
+         KPCw==
+X-Gm-Message-State: APjAAAVt9PlLP1dlu/fDXoWQt/5N7hbgSp/NOfjbTUQ7pKRw99rZJHkO
+        +8TyBIQQE14eh1vpGRis0z0wrA==
+X-Google-Smtp-Source: APXvYqxj2mg+mTtpSS0BEUuEYEVSTXX6lf+1zju0o/vwNw/rdPPfOt84rnPY3PCKVl+fx/gRJLtl7g==
+X-Received: by 2002:adf:cd83:: with SMTP id q3mr49244642wrj.228.1555413621350;
+        Tue, 16 Apr 2019 04:20:21 -0700 (PDT)
+Received: from vitty.brq.redhat.com (nat-pool-brq-t.redhat.com. [213.175.37.10])
+        by smtp.gmail.com with ESMTPSA id z10sm17162151wmi.15.2019.04.16.04.20.20
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 16 Apr 2019 04:20:20 -0700 (PDT)
+From:   Vitaly Kuznetsov <vkuznets@redhat.com>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     "tglx\@linutronix.de" <tglx@linutronix.de>,
+        "riel\@surriel.com" <riel@surriel.com>,
+        "jpoimboe\@redhat.com" <jpoimboe@redhat.com>,
+        "luto\@kernel.org" <luto@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "marcelo.cerri\@canonical.com" <marcelo.cerri@canonical.com>,
+        "apw\@canonical.com" <apw@canonical.com>,
+        "olaf\@aepfle.de" <olaf@aepfle.de>,
+        "jasowang\@redhat.com" <jasowang@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: Re: [PATCH] smp: Do not warn if smp_call_function_single() is doing a self call.
+In-Reply-To: <20190416093123.GR11158@hirez.programming.kicks-ass.net>
+References: <20190412235341.29379-1-decui@microsoft.com> <20190415122128.GO11158@hirez.programming.kicks-ass.net> <PU1P153MB01695FDC44C6A2C32C7FB887BF2B0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM> <20190416093123.GR11158@hirez.programming.kicks-ass.net>
+Date:   Tue, 16 Apr 2019 13:20:19 +0200
+Message-ID: <87o9562o3w.fsf@vitty.brq.redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190413003543.GA9544@lenoir>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 13, 2019 at 02:35:45AM +0200, Frederic Weisbecker wrote:
-> On Thu, Apr 11, 2019 at 12:46:32PM +0200, Peter Zijlstra wrote:
+Peter Zijlstra <peterz@infradead.org> writes:
 
-> > +/*
-> > + * Observe that when given a bitmask where each bitnr is encoded as above, a
-> > + * right shift of the mask transforms the individual bitnrs as -1.
-> > + *
-> > + * So for all bits where bitnr1 == 1, we can create the mask where bitnr1 == 0
-> 
-> So by bitnr1 you're referring to direction, right?
+> On Mon, Apr 15, 2019 at 11:39:57PM +0000, Dexuan Cui wrote:
+>> > From: Peter Zijlstra <peterz@infradead.org>
+>> > Sent: Monday, April 15, 2019 5:21 AM
+>> > To: Dexuan Cui <decui@microsoft.com>
+>> > 
+>> > On Fri, Apr 12, 2019 at 11:53:57PM +0000, Dexuan Cui wrote:
+>> > > If smp_call_function_single() is calling the function for itself, it's safe
+>> > > to run with irqs_disabled() == true.
+>> > >
+>> > > I hit the warning because I'm in the below path in the .suspend callback of
+>> > > a "syscore_ops" to support hibernation for a VM running on Hyper-V:
+>> > >
+>> > >   hv_synic_cleanup() ->
+>> > >     clockevents_unbind_device() ->
+>> > >       clockevents_unbind() ->
+>> > >         smp_call_function_single().
+>> > >
+>> > > When the .suspend callback runs, only CPU0 is online and irqs_disabled() is
+>> > > true.
+>> > 
+>> > Pray tell, how well do you think mutex_lock() works with interrupts
+>> > disabled?
+>> 
+>> Good point. I realized generally speaking this patch makes no sense, so let me
+>> try the solution proposed by Vitaly, i.e. fix clockevents_unbind() instead.
+>
+> That's still not the problem. You're calling clockevents_unbind_device()
+> with IRQs disabled, that's not correct. It doesn't matter what
+> clockevents_unbind() does thereafter.
+>
 
-Yes, as per the comment on exclusive_bit().
+True. And before we start digging deeper into this, let's step back: why
+do we need to do clockevents_unbind_device() on hybernation? Can we just
+disable the device and re-enable it back on resume?
 
-> > + * by subtracting 2, or shifting the mask right by 2.
-> 
-> In which case we can perhaps reformulate:
-> 
->   So for all bits whose number have LOCK_ENABLED_* set (bitnr1 == 1), we can create the
->   mask with those bit numbers using LOCK_USED_IN_* (bitnr1 == 0) instead by
->   subtracting the bit number by 2, or shifting the mask right by 2.
-> 
-> And same would go for below.
+Actually, all usages of clockevents_unbind_device() in kernel are
+limited to Hyper-V and with Michael's patches moving this out of VMBus
+driver I think it can go away completely.
 
-Sure.
-
-> > + *
-> > + * Similarly, bitnr1 == 0 becomes bitnr1 == 1 by adding 2, or shifting left 2.
-> > + *
-> > + * So split the mask (note that LOCKF_ENABLED_IRQ_ALL|LOCKF_USED_IN_IRQ_ALL is
-> > + * all bits set) and recompose with bitnr1 flipped.
-> > + */
-> > +static unsigned long invert_dir_mask(unsigned long mask)
-> > +{
-> > +	unsigned long excl = 0;
-> > +
-> > +	/* Invert dir */
-> > +	excl |= (mask & LOCKF_ENABLED_IRQ_ALL) >> LOCK_USAGE_DIR_MASK;
-> > +	excl |= (mask & LOCKF_USED_IN_IRQ_ALL) << LOCK_USAGE_DIR_MASK;
-> > +
-> > +	return excl;
-> > +}
-> > +
-> > +/*
-> > + * As above, we clear bitnr0 with bitmask ops. First, for all bits with bitnr1
-> > + * set, add those with bitnr1 cleared. And then mask out all bitnr1.
-> > + */
-> 
-> Same here:
-> 
->   As above, we clear bitnr0 (LOCK_*_READ off) with bitmask ops. First, for all bits
->   with bitnr1 set (LOCK_ENABLED_*) , add those with bitnr1 cleared (LOCK_USED_IN_*).
->   And then mask out all bitnr1.
-
-Ha! you failed to spot my failure, all the above should be bitnr0 of
-course :/
-
-> > +static unsigned long exclusive_mask(unsigned long mask)
-> > +{
-> > +	unsigned long excl = invert_dir_mask(mask);
-> > +
-> > +	/* Strip read */
-> > +	excl |= (excl & LOCKF_IRQ_READ) >> LOCK_USAGE_READ_MASK;
-> > +	excl &= ~LOCKF_IRQ_READ;
-> > +
-> > +	return excl;
-> > +}
-> 
-> Not sure I'm making things clearer but at least that's some more pointers
-> to enum lock_usage_bit (defined on headers where I should add more layout
-> explanations, especially to make it clear we play with bit number bits :-s  )
-
-Find updated below.
-
----
-Subject: locking/lockdep: Test all incompatible scenario at once in check_irq_usage()
-From: Frederic Weisbecker <frederic@kernel.org>
-Date: Tue, 2 Apr 2019 18:02:44 +0200
-
-check_prev_add_irq() tests all incompatible scenarios one after the
-other while adding a lock (@next) to a tree dependency (@prev):
-
-	LOCK_USED_IN_HARDIRQ          vs         LOCK_ENABLED_HARDIRQ
-	LOCK_USED_IN_HARDIRQ_READ     vs         LOCK_ENABLED_HARDIRQ
-	LOCK_USED_IN_SOFTIRQ          vs         LOCK_ENABLED_SOFTIRQ
-	LOCK_USED_IN_SOFTIRQ_READ     vs         LOCK_ENABLED_SOFTIRQ
-
-Also for these four scenarios, we must at least iterate the @prev
-backward dependency. Then if it matches the relevant LOCK_USED_* bit,
-we must also iterate the @next forward dependency.
-
-Therefore in the best case we iterate 4 times, in the worst case 8 times.
-
-A different approach can let us divide the number of branch iterations
-by 4:
-
-1) Iterate through @prev backward dependencies and accumulate all the IRQ
-   uses in a single mask. In the best case where the current lock hasn't
-   been used in IRQ, we stop here.
-
-2) Iterate through @next forward dependencies and try to find a lock
-   whose usage is exclusive to the accumulated usages gathered in the
-   previous step. If we find one (call it @lockA), we have found an
-   incompatible use, otherwise we stop here. Only bad locking scenario
-   go further. So a sane verification stop here.
-
-3) Iterate again through @prev backward dependency and find the lock
-   whose usage matches @lockA in term of incompatibility. Call that
-   lock @lockB.
-
-4) Report the incompatible usages of @lockA and @lockB
-
-If no incompatible use is found, the verification never goes beyond
-step 2 which means at most two iterations.
-
-The following compares the execution measurements of the function
-check_prev_add_irq():
-
-            Number of  calls   | Avg (ns)  | Stdev (ns) | Total time (ns)
-  ------------------------------------------------------------------------
-  Mainline         8452        |  2652     |    11962   |    22415143
-  This patch       8452        |  1518     |     7090   |    12835602
-
-Cc: Ingo Molnar <mingo@kernel.org>
-Signed-off-by: Frederic Weisbecker <frederic@kernel.org>
-Signed-off-by: Peter Zijlstra (Intel) <peterz@infradead.org>
-Link: https://lkml.kernel.org/r/20190402160244.32434-5-frederic@kernel.org
----
- kernel/locking/lockdep.c           |  228 ++++++++++++++++++++++++++-----------
- kernel/locking/lockdep_internals.h |    6 
- 2 files changed, 167 insertions(+), 67 deletions(-)
-
---- a/kernel/locking/lockdep.c
-+++ b/kernel/locking/lockdep.c
-@@ -1676,6 +1676,14 @@ check_redundant(struct lock_list *root,
- }
- 
- #if defined(CONFIG_TRACE_IRQFLAGS) && defined(CONFIG_PROVE_LOCKING)
-+
-+static inline int usage_accumulate(struct lock_list *entry, void *mask)
-+{
-+	*(unsigned long *)mask |= entry->class->usage_mask;
-+
-+	return 0;
-+}
-+
- /*
-  * Forwards and backwards subgraph searching, for the purposes of
-  * proving that two subgraphs can be connected by a new dependency
-@@ -1687,8 +1695,6 @@ static inline int usage_match(struct loc
- 	return entry->class->usage_mask & *(unsigned long *)mask;
- }
- 
--
--
- /*
-  * Find a node in the forwards-direction dependency sub-graph starting
-  * at @root->class that matches @bit.
-@@ -1922,39 +1928,6 @@ print_bad_irq_dependency(struct task_str
- 	return 0;
- }
- 
--static int
--check_usage(struct task_struct *curr, struct held_lock *prev,
--	    struct held_lock *next, enum lock_usage_bit bit_backwards,
--	    enum lock_usage_bit bit_forwards, const char *irqclass)
--{
--	int ret;
--	struct lock_list this, that;
--	struct lock_list *uninitialized_var(target_entry);
--	struct lock_list *uninitialized_var(target_entry1);
--
--	this.parent = NULL;
--
--	this.class = hlock_class(prev);
--	ret = find_usage_backwards(&this, lock_flag(bit_backwards), &target_entry);
--	if (ret < 0)
--		return print_bfs_bug(ret);
--	if (ret == 1)
--		return ret;
--
--	that.parent = NULL;
--	that.class = hlock_class(next);
--	ret = find_usage_forwards(&that, lock_flag(bit_forwards), &target_entry1);
--	if (ret < 0)
--		return print_bfs_bug(ret);
--	if (ret == 1)
--		return ret;
--
--	return print_bad_irq_dependency(curr, &this, &that,
--			target_entry, target_entry1,
--			prev, next,
--			bit_backwards, bit_forwards, irqclass);
--}
--
- static const char *state_names[] = {
- #define LOCKDEP_STATE(__STATE) \
- 	__stringify(__STATE),
-@@ -1977,6 +1950,13 @@ static inline const char *state_name(enu
- 		return state_names[bit >> LOCK_USAGE_DIR_MASK];
- }
- 
-+/*
-+ * The bit number is encoded like:
-+ *
-+ *  bit0: 0 exclusive, 1 read lock
-+ *  bit1: 0 used in irq, 1 irq enabled
-+ *  bit2-n: state
-+ */
- static int exclusive_bit(int new_bit)
- {
- 	int state = new_bit & LOCK_USAGE_STATE_MASK;
-@@ -1988,45 +1968,160 @@ static int exclusive_bit(int new_bit)
- 	return state | (dir ^ LOCK_USAGE_DIR_MASK);
- }
- 
-+/*
-+ * Observe that when given a bitmask where each bitnr is encoded as above, a
-+ * right shift of the mask transforms the individual bitnrs as -1 and
-+ * conversely, a left shift transforms into +1 for the individual bitnrs.
-+ *
-+ * So for all bits whose number have LOCK_ENABLED_* set (bitnr1 == 1), we can
-+ * create the mask with those bit numbers using LOCK_USED_IN_* (bitnr1 == 0)
-+ * instead by subtracting the bit number by 2, or shifting the mask right by 2.
-+ *
-+ * Similarly, bitnr1 == 0 becomes bitnr1 == 1 by adding 2, or shifting left 2.
-+ *
-+ * So split the mask (note that LOCKF_ENABLED_IRQ_ALL|LOCKF_USED_IN_IRQ_ALL is
-+ * all bits set) and recompose with bitnr1 flipped.
-+ */
-+static unsigned long invert_dir_mask(unsigned long mask)
-+{
-+	unsigned long excl = 0;
-+
-+	/* Invert dir */
-+	excl |= (mask & LOCKF_ENABLED_IRQ_ALL) >> LOCK_USAGE_DIR_MASK;
-+	excl |= (mask & LOCKF_USED_IN_IRQ_ALL) << LOCK_USAGE_DIR_MASK;
-+
-+	return excl;
-+}
-+
-+/*
-+ * As above, we clear bitnr0 (LOCK_*_READ off) with bitmask ops. First, for all
-+ * bits with bitnr0 set (LOCK_*_READ), add those with bitnr0 cleared (LOCK_*).
-+ * And then mask out all bitnr0.
-+ */
-+static unsigned long exclusive_mask(unsigned long mask)
-+{
-+	unsigned long excl = invert_dir_mask(mask);
-+
-+	/* Strip read */
-+	excl |= (excl & LOCKF_IRQ_READ) >> LOCK_USAGE_READ_MASK;
-+	excl &= ~LOCKF_IRQ_READ;
-+
-+	return excl;
-+}
-+
-+/*
-+ * Retrieve the _possible_ original mask to which @mask is
-+ * exclusive. Ie: this is the opposite of exclusive_mask().
-+ * Note that 2 possible original bits can match an exclusive
-+ * bit: one has LOCK_USAGE_READ_MASK set, the other has it
-+ * cleared. So both are returned for each exclusive bit.
-+ */
-+static unsigned long original_mask(unsigned long mask)
-+{
-+	unsigned long excl = invert_dir_mask(mask);
-+
-+	/* Include read in existing usages */
-+	excl |= (excl & LOCKF_IRQ) << LOCK_USAGE_READ_MASK;
-+
-+	return excl;
-+}
-+
-+/*
-+ * Find the first pair of bit match between an original
-+ * usage mask and an exclusive usage mask.
-+ */
-+static int find_exclusive_match(unsigned long mask,
-+				unsigned long excl_mask,
-+				enum lock_usage_bit *bitp,
-+				enum lock_usage_bit *excl_bitp)
-+{
-+	int bit, excl;
-+
-+	for_each_set_bit(bit, &mask, LOCK_USED) {
-+		excl = exclusive_bit(bit);
-+		if (excl_mask & lock_flag(excl)) {
-+			*bitp = bit;
-+			*excl_bitp = excl;
-+			return 0;
-+		}
-+	}
-+	return -1;
-+}
-+
-+/*
-+ * Prove that the new dependency does not connect a hardirq-safe(-read)
-+ * lock with a hardirq-unsafe lock - to achieve this we search
-+ * the backwards-subgraph starting at <prev>, and the
-+ * forwards-subgraph starting at <next>:
-+ */
- static int check_irq_usage(struct task_struct *curr, struct held_lock *prev,
--			   struct held_lock *next, enum lock_usage_bit bit)
-+			   struct held_lock *next)
- {
-+	unsigned long usage_mask = 0, forward_mask, backward_mask;
-+	enum lock_usage_bit forward_bit = 0, backward_bit = 0;
-+	struct lock_list *uninitialized_var(target_entry1);
-+	struct lock_list *uninitialized_var(target_entry);
-+	struct lock_list this, that;
-+	int ret;
-+
- 	/*
--	 * Prove that the new dependency does not connect a hardirq-safe
--	 * lock with a hardirq-unsafe lock - to achieve this we search
--	 * the backwards-subgraph starting at <prev>, and the
--	 * forwards-subgraph starting at <next>:
-+	 * Step 1: gather all hard/soft IRQs usages backward in an
-+	 * accumulated usage mask.
- 	 */
--	if (!check_usage(curr, prev, next, bit,
--			   exclusive_bit(bit), state_name(bit)))
--		return 0;
-+	this.parent = NULL;
-+	this.class = hlock_class(prev);
-+
-+	ret = __bfs_backwards(&this, &usage_mask, usage_accumulate, NULL);
-+	if (ret < 0)
-+		return print_bfs_bug(ret);
- 
--	bit++; /* _READ */
-+	usage_mask &= LOCKF_USED_IN_IRQ_ALL;
-+	if (!usage_mask)
-+		return 1;
- 
- 	/*
--	 * Prove that the new dependency does not connect a hardirq-safe-read
--	 * lock with a hardirq-unsafe lock - to achieve this we search
--	 * the backwards-subgraph starting at <prev>, and the
--	 * forwards-subgraph starting at <next>:
-+	 * Step 2: find exclusive uses forward that match the previous
-+	 * backward accumulated mask.
- 	 */
--	if (!check_usage(curr, prev, next, bit,
--			   exclusive_bit(bit), state_name(bit)))
--		return 0;
-+	forward_mask = exclusive_mask(usage_mask);
- 
--	return 1;
--}
-+	that.parent = NULL;
-+	that.class = hlock_class(next);
- 
--static int
--check_prev_add_irq(struct task_struct *curr, struct held_lock *prev,
--		struct held_lock *next)
--{
--#define LOCKDEP_STATE(__STATE)						\
--	if (!check_irq_usage(curr, prev, next, LOCK_USED_IN_##__STATE))	\
--		return 0;
--#include "lockdep_states.h"
--#undef LOCKDEP_STATE
-+	ret = find_usage_forwards(&that, forward_mask, &target_entry1);
-+	if (ret < 0)
-+		return print_bfs_bug(ret);
-+	if (ret == 1)
-+		return ret;
- 
--	return 1;
-+	/*
-+	 * Step 3: we found a bad match! Now retrieve a lock from the backward
-+	 * list whose usage mask matches the exclusive usage mask from the
-+	 * lock found on the forward list.
-+	 */
-+	backward_mask = original_mask(target_entry1->class->usage_mask);
-+
-+	ret = find_usage_backwards(&this, backward_mask, &target_entry);
-+	if (ret < 0)
-+		return print_bfs_bug(ret);
-+	if (DEBUG_LOCKS_WARN_ON(ret == 1))
-+		return 1;
-+
-+	/*
-+	 * Step 4: narrow down to a pair of incompatible usage bits
-+	 * and report it.
-+	 */
-+	ret = find_exclusive_match(target_entry->class->usage_mask,
-+				   target_entry1->class->usage_mask,
-+				   &backward_bit, &forward_bit);
-+	if (DEBUG_LOCKS_WARN_ON(ret == -1))
-+		return 1;
-+
-+	return print_bad_irq_dependency(curr, &this, &that,
-+			target_entry, target_entry1,
-+			prev, next,
-+			backward_bit, forward_bit,
-+			state_name(backward_bit));
- }
- 
- static void inc_chains(void)
-@@ -2043,9 +2138,8 @@ static void inc_chains(void)
- 
- #else
- 
--static inline int
--check_prev_add_irq(struct task_struct *curr, struct held_lock *prev,
--		struct held_lock *next)
-+static inline int check_irq_usage(struct task_struct *curr,
-+				  struct held_lock *prev, struct held_lock *next)
- {
- 	return 1;
- }
-@@ -2225,7 +2319,7 @@ check_prev_add(struct task_struct *curr,
- 	else if (unlikely(ret < 0))
- 		return print_bfs_bug(ret);
- 
--	if (!check_prev_add_irq(curr, prev, next))
-+	if (!check_irq_usage(curr, prev, next))
- 		return 0;
- 
- 	/*
---- a/kernel/locking/lockdep_internals.h
-+++ b/kernel/locking/lockdep_internals.h
-@@ -66,6 +66,12 @@ static const unsigned long LOCKF_USED_IN
- 	0;
- #undef LOCKDEP_STATE
- 
-+#define LOCKF_ENABLED_IRQ_ALL (LOCKF_ENABLED_IRQ | LOCKF_ENABLED_IRQ_READ)
-+#define LOCKF_USED_IN_IRQ_ALL (LOCKF_USED_IN_IRQ | LOCKF_USED_IN_IRQ_READ)
-+
-+#define LOCKF_IRQ (LOCKF_ENABLED_IRQ | LOCKF_USED_IN_IRQ)
-+#define LOCKF_IRQ_READ (LOCKF_ENABLED_IRQ_READ | LOCKF_USED_IN_IRQ_READ)
-+
- /*
-  * CONFIG_LOCKDEP_SMALL is defined for sparc. Sparc requires .text,
-  * .data and .bss to fit in required 32MB limit for the kernel. With
+-- 
+Vitaly
