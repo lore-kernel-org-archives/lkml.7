@@ -2,228 +2,178 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 55326C282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:01:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 817A0C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:01:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 17A8A20821
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:01:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="YaMoOdnx"
+	by mail.kernel.org (Postfix) with ESMTP id 3C41D206B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:01:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555430499;
+	bh=mHk5RpEn1Rx8eHeT3Lb/2t+D/Q6RRd9GgljmOobrfto=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=OYYw/9pEsYPxM7vrV7amQyaMTzgrZwRifaQm0e7nU2u/9KDfSVfQ8sOAoz4i/eGZF
+	 ZqWnzS9t/TDkeohKGBTjZe6nXoHHJpZCNltte60yTcfpg9nfGjCZfDAUvtJ8b98PL3
+	 NTsKNKZSMaOV5XV3VuqSRqUtw6WYJdr09lOky3Ns=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729723AbfDPQB0 (ORCPT
+        id S1729843AbfDPQBi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 12:01:26 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:47652 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727618AbfDPQB0 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 12:01:26 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=QtVOPp9XpMjn95ZD00G+bQ5IUpR0FEhnQTx4/Nr+hTo=; b=YaMoOdnxJ6Q6o9/SSeBzYK5XG
-        to9JdTAU3hSRJa9F4p5GxIL4cmonUeGswTX5+yQtObIVzTAGRWC7FoXefWjN9rTlXQItuyJ6HOdcB
-        HjSlBUPddVbBKQdKknIFL98qv1N+zXilh71ROxQWTRwh0XSshPz1HeQk3lsZwNeQLyQePc6XxpQil
-        YVoorGVKTzldpc47fxClZ+xDbfYE+opVHubv9DYWcpeMOyRSBJHBi870tj9Z73DJ8l5qNCLif6mjn
-        mKXOPQMzwRy+byJh+1HTIsIb3dbcUDSi8fPV+gaieLYdFZrv8nm/OhOR0bbTfTscxFbt0QXXjak2a
-        HSkJHg38A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hGQWI-0003yH-PU; Tue, 16 Apr 2019 16:01:15 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5A36F29AC164D; Tue, 16 Apr 2019 18:01:13 +0200 (CEST)
-Date:   Tue, 16 Apr 2019 18:01:13 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
-Subject: Re: [PATCH v4 06/16] locking/rwsem: Code cleanup after files merging
-Message-ID: <20190416160113.GM12232@hirez.programming.kicks-ass.net>
-References: <20190413172259.2740-1-longman@redhat.com>
- <20190413172259.2740-7-longman@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190413172259.2740-7-longman@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Tue, 16 Apr 2019 12:01:38 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:38280 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728712AbfDPQBh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 12:01:37 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AEE80308795D;
+        Tue, 16 Apr 2019 16:01:36 +0000 (UTC)
+Received: from krava.brq.redhat.com (unknown [10.43.17.48])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 1ED965D71B;
+        Tue, 16 Apr 2019 16:01:27 +0000 (UTC)
+From:   Jiri Olsa <jolsa@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Jesper Dangaard Brouer <brouer@redhat.com>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Daniel Borkmann <daniel@iogearbox.net>,
+        Stanislav Fomichev <sdf@google.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Andi Kleen <ak@linux.intel.com>,
+        Adrian Hunter <adrian.hunter@intel.com>,
+        Song Liu <songliubraving@fb.com>
+Subject: [PATCH 00/12] perf tools: Display eBPF code in intel_pt trace
+Date:   Tue, 16 Apr 2019 18:01:15 +0200
+Message-Id: <20190416160127.30203-1-jolsa@kernel.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Tue, 16 Apr 2019 16:01:37 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+hi,
+this patchset adds dso support to read and display
+bpf code in intel_pt trace output. I had to change
+some of the kernel maps processing code, so hopefully
+I did not break too many things ;-)
 
-More cleanups..
+It's now possible to see bpf code flow via:
 
+  # perf-with-kcore record pt -e intel_pt//ku -- sleep 1
+  # perf-with-kcore script pt --insn-trace --xed
+  ...
+           sleep 36660 [016] 1057036.806464404:  ffffffff811dfba5 trace_call_bpf+0x65 ([kernel.kallsyms])               nopl  %eax, (%rax,%rax,1)
+           sleep 36660 [016] 1057036.806464404:  ffffffff811dfbaa trace_call_bpf+0x6a ([kernel.kallsyms])               movq  0x30(%rbx), %rax
+           sleep 36660 [016] 1057036.806464404:  ffffffff811dfbae trace_call_bpf+0x6e ([kernel.kallsyms])               leaq  0x38(%rbx), %rsi
+           sleep 36660 [016] 1057036.806464404:  ffffffff811dfbb2 trace_call_bpf+0x72 ([kernel.kallsyms])               mov %r13, %rdi
+           sleep 36660 [016] 1057036.806464404:  ffffffff811dfbb5 trace_call_bpf+0x75 ([kernel.kallsyms])               callq  0xffffffff81c00c30
+           sleep 36660 [016] 1057036.806464404:  ffffffff81c00c30 __x86_indirect_thunk_rax+0x0 ([kernel.kallsyms])              callq  0xffffffff81c00c3c
+           sleep 36660 [016] 1057036.806464404:  ffffffff81c00c3c __x86_indirect_thunk_rax+0xc ([kernel.kallsyms])              movq  %rax, (%rsp)
+           sleep 36660 [016] 1057036.806464404:  ffffffff81c00c40 __x86_indirect_thunk_rax+0x10 ([kernel.kallsyms])             retq
+           sleep 36660 [016] 1057036.806464725:  ffffffffa05e89ef bpf_prog_da4fe6b3d2c29b25_trace_return+0x0 (bpf_prog_da4fe6b3d2c29b25_trace_return)           pushq  %rbp
+           sleep 36660 [016] 1057036.806464725:  ffffffffa05e89f0 bpf_prog_da4fe6b3d2c29b25_trace_return+0x1 (bpf_prog_da4fe6b3d2c29b25_trace_return)           mov %rsp, %rbp
+           sleep 36660 [016] 1057036.806464725:  ffffffffa05e89f3 bpf_prog_da4fe6b3d2c29b25_trace_return+0x4 (bpf_prog_da4fe6b3d2c29b25_trace_return)           sub $0x158, %rsp
+           sleep 36660 [016] 1057036.806464725:  ffffffffa05e89fa bpf_prog_da4fe6b3d2c29b25_trace_return+0xb (bpf_prog_da4fe6b3d2c29b25_trace_return)           sub $0x28, %rbp
+           sleep 36660 [016] 1057036.806464725:  ffffffffa05e89fe bpf_prog_da4fe6b3d2c29b25_trace_return+0xf (bpf_prog_da4fe6b3d2c29b25_trace_return)           movq  %rbx, (%rbp)
+           sleep 36660 [016] 1057036.806464725:  ffffffffa05e8a02 bpf_prog_da4fe6b3d2c29b25_trace_return+0x13 (bpf_prog_da4fe6b3d2c29b25_trace_return)          movq  %r13, 0x8(%rbp)
+           sleep 36660 [016] 1057036.806464725:  ffffffffa05e8a06 bpf_prog_da4fe6b3d2c29b25_trace_return+0x17 (bpf_prog_da4fe6b3d2c29b25_trace_return)          movq  %r14, 0x10(%rbp)
+           sleep 36660 [016] 1057036.806464725:  ffffffffa05e8a0a bpf_prog_da4fe6b3d2c29b25_trace_return+0x1b (bpf_prog_da4fe6b3d2c29b25_trace_return)          movq  %r15, 0x18(%rbp)
+           sleep 36660 [016] 1057036.806464725:  ffffffffa05e8a0e bpf_prog_da4fe6b3d2c29b25_trace_return+0x1f (bpf_prog_da4fe6b3d2c29b25_trace_return)          xor %eax, %eax
+           sleep 36660 [016] 1057036.806464725:  ffffffffa05e8a10 bpf_prog_da4fe6b3d2c29b25_trace_return+0x21 (bpf_prog_da4fe6b3d2c29b25_trace_return)          movq  %rax, 0x20(%rbp)
+           sleep 36660 [016] 1057036.806464725:  ffffffffa05e8a14 bpf_prog_da4fe6b3d2c29b25_trace_return+0x25 (bpf_prog_da4fe6b3d2c29b25_trace_return)          mov %rdi, %rbx
+           sleep 36660 [016] 1057036.806464725:  ffffffffa05e8a17 bpf_prog_da4fe6b3d2c29b25_trace_return+0x28 (bpf_prog_da4fe6b3d2c29b25_trace_return)          callq  0xffffffff811fed50
+           sleep 36660 [016] 1057036.806464725:  ffffffff811fed50 bpf_get_current_pid_tgid+0x0 ([kernel.kallsyms])              nopl  %eax, (%rax,%rax,1)
+           sleep 36660 [016] 1057036.806464725:  ffffffff811fed55 bpf_get_current_pid_tgid+0x5 ([kernel.kallsyms])              movq  %gs:0x15c00, %rdx
+           sleep 36660 [016] 1057036.806464725:  ffffffff811fed5e bpf_get_current_pid_tgid+0xe ([kernel.kallsyms])              test %rdx, %rdx
+           sleep 36660 [016] 1057036.806464725:  ffffffff811fed61 bpf_get_current_pid_tgid+0x11 ([kernel.kallsyms])             jz 0xffffffff811fed79
+           sleep 36660 [016] 1057036.806464725:  ffffffff811fed63 bpf_get_current_pid_tgid+0x13 ([kernel.kallsyms])             movsxdl  0x494(%rdx), %rax
+           sleep 36660 [016] 1057036.806464725:  ffffffff811fed6a bpf_get_current_pid_tgid+0x1a ([kernel.kallsyms])             movsxdl  0x490(%rdx), %rdx
+           sleep 36660 [016] 1057036.806464725:  ffffffff811fed71 bpf_get_current_pid_tgid+0x21 ([kernel.kallsyms])             shl $0x20, %rax
+           sleep 36660 [016] 1057036.806464725:  ffffffff811fed75 bpf_get_current_pid_tgid+0x25 ([kernel.kallsyms])             or %rdx, %rax
+           sleep 36660 [016] 1057036.806464725:  ffffffff811fed78 bpf_get_current_pid_tgid+0x28 ([kernel.kallsyms])             retq
+           sleep 36660 [016] 1057036.806464725:  ffffffffa05e8a1c bpf_prog_da4fe6b3d2c29b25_trace_return+0x2d (bpf_prog_da4fe6b3d2c29b25_trace_return)          movq  %rax, -0x8(%rbp)
+           sleep 36660 [016] 1057036.806464725:  ffffffffa05e8a20 bpf_prog_da4fe6b3d2c29b25_trace_return+0x31 (bpf_prog_da4fe6b3d2c29b25_trace_return)          xor %edi, %edi
+           sleep 36660 [016] 1057036.806464725:  ffffffffa05e8a22 bpf_prog_da4fe6b3d2c29b25_trace_return+0x33 (bpf_prog_da4fe6b3d2c29b25_trace_return)          movq  %rdi, -0x10(%rbp)
+           sleep 36660 [016] 1057036.806464725:  ffffffffa05e8a26 bpf_prog_da4fe6b3d2c29b25_trace_return+0x37 (bpf_prog_da4fe6b3d2c29b25_trace_return)          movq  %rdi, -0x18(%rbp)
+
+  # perf-core/perf-with-kcore script pt --call-trace
+  ...
+           sleep 36660 [016] 1057036.806464404: ([kernel.kallsyms]                       )                kretprobe_perf_func
+           sleep 36660 [016] 1057036.806464404: ([kernel.kallsyms]                       )                    trace_call_bpf
+           sleep 36660 [016] 1057036.806464404: ([kernel.kallsyms]                       )                        __x86_indirect_thunk_rax
+           sleep 36660 [016] 1057036.806464404: ([kernel.kallsyms]                       )                            __x86_indirect_thunk_rax
+           sleep 36660 [016] 1057036.806464725: (bpf_prog_da4fe6b3d2c29b25_trace_return  )                                bpf_get_current_pid_tgid
+           sleep 36660 [016] 1057036.806464725: (bpf_prog_da4fe6b3d2c29b25_trace_return  )                                bpf_ktime_get_ns
+           sleep 36660 [016] 1057036.806464725: ([kernel.kallsyms]                       )                                    __x86_indirect_thunk_rax
+           sleep 36660 [016] 1057036.806464725: ([kernel.kallsyms]                       )                                        __x86_indirect_thunk_rax
+           sleep 36660 [016] 1057036.806465045: (bpf_prog_da4fe6b3d2c29b25_trace_return  )                                __htab_map_lookup_elem
+           sleep 36660 [016] 1057036.806465366: ([kernel.kallsyms]                       )                                    memcmp
+           sleep 36660 [016] 1057036.806465687: (bpf_prog_da4fe6b3d2c29b25_trace_return  )                                bpf_probe_read
+           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms]                       )                                    probe_kernel_read
+           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms]                       )                                        __check_object_size
+           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms]                       )                                            check_stack_object
+           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms]                       )                                        copy_user_enhanced_fast_string
+           sleep 36660 [016] 1057036.806465687: (bpf_prog_da4fe6b3d2c29b25_trace_return  )                                bpf_probe_read
+           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms]                       )                                    probe_kernel_read
+           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms]                       )                                        __check_object_size
+           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms]                       )                                            check_stack_object
+           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms]                       )                                        copy_user_enhanced_fast_string
+           sleep 36660 [016] 1057036.806466008: (bpf_prog_da4fe6b3d2c29b25_trace_return  )                                bpf_get_current_uid_gid
+           sleep 36660 [016] 1057036.806466008: ([kernel.kallsyms]                       )                                    from_kgid
+           sleep 36660 [016] 1057036.806466008: ([kernel.kallsyms]                       )                                    from_kuid
+           sleep 36660 [016] 1057036.806466008: (bpf_prog_da4fe6b3d2c29b25_trace_return  )                                bpf_perf_event_output
+           sleep 36660 [016] 1057036.806466328: ([kernel.kallsyms]                       )                                    perf_event_output
+           sleep 36660 [016] 1057036.806466328: ([kernel.kallsyms]                       )                                        perf_prepare_sample
+           sleep 36660 [016] 1057036.806466328: ([kernel.kallsyms]                       )                                            perf_misc_flags
+           sleep 36660 [016] 1057036.806466328: ([kernel.kallsyms]                       )                                                __x86_indirect_thunk_rax
+           sleep 36660 [016] 1057036.806466328: ([kernel.kallsyms]                       )                                                    __x86_indirect_thunk_rax
+
+
+It's also available in here:
+  git://git.kernel.org/pub/scm/linux/kernel/git/jolsa/perf.git
+  perf/fixes
+
+thanks,
+jirka
+
+
+Cc: Jesper Dangaard Brouer <brouer@redhat.com>
+Cc: Alexei Starovoitov <ast@kernel.org>
+Cc: Daniel Borkmann <daniel@iogearbox.net>
+Cc: Stanislav Fomichev <sdf@google.com>
 ---
---- a/kernel/locking/rwsem.c
-+++ b/kernel/locking/rwsem.c
-@@ -303,7 +303,7 @@ static void __rwsem_mark_wake(struct rw_
- 		list_del(&waiter->list);
- 		/*
- 		 * Ensure calling get_task_struct() before setting the reader
--		 * waiter to nil such that rwsem_down_read_failed() cannot
-+		 * waiter to nil such that rwsem_down_read_slow() cannot
- 		 * race with do_exit() by always holding a reference count
- 		 * to the task to wakeup.
- 		 */
-@@ -500,7 +500,7 @@ static bool rwsem_optimistic_spin(struct
-  * Wait for the read lock to be granted
-  */
- static inline struct rw_semaphore __sched *
--__rwsem_down_read_failed_common(struct rw_semaphore *sem, int state)
-+rwsem_down_read_slow(struct rw_semaphore *sem, int state)
- {
- 	long count, adjustment = -RWSEM_READER_BIAS;
- 	struct rwsem_waiter waiter;
-@@ -572,23 +572,11 @@ __rwsem_down_read_failed_common(struct r
- 	return ERR_PTR(-EINTR);
- }
- 
--static inline struct rw_semaphore * __sched
--rwsem_down_read_failed(struct rw_semaphore *sem)
--{
--	return __rwsem_down_read_failed_common(sem, TASK_UNINTERRUPTIBLE);
--}
--
--static inline struct rw_semaphore * __sched
--rwsem_down_read_failed_killable(struct rw_semaphore *sem)
--{
--	return __rwsem_down_read_failed_common(sem, TASK_KILLABLE);
--}
--
- /*
-  * Wait until we successfully acquire the write lock
-  */
- static inline struct rw_semaphore *
--__rwsem_down_write_failed_common(struct rw_semaphore *sem, int state)
-+rwsem_down_write_slow(struct rw_semaphore *sem, int state)
- {
- 	long count;
- 	bool waiting = true; /* any queued threads before us */
-@@ -689,18 +677,6 @@ __rwsem_down_write_failed_common(struct
- 	return ERR_PTR(-EINTR);
- }
- 
--static inline struct rw_semaphore * __sched
--rwsem_down_write_failed(struct rw_semaphore *sem)
--{
--	return __rwsem_down_write_failed_common(sem, TASK_UNINTERRUPTIBLE);
--}
--
--static inline struct rw_semaphore * __sched
--rwsem_down_write_failed_killable(struct rw_semaphore *sem)
--{
--	return __rwsem_down_write_failed_common(sem, TASK_KILLABLE);
--}
--
- /*
-  * handle waking up a waiter on the semaphore
-  * - up_read/up_write has decremented the active part of count if we come here
-@@ -749,7 +725,7 @@ inline void __down_read(struct rw_semaph
- {
- 	if (unlikely(atomic_long_fetch_add_acquire(RWSEM_READER_BIAS,
- 			&sem->count) & RWSEM_READ_FAILED_MASK)) {
--		rwsem_down_read_failed(sem);
-+		rwsem_down_read_slow(sem, TASK_UNINTERRUPTIBLE);
- 		DEBUG_RWSEMS_WARN_ON(!((unsigned long)sem->owner &
- 					RWSEM_READER_OWNED), sem);
- 	} else {
-@@ -761,7 +737,7 @@ static inline int __down_read_killable(s
- {
- 	if (unlikely(atomic_long_fetch_add_acquire(RWSEM_READER_BIAS,
- 			&sem->count) & RWSEM_READ_FAILED_MASK)) {
--		if (IS_ERR(rwsem_down_read_failed_killable(sem)))
-+		if (IS_ERR(rwsem_down_read_slow(sem, TASK_KILLABLE)))
- 			return -EINTR;
- 		DEBUG_RWSEMS_WARN_ON(!((unsigned long)sem->owner &
- 					RWSEM_READER_OWNED), sem);
-@@ -794,34 +770,38 @@ static inline int __down_read_trylock(st
-  */
- static inline void __down_write(struct rw_semaphore *sem)
- {
--	if (unlikely(atomic_long_cmpxchg_acquire(&sem->count, 0,
--						 RWSEM_WRITER_LOCKED)))
--		rwsem_down_write_failed(sem);
-+	long tmp = RWSEM_UNLOCKED_VALUE;
-+
-+	if (unlikely(atomic_long_try_cmpxchg_acquire(&sem->count, &tmp,
-+						     RWSEM_WRITER_LOCKED)))
-+		rwsem_down_write_slow(sem, TASK_UNINTERRUPTIBLE);
- 	rwsem_set_owner(sem);
- }
- 
- static inline int __down_write_killable(struct rw_semaphore *sem)
- {
--	if (unlikely(atomic_long_cmpxchg_acquire(&sem->count, 0,
--						 RWSEM_WRITER_LOCKED)))
--		if (IS_ERR(rwsem_down_write_failed_killable(sem)))
-+	long tmp = RWSEM_UNLOCKED_VALUE;
-+
-+	if (unlikely(atomic_long_try_cmpxchg_acquire(&sem->count, &tmp,
-+						     RWSEM_WRITER_LOCKED))) {
-+		if (IS_ERR(rwsem_down_write_slow(sem, TASK_KILLABLE)))
- 			return -EINTR;
-+	}
- 	rwsem_set_owner(sem);
- 	return 0;
- }
- 
- static inline int __down_write_trylock(struct rw_semaphore *sem)
- {
--	long tmp;
-+	long tmp = RWSEM_UNLOCKED_VALUE;
- 
- 	lockevent_inc(rwsem_wtrylock);
--	tmp = atomic_long_cmpxchg_acquire(&sem->count, RWSEM_UNLOCKED_VALUE,
--					  RWSEM_WRITER_LOCKED);
--	if (tmp == RWSEM_UNLOCKED_VALUE) {
--		rwsem_set_owner(sem);
--		return true;
--	}
--	return false;
-+	if (!atomic_long_try_cmpxchg_acquire(&sem->count, &tmp,
-+					     RWSEM_WRITER_LOCKED))
-+		return false;
-+
-+	rwsem_set_owner(sem);
-+	return true;
- }
- 
- /*
-@@ -831,12 +811,11 @@ inline void __up_read(struct rw_semaphor
- {
- 	long tmp;
- 
--	DEBUG_RWSEMS_WARN_ON(!((unsigned long)sem->owner & RWSEM_READER_OWNED),
--				sem);
-+	DEBUG_RWSEMS_WARN_ON(!((unsigned long)sem->owner & RWSEM_READER_OWNED), sem);
- 	rwsem_clear_reader_owned(sem);
- 	tmp = atomic_long_add_return_release(-RWSEM_READER_BIAS, &sem->count);
--	if (unlikely((tmp & (RWSEM_LOCK_MASK|RWSEM_FLAG_WAITERS))
--			== RWSEM_FLAG_WAITERS))
-+	if (unlikely((tmp & (RWSEM_LOCK_MASK|RWSEM_FLAG_WAITERS)) ==
-+		     RWSEM_FLAG_WAITERS))
- 		rwsem_wake(sem);
- }
- 
-@@ -848,7 +827,7 @@ static inline void __up_write(struct rw_
- 	DEBUG_RWSEMS_WARN_ON(sem->owner != current, sem);
- 	rwsem_clear_owner(sem);
- 	if (unlikely(atomic_long_fetch_add_release(-RWSEM_WRITER_LOCKED,
--			&sem->count) & RWSEM_FLAG_WAITERS))
-+						   &sem->count) & RWSEM_FLAG_WAITERS))
- 		rwsem_wake(sem);
- }
- 
+Jiri Olsa (11):
+      perf tools: Separate generic code in dso__data_file_size
+      perf tools: Separate generic code in dso_cache__read
+      perf tools: Simplify dso_cache__read function
+      perf tools: Add bpf dso read and size hooks
+      perf tools: Read also the end of the kernel
+      perf tools: Do not erase uncovered maps by kcore
+      perf tools: Fix side band thread draining
+      perf tools: Fix map reference counting
+      perf tools: Keep zero in pgoff bpf map
+      perf tools: Reuse shared eBPF dso objects
+      perf script: Pad dso name for --call-trace
+
+Song Liu (1):
+      perf tools: Check maps for bpf programs
+
+ tools/include/linux/kernel.h     |   1 +
+ tools/lib/vsprintf.c             |  19 +++++++++++++++++++
+ tools/perf/builtin-script.c      |   1 +
+ tools/perf/util/dso.c            | 124 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++------------------------------------
+ tools/perf/util/evlist.c         |  14 +++++++++-----
+ tools/perf/util/machine.c        |  45 +++++++++++++++++++++++++++++++--------------
+ tools/perf/util/map.c            |  26 +++++++++++++++++++++++---
+ tools/perf/util/map.h            |   4 +++-
+ tools/perf/util/symbol.c         |  14 +++++++++++++-
+ tools/perf/util/symbol_conf.h    |   1 +
+ tools/perf/util/symbol_fprintf.c |   1 +
+ 11 files changed, 190 insertions(+), 60 deletions(-)
