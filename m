@@ -7,49 +7,49 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 41E56C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:59:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F112FC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:59:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D5AF2077C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:59:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF6C120652
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:59:06 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="kF6jKZuj"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="HKvEwMw9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729780AbfDPO67 (ORCPT
+        id S1729738AbfDPO6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 10:58:59 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:49630 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1729739AbfDPO64 (ORCPT
+        Tue, 16 Apr 2019 10:58:54 -0400
+Received: from mx08-00178001.pphosted.com ([91.207.212.93]:8980 "EHLO
+        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1726215AbfDPO6v (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 10:58:56 -0400
-Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3GEuPJt007194;
-        Tue, 16 Apr 2019 16:58:43 +0200
+        Tue, 16 Apr 2019 10:58:51 -0400
+Received: from pps.filterd (m0046660.ppops.net [127.0.0.1])
+        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3GEsB5f004133;
+        Tue, 16 Apr 2019 16:58:40 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
  : date : message-id : in-reply-to : references : mime-version :
  content-type; s=STMicroelectronics;
- bh=Qcbov99m1lkaIUfnuX86RHd5PLWtt8rqoo5dDBx7OIc=;
- b=kF6jKZujrIC1XL65sR0Ii25ogT6ooqdaSN0FXjyeA3dB7La1R5vBjmM73Imw/56mdQpx
- w1wHgKtcCurRlKRrfWW/P0klmgFStwiDrRFhwDFnhvX4K7OY64MYLiM6ZMWiX29Y1I53
- f99mRlA9VAaA/RpVFQKSIGyDnUbwMZl0K8AAKsX85+eV2LpAFpn6mSQGMLPLaCpDv6uk
- jLBliZ5pZGxcn5jEL/oTQuq/vqs4MSQpFuiRSadw6II2RunaU/1ZFzQ7WMajYb3+IhJg
- 9r34HudjAX2SKVMqrAB52r5MmbDhcby+dhs/RIQ/Sc0fZ8c1eh1I3RrVpxZvYGOQMOSq Sw== 
+ bh=d6E9IXGLFgoY3c/GRqylXXvGDNAabRYzqsWi4VZvanE=;
+ b=HKvEwMw9x6dXk35Si2jje+Xlso80mLDci1aYWb3JPqiVYcPbgPzn0Tahm3Rn5RDMPGYV
+ RrVUIxtcXj9t4qJKtJ6JnfdCqFZfiz78misNFvoiCmGs7YG8p03+LnoqG5HEogvmE66b
+ q1/MbyUDjTeQ0oBtGAsGokIA1un+Wh6Hxm4bhWp0pGJ8sIZu3sDZllOCkHukuBW3//QX
+ WS7shvZlW4xa6FMg0Pq5D9K9YmliHa95fLZu1XuHhLsHdgNK9NcA9fJ/PPWCPwsoM9jy
+ C9FmcWWCsYnXBcpaIfyOH4gx8DoPTMIcHSWFdVyz7JnZ11zgFTrhRmu7zc7KQHy0EiL+ 5g== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2ru5800uhn-1
+        by mx08-00178001.pphosted.com with ESMTP id 2rw1a5vyy1-1
         (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 16 Apr 2019 16:58:43 +0200
+        Tue, 16 Apr 2019 16:58:40 +0200
 Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 3C0BA31;
-        Tue, 16 Apr 2019 14:58:43 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 00490269D;
-        Tue, 16 Apr 2019 14:58:42 +0000 (GMT)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas24.st.com
- (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 16 Apr
- 2019 16:58:42 +0200
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 92B3431;
+        Tue, 16 Apr 2019 14:58:39 +0000 (GMT)
+Received: from Webmail-eu.st.com (Safex1hubcas21.st.com [10.75.90.44])
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 6B02D269B;
+        Tue, 16 Apr 2019 14:58:39 +0000 (GMT)
+Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by SAFEX1HUBCAS21.st.com
+ (10.75.90.44) with Microsoft SMTP Server (TLS) id 14.3.361.1; Tue, 16 Apr
+ 2019 16:58:39 +0200
 Received: from localhost (10.201.23.25) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 16 Apr 2019 16:58:42
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 16 Apr 2019 16:58:39
  +0200
 From:   Fabien Dessenne <fabien.dessenne@st.com>
 To:     Rob Herring <robh+dt@kernel.org>,
@@ -67,9 +67,9 @@ CC:     Fabien Dessenne <fabien.dessenne@st.com>,
         Arnaud Pouliquen <arnaud.pouliquen@st.com>,
         "Ludovic Barre" <ludovic.barre@st.com>,
         Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v2 8/8] ARM: dts: stm32: enable m4 coprocessor support on STM32MP157a-dk1
-Date:   Tue, 16 Apr 2019 16:58:19 +0200
-Message-ID: <1555426699-5340-9-git-send-email-fabien.dessenne@st.com>
+Subject: [PATCH v2 5/8] ARM: dts: stm32: declare copro reserved memories on STM32MP157c-ed1
+Date:   Tue, 16 Apr 2019 16:58:16 +0200
+Message-ID: <1555426699-5340-6-git-send-email-fabien.dessenne@st.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <1555426699-5340-1-git-send-email-fabien.dessenne@st.com>
 References: <1555426699-5340-1-git-send-email-fabien.dessenne@st.com>
@@ -83,34 +83,67 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable m4 coprocessor for STM32MP157a-dk1 board.
+Declare reserved memories shared by the processors for STM32MP157c-ed1
+board.
 
 Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
 ---
- arch/arm/boot/dts/stm32mp157a-dk1.dts | 10 ++++++++++
- 1 file changed, 10 insertions(+)
+ arch/arm/boot/dts/stm32mp157c-ed1.dts | 42 +++++++++++++++++++++++++++++++++++
+ 1 file changed, 42 insertions(+)
 
-diff --git a/arch/arm/boot/dts/stm32mp157a-dk1.dts b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-index 26ce8de..da64ee2 100644
---- a/arch/arm/boot/dts/stm32mp157a-dk1.dts
-+++ b/arch/arm/boot/dts/stm32mp157a-dk1.dts
-@@ -116,6 +116,16 @@
- 	status = "okay";
- };
+diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+index 626ceb3..acfc5cd 100644
+--- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
++++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+@@ -21,6 +21,48 @@
+ 		reg = <0xC0000000 0x40000000>;
+ 	};
  
-+&m4_rproc {
-+	memory-region = <&retram>, <&mcuram>, <&mcuram2>, <&vdev0vring0>,
-+			<&vdev0vring1>, <&vdev0buffer>;
-+	mboxes = <&ipcc 0>, <&ipcc 1>, <&ipcc 2>;
-+	mbox-names = "vq0", "vq1", "shutdown";
-+	interrupt-parent = <&exti>;
-+	interrupts = <68 1>;
-+	status = "okay";
-+};
++	reserved-memory {
++		#address-cells = <1>;
++		#size-cells = <1>;
++		ranges;
 +
- &rng1 {
- 	status = "okay";
- };
++		mcuram2: mcuram2@10000000 {
++			compatible = "shared-dma-pool";
++			reg = <0x10000000 0x40000>;
++			no-map;
++		};
++
++		vdev0vring0: vdev0vring0@10040000 {
++			compatible = "shared-dma-pool";
++			reg = <0x10040000 0x1000>;
++			no-map;
++		};
++
++		vdev0vring1: vdev0vring1@10041000 {
++			compatible = "shared-dma-pool";
++			reg = <0x10041000 0x1000>;
++			no-map;
++		};
++
++		vdev0buffer: vdev0buffer@10042000 {
++			compatible = "shared-dma-pool";
++			reg = <0x10042000 0x4000>;
++			no-map;
++		};
++
++		mcuram: mcuram@30000000 {
++			compatible = "shared-dma-pool";
++			reg = <0x30000000 0x40000>;
++			no-map;
++		};
++
++		retram: retram@38000000 {
++			compatible = "shared-dma-pool";
++			reg = <0x38000000 0x10000>;
++			no-map;
++		};
++	};
++
+ 	aliases {
+ 		serial0 = &uart4;
+ 	};
 -- 
 2.7.4
 
