@@ -3,31 +3,31 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F37FFC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:55:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5EDEBC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:55:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CFF962087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:55:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 384E720880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:55:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730628AbfDPRy5 (ORCPT
+        id S1730615AbfDPRy4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 13:54:57 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:57702 "EHLO
+        Tue, 16 Apr 2019 13:54:56 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:57714 "EHLO
         ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730356AbfDPRxu (ORCPT
+        with ESMTP id S1728108AbfDPRxu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 16 Apr 2019 13:53:50 -0400
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hGSHE-0005Zz-C5; Tue, 16 Apr 2019 17:53:48 +0000
+        id 1hGSHE-0005aH-Mh; Tue, 16 Apr 2019 17:53:48 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [RFC PATCH 55/62] fuse: switch to ->free_inode()
-Date:   Tue, 16 Apr 2019 18:53:33 +0100
-Message-Id: <20190416175340.21068-55-viro@ZenIV.linux.org.uk>
+Subject: [RFC PATCH 58/62] hugetlb: make use of ->free_inode()
+Date:   Tue, 16 Apr 2019 18:53:36 +0100
+Message-Id: <20190416175340.21068-58-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190416175340.21068-1-viro@ZenIV.linux.org.uk>
 References: <20190416174900.GT2217@ZenIV.linux.org.uk>
@@ -41,78 +41,46 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-fuse_destroy_inode() is gone - sanity checks that need the stack
-trace of the caller get moved into ->evict_inode(), the rest joins
-the RCU-delayed part which becomes ->free_inode().
-
-While we are at it, don't just pass the address of what happens
-to be the first member of structure to kmem_cache_free() -
-get_fuse_inode() is there for purpose and it gives the proper
-container_of() use.  No behaviour change, but verifying correctness
-is easier that way.
+moving synchronous parts of ->destroy_inode() to ->evict_inode() is
+not possible here - they are balancing the stuff done in ->alloc_inode(),
+not the things acquired while using it or sanity checks.
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- fs/fuse/inode.c | 24 ++++++++++--------------
- 1 file changed, 10 insertions(+), 14 deletions(-)
+ fs/hugetlbfs/inode.c | 5 ++---
+ 1 file changed, 2 insertions(+), 3 deletions(-)
 
-diff --git a/fs/fuse/inode.c b/fs/fuse/inode.c
-index ec5d9953dfb6..f485d09d14df 100644
---- a/fs/fuse/inode.c
-+++ b/fs/fuse/inode.c
-@@ -107,34 +107,30 @@ static struct inode *fuse_alloc_inode(struct super_block *sb)
- 	return inode;
+diff --git a/fs/hugetlbfs/inode.c b/fs/hugetlbfs/inode.c
+index 9285dd4f4b1c..c74ef4426282 100644
+--- a/fs/hugetlbfs/inode.c
++++ b/fs/hugetlbfs/inode.c
+@@ -1051,9 +1051,8 @@ static struct inode *hugetlbfs_alloc_inode(struct super_block *sb)
+ 	return &p->vfs_inode;
  }
  
--static void fuse_i_callback(struct rcu_head *head)
--{
+-static void hugetlbfs_i_callback(struct rcu_head *head)
++static void hugetlbfs_free_inode(struct inode *inode)
+ {
 -	struct inode *inode = container_of(head, struct inode, i_rcu);
--	kmem_cache_free(fuse_inode_cachep, inode);
--}
--
--static void fuse_destroy_inode(struct inode *inode)
-+static void fuse_free_inode(struct inode *inode)
- {
- 	struct fuse_inode *fi = get_fuse_inode(inode);
--	if (S_ISREG(inode->i_mode) && !is_bad_inode(inode)) {
--		WARN_ON(!list_empty(&fi->write_files));
--		WARN_ON(!list_empty(&fi->queued_writes));
--	}
-+
- 	mutex_destroy(&fi->mutex);
- 	kfree(fi->forget);
--	call_rcu(&inode->i_rcu, fuse_i_callback);
-+	kmem_cache_free(fuse_inode_cachep, fi);
+ 	kmem_cache_free(hugetlbfs_inode_cachep, HUGETLBFS_I(inode));
  }
  
- static void fuse_evict_inode(struct inode *inode)
+@@ -1061,7 +1060,6 @@ static void hugetlbfs_destroy_inode(struct inode *inode)
  {
-+	struct fuse_inode *fi = get_fuse_inode(inode);
-+
- 	truncate_inode_pages_final(&inode->i_data);
- 	clear_inode(inode);
- 	if (inode->i_sb->s_flags & SB_ACTIVE) {
- 		struct fuse_conn *fc = get_fuse_conn(inode);
--		struct fuse_inode *fi = get_fuse_inode(inode);
- 		fuse_queue_forget(fc, fi->forget, fi->nodeid, fi->nlookup);
- 		fi->forget = NULL;
- 	}
-+	if (S_ISREG(inode->i_mode) && !is_bad_inode(inode)) {
-+		WARN_ON(!list_empty(&fi->write_files));
-+		WARN_ON(!list_empty(&fi->queued_writes));
-+	}
+ 	hugetlbfs_inc_free_inodes(HUGETLBFS_SB(inode->i_sb));
+ 	mpol_free_shared_policy(&HUGETLBFS_I(inode)->policy);
+-	call_rcu(&inode->i_rcu, hugetlbfs_i_callback);
  }
  
- static int fuse_remount_fs(struct super_block *sb, int *flags, char *data)
-@@ -814,7 +810,7 @@ static const struct export_operations fuse_export_operations = {
+ static const struct address_space_operations hugetlbfs_aops = {
+@@ -1108,6 +1106,7 @@ static const struct inode_operations hugetlbfs_inode_operations = {
  
- static const struct super_operations fuse_super_operations = {
- 	.alloc_inode    = fuse_alloc_inode,
--	.destroy_inode  = fuse_destroy_inode,
-+	.free_inode     = fuse_free_inode,
- 	.evict_inode	= fuse_evict_inode,
- 	.write_inode	= fuse_write_inode,
- 	.drop_inode	= generic_delete_inode,
+ static const struct super_operations hugetlbfs_ops = {
+ 	.alloc_inode    = hugetlbfs_alloc_inode,
++	.free_inode     = hugetlbfs_free_inode,
+ 	.destroy_inode  = hugetlbfs_destroy_inode,
+ 	.evict_inode	= hugetlbfs_evict_inode,
+ 	.statfs		= hugetlbfs_statfs,
 -- 
 2.11.0
 
