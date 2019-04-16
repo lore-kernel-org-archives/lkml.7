@@ -2,232 +2,109 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0FE1EC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:29:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34B3BC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:29:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D5C0420857
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:29:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EEB3D2086A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:29:07 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="VnwFN9Tv"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728289AbfDPJ16 (ORCPT
+        id S1729122AbfDPJ3G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 05:27:58 -0400
-Received: from mailgw01.mediatek.com ([210.61.82.183]:13925 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728417AbfDPJ1z (ORCPT
+        Tue, 16 Apr 2019 05:29:06 -0400
+Received: from mail-ua1-f68.google.com ([209.85.222.68]:39977 "EHLO
+        mail-ua1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728230AbfDPJ3F (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 05:27:55 -0400
-X-UUID: 03d37f40f0424bef88e83373b8d18709-20190416
-X-UUID: 03d37f40f0424bef88e83373b8d18709-20190416
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw01.mediatek.com
-        (envelope-from <stu.hsieh@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1502897825; Tue, 16 Apr 2019 17:27:49 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 16 Apr 2019 17:27:48 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 16 Apr 2019 17:27:48 +0800
-From:   Stu Hsieh <stu.hsieh@mediatek.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, CK Hu <ck.hu@mediatek.com>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Stu Hsieh <stu.hsieh@mediatek.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <wsd_upstream@mediatek.com>
-Subject: [PATCH v2 10/15] [media] mtk-mipicsi: add ISR for writing the data to buffer
-Date:   Tue, 16 Apr 2019 17:27:38 +0800
-Message-ID: <1555406863-18069-11-git-send-email-stu.hsieh@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1555406863-18069-1-git-send-email-stu.hsieh@mediatek.com>
-References: <1555406863-18069-1-git-send-email-stu.hsieh@mediatek.com>
+        Tue, 16 Apr 2019 05:29:05 -0400
+Received: by mail-ua1-f68.google.com with SMTP id b8so6487036uaq.7
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 02:29:04 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=dhcboL+Tv6bldB/w0lutB+kgOQAT1H7WFSgvZ9qwEQM=;
+        b=VnwFN9Tvg1XRMBCLftvF7GHCqFqhlYeH7MslusvQdUqByeYk7b0WwMiuHID4j1H0pr
+         cekYBP1r/dGDnV0Qzlgqbds+fvZK1Zi5rE4UiH3Ci0zQM/cMP03+6mlhbmpAUjbhnYtN
+         vfqBqhHhcE4i1nsK9dX+J5Bd5TzCuu6DkdmJya6yJIEn8bBR8YI+Fd8pMkpv1ZpmBWCZ
+         7qhivot8xKsFrB44UHOymhNXxcpXl1Fu0uYua/iJjjTGjoocBRBI3AkBsOA1zt/4RxWj
+         PvWYc+Ad0bwOOQaBEV6X2dA2SMKkXEiMTeFD9csvBZ2o3cX412+oFrUTLamViqb7oq0R
+         OsYg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=dhcboL+Tv6bldB/w0lutB+kgOQAT1H7WFSgvZ9qwEQM=;
+        b=FSNA3CNM+VtvduRZAvXs9HmYiZxsA/QmjimTVIyeR/ksFrTbWfuZYMcfo8zVp+Fcog
+         jzten8uIxMrsv5idUUrSDoJvVnRRkZlAzZwewPQQ7SH+hyveu9YZ23wB3D1CZcF1vw6B
+         GSjQB3npS/7PW6hyiqzYqSXss4HUPNp1b1HzZVHeItmH+RYEEiBtVQSAkEJC9R5i6V0+
+         MGyIB7T6RtSAPEUJhxpwuzFXlUThtGuFu+QpDJ+nUdQoMtZ8KL8S/xMsyyGdLKXaZlHT
+         wBEtPTDeZ4t6dut2ZEHKRRJt3J2AeBw6ZVhB2d0xEFS8hG/LZVSecJ57NW7YW84xnaaE
+         AiPA==
+X-Gm-Message-State: APjAAAVNLXg5Yi1DbBhv5QyaoHfTkn1rGTkhM+m4VKEzHVvFtNRZEiHd
+        Vxdb8AW+MauUV+XO/91iW3yJVfkijMcYX4nj5G5AoQBq
+X-Google-Smtp-Source: APXvYqxN3YbulrrpcNzAqBD53pLoseE/OkLXt0OsZZvr+lWCmzNFvOfOswZapUbbMLG1+DqiznWNcQSLJE1v65GJSVE=
+X-Received: by 2002:ab0:6947:: with SMTP id c7mr18906780uas.51.1555406943901;
+ Tue, 16 Apr 2019 02:29:03 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain
-X-MTK:  N
+References: <20190412093434.GA24516@amd> <CAPDyKFo2cZOqyCqBaZJzReaWfMenn6zgHcpCpf+XfegwqwNKxQ@mail.gmail.com>
+ <20190416080024.GD14538@amd>
+In-Reply-To: <20190416080024.GD14538@amd>
+From:   Ulf Hansson <ulf.hansson@linaro.org>
+Date:   Tue, 16 Apr 2019 11:28:27 +0200
+Message-ID: <CAPDyKFp-tNhxM=RSsb3eqJhHMSV4ZMo2Chag5NFAK-d1Oi_j4g@mail.gmail.com>
+Subject: Re: [PATCH] Fix warning and undefined behavior in mmc voltage handling
+To:     Pavel Machek <pavel@ucw.cz>
+Cc:     kernel list <linux-kernel@vger.kernel.org>,
+        Andrew Morton <akpm@osdl.org>,
+        Trivial patch monkey <trivial@kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch add ISR for writing the data to buffer
+On Tue, 16 Apr 2019 at 10:00, Pavel Machek <pavel@ucw.cz> wrote:
+>
+> On Tue 2019-04-16 09:48:51, Ulf Hansson wrote:
+> > On Fri, 12 Apr 2019 at 11:34, Pavel Machek <pavel@ucw.cz> wrote:
+> > >
+> > > !voltage_ranges is tested for too late, allowing warning and undefined
+> > > behavior. Fix that.
+> > >
+> > > Signed-off-by: Pavel Machek <pavel@ucw.cz>
+> >
+> > Pavel, thanks for your patch.
+> >
+> > Would you mind re-posting to linux-mmc so I can get it into the
+> > patchtracker. Please also change the prefix of the header to "mmc:
+> > core:".
+>
+> Done.
 
-When mipicsi HW complete to write the data in buffer,
-the interrupt woulb be trigger.
-So, the ISR need to clear interrupt status for next interrupt.
+Thanks!
 
-Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
----
- .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 112 ++++++++++++++++++
- 1 file changed, 112 insertions(+)
+>
+> > > Plus I guess author should add parenthesis in the expression. a / b /
+> > > c is _not_ common idiom.
+>
+> Can you do something about the a / b / c situation?
 
-diff --git a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-index 7331543d400a..3624186206bd 100644
---- a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-+++ b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-@@ -35,6 +35,7 @@
- #include <linux/pm_runtime.h>
- #include <linux/iommu.h>
- #include <linux/of.h>
-+#include <linux/of_irq.h>
- #include <linux/of_platform.h>
- #include <media/v4l2-common.h>
- #include <media/v4l2-dev.h>
-@@ -97,6 +98,8 @@
- #define CAMSV_MODULE_EN					0x10
- #define CAMSV_FMT_SEL					0x14
- #define CAMSV_INT_EN					0x18
-+#define CAMSV_INT_STATUS				0x1C
-+#define PASS1_DONE_STATUS				10
- #define CAMSV_SW_CTL					0x20
- #define CAMSV_CLK_EN					0x30
- 
-@@ -127,6 +130,8 @@ struct mtk_mipicsi_dev {
- 	unsigned int camsv_num;
- 	struct v4l2_device	v4l2_dev;
- 	struct device *larb_pdev;
-+	unsigned int		irq[MTK_CAMDMA_MAX_NUM];
-+	bool irq_status[MTK_CAMDMA_MAX_NUM];
- 	void __iomem		*ana;
- 	void __iomem		*seninf_ctrl;
- 	void __iomem		*seninf;
-@@ -140,6 +145,7 @@ struct mtk_mipicsi_dev {
- 	spinlock_t		lock;
- 	spinlock_t		queue_lock;
- 	struct mtk_mipicsi_buf	cam_buf[MAX_BUFFER_NUM];
-+	bool			is_enable_irq[MTK_CAMDMA_MAX_NUM];
- 	bool streamon;
- 	unsigned long frame_cnt[MTK_CAMDMA_MAX_NUM];
- 	unsigned int link;
-@@ -934,9 +940,98 @@ static const struct dev_pm_ops mtk_mipicsi_pm = {
- 		mtk_mipicsi_pm_resume, NULL)
- };
- 
-+static int get_irq_channel(struct mtk_mipicsi_dev *mipicsi)
-+{
-+	int ch;
-+	u32 int_reg_val;
-+
-+	for (ch = 0; ch < mipicsi->camsv_num; ++ch) {
-+		int_reg_val = readl(mipicsi->camsv[ch] + CAMSV_INT_STATUS);
-+		if ((int_reg_val & (1UL << PASS1_DONE_STATUS)) != 0UL)
-+			return ch;
-+	}
-+
-+	return -1;
-+}
-+
-+static void mtk_mipicsi_irq_buf_process(struct mtk_mipicsi_dev *mipicsi)
-+{
-+	unsigned int i = 0U;
-+	struct mtk_mipicsi_buf *new_cam_buf = NULL;
-+	struct mtk_mipicsi_buf *tmp = NULL;
-+	unsigned int index = 0U;
-+	unsigned int next = 0U;
-+
-+	for (i = 0U; i < MTK_CAMDMA_MAX_NUM; ++i)
-+		mipicsi->irq_status[i] = false;
-+
-+	i = 0;
-+
-+	/* only one buffer left */
-+	if ((&(mipicsi->fb_list))->next->next == &(mipicsi->fb_list))
-+		return;
-+
-+	/*for each fb_lst 2 times to get the top 2 buffer.*/
-+	list_for_each_entry_safe(new_cam_buf, tmp,
-+		&(mipicsi->fb_list), queue) {
-+		if (i == 0U) {
-+			index = new_cam_buf->vb->index;
-+		} else {
-+			next = new_cam_buf->vb->index;
-+			break;
-+		}
-+		++i;
-+	}
-+
-+	/*
-+	 * fb_list has one more buffer. Free the first buffer to user
-+	 * and fill the second buffer to HW.
-+	 */
-+	vb2_buffer_done(mipicsi->cam_buf[index].vb,
-+		VB2_BUF_STATE_DONE);
-+	++(mipicsi->dequeue_cnt);
-+
-+	list_del_init(&(mipicsi->cam_buf[index].queue));
-+}
-+
-+static irqreturn_t mtk_mipicsi_isr(int irq, void *data)
-+{
-+
-+	struct mtk_mipicsi_dev *mipicsi = data;
-+	unsigned long flags = 0;
-+	int isr_ch;
-+	u8 irq_cnt = 0, i = 0;
-+
-+	spin_lock_irqsave(&mipicsi->lock, flags);
-+
-+	isr_ch = get_irq_channel(mipicsi);
-+	if (isr_ch < 0) {
-+		spin_unlock_irqrestore(&mipicsi->lock, flags);
-+		return IRQ_HANDLED;
-+	}
-+
-+	/* clear interrupt */
-+	writel(1UL << PASS1_DONE_STATUS,
-+		mipicsi->camsv[isr_ch] + CAMSV_INT_STATUS);
-+	mipicsi->irq_status[isr_ch] = true;
-+	++(mipicsi->frame_cnt[isr_ch]);
-+	for (i = 0U; i < MTK_CAMDMA_MAX_NUM; ++i) {
-+		if (mipicsi->irq_status[i])
-+			++irq_cnt;
-+	}
-+
-+	if (irq_cnt == mipicsi->link)
-+		mtk_mipicsi_irq_buf_process(mipicsi);
-+	spin_unlock_irqrestore(&mipicsi->lock, flags);
-+
-+	return IRQ_HANDLED;
-+}
-+
- static int seninf_mux_camsv_node_parse(struct mtk_mipicsi_dev *mipicsi,
- 		int index)
- {
-+	int ret;
-+	int irq;
- 	struct clk *clk = NULL;
- 	struct device *dev = NULL;
- 	struct resource *res = NULL;
-@@ -974,6 +1069,23 @@ static int seninf_mux_camsv_node_parse(struct mtk_mipicsi_dev *mipicsi,
- 	}
- 	mipicsi->clk[index] = clk;
- 
-+	irq = of_irq_get(np, 0);
-+	if (irq <= 0) {
-+		dev_err(dev, "get irq fail in %s node\n", np->full_name);
-+		return -ENODEV;
-+	}
-+	mipicsi->irq[index] = irq;
-+
-+	ret = devm_request_irq(dev, irq,
-+			mtk_mipicsi_isr, 0,
-+			mipicsi->drv_name, mipicsi);
-+	if (ret != 0) {
-+		dev_err(dev, "%s irq register failed\n", np->full_name);
-+		return -ENODEV;
-+	}
-+	disable_irq(mipicsi->irq[index]);
-+	mipicsi->irq_status[index] = false;
-+
- 	res = platform_get_resource(camdma_pdev, IORESOURCE_MEM, 0);
- 	if (res == NULL) {
- 		dev_err(dev, "get seninf_mux memory failed in %s node\n",
--- 
-2.18.0
+Sure.
 
+>
+> > > -       num_ranges = num_ranges / sizeof(*voltage_ranges) / 2;
+> > > +       num_ranges = num_ranges / sizeof(*voltage_ranges) / 2;
+>
+> I guess it is:
+>        num_ranges = (num_ranges / sizeof(*voltage_ranges)) / 2;
+
+Just send a patch on top, then I will apply it.
+
+Kind regards
+Uffe
