@@ -2,111 +2,162 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27E9EC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:06:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FE00C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:07:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F4234206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:06:33 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 50D1B206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:07:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728451AbfDPIGc (ORCPT
+        id S1728477AbfDPIHb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 04:06:32 -0400
-Received: from foss.arm.com ([217.140.101.70]:48732 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726277AbfDPIGc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 04:06:32 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 8AB57EBD;
-        Tue, 16 Apr 2019 01:06:31 -0700 (PDT)
-Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 672A53F557;
-        Tue, 16 Apr 2019 01:06:30 -0700 (PDT)
-Subject: Re: [PATCH v2] irqchip/gicv3-its: fix some definitions of inner
- cacheability attributes
-To:     Yao HongBo <yaohongbo@huawei.com>, linuxarm@huawei.com,
-        yangyingliang@huawei.com, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org
-References: <20190408140103.131554-1-yaohongbo@huawei.com>
- <311479a8-0d6f-ec17-8f51-a4545e0929b1@huawei.com>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: ARM Ltd
-Message-ID: <99bf3b0d-1814-7d01-0e25-5fdf6af6df04@arm.com>
-Date:   Tue, 16 Apr 2019 09:06:28 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 16 Apr 2019 04:07:31 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:56797 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726277AbfDPIHb (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 04:07:31 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3G87DRt3347557
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Tue, 16 Apr 2019 01:07:13 -0700
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3G87D0b3347554;
+        Tue, 16 Apr 2019 01:07:13 -0700
+Date:   Tue, 16 Apr 2019 01:07:13 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Jian-Hong Pan <tipbot@zytor.com>
+Message-ID: <tip-0082517fa4bce073e7cf542633439f26538a14cc@git.kernel.org>
+Cc:     tglx@linutronix.de, linux-kernel@vger.kernel.org,
+        peterz@infradead.org, bp@alien8.de, drake@endlessm.com,
+        jian-hong@endlessm.com, matt@codeblueprint.co.uk,
+        ard.biesheuvel@linaro.org, hpa@zytor.com, mingo@kernel.org,
+        torvalds@linux-foundation.org
+Reply-To: peterz@infradead.org, bp@alien8.de, drake@endlessm.com,
+          tglx@linutronix.de, linux-kernel@vger.kernel.org,
+          mingo@kernel.org, torvalds@linux-foundation.org,
+          jian-hong@endlessm.com, matt@codeblueprint.co.uk,
+          ard.biesheuvel@linaro.org, hpa@zytor.com
+In-Reply-To: <20190412080152.3718-1-jian-hong@endlessm.com>
+References: <20190412080152.3718-1-jian-hong@endlessm.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/urgent] x86/reboot, efi: Use EFI reboot for Acer
+ TravelMate X514-51T
+Git-Commit-ID: 0082517fa4bce073e7cf542633439f26538a14cc
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-In-Reply-To: <311479a8-0d6f-ec17-8f51-a4545e0929b1@huawei.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Hongbo,
+Commit-ID:  0082517fa4bce073e7cf542633439f26538a14cc
+Gitweb:     https://git.kernel.org/tip/0082517fa4bce073e7cf542633439f26538a14cc
+Author:     Jian-Hong Pan <jian-hong@endlessm.com>
+AuthorDate: Fri, 12 Apr 2019 16:01:53 +0800
+Committer:  Ingo Molnar <mingo@kernel.org>
+CommitDate: Tue, 16 Apr 2019 10:01:24 +0200
 
-On 16/04/2019 02:14, Yao HongBo wrote:
-> Hi Marc,
-> 
-> sorry for ping you...
-> 
-> What's your suggestion for this patch? I look forward to your reply.
+x86/reboot, efi: Use EFI reboot for Acer TravelMate X514-51T
 
-This patch looks fine, although it doesn't fix anything as far as I know
-(doing write-through instead of write-back cannot lead to any data loss,
-and nobody reported any performance issue because of this typo).
+Upon reboot, the Acer TravelMate X514-51T laptop appears to complete the
+shutdown process, but then it hangs in BIOS POST with a black screen.
 
-I plan to queue it for 5.2.
+The problem is intermittent - at some points it has appeared related to
+Secure Boot settings or different kernel builds, but ultimately we have
+not been able to identify the exact conditions that trigger the issue to
+come and go.
 
-Thanks,
+Besides, the EFI mode cannot be disabled in the BIOS of this model.
 
-	M.
--- 
-Jazz is not dead. It just smells funny...
+However, after extensive testing, we observe that using the EFI reboot
+method reliably avoids the issue in all cases.
+
+So add a boot time quirk to use EFI reboot on such systems.
+
+Buglink: https://bugzilla.kernel.org/show_bug.cgi?id=203119
+Signed-off-by: Jian-Hong Pan <jian-hong@endlessm.com>
+Signed-off-by: Daniel Drake <drake@endlessm.com>
+Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Matt Fleming <matt@codeblueprint.co.uk>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: linux-efi@vger.kernel.org
+Cc: linux@endlessm.com
+Link: http://lkml.kernel.org/r/20190412080152.3718-1-jian-hong@endlessm.com
+[ Fix !CONFIG_EFI build failure, clarify the code and the changelog a bit. ]
+Signed-off-by: Ingo Molnar <mingo@kernel.org>
+---
+ arch/x86/kernel/reboot.c | 21 +++++++++++++++++++++
+ include/linux/efi.h      |  7 ++++++-
+ 2 files changed, 27 insertions(+), 1 deletion(-)
+
+diff --git a/arch/x86/kernel/reboot.c b/arch/x86/kernel/reboot.c
+index 725624b6c0c0..8fd3cedd9acc 100644
+--- a/arch/x86/kernel/reboot.c
++++ b/arch/x86/kernel/reboot.c
+@@ -81,6 +81,19 @@ static int __init set_bios_reboot(const struct dmi_system_id *d)
+ 	return 0;
+ }
+ 
++/*
++ * Some machines don't handle the default ACPI reboot method and
++ * require the EFI reboot method:
++ */
++static int __init set_efi_reboot(const struct dmi_system_id *d)
++{
++	if (reboot_type != BOOT_EFI && !efi_runtime_disabled()) {
++		reboot_type = BOOT_EFI;
++		pr_info("%s series board detected. Selecting EFI-method for reboot.\n", d->ident);
++	}
++	return 0;
++}
++
+ void __noreturn machine_real_restart(unsigned int type)
+ {
+ 	local_irq_disable();
+@@ -166,6 +179,14 @@ static const struct dmi_system_id reboot_dmi_table[] __initconst = {
+ 			DMI_MATCH(DMI_PRODUCT_NAME, "AOA110"),
+ 		},
+ 	},
++	{	/* Handle reboot issue on Acer TravelMate X514-51T */
++		.callback = set_efi_reboot,
++		.ident = "Acer TravelMate X514-51T",
++		.matches = {
++			DMI_MATCH(DMI_SYS_VENDOR, "Acer"),
++			DMI_MATCH(DMI_PRODUCT_NAME, "TravelMate X514-51T"),
++		},
++	},
+ 
+ 	/* Apple */
+ 	{	/* Handle problems with rebooting on Apple MacBook5 */
+diff --git a/include/linux/efi.h b/include/linux/efi.h
+index 54357a258b35..6ebc2098cfe1 100644
+--- a/include/linux/efi.h
++++ b/include/linux/efi.h
+@@ -1611,7 +1611,12 @@ efi_status_t efi_setup_gop(efi_system_table_t *sys_table_arg,
+ 			   struct screen_info *si, efi_guid_t *proto,
+ 			   unsigned long size);
+ 
+-bool efi_runtime_disabled(void);
++#ifdef CONFIG_EFI
++extern bool efi_runtime_disabled(void);
++#else
++static inline bool efi_runtime_disabled(void) { return true; }
++#endif
++
+ extern void efi_call_virt_check_flags(unsigned long flags, const char *call);
+ extern unsigned long efi_call_virt_save_flags(void);
+ 
