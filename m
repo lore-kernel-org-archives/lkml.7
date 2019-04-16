@@ -2,254 +2,262 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9CDBC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:21:44 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B22C1C282DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:21:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9BEC120663
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:21:44 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7A35520663
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:21:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730706AbfDPUVn (ORCPT
+        id S1730746AbfDPUVs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 16:21:43 -0400
-Received: from mout.kundenserver.de ([212.227.126.134]:48463 "EHLO
+        Tue, 16 Apr 2019 16:21:48 -0400
+Received: from mout.kundenserver.de ([212.227.126.130]:53165 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730022AbfDPUVj (ORCPT
+        with ESMTP id S1730680AbfDPUVo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 16:21:39 -0400
+        Tue, 16 Apr 2019 16:21:44 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MK5BG-1hYhwa1x9y-00LYy0; Tue, 16 Apr 2019 22:20:34 +0200
+ 1MkEdF-1gb4231FYv-00kccp; Tue, 16 Apr 2019 22:21:34 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Alexander Viro <viro@zeniv.linux.org.uk>
 Cc:     linux-fsdevel@vger.kernel.org, y2038@lists.linaro.org,
         linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
         "David S. Miller" <davem@davemloft.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Jonathan Corbet <corbet@lwn.net>,
         Karsten Keil <isdn@linux-pingi.de>,
-        "James E.J. Bottomley" <jejb@linux.ibm.com>,
-        "Martin K. Petersen" <martin.petersen@oracle.com>,
-        Marcel Holtmann <marcel@holtmann.org>, netdev@vger.kernel.org,
-        devel@driverdev.osuosl.org, linux-integrity@vger.kernel.org,
-        qat-linux@intel.com, linux-crypto@vger.kernel.org,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux1394-devel@lists.sourceforge.net,
-        amd-gfx@lists.freedesktop.org, linux-input@vger.kernel.org,
-        linux-usb@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-ide@vger.kernel.org, linux-iio@vger.kernel.org,
-        linux-rdma@vger.kernel.org, linuxppc-dev@lists.ozlabs.org,
-        linux-mtd@lists.infradead.org, linux-ppp@vger.kernel.org,
-        linux-nvme@lists.infradead.org,
-        platform-driver-x86@vger.kernel.org,
-        linux-remoteproc@vger.kernel.org, linux-rtc@vger.kernel.org,
-        linux-s390@vger.kernel.org, sparclinux@vger.kernel.org,
-        linux-scsi@vger.kernel.org, linux-fbdev@vger.kernel.org,
-        linux-btrfs@vger.kernel.org, ceph-devel@vger.kernel.org,
-        linux-bluetooth@vger.kernel.org, linux-wireless@vger.kernel.org,
-        alsa-devel@alsa-project.org
-Subject: [PATCH v3 00/26] compat_ioctl: cleanups
-Date:   Tue, 16 Apr 2019 22:19:38 +0200
-Message-Id: <20190416202013.4034148-1-arnd@arndb.de>
+        Paul Mackerras <paulus@samba.org>,
+        Guillaume Nault <g.nault@alphalink.fr>,
+        Eric Biggers <ebiggers@google.com>, netdev@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-ppp@vger.kernel.org
+Subject: [PATCH v3 06/26] compat_ioctl: handle PPPIOCGIDLE for 64-bit time_t
+Date:   Tue, 16 Apr 2019 22:19:44 +0200
+Message-Id: <20190416202013.4034148-7-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
+In-Reply-To: <20190416202013.4034148-1-arnd@arndb.de>
+References: <20190416202013.4034148-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:mvmRBVqmcY1mhupTDI+zdTPTOsWPDzdt5BCk66I7Xg6IdvERZEQ
- hRpELhbiULHqPfrFcKxAriH7V1lp/edkgqwfhvhGT7toE1JGZlBQqZQbzlO+eWCP2ER4sRI
- in0P9PUn+JskXwI/0DeODFTzggwqBwkA2RyOC6uS1Bny6OQqf072778J9AqViE858nJkb+Q
- eFCv7b9/d64u+uVjuBSrw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:4YXF1UI2n5Q=:2lrB6KN7HwAQtli1cWDOA1
- ltGxgBmWd8Fqoc71LQ8VzLwWLaNvj+CW12qPzYpO1l8AZdyrYZyP0N4PsQEdUAbJF5uuHUksh
- n1DDxCihVRi61gQcMVsrO1pG1YPKFaPQzVTeaYOpxWoNb8K7HJ6r7ksA8P1//8F3tGpjLIpsr
- 2uGXhdguNTKZ6RC0DDjnP6sKO4k4wGK3n2+VH2IapXNqay1Rnxy7n/3KNpwoEzu7pus3KhjDx
- trDD0YdU4bzJfV+eAUb2FrbQXzjNf2xES3GuI7loJs5iR+V11xnIRGXgjJCR0qspPApVJfBmX
- neVC6QfvFYilQE6IOSF/4bAOsLC5A4r2kszz8FpAuwQjmxBVdxeXF7FMMjiFg8BnAKBbvAC1T
- xhQmG9hQmHoOtQ/Yr6HU7Tfy/zeLAVW4SVL/VydRuFf8DXue+RdSJDb3hpccGIeb63LIO0G1v
- e4XgL55OxAPj4vXQqm4d1WoYV+utT6+JgILxp13ecCuEqq3MqpBOPkc8XNWr+Ry55jDDjAt8C
- aP7iHyI2Tqmu7o1RFZ5HsozgGiVuoCefRN8AJnp/570z1fB0aVB4uY6jaGNmZfRjyOtrb1EjF
- HD/vjiujlkTbHo3Fk9GP+W2YVhzzod6JubIkdRkIipbXVKbSLHv0aXWv5TVkWWJriq1edvctS
- KJqDn2/1AHnjJ2I6pcNw1jOdZrwlt0opNSNamI11DM7UpEi4Woh+mGm9U1Ei44E6M0mpM6Xnl
- pi7O5Ccuju0WtClcha6vz7mVFLqKwYrWB1kFcA==
+X-Provags-ID: V03:K1:Z80sGlQ66gRm2J3CTo2uN9CB8g+68RhpTNesaNMqEHaMegdINz6
+ 4NDVDUKLJNtguoaI43IdlVTGqdA1j2BqpjMgVueMZu4HbXK0HEtb6AdMqtE3FVxZ1xcBOIt
+ P0QmpFnVi5ez8MNsAZHnm5E+eCcZpQzCUMYGUf1G9q9iaC7ADGup2duzt6tUAIarmn0BXwJ
+ 4pKH/nSVo9gncltdrqc/A==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:6F4NwBI/CM0=:FNMhySh9Wa2sfvB+2nXXn8
+ R5ye0JtPLNWGgQml3Fu/a5MXEJP4meYjjeArlYU3nNRmVPB5yf3E0c1eJJYCg0gnPiq/j5h/F
+ hBGWY50cQpeWpiW8Hn8rf/epymotTvICFTV7G0QQPLJNGpJwq6KQWwKaGVItyjUXrjYxMgJiU
+ C0ptKrCNTcAyNTacqYaHPy72P3KF28p4j9U5N71hQbKfR7oqM1wfXhniMbO6lJ9XA1P3Do284
+ vu3XJnkhhn3fZUZT9kYXvvewgVdxtpEuhzrprD4YanCu4s5wWD0PY5SytISsHLPu5x8c1FDDZ
+ 3InpnQ7G8nHu27yj5I0kN1eT24mIy4EvwSHEQFuzZMGbwrD77IjpGJP4vF2rHBOaioVKDPmXW
+ swyRiOGL7xb8exqv2RdTIMuvc1AStgkjomejP3yicyY08gUtcEiOLBvKAMx7/LeFitLJbV/19
+ 0jpYePVpy6bPbo1gFELWo8ueefqC1QhXEuVYqoUNPWoEwP2iAvll2SSZP3z2gDqtlb42ifqLe
+ bVEmP0Nk6tm5g4MuDszbNbPo8ehiFuKi1sY1Y2a1MZjPUFh2g1e22BTM9I0TIsQep3jKvcbGg
+ fncc6d6/I7LWKBn27oaJZxWJB1r/aQgKmRFUeEeYJs4mnVTMTEARa7Zj5MQavUlJf6ADo9A8k
+ WoYGYCiXjI3U9vYcuuX0n/p0W8olm1Rxi0g6uWKsPOFKpOBKxI1DXITeFn2U1rDMqG9TQMgh8
+ NYiUTgkdIh2Wz8ukYHPdf06J/621/zeMY5KuJw==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Al,
+The ppp_idle structure is defined in terms of __kernel_time_t, which is
+defined as 'long' on all architectures, and this usage is not affected
+by the y2038 problem since it transports a time interval rather than an
+absolute time.
 
-It took me way longer than I had hoped to revisit this series, see
-https://lore.kernel.org/lkml/20180912150142.157913-1-arnd@arndb.de/
-for the previously posted version.
+However, the ppp user space defines the same structure as time_t, which
+may be 64-bit wide on new libc versions even on 32-bit architectures.
 
-I've come to the point where all conversion handlers and most
-COMPATIBLE_IOCTL() entries are gone from this file, but for
-now, this series only has the parts that have either been reviewed
-previously, or that are simple enough to include.
+It's easy enough to just handle both possible structure layouts on
+all architectures, to deal with the possibility that a user space ppp
+implementation comes with its own ppp_idle structure definition, as well
+as to document the fact that the driver is y2038-safe.
 
-The main missing piece is the SG_IO/SG_GET_REQUEST_TABLE conversion.
-I'll post the patches I made for that later, as they need more
-testing and review from the scsi maintainers.
+Doing this also avoids the need for a special compat mode translation,
+since 32-bit and 64-bit kernels now support the same interfaces.
 
-I hope you can still take these for the coming merge window, unless
-new problems come up.
+Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+---
+ Documentation/networking/ppp_generic.txt |  2 ++
+ drivers/isdn/i4l/isdn_ppp.c              | 14 ++++++++---
+ drivers/net/ppp/ppp_generic.c            | 19 +++++++++++----
+ fs/compat_ioctl.c                        | 31 ------------------------
+ include/uapi/linux/ppp-ioctl.h           |  2 ++
+ include/uapi/linux/ppp_defs.h            | 14 +++++++++++
+ 6 files changed, 43 insertions(+), 39 deletions(-)
 
-      Arnd
-
-Arnd Bergmann (26):
-  compat_ioctl: pppoe: fix PPPOEIOCSFWD handling
-  compat_ioctl: move simple ppp command handling into driver
-  compat_ioctl: avoid unused function warning for do_ioctl
-  compat_ioctl: move PPPIOCSCOMPRESS32 to ppp-generic.c
-  compat_ioctl: move PPPIOCSPASS32/PPPIOCSACTIVE32 to ppp_generic.c
-  compat_ioctl: handle PPPIOCGIDLE for 64-bit time_t
-  compat_ioctl: move rtc handling into rtc-dev.c
-  compat_ioctl: add compat_ptr_ioctl()
-  compat_ioctl: move drivers to compat_ptr_ioctl
-  compat_ioctl: use correct compat_ptr() translation in drivers
-  ceph: fix compat_ioctl for ceph_dir_operations
-  compat_ioctl: move more drivers to compat_ptr_ioctl
-  compat_ioctl: move tape handling into drivers
-  compat_ioctl: move ATYFB_CLK handling to atyfb driver
-  compat_ioctl: move isdn/capi ioctl translation into driver
-  compat_ioctl: move rfcomm handlers into driver
-  compat_ioctl: move hci_sock handlers into driver
-  compat_ioctl: remove HCIUART handling
-  compat_ioctl: remove HIDIO translation
-  compat_ioctl: remove translation for sound ioctls
-  compat_ioctl: remove IGNORE_IOCTL()
-  compat_ioctl: remove /dev/random commands
-  compat_ioctl: remove joystick ioctl translation
-  compat_ioctl: remove PCI ioctl translation
-  compat_ioctl: remove /dev/raw ioctl translation
-  compat_ioctl: remove last RAID handling code
-
- Documentation/networking/ppp_generic.txt    |   2 +
- arch/um/drivers/hostaudio_kern.c            |   1 +
- drivers/android/binder.c                    |   2 +-
- drivers/char/ppdev.c                        |  12 +-
- drivers/char/random.c                       |   1 +
- drivers/char/tpm/tpm_vtpm_proxy.c           |  12 +-
- drivers/crypto/qat/qat_common/adf_ctl_drv.c |   2 +-
- drivers/dma-buf/dma-buf.c                   |   4 +-
- drivers/dma-buf/sw_sync.c                   |   2 +-
- drivers/dma-buf/sync_file.c                 |   2 +-
- drivers/firewire/core-cdev.c                |  12 +-
- drivers/gpu/drm/amd/amdkfd/kfd_chardev.c    |   2 +-
- drivers/hid/hidraw.c                        |   4 +-
- drivers/hid/usbhid/hiddev.c                 |  11 +-
- drivers/hwtracing/stm/core.c                |  12 +-
- drivers/ide/ide-tape.c                      |  31 +-
- drivers/iio/industrialio-core.c             |   2 +-
- drivers/infiniband/core/uverbs_main.c       |   4 +-
- drivers/isdn/capi/capi.c                    |  31 +
- drivers/isdn/i4l/isdn_ppp.c                 |  14 +-
- drivers/media/rc/lirc_dev.c                 |   4 +-
- drivers/mfd/cros_ec_dev.c                   |   4 +-
- drivers/misc/cxl/flash.c                    |   8 +-
- drivers/misc/genwqe/card_dev.c              |  23 +-
- drivers/misc/mei/main.c                     |  22 +-
- drivers/misc/vmw_vmci/vmci_host.c           |   2 +-
- drivers/mtd/ubi/cdev.c                      |  36 +-
- drivers/net/ppp/ppp_generic.c               |  99 +++-
- drivers/net/ppp/pppoe.c                     |   7 +
- drivers/net/ppp/pptp.c                      |   3 +
- drivers/net/tap.c                           |  12 +-
- drivers/nvdimm/bus.c                        |   4 +-
- drivers/nvme/host/core.c                    |   2 +-
- drivers/pci/switch/switchtec.c              |   2 +-
- drivers/platform/x86/wmi.c                  |   2 +-
- drivers/rpmsg/rpmsg_char.c                  |   4 +-
- drivers/rtc/dev.c                           |  13 +-
- drivers/rtc/rtc-vr41xx.c                    |  10 +
- drivers/s390/char/tape_char.c               |  41 +-
- drivers/sbus/char/display7seg.c             |   2 +-
- drivers/sbus/char/envctrl.c                 |   4 +-
- drivers/scsi/3w-xxxx.c                      |   4 +-
- drivers/scsi/cxlflash/main.c                |   2 +-
- drivers/scsi/esas2r/esas2r_main.c           |   2 +-
- drivers/scsi/megaraid/megaraid_mm.c         |  28 +-
- drivers/scsi/osst.c                         |  34 +-
- drivers/scsi/pmcraid.c                      |   4 +-
- drivers/scsi/st.c                           |  35 +-
- drivers/staging/android/ion/ion.c           |   4 +-
- drivers/staging/pi433/pi433_if.c            |  12 +-
- drivers/staging/vme/devices/vme_user.c      |   2 +-
- drivers/tee/tee_core.c                      |   2 +-
- drivers/usb/class/cdc-wdm.c                 |   2 +-
- drivers/usb/class/usbtmc.c                  |   4 +-
- drivers/usb/core/devio.c                    |  16 +-
- drivers/usb/gadget/function/f_fs.c          |  12 +-
- drivers/vfio/vfio.c                         |  39 +-
- drivers/vhost/net.c                         |  12 +-
- drivers/vhost/scsi.c                        |  12 +-
- drivers/vhost/test.c                        |  12 +-
- drivers/vhost/vsock.c                       |  12 +-
- drivers/video/fbdev/aty/atyfb_base.c        |  12 +-
- drivers/virt/fsl_hypervisor.c               |   2 +-
- fs/btrfs/super.c                            |   2 +-
- fs/ceph/dir.c                               |   1 +
- fs/ceph/file.c                              |   2 +-
- fs/compat_ioctl.c                           | 602 +-------------------
- fs/fat/file.c                               |  13 +-
- fs/fuse/dev.c                               |   2 +-
- fs/notify/fanotify/fanotify_user.c          |   2 +-
- fs/userfaultfd.c                            |   2 +-
- include/linux/fs.h                          |   7 +
- include/linux/if_pppox.h                    |   2 +
- include/linux/mtio.h                        |  58 ++
- include/uapi/linux/ppp-ioctl.h              |   2 +
- include/uapi/linux/ppp_defs.h               |  14 +
- net/bluetooth/hci_sock.c                    |  21 +-
- net/bluetooth/rfcomm/sock.c                 |  14 +-
- net/l2tp/l2tp_ppp.c                         |   3 +
- net/rfkill/core.c                           |   2 +-
- sound/core/oss/pcm_oss.c                    |   4 +
- sound/oss/dmasound/dmasound_core.c          |   2 +
- 82 files changed, 452 insertions(+), 1034 deletions(-)
- create mode 100644 include/linux/mtio.h
-
+diff --git a/Documentation/networking/ppp_generic.txt b/Documentation/networking/ppp_generic.txt
+index 61daf4b39600..fd563aff5fc9 100644
+--- a/Documentation/networking/ppp_generic.txt
++++ b/Documentation/networking/ppp_generic.txt
+@@ -378,6 +378,8 @@ an interface unit are:
+   CONFIG_PPP_FILTER option is enabled, the set of packets which reset
+   the transmit and receive idle timers is restricted to those which
+   pass the `active' packet filter.
++  Two versions of this command exist, to deal with user space
++  expecting times as either 32-bit or 64-bit time_t seconds.
+ 
+ * PPPIOCSMAXCID sets the maximum connection-ID parameter (and thus the
+   number of connection slots) for the TCP header compressor and
+diff --git a/drivers/isdn/i4l/isdn_ppp.c b/drivers/isdn/i4l/isdn_ppp.c
+index a7b275ea5de1..1f17126c5fa4 100644
+--- a/drivers/isdn/i4l/isdn_ppp.c
++++ b/drivers/isdn/i4l/isdn_ppp.c
+@@ -543,11 +543,19 @@ isdn_ppp_ioctl(int min, struct file *file, unsigned int cmd, unsigned long arg)
+ 		}
+ 		is->pppcfg = val;
+ 		break;
+-	case PPPIOCGIDLE:	/* get idle time information */
++	case PPPIOCGIDLE32:	/* get idle time information */
+ 		if (lp) {
+-			struct ppp_idle pidle;
++			struct ppp_idle32 pidle;
+ 			pidle.xmit_idle = pidle.recv_idle = lp->huptimer;
+-			if ((r = set_arg(argp, &pidle, sizeof(struct ppp_idle))))
++			if ((r = set_arg(argp, &pidle, sizeof(struct ppp_idle32))))
++				return r;
++		}
++		break;
++	case PPPIOCGIDLE64:	/* get idle time information */
++		if (lp) {
++			struct ppp_idle64 pidle;
++			pidle.xmit_idle = pidle.recv_idle = lp->huptimer;
++			if ((r = set_arg(argp, &pidle, sizeof(struct ppp_idle64))))
+ 				return r;
+ 		}
+ 		break;
+diff --git a/drivers/net/ppp/ppp_generic.c b/drivers/net/ppp/ppp_generic.c
+index b8a867fdd5ad..712fa94650fe 100644
+--- a/drivers/net/ppp/ppp_generic.c
++++ b/drivers/net/ppp/ppp_generic.c
+@@ -619,7 +619,8 @@ static long ppp_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ 	struct ppp_file *pf;
+ 	struct ppp *ppp;
+ 	int err = -EFAULT, val, val2, i;
+-	struct ppp_idle idle;
++	struct ppp_idle32 idle32;
++	struct ppp_idle64 idle64;
+ 	struct npioctl npi;
+ 	int unit, cflags;
+ 	struct slcompress *vj;
+@@ -743,10 +744,18 @@ static long ppp_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
+ 		err = 0;
+ 		break;
+ 
+-	case PPPIOCGIDLE:
+-		idle.xmit_idle = (jiffies - ppp->last_xmit) / HZ;
+-		idle.recv_idle = (jiffies - ppp->last_recv) / HZ;
+-		if (copy_to_user(argp, &idle, sizeof(idle)))
++	case PPPIOCGIDLE32:
++                idle32.xmit_idle = (jiffies - ppp->last_xmit) / HZ;
++                idle32.recv_idle = (jiffies - ppp->last_recv) / HZ;
++                if (copy_to_user(argp, &idle32, sizeof(idle32)))
++			break;
++		err = 0;
++		break;
++
++	case PPPIOCGIDLE64:
++		idle64.xmit_idle = (jiffies - ppp->last_xmit) / HZ;
++		idle64.recv_idle = (jiffies - ppp->last_recv) / HZ;
++		if (copy_to_user(argp, &idle64, sizeof(idle64)))
+ 			break;
+ 		err = 0;
+ 		break;
+diff --git a/fs/compat_ioctl.c b/fs/compat_ioctl.c
+index d507b7189958..e6dbd956cf66 100644
+--- a/fs/compat_ioctl.c
++++ b/fs/compat_ioctl.c
+@@ -269,36 +269,7 @@ static int sg_grt_trans(struct file *file,
+ 	}
+ 	return err;
+ }
+-#endif /* CONFIG_BLOCK */
+-
+-struct ppp_idle32 {
+-	compat_time_t xmit_idle;
+-	compat_time_t recv_idle;
+-};
+-#define PPPIOCGIDLE32		_IOR('t', 63, struct ppp_idle32)
+-
+-static int ppp_gidle(struct file *file, unsigned int cmd,
+-		struct ppp_idle32 __user *idle32)
+-{
+-	struct ppp_idle __user *idle;
+-	__kernel_time_t xmit, recv;
+-	int err;
+-
+-	idle = compat_alloc_user_space(sizeof(*idle));
+ 
+-	err = do_ioctl(file, PPPIOCGIDLE, (unsigned long) idle);
+-
+-	if (!err) {
+-		if (get_user(xmit, &idle->xmit_idle) ||
+-		    get_user(recv, &idle->recv_idle) ||
+-		    put_user(xmit, &idle32->xmit_idle) ||
+-		    put_user(recv, &idle32->recv_idle))
+-			err = -EFAULT;
+-	}
+-	return err;
+-}
+-
+-#ifdef CONFIG_BLOCK
+ struct mtget32 {
+ 	compat_long_t	mt_type;
+ 	compat_long_t	mt_resid;
+@@ -838,8 +809,6 @@ static long do_ioctl_trans(unsigned int cmd,
+ 	void __user *argp = compat_ptr(arg);
+ 
+ 	switch (cmd) {
+-	case PPPIOCGIDLE32:
+-		return ppp_gidle(file, cmd, argp);
+ #ifdef CONFIG_BLOCK
+ 	case SG_IO:
+ 		return sg_ioctl_trans(file, cmd, argp);
+diff --git a/include/uapi/linux/ppp-ioctl.h b/include/uapi/linux/ppp-ioctl.h
+index 88b5f9990320..7bd2a5a75348 100644
+--- a/include/uapi/linux/ppp-ioctl.h
++++ b/include/uapi/linux/ppp-ioctl.h
+@@ -104,6 +104,8 @@ struct pppol2tp_ioc_stats {
+ #define PPPIOCGDEBUG	_IOR('t', 65, int)	/* Read debug level */
+ #define PPPIOCSDEBUG	_IOW('t', 64, int)	/* Set debug level */
+ #define PPPIOCGIDLE	_IOR('t', 63, struct ppp_idle) /* get idle time */
++#define PPPIOCGIDLE32	_IOR('t', 63, struct ppp_idle32) /* 32-bit times */
++#define PPPIOCGIDLE64	_IOR('t', 63, struct ppp_idle64) /* 64-bit times */
+ #define PPPIOCNEWUNIT	_IOWR('t', 62, int)	/* create new ppp unit */
+ #define PPPIOCATTACH	_IOW('t', 61, int)	/* attach to ppp unit */
+ #define PPPIOCDETACH	_IOW('t', 60, int)	/* obsolete, do not use */
+diff --git a/include/uapi/linux/ppp_defs.h b/include/uapi/linux/ppp_defs.h
+index fff51b91b409..0039fa39a358 100644
+--- a/include/uapi/linux/ppp_defs.h
++++ b/include/uapi/linux/ppp_defs.h
+@@ -142,10 +142,24 @@ struct ppp_comp_stats {
+ /*
+  * The following structure records the time in seconds since
+  * the last NP packet was sent or received.
++ *
++ * Linux implements both 32-bit and 64-bit time_t versions
++ * for compatibility with user space that defines ppp_idle
++ * based on the libc time_t.
+  */
+ struct ppp_idle {
+     __kernel_time_t xmit_idle;	/* time since last NP packet sent */
+     __kernel_time_t recv_idle;	/* time since last NP packet received */
+ };
+ 
++struct ppp_idle32 {
++    __s32 xmit_idle;		/* time since last NP packet sent */
++    __s32 recv_idle;		/* time since last NP packet received */
++};
++
++struct ppp_idle64 {
++    __s64 xmit_idle;		/* time since last NP packet sent */
++    __s64 recv_idle;		/* time since last NP packet received */
++};
++
+ #endif /* _UAPI_PPP_DEFS_H_ */
 -- 
 2.20.0
 
-Cc: "David S. Miller" <davem@davemloft.net>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Karsten Keil <isdn@linux-pingi.de>
-Cc: "James E.J. Bottomley" <jejb@linux.ibm.com>
-Cc: "Martin K. Petersen" <martin.petersen@oracle.com>
-Cc: Marcel Holtmann <marcel@holtmann.org>
-Cc: netdev@vger.kernel.org
-Cc: linux-kernel@vger.kernel.org
-Cc: devel@driverdev.osuosl.org
-Cc: linux-integrity@vger.kernel.org
-Cc: qat-linux@intel.com
-Cc: linux-crypto@vger.kernel.org
-Cc: linux-media@vger.kernel.org
-Cc: dri-devel@lists.freedesktop.org
-Cc: linux1394-devel@lists.sourceforge.net
-Cc: amd-gfx@lists.freedesktop.org
-Cc: linux-input@vger.kernel.org
-Cc: linux-usb@vger.kernel.org
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-ide@vger.kernel.org
-Cc: linux-iio@vger.kernel.org
-Cc: linux-rdma@vger.kernel.org
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: linux-mtd@lists.infradead.org
-Cc: linux-ppp@vger.kernel.org
-Cc: linux-nvme@lists.infradead.org
-Cc: platform-driver-x86@vger.kernel.org
-Cc: linux-remoteproc@vger.kernel.org
-Cc: linux-rtc@vger.kernel.org
-Cc: linux-s390@vger.kernel.org
-Cc: sparclinux@vger.kernel.org
-Cc: linux-scsi@vger.kernel.org
-Cc: linux-fbdev@vger.kernel.org
-Cc: linux-btrfs@vger.kernel.org
-Cc: ceph-devel@vger.kernel.org
-Cc: linux-fsdevel@vger.kernel.org
-Cc: linux-bluetooth@vger.kernel.org
-Cc: linux-wireless@vger.kernel.org
-Cc: alsa-devel@alsa-project.org
-Cc: y2038@lists.linaro.org
