@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CABE5C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:55:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 724EEC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:55:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A43D52075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:55:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4706A2087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:55:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730644AbfDPRzT (ORCPT
+        id S1730467AbfDPRza (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 13:55:19 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:57724 "EHLO
+        Tue, 16 Apr 2019 13:55:30 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:57710 "EHLO
         ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730382AbfDPRxu (ORCPT
+        with ESMTP id S1730364AbfDPRxu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 16 Apr 2019 13:53:50 -0400
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hGSHF-0005aZ-45; Tue, 16 Apr 2019 17:53:49 +0000
+        id 1hGSHE-0005aB-KI; Tue, 16 Apr 2019 17:53:48 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [RFC PATCH 61/62] sockfs: switch to ->free_inode()
-Date:   Tue, 16 Apr 2019 18:53:39 +0100
-Message-Id: <20190416175340.21068-61-viro@ZenIV.linux.org.uk>
+Subject: [RFC PATCH 57/62] overlayfs: make use of ->free_inode()
+Date:   Tue, 16 Apr 2019 18:53:35 +0100
+Message-Id: <20190416175340.21068-57-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190416175340.21068-1-viro@ZenIV.linux.org.uk>
 References: <20190416174900.GT2217@ZenIV.linux.org.uk>
@@ -41,46 +41,53 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-we do have an RCU-delayed part there already (freeing the wq),
-so it's not like the pipe situation; moreover, it might be
-worth considering coallocating wq with the rest of struct sock_alloc.
-->sk_wq in struct sock would remain a pointer as it is, but
-the object it normally points to would be coallocated with
-struct socket...
+synchronous parts are left in ->destroy_inode()
 
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- net/socket.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+ fs/overlayfs/super.c | 13 ++++++-------
+ 1 file changed, 6 insertions(+), 7 deletions(-)
 
-diff --git a/net/socket.c b/net/socket.c
-index 8255f5bda0aa..6953a049fb82 100644
---- a/net/socket.c
-+++ b/net/socket.c
-@@ -263,12 +263,12 @@ static struct inode *sock_alloc_inode(struct super_block *sb)
- 	return &ei->vfs_inode;
+diff --git a/fs/overlayfs/super.c b/fs/overlayfs/super.c
+index 0116735cc321..5ec4fc2f5d7e 100644
+--- a/fs/overlayfs/super.c
++++ b/fs/overlayfs/super.c
+@@ -190,11 +190,13 @@ static struct inode *ovl_alloc_inode(struct super_block *sb)
+ 	return &oi->vfs_inode;
  }
  
--static void sock_destroy_inode(struct inode *inode)
-+static void sock_free_inode(struct inode *inode)
+-static void ovl_i_callback(struct rcu_head *head)
++static void ovl_free_inode(struct inode *inode)
  {
- 	struct socket_alloc *ei;
+-	struct inode *inode = container_of(head, struct inode, i_rcu);
++	struct ovl_inode *oi = OVL_I(inode);
  
- 	ei = container_of(inode, struct socket_alloc, vfs_inode);
--	kfree_rcu(ei->socket.wq, rcu);
-+	kfree(ei->socket.wq);
- 	kmem_cache_free(sock_inode_cachep, ei);
+-	kmem_cache_free(ovl_inode_cachep, OVL_I(inode));
++	kfree(oi->redirect);
++	mutex_destroy(&oi->lock);
++	kmem_cache_free(ovl_inode_cachep, oi);
  }
  
-@@ -293,7 +293,7 @@ static void init_inodecache(void)
+ static void ovl_destroy_inode(struct inode *inode)
+@@ -207,10 +209,6 @@ static void ovl_destroy_inode(struct inode *inode)
+ 		ovl_dir_cache_free(inode);
+ 	else
+ 		iput(oi->lowerdata);
+-	kfree(oi->redirect);
+-	mutex_destroy(&oi->lock);
+-
+-	call_rcu(&inode->i_rcu, ovl_i_callback);
+ }
  
- static const struct super_operations sockfs_ops = {
- 	.alloc_inode	= sock_alloc_inode,
--	.destroy_inode	= sock_destroy_inode,
-+	.free_inode	= sock_free_inode,
- 	.statfs		= simple_statfs,
- };
+ static void ovl_free_fs(struct ovl_fs *ofs)
+@@ -377,6 +375,7 @@ static int ovl_remount(struct super_block *sb, int *flags, char *data)
  
+ static const struct super_operations ovl_super_operations = {
+ 	.alloc_inode	= ovl_alloc_inode,
++	.free_inode	= ovl_free_inode,
+ 	.destroy_inode	= ovl_destroy_inode,
+ 	.drop_inode	= generic_delete_inode,
+ 	.put_super	= ovl_put_super,
 -- 
 2.11.0
 
