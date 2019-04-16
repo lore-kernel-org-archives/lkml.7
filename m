@@ -2,82 +2,136 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63571C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:48:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5D74C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:48:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B85B2075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:48:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 811F02075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:48:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728980AbfDPKr7 (ORCPT
+        id S1729070AbfDPKs1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 06:47:59 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:53396 "EHLO mx1.redhat.com"
+        Tue, 16 Apr 2019 06:48:27 -0400
+Received: from sauhun.de ([88.99.104.3]:48906 "EHLO pokefinder.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726347AbfDPKr6 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 06:47:58 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B531A368B3;
-        Tue, 16 Apr 2019 10:47:56 +0000 (UTC)
-Received: from localhost (ovpn-117-202.ams2.redhat.com [10.36.117.202])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id DD1901001E8C;
-        Tue, 16 Apr 2019 10:47:49 +0000 (UTC)
-From:   Stefan Hajnoczi <stefanha@redhat.com>
-To:     kvm@vger.kernel.org
-Cc:     virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Nicholas Bellinger <nab@linux-iscsi.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>,
-        Jason Wang <jasowang@redhat.com>,
-        Stefan Hajnoczi <stefanha@redhat.com>
-Subject: [PATCH] vhost/scsi: drop unnecessary smp_mb__after_atomic()
-Date:   Tue, 16 Apr 2019 11:47:48 +0100
-Message-Id: <20190416104748.26942-1-stefanha@redhat.com>
+        id S1727942AbfDPKs0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 06:48:26 -0400
+Received: from localhost (p54B332D3.dip0.t-ipconnect.de [84.179.50.211])
+        by pokefinder.org (Postfix) with ESMTPSA id 888E52C3637;
+        Tue, 16 Apr 2019 12:48:23 +0200 (CEST)
+Date:   Tue, 16 Apr 2019 12:48:23 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Stefan Lengfeld <contact@stefanchrist.eu>
+Cc:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-i2c@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        Peter Rosin <peda@axentia.se>, linux-omap@vger.kernel.org,
+        linux-tegra@vger.kernel.org,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+Subject: Re: [PATCH 01/12] i2c: remove use of in_atomic()
+Message-ID: <20190416104823.zabxzdxarzfhdw7m@ninjato>
+References: <20190403124019.8947-1-wsa+renesas@sang-engineering.com>
+ <20190403124019.8947-2-wsa+renesas@sang-engineering.com>
+ <20190415215546.xr7aftkahcu4ygak@porty>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.30]); Tue, 16 Apr 2019 10:47:58 +0000 (UTC)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="va5zqs4dempdj6of"
+Content-Disposition: inline
+In-Reply-To: <20190415215546.xr7aftkahcu4ygak@porty>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The vhost_scsi.ko code used several atomic variables at one point.
-Later they were dropped or converted to regular ints protected by a
-mutex.
 
-The commit that made these changes left an unused smp_mb__after_atomic()
-in vhost_scsi_set_endpoint().  It was previously used after incrementing
-vhost_scsi->vhost_ref_cnt but this field has been dropped:
+--va5zqs4dempdj6of
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-  -     atomic_inc(&vs->vhost_ref_cnt);
-        smp_mb__after_atomic_inc();
+Hi Stefan,
 
-Reported-by: Andrea Parri <andrea.parri@amarulasolutions.com>
-Fixes: 101998f6fcd680 ("tcm_vhost: Post-merge review changes requested by MST")
-Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
----
- drivers/vhost/scsi.c | 1 -
- 1 file changed, 1 deletion(-)
+> Tested-by: Stefan Lengfeld <contact@stefanchrist.eu>
 
-diff --git a/drivers/vhost/scsi.c b/drivers/vhost/scsi.c
-index 618fb6461017..c090d177bd75 100644
---- a/drivers/vhost/scsi.c
-+++ b/drivers/vhost/scsi.c
-@@ -1443,7 +1443,6 @@ vhost_scsi_set_endpoint(struct vhost_scsi *vs,
- 			tpg->tv_tpg_vhost_count++;
- 			tpg->vhost_scsi = vs;
- 			vs_tpg[tpg->tport_tpgt] = tpg;
--			smp_mb__after_atomic();
- 			match = true;
- 		}
- 		mutex_unlock(&tpg->tv_tpg_mutex);
--- 
-2.20.1
+Thanks for your comments and testing! I will fix the issues you
+mentioned and add your tags.
 
+> > +/*
+> > + * We only allow atomic transfers for very late communication, e.g. to=
+ send
+> > + * the powerdown command to a PMIC. Atomic transfers are a corner case=
+ and not
+> > + * for generic use!
+> > + */
+> > +static inline bool i2c_in_atomic_xfer_mode(void)
+> > +{
+> > +	return system_state > SYSTEM_RUNNING && irqs_disabled();
+> > +}
+>=20
+> I agree that this code is a lot better than the previous
+> 'irqs_disabled() || in_atomic()'. It also makes clear that the atomic
+> I2C transfers is only meant for late shutdown I2C communcation.
+>=20
+>=20
+> After I read the article https://lwn.net/Articles/274695/ again I
+> nevertheless cannot really say whether the usage of 'irqs_disabled()' is
+> the theoretical correct approach. The article states explicitly that
+> only the caller can really decided whether the operation should be
+> atomic or not.
+
+During the discussion with Peter, he stated we need irqs_disabled()
+because 'system_state > SYSTEM_RUNNING' alone won't do.
+
+> Recap from previous discussions:
+>=20
+> But then you have to patch every call site to use either a new function
+> like 'i2c_transfer_atomic()' or the extend I2C message flags. And mostly
+> also supported this trough regmap and maybe other translation layers,
+> which seems unpractical, may breaking existing usages and maybe not
+> worth the hassle.
+
+Yes, I kinda gave up on white-listing late I2C transfers. My hope is
+that not too many drivers will have an atomic callback, so the WARN will
+trigger often enough to find late transfers which are inappropriate.
+
+Another idea just popping up: Maybe we can improve that even further by
+first globally disabling atomic transfers. Drivers knowing they need
+this can then call an I2C core helper to enable them (again globally).
+Still not perfect as some unwanted late I2C transfers from another
+driver could slip through, but this should be rare enough. The pro-side
+is we will detect more unwanted late transfers if support for them is
+default off. It should be noted that "disabling" means keeping the old
+behaviour which is: we try the regular transfer but complain about it.
+Only enabling atomic will make the core quiet.
+
+Regards,
+
+   Wolfram
+
+
+--va5zqs4dempdj6of
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAly1svMACgkQFA3kzBSg
+KbZxBRAApfDnYlIej1zlztDILL+sczBMwOC2hii04cYsWcmCh3D+0h6upc7U3ibE
+pVykQ6KN5qrvSyu07V1aw2Z/iM2T2rA/MSMKEOAKmnydQLzWGU/VpgKKXWdd6o7J
+aol3sP+ovgih1qolxcAFw9sW8EfrrkEp8AbcGcfTCALWHfEmcLWyvWcm3kedBZIX
+br6lJHvLUU4WrKZxhUsuz1VQ/wq9iIcZiG/pEbyBAD/4Yo2Ot2WyiYw4TjScxgvP
+aGWKC3+GX08/O1PMjnMVTrtGyW2LhrMcQx1w0s3We93KWsSnzRPRQjbNUa0e/uIZ
+Hes/jSfFV3a8paryTaipp2w2k4u11h3ZbLsRFrN2SXKTv3oJxrh6bcRd2j7dJB4q
+iwjOQnd5CWRjljZ1xhS2i+RY1TD2ZxspLIS4Z+PAqjE4qTGlioyqkZkH9/aC4Kb2
+kbzFu8oOzSVTptTZVslEgCZgjoNB77Z7unFDAiogat71VL1473XT7mdW4sGTT8iy
+aI60L8EXdYrsde0pcyH23v/iz9e9gV8wk4zo47v48osiPXLw59CmUqr9/8/6jnn/
+nAEKyMK5qyQkc3u792gAF9Ex7g1w3QRFBD+6ZIvY3gMeMSoHpUwoysxklQuXWE5e
+T3OfXcZ3hSYof1AUlO7BfEQ89r/Uil9mtZPrYJ0N6qDTX7eDfY8=
+=HlAN
+-----END PGP SIGNATURE-----
+
+--va5zqs4dempdj6of--
