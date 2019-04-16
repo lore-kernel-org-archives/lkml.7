@@ -4,46 +4,48 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 504C3C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:46:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0A37C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:46:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 215BB20868
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:46:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF91020821
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:46:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="DxcXAQbH"
+	dkim=pass (1024-bit key) header.d=onstation.org header.i=@onstation.org header.b="uJRWc93W"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728391AbfDPIqF (ORCPT
+        id S1728768AbfDPIqI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 04:46:05 -0400
-Received: from onstation.org ([52.200.56.107]:36158 "EHLO onstation.org"
+        Tue, 16 Apr 2019 04:46:08 -0400
+Received: from onstation.org ([52.200.56.107]:36172 "EHLO onstation.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726208AbfDPIqF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 04:46:05 -0400
+        id S1726753AbfDPIqG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 04:46:06 -0400
 Received: from localhost.localdomain (c-98-239-145-235.hsd1.wv.comcast.net [98.239.145.235])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
         (Authenticated sender: masneyb)
-        by onstation.org (Postfix) with ESMTPSA id B59B43E8E1;
-        Tue, 16 Apr 2019 08:46:03 +0000 (UTC)
+        by onstation.org (Postfix) with ESMTPSA id 7B9EB44712;
+        Tue, 16 Apr 2019 08:46:04 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=onstation.org;
         s=default; t=1555404364;
-        bh=L+9TZ8tgPDesCW+fNCqgvWXor+TvSvQGnl3HlE3A2Us=;
-        h=From:To:Cc:Subject:Date:From;
-        b=DxcXAQbHrG6yK2cBT++8OYrY/unjgyp0xmX5uHr3rBz2+bHEKbiA8nxsLcZsq0tdt
-         v4/+tA7bu/JZBZ1FC+5a2SybNm0Na/NxkUR0rGjZWX9vmadv1iBRdD8jrZfpTmb252
-         1iKuRXds/zmnkMZBrLKtreowzJqHlnEHK3TOTO6U=
+        bh=mRDsNvwbB9OqAR8Hx3W4TrRPH+8GNPF58Iz995Rkq4A=;
+        h=From:To:Cc:Subject:Date:In-Reply-To:References:From;
+        b=uJRWc93WLsIlZzKubVe99lnLlkmE6u06WtcVVpK327NDNdswuggGJZDdOG0gx/izO
+         lMcdlpDWNl9m1g6wIFHxqzghPtlJlZ2DandASxCFRwUrJ5LFhLnrW3wgAn5/h6jlVX
+         LjymiIoC/VlwHK71pwALQnn6iQGKgReZlS1Z+ZKc=
 From:   Brian Masney <masneyb@onstation.org>
 To:     jic23@kernel.org, robh+dt@kernel.org
 Cc:     lars@metafoo.de, pmeerw@pmeerw.net, mark.rutland@arm.com,
         linux-iio@vger.kernel.org, devicetree@vger.kernel.org,
         linux-kernel@vger.kernel.org
-Subject: [PATCH 1/2] dt-bindings: iio: tsl2772: convert bindings to YAML format
-Date:   Tue, 16 Apr 2019 04:45:51 -0400
-Message-Id: <20190416084552.1538-1-masneyb@onstation.org>
+Subject: [PATCH 2/2] dt-bindings: iio: tsl2583: convert bindings to YAML format
+Date:   Tue, 16 Apr 2019 04:45:52 -0400
+Message-Id: <20190416084552.1538-2-masneyb@onstation.org>
 X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190416084552.1538-1-masneyb@onstation.org>
+References: <20190416084552.1538-1-masneyb@onstation.org>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -51,131 +53,91 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the tsl2772 device tree bindings to the new YAML format.
+Convert the tsl2583 device tree bindings to the new YAML format.
 
 Signed-off-by: Brian Masney <masneyb@onstation.org>
 ---
- .../devicetree/bindings/iio/light/tsl2772.txt | 42 ---------
- .../bindings/iio/light/tsl2772.yaml           | 85 +++++++++++++++++++
- 2 files changed, 85 insertions(+), 42 deletions(-)
- delete mode 100644 Documentation/devicetree/bindings/iio/light/tsl2772.txt
- create mode 100644 Documentation/devicetree/bindings/iio/light/tsl2772.yaml
+I can no longer find the data sheet for this device linked on AMS's
+site. The datasheet is still on Digikey [1], however I didn't include it
+in the binding document since I assume that we should only link to the
+manufacturer's website.
+https://media.digikey.com/pdf/Data%20Sheets/Austriamicrosystems%20PDFs/TSL2581,83.pdf
 
-diff --git a/Documentation/devicetree/bindings/iio/light/tsl2772.txt b/Documentation/devicetree/bindings/iio/light/tsl2772.txt
+ .../devicetree/bindings/iio/light/tsl2583.txt | 25 ----------
+ .../bindings/iio/light/tsl2583.yaml           | 49 +++++++++++++++++++
+ 2 files changed, 49 insertions(+), 25 deletions(-)
+ delete mode 100644 Documentation/devicetree/bindings/iio/light/tsl2583.txt
+ create mode 100644 Documentation/devicetree/bindings/iio/light/tsl2583.yaml
+
+diff --git a/Documentation/devicetree/bindings/iio/light/tsl2583.txt b/Documentation/devicetree/bindings/iio/light/tsl2583.txt
 deleted file mode 100644
-index 1c5e6f17a1df..000000000000
---- a/Documentation/devicetree/bindings/iio/light/tsl2772.txt
+index 059dffa1829a..000000000000
+--- a/Documentation/devicetree/bindings/iio/light/tsl2583.txt
 +++ /dev/null
-@@ -1,42 +0,0 @@
--* AMS/TAOS ALS and proximity sensor
+@@ -1,25 +0,0 @@
+-* TAOS TSL 2580/2581/2583 ALS sensor
 -
 -Required properties:
 -
 -  - compatible: Should be one of
--		"amstaos,tsl2571"
--		"amstaos,tsl2671"
--		"amstaos,tmd2671"
--		"amstaos,tsl2771"
--		"amstaos,tmd2771"
--		"amstaos,tsl2572"
--		"amstaos,tsl2672"
--		"amstaos,tmd2672"
--		"amstaos,tsl2772"
--		"amstaos,tmd2772"
--		"avago,apds9930"
+-		"amstaos,tsl2580"
+-		"amstaos,tsl2581"
+-		"amstaos,tsl2583"
 -  - reg: the I2C address of the device
 -
 -Optional properties:
 -
--  - amstaos,proximity-diodes - proximity diodes to enable. <0>, <1>, or <0 1>
--                               are the only valid values.
--  - led-max-microamp - current for the proximity LED. Must be 100000, 50000,
--                       25000, or 13000.
--  - vdd-supply: phandle to the regulator that provides power to the sensor.
--  - vddio-supply: phandle to the regulator that provides power to the bus.
 -  - interrupts: the sole interrupt generated by the device
 -
 -  Refer to interrupt-controller/interrupts.txt for generic interrupt client
 -  node bindings.
 -
+-  - vcc-supply: phandle to the regulator that provides power to the sensor.
+-
 -Example:
 -
--tsl2772@39 {
--	compatible = "amstaos,tsl2772";
--	reg = <0x39>;
--	interrupts-extended = <&msmgpio 61 IRQ_TYPE_EDGE_FALLING>;
--	vdd-supply = <&pm8941_l17>;
--	vddio-supply = <&pm8941_lvs1>;
--	amstaos,proximity-diodes = <0>;
--	led-max-microamp = <100000>;
+-tsl2581@29 {
+-	compatible = "amstaos,tsl2581";
+-	reg = <0x29>;
 -};
-diff --git a/Documentation/devicetree/bindings/iio/light/tsl2772.yaml b/Documentation/devicetree/bindings/iio/light/tsl2772.yaml
+diff --git a/Documentation/devicetree/bindings/iio/light/tsl2583.yaml b/Documentation/devicetree/bindings/iio/light/tsl2583.yaml
 new file mode 100644
-index 000000000000..b3ac182288d2
+index 000000000000..c2d11b605963
 --- /dev/null
-+++ b/Documentation/devicetree/bindings/iio/light/tsl2772.yaml
-@@ -0,0 +1,85 @@
++++ b/Documentation/devicetree/bindings/iio/light/tsl2583.yaml
+@@ -0,0 +1,49 @@
 +# SPDX-License-Identifier: (GPL-2.0 OR BSD-2-Clause)
 +%YAML 1.2
 +---
-+$id: http://devicetree.org/schemas/iio/light/tsl2772.yaml#
++$id: http://devicetree.org/schemas/iio/light/tsl2583.yaml#
 +$schema: http://devicetree.org/meta-schemas/core.yaml#
 +
-+title: AMS/TAOS Ambient Light Sensor (ALS) and Proximity Detector
++title: AMS/TAOS Ambient Light Sensor (ALS)
 +
 +maintainers:
 +  - Brian Masney <masneyb@onstation.org>
 +
 +description: |
-+  Ambient light sensing and proximity detection with an i2c interface.
-+  https://ams.com/documents/20143/36005/TSL2772_DS000181_2-00.pdf
++  Ambient light sensing with an i2c interface.
 +
 +properties:
 +  compatible:
 +    enum:
-+      - amstaos,tsl2571
-+      - amstaos,tsl2671
-+      - amstaos,tmd2671
-+      - amstaos,tsl2771
-+      - amstaos,tmd2771
-+      - amstaos,tsl2572
-+      - amstaos,tsl2672
-+      - amstaos,tmd2672
-+      - amstaos,tsl2772
-+      - amstaos,tmd2772
-+      - avago,apds9930
++      - amstaos,tsl2580
++      - amstaos,tsl2581
++      - amstaos,tsl2583
 +
 +  reg:
 +    description: The I2C address of the device
 +    maxItems: 1
 +
-+  amstaos,proximity-diodes:
-+    description: Proximity diodes to enable
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32-array
-+      - minItems: 1
-+        maxItems: 2
-+        items:
-+          minimum: 0
-+          maximum: 1
-+
 +  interrupts:
 +    description: Interrupt generated by the device
 +    maxItems: 1
 +
-+  led-max-microamp:
-+    description: Current for the proximity LED
-+    allOf:
-+      - $ref: /schemas/types.yaml#/definitions/uint32
-+      - enum: [13000, 25000, 50000, 100000]
-+
-+  vdd-supply:
++  vcc-supply:
 +    $ref: /schemas/types.yaml#/definitions/phandle
 +    description: Regulator that provides power to the sensor
-+
-+  vddio-supply:
-+    $ref: /schemas/types.yaml#/definitions/phandle
-+    description: Regulator that provides power to the bus
 +
 +required:
 +  - compatible
@@ -183,20 +145,13 @@ index 000000000000..b3ac182288d2
 +
 +examples:
 +  - |
-+    #include <dt-bindings/interrupt-controller/irq.h>
-+
 +    i2c {
 +        #address-cells = <1>;
 +        #size-cells = <0>;
 +
-+        tsl2772@39 {
-+                compatible = "amstaos,tsl2772";
-+                reg = <0x39>;
-+                interrupts-extended = <&msmgpio 61 IRQ_TYPE_EDGE_FALLING>;
-+                vdd-supply = <&pm8941_l17>;
-+                vddio-supply = <&pm8941_lvs1>;
-+                amstaos,proximity-diodes = <0>;
-+                led-max-microamp = <100000>;
++        tsl2581@29 {
++                compatible = "amstaos,tsl2581";
++                reg = <0x29>;
 +        };
 +    };
 +...
