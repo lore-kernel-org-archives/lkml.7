@@ -2,120 +2,82 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 236C0C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:30:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 640DAC282DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:32:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D09F32073F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:30:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 31FBB2073F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:32:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727980AbfDPGag (ORCPT
+        id S1728084AbfDPGcz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 02:30:36 -0400
-Received: from mga05.intel.com ([192.55.52.43]:5528 "EHLO mga05.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726805AbfDPGaf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 02:30:35 -0400
-X-Amp-Result: UNKNOWN
-X-Amp-Original-Verdict: FILE UNKNOWN
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Apr 2019 23:30:35 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,355,1549958400"; 
-   d="scan'208";a="131759180"
-Received: from lkp-server01.sh.intel.com (HELO lkp-server01) ([10.239.97.150])
-  by orsmga007.jf.intel.com with ESMTP; 15 Apr 2019 23:30:33 -0700
-Received: from kbuild by lkp-server01 with local (Exim 4.89)
-        (envelope-from <lkp@intel.com>)
-        id 1hGHc1-0004z8-9Q; Tue, 16 Apr 2019 14:30:33 +0800
-Date:   Tue, 16 Apr 2019 14:29:33 +0800
-From:   kbuild test robot <lkp@intel.com>
-To:     Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
-Cc:     kbuild-all@01.org, linux-fbdev@vger.kernel.org,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] video: fbdev: da8xx-fb: add COMPILE_TEST support
-Message-ID: <201904161412.VEAizQ2O%lkp@intel.com>
-References: <5eba3c36-bc65-74ae-cc7c-cc45ee06ccfe@samsung.com>
+        Tue, 16 Apr 2019 02:32:55 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:48308 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726857AbfDPGcy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 02:32:54 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:b93f:9fae:b276:a89a])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 6499A260C42;
+        Tue, 16 Apr 2019 07:32:53 +0100 (BST)
+Date:   Tue, 16 Apr 2019 08:32:50 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     Vitor Soares <vitor.soares@synopsys.com>
+Cc:     linux-iio@vger.kernel.org, linux-i3c@lists.infradead.org,
+        linux-kernel@vger.kernel.org, pmeerw@pmeerw.net, lars@metafoo.de,
+        knaack.h@gmx.de, jic23@kernel.org, lorenzo.bianconi83@gmail.com,
+        bbrezillon@kernel.org, rafael@kernel.org,
+        gregkh@linuxfoundation.org, broonie@kernel.org,
+        joao.pinto@synopsys.com
+Subject: Re: [PATCH 0/3] Add ST lsm6dso i3c suppport
+Message-ID: <20190416083250.272edfe1@collabora.com>
+In-Reply-To: <cover.1555354268.git.vitor.soares@synopsys.com>
+References: <cover.1555354268.git.vitor.soares@synopsys.com>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <5eba3c36-bc65-74ae-cc7c-cc45ee06ccfe@samsung.com>
-X-Patchwork-Hint: ignore
-User-Agent: Mutt/1.5.23 (2014-03-12)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Bartlomiej,
+Hi Vitor,
 
-I love your patch! Perhaps something to improve:
+On Mon, 15 Apr 2019 21:19:38 +0200
+Vitor Soares <vitor.soares@synopsys.com> wrote:
 
-[auto build test WARNING on linus/master]
-[also build test WARNING on v5.1-rc5 next-20190415]
-[if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+I like the very detailed description in your cover letter :P.
+Anyway, glad to see I3C support added to regmap. Also happy to have a
+new driver for an I3C device.
 
-url:    https://github.com/0day-ci/linux/commits/Bartlomiej-Zolnierkiewicz/video-fbdev-da8xx-fb-add-COMPILE_TEST-support/20190415-184308
-reproduce:
-        # apt-get install sparse
-        make ARCH=x86_64 allmodconfig
-        make C=1 CF='-fdiagnostic-prefix -D__CHECK_ENDIAN__'
+Thanks for working on that.
 
+Boris
 
-sparse warnings: (new ones prefixed by >>)
+> Vitor Soares (3):
+>   remap: Add i3c bus support
+>   i3c: Add i3c_get_device_id helper
+>   iio: imu: st_lsm6dsx: Add i3c basic support
+> 
+>  drivers/base/regmap/Kconfig                 |  6 ++-
+>  drivers/base/regmap/Makefile                |  1 +
+>  drivers/base/regmap/regmap-i3c.c            | 62 ++++++++++++++++++++++++++
+>  drivers/i3c/device.c                        |  8 ++++
+>  drivers/iio/imu/st_lsm6dsx/Kconfig          |  8 +++-
+>  drivers/iio/imu/st_lsm6dsx/Makefile         |  1 +
+>  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c | 67 +++++++++++++++++++++++++++++
+>  include/linux/i3c/device.h                  |  1 +
+>  include/linux/regmap.h                      | 20 +++++++++
+>  9 files changed, 172 insertions(+), 2 deletions(-)
+>  create mode 100644 drivers/base/regmap/regmap-i3c.c
+>  create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c
+> 
 
-
-vim +1159 drivers/video/fbdev/da8xx-fb.c
-
-1f9c3e1f drivers/video/da8xx-fb.c Martin Ambrose        2010-05-24  1144  
-4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1145  static int fb_ioctl(struct fb_info *info, unsigned int cmd,
-4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1146  			  unsigned long arg)
-4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1147  {
-4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1148  	struct lcd_sync_arg sync_arg;
-4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1149  
-4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1150  	switch (cmd) {
-4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1151  	case FBIOGET_CONTRAST:
-4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1152  	case FBIOPUT_CONTRAST:
-4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1153  	case FBIGET_BRIGHTNESS:
-4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1154  	case FBIPUT_BRIGHTNESS:
-4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1155  	case FBIGET_COLOR:
-4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1156  	case FBIPUT_COLOR:
-2f93e8f4 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1157  		return -ENOTTY;
-4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1158  	case FBIPUT_HSYNC:
-4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22 @1159  		if (copy_from_user(&sync_arg, (char *)arg,
-4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1160  				sizeof(struct lcd_sync_arg)))
-2f93e8f4 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1161  			return -EFAULT;
-4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1162  		lcd_cfg_horizontal_sync(sync_arg.back_porch,
-4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1163  					sync_arg.pulse_width,
-4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1164  					sync_arg.front_porch);
-4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1165  		break;
-4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1166  	case FBIPUT_VSYNC:
-4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1167  		if (copy_from_user(&sync_arg, (char *)arg,
-4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1168  				sizeof(struct lcd_sync_arg)))
-2f93e8f4 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1169  			return -EFAULT;
-4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1170  		lcd_cfg_vertical_sync(sync_arg.back_porch,
-4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1171  					sync_arg.pulse_width,
-4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1172  					sync_arg.front_porch);
-4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1173  		break;
-1f9c3e1f drivers/video/da8xx-fb.c Martin Ambrose        2010-05-24  1174  	case FBIO_WAITFORVSYNC:
-1f9c3e1f drivers/video/da8xx-fb.c Martin Ambrose        2010-05-24  1175  		return fb_wait_for_vsync(info);
-4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1176  	default:
-4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1177  		return -EINVAL;
-4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1178  	}
-4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1179  	return 0;
-4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1180  }
-4ed824d9 drivers/video/da8xx-fb.c Sudhakar Rajashekhara 2009-09-22  1181  
-
-:::::: The code at line 1159 was first introduced by commit
-:::::: 4ed824d9aead77a6a4eb1e89c3b3d270ba386fad davinci: fb: Frame Buffer driver for TI DA8xx/OMAP-L1xx
-
-:::::: TO: Sudhakar Rajashekhara <sudhakar.raj@ti.com>
-:::::: CC: Linus Torvalds <torvalds@linux-foundation.org>
-
----
-0-DAY kernel test infrastructure                Open Source Technology Center
-https://lists.01.org/pipermail/kbuild-all                   Intel Corporation
