@@ -2,143 +2,255 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD85C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 23:16:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E70CBC282DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 23:17:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75FAB20868
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 23:16:23 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FfRQwrdQ"
+	by mail.kernel.org (Postfix) with ESMTP id AED7B217D4
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 23:17:09 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730653AbfDPXQW (ORCPT
+        id S1730791AbfDPXRI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 19:16:22 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:39833 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728237AbfDPXQV (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 19:16:21 -0400
-Received: by mail-pl1-f193.google.com with SMTP id a96so11065250pla.6;
-        Tue, 16 Apr 2019 16:16:21 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=SJrdIOnMZscAX3/lUO7sU8M0Yhf+BeHX0BuUUJgATp4=;
-        b=FfRQwrdQnaM0FXPdkha6ruAJA2Vv0gqqHk8SCEtsf0Z3m5+fSOvlfcmzTam5quIfTw
-         DILB7M+Fs7Sr64MnSSmkeTJZXL8rcHl2iFAayFzLTToEQiSy3a7LKzzHG4dEP9iZAE3Q
-         kBp2MmuzbAAOOq6WaN9pVhAfHOjrpWxZqVFHzqPK1Arj8RwUzxOGJ5DdxoxXrjl3vRO3
-         22dTaKWaQiwzqIfgPtQBDOXTmuVEMzfQqTdmr2i2sVLr52j0hln7Iy2AyRUHJ09hDUR6
-         GaNSMjrETd6anOT6BW4U0IJ3HSogJU1yb/j0ctJFVgjXnw+nGirD0ll27KKOhJPiZTYC
-         tOCA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=SJrdIOnMZscAX3/lUO7sU8M0Yhf+BeHX0BuUUJgATp4=;
-        b=WELsBKT/Qdcumxau7+pJ+Tx1JT3IpcbPxpY1j2Irt8ExmrP/IXIRbh8NRREBjrUZ7O
-         p0mmKSCV59h52Fd6UL13SNbwNVN5bUry1cq5k2qFYdaTBb2j98ZnCLlFfUcM6eh87wGw
-         gaVHGSRkzx6KWCgr8AJhopUzLDfHa1OSh28OnNxp1GjVPmDfjxr6xpRUfbQuUgXwLPe4
-         r26Y3kRh42JqnJpd9biZrlR8lqrcjkm3vr5EoOBuqsq4P7IfxL35xTQoGBwPDD0U2uD3
-         m73s6asU4iQQVSgMyGhsnpHfpAzq1DWNe+Gw8d9gpt/lY5x3YOp0Jc9PZHha3ip5RIbu
-         V9nQ==
-X-Gm-Message-State: APjAAAXMznaDwjfgs5qS17fD7tIUCm+At2SoN+NDjmIS1ZhUBeSmIAm/
-        FGoEw9WM8ULY/yvkQqdZwtinvWLocxCBjhKplrE2UWZc
-X-Google-Smtp-Source: APXvYqx0nrC7rPCkGRTUFuYDfHJ0Whe745e75S26fT/nd1jMODEQF5PZ81sQg6puaH4+Ve5LW/aPvKtJa+G3eUdRRBE=
-X-Received: by 2002:a17:902:9a89:: with SMTP id w9mr86279265plp.126.1555456580630;
- Tue, 16 Apr 2019 16:16:20 -0700 (PDT)
+        Tue, 16 Apr 2019 19:17:08 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33878 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728237AbfDPXRI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 19:17:08 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 218B93199363;
+        Tue, 16 Apr 2019 23:17:07 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.236])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id AF2FB5C1B5;
+        Tue, 16 Apr 2019 23:16:57 +0000 (UTC)
+Date:   Tue, 16 Apr 2019 19:16:56 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Boaz Harrosh <openosd@gmail.com>
+Cc:     Boaz Harrosh <boaz@plexistor.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-block@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
+        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Ming Lei <ming.lei@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Matthew Wilcox <willy@infradead.org>,
+        Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org,
+        Yan Zheng <zyan@redhat.com>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Alex Elder <elder@kernel.org>, ceph-devel@vger.kernel.org,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        Mike Marshall <hubcap@omnibond.com>,
+        Martin Brandenburg <martin@omnibond.com>,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        v9fs-developer@lists.sourceforge.net, Coly Li <colyli@suse.de>,
+        linux-bcache@vger.kernel.org,
+        Ernesto =?iso-8859-1?Q?A=2E_Fern=E1ndez?= 
+        <ernesto.mnd.fernandez@gmail.com>
+Subject: Re: [PATCH v1 00/15] Keep track of GUPed pages in fs and block
+Message-ID: <20190416231655.GB22465@redhat.com>
+References: <20190411210834.4105-1-jglisse@redhat.com>
+ <2c124cc4-b97e-ee28-2926-305bc6bc74bd@plexistor.com>
+ <20190416185922.GA12818@kmo-pixel>
+ <CAPcyv4jLrQ6evLAJzsASh=H6Tzx8E1oiF+YR3L2fOpbZYNUWGg@mail.gmail.com>
+ <ccac6c5a-7120-0455-88de-ca321b01e825@plexistor.com>
+ <20190416195735.GE21526@redhat.com>
+ <41e2d7e1-104b-a006-2824-015ca8c76cc8@gmail.com>
 MIME-Version: 1.0
-References: <20190416213351.28999-1-xiyou.wangcong@gmail.com> <20190416214634.GP31772@zn.tnic>
-In-Reply-To: <20190416214634.GP31772@zn.tnic>
-From:   Cong Wang <xiyou.wangcong@gmail.com>
-Date:   Tue, 16 Apr 2019 16:16:08 -0700
-Message-ID: <CAM_iQpVd02zkVJ846cj-Fg1yUNuz6tY5q1Vpj4LrXmE06dPYYg@mail.gmail.com>
-Subject: Re: [PATCH v2 1/2] ras: fix an off-by-one error in __find_elem()
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-edac@vger.kernel.org,
-        Tony Luck <tony.luck@intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <41e2d7e1-104b-a006-2824-015ca8c76cc8@gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Tue, 16 Apr 2019 23:17:07 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 2:46 PM Borislav Petkov <bp@alien8.de> wrote:
->
-> On Tue, Apr 16, 2019 at 02:33:50PM -0700, Cong Wang wrote:
-> > ce_arr.array[] is always within the range [0, ce_arr.n-1].
-> > However, the binary search code in __find_elem() uses ce_arr.n
-> > as the maximum index, which could lead to an off-by-one
-> > out-of-bound access right after the while loop. In this case,
-> > we should not even read it, just return -ENOKEY instead.
-> >
-> > Note, this could cause a kernel crash if ce_arr.n is exactly
-> > MAX_ELEMS.
->
-> "Could cause"?
->
-> I'm still waiting for a demonstration. You can build a case through
-> writing values in the debugfs nodes I pointed you at or even with a
-> patch ontop preparing the exact conditions for it to crash. And then
-> give me that "recipe" to trigger it here in a VM.
+On Wed, Apr 17, 2019 at 01:09:22AM +0300, Boaz Harrosh wrote:
+> On 16/04/19 22:57, Jerome Glisse wrote:
+> <>
+> > 
+> > A very long thread on this:
+> > 
+> > https://lkml.org/lkml/2018/12/3/1128
+> > 
+> > especialy all the reply to this first one
+> > 
+> > There is also:
+> > 
+> > https://lkml.org/lkml/2019/3/26/1395
+> > https://lwn.net/Articles/753027/
+> > 
+> 
+> OK I have re-read this patchset and a little bit of the threads above (not all)
+> 
+> As I understand the long term plan is to keep two separate ref-counts one
+> for GUP-ref and one for the regular page-state/ownership ref.
+> Currently looking at page-ref we do not know if we have a GUP currently held.
+> With the new plan we can (Still not sure what's the full plan with this new info)
+> 
+> But if you make it such as the first GUP-ref also takes a page_ref and the
+> last GUp-dec also does put_page. Then the all of these becomes a matter of
+> matching every call to get_user_pages or iov_iter_get_pages() with a new
+> put_user_pages or iov_iter_put_pages().
+> 
+> Then if much below us an LLD takes a get_page() say an skb below the iscsi
+> driver, and so on. We do not care and we keep doing a put_page because we know
+> the GUP-ref holds the page for us.
+> 
+> The current block layer is transparent to any page-ref it does not take any
+> nor put_page any. It is only the higher users that have done GUP that take care of that.
+> 
+> The patterns I see are:
+> 
+>   iov_iter_get_pages()
+> 
+> 	IO(sync)
+> 
+>   for(numpages)
+> 	put_page()
+> 
+> Or
+> 
+>   iov_iter_get_pages()
+> 
+> 	IO (async)
+> 		->	foo_end_io()
+> 				put_page
+> 
+> (Same with get_user_pages)
+> (IO need not be block layer. It can be networking and so on like in NFS or CIFS
+>  and so on)
 
-It is actually fairly easy:
+They are also other code that pass around bio_vec and the code that
+fill it is disconnected from the code that release the page and they
+can mix and match GUP and non GUP AFAICT.
 
-1) Fill the whole page with PFN's:
-for i in `seq 0 511`; do echo $i >> /sys/kernel/debug/ras/cec/pfn; done
+On fs side they are also code that fill either bio or bio_vec and
+use some extra mechanism other than bio_end to submit io through
+workqueue and then release pages (cifs for instance). Again i believe
+they can mix and match GUP and non GUP (i have not spotted something
+obvious indicating otherwise).
 
-2) Set thresh to 1 in order to trigger the deletion:
-echo 1 > /sys/kernel/debug/ras/cec/count_threshold
+> 
+> The first pattern is easy just add the proper new api for
+> it, so for every iov_iter_get_pages() you have an iov_iter_put_pages() and remove
+> lots of cooked up for loops. Also the all iov_iter_get_pages_use_gup() just drops.
+> (Same at get_user_pages sites use put_user_pages)
 
-3) Repeatedly add and remove the last element:
-echo 512 >> /sys/kernel/debug/ras/cec/pfn
-(until you get a crash.)
+Yes this patchset already convert some of this first pattern.
 
-In case you still don't get it, here it is:
+> The second pattern is a bit harder because it is possible that the foo_end_io()
+> is currently used for GUP as well as none-GUP cases. this is easy to fix. But the
+> even harder case is if the same foo_end_io() call has some pages GUPed and some not
+> in the same call.
+> 
+> staring at this patchset and the call sites I did not see any such places. Do you know
+> of any?
+> (We can always force such mixed-case users to always GUP-ref the pages and code
+>  foo_end_io() to GUP-dec)
 
-[   57.732593] BUG: unable to handle kernel paging request at ffff9c667bca0000
-[   57.734994] #PF error: [PROT] [WRITE]
-[   57.735891] PGD 75601067 P4D 75601067 PUD 75605067 PMD 7bca1063 PTE
-800000007bca0061
-[   57.737702] Oops: 0003 [#1] SMP PTI
-[   57.738533] CPU: 0 PID: 649 Comm: bash Not tainted 5.1.0-rc5+ #561
-[   57.739965] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
-BIOS ?-20180724_192412-buildhw-07.phx2.fedoraproject.org-1.fc29
-04/01/2014
-[   57.742892] RIP: 0010:__memmove+0x57/0x1a0
-[   57.743853] Code: 00 72 05 40 38 fe 74 3b 48 83 ea 20 48 83 ea 20
-4c 8b 1e 4c 8b 56 08 4c 8b 4e 10 4c 8b 46 18 48 8d 76 20 4c 89 1f 4c
-89 57 08 <4c> 89 4f 10 4c 89 47 18 48 8d 7f 20 73 d4 48 83 c2 20 e9 a2
-00 00
-[   57.748150] RSP: 0018:ffffbe2ec0c8bdf8 EFLAGS: 00010206
-[   57.749371] RAX: ffff9c667a5c1ff0 RBX: 0000000000000001 RCX: 0000000000000ff8
-[   57.751018] RDX: 00000007fe921fb8 RSI: ffff9c667bca0018 RDI: ffff9c667bc9fff0
-[   57.752674] RBP: 0000000000000200 R08: 0000000000000000 R09: 0000015c00000000
-[   57.754325] R10: 0000000000040001 R11: 5a5a5a5a5a5a5a5a R12: 0000000000000004
-[   57.755976] R13: ffff9c6671787778 R14: ffff9c6671787728 R15: ffff9c6671787750
-[   57.757631] FS:  00007f33ca294740(0000) GS:ffff9c667d800000(0000)
-knlGS:0000000000000000
-[   57.759689] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-[   57.761023] CR2: ffff9c667bca0000 CR3: 000000007061e000 CR4: 00000000000406f0
-[   57.762681] Call Trace:
-[   57.763275]  del_elem.constprop.1+0x39/0x40
-[   57.764260]  cec_add_elem+0x1e4/0x211
-[   57.765129]  simple_attr_write+0xa2/0xc3
-[   57.766057]  debugfs_attr_write+0x45/0x5c
-[   57.767005]  full_proxy_write+0x4b/0x65
-[   57.767911]  ? full_proxy_poll+0x50/0x50
-[   57.768844]  vfs_write+0xb8/0xf5
-[   57.769613]  ksys_write+0x6b/0xb8
-[   57.770407]  do_syscall_64+0x57/0x65
-[   57.771249]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+I believe direct-io.c is such example thought in that case i believe it
+can only be the ZERO_PAGE so this might easily detectable. They are also
+lot of fs functions taking an iterator and then using iov_iter_get_pages*()
+to fill a bio. AFAICT those functions can be call with pipe iterator or
+iovec iterator and probably also with other iterator type. But it is all
+common code afterward (the bi_end_io function is the same no matter the
+iterator).
 
-I will leave it as a homework for explaining why the crash is inside
-memmove(). ;)
+Thought that can probably be solve that way:
 
-Thanks.
+From:
+    foo_bi_end_io(struct bio *bio) {
+        ...
+        for (i = 0; i < npages; ++i) {
+            put_page(pages[i]);
+        }
+    }
+
+To:
+    foo_bi_end_io_common(struct bio *bio) {
+        ...
+    }
+
+    foo_bi_end_io_normal(struct bio *bio)
+        foo_bi_end_io_common(bio);
+        for (i = 0; i < npages; ++i) {
+            put_page(pages[i]);
+        }
+    }
+
+    foo_bi_end_io_gup(struct bio *bio)
+        foo_bi_end_io_common(bio);
+        for (i = 0; i < npages; ++i) {
+            put_user_page(pages[i]);
+        }
+    }
+
+Then when filling in the bio i either pick foo_bi_end_io_normal() or
+foo_bi_end_io_gup(). I am assuming that bio with different bi_end_io
+function never get merge.
+
+The issue is that some bio_add_page*() call site are disconnected
+from where the bio is allocated and initialized (and also where the
+bi_end_io function is set). This make it quite hard to ascertain
+that GUPed page and non GUP page can not co-exist in same bio.
+
+Also in some cases it is not clear that the same iter is use to
+fill the same bio ie it might be possible that some code path fill
+the same bio from different iterator (and thus some pages might
+be coming from GUP and other not).
+
+It would certainly seems to require more careful review from the
+maintainers of such fs. I tend to believe that putting the burden
+on the reviewer is a harder sell :)
+
+From quick glance:
+   - nilfs segment thing
+   - direct-io same bio accumulate pages over multiple call but
+     it should always be from same iterator and thus either always
+     be from GUP or non GUP. Also the ZERO_PAGE case should be easy
+     to catch.
+   - fs/nfs/blocklayout/blocklayout.c
+   - gfs2 log buffer, that should never be page from GUP but i could
+     not ascertain that easily from quick review
+
+This is not extensive, i was just grepping for bio_add_page() and
+they are 2 other variant to check and i tended to discard places
+where bio is allocated in same function as bio_add_page() but this
+might not be a valid assumption either. Some bio might be allocated
+and only if there is no default bio already and then set as default
+bio which might be use latter on with different iterator.
+
+> 
+> So with a very careful coding I think you need not touch the block / scatter-list layers
+> nor any LLD drivers. The only code affected is the code around the get_user_pages and friends.
+> Changing the API will surface all those.
+> (IE. introduce a new API, convert one by one, Remove old API)
+> 
+> Am I smoking?
+
+No, i thought about it seemed more dangerous and harder to get right
+because some code add page in one place and setup bio in another. I
+can dig some more on that front but this still leave the non-bio user
+of bio_vec and those IIRC also suffer from same disconnect issue.
+
+> 
+> BTW: Are you aware of the users of iov_iter_get_pages_alloc() Do they need fixing too?
+
+Yeah and that patchset should address those already, i do not think
+i missed any.
+
+Cheers,
+Jérôme
