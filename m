@@ -2,162 +2,124 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5C0C3C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:30:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F0218C282DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:31:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D9AF20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:30:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C311920663
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:31:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amdcloud.onmicrosoft.com header.i=@amdcloud.onmicrosoft.com header.b="NS6qaaEo"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="J+SPwpl3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730515AbfDPUaN (ORCPT
+        id S1730622AbfDPUbR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 16:30:13 -0400
-Received: from mail-eopbgr690048.outbound.protection.outlook.com ([40.107.69.48]:7653
-        "EHLO NAM04-CO1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727180AbfDPUaN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 16:30:13 -0400
+        Tue, 16 Apr 2019 16:31:17 -0400
+Received: from mail-pl1-f194.google.com ([209.85.214.194]:41622 "EHLO
+        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727180AbfDPUbQ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 16:31:16 -0400
+Received: by mail-pl1-f194.google.com with SMTP id d1so10885559plj.8;
+        Tue, 16 Apr 2019 13:31:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=amdcloud.onmicrosoft.com; s=selector1-amd-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=pElGM2RIOcsvbeU9mPIFXnYMp5HKG5dqCF+hRsn+MKo=;
- b=NS6qaaEoUvkPCSanl/HI1wiFd1mCuthBRBEkOJB2+pr1OvJTT3RhXwB8uoUbV1qKEW/3l1gUr2cmOerFX0BvZ55BbUwrKl6XxDkt98IZSJBBNmdnyfQ3PeknGnpfAU/0OjnkMrpjkh05G+dWu1lH9yzOLZevYxdB+rovhT2hBFg=
-Received: from DM6PR12MB2682.namprd12.prod.outlook.com (20.176.116.31) by
- DM6PR12MB3481.namprd12.prod.outlook.com (20.178.199.12) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1813.12; Tue, 16 Apr 2019 20:30:10 +0000
-Received: from DM6PR12MB2682.namprd12.prod.outlook.com
- ([fe80::9d54:69c5:d057:80de]) by DM6PR12MB2682.namprd12.prod.outlook.com
- ([fe80::9d54:69c5:d057:80de%3]) with mapi id 15.20.1792.018; Tue, 16 Apr 2019
- 20:30:10 +0000
-From:   "Singh, Brijesh" <brijesh.singh@amd.com>
-To:     Peter Zijlstra <peterz@infradead.org>,
-        Dave Hansen <dave.hansen@intel.com>
-CC:     "Singh, Brijesh" <brijesh.singh@amd.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Dan Williams <dan.j.williams@intel.com>,
-        "Kirill A . Shutemov" <kirill.shutemov@linux.intel.com>,
-        Andy Lutomirski <luto@kernel.org>,
-        Borislav Petkov <bp@alien8.de>,
-        "H . Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        "Lendacky, Thomas" <Thomas.Lendacky@amd.com>
-Subject: Re: [PATCH v2] x86: mm: Do not use set_{pud,pmd}_safe when splitting
- the large page
-Thread-Topic: [PATCH v2] x86: mm: Do not use set_{pud,pmd}_safe when splitting
- the large page
-Thread-Index: AQHU85tDyVgm7zhkk0iOKwSo2aeXvqY9YQcAgAAEPwCAAdnfgA==
-Date:   Tue, 16 Apr 2019 20:30:10 +0000
-Message-ID: <bb68f941-c962-ebb9-68b6-905ff2189bb2@amd.com>
-References: <20190415145515.13559-1-brijesh.singh@amd.com>
- <1aec4241-09c0-5295-7bb7-235e9a494d2c@intel.com>
- <20190415161404.GL4038@hirez.programming.kicks-ass.net>
-In-Reply-To: <20190415161404.GL4038@hirez.programming.kicks-ass.net>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SN6PR2101CA0021.namprd21.prod.outlook.com
- (2603:10b6:805:106::31) To DM6PR12MB2682.namprd12.prod.outlook.com
- (2603:10b6:5:4a::31)
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=brijesh.singh@amd.com; 
-x-ms-exchange-messagesentrepresentingtype: 1
-x-originating-ip: [165.204.77.1]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: f1c09843-c80e-47a3-212f-08d6c2aa5251
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600140)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:DM6PR12MB3481;
-x-ms-traffictypediagnostic: DM6PR12MB3481:
-x-microsoft-antispam-prvs: <DM6PR12MB3481F75E59FBC9826C2D7902E5240@DM6PR12MB3481.namprd12.prod.outlook.com>
-x-forefront-prvs: 000947967F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(396003)(136003)(39860400002)(366004)(346002)(54534003)(189003)(199004)(52116002)(102836004)(76176011)(316002)(110136005)(54906003)(53546011)(99286004)(6506007)(386003)(36756003)(53936002)(6512007)(6246003)(68736007)(5660300002)(4326008)(71190400001)(25786009)(71200400001)(476003)(31696002)(446003)(97736004)(81156014)(11346002)(81166006)(8936002)(8676002)(86362001)(486006)(2616005)(186003)(26005)(14444005)(256004)(6436002)(6486002)(14454004)(6116002)(478600001)(31686004)(7416002)(2906002)(305945005)(7736002)(561944003)(3846002)(66066001)(105586002)(106356001)(229853002)(142933001);DIR:OUT;SFP:1101;SCL:1;SRVR:DM6PR12MB3481;H:DM6PR12MB2682.namprd12.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: amd.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: dQLCz7uHfGYC6+v2q/1muOVnare/JvpJt/uZgVgh1peJLF1m5NL40//FlZxutMKg8mNuqnnzfBCFIboYS6saUDE/Jxj3v2fkuddtMPi155dw6GtITX30IbVXvLC6e5dc0WN2wNWAd1moADrsKo+PTtxEYGlfj7ppfakOfdioNwYYc0GfXpEuFxTUot/3KvrBayxojW0RlMyt+hzOkVX1AHJo6FIeOnflZPVJp9mkTo8eKbhv6u4gVaFiKqaDjnab3Ww/Rjp0ZPy3BZCxrPpI2c8gfpDPmwZdQzUbb+FVmjJu8hPXeTenObn+AtZrkisHGUl1BsvpXCZQVEzCHKl3wRqrTW6RPidVUq+9ajuB2j78byphEPL1qhdvAneaE32cPS1reSfMbB/vjUMgY4jJ5SK/PXRXjMAbfrZcmWNoGEc=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <18092EEC5A2DDF4685752FAA2E7C1B11@namprd12.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=kCyaUCGVc/V6ZyQOKtuzykzGifqfq9ikv6LcWKWTfVU=;
+        b=J+SPwpl35yPvHJvJZ07r8o1l2k8iBLdOLSUgh3hA52oOCQvnOmI/UtNV7IcX+wYfkE
+         ENWd7wa2xE9c9wXvpgX+FqcJYCa5LtEB+0ZGfd/lBqbPLZhPUnItDgM42vg/wwFzFI/3
+         0KGQQHYgl/IJutFNMyNnnitvjHPrnXrkMfK256Bwj25KM8TpjQCDleaNq1aTiW921Ts+
+         FF3phjjQQ0b29KLaMt5BORp7Fgrym9NeT6rlbak8owR83BkYtHJiq6muO9Pg9p5aG4PD
+         KreMwl56PPQm0avEhhwEWmr2+mrYBxuFT3vi6sS5o3Nmp/l2gMIeH6gVxOA6F2oEbVC+
+         NidQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=kCyaUCGVc/V6ZyQOKtuzykzGifqfq9ikv6LcWKWTfVU=;
+        b=dT3X9c78jW9qLEyTirluXCvDlIn5S9daenfTUuwOVxogPag6Hek/NUvN6iAhtI4iL7
+         4/rDJfFaOr7U9wOdlEwiRoaMPPEDsD1VUW1NBVevdIXgCJ24JOhuPhRj7GqqPVrRX+qO
+         4Myx8PRU1AWGWd5vwR1eomP2NWdU+84km8TBc5/INc5GceXZgK+kyfOr/P0BmWxShgaS
+         04pSWMRD4afJXVTC5S2A7cKh9U61EBzf+iTv2gaRmKqM8mApaHqhyt2kvBFkpDnO+dIw
+         kvGjyP4Hn66ye2p15B7ag56xlTxNR/k/jzYQvxTt9hrvtj/+BGiwTqu8bkQb3w+4BbIM
+         /Qiw==
+X-Gm-Message-State: APjAAAV/xnrsPxdOlvGzM2jUwipqS5qLdjV+pOdj6XLd1tUfixAMImfT
+        NdLJ9TwOCLSftNCdiVZaWoo=
+X-Google-Smtp-Source: APXvYqzUOhZnFUrYJ3CgrX3jDbq+IXxjHEH7hysLbncDjc6qCSVo+371FJ8CPB/OYsHBPFtMOU/9pA==
+X-Received: by 2002:a17:902:2b88:: with SMTP id l8mr80447832plb.262.1555446675674;
+        Tue, 16 Apr 2019 13:31:15 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id j12sm65163698pgg.79.2019.04.16.13.31.14
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Apr 2019 13:31:14 -0700 (PDT)
+Date:   Tue, 16 Apr 2019 13:31:14 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Jonathan Corbet <corbet@lwn.net>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Joel Stanley <joel@jms.id.au>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-hwmon@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, Liviu Dudau <liviu.dudau@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v2 00/21] Convert hwmon documentation to ReST
+Message-ID: <20190416203114.GB25517@roeck-us.net>
+References: <cover.1554923967.git.mchehab+samsung@kernel.org>
+ <20190411124324.3ed62fad@lwn.net>
+ <20190411174357.251904f5@coco.lan>
+ <20190411210731.GA29378@roeck-us.net>
+ <20190412100451.6fe49de7@lwn.net>
+ <f900adea-d231-c00d-847c-33e66e79ea30@roeck-us.net>
+ <20190416141949.09b48789@lwn.net>
 MIME-Version: 1.0
-X-OriginatorOrg: amd.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: f1c09843-c80e-47a3-212f-08d6c2aa5251
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Apr 2019 20:30:10.4093
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 3dd8961f-e488-4e60-8e11-a82d994e183d
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: DM6PR12MB3481
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190416141949.09b48789@lwn.net>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-DQoNCk9uIDQvMTUvMTkgMTE6MTQgQU0sIFBldGVyIFppamxzdHJhIHdyb3RlOg0KPiBPbiBNb24s
-IEFwciAxNSwgMjAxOSBhdCAwODo1ODo1MkFNIC0wNzAwLCBEYXZlIEhhbnNlbiB3cm90ZToNCj4+
-IE9uIDQvMTUvMTkgNzo1NSBBTSwgU2luZ2gsIEJyaWplc2ggd3JvdGU6DQo+Pj4gICBzdGF0aWMg
-dW5zaWduZWQgbG9uZyBfX21lbWluaXQNCj4+PiAgIHBoeXNfcHRlX2luaXQocHRlX3QgKnB0ZV9w
-YWdlLCB1bnNpZ25lZCBsb25nIHBhZGRyLCB1bnNpZ25lZCBsb25nIHBhZGRyX2VuZCwNCj4+PiAt
-CSAgICAgIHBncHJvdF90IHByb3QpDQo+Pj4gKwkgICAgICBwZ3Byb3RfdCBwcm90LCBib29sIHNh
-ZmUpDQo+Pj4gICB7DQo+Pj4gICAJdW5zaWduZWQgbG9uZyBwYWdlcyA9IDAsIHBhZGRyX25leHQ7
-DQo+Pj4gICAJdW5zaWduZWQgbG9uZyBwYWRkcl9sYXN0ID0gcGFkZHJfZW5kOw0KPj4+IEBAIC00
-MzIsNyArNDYzLDcgQEAgcGh5c19wdGVfaW5pdChwdGVfdCAqcHRlX3BhZ2UsIHVuc2lnbmVkIGxv
-bmcgcGFkZHIsIHVuc2lnbmVkIGxvbmcgcGFkZHJfZW5kLA0KPj4+ICAgCQkJCQkgICAgIEU4MjBf
-VFlQRV9SQU0pICYmDQo+Pj4gICAJCQkgICAgIWU4MjBfX21hcHBlZF9hbnkocGFkZHIgJiBQQUdF
-X01BU0ssIHBhZGRyX25leHQsDQo+Pj4gICAJCQkJCSAgICAgRTgyMF9UWVBFX1JFU0VSVkVEX0tF
-Uk4pKQ0KPj4+IC0JCQkJc2V0X3B0ZV9zYWZlKHB0ZSwgX19wdGUoMCkpOw0KPj4+ICsJCQkJX19z
-ZXRfcHRlKHB0ZSwgX19wdGUoMCksIHNhZmUpOw0KPj4+ICAgCQkJY29udGludWU7DQo+Pj4gICAJ
-CX0NCj4+DQo+PiBUaGUgY2hhbmdlbG9nIGlzIGdyZWF0LCBidHcuDQo+Pg0KPj4gQnV0LCBJJ20g
-bm90IGEgYmlnIGZhbiBvZiBwcm9wYWdhdGluZyB0aGUgJ3NhZmUnIG5vbWVuY2xhdHVyZS4gIENv
-dWxkDQo+PiB3ZSwgYXQgbGVhc3QsIGNhbGwgaXQgJ292ZXJ3cml0ZV9zYWZlJyBvciBzb21ldGhp
-bmcgaWYgd2UncmUgZ29pbmcgdG8NCj4+IGhhdmUgYSB2YXJpYWJsZSBuYW1lPyAgT3IgZXZlbiwg
-J25ld19lbnRyaWVzX29ubHknIG9yIHNvbWV0aGluZyB0aGF0DQo+PiBhY3R1YWxseSBjb252ZXlz
-IG1lYW5pbmc/DQo+Pg0KPj4gQmVjYXVzZSwganVzdCByZWFkaW5nIGl0LCBJIGFsd2F5cyB3b25k
-ZXIgIndoeSBkbyB3ZSBoYXZlIGFuIHVuc2FmZQ0KPj4gdmFyaWFudCwgdGhhdCdzIHN0dXBpZCIg
-ZXZlcnkgdGltZS4gOikNCj4gDQo+IHMvc2FmZS9pbml0LyBvbiB0aGUgd2hvbGUgdGhpbmc/DQo+
-IA0KDQpJIHdpbGwgdXBkYXRlIHRoZSB2YXJpYWJsZSBuYW1lIGluIHYzLg0KDQo+IEFuZCBtYXli
-ZSBldmVuIGJhY2sgb24gdGhlIGluaXRpYWwgX3NhZmUgZnVuY3Rpb25zPyBCZWNhdXNlIGFsbCBv
-ZiB0aGlzDQo+IGlzIGFib3V0IGluaXRpYWxpemluZyBwYWdlLXRhYmxlcywgd2hpY2ggaXMgYSBU
-TEIgKnNhZmUqIG9wZXJhdGlvbiBJDQo+IHN1cHBvc2UgOi0pDQo+IA0KDQpTaW5jZSB0aGlzIHBh
-cnRpY3VsYXIgcGF0Y2ggbmVlZCB0byBwdWxsZWQgaW50byBzdGFibGUgaGVuY2UgSSBhbQ0KbGVh
-bmluZyB0b3dhcmRzIG1ha2luZyB0aGUgX3NhZmUgZnVuY3Rpb24gcmVuYW1lIGFmdGVyIHRoaXMg
-cGF0Y2guDQoNCj4+PiArI2RlZmluZSBERUZJTkVfRU5UUlkodHlwZTEsIHR5cGUyLCBzYWZlKQkJ
-CVwNCj4+PiArc3RhdGljIGlubGluZSB2b2lkIF9fc2V0XyMjdHlwZTEodHlwZTEjI190ICphcmcx
-LAkJXA0KPj4+ICsJCQl0eXBlMiMjX3QgYXJnMiwgYm9vbCBzYWZlKQkJXA0KPj4+ICt7CQkJCQkJ
-CQlcDQo+Pj4gKwlpZiAoc2FmZSkJCQkJCQlcDQo+Pj4gKwkJc2V0XyMjdHlwZTEjI19zYWZlKGFy
-ZzEsIGFyZzIpOwkJCVwNCj4+PiArCWVsc2UJCQkJCQkJXA0KPj4+ICsJCXNldF8jI3R5cGUxKGFy
-ZzEsIGFyZzIpOwkJCVwNCj4+PiArfQ0KPj4NCj4+IFdoaWxlIEkgYXBwcmVjaWF0ZSB0aGUgYnJl
-dml0eSB0aGF0IHRoZXNlIG1hY3JvcyBhbGxvdywgSSBkZXRlc3QgdGhlaXINCj4+IGFiaWxpdHkg
-dG8gdGh3YXJ0IGNzY29wZSBhbmQgZ3JlcC4gIEkgZ3Vlc3MgaXQncyBqdXN0IG9uZSBmaWxlLCBi
-dXQgaXQNCj4+IGRvZXMgbWFrZSBtZSBncnVtYmxlIGEgYml0Lg0KPiANCj4gVGhlcmUgaXMgc2Ny
-aXB0cy90YWdzLnNoIHdoZXJlIHlvdSBjYW4gYWRkIHRvIHJlZ2V4X2MgdG8gdGVhY2gNCj4gY3Nj
-b3BlL2N0YWdzIGFib3V0IG1hZ2ljIG1hY3Jvcy4NCj4gDQo+PiBBbHNvLCBjYW4gd2UgZG8gYmV0
-dGVyIHRoYW4gIl9fIj8gIEFyZW4ndCB0aGVzZSBzcGVjaWZpYyB0bw0KPj4gaW5pdGlhbGl6YXRp
-b24sIGFuZCBvbmx5IGZvciB0aGUga2VybmVsPyAgTWF5YmUgd2Ugc2hvdWxkIGNhbGwgdGhlbQ0K
-Pj4gbWVtaW5pdF9zZXRfcHRlKCkgb3Iga2Vybl9zZXRfcHRlKCkgb3Igc29tZXRoaW5nIHNvIG1h
-a2UgaXQgdG90YWxseQ0KPj4gY2xlYXIgdG8gdGhlIHJlYWRlciB0aGF0IHRoZXkncmUgbmV3Lg0K
-PiANCj4gc2V0XypfaW5pdCgpIGFuZCBzZXRfKigpIEkgc3VwcG9zZS4NCj4gDQoNCldpbGwgZG8N
-Cg0KPj4NCj4+PiAtCQlrZXJuZWxfcGh5c2ljYWxfbWFwcGluZ19pbml0KF9fcGEodmFkZHIgJiBw
-bWFzayksDQo+Pj4gLQkJCQkJICAgICBfX3BhKCh2YWRkcl9lbmQgJiBwbWFzaykgKyBwc2l6ZSks
-DQo+Pj4gLQkJCQkJICAgICBzcGxpdF9wYWdlX3NpemVfbWFzayk7DQo+Pj4gKwkJa2VybmVsX3Bo
-eXNpY2FsX21hcHBpbmdfY2hhbmdlKF9fcGEodmFkZHIgJiBwbWFzayksDQo+Pj4gKwkJCQkJICAg
-ICAgIF9fcGEoKHZhZGRyX2VuZCAmIHBtYXNrKSArIHBzaXplKSwNCj4+PiArCQkJCQkgICAgICAg
-c3BsaXRfcGFnZV9zaXplX21hc2spOw0KPj4NCj4+IEJUVywgdGhpcyBodW5rIGlzIHJlYWxseSBu
-aWNlIHRoZSB3YXkgdGhhdCB0aGUgbmV3IG5hbWluZyBtYWtlcyBpdCBtb3JlDQo+PiBpbnR1aXRp
-dmUgd2hhdCdzIGdvaW5nIG9uLiAgTXkgb25seSBuaXQgdzl1bGQgYmUgdGhhdCB3ZSBub3cgaGF2
-ZSB0d28NCj4+IHZlcnkgc2ltaWxhcmx5LW5hbWVkIGZ1bmN0aW9ucyB3aXRoIGRpZmZlcmVudCBU
-TEItZmx1c2hpbmcgcmVxdWlyZW1lbnRzLg0KPj4NCj4+IENvdWxkIHdlIHBsZWFzZSBpbmNsdWRl
-IGEgY29tbWVudCBhdCB0aGlzIHNpdGUgdGhhdCByZW1pbmRzIHVzIHRoYXQgd2UNCj4+IG93ZSBh
-IFRMQiBmbHVzaCBhZnRlciB0aGlzPw0KPiANCj4gUmlnaHQsIGEgY29tbWVudCB3b3VsZCBiZSBn
-b29kLiBJIHRoaW5rIG15IGluaXRpYWwgcHJvcG9zYWwgaGFkIHRoZSBUTEINCj4gZmx1c2hpbmcg
-aW5zaWRlLCBidXQgSSBzZWUgdGhlIHVzYWdlIGlzIGluIGEgbG9vcCwgc28gSSBhcHByZWNpYXRl
-IHRoZQ0KPiBkZXNpcmUgdG8ga2VlcCB0aGUgVExCIGZsdXNoaW5nIG91dHNpZGUuDQo+IA0KDQpJ
-J3ZlIGFkZCBjb21tZW50IGluIGtlcm5lbF9waHlzaWNhbF9tYXBwaW5nX2NoYW5nZSgpIGRlZmlu
-aXRpb24uIEkgd2lsbA0KYWRkIHNvbWV0aGluZyBhbG9uZyB0aGF0IGxpbmUgaGVyZSBhcyB3ZWxs
-Lg0KDQp0aGFua3MNCg==
+On Tue, Apr 16, 2019 at 02:19:49PM -0600, Jonathan Corbet wrote:
+> On Fri, 12 Apr 2019 20:09:16 -0700
+> Guenter Roeck <linux@roeck-us.net> wrote:
+> 
+> > The big real-world question is: Is the series good enough for you to accept,
+> > or do you expect some level of user/kernel separation ?
+> 
+> I guess it can go in; it's forward progress, even if it doesn't make the
+> improvements I would like to see.
+> 
+> The real question, I guess, is who should take it.  I've been seeing a
+> fair amount of activity on hwmon, so I suspect that the potential for
+> conflicts is real.  Perhaps things would go smoother if it went through
+> your tree?
+> 
+We'll see a number of conflicts, yes. In terms of timing, this is probably
+the worst release in the last few years to make such a change. I currently
+have 9 patches queued in hwmon-next which touch Documentation/hwmon.
+Of course the changes made in those are all not ReST compatible, and I have
+no idea what to look out for to make it compatible. So this is going to be
+fun (in a negative sense) either way.
+
+I don't really have a recommendation at this point; I think the best I could
+do to take the patches which don't generate conflicts and leave the rest
+alone. But that would also be bad, since the new index file would not match
+reality. No idea, really, what the best or even a useful approach would be.
+
+Maybe automated changes like this (assuming they are indeed automated)
+can be generated and pushed right after a commit window closes. Would
+that by any chance be possible ?
+
+Guenter
