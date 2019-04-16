@@ -2,158 +2,140 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B8F6C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:16:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 492DEC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:18:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4987220684
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:16:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 08B7220684
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:18:54 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="cx2UYLU4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730059AbfDPUQK (ORCPT
+        id S1729710AbfDPUSx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 16:16:10 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:43748 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728732AbfDPUQI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 16:16:08 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1195A30BC65E;
-        Tue, 16 Apr 2019 20:16:08 +0000 (UTC)
-Received: from treble (ovpn-124-46.rdu2.redhat.com [10.10.124.46])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id F363C5C1B4;
-        Tue, 16 Apr 2019 20:16:02 +0000 (UTC)
-Date:   Tue, 16 Apr 2019 15:15:59 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Kairui Song <kasong@redhat.com>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Borislav Petkov <bp@alien8.de>, Dave Young <dyoung@redhat.com>
-Subject: Re: [RFC PATCH v2] perf/x86: make perf callchain work without
- CONFIG_FRAME_POINTER
-Message-ID: <20190416201559.d267liiwpjvo3wet@treble>
-References: <20190408165942.23640-1-kasong@redhat.com>
- <20190415153622.GG12232@hirez.programming.kicks-ass.net>
- <20190415165859.ul7i2w3lai3umgik@treble>
- <CACPcB9f8OJmk++54YwW3yhrnohj31+oJcxfesJbNbNSGk9WUQQ@mail.gmail.com>
- <CACPcB9f0D4SdJLAtUs4vYwduBiPYDpa-y8r7jracYy=sAJmo5g@mail.gmail.com>
+        Tue, 16 Apr 2019 16:18:53 -0400
+Received: from mail-io1-f65.google.com ([209.85.166.65]:39567 "EHLO
+        mail-io1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728000AbfDPUSw (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 16:18:52 -0400
+Received: by mail-io1-f65.google.com with SMTP id e13so18735272ioq.6
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 13:18:52 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=XqFZk5qgav69xi0SuJyDMEr2clOQqYVnHTLXC004odA=;
+        b=cx2UYLU4/7EyL9BPoWnm8AMOGxWyxhufzLPZhGFAMivgm7kIaJrO4qWgiQpL0JJspf
+         cPaxQovh6ml1F6iYL5l4W7ayfjPrRsWfzQuu22yv+qYtZqjp3cCEq3nAcwWT8v9qribR
+         u+APyqyZFmjsB4AAlMQMzwPHE+RX67a6pDKprEtj03AEmMwK5HmXcj78C5T5312JvkHq
+         +SVUCKtfs9uGfjGbUW1SaUBT6KbY2H6jH4Nvsfmt/nb4q1AMiOldsTPNiVaGmHG3PCCx
+         Rwo10jwNUpNMc8SJ9Z6AOaOjRFb48S42MvhNr6X9lGMOb+/vLbR4Gu2GmGzR7OT+nw/v
+         WYPg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=XqFZk5qgav69xi0SuJyDMEr2clOQqYVnHTLXC004odA=;
+        b=Q97WRwlmZfsRZnc3AVlDSTGZq9tZD+AtSvBJ7e9hCFCImdDEbz0yS834bWwozXTcK3
+         KuZyXZKIeIrZVZvrl3tR8DsyAF20EHxaZr8ESX1IhQ4zbEuQ8dRgFfaGhdIxLLV8c74d
+         NjZ5U9f4rCDevXy1w63Xn1aFU7zmPA0W1SSLT/5fM1v3f8MhOyZIoebhQLD5vMPF052x
+         8jMSlPObKlZK8YAkVehcQ5tPjTLEIbp3gKr2LWGKaiy4Jx4KMjBpaQ5qZ6UPJ6+LEis2
+         umz1GUupaq3pP/tjoXrNY2i3tLTJRRHPCHnH2HEhjH6hVZGhsM7w3SEHIwij3PPER9O1
+         ZLyA==
+X-Gm-Message-State: APjAAAXOWfMoGDckc9rqtSf7bc7cC8jS0VkxXxv+C+OO40nXj8mH9xLx
+        taL1jxkL7CXxjg9Hqd2Ho/QRRjFUZSemmzirVhT/dQ==
+X-Google-Smtp-Source: APXvYqwV2WIII5nr7bauB4HuZ2PK1ZqbKcpz++HkaHYXomE9T3f2NzXd2zuFcyuG4BeCKJ2GrIqJKtt+akK6/C87e4I=
+X-Received: by 2002:a5d:984a:: with SMTP id p10mr38323902ios.217.1555445931606;
+ Tue, 16 Apr 2019 13:18:51 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <CACPcB9f0D4SdJLAtUs4vYwduBiPYDpa-y8r7jracYy=sAJmo5g@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.46]); Tue, 16 Apr 2019 20:16:08 +0000 (UTC)
+References: <20190412102738.12679-1-leo.yan@linaro.org> <20190412102738.12679-2-leo.yan@linaro.org>
+In-Reply-To: <20190412102738.12679-2-leo.yan@linaro.org>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Tue, 16 Apr 2019 14:18:40 -0600
+Message-ID: <CANLsYkw1vaevcJZfjQfF9BeUvi1THGNtu+SH+LR008LjZOc7fA@mail.gmail.com>
+Subject: Re: [PATCH v5 1/4] dt-bindings: arm: coresight: Add new compatible
+ for static replicator
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        devicetree@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 01:39:19AM +0800, Kairui Song wrote:
-> On Tue, Apr 16, 2019 at 7:30 PM Kairui Song <kasong@redhat.com> wrote:
-> >
-> > On Tue, Apr 16, 2019 at 12:59 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
-> > >
-> > > On Mon, Apr 15, 2019 at 05:36:22PM +0200, Peter Zijlstra wrote:
-> > > >
-> > > > I'll mostly defer to Josh on unwinding, but a few comments below.
-> > > >
-> > > > On Tue, Apr 09, 2019 at 12:59:42AM +0800, Kairui Song wrote:
-> > > > > diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
-> > > > > index e2b1447192a8..6075a4f94376 100644
-> > > > > --- a/arch/x86/events/core.c
-> > > > > +++ b/arch/x86/events/core.c
-> > > > > @@ -2355,6 +2355,12 @@ void arch_perf_update_userpage(struct perf_event *event,
-> > > > >     cyc2ns_read_end();
-> > > > >  }
-> > > > >
-> > > > > +static inline int
-> > > > > +valid_perf_registers(struct pt_regs *regs)
-> > > > > +{
-> > > > > +   return (regs->ip && regs->bp && regs->sp);
-> > > > > +}
-> > > >
-> > > > I'm unconvinced by this, with both guess and orc having !bp is perfectly
-> > > > valid.
-> > > >
-> > > > >  void
-> > > > >  perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs)
-> > > > >  {
-> > > > > @@ -2366,11 +2372,17 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
-> > > > >             return;
-> > > > >     }
-> > > > >
-> > > > > -   if (perf_callchain_store(entry, regs->ip))
-> > > > > +   if (valid_perf_registers(regs)) {
-> > > > > +           if (perf_callchain_store(entry, regs->ip))
-> > > > > +                   return;
-> > > > > +           unwind_start(&state, current, regs, NULL);
-> > > > > +   } else if (regs->sp) {
-> > > > > +           unwind_start(&state, current, NULL, (unsigned long *)regs->sp);
-> > > > > +   } else {
-> > > > >             return;
-> > > > > +   }
-> > > >
-> > > > AFAICT if we, by pure accident, end up with !bp for ORC, then we
-> > > > initialize the unwind wrong.
-> > > >
-> > > > Note that @regs is mostly trivially correct, except for that tracepoint
-> > > > case. So I don't think we should magic here.
-> > >
-> > > Ah, I didn't quite understand this code before, and I still don't
-> > > really, but I guess the issue is that @regs can be either real or fake.
-> > >
-> > > In the real @regs case, we just want to always unwind starting from
-> > > regs->sp.
-> > >
-> > > But in the fake @regs case, we should instead unwind from the current
-> > > frame, skipping all frames until we hit the fake regs->sp.  Because
-> > > starting from fake/incomplete regs is most likely going to cause
-> > > problems with ORC (or DWARF for other arches).
-> > >
-> > > The idea of a fake regs is fragile and confusing.  Is it possible to
-> > > just pass in the "skip" stack pointer directly instead?  That should
-> > > work for both FP and non-FP.  And I _think_ there's no need to ever
-> > > capture regs->bp anyway -- the stack pointer should be sufficient.
-> >
-> > Hi, that will break some other usage, if perf_callchain_kernel is
-> > called but it won't unwind to the callsite (could be produced by
-> > attach an ebpf call to kprobe), things will also go wrong. It should
-> > start with given registers when the register is valid.
-> > And it's true with omit frame pointer BP value could be anything, so 0
-> > is also valid, I think I need to find a better way to tell if we could
-> > start with the registers value or direct start unwinding and skip
-> > until got the stack.
-> >
-> 
-> Hi, sorry I might have some misunderstanding. Adding an extra argument
-> (eg. skip_sp) to indicate if it should just unwind from the current
-> frame, and use SP as the "skip mark", should work well.
-> 
-> And I also think the "fake"/"real" reg is fragile, could we abuse
-> another eflag (just like PERF_EFLAGS_EXACT) to indicate the regs are
-> partially dumped fake registers? So perf_callchain_kernel just check
-> if it's a "partial registers", and in such case it can start unwinding
-> and skip until it get to SP. This make it easier to tell if the
-> registers are "fake".
+Hi Leo,
 
-If you do the regs->eflags thing to mark the regs as fake in
-(perf_arch_fetch_caller_regs()), then I don't think skip_sp would be
-needed, because regs->sp could probably mark the skip point.
+On Fri, 12 Apr 2019 at 04:28, Leo Yan <leo.yan@linaro.org> wrote:
+>
+> CoreSight uses below bindings for replicator:
+>
+>   Dynamic replicator, aka. configurable replicator:
+>     "arm,coresight-dynamic-replicator", "arm,primecell";
+>
+>   Static replicator, aka. non-configurable replicator:
+>     "arm,coresight-replicator";
+>
+> The compatible string "arm,coresight-replicator" is not an explicit
+> naming to express the replicator is 'static'.  To unify the naming
+> convention, this patch introduces a new compatible string
+> "arm,coresight-static-replicator" for the static replicator; the
+> compatible string "arm,coresight-replicator" is kept for backward
+> compatibility, but tag it as obsolete and suggest to use the new
+> compatible string.
+>
+> As result CoreSight replicator have below bindings:
+>
+>   Dynamic replicator:
+>     "arm,coresight-dynamic-replicator", "arm,primecell";
+>
+>   Static replicator:
+>     "arm,coresight-static-replicator";
+>     "arm,coresight-replicator"; (obsolete)
+>
+> Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> ---
+>  Documentation/devicetree/bindings/arm/coresight.txt | 7 +++++--
+>  1 file changed, 5 insertions(+), 2 deletions(-)
+>
+> diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+> index f8aff65ab921..d02d160fa8ac 100644
+> --- a/Documentation/devicetree/bindings/arm/coresight.txt
+> +++ b/Documentation/devicetree/bindings/arm/coresight.txt
+> @@ -69,7 +69,10 @@ its hardware characteristcs.
+>
+>         * compatible: Currently supported value is (note the absence of the
+>           AMBA markee):
+> -               - "arm,coresight-replicator"
+> +               - Coresight Non-configurable Replicator:
+> +                       "arm,coresight-static-replicator";
+> +                       "arm,coresight-replicator"; (OBSOLETE. For backward
+> +                               compatibility and will be removed)
+>
+>         * port or ports: see "Graph bindings for Coresight" below.
+>
+> @@ -169,7 +172,7 @@ Example:
+>                 /* non-configurable replicators don't show up on the
+>                  * AMBA bus.  As such no need to add "arm,primecell".
+>                  */
+> -               compatible = "arm,coresight-replicator";
+> +               compatible = "arm,coresight-static-replicator";
+>
+>                 out-ports {
+>                         #address-cells = <1>;
+> --
+> 2.17.1
 
-Instead I was actually hoping we could get rid of fake regs and
-perf_arch_fetch_caller_regs() altogether, because it's a nasty hack.
-But I don't know what else those fake regs are used for.
+Since this is a binding patch it needs to be sent on its own.
 
--- 
-Josh
+>
