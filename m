@@ -2,157 +2,60 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DCD6C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EB1A4C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:35:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3BC20217F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:35:07 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hL01R5N9"
+	by mail.kernel.org (Postfix) with ESMTP id BA17D217F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:35:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727654AbfDPNfF (ORCPT
+        id S1728292AbfDPNfu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 09:35:05 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:35176 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725861AbfDPNfF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 09:35:05 -0400
-Received: by mail-wr1-f65.google.com with SMTP id w1so27136188wrp.2;
-        Tue, 16 Apr 2019 06:35:03 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=gtj/5iMz3MxPUzB/SeKu04LUpdqWkOQ/tFn3hR85Ni8=;
-        b=hL01R5N94yVDl97uKhSgA38HJ81/dQqvZrAM+g4t4aNLfkRPM8fg6BySqBdXi++C2S
-         nsbMNz3IirGmKYnQjEzyzBET1utqLaqz0x4rWcsrj4ebf6lG3RF+8SgsTf51rkmLEPlq
-         QRhOvdgfYHHppNCEmdVWsy7mHeOGoa0bg9D1Dq7HRef0iUzfdY4sSZfsKjxyB5SleDqH
-         GdKA5wiTeofggtsBGrr2nW4chaw/gYN7SjRURfWhCSkKzved/Mdj//U9Br36OStVIfBB
-         HKwlBBwZZhihp+FjRtdV5Q7rFg7C7t4e+de6kQC7c8DLeJx48zpqx3vaP807mfhAgFhB
-         MNNA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=gtj/5iMz3MxPUzB/SeKu04LUpdqWkOQ/tFn3hR85Ni8=;
-        b=jrS2YaAA37s6poKQfZeR/S1UFLhUWY3VA+Emd0vX51hIIuHLiiNgyg0H2wHgTAoQ1v
-         e9FZHsnARKhLxYuPHjxXMmO3UTQMoWn5DA2HcvTV9h2Vl62VtqfpDASFMufcrPwCcSfT
-         EodZ7Pbqa5MZMxKUkONT9SCFiIbueYAZvbv6FNVNpr9rAeioGzAsoonilyDWIiXTFLQP
-         fGtUHneWlL+7YovKeVkYG/9AATSWzh84/g/A9sBEcLtiUnOFgmy4ZfqEe2MzHu+VcYa6
-         WZCRwXsHJM7lI6fsVMBQjX83EjFd3cCkrPo0TIhI3XvRJLBpE4TYWjHgztWg2wniTsR1
-         Asww==
-X-Gm-Message-State: APjAAAV4Mao25gxoD6kzWNJPu70lG1t4DsxkwtiBZP1kJz5XP5k7KbQH
-        1P2q+nuhQQZdz/U8pi1t0To=
-X-Google-Smtp-Source: APXvYqwqme4hrF41XPdKAl0EYbpyR0UvePnWn/LM231rA2A2LoruG6SYYfEMLKYa8zbVnBN9VTuuIw==
-X-Received: by 2002:adf:f984:: with SMTP id f4mr45003821wrr.97.1555421702957;
-        Tue, 16 Apr 2019 06:35:02 -0700 (PDT)
-Received: from 640k.lan ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id p6sm42881082wrs.6.2019.04.16.06.35.01
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 06:35:02 -0700 (PDT)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     torvalds@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org, rkrcmar@redhat.com,
-        kvm@vger.kernel.org
-Subject: [GIT PULL] KVM changes for Linux 5.1-rc6
-Date:   Tue, 16 Apr 2019 15:35:01 +0200
-Message-Id: <1555421701-47592-1-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
+        Tue, 16 Apr 2019 09:35:50 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:33664 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727037AbfDPNfu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 09:35:50 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D9744C081F5B;
+        Tue, 16 Apr 2019 13:35:44 +0000 (UTC)
+Received: from warthog.procyon.org.uk (ovpn-121-98.rdu2.redhat.com [10.10.121.98])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id A9EBA1001DE0;
+        Tue, 16 Apr 2019 13:35:43 +0000 (UTC)
+Organization: Red Hat UK Ltd. Registered Address: Red Hat UK Ltd, Amberley
+        Place, 107-111 Peascod Street, Windsor, Berkshire, SI4 1TE, United
+        Kingdom.
+        Registered in England and Wales under Company Registration No. 3798903
+From:   David Howells <dhowells@redhat.com>
+In-Reply-To: <CAGXu5jJRNUZcCyRS_xXG-XYWVLkCtV1h62-H3OsQWKB4jQ02kQ@mail.gmail.com>
+References: <CAGXu5jJRNUZcCyRS_xXG-XYWVLkCtV1h62-H3OsQWKB4jQ02kQ@mail.gmail.com> <20190110220245.GA20942@embeddedor> <CAGXu5j+WYMbVaAWETjjg6BbVGNYaJt_8cKcFkiL7XUwbQEZGAA@mail.gmail.com> <2077.1554802104@warthog.procyon.org.uk>
+To:     Kees Cook <keescook@google.com>
+Cc:     dhowells@redhat.com,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        linux-afs@lists.infradead.org, LKML <linux-kernel@vger.kernel.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>
+Subject: Re: [PATCH] afs: Mark expected switch fall-throughs
+MIME-Version: 1.0
+Content-Type: text/plain; charset="us-ascii"
+Content-ID: <21213.1555421742.1@warthog.procyon.org.uk>
+Date:   Tue, 16 Apr 2019 14:35:42 +0100
+Message-ID: <21214.1555421742@warthog.procyon.org.uk>
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Tue, 16 Apr 2019 13:35:50 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Linus,
+Kees Cook <keescook@google.com> wrote:
 
-The following changes since commit 771acc7e4a6e5dba779cb1a7fd851a164bc81033:
+> > Can we fix the compiler, please, to say that *every* case (perhaps barring
+> > the last) is expected to fall through?
 
-  Bluetooth: btusb: request wake pin with NOAUTOEN (2019-04-09 17:38:24 -1000)
+I should say "... so that we can say that *every* case ...".
 
-are available in the git repository at:
-
-  https://git.kernel.org/pub/scm/virt/kvm/kvm.git tags/for-linus
-
-for you to fetch changes up to 09f8bbfd55b2710770e0fc978da2773f6e705bed:
-
-  KVM: x86: avoid misreporting level-triggered irqs as edge-triggered in tracing (2019-04-16 10:59:20 +0200)
-
-5.1 keeps its reputation as a big bugfix release for KVM x86.
-
-----------------------------------------------------------------
-* Fix for a memory leak introduced during the merge window
-* Fixes for nested VMX with ept=0
-* Fixes for AMD (APIC virtualization, NMI injection)
-* Fixes for Hyper-V under KVM and KVM under Hyper-V
-* Fixes for 32-bit SMM and tests for SMM virtualization
-* More array_index_nospec peppering
-
-----------------------------------------------------------------
-Ben Gardon (1):
-      kvm: mmu: Fix overflow on kvm mmu page limit calculation
-
-Hariprasad Kelam (1):
-      KVM: x86: fix warning Using plain integer as NULL pointer
-
-Liran Alon (2):
-      KVM: x86: Raise #GP when guest vCPU do not support PMU
-      KVM: nVMX: Expose RDPMC-exiting only when guest supports PMU
-
-Paolo Bonzini (5):
-      KVM: nVMX: allow tests to use bad virtual-APIC page address
-      KVM: nVMX: always use early vmcs check when EPT is disabled
-      selftests: kvm/evmcs_test: complete I/O before migrating guest state
-      selftests: kvm: fix for compilers that do not support -no-pie
-      KVM: fix spectrev1 gadgets
-
-Sean Christopherson (6):
-      KVM: x86/mmu: Fix an inverted list_empty() check when zapping sptes
-      KVM: x86: Load SMRAM in a single shot when leaving SMM
-      KVM: x86: Open code kvm_set_hflags
-      KVM: x86: clear SMM flags before loading state while leaving SMM
-      KVM: x86: Don't clear EFER during SMM transitions for 32-bit vCPU
-      KVM: x86: Always use 32-bit SMRAM save state for 32-bit kernels
-
-Suthikulpanit, Suravee (2):
-      Revert "svm: Fix AVIC incomplete IPI emulation"
-      svm/avic: Fix invalidate logical APIC id entry
-
-Vitaly Kuznetsov (3):
-      KVM: x86: svm: make sure NMI is injected after nmi_singlestep
-      selftests: kvm: add a selftest for SMM
-      KVM: x86: avoid misreporting level-triggered irqs as edge-triggered in tracing
-
-WANG Chao (1):
-      x86/kvm: move kvm_load/put_guest_xcr0 into atomic context
-
- arch/x86/include/asm/kvm_emulate.h                 |   4 +-
- arch/x86/include/asm/kvm_host.h                    |  17 +-
- arch/x86/include/uapi/asm/vmx.h                    |   1 +
- arch/x86/kvm/emulate.c                             | 191 +++++++++++----------
- arch/x86/kvm/lapic.c                               |   4 +-
- arch/x86/kvm/mmu.c                                 |  15 +-
- arch/x86/kvm/mmu.h                                 |   2 +-
- arch/x86/kvm/pmu.c                                 |   4 +
- arch/x86/kvm/svm.c                                 |  57 +++---
- arch/x86/kvm/trace.h                               |   4 +-
- arch/x86/kvm/vmx/nested.c                          |  47 +++--
- arch/x86/kvm/vmx/vmx.c                             |  35 +++-
- arch/x86/kvm/vmx/vmx.h                             |   2 +
- arch/x86/kvm/x86.c                                 |  64 ++++---
- arch/x86/kvm/x86.h                                 |   2 +
- include/linux/kvm_host.h                           |  10 +-
- tools/testing/selftests/kvm/Makefile               |   9 +-
- .../selftests/kvm/include/x86_64/processor.h       |  27 +++
- tools/testing/selftests/kvm/lib/kvm_util.c         |   5 +
- tools/testing/selftests/kvm/lib/x86_64/processor.c |  20 ++-
- tools/testing/selftests/kvm/x86_64/evmcs_test.c    |   5 +-
- tools/testing/selftests/kvm/x86_64/smm_test.c      | 157 +++++++++++++++++
- tools/testing/selftests/kvm/x86_64/state_test.c    |  15 +-
- virt/kvm/irqchip.c                                 |   5 +-
- virt/kvm/kvm_main.c                                |   6 +-
- 25 files changed, 496 insertions(+), 212 deletions(-)
- create mode 100644 tools/testing/selftests/kvm/x86_64/smm_test.c
+David
