@@ -3,51 +3,51 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0B01FC282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:47:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D994C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:47:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9826222BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:47:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2F730222BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:47:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729556AbfDPNrG (ORCPT
+        id S1729568AbfDPNrJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 09:47:06 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:46266 "EHLO
+        Tue, 16 Apr 2019 09:47:09 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:39116 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728261AbfDPNrG (ORCPT
+        by vger.kernel.org with ESMTP id S1729541AbfDPNrD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 09:47:06 -0400
-Received: from pps.filterd (m0098419.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3GDkQCP100018
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:47:04 -0400
-Received: from e06smtp02.uk.ibm.com (e06smtp02.uk.ibm.com [195.75.94.98])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2rwdvq702j-1
+        Tue, 16 Apr 2019 09:47:03 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3GDkdfZ175960
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:47:02 -0400
+Received: from e06smtp04.uk.ibm.com (e06smtp04.uk.ibm.com [195.75.94.100])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rwfbatshd-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:47:03 -0400
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:46:48 -0400
 Received: from localhost
-        by e06smtp02.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp04.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <ldufour@linux.ibm.com>;
-        Tue, 16 Apr 2019 14:46:43 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp02.uk.ibm.com (192.168.101.132) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Tue, 16 Apr 2019 14:46:20 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp04.uk.ibm.com (192.168.101.134) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 16 Apr 2019 14:46:33 +0100
+        Tue, 16 Apr 2019 14:46:11 +0100
 Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3GDkVc961145266
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3GDk9qK37617726
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 Apr 2019 13:46:31 GMT
+        Tue, 16 Apr 2019 13:46:09 GMT
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 80BDA4C050;
-        Tue, 16 Apr 2019 13:46:31 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 978DD4C040;
+        Tue, 16 Apr 2019 13:46:09 +0000 (GMT)
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 102364C046;
-        Tue, 16 Apr 2019 13:46:30 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 9DF8D4C04A;
+        Tue, 16 Apr 2019 13:46:06 +0000 (GMT)
 Received: from nimbus.lab.toulouse-stg.fr.ibm.com (unknown [9.101.4.33])
         by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 16 Apr 2019 13:46:29 +0000 (GMT)
+        Tue, 16 Apr 2019 13:46:06 +0000 (GMT)
 From:   Laurent Dufour <ldufour@linux.ibm.com>
 To:     akpm@linux-foundation.org, mhocko@kernel.org, peterz@infradead.org,
         kirill@shutemov.name, ak@linux.intel.com, dave@stgolabs.net,
@@ -77,69 +77,126 @@ To:     akpm@linux-foundation.org, mhocko@kernel.org, peterz@infradead.org,
 Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         haren@linux.vnet.ibm.com, npiggin@gmail.com,
         paulmck@linux.vnet.ibm.com, Tim Chen <tim.c.chen@linux.intel.com>,
-        linuxppc-dev@lists.ozlabs.org, x86@kernel.org,
-        Vinayak Menon <vinmenon@codeaurora.org>
-Subject: [PATCH v12 23/31] mm: don't do swap readahead during speculative page fault
-Date:   Tue, 16 Apr 2019 15:45:14 +0200
+        linuxppc-dev@lists.ozlabs.org, x86@kernel.org
+Subject: [PATCH v12 15/31] mm: introduce __lru_cache_add_active_or_unevictable
+Date:   Tue, 16 Apr 2019 15:45:06 +0200
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190416134522.17540-1-ldufour@linux.ibm.com>
 References: <20190416134522.17540-1-ldufour@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19041613-0008-0000-0000-000002DA6FB6
+x-cbid: 19041613-0016-0000-0000-0000026F7275
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19041613-0009-0000-0000-00002246A83F
-Message-Id: <20190416134522.17540-24-ldufour@linux.ibm.com>
+x-cbparentid: 19041613-0017-0000-0000-000032CBBD8C
+Message-Id: <20190416134522.17540-16-ldufour@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-16_05:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=937 adultscore=0 classifier=spam adjust=0 reason=mlx
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1810050000 definitions=main-1904160093
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vinayak Menon faced a panic because one thread was page faulting a page in
-swap, while another one was mprotecting a part of the VMA leading to a VMA
-split.
-This raise a panic in swap_vma_readahead() because the VMA's boundaries
-were not more matching the faulting address.
+The speculative page fault handler which is run without holding the
+mmap_sem is calling lru_cache_add_active_or_unevictable() but the vm_flags
+is not guaranteed to remain constant.
+Introducing __lru_cache_add_active_or_unevictable() which has the vma flags
+value parameter instead of the vma pointer.
 
-To avoid this, if the page is not found in the swap, the speculative page
-fault is aborted to retry a regular page fault.
-
-Reported-by: Vinayak Menon <vinmenon@codeaurora.org>
+Acked-by: David Rientjes <rientjes@google.com>
 Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
 ---
- mm/memory.c | 11 +++++++++++
- 1 file changed, 11 insertions(+)
+ include/linux/swap.h | 10 ++++++++--
+ mm/memory.c          |  8 ++++----
+ mm/swap.c            |  6 +++---
+ 3 files changed, 15 insertions(+), 9 deletions(-)
 
+diff --git a/include/linux/swap.h b/include/linux/swap.h
+index 4bfb5c4ac108..d33b94eb3c69 100644
+--- a/include/linux/swap.h
++++ b/include/linux/swap.h
+@@ -343,8 +343,14 @@ extern void deactivate_file_page(struct page *page);
+ extern void mark_page_lazyfree(struct page *page);
+ extern void swap_setup(void);
+ 
+-extern void lru_cache_add_active_or_unevictable(struct page *page,
+-						struct vm_area_struct *vma);
++extern void __lru_cache_add_active_or_unevictable(struct page *page,
++						unsigned long vma_flags);
++
++static inline void lru_cache_add_active_or_unevictable(struct page *page,
++						struct vm_area_struct *vma)
++{
++	return __lru_cache_add_active_or_unevictable(page, vma->vm_flags);
++}
+ 
+ /* linux/mm/vmscan.c */
+ extern unsigned long zone_reclaimable_pages(struct zone *zone);
 diff --git a/mm/memory.c b/mm/memory.c
-index 6e6bf61c0e5c..1991da97e2db 100644
+index 56802850e72c..85ec5ce5c0a8 100644
 --- a/mm/memory.c
 +++ b/mm/memory.c
-@@ -2900,6 +2900,17 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
- 				lru_cache_add_anon(page);
- 				swap_readpage(page, true);
- 			}
-+		} else if (vmf->flags & FAULT_FLAG_SPECULATIVE) {
-+			/*
-+			 * Don't try readahead during a speculative page fault
-+			 * as the VMA's boundaries may change in our back.
-+			 * If the page is not in the swap cache and synchronous
-+			 * read is disabled, fall back to the regular page
-+			 * fault mechanism.
-+			 */
-+			delayacct_clear_flag(DELAYACCT_PF_SWAPIN);
-+			ret = VM_FAULT_RETRY;
-+			goto out;
- 		} else {
- 			page = swapin_readahead(entry, GFP_HIGHUSER_MOVABLE,
- 						vmf);
+@@ -2347,7 +2347,7 @@ static vm_fault_t wp_page_copy(struct vm_fault *vmf)
+ 		ptep_clear_flush_notify(vma, vmf->address, vmf->pte);
+ 		page_add_new_anon_rmap(new_page, vma, vmf->address, false);
+ 		mem_cgroup_commit_charge(new_page, memcg, false, false);
+-		lru_cache_add_active_or_unevictable(new_page, vma);
++		__lru_cache_add_active_or_unevictable(new_page, vmf->vma_flags);
+ 		/*
+ 		 * We call the notify macro here because, when using secondary
+ 		 * mmu page tables (such as kvm shadow page tables), we want the
+@@ -2896,7 +2896,7 @@ vm_fault_t do_swap_page(struct vm_fault *vmf)
+ 	if (unlikely(page != swapcache && swapcache)) {
+ 		page_add_new_anon_rmap(page, vma, vmf->address, false);
+ 		mem_cgroup_commit_charge(page, memcg, false, false);
+-		lru_cache_add_active_or_unevictable(page, vma);
++		__lru_cache_add_active_or_unevictable(page, vmf->vma_flags);
+ 	} else {
+ 		do_page_add_anon_rmap(page, vma, vmf->address, exclusive);
+ 		mem_cgroup_commit_charge(page, memcg, true, false);
+@@ -3048,7 +3048,7 @@ static vm_fault_t do_anonymous_page(struct vm_fault *vmf)
+ 	inc_mm_counter_fast(vma->vm_mm, MM_ANONPAGES);
+ 	page_add_new_anon_rmap(page, vma, vmf->address, false);
+ 	mem_cgroup_commit_charge(page, memcg, false, false);
+-	lru_cache_add_active_or_unevictable(page, vma);
++	__lru_cache_add_active_or_unevictable(page, vmf->vma_flags);
+ setpte:
+ 	set_pte_at(vma->vm_mm, vmf->address, vmf->pte, entry);
+ 
+@@ -3327,7 +3327,7 @@ vm_fault_t alloc_set_pte(struct vm_fault *vmf, struct mem_cgroup *memcg,
+ 		inc_mm_counter_fast(vma->vm_mm, MM_ANONPAGES);
+ 		page_add_new_anon_rmap(page, vma, vmf->address, false);
+ 		mem_cgroup_commit_charge(page, memcg, false, false);
+-		lru_cache_add_active_or_unevictable(page, vma);
++		__lru_cache_add_active_or_unevictable(page, vmf->vma_flags);
+ 	} else {
+ 		inc_mm_counter_fast(vma->vm_mm, mm_counter_file(page));
+ 		page_add_file_rmap(page, false);
+diff --git a/mm/swap.c b/mm/swap.c
+index 3a75722e68a9..a55f0505b563 100644
+--- a/mm/swap.c
++++ b/mm/swap.c
+@@ -450,12 +450,12 @@ void lru_cache_add(struct page *page)
+  * directly back onto it's zone's unevictable list, it does NOT use a
+  * per cpu pagevec.
+  */
+-void lru_cache_add_active_or_unevictable(struct page *page,
+-					 struct vm_area_struct *vma)
++void __lru_cache_add_active_or_unevictable(struct page *page,
++					   unsigned long vma_flags)
+ {
+ 	VM_BUG_ON_PAGE(PageLRU(page), page);
+ 
+-	if (likely((vma->vm_flags & (VM_LOCKED | VM_SPECIAL)) != VM_LOCKED))
++	if (likely((vma_flags & (VM_LOCKED | VM_SPECIAL)) != VM_LOCKED))
+ 		SetPageActive(page);
+ 	else if (!TestSetPageMlocked(page)) {
+ 		/*
 -- 
 2.21.0
 
