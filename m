@@ -2,108 +2,128 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A0557C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:38:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D1609C282DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:40:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 721AD206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:38:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A614220868
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:40:36 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="sL/wnHvm"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VEnW0PE9"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730263AbfDPTiw (ORCPT
+        id S1730219AbfDPTkf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 15:38:52 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:36418 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729925AbfDPTiu (ORCPT
+        Tue, 16 Apr 2019 15:40:35 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:43226 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727136AbfDPTkf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 15:38:50 -0400
-Received: by mail-qt1-f195.google.com with SMTP id s15so24745951qtn.3
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 12:38:49 -0700 (PDT)
+        Tue, 16 Apr 2019 15:40:35 -0400
+Received: by mail-pg1-f195.google.com with SMTP id z9so10820295pgu.10;
+        Tue, 16 Apr 2019 12:40:34 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=DHvwucClEuE6vcfN7CuEc8eFK+qMiBspP3oOBK+KZZE=;
-        b=sL/wnHvmS8sJ5Cgb3Z/Ioo4m4Apbm4Eve1PwNIh0xYbgNh9Vq/AFdwbWhtBb2XDgcH
-         U+XlSoQjehVMSTlhE4hbEZ7fsx9HJDnkExCEXL9rTkN9QiX16Y2FvKWTLyT4HumqseVu
-         3ejFYFn/9cM5kSutWvOF6wi2ClYNEOBzACNvN/CDnG329cP6gI53yhlzJRTjCSIQZuo7
-         6qA5W4s7vHgrSoYYlAMXt7iV6XhbeOTSAR2ztxVcDNpOh4+ysiRzXhm3XgUHRVQY6hRw
-         t7RPjuVGg3NiDSZQXMlwDW5XqbAHI28D6/FSvuHTxGdAIBe5IgdW7a3r0lBMLh8AuB0O
-         LhSQ==
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=20EwNywf3m8P4T0FJ/VzGkdxquhCrRE+pse6Cf24+X0=;
+        b=VEnW0PE9d8x1tlqWkq6cgRRoNTY0bo4cNgszRh7h/yJRk6drqwERjev46mEL8mmE48
+         E1TmwzBwRuKtqc9Pby1aYBnZl0XDFOXGspNuGYAM2UZU3IHiaxT+tFnbX2tfNDsTZ+TH
+         Lk+7A58nrn0XvqTzMpf64vdaUMI1uscSEcSmH8rV3MO5e1yBXg5oFniZI2B91ei1T9bb
+         bqIAsFZ/AqG+P9OxpV1rEGwTjmfj69dweD0w1eYUQfxflnXYqj2jwZZB2sgPoOVaeu74
+         C65f2UrFNTl+tRtznBShRk+7JG212vqxa+oFUpALzA2iviJ59TaORfyHql/qMaMFPR95
+         52rw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=DHvwucClEuE6vcfN7CuEc8eFK+qMiBspP3oOBK+KZZE=;
-        b=rgRlBDYREevXegaD5BqZaz+VbktMkH01IBSczsa3/F4G7T4wNIFuWFt54vAnRlKxt0
-         t55shLH/bEphhxwpsRhL2KhuKoL87LlXVRmjMTaDrh3fyah0ziek6IzZWRogImHFuQVr
-         mgvsuhv1mXSqkK7jy2y4p+aVgOU0MNipiMb3Pj1VSKufTWtmjSr4I/eg/N9/qsT0vxpn
-         OKKf59oduSeeC7QVHJcaBmU5gcaR5PqaadKSIF7aL43XvQAaBokb3I3JGPx30b1WvA0n
-         Vi/4e39SKvNtA2gil2vT8INar1xa+p7ROgwtssDuJFYHub1zBMqcSDZL3NLZ946gmfRe
-         9n2g==
-X-Gm-Message-State: APjAAAWx2o8RlIcnJW80l6h6TW+JtK2+YoOm/IBZwwa1kjE2wzrN/D0h
-        YFPs3Hnxfjy7S2Kx8A5NuWmmHg==
-X-Google-Smtp-Source: APXvYqxvSzU3L2NQrIcypK1zKQZYEFuHAWcQTeJchBku3CjTAKGvQLtnr8h3i+DB2p97TgkmshwU2w==
-X-Received: by 2002:aed:3f49:: with SMTP id q9mr69900551qtf.279.1555443528979;
-        Tue, 16 Apr 2019 12:38:48 -0700 (PDT)
-Received: from Thara-Work-Ubuntu.fios-router.home (pool-71-255-245-97.washdc.fios.verizon.net. [71.255.245.97])
-        by smtp.googlemail.com with ESMTPSA id k41sm46150797qtc.89.2019.04.16.12.38.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Tue, 16 Apr 2019 12:38:48 -0700 (PDT)
-From:   Thara Gopinath <thara.gopinath@linaro.org>
-To:     mingo@redhat.com, peterz@infradead.org, rui.zhang@intel.com
-Cc:     linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
-        viresh.kumar@linaro.org, javi.merino@kernel.org,
-        edubezval@gmail.com, daniel.lezcano@linaro.org,
-        vincent.guittot@linaro.org, nicolas.dechesne@linaro.org,
-        bjorn.andersson@linaro.org, dietmar.eggemann@arm.com
-Subject: [PATCH V3 3/3] thermal/cpu-cooling: Update thermal pressure in case of a maximum frequency capping
-Date:   Tue, 16 Apr 2019 15:38:41 -0400
-Message-Id: <1555443521-579-4-git-send-email-thara.gopinath@linaro.org>
-X-Mailer: git-send-email 2.1.4
-In-Reply-To: <1555443521-579-1-git-send-email-thara.gopinath@linaro.org>
-References: <1555443521-579-1-git-send-email-thara.gopinath@linaro.org>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=20EwNywf3m8P4T0FJ/VzGkdxquhCrRE+pse6Cf24+X0=;
+        b=gUUCeF/71Ksz1nnYz2f5jA+TIL1KTaN44i9Xq2S2mwwSA1Ns++7RMXUCgTVGuxtkq1
+         skwN1YCtiKV9r8NdWSXTwI90XOUR8L88oqUiNDLtRKKu0oPDxcGCyB/ki4YgMK5NJ55W
+         r0qZcERY4WozS3v3M/eISPRUlHmkVTyUeEVTUoeOhItLYmPDuGW0saayMYr9N5JvTbqb
+         KVlAU5fJUfXEfSVQZ5rdNd580ekWrTpmkOkiTkC1chMLp6QG3RMdJcFwcnLm5mZ2nwmo
+         p+YpyliWvMy6GCDluLtx8yQFFzlmcK55nqpZmYpKobWA6EMeGmtj53p3x1TunIn4naoj
+         RzHg==
+X-Gm-Message-State: APjAAAWftH03PIK99fFfIb/lYSaQHbm4d4tCquTl7j0eul4sZhm+uHOS
+        n4aQGQBHaCYmjlAOSu0vjqf2WKhV
+X-Google-Smtp-Source: APXvYqwdRAbbQWSADv2xDu8Xk2Hi11MQ8eg+1GUWnQF0PK63xfLcu/isQuCgtyfsgKQcp+Lpt+7pOw==
+X-Received: by 2002:a65:608a:: with SMTP id t10mr66423984pgu.125.1555443634409;
+        Tue, 16 Apr 2019 12:40:34 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id n3sm90913990pfa.99.2019.04.16.12.40.33
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Apr 2019 12:40:33 -0700 (PDT)
+Date:   Tue, 16 Apr 2019 12:40:33 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Ruslan Babayev <ruslan@babayev.com>
+Cc:     xe-linux-external@cisco.com, Jean Delvare <jdelvare@suse.com>,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/4] hwmon: (pmbus) mark registers READ_VIN and READ_IIN
+ as paged
+Message-ID: <20190416194032.GB8093@roeck-us.net>
+References: <20190416183620.39950-2-ruslan@babayev.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190416183620.39950-2-ruslan@babayev.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Enable cpufreq cooling device to update the thermal pressure in
-event of a capped maximum frequency or removal of capped maximum
-frequency.
+On Tue, Apr 16, 2019 at 11:36:17AM -0700, Ruslan Babayev wrote:
+> On some devices (like IR35215) READ_VIN and READ_IIN registers are
+> paged.
+> 
+> For devices where these registers are not paged the extra check
+> ensures we expose only the registers that are actually present.
+> 
+> Cc: xe-linux-external@cisco.com
+> Signed-off-by: Ruslan Babayev <ruslan@babayev.com>
+> ---
+>  drivers/hwmon/pmbus/pmbus_core.c | 5 +++++
+>  1 file changed, 5 insertions(+)
+> 
+> diff --git a/drivers/hwmon/pmbus/pmbus_core.c b/drivers/hwmon/pmbus/pmbus_core.c
+> index f35b239961e3..fac966967816 100644
+> --- a/drivers/hwmon/pmbus/pmbus_core.c
+> +++ b/drivers/hwmon/pmbus/pmbus_core.c
+> @@ -1379,6 +1379,9 @@ static int pmbus_add_sensor_attrs(struct i2c_client *client,
+>  		for (page = 0; page < pages; page++) {
+>  			if (!(info->func[page] & attrs->func))
+>  				continue;
+> +			if (!pmbus_check_word_register(client, page,
+> +						       attrs->reg))
+> +				continue;
 
-Signed-off-by: Thara Gopinath <thara.gopinath@linaro.org>
----
- drivers/thermal/cpu_cooling.c | 4 ++++
- 1 file changed, 4 insertions(+)
+This won't work. Most other chips will just report the values from page 0
+when trying to read VIN/IIN from other pages.
 
-diff --git a/drivers/thermal/cpu_cooling.c b/drivers/thermal/cpu_cooling.c
-index 6fff161..d5cc3c3 100644
---- a/drivers/thermal/cpu_cooling.c
-+++ b/drivers/thermal/cpu_cooling.c
-@@ -31,6 +31,7 @@
- #include <linux/slab.h>
- #include <linux/cpu.h>
- #include <linux/cpu_cooling.h>
-+#include <linux/sched/thermal.h>
- 
- #include <trace/events/thermal.h>
- 
-@@ -177,6 +178,9 @@ static int cpufreq_thermal_notifier(struct notifier_block *nb,
- 
- 		if (policy->max > clipped_freq)
- 			cpufreq_verify_within_limits(policy, 0, clipped_freq);
-+
-+		sched_update_thermal_pressure(policy->cpus,
-+				policy->max, policy->cpuinfo.max_freq);
- 		break;
- 	}
- 	mutex_unlock(&cooling_list_lock);
--- 
-2.1.4
+Guenter
 
+>  			ret = pmbus_add_sensor_attrs_one(client, data, info,
+>  							 name, index, page,
+>  							 attrs);
+> @@ -1498,6 +1501,7 @@ static const struct pmbus_sensor_attr voltage_attributes[] = {
+>  		.reg = PMBUS_READ_VIN,
+>  		.class = PSC_VOLTAGE_IN,
+>  		.label = "vin",
+> +		.paged = true,
+>  		.func = PMBUS_HAVE_VIN,
+>  		.sfunc = PMBUS_HAVE_STATUS_INPUT,
+>  		.sbase = PB_STATUS_INPUT_BASE,
+> @@ -1602,6 +1606,7 @@ static const struct pmbus_sensor_attr current_attributes[] = {
+>  		.reg = PMBUS_READ_IIN,
+>  		.class = PSC_CURRENT_IN,
+>  		.label = "iin",
+> +		.paged = true,
+>  		.func = PMBUS_HAVE_IIN,
+>  		.sfunc = PMBUS_HAVE_STATUS_INPUT,
+>  		.sbase = PB_STATUS_INPUT_BASE,
+> -- 
+> 2.17.1
+> 
