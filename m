@@ -2,86 +2,103 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E417C282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:54:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A2D78C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:58:15 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09DE220857
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:54:38 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555397679;
-	bh=Zu9rrMFkcVvad8CThfYywPplWrCzx7RSQhgl8pxB4X0=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=tglqqzh7WL4OVcGFPGNlp9/usagXhqqtb39EVht6TtP/D1yQlVbSoFa7KBrYAnd4x
-	 vAIonYUwVQPL3D0U1NJMCcaezYxsldhlui6q49Zil2eZVnSyC2HGiXOGTI/yp9rztP
-	 3+LY2IKLo4NhEnf9ltfuQqd7koFAFlPrIBOkRzeU=
+	by mail.kernel.org (Postfix) with ESMTP id 69F262075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:58:15 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="eI5lyWqX";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="VWZsRDCk"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728118AbfDPGyh (ORCPT
+        id S1728177AbfDPG6O (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 02:54:37 -0400
-Received: from mx2.suse.de ([195.135.220.15]:43348 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726768AbfDPGyh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 02:54:37 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 99D90ACD0;
-        Tue, 16 Apr 2019 06:54:35 +0000 (UTC)
-Date:   Tue, 16 Apr 2019 08:54:32 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     linux-mm@kvack.org, Andrew Morton <akpm@linux-foundation.org>
-Cc:     Pingfan Liu <kernelfans@gmail.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>, x86@kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Tony Luck <tony.luck@intel.com>, linuxppc-dev@lists.ozlabs.org,
-        linux-ia64@vger.kernel.org, LKML <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@elte.hu>
-Subject: Re: [PATCH 0/2] x86, numa: always initialize all possible nodes
-Message-ID: <20190416065432.GC11561@dhcp22.suse.cz>
-References: <20190212095343.23315-1-mhocko@kernel.org>
- <20190226131201.GA10588@dhcp22.suse.cz>
- <20190415114209.GJ3366@dhcp22.suse.cz>
+        Tue, 16 Apr 2019 02:58:14 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:41434 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726825AbfDPG6N (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 02:58:13 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id 1540A608D4; Tue, 16 Apr 2019 06:58:13 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1555397893;
+        bh=xkYts39MEJAK8g8EIi9wJOxU/vlUuyMyWYyA/Shlmfc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=eI5lyWqXvu0CFcpMBQngaVD9C7R7BHDu2ZrkOogsXAwEYeXmOEKLkcqAvfq455dxj
+         nnPHJxKecleUKc+0OQIzAAsJ99nmWD2U4Eiwh48HlEqIJXnUzZgp8Lt8hQq23JtRj0
+         7cygBYjniZcZwGSq1wTAMlhzqZS0RYL+zV59Gxmo=
+Received: from [10.204.79.15] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id BA442608D4;
+        Tue, 16 Apr 2019 06:54:19 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1555397892;
+        bh=xkYts39MEJAK8g8EIi9wJOxU/vlUuyMyWYyA/Shlmfc=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=VWZsRDCkvBeKkxY1l1CxhQg6wGbiJ8yAqlblexrUMGhDNZG+vKcpZA1VRfsR6Hq1B
+         M22k1eHoOB3jsRw3Jvftrd5oBDwUmbR1nZvLAhUzjGfSD0aspOlWJTFjDvx7vt1Ypp
+         muE+fW2wN49PuzWKv0ftFrWfKBj5hIqAn2nJO+uk=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org BA442608D4
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH] platform/x86: thinkpad_acpi: fix spelling mistake
+ "capabilites" -> "capabilities"
+To:     Colin King <colin.king@canonical.com>,
+        Henrique de Moraes Holschuh <ibm-acpi@hmh.eng.br>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        ibm-acpi-devel@lists.sourceforge.net,
+        platform-driver-x86@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190415125204.7386-1-colin.king@canonical.com>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <520f6626-246b-005f-53ef-df2f75a89cd9@codeaurora.org>
+Date:   Tue, 16 Apr 2019 12:24:16 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190415114209.GJ3366@dhcp22.suse.cz>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190415125204.7386-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Forgot to cc Andrew. Now for real.
 
-Andrew please note that Dave has reviewed the patch
-http://lkml.kernel.org/r/77b364e5-a30c-964a-6985-00b759dac128@intel.com
+On 4/15/2019 6:22 PM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> There is a spelling mistake in a module parameter description. Fix it.
+>
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 
-Or do you want me to resubmit?
+Cheers,
+-Mukesh
 
-On Mon 15-04-19 13:42:09, Michal Hocko wrote:
-> On Tue 26-02-19 14:12:01, Michal Hocko wrote:
-> > On Tue 12-02-19 10:53:41, Michal Hocko wrote:
-> > > Hi,
-> > > this has been posted as an RFC previously [1]. There didn't seem to be
-> > > any objections so I am reposting this for inclusion. I have added a
-> > > debugging patch which prints the zonelist setup for each numa node
-> > > for an easier debugging of a broken zonelist setup.
-> > > 
-> > > [1] http://lkml.kernel.org/r/20190114082416.30939-1-mhocko@kernel.org
-> > 
-> > Friendly ping. I haven't heard any complains so can we route this via
-> > tip/x86/mm or should we go via mmotm.
-> 
-> It seems that Dave is busy. Let's add Andrew. Can we get this [1] merged
-> finally, please?
-> 
-> [1] http://lkml.kernel.org/r/20190212095343.23315-1-mhocko@kernel.org
-
--- 
-Michal Hocko
-SUSE Labs
+> ---
+>   drivers/platform/x86/thinkpad_acpi.c | 2 +-
+>   1 file changed, 1 insertion(+), 1 deletion(-)
+>
+> diff --git a/drivers/platform/x86/thinkpad_acpi.c b/drivers/platform/x86/thinkpad_acpi.c
+> index 57d9ae9d8e56..9192b686e9a6 100644
+> --- a/drivers/platform/x86/thinkpad_acpi.c
+> +++ b/drivers/platform/x86/thinkpad_acpi.c
+> @@ -10269,7 +10269,7 @@ MODULE_PARM_DESC(volume_mode,
+>   
+>   module_param_named(volume_capabilities, volume_capabilities, uint, 0444);
+>   MODULE_PARM_DESC(volume_capabilities,
+> -		 "Selects the mixer capabilites: 0=auto, 1=volume and mute, 2=mute only");
+> +		 "Selects the mixer capabilities: 0=auto, 1=volume and mute, 2=mute only");
+>   
+>   module_param_named(volume_control, volume_control_allowed, bool, 0444);
+>   MODULE_PARM_DESC(volume_control,
