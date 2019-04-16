@@ -2,174 +2,130 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE61C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:44:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79314C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:48:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C9C220868
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:44:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3AFF320663
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:48:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="g6FPp6RI";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="YCOzmMf3"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728132AbfDPGoe (ORCPT
+        id S1728412AbfDPGsA (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 02:44:34 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:40152 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726962AbfDPGod (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 02:44:33 -0400
-Received: from DGGEMS409-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id 1230D86BB2946F49AA71;
-        Tue, 16 Apr 2019 14:44:31 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS409-HUB.china.huawei.com
- (10.3.19.209) with Microsoft SMTP Server id 14.3.408.0; Tue, 16 Apr 2019
- 14:44:24 +0800
-From:   Yue Haibing <yuehaibing@huawei.com>
-To:     <hch@lst.de>, <jlbec@evilplan.org>, <daniel.baluta@intel.com>
-CC:     <linux-kernel@vger.kernel.org>, <mchristi@redhat.com>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] configfs: Fix possible use-after-free in configfs_register_group
-Date:   Tue, 16 Apr 2019 14:44:08 +0800
-Message-ID: <20190416064408.34512-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
+        Tue, 16 Apr 2019 02:48:00 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:35934 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726962AbfDPGsA (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 02:48:00 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id CD30360E3E; Tue, 16 Apr 2019 06:47:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1555397278;
+        bh=GuvEf4JhvqUkR2GYNDIruEJU7MAzPOx63kAy/HuJATo=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=g6FPp6RIxl1PvDi345VzVKz3J48B4to5mXwVn60Strg+TYqmfsJFBxpIoEJD36Fy8
+         me6rgV1krEA+a274Dd4Is7qn/6gaz/locroOkSiyMZMlhDaxr4dOLtdIC/eNaZNU08
+         zOw3IfJUcjYQk5QvdLAL9rQT7qub7MfD3SUliEdw=
+Received: from [10.204.79.15] (blr-c-bdr-fw-01_globalnat_allzones-outside.qualcomm.com [103.229.19.19])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: mojha@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 63728607CA;
+        Tue, 16 Apr 2019 06:47:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1555397277;
+        bh=GuvEf4JhvqUkR2GYNDIruEJU7MAzPOx63kAy/HuJATo=;
+        h=Subject:To:Cc:References:From:Date:In-Reply-To:From;
+        b=YCOzmMf3bPcqKb9+3i5XOUD0v/Kwome1COe1U5LWWoJZbrb7OOhqUIhi6GImgnBWE
+         XJoDT7M4ZtU+UUYlRVxb0LHG8CLWnTzdW+t1RG4iuWG8s4vr199TReF7sBX4m3K8kD
+         ap7tzMGk6U/NG9T50W1t0x+tERCsgnG8r1ajnzrI=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 63728607CA
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=mojha@codeaurora.org
+Subject: Re: [PATCH] iwlegacy: fix spelling mistake "acumulative" ->
+ "accumulative"
+To:     Colin King <colin.king@canonical.com>,
+        Stanislaw Gruszka <sgruszka@redhat.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        "David S . Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <20190415103703.11254-1-colin.king@canonical.com>
+From:   Mukesh Ojha <mojha@codeaurora.org>
+Message-ID: <4c87d5c6-c5f8-c3f5-b0b9-2a70b888a622@codeaurora.org>
+Date:   Tue, 16 Apr 2019 12:17:42 +0530
+User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+In-Reply-To: <20190415103703.11254-1-colin.king@canonical.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
 
-Syzkaller report this:
+On 4/15/2019 4:07 PM, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
+>
+> Fix spelling mistakes in rx stats text. I missed these from an earlier
+> round of fixing the same spelling mistake.
+>
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
 
-BUG: KASAN: use-after-free in __list_add_valid+0xd4/0xe0 lib/list_debug.c:26
-Read of size 8 at addr ffff8881ef61ae20 by task syz-executor.0/5996
+Cheers,
+-Mukesh
 
-CPU: 1 PID: 5996 Comm: syz-executor.0 Tainted: G         C        5.0.0+ #5
-Hardware name: QEMU Standard PC (i440FX + PIIX, 1996), BIOS 1.10.2-1ubuntu1 04/01/2014
-Call Trace:
- __dump_stack lib/dump_stack.c:77 [inline]
- dump_stack+0xa9/0x10e lib/dump_stack.c:113
- print_address_description+0x65/0x270 mm/kasan/report.c:187
- kasan_report+0x149/0x18d mm/kasan/report.c:317
- __list_add_valid+0xd4/0xe0 lib/list_debug.c:26
- __list_add include/linux/list.h:60 [inline]
- list_add_tail include/linux/list.h:93 [inline]
- link_obj+0xb0/0x190 fs/configfs/dir.c:759
- link_group+0x1c/0x130 fs/configfs/dir.c:784
- configfs_register_group+0x56/0x1e0 fs/configfs/dir.c:1751
- configfs_register_default_group+0x72/0xc0 fs/configfs/dir.c:1834
- ? 0xffffffffc1be0000
- iio_sw_trigger_init+0x23/0x1000 [industrialio_sw_trigger]
- do_one_initcall+0xbc/0x47d init/main.c:887
- do_init_module+0x1b5/0x547 kernel/module.c:3456
- load_module+0x6405/0x8c10 kernel/module.c:3804
- __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
- do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-RIP: 0033:0x462e99
-Code: f7 d8 64 89 02 b8 ff ff ff ff c3 66 0f 1f 44 00 00 48 89 f8 48 89 f7 48 89 d6 48 89 ca 4d 89 c2 4d 89 c8 4c 8b 4c 24 08 0f 05 <48> 3d 01 f0 ff ff 73 01 c3 48 c7 c1 bc ff ff ff f7 d8 64 89 01 48
-RSP: 002b:00007f494ecbcc58 EFLAGS: 00000246 ORIG_RAX: 0000000000000139
-RAX: ffffffffffffffda RBX: 000000000073bf00 RCX: 0000000000462e99
-RDX: 0000000000000000 RSI: 0000000020000180 RDI: 0000000000000003
-RBP: 00007f494ecbcc70 R08: 0000000000000000 R09: 0000000000000000
-R10: 0000000000000000 R11: 0000000000000246 R12: 00007f494ecbd6bc
-R13: 00000000004bcefa R14: 00000000006f6fb0 R15: 0000000000000004
-
-Allocated by task 5987:
- set_track mm/kasan/common.c:87 [inline]
- __kasan_kmalloc.constprop.3+0xa0/0xd0 mm/kasan/common.c:497
- kmalloc include/linux/slab.h:545 [inline]
- kzalloc include/linux/slab.h:740 [inline]
- configfs_register_default_group+0x4c/0xc0 fs/configfs/dir.c:1829
- 0xffffffffc1bd0023
- do_one_initcall+0xbc/0x47d init/main.c:887
- do_init_module+0x1b5/0x547 kernel/module.c:3456
- load_module+0x6405/0x8c10 kernel/module.c:3804
- __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
- do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-Freed by task 5987:
- set_track mm/kasan/common.c:87 [inline]
- __kasan_slab_free+0x130/0x180 mm/kasan/common.c:459
- slab_free_hook mm/slub.c:1429 [inline]
- slab_free_freelist_hook mm/slub.c:1456 [inline]
- slab_free mm/slub.c:3003 [inline]
- kfree+0xe1/0x270 mm/slub.c:3955
- configfs_register_default_group+0x9a/0xc0 fs/configfs/dir.c:1836
- 0xffffffffc1bd0023
- do_one_initcall+0xbc/0x47d init/main.c:887
- do_init_module+0x1b5/0x547 kernel/module.c:3456
- load_module+0x6405/0x8c10 kernel/module.c:3804
- __do_sys_finit_module+0x162/0x190 kernel/module.c:3898
- do_syscall_64+0x9f/0x450 arch/x86/entry/common.c:290
- entry_SYSCALL_64_after_hwframe+0x49/0xbe
-
-The buggy address belongs to the object at ffff8881ef61ae00
- which belongs to the cache kmalloc-192 of size 192
-The buggy address is located 32 bytes inside of
- 192-byte region [ffff8881ef61ae00, ffff8881ef61aec0)
-The buggy address belongs to the page:
-page:ffffea0007bd8680 count:1 mapcount:0 mapping:ffff8881f6c03000 index:0xffff8881ef61a700
-flags: 0x2fffc0000000200(slab)
-raw: 02fffc0000000200 ffffea0007ca4740 0000000500000005 ffff8881f6c03000
-raw: ffff8881ef61a700 000000008010000c 00000001ffffffff 0000000000000000
-page dumped because: kasan: bad access detected
-
-Memory state around the buggy address:
- ffff8881ef61ad00: 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
- ffff8881ef61ad80: 00 00 00 00 00 00 00 00 fc fc fc fc fc fc fc fc
->ffff8881ef61ae00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-                               ^
- ffff8881ef61ae80: fb fb fb fb fb fb fb fb fc fc fc fc fc fc fc fc
- ffff8881ef61af00: fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb fb
-
-In configfs_register_group(), if create_default_group() failed, we
-forgot to unlink group. It will left a invalid item in parent list,
-which may trigger a use-after-free issue.
-
-Reported-by: Hulk Robot <hulkci@huawei.com>
-Fixes: 5cf6a51e6062 ("configfs: allow dynamic group creation")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
----
- fs/configfs/dir.c | 17 ++++++++++++-----
- 1 file changed, 12 insertions(+), 5 deletions(-)
-
-diff --git a/fs/configfs/dir.c b/fs/configfs/dir.c
-index 591e82b..5e7932d 100644
---- a/fs/configfs/dir.c
-+++ b/fs/configfs/dir.c
-@@ -1757,12 +1757,19 @@ int configfs_register_group(struct config_group *parent_group,
- 
- 	inode_lock_nested(d_inode(parent), I_MUTEX_PARENT);
- 	ret = create_default_group(parent_group, group);
--	if (!ret) {
--		spin_lock(&configfs_dirent_lock);
--		configfs_dir_set_ready(group->cg_item.ci_dentry->d_fsdata);
--		spin_unlock(&configfs_dirent_lock);
--	}
-+	if (ret)
-+		goto err_out;
-+
-+	spin_lock(&configfs_dirent_lock);
-+	configfs_dir_set_ready(group->cg_item.ci_dentry->d_fsdata);
-+	spin_unlock(&configfs_dirent_lock);
-+	inode_unlock(d_inode(parent));
-+	return 0;
-+err_out:
- 	inode_unlock(d_inode(parent));
-+	mutex_lock(&subsys->su_mutex);
-+	unlink_group(group);
-+	mutex_unlock(&subsys->su_mutex);
- 	return ret;
- }
- EXPORT_SYMBOL(configfs_register_group);
--- 
-2.7.0
-
-
+> ---
+>   drivers/net/wireless/intel/iwlegacy/3945-debug.c | 8 ++++----
+>   1 file changed, 4 insertions(+), 4 deletions(-)
+>
+> diff --git a/drivers/net/wireless/intel/iwlegacy/3945-debug.c b/drivers/net/wireless/intel/iwlegacy/3945-debug.c
+> index a2960032be81..4b912e707f38 100644
+> --- a/drivers/net/wireless/intel/iwlegacy/3945-debug.c
+> +++ b/drivers/net/wireless/intel/iwlegacy/3945-debug.c
+> @@ -185,7 +185,7 @@ il3945_ucode_rx_stats_read(struct file *file, char __user *user_buf,
+>   	pos +=
+>   	    scnprintf(buf + pos, bufsz - pos,
+>   		      "%-32s     current"
+> -		      "acumulative       delta         max\n",
+> +		      "accumulative      delta         max\n",
+>   		      "Statistics_Rx - CCK:");
+>   	pos +=
+>   	    scnprintf(buf + pos, bufsz - pos,
+> @@ -273,7 +273,7 @@ il3945_ucode_rx_stats_read(struct file *file, char __user *user_buf,
+>   	pos +=
+>   	    scnprintf(buf + pos, bufsz - pos,
+>   		      "%-32s     current"
+> -		      "acumulative       delta         max\n",
+> +		      "accumulative      delta         max\n",
+>   		      "Statistics_Rx - GENERAL:");
+>   	pos +=
+>   	    scnprintf(buf + pos, bufsz - pos,
+> @@ -346,7 +346,7 @@ il3945_ucode_tx_stats_read(struct file *file, char __user *user_buf,
+>   	pos +=
+>   	    scnprintf(buf + pos, bufsz - pos,
+>   		      "%-32s     current"
+> -		      "acumulative       delta         max\n",
+> +		      "accumulative      delta         max\n",
+>   		      "Statistics_Tx:");
+>   	pos +=
+>   	    scnprintf(buf + pos, bufsz - pos,
+> @@ -447,7 +447,7 @@ il3945_ucode_general_stats_read(struct file *file, char __user *user_buf,
+>   	pos +=
+>   	    scnprintf(buf + pos, bufsz - pos,
+>   		      "%-32s     current"
+> -		      "acumulative       delta         max\n",
+> +		      "accumulative      delta         max\n",
+>   		      "Statistics_General:");
+>   	pos +=
+>   	    scnprintf(buf + pos, bufsz - pos,
