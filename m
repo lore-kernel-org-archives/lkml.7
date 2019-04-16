@@ -2,174 +2,103 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9EC53C282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 04:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C784BC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 04:30:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6CB9420868
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 04:29:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9153320868
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 04:30:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Gg1FzgWN"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="ozZ7mZGs"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726675AbfDPE3g (ORCPT
+        id S1726748AbfDPEaf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 00:29:36 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:35428 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725648AbfDPE3f (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 00:29:35 -0400
-Received: by mail-lf1-f67.google.com with SMTP id j20so1979256lfh.2
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 21:29:34 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=/+ifBXEJ4n8haRZlqyLnigtDv3lKxJOg0M4uc1Mkir4=;
-        b=Gg1FzgWNDtN2vGXRbYzT0wIvHzKhihYHfEx2LNHGol7e6Komzz2aDtVRUxZbxmgb1L
-         +HKb67IoNhi30Q6KHN2dOZ5028D/rglqamoijrG84w/3YRoaxjYggaF38Hx2bqCPnoWl
-         42LSiRGss2EMu0v60SS6xguqlxSja4QvyAGH95t5mtitvmmT0sW0njin6Yzc6tUQ4d3q
-         +LUqoxJBtJzZdoSFn3SCsFStKaF3Cvb5BfH0AUsra4jWHmfwDae/byKBj3YNq/2RgQDl
-         v8Z/JVsEMmctYEJjGVRTk4Hnb01Luh6wJHaYNPd6qUnesBT7P86z99EMDhUQHEGrnRu/
-         C7Tg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=/+ifBXEJ4n8haRZlqyLnigtDv3lKxJOg0M4uc1Mkir4=;
-        b=ikYzBaRnYl7jAKLqMkT3mN9cLboeZf642phvPSJ29Gc8nmdKa96PHfcXXCYIPTp0aT
-         bzYQNNiCX7pP3qeossBdN7ooVh0vmjQrpvaCDVJtXhDYNG/fxmZjflTu+A2Cg8bWpFYp
-         m0v6kAFHKpxqRh7OLrhzAdT+gbhR+CP58/XeA6r7XnKAgRSJh6PbVOlTFW9iiQN4jzHm
-         Yj/Ns3sYFye6wCq6D1mVBOlJJ8tJ2V08XqTAbIs1VQzkJwc6RdZPBQ7Xtwj1D3km6eRC
-         vDSEcLHbY2GZgmsLcAy+TnkLpcuXEsnpaPqK9JDkQWYYRQnpAn4v7VSATS7zmtcrLRM3
-         4uyA==
-X-Gm-Message-State: APjAAAXQoOu3+dsRmc1lVhrb3qgzRZ4VXu5N+Om6yCWnnXBcywvF8SJM
-        84c2h+iMbWRD8XfKcna4spjOGrkuP6GDbU1MBzvAoxkZcO8=
-X-Google-Smtp-Source: APXvYqzN2Dvn1B8OUajSL5eTujnuhQeOcG8aNnoJvXQchq6YO6DHFCbbnlXUqr8/TuirI50QnfOnM4L/39nr/zGK7E4=
-X-Received: by 2002:ac2:53a4:: with SMTP id j4mr42957001lfh.106.1555388973567;
- Mon, 15 Apr 2019 21:29:33 -0700 (PDT)
+        Tue, 16 Apr 2019 00:30:35 -0400
+Received: from ozlabs.org ([203.11.71.1]:56165 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725808AbfDPEaf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 00:30:35 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44jsqX4xsmz9s4V;
+        Tue, 16 Apr 2019 14:30:32 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1555389033;
+        bh=dOGvMzw1kLKOsu9CzHvx2d4cUfbU0gqkaLv452qKDiU=;
+        h=Date:From:To:Cc:Subject:From;
+        b=ozZ7mZGsttCOm6svA5oLb8si9yZQkcJiiwrLzpdxAlRRj3evNY/g0JZzB6uLT+SMS
+         jhkU9juxJxs/jeyZSLF1kw9tg7Hr+qVQ8EUEEh2ztPV3t3u6d6fIzv2BU14Hz+I1Vd
+         xQytDBmXiIkmINbzXMB0I4foMUfkGzFnFk/THuovV1vGBMOZfgBymwxnnx4GF34ebs
+         xQx2ZO/Em4bXU1qER9Bk0ijdg3xfJuE5H1SNAJTY2scgCzDUjhfQ9OZE/wofHzcTHs
+         X2MiUMrM1DFDJULNpVGN0ker6G4Z91u/8pI2+6h42Xla7uWrMMlonnWfQVvOe5Q0Qg
+         6Xu+V28UYs/Ig==
+Date:   Tue, 16 Apr 2019 14:30:30 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Benson Leung <bleung@google.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Dmitry Torokhov <dmitry.torokhov@gmail.com>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Nick Crews <ncrews@chromium.org>
+Subject: linux-next: build warning after merge of the chrome-platform tree
+Message-ID: <20190416143030.07537982@canb.auug.org.au>
 MIME-Version: 1.0
-References: <20190415183726.036654568@linuxfoundation.org>
-In-Reply-To: <20190415183726.036654568@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 16 Apr 2019 09:59:22 +0530
-Message-ID: <CA+G9fYvUAfvcFp0p4=ANA1VeoyGEMsLZa6VYN5h7M0dO-BZzyA@mail.gmail.com>
-Subject: Re: [PATCH 4.14 00/69] 4.14.112-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_//BOQKd8ymmpCrPnrqxk/2FO"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Apr 2019 at 00:32, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
->
-> This is the start of the stable review cycle for the 4.14.112 release.
-> There are 69 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
->
-> Responses should be made by Wed Apr 17 18:36:38 UTC 2019.
-> Anything received after that time might be too late.
->
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v4.x/stable-review/patch-=
-4.14.112-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-4.14.y
-> and the diffstat can be found below.
->
-> thanks,
->
-> greg k-h
->
+--Sig_//BOQKd8ymmpCrPnrqxk/2FO
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
+Hi all,
 
-Summary
-------------------------------------------------------------------------
+After merging the chrome-platform tree, today's linux-next build (x86_64
+allmodconfig) produced this warning:
 
-kernel: 4.14.112-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-4.14.y
-git commit: 58023abef2c4691261db5b40563dc18cc95f3c37
-git describe: v4.14.111-70-g58023abef2c4
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-4.14-oe/bu=
-ild/v4.14.111-70-g58023abef2c4
+In file included from drivers/platform/chrome/wilco_ec/debugfs.c:11:
+drivers/platform/chrome/wilco_ec/debugfs.c: In function 'fops_h1_gpio_open':
+drivers/platform/chrome/wilco_ec/debugfs.c:210:59: warning: format '%x' exp=
+ects argument of type 'unsigned int', but argument 2 has type 'long long un=
+signed int' [-Wformat=3D]
+ DEFINE_DEBUGFS_ATTRIBUTE(fops_h1_gpio, h1_gpio_get, NULL, "0x%02x\n");
+                                                           ^~~~~~~~~~
+include/linux/debugfs.h:45:29: note: in definition of macro 'DEFINE_DEBUGFS=
+_ATTRIBUTE'
+  __simple_attr_check_format(__fmt, 0ull);   \
+                             ^~~~~
 
-No regressions (compared to build v4.14.111)
+Introduced by commit
 
-No fixes (compared to build v4.14.111)
-
-Ran 23296 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c - arm64
-- hi6220-hikey - arm64
-- i386
-- juno-r2 - arm64
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15 - arm
-- x86_64
-
-Test Suites
------------
-* boot
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fs-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-sched-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* perf
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* kvm-unit-tests
-* ltp-cap_bounds-tests
-* ltp-cpuhotplug-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-securebits-tests
-* ltp-open-posix-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
+  db6c540a0018 ("platform/chrome: wilco_ec: Add h1_gpio status to debugfs")
 
 --=20
-Linaro LKFT
-https://lkft.linaro.org
+Cheers,
+Stephen Rothwell
+
+--Sig_//BOQKd8ymmpCrPnrqxk/2FO
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAly1WmYACgkQAVBC80lX
+0GzrawgAoPvOqwI2AdlKc0GxmhLUlOjQejEBgooTENhIFcmLetwcWkxEDKeLuafT
+IQMPJ/yaBhqIR8AxKZT5HBT59mdusNqMHFodslqHFvIDQihbLIQMAA4IsWju7VD/
+M/K4H/u3qox6jbu+gM1m9Vc29kwA9WA31ycnEjG+2P3VSycszZH8tBedZT3EpABD
+kN+4k06xAn3LseU07Ja9TzEntQaUOZU0WEIwGi3obrIf5E/9lV82wYt1Y6rPcn/X
+Nap3GnX6n24j3Gc2v6mDinT7D/MRkBqtnD4Fa/ExA65zljjqM/OP2AOVXT/YDSTL
+ZClEi+rY3sZ5+8ZejPsQ7rBFW1OaHw==
+=9j2L
+-----END PGP SIGNATURE-----
+
+--Sig_//BOQKd8ymmpCrPnrqxk/2FO--
