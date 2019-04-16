@@ -2,67 +2,82 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E85F8C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:33:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CDDD8C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:33:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C00E720870
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:33:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A567A20872
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:33:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728651AbfDPNdV (ORCPT
+        id S1728879AbfDPNd2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 09:33:21 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:59633 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726215AbfDPNdU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 09:33:20 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hGOD8-0004VO-KE; Tue, 16 Apr 2019 13:33:18 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Wim Van Sebroeck <wim@linux-watchdog.org>,
-        linux-watchdog@vger.kernel.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] watchdog: intel_scu_watchdog: fix spelling mistake: "set_hearbeat" -> "set_heartbeat"
-Date:   Tue, 16 Apr 2019 14:33:18 +0100
-Message-Id: <20190416133318.21045-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Tue, 16 Apr 2019 09:33:28 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45870 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725796AbfDPNd1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 09:33:27 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 3AE3219D04A;
+        Tue, 16 Apr 2019 13:33:19 +0000 (UTC)
+Received: from pauld.bos.csb (dhcp-17-51.bos.redhat.com [10.18.17.51])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 3311A5C22D;
+        Tue, 16 Apr 2019 13:33:17 +0000 (UTC)
+Date:   Tue, 16 Apr 2019 09:33:15 -0400
+From:   Phil Auld <pauld@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, hpa@zytor.com, bsegall@google.com,
+        torvalds@linux-foundation.org, anton@ozlabs.org, efault@gmx.de,
+        mingo@kernel.org, tglx@linutronix.de,
+        linux-tip-commits@vger.kernel.org
+Subject: Re: [tip:sched/core] sched/fair: Limit sched_cfs_period_timer loop
+ to avoid hard lockup
+Message-ID: <20190416133315.GB17860@pauld.bos.csb>
+References: <20190319130005.25492-1-pauld@redhat.com>
+ <tip-06ec5d30e8d57b820d44df6340dcb25010d6d0fa@git.kernel.org>
+ <20190409124815.GA10132@pauld.bos.csb>
+ <20190409130527.GR11158@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190409130527.GR11158@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Tue, 16 Apr 2019 13:33:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+On Tue, Apr 09, 2019 at 03:05:27PM +0200 Peter Zijlstra wrote:
+> On Tue, Apr 09, 2019 at 08:48:16AM -0400, Phil Auld wrote:
+> > Hi Ingo, Peter,
+> > 
+> > On Wed, Apr 03, 2019 at 01:38:39AM -0700 tip-bot for Phil Auld wrote:
+> > > Commit-ID:  06ec5d30e8d57b820d44df6340dcb25010d6d0fa
+> > > Gitweb:     https://git.kernel.org/tip/06ec5d30e8d57b820d44df6340dcb25010d6d0fa
+> > > Author:     Phil Auld <pauld@redhat.com>
+> > > AuthorDate: Tue, 19 Mar 2019 09:00:05 -0400
+> > > Committer:  Ingo Molnar <mingo@kernel.org>
+> > > CommitDate: Wed, 3 Apr 2019 09:50:23 +0200
+> > 
+> > This commit seems to have gotten lost. It's not in tip and now the 
+> > direct gitweb link is also showing bad commit reference. 
+> > 
+> > Did this fall victim to a reset or something?
+> 
+> It had (trivial) builds fails on 32 bit. I have a fixed up version
+> around somewhere, but that hasn't made it back in yet.
 
-There is a spelling mistake in a pr_debug message. Fix it.
 
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
----
- drivers/watchdog/intel_scu_watchdog.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+Friendly ping...
 
-diff --git a/drivers/watchdog/intel_scu_watchdog.c b/drivers/watchdog/intel_scu_watchdog.c
-index 0caab6241eb7..718f7db35bec 100644
---- a/drivers/watchdog/intel_scu_watchdog.c
-+++ b/drivers/watchdog/intel_scu_watchdog.c
-@@ -224,7 +224,7 @@ static int intel_scu_set_heartbeat(u32 t)
- 		 watchdog_device.timer_tbl_ptr->freq_hz);
- 	pr_debug("set_heartbeat: timer_set is %x (hex)\n",
- 		 watchdog_device.timer_set);
--	pr_debug("set_hearbeat: timer_margin is %x (hex)\n", timer_margin);
-+	pr_debug("set_heartbeat: timer_margin is %x (hex)\n", timer_margin);
- 	pr_debug("set_heartbeat: threshold is %x (hex)\n",
- 		 watchdog_device.threshold);
- 	pr_debug("set_heartbeat: soft_threshold is %x (hex)\n",
+
+Thanks,
+Phil
+
 -- 
-2.20.1
-
