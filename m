@@ -2,115 +2,102 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F229BC10F12
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:15:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 942F9C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B704520868
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:15:11 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="Y8xqOZaS"
+	by mail.kernel.org (Postfix) with ESMTP id 60EA620868
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:20:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726676AbfDPDPJ (ORCPT
+        id S1726750AbfDPDUD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 23:15:09 -0400
-Received: from mail-vs1-f65.google.com ([209.85.217.65]:44647 "EHLO
-        mail-vs1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726258AbfDPDPI (ORCPT
+        Mon, 15 Apr 2019 23:20:03 -0400
+Received: from edison.jonmasters.org ([173.255.233.168]:47146 "EHLO
+        edison.jonmasters.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726258AbfDPDUC (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 23:15:08 -0400
-Received: by mail-vs1-f65.google.com with SMTP id j184so10698479vsd.11
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 20:15:07 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=Mk6BIBLLGO0U80tLWMVE0489EqA725xprr9VtegXBQw=;
-        b=Y8xqOZaS7jkwKovka8QtC0wCgsNCE4WBE8pK3EDq4eKI6sO+T80f/S1bmRcL3mxz/l
-         Cvk05b4RCyjWoI0j+pNA99L3vDReq81bLIvF4e378eH+fFvsHhaQpkt9P2QwQ9zEhlaW
-         p792GG7NkrUjaFmz8u13GMr+5hDAtUDZo0rY4=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=Mk6BIBLLGO0U80tLWMVE0489EqA725xprr9VtegXBQw=;
-        b=bAP5TYyXXD4gz4KxOqJx4O7n8gCuknN93eZtK6xSBNNNPJ1p0s8/x3zRv5WAdyeVQi
-         XukadyIO84Zu87MeqCx1jNx9iuZY4TU+LMiYK00XRwDBrn8vToneIZ2nzYUrFxVvGdcH
-         Js9h+mEBgJ+fkBEIUyThEIY5hU77SWsuBciLMaqWEC7niJ9CH9IlwPFGcTRccsyR2Dsq
-         UJO++auV5xsjpQ/vDqkLG+ehMiMLWDEDoIS+6uZzkk72Wo9yWjavNxy5BlBgwjhs7DL/
-         yFSslO5IiRrtLXjB8lnhLH+NgT7FRJb2s50We5Smc4wxuaRCj5WRPx5rhYJOKZlmxYS0
-         B1vg==
-X-Gm-Message-State: APjAAAVLGrSk7hqtQ0TFSO/fQxfr2IUsH8Hx0itYDbCobY/+46yfzZx3
-        dGjocaUqKsXHHVrCBIltf1SRJoDvhCY=
-X-Google-Smtp-Source: APXvYqwO3+b5S/B7DDGJBfT9wzgRi47s5fo68FjCxDb03wMH0jM3sHZDsb6ry1ulV8i4mDp3FQ5XKA==
-X-Received: by 2002:a67:f607:: with SMTP id k7mr39807285vso.137.1555384506359;
-        Mon, 15 Apr 2019 20:15:06 -0700 (PDT)
-Received: from mail-vs1-f48.google.com (mail-vs1-f48.google.com. [209.85.217.48])
-        by smtp.gmail.com with ESMTPSA id v22sm13661478vkv.35.2019.04.15.20.15.04
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Mon, 15 Apr 2019 20:15:04 -0700 (PDT)
-Received: by mail-vs1-f48.google.com with SMTP id f22so10692825vso.7
-        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 20:15:04 -0700 (PDT)
-X-Received: by 2002:a67:f04e:: with SMTP id q14mr43541834vsm.133.1555384503717;
- Mon, 15 Apr 2019 20:15:03 -0700 (PDT)
+        Mon, 15 Apr 2019 23:20:02 -0400
+Received: from [8.46.73.194] (helo=tonnant.bos.jonmasters.org)
+        by edison.jonmasters.org with esmtpsa (TLS1.0:RSA_AES_128_CBC_SHA1:16)
+        (Exim 4.71)
+        (envelope-from <jcm@jonmasters.org>)
+        id 1hGEdZ-0000Np-MW; Tue, 16 Apr 2019 03:19:58 +0000
+To:     Linus Torvalds <torvalds@linux-foundation.org>,
+        =?UTF-8?B?TcOlbnMgUnVsbGfDpXJk?= <mans@mansr.com>
+Cc:     Matt Turner <mattst88@gmail.com>, Borislav Petkov <bp@alien8.de>,
+        Alan Cox <gnomes@lxorguk.ukuu.org.uk>,
+        Matthew Wilcox <willy@infradead.org>,
+        Jann Horn <jannh@google.com>,
+        Al Viro <viro@zeniv.linux.org.uk>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        kernel list <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        the arch/x86 maintainers <x86@kernel.org>,
+        Linux API <linux-api@vger.kernel.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Richard Weinberger <richard@nod.at>,
+        Anton Ivanov <anton.ivanov@cambridgegreys.com>,
+        linux-alpha <linux-alpha@vger.kernel.org>,
+        linux-m68k@lists.linux-m68k.org
+References: <CAG48ez1RVd5mQ_Pb6eygQESaZhpQz765OAZYSoPE0kPqfZEXQg@mail.gmail.com>
+ <20190305091904.GB8256@zn.tnic>
+ <20190305122218.GD13380@bombadil.infradead.org>
+ <20190305134347.4be2449c@alans-desktop> <20190305145717.GD8256@zn.tnic>
+ <CAHk-=wi2E4kugAW7BQwNSVwYHOr=B_9EgzBRMpQ2+1dxAqydDg@mail.gmail.com>
+ <20190305173134.GE8256@zn.tnic>
+ <CAHk-=wg0bY=RFhD4NW9x++fC0bME=_-9xM3kexGGM3gefHQTyQ@mail.gmail.com>
+ <20190305181138.GG8256@zn.tnic> <20190305181808.GH8256@zn.tnic>
+ <CAEdQ38G5M3vq9pGBV1iyEViO7JhFuXk5g+VCs-vUH+Z62kNqgQ@mail.gmail.com>
+ <CAHk-=wgt7M6yA5BJCJo0nF22WgPJnN8CvViL9CAJmd+S+Civ6w@mail.gmail.com>
+ <yw1xa7i14btw.fsf@mansr.com>
+ <CAHk-=whD1SumZUBQeuMT-GcciwPxg_jW_TsPAmokYp3sGGCGhA@mail.gmail.com>
+ <yw1x5zsp473a.fsf@mansr.com>
+ <CAHk-=wiU7xacTqDfm-x29-meyJWNd_X95K0T8FQMcDgy-yo3Qw@mail.gmail.com>
+From:   Jon Masters <jcm@jonmasters.org>
+Message-ID: <cb8451f5-e49f-a389-2b78-d6f8265ccecf@jonmasters.org>
+Date:   Mon, 15 Apr 2019 23:19:47 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-References: <20190411192607.GD225654@gmail.com> <20190411192827.72551-1-ebiggers@kernel.org>
- <CAGXu5jJ8k7fP5Vb=ygmQ0B45GfrK2PeaV04bPWmcZ6Vb+swgyA@mail.gmail.com>
- <20190415022412.GA29714@bombadil.infradead.org> <20190415024615.f765e7oagw26ezam@gondor.apana.org.au>
- <20190416021852.GA18616@bombadil.infradead.org>
-In-Reply-To: <20190416021852.GA18616@bombadil.infradead.org>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Mon, 15 Apr 2019 22:14:51 -0500
-X-Gmail-Original-Message-ID: <CAGXu5jKaVB=bTJCBWhsxAny7-OkzXQ+8KCd5O+_-7hKcJFiqKw@mail.gmail.com>
-Message-ID: <CAGXu5jKaVB=bTJCBWhsxAny7-OkzXQ+8KCd5O+_-7hKcJFiqKw@mail.gmail.com>
-Subject: Re: [PATCH] crypto: testmgr - allocate buffers with __GFP_COMP
-To:     Matthew Wilcox <willy@infradead.org>
-Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
-        Kees Cook <keescook@chromium.org>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Rik van Riel <riel@surriel.com>,
-        linux-crypto <linux-crypto@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Laura Abbott <labbott@redhat.com>,
-        Linux-MM <linux-mm@kvack.org>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <CAHk-=wiU7xacTqDfm-x29-meyJWNd_X95K0T8FQMcDgy-yo3Qw@mail.gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-SA-Exim-Connect-IP: 8.46.73.194
+X-SA-Exim-Mail-From: jcm@jonmasters.org
+Subject: Re: [PATCH] x86: Deprecate a.out support
+X-SA-Exim-Version: 4.2.1 (built Sun, 08 Nov 2009 07:31:22 +0000)
+X-SA-Exim-Scanned: Yes (on edison.jonmasters.org)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 9:18 PM Matthew Wilcox <willy@infradead.org> wrote:
-> I agree; if the crypto code is never going to try to go from the address of
-> a byte in the allocation back to the head page, then there's no need to
-> specify GFP_COMP.
->
-> But that leaves us in the awkward situation where
-> HARDENED_USERCOPY_PAGESPAN does need to be able to figure out whether
-> 'ptr + n - 1' lies within the same allocation as ptr.  Without using
-> a compound page, there's no indication in the VM structures that these
-> two pages were allocated as part of the same allocation.
->
-> We could force all multi-page allocations to be compound pages if
-> HARDENED_USERCOPY_PAGESPAN is enabled, but I worry that could break
-> something.  We could make it catch fewer problems by succeeding if the
-> page is not compound.  I don't know, these all seem like bad choices
-> to me.
+Hi Linus,
 
-If GFP_COMP is _not_ the correct signal about adjacent pages being
-part of the same allocation, then I agree: we need to drop this check
-entirely from PAGESPAN. Is there anything else that indicates this
-property? (Or where might we be able to store that info?)
+I'm Jon, and I just bought my first Alpha. What can I say, I was late to
+the party, and I probably need to get out more. Actually, I wanted it
+for its memory consistency model, or (some would say) lack thereof.
 
-There are other pagespan checks, though, so those could stay. But I'd
-really love to gain page allocator allocation size checking ...
+On 3/11/19 3:03 PM, Linus Torvalds wrote:
+> On Mon, Mar 11, 2019 at 11:08 AM Måns Rullgård <mans@mansr.com> wrote:
+>>
+>> The latest version I have is 5.1, and that uses ECOFF.
+> 
+> ECOFF _is_ a.out as far as Linux is concerned.
+> 
+> So Linux basically treats ECOFF as "regular a.out with just some
+> header extensions".
+> 
+> We don't have any specific support for ECOFF.
+> 
+> I _think_. Again, it's been years and years.
 
--- 
-Kees Cook
+...so removing a.out would break various boot tooling as well. I'm still
+working on getting my Miata up and running upstream kernels (should be
+shortly) but I'm happy to help out testing any proposals.
+
+Jon.
