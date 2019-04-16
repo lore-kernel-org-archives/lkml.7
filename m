@@ -2,82 +2,92 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 640DAC282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:32:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 43FE6C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:35:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 31FBB2073F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:32:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 136FF2073F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 06:35:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728084AbfDPGcz (ORCPT
+        id S1728208AbfDPGfD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 02:32:55 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:48308 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726857AbfDPGcy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 02:32:54 -0400
-Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:b93f:9fae:b276:a89a])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        (Authenticated sender: bbrezillon)
-        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 6499A260C42;
-        Tue, 16 Apr 2019 07:32:53 +0100 (BST)
-Date:   Tue, 16 Apr 2019 08:32:50 +0200
-From:   Boris Brezillon <boris.brezillon@collabora.com>
-To:     Vitor Soares <vitor.soares@synopsys.com>
-Cc:     linux-iio@vger.kernel.org, linux-i3c@lists.infradead.org,
-        linux-kernel@vger.kernel.org, pmeerw@pmeerw.net, lars@metafoo.de,
-        knaack.h@gmx.de, jic23@kernel.org, lorenzo.bianconi83@gmail.com,
-        bbrezillon@kernel.org, rafael@kernel.org,
-        gregkh@linuxfoundation.org, broonie@kernel.org,
-        joao.pinto@synopsys.com
-Subject: Re: [PATCH 0/3] Add ST lsm6dso i3c suppport
-Message-ID: <20190416083250.272edfe1@collabora.com>
-In-Reply-To: <cover.1555354268.git.vitor.soares@synopsys.com>
-References: <cover.1555354268.git.vitor.soares@synopsys.com>
-Organization: Collabora
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
+        Tue, 16 Apr 2019 02:35:03 -0400
+Received: from mga04.intel.com ([192.55.52.120]:15139 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726857AbfDPGfC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 02:35:02 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 15 Apr 2019 23:35:02 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,355,1549958400"; 
+   d="scan'208";a="143098685"
+Received: from aubrey-lkp.sh.intel.com ([10.239.97.113])
+  by orsmga003.jf.intel.com with ESMTP; 15 Apr 2019 23:34:58 -0700
+From:   Aubrey Li <aubrey.li@linux.intel.com>
+To:     tglx@linutronix.de, mingo@redhat.com, peterz@infradead.org,
+        hpa@zytor.com
+Cc:     ak@linux.intel.com, tim.c.chen@linux.intel.com,
+        dave.hansen@intel.com, arjan@linux.intel.com, adobriyan@gmail.com,
+        akpm@linux-foundation.org, aubrey.li@intel.com,
+        linux-api@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Aubrey Li <aubrey.li@linux.intel.com>
+Subject: [PATCH v15 1/3] /proc/pid/status: Add support for architecture specific output
+Date:   Tue, 16 Apr 2019 14:32:48 +0800
+Message-Id: <20190416063250.7514-1-aubrey.li@linux.intel.com>
+X-Mailer: git-send-email 2.21.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Vitor,
+The architecture specific information of the running processes could
+be useful to the userland. Add support to examine process architecture
+specific information externally.
 
-On Mon, 15 Apr 2019 21:19:38 +0200
-Vitor Soares <vitor.soares@synopsys.com> wrote:
+Signed-off-by: Aubrey Li <aubrey.li@linux.intel.com>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Andi Kleen <ak@linux.intel.com>
+Cc: Tim Chen <tim.c.chen@linux.intel.com>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: Arjan van de Ven <arjan@linux.intel.com>
+Cc: Linux API <linux-api@vger.kernel.org>
+Cc: Alexey Dobriyan <adobriyan@gmail.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+---
+ fs/proc/array.c | 6 ++++++
+ 1 file changed, 6 insertions(+)
 
-I like the very detailed description in your cover letter :P.
-Anyway, glad to see I3C support added to regmap. Also happy to have a
-new driver for an I3C device.
-
-Thanks for working on that.
-
-Boris
-
-> Vitor Soares (3):
->   remap: Add i3c bus support
->   i3c: Add i3c_get_device_id helper
->   iio: imu: st_lsm6dsx: Add i3c basic support
-> 
->  drivers/base/regmap/Kconfig                 |  6 ++-
->  drivers/base/regmap/Makefile                |  1 +
->  drivers/base/regmap/regmap-i3c.c            | 62 ++++++++++++++++++++++++++
->  drivers/i3c/device.c                        |  8 ++++
->  drivers/iio/imu/st_lsm6dsx/Kconfig          |  8 +++-
->  drivers/iio/imu/st_lsm6dsx/Makefile         |  1 +
->  drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c | 67 +++++++++++++++++++++++++++++
->  include/linux/i3c/device.h                  |  1 +
->  include/linux/regmap.h                      | 20 +++++++++
->  9 files changed, 172 insertions(+), 2 deletions(-)
->  create mode 100644 drivers/base/regmap/regmap-i3c.c
->  create mode 100644 drivers/iio/imu/st_lsm6dsx/st_lsm6dsx_i3c.c
-> 
+diff --git a/fs/proc/array.c b/fs/proc/array.c
+index 2edbb657f859..87bc7e882d35 100644
+--- a/fs/proc/array.c
++++ b/fs/proc/array.c
+@@ -96,6 +96,11 @@
+ #include <asm/processor.h>
+ #include "internal.h"
+ 
++/* Add support for architecture specific output in /proc/pid/status */
++#ifndef	arch_proc_pid_status
++#define	arch_proc_pid_status(m, task)
++#endif
++
+ void proc_task_name(struct seq_file *m, struct task_struct *p, bool escape)
+ {
+ 	char *buf;
+@@ -424,6 +429,7 @@ int proc_pid_status(struct seq_file *m, struct pid_namespace *ns,
+ 	task_cpus_allowed(m, task);
+ 	cpuset_task_status_allowed(m, task);
+ 	task_context_switch_counts(m, task);
++	arch_proc_pid_status(m, task);
+ 	return 0;
+ }
+ 
+-- 
+2.21.0
 
