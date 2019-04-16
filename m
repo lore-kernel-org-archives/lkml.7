@@ -2,139 +2,204 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 20971C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 01:34:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 91797C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 01:45:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DF2ED2054F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 01:34:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 574F020854
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 01:45:13 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="tDsZ1KoY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728380AbfDPBeN (ORCPT
+        id S1728349AbfDPBpL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 21:34:13 -0400
-Received: from szxga02-in.huawei.com ([45.249.212.188]:2537 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726464AbfDPBeN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 21:34:13 -0400
-Received: from DGGEML402-HUB.china.huawei.com (unknown [172.30.72.54])
-        by Forcepoint Email with ESMTP id 5F66C34D76703765ADF2;
-        Tue, 16 Apr 2019 09:34:10 +0800 (CST)
-Received: from DGGEML522-MBS.china.huawei.com ([169.254.8.248]) by
- DGGEML402-HUB.china.huawei.com ([fe80::fca6:7568:4ee3:c776%31]) with mapi id
- 14.03.0439.000; Tue, 16 Apr 2019 09:34:08 +0800
-From:   Linhaifeng <haifeng.lin@huawei.com>
-To:     Paul Clarke <pc@us.ibm.com>,
-        "linux-perf-users@vger.kernel.org" <linux-perf-users@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: RE: perf tools:Is there any tools to found out the max latency by
- irq or cpu idle
-Thread-Topic: perf tools:Is there any tools to found out the max latency by
- irq or cpu idle
-Thread-Index: AQHU8TjwQPH5fZKzxkKUF8YFzmG5zqY5l6vwgAMUFYCAAVhoEA==
-Date:   Tue, 16 Apr 2019 01:34:07 +0000
-Message-ID: <4099DE2E54AFAD489356C6C9161D533395929531@dggeml522-mbs.china.huawei.com>
-References: <4099DE2E54AFAD489356C6C9161D53339591D64A@DGGEML502-MBX.china.huawei.com>
- <8ce8c596-123e-1342-5ccc-06a5fd8a60ec@redhat.com>
- <4099DE2E54AFAD489356C6C9161D53339591DE6D@DGGEML502-MBX.china.huawei.com>
- <6e6a98a4-a442-1e10-cf5a-56b6792d42ba@us.ibm.com>
-In-Reply-To: <6e6a98a4-a442-1e10-cf5a-56b6792d42ba@us.ibm.com>
-Accept-Language: en-GB, zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.177.20.223]
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
+        Mon, 15 Apr 2019 21:45:11 -0400
+Received: from mailout2.samsung.com ([203.254.224.25]:47738 "EHLO
+        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726527AbfDPBpK (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 21:45:10 -0400
+Received: from epcas1p1.samsung.com (unknown [182.195.41.45])
+        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20190416014505epoutp0257f126e4773eec84bfada5348a98e49b~V0Q5VupLX2521925219epoutp02C
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 01:45:05 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20190416014505epoutp0257f126e4773eec84bfada5348a98e49b~V0Q5VupLX2521925219epoutp02C
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1555379105;
+        bh=8EcbpDCs9xcL2YICnAwcP5pdE5fA//OburzmSKvtNx8=;
+        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
+        b=tDsZ1KoYb8QZHflt2frHqEwmRZoEyyzRoV30GYggfnfy/pLTxjnCII1SnPWla0uN5
+         zxHfcIcKivWvXTrBTaOJwDdXXedp6huhlU24W4gbS+3PuaPcOetrN+m3LnFFIUBCfY
+         rQ/CFyWNjqS+0DqYFgR6sS1YzBgYuX4lsMDhAGHo=
+Received: from epsmges1p5.samsung.com (unknown [182.195.40.156]) by
+        epcas1p4.samsung.com (KnoxPortal) with ESMTP id
+        20190416014502epcas1p4c9e0ba707e90ffbdf4bed9c2ae9a6279~V0Q2U5Ecy1138011380epcas1p4O;
+        Tue, 16 Apr 2019 01:45:02 +0000 (GMT)
+Received: from epcas1p3.samsung.com ( [182.195.41.47]) by
+        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
+        0F.F4.04108.D9335BC5; Tue, 16 Apr 2019 10:45:01 +0900 (KST)
+Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
+        epcas1p1.samsung.com (KnoxPortal) with ESMTPA id
+        20190416014500epcas1p18102d45555ff24edff5f402c39322c10~V0Q0sovmD0573705737epcas1p1H;
+        Tue, 16 Apr 2019 01:45:00 +0000 (GMT)
+Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
+        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190416014500epsmtrp2dc3b4b5c6d1c7a16975f709563fa4c74~V0Q0rizYa2418824188epsmtrp2b;
+        Tue, 16 Apr 2019 01:45:00 +0000 (GMT)
+X-AuditID: b6c32a39-8b7ff7000000100c-0c-5cb5339d4158
+Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
+        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
+        93.7E.03692.C9335BC5; Tue, 16 Apr 2019 10:45:00 +0900 (KST)
+Received: from [10.113.221.102] (unknown [10.113.221.102]) by
+        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190416014500epsmtip15ee5dd9ddd37574e8c9c381797f50205~V0Q0ggANT3031930319epsmtip1_;
+        Tue, 16 Apr 2019 01:45:00 +0000 (GMT)
+Subject: Re: [PATCH v2 01/19] PM / devfreq: tegra: Fix kHz to Hz conversion
+To:     Dmitry Osipenko <digetx@gmail.com>,
+        Thierry Reding <thierry.reding@gmail.com>,
+        Jonathan Hunter <jonathanh@nvidia.com>,
+        MyungJoo Ham <myungjoo.ham@samsung.com>,
+        Kyungmin Park <kyungmin.park@samsung.com>,
+        Tomeu Vizoso <tomeu.vizoso@collabora.com>
+Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org
+From:   Chanwoo Choi <cw00.choi@samsung.com>
+Organization: Samsung Electronics
+Message-ID: <a7cacb6c-1097-6d16-f6dc-7470f487c5b8@samsung.com>
+Date:   Tue, 16 Apr 2019 10:45:55 +0900
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+        Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190415145505.18397-2-digetx@gmail.com>
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Brightmail-Tracker: H4sIAAAAAAAAA01SbUhTURj2uLvjVZpdZ+rbirIbURnLXdf0KimaIwYFSf3JENbFXaa5r3Zn
+        VP7RLEvRvgyqlRWlUVZUusUUzLLok8wyQZ3DvoiS1NLKCrS2XSP/Pe/7vM95znPOS0rkN7GC
+        LLQ4eLuFM9E4grh1b3misk7tzlNN9S1hr3x9h9i9zvME+2zP5zC2u/U0Zsdr7iO28psTs96y
+        S5j91XqGYA9ee4kzw3UeXz3StTh9Ybqa8hGsO+hqRLrxpgU50i1Fqwt4zsDb43lLvtVQaDGm
+        0+s26bP1mmQVo2RS2RQ63sKZ+XRauz5HubbQ5L8QHb+DMxX7WzmcINCJGavt1mIHH19gFRzp
+        NG8zmGyptpUCZxaKLcaV+VZzGqNSJWn8g1uLCtx91dj2KWZnXflvXIo8UVUonARqFVQ0VxFV
+        KIKUUx4EZYd6Q8ViDMGT0W8SsfiBoHTUHfZP0nO4VioSbQh8J+umJaMI/lzqDU5FU+ug7Xk9
+        DhBzqCkEY60npAFCQuXC97sNkgDGVAK0f+zFATybWgQ9P9+hAJZRGeDt8Qb7BLUEPj29GtTG
+        UJth8MENqTgTBY9PvicCOJxKhkPHKrB4fhz0vz8bKuKFUO4+FcwA1B8Mb9zHkZhBC7UDH6bz
+        RMPQQ9c0VsD4SBsWcQlcfnwfi+IDCFztXVKRUEN7Q63fgfQ7LIfrrYmiWSSMfK+WBtpAyeBA
+        hVycXgzdr32hIp4LF/ZXTh+vgw9f9koPo0XOGXGcMyI4Z0Rw/jc7h4hGFMvbBLORFxibZuZ/
+        N6HguiaketCDzvUdiCIRPUtGVrvy5FJuh7DL3IGAlNBzZFkGf0tm4Hbt5u1Wvb3YxAsdSON/
+        7SMSRUy+1b/8Foee0SSp1Wp2FZOsYRg6TnY9MztPThk5B1/E8zbe/k8XSoYrStG57bc2yItC
+        Numy1tKe4Y0vJ4dabnZuu6jNrR3V5w9snrVUZZws6ZrSXnFRDdEtA47EE1+iHhGK+sHcrBU1
+        KWNt2n3NE53z1qStSKs8qoz2ren3/Vo2NlzyajJjSPUC25XzH00ULo3FeZJ7z5+kxIZkN2ae
+        T7rzzHu729vQXt31NpImhAKOSZDYBe4vtbZwicQDAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFIsWRmVeSWpSXmKPExsWy7bCSnO4c460xBgu/6Fqs/viY0aJl1iIW
+        i7NNb9gtLu+aw2bxufcIo0Xnl1lsFrcbV7BZ/Nw1j8Wib+0lNgdOjx13lzB67Jx1l92jt/kd
+        m0ffllWMHp83yQWwRnHZpKTmZJalFunbJXBlbL3Zw1bwUrRibvMvtgbGHYJdjJwcEgImElcn
+        TGbtYuTiEBLYzSjxrquNBSIhKTHt4lHmLkYOIFtY4vDhYoiat4wSz669BqsRFvCW2Ht+CRtI
+        QkSgiUni88MWJpAEs0CkRP+jblYQW0hgK6NE3xw5EJtNQEti/4sbbCA2v4CixNUfjxlBbF4B
+        O4nbV2+DxVkEVCVenl4D1isqECFx5v0KFogaQYmTM5+A2ZwCZhL9U9rYIHapS/yZd4kZwhaX
+        uPVkPtQN8hLNW2czT2AUnoWkfRaSlllIWmYhaVnAyLKKUTK1oDg3PbfYsMAwL7Vcrzgxt7g0
+        L10vOT93EyM4xrQ0dzBeXhJ/iFGAg1GJhzehb0uMEGtiWXFl7iFGCQ5mJRFexxSgEG9KYmVV
+        alF+fFFpTmrxIUZpDhYlcd6neccihQTSE0tSs1NTC1KLYLJMHJxSDYy+TZWb56zW+HHNgadX
+        yXupfMOuyOcXC6+obbf5u/yLCf/pmcKOmfM73N7zzeCz87itL/69Vz5Rxv2T0rNN1eK6gccT
+        suI8Pr3gzjp+x5yv4nfcUetgdiaXDqdAl4/nJj2VWf1s3wWfdaevLoi6lx2ho1n0g0O1yT5z
+        pZfaca3POjGp/5TmFyqxFGckGmoxFxUnAgBvhi9ZrQIAAA==
+X-CMS-MailID: 20190416014500epcas1p18102d45555ff24edff5f402c39322c10
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+CMS-TYPE: 101P
+DLP-Filter: Pass
 X-CFilter-Loop: Reflected
+X-CMS-RootMailID: 20190415145820epcas2p27ba84badad9cf5cf5b7853af7e908e43
+References: <20190415145505.18397-1-digetx@gmail.com>
+        <CGME20190415145820epcas2p27ba84badad9cf5cf5b7853af7e908e43@epcas2p2.samsung.com>
+        <20190415145505.18397-2-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-SGksIFBDDQoNClRoYW5rIHlvdSBldmVyeSBtdWNoIQ0KDQotLS0tLU9yaWdpbmFsIE1lc3NhZ2Ut
-LS0tLQ0KRnJvbTogUGF1bCBDbGFya2UgW21haWx0bzpwY0B1cy5pYm0uY29tXSANClNlbnQ6IDIw
-MTnlubQ05pyIMTXml6UgMjA6NTMNClRvOiBMaW5oYWlmZW5nIDxoYWlmZW5nLmxpbkBodWF3ZWku
-Y29tPjsgbGludXgtcGVyZi11c2Vyc0B2Z2VyLmtlcm5lbC5vcmc7IGxpbnV4LWtlcm5lbEB2Z2Vy
-Lmtlcm5lbC5vcmcNClN1YmplY3Q6IFJlOiBwZXJmIHRvb2xzOklzIHRoZXJlIGFueSB0b29scyB0
-byBmb3VuZCBvdXQgdGhlIG1heCBsYXRlbmN5IGJ5IGlycSBvciBjcHUgaWRsZQ0KDQpPbiA0LzEz
-LzE5IDE6MDEgQU0sIExpbmhhaWZlbmcgd3JvdGU6DQo+IFNvcnJ5LCB0aGUgdmFsdWUgMTMxMDgx
-NDA4IGlzIGp1c3QgZm9yIGV4YW1wbGUuIEFjdHVhbGx5IHRoZSByZXN1bHQgaXMgbGlrZSB0aGlz
-Og0KPiAgc3FydCAyMDE5LTA0LTEwIDIzOjUzOjUwOiA0Mzk2OA0KPiAgc3FydCAyMDE5LTA0LTEw
-IDIzOjUzOjUxOiA0NDA2MA0KPiAgc3FydCAyMDE5LTA0LTEwIDIzOjUzOjUyOiA0OTAxMg0KPiAg
-c3FydCAyMDE5LTA0LTEwIDIzOjUzOjUzOiAzODE3Mg0KPiAgc3FydCAyMDE5LTA0LTEwIDIzOjUz
-OjU0OiAxMzEwODE0MDgNCj4gIHNxcnQgMjAxOS0wNC0xMCAyMzo1Mzo1NTogNDM2MDANCj4gIHNx
-cnQgMjAxOS0wNC0xMCAyMzo1Mzo1NjogNDY3MDQNCj4gIHNxcnQgMjAxOS0wNC0xMCAyMzo1Mzo1
-NzogNDY4ODANCj4gIHNxcnQgMjAxOS0wNC0xMCAyMzo1Mzo1ODogNDQzMzINCj4gIOKApuKApg0K
-PiAgc3FydCAyMDE5LTA0LTEwIDAyOjE3OjE1OiAxMzYzNDU4NzYNCj4gIOKApuKApg0KPiAgc3Fy
-dCAyMDE5LTA0LTEwIDA0OjQwOjM1OiAxMzYzMzU2NDQNCj4gIOKApuKApg0KDQpHaXZlbiB0aGUg
-cGVyaW9kaWNpdHksIEknbSB3b25kZXJpbmcgaWYgaXQgY291bGQgYmUgU3lzdGVtIE1hbmFnZW1l
-bnQgSW50ZXJydXB0cyAoU01Jcyk/DQoNCklmIHNvLCBzb21lIEJJT1NlcyBoYXZlIHNldHRpbmdz
-IHRvIG1pdGlnYXRlLCBvdGhlcndpc2UsIHRoZXJlJ3Mgbm90IG11Y2ggdGhhdCBjYW4gYmUgZG9u
-ZSwgcGVyIG15IHVuZGVyc3RhbmRpbmcuDQoNClBDDQoNCj4gLS0tLS1PcmlnaW5hbCBNZXNzYWdl
-LS0tLS0NCj4gRnJvbTogV2lsbGlhbSBDb2hlbiBbbWFpbHRvOndjb2hlbkByZWRoYXQuY29tXQ0K
-PiBTZW50OiAyMDE55bm0NOaciDEy5pelIDIyOjA2DQo+IFRvOiBMaW5oYWlmZW5nIDxoYWlmZW5n
-LmxpbkBodWF3ZWkuY29tPjsgDQo+IGxpbnV4LXBlcmYtdXNlcnNAdmdlci5rZXJuZWwub3JnOyBs
-aW51eC1rZXJuZWxAdmdlci5rZXJuZWwub3JnDQo+IFN1YmplY3Q6IFJlOiBwZXJmIHRvb2xzOklz
-IHRoZXJlIGFueSB0b29scyB0byBmb3VuZCBvdXQgdGhlIG1heCANCj4gbGF0ZW5jeSBieSBpcnEg
-b3IgY3B1IGlkbGUNCj4gDQo+IE9uIDQvMTEvMTkgODo1NyBQTSwgTGluaGFpZmVuZyB3cm90ZToN
-Cj4+IEhpLA0KPj4gSSBoYXZlIGEgc2luZ2xlIHRocmVhZCBhcHBsaWNhdGlvbiBsaWtlIHRoaXM6
-DQo+Pg0KPj4gV2hpbGUgKDEpIHsNCj4+IMKgwqDCoCBzdGFydCA9IHJkdHNjKCk7DQo+PiDCoMKg
-wqAgc3FydCAoMTAyNCk7wqDCoMKgwqDCoCANCj4+IOOAgOOAgGVuZCA9IHJkdHNjKCk7DQo+PiDj
-gIDjgIBjeWNsZXMgPSBlbmQg4oCTIHN0YXJ0Ow0KPj4g44CA44CAcHJpbnRmKCJjeWNsZXM6ICVk
-LSUwMmQtJTAyZCAlMDJkOiUwMmQ6JTAyZDogJWx1XG4iLCANCj4+IOOAgOOAgOOAgOOAgOOAgOOA
-gDE5MDArdGltZWluZm8tPnRtX3llYXIsIDErdGltZWluZm8tPnRtX21vbiwgdGltZWluZm8tPnRt
-X21kYXksIHRpbWVpbmZvLT50bV9ob3VyLCB0aW1laW5mby0+dG1fbWluLCB0aW1laW5mby0+dG1f
-c2VjLA0KPj4g44CA44CA44CA44CA44CA44CAY3ljbGVzKTsNCj4+IH0NCj4+IEl0IHByaW50IHRo
-ZSBjeWNsZXMgb2Ygc3FydCBldmVyeSBzZWNvbmQgYW5kIHJ1biB3aXRoIHRhc2tzZXQg4oCTYyAx
-IC4vc3FydC4NCj4+IFRoZSByZXN1bHQgb2YgdGVzdCBpczoNCj4+DQo+PiBzcXJ0IDIwMTktMDQt
-MTAgMjM6NTM6NTA6IDQzOTY4DQo+PiBzcXJ0IDIwMTktMDQtMTAgMjM6NTM6NTE6IDQ0MDYwDQo+
-PiBzcXJ0IDIwMTktMDQtMTAgMjM6NTM6NTI6IDQ5MDEyDQo+PiBzcXJ0IDIwMTktMDQtMTAgMjM6
-NTM6NTM6IDM4MTcyDQo+PiBzcXJ0IDIwMTktMDQtMTAgMjM6NTM6NTQ6IDEzMTA4MTQwOA0KPj4g
-c3FydCAyMDE5LTA0LTEwIDIzOjUzOjU1OiA0MzYwMA0KPj4gc3FydCAyMDE5LTA0LTEwIDIzOjUz
-OjU2OiA0NjcwNA0KPj4gc3FydCAyMDE5LTA0LTEwIDIzOjUzOjU3OiA0Njg4MA0KPj4gc3FydCAy
-MDE5LTA0LTEwIDIzOjUzOjU4OiA0NDMzMg0KPj4g4oCm4oCmDQo+PiBzcXJ0IDIwMTktMDQtMTAg
-MDI6MTc6MTU6IDEzMTA4MTQwOA0KPj4g4oCm4oCmDQo+PiBzcXJ0IDIwMTktMDQtMTAgMDQ6NDA6
-MzU6IDEzMTA4MTQwOA0KPj4g4oCm4oCmDQo+Pg0KPj4gRXZlcnkgMmhvdXIyM21pbiB0aGVyZSB3
-b3VsZCBiZSBhIGxhcmdlIGN5Y2xlcy4gSSB1c2UgcGVyZiBzY2hlZCBub3QgZm91bmQgYW55IHNj
-aGVkX3N3aXRjaCBldmVudHMuDQo+IA0KPiBIaSwNCj4gDQo+IFRoZSBmYWN0IHRoYXQgaXQgaXMg
-dGhlIHNhbWUgdmFsdWUgMTMxMDgxNDA4IGV2ZXJ5IDIgaG91cnMgMjMgbWludXRlcyBsb29rcyBz
-dXNwZWN0LiBPbmUgd291bGQgZXhwZWN0IHNvbWUgdmFyaWF0aW9uIGluIHRoZSBjb3VudHMuICBJ
-dCBsb29rcyBsaWtlIHRoZXJlIGlzIHNvbWUgcm9sbG92ZXIgb3Igb3ZlcmZsb3cgaXNzdWUuICBJ
-dCB3b3VsZCBiZSBoZWxwZnVsIHRvIHByaW50IG91dCB0aGUgc3RhcnQgYW5kIGVuZCB2YWx1ZXMg
-dG8gc2VlIHdoYXQgaXMgZ29pbmcgb24gd2l0aCB0aGUgcmF3IHJkc3RjIHZhbHVlcy4gIE1heWJl
-IHRoZSB0aHJlYWQgaXMgYmVpbmcgbW92ZWQgYmV0d2VlbiBwcm9jZXNzb3JzIGFuZCB0aGUgVFND
-IGFyZSBvdXQgb2Ygc3luYy4gIFdoYXQgcGFydGljdWxhciBwcm9jZXNzb3IgbW9kZWwgd2FzIHRo
-aXMgcnVubmluZyBvbj8gV2FzIHRoaXMgcnVubmluZyBvbiBwaHlzaWNhbCBoYXJkd2FyZSBvciBp
-bnNpZGUgYSBrdm0gZ3Vlc3Q/IA0KPiANCj4gQWNjb3JkaW5nIHRvIHRoZSBJbnRlbCA2NCBhbmQg
-SUEtMzIgQXJjaGl0ZWN0dXJlIFNvZnR3YXJlIERldmxvcGVyJ3MgTWFudWFsIFZvbHVtZSAzICgz
-MjUzODQtc2RtLXZvbC0zYWJjZC5wZGYpOg0KPiANCj4gVGhlIFJEVFNDIGluc3RydWN0aW9uIHJl
-YWRzIHRoZSB0aW1lLXN0YW1wIGNvdW50ZXIgYW5kIGlzIGd1YXJhbnRlZWQgdG8gcmV0dXJuIGEg
-bW9ub3RvbmljYWxseSBpbmNyZWFzaW5nIHVuaXF1ZSB2YWx1ZSB3aGVuZXZlciBleGVjdXRlZCwg
-ZXhjZXB0IGZvciBhIDY0LWJpdCBjb3VudGVyIHdyYXBhcm91bmQuIEludGVsIGd1YXJhbnRlZXMg
-dGhhdCB0aGUgdGltZS1zdGFtcCBjb3VudGVyIHdpbGwgbm90IHdyYXBhcm91bmQgd2l0aGluIDEw
-IHllYXJzIGFmdGVyIGJlaW5nIHJlc2V0LiBUaGUgcGVyaW9kIGZvciBjb3VudGVyIHdyYXAgaXMg
-bG9uZ2VyIGZvciBQZW50aXVtIDQsIEludGVsIFhlb24sIFA2IGZhbWlseSwgYW5kIFBlbnRpdW0g
-cHJvY2Vzc29ycy4NCj4gDQo+IC1XaWxsIENvaGVuDQo+IA0KPiANCj4+DQo+PiBMMkdXXzI2ODA6
-L2hvbWUvZnNwL3puICMgcGVyZiBzY2hlZCByZWNvcmQgLUMgNi0xMSAtbyBwZXJmLnNjaGVkIF5D
-WyANCj4+IHBlcmYgcmVjb3JkOiBXb2tlbiB1cCA2NCB0aW1lcyB0byB3cml0ZSBkYXRhIF0gWyBw
-ZXJmIHJlY29yZDogDQo+PiBDYXB0dXJlZCBhbmQgd3JvdGUgMjA0Ljg3OCBNQiBwZXJmLnNjaGVk
-ICgxOTExMTg5IHNhbXBsZXMpIF0NCj4+DQo+PiBMMkdXXzI2ODA6L2hvbWUvZnNwL3puICMgcGVy
-ZiBzY2hlZCBsYXRlbmN5IC1pIHBlcmYuc2NoZWQNCj4+DQo+PiAtLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4+IC0N
-Cj4+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4+IMKgIFRh
-c2vCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoMKgIFJ1bnRpbWUgbXPCoCB8
-IFN3aXRjaGVzIHwgQXZlcmFnZSBkZWxheSBtcw0KPj4gfCBNYXhpbXVtIGRlbGF5IG1zIHwgTWF4
-aW11bSBkZWxheSBhdMKgwqDCoMKgwqDCoCB8DQo+PiAtLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4+IC0NCj4+IC0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0NCj4+IC0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LQ0KPj4gLQ0KPj4gLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0K
-Pj4gwqAgVE9UQUw6wqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgwqDCoMKgIHzCoMKgwqDCoMKgIDAu
-MDAwIG1zIHwgwqDCoMKgwqDCoMKgwqAwIHwNCj4+IC0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
-LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLQ0KPj4NCj4+DQo+Pg0KPj4gSXMgdGhlcmUgYW55IG90
-aGVyIHRvb2xzIG9mIHBlcmYgdG8gZm91bmQgb3V0IHRoZSBtYXggbGF0ZW5jeSBieSBpcnEgb3Ig
-Y3B1IGlkbGUgPw0KPj4NCj4+DQo+IA0KDQo=
+Hi,
+
+I add one minor comment (KHZ -> hz).
+
+On 19. 4. 15. 오후 11:54, Dmitry Osipenko wrote:
+> The kHz to Hz is incorrectly converted in a few places in the code,
+> this results in a wrong frequency being calculated because devfreq core
+> uses OPP frequencies that are given in Hz to clamp the rate, while
+> tegra-devfreq gives to the core value in kHz and then it also expects to
+> receive value in kHz from the core. In a result memory freq is always set
+> to a value which is close to ULONG_MAX because of the bug. Hence the EMC
+> frequency is always capped to the maximum and the driver doesn't do
+> anything useful. This patch was tested on Tegra30 and Tegra124 SoC's, EMC
+> frequency scaling works properly now.
+> 
+> Cc: <stable@vger.kernel.org> # 4.14+
+> Tested-by: Steev Klimaszewski <steev@kali.org>
+> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
+> ---
+>  drivers/devfreq/tegra-devfreq.c | 10 ++++------
+>  1 file changed, 4 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/devfreq/tegra-devfreq.c b/drivers/devfreq/tegra-devfreq.c
+> index c89ba7b834ff..02905978abe1 100644
+> --- a/drivers/devfreq/tegra-devfreq.c
+> +++ b/drivers/devfreq/tegra-devfreq.c
+> @@ -486,9 +486,9 @@ static int tegra_devfreq_target(struct device *dev, unsigned long *freq,
+>  {
+>  	struct tegra_devfreq *tegra = dev_get_drvdata(dev);
+>  	struct dev_pm_opp *opp;
+> -	unsigned long rate = *freq * KHZ;
+> +	unsigned long rate;
+>  
+> -	opp = devfreq_recommended_opp(dev, &rate, flags);
+> +	opp = devfreq_recommended_opp(dev, freq, flags);
+>  	if (IS_ERR(opp)) {
+>  		dev_err(dev, "Failed to find opp for %lu KHz\n", *freq);
+
+Need to change it as following:
+- KHz -> Hz
+
+
+>  		return PTR_ERR(opp);
+> @@ -499,8 +499,6 @@ static int tegra_devfreq_target(struct device *dev, unsigned long *freq,
+>  	clk_set_min_rate(tegra->emc_clock, rate);
+>  	clk_set_rate(tegra->emc_clock, 0);
+>  
+> -	*freq = rate;
+> -
+>  	return 0;
+>  }
+>  
+> @@ -510,7 +508,7 @@ static int tegra_devfreq_get_dev_status(struct device *dev,
+>  	struct tegra_devfreq *tegra = dev_get_drvdata(dev);
+>  	struct tegra_devfreq_device *actmon_dev;
+>  
+> -	stat->current_frequency = tegra->cur_freq;
+> +	stat->current_frequency = tegra->cur_freq * KHZ;
+>  
+>  	/* To be used by the tegra governor */
+>  	stat->private_data = tegra;
+> @@ -565,7 +563,7 @@ static int tegra_governor_get_target(struct devfreq *devfreq,
+>  		target_freq = max(target_freq, dev->target_freq);
+>  	}
+>  
+> -	*freq = target_freq;
+> +	*freq = target_freq * KHZ;
+>  
+>  	return 0;
+>  }
+> 
+
+It looks good to me if modify it in accordance with my comment.
+Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+
+Regards,
+Chanwoo Choi
+
+
+
+-- 
+Best Regards,
+Chanwoo Choi
+Samsung Electronics
