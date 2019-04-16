@@ -2,221 +2,286 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E4602C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:33:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC35C282DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:34:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B39F520857
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:33:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 353AB20868
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:34:27 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Y/xUCFep"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728642AbfDPHdd (ORCPT
+        id S1728655AbfDPHe0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 03:33:33 -0400
-Received: from szxga04-in.huawei.com ([45.249.212.190]:6193 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727845AbfDPHda (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 03:33:30 -0400
-Received: from DGGEMS402-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id A8E6748454742B1BD12C;
-        Tue, 16 Apr 2019 15:33:28 +0800 (CST)
-Received: from localhost.localdomain.localdomain (10.175.113.25) by
- DGGEMS402-HUB.china.huawei.com (10.3.19.202) with Microsoft SMTP Server id
- 14.3.408.0; Tue, 16 Apr 2019 15:33:18 +0800
-From:   Chen Zhou <chenzhou10@huawei.com>
-To:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <ebiederm@xmission.com>, <rppt@linux.ibm.com>,
-        <catalin.marinas@arm.com>, <will.deacon@arm.com>,
-        <akpm@linux-foundation.org>, <ard.biesheuvel@linaro.org>
-CC:     <horms@verge.net.au>, <takahiro.akashi@linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
-        <linux-mm@kvack.org>, <wangkefeng.wang@huawei.com>,
-        Chen Zhou <chenzhou10@huawei.com>
-Subject: [PATCH v5 3/4] memblock: extend memblock_cap_memory_range to multiple ranges
-Date:   Tue, 16 Apr 2019 15:43:28 +0800
-Message-ID: <20190416074329.44928-4-chenzhou10@huawei.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190416074329.44928-1-chenzhou10@huawei.com>
-References: <20190416074329.44928-1-chenzhou10@huawei.com>
+        Tue, 16 Apr 2019 03:34:26 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:36879 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726783AbfDPHeZ (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 03:34:25 -0400
+Received: by mail-ed1-f66.google.com with SMTP id f53so15412938ede.4
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 00:34:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=VxD0wqk0R74Xd3PERoRqoKTHzKJg4s5+FcZ/4pPZ1eU=;
+        b=Y/xUCFep/P+HetuAUFL9HEFkYIUhS0xEqTQugGY85NZEFmNOeKaDlkp/93DoSjOYyC
+         ycsITVT21XJHZMxmote41j2wwxVABkcOqLyHQdOpJ2x/q4YjmeH1w6xIPq/VuR/HUxI8
+         KyenNuZGrvAfn/NbDww2U5N1gptFgpB8HrXnw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=VxD0wqk0R74Xd3PERoRqoKTHzKJg4s5+FcZ/4pPZ1eU=;
+        b=gKDxLz1zxrgONSLiwP4MoQfJBZsYe/yWEoiBm3UsLdkqowqOQxdYzfK/41pVczQacQ
+         fNeIBEhhT5PceayH4UtPbjDGXfFwZDT5gA+hH5l9Y8ksHVtp1LjvvneDYAdrcIyDcllq
+         LH/+poV5K1l9XfH2JXYFfo8tfISeOsurBjG43OeknhYeAPLra4ZguZtlXOmcsAYdwNpl
+         n9Jg43sjzuVir/iSaM5otoPKdJ+AjXw5dcw70TZ+Ke7RTqfauGxA9o6p85wJKxHP4bWQ
+         IUcM08HO5rKQ9itAWtK1iUa7QGBIvil/mvOdeeZv5m4DT0P2XKEgrgahW5KcgyjEL/Gs
+         XWjg==
+X-Gm-Message-State: APjAAAVSSQDHCYR9bS870lVgyWQKYYjECcyISFJcsqdgVpshn/mpk1JW
+        WaI+y7lencDsiOgeH3QCKECeeQ==
+X-Google-Smtp-Source: APXvYqzJ2zruI/TvXeDHg+SxpeECUEIs50E5nx1mUOG7Fjh5MWWBIarMzl83bomPfRuK2HS7h5yk8A==
+X-Received: by 2002:a50:9dc8:: with SMTP id l8mr8049845edk.180.1555400063146;
+        Tue, 16 Apr 2019 00:34:23 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id v9sm3336323ede.32.2019.04.16.00.34.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 16 Apr 2019 00:34:21 -0700 (PDT)
+Date:   Tue, 16 Apr 2019 09:34:20 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Liviu Dudau <Liviu.Dudau@arm.com>
+Cc:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
+        nd <nd@arm.com>, "sean@poorly.run" <sean@poorly.run>,
+        Ben Davis <Ben.Davis@arm.com>
+Subject: Re: [v2,1/2] drm: Add writeback_w,h properties
+Message-ID: <20190416073419.GN2665@phenom.ffwll.local>
+Mail-Followup-To: Liviu Dudau <Liviu.Dudau@arm.com>,
+        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
+        "airlied@linux.ie" <airlied@linux.ie>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
+        nd <nd@arm.com>, "sean@poorly.run" <sean@poorly.run>,
+        Ben Davis <Ben.Davis@arm.com>
+References: <1555078094-6587-2-git-send-email-ben.davis@arm.com>
+ <20190415075922.GA24596@james-ThinkStation-P300>
+ <20190415092045.GO15144@e110455-lin.cambridge.arm.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7BIT
-Content-Type:   text/plain; charset=US-ASCII
-X-Originating-IP: [10.175.113.25]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190415092045.GO15144@e110455-lin.cambridge.arm.com>
+X-Operating-System: Linux phenom 4.19.0-1-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The memblock_cap_memory_range() removes all the memory except the
-range passed to it. Extend this function to receive an array of
-memblock_regions that should be kept. This allows switching to
-simple iteration over memblock arrays with 'for_each_mem_range_rev'
-to remove the unneeded memory.
+On Mon, Apr 15, 2019 at 10:20:45AM +0100, Liviu Dudau wrote:
+> On Mon, Apr 15, 2019 at 08:59:30AM +0100, james qian wang (Arm Technology China) wrote:
+> > On Fri, Apr 12, 2019 at 02:08:28PM +0000, Ben Davis wrote:
+> > > Add new properties to specify width and height for writeback.
+> > > 
+> > > Signed-off-by: Ben Davis <ben.davis@arm.com>
+> > > ---
+> > >  drivers/gpu/drm/drm_atomic_uapi.c |  8 ++++++++
+> > >  drivers/gpu/drm/drm_writeback.c   | 28 ++++++++++++++++++++++++++++
+> > >  include/drm/drm_connector.h       |  4 ++++
+> > >  include/drm/drm_mode_config.h     | 10 ++++++++++
+> > >  4 files changed, 50 insertions(+)
+> > > 
+> > > -- 
+> > > 2.7.4
+> > > 
+> > > diff --git a/drivers/gpu/drm/drm_atomic_uapi.c b/drivers/gpu/drm/drm_atomic_uapi.c
+> > > index d520a04..1f68dce 100644
+> > > --- a/drivers/gpu/drm/drm_atomic_uapi.c
+> > > +++ b/drivers/gpu/drm/drm_atomic_uapi.c
+> > > @@ -765,6 +765,10 @@ static int drm_atomic_connector_set_property(struct drm_connector *connector,
+> > >  			return -EINVAL;
+> > >  		}
+> > >  		state->content_protection = val;
+> > > +	} else if (property == config->prop_writeback_w) {
+> > > +		state->writeback_w = val;
+> > > +	} else if (property == config->prop_writeback_h) {
+> > > +		state->writeback_h = val;
+> > >  	} else if (property == config->writeback_fb_id_property) {
+> > >  		struct drm_framebuffer *fb = drm_framebuffer_lookup(dev, NULL, val);
+> > >  		int ret = drm_atomic_set_writeback_fb_for_connector(state, fb);
+> > > @@ -837,6 +841,10 @@ drm_atomic_connector_get_property(struct drm_connector *connector,
+> > >  		*val = state->scaling_mode;
+> > >  	} else if (property == connector->content_protection_property) {
+> > >  		*val = state->content_protection;
+> > > +	} else if (property == config->prop_writeback_w) {
+> > > +		*val = state->writeback_w;
+> > > +	} else if (property == config->prop_writeback_h) {
+> > > +		*val = state->writeback_h;
+> > >  	} else if (property == config->writeback_fb_id_property) {
+> > >  		/* Writeback framebuffer is one-shot, write and forget */
+> > >  		*val = 0;
+> > > diff --git a/drivers/gpu/drm/drm_writeback.c b/drivers/gpu/drm/drm_writeback.c
+> > > index c20e6fe..3d0453e 100644
+> > > --- a/drivers/gpu/drm/drm_writeback.c
+> > > +++ b/drivers/gpu/drm/drm_writeback.c
+> > > @@ -74,6 +74,12 @@
+> > >   *	applications making use of writeback connectors *always* retrieve an
+> > >   *	out-fence for the commit and use it appropriately.
+> > >   *	From userspace, this property will always read as zero.
+> > > + *
+> > > + *  "WRITEBACK_W":
+> > > + *	The width of the writeback buffer to write back. 0 acts as default.
+> > > + *
+> > > + *  "WRITEBACK_H":
+> > > + *	The height of the writeback buffer to write back. 0 acts as default.
+> > >   */
+> > >  
+> > >  #define fence_to_wb_connector(x) container_of(x->lock, \
+> > > @@ -141,6 +147,22 @@ static int create_writeback_properties(struct drm_device *dev)
+> > >  		dev->mode_config.writeback_out_fence_ptr_property = prop;
+> > >  	}
+> > >  
+> > > +	if (!dev->mode_config.prop_writeback_w) {
+> > > +		prop = drm_property_create_range(dev, DRM_MODE_PROP_ATOMIC,
+> > > +						 "WRITEBACK_W", 1, UINT_MAX);
+> > > +		if (!prop)
+> > > +			return -ENOMEM;
+> > > +		dev->mode_config.prop_writeback_w = prop;
+> > > +	}
+> > > +
+> > > +	if (!dev->mode_config.prop_writeback_h) {
+> > > +		prop = drm_property_create_range(dev, DRM_MODE_PROP_ATOMIC,
+> > > +						 "WRITEBACK_H", 1, UINT_MAX);
+> > > +		if (!prop)
+> > > +			return -ENOMEM;
+> > > +		dev->mode_config.prop_writeback_h = prop;
+> > > +	}
+> > > +
+> > >  	return 0;
+> > >  }
+> > >  
+> > > @@ -225,6 +247,12 @@ int drm_writeback_connector_init(struct drm_device *dev,
+> > >  	drm_object_attach_property(&connector->base,
+> > >  				   config->writeback_pixel_formats_property,
+> > >  				   blob->base.id);
+> > > +
+> > > +	drm_object_attach_property(&connector->base,
+> > > +				   config->prop_writeback_w, 0);
+> > > +	drm_object_attach_property(&connector->base,
+> > > +				   config->prop_writeback_h, 0);
+> > 
+> > Hi Ben:
+> > Do we real need these two individual properties for specifing the writeback
+> > w/h, can we use fb->w/h ?
+> > And since these two properties are added as common and standard properties,
+> > it influnce all existing write-back implementation which all assumed
+> > writeback size as fb->w/h.
+> 
+> The idea of having these additional properties was to maintain backwards
+> compatibility (of some sort). If you don't set writeback_w/h then the
+> assumption is that they are the same as fb->w/h, but I can see how it's
+> going to be confusing to have fb->w/h different from crtc->w/h and
+> different from writeback_w/h.
 
-Enable use of this function in arm64 for reservation of multiple
-regions for the crash kernel.
+Since we already have crtc_w/h independent of writeback_fb_w/h, do we need
+another set of w/h? Are all the interactions between these tree
+well-defined?
 
-Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
----
- arch/arm64/mm/init.c     | 34 ++++++++++++++++++++++++----------
- include/linux/memblock.h |  2 +-
- mm/memblock.c            | 44 ++++++++++++++++++++------------------------
- 3 files changed, 45 insertions(+), 35 deletions(-)
+Atm I'm assuming that writeback is using crtc_w/h into the fb, at offset
+0, not scaled any further. But the planes themselves can be scaled into
+the crtc_w/h window ofc.
 
-diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-index f5dde73..7f999bf 100644
---- a/arch/arm64/mm/init.c
-+++ b/arch/arm64/mm/init.c
-@@ -64,6 +64,10 @@ EXPORT_SYMBOL(memstart_addr);
- phys_addr_t arm64_dma_phys_limit __ro_after_init;
- 
- #ifdef CONFIG_KEXEC_CORE
-+
-+/* at most two crash kernel regions, low_region and high_region */
-+#define CRASH_MAX_USABLE_RANGES	2
-+
- /*
-  * reserve_crashkernel() - reserves memory for crash kernel
-  *
-@@ -295,9 +299,9 @@ early_param("mem", early_mem);
- static int __init early_init_dt_scan_usablemem(unsigned long node,
- 		const char *uname, int depth, void *data)
- {
--	struct memblock_region *usablemem = data;
--	const __be32 *reg;
--	int len;
-+	struct memblock_type *usablemem = data;
-+	const __be32 *reg, *endp;
-+	int len, nr = 0;
- 
- 	if (depth != 1 || strcmp(uname, "chosen") != 0)
- 		return 0;
-@@ -306,22 +310,32 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
- 	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
- 		return 1;
- 
--	usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
--	usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
-+	endp = reg + (len / sizeof(__be32));
-+	while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
-+		unsigned long base = dt_mem_next_cell(dt_root_addr_cells, &reg);
-+		unsigned long size = dt_mem_next_cell(dt_root_size_cells, &reg);
- 
-+		if (memblock_add_range(usablemem, base, size, NUMA_NO_NODE,
-+				       MEMBLOCK_NONE))
-+			return 0;
-+		if (++nr >= CRASH_MAX_USABLE_RANGES)
-+			break;
-+	}
- 	return 1;
- }
- 
- static void __init fdt_enforce_memory_region(void)
- {
--	struct memblock_region reg = {
--		.size = 0,
-+	struct memblock_region usable_regions[CRASH_MAX_USABLE_RANGES];
-+	struct memblock_type usablemem = {
-+		.max = CRASH_MAX_USABLE_RANGES,
-+		.regions = usable_regions,
- 	};
- 
--	of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
-+	of_scan_flat_dt(early_init_dt_scan_usablemem, &usablemem);
- 
--	if (reg.size)
--		memblock_cap_memory_range(reg.base, reg.size);
-+	if (usablemem.cnt)
-+		memblock_cap_memory_ranges(usablemem.regions, usablemem.cnt);
- }
- 
- void __init arm64_memblock_init(void)
-diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-index 47e3c06..e490a73 100644
---- a/include/linux/memblock.h
-+++ b/include/linux/memblock.h
-@@ -445,7 +445,7 @@ phys_addr_t memblock_mem_size(unsigned long limit_pfn);
- phys_addr_t memblock_start_of_DRAM(void);
- phys_addr_t memblock_end_of_DRAM(void);
- void memblock_enforce_memory_limit(phys_addr_t memory_limit);
--void memblock_cap_memory_range(phys_addr_t base, phys_addr_t size);
-+void memblock_cap_memory_ranges(struct memblock_region *regions, int count);
- void memblock_mem_limit_remove_map(phys_addr_t limit);
- bool memblock_is_memory(phys_addr_t addr);
- bool memblock_is_map_memory(phys_addr_t addr);
-diff --git a/mm/memblock.c b/mm/memblock.c
-index f315eca..08581b1 100644
---- a/mm/memblock.c
-+++ b/mm/memblock.c
-@@ -1669,36 +1669,31 @@ void __init memblock_enforce_memory_limit(phys_addr_t limit)
- 			      PHYS_ADDR_MAX);
- }
- 
--void __init memblock_cap_memory_range(phys_addr_t base, phys_addr_t size)
--{
--	int start_rgn, end_rgn;
--	int i, ret;
--
--	if (!size)
--		return;
--
--	ret = memblock_isolate_range(&memblock.memory, base, size,
--						&start_rgn, &end_rgn);
--	if (ret)
--		return;
--
--	/* remove all the MAP regions */
--	for (i = memblock.memory.cnt - 1; i >= end_rgn; i--)
--		if (!memblock_is_nomap(&memblock.memory.regions[i]))
--			memblock_remove_region(&memblock.memory, i);
-+void __init memblock_cap_memory_ranges(struct memblock_region *regions,
-+				       int count)
-+{
-+	struct memblock_type regions_to_keep = {
-+		.max = count,
-+		.cnt = count,
-+		.regions = regions,
-+	};
-+	phys_addr_t start, end;
-+	u64 i;
- 
--	for (i = start_rgn - 1; i >= 0; i--)
--		if (!memblock_is_nomap(&memblock.memory.regions[i]))
--			memblock_remove_region(&memblock.memory, i);
-+	/* truncate memory while skipping NOMAP regions */
-+	for_each_mem_range_rev(i, &memblock.memory, &regions_to_keep,
-+			       NUMA_NO_NODE, MEMBLOCK_NONE, &start, &end, NULL)
-+		memblock_remove(start, end - start);
- 
- 	/* truncate the reserved regions */
--	memblock_remove_range(&memblock.reserved, 0, base);
--	memblock_remove_range(&memblock.reserved,
--			base + size, PHYS_ADDR_MAX);
-+	for_each_mem_range_rev(i, &memblock.reserved, &regions_to_keep,
-+			       NUMA_NO_NODE, MEMBLOCK_NONE, &start, &end, NULL)
-+		memblock_remove_range(&memblock.reserved, start, end - start);
- }
- 
- void __init memblock_mem_limit_remove_map(phys_addr_t limit)
- {
-+	struct memblock_region region = { 0 };
- 	phys_addr_t max_addr;
- 
- 	if (!limit)
-@@ -1710,7 +1705,8 @@ void __init memblock_mem_limit_remove_map(phys_addr_t limit)
- 	if (max_addr == PHYS_ADDR_MAX)
- 		return;
- 
--	memblock_cap_memory_range(0, max_addr);
-+	region.size = max_addr;
-+	memblock_cap_memory_ranges(&region, 1);
- }
- 
- static int __init_memblock memblock_search(struct memblock_type *type, phys_addr_t addr)
+Iirc the hw supporting writeback thus far needs a dedicated crtc for
+writeback, so adding yet another scaling window is not needed?
+-Daniel
+
+> > To compatible with existing writeback support, I suggest to keep to
+> > use fb->w/h or add these properties as malidp private.
+> 
+> We don't need to make them malidp private, there is nothing malidp
+> specific in them. I'll talk with Ben, we should probably drop this patch
+> entirely and just enable malidp scaling when fb->w/h differ from
+> crtc->w/h.
+> 
+> Best regards,
+> Liviu
+> 
+> 
+> > 
+> > Thanks
+> > James
+> > 
+> > 
+> > >  	wb_connector->pixel_formats_blob_ptr = blob;
+> > >  
+> > >  	return 0;
+> > > diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
+> > > index 8fe22ab..51c4cb2 100644
+> > > --- a/include/drm/drm_connector.h
+> > > +++ b/include/drm/drm_connector.h
+> > > @@ -515,6 +515,10 @@ struct drm_connector_state {
+> > >  	 */
+> > >  	struct drm_writeback_job *writeback_job;
+> > >  
+> > > +	/** @writeback_w: width of plane to write to wb buffer */
+> > > +	/** @writeback_h: height of plane to write to wb buffer */
+> > > +	uint32_t writeback_w, writeback_h;
+> > > +
+> > >  	/**
+> > >  	 * @max_requested_bpc: Connector property to limit the maximum bit
+> > >  	 * depth of the pixels.
+> > > diff --git a/include/drm/drm_mode_config.h b/include/drm/drm_mode_config.h
+> > > index 7f60e8e..a0c2133 100644
+> > > --- a/include/drm/drm_mode_config.h
+> > > +++ b/include/drm/drm_mode_config.h
+> > > @@ -622,6 +622,16 @@ struct drm_mode_config {
+> > >  	 */
+> > >  	struct drm_property *prop_crtc_h;
+> > >  	/**
+> > > +	 * @prop_writeback_w: Writeback connector property for the plane
+> > > +	 * destination position in the writeback buffer.
+> > > +	 */
+> > > +	struct drm_property *prop_writeback_w;
+> > > +	/**
+> > > +	 * @prop_writeback_h: Writeback connector property for the plane
+> > > +	 * destination position in the writeback buffer.
+> > > +	 */
+> > > +	struct drm_property *prop_writeback_h;
+> > > +	/**
+> > >  	 * @prop_fb_id: Default atomic plane property to specify the
+> > >  	 * &drm_framebuffer.
+> > >  	 */
+> > 
+> > Pls del this window style line ending 
+> > 
+> 
+> -- 
+> ====================
+> | I would like to |
+> | fix the world,  |
+> | but they're not |
+> | giving me the   |
+>  \ source code!  /
+>   ---------------
+>     ¯\_(ツ)_/¯
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
 -- 
-2.7.4
-
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
