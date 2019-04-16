@@ -2,146 +2,184 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 083BAC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:55:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED68C282DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:57:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D2F682064A
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:55:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 068CC20868
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:57:22 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="hmZzhUQ1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729386AbfDPQzv (ORCPT
+        id S1729712AbfDPQ5V (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 12:55:51 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:37307 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726816AbfDPQzu (ORCPT
+        Tue, 16 Apr 2019 12:57:21 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:38812 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728052AbfDPQ5V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 12:55:50 -0400
-Received: from pty.hi.pengutronix.de ([2001:67c:670:100:1d::c5])
-        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
-        (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1hGRN4-0006f4-2I; Tue, 16 Apr 2019 18:55:46 +0200
-Received: from mfe by pty.hi.pengutronix.de with local (Exim 4.89)
-        (envelope-from <mfe@pengutronix.de>)
-        id 1hGRN1-00050E-Th; Tue, 16 Apr 2019 18:55:43 +0200
-Date:   Tue, 16 Apr 2019 18:55:43 +0200
-From:   Marco Felsch <m.felsch@pengutronix.de>
-To:     Angus Ainslie <angus@akkea.ca>
-Cc:     Mark Rutland <mark.rutland@arm.com>, devicetree@vger.kernel.org,
-        Fabio Estevam <festevam@gmail.com>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        linux-kernel@vger.kernel.org, Rob Herring <robh+dt@kernel.org>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Shawn Guo <shawnguo@kernel.org>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v4 0/2] Add support for the Purism Librem5 devkit
-Message-ID: <20190416165543.hbowm2zejjdxzwc3@pengutronix.de>
-References: <20190415235343.16565-1-angus@akkea.ca>
- <20190416075834.6wurd6nq4ow5woyn@pengutronix.de>
- <665773559cd9449a27fc9bc40cf73792@www.akkea.ca>
+        Tue, 16 Apr 2019 12:57:21 -0400
+Received: by mail-it1-f193.google.com with SMTP id f22so33715588ita.3
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:57:20 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=lixom-net.20150623.gappssmtp.com; s=20150623;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=EU46mLQQ7G089XieiXXUNG+kvC8Kcv5wsXaiLDfWNPM=;
+        b=hmZzhUQ1FwKF58/BA7qKfuPVO7YbSv0RBE33RVGiBatJnffk3jyClBySbZoneDLHaU
+         17pi5JG572jswpbG3sm3Yy+GTH0OLGDDyudPCL2O7/hOvS9mIU8IgtEm1/ZbnII+5T1q
+         GDdCEPcXsulbIEM6uYikY9Lealf8lno5CoThLmUg6v7WHv5mv9WgNBWIl2eOagfhvJhH
+         zOlpODIhHJg0VqCtGk9OtDfx5yZkWZI8HLAFS9u8Q3lepbHr9VSjzROvVVSxaNq8Swuc
+         eF0AfeR7boqKeBlAhtCA6cKFpFrMIsaCnXj4ohfJ8E1e8JYuB05X7/sg6ingMGk4WH9U
+         mvNQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=EU46mLQQ7G089XieiXXUNG+kvC8Kcv5wsXaiLDfWNPM=;
+        b=VfPNTvR5K9+yrI170kJQ2S6KXBzsyncysyI2SKJchbhEq7PwBMRLBUO9gAAvEPCRKv
+         sugQgf3/Du5UskHJOl1ZnqdRsyjwr+xLMT+mRcDGg5bH/X9XYHP78rHaVKPpHmlEqUE1
+         U7K3vfT4a2mevfTRBzZ4Q+zueun8NDm53kIO7EyiGehhX8xsmBy2qrlZe0wYM+Oafy+7
+         tlF3qZUM1ovsI51i/9Y7GRvv8TRCdsWii8y6BeiGxfnjeuK3va7clkk0BOhmxAXKfhaX
+         k2wG/yObgoxc182q/bIC24Ie0ZuclHmSHuw6pyRANB+AhojZUXr1+D5tA+qLMT5TwzUd
+         cbCg==
+X-Gm-Message-State: APjAAAV1T2R/eBXTNJw8o9GGNsH0rVD/xrca7+zMH6XjlUV3TH6UTY+T
+        QGyTEaaW+oB9jaumK7ob7AKb5OR4BcAKjiRak5tMSg==
+X-Google-Smtp-Source: APXvYqxB08JGEDtscMYEYo8Sg5HwPOOG6oPOAiZrsbLH5xeEilW+y2/SxXthJNaZVzYc8OPGM1YjpXTW7H4SV9tcS6E=
+X-Received: by 2002:a24:2458:: with SMTP id f85mr29260925ita.83.1555433839807;
+ Tue, 16 Apr 2019 09:57:19 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <665773559cd9449a27fc9bc40cf73792@www.akkea.ca>
-X-Sent-From: Pengutronix Hildesheim
-X-URL:  http://www.pengutronix.de/
-X-IRC:  #ptxdist @freenode
-X-Accept-Language: de,en
-X-Accept-Content-Type: text/plain
-X-Uptime: 18:54:25 up 87 days, 21:36, 74 users,  load average: 0.18, 0.09,
- 0.03
-User-Agent: NeoMutt/20170113 (1.7.2)
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::c5
-X-SA-Exim-Mail-From: mfe@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
+References: <20190411031540.ehezr6kq7ouobpzx@ast-mbp.dhcp.thefacebook.com>
+ <CAOesGMgiPB=7FE7tXXHes7WSLfByyPxirOStoH21NZqMwaUihQ@mail.gmail.com>
+ <20190415104109.64d914f3@gandalf.local.home> <CAGXu5j+KPVRcOJ3Ue9ZQF93GyaDhvCnFCvJ_C3WKCx2=SNdDyg@mail.gmail.com>
+ <20190416083306.5646a687@gandalf.local.home> <20190416124939.GB6027@kroah.com>
+ <20190416130440.GA7944@localhost> <f8b15e31-1aab-ab2c-d44d-47325faab67d@opersys.com>
+ <20190416094509.1af6326b@gandalf.local.home> <20190416142240.GA31920@kroah.com>
+ <20190416164642.krptlz32zusr4pgn@ast-mbp.dhcp.thefacebook.com>
+In-Reply-To: <20190416164642.krptlz32zusr4pgn@ast-mbp.dhcp.thefacebook.com>
+From:   Olof Johansson <olof@lixom.net>
+Date:   Tue, 16 Apr 2019 09:57:08 -0700
+Message-ID: <CAOesGMgGEZ8o-e2uAYLSGeO+RHcXAEzEoKcsjpveOLJZ5pX=4w@mail.gmail.com>
+Subject: Re: [PATCH v5 1/3] Provide in-kernel headers to make extending kernel easier
+To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Steven Rostedt <rostedt@goodmis.org>,
+        Karim Yaghmour <karim.yaghmour@opersys.com>,
+        Joel Fernandes <joel@joelfernandes.org>,
+        Kees Cook <keescook@chromium.org>,
+        Olof Johansson <olof@lixom.net>,
+        Joel Fernandes <joelaf@google.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Qais Yousef <qais.yousef@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Manoj Rao <linux@manojrajarao.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Alexei Starovoitov <ast@kernel.org>,
+        atish patra <atishp04@gmail.com>,
+        Daniel Colascione <dancol@google.com>,
+        Dan Williams <dan.j.williams@intel.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Jonathan Corbet <corbet@lwn.net>,
+        Android Kernel Team <kernel-team@android.com>,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        "open list:KERNEL SELFTEST FRAMEWORK" 
+        <linux-kselftest@vger.kernel.org>,
+        linux-trace-devel@vger.kernel.org,
+        Masahiro Yamada <yamada.masahiro@socionext.com>,
+        Masami Hiramatsu <mhiramat@kernel.org>,
+        Randy Dunlap <rdunlap@infradead.org>,
+        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 19-04-16 09:38, Angus Ainslie wrote:
-> On 2019-04-16 00:58, Marco Felsch wrote:
-> > Hi Agnus,
-> > 
-> > On 19-04-15 16:53, Angus Ainslie (Purism) wrote:
-> > > The Librem5 devkit is based on the imx8mq from NXP. This is a default
-> > > devicetree to boot the board to a command prompt.
-> > 
-> > You should also provide a patch which adds the devicetree to the yaml
-> > file, see: Documentation/devicetree/bindings/arm/fsl.yaml.
-> > 
-> 
-> Sure, what is that yaml file for ?
+On Tue, Apr 16, 2019 at 9:46 AM Alexei Starovoitov
+<alexei.starovoitov@gmail.com> wrote:
+>
+> On Tue, Apr 16, 2019 at 04:22:40PM +0200, Greg Kroah-Hartman wrote:
+> > On Tue, Apr 16, 2019 at 09:45:09AM -0400, Steven Rostedt wrote:
+> > > On Tue, 16 Apr 2019 09:32:37 -0400
+> > > Karim Yaghmour <karim.yaghmour@opersys.com> wrote:
+> > >
+> > > > >>> Then we should perhaps make a new file system call tarballs ;-)
+> > > > >>>
+> > > > >>>   /sys/kernel/tarballs/
+> > > > >>>
+> > > > >>> and place everything there. That way it removes it from /proc (which is
+> > > > >>> the worse place for that) and also makes it something other than debug.
+> > > > >>> That's what I did for tracefs.
+> > > > >>
+> > > > >> As horrible as that suggestion is, it does kind of make sense :)
+> > > > >>
+> > > > >> We can't put this in debugfs as that's only for debugging and systems
+> > > > >> should never have that mounted for normal operations (users want to
+> > > > >> build ebpf programs), and /proc really should be for processes but that
+> > > > >> horse is long left the barn.
+> > > > >>
+> > > > >> But, I'm willing to consider putting this either in a system-fs-like
+> > > > >> filesystem, or just in sysfs itself, we do have /sys/kernel/ to play
+> > > > >> around in if the main objection is that we should not be cluttering up
+> > > > >> /proc with stuff like this.
+> > > > >>
+> > > > >
+> > > > > I am ok with the suggestion of /sys/kernel for the archive. That also seems
+> > > > > to fit well with the idea that the headers are kernel related and probably
+> > > > > belong here more strictly speaking, than /proc.
+> > > >
+> > > > This makes sense. And if it alleviates concerns regarding extending
+> > > > /proc ABIs then might as well switch to this.
+> > > >
+> > > > Olof, what do you think of this?
+> > >
+> > > BTW, the name "tarballs" was kind of a joke. Probably should come up
+> > > with a better name. Although, I'm fine with tarballsfs ;-)
+> >
+> > No need to have this be a separate filesystem, we can use a binary sysfs
+> > file in /sys/kernel/ for this as the kernel is not doing any "parsing"
+> > of the data, it is just dumping it out to userspace.
+>
+> What folks keep saying that an fs of header files is easier to use
+> than tarball from bcc and cleaner from architectural pov.
+> That's not the case.
+> From bcc side I'd rather have a single precompiled headers blob
+> that I can feed into clang and improve bpf program compilation time.
+> Having a set of headers is a step to generate such .pch file,
+> but once generated the headers can be removed from fs and kheaders
+> module unloaded.
+> The sequence is: bcc checks standard /lib/module location,
+> if not there loads kheader mod, extracts into known location, and unloads.
 
-Thats for Rob's the validation: https://lwn.net/Articles/771621/
+May I suggest keeping the bcc-populated headers somewhere else?
+Ideally something cleaned out on every reboot in case kernel changes
+without version string doing it.
 
-Regards,
-  Marco
+That way you can by default prefer the module-exported tarball, and
+fall back to /lib/module/$(uname -r)/ if not available, instead of the
+other way around and instead of having to check creation times on the
+dir vs boot time of the kernel, etc.
 
-> 
-> Angus
-> 
-> > Thanks,
-> >   Marco
-> > 
-> > > 
-> > > Changes since v3:
-> > > 
-> > > Freshly sorted and pressed nodes.
-> > > Change the backlight to an interpolated scale.
-> > > Dropped i2c2.
-> > > Dropped devkit version number to match debian MR.
-> > > 
-> > > Changes since v2:
-> > > 
-> > > Fixed incorrect phy-supply for the fsl-fec.
-> > > Dropped unused regulator property.
-> > > Fixup Makefile for linux-next.
-> > > 
-> > > Changes since v1:
-> > > 
-> > > Dropped config file.
-> > > Updated the board compatible label.
-> > > Changed node names to follow naming conventions.
-> > > Added a more complete regulator hierachy.
-> > > Removed unused nodes.
-> > > Removed unknown devices.
-> > > Fixed comment style.
-> > > Dropped undocumented properties.
-> > > 
-> > > Angus Ainslie (Purism) (2):
-> > >   arm64: dts: fsl: librem5: Add a device tree for the Librem5 devkit
-> > >   dt-bindings: Add an entry for Purism SPC
-> > > 
-> > >  .../devicetree/bindings/vendor-prefixes.txt   |   1 +
-> > >  arch/arm64/boot/dts/freescale/Makefile        |   1 +
-> > >  .../dts/freescale/imx8mq-librem5-devkit.dts   | 822
-> > > ++++++++++++++++++
-> > >  3 files changed, 824 insertions(+)
-> > >  create mode 100644
-> > > arch/arm64/boot/dts/freescale/imx8mq-librem5-devkit.dts
-> > > 
-> > > --
-> > > 2.17.1
-> > > 
-> > > 
-> > > 
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-> 
+Anyway, that's just an implementation detail. But it's the kind of
+detail that all tools that use this would need to get right, instead
+of doing it right once by exporting it in a way that it can be
+directly used.
 
--- 
-Pengutronix e.K.                           |                             |
-Industrial Linux Solutions                 | http://www.pengutronix.de/  |
-Peiner Str. 6-8, 31137 Hildesheim, Germany | Phone: +49-5121-206917-0    |
-Amtsgericht Hildesheim, HRA 2686           | Fax:   +49-5121-206917-5555 |
+> The extraced headers are in plain fs cache and will be evicted from memory
+> when bcc is done compiling progs.
+> imo much cleaner than kernel maintaining headers-fs and wasting memory.
+
+So, in my original proposal I recommended unmounting when not needing
+it, which would remove the memory usage as well.
+
+> Where kheaders.tar.xz is placed doesn't really matter.
+> /proc or /sys/kernel makes no real difference.
+
+If done in a location that isn't a perpetual ABI commitment, a tarball
+solution is something we can work with.
+
+
+-Olof
