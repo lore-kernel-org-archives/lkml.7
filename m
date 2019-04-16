@@ -3,93 +3,85 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E41B8C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:37:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B3A06C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:37:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A6D04217F9
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:37:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7E28F217F9
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:37:46 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729352AbfDPNhj (ORCPT
+        id S1729390AbfDPNhp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 09:37:39 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60364 "EHLO mx1.redhat.com"
+        Tue, 16 Apr 2019 09:37:45 -0400
+Received: from foss.arm.com ([217.140.101.70]:55122 "EHLO foss.arm.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728032AbfDPNhj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 09:37:39 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id E69783082206;
-        Tue, 16 Apr 2019 13:37:38 +0000 (UTC)
-Received: from [10.18.17.208] (dhcp-17-208.bos.redhat.com [10.18.17.208])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 74BB95C22C;
-        Tue, 16 Apr 2019 13:37:37 +0000 (UTC)
-Subject: Re: [PATCH v3 0/9] klp-convert livepatch build tooling
-To:     Balbir Singh <bsingharora@gmail.com>
-Cc:     linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, Jessica Yu <jeyu@kernel.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Joao Moreira <jmoreira@suse.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michael Matz <matz@suse.de>, Miroslav Benes <mbenes@suse.cz>,
-        Nicolai Stange <nstange@suse.de>,
-        Petr Mladek <pmladek@suse.com>
-References: <20190410155058.9437-1-joe.lawrence@redhat.com>
- <20190416052422.GA7482@350D>
-From:   Joe Lawrence <joe.lawrence@redhat.com>
-Message-ID: <57510765-be85-4f91-493b-f7213a7580f3@redhat.com>
-Date:   Tue, 16 Apr 2019 09:37:36 -0400
+        id S1728032AbfDPNho (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 09:37:44 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id CBD86EBD;
+        Tue, 16 Apr 2019 06:37:43 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id B21A73F59C;
+        Tue, 16 Apr 2019 06:37:40 -0700 (PDT)
+Subject: Re: [PATCH 3/9] iommu/dma-iommu: Add iommu_dma_copy_reserved_iova,
+ iommu_dma_apply_resv_region to the dma-iommu api
+To:     Tom Murphy <tmurphy@arista.com>,
+        Christoph Hellwig <hch@infradead.org>
+Cc:     iommu@lists.linux-foundation.org, Heiko Stuebner <heiko@sntech.de>,
+        Will Deacon <will.deacon@arm.com>,
+        David Brown <david.brown@linaro.org>,
+        linux-samsung-soc@vger.kernel.org,
+        Dmitry Safonov <dima@arista.com>,
+        Krzysztof Kozlowski <krzk@kernel.org>,
+        linux-rockchip@lists.infradead.org, Kukjin Kim <kgene@kernel.org>,
+        Andy Gross <andy.gross@linaro.org>,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        linux-arm-msm@vger.kernel.org, linux-mediatek@lists.infradead.org,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        Tom Murphy <murphyt7@tcd.ie>
+References: <20190411184741.27540-1-tmurphy@arista.com>
+ <20190411184741.27540-4-tmurphy@arista.com>
+ <20190415063134.GB1377@infradead.org>
+ <CAPL0++7Z=EMpYOvUn8yvcRqRT5iwJMD8zLhmFr4uFbH7W3WqXQ@mail.gmail.com>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <bc3cc59a-ea12-c82a-87a0-779a3418125f@arm.com>
+Date:   Tue, 16 Apr 2019 14:37:39 +0100
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190416052422.GA7482@350D>
+In-Reply-To: <CAPL0++7Z=EMpYOvUn8yvcRqRT5iwJMD8zLhmFr4uFbH7W3WqXQ@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
+Content-Language: en-GB
 Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.47]); Tue, 16 Apr 2019 13:37:39 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/16/19 1:24 AM, Balbir Singh wrote:
-> 
-> Could we get some details with examples or a sample, sorry I might be dense
-> and missing simple information. The problem being solved is not clear to
-> me from the changelog.
-> 
+On 16/04/2019 14:22, Tom Murphy wrote:
+> I hoped this could be an exception, it's easier to grok without the
+> line break and isn't crazy long. Because you mentioned it I'll fix it.
 
-Hi Balbir,
+Frankly this patch is hard to justify anyway - iommu-dma already has its 
+own reserved region handling, and there should be no need for external 
+callers to be poking into the innards provided the IOMMU driver reports 
+the correct reserved regions in the first place.
 
-I see that Miroslav has already pointed to documentation, samples and 
-self-tests for the patchset, but here is a summary in my own words:
+If the iommu-dma abstraction is not quite sufficient to actually convert 
+amd-iommu to use it properly, then we should improve the abstraction, 
+rather than just punching holes in it to merely poke renamed parts of 
+the existing amd-iommu logic into.
 
-kpatch-build constructs livepatch kernel modules by comparing a 
-reference build with a patched build, combing through ELF object 
-sections and extracting new and changed sections that include patched code.
+Robin.
 
-An alternative approach is "source-based", in which a livepatch kernel 
-module is built (mostly entirely) using the kernel's build 
-infrastructure.  Sources for a livepatch are gathered ahead of time and 
-then built like an ordinary kernel module.
-
-In either approach, there lies the problem of symbol visibility: how can 
-a livepatch resolve symbols that a kernel module ordinarily can't.  For 
-example, file local or simply unexported symbols in across the kernel 
-and other modules.  Enter the concept of "livepatch symbols" described 
-in module-elf-format.txt.
-
-kpatch-build already creates such "livepatch symbols" (see its 
-create_klp_relasecs_and_syms()) and the livepatching core kernel code 
-already knows how resolve such symbols at klp_object patch time (see 
-klp_write_object_relocations()).
-
-The klp-convert tool and this supporting patchset would empower 
-source-based-constructed livepatch modules to do the same.
-
--- Joe
+> On Mon, Apr 15, 2019 at 7:31 AM Christoph Hellwig <hch@infradead.org> wrote:
+>>
+>> On Thu, Apr 11, 2019 at 07:47:32PM +0100, Tom Murphy via iommu wrote:
+>>> +
+>>> +     WARN_ON_ONCE(iommu_dma_reserve_iova(domain, region->start, end) == NULL);
+>>
+>> Overly long line..
