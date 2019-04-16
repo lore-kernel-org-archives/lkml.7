@@ -2,79 +2,85 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC0AC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:00:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 025BAC282DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:00:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 96A8C20652
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:00:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C93C2206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:00:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729932AbfDPPAl (ORCPT
+        id S1729947AbfDPPAm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 11:00:41 -0400
-Received: from mail-pl1-f193.google.com ([209.85.214.193]:35281 "EHLO
-        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729300AbfDPPAj (ORCPT
+        Tue, 16 Apr 2019 11:00:42 -0400
+Received: from iolanthe.rowland.org ([192.131.102.54]:42770 "HELO
+        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with SMTP id S1729742AbfDPPAg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 11:00:39 -0400
-Received: by mail-pl1-f193.google.com with SMTP id w24so10485701plp.2;
-        Tue, 16 Apr 2019 08:00:39 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=YzEbblBmSVEVYraSVJmAXHJjfIQS4JnfPJ5pABW9bwM=;
-        b=MpMnHx1uPX3QbKmpn+4VaIY1oCOc6JN/A2pbqI4+lu4AV1eXCW2WIDlms7gtEyg3m3
-         qyRx7AnMnEA9+0hqe2hGvh6jSRl1O1NFVQ0cISOnlwbSqoltnFUjOdYNQhz/pyPFCgs7
-         BmTrqEmej1OoIfvkY9SCHR+n1YE2BMcjwGrCAamP03qqsM7h4rLePDIr1htX51Ic0u/s
-         sv2JUsZuEEggcVJZYUqZhMptBm3sfTcSP6qyAFpRqLiYi1SQZSjKm8TiAu9TyhwCvsP/
-         EVQfwLBrDTxv7lx+r9kky0mjNeBYuZNWPfitL9LdtSLJ+5wmnW48Clx1op4cviglpA9A
-         UZZg==
-X-Gm-Message-State: APjAAAXMBxIttr55eDXu2uV6GauXvJkTOSz+V5qxE9bkTxmmqhW3UjBn
-        gwWU+y+lvotHLQPA7VaAP7o=
-X-Google-Smtp-Source: APXvYqySzSzXOj0Lmriu7HG7Tij+Jv6tCo5HjivT6quvsGdRuy1XM1U7v9j5by0iBOoTZTx/2bx+WQ==
-X-Received: by 2002:a17:902:7081:: with SMTP id z1mr83359372plk.252.1555426838881;
-        Tue, 16 Apr 2019 08:00:38 -0700 (PDT)
-Received: from [10.128.207.50] ([66.201.36.5])
-        by smtp.gmail.com with ESMTPSA id l1sm59682001pgp.9.2019.04.16.08.00.37
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 16 Apr 2019 08:00:37 -0700 (PDT)
-Message-ID: <1555426836.35423.1.camel@acm.org>
-Subject: Re: [PATCH v2 1/3] blk-mq.c: Add documention of function
- blk_mq_init_queue
-From:   Bart Van Assche <bvanassche@acm.org>
-To:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>,
-        linux-kernel@vger.kernel.org
-Cc:     linux-block@vger.kernel.org, axboe@kernel.dk,
-        Chaitanya.Kulkarni@wdc.com
-Date:   Tue, 16 Apr 2019 08:00:36 -0700
-In-Reply-To: <20190416032801.200694-1-marcos.souza.org@gmail.com>
-References: <20190416032801.200694-1-marcos.souza.org@gmail.com>
-Content-Type: text/plain; charset="UTF-7"
-X-Mailer: Evolution 3.26.2-1 
-Mime-Version: 1.0
-Content-Transfer-Encoding: 7bit
+        Tue, 16 Apr 2019 11:00:36 -0400
+Received: (qmail 5287 invoked by uid 2102); 16 Apr 2019 11:00:35 -0400
+Received: from localhost (sendmail-bs@127.0.0.1)
+  by localhost with SMTP; 16 Apr 2019 11:00:35 -0400
+Date:   Tue, 16 Apr 2019 11:00:35 -0400 (EDT)
+From:   Alan Stern <stern@rowland.harvard.edu>
+X-X-Sender: stern@iolanthe.rowland.org
+To:     Jesse Hathaway <jesse@mbuki-mvuki.org>
+cc:     Bjorn Helgaas <helgaas@kernel.org>, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        <linux-kernel@vger.kernel.org>, <linux-pci@vger.kernel.org>,
+        Mathias Nyman <mathias.nyman@intel.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        <linux-usb@vger.kernel.org>
+Subject: Re: Regression causes a hang on boot with a Comtrol PCI card
+In-Reply-To: <CANSNSoVpnK6fyfFct7cLNRJAvdLWh0ac=isnPOkOAp4LV+WoSw@mail.gmail.com>
+Message-ID: <Pine.LNX.4.44L0.1904161054060.1605-100000@iolanthe.rowland.org>
+MIME-Version: 1.0
+Content-Type: TEXT/PLAIN; charset=US-ASCII
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 2019-04-16 at 00:27 -0300, Marcos Paulo de Souza wrote:
-+AD4 Reviewed-by: Chaitanya Kulkarni +ADw-chaitanya.kulkarni+AEA-wdc.com+AD4
-+AD4 Signed-off-by: Marcos Paulo de Souza +ADw-marcos.souza.org+AEA-gmail.com+AD4
-+AD4 ---
-+AD4 
-+AD4  No changes from v1.
-+AD4 
-+AD4  block/blk-mq.c +AHw 9 +++++++++
-+AD4  1 file changed, 9 insertions()
+On Mon, 15 Apr 2019, Jesse Hathaway wrote:
 
-Please always include a cover letter with a patch series that gives an
-overview of the purpose of the patch series.
+> On Sat, Apr 6, 2019 at 10:32 AM Alan Stern <stern@rowland.harvard.edu> wrote:
+> > Well, at least that's forward progress.  I don't know what pstore is or
+> > what connection it has to the USB subsystem.  Does the machine hang
+> > similarly if you boot without the Comtrol PCI card present?
+> 
+> Yes the box boots fine when the Comtrol PCI card is *not* present.
+> 
+> > For that matter, what happens if you remove EHCI from the kernel
+> > configuration completely?
+> 
+> If I remove USB support, the box still hangs after registering the pstore, but
+> if I remove pstore support and APEI support from the kernel then the box boots
+> without issue.
+> 
+> > As for how the PCI card affects the USB handoff, it depends on how the
+> > BIOS behaves.  Normally the BIOS will take control of all the available
+> > EHCI controllers during bootup (so that it can use them to communicate
+> > with a USB keyboard or mouse), including controllers on add-on PCI
+> > cards as well as those on the motherboard.  When the kernel starts up,
+> > it tries to take ownership of the controllers away from the BIOS
+> > (that's the handoff) so that Linux can use them.  However, if the BIOS
+> > was never tested for handoff of USB controllers on add-on PCI cards, it
+> > could easily have a bug that would crash the machine.
+> 
+> The Comtrol card provides 32 serial ports, via a breakout box, but it has
+> no USB functionality, which was why I was surprised that its presence
+> somehow breaks the USB hand off.
 
-Thanks,
+Well, I am completely mystified.  Nor do I understand how the commits
+you identified could be related, although maybe the relationship is
+very indirect.
 
-Bart.
+Whatever the source of the problem, I don't think you're going to find 
+it by looking at the USB code.  Perhaps the early initialization of the 
+functions that _are_ present on the Comtrol card somehow messes up 
+other parts of the system.
+
+Alan Stern
+
