@@ -2,95 +2,391 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D197CC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:18:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D0A04C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:18:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A5CF32077C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:18:04 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 93FD62077C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:18:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729330AbfDPNSD (ORCPT
+        id S1729384AbfDPNSN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 09:18:03 -0400
-Received: from mout.kundenserver.de ([217.72.192.73]:45223 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726796AbfDPNSD (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 09:18:03 -0400
-Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
- (mreue107 [212.227.15.145]) with ESMTPA (Nemesis) id
- 1MPXQi-1hU3CQ4A9S-00MbZQ; Tue, 16 Apr 2019 15:17:49 +0200
-From:   Arnd Bergmann <arnd@arndb.de>
-To:     arm@kernel.org
-Cc:     Arnd Bergmann <arnd@arndb.de>, Baruch Siach <baruch@tkos.co.il>,
-        Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] ARM: debug-ll: add default address for digicolor
-Date:   Tue, 16 Apr 2019 15:17:30 +0200
-Message-Id: <20190416131746.1303495-1-arnd@arndb.de>
-X-Mailer: git-send-email 2.20.0
+        Tue, 16 Apr 2019 09:18:13 -0400
+Received: from mga04.intel.com ([192.55.52.120]:40565 "EHLO mga04.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726796AbfDPNSM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 09:18:12 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Apr 2019 06:18:12 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,357,1549958400"; 
+   d="scan'208";a="162369180"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by fmsmga004.fm.intel.com with ESMTP; 16 Apr 2019 06:18:09 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hGNyS-0003PI-1R; Tue, 16 Apr 2019 16:18:08 +0300
+Date:   Tue, 16 Apr 2019 16:18:08 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     Yury Norov <yury.norov@gmail.com>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Rasmus Villemoes <linux@rasmusvillemoes.dk>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Kees Cook <keescook@chromium.org>,
+        Matthew Wilcox <willy@infradead.org>,
+        Tetsuo Handa <penguin-kernel@I-love.SAKURA.ne.jp>,
+        Mike Travis <travis@sgi.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Yury Norov <ynorov@marvell.com>, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 2/5] lib: rework bitmap_parselist
+Message-ID: <20190416131808.GF9224@smile.fi.intel.com>
+References: <20190416063801.20134-1-ynorov@marvell.com>
+ <20190416063801.20134-3-ynorov@marvell.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:fwTdw+l9kVa6fOtmnIO52nhUJMcaPosyBl1f+hU03D9+UXyS4oT
- oC6YMst8gZVfVL2ovllRDbGPcqN+sJSrhg0uhwD183hxpk26+mYzVsajxe9sZCCCrKU88Er
- ZCkXMcp4AtDLN6ZLGG91kULXwmfpqatn0KkoGD7AsAUSHN5F1C8hzo/UMn72OHe10dobIOy
- B2j4qGajZCit1IbQ29lNQ==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:vaTzPpgMRbA=:NqXmIO/mq/mvAFXCpgYiF+
- 9zHN3YIE2mhVOF0AtMt8npzcbj+8HT64MwVdY6x0MnC2s6nt+kKfwBqu84UUrt/JHMYTHt1Om
- 1XbrVOZGWqTAx9He6IUvLwPRVAN8mGEeoB1qHr+FBG4rLYXguS6OMhH0890YRb5q9uZDw9E90
- rzPmOHjKlihvrze5lzATCfUNFtG0LnohNPn1ie3JZeCTue7lNfMVdeiZbi8W8gRdh7re6X8bM
- h7XXk+sYC1XNI4ME584KGNGWHudOjuKUp05gtobjUYWIw8WtgbHKTN/jzzhKSkeuDfWWE9cVk
- gCZai57nPmtRx4oIDhJnxRz7VLJu9yE8/MRucEdddVfXuf9N5MZRG6h13ougi9gQ84trEr5Bv
- fM8KTR92Wc2ml2ltmKmJODGM7AEX22S8AU1VhmcRvbc4QwHzhF80aorPWi8j1/0Odw1WdeTQR
- UDPpLvs1UjtIbspCNd19ZrMTrDTRD65T66tXtO39ey0dDD/KQ/xe79idkrw8C5qVW/BoZ19Y+
- rbIatp77zZ36IGehJX+7o3umDK/iI24LWc71ujHhyROllz7om0T8b6u+9PEclAXO5mmL6rV6m
- 8olZae1jqBunOSt/wb2U3JYJJn4MVA1Eaz9ajUf1D66CBZGrs7bSa2vGq2hsbe4CLtm1cV2x5
- MWTtQDC8CukD8xLWfwuk6ZVtlD07OwuRJ17N9txPMErdHM7NtpsWQomznreTURSPbA3Sc7tr2
- Rtd3zz8My3FMcBGjOofWeN/6hMUioOMO5I7glA==
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190416063801.20134-3-ynorov@marvell.com>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The digicolor platform has three UARTs, but the Kconfig.debug
-file explicitly lists port zero as the one to be used for the
-console, while not providing any default values.
+On Mon, Apr 15, 2019 at 11:37:58PM -0700, Yury Norov wrote:
+> From: Yury Norov <ynorov@marvell.com>
+> 
+> Remove __bitmap_parselist helper and split the function to logical
+> parts.
+> 
 
-This can get an automated randconfig build stuck in a loop
-waiting for the user to input the number. As we already know
-the physical address, this patch provides that number as
-default, along with a reasonable default value for the virtual
-address.
+One comment below.
 
-Cc: Baruch Siach <baruch@tkos.co.il>
-Signed-off-by: Arnd Bergmann <arnd@arndb.de>
----
- arch/arm/Kconfig.debug | 2 ++
- 1 file changed, 2 insertions(+)
+Overall looks good to me, thanks!
+Reviewed-by: Andy Shevchenko <andriy.shevchenko@linux.intel.com>
 
-diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-index a8a1e14f20ab..e5f0b36d797f 100644
---- a/arch/arm/Kconfig.debug
-+++ b/arch/arm/Kconfig.debug
-@@ -1676,6 +1676,7 @@ config DEBUG_UART_PHYS
- 	default 0xe6e68000 if DEBUG_RCAR_GEN2_SCIF1
- 	default 0xe6ee0000 if DEBUG_RCAR_GEN2_SCIF4
- 	default 0xe8008000 if DEBUG_R7S72100_SCIF2
-+	default 0xf0000740 if DEBUG_DIGICOLOR_UA0
- 	default 0xf0000be0 if ARCH_EBSA110
- 	default 0xf1012000 if DEBUG_MVEBU_UART0_ALTERNATE
- 	default 0xf1012100 if DEBUG_MVEBU_UART1_ALTERNATE
-@@ -1785,6 +1786,7 @@ config DEBUG_UART_VIRT
- 	default 0xfd012000 if DEBUG_MVEBU_UART0_ALTERNATE && ARCH_MV78XX0
- 	default 0xfd883000 if DEBUG_ALPINE_UART0
- 	default 0xfde12000 if DEBUG_MVEBU_UART0_ALTERNATE && ARCH_DOVE
-+	default 0xfe000740 if DEBUG_DIGICOLOR_UA0
- 	default 0xfe012000 if DEBUG_MVEBU_UART0_ALTERNATE && ARCH_ORION5X
- 	default 0xfe017000 if DEBUG_MMP_UART2
- 	default 0xfe018000 if DEBUG_MMP_UART3
+> Signed-off-by: Yury Norov <ynorov@marvell.com>
+> ---
+>  lib/bitmap.c | 255 ++++++++++++++++++++++++++++-----------------------
+>  1 file changed, 142 insertions(+), 113 deletions(-)
+> 
+> diff --git a/lib/bitmap.c b/lib/bitmap.c
+> index c63ddd06a5da..f235434df87b 100644
+> --- a/lib/bitmap.c
+> +++ b/lib/bitmap.c
+> @@ -20,6 +20,8 @@
+>  
+>  #include <asm/page.h>
+>  
+> +#include "kstrtox.h"
+> +
+>  /**
+>   * DOC: bitmap introduction
+>   *
+> @@ -477,12 +479,128 @@ int bitmap_print_to_pagebuf(bool list, char *buf, const unsigned long *maskp,
+>  }
+>  EXPORT_SYMBOL(bitmap_print_to_pagebuf);
+>  
+> +/*
+> + * Region 9-38:4/10 describes the following bitmap structure:
+> + * 0	   9  12    18			38
+> + * .........****......****......****......
+> + *	    ^  ^     ^			 ^
+> + *      start  off   group_len	       end
+> + */
+> +struct region {
+> +	unsigned int start;
+> +	unsigned int off;
+> +	unsigned int group_len;
+> +	unsigned int end;
+> +};
+> +
+> +static int bitmap_set_region(const struct region *r,
+> +				unsigned long *bitmap, int nbits)
+> +{
+> +	unsigned int start;
+> +
+> +	if (r->end >= nbits)
+> +		return -ERANGE;
+> +
+> +	for (start = r->start; start <= r->end; start += r->group_len)
+> +		bitmap_set(bitmap, start, min(r->end - start + 1, r->off));
+> +
+> +	return 0;
+> +}
+> +
+> +static int bitmap_check_region(const struct region *r)
+> +{
+> +	if (r->start > r->end || r->group_len == 0 || r->off > r->group_len)
+> +		return -EINVAL;
+> +
+> +	return 0;
+> +}
+> +
+> +static const char *bitmap_getnum(const char *str, unsigned int *num)
+> +{
+> +	unsigned long long n;
+> +	unsigned int len;
+> +
+
+> +	len = _parse_integer(str, 10, &n);
+
+I think we are good here, since it's only for use inside lib itself.
+
+> +	if (!len)
+> +		return ERR_PTR(-EINVAL);
+
+> +	if (len & KSTRTOX_OVERFLOW || n != (unsigned int)n)
+
+Second part is simple to compare to UINT_MAX: "n > UINT_MAX", or
+"upper_32_bits(n)" would work as well.
+
+Among all I would rather go to comparison with limits, i.e. UINT_MAX.
+
+> +		return ERR_PTR(-EOVERFLOW);
+> +
+> +	*num = n;
+> +	return str + len;
+> +}
+> +
+> +static inline bool end_of_str(char c)
+> +{
+> +	return c == '\0' || c == '\n';
+> +}
+> +
+> +static inline bool __end_of_region(char c)
+> +{
+> +	return isspace(c) || c == ',';
+> +}
+> +
+> +static inline bool end_of_region(char c)
+> +{
+> +	return __end_of_region(c) || end_of_str(c);
+> +}
+> +
+> +/*
+> + * The format allows commas and whitespases at the beginning
+> + * of the region.
+> + */
+> +static const char *bitmap_find_region(const char *str)
+> +{
+> +	while (__end_of_region(*str))
+> +		str++;
+> +
+> +	return end_of_str(*str) ? NULL : str;
+> +}
+> +
+> +static const char *bitmap_parse_region(const char *str, struct region *r)
+> +{
+> +	str = bitmap_getnum(str, &r->start);
+> +	if (IS_ERR(str))
+> +		return str;
+> +
+> +	if (end_of_region(*str))
+> +		goto no_end;
+> +
+> +	if (*str != '-')
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	str = bitmap_getnum(str + 1, &r->end);
+> +	if (IS_ERR(str))
+> +		return str;
+> +
+> +	if (end_of_region(*str))
+> +		goto no_pattern;
+> +
+> +	if (*str != ':')
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	str = bitmap_getnum(str + 1, &r->off);
+> +	if (IS_ERR(str))
+> +		return str;
+> +
+> +	if (*str != '/')
+> +		return ERR_PTR(-EINVAL);
+> +
+> +	return bitmap_getnum(str + 1, &r->group_len);
+> +
+> +no_end:
+> +	r->end = r->start;
+> +no_pattern:
+> +	r->off = r->end + 1;
+> +	r->group_len = r->end + 1;
+> +
+> +	return end_of_str(*str) ? NULL : str;
+> +}
+> +
+>  /**
+> - * __bitmap_parselist - convert list format ASCII string to bitmap
+> - * @buf: read nul-terminated user string from this buffer
+> - * @buflen: buffer size in bytes.  If string is smaller than this
+> - *    then it must be terminated with a \0.
+> - * @is_user: location of buffer, 0 indicates kernel space
+> + * bitmap_parselist - convert list format ASCII string to bitmap
+> + * @buf: read user string from this buffer; must be terminated
+> + *    with a \0 or \n.
+>   * @maskp: write resulting mask here
+>   * @nmaskbits: number of bits in mask to be written
+>   *
+> @@ -498,127 +616,38 @@ EXPORT_SYMBOL(bitmap_print_to_pagebuf);
+>   *
+>   * Returns: 0 on success, -errno on invalid input strings. Error values:
+>   *
+> - *   - ``-EINVAL``: second number in range smaller than first
+> + *   - ``-EINVAL``: wrong region format
+>   *   - ``-EINVAL``: invalid character in string
+>   *   - ``-ERANGE``: bit number specified too large for mask
+> + *   - ``-EOVERFLOW``: integer overflow in the input parameters
+>   */
+> -static int __bitmap_parselist(const char *buf, unsigned int buflen,
+> -		int is_user, unsigned long *maskp,
+> -		int nmaskbits)
+> +int bitmap_parselist(const char *buf, unsigned long *maskp, int nmaskbits)
+>  {
+> -	unsigned int a, b, old_a, old_b;
+> -	unsigned int group_size, used_size, off;
+> -	int c, old_c, totaldigits, ndigits;
+> -	const char __user __force *ubuf = (const char __user __force *)buf;
+> -	int at_start, in_range, in_partial_range;
+> +	struct region r;
+> +	long ret;
+>  
+> -	totaldigits = c = 0;
+> -	old_a = old_b = 0;
+> -	group_size = used_size = 0;
+>  	bitmap_zero(maskp, nmaskbits);
+> -	do {
+> -		at_start = 1;
+> -		in_range = 0;
+> -		in_partial_range = 0;
+> -		a = b = 0;
+> -		ndigits = totaldigits;
+> -
+> -		/* Get the next cpu# or a range of cpu#'s */
+> -		while (buflen) {
+> -			old_c = c;
+> -			if (is_user) {
+> -				if (__get_user(c, ubuf++))
+> -					return -EFAULT;
+> -			} else
+> -				c = *buf++;
+> -			buflen--;
+> -			if (isspace(c))
+> -				continue;
+>  
+> -			/* A '\0' or a ',' signal the end of a cpu# or range */
+> -			if (c == '\0' || c == ',')
+> -				break;
+> -			/*
+> -			* whitespaces between digits are not allowed,
+> -			* but it's ok if whitespaces are on head or tail.
+> -			* when old_c is whilespace,
+> -			* if totaldigits == ndigits, whitespace is on head.
+> -			* if whitespace is on tail, it should not run here.
+> -			* as c was ',' or '\0',
+> -			* the last code line has broken the current loop.
+> -			*/
+> -			if ((totaldigits != ndigits) && isspace(old_c))
+> -				return -EINVAL;
+> -
+> -			if (c == '/') {
+> -				used_size = a;
+> -				at_start = 1;
+> -				in_range = 0;
+> -				a = b = 0;
+> -				continue;
+> -			}
+> +	while (buf) {
+> +		buf = bitmap_find_region(buf);
+> +		if (buf == NULL)
+> +			return 0;
+>  
+> -			if (c == ':') {
+> -				old_a = a;
+> -				old_b = b;
+> -				at_start = 1;
+> -				in_range = 0;
+> -				in_partial_range = 1;
+> -				a = b = 0;
+> -				continue;
+> -			}
+> +		buf = bitmap_parse_region(buf, &r);
+> +		if (IS_ERR(buf))
+> +			return PTR_ERR(buf);
+>  
+> -			if (c == '-') {
+> -				if (at_start || in_range)
+> -					return -EINVAL;
+> -				b = 0;
+> -				in_range = 1;
+> -				at_start = 1;
+> -				continue;
+> -			}
+> +		ret = bitmap_check_region(&r);
+> +		if (ret)
+> +			return ret;
+>  
+> -			if (!isdigit(c))
+> -				return -EINVAL;
+> +		ret = bitmap_set_region(&r, maskp, nmaskbits);
+> +		if (ret)
+> +			return ret;
+> +	}
+>  
+> -			b = b * 10 + (c - '0');
+> -			if (!in_range)
+> -				a = b;
+> -			at_start = 0;
+> -			totaldigits++;
+> -		}
+> -		if (ndigits == totaldigits)
+> -			continue;
+> -		if (in_partial_range) {
+> -			group_size = a;
+> -			a = old_a;
+> -			b = old_b;
+> -			old_a = old_b = 0;
+> -		} else {
+> -			used_size = group_size = b - a + 1;
+> -		}
+> -		/* if no digit is after '-', it's wrong*/
+> -		if (at_start && in_range)
+> -			return -EINVAL;
+> -		if (!(a <= b) || group_size == 0 || !(used_size <= group_size))
+> -			return -EINVAL;
+> -		if (b >= nmaskbits)
+> -			return -ERANGE;
+> -		while (a <= b) {
+> -			off = min(b - a + 1, used_size);
+> -			bitmap_set(maskp, a, off);
+> -			a += group_size;
+> -		}
+> -	} while (buflen && c == ',');
+>  	return 0;
+>  }
+> -
+> -int bitmap_parselist(const char *bp, unsigned long *maskp, int nmaskbits)
+> -{
+> -	char *nl  = strchrnul(bp, '\n');
+> -	int len = nl - bp;
+> -
+> -	return __bitmap_parselist(bp, len, 0, maskp, nmaskbits);
+> -}
+>  EXPORT_SYMBOL(bitmap_parselist);
+>  
+>  
+> -- 
+> 2.17.1
+> 
+
 -- 
-2.20.0
+With Best Regards,
+Andy Shevchenko
+
 
