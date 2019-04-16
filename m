@@ -2,110 +2,171 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BE552C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:22:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 093F6C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:23:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8D39C2087C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:22:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CC3A7206B6
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:23:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=joelfernandes.org header.i=@joelfernandes.org header.b="NR1FsJ7c"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wZvlWKmx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730045AbfDPRWw (ORCPT
+        id S1730071AbfDPRXo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 13:22:52 -0400
-Received: from mail-lj1-f194.google.com ([209.85.208.194]:46984 "EHLO
-        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728468AbfDPRWv (ORCPT
+        Tue, 16 Apr 2019 13:23:44 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:40188 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728108AbfDPRXo (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 13:22:51 -0400
-Received: by mail-lj1-f194.google.com with SMTP id h21so19810425ljk.13
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 10:22:50 -0700 (PDT)
+        Tue, 16 Apr 2019 13:23:44 -0400
+Received: by mail-wm1-f67.google.com with SMTP id z24so26663075wmi.5
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 10:23:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=joelfernandes.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=teLrKWBJL8PYLLheXxLHFCByZ+NGmGgF48F54jGmNmU=;
-        b=NR1FsJ7cAE+Yhvw6jJ92R3jwPdAFWhBkmWNekvPM0VQugn4LtIkbgJdQ25zvJ31/s6
-         EbAsB91gYIvJNKcsOJwyE3t4c9rtdAlNwp+anCsc0fYhptrZcarbrnfheOkROLuxzgmk
-         zST7fuy0QSXlySwG2fvxvBU3UINxkvGuufenA=
+        d=linaro.org; s=google;
+        h=subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=uG4weFkpAqO5ZljcdLSZQOdiEbgnP+Em6FwXZ5QFtl8=;
+        b=wZvlWKmxDSAVZh4ZOYgMXEE0GyclhXG9AR9XxEuUXdsgz6pgW1onZGiGDg4gzmzMkq
+         Jd+778y8DYV54xNsOT7nofj/zD1T8U1IfKLKLdy/O0sBv1uTQcV35JSDmCi/OPZhwxtt
+         5sKP1+bw6EmLKvfe7Y8mAwEsJ16mpTyJWY6ZDDXmRSmw2Y9edMqaqC2fRJHvpjvpZPCF
+         ekijL0etoOKiifYN4VDObCFsMxa9q4TU2i8mgQIKhv5KbMNZ0YHYTiaBm4IxPXHF6gsP
+         UsyaC/vwEPtnGSZwKUI+w7aq1G9EvoCMUyaCP2Qy4j0JRUMM2nfq9lSSoUM9WqnPIPSk
+         OvJA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=teLrKWBJL8PYLLheXxLHFCByZ+NGmGgF48F54jGmNmU=;
-        b=TQbpwbz8bCPpAdEXTCfvhxT7e2nYOq7TmQUKAt9hS51XcVtqaQIKe59DOGmfEKVZ4Z
-         EYWCxRwo+COio/JHnRDt5fj74B4Itq3GUUd1ubOPof/A6jUBL+yu3B72qUPuXW6jSRI2
-         4078ODj8RKrLeOOIJGNdlw3OUkyy8XBmGAmf0WpIacZ1bNd0/BcqQCHu0DHZ/J+0diT9
-         J5hR76d2yWLLhaG0SZ3V8/szFreLksdklhP26VVWJ0Rb4H54iDcPbvIH4h5hNrX462r3
-         +LU+ijuf4q9oFpCgyM+2PncOvx5srBXxHX7Wzm+1CGcYwShScPL3RkxyhrkmyLLue1cJ
-         agBg==
-X-Gm-Message-State: APjAAAVXbROQRpGaBJtcczZVbVTFpgnD4SlhlbC3Z9dRycmJpIfUZQ+n
-        Nr1Uxj32l6UCVkqVUc6asrNJfJaGCaqk+tXaWx3mCA==
-X-Google-Smtp-Source: APXvYqxZteqC8ERtgpAkWtZFuixQenPXlZ5ha+FDwpWOAVUTWKODqK1kWk7yAc4GvI7EbPzn7ayGGpGjIsXiUNdmUr4=
-X-Received: by 2002:a2e:3803:: with SMTP id f3mr46633107lja.165.1555435369399;
- Tue, 16 Apr 2019 10:22:49 -0700 (PDT)
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=uG4weFkpAqO5ZljcdLSZQOdiEbgnP+Em6FwXZ5QFtl8=;
+        b=AZgfMdjV6zWzfdi6mAIeoTX1rQKdlC8B3GJM0p1IK/FRi0DiL8rOv3DoWdP8moALv4
+         p/Hw/ll0ie7xDFbWrDCBNSu91If4XqYFq94Vy5qddT1Et9gZjr9rwR7HBC8iX3EclUZJ
+         qZzQZpUm7NV2euFhR5SlLNIb1xk6UEs2b7YNIjFT9KZp9a+pd8mQ8hB5MEcf5FAnzWlU
+         Oq5fv7RxHvZO5rYQRzIMH5TI6yQJvDiGcTihFaRCrq4xQ4F8BdneZJTevCzb/xBG7WNV
+         sK7zwxCYDvnvz8T2Ytsdt3zRpvp/BG9wOgDcq8Q65YZdAcdGxDd4GZHgMnw8/x40CQhB
+         4GLQ==
+X-Gm-Message-State: APjAAAWE803KNzS/4MpPR7w4alNVv+7ftO7pR9qCS0VTyfcCSPxT0mcB
+        m3JxZU2Mfk/CtmpGh85dIXPk1tsZ0lE=
+X-Google-Smtp-Source: APXvYqyMgF0ek7GadqBFM/O73FdiNZzfFP46WcCodaYko3A1ugKssnNmkZLnp8J8wwyfq16azoWA+A==
+X-Received: by 2002:a1c:43c2:: with SMTP id q185mr26297973wma.53.1555435421500;
+        Tue, 16 Apr 2019 10:23:41 -0700 (PDT)
+Received: from [192.168.0.41] (50.251.95.92.rev.sfr.net. [92.95.251.50])
+        by smtp.googlemail.com with ESMTPSA id z7sm54467728wrt.10.2019.04.16.10.23.39
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Apr 2019 10:23:40 -0700 (PDT)
+Subject: Re: [PATCH v4 04/12] thermal: qoriq: Drop per-sensor data
+To:     Andrey Smirnov <andrew.smirnov@gmail.com>, linux-pm@vger.kernel.org
+Cc:     Chris Healy <cphealy@gmail.com>,
+        Lucas Stach <l.stach@pengutronix.de>,
+        Eduardo Valentin <edubezval@gmail.com>,
+        Angus Ainslie <angus@akkea.ca>, linux-imx@nxp.com,
+        linux-kernel@vger.kernel.org
+References: <20190413082748.29990-1-andrew.smirnov@gmail.com>
+ <20190413082748.29990-5-andrew.smirnov@gmail.com>
+From:   Daniel Lezcano <daniel.lezcano@linaro.org>
+Message-ID: <230a8f04-0d1a-8b3e-2ddc-c1bb0d06bfb1@linaro.org>
+Date:   Tue, 16 Apr 2019 19:23:39 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190411031540.ehezr6kq7ouobpzx@ast-mbp.dhcp.thefacebook.com>
- <CAOesGMgiPB=7FE7tXXHes7WSLfByyPxirOStoH21NZqMwaUihQ@mail.gmail.com>
- <20190415104109.64d914f3@gandalf.local.home> <CAGXu5j+KPVRcOJ3Ue9ZQF93GyaDhvCnFCvJ_C3WKCx2=SNdDyg@mail.gmail.com>
- <20190416083306.5646a687@gandalf.local.home> <20190416124939.GB6027@kroah.com>
- <20190416130440.GA7944@localhost> <f8b15e31-1aab-ab2c-d44d-47325faab67d@opersys.com>
- <20190416094509.1af6326b@gandalf.local.home> <20190416142240.GA31920@kroah.com>
- <20190416164642.krptlz32zusr4pgn@ast-mbp.dhcp.thefacebook.com> <CAOesGMgGEZ8o-e2uAYLSGeO+RHcXAEzEoKcsjpveOLJZ5pX=4w@mail.gmail.com>
-In-Reply-To: <CAOesGMgGEZ8o-e2uAYLSGeO+RHcXAEzEoKcsjpveOLJZ5pX=4w@mail.gmail.com>
-From:   Joel Fernandes <joel@joelfernandes.org>
-Date:   Tue, 16 Apr 2019 13:22:38 -0400
-Message-ID: <CAEXW_YS=C8FkC1h4ZQ6_jX8jY==Xe66c+q9cgM=Ci+N7SyNz6w@mail.gmail.com>
-Subject: Re: [PATCH v5 1/3] Provide in-kernel headers to make extending kernel easier
-To:     Olof Johansson <olof@lixom.net>
-Cc:     Alexei Starovoitov <alexei.starovoitov@gmail.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Kees Cook <keescook@chromium.org>,
-        Joel Fernandes <joelaf@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Manoj Rao <linux@manojrajarao.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        atish patra <atishp04@gmail.com>,
-        Daniel Colascione <dancol@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <20190413082748.29990-5-andrew.smirnov@gmail.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 12:57 PM Olof Johansson <olof@lixom.net> wrote:
-[snip]
-> > Where kheaders.tar.xz is placed doesn't really matter.
-> > /proc or /sys/kernel makes no real difference.
->
-> If done in a location that isn't a perpetual ABI commitment, a tarball
-> solution is something we can work with.
+On 13/04/2019 10:27, Andrey Smirnov wrote:
+> Now that driver is converted to use get_temp_id() instead of
+> get_temp() we no longer need per sensor data. Drop all of the code
+> related to it.
 
-This is the part I don't get, Olof. It has to be an ABI commitment so
-that the tools always work. Why are we so interested in breaking
-userspace tools? We want a robust solution, not a fragile one.
+Rui, Eduardo,
 
-thanks,
+I just want to point out this patch is depending on:
 
- - Joel
+"[PATCH] thermal/drivers/of: Add a get_temp_id callback function"
+
+
+> Signed-off-by: Andrey Smirnov <andrew.smirnov@gmail.com>
+> Cc: Chris Healy <cphealy@gmail.com>
+> Cc: Lucas Stach <l.stach@pengutronix.de>
+> Cc: Eduardo Valentin <edubezval@gmail.com>
+> Cc: Daniel Lezcano <daniel.lezcano@linaro.org>
+> Cc: Angus Ainslie (Purism) <angus@akkea.ca>
+> Cc: linux-imx@nxp.com
+> Cc: linux-pm@vger.kernel.org
+> Cc: linux-kernel@vger.kernel.org
+> ---
+>  drivers/thermal/qoriq_thermal.c | 25 ++-----------------------
+>  1 file changed, 2 insertions(+), 23 deletions(-)
+> 
+> diff --git a/drivers/thermal/qoriq_thermal.c b/drivers/thermal/qoriq_thermal.c
+> index c041d1ae3500..3500e238fe3e 100644
+> --- a/drivers/thermal/qoriq_thermal.c
+> +++ b/drivers/thermal/qoriq_thermal.c
+> @@ -59,20 +59,9 @@ struct qoriq_tmu_regs {
+>  	u32 ttr3cr;		/* Temperature Range 3 Control Register */
+>  };
+>  
+> -struct qoriq_tmu_data;
+> -
+> -/*
+> - * Thermal zone data
+> - */
+> -struct qoriq_sensor {
+> -	struct qoriq_tmu_data		*qdata;
+> -	int				id;
+> -};
+> -
+>  struct qoriq_tmu_data {
+>  	struct qoriq_tmu_regs __iomem *regs;
+>  	bool little_endian;
+> -	struct qoriq_sensor	*sensor[SITES_MAX];
+>  };
+>  
+>  static void tmu_write(struct qoriq_tmu_data *p, u32 val, void __iomem *addr)
+> @@ -93,8 +82,7 @@ static u32 tmu_read(struct qoriq_tmu_data *p, void __iomem *addr)
+>  
+>  static int tmu_get_temp(int id, void *p, int *temp)
+>  {
+> -	struct qoriq_sensor *qsensor = p;
+> -	struct qoriq_tmu_data *qdata = qsensor->qdata;
+> +	struct qoriq_tmu_data *qdata = p;
+>  	u32 val;
+>  
+>  	val = tmu_read(qdata, &qdata->regs->site[id].tritsr);
+> @@ -115,17 +103,8 @@ static int qoriq_tmu_register_tmu_zone(struct platform_device *pdev)
+>  	for (id = 0; id < SITES_MAX; id++) {
+>  		struct thermal_zone_device *tzd;
+>  
+> -		qdata->sensor[id] = devm_kzalloc(&pdev->dev,
+> -				sizeof(struct qoriq_sensor), GFP_KERNEL);
+> -		if (!qdata->sensor[id])
+> -			return -ENOMEM;
+> -
+> -		qdata->sensor[id]->id = id;
+> -		qdata->sensor[id]->qdata = qdata;
+> -
+>  		tzd = devm_thermal_zone_of_sensor_register(&pdev->dev, id,
+> -							   qdata->sensor[id],
+> -							   &tmu_tz_ops);
+> +							   qdata, &tmu_tz_ops);
+>  		if (IS_ERR(tzd)) {
+>  			if (PTR_ERR(tzd) == -ENODEV)
+>  				continue;
+> 
+
+
+-- 
+ <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+
+Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
+<http://twitter.com/#!/linaroorg> Twitter |
+<http://www.linaro.org/linaro-blog/> Blog
+
