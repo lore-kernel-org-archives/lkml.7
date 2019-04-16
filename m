@@ -2,174 +2,146 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5CA1AC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10FF2C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:30:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2BB442073F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:27:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="X7xUcL+O"
+	by mail.kernel.org (Postfix) with ESMTP id DCE8220821
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 11:30:21 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729208AbfDPL1V (ORCPT
+        id S1728230AbfDPLaU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 07:27:21 -0400
-Received: from mail-lf1-f68.google.com ([209.85.167.68]:45748 "EHLO
-        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726313AbfDPL1U (ORCPT
+        Tue, 16 Apr 2019 07:30:20 -0400
+Received: from mail-io1-f67.google.com ([209.85.166.67]:34911 "EHLO
+        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726672AbfDPLaU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 07:27:20 -0400
-Received: by mail-lf1-f68.google.com with SMTP id t11so11217328lfl.12
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 04:27:19 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=sQbXDEP+T6dLkIrCuP+1EhAc7j0C97jWMAcy46QoDbY=;
-        b=X7xUcL+O6GGWvXIKTzy5RcmxNA3NMolz3J3gQPxeL7BGrh3foUEnbLG7IqlVH/UfRX
-         ln8rM+gsg/MvdSZKRf9OAwzHOvxag2AewVPmPKZRj5Ztd62A+oOEXGVADirWZRTrjcmk
-         0LjmFtnezQXkzNU5LJCEsy3dTgcR7ZjD0ubRtXsXgmphelJWN1BFyltxxKgvoGYnv9nV
-         3HwuiE8sANH81wimYgDGbjwUUwBPGwXt+Hg+lPbTuU9V8tEJzCmvo4A8YIhZoVk7FRPR
-         0PBPCc4zRaumiDK+FfqqSe/id3HKtnS+BnhWqyNZyov1yYZ6Re3ydy28SDwuVuCFg2yJ
-         e7TA==
+        Tue, 16 Apr 2019 07:30:20 -0400
+Received: by mail-io1-f67.google.com with SMTP id p16so17339344iod.2
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 04:30:19 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=sQbXDEP+T6dLkIrCuP+1EhAc7j0C97jWMAcy46QoDbY=;
-        b=SQv2+c5berPsy/wYvTMj5cjJCOqRXIbt9+iWPguA934TmgMWvrWbRrpClo58sA5OWC
-         hUPE+7zWkO40czsNWubENaW9njl9gZmiHFzmy+Edad4k6+1uZyFNLCG7Y0mwpHY6SFYD
-         J7FdDr4TvIc2C7VbjGkHD+5ejvcF1VvXSh65Pg/5upF/v5a4/9N0tIdE5b2nf/qg1Oyr
-         WeOR8uPGD340Yy2ZWqE36FOKB1o5n0cGX8ruSHqm7ZL/vm5JGrYlK4VAR2yZpUscN/+p
-         6+5HqXwmss6S+Hzwx4ovjUkqGXCVX87Pt/Vscc1toYr8PIODXv5d742XvhNB0gRy12Ge
-         bY/Q==
-X-Gm-Message-State: APjAAAW63mPy48GsrCtibot8zkt+5Y6nLYx9LJYHM2eV0XvPZTKkFGpe
-        MW2Sbxi8GuOx3HEDsRaWQ3zBm+M/0kZub+jEnKPsiPQIoZA=
-X-Google-Smtp-Source: APXvYqxwk5ntOHcd0pDM+CNmIAAZLkPStsjapNWaqfYZ67cn1gkPU2HeGsrT7NB+c2dwbSd+2nM58A7S+JcOfxxOzXE=
-X-Received: by 2002:ac2:4214:: with SMTP id y20mr9617102lfh.75.1555414038540;
- Tue, 16 Apr 2019 04:27:18 -0700 (PDT)
+         :message-id:subject:to:cc;
+        bh=8kncRXSaDmHAz0vEzoPgmtt9ZkL84kbgi+tbCTlVlZg=;
+        b=ApQRI9fWUYRLLPs58NNTurTxHnFiW36N/Cu4OnwjpbGDyeg12RDrUw3v0fllz/7bnC
+         PnXfPYJqe3NbsoErjUakamZIaNFKp49aeffYaWY0cUrdoxB5ojEnTZuR/yX8jHpPWpkp
+         NLduZ4EPngI6MIG173MfhEzylFRkyZeb9gI6mQ2uhnt63Y8UovaBT4jpxA6p7rg/tpw7
+         w8GUzhOWrSHPxbquzvZOA6mrutrhc9sgcsTKaoL78rAyM2rQea59fJAOBQ+mQTnsft4b
+         kr9TtosQ9p/5M3KjX4UuwBILDPuy3ipsWxu2Dsxx4tP90YbTJ7Tr0WvkYB9uP+LYcyxN
+         g4+Q==
+X-Gm-Message-State: APjAAAVKkQZOmgkFp0cNCckIC85OVOjquYxWMCEfzieaecgBPL6jmLJt
+        p5Jsi61Lei1Q+QJWkaPj8pS2Q9upkKhsGaqb7gIKTQ==
+X-Google-Smtp-Source: APXvYqxd3Uwa1yI6uLSuvIcq9kBKgnvusjWCX2A01vpAJJPor/2NbCMGhCaBPPW6B20RtItNF7YZ42poPqL+Ylo9MKE=
+X-Received: by 2002:a6b:7218:: with SMTP id n24mr13899663ioc.112.1555414219274;
+ Tue, 16 Apr 2019 04:30:19 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190415183744.887851196@linuxfoundation.org>
-In-Reply-To: <20190415183744.887851196@linuxfoundation.org>
-From:   Naresh Kamboju <naresh.kamboju@linaro.org>
-Date:   Tue, 16 Apr 2019 16:57:07 +0530
-Message-ID: <CA+G9fYtdGyJss=_4j18DUYDdojcmQ4=_hTx5FFKDxS6V2PSvvA@mail.gmail.com>
-Subject: Re: [PATCH 5.0 000/117] 5.0.8-stable review
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     open list <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Shuah Khan <shuah@kernel.org>, patches@kernelci.org,
-        Ben Hutchings <ben.hutchings@codethink.co.uk>,
-        lkft-triage@lists.linaro.org,
-        linux- stable <stable@vger.kernel.org>
+References: <20190408165942.23640-1-kasong@redhat.com> <20190415153622.GG12232@hirez.programming.kicks-ass.net>
+ <20190415165859.ul7i2w3lai3umgik@treble>
+In-Reply-To: <20190415165859.ul7i2w3lai3umgik@treble>
+From:   Kairui Song <kasong@redhat.com>
+Date:   Tue, 16 Apr 2019 19:30:07 +0800
+Message-ID: <CACPcB9f8OJmk++54YwW3yhrnohj31+oJcxfesJbNbNSGk9WUQQ@mail.gmail.com>
+Subject: Re: [RFC PATCH v2] perf/x86: make perf callchain work without CONFIG_FRAME_POINTER
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Kairui Song <kasong@redhat.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Dave Young <dyoung@redhat.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Apr 2019 at 00:39, Greg Kroah-Hartman
-<gregkh@linuxfoundation.org> wrote:
+On Tue, Apr 16, 2019 at 12:59 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
 >
-> This is the start of the stable review cycle for the 5.0.8 release.
-> There are 117 patches in this series, all will be posted as a response
-> to this one.  If anyone has any issues with these being applied, please
-> let me know.
+> On Mon, Apr 15, 2019 at 05:36:22PM +0200, Peter Zijlstra wrote:
+> >
+> > I'll mostly defer to Josh on unwinding, but a few comments below.
+> >
+> > On Tue, Apr 09, 2019 at 12:59:42AM +0800, Kairui Song wrote:
+> > > diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> > > index e2b1447192a8..6075a4f94376 100644
+> > > --- a/arch/x86/events/core.c
+> > > +++ b/arch/x86/events/core.c
+> > > @@ -2355,6 +2355,12 @@ void arch_perf_update_userpage(struct perf_event *event,
+> > >     cyc2ns_read_end();
+> > >  }
+> > >
+> > > +static inline int
+> > > +valid_perf_registers(struct pt_regs *regs)
+> > > +{
+> > > +   return (regs->ip && regs->bp && regs->sp);
+> > > +}
+> >
+> > I'm unconvinced by this, with both guess and orc having !bp is perfectly
+> > valid.
+> >
+> > >  void
+> > >  perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs)
+> > >  {
+> > > @@ -2366,11 +2372,17 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
+> > >             return;
+> > >     }
+> > >
+> > > -   if (perf_callchain_store(entry, regs->ip))
+> > > +   if (valid_perf_registers(regs)) {
+> > > +           if (perf_callchain_store(entry, regs->ip))
+> > > +                   return;
+> > > +           unwind_start(&state, current, regs, NULL);
+> > > +   } else if (regs->sp) {
+> > > +           unwind_start(&state, current, NULL, (unsigned long *)regs->sp);
+> > > +   } else {
+> > >             return;
+> > > +   }
+> >
+> > AFAICT if we, by pure accident, end up with !bp for ORC, then we
+> > initialize the unwind wrong.
+> >
+> > Note that @regs is mostly trivially correct, except for that tracepoint
+> > case. So I don't think we should magic here.
 >
-> Responses should be made by Wed Apr 17 18:36:42 UTC 2019.
-> Anything received after that time might be too late.
+> Ah, I didn't quite understand this code before, and I still don't
+> really, but I guess the issue is that @regs can be either real or fake.
 >
-> The whole patch series can be found in one patch at:
->         https://www.kernel.org/pub/linux/kernel/v5.x/stable-review/patch-=
-5.0.8-rc1.gz
-> or in the git tree and branch at:
->         git://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stable=
--rc.git linux-5.0.y
-> and the diffstat can be found below.
+> In the real @regs case, we just want to always unwind starting from
+> regs->sp.
 >
-> thanks,
+> But in the fake @regs case, we should instead unwind from the current
+> frame, skipping all frames until we hit the fake regs->sp.  Because
+> starting from fake/incomplete regs is most likely going to cause
+> problems with ORC (or DWARF for other arches).
 >
-> greg k-h
+> The idea of a fake regs is fragile and confusing.  Is it possible to
+> just pass in the "skip" stack pointer directly instead?  That should
+> work for both FP and non-FP.  And I _think_ there's no need to ever
+> capture regs->bp anyway -- the stack pointer should be sufficient.
+
+Hi, that will break some other usage, if perf_callchain_kernel is
+called but it won't unwind to the callsite (could be produced by
+attach an ebpf call to kprobe), things will also go wrong. It should
+start with given registers when the register is valid.
+And it's true with omit frame pointer BP value could be anything, so 0
+is also valid, I think I need to find a better way to tell if we could
+start with the registers value or direct start unwinding and skip
+until got the stack.
+
 >
-
-Results from Linaro=E2=80=99s test farm.
-No regressions on arm64, arm, x86_64, and i386.
-
-Summary
-------------------------------------------------------------------------
-
-kernel: 5.0.8-rc1
-git repo: https://git.kernel.org/pub/scm/linux/kernel/git/stable/linux-stab=
-le-rc.git
-git branch: linux-5.0.y
-git commit: e6fdfdbfcc6a9ee160e553eb0eaab811d6de783e
-git describe: v5.0.7-118-ge6fdfdbfcc6a
-Test details: https://qa-reports.linaro.org/lkft/linux-stable-rc-5.0-oe/bui=
-ld/v5.0.7-118-ge6fdfdbfcc6a
-
-No regressions (compared to build v5.0.7)
-
-No fixes (compared to build v5.0.7)
-
-Ran 23487 total tests in the following environments and test suites.
-
-Environments
---------------
-- dragonboard-410c
-- hi6220-hikey
-- i386
-- juno-r2
-- qemu_arm
-- qemu_arm64
-- qemu_i386
-- qemu_x86_64
-- x15
-- x86
-
-Test Suites
------------
-* boot
-* install-android-platform-tools-r2600
-* kselftest
-* libhugetlbfs
-* ltp-cap_bounds-tests
-* ltp-commands-tests
-* ltp-containers-tests
-* ltp-cpuhotplug-tests
-* ltp-cve-tests
-* ltp-dio-tests
-* ltp-fcntl-locktests-tests
-* ltp-filecaps-tests
-* ltp-fs_bind-tests
-* ltp-fs_perms_simple-tests
-* ltp-fsx-tests
-* ltp-hugetlb-tests
-* ltp-io-tests
-* ltp-ipc-tests
-* ltp-math-tests
-* ltp-mm-tests
-* ltp-nptl-tests
-* ltp-pty-tests
-* ltp-sched-tests
-* ltp-securebits-tests
-* ltp-syscalls-tests
-* ltp-timers-tests
-* spectre-meltdown-checker-test
-* v4l2-compliance
-* kvm-unit-tests
-* ltp-fs-tests
-* perf
-* ltp-open-posix-tests
-* kselftest-vsyscall-mode-native
-* kselftest-vsyscall-mode-none
-
---=20
-Linaro LKFT
-https://lkft.linaro.org
+> In other words, either regs should be "real", and skip_sp is NULL; or
+> regs should be NULL and skip_sp should have a value.
+>
+> --
+> Josh
+--
+Best Regards,
+Kairui Song
