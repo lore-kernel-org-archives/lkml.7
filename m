@@ -2,79 +2,144 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7C17C282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 22:05:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F2C3BC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 22:07:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 65C942173C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 22:05:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="G40A4BNF"
+	by mail.kernel.org (Postfix) with ESMTP id CB98D20880
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 22:07:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729840AbfDPWFq (ORCPT
+        id S1730508AbfDPWHq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 18:05:46 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:40061 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727136AbfDPWFq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 18:05:46 -0400
-Received: by mail-pf1-f193.google.com with SMTP id c207so11070193pfc.7;
-        Tue, 16 Apr 2019 15:05:45 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qQbFxLYMYwlP7onrPgWhLG4N+rabnF+FxSGrsuK302s=;
-        b=G40A4BNFpkhvQvKlzBVKYzlG3n4a5XI7dJCXeyvVsOhqgQt2DOtmFTD4Ha8Ht0sW1b
-         PwVouVGUnhPPjCSuZz27tJzJrgt9nJ4Kuz/es6EdbXIIqY3SeiXB7NTZAJ//R4ZyP2fE
-         wR+ADoiFriuwdy5hM9e7C7mbL9K/HHS7WV2A95ZW2u1OhQfIxuebDlFsCbMN3O0nKl+n
-         b6ckZm4k3aVFKeNqiVkodbFOkHn7h2ZVBwHazkb5FLAatasJJtURqLwF2eJZWygL0smz
-         3ROYxyf3Q4zEKXD61z69MqyUkCDjsnqsdpJPD5E3C8hY155DOMt18ZFvCaICmEgYYqHD
-         /hmg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qQbFxLYMYwlP7onrPgWhLG4N+rabnF+FxSGrsuK302s=;
-        b=UIR89x1mWIroS5knZ1+Rfx/3+5MEHPhzXwUrmD+JJobaIipLUwvhodya/WWchqPZf/
-         wjxSz2ATMLw8HnD9ILZ1uO9e5YTXTSZogOIhk+Up++d5lXVj/qQrM79OfUAo6ZWUGX45
-         JFsOQisG2xUzSnMv6Qpjc4hmS5w3cKzmWiEO6msBFC1D2XvIWW+beVHLrjKcIu34qsJ7
-         wAM7DweOGnIwmTJUFEbho+BULHsQ7nlajjzFKQeeyAngt7F5M8AXgyF7iJ+rtYfDvsFF
-         0PxBldG/Pjg9dPUB3JoAVKZ80rujKXPA0PbT/NUoWWYBtuTZQTrv18Qq4oWp0W+oQmZf
-         yHJQ==
-X-Gm-Message-State: APjAAAWVd/op1mU64M2egdx8v+j/PosECXmr9ROSnKRT3PC2prY+zvzM
-        IiCA0d7kIQGfMXXPFHnTgF0dU4DK
-X-Google-Smtp-Source: APXvYqyMKtQyB3GvStcrXo9zOUdpUI3q/qPYmBZVhKnXLa+eSTeVu220Os22duGsFTKQMFrsMrePIQ==
-X-Received: by 2002:a65:524a:: with SMTP id q10mr76345024pgp.224.1555452345335;
-        Tue, 16 Apr 2019 15:05:45 -0700 (PDT)
-Received: from bharath12345-Inspiron-5559 ([103.110.42.34])
-        by smtp.gmail.com with ESMTPSA id c1sm61792503pgk.44.2019.04.16.15.05.39
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 15:05:44 -0700 (PDT)
-Date:   Wed, 17 Apr 2019 03:35:36 +0530
-From:   Bharath Vedartham <linux.bhar@gmail.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc:     linux-kernel@vger.kernel.org, torvalds@linux-foundation.org,
-        akpm@linux-foundation.org, linux@roeck-us.net, shuah@kernel.org,
-        patches@kernelci.org, ben.hutchings@codethink.co.uk,
-        lkft-triage@lists.linaro.org, stable@vger.kernel.org
-Subject: Re: [PATCH 4.9 00/76] 4.9.169-stable review
-Message-ID: <20190416220536.GA3502@bharath12345-Inspiron-5559>
-References: <20190415183707.712011689@linuxfoundation.org>
+        Tue, 16 Apr 2019 18:07:46 -0400
+Received: from mga03.intel.com ([134.134.136.65]:16594 "EHLO mga03.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727136AbfDPWHq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 18:07:46 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga103.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Apr 2019 15:07:45 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,359,1549958400"; 
+   d="scan'208";a="338111571"
+Received: from sjchrist-coffee.jf.intel.com (HELO linux.intel.com) ([10.54.74.181])
+  by fmsmga006.fm.intel.com with ESMTP; 16 Apr 2019 15:07:45 -0700
+Date:   Tue, 16 Apr 2019 15:07:44 -0700
+From:   Sean Christopherson <sean.j.christopherson@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, x86@kernel.org,
+        Andy Lutomirski <luto@kernel.org>,
+        Josh Poimboeuf <jpoimboe@redhat.com>
+Subject: Re: [patch V3 21/32] x86/exceptions: Split debug IST stack
+Message-ID: <20190416220744.GA2487@linux.intel.com>
+References: <20190414155936.679808307@linutronix.de>
+ <20190414160145.439944544@linutronix.de>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190415183707.712011689@linuxfoundation.org>
+In-Reply-To: <20190414160145.439944544@linutronix.de>
 User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Compiled(defconfig) and tested on my x86 machine. No dmesg regressions
-observed.
+On Sun, Apr 14, 2019 at 05:59:57PM +0200, Thomas Gleixner wrote:
+> The debug IST stack is actually two separate debug stacks to handle #DB
+> recursion. This is required because the CPU starts always at top of stack
+> on exception entry, which means on #DB recursion the second #DB would
+> overwrite the stack of the first.
+> 
+> The low level entry code therefore adjusts the top of stack on entry so a
+> secondary #DB starts from a different stack page. But the stack pages are
+> adjacent without a guard page between them.
+> 
+> Split the debug stack into 3 stacks which are separated by guard pages. The
+> 3rd stack is never mapped into the cpu_entry_area and is only there to
+> catch triple #DB nesting:
+> 
+>       --- top of DB_stack	<- Initial stack
+>       --- end of DB_stack
+>       	  guard page
+> 
+>       --- top of DB1_stack	<- Top of stack after entering first #DB
+>       --- end of DB1_stack
+>       	  guard page
+> 
+>       --- top of DB2_stack	<- Top of stack after entering second #DB
+>       --- end of DB2_stack	   
+>       	  guard page
+> 
+> If DB2 would not act as the final guard hole, a second #DB would point the
+> top of #DB stack to the stack below #DB1 which would be valid and not catch
+> the not so desired triple nesting.
+> 
+> The backing store does not allocate any memory for DB2 and its guard page
+> as it is not going to be mapped into the cpu_entry_area.
+> 
+>  - Adjust the low level entry code so it adjusts top of #DB with the offset
+>    between the stacks instead of exception stack size.
+> 
+>  - Make the dumpstack code aware of the new stacks.
+> 
+>  - Adjust the in_debug_stack() implementation and move it into the NMI code
+>    where it belongs. As this is NMI hotpath code, it just checks the full
+>    area between top of DB_stack and bottom of DB1_stack without checking
+>    for the guard page. That's correct because the NMI cannot hit a
+>    stackpointer pointing to the guard page between DB and DB1 stack.  Even
+>    if it would, then the NMI operation still is unaffected, but the resume
+>    of the debug exception on the topmost DB stack will crash by touching
+>    the guard page.
+> 
+> Suggested-by: Andy Lutomirski <luto@kernel.org>
+> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+> ---
+
+One nit below on the docs, otherwise:
+
+Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
+
+> V2 -> V3: Fix off by one in in_debug_stack()
+> ---
+>  Documentation/x86/kernel-stacks       |    7 ++++++-
+>  arch/x86/entry/entry_64.S             |    8 ++++----
+>  arch/x86/include/asm/cpu_entry_area.h |   14 ++++++++++----
+>  arch/x86/include/asm/debugreg.h       |    2 --
+>  arch/x86/include/asm/page_64_types.h  |    3 ---
+>  arch/x86/kernel/asm-offsets_64.c      |    2 ++
+>  arch/x86/kernel/cpu/common.c          |   11 -----------
+>  arch/x86/kernel/dumpstack_64.c        |   12 ++++++++----
+>  arch/x86/kernel/nmi.c                 |   20 +++++++++++++++++++-
+>  arch/x86/mm/cpu_entry_area.c          |    4 +++-
+>  10 files changed, 52 insertions(+), 31 deletions(-)
+> 
+> --- a/Documentation/x86/kernel-stacks
+> +++ b/Documentation/x86/kernel-stacks
+> @@ -76,7 +76,7 @@ The currently assigned IST stacks are :-
+>    middle of switching stacks.  Using IST for NMI events avoids making
+>    assumptions about the previous state of the kernel stack.
+>  
+> -* ESTACK_DB.  DEBUG_STKSZ
+> +* ESTACK_DB.  EXCEPTION_STKSZ (PAGE_SIZE).
+>  
+>    Used for hardware debug interrupts (interrupt 1) and for software
+>    debug interrupts (INT3).
+> @@ -86,6 +86,11 @@ The currently assigned IST stacks are :-
+>    avoids making assumptions about the previous state of the kernel
+>    stack.
+>  
+> +  To handle nested #DB correctly there exist two instances of DB stacks. On
+> +  #DB entry the IST stackpointer for #DB is switched to the second instance
+> +  so a nested #DB starts from a clean stack. The nested #DB switches to
+
+Pretty sure the "to" at the end is unwanted.
+
+> +  the IST stackpointer to a guard hole to catch triple nesting.
+> +
+>  * ESTACK_MCE.  EXCEPTION_STKSZ (PAGE_SIZE).
+>  
+>    Used for interrupt 18 - Machine Check Exception (#MC).
