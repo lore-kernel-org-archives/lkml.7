@@ -2,105 +2,81 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 47CD7C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:17:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 77E73C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:18:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0ADCB20868
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:17:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="tcrTrP0P"
+	by mail.kernel.org (Postfix) with ESMTP id 4977720868
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:18:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729955AbfDPQRd (ORCPT
+        id S1729892AbfDPQSZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 12:17:33 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:38726 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726605AbfDPQRd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 12:17:33 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=puOlvjKB3Y3WOVRPAmxyhbtthgJ+YL5qig7OLr+ohsc=; b=tcrTrP0P0B/fwDtHvJAtUjuQP
-        IO9VA4Azju/qglP18WD9SwkBmbD56neNBCy7nemOs44hiCj81O+s6FlR14weA4/b+q58MK7gvlWHB
-        cZ/ivhWMNJtye5FWk69DI6vOwfGga76FH+xNZ9WVtk2VzY2kESG4yCcRpjZzIYLsxZr4ZFt7q143K
-        RML9YT4FAOGRUZbEOrsIPdm4dqRlo4zpS5LDOr7Q+cEI0u8sq4MDXvQa/jcYakFUr2IkAUjczkR4f
-        2A1HLWsv/aoe7/YA062css1+8A4RpzgT0hWVufG5AObkOEzpMmC3Yrpzy/W8X0lAO3/xSbVCmqZTe
-        O84Epel1A==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hGQm0-0003q2-LD; Tue, 16 Apr 2019 16:17:28 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 2776129AC1641; Tue, 16 Apr 2019 18:17:27 +0200 (CEST)
-Date:   Tue, 16 Apr 2019 18:17:27 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
-Subject: Re: [PATCH v4 06/16] locking/rwsem: Code cleanup after files merging
-Message-ID: <20190416161727.GS14281@hirez.programming.kicks-ass.net>
-References: <20190413172259.2740-1-longman@redhat.com>
- <20190413172259.2740-7-longman@redhat.com>
- <20190416160113.GM12232@hirez.programming.kicks-ass.net>
+        Tue, 16 Apr 2019 12:18:25 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34956 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726037AbfDPQSY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 12:18:24 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 83D50307D983;
+        Tue, 16 Apr 2019 16:18:24 +0000 (UTC)
+Received: from pauld.bos.csb (dhcp-17-51.bos.redhat.com [10.18.17.51])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 80C285D9D3;
+        Tue, 16 Apr 2019 16:18:21 +0000 (UTC)
+Date:   Tue, 16 Apr 2019 12:18:19 -0400
+From:   Phil Auld <pauld@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     linux-kernel@vger.kernel.org, hpa@zytor.com, bsegall@google.com,
+        torvalds@linux-foundation.org, anton@ozlabs.org, efault@gmx.de,
+        mingo@kernel.org, tglx@linutronix.de,
+        linux-tip-commits@vger.kernel.org
+Subject: Re: [tip:sched/core] sched/fair: Limit sched_cfs_period_timer loop
+ to avoid hard lockup
+Message-ID: <20190416161819.GE17860@pauld.bos.csb>
+References: <20190319130005.25492-1-pauld@redhat.com>
+ <tip-06ec5d30e8d57b820d44df6340dcb25010d6d0fa@git.kernel.org>
+ <20190409124815.GA10132@pauld.bos.csb>
+ <20190409130527.GR11158@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190416160113.GM12232@hirez.programming.kicks-ass.net>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190409130527.GR11158@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.5.21 (2010-09-15)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Tue, 16 Apr 2019 16:18:24 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 06:01:13PM +0200, Peter Zijlstra wrote:
-> @@ -794,34 +770,38 @@ static inline int __down_read_trylock(st
->   */
->  static inline void __down_write(struct rw_semaphore *sem)
->  {
-> -	if (unlikely(atomic_long_cmpxchg_acquire(&sem->count, 0,
-> -						 RWSEM_WRITER_LOCKED)))
-> -		rwsem_down_write_failed(sem);
-> +	long tmp = RWSEM_UNLOCKED_VALUE;
-> +
-> +	if (unlikely(atomic_long_try_cmpxchg_acquire(&sem->count, &tmp,
-> +						     RWSEM_WRITER_LOCKED)))
+On Tue, Apr 09, 2019 at 03:05:27PM +0200 Peter Zijlstra wrote:
+> On Tue, Apr 09, 2019 at 08:48:16AM -0400, Phil Auld wrote:
+> > Hi Ingo, Peter,
+> > 
+> > On Wed, Apr 03, 2019 at 01:38:39AM -0700 tip-bot for Phil Auld wrote:
+> > > Commit-ID:  06ec5d30e8d57b820d44df6340dcb25010d6d0fa
+> > > Gitweb:     https://git.kernel.org/tip/06ec5d30e8d57b820d44df6340dcb25010d6d0fa
+> > > Author:     Phil Auld <pauld@redhat.com>
+> > > AuthorDate: Tue, 19 Mar 2019 09:00:05 -0400
+> > > Committer:  Ingo Molnar <mingo@kernel.org>
+> > > CommitDate: Wed, 3 Apr 2019 09:50:23 +0200
+> > 
+> > This commit seems to have gotten lost. It's not in tip and now the 
+> > direct gitweb link is also showing bad commit reference. 
+> > 
+> > Did this fall victim to a reset or something?
+> 
+> It had (trivial) builds fails on 32 bit. I have a fixed up version
+> around somewhere, but that hasn't made it back in yet.
 
-!
 
-> +		rwsem_down_write_slow(sem, TASK_UNINTERRUPTIBLE);
->  	rwsem_set_owner(sem);
->  }
->  
->  static inline int __down_write_killable(struct rw_semaphore *sem)
->  {
-> -	if (unlikely(atomic_long_cmpxchg_acquire(&sem->count, 0,
-> -						 RWSEM_WRITER_LOCKED)))
-> -		if (IS_ERR(rwsem_down_write_failed_killable(sem)))
-> +	long tmp = RWSEM_UNLOCKED_VALUE;
-> +
-> +	if (unlikely(atomic_long_try_cmpxchg_acquire(&sem->count, &tmp,
-> +						     RWSEM_WRITER_LOCKED))) {
+Thank you :)
 
-also !
+I'll post the follow up version for the stable trees soon.
 
-> +		if (IS_ERR(rwsem_down_write_slow(sem, TASK_KILLABLE)))
->  			return -EINTR;
-> +	}
->  	rwsem_set_owner(sem);
->  	return 0;
->  }
 
-I'm having a great day it seems, it's like back in uni, trying to find
-all the missing - signs in this page-long DE.
+-- 
