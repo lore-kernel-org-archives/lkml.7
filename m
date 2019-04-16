@@ -5,56 +5,57 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99BB5C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D1C4C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:56:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5383C20880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:56:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD0712087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:56:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="AX0k/eR5"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Ui1YNlS4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729930AbfDPP4d (ORCPT
+        id S1729976AbfDPP4h (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 11:56:33 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:36560 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729888AbfDPP43 (ORCPT
+        Tue, 16 Apr 2019 11:56:37 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:55832 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729888AbfDPP4e (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 11:56:29 -0400
-Received: by mail-io1-f66.google.com with SMTP id f6so18067306iop.3;
-        Tue, 16 Apr 2019 08:56:29 -0700 (PDT)
+        Tue, 16 Apr 2019 11:56:34 -0400
+Received: by mail-it1-f193.google.com with SMTP id y134so33802428itc.5;
+        Tue, 16 Apr 2019 08:56:33 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=OjlIJHxEpFp/A+hcc5BNKsaqXfawoe8fg2LkeNDtbf0=;
-        b=AX0k/eR5384dm7Ty80gKppvzD6Y2hPE+dktxp6u8lO2MtxKnmc0psLKUD6MF5k2fRz
-         PTd4L8arrmVpq6BSGFtno+9thUphzsV2zHPsgOoXXUnelm5dHHbz3jaDHTQduNe6CY5I
-         vgc3qSu63CgCsTdXm+pI3Xy1sMucKtYt8fMyrU6wM1CTyCnReyqTugZmAC4+Q9mDL8xN
-         ulj752qZJl64bBj8qfEFgSRToHHXp10n1e6e6fEI4zguRiZJYnG8jnZIkjVLlspsbkpO
-         UxLOUL3zY2aKHcP9VNWC6oD+sV8uPB5E1rgYba3klxWqTDE9CaGCjnpCzB2clBpCubeM
-         BZTg==
+        bh=LZIvTcd96WbWgUj6Nl0WRY3WUo/14uX37QidroQ5rk8=;
+        b=Ui1YNlS4FCX4CMA6CgIR86nCBMtAh8nZer8Zyal47bDJ5xHJp78kBobrtRYNiNADk1
+         o4mjlnDzGQdE6Z0D9rPrCmZN2Y46wyS+2pMsTj1mLrxyZKhVZy8J2j6g42oBb9YJNQKU
+         WfLqLnsAncGGCoiFgGN+c4i5QX7RdLks4JciBT0OY4ok5tuBThI/EIECXoXMR0kKBQca
+         gfDCy6xdtnA9Ht+R4Gh3XKus/t5dYT/kUSXi8nlprV8scFu4lEiT43tjsnKQQk6sBeAn
+         lZN99KxSLqQ9J6BIGwwYcxJ2XKbHT62sY9xIBMBV9jMXYv2SUvAyMbUOG9+raNykdtoX
+         ojCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=OjlIJHxEpFp/A+hcc5BNKsaqXfawoe8fg2LkeNDtbf0=;
-        b=rk8r3AWJSbR2acAl73skv602zEBQbVXZpJ45IMWKSoRsWv33dVSZfXeOLNZLcGf3WD
-         SqhH2uPFRkQzC0m2noBlOfm1jRHIi5u6/KYRxQYT7/aWk19jWuQBr3qccHauiGsxOWoF
-         5mzSem7PRJIaGTEOSH8JAg7ZHjO35JXAkUa8o0EBwmwDrOIAkcTw525VGCTJs01rdC+O
-         pGezjyw0sa7BRDWllcVJnneDtGXD/2blcsQNbrnifckQENcmwhjoPFyUtSA47wpeA7uG
-         0qmx4cv2L5GnxL39SuPlDoWkUPCBivqSc3+ZYhvB3evWrA8YMP/fvXB/SZK/u7LOaSXA
-         pU5g==
-X-Gm-Message-State: APjAAAXGSsXQ6a+YUXiRSgzF/HWqFoNnDItz0u6U2BWibNzRfpyijCmf
-        K/Vp9jQnTSPUepcMBojd7rc=
-X-Google-Smtp-Source: APXvYqzNInnHu0dJ3EMz8ZRAaxX6HGUZ3z+Ffeu6d+GP2TODTnyQuBe2PzCKlqYcvu3aApPwpa9PTA==
-X-Received: by 2002:a5d:9457:: with SMTP id x23mr6777004ior.271.1555430188575;
-        Tue, 16 Apr 2019 08:56:28 -0700 (PDT)
+        bh=LZIvTcd96WbWgUj6Nl0WRY3WUo/14uX37QidroQ5rk8=;
+        b=N/0C8DeXLfju2mqGLZiumeb42gpuPFZxGjuxlLMWrFpZB32gsfV2FE3R0Qr5EE30oO
+         KATJqlcOZHAtFL+iZO4ZZL/+u4M3WtZ3Ffb133Ctmq7rN276s6T+rVUEN8utytunXpSH
+         VjuOH7CchqRIyHLmWBRufjYt9y3cX7Cd7teMHEv+MKVz99HheG0/EHiebrgzYfvJC+M0
+         omSKPJIA53fZk0xwO9UZYbpkHPT+SlVtQxY3e4L4jmN1zgqmEg8Xez3Mc+9kPWFJ4DyW
+         HaL71Jp9Hg2rn4YX4dZQJcl/8PmykChewTOXasajeJmhErNE943aDN0NqADxZf6xbcq3
+         RSbQ==
+X-Gm-Message-State: APjAAAUMQYxEfmyiLACgO9MkTPKvIyoo/c2qABq4e/JsGvMON7xxIz+i
+        +H40m9zYAfvqJGCjtAuZBfw=
+X-Google-Smtp-Source: APXvYqytLruEYzG85v59xVKihuZocoO2g3PC0x1YvGE38G4FIZLnh4KIgTvEy0j21W3cSf9OyteCkw==
+X-Received: by 2002:a24:5306:: with SMTP id n6mr14574142itb.101.1555430193130;
+        Tue, 16 Apr 2019 08:56:33 -0700 (PDT)
 Received: from svens-asus.arcx.com ([184.94.50.30])
-        by smtp.gmail.com with ESMTPSA id 64sm9766630ite.42.2019.04.16.08.56.26
+        by smtp.gmail.com with ESMTPSA id 64sm9766630ite.42.2019.04.16.08.56.31
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 08:56:27 -0700 (PDT)
+        Tue, 16 Apr 2019 08:56:32 -0700 (PDT)
 From:   Sven Van Asbroeck <thesven73@gmail.com>
 X-Google-Original-From: Sven Van Asbroeck <TheSven73@gmail.com>
 To:     robh+dt@kernel.org, linus.walleij@linaro.org
@@ -68,9 +69,9 @@ Cc:     lee.jones@linaro.org, mark.rutland@arm.com, afaerber@suse.de,
         stuyoder@gmail.com, jan.kiszka@siemens.com,
         maxime.ripard@bootlin.com, linux-kernel@vger.kernel.org,
         netdev@vger.kernel.org
-Subject: [PATCH v11 3/7] anybus-s: support the Arcx anybus controller
-Date:   Tue, 16 Apr 2019 11:56:14 -0400
-Message-Id: <20190416155618.1369-4-TheSven73@gmail.com>
+Subject: [PATCH v11 6/7] fieldbus_dev: support HMS Profinet IRT industrial controller
+Date:   Tue, 16 Apr 2019 11:56:17 -0400
+Message-Id: <20190416155618.1369-7-TheSven73@gmail.com>
 X-Mailer: git-send-email 2.17.1
 In-Reply-To: <20190416155618.1369-1-TheSven73@gmail.com>
 References: <20190416155618.1369-1-TheSven73@gmail.com>
@@ -79,72 +80,73 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add a driver for the Arcx anybus controller.
+The Anybus-S PROFINET IRT communication module provides instant integration
+to any Ethernet based LAN via SMTP, FTP, HTTP as well as PROFINET and
+Modbus-TCP. Additional protocols can be implemented on top of TCP/IP
+or UDP using the transparent socket interface.
 
-This device implements two Anybus-S hosts (buses),
-and connects to the SoC via a parallel memory bus.
-There is also a CAN power readout, unrelated to the Anybus,
-modelled as a regulator.
+Official documentation:
+https://www.anybus.com/docs/librariesprovider7/default-document-library
+/manuals-design-guides/hms-hmsi-168-52.pdf
+
+This implementation is an Anybus-S client driver, designed to be
+instantiated by the Anybus-S bus driver when it discovers the Profinet
+card.
+
+If loaded successfully, the driver registers itself as a fieldbus_dev,
+and userspace can access it through the fieldbus_dev interface.
 
 Signed-off-by: Sven Van Asbroeck <TheSven73@gmail.com>
 ---
- drivers/staging/fieldbus/Makefile             |   1 -
- drivers/staging/fieldbus/anybuss/Kconfig      |  14 +
- drivers/staging/fieldbus/anybuss/Makefile     |   2 +
- .../staging/fieldbus/anybuss/arcx-anybus.c    | 399 ++++++++++++++++++
- 4 files changed, 415 insertions(+), 1 deletion(-)
- create mode 100644 drivers/staging/fieldbus/anybuss/arcx-anybus.c
+ drivers/staging/fieldbus/anybuss/Kconfig      |  16 ++
+ drivers/staging/fieldbus/anybuss/Makefile     |   1 +
+ .../staging/fieldbus/anybuss/hms-profinet.c   | 228 ++++++++++++++++++
+ 3 files changed, 245 insertions(+)
+ create mode 100644 drivers/staging/fieldbus/anybuss/hms-profinet.c
 
-diff --git a/drivers/staging/fieldbus/Makefile b/drivers/staging/fieldbus/Makefile
-index c21056bdb3d2..bdf645d41344 100644
---- a/drivers/staging/fieldbus/Makefile
-+++ b/drivers/staging/fieldbus/Makefile
-@@ -5,4 +5,3 @@
- 
- obj-$(CONFIG_FIELDBUS_DEV)	+= fieldbus_dev.o anybuss/
- fieldbus_dev-y			:= dev_core.o
--
 diff --git a/drivers/staging/fieldbus/anybuss/Kconfig b/drivers/staging/fieldbus/anybuss/Kconfig
-index 5b495f25c11e..e257f8a517bb 100644
+index e257f8a517bb..41f241c73826 100644
 --- a/drivers/staging/fieldbus/anybuss/Kconfig
 +++ b/drivers/staging/fieldbus/anybuss/Kconfig
-@@ -7,3 +7,17 @@ config HMS_ANYBUSS_BUS
- 	  You can attach a single Anybus-S compatible card to it, which
- 	  typically provides fieldbus and industrial ethernet
- 	  functionality.
-+
-+if HMS_ANYBUSS_BUS
-+
-+config ARCX_ANYBUS_CONTROLLER
-+	tristate "Arcx Anybus-S Controller"
-+	depends on OF && GPIOLIB && HAS_IOMEM && REGULATOR
+@@ -20,4 +20,20 @@ config ARCX_ANYBUS_CONTROLLER
+ 	  There is also a CAN power readout, unrelated to the Anybus,
+ 	  modelled as a regulator.
+ 
++config HMS_PROFINET
++	tristate "HMS Profinet IRT Controller (Anybus-S)"
++	depends on FIELDBUS_DEV && HMS_ANYBUSS_BUS
 +	help
-+	  Select this to get support for the Arcx Anybus controller.
-+	  It connects to the SoC via a parallel memory bus, and
-+	  embeds up to two Anybus-S buses (slots).
-+	  There is also a CAN power readout, unrelated to the Anybus,
-+	  modelled as a regulator.
++	  If you say yes here you get support for the HMS Industrial
++	  Networks Profinet IRT Controller.
 +
-+endif
++	  It will be registered with the kernel as a fieldbus_dev,
++	  so userspace can interact with it via the fieldbus_dev userspace
++	  interface(s).
++
++	  This driver can also be built as a module. If so, the module
++	  will be called hms-profinet.
++
++	  If unsure, say N.
++
+ endif
 diff --git a/drivers/staging/fieldbus/anybuss/Makefile b/drivers/staging/fieldbus/anybuss/Makefile
-index 236579aa7270..7198b080926b 100644
+index 7198b080926b..3ad3dcc6be56 100644
 --- a/drivers/staging/fieldbus/anybuss/Makefile
 +++ b/drivers/staging/fieldbus/anybuss/Makefile
-@@ -5,3 +5,5 @@
- 
- obj-$(CONFIG_HMS_ANYBUSS_BUS)	+= anybuss_core.o
+@@ -7,3 +7,4 @@ obj-$(CONFIG_HMS_ANYBUSS_BUS)	+= anybuss_core.o
  anybuss_core-y			+= host.o
-+
-+obj-$(CONFIG_ARCX_ANYBUS_CONTROLLER) += arcx-anybus.o
-diff --git a/drivers/staging/fieldbus/anybuss/arcx-anybus.c b/drivers/staging/fieldbus/anybuss/arcx-anybus.c
+ 
+ obj-$(CONFIG_ARCX_ANYBUS_CONTROLLER) += arcx-anybus.o
++obj-$(CONFIG_HMS_PROFINET)	+= hms-profinet.o
+diff --git a/drivers/staging/fieldbus/anybuss/hms-profinet.c b/drivers/staging/fieldbus/anybuss/hms-profinet.c
 new file mode 100644
-index 000000000000..a167fb68e355
+index 000000000000..c5db648aa65f
 --- /dev/null
-+++ b/drivers/staging/fieldbus/anybuss/arcx-anybus.c
-@@ -0,0 +1,399 @@
++++ b/drivers/staging/fieldbus/anybuss/hms-profinet.c
+@@ -0,0 +1,228 @@
 +// SPDX-License-Identifier: GPL-2.0
 +/*
-+ * Arcx Anybus-S Controller driver
++ * HMS Profinet Client Driver
 + *
 + * Copyright (C) 2018 Arcx Inc
 + */
@@ -153,393 +155,222 @@ index 000000000000..a167fb68e355
 +#include <linux/module.h>
 +#include <linux/init.h>
 +#include <linux/slab.h>
-+#include <linux/platform_device.h>
-+#include <linux/gpio/consumer.h>
-+#include <linux/io.h>
-+#include <linux/of.h>
-+#include <linux/delay.h>
-+#include <linux/idr.h>
-+#include <linux/mutex.h>
-+#include <linux/regulator/driver.h>
-+#include <linux/regulator/machine.h>
-+#include <linux/regmap.h>
 +
-+/* move to <linux/anybuss-controller.h> when taking this out of staging */
-+#include "anybuss-controller.h"
++/* move to <linux/fieldbus_dev.h> when taking this out of staging */
++#include "../fieldbus_dev.h"
 +
-+#define CPLD_STATUS1		0x80
-+#define CPLD_CONTROL		0x80
-+#define CPLD_CONTROL_CRST	0x40
-+#define CPLD_CONTROL_RST1	0x04
-+#define CPLD_CONTROL_RST2	0x80
-+#define CPLD_STATUS1_AB		0x02
-+#define CPLD_STATUS1_CAN_POWER	0x01
-+#define CPLD_DESIGN_LO		0x81
-+#define CPLD_DESIGN_HI		0x82
-+#define CPLD_CAP		0x83
-+#define CPLD_CAP_COMPAT		0x01
-+#define CPLD_CAP_SEP_RESETS	0x02
++/* move to <linux/anybuss-client.h> when taking this out of staging */
++#include "anybuss-client.h"
 +
-+struct controller_priv {
-+	struct device *class_dev;
-+	bool common_reset;
-+	struct gpio_desc *reset_gpiod;
-+	void __iomem *cpld_base;
-+	struct mutex ctrl_lock; /* protects CONTROL register */
-+	u8 control_reg;
-+	char version[3];
-+	u16 design_no;
-+};
-+
-+static void do_reset(struct controller_priv *cd, u8 rst_bit, bool reset)
-+{
-+	mutex_lock(&cd->ctrl_lock);
-+	/*
-+	 * CPLD_CONTROL is write-only, so cache its value in
-+	 * cd->control_reg
-+	 */
-+	if (reset)
-+		cd->control_reg &= ~rst_bit;
-+	else
-+		cd->control_reg |= rst_bit;
-+	writeb(cd->control_reg, cd->cpld_base + CPLD_CONTROL);
-+	/*
-+	 * h/w work-around:
-+	 * the hardware is 'too fast', so a reset followed by an immediate
-+	 * not-reset will _not_ change the anybus reset line in any way,
-+	 * losing the reset. to prevent this from happening, introduce
-+	 * a minimum reset duration.
-+	 * Verified minimum safe duration required using a scope
-+	 * on 14-June-2018: 100 us.
-+	 */
-+	if (reset)
-+		usleep_range(100, 200);
-+	mutex_unlock(&cd->ctrl_lock);
-+}
-+
-+static int anybuss_reset(struct controller_priv *cd,
-+			 unsigned long id, bool reset)
-+{
-+	if (id >= 2)
-+		return -EINVAL;
-+	if (cd->common_reset)
-+		do_reset(cd, CPLD_CONTROL_CRST, reset);
-+	else
-+		do_reset(cd, id ? CPLD_CONTROL_RST2 : CPLD_CONTROL_RST1, reset);
-+	return 0;
-+}
-+
-+static void export_reset_0(struct device *dev, bool assert)
-+{
-+	struct controller_priv *cd = dev_get_drvdata(dev);
-+
-+	anybuss_reset(cd, 0, assert);
-+}
-+
-+static void export_reset_1(struct device *dev, bool assert)
-+{
-+	struct controller_priv *cd = dev_get_drvdata(dev);
-+
-+	anybuss_reset(cd, 1, assert);
-+}
++#define PROFI_DPRAM_SIZE	512
 +
 +/*
-+ * parallel bus limitation:
-+ *
-+ * the anybus is 8-bit wide. we can't assume that the hardware will translate
-+ * word accesses on the parallel bus to multiple byte-accesses on the anybus.
-+ *
-+ * the imx WEIM bus does not provide this type of translation.
-+ *
-+ * to be safe, we will limit parallel bus accesses to a single byte
-+ * at a time for now.
++ * ---------------------------------------------------------------
++ * Anybus Profinet mailbox messages - definitions
++ * ---------------------------------------------------------------
++ * note that we're depending on the layout of these structures being
++ * exactly as advertised.
 + */
 +
-+static int read_reg_bus(void *context, unsigned int reg,
-+			unsigned int *val)
-+{
-+	void __iomem *base = context;
++struct msg_mac_addr {
++	u8 addr[6];
++};
 +
-+	*val = readb(base + reg);
-+	return 0;
++struct profi_priv {
++	struct fieldbus_dev fbdev;
++	struct anybuss_client *client;
++	struct mutex enable_lock; /* serializes card enable */
++	bool power_on;
++};
++
++static ssize_t
++profi_read_area(struct fieldbus_dev *fbdev, char __user *buf, size_t size,
++		loff_t *offset)
++{
++	struct profi_priv *priv = container_of(fbdev, struct profi_priv, fbdev);
++
++	return anybuss_read_output(priv->client, buf, size, offset);
 +}
 +
-+static int write_reg_bus(void *context, unsigned int reg,
-+			 unsigned int val)
++static ssize_t
++profi_write_area(struct fieldbus_dev *fbdev, const char __user *buf,
++		 size_t size, loff_t *offset)
 +{
-+	void __iomem *base = context;
++	struct profi_priv *priv = container_of(fbdev, struct profi_priv, fbdev);
 +
-+	writeb(val, base + reg);
-+	return 0;
++	return anybuss_write_input(priv->client, buf, size, offset);
 +}
 +
-+static struct regmap *create_parallel_regmap(struct platform_device *pdev,
-+					     int idx)
++static int profi_id_get(struct fieldbus_dev *fbdev, char *buf,
++			size_t max_size)
 +{
-+	struct regmap_config regmap_cfg = {
-+		.reg_bits = 11,
-+		.val_bits = 8,
-+		/*
-+		 * single-byte parallel bus accesses are atomic, so don't
-+		 * require any synchronization.
-+		 */
-+		.disable_locking = true,
-+		.reg_read = read_reg_bus,
-+		.reg_write = write_reg_bus,
++	struct profi_priv *priv = container_of(fbdev, struct profi_priv, fbdev);
++	struct msg_mac_addr response;
++	int ret;
++
++	ret = anybuss_recv_msg(priv->client, 0x0010, &response,
++			       sizeof(response));
++	if (ret < 0)
++		return ret;
++	return snprintf(buf, max_size, "%02X:%02X:%02X:%02X:%02X:%02X\n",
++		response.addr[0], response.addr[1],
++		response.addr[2], response.addr[3],
++		response.addr[4], response.addr[5]);
++}
++
++static bool profi_enable_get(struct fieldbus_dev *fbdev)
++{
++	struct profi_priv *priv = container_of(fbdev, struct profi_priv, fbdev);
++	bool power_on;
++
++	mutex_lock(&priv->enable_lock);
++	power_on = priv->power_on;
++	mutex_unlock(&priv->enable_lock);
++
++	return power_on;
++}
++
++static int __profi_enable(struct profi_priv *priv)
++{
++	int ret;
++	struct anybuss_client *client = priv->client;
++	/* Initialization Sequence, Generic Anybus Mode */
++	const struct anybuss_memcfg mem_cfg = {
++		.input_io = 220,
++		.input_dpram = PROFI_DPRAM_SIZE,
++		.input_total = PROFI_DPRAM_SIZE,
++		.output_io = 220,
++		.output_dpram = PROFI_DPRAM_SIZE,
++		.output_total = PROFI_DPRAM_SIZE,
++		.offl_mode = AB_OFFL_MODE_CLEAR,
 +	};
-+	struct resource *res;
-+	void __iomem *base;
-+	struct device *dev = &pdev->dev;
 +
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, idx + 1);
-+	if (resource_size(res) < (1 << regmap_cfg.reg_bits))
-+		return ERR_PTR(-EINVAL);
-+	base = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(base))
-+		return ERR_CAST(base);
-+	return devm_regmap_init(dev, NULL, base, &regmap_cfg);
-+}
-+
-+static struct anybuss_host *
-+create_anybus_host(struct platform_device *pdev, int idx)
-+{
-+	struct anybuss_ops ops = {};
-+
-+	switch (idx) {
-+	case 0:
-+		ops.reset = export_reset_0;
-+		break;
-+	case 1:
-+		ops.reset = export_reset_1;
-+		break;
-+	default:
-+		return ERR_PTR(-EINVAL);
-+	}
-+	ops.host_idx = idx;
-+	ops.regmap = create_parallel_regmap(pdev, idx);
-+	if (IS_ERR(ops.regmap))
-+		return ERR_CAST(ops.regmap);
-+	ops.irq = platform_get_irq(pdev, idx);
-+	if (ops.irq <= 0)
-+		return ERR_PTR(-EINVAL);
-+	return devm_anybuss_host_common_probe(&pdev->dev, &ops);
-+}
-+
-+static ssize_t version_show(struct device *dev,
-+			    struct device_attribute *attr, char *buf)
-+{
-+	struct controller_priv *cd = dev_get_drvdata(dev);
-+
-+	return sprintf(buf, "%s\n", cd->version);
-+}
-+static DEVICE_ATTR_RO(version);
-+
-+static ssize_t design_number_show(struct device *dev,
-+				  struct device_attribute *attr, char *buf)
-+{
-+	struct controller_priv *cd = dev_get_drvdata(dev);
-+
-+	return sprintf(buf, "%d\n", cd->design_no);
-+}
-+static DEVICE_ATTR_RO(design_number);
-+
-+static struct attribute *controller_attributes[] = {
-+	&dev_attr_version.attr,
-+	&dev_attr_design_number.attr,
-+	NULL,
-+};
-+
-+static struct attribute_group controller_attribute_group = {
-+	.attrs = controller_attributes,
-+};
-+
-+static const struct attribute_group *controller_attribute_groups[] = {
-+	&controller_attribute_group,
-+	NULL,
-+};
-+
-+static void controller_device_release(struct device *dev)
-+{
-+	kfree(dev);
-+}
-+
-+static int can_power_is_enabled(struct regulator_dev *rdev)
-+{
-+	struct controller_priv *cd = rdev_get_drvdata(rdev);
-+
-+	return !(readb(cd->cpld_base + CPLD_STATUS1) & CPLD_STATUS1_CAN_POWER);
-+}
-+
-+static struct regulator_ops can_power_ops = {
-+	.is_enabled = can_power_is_enabled,
-+};
-+
-+static const struct regulator_desc can_power_desc = {
-+	.name = "regulator-can-power",
-+	.id = -1,
-+	.type = REGULATOR_VOLTAGE,
-+	.owner = THIS_MODULE,
-+	.ops = &can_power_ops,
-+};
-+
-+static struct class *controller_class;
-+static DEFINE_IDA(controller_index_ida);
-+
-+static int controller_probe(struct platform_device *pdev)
-+{
-+	struct controller_priv *cd;
-+	struct device *dev = &pdev->dev;
-+	struct regulator_config config = { };
-+	struct regulator_dev *regulator;
-+	int err, id;
-+	struct resource *res;
-+	struct anybuss_host *host;
-+	u8 status1, cap;
-+
-+	cd = devm_kzalloc(dev, sizeof(*cd), GFP_KERNEL);
-+	if (!cd)
-+		return -ENOMEM;
-+	dev_set_drvdata(dev, cd);
-+	mutex_init(&cd->ctrl_lock);
-+	cd->reset_gpiod = devm_gpiod_get(dev, "reset", GPIOD_OUT_LOW);
-+	if (IS_ERR(cd->reset_gpiod))
-+		return PTR_ERR(cd->reset_gpiod);
-+
-+	/* CPLD control memory, sits at index 0 */
-+	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
-+	cd->cpld_base = devm_ioremap_resource(dev, res);
-+	if (IS_ERR(cd->cpld_base)) {
-+		dev_err(dev,
-+			"failed to map cpld base address\n");
-+		err = PTR_ERR(cd->cpld_base);
-+		goto out_reset;
-+	}
-+
-+	/* identify cpld */
-+	status1 = readb(cd->cpld_base + CPLD_STATUS1);
-+	cd->design_no = (readb(cd->cpld_base + CPLD_DESIGN_HI) << 8) |
-+				readb(cd->cpld_base + CPLD_DESIGN_LO);
-+	snprintf(cd->version, sizeof(cd->version), "%c%d",
-+		 'A' + ((status1 >> 5) & 0x7),
-+		 (status1 >> 2) & 0x7);
-+	dev_info(dev, "design number %d, revision %s\n",
-+		 cd->design_no,
-+		cd->version);
-+	cap = readb(cd->cpld_base + CPLD_CAP);
-+	if (!(cap & CPLD_CAP_COMPAT)) {
-+		dev_err(dev, "unsupported controller [cap=0x%02X]", cap);
-+		err = -ENODEV;
-+		goto out_reset;
-+	}
-+
-+	if (status1 & CPLD_STATUS1_AB) {
-+		dev_info(dev, "has anybus-S slot(s)");
-+		cd->common_reset = !(cap & CPLD_CAP_SEP_RESETS);
-+		dev_info(dev, "supports %s", cd->common_reset ?
-+			"a common reset" : "separate resets");
-+		for (id = 0; id < 2; id++) {
-+			host = create_anybus_host(pdev, id);
-+			if (!IS_ERR(host))
-+				continue;
-+			err = PTR_ERR(host);
-+			/* -ENODEV is fine, it just means no card detected */
-+			if (err != -ENODEV)
-+				goto out_reset;
-+		}
-+	}
-+
-+	id = ida_simple_get(&controller_index_ida, 0, 0, GFP_KERNEL);
-+	if (id < 0) {
-+		err = id;
-+		goto out_reset;
-+	}
-+	/* export can power readout as a regulator */
-+	config.dev = dev;
-+	config.driver_data = cd;
-+	regulator = devm_regulator_register(dev, &can_power_desc, &config);
-+	if (IS_ERR(regulator)) {
-+		err = PTR_ERR(regulator);
-+		goto out_reset;
-+	}
-+	/* make controller info visible to userspace */
-+	cd->class_dev = kzalloc(sizeof(*cd->class_dev), GFP_KERNEL);
-+	if (!cd->class_dev) {
-+		err = -ENOMEM;
-+		goto out_ida;
-+	}
-+	cd->class_dev->class = controller_class;
-+	cd->class_dev->groups = controller_attribute_groups;
-+	cd->class_dev->parent = dev;
-+	cd->class_dev->id = id;
-+	cd->class_dev->release = controller_device_release;
-+	dev_set_name(cd->class_dev, "%d", cd->class_dev->id);
-+	dev_set_drvdata(cd->class_dev, cd);
-+	err = device_register(cd->class_dev);
-+	if (err)
-+		goto out_dev;
++	/*
++	 * switch anybus off then on, this ensures we can do a complete
++	 * configuration cycle in case anybus was already on.
++	 */
++	anybuss_set_power(client, false);
++	ret = anybuss_set_power(client, true);
++	if (ret)
++		goto err;
++	ret = anybuss_start_init(client, &mem_cfg);
++	if (ret)
++		goto err;
++	ret = anybuss_finish_init(client);
++	if (ret)
++		goto err;
++	priv->power_on = true;
 +	return 0;
-+out_dev:
-+	put_device(cd->class_dev);
-+out_ida:
-+	ida_simple_remove(&controller_index_ida, id);
-+out_reset:
-+	gpiod_set_value_cansleep(cd->reset_gpiod, 1);
-+	return err;
++
++err:
++	anybuss_set_power(client, false);
++	priv->power_on = false;
++	return ret;
 +}
 +
-+static int controller_remove(struct platform_device *pdev)
++static int __profi_disable(struct profi_priv *priv)
 +{
-+	struct controller_priv *cd = platform_get_drvdata(pdev);
-+	int id = cd->class_dev->id;
++	struct anybuss_client *client = priv->client;
 +
-+	device_unregister(cd->class_dev);
-+	ida_simple_remove(&controller_index_ida, id);
-+	gpiod_set_value_cansleep(cd->reset_gpiod, 1);
++	anybuss_set_power(client, false);
++	priv->power_on = false;
 +	return 0;
 +}
 +
-+static const struct of_device_id controller_of_match[] = {
-+	{ .compatible = "arcx,anybus-controller" },
-+	{ }
-+};
-+
-+MODULE_DEVICE_TABLE(of, controller_of_match);
-+
-+static struct platform_driver controller_driver = {
-+	.probe = controller_probe,
-+	.remove = controller_remove,
-+	.driver		= {
-+		.name   = "arcx-anybus-controller",
-+		.of_match_table	= of_match_ptr(controller_of_match),
-+	},
-+};
-+
-+static int __init controller_init(void)
++static int profi_simple_enable(struct fieldbus_dev *fbdev, bool enable)
 +{
++	int ret;
++	struct profi_priv *priv = container_of(fbdev, struct profi_priv, fbdev);
++
++	mutex_lock(&priv->enable_lock);
++	if (enable)
++		ret = __profi_enable(priv);
++	else
++		ret = __profi_disable(priv);
++	mutex_unlock(&priv->enable_lock);
++
++	return ret;
++}
++
++static void profi_on_area_updated(struct anybuss_client *client)
++{
++	struct profi_priv *priv = anybuss_get_drvdata(client);
++
++	fieldbus_dev_area_updated(&priv->fbdev);
++}
++
++static void profi_on_online_changed(struct anybuss_client *client, bool online)
++{
++	struct profi_priv *priv = anybuss_get_drvdata(client);
++
++	fieldbus_dev_online_changed(&priv->fbdev, online);
++}
++
++static int profinet_probe(struct anybuss_client *client)
++{
++	struct profi_priv *priv;
++	struct device *dev = &client->dev;
 +	int err;
 +
-+	controller_class = class_create(THIS_MODULE, "arcx_anybus_controller");
-+	if (IS_ERR(controller_class))
-+		return PTR_ERR(controller_class);
-+	err = platform_driver_register(&controller_driver);
-+	if (err)
-+		class_destroy(controller_class);
++	client->on_area_updated = profi_on_area_updated;
++	client->on_online_changed = profi_on_online_changed;
++	priv = devm_kzalloc(dev, sizeof(*priv), GFP_KERNEL);
++	if (!priv)
++		return -ENOMEM;
++	mutex_init(&priv->enable_lock);
++	priv->client = client;
++	priv->fbdev.read_area_sz = PROFI_DPRAM_SIZE;
++	priv->fbdev.write_area_sz = PROFI_DPRAM_SIZE;
++	priv->fbdev.card_name = "HMS Profinet IRT (Anybus-S)";
++	priv->fbdev.fieldbus_type = FIELDBUS_DEV_TYPE_PROFINET;
++	priv->fbdev.read_area = profi_read_area;
++	priv->fbdev.write_area = profi_write_area;
++	priv->fbdev.fieldbus_id_get = profi_id_get;
++	priv->fbdev.enable_get = profi_enable_get;
++	priv->fbdev.simple_enable_set = profi_simple_enable;
++	priv->fbdev.parent = dev;
++	err = fieldbus_dev_register(&priv->fbdev);
++	if (err < 0)
++		return err;
++	dev_info(dev, "card detected, registered as %s",
++		 dev_name(priv->fbdev.dev));
++	anybuss_set_drvdata(client, priv);
 +
-+	return err;
++	return 0;
 +}
 +
-+static void __exit controller_exit(void)
++static int profinet_remove(struct anybuss_client *client)
 +{
-+	platform_driver_unregister(&controller_driver);
-+	class_destroy(controller_class);
-+	ida_destroy(&controller_index_ida);
++	struct profi_priv *priv = anybuss_get_drvdata(client);
++
++	fieldbus_dev_unregister(&priv->fbdev);
++	return 0;
 +}
 +
-+module_init(controller_init);
-+module_exit(controller_exit);
++static struct anybuss_client_driver profinet_driver = {
++	.probe = profinet_probe,
++	.remove = profinet_remove,
++	.driver		= {
++		.name   = "hms-profinet",
++		.owner	= THIS_MODULE,
++	},
++	.fieldbus_type = 0x0089,
++};
 +
-+MODULE_DESCRIPTION("Arcx Anybus-S Controller driver");
++static int __init profinet_init(void)
++{
++	return anybuss_client_driver_register(&profinet_driver);
++}
++module_init(profinet_init);
++
++static void __exit profinet_exit(void)
++{
++	return anybuss_client_driver_unregister(&profinet_driver);
++}
++module_exit(profinet_exit);
++
 +MODULE_AUTHOR("Sven Van Asbroeck <TheSven73@gmail.com>");
++MODULE_DESCRIPTION("HMS Profinet IRT Driver (Anybus-S)");
 +MODULE_LICENSE("GPL v2");
 -- 
 2.17.1
