@@ -6,364 +6,850 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA8CC10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:02:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4B69EC10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:02:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 402DF20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:02:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E502A20830
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:02:58 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555383774;
-	bh=+5cLUwta2EtLhhJcezvYMGCIvdYhdLRdNmhuYSt8rkE=;
+	s=default; t=1555383779;
+	bh=ZkNNcu7+L4UZdQuCI0YmEbgKzonZcRxI6/pmDeydu6w=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=DYZLNMIT9Luuyoh2U0y/eRqRutWQsR9IGPqQqwKnQtLx+ywMMPuLAjsDF0j5iTdGl
-	 wT9lpdnQFkghjIrSe34b7NcdkMkLxr8pVKnRB0FjnvCcjDIEdRri8pRKGVa/69D1cU
-	 avMN7IwVVDiPUmVodj3YrHBGCv9e1b539QqsxSzI=
+	b=yuqqmPdb7OhkIVBa1rGn0+N32Jf496nUZDOMx5a/4Mr1yacnSRndQPTmc9BYRRbZ4
+	 TmldziLqgflbAKEilaYZgG9gtgg1enfekIo9c09UKi9rCd4kycQ6BVXvDItcBvvLvo
+	 PpRuvdgZ+uZ0TAUMsgSR8QH7cHcRpZ4Eo1UAGTn0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728658AbfDPDCw (ORCPT
+        id S1728621AbfDPDCv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 23:02:52 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:43978 "EHLO
+        Mon, 15 Apr 2019 23:02:51 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:43984 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726628AbfDPC43 (ORCPT
+        with ESMTP id S1726645AbfDPC43 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Mon, 15 Apr 2019 22:56:29 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
-        To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=ROo0V5tASYYmluZFwiPFZ4NY6wYz8FNHFQgcBBsMV7A=; b=t5vR29FecUN28nSqP3q2fiI1xc
-        Gljlzhs4hp+WeQOk29GLneTJ4OT9t+xlpAUEImcXYrXXldCGRJpWwq9ZCNok+iYfM+fn/WKgRV6vq
-        jy7CPvckA59bC8T+jS2Ulx01wyyzA51cgDMv3yUZEvvQDtnssB3F3qZMpA9+scZCO/otsO9uNHFlB
-        aRikCFTrVmBwjnVv7o2Wp5Tgc9MzKp4evbdxRoPS3FJSVdo7V07v0YDMZVhewpRR5I/cW5/0I8Amu
-        c+Wda7DdLCTARgWOBcCg0A9F4eURnb8CUgz1jQC+GZsK4ymetlRsaoe66/APKf44hb4I9oR8xKJ4F
-        yVbRAofQ==;
+        bh=FQnBJr60GgMTqg23T6pcF71VkH6FUHBwdjDVV+sfRYY=; b=eaNLhv3UIn13aGlGO9PTKkFsxS
+        JE8aw6mmThcQt1RJH0E7Xfm5oc09Iym2KanCjisB/TB3a/pPPpWBqyVsUOfaWN8wAdgQZ81JSu3km
+        wQEEvlPJ33JyRHVh+KMbBfjtr8/Qzh+HGZAsepnBSO7j2v8V/otkITU0a/E/maB+hyBrESm48U4Lo
+        GxZEVFQgymXINeHxad6IDdy39E2pKpYSbnzgKGC4xiANE9h/50tmeqbkIhvFChSdlN6uPzgnu9RA+
+        5R97izuDKOIqWZUFsxPPRZXoNVDHxqXZBNW3n4j+7oJ8LMXs5lJ2+4Wqx2eEEL8Z1kYUh/ABN6+MN
+        7BV7HdoA==;
 Received: from 177.205.118.176.dynamic.adsl.gvt.net.br ([177.205.118.176] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hGEGp-0007aq-W7; Tue, 16 Apr 2019 02:56:28 +0000
+        id 1hGEGp-0007an-S9; Tue, 16 Apr 2019 02:56:28 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hGEGn-0001oc-Rs; Mon, 15 Apr 2019 23:56:25 -0300
+        id 1hGEGn-0001oM-P6; Mon, 15 Apr 2019 23:56:25 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
         linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Thomas Gleixner <tglx@linutronix.de>
-Subject: [PATCH 35/57] docs: timers: convert documentation to ReST
-Date:   Mon, 15 Apr 2019 23:56:00 -0300
-Message-Id: <cb53bf2e4b00c9ba398e17079b3fb4f86d081a47.1555382110.git.mchehab+samsung@kernel.org>
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        Heiko Carstens <heiko.carstens@de.ibm.com>,
+        linux-s390@vger.kernel.org
+Subject: [PATCH 32/57] s390: include/asm/debug.h add kerneldoc markups
+Date:   Mon, 15 Apr 2019 23:55:57 -0300
+Message-Id: <bc2830acc1469ab34f801e0786132deafe810e59.1555382110.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1555382110.git.mchehab+samsung@kernel.org>
 References: <cover.1555382110.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The conversion here is really trivial: just a bunch of title
-markups and very few puntual changes is enough to make it to
-be parsed by Sphinx and generate a nice html.
+Instead of keeping the documentation inside s390dbf.txt,
+move them to arch/s390/include/asm/debug.h, using standard
+kernel-doc markups.
+
+Those were converted to kerneldoc using this specially made
+script and manually editted:
+
+<script>
+use strict;
+
+my $mode = "";
+my $parameter = "";
+my $ret = "";
+my $descr = "";
+
+sub add_var($)
+{
+	my $ln = shift;
+
+	$ln =~ s/^\s+//;
+	$ln =~ s/\s+$//;
+
+	return if ($ln eq "");
+
+	$ln =~ s/^(\S+)\s+/$1\t/;
+
+	print " * \@$ln\n";
+}
+
+sub add_return($)
+{
+	my $ln = shift;
+
+	print " *\n * Return:\n" if ($mode ne "Return Value:");
+
+	$ln =~ s/^\s+//;
+	$ln =~ s/\s+$//;
+
+	return if ($ln eq "");
+
+	print " * -   $ln\n";
+}
+
+sub add_description($)
+{
+	my $ln = shift;
+
+	print " *\n * \n" if ($mode ne "Description:");
+
+	$ln =~ s/^\s+//;
+	$ln =~ s/\s+$//;
+
+	return if ($ln eq "");
+
+	print " * $ln\n";
+}
+
+sub flush_results()
+{
+	print " */\n\n";
+}
+
+while (<>) {
+	if (m/^[\-]+$/) {
+		flush_results();
+		$mode = "";
+		$parameter = "";
+		$ret = "";
+		$descr = "";
+		next;
+	}
+	if (m/(Parameter:)(.*)/) {
+		print " *\n" if ($mode eq "func");
+		add_var($2);
+		$mode = $1;
+		next;
+	}
+	if (m/(Return Value:)(.*)/) {
+		add_return($2);
+		$mode = $1;
+		next;
+	}
+	if (m/(Description:)(.*)/) {
+		add_description($2);
+		$mode = $1;
+		next;
+	}
+	if ($mode eq "Parameter:") {
+		add_var($_);
+		next;
+	}
+	if ($mode eq "Return Value:") {
+		add_return($_);
+		next;
+	}
+	if ($mode eq "Description:") {
+		add_description($_);
+		next;
+	}
+	next if (m/^\s*$/);
+
+	if (m/^\S+.*\s\*?(\S+)\s*\(/) {
+		if ($mode eq "") {
+			print "/**\n * $1()\n";
+		} else {
+			print " * $1()\n";
+		}
+		$mode="func";
+	}
+}
+flush_results();
+</script>
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/timers/NO_HZ.txt        | 40 ++++++++++++++++-----------
- Documentation/timers/highres.txt      | 11 ++++----
- Documentation/timers/hpet.txt         |  4 ++-
- Documentation/timers/hrtimers.txt     |  6 ++--
- Documentation/timers/timekeeping.txt  |  3 +-
- Documentation/timers/timers-howto.txt | 15 +++++++---
- 6 files changed, 49 insertions(+), 30 deletions(-)
+ Documentation/s390/s390dbf.txt | 322 +--------------------------------
+ arch/s390/include/asm/debug.h  | 231 +++++++++++++++++++++++
+ 2 files changed, 232 insertions(+), 321 deletions(-)
 
-diff --git a/Documentation/timers/NO_HZ.txt b/Documentation/timers/NO_HZ.txt
-index 9591092da5e0..065db217cb04 100644
---- a/Documentation/timers/NO_HZ.txt
-+++ b/Documentation/timers/NO_HZ.txt
-@@ -1,4 +1,6 @@
--		NO_HZ: Reducing Scheduling-Clock Ticks
-+﻿======================================
-+NO_HZ: Reducing Scheduling-Clock Ticks
-+======================================
+diff --git a/Documentation/s390/s390dbf.txt b/Documentation/s390/s390dbf.txt
+index 549dba50fc3b..b0ca0d142ea1 100644
+--- a/Documentation/s390/s390dbf.txt
++++ b/Documentation/s390/s390dbf.txt
+@@ -107,327 +107,7 @@ will stay deactivated.
+ Kernel Interfaces:
+ ------------------
  
- 
- This document describes Kconfig options and boot parameters that can
-@@ -28,7 +30,8 @@ by a third section on RCU-specific considerations, a fourth section
- discussing testing, and a fifth and final section listing known issues.
- 
- 
--NEVER OMIT SCHEDULING-CLOCK TICKS
-+Never Omit Scheduling-Clock Ticks
-+=================================
- 
- Very old versions of Linux from the 1990s and the very early 2000s
- are incapable of omitting scheduling-clock ticks.  It turns out that
-@@ -59,7 +62,8 @@ degrade your applications performance.  If this describes your workload,
- you should read the following two sections.
- 
- 
--OMIT SCHEDULING-CLOCK TICKS FOR IDLE CPUs
-+Omit Scheduling-Clock Ticks For Idle CPUs
-+=========================================
- 
- If a CPU is idle, there is little point in sending it a scheduling-clock
- interrupt.  After all, the primary purpose of a scheduling-clock interrupt
-@@ -97,7 +101,8 @@ By default, CONFIG_NO_HZ_IDLE=y kernels boot with "nohz=on", enabling
- dyntick-idle mode.
- 
- 
--OMIT SCHEDULING-CLOCK TICKS FOR CPUs WITH ONLY ONE RUNNABLE TASK
-+Omit Scheduling-Clock Ticks For CPUs With Only One Runnable Task
-+================================================================
- 
- If a CPU has only one runnable task, there is little point in sending it
- a scheduling-clock interrupt because there is no other task to switch to.
-@@ -174,7 +179,8 @@ However, the drawbacks listed above mean that adaptive ticks should not
- (yet) be enabled by default.
- 
- 
--RCU IMPLICATIONS
-+RCU Implications
-+================
- 
- There are situations in which idle CPUs cannot be permitted to
- enter either dyntick-idle mode or adaptive-tick mode, the most
-@@ -199,7 +205,8 @@ scheduler will decide where to run them, which might or might not be
- where you want them to run.
- 
- 
--TESTING
-+Testing
-+=======
- 
- So you enable all the OS-jitter features described in this document,
- but do not see any change in your workload's behavior.  Is this because
-@@ -222,9 +229,10 @@ We do not currently have a good way to remove OS jitter from single-CPU
- systems.
- 
- 
--KNOWN ISSUES
-+Known Issues
-+============
- 
--o	Dyntick-idle slows transitions to and from idle slightly.
-+*	Dyntick-idle slows transitions to and from idle slightly.
- 	In practice, this has not been a problem except for the most
- 	aggressive real-time workloads, which have the option of disabling
- 	dyntick-idle mode, an option that most of them take.  However,
-@@ -248,13 +256,13 @@ o	Dyntick-idle slows transitions to and from idle slightly.
- 		this parameter effectively disables Turbo Mode on Intel
- 		CPUs, which can significantly reduce maximum performance.
- 
--o	Adaptive-ticks slows user/kernel transitions slightly.
-+*	Adaptive-ticks slows user/kernel transitions slightly.
- 	This is not expected to be a problem for computationally intensive
- 	workloads, which have few such transitions.  Careful benchmarking
- 	will be required to determine whether or not other workloads
- 	are significantly affected by this effect.
- 
--o	Adaptive-ticks does not do anything unless there is only one
-+*	Adaptive-ticks does not do anything unless there is only one
- 	runnable task for a given CPU, even though there are a number
- 	of other situations where the scheduling-clock tick is not
- 	needed.  To give but one example, consider a CPU that has one
-@@ -275,7 +283,7 @@ o	Adaptive-ticks does not do anything unless there is only one
- 
- 	Better handling of these sorts of situations is future work.
- 
--o	A reboot is required to reconfigure both adaptive idle and RCU
-+*	A reboot is required to reconfigure both adaptive idle and RCU
- 	callback offloading.  Runtime reconfiguration could be provided
- 	if needed, however, due to the complexity of reconfiguring RCU at
- 	runtime, there would need to be an earthshakingly good reason.
-@@ -283,12 +291,12 @@ o	A reboot is required to reconfigure both adaptive idle and RCU
- 	simply offloading RCU callbacks from all CPUs and pinning them
- 	where you want them whenever you want them pinned.
- 
--o	Additional configuration is required to deal with other sources
-+*	Additional configuration is required to deal with other sources
- 	of OS jitter, including interrupts and system-utility tasks
- 	and processes.  This configuration normally involves binding
- 	interrupts and tasks to particular CPUs.
- 
--o	Some sources of OS jitter can currently be eliminated only by
-+*	Some sources of OS jitter can currently be eliminated only by
- 	constraining the workload.  For example, the only way to eliminate
- 	OS jitter due to global TLB shootdowns is to avoid the unmapping
- 	operations (such as kernel module unload operations) that
-@@ -299,17 +307,17 @@ o	Some sources of OS jitter can currently be eliminated only by
- 	helpful, especially when combined with the mlock() and mlockall()
- 	system calls.
- 
--o	Unless all CPUs are idle, at least one CPU must keep the
-+*	Unless all CPUs are idle, at least one CPU must keep the
- 	scheduling-clock interrupt going in order to support accurate
- 	timekeeping.
- 
--o	If there might potentially be some adaptive-ticks CPUs, there
-+*	If there might potentially be some adaptive-ticks CPUs, there
- 	will be at least one CPU keeping the scheduling-clock interrupt
- 	going, even if all CPUs are otherwise idle.
- 
- 	Better handling of this situation is ongoing work.
- 
--o	Some process-handling operations still require the occasional
-+*	Some process-handling operations still require the occasional
- 	scheduling-clock tick.	These operations include calculating CPU
- 	load, maintaining sched average, computing CFS entity vruntime,
- 	computing avenrun, and carrying out load balancing.  They are
-diff --git a/Documentation/timers/highres.txt b/Documentation/timers/highres.txt
-index 8f9741592123..f93528e6f1c8 100644
---- a/Documentation/timers/highres.txt
-+++ b/Documentation/timers/highres.txt
-@@ -1,5 +1,6 @@
-+=====================================================
- High resolution timers and dynamic ticks design notes
-------------------------------------------------------
-+=====================================================
- 
- Further information can be found in the paper of the OLS 2006 talk "hrtimers
- and beyond". The paper is part of the OLS 2006 Proceedings Volume 1, which can
-@@ -35,6 +36,7 @@ also figure #2 (OLS slides p. 15)
- 
- The main differences to the timer wheel, which holds the armed timer_list type
- timers are:
-+
-        - time ordered enqueueing into a rb-tree
-        - independent of ticks (the processing is based on nanoseconds)
- 
-@@ -55,7 +57,8 @@ merged into the 2.6.18 kernel.
- 
- Further information about the Generic Time Of Day framework is available in the
- OLS 2005 Proceedings Volume 1:
--http://www.linuxsymposium.org/2005/linuxsymposium_procv1.pdf
-+
-+	http://www.linuxsymposium.org/2005/linuxsymposium_procv1.pdf
- 
- The paper "We Are Not Getting Any Younger: A New Approach to Time and
- Timers" was written by J. Stultz, D.V. Hart, & N. Aravamudan.
-@@ -100,6 +103,7 @@ accounting, profiling, and high resolution timers.
- 
- The management layer assigns one or more of the following functions to a clock
- event device:
-+
-       - system global periodic tick (jiffies update)
-       - cpu local update_process_times
-       - cpu local profiling
-@@ -244,6 +248,3 @@ extended to x86_64 and ARM already. Initial (work in progress) support is also
- available for MIPS and PowerPC.
- 
- 	  Thomas, Ingo
+-----------------------------------------------------------------------------
+-
+-::
+-
+-  debug_info_t *debug_register(char *name, int pages, int nr_areas,
+-			       int buf_size);
+-
+-Parameter:
+-	      name:
+-			   Name of debug log (e.g. used for debugfs entry)
+-	      pages:
+-			   Number of pages, which will be allocated per area
+-	      nr_areas:
+-			   Number of debug areas
+-	      buf_size:
+-			   Size of data area in each debug entry
+-
+-Return Value:
+-	Handle for generated debug area
+-
+-	  NULL if register failed
+-
+-Description:  Allocates memory for a debug log
+-	      Must not be called within an interrupt handler
+-
+-----------------------------------------------------------------------------
+-
+-::
+-
+-  debug_info_t *debug_register_mode(char *name, int pages, int nr_areas,
+-				    int buf_size, mode_t mode, uid_t uid,
+-				    gid_t gid);
+-
+-Parameter:
+-	      name:
+-			   Name of debug log (e.g. used for debugfs entry)
+-	      pages:
+-			   Number of pages, which will be allocated per area
+-	      nr_areas:
+-			   Number of debug areas
+-	      buf_size:
+-			   Size of data area in each debug entry
+-	      mode:
+-			   File mode for debugfs files. E.g. S_IRWXUGO
+-	      uid:
+-			   User ID for debugfs files. Currently only 0 is
+-			   supported.
+-	      gid:
+-			   Group ID for debugfs files. Currently only 0 is
+-			   supported.
+-
+-Return Value:
+-	      Handle for generated debug area
+-
+-		NULL if register failed
+-
+-Description:
+-	      Allocates memory for a debug log
+-	      Must not be called within an interrupt handler
+-
+----------------------------------------------------------------------------
+-
+-::
+-
+-  void debug_unregister (debug_info_t * id);
+-
+-Parameter:
+-	       id:
+-		    handle for debug log
+-
+-Return Value:
+-	       none
+-
+-Description:
+-	       frees memory for a debug log and removes all registered debug
+-	       views.
+-
+-	       Must not be called within an interrupt handler
+-
+----------------------------------------------------------------------------
+-
+-::
+-
+-  void debug_set_level (debug_info_t * id, int new_level);
+-
+-Parameter:     id:        handle for debug log
+-	       new_level: new debug level
+-
+-Return Value:
+-	       none
+-
+-Description:
+-	       Sets new actual debug level if new_level is valid.
+-
+----------------------------------------------------------------------------
+-
+-::
+-
+-  bool debug_level_enabled (debug_info_t * id, int level);
+-
+-Parameter:
+-	      id:
+-			  handle for debug log
+-	      level:
+-			  debug level
+-
+-Return Value:
+-	      True if level is less or equal to the current debug level.
+-
+-Description:
+-	      Returns true if debug events for the specified level would be
+-	      logged. Otherwise returns false.
+-
+----------------------------------------------------------------------------
+-
+-::
+-
+-  void debug_stop_all(void);
+-
+-Parameter:
+-	       none
+-
+-Return Value:
+-	       none
+-
+-Description:
+-	       stops the debug feature if stopping is allowed. Currently
+-	       used in case of a kernel oops.
+-
+----------------------------------------------------------------------------
+-
+-::
+-
+-  debug_entry_t* debug_event (debug_info_t* id, int level, void* data,
+-			      int length);
+-
+-Parameter:
+-	       id:
+-		       handle for debug log
+-	       level:
+-		       debug level
+-	       data:
+-		       pointer to data for debug entry
+-	       length:
+-		       length of data in bytes
+-
+-Return Value:
+-	       Address of written debug entry
+-
+-Description:
+-	       writes debug entry to active debug area (if level <= actual
+-	       debug level)
+-
+----------------------------------------------------------------------------
+-
+-::
+-
+-  debug_entry_t* debug_int_event (debug_info_t * id, int level,
+-				  unsigned int data);
+-  debug_entry_t* debug_long_event(debug_info_t * id, int level,
+-				  unsigned long data);
+-
+-Parameter:
+-	       id:
+-		       handle for debug log
+-	       level:
+-		       debug level
+-	       data:
+-		       integer value for debug entry
+-
+-Return Value:
+-	       Address of written debug entry
+-
+-Description:
+-	       writes debug entry to active debug area (if level <= actual
+-	       debug level)
+-
+----------------------------------------------------------------------------
+-
+-::
+-
+-  debug_entry_t* debug_text_event (debug_info_t * id, int level,
+-				   const char* data);
+-
+-Parameter:
+-	       id:
+-		       handle for debug log
+-	       level:
+-		       debug level
+-	       data:
+-		       string for debug entry
+-
+-Return Value:
+-	       Address of written debug entry
+-
+-Description:
+-	       writes debug entry in ascii format to active debug area
+-	       (if level <= actual debug level)
+-
+----------------------------------------------------------------------------
+-
+-::
+-
+-  debug_entry_t* debug_sprintf_event (debug_info_t * id, int level,
+-				      char* string,...);
+-
+-Parameter:
+-	       id:
+-		      handle for debug log
+-	       level:
+-		      debug level
+-	       string:
+-		      format string for debug entry
+-	       ...:
+-		      varargs used as in sprintf()
+-
+-Return Value:  Address of written debug entry
+-
+-Description:
+-	       writes debug entry with format string and varargs (longs) to
+-	       active debug area (if level $<=$ actual debug level).
+-	       floats and long long datatypes cannot be used as varargs.
+-
+----------------------------------------------------------------------------
+-
+-::
+-
+-  debug_entry_t* debug_exception (debug_info_t* id, int level, void* data,
+-				  int length);
+-
+-Parameter:
+-	       id:
+-		       handle for debug log
+-	       level:
+-		       debug level
+-	       data:
+-		       pointer to data for debug entry
+-	       length:
+-		       length of data in bytes
+-
+-Return Value:
+-	       Address of written debug entry
+-
+-Description:
+-	       writes debug entry to active debug area (if level <= actual
+-	       debug level) and switches to next debug area
+-
+----------------------------------------------------------------------------
+-
+-::
+-  debug_entry_t* debug_int_exception (debug_info_t * id, int level,
+-				      unsigned int data);
+-  debug_entry_t* debug_long_exception(debug_info_t * id, int level,
+-				      unsigned long data);
+-
+-Parameter:     id:     handle for debug log
+-	       level:  debug level
+-	       data:   integer value for debug entry
+-
+-Return Value:  Address of written debug entry
+-
+-Description:   writes debug entry to active debug area (if level <= actual
+-	       debug level) and switches to next debug area
+-
+----------------------------------------------------------------------------
+-
+-debug_entry_t* debug_text_exception (debug_info_t * id, int level,
+-				     const char* data);
+-
+-Parameter:     id:     handle for debug log
+-	       level:  debug level
+-	       data:   string for debug entry
+-
+-Return Value:  Address of written debug entry
+-
+-Description:   writes debug entry in ascii format to active debug area
+-	       (if level <= actual debug level) and switches to next debug
+-	       area
+-
+----------------------------------------------------------------------------
+-
+-debug_entry_t* debug_sprintf_exception (debug_info_t * id, int level,
+-					char* string,...);
+-
+-Parameter:     id:    handle for debug log
+-	       level: debug level
+-	       string: format string for debug entry
+-	       ...: varargs used as in sprintf()
+-
+-Return Value:  Address of written debug entry
+-
+-Description:   writes debug entry with format string and varargs (longs) to
+-	       active debug area (if level $<=$ actual debug level) and
+-	       switches to next debug area.
+-	       floats and long long datatypes cannot be used as varargs.
+-
+----------------------------------------------------------------------------
+-
+-int debug_register_view (debug_info_t * id, struct debug_view *view);
+-
+-Parameter:     id:    handle for debug log
+-	       view:  pointer to debug view struct
+-
+-Return Value:  0  : ok
+-	       < 0: Error
+-
+-Description:   registers new debug view and creates debugfs dir entry
+-
+----------------------------------------------------------------------------
+-
+-int debug_unregister_view (debug_info_t * id, struct debug_view *view);
+-
+-Parameter:     id:    handle for debug log
+-	       view:  pointer to debug view struct
+-
+-Return Value:  0  : ok
+-	       < 0: Error
+-
+-Description:   unregisters debug view and removes debugfs dir entry
 -
 -
--
-diff --git a/Documentation/timers/hpet.txt b/Documentation/timers/hpet.txt
-index 895345ec513b..c9d05d3caaca 100644
---- a/Documentation/timers/hpet.txt
-+++ b/Documentation/timers/hpet.txt
-@@ -1,4 +1,6 @@
--		High Precision Event Timer Driver for Linux
-+===========================================
-+High Precision Event Timer Driver for Linux
-+===========================================
++.. kernel-doc:: arch/s390/include/asm/debug.h
  
- The High Precision Event Timer (HPET) hardware follows a specification
- by Intel and Microsoft, revision 1.
-diff --git a/Documentation/timers/hrtimers.txt b/Documentation/timers/hrtimers.txt
-index 588d85724f10..c1c20a693e8f 100644
---- a/Documentation/timers/hrtimers.txt
-+++ b/Documentation/timers/hrtimers.txt
-@@ -1,6 +1,6 @@
--
-+======================================================
- hrtimers - subsystem for high-resolution kernel timers
------------------------------------------------------
-+======================================================
+ Predefined views:
+ -----------------
+diff --git a/arch/s390/include/asm/debug.h b/arch/s390/include/asm/debug.h
+index c305d39f5016..7cc83938c659 100644
+--- a/arch/s390/include/asm/debug.h
++++ b/arch/s390/include/asm/debug.h
+@@ -95,25 +95,106 @@ debug_entry_t *debug_exception_common(debug_info_t *id, int level,
  
- This patch introduces a new subsystem for high-resolution kernel timers.
+ /* Debug Feature API: */
  
-@@ -146,7 +146,7 @@ the clock_getres() interface. This will return whatever real resolution
- a given clock has - be it low-res, high-res, or artificially-low-res.
++/**
++ * debug_register() - allocates memory for a debug log.
++ *
++ * @name:        Name of debug log (e.g. used for debugfs entry)
++ * @pages:       Number of pages, which will be allocated per area
++ * @nr_areas:    Number of debug areas
++ * @buf_size:    Size of data area in each debug entry
++ *
++ * Return:
++ * - Handler for generated debug area
++ * - %NULL if register failed
++ *
++ * Must not be called within an interrupt handler.
++ */
+ debug_info_t *debug_register(const char *name, int pages, int nr_areas,
+ 			     int buf_size);
  
- hrtimers - testing and verification
------------------------------------
-+-----------------------------------
++/**
++ * debug_register_mode() - allocates memory for a debug log.
++ *
++ * @name:	Name of debug log (e.g. used for debugfs entry)
++ * @pages:	Number of pages, which will be allocated per area
++ * @nr_areas:	Number of debug areas
++ * @buf_size:	Size of data area in each debug entry
++ * @mode:	File mode for debugfs files. E.g. S_IRWXUGO
++ * @uid:	User ID for debugfs files. Currently only 0 is supported.
++ * @gid:	Group ID for debugfs files. Currently only 0 is supported.
++ *
++ * Return:
++ * - Handler for generated debug area
++ * - %NULL if register failed
++ *
++ * Must not be called within an interrupt handler
++ */
+ debug_info_t *debug_register_mode(const char *name, int pages, int nr_areas,
+ 				  int buf_size, umode_t mode, uid_t uid,
+ 				  gid_t gid);
  
- We used the high-resolution clock subsystem ontop of hrtimers to verify
- the hrtimer implementation details in praxis, and we also ran the posix
-diff --git a/Documentation/timers/timekeeping.txt b/Documentation/timers/timekeeping.txt
-index 2d1732b0a868..f83e98852e2c 100644
---- a/Documentation/timers/timekeeping.txt
-+++ b/Documentation/timers/timekeeping.txt
-@@ -1,5 +1,6 @@
-+===========================================================
- Clock sources, Clock events, sched_clock() and delay timers
-------------------------------------------------------------
-+===========================================================
++/**
++ * debug_unregister() - frees memory for a debug log and removes all
++ *			registered debug
++ * views.
++ *
++ * @id:		handle for debug log
++ *
++ * Return:
++ *    none
++ *
++ * Must not be called within an interrupt handler
++ */
+ void debug_unregister(debug_info_t *id);
  
- This document tries to briefly explain some basic kernel timekeeping
- abstractions. It partly pertains to the drivers usually found in
-diff --git a/Documentation/timers/timers-howto.txt b/Documentation/timers/timers-howto.txt
-index 038f8c77a076..7e3167bec2b1 100644
---- a/Documentation/timers/timers-howto.txt
-+++ b/Documentation/timers/timers-howto.txt
-@@ -1,5 +1,6 @@
-+===================================================================
- delays - Information on the various kernel delay / sleep mechanisms
---------------------------------------------------------------------
-+===================================================================
++/**
++ * debug_set_level() -  Sets new actual debug level if new_level is valid.
++ *
++ * @id:		handle for debug log
++ * @new_level:	new debug level
++ *
++ * Return:
++ *    none
++ */
+ void debug_set_level(debug_info_t *id, int new_level);
  
- This document seeks to answer the common question: "What is the
- RightWay (TM) to insert a delay?"
-@@ -17,7 +18,7 @@ code in an atomic context?"  This should be followed closely by "Does
- it really need to delay in atomic context?" If so...
- 
- ATOMIC CONTEXT:
--	You must use the *delay family of functions. These
-+	You must use the `*delay` family of functions. These
- 	functions use the jiffie estimation of clock speed
- 	and will busy wait for enough loop cycles to achieve
- 	the desired delay:
-@@ -35,21 +36,26 @@ ATOMIC CONTEXT:
- 	be refactored to allow for the use of msleep.
- 
- NON-ATOMIC CONTEXT:
--	You should use the *sleep[_range] family of functions.
-+	You should use the `*sleep[_range]` family of functions.
- 	There are a few more options here, while any of them may
- 	work correctly, using the "right" sleep function will
- 	help the scheduler, power management, and just make your
- 	driver better :)
- 
- 	-- Backed by busy-wait loop:
+ void debug_set_critical(void);
 +
- 		udelay(unsigned long usecs)
-+
- 	-- Backed by hrtimers:
-+
- 		usleep_range(unsigned long min, unsigned long max)
-+
- 	-- Backed by jiffies / legacy_timers
-+
- 		msleep(unsigned long msecs)
- 		msleep_interruptible(unsigned long msecs)
++/**
++ * debug_stop_all() - stops the debug feature if stopping is allowed.
++ *
++ * Return:
++ * -   none
++ */
+ void debug_stop_all(void);
  
--	Unlike the *delay family, the underlying mechanism
-+	Unlike the `*delay` family, the underlying mechanism
- 	driving each of these calls varies, thus there are
- 	quirks you should be aware of.
++/**
++ * debug_level_enabled() - Returns true if debug events for the specified
++ *			   level would be logged. Otherwise returns false.
++ *
++ * @id:		handle for debug log
++ * @level:	debug level
++ *
++ * Return:
++ * - %true if level is less or equal to the current debug level.
++ */
+ static inline bool debug_level_enabled(debug_info_t *id, int level)
+ {
+ 	return level <= id->level;
+ }
  
-@@ -70,6 +76,7 @@ NON-ATOMIC CONTEXT:
- 		- Why not msleep for (1ms - 20ms)?
- 			Explained originally here:
- 				http://lkml.org/lkml/2007/8/3/250
++/**
++ * debug_event() - writes debug entry to active debug area
++ *		   (if level <= actual debug level)
++ *
++ * @id:		handle for debug log
++ * @level:	debug level
++ * @data:	pointer to data for debug entry
++ * @length:	length of data in bytes
++ *
++ * Return:
++ * - Address of written debug entry
++ */
+ static inline debug_entry_t *debug_event(debug_info_t *id, int level,
+ 					 void *data, int length)
+ {
+@@ -122,6 +203,18 @@ static inline debug_entry_t *debug_event(debug_info_t *id, int level,
+ 	return debug_event_common(id, level, data, length);
+ }
+ 
++/**
++ * debug_int_event() - writes debug entry to active debug area
++ * 		       (if level <= actual debug level)
++ *
++ * @id:		handle for debug log
++ * @level:	debug level
++ * @tag:	integer value for debug entry
++ *
++ * Return:
++ * - Address of written debug entry
++ * - %NULL if error
++ */
+ static inline debug_entry_t *debug_int_event(debug_info_t *id, int level,
+ 					     unsigned int tag)
+ {
+@@ -132,6 +225,18 @@ static inline debug_entry_t *debug_int_event(debug_info_t *id, int level,
+ 	return debug_event_common(id, level, &t, sizeof(unsigned int));
+ }
+ 
++/**
++ * debug_long_event() - writes debug entry to active debug area
++ * 		       (if level <= actual debug level)
++ *
++ * @id:		handle for debug log
++ * @level:	debug level
++ * @tag:	integer value for debug entry
++ *
++ * Return:
++ * - Address of written debug entry
++ * - %NULL if error
++ */
+ static inline debug_entry_t *debug_long_event(debug_info_t *id, int level,
+ 					      unsigned long tag)
+ {
+@@ -142,6 +247,18 @@ static inline debug_entry_t *debug_long_event(debug_info_t *id, int level,
+ 	return debug_event_common(id, level, &t, sizeof(unsigned long));
+ }
+ 
++/**
++ * debug_text_event() - writes debug entry in ascii format to active
++ *			debug area (if level <= actual debug level)
++ *
++ * @id:		handle for debug log
++ * @level:	debug level
++ * @txt:	string for debug entry
++ *
++ * Return:
++ * - Address of written debug entry
++ * - %NULL if error
++ */
+ static inline debug_entry_t *debug_text_event(debug_info_t *id, int level,
+ 					      const char *txt)
+ {
+@@ -158,6 +275,22 @@ extern debug_entry_t *
+ __debug_sprintf_event(debug_info_t *id, int level, char *string, ...)
+ 	__attribute__ ((format(printf, 3, 4)));
+ 
++/**
++ * debug_sprintf_event() - writes debug entry with format string
++ *			   and varargs (longs) to active debug area
++ *			   (if level $<=$ actual debug level).
++ *
++ * @_id:	handle for debug log
++ * @_level:	debug level
++ * @_fmt:	format string for debug entry
++ * @...:	varargs used as in sprintf()
++ *
++ * Return:
++ * - Address of written debug entry
++ * - %NULL if error
++ *
++ * floats and long long datatypes cannot be used as varargs.
++ */
+ #define debug_sprintf_event(_id, _level, _fmt, ...)			\
+ ({									\
+ 	debug_entry_t *__ret;						\
+@@ -172,6 +305,20 @@ __debug_sprintf_event(debug_info_t *id, int level, char *string, ...)
+ 	__ret;								\
+ })
+ 
++/**
++ * debug_exception() - writes debug entry to active debug area
++ *		       (if level <= actual debug level) and switches
++ *		       to next debug area
++ *
++ * @id:		handle for debug log
++ * @level:	debug level
++ * @data:	pointer to data for debug entry
++ * @length:	length of data in bytes
++ *
++ * Return:
++ * - Address of written debug entry
++ * - %NULL if error
++ */
+ static inline debug_entry_t *debug_exception(debug_info_t *id, int level,
+ 					     void *data, int length)
+ {
+@@ -180,6 +327,19 @@ static inline debug_entry_t *debug_exception(debug_info_t *id, int level,
+ 	return debug_exception_common(id, level, data, length);
+ }
+ 
++/**
++ * debug_int_exception() - writes debug entry to active debug area
++ *			   (if level <= actual debug level)
++ *			   and switches to next debug area
++ *
++ * @id:		handle for debug log
++ * @level:	debug level
++ * @tag:	integer value for debug entry
++ *
++ * Return:
++ * - Address of written debug entry
++ * - %NULL if error
++ */
+ static inline debug_entry_t *debug_int_exception(debug_info_t *id, int level,
+ 						 unsigned int tag)
+ {
+@@ -190,6 +350,19 @@ static inline debug_entry_t *debug_int_exception(debug_info_t *id, int level,
+ 	return debug_exception_common(id, level, &t, sizeof(unsigned int));
+ }
+ 
++/**
++ * debug_long_exception() - writes debug entry to active debug area
++ *			   (if level <= actual debug level)
++ *			   and switches to next debug area
++ *
++ * @id:		handle for debug log
++ * @level:	debug level
++ * @tag:	integer value for debug entry
++ *
++ * Return:
++ * - Address of written debug entry
++ * - %NULL if error
++ */
+ static inline debug_entry_t *debug_long_exception (debug_info_t *id, int level,
+ 						   unsigned long tag)
+ {
+@@ -200,6 +373,20 @@ static inline debug_entry_t *debug_long_exception (debug_info_t *id, int level,
+ 	return debug_exception_common(id, level, &t, sizeof(unsigned long));
+ }
+ 
++/**
++ * debug_text_exception() - writes debug entry in ascii format to active
++ *			    debug area (if level <= actual debug level)
++ *			    and switches to next debug
++ * area
++ *
++ * @id:	handle for debug log
++ * @level:	debug level
++ * @txt:	string for debug entry
++ *
++ * Return:
++ * - Address of written debug entry
++ * - %NULL if error
++ */
+ static inline debug_entry_t *debug_text_exception(debug_info_t *id, int level,
+ 						  const char *txt)
+ {
+@@ -216,6 +403,24 @@ extern debug_entry_t *
+ __debug_sprintf_exception(debug_info_t *id, int level, char *string, ...)
+ 	__attribute__ ((format(printf, 3, 4)));
+ 
 +
- 			msleep(1~20) may not do what the caller intends, and
- 			will often sleep longer (~20 ms actual sleep for any
- 			value given in the 1~20ms range). In many cases this
++/**
++ * debug_sprintf_exception() - writes debug entry with format string and
++ *			       varargs (longs) to active debug area
++ * 			       (if level $<=$ actual debug level)
++ *			       and switches to next debug area.
++ *
++ * @_id:	handle for debug log
++ * @_level:	debug level
++ * @_fmt:	format string for debug entry
++ * @...:	varargs used as in sprintf()
++ *
++ * Return:
++ * - Address of written debug entry
++ * - %NULL if error
++ *
++ * floats and long long datatypes cannot be used as varargs.
++ */
+ #define debug_sprintf_exception(_id, _level, _fmt, ...)			\
+ ({									\
+ 	debug_entry_t *__ret;						\
+@@ -230,7 +435,33 @@ __debug_sprintf_exception(debug_info_t *id, int level, char *string, ...)
+ 	__ret;								\
+ })
+ 
++/**
++ * debug_register_view() - registers new debug view and creates debugfs
++ *			   dir entry
++ *
++ * @id:	handle for debug log
++ * @view:	pointer to debug view struct
++ *
++ * Return:
++ * -   0  : ok
++ * -   < 0: Error
++ */
+ int debug_register_view(debug_info_t *id, struct debug_view *view);
++
++/**
++ * debug_unregister_view()
++ *
++ * @id:	handle for debug log
++ * @view:	pointer to debug view struct
++ *
++ * Return:
++ * -   0  : ok
++ * -   < 0: Error
++ *
++ *
++ * unregisters debug view and removes debugfs dir entry
++ */
++
+ int debug_unregister_view(debug_info_t *id, struct debug_view *view);
+ 
+ /*
 -- 
 2.20.1
 
