@@ -2,138 +2,69 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6159BC282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:59:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8341EC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:59:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30F7D20674
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:59:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="Ul20SAHx"
+	by mail.kernel.org (Postfix) with ESMTP id 5C4D220663
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:59:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729818AbfDPO7W (ORCPT
+        id S1729826AbfDPO71 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 10:59:22 -0400
-Received: from mx08-00178001.pphosted.com ([91.207.212.93]:39062 "EHLO
-        mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1726605AbfDPO6v (ORCPT
+        Tue, 16 Apr 2019 10:59:27 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:34697 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729819AbfDPO7Y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 10:58:51 -0400
-Received: from pps.filterd (m0046661.ppops.net [127.0.0.1])
-        by mx08-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3GEqBNW004017;
-        Tue, 16 Apr 2019 16:58:35 +0200
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : in-reply-to : references : mime-version :
- content-type; s=STMicroelectronics;
- bh=7iC3GIYKH/UQWDBYoSrrAmvhnN+Pb4p3UHEM1FZwyZY=;
- b=Ul20SAHxbEV67kq8fboZopQMLNmJ8ZH8vGzk7jbX8qUzDqn12yV/JpoWukjAgUhjPed3
- KXABecS6qRuu8fPqGdZT/YqV1gfFsM1qqXG7QXE1exm4Ga0D7Si07mIJY8KR/lHbTosE
- Tda4C/+mSbCltwMyx7okA8Wqprl+H9mvaw3/bJArT3BL049vFdcj3XFokaeumnprZ135
- yF6jMr1xR4bLbyQNjBvCbhr7GlwoRrguUylDIVOx3ljJ2vOUvQn5UMT5UfhEgv7pZmSf
- 1aGQ8GIcvW/sA6dMKuV4DRuMXMzhJEAu4S9qrYpR/kD3+LbQTVBiS8i71zvwy7wLXAx6 Kw== 
-Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx08-00178001.pphosted.com with ESMTP id 2ru6ngseaa-1
-        (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 16 Apr 2019 16:58:35 +0200
-Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 03F0F3D;
-        Tue, 16 Apr 2019 14:58:35 +0000 (GMT)
-Received: from Webmail-eu.st.com (Safex1hubcas22.st.com [10.75.90.92])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id CD940269B;
-        Tue, 16 Apr 2019 14:58:34 +0000 (GMT)
-Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas22.st.com
- (10.75.90.92) with Microsoft SMTP Server (TLS) id 14.3.361.1; Tue, 16 Apr
- 2019 16:58:34 +0200
-Received: from localhost (10.201.23.25) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 16 Apr 2019 16:58:34
- +0200
-From:   Fabien Dessenne <fabien.dessenne@st.com>
-To:     Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
-        Alexandre Torgue <alexandre.torgue@st.com>,
-        Ohad Ben-Cohen <ohad@wizery.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        <devicetree@vger.kernel.org>,
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <linux-remoteproc@vger.kernel.org>
-CC:     Fabien Dessenne <fabien.dessenne@st.com>,
-        Loic Pallardy <loic.pallardy@st.com>,
-        Arnaud Pouliquen <arnaud.pouliquen@st.com>,
-        "Ludovic Barre" <ludovic.barre@st.com>,
-        Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v2 1/8] dt-bindings: stm32: add bindings for ML-AHB interconnect
-Date:   Tue, 16 Apr 2019 16:58:12 +0200
-Message-ID: <1555426699-5340-2-git-send-email-fabien.dessenne@st.com>
-X-Mailer: git-send-email 2.7.4
-In-Reply-To: <1555426699-5340-1-git-send-email-fabien.dessenne@st.com>
-References: <1555426699-5340-1-git-send-email-fabien.dessenne@st.com>
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.201.23.25]
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-16_05:,,
- signatures=0
+        Tue, 16 Apr 2019 10:59:24 -0400
+Received: by mail-pf1-f193.google.com with SMTP id b3so10556863pfd.1;
+        Tue, 16 Apr 2019 07:59:24 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:message-id:subject:from:to:cc:date:in-reply-to
+         :references:mime-version:content-transfer-encoding;
+        bh=yu9Z/EyNWp/U8dL+P8qHuhZD1ld40sA1sHPO6SGI6ok=;
+        b=qsI97xtDmxX8qbW/v6B3ETVPE9++QHW5DfLflKQq4P3IUa2LynL94vffzdaJWOhTNT
+         +Db2VMX5T7Ce+7ik8ITJGjhyx7fIVPEIQBJF5cMMxLpUuE7xIDATiHd7zHfst3n6Yh+F
+         C9TRNRkNM/0m4dkPWhLQPqfC0jDL/6Ja+FUKN8Zb30rzGXOwAPsuLJSI1xqI8OYQ8Yav
+         JenzY+4F0d7J09ICTvDfKHFTGxWfbyDFrD9k1lBBN54iHTPCJpWiXYMlqI2pdju56pOU
+         XgcxNR3O3yspiWzN9SBhUSxDQQW76YVAAI3SQr7jE5AN2NISGyXecLdbG5UAVXGzbFX3
+         GSwQ==
+X-Gm-Message-State: APjAAAWBP8JUSMtF574nsNU5zBtle74bH3iPV7lK48CQ4fNS26/I2IyJ
+        Aj05s7SfJJVUMl/cyKvrCMc=
+X-Google-Smtp-Source: APXvYqyC4K8SMb/lpcsPV3/59yelHHy8Z+8+zfBNakYSXP04DrKu90LbF2wVIg3xGCFRoFHH+wyHkA==
+X-Received: by 2002:a62:424f:: with SMTP id p76mr83227665pfa.141.1555426763480;
+        Tue, 16 Apr 2019 07:59:23 -0700 (PDT)
+Received: from [10.128.207.50] ([66.201.36.5])
+        by smtp.gmail.com with ESMTPSA id v82sm118614912pfa.170.2019.04.16.07.59.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 16 Apr 2019 07:59:22 -0700 (PDT)
+Message-ID: <1555426760.35423.0.camel@acm.org>
+Subject: Re: [PATCH v2 2/3] blk-mq.c: Rework documention of
+ blk_mq_init_sq_queue function
+From:   Bart Van Assche <bvanassche@acm.org>
+To:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>,
+        linux-kernel@vger.kernel.org
+Cc:     linux-block@vger.kernel.org, axboe@kernel.dk,
+        Chaitanya.Kulkarni@wdc.com
+Date:   Tue, 16 Apr 2019 07:59:20 -0700
+In-Reply-To: <20190416032801.200694-2-marcos.souza.org@gmail.com>
+References: <20190416032801.200694-1-marcos.souza.org@gmail.com>
+         <20190416032801.200694-2-marcos.souza.org@gmail.com>
+Content-Type: text/plain; charset="UTF-7"
+X-Mailer: Evolution 3.26.2-1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document the ML-AHB interconnect for stm32 SoCs.
+On Tue, 2019-04-16 at 00:28 -0300, Marcos Paulo de Souza wrote:
++AD4  +ACo +AEA-set+AF8-flags: flags of +AEA-set
 
-Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
----
- .../devicetree/bindings/arm/stm32/mlahb.txt        | 37 ++++++++++++++++++++++
- 1 file changed, 37 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/stm32/mlahb.txt
+The above does not look very helpful to me ...
 
-diff --git a/Documentation/devicetree/bindings/arm/stm32/mlahb.txt b/Documentation/devicetree/bindings/arm/stm32/mlahb.txt
-new file mode 100644
-index 0000000..a36458a
---- /dev/null
-+++ b/Documentation/devicetree/bindings/arm/stm32/mlahb.txt
-@@ -0,0 +1,37 @@
-+ML-AHB interconnect bindings
-+
-+These bindings describe the STM32 SoCs ML-AHB interconnect bus which connects
-+a Cortex-M subsystem with dedicated memories.
-+The MCU SRAM and RETRAM memory parts can be accessed through different addresses
-+(see "RAM aliases" in [1]) using different buses (see [2]) : balancing the
-+Cortex-M firmware accesses among those ports allows to tune the system
-+performance.
-+
-+[1]: https://www.st.com/resource/en/reference_manual/dm00327659.pdf
-+[2]: https://wiki.st.com/stm32mpu/wiki/STM32MP15_RAM_mapping
-+
-+Required properties:
-+- compatible: should be "simple-bus"
-+- dma-ranges: describes memory addresses translation between the local CPU and
-+	   the remote Cortex-M processor. Each memory region, is declared with
-+	   3 parameters:
-+		 - param 1: device base address (Cortex-M processor address)
-+		 - param 2: physical base address (local CPU address)
-+		 - param 3: size of the memory region.
-+
-+The Cortex-M remote processor accessed via the mlahb interconnect is described
-+by a child node.
-+
-+Example:
-+mlahb {
-+	compatible = "simple-bus";
-+	#address-cells = <1>;
-+	#size-cells = <1>;
-+	dma-ranges = <0x00000000 0x38000000 0x10000>,
-+		     <0x10000000 0x10000000 0x60000>,
-+		     <0x30000000 0x30000000 0x60000>;
-+
-+	m4_rproc: m4@0 {
-+		...
-+	};
-+};
--- 
-2.7.4
-
+Bart.
