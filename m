@@ -2,184 +2,149 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED68C282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0057CC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:58:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 068CC20868
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:57:22 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=lixom-net.20150623.gappssmtp.com header.i=@lixom-net.20150623.gappssmtp.com header.b="hmZzhUQ1"
+	by mail.kernel.org (Postfix) with ESMTP id C8CE720821
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:58:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729712AbfDPQ5V (ORCPT
+        id S1730029AbfDPQ6H (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 12:57:21 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:38812 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728052AbfDPQ5V (ORCPT
+        Tue, 16 Apr 2019 12:58:07 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:35866 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726946AbfDPQ6G (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 12:57:21 -0400
-Received: by mail-it1-f193.google.com with SMTP id f22so33715588ita.3
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:57:20 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=lixom-net.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=EU46mLQQ7G089XieiXXUNG+kvC8Kcv5wsXaiLDfWNPM=;
-        b=hmZzhUQ1FwKF58/BA7qKfuPVO7YbSv0RBE33RVGiBatJnffk3jyClBySbZoneDLHaU
-         17pi5JG572jswpbG3sm3Yy+GTH0OLGDDyudPCL2O7/hOvS9mIU8IgtEm1/ZbnII+5T1q
-         GDdCEPcXsulbIEM6uYikY9Lealf8lno5CoThLmUg6v7WHv5mv9WgNBWIl2eOagfhvJhH
-         zOlpODIhHJg0VqCtGk9OtDfx5yZkWZI8HLAFS9u8Q3lepbHr9VSjzROvVVSxaNq8Swuc
-         eF0AfeR7boqKeBlAhtCA6cKFpFrMIsaCnXj4ohfJ8E1e8JYuB05X7/sg6ingMGk4WH9U
-         mvNQ==
+        Tue, 16 Apr 2019 12:58:06 -0400
+Received: by mail-oi1-f194.google.com with SMTP id l203so17601371oia.3;
+        Tue, 16 Apr 2019 09:58:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=EU46mLQQ7G089XieiXXUNG+kvC8Kcv5wsXaiLDfWNPM=;
-        b=VfPNTvR5K9+yrI170kJQ2S6KXBzsyncysyI2SKJchbhEq7PwBMRLBUO9gAAvEPCRKv
-         sugQgf3/Du5UskHJOl1ZnqdRsyjwr+xLMT+mRcDGg5bH/X9XYHP78rHaVKPpHmlEqUE1
-         U7K3vfT4a2mevfTRBzZ4Q+zueun8NDm53kIO7EyiGehhX8xsmBy2qrlZe0wYM+Oafy+7
-         tlF3qZUM1ovsI51i/9Y7GRvv8TRCdsWii8y6BeiGxfnjeuK3va7clkk0BOhmxAXKfhaX
-         k2wG/yObgoxc182q/bIC24Ie0ZuclHmSHuw6pyRANB+AhojZUXr1+D5tA+qLMT5TwzUd
-         cbCg==
-X-Gm-Message-State: APjAAAV1T2R/eBXTNJw8o9GGNsH0rVD/xrca7+zMH6XjlUV3TH6UTY+T
-        QGyTEaaW+oB9jaumK7ob7AKb5OR4BcAKjiRak5tMSg==
-X-Google-Smtp-Source: APXvYqxB08JGEDtscMYEYo8Sg5HwPOOG6oPOAiZrsbLH5xeEilW+y2/SxXthJNaZVzYc8OPGM1YjpXTW7H4SV9tcS6E=
-X-Received: by 2002:a24:2458:: with SMTP id f85mr29260925ita.83.1555433839807;
- Tue, 16 Apr 2019 09:57:19 -0700 (PDT)
+        bh=6O9UWoKPONz+bYSG+75bKCi216wdgvOgo062zGz4RQY=;
+        b=qx7F/ZY+aLxksEEp+TmZIhoE12Hwxfh0oUwP8Gb2iG9IXre9ae8Hl9+wDXYLXpKJl9
+         roFL3FupuK5V6bVPbsJRnmvQzri66Z3SKqFzGbsZrKF4gk3UB1LTwAgQE3AefxR3fi8n
+         fIcE7uI/3rTgV9BB4ZQ7F8MdZjPRv9HCojI1NUbVhrAZak6N1AstYRsNAo6PMDRJqWbq
+         B0hBe8hVXu8an8g1Gg9EcBBKyAnGe14KDpIp7489YAf8MBBGmhxw1mN1cdsn+/ASG/CA
+         h9NPMR5e0GoPwDB9tNqYrlWw0Wvhbn+MI+SbzjnGJ0O0auxAnb+ENzGXzf24m9qEEfPY
+         h6Eg==
+X-Gm-Message-State: APjAAAU2g7JSJLP5yLrUuOD2p1RDCqM8iqIx5OlYl/NcGqOI+I2q9W0j
+        xr8Cw9cN//g94hBOPqApWKYehK96
+X-Google-Smtp-Source: APXvYqwCyk2MSmArCItUUEXzMboe9a1lQnKsCsb+7B/H+9b5akIvFvLJY4JVAU3OBGzBc3KA3sD6fA==
+X-Received: by 2002:aca:310a:: with SMTP id x10mr25043639oix.161.1555433885649;
+        Tue, 16 Apr 2019 09:58:05 -0700 (PDT)
+Received: from mail-oi1-f173.google.com (mail-oi1-f173.google.com. [209.85.167.173])
+        by smtp.gmail.com with ESMTPSA id s63sm18944847oif.52.2019.04.16.09.58.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Apr 2019 09:58:04 -0700 (PDT)
+Received: by mail-oi1-f173.google.com with SMTP id x188so17562064oia.13;
+        Tue, 16 Apr 2019 09:58:04 -0700 (PDT)
+X-Received: by 2002:aca:f1d4:: with SMTP id p203mr25036958oih.154.1555433884418;
+ Tue, 16 Apr 2019 09:58:04 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190411031540.ehezr6kq7ouobpzx@ast-mbp.dhcp.thefacebook.com>
- <CAOesGMgiPB=7FE7tXXHes7WSLfByyPxirOStoH21NZqMwaUihQ@mail.gmail.com>
- <20190415104109.64d914f3@gandalf.local.home> <CAGXu5j+KPVRcOJ3Ue9ZQF93GyaDhvCnFCvJ_C3WKCx2=SNdDyg@mail.gmail.com>
- <20190416083306.5646a687@gandalf.local.home> <20190416124939.GB6027@kroah.com>
- <20190416130440.GA7944@localhost> <f8b15e31-1aab-ab2c-d44d-47325faab67d@opersys.com>
- <20190416094509.1af6326b@gandalf.local.home> <20190416142240.GA31920@kroah.com>
- <20190416164642.krptlz32zusr4pgn@ast-mbp.dhcp.thefacebook.com>
-In-Reply-To: <20190416164642.krptlz32zusr4pgn@ast-mbp.dhcp.thefacebook.com>
-From:   Olof Johansson <olof@lixom.net>
-Date:   Tue, 16 Apr 2019 09:57:08 -0700
-Message-ID: <CAOesGMgGEZ8o-e2uAYLSGeO+RHcXAEzEoKcsjpveOLJZ5pX=4w@mail.gmail.com>
-Subject: Re: [PATCH v5 1/3] Provide in-kernel headers to make extending kernel easier
-To:     Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Karim Yaghmour <karim.yaghmour@opersys.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Kees Cook <keescook@chromium.org>,
-        Olof Johansson <olof@lixom.net>,
-        Joel Fernandes <joelaf@google.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Qais Yousef <qais.yousef@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Manoj Rao <linux@manojrajarao.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Alexei Starovoitov <ast@kernel.org>,
-        atish patra <atishp04@gmail.com>,
-        Daniel Colascione <dancol@google.com>,
-        Dan Williams <dan.j.williams@intel.com>,
-        Guenter Roeck <groeck@chromium.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Android Kernel Team <kernel-team@android.com>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        "open list:KERNEL SELFTEST FRAMEWORK" 
-        <linux-kselftest@vger.kernel.org>,
-        linux-trace-devel@vger.kernel.org,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Masami Hiramatsu <mhiramat@kernel.org>,
-        Randy Dunlap <rdunlap@infradead.org>,
-        Shuah Khan <shuah@kernel.org>, Yonghong Song <yhs@fb.com>
+References: <20190411232315.19588-1-olteanv@gmail.com> <20190411232315.19588-2-olteanv@gmail.com>
+In-Reply-To: <20190411232315.19588-2-olteanv@gmail.com>
+From:   Li Yang <leoyang.li@nxp.com>
+Date:   Tue, 16 Apr 2019 11:57:53 -0500
+X-Gmail-Original-Message-ID: <CADRPPNS2kecKh=MXJZafKW1x7wZ2MJh4qng1jdZ=-Pij2nXi2g@mail.gmail.com>
+Message-ID: <CADRPPNS2kecKh=MXJZafKW1x7wZ2MJh4qng1jdZ=-Pij2nXi2g@mail.gmail.com>
+Subject: Re: [PATCH v2 2/2] ARM: dts: ls1021: Fix SGMII PCS link remaining
+ down after PHY disconnect
+To:     Vladimir Oltean <olteanv@gmail.com>
+Cc:     Shawn Guo <shawnguo@kernel.org>, claudiu.manoil@nxp.com,
+        Rob Herring <robh+dt@kernel.org>,
+        "moderated list:ARM/FREESCALE IMX / MXC ARM ARCHITECTURE" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
+        <devicetree@vger.kernel.org>, lkml <linux-kernel@vger.kernel.org>,
+        Netdev <netdev@vger.kernel.org>,
+        David Miller <davem@davemloft.net>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 9:46 AM Alexei Starovoitov
-<alexei.starovoitov@gmail.com> wrote:
+On Thu, Apr 11, 2019 at 6:28 PM Vladimir Oltean <olteanv@gmail.com> wrote:
 >
-> On Tue, Apr 16, 2019 at 04:22:40PM +0200, Greg Kroah-Hartman wrote:
-> > On Tue, Apr 16, 2019 at 09:45:09AM -0400, Steven Rostedt wrote:
-> > > On Tue, 16 Apr 2019 09:32:37 -0400
-> > > Karim Yaghmour <karim.yaghmour@opersys.com> wrote:
-> > >
-> > > > >>> Then we should perhaps make a new file system call tarballs ;-)
-> > > > >>>
-> > > > >>>   /sys/kernel/tarballs/
-> > > > >>>
-> > > > >>> and place everything there. That way it removes it from /proc (which is
-> > > > >>> the worse place for that) and also makes it something other than debug.
-> > > > >>> That's what I did for tracefs.
-> > > > >>
-> > > > >> As horrible as that suggestion is, it does kind of make sense :)
-> > > > >>
-> > > > >> We can't put this in debugfs as that's only for debugging and systems
-> > > > >> should never have that mounted for normal operations (users want to
-> > > > >> build ebpf programs), and /proc really should be for processes but that
-> > > > >> horse is long left the barn.
-> > > > >>
-> > > > >> But, I'm willing to consider putting this either in a system-fs-like
-> > > > >> filesystem, or just in sysfs itself, we do have /sys/kernel/ to play
-> > > > >> around in if the main objection is that we should not be cluttering up
-> > > > >> /proc with stuff like this.
-> > > > >>
-> > > > >
-> > > > > I am ok with the suggestion of /sys/kernel for the archive. That also seems
-> > > > > to fit well with the idea that the headers are kernel related and probably
-> > > > > belong here more strictly speaking, than /proc.
-> > > >
-> > > > This makes sense. And if it alleviates concerns regarding extending
-> > > > /proc ABIs then might as well switch to this.
-> > > >
-> > > > Olof, what do you think of this?
-> > >
-> > > BTW, the name "tarballs" was kind of a joke. Probably should come up
-> > > with a better name. Although, I'm fine with tarballsfs ;-)
-> >
-> > No need to have this be a separate filesystem, we can use a binary sysfs
-> > file in /sys/kernel/ for this as the kernel is not doing any "parsing"
-> > of the data, it is just dumping it out to userspace.
+> Each eTSEC MAC has its own TBI (SGMII) PCS and private MDIO bus.
+> But due to a DTS oversight, both SGMII-compatible MACs of the LS1021 SoC
+> are pointing towards the same internal PCS. Therefore nobody is
+> controlling the internal PCS of eTSEC0.
 >
-> What folks keep saying that an fs of header files is easier to use
-> than tarball from bcc and cleaner from architectural pov.
-> That's not the case.
-> From bcc side I'd rather have a single precompiled headers blob
-> that I can feed into clang and improve bpf program compilation time.
-> Having a set of headers is a step to generate such .pch file,
-> but once generated the headers can be removed from fs and kheaders
-> module unloaded.
-> The sequence is: bcc checks standard /lib/module location,
-> if not there loads kheader mod, extracts into known location, and unloads.
+> Upon initial ndo_open, the SGMII link is ok by virtue of U-boot
+> initialization. But upon an ifdown/ifup sequence, the code path from
+> ndo_open -> init_phy -> gfar_configure_serdes does not get executed for
+> the PCS of eTSEC0 (and is executed twice for MAC eTSEC1). So the SGMII
+> link remains down for eTSEC0. On the LS1021A-TWR board, to signal this
+> failure condition, the PHY driver keeps printing
+> '803x_aneg_done: SGMII link is not ok'.
+>
+> Fixes: 055223d4d22d ("ARM: dts: ls1021a: Enable the eTSEC ports on QDS and TWR")
+> Signed-off-by: Vladimir Oltean <olteanv@gmail.com>
+> Reviewed-by: Claudiu Manoil <claudiu.manoil@nxp.com>
 
-May I suggest keeping the bcc-populated headers somewhere else?
-Ideally something cleaned out on every reboot in case kernel changes
-without version string doing it.
+Acked-by: Li Yang <leoyang.li@nxp.com>
 
-That way you can by default prefer the module-exported tarball, and
-fall back to /lib/module/$(uname -r)/ if not available, instead of the
-other way around and instead of having to check creation times on the
-dir vs boot time of the kernel, etc.
-
-Anyway, that's just an implementation detail. But it's the kind of
-detail that all tools that use this would need to get right, instead
-of doing it right once by exporting it in a way that it can be
-directly used.
-
-> The extraced headers are in plain fs cache and will be evicted from memory
-> when bcc is done compiling progs.
-> imo much cleaner than kernel maintaining headers-fs and wasting memory.
-
-So, in my original proposal I recommended unmounting when not needing
-it, which would remove the memory usage as well.
-
-> Where kheaders.tar.xz is placed doesn't really matter.
-> /proc or /sys/kernel makes no real difference.
-
-If done in a location that isn't a perpetual ABI commitment, a tarball
-solution is something we can work with.
-
-
--Olof
+Thanks,
+Leo
+> ---
+>  arch/arm/boot/dts/ls1021a-twr.dts | 9 ++++++++-
+>  arch/arm/boot/dts/ls1021a.dtsi    | 9 +++++++++
+>  2 files changed, 17 insertions(+), 1 deletion(-)
+>
+> diff --git a/arch/arm/boot/dts/ls1021a-twr.dts b/arch/arm/boot/dts/ls1021a-twr.dts
+> index 97e1fb7ea932..9b1fe99d55b1 100644
+> --- a/arch/arm/boot/dts/ls1021a-twr.dts
+> +++ b/arch/arm/boot/dts/ls1021a-twr.dts
+> @@ -145,7 +145,7 @@
+>  };
+>
+>  &enet0 {
+> -       tbi-handle = <&tbi1>;
+> +       tbi-handle = <&tbi0>;
+>         phy-handle = <&sgmii_phy2>;
+>         phy-connection-type = "sgmii";
+>         status = "okay";
+> @@ -225,6 +225,13 @@
+>         sgmii_phy2: ethernet-phy@2 {
+>                 reg = <0x2>;
+>         };
+> +       tbi0: tbi-phy@1f {
+> +               reg = <0x1f>;
+> +               device_type = "tbi-phy";
+> +       };
+> +};
+> +
+> +&mdio1 {
+>         tbi1: tbi-phy@1f {
+>                 reg = <0x1f>;
+>                 device_type = "tbi-phy";
+> diff --git a/arch/arm/boot/dts/ls1021a.dtsi b/arch/arm/boot/dts/ls1021a.dtsi
+> index 1a2a9509d9c2..89eab1fd1f7f 100644
+> --- a/arch/arm/boot/dts/ls1021a.dtsi
+> +++ b/arch/arm/boot/dts/ls1021a.dtsi
+> @@ -709,6 +709,15 @@
+>                               <0x0 0x2d10030 0x0 0x4>;
+>                 };
+>
+> +               mdio1: mdio@2d64000 {
+> +                       compatible = "fsl,etsec2-mdio";
+> +                       device_type = "mdio";
+> +                       #address-cells = <1>;
+> +                       #size-cells = <0>;
+> +                       reg = <0x0 0x2d64000 0x0 0x4000>,
+> +                             <0x0 0x2d50030 0x0 0x4>;
+> +               };
+> +
+>                 ptp_clock@2d10e00 {
+>                         compatible = "fsl,etsec-ptp";
+>                         reg = <0x0 0x2d10e00 0x0 0xb0>;
+> --
+> 2.17.1
+>
