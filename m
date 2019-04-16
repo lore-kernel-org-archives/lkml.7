@@ -6,28 +6,28 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 88F7EC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:57:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id F35F8C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61D5D206B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:57:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CD8632087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:58:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730663AbfDPR5p (ORCPT
+        id S1730830AbfDPR6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 13:57:45 -0400
-Received: from zeniv.linux.org.uk ([195.92.253.2]:57594 "EHLO
+        Tue, 16 Apr 2019 13:58:02 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:57590 "EHLO
         ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730271AbfDPRxq (ORCPT
+        with ESMTP id S1730268AbfDPRxq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 16 Apr 2019 13:53:46 -0400
 Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
-        id 1hGSHA-0005XB-Do; Tue, 16 Apr 2019 17:53:44 +0000
+        id 1hGSHA-0005X5-9Z; Tue, 16 Apr 2019 17:53:44 +0000
 From:   Al Viro <viro@ZenIV.linux.org.uk>
 To:     Linus Torvalds <torvalds@linux-foundation.org>
 Cc:     linux-kernel@vger.kernel.org, linux-fsdevel@vger.kernel.org
-Subject: [RFC PATCH 28/62] nilfs2: switch to ->free_inode()
-Date:   Tue, 16 Apr 2019 18:53:06 +0100
-Message-Id: <20190416175340.21068-28-viro@ZenIV.linux.org.uk>
+Subject: [RFC PATCH 27/62] nfs{,4}: switch to ->free_inode()
+Date:   Tue, 16 Apr 2019 18:53:05 +0100
+Message-Id: <20190416175340.21068-27-viro@ZenIV.linux.org.uk>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <20190416175340.21068-1-viro@ZenIV.linux.org.uk>
 References: <20190416174900.GT2217@ZenIV.linux.org.uk>
@@ -41,70 +41,77 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Al Viro <viro@zeniv.linux.org.uk>
 
-kill an extern that went stale 9 years ago, while we are at it...
-
 Signed-off-by: Al Viro <viro@zeniv.linux.org.uk>
 ---
- fs/nilfs2/nilfs.h |  2 --
- fs/nilfs2/super.c | 11 ++---------
- 2 files changed, 2 insertions(+), 11 deletions(-)
+ fs/nfs/inode.c     | 10 ++--------
+ fs/nfs/internal.h  |  2 +-
+ fs/nfs/nfs4super.c |  2 +-
+ fs/nfs/super.c     |  2 +-
+ 4 files changed, 5 insertions(+), 11 deletions(-)
 
-diff --git a/fs/nilfs2/nilfs.h b/fs/nilfs2/nilfs.h
-index a2f247b6a209..42395ba52da6 100644
---- a/fs/nilfs2/nilfs.h
-+++ b/fs/nilfs2/nilfs.h
-@@ -252,7 +252,6 @@ int nilfs_ioctl_prepare_clean_segments(struct the_nilfs *, struct nilfs_argv *,
- void nilfs_inode_add_blocks(struct inode *inode, int n);
- void nilfs_inode_sub_blocks(struct inode *inode, int n);
- extern struct inode *nilfs_new_inode(struct inode *, umode_t);
--extern void nilfs_free_inode(struct inode *);
- extern int nilfs_get_block(struct inode *, sector_t, struct buffer_head *, int);
- extern void nilfs_set_inode_flags(struct inode *);
- extern int nilfs_read_inode_common(struct inode *, struct nilfs_inode *);
-@@ -289,7 +288,6 @@ static inline int nilfs_mark_inode_dirty_sync(struct inode *inode)
- 
- /* super.c */
- extern struct inode *nilfs_alloc_inode(struct super_block *);
--extern void nilfs_destroy_inode(struct inode *);
- 
- extern __printf(3, 4)
- void __nilfs_msg(struct super_block *sb, const char *level,
-diff --git a/fs/nilfs2/super.c b/fs/nilfs2/super.c
-index 26290aa1023f..5729ee86da9a 100644
---- a/fs/nilfs2/super.c
-+++ b/fs/nilfs2/super.c
-@@ -155,21 +155,14 @@ struct inode *nilfs_alloc_inode(struct super_block *sb)
- 	return &ii->vfs_inode;
+diff --git a/fs/nfs/inode.c b/fs/nfs/inode.c
+index 414a90d48493..f61af8307dc8 100644
+--- a/fs/nfs/inode.c
++++ b/fs/nfs/inode.c
+@@ -2055,17 +2055,11 @@ struct inode *nfs_alloc_inode(struct super_block *sb)
  }
+ EXPORT_SYMBOL_GPL(nfs_alloc_inode);
  
--static void nilfs_i_callback(struct rcu_head *head)
-+static void nilfs_free_inode(struct inode *inode)
+-static void nfs_i_callback(struct rcu_head *head)
++void nfs_free_inode(struct inode *inode)
  {
 -	struct inode *inode = container_of(head, struct inode, i_rcu);
--
- 	if (nilfs_is_metadata_file_inode(inode))
- 		nilfs_mdt_destroy(inode);
- 
- 	kmem_cache_free(nilfs_inode_cachep, NILFS_I(inode));
+ 	kmem_cache_free(nfs_inode_cachep, NFS_I(inode));
  }
- 
--void nilfs_destroy_inode(struct inode *inode)
--{
--	call_rcu(&inode->i_rcu, nilfs_i_callback);
--}
 -
- static int nilfs_sync_super(struct super_block *sb, int flag)
- {
- 	struct the_nilfs *nilfs = sb->s_fs_info;
-@@ -686,7 +679,7 @@ static int nilfs_show_options(struct seq_file *seq, struct dentry *dentry)
+-void nfs_destroy_inode(struct inode *inode)
+-{
+-	call_rcu(&inode->i_rcu, nfs_i_callback);
+-}
+-EXPORT_SYMBOL_GPL(nfs_destroy_inode);
++EXPORT_SYMBOL_GPL(nfs_free_inode);
  
- static const struct super_operations nilfs_sops = {
- 	.alloc_inode    = nilfs_alloc_inode,
--	.destroy_inode  = nilfs_destroy_inode,
-+	.free_inode     = nilfs_free_inode,
- 	.dirty_inode    = nilfs_dirty_inode,
- 	.evict_inode    = nilfs_evict_inode,
- 	.put_super      = nilfs_put_super,
+ static inline void nfs4_init_once(struct nfs_inode *nfsi)
+ {
+diff --git a/fs/nfs/internal.h b/fs/nfs/internal.h
+index c7cf23ae6597..331a0504eaf8 100644
+--- a/fs/nfs/internal.h
++++ b/fs/nfs/internal.h
+@@ -381,7 +381,7 @@ int nfs_check_flags(int);
+ /* inode.c */
+ extern struct workqueue_struct *nfsiod_workqueue;
+ extern struct inode *nfs_alloc_inode(struct super_block *sb);
+-extern void nfs_destroy_inode(struct inode *);
++extern void nfs_free_inode(struct inode *);
+ extern int nfs_write_inode(struct inode *, struct writeback_control *);
+ extern int nfs_drop_inode(struct inode *);
+ extern void nfs_clear_inode(struct inode *);
+diff --git a/fs/nfs/nfs4super.c b/fs/nfs/nfs4super.c
+index 6fb7cb6b3f4b..689977e148cb 100644
+--- a/fs/nfs/nfs4super.c
++++ b/fs/nfs/nfs4super.c
+@@ -50,7 +50,7 @@ struct file_system_type nfs4_referral_fs_type = {
+ 
+ static const struct super_operations nfs4_sops = {
+ 	.alloc_inode	= nfs_alloc_inode,
+-	.destroy_inode	= nfs_destroy_inode,
++	.free_inode	= nfs_free_inode,
+ 	.write_inode	= nfs4_write_inode,
+ 	.drop_inode	= nfs_drop_inode,
+ 	.statfs		= nfs_statfs,
+diff --git a/fs/nfs/super.c b/fs/nfs/super.c
+index 23790c7b2289..aec4e2c4b02f 100644
+--- a/fs/nfs/super.c
++++ b/fs/nfs/super.c
+@@ -309,7 +309,7 @@ struct file_system_type nfs_xdev_fs_type = {
+ 
+ const struct super_operations nfs_sops = {
+ 	.alloc_inode	= nfs_alloc_inode,
+-	.destroy_inode	= nfs_destroy_inode,
++	.free_inode	= nfs_free_inode,
+ 	.write_inode	= nfs_write_inode,
+ 	.drop_inode	= nfs_drop_inode,
+ 	.statfs		= nfs_statfs,
 -- 
 2.11.0
 
