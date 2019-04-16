@@ -2,103 +2,190 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2D53CC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:26:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E254AC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:27:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C593120868
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:26:42 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="axmPzitK"
+	by mail.kernel.org (Postfix) with ESMTP id BAC592064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:27:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729271AbfDPP0l (ORCPT
+        id S1729668AbfDPP1G (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 11:26:41 -0400
-Received: from mail-pl1-f196.google.com ([209.85.214.196]:34698 "EHLO
-        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725796AbfDPP0l (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 11:26:41 -0400
-Received: by mail-pl1-f196.google.com with SMTP id y6so10538103plt.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 08:26:40 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=19GOTwtI97mJiAIP+RA+2iQqmxaYUc14FnV0g8ZO8xY=;
-        b=axmPzitKE6Ccela9QCNqirAJUeUghwnXpNbxlztPx30GKcytnqWEgnExzi2DU+CDtU
-         JnEJmddU69Lmr1XZGNyplAv5Q44TeuyL0/eXok6XaM0fqbbcrnCSU3/IDktSugs56iGC
-         3r8dl/YSr4do+OueVqj4YP4T62aNlgjQIn4gcvk2I4GVi4XfmrSHy5hnZt7lMFsf8CUZ
-         e91Tz2gBZGmgbmdf7/PUyJ6tzHS7w8yN0NWpWz7D9ap96W1LhT9Gbzmv/sK/g7YZVLtT
-         9QbjmbkZC257M7f12VBGtgz7L0JBP+nVTzbY5PdacH3UmOz0VuoYI1rB6Kxg11r2AxP9
-         GeoA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=19GOTwtI97mJiAIP+RA+2iQqmxaYUc14FnV0g8ZO8xY=;
-        b=Ly/5cHqmRCsEdw8sA6JsR+ihsLXvbANnsoDWv4nxXtvFXLWyUk5S1tPX1jT4w0por6
-         HvMlYM1OPGY6k9qnaUCIExliPyJXERL77qJC4FeXTDRR9pARKiSKUO7VJI/NfCvZsJ6y
-         0WKXd+ScUt4S/apx6xPi5xeWgZ83gVIrjVfUcQhQ5gjRJmgZ8bftbeYe5bZGq/xn85e/
-         hG6Sz0XidpG4KfQcZIAVGcD4eJr6jYF3BGqr/E47FJe37cs24JOIWwwl//hYHoHZmB37
-         lDukmNekpI8L5luG/69fFVd1m/VPCDdcKi/JbMoWCuWH9dwhexQJBHWTyG/egV7T4GE6
-         5Aiw==
-X-Gm-Message-State: APjAAAWTj+0G6nuCIBO/FzHVltzTkRdP2lkGr7L9eBZMpqt8SgbyslHV
-        T8dD77WY3ASfRUHaADmG87k9n6f92DKYKQTqy5a3MQ==
-X-Google-Smtp-Source: APXvYqxs0yGzU9//tKZLPqEHbdXmEoFQBz6Dc0eQq1ke68TGJmY9bLAlqdcmfhkBT7CNGihDA6wRtkHB5ZElaPHPpKg=
-X-Received: by 2002:a17:902:778a:: with SMTP id o10mr71319085pll.135.1555428399668;
- Tue, 16 Apr 2019 08:26:39 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190416145257.101945-1-venture@google.com>
-In-Reply-To: <20190416145257.101945-1-venture@google.com>
-From:   Patrick Venture <venture@google.com>
-Date:   Tue, 16 Apr 2019 08:26:28 -0700
-Message-ID: <CAO=noty9DwJO9sU19C30zTAigkrOYbAhqjEFkxNv5+eZ1k7kQQ@mail.gmail.com>
-Subject: Re: [PATCH] dt-bindings: Add vendor prefix for intersil
-To:     Patrick Venture <venture@google.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     treding@nvidia.com, khilman@baylibre.com,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        heiko@sntech.de, martin.blumenstingl@googlemail.com,
-        johan@kernel.org, devicetree@vger.kernel.org,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+        Tue, 16 Apr 2019 11:27:06 -0400
+Received: from mga05.intel.com ([192.55.52.43]:40693 "EHLO mga05.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726645AbfDPP1G (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 11:27:06 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga003.jf.intel.com ([10.7.209.27])
+  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Apr 2019 08:27:05 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,358,1549958400"; 
+   d="scan'208";a="143217383"
+Received: from otc-icl-cdi187.jf.intel.com ([10.54.55.103])
+  by orsmga003.jf.intel.com with ESMTP; 16 Apr 2019 08:27:05 -0700
+From:   kan.liang@linux.intel.com
+To:     acme@kernel.org, jolsa@kernel.org, mingo@redhat.com,
+        linux-kernel@vger.kernel.org
+Cc:     peterz@infradead.org, alexander.shishkin@linux.intel.com,
+        ak@linux.intel.com, Kan Liang <kan.liang@linux.intel.com>
+Subject: [PATCH 1/3] perf, tools: Add support for recording and printing XMM registers
+Date:   Tue, 16 Apr 2019 08:24:17 -0700
+Message-Id: <20190416152419.1419-1-kan.liang@linux.intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 7:53 AM Patrick Venture <venture@google.com> wrote:
->
-> Add vendor prefix for intersil, known as Intersil, a subsidiary of
-> Renesas Electronic Corporation.
->
-> Signed-off-by: Patrick Venture <venture@google.com>
-> ---
->  Documentation/devicetree/bindings/vendor-prefixes.txt | 1 +
->  1 file changed, 1 insertion(+)
->
-> diff --git a/Documentation/devicetree/bindings/vendor-prefixes.txt b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> index 8162b0eb4b50..ffc69a8bedaf 100644
-> --- a/Documentation/devicetree/bindings/vendor-prefixes.txt
-> +++ b/Documentation/devicetree/bindings/vendor-prefixes.txt
-> @@ -191,6 +191,7 @@ innolux     Innolux Corporation
->  inside-secure  INSIDE Secure
->  intel  Intel Corporation
->  intercontrol   Inter Control Group
-> +intersil       Intersil
+From: Andi Kleen <ak@linux.intel.com>
 
-I see there's already isil for this.  I'll update my device-tree
-patches to use isil.
+Icelake and later platforms support collecting XMM registers with PEBS
+event.
+Add support for perf script to dump them, and support
+for the register parser in perf record -I ... to configure them.
+For now they are just printed in hex, could potentially add
+other formats too.
 
->  invensense     InvenSense Inc.
->  inversepath    Inverse Path
->  iom    Iomega Corporation
-> --
-> 2.21.0.392.gf8f6787159e-goog
->
+Signed-off-by: Andi Kleen <ak@linux.intel.com>
+Signed-off-by: Kan Liang <kan.liang@linux.intel.com>
+---
+ tools/arch/x86/include/uapi/asm/perf_regs.h | 23 ++++++++++++++++++-
+ tools/perf/arch/x86/include/perf_regs.h     | 25 +++++++++++++++++++--
+ tools/perf/arch/x86/util/perf_regs.c        | 16 +++++++++++++
+ tools/perf/util/perf_regs.h                 |  1 +
+ 4 files changed, 62 insertions(+), 3 deletions(-)
+
+diff --git a/tools/arch/x86/include/uapi/asm/perf_regs.h b/tools/arch/x86/include/uapi/asm/perf_regs.h
+index f3329cabce5c..ac67bbea10ca 100644
+--- a/tools/arch/x86/include/uapi/asm/perf_regs.h
++++ b/tools/arch/x86/include/uapi/asm/perf_regs.h
+@@ -27,8 +27,29 @@ enum perf_event_x86_regs {
+ 	PERF_REG_X86_R13,
+ 	PERF_REG_X86_R14,
+ 	PERF_REG_X86_R15,
+-
++	/* These are the limits for the GPRs. */
+ 	PERF_REG_X86_32_MAX = PERF_REG_X86_GS + 1,
+ 	PERF_REG_X86_64_MAX = PERF_REG_X86_R15 + 1,
++
++	/* These all need two bits set because they are 128bit */
++	PERF_REG_X86_XMM0  = 32,
++	PERF_REG_X86_XMM1  = 34,
++	PERF_REG_X86_XMM2  = 36,
++	PERF_REG_X86_XMM3  = 38,
++	PERF_REG_X86_XMM4  = 40,
++	PERF_REG_X86_XMM5  = 42,
++	PERF_REG_X86_XMM6  = 44,
++	PERF_REG_X86_XMM7  = 46,
++	PERF_REG_X86_XMM8  = 48,
++	PERF_REG_X86_XMM9  = 50,
++	PERF_REG_X86_XMM10 = 52,
++	PERF_REG_X86_XMM11 = 54,
++	PERF_REG_X86_XMM12 = 56,
++	PERF_REG_X86_XMM13 = 58,
++	PERF_REG_X86_XMM14 = 60,
++	PERF_REG_X86_XMM15 = 62,
++
++	/* These include both GPRs and XMMX registers */
++	PERF_REG_X86_XMM_MAX = PERF_REG_X86_XMM15 + 2,
+ };
+ #endif /* _ASM_X86_PERF_REGS_H */
+diff --git a/tools/perf/arch/x86/include/perf_regs.h b/tools/perf/arch/x86/include/perf_regs.h
+index 7f6d538f8a89..b7321337d100 100644
+--- a/tools/perf/arch/x86/include/perf_regs.h
++++ b/tools/perf/arch/x86/include/perf_regs.h
+@@ -8,9 +8,9 @@
+ 
+ void perf_regs_load(u64 *regs);
+ 
++#define PERF_REGS_MAX PERF_REG_X86_XMM_MAX
+ #ifndef HAVE_ARCH_X86_64_SUPPORT
+ #define PERF_REGS_MASK ((1ULL << PERF_REG_X86_32_MAX) - 1)
+-#define PERF_REGS_MAX PERF_REG_X86_32_MAX
+ #define PERF_SAMPLE_REGS_ABI PERF_SAMPLE_REGS_ABI_32
+ #else
+ #define REG_NOSUPPORT ((1ULL << PERF_REG_X86_DS) | \
+@@ -18,7 +18,6 @@ void perf_regs_load(u64 *regs);
+ 		       (1ULL << PERF_REG_X86_FS) | \
+ 		       (1ULL << PERF_REG_X86_GS))
+ #define PERF_REGS_MASK (((1ULL << PERF_REG_X86_64_MAX) - 1) & ~REG_NOSUPPORT)
+-#define PERF_REGS_MAX PERF_REG_X86_64_MAX
+ #define PERF_SAMPLE_REGS_ABI PERF_SAMPLE_REGS_ABI_64
+ #endif
+ #define PERF_REG_IP PERF_REG_X86_IP
+@@ -77,6 +76,28 @@ static inline const char *perf_reg_name(int id)
+ 	case PERF_REG_X86_R15:
+ 		return "R15";
+ #endif /* HAVE_ARCH_X86_64_SUPPORT */
++
++#define XMM(x) \
++	case PERF_REG_X86_XMM ## x:	\
++	case PERF_REG_X86_XMM ## x + 1:	\
++		return "XMM" #x;
++	XMM(0)
++	XMM(1)
++	XMM(2)
++	XMM(3)
++	XMM(4)
++	XMM(5)
++	XMM(6)
++	XMM(7)
++	XMM(8)
++	XMM(9)
++	XMM(10)
++	XMM(11)
++	XMM(12)
++	XMM(13)
++	XMM(14)
++	XMM(15)
++#undef XMM
+ 	default:
+ 		return NULL;
+ 	}
+diff --git a/tools/perf/arch/x86/util/perf_regs.c b/tools/perf/arch/x86/util/perf_regs.c
+index fead6b3b4206..71d7604dbf0b 100644
+--- a/tools/perf/arch/x86/util/perf_regs.c
++++ b/tools/perf/arch/x86/util/perf_regs.c
+@@ -31,6 +31,22 @@ const struct sample_reg sample_reg_masks[] = {
+ 	SMPL_REG(R14, PERF_REG_X86_R14),
+ 	SMPL_REG(R15, PERF_REG_X86_R15),
+ #endif
++	SMPL_REG2(XMM0, PERF_REG_X86_XMM0),
++	SMPL_REG2(XMM1, PERF_REG_X86_XMM1),
++	SMPL_REG2(XMM2, PERF_REG_X86_XMM2),
++	SMPL_REG2(XMM3, PERF_REG_X86_XMM3),
++	SMPL_REG2(XMM4, PERF_REG_X86_XMM4),
++	SMPL_REG2(XMM5, PERF_REG_X86_XMM5),
++	SMPL_REG2(XMM6, PERF_REG_X86_XMM6),
++	SMPL_REG2(XMM7, PERF_REG_X86_XMM7),
++	SMPL_REG2(XMM8, PERF_REG_X86_XMM8),
++	SMPL_REG2(XMM9, PERF_REG_X86_XMM9),
++	SMPL_REG2(XMM10, PERF_REG_X86_XMM10),
++	SMPL_REG2(XMM11, PERF_REG_X86_XMM11),
++	SMPL_REG2(XMM12, PERF_REG_X86_XMM12),
++	SMPL_REG2(XMM13, PERF_REG_X86_XMM13),
++	SMPL_REG2(XMM14, PERF_REG_X86_XMM14),
++	SMPL_REG2(XMM15, PERF_REG_X86_XMM15),
+ 	SMPL_REG_END
+ };
+ 
+diff --git a/tools/perf/util/perf_regs.h b/tools/perf/util/perf_regs.h
+index c9319f8d17a6..1a15a4bfc28d 100644
+--- a/tools/perf/util/perf_regs.h
++++ b/tools/perf/util/perf_regs.h
+@@ -12,6 +12,7 @@ struct sample_reg {
+ 	uint64_t mask;
+ };
+ #define SMPL_REG(n, b) { .name = #n, .mask = 1ULL << (b) }
++#define SMPL_REG2(n, b) { .name = #n, .mask = 3ULL << (b) }
+ #define SMPL_REG_END { .name = NULL }
+ 
+ extern const struct sample_reg sample_reg_masks[];
+-- 
+2.17.1
+
