@@ -2,192 +2,140 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A3F4C282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:19:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8AD8DC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:19:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 466D120872
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:19:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 560AB20656
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 15:19:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jGdcibng"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728895AbfDPPTe (ORCPT
+        id S1729510AbfDPPTs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 11:19:34 -0400
-Received: from mx2.suse.de ([195.135.220.15]:46340 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725796AbfDPPTe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 11:19:34 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 92646AE5D;
-        Tue, 16 Apr 2019 15:19:32 +0000 (UTC)
-Subject: Re: [patch V5 01/32] mm/slab: Remove broken stack trace storage
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        LKML <linux-kernel@vger.kernel.org>, X86 ML <x86@kernel.org>,
-        Sean Christopherson <sean.j.christopherson@intel.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pekka Enberg <penberg@kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        David Rientjes <rientjes@google.com>
-References: <20190414155936.679808307@linutronix.de>
- <20190414160143.591255977@linutronix.de>
- <CALCETrUhVc_u3HL-x7wMnk9ukEbwQPvc9N5Na-Q55se0VwcCpw@mail.gmail.com>
- <alpine.DEB.2.21.1904141832400.4917@nanos.tec.linutronix.de>
- <alpine.DEB.2.21.1904151101100.1729@nanos.tec.linutronix.de>
- <20190415132339.wiqyzygqklliyml7@treble>
- <alpine.DEB.2.21.1904151804460.1895@nanos.tec.linutronix.de>
- <20190415161657.2zwboghblj5ducux@treble>
- <CALCETrXLa9ec8Lcz2WPML8qQiStpTtDSAGkW=Rv9bMSiunNNMw@mail.gmail.com>
- <alpine.DEB.2.21.1904152320540.1806@nanos.tec.linutronix.de>
- <612f9b99-a75b-6aeb-cf92-7dc5421cd950@suse.cz>
- <alpine.DEB.2.21.1904161608570.1685@nanos.tec.linutronix.de>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Openpgp: preference=signencrypt
-Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
- 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
-Message-ID: <20effcc8-6d4d-bdd8-379e-8eed5624542c@suse.cz>
-Date:   Tue, 16 Apr 2019 17:16:14 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 16 Apr 2019 11:19:48 -0400
+Received: from mail-yw1-f66.google.com ([209.85.161.66]:40867 "EHLO
+        mail-yw1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbfDPPTs (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 11:19:48 -0400
+Received: by mail-yw1-f66.google.com with SMTP id p64so7431283ywg.7;
+        Tue, 16 Apr 2019 08:19:47 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=OGZxEZLdV/K30nuH8Uzzyz2QfjUn13BwzqKUuEx08v8=;
+        b=jGdcibngQkLqrpkdgccUSMvwK/0UdckbFQlfgM8EDx12LVwCG9IL0sOp3OeGDGUBU/
+         Oq5DCq5co7va/iZ8niqdd0iNJ9yMMoV4KZ6AIl63Lyb4KXBJkXiuMeSaxMQ7IVFgesMb
+         eg0GWphf2Z5U7JBwRGZbc6hXyiEyIoEYviVgGMFs+z8SFaGMQC4zl7AjBKOvaaghBqcv
+         9+0q9EoylYrpkC3UFdLlMMIdvB0CfqVE0LOErrdrwXDi4U7mj1FZ/bQiI/AfMZnlptLe
+         /lDg68CnMG3QF6+W1WlF4sJff0wiH7Oe3e5bnKxukTnhACkru6+7l8JAE5xSq1GgZFDQ
+         7ODQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=OGZxEZLdV/K30nuH8Uzzyz2QfjUn13BwzqKUuEx08v8=;
+        b=S0om7PQs9zwaESKK6bsJ9IEugn+YSRF7oi91eIzK0SuAKhJ+1CshLZmun8M/736cnx
+         Jrz8zHB3bLo1cff1lXFAn6FGVix1rv4kqKLUgjZNrLR+oawl8r9SBxYWJRP0Wq5bwaW7
+         8KQINC0xCNKot4AnPnqBIfOy7tEu3eHFK4Y2BOdkBY0y/bVlrL5Bgns53y1UxUTtfi+w
+         pazjN298pBghEPoonVmQ7sEJpzwT+n4R9DBdcSL81hrCX9l/73rKlVNr9hGVsLAa9rfo
+         k4kWYeJUnU0sL/j4DQLVmRhHTccZ+/bX5PuIooO0LrAAVYwePDrfEtwdkkqj+rWOKuwm
+         jPig==
+X-Gm-Message-State: APjAAAUKg8j1NEf6Td8QlCc7xEsRDBcCQzI5UBfjq005Lg90VKBnexMa
+        nr+tlBT6K6QgOsWB4WJxtKs=
+X-Google-Smtp-Source: APXvYqwlzj98lc+YXQ4mS1P9fmyLboiqYPy1lX5icf+/dyH2DLhHG/euQHfqp9q7yH/feh774Z+Lgg==
+X-Received: by 2002:a81:1693:: with SMTP id 141mr63392874yww.448.1555427987586;
+        Tue, 16 Apr 2019 08:19:47 -0700 (PDT)
+Received: from nishad ([2406:7400:54:eb3:d9be:857a:cd1e:eb7f])
+        by smtp.gmail.com with ESMTPSA id e136sm28357702ywa.102.2019.04.16.08.19.41
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 16 Apr 2019 08:19:46 -0700 (PDT)
+Date:   Tue, 16 Apr 2019 20:49:35 +0530
+From:   Nishad Kamdar <nishadkamdar@gmail.com>
+To:     Matthias Brugger <matthias.bgg@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org, devicetree@vger.kernel.org,
+        linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Joe Perches <joe@perches.com>,
+        Uwe =?utf-8?Q?Kleine-K=C3=B6nig?= 
+        <u.kleine-koenig@pengutronix.de>
+Subject: [PATCH v3 1/5] arm64: Use the correct style for SPDX License
+ Identifier
+Message-ID: <ecdbe63bea1b1d2d67db6cc577aa32bf872f2310.1555427419.git.nishadkamdar@gmail.com>
+References: <cover.1555427418.git.nishadkamdar@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1904161608570.1685@nanos.tec.linutronix.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1555427418.git.nishadkamdar@gmail.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/16/19 4:10 PM, Thomas Gleixner wrote:
-> kstack_end() is broken on interrupt stacks as they are not guaranteed to be
-> sized THREAD_SIZE and THREAD_SIZE aligned.
-> 
-> As SLAB seems not to be used much with debugging enabled and might just go
-> away completely according to:
-> 
->   https://lkml.kernel.org/r/612f9b99-a75b-6aeb-cf92-7dc5421cd950@suse.cz
-> 
-> just remove the bogus code instead of trying to fix it.
-> 
-> Fixes: 98eb235b7feb ("[PATCH] page unmapping debug") - History tree
-> Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-> Cc: Andrew Morton <akpm@linux-foundation.org>
-> Cc: Pekka Enberg <penberg@kernel.org>
-> Cc: linux-mm@kvack.org
+This patch corrects the SPDX License Identifier style
+in the arm64 Hardware Architecture related files.
 
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Suggested-by: Joe Perches <joe@perches.com>
+Signed-off-by: Nishad Kamdar <nishadkamdar@gmail.com>
+---
+ arch/arm64/boot/dts/mediatek/mt2712-pinfunc.h | 2 +-
+ arch/arm64/include/asm/pointer_auth.h         | 2 +-
+ arch/arm64/include/asm/sdei.h                 | 2 +-
+ arch/arm64/include/asm/vmap_stack.h           | 2 +-
+ 4 files changed, 4 insertions(+), 4 deletions(-)
 
-Thanks.
-
-> ---
-> V5: Remove the cruft.
-> V4: Make it actually work
-> V2: Made the code simpler to understand (Andy)
-> ---
->  mm/slab.c |   22 +++-------------------
->  1 file changed, 3 insertions(+), 19 deletions(-)
-> 
-> --- a/mm/slab.c
-> +++ b/mm/slab.c
-> @@ -1470,33 +1470,17 @@ static bool is_debug_pagealloc_cache(str
->  static void store_stackinfo(struct kmem_cache *cachep, unsigned long *addr,
->  			    unsigned long caller)
->  {
-> -	int size = cachep->object_size;
-> +	int size = cachep->object_size / sizeof(unsigned long);
->  
->  	addr = (unsigned long *)&((char *)addr)[obj_offset(cachep)];
->  
-> -	if (size < 5 * sizeof(unsigned long))
-> +	if (size < 4)
->  		return;
->  
->  	*addr++ = 0x12345678;
->  	*addr++ = caller;
->  	*addr++ = smp_processor_id();
-> -	size -= 3 * sizeof(unsigned long);
-> -	{
-> -		unsigned long *sptr = &caller;
-> -		unsigned long svalue;
-> -
-> -		while (!kstack_end(sptr)) {
-> -			svalue = *sptr++;
-> -			if (kernel_text_address(svalue)) {
-> -				*addr++ = svalue;
-> -				size -= sizeof(unsigned long);
-> -				if (size <= sizeof(unsigned long))
-> -					break;
-> -			}
-> -		}
-> -
-> -	}
-> -	*addr++ = 0x87654321;
-> +	*addr = 0x87654321;
->  }
->  
->  static void slab_kernel_map(struct kmem_cache *cachep, void *objp,
-> 
+diff --git a/arch/arm64/boot/dts/mediatek/mt2712-pinfunc.h b/arch/arm64/boot/dts/mediatek/mt2712-pinfunc.h
+index 1b4cb0c55744..385c455a7c98 100644
+--- a/arch/arm64/boot/dts/mediatek/mt2712-pinfunc.h
++++ b/arch/arm64/boot/dts/mediatek/mt2712-pinfunc.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ /*
+  * Copyright (C) 2018 MediaTek Inc.
+  * Author: Zhiyong Tao <zhiyong.tao@mediatek.com>
+diff --git a/arch/arm64/include/asm/pointer_auth.h b/arch/arm64/include/asm/pointer_auth.h
+index 15d49515efdd..d328540cb85e 100644
+--- a/arch/arm64/include/asm/pointer_auth.h
++++ b/arch/arm64/include/asm/pointer_auth.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ #ifndef __ASM_POINTER_AUTH_H
+ #define __ASM_POINTER_AUTH_H
+ 
+diff --git a/arch/arm64/include/asm/sdei.h b/arch/arm64/include/asm/sdei.h
+index ffe47d766c25..63e0b92a5fbb 100644
+--- a/arch/arm64/include/asm/sdei.h
++++ b/arch/arm64/include/asm/sdei.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ // Copyright (C) 2017 Arm Ltd.
+ #ifndef __ASM_SDEI_H
+ #define __ASM_SDEI_H
+diff --git a/arch/arm64/include/asm/vmap_stack.h b/arch/arm64/include/asm/vmap_stack.h
+index 0b5ec6e08c10..0a12115d9638 100644
+--- a/arch/arm64/include/asm/vmap_stack.h
++++ b/arch/arm64/include/asm/vmap_stack.h
+@@ -1,4 +1,4 @@
+-// SPDX-License-Identifier: GPL-2.0
++/* SPDX-License-Identifier: GPL-2.0 */
+ // Copyright (C) 2017 Arm Ltd.
+ #ifndef __ASM_VMAP_STACK_H
+ #define __ASM_VMAP_STACK_H
+-- 
+2.17.1
 
