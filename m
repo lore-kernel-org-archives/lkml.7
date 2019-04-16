@@ -2,137 +2,107 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 913F9C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C1F4C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:09:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 66F8820651
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:09:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDE9A20651
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:09:41 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555405781;
+	bh=W6ngLSMgrHr0W3U4Bw4UbqBajEV6+Q7wlh9FAZZkBh4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=UuIpYP+lqHHdjVtRcSUYznKyNWFjtLY27gCHZX2xUAhPi0l2d0Q1Qx6VMDeuwum06
+	 DfJ3Vtx1XPoL3ZcvATEcrdEpi6XuDnI23+Emn6XYTdAA8ITxM0cBwUi3c+860ToU2N
+	 d1ickIJsFabG7w5l+z+H1Qfo+hoylSJAXVSqpFb8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728919AbfDPJJQ (ORCPT
+        id S1728926AbfDPJJk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 05:09:16 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:53176 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728770AbfDPJJP (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 05:09:15 -0400
-Received: from pps.filterd (m0098396.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3G8whfx120229
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 05:09:14 -0400
-Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rwb22avk0-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 05:09:13 -0400
-Received: from localhost
-        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <schwidefsky@de.ibm.com>;
-        Tue, 16 Apr 2019 10:09:11 +0100
-Received: from b06cxnps4075.portsmouth.uk.ibm.com (9.149.109.197)
-        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 16 Apr 2019 10:09:08 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps4075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3G998l325624708
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 Apr 2019 09:09:08 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id F11CB42045;
-        Tue, 16 Apr 2019 09:09:07 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id B95A342042;
-        Tue, 16 Apr 2019 09:09:07 +0000 (GMT)
-Received: from mschwideX1 (unknown [9.152.212.60])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 16 Apr 2019 09:09:07 +0000 (GMT)
-Date:   Tue, 16 Apr 2019 11:09:06 +0200
-From:   Martin Schwidefsky <schwidefsky@de.ibm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-s390 <linux-s390@vger.kernel.org>
-Subject: Re: Linux 5.1-rc5
-In-Reply-To: <CAHk-=wj7jgMOVFW0tiU-X+zhg6+Rn7mEBTej+f26rV3zXezOSA@mail.gmail.com>
-References: <CAHk-=wjvcuyCQGnfOhooaL1H4H63qXO=xgo+9yncSOG=eK+kbA@mail.gmail.com>
-        <20190415051919.GA31481@infradead.org>
-        <CAHk-=wj7jgMOVFW0tiU-X+zhg6+Rn7mEBTej+f26rV3zXezOSA@mail.gmail.com>
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+        Tue, 16 Apr 2019 05:09:40 -0400
+Received: from mail.kernel.org ([198.145.29.99]:38602 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726770AbfDPJJk (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 05:09:40 -0400
+Received: from localhost (unknown [27.5.36.118])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 236FA20645;
+        Tue, 16 Apr 2019 09:09:38 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555405779;
+        bh=W6ngLSMgrHr0W3U4Bw4UbqBajEV6+Q7wlh9FAZZkBh4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=HbEmy3YIoZJbYM+xh03pVXKo0B/ONW0B08iQkD0+49f3EQ7WTkSOUzFc0foEne8c6
+         HLWY60V72VYQpM0rfsY1sr7l6UKJXL7xHtWi7sX+gkquBy/Q1UO5Ba9AEFGpqJCadp
+         y2Oqmxxm899RJHzpHDrEk0P9Iyx+HDpr7l6cIDrw=
+Date:   Tue, 16 Apr 2019 14:39:35 +0530
+From:   Vinod Koul <vkoul@kernel.org>
+To:     "Rafael J. Wysocki" <rafael@kernel.org>
+Cc:     Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>,
+        "moderated list:SOUND - SOC LAYER / DYNAMIC AUDIO POWER MANAGEM..." 
+        <alsa-devel@alsa-project.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Takashi Iwai <tiwai@suse.de>, Mark Brown <broonie@kernel.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Liam Girdwood <liam.r.girdwood@linux.intel.com>,
+        jank@cadence.com, Joe Perches <joe@perches.com>,
+        Srini Kandagatla <srinivas.kandagatla@linaro.org>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>,
+        Robert Moore <robert.moore@intel.com>,
+        Erik Schmauss <erik.schmauss@intel.com>,
+        "open list:ACPI" <linux-acpi@vger.kernel.org>,
+        "open list:ACPI COMPONENT ARCHITECTURE (ACPICA)" <devel@acpica.org>
+Subject: Re: [PATCH] ACPI / device_sysfs: change _ADR representation to 64
+ bits
+Message-ID: <20190416090935.GT28103@vkoul-mobl>
+References: <20190415151857.25531-1-pierre-louis.bossart@linux.intel.com>
+ <20190416032923.GQ28103@vkoul-mobl>
+ <CAJZ5v0jOkQ7aWn6B_yVTYd7y+78mpGSzBoGuWe3uCdzDRNE94Q@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19041609-0012-0000-0000-0000030F52A4
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19041609-0013-0000-0000-000021478AB9
-Message-Id: <20190416110906.6c773aff@mschwideX1>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-16_03:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904160063
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAJZ5v0jOkQ7aWn6B_yVTYd7y+78mpGSzBoGuWe3uCdzDRNE94Q@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 15 Apr 2019 09:17:10 -0700
-Linus Torvalds <torvalds@linux-foundation.org> wrote:
-
-> On Sun, Apr 14, 2019 at 10:19 PM Christoph Hellwig <hch@infradead.org> wrote:
+On 16-04-19, 10:09, Rafael J. Wysocki wrote:
+> On Tue, Apr 16, 2019 at 5:29 AM Vinod Koul <vkoul@kernel.org> wrote:
 > >
-> > Can we please have the page refcount overflow fixes out on the list
-> > for review, even if it is after the fact?  
+> > On 15-04-19, 10:18, Pierre-Louis Bossart wrote:
+> > > Standards such as the MIPI DisCo for SoundWire 1.0 specification
+> > > assume the _ADR field is 64 bits.
+> > >
+> > > _ADR is defined as an "Integer" represented as 64 bits since ACPI 2.0
+> > > released in 2002. The low levels already use _ADR as 64 bits, e.g. in
+> > > struct acpi_device_info.
+> > >
+> > > This patch bumps the representation used for sysfs to 64 bits.
+> > >
+> > > Example with a SoundWire device, the results show the complete
+> > > vendorID and linkID which were omitted before:
+> > >
+> > > Before:
+> > > $ more /sys/bus/acpi/devices/device\:38/adr
+> > > 0x5d070000
+> > > After:
+> > > $ more /sys/bus/acpi/devices/device\:38/adr
+> > > 0x000010025d070000
+> >
+> > This looks fine but the sysfs file is an ABI. Not sure if we can modify
+> > the value returned this way.. Though it should not cause userspace
+> > reading 32bits to break...
 > 
-> They were actually on a list for review long before the fact, but it
-> was the security mailing list. The issue actually got discussed back
-> in January along with early versions of the patches, but then we
-> dropped the ball because it just wasn't on anybody's radar and it got
-> resurrected late March. Willy wrote a rather bigger patch-series, and
-> review of that is what then resulted in those commits. So they may
-> look recent, but that's just because the original patches got
-> seriously edited down and rewritten.
+> Well, IIRC using "08" instead of "016" in the format field would
+> preserve the existing behavior for 32-bit values, wouldn't it?
 
-First time I hear about this, thanks for the heads up.
- 
-> That said, powerpc and s390 should at least look at maybe adding a
-> check for the page ref in their gup paths too. Powerpc has the special
-> gup_hugepte() case, and s390 has its own version of gup entirely. I
-> was actually hoping the s390 guys would look at using the generic gup
-> code.
-
-We did look at converting the s390 gup code to CONFIG_HAVE_GENERIC_GUP,
-there are some details that need careful consideration. The top one
-is access_ok(), for s390 we always return true. The generic gup code
-relies on the fact that a page table walk with a specific address is
-doable if access_ok() returned true, the s390 specific check is slightly
-different:
-
-        if ((end <= start) || (end > mm->context.asce_limit))
-                return 0;
-
-The obvious approach would be to modify access_ok() to check against
-the asce_limit. I will try and see if anything breaks, e.g. the automatic
-page table upgrade.
-
-> I ruthlessly also entirely ignored MIPS, SH and sparc, since they seem
-> largely irrelevant, partly since even theoretically this whole issue
-> needs a _lot_ of memory.
-> 
-> Michael, Martin, see commit 6b3a70773630 ("Merge branch 'page-refs'
-> (page ref overflow)"). You may or may not really care.
-
-On s390 we can have up to 16TB of memory in a single LPAR. So yes, I do
-care about it.
+Yeah that should do :)
 
 -- 
-blue skies,
-   Martin.
-
-"Reality continues to ruin my life." - Calvin.
-
+~Vinod
