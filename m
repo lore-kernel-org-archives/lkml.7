@@ -2,157 +2,119 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4EBBC10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 00:09:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 452B9C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 00:20:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8268420645
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 00:09:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 110342084B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 00:20:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="nmFjBUsY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728215AbfDPAJQ (ORCPT
+        id S1728258AbfDPAUs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 20:09:16 -0400
-Received: from out30-42.freemail.mail.aliyun.com ([115.124.30.42]:50343 "EHLO
-        out30-42.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727012AbfDPAJP (ORCPT
+        Mon, 15 Apr 2019 20:20:48 -0400
+Received: from mail-pf1-f195.google.com ([209.85.210.195]:46180 "EHLO
+        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726527AbfDPAUs (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 20:09:15 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R871e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04420;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0TPPwXuC_1555373347;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TPPwXuC_1555373347)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Tue, 16 Apr 2019 08:09:12 +0800
-Subject: Re: [v2 RFC PATCH 0/9] Another Approach to Use PMEM as NUMA Node
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     mgorman@techsingularity.net, riel@surriel.com, hannes@cmpxchg.org,
-        akpm@linux-foundation.org, dave.hansen@intel.com,
-        keith.busch@intel.com, dan.j.williams@intel.com,
-        fengguang.wu@intel.com, fan.du@intel.com, ying.huang@intel.com,
-        ziy@nvidia.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <1554955019-29472-1-git-send-email-yang.shi@linux.alibaba.com>
- <20190412084702.GD13373@dhcp22.suse.cz>
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-Message-ID: <a68137bb-dcd8-4e4a-b3a9-69a66f9dccaf@linux.alibaba.com>
-Date:   Mon, 15 Apr 2019 17:09:07 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Mon, 15 Apr 2019 20:20:48 -0400
+Received: by mail-pf1-f195.google.com with SMTP id 9so9418607pfj.13;
+        Mon, 15 Apr 2019 17:20:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=hGSRLXLadQOLX55DxvAINLcJwPboKn8ZaKLD5g5ABfk=;
+        b=nmFjBUsYM9msfrovL5HTwoHxVo43G4+UeKNdS5QH+k7HD/YPb/O/dldlWjKACM5H1M
+         8HGkS5m3EtWouV7z0dNwq5kz9hMU8xOZp9cPb0Y8D9a1W8WkSwD3B3nPqdHR106jgylN
+         5PYesBxzHGUyuCjRtt97iZuzTuQ2xKE8/cxCWZS0j1VBz01OiapO5ojHtu9plN7gU6ks
+         I0mCzo/5jCFYqJwdR5pWq1ysg8oeC91qNTz39pw2zn3byf8kxygZ85zvvhICleM1KlHJ
+         SiF4EWpYKsAYjpUCNy0+TTnswBO3QLFkm4K3HS1zIsI52DN8RfNDegQQySRGZZ9OqZM3
+         9U2A==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=hGSRLXLadQOLX55DxvAINLcJwPboKn8ZaKLD5g5ABfk=;
+        b=tYUf+bz1sbdDQLRV1Bq6Q/FzP6Nt7sWS/RmyXHpjrOrhi9sSGvXAnHQuWBzWWnZuu6
+         TpjwAf7uKWZ2oXjvIg5W/rDKTx6I02//nFCvbNqdqXrp5b674m1js8xs+BGjmbHAn6u/
+         HiwBiKBPzd2ffzTnyDH+v66DtF3BtKk1qtyRlZrSWL/5GC2tXMcsyTeVnAtA+17oMeLN
+         aZzUh8Bkz6EDX9TeMSEBvdr1/gvHkFSNVw27NxsEqnP1Qf0VzxejU3IcU0H4E243RIQM
+         HcrH1aVS59g1Y3i3ITgUhtVb2pfID2i7pjgbV4IQTUlPBqfhOwQS8HC2UpEFSB/xfI7P
+         RSAw==
+X-Gm-Message-State: APjAAAUsVPAr+XROrNOxnDsmW6YA3dfS/SIOIH+paBpXQbx0vUpnD1TW
+        n3EuQsOxSsnlYmzcOhG6mqA=
+X-Google-Smtp-Source: APXvYqz+Spzaqjsyrgcvief1vVTGeGZPlPzqd3ZotwlRs1OHaoj5oocNIkr3pm6AN0Dl/iZdG0p+dA==
+X-Received: by 2002:aa7:8208:: with SMTP id k8mr80107297pfi.69.1555374047590;
+        Mon, 15 Apr 2019 17:20:47 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id s19sm69505548pfe.74.2019.04.15.17.20.45
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Mon, 15 Apr 2019 17:20:46 -0700 (PDT)
+Date:   Mon, 15 Apr 2019 17:20:45 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Lei YU <mine260309@gmail.com>
+Cc:     Jean Delvare <jdelvare@suse.com>,
+        Eddie James <eajames@linux.ibm.com>,
+        linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Joel Stanley <joel@jms.id.au>, Andrew Jeffery <andrew@aj.id.au>
+Subject: Re: [PATCH] hwmon (occ): Fix extended status bits
+Message-ID: <20190416002045.GA4442@roeck-us.net>
+References: <1555324640-152061-1-git-send-email-mine260309@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190412084702.GD13373@dhcp22.suse.cz>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
-Content-Language: en-US
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1555324640-152061-1-git-send-email-mine260309@gmail.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Mon, Apr 15, 2019 at 06:37:20PM +0800, Lei YU wrote:
+> The occ's extended status is checked and shown as sysfs attributes. But
+> the code was incorrectly checking the "status" bits.
+> Fix it by checking the "ext_status" bits.
+> 
+> Signed-off-by: Lei YU <mine260309@gmail.com>
+> Reviewed-by: Eddie James <eajames@linux.ibm.com>
 
-
-On 4/12/19 1:47 AM, Michal Hocko wrote:
-> On Thu 11-04-19 11:56:50, Yang Shi wrote:
-> [...]
->> Design
->> ======
->> Basically, the approach is aimed to spread data from DRAM (closest to local
->> CPU) down further to PMEM and disk (typically assume the lower tier storage
->> is slower, larger and cheaper than the upper tier) by their hotness.  The
->> patchset tries to achieve this goal by doing memory promotion/demotion via
->> NUMA balancing and memory reclaim as what the below diagram shows:
->>
->>      DRAM <--> PMEM <--> Disk
->>        ^                   ^
->>        |-------------------|
->>                 swap
->>
->> When DRAM has memory pressure, demote pages to PMEM via page reclaim path.
->> Then NUMA balancing will promote pages to DRAM as long as the page is referenced
->> again.  The memory pressure on PMEM node would push the inactive pages of PMEM
->> to disk via swap.
->>
->> The promotion/demotion happens only between "primary" nodes (the nodes have
->> both CPU and memory) and PMEM nodes.  No promotion/demotion between PMEM nodes
->> and promotion from DRAM to PMEM and demotion from PMEM to DRAM.
->>
->> The HMAT is effectively going to enforce "cpu-less" nodes for any memory range
->> that has differentiated performance from the conventional memory pool, or
->> differentiated performance for a specific initiator, per Dan Williams.  So,
->> assuming PMEM nodes are cpuless nodes sounds reasonable.
->>
->> However, cpuless nodes might be not PMEM nodes.  But, actually, memory
->> promotion/demotion doesn't care what kind of memory will be the target nodes,
->> it could be DRAM, PMEM or something else, as long as they are the second tier
->> memory (slower, larger and cheaper than regular DRAM), otherwise it sounds
->> pointless to do such demotion.
->>
->> Defined "N_CPU_MEM" nodemask for the nodes which have both CPU and memory in
->> order to distinguish with cpuless nodes (memory only, i.e. PMEM nodes) and
->> memoryless nodes (some architectures, i.e. Power, may have memoryless nodes).
->> Typically, memory allocation would happen on such nodes by default unless
->> cpuless nodes are specified explicitly, cpuless nodes would be just fallback
->> nodes, so they are also as known as "primary" nodes in this patchset.  With
->> two tier memory system (i.e. DRAM + PMEM), this sounds good enough to
->> demonstrate the promotion/demotion approach for now, and this looks more
->> architecture-independent.  But it may be better to construct such node mask
->> by reading hardware information (i.e. HMAT), particularly for more complex
->> memory hierarchy.
-> I still believe you are overcomplicating this without a strong reason.
-> Why cannot we start simple and build from there? In other words I do not
-> think we really need anything like N_CPU_MEM at all.
-
-In this patchset N_CPU_MEM is used to tell us what nodes are cpuless 
-nodes. They would be the preferred demotion target.  Of course, we could 
-rely on firmware to just demote to the next best node, but it may be a 
-"preferred" node, if so I don't see too much benefit achieved by 
-demotion. Am I missing anything?
-
->
-> I would expect that the very first attempt wouldn't do much more than
-> migrate to-be-reclaimed pages (without an explicit binding) with a
-
-Do you mean respect mempolicy or cpuset when doing demotion? I was 
-wondering this, but I didn't do so in the current implementation since 
-it may need walk the rmap to retrieve the mempolicy in the reclaim path. 
-Is there any easier way to do so?
-
-> very optimistic allocation strategy (effectivelly GFP_NOWAIT) and if
-
-Yes, this has been done in this patchset.
-
-> that fails then simply give up. All that hooked essentially to the
-> node_reclaim path with a new node_reclaim mode so that the behavior
-> would be opt-in. This should be the most simplistic way to start AFAICS
-> and something people can play with without risking regressions.
-
-I agree it is safer to start with node reclaim. Once it is stable enough 
-and we are confident enough, it can be extended to global reclaim.
-
->
-> Once we see how that behaves in the real world and what kind of corner
-> case user are able to trigger then we can build on top. E.g. do we want
-> to migrate from cpuless nodes as well? I am not really sure TBH. On one
-> hand why not if other nodes are free to hold that memory? Swap out is
-> more expensive. Anyway this is kind of decision which would rather be
-> shaped on an existing experience rather than ad-hoc decistion right now.
-
-I do agree.
-
->
-> I would also not touch the numa balancing logic at this stage and rather
-> see how the current implementation behaves.
-
-I agree we would prefer start from something simpler and see how it works.
-
-The "twice access" optimization is aimed to reduce the PMEM bandwidth 
-burden since the bandwidth of PMEM is scarce resource. I did compare 
-"twice access" to "no twice access", it does save a lot bandwidth for 
-some once-off access pattern. For example, when running stress test with 
-mmtest's usemem-stress-numa-compact. The kernel would promote ~600,000 
-pages with "twice access" in 4 hours, but it would promote ~80,000,000 
-pages without "twice access".
+Applied.
 
 Thanks,
-Yang
+Guenter
 
-
+> ---
+>  drivers/hwmon/occ/sysfs.c | 8 ++++----
+>  1 file changed, 4 insertions(+), 4 deletions(-)
+> 
+> diff --git a/drivers/hwmon/occ/sysfs.c b/drivers/hwmon/occ/sysfs.c
+> index fe3d15e..a71ca94 100644
+> --- a/drivers/hwmon/occ/sysfs.c
+> +++ b/drivers/hwmon/occ/sysfs.c
+> @@ -42,16 +42,16 @@ static ssize_t occ_sysfs_show(struct device *dev,
+>  		val = !!(header->status & OCC_STAT_ACTIVE);
+>  		break;
+>  	case 2:
+> -		val = !!(header->status & OCC_EXT_STAT_DVFS_OT);
+> +		val = !!(header->ext_status & OCC_EXT_STAT_DVFS_OT);
+>  		break;
+>  	case 3:
+> -		val = !!(header->status & OCC_EXT_STAT_DVFS_POWER);
+> +		val = !!(header->ext_status & OCC_EXT_STAT_DVFS_POWER);
+>  		break;
+>  	case 4:
+> -		val = !!(header->status & OCC_EXT_STAT_MEM_THROTTLE);
+> +		val = !!(header->ext_status & OCC_EXT_STAT_MEM_THROTTLE);
+>  		break;
+>  	case 5:
+> -		val = !!(header->status & OCC_EXT_STAT_QUICK_DROP);
+> +		val = !!(header->ext_status & OCC_EXT_STAT_QUICK_DROP);
+>  		break;
+>  	case 6:
+>  		val = header->occ_state;
