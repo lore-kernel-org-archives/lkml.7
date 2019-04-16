@@ -2,105 +2,157 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E2E4BC282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 04:15:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 076D8C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 04:23:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B568D20870
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 04:15:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BB2D320674
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 04:23:24 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="WJJG0Npc"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726320AbfDPEPQ (ORCPT
+        id S1726251AbfDPEXX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 00:15:16 -0400
-Received: from www.osadl.org ([62.245.132.105]:49326 "EHLO www.osadl.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725770AbfDPEPQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 00:15:16 -0400
-Received: from debian01.hofrr.at (178.115.242.59.static.drei.at [178.115.242.59])
-        by www.osadl.org (8.13.8/8.13.8/OSADL-2007092901) with ESMTP id x3G48kX0003254;
-        Tue, 16 Apr 2019 06:08:46 +0200
-From:   Nicholas Mc Guire <hofrat@osadl.org>
-To:     Russell King <linux@armlinux.org.uk>
-Cc:     Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Mark Brown <broonie@kernel.org>,
-        Tony Lindgren <tony@atomide.com>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Janusz Krzysztofik <jmkrzyszt@gmail.com>,
-        Mike Rapoport <rppt@linux.vnet.ibm.com>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        Nicholas Mc Guire <hofrat@osadl.org>
-Subject: [PATCH V2] ARM: imx legacy: warn on failed allocation
-Date:   Tue, 16 Apr 2019 06:03:29 +0200
-Message-Id: <1555387409-9018-1-git-send-email-hofrat@osadl.org>
-X-Mailer: git-send-email 2.1.4
+        Tue, 16 Apr 2019 00:23:23 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:36007 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725770AbfDPEXX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 00:23:23 -0400
+Received: by mail-pf1-f193.google.com with SMTP id z5so9717732pfn.3
+        for <linux-kernel@vger.kernel.org>; Mon, 15 Apr 2019 21:23:22 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition;
+        bh=1CrB2HP13L0GNgTn3HfNwJPzGCmxfUyYWocS/1tA8rE=;
+        b=WJJG0NpcCTyxyZbH8Yt0BgM7gAsu1X9DReuk1W9HY0LMq8CSiwtklsX0iuEa4eBr6h
+         7kLxjmiGv0hIt7luQM+Ag5I2T5HJUpKgLqZMgFX1tj6VaZj+leTat3UF+T8tGZL0VOqZ
+         utkxBEwoQwGB9y1i3m4Cd70jRXkXso/NDtXPY=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition;
+        bh=1CrB2HP13L0GNgTn3HfNwJPzGCmxfUyYWocS/1tA8rE=;
+        b=fMcppCeUpyM+9B1cWBGtiRF6IqcQX/WXYbt753Suyh0hsA/QDSvrZiuOOjirMx/7Et
+         AjsAzx1ppz/AZhw9amK/eXFkHC+50VhsH85XCJKxWWrgRKBHucdVCR+T9n9R/lf1Mmz8
+         ecDbqIj4/FAop//Pu+dDJQDubMykeIswRt1zpeHb8HBwbLvSL3HFULu/Z5oH+13xs1ME
+         WOtP9cIS44Q36zxlXj6dR3V04Jd6Tti+Y1BCH/S0g8B8seDz0BaU609ShMpj0/6kP9wD
+         oA/sCbOlmgz/+42w/O0X3LxyKkaGjMXcUIVja6IChmvQCfs1hXhLaOA53K3DhBc8iKOc
+         wtHg==
+X-Gm-Message-State: APjAAAUceRykC2yCEcfnQPR5cohLkrb8WAtlDC0OgsmmWPDsFjy5QJ0z
+        3JgMncaRvzRWcvSNqU7cafyR2jXOkVE=
+X-Google-Smtp-Source: APXvYqzsIBv+cdgOlY8SZTDTYhgKrnvL+0taDPQqzRo6dwpos5YGT3yRQ9Fd10haO4j3oxGC9XkniA==
+X-Received: by 2002:a63:5b24:: with SMTP id p36mr29407282pgb.84.1555388602586;
+        Mon, 15 Apr 2019 21:23:22 -0700 (PDT)
+Received: from www.outflux.net (173-164-112-133-Oregon.hfc.comcastbusiness.net. [173.164.112.133])
+        by smtp.gmail.com with ESMTPSA id a129sm104594830pfa.152.2019.04.15.21.23.21
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Mon, 15 Apr 2019 21:23:21 -0700 (PDT)
+Date:   Mon, 15 Apr 2019 21:23:20 -0700
+From:   Kees Cook <keescook@chromium.org>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Ali Saidi <alisaidi@amazon.com>, Michal Hocko <mhocko@suse.com>,
+        Matthew Wilcox <willy@infradead.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Jann Horn <jannh@google.com>, linux-kernel@vger.kernel.org
+Subject: [PATCH] binfmt_elf: Move brk out of mmap when doing direct loader
+ exec
+Message-ID: <20190416042320.GA36924@beast>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Even in init the allocation can fail and thus should report by 
-pr_err() so that the cause can be easily identified.
+Commit eab09532d400 ("binfmt_elf: use ELF_ET_DYN_BASE only for PIE"),
+made changes in the rare case when the ELF loader was directly invoked
+(e.g to set a non-inheritable LD_LIBRARY_PATH, testing new versions of
+the loader), by moving into the mmap region to avoid both ET_EXEC and PIE
+binaries. This had the effect of also moving the brk region into mmap,
+which could lead to the stack and brk being arbitrarily close to each
+other. An unlucky process wouldn't get its requested stack size and stack
+allocations could end up scribbling on the heap.
 
-Signed-off-by: Nicholas Mc Guire <hofrat@osadl.org>
-Link: https://lkml.org/lkml/2019/4/14/152
----
+This is illustrated here. In the case of using the loader directly, brk
+(so helpfully identified as "[heap]") is allocated with the _loader_
+not the binary. For example, with ASLR entirely disabled, you can see
+this more clearly:
 
-Problem located with an experimental coccinelle script
-
-V2: Russell King <linux@armlinux.org.uk> pointed out that the use of
-    WARN_ON() would result in a stack trace followed by the oops due
-    to dereferencing of the NULL pointer and so make it even less
-    likely that users would uncover the actual cause - so drop the 
-    WARN_ON() and use a short pr_err() message that points to the 
-    oops cause directly.
-
-Note that this will trigger a checkpatch WARNING:
-     "WARNING: Possible unnecessary 'out of memory' message"
-but comparing the oops with an without the one-line pr_err I would argue
-that it makes sense to include it (first line here is from pr_err()):
-<snip>
-[ 8061.514840] shared page allocation failure in hello_init()
-[ 8113.563239] BUG: unable to handle kernel NULL pointer dereference at 0000000000000000
-[ 8113.563250] #PF error: [WRITE]
-[ 8113.563255] PGD 8000000129993067 P4D 8000000129993067 PUD 129992067 PMD 0
-[ 8113.563267] Oops: 0002 [#1] SMP PTI
-[ 8113.563276] CPU: 2 PID: 2656 Comm: bash Tainted: G        W  O      5.0.0-rc3livepatchtest-next-20190123+ #4
-[ 8113.563280] Hardware name: Quanta TWH/TWH, BIOS QU221 10/14/2011
-[ 8113.563292] RIP: 0010:foo_store+0x3a/0x90 [hello_chardev]
+$ /bin/cat /proc/self/maps
+555555554000-55555555c000 r-xp 00000000 ... /bin/cat
+55555575b000-55555575c000 r--p 00007000 ... /bin/cat
+55555575c000-55555575d000 rw-p 00008000 ... /bin/cat
+55555575d000-55555577e000 rw-p 00000000 ... [heap]
 ...
-<snip>
+7ffff7ff7000-7ffff7ffa000 r--p 00000000 ... [vvar]
+7ffff7ffa000-7ffff7ffc000 r-xp 00000000 ... [vdso]
+7ffff7ffc000-7ffff7ffd000 r--p 00027000 ... /lib/x86_64-linux-gnu/ld-2.27.so
+7ffff7ffd000-7ffff7ffe000 rw-p 00028000 ... /lib/x86_64-linux-gnu/ld-2.27.so
+7ffff7ffe000-7ffff7fff000 rw-p 00000000 ...
+7ffffffde000-7ffffffff000 rw-p 00000000 ... [stack]
 
-Patch was compile-tested with: imx_v4_v5_defconfig (implies
-CONFIG_MACH_MX27ADS=y)
-(with some unrelated sparse warnings about unimplemented syscalls)
+$ /lib/x86_64-linux-gnu/ld-2.27.so /bin/cat /proc/self/maps
+...
+7ffff7bcc000-7ffff7bd4000 r-xp 00000000 ... /bin/cat
+7ffff7bd4000-7ffff7dd3000 ---p 00008000 ... /bin/cat
+7ffff7dd3000-7ffff7dd4000 r--p 00007000 ... /bin/cat
+7ffff7dd4000-7ffff7dd5000 rw-p 00008000 ... /bin/cat
+7ffff7dd5000-7ffff7dfc000 r-xp 00000000 ... /lib/x86_64-linux-gnu/ld-2.27.so
+7ffff7fb2000-7ffff7fd6000 rw-p 00000000 ...
+7ffff7ff7000-7ffff7ffa000 r--p 00000000 ... [vvar]
+7ffff7ffa000-7ffff7ffc000 r-xp 00000000 ... [vdso]
+7ffff7ffc000-7ffff7ffd000 r--p 00027000 ... /lib/x86_64-linux-gnu/ld-2.27.so
+7ffff7ffd000-7ffff7ffe000 rw-p 00028000 ... /lib/x86_64-linux-gnu/ld-2.27.so
+7ffff7ffe000-7ffff8020000 rw-p 00000000 ... [heap]
+7ffffffde000-7ffffffff000 rw-p 00000000 ... [stack]
 
-Patch is against 5.1-rc4 (localversion-next is 20190415)
+The solution is to move brk out of mmap and into ELF_ET_DYN_BASE since
+nothing is there in this direct loader case (and ET_EXEC still far
+away at 0x400000). Anything that ran before should still work (i.e. the
+ultimately-launched binary already had the brk very far from its text,
+so this should be no different from a COMPAT_BRK standpoint). The only
+risk I see here is that if someone started to suddenly depend on the
+entire memory space above the mmap region being available when launching
+binaries via a direct loader execs which seems highly unlikely, I'd hope:
+this would mean a binary would _not_ work when execed normally.
 
- arch/arm/mach-imx/mach-mx27ads.c | 4 ++++
- 1 file changed, 4 insertions(+)
+Reported-by: Ali Saidi <alisaidi@amazon.com>
+Link: https://lkml.kernel.org/r/CAGXu5jJ5sj3emOT2QPxQkNQk0qbU6zEfu9=Omfhx_p0nCKPSjA@mail.gmail.com
+Fixes: eab09532d400 ("binfmt_elf: use ELF_ET_DYN_BASE only for PIE")
+Signed-off-by: Kees Cook <keescook@chromium.org>
+---
+ fs/binfmt_elf.c | 9 +++++++++
+ 1 file changed, 9 insertions(+)
 
-diff --git a/arch/arm/mach-imx/mach-mx27ads.c b/arch/arm/mach-imx/mach-mx27ads.c
-index 6dd7f57..cba6876 100644
---- a/arch/arm/mach-imx/mach-mx27ads.c
-+++ b/arch/arm/mach-imx/mach-mx27ads.c
-@@ -247,6 +247,10 @@ static void __init mx27ads_regulator_init(void)
- 	struct gpio_chip *vchip;
+diff --git a/fs/binfmt_elf.c b/fs/binfmt_elf.c
+index 7d09d125f148..cdaa33f4a3ef 100644
+--- a/fs/binfmt_elf.c
++++ b/fs/binfmt_elf.c
+@@ -1131,6 +1131,15 @@ static int load_elf_binary(struct linux_binprm *bprm)
+ 	current->mm->end_data = end_data;
+ 	current->mm->start_stack = bprm->p;
  
- 	vchip = kzalloc(sizeof(*vchip), GFP_KERNEL);
-+	if (!vchip)
-+		pr_err("vchip allocation failure in %s()\n",
-+			__func__);
++	/*
++	 * When executing a loader directly (ET_DYN without Interp), move
++	 * the brk area out of the mmap region (since it grows up, and may
++	 * collide early with the stack growing down), and into the unused
++	 * ELF_ET_DYN_BASE region.
++	 */
++	if (!elf_interpreter)
++		current->mm->brk = current->mm->start_brk = ELF_ET_DYN_BASE;
 +
- 	vchip->owner		= THIS_MODULE;
- 	vchip->label		= "LCD";
- 	vchip->base		= MX27ADS_LCD_GPIO;
+ 	if ((current->flags & PF_RANDOMIZE) && (randomize_va_space > 1)) {
+ 		current->mm->brk = current->mm->start_brk =
+ 			arch_randomize_brk(current->mm);
 -- 
-2.1.4
+2.17.1
 
+
+-- 
+Kees Cook
