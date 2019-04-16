@@ -7,53 +7,56 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51012C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:33:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7FD7DC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:33:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1861920821
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:33:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4734B20821
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:33:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555432391;
-	bh=4KBctzLP+00mEOdYXccYXwzZ+CV8s58qWmGzMFeQiCI=;
+	s=default; t=1555432394;
+	bh=/ouBVB4VZSVZ5oLyD71SIopnuR1PKLOnegkUXeXcLGo=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=cbhQVi4hC4vdWaiuCKAeGC5N5uUIBsA9Djg1ukCO+rWeU2qUpUEmWUmLSKtbbOP5P
-	 Y9jTvqEcXracnNsfNsSxYoG/WYujv3hSoPoAQRlJd5FQfY4dFV9P3Wks9bK07XSMfz
-	 vvX/NTrFSbyZ5w94s701brXsTliUBbndyNxL+S6Y=
+	b=JjlaDKR/ckvKoKWcooNbkxuTVW/SBK1gL9fdGJiZSS1/1mGMIP0Vs/9/PRrdnLLE6
+	 eZLlIL3V8NDd7a4GfFX/HPfGHd+0cb9FvM1sd7a/UuDYZabOMzgJdVXqiIWMRGV+lo
+	 nFjSTBtmZRFoZ8dQsYw4vJ64er/hpQjPwOS9KccM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730085AbfDPQdJ (ORCPT
+        id S1730104AbfDPQdM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 12:33:09 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:32928 "EHLO
+        Tue, 16 Apr 2019 12:33:12 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:32930 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730051AbfDPQdH (ORCPT
+        with ESMTP id S1730050AbfDPQdI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 12:33:07 -0400
+        Tue, 16 Apr 2019 12:33:08 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=RJsSUYZPbJP4gZNGAuu1icpzFsWShU8Sd356Fc9xoLA=; b=TuPkdgbs4yk0
-        cZenrlsDBAGSNWCkJyJhWgHkl4bYKInCny8HWHgd6jA00VKWMnaOK+HZNx3BcGtdX0tsbbj5/erGZ
-        aKhUmzmAr4qRtEseETqEki0t7KE0D4yeiktmJIRhIAA/1SXGKLq9qbG2sJ8su4VrA/dX+KL4RSHkE
-        6UnvI=;
+        List-Archive; bh=WRZTYL0qKzDTJkr5+DO6NFqzZol0XgpRy+qpj9E/6y0=; b=kGBns/O4RtAn
+        Wd90T+TlOXH1Z9b0M9X84r8YR/PlYQkYI5DJt7ThiCOwRUT2acjF/quoMssBtdS/X+YGLKcKV/cLz
+        8nTfPxCB/QFQ4gMVtuTzKMUIiXWkrsDwHgUWie4DsLgPmTfTQ9eczaxyfLHJofBarxtTWZgvl48Em
+        a/2wQ=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hGR0z-0007ra-A5; Tue, 16 Apr 2019 16:32:57 +0000
+        id 1hGR15-0007rm-5x; Tue, 16 Apr 2019 16:33:03 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id CC1B71128250; Tue, 16 Apr 2019 17:32:56 +0100 (BST)
+        id 956F211281C6; Tue, 16 Apr 2019 17:32:57 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Laxman Dewangan <ldewangan@nvidia.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Mark Brown <broonie@kernel.org>
-Subject: Applied "regulator: tps80031: Switch to SPDX identifier" to the regulator tree
-In-Reply-To: <20190416101729.26330-3-axel.lin@ingics.com>
+To:     Sowjanya Komatineni <skomatineni@nvidia.com>
+Cc:     broonie@kernel.org, devicetree@vger.kernel.org,
+        jonathanh@nvidia.com, kyarlagadda@nvidia.com, ldewangan@nvidia.com,
+        linux-kernel@vger.kernel.org, linux-spi@vger.kernel.org,
+        linux-tegra@vger.kernel.org, Mark Brown <broonie@kernel.org>,
+        mark.rutland@arm.com, robh+dt@kernel.org, skomatineni@nvidia.com,
+        talho@nvidia.com, thierry.reding@gmail.com
+Subject: Applied "spi: tegra114: fix PIO transfer" to the spi tree
+In-Reply-To: <1555363834-32155-2-git-send-email-skomatineni@nvidia.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190416163256.CC1B71128250@debutante.sirena.org.uk>
-Date:   Tue, 16 Apr 2019 17:32:56 +0100 (BST)
+Message-Id: <20190416163257.956F211281C6@debutante.sirena.org.uk>
+Date:   Tue, 16 Apr 2019 17:32:57 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -61,11 +64,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: tps80031: Switch to SPDX identifier
+   spi: tegra114: fix PIO transfer
 
-has been applied to the regulator tree at
+has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.2
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.1
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -86,59 +89,36 @@ to this mail.
 Thanks,
 Mark
 
-From fd1a4da3bfd77d3fe15165948b948ead2b522c1c Mon Sep 17 00:00:00 2001
-From: Axel Lin <axel.lin@ingics.com>
-Date: Tue, 16 Apr 2019 18:17:29 +0800
-Subject: [PATCH] regulator: tps80031: Switch to SPDX identifier
+From 3f6e3f7843a6a1667ed890ca51a1388fc7bf3429 Mon Sep 17 00:00:00 2001
+From: Sowjanya Komatineni <skomatineni@nvidia.com>
+Date: Mon, 15 Apr 2019 14:30:26 -0700
+Subject: [PATCH] spi: tegra114: fix PIO transfer
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
+This patch fixes PIO mode transfer to use PIO bit in SPI_COMMAND1 register.
+Current driver uses DMA_EN instead of PIO bit.
+
+Signed-off-by: Sowjanya Komatineni <skomatineni@nvidia.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/tps80031-regulator.c | 34 ++++++++------------------
- 1 file changed, 10 insertions(+), 24 deletions(-)
+ drivers/spi/spi-tegra114.c | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/regulator/tps80031-regulator.c b/drivers/regulator/tps80031-regulator.c
-index 8e65a13e2ef5..85a6a8ca8c1b 100644
---- a/drivers/regulator/tps80031-regulator.c
-+++ b/drivers/regulator/tps80031-regulator.c
-@@ -1,27 +1,13 @@
--/*
-- * tps80031-regulator.c -- TI TPS80031 regulator driver.
-- *
-- * Regulator driver for TI TPS80031/TPS80032 Fully Integrated Power
-- * Management with Power Path and Battery Charger.
-- *
-- * Copyright (c) 2012, NVIDIA Corporation.
-- *
-- * Author: Laxman Dewangan <ldewangan@nvidia.com>
-- *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License as
-- * published by the Free Software Foundation version 2.
-- *
-- * This program is distributed "as is" WITHOUT ANY WARRANTY of any kind,
-- * whether express or implied; without even the implied warranty of
-- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-- * General Public License for more details.
-- *
-- * You should have received a copy of the GNU General Public License
-- * along with this program; if not, write to the Free Software
-- * Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA
-- * 02111-1307, USA
-- */
-+// SPDX-License-Identifier: GPL-2.0
-+//
-+// tps80031-regulator.c -- TI TPS80031 regulator driver.
-+//
-+// Regulator driver for TI TPS80031/TPS80032 Fully Integrated Power
-+// Management with Power Path and Battery Charger.
-+//
-+// Copyright (c) 2012, NVIDIA Corporation.
-+//
-+// Author: Laxman Dewangan <ldewangan@nvidia.com>
+diff --git a/drivers/spi/spi-tegra114.c b/drivers/spi/spi-tegra114.c
+index b57f10182fae..21e4fdad013f 100644
+--- a/drivers/spi/spi-tegra114.c
++++ b/drivers/spi/spi-tegra114.c
+@@ -641,8 +641,9 @@ static int tegra_spi_start_cpu_based_transfer(
  
- #include <linux/delay.h>
- #include <linux/err.h>
+ 	tspi->is_curr_dma_xfer = false;
+ 
+-	val |= SPI_DMA_EN;
+-	tegra_spi_writel(tspi, val, SPI_DMA_CTL);
++	val = tspi->command1_reg;
++	val |= SPI_PIO;
++	tegra_spi_writel(tspi, val, SPI_COMMAND1);
+ 	return 0;
+ }
+ 
 -- 
 2.20.1
 
