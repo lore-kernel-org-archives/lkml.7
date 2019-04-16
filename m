@@ -2,97 +2,98 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBBD7C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DD973C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:38:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9510B20857
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:38:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kroah.com header.i=@kroah.com header.b="S2+V0OQs";
-	dkim=pass (2048-bit key) header.d=messagingengine.com header.i=@messagingengine.com header.b="F4iiQH24"
+	by mail.kernel.org (Postfix) with ESMTP id AE61420857
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:38:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555411128;
+	bh=08pqCf0mblmvYaCZiDBeQHcOa6u4+HtIRC440BSetf4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=jbCYFvknNu+hkLodPzhMXobIHP1JdV5z8cEka7bvIGajsAzeecbtVdM400ZomJIe1
+	 nV2aj8gfK4h2Evih8LKgLLPNxZn0EzQ1u9ExCUzw5D3uLPfxgsdCKb1g/RXtRv4HWs
+	 Dg7Wg8wSjl7oInSAS0tTQ+0WqeFcrHhMLbyWPtZc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729050AbfDPKiq (ORCPT
+        id S1729096AbfDPKir (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 16 Apr 2019 06:38:47 -0400
+Received: from mail.kernel.org ([198.145.29.99]:57332 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727950AbfDPKiq (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 16 Apr 2019 06:38:46 -0400
-Received: from out5-smtp.messagingengine.com ([66.111.4.29]:44335 "EHLO
-        out5-smtp.messagingengine.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1726682AbfDPKiq (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 06:38:46 -0400
-Received: from compute6.internal (compute6.nyi.internal [10.202.2.46])
-        by mailout.nyi.internal (Postfix) with ESMTP id BBA2C21C28;
-        Tue, 16 Apr 2019 06:38:44 -0400 (EDT)
-Received: from mailfrontend1 ([10.202.2.162])
-  by compute6.internal (MEProxy); Tue, 16 Apr 2019 06:38:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=kroah.com; h=
-        date:from:to:cc:subject:message-id:references:mime-version
-        :content-type:in-reply-to; s=fm3; bh=zN/ZIYi/aq5qbuo+6eh0bUkCq5/
-        s9b24BluyNPa+8YM=; b=S2+V0OQsJ4x6RUe1kv8M22NZjYQ3NAiBYop/5IXuLKF
-        5Sbdl1/QoreF/PJ0/Yi60Omooauu++Mbm1FnbAsopu6nvpFnbS5/aOj/MojvpNoA
-        zX9FB076o2KgXr/eyWmrGe2LHMz2SJ9Q1d3kmTlrPnFQ3hQyemU8fmD8A3vDF4dC
-        +DR+dX1LRatOkRi832RO1rqUq67bcc7M3Ojb13V0uh7zKY0SmNvSzYf+RZ8FYZ+v
-        fWeVAUy251vokdbcggUIF3hOKcMG2Xc0e4BbUZqICfliVNlzlLXTDFFfxUln0du8
-        60coOFy0SU0PZ6toSvgHEsJ/h+wtZ0lQehZIlLO/lww==
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=
-        messagingengine.com; h=cc:content-type:date:from:in-reply-to
-        :message-id:mime-version:references:subject:to:x-me-proxy
-        :x-me-proxy:x-me-sender:x-me-sender:x-sasl-enc; s=fm2; bh=zN/ZIY
-        i/aq5qbuo+6eh0bUkCq5/s9b24BluyNPa+8YM=; b=F4iiQH24dOyz5yXPf/IlLT
-        6LHhRhgcULDLXVXIe9Imid1T1tufuFfCGTV3LoZyrT5FZXdwH8eqIsUWSCCHV0K5
-        rajV61BVWY/FtlAaqqTLQjqq352OVzPCBMgnu8H2sacK1IxEBOB60D1RJgeMVfbB
-        Bf5xhoZLE4BxHL6dq3Ei5iddsVkT1kxQPAfmDRlY5yg26HHqvhU/A+3eBw+11A1U
-        6zYfAa1Yio3S9nQRQ99cdXO/hmNRM8Niq0qZhdhps0vyXIwYieCVCIe+4E08NYC3
-        S/BLGNROxSvOrAMU+18XNmKxviDZELUVbxl5vyw7Sp5aPaRl7rfR5XI0nyLqjMJA
-        ==
-X-ME-Sender: <xms:s7C1XGxoscY4NefXiOLtCS5OjLJiHZ0JTaUtO2uOR6KoZ1plNTb-Mg>
-X-ME-Proxy-Cause: gggruggvucftvghtrhhoucdtuddrgeduuddrfedugdeftdcutefuodetggdotefrodftvf
-    curfhrohhfihhlvgemucfhrghsthforghilhdpqfgfvfdpuffrtefokffrpgfnqfghnecu
-    uegrihhlohhuthemuceftddtnecusecvtfgvtghiphhivghnthhsucdlqddutddtmdenuc
-    fjughrpeffhffvuffkfhggtggujggfsehttdertddtredvnecuhfhrohhmpefirhgvghcu
-    mffjuceoghhrvghgsehkrhhorghhrdgtohhmqeenucfkphepkeefrdekiedrkeelrddutd
-    ejnecurfgrrhgrmhepmhgrihhlfhhrohhmpehgrhgvgheskhhrohgrhhdrtghomhenucev
-    lhhushhtvghrufhiiigvpedt
-X-ME-Proxy: <xmx:s7C1XL9gd8Z75kmCEwBZ60mPnOF5qufR5M-Gz3_C0K0WmXgZ7MeQ0Q>
-    <xmx:s7C1XHoMNZP7XO3XDBLSW41u8997ilrS0nF4Jc9vztQrwEp-Z_4ZeA>
-    <xmx:s7C1XEkKRbOwZHarjZDbLonzf18u2HxvfO72cqF6ASLfJIlXR7FpIg>
-    <xmx:tLC1XN8x0T-bg5Satsr4Lvv2ZMCKRLEMKwVWntX0YDskFwjgM3Ir2A>
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
-        by mail.messagingengine.com (Postfix) with ESMTPA id 144CFE4AD3;
-        Tue, 16 Apr 2019 06:38:42 -0400 (EDT)
-Date:   Tue, 16 Apr 2019 12:06:56 +0200
-From:   Greg KH <greg@kroah.com>
-To:     Yang Xiao <92siuyang@gmail.com>
-Cc:     kbuild test robot <lkp@intel.com>, kbuild-all@01.org,
-        linux-usb@vger.kernel.org, linux-media@vger.kernel.org,
-        linux-kernel@vger.kernel.org, mchehab@kernel.org,
-        Kees Cook <keescook@chromium.org>, hans.verkuil@cisco.com,
-        Young Xiao <YangX92@hotmail.com>
-Subject: Re: [PATCH] USB: s2255 & stkwebcam: fix oops with malicious USB
- descriptors
-Message-ID: <20190416100656.GG896@kroah.com>
-References: <1554958452-29794-1-git-send-email-92siuyang@gmail.com>
- <201904112252.HfZVFACR%lkp@intel.com>
- <CAKgHYH27TtpbUKJin+WyTRUvqgpTSBRWBTp6YhsUCpVTnKfNPA@mail.gmail.com>
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 51C0E206BA;
+        Tue, 16 Apr 2019 10:38:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555411125;
+        bh=08pqCf0mblmvYaCZiDBeQHcOa6u4+HtIRC440BSetf4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=Vrje8Sp9BtChWl4iBvqwAlufYFCj4JWJszjQDcaUqgY9swnCZ3Fa3A3EUG6GETvZJ
+         /FUf9k/d8TNnqszjZ+xMbaQnnHU/7Rld2lQxaUidd/ibnf3dWiiv9canJ5YehWo5LY
+         0Q4bq/4K7rCfEpupE5U/ZR538pRtp1nQ34Ua6yc8=
+Date:   Tue, 16 Apr 2019 12:12:58 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Chunfeng Yun <chunfeng.yun@mediatek.com>
+Cc:     Mathias Nyman <mathias.nyman@intel.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        Marek Szyprowski <m.szyprowski@samsung.com>,
+        linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org,
+        linux-mediatek@lists.infradead.org
+Subject: Re: [v2 PATCH 1/6] usb: xhci-mtk: get optional clock by
+ devm_clk_get_optional()
+Message-ID: <20190416101258.GA26091@kroah.com>
+References: <bc6cdc2dce698dddbd692ba100fbf08c15c7b023.1554877692.git.chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <CAKgHYH27TtpbUKJin+WyTRUvqgpTSBRWBTp6YhsUCpVTnKfNPA@mail.gmail.com>
+In-Reply-To: <bc6cdc2dce698dddbd692ba100fbf08c15c7b023.1554877692.git.chunfeng.yun@mediatek.com>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 10:14:50AM +0800, Yang Xiao wrote:
-> Sorry for my mistake.
+On Wed, Apr 10, 2019 at 02:47:24PM +0800, Chunfeng Yun wrote:
+> Use devm_clk_get_optional() to get optional clock
 > 
-> I have fixed the mistake. And the attachment is the changed patch.
+> Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+> ---
+> v2: no changes
+> ---
+>  drivers/usb/host/xhci-mtk.c | 19 +++----------------
+>  1 file changed, 3 insertions(+), 16 deletions(-)
+> 
+> diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
+> index 60987c787e44..026fe18972d3 100644
+> --- a/drivers/usb/host/xhci-mtk.c
+> +++ b/drivers/usb/host/xhci-mtk.c
+> @@ -206,19 +206,6 @@ static int xhci_mtk_ssusb_config(struct xhci_hcd_mtk *mtk)
+>  	return xhci_mtk_host_enable(mtk);
+>  }
+>  
+> -/* ignore the error if the clock does not exist */
+> -static struct clk *optional_clk_get(struct device *dev, const char *id)
+> -{
+> -	struct clk *opt_clk;
+> -
+> -	opt_clk = devm_clk_get(dev, id);
+> -	/* ignore error number except EPROBE_DEFER */
+> -	if (IS_ERR(opt_clk) && (PTR_ERR(opt_clk) != -EPROBE_DEFER))
 
-I can not apply attachments, please fix up and resend as documented.
+Are you sure about this?
+
+devm_clk_get_optional() does not check for -EPROBE_DEFER, so you just
+changed the functionality of this code.  Is that ok?  If so, please call
+it out explicitly in your changelog comment when you resend this.
 
 thanks,
 
