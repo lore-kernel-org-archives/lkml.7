@@ -2,147 +2,143 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5BA9DC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 23:14:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id AAD85C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 23:16:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A81B20868
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 23:14:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 75FAB20868
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 23:16:23 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="feDSQEgo"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FfRQwrdQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730152AbfDPXOP (ORCPT
+        id S1730653AbfDPXQW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 19:14:15 -0400
-Received: from mail-ua1-f65.google.com ([209.85.222.65]:44873 "EHLO
-        mail-ua1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728237AbfDPXOP (ORCPT
+        Tue, 16 Apr 2019 19:16:22 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:39833 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728237AbfDPXQV (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 19:14:15 -0400
-Received: by mail-ua1-f65.google.com with SMTP id p13so7288317uaa.11
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 16:14:14 -0700 (PDT)
+        Tue, 16 Apr 2019 19:16:21 -0400
+Received: by mail-pl1-f193.google.com with SMTP id a96so11065250pla.6;
+        Tue, 16 Apr 2019 16:16:21 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=ypsQMgePAKxZuEqECB22Fl32IQ1nGGqK4THufGdpBQE=;
-        b=feDSQEgo8svBfuUX8OAUrGPZvDYyfdpDfNwAjaivYqfIx2kZ2VJnvzN7qOZZzw5bpK
-         5TXRX9gHD4domVhVOtJbMAkuQXMY2nsh/cmoNQQ4f8m0lNfeqaGU22lG2bRKJys9O6Q0
-         ddusRCxtziWyBdD81A5uVVyFUSSeWidgI9arw=
+        bh=SJrdIOnMZscAX3/lUO7sU8M0Yhf+BeHX0BuUUJgATp4=;
+        b=FfRQwrdQnaM0FXPdkha6ruAJA2Vv0gqqHk8SCEtsf0Z3m5+fSOvlfcmzTam5quIfTw
+         DILB7M+Fs7Sr64MnSSmkeTJZXL8rcHl2iFAayFzLTToEQiSy3a7LKzzHG4dEP9iZAE3Q
+         kBp2MmuzbAAOOq6WaN9pVhAfHOjrpWxZqVFHzqPK1Arj8RwUzxOGJ5DdxoxXrjl3vRO3
+         22dTaKWaQiwzqIfgPtQBDOXTmuVEMzfQqTdmr2i2sVLr52j0hln7Iy2AyRUHJ09hDUR6
+         GaNSMjrETd6anOT6BW4U0IJ3HSogJU1yb/j0ctJFVgjXnw+nGirD0ll27KKOhJPiZTYC
+         tOCA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=ypsQMgePAKxZuEqECB22Fl32IQ1nGGqK4THufGdpBQE=;
-        b=GyPjhni5tKNTPXJwcjt9i9Xhiy/AFkIuP4dtzMmIVib0dZxWpBJZWPIkPPhkfl069S
-         7/OyAy4j6fiiIcdC2KmHJ8SdsYJFLgvinP6wrhy8UBlits9Fwgar+gf4U2aftqCUb+Xm
-         dzeY8lX4+ppPPKWN9GjdVapm61e1Q9Grb9d8jIlHA0YJ2Y1DWdsUNkL7VGr/XHNMBgub
-         JIrX8X4BNuSv3n0jv5z25PZHSLajO7KoaFuktHPpL7oIT1Q04150ahCEloqKl8ECqAuO
-         8mnLdFy0hFCmOJR6etHVsETeHuavtbR3fXnMXbc8UsQfpMwf3GxhxY1wxYrDWBb2wbjB
-         d1Zg==
-X-Gm-Message-State: APjAAAU92beMmZ7SD+nrMe0RAyFYb6ltyFSHWsa9OMXFubv/VHE6t9EV
-        6QC5js9aGhtLMUaaTDvzIRNdTJZlEKA=
-X-Google-Smtp-Source: APXvYqzedf2wfpJlGZTTHAdiM+QlTZaz63MvsJNk2mzhe5lSxTQxOlqZwq+w0WTdpH008NVRx0UD+Q==
-X-Received: by 2002:ab0:340a:: with SMTP id z10mr35575924uap.10.1555456453876;
-        Tue, 16 Apr 2019 16:14:13 -0700 (PDT)
-Received: from mail-vs1-f44.google.com (mail-vs1-f44.google.com. [209.85.217.44])
-        by smtp.gmail.com with ESMTPSA id m23sm91600588vsl.24.2019.04.16.16.14.12
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 16:14:13 -0700 (PDT)
-Received: by mail-vs1-f44.google.com with SMTP id s2so12550505vsi.5
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 16:14:12 -0700 (PDT)
-X-Received: by 2002:a67:7e12:: with SMTP id z18mr23509937vsc.82.1555456452273;
- Tue, 16 Apr 2019 16:14:12 -0700 (PDT)
+        bh=SJrdIOnMZscAX3/lUO7sU8M0Yhf+BeHX0BuUUJgATp4=;
+        b=WELsBKT/Qdcumxau7+pJ+Tx1JT3IpcbPxpY1j2Irt8ExmrP/IXIRbh8NRREBjrUZ7O
+         p0mmKSCV59h52Fd6UL13SNbwNVN5bUry1cq5k2qFYdaTBb2j98ZnCLlFfUcM6eh87wGw
+         gaVHGSRkzx6KWCgr8AJhopUzLDfHa1OSh28OnNxp1GjVPmDfjxr6xpRUfbQuUgXwLPe4
+         r26Y3kRh42JqnJpd9biZrlR8lqrcjkm3vr5EoOBuqsq4P7IfxL35xTQoGBwPDD0U2uD3
+         m73s6asU4iQQVSgMyGhsnpHfpAzq1DWNe+Gw8d9gpt/lY5x3YOp0Jc9PZHha3ip5RIbu
+         V9nQ==
+X-Gm-Message-State: APjAAAXMznaDwjfgs5qS17fD7tIUCm+At2SoN+NDjmIS1ZhUBeSmIAm/
+        FGoEw9WM8ULY/yvkQqdZwtinvWLocxCBjhKplrE2UWZc
+X-Google-Smtp-Source: APXvYqx0nrC7rPCkGRTUFuYDfHJ0Whe745e75S26fT/nd1jMODEQF5PZ81sQg6puaH4+Ve5LW/aPvKtJa+G3eUdRRBE=
+X-Received: by 2002:a17:902:9a89:: with SMTP id w9mr86279265plp.126.1555456580630;
+ Tue, 16 Apr 2019 16:16:20 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190416042320.GA36924@beast> <20190416160407.0e398a086507b811d7e95bbf@linux-foundation.org>
-In-Reply-To: <20190416160407.0e398a086507b811d7e95bbf@linux-foundation.org>
-From:   Kees Cook <keescook@chromium.org>
-Date:   Tue, 16 Apr 2019 18:14:00 -0500
-X-Gmail-Original-Message-ID: <CAGXu5j+z7craEPiDYRjgYo4JBEum965JC_xSajv8TyPM09eaXQ@mail.gmail.com>
-Message-ID: <CAGXu5j+z7craEPiDYRjgYo4JBEum965JC_xSajv8TyPM09eaXQ@mail.gmail.com>
-Subject: Re: [PATCH] binfmt_elf: Move brk out of mmap when doing direct loader exec
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Ali Saidi <alisaidi@amazon.com>, Michal Hocko <mhocko@suse.com>,
-        Matthew Wilcox <willy@infradead.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Jann Horn <jannh@google.com>,
-        LKML <linux-kernel@vger.kernel.org>
+References: <20190416213351.28999-1-xiyou.wangcong@gmail.com> <20190416214634.GP31772@zn.tnic>
+In-Reply-To: <20190416214634.GP31772@zn.tnic>
+From:   Cong Wang <xiyou.wangcong@gmail.com>
+Date:   Tue, 16 Apr 2019 16:16:08 -0700
+Message-ID: <CAM_iQpVd02zkVJ846cj-Fg1yUNuz6tY5q1Vpj4LrXmE06dPYYg@mail.gmail.com>
+Subject: Re: [PATCH v2 1/2] ras: fix an off-by-one error in __find_elem()
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-edac@vger.kernel.org,
+        Tony Luck <tony.luck@intel.com>,
+        Thomas Gleixner <tglx@linutronix.de>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 6:04 PM Andrew Morton <akpm@linux-foundation.org> wrote:
+On Tue, Apr 16, 2019 at 2:46 PM Borislav Petkov <bp@alien8.de> wrote:
 >
-> On Mon, 15 Apr 2019 21:23:20 -0700 Kees Cook <keescook@chromium.org> wrote:
+> On Tue, Apr 16, 2019 at 02:33:50PM -0700, Cong Wang wrote:
+> > ce_arr.array[] is always within the range [0, ce_arr.n-1].
+> > However, the binary search code in __find_elem() uses ce_arr.n
+> > as the maximum index, which could lead to an off-by-one
+> > out-of-bound access right after the while loop. In this case,
+> > we should not even read it, just return -ENOKEY instead.
+> >
+> > Note, this could cause a kernel crash if ce_arr.n is exactly
+> > MAX_ELEMS.
 >
-> > Commit eab09532d400 ("binfmt_elf: use ELF_ET_DYN_BASE only for PIE"),
-> > made changes in the rare case when the ELF loader was directly invoked
-> > (e.g to set a non-inheritable LD_LIBRARY_PATH, testing new versions of
-> > the loader), by moving into the mmap region to avoid both ET_EXEC and PIE
-> > binaries. This had the effect of also moving the brk region into mmap,
-> > which could lead to the stack and brk being arbitrarily close to each
-> > other. An unlucky process wouldn't get its requested stack size and stack
-> > allocations could end up scribbling on the heap.
-> >
-> > This is illustrated here. In the case of using the loader directly, brk
-> > (so helpfully identified as "[heap]") is allocated with the _loader_
-> > not the binary. For example, with ASLR entirely disabled, you can see
-> > this more clearly:
-> >
-> > $ /bin/cat /proc/self/maps
-> > 555555554000-55555555c000 r-xp 00000000 ... /bin/cat
-> > 55555575b000-55555575c000 r--p 00007000 ... /bin/cat
-> > 55555575c000-55555575d000 rw-p 00008000 ... /bin/cat
-> > 55555575d000-55555577e000 rw-p 00000000 ... [heap]
-> > ...
-> > 7ffff7ff7000-7ffff7ffa000 r--p 00000000 ... [vvar]
-> > 7ffff7ffa000-7ffff7ffc000 r-xp 00000000 ... [vdso]
-> > 7ffff7ffc000-7ffff7ffd000 r--p 00027000 ... /lib/x86_64-linux-gnu/ld-2.27.so
-> > 7ffff7ffd000-7ffff7ffe000 rw-p 00028000 ... /lib/x86_64-linux-gnu/ld-2.27.so
-> > 7ffff7ffe000-7ffff7fff000 rw-p 00000000 ...
-> > 7ffffffde000-7ffffffff000 rw-p 00000000 ... [stack]
-> >
-> > $ /lib/x86_64-linux-gnu/ld-2.27.so /bin/cat /proc/self/maps
-> > ...
-> > 7ffff7bcc000-7ffff7bd4000 r-xp 00000000 ... /bin/cat
-> > 7ffff7bd4000-7ffff7dd3000 ---p 00008000 ... /bin/cat
-> > 7ffff7dd3000-7ffff7dd4000 r--p 00007000 ... /bin/cat
-> > 7ffff7dd4000-7ffff7dd5000 rw-p 00008000 ... /bin/cat
-> > 7ffff7dd5000-7ffff7dfc000 r-xp 00000000 ... /lib/x86_64-linux-gnu/ld-2.27.so
-> > 7ffff7fb2000-7ffff7fd6000 rw-p 00000000 ...
-> > 7ffff7ff7000-7ffff7ffa000 r--p 00000000 ... [vvar]
-> > 7ffff7ffa000-7ffff7ffc000 r-xp 00000000 ... [vdso]
-> > 7ffff7ffc000-7ffff7ffd000 r--p 00027000 ... /lib/x86_64-linux-gnu/ld-2.27.so
-> > 7ffff7ffd000-7ffff7ffe000 rw-p 00028000 ... /lib/x86_64-linux-gnu/ld-2.27.so
-> > 7ffff7ffe000-7ffff8020000 rw-p 00000000 ... [heap]
-> > 7ffffffde000-7ffffffff000 rw-p 00000000 ... [stack]
-> >
-> > The solution is to move brk out of mmap and into ELF_ET_DYN_BASE since
-> > nothing is there in this direct loader case (and ET_EXEC still far
-> > away at 0x400000). Anything that ran before should still work (i.e. the
-> > ultimately-launched binary already had the brk very far from its text,
-> > so this should be no different from a COMPAT_BRK standpoint). The only
-> > risk I see here is that if someone started to suddenly depend on the
-> > entire memory space above the mmap region being available when launching
-> > binaries via a direct loader execs which seems highly unlikely, I'd hope:
-> > this would mean a binary would _not_ work when execed normally.
-> >
-> > Reported-by: Ali Saidi <alisaidi@amazon.com>
-> > Link: https://lkml.kernel.org/r/CAGXu5jJ5sj3emOT2QPxQkNQk0qbU6zEfu9=Omfhx_p0nCKPSjA@mail.gmail.com
-> > Fixes: eab09532d400 ("binfmt_elf: use ELF_ET_DYN_BASE only for PIE")
-> > Signed-off-by: Kees Cook <keescook@chromium.org>
+> "Could cause"?
 >
-> No cc:stable?
+> I'm still waiting for a demonstration. You can build a case through
+> writing values in the debugfs nodes I pointed you at or even with a
+> patch ontop preparing the exact conditions for it to crash. And then
+> give me that "recipe" to trigger it here in a VM.
 
-Probably it should be, yes. I think I'm just shy about that when
-poking ELF mappings. :)
+It is actually fairly easy:
 
--- 
-Kees Cook
+1) Fill the whole page with PFN's:
+for i in `seq 0 511`; do echo $i >> /sys/kernel/debug/ras/cec/pfn; done
+
+2) Set thresh to 1 in order to trigger the deletion:
+echo 1 > /sys/kernel/debug/ras/cec/count_threshold
+
+3) Repeatedly add and remove the last element:
+echo 512 >> /sys/kernel/debug/ras/cec/pfn
+(until you get a crash.)
+
+In case you still don't get it, here it is:
+
+[   57.732593] BUG: unable to handle kernel paging request at ffff9c667bca0000
+[   57.734994] #PF error: [PROT] [WRITE]
+[   57.735891] PGD 75601067 P4D 75601067 PUD 75605067 PMD 7bca1063 PTE
+800000007bca0061
+[   57.737702] Oops: 0003 [#1] SMP PTI
+[   57.738533] CPU: 0 PID: 649 Comm: bash Not tainted 5.1.0-rc5+ #561
+[   57.739965] Hardware name: QEMU Standard PC (i440FX + PIIX, 1996),
+BIOS ?-20180724_192412-buildhw-07.phx2.fedoraproject.org-1.fc29
+04/01/2014
+[   57.742892] RIP: 0010:__memmove+0x57/0x1a0
+[   57.743853] Code: 00 72 05 40 38 fe 74 3b 48 83 ea 20 48 83 ea 20
+4c 8b 1e 4c 8b 56 08 4c 8b 4e 10 4c 8b 46 18 48 8d 76 20 4c 89 1f 4c
+89 57 08 <4c> 89 4f 10 4c 89 47 18 48 8d 7f 20 73 d4 48 83 c2 20 e9 a2
+00 00
+[   57.748150] RSP: 0018:ffffbe2ec0c8bdf8 EFLAGS: 00010206
+[   57.749371] RAX: ffff9c667a5c1ff0 RBX: 0000000000000001 RCX: 0000000000000ff8
+[   57.751018] RDX: 00000007fe921fb8 RSI: ffff9c667bca0018 RDI: ffff9c667bc9fff0
+[   57.752674] RBP: 0000000000000200 R08: 0000000000000000 R09: 0000015c00000000
+[   57.754325] R10: 0000000000040001 R11: 5a5a5a5a5a5a5a5a R12: 0000000000000004
+[   57.755976] R13: ffff9c6671787778 R14: ffff9c6671787728 R15: ffff9c6671787750
+[   57.757631] FS:  00007f33ca294740(0000) GS:ffff9c667d800000(0000)
+knlGS:0000000000000000
+[   57.759689] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
+[   57.761023] CR2: ffff9c667bca0000 CR3: 000000007061e000 CR4: 00000000000406f0
+[   57.762681] Call Trace:
+[   57.763275]  del_elem.constprop.1+0x39/0x40
+[   57.764260]  cec_add_elem+0x1e4/0x211
+[   57.765129]  simple_attr_write+0xa2/0xc3
+[   57.766057]  debugfs_attr_write+0x45/0x5c
+[   57.767005]  full_proxy_write+0x4b/0x65
+[   57.767911]  ? full_proxy_poll+0x50/0x50
+[   57.768844]  vfs_write+0xb8/0xf5
+[   57.769613]  ksys_write+0x6b/0xb8
+[   57.770407]  do_syscall_64+0x57/0x65
+[   57.771249]  entry_SYSCALL_64_after_hwframe+0x49/0xbe
+
+I will leave it as a homework for explaining why the crash is inside
+memmove(). ;)
+
+Thanks.
