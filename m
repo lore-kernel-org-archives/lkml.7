@@ -2,115 +2,57 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 91368C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 04:48:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8069EC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 05:07:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 658942075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 04:48:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4CCFF2075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 05:07:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1727149AbfDPEsi (ORCPT
+        id S1726583AbfDPFBG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 00:48:38 -0400
-Received: from mx2.suse.de ([195.135.220.15]:59614 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725819AbfDPEsh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 00:48:37 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id E29BEAF40;
-        Tue, 16 Apr 2019 04:48:35 +0000 (UTC)
-From:   NeilBrown <neil@brown.name>
-To:     Ulf Hansson <ulf.hansson@linaro.org>,
-        Chaotian Jing <chaotian.jing@mediatek.com>
-Date:   Tue, 16 Apr 2019 14:47:29 +1000
-Subject: [PATCH 5/5] mmc: mtk-sd: enable internal write-protect logic.
-Cc:     linux-mmc@vger.kernel.org, linux-kernel@vger.kernel.org,
-        thirtythreeforty@gmail.com
-Message-ID: <155539004934.25108.642381572389480964.stgit@noble.brown>
-In-Reply-To: <155538933003.25108.3338569916935462285.stgit@noble.brown>
-References: <155538933003.25108.3338569916935462285.stgit@noble.brown>
-User-Agent: StGit/0.17.1-dirty
+        Tue, 16 Apr 2019 01:01:06 -0400
+Received: from isilmar-4.linta.de ([136.243.71.142]:59798 "EHLO
+        isilmar-4.linta.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725802AbfDPFBG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 01:01:06 -0400
+Received: from light.dominikbrodowski.net (isilmar.linta [10.0.0.1])
+        by isilmar-4.linta.de (Postfix) with ESMTPS id 906E7200941;
+        Tue, 16 Apr 2019 05:01:04 +0000 (UTC)
+Received: by light.dominikbrodowski.net (Postfix, from userid 1000)
+        id 581062033D; Tue, 16 Apr 2019 06:58:01 +0200 (CEST)
+Date:   Tue, 16 Apr 2019 06:58:01 +0200
+From:   Dominik Brodowski <linux@dominikbrodowski.net>
+To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: Re: [PATCH 24/57] docs: pcmcia: convert it to ReST format
+Message-ID: <20190416045801.GA13259@light.dominikbrodowski.net>
+References: <cover.1555382110.git.mchehab+samsung@kernel.org>
+ <e3c4827b8f33af90e4628de6590c6e040a20779c.1555382110.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <e3c4827b8f33af90e4628de6590c6e040a20779c.1555382110.git.mchehab+samsung@kernel.org>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The mtk-sd silicon has integrated write-protect detection logic.
+On Mon, Apr 15, 2019 at 11:55:49PM -0300, Mauro Carvalho Chehab wrote:
+> Convert the pcmcia docs to ReST format. Most of the changes here
+> are trivial, making Sphinx properly identify titles, lists and
+> literal blocks.
+> 
+> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 
-If the sdhci isn't marked no-write-protect and doesn't have a
-ro-gpio configured, assume the internal wp logic should be used.
+Acked-by: Dominik Brodowski <linux@dominikbrodowski.net>
 
-Signed-off-by: NeilBrown <neil@brown.name>
----
- drivers/mmc/host/mtk-sd.c |   30 +++++++++++++++++++++++++++++-
- 1 file changed, 29 insertions(+), 1 deletion(-)
-
-diff --git a/drivers/mmc/host/mtk-sd.c b/drivers/mmc/host/mtk-sd.c
-index 341cf5f03429..d63d6b62f49a 100644
---- a/drivers/mmc/host/mtk-sd.c
-+++ b/drivers/mmc/host/mtk-sd.c
-@@ -433,6 +433,7 @@ struct msdc_host {
- 				 /* cmd response sample selection for HS400 */
- 	bool hs400_mode;	/* current eMMC will run at hs400 mode */
- 	bool internal_cd;	/* Use internal card-detect logic */
-+	bool internal_ro;	/* Use internal write-protect logic */
- 	struct msdc_save_para save_para; /* used when gate HCLK */
- 	struct msdc_tune_para def_tune_para; /* default tune setting */
- 	struct msdc_tune_para saved_tune_para; /* tune result of CMD21/CMD19 */
-@@ -2119,12 +2120,30 @@ static int msdc_get_cd(struct mmc_host *mmc)
- 		return !val;
- }
- 
-+static int msdc_get_ro(struct mmc_host *mmc)
-+{
-+	struct msdc_host *host = mmc_priv(mmc);
-+	int val;
-+
-+	if (mmc->caps2 & MMC_CAP2_NO_WRITE_PROTECT)
-+		return 0;
-+
-+	if (!host->internal_ro)
-+		return mmc_gpio_get_ro(mmc);
-+
-+	val = readl(host->base + MSDC_PS) & MSDC_PS_WP;
-+	if (mmc->caps2 & MMC_CAP2_RO_ACTIVE_HIGH)
-+		return !!val;
-+	else
-+		return !val;
-+}
-+
- static const struct mmc_host_ops mt_msdc_ops = {
- 	.post_req = msdc_post_req,
- 	.pre_req = msdc_pre_req,
- 	.request = msdc_ops_request,
- 	.set_ios = msdc_ops_set_ios,
--	.get_ro = mmc_gpio_get_ro,
-+	.get_ro = msdc_get_ro,
- 	.get_cd = msdc_get_cd,
- 	.enable_sdio_irq = msdc_enable_sdio_irq,
- 	.ack_sdio_irq = msdc_ack_sdio_irq,
-@@ -2256,6 +2275,15 @@ static int msdc_drv_probe(struct platform_device *pdev)
- 		host->internal_cd = true;
- 	}
- 
-+	if (!(mmc->caps2 & MMC_CAP2_NO_WRITE_PROTECT) &&
-+	    !mmc_can_gpio_ro(mmc)) {
-+		/*
-+		 * Has write-protect but no GPIO declared, so
-+		 * use internal functionality.
-+		 */
-+		host->internal_ro = true;
-+	}
-+
- 	msdc_of_property_parse(pdev, host);
- 
- 	host->dev = &pdev->dev;
-
-
+Thanks,
+	Dominik
