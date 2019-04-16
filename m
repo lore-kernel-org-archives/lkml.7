@@ -4,229 +4,115 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2B4FC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:02:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 86F75C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:02:21 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C03120880
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:02:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4BF7F217D7
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:02:21 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555430534;
-	bh=nUdMgEi5L0/t0hKUbqTUzB60fD42kM2xGW8h1tFcTk4=;
+	s=default; t=1555430541;
+	bh=ZqOg3Yr7Zx8JhIKDYP9iSBU0vcd7gjtZUTEVVIE9maY=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=r7ysSTG5bHiBGvhG+8/3Zfiz2N3N5X3mqSDTYyE5qu+Vs9U3X6XmTLTV2lD5ABaS9
-	 3xbLDFVAVc88NAhU4EdRBAPpOgz/AQ+RjmYnDPZ61mFqYETLxkW9FtnNta9C8Yt+aX
-	 uCOPf3fu2SPhCLQDHsNiloZtzmqYt0dleoR8GY00=
+	b=HzXxxZplJmdGX5nCjx2X8D5rvOi0SaS3BLXvezrW1PBS7X5+ONVrm6FMauI3XneQ7
+	 1EUMs6ZU3sGHaj60Rfp6xG7CQPvDvdMyjYjKLgZchix8gdbR22425CkLCGNJjpHXLE
+	 6ecuA5ITg9BC+xrI1zOA6QEkJh6XA4YpPjraaqIY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730093AbfDPQCN (ORCPT
+        id S1730053AbfDPQCG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 12:02:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:44412 "EHLO mx1.redhat.com"
+        Tue, 16 Apr 2019 12:02:06 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:36308 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726860AbfDPQCL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 12:02:11 -0400
+        id S1729984AbfDPQCD (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 12:02:03 -0400
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 039F8308404C;
-        Tue, 16 Apr 2019 16:02:11 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 24AF95D60E;
+        Tue, 16 Apr 2019 16:02:03 +0000 (UTC)
 Received: from krava.brq.redhat.com (unknown [10.43.17.48])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B22745D71B;
-        Tue, 16 Apr 2019 16:02:08 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D1B9B5D71B;
+        Tue, 16 Apr 2019 16:02:00 +0000 (UTC)
 From:   Jiri Olsa <jolsa@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
-Cc:     lkml <linux-kernel@vger.kernel.org>,
+Cc:     Song Liu <songliubraving@fb.com>,
+        lkml <linux-kernel@vger.kernel.org>,
         Ingo Molnar <mingo@kernel.org>,
         Namhyung Kim <namhyung@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
         Peter Zijlstra <a.p.zijlstra@chello.nl>,
         Andi Kleen <ak@linux.intel.com>,
         Adrian Hunter <adrian.hunter@intel.com>,
-        Song Liu <songliubraving@fb.com>,
         Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>
-Subject: [PATCH 12/12] perf script: Pad dso name for --call-trace
-Date:   Tue, 16 Apr 2019 18:01:27 +0200
-Message-Id: <20190416160127.30203-13-jolsa@kernel.org>
+Subject: [PATCH 09/12] perf tools: Fix map reference counting
+Date:   Tue, 16 Apr 2019 18:01:24 +0200
+Message-Id: <20190416160127.30203-10-jolsa@kernel.org>
 In-Reply-To: <20190416160127.30203-1-jolsa@kernel.org>
 References: <20190416160127.30203-1-jolsa@kernel.org>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Tue, 16 Apr 2019 16:02:11 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.39]); Tue, 16 Apr 2019 16:02:03 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-so we don't have the indent screwed by different dso name lenghts,
-as now for kernel there's also bpf code displayed.
+By calling maps__insert we assume to get 2 references
+on the map, which we relese within maps__remove call.
 
-  # perf-with-kcore record pt -e intel_pt//ku -- sleep 1
-  # perf-core/perf-with-kcore script pt --call-trace
+However if there's already same map name, we currently
+don't bump the reference and can crash, like:
 
-Before:
-           sleep 36660 [016] 1057036.806464404: ([kernel.kallsyms])                                  kretprobe_perf_func
-           sleep 36660 [016] 1057036.806464404: ([kernel.kallsyms])                                      trace_call_bpf
-           sleep 36660 [016] 1057036.806464404: ([kernel.kallsyms])                                          __x86_indirect_thunk_rax
-           sleep 36660 [016] 1057036.806464404: ([kernel.kallsyms])                                              __x86_indirect_thunk_rax
-           sleep 36660 [016] 1057036.806464725: (bpf_prog_da4fe6b3d2c29b25_trace_return)                                                     bpf_get_current_pid_tgid
-           sleep 36660 [016] 1057036.806464725: (bpf_prog_da4fe6b3d2c29b25_trace_return)                                                     bpf_ktime_get_ns
-           sleep 36660 [016] 1057036.806464725: ([kernel.kallsyms])                                                      __x86_indirect_thunk_rax
-           sleep 36660 [016] 1057036.806464725: ([kernel.kallsyms])                                                          __x86_indirect_thunk_rax
-           sleep 36660 [016] 1057036.806465045: (bpf_prog_da4fe6b3d2c29b25_trace_return)                                                     __htab_map_lookup_elem
-           sleep 36660 [016] 1057036.806465366: ([kernel.kallsyms])                                                      memcmp
-           sleep 36660 [016] 1057036.806465687: (bpf_prog_da4fe6b3d2c29b25_trace_return)                                                     bpf_probe_read
-           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms])                                                      probe_kernel_read
-           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms])                                                          __check_object_size
-           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms])                                                              check_stack_object
-           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms])                                                          copy_user_enhanced_fast_string
-           sleep 36660 [016] 1057036.806465687: (bpf_prog_da4fe6b3d2c29b25_trace_return)                                                     bpf_probe_read
-           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms])                                                      probe_kernel_read
-           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms])                                                          __check_object_size
-           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms])                                                              check_stack_object
-           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms])                                                          copy_user_enhanced_fast_string
-           sleep 36660 [016] 1057036.806466008: (bpf_prog_da4fe6b3d2c29b25_trace_return)                                                     bpf_get_current_uid_gid
-           sleep 36660 [016] 1057036.806466008: ([kernel.kallsyms])                                                      from_kgid
-           sleep 36660 [016] 1057036.806466008: ([kernel.kallsyms])                                                      from_kuid
-           sleep 36660 [016] 1057036.806466008: (bpf_prog_da4fe6b3d2c29b25_trace_return)                                                     bpf_perf_event_output
-           sleep 36660 [016] 1057036.806466328: ([kernel.kallsyms])                                                      perf_event_output
-           sleep 36660 [016] 1057036.806466328: ([kernel.kallsyms])                                                          perf_prepare_sample
-           sleep 36660 [016] 1057036.806466328: ([kernel.kallsyms])                                                              perf_misc_flags
-           sleep 36660 [016] 1057036.806466328: ([kernel.kallsyms])                                                                  __x86_indirect_thunk_rax
-           sleep 36660 [016] 1057036.806466328: ([kernel.kallsyms])                                                                      __x86_indirect_thunk_rax
-           sleep 36660 [016] 1057036.806466328: ([kvm])                                                                  kvm_is_in_guest
-           sleep 36660 [016] 1057036.806466649: ([kernel.kallsyms])                                                              __perf_event_header__init_id.isra.0
-           sleep 36660 [016] 1057036.806466649: ([kernel.kallsyms])                                                          perf_output_begin
+  Program received signal SIGABRT, Aborted.
+  0x00007ffff75e60f5 in raise () from /lib64/libc.so.6
 
-After:
-           sleep 36660 [016] 1057036.806464404: ([kernel.kallsyms]                       )                kretprobe_perf_func
-           sleep 36660 [016] 1057036.806464404: ([kernel.kallsyms]                       )                    trace_call_bpf
-           sleep 36660 [016] 1057036.806464404: ([kernel.kallsyms]                       )                        __x86_indirect_thunk_rax
-           sleep 36660 [016] 1057036.806464404: ([kernel.kallsyms]                       )                            __x86_indirect_thunk_rax
-           sleep 36660 [016] 1057036.806464725: (bpf_prog_da4fe6b3d2c29b25_trace_return  )                                bpf_get_current_pid_tgid
-           sleep 36660 [016] 1057036.806464725: (bpf_prog_da4fe6b3d2c29b25_trace_return  )                                bpf_ktime_get_ns
-           sleep 36660 [016] 1057036.806464725: ([kernel.kallsyms]                       )                                    __x86_indirect_thunk_rax
-           sleep 36660 [016] 1057036.806464725: ([kernel.kallsyms]                       )                                        __x86_indirect_thunk_rax
-           sleep 36660 [016] 1057036.806465045: (bpf_prog_da4fe6b3d2c29b25_trace_return  )                                __htab_map_lookup_elem
-           sleep 36660 [016] 1057036.806465366: ([kernel.kallsyms]                       )                                    memcmp
-           sleep 36660 [016] 1057036.806465687: (bpf_prog_da4fe6b3d2c29b25_trace_return  )                                bpf_probe_read
-           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms]                       )                                    probe_kernel_read
-           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms]                       )                                        __check_object_size
-           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms]                       )                                            check_stack_object
-           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms]                       )                                        copy_user_enhanced_fast_string
-           sleep 36660 [016] 1057036.806465687: (bpf_prog_da4fe6b3d2c29b25_trace_return  )                                bpf_probe_read
-           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms]                       )                                    probe_kernel_read
-           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms]                       )                                        __check_object_size
-           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms]                       )                                            check_stack_object
-           sleep 36660 [016] 1057036.806465687: ([kernel.kallsyms]                       )                                        copy_user_enhanced_fast_string
-           sleep 36660 [016] 1057036.806466008: (bpf_prog_da4fe6b3d2c29b25_trace_return  )                                bpf_get_current_uid_gid
-           sleep 36660 [016] 1057036.806466008: ([kernel.kallsyms]                       )                                    from_kgid
-           sleep 36660 [016] 1057036.806466008: ([kernel.kallsyms]                       )                                    from_kuid
-           sleep 36660 [016] 1057036.806466008: (bpf_prog_da4fe6b3d2c29b25_trace_return  )                                bpf_perf_event_output
-           sleep 36660 [016] 1057036.806466328: ([kernel.kallsyms]                       )                                    perf_event_output
-           sleep 36660 [016] 1057036.806466328: ([kernel.kallsyms]                       )                                        perf_prepare_sample
-           sleep 36660 [016] 1057036.806466328: ([kernel.kallsyms]                       )                                            perf_misc_flags
-           sleep 36660 [016] 1057036.806466328: ([kernel.kallsyms]                       )                                                __x86_indirect_thunk_rax
-           sleep 36660 [016] 1057036.806466328: ([kernel.kallsyms]                       )                                                    __x86_indirect_thunk_rax
+  (gdb) bt
+  #0  0x00007ffff75e60f5 in raise () from /lib64/libc.so.6
+  #1  0x00007ffff75d0895 in abort () from /lib64/libc.so.6
+  #2  0x00007ffff75d0769 in __assert_fail_base.cold () from /lib64/libc.so.6
+  #3  0x00007ffff75de596 in __assert_fail () from /lib64/libc.so.6
+  #4  0x00000000004fc006 in refcount_sub_and_test (i=1, r=0x1224e88) at tools/include/linux/refcount.h:131
+  #5  refcount_dec_and_test (r=0x1224e88) at tools/include/linux/refcount.h:148
+  #6  map__put (map=0x1224df0) at util/map.c:299
+  #7  0x00000000004fdb95 in __maps__remove (map=0x1224df0, maps=0xb17d80) at util/map.c:953
+  #8  maps__remove (maps=0xb17d80, map=0x1224df0) at util/map.c:959
+  #9  0x00000000004f7d8a in map_groups__remove (map=<optimized out>, mg=<optimized out>) at util/map_groups.h:65
+  #10 machine__process_ksymbol_unregister (sample=<optimized out>, event=0x7ffff7279670, machine=<optimized out>) at util/machine.c:728
+  #11 machine__process_ksymbol (machine=<optimized out>, event=0x7ffff7279670, sample=<optimized out>) at util/machine.c:741
+  #12 0x00000000004fffbb in perf_session__deliver_event (session=0xb11390, event=0x7ffff7279670, tool=0x7fffffffc7b0, file_offset=13936) at util/session.c:1362
+  #13 0x00000000005039bb in do_flush (show_progress=false, oe=0xb17e80) at util/ordered-events.c:243
+  #14 __ordered_events__flush (oe=0xb17e80, how=OE_FLUSH__ROUND, timestamp=<optimized out>) at util/ordered-events.c:322
+  #15 0x00000000005005e4 in perf_session__process_user_event (session=session@entry=0xb11390, event=event@entry=0x7ffff72a4af8,
+  ...
 
-Link: http://lkml.kernel.org/n/tip-99g9rg4p20a1o99vr0nkjhq8@git.kernel.org
+Adding the map on the list and getting the reference event
+if we find the map with same name.
+
+Cc: Song Liu <songliubraving@fb.com>
+Link: http://lkml.kernel.org/n/tip-38t1ihcy32lvu4xfpm0p7yex@git.kernel.org
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 ---
- tools/include/linux/kernel.h  |  1 +
- tools/lib/vsprintf.c          | 19 +++++++++++++++++++
- tools/perf/builtin-script.c   |  1 +
- tools/perf/util/map.c         |  6 ++++++
- tools/perf/util/symbol_conf.h |  1 +
- 5 files changed, 28 insertions(+)
+ tools/perf/util/map.c | 4 +---
+ 1 file changed, 1 insertion(+), 3 deletions(-)
 
-diff --git a/tools/include/linux/kernel.h b/tools/include/linux/kernel.h
-index 857d9e22826e..cba226948a0c 100644
---- a/tools/include/linux/kernel.h
-+++ b/tools/include/linux/kernel.h
-@@ -102,6 +102,7 @@
- 
- int vscnprintf(char *buf, size_t size, const char *fmt, va_list args);
- int scnprintf(char * buf, size_t size, const char * fmt, ...);
-+int scnprintf_pad(char * buf, size_t size, const char * fmt, ...);
- 
- #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof((arr)[0]) + __must_be_array(arr))
- 
-diff --git a/tools/lib/vsprintf.c b/tools/lib/vsprintf.c
-index e08ee147eab4..149a15013b23 100644
---- a/tools/lib/vsprintf.c
-+++ b/tools/lib/vsprintf.c
-@@ -23,3 +23,22 @@ int scnprintf(char * buf, size_t size, const char * fmt, ...)
- 
-        return (i >= ssize) ? (ssize - 1) : i;
- }
-+
-+int scnprintf_pad(char * buf, size_t size, const char * fmt, ...)
-+{
-+	ssize_t ssize = size;
-+	va_list args;
-+	int i;
-+
-+	va_start(args, fmt);
-+	i = vsnprintf(buf, size, fmt, args);
-+	va_end(args);
-+
-+	if (i < (int) size) {
-+		for (; i < (int) size; i++)
-+			buf[i] = ' ';
-+		buf[i] = 0x0;
-+	}
-+
-+	return (i >= ssize) ? (ssize - 1) : i;
-+}
-diff --git a/tools/perf/builtin-script.c b/tools/perf/builtin-script.c
-index 61cfd8f70989..7adaa6c63a0b 100644
---- a/tools/perf/builtin-script.c
-+++ b/tools/perf/builtin-script.c
-@@ -3297,6 +3297,7 @@ static int parse_call_trace(const struct option *opt __maybe_unused,
- 	parse_output_fields(NULL, "-ip,-addr,-event,-period,+callindent", 0);
- 	itrace_parse_synth_opts(opt, "cewp", 0);
- 	symbol_conf.nanosecs = true;
-+	symbol_conf.pad_output_len_dso = 50;
- 	return 0;
- }
- 
 diff --git a/tools/perf/util/map.c b/tools/perf/util/map.c
-index ee71efb9db62..c3fbd6e556b0 100644
+index 28d484ef74ae..ee71efb9db62 100644
 --- a/tools/perf/util/map.c
 +++ b/tools/perf/util/map.c
-@@ -405,6 +405,7 @@ size_t map__fprintf(struct map *map, FILE *fp)
- 
- size_t map__fprintf_dsoname(struct map *map, FILE *fp)
- {
-+	char buf[PATH_MAX];
- 	const char *dsoname = "[unknown]";
- 
- 	if (map && map->dso) {
-@@ -414,6 +415,11 @@ size_t map__fprintf_dsoname(struct map *map, FILE *fp)
- 			dsoname = map->dso->name;
+@@ -926,10 +926,8 @@ static void __maps__insert_name(struct maps *maps, struct map *map)
+ 		rc = strcmp(m->dso->short_name, map->dso->short_name);
+ 		if (rc < 0)
+ 			p = &(*p)->rb_left;
+-		else if (rc  > 0)
+-			p = &(*p)->rb_right;
+ 		else
+-			return;
++			p = &(*p)->rb_right;
  	}
- 
-+	if (symbol_conf.pad_output_len_dso) {
-+		scnprintf_pad(buf, symbol_conf.pad_output_len_dso, "%s", dsoname);
-+		dsoname = buf;
-+	}
-+
- 	return fprintf(fp, "%s", dsoname);
- }
- 
-diff --git a/tools/perf/util/symbol_conf.h b/tools/perf/util/symbol_conf.h
-index 6c55fa6fccec..382ba63fc554 100644
---- a/tools/perf/util/symbol_conf.h
-+++ b/tools/perf/util/symbol_conf.h
-@@ -69,6 +69,7 @@ struct symbol_conf {
- 			*tid_list;
- 	const char	*symfs;
- 	int		res_sample;
-+	int		pad_output_len_dso;
- };
- 
- extern struct symbol_conf symbol_conf;
+ 	rb_link_node(&map->rb_node_name, parent, p);
+ 	rb_insert_color(&map->rb_node_name, &maps->names);
 -- 
 2.17.2
 
