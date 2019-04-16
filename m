@@ -2,95 +2,108 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EED81C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 21:19:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E6BC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 21:19:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B2AE820868
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 21:19:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B10B320821
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 21:19:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730123AbfDPVT3 (ORCPT
+        id S1730411AbfDPVTh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 17:19:29 -0400
-Received: from mx2.suse.de ([195.135.220.15]:51104 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728277AbfDPVT3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 17:19:29 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id DE1EAAC1B;
-        Tue, 16 Apr 2019 21:19:27 +0000 (UTC)
-Subject: Re: [PATCH] slab: remove store_stackinfo()
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Qian Cai <cai@lca.pw>, akpm@linux-foundation.org, luto@kernel.org,
-        jpoimboe@redhat.com, sean.j.christopherson@intel.com,
-        penberg@kernel.org, rientjes@google.com, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-References: <20190416142258.18694-1-cai@lca.pw>
- <902fed9c-9655-a241-677d-5fa11b6c95a1@suse.cz>
- <alpine.DEB.2.21.1904162040570.1780@nanos.tec.linutronix.de>
-From:   Vlastimil Babka <vbabka@suse.cz>
-Message-ID: <235d7500-8235-c7d4-0d6f-4d069133bd8d@suse.cz>
-Date:   Tue, 16 Apr 2019 23:19:11 +0200
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.0
+        Tue, 16 Apr 2019 17:19:37 -0400
+Received: from mout.kundenserver.de ([212.227.126.133]:56331 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728277AbfDPVTh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 17:19:37 -0400
+Received: from [192.168.1.110] ([95.117.99.70]) by mrelayeu.kundenserver.de
+ (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
+ 1MOQyE-1hUCrY2CDO-00Pvzl; Tue, 16 Apr 2019 23:18:14 +0200
+Subject: Re: [PATCH v10 0/7] Add Fieldbus subsystem + support HMS Profinet
+ card
+To:     Sven Van Asbroeck <thesven73@gmail.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com,
+        =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>,
+        treding@nvidia.com, David Lechner <david@lechnology.com>,
+        noralf@tronnes.org, johan@kernel.org,
+        Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg KH <gregkh@linuxfoundation.org>, john.garry@huawei.com,
+        geert+renesas@glider.be, robin.murphy@arm.com,
+        Paul Gortmaker <paul.gortmaker@windriver.com>,
+        sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io,
+        Stuart Yoder <stuyoder@gmail.com>,
+        "J. Kiszka" <jan.kiszka@siemens.com>, maxime.ripard@bootlin.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+References: <20190409144250.7237-1-TheSven73@gmail.com>
+ <982e69c6-4e68-6f62-8bed-cd5a1802272b@metux.net>
+ <CAGngYiUTHZFFY=H7xXHzZnN4pS0jAqWBTrcw04hjf5S-ykxC9w@mail.gmail.com>
+ <c1831703-a476-8870-0a5f-9060bda0f669@metux.net>
+ <CAGngYiXx2eKR7DnHm9sNWVC+B1F2N6uUNXqZAq4rey2yjU1RyA@mail.gmail.com>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <23a25601-ed98-5348-9bac-bf8fc2baea5e@metux.net>
+Date:   Tue, 16 Apr 2019 23:18:10 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
 MIME-Version: 1.0
-In-Reply-To: <alpine.DEB.2.21.1904162040570.1780@nanos.tec.linutronix.de>
+In-Reply-To: <CAGngYiXx2eKR7DnHm9sNWVC+B1F2N6uUNXqZAq4rey2yjU1RyA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-Provags-ID: V03:K1:RGPLo8WHxqxhqmE3Mc+YjEr2v/x9cw42b/xKtJ0io9QhRAGNNto
+ 6JnAqbe6JtVzBaV/MW/lw2kH6K71VmnLlhgYJTVlrMAVDdI95ie9ZVz8F+kvvRj3wovXCTk
+ KH0ntayGAXgnzrUE9eSZT0OaH7dezhY3CONiA0hrx9Iy7e7kkR9FvvVji6n2sBJhKTaEuEi
+ R/BfrzYuWRJctPtWpRbMQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:zTW+RHD0ooc=:c/dsLFZuMsMQ2EiAOGUlM7
+ B0OwAhDbwry1OvnG/11cPx9CLuaEX5Eu+o6n3PotkOpQPSFKgXhPrqa/HXaWyk9tst3mHXLRG
+ rtCMaJwLkdxauQmpxwqEq6AHUrHNTpH+5R83uEoZrrB+aTsqRItACO0ZukjIYZf1gfMgoydmt
+ ATfxU7kTjhGZr60Qj0ISJyyzbA2N9zxKivEK9jemd1Tz3MvP2MDjBRBQLHwAzfkFFZYV/Ktc3
+ JLe/Oifjb1TE6hHqcOF2oKNI6lMgMbSoFVlHXcregAH9MJLt7OmtPwIGl0VH8DAPKjxs8O2ZM
+ o0CoUGH2AezjTBw6p9U+vePUUNIEkQBdLT2fTn8kym2WUYTTOdo5IT51l2GE5b6/MzxQyozVt
+ EXi98kB3ObI+niL9sFyGPPhjzD3jCn2SqG9w3kbG0/30dvAi1lP1g0YVJdX/PL9x7HyN9sZgY
+ Suh5vTZxo531sGIKpAHFN+F8k4DcuuQ5aFCQ4j1ziviQkOIGBbRswK4w4tb0LUac2UxEHgtCc
+ V+fEpwTDtal0wO9HLuj1JEOfvDyFTmbhQAOqNGcNKogojyO0Hvchen9XLkceVkjj6gFbbEnBQ
+ VsM8Bb3zPoerJqxS5J5UIGnMrwZHEWmpbu8ZPAIDvarndTig6DPl5QXkc262LjSwcsM9yrJ8y
+ ejoDokJasgK/ocNhM4jgkg7WpK4tmiSfU6PSJ+u0bcT8zRC5lxOoOXQQzWIIs9grck9KF1eGD
+ HtfbQiP26eh7kR7lCdLP9EiHCFXJ1UsKPOPvP0GyC16fQsSas/lLWcqzPt0=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/16/2019 8:50 PM, Thomas Gleixner wrote:
-> On Tue, 16 Apr 2019, Vlastimil Babka wrote:
-> 
->> On 4/16/19 4:22 PM, Qian Cai wrote:
->>> store_stackinfo() does not seem used in actual SLAB debugging.
->>> Potentially, it could be added to check_poison_obj() to provide more
->>> information, but this seems like an overkill due to the declining
->>> popularity of the SLAB, so just remove it instead.
->>>
->>> Signed-off-by: Qian Cai <cai@lca.pw>
+On 16.04.19 20:56, Sven Van Asbroeck wrote:
+
+>> By the way: any special reason for doing this via device instead of
+>> socket (like we have w/ can) ?
 >>
->> I've acked Thomas' version already which was narrower, but no objection
->> to remove more stuff on top of that. Linus (and I later in another
->> thread) already pointed out /proc/slab_allocators. It only takes a look
->> at add_caller() there to not regret removing that one.
 > 
-> The issue why I was looking at this was a krobot complaint about the kernel
-> crashing in that stack store function with my stackguard series applied. It
-> was broken before the stackguard pages already, it just went unnoticed.
-> 
-> As you explained, nobody is caring about DEBUG_SLAB + DEBUG_PAGEALLOC
-> anyway, so I'm happy to not care about krobot tripping over it either.
-> 
-> So we have 3 options:
-> 
->    1) I ignore it and merge the stack guard series w/o it
-> 
->    2) I can carry the minimal fix or Qian's version in the stackguard
->       branch
-> 
->    3) We ship that minimal fix to Linus right now and then everyone can
->       base their stuff on top independently.
+> A fieldbus_dev device communicates with its controller through a section
+> of shared memory (process memory). It just felt more logical to model
+> this as a device which acts like a file. When you read/write the file,
+> you read/write the process memory underneath.
 
-I think #3 is overkill for something that was broken for who knows how long and
-nobody noticed. I'd go with 2) and perhaps Qian's version as nobody AFAIK uses
-the caller+cpu as well as the stack trace.
+Yeah, that sounds logical. By the way: could we also mmap() that device?
 
-For Qian's version also:
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
+Okay that's just a purely academical idea here, but I'm curious whether
+that would make a notable difference in performance.
 
-> #3 is probably the right thing to do.
-> 
-> Thanks,
-> 
-> 	tglx
-> 
+Yet another question: does each fieldbus_dev instance talk to exactly
+one plc process memory, or can there be many ?
 
+Having separate device nodes per plc process memory seems a good idea
+for finer access control (via chown+friends).
+
+
+--mtx
+
+-- 
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
