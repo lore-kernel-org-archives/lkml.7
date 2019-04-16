@@ -4,68 +4,71 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C618FC282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:33:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0F96BC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:33:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 925562075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:33:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6D8A20449
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:33:22 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="CUt74S70"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="TYgdyooD"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730267AbfDPSdQ (ORCPT
+        id S1730333AbfDPSdV (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 14:33:16 -0400
-Received: from mail-it1-f195.google.com ([209.85.166.195]:38924 "EHLO
-        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729640AbfDPSdO (ORCPT
+        Tue, 16 Apr 2019 14:33:21 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:54768 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730286AbfDPSdT (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 14:33:14 -0400
-Received: by mail-it1-f195.google.com with SMTP id 139so350970ita.4
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 11:33:13 -0700 (PDT)
+        Tue, 16 Apr 2019 14:33:19 -0400
+Received: by mail-it1-f193.google.com with SMTP id a190so349923ite.4
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 11:33:18 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=chromium.org; s=google;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=TIDqxxqztE2jOgZOgI8qrgI9gmHi2GmWCm0V06l/nB4=;
-        b=CUt74S70/N1xpKsCTnqgFUJlJf8322fRk0pGHzVvVRn4Qv2APnTP2H6nvTQnyhonY7
-         HlOPEne5p8nDJkvSsL8FNmWkuHODyXn7C7Smm5P97HSXfE39EbihL5+9+kVl0ZrGdFkn
-         Q03tlXUZ23xxqwOKAO5jcZyfBPymoG7vINi30=
+        bh=F3GPaWxyQHkj77z2s2eVPCGI01KnC8ViCHmTdyBvcOU=;
+        b=TYgdyooDOXKuuhaht5S5dTCrXIc6mB+6oviKJo14tF4ChMKI0wLDdf3QmJW8ZscNB+
+         fKSjrQSrEV81py88vVUlJlbjxUy7eMW0FJBjzq8t9voUlRuPpiM7Crpp2tjMjKfEyOe1
+         4qsbNscB/a3xXglB+tPSE78EmnwpZY50JeAh0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=TIDqxxqztE2jOgZOgI8qrgI9gmHi2GmWCm0V06l/nB4=;
-        b=IKHy6poAEergzmE4ciw+af9bbjmFmoFXhiuvx+aKr2O3Eh3tlRVrHVvMVnloowfLin
-         DAfIubOTFiIowSQyBZCJirQHh2scHQDvBxURPXIGzEQNrEaDiqipL61DgSAQWTA0LTeB
-         jsAvx2iJS1Umrpli1kGuxKdSTtpOhmlRWR0NmcsUGIkyCIppABShW0PF821oTc+AtCx3
-         l7FU610Zlck4tN2p8DCTsrEVZIMCJdVR7uGPvbZvVL3+ke6OWtonpTjLM4szRBpvS8wT
-         ncu3dfFL1uYpXYzTOYDsF/KMoZA93bt6nBp02vSbcaFHZWHFLwD6Ve/uzpstw3ekSa+m
-         MhLg==
-X-Gm-Message-State: APjAAAXxZ9hE6+PkyFrLMANpXRUPeWb1o4VoOEE09MTDRjqXqNqBgBi6
-        8KIxIadUlhy1i3QRtWQgP1te2A==
-X-Google-Smtp-Source: APXvYqxnB/KycclqM0AuhAq3iK59bz4PqOUVtPK2s9yABsRN20ILC34p4x3ITbTV7bRxO/Zn8yeX1A==
-X-Received: by 2002:a24:bd08:: with SMTP id x8mr26681438ite.46.1555439593029;
-        Tue, 16 Apr 2019 11:33:13 -0700 (PDT)
+        bh=F3GPaWxyQHkj77z2s2eVPCGI01KnC8ViCHmTdyBvcOU=;
+        b=oOeCvpb7EBPZeI6D4o8/Dc6wKjRrCfx4v/iE7CqnnKwLnBt9Azn8nnaTeiwsAPTPyX
+         DiLlzhxdMXqvn6H14GDzRc2c6tfQ+SozS0csRuyPMA2J/M3ry7PMj/e1XxP8vxWtjTfU
+         ncK4MRJAJTv4xptrjdm6mv1p8BB9/0ODQKv4TP6iM8PZJW8s8N0M32Hmu+jwfgSKoKAL
+         pYkNO3PrCh2febNcwc1HOfNA1QtADjJPjkfxLba1AqC50VLZKo6BmMwqELU73vRAN3R4
+         0wxX1RLhdENBkCY3YXwMoTGM/JTTQ7uVjNWSmXWJZ1PlAORtDltV5T4Yr5C59uy2Exnv
+         0JaA==
+X-Gm-Message-State: APjAAAXogNQii21nufRzht5BpwFwAEEZTu9xsOI0bd80Kom+tdI1dsUd
+        uLaNK1N/QNpn4LJBzupKy5R1Ng==
+X-Google-Smtp-Source: APXvYqyUEAIZVeWfBmzRRg9tdYk+hBJwi3c2BMG1LanJailJTOvWT5vm8VLN+5bDqavqhvrdcAMEOA==
+X-Received: by 2002:a24:4161:: with SMTP id x94mr31426514ita.83.1555439598146;
+        Tue, 16 Apr 2019 11:33:18 -0700 (PDT)
 Received: from localhost ([2620:15c:183:0:20b8:dee7:5447:d05])
-        by smtp.gmail.com with ESMTPSA id z24sm19096762ioi.67.2019.04.16.11.33.12
+        by smtp.gmail.com with ESMTPSA id m25sm92094iti.24.2019.04.16.11.33.17
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 11:33:12 -0700 (PDT)
+        Tue, 16 Apr 2019 11:33:17 -0700 (PDT)
 From:   Raul E Rangel <rrangel@chromium.org>
 To:     linux-mmc@vger.kernel.org, linux-trace-devel@vger.kernel.org
 Cc:     djkurtz@chromium.org, zwisler@chromium.org,
         Raul E Rangel <rrangel@chromium.org>,
         Steven Rostedt <rostedt@goodmis.org>,
         hongjiefang <hongjiefang@asrmicro.com>,
-        Ingo Molnar <mingo@redhat.com>, linux-kernel@vger.kernel.org,
+        Jennifer Dahm <jennifer.dahm@ni.com>,
+        linux-kernel@vger.kernel.org, Shawn Lin <shawn.lin@rock-chips.com>,
         Kyle Roeschley <kyle.roeschley@ni.com>,
+        Ingo Molnar <mingo@redhat.com>,
         Avri Altman <avri.altman@wdc.com>,
-        Ulf Hansson <ulf.hansson@linaro.org>
-Subject: [PATCH v2 2/4] mmc: core: Add trace event for SD SSR response
-Date:   Tue, 16 Apr 2019 12:32:55 -0600
-Message-Id: <20190416183257.247902-3-rrangel@chromium.org>
+        Ulf Hansson <ulf.hansson@linaro.org>,
+        Simon Horman <horms+renesas@verge.net.au>
+Subject: [PATCH v2 4/4] mmc: core: Add trace event for CSD response
+Date:   Tue, 16 Apr 2019 12:32:57 -0600
+Message-Id: <20190416183257.247902-5-rrangel@chromium.org>
 X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
 In-Reply-To: <20190416183257.247902-1-rrangel@chromium.org>
 References: <20190416183257.247902-1-rrangel@chromium.org>
@@ -77,65 +80,85 @@ List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 Example:
-sd_ssr: mmc0: au: 8192, erase time: 0, erase offset: 0x0, raw: {0x0,0x3000000,0x1019000,0x10000,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0,0x0}
+mmc_csd: mmc0: struct: 0, cmdclass: 0x5b5, raw: {0x400e0032,0x5b590000,0x3b4b7f80,0xa404000}
 
 Signed-off-by: Raul E Rangel <rrangel@chromium.org>
 ---
 
+ drivers/mmc/core/mmc.c     |  4 ++++
  drivers/mmc/core/sd.c      |  2 ++
- include/trace/events/mmc.h | 32 ++++++++++++++++++++++++++++++++
- 2 files changed, 34 insertions(+)
+ include/trace/events/mmc.h | 29 +++++++++++++++++++++++++++++
+ 3 files changed, 35 insertions(+)
 
+diff --git a/drivers/mmc/core/mmc.c b/drivers/mmc/core/mmc.c
+index 3e786ba204c3..46ce894f7c03 100644
+--- a/drivers/mmc/core/mmc.c
++++ b/drivers/mmc/core/mmc.c
+@@ -20,6 +20,8 @@
+ #include <linux/mmc/card.h>
+ #include <linux/mmc/mmc.h>
+ 
++#include <trace/events/mmc.h>
++
+ #include "core.h"
+ #include "card.h"
+ #include "host.h"
+@@ -182,6 +184,8 @@ static int mmc_decode_csd(struct mmc_card *card)
+ 		csd->erase_size <<= csd->write_blkbits - 9;
+ 	}
+ 
++	trace_mmc_csd(card);
++
+ 	return 0;
+ }
+ 
 diff --git a/drivers/mmc/core/sd.c b/drivers/mmc/core/sd.c
-index f1772972d6a3..908c3087cdcd 100644
+index 908c3087cdcd..3b2e09fa72c5 100644
 --- a/drivers/mmc/core/sd.c
 +++ b/drivers/mmc/core/sd.c
-@@ -292,6 +292,8 @@ static int mmc_read_ssr(struct mmc_card *card)
- 	card->erase_arg = (card->scr.sda_specx && discard_support) ?
- 			    SD_DISCARD_ARG : SD_ERASE_ARG;
+@@ -183,6 +183,8 @@ static int mmc_decode_csd(struct mmc_card *card)
  
-+	trace_sd_ssr(card);
+ 	card->erase_size = csd->erase_size;
+ 
++	trace_mmc_csd(card);
 +
  	return 0;
  }
  
 diff --git a/include/trace/events/mmc.h b/include/trace/events/mmc.h
-index 9761d3db16db..463cf318d762 100644
+index 8d97810221cd..46fd918bcae3 100644
 --- a/include/trace/events/mmc.h
 +++ b/include/trace/events/mmc.h
-@@ -61,6 +61,38 @@ TRACE_EVENT(sd_scr,
+@@ -185,6 +185,35 @@ TRACE_EVENT(sd_ssr,
  	)
  );
  
-+TRACE_EVENT(sd_ssr,
++TRACE_EVENT(mmc_csd,
 +
 +	TP_PROTO(struct mmc_card *card),
 +
 +	TP_ARGS(card),
 +
 +	TP_STRUCT__entry(
-+		__array(u32,			raw,	16)
-+		__field(unsigned int,		au)
-+		__field(unsigned int,		erase_timeout)
-+		__field(unsigned int,		erase_offset)
++		__array(u32,			raw,	4)
++		__field(unsigned char,		structure)
++		__field(unsigned short,		cmdclass)
 +		__string(name,			mmc_hostname(card->host))
 +	),
 +
 +	TP_fast_assign(
-+		BUILD_BUG_ON(sizeof(card->raw_ssr) != sizeof(__entry->raw));
-+		memcpy(__entry->raw, card->raw_ssr, sizeof(__entry->raw));
-+		__entry->au = card->ssr.au;
-+		__entry->erase_timeout = card->ssr.erase_timeout;
-+		__entry->erase_offset = card->ssr.erase_offset;
++		BUILD_BUG_ON(sizeof(card->raw_csd) != sizeof(__entry->raw));
++		memcpy(__entry->raw, card->raw_csd, sizeof(__entry->raw));
++		__entry->structure = card->csd.structure;
++		__entry->cmdclass = card->csd.cmdclass;
 +		__assign_str(name, mmc_hostname(card->host));
 +	),
 +
-+	TP_printk("%s: au: %d, erase time: %d, erase offset: %#x, raw: %s",
++	TP_printk("%s: struct: %d, cmdclass: %#x, raw: %s",
 +		  __get_str(name),
-+		  __entry->au,
-+		  __entry->erase_timeout,
-+		  __entry->erase_offset,
-+		  __print_array(__entry->raw, 16, sizeof(u32))
++		  __entry->structure,
++		  __entry->cmdclass,
++		  __print_array(__entry->raw, 4, sizeof(u32))
 +	)
 +);
 +
