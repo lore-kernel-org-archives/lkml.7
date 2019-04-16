@@ -2,102 +2,108 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9361EC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:56:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 84CA2C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:56:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67C51206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:56:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5758E206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:56:39 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="mVcQ2Wr9"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="GZgdMARR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729653AbfDPS4d (ORCPT
+        id S1730289AbfDPS4i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 14:56:33 -0400
-Received: from mail-oi1-f193.google.com ([209.85.167.193]:45475 "EHLO
-        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726860AbfDPS4d (ORCPT
+        Tue, 16 Apr 2019 14:56:38 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:42075 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726860AbfDPS4g (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 14:56:33 -0400
-Received: by mail-oi1-f193.google.com with SMTP id y84so17881425oia.12
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 11:56:33 -0700 (PDT)
+        Tue, 16 Apr 2019 14:56:36 -0400
+Received: by mail-oi1-f194.google.com with SMTP id w139so17879223oie.9;
+        Tue, 16 Apr 2019 11:56:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=hd6YYQ3v11Q102JhxXilIcflTiefu/2D26xYyg0/qvg=;
-        b=mVcQ2Wr9m9exR/ADm+8pWn+2G+7anyuu8bmTfoMGizO2ZSTTgvDDH+Ys1aus/m0irL
-         HLD71ccNVozch8SMoiY0HhUmsckNjOYVeUG5jhzEpe8gkiq3ZQ1sYmtG1xYwZ1tsIx3+
-         Db+maTwVua7KGT7FtqmjM3Kd6ZXgpnVOB1BuT8psnZiRGm8D7tlYRKYEx2HM9RXojzyZ
-         yFgfWYTbZ+U4CgoT+fC3RDNME2Zb2ItZMprPbcGesvpuEzbvByfx6sLaC6OSz7oAiSzE
-         xR6uBXe3bitD8guNe2dnOiYbNxLaA3RSPoyRTyKngTQAtCdKsd8GqjqE9qIg4XlvYRdB
-         0yKw==
+        bh=NxYtAVJwFVsOpycxVwKeebGPthDojBTc0/ZdScDrujg=;
+        b=GZgdMARRCopgwYIdLe3C+n5X+0fJKGKrYOdzQTxHDw+yB9Fe7qrCAX91ChnSnCtXlp
+         pzfSMTXMCQUqgC6AZgLJiuhSPdsrhkHF+jBzc6qGc7L9RVaeMWrcskeAiAvFdUt2OHJy
+         m4tCnf8+lrSg4rbB7F1RWOcGxxC7BrXt6BOnQGsEiaYIldUw7Dige1OiHN7sNbq54VyQ
+         CnV5OVK8GvySLSSEjTu8Vd2skGsyT6NyZw1TaixuTT1lhoQBsrCq9sRvvGbklUFLoPmm
+         7dTe3TZSlHMwg3k2PSh/1B2N32Ap5OGr8esR3amrgMM9gu3KW+pKJK5UJxcwOJK054lB
+         Fu0g==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=hd6YYQ3v11Q102JhxXilIcflTiefu/2D26xYyg0/qvg=;
-        b=PxKm1wKRi1Oh9eWmTpE40hNm+wA0Cr9pLfxnJtuCb135Vsy33VUzxp6QF0/3j4Kw3Q
-         pwpPo33L1cycrjJdRXXfQBgz1lEujOyHd0ZLBuGbCdUXNQYI+m9FCtPuiuI2WR8cc6C0
-         cwRcDicRfL/v1mPBKVtxJybZrZMHeS5P9lFz3R89sgXCGJfO/XTY691rpVM+zyBguonv
-         sN04OvnsG8ysbckOxrS+flGd4OLiW+Bql87T/AU43n1U5Vb+jYtvctT3U8ALF6cb7h0k
-         pGU9WRIQDABolDdFL6MSt4uvRQQVf6s2FgL8FWuUSIILYlKXDsca2QHhBus1Fj50lZJg
-         iRJA==
-X-Gm-Message-State: APjAAAVrIH3iuxuI1oJWYhm5iYRWwj4uTDEXN765gBITnYbkoZ91B0fB
-        shtLpSCPzFxlQabe8SN301fRBsjccs3cU+RflYJ1KQ==
-X-Google-Smtp-Source: APXvYqyof3rRxq8JcY/+UyB5ka2SU7k7Ud9CzBYhFIOjtp6+4fm1P94K7C5lJZgZxUuKEgOBrh+Cv5KHLS7VYiKyxjc=
-X-Received: by 2002:aca:3f07:: with SMTP id m7mr24154237oia.179.1555440992614;
- Tue, 16 Apr 2019 11:56:32 -0700 (PDT)
+        bh=NxYtAVJwFVsOpycxVwKeebGPthDojBTc0/ZdScDrujg=;
+        b=R4R0eePTU33FdlJI4jD/0PzMsxuOD67CIJN2BQKgpZadoLOUmHFRfpXl6Ags7hZfJ+
+         zZD6ByQ3V/dkfMjeromvbEngJysXlv7kSjQfQJ8N3lLWeKGCbnINitzU83o26hIh74iJ
+         foSSmcGKyfBxCLyEVGLrMstT7w7XgVJDwcSR41QdNjSbG8gre9Ke1ZbvjjGaKsB/Isgl
+         uPYTwYKFgvgkJxY7VMJgEkQpsv8jYyWi7aez1V65D4vLlxzngj1gvT9SfvXpISX/elJM
+         MGxc9cLBun42JYD0ySsniEHD3A5oNIQD43vkiGoICr8cFat9/vcBfxML8Cskuw6T5W35
+         Qpsw==
+X-Gm-Message-State: APjAAAW4zkYPxdygsDQZX5Z1d1ZGuDqgLDU0M4Wg3i31xO5fExKL+3hC
+        Pv9G+DRJ+iBo1l4lFE6H4gp5/VX05n4rs/AKqA/bWQ==
+X-Google-Smtp-Source: APXvYqxH22wnZmqgEEZAGO7f/TNbzjdsSsv0R3pYZRTu8BIxjADinenIFagqfTa2bhQDTuWqFl3beHfVpUPCyoLoSjw=
+X-Received: by 2002:aca:5241:: with SMTP id g62mr24619776oib.103.1555440995340;
+ Tue, 16 Apr 2019 11:56:35 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190415142229.GA14330@linux-8ccs> <20190415181833.101222-1-trong@android.com>
- <20190416152144.GA1419@linux-8ccs> <CANA+-vDxLy7A7aEDsHS4y7ujwN5atzkGrVwSvDs-U3Oa_5oLFg@mail.gmail.com>
-In-Reply-To: <CANA+-vDxLy7A7aEDsHS4y7ujwN5atzkGrVwSvDs-U3Oa_5oLFg@mail.gmail.com>
-From:   Tri Vo <trong@android.com>
-Date:   Tue, 16 Apr 2019 11:56:21 -0700
-Message-ID: <CANA+-vAvLUFPhfXj_CxkV8Fgv+zmqvu=MxwtwFTbr5Nrn68E9g@mail.gmail.com>
-Subject: Re: [PATCH v2] module: add stubs for within_module functions
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Nick Desaulniers <ndesaulniers@google.com>,
-        Greg Hackmann <ghackmann@android.com>, linux-mm@kvack.org,
-        kbuild-all@01.org, Randy Dunlap <rdunlap@infradead.org>,
-        kbuild test robot <lkp@intel.com>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Petri Gynther <pgynther@google.com>, willy@infradead.org,
-        Peter Oberparleiter <oberpar@linux.ibm.com>,
-        Jessica Yu <jeyu@kernel.org>
+References: <20190409144250.7237-1-TheSven73@gmail.com> <982e69c6-4e68-6f62-8bed-cd5a1802272b@metux.net>
+ <CAGngYiUTHZFFY=H7xXHzZnN4pS0jAqWBTrcw04hjf5S-ykxC9w@mail.gmail.com> <c1831703-a476-8870-0a5f-9060bda0f669@metux.net>
+In-Reply-To: <c1831703-a476-8870-0a5f-9060bda0f669@metux.net>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Tue, 16 Apr 2019 14:56:24 -0400
+Message-ID: <CAGngYiXx2eKR7DnHm9sNWVC+B1F2N6uUNXqZAq4rey2yjU1RyA@mail.gmail.com>
+Subject: Re: [PATCH v10 0/7] Add Fieldbus subsystem + support HMS Profinet card
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com,
+        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        treding@nvidia.com, David Lechner <david@lechnology.com>,
+        noralf@tronnes.org, johan@kernel.org,
+        Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg KH <gregkh@linuxfoundation.org>, john.garry@huawei.com,
+        geert+renesas@glider.be, robin.murphy@arm.com,
+        Paul Gortmaker <paul.gortmaker@windriver.com>,
+        sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io,
+        Stuart Yoder <stuyoder@gmail.com>,
+        "J. Kiszka" <jan.kiszka@siemens.com>, maxime.ripard@bootlin.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 10:55 AM Tri Vo <trong@android.com> wrote:
+On Tue, Apr 16, 2019 at 12:49 PM Enrico Weigelt, metux IT consult
+<lkml@metux.net> wrote:
 >
-> On Tue, Apr 16, 2019 at 8:21 AM Jessica Yu <jeyu@kernel.org> wrote:
-> >
-> > +++ Tri Vo [15/04/19 11:18 -0700]:
-> > >Provide stubs for within_module_core(), within_module_init(), and
-> > >within_module() to prevent build errors when !CONFIG_MODULES.
-> > >
-> > >v2:
-> > >- Generalized commit message, as per Jessica.
-> > >- Stubs for within_module_core() and within_module_init(), as per Nick.
-> > >
-> > >Suggested-by: Matthew Wilcox <willy@infradead.org>
-> > >Reported-by: Randy Dunlap <rdunlap@infradead.org>
-> > >Reported-by: kbuild test robot <lkp@intel.com>
-> > >Link: https://marc.info/?l=linux-mm&m=155384681109231&w=2
-> > >Signed-off-by: Tri Vo <trong@android.com>
-> >
-> > Applied, thanks!
 >
-> Thank you!
+> Maybe I'm a bit beaurocratic here, but I really believe that precise
+> naming is important, eg. for avoiding potential conflicts w/ different
+> fieldbus classes (eg. mvb) that might come in the future.
 
-Andrew,
-this patch fixes 8c3d220cb6b5 ("gcov: clang support"). Could you
-re-apply the gcov patch? Sorry, if it's a dumb question. I'm not
-familiar with how cross-tree patches are handled in Linux.
+I named the subsystem 'fieldbus_dev' because it handles fieldbus
+devices, not controllers. Granted, it's in the drivers/staging/fieldbus
+directory, but that's because people objected to the verbosity of
+fieldbus_dev. In the C code, it's all fieldbus_dev.
+
+>
+> By the way: any special reason for doing this via device instead of
+> socket (like we have w/ can) ?
+>
+
+A fieldbus_dev device communicates with its controller through a section
+of shared memory (process memory). It just felt more logical to model
+this as a device which acts like a file. When you read/write the file,
+you read/write the process memory underneath.
+
+Sven
