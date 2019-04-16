@@ -2,100 +2,88 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A82BC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:08:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2593BC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:08:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40D2020872
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:08:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E6FA420872
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:08:15 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730119AbfDPRIJ (ORCPT
+        id S1730145AbfDPRIP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 13:08:09 -0400
-Received: from mout.kundenserver.de ([212.227.17.24]:54867 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729956AbfDPRIJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 13:08:09 -0400
-Received: from [192.168.1.110] ([95.117.99.70]) by mrelayeu.kundenserver.de
- (mreue106 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MDPqi-1h61wS3rYk-00AYH2; Tue, 16 Apr 2019 19:06:51 +0200
-Subject: Re: [PATCH v11 2/7] anybus-s: support HMS Anybus-S bus
-To:     Sven Van Asbroeck <thesven73@gmail.com>, robh+dt@kernel.org,
-        linus.walleij@linaro.org
-Cc:     lee.jones@linaro.org, mark.rutland@arm.com, afaerber@suse.de,
-        treding@nvidia.com, david@lechnology.com, noralf@tronnes.org,
-        johan@kernel.org, monstr@monstr.eu, michal.vokac@ysoft.com,
-        arnd@arndb.de, gregkh@linuxfoundation.org, john.garry@huawei.com,
-        geert+renesas@glider.be, robin.murphy@arm.com,
-        paul.gortmaker@windriver.com,
-        sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io,
-        stuyoder@gmail.com, jan.kiszka@siemens.com,
-        maxime.ripard@bootlin.com, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org
-References: <20190416155618.1369-1-TheSven73@gmail.com>
- <20190416155618.1369-3-TheSven73@gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <4aecef30-0d64-c5f7-c4de-43b0754e2fdd@metux.net>
-Date:   Tue, 16 Apr 2019 19:06:45 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Tue, 16 Apr 2019 13:08:15 -0400
+Received: from foss.arm.com ([217.140.101.70]:59970 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729956AbfDPRIN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 13:08:13 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 77CDA80D;
+        Tue, 16 Apr 2019 10:08:13 -0700 (PDT)
+Received: from lakrids.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 86D6F3F59C;
+        Tue, 16 Apr 2019 10:08:11 -0700 (PDT)
+Date:   Tue, 16 Apr 2019 18:08:09 +0100
+From:   Mark Rutland <mark.rutland@arm.com>
+To:     Nick Desaulniers <ndesaulniers@google.com>
+Cc:     Kees Cook <keescook@chromium.org>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Alex Matveev <alxmtvv@gmail.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Yury Norov <ynorov@caviumnetworks.com>,
+        Matthias Kaehlcke <mka@chromium.org>,
+        Sami Tolvanen <samitolvanen@google.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3] arm64: sysreg: make mrs_s and msr_s macros work with
+ Clang and LTO
+Message-ID: <20190416170808.GC54708@lakrids.cambridge.arm.com>
+References: <20190415143821.GA46880@beast>
+ <20190415170604.GA44415@lakrids.cambridge.arm.com>
+ <CAKwvOdk_jFQKW2C2=925So_dvZ6dm03AXMZ9Nk+O1J2xyhE2EA@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190416155618.1369-3-TheSven73@gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:/StFjb92ehPTCM32sGbzFPQa6/ePviqGY5nt7Q92ObUEiaS2OgE
- 0YLcMfxwigBBNgu81s+7v+owJOccRtz9hhfvF8vDvWLVj2Z22Yzl8i1tl+UFMFp7zVkeeMw
- vleqFS8h3eXf+PPL7PZCHY7QPoPy8Qs+RXfPczlTd4/8k7ZV+eK5SBadWMDeQW4UfM7fMCP
- FkB5/JbgHz8nxZEOObzIw==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:GQ6ooqywZYE=:McGdIFYEXZOfxu4nu719BQ
- Y2YivaGknx/WWclbVup9Jh906wfDhRspc2cmmgjYO9oYxoA40qItSQH4CD5c9GR6htjyYLaPc
- jqfFObdoVf81ZOxsKn/I0Js30r99UPzLRomILa3L7FbiHlVEXol24bTPqhBxDGuONAUZ0y4s+
- 7nHASGXbBxRlAhmzvZlAkN3573NqekMPiv9JmTXbnqvwZzdJ6Xaoj0DT6UExpetaFOOWe7/tR
- hbODcHBnnlXBDauYZY4wvb4wi3OIAVA//cw2klQf2bpF7Yaj63TTiZA/fMHHrF/o+KRXDszhg
- zFArbwa7IvZYFYFhpY2/Sb1jTQIY7fbU+9zbDD0tipHPCNfcrK7AE7jHZ5swGQYg6fakS79P2
- sXvRBlaildJIq1a54YrRiteCNgMPSySkzLJ7vxtDxodQUbwMchKhU2MwXZieUFpr2sdevDq0+
- 1UiUJfTPhht4F68lzoG5jx9tqZK+CWK5ZB5P01xOcv9riewwmpatr1Pwkt9Gl5A7LsePFvDMv
- /fyPFUsyNEN8EFTen6kj1ntfn9fUkx/ttdzSCIhFUIcVTszSTHvkKso+OxXt1puMpLMSewzK6
- dJRqFZW34BybtZdvuHrGSG/vC+MYrkIV9yGL45uM4zaZmBa1Slqmsx46nTd0609NQPV9jK9Du
- DnWyoK9lbHeE0p+63vhwlgRpOK9rfsi3c4iObLAHNIv1mdMViJHkXQ2ahSjhaXx6iHNbwT0wo
- IovzMMK3HNdFL5vvs98j0WvZGjh00EppMiDYZHNKHlfAyGClqz2iqNsm233E2EuSVh8HNFqIo
- j+6s+U8Gul/+KdJni1xiQMnz/Ch9cvurL+csLqrAaB0AiSAPcfOYafqFPLMg+std/Cfbl9/
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAKwvOdk_jFQKW2C2=925So_dvZ6dm03AXMZ9Nk+O1J2xyhE2EA@mail.gmail.com>
+User-Agent: Mutt/1.11.1+11 (2f07cb52) (2018-12-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16.04.19 17:56, Sven Van Asbroeck wrote:
+On Mon, Apr 15, 2019 at 10:22:27AM -0700, Nick Desaulniers wrote:
+> On Mon, Apr 15, 2019 at 10:06 AM Mark Rutland <mark.rutland@arm.com> wrote:
+> > It would be nice if we could simply rely on a more recent binutils these
+> > days, which supports the generic S<op0>_<op1>_<cn>_<Cm>_<op2> sysreg
+> > definition. That would mean we could get rid of the whole msr_s/mrs_s
+> > hack by turning that into a CPP macro which built that name.
+> >
+> > It looks like binutils has been able to do that since September 2014...
+> >
+> > Are folk using toolchains older than that to compile kernels?
+> 
+> Do you have a link to a commit?  If we can pinpoint the binutils
+> version, that might help.
 
-Hi,
+IIUC any version of binutils with commit:
 
-> The Anybus-S/Anybus-M is a series of interchangeable fieldbus communication
-> modules featuring on board memory and processing power. All software and
-> hardware functionality required to communicate on the fieldbus is
-> incorporated in the module itself, allowing the application to focus on
-> other tasks.
+  df7b4545b2b49572 ("[PATCH/AArch64] Generic support for all system registers using mrs and msr")
 
-I'm a bit confused, what this anybus stuff actually does.
+... should be sufficent.
 
-Is it some proprietary backplane bus, where things like eg. fieldbus
-adapters are attached to ?
+That's on gitweb at:
 
-I see some struct bus_type field declaration - is that going to be some
-subsystem, similar to those for other bus'es (eg. pci, usb, ...) ?
+  https://sourceware.org/git/gitweb.cgi?p=binutils-gdb.git;a=commit;h=df7b4545b2b49572ab63690c130df973af109615
 
-Maybe that deserves a bit more documentation :p
+> Also, I look forward to this patch for use of Clang's integrated
+> assembler (regardless of LTO).  I remember getting frustrated trying
+> to figure out how to resolve this for both assemblers, and I had
+> forgotten this solution existed.
 
+Is this the only blocker for the integrated assembler?
 
-
---mtx
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Thanks,
+Mark.
