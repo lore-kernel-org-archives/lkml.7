@@ -2,245 +2,149 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C98CEC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:41:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FE62C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:45:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9549120821
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:41:39 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lTnc3xxL"
+	by mail.kernel.org (Postfix) with ESMTP id 04FC720663
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:45:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730265AbfDPTli (ORCPT
+        id S1729676AbfDPTp3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 15:41:38 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:45944 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727997AbfDPTlh (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 15:41:37 -0400
-Received: by mail-pl1-f194.google.com with SMTP id bf11so10821392plb.12;
-        Tue, 16 Apr 2019 12:41:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=kPsNBNGRZIREHuLkWl5OQs57K/lLEwg+3DT+aodwTVw=;
-        b=lTnc3xxLX6TghNRPbG9dqrGDIS//VJConEojYRafTjk2lJcOzT+uEs3phcmni3Izqu
-         7ANikKLkLIMp5mTOEGjhcN2J27bnGXK5VjBHpd/IcnRWs9d/WuQM9heZlkICKcPBsFry
-         g/qtz2qZY2UfCdSwDHs4XYlMRbFpLMEbEgHqRslfwcwOh6xUJH7yjdziKRGlLl8+acyQ
-         cKeIVYQu+JXLCYVqW7b4Txlckn37qvcb6Qau6N1bcGurypC6diPZ38aVh6osSyEb1QTo
-         8H5TJol/H/g3vOSHqRRN2Crbq49MlC3CCEagsDtTChnWsvFjrugV3c9CdRGv+hPeD+NH
-         PFeg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=kPsNBNGRZIREHuLkWl5OQs57K/lLEwg+3DT+aodwTVw=;
-        b=A7FHY/BEInNvT/4LQGTNtvSKyH/PyRE+tgwK9qb6OX36sPZW4nZTTuO3EhchrWEDLC
-         36R/J1Z0pZIVi2z9DWjJeO+AmKFHiNkPUiso7PrIKQalo/q2BYJmIfUKq1Adm/WSDr8h
-         pUiEbN70Znrkfg96/10fGBj18Ai5p+BRMfB7Re0ZSFFHRsBMzcLZqBtn3A1kpA9HYiGw
-         Zuwtqk5N+xEDwXYKY5gXG1+o9kRKbQl1kUmbvdVjxeeQEju/Lrvs00vOTIxBhlbcoX/H
-         /qyTgTcJGYhDPshgx6p5HY3szpCREflkj551yqRVDf4MKW376Jy3C750GoLicBKXPaK/
-         6brg==
-X-Gm-Message-State: APjAAAWuJvm2w//MmctZULt+PkaetsP+jRxXMDpgbjIOR0jBCpgqv+Ep
-        hoPnzuPPs171mBkd3zu0Z04=
-X-Google-Smtp-Source: APXvYqyGLUsF0GRTqPUm3jbRkMNhxsFYDJeGCEwr+SZn/wFwM5rPnQIA3Vr9lxsdC3wdNm+h1YW7Bw==
-X-Received: by 2002:a17:902:8ecc:: with SMTP id x12mr84322919plo.0.1555443696701;
-        Tue, 16 Apr 2019 12:41:36 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id f5sm55346249pgo.75.2019.04.16.12.41.35
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 12:41:36 -0700 (PDT)
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     jdelvare@suse.com, linux@roeck-us.net
-Cc:     linux-hwmon@vger.kernel.org, linux-kernel@vger.kernel.org,
-        corbet@lwn.net, linux-doc@vger.kernel.org
-Subject: [PATCH v2] hwmon: (ina3221) Add averaging mode support
-Date:   Tue, 16 Apr 2019 12:41:31 -0700
-Message-Id: <20190416194131.29560-1-nicoleotsuka@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Tue, 16 Apr 2019 15:45:29 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:47186 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727997AbfDPTp3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 15:45:29 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id B0E9E3092641;
+        Tue, 16 Apr 2019 19:45:28 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-47.bos.redhat.com [10.18.17.47])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 749685D719;
+        Tue, 16 Apr 2019 19:45:27 +0000 (UTC)
+Subject: Re: [PATCH v4 06/16] locking/rwsem: Code cleanup after files merging
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+References: <20190413172259.2740-1-longman@redhat.com>
+ <20190413172259.2740-7-longman@redhat.com>
+ <20190416160113.GM12232@hirez.programming.kicks-ass.net>
+ <20190416161727.GS14281@hirez.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ weim8xU=
+Organization: Red Hat
+Message-ID: <08312a80-9690-d193-8eb4-76876ad083bb@redhat.com>
+Date:   Tue, 16 Apr 2019 15:45:27 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20190416161727.GS14281@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Tue, 16 Apr 2019 19:45:28 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The CONFIG register has a 3-bit averaging mode field for users
-to setup the number of samples that are collected and averaged
-together. This is very useful to filter noise from sensor data.
+On 04/16/2019 12:17 PM, Peter Zijlstra wrote:
+> On Tue, Apr 16, 2019 at 06:01:13PM +0200, Peter Zijlstra wrote:
+>> @@ -794,34 +770,38 @@ static inline int __down_read_trylock(st
+>>   */
+>>  static inline void __down_write(struct rw_semaphore *sem)
+>>  {
+>> -	if (unlikely(atomic_long_cmpxchg_acquire(&sem->count, 0,
+>> -						 RWSEM_WRITER_LOCKED)))
+>> -		rwsem_down_write_failed(sem);
+>> +	long tmp = RWSEM_UNLOCKED_VALUE;
+>> +
+>> +	if (unlikely(atomic_long_try_cmpxchg_acquire(&sem->count, &tmp,
+>> +						     RWSEM_WRITER_LOCKED)))
+> !
+>
+>> +		rwsem_down_write_slow(sem, TASK_UNINTERRUPTIBLE);
+>>  	rwsem_set_owner(sem);
+>>  }
+>>  
+>>  static inline int __down_write_killable(struct rw_semaphore *sem)
+>>  {
+>> -	if (unlikely(atomic_long_cmpxchg_acquire(&sem->count, 0,
+>> -						 RWSEM_WRITER_LOCKED)))
+>> -		if (IS_ERR(rwsem_down_write_failed_killable(sem)))
+>> +	long tmp = RWSEM_UNLOCKED_VALUE;
+>> +
+>> +	if (unlikely(atomic_long_try_cmpxchg_acquire(&sem->count, &tmp,
+>> +						     RWSEM_WRITER_LOCKED))) {
+> also !
+>
+>> +		if (IS_ERR(rwsem_down_write_slow(sem, TASK_KILLABLE)))
+>>  			return -EINTR;
+>> +	}
+>>  	rwsem_set_owner(sem);
+>>  	return 0;
+>>  }
+> I'm having a great day it seems, it's like back in uni, trying to find
+> all the missing - signs in this page-long DE.
 
-This patch adds a 'samples' sysfs node using hwmon_chip_samples
-of hwmon core, and updates wait time calculation by taking this
-samples value into account.
+I am really grateful that you have spent the time to review my rwsem
+patches. It is also very intense for me in the last few days
+concentrating on investigating the regression and finding useful fixes
+that I don't have time to deal with other stuffs.
 
-Signed-off-by: Nicolin Chen <nicoleotsuka@gmail.com>
----
-Changelog
-v1->v2:
- * Implemented "samples" through hwmon_chip_info
- * Used find_closest()
-
- Documentation/hwmon/ina3221 |  3 ++
- drivers/hwmon/ina3221.c     | 67 ++++++++++++++++++++++++++++++++++++-
- 2 files changed, 69 insertions(+), 1 deletion(-)
-
-diff --git a/Documentation/hwmon/ina3221 b/Documentation/hwmon/ina3221
-index 4b82cbfb551c..ed3f22769d4b 100644
---- a/Documentation/hwmon/ina3221
-+++ b/Documentation/hwmon/ina3221
-@@ -35,3 +35,6 @@ curr[123]_max           Warning alert current(mA) setting, activates the
-                           average is above this value.
- curr[123]_max_alarm     Warning alert current limit exceeded
- in[456]_input           Shunt voltage(uV) for channels 1, 2, and 3 respectively
-+samples                 Number of samples using in the averaging mode.
-+                          Supports the list of number of samples:
-+                          1, 4, 16, 64, 128, 256, 512, 1024
-diff --git a/drivers/hwmon/ina3221.c b/drivers/hwmon/ina3221.c
-index e6f43df0435c..74d39d212931 100644
---- a/drivers/hwmon/ina3221.c
-+++ b/drivers/hwmon/ina3221.c
-@@ -22,6 +22,7 @@
- #include <linux/of.h>
- #include <linux/pm_runtime.h>
- #include <linux/regmap.h>
-+#include <linux/util_macros.h>
- 
- #define INA3221_DRIVER_NAME		"ina3221"
- 
-@@ -51,6 +52,9 @@
- #define INA3221_CONFIG_VBUS_CT_SHIFT	6
- #define INA3221_CONFIG_VBUS_CT_MASK	GENMASK(8, 6)
- #define INA3221_CONFIG_VBUS_CT(x)	(((x) & GENMASK(8, 6)) >> 6)
-+#define INA3221_CONFIG_AVG_SHIFT	9
-+#define INA3221_CONFIG_AVG_MASK		GENMASK(11, 9)
-+#define INA3221_CONFIG_AVG(x)		(((x) & GENMASK(11, 9)) >> 9)
- #define INA3221_CONFIG_CHs_EN_MASK	GENMASK(14, 12)
- #define INA3221_CONFIG_CHx_EN(x)	BIT(14 - (x))
- 
-@@ -135,17 +139,24 @@ static const u16 ina3221_conv_time[] = {
- 	140, 204, 332, 588, 1100, 2116, 4156, 8244,
- };
- 
-+/* Lookup table for number of samples using in averaging mode */
-+static const int ina3221_avg_samples[] = {
-+	1, 4, 16, 64, 128, 256, 512, 1024,
-+};
-+
- static inline int ina3221_wait_for_data(struct ina3221_data *ina)
- {
- 	u32 channels = hweight16(ina->reg_config & INA3221_CONFIG_CHs_EN_MASK);
- 	u32 vbus_ct_idx = INA3221_CONFIG_VBUS_CT(ina->reg_config);
- 	u32 vsh_ct_idx = INA3221_CONFIG_VSH_CT(ina->reg_config);
-+	u32 samples_idx = INA3221_CONFIG_AVG(ina->reg_config);
-+	u32 samples = ina3221_avg_samples[samples_idx];
- 	u32 vbus_ct = ina3221_conv_time[vbus_ct_idx];
- 	u32 vsh_ct = ina3221_conv_time[vsh_ct_idx];
- 	u32 wait, cvrf;
- 
- 	/* Calculate total conversion time */
--	wait = channels * (vbus_ct + vsh_ct);
-+	wait = channels * (vbus_ct + vsh_ct) * samples;
- 
- 	/* Polling the CVRF bit to make sure read data is ready */
- 	return regmap_field_read_poll_timeout(ina->fields[F_CVRF],
-@@ -176,6 +187,21 @@ static const u8 ina3221_in_reg[] = {
- 	INA3221_SHUNT3,
- };
- 
-+static int ina3221_read_chip(struct device *dev, u32 attr, long *val)
-+{
-+	struct ina3221_data *ina = dev_get_drvdata(dev);
-+	int regval;
-+
-+	switch (attr) {
-+	case hwmon_chip_samples:
-+		regval = INA3221_CONFIG_AVG(ina->reg_config);
-+		*val = ina3221_avg_samples[regval];
-+		return 0;
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
- static int ina3221_read_in(struct device *dev, u32 attr, int channel, long *val)
- {
- 	const bool is_shunt = channel > INA3221_CHANNEL3;
-@@ -279,6 +305,30 @@ static int ina3221_read_curr(struct device *dev, u32 attr,
- 	}
- }
- 
-+static int ina3221_write_chip(struct device *dev, u32 attr, long val)
-+{
-+	struct ina3221_data *ina = dev_get_drvdata(dev);
-+	int ret, idx;
-+
-+	switch (attr) {
-+	case hwmon_chip_samples:
-+		idx = find_closest(val, ina3221_avg_samples,
-+				   ARRAY_SIZE(ina3221_avg_samples));
-+
-+		ret = regmap_update_bits(ina->regmap, INA3221_CONFIG,
-+					 INA3221_CONFIG_AVG_MASK,
-+					 idx << INA3221_CONFIG_AVG_SHIFT);
-+		if (ret)
-+			return ret;
-+
-+		/* Update reg_config accordingly */
-+		return regmap_read(ina->regmap, INA3221_CONFIG,
-+				   &ina->reg_config);
-+	default:
-+		return -EOPNOTSUPP;
-+	}
-+}
-+
- static int ina3221_write_curr(struct device *dev, u32 attr,
- 			      int channel, long val)
- {
-@@ -361,6 +411,9 @@ static int ina3221_read(struct device *dev, enum hwmon_sensor_types type,
- 	mutex_lock(&ina->lock);
- 
- 	switch (type) {
-+	case hwmon_chip:
-+		ret = ina3221_read_chip(dev, attr, val);
-+		break;
- 	case hwmon_in:
- 		/* 0-align channel ID */
- 		ret = ina3221_read_in(dev, attr, channel - 1, val);
-@@ -387,6 +440,9 @@ static int ina3221_write(struct device *dev, enum hwmon_sensor_types type,
- 	mutex_lock(&ina->lock);
- 
- 	switch (type) {
-+	case hwmon_chip:
-+		ret = ina3221_write_chip(dev, attr, val);
-+		break;
- 	case hwmon_in:
- 		/* 0-align channel ID */
- 		ret = ina3221_write_enable(dev, channel - 1, val);
-@@ -423,6 +479,13 @@ static umode_t ina3221_is_visible(const void *drvdata,
- 	const struct ina3221_input *input = NULL;
- 
- 	switch (type) {
-+	case hwmon_chip:
-+		switch (attr) {
-+		case hwmon_chip_samples:
-+			return 0644;
-+		default:
-+			return 0;
-+		}
- 	case hwmon_in:
- 		/* Ignore in0_ */
- 		if (channel == 0)
-@@ -463,6 +526,8 @@ static umode_t ina3221_is_visible(const void *drvdata,
- 				   HWMON_C_MAX | HWMON_C_MAX_ALARM)
- 
- static const struct hwmon_channel_info *ina3221_info[] = {
-+	HWMON_CHANNEL_INFO(chip,
-+			   HWMON_C_SAMPLES),
- 	HWMON_CHANNEL_INFO(in,
- 			   /* 0: dummy, skipped in is_visible */
- 			   HWMON_I_INPUT,
--- 
-2.17.1
+Cheers,
+Longman
 
