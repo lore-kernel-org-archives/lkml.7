@@ -2,113 +2,109 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A7DF7C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 12:55:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 05371C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 12:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79BFA20872
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 12:55:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CFB5E205ED
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 12:55:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729012AbfDPMzb (ORCPT
+        id S1729160AbfDPMzl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 08:55:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:48666 "EHLO mx1.redhat.com"
+        Tue, 16 Apr 2019 08:55:41 -0400
+Received: from mga06.intel.com ([134.134.136.31]:4944 "EHLO mga06.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727841AbfDPMza (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 08:55:30 -0400
-Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8A55A309703F;
-        Tue, 16 Apr 2019 12:55:30 +0000 (UTC)
-Received: from treble (ovpn-120-105.rdu2.redhat.com [10.10.120.105])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id A40721001DE0;
-        Tue, 16 Apr 2019 12:55:29 +0000 (UTC)
-Date:   Tue, 16 Apr 2019 07:55:26 -0500
-From:   Josh Poimboeuf <jpoimboe@redhat.com>
-To:     Jiri Kosina <jikos@kernel.org>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Kamalesh Babulal <kamalesh@linux.vnet.ibm.com>,
-        live-patching@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Miroslav Benes <mbenes@suse.cz>
-Subject: Re: [PATCH] livepatch: Enforce reliable stack trace as config
- dependency
-Message-ID: <20190416125446.hh2dpzwgixnkubwr@treble>
-References: <20190209091728.23046-1-kamalesh@linux.vnet.ibm.com>
- <20190211140813.z7kap634gz3gp6a4@treble>
- <20190212094608.bzwc26j67daqnx6x@pathway.suse.cz>
- <nycvar.YFH.7.76.1904161345560.9803@cbobk.fhfr.pm>
+        id S1727821AbfDPMzl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 08:55:41 -0400
+X-Amp-Result: UNSCANNABLE
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by orsmga104.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 16 Apr 2019 05:52:39 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,357,1549958400"; 
+   d="scan'208";a="162363516"
+Received: from smile.fi.intel.com (HELO smile) ([10.237.72.86])
+  by fmsmga004.fm.intel.com with ESMTP; 16 Apr 2019 05:52:36 -0700
+Received: from andy by smile with local (Exim 4.92)
+        (envelope-from <andriy.shevchenko@linux.intel.com>)
+        id 1hGNZi-00037H-Hs; Tue, 16 Apr 2019 15:52:34 +0300
+Date:   Tue, 16 Apr 2019 15:52:34 +0300
+From:   Andy Shevchenko <andriy.shevchenko@linux.intel.com>
+To:     "Life is hard, and then you die" <ronald@innovation.ch>
+Cc:     Dmitry Torokhov <dmitry.torokhov@gmail.com>,
+        Henrik Rydberg <rydberg@bitmath.org>,
+        Andrzej Hajda <a.hajda@samsung.com>,
+        Inki Dae <inki.dae@samsung.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Lukas Wunner <lukas@wunner.de>,
+        Federico Lorenzi <federico@travelground.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        linux-input@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v5 2/2] Input: add Apple SPI keyboard and trackpad driver.
+Message-ID: <20190416125234.GD9224@smile.fi.intel.com>
+References: <20190415081300.24831-1-ronald@innovation.ch>
+ <20190415081300.24831-3-ronald@innovation.ch>
+ <20190415090346.GL9224@smile.fi.intel.com>
+ <20190415230955.GA13033@innovation.ch>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <nycvar.YFH.7.76.1904161345560.9803@cbobk.fhfr.pm>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Tue, 16 Apr 2019 12:55:30 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190415230955.GA13033@innovation.ch>
+Organization: Intel Finland Oy - BIC 0357606-4 - Westendinkatu 7, 02160 Espoo
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 01:47:30PM +0200, Jiri Kosina wrote:
-> On Tue, 12 Feb 2019, Petr Mladek wrote:
+On Mon, Apr 15, 2019 at 04:09:55PM -0700, Life is hard, and then you die wrote:
+> On Mon, Apr 15, 2019 at 12:03:46PM +0300, Andy Shevchenko wrote:
+> > On Mon, Apr 15, 2019 at 01:13:00AM -0700, Ronald Tschalär wrote:
+
+> > > +static void
+> > > +applespi_remap_fn_key(struct keyboard_protocol *keyboard_protocol)
+> > > +{
+> > > +	unsigned char tmp;
+> > 
+> > > +	u8 bit = BIT(fnremap - 1);
+> > 
+> > The above is UB and I'm sorry I didn't find this earlier.
+> > 
+> > So, something like this would work
+> > 
+> > 	u8 bit = BIT((fnremap - 1) & 0x07);
 > 
-> > > I think I'd rather go in the opposite direction: allow the patches to be
-> > > loaded.  Then they can be forced, if needed.  That enables both compile
-> > > and runtime testing.  That way we don't make any backward progress,
-> > > until such arches get reliable stacktraces.
-> > 
-> > Do you mean to convert the error into warning?
-> > 
-> > For example, the change below. Note that I did not mention
-> > the possibility to force the transition by intention. It is risky
-> > and people should not get used to it.
-> > 
-> > Heh, I think that this was the main reason why it was the error.
-> > We did not want to get people used to forcing livepatches.
-> > 
-> > 
-> > diff --git a/kernel/livepatch/core.c b/kernel/livepatch/core.c
-> > index d1af69e9f0e3..8d9bce251516 100644
-> > --- a/kernel/livepatch/core.c
-> > +++ b/kernel/livepatch/core.c
-> > @@ -1035,11 +1035,10 @@ int klp_enable_patch(struct klp_patch *patch)
-> >  		return -ENODEV;
-> >  
-> >  	if (!klp_have_reliable_stack()) {
-> > -		pr_err("This architecture doesn't have support for the livepatch consistency model.\n");
-> > -		return -EOPNOTSUPP;
-> > +		pr_warn("This architecture doesn't have support for the livepatch consistency model.\n");
-> > +		pr_warn("Only one livepatch can be installed.\n");
-> >  	}
-> >  
-> > -
+> fnremap is already constrained by the following:
+
+"already" is a wrong word here. Compiler checks in the order of appearing, so,
+for it it is UB and we need to limit bits to allowed range, up to 31 for
+unsigned int.
+
 > 
-> This seems to have been lost.
+> > > +
+> > > +	if (!fnremap || fnremap > ARRAY_SIZE(applespi_controlcodes) ||
+> > > +	    !applespi_controlcodes[fnremap - 1])
+> > > +		return;
+> 
+> and the array-size of applespi_controlcodes is constrained to the
+> number of bits in u8 according to this assertion
+> 
+> > > +	compiletime_assert(ARRAY_SIZE(applespi_controlcodes) ==
+> > > +			   sizeof_field(struct keyboard_protocol, modifiers) * 8,
+> > > +			   "applespi_controlcodes has wrong number of entries");
+> 
+> So I don't see that the masking buys anything new.
 
-Sorry, this must have gotten lost in my inbox - yes, something like the
-above is what I had in mind.  Though instead of "one livepatch can be
-installed" it might say that the patch transition may never complete.
-
-BTW, might we want to consider adding a way to say "this patch doesn't
-need the consistency model", which just applies the patch immediately
-like we used to?  Like patch->simple = true?  Then we could easily
-support all arches for basic patches.
-
-> I think we should take this aproach before Miroslav is ready with 
-> realiable stack traces for s390. At the same time, I'd suggest issuing a 
-> proper WARN() there instead of just pr_warn(). The kernel might be in a 
-> potentially funky state, so let's at least get the 'W' taint in place.
-
-I don't think it would be in a dangerous state, because
-save_stack_trace_tsk_reliable() will return -ENOSYS and the patch will
-remain in transition forever because the signaling doesn't work for
-kthreads.  So I don't think a warning is necessary.  In fact we may want
-to remove the warning in the generic version of
-save_stack_trace_tsk_reliable().
+It buys us the follow to the standard. But gcc is clever enough to strip number
+to allowed one.
 
 -- 
-Josh
+With Best Regards,
+Andy Shevchenko
+
+
