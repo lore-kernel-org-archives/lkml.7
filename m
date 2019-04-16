@@ -3,103 +3,94 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2FF95C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:29:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40FA1C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:29:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0D22E20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:29:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1BBB720663
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:29:02 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730871AbfDPU26 (ORCPT
+        id S1730897AbfDPU3B (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 16:28:58 -0400
-Received: from mout.kundenserver.de ([212.227.126.131]:43345 "EHLO
+        Tue, 16 Apr 2019 16:29:01 -0400
+Received: from mout.kundenserver.de ([212.227.126.135]:41833 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730804AbfDPU2x (ORCPT
+        with ESMTP id S1730866AbfDPU26 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 16:28:53 -0400
+        Tue, 16 Apr 2019 16:28:58 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue010 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1Mbzhv-1giFg71QTf-00dao0; Tue, 16 Apr 2019 22:28:48 +0200
+ 1N9MYu-1gkkwe3aUu-015EvX; Tue, 16 Apr 2019 22:28:56 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Alexander Viro <viro@zeniv.linux.org.uk>
 Cc:     linux-fsdevel@vger.kernel.org, y2038@lists.linaro.org,
-        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Theodore Ts'o" <tytso@mit.edu>
-Subject: [PATCH v3 22/26] compat_ioctl: remove /dev/random commands
-Date:   Tue, 16 Apr 2019 22:28:07 +0200
-Message-Id: <20190416202839.248216-3-arnd@arndb.de>
+        linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>
+Subject: [PATCH v3 26/26] compat_ioctl: remove last RAID handling code
+Date:   Tue, 16 Apr 2019 22:28:11 +0200
+Message-Id: <20190416202839.248216-7-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20190416202839.248216-1-arnd@arndb.de>
 References: <20190416202013.4034148-1-arnd@arndb.de>
  <20190416202839.248216-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:jA89eqKnRPmlOtnlgpKIzUdW+gr3sTm2sk1VYxigi/oVU0N+G51
- 0yLOK85iHW8gxA8PYZiCGw8y/mYMEGZXPu0hhwB/nJ7lk40rQeu99bZ+GnYqZROIRSDnj5G
- DuFwuOB+9o2MaekeHCiHSGB462Rhu0iMTrViAbpxpib4GwudUebC6fEEeM6OPZ+MaDFcUt4
- wPXTUJTIzS5je+gbuQyzA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:CHYFpmqHt7I=:IW5eUkhGK4i+y9MkToJnzi
- wbKi29WpRLt+kIO9iXBAUUBx1iJ1WywiCib18wfeMU4W9cjY4ZQpfjmFs3y8fRjTw4ZvEJktT
- fWVJ9BUklJJ6sO4uCCo7b33pEAeOTJ17ZeJjADc+a6n3lw10DutWFVJkNTiHglIW9tkV8IrMT
- p9wL/CHrYlFN1K9pJwiZKPOGyaSdsbKCIBElAXjNIQ/JuCJRF5p7pf5u4KSszUAqV1jThifSm
- YshwVhwVTj7ZtK0p7bVsjQ3DARc2CQD5Aklu9x4/4EOKmbAQuRSMzITpRrg391Ar3CGCJUr1x
- xVFLE1SdoUaegHSb2ics8kqh83q3GSsAZhThmyqUa2NU4qzmHL82z0I4E7NCSqc3tNcW12225
- ydkTLOAdh6fIBhBvesE225gMv+2QFtlryTKzYBrKc2/U1WEMLfMp8gXKrRNXvxk6Xr99fjmY8
- TkETFcV3362QHhVMy45weAKDImPujFkFnShbvhGbRK2WIndhNhBvreSUi6KbpmpTv8Wy4YI0t
- VeGtW6TuG/QI2+2nPn8TRAcnWXGPtuydquHDBcWIgs43hsALWLhlsEcjO+DelsRZ6pyPC1PDG
- /pTqjFOx4gvWo0KAJqQ/psJ7T7yWABp/IYfNmnB4igb5uCvO7PHU0gXqkBmVK0TZ2wavgO4eJ
- 1OrLkVhwKSZog+g5rP+8GTmR8+AjndhIeNq3Jk+YBdiSD6CPG7oeRAxv5ty9kK0FGiUp0LIjt
- nXw+upVecaRMNlkqVuUZbrkKaCjs+DoBv0IhNA==
+X-Provags-ID: V03:K1:kr37GgGf+FAvlT+Ih2yyYppWJzyd/T1IQq+sLtn8CWkKCuJB+ij
+ t97YwUJguLn7fO+Zf/mVSeKYHREnqFvby2c7c6IXVZKxbaS8DDfMooioaV+RL6PmOTQVCHq
+ tacD6C/ufvXWISqaCW1G7KJd5YRWhQN6QbHYvoRL3jyRJv6PlFkAOxHQill0qp/PkF+Bksa
+ OgEQSEGZKEJhaQRrMYxSQ==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:2Xx3458CozM=:XO71Q29thOiOAQO99iAITx
+ l2IGPASdz//mh80V+XhBLN621DKXjYp+XM3OZsFtQb6ZZIH6eJOGOqbkRLqzZfwE4bQONDqRl
+ QCiuyirtlX79abZ/cipVNyKhKOuYXK9w1No19Bu41FAzEiPd2uMpCk1xn4YHno4Wrp2t24PRq
+ VYqOkIcj2wdCroQrCaG+nrtaXc/SRYJaCphRUoC6KS6q40RKNJwhMoOFHFaPEKlErKxBLHuej
+ sOYRewgvOu/OKW5XconPDWRZSkKGyQDEK4In9x1WQB1sz/HJZpKQPAqXtmbRjoC1ilLzx8ASn
+ ZnCj3tl+DK4ve8vLuGd7QHn3SI8a/jyDJqmubRmzNdYjGnLQl5QoZ5LSUHFLXYHCzf8Yba4Nk
+ ePCNE0rPiI1Mwf0KD8X856s41h1fh4GRoQXVRfhGWCW7xsLrZLrq6NtlB17T7KOibwr8khooK
+ kHi9vlmS31z8PiUaVDdZt0uRV163VxXPsWpsrI/vDKI+QhjYOqwmZ1lwv6ORgUUHKuktN1nS2
+ A3Oq6k0nfil5cLpGlZxGW2lpWjpLG1te2mhW/Hp0LE31nmhgln2MuUV3d9LR+G7yhMkq4iJSM
+ 0moPEoSgI+6Pg2cgU5Y28qdQEEs/WnvkOsNTqgyHpAKd2QmkzxFgAEbgkMMGBRtgCzZml6JsG
+ t9mtSIzfuktyYOPTdgICO758slYUXYA2boXcDp++xCkpD7zOx8IvfU6LvGBlF+FyNlz4GsSCd
+ 6uSKeMooEH516yYNrdU2kimgp95z1VnfEG4XlA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These are all handled by the random driver, so instead of listing
-each ioctl, we can just use the same function to deal with both
-native and compat commands.
+Commit aa98aa31987a ("md: move compat_ioctl handling into md.c")
+already removed the COMPATIBLE_IOCTL() table entries and added
+a complete implementation, but a few lines got left behind and
+should also be removed here.
 
-Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- drivers/char/random.c | 1 +
- fs/compat_ioctl.c     | 7 -------
- 2 files changed, 1 insertion(+), 7 deletions(-)
+ fs/compat_ioctl.c | 13 -------------
+ 1 file changed, 13 deletions(-)
 
-diff --git a/drivers/char/random.c b/drivers/char/random.c
-index 38c6d1af6d1c..4f397c70d89b 100644
---- a/drivers/char/random.c
-+++ b/drivers/char/random.c
-@@ -2025,6 +2025,7 @@ const struct file_operations random_fops = {
- 	.write = random_write,
- 	.poll  = random_poll,
- 	.unlocked_ioctl = random_ioctl,
-+	.compat_ioctl = compat_ptr_ioctl,
- 	.fasync = random_fasync,
- 	.llseek = noop_llseek,
- };
 diff --git a/fs/compat_ioctl.c b/fs/compat_ioctl.c
-index bae7b38a881f..78144a599f36 100644
+index 63de00cc85df..09f42e0585b7 100644
 --- a/fs/compat_ioctl.c
 +++ b/fs/compat_ioctl.c
-@@ -380,13 +380,6 @@ COMPATIBLE_IOCTL(WDIOC_SETTIMEOUT)
- COMPATIBLE_IOCTL(WDIOC_GETTIMEOUT)
- COMPATIBLE_IOCTL(WDIOC_SETPRETIMEOUT)
- COMPATIBLE_IOCTL(WDIOC_GETPRETIMEOUT)
--/* Big R */
--COMPATIBLE_IOCTL(RNDGETENTCNT)
--COMPATIBLE_IOCTL(RNDADDTOENTCNT)
--COMPATIBLE_IOCTL(RNDGETPOOL)
--COMPATIBLE_IOCTL(RNDADDENTROPY)
--COMPATIBLE_IOCTL(RNDZAPENTCNT)
--COMPATIBLE_IOCTL(RNDCLEARPOOL)
- /* Misc. */
- COMPATIBLE_IOCTL(PCIIOC_CONTROLLER)
- COMPATIBLE_IOCTL(PCIIOC_MMAP_IS_IO)
+@@ -394,19 +394,6 @@ static long do_ioctl_trans(unsigned int cmd,
+ #endif
+ 	}
+ 
+-	/*
+-	 * These take an integer instead of a pointer as 'arg',
+-	 * so we must not do a compat_ptr() translation.
+-	 */
+-	switch (cmd) {
+-	/* RAID */
+-	case HOT_REMOVE_DISK:
+-	case HOT_ADD_DISK:
+-	case SET_DISK_FAULTY:
+-	case SET_BITMAP_FILE:
+-		return vfs_ioctl(file, cmd, arg);
+-	}
+-
+ 	return -ENOIOCTLCMD;
+ }
+ 
 -- 
 2.20.0
 
