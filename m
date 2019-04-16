@@ -2,273 +2,112 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2B1BC10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 02:55:50 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D74E1C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 02:56:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B4D932075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 02:55:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A51EB2087C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 02:56:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555383389;
+	bh=X7TEI2XUO5nXn8BhZ0KveyAJCvK3WrEmqRwAf0x1IDw=;
+	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
+	b=gqzYg/nDYlDfeHd2Fs5wmfDTfNiuOoRlpxqq7GMxGgJYphPdNp0QQUnEu1/fLaYLm
+	 7VUevK3Kpp4o7R1gzJFAQoHqN0Rvkazu2Yfbsrq9zXfqO5v/gDrCmZ9Ox9M4Ged7n0
+	 fkCm83Du83G23ry4BGPFbavicYPz+xRJSbbCPFfQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726285AbfDPCzt (ORCPT
+        id S1726611AbfDPC42 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 22:55:49 -0400
-Received: from szxga06-in.huawei.com ([45.249.212.32]:57654 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1725796AbfDPCzs (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 22:55:48 -0400
-Received: from DGGEMS408-HUB.china.huawei.com (unknown [172.30.72.58])
-        by Forcepoint Email with ESMTP id B2E4F7FC284ACB1266F9;
-        Tue, 16 Apr 2019 10:55:46 +0800 (CST)
-Received: from [127.0.0.1] (10.177.131.64) by DGGEMS408-HUB.china.huawei.com
- (10.3.19.208) with Microsoft SMTP Server id 14.3.408.0; Tue, 16 Apr 2019
- 10:55:37 +0800
-Subject: Re: [PATCH v4 3/5] memblock: add memblock_cap_memory_ranges for
- multiple ranges
-To:     Mike Rapoport <rppt@linux.ibm.com>
-References: <20190415105725.22088-1-chenzhou10@huawei.com>
- <20190415105725.22088-4-chenzhou10@huawei.com>
- <20190415190940.GA6081@rapoport-lnx>
-CC:     <tglx@linutronix.de>, <mingo@redhat.com>, <bp@alien8.de>,
-        <ebiederm@xmission.com>, <catalin.marinas@arm.com>,
-        <will.deacon@arm.com>, <akpm@linux-foundation.org>,
-        <ard.biesheuvel@linaro.org>, <horms@verge.net.au>,
-        <takahiro.akashi@linaro.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, <kexec@lists.infradead.org>,
-        <linux-mm@kvack.org>, <wangkefeng.wang@huawei.com>
-From:   Chen Zhou <chenzhou10@huawei.com>
-Message-ID: <703cdbf0-b425-880b-b087-aaf3fe84673d@huawei.com>
-Date:   Tue, 16 Apr 2019 10:55:34 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:45.0) Gecko/20100101
- Thunderbird/45.7.1
+        Mon, 15 Apr 2019 22:56:28 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:43962 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725796AbfDPC42 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Mon, 15 Apr 2019 22:56:28 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
+        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
+        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=ACbVHtBxLhrCBDhqA3rheQIYn6ZENVo512ct8LevMBM=; b=Yso8SgFI5QZG/c6ZV9kK5uBCK1
+        6gY0Ehddua/CvdAzc39bxJQEmRM2piyJKMYEjG0oxQWPNoDtNq2CpjDlNe7ZvU+dcHseFLTF5hXtT
+        hP3YcrHFtrdAjmuMQ3YtjcYVvJqKMLEl8EXDAHeho0sRyDnGQDersAswkFaKpAP/57q9u7/FEVJH6
+        Drpk2F3T+ccyPa0pH6ElABoImi/kyuVvF4nyKJ5tmWb9XKHIcYmwz+vMsmRuvmsCFf7WqWvAkf7BO
+        1zSv2Ekgnu8ih0aWu1WpMHpSEAcB3XeBc6eumTCO7/0Tuqrt4HIYFCU/mPKze1InwjY5FudscWHVF
+        Qt7eiO7A==;
+Received: from 177.205.118.176.dynamic.adsl.gvt.net.br ([177.205.118.176] helo=bombadil.infradead.org)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hGEGp-0007aM-Sx; Tue, 16 Apr 2019 02:56:27 +0000
+Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
+        (envelope-from <mchehab@bombadil.infradead.org>)
+        id 1hGEGn-0001lO-2m; Mon, 15 Apr 2019 23:56:25 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
+Subject: [PATCH 08/57] docs: cgroup-v1/blkio-controller.rst: add a note about CFQ scheduler
+Date:   Mon, 15 Apr 2019 23:55:33 -0300
+Message-Id: <2551b8c383cbd7f5c730bef8d83d66712c9b2d5b.1555382110.git.mchehab+samsung@kernel.org>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <cover.1555382110.git.mchehab+samsung@kernel.org>
+References: <cover.1555382110.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
-In-Reply-To: <20190415190940.GA6081@rapoport-lnx>
-Content-Type: text/plain; charset="windows-1252"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.177.131.64]
-X-CFilter-Loop: Reflected
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mike,
+The CFQ scheduler was removed on this changeset:
 
-On 2019/4/16 3:09, Mike Rapoport wrote:
-> Hi,
-> 
-> On Mon, Apr 15, 2019 at 06:57:23PM +0800, Chen Zhou wrote:
->> The memblock_cap_memory_range() removes all the memory except the
->> range passed to it. Extend this function to receive memblock_type
->> with the regions that should be kept.
->>
->> Enable this function in arm64 for reservation of multiple regions
->> for the crash kernel.
->>
->> Signed-off-by: Chen Zhou <chenzhou10@huawei.com>
->> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> 
-> I didn't work on this version, please drop the signed-off.
+  commit f382fb0bcef4c37dc049e9f6963e3baf204d815c
+  Author: Jens Axboe <axboe@kernel.dk>
+  Date:   Fri Oct 12 10:14:46 2018 -0600
 
-Sorry about this. I should ask you firstly before doing it this way. I will drop it.
+    block: remove legacy IO schedulers
 
-		remove_size);
->> +	}
->> +
->> +	memblock_remove_range(&memblock.reserved,
->> +			regs[nr - 1].base + regs[nr - 1].size, PHYS_ADDR_MAX);
->> +}
->> +
-> 
-> I've double-checked and I see no problem with using
-> for_each_mem_range_rev() iterators for removing some ranges. And with them
-> this functions becomes much clearer and more efficient.
-> 
-> Can you please check if the below patch works for you?
-> 
->>From e25e6c9cd94a01abac124deacc66e5d258fdbf7c Mon Sep 17 00:00:00 2001
-> From: Mike Rapoport <rppt@linux.ibm.com>
-> Date: Wed, 10 Apr 2019 16:02:32 +0300
-> Subject: [PATCH] memblock: extend memblock_cap_memory_range to multiple ranges
-> 
-> The memblock_cap_memory_range() removes all the memory except the range
-> passed to it. Extend this function to receive an array of memblock_regions
-> that should be kept. This allows switching to simple iteration over
-> memblock arrays with 'for_each_mem_range_rev' to remove the unneeded memory.
-> 
-> Enable use of this function in arm64 for reservation of multiple regions for
-> the crash kernel.
-> 
-> Signed-off-by: Mike Rapoport <rppt@linux.ibm.com>
-> ---
->  arch/arm64/mm/init.c     | 34 ++++++++++++++++++++++++----------
->  include/linux/memblock.h |  2 +-
->  mm/memblock.c            | 44 ++++++++++++++++++++------------------------
->  3 files changed, 45 insertions(+), 35 deletions(-)
-> 
-> diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
-> index 6bc1350..8665d29 100644
-> --- a/arch/arm64/mm/init.c
-> +++ b/arch/arm64/mm/init.c
-> @@ -64,6 +64,10 @@ EXPORT_SYMBOL(memstart_addr);
->  phys_addr_t arm64_dma_phys_limit __ro_after_init;
->  
->  #ifdef CONFIG_KEXEC_CORE
-> +
-> +/* at most two crash kernel regions, low_region and high_region */
-> +#define CRASH_MAX_USABLE_RANGES	2
-> +
->  /*
->   * reserve_crashkernel() - reserves memory for crash kernel
->   *
-> @@ -280,9 +284,9 @@ early_param("mem", early_mem);
->  static int __init early_init_dt_scan_usablemem(unsigned long node,
->  		const char *uname, int depth, void *data)
->  {
-> -	struct memblock_region *usablemem = data;
-> -	const __be32 *reg;
-> -	int len;
-> +	struct memblock_type *usablemem = data;
-> +	const __be32 *reg, *endp;
-> +	int len, nr = 0;
->  
->  	if (depth != 1 || strcmp(uname, "chosen") != 0)
->  		return 0;
-> @@ -291,22 +295,32 @@ static int __init early_init_dt_scan_usablemem(unsigned long node,
->  	if (!reg || (len < (dt_root_addr_cells + dt_root_size_cells)))
->  		return 1;
->  
-> -	usablemem->base = dt_mem_next_cell(dt_root_addr_cells, &reg);
-> -	usablemem->size = dt_mem_next_cell(dt_root_size_cells, &reg);
-> +	endp = reg + (len / sizeof(__be32));
-> +	while ((endp - reg) >= (dt_root_addr_cells + dt_root_size_cells)) {
-> +		unsigned long base = dt_mem_next_cell(dt_root_addr_cells, &reg);
-> +		unsigned long size = dt_mem_next_cell(dt_root_size_cells, &reg);
->  
-> +		if (memblock_add_range(usablemem, base, size, NUMA_NO_NODE,
-> +				       MEMBLOCK_NONE))
-> +			return 0;
-> +		if (++nr >= CRASH_MAX_USABLE_RANGES)
-> +			break;
-> +	}
->  	return 1;
->  }
->  
->  static void __init fdt_enforce_memory_region(void)
->  {
-> -	struct memblock_region reg = {
-> -		.size = 0,
-> +	struct memblock_region usable_regions[CRASH_MAX_USABLE_RANGES];
-> +	struct memblock_type usablemem = {
-> +		.max = CRASH_MAX_USABLE_RANGES,
-> +		.regions = usable_regions,
->  	};
->  
-> -	of_scan_flat_dt(early_init_dt_scan_usablemem, &reg);
-> +	of_scan_flat_dt(early_init_dt_scan_usablemem, &usablemem);
->  
-> -	if (reg.size)
-> -		memblock_cap_memory_range(reg.base, reg.size);
-> +	if (usablemem.cnt)
-> +		memblock_cap_memory_ranges(usablemem.regions, usablemem.cnt);
->  }
->  
->  void __init arm64_memblock_init(void)
-> diff --git a/include/linux/memblock.h b/include/linux/memblock.h
-> index 294d5d8..f5c029b 100644
-> --- a/include/linux/memblock.h
-> +++ b/include/linux/memblock.h
-> @@ -404,7 +404,7 @@ phys_addr_t memblock_mem_size(unsigned long limit_pfn);
->  phys_addr_t memblock_start_of_DRAM(void);
->  phys_addr_t memblock_end_of_DRAM(void);
->  void memblock_enforce_memory_limit(phys_addr_t memory_limit);
-> -void memblock_cap_memory_range(phys_addr_t base, phys_addr_t size);
-> +void memblock_cap_memory_ranges(struct memblock_region *regions, int count);
->  void memblock_mem_limit_remove_map(phys_addr_t limit);
->  bool memblock_is_memory(phys_addr_t addr);
->  bool memblock_is_map_memory(phys_addr_t addr);
-> diff --git a/mm/memblock.c b/mm/memblock.c
-> index e7665cf..8d4d060 100644
-> --- a/mm/memblock.c
-> +++ b/mm/memblock.c
-> @@ -1605,36 +1605,31 @@ void __init memblock_enforce_memory_limit(phys_addr_t limit)
->  			      PHYS_ADDR_MAX);
->  }
->  
-> -void __init memblock_cap_memory_range(phys_addr_t base, phys_addr_t size)
-> -{
-> -	int start_rgn, end_rgn;
-> -	int i, ret;
-> -
-> -	if (!size)
-> -		return;
-> -
-> -	ret = memblock_isolate_range(&memblock.memory, base, size,
-> -						&start_rgn, &end_rgn);
-> -	if (ret)
-> -		return;
-> -
-> -	/* remove all the MAP regions */
-> -	for (i = memblock.memory.cnt - 1; i >= end_rgn; i--)
-> -		if (!memblock_is_nomap(&memblock.memory.regions[i]))
-> -			memblock_remove_region(&memblock.memory, i);
-> +void __init memblock_cap_memory_ranges(struct memblock_region *regions,
-> +				       int count)
-> +{
-> +	struct memblock_type regions_to_keep = {
-> +		.max = count,
-> +		.cnt = count,
-> +		.regions = regions,
-> +	};
-> +	phys_addr_t start, end;
-> +	u64 i;
->  
-> -	for (i = start_rgn - 1; i >= 0; i--)
-> -		if (!memblock_is_nomap(&memblock.memory.regions[i]))
-> -			memblock_remove_region(&memblock.memory, i);
-> +	/* truncate memory while skipping NOMAP regions */
-> +	for_each_mem_range_rev(i, &memblock.memory, &regions_to_keep,
-> +			       NUMA_NO_NODE, MEMBLOCK_NONE, &start, &end, NULL)
-> +		memblock_remove(start, end);
+    Retain the deadline documentation, as that carries over to mq-deadline
+    as well.
 
-Yes, this works well.
-A minor issue, replace memblock_remove(start, end) with memblock_remove(start, end - start).
+    Tested-by: Ming Lei <ming.lei@redhat.com>
+    Reviewed-by: Omar Sandoval <osandov@fb.com>
+    Signed-off-by: Jens Axboe <axboe@kernel.dk>
 
->  
->  	/* truncate the reserved regions */
-> -	memblock_remove_range(&memblock.reserved, 0, base);
-> -	memblock_remove_range(&memblock.reserved,
-> -			base + size, PHYS_ADDR_MAX);
-> +	for_each_mem_range_rev(i, &memblock.reserved, &regions_to_keep,
-> +			       NUMA_NO_NODE, MEMBLOCK_NONE, &start, &end, NULL)
-> +		memblock_remove_range(&memblock.reserved, start, end);
+However, the cgroups-v1 documentation still mentions it and points
+to a removed file that used to belong to such scheduler.
 
-The same as above. Replace memblock_remove_range(&memblock.reserved, start, end) with
-memblock_remove_range(&memblock.reserved, start, end - start).
+Add a note about that, as someone needs to fix the document pointing
+to another scheduler, if cgroups-v1 blockio is not dependent of
+CFQ scheduler.
 
-Thanks,
-Chen Zhou
+Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
+---
+ Documentation/cgroup-v1/blkio-controller.txt | 7 +++++++
+ 1 file changed, 7 insertions(+)
 
->  }
->  
->  void __init memblock_mem_limit_remove_map(phys_addr_t limit)
->  {
-> +	struct memblock_region region = { 0 };
->  	phys_addr_t max_addr;
->  
->  	if (!limit)
-> @@ -1646,7 +1641,8 @@ void __init memblock_mem_limit_remove_map(phys_addr_t limit)
->  	if (max_addr == PHYS_ADDR_MAX)
->  		return;
->  
-> -	memblock_cap_memory_range(0, max_addr);
-> +	region.size = max_addr;
-> +	memblock_cap_memory_ranges(&region, 1);
->  }
->  
->  static int __init_memblock memblock_search(struct memblock_type *type, phys_addr_t addr)
-> 
+diff --git a/Documentation/cgroup-v1/blkio-controller.txt b/Documentation/cgroup-v1/blkio-controller.txt
+index 2c1b907afc14..2836c2c31e63 100644
+--- a/Documentation/cgroup-v1/blkio-controller.txt
++++ b/Documentation/cgroup-v1/blkio-controller.txt
+@@ -17,6 +17,13 @@ one is throttling policy which can be used to specify upper IO rate limits
+ on devices. This policy is implemented in generic block layer and can be
+ used on leaf nodes as well as higher level logical devices like device mapper.
+ 
++.. note::
++
++   While this document mentions the CFQ scheduler, it got removed at
++   Kernel 4.20, as there are other schedulers that are more efficient.
++
++   Someone needs to update this file in order to reflect such change.
++
+ HOWTO
+ =====
+ Proportional Weight division of bandwidth
+-- 
+2.20.1
 
