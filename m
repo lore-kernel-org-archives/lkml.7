@@ -2,52 +2,54 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 557A6C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:58:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E78C0C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:58:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 146E020684
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:58:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B67AB2077C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:58:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="TFlCBvGZ"
+	dkim=pass (2048-bit key) header.d=st.com header.i=@st.com header.b="05MQJKg4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729688AbfDPO6u (ORCPT
+        id S1729753AbfDPO6z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 10:58:50 -0400
-Received: from mx07-00178001.pphosted.com ([62.209.51.94]:28100 "EHLO
+        Tue, 16 Apr 2019 10:58:55 -0400
+Received: from mx07-00178001.pphosted.com ([62.209.51.94]:28150 "EHLO
         mx07-00178001.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1725796AbfDPO6u (ORCPT
+        by vger.kernel.org with ESMTP id S1726713AbfDPO6w (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 10:58:50 -0400
+        Tue, 16 Apr 2019 10:58:52 -0400
 Received: from pps.filterd (m0046668.ppops.net [127.0.0.1])
-        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3GEuLp1007177;
-        Tue, 16 Apr 2019 16:58:35 +0200
+        by mx07-00178001.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3GEuLp3007177;
+        Tue, 16 Apr 2019 16:58:41 +0200
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=st.com; h=from : to : cc : subject
- : date : message-id : mime-version : content-type; s=STMicroelectronics;
- bh=a0WPuEtezcJ43FTbI4cZhrZcoa/ZI4CHF8RviI7aspo=;
- b=TFlCBvGZGvf9HvCOfPpV2NnDeBk0iCe8IlYIh1VyqAroOpb6Y+vhlHgglk6g5g1C6B+8
- KfeZ3xAfIwvt9hkSN7sbFA2oibSCdQuFNKuLZD+6CeAdPeOBVnOxu6hvF7Oik5xUx21r
- UzEzEeMc6TyLYHOlPM9hxWxVTMhSilVPp1yQbUSX+ESX2mij+VVn48Q70bJs9yxQgPAW
- f+wWwqAnJzBQOXemBcPWdxh48d3tkKa+vF78Qkhz2MG60DukdANCIR8gX7zQGSxSea+J
- HJfd+PsNh7EbGphpAlKAYVQkfpztCtr87XqfWSVIFH5jv6lRQI/plGpUARw1hb4jUJpi Bw== 
+ : date : message-id : in-reply-to : references : mime-version :
+ content-type; s=STMicroelectronics;
+ bh=mSy4siWAizfgGjB9diApebndiE8iTckODadKgfNYPpM=;
+ b=05MQJKg4vniooo5yQkK/z9P7yzNFzT4aehAgTx5VDIBy/MP/2bo7lfOEu/6HaO5YZq/B
+ yQtLZfFjTbpjGQJuzGEhDoRNiRr95bCKiUW/iQPMtDT2nGh9lKJx2/IKdO3+LNF5c8Sl
+ Xio4QdLM2idCK/lYeJoe06AgvluVAW+Ac1e1PJ6Ct/tNE36sAf6gEQH/gl2Dp5cyPWzm
+ qS+kCMkBYkUzC4KDZyEkFVz64mTruD4r6JVpQsCSsyr98+j+vvAkUgAtY88Ycc+TUqW1
+ hFckKFG4R5+BkuKA7b/iZIP7irLMez9zkMl32p6ujxjhqSM+dG6yVFsNcRsq6fQCXgI+ 2g== 
 Received: from beta.dmz-eu.st.com (beta.dmz-eu.st.com [164.129.1.35])
-        by mx07-00178001.pphosted.com with ESMTP id 2ru5800uh7-1
+        by mx07-00178001.pphosted.com with ESMTP id 2ru5800uhg-1
         (version=TLSv1 cipher=ECDHE-RSA-AES256-SHA bits=256 verify=NOT);
-        Tue, 16 Apr 2019 16:58:35 +0200
+        Tue, 16 Apr 2019 16:58:41 +0200
 Received: from zeta.dmz-eu.st.com (zeta.dmz-eu.st.com [164.129.230.9])
-        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 1EC6F3A;
-        Tue, 16 Apr 2019 14:58:33 +0000 (GMT)
+        by beta.dmz-eu.st.com (STMicroelectronics) with ESMTP id A671C31;
+        Tue, 16 Apr 2019 14:58:40 +0000 (GMT)
 Received: from Webmail-eu.st.com (Safex1hubcas24.st.com [10.75.90.94])
-        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id BA53E269D;
-        Tue, 16 Apr 2019 14:58:33 +0000 (GMT)
+        by zeta.dmz-eu.st.com (STMicroelectronics) with ESMTP id 899E6269B;
+        Tue, 16 Apr 2019 14:58:40 +0000 (GMT)
 Received: from SAFEX1HUBCAS23.st.com (10.75.90.47) by Safex1hubcas24.st.com
  (10.75.90.94) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 16 Apr
- 2019 16:58:33 +0200
+ 2019 16:58:40 +0200
 Received: from localhost (10.201.23.25) by webmail-ga.st.com (10.75.90.48)
- with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 16 Apr 2019 16:58:33
+ with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 16 Apr 2019 16:58:40
  +0200
 From:   Fabien Dessenne <fabien.dessenne@st.com>
 To:     Rob Herring <robh+dt@kernel.org>,
@@ -65,10 +67,12 @@ CC:     Fabien Dessenne <fabien.dessenne@st.com>,
         Arnaud Pouliquen <arnaud.pouliquen@st.com>,
         "Ludovic Barre" <ludovic.barre@st.com>,
         Benjamin Gaignard <benjamin.gaignard@st.com>
-Subject: [PATCH v2 0/8] stm32 m4 remoteproc on STM32MP157c
-Date:   Tue, 16 Apr 2019 16:58:11 +0200
-Message-ID: <1555426699-5340-1-git-send-email-fabien.dessenne@st.com>
+Subject: [PATCH v2 6/8] ARM: dts: stm32: enable m4 coprocessor support on STM32MP157c-ed1
+Date:   Tue, 16 Apr 2019 16:58:17 +0200
+Message-ID: <1555426699-5340-7-git-send-email-fabien.dessenne@st.com>
 X-Mailer: git-send-email 2.7.4
+In-Reply-To: <1555426699-5340-1-git-send-email-fabien.dessenne@st.com>
+References: <1555426699-5340-1-git-send-email-fabien.dessenne@st.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-Originating-IP: [10.201.23.25]
@@ -79,42 +83,34 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-STMicrolectronics STM32MP157 MPU are based on a Dual Arm Cortex-A7 core and a
-Cortex-M4.
-This patchset adds the support of the stm32_rproc driver allowing to control
-the M4 remote processor.
+Enable m4 coprocessor for STM32MP157c-ed1 board.
 
-Changes since v1:
-- Gave details about the memory mapping (in bindings).
-- Used 'dma-ranges' instead of 'ranges'.
-- Updated the 'compatible' property.
-- Remove the 'recovery', 'reset-names' and 'interrupt-names' properties.
-- Clarified why / when mailboxes are optional.
+Signed-off-by: Fabien Dessenne <fabien.dessenne@st.com>
+---
+ arch/arm/boot/dts/stm32mp157c-ed1.dts | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
 
-Fabien Dessenne (8):
-  dt-bindings: stm32: add bindings for ML-AHB interconnect
-  dt-bindings: remoteproc: add bindings for stm32 remote processor
-    driver
-  remoteproc: stm32: add an ST stm32_rproc driver
-  ARM: dts: stm32: add m4 remoteproc support on STM32MP157c
-  ARM: dts: stm32: declare copro reserved memories on STM32MP157c-ed1
-  ARM: dts: stm32: enable m4 coprocessor support on STM32MP157c-ed1
-  ARM: dts: stm32: declare copro reserved memories on STM32MP157a-dk1
-  ARM: dts: stm32: enable m4 coprocessor support on STM32MP157a-dk1
-
- .../devicetree/bindings/arm/stm32/mlahb.txt        |  37 ++
- .../devicetree/bindings/remoteproc/stm32-rproc.txt |  64 +++
- arch/arm/boot/dts/stm32mp157a-dk1.dts              |  52 ++
- arch/arm/boot/dts/stm32mp157c-ed1.dts              |  52 ++
- arch/arm/boot/dts/stm32mp157c.dtsi                 |  20 +
- drivers/remoteproc/Kconfig                         |  15 +
- drivers/remoteproc/Makefile                        |   1 +
- drivers/remoteproc/stm32_rproc.c                   | 628 +++++++++++++++++++++
- 8 files changed, 869 insertions(+)
- create mode 100644 Documentation/devicetree/bindings/arm/stm32/mlahb.txt
- create mode 100644 Documentation/devicetree/bindings/remoteproc/stm32-rproc.txt
- create mode 100644 drivers/remoteproc/stm32_rproc.c
-
+diff --git a/arch/arm/boot/dts/stm32mp157c-ed1.dts b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+index acfc5cd..e5a6f40 100644
+--- a/arch/arm/boot/dts/stm32mp157c-ed1.dts
++++ b/arch/arm/boot/dts/stm32mp157c-ed1.dts
+@@ -134,6 +134,16 @@
+ 	status = "okay";
+ };
+ 
++&m4_rproc {
++	memory-region = <&retram>, <&mcuram>, <&mcuram2>, <&vdev0vring0>,
++			<&vdev0vring1>, <&vdev0buffer>;
++	mboxes = <&ipcc 0>, <&ipcc 1>, <&ipcc 2>;
++	mbox-names = "vq0", "vq1", "shutdown";
++	interrupt-parent = <&exti>;
++	interrupts = <68 1>;
++	status = "okay";
++};
++
+ &rng1 {
+ 	status = "okay";
+ };
 -- 
 2.7.4
 
