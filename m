@@ -2,123 +2,88 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 314B6C282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:34:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD3E7C10F0E
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:36:54 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC2062075B
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:34:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8276E2075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:36:54 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=wdc.com header.i=@wdc.com header.b="hNBwHjpa";
-	dkim=pass (1024-bit key) header.d=sharedspace.onmicrosoft.com header.i=@sharedspace.onmicrosoft.com header.b="CWnXAIZv"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GQkN3Gah";
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=codeaurora.org header.i=@codeaurora.org header.b="GQkN3Gah"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726795AbfDPDe1 (ORCPT
+        id S1726813AbfDPDgx (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 23:34:27 -0400
-Received: from esa4.hgst.iphmx.com ([216.71.154.42]:34814 "EHLO
-        esa4.hgst.iphmx.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726094AbfDPDe1 (ORCPT
+        Mon, 15 Apr 2019 23:36:53 -0400
+Received: from smtp.codeaurora.org ([198.145.29.96]:56520 "EHLO
+        smtp.codeaurora.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726094AbfDPDgw (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 23:34:27 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=simple/simple;
-  d=wdc.com; i=@wdc.com; q=dns/txt; s=dkim.wdc.com;
-  t=1555385667; x=1586921667;
-  h=from:to:cc:subject:date:message-id:references:
-   in-reply-to:content-id:content-transfer-encoding:
-   mime-version;
-  bh=TNKDPbVSOBmRy1vQS8AmbAESFKJCX/K79MlFXaNqRmI=;
-  b=hNBwHjpalOnME7fs+CqFxJGzpx2q4IC7DZkmLVXp7OiUoB41O08KeTjj
-   Fk+oFNK1TTBnECfOzDVGaUqJ2+rleKCIV+ni62vUtvxdILEpqDGus3gA7
-   CM5jbFoleC6zpH5Z44uDw6KVphMreOhJ29LnDLXGjzL0WsVALpEBDPLDN
-   8s+/uFValU2hOZF61I+IJ/+OzzEX7PZ5E598mOZ9ytbg3UOT3r5Z0CzCo
-   8mRS9PQd8f81RZWtxrftvI39fcYBMkVRrS9Esr5fc/+JsxLIPYgq2SKel
-   RO3rfdC+GAAbHrNXCsWPQMGhF2LGyDg23v6NmGhAUiY2rgV46gmi0skUk
-   g==;
-X-IronPort-AV: E=Sophos;i="5.60,355,1549900800"; 
-   d="scan'208";a="106051810"
-Received: from mail-by2nam01lp2058.outbound.protection.outlook.com (HELO NAM01-BY2-obe.outbound.protection.outlook.com) ([104.47.34.58])
-  by ob1.hgst.iphmx.com with ESMTP; 16 Apr 2019 11:34:27 +0800
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
- d=sharedspace.onmicrosoft.com; s=selector1-wdc-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=TNKDPbVSOBmRy1vQS8AmbAESFKJCX/K79MlFXaNqRmI=;
- b=CWnXAIZvHUPqjK4n/SfeXXKz2r7y+8nNfgTZuxGgNr/pS6sF2yn3gsaSUiYPTzyoTC7DCItWzAE2HfiIy3j9GFHymoT7wf0E54JOQl1AlVm6MV+rHRn1fCuI0QmwhETI6dEkn11rBxE51UtiSrzLbQFeC5W+T+6L/oSvKCwLwkM=
-Received: from SN6PR04MB4527.namprd04.prod.outlook.com (52.135.120.25) by
- SN6PR04MB4750.namprd04.prod.outlook.com (52.135.122.144) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1792.19; Tue, 16 Apr 2019 03:34:25 +0000
-Received: from SN6PR04MB4527.namprd04.prod.outlook.com
- ([fe80::c95e:c178:8d66:3703]) by SN6PR04MB4527.namprd04.prod.outlook.com
- ([fe80::c95e:c178:8d66:3703%3]) with mapi id 15.20.1792.018; Tue, 16 Apr 2019
- 03:34:25 +0000
-From:   Chaitanya Kulkarni <Chaitanya.Kulkarni@wdc.com>
-To:     Marcos Paulo de Souza <marcos.souza.org@gmail.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "linux-block@vger.kernel.org" <linux-block@vger.kernel.org>,
-        "axboe@kernel.dk" <axboe@kernel.dk>
-Subject: Re: [PATCH v2 3/3] Documentation: kernel-api.rst: Add block/blk-mq.c
-Thread-Topic: [PATCH v2 3/3] Documentation: kernel-api.rst: Add block/blk-mq.c
-Thread-Index: AQHU9ARzz62xPEqQ1Uq8unW1AFA2EKY9rTAA
-Date:   Tue, 16 Apr 2019 03:34:25 +0000
-Message-ID: <861CA549-6044-47DA-80C7-4285688C0143@wdc.com>
-References: <20190416032801.200694-1-marcos.souza.org@gmail.com>
- <20190416032801.200694-3-marcos.souza.org@gmail.com>
-In-Reply-To: <20190416032801.200694-3-marcos.souza.org@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-user-agent: Microsoft-MacOutlook/10.17.1.190326
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=Chaitanya.Kulkarni@wdc.com; 
-x-originating-ip: [2605:e000:3e45:f500:a40c:71d7:63f8:b285]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 668f3735-bba0-431b-6f34-08d6c21c6c8c
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600140)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:SN6PR04MB4750;
-x-ms-traffictypediagnostic: SN6PR04MB4750:
-wdcipoutbound: EOP-TRUE
-x-microsoft-antispam-prvs: <SN6PR04MB4750D537EA8E0E20BB5B62BF86240@SN6PR04MB4750.namprd04.prod.outlook.com>
-x-forefront-prvs: 000947967F
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(39860400002)(396003)(376002)(136003)(346002)(366004)(199004)(189003)(6246003)(14454004)(5660300002)(2906002)(6486002)(58126008)(316002)(86362001)(68736007)(33656002)(54906003)(110136005)(53936002)(4326008)(25786009)(6116002)(256004)(6436002)(6512007)(82746002)(229853002)(4744005)(2501003)(305945005)(478600001)(81156014)(81166006)(72206003)(97736004)(11346002)(2616005)(476003)(36756003)(446003)(46003)(102836004)(76176011)(186003)(8936002)(99286004)(71200400001)(71190400001)(83716004)(8676002)(6506007)(105586002)(106356001)(486006)(7736002);DIR:OUT;SFP:1102;SCL:1;SRVR:SN6PR04MB4750;H:SN6PR04MB4527.namprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: /ZUf1hHDcj0RuumbcWJGEMxU4nW77pGcDLeR2njeksAXHjkLcKThppRnXclMDHkVA+rHY3n/25UCNB8PXTrPfOX3TlrKaYuu1shCaznxzuV2+eagjOYS611FtBAvRm0LCCkWiEh+VytsczoU2p1KsNrfSi5cj835ANPijPB05Lb7tUvkaTBHZOmuGJlpfYgGVhdeSNzXXcaWug2mItqQXoS5nz3P3NHU9H3xbUAMHzmLA7S1smxZYXOvlZH03VP53dVG0EtSodKsyKyGzrw9xHC8+ya43fxtwXsjts1on6HI90Kv4bbwUm5kNMPRZXGwzkT7OY6SI9gsPLogYu6sdSfCvOi+H/iryFhZCZnqbQX7wxgR4uYpNM5h1kLeCvyI0DwbN3dk+FFZ3Nd8aK9WGb6rLYZZwqNVnKFp3wenYbM=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <BC535CF2F30B7D4DBC00ADB79785460C@namprd04.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Mon, 15 Apr 2019 23:36:52 -0400
+Received: by smtp.codeaurora.org (Postfix, from userid 1000)
+        id C73E7608D4; Tue, 16 Apr 2019 03:36:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1555385811;
+        bh=l0tY0NqVwdKLYiFp6PZGQV9aQNteT7tjL8QZIZ6IJhA=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=GQkN3Gahycr9yPm776IJQlgwitoDd/YeNWmAY6Auls46/7fshM0TCn5QuCmVp1JRL
+         llqza70Hv0jXEsz2K97grbOQhBGIB20143tEuB7pxy5vHDcKyM/+RWz/osoQn+8dk4
+         3oeOPpGRihJZvg9lHIusxfZvq0zYfuANdrI7TxIg=
+Received: from potku.adurom.net (88-114-240-156.elisa-laajakaista.fi [88.114.240.156])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        (Authenticated sender: kvalo@smtp.codeaurora.org)
+        by smtp.codeaurora.org (Postfix) with ESMTPSA id 81428608D4;
+        Tue, 16 Apr 2019 03:36:49 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=codeaurora.org;
+        s=default; t=1555385811;
+        bh=l0tY0NqVwdKLYiFp6PZGQV9aQNteT7tjL8QZIZ6IJhA=;
+        h=From:To:Cc:Subject:References:Date:In-Reply-To:From;
+        b=GQkN3Gahycr9yPm776IJQlgwitoDd/YeNWmAY6Auls46/7fshM0TCn5QuCmVp1JRL
+         llqza70Hv0jXEsz2K97grbOQhBGIB20143tEuB7pxy5vHDcKyM/+RWz/osoQn+8dk4
+         3oeOPpGRihJZvg9lHIusxfZvq0zYfuANdrI7TxIg=
+DMARC-Filter: OpenDMARC Filter v1.3.2 smtp.codeaurora.org 81428608D4
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; dmarc=none (p=none dis=none) header.from=codeaurora.org
+Authentication-Results: pdx-caf-mail.web.codeaurora.org; spf=none smtp.mailfrom=kvalo@codeaurora.org
+From:   Kalle Valo <kvalo@codeaurora.org>
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>
+Cc:     Ping-Ke Shih <pkshih@realtek.com>,
+        "David S. Miller" <davem@davemloft.net>,
+        linux-wireless@vger.kernel.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH wireless-drivers] rtlwifi: rtl8723ae: Fix missing break in switch statement
+References: <20190416003626.GA16834@embeddedor>
+Date:   Tue, 16 Apr 2019 06:36:46 +0300
+In-Reply-To: <20190416003626.GA16834@embeddedor> (Gustavo A. R. Silva's
+        message of "Mon, 15 Apr 2019 19:36:26 -0500")
+Message-ID: <87h8ay8vu9.fsf@kamboji.qca.qualcomm.com>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/24.5 (gnu/linux)
 MIME-Version: 1.0
-X-OriginatorOrg: wdc.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 668f3735-bba0-431b-6f34-08d6c21c6c8c
-X-MS-Exchange-CrossTenant-originalarrivaltime: 16 Apr 2019 03:34:25.4378
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b61c8803-16f3-4c35-9b17-6f65f441df86
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: SN6PR04MB4750
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-TG9va3MgZ29vZC4NCg0KUmV2aWV3ZWQtYnk6IENoYWl0YW55YSBLdWxrYXJuaSA8Y2hhaXRhbnlh
-Lmt1bGthcm5pQHdkYy5jb20+DQoNCu+7v09uIDQvMTUvMTksIDg6MjggUE0sICJNYXJjb3MgUGF1
-bG8gZGUgU291emEiIDxtYXJjb3Muc291emEub3JnQGdtYWlsLmNvbT4gd3JvdGU6DQoNCiAgICBO
-b3cgZG9jdW1lbnRlZCBmdW5jdGlvbnMgb2YgYmxrLW1xLmMgd2lsbCBhcHBlYXIgaW4gdGhlIG9m
-ZmljaWFsIGtlcm5lbA0KICAgIGRvY3VtZW50YXRpb24uDQogICAgDQogICAgU2lnbmVkLW9mZi1i
-eTogTWFyY29zIFBhdWxvIGRlIFNvdXphIDxtYXJjb3Muc291emEub3JnQGdtYWlsLmNvbT4NCiAg
-ICAtLS0NCiAgICANCiAgICAgTm8gY2hhbmdlcyBmcm9tIHYxLg0KICAgIA0KICAgICBEb2N1bWVu
-dGF0aW9uL2NvcmUtYXBpL2tlcm5lbC1hcGkucnN0IHwgNiArKysrKysNCiAgICAgMSBmaWxlIGNo
-YW5nZWQsIDYgaW5zZXJ0aW9ucygrKQ0KICAgIA0KICAgIGRpZmYgLS1naXQgYS9Eb2N1bWVudGF0
-aW9uL2NvcmUtYXBpL2tlcm5lbC1hcGkucnN0IGIvRG9jdW1lbnRhdGlvbi9jb3JlLWFwaS9rZXJu
-ZWwtYXBpLnJzdA0KICAgIGluZGV4IDcxZjVkMmZlMzliNy4uY2MzMjM0ODBjZTBlIDEwMDY0NA0K
-ICAgIC0tLSBhL0RvY3VtZW50YXRpb24vY29yZS1hcGkva2VybmVsLWFwaS5yc3QNCiAgICArKysg
-Yi9Eb2N1bWVudGF0aW9uL2NvcmUtYXBpL2tlcm5lbC1hcGkucnN0DQogICAgQEAgLTI3Niw2ICsy
-NzYsMTIgQEAgQmxvY2sgRGV2aWNlcw0KICAgICAuLiBrZXJuZWwtZG9jOjogYmxvY2svYmxrLW1h
-cC5jDQogICAgICAgIDpleHBvcnQ6DQogICAgIA0KICAgICsuLiBrZXJuZWwtZG9jOjogYmxvY2sv
-YmxrLW1xLmMNCiAgICArICAgOmV4cG9ydDoNCiAgICArDQogICAgKy4uIGtlcm5lbC1kb2M6OiBi
-bG9jay9ibGstbXEuYw0KICAgICsgICA6aW50ZXJuYWw6DQogICAgKw0KICAgICAuLiBrZXJuZWwt
-ZG9jOjogYmxvY2svYmxrLXN5c2ZzLmMNCiAgICAgICAgOmludGVybmFsOg0KICAgICANCiAgICAt
-LSANCiAgICAyLjE2LjQNCiAgICANCiAgICANCg0K
+"Gustavo A. R. Silva" <gustavo@embeddedor.com> writes:
+
+> Add missing break statement in order to prevent the code from falling
+> through to case 0x1025, and erroneously setting rtlhal->oem_id to
+> RT_CID_819X_ACER when rtlefuse->eeprom_svid is equal to 0x10EC and
+> none of the cases in switch (rtlefuse->eeprom_smid) match.
+>
+> This bug was found thanks to the ongoing efforts to enable
+> -Wimplicit-fallthrough.
+>
+> Fixes: 238ad2ddf34b ("rtlwifi: rtl8723ae: Clean up the hardware info routine")
+> Cc: stable@vger.kernel.org
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
+
+You have marked this for wireless-drivers but the commit is 2.5 years
+old, so I think wireless-drivers-next is more approriate.
+
+-- 
+Kalle Valo
