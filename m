@@ -2,94 +2,246 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 135CCC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:35:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C40FC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:35:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DE56F206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:35:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D092320693
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 10:35:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="i6ViKele"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729159AbfDPKfT (ORCPT
+        id S1728987AbfDPKfj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 06:35:19 -0400
-Received: from [110.188.70.11] ([110.188.70.11]:40646 "EHLO spam2.hygon.cn"
-        rhost-flags-FAIL-FAIL-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727783AbfDPKfT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 06:35:19 -0400
-Received: from MK-DB.hygon.cn ([172.23.18.60])
-        by spam2.hygon.cn with ESMTP id x3GAScAS069530;
-        Tue, 16 Apr 2019 18:28:38 +0800 (GMT-8)
-        (envelope-from fenghao@hygon.cn)
-Received: from cncheex02.Hygon.cn ([172.23.18.12])
-        by MK-DB.hygon.cn with ESMTP id x3GASTDC034698;
-        Tue, 16 Apr 2019 18:28:29 +0800 (GMT-8)
-        (envelope-from fenghao@hygon.cn)
-Received: from [172.30.20.134] (172.23.18.44) by cncheex02.Hygon.cn
- (172.23.18.12) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1466.3; Tue, 16 Apr
- 2019 18:28:34 +0800
-Subject: Re: [PATCH 0/6] Add Hygon SEV support
-To:     Paolo Bonzini <pbonzini@redhat.com>,
-        Pascal Van Leeuwen <pvanleeuwen@insidesecure.com>,
-        "'Tom Lendacky '" <thomas.lendacky@amd.com>,
-        "'Gary Hook '" <gary.hook@amd.com>,
-        "'Herbert Xu '" <herbert@gondor.apana.org.au>,
-        "' David S. Miller '" <davem@davemloft.net>,
-        "'Janakarajan Natarajan '" <Janakarajan.Natarajan@amd.com>,
-        "'Joerg Roedel '" <joro@8bytes.org>,
-        =?UTF-8?B?JyBSYWRpbSBLcsSNbcOhxZkgJw==?= <rkrcmar@redhat.com>,
-        "'Thomas Gleixner '" <tglx@linutronix.de>,
-        "'Ingo Molnar '" <mingo@redhat.com>,
-        "'Borislav Petkov '" <bp@alien8.de>,
-        "' H. Peter Anvin '" <hpa@zytor.com>
-CC:     "'Zhaohui Du '" <duzhaohui@hygon.cn>,
-        "'Zhiwei Ying '" <yingzhiwei@hygon.cn>,
-        "'Wen Pu '" <puwen@hygon.cn>, "x86@kernel.org" <x86@kernel.org>,
-        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
-        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-References: <1555329868-17895-1-git-send-email-fenghao@hygon.cn>
- <3a1288ab-8e18-5421-05b4-4f4ef2fc531c@redhat.com>
- <AM6PR09MB35237F925CF4C82FBBA53862D22B0@AM6PR09MB3523.eurprd09.prod.outlook.com>
- <fda47663-9536-0d36-5a0e-c6da77e21209@redhat.com>
- <AM6PR09MB35234C86C0502E1FAAB3A305D2240@AM6PR09MB3523.eurprd09.prod.outlook.com>
- <985108b1-6d51-4458-48de-c5b96c5f14f9@redhat.com>
-From:   Hao Feng <fenghao@hygon.cn>
-Message-ID: <992c3a3f-8eb2-5286-c9f7-7940fc5ccf55@hygon.cn>
-Date:   Tue, 16 Apr 2019 18:28:33 +0800
+        Tue, 16 Apr 2019 06:35:39 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:33575 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727164AbfDPKfj (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 06:35:39 -0400
+Received: by mail-ed1-f68.google.com with SMTP id d55so16644523ede.0;
+        Tue, 16 Apr 2019 03:35:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=subject:to:cc:references:from:openpgp:autocrypt:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=osV4uSGmKNOTKTIpptbN662Bf1zq9BgJbORpKjcayAE=;
+        b=i6ViKelexvmIdXbdFV3CXBY7aakbmlyHH1W3UPn4Y1TL6xapVKyJ+9Hk1hDQwTMu/j
+         z2KF59DSD9l2aeQjbGJ3IYBjpkcxk2St4yAYtP3o9LC5x068w+mtHAkdNun3lHpVvbPa
+         cpLKzAeL3KXi87NHxIZmdIAvDCxjalcobQqPD7vMfN/QbrjhduLeWDODqAbrGcKYBha4
+         ZgsJCLuqhYa9chGQF8Q5qcXuZhY8CztXJBaXeMjEcn3/G4OrJ9Bpol+lcY4eq9O0meRx
+         sgklRwn2i/elPt9fCLtd/NRghoAUphvKk6v5TlH/aZTx8vMVX6vcPhPDzNppTTfTO5JM
+         OCFA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:openpgp:autocrypt
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=osV4uSGmKNOTKTIpptbN662Bf1zq9BgJbORpKjcayAE=;
+        b=q9G/x8mTocGNI73nQOQUqjzlNN8mqGjBP5C740bvzcVfYWxDkxPBTaCGGfXBCW5mZU
+         QXCD8zqBk6Y55pyJicDz2YwjCtcPfxpYw2fDADsbhZsAv190YQJJXtZK8E67d/29G6Nl
+         NriTKZjDpQF+EQpgLkpFQZOouJcP5TXwsKq2o25YHd2yZzuTbNeTg6PExwZ7SeF0HnIY
+         p5mgy0Bo+OPwHgXIoJ7tk27EABXQSgr1FLr2k4hzN8efcYXq6OdFkOxP5rEtxKAu3UOK
+         R13oIcdRGygmrFS1nvvUS6ju2SOPAkud54vsr+P1AO/YS+IrhcUjA48bw2qHpm7NmhKn
+         aOYg==
+X-Gm-Message-State: APjAAAU5GTfd4n1WSHwqDdAXH0HLHa4T16pABIFwXZ0JvNggpic5SQTu
+        nzjs5+/4tBJPjvdV8Hjsnz4=
+X-Google-Smtp-Source: APXvYqygIRrGsG4pGmNzvhv4OUL3AIHx3AWVoHJHBJXco8FKymCU7xKG9PUwlNE4LkVvQyDlqvREhw==
+X-Received: by 2002:a17:906:a3d3:: with SMTP id ca19mr31742702ejb.78.1555410936244;
+        Tue, 16 Apr 2019 03:35:36 -0700 (PDT)
+Received: from ziggy.stardust ([37.223.141.112])
+        by smtp.gmail.com with ESMTPSA id i12sm9569557ejp.57.2019.04.16.03.35.34
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Apr 2019 03:35:35 -0700 (PDT)
+Subject: Re: [PATCH v9] arm64: dts: Add Mediatek SoC MT8183 and evaluation
+ board dts and Makefile
+To:     Erin Lo <erin.lo@mediatek.com>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        devicetree@vger.kernel.org,
+        srv_heupstream <srv_heupstream@mediatek.com>,
+        linux-kernel@vger.kernel.org, linux-serial@vger.kernel.org,
+        linux-mediatek@lists.infradead.org,
+        linux-arm-kernel@lists.infradead.org, mars.cheng@mediatek.com,
+        eddie.huang@mediatek.com, Ben Ho <Ben.Ho@mediatek.com>,
+        Seiya Wang <seiya.wang@mediatek.com>,
+        Weiyi Lu <weiyi.lu@mediatek.com>,
+        Hsin-Hsiung Wang <hsin-hsiung.wang@mediatek.com>,
+        Stephen Boyd <sboyd@codeaurora.org>
+References: <1552898552-13045-2-git-send-email-erin.lo@mediatek.com>
+ <201903190247.QZDwfpLQ%lkp@intel.com>
+ <135d7e3a-d5a3-0f13-05c9-4a8ec0524256@gmail.com>
+ <1555406836.27018.10.camel@mtksdaap41>
+From:   Matthias Brugger <matthias.bgg@gmail.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=matthias.bgg@gmail.com; prefer-encrypt=mutual; keydata=
+ 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
+ jrHWeQEI2ucSKsNa8FllDmG/fQ==
+Message-ID: <f18dbb3a-c141-ebb8-87f3-a6c437800136@gmail.com>
+Date:   Tue, 16 Apr 2019 12:35:34 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <985108b1-6d51-4458-48de-c5b96c5f14f9@redhat.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <1555406836.27018.10.camel@mtksdaap41>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Originating-IP: [172.23.18.44]
-X-ClientProxiedBy: cncheex01.Hygon.cn (172.23.18.10) To cncheex02.Hygon.cn
- (172.23.18.12)
-X-MAIL: spam2.hygon.cn x3GAScAS069530
-X-DNSRBL: 
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/16/19 4:09 PM, Paolo Bonzini wrote:
-> Useful does not mean secure, does it?  PKZIP encryption was certainly
-> useful back in the day, but it was not secure.
+
+
+On 16/04/2019 11:27, Erin Lo wrote:
+> On Tue, 2019-04-16 at 10:29 +0200, Matthias Brugger wrote:
+>>
+>> On 18/03/2019 19:42, kbuild test robot wrote:
+>>> Hi Erin,
+>>>
+>>> Thank you for the patch! Yet something to improve:
+>>>
+>>> [auto build test ERROR on robh/for-next]
+>>> [also build test ERROR on v5.1-rc1 next-20190318]
+>>> [if your patch is applied to the wrong git tree, please drop us a note to help improve the system]
+>>>
+>>> url:    https://github.com/0day-ci/linux/commits/Erin-Lo/arm64-dts-Add-Mediatek-SoC-MT8183-and-evaluation-board-dts-and-Makefile/20190318-170422
+>>> base:   https://git.kernel.org/pub/scm/linux/kernel/git/robh/linux.git for-next
+>>> config: arm64-allyesconfig (attached as .config)
+>>> compiler: aarch64-linux-gnu-gcc (Debian 7.2.0-11) 7.2.0
+>>> reproduce:
+>>>         wget https://raw.githubusercontent.com/intel/lkp-tests/master/sbin/make.cross -O ~/bin/make.cross
+>>>         chmod +x ~/bin/make.cross
+>>>         # save the attached .config to linux build tree
+>>>         GCC_VERSION=7.2.0 make.cross ARCH=arm64 
+>>>
+>>> All errors (new ones prefixed by >>):
+>>>
+>>>    In file included from arch/arm64/boot/dts/mediatek/mt8183-evb.dts:9:0:
+>>>>> arch/arm64/boot/dts/mediatek/mt8183.dtsi:8:10: fatal error: dt-bindings/clock/mt8183-clk.h: No such file or directory
+>>>     #include <dt-bindings/clock/mt8183-clk.h>
+>>>              ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+>>>    compilation terminated.
+>>>
+>>> vim +8 arch/arm64/boot/dts/mediatek/mt8183.dtsi
+>>>
+>>>    > 8	#include <dt-bindings/clock/mt8183-clk.h>
+>>>      9	#include <dt-bindings/interrupt-controller/arm-gic.h>
+>>>     10	#include <dt-bindings/interrupt-controller/irq.h>
+>>>     11	
+>>>
+>>
+>> Stephen queued the corresponding patch for v5.2.
+>> I propose we wait for v5.2-rc1 and then apply the basic support and the others
+>> based on this one.
+>>
+>> Erin: There are may mt8183 dts patches floating around that depend on this or
+>> more patches. Can you coordinate with your colleagues to resend them as a
+>> series? Then it will be easier for me to take them for v5.3, as some have
+>> dependencies on other series etc.
+>>
+>> Thanks a lot.
+>> Matthias
+> 
+> OK, I will coordinate with my colleagues to resend mt8183 dts patches as
+> a series base on v5.2-rc1 when v5.2-rc1 release.
+> Since we want to send this series more confident so they still send
+> separate patch in v5.1 just for review in advance. Is that ok for you?
 > 
 
-Thanks for the comments, quite understand the concern about security
-because it is indeed so important. Many people may not hear about
-SM2, so it is natural to doubt its security. Actually SM2 is not just China
-standard, it is also ISO/IEC standard, this fact should give us some
-confidence about its security.
-
-You can get more information about SM2 from below ISO/IEC specification.
-https://www.iso.org/obp/ui/#iso:std:iso-iec:14888:-3:ed-4:v1:en
-
--- 
-Thanks
-Harry
+Sure no problem. Thanks for helping!
