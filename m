@@ -2,263 +2,133 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 798B9C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:57:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C01C7C282DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:57:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 418222073F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:57:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 922B02073F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:57:55 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730389AbfDPT5u (ORCPT
+        id S1730458AbfDPT5y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 16 Apr 2019 15:57:54 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:45206 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1730377AbfDPT5u (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 16 Apr 2019 15:57:50 -0400
-Received: from mout.kundenserver.de ([217.72.192.74]:47829 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728770AbfDPT5n (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 15:57:43 -0400
-Received: from orion.localdomain ([95.117.99.70]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1MFba4-1h3nQ232Q2-00H953; Tue, 16 Apr 2019 21:57:40 +0200
-From:   "Enrico Weigelt, metux IT consult" <info@metux.net>
-To:     linux-kernel@vger.kernel.org
-Cc:     dmitry.torokhov@gmail.com, linux-input@vger.kernel.org
-Subject: [PATCH 3/4] input: keyboard: gpio_keys_polled: use gpio lookup table
-Date:   Tue, 16 Apr 2019 21:57:24 +0200
-Message-Id: <1555444645-15156-4-git-send-email-info@metux.net>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1555444645-15156-1-git-send-email-info@metux.net>
-References: <1555444645-15156-1-git-send-email-info@metux.net>
-X-Provags-ID: V03:K1:CPdYnkIO5e3+kGA3V5cgWPn219nnvvi9Vdoo5187xAQ3g86z9ws
- qx6blkrm47RdLkPQQIivKqVU7Wl4lX20IoBHCZehiAAdhZY9CPjX0BlqdqObnLavXuLjl2W
- wfKdKd/6kk4wm9v4nEw0c7CbZtsrE7lG+7krm8I24pm6jdBaBgxWuiMUE4i3GDLMB75ertY
- a+4Jdh8OrPuBX2MVy3X3A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:7gvHo7+nZ8g=:KlQ5qqE6dQ5s7ISN0gBmqb
- 0pmgssOVIDVjTQlfZSA8qsNRaMT/gBzaVsaXv71O56PuElkEAqk4mJVB2zdo89UchHmXAdB22
- mWGnh6rZqMtQccU+Cyq710hl8vMZ62iulBU/X7EdAnPEnAoj/z/mHLHoMPa32xQ0a/KXH6GW/
- JiEvfnOmF62fnpQACGo8JeumuQiVMSzy3684J/x67lsiuryVv5HQnejeHZ/AkdAtu2cXZbD+A
- SErWcew2FK+PFrACgddyl/fKe8nPQplf85G2jmSjA4687uVCVNb5WIIIjUKBPKAb33zAHRg3a
- iiCdaL7M1zzOzP3VhPYcpLNa0vnCEkJIeqW5ytij6HUjyTLal9/6aJQzVIZ4thq1shTklcW0B
- aBDscLcd/h+WL2t8iyR75crHfudk+iOJwdbfcB1HmSNYHjZl7/HqDxtmJ7pZdRqEtX0cr36IE
- 4cYw+F61D0/590dRPNdB7Twq5b0YSpVWeOle3xapSylhhebKQbky5MEddAOSUxn209r0UVKOt
- 5mNso6azkUQAHb8FBH/zY/lW/jNBSTlWCYqF7J8hVipNRfYS2Rljx5mqqKh0Af8ROFCOYcKFK
- eg3QmWUbvBezfCv1ks/b1BKRqX9HqIODUqaUzmJJFtx8BRxI4WMTiPBzkdnicXAInnjgi7bay
- o98fcCuRx/Ox/NqhgDgPh5ZgSX9RWnxUacEB2jvUYZKjkoUQoAvdZW9f+rM5zQ/JdYqyTYokS
- VbutjSQ58A6zI/GIAbsRGK3Bj3Pyp+3i9ephMw==
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id D6EA7F74CE;
+        Tue, 16 Apr 2019 19:57:49 +0000 (UTC)
+Received: from redhat.com (unknown [10.20.6.236])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 883AF608C7;
+        Tue, 16 Apr 2019 19:57:38 +0000 (UTC)
+Date:   Tue, 16 Apr 2019 15:57:35 -0400
+From:   Jerome Glisse <jglisse@redhat.com>
+To:     Boaz Harrosh <boaz@plexistor.com>
+Cc:     Dan Williams <dan.j.williams@intel.com>,
+        Kent Overstreet <kent.overstreet@gmail.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
+        linux-block@vger.kernel.org, Linux MM <linux-mm@kvack.org>,
+        John Hubbard <jhubbard@nvidia.com>, Jan Kara <jack@suse.cz>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Johannes Thumshirn <jthumshirn@suse.de>,
+        Christoph Hellwig <hch@lst.de>, Jens Axboe <axboe@kernel.dk>,
+        Ming Lei <ming.lei@redhat.com>, Jason Gunthorpe <jgg@ziepe.ca>,
+        Matthew Wilcox <willy@infradead.org>,
+        Steve French <sfrench@samba.org>, linux-cifs@vger.kernel.org,
+        Yan Zheng <zyan@redhat.com>, Sage Weil <sage@redhat.com>,
+        Ilya Dryomov <idryomov@gmail.com>,
+        Alex Elder <elder@kernel.org>, ceph-devel@vger.kernel.org,
+        Eric Van Hensbergen <ericvh@gmail.com>,
+        Latchesar Ionkov <lucho@ionkov.net>,
+        Mike Marshall <hubcap@omnibond.com>,
+        Martin Brandenburg <martin@omnibond.com>,
+        devel@lists.orangefs.org,
+        Dominique Martinet <asmadeus@codewreck.org>,
+        v9fs-developer@lists.sourceforge.net, Coly Li <colyli@suse.de>,
+        linux-bcache@vger.kernel.org,
+        Ernesto =?iso-8859-1?Q?A=2E_Fern=E1ndez?= 
+        <ernesto.mnd.fernandez@gmail.com>
+Subject: Re: [PATCH v1 00/15] Keep track of GUPed pages in fs and block
+Message-ID: <20190416195735.GE21526@redhat.com>
+References: <20190411210834.4105-1-jglisse@redhat.com>
+ <2c124cc4-b97e-ee28-2926-305bc6bc74bd@plexistor.com>
+ <20190416185922.GA12818@kmo-pixel>
+ <CAPcyv4jLrQ6evLAJzsASh=H6Tzx8E1oiF+YR3L2fOpbZYNUWGg@mail.gmail.com>
+ <ccac6c5a-7120-0455-88de-ca321b01e825@plexistor.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <ccac6c5a-7120-0455-88de-ca321b01e825@plexistor.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Tue, 16 Apr 2019 19:57:50 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Support the recently introduced gpio lookup tables for
-attaching to gpio lines. So, harcoded gpio numbers aren't
-needed anymore.
+On Tue, Apr 16, 2019 at 10:28:40PM +0300, Boaz Harrosh wrote:
+> On 16/04/19 22:12, Dan Williams wrote:
+> > On Tue, Apr 16, 2019 at 11:59 AM Kent Overstreet
+> > <kent.overstreet@gmail.com> wrote:
+> <>
+> > This all reminds of the failed attempt to teach the block layer to
+> > operate without pages:
+> > 
+> > https://lore.kernel.org/lkml/20150316201640.33102.33761.stgit@dwillia2-desk3.amr.corp.intel.com/
+> > 
+> 
+> Exactly why I want to make sure it is just a [pointer | flag] and not any kind of pfn
+> type. Let us please not go there again?
+> 
+> >>
+> >> Question though - why do we need a flag for whether a page is a GUP page or not?
+> >> Couldn't the needed information just be determined by what range the pfn is not
+> >> (i.e. whether or not it has a struct page associated with it)?
+> > 
+> > That amounts to a pfn_valid() check which is a bit heavier than if we
+> > can store a flag in the bv_pfn entry directly.
+> > 
+> > I'd say create a new PFN_* flag, and make bv_pfn a 'pfn_t' rather than
+> > an 'unsigned long'.
+> > 
+> 
+> No, please please not. This is not a pfn and not a pfn_t. It is a page-ptr
+> and a flag that says where/how to put_page it. IE I did a GUP on this page
+> please do a PUP on this page instead of regular put_page. So no where do I mean
+> pfn or pfn_t in this code. Then why?
+> 
+> > That said, I'm still in favor of Jan's proposal to just make the
+> > bv_page semantics uniform. Otherwise we're complicating this core
+> > infrastructure for some yet to be implemented GPU memory management
+> > capabilities with yet to be determined value. Circle back when that
+> > value is clear, but in the meantime fix the GUP bug.
+> > 
+> 
+> I agree there are simpler ways to solve the bugs at hand then
+> to system wide separate get_user_page from get_page and force all put_user
+> callers to remember what to do. Is there some Document explaining the
+> all design of where this is going?
+> 
 
-Cc: Dmitry Torokhov <dmitry.torokhov@gmail.com>
-Cc: linux-input@vger.kernel.org
-Signed-off-by: Enrico Weigelt, metux IT consult <info@metux.net>
----
- drivers/input/keyboard/gpio_keys_polled.c | 167 +++++++++++++++++++++---------
- 1 file changed, 119 insertions(+), 48 deletions(-)
+A very long thread on this:
 
-diff --git a/drivers/input/keyboard/gpio_keys_polled.c b/drivers/input/keyboard/gpio_keys_polled.c
-index 3312186..3f773b2 100644
---- a/drivers/input/keyboard/gpio_keys_polled.c
-+++ b/drivers/input/keyboard/gpio_keys_polled.c
-@@ -24,6 +24,7 @@
- #include <linux/platform_device.h>
- #include <linux/gpio.h>
- #include <linux/gpio/consumer.h>
-+#include <linux/gpio/machine.h>
- #include <linux/gpio_keys.h>
- #include <linux/property.h>
- 
-@@ -227,6 +228,119 @@ static void gpio_keys_polled_set_abs_params(struct input_dev *input,
- };
- MODULE_DEVICE_TABLE(of, gpio_keys_polled_of_match);
- 
-+static struct gpio_desc *gpio_keys_polled_get_gpiod_fwnode(
-+	struct device *dev,
-+	int idx,
-+	const char *desc)
-+{
-+	struct gpio_desc *gpiod;
-+	struct fwnode_handle *child;
-+	int x;
-+
-+	/* get the idx'th child node */
-+	child = device_get_next_child_node(dev, NULL);
-+	while (child && x) {
-+		child = device_get_next_child_node(dev, child);
-+		x--;
-+	}
-+
-+	if (!child) {
-+		dev_err(dev, "missing oftree child node #%d\n", idx);
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	gpiod = devm_fwnode_get_gpiod_from_child(dev,
-+						 NULL,
-+						 child,
-+						 GPIOD_IN,
-+						 desc);
-+	if (IS_ERR(gpiod)) {
-+		if (PTR_ERR(gpiod) != -EPROBE_DEFER)
-+			dev_err(dev,
-+				"failed to get gpio: %ld\n",
-+				PTR_ERR(gpiod));
-+		fwnode_handle_put(child);
-+		return gpiod;
-+	}
-+
-+	return gpiod;
-+}
-+
-+static struct gpio_desc *gpio_keys_polled_get_gpiod_legacy(
-+	struct device *dev,
-+	int idx,
-+	const struct gpio_keys_button *button)
-+{
-+	/*
-+	 * Legacy GPIO number so request the GPIO here and
-+	 * convert it to descriptor.
-+	 */
-+	unsigned int flags = GPIOF_IN;
-+	struct gpio_desc *gpiod;
-+	int error;
-+
-+	dev_info(dev, "hardcoded gpio IDs are deprecated.\n");
-+
-+	if (button->active_low)
-+		flags |= GPIOF_ACTIVE_LOW;
-+
-+	error = devm_gpio_request_one(dev, button->gpio,
-+			flags, button->desc ? : DRV_NAME);
-+	if (error) {
-+		dev_err(dev,
-+			"unable to claim gpio %u, err=%d\n",
-+			button->gpio, error);
-+		return ERR_PTR(error);
-+	}
-+
-+	gpiod = gpio_to_desc(button->gpio);
-+	if (!gpiod) {
-+		dev_err(dev,
-+			"unable to convert gpio %u to descriptor\n",
-+			button->gpio);
-+		return ERR_PTR(-EINVAL);
-+	}
-+
-+	return gpiod;
-+}
-+
-+static struct gpio_desc *gpio_keys_polled_get_gpiod(
-+	struct device *dev,
-+	int idx,
-+	const struct gpio_keys_button *button)
-+{
-+	struct gpio_desc *gpiod = NULL;
-+	int error;
-+
-+	/* No legacy static platform data - use oftree */
-+	if (!dev_get_platdata(dev)) {
-+		return gpio_keys_polled_get_gpiod_fwnode(
-+			dev, idx, button->desc);
-+	}
-+
-+	gpiod = devm_gpiod_get_index(dev, NULL, idx, GPIOF_IN);
-+
-+	if (!IS_ERR(gpiod)) {
-+		dev_info(dev, "picked gpiod idx %d from gpio table\n", idx);
-+		gpiod_set_consumer_name(gpiod, button->desc ? : DRV_NAME);
-+		return gpiod;
-+	}
-+
-+	if (PTR_ERR(gpiod) != -ENOENT) {
-+		dev_err(dev, "failed fetching gpiod #%d: %d\n",
-+			idx, PTR_ERR(gpiod));
-+		return gpiod;
-+	}
-+
-+	/* Use legacy gpio id, if defined */
-+	if (gpio_is_valid(button->gpio)) {
-+		return gpio_keys_polled_get_gpiod_legacy(
-+			dev, idx, button);
-+	}
-+
-+	return ERR_PTR(-ENOENT);
-+}
-+
- static int gpio_keys_polled_probe(struct platform_device *pdev)
- {
- 	struct device *dev = &pdev->dev;
-@@ -291,57 +405,14 @@ static int gpio_keys_polled_probe(struct platform_device *pdev)
- 
- 		if (button->wakeup) {
- 			dev_err(dev, DRV_NAME " does not support wakeup\n");
--			fwnode_handle_put(child);
- 			return -EINVAL;
- 		}
- 
--		if (!dev_get_platdata(dev)) {
--			/* No legacy static platform data */
--			child = device_get_next_child_node(dev, child);
--			if (!child) {
--				dev_err(dev, "missing child device node\n");
--				return -EINVAL;
--			}
--
--			bdata->gpiod = devm_fwnode_get_gpiod_from_child(dev,
--								NULL, child,
--								GPIOD_IN,
--								button->desc);
--			if (IS_ERR(bdata->gpiod)) {
--				error = PTR_ERR(bdata->gpiod);
--				if (error != -EPROBE_DEFER)
--					dev_err(dev,
--						"failed to get gpio: %d\n",
--						error);
--				fwnode_handle_put(child);
--				return error;
--			}
--		} else if (gpio_is_valid(button->gpio)) {
--			/*
--			 * Legacy GPIO number so request the GPIO here and
--			 * convert it to descriptor.
--			 */
--			unsigned flags = GPIOF_IN;
--
--			if (button->active_low)
--				flags |= GPIOF_ACTIVE_LOW;
--
--			error = devm_gpio_request_one(dev, button->gpio,
--					flags, button->desc ? : DRV_NAME);
--			if (error) {
--				dev_err(dev,
--					"unable to claim gpio %u, err=%d\n",
--					button->gpio, error);
--				return error;
--			}
--
--			bdata->gpiod = gpio_to_desc(button->gpio);
--			if (!bdata->gpiod) {
--				dev_err(dev,
--					"unable to convert gpio %u to descriptor\n",
--					button->gpio);
--				return -EINVAL;
--			}
-+		bdata->gpiod = gpio_keys_polled_get_gpiod(dev, i, button);
-+
-+		if (IS_ERR(bdata->gpiod)) {
-+			dev_err(dev, "failed to fetch gpiod #%d\n", i);
-+			return PTR_ERR(bdata->gpiod);
- 		}
- 
- 		bdata->last_state = -1;
--- 
-1.9.1
+https://lkml.org/lkml/2018/12/3/1128
 
+especialy all the reply to this first one
+
+There is also:
+
+https://lkml.org/lkml/2019/3/26/1395
+https://lwn.net/Articles/753027/
+
+Cheers,
+Jérôme
