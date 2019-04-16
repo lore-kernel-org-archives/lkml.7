@@ -2,197 +2,132 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DDF2C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:24:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C360C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:24:59 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C2AE7206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:24:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 599B5206BA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:24:59 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="FM5V4Py8"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="LnjvjKG4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728559AbfDPHYu (ORCPT
+        id S1728579AbfDPHY6 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 03:24:50 -0400
-Received: from mail-ot1-f66.google.com ([209.85.210.66]:40549 "EHLO
-        mail-ot1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727828AbfDPHYu (ORCPT
+        Tue, 16 Apr 2019 03:24:58 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:46743 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727828AbfDPHY5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 03:24:50 -0400
-Received: by mail-ot1-f66.google.com with SMTP id t8so16746634otp.7
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 00:24:49 -0700 (PDT)
+        Tue, 16 Apr 2019 03:24:57 -0400
+Received: by mail-ed1-f66.google.com with SMTP id d1so16939823edd.13
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 00:24:56 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=chromium.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=GfJbj3592HFAwS7sdfwgYwNJSeaElGORqUj9VQPS7Yc=;
-        b=FM5V4Py8RkZJGeFFHn6B/aweYNJj0IZn6J4x5pKCTEqYobR2ZiIVwa7CGqqMPoLvQy
-         FtRSkcnwY3aFDLVjJy/ByhOPFWptPIPutAc7gnB/bGJJOx/ifAppTL2QAupL/NsWIRSp
-         X/b+VKIiAHHwFIJAYOIZmi45AJ+ZYUkjiwYaM=
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=++7GNxojVLlwznIFjjwVt5D6h/jm9btpA+lc+r10FF4=;
+        b=LnjvjKG4+1gvHHKqt+GrmossZ+Cam5CQvr306UV2C0YVdAYmVbHh5mSJ1O7MmSDLl1
+         MAxudnSTnaDkvolyi9OAfMwZsznm6XasRIZWvr+dLj5w4NHDdEhehn6zTMp5DG3soFhM
+         pdug8gA/L4BbwQE1pf2EIimiIlFuVpRL6t0o0=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=GfJbj3592HFAwS7sdfwgYwNJSeaElGORqUj9VQPS7Yc=;
-        b=kl7zd0P0lRauic7TryDMPkYu+/llYhtqy6rdFMFd/Vq2tl12FFlYPkEGBOXly8Vh+O
-         UkxLTRUKViINrEQJ3YjLRVyPaYnEBePomYHx9ychEcViVxwlF8hCHPCY0XJEMIWfTBFt
-         U8nLT1ex3TW3jmBdskE4twUH+lFYc7wdyIrdvqVJBsAohsWSpXvYXFDAYoi83AygPSyY
-         ThjSY7cBtNFgq0LWr9kYcYyZPCgXXaqMzMVlts7y1ZIDtgAo1eZjQCx4uxiRftQ6ak9c
-         ipde899FP5prLSLyJg8qqpkzOrbh2U9d4eZWQGN0tXpZqiQG4Dc3V3sV1kdoM4YTnkP5
-         u/fQ==
-X-Gm-Message-State: APjAAAVFfiXltDHPp2FNf0NiMT+1eGAL1YiKhCTAWSBgf7C6UFBaIH2a
-        nm6b6Ip6i0sfZ7vfdeWQDooXR3Otfkc=
-X-Google-Smtp-Source: APXvYqyNLJhh2tZEnaVExG2sWCxf74YH72CdrJxaVCmhTjm/bb2xpujxl8LiGnBYJ+shszEs45Tk2w==
-X-Received: by 2002:a9d:6187:: with SMTP id g7mr49148720otk.2.1555399489203;
-        Tue, 16 Apr 2019 00:24:49 -0700 (PDT)
-Received: from mail-ot1-f52.google.com (mail-ot1-f52.google.com. [209.85.210.52])
-        by smtp.gmail.com with ESMTPSA id q9sm20359305oti.78.2019.04.16.00.24.48
-        for <linux-kernel@vger.kernel.org>
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 00:24:49 -0700 (PDT)
-Received: by mail-ot1-f52.google.com with SMTP id o74so16761988ota.3
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 00:24:48 -0700 (PDT)
-X-Received: by 2002:a9d:57c2:: with SMTP id q2mr48272947oti.313.1555399021608;
- Tue, 16 Apr 2019 00:17:01 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :in-reply-to:user-agent;
+        bh=++7GNxojVLlwznIFjjwVt5D6h/jm9btpA+lc+r10FF4=;
+        b=RIn/lAGjQ4PIYzEZ0pPBJPSmEsnqNZcEEjJxabpK3I9yHz5J2Ku+nNaHpDignJYGkA
+         IqqXwLrREJNwgd/XS907Rxa1DLnzDHGpWSA3v9jZA4jcSoJpSeFCWb8VLHdzTM/dG9af
+         fFk77moJOkmoP2BbPSXRfuQwykF1BLlC2ezCqzGWJnzS5xH35f0W44QcPIX2FJDYCKyJ
+         /goGdt6iwa/IzZuA8XDWl03JToD0tsS67c+/BgkO5OajFx9UKgH8picCBe31tXBO0vof
+         Q/2NaRu+akzp3r0DmdFfzV6pg7vEYzzPNybgPRBe2DD2Hd5AbBXWda1GCZmOu7i+nJaY
+         3Jjw==
+X-Gm-Message-State: APjAAAULlVVL9c/nvVTvxtGS8W3IwLdpKUSa6iVOtT7e6SKLQ8o3yJXV
+        iRhV9eLqzcPLj5QscCr7IYP2hg==
+X-Google-Smtp-Source: APXvYqzxkXrC1BjZF3W+95CROoGuedoLjl82otWOcyzcZcd6uaVIHO+QVl1NT16GDQFSPFEr7I38eQ==
+X-Received: by 2002:a50:eacb:: with SMTP id u11mr44725846edp.212.1555399496177;
+        Tue, 16 Apr 2019 00:24:56 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id y5sm9315547eds.7.2019.04.16.00.24.54
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 16 Apr 2019 00:24:55 -0700 (PDT)
+Date:   Tue, 16 Apr 2019 09:24:53 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Gerd Hoffmann <kraxel@redhat.com>
+Cc:     dri-devel@lists.freedesktop.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] drm: fix drm_fb_xrgb8888_to_rgb888_dstclip()
+Message-ID: <20190416072453.GL2665@phenom.ffwll.local>
+Mail-Followup-To: Gerd Hoffmann <kraxel@redhat.com>,
+        dri-devel@lists.freedesktop.org,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
+        open list <linux-kernel@vger.kernel.org>
+References: <20190411044932.13247-1-kraxel@redhat.com>
 MIME-Version: 1.0
-References: <cover.bfe197a82766125bea21dd26fd3de85893a921ac.1554380738.git-series.maxime.ripard@bootlin.com>
- <7cd913545cfc80fa9999839c62c4bf7b354a7904.1554380738.git-series.maxime.ripard@bootlin.com>
- <CAAFQd5ASMJL2_ovNeFOhCh2JoD86KMtV5XO+7OgM37ckxrxmfA@mail.gmail.com>
- <CAGb2v642__AF3iHO+d9FKazJ4=uRAQSfxAN_uCUWagH6Jz2twQ@mail.gmail.com>
- <c3ed6d00bf5642b1524ef4973f2db7ba6759fb6d.camel@collabora.com>
- <20190405151552.biesirbs35uivk7d@flea> <05078223a4098c96f6260f77e9ef2a01b966daa6.camel@collabora.com>
- <20190411155749.crdpidehjxa6edya@flea>
-In-Reply-To: <20190411155749.crdpidehjxa6edya@flea>
-From:   Tomasz Figa <tfiga@chromium.org>
-Date:   Tue, 16 Apr 2019 16:16:50 +0900
-X-Gmail-Original-Message-ID: <CAAFQd5Cz-N-7YdwVbtF9yX3LgDtG0yqD0sw6w9r47_m086=b-A@mail.gmail.com>
-Message-ID: <CAAFQd5Cz-N-7YdwVbtF9yX3LgDtG0yqD0sw6w9r47_m086=b-A@mail.gmail.com>
-Subject: Re: [PATCH RESEND v7 1/2] media: uapi: Add H264 low-level decoder API
- compound controls.
-To:     Maxime Ripard <maxime.ripard@bootlin.com>,
-        Nicolas Dufresne <nicolas.dufresne@collabora.com>
-Cc:     Chen-Yu Tsai <wens@csie.org>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Pawel Osciak <posciak@chromium.org>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        "list@263.net:IOMMU DRIVERS <iommu@lists.linux-foundation.org>, Joerg
-        Roedel <joro@8bytes.org>," <linux-arm-kernel@lists.infradead.org>,
-        Linux Media Mailing List <linux-media@vger.kernel.org>,
-        Jens Kuske <jenskuske@gmail.com>,
-        Jernej Skrabec <jernej.skrabec@gmail.com>,
-        Jonas Karlman <jonas@kwiboo.se>,
-        Ezequiel Garcia <ezequiel@collabora.com>,
-        linux-sunxi <linux-sunxi@googlegroups.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Guenter Roeck <groeck@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190411044932.13247-1-kraxel@redhat.com>
+X-Operating-System: Linux phenom 4.19.0-1-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 12:57 AM Maxime Ripard
-<maxime.ripard@bootlin.com> wrote:
->
-> Hi,
->
-> On Fri, Apr 05, 2019 at 12:27:48PM -0400, Nicolas Dufresne wrote:
-> > Le vendredi 05 avril 2019 =C3=A0 17:15 +0200, Maxime Ripard a =C3=A9cri=
-t :
-> > > Hi Nicolas,
-> > >
-> > > On Thu, Apr 04, 2019 at 11:41:13AM -0400, Nicolas Dufresne wrote:
-> > > > > > > +    * - __u16
-> > > > > > > +      - ``pic_width_in_mbs_minus1``
-> > > > > > > +      -
-> > > > > > > +    * - __u16
-> > > > > > > +      - ``pic_height_in_map_units_minus1``
-> > > > > > > +      -
-> > > > > >
-> > > > > > We recently had some reflection with Alex that this is redundan=
-t with
-> > > > > > the width and height in the OUTPUT format. It may also apply to=
- some
-> > > > > > other fields in these structs. I feel like they should be remov=
-ed and
-> > > > > > passed via corresponding generic V4L2 properties - format, sele=
-ction,
-> > > > > > etc.
-> > > > > >
-> > > > > > The same problem is also present in the MPEG2 controls. In fact=
-, there
-> > > > > > was a patch already which used some fields from the controls to
-> > > > > > calculate the destination buffer strides, rather than bytesperl=
-ine in
-> > > > > > the format.
-> > > > > >
-> > > > > > Since we're in staging, it could be done with a follow-up patch=
-, though.
-> > > > >
-> > > > > Just my two cents. I played with some codecs a while back. IIRC s=
-ome
-> > > > > specify a "codec" size in addition to the actual picture size, li=
-ke
-> > > > > when the encoder does padding to fit the requirements of the code=
-c
-> > > > > (spec). Is this needed anywhere?
-> > > >
-> > > > With state-less encoders, the headers, which contains the crop
-> > > > information is created by userspace and for state less decoder, the
-> > > > headers that contains this information is parsed by userspace. So I
-> > > > believe that in theory, the accelerator does not strictly need to b=
-e
-> > > > aware of the cropped dimensions.
-> > > >
-> > > > Another thing, is that there is not guarantied matches between e.g.
-> > > > depth of the chrome/luma and the final image buffers. Some hardware=
- may
-> > > > have bandwidth limitation or internal converter and could possibly
-> > > > decode 10bit data into 8bit buffers.
-> > > >
-> > > > A third reason why I would not try and encode this header informati=
-on
-> > > > is that there can be multiple PPS/SPS at the same time, and I think
-> > > > it's confusing if the relevant information to differentiate them is
-> > > > removed.
-> > >
-> > > Sorry if that sounds a bit dumb, but it's not really clear to me if
-> > > you're arguing for the removal of the data as Tomasz suggests, or if
-> > > you want to keep them.
-> > >
-> > > The first paragrah seems to advocate for the former, but the two
-> > > others for the latter.
-> >
-> > I think the data should stay. As I said, there can be multiple SPS/PPS,
-> > while there is only one format. That being said, how does SPS/PPS
-> > activation works ? How do you tell the driver about all the SPS/PPS and
-> > which one is being activated ?
->
-> The current way of dealing with this is that the _SLICE_PARAMS control
-> actually takes an array of SPS's. And same thing for PPS.
->
-> There's no difference between activated and deactivated ones
-> though. What is the use case for this?
+On Thu, Apr 11, 2019 at 06:49:32AM +0200, Gerd Hoffmann wrote:
+> Oops, the __iomem annotation was added to the header file only.
+> Add it to the implementation (and documentation) too.
+> 
+> Fixes: 5c5373b51bec ("drm: switch drm_fb_xrgb8888_to_rgb888_dstclip to accept __iomem dst")
+> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
+> ---
+>  drivers/gpu/drm/drm_format_helper.c | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/gpu/drm/drm_format_helper.c b/drivers/gpu/drm/drm_format_helper.c
+> index 319de608a088..da388012df2a 100644
+> --- a/drivers/gpu/drm/drm_format_helper.c
+> +++ b/drivers/gpu/drm/drm_format_helper.c
+> @@ -230,7 +230,7 @@ static void drm_fb_xrgb8888_to_rgb888_line(u8 *dbuf, u32 *sbuf,
+>  
+>  /**
+>   * drm_fb_xrgb8888_to_rgb888_dstclip - Convert XRGB8888 to RGB888 clip buffer
+> - * @dst: RGB565 destination buffer
+> + * @dst: RGB565 destination buffer (iomem)
+>   * @dst_pitch: destination buffer pitch
+>   * @vaddr: XRGB8888 source buffer
+>   * @fb: DRM framebuffer
+> @@ -241,9 +241,9 @@ static void drm_fb_xrgb8888_to_rgb888_line(u8 *dbuf, u32 *sbuf,
+>   * support XRGB8888.
+>   *
+>   * This function applies clipping on dst, i.e. the destination is a
+> - * full framebuffer but only the clip rect content is copied over.
+> + * full (iomem) framebuffer but only the clip rect content is copied over.
+>   */
 
-Uhm, there is only one format, but so there is only one active
-SPS/PPS, isn't it?
+All this nice kerneldoc isn't pulled into the docs in
+Documentation/gpu/drm-kms-helper.rst anywhere. Can you pls fix that too?
 
-An alternative would be to just make the OUTPUT format a function of
-the currently set controls, so that it would always match the active
-PPS/SPS, without the ability for the application to change it.
+Thanks, Daniel
 
-I just want to avoid the case when the OUTPUT format can be set
-randomly to something different than in the stream and also drivers
-reading randomly the format-related information sometimes from the
-controls and sometimes from the format state.
+> -void drm_fb_xrgb8888_to_rgb888_dstclip(void *dst, unsigned int dst_pitch,
+> +void drm_fb_xrgb8888_to_rgb888_dstclip(void __iomem *dst, unsigned int dst_pitch,
+>  				       void *vaddr, struct drm_framebuffer *fb,
+>  				       struct drm_rect *clip)
+>  {
+> -- 
+> 2.18.1
+> 
 
-Best regards,
-Tomasz
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
