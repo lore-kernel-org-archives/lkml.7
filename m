@@ -2,94 +2,69 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C12ABC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:02:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3300BC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:06:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B39A223B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:02:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 06E38223C0
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:06:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729491AbfDPOCs (ORCPT
+        id S1727240AbfDPOGy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 10:02:48 -0400
-Received: from bhuna.collabora.co.uk ([46.235.227.227]:50572 "EHLO
-        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726215AbfDPOCr (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 10:02:47 -0400
-Received: from [127.0.0.1] (localhost [127.0.0.1])
-        (Authenticated sender: ezequiel)
-        with ESMTPSA id D2873281F9F
-Message-ID: <16b99f4040a1837bcdbf860d0e9517eb53002aed.camel@collabora.com>
-Subject: Re: [5.2][PATCH 0/3] Ingenic JZ47xx KMS driver
-From:   Ezequiel Garcia <ezequiel@collabora.com>
-To:     Paul Cercueil <paul@crapouillou.net>
-Cc:     David Airlie <airlied@linux.ie>, Daniel Vetter <daniel@ffwll.ch>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, devicetree@vger.kernel.org,
-        linux-mips@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        linux-kernel@vger.kernel.org
-Date:   Tue, 16 Apr 2019 11:02:35 -0300
-In-Reply-To: <1552304705.1929.0@crapouillou.net>
-References: <20190228220756.20262-1-paul@crapouillou.net>
-         <fce3f17981cda6a263abcce6b2902591e7984fa4.camel@collabora.com>
-         <1552304705.1929.0@crapouillou.net>
-Organization: Collabora
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.30.5-1 
+        Tue, 16 Apr 2019 10:06:54 -0400
+Received: from foss.arm.com ([217.140.101.70]:55862 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726037AbfDPOGy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 10:06:54 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 09179EBD;
+        Tue, 16 Apr 2019 07:06:54 -0700 (PDT)
+Received: from e113632-lin.cambridge.arm.com (e113632-lin.cambridge.arm.com [10.1.194.37])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPA id 9B6753F59C;
+        Tue, 16 Apr 2019 07:06:52 -0700 (PDT)
+From:   Valentin Schneider <valentin.schneider@arm.com>
+To:     linux-kernel@vger.kernel.org
+Cc:     mingo@redhat.com, peterz@infradead.org, morten.rasmussen@arm.com,
+        quentin.perret@arm.com, Dietmar.Eggemann@arm.com
+Subject: [PATCH RESEND] sched/fair: Remove unneeded prototype of capacity_of()
+Date:   Tue, 16 Apr 2019 15:06:21 +0100
+Message-Id: <20190416140621.19884-1-valentin.schneider@arm.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, 2019-03-11 at 12:45 +0100, Paul Cercueil wrote:
-> Hi Ezequiel,
-> 
-> On Mon, Mar 11, 2019 at 1:02 AM, Ezequiel Garcia 
-> <ezequiel@collabora.com> wrote:
-> > On Thu, 2019-02-28 at 19:07 -0300, Paul Cercueil wrote:
-> > >  Hi,
-> > > 
-> > >  This is a first attempt at a KMS driver for the JZ47xx MIPS SoCs by
-> > >  Ingenic. It is aimed to replace the aging jz4740-fb driver.
-> > > 
-> > >  The driver will later be updated with new features (overlays, TV-out
-> > >  etc.), that's why I didn't go with the simple/tiny DRM driver.
-> > > 
-> > >  The driver has been tested on the Ben Nanonote (JZ4740) and the
-> > >  RetroMini RS-90 (JZ4725B) handheld gaming console.
-> > > 
-> > 
-> > Does this support JZ4780? Or otherwise,
-> > is there any similarity with JZ4780 display controller?
-> > 
-> > Thanks,
-> > Eze
-> 
-> The JZ4780 LCD controller would in theory work with this driver, but
-> to test on the CI20 you'd need to add support for HDMI first.
-> 
+The prototype of that function was already hoisted up in
 
-After reviewing a bit this driver and the JZ480 one on the CI20 repo,
-there seems to be some differences.
+  commit 3b1baa6496e6 ("sched/fair: Add 'group_misfit_task' load-balance type")
 
-To begin with, the JZ480 apparently has a new 8-word descriptor.
+but that seems to have been missed. Get rid of the extra prototype.
 
-The HDMI looks pretty much a Synopsys DW HDMI, mostly compatible
-with the dw-hdmi encoder.
+Fixes: 2802bf3cd936 ("sched/fair: Add over-utilization/tipping point indicator")
+Acked-by: Quentin Perret <quentin.perret@arm.com>
+Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
+---
+ kernel/sched/fair.c | 1 -
+ 1 file changed, 1 deletion(-)
 
-I'll try to put together some patches to enable JZ4780 support.
-Won't happen anytime soon, so if anyone wants to give it
-a shot, be my guest :-)
-
-Regards,
-Eze
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index ed7f5f8107b7..b6cc0703b850 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -5116,7 +5116,6 @@ static inline void hrtick_update(struct rq *rq)
+ 
+ #ifdef CONFIG_SMP
+ static inline unsigned long cpu_util(int cpu);
+-static unsigned long capacity_of(int cpu);
+ 
+ static inline bool cpu_overutilized(int cpu)
+ {
+-- 
+2.20.1
 
