@@ -2,2886 +2,2667 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 67457C10F0E
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:02:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E524C10F12
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:02:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA4FA20656
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:02:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0CF0420656
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 03:02:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555383730;
-	bh=wvcpXnQLeu+k5J8V1EWys1ePN9PcTqct5etOHn3XnYI=;
+	s=default; t=1555383734;
+	bh=T88Q3anJ67jpB0REIQ/RS5fqCmqeehWTngeXF6jmrhs=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=cl2B29hcPCBI7wHzzGBHIr+bDDQBuhtYaBtfD+r/2mmJ2dq7oXXr08ozYEEaIbM7O
-	 2XzlZGBOVFnXFVelzqGLSdZqYzOerrXhzv470YuAcdh7mfLGa91huXxJY4fm7OCVFm
-	 w9jWZ3YR5yIEWZAUtY3TFLT11bV1+vT6WfLeENts=
+	b=0ov9MWlRSIwCCwPqtTVhSbYQFhnWlO0+OMAhm51/t53sGeosmx9B+Zbo6ed3T3mnf
+	 WQ/nm5+CBlPAWGOBdVLZfRnDp+iioO8Rp1UccehD4tD3uhOO/BvizNNzF3CRTRoa+l
+	 mj/AxuAzQhXU54EB4e2CzzY+Nx/4MzmrevRjwn+0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728544AbfDPDCI (ORCPT
+        id S1728741AbfDPDCM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Mon, 15 Apr 2019 23:02:08 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:44024 "EHLO
+        Mon, 15 Apr 2019 23:02:12 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44014 "EHLO
         bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726697AbfDPC4c (ORCPT
+        with ESMTP id S1726691AbfDPC4b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Mon, 15 Apr 2019 22:56:32 -0400
+        Mon, 15 Apr 2019 22:56:31 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=infradead.org; s=bombadil.20170209; h=Sender:Content-Transfer-Encoding:
-        MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:To:From:
-        Reply-To:Content-Type:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Content-Type:MIME-Version:References:In-Reply-To:Message-Id:Date:Subject:Cc:
+        To:From:Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
         Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
         List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-        bh=xUc+Mu5Y3kVXibJ3rrwZ/W7fMejPD+fb0bEAYfhbcGc=; b=E3zC+3QHOX3W1zBCuAk5SXnOsK
-        fnnm5VQpH6Levyeg+2MVdhXFLelMGQKfLWxMDZyHI6EGc9AcpCLSdUwx8rDQGufRlCiHIWa71hoAv
-        kv8tg+J5vtJi9BVHEtD1K6Is36JcDkWdQHWifKs2Tha6IRKbV1LdOPBQeERL2iz0bYwhd4hylPiHT
-        D9A+7OXbXNx16Nyj+gdjs+DnzYMT3gdfiTbyOdaj6uKnKfVYZ7QUFrEdlmQ/ni9o9+UtVpvWXYUOZ
-        A+1AHYmuezsqrui9pYKnoQI729NIeheik6MB/2uruEtf+PWLSJdb2uKabztrqMxOB+bxhc9z1qic7
-        yBUB/pvQ==;
+        bh=Lb1CvBkrKYi+GQQcnRgIGMmigthJb6x2jCvm9OgUTJc=; b=hS5h/Mr3ejfUGhc/kptDKuIW6s
+        NXggfm8sYnyVO7dJA80+NNtq5Y2pkm5bLTiWVxEHLc458UK8YByeCbZwBaYoWSevb3hYNta6yjQnX
+        5kpgOkmcpXjpyt4CX7w4XAa6+swg0nUNcwBf14/7hJ+bLAHUTXSh2bviFMQ72kHhv6wae6s3xtb4V
+        ZTkXGYBSDX6Vwe2o1Vxn0ERHMcz3/yo7QQbdIb54cSsBJJb/Nx8GzwT0gupU3dxGh7v4EWpjwH6it
+        6EBgdgZIZQSvSN/TnJzDiOyYUM93EeqW0nQqXXvKYb7892iC1iYLXOuvbZvezQJW5ila0YLlknpC7
+        LoYfwkkw==;
 Received: from 177.205.118.176.dynamic.adsl.gvt.net.br ([177.205.118.176] helo=bombadil.infradead.org)
         by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hGEGp-0007aJ-RI; Tue, 16 Apr 2019 02:56:29 +0000
+        id 1hGEGp-0007aK-Sj; Tue, 16 Apr 2019 02:56:29 +0000
 Received: from mchehab by bombadil.infradead.org with local (Exim 4.92)
         (envelope-from <mchehab@bombadil.infradead.org>)
-        id 1hGEGn-0001lL-1t; Mon, 15 Apr 2019 23:56:25 -0300
+        id 1hGEGm-0001l0-Sn; Mon, 15 Apr 2019 23:56:24 -0300
 From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Linux Doc Mailing List <linux-doc@vger.kernel.org>
 Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
         Mauro Carvalho Chehab <mchehab@infradead.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>
-Subject: [PATCH 07/57] docs: cgroup-v1: convert to ReST file format
-Date:   Mon, 15 Apr 2019 23:55:32 -0300
-Message-Id: <6b8346efa22e0f138dc24e32278a58f4ab782e08.1555382110.git.mchehab+samsung@kernel.org>
+        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Len Brown <lenb@kernel.org>, linux-acpi@vger.kernel.org
+Subject: [PATCH 02/57] docs: acpi: convert text files to ReST
+Date:   Mon, 15 Apr 2019 23:55:27 -0300
+Message-Id: <10802a7ac16958a2786c2fc083fb5cb50eb7ebb9.1555382110.git.mchehab+samsung@kernel.org>
 X-Mailer: git-send-email 2.20.1
 In-Reply-To: <cover.1555382110.git.mchehab+samsung@kernel.org>
 References: <cover.1555382110.git.mchehab+samsung@kernel.org>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Convert the cgroup-v1 files to ReST format, in order to
-allow a later addition to the admin-guide.
+Most of the files are already in good shape, making easier to
+convert them to ReST by adding proper title markups and
+addressing some identation and markups to properly format the
+document.
 
 Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 ---
- Documentation/cgroup-v1/blkio-controller.txt  |  96 ++--
- Documentation/cgroup-v1/cgroups.txt           | 180 +++----
- Documentation/cgroup-v1/cpuacct.txt           |  15 +-
- Documentation/cgroup-v1/cpusets.txt           | 203 ++++----
- Documentation/cgroup-v1/devices.txt           |  40 +-
- Documentation/cgroup-v1/freezer-subsystem.txt |  14 +-
- Documentation/cgroup-v1/hugetlb.txt           |  31 +-
- Documentation/cgroup-v1/memcg_test.txt        | 259 ++++++----
- Documentation/cgroup-v1/memory.txt            | 449 +++++++++++-------
- Documentation/cgroup-v1/net_cls.txt           |  37 +-
- Documentation/cgroup-v1/net_prio.txt          |  24 +-
- Documentation/cgroup-v1/pids.txt              |  78 +--
- Documentation/cgroup-v1/rdma.txt              |  66 +--
- 13 files changed, 890 insertions(+), 602 deletions(-)
+ Documentation/acpi/DSD-properties-rules.txt   |   4 +-
+ Documentation/acpi/acpi-lid.txt               |  37 +-
+ Documentation/acpi/aml-debugger.txt           |  31 +-
+ Documentation/acpi/apei/einj.txt              |  59 ++--
+ Documentation/acpi/apei/output_format.txt     | 247 +++++++-------
+ Documentation/acpi/cppc_sysfs.txt             |  52 +--
+ Documentation/acpi/debug.txt                  |  20 +-
+ .../acpi/dsd/data-node-references.txt         |  11 +-
+ Documentation/acpi/dsd/graph.txt              |  24 +-
+ Documentation/acpi/dsd/leds.txt               |  18 +-
+ Documentation/acpi/dsdt-override.txt          |   4 +-
+ Documentation/acpi/enumeration.txt            |  42 +--
+ Documentation/acpi/gpio-properties.txt        |  42 +--
+ Documentation/acpi/i2c-muxes.txt              |  21 +-
+ Documentation/acpi/initrd_table_override.txt  |  90 ++---
+ Documentation/acpi/linuxized-acpica.txt       |  58 ++--
+ Documentation/acpi/lpit.txt                   |   8 +-
+ Documentation/acpi/method-customizing.txt     |  48 ++-
+ Documentation/acpi/method-tracing.txt         | 132 ++++---
+ Documentation/acpi/namespace.txt              | 323 +++++++++---------
+ Documentation/acpi/osi.txt                    |   3 +-
+ Documentation/acpi/scan_handlers.txt          |   9 +-
+ Documentation/acpi/ssdt-overlays.txt          | 128 +++----
+ Documentation/acpi/video_extension.txt        |  16 +-
+ 24 files changed, 794 insertions(+), 633 deletions(-)
 
-diff --git a/Documentation/cgroup-v1/blkio-controller.txt b/Documentation/cgroup-v1/blkio-controller.txt
-index 673dc34d3f78..2c1b907afc14 100644
---- a/Documentation/cgroup-v1/blkio-controller.txt
-+++ b/Documentation/cgroup-v1/blkio-controller.txt
-@@ -1,5 +1,7 @@
--				Block IO Controller
--				===================
-+===================
-+Block IO Controller
-+===================
-+
- Overview
- ========
- cgroup subsys "blkio" implements the block io controller. There seems to be
-@@ -22,28 +24,35 @@ Proportional Weight division of bandwidth
- You can do a very simple testing of running two dd threads in two different
- cgroups. Here is what you can do.
- 
--- Enable Block IO controller
-+- Enable Block IO controller::
-+
- 	CONFIG_BLK_CGROUP=y
- 
--- Enable group scheduling in CFQ
-+- Enable group scheduling in CFQ:
-+
-+
- 	CONFIG_CFQ_GROUP_IOSCHED=y
- 
- - Compile and boot into kernel and mount IO controller (blkio); see
-   cgroups.txt, Why are cgroups needed?.
- 
-+  ::
-+
- 	mount -t tmpfs cgroup_root /sys/fs/cgroup
- 	mkdir /sys/fs/cgroup/blkio
- 	mount -t cgroup -o blkio none /sys/fs/cgroup/blkio
- 
--- Create two cgroups
-+- Create two cgroups::
-+
- 	mkdir -p /sys/fs/cgroup/blkio/test1/ /sys/fs/cgroup/blkio/test2
- 
--- Set weights of group test1 and test2
-+- Set weights of group test1 and test2::
-+
- 	echo 1000 > /sys/fs/cgroup/blkio/test1/blkio.weight
- 	echo 500 > /sys/fs/cgroup/blkio/test2/blkio.weight
- 
- - Create two same size files (say 512MB each) on same disk (file1, file2) and
--  launch two dd threads in different cgroup to read those files.
-+  launch two dd threads in different cgroup to read those files::
- 
- 	sync
- 	echo 3 > /proc/sys/vm/drop_caches
-@@ -65,24 +74,27 @@ cgroups. Here is what you can do.
- 
- Throttling/Upper Limit policy
- -----------------------------
--- Enable Block IO controller
-+- Enable Block IO controller::
-+
- 	CONFIG_BLK_CGROUP=y
- 
--- Enable throttling in block layer
-+- Enable throttling in block layer::
-+
- 	CONFIG_BLK_DEV_THROTTLING=y
- 
--- Mount blkio controller (see cgroups.txt, Why are cgroups needed?)
-+- Mount blkio controller (see cgroups.txt, Why are cgroups needed?)::
-+
-         mount -t cgroup -o blkio none /sys/fs/cgroup/blkio
- 
- - Specify a bandwidth rate on particular device for root group. The format
--  for policy is "<major>:<minor>  <bytes_per_second>".
-+  for policy is "<major>:<minor>  <bytes_per_second>"::
- 
-         echo "8:16  1048576" > /sys/fs/cgroup/blkio/blkio.throttle.read_bps_device
- 
-   Above will put a limit of 1MB/second on reads happening for root group
-   on device having major/minor number 8:16.
- 
--- Run dd to read a file and see if rate is throttled to 1MB/s or not.
-+- Run dd to read a file and see if rate is throttled to 1MB/s or not::
- 
-         # dd iflag=direct if=/mnt/common/zerofile of=/dev/null bs=4K count=1024
-         1024+0 records in
-@@ -99,7 +111,7 @@ throttling's hierarchy support is enabled iff "sane_behavior" is
- enabled from cgroup side, which currently is a development option and
- not publicly available.
- 
--If somebody created a hierarchy like as follows.
-+If somebody created a hierarchy like as follows::
- 
- 			root
- 			/  \
-@@ -115,7 +127,7 @@ directly generated by tasks in that cgroup.
- 
- Throttling without "sane_behavior" enabled from cgroup side will
- practically treat all groups at same level as if it looks like the
--following.
-+following::
- 
- 				pivot
- 			     /  /   \  \
-@@ -152,27 +164,31 @@ Proportional weight policy files
- 	  These rules override the default value of group weight as specified
- 	  by blkio.weight.
- 
--	  Following is the format.
-+	  Following is the format::
- 
--	  # echo dev_maj:dev_minor weight > blkio.weight_device
--	  Configure weight=300 on /dev/sdb (8:16) in this cgroup
--	  # echo 8:16 300 > blkio.weight_device
--	  # cat blkio.weight_device
--	  dev     weight
--	  8:16    300
-+	    # echo dev_maj:dev_minor weight > blkio.weight_device
- 
--	  Configure weight=500 on /dev/sda (8:0) in this cgroup
--	  # echo 8:0 500 > blkio.weight_device
--	  # cat blkio.weight_device
--	  dev     weight
--	  8:0     500
--	  8:16    300
-+	  Configure weight=300 on /dev/sdb (8:16) in this cgroup::
- 
--	  Remove specific weight for /dev/sda in this cgroup
--	  # echo 8:0 0 > blkio.weight_device
--	  # cat blkio.weight_device
--	  dev     weight
--	  8:16    300
-+	    # echo 8:16 300 > blkio.weight_device
-+	    # cat blkio.weight_device
-+	    dev     weight
-+	    8:16    300
-+
-+	  Configure weight=500 on /dev/sda (8:0) in this cgroup::
-+
-+	    # echo 8:0 500 > blkio.weight_device
-+	    # cat blkio.weight_device
-+	    dev     weight
-+	    8:0     500
-+	    8:16    300
-+
-+	  Remove specific weight for /dev/sda in this cgroup::
-+
-+	    # echo 8:0 0 > blkio.weight_device
-+	    # cat blkio.weight_device
-+	    dev     weight
-+	    8:16    300
- 
- - blkio.leaf_weight[_device]
- 	- Equivalents of blkio.weight[_device] for the purpose of
-@@ -297,30 +313,30 @@ Throttling/Upper limit policy files
- - blkio.throttle.read_bps_device
- 	- Specifies upper limit on READ rate from the device. IO rate is
- 	  specified in bytes per second. Rules are per device. Following is
--	  the format.
-+	  the format::
- 
--  echo "<major>:<minor>  <rate_bytes_per_second>" > /cgrp/blkio.throttle.read_bps_device
-+	    echo "<major>:<minor>  <rate_bytes_per_second>" > /cgrp/blkio.throttle.read_bps_device
- 
- - blkio.throttle.write_bps_device
- 	- Specifies upper limit on WRITE rate to the device. IO rate is
- 	  specified in bytes per second. Rules are per device. Following is
--	  the format.
-+	  the format::
- 
--  echo "<major>:<minor>  <rate_bytes_per_second>" > /cgrp/blkio.throttle.write_bps_device
-+	    echo "<major>:<minor>  <rate_bytes_per_second>" > /cgrp/blkio.throttle.write_bps_device
- 
- - blkio.throttle.read_iops_device
- 	- Specifies upper limit on READ rate from the device. IO rate is
- 	  specified in IO per second. Rules are per device. Following is
--	  the format.
-+	  the format::
- 
--  echo "<major>:<minor>  <rate_io_per_second>" > /cgrp/blkio.throttle.read_iops_device
-+	   echo "<major>:<minor>  <rate_io_per_second>" > /cgrp/blkio.throttle.read_iops_device
- 
- - blkio.throttle.write_iops_device
- 	- Specifies upper limit on WRITE rate to the device. IO rate is
- 	  specified in io per second. Rules are per device. Following is
--	  the format.
-+	  the format::
- 
--  echo "<major>:<minor>  <rate_io_per_second>" > /cgrp/blkio.throttle.write_iops_device
-+	    echo "<major>:<minor>  <rate_io_per_second>" > /cgrp/blkio.throttle.write_iops_device
- 
- Note: If both BW and IOPS rules are specified for a device, then IO is
-       subjected to both the constraints.
-diff --git a/Documentation/cgroup-v1/cgroups.txt b/Documentation/cgroup-v1/cgroups.txt
-index 059f7063eea6..2ee5e8b6db0c 100644
---- a/Documentation/cgroup-v1/cgroups.txt
-+++ b/Documentation/cgroup-v1/cgroups.txt
-@@ -1,35 +1,39 @@
--				CGROUPS
--				-------
-+==============
-+Control Groups
-+==============
- 
- Written by Paul Menage <menage@google.com> based on
- Documentation/cgroup-v1/cpusets.txt
- 
- Original copyright statements from cpusets.txt:
-+
- Portions Copyright (C) 2004 BULL SA.
-+
- Portions Copyright (c) 2004-2006 Silicon Graphics, Inc.
-+
- Modified by Paul Jackson <pj@sgi.com>
-+
- Modified by Christoph Lameter <cl@linux.com>
- 
--CONTENTS:
--=========
-+.. CONTENTS:
- 
--1. Control Groups
--  1.1 What are cgroups ?
--  1.2 Why are cgroups needed ?
--  1.3 How are cgroups implemented ?
--  1.4 What does notify_on_release do ?
--  1.5 What does clone_children do ?
--  1.6 How do I use cgroups ?
--2. Usage Examples and Syntax
--  2.1 Basic Usage
--  2.2 Attaching processes
--  2.3 Mounting hierarchies by name
--3. Kernel API
--  3.1 Overview
--  3.2 Synchronization
--  3.3 Subsystem API
--4. Extended attributes usage
--5. Questions
-+	1. Control Groups
-+	1.1 What are cgroups ?
-+	1.2 Why are cgroups needed ?
-+	1.3 How are cgroups implemented ?
-+	1.4 What does notify_on_release do ?
-+	1.5 What does clone_children do ?
-+	1.6 How do I use cgroups ?
-+	2. Usage Examples and Syntax
-+	2.1 Basic Usage
-+	2.2 Attaching processes
-+	2.3 Mounting hierarchies by name
-+	3. Kernel API
-+	3.1 Overview
-+	3.2 Synchronization
-+	3.3 Subsystem API
-+	4. Extended attributes usage
-+	5. Questions
- 
- 1. Control Groups
- =================
-@@ -108,7 +112,7 @@ As an example of a scenario (originally proposed by vatsa@in.ibm.com)
- that can benefit from multiple hierarchies, consider a large
- university server with various users - students, professors, system
- tasks etc. The resource planning for this server could be along the
--following lines:
-+following lines::
- 
-        CPU :          "Top cpuset"
-                        /       \
-@@ -136,7 +140,7 @@ depending on who launched it (prof/student).
- With the ability to classify tasks differently for different resources
- (by putting those resource subsystems in different hierarchies),
- the admin can easily set up a script which receives exec notifications
--and depending on who is launching the browser he can
-+and depending on who is launching the browser he can::
- 
-     # echo browser_pid > /sys/fs/cgroup/<restype>/<userclass>/tasks
- 
-@@ -151,7 +155,7 @@ wants to do online gaming :))  OR give one of the student's simulation
- apps enhanced CPU power.
- 
- With ability to write PIDs directly to resource classes, it's just a
--matter of:
-+matter of::
- 
-        # echo pid > /sys/fs/cgroup/network/<new_class>/tasks
-        (after some time)
-@@ -306,7 +310,7 @@ configuration from the parent during initialization.
- --------------------------
- 
- To start a new job that is to be contained within a cgroup, using
--the "cpuset" cgroup subsystem, the steps are something like:
-+the "cpuset" cgroup subsystem, the steps are something like::
- 
-  1) mount -t tmpfs cgroup_root /sys/fs/cgroup
-  2) mkdir /sys/fs/cgroup/cpuset
-@@ -320,7 +324,7 @@ the "cpuset" cgroup subsystem, the steps are something like:
- 
- For example, the following sequence of commands will setup a cgroup
- named "Charlie", containing just CPUs 2 and 3, and Memory Node 1,
--and then start a subshell 'sh' in that cgroup:
-+and then start a subshell 'sh' in that cgroup::
- 
-   mount -t tmpfs cgroup_root /sys/fs/cgroup
-   mkdir /sys/fs/cgroup/cpuset
-@@ -345,8 +349,9 @@ and then start a subshell 'sh' in that cgroup:
- Creating, modifying, using cgroups can be done through the cgroup
- virtual filesystem.
- 
--To mount a cgroup hierarchy with all available subsystems, type:
--# mount -t cgroup xxx /sys/fs/cgroup
-+To mount a cgroup hierarchy with all available subsystems, type::
-+
-+  # mount -t cgroup xxx /sys/fs/cgroup
- 
- The "xxx" is not interpreted by the cgroup code, but will appear in
- /proc/mounts so may be any useful identifying string that you like.
-@@ -355,18 +360,19 @@ Note: Some subsystems do not work without some user input first.  For instance,
- if cpusets are enabled the user will have to populate the cpus and mems files
- for each new cgroup created before that group can be used.
- 
--As explained in section `1.2 Why are cgroups needed?' you should create
-+As explained in section `1.2 Why are cgroups needed?` you should create
- different hierarchies of cgroups for each single resource or group of
- resources you want to control. Therefore, you should mount a tmpfs on
- /sys/fs/cgroup and create directories for each cgroup resource or resource
--group.
-+group::
- 
--# mount -t tmpfs cgroup_root /sys/fs/cgroup
--# mkdir /sys/fs/cgroup/rg1
-+  # mount -t tmpfs cgroup_root /sys/fs/cgroup
-+  # mkdir /sys/fs/cgroup/rg1
- 
- To mount a cgroup hierarchy with just the cpuset and memory
--subsystems, type:
--# mount -t cgroup -o cpuset,memory hier1 /sys/fs/cgroup/rg1
-+subsystems, type::
-+
-+  # mount -t cgroup -o cpuset,memory hier1 /sys/fs/cgroup/rg1
- 
- While remounting cgroups is currently supported, it is not recommend
- to use it. Remounting allows changing bound subsystems and
-@@ -375,9 +381,10 @@ hierarchy is empty and release_agent itself should be replaced with
- conventional fsnotify. The support for remounting will be removed in
- the future.
- 
--To Specify a hierarchy's release_agent:
--# mount -t cgroup -o cpuset,release_agent="/sbin/cpuset_release_agent" \
--  xxx /sys/fs/cgroup/rg1
-+To Specify a hierarchy's release_agent::
-+
-+  # mount -t cgroup -o cpuset,release_agent="/sbin/cpuset_release_agent" \
-+    xxx /sys/fs/cgroup/rg1
- 
- Note that specifying 'release_agent' more than once will return failure.
- 
-@@ -390,32 +397,39 @@ Then under /sys/fs/cgroup/rg1 you can find a tree that corresponds to the
- tree of the cgroups in the system. For instance, /sys/fs/cgroup/rg1
- is the cgroup that holds the whole system.
- 
--If you want to change the value of release_agent:
--# echo "/sbin/new_release_agent" > /sys/fs/cgroup/rg1/release_agent
-+If you want to change the value of release_agent::
-+
-+  # echo "/sbin/new_release_agent" > /sys/fs/cgroup/rg1/release_agent
- 
- It can also be changed via remount.
- 
--If you want to create a new cgroup under /sys/fs/cgroup/rg1:
--# cd /sys/fs/cgroup/rg1
--# mkdir my_cgroup
-+If you want to create a new cgroup under /sys/fs/cgroup/rg1::
- 
--Now you want to do something with this cgroup.
--# cd my_cgroup
-+  # cd /sys/fs/cgroup/rg1
-+  # mkdir my_cgroup
- 
--In this directory you can find several files:
--# ls
--cgroup.procs notify_on_release tasks
--(plus whatever files added by the attached subsystems)
-+Now you want to do something with this cgroup:
- 
--Now attach your shell to this cgroup:
--# /bin/echo $$ > tasks
-+  # cd my_cgroup
-+
-+In this directory you can find several files::
-+
-+  # ls
-+  cgroup.procs notify_on_release tasks
-+  (plus whatever files added by the attached subsystems)
-+
-+Now attach your shell to this cgroup::
-+
-+  # /bin/echo $$ > tasks
- 
- You can also create cgroups inside your cgroup by using mkdir in this
--directory.
--# mkdir my_sub_cs
-+directory::
- 
--To remove a cgroup, just use rmdir:
--# rmdir my_sub_cs
-+  # mkdir my_sub_cs
-+
-+To remove a cgroup, just use rmdir::
-+
-+  # rmdir my_sub_cs
- 
- This will fail if the cgroup is in use (has cgroups inside, or
- has processes attached, or is held alive by other subsystem-specific
-@@ -424,19 +438,21 @@ reference).
- 2.2 Attaching processes
- -----------------------
- 
--# /bin/echo PID > tasks
-+::
-+
-+  # /bin/echo PID > tasks
- 
- Note that it is PID, not PIDs. You can only attach ONE task at a time.
--If you have several tasks to attach, you have to do it one after another:
-+If you have several tasks to attach, you have to do it one after another::
- 
--# /bin/echo PID1 > tasks
--# /bin/echo PID2 > tasks
--	...
--# /bin/echo PIDn > tasks
-+  # /bin/echo PID1 > tasks
-+  # /bin/echo PID2 > tasks
-+	  ...
-+  # /bin/echo PIDn > tasks
- 
--You can attach the current shell task by echoing 0:
-+You can attach the current shell task by echoing 0::
- 
--# echo 0 > tasks
-+  # echo 0 > tasks
- 
- You can use the cgroup.procs file instead of the tasks file to move all
- threads in a threadgroup at once. Echoing the PID of any task in a
-@@ -529,7 +545,7 @@ Each subsystem may export the following methods. The only mandatory
- methods are css_alloc/free. Any others that are null are presumed to
- be successful no-ops.
- 
--struct cgroup_subsys_state *css_alloc(struct cgroup *cgrp)
-+`struct cgroup_subsys_state *css_alloc(struct cgroup *cgrp)`
- (cgroup_mutex held by caller)
- 
- Called to allocate a subsystem state object for a cgroup. The
-@@ -544,7 +560,7 @@ identified by the passed cgroup object having a NULL parent (since
- it's the root of the hierarchy) and may be an appropriate place for
- initialization code.
- 
--int css_online(struct cgroup *cgrp)
-+`int css_online(struct cgroup *cgrp)`
- (cgroup_mutex held by caller)
- 
- Called after @cgrp successfully completed all allocations and made
-@@ -554,7 +570,7 @@ callback can be used to implement reliable state sharing and
- propagation along the hierarchy. See the comment on
- cgroup_for_each_descendant_pre() for details.
- 
--void css_offline(struct cgroup *cgrp);
-+`void css_offline(struct cgroup *cgrp);`
- (cgroup_mutex held by caller)
- 
- This is the counterpart of css_online() and called iff css_online()
-@@ -564,7 +580,7 @@ all references it's holding on @cgrp. When all references are dropped,
- cgroup removal will proceed to the next step - css_free(). After this
- callback, @cgrp should be considered dead to the subsystem.
- 
--void css_free(struct cgroup *cgrp)
-+`void css_free(struct cgroup *cgrp)`
- (cgroup_mutex held by caller)
- 
- The cgroup system is about to free @cgrp; the subsystem should free
-@@ -573,7 +589,7 @@ is completely unused; @cgrp->parent is still valid. (Note - can also
- be called for a newly-created cgroup if an error occurs after this
- subsystem's create() method has been called for the new cgroup).
- 
--int can_attach(struct cgroup *cgrp, struct cgroup_taskset *tset)
-+`int can_attach(struct cgroup *cgrp, struct cgroup_taskset *tset)`
- (cgroup_mutex held by caller)
- 
- Called prior to moving one or more tasks into a cgroup; if the
-@@ -594,7 +610,7 @@ fork. If this method returns 0 (success) then this should remain valid
- while the caller holds cgroup_mutex and it is ensured that either
- attach() or cancel_attach() will be called in future.
- 
--void css_reset(struct cgroup_subsys_state *css)
-+`void css_reset(struct cgroup_subsys_state *css)`
- (cgroup_mutex held by caller)
- 
- An optional operation which should restore @css's configuration to the
-@@ -608,7 +624,7 @@ This prevents unexpected resource control from a hidden css and
- ensures that the configuration is in the initial state when it is made
- visible again later.
- 
--void cancel_attach(struct cgroup *cgrp, struct cgroup_taskset *tset)
-+`void cancel_attach(struct cgroup *cgrp, struct cgroup_taskset *tset)`
- (cgroup_mutex held by caller)
- 
- Called when a task attach operation has failed after can_attach() has succeeded.
-@@ -617,26 +633,26 @@ function, so that the subsystem can implement a rollback. If not, not necessary.
- This will be called only about subsystems whose can_attach() operation have
- succeeded. The parameters are identical to can_attach().
- 
--void attach(struct cgroup *cgrp, struct cgroup_taskset *tset)
-+`void attach(struct cgroup *cgrp, struct cgroup_taskset *tset)`
- (cgroup_mutex held by caller)
- 
- Called after the task has been attached to the cgroup, to allow any
- post-attachment activity that requires memory allocations or blocking.
- The parameters are identical to can_attach().
- 
--void fork(struct task_struct *task)
-+`void fork(struct task_struct *task)`
- 
- Called when a task is forked into a cgroup.
- 
--void exit(struct task_struct *task)
-+`void exit(struct task_struct *task)`
- 
- Called during task exit.
- 
--void free(struct task_struct *task)
-+`void free(struct task_struct *task)`
- 
- Called when the task_struct is freed.
- 
--void bind(struct cgroup *root)
-+`void bind(struct cgroup *root)`
- (cgroup_mutex held by caller)
- 
- Called when a cgroup subsystem is rebound to a different hierarchy
-@@ -649,6 +665,7 @@ that is being created/destroyed (and hence has no sub-cgroups).
- 
- cgroup filesystem supports certain types of extended attributes in its
- directories and files.  The current supported types are:
-+
- 	- Trusted (XATTR_TRUSTED)
- 	- Security (XATTR_SECURITY)
- 
-@@ -666,12 +683,13 @@ in containers and systemd for assorted meta data like main PID in a cgroup
- 5. Questions
- ============
- 
--Q: what's up with this '/bin/echo' ?
--A: bash's builtin 'echo' command does not check calls to write() against
--   errors. If you use it in the cgroup file system, you won't be
--   able to tell whether a command succeeded or failed.
-+::
- 
--Q: When I attach processes, only the first of the line gets really attached !
--A: We can only return one error code per call to write(). So you should also
--   put only ONE PID.
-+  Q: what's up with this '/bin/echo' ?
-+  A: bash's builtin 'echo' command does not check calls to write() against
-+     errors. If you use it in the cgroup file system, you won't be
-+     able to tell whether a command succeeded or failed.
- 
-+  Q: When I attach processes, only the first of the line gets really attached !
-+  A: We can only return one error code per call to write(). So you should also
-+     put only ONE PID.
-diff --git a/Documentation/cgroup-v1/cpuacct.txt b/Documentation/cgroup-v1/cpuacct.txt
-index 9d73cc0cadb9..d30ed81d2ad7 100644
---- a/Documentation/cgroup-v1/cpuacct.txt
-+++ b/Documentation/cgroup-v1/cpuacct.txt
+diff --git a/Documentation/acpi/DSD-properties-rules.txt b/Documentation/acpi/DSD-properties-rules.txt
+index 3e4862bdad98..2b0307a897c1 100644
+--- a/Documentation/acpi/DSD-properties-rules.txt
++++ b/Documentation/acpi/DSD-properties-rules.txt
 @@ -1,5 +1,6 @@
-+=========================
- CPU Accounting Controller
---------------------------
-+=========================
- 
- The CPU accounting controller is used to group tasks using cgroups and
- account the CPU usage of these groups of tasks.
-@@ -8,9 +9,9 @@ The CPU accounting controller supports multi-hierarchy groups. An accounting
- group accumulates the CPU usage of all of its child groups and the tasks
- directly present in its group.
- 
--Accounting groups can be created by first mounting the cgroup filesystem.
-+Accounting groups can be created by first mounting the cgroup filesystem::
- 
--# mount -t cgroup -ocpuacct none /sys/fs/cgroup
-+  # mount -t cgroup -ocpuacct none /sys/fs/cgroup
- 
- With the above step, the initial or the parent accounting group becomes
- visible at /sys/fs/cgroup. At bootup, this group includes all the tasks in
-@@ -19,11 +20,11 @@ the system. /sys/fs/cgroup/tasks lists the tasks in this cgroup.
- by this group which is essentially the CPU time obtained by all the tasks
- in the system.
- 
--New accounting groups can be created under the parent group /sys/fs/cgroup.
-+New accounting groups can be created under the parent group /sys/fs/cgroup::
- 
--# cd /sys/fs/cgroup
--# mkdir g1
--# echo $$ > g1/tasks
-+  # cd /sys/fs/cgroup
-+  # mkdir g1
-+  # echo $$ > g1/tasks
- 
- The above steps create a new group g1 and move the current shell
- process (bash) into it. CPU time consumed by this bash and its children
-diff --git a/Documentation/cgroup-v1/cpusets.txt b/Documentation/cgroup-v1/cpusets.txt
-index 8402dd6de8df..7b65c9fb41d8 100644
---- a/Documentation/cgroup-v1/cpusets.txt
-+++ b/Documentation/cgroup-v1/cpusets.txt
-@@ -1,35 +1,36 @@
--				CPUSETS
--				-------
-+=======
-+CPUSETS
-+=======
- 
- Copyright (C) 2004 BULL SA.
-+
- Written by Simon.Derr@bull.net
- 
--Portions Copyright (c) 2004-2006 Silicon Graphics, Inc.
--Modified by Paul Jackson <pj@sgi.com>
--Modified by Christoph Lameter <cl@linux.com>
--Modified by Paul Menage <menage@google.com>
--Modified by Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
-+- Portions Copyright (c) 2004-2006 Silicon Graphics, Inc.
-+- Modified by Paul Jackson <pj@sgi.com>
-+- Modified by Christoph Lameter <cl@linux.com>
-+- Modified by Paul Menage <menage@google.com>
-+- Modified by Hidetoshi Seto <seto.hidetoshi@jp.fujitsu.com>
- 
--CONTENTS:
--=========
-+.. CONTENTS:
- 
--1. Cpusets
--  1.1 What are cpusets ?
--  1.2 Why are cpusets needed ?
--  1.3 How are cpusets implemented ?
--  1.4 What are exclusive cpusets ?
--  1.5 What is memory_pressure ?
--  1.6 What is memory spread ?
--  1.7 What is sched_load_balance ?
--  1.8 What is sched_relax_domain_level ?
--  1.9 How do I use cpusets ?
--2. Usage Examples and Syntax
--  2.1 Basic Usage
--  2.2 Adding/removing cpus
--  2.3 Setting flags
--  2.4 Attaching processes
--3. Questions
--4. Contact
-+   1. Cpusets
-+     1.1 What are cpusets ?
-+     1.2 Why are cpusets needed ?
-+     1.3 How are cpusets implemented ?
-+     1.4 What are exclusive cpusets ?
-+     1.5 What is memory_pressure ?
-+     1.6 What is memory spread ?
-+     1.7 What is sched_load_balance ?
-+     1.8 What is sched_relax_domain_level ?
-+     1.9 How do I use cpusets ?
-+   2. Usage Examples and Syntax
-+     2.1 Basic Usage
-+     2.2 Adding/removing cpus
-+     2.3 Setting flags
-+     2.4 Attaching processes
-+   3. Questions
-+   4. Contact
- 
- 1. Cpusets
- ==========
-@@ -157,7 +158,7 @@ modifying cpusets is via this cpuset file system.
- The /proc/<pid>/status file for each task has four added lines,
- displaying the task's cpus_allowed (on which CPUs it may be scheduled)
- and mems_allowed (on which Memory Nodes it may obtain memory),
--in the two formats seen in the following example:
-+in the two formats seen in the following example::
- 
-   Cpus_allowed:   ffffffff,ffffffff,ffffffff,ffffffff
-   Cpus_allowed_list:      0-127
-@@ -181,6 +182,7 @@ files describing that cpuset:
-  - cpuset.sched_relax_domain_level: the searching range when migrating tasks
- 
- In addition, only the root cpuset has the following file:
-+
-  - cpuset.memory_pressure_enabled flag: compute memory_pressure?
- 
- New cpusets are created using the mkdir system call or shell
-@@ -266,7 +268,8 @@ to monitor a cpuset for signs of memory pressure.  It's up to the
- batch manager or other user code to decide what to do about it and
- take action.
- 
--==> Unless this feature is enabled by writing "1" to the special file
-+==>
-+    Unless this feature is enabled by writing "1" to the special file
-     /dev/cpuset/memory_pressure_enabled, the hook in the rebalance
-     code of __alloc_pages() for this metric reduces to simply noticing
-     that the cpuset_memory_pressure_enabled flag is zero.  So only
-@@ -399,6 +402,7 @@ have tasks running on them unless explicitly assigned.
- 
- This default load balancing across all CPUs is not well suited for
- the following two situations:
-+
-  1) On large systems, load balancing across many CPUs is expensive.
-     If the system is managed using cpusets to place independent jobs
-     on separate sets of CPUs, full load balancing is unnecessary.
-@@ -501,6 +505,7 @@ all the CPUs that must be load balanced.
- The cpuset code builds a new such partition and passes it to the
- scheduler sched domain setup code, to have the sched domains rebuilt
- as necessary, whenever:
-+
-  - the 'cpuset.sched_load_balance' flag of a cpuset with non-empty CPUs changes,
-  - or CPUs come or go from a cpuset with this flag enabled,
-  - or 'cpuset.sched_relax_domain_level' value of a cpuset with non-empty CPUs
-@@ -553,13 +558,15 @@ this searching range as you like.  This file takes int value which
- indicates size of searching range in levels ideally as follows,
- otherwise initial value -1 that indicates the cpuset has no request.
- 
--  -1  : no request. use system default or follow request of others.
--   0  : no search.
--   1  : search siblings (hyperthreads in a core).
--   2  : search cores in a package.
--   3  : search cpus in a node [= system wide on non-NUMA system]
--   4  : search nodes in a chunk of node [on NUMA system]
--   5  : search system wide [on NUMA system]
-+====== ===========================================================
-+  -1   no request. use system default or follow request of others.
-+   0   no search.
-+   1   search siblings (hyperthreads in a core).
-+   2   search cores in a package.
-+   3   search cpus in a node [= system wide on non-NUMA system]
-+   4   search nodes in a chunk of node [on NUMA system]
-+   5   search system wide [on NUMA system]
-+====== ===========================================================
- 
- The system default is architecture dependent.  The system default
- can be changed using the relax_domain_level= boot parameter.
-@@ -578,13 +585,14 @@ and whether it is acceptable or not depends on your situation.
- Don't modify this file if you are not sure.
- 
- If your situation is:
-+
-  - The migration costs between each cpu can be assumed considerably
-    small(for you) due to your special application's behavior or
-    special hardware support for CPU cache etc.
-  - The searching cost doesn't have impact(for you) or you can make
-    the searching cost enough small by managing cpuset to compact etc.
-  - The latency is required even it sacrifices cache hit rate etc.
--then increasing 'sched_relax_domain_level' would benefit you.
-+   then increasing 'sched_relax_domain_level' would benefit you.
- 
- 
- 1.9 How do I use cpusets ?
-@@ -678,7 +686,7 @@ To start a new job that is to be contained within a cpuset, the steps are:
- 
- For example, the following sequence of commands will setup a cpuset
- named "Charlie", containing just CPUs 2 and 3, and Memory Node 1,
--and then start a subshell 'sh' in that cpuset:
-+and then start a subshell 'sh' in that cpuset::
- 
-   mount -t cgroup -ocpuset cpuset /sys/fs/cgroup/cpuset
-   cd /sys/fs/cgroup/cpuset
-@@ -693,6 +701,7 @@ and then start a subshell 'sh' in that cpuset:
-   cat /proc/self/cpuset
- 
- There are ways to query or modify cpusets:
-+
-  - via the cpuset file system directly, using the various cd, mkdir, echo,
-    cat, rmdir commands from the shell, or their equivalent from C.
-  - via the C library libcpuset.
-@@ -722,115 +731,133 @@ Then under /sys/fs/cgroup/cpuset you can find a tree that corresponds to the
- tree of the cpusets in the system. For instance, /sys/fs/cgroup/cpuset
- is the cpuset that holds the whole system.
- 
--If you want to create a new cpuset under /sys/fs/cgroup/cpuset:
--# cd /sys/fs/cgroup/cpuset
--# mkdir my_cpuset
-+If you want to create a new cpuset under /sys/fs/cgroup/cpuset::
- 
--Now you want to do something with this cpuset.
--# cd my_cpuset
-+  # cd /sys/fs/cgroup/cpuset
-+  # mkdir my_cpuset
- 
--In this directory you can find several files:
--# ls
--cgroup.clone_children  cpuset.memory_pressure
--cgroup.event_control   cpuset.memory_spread_page
--cgroup.procs           cpuset.memory_spread_slab
--cpuset.cpu_exclusive   cpuset.mems
--cpuset.cpus            cpuset.sched_load_balance
--cpuset.mem_exclusive   cpuset.sched_relax_domain_level
--cpuset.mem_hardwall    notify_on_release
--cpuset.memory_migrate  tasks
-+Now you want to do something with this cpuset::
-+
-+  # cd my_cpuset
-+
-+In this directory you can find several files::
-+
-+  # ls
-+  cgroup.clone_children  cpuset.memory_pressure
-+  cgroup.event_control   cpuset.memory_spread_page
-+  cgroup.procs           cpuset.memory_spread_slab
-+  cpuset.cpu_exclusive   cpuset.mems
-+  cpuset.cpus            cpuset.sched_load_balance
-+  cpuset.mem_exclusive   cpuset.sched_relax_domain_level
-+  cpuset.mem_hardwall    notify_on_release
-+  cpuset.memory_migrate  tasks
- 
- Reading them will give you information about the state of this cpuset:
- the CPUs and Memory Nodes it can use, the processes that are using
- it, its properties.  By writing to these files you can manipulate
- the cpuset.
- 
--Set some flags:
--# /bin/echo 1 > cpuset.cpu_exclusive
-+Set some flags::
- 
--Add some cpus:
--# /bin/echo 0-7 > cpuset.cpus
-+  # /bin/echo 1 > cpuset.cpu_exclusive
- 
--Add some mems:
--# /bin/echo 0-7 > cpuset.mems
-+Add some cpus::
- 
--Now attach your shell to this cpuset:
--# /bin/echo $$ > tasks
-+  # /bin/echo 0-7 > cpuset.cpus
-+
-+Add some mems::
-+
-+  # /bin/echo 0-7 > cpuset.mems
-+
-+Now attach your shell to this cpuset::
-+
-+  # /bin/echo $$ > tasks
- 
- You can also create cpusets inside your cpuset by using mkdir in this
--directory.
--# mkdir my_sub_cs
-+directory::
-+
-+  # mkdir my_sub_cs
-+
-+To remove a cpuset, just use rmdir::
-+
-+  # rmdir my_sub_cs
- 
--To remove a cpuset, just use rmdir:
--# rmdir my_sub_cs
- This will fail if the cpuset is in use (has cpusets inside, or has
- processes attached).
- 
- Note that for legacy reasons, the "cpuset" filesystem exists as a
- wrapper around the cgroup filesystem.
- 
--The command
-+The command::
- 
--mount -t cpuset X /sys/fs/cgroup/cpuset
-+  mount -t cpuset X /sys/fs/cgroup/cpuset
- 
--is equivalent to
-+is equivalent to::
- 
--mount -t cgroup -ocpuset,noprefix X /sys/fs/cgroup/cpuset
--echo "/sbin/cpuset_release_agent" > /sys/fs/cgroup/cpuset/release_agent
-+  mount -t cgroup -ocpuset,noprefix X /sys/fs/cgroup/cpuset
-+  echo "/sbin/cpuset_release_agent" > /sys/fs/cgroup/cpuset/release_agent
- 
- 2.2 Adding/removing cpus
- ------------------------
- 
- This is the syntax to use when writing in the cpus or mems files
--in cpuset directories:
-+in cpuset directories::
- 
--# /bin/echo 1-4 > cpuset.cpus		-> set cpus list to cpus 1,2,3,4
--# /bin/echo 1,2,3,4 > cpuset.cpus	-> set cpus list to cpus 1,2,3,4
-+  # /bin/echo 1-4 > cpuset.cpus		-> set cpus list to cpus 1,2,3,4
-+  # /bin/echo 1,2,3,4 > cpuset.cpus	-> set cpus list to cpus 1,2,3,4
- 
- To add a CPU to a cpuset, write the new list of CPUs including the
--CPU to be added. To add 6 to the above cpuset:
-+CPU to be added. To add 6 to the above cpuset::
- 
--# /bin/echo 1-4,6 > cpuset.cpus	-> set cpus list to cpus 1,2,3,4,6
-+  # /bin/echo 1-4,6 > cpuset.cpus	-> set cpus list to cpus 1,2,3,4,6
- 
- Similarly to remove a CPU from a cpuset, write the new list of CPUs
- without the CPU to be removed.
- 
--To remove all the CPUs:
-+To remove all the CPUs::
- 
--# /bin/echo "" > cpuset.cpus		-> clear cpus list
-+  # /bin/echo "" > cpuset.cpus		-> clear cpus list
- 
- 2.3 Setting flags
- -----------------
- 
--The syntax is very simple:
-+The syntax is very simple::
- 
--# /bin/echo 1 > cpuset.cpu_exclusive 	-> set flag 'cpuset.cpu_exclusive'
--# /bin/echo 0 > cpuset.cpu_exclusive 	-> unset flag 'cpuset.cpu_exclusive'
-+  # /bin/echo 1 > cpuset.cpu_exclusive 	-> set flag 'cpuset.cpu_exclusive'
-+  # /bin/echo 0 > cpuset.cpu_exclusive 	-> unset flag 'cpuset.cpu_exclusive'
- 
- 2.4 Attaching processes
- -----------------------
- 
--# /bin/echo PID > tasks
-+::
-+
-+  # /bin/echo PID > tasks
- 
- Note that it is PID, not PIDs. You can only attach ONE task at a time.
--If you have several tasks to attach, you have to do it one after another:
-+If you have several tasks to attach, you have to do it one after another::
- 
--# /bin/echo PID1 > tasks
--# /bin/echo PID2 > tasks
-+  # /bin/echo PID1 > tasks
-+  # /bin/echo PID2 > tasks
- 	...
--# /bin/echo PIDn > tasks
-+  # /bin/echo PIDn > tasks
- 
- 
- 3. Questions
- ============
- 
--Q: what's up with this '/bin/echo' ?
--A: bash's builtin 'echo' command does not check calls to write() against
-+Q:
-+   what's up with this '/bin/echo' ?
-+
-+A:
-+   bash's builtin 'echo' command does not check calls to write() against
-    errors. If you use it in the cpuset file system, you won't be
-    able to tell whether a command succeeded or failed.
- 
--Q: When I attach processes, only the first of the line gets really attached !
--A: We can only return one error code per call to write(). So you should also
-+Q:
-+   When I attach processes, only the first of the line gets really attached !
-+
-+A:
-+   We can only return one error code per call to write(). So you should also
-    put only ONE pid.
- 
- 4. Contact
-diff --git a/Documentation/cgroup-v1/devices.txt b/Documentation/cgroup-v1/devices.txt
-index 3c1095ca02ea..73033448a3e1 100644
---- a/Documentation/cgroup-v1/devices.txt
-+++ b/Documentation/cgroup-v1/devices.txt
-@@ -1,6 +1,9 @@
-+===========================
- Device Whitelist Controller
-+===========================
- 
--1. Description:
-+1. Description
-+==============
- 
- Implement a cgroup to track and enforce open and mknod restrictions
- on device files.  A device cgroup associates a device access
-@@ -16,24 +19,26 @@ devices from the whitelist or add new entries.  A child cgroup can
- never receive a device access which is denied by its parent.
- 
- 2. User Interface
-+=================
- 
- An entry is added using devices.allow, and removed using
--devices.deny.  For instance
-+devices.deny.  For instance::
- 
- 	echo 'c 1:3 mr' > /sys/fs/cgroup/1/devices.allow
- 
- allows cgroup 1 to read and mknod the device usually known as
--/dev/null.  Doing
-+/dev/null.  Doing::
- 
- 	echo a > /sys/fs/cgroup/1/devices.deny
- 
--will remove the default 'a *:* rwm' entry. Doing
-+will remove the default 'a *:* rwm' entry. Doing::
- 
- 	echo a > /sys/fs/cgroup/1/devices.allow
- 
- will add the 'a *:* rwm' entry to the whitelist.
- 
- 3. Security
-+===========
- 
- Any task can move itself between cgroups.  This clearly won't
- suffice, but we can decide the best way to adequately restrict
-@@ -50,6 +55,7 @@ A cgroup may not be granted more permissions than the cgroup's
- parent has.
- 
- 4. Hierarchy
-+============
- 
- device cgroups maintain hierarchy by making sure a cgroup never has more
- access permissions than its parent.  Every time an entry is written to
-@@ -58,7 +64,8 @@ from their whitelist and all the locally set whitelist entries will be
- re-evaluated.  In case one of the locally set whitelist entries would provide
- more access than the cgroup's parent, it'll be removed from the whitelist.
- 
--Example:
-+Example::
-+
-       A
-      / \
-         B
-@@ -67,10 +74,12 @@ Example:
-     A            allow		"b 8:* rwm", "c 116:1 rw"
-     B            deny		"c 1:3 rwm", "c 116:2 rwm", "b 3:* rwm"
- 
--If a device is denied in group A:
-+If a device is denied in group A::
-+
- 	# echo "c 116:* r" > A/devices.deny
-+
- it'll propagate down and after revalidating B's entries, the whitelist entry
--"c 116:2 rwm" will be removed:
-+"c 116:2 rwm" will be removed::
- 
-     group        whitelist entries                        denied devices
-     A            all                                      "b 8:* rwm", "c 116:* rw"
-@@ -79,7 +88,8 @@ it'll propagate down and after revalidating B's entries, the whitelist entry
- In case parent's exceptions change and local exceptions are not allowed
- anymore, they'll be deleted.
- 
--Notice that new whitelist entries will not be propagated:
-+Notice that new whitelist entries will not be propagated::
-+
-       A
-      / \
-         B
-@@ -88,24 +98,30 @@ Notice that new whitelist entries will not be propagated:
-     A            "c 1:3 rwm", "c 1:5 r"                   all the rest
-     B            "c 1:3 rwm", "c 1:5 r"                   all the rest
- 
--when adding "c *:3 rwm":
-+when adding `c *:3 rwm`::
-+
- 	# echo "c *:3 rwm" >A/devices.allow
- 
--the result:
-+the result::
-+
-     group        whitelist entries                        denied devices
-     A            "c *:3 rwm", "c 1:5 r"                   all the rest
-     B            "c 1:3 rwm", "c 1:5 r"                   all the rest
- 
--but now it'll be possible to add new entries to B:
-+but now it'll be possible to add new entries to B::
-+
- 	# echo "c 2:3 rwm" >B/devices.allow
- 	# echo "c 50:3 r" >B/devices.allow
--or even
-+
-+or even::
-+
- 	# echo "c *:3 rwm" >B/devices.allow
- 
- Allowing or denying all by writing 'a' to devices.allow or devices.deny will
- not be possible once the device cgroups has children.
- 
- 4.1 Hierarchy (internal implementation)
-+---------------------------------------
- 
- device cgroups is implemented internally using a behavior (ALLOW, DENY) and a
- list of exceptions.  The internal state is controlled using the same user
-diff --git a/Documentation/cgroup-v1/freezer-subsystem.txt b/Documentation/cgroup-v1/freezer-subsystem.txt
-index e831cb2b8394..582d3427de3f 100644
---- a/Documentation/cgroup-v1/freezer-subsystem.txt
-+++ b/Documentation/cgroup-v1/freezer-subsystem.txt
-@@ -1,3 +1,7 @@
-+==============
-+Cgroup Freezer
-+==============
-+
- The cgroup freezer is useful to batch job management system which start
- and stop sets of tasks in order to schedule the resources of a machine
- according to the desires of a system administrator. This sort of program
-@@ -23,7 +27,7 @@ blocked, or ignored it can be seen by waiting or ptracing parent tasks.
- SIGCONT is especially unsuitable since it can be caught by the task. Any
- programs designed to watch for SIGSTOP and SIGCONT could be broken by
- attempting to use SIGSTOP and SIGCONT to stop and resume tasks. We can
--demonstrate this problem using nested bash shells:
-+demonstrate this problem using nested bash shells::
- 
- 	$ echo $$
- 	16644
-@@ -93,19 +97,19 @@ The following cgroupfs files are created by cgroup freezer.
- The root cgroup is non-freezable and the above interface files don't
- exist.
- 
--* Examples of usage :
-+* Examples of usage::
- 
-    # mkdir /sys/fs/cgroup/freezer
-    # mount -t cgroup -ofreezer freezer /sys/fs/cgroup/freezer
-    # mkdir /sys/fs/cgroup/freezer/0
-    # echo $some_pid > /sys/fs/cgroup/freezer/0/tasks
- 
--to get status of the freezer subsystem :
-+to get status of the freezer subsystem::
- 
-    # cat /sys/fs/cgroup/freezer/0/freezer.state
-    THAWED
- 
--to freeze all tasks in the container :
-+to freeze all tasks in the container::
- 
-    # echo FROZEN > /sys/fs/cgroup/freezer/0/freezer.state
-    # cat /sys/fs/cgroup/freezer/0/freezer.state
-@@ -113,7 +117,7 @@ to freeze all tasks in the container :
-    # cat /sys/fs/cgroup/freezer/0/freezer.state
-    FROZEN
- 
--to unfreeze all tasks in the container :
-+to unfreeze all tasks in the container::
- 
-    # echo THAWED > /sys/fs/cgroup/freezer/0/freezer.state
-    # cat /sys/fs/cgroup/freezer/0/freezer.state
-diff --git a/Documentation/cgroup-v1/hugetlb.txt b/Documentation/cgroup-v1/hugetlb.txt
-index 106245c3aecc..7056a185914b 100644
---- a/Documentation/cgroup-v1/hugetlb.txt
-+++ b/Documentation/cgroup-v1/hugetlb.txt
-@@ -1,5 +1,6 @@
-+==================
- HugeTLB Controller
---------------------
-+==================
- 
- The HugeTLB controller allows to limit the HugeTLB usage per control group and
- enforces the controller limit during page fault. Since HugeTLB doesn't
-@@ -16,16 +17,16 @@ With the above step, the initial or the parent HugeTLB group becomes
- visible at /sys/fs/cgroup. At bootup, this group includes all the tasks in
- the system. /sys/fs/cgroup/tasks lists the tasks in this cgroup.
- 
--New groups can be created under the parent group /sys/fs/cgroup.
-+New groups can be created under the parent group /sys/fs/cgroup::
- 
--# cd /sys/fs/cgroup
--# mkdir g1
--# echo $$ > g1/tasks
-+  # cd /sys/fs/cgroup
-+  # mkdir g1
-+  # echo $$ > g1/tasks
- 
- The above steps create a new group g1 and move the current shell
- process (bash) into it.
- 
--Brief summary of control files
-+Brief summary of control files::
- 
-  hugetlb.<hugepagesize>.limit_in_bytes     # set/show limit of "hugepagesize" hugetlb usage
-  hugetlb.<hugepagesize>.max_usage_in_bytes # show max "hugepagesize" hugetlb  usage recorded
-@@ -33,13 +34,13 @@ Brief summary of control files
-  hugetlb.<hugepagesize>.failcnt		   # show the number of allocation failure due to HugeTLB limit
- 
- For a system supporting two hugepage size (16M and 16G) the control
--files include:
-+files include::
- 
--hugetlb.16GB.limit_in_bytes
--hugetlb.16GB.max_usage_in_bytes
--hugetlb.16GB.usage_in_bytes
--hugetlb.16GB.failcnt
--hugetlb.16MB.limit_in_bytes
--hugetlb.16MB.max_usage_in_bytes
--hugetlb.16MB.usage_in_bytes
--hugetlb.16MB.failcnt
-+  hugetlb.16GB.limit_in_bytes
-+  hugetlb.16GB.max_usage_in_bytes
-+  hugetlb.16GB.usage_in_bytes
-+  hugetlb.16GB.failcnt
-+  hugetlb.16MB.limit_in_bytes
-+  hugetlb.16MB.max_usage_in_bytes
-+  hugetlb.16MB.usage_in_bytes
-+  hugetlb.16MB.failcnt
-diff --git a/Documentation/cgroup-v1/memcg_test.txt b/Documentation/cgroup-v1/memcg_test.txt
-index 621e29ffb358..507bc99631bf 100644
---- a/Documentation/cgroup-v1/memcg_test.txt
-+++ b/Documentation/cgroup-v1/memcg_test.txt
-@@ -1,5 +1,9 @@
--Memory Resource Controller(Memcg)  Implementation Memo.
-+=====================================================
-+Memory Resource Controller(Memcg) Implementation Memo
-+=====================================================
-+
- Last Updated: 2010/2
-+
- Base Kernel Version: based on 2.6.33-rc7-mm(candidate for 34).
- 
- Because VM is getting complex (one of reasons is memcg...), memcg's behavior
-@@ -9,24 +13,31 @@ Please note that implementation details can be changed.
- (*) Topics on API should be in Documentation/cgroup-v1/memory.txt)
- 
- 0. How to record usage ?
-+========================
-+
-    2 objects are used.
- 
-    page_cgroup ....an object per page.
-+
- 	Allocated at boot or memory hotplug. Freed at memory hot removal.
- 
-    swap_cgroup ... an entry per swp_entry.
-+
- 	Allocated at swapon(). Freed at swapoff().
- 
-    The page_cgroup has USED bit and double count against a page_cgroup never
-    occurs. swap_cgroup is used only when a charged page is swapped-out.
- 
- 1. Charge
-+=========
- 
-    a page/swp_entry may be charged (usage += PAGE_SIZE) at
- 
- 	mem_cgroup_try_charge()
- 
- 2. Uncharge
-+===========
-+
-   a page/swp_entry may be uncharged (usage -= PAGE_SIZE) by
- 
- 	mem_cgroup_uncharge()
-@@ -37,9 +48,12 @@ Please note that implementation details can be changed.
- 	  disappears.
- 
- 3. charge-commit-cancel
-+=======================
-+
- 	Memcg pages are charged in two steps:
--		mem_cgroup_try_charge()
--		mem_cgroup_commit_charge() or mem_cgroup_cancel_charge()
-+
-+		- mem_cgroup_try_charge()
-+		- mem_cgroup_commit_charge() or mem_cgroup_cancel_charge()
- 
- 	At try_charge(), there are no flags to say "this page is charged".
- 	at this point, usage += PAGE_SIZE.
-@@ -51,6 +65,8 @@ Please note that implementation details can be changed.
- Under below explanation, we assume CONFIG_MEM_RES_CTRL_SWAP=y.
- 
- 4. Anonymous
-+============
-+
- 	Anonymous page is newly allocated at
- 		  - page fault into MAP_ANONYMOUS mapping.
- 		  - Copy-On-Write.
-@@ -78,34 +94,45 @@ Under below explanation, we assume CONFIG_MEM_RES_CTRL_SWAP=y.
- 	(e) zap_pte() is called and swp_entry's refcnt -=1 -> 0.
- 
- 5. Page Cache
-+=============
-+
-    	Page Cache is charged at
- 	- add_to_page_cache_locked().
- 
- 	The logic is very clear. (About migration, see below)
--	Note: __remove_from_page_cache() is called by remove_from_page_cache()
--	and __remove_mapping().
-+
-+	Note:
-+	  __remove_from_page_cache() is called by remove_from_page_cache()
-+	  and __remove_mapping().
- 
- 6. Shmem(tmpfs) Page Cache
-+===========================
-+
- 	The best way to understand shmem's page state transition is to read
- 	mm/shmem.c.
-+
- 	But brief explanation of the behavior of memcg around shmem will be
- 	helpful to understand the logic.
- 
- 	Shmem's page (just leaf page, not direct/indirect block) can be on
-+
- 		- radix-tree of shmem's inode.
- 		- SwapCache.
- 		- Both on radix-tree and SwapCache. This happens at swap-in
- 		  and swap-out,
- 
- 	It's charged when...
-+
- 	- A new page is added to shmem's radix-tree.
- 	- A swp page is read. (move a charge from swap_cgroup to page_cgroup)
- 
- 7. Page Migration
-+=================
- 
- 	mem_cgroup_migrate()
- 
- 8. LRU
-+======
-         Each memcg has its own private LRU. Now, its handling is under global
- 	VM's control (means that it's handled under global pgdat->lru_lock).
- 	Almost all routines around memcg's LRU is called by global LRU's
-@@ -114,163 +141,211 @@ Under below explanation, we assume CONFIG_MEM_RES_CTRL_SWAP=y.
- 	A special function is mem_cgroup_isolate_pages(). This scans
- 	memcg's private LRU and call __isolate_lru_page() to extract a page
- 	from LRU.
-+
- 	(By __isolate_lru_page(), the page is removed from both of global and
--	 private LRU.)
-+	private LRU.)
- 
- 
- 9. Typical Tests.
-+=================
- 
-  Tests for racy cases.
- 
-- 9.1 Small limit to memcg.
-+9.1 Small limit to memcg.
-+-------------------------
-+
- 	When you do test to do racy case, it's good test to set memcg's limit
- 	to be very small rather than GB. Many races found in the test under
- 	xKB or xxMB limits.
-+
- 	(Memory behavior under GB and Memory behavior under MB shows very
--	 different situation.)
-+	different situation.)
-+
-+9.2 Shmem
-+---------
- 
-- 9.2 Shmem
- 	Historically, memcg's shmem handling was poor and we saw some amount
- 	of troubles here. This is because shmem is page-cache but can be
- 	SwapCache. Test with shmem/tmpfs is always good test.
- 
-- 9.3 Migration
-+9.3 Migration
-+-------------
-+
- 	For NUMA, migration is an another special case. To do easy test, cpuset
--	is useful. Following is a sample script to do migration.
-+	is useful. Following is a sample script to do migration::
- 
--	mount -t cgroup -o cpuset none /opt/cpuset
-+		mount -t cgroup -o cpuset none /opt/cpuset
- 
--	mkdir /opt/cpuset/01
--	echo 1 > /opt/cpuset/01/cpuset.cpus
--	echo 0 > /opt/cpuset/01/cpuset.mems
--	echo 1 > /opt/cpuset/01/cpuset.memory_migrate
--	mkdir /opt/cpuset/02
--	echo 1 > /opt/cpuset/02/cpuset.cpus
--	echo 1 > /opt/cpuset/02/cpuset.mems
--	echo 1 > /opt/cpuset/02/cpuset.memory_migrate
-+		mkdir /opt/cpuset/01
-+		echo 1 > /opt/cpuset/01/cpuset.cpus
-+		echo 0 > /opt/cpuset/01/cpuset.mems
-+		echo 1 > /opt/cpuset/01/cpuset.memory_migrate
-+		mkdir /opt/cpuset/02
-+		echo 1 > /opt/cpuset/02/cpuset.cpus
-+		echo 1 > /opt/cpuset/02/cpuset.mems
-+		echo 1 > /opt/cpuset/02/cpuset.memory_migrate
- 
- 	In above set, when you moves a task from 01 to 02, page migration to
- 	node 0 to node 1 will occur. Following is a script to migrate all
--	under cpuset.
--	--
--	move_task()
--	{
--	for pid in $1
--        do
--                /bin/echo $pid >$2/tasks 2>/dev/null
--		echo -n $pid
--		echo -n " "
--        done
--	echo END
--	}
-+	under cpuset.::
-+
-+		--
-+		move_task()
-+		{
-+		for pid in $1
-+		do
-+			/bin/echo $pid >$2/tasks 2>/dev/null
-+			echo -n $pid
-+			echo -n " "
-+		done
-+		echo END
-+		}
-+
-+		G1_TASK=`cat ${G1}/tasks`
-+		G2_TASK=`cat ${G2}/tasks`
-+		move_task "${G1_TASK}" ${G2} &
-+		--
-+
-+9.4 Memory hotplug
-+------------------
- 
--	G1_TASK=`cat ${G1}/tasks`
--	G2_TASK=`cat ${G2}/tasks`
--	move_task "${G1_TASK}" ${G2} &
--	--
-- 9.4 Memory hotplug.
- 	memory hotplug test is one of good test.
--	to offline memory, do following.
--	# echo offline > /sys/devices/system/memory/memoryXXX/state
-+
-+	to offline memory, do following::
-+
-+		# echo offline > /sys/devices/system/memory/memoryXXX/state
-+
- 	(XXX is the place of memory)
-+
- 	This is an easy way to test page migration, too.
- 
-- 9.5 mkdir/rmdir
-+9.5 mkdir/rmdir
-+---------------
-+
- 	When using hierarchy, mkdir/rmdir test should be done.
--	Use tests like the following.
-+	Use tests like the following::
- 
--	echo 1 >/opt/cgroup/01/memory/use_hierarchy
--	mkdir /opt/cgroup/01/child_a
--	mkdir /opt/cgroup/01/child_b
-+		echo 1 >/opt/cgroup/01/memory/use_hierarchy
-+		mkdir /opt/cgroup/01/child_a
-+		mkdir /opt/cgroup/01/child_b
- 
--	set limit to 01.
--	add limit to 01/child_b
--	run jobs under child_a and child_b
-+		set limit to 01.
-+		add limit to 01/child_b
-+		run jobs under child_a and child_b
- 
--	create/delete following groups at random while jobs are running.
--	/opt/cgroup/01/child_a/child_aa
--	/opt/cgroup/01/child_b/child_bb
--	/opt/cgroup/01/child_c
-+	create/delete following groups at random while jobs are running::
-+
-+		/opt/cgroup/01/child_a/child_aa
-+		/opt/cgroup/01/child_b/child_bb
-+		/opt/cgroup/01/child_c
- 
- 	running new jobs in new group is also good.
- 
-- 9.6 Mount with other subsystems.
-+9.6 Mount with other subsystems
-+-------------------------------
-+
- 	Mounting with other subsystems is a good test because there is a
- 	race and lock dependency with other cgroup subsystems.
- 
--	example)
--	# mount -t cgroup none /cgroup -o cpuset,memory,cpu,devices
-+	example::
-+
-+		# mount -t cgroup none /cgroup -o cpuset,memory,cpu,devices
- 
- 	and do task move, mkdir, rmdir etc...under this.
- 
-- 9.7 swapoff.
-+9.7 swapoff
-+-----------
-+
- 	Besides management of swap is one of complicated parts of memcg,
- 	call path of swap-in at swapoff is not same as usual swap-in path..
- 	It's worth to be tested explicitly.
- 
--	For example, test like following is good.
--	(Shell-A)
--	# mount -t cgroup none /cgroup -o memory
--	# mkdir /cgroup/test
--	# echo 40M > /cgroup/test/memory.limit_in_bytes
--	# echo 0 > /cgroup/test/tasks
-+	For example, test like following is good:
-+
-+	(Shell-A)::
-+
-+		# mount -t cgroup none /cgroup -o memory
-+		# mkdir /cgroup/test
-+		# echo 40M > /cgroup/test/memory.limit_in_bytes
-+		# echo 0 > /cgroup/test/tasks
-+
- 	Run malloc(100M) program under this. You'll see 60M of swaps.
--	(Shell-B)
--	# move all tasks in /cgroup/test to /cgroup
--	# /sbin/swapoff -a
--	# rmdir /cgroup/test
--	# kill malloc task.
-+
-+	(Shell-B)::
-+
-+		# move all tasks in /cgroup/test to /cgroup
-+		# /sbin/swapoff -a
-+		# rmdir /cgroup/test
-+		# kill malloc task.
- 
- 	Of course, tmpfs v.s. swapoff test should be tested, too.
- 
-- 9.8 OOM-Killer
-+9.8 OOM-Killer
-+--------------
-+
- 	Out-of-memory caused by memcg's limit will kill tasks under
- 	the memcg. When hierarchy is used, a task under hierarchy
- 	will be killed by the kernel.
-+
- 	In this case, panic_on_oom shouldn't be invoked and tasks
- 	in other groups shouldn't be killed.
- 
- 	It's not difficult to cause OOM under memcg as following.
--	Case A) when you can swapoff
--	#swapoff -a
--	#echo 50M > /memory.limit_in_bytes
-+
-+	Case A) when you can swapoff::
-+
-+		#swapoff -a
-+		#echo 50M > /memory.limit_in_bytes
-+
- 	run 51M of malloc
- 
--	Case B) when you use mem+swap limitation.
--	#echo 50M > memory.limit_in_bytes
--	#echo 50M > memory.memsw.limit_in_bytes
-+	Case B) when you use mem+swap limitation::
-+
-+		#echo 50M > memory.limit_in_bytes
-+		#echo 50M > memory.memsw.limit_in_bytes
-+
- 	run 51M of malloc
- 
-- 9.9 Move charges at task migration
-+9.9 Move charges at task migration
-+----------------------------------
-+
- 	Charges associated with a task can be moved along with task migration.
- 
--	(Shell-A)
--	#mkdir /cgroup/A
--	#echo $$ >/cgroup/A/tasks
-+	(Shell-A)::
-+
-+		#mkdir /cgroup/A
-+		#echo $$ >/cgroup/A/tasks
-+
- 	run some programs which uses some amount of memory in /cgroup/A.
- 
--	(Shell-B)
--	#mkdir /cgroup/B
--	#echo 1 >/cgroup/B/memory.move_charge_at_immigrate
--	#echo "pid of the program running in group A" >/cgroup/B/tasks
-+	(Shell-B)::
- 
--	You can see charges have been moved by reading *.usage_in_bytes or
-+		#mkdir /cgroup/B
-+		#echo 1 >/cgroup/B/memory.move_charge_at_immigrate
-+		#echo "pid of the program running in group A" >/cgroup/B/tasks
-+
-+	You can see charges have been moved by reading `*.usage_in_bytes` or
- 	memory.stat of both A and B.
--	See 8.2 of Documentation/cgroup-v1/memory.txt to see what value should be
--	written to move_charge_at_immigrate.
- 
-- 9.10 Memory thresholds
-+	See 8.2 of Documentation/cgroup-v1/memory.txt to see what value should
-+	be written to move_charge_at_immigrate.
-+
-+9.10 Memory thresholds
-+----------------------
-+
- 	Memory controller implements memory thresholds using cgroups notification
- 	API. You can use tools/cgroup/cgroup_event_listener.c to test it.
- 
--	(Shell-A) Create cgroup and run event listener
--	# mkdir /cgroup/A
--	# ./cgroup_event_listener /cgroup/A/memory.usage_in_bytes 5M
-+	(Shell-A) Create cgroup and run event listener::
- 
--	(Shell-B) Add task to cgroup and try to allocate and free memory
--	# echo $$ >/cgroup/A/tasks
--	# a="$(dd if=/dev/zero bs=1M count=10)"
--	# a=
-+		# mkdir /cgroup/A
-+		# ./cgroup_event_listener /cgroup/A/memory.usage_in_bytes 5M
-+
-+	(Shell-B) Add task to cgroup and try to allocate and free memory::
-+
-+		# echo $$ >/cgroup/A/tasks
-+		# a="$(dd if=/dev/zero bs=1M count=10)"
-+		# a=
- 
- 	You will see message from cgroup_event_listener every time you cross
- 	the thresholds.
-diff --git a/Documentation/cgroup-v1/memory.txt b/Documentation/cgroup-v1/memory.txt
-index a33cedf85427..9ac71f2608e1 100644
---- a/Documentation/cgroup-v1/memory.txt
-+++ b/Documentation/cgroup-v1/memory.txt
-@@ -1,22 +1,26 @@
-+==========================
- Memory Resource Controller
-+==========================
- 
--NOTE: This document is hopelessly outdated and it asks for a complete
-+NOTE:
-+      This document is hopelessly outdated and it asks for a complete
-       rewrite. It still contains a useful information so we are keeping it
-       here but make sure to check the current code if you need a deeper
-       understanding.
- 
--NOTE: The Memory Resource Controller has generically been referred to as the
-+NOTE:
-+      The Memory Resource Controller has generically been referred to as the
-       memory controller in this document. Do not confuse memory controller
-       used here with the memory controller that is used in hardware.
- 
--(For editors)
--In this document:
-+(For editors) In this document:
-       When we mention a cgroup (cgroupfs's directory) with memory controller,
-       we call it "memory cgroup". When you see git-log and source code, you'll
-       see patch's title and function names tend to use "memcg".
-       In this document, we avoid using it.
- 
- Benefits and Purpose of the memory controller
-+=============================================
- 
- The memory controller isolates the memory behaviour of a group of tasks
- from the rest of the system. The article on LWN [12] mentions some probable
-@@ -38,6 +42,7 @@ e. There are several other use cases; find one or use the controller just
- Current Status: linux-2.6.34-mmotm(development version of 2010/April)
- 
- Features:
-+
-  - accounting anonymous pages, file caches, swap caches usage and limiting them.
-  - pages are linked to per-memcg LRU exclusively, and there is no global LRU.
-  - optionally, memory+swap usage can be accounted and limited.
-@@ -54,41 +59,48 @@ Features:
- 
- Brief summary of control files.
- 
-- tasks				 # attach a task(thread) and show list of threads
-- cgroup.procs			 # show list of processes
-- cgroup.event_control		 # an interface for event_fd()
-- memory.usage_in_bytes		 # show current usage for memory
--				 (See 5.5 for details)
-- memory.memsw.usage_in_bytes	 # show current usage for memory+Swap
--				 (See 5.5 for details)
-- memory.limit_in_bytes		 # set/show limit of memory usage
-- memory.memsw.limit_in_bytes	 # set/show limit of memory+Swap usage
-- memory.failcnt			 # show the number of memory usage hits limits
-- memory.memsw.failcnt		 # show the number of memory+Swap hits limits
-- memory.max_usage_in_bytes	 # show max memory usage recorded
-- memory.memsw.max_usage_in_bytes # show max memory+Swap usage recorded
-- memory.soft_limit_in_bytes	 # set/show soft limit of memory usage
-- memory.stat			 # show various statistics
-- memory.use_hierarchy		 # set/show hierarchical account enabled
-- memory.force_empty		 # trigger forced page reclaim
-- memory.pressure_level		 # set memory pressure notifications
-- memory.swappiness		 # set/show swappiness parameter of vmscan
--				 (See sysctl's vm.swappiness)
-- memory.move_charge_at_immigrate # set/show controls of moving charges
-- memory.oom_control		 # set/show oom controls.
-- memory.numa_stat		 # show the number of memory usage per numa node
-+==================================== ==========================================
-+ tasks				     attach a task(thread) and show list of
-+				     threads
-+ cgroup.procs			     show list of processes
-+ cgroup.event_control		     an interface for event_fd()
-+ memory.usage_in_bytes		     show current usage for memory
-+				     (See 5.5 for details)
-+ memory.memsw.usage_in_bytes	     show current usage for memory+Swap
-+				     (See 5.5 for details)
-+ memory.limit_in_bytes		     set/show limit of memory usage
-+ memory.memsw.limit_in_bytes	     set/show limit of memory+Swap usage
-+ memory.failcnt			     show the number of memory usage hits limits
-+ memory.memsw.failcnt		     show the number of memory+Swap hits limits
-+ memory.max_usage_in_bytes	     show max memory usage recorded
-+ memory.memsw.max_usage_in_bytes     show max memory+Swap usage recorded
-+ memory.soft_limit_in_bytes	     set/show soft limit of memory usage
-+ memory.stat			     show various statistics
-+ memory.use_hierarchy		     set/show hierarchical account enabled
-+ memory.force_empty		     trigger forced page reclaim
-+ memory.pressure_level		     set memory pressure notifications
-+ memory.swappiness		     set/show swappiness parameter of vmscan
-+				     (See sysctl's vm.swappiness)
-+ memory.move_charge_at_immigrate     set/show controls of moving charges
-+ memory.oom_control		     set/show oom controls.
-+ memory.numa_stat		     show the number of memory usage per numa
-+				     node
- 
-- memory.kmem.limit_in_bytes      # set/show hard limit for kernel memory
-- memory.kmem.usage_in_bytes      # show current kernel memory allocation
-- memory.kmem.failcnt             # show the number of kernel memory usage hits limits
-- memory.kmem.max_usage_in_bytes  # show max kernel memory usage recorded
-+ memory.kmem.limit_in_bytes          set/show hard limit for kernel memory
-+ memory.kmem.usage_in_bytes          show current kernel memory allocation
-+ memory.kmem.failcnt                 show the number of kernel memory usage
-+				     hits limits
-+ memory.kmem.max_usage_in_bytes      show max kernel memory usage recorded
- 
-- memory.kmem.tcp.limit_in_bytes  # set/show hard limit for tcp buf memory
-- memory.kmem.tcp.usage_in_bytes  # show current tcp buf memory allocation
-- memory.kmem.tcp.failcnt            # show the number of tcp buf memory usage hits limits
-- memory.kmem.tcp.max_usage_in_bytes # show max tcp buf memory usage recorded
-+ memory.kmem.tcp.limit_in_bytes      set/show hard limit for tcp buf memory
-+ memory.kmem.tcp.usage_in_bytes      show current tcp buf memory allocation
-+ memory.kmem.tcp.failcnt             show the number of tcp buf memory usage
-+				     hits limits
-+ memory.kmem.tcp.max_usage_in_bytes  show max tcp buf memory usage recorded
-+==================================== ==========================================
- 
- 1. History
-+==========
- 
- The memory controller has a long history. A request for comments for the memory
- controller was posted by Balbir Singh [1]. At the time the RFC was posted
-@@ -103,6 +115,7 @@ at version 6; it combines both mapped (RSS) and unmapped Page
- Cache Control [11].
- 
- 2. Memory Control
-+=================
- 
- Memory is a unique resource in the sense that it is present in a limited
- amount. If a task requires a lot of CPU processing, the task can spread
-@@ -120,6 +133,7 @@ are:
- The memory controller is the first controller developed.
- 
- 2.1. Design
-+-----------
- 
- The core of the design is a counter called the page_counter. The
- page_counter tracks the current memory usage and limit of the group of
-@@ -127,6 +141,9 @@ processes associated with the controller. Each cgroup has a memory controller
- specific data structure (mem_cgroup) associated with it.
- 
- 2.2. Accounting
-+---------------
-+
-+::
- 
- 		+--------------------+
- 		|  mem_cgroup        |
-@@ -165,6 +182,7 @@ updated. page_cgroup has its own LRU on cgroup.
- (*) page_cgroup structure is allocated at boot/memory-hotplug time.
- 
- 2.2.1 Accounting details
-+------------------------
- 
- All mapped anon pages (RSS) and cache pages (Page Cache) are accounted.
- Some pages which are never reclaimable and will not be on the LRU
-@@ -191,6 +209,7 @@ Note: we just account pages-on-LRU because our purpose is to control amount
- of used pages; not-on-LRU pages tend to be out-of-control from VM view.
- 
- 2.3 Shared Page Accounting
-+--------------------------
- 
- Shared pages are accounted on the basis of the first touch approach. The
- cgroup that first touches a page is accounted for the page. The principle
-@@ -207,11 +226,13 @@ be backed into memory in force, charges for pages are accounted against the
- caller of swapoff rather than the users of shmem.
- 
- 2.4 Swap Extension (CONFIG_MEMCG_SWAP)
-+--------------------------------------
- 
- Swap Extension allows you to record charge for swap. A swapped-in page is
- charged back to original page allocator if possible.
- 
- When swap is accounted, following files are added.
-+
-  - memory.memsw.usage_in_bytes.
-  - memory.memsw.limit_in_bytes.
- 
-@@ -224,14 +245,16 @@ In this case, setting memsw.limit_in_bytes=3G will prevent bad use of swap.
- By using the memsw limit, you can avoid system OOM which can be caused by swap
- shortage.
- 
--* why 'memory+swap' rather than swap.
-+**why 'memory+swap' rather than swap**
-+
- The global LRU(kswapd) can swap out arbitrary pages. Swap-out means
- to move account from memory to swap...there is no change in usage of
- memory+swap. In other words, when we want to limit the usage of swap without
- affecting global LRU, memory+swap limit is better than just limiting swap from
- an OS point of view.
- 
--* What happens when a cgroup hits memory.memsw.limit_in_bytes
-+**What happens when a cgroup hits memory.memsw.limit_in_bytes**
-+
- When a cgroup hits memory.memsw.limit_in_bytes, it's useless to do swap-out
- in this cgroup. Then, swap-out will not be done by cgroup routine and file
- caches are dropped. But as mentioned above, global LRU can do swapout memory
-@@ -239,6 +262,7 @@ from it for sanity of the system's memory management state. You can't forbid
- it by cgroup.
- 
- 2.5 Reclaim
-+-----------
- 
- Each cgroup maintains a per cgroup LRU which has the same structure as
- global VM. When a cgroup goes over its limit, we first try
-@@ -251,29 +275,36 @@ The reclaim algorithm has not been modified for cgroups, except that
- pages that are selected for reclaiming come from the per-cgroup LRU
- list.
- 
--NOTE: Reclaim does not work for the root cgroup, since we cannot set any
--limits on the root cgroup.
-+NOTE:
-+  Reclaim does not work for the root cgroup, since we cannot set any
-+  limits on the root cgroup.
- 
--Note2: When panic_on_oom is set to "2", the whole system will panic.
-+Note2:
-+  When panic_on_oom is set to "2", the whole system will panic.
- 
- When oom event notifier is registered, event will be delivered.
- (See oom_control section)
- 
- 2.6 Locking
-+-----------
- 
-    lock_page_cgroup()/unlock_page_cgroup() should not be called under
-    the i_pages lock.
- 
-    Other lock order is following:
-+
-    PG_locked.
--   mm->page_table_lock
--       pgdat->lru_lock
--	  lock_page_cgroup.
-+     mm->page_table_lock
-+         pgdat->lru_lock
-+	   lock_page_cgroup.
-+
-   In many cases, just lock_page_cgroup() is called.
-+
-   per-zone-per-cgroup LRU (cgroup's private LRU) is just guarded by
-   pgdat->lru_lock, it has no lock of its own.
- 
- 2.7 Kernel Memory Extension (CONFIG_MEMCG_KMEM)
-+-----------------------------------------------
- 
- With the Kernel memory extension, the Memory Controller is able to limit
- the amount of kernel memory used by the system. Kernel memory is fundamentally
-@@ -288,6 +319,7 @@ Kernel memory limits are not imposed for the root cgroup. Usage for the root
- cgroup may or may not be accounted. The memory used is accumulated into
- memory.kmem.usage_in_bytes, or in a separate counter when it makes sense.
- (currently only for tcp).
-+
- The main "kmem" counter is fed into the main counter, so kmem charges will
- also be visible from the user counter.
- 
-@@ -295,36 +327,42 @@ Currently no soft limit is implemented for kernel memory. It is future work
- to trigger slab reclaim when those limits are reached.
- 
- 2.7.1 Current Kernel Memory resources accounted
-+-----------------------------------------------
- 
--* stack pages: every process consumes some stack pages. By accounting into
--kernel memory, we prevent new processes from being created when the kernel
--memory usage is too high.
-+stack pages:
-+  every process consumes some stack pages. By accounting into
-+  kernel memory, we prevent new processes from being created when the kernel
-+  memory usage is too high.
- 
--* slab pages: pages allocated by the SLAB or SLUB allocator are tracked. A copy
--of each kmem_cache is created every time the cache is touched by the first time
--from inside the memcg. The creation is done lazily, so some objects can still be
--skipped while the cache is being created. All objects in a slab page should
--belong to the same memcg. This only fails to hold when a task is migrated to a
--different memcg during the page allocation by the cache.
-+slab pages:
-+  pages allocated by the SLAB or SLUB allocator are tracked. A copy
-+  of each kmem_cache is created every time the cache is touched by the first time
-+  from inside the memcg. The creation is done lazily, so some objects can still be
-+  skipped while the cache is being created. All objects in a slab page should
-+  belong to the same memcg. This only fails to hold when a task is migrated to a
-+  different memcg during the page allocation by the cache.
- 
--* sockets memory pressure: some sockets protocols have memory pressure
--thresholds. The Memory Controller allows them to be controlled individually
--per cgroup, instead of globally.
-+sockets memory pressure:
-+  some sockets protocols have memory pressure
-+  thresholds. The Memory Controller allows them to be controlled individually
-+  per cgroup, instead of globally.
- 
--* tcp memory pressure: sockets memory pressure for the tcp protocol.
-+tcp memory pressure:
-+  sockets memory pressure for the tcp protocol.
- 
- 2.7.2 Common use cases
-+----------------------
- 
- Because the "kmem" counter is fed to the main user counter, kernel memory can
- never be limited completely independently of user memory. Say "U" is the user
- limit, and "K" the kernel limit. There are three possible ways limits can be
- set:
- 
--    U != 0, K = unlimited:
-+U != 0, K = unlimited:
-     This is the standard memcg limitation mechanism already present before kmem
-     accounting. Kernel memory is completely ignored.
- 
--    U != 0, K < U:
-+U != 0, K < U:
-     Kernel memory is a subset of the user memory. This setup is useful in
-     deployments where the total amount of memory per-cgroup is overcommited.
-     Overcommiting kernel memory limits is definitely not recommended, since the
-@@ -332,19 +370,23 @@ set:
-     In this case, the admin could set up K so that the sum of all groups is
-     never greater than the total memory, and freely set U at the cost of his
-     QoS.
--    WARNING: In the current implementation, memory reclaim will NOT be
-+
-+WARNING:
-+    In the current implementation, memory reclaim will NOT be
-     triggered for a cgroup when it hits K while staying below U, which makes
-     this setup impractical.
- 
--    U != 0, K >= U:
-+U != 0, K >= U:
-     Since kmem charges will also be fed to the user counter and reclaim will be
-     triggered for the cgroup for both kinds of memory. This setup gives the
-     admin a unified view of memory, and it is also useful for people who just
-     want to track kernel memory usage.
- 
- 3. User Interface
-+=================
- 
- 3.0. Configuration
-+------------------
- 
- a. Enable CONFIG_CGROUPS
- b. Enable CONFIG_MEMCG
-@@ -352,39 +394,53 @@ c. Enable CONFIG_MEMCG_SWAP (to use swap extension)
- d. Enable CONFIG_MEMCG_KMEM (to use kmem extension)
- 
- 3.1. Prepare the cgroups (see cgroups.txt, Why are cgroups needed?)
--# mount -t tmpfs none /sys/fs/cgroup
--# mkdir /sys/fs/cgroup/memory
--# mount -t cgroup none /sys/fs/cgroup/memory -o memory
-+-------------------------------------------------------------------
- 
--3.2. Make the new group and move bash into it
--# mkdir /sys/fs/cgroup/memory/0
--# echo $$ > /sys/fs/cgroup/memory/0/tasks
-+::
- 
--Since now we're in the 0 cgroup, we can alter the memory limit:
--# echo 4M > /sys/fs/cgroup/memory/0/memory.limit_in_bytes
-+	# mount -t tmpfs none /sys/fs/cgroup
-+	# mkdir /sys/fs/cgroup/memory
-+	# mount -t cgroup none /sys/fs/cgroup/memory -o memory
- 
--NOTE: We can use a suffix (k, K, m, M, g or G) to indicate values in kilo,
--mega or gigabytes. (Here, Kilo, Mega, Giga are Kibibytes, Mebibytes, Gibibytes.)
-+3.2. Make the new group and move bash into it::
- 
--NOTE: We can write "-1" to reset the *.limit_in_bytes(unlimited).
--NOTE: We cannot set limits on the root cgroup any more.
-+	# mkdir /sys/fs/cgroup/memory/0
-+	# echo $$ > /sys/fs/cgroup/memory/0/tasks
- 
--# cat /sys/fs/cgroup/memory/0/memory.limit_in_bytes
--4194304
-+Since now we're in the 0 cgroup, we can alter the memory limit::
- 
--We can check the usage:
--# cat /sys/fs/cgroup/memory/0/memory.usage_in_bytes
--1216512
-+	# echo 4M > /sys/fs/cgroup/memory/0/memory.limit_in_bytes
-+
-+NOTE:
-+  We can use a suffix (k, K, m, M, g or G) to indicate values in kilo,
-+  mega or gigabytes. (Here, Kilo, Mega, Giga are Kibibytes, Mebibytes,
-+  Gibibytes.)
-+
-+NOTE:
-+  We can write "-1" to reset the `*.limit_in_bytes(unlimited)`.
-+
-+NOTE:
-+  We cannot set limits on the root cgroup any more.
-+
-+::
-+
-+  # cat /sys/fs/cgroup/memory/0/memory.limit_in_bytes
-+  4194304
-+
-+We can check the usage::
-+
-+  # cat /sys/fs/cgroup/memory/0/memory.usage_in_bytes
-+  1216512
- 
- A successful write to this file does not guarantee a successful setting of
- this limit to the value written into the file. This can be due to a
- number of factors, such as rounding up to page boundaries or the total
- availability of memory on the system. The user is required to re-read
--this file after a write to guarantee the value committed by the kernel.
-+this file after a write to guarantee the value committed by the kernel::
- 
--# echo 1 > memory.limit_in_bytes
--# cat memory.limit_in_bytes
--4096
-+  # echo 1 > memory.limit_in_bytes
-+  # cat memory.limit_in_bytes
-+  4096
- 
- The memory.failcnt field gives the number of times that the cgroup limit was
- exceeded.
-@@ -393,6 +449,7 @@ The memory.stat file gives accounting information. Now, the number of
- caches, RSS and Active pages/Inactive pages are shown.
- 
- 4. Testing
-+==========
- 
- For testing features and implementation, see memcg_test.txt.
- 
-@@ -408,6 +465,7 @@ But the above two are testing extreme situations.
- Trying usual test under memory controller is always helpful.
- 
- 4.1 Troubleshooting
-+-------------------
- 
- Sometimes a user might find that the application under a cgroup is
- terminated by the OOM killer. There are several causes for this:
-@@ -422,6 +480,7 @@ To know what happens, disabling OOM_Kill as per "10. OOM Control" (below) and
- seeing what happens will be helpful.
- 
- 4.2 Task migration
-+------------------
- 
- When a task migrates from one cgroup to another, its charge is not
- carried forward by default. The pages allocated from the original cgroup still
-@@ -432,6 +491,7 @@ You can move charges of a task along with task migration.
- See 8. "Move charges at task migration"
- 
- 4.3 Removing a cgroup
-+---------------------
- 
- A cgroup can be removed by rmdir, but as discussed in sections 4.1 and 4.2, a
- cgroup might have some charge associated with it, even though all
-@@ -448,13 +508,15 @@ will be charged as a new owner of it.
- 
- About use_hierarchy, see Section 6.
- 
--5. Misc. interfaces.
-+5. Misc. interfaces
-+===================
- 
- 5.1 force_empty
-+---------------
-   memory.force_empty interface is provided to make cgroup's memory usage empty.
--  When writing anything to this
-+  When writing anything to this::
- 
--  # echo 0 > memory.force_empty
-+    # echo 0 > memory.force_empty
- 
-   the cgroup will be reclaimed and as many pages reclaimed as possible.
- 
-@@ -471,50 +533,61 @@ About use_hierarchy, see Section 6.
-   About use_hierarchy, see Section 6.
- 
- 5.2 stat file
-+-------------
- 
- memory.stat file includes following statistics
- 
--# per-memory cgroup local status
--cache		- # of bytes of page cache memory.
--rss		- # of bytes of anonymous and swap cache memory (includes
-+per-memory cgroup local status
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-+
-+=============== ===============================================================
-+cache		# of bytes of page cache memory.
-+rss		# of bytes of anonymous and swap cache memory (includes
- 		transparent hugepages).
--rss_huge	- # of bytes of anonymous transparent hugepages.
--mapped_file	- # of bytes of mapped file (includes tmpfs/shmem)
--pgpgin		- # of charging events to the memory cgroup. The charging
-+rss_huge	# of bytes of anonymous transparent hugepages.
-+mapped_file	# of bytes of mapped file (includes tmpfs/shmem)
-+pgpgin		# of charging events to the memory cgroup. The charging
- 		event happens each time a page is accounted as either mapped
- 		anon page(RSS) or cache page(Page Cache) to the cgroup.
--pgpgout		- # of uncharging events to the memory cgroup. The uncharging
-+pgpgout		# of uncharging events to the memory cgroup. The uncharging
- 		event happens each time a page is unaccounted from the cgroup.
--swap		- # of bytes of swap usage
--dirty		- # of bytes that are waiting to get written back to the disk.
--writeback	- # of bytes of file/anon cache that are queued for syncing to
-+swap		# of bytes of swap usage
-+dirty		# of bytes that are waiting to get written back to the disk.
-+writeback	# of bytes of file/anon cache that are queued for syncing to
- 		disk.
--inactive_anon	- # of bytes of anonymous and swap cache memory on inactive
-+inactive_anon	# of bytes of anonymous and swap cache memory on inactive
- 		LRU list.
--active_anon	- # of bytes of anonymous and swap cache memory on active
-+active_anon	# of bytes of anonymous and swap cache memory on active
- 		LRU list.
--inactive_file	- # of bytes of file-backed memory on inactive LRU list.
--active_file	- # of bytes of file-backed memory on active LRU list.
--unevictable	- # of bytes of memory that cannot be reclaimed (mlocked etc).
-+inactive_file	# of bytes of file-backed memory on inactive LRU list.
-+active_file	# of bytes of file-backed memory on active LRU list.
-+unevictable	# of bytes of memory that cannot be reclaimed (mlocked etc).
-+=============== ===============================================================
- 
--# status considering hierarchy (see memory.use_hierarchy settings)
-+status considering hierarchy (see memory.use_hierarchy settings)
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
--hierarchical_memory_limit - # of bytes of memory limit with regard to hierarchy
--			under which the memory cgroup is
--hierarchical_memsw_limit - # of bytes of memory+swap limit with regard to
--			hierarchy under which memory cgroup is.
-+========================= ===================================================
-+hierarchical_memory_limit # of bytes of memory limit with regard to hierarchy
-+			  under which the memory cgroup is
-+hierarchical_memsw_limit  # of bytes of memory+swap limit with regard to
-+			  hierarchy under which memory cgroup is.
- 
--total_<counter>		- # hierarchical version of <counter>, which in
--			addition to the cgroup's own value includes the
--			sum of all hierarchical children's values of
--			<counter>, i.e. total_cache
-+total_<counter>		  # hierarchical version of <counter>, which in
-+			  addition to the cgroup's own value includes the
-+			  sum of all hierarchical children's values of
-+			  <counter>, i.e. total_cache
-+========================= ===================================================
- 
--# The following additional stats are dependent on CONFIG_DEBUG_VM.
-+The following additional stats are dependent on CONFIG_DEBUG_VM
-+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
- 
--recent_rotated_anon	- VM internal parameter. (see mm/vmscan.c)
--recent_rotated_file	- VM internal parameter. (see mm/vmscan.c)
--recent_scanned_anon	- VM internal parameter. (see mm/vmscan.c)
--recent_scanned_file	- VM internal parameter. (see mm/vmscan.c)
-+========================= ========================================
-+recent_rotated_anon	  VM internal parameter. (see mm/vmscan.c)
-+recent_rotated_file	  VM internal parameter. (see mm/vmscan.c)
-+recent_scanned_anon	  VM internal parameter. (see mm/vmscan.c)
-+recent_scanned_file	  VM internal parameter. (see mm/vmscan.c)
-+========================= ========================================
- 
- Memo:
- 	recent_rotated means recent frequency of LRU rotation.
-@@ -525,12 +598,15 @@ Note:
- 	Only anonymous and swap cache memory is listed as part of 'rss' stat.
- 	This should not be confused with the true 'resident set size' or the
- 	amount of physical memory used by the cgroup.
-+
- 	'rss + mapped_file" will give you resident set size of cgroup.
-+
- 	(Note: file and shmem may be shared among other cgroups. In that case,
--	 mapped_file is accounted only when the memory cgroup is owner of page
--	 cache.)
-+	mapped_file is accounted only when the memory cgroup is owner of page
-+	cache.)
- 
- 5.3 swappiness
-+--------------
- 
- Overrides /proc/sys/vm/swappiness for the particular group. The tunable
- in the root cgroup corresponds to the global swappiness setting.
-@@ -541,16 +617,19 @@ there is a swap storage available. This might lead to memcg OOM killer
- if there are no file pages to reclaim.
- 
- 5.4 failcnt
-+-----------
- 
- A memory cgroup provides memory.failcnt and memory.memsw.failcnt files.
- This failcnt(== failure count) shows the number of times that a usage counter
- hit its limit. When a memory cgroup hits a limit, failcnt increases and
- memory under it will be reclaimed.
- 
--You can reset failcnt by writing 0 to failcnt file.
--# echo 0 > .../memory.failcnt
-+You can reset failcnt by writing 0 to failcnt file::
-+
-+	# echo 0 > .../memory.failcnt
- 
- 5.5 usage_in_bytes
-+------------------
- 
- For efficiency, as other kernel components, memory cgroup uses some optimization
- to avoid unnecessary cacheline false sharing. usage_in_bytes is affected by the
-@@ -560,6 +639,7 @@ If you want to know more exact memory usage, you should use RSS+CACHE(+SWAP)
- value in memory.stat(see 5.2).
- 
- 5.6 numa_stat
-+-------------
- 
- This is similar to numa_maps but operates on a per-memcg basis.  This is
- useful for providing visibility into the numa locality information within
-@@ -571,22 +651,23 @@ Each memcg's numa_stat file includes "total", "file", "anon" and "unevictable"
- per-node page counts including "hierarchical_<counter>" which sums up all
- hierarchical children's values in addition to the memcg's own value.
- 
--The output format of memory.numa_stat is:
-+The output format of memory.numa_stat is::
- 
--total=<total pages> N0=<node 0 pages> N1=<node 1 pages> ...
--file=<total file pages> N0=<node 0 pages> N1=<node 1 pages> ...
--anon=<total anon pages> N0=<node 0 pages> N1=<node 1 pages> ...
--unevictable=<total anon pages> N0=<node 0 pages> N1=<node 1 pages> ...
--hierarchical_<counter>=<counter pages> N0=<node 0 pages> N1=<node 1 pages> ...
-+  total=<total pages> N0=<node 0 pages> N1=<node 1 pages> ...
-+  file=<total file pages> N0=<node 0 pages> N1=<node 1 pages> ...
-+  anon=<total anon pages> N0=<node 0 pages> N1=<node 1 pages> ...
-+  unevictable=<total anon pages> N0=<node 0 pages> N1=<node 1 pages> ...
-+  hierarchical_<counter>=<counter pages> N0=<node 0 pages> N1=<node 1 pages> ...
- 
- The "total" count is sum of file + anon + unevictable.
- 
- 6. Hierarchy support
-+====================
- 
- The memory controller supports a deep hierarchy and hierarchical accounting.
- The hierarchy is created by creating the appropriate cgroups in the
- cgroup filesystem. Consider for example, the following cgroup filesystem
--hierarchy
-+hierarchy::
- 
- 	       root
- 	     /  |   \
-@@ -603,24 +684,28 @@ limit, the reclaim algorithm reclaims from the tasks in the ancestor and the
- children of the ancestor.
- 
- 6.1 Enabling hierarchical accounting and reclaim
-+------------------------------------------------
- 
- A memory cgroup by default disables the hierarchy feature. Support
--can be enabled by writing 1 to memory.use_hierarchy file of the root cgroup
-+can be enabled by writing 1 to memory.use_hierarchy file of the root cgroup::
- 
--# echo 1 > memory.use_hierarchy
-+	# echo 1 > memory.use_hierarchy
- 
--The feature can be disabled by
-+The feature can be disabled by::
- 
--# echo 0 > memory.use_hierarchy
-+	# echo 0 > memory.use_hierarchy
- 
--NOTE1: Enabling/disabling will fail if either the cgroup already has other
-+NOTE1:
-+       Enabling/disabling will fail if either the cgroup already has other
-        cgroups created below it, or if the parent cgroup has use_hierarchy
-        enabled.
- 
--NOTE2: When panic_on_oom is set to "2", the whole system will panic in
-+NOTE2:
-+       When panic_on_oom is set to "2", the whole system will panic in
-        case of an OOM event in any cgroup.
- 
- 7. Soft limits
-+==============
- 
- Soft limits allow for greater sharing of memory. The idea behind soft limits
- is to allow control groups to use as much of the memory as needed, provided
-@@ -640,22 +725,26 @@ hints/setup. Currently soft limit based reclaim is set up such that
- it gets invoked from balance_pgdat (kswapd).
- 
- 7.1 Interface
-+-------------
- 
- Soft limits can be setup by using the following commands (in this example we
--assume a soft limit of 256 MiB)
-+assume a soft limit of 256 MiB)::
- 
--# echo 256M > memory.soft_limit_in_bytes
-+	# echo 256M > memory.soft_limit_in_bytes
- 
--If we want to change this to 1G, we can at any time use
-+If we want to change this to 1G, we can at any time use::
- 
--# echo 1G > memory.soft_limit_in_bytes
-+	# echo 1G > memory.soft_limit_in_bytes
- 
--NOTE1: Soft limits take effect over a long period of time, since they involve
-+NOTE1:
-+       Soft limits take effect over a long period of time, since they involve
-        reclaiming memory for balancing between memory cgroups
--NOTE2: It is recommended to set the soft limit always below the hard limit,
-+NOTE2:
-+       It is recommended to set the soft limit always below the hard limit,
-        otherwise the hard limit will take precedence.
- 
- 8. Move charges at task migration
-+=================================
- 
- Users can move charges associated with a task along with task migration, that
- is, uncharge task's pages from the old cgroup and charge them to the new cgroup.
-@@ -663,60 +752,71 @@ This feature is not supported in !CONFIG_MMU environments because of lack of
- page tables.
- 
- 8.1 Interface
-+-------------
- 
- This feature is disabled by default. It can be enabled (and disabled again) by
- writing to memory.move_charge_at_immigrate of the destination cgroup.
- 
--If you want to enable it:
-+If you want to enable it::
- 
--# echo (some positive value) > memory.move_charge_at_immigrate
-+	# echo (some positive value) > memory.move_charge_at_immigrate
- 
--Note: Each bits of move_charge_at_immigrate has its own meaning about what type
-+Note:
-+      Each bits of move_charge_at_immigrate has its own meaning about what type
-       of charges should be moved. See 8.2 for details.
--Note: Charges are moved only when you move mm->owner, in other words,
-+Note:
-+      Charges are moved only when you move mm->owner, in other words,
-       a leader of a thread group.
--Note: If we cannot find enough space for the task in the destination cgroup, we
-+Note:
-+      If we cannot find enough space for the task in the destination cgroup, we
-       try to make space by reclaiming memory. Task migration may fail if we
-       cannot make enough space.
--Note: It can take several seconds if you move charges much.
-+Note:
-+      It can take several seconds if you move charges much.
- 
--And if you want disable it again:
-+And if you want disable it again::
- 
--# echo 0 > memory.move_charge_at_immigrate
-+	# echo 0 > memory.move_charge_at_immigrate
- 
- 8.2 Type of charges which can be moved
-+--------------------------------------
- 
- Each bit in move_charge_at_immigrate has its own meaning about what type of
- charges should be moved. But in any case, it must be noted that an account of
- a page or a swap can be moved only when it is charged to the task's current
- (old) memory cgroup.
- 
--  bit | what type of charges would be moved ?
-- -----+------------------------------------------------------------------------
--   0  | A charge of an anonymous page (or swap of it) used by the target task.
--      | You must enable Swap Extension (see 2.4) to enable move of swap charges.
-- -----+------------------------------------------------------------------------
--   1  | A charge of file pages (normal file, tmpfs file (e.g. ipc shared memory)
--      | and swaps of tmpfs file) mmapped by the target task. Unlike the case of
--      | anonymous pages, file pages (and swaps) in the range mmapped by the task
--      | will be moved even if the task hasn't done page fault, i.e. they might
--      | not be the task's "RSS", but other task's "RSS" that maps the same file.
--      | And mapcount of the page is ignored (the page can be moved even if
--      | page_mapcount(page) > 1). You must enable Swap Extension (see 2.4) to
--      | enable move of swap charges.
-++---+--------------------------------------------------------------------------+
-+|bit| what type of charges would be moved ?                                    |
-++===+==========================================================================+
-+| 0 | A charge of an anonymous page (or swap of it) used by the target task.   |
-+|   | You must enable Swap Extension (see 2.4) to enable move of swap charges. |
-++---+--------------------------------------------------------------------------+
-+| 1 | A charge of file pages (normal file, tmpfs file (e.g. ipc shared memory) |
-+|   | and swaps of tmpfs file) mmapped by the target task. Unlike the case of  |
-+|   | anonymous pages, file pages (and swaps) in the range mmapped by the task |
-+|   | will be moved even if the task hasn't done page fault, i.e. they might   |
-+|   | not be the task's "RSS", but other task's "RSS" that maps the same file. |
-+|   | And mapcount of the page is ignored (the page can be moved even if       |
-+|   | page_mapcount(page) > 1). You must enable Swap Extension (see 2.4) to    |
-+|   | enable move of swap charges.                                             |
-++---+--------------------------------------------------------------------------+
- 
- 8.3 TODO
-+--------
- 
- - All of moving charge operations are done under cgroup_mutex. It's not good
-   behavior to hold the mutex too long, so we may need some trick.
- 
- 9. Memory thresholds
-+====================
- 
- Memory cgroup implements memory thresholds using the cgroups notification
- API (see cgroups.txt). It allows to register multiple memory and memsw
- thresholds and gets notifications when it crosses.
- 
- To register a threshold, an application must:
-+
- - create an eventfd using eventfd(2);
- - open memory.usage_in_bytes or memory.memsw.usage_in_bytes;
- - write string like "<event_fd> <fd of memory.usage_in_bytes> <threshold>" to
-@@ -728,6 +828,7 @@ threshold in any direction.
- It's applicable for root and non-root cgroup.
- 
- 10. OOM Control
-+===============
- 
- memory.oom_control file is for OOM notification and other controls.
- 
-@@ -736,6 +837,7 @@ API (See cgroups.txt). It allows to register multiple OOM notification
- delivery and gets notification when OOM happens.
- 
- To register a notifier, an application must:
-+
-  - create an eventfd using eventfd(2)
-  - open memory.oom_control file
-  - write string like "<event_fd> <fd of memory.oom_control>" to
-@@ -752,8 +854,11 @@ If OOM-killer is disabled, tasks under cgroup will hang/sleep
- in memory cgroup's OOM-waitqueue when they request accountable memory.
- 
- For running them, you have to relax the memory cgroup's OOM status by
-+
- 	* enlarge limit or reduce usage.
-+
- To reduce usage,
-+
- 	* kill some tasks.
- 	* move some tasks to other group with account migration.
- 	* remove some files (on tmpfs?)
-@@ -761,11 +866,14 @@ To reduce usage,
- Then, stopped tasks will work again.
- 
- At reading, current status of OOM is shown.
--	oom_kill_disable 0 or 1 (if 1, oom-killer is disabled)
--	under_oom	 0 or 1 (if 1, the memory cgroup is under OOM, tasks may
--				 be stopped.)
-+
-+	- oom_kill_disable 0 or 1
-+	  (if 1, oom-killer is disabled)
-+	- under_oom	   0 or 1
-+	  (if 1, the memory cgroup is under OOM, tasks may be stopped.)
- 
- 11. Memory Pressure
-+===================
- 
- The pressure level notifications can be used to monitor the memory
- allocation cost; based on the pressure, applications can implement
-@@ -840,21 +948,22 @@ Test:
- 
-    Here is a small script example that makes a new cgroup, sets up a
-    memory limit, sets up a notification in the cgroup and then makes child
--   cgroup experience a critical pressure:
-+   cgroup experience a critical pressure::
- 
--   # cd /sys/fs/cgroup/memory/
--   # mkdir foo
--   # cd foo
--   # cgroup_event_listener memory.pressure_level low,hierarchy &
--   # echo 8000000 > memory.limit_in_bytes
--   # echo 8000000 > memory.memsw.limit_in_bytes
--   # echo $$ > tasks
--   # dd if=/dev/zero | read x
-+	# cd /sys/fs/cgroup/memory/
-+	# mkdir foo
-+	# cd foo
-+	# cgroup_event_listener memory.pressure_level low,hierarchy &
-+	# echo 8000000 > memory.limit_in_bytes
-+	# echo 8000000 > memory.memsw.limit_in_bytes
-+	# echo $$ > tasks
-+	# dd if=/dev/zero | read x
- 
-    (Expect a bunch of notifications, and eventually, the oom-killer will
-    trigger.)
- 
- 12. TODO
++==================================
+ _DSD Device Properties Usage Rules
+-----------------------------------
++==================================
+ 
+ Properties, Property Sets and Property Subsets
+ ----------------------------------------------
+@@ -94,4 +95,5 @@ References
+ ----------
+ 
+ [1] http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf
++
+ [2] http://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-data-extension-UUID-v1.1.pdf
+diff --git a/Documentation/acpi/acpi-lid.txt b/Documentation/acpi/acpi-lid.txt
+index effe7af3a5af..a4bc51ee2db1 100644
+--- a/Documentation/acpi/acpi-lid.txt
++++ b/Documentation/acpi/acpi-lid.txt
+@@ -1,10 +1,14 @@
++=========================================================
+ Special Usage Model of the ACPI Control Method Lid Device
++=========================================================
+ 
+ Copyright (C) 2016, Intel Corporation
+-Author: Lv Zheng <lv.zheng@intel.com>
+ 
++:Author: Lv Zheng <lv.zheng@intel.com>
+ 
+-Abstract:
++
++Abstract
 +========
  
- 1. Make per-cgroup scanner reclaim not-shared pages first
- 2. Teach controller to account for shared-pages
-@@ -862,11 +971,13 @@ Test:
-    not yet hit but the usage is getting closer
+ Platforms containing lids convey lid state (open/close) to OSPMs using a
+ control method lid device. To implement this, the AML tables issue
+@@ -20,6 +24,7 @@ expections of the Linux ACPI lid device driver.
  
- Summary
-+=======
  
- Overall, the memory controller has been a stable controller and has been
- commented and discussed quite extensively in the community.
+ 1. Restrictions of the returning value of the _LID control method
++=================================================================
  
- References
-+==========
+ The _LID control method is described to return the "current" lid state.
+ However the word of "current" has ambiguity, some buggy AML tables return
+@@ -31,6 +36,8 @@ with cached value, the initial returning value is likely not reliable.
+ There are platforms always retun "closed" as initial lid state.
  
- 1. Singh, Balbir. RFC: Memory Controller, http://lwn.net/Articles/206697/
- 2. Singh, Balbir. Memory Controller (RSS Control),
-diff --git a/Documentation/cgroup-v1/net_cls.txt b/Documentation/cgroup-v1/net_cls.txt
-index ec182346dea2..a2cf272af7a0 100644
---- a/Documentation/cgroup-v1/net_cls.txt
-+++ b/Documentation/cgroup-v1/net_cls.txt
+ 2. Restrictions of the lid state change notifications
++=====================================================
++
+ 
+ There are buggy AML tables never notifying when the lid device state is
+ changed to "opened". Thus the "opened" notification is not guaranteed. But
+@@ -40,26 +47,32 @@ trigger some system power saving operations on Windows. Since it is fully
+ tested, it is reliable from all AML tables.
+ 
+ 3. Expections for the userspace users of the ACPI lid device driver
++===================================================================
+ 
+ The ACPI button driver exports the lid state to the userspace via the
+ following file:
++
+   /proc/acpi/button/lid/LID0/state
++
+ This file actually calls the _LID control method described above. And given
+ the previous explanation, it is not reliable enough on some platforms. So
+ it is advised for the userspace program to not to solely rely on this file
+ to determine the actual lid state.
+ 
+ The ACPI button driver emits the following input event to the userspace:
+-  SW_LID
+-The ACPI lid device driver is implemented to try to deliver the platform
+-triggered events to the userspace. However, given the fact that the buggy
+-firmware cannot make sure "opened"/"closed" events are paired, the ACPI
+-button driver uses the following 3 modes in order not to trigger issues.
++
++SW_LID
++  The ACPI lid device driver is implemented to try to deliver the platform
++  triggered events to the userspace. However, given the fact that the buggy
++  firmware cannot make sure "opened"/"closed" events are paired, the ACPI
++  button driver uses the following 3 modes in order not to trigger issues.
+ 
+ If the userspace hasn't been prepared to ignore the unreliable "opened"
+ events and the unreliable initial state notification, Linux users can use
+ the following kernel parameters to handle the possible issues:
+-A. button.lid_init_state=method:
++
++A. `button.lid_init_state=method`:
++
+    When this option is specified, the ACPI button driver reports the
+    initial lid state using the returning value of the _LID control method
+    and whether the "opened"/"closed" events are paired fully relies on the
+@@ -69,7 +82,9 @@ A. button.lid_init_state=method:
+    notification is missing.
+    This option is the default behavior during the period the userspace
+    isn't ready to handle the buggy AML tables.
+-B. button.lid_init_state=open:
++
++B. `button.lid_init_state=open`:
++
+    When this option is specified, the ACPI button driver always reports the
+    initial lid state as "opened" and whether the "opened"/"closed" events
+    are paired fully relies on the firmware implementation.
+@@ -80,7 +95,9 @@ B. button.lid_init_state=open:
+ If the userspace has been prepared to ignore the unreliable "opened" events
+ and the unreliable initial state notification, Linux users should always
+ use the following kernel parameter:
+-C. button.lid_init_state=ignore:
++
++C. `button.lid_init_state=ignore`:
++
+    When this option is specified, the ACPI button driver never reports the
+    initial lid state and there is a compensation mechanism implemented to
+    ensure that the reliable "closed" notifications can always be delievered
+diff --git a/Documentation/acpi/aml-debugger.txt b/Documentation/acpi/aml-debugger.txt
+index 75ebeb64ab29..22144e0c496d 100644
+--- a/Documentation/acpi/aml-debugger.txt
++++ b/Documentation/acpi/aml-debugger.txt
+@@ -1,6 +1,9 @@
++================
+ The AML Debugger
++================
+ 
+ Copyright (C) 2016, Intel Corporation
++
+ Author: Lv Zheng <lv.zheng@intel.com>
+ 
+ 
+@@ -10,16 +13,16 @@ kernel.
+ 1. Build the debugger
+ 
+    The following kernel configuration items are required to enable the AML
+-   debugger interface from the Linux kernel:
++   debugger interface from the Linux kernel::
+ 
+-   CONFIG_ACPI_DEBUGGER=y
+-   CONFIG_ACPI_DEBUGGER_USER=m
++     CONFIG_ACPI_DEBUGGER=y
++     CONFIG_ACPI_DEBUGGER_USER=m
+ 
+    The userspace utilities can be built from the kernel source tree using
+-   the following commands:
++   the following commands::
+ 
+-   $ cd tools
+-   $ make acpi
++     $ cd tools
++     $ make acpi
+ 
+    The resultant userspace tool binary is then located at:
+ 
+@@ -31,11 +34,11 @@ kernel.
+ 2. Start the userspace debugger interface
+ 
+    After booting the kernel with the debugger built-in, the debugger can be
+-   started by using the following commands:
++   started by using the following commands::
+ 
+-   # mount -t debugfs none /sys/kernel/debug
+-   # modprobe acpi_dbg
+-   # tools/power/acpi/acpidbg
++     # mount -t debugfs none /sys/kernel/debug
++     # modprobe acpi_dbg
++     # tools/power/acpi/acpidbg
+ 
+    That spawns the interactive AML debugger environment where you can execute
+    debugger commands.
+@@ -51,9 +54,9 @@ kernel.
+ 3. Stop the userspace debugger interface
+ 
+    The interactive debugger interface can be closed by pressing Ctrl+C or using
+-   the "quit" or "exit" commands.  When finished, unload the module with:
++   the "quit" or "exit" commands.  When finished, unload the module with::
+ 
+-   # rmmod acpi_dbg
++     # rmmod acpi_dbg
+ 
+    The module unloading may fail if there is an acpidbg instance running.
+ 
+@@ -61,6 +64,6 @@ kernel.
+ 
+    It may be useful to run the AML debugger in a test script. "acpidbg" supports
+    this in a special "batch" mode.  For example, the following command outputs
+-   the entire ACPI namespace:
++   the entire ACPI namespace::
+ 
+-   # acpidbg -b "namespace"
++     # acpidbg -b "namespace"
+diff --git a/Documentation/acpi/apei/einj.txt b/Documentation/acpi/apei/einj.txt
+index e550c8b98139..4fe670dd2d4c 100644
+--- a/Documentation/acpi/apei/einj.txt
++++ b/Documentation/acpi/apei/einj.txt
+@@ -1,13 +1,14 @@
+-			APEI Error INJection
+-			~~~~~~~~~~~~~~~~~~~~
++====================
++APEI Error INJection
++====================
+ 
+ EINJ provides a hardware error injection mechanism. It is very useful
+ for debugging and testing APEI and RAS features in general.
+ 
+ You need to check whether your BIOS supports EINJ first. For that, look
+-for early boot messages similar to this one:
++for early boot messages similar to this one::
+ 
+-ACPI: EINJ 0x000000007370A000 000150 (v01 INTEL           00000001 INTL 00000001)
++  ACPI: EINJ 0x000000007370A000 000150 (v01 INTEL           00000001 INTL 00000001)
+ 
+ which shows that the BIOS is exposing an EINJ table - it is the
+ mechanism through which the injection is done.
+@@ -23,11 +24,11 @@ order to see the APEI,EINJ,... functionality supported and exposed by
+ the BIOS menu.
+ 
+ To use EINJ, make sure the following are options enabled in your kernel
+-configuration:
++configuration::
+ 
+-CONFIG_DEBUG_FS
+-CONFIG_ACPI_APEI
+-CONFIG_ACPI_APEI_EINJ
++  CONFIG_DEBUG_FS
++  CONFIG_ACPI_APEI
++  CONFIG_ACPI_APEI_EINJ
+ 
+ The EINJ user interface is in <debugfs mount point>/apei/einj.
+ 
+@@ -37,8 +38,9 @@ The following files belong to it:
+ 
+   This file shows which error types are supported:
+ 
++  ================	===================================
+   Error Type Value	Error Description
+-  ================	=================
++  ================	===================================
+   0x00000001		Processor Correctable
+   0x00000002		Processor Uncorrectable non-fatal
+   0x00000004		Processor Uncorrectable fatal
+@@ -51,6 +53,7 @@ The following files belong to it:
+   0x00000200		Platform Correctable
+   0x00000400		Platform Uncorrectable non-fatal
+   0x00000800		Platform Uncorrectable fatal
++  ================	===================================
+ 
+   The format of the file contents are as above, except present are only
+   the available error types.
+@@ -121,7 +124,7 @@ BIOS versions based on the ACPI 5.0 specification have more control over
+ the target of the injection. For processor-related errors (type 0x1, 0x2
+ and 0x4), you can set flags to 0x3 (param3 for bit 0, and param1 and
+ param2 for bit 1) so that you have more information added to the error
+-signature being injected. The actual data passed is this:
++signature being injected. The actual data passed is this::
+ 
+ 	memory_address = param1;
+ 	memory_address_range = param2;
+@@ -131,7 +134,7 @@ signature being injected. The actual data passed is this:
+ For memory errors (type 0x8, 0x10 and 0x20) the address is set using
+ param1 with a mask in param2 (0x0 is equivalent to all ones). For PCI
+ express errors (type 0x40, 0x80 and 0x100) the segment, bus, device and
+-function are specified using param1:
++function are specified using param1::
+ 
+          31     24 23    16 15    11 10      8  7        0
+ 	+-------------------------------------------------+
+@@ -152,26 +155,26 @@ documentation for details (and expect changes to this API if vendors
+ creativity in using this feature expands beyond our expectations).
+ 
+ 
+-An error injection example:
++An error injection example::
+ 
+-# cd /sys/kernel/debug/apei/einj
+-# cat available_error_type		# See which errors can be injected
+-0x00000002	Processor Uncorrectable non-fatal
+-0x00000008	Memory Correctable
+-0x00000010	Memory Uncorrectable non-fatal
+-# echo 0x12345000 > param1		# Set memory address for injection
+-# echo $((-1 << 12)) > param2		# Mask 0xfffffffffffff000 - anywhere in this page
+-# echo 0x8 > error_type			# Choose correctable memory error
+-# echo 1 > error_inject			# Inject now
++  # cd /sys/kernel/debug/apei/einj
++  # cat available_error_type		# See which errors can be injected
++  0x00000002	Processor Uncorrectable non-fatal
++  0x00000008	Memory Correctable
++  0x00000010	Memory Uncorrectable non-fatal
++  # echo 0x12345000 > param1		# Set memory address for injection
++  # echo $((-1 << 12)) > param2		# Mask 0xfffffffffffff000 - anywhere in this page
++  # echo 0x8 > error_type			# Choose correctable memory error
++  # echo 1 > error_inject			# Inject now
+ 
+-You should see something like this in dmesg:
++You should see something like this in dmesg::
+ 
+-[22715.830801] EDAC sbridge MC3: HANDLING MCE MEMORY ERROR
+-[22715.834759] EDAC sbridge MC3: CPU 0: Machine Check Event: 0 Bank 7: 8c00004000010090
+-[22715.834759] EDAC sbridge MC3: TSC 0
+-[22715.834759] EDAC sbridge MC3: ADDR 12345000 EDAC sbridge MC3: MISC 144780c86
+-[22715.834759] EDAC sbridge MC3: PROCESSOR 0:306e7 TIME 1422553404 SOCKET 0 APIC 0
+-[22716.616173] EDAC MC3: 1 CE memory read error on CPU_SrcID#0_Channel#0_DIMM#0 (channel:0 slot:0 page:0x12345 offset:0x0 grain:32 syndrome:0x0 -  area:DRAM err_code:0001:0090 socket:0 channel_mask:1 rank:0)
++  [22715.830801] EDAC sbridge MC3: HANDLING MCE MEMORY ERROR
++  [22715.834759] EDAC sbridge MC3: CPU 0: Machine Check Event: 0 Bank 7: 8c00004000010090
++  [22715.834759] EDAC sbridge MC3: TSC 0
++  [22715.834759] EDAC sbridge MC3: ADDR 12345000 EDAC sbridge MC3: MISC 144780c86
++  [22715.834759] EDAC sbridge MC3: PROCESSOR 0:306e7 TIME 1422553404 SOCKET 0 APIC 0
++  [22716.616173] EDAC MC3: 1 CE memory read error on CPU_SrcID#0_Channel#0_DIMM#0 (channel:0 slot:0 page:0x12345 offset:0x0 grain:32 syndrome:0x0 -  area:DRAM err_code:0001:0090 socket:0 channel_mask:1 rank:0)
+ 
+ For more information about EINJ, please refer to ACPI specification
+ version 4.0, section 17.5 and ACPI 5.0, section 18.6.
+diff --git a/Documentation/acpi/apei/output_format.txt b/Documentation/acpi/apei/output_format.txt
+index 0c49c197c47a..b132bdd950b8 100644
+--- a/Documentation/acpi/apei/output_format.txt
++++ b/Documentation/acpi/apei/output_format.txt
+@@ -1,128 +1,129 @@
+-                     APEI output format
+-                     ~~~~~~~~~~~~~~~~~~
++==================
++APEI output format
++==================
+ 
+ APEI uses printk as hardware error reporting interface, the output
+-format is as follow.
+-
+-<error record> :=
+-APEI generic hardware error status
+-severity: <integer>, <severity string>
+-section: <integer>, severity: <integer>, <severity string>
+-flags: <integer>
+-<section flags strings>
+-fru_id: <uuid string>
+-fru_text: <string>
+-section_type: <section type string>
+-<section data>
+-
+-<severity string>* := recoverable | fatal | corrected | info
+-
+-<section flags strings># :=
+-[primary][, containment warning][, reset][, threshold exceeded]\
+-[, resource not accessible][, latent error]
+-
+-<section type string> := generic processor error | memory error | \
+-PCIe error | unknown, <uuid string>
+-
+-<section data> :=
+-<generic processor section data> | <memory section data> | \
+-<pcie section data> | <null>
+-
+-<generic processor section data> :=
+-[processor_type: <integer>, <proc type string>]
+-[processor_isa: <integer>, <proc isa string>]
+-[error_type: <integer>
+-<proc error type strings>]
+-[operation: <integer>, <proc operation string>]
+-[flags: <integer>
+-<proc flags strings>]
+-[level: <integer>]
+-[version_info: <integer>]
+-[processor_id: <integer>]
+-[target_address: <integer>]
+-[requestor_id: <integer>]
+-[responder_id: <integer>]
+-[IP: <integer>]
+-
+-<proc type string>* := IA32/X64 | IA64
+-
+-<proc isa string>* := IA32 | IA64 | X64
+-
+-<processor error type strings># :=
+-[cache error][, TLB error][, bus error][, micro-architectural error]
+-
+-<proc operation string>* := unknown or generic | data read | data write | \
+-instruction execution
+-
+-<proc flags strings># :=
+-[restartable][, precise IP][, overflow][, corrected]
+-
+-<memory section data> :=
+-[error_status: <integer>]
+-[physical_address: <integer>]
+-[physical_address_mask: <integer>]
+-[node: <integer>]
+-[card: <integer>]
+-[module: <integer>]
+-[bank: <integer>]
+-[device: <integer>]
+-[row: <integer>]
+-[column: <integer>]
+-[bit_position: <integer>]
+-[requestor_id: <integer>]
+-[responder_id: <integer>]
+-[target_id: <integer>]
+-[error_type: <integer>, <mem error type string>]
+-
+-<mem error type string>* :=
+-unknown | no error | single-bit ECC | multi-bit ECC | \
+-single-symbol chipkill ECC | multi-symbol chipkill ECC | master abort | \
+-target abort | parity error | watchdog timeout | invalid address | \
+-mirror Broken | memory sparing | scrub corrected error | \
+-scrub uncorrected error
+-
+-<pcie section data> :=
+-[port_type: <integer>, <pcie port type string>]
+-[version: <integer>.<integer>]
+-[command: <integer>, status: <integer>]
+-[device_id: <integer>:<integer>:<integer>.<integer>
+-slot: <integer>
+-secondary_bus: <integer>
+-vendor_id: <integer>, device_id: <integer>
+-class_code: <integer>]
+-[serial number: <integer>, <integer>]
+-[bridge: secondary_status: <integer>, control: <integer>]
+-[aer_status: <integer>, aer_mask: <integer>
+-<aer status string>
+-[aer_uncor_severity: <integer>]
+-aer_layer=<aer layer string>, aer_agent=<aer agent string>
+-aer_tlp_header: <integer> <integer> <integer> <integer>]
+-
+-<pcie port type string>* := PCIe end point | legacy PCI end point | \
+-unknown | unknown | root port | upstream switch port | \
+-downstream switch port | PCIe to PCI/PCI-X bridge | \
+-PCI/PCI-X to PCIe bridge | root complex integrated endpoint device | \
+-root complex event collector
+-
+-if section severity is fatal or recoverable
+-<aer status string># :=
+-unknown | unknown | unknown | unknown | Data Link Protocol | \
+-unknown | unknown | unknown | unknown | unknown | unknown | unknown | \
+-Poisoned TLP | Flow Control Protocol | Completion Timeout | \
+-Completer Abort | Unexpected Completion | Receiver Overflow | \
+-Malformed TLP | ECRC | Unsupported Request
+-else
+-<aer status string># :=
+-Receiver Error | unknown | unknown | unknown | unknown | unknown | \
+-Bad TLP | Bad DLLP | RELAY_NUM Rollover | unknown | unknown | unknown | \
+-Replay Timer Timeout | Advisory Non-Fatal
+-fi
+-
+-<aer layer string> :=
+-Physical Layer | Data Link Layer | Transaction Layer
+-
+-<aer agent string> :=
+-Receiver ID | Requester ID | Completer ID | Transmitter ID
++format is as follow::
++
++  <error record> :=
++  APEI generic hardware error status
++  severity: <integer>, <severity string>
++  section: <integer>, severity: <integer>, <severity string>
++  flags: <integer>
++  <section flags strings>
++  fru_id: <uuid string>
++  fru_text: <string>
++  section_type: <section type string>
++  <section data>
++
++  <severity string>* := recoverable | fatal | corrected | info
++
++  <section flags strings># :=
++  [primary][, containment warning][, reset][, threshold exceeded]\
++  [, resource not accessible][, latent error]
++
++  <section type string> := generic processor error | memory error | \
++  PCIe error | unknown, <uuid string>
++
++  <section data> :=
++  <generic processor section data> | <memory section data> | \
++  <pcie section data> | <null>
++
++  <generic processor section data> :=
++  [processor_type: <integer>, <proc type string>]
++  [processor_isa: <integer>, <proc isa string>]
++  [error_type: <integer>
++  <proc error type strings>]
++  [operation: <integer>, <proc operation string>]
++  [flags: <integer>
++  <proc flags strings>]
++  [level: <integer>]
++  [version_info: <integer>]
++  [processor_id: <integer>]
++  [target_address: <integer>]
++  [requestor_id: <integer>]
++  [responder_id: <integer>]
++  [IP: <integer>]
++
++  <proc type string>* := IA32/X64 | IA64
++
++  <proc isa string>* := IA32 | IA64 | X64
++
++  <processor error type strings># :=
++  [cache error][, TLB error][, bus error][, micro-architectural error]
++
++  <proc operation string>* := unknown or generic | data read | data write | \
++  instruction execution
++
++  <proc flags strings># :=
++  [restartable][, precise IP][, overflow][, corrected]
++
++  <memory section data> :=
++  [error_status: <integer>]
++  [physical_address: <integer>]
++  [physical_address_mask: <integer>]
++  [node: <integer>]
++  [card: <integer>]
++  [module: <integer>]
++  [bank: <integer>]
++  [device: <integer>]
++  [row: <integer>]
++  [column: <integer>]
++  [bit_position: <integer>]
++  [requestor_id: <integer>]
++  [responder_id: <integer>]
++  [target_id: <integer>]
++  [error_type: <integer>, <mem error type string>]
++
++  <mem error type string>* :=
++  unknown | no error | single-bit ECC | multi-bit ECC | \
++  single-symbol chipkill ECC | multi-symbol chipkill ECC | master abort | \
++  target abort | parity error | watchdog timeout | invalid address | \
++  mirror Broken | memory sparing | scrub corrected error | \
++  scrub uncorrected error
++
++  <pcie section data> :=
++  [port_type: <integer>, <pcie port type string>]
++  [version: <integer>.<integer>]
++  [command: <integer>, status: <integer>]
++  [device_id: <integer>:<integer>:<integer>.<integer>
++  slot: <integer>
++  secondary_bus: <integer>
++  vendor_id: <integer>, device_id: <integer>
++  class_code: <integer>]
++  [serial number: <integer>, <integer>]
++  [bridge: secondary_status: <integer>, control: <integer>]
++  [aer_status: <integer>, aer_mask: <integer>
++  <aer status string>
++  [aer_uncor_severity: <integer>]
++  aer_layer=<aer layer string>, aer_agent=<aer agent string>
++  aer_tlp_header: <integer> <integer> <integer> <integer>]
++
++  <pcie port type string>* := PCIe end point | legacy PCI end point | \
++  unknown | unknown | root port | upstream switch port | \
++  downstream switch port | PCIe to PCI/PCI-X bridge | \
++  PCI/PCI-X to PCIe bridge | root complex integrated endpoint device | \
++  root complex event collector
++
++  if section severity is fatal or recoverable
++  <aer status string># :=
++  unknown | unknown | unknown | unknown | Data Link Protocol | \
++  unknown | unknown | unknown | unknown | unknown | unknown | unknown | \
++  Poisoned TLP | Flow Control Protocol | Completion Timeout | \
++  Completer Abort | Unexpected Completion | Receiver Overflow | \
++  Malformed TLP | ECRC | Unsupported Request
++  else
++  <aer status string># :=
++  Receiver Error | unknown | unknown | unknown | unknown | unknown | \
++  Bad TLP | Bad DLLP | RELAY_NUM Rollover | unknown | unknown | unknown | \
++  Replay Timer Timeout | Advisory Non-Fatal
++  fi
++
++  <aer layer string> :=
++  Physical Layer | Data Link Layer | Transaction Layer
++
++  <aer agent string> :=
++  Receiver ID | Requester ID | Completer ID | Transmitter ID
+ 
+ Where, [] designate corresponding content is optional
+ 
+diff --git a/Documentation/acpi/cppc_sysfs.txt b/Documentation/acpi/cppc_sysfs.txt
+index f20fb445135d..e4c6bb5a3333 100644
+--- a/Documentation/acpi/cppc_sysfs.txt
++++ b/Documentation/acpi/cppc_sysfs.txt
 @@ -1,5 +1,6 @@
-+=========================
- Network classifier cgroup
---------------------------
-+=========================
+-
+-	Collaborative Processor Performance Control (CPPC)
++==================================================
++Collaborative Processor Performance Control (CPPC)
++==================================================
  
- The Network classifier cgroup provides an interface to
- tag network packets with a class identifier (classid).
-@@ -17,23 +18,27 @@ values is 0xAAAABBBB; AAAA is the major handle number and BBBB
- is the minor handle number.
- Reading net_cls.classid yields a decimal result.
+ CPPC defined in the ACPI spec describes a mechanism for the OS to manage the
+ performance of a logical processor on a contigious and abstract performance
+@@ -8,28 +9,30 @@ to request performance levels and to measure per-cpu delivered performance.
  
--Example:
--mkdir /sys/fs/cgroup/net_cls
--mount -t cgroup -onet_cls net_cls /sys/fs/cgroup/net_cls
--mkdir /sys/fs/cgroup/net_cls/0
--echo 0x100001 >  /sys/fs/cgroup/net_cls/0/net_cls.classid
--	- setting a 10:1 handle.
-+Example::
+ For more details on CPPC please refer to the ACPI specification at:
  
--cat /sys/fs/cgroup/net_cls/0/net_cls.classid
--1048577
-+	mkdir /sys/fs/cgroup/net_cls
-+	mount -t cgroup -onet_cls net_cls /sys/fs/cgroup/net_cls
-+	mkdir /sys/fs/cgroup/net_cls/0
-+	echo 0x100001 >  /sys/fs/cgroup/net_cls/0/net_cls.classid
+-http://uefi.org/specifications
++	http://uefi.org/specifications
  
--configuring tc:
--tc qdisc add dev eth0 root handle 10: htb
-+- setting a 10:1 handle::
+ Some of the CPPC registers are exposed via sysfs under:
  
--tc class add dev eth0 parent 10: classid 10:1 htb rate 40mbit
-- - creating traffic class 10:1
-+	cat /sys/fs/cgroup/net_cls/0/net_cls.classid
-+	1048577
+-/sys/devices/system/cpu/cpuX/acpi_cppc/
++	/sys/devices/system/cpu/cpuX/acpi_cppc/
  
--tc filter add dev eth0 parent 10: protocol ip prio 10 handle 1: cgroup
-+- configuring tc::
+ for each cpu X
  
--configuring iptables, basic example:
--iptables -A OUTPUT -m cgroup ! --cgroup 0x100001 -j DROP
-+	tc qdisc add dev eth0 root handle 10: htb
-+	tc class add dev eth0 parent 10: classid 10:1 htb rate 40mbit
+ --------------------------------------------------------------------------------
+ 
+-$ ls -lR  /sys/devices/system/cpu/cpu0/acpi_cppc/
+-/sys/devices/system/cpu/cpu0/acpi_cppc/:
+-total 0
+--r--r--r-- 1 root root 65536 Mar  5 19:38 feedback_ctrs
+--r--r--r-- 1 root root 65536 Mar  5 19:38 highest_perf
+--r--r--r-- 1 root root 65536 Mar  5 19:38 lowest_freq
+--r--r--r-- 1 root root 65536 Mar  5 19:38 lowest_nonlinear_perf
+--r--r--r-- 1 root root 65536 Mar  5 19:38 lowest_perf
+--r--r--r-- 1 root root 65536 Mar  5 19:38 nominal_freq
+--r--r--r-- 1 root root 65536 Mar  5 19:38 nominal_perf
+--r--r--r-- 1 root root 65536 Mar  5 19:38 reference_perf
+--r--r--r-- 1 root root 65536 Mar  5 19:38 wraparound_time
++::
 +
-+- creating traffic class 10:1::
-+
-+	tc filter add dev eth0 parent 10: protocol ip prio 10 handle 1: cgroup
-+
-+configuring iptables, basic example::
-+
-+	iptables -A OUTPUT -m cgroup ! --cgroup 0x100001 -j DROP
-diff --git a/Documentation/cgroup-v1/net_prio.txt b/Documentation/cgroup-v1/net_prio.txt
-index a82cbd28ea8a..b40905871c64 100644
---- a/Documentation/cgroup-v1/net_prio.txt
-+++ b/Documentation/cgroup-v1/net_prio.txt
-@@ -1,5 +1,6 @@
-+=======================
- Network priority cgroup
---------------------------
-+=======================
++  $ ls -lR  /sys/devices/system/cpu/cpu0/acpi_cppc/
++  /sys/devices/system/cpu/cpu0/acpi_cppc/:
++  total 0
++  -r--r--r-- 1 root root 65536 Mar  5 19:38 feedback_ctrs
++  -r--r--r-- 1 root root 65536 Mar  5 19:38 highest_perf
++  -r--r--r-- 1 root root 65536 Mar  5 19:38 lowest_freq
++  -r--r--r-- 1 root root 65536 Mar  5 19:38 lowest_nonlinear_perf
++  -r--r--r-- 1 root root 65536 Mar  5 19:38 lowest_perf
++  -r--r--r-- 1 root root 65536 Mar  5 19:38 nominal_freq
++  -r--r--r-- 1 root root 65536 Mar  5 19:38 nominal_perf
++  -r--r--r-- 1 root root 65536 Mar  5 19:38 reference_perf
++  -r--r--r-- 1 root root 65536 Mar  5 19:38 wraparound_time
  
- The Network priority cgroup provides an interface to allow an administrator to
- dynamically set the priority of network traffic generated by various
-@@ -14,9 +15,9 @@ SO_PRIORITY socket option.  This however, is not always possible because:
+ --------------------------------------------------------------------------------
  
- This cgroup allows an administrator to assign a process to a group which defines
- the priority of egress traffic on a given interface. Network priority groups can
--be created by first mounting the cgroup filesystem.
-+be created by first mounting the cgroup filesystem::
+@@ -54,16 +57,17 @@ total 0
  
--# mount -t cgroup -onet_prio none /sys/fs/cgroup/net_prio
-+	# mount -t cgroup -onet_prio none /sys/fs/cgroup/net_prio
+ --------------------------------------------------------------------------------
  
- With the above step, the initial group acting as the parent accounting group
- becomes visible at '/sys/fs/cgroup/net_prio'.  This group includes all tasks in
-@@ -25,17 +26,18 @@ the system. '/sys/fs/cgroup/net_prio/tasks' lists the tasks in this cgroup.
- Each net_prio cgroup contains two files that are subsystem specific
+-		Computing Average Delivered Performance
++Computing Average Delivered Performance
++=======================================
  
- net_prio.prioidx
--This file is read-only, and is simply informative.  It contains a unique integer
--value that the kernel uses as an internal representation of this cgroup.
-+  This file is read-only, and is simply informative.  It contains a unique
-+  integer value that the kernel uses as an internal representation of this
-+  cgroup.
+ Below describes the steps to compute the average performance delivered by taking
+-two different snapshots of feedback counters at time T1 and T2.
++two different snapshots of feedback counters at time T1 and T2::
  
- net_prio.ifpriomap
--This file contains a map of the priorities assigned to traffic originating from
--processes in this group and egressing the system on various interfaces. It
--contains a list of tuples in the form <ifname priority>.  Contents of this file
--can be modified by echoing a string into the file using the same tuple format.
--for example:
-+  This file contains a map of the priorities assigned to traffic originating
-+  from processes in this group and egressing the system on various interfaces.
-+  It contains a list of tuples in the form <ifname priority>.  Contents of this
-+  file can be modified by echoing a string into the file using the same tuple
-+  format. For example::
+-T1: Read feedback_ctrs as fbc_t1
+-    Wait or run some workload
+-T2: Read feedback_ctrs as fbc_t2
++  T1: Read feedback_ctrs as fbc_t1
++      Wait or run some workload
++  T2: Read feedback_ctrs as fbc_t2
  
--echo "eth0 5" > /sys/fs/cgroups/net_prio/iscsi/net_prio.ifpriomap
-+	echo "eth0 5" > /sys/fs/cgroups/net_prio/iscsi/net_prio.ifpriomap
+-delivered_counter_delta = fbc_t2[del] - fbc_t1[del]
+-reference_counter_delta = fbc_t2[ref] - fbc_t1[ref]
++  delivered_counter_delta = fbc_t2[del] - fbc_t1[del]
++  reference_counter_delta = fbc_t2[ref] - fbc_t1[ref]
  
- This command would force any traffic originating from processes belonging to the
- iscsi net_prio cgroup and egressing on interface eth0 to have the priority of
-diff --git a/Documentation/cgroup-v1/pids.txt b/Documentation/cgroup-v1/pids.txt
-index e105d708ccde..6acebd9e72c8 100644
---- a/Documentation/cgroup-v1/pids.txt
-+++ b/Documentation/cgroup-v1/pids.txt
-@@ -1,5 +1,6 @@
--						   Process Number Controller
--						   =========================
-+=========================
-+Process Number Controller
-+=========================
+-delivered_perf = (refernce_perf x delivered_counter_delta) / reference_counter_delta
++  delivered_perf = (refernce_perf x delivered_counter_delta) / reference_counter_delta
+diff --git a/Documentation/acpi/debug.txt b/Documentation/acpi/debug.txt
+index 65bf47c46b6d..259a12a1e6a9 100644
+--- a/Documentation/acpi/debug.txt
++++ b/Documentation/acpi/debug.txt
+@@ -1,4 +1,6 @@
+-			ACPI Debug Output
++=================
++ACPI Debug Output
++=================
  
- Abstract
+ 
+ The ACPI CA, the Linux ACPI core, and some ACPI drivers can generate debug
+@@ -33,7 +35,7 @@ to /sys/module/acpi/parameters/debug_layer.
+ 
+ The possible components are defined in include/acpi/acoutput.h and
+ include/acpi/acpi_drivers.h.  Reading /sys/module/acpi/parameters/debug_layer
+-shows the supported mask values, currently these:
++shows the supported mask values, currently these::
+ 
+     ACPI_UTILITIES                  0x00000001
+     ACPI_HARDWARE                   0x00000002
+@@ -81,7 +83,7 @@ to /sys/module/acpi/parameters/debug_level.
+ 
+ The possible levels are defined in include/acpi/acoutput.h.  Reading
+ /sys/module/acpi/parameters/debug_level shows the supported mask values,
+-currently these:
++currently these::
+ 
+     ACPI_LV_INIT                    0x00000001
+     ACPI_LV_DEBUG_OBJECT            0x00000002
+@@ -115,7 +117,7 @@ currently these:
+ Examples
  --------
-@@ -34,55 +35,58 @@ pids.current tracks all child cgroup hierarchies, so parent/pids.current is a
- superset of parent/child/pids.current.
  
- The pids.events file contains event counters:
+-For example, drivers/acpi/bus.c contains this:
++For example, drivers/acpi/bus.c contains this::
+ 
+     #define _COMPONENT              ACPI_BUS_COMPONENT
+     ...
+@@ -127,22 +129,22 @@ statement uses ACPI_DB_INFO, which is macro based on the ACPI_LV_INFO
+ definition.)
+ 
+ Enable all AML "Debug" output (stores to the Debug object while interpreting
+-AML) during boot:
++AML) during boot::
+ 
+     acpi.debug_layer=0xffffffff acpi.debug_level=0x2
+ 
+-Enable PCI and PCI interrupt routing debug messages:
++Enable PCI and PCI interrupt routing debug messages::
+ 
+     acpi.debug_layer=0x400000 acpi.debug_level=0x4
+ 
+-Enable all ACPI hardware-related messages:
++Enable all ACPI hardware-related messages::
+ 
+     acpi.debug_layer=0x2 acpi.debug_level=0xffffffff
+ 
+-Enable all ACPI_DB_INFO messages after boot:
++Enable all ACPI_DB_INFO messages after boot::
+ 
+     # echo 0x4 > /sys/module/acpi/parameters/debug_level
+ 
+-Show all valid component values:
++Show all valid component values::
+ 
+     # cat /sys/module/acpi/parameters/debug_layer
+diff --git a/Documentation/acpi/dsd/data-node-references.txt b/Documentation/acpi/dsd/data-node-references.txt
+index c3871565c8cf..9ccd02bf060c 100644
+--- a/Documentation/acpi/dsd/data-node-references.txt
++++ b/Documentation/acpi/dsd/data-node-references.txt
+@@ -1,4 +1,9 @@
++====================
++Data Node References
++====================
 +
-   - max: Number of times fork failed because limit was hit.
+ Copyright (C) 2018 Intel Corporation
++
+ Author: Sakari Ailus <sakari.ailus@linux.intel.com>
  
+ 
+@@ -30,6 +35,8 @@ extension key.
  Example
  -------
  
--First, we mount the pids controller:
--# mkdir -p /sys/fs/cgroup/pids
--# mount -t cgroup -o pids none /sys/fs/cgroup/pids
-+First, we mount the pids controller::
- 
--Then we create a hierarchy, set limits and attach processes to it:
--# mkdir -p /sys/fs/cgroup/pids/parent/child
--# echo 2 > /sys/fs/cgroup/pids/parent/pids.max
--# echo $$ > /sys/fs/cgroup/pids/parent/cgroup.procs
--# cat /sys/fs/cgroup/pids/parent/pids.current
--2
--#
-+	# mkdir -p /sys/fs/cgroup/pids
-+	# mount -t cgroup -o pids none /sys/fs/cgroup/pids
++::
 +
-+Then we create a hierarchy, set limits and attach processes to it::
+ 	In the ASL snippet below, the "reference" _DSD property [2] contains a
+ 	device object reference to DEV0 and under that device object, a
+ 	hierarchical data extension key "node@1" referring to the NOD1 object
+@@ -81,9 +88,9 @@ References
+ ----------
+ 
+ [1] Hierarchical Data Extension UUID For _DSD.
+-    <URL:http://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-data-extension-UUID-v1.1.pdf>,
++    http://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-data-extension-UUID-v1.1.pdf,
+     referenced 2018-07-17.
+ 
+ [2] Device Properties UUID For _DSD.
+-    <URL:http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf>,
++    http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf,
+     referenced 2016-10-04.
+diff --git a/Documentation/acpi/dsd/graph.txt b/Documentation/acpi/dsd/graph.txt
+index b9ce910781dc..618deddcf512 100644
+--- a/Documentation/acpi/dsd/graph.txt
++++ b/Documentation/acpi/dsd/graph.txt
+@@ -1,4 +1,6 @@
++======
+ Graphs
++======
+ 
+ 
+ _DSD
+@@ -40,7 +42,7 @@ All port nodes are located under the device's "_DSD" node in the hierarchical
+ data extension tree. The data extension related to each port node must begin
+ with "port" and must be followed by the "@" character and the number of the port
+ as its key. The target object it refers to should be called "PRTX", where "X" is
+-the number of the port. An example of such a package would be:
++the number of the port. An example of such a package would be::
+ 
+     Package() { "port@4", PRT4 }
+ 
+@@ -49,7 +51,7 @@ data extension key of the endpoint nodes must begin with
+ "endpoint" and must be followed by the "@" character and the number of the
+ endpoint. The object it refers to should be called "EPXY", where "X" is the
+ number of the port and "Y" is the number of the endpoint. An example of such a
+-package would be:
++package would be::
+ 
+     Package() { "endpoint@0", EP40 }
+ 
+@@ -65,7 +67,7 @@ The endpoint reference uses property extension with "remote-endpoint" property
+ name followed by a reference in the same package. Such references consist of the
+ the remote device reference, the first package entry of the port data extension
+ reference under the device and finally the first package entry of the endpoint
+-data extension reference under the port. Individual references thus appear as:
++data extension reference under the port. Individual references thus appear as::
+ 
+     Package() { device, "port@X", "endpoint@Y" }
+ 
+@@ -75,7 +77,7 @@ endpoint.
+ The references to endpoints must be always done both ways, to the
+ remote endpoint and back from the referred remote endpoint node.
+ 
+-A simple example of this is show below:
++A simple example of this is show below::
+ 
+     Scope (\_SB.PCI0.I2C2)
+     {
+@@ -151,23 +153,25 @@ References
+ ----------
+ 
+ [1] _DSD (Device Specific Data) Implementation Guide.
+-    <URL:http://www.uefi.org/sites/default/files/resources/_DSD-implementation-guide-toplevel-1_1.htm>,
++    http://www.uefi.org/sites/default/files/resources/_DSD-implementation-guide-toplevel-1_1.htm,
+     referenced 2016-10-03.
+ 
+-[2] Devicetree. <URL:http://www.devicetree.org>, referenced 2016-10-03.
++[2] Devicetree.
++    http://www.devicetree.org, referenced 2016-10-03.
+ 
+-[3] Documentation/devicetree/bindings/graph.txt
++[3] Linux Kernel device tree graph rules.
++    Documentation/devicetree/bindings/graph.txt
+ 
+ [4] Device Properties UUID For _DSD.
+-    <URL:http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf>,
++    http://www.uefi.org/sites/default/files/resources/_DSD-device-properties-UUID.pdf,
+     referenced 2016-10-04.
+ 
+ [5] Hierarchical Data Extension UUID For _DSD.
+-    <URL:http://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-data-extension-UUID-v1.1.pdf>,
++    URL:http://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-data-extension-UUID-v1.1.pdf,
+     referenced 2016-10-04.
+ 
+ [6] Advanced Configuration and Power Interface Specification.
+-    <URL:http://www.uefi.org/sites/default/files/resources/ACPI_6_1.pdf>,
++    http://www.uefi.org/sites/default/files/resources/ACPI_6_1.pdf,
+     referenced 2016-10-04.
+ 
+ [7] _DSD Device Properties Usage Rules.
+diff --git a/Documentation/acpi/dsd/leds.txt b/Documentation/acpi/dsd/leds.txt
+index 81a63af42ed2..82ccd5cfb1fd 100644
+--- a/Documentation/acpi/dsd/leds.txt
++++ b/Documentation/acpi/dsd/leds.txt
+@@ -1,4 +1,6 @@
++========================================
+ Describing and referring to LEDs in ACPI
++========================================
+ 
+ Individual LEDs are described by hierarchical data extension [6] nodes under the
+ device node, the LED driver chip. The "reg" property in the LED specific nodes
+@@ -26,7 +28,7 @@ followed by the referred object name. That object shall be named "LED" followed
+ by the number of the LED.
+ 
+ An ASL example of a camera sensor device and a LED driver device for two LEDs.
+-Objects not relevant for LEDs or the references to them have been omitted.
++Objects not relevant for LEDs or the references to them have been omitted::
+ 
+ 	Device (LED)
+ 	{
+@@ -72,10 +74,14 @@ Objects not relevant for LEDs or the references to them have been omitted.
+ 
+ where
+ 
+-	LED	LED driver device
+-	LED0	First LED
+-	LED1	Second LED
+-	SEN	Camera sensor device (or another device the LED is
++	LED
++		LED driver device
++	LED0
++		First LED
++	LED1
++		Second LED
++	SEN
++		Camera sensor device (or another device the LED is
+ 		related to)
+ 
+ [1] Device tree. <URL:http://www.devicetree.org>, referenced 2019-02-21.
+@@ -96,4 +102,4 @@ where
+     <URL:http://www.uefi.org/sites/default/files/resources/_DSD-hierarchical-data-extension-UUID-v1.1.pdf>,
+     referenced 2019-02-21.
+ 
+-[7] Documentation/acpi/dsd/data-node-reference.txt
++[7] Documentation/acpi/dsd/data-node-references.txt
+diff --git a/Documentation/acpi/dsdt-override.txt b/Documentation/acpi/dsdt-override.txt
+index 784841caa6e6..d483b1957be1 100644
+--- a/Documentation/acpi/dsdt-override.txt
++++ b/Documentation/acpi/dsdt-override.txt
+@@ -1,4 +1,6 @@
+-Linux supports a method of overriding the BIOS DSDT:
++===================================================
++Linux supports a method of overriding the BIOS DSDT
++===================================================
+ 
+ CONFIG_ACPI_CUSTOM_DSDT builds the image into the kernel.
+ 
+diff --git a/Documentation/acpi/enumeration.txt b/Documentation/acpi/enumeration.txt
+index 1395b844649c..5b740fb9054b 100644
+--- a/Documentation/acpi/enumeration.txt
++++ b/Documentation/acpi/enumeration.txt
+@@ -1,5 +1,7 @@
++=============================
+ ACPI based device enumeration
+-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
++=============================
 +
-+	# mkdir -p /sys/fs/cgroup/pids/parent/child
-+	# echo 2 > /sys/fs/cgroup/pids/parent/pids.max
-+	# echo $$ > /sys/fs/cgroup/pids/parent/cgroup.procs
-+	# cat /sys/fs/cgroup/pids/parent/pids.current
-+	2
-+	#
+ ACPI 5 introduced a set of new resources (UartTSerialBus, I2cSerialBus,
+ SpiSerialBus, GpioIo and GpioInt) which can be used in enumerating slave
+ devices behind serial bus controllers.
+@@ -11,10 +13,10 @@ that are accessed through memory-mapped registers.
+ In order to support this and re-use the existing drivers as much as
+ possible we decided to do following:
  
- It should be noted that attempts to overcome the set limit (2 in this case) will
--fail:
-+fail::
+-	o Devices that have no bus connector resource are represented as
++	- Devices that have no bus connector resource are represented as
+ 	  platform devices.
  
--# cat /sys/fs/cgroup/pids/parent/pids.current
--2
--# ( /bin/echo "Here's some processes for you." | cat )
--sh: fork: Resource temporary unavailable
--#
-+	# cat /sys/fs/cgroup/pids/parent/pids.current
-+	2
-+	# ( /bin/echo "Here's some processes for you." | cat )
-+	sh: fork: Resource temporary unavailable
-+	#
+-	o Devices behind real busses where there is a connector resource
++	- Devices behind real busses where there is a connector resource
+ 	  are represented as struct spi_device or struct i2c_device
+ 	  (standard UARTs are not busses so there is no struct uart_device).
  
- Even if we migrate to a child cgroup (which doesn't have a set limit), we will
- not be able to overcome the most stringent limit in the hierarchy (in this case,
--parent's):
-+parent's)::
+@@ -39,7 +41,7 @@ some other non-ACPI platform, the driver might work out of the box or needs
+ some minor changes.
  
--# echo $$ > /sys/fs/cgroup/pids/parent/child/cgroup.procs
--# cat /sys/fs/cgroup/pids/parent/pids.current
--2
--# cat /sys/fs/cgroup/pids/parent/child/pids.current
--2
--# cat /sys/fs/cgroup/pids/parent/child/pids.max
--max
--# ( /bin/echo "Here's some processes for you." | cat )
--sh: fork: Resource temporary unavailable
--#
-+	# echo $$ > /sys/fs/cgroup/pids/parent/child/cgroup.procs
-+	# cat /sys/fs/cgroup/pids/parent/pids.current
-+	2
-+	# cat /sys/fs/cgroup/pids/parent/child/pids.current
-+	2
-+	# cat /sys/fs/cgroup/pids/parent/child/pids.max
-+	max
-+	# ( /bin/echo "Here's some processes for you." | cat )
-+	sh: fork: Resource temporary unavailable
-+	#
+ Adding ACPI support for an existing driver should be pretty
+-straightforward. Here is the simplest example:
++straightforward. Here is the simplest example::
  
- We can set a limit that is smaller than pids.current, which will stop any new
- processes from being forked at all (note that the shell itself counts towards
--pids.current):
-+pids.current)::
+ 	#ifdef CONFIG_ACPI
+ 	static const struct acpi_device_id mydrv_acpi_match[] = {
+@@ -66,7 +68,7 @@ DMA controllers enumerated via ACPI should be registered in the system to
+ provide generic access to their resources. For example, a driver that would
+ like to be accessible to slave devices via generic API call
+ dma_request_slave_channel() must register itself at the end of the probe
+-function like this:
++function like this::
  
--# echo 1 > /sys/fs/cgroup/pids/parent/pids.max
--# /bin/echo "We can't even spawn a single process now."
--sh: fork: Resource temporary unavailable
--# echo 0 > /sys/fs/cgroup/pids/parent/pids.max
--# /bin/echo "We can't even spawn a single process now."
--sh: fork: Resource temporary unavailable
--#
-+	# echo 1 > /sys/fs/cgroup/pids/parent/pids.max
-+	# /bin/echo "We can't even spawn a single process now."
-+	sh: fork: Resource temporary unavailable
-+	# echo 0 > /sys/fs/cgroup/pids/parent/pids.max
-+	# /bin/echo "We can't even spawn a single process now."
-+	sh: fork: Resource temporary unavailable
-+	#
-diff --git a/Documentation/cgroup-v1/rdma.txt b/Documentation/cgroup-v1/rdma.txt
-index 9bdb7fd03f83..2fcb0a9bf790 100644
---- a/Documentation/cgroup-v1/rdma.txt
-+++ b/Documentation/cgroup-v1/rdma.txt
-@@ -1,16 +1,17 @@
--				RDMA Controller
--				----------------
-+===============
-+RDMA Controller
-+===============
+ 	err = devm_acpi_dma_controller_register(dev, xlate_func, dw);
+ 	/* Handle the error if it's not a case of !CONFIG_ACPI */
+@@ -74,7 +76,7 @@ function like this:
+ and implement custom xlate function if needed (usually acpi_dma_simple_xlate()
+ is enough) which converts the FixedDMA resource provided by struct
+ acpi_dma_spec into the corresponding DMA channel. A piece of code for that case
+-could look like:
++could look like::
  
--Contents
----------
-+.. Contents
+ 	#ifdef CONFIG_ACPI
+ 	struct filter_args {
+@@ -114,7 +116,7 @@ provided by struct acpi_dma.
+ Clients must call dma_request_slave_channel() with the string parameter that
+ corresponds to a specific FixedDMA resource. By default "tx" means the first
+ entry of the FixedDMA resource array, "rx" means the second entry. The table
+-below shows a layout:
++below shows a layout::
  
--1. Overview
--  1-1. What is RDMA controller?
--  1-2. Why RDMA controller needed?
--  1-3. How is RDMA controller implemented?
--2. Usage Examples
-+   1. Overview
-+     1-1. What is RDMA controller?
-+     1-2. Why RDMA controller needed?
-+     1-3. How is RDMA controller implemented?
-+   2. Usage Examples
+ 	Device (I2C0)
+ 	{
+@@ -143,7 +145,7 @@ Slave devices behind SPI bus have SpiSerialBus resource attached to them.
+ This is extracted automatically by the SPI core and the slave devices are
+ enumerated once spi_register_master() is called by the bus driver.
  
- 1. Overview
-+===========
+-Here is what the ACPI namespace for a SPI slave might look like:
++Here is what the ACPI namespace for a SPI slave might look like::
  
- 1-1. What is RDMA controller?
- -----------------------------
-@@ -83,27 +84,34 @@ what is configured by user for a given cgroup and what is supported by
- IB device.
+ 	Device (EEP0)
+ 	{
+@@ -163,7 +165,7 @@ Here is what the ACPI namespace for a SPI slave might look like:
  
- Following resources can be accounted by rdma controller.
+ The SPI device drivers only need to add ACPI IDs in a similar way than with
+ the platform device drivers. Below is an example where we add ACPI support
+-to at25 SPI eeprom driver (this is meant for the above ACPI snippet):
++to at25 SPI eeprom driver (this is meant for the above ACPI snippet)::
+ 
+ 	#ifdef CONFIG_ACPI
+ 	static const struct acpi_device_id at25_acpi_match[] = {
+@@ -182,7 +184,7 @@ to at25 SPI eeprom driver (this is meant for the above ACPI snippet):
+ 
+ Note that this driver actually needs more information like page size of the
+ eeprom etc. but at the time writing this there is no standard way of
+-passing those. One idea is to return this in _DSM method like:
++passing those. One idea is to return this in _DSM method like::
+ 
+ 	Device (EEP0)
+ 	{
+@@ -202,7 +204,7 @@ passing those. One idea is to return this in _DSM method like:
+ 		}
+ 
+ Then the at25 SPI driver can get this configuration by calling _DSM on its
+-ACPI handle like:
++ACPI handle like::
+ 
+ 	struct acpi_buffer output = { ACPI_ALLOCATE_BUFFER, NULL };
+ 	struct acpi_object_list input;
+@@ -227,7 +229,7 @@ any slave devices behind the controller device once the adapter is
+ registered.
+ 
+ Below is an example of how to add ACPI support to the existing mpu3050
+-input driver:
++input driver::
+ 
+ 	#ifdef CONFIG_ACPI
+ 	static const struct acpi_device_id mpu3050_acpi_match[] = {
+@@ -257,10 +259,10 @@ and GpioInt. These resources can be used to pass GPIO numbers used by
+ the device to the driver. ACPI 5.1 extended this with _DSD (Device
+ Specific Data) which made it possible to name the GPIOs among other things.
+ 
+-For example:
++For example::
+ 
+-Device (DEV)
+-{
++  Device (DEV)
++  {
+ 	Method (_CRS, 0, NotSerialized)
+ 	{
+ 		Name (SBUF, ResourceTemplate()
+@@ -310,7 +312,7 @@ There is a standard GPIO API for that and is documented in
+ Documentation/gpio/.
+ 
+ In the above example we can get the corresponding two GPIO descriptors with
+-a code like this:
++a code like this::
+ 
+ 	#include <linux/gpio/consumer.h>
+ 	...
+@@ -340,15 +342,15 @@ devices there needs to be an ACPI handle that they can use to reference
+ parts of the ACPI namespace that relate to them. In the Linux MFD subsystem
+ we provide two ways:
+ 
+-	o The children share the parent ACPI handle.
+-	o The MFD cell can specify the ACPI id of the device.
++	- The children share the parent ACPI handle.
++	- The MFD cell can specify the ACPI id of the device.
+ 
+ For the first case, the MFD drivers do not need to do anything. The
+ resulting child platform device will have its ACPI_COMPANION() set to point
+ to the parent device.
+ 
+ If the ACPI namespace has a device that we can match using an ACPI id or ACPI
+-adr, the cell should be set like:
++adr, the cell should be set like::
+ 
+ 	static struct mfd_cell_acpi_match my_subdevice_cell_acpi_match = {
+ 		.pnpid = "XYZ0001",
+@@ -412,7 +414,7 @@ will be enumerated to depends on the device ID returned by _HID.
+ 
+ For example, the following ACPI sample might be used to enumerate an lm75-type
+ I2C temperature sensor and match it to the driver using the Device Tree
+-namespace link:
++namespace link::
+ 
+ 	Device (TMP0)
+ 	{
+diff --git a/Documentation/acpi/gpio-properties.txt b/Documentation/acpi/gpio-properties.txt
+index 88c65cb5bf0a..d8ba7a06db73 100644
+--- a/Documentation/acpi/gpio-properties.txt
++++ b/Documentation/acpi/gpio-properties.txt
+@@ -1,5 +1,6 @@
++======================================
+ _DSD Device Properties Related to GPIO
+---------------------------------------
++======================================
+ 
+ With the release of ACPI 5.1, the _DSD configuration object finally
+ allows names to be given to GPIOs (and other things as well) returned
+@@ -8,7 +9,7 @@ the corresponding GPIO, which is pretty error prone (it depends on
+ the _CRS output ordering, for example).
+ 
+ With _DSD we can now query GPIOs using a name instead of an integer
+-index, like the ASL example below shows:
++index, like the ASL example below shows::
+ 
+   // Bluetooth device with reset and shutdown GPIOs
+   Device (BTH)
+@@ -34,7 +35,7 @@ index, like the ASL example below shows:
+       })
+   }
+ 
+-The format of the supported GPIO property is:
++The format of the supported GPIO property is::
+ 
+   Package () { "name", Package () { ref, index, pin, active_low }}
+ 
+@@ -55,7 +56,7 @@ It is possible to leave holes in the array of GPIOs. This is useful in
+ cases like with SPI host controllers where some chip selects may be
+ implemented as GPIOs and some as native signals. For example a SPI host
+ controller can have chip selects 0 and 2 implemented as GPIOs and 1 as
+-native:
++native::
+ 
+   Package () {
+       "cs-gpios",
+@@ -78,7 +79,7 @@ _DSD device properties for GPIO controllers:
+ - input
+ - line-name
+ 
+-Example:
++Example::
+ 
+   Name (_DSD, Package () {
+       // _DSD Hierarchical Properties Extension UUID
+@@ -100,7 +101,7 @@ Example:
+ 
+ - gpio-line-names
+ 
+-Example:
++Example::
+ 
+   Package () {
+       "gpio-line-names",
+@@ -139,16 +140,16 @@ line in that resource starting from zero, and the active-low flag for that line,
+ respectively, in analogy with the _DSD GPIO property format specified above.
+ 
+ For the example Bluetooth device discussed previously the data structures in
+-question would look like this:
++question would look like this::
+ 
+-static const struct acpi_gpio_params reset_gpio = { 1, 1, false };
+-static const struct acpi_gpio_params shutdown_gpio = { 0, 0, false };
++  static const struct acpi_gpio_params reset_gpio = { 1, 1, false };
++  static const struct acpi_gpio_params shutdown_gpio = { 0, 0, false };
+ 
+-static const struct acpi_gpio_mapping bluetooth_acpi_gpios[] = {
+-  { "reset-gpios", &reset_gpio, 1 },
+-  { "shutdown-gpios", &shutdown_gpio, 1 },
+-  { },
+-};
++  static const struct acpi_gpio_mapping bluetooth_acpi_gpios[] = {
++    { "reset-gpios", &reset_gpio, 1 },
++    { "shutdown-gpios", &shutdown_gpio, 1 },
++    { },
++  };
+ 
+ Next, the mapping table needs to be passed as the second argument to
+ acpi_dev_add_driver_gpios() that will register it with the ACPI device object
+@@ -163,7 +164,7 @@ Using the _CRS fallback
+ If a device does not have _DSD or the driver does not create ACPI GPIO
+ mapping, the Linux GPIO framework refuses to return any GPIOs. This is
+ because the driver does not know what it actually gets. For example if we
+-have a device like below:
++have a device like below::
+ 
+   Device (BTH)
+   {
+@@ -177,7 +178,7 @@ have a device like below:
+       })
+   }
+ 
+-The driver might expect to get the right GPIO when it does:
++The driver might expect to get the right GPIO when it does::
+ 
+   desc = gpiod_get(dev, "reset", GPIOD_OUT_LOW);
+ 
+@@ -195,18 +196,21 @@ objects, as listed in the above chapter, of the device in question.
+ Getting GPIO descriptor
+ -----------------------
+ 
+-There are two main approaches to get GPIO resource from ACPI:
++There are two main approaches to get GPIO resource from ACPI::
 +
-+  ==========    =============================
-   hca_handle	Maximum number of HCA Handles
-   hca_object 	Maximum number of HCA Objects
-+  ==========    =============================
+ 	desc = gpiod_get(dev, connection_id, flags);
+ 	desc = gpiod_get_index(dev, connection_id, index, flags);
  
- 2. Usage Examples
-------------------
--
--(a) Configure resource limit:
--echo mlx4_0 hca_handle=2 hca_object=2000 > /sys/fs/cgroup/rdma/1/rdma.max
--echo ocrdma1 hca_handle=3 > /sys/fs/cgroup/rdma/2/rdma.max
--
--(b) Query resource limit:
--cat /sys/fs/cgroup/rdma/2/rdma.max
--#Output:
--mlx4_0 hca_handle=2 hca_object=2000
--ocrdma1 hca_handle=3 hca_object=max
--
--(c) Query current usage:
--cat /sys/fs/cgroup/rdma/2/rdma.current
--#Output:
--mlx4_0 hca_handle=1 hca_object=20
--ocrdma1 hca_handle=1 hca_object=23
--
--(d) Delete resource limit:
--echo echo mlx4_0 hca_handle=max hca_object=max > /sys/fs/cgroup/rdma/1/rdma.max
+ We may consider two different cases here, i.e. when connection ID is
+ provided and otherwise.
+ 
+-Case 1:
++Case 1::
++
+ 	desc = gpiod_get(dev, "non-null-connection-id", flags);
+ 	desc = gpiod_get_index(dev, "non-null-connection-id", index, flags);
+ 
+-Case 2:
++Case 2::
++
+ 	desc = gpiod_get(dev, NULL, flags);
+ 	desc = gpiod_get_index(dev, NULL, index, flags);
+ 
+diff --git a/Documentation/acpi/i2c-muxes.txt b/Documentation/acpi/i2c-muxes.txt
+index 9fcc4f0b885e..5481cf1ad272 100644
+--- a/Documentation/acpi/i2c-muxes.txt
++++ b/Documentation/acpi/i2c-muxes.txt
+@@ -1,20 +1,21 @@
++==============
+ ACPI I2C Muxes
+---------------
++==============
+ 
+ Describing an I2C device hierarchy that includes I2C muxes requires an ACPI
+ Device () scope per mux channel.
+ 
+-Consider this topology:
++Consider this topology::
+ 
+-+------+   +------+
+-| SMB1 |-->| MUX0 |--CH00--> i2c client A (0x50)
+-|      |   | 0x70 |--CH01--> i2c client B (0x50)
+-+------+   +------+
++  +------+   +------+
++  | SMB1 |-->| MUX0 |--CH00--> i2c client A (0x50)
++  |      |   | 0x70 |--CH01--> i2c client B (0x50)
++  +------+   +------+
+ 
+-which corresponds to the following ASL:
++which corresponds to the following ASL::
+ 
+-Device (SMB1)
+-{
++  Device (SMB1)
++  {
+     Name (_HID, ...)
+     Device (MUX0)
+     {
+@@ -55,4 +56,4 @@ Device (SMB1)
+             }
+         }
+     }
+-}
++  }
+diff --git a/Documentation/acpi/initrd_table_override.txt b/Documentation/acpi/initrd_table_override.txt
+index 30437a6db373..1b89103f810a 100644
+--- a/Documentation/acpi/initrd_table_override.txt
++++ b/Documentation/acpi/initrd_table_override.txt
+@@ -1,3 +1,4 @@
++================================
+ Upgrading ACPI tables via initrd
+ ================================
+ 
+@@ -19,12 +20,14 @@ ACPI_TABLE_OVERRIDE_VIA_BUILTIN_INITRD should also be true for this
+ feature to work.
+ 
+ For a full list of ACPI tables that can be upgraded/installed, take a look
+-at the char *table_sigs[MAX_ACPI_SIGNATURE]; definition in
++at the `char *table_sigs[MAX_ACPI_SIGNATURE];` definition in
+ drivers/acpi/tables.c.
+ All ACPI tables iasl (Intel's ACPI compiler and disassembler) knows should
+ be overridable, except:
++
+    - ACPI_SIG_RSDP (has a signature of 6 bytes)
+    - ACPI_SIG_FACS (does not have an ordinary ACPI table header)
++
+ Both could get implemented as well.
+ 
+ 
+@@ -50,47 +53,48 @@ change with not instrumented initrds.
+ 3) How does it work
+ -------------------
+ 
+-# Extract the machine's ACPI tables:
+-cd /tmp
+-acpidump >acpidump
+-acpixtract -a acpidump
+-# Disassemble, modify and recompile them:
+-iasl -d *.dat
+-# For example add this statement into a _PRT (PCI Routing Table) function
+-# of the DSDT:
+-Store("HELLO WORLD", debug)
+-# And increase the OEM Revision. For example, before modification:
+-DefinitionBlock ("DSDT.aml", "DSDT", 2, "INTEL ", "TEMPLATE", 0x00000000)
+-# After modification:
+-DefinitionBlock ("DSDT.aml", "DSDT", 2, "INTEL ", "TEMPLATE", 0x00000001)
+-iasl -sa dsdt.dsl
+-# Add the raw ACPI tables to an uncompressed cpio archive.
+-# They must be put into a /kernel/firmware/acpi directory inside the cpio
+-# archive. Note that if the table put here matches a platform table
+-# (similar Table Signature, and similar OEMID, and similar OEM Table ID)
+-# with a more recent OEM Revision, the platform table will be upgraded by
+-# this table. If the table put here doesn't match a platform table
+-# (dissimilar Table Signature, or dissimilar OEMID, or dissimilar OEM Table
+-# ID), this table will be appended.
+-mkdir -p kernel/firmware/acpi
+-cp dsdt.aml kernel/firmware/acpi
+-# A maximum of "NR_ACPI_INITRD_TABLES (64)" tables are currently allowed
+-# (see osl.c):
+-iasl -sa facp.dsl
+-iasl -sa ssdt1.dsl
+-cp facp.aml kernel/firmware/acpi
+-cp ssdt1.aml kernel/firmware/acpi
+-# The uncompressed cpio archive must be the first. Other, typically
+-# compressed cpio archives, must be concatenated on top of the uncompressed
+-# one. Following command creates the uncompressed cpio archive and
+-# concatenates the original initrd on top:
+-find kernel | cpio -H newc --create > /boot/instrumented_initrd
+-cat /boot/initrd >>/boot/instrumented_initrd
+-# reboot with increased acpi debug level, e.g. boot params:
+-acpi.debug_level=0x2 acpi.debug_layer=0xFFFFFFFF
+-# and check your syslog:
+-[    1.268089] ACPI: PCI Interrupt Routing Table [\_SB_.PCI0._PRT]
+-[    1.272091] [ACPI Debug]  String [0x0B] "HELLO WORLD"
++# Extract the machine's ACPI tables::
++
++  cd /tmp
++  acpidump >acpidump
++  acpixtract -a acpidump
++  # Disassemble, modify and recompile them:
++  iasl -d *.dat
++  # For example add this statement into a _PRT (PCI Routing Table) function
++  # of the DSDT:
++  # Store("HELLO WORLD", debug)
++  # And increase the OEM Revision. For example, before modification:
++  # DefinitionBlock ("DSDT.aml", "DSDT", 2, "INTEL ", "TEMPLATE", 0x00000000)
++  # After modification:
++  # DefinitionBlock ("DSDT.aml", "DSDT", 2, "INTEL ", "TEMPLATE", 0x00000001)
++  iasl -sa dsdt.dsl
++  # Add the raw ACPI tables to an uncompressed cpio archive.
++  # They must be put into a /kernel/firmware/acpi directory inside the cpio
++  # archive. Note that if the table put here matches a platform table
++  # (similar Table Signature, and similar OEMID, and similar OEM Table ID)
++  # with a more recent OEM Revision, the platform table will be upgraded by
++  # this table. If the table put here doesn't match a platform table
++  # (dissimilar Table Signature, or dissimilar OEMID, or dissimilar OEM Table
++  # ID), this table will be appended.
++  mkdir -p kernel/firmware/acpi
++  cp dsdt.aml kernel/firmware/acpi
++  # A maximum of "NR_ACPI_INITRD_TABLES (64)" tables are currently allowed
++  # (see osl.c):
++  iasl -sa facp.dsl
++  iasl -sa ssdt1.dsl
++  cp facp.aml kernel/firmware/acpi
++  cp ssdt1.aml kernel/firmware/acpi
++  # The uncompressed cpio archive must be the first. Other, typically
++  # compressed cpio archives, must be concatenated on top of the uncompressed
++  # one. Following command creates the uncompressed cpio archive and
++  # concatenates the original initrd on top:
++  find kernel | cpio -H newc --create > /boot/instrumented_initrd
++  cat /boot/initrd >>/boot/instrumented_initrd
++  # reboot with increased acpi debug level, e.g. boot params:
++  acpi.debug_level=0x2 acpi.debug_layer=0xFFFFFFFF
++  # and check your syslog:
++  [    1.268089] ACPI: PCI Interrupt Routing Table [\_SB_.PCI0._PRT]
++  [    1.272091] [ACPI Debug]  String [0x0B] "HELLO WORLD"
+ 
+ iasl is able to disassemble and recompile quite a lot different,
+ also static ACPI tables.
+@@ -106,6 +110,8 @@ on SUSE).
+ 
+ acpidump can be found in Len Browns pmtools:
+ ftp://kernel.org/pub/linux/kernel/people/lenb/acpi/utils/pmtools/acpidump
++
+ This tool is also part of the acpica package on SUSE.
++
+ Alternatively, used ACPI tables can be retrieved via sysfs in latest kernels:
+ /sys/firmware/acpi/tables
+diff --git a/Documentation/acpi/linuxized-acpica.txt b/Documentation/acpi/linuxized-acpica.txt
+index 3ad7b0dfb083..bb5e7e49e175 100644
+--- a/Documentation/acpi/linuxized-acpica.txt
++++ b/Documentation/acpi/linuxized-acpica.txt
+@@ -1,10 +1,14 @@
++============================================================
+ Linuxized ACPICA - Introduction to ACPICA Release Automation
++============================================================
+ 
+ Copyright (C) 2013-2016, Intel Corporation
++
+ Author: Lv Zheng <lv.zheng@intel.com>
+ 
+ 
+-Abstract:
++Abstract
++========
+ 
+ This document describes the ACPICA project and the relationship between
+ ACPICA and Linux.  It also describes how ACPICA code in drivers/acpi/acpica,
+@@ -13,6 +17,7 @@ upstream.
+ 
+ 
+ 1. ACPICA Project
 +=================
+ 
+    The ACPI Component Architecture (ACPICA) project provides an operating
+    system (OS)-independent reference implementation of the Advanced
+@@ -25,7 +30,7 @@ upstream.
+    supported by Intel Corporation.
+ 
+    The following figure depicts the Linux ACPI subsystem where the ACPICA
+-   adaptation is included:
++   adaptation is included::
+ 
+       +---------------------------------------------------------+
+       |                                                         |
+@@ -72,34 +77,43 @@ upstream.
+                  Figure 1. Linux ACPI Software Components
+ 
+    NOTE:
 +
-+(a) Configure resource limit::
+     A. OS Service Layer - Provided by Linux to offer OS dependent
+-       implementation of the predefined ACPICA interfaces (acpi_os_*).
++       implementation of the predefined ACPICA interfaces (acpi_os_*)::
 +
-+	echo mlx4_0 hca_handle=2 hca_object=2000 > /sys/fs/cgroup/rdma/1/rdma.max
-+	echo ocrdma1 hca_handle=3 > /sys/fs/cgroup/rdma/2/rdma.max
+          include/acpi/acpiosxf.h
+          drivers/acpi/osl.c
+          include/acpi/platform
+          include/asm/acenv.h
 +
-+(b) Query resource limit::
+     B. ACPICA Functionality - Released from ACPICA code base to offer
+-       OS independent implementation of the ACPICA interfaces (acpi_*).
++       OS independent implementation of the ACPICA interfaces (acpi_*)::
 +
-+	cat /sys/fs/cgroup/rdma/2/rdma.max
-+	#Output:
-+	mlx4_0 hca_handle=2 hca_object=2000
-+	ocrdma1 hca_handle=3 hca_object=max
+          drivers/acpi/acpica
+          include/acpi/ac*.h
+          tools/power/acpi
 +
-+(c) Query current usage::
+     C. Linux/ACPI Functionality - Providing Linux specific ACPI
+        functionality to the other Linux kernel subsystems and user space
+-       programs.
++       programs::
 +
-+	cat /sys/fs/cgroup/rdma/2/rdma.current
-+	#Output:
-+	mlx4_0 hca_handle=1 hca_object=20
-+	ocrdma1 hca_handle=1 hca_object=23
+          drivers/acpi
+          include/linux/acpi.h
+          include/linux/acpi*.h
+          include/acpi
+          tools/power/acpi
 +
-+(d) Delete resource limit::
+     D. Architecture Specific ACPICA/ACPI Functionalities - Provided by the
+        ACPI subsystem to offer architecture specific implementation of the
+        ACPI interfaces.  They are Linux specific components and are out of
+-       the scope of this document.
++       the scope of this document::
 +
-+	echo echo mlx4_0 hca_handle=max hca_object=max > /sys/fs/cgroup/rdma/1/rdma.max
+          include/asm/acpi.h
+          include/asm/acpi*.h
+          arch/*/acpi
+ 
+ 2. ACPICA Release
++=================
+ 
+    The ACPICA project maintains its code base at the following repository URL:
+    https://github.com/acpica/acpica.git. As a rule, a release is made every
+@@ -112,7 +126,7 @@ upstream.
+    copy the ACPICA git repository.  Each commit in the monthly release is
+    converted into a linuxized ACPICA patch.  Together, they form the monthly
+    ACPICA release patchset for the Linux ACPI community.  This process is
+-   illustrated in the following figure:
++   illustrated in the following figure::
+ 
+     +-----------------------------+
+     | acpica / master (-) commits |
+@@ -154,6 +168,7 @@ upstream.
+                 Figure 2. ACPICA -> Linux Upstream Process
+ 
+    NOTE:
++
+     A. Linuxize Utilities - Provided by the ACPICA repository, including a
+        utility located in source/tools/acpisrc folder and a number of
+        scripts located in generate/linux folder.
+@@ -171,6 +186,7 @@ upstream.
+    CONFIG_ACPI/CONFIG_ACPI_DEBUG/CONFIG_ACPI_DEBUGGER
+ 
+ 3. ACPICA Divergences
++=====================
+ 
+    Ideally, all of the ACPICA commits should be converted into Linux patches
+    automatically without manual modifications, the "linux / master" tree should
+@@ -183,6 +199,7 @@ upstream.
+    "ACPICA Divergences".
+ 
+    The various sources of ACPICA divergences include:
++
+    1. Legacy divergences - Before the current ACPICA release process was
+       established, there already had been divergences between Linux and
+       ACPICA. Over the past several years those divergences have been greatly
+@@ -214,6 +231,7 @@ upstream.
+       divergences are generated.
+ 
+ 4. ACPICA Development
++=====================
+ 
+    This paragraph guides Linux developers to use the ACPICA upstream release
+    utilities to obtain Linux patches corresponding to upstream ACPICA commits
+@@ -225,11 +243,11 @@ upstream.
+    you want to cherry pick must be committed into the local repository.
+ 
+    Then the gen-patch.sh command can help to cherry-pick an ACPICA commit
+-   from the ACPICA local repository:
++   from the ACPICA local repository::
+ 
+-   $ git clone https://github.com/acpica/acpica
+-   $ cd acpica
+-   $ generate/linux/gen-patch.sh -u [commit ID]
++     $ git clone https://github.com/acpica/acpica
++     $ cd acpica
++     $ generate/linux/gen-patch.sh -u [commit ID]
+ 
+    Here the commit ID is the ACPICA local repository commit ID you want to
+    cherry pick.  It can be omitted if the commit is "HEAD".
+@@ -240,11 +258,11 @@ upstream.
+    changes that haven't been applied to Linux yet.
+ 
+    You can generate the ACPICA release series yourself and rebase your code on
+-   top of the generated ACPICA release patches:
++   top of the generated ACPICA release patches::
+ 
+-   $ git clone https://github.com/acpica/acpica
+-   $ cd acpica
+-   $ generate/linux/make-patches.sh -u [commit ID]
++     $ git clone https://github.com/acpica/acpica
++     $ cd acpica
++     $ generate/linux/make-patches.sh -u [commit ID]
+ 
+    The commit ID should be the last ACPICA commit accepted by Linux.  Usually,
+    it is the commit modifying ACPI_CA_VERSION.  It can be found by executing
+@@ -254,9 +272,9 @@ upstream.
+    3. Inspect the current divergences
+ 
+    If you have local copies of both Linux and upstream ACPICA, you can generate
+-   a diff file indicating the state of the current divergences:
++   a diff file indicating the state of the current divergences::
+ 
+-   # git clone https://github.com/acpica/acpica
+-   # git clone http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
+-   # cd acpica
+-   # generate/linux/divergences.sh -s ../linux
++     # git clone https://github.com/acpica/acpica
++     # git clone http://git.kernel.org/pub/scm/linux/kernel/git/torvalds/linux.git
++     # cd acpica
++     # generate/linux/divergences.sh -s ../linux
+diff --git a/Documentation/acpi/lpit.txt b/Documentation/acpi/lpit.txt
+index b426398d2e97..b01c97c6f739 100644
+--- a/Documentation/acpi/lpit.txt
++++ b/Documentation/acpi/lpit.txt
+@@ -1,3 +1,7 @@
++=====================
++Low Power Idle states
++=====================
++
+ To enumerate platform Low Power Idle states, Intel platforms are using
+ “Low Power Idle Table” (LPIT). More details about this table can be
+ downloaded from:
+@@ -8,11 +12,13 @@ Residencies for each low power state can be read via FFH
+ 
+ On platforms supporting S0ix sleep states, there can be two types of
+ residencies:
++
+ - CPU PKG C10 (Read via FFH interface)
+ - Platform Controller Hub (PCH) SLP_S0 (Read via memory mapped interface)
+ 
+ The following attributes are added dynamically to the cpuidle
+-sysfs attribute group:
++sysfs attribute group::
++
+ 	/sys/devices/system/cpu/cpuidle/low_power_idle_cpu_residency_us
+ 	/sys/devices/system/cpu/cpuidle/low_power_idle_system_residency_us
+ 
+diff --git a/Documentation/acpi/method-customizing.txt b/Documentation/acpi/method-customizing.txt
+index 7235da975f23..4a00a52e69f0 100644
+--- a/Documentation/acpi/method-customizing.txt
++++ b/Documentation/acpi/method-customizing.txt
+@@ -1,3 +1,4 @@
++=======================================
+ Linux ACPI Custom Control Method How To
+ =======================================
+ 
+@@ -7,47 +8,58 @@ Written by Zhang Rui <rui.zhang@intel.com>
+ Linux supports customizing ACPI control methods at runtime.
+ 
+ Users can use this to
++
+ 1. override an existing method which may not work correctly,
+    or just for debugging purposes.
+ 2. insert a completely new method in order to create a missing
+    method such as _OFF, _ON, _STA, _INI, etc.
++
+ For these cases, it is far simpler to dynamically install a single
+ control method rather than override the entire DSDT, because kernel
+ rebuild/reboot is not needed and test result can be got in minutes.
+ 
+-Note: Only ACPI METHOD can be overridden, any other object types like
++Note:
++      Only ACPI METHOD can be overridden, any other object types like
+       "Device", "OperationRegion", are not recognized. Methods
+       declared inside scope operators are also not supported.
+-Note: The same ACPI control method can be overridden for many times,
++Note:
++      The same ACPI control method can be overridden for many times,
+       and it's always the latest one that used by Linux/kernel.
+-Note: To get the ACPI debug object output (Store (AAAA, Debug)),
++Note:
++      To get the ACPI debug object output (Store (AAAA, Debug)),
+       please run "echo 1 > /sys/module/acpi/parameters/aml_debug_output".
+ 
+ 1. override an existing method
++
+    a) get the ACPI table via ACPI sysfs I/F. e.g. to get the DSDT,
+       just run "cat /sys/firmware/acpi/tables/DSDT > /tmp/dsdt.dat"
+    b) disassemble the table by running "iasl -d dsdt.dat".
+    c) rewrite the ASL code of the method and save it in a new file,
+    d) package the new file (psr.asl) to an ACPI table format.
+-      Here is an example of a customized \_SB._AC._PSR method,
++      Here is an example of a customized \_SB._AC._PSR method::
+ 
+-      DefinitionBlock ("", "SSDT", 1, "", "", 0x20080715)
+-      {
+-	Method (\_SB_.AC._PSR, 0, NotSerialized)
+-	{
++        DefinitionBlock ("", "SSDT", 1, "", "", 0x20080715)
++        {
++	  Method (\_SB_.AC._PSR, 0, NotSerialized)
++	  {
+ 		Store ("In AC _PSR", Debug)
+ 		Return (ACON)
+-	}
+-      }
++	  }
++        }
++
+       Note that the full pathname of the method in ACPI namespace
+       should be used.
+    e) assemble the file to generate the AML code of the method.
+-      e.g. "iasl -vw 6084 psr.asl" (psr.aml is generated as a result)
+-      If parameter "-vw 6084" is not supported by your iASL compiler,
++      e.g. `iasl -vw 6084 psr.asl` (psr.aml is generated as a result)
++      If parameter `-vw 6084` is not supported by your iASL compiler,
+       please try a newer version.
+-   f) mount debugfs by "mount -t debugfs none /sys/kernel/debug"
+-   g) override the old method via the debugfs by running
+-      "cat /tmp/psr.aml > /sys/kernel/debug/acpi/custom_method"
++   f) mount debugfs by running::
++
++	mount -t debugfs none /sys/kernel/debug
++
++   g) override the old method via the debugfs by running::
++
++	cat /tmp/psr.aml > /sys/kernel/debug/acpi/custom_method
+ 
+ 2. insert a new method
+    This is easier than overriding an existing method.
+@@ -62,12 +74,14 @@ Note: To get the ACPI debug object output (Store (AAAA, Debug)),
+    and redo step c) ~ g) to override the method with the original one.
+ 
+ 
+-Note: We can use a kernel with multiple custom ACPI method running,
++Note:
++      We can use a kernel with multiple custom ACPI method running,
+       But each individual write to debugfs can implement a SINGLE
+       method override. i.e. if we want to insert/override multiple
+       ACPI methods, we need to redo step c) ~ g) for multiple times.
+ 
+-Note: Be aware that root can mis-use this driver to modify arbitrary
++Note:
++      Be aware that root can mis-use this driver to modify arbitrary
+       memory and gain additional rights, if root's privileges got
+       restricted (for example if root is not allowed to load additional
+       modules after boot).
+diff --git a/Documentation/acpi/method-tracing.txt b/Documentation/acpi/method-tracing.txt
+index 0aba14c8f459..779475fecefb 100644
+--- a/Documentation/acpi/method-tracing.txt
++++ b/Documentation/acpi/method-tracing.txt
+@@ -1,15 +1,20 @@
++=====================
+ ACPICA Trace Facility
++=====================
+ 
+ Copyright (C) 2015, Intel Corporation
++
+ Author: Lv Zheng <lv.zheng@intel.com>
+ 
+ 
+ Abstract:
++=========
+ 
+ This document describes the functions and the interfaces of the method
+ tracing facility.
+ 
+ 1. Functionalities and usage examples:
++======================================
+ 
+    ACPICA provides method tracing capability. And two functions are
+    currently implemented using this capability.
+@@ -31,30 +36,38 @@ tracing facility.
+ 
+    The following command examples illustrate the usage of the "log reducer"
+    functionality:
++
+    a. Filter out the debug layer/level matched logs when control methods
+-      are being evaluated:
+-      # cd /sys/module/acpi/parameters
+-      # echo "0xXXXXXXXX" > trace_debug_layer
+-      # echo "0xYYYYYYYY" > trace_debug_level
+-      # echo "enable" > trace_state
++      are being evaluated::
++
++        # cd /sys/module/acpi/parameters
++        # echo "0xXXXXXXXX" > trace_debug_layer
++        # echo "0xYYYYYYYY" > trace_debug_level
++        # echo "enable" > trace_state
++
+    b. Filter out the debug layer/level matched logs when the specified
+-      control method is being evaluated:
+-      # cd /sys/module/acpi/parameters
+-      # echo "0xXXXXXXXX" > trace_debug_layer
+-      # echo "0xYYYYYYYY" > trace_debug_level
+-      # echo "\PPPP.AAAA.TTTT.HHHH" > trace_method_name
+-      # echo "method" > /sys/module/acpi/parameters/trace_state
++      control method is being evaluated::
++
++        # cd /sys/module/acpi/parameters
++        # echo "0xXXXXXXXX" > trace_debug_layer
++        # echo "0xYYYYYYYY" > trace_debug_level
++        # echo "\PPPP.AAAA.TTTT.HHHH" > trace_method_name
++        # echo "method" > /sys/module/acpi/parameters/trace_state
++
+    c. Filter out the debug layer/level matched logs when the specified
+-      control method is being evaluated for the first time:
+-      # cd /sys/module/acpi/parameters
+-      # echo "0xXXXXXXXX" > trace_debug_layer
+-      # echo "0xYYYYYYYY" > trace_debug_level
+-      # echo "\PPPP.AAAA.TTTT.HHHH" > trace_method_name
+-      # echo "method-once" > /sys/module/acpi/parameters/trace_state
+-   Where:
+-      0xXXXXXXXX/0xYYYYYYYY: Refer to Documentation/acpi/debug.txt for
++      control method is being evaluated for the first time::
++
++        # cd /sys/module/acpi/parameters
++        # echo "0xXXXXXXXX" > trace_debug_layer
++        # echo "0xYYYYYYYY" > trace_debug_level
++        # echo "\PPPP.AAAA.TTTT.HHHH" > trace_method_name
++        # echo "method-once" > /sys/module/acpi/parameters/trace_state
++
++      Where::
++
++        0xXXXXXXXX/0xYYYYYYYY: Refer to Documentation/acpi/debug.txt for
+ 			     possible debug layer/level masking values.
+-      \PPPP.AAAA.TTTT.HHHH: Full path of a control method that can be found
++        \PPPP.AAAA.TTTT.HHHH: Full path of a control method that can be found
+ 			    in the ACPI namespace. It needn't be an entry
+ 			    of a control method evaluation.
+ 
+@@ -63,7 +76,8 @@ tracing facility.
+    There are special log entries added by the method tracing facility at
+    the "trace points" the AML interpreter starts/stops to execute a control
+    method, or an AML opcode. Note that the format of the log entries are
+-   subject to change:
++   subject to change::
++
+      [    0.186427]   exdebug-0398 ex_trace_point        : Method Begin [0xf58394d8:\_SB.PCI0.LPCB.ECOK] execution.
+      [    0.186630]   exdebug-0398 ex_trace_point        : Opcode Begin [0xf5905c88:If] execution.
+      [    0.186820]   exdebug-0398 ex_trace_point        : Opcode Begin [0xf5905cc0:LEqual] execution.
+@@ -87,43 +101,54 @@ tracing facility.
+ 
+    The following command examples illustrate the usage of the "AML tracer"
+    functionality:
++
+    a. Filter out the method start/stop "AML tracer" logs when control
+-      methods are being evaluated:
+-      # cd /sys/module/acpi/parameters
+-      # echo "0x80" > trace_debug_layer
+-      # echo "0x10" > trace_debug_level
+-      # echo "enable" > trace_state
++      methods are being evaluated::
++
++        # cd /sys/module/acpi/parameters
++        # echo "0x80" > trace_debug_layer
++        # echo "0x10" > trace_debug_level
++        # echo "enable" > trace_state
++
+    b. Filter out the method start/stop "AML tracer" when the specified
+-      control method is being evaluated:
+-      # cd /sys/module/acpi/parameters
+-      # echo "0x80" > trace_debug_layer
+-      # echo "0x10" > trace_debug_level
+-      # echo "\PPPP.AAAA.TTTT.HHHH" > trace_method_name
+-      # echo "method" > trace_state
++      control method is being evaluated::
++
++        # cd /sys/module/acpi/parameters
++        # echo "0x80" > trace_debug_layer
++        # echo "0x10" > trace_debug_level
++        # echo "\PPPP.AAAA.TTTT.HHHH" > trace_method_name
++        # echo "method" > trace_state
++
+    c. Filter out the method start/stop "AML tracer" logs when the specified
+       control method is being evaluated for the first time:
+-      # cd /sys/module/acpi/parameters
+-      # echo "0x80" > trace_debug_layer
+-      # echo "0x10" > trace_debug_level
+-      # echo "\PPPP.AAAA.TTTT.HHHH" > trace_method_name
+-      # echo "method-once" > trace_state
++
++        # cd /sys/module/acpi/parameters
++        # echo "0x80" > trace_debug_layer
++        # echo "0x10" > trace_debug_level
++        # echo "\PPPP.AAAA.TTTT.HHHH" > trace_method_name
++        # echo "method-once" > trace_state
++
+    d. Filter out the method/opcode start/stop "AML tracer" when the
+-      specified control method is being evaluated:
+-      # cd /sys/module/acpi/parameters
+-      # echo "0x80" > trace_debug_layer
+-      # echo "0x10" > trace_debug_level
+-      # echo "\PPPP.AAAA.TTTT.HHHH" > trace_method_name
+-      # echo "opcode" > trace_state
++      specified control method is being evaluated::
++
++        # cd /sys/module/acpi/parameters
++        # echo "0x80" > trace_debug_layer
++        # echo "0x10" > trace_debug_level
++        # echo "\PPPP.AAAA.TTTT.HHHH" > trace_method_name
++        # echo "opcode" > trace_state
++
+    e. Filter out the method/opcode start/stop "AML tracer" when the
+-      specified control method is being evaluated for the first time:
+-      # cd /sys/module/acpi/parameters
+-      # echo "0x80" > trace_debug_layer
+-      # echo "0x10" > trace_debug_level
+-      # echo "\PPPP.AAAA.TTTT.HHHH" > trace_method_name
+-      # echo "opcode-opcode" > trace_state
++      specified control method is being evaluated for the first time::
++
++        # cd /sys/module/acpi/parameters
++        # echo "0x80" > trace_debug_layer
++        # echo "0x10" > trace_debug_level
++        # echo "\PPPP.AAAA.TTTT.HHHH" > trace_method_name
++        # echo "opcode-opcode" > trace_state
+ 
+   Note that all above method tracing facility related module parameters can
+-  be used as the boot parameters, for example:
++  be used as the boot parameters, for example::
++
+       acpi.trace_debug_layer=0x80 acpi.trace_debug_level=0x10 \
+       acpi.trace_method_name=\_SB.LID0._LID acpi.trace_state=opcode-once
+ 
+@@ -150,9 +175,12 @@ tracing facility.
+    trace_state
+ 	The status of the tracing feature.
+ 	Users can enable/disable this debug tracing feature by executing
+-	the following command:
++	the following command::
++
+ 	    # echo string > /sys/module/acpi/parameters/trace_state
++
+ 	Where "string" should be one of the following:
++
+ 	"disable"
+ 	    Disable the method tracing feature.
+ 	"enable"
+@@ -180,8 +208,10 @@ tracing facility.
+ 	    ACPICA debugging messages matching
+ 	    "trace_debug_layer/trace_debug_level" during method/opcode
+ 	    execution of "trace_method_name" will be logged only once.
++
+ 	Note that, the difference between the "enable" and other feature
+         enabling options are:
++
+ 	1. When "enable" is specified, since
+ 	   "trace_debug_layer/trace_debug_level" shall apply to all control
+ 	   method evaluations, after configuring "trace_state" to "enable",
+diff --git a/Documentation/acpi/namespace.txt b/Documentation/acpi/namespace.txt
+index 1860cb3865c6..9a6dca683fbc 100644
+--- a/Documentation/acpi/namespace.txt
++++ b/Documentation/acpi/namespace.txt
+@@ -1,10 +1,14 @@
++===================================================
+ ACPI Device Tree - Representation of ACPI Namespace
++===================================================
+ 
+ Copyright (C) 2013, Intel Corporation
++
+ Author: Lv Zheng <lv.zheng@intel.com>
+ 
+ 
+ Abstract:
++=========
+ 
+ The Linux ACPI subsystem converts ACPI namespace objects into a Linux
+ device tree under the /sys/devices/LNXSYSTEM:00 and updates it upon
+@@ -15,12 +19,14 @@ This document illustrates the structure of the ACPI device tree.
+ 
+ 
+ Credit:
++=======
+ 
+ Thanks for the help from Zhang Rui <rui.zhang@intel.com> and Rafael J.
+ Wysocki <rafael.j.wysocki@intel.com>.
+ 
+ 
+ 1. ACPI Definition Blocks
++=========================
+ 
+    The ACPI firmware sets up RSDP (Root System Description Pointer) in the
+    system memory address space pointing to the XSDT (Extended System
+@@ -40,7 +46,7 @@ Wysocki <rafael.j.wysocki@intel.com>.
+    structure of the underlying hardware platform.
+ 
+    The relationships between ACPI System Definition Tables described above
+-   are illustrated in the following diagram.
++   are illustrated in the following diagram::
+ 
+      +---------+    +-------+    +--------+    +------------------------+
+      |  RSDP   | +->| XSDT  | +->|  FADT  |    |  +-------------------+ |
+@@ -68,18 +74,21 @@ Wysocki <rafael.j.wysocki@intel.com>.
+ 
+                      Figure 1. ACPI Definition Blocks
+ 
+-   NOTE: RSDP can also contain a pointer to the RSDT (Root System
++   NOTE:
++         RSDP can also contain a pointer to the RSDT (Root System
+          Description Table).  Platforms provide RSDT to enable
+          compatibility with ACPI 1.0 operating systems.  The OS is expected
+          to use XSDT, if present.
+ 
+ 
+ 2. Example ACPI Namespace
++=========================
+ 
+    All definition blocks are loaded into a single namespace.  The namespace
+    is a hierarchy of objects identified by names and paths.
+    The following naming conventions apply to object names in the ACPI
+    namespace:
++
+    1. All names are 32 bits long.
+    2. The first byte of a name must be one of 'A' - 'Z', '_'.
+    3. Each of the remaining bytes of a name must be one of 'A' - 'Z', '0'
+@@ -91,100 +100,101 @@ Wysocki <rafael.j.wysocki@intel.com>.
+       (i.e. names prepended with '^' are relative to the parent of the
+       current namespace node).
+ 
+-   The figure below shows an example ACPI namespace.
++   The figure below shows an example ACPI namespace::
+ 
+-   +------+
+-   | \    |                     Root
+-   +------+
+-     |
+-     | +------+
+-     +-| _PR  |                 Scope(_PR): the processor namespace
+-     | +------+
+-     |   |
+-     |   | +------+
+-     |   +-| CPU0 |             Processor(CPU0): the first processor
+-     |     +------+
+-     |
+-     | +------+
+-     +-| _SB  |                 Scope(_SB): the system bus namespace
+-     | +------+
+-     |   |
+-     |   | +------+
+-     |   +-| LID0 |             Device(LID0); the lid device
+-     |   | +------+
+-     |   |   |
+-     |   |   | +------+
+-     |   |   +-| _HID |         Name(_HID, "PNP0C0D"): the hardware ID
+-     |   |   | +------+
+-     |   |   |
+-     |   |   | +------+
+-     |   |   +-| _STA |         Method(_STA): the status control method
+-     |   |     +------+
+-     |   |
+-     |   | +------+
+-     |   +-| PCI0 |             Device(PCI0); the PCI root bridge
+-     |     +------+
+-     |       |
+-     |       | +------+
+-     |       +-| _HID |         Name(_HID, "PNP0A08"): the hardware ID
+-     |       | +------+
+-     |       |
+-     |       | +------+
+-     |       +-| _CID |         Name(_CID, "PNP0A03"): the compatible ID
+-     |       | +------+
+-     |       |
+-     |       | +------+
+-     |       +-| RP03 |         Scope(RP03): the PCI0 power scope
+-     |       | +------+
+-     |       |   |
+-     |       |   | +------+
+-     |       |   +-| PXP3 |     PowerResource(PXP3): the PCI0 power resource
+-     |       |     +------+
+-     |       |
+-     |       | +------+
+-     |       +-| GFX0 |         Device(GFX0): the graphics adapter
+-     |         +------+
+-     |           |
+-     |           | +------+
+-     |           +-| _ADR |     Name(_ADR, 0x00020000): the PCI bus address
+-     |           | +------+
+-     |           |
+-     |           | +------+
+-     |           +-| DD01 |     Device(DD01): the LCD output device
+-     |             +------+
+-     |               |
+-     |               | +------+
+-     |               +-| _BCL | Method(_BCL): the backlight control method
+-     |                 +------+
+-     |
+-     | +------+
+-     +-| _TZ  |                 Scope(_TZ): the thermal zone namespace
+-     | +------+
+-     |   |
+-     |   | +------+
+-     |   +-| FN00 |             PowerResource(FN00): the FAN0 power resource
+-     |   | +------+
+-     |   |
+-     |   | +------+
+-     |   +-| FAN0 |             Device(FAN0): the FAN0 cooling device
+-     |   | +------+
+-     |   |   |
+-     |   |   | +------+
+-     |   |   +-| _HID |         Name(_HID, "PNP0A0B"): the hardware ID
+-     |   |     +------+
+-     |   |
+-     |   | +------+
+-     |   +-| TZ00 |             ThermalZone(TZ00); the FAN thermal zone
+-     |     +------+
+-     |
+-     | +------+
+-     +-| _GPE |                 Scope(_GPE): the GPE namespace
+-       +------+
++     +------+
++     | \    |                     Root
++     +------+
++       |
++       | +------+
++       +-| _PR  |                 Scope(_PR): the processor namespace
++       | +------+
++       |   |
++       |   | +------+
++       |   +-| CPU0 |             Processor(CPU0): the first processor
++       |     +------+
++       |
++       | +------+
++       +-| _SB  |                 Scope(_SB): the system bus namespace
++       | +------+
++       |   |
++       |   | +------+
++       |   +-| LID0 |             Device(LID0); the lid device
++       |   | +------+
++       |   |   |
++       |   |   | +------+
++       |   |   +-| _HID |         Name(_HID, "PNP0C0D"): the hardware ID
++       |   |   | +------+
++       |   |   |
++       |   |   | +------+
++       |   |   +-| _STA |         Method(_STA): the status control method
++       |   |     +------+
++       |   |
++       |   | +------+
++       |   +-| PCI0 |             Device(PCI0); the PCI root bridge
++       |     +------+
++       |       |
++       |       | +------+
++       |       +-| _HID |         Name(_HID, "PNP0A08"): the hardware ID
++       |       | +------+
++       |       |
++       |       | +------+
++       |       +-| _CID |         Name(_CID, "PNP0A03"): the compatible ID
++       |       | +------+
++       |       |
++       |       | +------+
++       |       +-| RP03 |         Scope(RP03): the PCI0 power scope
++       |       | +------+
++       |       |   |
++       |       |   | +------+
++       |       |   +-| PXP3 |     PowerResource(PXP3): the PCI0 power resource
++       |       |     +------+
++       |       |
++       |       | +------+
++       |       +-| GFX0 |         Device(GFX0): the graphics adapter
++       |         +------+
++       |           |
++       |           | +------+
++       |           +-| _ADR |     Name(_ADR, 0x00020000): the PCI bus address
++       |           | +------+
++       |           |
++       |           | +------+
++       |           +-| DD01 |     Device(DD01): the LCD output device
++       |             +------+
++       |               |
++       |               | +------+
++       |               +-| _BCL | Method(_BCL): the backlight control method
++       |                 +------+
++       |
++       | +------+
++       +-| _TZ  |                 Scope(_TZ): the thermal zone namespace
++       | +------+
++       |   |
++       |   | +------+
++       |   +-| FN00 |             PowerResource(FN00): the FAN0 power resource
++       |   | +------+
++       |   |
++       |   | +------+
++       |   +-| FAN0 |             Device(FAN0): the FAN0 cooling device
++       |   | +------+
++       |   |   |
++       |   |   | +------+
++       |   |   +-| _HID |         Name(_HID, "PNP0A0B"): the hardware ID
++       |   |     +------+
++       |   |
++       |   | +------+
++       |   +-| TZ00 |             ThermalZone(TZ00); the FAN thermal zone
++       |     +------+
++       |
++       | +------+
++       +-| _GPE |                 Scope(_GPE): the GPE namespace
++         +------+
+ 
+                      Figure 2. Example ACPI Namespace
+ 
+ 
+ 3. Linux ACPI Device Objects
++============================
+ 
+    The Linux kernel's core ACPI subsystem creates struct acpi_device
+    objects for ACPI namespace objects representing devices, power resources
+@@ -230,6 +240,7 @@ Wysocki <rafael.j.wysocki@intel.com>.
+    the basis of the contents of ACPI System Description Tables (as
+    indicated by the letter in the first column and the notation in the
+    second column of the table above):
++
+    N:
+       The object's source is an ACPI namespace node (as indicated by the
+       named object's type in the second column).  In that case the object's
+@@ -256,6 +267,7 @@ Wysocki <rafael.j.wysocki@intel.com>.
+ 
+    The forth column of the above table indicates the 'bus_id' generation
+    rule of the struct acpi_device object:
++
+    _HID:
+       _HID in the last column of the table means that the object's bus_id
+       is derived from the _HID/_CID identification objects present under
+@@ -276,6 +288,7 @@ Wysocki <rafael.j.wysocki@intel.com>.
+ 
+ 
+ 4. Linux ACPI Physical Device Glue
++==================================
+ 
+    ACPI device (i.e. struct acpi_device) objects may be linked to other
+    objects in the Linux' device hierarchy that represent "physical" devices
+@@ -310,79 +323,83 @@ Wysocki <rafael.j.wysocki@intel.com>.
+ 
+ 
+ 5. Example Linux ACPI Device Tree
++=================================
+ 
+    The sysfs hierarchy of struct acpi_device objects corresponding to the
+    example ACPI namespace illustrated in Figure 2 with the addition of
+-   fixed PWR_BUTTON/SLP_BUTTON devices is shown below.
++   fixed PWR_BUTTON/SLP_BUTTON devices is shown below::
+ 
+-   +--------------+---+-----------------+
+-   | LNXSYSTEM:00 | \ | acpi:LNXSYSTEM: |
+-   +--------------+---+-----------------+
+-     |
+-     | +-------------+-----+----------------+
+-     +-| LNXPWRBN:00 | N/A | acpi:LNXPWRBN: |
+-     | +-------------+-----+----------------+
+-     |
+-     | +-------------+-----+----------------+
+-     +-| LNXSLPBN:00 | N/A | acpi:LNXSLPBN: |
+-     | +-------------+-----+----------------+
+-     |
+-     | +-----------+------------+--------------+
+-     +-| LNXCPU:00 | \_PR_.CPU0 | acpi:LNXCPU: |
+-     | +-----------+------------+--------------+
+-     |
+-     | +-------------+-------+----------------+
+-     +-| LNXSYBUS:00 | \_SB_ | acpi:LNXSYBUS: |
+-     | +-------------+-------+----------------+
+-     |   |
+-     |   | +- - - - - - - +- - - - - - +- - - - - - - -+
+-     |   +-| PNP0C0D:00 | \_SB_.LID0 | acpi:PNP0C0D: |
+-     |   | +- - - - - - - +- - - - - - +- - - - - - - -+
+-     |   |
+-     |   | +------------+------------+-----------------------+
+-     |   +-| PNP0A08:00 | \_SB_.PCI0 | acpi:PNP0A08:PNP0A03: |
+-     |     +------------+------------+-----------------------+
+-     |       |
+-     |       | +-----------+-----------------+-----+
+-     |       +-| device:00 | \_SB_.PCI0.RP03 | N/A |
+-     |       | +-----------+-----------------+-----+
+-     |       |   |
+-     |       |   | +-------------+----------------------+----------------+
+-     |       |   +-| LNXPOWER:00 | \_SB_.PCI0.RP03.PXP3 | acpi:LNXPOWER: |
+-     |       |     +-------------+----------------------+----------------+
+-     |       |
+-     |       | +-------------+-----------------+----------------+
+-     |       +-| LNXVIDEO:00 | \_SB_.PCI0.GFX0 | acpi:LNXVIDEO: |
+-     |         +-------------+-----------------+----------------+
+-     |           |
+-     |           | +-----------+-----------------+-----+
+-     |           +-| device:01 | \_SB_.PCI0.DD01 | N/A |
+-     |             +-----------+-----------------+-----+
+-     |
+-     | +-------------+-------+----------------+
+-     +-| LNXSYBUS:01 | \_TZ_ | acpi:LNXSYBUS: |
+-       +-------------+-------+----------------+
+-         |
+-         | +-------------+------------+----------------+
+-         +-| LNXPOWER:0a | \_TZ_.FN00 | acpi:LNXPOWER: |
+-         | +-------------+------------+----------------+
+-         |
+-         | +------------+------------+---------------+
+-         +-| PNP0C0B:00 | \_TZ_.FAN0 | acpi:PNP0C0B: |
+-         | +------------+------------+---------------+
+-         |
+-         | +-------------+------------+----------------+
+-         +-| LNXTHERM:00 | \_TZ_.TZ00 | acpi:LNXTHERM: |
+-           +-------------+------------+----------------+
++     +--------------+---+-----------------+
++     | LNXSYSTEM:00 | \ | acpi:LNXSYSTEM: |
++     +--------------+---+-----------------+
++       |
++       | +-------------+-----+----------------+
++       +-| LNXPWRBN:00 | N/A | acpi:LNXPWRBN: |
++       | +-------------+-----+----------------+
++       |
++       | +-------------+-----+----------------+
++       +-| LNXSLPBN:00 | N/A | acpi:LNXSLPBN: |
++       | +-------------+-----+----------------+
++       |
++       | +-----------+------------+--------------+
++       +-| LNXCPU:00 | \_PR_.CPU0 | acpi:LNXCPU: |
++       | +-----------+------------+--------------+
++       |
++       | +-------------+-------+----------------+
++       +-| LNXSYBUS:00 | \_SB_ | acpi:LNXSYBUS: |
++       | +-------------+-------+----------------+
++       |   |
++       |   | +- - - - - - - +- - - - - - +- - - - - - - -+
++       |   +-| PNP0C0D:00 | \_SB_.LID0 | acpi:PNP0C0D: |
++       |   | +- - - - - - - +- - - - - - +- - - - - - - -+
++       |   |
++       |   | +------------+------------+-----------------------+
++       |   +-| PNP0A08:00 | \_SB_.PCI0 | acpi:PNP0A08:PNP0A03: |
++       |     +------------+------------+-----------------------+
++       |       |
++       |       | +-----------+-----------------+-----+
++       |       +-| device:00 | \_SB_.PCI0.RP03 | N/A |
++       |       | +-----------+-----------------+-----+
++       |       |   |
++       |       |   | +-------------+----------------------+----------------+
++       |       |   +-| LNXPOWER:00 | \_SB_.PCI0.RP03.PXP3 | acpi:LNXPOWER: |
++       |       |     +-------------+----------------------+----------------+
++       |       |
++       |       | +-------------+-----------------+----------------+
++       |       +-| LNXVIDEO:00 | \_SB_.PCI0.GFX0 | acpi:LNXVIDEO: |
++       |         +-------------+-----------------+----------------+
++       |           |
++       |           | +-----------+-----------------+-----+
++       |           +-| device:01 | \_SB_.PCI0.DD01 | N/A |
++       |             +-----------+-----------------+-----+
++       |
++       | +-------------+-------+----------------+
++       +-| LNXSYBUS:01 | \_TZ_ | acpi:LNXSYBUS: |
++         +-------------+-------+----------------+
++           |
++           | +-------------+------------+----------------+
++           +-| LNXPOWER:0a | \_TZ_.FN00 | acpi:LNXPOWER: |
++           | +-------------+------------+----------------+
++           |
++           | +------------+------------+---------------+
++           +-| PNP0C0B:00 | \_TZ_.FAN0 | acpi:PNP0C0B: |
++           | +------------+------------+---------------+
++           |
++           | +-------------+------------+----------------+
++           +-| LNXTHERM:00 | \_TZ_.TZ00 | acpi:LNXTHERM: |
++             +-------------+------------+----------------+
+ 
+                   Figure 3. Example Linux ACPI Device Tree
+ 
+-   NOTE: Each node is represented as "object/path/modalias", where:
++   NOTE:
++       Each node is represented as "object/path/modalias", where:
++
+          1. 'object' is the name of the object's directory in sysfs.
+          2. 'path' is the ACPI namespace path of the corresponding
+             ACPI namespace object, as returned by the object's 'path'
+             sysfs attribute.
+          3. 'modalias' is the value of the object's 'modalias' sysfs
+             attribute (as described earlier in this document).
+-   NOTE: N/A indicates the device object does not have the 'path' or the
+-         'modalias' attribute.
++   NOTE:
++       N/A indicates the device object does not have the 'path' or the
++       'modalias' attribute.
+diff --git a/Documentation/acpi/osi.txt b/Documentation/acpi/osi.txt
+index 50cde0ceb9b0..401518ca15cc 100644
+--- a/Documentation/acpi/osi.txt
++++ b/Documentation/acpi/osi.txt
+@@ -1,5 +1,6 @@
++==========================
+ ACPI _OSI and _REV methods
+---------------------------
++==========================
+ 
+ An ACPI BIOS can use the "Operating System Interfaces" method (_OSI)
+ to find out what the operating system supports. Eg. If BIOS
+diff --git a/Documentation/acpi/scan_handlers.txt b/Documentation/acpi/scan_handlers.txt
+index 3246ccf15992..fa8265f272d5 100644
+--- a/Documentation/acpi/scan_handlers.txt
++++ b/Documentation/acpi/scan_handlers.txt
+@@ -1,6 +1,9 @@
++==================
+ ACPI Scan Handlers
++==================
+ 
+ Copyright (C) 2012, Intel Corporation
++
+ Author: Rafael J. Wysocki <rafael.j.wysocki@intel.com>
+ 
+ During system initialization and ACPI-based device hot-add, the ACPI namespace
+@@ -30,14 +33,14 @@ to configure that link so that the kernel can use it.
+ Those additional configuration tasks usually depend on the type of the hardware
+ component represented by the given device node which can be determined on the
+ basis of the device node's hardware ID (HID).  They are performed by objects
+-called ACPI scan handlers represented by the following structure:
++called ACPI scan handlers represented by the following structure::
+ 
+-struct acpi_scan_handler {
++  struct acpi_scan_handler {
+ 	const struct acpi_device_id *ids;
+ 	struct list_head list_node;
+ 	int (*attach)(struct acpi_device *dev, const struct acpi_device_id *id);
+ 	void (*detach)(struct acpi_device *dev);
+-};
++  };
+ 
+ where ids is the list of IDs of device nodes the given handler is supposed to
+ take care of, list_node is the hook to the global list of ACPI scan handlers
+diff --git a/Documentation/acpi/ssdt-overlays.txt b/Documentation/acpi/ssdt-overlays.txt
+index 5ae13f161ea2..036ba3bb8613 100644
+--- a/Documentation/acpi/ssdt-overlays.txt
++++ b/Documentation/acpi/ssdt-overlays.txt
+@@ -1,3 +1,6 @@
++=============
++SSDT Overlays
++=============
+ 
+ In order to support ACPI open-ended hardware configurations (e.g. development
+ boards) we need a way to augment the ACPI configuration provided by the firmware
+@@ -15,10 +18,10 @@ user defined SSDT tables that contain the board specific information.
+ 
+ For example, to enumerate a Bosch BMA222E accelerometer on the I2C bus of the
+ Minnowboard MAX development board exposed via the LSE connector [1], the
+-following ASL code can be used:
++following ASL code can be used::
+ 
+-DefinitionBlock ("minnowmax.aml", "SSDT", 1, "Vendor", "Accel", 0x00000003)
+-{
++  DefinitionBlock ("minnowmax.aml", "SSDT", 1, "Vendor", "Accel", 0x00000003)
++  {
+     External (\_SB.I2C6, DeviceObj)
+ 
+     Scope (\_SB.I2C6)
+@@ -45,25 +48,26 @@ DefinitionBlock ("minnowmax.aml", "SSDT", 1, "Vendor", "Accel", 0x00000003)
+             }
+         }
+     }
+-}
++  }
+ 
+-which can then be compiled to AML binary format:
++which can then be compiled to AML binary format::
+ 
+-$ iasl minnowmax.asl
++  $ iasl minnowmax.asl
+ 
+-Intel ACPI Component Architecture
+-ASL Optimizing Compiler version 20140214-64 [Mar 29 2014]
+-Copyright (c) 2000 - 2014 Intel Corporation
++  Intel ACPI Component Architecture
++  ASL Optimizing Compiler version 20140214-64 [Mar 29 2014]
++  Copyright (c) 2000 - 2014 Intel Corporation
+ 
+-ASL Input:     minnomax.asl - 30 lines, 614 bytes, 7 keywords
+-AML Output:    minnowmax.aml - 165 bytes, 6 named objects, 1 executable opcodes
++  ASL Input:     minnomax.asl - 30 lines, 614 bytes, 7 keywords
++  AML Output:    minnowmax.aml - 165 bytes, 6 named objects, 1 executable opcodes
+ 
+ [1] http://wiki.minnowboard.org/MinnowBoard_MAX#Low_Speed_Expansion_Connector_.28Top.29
+ 
+ The resulting AML code can then be loaded by the kernel using one of the methods
+ below.
+ 
+-== Loading ACPI SSDTs from initrd ==
++Loading ACPI SSDTs from initrd
++==============================
+ 
+ This option allows loading of user defined SSDTs from initrd and it is useful
+ when the system does not support EFI or when there is not enough EFI storage.
+@@ -74,23 +78,24 @@ aml code must be placed in the first, uncompressed, initrd under the
+ in loading multiple tables. Only SSDT and OEM tables are allowed. See
+ initrd_table_override.txt for more details.
+ 
+-Here is an example:
++Here is an example::
+ 
+-# Add the raw ACPI tables to an uncompressed cpio archive.
+-# They must be put into a /kernel/firmware/acpi directory inside the
+-# cpio archive.
+-# The uncompressed cpio archive must be the first.
+-# Other, typically compressed cpio archives, must be
+-# concatenated on top of the uncompressed one.
+-mkdir -p kernel/firmware/acpi
+-cp ssdt.aml kernel/firmware/acpi
++  # Add the raw ACPI tables to an uncompressed cpio archive.
++  # They must be put into a /kernel/firmware/acpi directory inside the
++  # cpio archive.
++  # The uncompressed cpio archive must be the first.
++  # Other, typically compressed cpio archives, must be
++  # concatenated on top of the uncompressed one.
++  mkdir -p kernel/firmware/acpi
++  cp ssdt.aml kernel/firmware/acpi
+ 
+-# Create the uncompressed cpio archive and concatenate the original initrd
+-# on top:
+-find kernel | cpio -H newc --create > /boot/instrumented_initrd
+-cat /boot/initrd >>/boot/instrumented_initrd
++  # Create the uncompressed cpio archive and concatenate the original initrd
++  # on top:
++  find kernel | cpio -H newc --create > /boot/instrumented_initrd
++  cat /boot/initrd >>/boot/instrumented_initrd
+ 
+-== Loading ACPI SSDTs from EFI variables ==
++Loading ACPI SSDTs from EFI variables
++=====================================
+ 
+ This is the preferred method, when EFI is supported on the platform, because it
+ allows a persistent, OS independent way of storing the user defined SSDTs. There
+@@ -116,48 +121,49 @@ include/linux/efi.h). Writing to the file must also be done with one write
+ operation.
+ 
+ For example, you can use the following bash script to create/update an EFI
+-variable with the content from a given file:
++variable with the content from a given file::
+ 
+-#!/bin/sh -e
++  #!/bin/sh -e
+ 
+-while ! [ -z "$1" ]; do
+-        case "$1" in
+-        "-f") filename="$2"; shift;;
+-        "-g") guid="$2"; shift;;
+-        *) name="$1";;
+-        esac
+-        shift
+-done
++  while ! [ -z "$1" ]; do
++          case "$1" in
++          "-f") filename="$2"; shift;;
++          "-g") guid="$2"; shift;;
++          *) name="$1";;
++          esac
++          shift
++  done
+ 
+-usage()
+-{
+-        echo "Syntax: ${0##*/} -f filename [ -g guid ] name"
+-        exit 1
+-}
++  usage()
++  {
++          echo "Syntax: ${0##*/} -f filename [ -g guid ] name"
++          exit 1
++  }
+ 
+-[ -n "$name" -a -f "$filename" ] || usage
++  [ -n "$name" -a -f "$filename" ] || usage
+ 
+-EFIVARFS="/sys/firmware/efi/efivars"
++  EFIVARFS="/sys/firmware/efi/efivars"
+ 
+-[ -d "$EFIVARFS" ] || exit 2
++  [ -d "$EFIVARFS" ] || exit 2
+ 
+-if stat -tf $EFIVARFS | grep -q -v de5e81e4; then
+-        mount -t efivarfs none $EFIVARFS
+-fi
++  if stat -tf $EFIVARFS | grep -q -v de5e81e4; then
++          mount -t efivarfs none $EFIVARFS
++  fi
+ 
+-# try to pick up an existing GUID
+-[ -n "$guid" ] || guid=$(find "$EFIVARFS" -name "$name-*" | head -n1 | cut -f2- -d-)
++  # try to pick up an existing GUID
++  [ -n "$guid" ] || guid=$(find "$EFIVARFS" -name "$name-*" | head -n1 | cut -f2- -d-)
+ 
+-# use a randomly generated GUID
+-[ -n "$guid" ] || guid="$(cat /proc/sys/kernel/random/uuid)"
++  # use a randomly generated GUID
++  [ -n "$guid" ] || guid="$(cat /proc/sys/kernel/random/uuid)"
+ 
+-# efivarfs expects all of the data in one write
+-tmp=$(mktemp)
+-/bin/echo -ne "\007\000\000\000" | cat - $filename > $tmp
+-dd if=$tmp of="$EFIVARFS/$name-$guid" bs=$(stat -c %s $tmp)
+-rm $tmp
++  # efivarfs expects all of the data in one write
++  tmp=$(mktemp)
++  /bin/echo -ne "\007\000\000\000" | cat - $filename > $tmp
++  dd if=$tmp of="$EFIVARFS/$name-$guid" bs=$(stat -c %s $tmp)
++  rm $tmp
+ 
+-== Loading ACPI SSDTs from configfs ==
++Loading ACPI SSDTs from configfs
++================================
+ 
+ This option allows loading of user defined SSDTs from userspace via the configfs
+ interface. The CONFIG_ACPI_CONFIGFS option must be select and configfs must be
+@@ -165,8 +171,8 @@ mounted. In the following examples, we assume that configfs has been mounted in
+ /config.
+ 
+ New tables can be loading by creating new directories in /config/acpi/table/ and
+-writing the SSDT aml code in the aml attribute:
++writing the SSDT aml code in the aml attribute::
+ 
+-cd /config/acpi/table
+-mkdir my_ssdt
+-cat ~/ssdt.aml > my_ssdt/aml
++  cd /config/acpi/table
++  mkdir my_ssdt
++  cat ~/ssdt.aml > my_ssdt/aml
+diff --git a/Documentation/acpi/video_extension.txt b/Documentation/acpi/video_extension.txt
+index 79bf6a4921be..7a5882a567b9 100644
+--- a/Documentation/acpi/video_extension.txt
++++ b/Documentation/acpi/video_extension.txt
+@@ -1,5 +1,6 @@
++=====================
+ ACPI video extensions
+-~~~~~~~~~~~~~~~~~~~~~
++=====================
+ 
+ This driver implement the ACPI Extensions For Display Adapters for
+ integrated graphics devices on motherboard, as specified in ACPI 2.0
+@@ -32,10 +33,10 @@ type: firmware
+ 
+ Note that ACPI video backlight driver will always use index for
+ brightness, actual_brightness and max_brightness. So if we have
+-the following _BCL package:
++the following _BCL package::
+ 
+-Method (_BCL, 0, NotSerialized)
+-{
++  Method (_BCL, 0, NotSerialized)
++  {
+ 	Return (Package (0x0C)
+ 	{
+ 		0x64,
+@@ -51,7 +52,7 @@ Method (_BCL, 0, NotSerialized)
+ 		0x5A,
+ 		0x64
+ 	})
+-}
++  }
+ 
+ The first two levels are for when laptop are on AC or on battery and are
+ not used by Linux currently. The remaining 10 levels are supported levels
+@@ -65,10 +66,11 @@ inclusive.
+ 2 Notify user space about hotkey event
+ 
+ There are generally two cases for hotkey event reporting:
++
+ i) For some laptops, when user presses the hotkey, a scancode will be
+    generated and sent to user space through the input device created by
+    the keyboard driver as a key type input event, with proper remap, the
+-   following key code will appear to user space:
++   following key code will appear to user space::
+ 
+ 	EV_KEY, KEY_BRIGHTNESSUP
+ 	EV_KEY, KEY_BRIGHTNESSDOWN
+@@ -82,7 +84,7 @@ ii) For some laptops, the press of the hotkey will not generate the
+     about the event. The event value is defined in the ACPI spec. ACPI
+     video driver will generate an key type input event according to the
+     notify value it received and send the event to user space through the
+-    input device it created:
++    input device it created::
+ 
+ 	event		keycode
+ 	0x86		KEY_BRIGHTNESSUP
 -- 
 2.20.1
 
