@@ -2,102 +2,60 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 65FE3C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:21:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57174C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:24:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4505020868
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:21:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 2A73020868
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 18:24:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="LxXjuT84"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729719AbfDPSVp (ORCPT
+        id S1729737AbfDPSYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 14:21:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58376 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727180AbfDPSVo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 14:21:44 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id AC539F74B3;
-        Tue, 16 Apr 2019 18:21:43 +0000 (UTC)
-Received: from krava (ovpn-204-66.brq.redhat.com [10.40.204.66])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 2AE7D19C71;
-        Tue, 16 Apr 2019 18:21:39 +0000 (UTC)
-Date:   Tue, 16 Apr 2019 20:21:39 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Stanislav Fomichev <sdf@fomichev.me>
-Cc:     Jiri Olsa <jolsa@kernel.org>,
-        Arnaldo Carvalho de Melo <acme@kernel.org>,
-        lkml <linux-kernel@vger.kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Andi Kleen <ak@linux.intel.com>,
-        Adrian Hunter <adrian.hunter@intel.com>,
-        Song Liu <songliubraving@fb.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>
-Subject: Re: [PATCH 02/12] perf tools: Separate generic code in
- dso_cache__read
-Message-ID: <20190416182139.GC10125@krava>
-References: <20190416160127.30203-1-jolsa@kernel.org>
- <20190416160127.30203-3-jolsa@kernel.org>
- <20190416171712.GB8631@mini-arch.hsd1.ca.comcast.net>
+        Tue, 16 Apr 2019 14:24:16 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:44788 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727067AbfDPSYP (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 14:24:15 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=Content-Transfer-Encoding:
+        MIME-Version:Message-Id:Date:Subject:Cc:To:From:Sender:Reply-To:Content-Type:
+        Content-ID:Content-Description:Resent-Date:Resent-From:Resent-Sender:
+        Resent-To:Resent-Cc:Resent-Message-ID:In-Reply-To:References:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=ADF99MA7v+f8m79E2m71xhkBIBG70cxv/tDPmw5+Luw=; b=LxXjuT84vZuLDh1tec0oD1nUn
+        qTgK2fLmsaMiqLmk1rUmL3PWrOUg6Zr6DtZS6fVwLfBHHT2WoTSuEd8yTiOcE7iZeRuAc9YaD0E3W
+        8GNTc/DWsdJjg4wEkVjSNf19wCjrXuWwofV5i1/wS8Kafz0dCDH9XmFnbr9X1Jrcmva0Da2bzDz5x
+        o9oTCR2/+74ZzrYdMhvWMH/ewiDFrN9bl3IFGwN0orryMh2C3Du7uSZjtjBuDNrx2UT0ow7drOHG5
+        g1vYrGSLdaxjR5/vpSYCaT6uDjIhoKzcIw+ainIJdCz7c3WMvnjsdh1bLrlTjrCz4KGt/RnFUv4LT
+        jHQcDSohQ==;
+Received: from 213-225-15-255.nat.highway.a1.net ([213.225.15.255] helo=localhost)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hGSkf-00075X-HT; Tue, 16 Apr 2019 18:24:13 +0000
+From:   Christoph Hellwig <hch@lst.de>
+To:     "David S. Miller" <davem@davemloft.net>
+Cc:     Guenter Roeck <linux@roeck-us.net>, sparclinux@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: fix SG list handling in the sparc32 iommu driver
+Date:   Tue, 16 Apr 2019 20:23:38 +0200
+Message-Id: <20190416182347.18441-1-hch@lst.de>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190416171712.GB8631@mini-arch.hsd1.ca.comcast.net>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Tue, 16 Apr 2019 18:21:44 +0000 (UTC)
+Content-Transfer-Encoding: 8bit
+X-SRS-Rewrite: SMTP reverse-path rewritten from <hch@infradead.org> by bombadil.infradead.org. See http://www.infradead.org/rpr.html
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 10:17:13AM -0700, Stanislav Fomichev wrote:
-> On 04/16, Jiri Olsa wrote:
-> > Moving file specific code in dso_cache__read function
-> > into separate file_read function. I'll add bpf specific
-> > code in following patches.
-> > 
-> > Link: http://lkml.kernel.org/n/tip-7f7d717uzrqt5ka2xp29ige3@git.kernel.org
-> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
-> > ---
-> >  tools/perf/util/dso.c | 47 ++++++++++++++++++++++++-------------------
-> >  1 file changed, 26 insertions(+), 21 deletions(-)
-> > 
-> > diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-> > index cb6199c1390a..6baad22ec8a9 100644
-> > --- a/tools/perf/util/dso.c
-> > +++ b/tools/perf/util/dso.c
-> > @@ -794,6 +794,30 @@ dso_cache__memcpy(struct dso_cache *cache, u64 offset,
-> >  	return cache_size;
-> >  }
-> >  
-> > +static ssize_t file_read(struct dso *dso, struct machine *machine,
-> > +			 u64 offset, char *data)
-> > +{
-> > +	ssize_t ret;
-> > +
-> > +	pthread_mutex_lock(&dso__data_open_lock);
-> > +
-> > +	/*
-> > +	 * dso->data.fd might be closed if other thread opened another
-> > +	 * file (dso) due to open file limit (RLIMIT_NOFILE).
-> > +	 */
-> > +	try_to_open_dso(dso, machine);
-> > +
-> > +	if (dso->data.fd < 0) {
-> > +		dso->data.status = DSO_DATA_STATUS_ERROR;
-> pthread_mutex_unlock(&dso__data_open_lock) here?
+Hi Dave,
 
-oops, yea.. thanks
-
-jirka
+this series fixes some long standing bugs in the sparc32 iommu driver,
+mostly the lack of handling of large sglist offsets in the map_sg
+method, but also a few other smaller bits.  These now show up all the
+time do some block layer changes in linux-next.
