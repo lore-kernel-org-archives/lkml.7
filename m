@@ -2,166 +2,104 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id AA0E7C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:31:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C0EADC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:31:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 86EC920651
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:31:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 94D2A20857
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 09:31:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="vCuSZ21e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729078AbfDPJbe (ORCPT
+        id S1729166AbfDPJbj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 05:31:34 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:46852 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1728193AbfDPJaZ (ORCPT
+        Tue, 16 Apr 2019 05:31:39 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:60586 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729026AbfDPJbe (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 05:30:25 -0400
-X-UUID: 037ff4b089d344439448c5ddd8d8440b-20190416
-X-UUID: 037ff4b089d344439448c5ddd8d8440b-20190416
-Received: from mtkmrs01.mediatek.inc [(172.21.131.159)] by mailgw02.mediatek.com
-        (envelope-from <stu.hsieh@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 1631183566; Tue, 16 Apr 2019 17:30:19 +0800
-Received: from MTKCAS06.mediatek.inc (172.21.101.30) by
- mtkmbs01n2.mediatek.inc (172.21.101.79) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Tue, 16 Apr 2019 17:30:17 +0800
-Received: from mtksdccf07.mediatek.inc (172.21.84.99) by MTKCAS06.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Tue, 16 Apr 2019 17:30:17 +0800
-From:   Stu Hsieh <stu.hsieh@mediatek.com>
-To:     Mauro Carvalho Chehab <mchehab@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, CK Hu <ck.hu@mediatek.com>
-CC:     Mark Rutland <mark.rutland@arm.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Stu Hsieh <stu.hsieh@mediatek.com>,
-        <linux-media@vger.kernel.org>, <devicetree@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>, <srv_heupstream@mediatek.com>
-Subject: [PATCH v2 03/15] [media] mtk-mipicsi: add pm function
-Date:   Tue, 16 Apr 2019 17:30:03 +0800
-Message-ID: <1555407015-18130-4-git-send-email-stu.hsieh@mediatek.com>
-X-Mailer: git-send-email 1.9.1
-In-Reply-To: <1555407015-18130-1-git-send-email-stu.hsieh@mediatek.com>
-References: <1555407015-18130-1-git-send-email-stu.hsieh@mediatek.com>
+        Tue, 16 Apr 2019 05:31:34 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Q7Xr99zF4r6jYA93XnsTaf9Eg1/qnFu84nzVS5th2p8=; b=vCuSZ21eWSxfOySyD+iPsw857
+        AMvJ+qUqBxnOm1QhnUfyHP0U74NqJasTl26fe3D0nqAk0CRrWHJUPHnYhSxFJNxXCGJ30b3YlICuP
+        Kcn2Nwoksj5QF+MscgUGkoNAwUOX1TRjFrKmOXkGnMtEH5kKg3P6N01LMukal/4egTMti4O86pDj7
+        Qvm+10NfXHLdFUuGenZ3p2dWKhsoH9iLWveL+U1iwnxtf0oqfMJ2AuCI7MaWs4dVqohuHoUztomoN
+        kqsnkX1yLIdkbeZMAmLLi/lvHEs3mN8tr46xV6AwYVwZLwMg89aqV9wK+ArJvvMkevSqV54SToJ7l
+        Sz9ZrrVoA==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hGKR3-0005vz-MZ; Tue, 16 Apr 2019 09:31:25 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 5B58629B49941; Tue, 16 Apr 2019 11:31:23 +0200 (CEST)
+Date:   Tue, 16 Apr 2019 11:31:23 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Dexuan Cui <decui@microsoft.com>
+Cc:     "tglx@linutronix.de" <tglx@linutronix.de>,
+        "riel@surriel.com" <riel@surriel.com>,
+        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>, vkuznets <vkuznets@redhat.com>,
+        "jasowang@redhat.com" <jasowang@redhat.com>
+Subject: Re: [PATCH] smp: Do not warn if smp_call_function_single() is doing
+ a self call.
+Message-ID: <20190416093123.GR11158@hirez.programming.kicks-ass.net>
+References: <20190412235341.29379-1-decui@microsoft.com>
+ <20190415122128.GO11158@hirez.programming.kicks-ass.net>
+ <PU1P153MB01695FDC44C6A2C32C7FB887BF2B0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-TM-SNTS-SMTP: 48967CEB63FF91E327FD0A2DCBA22904CA4C750A69FB2313E50D2B42E8D872CA2000:8
-X-MTK:  N
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <PU1P153MB01695FDC44C6A2C32C7FB887BF2B0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This patch add PM function to enable/disable clk and larb.
+On Mon, Apr 15, 2019 at 11:39:57PM +0000, Dexuan Cui wrote:
+> > From: Peter Zijlstra <peterz@infradead.org>
+> > Sent: Monday, April 15, 2019 5:21 AM
+> > To: Dexuan Cui <decui@microsoft.com>
+> > 
+> > On Fri, Apr 12, 2019 at 11:53:57PM +0000, Dexuan Cui wrote:
+> > > If smp_call_function_single() is calling the function for itself, it's safe
+> > > to run with irqs_disabled() == true.
+> > >
+> > > I hit the warning because I'm in the below path in the .suspend callback of
+> > > a "syscore_ops" to support hibernation for a VM running on Hyper-V:
+> > >
+> > >   hv_synic_cleanup() ->
+> > >     clockevents_unbind_device() ->
+> > >       clockevents_unbind() ->
+> > >         smp_call_function_single().
+> > >
+> > > When the .suspend callback runs, only CPU0 is online and irqs_disabled() is
+> > > true.
+> > 
+> > Pray tell, how well do you think mutex_lock() works with interrupts
+> > disabled?
+> 
+> Good point. I realized generally speaking this patch makes no sense, so let me
+> try the solution proposed by Vitaly, i.e. fix clockevents_unbind() instead.
 
-Signed-off-by: Stu Hsieh <stu.hsieh@mediatek.com>
----
- .../media/platform/mtk-mipicsi/mtk_mipicsi.c  | 80 +++++++++++++++++++
- 1 file changed, 80 insertions(+)
+That's still not the problem. You're calling clockevents_unbind_device()
+with IRQs disabled, that's not correct. It doesn't matter what
+clockevents_unbind() does thereafter.
 
-diff --git a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-index e26bebe17fe5..ec4f6b503b32 100644
---- a/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-+++ b/drivers/media/platform/mtk-mipicsi/mtk_mipicsi.c
-@@ -464,6 +464,85 @@ static struct soc_camera_host_ops mtk_soc_camera_host_ops = {
- 	.set_bus_param		= mtk_mipicsi_set_bus_param,
- };
- 
-+static int mtk_mipicsi_pm_suspend(struct device *dev)
-+{
-+	struct soc_camera_host *ici = to_soc_camera_host(dev);
-+	struct mtk_mipicsi_dev *mipicsi = NULL;
-+	int ret = 0;
-+	int i = 0;
-+
-+	mipicsi = container_of(ici, struct mtk_mipicsi_dev, soc_host);
-+	if (mipicsi->soc_host.icd != NULL) {
-+		struct v4l2_subdev *sd =
-+			soc_camera_to_subdev(mipicsi->soc_host.icd);
-+
-+		ret = v4l2_subdev_call(sd, core, s_power, 0);
-+		if (ret == -ENOIOCTLCMD)
-+			ret = 0;
-+	}
-+
-+	/* close digtal and analog clock */
-+	for (i = 0; i < mipicsi->clk_num; ++i)
-+		clk_disable_unprepare(mipicsi->clk[i]);
-+
-+	if (mipicsi->larb_pdev != NULL)
-+		mtk_smi_larb_put(mipicsi->larb_pdev);
-+
-+	return ret;
-+}
-+
-+static int mtk_mipicsi_suspend(struct device *dev)
-+{
-+	if (pm_runtime_suspended(dev))
-+		return 0;
-+
-+	return mtk_mipicsi_pm_suspend(dev);
-+}
-+
-+static int mtk_mipicsi_pm_resume(struct device *dev)
-+{
-+	struct soc_camera_host *ici = to_soc_camera_host(dev);
-+	struct mtk_mipicsi_dev *mipicsi =
-+		container_of(ici, struct mtk_mipicsi_dev, soc_host);
-+	int ret = 0;
-+	int i = 0;
-+
-+	if (mipicsi->soc_host.icd != NULL) {
-+		struct v4l2_subdev *sd =
-+			soc_camera_to_subdev(mipicsi->soc_host.icd);
-+
-+		ret = v4l2_subdev_call(sd, core, s_power, 1);
-+		if (ret == -ENOIOCTLCMD)
-+			ret = 0;
-+	}
-+
-+	if (mipicsi->larb_pdev != NULL) {
-+		ret = mtk_smi_larb_get(mipicsi->larb_pdev);
-+		if (ret != 0)
-+			return ret;
-+	}
-+
-+	/* enable digtal clock */
-+	for (i = 0; i < mipicsi->clk_num; ++i)
-+		(void)clk_prepare_enable(mipicsi->clk[i]);
-+
-+	return ret;
-+}
-+
-+static int mtk_mipicsi_resume(struct device *dev)
-+{
-+	if (pm_runtime_suspended(dev))
-+		return 0;
-+
-+	return mtk_mipicsi_pm_resume(dev);
-+}
-+
-+static const struct dev_pm_ops mtk_mipicsi_pm = {
-+	SET_SYSTEM_SLEEP_PM_OPS(mtk_mipicsi_suspend, mtk_mipicsi_resume)
-+	SET_RUNTIME_PM_OPS(mtk_mipicsi_pm_suspend,
-+		mtk_mipicsi_pm_resume, NULL)
-+};
-+
- static int seninf_mux_camsv_node_parse(struct mtk_mipicsi_dev *mipicsi,
- 		int index)
- {
-@@ -756,6 +835,7 @@ static const struct of_device_id mtk_mipicsi_of_match[] = {
- static struct platform_driver mtk_mipicsi_driver = {
- 	.driver		= {
- 		.name	= MTK_MIPICSI_DRV_NAME,
-+		.pm	= &mtk_mipicsi_pm,
- 		.of_match_table = of_match_ptr(mtk_mipicsi_of_match),
- 	},
- 	.probe		= mtk_mipicsi_probe,
--- 
-2.18.0
-
+You simply cannot do any of this with IRQs disabled, end of story.
