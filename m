@@ -2,227 +2,220 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED57C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:07:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 901C2C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:09:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4EB4D223C0
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:07:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Qio959Zi"
+	by mail.kernel.org (Postfix) with ESMTP id 5413B2064B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 14:09:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729372AbfDPOHy (ORCPT
+        id S1729450AbfDPOJF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 10:07:54 -0400
-Received: from mail-wr1-f68.google.com ([209.85.221.68]:34045 "EHLO
-        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726713AbfDPOHx (ORCPT
+        Tue, 16 Apr 2019 10:09:05 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:49264 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726500AbfDPOJF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 10:07:53 -0400
-Received: by mail-wr1-f68.google.com with SMTP id p10so27304156wrq.1;
-        Tue, 16 Apr 2019 07:07:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=+HY91w5f+9s/uMWknBV9UYHwFztj3VHolQha5X2UoMo=;
-        b=Qio959ZiEBsMV5cgyIL2Qrz7WLWDgXeDQwsbiGUGy+2xJTIG3a78Ic+Czz10YgM57Y
-         ZgXi9xHjuOtBmSWkoZl68+gxA2uZkFr23Hb93WwFWpih+K+eEoB9B3re0Mh96Jyax5tw
-         9uczqVpHHU5Ka4bd8MGXqCayDf8ZtIIrXh9FJvKnME+rGC37mKX1EZ/i4ttS7TGgXPx1
-         w8xQousk+zZPlqledwVBFB1y0Ttpum1E+LO+1A6wsZaB87PgktBlBbAONku5YNi8y7QA
-         XdIlBqvUcdKKQKZSD1iT40EpEG8fUEHynFuYNinLTV9uN9eY23T7Nth8xvqOtKeBQov5
-         oaUw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=+HY91w5f+9s/uMWknBV9UYHwFztj3VHolQha5X2UoMo=;
-        b=DF44tSfPtwnHAKsiczppUKQIiOb64l5Qw6zAM2rWjPzMVIMPDcYisYKDFrKWNFLhh7
-         y/4oCP7/1rTAa2dDEMC4iNJ0HC9BlxEObye8rAYq4Q9HnTssmH+v1VObFNIoakWLBF9Q
-         B1p/t0pS3cgfE5orY8eiehRcC8jMkgbzN2NNBoiXkvaDftm5EEcsd1ZO3uXBFXCKED3i
-         1khEmuq2oAtD7Gab9ulSKnT+ozCQLf8JhbiZtOoHebp9/a6dyOVXFXUx81/1T0wa8+lM
-         /qXi372GgzXD7EDpJGQpuPS4z9uRPQqyKt/VySjXVgx48beWL5/uMp6YpW7sXm13tX+B
-         6DXQ==
-X-Gm-Message-State: APjAAAVCN6n04m1nX883L8zC6j6+PP+19TtosuDfMyWF9Ft2Agf+b4mk
-        thB7kjyNcUm/WqB3BHDh4nk=
-X-Google-Smtp-Source: APXvYqwQUpN2z/xMJdGlvthSFTSeOI6pMVEPRSldxsbz2UKDArc7VW0qrmFuFAu9dAkuqezWDHaGBw==
-X-Received: by 2002:adf:ed8f:: with SMTP id c15mr28853326wro.144.1555423670848;
-        Tue, 16 Apr 2019 07:07:50 -0700 (PDT)
-Received: from 5WDYG62.mdi (static-css-cqn-143221.business.bouyguestelecom.com. [176.149.143.221])
-        by smtp.gmail.com with ESMTPSA id v192sm24008494wme.24.2019.04.16.07.07.49
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 07:07:49 -0700 (PDT)
-From:   Romain Izard <romain.izard.pro@gmail.com>
-To:     Felipe Balbi <balbi@kernel.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Andrzej Pietrasiewicz <andrzej.p@samsung.com>
-Cc:     linux-usb@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Romain Izard <romain.izard.pro@gmail.com>
-Subject: [PATCH 2/2] usb: gadget: f_ncm: Add OS descriptor support
-Date:   Tue, 16 Apr 2019 16:07:32 +0200
-Message-Id: <20190416140732.21941-2-romain.izard.pro@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190416140732.21941-1-romain.izard.pro@gmail.com>
-References: <20190416140732.21941-1-romain.izard.pro@gmail.com>
+        Tue, 16 Apr 2019 10:09:05 -0400
+Received: from localhost ([127.0.0.1] helo=flow.W.breakpoint.cc)
+        by Galois.linutronix.de with esmtp (Exim 4.80)
+        (envelope-from <bigeasy@linutronix.de>)
+        id 1hGOlg-000347-Cj; Tue, 16 Apr 2019 16:09:00 +0200
+From:   Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+To:     Theodore Ts'o <tytso@mit.edu>
+Cc:     linux-kernel@vger.kernel.org, tglx@linutronix.de,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>
+Subject: [PATCH] random: Add a spinlock_t to struct batched_entropy
+Date:   Tue, 16 Apr 2019 16:08:58 +0200
+Message-Id: <20190416140858.31980-1-bigeasy@linutronix.de>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-To be able to use the default USB class drivers available in Microsoft
-Windows, we need to add OS descriptors to the exported USB gadget to
-tell the OS that we are compatible with the built-in drivers.
+The per-CPU variable batched_entropy_uXX is protected by get_cpu_var().
+This is just a preempt_disable() which ensures that the variable is only
+from the local CPU. It does not protect against users on the same CPU
+from another context. It is possible that a preemptible context reads
+slot 0 and then an interrupt occurs and the same value is read again.
 
-Copy the OS descriptor support from f_rndis into f_ncm. As a result,
-using the WINNCM compatible ID, the UsbNcm driver is loaded on
-enumeration without the need for a custom driver or inf file.
+The above scenario is confirmed by lockdep if we add a spinlock:
+| ================================
+| WARNING: inconsistent lock state
+| 5.1.0-rc3+ #42 Not tainted
+| --------------------------------
+| inconsistent {SOFTIRQ-ON-W} -> {IN-SOFTIRQ-W} usage.
+| ksoftirqd/9/56 [HC0[0]:SC1[1]:HE0:SE0] takes:
+| (____ptrval____) (batched_entropy_u32.lock){+.?.}, at: get_random_u32+0x3e/0xe0
+| {SOFTIRQ-ON-W} state was registered at:
+|   _raw_spin_lock+0x2a/0x40
+|   get_random_u32+0x3e/0xe0
+|   new_slab+0x15c/0x7b0
+|   ___slab_alloc+0x492/0x620
+|   __slab_alloc.isra.73+0x53/0xa0
+|   kmem_cache_alloc_node+0xaf/0x2a0
+|   copy_process.part.41+0x1e1/0x2370
+|   _do_fork+0xdb/0x6d0
+|   kernel_thread+0x20/0x30
+|   kthreadd+0x1ba/0x220
+|   ret_from_fork+0x3a/0x50
+…
+| other info that might help us debug this:
+|  Possible unsafe locking scenario:
+|
+|        CPU0
+|        ----
+|   lock(batched_entropy_u32.lock);
+|   <Interrupt>
+|     lock(batched_entropy_u32.lock);
+|
+|  *** DEADLOCK ***
+|
+| stack backtrace:
+| Call Trace:
+…
+|  kmem_cache_alloc_trace+0x20e/0x270
+|  ipmi_alloc_recv_msg+0x16/0x40
+…
+|  __do_softirq+0xec/0x48d
+|  run_ksoftirqd+0x37/0x60
+|  smpboot_thread_fn+0x191/0x290
+|  kthread+0xfe/0x130
+|  ret_from_fork+0x3a/0x50
 
-Signed-off-by: Romain Izard <romain.izard.pro@gmail.com>
+Add a spinlock_t to the batched_entropy data structure and acquire the
+lock while accessing it. Acquire the lock with disabled interrupts
+because this function may be used from interrupt context.
+
+Remove the batched_entropy_reset_lock lock. Now that we have a lock for
+the data scructure, we can access it from a remote CPU.
+
+Signed-off-by: Sebastian Andrzej Siewior <bigeasy@linutronix.de>
 ---
- drivers/usb/gadget/function/f_ncm.c | 47 +++++++++++++++++++++++++++--
- drivers/usb/gadget/function/u_ncm.h |  3 ++
- 2 files changed, 47 insertions(+), 3 deletions(-)
+ drivers/char/random.c | 52 ++++++++++++++++++++++---------------------
+ 1 file changed, 27 insertions(+), 25 deletions(-)
 
-diff --git a/drivers/usb/gadget/function/f_ncm.c b/drivers/usb/gadget/function/f_ncm.c
-index d5c47e7a7f61..2d6e76e4cffa 100644
---- a/drivers/usb/gadget/function/f_ncm.c
-+++ b/drivers/usb/gadget/function/f_ncm.c
-@@ -23,6 +23,7 @@
- #include "u_ether.h"
- #include "u_ether_configfs.h"
- #include "u_ncm.h"
-+#include "configfs.h"
+diff --git a/drivers/char/random.c b/drivers/char/random.c
+index 38c6d1af6d1c0..8d25c7b1f99bc 100644
+--- a/drivers/char/random.c
++++ b/drivers/char/random.c
+@@ -2211,8 +2211,8 @@ struct batched_entropy {
+ 		u32 entropy_u32[CHACHA_BLOCK_SIZE / sizeof(u32)];
+ 	};
+ 	unsigned int position;
++	spinlock_t batch_lock;
+ };
+-static rwlock_t batched_entropy_reset_lock = __RW_LOCK_UNLOCKED(batched_entropy_reset_lock);
  
  /*
-  * This function is a "CDC Network Control Model" (CDC NCM) Ethernet link.
-@@ -1391,6 +1392,16 @@ static int ncm_bind(struct usb_configuration *c, struct usb_function *f)
- 		return -EINVAL;
- 
- 	ncm_opts = container_of(f->fi, struct f_ncm_opts, func_inst);
+  * Get a random word for internal kernel use only. The quality of the random
+@@ -2222,12 +2222,14 @@ static rwlock_t batched_entropy_reset_lock = __RW_LOCK_UNLOCKED(batched_entropy_
+  * wait_for_random_bytes() should be called and return 0 at least once
+  * at any point prior.
+  */
+-static DEFINE_PER_CPU(struct batched_entropy, batched_entropy_u64);
++static DEFINE_PER_CPU(struct batched_entropy, batched_entropy_u64) = {
++	.batch_lock	= __SPIN_LOCK_UNLOCKED(batched_entropy_u64.lock),
++};
 +
-+	if (cdev->use_os_string) {
-+		f->os_desc_table = kzalloc(sizeof(*f->os_desc_table),
-+					   GFP_KERNEL);
-+		if (!f->os_desc_table)
-+			return -ENOMEM;
-+		f->os_desc_n = 1;
-+		f->os_desc_table[0].os_desc = &ncm_opts->ncm_os_desc;
-+	}
-+
- 	/*
- 	 * in drivers/usb/gadget/configfs.c:configfs_composite_bind()
- 	 * configurations are bound in sequence with list_for_each_entry,
-@@ -1404,13 +1415,15 @@ static int ncm_bind(struct usb_configuration *c, struct usb_function *f)
- 		status = gether_register_netdev(ncm_opts->net);
- 		mutex_unlock(&ncm_opts->lock);
- 		if (status)
--			return status;
-+			goto fail;
- 		ncm_opts->bound = true;
- 	}
- 	us = usb_gstrings_attach(cdev, ncm_strings,
- 				 ARRAY_SIZE(ncm_string_defs));
--	if (IS_ERR(us))
--		return PTR_ERR(us);
-+	if (IS_ERR(us)) {
-+		status = PTR_ERR(us);
-+		goto fail;
-+	}
- 	ncm_control_intf.iInterface = us[STRING_CTRL_IDX].id;
- 	ncm_data_nop_intf.iInterface = us[STRING_DATA_IDX].id;
- 	ncm_data_intf.iInterface = us[STRING_DATA_IDX].id;
-@@ -1427,6 +1440,10 @@ static int ncm_bind(struct usb_configuration *c, struct usb_function *f)
- 	ncm_control_intf.bInterfaceNumber = status;
- 	ncm_union_desc.bMasterInterface0 = status;
- 
-+	if (cdev->use_os_string)
-+		f->os_desc_table[0].if_id =
-+			ncm_iad_desc.bFirstInterface;
-+
- 	status = usb_interface_id(c, f);
- 	if (status < 0)
- 		goto fail;
-@@ -1506,6 +1523,9 @@ static int ncm_bind(struct usb_configuration *c, struct usb_function *f)
- 	return 0;
- 
- fail:
-+	kfree(f->os_desc_table);
-+	f->os_desc_n = 0;
-+
- 	if (ncm->notify_req) {
- 		kfree(ncm->notify_req->buf);
- 		usb_ep_free_request(ncm->notify, ncm->notify_req);
-@@ -1560,16 +1580,22 @@ static void ncm_free_inst(struct usb_function_instance *f)
- 		gether_cleanup(netdev_priv(opts->net));
- 	else
- 		free_netdev(opts->net);
-+	kfree(opts->ncm_interf_group);
- 	kfree(opts);
- }
- 
- static struct usb_function_instance *ncm_alloc_inst(void)
+ u64 get_random_u64(void)
  {
- 	struct f_ncm_opts *opts;
-+	struct usb_os_desc *descs[1];
-+	char *names[1];
-+	struct config_group *ncm_interf_group;
+ 	u64 ret;
+-	bool use_lock;
+-	unsigned long flags = 0;
++	unsigned long flags;
+ 	struct batched_entropy *batch;
+ 	static void *previous;
  
- 	opts = kzalloc(sizeof(*opts), GFP_KERNEL);
- 	if (!opts)
- 		return ERR_PTR(-ENOMEM);
-+	opts->ncm_os_desc.ext_compat_id = opts->ncm_ext_compat_id;
-+
- 	mutex_init(&opts->lock);
- 	opts->func_inst.free_func_inst = ncm_free_inst;
- 	opts->net = gether_setup_default();
-@@ -1578,8 +1604,20 @@ static struct usb_function_instance *ncm_alloc_inst(void)
- 		kfree(opts);
- 		return ERR_CAST(net);
+@@ -2242,28 +2244,25 @@ u64 get_random_u64(void)
+ 
+ 	warn_unseeded_randomness(&previous);
+ 
+-	use_lock = READ_ONCE(crng_init) < 2;
+-	batch = &get_cpu_var(batched_entropy_u64);
+-	if (use_lock)
+-		read_lock_irqsave(&batched_entropy_reset_lock, flags);
++	batch = raw_cpu_ptr(&batched_entropy_u64);
++	spin_lock_irqsave(&batch->batch_lock, flags);
+ 	if (batch->position % ARRAY_SIZE(batch->entropy_u64) == 0) {
+ 		extract_crng((u8 *)batch->entropy_u64);
+ 		batch->position = 0;
  	}
-+	INIT_LIST_HEAD(&opts->ncm_os_desc.ext_prop);
-+
-+	descs[0] = &opts->ncm_os_desc;
-+	names[0] = "ncm";
- 
- 	config_group_init_type_name(&opts->func_inst.group, "", &ncm_func_type);
-+	ncm_interf_group =
-+		usb_os_desc_prepare_interf_dir(&opts->func_inst.group, 1, descs,
-+					       names, THIS_MODULE);
-+	if (IS_ERR(ncm_interf_group)) {
-+		ncm_free_inst(&opts->func_inst);
-+		return ERR_CAST(ncm_interf_group);
-+	}
-+	opts->ncm_interf_group = ncm_interf_group;
- 
- 	return &opts->func_inst;
+ 	ret = batch->entropy_u64[batch->position++];
+-	if (use_lock)
+-		read_unlock_irqrestore(&batched_entropy_reset_lock, flags);
+-	put_cpu_var(batched_entropy_u64);
++	spin_unlock_irqrestore(&batch->batch_lock, flags);
+ 	return ret;
  }
-@@ -1605,6 +1643,9 @@ static void ncm_unbind(struct usb_configuration *c, struct usb_function *f)
+ EXPORT_SYMBOL(get_random_u64);
  
- 	hrtimer_cancel(&ncm->task_timer);
+-static DEFINE_PER_CPU(struct batched_entropy, batched_entropy_u32);
++static DEFINE_PER_CPU(struct batched_entropy, batched_entropy_u32) = {
++	.batch_lock	= __SPIN_LOCK_UNLOCKED(batched_entropy_u32.lock),
++};
+ u32 get_random_u32(void)
+ {
+ 	u32 ret;
+-	bool use_lock;
+-	unsigned long flags = 0;
++	unsigned long flags;
+ 	struct batched_entropy *batch;
+ 	static void *previous;
  
-+	kfree(f->os_desc_table);
-+	f->os_desc_n = 0;
+@@ -2272,18 +2271,14 @@ u32 get_random_u32(void)
+ 
+ 	warn_unseeded_randomness(&previous);
+ 
+-	use_lock = READ_ONCE(crng_init) < 2;
+-	batch = &get_cpu_var(batched_entropy_u32);
+-	if (use_lock)
+-		read_lock_irqsave(&batched_entropy_reset_lock, flags);
++	batch = raw_cpu_ptr(&batched_entropy_u32);
++	spin_lock_irqsave(&batch->batch_lock, flags);
+ 	if (batch->position % ARRAY_SIZE(batch->entropy_u32) == 0) {
+ 		extract_crng((u8 *)batch->entropy_u32);
+ 		batch->position = 0;
+ 	}
+ 	ret = batch->entropy_u32[batch->position++];
+-	if (use_lock)
+-		read_unlock_irqrestore(&batched_entropy_reset_lock, flags);
+-	put_cpu_var(batched_entropy_u32);
++	spin_unlock_irqrestore(&batch->batch_lock, flags);
+ 	return ret;
+ }
+ EXPORT_SYMBOL(get_random_u32);
+@@ -2297,12 +2292,19 @@ static void invalidate_batched_entropy(void)
+ 	int cpu;
+ 	unsigned long flags;
+ 
+-	write_lock_irqsave(&batched_entropy_reset_lock, flags);
+ 	for_each_possible_cpu (cpu) {
+-		per_cpu_ptr(&batched_entropy_u32, cpu)->position = 0;
+-		per_cpu_ptr(&batched_entropy_u64, cpu)->position = 0;
++		struct batched_entropy *batched_entropy;
 +
- 	ncm_string_defs[0].id = 0;
- 	usb_free_all_descriptors(f);
++		batched_entropy = per_cpu_ptr(&batched_entropy_u32, cpu);
++		spin_lock_irqsave(&batched_entropy->batch_lock, flags);
++		batched_entropy->position = 0;
++		spin_unlock(&batched_entropy->batch_lock);
++
++		batched_entropy = per_cpu_ptr(&batched_entropy_u64, cpu);
++		spin_lock(&batched_entropy->batch_lock);
++		batched_entropy->position = 0;
++		spin_unlock_irqrestore(&batched_entropy->batch_lock, flags);
+ 	}
+-	write_unlock_irqrestore(&batched_entropy_reset_lock, flags);
+ }
  
-diff --git a/drivers/usb/gadget/function/u_ncm.h b/drivers/usb/gadget/function/u_ncm.h
-index d483e45c0f77..70da3201a1d0 100644
---- a/drivers/usb/gadget/function/u_ncm.h
-+++ b/drivers/usb/gadget/function/u_ncm.h
-@@ -20,6 +20,9 @@ struct f_ncm_opts {
- 	struct net_device		*net;
- 	bool				bound;
- 
-+	struct config_group		*ncm_interf_group;
-+	struct usb_os_desc		ncm_os_desc;
-+	char				ncm_ext_compat_id[16];
- 	/*
- 	 * Read/write access to configfs attributes is handled by configfs.
- 	 *
+ /**
 -- 
-2.17.1
+2.20.1
 
