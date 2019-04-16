@@ -2,132 +2,178 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FC6DC10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:09:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02C84C10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:09:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10394206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:09:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="Nb9r/ObQ"
+	by mail.kernel.org (Postfix) with ESMTP id C43AC20821
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 08:09:57 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728671AbfDPIJy (ORCPT
+        id S1727161AbfDPIJ4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
+        Tue, 16 Apr 2019 04:09:56 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:46468 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728654AbfDPIJy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Tue, 16 Apr 2019 04:09:54 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:35383 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728541AbfDPIJw (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 04:09:52 -0400
-Received: by mail-wm1-f68.google.com with SMTP id y197so12186568wmd.0
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 01:09:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=QULGWttfcYVMWXLo/sdQLVGyglVz6xrWAgoO0aZe4xE=;
-        b=Nb9r/ObQV8eZAS1Eje/jUKTuUK5BUX4ZBpRuqs3NdqXic/y0zlpuxUcuUqjFjb3//y
-         T6+g8nU6ICz9ppi68TPOw72G7aCS4vxMsKudKOd2tJZkDYQOtc//7JQa0o0qsqW4b45b
-         6JRW/WDVERtNpQVUfZQ95pBtSBIZPVFwjmgXAzTX5vxzIkGGzAJ4RuLTCV/ASCzYzy0R
-         FBrxpJyKSuDAJXLpJpUEDPvS2F/7ZszESwR8iYMzDWthp9rzIvOAd7wl+iKUvGwSHIB6
-         WH65EtdDy4R9WI3Rf7d727pQvherGBPRl6SvxzPWq6N22re8bRIZ/F57g6a9WyH+Oc2v
-         MM2w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=QULGWttfcYVMWXLo/sdQLVGyglVz6xrWAgoO0aZe4xE=;
-        b=GiQPyrEL/y5Q3VcDwx/4VbUTYttRVlXpetWmyX8ovPqQGhSyWHKEZdcDcb7IumtUQO
-         Jv65hBsjuNqInLWjE7sUDu1Aae+bQDP0N2NlFORqhHUS6w8n4RYVpqSKlTBsDSjVmcPC
-         9rwBpO5ut+3NGr/kGfmYXlmOOmyAkwh5HJC6+vqnrzQtfBNdc+lirkQpvpdz3cMrDYet
-         wrfZDq5pPIxye8diPoiPZDam88BcBbKvRzj2fboc3f4/isFW4uX38GxMYTbg9FwEYWUk
-         WWShyaBcfErwxvzxP9+waE5BIAiGNKOarGXq12fQqVHVcrPKIJvflcolNvpPGfXX34Pc
-         6qEQ==
-X-Gm-Message-State: APjAAAV3Ih71SfY3jC87hQmDqXnWj9b2J949iDkIWI6H5LMXe9EQnMay
-        c1+hoF8RllmFD6Sr8pt7YnUW8w==
-X-Google-Smtp-Source: APXvYqyd/mMCIxOgtxk+5cUT8P7w6HRcUSsmFkOOk3Qt88R0HHow9yP9Ebnz2E9kBRw4V8VQepmPBA==
-X-Received: by 2002:a1c:b189:: with SMTP id a131mr24749123wmf.107.1555402190784;
-        Tue, 16 Apr 2019 01:09:50 -0700 (PDT)
-Received: from [192.168.0.41] (50.251.95.92.rev.sfr.net. [92.95.251.50])
-        by smtp.googlemail.com with ESMTPSA id s18sm20983941wmc.41.2019.04.16.01.09.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 01:09:50 -0700 (PDT)
-Subject: Re: [PATCH 18/24] dt-bindings: timer: mtk-timer: add support for
- MT8516
-To:     Matthias Brugger <matthias.bgg@gmail.com>,
-        Fabien Parent <fparent@baylibre.com>, robh+dt@kernel.org,
-        mark.rutland@arm.com
-Cc:     sean.wang@kernel.org, ryder.lee@mediatek.com,
-        hsin-hsiung.wang@mediatek.com, wenzhen.yu@mediatek.com,
-        chaotian.jing@mediatek.com, yong.mao@mediatek.com,
-        jjian.zhou@mediatek.com, devicetree@vger.kernel.org,
-        linux-kernel@vger.kernel.org, linux-i2c@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-mediatek@lists.infradead.org, linux-mmc@vger.kernel.org,
-        linux-gpio@vger.kernel.org, linux-serial@vger.kernel.org,
-        linux-spi@vger.kernel.org, linux-watchdog@vger.kernel.org,
-        linux-clk@vger.kernel.org, stephane.leprovost@mediatek.com
-References: <20190323211612.860-1-fparent@baylibre.com>
- <20190323211612.860-19-fparent@baylibre.com>
- <182f1ae5-9f4f-8ef4-695f-353bbd1966c6@gmail.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <e4895191-c267-7b0b-6203-8e4ff44927e0@linaro.org>
-Date:   Tue, 16 Apr 2019 10:09:47 +0200
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 315CE3086265;
+        Tue, 16 Apr 2019 08:09:53 +0000 (UTC)
+Received: from [10.36.112.44] (ovpn-112-44.ams2.redhat.com [10.36.112.44])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 82BC71001E8D;
+        Tue, 16 Apr 2019 08:09:41 +0000 (UTC)
+Subject: Re: [PATCH 0/6] Add Hygon SEV support
+To:     Pascal Van Leeuwen <pvanleeuwen@insidesecure.com>,
+        Hao Feng <fenghao@hygon.cn>,
+        'Tom Lendacky ' <thomas.lendacky@amd.com>,
+        'Gary Hook ' <gary.hook@amd.com>,
+        'Herbert Xu ' <herbert@gondor.apana.org.au>,
+        "' David S. Miller '" <davem@davemloft.net>,
+        'Janakarajan Natarajan ' <Janakarajan.Natarajan@amd.com>,
+        'Joerg Roedel ' <joro@8bytes.org>,
+        =?UTF-8?B?JyBSYWRpbSBLcsSNbcOhxZkgJw==?= <rkrcmar@redhat.com>,
+        'Thomas Gleixner ' <tglx@linutronix.de>,
+        'Ingo Molnar ' <mingo@redhat.com>,
+        'Borislav Petkov ' <bp@alien8.de>,
+        "' H. Peter Anvin '" <hpa@zytor.com>
+Cc:     'Zhaohui Du ' <duzhaohui@hygon.cn>,
+        'Zhiwei Ying ' <yingzhiwei@hygon.cn>,
+        'Wen Pu ' <puwen@hygon.cn>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "linux-crypto@vger.kernel.org" <linux-crypto@vger.kernel.org>,
+        "kvm@vger.kernel.org" <kvm@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+References: <1555329868-17895-1-git-send-email-fenghao@hygon.cn>
+ <3a1288ab-8e18-5421-05b4-4f4ef2fc531c@redhat.com>
+ <AM6PR09MB35237F925CF4C82FBBA53862D22B0@AM6PR09MB3523.eurprd09.prod.outlook.com>
+ <fda47663-9536-0d36-5a0e-c6da77e21209@redhat.com>
+ <AM6PR09MB35234C86C0502E1FAAB3A305D2240@AM6PR09MB3523.eurprd09.prod.outlook.com>
+From:   Paolo Bonzini <pbonzini@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=pbonzini@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ uUHgL9dKIfvpm+rNXRn9wAwGjk0X/A==
+Message-ID: <985108b1-6d51-4458-48de-c5b96c5f14f9@redhat.com>
+Date:   Tue, 16 Apr 2019 10:09:29 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <182f1ae5-9f4f-8ef4-695f-353bbd1966c6@gmail.com>
+In-Reply-To: <AM6PR09MB35234C86C0502E1FAAB3A305D2240@AM6PR09MB3523.eurprd09.prod.outlook.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.49]); Tue, 16 Apr 2019 08:09:53 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/04/2019 09:54, Matthias Brugger wrote:
-> 
-> 
-> On 23/03/2019 22:16, Fabien Parent wrote:
->> Add binding documentation of mtk-timer for MT8516 SoC.
+On 16/04/19 08:58, Pascal Van Leeuwen wrote:
+>>> Besides that, they are in heavy practical use in mainland China, 
+>>> usually as direct replacements for SHA2-256 and AES in whatever 
+>>> protocol or use case you need: IPsec, TLS, WPA2, XTS for disk encryption,
+>>> you name it.
 >>
->> Signed-off-by: Fabien Parent <fparent@baylibre.com>
->> ---
->>  Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt | 1 +
->>  1 file changed, 1 insertion(+)
-> 
-> applied to v5.1-next/dts64
-> 
-> Daniel let me know if you want to take it through your tree and I drop the patch.
+>> How should that mean anything?
+>
+> Uhm ... no, the fact that something is actually *useful* to potentially
+> a billion plus people doesn't mean anything ...
 
-It is ok.
+Useful does not mean secure, does it?  PKZIP encryption was certainly
+useful back in the day, but it was not secure.
 
-Acked-by: Daniel Lezcano <daniel.lezcano@linaro.org>
+>> I did educate myself a bit, but I'm not an expert in cryptography, so I
+>> would like to be sure that these are not another Speck or DUAL-EC-DRBG.
+>
+> Innocent until proven guilty mean anything to you?
 
->> diff --git a/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt b/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
->> index ff7c567a7972..74c3eadad844 100644
->> --- a/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
->> +++ b/Documentation/devicetree/bindings/timer/mediatek,mtk-timer.txt
->> @@ -17,6 +17,7 @@ Required properties:
->>  	* "mediatek,mt8127-timer" for MT8127 compatible timers (GPT)
->>  	* "mediatek,mt8135-timer" for MT8135 compatible timers (GPT)
->>  	* "mediatek,mt8173-timer" for MT8173 compatible timers (GPT)
->> +	* "mediatek,mt8516-timer" for MT8516 compatible timers (GPT)
->>  	* "mediatek,mt6577-timer" for MT6577 and all above compatible timers (GPT)
->>  
->>  	For those SoCs that use SYST
+This is not a court of justice, it's a software project.  For that
+matter "certainty beyond reasonable doubt" is not a thing either in this
+context.
+
+>>  "SM2 is based on ECC(Elliptic Curve Cryptography), and uses a special
+>> curve" is enough for me to see warning signs, at least without further
+>> explanations,
 >>
+> The specification is public (if you can read Chinese, anyway), so open to
+> analysis. Either way, it's quite irrelevant to Chinese organisations that
+> HAVE to use SM2. And anyone else can just decide NOT to use it, you don't
+> even have to compile it into your kernel. It's called freedom.
 
+"Freedom" didn't apply when Speck was proposed for inclusion in Linux,
+and I would like to make sure I don't make a mistake when adding crypto
+interfaces.  If SM2/3/4 were broken, I couldn't care less if someone HAS
+to use them, they can patch their kernel.  But if they're not then I
+appreciate that you wrote to correct me, it's helpful.  Please
+understand that 99% of the community has not ever heard of anything but
+SHA-{1,2,3}, ECDSA, Ed25519, AES.  If somebody comes up with a patch
+with "strange" crypto, it's up to them to say that they are secure---and
+again, the key word is secure, not useful.
 
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
+Paolo
 
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+>> and so does the fact that the initial SM3 values were
+>> changed from SHA-2 and AFAICT there is no public justification for
+>> that.
+>>
+> Actually, SM3 is an *improvement* on SHA-2, and there has been ample
+> analysis done on that to, in fact, confirm it's (slightly) better.
+> So there IS public justification. Don't shout if you don't know the
+> facts.
