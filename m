@@ -6,258 +6,269 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B22C1C282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:21:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 828CFC10F14
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:21:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7A35520663
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:21:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5357F20663
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 20:21:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730746AbfDPUVs (ORCPT
+        id S1730770AbfDPUVw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 16:21:48 -0400
-Received: from mout.kundenserver.de ([212.227.126.130]:53165 "EHLO
+        Tue, 16 Apr 2019 16:21:52 -0400
+Received: from mout.kundenserver.de ([212.227.126.134]:46449 "EHLO
         mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730680AbfDPUVo (ORCPT
+        with ESMTP id S1730022AbfDPUVr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 16:21:44 -0400
+        Tue, 16 Apr 2019 16:21:47 -0400
 Received: from threadripper.lan ([149.172.19.189]) by mrelayeu.kundenserver.de
  (mreue012 [212.227.15.129]) with ESMTPA (Nemesis) id
- 1MkEdF-1gb4231FYv-00kccp; Tue, 16 Apr 2019 22:21:34 +0200
+ 1MK5BG-1hYhvb2HTK-00LYy0; Tue, 16 Apr 2019 22:21:37 +0200
 From:   Arnd Bergmann <arnd@arndb.de>
 To:     Alexander Viro <viro@zeniv.linux.org.uk>
 Cc:     linux-fsdevel@vger.kernel.org, y2038@lists.linaro.org,
         linux-kernel@vger.kernel.org, Arnd Bergmann <arnd@arndb.de>,
-        "David S. Miller" <davem@davemloft.net>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Karsten Keil <isdn@linux-pingi.de>,
-        Paul Mackerras <paulus@samba.org>,
-        Guillaume Nault <g.nault@alphalink.fr>,
-        Eric Biggers <ebiggers@google.com>, netdev@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-ppp@vger.kernel.org
-Subject: [PATCH v3 06/26] compat_ioctl: handle PPPIOCGIDLE for 64-bit time_t
-Date:   Tue, 16 Apr 2019 22:19:44 +0200
-Message-Id: <20190416202013.4034148-7-arnd@arndb.de>
+        Alexandre Belloni <alexandre.belloni@bootlin.com>,
+        Alessandro Zummo <a.zummo@towertech.it>,
+        linux-rtc@vger.kernel.org
+Subject: [PATCH v3 07/26] compat_ioctl: move rtc handling into rtc-dev.c
+Date:   Tue, 16 Apr 2019 22:19:45 +0200
+Message-Id: <20190416202013.4034148-8-arnd@arndb.de>
 X-Mailer: git-send-email 2.20.0
 In-Reply-To: <20190416202013.4034148-1-arnd@arndb.de>
 References: <20190416202013.4034148-1-arnd@arndb.de>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
-X-Provags-ID: V03:K1:Z80sGlQ66gRm2J3CTo2uN9CB8g+68RhpTNesaNMqEHaMegdINz6
- 4NDVDUKLJNtguoaI43IdlVTGqdA1j2BqpjMgVueMZu4HbXK0HEtb6AdMqtE3FVxZ1xcBOIt
- P0QmpFnVi5ez8MNsAZHnm5E+eCcZpQzCUMYGUf1G9q9iaC7ADGup2duzt6tUAIarmn0BXwJ
- 4pKH/nSVo9gncltdrqc/A==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:6F4NwBI/CM0=:FNMhySh9Wa2sfvB+2nXXn8
- R5ye0JtPLNWGgQml3Fu/a5MXEJP4meYjjeArlYU3nNRmVPB5yf3E0c1eJJYCg0gnPiq/j5h/F
- hBGWY50cQpeWpiW8Hn8rf/epymotTvICFTV7G0QQPLJNGpJwq6KQWwKaGVItyjUXrjYxMgJiU
- C0ptKrCNTcAyNTacqYaHPy72P3KF28p4j9U5N71hQbKfR7oqM1wfXhniMbO6lJ9XA1P3Do284
- vu3XJnkhhn3fZUZT9kYXvvewgVdxtpEuhzrprD4YanCu4s5wWD0PY5SytISsHLPu5x8c1FDDZ
- 3InpnQ7G8nHu27yj5I0kN1eT24mIy4EvwSHEQFuzZMGbwrD77IjpGJP4vF2rHBOaioVKDPmXW
- swyRiOGL7xb8exqv2RdTIMuvc1AStgkjomejP3yicyY08gUtcEiOLBvKAMx7/LeFitLJbV/19
- 0jpYePVpy6bPbo1gFELWo8ueefqC1QhXEuVYqoUNPWoEwP2iAvll2SSZP3z2gDqtlb42ifqLe
- bVEmP0Nk6tm5g4MuDszbNbPo8ehiFuKi1sY1Y2a1MZjPUFh2g1e22BTM9I0TIsQep3jKvcbGg
- fncc6d6/I7LWKBn27oaJZxWJB1r/aQgKmRFUeEeYJs4mnVTMTEARa7Zj5MQavUlJf6ADo9A8k
- WoYGYCiXjI3U9vYcuuX0n/p0W8olm1Rxi0g6uWKsPOFKpOBKxI1DXITeFn2U1rDMqG9TQMgh8
- NYiUTgkdIh2Wz8ukYHPdf06J/621/zeMY5KuJw==
+X-Provags-ID: V03:K1:B2ClSMSiEFlnaEEi3ndg7yav6kA3YQMp22nXP4yMYACDK4GCVb8
+ so8/3NOd0R8UETnhaAWoNo8PJueRe4PlnmV/ESRHVb3ZnuTV5i0rkpbg5tGVq6jeY3MfCJo
+ KONeeBv5yswcOlSgGCwuYRDAJLVMmi0N+iCoOX88gKvK6v6vqiPXb9upPHvJu3hptAjzTpl
+ 7S7kIEa+X35b9UoxeZu5w==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:0MmAwt7Sbvk=:fEf2j0EDW7jMOmEKI61Onk
+ /uMt4yFXfPUDC7H4WXsovokdtvCOqDjm6IRHEvf4NYW3a/7GaCwJDf/3Ol+Pt5UwAEvBSQe8t
+ OEposH/RXVTu0ClMzs0XJCZvW8fzHX73ugPoirOpNOyaX4IXHCxhnLx3S1Llx30mPFm98bRL7
+ t55yZp4xJnlRHsTKBp6RGd5SiAeBVuJX+QgITzgCiwUQRyNAkNl0BmqpEeN1Sx7q1EfKYkK0I
+ 0CbczoMSrnbTnX+CZLsHjg3rMpqfdevS143P1REMXfveYLfQYRc8XeyRWsEzOtnSlZSS13ilJ
+ OGrUCB2767hNAr1W7Jy9fxX+WRSE0NLbUiaRCX8PV7js/RAQHYG8ibFCk8G7C2ianjgNu6w2z
+ K64IkyPiss326rAkjXrkOEdqYjp0kx12/hNbKVPYTP7bXR9JvQ+LlUhddRT9z7Mn5B8RojJ59
+ NbgzhqenuM+Kcw8PFMuo3A6A3JclLy1pde+oP0UF/wDyfEvr8jYsHi+lbVQa0hZ5MJF0LF+l1
+ MRiTB4Zw3aDerVOrWdxaxYWSjG3fr1uwv8QmowYuhsWD0adelfl6/+jnuyXZ4b1fmvzTLWkE5
+ jnqO/QnFYJgsDUGdxOhKQq21e2c9ByLOR9HITFiKHtyMXg3EzlnBByF6rSSZW/OUHHEfm7JCf
+ 8stZMR4cVAzwcEVek1O9IFmr7nIsOlfPRM0o5g1B8yyYeFUDZkTTWO6il8Jj7LDU9mBvJ8MQu
+ Oab33A9/ZJL/xvy/JnrRQUqyOADHsS46zhjoDQ==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ppp_idle structure is defined in terms of __kernel_time_t, which is
-defined as 'long' on all architectures, and this usage is not affected
-by the y2038 problem since it transports a time interval rather than an
-absolute time.
+We no longer need the rtc compat handling to be in common code, now that
+all drivers are either moved to the rtc-class framework, or (rarely)
+exist in drivers/char for architectures without compat mode (m68k,
+alpha and ia64, respectively).
 
-However, the ppp user space defines the same structure as time_t, which
-may be 64-bit wide on new libc versions even on 32-bit architectures.
+I checked the list of ioctl commands in drivers, and the ones that are
+not already handled are all compatible, again with the one exception of
+m68k driver, which implements RTC_PLL_GET and RTC_PLL_SET, but has no
+compat mode.
 
-It's easy enough to just handle both possible structure layouts on
-all architectures, to deal with the possibility that a user space ppp
-implementation comes with its own ppp_idle structure definition, as well
-as to document the fact that the driver is y2038-safe.
+Since the ioctl commands are either compatible or differ in both structure
+and command code between 32-bit and 64-bit, we can merge the compat
+handler into the native one and just implement the two common compat
+commands (RTC_IRQP_READ, RTC_IRQP_SET) there. The result is a slight
+change in behavior, as a native 64-bit process will now also handle the
+32-bit commands (RTC_IRQP_SET32/RTC_IRQP_SET).
 
-Doing this also avoids the need for a special compat mode translation,
-since 32-bit and 64-bit kernels now support the same interfaces.
+The old conversion handler also deals with RTC_EPOCH_READ and
+RTC_EPOCH_SET, which are not handled in rtc-dev.c but only in a single
+device driver (rtc-vr41xx), so I'm adding the compat version in the same
+place. I don't expect other drivers to need those commands in the future.
 
+Acked-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
 Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 ---
- Documentation/networking/ppp_generic.txt |  2 ++
- drivers/isdn/i4l/isdn_ppp.c              | 14 ++++++++---
- drivers/net/ppp/ppp_generic.c            | 19 +++++++++++----
- fs/compat_ioctl.c                        | 31 ------------------------
- include/uapi/linux/ppp-ioctl.h           |  2 ++
- include/uapi/linux/ppp_defs.h            | 14 +++++++++++
- 6 files changed, 43 insertions(+), 39 deletions(-)
+v2: merge compat handler into ioctl function to avoid the
+    compat_alloc_user_space() roundtrip, based on feedback
+    from Al Viro.
+---
+ drivers/rtc/dev.c        | 13 ++++++++-
+ drivers/rtc/rtc-vr41xx.c | 10 +++++++
+ fs/compat_ioctl.c        | 61 ++--------------------------------------
+ 3 files changed, 25 insertions(+), 59 deletions(-)
 
-diff --git a/Documentation/networking/ppp_generic.txt b/Documentation/networking/ppp_generic.txt
-index 61daf4b39600..fd563aff5fc9 100644
---- a/Documentation/networking/ppp_generic.txt
-+++ b/Documentation/networking/ppp_generic.txt
-@@ -378,6 +378,8 @@ an interface unit are:
-   CONFIG_PPP_FILTER option is enabled, the set of packets which reset
-   the transmit and receive idle timers is restricted to those which
-   pass the `active' packet filter.
-+  Two versions of this command exist, to deal with user space
-+  expecting times as either 32-bit or 64-bit time_t seconds.
+diff --git a/drivers/rtc/dev.c b/drivers/rtc/dev.c
+index 1d006ef4bb57..a63779ccc8aa 100644
+--- a/drivers/rtc/dev.c
++++ b/drivers/rtc/dev.c
+@@ -13,6 +13,7 @@
  
- * PPPIOCSMAXCID sets the maximum connection-ID parameter (and thus the
-   number of connection slots) for the TCP header compressor and
-diff --git a/drivers/isdn/i4l/isdn_ppp.c b/drivers/isdn/i4l/isdn_ppp.c
-index a7b275ea5de1..1f17126c5fa4 100644
---- a/drivers/isdn/i4l/isdn_ppp.c
-+++ b/drivers/isdn/i4l/isdn_ppp.c
-@@ -543,11 +543,19 @@ isdn_ppp_ioctl(int min, struct file *file, unsigned int cmd, unsigned long arg)
- 		}
- 		is->pppcfg = val;
- 		break;
--	case PPPIOCGIDLE:	/* get idle time information */
-+	case PPPIOCGIDLE32:	/* get idle time information */
- 		if (lp) {
--			struct ppp_idle pidle;
-+			struct ppp_idle32 pidle;
- 			pidle.xmit_idle = pidle.recv_idle = lp->huptimer;
--			if ((r = set_arg(argp, &pidle, sizeof(struct ppp_idle))))
-+			if ((r = set_arg(argp, &pidle, sizeof(struct ppp_idle32))))
-+				return r;
-+		}
-+		break;
-+	case PPPIOCGIDLE64:	/* get idle time information */
-+		if (lp) {
-+			struct ppp_idle64 pidle;
-+			pidle.xmit_idle = pidle.recv_idle = lp->huptimer;
-+			if ((r = set_arg(argp, &pidle, sizeof(struct ppp_idle64))))
- 				return r;
- 		}
- 		break;
-diff --git a/drivers/net/ppp/ppp_generic.c b/drivers/net/ppp/ppp_generic.c
-index b8a867fdd5ad..712fa94650fe 100644
---- a/drivers/net/ppp/ppp_generic.c
-+++ b/drivers/net/ppp/ppp_generic.c
-@@ -619,7 +619,8 @@ static long ppp_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 	struct ppp_file *pf;
- 	struct ppp *ppp;
- 	int err = -EFAULT, val, val2, i;
--	struct ppp_idle idle;
-+	struct ppp_idle32 idle32;
-+	struct ppp_idle64 idle64;
- 	struct npioctl npi;
- 	int unit, cflags;
- 	struct slcompress *vj;
-@@ -743,10 +744,18 @@ static long ppp_ioctl(struct file *file, unsigned int cmd, unsigned long arg)
- 		err = 0;
- 		break;
+ #define pr_fmt(fmt) KBUILD_MODNAME ": " fmt
  
--	case PPPIOCGIDLE:
--		idle.xmit_idle = (jiffies - ppp->last_xmit) / HZ;
--		idle.recv_idle = (jiffies - ppp->last_recv) / HZ;
--		if (copy_to_user(argp, &idle, sizeof(idle)))
-+	case PPPIOCGIDLE32:
-+                idle32.xmit_idle = (jiffies - ppp->last_xmit) / HZ;
-+                idle32.recv_idle = (jiffies - ppp->last_recv) / HZ;
-+                if (copy_to_user(argp, &idle32, sizeof(idle32)))
-+			break;
-+		err = 0;
++#include <linux/compat.h>
+ #include <linux/module.h>
+ #include <linux/rtc.h>
+ #include <linux/sched/signal.h>
+@@ -359,10 +360,19 @@ static long rtc_dev_ioctl(struct file *file,
+ 		mutex_unlock(&rtc->ops_lock);
+ 		return rtc_update_irq_enable(rtc, 0);
+ 
++#ifdef CONFIG_64BIT
++#define RTC_IRQP_SET32		_IOW('p', 0x0c, __u32)
++#define RTC_IRQP_READ32		_IOR('p', 0x0b, __u32)
++	case RTC_IRQP_SET32:
++		err = rtc_irq_set_freq(rtc, arg);
 +		break;
++	case RTC_IRQP_READ32:
++		err = put_user(rtc->irq_freq, (unsigned int __user *)uarg);
++		break;
++#endif
+ 	case RTC_IRQP_SET:
+ 		err = rtc_irq_set_freq(rtc, arg);
+ 		break;
+-
+ 	case RTC_IRQP_READ:
+ 		err = put_user(rtc->irq_freq, (unsigned long __user *)uarg);
+ 		break;
+@@ -434,6 +444,7 @@ static const struct file_operations rtc_dev_fops = {
+ 	.read		= rtc_dev_read,
+ 	.poll		= rtc_dev_poll,
+ 	.unlocked_ioctl	= rtc_dev_ioctl,
++	.compat_ioctl	= compat_ptr_ioctl,
+ 	.open		= rtc_dev_open,
+ 	.release	= rtc_dev_release,
+ 	.fasync		= rtc_dev_fasync,
+diff --git a/drivers/rtc/rtc-vr41xx.c b/drivers/rtc/rtc-vr41xx.c
+index e66d0f63cee2..62c16a3b2d5c 100644
+--- a/drivers/rtc/rtc-vr41xx.c
++++ b/drivers/rtc/rtc-vr41xx.c
+@@ -17,6 +17,7 @@
+  *  along with this program; if not, write to the Free Software
+  *  Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
+  */
++#include <linux/compat.h>
+ #include <linux/err.h>
+ #include <linux/fs.h>
+ #include <linux/init.h>
+@@ -79,6 +80,10 @@ static void __iomem *rtc2_base;
+ #define rtc2_read(offset)		readw(rtc2_base + (offset))
+ #define rtc2_write(offset, value)	writew((value), rtc2_base + (offset))
+ 
++/* 32-bit compat for ioctls that nobody else uses */
++#define RTC_EPOCH_READ32	_IOR('p', 0x0d, __u32)
++#define RTC_EPOCH_SET32		_IOW('p', 0x0e, __u32)
 +
-+	case PPPIOCGIDLE64:
-+		idle64.xmit_idle = (jiffies - ppp->last_xmit) / HZ;
-+		idle64.recv_idle = (jiffies - ppp->last_recv) / HZ;
-+		if (copy_to_user(argp, &idle64, sizeof(idle64)))
- 			break;
- 		err = 0;
- 		break;
+ static unsigned long epoch = 1970;	/* Jan 1 1970 00:00:00 */
+ 
+ static DEFINE_SPINLOCK(rtc_lock);
+@@ -192,6 +197,11 @@ static int vr41xx_rtc_ioctl(struct device *dev, unsigned int cmd, unsigned long
+ 	switch (cmd) {
+ 	case RTC_EPOCH_READ:
+ 		return put_user(epoch, (unsigned long __user *)arg);
++#ifdef CONFIG_64BIT
++	case RTC_EPOCH_READ32:
++		return put_user(epoch, (unsigned int __user *)arg);
++	case RTC_EPOCH_SET32:
++#endif
+ 	case RTC_EPOCH_SET:
+ 		/* Doesn't support before 1900 */
+ 		if (arg < 1900)
 diff --git a/fs/compat_ioctl.c b/fs/compat_ioctl.c
-index d507b7189958..e6dbd956cf66 100644
+index e6dbd956cf66..fee116e822d8 100644
 --- a/fs/compat_ioctl.c
 +++ b/fs/compat_ioctl.c
-@@ -269,36 +269,7 @@ static int sg_grt_trans(struct file *file,
- 	}
- 	return err;
- }
--#endif /* CONFIG_BLOCK */
--
--struct ppp_idle32 {
--	compat_time_t xmit_idle;
--	compat_time_t recv_idle;
--};
--#define PPPIOCGIDLE32		_IOR('t', 63, struct ppp_idle32)
--
--static int ppp_gidle(struct file *file, unsigned int cmd,
--		struct ppp_idle32 __user *idle32)
--{
--	struct ppp_idle __user *idle;
--	__kernel_time_t xmit, recv;
--	int err;
--
--	idle = compat_alloc_user_space(sizeof(*idle));
+@@ -32,7 +32,6 @@
+ #include <linux/vt_kern.h>
+ #include <linux/raw.h>
+ #include <linux/blkdev.h>
+-#include <linux/rtc.h>
+ #include <linux/pci.h>
+ #include <linux/serial.h>
+ #include <linux/ctype.h>
+@@ -343,37 +342,6 @@ static int mt_ioctl_trans(struct file *file,
+ #define HCIUARTSETFLAGS		_IOW('U', 203, int)
+ #define HCIUARTGETFLAGS		_IOR('U', 204, int)
  
--	err = do_ioctl(file, PPPIOCGIDLE, (unsigned long) idle);
+-#define RTC_IRQP_READ32		_IOR('p', 0x0b, compat_ulong_t)
+-#define RTC_IRQP_SET32		_IOW('p', 0x0c, compat_ulong_t)
+-#define RTC_EPOCH_READ32	_IOR('p', 0x0d, compat_ulong_t)
+-#define RTC_EPOCH_SET32		_IOW('p', 0x0e, compat_ulong_t)
 -
--	if (!err) {
--		if (get_user(xmit, &idle->xmit_idle) ||
--		    get_user(recv, &idle->recv_idle) ||
--		    put_user(xmit, &idle32->xmit_idle) ||
--		    put_user(recv, &idle32->recv_idle))
--			err = -EFAULT;
+-static int rtc_ioctl(struct file *file,
+-		unsigned cmd, void __user *argp)
+-{
+-	unsigned long __user *valp = compat_alloc_user_space(sizeof(*valp));
+-	int ret;
+-
+-	if (valp == NULL)
+-		return -EFAULT;
+-	switch (cmd) {
+-	case RTC_IRQP_READ32:
+-	case RTC_EPOCH_READ32:
+-		ret = do_ioctl(file, (cmd == RTC_IRQP_READ32) ?
+-					RTC_IRQP_READ : RTC_EPOCH_READ,
+-					(unsigned long)valp);
+-		if (ret)
+-			return ret;
+-		return convert_in_user(valp, (unsigned int __user *)argp);
+-	case RTC_IRQP_SET32:
+-		return do_ioctl(file, RTC_IRQP_SET, (unsigned long)argp);
+-	case RTC_EPOCH_SET32:
+-		return do_ioctl(file, RTC_EPOCH_SET, (unsigned long)argp);
 -	}
--	return err;
+-
+-	return -ENOIOCTLCMD;
 -}
 -
--#ifdef CONFIG_BLOCK
- struct mtget32 {
- 	compat_long_t	mt_type;
- 	compat_long_t	mt_resid;
-@@ -838,8 +809,6 @@ static long do_ioctl_trans(unsigned int cmd,
- 	void __user *argp = compat_ptr(arg);
- 
+ /* on ia32 l_start is on a 32-bit boundary */
+ #if defined(CONFIG_IA64) || defined(CONFIG_X86_64)
+ struct space_resv_32 {
+@@ -457,21 +425,6 @@ COMPATIBLE_IOCTL(SCSI_IOCTL_GET_PCI)
+ /* Big V (don't complain on serial console) */
+ IGNORE_IOCTL(VT_OPENQRY)
+ IGNORE_IOCTL(VT_GETMODE)
+-/* Little p (/dev/rtc, /dev/envctrl, etc.) */
+-COMPATIBLE_IOCTL(RTC_AIE_ON)
+-COMPATIBLE_IOCTL(RTC_AIE_OFF)
+-COMPATIBLE_IOCTL(RTC_UIE_ON)
+-COMPATIBLE_IOCTL(RTC_UIE_OFF)
+-COMPATIBLE_IOCTL(RTC_PIE_ON)
+-COMPATIBLE_IOCTL(RTC_PIE_OFF)
+-COMPATIBLE_IOCTL(RTC_WIE_ON)
+-COMPATIBLE_IOCTL(RTC_WIE_OFF)
+-COMPATIBLE_IOCTL(RTC_ALM_SET)
+-COMPATIBLE_IOCTL(RTC_ALM_READ)
+-COMPATIBLE_IOCTL(RTC_RD_TIME)
+-COMPATIBLE_IOCTL(RTC_SET_TIME)
+-COMPATIBLE_IOCTL(RTC_WKALM_SET)
+-COMPATIBLE_IOCTL(RTC_WKALM_RD)
+ /*
+  * These two are only for the sbus rtc driver, but
+  * hwclock tries them on every rtc device first when
+@@ -806,24 +759,16 @@ IGNORE_IOCTL(FBIOGCURSOR32)
+ static long do_ioctl_trans(unsigned int cmd,
+ 		 unsigned long arg, struct file *file)
+ {
+-	void __user *argp = compat_ptr(arg);
+-
  	switch (cmd) {
--	case PPPIOCGIDLE32:
--		return ppp_gidle(file, cmd, argp);
  #ifdef CONFIG_BLOCK
  	case SG_IO:
- 		return sg_ioctl_trans(file, cmd, argp);
-diff --git a/include/uapi/linux/ppp-ioctl.h b/include/uapi/linux/ppp-ioctl.h
-index 88b5f9990320..7bd2a5a75348 100644
---- a/include/uapi/linux/ppp-ioctl.h
-+++ b/include/uapi/linux/ppp-ioctl.h
-@@ -104,6 +104,8 @@ struct pppol2tp_ioc_stats {
- #define PPPIOCGDEBUG	_IOR('t', 65, int)	/* Read debug level */
- #define PPPIOCSDEBUG	_IOW('t', 64, int)	/* Set debug level */
- #define PPPIOCGIDLE	_IOR('t', 63, struct ppp_idle) /* get idle time */
-+#define PPPIOCGIDLE32	_IOR('t', 63, struct ppp_idle32) /* 32-bit times */
-+#define PPPIOCGIDLE64	_IOR('t', 63, struct ppp_idle64) /* 64-bit times */
- #define PPPIOCNEWUNIT	_IOWR('t', 62, int)	/* create new ppp unit */
- #define PPPIOCATTACH	_IOW('t', 61, int)	/* attach to ppp unit */
- #define PPPIOCDETACH	_IOW('t', 60, int)	/* obsolete, do not use */
-diff --git a/include/uapi/linux/ppp_defs.h b/include/uapi/linux/ppp_defs.h
-index fff51b91b409..0039fa39a358 100644
---- a/include/uapi/linux/ppp_defs.h
-+++ b/include/uapi/linux/ppp_defs.h
-@@ -142,10 +142,24 @@ struct ppp_comp_stats {
- /*
-  * The following structure records the time in seconds since
-  * the last NP packet was sent or received.
-+ *
-+ * Linux implements both 32-bit and 64-bit time_t versions
-+ * for compatibility with user space that defines ppp_idle
-+ * based on the libc time_t.
-  */
- struct ppp_idle {
-     __kernel_time_t xmit_idle;	/* time since last NP packet sent */
-     __kernel_time_t recv_idle;	/* time since last NP packet received */
- };
+-		return sg_ioctl_trans(file, cmd, argp);
++		return sg_ioctl_trans(file, cmd, compat_ptr(arg));
+ 	case SG_GET_REQUEST_TABLE:
+-		return sg_grt_trans(file, cmd, argp);
++		return sg_grt_trans(file, cmd, compat_ptr(arg));
+ 	case MTIOCGET32:
+ 	case MTIOCPOS32:
+-		return mt_ioctl_trans(file, cmd, argp);
++		return mt_ioctl_trans(file, cmd, compat_ptr(arg));
+ #endif
+-	/* Not implemented in the native kernel */
+-	case RTC_IRQP_READ32:
+-	case RTC_IRQP_SET32:
+-	case RTC_EPOCH_READ32:
+-	case RTC_EPOCH_SET32:
+-		return rtc_ioctl(file, cmd, argp);
+ 	}
  
-+struct ppp_idle32 {
-+    __s32 xmit_idle;		/* time since last NP packet sent */
-+    __s32 recv_idle;		/* time since last NP packet received */
-+};
-+
-+struct ppp_idle64 {
-+    __s64 xmit_idle;		/* time since last NP packet sent */
-+    __s64 recv_idle;		/* time since last NP packet received */
-+};
-+
- #endif /* _UAPI_PPP_DEFS_H_ */
+ 	/*
 -- 
 2.20.0
 
