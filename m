@@ -2,85 +2,157 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BBC0C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:22:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B4C1C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:23:13 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6EBD82077C
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:22:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 211D32077C
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:23:13 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="oZcEH8W0"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Vd9fvU4P"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729388AbfDPNW4 (ORCPT
+        id S1729397AbfDPNXL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 09:22:56 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:50758 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728550AbfDPNWz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 09:22:55 -0400
-Received: from zn.tnic (p200300EC2F0D690030B3A6530520175E.dip0.t-ipconnect.de [IPv6:2003:ec:2f0d:6900:30b3:a653:520:175e])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id C3E781EC0513;
-        Tue, 16 Apr 2019 15:22:53 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1555420973;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=KtFBu9fQjx20A0TaGhKyKlOM4NgYk6LNTftBoECtOos=;
-        b=oZcEH8W03c+S3Qy5sqA7Cld9gDSxMyMVLnyb3M59sKKb9R7vPjw/ZKSR4+tzlOKStLJxIs
-        4CzEU++MPdWZOlu6Fc/umlHC9OzJr6Sa2ZHrsLhLNKh2h4fQ+zswYALh+5gxVbKVKCho1O
-        kmtMCldCQ0t8WNxGLa3MZK7xIL/Rylk=
-Date:   Tue, 16 Apr 2019 15:22:53 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Dave Young <dyoung@redhat.com>
-Cc:     Junichi Nomura <j-nomura@ce.jp.nec.com>,
-        Chao Fan <fanc.fnst@cn.fujitsu.com>,
-        Baoquan He <bhe@redhat.com>, Kairui Song <kasong@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] x86/boot: Use efi_setup_data for searching RSDP on
- kexec-ed kernels
-Message-ID: <20190416132253.GE31772@zn.tnic>
-References: <20190412025416.GA11070@jeru.linux.bs1.fc.nec.co.jp>
- <20190412084956.GC19808@zn.tnic>
- <20190412133528.GD19808@zn.tnic>
- <cc2c1dbe-4fb3-fb7d-0540-c04734fc15cb@ce.jp.nec.com>
- <20190415090717.GA29317@zn.tnic>
- <20190415102525.GB29317@zn.tnic>
- <23309b73-d135-a207-564b-6003cee39184@ce.jp.nec.com>
- <20190416094024.GE27892@zn.tnic>
- <20190416095209.GG27892@zn.tnic>
- <20190416114133.GA7541@dhcp-128-65.nay.redhat.com>
+        Tue, 16 Apr 2019 09:23:11 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:37378 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726986AbfDPNXL (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 09:23:11 -0400
+Received: by mail-pg1-f196.google.com with SMTP id e6so10351500pgc.4;
+        Tue, 16 Apr 2019 06:23:10 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:subject:to:cc:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-language:content-transfer-encoding;
+        bh=YTcai3ILqiFQ0jFaP1rQRFUTWlngnMBopiXkVQbHRlg=;
+        b=Vd9fvU4PnFlrh7s4E9wblubIalsFj6J4baNeHXwlb3AczNr8RgDAu/YRUss1UCR64g
+         pGwioKEcPOLA04UDvylIKl82yGaZKpe+zrg+1uO5RUjIanfDWwOAqlIake46qjztHvcT
+         snBnRngHxgGU4rDBziicd3ce68ENZybhlHAFsytWQxiZmk4IR+A1aSBBEbBHtN80/lJl
+         DP0LjDsxuuvi3Pbm9lTuPMnEaZOJUSmh6b5rbYN1ad8Eq/aXhRHx3jiSIKyzdf3TwoYi
+         egDt7q9k12VD6UDgfyUIYIwPjdMwqV8SU7MyIEKrXTeVa0zFlNIBmGzm3p3PSUgwtaqn
+         FlhA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:subject:to:cc:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=YTcai3ILqiFQ0jFaP1rQRFUTWlngnMBopiXkVQbHRlg=;
+        b=Ye8uTQ7mVBJV1XezRF7kQNWO2Vy8T18iU3rZ4x6vRXGMIx+io5w9uqpv2icZURZ8So
+         Fe/mP2KDD8weKGoXkWaKdaDZzG3PZaOoxTPCNW8fAZzuvuZD+ap1c94XFFgs+vhMgb3t
+         PI+TjmPMiQRiVvrIE1BTZOs8ek8FZqG4XQYM7XLs4Icf3eEIpc7Qk8cQpiwkQXOGZs5w
+         hg+FivC2ZBH8d4c1JqwKlbO5kWS0IHAlj0xDyaJaTkCdbUVF7KJrkZcqIIEv5GShGCop
+         XOesiIy8xup1hUnSe6h7IG8v1tWcXaHqJZ4DlCTq2qpHk3ITIhZ8vA2NrSSoBhoLRWWk
+         prXw==
+X-Gm-Message-State: APjAAAUlWysS7jTxmBcXNUgRVZZkChLMkas2+ULQ+XIYLuSSGNjM69Pk
+        JqVBgMZCxvqXugX6m6uE81V3oDKT
+X-Google-Smtp-Source: APXvYqw/s3TXNvlgP5EucJboiFEgnGRxmVa5YbwHQmHCMJ+PyxRciRx5Z27Yv0WpDVaXKq83xM7ylA==
+X-Received: by 2002:a63:6844:: with SMTP id d65mr77767431pgc.393.1555420990346;
+        Tue, 16 Apr 2019 06:23:10 -0700 (PDT)
+Received: from server.roeck-us.net ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id l1sm66358724pgo.13.2019.04.16.06.23.08
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Apr 2019 06:23:09 -0700 (PDT)
+Subject: Re: [PATCH v2 01/16] watchdog: refactor watchdog_init_timeout
+To:     Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-watchdog@vger.kernel.org
+Cc:     linux-renesas-soc@vger.kernel.org,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-kernel@vger.kernel.org
+References: <20190416102515.12269-1-wsa+renesas@sang-engineering.com>
+ <20190416102515.12269-2-wsa+renesas@sang-engineering.com>
+From:   Guenter Roeck <linux@roeck-us.net>
+Message-ID: <b65ae931-bfb3-acb4-8097-da4b81be1ea5@roeck-us.net>
+Date:   Tue, 16 Apr 2019 06:23:08 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190416114133.GA7541@dhcp-128-65.nay.redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <20190416102515.12269-2-wsa+renesas@sang-engineering.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 07:41:33PM +0800, Dave Young wrote:
-> On 04/16/19 at 11:52am, Borislav Petkov wrote:
-> > I'll queue the below in the next days if there are no more complaints:
+On 4/16/19 3:25 AM, Wolfram Sang wrote:
+> The function is not easy to read and has a problem: -EINVAL is returned
+> when the module parameter is invalid but the DT parameter is OK.
 > 
-> As for the kexec breakage, even with the V3 patch, kexec still hangs on
-> a Lenovo T420 laptop.  Kairui also reproduced the problem. So can we
-> wait a few days see if we can make some progress to find the cause?
+> Refactor the code to have the same pattern of checks for the module
+> parameter and DT. Further ones can be easily added in the future if the
+> need arises. The above mentioned problem is fixed, too.
+> 
+> Some documentation is added to describe the different handlings of '0'
+> for the module parameter and the DT property.
+> 
+> Signed-off-by: Wolfram Sang <wsa+renesas@sang-engineering.com>
 
-How is applying this patch going to change anything?
+Reviewed-by: Guenter Roeck <linux@roeck-us.net>
 
-I was told that the breakage is there even without it...
+> ---
+>   drivers/watchdog/watchdog_core.c | 33 +++++++++++++++++++--------------
+>   1 file changed, 19 insertions(+), 14 deletions(-)
+> 
+> diff --git a/drivers/watchdog/watchdog_core.c b/drivers/watchdog/watchdog_core.c
+> index eb8fa25f8eb2..21e53cc49977 100644
+> --- a/drivers/watchdog/watchdog_core.c
+> +++ b/drivers/watchdog/watchdog_core.c
+> @@ -105,9 +105,12 @@ static void watchdog_check_min_max_timeout(struct watchdog_device *wdd)
+>    * timeout module parameter (if it is valid value) or the timeout-sec property
+>    * (only if it is a valid value and the timeout_parm is out of bounds).
+>    * If none of them are valid then we keep the old value (which should normally
+> - * be the default timeout value).
+> + * be the default timeout value). Note that for the module parameter, '0' means
+> + * 'use default' while it is an invalid value for the timeout-sec property.
+> + * It should simply be dropped if you want to use the default value then.
+>    *
+> - * A zero is returned on success and -EINVAL for failure.
+> + * A zero is returned on success or -EINVAL if all provided values are out of
+> + * bounds.
+>    */
+>   int watchdog_init_timeout(struct watchdog_device *wdd,
+>   				unsigned int timeout_parm, struct device *dev)
+> @@ -117,22 +120,24 @@ int watchdog_init_timeout(struct watchdog_device *wdd,
+>   
+>   	watchdog_check_min_max_timeout(wdd);
+>   
+> -	/* try to get the timeout module parameter first */
+> -	if (!watchdog_timeout_invalid(wdd, timeout_parm) && timeout_parm) {
+> -		wdd->timeout = timeout_parm;
+> -		return ret;
+> -	}
+> -	if (timeout_parm)
+> +	/* check the driver supplied value (likely a module parameter) first */
+> +	if (timeout_parm) {
+> +		if (!watchdog_timeout_invalid(wdd, timeout_parm)) {
+> +			wdd->timeout = timeout_parm;
+> +			return 0;
+> +		}
+>   		ret = -EINVAL;
+> +	}
+>   
+>   	/* try to get the timeout_sec property */
+> -	if (dev == NULL || dev->of_node == NULL)
+> -		return ret;
+> -	of_property_read_u32(dev->of_node, "timeout-sec", &t);
+> -	if (!watchdog_timeout_invalid(wdd, t) && t)
+> -		wdd->timeout = t;
+> -	else
+> +	if (dev && dev->of_node &&
+> +	    of_property_read_u32(dev->of_node, "timeout-sec", &t) == 0) {
+> +		if (t && !watchdog_timeout_invalid(wdd, t)) {
+> +			wdd->timeout = t;
+> +			return 0;
+> +		}
+>   		ret = -EINVAL;
+> +	}
+>   
+>   	return ret;
+>   }
+> 
 
--- 
-Regards/Gruss,
-    Boris.
-
-Good mailing practices for 400: avoid top-posting and trim the reply.
