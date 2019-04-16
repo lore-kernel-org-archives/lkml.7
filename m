@@ -2,139 +2,77 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A085C10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:25:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 894BCC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:27:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 40E15206B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:25:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 51B642064A
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 17:27:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730176AbfDPRZC (ORCPT
+        id S1730143AbfDPR1Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 13:25:02 -0400
-Received: from metis.ext.pengutronix.de ([85.220.165.71]:57261 "EHLO
-        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726230AbfDPRZB (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 13:25:01 -0400
-Received: from kresse.hi.pengutronix.de ([2001:67c:670:100:1d::2a])
-        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
-        (envelope-from <l.stach@pengutronix.de>)
-        id 1hGRpJ-00017y-Np; Tue, 16 Apr 2019 19:24:57 +0200
-Message-ID: <1555435497.2317.17.camel@pengutronix.de>
-Subject: Re: [PATCH v4 00/12] QorIQ TMU multi-sensor and HWMON support
-From:   Lucas Stach <l.stach@pengutronix.de>
-To:     Andrey Smirnov <andrew.smirnov@gmail.com>, linux-pm@vger.kernel.org
-Cc:     Chris Healy <cphealy@gmail.com>,
-        Eduardo Valentin <edubezval@gmail.com>,
-        Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Angus Ainslie <angus@akkea.ca>, linux-imx@nxp.com,
-        linux-kernel@vger.kernel.org
-Date:   Tue, 16 Apr 2019 19:24:57 +0200
-In-Reply-To: <20190413082748.29990-1-andrew.smirnov@gmail.com>
-References: <20190413082748.29990-1-andrew.smirnov@gmail.com>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.22.6-1+deb9u1 
-Mime-Version: 1.0
+        Tue, 16 Apr 2019 13:27:25 -0400
+Received: from ms.lwn.net ([45.79.88.28]:39624 "EHLO ms.lwn.net"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727180AbfDPR1Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 13:27:25 -0400
+Received: from lwn.net (localhost [127.0.0.1])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by ms.lwn.net (Postfix) with ESMTPSA id AF2CF537;
+        Tue, 16 Apr 2019 17:27:24 +0000 (UTC)
+Date:   Tue, 16 Apr 2019 11:27:23 -0600
+From:   Jonathan Corbet <corbet@lwn.net>
+To:     Mike Snitzer <snitzer@redhat.com>
+Cc:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Alasdair Kergon <agk@redhat.com>,
+        dm-devel@redhat.com
+Subject: Re: [PATCH 10/57] docs: device-mapper: convert it to ReST format
+Message-ID: <20190416112723.66b4bd4a@lwn.net>
+In-Reply-To: <20190416154858.GB22497@redhat.com>
+References: <cover.1555382110.git.mchehab+samsung@kernel.org>
+        <9dd3c4eca01489bd67ea6de88dfedef8b0e81901.1555382110.git.mchehab+samsung@kernel.org>
+        <20190416132851.GA22497@redhat.com>
+        <20190416080024.7fb65682@lwn.net>
+        <20190416154858.GB22497@redhat.com>
+Organization: LWN.net
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
 Content-Transfer-Encoding: 8bit
-X-SA-Exim-Connect-IP: 2001:67c:670:100:1d::2a
-X-SA-Exim-Mail-From: l.stach@pengutronix.de
-X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
-X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Series is:
+On Tue, 16 Apr 2019 11:48:59 -0400
+Mike Snitzer <snitzer@redhat.com> wrote:
 
-Tested-by: Lucas Stach <l.stach@pengutronix.de>
+> Think the last piece I'm missing is: how does one edit a .rst document
+> without having to know to sprinkle syntactic sugar around?  Does emacs
+> have a ReST mode?  If not what client interface are people using to
+> properly change these documents?
 
-Regards,
-Lucas
+There is an RST mode for Emacs, yes.  But you likely don't really need
+it.  RST is a simple format and, in general, we try to keep the markup to
+a minimum so that the plain-text files remain as readable as possible.
+Most of our documents are 99% RST before anybody gets around to formally
+converting them.
 
-Am Samstag, den 13.04.2019, 01:27 -0700 schrieb Andrey Smirnov:
-> Everyone:
-> 
-> This series contains patches adding support for HWMON integration, bug
-> fixes and general improvements (hopefully) for TMU driver I made while
-> working on it on i.MX8MQ.
-> 
-> Feedback is welcome!
-> 
-> Thanks,
-> Andrey Smirnov
-> 
-> Changes since [v3]
-> 
->     - Series reabse on top of [rfc]
->     
->     - Fixed incorrect goto label in "thermal: qoriq: Pass data to
->       qoriq_tmu_calibration()"
->       
->     - Added REGS_TRITSR() register description to "thermal: qoriq: Do
->       not report invalid temperature reading"
->       
->     - Reworded commit message of "thermal: qoriq: Remove unnecessary
->       DT node is NULL check"
-> 
-> Changes since [v2]
-> 
->     - Patches rebased on v5.1-rc1
-> 
-> Changes since [v1]
-> 
->     - Rebased on "linus" branch of
->       git.kernel.org/pub/scm/linux/kernel/git/evalenti/linux-soc-thermal.git
->       that included latest chagnes adding multi-sensors support
-> 
->     - Dropped
-> 
-> 	thermal: qoriq: Add support for multiple thremal sites
-> 	thermal: qoriq: Be more strict when parsing
-> 	thermal: qoriq: Simplify error handling in qoriq_tmu_get_sensor_id()
-> 
->       since they are no longer relevant
-> 
->     - Added
-> 
-> 	thermal: qoriq: Don't store struct thermal_zone_device reference
-> 	thermal: qoriq: Add local struct qoriq_sensor pointer
-> 	thermal: qoriq: Embed per-sensor data into struct qoriq_tmu_data
-> 	thermal: qoriq: Pass data to qoriq_tmu_register_tmu_zone() directly
-> 
->       to simplify latest codebase
-> 
->     - Changed "thermal: qoriq: Do not report invalid temperature
->       reading" to use regmap_read_poll_timeout() to make sure that
->       tmu_get_temp() waits for fist sample to be ready before
->       reporting it. This case is triggered on my setup if
->       qoriq_thermal is compiled as a module
-> 
-> [v1] lore.kernel.org/lkml/20190218191141.3729-1-andrew.smirnov@gmail.com
-> [v2] lore.kernel.org/lkml/20190222200508.26325-1-andrew.smirnov@gmail.com
-> [v3] lore.kernel.org/lkml/20190401041418.5999-1-andrew.smirnov@gmail.com
-> [rfc] lore.kernel.org/lkml/20190404080647.8173-1-daniel.lezcano@linaro.org
-> 
-> Andrey Smirnov (12):
->   thermal: qoriq: Remove unnecessary DT node is NULL check
->   thermal: qoriq: Add local struct device pointer
->   thermal: qoriq: Don't store struct thermal_zone_device reference
->   thermal: qoriq: Drop per-sensor data
->   thermal: qoriq: Pass data to qoriq_tmu_register_tmu_zone() directly
->   thermal: qoriq: Pass data to qoriq_tmu_calibration() directly
->   thermal: qoriq: Convert driver to use devm_ioremap()
->   thermal: qoriq: Convert driver to use regmap API
->   thermal: qoriq: Enable all sensors before registering them
->   thermal: qoriq: Do not report invalid temperature reading
->   thermal_hwmon: Add devres wrapper for thermal_add_hwmon_sysfs()
->   thermal: qoriq: Add hwmon support
-> 
->  drivers/thermal/qoriq_thermal.c | 287 +++++++++++++++-----------------
->  drivers/thermal/thermal_hwmon.c |  28 ++++
->  drivers/thermal/thermal_hwmon.h |   7 +
->  3 files changed, 171 insertions(+), 151 deletions(-)
-> 
+> (apologies if this is all spelled out nicely in Documentation/
+> somewhere, but please help this man learn to fish).
+
+Basics in Documentation/doc-guide (or
+https://www.kernel.org/doc/html/latest/doc-guide/index.html).  There's
+also some history and overview in:
+
+	https://lwn.net/Articles/692704/
+	https://lwn.net/Articles/692705/
+
+Thanks,
+
+jon
