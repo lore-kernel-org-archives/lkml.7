@@ -2,167 +2,107 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B4751C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:16:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFE41C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:17:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 75B7E2073F
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:16:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="BsejPg4a"
+	by mail.kernel.org (Postfix) with ESMTP id A7BBD2073F
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:17:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728502AbfDPHQe (ORCPT
+        id S1728507AbfDPHRh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 03:16:34 -0400
-Received: from mailout4.samsung.com ([203.254.224.34]:38208 "EHLO
-        mailout4.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726346AbfDPHQd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 03:16:33 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout4.samsung.com (KnoxPortal) with ESMTP id 20190416071630epoutp0486b8d49ffc1f401f024622c7d900bdf3~V4yQ0HLNQ0364503645epoutp04R
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 07:16:30 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout4.samsung.com 20190416071630epoutp0486b8d49ffc1f401f024622c7d900bdf3~V4yQ0HLNQ0364503645epoutp04R
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1555398990;
-        bh=dde/p7yO/I/1JqQ5W6bj3i3di08LAJB9gbKNIwdjoCE=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=BsejPg4anDwnB3Gfk7XFX5mgJ4Ca7EEK673TNOO2ammOyDOyICGQNBcAWng6zAhX1
-         LzQYwSRztJ3H+3Y7SIqK1jVeUONkIK9Pa6VzRYVP7XX/TOewLQVTtNwrhcGzFTwPmU
-         OUaE4CwXlEEUKUu7skFyUn/SHM5vW5gv1sUpNpqU=
-Received: from epsmges1p4.samsung.com (unknown [182.195.40.158]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTP id
-        20190416071628epcas1p2fd18aa4a1d3e1bc440a2f0a4d53f85a5~V4yOcdOF-1680716807epcas1p2i;
-        Tue, 16 Apr 2019 07:16:28 +0000 (GMT)
-Received: from epcas1p1.samsung.com ( [182.195.41.45]) by
-        epsmges1p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        3C.BF.04257.A4185BC5; Tue, 16 Apr 2019 16:16:26 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p2.samsung.com (KnoxPortal) with ESMTPA id
-        20190416071625epcas1p25204b912c8484ea796bf15cc7eddb0c7~V4yL_ZKWY1974619746epcas1p2r;
-        Tue, 16 Apr 2019 07:16:25 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190416071625epsmtrp2b9518bda8b8a9b5ac3c7b352085cea5d~V4yL9krm40857808578epsmtrp2p;
-        Tue, 16 Apr 2019 07:16:25 +0000 (GMT)
-X-AuditID: b6c32a38-5cbff700000010a1-87-5cb5814a0736
-Received: from epsmtip1.samsung.com ( [182.195.34.30]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        D5.51.03692.94185BC5; Tue, 16 Apr 2019 16:16:25 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip1.samsung.com (KnoxPortal) with ESMTPA id
-        20190416071625epsmtip18757936431a34ea6b973368ac9509111~V4yLutz7i2091420914epsmtip1H;
-        Tue, 16 Apr 2019 07:16:25 +0000 (GMT)
-Subject: Re: [PATCH v2 13/19] PM / devfreq: tegra: Mark ACTMON's governor as
- immutable
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <6df81b00-8d6a-8aca-d191-8a214a50232c@samsung.com>
-Date:   Tue, 16 Apr 2019 16:17:20 +0900
+        Tue, 16 Apr 2019 03:17:37 -0400
+Received: from mx2.suse.de ([195.135.220.15]:46482 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726988AbfDPHRg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 03:17:36 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 80457ACD0;
+        Tue, 16 Apr 2019 07:17:34 +0000 (UTC)
+Subject: Re: [PATCH net-next] xen-netfront: mark expected switch fall-through
+To:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        Stefano Stabellini <sstabellini@kernel.org>,
+        "David S. Miller" <davem@davemloft.net>
+Cc:     xen-devel@lists.xenproject.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>
+References: <20190415211141.GA1732@embeddedor>
+From:   Juergen Gross <jgross@suse.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=jgross@suse.com; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <0169c220-8a56-f1cb-1922-d17ea56b1427@suse.com>
+Date:   Tue, 16 Apr 2019 09:17:32 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
+ Thunderbird/60.5.1
 MIME-Version: 1.0
-In-Reply-To: <20190415145505.18397-14-digetx@gmail.com>
-Content-Language: en-US
+In-Reply-To: <20190415211141.GA1732@embeddedor>
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
 Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Se0hTURzHO7vb9Sotb8vs1/5IvRGRYO3qVtdwYiiySkp60WO0bu6i4l7t
-        bpI9oLIyh1ohlU4zaxpqlBWzdGmiRS/sQZFlNrIH0QsrzSijbNtd5H+f8zvf7+93vuccApOd
-        w+VErsnGWU2sgcLDxJeuzYmLW7K7Rat43yhhznx9jZi9zlNi5u6eTyHMI081zgyXXkdM8Tcn
-        zvTvbsCZn54aMVN29iGeEqpp9dYhTZvTG6IpLRzENWXuJqQZvjgjU7I+LymHY/WcNZozZZn1
-        uaZsNbV0pS5Vp5qvoOPoRGYBFW1ijZyaSsvIjEvPNfgOREXnswa7r5TJ8jw1LznJarbbuOgc
-        M29TU5xFb7AkWubyrJG3m7LnZpmNC2mFIl7lE27Kyymp78Is7RO3HvFm7EK1YQ4USgCphN9/
-        GpEDhREyshVB3Y0BTFgMIah0XA7ufEcwNvoU/bNU1fyS+FlGdiBouBMuiD4jaPP04Q5EEFPI
-        teDq2OKvR5B/EAx5KgIGjFwHI131mJ9xMhY63z3F/RxOxsDjH68DA6RkMvS6x0R+FpOz4EqJ
-        J+Cd6uv54sZ5iaCZDLcr34j9HEougP6rZ4P9p8GzNydEAkdBYUtVIA6Qv3AYfd8rERKkgfP0
-        vmCaKfDhpjtEYDkMD3bgAm+HxtvXccF8AIG780HQnACd9eUif0qMnAPNnnnCsEkwOFIi8ZeB
-        lMKB/TJBPRMeDXhFAk8HV1FxsL0Gjvf1o0MoxjkujnNcBOe4CM7/w2qRuAlFchbemM3xtEU5
-        /rEvosBfjWVaUfu9jG5EEoiaKN1U5tbKJGw+X2DsRkBgVIR0kd5XkurZgm2c1ayz2g0c341U
-        vts+jMmnZpl9P99k09Gq+ISEBEZJz1fRNDVN2pySqpWR2ayNy+M4C2f95xMRofJdaCfVMcmx
-        894O69iaVYrFpa/qJ/R9zLdf/tle1PM8vmdRKrbhYFSXuuqtoq3O28SP3GoaUX6LTS//cuzC
-        nTMVxecerF7MnbzvipQPFc6OKWggWkQrTo5ufxZSuUqJNidpN1bijuNLtHXq5dqXWyyJPUeb
-        Xcu1LvNA4xPdwmURmdVYOCXmc1g6FrPy7F93NQGYwQMAAA==
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprBIsWRmVeSWpSXmKPExsWy7bCSnK5n49YYg46zaharPz5mtGiZtYjF
-        4mzTG3aLy7vmsFl87j3CaNH5ZRabxe3GFWwWP3fNY7HoW3uJzYHTY8fdJYweO2fdZffobX7H
-        5tG3ZRWjx+dNcgGsUVw2Kak5mWWpRfp2CVwZPUsPMhfs4amYetengXEBVxcjJ4eEgInE7Hm/
-        WUFsIYHdjBIL9yZBxCUlpl08ytzFyAFkC0scPlzcxcgFVPKWUeL9/lvsIHFhgQiJxXsLQeIi
-        Ak1MEp8ftjCB9DILREr0P+pmhWjYxigx8/ZEdpAEm4CWxP4XN9hAbH4BRYmrPx4zgti8AnYS
-        17b8B2tmEVCV2N2zC+wgUaAFZ96vYIGoEZQ4OfMJmM0pYC5xe99aVohl6hJ/5l1ihrDFJW49
-        mQ91hLxE89bZzBMYhWchaZ+FpGUWkpZZSFoWMLKsYpRMLSjOTc8tNiwwzEst1ytOzC0uzUvX
-        S87P3cQIji8tzR2Ml5fEH2IU4GBU4uFN6NsSI8SaWFZcmXuIUYKDWUmE1zEFKMSbklhZlVqU
-        H19UmpNafIhRmoNFSZz3ad6xSCGB9MSS1OzU1ILUIpgsEwenVAOjces5X6mMTSt+PuSMSrIW
-        +LxPqOKfV9ysCO7i9luv7VMtLMzCO5vLbWK+e688VX7uP1dNgMjXNaLaFwI+mmSL7ApUvWg/
-        c9v9zA9fv7pOmNbeOuvze4b6jOrSxrvHs4MvmSQE/Pm5ojEvILr/uqHAy3VmbyN9mOLqi6V0
-        3jFo5AXlpBer/lNiKc5INNRiLipOBAAPaSPRqwIAAA==
-X-CMS-MailID: 20190416071625epcas1p25204b912c8484ea796bf15cc7eddb0c7
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190415145721epcas1p2f14027ba26bed3e3361d6a261d851c68
-References: <20190415145505.18397-1-digetx@gmail.com>
-        <CGME20190415145721epcas1p2f14027ba26bed3e3361d6a261d851c68@epcas1p2.samsung.com>
-        <20190415145505.18397-14-digetx@gmail.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 19. 4. 15. 오후 11:54, Dmitry Osipenko wrote:
-> The ACTMON's governor supports only the Tegra's devfreq device and there
-> is no need to use any other governor, hence let's mark Tegra governor as
-> immutable to permanently stick it with Tegra's devfreq device.
+On 15/04/2019 23:11, Gustavo A. R. Silva wrote:
+> In preparation to enabling -Wimplicit-fallthrough, mark switch
+> cases where we are expecting to fall through.
 > 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/devfreq/Kconfig         | 1 -
->  drivers/devfreq/tegra-devfreq.c | 1 +
->  2 files changed, 1 insertion(+), 1 deletion(-)
+> This patch fixes the following warning:
 > 
-> diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
-> index 6a172d338f6d..a78dffe603c1 100644
-> --- a/drivers/devfreq/Kconfig
-> +++ b/drivers/devfreq/Kconfig
-> @@ -94,7 +94,6 @@ config ARM_EXYNOS_BUS_DEVFREQ
->  config ARM_TEGRA_DEVFREQ
->  	tristate "Tegra DEVFREQ Driver"
->  	depends on ARCH_TEGRA_124_SOC
-> -	select DEVFREQ_GOV_SIMPLE_ONDEMAND
->  	select PM_OPP
->  	help
->  	  This adds the DEVFREQ driver for the Tegra family of SoCs.
-> diff --git a/drivers/devfreq/tegra-devfreq.c b/drivers/devfreq/tegra-devfreq.c
-> index f1a6f951813a..832e4f5aa11b 100644
-> --- a/drivers/devfreq/tegra-devfreq.c
-> +++ b/drivers/devfreq/tegra-devfreq.c
-> @@ -593,6 +593,7 @@ static struct devfreq_governor tegra_devfreq_governor = {
->  	.name = "tegra_actmon",
->  	.get_target_freq = tegra_governor_get_target,
->  	.event_handler = tegra_governor_event_handler,
-> +	.immutable = true,
->  };
->  
->  static int tegra_devfreq_probe(struct platform_device *pdev)
+> drivers/net/xen-netfront.c: In function ‘netback_changed’:
+> drivers/net/xen-netfront.c:2038:6: warning: this statement may fall through [-Wimplicit-fallthrough=]
+>    if (dev->state == XenbusStateClosed)
+>       ^
+> drivers/net/xen-netfront.c:2041:2: note: here
+>   case XenbusStateClosing:
+>   ^~~~
 > 
+> Warning level 3 was used: -Wimplicit-fallthrough=3
+> 
+> Notice that, in this particular case, the code comment is modified
+> in accordance with what GCC is expecting to find.
+> 
+> This patch is part of the ongoing efforts to enable
+> -Wimplicit-fallthrough.
+> 
+> Signed-off-by: Gustavo A. R. Silva <gustavo@embeddedor.com>
 
-Looks good to me.
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Reviewed-by: Juergen Gross <jgross@suse.com>
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+
+Juergen
