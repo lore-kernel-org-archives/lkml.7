@@ -2,132 +2,191 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8C360C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:24:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C15FEC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:27:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 599B5206BA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:24:59 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4D90920675
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:27:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="LnjvjKG4"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="JP2Pnu4O"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728579AbfDPHY6 (ORCPT
+        id S1728504AbfDPH1Z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 03:24:58 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:46743 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727828AbfDPHY5 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 03:24:57 -0400
-Received: by mail-ed1-f66.google.com with SMTP id d1so16939823edd.13
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 00:24:56 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=++7GNxojVLlwznIFjjwVt5D6h/jm9btpA+lc+r10FF4=;
-        b=LnjvjKG4+1gvHHKqt+GrmossZ+Cam5CQvr306UV2C0YVdAYmVbHh5mSJ1O7MmSDLl1
-         MAxudnSTnaDkvolyi9OAfMwZsznm6XasRIZWvr+dLj5w4NHDdEhehn6zTMp5DG3soFhM
-         pdug8gA/L4BbwQE1pf2EIimiIlFuVpRL6t0o0=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :in-reply-to:user-agent;
-        bh=++7GNxojVLlwznIFjjwVt5D6h/jm9btpA+lc+r10FF4=;
-        b=RIn/lAGjQ4PIYzEZ0pPBJPSmEsnqNZcEEjJxabpK3I9yHz5J2Ku+nNaHpDignJYGkA
-         IqqXwLrREJNwgd/XS907Rxa1DLnzDHGpWSA3v9jZA4jcSoJpSeFCWb8VLHdzTM/dG9af
-         fFk77moJOkmoP2BbPSXRfuQwykF1BLlC2ezCqzGWJnzS5xH35f0W44QcPIX2FJDYCKyJ
-         /goGdt6iwa/IzZuA8XDWl03JToD0tsS67c+/BgkO5OajFx9UKgH8picCBe31tXBO0vof
-         Q/2NaRu+akzp3r0DmdFfzV6pg7vEYzzPNybgPRBe2DD2Hd5AbBXWda1GCZmOu7i+nJaY
-         3Jjw==
-X-Gm-Message-State: APjAAAULlVVL9c/nvVTvxtGS8W3IwLdpKUSa6iVOtT7e6SKLQ8o3yJXV
-        iRhV9eLqzcPLj5QscCr7IYP2hg==
-X-Google-Smtp-Source: APXvYqzxkXrC1BjZF3W+95CROoGuedoLjl82otWOcyzcZcd6uaVIHO+QVl1NT16GDQFSPFEr7I38eQ==
-X-Received: by 2002:a50:eacb:: with SMTP id u11mr44725846edp.212.1555399496177;
-        Tue, 16 Apr 2019 00:24:56 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id y5sm9315547eds.7.2019.04.16.00.24.54
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 16 Apr 2019 00:24:55 -0700 (PDT)
-Date:   Tue, 16 Apr 2019 09:24:53 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     dri-devel@lists.freedesktop.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        open list <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] drm: fix drm_fb_xrgb8888_to_rgb888_dstclip()
-Message-ID: <20190416072453.GL2665@phenom.ffwll.local>
-Mail-Followup-To: Gerd Hoffmann <kraxel@redhat.com>,
-        dri-devel@lists.freedesktop.org,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Sean Paul <sean@poorly.run>, David Airlie <airlied@linux.ie>,
-        open list <linux-kernel@vger.kernel.org>
-References: <20190411044932.13247-1-kraxel@redhat.com>
+        Tue, 16 Apr 2019 03:27:25 -0400
+Received: from ozlabs.org ([203.11.71.1]:53491 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727783AbfDPH1Y (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 03:27:24 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44jxlY37bPz9s3q;
+        Tue, 16 Apr 2019 17:27:21 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1555399641;
+        bh=ySBSmcn1rdVSiCXo1fcDhh/RmSKw7YxqJLMjHc7CfPE=;
+        h=Date:From:To:Cc:Subject:From;
+        b=JP2Pnu4OuX9WWKDrG5tL1ReFcIa6gZQ5eODWmDOAfkYgbb+lDkCpOMexDadvyrjbz
+         yuN90Viz0Skjoa3wVA4+gxOGZnTmvCIG5cAUmid2JxhqItfW8LtNuP9i+0JsUoY2ws
+         sWHDNDg80ulCSuNA1HQ1Gri4trhFabk+Q/vHbB8MO/4B7FE1ZYNsNo/f9imhxWSwvW
+         7cu/7tD19kZIqJG3aiIKigTS5vjy5n8Ag0ijHJ6KE/ZpdAZtmrceD6DZDsI4ukkwga
+         OqK8ARoDJscFzxTfsU9Sr4E2t2lF/abMopKQ8yMNRcXRHUITTUYpJk3EnstHu0fUJT
+         XoXJOo7D9d0Hg==
+Date:   Tue, 16 Apr 2019 17:27:20 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     "Jason A. Donenfeld" <Jason@zx2c4.com>
+Cc:     "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Kees Cook <keescook@chromium.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Subject: [PATCH] lib/siphash.c: mark expected switch fall-throughs
+Message-ID: <20190416172720.68e8b95f@canb.auug.org.au>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190411044932.13247-1-kraxel@redhat.com>
-X-Operating-System: Linux phenom 4.19.0-1-amd64 
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/Qn.XaSU2md=eAMclBSozIV5"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 11, 2019 at 06:49:32AM +0200, Gerd Hoffmann wrote:
-> Oops, the __iomem annotation was added to the header file only.
-> Add it to the implementation (and documentation) too.
-> 
-> Fixes: 5c5373b51bec ("drm: switch drm_fb_xrgb8888_to_rgb888_dstclip to accept __iomem dst")
-> Signed-off-by: Gerd Hoffmann <kraxel@redhat.com>
-> ---
->  drivers/gpu/drm/drm_format_helper.c | 6 +++---
->  1 file changed, 3 insertions(+), 3 deletions(-)
-> 
-> diff --git a/drivers/gpu/drm/drm_format_helper.c b/drivers/gpu/drm/drm_format_helper.c
-> index 319de608a088..da388012df2a 100644
-> --- a/drivers/gpu/drm/drm_format_helper.c
-> +++ b/drivers/gpu/drm/drm_format_helper.c
-> @@ -230,7 +230,7 @@ static void drm_fb_xrgb8888_to_rgb888_line(u8 *dbuf, u32 *sbuf,
->  
->  /**
->   * drm_fb_xrgb8888_to_rgb888_dstclip - Convert XRGB8888 to RGB888 clip buffer
-> - * @dst: RGB565 destination buffer
-> + * @dst: RGB565 destination buffer (iomem)
->   * @dst_pitch: destination buffer pitch
->   * @vaddr: XRGB8888 source buffer
->   * @fb: DRM framebuffer
-> @@ -241,9 +241,9 @@ static void drm_fb_xrgb8888_to_rgb888_line(u8 *dbuf, u32 *sbuf,
->   * support XRGB8888.
->   *
->   * This function applies clipping on dst, i.e. the destination is a
-> - * full framebuffer but only the clip rect content is copied over.
-> + * full (iomem) framebuffer but only the clip rect content is copied over.
->   */
+--Sig_/Qn.XaSU2md=eAMclBSozIV5
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-All this nice kerneldoc isn't pulled into the docs in
-Documentation/gpu/drm-kms-helper.rst anywhere. Can you pls fix that too?
+In preparation to enabling -Wimplicit-fallthrough, mark switch cases
+where we are expecting to fall through.
 
-Thanks, Daniel
+This patch aims to suppress up to 18 missing-break-in-switch false
+positives on some architectures.
 
-> -void drm_fb_xrgb8888_to_rgb888_dstclip(void *dst, unsigned int dst_pitch,
-> +void drm_fb_xrgb8888_to_rgb888_dstclip(void __iomem *dst, unsigned int dst_pitch,
->  				       void *vaddr, struct drm_framebuffer *fb,
->  				       struct drm_rect *clip)
->  {
-> -- 
-> 2.18.1
-> 
+Cc: Jason A. Donenfeld <Jason@zx2c4.com>
+Cc: Gustavo A. R. Silva <gustavo@embeddedor.com>
+Cc: Kees Cook <keescook@chromium.org>
+Signed-off-by: Stephen Rothwell <sfr@canb.auug.org.au>
+---
+ lib/siphash.c | 36 ++++++++++++++++++------------------
+ 1 file changed, 18 insertions(+), 18 deletions(-)
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+Build tested on PowerPC.
+
+diff --git a/lib/siphash.c b/lib/siphash.c
+index 3ae58b4edad6..c47bb6ff2149 100644
+--- a/lib/siphash.c
++++ b/lib/siphash.c
+@@ -68,11 +68,11 @@ u64 __siphash_aligned(const void *data, size_t len, con=
+st siphash_key_t *key)
+ 						  bytemask_from_count(left)));
+ #else
+ 	switch (left) {
+-	case 7: b |=3D ((u64)end[6]) << 48;
+-	case 6: b |=3D ((u64)end[5]) << 40;
+-	case 5: b |=3D ((u64)end[4]) << 32;
++	case 7: b |=3D ((u64)end[6]) << 48; /* fall through */
++	case 6: b |=3D ((u64)end[5]) << 40; /* fall through */
++	case 5: b |=3D ((u64)end[4]) << 32; /* fall through */
+ 	case 4: b |=3D le32_to_cpup(data); break;
+-	case 3: b |=3D ((u64)end[2]) << 16;
++	case 3: b |=3D ((u64)end[2]) << 16; /* fall through */
+ 	case 2: b |=3D le16_to_cpup(data); break;
+ 	case 1: b |=3D end[0];
+ 	}
+@@ -101,11 +101,11 @@ u64 __siphash_unaligned(const void *data, size_t len,=
+ const siphash_key_t *key)
+ 						  bytemask_from_count(left)));
+ #else
+ 	switch (left) {
+-	case 7: b |=3D ((u64)end[6]) << 48;
+-	case 6: b |=3D ((u64)end[5]) << 40;
+-	case 5: b |=3D ((u64)end[4]) << 32;
++	case 7: b |=3D ((u64)end[6]) << 48; /* fall through */
++	case 6: b |=3D ((u64)end[5]) << 40; /* fall through */
++	case 5: b |=3D ((u64)end[4]) << 32; /* fall through */
+ 	case 4: b |=3D get_unaligned_le32(end); break;
+-	case 3: b |=3D ((u64)end[2]) << 16;
++	case 3: b |=3D ((u64)end[2]) << 16; /* fall through */
+ 	case 2: b |=3D get_unaligned_le16(end); break;
+ 	case 1: b |=3D end[0];
+ 	}
+@@ -268,11 +268,11 @@ u32 __hsiphash_aligned(const void *data, size_t len, =
+const hsiphash_key_t *key)
+ 						  bytemask_from_count(left)));
+ #else
+ 	switch (left) {
+-	case 7: b |=3D ((u64)end[6]) << 48;
+-	case 6: b |=3D ((u64)end[5]) << 40;
+-	case 5: b |=3D ((u64)end[4]) << 32;
++	case 7: b |=3D ((u64)end[6]) << 48; /* fall through */
++	case 6: b |=3D ((u64)end[5]) << 40; /* fall through */
++	case 5: b |=3D ((u64)end[4]) << 32; /* fall through */
+ 	case 4: b |=3D le32_to_cpup(data); break;
+-	case 3: b |=3D ((u64)end[2]) << 16;
++	case 3: b |=3D ((u64)end[2]) << 16; /* fall through */
+ 	case 2: b |=3D le16_to_cpup(data); break;
+ 	case 1: b |=3D end[0];
+ 	}
+@@ -301,11 +301,11 @@ u32 __hsiphash_unaligned(const void *data, size_t len,
+ 						  bytemask_from_count(left)));
+ #else
+ 	switch (left) {
+-	case 7: b |=3D ((u64)end[6]) << 48;
+-	case 6: b |=3D ((u64)end[5]) << 40;
+-	case 5: b |=3D ((u64)end[4]) << 32;
++	case 7: b |=3D ((u64)end[6]) << 48; /* fall through */
++	case 6: b |=3D ((u64)end[5]) << 40; /* fall through */
++	case 5: b |=3D ((u64)end[4]) << 32; /* fall through */
+ 	case 4: b |=3D get_unaligned_le32(end); break;
+-	case 3: b |=3D ((u64)end[2]) << 16;
++	case 3: b |=3D ((u64)end[2]) << 16; /* fall through */
+ 	case 2: b |=3D get_unaligned_le16(end); break;
+ 	case 1: b |=3D end[0];
+ 	}
+@@ -431,7 +431,7 @@ u32 __hsiphash_aligned(const void *data, size_t len, co=
+nst hsiphash_key_t *key)
+ 		v0 ^=3D m;
+ 	}
+ 	switch (left) {
+-	case 3: b |=3D ((u32)end[2]) << 16;
++	case 3: b |=3D ((u32)end[2]) << 16; /* fall through */
+ 	case 2: b |=3D le16_to_cpup(data); break;
+ 	case 1: b |=3D end[0];
+ 	}
+@@ -454,7 +454,7 @@ u32 __hsiphash_unaligned(const void *data, size_t len,
+ 		v0 ^=3D m;
+ 	}
+ 	switch (left) {
+-	case 3: b |=3D ((u32)end[2]) << 16;
++	case 3: b |=3D ((u32)end[2]) << 16; /* fall through */
+ 	case 2: b |=3D get_unaligned_le16(end); break;
+ 	case 1: b |=3D end[0];
+ 	}
+--=20
+2.20.1
+
+
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/Qn.XaSU2md=eAMclBSozIV5
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAly1g9gACgkQAVBC80lX
+0Gz0EAf/X/HZk/WV5b0f9yiLnB4QmA89JQDL8FDxH0g4xqfFETSJejmC3dcoZKaI
+G5HoMrIcKYEJwPbZQJsdTZ4T9CBg9NLumml7LGLBihLwKLTg/xBMt9w3i8RiRgW1
+K6UQgKvF654Jt/Wyt7zhjNQO0nlnLEQ3nqacS1bsv1ZqLHVEj8jvzm4OO1K+AjYP
+UlA+TzMq+rArZY6Bqlgtlf6AOCP44kEVdkPoMZ71dq1zpkDl6o9Zoas14XrdtI6A
+AAERKeG+GpGSJuzFuZMDNzT/soF9M8ZAkn/YemHs9Eip4heZHtBkg25poNngkE/v
+8zsRyXQPmSIf8rHWoraiWQ27SqBi/g==
+=wsb6
+-----END PGP SIGNATURE-----
+
+--Sig_/Qn.XaSU2md=eAMclBSozIV5--
