@@ -2,286 +2,154 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-0.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FC35C282DA
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:34:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 04A36C10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:34:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 353AB20868
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:34:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="Y/xUCFep"
+	by mail.kernel.org (Postfix) with ESMTP id BD08E20857
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 07:34:51 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555400091;
+	bh=7vimyrKrT4i/KjB8atJljNvV4U+fYCJg1iYSDchaZCQ=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=m4/zfWZnrOsMAVr8QwyJA/k0eGKUWN9tTTiPBmj96v7fTqKMpWzbYhw0prHSjKAil
+	 q6PD7li2HsRqQ08mwLzjwpa5ELQaBg1EWXpnnc94DEUY3bQmv1sDrffsIPSpzIsJP+
+	 xdP6IALQv9dWnaQIRpxitb5G6/hcpiGipi7zp6b4=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728655AbfDPHe0 (ORCPT
+        id S1728524AbfDPHeu (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 03:34:26 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:36879 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726783AbfDPHeZ (ORCPT
+        Tue, 16 Apr 2019 03:34:50 -0400
+Received: from mail-wm1-f67.google.com ([209.85.128.67]:34184 "EHLO
+        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726783AbfDPHeu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 03:34:25 -0400
-Received: by mail-ed1-f66.google.com with SMTP id f53so15412938ede.4
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 00:34:23 -0700 (PDT)
+        Tue, 16 Apr 2019 03:34:50 -0400
+Received: by mail-wm1-f67.google.com with SMTP id r186so1672438wmf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 00:34:48 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ffwll.ch; s=google;
-        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
-         :references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=VxD0wqk0R74Xd3PERoRqoKTHzKJg4s5+FcZ/4pPZ1eU=;
-        b=Y/xUCFep/P+HetuAUFL9HEFkYIUhS0xEqTQugGY85NZEFmNOeKaDlkp/93DoSjOYyC
-         ycsITVT21XJHZMxmote41j2wwxVABkcOqLyHQdOpJ2x/q4YjmeH1w6xIPq/VuR/HUxI8
-         KyenNuZGrvAfn/NbDww2U5N1gptFgpB8HrXnw=
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=mkoSdOor3prGzzN6JE1yPzhhOlDqFnk43U2JtGpW8+4=;
+        b=avOi66Pe57NEXYhLYp/kgYdx9ocSr4U6Pcfdgf+zecIGv+Y8c6jMrH56EN5ias943v
+         c+00tmCD4SPbeoEi+QX0BS87cabeIwS4coPM8IIXTHErhfOucjb4xBq0ermuAQLd30nz
+         Sl4LnRlAZOQ6zT3+ApE78/5fhhyxitMgDooSi5V5MX3JvFGGE1+VxzJEEI8cSJ81pouQ
+         /Puh8SBXTdmeXLNPVI6QbMhs7cUs/VquH8C8pEkTOirXHmv2gz9IrewUKyQxQI3oeuCe
+         B5YbEwsf6BaQFGoMSB35bGX2r3jkxsY9NhWKaFlyKE3F2NjrqhD/ebjLHM9vw3EUUMrz
+         cBcw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :mail-followup-to:references:mime-version:content-disposition
-         :content-transfer-encoding:in-reply-to:user-agent;
-        bh=VxD0wqk0R74Xd3PERoRqoKTHzKJg4s5+FcZ/4pPZ1eU=;
-        b=gKDxLz1zxrgONSLiwP4MoQfJBZsYe/yWEoiBm3UsLdkqowqOQxdYzfK/41pVczQacQ
-         fNeIBEhhT5PceayH4UtPbjDGXfFwZDT5gA+hH5l9Y8ksHVtp1LjvvneDYAdrcIyDcllq
-         LH/+poV5K1l9XfH2JXYFfo8tfISeOsurBjG43OeknhYeAPLra4ZguZtlXOmcsAYdwNpl
-         n9Jg43sjzuVir/iSaM5otoPKdJ+AjXw5dcw70TZ+Ke7RTqfauGxA9o6p85wJKxHP4bWQ
-         IUcM08HO5rKQ9itAWtK1iUa7QGBIvil/mvOdeeZv5m4DT0P2XKEgrgahW5KcgyjEL/Gs
-         XWjg==
-X-Gm-Message-State: APjAAAVSSQDHCYR9bS870lVgyWQKYYjECcyISFJcsqdgVpshn/mpk1JW
-        WaI+y7lencDsiOgeH3QCKECeeQ==
-X-Google-Smtp-Source: APXvYqzJ2zruI/TvXeDHg+SxpeECUEIs50E5nx1mUOG7Fjh5MWWBIarMzl83bomPfRuK2HS7h5yk8A==
-X-Received: by 2002:a50:9dc8:: with SMTP id l8mr8049845edk.180.1555400063146;
-        Tue, 16 Apr 2019 00:34:23 -0700 (PDT)
-Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id v9sm3336323ede.32.2019.04.16.00.34.21
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=mkoSdOor3prGzzN6JE1yPzhhOlDqFnk43U2JtGpW8+4=;
+        b=Z6XGs2qPT30JzXiHMw38Iikok9DIt2195MQtMcYATk7QYJwE2Zg40bz0GTfbFfE6HT
+         7gflu0U309UVZ2eEMvkPYZk1hydYhqZG0dZvLijxHk38FFP8iaUHFNEsSEfF9IVQhEOG
+         /qT9nMwtjfSx4LIKRctQ/dU4RDUVcAuV08LbMKTEpmdi4v+zDo0R2/hFJtH3yz5avp7a
+         ZHOkDwnRFQFOgJjl4ab88UEMuNgf9RfskPDgrch1Gzw3ZlsQRjmw4hO7wU0T/LUt14H6
+         xOWlBZUZPg2AwHWGvus46oBS0bjvqxz7ZDdV7Nt6Ilckk1Jcm1gR4J8ZP7g3MgIbtIu3
+         Zcfw==
+X-Gm-Message-State: APjAAAXGajS3a0bCD5nmyUR3TRKOUpqjL5bCSCqtJ3y7+WqyvgouXHTy
+        uCAXe7MSIZmXJkZMGAywFLE=
+X-Google-Smtp-Source: APXvYqxy3W3EBoT+cmkOx5XicQL7waKfwKA9cRwM40EZV3MSlKirpHeM+Ju2eRmARv2cTDIsmMHJCA==
+X-Received: by 2002:a1c:cbc5:: with SMTP id b188mr25073403wmg.87.1555400088119;
+        Tue, 16 Apr 2019 00:34:48 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id 61sm171950162wre.50.2019.04.16.00.34.46
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 16 Apr 2019 00:34:21 -0700 (PDT)
-Date:   Tue, 16 Apr 2019 09:34:20 +0200
-From:   Daniel Vetter <daniel@ffwll.ch>
-To:     Liviu Dudau <Liviu.Dudau@arm.com>
-Cc:     "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
+        Tue, 16 Apr 2019 00:34:47 -0700 (PDT)
+Date:   Tue, 16 Apr 2019 09:34:44 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     "Reshetova, Elena" <elena.reshetova@intel.com>
+Cc:     "luto@kernel.org" <luto@kernel.org>,
+        "luto@amacapital.net" <luto@amacapital.net>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
-        nd <nd@arm.com>, "sean@poorly.run" <sean@poorly.run>,
-        Ben Davis <Ben.Davis@arm.com>
-Subject: Re: [v2,1/2] drm: Add writeback_w,h properties
-Message-ID: <20190416073419.GN2665@phenom.ffwll.local>
-Mail-Followup-To: Liviu Dudau <Liviu.Dudau@arm.com>,
-        "james qian wang (Arm Technology China)" <james.qian.wang@arm.com>,
-        "airlied@linux.ie" <airlied@linux.ie>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        "maxime.ripard@bootlin.com" <maxime.ripard@bootlin.com>,
-        nd <nd@arm.com>, "sean@poorly.run" <sean@poorly.run>,
-        Ben Davis <Ben.Davis@arm.com>
-References: <1555078094-6587-2-git-send-email-ben.davis@arm.com>
- <20190415075922.GA24596@james-ThinkStation-P300>
- <20190415092045.GO15144@e110455-lin.cambridge.arm.com>
+        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
+        "keescook@chromium.org" <keescook@chromium.org>,
+        "jannh@google.com" <jannh@google.com>,
+        "Perla, Enrico" <enrico.perla@intel.com>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "bp@alien8.de" <bp@alien8.de>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
+Subject: Re: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
+Message-ID: <20190416073444.GC127769@gmail.com>
+References: <20190415060918.3766-1-elena.reshetova@intel.com>
+ <20190415072535.GA51449@gmail.com>
+ <2236FBA76BA1254E88B949DDB74E612BA4C4F90F@IRSMSX102.ger.corp.intel.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190415092045.GO15144@e110455-lin.cambridge.arm.com>
-X-Operating-System: Linux phenom 4.19.0-1-amd64 
+In-Reply-To: <2236FBA76BA1254E88B949DDB74E612BA4C4F90F@IRSMSX102.ger.corp.intel.com>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 10:20:45AM +0100, Liviu Dudau wrote:
-> On Mon, Apr 15, 2019 at 08:59:30AM +0100, james qian wang (Arm Technology China) wrote:
-> > On Fri, Apr 12, 2019 at 02:08:28PM +0000, Ben Davis wrote:
-> > > Add new properties to specify width and height for writeback.
-> > > 
-> > > Signed-off-by: Ben Davis <ben.davis@arm.com>
-> > > ---
-> > >  drivers/gpu/drm/drm_atomic_uapi.c |  8 ++++++++
-> > >  drivers/gpu/drm/drm_writeback.c   | 28 ++++++++++++++++++++++++++++
-> > >  include/drm/drm_connector.h       |  4 ++++
-> > >  include/drm/drm_mode_config.h     | 10 ++++++++++
-> > >  4 files changed, 50 insertions(+)
-> > > 
-> > > -- 
-> > > 2.7.4
-> > > 
-> > > diff --git a/drivers/gpu/drm/drm_atomic_uapi.c b/drivers/gpu/drm/drm_atomic_uapi.c
-> > > index d520a04..1f68dce 100644
-> > > --- a/drivers/gpu/drm/drm_atomic_uapi.c
-> > > +++ b/drivers/gpu/drm/drm_atomic_uapi.c
-> > > @@ -765,6 +765,10 @@ static int drm_atomic_connector_set_property(struct drm_connector *connector,
-> > >  			return -EINVAL;
-> > >  		}
-> > >  		state->content_protection = val;
-> > > +	} else if (property == config->prop_writeback_w) {
-> > > +		state->writeback_w = val;
-> > > +	} else if (property == config->prop_writeback_h) {
-> > > +		state->writeback_h = val;
-> > >  	} else if (property == config->writeback_fb_id_property) {
-> > >  		struct drm_framebuffer *fb = drm_framebuffer_lookup(dev, NULL, val);
-> > >  		int ret = drm_atomic_set_writeback_fb_for_connector(state, fb);
-> > > @@ -837,6 +841,10 @@ drm_atomic_connector_get_property(struct drm_connector *connector,
-> > >  		*val = state->scaling_mode;
-> > >  	} else if (property == connector->content_protection_property) {
-> > >  		*val = state->content_protection;
-> > > +	} else if (property == config->prop_writeback_w) {
-> > > +		*val = state->writeback_w;
-> > > +	} else if (property == config->prop_writeback_h) {
-> > > +		*val = state->writeback_h;
-> > >  	} else if (property == config->writeback_fb_id_property) {
-> > >  		/* Writeback framebuffer is one-shot, write and forget */
-> > >  		*val = 0;
-> > > diff --git a/drivers/gpu/drm/drm_writeback.c b/drivers/gpu/drm/drm_writeback.c
-> > > index c20e6fe..3d0453e 100644
-> > > --- a/drivers/gpu/drm/drm_writeback.c
-> > > +++ b/drivers/gpu/drm/drm_writeback.c
-> > > @@ -74,6 +74,12 @@
-> > >   *	applications making use of writeback connectors *always* retrieve an
-> > >   *	out-fence for the commit and use it appropriately.
-> > >   *	From userspace, this property will always read as zero.
-> > > + *
-> > > + *  "WRITEBACK_W":
-> > > + *	The width of the writeback buffer to write back. 0 acts as default.
-> > > + *
-> > > + *  "WRITEBACK_H":
-> > > + *	The height of the writeback buffer to write back. 0 acts as default.
-> > >   */
-> > >  
-> > >  #define fence_to_wb_connector(x) container_of(x->lock, \
-> > > @@ -141,6 +147,22 @@ static int create_writeback_properties(struct drm_device *dev)
-> > >  		dev->mode_config.writeback_out_fence_ptr_property = prop;
-> > >  	}
-> > >  
-> > > +	if (!dev->mode_config.prop_writeback_w) {
-> > > +		prop = drm_property_create_range(dev, DRM_MODE_PROP_ATOMIC,
-> > > +						 "WRITEBACK_W", 1, UINT_MAX);
-> > > +		if (!prop)
-> > > +			return -ENOMEM;
-> > > +		dev->mode_config.prop_writeback_w = prop;
-> > > +	}
-> > > +
-> > > +	if (!dev->mode_config.prop_writeback_h) {
-> > > +		prop = drm_property_create_range(dev, DRM_MODE_PROP_ATOMIC,
-> > > +						 "WRITEBACK_H", 1, UINT_MAX);
-> > > +		if (!prop)
-> > > +			return -ENOMEM;
-> > > +		dev->mode_config.prop_writeback_h = prop;
-> > > +	}
-> > > +
-> > >  	return 0;
-> > >  }
-> > >  
-> > > @@ -225,6 +247,12 @@ int drm_writeback_connector_init(struct drm_device *dev,
-> > >  	drm_object_attach_property(&connector->base,
-> > >  				   config->writeback_pixel_formats_property,
-> > >  				   blob->base.id);
-> > > +
-> > > +	drm_object_attach_property(&connector->base,
-> > > +				   config->prop_writeback_w, 0);
-> > > +	drm_object_attach_property(&connector->base,
-> > > +				   config->prop_writeback_h, 0);
-> > 
-> > Hi Ben:
-> > Do we real need these two individual properties for specifing the writeback
-> > w/h, can we use fb->w/h ?
-> > And since these two properties are added as common and standard properties,
-> > it influnce all existing write-back implementation which all assumed
-> > writeback size as fb->w/h.
-> 
-> The idea of having these additional properties was to maintain backwards
-> compatibility (of some sort). If you don't set writeback_w/h then the
-> assumption is that they are the same as fb->w/h, but I can see how it's
-> going to be confusing to have fb->w/h different from crtc->w/h and
-> different from writeback_w/h.
 
-Since we already have crtc_w/h independent of writeback_fb_w/h, do we need
-another set of w/h? Are all the interactions between these tree
-well-defined?
+* Reshetova, Elena <elena.reshetova@intel.com> wrote:
 
-Atm I'm assuming that writeback is using crtc_w/h into the fb, at offset
-0, not scaled any further. But the planes themselves can be scaled into
-the crtc_w/h window ofc.
+> > 4)
+> > 
+> > But before you tweak the patch, a more fundamental question:
+> > 
+> > Does the stack offset have to be per *syscall execution* randomized?
+> > Which threats does this protect against that a simpler per task syscall
+> > random offset wouldn't protect against?
+> 
+> We *really* need it per syscall. If you take a look on the recent stack attacks
+> [1],[2],[3],[4], they all do some initial probing on syscalls first to discover stack addresses
+> or leftover data on the stack (or pre-populate stack with some attacker-controlled data), 
+> and then in the following syscall execute the actual attack (leak data, use
+> pre-populated data for execution, etc.). If the offset stays the same during 
+> task life time, it can be easily recovered during this initial probing phase, and
+> then nothing changes for the attacker. 
+> 
+> [1] Kernel Exploitation Via Uninitialized Stack, 2011
+> https://www.defcon.org/images/defcon-19/dc-19-presentations/Cook/DEFCON-19-Cook-Kernel-Exploitation.pdf
+> [2] Stackjacking, 2011, https://jon.oberheide.org/files/stackjacking-infiltrate11.pdf
+> [3] The Stack is Back, 2012, https://jon.oberheide.org/files/infiltrate12-thestackisback.pdf
+> [4] Exploiting Recursion in the Linux Kernel, 2016,
+> https://googleprojectzero.blogspot.com/2016/06/exploiting-recursion-in-linux-kernel_20.html
 
-Iirc the hw supporting writeback thus far needs a dedicated crtc for
-writeback, so adding yet another scaling window is not needed?
--Daniel
+Yeah, so if there's an information leak from the kernel stack, don't we 
+now effectively store 5 PRNG bits there for every syscall, allowing the 
+systematic probing of the generic PRNG?
 
-> > To compatible with existing writeback support, I suggest to keep to
-> > use fb->w/h or add these properties as malidp private.
-> 
-> We don't need to make them malidp private, there is nothing malidp
-> specific in them. I'll talk with Ben, we should probably drop this patch
-> entirely and just enable malidp scaling when fb->w/h differ from
-> crtc->w/h.
-> 
-> Best regards,
-> Liviu
-> 
-> 
-> > 
-> > Thanks
-> > James
-> > 
-> > 
-> > >  	wb_connector->pixel_formats_blob_ptr = blob;
-> > >  
-> > >  	return 0;
-> > > diff --git a/include/drm/drm_connector.h b/include/drm/drm_connector.h
-> > > index 8fe22ab..51c4cb2 100644
-> > > --- a/include/drm/drm_connector.h
-> > > +++ b/include/drm/drm_connector.h
-> > > @@ -515,6 +515,10 @@ struct drm_connector_state {
-> > >  	 */
-> > >  	struct drm_writeback_job *writeback_job;
-> > >  
-> > > +	/** @writeback_w: width of plane to write to wb buffer */
-> > > +	/** @writeback_h: height of plane to write to wb buffer */
-> > > +	uint32_t writeback_w, writeback_h;
-> > > +
-> > >  	/**
-> > >  	 * @max_requested_bpc: Connector property to limit the maximum bit
-> > >  	 * depth of the pixels.
-> > > diff --git a/include/drm/drm_mode_config.h b/include/drm/drm_mode_config.h
-> > > index 7f60e8e..a0c2133 100644
-> > > --- a/include/drm/drm_mode_config.h
-> > > +++ b/include/drm/drm_mode_config.h
-> > > @@ -622,6 +622,16 @@ struct drm_mode_config {
-> > >  	 */
-> > >  	struct drm_property *prop_crtc_h;
-> > >  	/**
-> > > +	 * @prop_writeback_w: Writeback connector property for the plane
-> > > +	 * destination position in the writeback buffer.
-> > > +	 */
-> > > +	struct drm_property *prop_writeback_w;
-> > > +	/**
-> > > +	 * @prop_writeback_h: Writeback connector property for the plane
-> > > +	 * destination position in the writeback buffer.
-> > > +	 */
-> > > +	struct drm_property *prop_writeback_h;
-> > > +	/**
-> > >  	 * @prop_fb_id: Default atomic plane property to specify the
-> > >  	 * &drm_framebuffer.
-> > >  	 */
-> > 
-> > Pls del this window style line ending 
-> > 
-> 
-> -- 
-> ====================
-> | I would like to |
-> | fix the world,  |
-> | but they're not |
-> | giving me the   |
->  \ source code!  /
->   ---------------
->     ¯\_(ツ)_/¯
-> _______________________________________________
-> dri-devel mailing list
-> dri-devel@lists.freedesktop.org
-> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+The kernel can execute millions of syscalls per second, I'm pretty sure 
+there's a statistical attack against:
 
--- 
-Daniel Vetter
-Software Engineer, Intel Corporation
-http://blog.ffwll.ch
+ * This is a maximally equidistributed combined Tausworthe generator
+ * based on code from GNU Scientific Library 1.5 (30 Jun 2004)
+ *
+ * lfsr113 version:
+ *
+ * x_n = (s1_n ^ s2_n ^ s3_n ^ s4_n)
+ *
+ * s1_{n+1} = (((s1_n & 4294967294) << 18) ^ (((s1_n <<  6) ^ s1_n) >> 13))
+ * s2_{n+1} = (((s2_n & 4294967288) <<  2) ^ (((s2_n <<  2) ^ s2_n) >> 27))
+ * s3_{n+1} = (((s3_n & 4294967280) <<  7) ^ (((s3_n << 13) ^ s3_n) >> 21))
+ * s4_{n+1} = (((s4_n & 4294967168) << 13) ^ (((s4_n <<  3) ^ s4_n) >> 12))
+ *
+ * The period of this generator is about 2^113 (see erratum paper).
+
+... which recovers the real PRNG state much faster than the ~60 seconds 
+seeding interval and allows the prediction of the next stack offset?
+
+I.e. I don't see how kernel stack PRNG randomization protects against 
+information leaks from the kernel stack. By putting PRNG information into 
+the kernel stack for *every* system call we add a broad attack surface: 
+any obscure ioctl information leak can now be escalated into an attack 
+against the net_rand_state PRNG, right?
+
+> No the above numbers are with CONFIG_PAGE_TABLE_ISOLATION=y for x86_64, 
+> I will test with CONFIG_PAGE_TABLE_ISOLATION turned off from now on 
+> also.
+
+Thanks!
+
+	Ingo
