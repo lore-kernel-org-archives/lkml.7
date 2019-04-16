@@ -2,39 +2,39 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-9.3 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3E71BC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:01:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D7A5BC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:01:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B574206B6
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:01:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A55CE20821
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 16:01:50 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555430506;
-	bh=JFED6vjl2aRKYyR0CTCueauRV9NwP9QL5kFDFoH2fd0=;
+	s=default; t=1555430510;
+	bh=OhOjMvA5//xK7jS1PivZMHKmgVlwJIZ5xSNjkrpt8V4=;
 	h=From:To:Cc:Subject:Date:In-Reply-To:References:List-ID:From;
-	b=d7BXYRsK/LJ/4ZjHQd2kBHYesMdJ80ete6yGv4uXY8GXxJD0js70z9kwbihKZxXFi
-	 KwDesEQRatpEetovWF13vkak8Vs2FxTb6w0zQlwGMkG8Yg0Nr+u9FVGX5IXg1U8BJv
-	 SWiK836AoOsc1wnyQOmGy/Ibr6FbQf07NVpysuq0=
+	b=CEQJyLNlLnRm7ljrthPJRraqH0aA9YcC/HUFXAFIV1O4ur7xzpmnZ3fagrjwa8CoK
+	 KLAjILu3e3F5EoXXkAZA9UOmj/hTer3GdsJvDg/Lq0LXtsJAaiJWbtscQQ5BmfgzMc
+	 h42kVoLfd72BmH1esElb3f67wwljFOttSQ+SxGrg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729917AbfDPQBp (ORCPT
+        id S1729969AbfDPQBt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 12:01:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:46322 "EHLO mx1.redhat.com"
+        Tue, 16 Apr 2019 12:01:49 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41192 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727691AbfDPQBm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 12:01:42 -0400
+        id S1729934AbfDPQBr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 12:01:47 -0400
 Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1B6C581106;
-        Tue, 16 Apr 2019 16:01:42 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 55CD08666F;
+        Tue, 16 Apr 2019 16:01:47 +0000 (UTC)
 Received: from krava.brq.redhat.com (unknown [10.43.17.48])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id C50905D71A;
-        Tue, 16 Apr 2019 16:01:39 +0000 (UTC)
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 0E04A5D71A;
+        Tue, 16 Apr 2019 16:01:44 +0000 (UTC)
 From:   Jiri Olsa <jolsa@kernel.org>
 To:     Arnaldo Carvalho de Melo <acme@kernel.org>
 Cc:     lkml <linux-kernel@vger.kernel.org>,
@@ -47,103 +47,107 @@ Cc:     lkml <linux-kernel@vger.kernel.org>,
         Song Liu <songliubraving@fb.com>,
         Alexei Starovoitov <ast@kernel.org>,
         Daniel Borkmann <daniel@iogearbox.net>
-Subject: [PATCH 02/12] perf tools: Separate generic code in dso_cache__read
-Date:   Tue, 16 Apr 2019 18:01:17 +0200
-Message-Id: <20190416160127.30203-3-jolsa@kernel.org>
+Subject: [PATCH 04/12] perf tools: Add bpf dso read and size hooks
+Date:   Tue, 16 Apr 2019 18:01:19 +0200
+Message-Id: <20190416160127.30203-5-jolsa@kernel.org>
 In-Reply-To: <20190416160127.30203-1-jolsa@kernel.org>
 References: <20190416160127.30203-1-jolsa@kernel.org>
 X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.28]); Tue, 16 Apr 2019 16:01:42 +0000 (UTC)
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Tue, 16 Apr 2019 16:01:47 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Moving file specific code in dso_cache__read function
-into separate file_read function. I'll add bpf specific
-code in following patches.
+Adding bpf related code into dso reading paths.
 
-Link: http://lkml.kernel.org/n/tip-7f7d717uzrqt5ka2xp29ige3@git.kernel.org
+Link: http://lkml.kernel.org/n/tip-ql6jpegvv5823yc87u0hlzfa@git.kernel.org
 Signed-off-by: Jiri Olsa <jolsa@kernel.org>
 ---
- tools/perf/util/dso.c | 47 ++++++++++++++++++++++++-------------------
- 1 file changed, 26 insertions(+), 21 deletions(-)
+ tools/perf/util/dso.c | 49 ++++++++++++++++++++++++++++++++++++++++++-
+ 1 file changed, 48 insertions(+), 1 deletion(-)
 
 diff --git a/tools/perf/util/dso.c b/tools/perf/util/dso.c
-index cb6199c1390a..6baad22ec8a9 100644
+index 6fdff723e55a..0cc6702c6442 100644
 --- a/tools/perf/util/dso.c
 +++ b/tools/perf/util/dso.c
-@@ -794,6 +794,30 @@ dso_cache__memcpy(struct dso_cache *cache, u64 offset,
- 	return cache_size;
+@@ -9,6 +9,8 @@
+ #include <errno.h>
+ #include <fcntl.h>
+ #include <libgen.h>
++#include <bpf/libbpf.h>
++#include "bpf-event.h"
+ #include "compress.h"
+ #include "namespaces.h"
+ #include "path.h"
+@@ -706,6 +708,44 @@ bool dso__data_status_seen(struct dso *dso, enum dso_data_status_seen by)
+ 	return false;
  }
  
-+static ssize_t file_read(struct dso *dso, struct machine *machine,
-+			 u64 offset, char *data)
++static ssize_t bpf_read(struct dso *dso, u64 offset, char *data)
 +{
-+	ssize_t ret;
++	struct bpf_prog_info_node *node;
++	ssize_t size = DSO__DATA_CACHE_SIZE;
++	u64 len;
++	u8 *buf;
 +
-+	pthread_mutex_lock(&dso__data_open_lock);
-+
-+	/*
-+	 * dso->data.fd might be closed if other thread opened another
-+	 * file (dso) due to open file limit (RLIMIT_NOFILE).
-+	 */
-+	try_to_open_dso(dso, machine);
-+
-+	if (dso->data.fd < 0) {
++	node = perf_env__find_bpf_prog_info(dso->bpf_prog.env, dso->bpf_prog.id);
++	if (!node || !node->info_linear) {
 +		dso->data.status = DSO_DATA_STATUS_ERROR;
-+		return -errno;
++		return -1;
 +	}
 +
-+	ret = pread(dso->data.fd, data, DSO__DATA_CACHE_SIZE, offset);
-+	pthread_mutex_unlock(&dso__data_open_lock);
++	len = node->info_linear->info.jited_prog_len;
++	buf = (u8 *) node->info_linear->info.jited_prog_insns;
 +
-+	return ret;
++	if (offset >= len)
++		return -1;
++
++	size = (ssize_t) min(len - offset, (u64) size);
++	memcpy(data, buf + offset, size);
++	return size;
 +}
 +
- static ssize_t
- dso_cache__read(struct dso *dso, struct machine *machine,
- 		u64 offset, u8 *data, ssize_t size)
-@@ -803,37 +827,18 @@ dso_cache__read(struct dso *dso, struct machine *machine,
- 	ssize_t ret;
++static int bpf_size(struct dso *dso)
++{
++	struct bpf_prog_info_node *node;
++
++	node = perf_env__find_bpf_prog_info(dso->bpf_prog.env, dso->bpf_prog.id);
++	if (!node || !node->info_linear) {
++		dso->data.status = DSO_DATA_STATUS_ERROR;
++		return -1;
++	}
++
++	dso->data.file_size = node->info_linear->info.jited_prog_len;
++	return 0;
++}
++
+ static void
+ dso_cache__free(struct dso *dso)
+ {
+@@ -831,7 +871,11 @@ dso_cache__read(struct dso *dso, struct machine *machine,
+ 	if (!cache)
+ 		return -ENOMEM;
  
- 	do {
--		u64 cache_offset;
-+		u64 cache_offset = offset & DSO__DATA_CACHE_MASK;
- 
- 		cache = zalloc(sizeof(*cache) + DSO__DATA_CACHE_SIZE);
- 		if (!cache)
- 			return -ENOMEM;
- 
--		pthread_mutex_lock(&dso__data_open_lock);
--
--		/*
--		 * dso->data.fd might be closed if other thread opened another
--		 * file (dso) due to open file limit (RLIMIT_NOFILE).
--		 */
--		try_to_open_dso(dso, machine);
--
--		if (dso->data.fd < 0) {
--			ret = -errno;
--			dso->data.status = DSO_DATA_STATUS_ERROR;
--			break;
--		}
--
--		cache_offset = offset & DSO__DATA_CACHE_MASK;
--
--		ret = pread(dso->data.fd, cache->data, DSO__DATA_CACHE_SIZE, cache_offset);
--		if (ret <= 0)
--			break;
+-	ret = file_read(dso, machine, cache_offset, cache->data);
++	if (dso->binary_type == DSO_BINARY_TYPE__BPF_PROG_INFO)
++		ret = bpf_read(dso, cache_offset, cache->data);
++	else
 +		ret = file_read(dso, machine, cache_offset, cache->data);
- 
++
+ 	if (ret > 0) {
  		cache->offset = cache_offset;
  		cache->size   = ret;
- 	} while (0);
+@@ -940,6 +984,9 @@ int dso__data_file_size(struct dso *dso, struct machine *machine)
+ 	if (dso->data.status == DSO_DATA_STATUS_ERROR)
+ 		return -1;
  
--	pthread_mutex_unlock(&dso__data_open_lock);
++	if (dso->binary_type == DSO_BINARY_TYPE__BPF_PROG_INFO)
++		return bpf_size(dso);
++
+ 	return file_size(dso, machine);
+ }
  
- 	if (ret > 0) {
- 		old = dso_cache__insert(dso, cache);
 -- 
 2.17.2
 
