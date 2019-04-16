@@ -6,48 +6,48 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8BAABC10F14
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:47:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E924AC282DA
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:47:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5C646222B2
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:47:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B81B121B26
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 13:47:18 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729589AbfDPNrN (ORCPT
+        id S1729604AbfDPNrR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 09:47:13 -0400
-Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:59104 "EHLO
+        Tue, 16 Apr 2019 09:47:17 -0400
+Received: from mx0b-001b2d01.pphosted.com ([148.163.158.5]:42152 "EHLO
         mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1729563AbfDPNrI (ORCPT
+        by vger.kernel.org with ESMTP id S1729563AbfDPNrQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 09:47:08 -0400
-Received: from pps.filterd (m0098413.ppops.net [127.0.0.1])
-        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3GDkXZx070765
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:47:07 -0400
-Received: from e06smtp05.uk.ibm.com (e06smtp05.uk.ibm.com [195.75.94.101])
-        by mx0b-001b2d01.pphosted.com with ESMTP id 2rwftphbht-1
+        Tue, 16 Apr 2019 09:47:16 -0400
+Received: from pps.filterd (m0098420.ppops.net [127.0.0.1])
+        by mx0b-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3GDkcQC175912
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:47:15 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0b-001b2d01.pphosted.com with ESMTP id 2rwfbattgt-1
         (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:47:07 -0400
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 09:47:11 -0400
 Received: from localhost
-        by e06smtp05.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
         for <linux-kernel@vger.kernel.org> from <ldufour@linux.ibm.com>;
-        Tue, 16 Apr 2019 14:47:04 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp05.uk.ibm.com (192.168.101.135) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        Tue, 16 Apr 2019 14:47:01 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
         (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Tue, 16 Apr 2019 14:46:53 +0100
+        Tue, 16 Apr 2019 14:46:51 +0100
 Received: from d06av22.portsmouth.uk.ibm.com (d06av22.portsmouth.uk.ibm.com [9.149.105.58])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3GDkqd060686582
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3GDknUt21561348
         (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Tue, 16 Apr 2019 13:46:52 GMT
+        Tue, 16 Apr 2019 13:46:49 GMT
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id DE5414C066;
-        Tue, 16 Apr 2019 13:46:51 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id 594DE4C044;
+        Tue, 16 Apr 2019 13:46:49 +0000 (GMT)
 Received: from d06av22.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 6804E4C046;
-        Tue, 16 Apr 2019 13:46:50 +0000 (GMT)
+        by IMSVA (Postfix) with ESMTP id D75944C05E;
+        Tue, 16 Apr 2019 13:46:47 +0000 (GMT)
 Received: from nimbus.lab.toulouse-stg.fr.ibm.com (unknown [9.101.4.33])
         by d06av22.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Tue, 16 Apr 2019 13:46:50 +0000 (GMT)
+        Tue, 16 Apr 2019 13:46:47 +0000 (GMT)
 From:   Laurent Dufour <ldufour@linux.ibm.com>
 To:     akpm@linux-foundation.org, mhocko@kernel.org, peterz@infradead.org,
         kirill@shutemov.name, ak@linux.intel.com, dave@stgolabs.net,
@@ -78,96 +78,78 @@ Cc:     linux-kernel@vger.kernel.org, linux-mm@kvack.org,
         haren@linux.vnet.ibm.com, npiggin@gmail.com,
         paulmck@linux.vnet.ibm.com, Tim Chen <tim.c.chen@linux.intel.com>,
         linuxppc-dev@lists.ozlabs.org, x86@kernel.org
-Subject: [PATCH v12 31/31] mm: Add a speculative page fault switch in sysctl
-Date:   Tue, 16 Apr 2019 15:45:22 +0200
+Subject: [PATCH v12 30/31] arm64/mm: add speculative page fault
+Date:   Tue, 16 Apr 2019 15:45:21 +0200
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190416134522.17540-1-ldufour@linux.ibm.com>
 References: <20190416134522.17540-1-ldufour@linux.ibm.com>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 X-TM-AS-GCONF: 00
-x-cbid: 19041613-0020-0000-0000-000003307064
+x-cbid: 19041613-0012-0000-0000-0000030F6F13
 X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19041613-0021-0000-0000-00002182B514
-Message-Id: <20190416134522.17540-32-ldufour@linux.ibm.com>
+x-cbparentid: 19041613-0013-0000-0000-00002147A86B
+Message-Id: <20190416134522.17540-31-ldufour@linux.ibm.com>
 X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-16_05:,,
  signatures=0
 X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
  malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
  clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=784 adultscore=0 classifier=spam adjust=0 reason=mlx
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
  scancount=1 engine=8.0.1-1810050000 definitions=main-1904160093
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-This allows to turn on/off the use of the speculative page fault handler.
+From: Mahendran Ganesh <opensource.ganesh@gmail.com>
 
-By default it's turned on.
+This patch enables the speculative page fault on the arm64
+architecture.
 
+I completed spf porting in 4.9. From the test result,
+we can see app launching time improved by about 10% in average.
+For the apps which have more than 50 threads, 15% or even more
+improvement can be got.
+
+Signed-off-by: Ganesh Mahendran <opensource.ganesh@gmail.com>
+
+[handle_speculative_fault() is no more returning the vma pointer]
 Signed-off-by: Laurent Dufour <ldufour@linux.ibm.com>
 ---
- include/linux/mm.h | 3 +++
- kernel/sysctl.c    | 9 +++++++++
- mm/memory.c        | 3 +++
- 3 files changed, 15 insertions(+)
+ arch/arm64/mm/fault.c | 12 ++++++++++++
+ 1 file changed, 12 insertions(+)
 
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index ec609cbad25a..f5bf13a2197a 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -1531,6 +1531,7 @@ extern vm_fault_t handle_mm_fault(struct vm_area_struct *vma,
- 			unsigned long address, unsigned int flags);
+diff --git a/arch/arm64/mm/fault.c b/arch/arm64/mm/fault.c
+index 4f343e603925..b5e2a93f9c21 100644
+--- a/arch/arm64/mm/fault.c
++++ b/arch/arm64/mm/fault.c
+@@ -485,6 +485,16 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
  
- #ifdef CONFIG_SPECULATIVE_PAGE_FAULT
-+extern int sysctl_speculative_page_fault;
- extern vm_fault_t __handle_speculative_fault(struct mm_struct *mm,
- 					     unsigned long address,
- 					     unsigned int flags);
-@@ -1538,6 +1539,8 @@ static inline vm_fault_t handle_speculative_fault(struct mm_struct *mm,
- 						  unsigned long address,
- 						  unsigned int flags)
- {
-+	if (unlikely(!sysctl_speculative_page_fault))
-+		return VM_FAULT_RETRY;
+ 	perf_sw_event(PERF_COUNT_SW_PAGE_FAULTS, 1, regs, addr);
+ 
++	/*
++	 * let's try a speculative page fault without grabbing the
++	 * mmap_sem.
++	 */
++	fault = handle_speculative_fault(mm, addr, mm_flags);
++	if (fault != VM_FAULT_RETRY) {
++		perf_sw_event(PERF_COUNT_SW_SPF, 1, regs, addr);
++		goto done;
++	}
++
  	/*
- 	 * Try speculative page fault for multithreaded user space task only.
+ 	 * As per x86, we may deadlock here. However, since the kernel only
+ 	 * validly references user space from well defined areas of the code,
+@@ -535,6 +545,8 @@ static int __kprobes do_page_fault(unsigned long addr, unsigned int esr,
+ 	}
+ 	up_read(&mm->mmap_sem);
+ 
++done:
++
+ 	/*
+ 	 * Handle the "normal" (no error) case first.
  	 */
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index 9df14b07a488..3a712e52c14a 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -1295,6 +1295,15 @@ static struct ctl_table vm_table[] = {
- 		.extra1		= &zero,
- 		.extra2		= &two,
- 	},
-+#ifdef CONFIG_SPECULATIVE_PAGE_FAULT
-+	{
-+		.procname	= "speculative_page_fault",
-+		.data		= &sysctl_speculative_page_fault,
-+		.maxlen		= sizeof(sysctl_speculative_page_fault),
-+		.mode		= 0644,
-+		.proc_handler	= proc_dointvec,
-+	},
-+#endif
- 	{
- 		.procname	= "panic_on_oom",
- 		.data		= &sysctl_panic_on_oom,
-diff --git a/mm/memory.c b/mm/memory.c
-index c65e8011d285..a12a60891350 100644
---- a/mm/memory.c
-+++ b/mm/memory.c
-@@ -83,6 +83,9 @@
- 
- #define CREATE_TRACE_POINTS
- #include <trace/events/pagefault.h>
-+#ifdef CONFIG_SPECULATIVE_PAGE_FAULT
-+int sysctl_speculative_page_fault = 1;
-+#endif
- 
- #if defined(LAST_CPUPID_NOT_IN_PAGE_FLAGS) && !defined(CONFIG_COMPILE_TEST)
- #warning Unfortunate NUMA and NUMA Balancing config, growing page-frame for last_cpupid.
 -- 
 2.21.0
 
