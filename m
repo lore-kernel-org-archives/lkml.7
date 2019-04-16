@@ -2,74 +2,74 @@ Return-Path: <SRS0=BZT9=SS=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.7 required=3.0 tests=FROM_LOCAL_HEX,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E0422C10F13
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:03:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CB35FC10F13
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:03:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BAE3B20663
-	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:03:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A85122075B
+	for <linux-kernel@archiver.kernel.org>; Tue, 16 Apr 2019 19:03:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730234AbfDPTC7 (ORCPT
+        id S1730405AbfDPTDD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 15:02:59 -0400
-Received: from mx2.suse.de ([195.135.220.15]:60402 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727136AbfDPTC7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 15:02:59 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id A756FAE47;
-        Tue, 16 Apr 2019 19:02:57 +0000 (UTC)
-Date:   Tue, 16 Apr 2019 21:02:56 +0200 (CEST)
-From:   Miroslav Benes <mbenes@suse.cz>
-To:     Joe Lawrence <joe.lawrence@redhat.com>
-cc:     linux-kernel@vger.kernel.org, live-patching@vger.kernel.org,
-        linux-kbuild@vger.kernel.org, Jessica Yu <jeyu@kernel.org>,
-        Jiri Kosina <jikos@kernel.org>,
-        Joao Moreira <jmoreira@suse.de>,
-        Josh Poimboeuf <jpoimboe@redhat.com>,
-        Konstantin Khlebnikov <khlebnikov@yandex-team.ru>,
-        Masahiro Yamada <yamada.masahiro@socionext.com>,
-        Michael Matz <matz@suse.de>, Nicolai Stange <nstange@suse.de>,
-        Petr Mladek <pmladek@suse.com>
-Subject: Re: [PATCH v3 2/9] kbuild: Support for Symbols.list creation
-In-Reply-To: <b2b5b57e-ae55-8e7b-f4f4-fa4f15194d77@redhat.com>
-Message-ID: <alpine.LSU.2.21.1904162101150.9731@pobox.suse.cz>
-References: <20190410155058.9437-1-joe.lawrence@redhat.com> <20190410155058.9437-3-joe.lawrence@redhat.com> <alpine.LSU.2.21.1904112100400.18787@pobox.suse.cz> <b2b5b57e-ae55-8e7b-f4f4-fa4f15194d77@redhat.com>
-User-Agent: Alpine 2.21 (LSU 202 2017-01-01)
+        Tue, 16 Apr 2019 15:03:03 -0400
+Received: from mail-io1-f72.google.com ([209.85.166.72]:33568 "EHLO
+        mail-io1-f72.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730295AbfDPTDB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 15:03:01 -0400
+Received: by mail-io1-f72.google.com with SMTP id n15so17560141ioc.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 12:03:01 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:date:in-reply-to:message-id:subject
+         :from:to;
+        bh=lxKut/HU+wkC7ZEcirpdmi7wbjnE0Dg75ohOiteV7/k=;
+        b=mAChWX6Hy16rzRqAxBzmzWPkTU2AHgov3xk8CwhJ4K7HHEVb8frn2iKuQRfwVKY7pG
+         kfPOhAyLaciBG2NS7ndSwgapJqEMJIdXIhlnOWkW2zeoVJkI17rn9KG9OwUfjlpDH/fB
+         TphNcY7uQ/IKtA92MIdtEdCWHUuMaKXsoLft1+aF8rT7T9mIUn6aKhAH3j+vbFSaz/f8
+         nRI+1EBxmQ9OogdtrhuxSVkjTLr9ha4koJHdqVtoyjT2BJYtMZkb/S85b4cq6Y9bKb30
+         VckbSLwL6zq7ENWWHBAn5WPrpG6aDJ8236FQRS1kbSW/JcGXIFt8uymcOlOVs34Md5oz
+         7vLw==
+X-Gm-Message-State: APjAAAWBDloPpGw7O7R0uPGQxbmxe+CN1FKkKj8nodyI9S4vKxAwdclf
+        2ctCw2uBF3SChbxgHyI1rPd0Kh/BedeysDSpBKE2GfeTrmEt
+X-Google-Smtp-Source: APXvYqxmLSv9mlCqd+l3cODicH/ctwi7Jnt4DCPyBOuMEvnCs9BLM4IIRMQMv/CSQyGywGduJYrKc1IGflO5nHdEvBpDDxM3Flnn
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
+X-Received: by 2002:a6b:c885:: with SMTP id y127mr6200078iof.2.1555441380972;
+ Tue, 16 Apr 2019 12:03:00 -0700 (PDT)
+Date:   Tue, 16 Apr 2019 12:03:00 -0700
+In-Reply-To: <Pine.LNX.4.44L0.1904161421530.1605-100000@iolanthe.rowland.org>
+X-Google-Appengine-App-Id: s~syzkaller
+X-Google-Appengine-App-Id-Alias: syzkaller
+Message-ID: <000000000000fb61d40586aa6a1e@google.com>
+Subject: Re: INFO: task hung in usb_kill_urb
+From:   syzbot <syzbot+d919b0f29d7b5a4994b9@syzkaller.appspotmail.com>
+To:     andreyknvl@google.com, gregkh@linuxfoundation.org,
+        gustavo@embeddedor.com, linux-kernel@vger.kernel.org,
+        linux-usb@vger.kernel.org, stern@rowland.harvard.edu,
+        syzkaller-bugs@googlegroups.com
+Content-Type: text/plain; charset="UTF-8"; format=flowed; delsp=yes
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Apr 2019, Joe Lawrence wrote:
+Hello,
 
-> On 4/11/19 3:04 PM, Miroslav Benes wrote:
-> > 
-> >> diff --git a/samples/livepatch/Makefile b/samples/livepatch/Makefile
-> >> index 2472ce39a18d..8b9b42a258ad 100644
-> >> --- a/samples/livepatch/Makefile
-> >> +++ b/samples/livepatch/Makefile
-> >> @@ -1,3 +1,4 @@
-> >> +LIVEPATCH_livepatch-sample := y
-> >>   obj-$(CONFIG_SAMPLE_LIVEPATCH) += livepatch-sample.o
-> >>   obj-$(CONFIG_SAMPLE_LIVEPATCH) += livepatch-shadow-mod.o
-> >>   obj-$(CONFIG_SAMPLE_LIVEPATCH) += livepatch-shadow-fix1.o
-> > 
-> > We discussed this and I think there has been no conclusion yet. Shouldn't
-> > we do the same (add LIVEPATCH_) for the other samples here as well?
-> 
-> In v2 review, I mentioned moving this hunk to ("modpost: Add modinfo flag to
-> livepatch modules") along with the same change to the other sample modules.  I
-> didn't apply that for v3, but can do so for the next spin if it makes the
-> commits easier to review.
+syzbot has tested the proposed patch and the reproducer did not trigger  
+crash:
 
-I think it belongs here, but I may be missing something. Anyway, it is not 
-really important, so I'd leave it up to you.
+Reported-and-tested-by:  
+syzbot+d919b0f29d7b5a4994b9@syzkaller.appspotmail.com
 
-Miroslav 
+Tested on:
+
+commit:         9a33b369 usb-fuzzer: main usb gadget fuzzer driver
+git tree:       https://github.com/google/kasan/tree/usb-fuzzer
+kernel config:  https://syzkaller.appspot.com/x/.config?x=23e37f59d94ddd15
+compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
+patch:          https://syzkaller.appspot.com/x/patch.diff?x=1260cccb200000
+
+Note: testing is done by a robot and is best-effort only.
