@@ -2,117 +2,130 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B244C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:38:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 34499C282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:39:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0967120835
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:38:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="LXZP5yJf"
+	by mail.kernel.org (Postfix) with ESMTP id 0D33B20835
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:39:42 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732230AbfDQMiy (ORCPT
+        id S1732206AbfDQMjl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 08:38:54 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:35018 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732191AbfDQMix (ORCPT
+        Wed, 17 Apr 2019 08:39:41 -0400
+Received: from relay10.mail.gandi.net ([217.70.178.230]:55957 "EHLO
+        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732049AbfDQMjk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 08:38:53 -0400
-Received: by mail-qt1-f193.google.com with SMTP id h39so27122731qte.2
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 05:38:52 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=PY2C+1xXL9se3lVqErpOfmzeBeNLhJ2ymdjjq7fQGb8=;
-        b=LXZP5yJfwy67RgbWiPN+mNC8E0cvqwhSdBMX8G95PHS2zLVuhgTkRfZr7Nte4rYf38
-         1iAEDS1PmoY8NJEyVYbTSw0Up4ia//v1B+snOz0jVQs19DdUGjQeuV0W4tY7uFiCgiB/
-         E20+FVMvYP0PeWZxc6FcScB9gwRFHfOw3PpEffRfgPK0I6b5ZSqftTb+R/X1s7DX75fR
-         Ico9e1335WFjRJN1QpzFkIPFKXKFDqPLREqOWNzxhA6BvFi3CZSPPbmFupH+AYJxLTcU
-         bHGn81qzSskZSwMY8ylFccwC5ZUv5OMe/qyArSs88nTienmd0FZWy7RVjPzjS2EClc1o
-         SOww==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=PY2C+1xXL9se3lVqErpOfmzeBeNLhJ2ymdjjq7fQGb8=;
-        b=mq159YfjFhMkr/3l/AM/HvDfPcSZiizOh2fl0YjaMheCPojRXSJ1YV/+wUoeRnfIvm
-         8si0KFjo5vCVT0N1tAjJBbercdv466uH070U5uKdtRWPOA6CYAaOGXt7M4VycrzjzaUv
-         WetMMCgkdCp7rLz7p4wRyJhEqLCw9jrRSKrIuycYG5tQ9UzFfWn+bBokBj0hvfHVHjC1
-         GEDK+ELJYzPdyu75RoCN8DHdg1xNV5IXz9kH0NFbh0PQeMVkBArbS3SetnvvDnhkAadS
-         w7gvgjuOj1At47jA5uPO505qwnJmUUB9UVn4hUSxuS6uBCC7MbUnFqOXlJcsOpfa2fo7
-         izgA==
-X-Gm-Message-State: APjAAAVlKuyT6Acy2XBAmkq2uD7iaFBtyt9limwOl7Bwn4HNoV5hoe2i
-        0dCPo1HbfISLSVyOOEYAMno/s/aDkCJv8u9R6Lloug==
-X-Google-Smtp-Source: APXvYqwnBVp0C+GbcCeCb0OHBMwxtQ/yoMubKCAdnBg0VrWMJK9p88tGewd86RSNXsU8tHAtFfyQMIo5T4D4OsOpLfM=
-X-Received: by 2002:aed:2208:: with SMTP id n8mr68337847qtc.168.1555504732238;
- Wed, 17 Apr 2019 05:38:52 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190412080152.3718-1-jian-hong@endlessm.com> <tip-0082517fa4bce073e7cf542633439f26538a14cc@git.kernel.org>
- <20190416082042.GA69717@gmail.com> <CAD8Lp44pQRYdw4cbfMt3uOSO23dzy_mWTt5T-Zjft08WWu_yUA@mail.gmail.com>
- <20190417061650.GA31060@gmail.com>
-In-Reply-To: <20190417061650.GA31060@gmail.com>
-From:   Daniel Drake <drake@endlessm.com>
-Date:   Wed, 17 Apr 2019 20:38:41 +0800
-Message-ID: <CAD8Lp45BLaoXF=RNcncqcTtNvaGHP72+a1CxcjoeBXDiw9TKbA@mail.gmail.com>
-Subject: Re: EFI reboot vs. ACPI reboot (was: Re: [tip:x86/urgent] x86/reboot,
- efi: Use EFI reboot for Acer TravelMate X514-51T)
-To:     Ingo Molnar <mingo@kernel.org>
-Cc:     Peter Zijlstra <peterz@infradead.org>,
-        Borislav Petkov <bp@alien8.de>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Linux Kernel <linux-kernel@vger.kernel.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Jian-Hong Pan <jian-hong@endlessm.com>,
-        matt@codeblueprint.co.uk,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>, hpa@zytor.com,
-        linux-efi@vger.kernel.org, Len Brown <len.brown@intel.com>,
-        linux-tip-commits@vger.kernel.org,
-        Endless Linux Upstreaming Team <linux@endlessm.com>
+        Wed, 17 Apr 2019 08:39:40 -0400
+Received: from aptenodytes (aaubervilliers-681-1-42-238.w90-88.abo.wanadoo.fr [90.88.160.238])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 1DA81240010;
+        Wed, 17 Apr 2019 12:39:36 +0000 (UTC)
+Message-ID: <9747977af63d2cb66a51e18ce5e545ed99803718.camel@bootlin.com>
+Subject: Re: [PATCH 19/20] lib: image-formats: Add more functions
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org
+Date:   Wed, 17 Apr 2019 14:39:36 +0200
+In-Reply-To: <382f72c5938f538c8489cb2032050f4be252ad59.1555487650.git-series.maxime.ripard@bootlin.com>
+References: <cover.8ec406bf8f4f097e9dc909d5aac466556822f592.1555487650.git-series.maxime.ripard@bootlin.com>
+         <382f72c5938f538c8489cb2032050f4be252ad59.1555487650.git-series.maxime.ripard@bootlin.com>
+Organization: Bootlin
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.1 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 2:16 PM Ingo Molnar <mingo@kernel.org> wrote:
-> Ok, so acpi_gbl_reduced_hardware is set when the ... 'reduced hardware'
-> bit is set:
->
->         acpi_gbl_reduced_hardware = FALSE;
->         if (acpi_gbl_FADT.flags & ACPI_FADT_HW_REDUCED) {
->                 acpi_gbl_reduced_hardware = TRUE;
->         }
->
->
-> which is described as:
->
->  #define ACPI_FADT_HW_REDUCED        (1<<20)     /* 20: [V5] ACPI hardware is not implemented (ACPI 5.0) */
->
-> That seems counter-intuitive to me: if no full ACPI hardware is
-> implemented then we should assume reduced ACPI functionality, i.e. if the
-> EFI runtime is otherwise available we should default to it.
+Hi,
 
-It's a bit confusing, but my loose understanding is that previous
-versions of the ACPI spec required system implementors to implement
-the whole thing; but that's increasingly impractical today, e.g. with
-ARM systems coming along, which do not gel well with some of the
-historical x86-rooted design aspects that spilled over into ACPI. The
-V5 spec introduces reduced mode as an opt-in new feature, but for
-compatibility with pre-V5 implementations it needs to consider "full
-hardware" mode as the default.
+On Wed, 2019-04-17 at 09:54 +0200, Maxime Ripard wrote:
+> V4L2 drivers typically need a few more helpers compared to DRM drivers, so
+> let's add them.
+> 
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
+> ---
+>  include/linux/image-formats.h | 42 ++++++++++++++++++++++++++++++++++++-
+>  1 file changed, 42 insertions(+)
+> 
+> diff --git a/include/linux/image-formats.h b/include/linux/image-formats.h
+> index b78b8e861fc9..a2cf3528bd31 100644
+> --- a/include/linux/image-formats.h
+> +++ b/include/linux/image-formats.h
+> @@ -388,6 +388,48 @@ uint64_t image_format_info_min_pitch(const struct image_format_info *info,
+>  			    image_format_info_block_height(info, plane));
+>  }
+>  
+> +/**
+> + * image_format_info_plane_stride - determine the stride value
+> + * @format: pointer to the image_format_info
+> + * @width: plane width
+> + * @plane: plane index
+> + *
+> + * Returns:
+> + * The bytes per pixel value for the specified plane.
 
-> Feel free to send a patch that makes EFI reboot the default one under
-> these circumstances,
+Looks like this needs to be updated to "bytes per line" ;)
 
-Just to check, you mean: EFI reboot (and shutdown) become the default
-methods when the machine is booted in EFI mode, and EFI stuff has not
-been disabled with a kernel parameter?
-Even when running in full hardware ACPI mode.
+Cheers,
 
-Thanks
-Daniel
+Paul
+
+> + */
+> +static inline
+> +unsigned int image_format_info_plane_stride(const struct image_format_info *format,
+> +					    unsigned int width, int plane)
+> +{
+> +	if (!format || plane >= format->num_planes)
+> +		return 0;
+> +
+> +	return image_format_info_plane_width(format, width, plane) *
+> +		image_format_info_plane_cpp(format, plane);
+> +}
+> +
+> +/**
+> + * image_format_info_plane_size - determine the size value
+> + * @format: pointer to the image_format_info
+> + * @width: plane width
+> + * @height: plane width
+> + * @plane: plane index
+> + *
+> + * Returns:
+> + * The size of the plane buffer.
+> + */
+> +static inline
+> +unsigned int image_format_info_plane_size(const struct image_format_info *format,
+> +					  unsigned int width, unsigned int height,
+> +					  int plane)
+> +{
+> +	if (!format || plane >= format->num_planes)
+> +		return 0;
+> +
+> +	return image_format_info_plane_stride(format, width, plane) *
+> +		image_format_info_plane_height(format, height, plane);
+> +}
+> +
+>  const struct image_format_info *__image_format_drm_lookup(u32 drm);
+>  const struct image_format_info *__image_format_v4l2_lookup(u32 v4l2);
+>  const struct image_format_info *image_format_drm_lookup(u32 drm);
+-- 
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
