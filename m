@@ -2,78 +2,110 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9D596C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 15:49:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7886EC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 15:49:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6022E20656
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 15:49:03 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="S/CqysnT"
+	by mail.kernel.org (Postfix) with ESMTP id 4AA4C20656
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 15:49:12 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555516152;
+	bh=XAlvS4Jw6k318R8PrK7HsVRz7jt4M7fKyVEW8+LIrWs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=HAfgM2UNC7LMAdlZRKH9ynAVkLs1TcqQQmxaAgwapm7r5lGJa/BYHqZ3cYWUjrInS
+	 ac78HyFiDZrfdE5fYsZ4yQAjZQjDuRur0875HNIkvp51DQrY+2Ql21Vt0pZAeKgVFt
+	 wsip5BfaCvGYtI1GH7YNhkKoTU0/VZp+tVYpx5p0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732799AbfDQPtC (ORCPT
+        id S1732819AbfDQPtL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 11:49:02 -0400
-Received: from bombadil.infradead.org ([198.137.202.133]:40004 "EHLO
-        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729940AbfDQPtB (ORCPT
+        Wed, 17 Apr 2019 11:49:11 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:60744 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732637AbfDQPtL (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 11:49:01 -0400
+        Wed, 17 Apr 2019 11:49:11 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
-        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
         List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=FCODExTNsFUPdjtSIpGHQlu+n8l5qEJjh02LTVeFR6Y=; b=S/CqysnTSDonZSFmBBkBl4pR7
-        vX85t6bdF5Hf7Vx8JSbbn8GKJU6rfSg3Z37TB+dHQvIbkZQkp+nOobXOd9PNvrGo/H2js2ngl2O8Q
-        ppGLMT3sau6BKPhYATyIlL1rVt3k5nohtN5iNePmE8indh1/3aJpY6QALj0YaQpCbRkSFtO+kTmgT
-        uL6Y6Qrf+FLt8X/pbL6I6Uz65+vpWWZJB2bTXjVugwomNQIX0Pk0ypx4GW6fW/Rs9Bhi2Bn2wD2Y5
-        hd1WYO+9q8LAyBTwiHBTmjYDrDHDWNOILr5duBXQ/og3Z3eJcb2P1g5pixoDfJnb+u0Ao+DJEGgeS
-        Qz2bCJDsQ==;
-Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hGmo0-0001uo-Kb; Wed, 17 Apr 2019 15:49:00 +0000
-Date:   Wed, 17 Apr 2019 08:49:00 -0700
-From:   Matthew Wilcox <willy@infradead.org>
-To:     Matteo Croce <mcroce@redhat.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
-        Kees Cook <keescook@chromium.org>,
-        Andrew Morton <akpm@linux-foundation.org>
-Subject: Re: [PATCH v3] proc/sysctl: add shared variables for range check
-Message-ID: <20190417154900.GD7751@bombadil.infradead.org>
-References: <20190417131531.9525-1-mcroce@redhat.com>
+         bh=u5rHoHZF6/viqyzahaEaixyUtWbVy9lY7TLd+/uIj24=; b=fPi+QQEbuEApcgNr+DuDdHAKE
+        zYmC5AG9yoWZP/df0fXc73FbOeJNa4IhKw5mkabO50PfIo6IKQQuCOG44ZPfixII+7cTtVqFAvvRl
+        SwJT55CzMuXJV47wLSWL8124LqgJqV08OwKvaBZUzLKFb0HI6GRv2WzUXWCGzgZCSOtL0=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hGmo5-0000eD-MW; Wed, 17 Apr 2019 15:49:05 +0000
+Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
+        id 152AF1128283; Wed, 17 Apr 2019 16:49:05 +0100 (BST)
+Date:   Wed, 17 Apr 2019 16:49:05 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Eric Hyeung Dong Jeong <eric.jeong.opensource@diasemi.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        DEVICETREE <devicetree@vger.kernel.org>,
+        LINUX-KERNEL <linux-kernel@vger.kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Support Opensource <Support.Opensource@diasemi.com>
+Subject: Re: [PATCH V1 3/3] regulator: slg51000: add slg51000 regulator driver
+Message-ID: <20190417154905.GD5703@sirena.org.uk>
+References: <cover.1555389447.git.eric.jeong.opensource@diasemi.com>
+ <5e4a6a007e45feac6d35203305cafd865be48755.1555389447.git.eric.jeong.opensource@diasemi.com>
+ <20190416152448.GC4834@sirena.org.uk>
+ <VE1PR10MB288069C2FC4B6F79AE8F26A891250@VE1PR10MB2880.EURPRD10.PROD.OUTLOOK.COM>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="11Y7aswkeuHtSBEs"
 Content-Disposition: inline
-In-Reply-To: <20190417131531.9525-1-mcroce@redhat.com>
-User-Agent: Mutt/1.9.2 (2017-12-15)
+In-Reply-To: <VE1PR10MB288069C2FC4B6F79AE8F26A891250@VE1PR10MB2880.EURPRD10.PROD.OUTLOOK.COM>
+X-Cookie: Boy!  Eucalyptus!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 03:15:31PM +0200, Matteo Croce wrote:
-> In the sysctl code the proc_dointvec_minmax() function is often used to
-> validate the user supplied value between an allowed range. This function
-> uses the extra1 and extra2 members from struct ctl_table as minimum and
-> maximum allowed value.
-> 
-> On sysctl handler declaration, in every source file there are some readonly
-> variables containing just an integer which address is assigned to the
-> extra1 and extra2 members, so the sysctl range is enforced.
-> 
-> The special values 0, 1 and INT_MAX are very often used as range boundary,
-> leading duplication of variables like zero=0, one=1, int_max=INT_MAX in
-> different source files:
-> 
->     $ git grep -E '\.extra[12].*&(zero|one|int_max)\b' |wc -l
->     245
-> 
-> This patch adds three const variables for the most commonly used values,
-> and use them instead of creating a local one for every object file.
 
-Does this actually cause the kernel size to shrink?  EXPORT_SYMBOL isn't
-free, you know.
+--11Y7aswkeuHtSBEs
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
+
+On Wed, Apr 17, 2019 at 11:25:29AM +0000, Eric Hyeung Dong Jeong wrote:
+> On Wednesday, April 17, 2019 12:25 AM +0900, Mark Brown wrote:
+
+> > This looks like it should be a get_status() operation as it's reading
+> > status bits rather than the command we sent to the device - for that
+> > just use regulator_is_enabled_regmap().
+
+> I thought that it needs to return current status of a regulator when the =
+function is called.
+> I am wondering that the *is_enabled()* function is just to check=20
+> If a regulator has been turned on or not rather than getting current stat=
+us of the regulator.
+
+It should say if we told the hardware to enable the regulator so the
+former - basically, is the hardware in the same state it'd be in after
+we called _enable() or _disable().  If there's a fault then that should
+only affect is_enabled() if it resets the enable bit that _enable() set.
+
+--11Y7aswkeuHtSBEs
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAly3SvAACgkQJNaLcl1U
+h9Crhwf9H312wObjFKX5Rz+Mwx7XZg7FSv06VMhCQ9BkLOva1gyLRu9r6ZTFM5XP
+5cxvKfVvZkoqgH9gxa6Rciqsq/sui+JcVQc5wYgUOkJWEOq31rlF3CnVm3k7tCCI
+U8B6o5j2QKK+yUfX1EOG3DshTe8vyZ0h8zEGDPB266jDjaIi8xg+PItqL8BUl7Nw
+9g342bLs4nUBQTopToy+xuGJ//QRE1M0+vm+BSwknSN+N9hH6nFRf2ijTJhFUWWi
+DEK/vBmKmwd+/eFFU+djUmP/UDzfVVXvD7iLaY/Lw4C/3JUC6xi7qjtQ+lEsOE4i
+ERqzG670pPBpTc4/q0j/03br7Ckmdw==
+=GfsX
+-----END PGP SIGNATURE-----
+
+--11Y7aswkeuHtSBEs--
