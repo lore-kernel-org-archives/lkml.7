@@ -4,62 +4,61 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2B59FC282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:10:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E80A1C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:11:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EC5DE206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:10:39 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B7B6A20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:11:18 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="XTYjoInI"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="RYCQ8ywP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732411AbfDQOKi (ORCPT
+        id S1732414AbfDQOLR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 10:10:38 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:45097 "EHLO
+        Wed, 17 Apr 2019 10:11:17 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:33257 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728335AbfDQOKi (ORCPT
+        with ESMTP id S1728335AbfDQOLQ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 10:10:38 -0400
+        Wed, 17 Apr 2019 10:11:16 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3HEAENS3933909
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3HEAuQE3933975
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 17 Apr 2019 07:10:14 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3HEAENS3933909
+        Wed, 17 Apr 2019 07:10:56 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3HEAuQE3933975
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041743; t=1555510215;
-        bh=j/+wbXpQc3Op65PFxRA9DIkvVKG6TrYNU9scc2J4IoY=;
+        s=2019041743; t=1555510257;
+        bh=ObJtQlIfE5Kix+3Q3qYB77YEJ9lkYqajY+SlmOz11uk=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=XTYjoInIL+JFkE//ZbtUSgLqDfASNoy9iqKl65RGcVTp0iqKnYfB+dqZJZEC4DBbb
-         ftAIL0LO+KzdazRihbrDCIYkS/5JSRRrm4beXfsdDoy64Qm2vMNNkX6VpgG5edkY86
-         WP3kmjwO4qDvU0PsjsnAr6zKt2jLLvRdy6CVgwIdk3mn6jkQKAhZKqoQcOb3HLX5BJ
-         pS7A7t2w+CS7j7MNTtTDvA3ttv1FPhwmHVThMvC8k8A6IUYHbWLc6Lg1WvzSby6xRc
-         ON4mgwTPSzdjtgN5e3MdIIB8kiT1PK4H6413sRbZ3BTfc0CNNwVkJFO7w3es9vhzmr
-         EgM87JXWRBfIQ==
+        b=RYCQ8ywPt9LJEAEIOZhlmcW+DT1UXSghlzWpygQl+GOcsm7Kei4fUVRzxAJjF38Z7
+         HXAqITAA78PV6I6KkELpML8H4OuTdYDTCupItVLwevVXLIlvMNfao5iBXceXK6r1LD
+         M+Pdd2q/ervgkWSulkkeMuKxdj4DOin4TYQSGVC9EuPGXj9Dqrr9uJ1y4pEIyXgtip
+         q37pxqDfqd+e5jVAZ9Hcb0hhRVd6A7s2mDJJOOg+J1D7n67JjuK2fmlcNKw53Z35Dd
+         UP05HK/Wlr2HMRMsJtEG1qo+mkahOEBp3+oHU9aSRVv4aAl6BsK9PKTCO88uJdL7xk
+         XqIphmCB0JaQg==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3HEAEiO3933906;
-        Wed, 17 Apr 2019 07:10:14 -0700
-Date:   Wed, 17 Apr 2019 07:10:14 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3HEAtit3933972;
+        Wed, 17 Apr 2019 07:10:55 -0700
+Date:   Wed, 17 Apr 2019 07:10:55 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
-Message-ID: <tip-7623f37e411156e6e09b95cf5c76e509c5fda640@git.kernel.org>
-Cc:     peterz@infradead.org, tglx@linutronix.de, mingo@kernel.org,
-        dave.hansen@linux.intel.com, mingo@redhat.com,
-        sean.j.christopherson@intel.com, x86@kernel.org, luto@kernel.org,
-        linux-kernel@vger.kernel.org, hpa@zytor.com, bp@suse.de,
-        jpoimboe@redhat.com
-Reply-To: peterz@infradead.org, luto@kernel.org,
-          dave.hansen@linux.intel.com, x86@kernel.org, mingo@kernel.org,
-          tglx@linutronix.de, hpa@zytor.com, linux-kernel@vger.kernel.org,
-          jpoimboe@redhat.com, bp@suse.de, mingo@redhat.com,
-          sean.j.christopherson@intel.com
-In-Reply-To: <20190414160144.680960459@linutronix.de>
-References: <20190414160144.680960459@linutronix.de>
+Message-ID: <tip-d876b67343a648f3613506c7dbfed088fa0c875b@git.kernel.org>
+Cc:     dave.hansen@linux.intel.com, sean.j.christopherson@intel.com,
+        mingo@kernel.org, jpoimboe@redhat.com, peterz@infradead.org,
+        bp@suse.de, hpa@zytor.com, mingo@redhat.com, x86@kernel.org,
+        tglx@linutronix.de, luto@kernel.org, linux-kernel@vger.kernel.org
+Reply-To: mingo@redhat.com, x86@kernel.org, bp@suse.de, tglx@linutronix.de,
+          luto@kernel.org, linux-kernel@vger.kernel.org,
+          dave.hansen@linux.intel.com, sean.j.christopherson@intel.com,
+          mingo@kernel.org, hpa@zytor.com, jpoimboe@redhat.com,
+          peterz@infradead.org
+In-Reply-To: <20190414160144.784487230@linutronix.de>
+References: <20190414160144.784487230@linutronix.de>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/irq] x86/cpu_entry_area: Provide exception stack accessor
-Git-Commit-ID: 7623f37e411156e6e09b95cf5c76e509c5fda640
+Subject: [tip:x86/irq] x86/traps: Use cpu_entry_area instead of orig_ist
+Git-Commit-ID: d876b67343a648f3613506c7dbfed088fa0c875b
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -73,20 +72,25 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  7623f37e411156e6e09b95cf5c76e509c5fda640
-Gitweb:     https://git.kernel.org/tip/7623f37e411156e6e09b95cf5c76e509c5fda640
+Commit-ID:  d876b67343a648f3613506c7dbfed088fa0c875b
+Gitweb:     https://git.kernel.org/tip/d876b67343a648f3613506c7dbfed088fa0c875b
 Author:     Thomas Gleixner <tglx@linutronix.de>
-AuthorDate: Sun, 14 Apr 2019 17:59:49 +0200
+AuthorDate: Sun, 14 Apr 2019 17:59:50 +0200
 Committer:  Borislav Petkov <bp@suse.de>
-CommitDate: Wed, 17 Apr 2019 13:00:22 +0200
+CommitDate: Wed, 17 Apr 2019 13:01:59 +0200
 
-x86/cpu_entry_area: Provide exception stack accessor
+x86/traps: Use cpu_entry_area instead of orig_ist
 
-Store a pointer to the per cpu entry area exception stack mappings to allow
-fast retrieval.
+The orig_ist[] array is a shadow copy of the IST array in the TSS. The
+reason why it exists is that older kernels used two TSS variants with
+different pointers into the debug stack. orig_ist[] contains the real
+starting points.
 
-Required for converting various places from using the shadow IST array to
-directly doing address calculations on the actual mapping address.
+There is no point anymore to do so because the same information can be
+retrieved using the base address of the cpu entry area mapping and the
+offsets of the various exception stacks.
+
+No functional change. Preparation for removing orig_ist.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Borislav Petkov <bp@suse.de>
@@ -98,51 +102,29 @@ Cc: Josh Poimboeuf <jpoimboe@redhat.com>
 Cc: Peter Zijlstra <peterz@infradead.org>
 Cc: Sean Christopherson <sean.j.christopherson@intel.com>
 Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190414160144.680960459@linutronix.de
+Link: https://lkml.kernel.org/r/20190414160144.784487230@linutronix.de
 ---
- arch/x86/include/asm/cpu_entry_area.h | 4 ++++
- arch/x86/mm/cpu_entry_area.c          | 4 ++++
- 2 files changed, 8 insertions(+)
+ arch/x86/mm/fault.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/arch/x86/include/asm/cpu_entry_area.h b/arch/x86/include/asm/cpu_entry_area.h
-index af8c312673de..9b406f067ecf 100644
---- a/arch/x86/include/asm/cpu_entry_area.h
-+++ b/arch/x86/include/asm/cpu_entry_area.h
-@@ -99,6 +99,7 @@ struct cpu_entry_area {
- #define CPU_ENTRY_AREA_TOT_SIZE	(CPU_ENTRY_AREA_SIZE * NR_CPUS)
+diff --git a/arch/x86/mm/fault.c b/arch/x86/mm/fault.c
+index 0524e1d74f24..06c089513d39 100644
+--- a/arch/x86/mm/fault.c
++++ b/arch/x86/mm/fault.c
+@@ -28,6 +28,7 @@
+ #include <asm/mmu_context.h>		/* vma_pkey()			*/
+ #include <asm/efi.h>			/* efi_recover_from_page_fault()*/
+ #include <asm/desc.h>			/* store_idt(), ...		*/
++#include <asm/cpu_entry_area.h>		/* exception stack		*/
  
- DECLARE_PER_CPU(struct cpu_entry_area *, cpu_entry_area);
-+DECLARE_PER_CPU(struct cea_exception_stacks *, cea_exception_stacks);
- 
- extern void setup_cpu_entry_areas(void);
- extern void cea_set_pte(void *cea_vaddr, phys_addr_t pa, pgprot_t flags);
-@@ -118,4 +119,7 @@ static inline struct entry_stack *cpu_entry_stack(int cpu)
- 	return &get_cpu_entry_area(cpu)->entry_stack_page.stack;
- }
- 
-+#define __this_cpu_ist_top_va(name)					\
-+	CEA_ESTACK_TOP(__this_cpu_read(cea_exception_stacks), name)
-+
- #endif
-diff --git a/arch/x86/mm/cpu_entry_area.c b/arch/x86/mm/cpu_entry_area.c
-index 2b1407662a6d..a00d0d059c8a 100644
---- a/arch/x86/mm/cpu_entry_area.c
-+++ b/arch/x86/mm/cpu_entry_area.c
-@@ -14,6 +14,7 @@ static DEFINE_PER_CPU_PAGE_ALIGNED(struct entry_stack_page, entry_stack_storage)
- 
- #ifdef CONFIG_X86_64
- static DEFINE_PER_CPU_PAGE_ALIGNED(struct exception_stacks, exception_stacks);
-+DEFINE_PER_CPU(struct cea_exception_stacks*, cea_exception_stacks);
- #endif
- 
- struct cpu_entry_area *get_cpu_entry_area(int cpu)
-@@ -92,6 +93,9 @@ static void __init percpu_setup_exception_stacks(unsigned int cpu)
- 	unsigned int npages;
- 
- 	BUILD_BUG_ON(sizeof(exception_stacks) % PAGE_SIZE != 0);
-+
-+	per_cpu(cea_exception_stacks, cpu) = &cea->estacks;
-+
- 	/*
- 	 * The exceptions stack mappings in the per cpu area are protected
- 	 * by guard pages so each stack must be mapped separately.
+ #define CREATE_TRACE_POINTS
+ #include <asm/trace/exceptions.h>
+@@ -793,7 +794,7 @@ no_context(struct pt_regs *regs, unsigned long error_code,
+ 	if (is_vmalloc_addr((void *)address) &&
+ 	    (((unsigned long)tsk->stack - 1 - address < PAGE_SIZE) ||
+ 	     address - ((unsigned long)tsk->stack + THREAD_SIZE) < PAGE_SIZE)) {
+-		unsigned long stack = this_cpu_read(orig_ist.ist[ESTACK_DF]) - sizeof(void *);
++		unsigned long stack = __this_cpu_ist_top_va(DF) - sizeof(void *);
+ 		/*
+ 		 * We're likely to be running with very little stack space
+ 		 * left.  It's plausible that we'd hit this condition but
