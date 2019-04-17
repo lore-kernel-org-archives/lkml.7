@@ -2,165 +2,168 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DE454C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:06:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 491A9C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:10:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AB23A20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:06:31 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="rVrx2hyR"
+	by mail.kernel.org (Postfix) with ESMTP id 10CB820663
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:10:22 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731651AbfDQSGa (ORCPT
+        id S1730432AbfDQSKU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 14:06:30 -0400
-Received: from mail-it1-f194.google.com ([209.85.166.194]:37016 "EHLO
-        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726751AbfDQSG3 (ORCPT
+        Wed, 17 Apr 2019 14:10:20 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:52337 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfDQSKU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 14:06:29 -0400
-Received: by mail-it1-f194.google.com with SMTP id u65so5897266itc.2
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 11:06:29 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=ivMa+ybPpD2KsvvjrcpbeauKLe55Ky4VkAKG13FO8Io=;
-        b=rVrx2hyRcLVlGagFejkXXE3y+RztYrKGMLAByTjxCSikwhVXq9a0BBHmwcO0WN2BeY
-         aZ1Rcd5Nsa/Qn/U9QkWwo9enrFrvaZQ0Ur9zSgWH3yfDOPnpMUe7sYNKptpUz0KDNDXP
-         NsBbI/9ZX3u5987dQFFGtjjotzePBRqKyhG1q7Ra3z7lBjZ3XV22UUyQ2U7tkpm/QeIX
-         4ApuNSAPf2oAFUlhhSbit65dMlDP96CsoDYfGMN7xiMlQEmjEaECbsEh/dESgousgC30
-         jXGYiNplkr/kwMJW8WPpwv1Db096EFiDaKcln+MWBpzsf6W4v9/Q0G5hjC466f5tAOev
-         Updg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=ivMa+ybPpD2KsvvjrcpbeauKLe55Ky4VkAKG13FO8Io=;
-        b=oDgabe5+X0fGQAxgIkuiqR0aHOGA+l5KEN9bIRHPXIMBsNWZ+aMNUglSz792cV5oWY
-         AxZep9hTq4JBYh4v2Qa/BP7hIjV26okgxiIt9cOGribQz68aM5PHcW72nMFcNoy9hMV6
-         XLQUCyz2RD8sWdJjShtUrUdvjVWE0+vMx5V9aKDg4jhNNlOE5iFvlzwcz5p4lOzt0dKZ
-         e6J7XJfrdJftpKUPjF7Ou7nbxmA5lMzpPFuXFrZV3d1zdPr8vppgjMGYNDKAGeuJwWwV
-         pqetOlaXV59SL0zD7cE8gLxcxMqj086Idsh3XF6eyVv2oZvMHg42PG2JFZrhD8s1ySaD
-         XlJQ==
-X-Gm-Message-State: APjAAAWHa2JAcTD4WeKwAZkOyIPA9Xu3HiHb2U9vB7LLVON7syL7vbEh
-        Vq7iU/O/+lwzgq58YOWalQvi8x9imQC4/g7KmHo=
-X-Google-Smtp-Source: APXvYqzjKvN7Ylw/V4E/s63ffbR5uzZo4rzoZgb7wXiRRC7U9Hs1viJaGKG1r3AyJ6I8Et3YDqXpUE62l2GG5sTyUeY=
-X-Received: by 2002:a24:43cf:: with SMTP id s198mr832232itb.113.1555524388551;
- Wed, 17 Apr 2019 11:06:28 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190410114227.25846-1-kraxel@redhat.com> <20190410114227.25846-4-kraxel@redhat.com>
- <CAAfnVBm5XZx8P7k5np823-uRr-kqf0ey9Y3GtoE2Geo4dCdQ=g@mail.gmail.com>
- <20190411050322.mfxo5mrwwzajlz3h@sirius.home.kraxel.org> <CAAfnVB=v+daY0Q+mtdK2Q=F7iS_Ra7jGYfic3twfnUVo=tz3Yg@mail.gmail.com>
- <20190412054924.dvh6bfxfrbgvezxr@sirius.home.kraxel.org> <CAPaKu7QsDp=kRsMzMf0YcvafsXBsr_m4bstuZiWAcmYiV_AxnQ@mail.gmail.com>
- <20190417095750.lre3xrg4dlgskfjg@sirius.home.kraxel.org>
-In-Reply-To: <20190417095750.lre3xrg4dlgskfjg@sirius.home.kraxel.org>
-From:   Chia-I Wu <olvaffe@gmail.com>
-Date:   Wed, 17 Apr 2019 11:06:17 -0700
-Message-ID: <CAPaKu7S+QarGDig8fsc1xDyg3z=22ntcCtVMxWh1H3bEzEwZ3A@mail.gmail.com>
-Subject: Re: [PATCH 3/3] virtio-gpu api: VIRTIO_GPU_F_RESSOURCE_V2
-To:     Gerd Hoffmann <kraxel@redhat.com>
-Cc:     Gurchetan Singh <gurchetansingh@chromium.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Jason Wang <jasowang@redhat.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        "open list:VIRTIO CORE, NET AND BLOCK DRIVERS" 
-        <virtualization@lists.linux-foundation.org>,
-        David Airlie <airlied@redhat.com>, virtio@lists.oasis-open.org
+        Wed, 17 Apr 2019 14:10:20 -0400
+Received: from collins (196.109.29.93.rev.sfr.net [93.29.109.196])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id D874220000C;
+        Wed, 17 Apr 2019 18:10:15 +0000 (UTC)
+Message-ID: <0df3d4b5178d8a37b67b275e0771741c6c268de3.camel@bootlin.com>
+Subject: Support for 2D engines/blitters in V4L2 and DRM
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Nicolas Dufresne <nicolas@ndufresne.ca>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexandre Courbot <acourbot@chromium.org>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Eric Anholt <eric@anholt.net>, Rob Clark <robdclark@gmail.com>,
+        Dave Airlie <airlied@redhat.com>,
+        Daniel Vetter <daniel@ffwll.ch>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
+Date:   Wed, 17 Apr 2019 20:10:15 +0200
 Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.0 
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 2:57 AM Gerd Hoffmann <kraxel@redhat.com> wrote:
->
-> On Fri, Apr 12, 2019 at 04:34:20PM -0700, Chia-I Wu wrote:
-> > Hi,
-> >
-> > I am still new to virgl, and missed the last round of discussion about
-> > resource_create_v2.
-> >
-> > From the discussion below, semantically resource_create_v2 creates a host
-> > resource object _without_ any storage; memory_create creates a host memory
-> > object which provides the storage.  Is that correct?
->
-> Right now all resource_create_* variants create a resource object with
-> host storage.  memory_create creates guest storage, and
-> resource_attach_memory binds things together.  Then you have to transfer
-> the data.
-In Gurchetan's Vulkan example,  the host storage allocation happens in
-(some variant of) memory_create, not in resource_create_v2.  Maybe
-that's what got me confused.
+Hi Nicolas,
 
->
-> Hmm, maybe we need a flag indicating that host storage is not needed,
-> for resources where we want establish some kind of shared mapping later
-> on.
-This makes sense, to support both Vulkan and non-Vulkan models.
+I'm detaching this thread from our V4L2 stateless decoding spec since
+it has drifted off and would certainly be interesting to DRM folks as
+well!
 
-This differs from this patch, but I think a full-fledged resource
-should logically have three components
+For context: I was initially talking about writing up support for the
+Allwinner 2D engine as a DRM render driver, where I'd like to be able
+to batch jobs that affect the same destination buffer to only signal
+the out fence once when the batch is done. We have a similar issue in
+v4l2 where we'd like the destination buffer for a set of requests (each
+covering one H264 slice) to be marked as done once the set was decoded.
 
- - a RESOURCE component that has not storage
- - a MEMORY component that provides the storage
- - a BACKING component that is for transfers
+Le mercredi 17 avril 2019 à 12:22 -0400, Nicolas Dufresne a écrit :
+> > > > Interestingly, I'm experiencing the exact same problem dealing with a
+> > > > 2D graphics blitter that has limited ouput scaling abilities which
+> > > > imply handlnig a large scaling operation as multiple clipped smaller
+> > > > scaling operations. The issue is basically that multiple jobs have to
+> > > > be submitted to complete a single frame and relying on an indication
+> > > > from the destination buffer (such as a fence) doesn't work to indicate
+> > > > that all the operations were completed, since we get the indication at
+> > > > each step instead of at the end of the batch.
+> > > 
+> > > That looks similar to the IMX.6 IPU m2m driver. It splits the image in
+> > > tiles of 1024x1024 and process each tile separately. This driver has
+> > > been around for a long time, so I guess they have a solution to that.
+> > > They don't need requests, because there is nothing to be bundled with
+> > > the input image. I know that Renesas folks have started working on a
+> > > de-interlacer. Again, this kind of driver may process and reuse input
+> > > buffers for motion compensation, but I don't think they need special
+> > > userspace API for that.
+> > 
+> > Thanks for the reference! I hope it's not a blitter that was
+> > contributed as a V4L2 driver instead of DRM, as it probably would be
+> > more useful in DRM (but that's way beside the point).
+> 
+> DRM does not offer a generic and discoverable interface for these
+> accelerators. Note that these drivers have most of the time started as
+> DRM driver and their DRM side where dropped. That was the case for
+> Exynos drivers at least.
 
-resource_attach_backing sets the BACKING component.  BACKING always
-uses guest pages and supports only transfers into or out of MEMORY.
+Heh, sadly I'm aware of how things turn out most of the time. The thing
+is that DRM expects drivers to implement their own interface. That's
+fine for passing BOs with GPU bitstream and textures, but not so much
+for dealing with framebuffer-based operations where the streaming and
+buffer interface that v4l2 has is a good fit.
 
-resource_attach_memory sets the MEMORY component.  MEMORY can use host
-or guest pages, and must always support GPU operations.  When a MEMORY
-is mappable in the guest, we can skip BACKING and achieve zero-copy.
+There's also the fact that the 2D pipeline is fixed-function and highly
+hardware-specific, so we need driver-specific job descriptions to
+really make the most of it. That's where v4l2 is not much of a good fit
+for complex 2D pipelines either. Most 2D engines can take multiple
+inputs and blit them together in various ways, which is too far from
+what v4l2 deals with. So we can have fixed single-buffer pipelines with
+at best CSC and scaling, but not much more with v4l2 really.
 
-resource_create_* can then get a flag to indicate whether only
-RESOURCE is created or RESOURCE+MEMORY is created.
+I don't think it would be too much work to bring an interface to DRM in
+order to describe render framebuffers (we only have display
+framebuffers so far), with a simple queuing interface for scheduling
+driver-specific jobs, which could be grouped together to only signal
+the out fences when every buffer of the batch was done being rendered.
+This last point would allow handling cases where userapce need to
+perform multiple operations to carry out the single operation that it
+needs to do. In the case of my 2D blitter, that would be scaling above
+a 1024x1024 destination, which could be required to scaling a video
+buffer up to a 1920x1080 display. With that, we can e.g. page flip the
+2D engine destination buffer and be certain that scaling will be fully
+done when the fence is signaled.
 
+There's also the userspace problem: DRM render has mesa to back it in
+userspace and provide a generic API for other programes. For 2D
+engines, we don't have much to hold on to. Cairo has a DRM render
+interface that supports a few DRM render drivers where there is either
+a 2D pipeline or where pre-built shaders are used to implement a 2D
+pipeline, and that's about it as far as I know.
 
->
-> > Do we expect these new commands to be supported by OpenGL, which does not
-> > separate resources and memories?
->
-> Well, for opengl you need a 1:1 relationship between memory region and
-> resource.
->
-> > > Yes, even though it is not clear yet how we are going to handle
-> > > host-allocated buffers in the vhost-user case ...
-> >
-> > This might be another dumb question, but is this only an issue for
-> > vhost-user(-gpu) case?  What mechanisms are used to map host dma-buf into
-> > the guest address space?
->
-> qemu can change the address space, that includes mmap()ing stuff there.
-> An external vhost-user process can't do this, it can only read the
-> address space layout, and read/write from/to guest memory.
-I thought vhost-user process can work with the host-allocated dmabuf
-directly.  That is,
+There's also the possibility of writing up a drm-render DDX to handle
+these 2D blitters that can make things a lot faster when running a
+desktop environment. As for wayland, well, I don't really know what to
+think. I was under the impression that it relies on GL for 2D
+operations, but am really not sure how true that actually is.
 
-  qemu: injects dmabuf pages into guest address space
-  vhost-user: work with the dmabuf
-  guest: can read/write those pages
+> The thing is that DRM is great if you do immediate display stuff, while
+> V4L2 is nice if you do streaming, where you expect filling queued, and
+> popping buffers from queues.
+> 
+> In the end, this is just an interface, nothing prevents you from making
+> an internal driver (like the Meson Canvas) and simply letting multiple
+> sub-system expose it. Specially that some of these IP will often
+> support both signal and memory processing, so they equally fit into a
+> media controller ISP, a v4l2 m2m or a DRM driver.
 
->
-> > But one needs to create the resource first to know which memory types can
-> > be attached to it.  I think the metadata needs to be returned with
-> > resource_create_v2.
->
-> There is a resource_info reply for that.
->
-> > That should be good enough.  But by returning alignments, we can minimize
-> > the gaps when attaching multiple resources, especially when the resources
-> > are only used by GPU.
->
-> We can add alignments to the resource_info reply.
->
-> cheers,
->   Gerd
->
+Having base drivers that can hook to both v4l2 m2m and DRM would
+definitely be awesome. Maybe we could have some common internal
+synchronization logic to make writing these drivers easier.
+
+It would be cool if both could be used concurrently and not just return
+-EBUSY when the device is used with the other subsystem.
+
+Anyway, that's my 2 cents about the situation and what we can do to
+improve it. I'm definitely interested in tackling these items, but it
+may take some time before we get there. Not to mention we need to
+rework media/v4l2 for per-slice decoding support ;)
+
+> Another driver you might want to look is Rockchip RGA driver (which is
+> a multi function IP, including blitting).
+
+Yep, I've aware of it as well. There's also vivante which exposes 2D
+cores but I'm really not sure whether any function is actually
+implemented. 
+
+OMAP4 and OMAP5 have a 2D engine that seems to be vivante as well from
+what I could find out, but it seems to only have blobs for bltsville
+and no significant docs.
+
+Cheers,
+
+Paul
+
