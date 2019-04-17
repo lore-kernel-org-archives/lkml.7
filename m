@@ -2,835 +2,469 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8C31C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 22:54:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B51C282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 22:54:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7D59A20656
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 22:54:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B8E7C20656
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 22:54:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=android.com header.i=@android.com header.b="fAheERYj"
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Mn1YtFP6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387480AbfDQWy0 (ORCPT
+        id S2387564AbfDQWyj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 18:54:26 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45715 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfDQWyZ (ORCPT
+        Wed, 17 Apr 2019 18:54:39 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:36546 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfDQWyi (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 18:54:25 -0400
-Received: by mail-pg1-f195.google.com with SMTP id y3so206773pgk.12
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 15:54:24 -0700 (PDT)
+        Wed, 17 Apr 2019 18:54:38 -0400
+Received: by mail-wr1-f67.google.com with SMTP id y13so429902wrd.3
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 15:54:36 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=android.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qnRjSs/ZRTt6TIBUVs6YxbQetdlAJZO/8qB67nDMBvw=;
-        b=fAheERYjeAuu2s5bp+a9bxoOxr/bxKrmIzG4G3rmkYk6wNSUGbKTNE8IwGSxT8WsBp
-         uLwKGZPZ0mYbXBK9KnIqM7rIAEIwGI5ZCQ4KJjyCbKn4iMQ93WhYpwba7M66y5hYRTMO
-         6WTcYeECSIucj80Ei+Y5qM/NszgudqAce4+aYmdL6jdgnVypfP6KkczfE8BWKFhRcviW
-         GYaxOzJzm0nO+nemjXpjzpVK75a3j2e4w7XU7WW9ViC0ApgLkaa8Tkb18VW6UvnoxuUJ
-         k8YgNd4fNtHvLviSzvAQq6qO0CIZE+9xkmCrDZNk5JeRbtLrPl3kOB1Envz8/SxzqLwR
-         iNFQ==
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=fI+B+7jxWBkf9fiGCTit20nyv5c7lLxLKEtMTOtcPLo=;
+        b=Mn1YtFP6oFnUsXjGXohN6+7UZFeEQD8fGIsrBKTg3l5tvgRCR3uk8n02ExBojsCgrD
+         oC4T7iDWCoi37gcZQ5ocQbMIi/azuMIKjG6wXW5E3AmK8CWmInUvQKoLIplc21GkCcgh
+         bbvihbMAYmhI9wEBOnCbKHua1DedatTq3nJyurtvRwdH95OSnDPlMQ0qkvmF1bbJXZ94
+         X88XtIm+bG4YwNzAGnkhR6nXB/TlI7J5kVX63Z+F5SiZmLx+BE2fVwh5jQHUx5AzmKsD
+         M+OEoGyFrXnKsXMb9xcfK1lK8ak6bn6UsoqQRE2J1nTT/nZMJC4eSQ+BET7aTRirsRvV
+         5pdA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=qnRjSs/ZRTt6TIBUVs6YxbQetdlAJZO/8qB67nDMBvw=;
-        b=QZk2NPivPsAk+rd1Et1TeJDG823uVNhNaHQvUeFD3PowU+uM+j6Sz6ar5Qfaoi981A
-         GloCptUlL0+HQQGtqRiw9duEfSXqe93oJ03c+Vu31QNi0G/lUgm0wQBDiS/gwt3hxqDK
-         y4s9Ytjd+/H/2t/x+Pp3jl6n4YTyBSjFJtkmEQ0BG+H93liAEmQp4jwlJBAbOVTcXSXI
-         r7uwF8+ag6M8hQXx2w3tL4oEQX9Ngo4oEdPdpevo0X0CITxYpAfwupHpKyz6F6a12cRI
-         OF5w/ACjavtA0BaNKQBUw5CIZ1vkXcBjJlnhDkf3F4sw9DeSU207VHrAla7oCrO2haLy
-         OV0A==
-X-Gm-Message-State: APjAAAVPv8Ua/jhBuHmm7OCsbPh1R2sQqRHR6GT9oGLXHxmSf1lzX9gS
-        7BdQK8ioOAlqOYnVTqW3qC0RKA==
-X-Google-Smtp-Source: APXvYqx0KfRbPtQ6NaZ4OkHYu16sP1Ov5sCEdUz18pl2qOFXop6IGAcKiLsUcwOqPHbU/+MF4AxNxA==
-X-Received: by 2002:aa7:8589:: with SMTP id w9mr92627706pfn.97.1555541663567;
-        Wed, 17 Apr 2019 15:54:23 -0700 (PDT)
-Received: from trong0.mtv.corp.google.com ([2620:0:1000:1601:c43f:8c1b:f6ef:3dce])
-        by smtp.gmail.com with ESMTPSA id e4sm85711pgd.32.2019.04.17.15.54.22
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Apr 2019 15:54:22 -0700 (PDT)
-From:   Tri Vo <trong@android.com>
-To:     akpm@linux-foundation.org
-Cc:     ghackmann@android.com, ndesaulniers@google.com,
-        linux-kernel@vger.kernel.org, oberpar@linux.ibm.com,
-        Tri Vo <trong@android.com>, Trilok Soni <tsoni@quicinc.com>,
-        Prasad Sodagudi <psodagud@quicinc.com>,
-        Daniel Mentz <danielmentz@google.com>,
-        Petri Gynther <pgynther@google.com>
-Subject: [PATCH v5] gcov: Clang support
-Date:   Wed, 17 Apr 2019 15:53:28 -0700
-Message-Id: <20190417225328.208129-1-trong@android.com>
-X-Mailer: git-send-email 2.21.0.392.gf8f6787159e-goog
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=fI+B+7jxWBkf9fiGCTit20nyv5c7lLxLKEtMTOtcPLo=;
+        b=eUvonnzMzYh+k63EBiy8CCKJ9l3MdsHzIz3SypRkVjGSuWcl7Cs97NzAtB0M356snw
+         qDdMH/qBnz1B7iHHhf6NPa0NUNhAdizaCVQDKHtgmMx7t7JEd2/oHUQYU24BU+D/4eis
+         s2AsPLWhLoGmEXTEsbyX7QcBPuy6k2GLmVwNkhpzVDW3RzZPgjqlQD6M7cF0nz+S/J3E
+         SADqmQcozSNUkVIFrU20bGfiyy68Cjd92Pqwav94hiYcjHSI+qw9OreYD14p8aQFQkUz
+         bfKq2qW+Lh9VhBlTyJ+XbQ8x3So9rQgFZfod9CLAxaOwz05SD3qkCw8LY/XI2qHBZm/Z
+         1E7g==
+X-Gm-Message-State: APjAAAW1lEHMxWonad4bnkT8ndOc3AOJBSTI9pq/UyFROHUJPx6OAFDt
+        F5r9ui3zK4j2pD5UCWnyof4Ijn/mleRS7Lh8lFgXBszG+KJAMQ==
+X-Google-Smtp-Source: APXvYqw4zxAQTR5pmCJXvUSDpPlpZu3L0p+qo3YqaJQs4UPJYITTf8AJex9SfvjW0QjMpmVz+0FU2M8SiXZglFoY0ko=
+X-Received: by 2002:a05:6000:14a:: with SMTP id r10mr38300487wrx.107.1555540005137;
+ Wed, 17 Apr 2019 15:26:45 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <20190402104153.25404-1-patrick.bellasi@arm.com> <20190402104153.25404-7-patrick.bellasi@arm.com>
+In-Reply-To: <20190402104153.25404-7-patrick.bellasi@arm.com>
+From:   Suren Baghdasaryan <surenb@google.com>
+Date:   Wed, 17 Apr 2019 15:26:33 -0700
+Message-ID: <CAJuCfpH3htcr3xB_Y4nr7HXCdQd1hOdOAXbtZJB1SOt7Of_qbw@mail.gmail.com>
+Subject: Re: [PATCH v8 06/16] sched/core: uclamp: Extend sched_setattr() to
+ support utilization clamping
+To:     Patrick Bellasi <patrick.bellasi@arm.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org,
+        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Tejun Heo <tj@kernel.org>,
+        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
+        Vincent Guittot <vincent.guittot@linaro.org>,
+        Viresh Kumar <viresh.kumar@linaro.org>,
+        Paul Turner <pjt@google.com>,
+        Quentin Perret <quentin.perret@arm.com>,
+        Dietmar Eggemann <dietmar.eggemann@arm.com>,
+        Morten Rasmussen <morten.rasmussen@arm.com>,
+        Juri Lelli <juri.lelli@redhat.com>,
+        Todd Kjos <tkjos@google.com>,
+        Joel Fernandes <joelaf@google.com>,
+        Steve Muckle <smuckle@google.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Greg Hackmann <ghackmann@android.com>
+On Tue, Apr 2, 2019 at 3:42 AM Patrick Bellasi <patrick.bellasi@arm.com> wrote:
+>
+> The SCHED_DEADLINE scheduling class provides an advanced and formal
+> model to define tasks requirements that can translate into proper
+> decisions for both task placements and frequencies selections. Other
+> classes have a more simplified model based on the POSIX concept of
+> priorities.
+>
+> Such a simple priority based model however does not allow to exploit
+> most advanced features of the Linux scheduler like, for example, driving
+> frequencies selection via the schedutil cpufreq governor. However, also
+> for non SCHED_DEADLINE tasks, it's still interesting to define tasks
+> properties to support scheduler decisions.
+>
+> Utilization clamping exposes to user-space a new set of per-task
+> attributes the scheduler can use as hints about the expected/required
+> utilization for a task. This allows to implement a "proactive" per-task
+> frequency control policy, a more advanced policy than the current one
+> based just on "passive" measured task utilization. For example, it's
+> possible to boost interactive tasks (e.g. to get better performance) or
+> cap background tasks (e.g. to be more energy/thermal efficient).
+>
+> Introduce a new API to set utilization clamping values for a specified
+> task by extending sched_setattr(), a syscall which already allows to
+> define task specific properties for different scheduling classes. A new
+> pair of attributes allows to specify a minimum and maximum utilization
+> the scheduler can consider for a task.
+>
+> Do that by validating the required clamp values before and then applying
+> the required changes using _the_ same pattern already in use for
+> __setscheduler(). This ensures that the task is re-enqueued with the new
+> clamp values.
+>
+> Do not allow to change sched class specific params and non class
+> specific params (i.e. clamp values) at the same time.  This keeps things
+> simple and still works for the most common cases since we are usually
+> interested in just one of the two actions.
 
-LLVM uses profiling data that's deliberately similar to GCC, but has a very
-different way of exporting that data.  LLVM calls llvm_gcov_init() once per
-module, and provides a couple of callbacks that we can use to ask for more
-data.
+Sorry, I can't find where you are checking to eliminate the
+possibility of simultaneous changes to both sched class specific
+params and non class specific params... Am I too tired or they are
+indeed missing?
 
-We care about the "writeout" callback, which in turn calls back into
-compiler-rt/this module to dump all the gathered coverage data to disk:
+>
+> Signed-off-by: Patrick Bellasi <patrick.bellasi@arm.com>
+> Cc: Ingo Molnar <mingo@redhat.com>
+> Cc: Peter Zijlstra <peterz@infradead.org>
+>
+> ---
+> Changes in v8:
+>  Others:
+>  - using p->uclamp_req to track clamp values "requested" from userspace
+> ---
+>  include/linux/sched.h            |  9 ++++
+>  include/uapi/linux/sched.h       | 12 ++++-
+>  include/uapi/linux/sched/types.h | 66 ++++++++++++++++++++----
+>  kernel/sched/core.c              | 87 +++++++++++++++++++++++++++++++-
+>  4 files changed, 162 insertions(+), 12 deletions(-)
+>
+> diff --git a/include/linux/sched.h b/include/linux/sched.h
+> index d8491954e2e1..c2b81a84985b 100644
+> --- a/include/linux/sched.h
+> +++ b/include/linux/sched.h
+> @@ -585,6 +585,7 @@ struct sched_dl_entity {
+>   * @value:             clamp value "assigned" to a se
+>   * @bucket_id:         bucket index corresponding to the "assigned" value
+>   * @active:            the se is currently refcounted in a rq's bucket
+> + * @user_defined:      the requested clamp value comes from user-space
+>   *
+>   * The bucket_id is the index of the clamp bucket matching the clamp value
+>   * which is pre-computed and stored to avoid expensive integer divisions from
+> @@ -594,11 +595,19 @@ struct sched_dl_entity {
+>   * which can be different from the clamp value "requested" from user-space.
+>   * This allows to know a task is refcounted in the rq's bucket corresponding
+>   * to the "effective" bucket_id.
+> + *
+> + * The user_defined bit is set whenever a task has got a task-specific clamp
+> + * value requested from userspace, i.e. the system defaults apply to this task
+> + * just as a restriction. This allows to relax default clamps when a less
+> + * restrictive task-specific value has been requested, thus allowing to
+> + * implement a "nice" semantic. For example, a task running with a 20%
+> + * default boost can still drop its own boosting to 0%.
+>   */
+>  struct uclamp_se {
+>         unsigned int value              : bits_per(SCHED_CAPACITY_SCALE);
+>         unsigned int bucket_id          : bits_per(UCLAMP_BUCKETS);
+>         unsigned int active             : 1;
+> +       unsigned int user_defined       : 1;
+>  };
+>  #endif /* CONFIG_UCLAMP_TASK */
+>
+> diff --git a/include/uapi/linux/sched.h b/include/uapi/linux/sched.h
+> index 075c610adf45..d2c65617a4a4 100644
+> --- a/include/uapi/linux/sched.h
+> +++ b/include/uapi/linux/sched.h
+> @@ -53,10 +53,20 @@
+>  #define SCHED_FLAG_RECLAIM             0x02
+>  #define SCHED_FLAG_DL_OVERRUN          0x04
+>  #define SCHED_FLAG_KEEP_POLICY         0x08
+> +#define SCHED_FLAG_KEEP_PARAMS         0x10
+> +#define SCHED_FLAG_UTIL_CLAMP_MIN      0x20
+> +#define SCHED_FLAG_UTIL_CLAMP_MAX      0x40
+> +
+> +#define SCHED_FLAG_KEEP_ALL    (SCHED_FLAG_KEEP_POLICY | \
+> +                                SCHED_FLAG_KEEP_PARAMS)
+> +
+> +#define SCHED_FLAG_UTIL_CLAMP  (SCHED_FLAG_UTIL_CLAMP_MIN | \
+> +                                SCHED_FLAG_UTIL_CLAMP_MAX)
+>
+>  #define SCHED_FLAG_ALL (SCHED_FLAG_RESET_ON_FORK       | \
+>                          SCHED_FLAG_RECLAIM             | \
+>                          SCHED_FLAG_DL_OVERRUN          | \
+> -                        SCHED_FLAG_KEEP_POLICY)
+> +                        SCHED_FLAG_KEEP_ALL            | \
+> +                        SCHED_FLAG_UTIL_CLAMP)
+>
+>  #endif /* _UAPI_LINUX_SCHED_H */
+> diff --git a/include/uapi/linux/sched/types.h b/include/uapi/linux/sched/types.h
+> index 10fbb8031930..c852153ddb0d 100644
+> --- a/include/uapi/linux/sched/types.h
+> +++ b/include/uapi/linux/sched/types.h
+> @@ -9,6 +9,7 @@ struct sched_param {
+>  };
+>
+>  #define SCHED_ATTR_SIZE_VER0   48      /* sizeof first published struct */
+> +#define SCHED_ATTR_SIZE_VER1   56      /* add: util_{min,max} */
+>
+>  /*
+>   * Extended scheduling parameters data structure.
+> @@ -21,8 +22,33 @@ struct sched_param {
+>   * the tasks may be useful for a wide variety of application fields, e.g.,
+>   * multimedia, streaming, automation and control, and many others.
+>   *
+> - * This variant (sched_attr) is meant at describing a so-called
+> - * sporadic time-constrained task. In such model a task is specified by:
+> + * This variant (sched_attr) allows to define additional attributes to
+> + * improve the scheduler knowledge about task requirements.
+> + *
+> + * Scheduling Class Attributes
+> + * ===========================
+> + *
+> + * A subset of sched_attr attributes specifies the
+> + * scheduling policy and relative POSIX attributes:
+> + *
+> + *  @size              size of the structure, for fwd/bwd compat.
+> + *
+> + *  @sched_policy      task's scheduling policy
+> + *  @sched_nice                task's nice value      (SCHED_NORMAL/BATCH)
+> + *  @sched_priority    task's static priority (SCHED_FIFO/RR)
+> + *
+> + * Certain more advanced scheduling features can be controlled by a
+> + * predefined set of flags via the attribute:
+> + *
+> + *  @sched_flags       for customizing the scheduler behaviour
+> + *
+> + * Sporadic Time-Constrained Task Attributes
+> + * =========================================
+> + *
+> + * A subset of sched_attr attributes allows to describe a so-called
+> + * sporadic time-constrained task.
+> + *
+> + * In such a model a task is specified by:
+>   *  - the activation period or minimum instance inter-arrival time;
+>   *  - the maximum (or average, depending on the actual scheduling
+>   *    discipline) computation time of all instances, a.k.a. runtime;
+> @@ -34,14 +60,8 @@ struct sched_param {
+>   * than the runtime and must be completed by time instant t equal to
+>   * the instance activation time + the deadline.
+>   *
+> - * This is reflected by the actual fields of the sched_attr structure:
+> + * This is reflected by the following fields of the sched_attr structure:
+>   *
+> - *  @size              size of the structure, for fwd/bwd compat.
+> - *
+> - *  @sched_policy      task's scheduling policy
+> - *  @sched_flags       for customizing the scheduler behaviour
+> - *  @sched_nice                task's nice value      (SCHED_NORMAL/BATCH)
+> - *  @sched_priority    task's static priority (SCHED_FIFO/RR)
+>   *  @sched_deadline    representative of the task's deadline
+>   *  @sched_runtime     representative of the task's runtime
+>   *  @sched_period      representative of the task's period
+> @@ -53,6 +73,29 @@ struct sched_param {
+>   * As of now, the SCHED_DEADLINE policy (sched_dl scheduling class) is the
+>   * only user of this new interface. More information about the algorithm
+>   * available in the scheduling class file or in Documentation/.
+> + *
+> + * Task Utilization Attributes
+> + * ===========================
+> + *
+> + * A subset of sched_attr attributes allows to specify the utilization
+> + * expected for a task. These attributes allow to inform the scheduler about
+> + * the utilization boundaries within which it should schedule the task. These
+> + * boundaries are valuable hints to support scheduler decisions on both task
+> + * placement and frequency selection.
+> + *
+> + *  @sched_util_min    represents the minimum utilization
+> + *  @sched_util_max    represents the maximum utilization
+> + *
+> + * Utilization is a value in the range [0..SCHED_CAPACITY_SCALE]. It
+> + * represents the percentage of CPU time used by a task when running at the
+> + * maximum frequency on the highest capacity CPU of the system. For example, a
+> + * 20% utilization task is a task running for 2ms every 10ms at maximum
+> + * frequency.
+> + *
+> + * A task with a min utilization value bigger than 0 is more likely scheduled
+> + * on a CPU with a capacity big enough to fit the specified value.
+> + * A task with a max utilization value smaller than 1024 is more likely
+> + * scheduled on a CPU with no more capacity than the specified value.
+>   */
+>  struct sched_attr {
+>         __u32 size;
+> @@ -70,6 +113,11 @@ struct sched_attr {
+>         __u64 sched_runtime;
+>         __u64 sched_deadline;
+>         __u64 sched_period;
+> +
+> +       /* Utilization hints */
+> +       __u32 sched_util_min;
+> +       __u32 sched_util_max;
+> +
+>  };
+>
+>  #endif /* _UAPI_LINUX_SCHED_TYPES_H */
+> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
+> index 20efb32e1a7e..68aed32e8ec7 100644
+> --- a/kernel/sched/core.c
+> +++ b/kernel/sched/core.c
+> @@ -1020,6 +1020,50 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
+>         return result;
+>  }
+>
+> +static int uclamp_validate(struct task_struct *p,
+> +                          const struct sched_attr *attr)
+> +{
+> +       unsigned int lower_bound = p->uclamp_req[UCLAMP_MIN].value;
+> +       unsigned int upper_bound = p->uclamp_req[UCLAMP_MAX].value;
+> +
+> +       if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MIN)
+> +               lower_bound = attr->sched_util_min;
+> +       if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MAX)
+> +               upper_bound = attr->sched_util_max;
+> +
+> +       if (lower_bound > upper_bound)
+> +               return -EINVAL;
+> +       if (upper_bound > SCHED_CAPACITY_SCALE)
+> +               return -EINVAL;
+> +
+> +       return 0;
+> +}
+> +
+> +static void __setscheduler_uclamp(struct task_struct *p,
+> +                                 const struct sched_attr *attr)
+> +{
+> +       if (likely(!(attr->sched_flags & SCHED_FLAG_UTIL_CLAMP)))
+> +               return;
+> +
+> +       if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MIN) {
+> +               unsigned int lower_bound = attr->sched_util_min;
+> +
+> +               p->uclamp_req[UCLAMP_MIN].user_defined = true;
+> +               p->uclamp_req[UCLAMP_MIN].value = lower_bound;
+> +               p->uclamp_req[UCLAMP_MIN].bucket_id =
+> +                       uclamp_bucket_id(lower_bound);
+> +       }
+> +
+> +       if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MAX) {
+> +               unsigned int upper_bound =  attr->sched_util_max;
+> +
+> +               p->uclamp_req[UCLAMP_MAX].user_defined = true;
+> +               p->uclamp_req[UCLAMP_MAX].value = upper_bound;
+> +               p->uclamp_req[UCLAMP_MAX].bucket_id =
+> +                       uclamp_bucket_id(upper_bound);
+> +       }
+> +}
+> +
+>  static void uclamp_fork(struct task_struct *p)
+>  {
+>         unsigned int clamp_id;
+> @@ -1056,6 +1100,13 @@ static void __init init_uclamp(void)
+>  #else /* CONFIG_UCLAMP_TASK */
+>  static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p) { }
+>  static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p) { }
+> +static inline int uclamp_validate(struct task_struct *p,
+> +                                 const struct sched_attr *attr)
+> +{
+> +       return -ENODEV;
 
-   llvm_gcda_start_file()
-     llvm_gcda_emit_function()
-     llvm_gcda_emit_arcs()
-     llvm_gcda_emit_function()
-     llvm_gcda_emit_arcs()
-     [... repeats for each function ...]
-   llvm_gcda_summary_info()
-   llvm_gcda_end_file()
+ENOSYS might be more appropriate?
 
-This design is much more stateless and unstructured than gcc's, and is
-intended to run at process exit.  This forces us to keep some local state
-about which module we're dealing with at the moment.  On the other hand, it
-also means we don't depend as much on how LLVM represents profiling data
-internally.
-
-See LLVM's lib/Transforms/Instrumentation/GCOVProfiling.cpp for more
-details on how this works, particularly GCOVProfiler::emitProfileArcs(),
-GCOVProfiler::insertCounterWriteout(), and GCOVProfiler::insertFlush().
-
-Co-authored-by: Nick Desaulniers <ndesaulniers@google.com>
-Co-authored-by: Tri Vo <trong@android.com>
-Signed-off-by: Greg Hackmann <ghackmann@android.com>
-Signed-off-by: Nick Desaulniers <ndesaulniers@google.com>
-Signed-off-by: Tri Vo <trong@android.com>
-Tested-by: Trilok Soni <tsoni@quicinc.com>
-Tested-by: Prasad Sodagudi <psodagud@quicinc.com>
-Tested-by: Tri Vo <trong@android.com>
-Tested-by: Daniel Mentz <danielmentz@google.com>
-Tested-by: Petri Gynther <pgynther@google.com>
-Reviewed-by: Peter Oberparleiter <oberpar@linux.ibm.com>
----
-v5:
-- Same as v4. Build error when !CONFIG_MODULES was fixed by another commit
-  41e72eeff32c ("module: add stubs for within_module functions")
-
- kernel/gcov/Kconfig   |   3 +-
- kernel/gcov/Makefile  |   1 +
- kernel/gcov/base.c    |   2 +-
- kernel/gcov/clang.c   | 586 ++++++++++++++++++++++++++++++++++++++++++
- kernel/gcov/gcc_3_4.c |  12 +
- kernel/gcov/gcc_4_7.c |  12 +
- kernel/gcov/gcov.h    |   2 +
- 7 files changed, 616 insertions(+), 2 deletions(-)
- create mode 100644 kernel/gcov/clang.c
-
-diff --git a/kernel/gcov/Kconfig b/kernel/gcov/Kconfig
-index 1e3823fa799b..f71c1adcff31 100644
---- a/kernel/gcov/Kconfig
-+++ b/kernel/gcov/Kconfig
-@@ -53,6 +53,7 @@ config GCOV_PROFILE_ALL
- choice
- 	prompt "Specify GCOV format"
- 	depends on GCOV_KERNEL
-+	depends on CC_IS_GCC
- 	---help---
- 	The gcov format is usually determined by the GCC version, and the
- 	default is chosen according to your GCC version. However, there are
-@@ -62,7 +63,7 @@ choice
-
- config GCOV_FORMAT_3_4
- 	bool "GCC 3.4 format"
--	depends on CC_IS_GCC && GCC_VERSION < 40700
-+	depends on GCC_VERSION < 40700
- 	---help---
- 	Select this option to use the format defined by GCC 3.4.
-
-diff --git a/kernel/gcov/Makefile b/kernel/gcov/Makefile
-index 45431ed679d1..d66a74b0f100 100644
---- a/kernel/gcov/Makefile
-+++ b/kernel/gcov/Makefile
-@@ -4,3 +4,4 @@ ccflags-y := -DSRCTREE='"$(srctree)"' -DOBJTREE='"$(objtree)"'
- obj-y := base.o fs.o
- obj-$(CONFIG_GCOV_FORMAT_3_4) += gcc_base.o gcc_3_4.o
- obj-$(CONFIG_GCOV_FORMAT_4_7) += gcc_base.o gcc_4_7.o
-+obj-$(CONFIG_CC_IS_CLANG) += clang.o
-diff --git a/kernel/gcov/base.c b/kernel/gcov/base.c
-index 799d42072727..0ffe9f194080 100644
---- a/kernel/gcov/base.c
-+++ b/kernel/gcov/base.c
-@@ -64,7 +64,7 @@ static int gcov_module_notifier(struct notifier_block *nb, unsigned long event,
-
- 	/* Remove entries located in module from linked list. */
- 	while ((info = gcov_info_next(info))) {
--		if (within_module((unsigned long)info, mod)) {
-+		if (gcov_info_within_module(info, mod)) {
- 			gcov_info_unlink(prev, info);
- 			if (gcov_events_enabled)
- 				gcov_event(GCOV_REMOVE, info);
-diff --git a/kernel/gcov/clang.c b/kernel/gcov/clang.c
-new file mode 100644
-index 000000000000..125c50397ba2
---- /dev/null
-+++ b/kernel/gcov/clang.c
-@@ -0,0 +1,586 @@
-+// SPDX-License-Identifier: GPL-2.0
-+/*
-+ * Copyright (C) 2019 Google, Inc.
-+ * modified from kernel/gcov/gcc_4_7.c
-+ *
-+ * This software is licensed under the terms of the GNU General Public
-+ * License version 2, as published by the Free Software Foundation, and
-+ * may be copied, distributed, and modified under those terms.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-+ * GNU General Public License for more details.
-+ *
-+ *
-+ * LLVM uses profiling data that's deliberately similar to GCC, but has a
-+ * very different way of exporting that data.  LLVM calls llvm_gcov_init() once
-+ * per module, and provides a couple of callbacks that we can use to ask for
-+ * more data.
-+ *
-+ * We care about the "writeout" callback, which in turn calls back into
-+ * compiler-rt/this module to dump all the gathered coverage data to disk:
-+ *
-+ *    llvm_gcda_start_file()
-+ *      llvm_gcda_emit_function()
-+ *      llvm_gcda_emit_arcs()
-+ *      llvm_gcda_emit_function()
-+ *      llvm_gcda_emit_arcs()
-+ *      [... repeats for each function ...]
-+ *    llvm_gcda_summary_info()
-+ *    llvm_gcda_end_file()
-+ *
-+ * This design is much more stateless and unstructured than gcc's, and is
-+ * intended to run at process exit.  This forces us to keep some local state
-+ * about which module we're dealing with at the moment.  On the other hand, it
-+ * also means we don't depend as much on how LLVM represents profiling data
-+ * internally.
-+ *
-+ * See LLVM's lib/Transforms/Instrumentation/GCOVProfiling.cpp for more
-+ * details on how this works, particularly GCOVProfiler::emitProfileArcs(),
-+ * GCOVProfiler::insertCounterWriteout(), and
-+ * GCOVProfiler::insertFlush().
-+ */
-+
-+#define pr_fmt(fmt)	"gcov: " fmt
-+
-+#include <linux/kernel.h>
-+#include <linux/list.h>
-+#include <linux/printk.h>
-+#include <linux/ratelimit.h>
-+#include <linux/seq_file.h>
-+#include <linux/slab.h>
-+#include <linux/vmalloc.h>
-+#include "gcov.h"
-+
-+typedef void (*llvm_gcov_callback)(void);
-+
-+struct gcov_info {
-+	struct list_head head;
-+
-+	const char *filename;
-+	unsigned int version;
-+	u32 checksum;
-+
-+	struct list_head functions;
-+};
-+
-+struct gcov_fn_info {
-+	struct list_head head;
-+
-+	u32 ident;
-+	u32 checksum;
-+	u8 use_extra_checksum;
-+	u32 cfg_checksum;
-+
-+	u32 num_counters;
-+	u64 *counters;
-+	const char *function_name;
-+};
-+
-+static struct gcov_info *current_info;
-+
-+static LIST_HEAD(clang_gcov_list);
-+
-+void llvm_gcov_init(llvm_gcov_callback writeout, llvm_gcov_callback flush)
-+{
-+	struct gcov_info *info = kzalloc(sizeof(*info), GFP_KERNEL);
-+
-+	if (!info) {
-+		pr_warn_ratelimited("failed to allocate gcov info\n");
-+		return;
-+	}
-+
-+	INIT_LIST_HEAD(&info->head);
-+	INIT_LIST_HEAD(&info->functions);
-+
-+	mutex_lock(&gcov_lock);
-+
-+	list_add_tail(&info->head, &clang_gcov_list);
-+	current_info = info;
-+	writeout();
-+	current_info = NULL;
-+	if (gcov_events_enabled)
-+		gcov_event(GCOV_ADD, info);
-+
-+	mutex_unlock(&gcov_lock);
-+}
-+EXPORT_SYMBOL(llvm_gcov_init);
-+
-+void llvm_gcda_start_file(const char *orig_filename, const char version[4],
-+		u32 checksum)
-+{
-+	current_info->filename = orig_filename;
-+	memcpy(&current_info->version, version, sizeof(current_info->version));
-+	current_info->checksum = checksum;
-+}
-+EXPORT_SYMBOL(llvm_gcda_start_file);
-+
-+void llvm_gcda_emit_function(u32 ident, const char *function_name,
-+		u32 func_checksum, u8 use_extra_checksum, u32 cfg_checksum)
-+{
-+	struct gcov_fn_info *info = kzalloc(sizeof(*info), GFP_KERNEL);
-+
-+	if (!info) {
-+		pr_warn_ratelimited("failed to allocate gcov function info for %s\n",
-+				function_name ?: "UNKNOWN");
-+		return;
-+	}
-+
-+	INIT_LIST_HEAD(&info->head);
-+	info->ident = ident;
-+	info->checksum = func_checksum;
-+	info->use_extra_checksum = use_extra_checksum;
-+	info->cfg_checksum = cfg_checksum;
-+	if (function_name)
-+		info->function_name = kstrdup(function_name, GFP_KERNEL);
-+
-+	list_add_tail(&info->head, &current_info->functions);
-+}
-+EXPORT_SYMBOL(llvm_gcda_emit_function);
-+
-+void llvm_gcda_emit_arcs(u32 num_counters, u64 *counters)
-+{
-+	struct gcov_fn_info *info = list_last_entry(&current_info->functions,
-+			struct gcov_fn_info, head);
-+
-+	info->num_counters = num_counters;
-+	info->counters = counters;
-+}
-+EXPORT_SYMBOL(llvm_gcda_emit_arcs);
-+
-+void llvm_gcda_summary_info(void)
-+{
-+}
-+EXPORT_SYMBOL(llvm_gcda_summary_info);
-+
-+void llvm_gcda_end_file(void)
-+{
-+}
-+EXPORT_SYMBOL(llvm_gcda_end_file);
-+
-+/**
-+ * gcov_info_filename - return info filename
-+ * @info: profiling data set
-+ */
-+const char *gcov_info_filename(struct gcov_info *info)
-+{
-+	return info->filename;
-+}
-+
-+/**
-+ * gcov_info_version - return info version
-+ * @info: profiling data set
-+ */
-+unsigned int gcov_info_version(struct gcov_info *info)
-+{
-+	return info->version;
-+}
-+
-+/**
-+ * gcov_info_next - return next profiling data set
-+ * @info: profiling data set
-+ *
-+ * Returns next gcov_info following @info or first gcov_info in the chain if
-+ * @info is %NULL.
-+ */
-+struct gcov_info *gcov_info_next(struct gcov_info *info)
-+{
-+	if (!info)
-+		return list_first_entry_or_null(&clang_gcov_list,
-+				struct gcov_info, head);
-+	if (list_is_last(&info->head, &clang_gcov_list))
-+		return NULL;
-+	return list_next_entry(info, head);
-+}
-+
-+/**
-+ * gcov_info_link - link/add profiling data set to the list
-+ * @info: profiling data set
-+ */
-+void gcov_info_link(struct gcov_info *info)
-+{
-+	list_add_tail(&info->head, &clang_gcov_list);
-+}
-+
-+/**
-+ * gcov_info_unlink - unlink/remove profiling data set from the list
-+ * @prev: previous profiling data set
-+ * @info: profiling data set
-+ */
-+void gcov_info_unlink(struct gcov_info *prev, struct gcov_info *info)
-+{
-+	/* Generic code unlinks while iterating. */
-+	__list_del_entry(&info->head);
-+}
-+
-+/**
-+ * gcov_info_within_module - check if a profiling data set belongs to a module
-+ * @info: profiling data set
-+ * @mod: module
-+ *
-+ * Returns true if profiling data belongs module, false otherwise.
-+ */
-+bool gcov_info_within_module(struct gcov_info *info, struct module *mod)
-+{
-+	return within_module((unsigned long)info->filename, mod);
-+}
-+
-+/* Symbolic links to be created for each profiling data file. */
-+const struct gcov_link gcov_link[] = {
-+	{ OBJ_TREE, "gcno" },	/* Link to .gcno file in $(objtree). */
-+	{ 0, NULL},
-+};
-+
-+/**
-+ * gcov_info_reset - reset profiling data to zero
-+ * @info: profiling data set
-+ */
-+void gcov_info_reset(struct gcov_info *info)
-+{
-+	struct gcov_fn_info *fn;
-+
-+	list_for_each_entry(fn, &info->functions, head)
-+		memset(fn->counters, 0,
-+				sizeof(fn->counters[0]) * fn->num_counters);
-+}
-+
-+/**
-+ * gcov_info_is_compatible - check if profiling data can be added
-+ * @info1: first profiling data set
-+ * @info2: second profiling data set
-+ *
-+ * Returns non-zero if profiling data can be added, zero otherwise.
-+ */
-+int gcov_info_is_compatible(struct gcov_info *info1, struct gcov_info *info2)
-+{
-+	struct gcov_fn_info *fn_ptr1 = list_first_entry_or_null(
-+			&info1->functions, struct gcov_fn_info, head);
-+	struct gcov_fn_info *fn_ptr2 = list_first_entry_or_null(
-+			&info2->functions, struct gcov_fn_info, head);
-+
-+	if (info1->checksum != info2->checksum)
-+		return false;
-+	if (!fn_ptr1)
-+		return fn_ptr1 == fn_ptr2;
-+	while (!list_is_last(&fn_ptr1->head, &info1->functions) &&
-+		!list_is_last(&fn_ptr2->head, &info2->functions)) {
-+		if (fn_ptr1->checksum != fn_ptr2->checksum)
-+			return false;
-+		if (fn_ptr1->use_extra_checksum != fn_ptr2->use_extra_checksum)
-+			return false;
-+		if (fn_ptr1->use_extra_checksum &&
-+			fn_ptr1->cfg_checksum != fn_ptr2->cfg_checksum)
-+			return false;
-+		fn_ptr1 = list_next_entry(fn_ptr1, head);
-+		fn_ptr2 = list_next_entry(fn_ptr2, head);
-+	}
-+	return list_is_last(&fn_ptr1->head, &info1->functions) &&
-+		list_is_last(&fn_ptr2->head, &info2->functions);
-+}
-+
-+/**
-+ * gcov_info_add - add up profiling data
-+ * @dest: profiling data set to which data is added
-+ * @source: profiling data set which is added
-+ *
-+ * Adds profiling counts of @source to @dest.
-+ */
-+void gcov_info_add(struct gcov_info *dst, struct gcov_info *src)
-+{
-+	struct gcov_fn_info *dfn_ptr;
-+	struct gcov_fn_info *sfn_ptr = list_first_entry_or_null(&src->functions,
-+			struct gcov_fn_info, head);
-+
-+	list_for_each_entry(dfn_ptr, &dst->functions, head) {
-+		u32 i;
-+
-+		for (i = 0; i < sfn_ptr->num_counters; i++)
-+			dfn_ptr->counters[i] += sfn_ptr->counters[i];
-+	}
-+}
-+
-+static struct gcov_fn_info *gcov_fn_info_dup(struct gcov_fn_info *fn)
-+{
-+	size_t cv_size; /* counter values size */
-+	struct gcov_fn_info *fn_dup = kmemdup(fn, sizeof(*fn),
-+			GFP_KERNEL);
-+	if (!fn_dup)
-+		return NULL;
-+	INIT_LIST_HEAD(&fn_dup->head);
-+
-+	fn_dup->function_name = kstrdup(fn->function_name, GFP_KERNEL);
-+	if (!fn_dup->function_name)
-+		goto err_name;
-+
-+	cv_size = fn->num_counters * sizeof(fn->counters[0]);
-+	fn_dup->counters = vmalloc(cv_size);
-+	if (!fn_dup->counters)
-+		goto err_counters;
-+	memcpy(fn_dup->counters, fn->counters, cv_size);
-+
-+	return fn_dup;
-+
-+err_counters:
-+	kfree(fn_dup->function_name);
-+err_name:
-+	kfree(fn_dup);
-+	return NULL;
-+}
-+
-+/**
-+ * gcov_info_dup - duplicate profiling data set
-+ * @info: profiling data set to duplicate
-+ *
-+ * Return newly allocated duplicate on success, %NULL on error.
-+ */
-+struct gcov_info *gcov_info_dup(struct gcov_info *info)
-+{
-+	struct gcov_info *dup;
-+	struct gcov_fn_info *fn;
-+
-+	dup = kmemdup(info, sizeof(*dup), GFP_KERNEL);
-+	if (!dup)
-+		return NULL;
-+	INIT_LIST_HEAD(&dup->head);
-+	INIT_LIST_HEAD(&dup->functions);
-+	dup->filename = kstrdup(info->filename, GFP_KERNEL);
-+	if (!dup->filename)
-+		goto err;
-+
-+	list_for_each_entry(fn, &info->functions, head) {
-+		struct gcov_fn_info *fn_dup = gcov_fn_info_dup(fn);
-+
-+		if (!fn_dup)
-+			goto err;
-+		list_add_tail(&fn_dup->head, &dup->functions);
-+	}
-+
-+	return dup;
-+
-+err:
-+	gcov_info_free(dup);
-+	return NULL;
-+}
-+
-+/**
-+ * gcov_info_free - release memory for profiling data set duplicate
-+ * @info: profiling data set duplicate to free
-+ */
-+void gcov_info_free(struct gcov_info *info)
-+{
-+	struct gcov_fn_info *fn, *tmp;
-+
-+	list_for_each_entry_safe(fn, tmp, &info->functions, head) {
-+		kfree(fn->function_name);
-+		vfree(fn->counters);
-+		list_del(&fn->head);
-+		kfree(fn);
-+	}
-+	kfree(info->filename);
-+	kfree(info);
-+}
-+
-+#define ITER_STRIDE	PAGE_SIZE
-+
-+/**
-+ * struct gcov_iterator - specifies current file position in logical records
-+ * @info: associated profiling data
-+ * @buffer: buffer containing file data
-+ * @size: size of buffer
-+ * @pos: current position in file
-+ */
-+struct gcov_iterator {
-+	struct gcov_info *info;
-+	void *buffer;
-+	size_t size;
-+	loff_t pos;
-+};
-+
-+/**
-+ * store_gcov_u32 - store 32 bit number in gcov format to buffer
-+ * @buffer: target buffer or NULL
-+ * @off: offset into the buffer
-+ * @v: value to be stored
-+ *
-+ * Number format defined by gcc: numbers are recorded in the 32 bit
-+ * unsigned binary form of the endianness of the machine generating the
-+ * file. Returns the number of bytes stored. If @buffer is %NULL, doesn't
-+ * store anything.
-+ */
-+static size_t store_gcov_u32(void *buffer, size_t off, u32 v)
-+{
-+	u32 *data;
-+
-+	if (buffer) {
-+		data = buffer + off;
-+		*data = v;
-+	}
-+
-+	return sizeof(*data);
-+}
-+
-+/**
-+ * store_gcov_u64 - store 64 bit number in gcov format to buffer
-+ * @buffer: target buffer or NULL
-+ * @off: offset into the buffer
-+ * @v: value to be stored
-+ *
-+ * Number format defined by gcc: numbers are recorded in the 32 bit
-+ * unsigned binary form of the endianness of the machine generating the
-+ * file. 64 bit numbers are stored as two 32 bit numbers, the low part
-+ * first. Returns the number of bytes stored. If @buffer is %NULL, doesn't store
-+ * anything.
-+ */
-+static size_t store_gcov_u64(void *buffer, size_t off, u64 v)
-+{
-+	u32 *data;
-+
-+	if (buffer) {
-+		data = buffer + off;
-+
-+		data[0] = (v & 0xffffffffUL);
-+		data[1] = (v >> 32);
-+	}
-+
-+	return sizeof(*data) * 2;
-+}
-+
-+/**
-+ * convert_to_gcda - convert profiling data set to gcda file format
-+ * @buffer: the buffer to store file data or %NULL if no data should be stored
-+ * @info: profiling data set to be converted
-+ *
-+ * Returns the number of bytes that were/would have been stored into the buffer.
-+ */
-+static size_t convert_to_gcda(char *buffer, struct gcov_info *info)
-+{
-+	struct gcov_fn_info *fi_ptr;
-+	size_t pos = 0;
-+
-+	/* File header. */
-+	pos += store_gcov_u32(buffer, pos, GCOV_DATA_MAGIC);
-+	pos += store_gcov_u32(buffer, pos, info->version);
-+	pos += store_gcov_u32(buffer, pos, info->checksum);
-+
-+	list_for_each_entry(fi_ptr, &info->functions, head) {
-+		u32 i;
-+		u32 len = 2;
-+
-+		if (fi_ptr->use_extra_checksum)
-+			len++;
-+
-+		pos += store_gcov_u32(buffer, pos, GCOV_TAG_FUNCTION);
-+		pos += store_gcov_u32(buffer, pos, len);
-+		pos += store_gcov_u32(buffer, pos, fi_ptr->ident);
-+		pos += store_gcov_u32(buffer, pos, fi_ptr->checksum);
-+		if (fi_ptr->use_extra_checksum)
-+			pos += store_gcov_u32(buffer, pos, fi_ptr->cfg_checksum);
-+
-+		pos += store_gcov_u32(buffer, pos, GCOV_TAG_COUNTER_BASE);
-+		pos += store_gcov_u32(buffer, pos, fi_ptr->num_counters * 2);
-+		for (i = 0; i < fi_ptr->num_counters; i++)
-+			pos += store_gcov_u64(buffer, pos, fi_ptr->counters[i]);
-+	}
-+
-+	return pos;
-+}
-+
-+/**
-+ * gcov_iter_new - allocate and initialize profiling data iterator
-+ * @info: profiling data set to be iterated
-+ *
-+ * Return file iterator on success, %NULL otherwise.
-+ */
-+struct gcov_iterator *gcov_iter_new(struct gcov_info *info)
-+{
-+	struct gcov_iterator *iter;
-+
-+	iter = kzalloc(sizeof(struct gcov_iterator), GFP_KERNEL);
-+	if (!iter)
-+		goto err_free;
-+
-+	iter->info = info;
-+	/* Dry-run to get the actual buffer size. */
-+	iter->size = convert_to_gcda(NULL, info);
-+	iter->buffer = vmalloc(iter->size);
-+	if (!iter->buffer)
-+		goto err_free;
-+
-+	convert_to_gcda(iter->buffer, info);
-+
-+	return iter;
-+
-+err_free:
-+	kfree(iter);
-+	return NULL;
-+}
-+
-+
-+/**
-+ * gcov_iter_get_info - return profiling data set for given file iterator
-+ * @iter: file iterator
-+ */
-+void gcov_iter_free(struct gcov_iterator *iter)
-+{
-+	vfree(iter->buffer);
-+	kfree(iter);
-+}
-+
-+/**
-+ * gcov_iter_get_info - return profiling data set for given file iterator
-+ * @iter: file iterator
-+ */
-+struct gcov_info *gcov_iter_get_info(struct gcov_iterator *iter)
-+{
-+	return iter->info;
-+}
-+
-+/**
-+ * gcov_iter_start - reset file iterator to starting position
-+ * @iter: file iterator
-+ */
-+void gcov_iter_start(struct gcov_iterator *iter)
-+{
-+	iter->pos = 0;
-+}
-+
-+/**
-+ * gcov_iter_next - advance file iterator to next logical record
-+ * @iter: file iterator
-+ *
-+ * Return zero if new position is valid, non-zero if iterator has reached end.
-+ */
-+int gcov_iter_next(struct gcov_iterator *iter)
-+{
-+	if (iter->pos < iter->size)
-+		iter->pos += ITER_STRIDE;
-+
-+	if (iter->pos >= iter->size)
-+		return -EINVAL;
-+
-+	return 0;
-+}
-+
-+/**
-+ * gcov_iter_write - write data for current pos to seq_file
-+ * @iter: file iterator
-+ * @seq: seq_file handle
-+ *
-+ * Return zero on success, non-zero otherwise.
-+ */
-+int gcov_iter_write(struct gcov_iterator *iter, struct seq_file *seq)
-+{
-+	size_t len;
-+
-+	if (iter->pos >= iter->size)
-+		return -EINVAL;
-+
-+	len = ITER_STRIDE;
-+	if (iter->pos + len > iter->size)
-+		len = iter->size - iter->pos;
-+
-+	seq_write(seq, iter->buffer + iter->pos, len);
-+
-+	return 0;
-+}
-diff --git a/kernel/gcov/gcc_3_4.c b/kernel/gcov/gcc_3_4.c
-index 2dddecbdbe6e..801ee4b0b969 100644
---- a/kernel/gcov/gcc_3_4.c
-+++ b/kernel/gcov/gcc_3_4.c
-@@ -137,6 +137,18 @@ void gcov_info_unlink(struct gcov_info *prev, struct gcov_info *info)
- 		gcov_info_head = info->next;
- }
-
-+/**
-+ * gcov_info_within_module - check if a profiling data set belongs to a module
-+ * @info: profiling data set
-+ * @mod: module
-+ *
-+ * Returns true if profiling data belongs module, false otherwise.
-+ */
-+bool gcov_info_within_module(struct gcov_info *info, struct module *mod)
-+{
-+	return within_module((unsigned long)info, mod);
-+}
-+
- /* Symbolic links to be created for each profiling data file. */
- const struct gcov_link gcov_link[] = {
- 	{ OBJ_TREE, "gcno" },	/* Link to .gcno file in $(objtree). */
-diff --git a/kernel/gcov/gcc_4_7.c b/kernel/gcov/gcc_4_7.c
-index ca5e5c0ef853..ec37563674d6 100644
---- a/kernel/gcov/gcc_4_7.c
-+++ b/kernel/gcov/gcc_4_7.c
-@@ -150,6 +150,18 @@ void gcov_info_unlink(struct gcov_info *prev, struct gcov_info *info)
- 		gcov_info_head = info->next;
- }
-
-+/**
-+ * gcov_info_within_module - check if a profiling data set belongs to a module
-+ * @info: profiling data set
-+ * @mod: module
-+ *
-+ * Returns true if profiling data belongs module, false otherwise.
-+ */
-+bool gcov_info_within_module(struct gcov_info *info, struct module *mod)
-+{
-+	return within_module((unsigned long)info, mod);
-+}
-+
- /* Symbolic links to be created for each profiling data file. */
- const struct gcov_link gcov_link[] = {
- 	{ OBJ_TREE, "gcno" },	/* Link to .gcno file in $(objtree). */
-diff --git a/kernel/gcov/gcov.h b/kernel/gcov/gcov.h
-index 0ecf1d664ec3..6ab2c1808c9d 100644
---- a/kernel/gcov/gcov.h
-+++ b/kernel/gcov/gcov.h
-@@ -15,6 +15,7 @@
- #ifndef GCOV_H
- #define GCOV_H GCOV_H
-
-+#include <linux/module.h>
- #include <linux/types.h>
-
- /*
-@@ -46,6 +47,7 @@ unsigned int gcov_info_version(struct gcov_info *info);
- struct gcov_info *gcov_info_next(struct gcov_info *info);
- void gcov_info_link(struct gcov_info *info);
- void gcov_info_unlink(struct gcov_info *prev, struct gcov_info *info);
-+bool gcov_info_within_module(struct gcov_info *info, struct module *mod);
-
- /* Base interface. */
- enum gcov_action {
---
-2.21.0.392.gf8f6787159e-goog
-
+> +}
+> +static void __setscheduler_uclamp(struct task_struct *p,
+> +                                 const struct sched_attr *attr) { }
+>  static inline void uclamp_fork(struct task_struct *p) { }
+>  static inline void init_uclamp(void) { }
+>  #endif /* CONFIG_UCLAMP_TASK */
+> @@ -4424,6 +4475,13 @@ static void __setscheduler_params(struct task_struct *p,
+>  static void __setscheduler(struct rq *rq, struct task_struct *p,
+>                            const struct sched_attr *attr, bool keep_boost)
+>  {
+> +       /*
+> +        * If params can't change scheduling class changes aren't allowed
+> +        * either.
+> +        */
+> +       if (attr->sched_flags & SCHED_FLAG_KEEP_PARAMS)
+> +               return;
+> +
+>         __setscheduler_params(p, attr);
+>
+>         /*
+> @@ -4561,6 +4619,13 @@ static int __sched_setscheduler(struct task_struct *p,
+>                         return retval;
+>         }
+>
+> +       /* Update task specific "requested" clamps */
+> +       if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP) {
+> +               retval = uclamp_validate(p, attr);
+> +               if (retval)
+> +                       return retval;
+> +       }
+> +
+>         /*
+>          * Make sure no PI-waiters arrive (or leave) while we are
+>          * changing the priority of the task:
+> @@ -4590,6 +4655,8 @@ static int __sched_setscheduler(struct task_struct *p,
+>                         goto change;
+>                 if (dl_policy(policy) && dl_param_changed(p, attr))
+>                         goto change;
+> +               if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP)
+> +                       goto change;
+>
+>                 p->sched_reset_on_fork = reset_on_fork;
+>                 task_rq_unlock(rq, p, &rf);
+> @@ -4670,7 +4737,9 @@ static int __sched_setscheduler(struct task_struct *p,
+>                 put_prev_task(rq, p);
+>
+>         prev_class = p->sched_class;
+> +
+>         __setscheduler(rq, p, attr, pi);
+> +       __setscheduler_uclamp(p, attr);
+>
+>         if (queued) {
+>                 /*
+> @@ -4846,6 +4915,10 @@ static int sched_copy_attr(struct sched_attr __user *uattr, struct sched_attr *a
+>         if (ret)
+>                 return -EFAULT;
+>
+> +       if ((attr->sched_flags & SCHED_FLAG_UTIL_CLAMP) &&
+> +           size < SCHED_ATTR_SIZE_VER1)
+> +               return -EINVAL;
+> +
+>         /*
+>          * XXX: Do we want to be lenient like existing syscalls; or do we want
+>          * to be strict and return an error on out-of-bounds values?
+> @@ -4922,10 +4995,15 @@ SYSCALL_DEFINE3(sched_setattr, pid_t, pid, struct sched_attr __user *, uattr,
+>         rcu_read_lock();
+>         retval = -ESRCH;
+>         p = find_process_by_pid(pid);
+> -       if (p != NULL)
+> -               retval = sched_setattr(p, &attr);
+> +       if (likely(p))
+> +               get_task_struct(p);
+>         rcu_read_unlock();
+>
+> +       if (likely(p)) {
+> +               retval = sched_setattr(p, &attr);
+> +               put_task_struct(p);
+> +       }
+> +
+>         return retval;
+>  }
+>
+> @@ -5076,6 +5154,11 @@ SYSCALL_DEFINE4(sched_getattr, pid_t, pid, struct sched_attr __user *, uattr,
+>         else
+>                 attr.sched_nice = task_nice(p);
+>
+> +#ifdef CONFIG_UCLAMP_TASK
+> +       attr.sched_util_min = p->uclamp_req[UCLAMP_MIN].value;
+> +       attr.sched_util_max = p->uclamp_req[UCLAMP_MAX].value;
+> +#endif
+> +
+>         rcu_read_unlock();
+>
+>         retval = sched_read_attr(uattr, &attr, size);
+> --
+> 2.20.1
+>
