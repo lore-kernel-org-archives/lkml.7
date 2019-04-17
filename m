@@ -2,115 +2,110 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BDD54C10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 10:15:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 45F90C10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 10:17:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9291C2073F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 10:15:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1B46A2073F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 10:17:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731670AbfDQKPW (ORCPT
+        id S1731697AbfDQKRS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 06:15:22 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:35972 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729584AbfDQKPV (ORCPT
+        Wed, 17 Apr 2019 06:17:18 -0400
+Received: from paleale.coelho.fi ([176.9.41.70]:53590 "EHLO
+        farmhouse.coelho.fi" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1726695AbfDQKRR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 06:15:21 -0400
-Received: by mail-ed1-f65.google.com with SMTP id u57so19850113edm.3
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 03:15:20 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=Fl5I4IhsegfAfYhYg7yGpZzu65bju11pI6HhhderbX8=;
-        b=aTdDTDvJ2HRQuDIjlirJ1NoDJ9vNPHuyyTTb1FpcRpUUkdO+gTB0fda1BlkI9qwU/T
-         iVTHdAQIJKxaDHpX8fVy7vBzD63IawHGG38QntjWwjEEvcGzGVr/9xEmrrgINDUpAi1l
-         4EFNAyJKDyz6tGr0+dlwrMaUw6KO/tzh3C7m/PukVx7UjwC4Mf9AJt21sY/1LyDfWjMa
-         62gX6QBCjfvOyeGwXdrkUUQs9+uhb910TkREB9ruKmX7DIJjSY504nuAb9QzzNg0o5Kc
-         Ydj6BIx9Wt0dPzTAuU4bGq1CB4iuuA31CSgFX22D1Tm6HIKcvoF/w8tq/JmXcTbwjV60
-         Fxhg==
-X-Gm-Message-State: APjAAAWFpbt+gjjcN9Zuqu3fyfzvNx0q6KdYpIVTGjz8E/gz4aa3VU2O
-        FpXCRZBhwJcsv/jV4oojkPWMxg==
-X-Google-Smtp-Source: APXvYqyPw7z+jXLieQdseap8u5P9jYpx6tTPQdsSrnQmEbRKDKKSZ0jSnMryatOZQ0UNJhEodbQAvQ==
-X-Received: by 2002:a17:906:a311:: with SMTP id j17mr48588209ejz.269.1555496119888;
-        Wed, 17 Apr 2019 03:15:19 -0700 (PDT)
-Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id g11sm1379557eda.12.2019.04.17.03.15.18
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Apr 2019 03:15:18 -0700 (PDT)
-Subject: Re: [PATCH v3 13/13] platform/x86: intel_cht_int33fe: Replacing the
- old connections with references
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-References: <20190412134122.82903-1-heikki.krogerus@linux.intel.com>
- <20190412134122.82903-14-heikki.krogerus@linux.intel.com>
- <a91a1d75-f224-9c9d-873a-f80467d2fb0c@redhat.com>
- <20190417063918.GI1747@kuha.fi.intel.com>
- <76d9ab79-a1d0-f3cd-ba5d-2325740c72ff@redhat.com>
- <20190417093252.GO1747@kuha.fi.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <2fcb2e2c-c390-1b49-7228-197f23401271@redhat.com>
-Date:   Wed, 17 Apr 2019 12:15:18 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 17 Apr 2019 06:17:17 -0400
+Received: from 91-156-6-193.elisa-laajakaista.fi ([91.156.6.193] helo=redipa)
+        by farmhouse.coelho.fi with esmtpsa (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.91)
+        (envelope-from <luca@coelho.fi>)
+        id 1hGhcu-0006lb-BF; Wed, 17 Apr 2019 13:17:12 +0300
+Message-ID: <3c1cb224613ac2cc3b20bfcf0c47e0df584c4e31.camel@coelho.fi>
+From:   Luca Coelho <luca@coelho.fi>
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     kvalo@codeaurora.org, johannes@sipsolutions.net,
+        emmanuel.grumbach@intel.com, linuxwifi@intel.com,
+        linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
+        Shahar S Matityahu <shahar.s.matityahu@intel.com>
+Date:   Wed, 17 Apr 2019 13:17:10 +0300
+In-Reply-To: <20190417101102.GA5878@dhcp22.suse.cz>
+References: <748205b02961167b0926d4afe8d9ad9cb37bf6ef.camel@coelho.fi>
+         <20190417073516.24250-1-luca@coelho.fi>
+         <20190417101102.GA5878@dhcp22.suse.cz>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5-1 
 MIME-Version: 1.0
-In-Reply-To: <20190417093252.GO1747@kuha.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+Subject: Re: [PATCH] iwlwifi: don't panic in error path on non-msix systems
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+On Wed, 2019-04-17 at 12:11 +0200, Michal Hocko wrote:
+> Hi,
+> which tree is this supposed to be applied on? It doesn't do apply on
+> top
+> of v5.1-rc4-3-gfd008d1a7a20. iwl_trans_pcie_sync_nmi doesn't exist in
+> drivers/net/wireless/intel/iwlwifi/pcie/trans.c. iwl_trans_sync_nmi
+> looks pretty similar. My patch massaging ended up with this. Please
+> double check. It compiles and even boots.
 
-On 17-04-19 11:32, Heikki Krogerus wrote:
-> On Wed, Apr 17, 2019 at 11:19:28AM +0200, Hans de Goede wrote:
+Ah, sorry, I didn't mention that that patch was supposed to apply on
+top of wireless-drivers-next, which is on its way to v5.2.  We have
+other patches touching this function there, thus the conflict.
 
-<snip>
+> diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
+> b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
+> index fe8269d023de..1f3969e2bcac 100644
+> --- a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
+> +++ b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
+> @@ -3639,20 +3639,27 @@ struct iwl_trans *iwl_trans_pcie_alloc(struct
+> pci_dev *pdev,
+>  
+>  void iwl_trans_sync_nmi(struct iwl_trans *trans)
+>  {
+> +	struct iwl_trans_pcie *trans_pcie =
+> IWL_TRANS_GET_PCIE_TRANS(trans);
+>  	unsigned long timeout = jiffies + IWL_TRANS_NMI_TIMEOUT;
+> +	u32 inta_addr, sw_err_bit;
+> +
+> +	if (trans_pcie->msix_enabled) {
+> +		inta_addr = CSR_MSIX_HW_INT_CAUSES_AD;
+> +		sw_err_bit = MSIX_HW_INT_CAUSES_REG_SW_ERR;
+> +	} else {
+> +		inta_addr = CSR_INT;
+> +		sw_err_bit = CSR_INT_BIT_SW_ERR;
+> +	}
+>  
+>  	iwl_disable_interrupts(trans);
+>  	iwl_force_nmi(trans);
+>  	while (time_after(timeout, jiffies)) {
+> -		u32 inta_hw = iwl_read32(trans,
+> -					 CSR_MSIX_HW_INT_CAUSES_AD);
+> +		u32 inta_hw = iwl_read32(trans, inta_addr);
+>  
+>  		/* Error detected by uCode */
+> -		if (inta_hw & MSIX_HW_INT_CAUSES_REG_SW_ERR) {
+> +		if (inta_hw & sw_err_bit) {
+>  			/* Clear causes register */
+> -			iwl_write32(trans, CSR_MSIX_HW_INT_CAUSES_AD,
+> -				    inta_hw &
+> -				    MSIX_HW_INT_CAUSES_REG_SW_ERR);
+> +			iwl_write32(trans, inta_addr, inta_hw &
+> sw_err_bit);
+>  			break;
+>  		}
 
->> That is not going to work since the (virtual) mux / orientation-switch
->> devices are only registered once the driver binds to the piusb30532 i2c
->> device, so when creating the nodes we only have the piusb30532 i2c device.
-> 
-> It's not a problem, that's why we have the software nodes. The nodes
-> can be created before the device entires. The node for pi3usb30532
-> will just be the parent node for the new nodes we add for the mux and
-> switch.
-> 
->> I've been thinking some more about this and an easy fix is to have separate
->> fwnode_match functions for typec_switch_match and typec_mux_match and have
->> them check that the dev_name ends in "-mux" resp. "-switch" that requires
->> only a very minimal change to "usb: typec: Registering real device entries for the muxes"
->> and then everything should be fine.
-> 
-> I don't want to do anymore device name matching unless we have to, and
-> here we don't have to. We can name the nodes for those virtual mux and
-> switch, and then just do fwnode_find_named_child_node() in
-> pi3usb30532.c for both of them.
+This looks good! So it fixed the problem you were having now?
 
-Thinking more about this, I have a feeling that this makes things needlessly
-complicated, checking the dev_name *ends* in "-mux" resp. "-switch" should be
-100% reliable since we call:
 
-         dev_set_name(&sw->dev, "%s-switch", dev_name(parent));
-         dev_set_name(&mux->dev, "%s-mux", dev_name(parent));
+--
+Cheers,
+Luca.
 
-When registering the switch / mux, so I believe doing name (suffix) comparison
-here is fine and much simpler. Anyways this is just my 2 cents on this, I'm
-happy with either solution, your choice.
-
-Regards,
-
-Hans
