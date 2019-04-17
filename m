@@ -6,106 +6,131 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD34C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 02:46:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17B36C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 02:58:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 142402075B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 02:46:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DCA2420872
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 02:58:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731089AbfDQCqu (ORCPT
+        id S1729462AbfDQC6o (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 22:46:50 -0400
-Received: from out1.zte.com.cn ([202.103.147.172]:58616 "EHLO mxct.zte.com.cn"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727816AbfDQCqn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 22:46:43 -0400
-Received: from mse01.zte.com.cn (unknown [10.30.3.20])
-        by Forcepoint Email with ESMTPS id A9875A74D1A8B70B2D7A;
-        Wed, 17 Apr 2019 10:46:42 +0800 (CST)
-Received: from notes_smtp.zte.com.cn ([10.30.1.239])
-        by mse01.zte.com.cn with ESMTP id x3H2kXZd061455;
-        Wed, 17 Apr 2019 10:46:33 +0800 (GMT-8)
-        (envelope-from wen.yang99@zte.com.cn)
-Received: from fox-host8.localdomain ([10.74.120.8])
-          by szsmtp06.zte.com.cn (Lotus Domino Release 8.5.3FP6)
-          with ESMTP id 2019041710465318-8910313 ;
-          Wed, 17 Apr 2019 10:46:53 +0800 
-From:   Wen Yang <wen.yang99@zte.com.cn>
-To:     linux-kernel@vger.kernel.org
-Cc:     wang.yi59@zte.com.cn, Wen Yang <wen.yang99@zte.com.cn>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Tull <atull@kernel.org>,
-        Richard Gong <richard.gong@intel.com>,
-        Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Subject: [PATCH 3/3] firmware: stratix10-svc: fix leaked of_node references
-Date:   Wed, 17 Apr 2019 10:44:53 +0800
-Message-Id: <1555469093-35179-4-git-send-email-wen.yang99@zte.com.cn>
-X-Mailer: git-send-email 1.8.3.1
-In-Reply-To: <1555469093-35179-1-git-send-email-wen.yang99@zte.com.cn>
-References: <1555469093-35179-1-git-send-email-wen.yang99@zte.com.cn>
-X-MIMETrack: Itemize by SMTP Server on SZSMTP06/server/zte_ltd(Release 8.5.3FP6|November
- 21, 2013) at 2019-04-17 10:46:53,
-        Serialize by Router on notes_smtp/zte_ltd(Release 9.0.1FP7|August  17, 2016) at
- 2019-04-17 10:46:25,
-        Serialize complete at 2019-04-17 10:46:25
-X-MAIL: mse01.zte.com.cn x3H2kXZd061455
+        Tue, 16 Apr 2019 22:58:44 -0400
+Received: from szxga06-in.huawei.com ([45.249.212.32]:44808 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727063AbfDQC6o (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 22:58:44 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.58])
+        by Forcepoint Email with ESMTP id A966E5D91625C1C48451;
+        Wed, 17 Apr 2019 10:58:41 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.408.0; Wed, 17 Apr 2019
+ 10:58:31 +0800
+From:   Yue Haibing <yuehaibing@huawei.com>
+To:     <kvalo@codeaurora.org>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-wireless@vger.kernel.org>, <ath9k-devel@qca.qualcomm.com>,
+        <davem@davemloft.net>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] ath9k: Remove some set but not used variables
+Date:   Wed, 17 Apr 2019 10:57:45 +0800
+Message-ID: <20190417025745.24044-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In stratix10_svc_init function, fw_np is obtained by calling
-of_find_node_by_name(), np is obtained by calling
-of_find_matching_node(), and the reference counts of those
-two device_nodes, fw_np and np, are increased.
-But when the function exits, only of_node_put is called on np,
-and fw_np's reference count is leaked.
+From: YueHaibing <yuehaibing@huawei.com>
 
-Detected by coccinelle with the following warnings:
-./drivers/firmware/stratix10-svc.c:1020:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 1014, but without a corresponding object release within this function.
-./drivers/firmware/stratix10-svc.c:1025:2-8: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 1014, but without a corresponding object release within this function.
-./drivers/firmware/stratix10-svc.c:1027:1-7: ERROR: missing of_node_put; acquired a node pointer with refcount incremented on line 1014, but without a corresponding object release within this function.
+Fixes gcc '-Wunused-but-set-variable' warning:
 
-Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Alan Tull <atull@kernel.org>
-Cc: Richard Gong <richard.gong@intel.com>
-Cc: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-Cc: linux-kernel@vger.kernel.org
+drivers/net/wireless/ath/ath9k/xmit.c: In function 'ath_tx_count_frames':
+drivers/net/wireless/ath/ath9k/xmit.c:413:25: warning: variable 'fi' set but not used [-Wunused-but-set-variable]
+drivers/net/wireless/ath/ath9k/xmit.c: In function 'ath_tx_complete_aggr':
+drivers/net/wireless/ath/ath9k/xmit.c:449:24: warning: variable 'hdr' set but not used [-Wunused-but-set-variable]
+drivers/net/wireless/ath/ath9k/xmit.c: In function 'ath_tx_start':
+drivers/net/wireless/ath/ath9k/xmit.c:2274:18: warning: variable 'avp' set but not used [-Wunused-but-set-variable]
+drivers/net/wireless/ath/ath9k/xmit.c:2269:24: warning: variable 'hdr' set but not used [-Wunused-but-set-variable]
+
+These variables are not used any more
+and can be removed.
+
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 ---
- drivers/firmware/stratix10-svc.c | 14 ++++++++++----
- 1 file changed, 10 insertions(+), 4 deletions(-)
+ drivers/net/wireless/ath/ath9k/xmit.c | 11 -----------
+ 1 file changed, 11 deletions(-)
 
-diff --git a/drivers/firmware/stratix10-svc.c b/drivers/firmware/stratix10-svc.c
-index 6e65148..482a6bd 100644
---- a/drivers/firmware/stratix10-svc.c
-+++ b/drivers/firmware/stratix10-svc.c
-@@ -1016,15 +1016,21 @@ static int __init stratix10_svc_init(void)
- 		return -ENODEV;
+diff --git a/drivers/net/wireless/ath/ath9k/xmit.c b/drivers/net/wireless/ath/ath9k/xmit.c
+index b17e1ca..59c3ab7 100644
+--- a/drivers/net/wireless/ath/ath9k/xmit.c
++++ b/drivers/net/wireless/ath/ath9k/xmit.c
+@@ -410,7 +410,6 @@ static void ath_tx_count_frames(struct ath_softc *sc, struct ath_buf *bf,
+ 			        struct ath_tx_status *ts, int txok,
+ 			        int *nframes, int *nbad)
+ {
+-	struct ath_frame_info *fi;
+ 	u16 seq_st = 0;
+ 	u32 ba[WME_BA_BMP_SIZE >> 5];
+ 	int ba_index;
+@@ -426,7 +425,6 @@ static void ath_tx_count_frames(struct ath_softc *sc, struct ath_buf *bf,
+ 	}
  
- 	np = of_find_matching_node(fw_np, stratix10_svc_drv_match);
--	if (!np)
--		return -ENODEV;
-+	if (!np) {
-+		ret = -ENODEV;
-+		goto out_put_fw_np;
-+	}
+ 	while (bf) {
+-		fi = get_frame_info(bf->bf_mpdu);
+ 		ba_index = ATH_BA_INDEX(seq_st, bf->bf_state.seqno);
  
- 	of_node_put(np);
- 	ret = of_platform_populate(fw_np, stratix10_svc_drv_match, NULL, NULL);
+ 		(*nframes)++;
+@@ -446,7 +444,6 @@ static void ath_tx_complete_aggr(struct ath_softc *sc, struct ath_txq *txq,
+ {
+ 	struct ath_node *an = NULL;
+ 	struct sk_buff *skb;
+-	struct ieee80211_hdr *hdr;
+ 	struct ieee80211_tx_info *tx_info;
+ 	struct ath_buf *bf_next, *bf_last = bf->bf_lastbf;
+ 	struct list_head bf_head;
+@@ -463,8 +460,6 @@ static void ath_tx_complete_aggr(struct ath_softc *sc, struct ath_txq *txq,
+ 	int bar_index = -1;
+ 
+ 	skb = bf->bf_mpdu;
+-	hdr = (struct ieee80211_hdr *)skb->data;
+-
+ 	tx_info = IEEE80211_SKB_CB(skb);
+ 
+ 	memcpy(rates, bf->rates, sizeof(rates));
+@@ -2269,12 +2264,10 @@ static int ath_tx_prepare(struct ieee80211_hw *hw, struct sk_buff *skb,
+ int ath_tx_start(struct ieee80211_hw *hw, struct sk_buff *skb,
+ 		 struct ath_tx_control *txctl)
+ {
+-	struct ieee80211_hdr *hdr;
+ 	struct ieee80211_tx_info *info = IEEE80211_SKB_CB(skb);
+ 	struct ieee80211_sta *sta = txctl->sta;
+ 	struct ieee80211_vif *vif = info->control.vif;
+ 	struct ath_frame_info *fi = get_frame_info(skb);
+-	struct ath_vif *avp = NULL;
+ 	struct ath_softc *sc = hw->priv;
+ 	struct ath_txq *txq = txctl->txq;
+ 	struct ath_atx_tid *tid = NULL;
+@@ -2283,16 +2276,12 @@ int ath_tx_start(struct ieee80211_hw *hw, struct sk_buff *skb,
+ 	bool ps_resp;
+ 	int q, ret;
+ 
+-	if (vif)
+-		avp = (void *)vif->drv_priv;
+-
+ 	ps_resp = !!(info->control.flags & IEEE80211_TX_CTRL_PS_RESPONSE);
+ 
+ 	ret = ath_tx_prepare(hw, skb, txctl);
  	if (ret)
--		return ret;
-+		goto out_put_fw_np;
+ 	    return ret;
  
--	return platform_driver_register(&stratix10_svc_driver);
-+	ret = platform_driver_register(&stratix10_svc_driver);
-+
-+out_put_fw_np:
-+	of_node_put(fw_np);
-+	return ret;
- }
- 
- static void __exit stratix10_svc_exit(void)
+-	hdr = (struct ieee80211_hdr *) skb->data;
+ 	/*
+ 	 * At this point, the vif, hw_key and sta pointers in the tx control
+ 	 * info are no longer valid (overwritten by the ath_frame_info data.
 -- 
-2.9.5
+2.7.0
+
 
