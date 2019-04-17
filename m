@@ -2,88 +2,100 @@ Return-Path: <SRS0=NWWL=SU=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.0 required=3.0 tests=DATE_IN_PAST_03_06,
+	DKIMWL_WL_HIGH,DKIM_SIGNED,DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D38AC282DD
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 02:30:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 68598C282DC
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 02:35:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2ABE22184B
-	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 02:30:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 12A00217F9
+	for <linux-kernel@archiver.kernel.org>; Thu, 18 Apr 2019 02:35:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555554919;
+	bh=l1oVrBI3MYalFYrCgdOqcs+vkGCjNTZ+i+vzrI+mfyI=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=hXUOyC+IqpYUrWL4Di4fT5SDRSu0Py5zcm/ED+E7XjRdsOw+76tyfnzOpE9I7zpmN
+	 2v0TBieonA0U1erJMkSu1jWRcuPI1KaMtDj3b+0GRoVZ4iufEQT8HPTNhZkwy9lNQ1
+	 y7/TTwpTSoFXq8F9cOMOHnSbEM9IasMdb2RiGjiE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387898AbfDRCaV (ORCPT
+        id S2387944AbfDRCfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 22:30:21 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33851 "EHLO mx1.redhat.com"
+        Wed, 17 Apr 2019 22:35:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:54070 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732737AbfDRCaV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 22:30:21 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        id S2387442AbfDRCfP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 22:35:15 -0400
+Received: from earth.universe (dyndsl-037-138-087-229.ewe-ip-backbone.de [37.138.87.229])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id A4846C057F4C;
-        Thu, 18 Apr 2019 02:30:20 +0000 (UTC)
-Received: from ming.t460p (ovpn-8-27.pek2.redhat.com [10.72.8.27])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id EDFB219C58;
-        Thu, 18 Apr 2019 02:30:10 +0000 (UTC)
-Date:   Thu, 18 Apr 2019 10:30:06 +0800
-From:   Ming Lei <ming.lei@redhat.com>
-To:     Paolo Bonzini <pbonzini@redhat.com>
-Cc:     linux-kernel@vger.kernel.org, stefanha@redhat.com,
-        stable@vger.kernel.org, Al Viro <viro@zeniv.linux.org.uk>,
-        Jens Axboe <axboe@kernel.dk>,
-        "open list:BLOCK LAYER" <linux-block@vger.kernel.org>
-Subject: Re: [PATCH v2] block: bio_map_user_iov should not be limited to
- BIO_MAX_PAGES
-Message-ID: <20190418023004.GC9520@ming.t460p>
-References: <20190417115207.30202-1-pbonzini@redhat.com>
- <20190418021903.GB9520@ming.t460p>
+        by mail.kernel.org (Postfix) with ESMTPSA id CDC3B2186A;
+        Thu, 18 Apr 2019 02:35:14 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555554915;
+        bh=l1oVrBI3MYalFYrCgdOqcs+vkGCjNTZ+i+vzrI+mfyI=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=1vHaW/6hGW8TMbG2L9X235NB7PopilNsLC0BTXO16ZMyxY36Z5jLjELbPTPhmClCG
+         fK2m2/j3LXg3yDY7oE/p7XJGOkKfdd1i1vilG3ZCcRmNbj1c8zmxlNr6WGFj9xDAFE
+         zVLv59GVapamA+KtI3jAq61hV2EfoIfnd9ioShgo=
+Received: by earth.universe (Postfix, from userid 1000)
+        id E0EF43C08D8; Wed, 17 Apr 2019 23:27:03 +0200 (CEST)
+Date:   Wed, 17 Apr 2019 23:27:03 +0200
+From:   Sebastian Reichel <sre@kernel.org>
+To:     Chen-Yu Tsai <wens@kernel.org>
+Cc:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Chen-Yu Tsai <wens@csie.org>, linux-pm@vger.kernel.org,
+        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-kernel@vger.kernel.org, linux-sunxi@googlegroups.com,
+        Hans de Goede <hdegoede@redhat.com>
+Subject: Re: [PATCH v4 0/7] ARM: sun8i: a83t: Enable USB OTG
+Message-ID: <20190417212703.7qq3nzjdvnceaim2@earth.universe>
+References: <20190416064024.20414-1-wens@kernel.org>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="igqa3fbpnirkgubc"
 Content-Disposition: inline
-In-Reply-To: <20190418021903.GB9520@ming.t460p>
-User-Agent: Mutt/1.9.1 (2017-09-22)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Thu, 18 Apr 2019 02:30:20 +0000 (UTC)
+In-Reply-To: <20190416064024.20414-1-wens@kernel.org>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Apr 18, 2019 at 10:19:04AM +0800, Ming Lei wrote:
-> Hi Paolo,
-> 
-> On Wed, Apr 17, 2019 at 01:52:07PM +0200, Paolo Bonzini wrote:
-> > Because bio_kmalloc uses inline iovecs, the limit on the number of entries
-> > is not BIO_MAX_PAGES but rather UIO_MAXIOV, which indeed is already checked
-> > in bio_kmalloc.  This could cause SG_IO requests to be truncated and the HBA
-> > to report a DMA overrun.
-> 
-> BIO_MAX_PAGES only limits the single bio's max vector number, if one bio
-> can't hold all user space request, new bio will be allocated and appended
-> to the passthrough request if queue limits aren't reached.
-> 
-> So I understand SG_IO request shouldn't be truncated because of
-> BIO_MAX_PAGES, or could you explain it in a bit detail or provide
-> a reproducer?
-> 
-> > 
-> > Note that if the argument to iov_iter_npages were changed to UIO_MAXIOV,
-> > we would still truncate SG_IO requests beyond UIO_MAXIOV pages.  Changing
-> > it to UIO_MAXIOV + 1 instead ensures that bio_kmalloc notices that the
-> > request is too big and blocks it.
-> 
-> We should pass UIO_MAXIOV instead of UIO_MAXIOV + 1, otherwise bio_kmalloc()
-> will fail. Otherwise, the patch looks fine, but shouldn't be a fix if my
-> above analysis is correct.
 
-Also we have enabled multipage bvec for passthough IO[1], we shouldn't
-need to allocate so big max io vectors any more, and actually the reasonable
-number is (PAGE_SIZE - sizeof(struct bio)) / sizeof(struct bio_vec), then we
-can avoid to stress mm for high order allocation.
+--igqa3fbpnirkgubc
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-[1] https://git.kernel.org/pub/scm/linux/kernel/git/axboe/linux-block.git/commit/?h=for-5.2/block&id=489fbbcb51d0249569d863f9220de69cb31f1922
+Hi,
 
-Thanks,
-Ming
+On Tue, Apr 16, 2019 at 02:40:17PM +0800, Chen-Yu Tsai wrote:
+> This is v4 of my A83T USB power supply / OTG series. Hopefully this is
+> the last revision even though it's kind of late in the -rc cycle for
+> the patches to make the next release. Fingers crossed.
+
+Patches 1-5 (i.e. all except DTS) queued to power-supply subsystem.
+
+-- Sebastian
+
+--igqa3fbpnirkgubc
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAEBCgAdFiEE72YNB0Y/i3JqeVQT2O7X88g7+poFAly3miQACgkQ2O7X88g7
++prqWw/+J4SyipXVg9AfuDS5gIqA+BsALd4XP08mMK21RNXCtwsFBvdE7tVt14c9
+8wP8QK0MJwET85erwMutvCQzhGs86xrSJQvRMliu0urFZquMhfOCNCwT4h8Riboa
+1ZjFBJdbM930Y6uQCbnKbbI3+0+kjALT3eVAqWrEVjDZ0AZEKRKssBTRKxzGfKpJ
+YHuh986celDxfRGv8diGBH41cVFJfkkZl53Pla0Bl0ZMfsQ4No88k6W1Zzukma7z
+uTY22Ds8PZt/vVxiGpCUsOHdZdzhBBc26TXNRS//whNAW33amSC/XqUL4zBULwIe
+jZg7iZW1HA250CWHIfzVc+E1tMbHLDHti7wvHvhmOmDPysvqKeBQKfJC+DrlaVHf
+rUC1xFGDfSmi4dkYCaTGgLv8eT0UsgQrFPv/g20MQt7Xv/iH2eyDQgnPcyBkOamx
+hRbqCo4LhANxHcinDy5W60OByKsdNAhpAJLBj2PLvFQb44yJBoJsLvvKaf3T28sO
+YYBjg2+Ukwbph8tpFS75BSy4oT6ovi3WuIDj3edehCJA/4Z6k9FiZyJ+mKEQ0GXE
+0BnckOAbypMUZXXJLUA8oa+IehClPC4ENGf3sE+TaSbmU+RB8qs20fJrrU7TvsFj
+t65pmglJPm0Yz3UzCr4LZ3hEXBSCjwJ4n70rEB21Xsfvi5gpXs8=
+=QGzf
+-----END PGP SIGNATURE-----
+
+--igqa3fbpnirkgubc--
