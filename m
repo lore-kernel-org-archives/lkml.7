@@ -2,148 +2,154 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-14.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10D52C10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:50:54 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54592C10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:51:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3FF32073F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:50:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 235312073F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:51:11 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="JjattUqW"
+	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="X0sosfSw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731443AbfDQIuw (ORCPT
+        id S1731477AbfDQIvK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 04:50:52 -0400
-Received: from mail-lj1-f195.google.com ([209.85.208.195]:43783 "EHLO
-        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731141AbfDQIuw (ORCPT
+        Wed, 17 Apr 2019 04:51:10 -0400
+Received: from fllv0015.ext.ti.com ([198.47.19.141]:40212 "EHLO
+        fllv0015.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731077AbfDQIvJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 04:50:52 -0400
-Received: by mail-lj1-f195.google.com with SMTP id f18so21667830lja.10
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 01:50:51 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=DVhd8fs5umKDxiiF8uOAyEdaazsYL5yIOc6xRx/Oseo=;
-        b=JjattUqWxsbDQW+fiUr5mGsAl0aTZMHysS4vgnVE5o5Jcm49ufRjRzo7Ww2+Yfa+hr
-         6l6aWV0xrREqBq3hgF1B6stGPe/+3SlTP+033CKqNjjmtgAbriHctOd6Sx6JDKRwH4ho
-         MB991v/HvVmcL8n+LnGARX4wOKuUCMcYXTZ4WAiwxzJmOH6Hxg7+B/ObKZWVWBJc7aAt
-         YV7fck0axAAs7TohCu7lW2yVbdrRbFF1I1tytgcKPG9Mtp0+x7UmI5opuQg562xBJwGT
-         OF8UFz2Vi3Veao+6TRnF71x1o87Ocron+hzkMa9exWIor6VgmHizbCxxcVUtZCv2yQUA
-         n6Bg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=DVhd8fs5umKDxiiF8uOAyEdaazsYL5yIOc6xRx/Oseo=;
-        b=XxjiJqhL42HGV92r+SyYzwwoN6MAoJaZ7xoUEuUNPd/b6075xC2kgjmqnu4QvtQw+S
-         VqBBO1fdrj0nyI/SDxO1FHjF2ZLUs2ERda2jUd7kyQdH09/+0ecIQi43hJDLIFZhHO+0
-         qVw0JQFUjHKOn/Yl7Gz39oNM2TxFH2syWiTGw0Nndpovx7f5Z615ONvfvmmUtg1/IqbA
-         P5xxaKRI9JYLyIYYxV4J880PHIgsxGM5KXQjkiSPGneoPbmCMwn1q4zKBpmxSWXyr1ef
-         ejIAjjtPoy6nKAybRxp6xuMvyA9n7Iug8bq4OusbIxhd1KOSaLe1/xXwRYXtOk/mpxdu
-         S1BQ==
-X-Gm-Message-State: APjAAAUzlqkJryvGsQu77FJZ4nwb09N3cUHHCQN/nuVxhykI6cGn0Qxh
-        epMvMpWq821UYaktx2sxvANzGQ==
-X-Google-Smtp-Source: APXvYqw5lU+fOPhIR44TGx6+tbd8C37dxOaxBd9EzOonfyl+5Zkz2INyNqTfSJtr/ijbK84nOLSgMQ==
-X-Received: by 2002:a2e:3e0e:: with SMTP id l14mr46687072lja.125.1555491050478;
-        Wed, 17 Apr 2019 01:50:50 -0700 (PDT)
-Received: from [192.168.0.199] ([31.173.81.146])
-        by smtp.gmail.com with ESMTPSA id b78sm3124344lfg.38.2019.04.17.01.50.48
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Apr 2019 01:50:49 -0700 (PDT)
-Subject: Re: [PATCH v1 2/3] MIPS: ath79: ar9331: add Ethernet nodes
-To:     Oleksij Rempel <o.rempel@pengutronix.de>,
-        Paul Burton <paul.burton@mips.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        James Hogan <jhogan@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Jay Cliburn <jcliburn@gmail.com>,
-        Chris Snook <chris.snook@gmail.com>,
-        "David S. Miller" <davem@davemloft.net>,
-        Mark Rutland <mark.rutland@arm.com>
-Cc:     Pengutronix Kernel Team <kernel@pengutronix.de>,
-        linux-mips@vger.kernel.org, linux-kernel@vger.kernel.org,
-        devicetree@vger.kernel.org, John Crispin <john@phrozen.org>,
-        Felix Fietkau <nbd@nbd.name>, netdev@vger.kernel.org
-References: <20190417062201.15745-1-o.rempel@pengutronix.de>
- <20190417062201.15745-3-o.rempel@pengutronix.de>
-From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-Message-ID: <a846087d-91c5-c075-2a7f-3ccf05137c69@cogentembedded.com>
-Date:   Wed, 17 Apr 2019 11:50:42 +0300
-User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+        Wed, 17 Apr 2019 04:51:09 -0400
+Received: from fllv0034.itg.ti.com ([10.64.40.246])
+        by fllv0015.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3H8p8pR018803;
+        Wed, 17 Apr 2019 03:51:08 -0500
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
+        s=ti-com-17Q1; t=1555491068;
+        bh=FP2qRlI1xX47IGO2jpt7195WGAc/jN+YAYZjIO7JSNY=;
+        h=Subject:To:CC:References:From:Date:In-Reply-To;
+        b=X0sosfSwYa5fYRNGJWZzTtdU4DiglTQokRQNJQcPywg0RuVIyv1fP2bSSGl0Xx7j5
+         5XRirg17KRhUHKUAYxG03MtPpkdCE4NPVBvToPqEvbSaH3Af18AGyEEYG9vK9T30sr
+         COm8HKtOWQ+x2re78BsWrpQvH0Cb4JGstws3baMU=
+Received: from DLEE106.ent.ti.com (dlee106.ent.ti.com [157.170.170.36])
+        by fllv0034.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3H8p82M042382
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
+        Wed, 17 Apr 2019 03:51:08 -0500
+Received: from DLEE115.ent.ti.com (157.170.170.26) by DLEE106.ent.ti.com
+ (157.170.170.36) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 17
+ Apr 2019 03:51:07 -0500
+Received: from fllv0040.itg.ti.com (10.64.41.20) by DLEE115.ent.ti.com
+ (157.170.170.26) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
+ Frontend Transport; Wed, 17 Apr 2019 03:51:07 -0500
+Received: from [172.24.190.233] (ileax41-snat.itg.ti.com [10.172.224.153])
+        by fllv0040.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3H8p3UB123389;
+        Wed, 17 Apr 2019 03:51:07 -0500
+Subject: Re: [GIT PULL] PHY: For 5.1 -rc
+To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+CC:     <linux-kernel@vger.kernel.org>
+References: <20190403044353.21620-1-kishon@ti.com>
+ <20190416103059.GA8292@kroah.com>
+From:   Kishon Vijay Abraham I <kishon@ti.com>
+Message-ID: <fd529200-fbb6-a513-940b-a415ac11bb72@ti.com>
+Date:   Wed, 17 Apr 2019 14:19:56 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190417062201.15745-3-o.rempel@pengutronix.de>
-Content-Type: text/plain; charset=utf-8; format=flowed
+In-Reply-To: <20190416103059.GA8292@kroah.com>
+Content-Type: text/plain; charset="utf-8"
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
+X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hello!
+Hi Greg,
 
-On 17.04.2019 9:22, Oleksij Rempel wrote:
-
-> Add ethernet nodes supported by ag71xx driver.
+On 16/04/19 4:00 PM, Greg Kroah-Hartman wrote:
+> On Wed, Apr 03, 2019 at 10:13:53AM +0530, Kishon Vijay Abraham I wrote:
+>> Hi Greg,
+>>
+>> Please find the pull request for 5.1 -rc cycle below.
+>>
+>> It fixes PHY programming sequence in phy-ti-pipe3 driver to align with
+>> TRM, requests IRQ only for OTG in phy-rcar-gen3-usb2 and a bunch of
+>> other linker errors and compilation warnings seen in randconfig.
+>>
+>> Please see the complete list of changes in the tag message below and let
+>> me know if I have to make any modifications.
+>>
+>> Thanks
+>> Kishon
+>>
+>> The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
+>>
+>>   Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
+>>
+>> are available in the Git repository at:
+>>
+>>   git://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git tags/phy-for-5.1-rc
+>>
+>> for you to fetch changes up to d5d60c3f25ab52de7c5dfd31f584f190b754629e:
+>>
+>>   phy: fix platform_no_drv_owner.cocci warnings (2019-04-03 10:02:20 +0530)
+>>
+>> ----------------------------------------------------------------
+>> phy: for 5.1-rc
+>>
+>>   *) Follow TRM sequence in phy-ti-pipe3 driver to ensure DPLL & PHY
+>>      operates correctly over the entire temperature range
+>>   *) Fix missing bit-wise 'OR' operator in ti-pipe3 driver
+>>   *) Fix to request IRQ only for OTG in phy-rcar-gen3-usb2 driver
+>>   *) Fix linker errors and compilation warnings got with randconfig
+>>   *) Fix sparse warnings and .cocci warnings
+>>
+>> Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
+>>
+>> ----------------------------------------------------------------
+>> Arnd Bergmann (3):
+>>       phy: allwinner: allow compile testing
+>>       phy: ti: usb2: fix OMAP_CONTROL_PHY dependency
+>>       phy: mapphone-mdm6600: add gpiolib dependency
+>>
+>> Colin Ian King (1):
+>>       phy: ti-pipe3: fix missing bit-wise or operator when assigning val
+>>
+>> Fabrizio Castro (1):
+>>       phy: renesas: rcar-gen3-usb2: No need to request IRQ for non-OTG
+>>
+>> Roger Quadros (4):
+>>       phy: ti-pipe3: Introduce mode property in driver data
+>>       phy: ti-pipe3: improve DPLL stability for SATA & USB
+>>       phy: ti-pipe3: Fix SATA & USB PHY power up sequence
+>>       phy: ti-pipe3: Fix PCIe power up sequence
+>>
+>> Tony Lindgren (1):
+>>       phy: phy-twl4030-usb: Fix cable state handling
+>>
+>> YueHaibing (3):
+>>       phy: rockchip-typec: Make usb3_pll_cfg and dp_pll_cfg static
+>>       phy: qcom-ufs: Make ufs_qcom_phy_disable_iface_clk static
+>>       phy: fix platform_no_drv_owner.cocci warnings
+>>
+>>  drivers/phy/allwinner/Kconfig              |   9 ++--
+>>  drivers/phy/marvell/phy-mvebu-a3700-utmi.c |   1 -
+>>  drivers/phy/motorola/Kconfig               |   2 +-
+>>  drivers/phy/qualcomm/phy-qcom-ufs.c        |   2 +-
+>>  drivers/phy/renesas/phy-rcar-gen3-usb2.c   |  27 ++++++------
+>>  drivers/phy/rockchip/phy-rockchip-typec.c  |   4 +-
+>>  drivers/phy/ti/Kconfig                     |   2 +-
+>>  drivers/phy/ti/phy-ti-pipe3.c              | 362 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----------------------------------------
 > 
-> Signed-off-by: Oleksij Rempel <o.rempel@pengutronix.de>
-> ---
->   arch/mips/boot/dts/qca/ar9331.dtsi           | 25 ++++++++++++++++++++
->   arch/mips/boot/dts/qca/ar9331_dpt_module.dts |  8 +++++++
->   2 files changed, 33 insertions(+)
-> 
-> diff --git a/arch/mips/boot/dts/qca/ar9331.dtsi b/arch/mips/boot/dts/qca/ar9331.dtsi
-> index 2bae201aa365..7d59c7c66dda 100644
-> --- a/arch/mips/boot/dts/qca/ar9331.dtsi
-> +++ b/arch/mips/boot/dts/qca/ar9331.dtsi
-> @@ -116,6 +116,31 @@
->   			};
->   		};
->   
-> +		eth0: eth@19000000 {
+> That's a lot of changes so late in the release cycle for one driver.
+> Are you sure those are not 5.2-rc1 things?
 
-    The name should be "ethernet@...> according to the DT spec.
+hmm, I'll add ti-pipe3 changes for 5.2-rc1 and send you v2 for this pull request.
 
-> +			status = "disabled";
-
-    Mmm, this one is typically specified last in the node.
-
-> +
-> +			compatible = "qca,ar9330-eth";
-> +			reg = <0x19000000 0x200>;
-> +			interrupts = <4>;
-> +
-> +			resets = <&rst 9>;
-> +			reset-names = "mac";
-> +		};
-> +
-> +		eth1: eth@1a000000 {
-
-    "ethernet@..." again.
-
-> +			status = "disabled";
-> +
-> +			compatible = "qca,ar9330-eth";
-> +			reg = <0x1a000000 0x200>;
-> +			interrupts = <5>;
-> +
-> +			resets = <&rst 13>, <&rst 23>;
-> +			reset-names = "mac", "mdio";
-> +
-> +			clocks = <&pll ATH79_CLK_MDIO>;
-> +			clock-names = "mdio";
-> +		};
-> +
->   		usb: usb@1b000100 {
->   			compatible = "chipidea,usb2";
->   			reg = <0x1b000000 0x200>;
-[...]
-
-MBR, Sergei
+Thanks
+Kishon
