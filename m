@@ -2,319 +2,140 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B660EC10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:48:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B09DAC10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:48:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 70A182176F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:48:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7F07D2177B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:48:34 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="VmpcECcu"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="HxzHhrBF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731182AbfDQHsG (ORCPT
+        id S1731205AbfDQHsd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 03:48:06 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:46585 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfDQHsG (ORCPT
+        Wed, 17 Apr 2019 03:48:33 -0400
+Received: from mailout2.w1.samsung.com ([210.118.77.12]:40618 "EHLO
+        mailout2.w1.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731171AbfDQHsd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 03:48:06 -0400
-Received: by mail-pf1-f196.google.com with SMTP id 9so11678125pfj.13
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 00:48:05 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:subject:date:message-id;
-        bh=LfsYQs+r2tnN2nPN5NZItQW9ZKUgXqJ0T9e/uFdLPiY=;
-        b=VmpcECcu4C5T2Rnde10C8wLlIAYxhtSqmj2T2hV0ePtGGpv82fdb1wTE2ol530YYzA
-         WjGl2LfoXI5a2jh+XaXGwAFTdJS9RENa59RQIU5lb1llPsCyXH3FFbmgdg2dIobiRR3T
-         nFQOljo0HfWK7pymJb5KyK7ULIGnS02hNjeta0GcS3rYr+Ry9199HFVk+qZv3Bcqpa6R
-         HNzOLcJuphRFu+ARQvclXmTk5uN7mlEAgiEXJL4ag2NKsAhvD1lGsXJAMEPtAVj0JsDG
-         vkYGb/hWtc8hJFfNA90gcR98eMEt9/NKbB3iC9R24uTMRAupuRdwPS7evcmsV6wk4iEr
-         0qYg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:subject:date:message-id;
-        bh=LfsYQs+r2tnN2nPN5NZItQW9ZKUgXqJ0T9e/uFdLPiY=;
-        b=RDfSrh/oCZ4JnnPVVrXgq0sE5rTQvxfQKxdEhQdJiHCwA9nib1sCCxppAVHmal/mXA
-         FpgKh5wa0rqvLxnxMnun/zyPQdby/Fb5cy0gCQ4Hmz8xRnJxWhKVMIw6iqXm0QESgwsC
-         qrJmCBN05uZsaqo/FxUq3LAq4bzylYHtO1ic+ya5AZfOJTwXLdF+gN0mIMDFLl2UGRZQ
-         cVzcGuUyqZF4MjYTBfjrVHVVDV/8w2de8fjO45OrHHnv3z82AiKVwgNzTe0GBnGSRhtU
-         6umnCznUNUjZT4Z0SDltdW+SQ7vuV978+FEO4QEs3RhglSfhYqPW6i/ojn/z1esSibsu
-         /LXQ==
-X-Gm-Message-State: APjAAAXMUL12j+r/uBckiSP0X8f9TwGswg+2LAVa0Ro6fLI29HfAVnuL
-        frA07T+2OfwsjGyGBEPCPnA=
-X-Google-Smtp-Source: APXvYqz8y7B5nZnJ9khyT03/ezgoBpuG7zDcrpzde5cNla5TubiA+8UgyaCXRAsEkAyQyU47l62xuw==
-X-Received: by 2002:a63:4847:: with SMTP id x7mr82038251pgk.233.1555487285046;
-        Wed, 17 Apr 2019 00:48:05 -0700 (PDT)
-Received: from bj03382pcu.spreadtrum.com ([117.18.48.82])
-        by smtp.gmail.com with ESMTPSA id m8sm62714444pgn.59.2019.04.17.00.47.44
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 17 Apr 2019 00:48:04 -0700 (PDT)
-From:   Zhaoyang Huang <huangzhaoyang@gmail.com>
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Pavel Tatashin <pasha.tatashin@oracle.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        David Rientjes <rientjes@google.com>,
-        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-        Roman Gushchin <guro@fb.com>, Jeff Layton <jlayton@redhat.com>,
-        Matthew Wilcox <mawilcox@microsoft.com>, linux-mm@kvack.org,
-        linux-kernel@vger.kernel.org
-Subject: [RFC PATCH] mm/workingset : judge file page activity via timestamp
-Date:   Wed, 17 Apr 2019 15:47:26 +0800
-Message-Id: <1555487246-15764-1-git-send-email-huangzhaoyang@gmail.com>
-X-Mailer: git-send-email 1.7.9.5
+        Wed, 17 Apr 2019 03:48:33 -0400
+Received: from eucas1p1.samsung.com (unknown [182.198.249.206])
+        by mailout2.w1.samsung.com (KnoxPortal) with ESMTP id 20190417074831euoutp02864d4e4699cbb327d355b197cac165c8~WM3fsSYWH0393303933euoutp02M
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 07:48:31 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.w1.samsung.com 20190417074831euoutp02864d4e4699cbb327d355b197cac165c8~WM3fsSYWH0393303933euoutp02M
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
+        s=mail20170921; t=1555487311;
+        bh=qcoBq5tBOKGZTWog231jA3ntWKkNru5PluYdYR46n7A=;
+        h=From:To:Cc:Subject:Date:References:From;
+        b=HxzHhrBF8iuBUzsVFllF4yjrjvCpEUxzanNqVupeSTntTlhnEdhThAn0tPK3Q/OFb
+         Hqt/GhF751EBSdIfhKFXmZZ8Aws16o9aD7MHHGpk0gK+5HDom6epCAnxxLl9Hf2KKX
+         WsIc6yBpcZkAiIMPs8sjgMVOiQTky2ejuFU21seY=
+Received: from eusmges2new.samsung.com (unknown [203.254.199.244]) by
+        eucas1p1.samsung.com (KnoxPortal) with ESMTP id
+        20190417074830eucas1p1482672c0db81cb6a73cac342bd5f3fd8~WM3e25dQM1289812898eucas1p1D;
+        Wed, 17 Apr 2019 07:48:30 +0000 (GMT)
+Received: from eucas1p2.samsung.com ( [182.198.249.207]) by
+        eusmges2new.samsung.com (EUCPMTA) with SMTP id DB.3E.04377.E4AD6BC5; Wed, 17
+        Apr 2019 08:48:30 +0100 (BST)
+Received: from eusmtrp2.samsung.com (unknown [182.198.249.139]) by
+        eucas1p2.samsung.com (KnoxPortal) with ESMTPA id
+        20190417074829eucas1p234e664f9bf295eca8d2fad6ba953f37c~WM3d-LbEF2287122871eucas1p2q;
+        Wed, 17 Apr 2019 07:48:29 +0000 (GMT)
+Received: from eusmgms2.samsung.com (unknown [182.198.249.180]) by
+        eusmtrp2.samsung.com (KnoxPortal) with ESMTP id
+        20190417074829eusmtrp2d5795a77e97e5b21883f40917d5cf787~WM3dvb-o72697726977eusmtrp23;
+        Wed, 17 Apr 2019 07:48:29 +0000 (GMT)
+X-AuditID: cbfec7f4-113ff70000001119-81-5cb6da4e1404
+Received: from eusmtip1.samsung.com ( [203.254.199.221]) by
+        eusmgms2.samsung.com (EUCPMTA) with SMTP id 2F.47.04140.D4AD6BC5; Wed, 17
+        Apr 2019 08:48:29 +0100 (BST)
+Received: from AMDC3778.DIGITAL.local (unknown [106.120.51.20]) by
+        eusmtip1.samsung.com (KnoxPortal) with ESMTPA id
+        20190417074828eusmtip1524b9a6a70ae3e0faf20f312728f4550~WM3dEkjVB0059200592eusmtip1q;
+        Wed, 17 Apr 2019 07:48:28 +0000 (GMT)
+From:   Lukasz Luba <l.luba@partner.samsung.com>
+To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-pm@vger.kernel.org, linux-samsung-soc@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org
+Cc:     b.zolnierkie@samsung.com, krzk@kernel.org, robh+dt@kernel.org,
+        mark.rutland@arm.com, cw00.choi@samsung.com,
+        kyungmin.park@samsung.com, m.szyprowski@samsung.com,
+        s.nawrocki@samsung.com, myungjoo.ham@samsung.com, kgene@kernel.org,
+        l.luba@partner.samsung.com
+Subject: [PATCH 0/3] Exynos Performance Monitoring Counters enhancements
+Date:   Wed, 17 Apr 2019 09:48:05 +0200
+Message-Id: <1555487288-4777-1-git-send-email-l.luba@partner.samsung.com>
+X-Mailer: git-send-email 2.7.4
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprDKsWRmVeSWpSXmKPExsWy7djP87p+t7bFGHzbz2+xccZ6VovrX56z
+        Wsw/co7Vov/xa2aL8+c3sFucbXrDbnGrQcZi0+NrrBaXd81hs/jce4TRYsb5fUwWa4/cZbdY
+        ev0ik8XtxhVsFq17j7BbHH7Tzuog4LFm3hpGj02rOtk8Ni+p9zj4bg+TR9+WVYwenzfJBbBF
+        cdmkpOZklqUW6dslcGV8fPWdpeAYZ8W2k6tZGhjnsHcxcnJICJhIXN3+kBHEFhJYwSixri+k
+        i5ELyP7CKHH17QoWCOczo8Sk5l1sMB0zph+ESixnlNi+9xMbXMvNd9uYuxg5ONgE9CR2rCoE
+        aRARWMwo8e1wFEgNs0Ank8S7yXvAJgkLeEhcvPKECcRmEVCV6J6xFszmFfCUeDd1AiPENjmJ
+        m+c6mUGaJQQWsUvca58NdbiLxNsHN1khbGGJV8e3QMVlJP7vnM8EYRdLNPQuhBpUI/G4fy5U
+        jbXE4eMXWUEOZRbQlFi/Sx8i7AhUfo4RJCwhwCdx460gSJgZyJy0bTozRJhXoqNNCKJaQ2JL
+        zwWoRWISy9dMY4co8ZDY35cOCdBYiXVzVrJNYJSbhbBqASPjKkbx1NLi3PTUYqO81HK94sTc
+        4tK8dL3k/NxNjMA0c/rf8S87GHf9STrEKMDBqMTDu+Ln1hgh1sSy4srcQ4wSHMxKIryOKVti
+        hHhTEiurUovy44tKc1KLDzFKc7AoifNWMzyIFhJITyxJzU5NLUgtgskycXBKNTAqvV7Tem9G
+        seDZmRtlW1Iuf2KeoujNprxQUM9fpc97+w5Pn7tvUvyW3Mj5FarJcNK77qz51IOSwn+ir69o
+        eOZ2Z0b/QYUocybN2jytz6u7EidYxXpMufyBXaPUZmPU8aNv7Dq4N17+uuj1z0I9nfk+W2+J
+        ngr16v/n0FC6VmzizTUf6oVunj+txFKckWioxVxUnAgAljk7ji8DAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrGLMWRmVeSWpSXmKPExsVy+t/xu7q+t7bFGCyeK2yxccZ6VovrX56z
+        Wsw/co7Vov/xa2aL8+c3sFucbXrDbnGrQcZi0+NrrBaXd81hs/jce4TRYsb5fUwWa4/cZbdY
+        ev0ik8XtxhVsFq17j7BbHH7Tzuog4LFm3hpGj02rOtk8Ni+p9zj4bg+TR9+WVYwenzfJBbBF
+        6dkU5ZeWpCpk5BeX2CpFG1oY6RlaWugZmVjqGRqbx1oZmSrp29mkpOZklqUW6dsl6GV8fPWd
+        peAYZ8W2k6tZGhjnsHcxcnJICJhIzJh+kKWLkYtDSGApo8Tyr/PYIBJiEpP2bYcqEpb4c62L
+        DaLoE6PE71XngTo4ONgE9CR2rCoEiYsILGeUOLbqLTOIwywwnUnizrsrLCDdwgIeEhevPGEC
+        sVkEVCW6Z6wFs3kFPCXeTZ3ACLFBTuLmuU7mCYw8CxgZVjGKpJYW56bnFhvpFSfmFpfmpesl
+        5+duYgSG+bZjP7fsYOx6F3yIUYCDUYmHd8XPrTFCrIllxZW5hxglOJiVRHgdU7bECPGmJFZW
+        pRblxxeV5qQWH2I0BVo+kVlKNDkfGIN5JfGGpobmFpaG5sbmxmYWSuK85w0qo4QE0hNLUrNT
+        UwtSi2D6mDg4pRoYO/pFm+sfLIyVUf9WXcMrsOuQwtaMF3dyU1VneQh//MXYJKe67kBYkP4/
+        z9dHtm1YfSP8OfdKvufczt19Rt/lT+yblGbz4d1kS8spam13xCymZzMsyp+xwetlhkLqm2Mn
+        Yt9EXyz+un3p2YJzSz8unhjEtvynxd+uSDcP63lL1/3dyWztNG0GixJLcUaioRZzUXEiAOMC
+        tAeJAgAA
+X-CMS-MailID: 20190417074829eucas1p234e664f9bf295eca8d2fad6ba953f37c
+X-Msg-Generator: CA
+Content-Type: text/plain; charset="utf-8"
+X-RootMTR: 20190417074829eucas1p234e664f9bf295eca8d2fad6ba953f37c
+X-EPHeader: CA
+CMS-TYPE: 201P
+X-CMS-RootMailID: 20190417074829eucas1p234e664f9bf295eca8d2fad6ba953f37c
+References: <CGME20190417074829eucas1p234e664f9bf295eca8d2fad6ba953f37c@eucas1p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+Hi all,
 
-This patch introduce timestamp into workingset's entry and judge if the page
-is active or inactive via active_file/refault_ratio instead of refault distance.
+This patch set extends PPMU on Samsung Exynos by choosing type of data
+which shell be counter in the PPMU registers.
+It is possible to count e.g. read or write requests, read or write data.
+A new field has been added in the DT 'event' node called 'event-data-type'.
+It is them used during the setup of the counter. In the prevoius
+implementation there was always one option used: count read+write data.
+Sometimes we need more precised information and this patch set tries to
+address it.
 
-The original thought is coming from the logs we got from trace_printk in this
-patch, we can find about 1/5 of the file pages' refault are under the
-scenario[1],which will be counted as inactive as they have a long refault distance
-in between access. However, we can also know from the time information that the
-page refault quickly as comparing to the average refault time which is calculated
-by the number of active file and refault ratio. We want to save these kinds of
-pages from evicted earlier as it used to be. The refault ratio is the value
-which can reflect lru's average file access frequency and also can be deemed as a
-prediction of future.
+Regards,
+Lukasz Luba
 
-The patch is tested on an android system and reduce 30% of page faults, while
-60% of the pages remain the original status as (refault_distance < active_file)
-indicates. Pages status got from ftrace during the test can refer to [2].
+Lukasz Luba (3):
+  include: dt-bindings: add Performance Monitoring Unit for Exynos
+  drivers: devfreq: events: extend events by type of counted data
+  Documentation: devicetree: add PPMU events description
 
-[1]
-system_server workingset_refault: WKST_ACT[0]:rft_dis 265976, act_file 34268 rft_ratio 3047 rft_time 0 avg_rft_time 11 refault 295592 eviction 29616 secs 97 pre_secs 97
-HwBinder:922  workingset_refault: WKST_ACT[0]:rft_dis 264478, act_file 35037 rft_ratio 3070 rft_time 2 avg_rft_time 11 refault 310078 eviction 45600 secs 101 pre_secs 99
+ .../bindings/devfreq/event/exynos-ppmu.txt         | 18 ++++++++++
+ MAINTAINERS                                        |  5 +++
+ drivers/devfreq/event/exynos-ppmu.c                | 38 +++++++++++++++-------
+ include/dt-bindings/pmu/exynos_ppmu.h              | 24 ++++++++++++++
+ include/linux/devfreq-event.h                      |  6 ++++
+ 5 files changed, 79 insertions(+), 12 deletions(-)
+ create mode 100644 include/dt-bindings/pmu/exynos_ppmu.h
 
-[2]
-WKST_ACT[0]:   original--INACTIVE  commit--ACTIVE
-WKST_ACT[1]:   original--ACTIVE    commit--ACTIVE
-WKST_INACT[0]: original--INACTIVE  commit--INACTIVE
-WKST_INACT[1]: original--ACTIVE    commit--INACTIVE
-
-Signed-off-by: Zhaoyang Huang <huangzhaoyang@gmail.com>
----
- include/linux/mmzone.h |   1 +
- mm/workingset.c        | 120 +++++++++++++++++++++++++++++++++++++++++++++----
- 2 files changed, 112 insertions(+), 9 deletions(-)
-
-diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-index 32699b2..6f30673 100644
---- a/include/linux/mmzone.h
-+++ b/include/linux/mmzone.h
-@@ -240,6 +240,7 @@ struct lruvec {
- 	atomic_long_t			inactive_age;
- 	/* Refaults at the time of last reclaim cycle */
- 	unsigned long			refaults;
-+	atomic_long_t			refaults_ratio;
- #ifdef CONFIG_MEMCG
- 	struct pglist_data *pgdat;
- #endif
-diff --git a/mm/workingset.c b/mm/workingset.c
-index 40ee02c..66c177b 100644
---- a/mm/workingset.c
-+++ b/mm/workingset.c
-@@ -160,6 +160,21 @@
- 			 MEM_CGROUP_ID_SHIFT)
- #define EVICTION_MASK	(~0UL >> EVICTION_SHIFT)
- 
-+#ifdef CONFIG_64BIT
-+#define EVICTION_SECS_POS_SHIFT 20
-+#define EVICTION_SECS_SHRINK_SHIFT 4
-+#define EVICTION_SECS_POS_MASK  ((1UL << EVICTION_SECS_POS_SHIFT) - 1)
-+#else
-+#ifndef CONFIG_MEMCG
-+#define EVICTION_SECS_POS_SHIFT 12
-+#define EVICTION_SECS_SHRINK_SHIFT 4
-+#define EVICTION_SECS_POS_MASK  ((1UL << EVICTION_SECS_POS_SHIFT) - 1)
-+#else
-+#define EVICTION_SECS_POS_SHIFT 0
-+#define EVICTION_SECS_SHRINK_SHIFT 0
-+#define NO_SECS_IN_WORKINGSET
-+#endif
-+#endif
- /*
-  * Eviction timestamps need to be able to cover the full range of
-  * actionable refaults. However, bits are tight in the radix tree
-@@ -169,10 +184,54 @@
-  * evictions into coarser buckets by shaving off lower timestamp bits.
-  */
- static unsigned int bucket_order __read_mostly;
--
-+#ifdef NO_SECS_IN_WORKINGSET
-+static void pack_secs(unsigned long *peviction) { }
-+static unsigned int unpack_secs(unsigned long entry) {return 0; }
-+#else
-+/*
-+ * Shrink the timestamp according to its value and store it together
-+ * with the shrink size in the entry.
-+ */
-+static void pack_secs(unsigned long *peviction)
-+{
-+	unsigned int secs;
-+	unsigned long eviction;
-+	int order;
-+	int secs_shrink_size;
-+	struct timespec ts;
-+
-+	get_monotonic_boottime(&ts);
-+	secs = (unsigned int)ts.tv_sec ? (unsigned int)ts.tv_sec : 1;
-+	order = get_count_order(secs);
-+	secs_shrink_size = (order <= EVICTION_SECS_POS_SHIFT)
-+			? 0 : (order - EVICTION_SECS_POS_SHIFT);
-+
-+	eviction = *peviction;
-+	eviction = (eviction << EVICTION_SECS_POS_SHIFT)
-+			| ((secs >> secs_shrink_size) & EVICTION_SECS_POS_MASK);
-+	eviction = (eviction << EVICTION_SECS_SHRINK_SHIFT) | (secs_shrink_size & 0xf);
-+	*peviction = eviction;
-+}
-+/*
-+ * Unpack the second from the entry and restore the value according to the
-+ * shrink size.
-+ */
-+static unsigned int unpack_secs(unsigned long entry)
-+{
-+	unsigned int secs;
-+	int secs_shrink_size;
-+
-+	secs_shrink_size = entry & ((1 << EVICTION_SECS_SHRINK_SHIFT) - 1);
-+	entry >>= EVICTION_SECS_SHRINK_SHIFT;
-+	secs = entry & EVICTION_SECS_POS_MASK;
-+	secs = secs << secs_shrink_size;
-+	return secs;
-+}
-+#endif
- static void *pack_shadow(int memcgid, pg_data_t *pgdat, unsigned long eviction)
- {
- 	eviction >>= bucket_order;
-+	pack_secs(&eviction);
- 	eviction = (eviction << MEM_CGROUP_ID_SHIFT) | memcgid;
- 	eviction = (eviction << NODES_SHIFT) | pgdat->node_id;
- 	eviction = (eviction << RADIX_TREE_EXCEPTIONAL_SHIFT);
-@@ -181,20 +240,24 @@ static void *pack_shadow(int memcgid, pg_data_t *pgdat, unsigned long eviction)
- }
- 
- static void unpack_shadow(void *shadow, int *memcgidp, pg_data_t **pgdat,
--			  unsigned long *evictionp)
-+			  unsigned long *evictionp, unsigned int *prev_secs)
- {
- 	unsigned long entry = (unsigned long)shadow;
- 	int memcgid, nid;
-+	unsigned int secs;
- 
- 	entry >>= RADIX_TREE_EXCEPTIONAL_SHIFT;
- 	nid = entry & ((1UL << NODES_SHIFT) - 1);
- 	entry >>= NODES_SHIFT;
- 	memcgid = entry & ((1UL << MEM_CGROUP_ID_SHIFT) - 1);
- 	entry >>= MEM_CGROUP_ID_SHIFT;
-+	secs = unpack_secs(entry);
-+	entry >>= (EVICTION_SECS_POS_SHIFT + EVICTION_SECS_SHRINK_SHIFT);
- 
- 	*memcgidp = memcgid;
- 	*pgdat = NODE_DATA(nid);
- 	*evictionp = entry << bucket_order;
-+	*prev_secs = secs;
- }
- 
- /**
-@@ -242,9 +305,22 @@ bool workingset_refault(void *shadow)
- 	unsigned long refault;
- 	struct pglist_data *pgdat;
- 	int memcgid;
-+#ifndef NO_SECS_IN_WORKINGSET
-+	unsigned long avg_refault_time;
-+	unsigned long refault_time;
-+	int tradition;
-+	unsigned int prev_secs;
-+	unsigned int secs;
-+	unsigned long refaults_ratio;
-+#endif
-+	struct timespec ts;
-+	/*
-+	convert jiffies to second
-+	*/
-+	get_monotonic_boottime(&ts);
-+	secs = (unsigned int)ts.tv_sec ? (unsigned int)ts.tv_sec : 1;
- 
--	unpack_shadow(shadow, &memcgid, &pgdat, &eviction);
--
-+	unpack_shadow(shadow, &memcgid, &pgdat, &eviction, &prev_secs);
- 	rcu_read_lock();
- 	/*
- 	 * Look up the memcg associated with the stored ID. It might
-@@ -288,14 +364,37 @@ bool workingset_refault(void *shadow)
- 	 * list is not a problem.
- 	 */
- 	refault_distance = (refault - eviction) & EVICTION_MASK;
--
- 	inc_lruvec_state(lruvec, WORKINGSET_REFAULT);
--
--	if (refault_distance <= active_file) {
-+#ifndef NO_SECS_IN_WORKINGSET
-+	refaults_ratio = (atomic_long_read(&lruvec->inactive_age) + 1) / secs;
-+	atomic_long_set(&lruvec->refaults_ratio, refaults_ratio);
-+	refault_time = secs - prev_secs;
-+	avg_refault_time = active_file / refaults_ratio;
-+	tradition = !!(refault_distance < active_file);
-+	if (refault_time <= avg_refault_time) {
-+#else
-+	if (refault_distance < active_file) {
-+#endif
- 		inc_lruvec_state(lruvec, WORKINGSET_ACTIVATE);
-+#ifndef NO_SECS_IN_WORKINGSET
-+		trace_printk("WKST_ACT[%d]:rft_dis %ld, act_file %ld \
-+				rft_ratio %ld rft_time %ld avg_rft_time %ld \
-+				refault %ld eviction %ld secs %d pre_secs %d\n",
-+				tradition, refault_distance, active_file,
-+				refaults_ratio, refault_time, avg_refault_time,
-+				refault, eviction, secs, prev_secs);
-+#endif
- 		rcu_read_unlock();
- 		return true;
- 	}
-+#ifndef NO_SECS_IN_WORKINGSET
-+	trace_printk("WKST_INACT[%d]:rft_dis %ld, act_file %ld \
-+			rft_ratio %ld rft_time %ld avg_rft_time %ld \
-+			refault %ld eviction %ld secs %d pre_secs %d\n",
-+			tradition, refault_distance, active_file,
-+			refaults_ratio, refault_time, avg_refault_time,
-+			refault, eviction, secs, prev_secs);
-+#endif
- 	rcu_read_unlock();
- 	return false;
- }
-@@ -513,7 +612,9 @@ static int __init workingset_init(void)
- 	unsigned int max_order;
- 	int ret;
- 
--	BUILD_BUG_ON(BITS_PER_LONG < EVICTION_SHIFT);
-+	BUILD_BUG_ON(BITS_PER_LONG < (EVICTION_SHIFT
-+				+ EVICTION_SECS_POS_SHIFT
-+				+ EVICTION_SECS_SHRINK_SHIFT));
- 	/*
- 	 * Calculate the eviction bucket size to cover the longest
- 	 * actionable refault distance, which is currently half of
-@@ -521,7 +622,8 @@ static int __init workingset_init(void)
- 	 * some more pages at runtime, so keep working with up to
- 	 * double the initial memory by using totalram_pages as-is.
- 	 */
--	timestamp_bits = BITS_PER_LONG - EVICTION_SHIFT;
-+	timestamp_bits = BITS_PER_LONG - EVICTION_SHIFT
-+			- EVICTION_SECS_POS_SHIFT - EVICTION_SECS_SHRINK_SHIFT;
- 	max_order = fls_long(totalram_pages - 1);
- 	if (max_order > timestamp_bits)
- 		bucket_order = max_order - timestamp_bits;
 -- 
-1.9.1
+2.7.4
 
