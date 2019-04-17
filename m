@@ -7,57 +7,57 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D2656C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:11:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 026AEC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:12:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A2F7E206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:11:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C38A0204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:12:47 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="XJnI3V02"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="JS3QclBz"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732449AbfDQOL4 (ORCPT
+        id S1730449AbfDQOMq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 10:11:56 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:39545 "EHLO
+        Wed, 17 Apr 2019 10:12:46 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:37307 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732306AbfDQOLz (ORCPT
+        with ESMTP id S1732320AbfDQOMq (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 10:11:55 -0400
+        Wed, 17 Apr 2019 10:12:46 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3HEBe2A3934046
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3HECRxu3934333
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 17 Apr 2019 07:11:40 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3HEBe2A3934046
+        Wed, 17 Apr 2019 07:12:28 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3HECRxu3934333
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041743; t=1555510301;
-        bh=3wJ2H8Gux5Xoa6XaVRQZIcFRz1QtXjVniFlXmGL8ESM=;
+        s=2019041743; t=1555510348;
+        bh=OhcV/FRotL36qxGr8OBhsLpuNgzyt92MJjjAa8bY5Zo=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=XJnI3V025estYH+/6FjT2cIIJcW9ThAJxcnolun0pt+EVvnXkwVdf10WdIxdgAadS
-         oYn0u1GKE6/oqPKYKKN81EHaopYoyZXifmgyAGNJJ+hT/+4vsL8Yn0eqeS/EFBpEI8
-         uPYCrl7rNsLmAsvNCQfYdOxMtDNwkedowNE3LUVFM9M/MM3gYkSblOPgbIA/m1f3sR
-         KxQFXXWav/pdZhpU8CluZQct9NFLCQ5Ej+UTrNZcxLHCmCQWwdWOuR+unQ+7OkTLtM
-         kqj0VR6WK6bd6O+ClMAKPScEcbwzzPqhERyFp/wtzKzxagejwajVddRpPrW7EDMOp1
-         uhfnxJbcKDU+w==
+        b=JS3QclBz6oeDU+n8E8Vpw1qocyeajhtUQO5vIGAh6ut7d2lvRL8N7VrOQ0F4iINDV
+         yVuufsp9/5+DG40TY5k9ImuMCAAXLjL6JjRDRE7j/gWa6M4sJ0IMTrAdzwPPsk3w+B
+         6kQhzbPtL25P3bPJBHd72sq8zEDxDIAHyZy/wJB8t8H1PgV3tLWc6e9pjCXmuPk/qx
+         EIx/wGnA+SjaaYSbsTgsbZJcytESCnyPABK2KMiNzsWawf3REt53nwS2wBB9qsCPQA
+         dVgpJOoL4MfVc2zZd4foY+SnrntjVU8YOhWx1C6YwU7FC2nAR2fxu6uDQo3tp8T+6E
+         LozVX7FszrecQ==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3HEBeEu3934043;
-        Wed, 17 Apr 2019 07:11:40 -0700
-Date:   Wed, 17 Apr 2019 07:11:40 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3HECRl23934329;
+        Wed, 17 Apr 2019 07:12:27 -0700
+Date:   Wed, 17 Apr 2019 07:12:27 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
-Message-ID: <tip-bf5882abab773afd1277415e2f826b21de28f30d@git.kernel.org>
-Cc:     nstange@suse.de, sean.j.christopherson@intel.com, bp@suse.de,
-        mingo@kernel.org, linux-kernel@vger.kernel.org, luto@kernel.org,
-        jpoimboe@redhat.com, x86@kernel.org, hpa@zytor.com,
-        mingo@redhat.com, tglx@linutronix.de
-Reply-To: hpa@zytor.com, linux-kernel@vger.kernel.org, tglx@linutronix.de,
-          bp@suse.de, mingo@kernel.org, luto@kernel.org,
-          jpoimboe@redhat.com, x86@kernel.org, mingo@redhat.com,
-          sean.j.christopherson@intel.com, nstange@suse.de
-In-Reply-To: <20190414160144.885741626@linutronix.de>
-References: <20190414160144.885741626@linutronix.de>
+Message-ID: <tip-afcd21dad88b68d646e91ed36948117d58b4c197@git.kernel.org>
+Cc:     linux-kernel@vger.kernel.org, mingo@redhat.com, luto@kernel.org,
+        mingo@kernel.org, sean.j.christopherson@intel.com, hpa@zytor.com,
+        jpoimboe@redhat.com, bp@suse.de, tglx@linutronix.de, x86@kernel.org
+Reply-To: bp@suse.de, x86@kernel.org, tglx@linutronix.de, mingo@redhat.com,
+          linux-kernel@vger.kernel.org, luto@kernel.org, hpa@zytor.com,
+          sean.j.christopherson@intel.com, mingo@kernel.org,
+          jpoimboe@redhat.com
+In-Reply-To: <20190414160144.974900463@linutronix.de>
+References: <20190414160144.974900463@linutronix.de>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/irq] x86/irq/64: Use cpu entry area instead of orig_ist
-Git-Commit-ID: bf5882abab773afd1277415e2f826b21de28f30d
+Subject: [tip:x86/irq] x86/dumpstack/64: Use cpu_entry_area instead of
+ orig_ist
+Git-Commit-ID: afcd21dad88b68d646e91ed36948117d58b4c197
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -71,14 +71,14 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  bf5882abab773afd1277415e2f826b21de28f30d
-Gitweb:     https://git.kernel.org/tip/bf5882abab773afd1277415e2f826b21de28f30d
+Commit-ID:  afcd21dad88b68d646e91ed36948117d58b4c197
+Gitweb:     https://git.kernel.org/tip/afcd21dad88b68d646e91ed36948117d58b4c197
 Author:     Thomas Gleixner <tglx@linutronix.de>
-AuthorDate: Sun, 14 Apr 2019 17:59:51 +0200
+AuthorDate: Sun, 14 Apr 2019 17:59:52 +0200
 Committer:  Borislav Petkov <bp@suse.de>
-CommitDate: Wed, 17 Apr 2019 13:02:48 +0200
+CommitDate: Wed, 17 Apr 2019 13:05:06 +0200
 
-x86/irq/64: Use cpu entry area instead of orig_ist
+x86/dumpstack/64: Use cpu_entry_area instead of orig_ist
 
 The orig_ist[] array is a shadow copy of the IST array in the TSS. The
 reason why it exists is that older kernels used two TSS variants with
@@ -91,56 +91,93 @@ offsets of the various exception stacks.
 
 No functional change. Preparation for removing orig_ist.
 
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Borislav Petkov <bp@suse.de>
 Cc: "H. Peter Anvin" <hpa@zytor.com>
 Cc: Andy Lutomirski <luto@kernel.org>
 Cc: Ingo Molnar <mingo@redhat.com>
 Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Nicolai Stange <nstange@suse.de>
 Cc: Sean Christopherson <sean.j.christopherson@intel.com>
 Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190414160144.885741626@linutronix.de
+Link: https://lkml.kernel.org/r/20190414160144.974900463@linutronix.de
 ---
- arch/x86/kernel/irq_64.c | 13 +++++++------
- 1 file changed, 7 insertions(+), 6 deletions(-)
+ arch/x86/kernel/dumpstack_64.c | 39 +++++++++++++++++++++++++++------------
+ 1 file changed, 27 insertions(+), 12 deletions(-)
 
-diff --git a/arch/x86/kernel/irq_64.c b/arch/x86/kernel/irq_64.c
-index 182e8b245e06..7eb6f8d11bfd 100644
---- a/arch/x86/kernel/irq_64.c
-+++ b/arch/x86/kernel/irq_64.c
-@@ -18,6 +18,8 @@
- #include <linux/uaccess.h>
- #include <linux/smp.h>
- #include <linux/sched/task_stack.h>
-+
+diff --git a/arch/x86/kernel/dumpstack_64.c b/arch/x86/kernel/dumpstack_64.c
+index 455b47ef9250..f6fbd0438f9e 100644
+--- a/arch/x86/kernel/dumpstack_64.c
++++ b/arch/x86/kernel/dumpstack_64.c
+@@ -16,6 +16,7 @@
+ #include <linux/bug.h>
+ #include <linux/nmi.h>
+ 
 +#include <asm/cpu_entry_area.h>
- #include <asm/io_apic.h>
- #include <asm/apic.h>
+ #include <asm/stacktrace.h>
  
-@@ -43,10 +45,9 @@ static inline void stack_overflow_check(struct pt_regs *regs)
+ static const char *exception_stack_names[N_EXCEPTION_STACKS] = {
+@@ -25,11 +26,6 @@ static const char *exception_stack_names[N_EXCEPTION_STACKS] = {
+ 		[ ESTACK_MCE	]	= "#MC",
+ };
+ 
+-static const unsigned long exception_stack_sizes[N_EXCEPTION_STACKS] = {
+-	[0 ... N_EXCEPTION_STACKS - 1]		= EXCEPTION_STKSZ,
+-	[ESTACK_DB]				= DEBUG_STKSZ
+-};
+-
+ const char *stack_type_name(enum stack_type type)
  {
- #ifdef CONFIG_DEBUG_STACKOVERFLOW
- #define STACK_MARGIN	128
--	struct orig_ist *oist;
--	u64 irq_stack_top, irq_stack_bottom;
--	u64 estack_top, estack_bottom;
-+	u64 irq_stack_top, irq_stack_bottom, estack_top, estack_bottom;
- 	u64 curbase = (u64)task_stack_page(current);
-+	struct cea_exception_stacks *estacks;
+ 	BUILD_BUG_ON(N_EXCEPTION_STACKS != 4);
+@@ -52,25 +48,44 @@ const char *stack_type_name(enum stack_type type)
+ 	return NULL;
+ }
  
- 	if (user_mode(regs))
- 		return;
-@@ -60,9 +61,9 @@ static inline void stack_overflow_check(struct pt_regs *regs)
- 	if (regs->sp >= irq_stack_bottom && regs->sp <= irq_stack_top)
- 		return;
++struct estack_layout {
++	unsigned int	begin;
++	unsigned int	end;
++};
++
++#define	ESTACK_ENTRY(x)	{						  \
++	.begin	= offsetof(struct cea_exception_stacks, x## _stack),	  \
++	.end	= offsetof(struct cea_exception_stacks, x## _stack_guard) \
++	}
++
++static const struct estack_layout layout[N_EXCEPTION_STACKS] = {
++	[ ESTACK_DF	]	= ESTACK_ENTRY(DF),
++	[ ESTACK_NMI	]	= ESTACK_ENTRY(NMI),
++	[ ESTACK_DB	]	= ESTACK_ENTRY(DB),
++	[ ESTACK_MCE	]	= ESTACK_ENTRY(MCE),
++};
++
+ static bool in_exception_stack(unsigned long *stack, struct stack_info *info)
+ {
+-	unsigned long *begin, *end;
++	unsigned long estacks, begin, end, stk = (unsigned long)stack;
+ 	struct pt_regs *regs;
+-	unsigned k;
++	unsigned int k;
  
--	oist = this_cpu_ptr(&orig_ist);
--	estack_top = (u64)oist->ist[ESTACK_DB];
--	estack_bottom = estack_top - DEBUG_STKSZ + STACK_MARGIN;
-+	estacks = __this_cpu_read(cea_exception_stacks);
-+	estack_top = CEA_ESTACK_TOP(estacks, DB);
-+	estack_bottom = CEA_ESTACK_BOT(estacks, DB) + STACK_MARGIN;
- 	if (regs->sp >= estack_bottom && regs->sp <= estack_top)
- 		return;
+ 	BUILD_BUG_ON(N_EXCEPTION_STACKS != 4);
  
++	estacks = (unsigned long)__this_cpu_read(cea_exception_stacks);
++
+ 	for (k = 0; k < N_EXCEPTION_STACKS; k++) {
+-		end   = (unsigned long *)raw_cpu_ptr(&orig_ist)->ist[k];
+-		begin = end - (exception_stack_sizes[k] / sizeof(long));
++		begin = estacks + layout[k].begin;
++		end   = estacks + layout[k].end;
+ 		regs  = (struct pt_regs *)end - 1;
+ 
+-		if (stack < begin || stack >= end)
++		if (stk < begin || stk >= end)
+ 			continue;
+ 
+ 		info->type	= STACK_TYPE_EXCEPTION + k;
+-		info->begin	= begin;
+-		info->end	= end;
++		info->begin	= (unsigned long *)begin;
++		info->end	= (unsigned long *)end;
+ 		info->next_sp	= (unsigned long *)regs->sp;
+ 
+ 		return true;
