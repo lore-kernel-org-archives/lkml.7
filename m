@@ -2,92 +2,120 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2184C10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 04:19:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 80EA7C10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 04:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B7F4B206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 04:19:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555474767;
-	bh=bspQzlGo9EynIWDSkYCI8MXcWsaNVw/Z8IDPpae7Bq8=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=zdXczyF9bVN/Vb0SXl0PDArcI6rAStJ5gT0zh1W8DGXSuIM9jgC0uiCQ5tR9WWZD7
-	 U5ODoQMqbzMO3KrDnBiVvho6bT53s8Cdea7v6VyKyJ4JjufkSAp20AB/5a/Q0s0vBI
-	 qaT6g8LtpUthW61doo7s3GPJIyz0nqkHZYXbzQWA=
+	by mail.kernel.org (Postfix) with ESMTP id 4399D21773
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 04:26:40 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="JEmymZXR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726132AbfDQET0 (ORCPT
+        id S1726209AbfDQE0i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 00:19:26 -0400
-Received: from mail.linuxfoundation.org ([140.211.169.12]:39032 "EHLO
-        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725774AbfDQET0 (ORCPT
+        Wed, 17 Apr 2019 00:26:38 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:36606 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725320AbfDQE0h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 00:19:26 -0400
-Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
-        by mail.linuxfoundation.org (Postfix) with ESMTPSA id 95213D81;
-        Wed, 17 Apr 2019 04:19:24 +0000 (UTC)
-Date:   Tue, 16 Apr 2019 21:19:22 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Feng Tang <feng.tang@intel.com>
-Cc:     Petr Mladek <pmladek@suse.com>,
-        Steven Rostedt <rostedt@goodmis.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        linux-kernel@vger.kernel.org, Kees Cook <keescook@chromium.org>,
-        Borislav Petkov <bp@suse.de>
-Subject: Re: [PATCH v2] panic: add an option to replay all the printk
- message in buffer
-Message-Id: <20190416211922.d3c9c6987f0b992da343be52@linux-foundation.org>
-In-Reply-To: <20190410153718.22905-1-feng.tang@intel.com>
-References: <20190410153718.22905-1-feng.tang@intel.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Wed, 17 Apr 2019 00:26:37 -0400
+Received: by mail-it1-f194.google.com with SMTP id y10so2346859itc.1;
+        Tue, 16 Apr 2019 21:26:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=KrEQHtdxnpbYarVakV4JXFvdsq2uHUJmsVf4Dv0SWWM=;
+        b=JEmymZXR+lCgLib+PwN05KgmtPTi2sR/tewbBRX7wSq7gTNuJoBYWonvjrcqBprqkC
+         dsjC85fd9iceLBBB4jMT7EIFzjcqVEDYW4I0UaB2B83Vb3p0+ELDDZ+KhS0p2deIj/q5
+         0zeAoPtsJJWGIVIkX1T/gofxIScd/kecjD9f6ByNbmyJOiXiPEYkKCW0/EhKchXUV1vN
+         9GoQx6chyfeqsesXak8Xcr3of7DTsbKH1WVjkN2BKlK15vVjp88DbVBu2OupEte7ppS5
+         s0zWuHOHnoowFE/BOMLnow3KPePwdlimXz+yXfUmckZmDJe3YLaiT5to/aH6iBTBjZdZ
+         wHww==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=KrEQHtdxnpbYarVakV4JXFvdsq2uHUJmsVf4Dv0SWWM=;
+        b=Bgahs0nFQEBw8boU/603oxWGtbdPVT1F/30W/1X+QVPP/tXSgHl4ZgFNNV2fJXjI66
+         PLI10KgvBFgaJbSHphtekbQnrLU9tW/QKcrTaVbCKGOCoFq6bTXHS/0DWFakrRxGciOE
+         sx/X9SK5ti+LXIWvRbfooe28YJUw85lcNtM7NpXz42fVxzm/X+cG3U/0YxzX7J5dPL9N
+         2Gpm2T99SO4mYFIneMG5fwMMbIY1vDxYu6SyyS2ylnSa1YtomokdmBCavQ5bCX9GyzAh
+         f5itwwU/JBosD8I6jcQnc9/PeRkwvI+BkjNi6u4ZxfwnEw/alKq9ED8zGzZ+rHE0iNPq
+         hmPg==
+X-Gm-Message-State: APjAAAW7SWqjMnUzWUYcvuXzuexg0efsJ3TYw7oHkf+d13m/SM8MuLp2
+        +Ja8lIjmhC/ZyYLGGas89zLZxvYILz8JROyBPlUvGu71
+X-Google-Smtp-Source: APXvYqzwKNP2fNIv9nEBCyXdvC/YRcTI1Vfc1obfhI3i4jMmoaNUNsnEQhTYSpqK9RHv0No1PHqhUR2sQoLXxClRMWk=
+X-Received: by 2002:a02:8508:: with SMTP id g8mr11208772jai.68.1555475196615;
+ Tue, 16 Apr 2019 21:26:36 -0700 (PDT)
+MIME-Version: 1.0
+References: <20190412172545.fkxnpnymhcw7xncc@macpro-scc.lancs.ac.uk>
+ <CANAwSgSX6q4M2EcWvEA3B6zQuY0DBrh-0_r3v__R--p7dzjs7w@mail.gmail.com> <CAJKOXPeUYw2DNEzRfKGzTmNAtg5mHJObVFHygKJ2eUdDpAFmOQ@mail.gmail.com>
+In-Reply-To: <CAJKOXPeUYw2DNEzRfKGzTmNAtg5mHJObVFHygKJ2eUdDpAFmOQ@mail.gmail.com>
+From:   Anand Moon <linux.amoon@gmail.com>
+Date:   Wed, 17 Apr 2019 09:56:27 +0530
+Message-ID: <CANAwSgR7a_gNGUSCkp1MH=t+V0iUfBEByn0UpO7=5xJXDHv7FA@mail.gmail.com>
+Subject: Re: [PATCH] ARM: dts: exynos: add CCI-400 PMU nodes support to
+ Exynos542x SoCs
+To:     Krzysztof Kozlowski <krzk@kernel.org>
+Cc:     Willy Wolff <willy.mh.wolff.ml@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Kukjin Kim <kgene@kernel.org>,
+        devicetree <devicetree@vger.kernel.org>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        "linux-samsung-soc@vger.kernel.org" 
+        <linux-samsung-soc@vger.kernel.org>,
+        Linux Kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 10 Apr 2019 23:37:18 +0800 Feng Tang <feng.tang@intel.com> wrote:
+Hi Krzysztof,
 
-> Currently on panic, kernel will lower the loglevel and print out
-> new printk msg only with console_flush_on_panic().
-> 
-> Add an option for users to configure the "panic_print" to see
-> all dmesg in buffer, some of which they may have never seen due
-> to the loglevel setting, which will help debugging too.
-> 
-> Thanks to Petr Mladek as somes codes come directly from the sample
-> code in his review comments.
+On Tue, 16 Apr 2019 at 15:49, Krzysztof Kozlowski <krzk@kernel.org> wrote:
+>
+> On Mon, 15 Apr 2019 at 14:24, Anand Moon <linux.amoon@gmail.com> wrote:
+> > Cache Coherent Interface (CCI) among Cortex-A15 and Cortex-A7, G2D, G3D and SSS
+> >
+> > Level 0 > CPU blocks such as Cortex-A15 (CA15), Cortex-A7 (CA7) are
+> > joined as the member of Level 0 CCI bus
+> >
+> > Level 1 > Display engine block (DISP) and 2D graphic engines (G2D) are
+> > directly connected to Level 1.
+> >   DISP, MDMA, SSS.
+> >
+> > Level 2 > While all the other IP is connected to Level 1 bus via Level 2 bus
+> >    G3D, MSCL, MFC, ISP, JPEG/Rotator/DMA/PERI, NAND/SD/EMMC.
+> >
+> > So my question is the mapped with the cci ip block correct.
+> > Level 0 (cci_control0)
+> > Level 1 (cci_control1)
+> > Level 2 (cci_control1)
+>
+> Hi Anand,
+>
+> I do not understand the question - what is mapped with correctly or not?
+>
+> Best regards,
+> Krzysztof
 
-CONFIG_PRINTK=n:
+Following the https://www.kernel.org/doc/Documentation/devicetree/bindings/arm/cci.txt
+CCI node linked to CPU and DMA nodes for example.
 
-kernel/printk/printk.c: In function console_unlock:
-kernel/printk/printk.c:2419:11: warning: __builtin_memcpy writing 27 bytes into a region of size 0 overflows the destination [-Wstringop-overflow=]
-    len += sprintf(text + len,
-           ^~~~~~~~~~~~~~~~~~~
-            "Replaying the entire log:\n");
-            ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+On this line below diagram from Exynos 5422 UM show various IP block
+linked to CCI level.
+Below image just elaborate overall architecture of Exynos 5422 CCI.
 
-because LOG_LINE_MAX=0 and PREFIX_MAX=0.
+[0] https://imgur.com/gallery/0xJSwGQ
 
+So we should map the various IP block to corresponding CCI level.
 
-Which is interesting.  The pre-existing
-
-			len = sprintf(text,
-				      "** %llu printk messages dropped **\n",
-				      log_first_seq - console_seq);
-
-in console_unlock() has the same issue, but the compiler doesn't seem
-to want to warn.
-
-(Also, using sprintf() is a bit lame for the new message - could use
-strlcpy()).
-
-I'll drop the patch for now - we don't want that warning to come out. 
-console_unlock() needs some fixing for the CONFIG_PRINTK=n case.
-
+Best Regards
+-Anand
