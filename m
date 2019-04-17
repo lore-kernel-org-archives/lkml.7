@@ -2,128 +2,270 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D7165C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:09:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27500C282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:10:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF8A32173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:09:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DFE502177B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:10:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732221AbfDQNJs (ORCPT
+        id S1732219AbfDQNKo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 09:09:48 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:59578 "EHLO mx1.redhat.com"
+        Wed, 17 Apr 2019 09:10:44 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56314 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729898AbfDQNJr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 09:09:47 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
+        id S1726800AbfDQNKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 09:10:43 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 2573B88ABF;
-        Wed, 17 Apr 2019 13:09:47 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.38])
-        by smtp.corp.redhat.com (Postfix) with SMTP id B9C2C19C58;
-        Wed, 17 Apr 2019 13:09:41 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Wed, 17 Apr 2019 15:09:46 +0200 (CEST)
-Date:   Wed, 17 Apr 2019 15:09:41 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Joel Fernandes <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, luto@amacapital.net,
-        rostedt@goodmis.org, dancol@google.com, christian@brauner.io,
-        jannh@google.com, surenb@google.com, torvalds@linux-foundation.org,
-        Alexey Dobriyan <adobriyan@gmail.com>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Andrei Vagin <avagin@gmail.com>,
+        by mx1.redhat.com (Postfix) with ESMTPS id 6820830842AC;
+        Wed, 17 Apr 2019 13:10:42 +0000 (UTC)
+Received: from [10.36.116.187] (ovpn-116-187.ams2.redhat.com [10.36.116.187])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 2A5355D9E1;
+        Wed, 17 Apr 2019 13:10:39 +0000 (UTC)
+Subject: Re: [PATCH v1 2/4] mm/memory_hotplug: Make
+ unregister_memory_section() never fail
+To:     Oscar Salvador <osalvador@suse.de>, linux-mm@kvack.org
+Cc:     linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "Rafael J. Wysocki" <rafael@kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Andrew Banman <andrew.banman@hpe.com>,
+        "mike.travis@hpe.com" <mike.travis@hpe.com>,
         Andrew Morton <akpm@linux-foundation.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        linux-fsdevel@vger.kernel.org, linux-kselftest@vger.kernel.org,
-        Michal Hocko <mhocko@suse.com>, Nadav Amit <namit@vmware.com>,
-        Serge Hallyn <serge@hallyn.com>, Shuah Khan <shuah@kernel.org>,
-        Stephen Rothwell <sfr@canb.auug.org.au>,
-        Taehee Yoo <ap420073@gmail.com>, Tejun Heo <tj@kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>, kernel-team@android.com,
-        Tycho Andersen <tycho@tycho.ws>
-Subject: Re: [PATCH RFC 1/2] Add polling support to pidfd
-Message-ID: <20190417130940.GC32622@redhat.com>
-References: <20190411175043.31207-1-joel@joelfernandes.org>
- <20190416120430.GA15437@redhat.com>
- <20190416192051.GA184889@google.com>
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Qian Cai <cai@lca.pw>, Wei Yang <richard.weiyang@gmail.com>,
+        Arun KS <arunks@codeaurora.org>,
+        Mathieu Malaterre <malat@debian.org>
+References: <20190409100148.24703-1-david@redhat.com>
+ <20190409100148.24703-3-david@redhat.com> <1555505146.3139.26.camel@suse.de>
+From:   David Hildenbrand <david@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ SE+xAvmumFBY
+Organization: Red Hat GmbH
+Message-ID: <d4b774c1-64a6-87f1-892e-8f3d447433c8@redhat.com>
+Date:   Wed, 17 Apr 2019 15:10:38 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190416192051.GA184889@google.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.26]); Wed, 17 Apr 2019 13:09:47 +0000 (UTC)
+In-Reply-To: <1555505146.3139.26.camel@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 17 Apr 2019 13:10:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/16, Joel Fernandes wrote:
->
-> On Tue, Apr 16, 2019 at 02:04:31PM +0200, Oleg Nesterov wrote:
-> >
-> > Could you explain when it should return POLLIN? When the whole process exits?
->
-> It returns POLLIN when the task is dead or doesn't exist anymore, or when it
-> is in a zombie state and there's no other thread in the thread group.
+On 17.04.19 14:45, Oscar Salvador wrote:
+> On Tue, 2019-04-09 at 12:01 +0200, David Hildenbrand wrote:
+>> Failing while removing memory is mostly ignored and cannot really be
+>> handled. Let's treat errors in unregister_memory_section() in a nice
+>> way, warning, but continuing.
+>>
+>> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+>> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
+>> Cc: Ingo Molnar <mingo@kernel.org>
+>> Cc: Andrew Banman <andrew.banman@hpe.com>
+>> Cc: "mike.travis@hpe.com" <mike.travis@hpe.com>
+>> Cc: David Hildenbrand <david@redhat.com>
+>> Cc: Andrew Morton <akpm@linux-foundation.org>
+>> Cc: Oscar Salvador <osalvador@suse.de>
+>> Cc: Michal Hocko <mhocko@suse.com>
+>> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+>> Cc: Qian Cai <cai@lca.pw>
+>> Cc: Wei Yang <richard.weiyang@gmail.com>
+>> Cc: Arun KS <arunks@codeaurora.org>
+>> Cc: Mathieu Malaterre <malat@debian.org>
+>> Signed-off-by: David Hildenbrand <david@redhat.com>
+>> ---
+>>  drivers/base/memory.c  | 16 +++++-----------
+>>  include/linux/memory.h |  2 +-
+>>  mm/memory_hotplug.c    |  4 +---
+>>  3 files changed, 7 insertions(+), 15 deletions(-)
+>>
+>> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
+>> index 0c9e22ffa47a..f180427e48f4 100644
+>> --- a/drivers/base/memory.c
+>> +++ b/drivers/base/memory.c
+>> @@ -734,15 +734,18 @@ unregister_memory(struct memory_block *memory)
+>>  {
+>>  	BUG_ON(memory->dev.bus != &memory_subsys);
+>>  
+>> -	/* drop the ref. we got in remove_memory_section() */
+>> +	/* drop the ref. we got via find_memory_block() */
+>>  	put_device(&memory->dev);
+>>  	device_unregister(&memory->dev);
+>>  }
+>>  
+>> -static int remove_memory_section(struct mem_section *section)
+>> +void unregister_memory_section(struct mem_section *section)
+>>  {
+>>  	struct memory_block *mem;
+>>  
+>> +	if (WARN_ON_ONCE(!present_section(section)))
+>> +		return;
+>> +
+>>  	mutex_lock(&mem_sysfs_mutex);
+>>  
+>>  	/*
+>> @@ -763,15 +766,6 @@ static int remove_memory_section(struct
+>> mem_section *section)
+>>  
+>>  out_unlock:
+>>  	mutex_unlock(&mem_sysfs_mutex);
+>> -	return 0;
+>> -}
+>> -
+>> -int unregister_memory_section(struct mem_section *section)
+>> -{
+>> -	if (!present_section(section))
+>> -		return -EINVAL;
+>> -
+>> -	return remove_memory_section(section);
+>>  }
+>>  #endif /* CONFIG_MEMORY_HOTREMOVE */
+>>  
+>> diff --git a/include/linux/memory.h b/include/linux/memory.h
+>> index a6ddefc60517..e1dc1bb2b787 100644
+>> --- a/include/linux/memory.h
+>> +++ b/include/linux/memory.h
+>> @@ -113,7 +113,7 @@ extern int
+>> register_memory_isolate_notifier(struct notifier_block *nb);
+>>  extern void unregister_memory_isolate_notifier(struct notifier_block
+>> *nb);
+>>  int hotplug_memory_register(int nid, struct mem_section *section);
+>>  #ifdef CONFIG_MEMORY_HOTREMOVE
+>> -extern int unregister_memory_section(struct mem_section *);
+>> +extern void unregister_memory_section(struct mem_section *);
+>>  #endif
+>>  extern int memory_dev_init(void);
+>>  extern int memory_notify(unsigned long val, void *v);
+>> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+>> index 696ed7ee5e28..b0cb05748f99 100644
+>> --- a/mm/memory_hotplug.c
+>> +++ b/mm/memory_hotplug.c
+>> @@ -527,9 +527,7 @@ static int __remove_section(struct zone *zone,
+>> struct mem_section *ms,
+>>  	if (!valid_section(ms))
+>>  		return ret;
+>>  
+>> -	ret = unregister_memory_section(ms);
+>> -	if (ret)
+>> -		return ret;
+>> +	unregister_memory_section(ms);
+> 
+> So, technically unregister_memory_section() can __only__ fail in case
+> the section is not present, returning -EINVAL.
+> 
+> Now, I was checking how the pair valid/present sections work.
+> Unless I am mistaken, we only mark sections as memmap those sections
+> that are present.
+> 
+> This can come from two paths:
+> 
+> - Early boot:
+>   * memblocks_present
+>      memory_present           - mark sections as present
+>     sparse_init               - iterates only over present sections
+>      sparse_init_nid
+>       sparse_init_one_section - mark section as valid
+> 
+> - Hotplug path:
+>   * sparse_add_one_section
+>      section_mark_present     - mark section as present
+>      sparse_init_one_section  - mark section as valid
+>    
+> 
+> During early boot, sparse_init iterates __only__ over present sections,
+> so only those are marked valid as well, and during hotplug, the section
+> is both marked present and valid.
+> 
+> All in all, I think that we are safe if we remove the present_section
+> check in your new unregister_memory_section(), as a valid_section
+> cannot be non-present, and we do already catch those early in
+> __remove_section().
 
-IOW, when the whole thread group exits, so it can't be used to monitor sub-threads.
+Yes, dropping the check completely would be the next step.
 
-just in case... speaking of this patch it doesn't modify proc_tid_base_operations,
-so you can't poll("/proc/sub-thread-tid") anyway, but iiuc you are going to use
-the anonymous file returned by CLONE_PIDFD ?
+> 
+> Then, the only thing missing to be completely error-less in that
+> codepath is to make unregister_mem_sect_under_nodes() void return-type.
+> Not that it matters a lot as we are already ignoring its return code,
+> but I find that quite disturbing and wrong.
+> 
+> So, would you like to take this patch in your patchset in case you re-
+> submit?
 
+I already had a look at that approach but would like to defer it, until
+I eventually factor out creation/deletion of memory devices (see my
+other RFC, still some work has to be done).
 
-> > Then all you need is
-> >
-> > 	!task || task->exit_state && thread_group_empty(task)
->
-> Yes this works as well, all the tests pass with your suggestion so I'll
-> change it to that. Although I will the be giving up returing EPOLLERR if the
-> task_struct doesn't exit. We don't need that, but I thought it was cool to
-> return it anyway.
+Reasons:
 
-OK, task == NULL means that it was already reaped by parent, pid_nr is free,
-probably useful....
+1. We only support unplug of system ram memory belonging to exactly one
+node. No need to iterate over all nodes. mem->node should later tell us
+exactly what needs to be removed. No need to iterate at all.
 
-> > Please do not use EXIT_DEAD/EXIT_ZOMBIE. And ->wait_pidfd should probably
-> > live in task->signal_struct.
->
-> About wait_pidfd living in signal_struct, that wont work since the waitqueue
-> has to survive for the duration of the poll system call.
+2. unregister_mem_sect_under_nodes() should be replaced by
+"unregister_mem_block_under_nodes()". We only support unplug of whole
+memory blocks. Ripping out random sections from a memory block is not
+going to work and is not supported.
 
-That is why I said this will need the additional cleanup in free_signal_struct().
-But I was wrong, somehow I forgot that free_poll_entry() needs wq_head->lock ;)
-so this will need much more complications, lets forget it...
+IOW, this is some leftover when people turned memory block devices to
+span multiple sections. Once we clean that up, this problem goes away.
 
-> Also the waitqueue living in struct pid solves the de_thread() issue I
-> mentioned later in the following thread and in the commit message:
-> https://lore.kernel.org/patchwork/comment/1257175/
+-- 
 
-Hmm...
+Thanks,
 
-	2. By including the struct pid for the waitqueue means that during
-	de_exec, the thread doing de_thread() automatically gets the new
-	waitqueue/pid even though its task_struct is different.
-
-this one?
-
-this is not true, or I do not understand...
-
-it gets the _same_ (old, not new) PIDTYPE_TGID pid even if it changes task_struct.
-But probably this is what you actually meant, because this is what your patch wants
-or I am totally confused.
-
-And note that exec/de_thread doesn't change ->signal_struct, so I do not understand
-you anyway. Nevermind.
-
-Oleg.
-
+David / dhildenb
