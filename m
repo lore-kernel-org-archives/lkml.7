@@ -4,30 +4,30 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D4AFBC282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:44:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 27AC4C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:44:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A590F217D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:44:36 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EA030217D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:44:39 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387524AbfDQVmU (ORCPT
+        id S2387733AbfDQVoi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 17:42:20 -0400
-Received: from mga12.intel.com ([192.55.52.136]:20155 "EHLO mga12.intel.com"
+        Wed, 17 Apr 2019 17:44:38 -0400
+Received: from mga12.intel.com ([192.55.52.136]:20162 "EHLO mga12.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387475AbfDQVmR (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 17:42:17 -0400
+        id S2387525AbfDQVmV (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 17:42:21 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
 Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Apr 2019 14:42:15 -0700
+  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Apr 2019 14:42:20 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,363,1549958400"; 
-   d="scan'208";a="224441131"
+   d="scan'208";a="224441160"
 Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by orsmga001.jf.intel.com with ESMTP; 17 Apr 2019 14:42:14 -0700
+  by orsmga001.jf.intel.com with ESMTP; 17 Apr 2019 14:42:19 -0700
 From:   Fenghua Yu <fenghua.yu@intel.com>
 To:     "Thomas Gleixner" <tglx@linutronix.de>,
         "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
@@ -45,9 +45,9 @@ Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
         "x86" <x86@kernel.org>, kvm@vger.kernel.org,
         netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
         Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH v7 02/21] drivers/net/b44: Align pwol_mask to unsigned long for better performance
-Date:   Wed, 17 Apr 2019 14:33:52 -0700
-Message-Id: <1555536851-17462-3-git-send-email-fenghua.yu@intel.com>
+Subject: [PATCH v7 08/21] x86/split_lock: Enumerate split lock detection on Icelake mobile processor
+Date:   Wed, 17 Apr 2019 14:33:58 -0700
+Message-Id: <1555536851-17462-9-git-send-email-fenghua.yu@intel.com>
 X-Mailer: git-send-email 2.5.0
 In-Reply-To: <1555536851-17462-1-git-send-email-fenghua.yu@intel.com>
 References: <1555536851-17462-1-git-send-email-fenghua.yu@intel.com>
@@ -56,49 +56,46 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Peter Zijlstra <peterz@infradead.org>
+Icelake mobile processor can detect split lock operations although
+the processor doesn't have MSR IA32_CORE_CAPABILITY and split lock
+detection bit in the MSR. Set split lock detection feature bit
+X86_FEATURE_SPLIT_LOCK_DETECT on the processor based on its
+family/model/stepping.
 
-A bit in pwol_mask is set in b44_magic_pattern() by atomic set_bit().
-But since pwol_mask is local and never exposed to concurrency, there is
-no need to set bit in pwol_mask atomically.
+In the future, a few other processors may also have the split lock
+detection feature but don't have MSR IA32_CORE_CAPABILITY. The feature
+will be enumerated on those processors once their family/model/stepping
+information is released.
 
-set_bit() sets the bit in a single unsigned long location. Because
-pwol_mask may not be aligned to unsigned long, the location may cross two
-cache lines. On x86, accessing two cache lines in locked instruction in
-set_bit() is called split locked access and can cause overall performance
-degradation.
-
-So use non atomic __set_bit() to set pwol_mask bits. __set_bit() won't hit
-split lock issue on x86.
-
-Signed-off-by: Peter Zijlstra <peterz@infradead.org>
 Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
 ---
- drivers/net/ethernet/broadcom/b44.c | 4 ++--
- 1 file changed, 2 insertions(+), 2 deletions(-)
+ arch/x86/kernel/cpu/intel.c | 12 +++++++++++-
+ 1 file changed, 11 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/net/ethernet/broadcom/b44.c b/drivers/net/ethernet/broadcom/b44.c
-index 97ab0dd25552..5738ab963dfb 100644
---- a/drivers/net/ethernet/broadcom/b44.c
-+++ b/drivers/net/ethernet/broadcom/b44.c
-@@ -1520,7 +1520,7 @@ static int b44_magic_pattern(u8 *macaddr, u8 *ppattern, u8 *pmask, int offset)
+diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+index ad3f72d106fc..62f61a961eb6 100644
+--- a/arch/x86/kernel/cpu/intel.c
++++ b/arch/x86/kernel/cpu/intel.c
+@@ -1038,8 +1038,18 @@ void __init cpu_set_core_cap_bits(struct cpuinfo_x86 *c)
+ {
+ 	u64 ia32_core_cap = 0;
  
- 	memset(ppattern + offset, 0xff, magicsync);
- 	for (j = 0; j < magicsync; j++)
--		set_bit(len++, (unsigned long *) pmask);
-+		__set_bit(len++, (unsigned long *)pmask);
+-	if (!cpu_has(c, X86_FEATURE_CORE_CAPABILITY))
++	if (!cpu_has(c, X86_FEATURE_CORE_CAPABILITY)) {
++		/*
++		 * The following processors have split lock detection feature.
++		 * But since they don't have MSR IA32_CORE_CAPABILITY, the
++		 * feature cannot be enumerated by the MSR. So enumerate the
++		 * feature by family/model/stepping.
++		 */
++		if (c->x86 == 6 && c->x86_model == INTEL_FAM6_ICELAKE_MOBILE)
++			set_split_lock_detect();
++
+ 		return;
++	}
  
- 	for (j = 0; j < B44_MAX_PATTERNS; j++) {
- 		if ((B44_PATTERN_SIZE - len) >= ETH_ALEN)
-@@ -1532,7 +1532,7 @@ static int b44_magic_pattern(u8 *macaddr, u8 *ppattern, u8 *pmask, int offset)
- 		for (k = 0; k< ethaddr_bytes; k++) {
- 			ppattern[offset + magicsync +
- 				(j * ETH_ALEN) + k] = macaddr[k];
--			set_bit(len++, (unsigned long *) pmask);
-+			__set_bit(len++, (unsigned long *)pmask);
- 		}
- 	}
- 	return len - 1;
+ 	/*
+ 	 * If MSR_IA32_CORE_CAPABILITY exists, enumerate features that are
 -- 
 2.19.1
 
