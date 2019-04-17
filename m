@@ -8,62 +8,62 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1DE5AC282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:55:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 789A2C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:55:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D19B121852
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:55:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45D32217FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:55:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="V9FMKPNA"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ddQYn3f6"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387542AbfDQUzY (ORCPT
+        id S2387583AbfDQUz3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 16:55:24 -0400
-Received: from mail-lf1-f66.google.com ([209.85.167.66]:33673 "EHLO
-        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387506AbfDQUzV (ORCPT
+        Wed, 17 Apr 2019 16:55:29 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:33678 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387506AbfDQUz1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 16:55:21 -0400
-Received: by mail-lf1-f66.google.com with SMTP id j11so19949368lfm.0;
-        Wed, 17 Apr 2019 13:55:19 -0700 (PDT)
+        Wed, 17 Apr 2019 16:55:27 -0400
+Received: by mail-lf1-f68.google.com with SMTP id j11so19949539lfm.0;
+        Wed, 17 Apr 2019 13:55:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=/1d5STtYeSfvYq/JvOmhvEZUVTsQSGLaSpbZY+1iQas=;
-        b=V9FMKPNA4LVURReEmOZW3YFC5gXHXhcV2KKwqaqqDvv+LxcfCI6XSaVeNuLnjEKptq
-         NiCLeA4LdRWq239GfPafdTjViPbfbuJbtHL589L9MCF+++tNFazulYSuTdAcfOTVY9Ym
-         WK/2e9Mst3anKhBiLB9iYLyLtiriQgBNhf1REyM5HnpjTNIe8aUk/idghE2LoqS6gzMp
-         bNN7gYdFqOsYBIiaV8FGFMOq5O+sFy6f9yxE2AQgHkK6ra5qF7XVEEj0PgHoqWaOg97x
-         C+AZmY3Lnap2gC319+Lg0R2iQ/auVQFekuQ3CZTx8OmBkCTYnwaB33v77X8+ncD12XCH
-         0UBw==
+        bh=dPtOeAFGcjG69CNffp85oXTQnu6Cl/PZEig489cVDuE=;
+        b=ddQYn3f69p1x3puHu7a3Dmbcb+wKHZ6qzvrQWKV+OYxBMxY7J97l9IJ97rxDj039Dn
+         biyOTJnjc2tbmrODIwb/iVqEGQVfGP81PpmaQ12TpYgjmsjIepppl+odgewBMlUEoMpQ
+         SdUBZE2A0rMIKEFtqKgmmZ/mNzIGkg7EW3bgRyIsmevPJRKgoLiXasMQdVveF38Ahxc0
+         9qvK+AQCMOss7DZv0khXwnIVpJXnU6r4VuMPA/7bpOB7cKIn0GH+W7/AH2aKuBRtFoVT
+         7PG5tHX6jp/MR9hxs+r96wEcjNyYnjodd0rZeaYoR8VNoEOPzUQFm5sBI+1/yno3Fk+G
+         zHog==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=/1d5STtYeSfvYq/JvOmhvEZUVTsQSGLaSpbZY+1iQas=;
-        b=ik2qH3rlRGFVE3YzpZ8VZW4AiaDOf95wcmq78m3rF+gttZUykK8rYckxWLl04ErY42
-         1SaKDaiJPWs6oDiB8NhRDV4K7AKV4ImuCMXaMH8zt/GpDyYFzOOFmJyQ3vXkJQo6lTpV
-         c5i+AuiSJhJMEhjjyDQVbCpZdo3zXcVYXbhsS/wbpWttgQm6uBoHKCjXIocOMD/RNCN8
-         ZF80EIJ0fCTq/AV3HK0ZpUxcu+oBDVc5iLW3aFAbIUHjBjsurmV2H+OwW98gb14gnC4S
-         xAC/YpBY+k2Th4nXfuq9lJD9oQC/8VqbMMGz0Ooi3YzvXthom9DC3/h56Nc0GVDZCGPh
-         yNIw==
-X-Gm-Message-State: APjAAAXi/WwU/CSO492/ya7RHx9S+hXHW7KIReXlumYfiJ9R/AwXbQDq
-        OZM7kNHGk7Pgl9+dcYeLLeLl1XzX0jA=
-X-Google-Smtp-Source: APXvYqyAKdyAhYN9ySmZxAHk00h3EMi9+Tw/4slJl4LgMWv8iayGLomPgoxZj9R0ODXB2J22sMeSpg==
-X-Received: by 2002:a19:f705:: with SMTP id z5mr31868092lfe.93.1555534518199;
-        Wed, 17 Apr 2019 13:55:18 -0700 (PDT)
+        bh=dPtOeAFGcjG69CNffp85oXTQnu6Cl/PZEig489cVDuE=;
+        b=um5OlRbo7NtPW5RkJV8WvxNV535IbcLltiM5oxC5TeasWL8VLAuhwD9cCjeq7osLXx
+         xloIYls1TMUJNv4C0AuiM66IfTYSxEBRHoJjRgxzvjJPgQ7xUPTEpAismKlkUCB2mK78
+         hmeRXPyEAeQv4/Sz/vxLFYfMARBPBGz/xLMfA+tcmEHPcDQztCHQcgnRYl7LNW98nt9o
+         67IC6UQbrYaup5OtzauUtYRGk9vKKNxQnR1swES9YwkqPMiswhNWqMOlcEQ6AZZucUGk
+         Q1d66ut8hbO0jE7iYwIIMKIM/GiuWxn/GD2d80WKq/lYVkSm2uw/z/Wb4NgCgji40t26
+         uOtg==
+X-Gm-Message-State: APjAAAXD0oqGKlSFNA17j+nDZp0J5sonwDWEU9Ze9joGZsNGT473zqMW
+        i8TYM2jxgzwzpm0bv8ullbKIjKjX7Hw=
+X-Google-Smtp-Source: APXvYqzCYTrHcKReLfN3IyB58j3dMKCRb/UFpYYDfXOkO/U9HWc7BNvTkMRriKuX3lNiZNc4ZQXqTQ==
+X-Received: by 2002:a19:428c:: with SMTP id p134mr3908077lfa.108.1555534523830;
+        Wed, 17 Apr 2019 13:55:23 -0700 (PDT)
 Received: from myhost.home (bfw35.neoplus.adsl.tpnet.pl. [83.28.60.35])
-        by smtp.gmail.com with ESMTPSA id z206sm4342lfa.53.2019.04.17.13.55.16
+        by smtp.gmail.com with ESMTPSA id z206sm4342lfa.53.2019.04.17.13.55.22
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Apr 2019 13:55:17 -0700 (PDT)
+        Wed, 17 Apr 2019 13:55:23 -0700 (PDT)
 From:   Jacek Anaszewski <jacek.anaszewski@gmail.com>
 To:     linux-leds@vger.kernel.org
 Cc:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
         pavel@ucw.cz, robh@kernel.org, dtor@google.com, linux@roeck-us.net,
         jacek.anaszewski@gmail.com, Dan Murphy <dmurphy@ti.com>
-Subject: [PATCH v4 13/26] dt-bindings: lm3692x: Add function and color properties
-Date:   Wed, 17 Apr 2019 22:54:26 +0200
-Message-Id: <20190417205439.17685-14-jacek.anaszewski@gmail.com>
+Subject: [PATCH v4 16/26] leds: lm3601x: Use generic support for composing LED names
+Date:   Wed, 17 Apr 2019 22:54:29 +0200
+Message-Id: <20190417205439.17685-17-jacek.anaszewski@gmail.com>
 X-Mailer: git-send-email 2.11.0
 In-Reply-To: <20190417205439.17685-1-jacek.anaszewski@gmail.com>
 References: <20190417205439.17685-1-jacek.anaszewski@gmail.com>
@@ -72,47 +72,133 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Refer to new "function" and "color" properties and mark "label"
-as deprecated.
+Switch to using generic LED support for composing LED class
+device name.
 
 Signed-off-by: Jacek Anaszewski <jacek.anaszewski@gmail.com>
 Cc: Dan Murphy <dmurphy@ti.com>
 ---
- Documentation/devicetree/bindings/leds/leds-lm3692x.txt | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ drivers/leds/leds-lm3601x.c | 38 +++++++++++++++++---------------------
+ 1 file changed, 17 insertions(+), 21 deletions(-)
 
-diff --git a/Documentation/devicetree/bindings/leds/leds-lm3692x.txt b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
-index 08b352840bd7..4c2d923f8758 100644
---- a/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
-+++ b/Documentation/devicetree/bindings/leds/leds-lm3692x.txt
-@@ -26,12 +26,16 @@ Required child properties:
- 		3 - Will enable the LED3 sync (LM36923 only)
+diff --git a/drivers/leds/leds-lm3601x.c b/drivers/leds/leds-lm3601x.c
+index 081aa71e43a3..6a1a0e75f3ec 100644
+--- a/drivers/leds/leds-lm3601x.c
++++ b/drivers/leds/leds-lm3601x.c
+@@ -10,7 +10,6 @@
+ #include <linux/module.h>
+ #include <linux/regmap.h>
+ #include <linux/slab.h>
+-#include <uapi/linux/uleds.h>
  
- Optional child properties:
--	- label : see Documentation/devicetree/bindings/leds/common.txt
-+	- function : see Documentation/devicetree/bindings/leds/common.txt
-+	- color : see Documentation/devicetree/bindings/leds/common.txt
-+	- label : see Documentation/devicetree/bindings/leds/common.txt (deprecated)
- 	- linux,default-trigger :
- 	   see Documentation/devicetree/bindings/leds/common.txt
+ #define LM3601X_LED_IR		0x0
+ #define LM3601X_LED_TORCH	0x1
+@@ -90,8 +89,6 @@ struct lm3601x_led {
+ 	struct regmap *regmap;
+ 	struct mutex lock;
  
- Example:
+-	char led_name[LED_MAX_NAME_SIZE];
+-
+ 	unsigned int flash_timeout;
+ 	unsigned int last_flag;
  
-+#include <dt-bindings/leds/common.h>
+@@ -322,10 +319,12 @@ static const struct led_flash_ops flash_ops = {
+ 	.fault_get		= lm3601x_flash_fault_get,
+ };
+ 
+-static int lm3601x_register_leds(struct lm3601x_led *led)
++static int lm3601x_register_leds(struct lm3601x_led *led,
++				 struct fwnode_handle *fwnode)
+ {
+ 	struct led_classdev *led_cdev;
+ 	struct led_flash_setting *setting;
++	struct led_init_data init_data;
+ 
+ 	led->fled_cdev.ops = &flash_ops;
+ 
+@@ -342,20 +341,25 @@ static int lm3601x_register_leds(struct lm3601x_led *led)
+ 	setting->val = led->flash_current_max;
+ 
+ 	led_cdev = &led->fled_cdev.led_cdev;
+-	led_cdev->name = led->led_name;
+ 	led_cdev->brightness_set_blocking = lm3601x_brightness_set;
+ 	led_cdev->max_brightness = DIV_ROUND_UP(led->torch_current_max,
+ 						LM3601X_TORCH_REG_DIV);
+ 	led_cdev->flags |= LED_DEV_CAP_FLASH;
+ 
+-	return led_classdev_flash_register(&led->client->dev, &led->fled_cdev);
++	init_data.fwnode = fwnode;
++	init_data.devicename = led->client->name;
++	init_data.default_label = (led->led_mode == LM3601X_LED_TORCH) ?
++					"torch" : "infrared";
 +
- led-controller@36 {
- 	compatible = "ti,lm3692x";
- 	reg = <0x36>;
-@@ -43,7 +47,8 @@ led-controller@36 {
- 
- 	led@0 {
- 		reg = <0>;
--		label = "white:backlight_cluster";
-+		function = LED_FUNCTION_BACKLIGHT;
-+		color = <LED_COLOR_ID_WHITE>;
- 		linux,default-trigger = "backlight";
- 	};
++	return led_classdev_flash_register_ext(&led->client->dev,
++						&led->fled_cdev, &init_data);
  }
+ 
+-static int lm3601x_parse_node(struct lm3601x_led *led)
++static int lm3601x_parse_node(struct lm3601x_led *led,
++			      struct fwnode_handle **fwnode)
+ {
+ 	struct fwnode_handle *child = NULL;
+ 	int ret = -ENODEV;
+-	const char *name;
+ 
+ 	child = device_get_next_child_node(&led->client->dev, child);
+ 	if (!child) {
+@@ -376,17 +380,6 @@ static int lm3601x_parse_node(struct lm3601x_led *led)
+ 		goto out_err;
+ 	}
+ 
+-	ret = fwnode_property_read_string(child, "label", &name);
+-	if (ret) {
+-		if (led->led_mode == LM3601X_LED_TORCH)
+-			name = "torch";
+-		else
+-			name = "infrared";
+-	}
+-
+-	snprintf(led->led_name, sizeof(led->led_name),
+-		"%s:%s", led->client->name, name);
+-
+ 	ret = fwnode_property_read_u32(child, "led-max-microamp",
+ 					&led->torch_current_max);
+ 	if (ret) {
+@@ -411,6 +404,8 @@ static int lm3601x_parse_node(struct lm3601x_led *led)
+ 		goto out_err;
+ 	}
+ 
++	*fwnode = child;
++
+ out_err:
+ 	fwnode_handle_put(child);
+ 	return ret;
+@@ -419,6 +414,7 @@ static int lm3601x_parse_node(struct lm3601x_led *led)
+ static int lm3601x_probe(struct i2c_client *client)
+ {
+ 	struct lm3601x_led *led;
++	struct fwnode_handle *fwnode;
+ 	int ret;
+ 
+ 	led = devm_kzalloc(&client->dev, sizeof(*led), GFP_KERNEL);
+@@ -428,7 +424,7 @@ static int lm3601x_probe(struct i2c_client *client)
+ 	led->client = client;
+ 	i2c_set_clientdata(client, led);
+ 
+-	ret = lm3601x_parse_node(led);
++	ret = lm3601x_parse_node(led, &fwnode);
+ 	if (ret)
+ 		return -ENODEV;
+ 
+@@ -442,7 +438,7 @@ static int lm3601x_probe(struct i2c_client *client)
+ 
+ 	mutex_init(&led->lock);
+ 
+-	return lm3601x_register_leds(led);
++	return lm3601x_register_leds(led, fwnode);
+ }
+ 
+ static int lm3601x_remove(struct i2c_client *client)
 -- 
 2.11.0
 
