@@ -2,151 +2,90 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 606E5C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:35:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 88A0AC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:36:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 35A3620663
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:35:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 47BEB20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:36:39 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555518999;
+	bh=bW6xSBvDB/mBGgIPoG8GbmafCV4/BBW01qP4pUZg0uA=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=e5U1RYFFOyiAPtpxgaer92XpNFVlc8aYV+txHfrULhn1G1/Q5eInmDE998xValvTU
+	 p8oBvy760NtwrLbZ28aQMx1EyAshyyHF2QW9K09rqu65hnWeqDXNA8hY2dwLcgEP6h
+	 2EZWcJWigIfAX2pUlfy/X0mFJ2GQhqwsIzO7Rmzs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732895AbfDQQfN (ORCPT
+        id S1732708AbfDQQgi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 12:35:13 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:55564 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731745AbfDQQfN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 12:35:13 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id B9EAA31587A4;
-        Wed, 17 Apr 2019 16:35:07 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-47.bos.redhat.com [10.18.17.47])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id A40285D9E1;
-        Wed, 17 Apr 2019 16:35:06 +0000 (UTC)
-Subject: Re: [PATCH v4 07/16] locking/rwsem: Implement lock handoff to prevent
- lock starvation
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
-References: <20190413172259.2740-1-longman@redhat.com>
- <20190413172259.2740-8-longman@redhat.com>
- <20190416154937.GL12232@hirez.programming.kicks-ass.net>
- <d10586ae-cd86-2992-766b-1ba4a4807b6a@redhat.com>
- <20190417073559.GZ4038@hirez.programming.kicks-ass.net>
-From:   Waiman Long <longman@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- weim8xU=
-Organization: Red Hat
-Message-ID: <6f0fd4d7-6ce0-6427-e5e2-39f94509b462@redhat.com>
-Date:   Wed, 17 Apr 2019 12:35:06 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 17 Apr 2019 12:36:38 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55634 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731472AbfDQQgh (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 12:36:37 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=bW6xSBvDB/mBGgIPoG8GbmafCV4/BBW01qP4pUZg0uA=; b=b23qw49RF4mdV1JEYxeEUH0Av
+        3lkHNIvyj+Is77edUqO/CfolTJ+XvscvicqL5UpmbRSr0jLkyyBPQ+qaFPYC9RZsrCFO9nu6z/9ur
+        YZ2zU9oooXJvpouSIwyiEeEg/c2APZF79+Za7Mw3BRp7ZmBKAKpqJcbjrtblijBwTOCUs=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hGnY0-000128-UK; Wed, 17 Apr 2019 16:36:32 +0000
+Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
+        id 2CAD01128FC7; Wed, 17 Apr 2019 17:36:32 +0100 (BST)
+Date:   Wed, 17 Apr 2019 17:36:32 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Axel Lin <axel.lin@ingics.com>
+Cc:     Pascal Paillet <p.paillet@st.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] regulator: stm32-pwr: Fix error checking for of_iomap
+Message-ID: <20190417163632.GA23145@sirena.org.uk>
+References: <20190417084335.15483-1-axel.lin@ingics.com>
 MIME-Version: 1.0
-In-Reply-To: <20190417073559.GZ4038@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 17 Apr 2019 16:35:12 +0000 (UTC)
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="ibTvN161/egqYuK8"
+Content-Disposition: inline
+In-Reply-To: <20190417084335.15483-1-axel.lin@ingics.com>
+X-Cookie: Colorless green ideas sleep furiously.
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/17/2019 03:35 AM, Peter Zijlstra wrote:
-> On Tue, Apr 16, 2019 at 02:16:11PM -0400, Waiman Long wrote:
->
->>>> @@ -324,6 +364,12 @@ static void __rwsem_mark_wake(struct rw_semaphore *sem,
->>>>  		adjustment -= RWSEM_FLAG_WAITERS;
->>>>  	}
->>>>  
->>>> +	/*
->>>> +	 * Clear the handoff flag
->>>> +	 */
->>> Right, but that is a trivial comment in the 'increment i' style, it
->>> clearly states what the code does, but completely fails to elucidate the
->>> code.
->>>
->>> Maybe:
->>>
->>> 	/*
->>> 	 * When we've woken a reader, we no longer need to force writers
->>> 	 * to give up the lock and we can clear HANDOFF.
->>> 	 */
->>>
->>> And I suppose this is required if we were the pickup of the handoff set
->>> above, but is there a guarantee that the HANDOFF was not set by a
->>> writer?
->> I can change the comment. The handoff bit is always cleared in
->> rwsem_try_write_lock() when the lock is successfully acquire. Will add a
->> comment to document that.
-> That doesn't help much, because it drops ->wait_lock between setting it
-> and acquiring it. So the read-acquire can interleave.
->
-> I _think_ it works, but I'm having trouble explaining how exactly. I
-> think because readers don't spin yet and thus wakeups abide by queue
-> order.
->
-> And the other way around should have (write) spinners terminate the
-> moment they see HANDOFF set by a readers, but I'm not immediately seeing
-> that either.
->
-> I'll continue staring at that.
->
-All writers acquire the lock by cmpxchg and they did check for the
-handoff bit before attempting to acquire. So there is no way for write
-spinners to acquire after they see the handoff bit.
 
-Cheers,
-Longman
+--ibTvN161/egqYuK8
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
+On Wed, Apr 17, 2019 at 04:43:35PM +0800, Axel Lin wrote:
+> of_iomap returns NULL on error.
+
+Someone already sent a patch for this.
+
+--ibTvN161/egqYuK8
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAly3Vg8ACgkQJNaLcl1U
+h9BLtAf8DMa6gODEtdtmKMaYolmFVhVyPZBvFlA3c1pDCRQvw4RNd+og/2ev4fl1
+kNTkMQMc+2WTabyzOHX9mVfciqhMQV0HF5AWGqmuBuABfw3iUIiF0D1poyqUXVoo
+udsbIEJJQWKwvmBYW35EID9ZOEM0z6G8YN+iQ7fQINOuWqQeLf26w6VZnZTDZR4n
+LxWGBruh6ACFCDH84yTdhYxZnjAeiuMlvXaFik/eJgsDyM2qws6PkmTDkX9fonDU
+DOgSsezDoi44CKOs69Qtvcv5Hsx6wGBPtDgCC6bo1IH+WLWDtTVdY1eq0SHlb+LI
+GOceKLE54/t3Uw30xjIbm/bQfNnivw==
+=rXXn
+-----END PGP SIGNATURE-----
+
+--ibTvN161/egqYuK8--
