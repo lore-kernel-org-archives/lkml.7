@@ -2,172 +2,132 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CE5B9C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 01:01:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DF48CC10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 01:09:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CCBB21773
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 01:01:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A36122177B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 01:09:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="jeH/bDGI"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cxC6JhMB"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730797AbfDQBBg (ORCPT
+        id S1729694AbfDQBJH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 21:01:36 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:22147 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728373AbfDQBBg (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 21:01:36 -0400
-Received: from epcas1p2.samsung.com (unknown [182.195.41.46])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20190417010132epoutp021cdd50379139ff78cd7d4fc338f8f777~WHUJoyrz82130521305epoutp02e
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 01:01:32 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20190417010132epoutp021cdd50379139ff78cd7d4fc338f8f777~WHUJoyrz82130521305epoutp02e
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1555462892;
-        bh=kbVyRbBkJIQSTO3fctjU3q1mQrZihQN25qYox3+sA9E=;
-        h=Subject:To:Cc:From:Date:In-Reply-To:References:From;
-        b=jeH/bDGIW2uaWi3jswnNRSEG9M22NDKwnxQZIt98QYC22Bm4ih4yoBs3tQzx0R+0c
-         BfymrBSr4Mp5QSLfDB+y7Velkn9xJvEcNL7IIRSBSRcMQNV/0pELsGSAayhRP5ltoQ
-         7bm3mmlzl5FhMWEVOgAS9eP0Cq7tsZIkH1yDzenI=
-Received: from epsmges1p5.samsung.com (unknown [182.195.40.153]) by
-        epcas1p1.samsung.com (KnoxPortal) with ESMTP id
-        20190417010118epcas1p1f2f55b13790baa1d6fab9128e64576ef~WHT8yxupI1362613626epcas1p1T;
-        Wed, 17 Apr 2019 01:01:18 +0000 (GMT)
-Received: from epcas1p4.samsung.com ( [182.195.41.48]) by
-        epsmges1p5.samsung.com (Symantec Messaging Gateway) with SMTP id
-        FB.38.04108.DDA76BC5; Wed, 17 Apr 2019 10:01:17 +0900 (KST)
-Received: from epsmtrp2.samsung.com (unknown [182.195.40.14]) by
-        epcas1p4.samsung.com (KnoxPortal) with ESMTPA id
-        20190417010117epcas1p4356130d02723698c03f9e85ab637abde~WHT7olLlP0706907069epcas1p4z;
-        Wed, 17 Apr 2019 01:01:17 +0000 (GMT)
-Received: from epsmgms1p1new.samsung.com (unknown [182.195.42.41]) by
-        epsmtrp2.samsung.com (KnoxPortal) with ESMTP id
-        20190417010117epsmtrp271fa3427ca2f9b370442771c855cec63~WHT7nzl7i1760617606epsmtrp2C;
-        Wed, 17 Apr 2019 01:01:17 +0000 (GMT)
-X-AuditID: b6c32a39-8b7ff7000000100c-ae-5cb67adda029
-Received: from epsmtip2.samsung.com ( [182.195.34.31]) by
-        epsmgms1p1new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        7A.BA.03692.DDA76BC5; Wed, 17 Apr 2019 10:01:17 +0900 (KST)
-Received: from [10.113.221.102] (unknown [10.113.221.102]) by
-        epsmtip2.samsung.com (KnoxPortal) with ESMTPA id
-        20190417010117epsmtip28ed24b22f0055e57b7ee16c1d3b3c2a6~WHT7ZGyUP3118131181epsmtip2C;
-        Wed, 17 Apr 2019 01:01:17 +0000 (GMT)
-Subject: Re: [PATCH v2 02/19] PM / devfreq: tegra: Replace readl-writel with
- relaxed versions
-To:     Dmitry Osipenko <digetx@gmail.com>,
-        Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-From:   Chanwoo Choi <cw00.choi@samsung.com>
-Organization: Samsung Electronics
-Message-ID: <127f2e0c-1cd0-25d9-1029-92af86775af8@samsung.com>
-Date:   Wed, 17 Apr 2019 10:02:13 +0900
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
-        Thunderbird/60.6.1
+        Tue, 16 Apr 2019 21:09:07 -0400
+Received: from ozlabs.org ([203.11.71.1]:54083 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728028AbfDQBJH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 21:09:07 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44kPJc2Jrrz9s55;
+        Wed, 17 Apr 2019 11:09:03 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1555463344;
+        bh=gx/m3xcElozFNplOIZLgXvME1X2j76PV32tUNT6mwjs=;
+        h=Date:From:To:Cc:Subject:From;
+        b=cxC6JhMBLZunL8dOEiIQwZBSS8ImYiAP+pCZqJQll/KBYSoOo4GK7yqFwocieYCaP
+         BvDIDD29AuMxLGVvHnTRdnUn38r+YobK08aUAIsiCh1x3QdbxbIOpP59y3YnMU3pTW
+         qwTdWJw820cav5G7eod9pXHukgXLlCcmyt2k/+eG66ca/ehx3muzZVC870fOIzVgr9
+         cJnAJyh9FAQGv48SmAdmbUPRssnjA14OY+rutg3dmAAhMO9zJie4suRCt+Hil1W6P+
+         MCPFAmdS7+JiBl3jFdCPxGj4kEnsvuIGVKs/2WTuEcu0uz+dNbytMan7VHbUVYED2C
+         8Ca64YAWXRSbw==
+Date:   Wed, 17 Apr 2019 11:08:56 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Daniel Borkmann <daniel@iogearbox.net>,
+        Alexei Starovoitov <ast@kernel.org>,
+        Networking <netdev@vger.kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Benjamin Poirier <bpoirier@suse.com>
+Subject: linux-next: manual merge of the bpf-next tree with the bpf tree
+Message-ID: <20190417110856.54b4ac1c@canb.auug.org.au>
 MIME-Version: 1.0
-In-Reply-To: <20190415145505.18397-3-digetx@gmail.com>
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Brightmail-Tracker: H4sIAAAAAAAAA02Sf0yMcRzHfe957ukujqer+MhGHuVH2+ke5/KUEmPcJhM2w5rzrHtWp/vl
-        nsv6gSFS+V0Kj4akzY8J7Wp1K80h+oNQIbkx9QdmNS7UNNzdw/Tf6/t9vz8/v18ZpqwlImRG
-        i4OzW1gTRQTjDffmqVWevIY0dU37XOb6lz7EHBAu4czj/Z+DmE5XJcF4j95HTPGQQDC9+64Q
-        zIjrPM4cu/GcWCrXNXouI12T4AnSHS0YIHTHnNeQzls3PVW6JSsxk2MNnD2Ss6RbDUZLRhK1
-        eoN+uV4bp6ZVdDyziIq0sGYuiVqRkqpaaTT5GqIid7KmbN9VKsvzVOySRLs128FFZlp5RxLF
-        2QwmW7xtPs+a+WxLxvx0qzmBVqsXaH3GbVmZPyt+S2ynJ+QIhY+ke9EXeQmSy4BcCPU/bkn8
-        rCQbEQwf2l2Cgn38FcH75mZCFL4jeHhxRwmSBQJeuKNETwuCr4NeiXgYRNB7+lkgUyiph4LC
-        poAQRv7yuVxnpH4BIzfDt7s1mJ8JMgZaP7wKVJhEzoTu4T7kZwW5BKpGmgN+nIwGd39bgMPJ
-        TfC27ZZU9IRA+9l+3M9yMg4OjtbiYv4p8Lr/gkTkGVBQfw7zNwHkbwI6ejy4OPMKeHz5JSZy
-        KHx66AwSOQK8Ay2EyPlwtf0+IQYXIXC2PpWKggZaa8ok/l1g5Dy46YoVi02EgW9HpOKKFFBU
-        qBTds6DznUci8lSoPlT8N70Ohr1D0hNopjBmHGHMCMKYEYT/xS4i/BqazNl4cwbH0zbt2Meu
-        Q4G/GhPfiNqepLgRKUPUBMW40fo0pZTdyeea3QhkGBWmWGZwpikVBjY3j7Nb9fZsE8e7kda3
-        7ZNYRHi61ffzLQ49rV2g0WiYhXSclqapKYqbS5enKckM1sFlcZyNs/+Lk8jkEXtRh3HV1ekV
-        Wxty+zaPFpVC16LShMmjx/MHz+5Y3eXqLvueUl4+dLh4/Zk53J0olzv0lSok58juU46Vv25H
-        r+l40I/vck6aW5GHv+nlG41lRdNKkypnhy/evhHW7OmpbNlTCWXlWVXrulp7VHVhVPXa3Kbb
-        UZqqsHUfc5KT9R1CQfJ4CuczWToGs/PsHyOY0lrBAwAA
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprFIsWRmVeSWpSXmKPExsWy7bCSvO7dqm0xBjtncFus/viY0aJl1iIW
-        i7NNb9gtLu+aw2bxufcIo0Xnl1lsFrcbV7BZ/Nw1j8Wib+0lNgdOjx13lzB67Jx1l92jt/kd
-        m0ffllWMHp83yQWwRnHZpKTmZJalFunbJXBl/J72n6lgOk/FrLYTrA2MHzm7GDk4JARMJK4d
-        Uuli5OIQEtjNKLHr/FW2LkZOoLikxLSLR5khaoQlDh8uhqh5yyix9OJmsBphgXiJ5radTCAJ
-        EYEmJonPD1uYQBLMApES/Y+6WSE6tjJKfLu2GSzBJqAlsf/FDbBufgFFias/HjOC2LwCdhIL
-        f+5hBbFZBFQlDj05BmaLCkRInHm/ggWiRlDi5MwnYDangJlE6591LBDL1CX+zLvEDGGLS9x6
-        Mh/qCHmJ5q2zmScwCs9C0j4LScssJC2zkLQsYGRZxSiZWlCcm55bbFhgmJdarlecmFtcmpeu
-        l5yfu4kRHGNamjsYLy+JP8QowMGoxMO74ufWGCHWxLLiytxDjBIczEoivI4pW2KEeFMSK6tS
-        i/Lji0pzUosPMUpzsCiJ8z7NOxYpJJCeWJKanZpakFoEk2Xi4JRqYJzd8kBd/fWuXyYZj9zY
-        jK4lnZv1psxvr9w/p9cpzsv33TRhFObOiPx49Pz3n9df+tZ+u2rRGXFiqfu2A5c2/F3H/4vN
-        6Or5IjGjbSy+uzPYRN7vuth7l/HfOZ4rsmstThSdYjqxzj9Frdb5+ZbbD/44MkxQ8vqb9Kfl
-        2t3JwlbRB27P4zH6femhEktxRqKhFnNRcSIAqcnPf60CAAA=
-X-CMS-MailID: 20190417010117epcas1p4356130d02723698c03f9e85ab637abde
-X-Msg-Generator: CA
-Content-Type: text/plain; charset="utf-8"
-CMS-TYPE: 101P
-DLP-Filter: Pass
-X-CFilter-Loop: Reflected
-X-CMS-RootMailID: 20190415145804epcas1p2c0d9f207713ae198599d34468261d64b
-References: <20190415145505.18397-1-digetx@gmail.com>
-        <CGME20190415145804epcas1p2c0d9f207713ae198599d34468261d64b@epcas1p2.samsung.com>
-        <20190415145505.18397-3-digetx@gmail.com>
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/PToTIyXnHLFQ77QlRBaumDo"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+--Sig_/PToTIyXnHLFQ77QlRBaumDo
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-On 19. 4. 15. 오후 11:54, Dmitry Osipenko wrote:
-> There is no need to insert memory barrier on each readl/writel
-> invocation, hence use the relaxed versions.
-> 
-> Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
-> ---
->  drivers/devfreq/tegra-devfreq.c | 8 ++++----
->  1 file changed, 4 insertions(+), 4 deletions(-)
-> 
-> diff --git a/drivers/devfreq/tegra-devfreq.c b/drivers/devfreq/tegra-devfreq.c
-> index 02905978abe1..0c0909fba545 100644
-> --- a/drivers/devfreq/tegra-devfreq.c
-> +++ b/drivers/devfreq/tegra-devfreq.c
-> @@ -191,23 +191,23 @@ static struct tegra_actmon_emc_ratio actmon_emc_ratios[] = {
->  
->  static u32 actmon_readl(struct tegra_devfreq *tegra, u32 offset)
->  {
-> -	return readl(tegra->regs + offset);
-> +	return readl_relaxed(tegra->regs + offset);
->  }
->  
->  static void actmon_writel(struct tegra_devfreq *tegra, u32 val, u32 offset)
->  {
-> -	writel(val, tegra->regs + offset);
-> +	writel_relaxed(val, tegra->regs + offset);
->  }
->  
->  static u32 device_readl(struct tegra_devfreq_device *dev, u32 offset)
->  {
-> -	return readl(dev->regs + offset);
-> +	return readl_relaxed(dev->regs + offset);
->  }
->  
->  static void device_writel(struct tegra_devfreq_device *dev, u32 val,
->  			  u32 offset)
->  {
-> -	writel(val, dev->regs + offset);
-> +	writel_relaxed(val, dev->regs + offset);
->  }
->  
->  static unsigned long do_percent(unsigned long val, unsigned int pct)
-> 
+Hi all,
 
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
+Today's linux-next merge of the bpf-next tree got a conflict in:
 
--- 
-Best Regards,
-Chanwoo Choi
-Samsung Electronics
+  tools/bpf/bpftool/map.c
+
+between commit:
+
+  e0665239e07f ("bpftool: Fix errno variable usage")
+
+from the bpf tree and commit:
+
+  0478c3bf8124 ("bpftool: Use print_entry_error() in case of ENOENT when du=
+mping")
+
+from the bpf-next tree.
+
+I fixed it up (see below) and can carry the fix as necessary. This
+is now fixed as far as linux-next is concerned, but any non trivial
+conflicts should be mentioned to your upstream maintainer when your tree
+is submitted for merging.  You may also want to consider cooperating
+with the maintainer of the conflicting tree to minimise any particularly
+complex conflicts.
+
+--=20
+Cheers,
+Stephen Rothwell
+
+diff --cc tools/bpf/bpftool/map.c
+index 1744bf61a0b8,44b192e87708..000000000000
+--- a/tools/bpf/bpftool/map.c
++++ b/tools/bpf/bpftool/map.c
+@@@ -722,11 -715,16 +715,16 @@@ static int dump_map_elem(int fd, void *
+  		jsonw_string_field(json_wtr, "error", strerror(lookup_errno));
+  		jsonw_end_object(json_wtr);
+  	} else {
++ 		const char *msg =3D NULL;
++=20
+ -		if (errno =3D=3D ENOENT)
+ +		if (lookup_errno =3D=3D ENOENT)
+- 			print_entry_plain(map_info, key, NULL);
+- 		else
+- 			print_entry_error(map_info, key,
+- 					  strerror(lookup_errno));
++ 			msg =3D "<no entry>";
++ 		else if (lookup_errno =3D=3D ENOSPC &&
++ 			 map_info->type =3D=3D BPF_MAP_TYPE_REUSEPORT_SOCKARRAY)
++ 			msg =3D "<cannot read>";
++=20
++ 		print_entry_error(map_info, key,
++ 				  msg ? : strerror(lookup_errno));
+  	}
+ =20
+  	return 0;
+
+--Sig_/PToTIyXnHLFQ77QlRBaumDo
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAly2fKgACgkQAVBC80lX
+0Gw8OQf/VvGCw2rn2B10cwgm/rjs+IduAfPs8kwMGJ+1YheHdRd6PggMRa2kqDPI
+2NW4J1kENtmWz5Jx48JzKrKbbwmpK5Af19oWbg7nTApBwTIeePd/uHeqorJYt/7P
+gSleXDPgq3TnyDhQhlzWLyTcRAaL7QadSdQWUjW1/zi/BI+HnzqzeXFDBX2F+yhn
+cWB6V0irEqDw11sLG8CmZi6FMJ9G/5HyP/T+LAv3lKR3thF6B1m8KBdPKuLfylSI
+kZ6cq6hcaINXHpO4ZMJ6rRWoE39kjOpv/nfuWTJUBY//xWkSsUxQuNmzt7DDV/Z5
+oTdt+XPhJeSnZeiDHKoRGq0WyAhNxw==
+=/wDW
+-----END PGP SIGNATURE-----
+
+--Sig_/PToTIyXnHLFQ77QlRBaumDo--
