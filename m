@@ -2,146 +2,171 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 530D8C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:19:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B6BF0C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:19:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 20C3D20872
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:19:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=umn.edu header.i=@umn.edu header.b="fnSP/znF"
+	by mail.kernel.org (Postfix) with ESMTP id 8712B20872
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:19:20 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732489AbfDQOTF (ORCPT
+        id S1732513AbfDQOTT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 10:19:05 -0400
-Received: from mta-p5.oit.umn.edu ([134.84.196.205]:39682 "EHLO
-        mta-p5.oit.umn.edu" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732267AbfDQOTE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 10:19:04 -0400
-Received: from localhost (unknown [127.0.0.1])
-        by mta-p5.oit.umn.edu (Postfix) with ESMTP id CA204D30
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 14:19:02 +0000 (UTC)
-X-Virus-Scanned: amavisd-new at umn.edu
-Received: from mta-p5.oit.umn.edu ([127.0.0.1])
-        by localhost (mta-p5.oit.umn.edu [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id GiGOEJBQvWwd for <linux-kernel@vger.kernel.org>;
-        Wed, 17 Apr 2019 09:19:02 -0500 (CDT)
-Received: from mail-it1-f200.google.com (mail-it1-f200.google.com [209.85.166.200])
-        (using TLSv1.2 with cipher AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mta-p5.oit.umn.edu (Postfix) with ESMTPS id 9FD5ED20
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 09:19:02 -0500 (CDT)
-Received: by mail-it1-f200.google.com with SMTP id s21so2641176ite.6
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 07:19:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=umn.edu; s=google;
-        h=from:to:cc:subject:date:message-id;
-        bh=uojC63LlRZMao2Xj4ZjGaAJ2xtzmNGWu+Lgx37e3mxc=;
-        b=fnSP/znF9HoI91HHaFKybcEPhsXHBY1++8r6g6Hv1Ul7W/0bqN3+aJfRkmri/3PYfx
-         HN56IjoL+zIa7IOyXmh2wZLkI4b49CaBwgNF+8Xhimo32S3D3/9BYK+2GKJh4lAZ6P5A
-         +zjJu2I0rutSN5Kr/YVW4NG4Z8wkjcFTZ8FxfpwshRusI0411TFSMM2V+x9igc0DKbjn
-         5yXYxkhKsWU48xNF9vGy+eedNIrHzdtNFv7keE4MYzhJ0nzCKB+xzPOoSr1nxMQY3C29
-         ofSdxgvXzwebXSYIYNJ+9YV6tVp2+JqBkWnOB2o9zRjVuSfpcXdSdp5NoZE1ArU/oKAL
-         uJWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=uojC63LlRZMao2Xj4ZjGaAJ2xtzmNGWu+Lgx37e3mxc=;
-        b=jQ3lQcAbXpmkPfHVk1hVXTKhA0qdNhcWq+H/2w+zJuBJ4skcZgjE90oUAXbJzN4Dso
-         BvBTe8CE7Tte0UaJ3VXOXf55cH2RzGECNUPdNaZqjQQu91tdBkNKHwQPaxmRgmtxNl6g
-         N9DJvPJ/aA2yEOakOk85JdA0lUqx/OEhOQXvraULBjskPwqKOKBZk4KYPZ0HlhF2KrcE
-         MR1Vdv/TO+0F/8EjHdOWWIMhbIaZWb5kRZoE0sHZccPpGw8zs76255Hom1tTak+5hfDP
-         YeKCVmQY78cMJXPo91I1mOItQWhZ4znMwuvE+zozyZXdp7d47+RCE8tT9peuNn1CzU35
-         82oQ==
-X-Gm-Message-State: APjAAAXY2wBpJ9gZuDTACdh9N6iiS3SCYczIRMxJLd37bSKSeTBE6D/V
-        GuofzB1jpKXI5x8aIYUvq1Gl6tue1qLUxxa1lVByFxTnvY71HW01aLRfvjPGoTd3IcWiIlRSyQq
-        a0R+uztU5KnJgQZQAwoIAi13yQno6
-X-Received: by 2002:a5d:8d88:: with SMTP id b8mr47103252ioj.58.1555510742095;
-        Wed, 17 Apr 2019 07:19:02 -0700 (PDT)
-X-Google-Smtp-Source: APXvYqybQYs6+blBBfUmDGt2jd85HaE+WxEAm3OWFoBDjr4F3rKrnG4xxjhtiFsnt75OJKqYWuLrFA==
-X-Received: by 2002:a5d:8d88:: with SMTP id b8mr47103238ioj.58.1555510741947;
-        Wed, 17 Apr 2019 07:19:01 -0700 (PDT)
-Received: from cs-u-cslp16.dtc.umn.edu (cs-u-cslp16.cs.umn.edu. [128.101.106.40])
-        by smtp.gmail.com with ESMTPSA id g126sm1317062itg.36.2019.04.17.07.19.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 17 Apr 2019 07:19:01 -0700 (PDT)
-From:   Wenwen Wang <wang6495@umn.edu>
-To:     Wenwen Wang <wang6495@umn.edu>
-Cc:     Bjorn Helgaas <bhelgaas@google.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        x86@kernel.org (maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)),
-        linux-pci@vger.kernel.org (open list:PCI SUBSYSTEM),
-        linux-kernel@vger.kernel.org (open list:X86 ARCHITECTURE (32-BIT AND
-        64-BIT))
-Subject: [PATCH v4] x86/PCI: fix a memory leak bug
-Date:   Wed, 17 Apr 2019 09:18:50 -0500
-Message-Id: <1555510730-9060-1-git-send-email-wang6495@umn.edu>
-X-Mailer: git-send-email 2.7.4
+        Wed, 17 Apr 2019 10:19:19 -0400
+Received: from foss.arm.com ([217.140.101.70]:45542 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732007AbfDQOTS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 10:19:18 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 69D72374;
+        Wed, 17 Apr 2019 07:19:18 -0700 (PDT)
+Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 152383F557;
+        Wed, 17 Apr 2019 07:19:13 -0700 (PDT)
+Subject: Re: [PATCH v9 1/5] KVM: arm64: Add a vcpu flag to control ptrauth for
+ guest
+To:     Amit Daniel Kachhap <amit.kachhap@arm.com>,
+        linux-arm-kernel@lists.infradead.org
+Cc:     Christoffer Dall <christoffer.dall@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Andrew Jones <drjones@redhat.com>,
+        Dave Martin <Dave.Martin@arm.com>,
+        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
+        kvmarm@lists.cs.columbia.edu,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        linux-kernel@vger.kernel.org, Mark Rutland <mark.rutland@arm.com>,
+        James Morse <james.morse@arm.com>,
+        Julien Thierry <julien.thierry@arm.com>
+References: <1555039236-10608-1-git-send-email-amit.kachhap@arm.com>
+ <1555039236-10608-2-git-send-email-amit.kachhap@arm.com>
+ <eeeebc4d-f061-42a5-954d-40161bbed23a@arm.com>
+ <ef1eb326-cd3a-4033-813d-ceae262b4e23@arm.com>
+From:   Marc Zyngier <marc.zyngier@arm.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
+ 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
+Organization: ARM Ltd
+Message-ID: <239c5d74-221e-cf8c-2c41-80db016bdc2b@arm.com>
+Date:   Wed, 17 Apr 2019 15:19:11 +0100
+User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <ef1eb326-cd3a-4033-813d-ceae262b4e23@arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In pcibios_irq_init(), the PCI IRQ routing table 'pirq_table' is firstly
-found through pirq_find_routing_table(). If the table is not found and
-'CONFIG_PCI_BIOS' is defined, the table is then allocated in
-pcibios_get_irq_routing_table() using kmalloc(). In the following
-execution, if the I/O APIC is used, this table is actually not used.
-However, in that case, the allocated table is not freed, which is a memory
-leak bug.
+On 17/04/2019 14:08, Amit Daniel Kachhap wrote:
+> Hi,
+> 
+> On 4/17/19 2:05 PM, Marc Zyngier wrote:
+>> On 12/04/2019 04:20, Amit Daniel Kachhap wrote:
+>>> A per vcpu flag is added to check if pointer authentication is
+>>> enabled for the vcpu or not. This flag may be enabled according to
+>>> the necessary user policies and host capabilities.
+>>>
+>>> This patch also adds a helper to check the flag.
+>>>
+>>> Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
+>>> Cc: Mark Rutland <mark.rutland@arm.com>
+>>> Cc: Marc Zyngier <marc.zyngier@arm.com>
+>>> Cc: Christoffer Dall <christoffer.dall@arm.com>
+>>> Cc: kvmarm@lists.cs.columbia.edu
+>>> ---
+>>>
+>>> Changes since v8:
+>>> * Added a new per vcpu flag which will store Pointer Authentication enable
+>>>    status instead of checking them again. [Dave Martin]
+>>>
+>>>   arch/arm64/include/asm/kvm_host.h | 4 ++++
+>>>   1 file changed, 4 insertions(+)
+>>>
+>>> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+>>> index 9d57cf8..31dbc7c 100644
+>>> --- a/arch/arm64/include/asm/kvm_host.h
+>>> +++ b/arch/arm64/include/asm/kvm_host.h
+>>> @@ -355,10 +355,14 @@ struct kvm_vcpu_arch {
+>>>   #define KVM_ARM64_HOST_SVE_ENABLED	(1 << 4) /* SVE enabled for EL0 */
+>>>   #define KVM_ARM64_GUEST_HAS_SVE		(1 << 5) /* SVE exposed to guest */
+>>>   #define KVM_ARM64_VCPU_SVE_FINALIZED	(1 << 6) /* SVE config completed */
+>>> +#define KVM_ARM64_GUEST_HAS_PTRAUTH	(1 << 7) /* PTRAUTH exposed to guest */
+>>>   
+>>>   #define vcpu_has_sve(vcpu) (system_supports_sve() && \
+>>>   			    ((vcpu)->arch.flags & KVM_ARM64_GUEST_HAS_SVE))
+>>>   
+>>> +#define vcpu_has_ptrauth(vcpu)	\
+>>> +			((vcpu)->arch.flags & KVM_ARM64_GUEST_HAS_PTRAUTH)
+>>> +
+>>
+>> Just as for SVE, please first check that the system has PTRAUTH.
+>> Something like:
+>>
+>> 		(cpus_have_const_cap(ARM64_HAS_GENERIC_AUTH_ARCH) && \
+>> 		 ((vcpu)->arch.flags & KVM_ARM64_GUEST_HAS_PTRAUTH))
+> 
+> In the subsequent patches, vcpu->arch.flags is only set to 
+> KVM_ARM64_GUEST_HAS_PTRAUTH when all host capability check conditions 
+> matches such as system_supports_address_auth(), 
+> system_supports_generic_auth() so doing them again is repetitive in my view.
 
-To fix this issue, free the allocated table if it is not used.
+It isn't the setting of the flag I care about, but the check of that
+flag. Checking a flag for a feature that cannot be used on the running
+system should have a zero cost, which isn't the case here.
 
-Signed-off-by: Wenwen Wang <wang6495@umn.edu>
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
----
- arch/x86/pci/irq.c | 10 ++++++++--
- 1 file changed, 8 insertions(+), 2 deletions(-)
+Granted, the impact should be minimal and it looks like it mostly happen
+on the slow path, but at the very least it would be consistent. So even
+if you don't buy my argument about efficiency, please change it in the
+name of consistency.
 
-diff --git a/arch/x86/pci/irq.c b/arch/x86/pci/irq.c
-index 52e5510..d3a73f9 100644
---- a/arch/x86/pci/irq.c
-+++ b/arch/x86/pci/irq.c
-@@ -1119,6 +1119,8 @@ static const struct dmi_system_id pciirq_dmi_table[] __initconst = {
- 
- void __init pcibios_irq_init(void)
- {
-+	struct irq_routing_table *rtable = NULL;
-+
- 	DBG(KERN_DEBUG "PCI: IRQ init\n");
- 
- 	if (raw_pci_ops == NULL)
-@@ -1129,8 +1131,10 @@ void __init pcibios_irq_init(void)
- 	pirq_table = pirq_find_routing_table();
- 
- #ifdef CONFIG_PCI_BIOS
--	if (!pirq_table && (pci_probe & PCI_BIOS_IRQ_SCAN))
-+	if (!pirq_table && (pci_probe & PCI_BIOS_IRQ_SCAN)) {
- 		pirq_table = pcibios_get_irq_routing_table();
-+		rtable = pirq_table;
-+	}
- #endif
- 	if (pirq_table) {
- 		pirq_peer_trick();
-@@ -1145,8 +1149,10 @@ void __init pcibios_irq_init(void)
- 		 * If we're using the I/O APIC, avoid using the PCI IRQ
- 		 * routing table
- 		 */
--		if (io_apic_assign_pci_irqs)
-+		if (io_apic_assign_pci_irqs) {
-+			kfree(rtable);
- 			pirq_table = NULL;
-+		}
- 	}
- 
- 	x86_init.pci.fixup_irqs();
+Thanks,
+
+	M.
 -- 
-2.7.4
-
+Jazz is not dead. It just smells funny...
