@@ -7,59 +7,59 @@ X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8CB2BC282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:05:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BCD05C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:06:20 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5A4E62177B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:05:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8440B2177B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:06:20 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="CoeHUw8i"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="Uo99+FLd"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732393AbfDQOFr (ORCPT
+        id S1732406AbfDQOGT (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 10:05:47 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:39569 "EHLO
+        Wed, 17 Apr 2019 10:06:19 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:36895 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731960AbfDQOFr (ORCPT
+        with ESMTP id S1730463AbfDQOGS (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 10:05:47 -0400
+        Wed, 17 Apr 2019 10:06:18 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3HE5Ksf3932925
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3HE60SV3932994
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 17 Apr 2019 07:05:21 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3HE5Ksf3932925
+        Wed, 17 Apr 2019 07:06:00 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3HE60SV3932994
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041743; t=1555509921;
-        bh=pobE8QEhbjkm5vdI7GHWFpL+JdevApp18b41bVq08e4=;
+        s=2019041743; t=1555509961;
+        bh=qoshsAZLNH4gKnGwx9bBAKf4J+PoLXsrjIUxCuGfzjo=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=CoeHUw8ioeUontAEIj1m5crjcUNVknDJNA8+iAoaxPwDHO9pflf5LtBMRKuxrkr3Y
-         ZLRhl76uUPVMHKaNhOwVI+m/NJIOzfwyMkjgyDcoxpWKtomEJzZ5+wi8dBM/qo46j7
-         EqXg1B5sQLsUbiOWoK76Qj26fhno7GeWFQDut5LrD6RoI2DXuXpcUzg8f5GauCgY0D
-         h6Qrm3mpGTR0p1RKzpARs/ERn5Eao8XJz9a4v2BIL2GM1WWDygux2V6+fYBFWJL/Jj
-         +ea3uT8fsSG/+lWRbOUdctqfqRhc8e34KS85mCudhrqhXEndtUo0BWW1+lYmVW2ekb
-         2xgLEK0keoHmQ==
+        b=Uo99+FLdSGWu6d1suhUDkjPFG3shuQCaOnGmW656/9pXnVKj7OEhiQQ+D0PMM+d4s
+         Ydh2qUksOZtuhm9GlSZjK861ZSqjy9fitOKN729mLJ0CiyUIYq5E9D1/bvI2I44MXw
+         eroLodVbxKSQRi9jkfKIBP1yc1Bn2h5ubfcE94QBiRVTvfEXSuG8NvDxOD5AiiIW4n
+         c7+/i/AeBNwgx1pLUGS2C3yy/4gZZRXovcTo3f5B2F86ulfcGaGqbd7rYTRTmpnIf0
+         lVAA/8+txXZeaY7j/2Y9kDDefS3TmozqG3GojEKbTHQ7mOgNVa1iopg+JRM6MDU/Z2
+         tCrdMc6WmGOEA==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3HE5KUm3932922;
-        Wed, 17 Apr 2019 07:05:20 -0700
-Date:   Wed, 17 Apr 2019 07:05:20 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3HE60oW3932991;
+        Wed, 17 Apr 2019 07:06:00 -0700
+Date:   Wed, 17 Apr 2019 07:06:00 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
-Message-ID: <tip-99d334511b337884cadbdfae28da912a4edb1001@git.kernel.org>
-Cc:     hpa@zytor.com, x86@kernel.org, mingo@kernel.org,
-        douly.fnst@cn.fujitsu.com, tglx@linutronix.de,
-        sean.j.christopherson@intel.com, nstange@suse.de,
-        linux-kernel@vger.kernel.org, mingo@redhat.com, bp@suse.de,
-        jpoimboe@redhat.com, luto@kernel.org
-Reply-To: hpa@zytor.com, mingo@kernel.org, douly.fnst@cn.fujitsu.com,
-          x86@kernel.org, tglx@linutronix.de,
-          sean.j.christopherson@intel.com, nstange@suse.de,
-          linux-kernel@vger.kernel.org, mingo@redhat.com, bp@suse.de,
-          jpoimboe@redhat.com, luto@kernel.org
-In-Reply-To: <20190414160144.050689789@linutronix.de>
-References: <20190414160144.050689789@linutronix.de>
+Message-ID: <tip-6f36bd8d2e8c221eaaf4ce5b0ebbb11c00b0ac98@git.kernel.org>
+Cc:     hpa@zytor.com, bp@suse.de, jpoimboe@redhat.com, cai@lca.pw,
+        kirill.shutemov@linux.intel.com, mingo@kernel.org,
+        mingo@redhat.com, linux-kernel@vger.kernel.org, x86@kernel.org,
+        bhe@redhat.com, sean.j.christopherson@intel.com, luto@kernel.org,
+        tglx@linutronix.de
+Reply-To: jpoimboe@redhat.com, cai@lca.pw, mingo@kernel.org,
+          kirill.shutemov@linux.intel.com, mingo@redhat.com, hpa@zytor.com,
+          bp@suse.de, sean.j.christopherson@intel.com, bhe@redhat.com,
+          tglx@linutronix.de, luto@kernel.org,
+          linux-kernel@vger.kernel.org, x86@kernel.org
+In-Reply-To: <20190414160144.139284839@linutronix.de>
+References: <20190414160144.139284839@linutronix.de>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/irq] x86/idt: Remove unused macro SISTG
-Git-Commit-ID: 99d334511b337884cadbdfae28da912a4edb1001
+Subject: [tip:x86/irq] x86/64: Remove stale CURRENT_MASK
+Git-Commit-ID: 6f36bd8d2e8c221eaaf4ce5b0ebbb11c00b0ac98
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -73,48 +73,42 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  99d334511b337884cadbdfae28da912a4edb1001
-Gitweb:     https://git.kernel.org/tip/99d334511b337884cadbdfae28da912a4edb1001
+Commit-ID:  6f36bd8d2e8c221eaaf4ce5b0ebbb11c00b0ac98
+Gitweb:     https://git.kernel.org/tip/6f36bd8d2e8c221eaaf4ce5b0ebbb11c00b0ac98
 Author:     Thomas Gleixner <tglx@linutronix.de>
-AuthorDate: Sun, 14 Apr 2019 17:59:42 +0200
+AuthorDate: Sun, 14 Apr 2019 17:59:43 +0200
 Committer:  Borislav Petkov <bp@suse.de>
-CommitDate: Wed, 17 Apr 2019 12:36:19 +0200
+CommitDate: Wed, 17 Apr 2019 12:38:36 +0200
 
-x86/idt: Remove unused macro SISTG
+x86/64: Remove stale CURRENT_MASK
 
-Commit
-
-  d8ba61ba58c8 ("x86/entry/64: Don't use IST entry for #BP stack")
-
-removed the last user but left the macro around.
+Nothing uses that and before people get the wrong ideas, get rid of it.
 
 Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Andy Lutomirski <luto@kernel.org>
 Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Dou Liyang <douly.fnst@cn.fujitsu.com>
+Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Baoquan He <bhe@redhat.com>
 Cc: Ingo Molnar <mingo@redhat.com>
 Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Nicolai Stange <nstange@suse.de>
+Cc: Qian Cai <cai@lca.pw>
 Cc: Sean Christopherson <sean.j.christopherson@intel.com>
 Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190414160144.050689789@linutronix.de
+Link: https://lkml.kernel.org/r/20190414160144.139284839@linutronix.de
 ---
- arch/x86/kernel/idt.c | 4 ----
- 1 file changed, 4 deletions(-)
+ arch/x86/include/asm/page_64_types.h | 1 -
+ 1 file changed, 1 deletion(-)
 
-diff --git a/arch/x86/kernel/idt.c b/arch/x86/kernel/idt.c
-index 01adea278a71..2877606e97de 100644
---- a/arch/x86/kernel/idt.c
-+++ b/arch/x86/kernel/idt.c
-@@ -45,10 +45,6 @@ struct idt_data {
- #define ISTG(_vector, _addr, _ist)			\
- 	G(_vector, _addr, _ist, GATE_INTERRUPT, DPL0, __KERNEL_CS)
+diff --git a/arch/x86/include/asm/page_64_types.h b/arch/x86/include/asm/page_64_types.h
+index 8f657286d599..bcd8c0518604 100644
+--- a/arch/x86/include/asm/page_64_types.h
++++ b/arch/x86/include/asm/page_64_types.h
+@@ -14,7 +14,6 @@
  
--/* System interrupt gate with interrupt stack */
--#define SISTG(_vector, _addr, _ist)			\
--	G(_vector, _addr, _ist, GATE_INTERRUPT, DPL3, __KERNEL_CS)
--
- /* Task gate */
- #define TSKG(_vector, _gdt)				\
- 	G(_vector, NULL, DEFAULT_STACK, GATE_TASK, DPL0, _gdt << 3)
+ #define THREAD_SIZE_ORDER	(2 + KASAN_STACK_ORDER)
+ #define THREAD_SIZE  (PAGE_SIZE << THREAD_SIZE_ORDER)
+-#define CURRENT_MASK (~(THREAD_SIZE - 1))
+ 
+ #define EXCEPTION_STACK_ORDER (0 + KASAN_STACK_ORDER)
+ #define EXCEPTION_STKSZ (PAGE_SIZE << EXCEPTION_STACK_ORDER)
