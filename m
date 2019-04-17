@@ -2,334 +2,110 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3724BC282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:59:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE91C10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:00:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5BE52054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:59:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6E87A2177B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:00:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c1v4SK4Z"
+	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="y+p7oy6x"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731203AbfDQH72 (ORCPT
+        id S1731250AbfDQH77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 03:59:28 -0400
-Received: from mail-ed1-f66.google.com ([209.85.208.66]:41970 "EHLO
-        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728373AbfDQH72 (ORCPT
+        Wed, 17 Apr 2019 03:59:59 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:46780 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727013AbfDQH76 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 03:59:28 -0400
-Received: by mail-ed1-f66.google.com with SMTP id g6so16183238edc.8
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 00:59:26 -0700 (PDT)
+        Wed, 17 Apr 2019 03:59:58 -0400
+Received: by mail-pg1-f195.google.com with SMTP id q1so11609474pgv.13
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 00:59:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
-        bh=jQL+/hzVQKWUcXK58myvXbK+OrvlIIBcgeWycPAqydM=;
-        b=c1v4SK4Z6waVLTMxG/3vhnt+2e1modPUViHrZiLAq2V+hCJlKyO7p4wAtK5qyHq9j4
-         SLTvl2Me9IVKistTIOmYRK/xTqDVvgpDhw7j06HErVpfyB4hz4dxCSlAT9oCrUlGCGfB
-         ++B6Eg0NXD0pcN3yJ/yzpPLJtqaJYbogs/l6CNwvdxH/Dn/LyJhm0hmJcoDUryfu9vTe
-         GOVTSY/FKXqHRDQMeWBET8Ef3jFlPnmHkax3zdrRHQvpPiYI/QAgVPqfOvWjJ7z73/jM
-         0PZ3tWT7RyRyXa1vtrFMLcVYqV07YIpZUgdy8vROKQqPXiQqg4qq29IYQ6kEV0Gk1wnW
-         26AQ==
+        d=ingics-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id;
+        bh=K3NXzTVp29K9R1SfEBsZC+ehQxZgYEfMymhcMkWw+KY=;
+        b=y+p7oy6xAvUhHf25QiPjgdDf4dXgdRmOnuK1FBNJo6gbPRsDpAP2rmIqEXojSlV2qB
+         p4QhLWaDC+H9XjfBDSFoC3hyatN/1i/fYur4w1WN6BMkWG6cexoGPHgDkmpGEjDQCOmE
+         b8Od8p7J4cXlWbzVtWE/Nwjjr4nEC1Dlik2RPgOZ3PQV4S8kvApWAz5Azuc6iridJ0ak
+         ++ZleG35su7G+EIP9QAY5rnqkmKW5cLY2Phx8J05o3pIhxSVv7hqLJO+mmh4UC38ebsU
+         m9KRZw0JnhlmXBtw/e9Dzll7ZBX3Mb1OoSb/kGLdXOyq3n5qwOoRCK/7TrNaHFaF/KCE
+         jO+Q==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to;
-        bh=jQL+/hzVQKWUcXK58myvXbK+OrvlIIBcgeWycPAqydM=;
-        b=IVkHbsR3D32lYdQi5XuDrknFCADmoPqNRfvfjZq+tNJDOLvKDVCIWwD5xfKL9rLgC+
-         +xOXiDXbBlv8pjA6OXZ28ONQ2omnhRkOk5Nc7Us7iaRnhMKKBp1Vsq1719N4muECcrD2
-         GGkJZSeTCvyFRo7A/q8q3AjfJytthlk8J93saLFowYwQIKtea96m3fvRp2pVqYgD2iku
-         ZcFjjgP4+jJV4OjAcVHk9J3oUMSF/oaYtyHrhWsVjAfNjPiiY48RNFoYZmsC4S+FBX5+
-         pAHLs5LxByeUhJaGC6CjXeoyP99r9TyGmwQ1U3PrJ1q2G2aXY4g5t+rtH3CoclyJKXJg
-         7Tkw==
-X-Gm-Message-State: APjAAAVlQaOCTh90u0bZlOBH2rSmG7GBBWinG64D1BlmFImy9bp5IZHz
-        1i2avnY2KSdlkYU24eoF5y2Pclvh84lUYljHTy8=
-X-Google-Smtp-Source: APXvYqwlLVcOMeJtr4wNVo5XRadsqKuP+HYJznYQvqQ0e4bLkZWQUGF4lNAhVltOW4+jGW/xJPXjiKyrXUOFH6GlGY4=
-X-Received: by 2002:a17:906:7b86:: with SMTP id s6mr45805184ejo.144.1555487965356;
- Wed, 17 Apr 2019 00:59:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <1555487246-15764-1-git-send-email-huangzhaoyang@gmail.com>
-In-Reply-To: <1555487246-15764-1-git-send-email-huangzhaoyang@gmail.com>
-From:   Zhaoyang Huang <huangzhaoyang@gmail.com>
-Date:   Wed, 17 Apr 2019 15:59:03 +0800
-Message-ID: <CAGWkznFCy-Fm1WObEk77shPGALWhn5dWS3ZLXY77+q_4Yp6bAQ@mail.gmail.com>
-Subject: Re: [RFC PATCH] mm/workingset : judge file page activity via timestamp
-To:     Andrew Morton <akpm@linux-foundation.org>,
-        Vlastimil Babka <vbabka@suse.cz>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        David Rientjes <rientjes@google.com>,
-        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
-        Roman Gushchin <guro@fb.com>, Jeff Layton <jlayton@redhat.com>,
-        Matthew Wilcox <mawilcox@microsoft.com>,
-        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Johannes Weiner <hannes@cmpxchg.org>
-Content-Type: text/plain; charset="UTF-8"
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=K3NXzTVp29K9R1SfEBsZC+ehQxZgYEfMymhcMkWw+KY=;
+        b=jewbwHFrLZ0neXQoJCNq9Be92nenhYJW49hS/o31B8TJY5wiCLIoBLm9kOAQseZHNF
+         MrxkrxBGjyQD6Io6DAic7F8QYolAsrgxvpIcAhuwhTvOIm6yXddWjsAkgSTJrKvX/2bv
+         vAfc9QSU47U+JZjnn1qPgL+lj1oMqAtgwBXZWQx9n8xy0nAq2e14RXs1S5p8MjLcmXfw
+         IEgmfZ2xwOddNBX+fUzRiShNeSTJEo5+m4vGxGF/aaEXX9IMeCg+nUbU6gg/34H9bSW5
+         9mh9rtf6c0s2C56X54XJJY6cl2ThRMu0phfHCpO54uEYXndxBuAjtMw7fbz8nYKQQD7Q
+         aa4w==
+X-Gm-Message-State: APjAAAXpAE0TM2Bn+mkD0wez5Sx/ck527S9PslESD5WrvuSJ/eKQFbhr
+        NeG4sJe0tuRdMoSh+P6zc8yanA==
+X-Google-Smtp-Source: APXvYqx+K2fr1BJjJrXpnAzpbeX2VgpZCS/E/HWN1xLfQlTYFKwFH8kBzW8Bru9X6b5LexXBl9g2zQ==
+X-Received: by 2002:a62:b40b:: with SMTP id h11mr88337648pfn.133.1555487997943;
+        Wed, 17 Apr 2019 00:59:57 -0700 (PDT)
+Received: from localhost.localdomain (36-239-215-67.dynamic-ip.hinet.net. [36.239.215.67])
+        by smtp.gmail.com with ESMTPSA id 17sm72499594pgz.52.2019.04.17.00.59.55
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 17 Apr 2019 00:59:56 -0700 (PDT)
+From:   Axel Lin <axel.lin@ingics.com>
+To:     Mark Brown <broonie@kernel.org>
+Cc:     Pascal Paillet <p.paillet@st.com>,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
+Subject: [PATCH] regulator: stm32-pwr: Staticize local symbols
+Date:   Wed, 17 Apr 2019 15:59:42 +0800
+Message-Id: <20190417075942.28321-1-axel.lin@ingics.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-add Johannes and answer his previous question.
+These symbols are only used by this driver, make them static.
 
-@Johannes Weiner
-Yes. I do agree with you about the original thought of sacrificing
-long distance access pages when huge memory demands arise. The problem
-is what is the criteria of the distance, which you can find from what
-I comment in the patch, that is, some pages have long refault_distance
-while having a very short access time in between. I think the latter
-one should be take into consideration or as part of the finnal
-decision of if the page should be active/inactive.
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+---
+ drivers/regulator/stm32-pwr.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-On Wed, Apr 17, 2019 at 3:48 PM Zhaoyang Huang <huangzhaoyang@gmail.com> wrote:
->
-> From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
->
-> This patch introduce timestamp into workingset's entry and judge if the page
-> is active or inactive via active_file/refault_ratio instead of refault distance.
->
-> The original thought is coming from the logs we got from trace_printk in this
-> patch, we can find about 1/5 of the file pages' refault are under the
-> scenario[1],which will be counted as inactive as they have a long refault distance
-> in between access. However, we can also know from the time information that the
-> page refault quickly as comparing to the average refault time which is calculated
-> by the number of active file and refault ratio. We want to save these kinds of
-> pages from evicted earlier as it used to be. The refault ratio is the value
-> which can reflect lru's average file access frequency and also can be deemed as a
-> prediction of future.
->
-> The patch is tested on an android system and reduce 30% of page faults, while
-> 60% of the pages remain the original status as (refault_distance < active_file)
-> indicates. Pages status got from ftrace during the test can refer to [2].
->
-> [1]
-> system_server workingset_refault: WKST_ACT[0]:rft_dis 265976, act_file 34268 rft_ratio 3047 rft_time 0 avg_rft_time 11 refault 295592 eviction 29616 secs 97 pre_secs 97
-> HwBinder:922  workingset_refault: WKST_ACT[0]:rft_dis 264478, act_file 35037 rft_ratio 3070 rft_time 2 avg_rft_time 11 refault 310078 eviction 45600 secs 101 pre_secs 99
->
-> [2]
-> WKST_ACT[0]:   original--INACTIVE  commit--ACTIVE
-> WKST_ACT[1]:   original--ACTIVE    commit--ACTIVE
-> WKST_INACT[0]: original--INACTIVE  commit--INACTIVE
-> WKST_INACT[1]: original--ACTIVE    commit--INACTIVE
->
-> Signed-off-by: Zhaoyang Huang <huangzhaoyang@gmail.com>
-> ---
->  include/linux/mmzone.h |   1 +
->  mm/workingset.c        | 120 +++++++++++++++++++++++++++++++++++++++++++++----
->  2 files changed, 112 insertions(+), 9 deletions(-)
->
-> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-> index 32699b2..6f30673 100644
-> --- a/include/linux/mmzone.h
-> +++ b/include/linux/mmzone.h
-> @@ -240,6 +240,7 @@ struct lruvec {
->         atomic_long_t                   inactive_age;
->         /* Refaults at the time of last reclaim cycle */
->         unsigned long                   refaults;
-> +       atomic_long_t                   refaults_ratio;
->  #ifdef CONFIG_MEMCG
->         struct pglist_data *pgdat;
->  #endif
-> diff --git a/mm/workingset.c b/mm/workingset.c
-> index 40ee02c..66c177b 100644
-> --- a/mm/workingset.c
-> +++ b/mm/workingset.c
-> @@ -160,6 +160,21 @@
->                          MEM_CGROUP_ID_SHIFT)
->  #define EVICTION_MASK  (~0UL >> EVICTION_SHIFT)
->
-> +#ifdef CONFIG_64BIT
-> +#define EVICTION_SECS_POS_SHIFT 20
-> +#define EVICTION_SECS_SHRINK_SHIFT 4
-> +#define EVICTION_SECS_POS_MASK  ((1UL << EVICTION_SECS_POS_SHIFT) - 1)
-> +#else
-> +#ifndef CONFIG_MEMCG
-> +#define EVICTION_SECS_POS_SHIFT 12
-> +#define EVICTION_SECS_SHRINK_SHIFT 4
-> +#define EVICTION_SECS_POS_MASK  ((1UL << EVICTION_SECS_POS_SHIFT) - 1)
-> +#else
-> +#define EVICTION_SECS_POS_SHIFT 0
-> +#define EVICTION_SECS_SHRINK_SHIFT 0
-> +#define NO_SECS_IN_WORKINGSET
-> +#endif
-> +#endif
->  /*
->   * Eviction timestamps need to be able to cover the full range of
->   * actionable refaults. However, bits are tight in the radix tree
-> @@ -169,10 +184,54 @@
->   * evictions into coarser buckets by shaving off lower timestamp bits.
->   */
->  static unsigned int bucket_order __read_mostly;
-> -
-> +#ifdef NO_SECS_IN_WORKINGSET
-> +static void pack_secs(unsigned long *peviction) { }
-> +static unsigned int unpack_secs(unsigned long entry) {return 0; }
-> +#else
-> +/*
-> + * Shrink the timestamp according to its value and store it together
-> + * with the shrink size in the entry.
-> + */
-> +static void pack_secs(unsigned long *peviction)
-> +{
-> +       unsigned int secs;
-> +       unsigned long eviction;
-> +       int order;
-> +       int secs_shrink_size;
-> +       struct timespec ts;
-> +
-> +       get_monotonic_boottime(&ts);
-> +       secs = (unsigned int)ts.tv_sec ? (unsigned int)ts.tv_sec : 1;
-> +       order = get_count_order(secs);
-> +       secs_shrink_size = (order <= EVICTION_SECS_POS_SHIFT)
-> +                       ? 0 : (order - EVICTION_SECS_POS_SHIFT);
-> +
-> +       eviction = *peviction;
-> +       eviction = (eviction << EVICTION_SECS_POS_SHIFT)
-> +                       | ((secs >> secs_shrink_size) & EVICTION_SECS_POS_MASK);
-> +       eviction = (eviction << EVICTION_SECS_SHRINK_SHIFT) | (secs_shrink_size & 0xf);
-> +       *peviction = eviction;
-> +}
-> +/*
-> + * Unpack the second from the entry and restore the value according to the
-> + * shrink size.
-> + */
-> +static unsigned int unpack_secs(unsigned long entry)
-> +{
-> +       unsigned int secs;
-> +       int secs_shrink_size;
-> +
-> +       secs_shrink_size = entry & ((1 << EVICTION_SECS_SHRINK_SHIFT) - 1);
-> +       entry >>= EVICTION_SECS_SHRINK_SHIFT;
-> +       secs = entry & EVICTION_SECS_POS_MASK;
-> +       secs = secs << secs_shrink_size;
-> +       return secs;
-> +}
-> +#endif
->  static void *pack_shadow(int memcgid, pg_data_t *pgdat, unsigned long eviction)
->  {
->         eviction >>= bucket_order;
-> +       pack_secs(&eviction);
->         eviction = (eviction << MEM_CGROUP_ID_SHIFT) | memcgid;
->         eviction = (eviction << NODES_SHIFT) | pgdat->node_id;
->         eviction = (eviction << RADIX_TREE_EXCEPTIONAL_SHIFT);
-> @@ -181,20 +240,24 @@ static void *pack_shadow(int memcgid, pg_data_t *pgdat, unsigned long eviction)
->  }
->
->  static void unpack_shadow(void *shadow, int *memcgidp, pg_data_t **pgdat,
-> -                         unsigned long *evictionp)
-> +                         unsigned long *evictionp, unsigned int *prev_secs)
->  {
->         unsigned long entry = (unsigned long)shadow;
->         int memcgid, nid;
-> +       unsigned int secs;
->
->         entry >>= RADIX_TREE_EXCEPTIONAL_SHIFT;
->         nid = entry & ((1UL << NODES_SHIFT) - 1);
->         entry >>= NODES_SHIFT;
->         memcgid = entry & ((1UL << MEM_CGROUP_ID_SHIFT) - 1);
->         entry >>= MEM_CGROUP_ID_SHIFT;
-> +       secs = unpack_secs(entry);
-> +       entry >>= (EVICTION_SECS_POS_SHIFT + EVICTION_SECS_SHRINK_SHIFT);
->
->         *memcgidp = memcgid;
->         *pgdat = NODE_DATA(nid);
->         *evictionp = entry << bucket_order;
-> +       *prev_secs = secs;
->  }
->
->  /**
-> @@ -242,9 +305,22 @@ bool workingset_refault(void *shadow)
->         unsigned long refault;
->         struct pglist_data *pgdat;
->         int memcgid;
-> +#ifndef NO_SECS_IN_WORKINGSET
-> +       unsigned long avg_refault_time;
-> +       unsigned long refault_time;
-> +       int tradition;
-> +       unsigned int prev_secs;
-> +       unsigned int secs;
-> +       unsigned long refaults_ratio;
-> +#endif
-> +       struct timespec ts;
-> +       /*
-> +       convert jiffies to second
-> +       */
-> +       get_monotonic_boottime(&ts);
-> +       secs = (unsigned int)ts.tv_sec ? (unsigned int)ts.tv_sec : 1;
->
-> -       unpack_shadow(shadow, &memcgid, &pgdat, &eviction);
-> -
-> +       unpack_shadow(shadow, &memcgid, &pgdat, &eviction, &prev_secs);
->         rcu_read_lock();
->         /*
->          * Look up the memcg associated with the stored ID. It might
-> @@ -288,14 +364,37 @@ bool workingset_refault(void *shadow)
->          * list is not a problem.
->          */
->         refault_distance = (refault - eviction) & EVICTION_MASK;
-> -
->         inc_lruvec_state(lruvec, WORKINGSET_REFAULT);
-> -
-> -       if (refault_distance <= active_file) {
-> +#ifndef NO_SECS_IN_WORKINGSET
-> +       refaults_ratio = (atomic_long_read(&lruvec->inactive_age) + 1) / secs;
-> +       atomic_long_set(&lruvec->refaults_ratio, refaults_ratio);
-> +       refault_time = secs - prev_secs;
-> +       avg_refault_time = active_file / refaults_ratio;
-> +       tradition = !!(refault_distance < active_file);
-> +       if (refault_time <= avg_refault_time) {
-> +#else
-> +       if (refault_distance < active_file) {
-> +#endif
->                 inc_lruvec_state(lruvec, WORKINGSET_ACTIVATE);
-> +#ifndef NO_SECS_IN_WORKINGSET
-> +               trace_printk("WKST_ACT[%d]:rft_dis %ld, act_file %ld \
-> +                               rft_ratio %ld rft_time %ld avg_rft_time %ld \
-> +                               refault %ld eviction %ld secs %d pre_secs %d\n",
-> +                               tradition, refault_distance, active_file,
-> +                               refaults_ratio, refault_time, avg_refault_time,
-> +                               refault, eviction, secs, prev_secs);
-> +#endif
->                 rcu_read_unlock();
->                 return true;
->         }
-> +#ifndef NO_SECS_IN_WORKINGSET
-> +       trace_printk("WKST_INACT[%d]:rft_dis %ld, act_file %ld \
-> +                       rft_ratio %ld rft_time %ld avg_rft_time %ld \
-> +                       refault %ld eviction %ld secs %d pre_secs %d\n",
-> +                       tradition, refault_distance, active_file,
-> +                       refaults_ratio, refault_time, avg_refault_time,
-> +                       refault, eviction, secs, prev_secs);
-> +#endif
->         rcu_read_unlock();
->         return false;
->  }
-> @@ -513,7 +612,9 @@ static int __init workingset_init(void)
->         unsigned int max_order;
->         int ret;
->
-> -       BUILD_BUG_ON(BITS_PER_LONG < EVICTION_SHIFT);
-> +       BUILD_BUG_ON(BITS_PER_LONG < (EVICTION_SHIFT
-> +                               + EVICTION_SECS_POS_SHIFT
-> +                               + EVICTION_SECS_SHRINK_SHIFT));
->         /*
->          * Calculate the eviction bucket size to cover the longest
->          * actionable refault distance, which is currently half of
-> @@ -521,7 +622,8 @@ static int __init workingset_init(void)
->          * some more pages at runtime, so keep working with up to
->          * double the initial memory by using totalram_pages as-is.
->          */
-> -       timestamp_bits = BITS_PER_LONG - EVICTION_SHIFT;
-> +       timestamp_bits = BITS_PER_LONG - EVICTION_SHIFT
-> +                       - EVICTION_SECS_POS_SHIFT - EVICTION_SECS_SHRINK_SHIFT;
->         max_order = fls_long(totalram_pages - 1);
->         if (max_order > timestamp_bits)
->                 bucket_order = max_order - timestamp_bits;
-> --
-> 1.9.1
->
+diff --git a/drivers/regulator/stm32-pwr.c b/drivers/regulator/stm32-pwr.c
+index e434b26d4c8b..222d593d76a2 100644
+--- a/drivers/regulator/stm32-pwr.c
++++ b/drivers/regulator/stm32-pwr.c
+@@ -32,7 +32,7 @@ enum {
+ 	STM32PWR_REG_NUM_REGS
+ };
+ 
+-u32 ready_mask_table[STM32PWR_REG_NUM_REGS] = {
++static u32 ready_mask_table[STM32PWR_REG_NUM_REGS] = {
+ 	[PWR_REG11] = REG_1_1_RDY,
+ 	[PWR_REG18] = REG_1_8_RDY,
+ 	[PWR_USB33] = USB_3_3_RDY,
+@@ -44,7 +44,7 @@ struct stm32_pwr_reg {
+ 	u32 ready_mask;
+ };
+ 
+-int stm32_pwr_reg_is_ready(struct regulator_dev *rdev)
++static int stm32_pwr_reg_is_ready(struct regulator_dev *rdev)
+ {
+ 	struct stm32_pwr_reg *priv = rdev_get_drvdata(rdev);
+ 	u32 val;
+@@ -54,7 +54,7 @@ int stm32_pwr_reg_is_ready(struct regulator_dev *rdev)
+ 	return (val & priv->ready_mask);
+ }
+ 
+-int stm32_pwr_reg_is_enabled(struct regulator_dev *rdev)
++static int stm32_pwr_reg_is_enabled(struct regulator_dev *rdev)
+ {
+ 	struct stm32_pwr_reg *priv = rdev_get_drvdata(rdev);
+ 	u32 val;
+-- 
+2.17.1
+
