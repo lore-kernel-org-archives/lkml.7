@@ -2,113 +2,154 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D01EDC282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:14:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5685AC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:15:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8C25420872
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:14:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nokia.onmicrosoft.com header.i=@nokia.onmicrosoft.com header.b="I2wo4tHS"
+	by mail.kernel.org (Postfix) with ESMTP id 2A70D2177B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:15:14 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732075AbfDQMOR (ORCPT
+        id S1732083AbfDQMPN convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 08:14:17 -0400
-Received: from mail-eopbgr70092.outbound.protection.outlook.com ([40.107.7.92]:10014
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726708AbfDQMOQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 08:14:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nokia.onmicrosoft.com;
- s=selector1-nokia-com;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=+jbLKGFq3bPYakonabdOf04bLP5RhwGJk/k9Sb72mNM=;
- b=I2wo4tHS1hQJb7cD6UXU94XRf9gGde/azrJ7lEmSxUwnMd4O5hKlHCM6tBLfJdjkruFQZ4jENo/ZAILEGxgeurmWvjSegLCQGT6Ll7mVE8uTTkSBl+qs4sNs1UKFzUfZL2fT3uDa6dhmrdjceDYifkXKbXtaKqwIVvpQI0BvG/o=
-Received: from AM0PR07MB6019.eurprd07.prod.outlook.com (20.178.112.14) by
- AM0SPR01MB21.eurprd07.prod.outlook.com (52.134.87.155) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1813.9; Wed, 17 Apr 2019 12:14:14 +0000
-Received: from AM0PR07MB6019.eurprd07.prod.outlook.com
- ([fe80::8538:2f6b:1fad:e3e7]) by AM0PR07MB6019.eurprd07.prod.outlook.com
- ([fe80::8538:2f6b:1fad:e3e7%2]) with mapi id 15.20.1813.009; Wed, 17 Apr 2019
- 12:14:14 +0000
-From:   "Koskinen, Aaro (Nokia - FI/Espoo)" <aaro.koskinen@nokia.com>
-To:     Yue Haibing <yuehaibing@huawei.com>,
-        "peppe.cavallaro@st.com" <peppe.cavallaro@st.com>,
-        "alexandre.torgue@st.com" <alexandre.torgue@st.com>,
-        "joabreu@synopsys.com" <joabreu@synopsys.com>,
-        "davem@davemloft.net" <davem@davemloft.net>,
-        "mcoquelin.stm32@gmail.com" <mcoquelin.stm32@gmail.com>
-CC:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-stm32@st-md-mailman.stormreply.com" 
-        <linux-stm32@st-md-mailman.stormreply.com>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>
-Subject: RE: [PATCH] net: stmmac: Use bfsize1 in ndesc_init_rx_desc
-Thread-Topic: [PATCH] net: stmmac: Use bfsize1 in ndesc_init_rx_desc
-Thread-Index: AQHU9MAG2Tyy46rygEK2TSRtfqvKI6ZAQa1g
-Date:   Wed, 17 Apr 2019 12:14:14 +0000
-Message-ID: <AM0PR07MB6019956E9F0C5829C1ACDC5EF4250@AM0PR07MB6019.eurprd07.prod.outlook.com>
-References: <20190417014939.36656-1-yuehaibing@huawei.com>
-In-Reply-To: <20190417014939.36656-1-yuehaibing@huawei.com>
-Accept-Language: en-US
+        Wed, 17 Apr 2019 08:15:13 -0400
+Received: from skedge04.snt-world.com ([91.208.41.69]:49202 "EHLO
+        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729578AbfDQMPM (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 08:15:12 -0400
+Received: from sntmail11s.snt-is.com (unknown [10.203.32.181])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by skedge04.snt-world.com (Postfix) with ESMTPS id BACF167A7D5;
+        Wed, 17 Apr 2019 14:15:08 +0200 (CEST)
+Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail11s.snt-is.com
+ (10.203.32.181) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 17 Apr
+ 2019 14:15:08 +0200
+Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
+ sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
+ 15.01.1713.004; Wed, 17 Apr 2019 14:15:08 +0200
+From:   Schrempf Frieder <frieder.schrempf@kontron.de>
+To:     "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
+        "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
+        "richard@nod.at" <richard@nod.at>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "Schrempf Frieder" <frieder.schrempf@kontron.de>
+Subject: [PATCH v5 0/7] mtd: rawnand: Support bad block markers in first,
+ second or last page
+Thread-Topic: [PATCH v5 0/7] mtd: rawnand: Support bad block markers in first,
+ second or last page
+Thread-Index: AQHU9Rcyt+xmDTJnpkOrxDzu8FWr2A==
+Date:   Wed, 17 Apr 2019 12:15:08 +0000
+Message-ID: <20190417121420.21752-1-frieder.schrempf@kontron.de>
+Accept-Language: de-DE, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
 X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=aaro.koskinen@nokia.com; 
-x-originating-ip: [131.228.2.23]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 01fdd744-19ee-467a-e7a3-08d6c32e34d3
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600140)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM0SPR01MB21;
-x-ms-traffictypediagnostic: AM0SPR01MB21:
-x-microsoft-antispam-prvs: <AM0SPR01MB21D8F43B4BD6E6800A47A5F4250@AM0SPR01MB21.eurprd07.prod.outlook.com>
-x-forefront-prvs: 0010D93EFE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(396003)(39860400002)(366004)(376002)(136003)(346002)(199004)(189003)(25786009)(66066001)(102836004)(316002)(5660300002)(54906003)(110136005)(26005)(4326008)(6436002)(4744005)(229853002)(6116002)(52536014)(76176011)(3846002)(186003)(6246003)(446003)(53936002)(11346002)(486006)(55016002)(9686003)(476003)(71190400001)(71200400001)(68736007)(74316002)(99286004)(86362001)(106356001)(7736002)(478600001)(7696005)(105586002)(14454004)(7416002)(305945005)(2501003)(256004)(2201001)(33656002)(81166006)(8676002)(81156014)(6506007)(14444005)(8936002)(97736004)(2906002);DIR:OUT;SFP:1102;SCL:1;SRVR:AM0SPR01MB21;H:AM0PR07MB6019.eurprd07.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: nokia.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: iRmqm3USVqtE4iVGOEhMzZdkOWf7IYctAWuq96Gxcg0+eLyEoeijWDt5ACg0j+WacJ4OX5WsRK8w8nih7FfEvEUx/WdaI8O6CNRrxsaYcBtFsOsTqeLMVYOHx+uWv1PeeVbRfy5m77jF3aQsxmYZkrVWDFr5Mdyjq9z0QvBFJz8+Gsn3sOFDHqMvhSZkNo1oSkdp2EsbfJZB5cWPXht+FPG67L6wILlxz8FbtdOBJZ8M9OOnFzIoALTnTS6EhORZyeQii0I50o8RofRK4ad3TS10PjdKtbwssXAkctkwZ1kmUVleN4XUIoZ3OJVAN/G4QCWNTTTtEyXASXFJr9GKErpA8dyBeGe+kPaLADRhEJljZ8BVCt6uzZrAkgP7wVP1/WiRA8zuB5XkEU8FJ4e3cYZbKwSAmu6wdpcWDFHZJKY=
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+x-originating-ip: [172.25.9.193]
+x-c2processedorg: 51b406b7-48a2-4d03-b652-521f56ac89f3
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-X-OriginatorOrg: nokia.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 01fdd744-19ee-467a-e7a3-08d6c32e34d3
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Apr 2019 12:14:14.0299
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 5d471751-9675-428d-917b-70f44f9630b0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0SPR01MB21
+X-SnT-MailScanner-Information: Please contact the ISP for more information
+X-SnT-MailScanner-ID: BACF167A7D5.A0233
+X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
+X-SnT-MailScanner-SpamCheck: 
+X-SnT-MailScanner-From: frieder.schrempf@kontron.de
+X-SnT-MailScanner-To: bbrezillon@kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, miquel.raynal@bootlin.com,
+        richard@nod.at
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
+From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-From: Yue Haibing [yuehaibing@huawei.com]
-> gcc warn this:
->
-> drivers/net/ethernet/stmicro/stmmac/norm_desc.c: In function ndesc_init_r=
-x_desc:
-> drivers/net/ethernet/stmicro/stmmac/norm_desc.c:138:6: warning: variable =
-'bfsize1' set but not used [-Wunused-but-set-variable]
->
-> Like enh_desc_init_rx_desc, we should use bfsize1
-> in ndesc_init_rx_desc to calculate 'p->des1'
->
-> Fixes: 583e63614149 ("net: stmmac: use correct DMA buffer size in the RX =
-descriptor")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Currently supported bad block marker positions within the block are:
+* in first page only
+* in last page only
+* in first or second page
 
-Reviewed-by: Aaro Koskinen <aaro.koskinen@nokia.com>
+After some cleanup and preparation in patches 1 to 4 we make it
+possible to set NAND_BBM_FIRSTPAGE, NAND_BBM_SECONDPAGE and
+NAND_BBM_LASTPAGE independently of each other (patch 5).
 
-Thanks, looks like GCC 6.3.0 missed this.
+Some ESMT NANDs are known to have been shipped by the manufacturer
+with bad block markers in the first or last page, instead of the
+first or second page.
 
-A.
+Also the datasheets for Cypress/Spansion/AMD NANDs claim that the
+first, second *and* last page needs to be checked.
+
+Therefore in patch 6 and 7 we set all three flags for
+AMD/Spansion/Cypress and ESMT chips.
+---
+Changes in v5:
+==============
+* Rebase onto current nand/next
+* Fix nand_bbm_get_next_page() docs
+* Use inclusive values for start page in nand_bbm_get_next_page()
+* Return -EINVAL from nand_bbm_get_next_page() when no more pages are available
+* Improve code style in nand_block_bad()
+* Add parentheses in scan_block_fast() and nand_default_block_markbad()
+* Unsign badblockpos field in struct nand_chip and struct onenand_chip
+* Add R-b tags
+
+Changes in v4:
+==============
+* Move onenand changes to separate patch
+* Add missing badblockpos field to onenand_chip struct
+* Move cleanup of badblockpos field and flags to separate patch
+* Move assignemnt of badblockpos from onenand_bbt.c to onenand_base.c
+* Fix incorrect usage of bbt_options in nand_bbt.c
+* Add R-b tags
+
+Changes in v3:
+==============
+* Fix bit offsets for new flags in nand_chip->options
+* Move separation of flags for first and second page markers to a
+  separate patch
+* Fix cover letter
+* Fix S-o-b tag
+* Add R-b tags
+
+Changes in v2:
+==============
+* Rebase on 5.0-rc1
+* Add patch to move bad block marker position info to a common place and
+  rename/prepare existing flags
+* improve/rename function nand_bbm_get_next_page() to use new flags
+---
+Frieder Schrempf (7):
+  mtd: rawnand: Always store info about bad block markers in chip struct
+  mtd: onenand: Store bad block marker position in chip struct
+  mtd: nand: Cleanup flags and fields for bad block marker position
+  mtd: nand: Make flags for bad block marker position more granular
+  mtd: rawnand: Support bad block markers in first, second or last page
+  mtd: rawnand: ESMT: Also use the last page for bad block markers
+  mtd: rawnand: AMD: Also use the last page for bad block markers
+
+ drivers/mtd/nand/onenand/onenand_base.c |  5 +-
+ drivers/mtd/nand/onenand/onenand_bbt.c  |  3 --
+ drivers/mtd/nand/raw/internals.h        |  1 +
+ drivers/mtd/nand/raw/nand_amd.c         |  8 +++-
+ drivers/mtd/nand/raw/nand_base.c        | 64 +++++++++++++++++--------
+ drivers/mtd/nand/raw/nand_bbt.c         | 28 +++++------
+ drivers/mtd/nand/raw/nand_esmt.c        |  9 +++-
+ drivers/mtd/nand/raw/nand_hynix.c       |  4 +-
+ drivers/mtd/nand/raw/nand_macronix.c    |  2 +-
+ drivers/mtd/nand/raw/nand_micron.c      |  2 +-
+ drivers/mtd/nand/raw/nand_samsung.c     |  4 +-
+ drivers/mtd/nand/raw/nand_toshiba.c     |  2 +-
+ drivers/mtd/nand/raw/sh_flctl.c         |  4 +-
+ include/linux/mtd/bbm.h                 | 14 +-----
+ include/linux/mtd/onenand.h             |  3 ++
+ include/linux/mtd/rawnand.h             | 17 ++++++-
+ 16 files changed, 105 insertions(+), 65 deletions(-)
+
+-- 
+2.17.1
