@@ -2,110 +2,173 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9FE91C10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:00:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5309DC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:02:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6E87A2177B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:00:00 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ingics-com.20150623.gappssmtp.com header.i=@ingics-com.20150623.gappssmtp.com header.b="y+p7oy6x"
+	by mail.kernel.org (Postfix) with ESMTP id 282BC2054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:02:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731250AbfDQH77 (ORCPT
+        id S1731041AbfDQICz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 03:59:59 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:46780 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727013AbfDQH76 (ORCPT
+        Wed, 17 Apr 2019 04:02:55 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33560 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1728335AbfDQICy (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 03:59:58 -0400
-Received: by mail-pg1-f195.google.com with SMTP id q1so11609474pgv.13
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 00:59:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=ingics-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id;
-        bh=K3NXzTVp29K9R1SfEBsZC+ehQxZgYEfMymhcMkWw+KY=;
-        b=y+p7oy6xAvUhHf25QiPjgdDf4dXgdRmOnuK1FBNJo6gbPRsDpAP2rmIqEXojSlV2qB
-         p4QhLWaDC+H9XjfBDSFoC3hyatN/1i/fYur4w1WN6BMkWG6cexoGPHgDkmpGEjDQCOmE
-         b8Od8p7J4cXlWbzVtWE/Nwjjr4nEC1Dlik2RPgOZ3PQV4S8kvApWAz5Azuc6iridJ0ak
-         ++ZleG35su7G+EIP9QAY5rnqkmKW5cLY2Phx8J05o3pIhxSVv7hqLJO+mmh4UC38ebsU
-         m9KRZw0JnhlmXBtw/e9Dzll7ZBX3Mb1OoSb/kGLdXOyq3n5qwOoRCK/7TrNaHFaF/KCE
-         jO+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=K3NXzTVp29K9R1SfEBsZC+ehQxZgYEfMymhcMkWw+KY=;
-        b=jewbwHFrLZ0neXQoJCNq9Be92nenhYJW49hS/o31B8TJY5wiCLIoBLm9kOAQseZHNF
-         MrxkrxBGjyQD6Io6DAic7F8QYolAsrgxvpIcAhuwhTvOIm6yXddWjsAkgSTJrKvX/2bv
-         vAfc9QSU47U+JZjnn1qPgL+lj1oMqAtgwBXZWQx9n8xy0nAq2e14RXs1S5p8MjLcmXfw
-         IEgmfZ2xwOddNBX+fUzRiShNeSTJEo5+m4vGxGF/aaEXX9IMeCg+nUbU6gg/34H9bSW5
-         9mh9rtf6c0s2C56X54XJJY6cl2ThRMu0phfHCpO54uEYXndxBuAjtMw7fbz8nYKQQD7Q
-         aa4w==
-X-Gm-Message-State: APjAAAXpAE0TM2Bn+mkD0wez5Sx/ck527S9PslESD5WrvuSJ/eKQFbhr
-        NeG4sJe0tuRdMoSh+P6zc8yanA==
-X-Google-Smtp-Source: APXvYqx+K2fr1BJjJrXpnAzpbeX2VgpZCS/E/HWN1xLfQlTYFKwFH8kBzW8Bru9X6b5LexXBl9g2zQ==
-X-Received: by 2002:a62:b40b:: with SMTP id h11mr88337648pfn.133.1555487997943;
-        Wed, 17 Apr 2019 00:59:57 -0700 (PDT)
-Received: from localhost.localdomain (36-239-215-67.dynamic-ip.hinet.net. [36.239.215.67])
-        by smtp.gmail.com with ESMTPSA id 17sm72499594pgz.52.2019.04.17.00.59.55
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Apr 2019 00:59:56 -0700 (PDT)
-From:   Axel Lin <axel.lin@ingics.com>
-To:     Mark Brown <broonie@kernel.org>
-Cc:     Pascal Paillet <p.paillet@st.com>,
-        Liam Girdwood <lgirdwood@gmail.com>,
-        linux-kernel@vger.kernel.org, Axel Lin <axel.lin@ingics.com>
-Subject: [PATCH] regulator: stm32-pwr: Staticize local symbols
-Date:   Wed, 17 Apr 2019 15:59:42 +0800
-Message-Id: <20190417075942.28321-1-axel.lin@ingics.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 17 Apr 2019 04:02:54 -0400
+Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3H7teQe100556
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 04:02:53 -0400
+Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rwym7sx69-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 04:02:52 -0400
+Received: from localhost
+        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <schwidefsky@de.ibm.com>;
+        Wed, 17 Apr 2019 09:02:50 +0100
+Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
+        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 17 Apr 2019 09:02:47 +0100
+Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
+        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3H82k9J49807494
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 17 Apr 2019 08:02:46 GMT
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 47A6842054;
+        Wed, 17 Apr 2019 08:02:46 +0000 (GMT)
+Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id 1026042064;
+        Wed, 17 Apr 2019 08:02:46 +0000 (GMT)
+Received: from mschwideX1 (unknown [9.145.37.72])
+        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
+        Wed, 17 Apr 2019 08:02:45 +0000 (GMT)
+Date:   Wed, 17 Apr 2019 10:02:44 +0200
+From:   Martin Schwidefsky <schwidefsky@de.ibm.com>
+To:     Linus Torvalds <torvalds@linux-foundation.org>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        linuxppc-dev@lists.ozlabs.org,
+        linux-s390 <linux-s390@vger.kernel.org>
+Subject: Re: Linux 5.1-rc5
+In-Reply-To: <20190417094637.51ad4c67@mschwideX1>
+References: <CAHk-=wjvcuyCQGnfOhooaL1H4H63qXO=xgo+9yncSOG=eK+kbA@mail.gmail.com>
+        <20190415051919.GA31481@infradead.org>
+        <CAHk-=wj7jgMOVFW0tiU-X+zhg6+Rn7mEBTej+f26rV3zXezOSA@mail.gmail.com>
+        <20190416110906.6c773aff@mschwideX1>
+        <20190416140658.2cb73a3f@mschwideX1>
+        <CAHk-=wjKi5C+Onhp5Vs5BQxHbaBud9M3cTS-S6Tr9yDY4dS-Sw@mail.gmail.com>
+        <CAHk-=wj2SW0Zno0Yn=S9wrsmHOKV0FiFPiPS4TM=Gn8yjfYXAg@mail.gmail.com>
+        <20190417094637.51ad4c67@mschwideX1>
+X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
+MIME-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
+X-TM-AS-GCONF: 00
+x-cbid: 19041708-0028-0000-0000-00000361BC9D
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19041708-0029-0000-0000-00002420F79A
+Message-Id: <20190417100244.42e29736@mschwideX1>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-17_04:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=636 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904170054
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-These symbols are only used by this driver, make them static.
+On Wed, 17 Apr 2019 09:46:37 +0200
+Martin Schwidefsky <schwidefsky@de.ibm.com> wrote:
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
----
- drivers/regulator/stm32-pwr.c | 6 +++---
- 1 file changed, 3 insertions(+), 3 deletions(-)
+> On Tue, 16 Apr 2019 09:49:46 -0700
+> Linus Torvalds <torvalds@linux-foundation.org> wrote:
+> 
+> > On Tue, Apr 16, 2019 at 9:16 AM Linus Torvalds
+> > <torvalds@linux-foundation.org> wrote:  
+> > >
+> > > We actually already *have* this function.
+> > >
+> > > It's called "gup_fast_permitted()" and it's used by x86-64 to verify
+> > > the proper address range. Exactly like s390 needs..
+> > >
+> > > Could you please use that instead?    
+> > 
+> > IOW, something like the attached.
+> > 
+> > Obviously untested. And maybe 'current' isn't declared in
+> > <asm/pgtable.h>, in which case you'd need to modify it to instead make
+> > the inline function be "s390_gup_fast_permitted()" that takes a
+> > pointer to the mm, and do something like
+> > 
+> >   #define gup_fast_permitted(start, pages) \
+> >          s390_gup_fast_permitted(current->mm, start, pages)
+> > 
+> > instead.
+> > 
+> > But I think you get the idea..  
+> 
+> Nice, I did not realize that gup_fast_permitted is a platform
+> override-able function. So that part is doable in arch/s390. But I
+> spoke to soon, I got my first crash and realized that the common gup code
+> is not usable as it is. The reason is this e.g. this sequence:
+> 
+> 	pgdp = pgd_offset(current->mm, addr);
+> 	pgd_t pgd = READ_ONCE(*pgdp);
+> 	/* some checking on pgd */
+> 	gup_p4d_range(pgd, addr, next, write, pages, nr);
+> 
+> 	p4dp = p4d_offset(&pgd, addr);
+> 	p4d_t p4d = READ_ONCE(*p4dp);
+> 	/* some checking on p4d */
+> 	gup_pud_range(p4d, addr, next, write, pages, nr);
+> 
+> 	pudp = pud_offset(&p4d, addr);
+> 	pud_t pud = READ_ONCE(*pudp);
+> 	/* some checking on pud */
+> 	gup_pmd_range(pud, addr, next, write, pages, nr;
+> 
+> Each step along the way will read the page table entry and pass the
+> table entry to the next function. This clashes with the page table
+> folding on s390. The s390 gup code looks more like this:
+> 
+> 	pgdp = pgd_offset(current->mm, addr);
+> 	/* some checking on pgd */
+> 	pgd_t pgd = READ_ONCE(*pgdp);
+> 	gup_p4d_range(pgdp, pgd, addr, next, write, pages, &nr);
+> 
+> 	p4dp = p4d_offset(pgdp, addr);
+> 	p4d_t p4d = READ_ONCE(*p4dp);
+> 	/* some checking on p4d */
+> 	gup_pud_range(p4dp, p4d, addr, next, write, pages, nr);
+> 
+> 	pudp = pud_offset(p4dp, addr);
+> 	pud_t pud = READ_ONCE(*pudp);
+> 	/* some checking on pud */
+> 	gup_pmd_range(pudp, pud, addr, next, write, pages, nr;
+> 
+> There are magic dereferences in the s390 versions of p4d_offset,
+> pud_offset and pmd_offset functions. To make this work the pointer
+> passed to these functions may not be the local copy of the already
+> dereferenced table entry. I'll cook up a patch for the common code.
 
-diff --git a/drivers/regulator/stm32-pwr.c b/drivers/regulator/stm32-pwr.c
-index e434b26d4c8b..222d593d76a2 100644
---- a/drivers/regulator/stm32-pwr.c
-+++ b/drivers/regulator/stm32-pwr.c
-@@ -32,7 +32,7 @@ enum {
- 	STM32PWR_REG_NUM_REGS
- };
- 
--u32 ready_mask_table[STM32PWR_REG_NUM_REGS] = {
-+static u32 ready_mask_table[STM32PWR_REG_NUM_REGS] = {
- 	[PWR_REG11] = REG_1_1_RDY,
- 	[PWR_REG18] = REG_1_8_RDY,
- 	[PWR_USB33] = USB_3_3_RDY,
-@@ -44,7 +44,7 @@ struct stm32_pwr_reg {
- 	u32 ready_mask;
- };
- 
--int stm32_pwr_reg_is_ready(struct regulator_dev *rdev)
-+static int stm32_pwr_reg_is_ready(struct regulator_dev *rdev)
- {
- 	struct stm32_pwr_reg *priv = rdev_get_drvdata(rdev);
- 	u32 val;
-@@ -54,7 +54,7 @@ int stm32_pwr_reg_is_ready(struct regulator_dev *rdev)
- 	return (val & priv->ready_mask);
- }
- 
--int stm32_pwr_reg_is_enabled(struct regulator_dev *rdev)
-+static int stm32_pwr_reg_is_enabled(struct regulator_dev *rdev)
- {
- 	struct stm32_pwr_reg *priv = rdev_get_drvdata(rdev);
- 	u32 val;
+Grumpf, that does *not* work. For gup the table entries may be read only
+once. Now I remember why I open-coded p4d_offset, pud_offset and pmd_offset
+in arch/s390/mm/gup.c, to avoid to read the table entries twice.
+It will be hard to use the common gup code after all.
+
 -- 
-2.17.1
+blue skies,
+   Martin.
+
+"Reality continues to ruin my life." - Calvin.
 
