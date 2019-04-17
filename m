@@ -2,2173 +2,2563 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-13.5 required=3.0
-	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E7EC282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:31:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8E2D3C282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:31:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E5074217D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:31:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1960B217D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:31:16 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555500676;
+	bh=aNTmRspKEyu+sMyIgY2afDOzOboG22XTJK9gBEvaVXw=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=chbtVkibIBoRapMcnzQ2yCWCUBwl06Dkf1Wh48cT8HdB0/T+Po5C0l4ZAfK5WB2o4
+	 xYXmn7U8Hj6wza6JQAbYfZ/63YnTxIlMZkx6iLFNAsF9/tHCz3zX21d2MXEfEqJ8qz
+	 OopunX4K17qDT6xndTlKsKNk7QPtNUJ/FN6yGKOQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732010AbfDQLbK (ORCPT
+        id S1732026AbfDQLbP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 07:31:10 -0400
-Received: from foss.arm.com ([217.140.101.70]:43314 "EHLO foss.arm.com"
+        Wed, 17 Apr 2019 07:31:15 -0400
+Received: from mail.kernel.org ([198.145.29.99]:52348 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731659AbfDQLbI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 07:31:08 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id A8085374;
-        Wed, 17 Apr 2019 04:31:06 -0700 (PDT)
-Received: from e110455-lin.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0BC4C3F68F;
-        Wed, 17 Apr 2019 04:31:06 -0700 (PDT)
-Received: by e110455-lin.cambridge.arm.com (Postfix, from userid 1000)
-        id 57CDD68240D; Wed, 17 Apr 2019 12:31:04 +0100 (BST)
-Date:   Wed, 17 Apr 2019 12:31:04 +0100
-From:   Liviu Dudau <liviu.dudau@arm.com>
-To:     Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Dirk Eibach <eibach@gdsys.de>, linux-aspeed@lists.ozlabs.org,
-        devicetree@vger.kernel.org,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Kamil Debski <kamil@wypas.org>,
-        Marc Hulsman <m.hulsman@tudelft.nl>,
-        Huang Rui <ray.huang@amd.com>,
-        Paul Mackerras <paulus@samba.org>,
-        Jim Cromie <jim.cromie@gmail.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Joel Stanley <joel@jms.id.au>,
-        Guenter Roeck <linux@roeck-us.net>,
-        Steve Glendinning <steve.glendinning@shawell.net>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Jean Delvare <jdelvare@suse.com>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Mauro Carvalho Chehab <mchehab@infradead.org>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Rudolf Marek <r.marek@assembler.cz>,
-        linux-arm-kernel@lists.infradead.org, linux-hwmon@vger.kernel.org,
-        Support Opensource <support.opensource@diasemi.com>,
-        George Joseph <george.joseph@fairview5.com>,
-        Andreas Werner <andreas.werner@men.de>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        patches@opensource.cirrus.com, linux-kernel@vger.kernel.org,
-        Juerg Haefliger <juergh@gmail.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        linuxppc-dev@lists.ozlabs.org
-Subject: Re: [PATCH v3 21/21] docs: hwmon: Add an index file and rename docs
- to *.rst
-Message-ID: <20190417113104.GW15144@e110455-lin.cambridge.arm.com>
-References: <cover.1555494108.git.mchehab+samsung@kernel.org>
- <efbe0a2b5be35026c3a2dbdb9090c4fbd932c9a2.1555494108.git.mchehab+samsung@kernel.org>
+        id S1731991AbfDQLbN (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 07:31:13 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id A785D2073F;
+        Wed, 17 Apr 2019 11:31:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555500668;
+        bh=aNTmRspKEyu+sMyIgY2afDOzOboG22XTJK9gBEvaVXw=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=VHg4+EAxZsYPxVq6e/eOr9SUQ8xAXEY/wuwzOtfcpsVk4zJRbtZZV757oZINb26Rz
+         GKR0Yo6v5yYHf4XdP6mnt4A1En23CvmCVOnJmruMfpgxpVRcnjR4+kRLpi6QTFnjFK
+         pFFZ02LalRHAWcSVo8VYykrHKWGETyc0ZRiRj+VE=
+Date:   Wed, 17 Apr 2019 13:31:05 +0200
+From:   Greg KH <gregkh@linuxfoundation.org>
+To:     linux-kernel@vger.kernel.org,
+        Andrew Morton <akpm@linux-foundation.org>,
+        torvalds@linux-foundation.org, stable@vger.kernel.org
+Cc:     lwn@lwn.net, Jiri Slaby <jslaby@suse.cz>
+Subject: Re: Linux 4.14.112
+Message-ID: <20190417113105.GB9736@kroah.com>
+References: <20190417113100.GA9736@kroah.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <efbe0a2b5be35026c3a2dbdb9090c4fbd932c9a2.1555494108.git.mchehab+samsung@kernel.org>
+In-Reply-To: <20190417113100.GA9736@kroah.com>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 06:46:29AM -0300, Mauro Carvalho Chehab wrote:
-> Now that all files were converted to ReST format, rename them
-> and add an index.
-> 
-> Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> ---
->  .../devicetree/bindings/hwmon/g762.txt        |   2 +-
->  Documentation/hwmon/{ab8500 => ab8500.rst}    |   2 +-
->  ...guru-datasheet => abituguru-datasheet.rst} |   0
->  .../hwmon/{abituguru => abituguru.rst}        |   0
->  .../hwmon/{abituguru3 => abituguru3.rst}      |   0
->  Documentation/hwmon/{abx500 => abx500.rst}    |   0
->  ...{acpi_power_meter => acpi_power_meter.rst} |   2 +-
->  Documentation/hwmon/{ad7314 => ad7314.rst}    |   0
->  .../hwmon/{adc128d818 => adc128d818.rst}      |   0
->  Documentation/hwmon/{adm1021 => adm1021.rst}  |   0
->  Documentation/hwmon/{adm1025 => adm1025.rst}  |   0
->  Documentation/hwmon/{adm1026 => adm1026.rst}  |   0
->  Documentation/hwmon/{adm1031 => adm1031.rst}  |   0
->  Documentation/hwmon/{adm1275 => adm1275.rst}  |   4 +-
->  Documentation/hwmon/{adm9240 => adm9240.rst}  |   0
->  Documentation/hwmon/{ads1015 => ads1015.rst}  |   0
->  Documentation/hwmon/{ads7828 => ads7828.rst}  |   0
->  Documentation/hwmon/{adt7410 => adt7410.rst}  |   0
->  Documentation/hwmon/{adt7411 => adt7411.rst}  |   0
->  Documentation/hwmon/{adt7462 => adt7462.rst}  |   1 -
->  Documentation/hwmon/{adt7470 => adt7470.rst}  |   0
->  Documentation/hwmon/{adt7475 => adt7475.rst}  |   0
->  Documentation/hwmon/{amc6821 => amc6821.rst}  |   1 -
->  Documentation/hwmon/{asb100 => asb100.rst}    |   1 -
->  Documentation/hwmon/{asc7621 => asc7621.rst}  |   0
->  ...{aspeed-pwm-tacho => aspeed-pwm-tacho.rst} |   0
->  .../hwmon/{coretemp => coretemp.rst}          |   0
->  Documentation/hwmon/{da9052 => da9052.rst}    |   0
->  Documentation/hwmon/{da9055 => da9055.rst}    |   0
->  Documentation/hwmon/{dme1737 => dme1737.rst}  |   0
->  Documentation/hwmon/{ds1621 => ds1621.rst}    |   0
->  Documentation/hwmon/{ds620 => ds620.rst}      |   0
->  Documentation/hwmon/{emc1403 => emc1403.rst}  |   0
->  Documentation/hwmon/{emc2103 => emc2103.rst}  |   0
->  .../hwmon/{emc6w201 => emc6w201.rst}          |   0
->  Documentation/hwmon/{f71805f => f71805f.rst}  |   0
->  .../hwmon/{f71882fg => f71882fg.rst}          |   0
->  .../hwmon/{fam15h_power => fam15h_power.rst}  |   0
->  .../hwmon/{ftsteutates => ftsteutates.rst}    |   0
->  Documentation/hwmon/{g760a => g760a.rst}      |   0
->  Documentation/hwmon/{g762 => g762.rst}        |   2 +-
->  Documentation/hwmon/{gl518sm => gl518sm.rst}  |   0
->  Documentation/hwmon/{hih6130 => hih6130.rst}  |   0
->  ...on-kernel-api.txt => hwmon-kernel-api.rst} |   4 +-
->  .../hwmon/{ibm-cffps => ibm-cffps.rst}        |   0
->  Documentation/hwmon/{ibmaem => ibmaem.rst}    |   0
->  .../hwmon/{ibmpowernv => ibmpowernv.rst}      |   0
->  Documentation/hwmon/{ina209 => ina209.rst}    |   0
->  Documentation/hwmon/{ina2xx => ina2xx.rst}    |   2 +-
->  Documentation/hwmon/{ina3221 => ina3221.rst}  |   0
->  Documentation/hwmon/index.rst                 | 179 ++++++++++++++++++
->  Documentation/hwmon/{ir35221 => ir35221.rst}  |   0
->  Documentation/hwmon/{it87 => it87.rst}        |   0
->  Documentation/hwmon/{jc42 => jc42.rst}        |   0
->  Documentation/hwmon/{k10temp => k10temp.rst}  |   0
->  Documentation/hwmon/{k8temp => k8temp.rst}    |   0
->  .../hwmon/{lineage-pem => lineage-pem.rst}    |   0
->  Documentation/hwmon/{lm25066 => lm25066.rst}  |   2 +-
->  Documentation/hwmon/{lm63 => lm63.rst}        |   0
->  Documentation/hwmon/{lm70 => lm70.rst}        |   0
->  Documentation/hwmon/{lm73 => lm73.rst}        |   0
->  Documentation/hwmon/{lm75 => lm75.rst}        |   0
->  Documentation/hwmon/{lm77 => lm77.rst}        |   0
->  Documentation/hwmon/{lm78 => lm78.rst}        |   0
->  Documentation/hwmon/{lm80 => lm80.rst}        |   0
->  Documentation/hwmon/{lm83 => lm83.rst}        |   0
->  Documentation/hwmon/{lm85 => lm85.rst}        |   0
->  Documentation/hwmon/{lm87 => lm87.rst}        |   0
->  Documentation/hwmon/{lm90 => lm90.rst}        |   0
->  Documentation/hwmon/{lm92 => lm92.rst}        |   0
->  Documentation/hwmon/{lm93 => lm93.rst}        |   0
->  Documentation/hwmon/{lm95234 => lm95234.rst}  |   0
->  Documentation/hwmon/{lm95245 => lm95245.rst}  |   0
->  Documentation/hwmon/{ltc2945 => ltc2945.rst}  |   0
->  Documentation/hwmon/{ltc2978 => ltc2978.rst}  |   0
->  Documentation/hwmon/{ltc2990 => ltc2990.rst}  |   0
->  Documentation/hwmon/{ltc3815 => ltc3815.rst}  |   0
->  Documentation/hwmon/{ltc4151 => ltc4151.rst}  |   0
->  Documentation/hwmon/{ltc4215 => ltc4215.rst}  |   0
->  Documentation/hwmon/{ltc4245 => ltc4245.rst}  |   0
->  Documentation/hwmon/{ltc4260 => ltc4260.rst}  |   0
->  Documentation/hwmon/{ltc4261 => ltc4261.rst}  |   0
->  .../hwmon/{max16064 => max16064.rst}          |   2 +-
->  .../hwmon/{max16065 => max16065.rst}          |   0
->  Documentation/hwmon/{max1619 => max1619.rst}  |   1 -
->  Documentation/hwmon/{max1668 => max1668.rst}  |   0
->  Documentation/hwmon/{max197 => max197.rst}    |   0
->  .../hwmon/{max20751 => max20751.rst}          |   2 +-
->  .../hwmon/{max31722 => max31722.rst}          |   0
->  .../hwmon/{max31785 => max31785.rst}          |   0
->  .../hwmon/{max31790 => max31790.rst}          |   0
->  .../hwmon/{max34440 => max34440.rst}          |   2 +-
->  Documentation/hwmon/{max6639 => max6639.rst}  |   0
->  Documentation/hwmon/{max6642 => max6642.rst}  |   0
->  Documentation/hwmon/{max6650 => max6650.rst}  |   1 -
->  Documentation/hwmon/{max6697 => max6697.rst}  |   0
->  Documentation/hwmon/{max8688 => max8688.rst}  |   2 +-
->  .../hwmon/{mc13783-adc => mc13783-adc.rst}    |   0
->  Documentation/hwmon/{mcp3021 => mcp3021.rst}  |   0
->  .../hwmon/{menf21bmc => menf21bmc.rst}        |   0
->  .../hwmon/{mlxreg-fan => mlxreg-fan.rst}      |   0
->  Documentation/hwmon/{nct6683 => nct6683.rst}  |   0
->  Documentation/hwmon/{nct6775 => nct6775.rst}  |   0
->  Documentation/hwmon/{nct7802 => nct7802.rst}  |   0
->  Documentation/hwmon/{nct7904 => nct7904.rst}  |   0
->  .../{npcm750-pwm-fan => npcm750-pwm-fan.rst}  |   0
->  Documentation/hwmon/{nsa320 => nsa320.rst}    |   0
->  .../{ntc_thermistor => ntc_thermistor.rst}    |   0
->  Documentation/hwmon/{occ => occ.rst}          |   0
->  Documentation/hwmon/{pc87360 => pc87360.rst}  |   0
->  Documentation/hwmon/{pc87427 => pc87427.rst}  |   0
->  Documentation/hwmon/{pcf8591 => pcf8591.rst}  |   0
->  .../hwmon/{pmbus-core => pmbus-core.rst}      |   0
->  Documentation/hwmon/{pmbus => pmbus.rst}      |   0
->  .../hwmon/{powr1220 => powr1220.rst}          |   0
->  Documentation/hwmon/{pwm-fan => pwm-fan.rst}  |   0
->  ...aspberrypi-hwmon => raspberrypi-hwmon.rst} |   0
->  Documentation/hwmon/{sch5627 => sch5627.rst}  |   0
->  Documentation/hwmon/{sch5636 => sch5636.rst}  |   0
->  .../hwmon/{scpi-hwmon => scpi-hwmon.rst}      |   0
->  Documentation/hwmon/{sht15 => sht15.rst}      |   0
->  Documentation/hwmon/{sht21 => sht21.rst}      |   0
->  Documentation/hwmon/{sht3x => sht3x.rst}      |   0
->  Documentation/hwmon/{shtc1 => shtc1.rst}      |   0
->  Documentation/hwmon/{sis5595 => sis5595.rst}  |   1 -
->  Documentation/hwmon/{smm665 => smm665.rst}    |   0
->  .../hwmon/{smsc47b397 => smsc47b397.rst}      |   0
->  .../hwmon/{smsc47m1 => smsc47m1.rst}          |   0
->  .../hwmon/{smsc47m192 => smsc47m192.rst}      |   0
->  ...mitting-patches => submitting-patches.rst} |   6 +-
->  .../{sysfs-interface => sysfs-interface.rst}  |   0
->  Documentation/hwmon/{tc654 => tc654.rst}      |   0
->  Documentation/hwmon/{tc74 => tc74.rst}        |   0
->  Documentation/hwmon/{thmc50 => thmc50.rst}    |   1 -
->  Documentation/hwmon/{tmp102 => tmp102.rst}    |   2 +-
->  Documentation/hwmon/{tmp103 => tmp103.rst}    |   2 +-
->  Documentation/hwmon/{tmp108 => tmp108.rst}    |   2 +-
->  Documentation/hwmon/{tmp401 => tmp401.rst}    |   2 +-
->  Documentation/hwmon/{tmp421 => tmp421.rst}    |   0
->  .../hwmon/{tps40422 => tps40422.rst}          |   2 +-
->  ...4030-madc-hwmon => twl4030-madc-hwmon.rst} |   0
->  Documentation/hwmon/{ucd9000 => ucd9000.rst}  |   4 +-
->  Documentation/hwmon/{ucd9200 => ucd9200.rst}  |   4 +-
->  .../{userspace-tools => userspace-tools.rst}  |   0
->  .../hwmon/{vexpress => vexpress.rst}          |   0
-
-For the vexpress part:
-
-Acked-by: Liviu Dudau <liviu.dudau@arm.com>
-
-Best regards,
-Liviu
-
->  Documentation/hwmon/{via686a => via686a.rst}  |   0
->  Documentation/hwmon/{vt1211 => vt1211.rst}    |   0
->  .../hwmon/{w83627ehf => w83627ehf.rst}        |   0
->  .../hwmon/{w83627hf => w83627hf.rst}          |   0
->  Documentation/hwmon/{w83773g => w83773g.rst}  |   0
->  Documentation/hwmon/{w83781d => w83781d.rst}  |   0
->  Documentation/hwmon/{w83791d => w83791d.rst}  |   2 +-
->  Documentation/hwmon/{w83792d => w83792d.rst}  |   0
->  Documentation/hwmon/{w83793 => w83793.rst}    |   0
->  Documentation/hwmon/{w83795 => w83795.rst}    |   0
->  .../hwmon/{w83l785ts => w83l785ts.rst}        |   0
->  .../hwmon/{w83l786ng => w83l786ng.rst}        |   0
->  Documentation/hwmon/{wm831x => wm831x.rst}    |   0
->  Documentation/hwmon/{wm8350 => wm8350.rst}    |   0
->  .../hwmon/{xgene-hwmon => xgene-hwmon.rst}    |   0
->  Documentation/hwmon/{zl6100 => zl6100.rst}    |   2 +-
->  Documentation/index.rst                       |   1 +
->  Documentation/thermal/sysfs-api.txt           |   2 +-
->  MAINTAINERS                                   | 108 +++++------
->  drivers/hwmon/Kconfig                         |   8 +-
->  drivers/hwmon/ads7828.c                       |   2 +-
->  drivers/hwmon/max197.c                        |   2 +-
->  drivers/hwmon/sht15.c                         |   2 +-
->  include/linux/platform_data/ads7828.h         |   2 +-
->  include/linux/platform_data/ds620.h           |   2 +-
->  include/linux/platform_data/ina2xx.h          |   2 +-
->  include/linux/platform_data/max197.h          |   2 +-
->  include/linux/platform_data/ntc_thermistor.h  |   2 +-
->  173 files changed, 275 insertions(+), 102 deletions(-)
->  rename Documentation/hwmon/{ab8500 => ab8500.rst} (86%)
->  rename Documentation/hwmon/{abituguru-datasheet => abituguru-datasheet.rst} (100%)
->  rename Documentation/hwmon/{abituguru => abituguru.rst} (100%)
->  rename Documentation/hwmon/{abituguru3 => abituguru3.rst} (100%)
->  rename Documentation/hwmon/{abx500 => abx500.rst} (100%)
->  rename Documentation/hwmon/{acpi_power_meter => acpi_power_meter.rst} (97%)
->  rename Documentation/hwmon/{ad7314 => ad7314.rst} (100%)
->  rename Documentation/hwmon/{adc128d818 => adc128d818.rst} (100%)
->  rename Documentation/hwmon/{adm1021 => adm1021.rst} (100%)
->  rename Documentation/hwmon/{adm1025 => adm1025.rst} (100%)
->  rename Documentation/hwmon/{adm1026 => adm1026.rst} (100%)
->  rename Documentation/hwmon/{adm1031 => adm1031.rst} (100%)
->  rename Documentation/hwmon/{adm1275 => adm1275.rst} (97%)
->  rename Documentation/hwmon/{adm9240 => adm9240.rst} (100%)
->  rename Documentation/hwmon/{ads1015 => ads1015.rst} (100%)
->  rename Documentation/hwmon/{ads7828 => ads7828.rst} (100%)
->  rename Documentation/hwmon/{adt7410 => adt7410.rst} (100%)
->  rename Documentation/hwmon/{adt7411 => adt7411.rst} (100%)
->  rename Documentation/hwmon/{adt7462 => adt7462.rst} (99%)
->  rename Documentation/hwmon/{adt7470 => adt7470.rst} (100%)
->  rename Documentation/hwmon/{adt7475 => adt7475.rst} (100%)
->  rename Documentation/hwmon/{amc6821 => amc6821.rst} (99%)
->  rename Documentation/hwmon/{asb100 => asb100.rst} (99%)
->  rename Documentation/hwmon/{asc7621 => asc7621.rst} (100%)
->  rename Documentation/hwmon/{aspeed-pwm-tacho => aspeed-pwm-tacho.rst} (100%)
->  rename Documentation/hwmon/{coretemp => coretemp.rst} (100%)
->  rename Documentation/hwmon/{da9052 => da9052.rst} (100%)
->  rename Documentation/hwmon/{da9055 => da9055.rst} (100%)
->  rename Documentation/hwmon/{dme1737 => dme1737.rst} (100%)
->  rename Documentation/hwmon/{ds1621 => ds1621.rst} (100%)
->  rename Documentation/hwmon/{ds620 => ds620.rst} (100%)
->  rename Documentation/hwmon/{emc1403 => emc1403.rst} (100%)
->  rename Documentation/hwmon/{emc2103 => emc2103.rst} (100%)
->  rename Documentation/hwmon/{emc6w201 => emc6w201.rst} (100%)
->  rename Documentation/hwmon/{f71805f => f71805f.rst} (100%)
->  rename Documentation/hwmon/{f71882fg => f71882fg.rst} (100%)
->  rename Documentation/hwmon/{fam15h_power => fam15h_power.rst} (100%)
->  rename Documentation/hwmon/{ftsteutates => ftsteutates.rst} (100%)
->  rename Documentation/hwmon/{g760a => g760a.rst} (100%)
->  rename Documentation/hwmon/{g762 => g762.rst} (97%)
->  rename Documentation/hwmon/{gl518sm => gl518sm.rst} (100%)
->  rename Documentation/hwmon/{hih6130 => hih6130.rst} (100%)
->  rename Documentation/hwmon/{hwmon-kernel-api.txt => hwmon-kernel-api.rst} (99%)
->  rename Documentation/hwmon/{ibm-cffps => ibm-cffps.rst} (100%)
->  rename Documentation/hwmon/{ibmaem => ibmaem.rst} (100%)
->  rename Documentation/hwmon/{ibmpowernv => ibmpowernv.rst} (100%)
->  rename Documentation/hwmon/{ina209 => ina209.rst} (100%)
->  rename Documentation/hwmon/{ina2xx => ina2xx.rst} (97%)
->  rename Documentation/hwmon/{ina3221 => ina3221.rst} (100%)
->  create mode 100644 Documentation/hwmon/index.rst
->  rename Documentation/hwmon/{ir35221 => ir35221.rst} (100%)
->  rename Documentation/hwmon/{it87 => it87.rst} (100%)
->  rename Documentation/hwmon/{jc42 => jc42.rst} (100%)
->  rename Documentation/hwmon/{k10temp => k10temp.rst} (100%)
->  rename Documentation/hwmon/{k8temp => k8temp.rst} (100%)
->  rename Documentation/hwmon/{lineage-pem => lineage-pem.rst} (100%)
->  rename Documentation/hwmon/{lm25066 => lm25066.rst} (97%)
->  rename Documentation/hwmon/{lm63 => lm63.rst} (100%)
->  rename Documentation/hwmon/{lm70 => lm70.rst} (100%)
->  rename Documentation/hwmon/{lm73 => lm73.rst} (100%)
->  rename Documentation/hwmon/{lm75 => lm75.rst} (100%)
->  rename Documentation/hwmon/{lm77 => lm77.rst} (100%)
->  rename Documentation/hwmon/{lm78 => lm78.rst} (100%)
->  rename Documentation/hwmon/{lm80 => lm80.rst} (100%)
->  rename Documentation/hwmon/{lm83 => lm83.rst} (100%)
->  rename Documentation/hwmon/{lm85 => lm85.rst} (100%)
->  rename Documentation/hwmon/{lm87 => lm87.rst} (100%)
->  rename Documentation/hwmon/{lm90 => lm90.rst} (100%)
->  rename Documentation/hwmon/{lm92 => lm92.rst} (100%)
->  rename Documentation/hwmon/{lm93 => lm93.rst} (100%)
->  rename Documentation/hwmon/{lm95234 => lm95234.rst} (100%)
->  rename Documentation/hwmon/{lm95245 => lm95245.rst} (100%)
->  rename Documentation/hwmon/{ltc2945 => ltc2945.rst} (100%)
->  rename Documentation/hwmon/{ltc2978 => ltc2978.rst} (100%)
->  rename Documentation/hwmon/{ltc2990 => ltc2990.rst} (100%)
->  rename Documentation/hwmon/{ltc3815 => ltc3815.rst} (100%)
->  rename Documentation/hwmon/{ltc4151 => ltc4151.rst} (100%)
->  rename Documentation/hwmon/{ltc4215 => ltc4215.rst} (100%)
->  rename Documentation/hwmon/{ltc4245 => ltc4245.rst} (100%)
->  rename Documentation/hwmon/{ltc4260 => ltc4260.rst} (100%)
->  rename Documentation/hwmon/{ltc4261 => ltc4261.rst} (100%)
->  rename Documentation/hwmon/{max16064 => max16064.rst} (96%)
->  rename Documentation/hwmon/{max16065 => max16065.rst} (100%)
->  rename Documentation/hwmon/{max1619 => max1619.rst} (99%)
->  rename Documentation/hwmon/{max1668 => max1668.rst} (100%)
->  rename Documentation/hwmon/{max197 => max197.rst} (100%)
->  rename Documentation/hwmon/{max20751 => max20751.rst} (96%)
->  rename Documentation/hwmon/{max31722 => max31722.rst} (100%)
->  rename Documentation/hwmon/{max31785 => max31785.rst} (100%)
->  rename Documentation/hwmon/{max31790 => max31790.rst} (100%)
->  rename Documentation/hwmon/{max34440 => max34440.rst} (98%)
->  rename Documentation/hwmon/{max6639 => max6639.rst} (100%)
->  rename Documentation/hwmon/{max6642 => max6642.rst} (100%)
->  rename Documentation/hwmon/{max6650 => max6650.rst} (99%)
->  rename Documentation/hwmon/{max6697 => max6697.rst} (100%)
->  rename Documentation/hwmon/{max8688 => max8688.rst} (97%)
->  rename Documentation/hwmon/{mc13783-adc => mc13783-adc.rst} (100%)
->  rename Documentation/hwmon/{mcp3021 => mcp3021.rst} (100%)
->  rename Documentation/hwmon/{menf21bmc => menf21bmc.rst} (100%)
->  rename Documentation/hwmon/{mlxreg-fan => mlxreg-fan.rst} (100%)
->  rename Documentation/hwmon/{nct6683 => nct6683.rst} (100%)
->  rename Documentation/hwmon/{nct6775 => nct6775.rst} (100%)
->  rename Documentation/hwmon/{nct7802 => nct7802.rst} (100%)
->  rename Documentation/hwmon/{nct7904 => nct7904.rst} (100%)
->  rename Documentation/hwmon/{npcm750-pwm-fan => npcm750-pwm-fan.rst} (100%)
->  rename Documentation/hwmon/{nsa320 => nsa320.rst} (100%)
->  rename Documentation/hwmon/{ntc_thermistor => ntc_thermistor.rst} (100%)
->  rename Documentation/hwmon/{occ => occ.rst} (100%)
->  rename Documentation/hwmon/{pc87360 => pc87360.rst} (100%)
->  rename Documentation/hwmon/{pc87427 => pc87427.rst} (100%)
->  rename Documentation/hwmon/{pcf8591 => pcf8591.rst} (100%)
->  rename Documentation/hwmon/{pmbus-core => pmbus-core.rst} (100%)
->  rename Documentation/hwmon/{pmbus => pmbus.rst} (100%)
->  rename Documentation/hwmon/{powr1220 => powr1220.rst} (100%)
->  rename Documentation/hwmon/{pwm-fan => pwm-fan.rst} (100%)
->  rename Documentation/hwmon/{raspberrypi-hwmon => raspberrypi-hwmon.rst} (100%)
->  rename Documentation/hwmon/{sch5627 => sch5627.rst} (100%)
->  rename Documentation/hwmon/{sch5636 => sch5636.rst} (100%)
->  rename Documentation/hwmon/{scpi-hwmon => scpi-hwmon.rst} (100%)
->  rename Documentation/hwmon/{sht15 => sht15.rst} (100%)
->  rename Documentation/hwmon/{sht21 => sht21.rst} (100%)
->  rename Documentation/hwmon/{sht3x => sht3x.rst} (100%)
->  rename Documentation/hwmon/{shtc1 => shtc1.rst} (100%)
->  rename Documentation/hwmon/{sis5595 => sis5595.rst} (99%)
->  rename Documentation/hwmon/{smm665 => smm665.rst} (100%)
->  rename Documentation/hwmon/{smsc47b397 => smsc47b397.rst} (100%)
->  rename Documentation/hwmon/{smsc47m1 => smsc47m1.rst} (100%)
->  rename Documentation/hwmon/{smsc47m192 => smsc47m192.rst} (100%)
->  rename Documentation/hwmon/{submitting-patches => submitting-patches.rst} (98%)
->  rename Documentation/hwmon/{sysfs-interface => sysfs-interface.rst} (100%)
->  rename Documentation/hwmon/{tc654 => tc654.rst} (100%)
->  rename Documentation/hwmon/{tc74 => tc74.rst} (100%)
->  rename Documentation/hwmon/{thmc50 => thmc50.rst} (99%)
->  rename Documentation/hwmon/{tmp102 => tmp102.rst} (93%)
->  rename Documentation/hwmon/{tmp103 => tmp103.rst} (92%)
->  rename Documentation/hwmon/{tmp108 => tmp108.rst} (95%)
->  rename Documentation/hwmon/{tmp401 => tmp401.rst} (97%)
->  rename Documentation/hwmon/{tmp421 => tmp421.rst} (100%)
->  rename Documentation/hwmon/{tps40422 => tps40422.rst} (96%)
->  rename Documentation/hwmon/{twl4030-madc-hwmon => twl4030-madc-hwmon.rst} (100%)
->  rename Documentation/hwmon/{ucd9000 => ucd9000.rst} (97%)
->  rename Documentation/hwmon/{ucd9200 => ucd9200.rst} (97%)
->  rename Documentation/hwmon/{userspace-tools => userspace-tools.rst} (100%)
->  rename Documentation/hwmon/{vexpress => vexpress.rst} (100%)
->  rename Documentation/hwmon/{via686a => via686a.rst} (100%)
->  rename Documentation/hwmon/{vt1211 => vt1211.rst} (100%)
->  rename Documentation/hwmon/{w83627ehf => w83627ehf.rst} (100%)
->  rename Documentation/hwmon/{w83627hf => w83627hf.rst} (100%)
->  rename Documentation/hwmon/{w83773g => w83773g.rst} (100%)
->  rename Documentation/hwmon/{w83781d => w83781d.rst} (100%)
->  rename Documentation/hwmon/{w83791d => w83791d.rst} (99%)
->  rename Documentation/hwmon/{w83792d => w83792d.rst} (100%)
->  rename Documentation/hwmon/{w83793 => w83793.rst} (100%)
->  rename Documentation/hwmon/{w83795 => w83795.rst} (100%)
->  rename Documentation/hwmon/{w83l785ts => w83l785ts.rst} (100%)
->  rename Documentation/hwmon/{w83l786ng => w83l786ng.rst} (100%)
->  rename Documentation/hwmon/{wm831x => wm831x.rst} (100%)
->  rename Documentation/hwmon/{wm8350 => wm8350.rst} (100%)
->  rename Documentation/hwmon/{xgene-hwmon => xgene-hwmon.rst} (100%)
->  rename Documentation/hwmon/{zl6100 => zl6100.rst} (98%)
-> 
-> diff --git a/Documentation/devicetree/bindings/hwmon/g762.txt b/Documentation/devicetree/bindings/hwmon/g762.txt
-> index 25cc6d8ee575..6d154c4923de 100644
-> --- a/Documentation/devicetree/bindings/hwmon/g762.txt
-> +++ b/Documentation/devicetree/bindings/hwmon/g762.txt
-> @@ -21,7 +21,7 @@ If an optional property is not set in .dts file, then current value is kept
->  unmodified (e.g. u-boot installed value).
->  
->  Additional information on operational parameters for the device is available
-> -in Documentation/hwmon/g762. A detailed datasheet for the device is available
-> +in Documentation/hwmon/g762.rst. A detailed datasheet for the device is available
->  at http://natisbad.org/NAS/refs/GMT_EDS-762_763-080710-0.2.pdf.
->  
->  Example g762 node:
-> diff --git a/Documentation/hwmon/ab8500 b/Documentation/hwmon/ab8500.rst
-> similarity index 86%
-> rename from Documentation/hwmon/ab8500
-> rename to Documentation/hwmon/ab8500.rst
-> index d87c61151239..33f93a9cec04 100644
-> --- a/Documentation/hwmon/ab8500
-> +++ b/Documentation/hwmon/ab8500.rst
-> @@ -18,7 +18,7 @@ Authors:
->  Description
->  -----------
->  
-> -See also Documentation/hwmon/abx500. This is the ST-Ericsson AB8500 specific
-> +See also Documentation/hwmon/abx500.rst. This is the ST-Ericsson AB8500 specific
->  driver.
->  
->  Currently only the AB8500 internal sensor and one external sensor for battery
-> diff --git a/Documentation/hwmon/abituguru-datasheet b/Documentation/hwmon/abituguru-datasheet.rst
-> similarity index 100%
-> rename from Documentation/hwmon/abituguru-datasheet
-> rename to Documentation/hwmon/abituguru-datasheet.rst
-> diff --git a/Documentation/hwmon/abituguru b/Documentation/hwmon/abituguru.rst
-> similarity index 100%
-> rename from Documentation/hwmon/abituguru
-> rename to Documentation/hwmon/abituguru.rst
-> diff --git a/Documentation/hwmon/abituguru3 b/Documentation/hwmon/abituguru3.rst
-> similarity index 100%
-> rename from Documentation/hwmon/abituguru3
-> rename to Documentation/hwmon/abituguru3.rst
-> diff --git a/Documentation/hwmon/abx500 b/Documentation/hwmon/abx500.rst
-> similarity index 100%
-> rename from Documentation/hwmon/abx500
-> rename to Documentation/hwmon/abx500.rst
-> diff --git a/Documentation/hwmon/acpi_power_meter b/Documentation/hwmon/acpi_power_meter.rst
-> similarity index 97%
-> rename from Documentation/hwmon/acpi_power_meter
-> rename to Documentation/hwmon/acpi_power_meter.rst
-> index 7665ca6ba957..4a0941ade0ca 100644
-> --- a/Documentation/hwmon/acpi_power_meter
-> +++ b/Documentation/hwmon/acpi_power_meter.rst
-> @@ -21,7 +21,7 @@ the ACPI 4.0 spec (Chapter 10.4).  These devices have a simple set of
->  features--a power meter that returns average power use over a configurable
->  interval, an optional capping mechanism, and a couple of trip points.  The
->  sysfs interface conforms with the specification outlined in the "Power" section
-> -of Documentation/hwmon/sysfs-interface.
-> +of Documentation/hwmon/sysfs-interface.rst.
->  
->  Special Features
->  ----------------
-> diff --git a/Documentation/hwmon/ad7314 b/Documentation/hwmon/ad7314.rst
-> similarity index 100%
-> rename from Documentation/hwmon/ad7314
-> rename to Documentation/hwmon/ad7314.rst
-> diff --git a/Documentation/hwmon/adc128d818 b/Documentation/hwmon/adc128d818.rst
-> similarity index 100%
-> rename from Documentation/hwmon/adc128d818
-> rename to Documentation/hwmon/adc128d818.rst
-> diff --git a/Documentation/hwmon/adm1021 b/Documentation/hwmon/adm1021.rst
-> similarity index 100%
-> rename from Documentation/hwmon/adm1021
-> rename to Documentation/hwmon/adm1021.rst
-> diff --git a/Documentation/hwmon/adm1025 b/Documentation/hwmon/adm1025.rst
-> similarity index 100%
-> rename from Documentation/hwmon/adm1025
-> rename to Documentation/hwmon/adm1025.rst
-> diff --git a/Documentation/hwmon/adm1026 b/Documentation/hwmon/adm1026.rst
-> similarity index 100%
-> rename from Documentation/hwmon/adm1026
-> rename to Documentation/hwmon/adm1026.rst
-> diff --git a/Documentation/hwmon/adm1031 b/Documentation/hwmon/adm1031.rst
-> similarity index 100%
-> rename from Documentation/hwmon/adm1031
-> rename to Documentation/hwmon/adm1031.rst
-> diff --git a/Documentation/hwmon/adm1275 b/Documentation/hwmon/adm1275.rst
-> similarity index 97%
-> rename from Documentation/hwmon/adm1275
-> rename to Documentation/hwmon/adm1275.rst
-> index 5c5860011d6e..9a1913e5b4d9 100644
-> --- a/Documentation/hwmon/adm1275
-> +++ b/Documentation/hwmon/adm1275.rst
-> @@ -68,7 +68,7 @@ integrated 12 bit analog-to-digital converter (ADC), accessed using a
->  PMBus interface.
->  
->  The driver is a client driver to the core PMBus driver. Please see
-> -Documentation/hwmon/pmbus for details on PMBus client drivers.
-> +Documentation/hwmon/pmbus.rst for details on PMBus client drivers.
->  
->  
->  Usage Notes
-> @@ -90,7 +90,7 @@ Platform data support
->  ---------------------
->  
->  The driver supports standard PMBus driver platform data. Please see
-> -Documentation/hwmon/pmbus for details.
-> +Documentation/hwmon/pmbus.rst for details.
->  
->  
->  Sysfs entries
-> diff --git a/Documentation/hwmon/adm9240 b/Documentation/hwmon/adm9240.rst
-> similarity index 100%
-> rename from Documentation/hwmon/adm9240
-> rename to Documentation/hwmon/adm9240.rst
-> diff --git a/Documentation/hwmon/ads1015 b/Documentation/hwmon/ads1015.rst
-> similarity index 100%
-> rename from Documentation/hwmon/ads1015
-> rename to Documentation/hwmon/ads1015.rst
-> diff --git a/Documentation/hwmon/ads7828 b/Documentation/hwmon/ads7828.rst
-> similarity index 100%
-> rename from Documentation/hwmon/ads7828
-> rename to Documentation/hwmon/ads7828.rst
-> diff --git a/Documentation/hwmon/adt7410 b/Documentation/hwmon/adt7410.rst
-> similarity index 100%
-> rename from Documentation/hwmon/adt7410
-> rename to Documentation/hwmon/adt7410.rst
-> diff --git a/Documentation/hwmon/adt7411 b/Documentation/hwmon/adt7411.rst
-> similarity index 100%
-> rename from Documentation/hwmon/adt7411
-> rename to Documentation/hwmon/adt7411.rst
-> diff --git a/Documentation/hwmon/adt7462 b/Documentation/hwmon/adt7462.rst
-> similarity index 99%
-> rename from Documentation/hwmon/adt7462
-> rename to Documentation/hwmon/adt7462.rst
-> index a7a831118d32..139e19696188 100644
-> --- a/Documentation/hwmon/adt7462
-> +++ b/Documentation/hwmon/adt7462.rst
-> @@ -68,4 +68,3 @@ The ADT7462 will scale the pwm between the lower and higher pwm speed when
->  the temperature is between the two temperature boundaries.  PWM values range
->  from 0 (off) to 255 (full speed).  Fan speed will be set to maximum when the
->  temperature sensor associated with the PWM control exceeds temp#_max.
-> -
-> diff --git a/Documentation/hwmon/adt7470 b/Documentation/hwmon/adt7470.rst
-> similarity index 100%
-> rename from Documentation/hwmon/adt7470
-> rename to Documentation/hwmon/adt7470.rst
-> diff --git a/Documentation/hwmon/adt7475 b/Documentation/hwmon/adt7475.rst
-> similarity index 100%
-> rename from Documentation/hwmon/adt7475
-> rename to Documentation/hwmon/adt7475.rst
-> diff --git a/Documentation/hwmon/amc6821 b/Documentation/hwmon/amc6821.rst
-> similarity index 99%
-> rename from Documentation/hwmon/amc6821
-> rename to Documentation/hwmon/amc6821.rst
-> index d10eabcbc0f3..5ddb2849da90 100644
-> --- a/Documentation/hwmon/amc6821
-> +++ b/Documentation/hwmon/amc6821.rst
-> @@ -106,4 +106,3 @@ different settings, you can set the following parameters:
->  
->  - init=1,
->  - pwminv: 0 default pwm output, 1 inverts pwm output.
-> -
-> diff --git a/Documentation/hwmon/asb100 b/Documentation/hwmon/asb100.rst
-> similarity index 99%
-> rename from Documentation/hwmon/asb100
-> rename to Documentation/hwmon/asb100.rst
-> index 311d9f7b6926..c2d5f97085fe 100644
-> --- a/Documentation/hwmon/asb100
-> +++ b/Documentation/hwmon/asb100.rst
-> @@ -71,4 +71,3 @@ TODO:
->    * Experiment with temp. sensor types.
->    * Are there really 13 voltage inputs? Probably not...
->    * Cleanups, no doubt...
-> -
-> diff --git a/Documentation/hwmon/asc7621 b/Documentation/hwmon/asc7621.rst
-> similarity index 100%
-> rename from Documentation/hwmon/asc7621
-> rename to Documentation/hwmon/asc7621.rst
-> diff --git a/Documentation/hwmon/aspeed-pwm-tacho b/Documentation/hwmon/aspeed-pwm-tacho.rst
-> similarity index 100%
-> rename from Documentation/hwmon/aspeed-pwm-tacho
-> rename to Documentation/hwmon/aspeed-pwm-tacho.rst
-> diff --git a/Documentation/hwmon/coretemp b/Documentation/hwmon/coretemp.rst
-> similarity index 100%
-> rename from Documentation/hwmon/coretemp
-> rename to Documentation/hwmon/coretemp.rst
-> diff --git a/Documentation/hwmon/da9052 b/Documentation/hwmon/da9052.rst
-> similarity index 100%
-> rename from Documentation/hwmon/da9052
-> rename to Documentation/hwmon/da9052.rst
-> diff --git a/Documentation/hwmon/da9055 b/Documentation/hwmon/da9055.rst
-> similarity index 100%
-> rename from Documentation/hwmon/da9055
-> rename to Documentation/hwmon/da9055.rst
-> diff --git a/Documentation/hwmon/dme1737 b/Documentation/hwmon/dme1737.rst
-> similarity index 100%
-> rename from Documentation/hwmon/dme1737
-> rename to Documentation/hwmon/dme1737.rst
-> diff --git a/Documentation/hwmon/ds1621 b/Documentation/hwmon/ds1621.rst
-> similarity index 100%
-> rename from Documentation/hwmon/ds1621
-> rename to Documentation/hwmon/ds1621.rst
-> diff --git a/Documentation/hwmon/ds620 b/Documentation/hwmon/ds620.rst
-> similarity index 100%
-> rename from Documentation/hwmon/ds620
-> rename to Documentation/hwmon/ds620.rst
-> diff --git a/Documentation/hwmon/emc1403 b/Documentation/hwmon/emc1403.rst
-> similarity index 100%
-> rename from Documentation/hwmon/emc1403
-> rename to Documentation/hwmon/emc1403.rst
-> diff --git a/Documentation/hwmon/emc2103 b/Documentation/hwmon/emc2103.rst
-> similarity index 100%
-> rename from Documentation/hwmon/emc2103
-> rename to Documentation/hwmon/emc2103.rst
-> diff --git a/Documentation/hwmon/emc6w201 b/Documentation/hwmon/emc6w201.rst
-> similarity index 100%
-> rename from Documentation/hwmon/emc6w201
-> rename to Documentation/hwmon/emc6w201.rst
-> diff --git a/Documentation/hwmon/f71805f b/Documentation/hwmon/f71805f.rst
-> similarity index 100%
-> rename from Documentation/hwmon/f71805f
-> rename to Documentation/hwmon/f71805f.rst
-> diff --git a/Documentation/hwmon/f71882fg b/Documentation/hwmon/f71882fg.rst
-> similarity index 100%
-> rename from Documentation/hwmon/f71882fg
-> rename to Documentation/hwmon/f71882fg.rst
-> diff --git a/Documentation/hwmon/fam15h_power b/Documentation/hwmon/fam15h_power.rst
-> similarity index 100%
-> rename from Documentation/hwmon/fam15h_power
-> rename to Documentation/hwmon/fam15h_power.rst
-> diff --git a/Documentation/hwmon/ftsteutates b/Documentation/hwmon/ftsteutates.rst
-> similarity index 100%
-> rename from Documentation/hwmon/ftsteutates
-> rename to Documentation/hwmon/ftsteutates.rst
-> diff --git a/Documentation/hwmon/g760a b/Documentation/hwmon/g760a.rst
-> similarity index 100%
-> rename from Documentation/hwmon/g760a
-> rename to Documentation/hwmon/g760a.rst
-> diff --git a/Documentation/hwmon/g762 b/Documentation/hwmon/g762.rst
-> similarity index 97%
-> rename from Documentation/hwmon/g762
-> rename to Documentation/hwmon/g762.rst
-> index 54574e26df21..0371b3365c48 100644
-> --- a/Documentation/hwmon/g762
-> +++ b/Documentation/hwmon/g762.rst
-> @@ -7,7 +7,7 @@ modes - PWM or DC - are supported by the device.
->  
->  For additional information, a detailed datasheet is available at
->  http://natisbad.org/NAS/ref/GMT_EDS-762_763-080710-0.2.pdf. sysfs
-> -bindings are described in Documentation/hwmon/sysfs-interface.
-> +bindings are described in Documentation/hwmon/sysfs-interface.rst.
->  
->  The following entries are available to the user in a subdirectory of
->  /sys/bus/i2c/drivers/g762/ to control the operation of the device.
-> diff --git a/Documentation/hwmon/gl518sm b/Documentation/hwmon/gl518sm.rst
-> similarity index 100%
-> rename from Documentation/hwmon/gl518sm
-> rename to Documentation/hwmon/gl518sm.rst
-> diff --git a/Documentation/hwmon/hih6130 b/Documentation/hwmon/hih6130.rst
-> similarity index 100%
-> rename from Documentation/hwmon/hih6130
-> rename to Documentation/hwmon/hih6130.rst
-> diff --git a/Documentation/hwmon/hwmon-kernel-api.txt b/Documentation/hwmon/hwmon-kernel-api.rst
-> similarity index 99%
-> rename from Documentation/hwmon/hwmon-kernel-api.txt
-> rename to Documentation/hwmon/hwmon-kernel-api.rst
-> index b347b959fcda..c41eb6108103 100644
-> --- a/Documentation/hwmon/hwmon-kernel-api.txt
-> +++ b/Documentation/hwmon/hwmon-kernel-api.rst
-> @@ -12,10 +12,10 @@ drivers that want to use the hardware monitoring framework.
->  This document does not describe what a hardware monitoring (hwmon) Driver or
->  Device is. It also does not describe the API which can be used by user space
->  to communicate with a hardware monitoring device. If you want to know this
-> -then please read the following file: Documentation/hwmon/sysfs-interface.
-> +then please read the following file: Documentation/hwmon/sysfs-interface.rst.
->  
->  For additional guidelines on how to write and improve hwmon drivers, please
-> -also read Documentation/hwmon/submitting-patches.
-> +also read Documentation/hwmon/submitting-patches.rst.
->  
->  The API
->  -------
-> diff --git a/Documentation/hwmon/ibm-cffps b/Documentation/hwmon/ibm-cffps.rst
-> similarity index 100%
-> rename from Documentation/hwmon/ibm-cffps
-> rename to Documentation/hwmon/ibm-cffps.rst
-> diff --git a/Documentation/hwmon/ibmaem b/Documentation/hwmon/ibmaem.rst
-> similarity index 100%
-> rename from Documentation/hwmon/ibmaem
-> rename to Documentation/hwmon/ibmaem.rst
-> diff --git a/Documentation/hwmon/ibmpowernv b/Documentation/hwmon/ibmpowernv.rst
-> similarity index 100%
-> rename from Documentation/hwmon/ibmpowernv
-> rename to Documentation/hwmon/ibmpowernv.rst
-> diff --git a/Documentation/hwmon/ina209 b/Documentation/hwmon/ina209.rst
-> similarity index 100%
-> rename from Documentation/hwmon/ina209
-> rename to Documentation/hwmon/ina209.rst
-> diff --git a/Documentation/hwmon/ina2xx b/Documentation/hwmon/ina2xx.rst
-> similarity index 97%
-> rename from Documentation/hwmon/ina2xx
-> rename to Documentation/hwmon/ina2xx.rst
-> index 95badf9c396f..94b9a260c518 100644
-> --- a/Documentation/hwmon/ina2xx
-> +++ b/Documentation/hwmon/ina2xx.rst
-> @@ -78,7 +78,7 @@ refer to the Documentation/devicetree/bindings/hwmon/ina2xx.txt for bindings
->  if the device tree is used.
->  
->  Additionally ina226 supports update_interval attribute as described in
-> -Documentation/hwmon/sysfs-interface. Internally the interval is the sum of
-> +Documentation/hwmon/sysfs-interface.rst. Internally the interval is the sum of
->  bus and shunt voltage conversion times multiplied by the averaging rate. We
->  don't touch the conversion times and only modify the number of averages. The
->  lower limit of the update_interval is 2 ms, the upper limit is 2253 ms.
-> diff --git a/Documentation/hwmon/ina3221 b/Documentation/hwmon/ina3221.rst
-> similarity index 100%
-> rename from Documentation/hwmon/ina3221
-> rename to Documentation/hwmon/ina3221.rst
-> diff --git a/Documentation/hwmon/index.rst b/Documentation/hwmon/index.rst
-> new file mode 100644
-> index 000000000000..893804414510
-> --- /dev/null
-> +++ b/Documentation/hwmon/index.rst
-> @@ -0,0 +1,179 @@
-> +=========================
-> +Linux Hardware Monitoring
-> +=========================
-> +
-> +.. toctree::
-> +   :maxdepth: 1
-> +
-> +   hwmon-kernel-api.rst
-> +   pmbus-core.rst
-> +   submitting-patches.rst
-> +   sysfs-interface.rst
-> +   userspace-tools.rst
-> +
-> +Hardware Monitoring Kernel Drivers
-> +==================================
-> +
-> +.. toctree::
-> +   :maxdepth: 1
-> +
-> +   ab8500.rst
-> +   abituguru.rst
-> +   abituguru3.rst
-> +   abx500.rst
-> +   acpi_power_meter.rst
-> +   ad7314.rst
-> +   adc128d818.rst
-> +   adm1021.rst
-> +   adm1025.rst
-> +   adm1026.rst
-> +   adm1031.rst
-> +   adm1275.rst
-> +   adm9240.rst
-> +   ads1015.rst
-> +   ads7828.rst
-> +   adt7410.rst
-> +   adt7411.rst
-> +   adt7462.rst
-> +   adt7470.rst
-> +   adt7475.rst
-> +   amc6821.rst
-> +   asb100.rst
-> +   asc7621.rst
-> +   aspeed-pwm-tacho.rst
-> +   coretemp.rst
-> +   da9052.rst
-> +   da9055.rst
-> +   dme1737.rst
-> +   ds1621.rst
-> +   ds620.rst
-> +   emc1403.rst
-> +   emc2103.rst
-> +   emc6w201.rst
-> +   f71805f.rst
-> +   f71882fg.rst
-> +   fam15h_power.rst
-> +   ftsteutates.rst
-> +   g760a.rst
-> +   g762.rst
-> +   gl518sm.rst
-> +   hih6130.rst
-> +   ibmaem.rst
-> +   ibm-cffps.rst
-> +   ibmpowernv.rst
-> +   ina209.rst
-> +   ina2xx.rst
-> +   ina3221.rst
-> +   ir35221.rst
-> +   it87.rst
-> +   jc42.rst
-> +   k10temp.rst
-> +   k8temp.rst
-> +   lineage-pem.rst
-> +   lm25066.rst
-> +   lm63.rst
-> +   lm70.rst
-> +   lm73.rst
-> +   lm75.rst
-> +   lm77.rst
-> +   lm78.rst
-> +   lm80.rst
-> +   lm83.rst
-> +   lm85.rst
-> +   lm87.rst
-> +   lm90.rst
-> +   lm92.rst
-> +   lm93.rst
-> +   lm95234.rst
-> +   lm95245.rst
-> +   ltc2945.rst
-> +   ltc2978.rst
-> +   ltc2990.rst
-> +   ltc3815.rst
-> +   ltc4151.rst
-> +   ltc4215.rst
-> +   ltc4245.rst
-> +   ltc4260.rst
-> +   ltc4261.rst
-> +   max16064.rst
-> +   max16065.rst
-> +   max1619.rst
-> +   max1668.rst
-> +   max197.rst
-> +   max20751.rst
-> +   max31722.rst
-> +   max31785.rst
-> +   max31790.rst
-> +   max34440.rst
-> +   max6639.rst
-> +   max6642.rst
-> +   max6650.rst
-> +   max6697.rst
-> +   max8688.rst
-> +   mc13783-adc.rst
-> +   mcp3021.rst
-> +   menf21bmc.rst
-> +   mlxreg-fan.rst
-> +   nct6683.rst
-> +   nct6775.rst
-> +   nct7802.rst
-> +   nct7904.rst
-> +   npcm750-pwm-fan.rst
-> +   nsa320.rst
-> +   ntc_thermistor.rst
-> +   occ.rst
-> +   pc87360.rst
-> +   pc87427.rst
-> +   pcf8591.rst
-> +   pmbus.rst
-> +   powr1220.rst
-> +   pwm-fan.rst
-> +   raspberrypi-hwmon.rst
-> +   sch5627.rst
-> +   sch5636.rst
-> +   scpi-hwmon.rst
-> +   sht15.rst
-> +   sht21.rst
-> +   sht3x.rst
-> +   shtc1.rst
-> +   sis5595.rst
-> +   smm665.rst
-> +   smsc47b397.rst
-> +   smsc47m192.rst
-> +   smsc47m1.rst
-> +   tc654.rst
-> +   tc74.rst
-> +   thmc50.rst
-> +   tmp102.rst
-> +   tmp103.rst
-> +   tmp108.rst
-> +   tmp401.rst
-> +   tmp421.rst
-> +   tps40422.rst
-> +   twl4030-madc-hwmon.rst
-> +   ucd9000.rst
-> +   ucd9200.rst
-> +   vexpress.rst
-> +   via686a.rst
-> +   vt1211.rst
-> +   w83627ehf.rst
-> +   w83627hf.rst
-> +   w83773g.rst
-> +   w83781d.rst
-> +   w83791d.rst
-> +   w83792d.rst
-> +   w83793.rst
-> +   w83795.rst
-> +   w83l785ts.rst
-> +   w83l786ng.rst
-> +   wm831x.rst
-> +   wm8350.rst
-> +   xgene-hwmon.rst
-> +   zl6100.rst
-> +
-> +.. only::  subproject and html
-> +
-> +   Indices
-> +   =======
-> +
-> +   * :ref:`genindex`
-> diff --git a/Documentation/hwmon/ir35221 b/Documentation/hwmon/ir35221.rst
-> similarity index 100%
-> rename from Documentation/hwmon/ir35221
-> rename to Documentation/hwmon/ir35221.rst
-> diff --git a/Documentation/hwmon/it87 b/Documentation/hwmon/it87.rst
-> similarity index 100%
-> rename from Documentation/hwmon/it87
-> rename to Documentation/hwmon/it87.rst
-> diff --git a/Documentation/hwmon/jc42 b/Documentation/hwmon/jc42.rst
-> similarity index 100%
-> rename from Documentation/hwmon/jc42
-> rename to Documentation/hwmon/jc42.rst
-> diff --git a/Documentation/hwmon/k10temp b/Documentation/hwmon/k10temp.rst
-> similarity index 100%
-> rename from Documentation/hwmon/k10temp
-> rename to Documentation/hwmon/k10temp.rst
-> diff --git a/Documentation/hwmon/k8temp b/Documentation/hwmon/k8temp.rst
-> similarity index 100%
-> rename from Documentation/hwmon/k8temp
-> rename to Documentation/hwmon/k8temp.rst
-> diff --git a/Documentation/hwmon/lineage-pem b/Documentation/hwmon/lineage-pem.rst
-> similarity index 100%
-> rename from Documentation/hwmon/lineage-pem
-> rename to Documentation/hwmon/lineage-pem.rst
-> diff --git a/Documentation/hwmon/lm25066 b/Documentation/hwmon/lm25066.rst
-> similarity index 97%
-> rename from Documentation/hwmon/lm25066
-> rename to Documentation/hwmon/lm25066.rst
-> index 60b7f2722931..da15e3094c8c 100644
-> --- a/Documentation/hwmon/lm25066
-> +++ b/Documentation/hwmon/lm25066.rst
-> @@ -69,7 +69,7 @@ LM25066, LM5064, and LM5066/LM5066I Power Management, Monitoring,
->  Control, and Protection ICs.
->  
->  The driver is a client driver to the core PMBus driver. Please see
-> -Documentation/hwmon/pmbus for details on PMBus client drivers.
-> +Documentation/hwmon/pmbus.rst for details on PMBus client drivers.
->  
->  
->  Usage Notes
-> diff --git a/Documentation/hwmon/lm63 b/Documentation/hwmon/lm63.rst
-> similarity index 100%
-> rename from Documentation/hwmon/lm63
-> rename to Documentation/hwmon/lm63.rst
-> diff --git a/Documentation/hwmon/lm70 b/Documentation/hwmon/lm70.rst
-> similarity index 100%
-> rename from Documentation/hwmon/lm70
-> rename to Documentation/hwmon/lm70.rst
-> diff --git a/Documentation/hwmon/lm73 b/Documentation/hwmon/lm73.rst
-> similarity index 100%
-> rename from Documentation/hwmon/lm73
-> rename to Documentation/hwmon/lm73.rst
-> diff --git a/Documentation/hwmon/lm75 b/Documentation/hwmon/lm75.rst
-> similarity index 100%
-> rename from Documentation/hwmon/lm75
-> rename to Documentation/hwmon/lm75.rst
-> diff --git a/Documentation/hwmon/lm77 b/Documentation/hwmon/lm77.rst
-> similarity index 100%
-> rename from Documentation/hwmon/lm77
-> rename to Documentation/hwmon/lm77.rst
-> diff --git a/Documentation/hwmon/lm78 b/Documentation/hwmon/lm78.rst
-> similarity index 100%
-> rename from Documentation/hwmon/lm78
-> rename to Documentation/hwmon/lm78.rst
-> diff --git a/Documentation/hwmon/lm80 b/Documentation/hwmon/lm80.rst
-> similarity index 100%
-> rename from Documentation/hwmon/lm80
-> rename to Documentation/hwmon/lm80.rst
-> diff --git a/Documentation/hwmon/lm83 b/Documentation/hwmon/lm83.rst
-> similarity index 100%
-> rename from Documentation/hwmon/lm83
-> rename to Documentation/hwmon/lm83.rst
-> diff --git a/Documentation/hwmon/lm85 b/Documentation/hwmon/lm85.rst
-> similarity index 100%
-> rename from Documentation/hwmon/lm85
-> rename to Documentation/hwmon/lm85.rst
-> diff --git a/Documentation/hwmon/lm87 b/Documentation/hwmon/lm87.rst
-> similarity index 100%
-> rename from Documentation/hwmon/lm87
-> rename to Documentation/hwmon/lm87.rst
-> diff --git a/Documentation/hwmon/lm90 b/Documentation/hwmon/lm90.rst
-> similarity index 100%
-> rename from Documentation/hwmon/lm90
-> rename to Documentation/hwmon/lm90.rst
-> diff --git a/Documentation/hwmon/lm92 b/Documentation/hwmon/lm92.rst
-> similarity index 100%
-> rename from Documentation/hwmon/lm92
-> rename to Documentation/hwmon/lm92.rst
-> diff --git a/Documentation/hwmon/lm93 b/Documentation/hwmon/lm93.rst
-> similarity index 100%
-> rename from Documentation/hwmon/lm93
-> rename to Documentation/hwmon/lm93.rst
-> diff --git a/Documentation/hwmon/lm95234 b/Documentation/hwmon/lm95234.rst
-> similarity index 100%
-> rename from Documentation/hwmon/lm95234
-> rename to Documentation/hwmon/lm95234.rst
-> diff --git a/Documentation/hwmon/lm95245 b/Documentation/hwmon/lm95245.rst
-> similarity index 100%
-> rename from Documentation/hwmon/lm95245
-> rename to Documentation/hwmon/lm95245.rst
-> diff --git a/Documentation/hwmon/ltc2945 b/Documentation/hwmon/ltc2945.rst
-> similarity index 100%
-> rename from Documentation/hwmon/ltc2945
-> rename to Documentation/hwmon/ltc2945.rst
-> diff --git a/Documentation/hwmon/ltc2978 b/Documentation/hwmon/ltc2978.rst
-> similarity index 100%
-> rename from Documentation/hwmon/ltc2978
-> rename to Documentation/hwmon/ltc2978.rst
-> diff --git a/Documentation/hwmon/ltc2990 b/Documentation/hwmon/ltc2990.rst
-> similarity index 100%
-> rename from Documentation/hwmon/ltc2990
-> rename to Documentation/hwmon/ltc2990.rst
-> diff --git a/Documentation/hwmon/ltc3815 b/Documentation/hwmon/ltc3815.rst
-> similarity index 100%
-> rename from Documentation/hwmon/ltc3815
-> rename to Documentation/hwmon/ltc3815.rst
-> diff --git a/Documentation/hwmon/ltc4151 b/Documentation/hwmon/ltc4151.rst
-> similarity index 100%
-> rename from Documentation/hwmon/ltc4151
-> rename to Documentation/hwmon/ltc4151.rst
-> diff --git a/Documentation/hwmon/ltc4215 b/Documentation/hwmon/ltc4215.rst
-> similarity index 100%
-> rename from Documentation/hwmon/ltc4215
-> rename to Documentation/hwmon/ltc4215.rst
-> diff --git a/Documentation/hwmon/ltc4245 b/Documentation/hwmon/ltc4245.rst
-> similarity index 100%
-> rename from Documentation/hwmon/ltc4245
-> rename to Documentation/hwmon/ltc4245.rst
-> diff --git a/Documentation/hwmon/ltc4260 b/Documentation/hwmon/ltc4260.rst
-> similarity index 100%
-> rename from Documentation/hwmon/ltc4260
-> rename to Documentation/hwmon/ltc4260.rst
-> diff --git a/Documentation/hwmon/ltc4261 b/Documentation/hwmon/ltc4261.rst
-> similarity index 100%
-> rename from Documentation/hwmon/ltc4261
-> rename to Documentation/hwmon/ltc4261.rst
-> diff --git a/Documentation/hwmon/max16064 b/Documentation/hwmon/max16064.rst
-> similarity index 96%
-> rename from Documentation/hwmon/max16064
-> rename to Documentation/hwmon/max16064.rst
-> index 61ec679dc477..6d5e9538991f 100644
-> --- a/Documentation/hwmon/max16064
-> +++ b/Documentation/hwmon/max16064.rst
-> @@ -21,7 +21,7 @@ This driver supports hardware monitoring for Maxim MAX16064 Quad Power-Supply
->  Controller with Active-Voltage Output Control and PMBus Interface.
->  
->  The driver is a client driver to the core PMBus driver.
-> -Please see Documentation/hwmon/pmbus for details on PMBus client drivers.
-> +Please see Documentation/hwmon/pmbus.rst for details on PMBus client drivers.
->  
->  
->  Usage Notes
-> diff --git a/Documentation/hwmon/max16065 b/Documentation/hwmon/max16065.rst
-> similarity index 100%
-> rename from Documentation/hwmon/max16065
-> rename to Documentation/hwmon/max16065.rst
-> diff --git a/Documentation/hwmon/max1619 b/Documentation/hwmon/max1619.rst
-> similarity index 99%
-> rename from Documentation/hwmon/max1619
-> rename to Documentation/hwmon/max1619.rst
-> index 4b3762c4eceb..e25956e70f73 100644
-> --- a/Documentation/hwmon/max1619
-> +++ b/Documentation/hwmon/max1619.rst
-> @@ -31,4 +31,3 @@ Only the external sensor has high and low limits.
->  The max1619 driver will not update its values more frequently than every
->  other second; reading them more often will do no harm, but will return
->  'old' values.
-> -
-> diff --git a/Documentation/hwmon/max1668 b/Documentation/hwmon/max1668.rst
-> similarity index 100%
-> rename from Documentation/hwmon/max1668
-> rename to Documentation/hwmon/max1668.rst
-> diff --git a/Documentation/hwmon/max197 b/Documentation/hwmon/max197.rst
-> similarity index 100%
-> rename from Documentation/hwmon/max197
-> rename to Documentation/hwmon/max197.rst
-> diff --git a/Documentation/hwmon/max20751 b/Documentation/hwmon/max20751.rst
-> similarity index 96%
-> rename from Documentation/hwmon/max20751
-> rename to Documentation/hwmon/max20751.rst
-> index d546695900ef..aa4469be6674 100644
-> --- a/Documentation/hwmon/max20751
-> +++ b/Documentation/hwmon/max20751.rst
-> @@ -23,7 +23,7 @@ This driver supports MAX20751 Multiphase Master with PMBus Interface
->  and Internal Buck Converter.
->  
->  The driver is a client driver to the core PMBus driver.
-> -Please see Documentation/hwmon/pmbus for details on PMBus client drivers.
-> +Please see Documentation/hwmon/pmbus.rst for details on PMBus client drivers.
->  
->  
->  Usage Notes
-> diff --git a/Documentation/hwmon/max31722 b/Documentation/hwmon/max31722.rst
-> similarity index 100%
-> rename from Documentation/hwmon/max31722
-> rename to Documentation/hwmon/max31722.rst
-> diff --git a/Documentation/hwmon/max31785 b/Documentation/hwmon/max31785.rst
-> similarity index 100%
-> rename from Documentation/hwmon/max31785
-> rename to Documentation/hwmon/max31785.rst
-> diff --git a/Documentation/hwmon/max31790 b/Documentation/hwmon/max31790.rst
-> similarity index 100%
-> rename from Documentation/hwmon/max31790
-> rename to Documentation/hwmon/max31790.rst
-> diff --git a/Documentation/hwmon/max34440 b/Documentation/hwmon/max34440.rst
-> similarity index 98%
-> rename from Documentation/hwmon/max34440
-> rename to Documentation/hwmon/max34440.rst
-> index 639838ef29fd..939138e12b02 100644
-> --- a/Documentation/hwmon/max34440
-> +++ b/Documentation/hwmon/max34440.rst
-> @@ -76,7 +76,7 @@ based on GIN pins. The MAX34460 supports 12 voltage channels, and the MAX34461
->  supports 16 voltage channels.
->  
->  The driver is a client driver to the core PMBus driver. Please see
-> -Documentation/hwmon/pmbus for details on PMBus client drivers.
-> +Documentation/hwmon/pmbus.rst for details on PMBus client drivers.
->  
->  
->  Usage Notes
-> diff --git a/Documentation/hwmon/max6639 b/Documentation/hwmon/max6639.rst
-> similarity index 100%
-> rename from Documentation/hwmon/max6639
-> rename to Documentation/hwmon/max6639.rst
-> diff --git a/Documentation/hwmon/max6642 b/Documentation/hwmon/max6642.rst
-> similarity index 100%
-> rename from Documentation/hwmon/max6642
-> rename to Documentation/hwmon/max6642.rst
-> diff --git a/Documentation/hwmon/max6650 b/Documentation/hwmon/max6650.rst
-> similarity index 99%
-> rename from Documentation/hwmon/max6650
-> rename to Documentation/hwmon/max6650.rst
-> index 74dc3f0caaa2..253482add082 100644
-> --- a/Documentation/hwmon/max6650
-> +++ b/Documentation/hwmon/max6650.rst
-> @@ -72,4 +72,3 @@ clock: The clock frequency in Hz of the chip the driver should assume [254000]
->  
->  Please have a look at the MAX6650/6651 data sheet and make sure that you fully
->  understand the meaning of these parameters before you attempt to change them.
-> -
-> diff --git a/Documentation/hwmon/max6697 b/Documentation/hwmon/max6697.rst
-> similarity index 100%
-> rename from Documentation/hwmon/max6697
-> rename to Documentation/hwmon/max6697.rst
-> diff --git a/Documentation/hwmon/max8688 b/Documentation/hwmon/max8688.rst
-> similarity index 97%
-> rename from Documentation/hwmon/max8688
-> rename to Documentation/hwmon/max8688.rst
-> index 43da139234c1..009487759c61 100644
-> --- a/Documentation/hwmon/max8688
-> +++ b/Documentation/hwmon/max8688.rst
-> @@ -21,7 +21,7 @@ This driver supports hardware monitoring for Maxim MAX8688 Digital Power-Supply
->  Controller/Monitor with PMBus Interface.
->  
->  The driver is a client driver to the core PMBus driver. Please see
-> -Documentation/hwmon/pmbus for details on PMBus client drivers.
-> +Documentation/hwmon/pmbus.rst for details on PMBus client drivers.
->  
->  
->  Usage Notes
-> diff --git a/Documentation/hwmon/mc13783-adc b/Documentation/hwmon/mc13783-adc.rst
-> similarity index 100%
-> rename from Documentation/hwmon/mc13783-adc
-> rename to Documentation/hwmon/mc13783-adc.rst
-> diff --git a/Documentation/hwmon/mcp3021 b/Documentation/hwmon/mcp3021.rst
-> similarity index 100%
-> rename from Documentation/hwmon/mcp3021
-> rename to Documentation/hwmon/mcp3021.rst
-> diff --git a/Documentation/hwmon/menf21bmc b/Documentation/hwmon/menf21bmc.rst
-> similarity index 100%
-> rename from Documentation/hwmon/menf21bmc
-> rename to Documentation/hwmon/menf21bmc.rst
-> diff --git a/Documentation/hwmon/mlxreg-fan b/Documentation/hwmon/mlxreg-fan.rst
-> similarity index 100%
-> rename from Documentation/hwmon/mlxreg-fan
-> rename to Documentation/hwmon/mlxreg-fan.rst
-> diff --git a/Documentation/hwmon/nct6683 b/Documentation/hwmon/nct6683.rst
-> similarity index 100%
-> rename from Documentation/hwmon/nct6683
-> rename to Documentation/hwmon/nct6683.rst
-> diff --git a/Documentation/hwmon/nct6775 b/Documentation/hwmon/nct6775.rst
-> similarity index 100%
-> rename from Documentation/hwmon/nct6775
-> rename to Documentation/hwmon/nct6775.rst
-> diff --git a/Documentation/hwmon/nct7802 b/Documentation/hwmon/nct7802.rst
-> similarity index 100%
-> rename from Documentation/hwmon/nct7802
-> rename to Documentation/hwmon/nct7802.rst
-> diff --git a/Documentation/hwmon/nct7904 b/Documentation/hwmon/nct7904.rst
-> similarity index 100%
-> rename from Documentation/hwmon/nct7904
-> rename to Documentation/hwmon/nct7904.rst
-> diff --git a/Documentation/hwmon/npcm750-pwm-fan b/Documentation/hwmon/npcm750-pwm-fan.rst
-> similarity index 100%
-> rename from Documentation/hwmon/npcm750-pwm-fan
-> rename to Documentation/hwmon/npcm750-pwm-fan.rst
-> diff --git a/Documentation/hwmon/nsa320 b/Documentation/hwmon/nsa320.rst
-> similarity index 100%
-> rename from Documentation/hwmon/nsa320
-> rename to Documentation/hwmon/nsa320.rst
-> diff --git a/Documentation/hwmon/ntc_thermistor b/Documentation/hwmon/ntc_thermistor.rst
-> similarity index 100%
-> rename from Documentation/hwmon/ntc_thermistor
-> rename to Documentation/hwmon/ntc_thermistor.rst
-> diff --git a/Documentation/hwmon/occ b/Documentation/hwmon/occ.rst
-> similarity index 100%
-> rename from Documentation/hwmon/occ
-> rename to Documentation/hwmon/occ.rst
-> diff --git a/Documentation/hwmon/pc87360 b/Documentation/hwmon/pc87360.rst
-> similarity index 100%
-> rename from Documentation/hwmon/pc87360
-> rename to Documentation/hwmon/pc87360.rst
-> diff --git a/Documentation/hwmon/pc87427 b/Documentation/hwmon/pc87427.rst
-> similarity index 100%
-> rename from Documentation/hwmon/pc87427
-> rename to Documentation/hwmon/pc87427.rst
-> diff --git a/Documentation/hwmon/pcf8591 b/Documentation/hwmon/pcf8591.rst
-> similarity index 100%
-> rename from Documentation/hwmon/pcf8591
-> rename to Documentation/hwmon/pcf8591.rst
-> diff --git a/Documentation/hwmon/pmbus-core b/Documentation/hwmon/pmbus-core.rst
-> similarity index 100%
-> rename from Documentation/hwmon/pmbus-core
-> rename to Documentation/hwmon/pmbus-core.rst
-> diff --git a/Documentation/hwmon/pmbus b/Documentation/hwmon/pmbus.rst
-> similarity index 100%
-> rename from Documentation/hwmon/pmbus
-> rename to Documentation/hwmon/pmbus.rst
-> diff --git a/Documentation/hwmon/powr1220 b/Documentation/hwmon/powr1220.rst
-> similarity index 100%
-> rename from Documentation/hwmon/powr1220
-> rename to Documentation/hwmon/powr1220.rst
-> diff --git a/Documentation/hwmon/pwm-fan b/Documentation/hwmon/pwm-fan.rst
-> similarity index 100%
-> rename from Documentation/hwmon/pwm-fan
-> rename to Documentation/hwmon/pwm-fan.rst
-> diff --git a/Documentation/hwmon/raspberrypi-hwmon b/Documentation/hwmon/raspberrypi-hwmon.rst
-> similarity index 100%
-> rename from Documentation/hwmon/raspberrypi-hwmon
-> rename to Documentation/hwmon/raspberrypi-hwmon.rst
-> diff --git a/Documentation/hwmon/sch5627 b/Documentation/hwmon/sch5627.rst
-> similarity index 100%
-> rename from Documentation/hwmon/sch5627
-> rename to Documentation/hwmon/sch5627.rst
-> diff --git a/Documentation/hwmon/sch5636 b/Documentation/hwmon/sch5636.rst
-> similarity index 100%
-> rename from Documentation/hwmon/sch5636
-> rename to Documentation/hwmon/sch5636.rst
-> diff --git a/Documentation/hwmon/scpi-hwmon b/Documentation/hwmon/scpi-hwmon.rst
-> similarity index 100%
-> rename from Documentation/hwmon/scpi-hwmon
-> rename to Documentation/hwmon/scpi-hwmon.rst
-> diff --git a/Documentation/hwmon/sht15 b/Documentation/hwmon/sht15.rst
-> similarity index 100%
-> rename from Documentation/hwmon/sht15
-> rename to Documentation/hwmon/sht15.rst
-> diff --git a/Documentation/hwmon/sht21 b/Documentation/hwmon/sht21.rst
-> similarity index 100%
-> rename from Documentation/hwmon/sht21
-> rename to Documentation/hwmon/sht21.rst
-> diff --git a/Documentation/hwmon/sht3x b/Documentation/hwmon/sht3x.rst
-> similarity index 100%
-> rename from Documentation/hwmon/sht3x
-> rename to Documentation/hwmon/sht3x.rst
-> diff --git a/Documentation/hwmon/shtc1 b/Documentation/hwmon/shtc1.rst
-> similarity index 100%
-> rename from Documentation/hwmon/shtc1
-> rename to Documentation/hwmon/shtc1.rst
-> diff --git a/Documentation/hwmon/sis5595 b/Documentation/hwmon/sis5595.rst
-> similarity index 99%
-> rename from Documentation/hwmon/sis5595
-> rename to Documentation/hwmon/sis5595.rst
-> index 5acba6b0c0db..16123b3bfff9 100644
-> --- a/Documentation/hwmon/sis5595
-> +++ b/Documentation/hwmon/sis5595.rst
-> @@ -121,4 +121,3 @@ Problems
->  --------
->  Some chips refuse to be enabled. We don't know why.
->  The driver will recognize this and print a message in dmesg.
-> -
-> diff --git a/Documentation/hwmon/smm665 b/Documentation/hwmon/smm665.rst
-> similarity index 100%
-> rename from Documentation/hwmon/smm665
-> rename to Documentation/hwmon/smm665.rst
-> diff --git a/Documentation/hwmon/smsc47b397 b/Documentation/hwmon/smsc47b397.rst
-> similarity index 100%
-> rename from Documentation/hwmon/smsc47b397
-> rename to Documentation/hwmon/smsc47b397.rst
-> diff --git a/Documentation/hwmon/smsc47m1 b/Documentation/hwmon/smsc47m1.rst
-> similarity index 100%
-> rename from Documentation/hwmon/smsc47m1
-> rename to Documentation/hwmon/smsc47m1.rst
-> diff --git a/Documentation/hwmon/smsc47m192 b/Documentation/hwmon/smsc47m192.rst
-> similarity index 100%
-> rename from Documentation/hwmon/smsc47m192
-> rename to Documentation/hwmon/smsc47m192.rst
-> diff --git a/Documentation/hwmon/submitting-patches b/Documentation/hwmon/submitting-patches.rst
-> similarity index 98%
-> rename from Documentation/hwmon/submitting-patches
-> rename to Documentation/hwmon/submitting-patches.rst
-> index 12540b7d9b50..f9796b9d9db6 100644
-> --- a/Documentation/hwmon/submitting-patches
-> +++ b/Documentation/hwmon/submitting-patches.rst
-> @@ -39,7 +39,7 @@ increase the chances of your change being accepted.
->  2. Adding functionality to existing drivers
->  -------------------------------------------
->  
-> -* Make sure the documentation in Documentation/hwmon/<driver_name> is up to
-> +* Make sure the documentation in Documentation/hwmon/<driver_name>.rst is up to
->    date.
->  
->  * Make sure the information in Kconfig is up to date.
-> @@ -61,7 +61,7 @@ increase the chances of your change being accepted.
->  
->  * Consider adding yourself to MAINTAINERS.
->  
-> -* Document the driver in Documentation/hwmon/<driver_name>.
-> +* Document the driver in Documentation/hwmon/<driver_name>.rst.
->  
->  * Add the driver to Kconfig and Makefile in alphabetical order.
->  
-> @@ -134,7 +134,7 @@ increase the chances of your change being accepted.
->    non-standard attributes, or you believe you do, discuss it on the mailing list
->    first. Either case, provide a detailed explanation why you need the
->    non-standard attribute(s).
-> -  Standard attributes are specified in Documentation/hwmon/sysfs-interface.
-> +  Standard attributes are specified in Documentation/hwmon/sysfs-interface.rst.
->  
->  * When deciding which sysfs attributes to support, look at the chip's
->    capabilities. While we do not expect your driver to support everything the
-> diff --git a/Documentation/hwmon/sysfs-interface b/Documentation/hwmon/sysfs-interface.rst
-> similarity index 100%
-> rename from Documentation/hwmon/sysfs-interface
-> rename to Documentation/hwmon/sysfs-interface.rst
-> diff --git a/Documentation/hwmon/tc654 b/Documentation/hwmon/tc654.rst
-> similarity index 100%
-> rename from Documentation/hwmon/tc654
-> rename to Documentation/hwmon/tc654.rst
-> diff --git a/Documentation/hwmon/tc74 b/Documentation/hwmon/tc74.rst
-> similarity index 100%
-> rename from Documentation/hwmon/tc74
-> rename to Documentation/hwmon/tc74.rst
-> diff --git a/Documentation/hwmon/thmc50 b/Documentation/hwmon/thmc50.rst
-> similarity index 99%
-> rename from Documentation/hwmon/thmc50
-> rename to Documentation/hwmon/thmc50.rst
-> index 6dba1b59b20c..cfff3885287d 100644
-> --- a/Documentation/hwmon/thmc50
-> +++ b/Documentation/hwmon/thmc50.rst
-> @@ -87,4 +87,3 @@ so it stops fans even if the value 0 into the ANALOG_OUT register does not.
->  
->  The driver was tested on Compaq AP550 with two ADM1022 chips (one works
->  in the temp3 mode), five temperature readings and two fans.
-> -
-> diff --git a/Documentation/hwmon/tmp102 b/Documentation/hwmon/tmp102.rst
-> similarity index 93%
-> rename from Documentation/hwmon/tmp102
-> rename to Documentation/hwmon/tmp102.rst
-> index 5e34821df4ab..b1f585531a88 100644
-> --- a/Documentation/hwmon/tmp102
-> +++ b/Documentation/hwmon/tmp102.rst
-> @@ -28,4 +28,4 @@ The TMP102 has a programmable update rate that can select between 8, 4, 1, and
->  0.5 Hz. (Currently the driver only supports the default of 4 Hz).
->  
->  The driver provides the common sysfs-interface for temperatures (see
-> -Documentation/hwmon/sysfs-interface under Temperatures).
-> +Documentation/hwmon/sysfs-interface.rst under Temperatures).
-> diff --git a/Documentation/hwmon/tmp103 b/Documentation/hwmon/tmp103.rst
-> similarity index 92%
-> rename from Documentation/hwmon/tmp103
-> rename to Documentation/hwmon/tmp103.rst
-> index 7682a795e38c..15d25806d585 100644
-> --- a/Documentation/hwmon/tmp103
-> +++ b/Documentation/hwmon/tmp103.rst
-> @@ -27,7 +27,7 @@ Resolution: 8 Bits
->  Accuracy: ±1°C Typ (–10°C to +100°C)
->  
->  The driver provides the common sysfs-interface for temperatures (see
-> -Documentation/hwmon/sysfs-interface under Temperatures).
-> +Documentation/hwmon/sysfs-interface.rst under Temperatures).
->  
->  Please refer how to instantiate this driver:
->  Documentation/i2c/instantiating-devices
-> diff --git a/Documentation/hwmon/tmp108 b/Documentation/hwmon/tmp108.rst
-> similarity index 95%
-> rename from Documentation/hwmon/tmp108
-> rename to Documentation/hwmon/tmp108.rst
-> index 7e08b7ef1e2f..5f4266a16cb2 100644
-> --- a/Documentation/hwmon/tmp108
-> +++ b/Documentation/hwmon/tmp108.rst
-> @@ -38,4 +38,4 @@ and then the device is shut down automatically. (This driver only supports
->  continuous mode.)
->  
->  The driver provides the common sysfs-interface for temperatures (see
-> -Documentation/hwmon/sysfs-interface under Temperatures).
-> +Documentation/hwmon/sysfs-interface.rst under Temperatures).
-> diff --git a/Documentation/hwmon/tmp401 b/Documentation/hwmon/tmp401.rst
-> similarity index 97%
-> rename from Documentation/hwmon/tmp401
-> rename to Documentation/hwmon/tmp401.rst
-> index bd865bbdb38d..6a05a0719bc7 100644
-> --- a/Documentation/hwmon/tmp401
-> +++ b/Documentation/hwmon/tmp401.rst
-> @@ -68,7 +68,7 @@ supported by the driver so far, so using the default resolution of 0.5
->  degree).
->  
->  The driver provides the common sysfs-interface for temperatures (see
-> -Documentation/hwmon/sysfs-interface under Temperatures).
-> +Documentation/hwmon/sysfs-interface.rst under Temperatures).
->  
->  The TMP411 and TMP431 chips are compatible with TMP401. TMP411 provides
->  some additional features.
-> diff --git a/Documentation/hwmon/tmp421 b/Documentation/hwmon/tmp421.rst
-> similarity index 100%
-> rename from Documentation/hwmon/tmp421
-> rename to Documentation/hwmon/tmp421.rst
-> diff --git a/Documentation/hwmon/tps40422 b/Documentation/hwmon/tps40422.rst
-> similarity index 96%
-> rename from Documentation/hwmon/tps40422
-> rename to Documentation/hwmon/tps40422.rst
-> index 359751eb5ed4..b691e30479dd 100644
-> --- a/Documentation/hwmon/tps40422
-> +++ b/Documentation/hwmon/tps40422.rst
-> @@ -21,7 +21,7 @@ This driver supports TI TPS40422 Dual-Output or Two-Phase Synchronous Buck
->  Controller with PMBus
->  
->  The driver is a client driver to the core PMBus driver.
-> -Please see Documentation/hwmon/pmbus for details on PMBus client drivers.
-> +Please see Documentation/hwmon/pmbus.rst for details on PMBus client drivers.
->  
->  
->  Usage Notes
-> diff --git a/Documentation/hwmon/twl4030-madc-hwmon b/Documentation/hwmon/twl4030-madc-hwmon.rst
-> similarity index 100%
-> rename from Documentation/hwmon/twl4030-madc-hwmon
-> rename to Documentation/hwmon/twl4030-madc-hwmon.rst
-> diff --git a/Documentation/hwmon/ucd9000 b/Documentation/hwmon/ucd9000.rst
-> similarity index 97%
-> rename from Documentation/hwmon/ucd9000
-> rename to Documentation/hwmon/ucd9000.rst
-> index d69061b7312c..ebc4f2b3bfea 100644
-> --- a/Documentation/hwmon/ucd9000
-> +++ b/Documentation/hwmon/ucd9000.rst
-> @@ -57,7 +57,7 @@ system-health monitor. The device integrates a 12-bit ADC for monitoring up to
->  13 power-supply voltage, current, or temperature inputs.
->  
->  This driver is a client driver to the core PMBus driver. Please see
-> -Documentation/hwmon/pmbus for details on PMBus client drivers.
-> +Documentation/hwmon/pmbus.rst for details on PMBus client drivers.
->  
->  
->  Usage Notes
-> @@ -72,7 +72,7 @@ Platform data support
->  ---------------------
->  
->  The driver supports standard PMBus driver platform data. Please see
-> -Documentation/hwmon/pmbus for details.
-> +Documentation/hwmon/pmbus.rst for details.
->  
->  
->  Sysfs entries
-> diff --git a/Documentation/hwmon/ucd9200 b/Documentation/hwmon/ucd9200.rst
-> similarity index 97%
-> rename from Documentation/hwmon/ucd9200
-> rename to Documentation/hwmon/ucd9200.rst
-> index 44eda4a579b6..b819dfd75f71 100644
-> --- a/Documentation/hwmon/ucd9200
-> +++ b/Documentation/hwmon/ucd9200.rst
-> @@ -33,7 +33,7 @@ dedicated circuitry for DC/DC loop management with flash memory and a serial
->  interface to support configuration, monitoring and management.
->  
->  This driver is a client driver to the core PMBus driver. Please see
-> -Documentation/hwmon/pmbus for details on PMBus client drivers.
-> +Documentation/hwmon/pmbus.rst for details on PMBus client drivers.
->  
->  
->  Usage Notes
-> @@ -48,7 +48,7 @@ Platform data support
->  ---------------------
->  
->  The driver supports standard PMBus driver platform data. Please see
-> -Documentation/hwmon/pmbus for details.
-> +Documentation/hwmon/pmbus.rst for details.
->  
->  
->  Sysfs entries
-> diff --git a/Documentation/hwmon/userspace-tools b/Documentation/hwmon/userspace-tools.rst
-> similarity index 100%
-> rename from Documentation/hwmon/userspace-tools
-> rename to Documentation/hwmon/userspace-tools.rst
-> diff --git a/Documentation/hwmon/vexpress b/Documentation/hwmon/vexpress.rst
-> similarity index 100%
-> rename from Documentation/hwmon/vexpress
-> rename to Documentation/hwmon/vexpress.rst
-> diff --git a/Documentation/hwmon/via686a b/Documentation/hwmon/via686a.rst
-> similarity index 100%
-> rename from Documentation/hwmon/via686a
-> rename to Documentation/hwmon/via686a.rst
-> diff --git a/Documentation/hwmon/vt1211 b/Documentation/hwmon/vt1211.rst
-> similarity index 100%
-> rename from Documentation/hwmon/vt1211
-> rename to Documentation/hwmon/vt1211.rst
-> diff --git a/Documentation/hwmon/w83627ehf b/Documentation/hwmon/w83627ehf.rst
-> similarity index 100%
-> rename from Documentation/hwmon/w83627ehf
-> rename to Documentation/hwmon/w83627ehf.rst
-> diff --git a/Documentation/hwmon/w83627hf b/Documentation/hwmon/w83627hf.rst
-> similarity index 100%
-> rename from Documentation/hwmon/w83627hf
-> rename to Documentation/hwmon/w83627hf.rst
-> diff --git a/Documentation/hwmon/w83773g b/Documentation/hwmon/w83773g.rst
-> similarity index 100%
-> rename from Documentation/hwmon/w83773g
-> rename to Documentation/hwmon/w83773g.rst
-> diff --git a/Documentation/hwmon/w83781d b/Documentation/hwmon/w83781d.rst
-> similarity index 100%
-> rename from Documentation/hwmon/w83781d
-> rename to Documentation/hwmon/w83781d.rst
-> diff --git a/Documentation/hwmon/w83791d b/Documentation/hwmon/w83791d.rst
-> similarity index 99%
-> rename from Documentation/hwmon/w83791d
-> rename to Documentation/hwmon/w83791d.rst
-> index a91f9e5fb0c6..3adaed39b157 100644
-> --- a/Documentation/hwmon/w83791d
-> +++ b/Documentation/hwmon/w83791d.rst
-> @@ -102,7 +102,7 @@ This file is used for both legacy and new code.
->  
->  The sysfs interface to the beep bitmask has migrated from the original legacy
->  method of a single sysfs beep_mask file to a newer method using multiple
-> -`*_beep` files as described in `Documentation/hwmon/sysfs-interface`.
-> +`*_beep` files as described in `Documentation/hwmon/sysfs-interface.rst`.
->  
->  A similar change has occurred for the bitmap corresponding to the alarms. The
->  original legacy method used a single sysfs alarms file containing a bitmap
-> diff --git a/Documentation/hwmon/w83792d b/Documentation/hwmon/w83792d.rst
-> similarity index 100%
-> rename from Documentation/hwmon/w83792d
-> rename to Documentation/hwmon/w83792d.rst
-> diff --git a/Documentation/hwmon/w83793 b/Documentation/hwmon/w83793.rst
-> similarity index 100%
-> rename from Documentation/hwmon/w83793
-> rename to Documentation/hwmon/w83793.rst
-> diff --git a/Documentation/hwmon/w83795 b/Documentation/hwmon/w83795.rst
-> similarity index 100%
-> rename from Documentation/hwmon/w83795
-> rename to Documentation/hwmon/w83795.rst
-> diff --git a/Documentation/hwmon/w83l785ts b/Documentation/hwmon/w83l785ts.rst
-> similarity index 100%
-> rename from Documentation/hwmon/w83l785ts
-> rename to Documentation/hwmon/w83l785ts.rst
-> diff --git a/Documentation/hwmon/w83l786ng b/Documentation/hwmon/w83l786ng.rst
-> similarity index 100%
-> rename from Documentation/hwmon/w83l786ng
-> rename to Documentation/hwmon/w83l786ng.rst
-> diff --git a/Documentation/hwmon/wm831x b/Documentation/hwmon/wm831x.rst
-> similarity index 100%
-> rename from Documentation/hwmon/wm831x
-> rename to Documentation/hwmon/wm831x.rst
-> diff --git a/Documentation/hwmon/wm8350 b/Documentation/hwmon/wm8350.rst
-> similarity index 100%
-> rename from Documentation/hwmon/wm8350
-> rename to Documentation/hwmon/wm8350.rst
-> diff --git a/Documentation/hwmon/xgene-hwmon b/Documentation/hwmon/xgene-hwmon.rst
-> similarity index 100%
-> rename from Documentation/hwmon/xgene-hwmon
-> rename to Documentation/hwmon/xgene-hwmon.rst
-> diff --git a/Documentation/hwmon/zl6100 b/Documentation/hwmon/zl6100.rst
-> similarity index 98%
-> rename from Documentation/hwmon/zl6100
-> rename to Documentation/hwmon/zl6100.rst
-> index 4029970bace4..41513bb7fe51 100644
-> --- a/Documentation/hwmon/zl6100
-> +++ b/Documentation/hwmon/zl6100.rst
-> @@ -113,7 +113,7 @@ This driver supports hardware monitoring for Intersil / Zilker Labs ZL6100 and
->  compatible digital DC-DC controllers.
->  
->  The driver is a client driver to the core PMBus driver. Please see
-> -Documentation/hwmon/pmbus and Documentation.hwmon/pmbus-core for details
-> +Documentation/hwmon/pmbus.rst and Documentation.hwmon/pmbus-core for details
->  on PMBus client drivers.
->  
->  
-> diff --git a/Documentation/index.rst b/Documentation/index.rst
-> index 80a421cb935e..3a710dc24fc8 100644
-> --- a/Documentation/index.rst
-> +++ b/Documentation/index.rst
-> @@ -83,6 +83,7 @@ needed).
->     media/index
->     networking/index
->     input/index
-> +   hwmon/index
->     gpu/index
->     security/index
->     sound/index
-> diff --git a/Documentation/thermal/sysfs-api.txt b/Documentation/thermal/sysfs-api.txt
-> index 911399730c1c..c3fa500df92c 100644
-> --- a/Documentation/thermal/sysfs-api.txt
-> +++ b/Documentation/thermal/sysfs-api.txt
-> @@ -316,7 +316,7 @@ ACPI thermal zones.
->      |---temp[1-*]_input:	The current temperature of thermal zone [1-*]
->      |---temp[1-*]_critical:	The critical trip point of thermal zone [1-*]
->  
-> -Please read Documentation/hwmon/sysfs-interface for additional information.
-> +Please read Documentation/hwmon/sysfs-interface.rst for additional information.
->  
->  ***************************
->  * Thermal zone attributes *
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index 349e5d8c3f58..6269c9d671ca 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -468,7 +468,7 @@ ADM1025 HARDWARE MONITOR DRIVER
->  M:	Jean Delvare <jdelvare@suse.com>
->  L:	linux-hwmon@vger.kernel.org
->  S:	Maintained
-> -F:	Documentation/hwmon/adm1025
-> +F:	Documentation/hwmon/adm1025.rst
->  F:	drivers/hwmon/adm1025.c
->  
->  ADM1029 HARDWARE MONITOR DRIVER
-> @@ -520,7 +520,7 @@ ADS1015 HARDWARE MONITOR DRIVER
->  M:	Dirk Eibach <eibach@gdsys.de>
->  L:	linux-hwmon@vger.kernel.org
->  S:	Maintained
-> -F:	Documentation/hwmon/ads1015
-> +F:	Documentation/hwmon/ads1015.rst
->  F:	drivers/hwmon/ads1015.c
->  F:	include/linux/platform_data/ads1015.h
->  
-> @@ -533,7 +533,7 @@ ADT7475 HARDWARE MONITOR DRIVER
->  M:	Jean Delvare <jdelvare@suse.com>
->  L:	linux-hwmon@vger.kernel.org
->  S:	Maintained
-> -F:	Documentation/hwmon/adt7475
-> +F:	Documentation/hwmon/adt7475.rst
->  F:	drivers/hwmon/adt7475.c
->  
->  ADVANSYS SCSI DRIVER
-> @@ -764,7 +764,7 @@ AMD FAM15H PROCESSOR POWER MONITORING DRIVER
->  M:	Huang Rui <ray.huang@amd.com>
->  L:	linux-hwmon@vger.kernel.org
->  S:	Supported
-> -F:	Documentation/hwmon/fam15h_power
-> +F:	Documentation/hwmon/fam15h_power.rst
->  F:	drivers/hwmon/fam15h_power.c
->  
->  AMD FCH GPIO DRIVER
-> @@ -2531,7 +2531,7 @@ ASC7621 HARDWARE MONITOR DRIVER
->  M:	George Joseph <george.joseph@fairview5.com>
->  L:	linux-hwmon@vger.kernel.org
->  S:	Maintained
-> -F:	Documentation/hwmon/asc7621
-> +F:	Documentation/hwmon/asc7621.rst
->  F:	drivers/hwmon/asc7621.c
->  
->  ASPEED VIDEO ENGINE DRIVER
-> @@ -4071,7 +4071,7 @@ CORETEMP HARDWARE MONITORING DRIVER
->  M:	Fenghua Yu <fenghua.yu@intel.com>
->  L:	linux-hwmon@vger.kernel.org
->  S:	Maintained
-> -F:	Documentation/hwmon/coretemp
-> +F:	Documentation/hwmon/coretemp.rst
->  F:	drivers/hwmon/coretemp.c
->  
->  COSA/SRP SYNC SERIAL DRIVER
-> @@ -4627,7 +4627,7 @@ DIALOG SEMICONDUCTOR DRIVERS
->  M:	Support Opensource <support.opensource@diasemi.com>
->  W:	http://www.dialog-semiconductor.com/products
->  S:	Supported
-> -F:	Documentation/hwmon/da90??
-> +F:	Documentation/hwmon/da90??.rst
->  F:	Documentation/devicetree/bindings/mfd/da90*.txt
->  F:	Documentation/devicetree/bindings/input/da90??-onkey.txt
->  F:	Documentation/devicetree/bindings/thermal/da90??-thermal.txt
-> @@ -4778,7 +4778,7 @@ DME1737 HARDWARE MONITOR DRIVER
->  M:	Juerg Haefliger <juergh@gmail.com>
->  L:	linux-hwmon@vger.kernel.org
->  S:	Maintained
-> -F:	Documentation/hwmon/dme1737
-> +F:	Documentation/hwmon/dme1737.rst
->  F:	drivers/hwmon/dme1737.c
->  
->  DMI/SMBIOS SUPPORT
-> @@ -6006,7 +6006,7 @@ F71805F HARDWARE MONITORING DRIVER
->  M:	Jean Delvare <jdelvare@suse.com>
->  L:	linux-hwmon@vger.kernel.org
->  S:	Maintained
-> -F:	Documentation/hwmon/f71805f
-> +F:	Documentation/hwmon/f71805f.rst
->  F:	drivers/hwmon/f71805f.c
->  
->  FADDR2LINE
-> @@ -7687,7 +7687,7 @@ INA209 HARDWARE MONITOR DRIVER
->  M:	Guenter Roeck <linux@roeck-us.net>
->  L:	linux-hwmon@vger.kernel.org
->  S:	Maintained
-> -F:	Documentation/hwmon/ina209
-> +F:	Documentation/hwmon/ina209.rst
->  F:	Documentation/devicetree/bindings/hwmon/ina2xx.txt
->  F:	drivers/hwmon/ina209.c
->  
-> @@ -7695,7 +7695,7 @@ INA2XX HARDWARE MONITOR DRIVER
->  M:	Guenter Roeck <linux@roeck-us.net>
->  L:	linux-hwmon@vger.kernel.org
->  S:	Maintained
-> -F:	Documentation/hwmon/ina2xx
-> +F:	Documentation/hwmon/ina2xx.rst
->  F:	drivers/hwmon/ina2xx.c
->  F:	include/linux/platform_data/ina2xx.h
->  
-> @@ -8328,7 +8328,7 @@ IT87 HARDWARE MONITORING DRIVER
->  M:	Jean Delvare <jdelvare@suse.com>
->  L:	linux-hwmon@vger.kernel.org
->  S:	Maintained
-> -F:	Documentation/hwmon/it87
-> +F:	Documentation/hwmon/it87.rst
->  F:	drivers/hwmon/it87.c
->  
->  IT913X MEDIA DRIVER
-> @@ -8372,7 +8372,7 @@ M:	Guenter Roeck <linux@roeck-us.net>
->  L:	linux-hwmon@vger.kernel.org
->  S:	Maintained
->  F:	drivers/hwmon/jc42.c
-> -F:	Documentation/hwmon/jc42
-> +F:	Documentation/hwmon/jc42.rst
->  
->  JFS FILESYSTEM
->  M:	Dave Kleikamp <shaggy@kernel.org>
-> @@ -8420,14 +8420,14 @@ K10TEMP HARDWARE MONITORING DRIVER
->  M:	Clemens Ladisch <clemens@ladisch.de>
->  L:	linux-hwmon@vger.kernel.org
->  S:	Maintained
-> -F:	Documentation/hwmon/k10temp
-> +F:	Documentation/hwmon/k10temp.rst
->  F:	drivers/hwmon/k10temp.c
->  
->  K8TEMP HARDWARE MONITORING DRIVER
->  M:	Rudolf Marek <r.marek@assembler.cz>
->  L:	linux-hwmon@vger.kernel.org
->  S:	Maintained
-> -F:	Documentation/hwmon/k8temp
-> +F:	Documentation/hwmon/k8temp.rst
->  F:	drivers/hwmon/k8temp.c
->  
->  KASAN
-> @@ -9118,21 +9118,21 @@ LM78 HARDWARE MONITOR DRIVER
->  M:	Jean Delvare <jdelvare@suse.com>
->  L:	linux-hwmon@vger.kernel.org
->  S:	Maintained
-> -F:	Documentation/hwmon/lm78
-> +F:	Documentation/hwmon/lm78.rst
->  F:	drivers/hwmon/lm78.c
->  
->  LM83 HARDWARE MONITOR DRIVER
->  M:	Jean Delvare <jdelvare@suse.com>
->  L:	linux-hwmon@vger.kernel.org
->  S:	Maintained
-> -F:	Documentation/hwmon/lm83
-> +F:	Documentation/hwmon/lm83.rst
->  F:	drivers/hwmon/lm83.c
->  
->  LM90 HARDWARE MONITOR DRIVER
->  M:	Jean Delvare <jdelvare@suse.com>
->  L:	linux-hwmon@vger.kernel.org
->  S:	Maintained
-> -F:	Documentation/hwmon/lm90
-> +F:	Documentation/hwmon/lm90.rst
->  F:	Documentation/devicetree/bindings/hwmon/lm90.txt
->  F:	drivers/hwmon/lm90.c
->  F:	include/dt-bindings/thermal/lm90.h
-> @@ -9141,7 +9141,7 @@ LM95234 HARDWARE MONITOR DRIVER
->  M:	Guenter Roeck <linux@roeck-us.net>
->  L:	linux-hwmon@vger.kernel.org
->  S:	Maintained
-> -F:	Documentation/hwmon/lm95234
-> +F:	Documentation/hwmon/lm95234.rst
->  F:	drivers/hwmon/lm95234.c
->  
->  LME2510 MEDIA DRIVER
-> @@ -9214,7 +9214,7 @@ LTC4261 HARDWARE MONITOR DRIVER
->  M:	Guenter Roeck <linux@roeck-us.net>
->  L:	linux-hwmon@vger.kernel.org
->  S:	Maintained
-> -F:	Documentation/hwmon/ltc4261
-> +F:	Documentation/hwmon/ltc4261.rst
->  F:	drivers/hwmon/ltc4261.c
->  
->  LTC4306 I2C MULTIPLEXER DRIVER
-> @@ -9445,7 +9445,7 @@ MAX16065 HARDWARE MONITOR DRIVER
->  M:	Guenter Roeck <linux@roeck-us.net>
->  L:	linux-hwmon@vger.kernel.org
->  S:	Maintained
-> -F:	Documentation/hwmon/max16065
-> +F:	Documentation/hwmon/max16065.rst
->  F:	drivers/hwmon/max16065.c
->  
->  MAX2175 SDR TUNER DRIVER
-> @@ -9461,14 +9461,14 @@ F:	include/uapi/linux/max2175.h
->  MAX6650 HARDWARE MONITOR AND FAN CONTROLLER DRIVER
->  L:	linux-hwmon@vger.kernel.org
->  S:	Orphan
-> -F:	Documentation/hwmon/max6650
-> +F:	Documentation/hwmon/max6650.rst
->  F:	drivers/hwmon/max6650.c
->  
->  MAX6697 HARDWARE MONITOR DRIVER
->  M:	Guenter Roeck <linux@roeck-us.net>
->  L:	linux-hwmon@vger.kernel.org
->  S:	Maintained
-> -F:	Documentation/hwmon/max6697
-> +F:	Documentation/hwmon/max6697.rst
->  F:	Documentation/devicetree/bindings/hwmon/max6697.txt
->  F:	drivers/hwmon/max6697.c
->  F:	include/linux/platform_data/max6697.h
-> @@ -10118,7 +10118,7 @@ F:	drivers/mfd/menf21bmc.c
->  F:	drivers/watchdog/menf21bmc_wdt.c
->  F:	drivers/leds/leds-menf21bmc.c
->  F:	drivers/hwmon/menf21bmc_hwmon.c
-> -F:	Documentation/hwmon/menf21bmc
-> +F:	Documentation/hwmon/menf21bmc.rst
->  
->  MEN Z069 WATCHDOG DRIVER
->  M:	Johannes Thumshirn <jth@kernel.org>
-> @@ -10747,7 +10747,7 @@ NCT6775 HARDWARE MONITOR DRIVER
->  M:	Guenter Roeck <linux@roeck-us.net>
->  L:	linux-hwmon@vger.kernel.org
->  S:	Maintained
-> -F:	Documentation/hwmon/nct6775
-> +F:	Documentation/hwmon/nct6775.rst
->  F:	drivers/hwmon/nct6775.c
->  
->  NET_FAILOVER MODULE
-> @@ -11841,7 +11841,7 @@ PC87360 HARDWARE MONITORING DRIVER
->  M:	Jim Cromie <jim.cromie@gmail.com>
->  L:	linux-hwmon@vger.kernel.org
->  S:	Maintained
-> -F:	Documentation/hwmon/pc87360
-> +F:	Documentation/hwmon/pc87360.rst
->  F:	drivers/hwmon/pc87360.c
->  
->  PC8736x GPIO DRIVER
-> @@ -11853,7 +11853,7 @@ PC87427 HARDWARE MONITORING DRIVER
->  M:	Jean Delvare <jdelvare@suse.com>
->  L:	linux-hwmon@vger.kernel.org
->  S:	Maintained
-> -F:	Documentation/hwmon/pc87427
-> +F:	Documentation/hwmon/pc87427.rst
->  F:	drivers/hwmon/pc87427.c
->  
->  PCA9532 LED DRIVER
-> @@ -12421,23 +12421,23 @@ S:	Maintained
->  F:	Documentation/devicetree/bindings/hwmon/ibm,cffps1.txt
->  F:	Documentation/devicetree/bindings/hwmon/max31785.txt
->  F:	Documentation/devicetree/bindings/hwmon/ltc2978.txt
-> -F:	Documentation/hwmon/adm1275
-> -F:	Documentation/hwmon/ibm-cffps
-> -F:	Documentation/hwmon/ir35221
-> -F:	Documentation/hwmon/lm25066
-> -F:	Documentation/hwmon/ltc2978
-> -F:	Documentation/hwmon/ltc3815
-> -F:	Documentation/hwmon/max16064
-> -F:	Documentation/hwmon/max20751
-> -F:	Documentation/hwmon/max31785
-> -F:	Documentation/hwmon/max34440
-> -F:	Documentation/hwmon/max8688
-> -F:	Documentation/hwmon/pmbus
-> -F:	Documentation/hwmon/pmbus-core
-> -F:	Documentation/hwmon/tps40422
-> -F:	Documentation/hwmon/ucd9000
-> -F:	Documentation/hwmon/ucd9200
-> -F:	Documentation/hwmon/zl6100
-> +F:	Documentation/hwmon/adm1275.rst
-> +F:	Documentation/hwmon/ibm-cffps.rst
-> +F:	Documentation/hwmon/ir35221.rst
-> +F:	Documentation/hwmon/lm25066.rst
-> +F:	Documentation/hwmon/ltc2978.rst
-> +F:	Documentation/hwmon/ltc3815.rst
-> +F:	Documentation/hwmon/max16064.rst
-> +F:	Documentation/hwmon/max20751.rst
-> +F:	Documentation/hwmon/max31785.rst
-> +F:	Documentation/hwmon/max34440.rst
-> +F:	Documentation/hwmon/max8688.rst
-> +F:	Documentation/hwmon/pmbus.rst
-> +F:	Documentation/hwmon/pmbus-core.rst
-> +F:	Documentation/hwmon/tps40422.rst
-> +F:	Documentation/hwmon/ucd9000.rst
-> +F:	Documentation/hwmon/ucd9200.rst
-> +F:	Documentation/hwmon/zl6100.rst
->  F:	drivers/hwmon/pmbus/
->  F:	include/linux/pmbus.h
->  
-> @@ -12701,7 +12701,7 @@ M:	Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>
->  L:	linux-hwmon@vger.kernel.org
->  S:	Supported
->  F:	Documentation/devicetree/bindings/hwmon/pwm-fan.txt
-> -F:	Documentation/hwmon/pwm-fan
-> +F:	Documentation/hwmon/pwm-fan.rst
->  F:	drivers/hwmon/pwm-fan.c
->  
->  PWM IR Transmitter
-> @@ -14366,21 +14366,21 @@ SMM665 HARDWARE MONITOR DRIVER
->  M:	Guenter Roeck <linux@roeck-us.net>
->  L:	linux-hwmon@vger.kernel.org
->  S:	Maintained
-> -F:	Documentation/hwmon/smm665
-> +F:	Documentation/hwmon/smm665.rst
->  F:	drivers/hwmon/smm665.c
->  
->  SMSC EMC2103 HARDWARE MONITOR DRIVER
->  M:	Steve Glendinning <steve.glendinning@shawell.net>
->  L:	linux-hwmon@vger.kernel.org
->  S:	Maintained
-> -F:	Documentation/hwmon/emc2103
-> +F:	Documentation/hwmon/emc2103.rst
->  F:	drivers/hwmon/emc2103.c
->  
->  SMSC SCH5627 HARDWARE MONITOR DRIVER
->  M:	Hans de Goede <hdegoede@redhat.com>
->  L:	linux-hwmon@vger.kernel.org
->  S:	Supported
-> -F:	Documentation/hwmon/sch5627
-> +F:	Documentation/hwmon/sch5627.rst
->  F:	drivers/hwmon/sch5627.c
->  
->  SMSC UFX6000 and UFX7000 USB to VGA DRIVER
-> @@ -14393,7 +14393,7 @@ SMSC47B397 HARDWARE MONITOR DRIVER
->  M:	Jean Delvare <jdelvare@suse.com>
->  L:	linux-hwmon@vger.kernel.org
->  S:	Maintained
-> -F:	Documentation/hwmon/smsc47b397
-> +F:	Documentation/hwmon/smsc47b397.rst
->  F:	drivers/hwmon/smsc47b397.c
->  
->  SMSC911x ETHERNET DRIVER
-> @@ -15744,7 +15744,7 @@ TMP401 HARDWARE MONITOR DRIVER
->  M:	Guenter Roeck <linux@roeck-us.net>
->  L:	linux-hwmon@vger.kernel.org
->  S:	Maintained
-> -F:	Documentation/hwmon/tmp401
-> +F:	Documentation/hwmon/tmp401.rst
->  F:	drivers/hwmon/tmp401.c
->  
->  TMPFS (SHMEM FILESYSTEM)
-> @@ -16796,7 +16796,7 @@ VT1211 HARDWARE MONITOR DRIVER
->  M:	Juerg Haefliger <juergh@gmail.com>
->  L:	linux-hwmon@vger.kernel.org
->  S:	Maintained
-> -F:	Documentation/hwmon/vt1211
-> +F:	Documentation/hwmon/vt1211.rst
->  F:	drivers/hwmon/vt1211.c
->  
->  VT8231 HARDWARE MONITOR DRIVER
-> @@ -16824,14 +16824,14 @@ W83791D HARDWARE MONITORING DRIVER
->  M:	Marc Hulsman <m.hulsman@tudelft.nl>
->  L:	linux-hwmon@vger.kernel.org
->  S:	Maintained
-> -F:	Documentation/hwmon/w83791d
-> +F:	Documentation/hwmon/w83791d.rst
->  F:	drivers/hwmon/w83791d.c
->  
->  W83793 HARDWARE MONITORING DRIVER
->  M:	Rudolf Marek <r.marek@assembler.cz>
->  L:	linux-hwmon@vger.kernel.org
->  S:	Maintained
-> -F:	Documentation/hwmon/w83793
-> +F:	Documentation/hwmon/w83793.rst
->  F:	drivers/hwmon/w83793.c
->  
->  W83795 HARDWARE MONITORING DRIVER
-> @@ -16940,7 +16940,7 @@ L:	patches@opensource.cirrus.com
->  T:	git https://github.com/CirrusLogic/linux-drivers.git
->  W:	https://github.com/CirrusLogic/linux-drivers/wiki
->  S:	Supported
-> -F:	Documentation/hwmon/wm83??
-> +F:	Documentation/hwmon/wm83??.rst
->  F:	Documentation/devicetree/bindings/extcon/extcon-arizona.txt
->  F:	Documentation/devicetree/bindings/regulator/arizona-regulator.txt
->  F:	Documentation/devicetree/bindings/mfd/arizona.txt
-> diff --git a/drivers/hwmon/Kconfig b/drivers/hwmon/Kconfig
-> index dedd5febd3aa..470ba66b18b0 100644
-> --- a/drivers/hwmon/Kconfig
-> +++ b/drivers/hwmon/Kconfig
-> @@ -17,7 +17,7 @@ menuconfig HWMON
->  
->  	  To find out which specific driver(s) you need, use the
->  	  sensors-detect script from the lm_sensors package.  Read
-> -	  <file:Documentation/hwmon/userspace-tools> for details.
-> +	  <file:Documentation/hwmon/userspace-tools.rst> for details.
->  
->  	  This support can also be built as a module. If so, the module
->  	  will be called hwmon.
-> @@ -59,7 +59,7 @@ config SENSORS_ABITUGURU
->  	  chip can be found on Abit uGuru featuring motherboards (most modern
->  	  Abit motherboards from before end 2005). For more info and a list
->  	  of which motherboards have which revision see
-> -	  Documentation/hwmon/abituguru
-> +	  Documentation/hwmon/abituguru.rst
->  
->  	  This driver can also be built as a module. If so, the module
->  	  will be called abituguru.
-> @@ -73,7 +73,7 @@ config SENSORS_ABITUGURU3
->  	  and their settings is supported. The third revision of the Abit
->  	  uGuru chip can be found on recent Abit motherboards (since end
->  	  2005). For more info and a list of which motherboards have which
-> -	  revision see Documentation/hwmon/abituguru3
-> +	  revision see Documentation/hwmon/abituguru3.rst
->  
->  	  This driver can also be built as a module. If so, the module
->  	  will be called abituguru3.
-> @@ -643,7 +643,7 @@ config SENSORS_CORETEMP
->  	help
->  	  If you say yes here you get support for the temperature
->  	  sensor inside your CPU. Most of the family 6 CPUs
-> -	  are supported. Check Documentation/hwmon/coretemp for details.
-> +	  are supported. Check Documentation/hwmon/coretemp.rst for details.
->  
->  config SENSORS_IT87
->  	tristate "ITE IT87xx and compatibles"
-> diff --git a/drivers/hwmon/ads7828.c b/drivers/hwmon/ads7828.c
-> index e6be617e3fb2..03d6e782777a 100644
-> --- a/drivers/hwmon/ads7828.c
-> +++ b/drivers/hwmon/ads7828.c
-> @@ -8,7 +8,7 @@
->   *
->   * ADS7830 support, by Guillaume Roguez <guillaume.roguez@savoirfairelinux.com>
->   *
-> - * For further information, see the Documentation/hwmon/ads7828 file.
-> + * For further information, see the Documentation/hwmon/ads7828.rst file.
->   *
->   * This program is free software; you can redistribute it and/or modify
->   * it under the terms of the GNU General Public License as published by
-> diff --git a/drivers/hwmon/max197.c b/drivers/hwmon/max197.c
-> index 3d9e210beedf..dd6a35219a18 100644
-> --- a/drivers/hwmon/max197.c
-> +++ b/drivers/hwmon/max197.c
-> @@ -8,7 +8,7 @@
->   * it under the terms of the GNU General Public License version 2 as
->   * published by the Free Software Foundation.
->   *
-> - * For further information, see the Documentation/hwmon/max197 file.
-> + * For further information, see the Documentation/hwmon/max197.rst file.
->   */
->  
->  #include <linux/kernel.h>
-> diff --git a/drivers/hwmon/sht15.c b/drivers/hwmon/sht15.c
-> index 39b41e35c2bf..7f4a63959730 100644
-> --- a/drivers/hwmon/sht15.c
-> +++ b/drivers/hwmon/sht15.c
-> @@ -10,7 +10,7 @@
->   *
->   * Copyright (c) 2007 Wouter Horre
->   *
-> - * For further information, see the Documentation/hwmon/sht15 file.
-> + * For further information, see the Documentation/hwmon/sht15.rst file.
->   */
->  
->  #include <linux/interrupt.h>
-> diff --git a/include/linux/platform_data/ads7828.h b/include/linux/platform_data/ads7828.h
-> index 3245f45f9d77..a3370a007702 100644
-> --- a/include/linux/platform_data/ads7828.h
-> +++ b/include/linux/platform_data/ads7828.h
-> @@ -4,7 +4,7 @@
->   * Copyright (c) 2012 Savoir-faire Linux Inc.
->   *          Vivien Didelot <vivien.didelot@savoirfairelinux.com>
->   *
-> - * For further information, see the Documentation/hwmon/ads7828 file.
-> + * For further information, see the Documentation/hwmon/ads7828.rst file.
->   *
->   * This program is free software; you can redistribute it and/or modify
->   * it under the terms of the GNU General Public License version 2 as
-> diff --git a/include/linux/platform_data/ds620.h b/include/linux/platform_data/ds620.h
-> index 6ef58bb77e46..f0ce22a78bb8 100644
-> --- a/include/linux/platform_data/ds620.h
-> +++ b/include/linux/platform_data/ds620.h
-> @@ -14,7 +14,7 @@ struct ds620_platform_data {
->  	 *  1 = PO_LOW
->  	 *  2 = PO_HIGH
->  	 *
-> -	 * (see Documentation/hwmon/ds620)
-> +	 * (see Documentation/hwmon/ds620.rst)
->  	 */
->  	int pomode;
->  };
-> diff --git a/include/linux/platform_data/ina2xx.h b/include/linux/platform_data/ina2xx.h
-> index 9f0aa1b48c78..dde59fd3590f 100644
-> --- a/include/linux/platform_data/ina2xx.h
-> +++ b/include/linux/platform_data/ina2xx.h
-> @@ -7,7 +7,7 @@
->   * it under the terms of the GNU General Public License version 2 as
->   * published by the Free Software Foundation.
->   *
-> - * For further information, see the Documentation/hwmon/ina2xx file.
-> + * For further information, see the Documentation/hwmon/ina2xx.rst file.
->   */
->  
->  /**
-> diff --git a/include/linux/platform_data/max197.h b/include/linux/platform_data/max197.h
-> index 8da8f94ee15c..2bbd0919bc89 100644
-> --- a/include/linux/platform_data/max197.h
-> +++ b/include/linux/platform_data/max197.h
-> @@ -8,7 +8,7 @@
->   * it under the terms of the GNU General Public License version 2 as
->   * published by the Free Software Foundation.
->   *
-> - * For further information, see the Documentation/hwmon/max197 file.
-> + * For further information, see the Documentation/hwmon/max197.rst file.
->   */
->  
->  #ifndef _PDATA_MAX197_H
-> diff --git a/include/linux/platform_data/ntc_thermistor.h b/include/linux/platform_data/ntc_thermistor.h
-> index ee03d429742b..5fa115d3ea4b 100644
-> --- a/include/linux/platform_data/ntc_thermistor.h
-> +++ b/include/linux/platform_data/ntc_thermistor.h
-> @@ -42,7 +42,7 @@ struct ntc_thermistor_platform_data {
->  	 * read_uV()
->  	 *
->  	 * How to setup pullup_ohm, pulldown_ohm, and connect is
-> -	 * described at Documentation/hwmon/ntc_thermistor
-> +	 * described at Documentation/hwmon/ntc_thermistor.rst
->  	 *
->  	 * pullup/down_ohm: 0 for infinite / not-connected
->  	 *
-> -- 
-> 2.20.1
-> 
-> 
-> _______________________________________________
-> linux-arm-kernel mailing list
-> linux-arm-kernel@lists.infradead.org
-> http://lists.infradead.org/mailman/listinfo/linux-arm-kernel
-
--- 
-====================
-| I would like to |
-| fix the world,  |
-| but they're not |
-| giving me the   |
- \ source code!  /
-  ---------------
-    ¯\_(ツ)_/¯
+diff --git a/Makefile b/Makefile
+index da223c660c9a..94673d2a6a27 100644
+--- a/Makefile
++++ b/Makefile
+@@ -1,7 +1,7 @@
+ # SPDX-License-Identifier: GPL-2.0
+ VERSION = 4
+ PATCHLEVEL = 14
+-SUBLEVEL = 111
++SUBLEVEL = 112
+ EXTRAVERSION =
+ NAME = Petit Gorille
+ 
+@@ -480,7 +480,7 @@ endif
+ ifeq ($(cc-name),clang)
+ ifneq ($(CROSS_COMPILE),)
+ CLANG_FLAGS	:= --target=$(notdir $(CROSS_COMPILE:%-=%))
+-GCC_TOOLCHAIN_DIR := $(dir $(shell which $(LD)))
++GCC_TOOLCHAIN_DIR := $(dir $(shell which $(CROSS_COMPILE)elfedit))
+ CLANG_FLAGS	+= --prefix=$(GCC_TOOLCHAIN_DIR)
+ GCC_TOOLCHAIN	:= $(realpath $(GCC_TOOLCHAIN_DIR)/..)
+ endif
+diff --git a/arch/arm/boot/dts/am335x-evm.dts b/arch/arm/boot/dts/am335x-evm.dts
+index ddd897556e03..478434ebff92 100644
+--- a/arch/arm/boot/dts/am335x-evm.dts
++++ b/arch/arm/boot/dts/am335x-evm.dts
+@@ -57,6 +57,24 @@
+ 		enable-active-high;
+ 	};
+ 
++	/* TPS79501 */
++	v1_8d_reg: fixedregulator-v1_8d {
++		compatible = "regulator-fixed";
++		regulator-name = "v1_8d";
++		vin-supply = <&vbat>;
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++	};
++
++	/* TPS79501 */
++	v3_3d_reg: fixedregulator-v3_3d {
++		compatible = "regulator-fixed";
++		regulator-name = "v3_3d";
++		vin-supply = <&vbat>;
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
+ 	matrix_keypad: matrix_keypad0 {
+ 		compatible = "gpio-matrix-keypad";
+ 		debounce-delay-ms = <5>;
+@@ -492,10 +510,10 @@
+ 		status = "okay";
+ 
+ 		/* Regulators */
+-		AVDD-supply = <&vaux2_reg>;
+-		IOVDD-supply = <&vaux2_reg>;
+-		DRVDD-supply = <&vaux2_reg>;
+-		DVDD-supply = <&vbat>;
++		AVDD-supply = <&v3_3d_reg>;
++		IOVDD-supply = <&v3_3d_reg>;
++		DRVDD-supply = <&v3_3d_reg>;
++		DVDD-supply = <&v1_8d_reg>;
+ 	};
+ };
+ 
+diff --git a/arch/arm/boot/dts/am335x-evmsk.dts b/arch/arm/boot/dts/am335x-evmsk.dts
+index 9ba4b18c0cb2..bbd828892fcb 100644
+--- a/arch/arm/boot/dts/am335x-evmsk.dts
++++ b/arch/arm/boot/dts/am335x-evmsk.dts
+@@ -73,6 +73,24 @@
+ 		enable-active-high;
+ 	};
+ 
++	/* TPS79518 */
++	v1_8d_reg: fixedregulator-v1_8d {
++		compatible = "regulator-fixed";
++		regulator-name = "v1_8d";
++		vin-supply = <&vbat>;
++		regulator-min-microvolt = <1800000>;
++		regulator-max-microvolt = <1800000>;
++	};
++
++	/* TPS78633 */
++	v3_3d_reg: fixedregulator-v3_3d {
++		compatible = "regulator-fixed";
++		regulator-name = "v3_3d";
++		vin-supply = <&vbat>;
++		regulator-min-microvolt = <3300000>;
++		regulator-max-microvolt = <3300000>;
++	};
++
+ 	leds {
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&user_leds_s0>;
+@@ -493,10 +511,10 @@
+ 		status = "okay";
+ 
+ 		/* Regulators */
+-		AVDD-supply = <&vaux2_reg>;
+-		IOVDD-supply = <&vaux2_reg>;
+-		DRVDD-supply = <&vaux2_reg>;
+-		DVDD-supply = <&vbat>;
++		AVDD-supply = <&v3_3d_reg>;
++		IOVDD-supply = <&v3_3d_reg>;
++		DRVDD-supply = <&v3_3d_reg>;
++		DVDD-supply = <&v1_8d_reg>;
+ 	};
+ };
+ 
+diff --git a/arch/arm/boot/dts/sama5d2-pinfunc.h b/arch/arm/boot/dts/sama5d2-pinfunc.h
+index e57191fb83de..9daa6dfd71e0 100644
+--- a/arch/arm/boot/dts/sama5d2-pinfunc.h
++++ b/arch/arm/boot/dts/sama5d2-pinfunc.h
+@@ -518,7 +518,7 @@
+ #define PIN_PC9__GPIO			PINMUX_PIN(PIN_PC9, 0, 0)
+ #define PIN_PC9__FIQ			PINMUX_PIN(PIN_PC9, 1, 3)
+ #define PIN_PC9__GTSUCOMP		PINMUX_PIN(PIN_PC9, 2, 1)
+-#define PIN_PC9__ISC_D0			PINMUX_PIN(PIN_PC9, 2, 1)
++#define PIN_PC9__ISC_D0			PINMUX_PIN(PIN_PC9, 3, 1)
+ #define PIN_PC9__TIOA4			PINMUX_PIN(PIN_PC9, 4, 2)
+ #define PIN_PC10			74
+ #define PIN_PC10__GPIO			PINMUX_PIN(PIN_PC10, 0, 0)
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+index 28257724a56e..e720f40bbd5d 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
++++ b/arch/arm64/boot/dts/rockchip/rk3328-rock64.dts
+@@ -82,8 +82,7 @@
+ 
+ 	vcc_host1_5v: vcc_otg_5v: vcc-host1-5v-regulator {
+ 		compatible = "regulator-fixed";
+-		enable-active-high;
+-		gpio = <&gpio0 RK_PD3 GPIO_ACTIVE_HIGH>;
++		gpio = <&gpio0 RK_PA2 GPIO_ACTIVE_LOW>;
+ 		pinctrl-names = "default";
+ 		pinctrl-0 = <&usb20_host_drv>;
+ 		regulator-name = "vcc_host1_5v";
+@@ -275,7 +274,7 @@
+ 
+ 	usb2 {
+ 		usb20_host_drv: usb20-host-drv {
+-			rockchip,pins = <0 RK_PD3 RK_FUNC_GPIO &pcfg_pull_none>;
++			rockchip,pins = <0 RK_PA2 RK_FUNC_GPIO &pcfg_pull_none>;
+ 		};
+ 	};
+ 
+diff --git a/arch/arm64/boot/dts/rockchip/rk3328.dtsi b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+index efac2202b16e..f6b4b8f0260f 100644
+--- a/arch/arm64/boot/dts/rockchip/rk3328.dtsi
++++ b/arch/arm64/boot/dts/rockchip/rk3328.dtsi
+@@ -1333,11 +1333,11 @@
+ 
+ 		sdmmc0 {
+ 			sdmmc0_clk: sdmmc0-clk {
+-				rockchip,pins = <1 RK_PA6 1 &pcfg_pull_none_4ma>;
++				rockchip,pins = <1 RK_PA6 1 &pcfg_pull_none_8ma>;
+ 			};
+ 
+ 			sdmmc0_cmd: sdmmc0-cmd {
+-				rockchip,pins = <1 RK_PA4 1 &pcfg_pull_up_4ma>;
++				rockchip,pins = <1 RK_PA4 1 &pcfg_pull_up_8ma>;
+ 			};
+ 
+ 			sdmmc0_dectn: sdmmc0-dectn {
+@@ -1349,14 +1349,14 @@
+ 			};
+ 
+ 			sdmmc0_bus1: sdmmc0-bus1 {
+-				rockchip,pins = <1 RK_PA0 1 &pcfg_pull_up_4ma>;
++				rockchip,pins = <1 RK_PA0 1 &pcfg_pull_up_8ma>;
+ 			};
+ 
+ 			sdmmc0_bus4: sdmmc0-bus4 {
+-				rockchip,pins = <1 RK_PA0 1 &pcfg_pull_up_4ma>,
+-						<1 RK_PA1 1 &pcfg_pull_up_4ma>,
+-						<1 RK_PA2 1 &pcfg_pull_up_4ma>,
+-						<1 RK_PA3 1 &pcfg_pull_up_4ma>;
++				rockchip,pins = <1 RK_PA0 1 &pcfg_pull_up_8ma>,
++						<1 RK_PA1 1 &pcfg_pull_up_8ma>,
++						<1 RK_PA2 1 &pcfg_pull_up_8ma>,
++						<1 RK_PA3 1 &pcfg_pull_up_8ma>;
+ 			};
+ 
+ 			sdmmc0_gpio: sdmmc0-gpio {
+@@ -1530,50 +1530,50 @@
+ 			rgmiim1_pins: rgmiim1-pins {
+ 				rockchip,pins =
+ 					/* mac_txclk */
+-					<1 RK_PB4 2 &pcfg_pull_none_12ma>,
++					<1 RK_PB4 2 &pcfg_pull_none_8ma>,
+ 					/* mac_rxclk */
+-					<1 RK_PB5 2 &pcfg_pull_none_2ma>,
++					<1 RK_PB5 2 &pcfg_pull_none_4ma>,
+ 					/* mac_mdio */
+-					<1 RK_PC3 2 &pcfg_pull_none_2ma>,
++					<1 RK_PC3 2 &pcfg_pull_none_4ma>,
+ 					/* mac_txen */
+-					<1 RK_PD1 2 &pcfg_pull_none_12ma>,
++					<1 RK_PD1 2 &pcfg_pull_none_8ma>,
+ 					/* mac_clk */
+-					<1 RK_PC5 2 &pcfg_pull_none_2ma>,
++					<1 RK_PC5 2 &pcfg_pull_none_4ma>,
+ 					/* mac_rxdv */
+-					<1 RK_PC6 2 &pcfg_pull_none_2ma>,
++					<1 RK_PC6 2 &pcfg_pull_none_4ma>,
+ 					/* mac_mdc */
+-					<1 RK_PC7 2 &pcfg_pull_none_2ma>,
++					<1 RK_PC7 2 &pcfg_pull_none_4ma>,
+ 					/* mac_rxd1 */
+-					<1 RK_PB2 2 &pcfg_pull_none_2ma>,
++					<1 RK_PB2 2 &pcfg_pull_none_4ma>,
+ 					/* mac_rxd0 */
+-					<1 RK_PB3 2 &pcfg_pull_none_2ma>,
++					<1 RK_PB3 2 &pcfg_pull_none_4ma>,
+ 					/* mac_txd1 */
+-					<1 RK_PB0 2 &pcfg_pull_none_12ma>,
++					<1 RK_PB0 2 &pcfg_pull_none_8ma>,
+ 					/* mac_txd0 */
+-					<1 RK_PB1 2 &pcfg_pull_none_12ma>,
++					<1 RK_PB1 2 &pcfg_pull_none_8ma>,
+ 					/* mac_rxd3 */
+-					<1 RK_PB6 2 &pcfg_pull_none_2ma>,
++					<1 RK_PB6 2 &pcfg_pull_none_4ma>,
+ 					/* mac_rxd2 */
+-					<1 RK_PB7 2 &pcfg_pull_none_2ma>,
++					<1 RK_PB7 2 &pcfg_pull_none_4ma>,
+ 					/* mac_txd3 */
+-					<1 RK_PC0 2 &pcfg_pull_none_12ma>,
++					<1 RK_PC0 2 &pcfg_pull_none_8ma>,
+ 					/* mac_txd2 */
+-					<1 RK_PC1 2 &pcfg_pull_none_12ma>,
++					<1 RK_PC1 2 &pcfg_pull_none_8ma>,
+ 
+ 					/* mac_txclk */
+-					<0 RK_PB0 1 &pcfg_pull_none>,
++					<0 RK_PB0 1 &pcfg_pull_none_8ma>,
+ 					/* mac_txen */
+-					<0 RK_PB4 1 &pcfg_pull_none>,
++					<0 RK_PB4 1 &pcfg_pull_none_8ma>,
+ 					/* mac_clk */
+-					<0 RK_PD0 1 &pcfg_pull_none>,
++					<0 RK_PD0 1 &pcfg_pull_none_4ma>,
+ 					/* mac_txd1 */
+-					<0 RK_PC0 1 &pcfg_pull_none>,
++					<0 RK_PC0 1 &pcfg_pull_none_8ma>,
+ 					/* mac_txd0 */
+-					<0 RK_PC1 1 &pcfg_pull_none>,
++					<0 RK_PC1 1 &pcfg_pull_none_8ma>,
+ 					/* mac_txd3 */
+-					<0 RK_PC7 1 &pcfg_pull_none>,
++					<0 RK_PC7 1 &pcfg_pull_none_8ma>,
+ 					/* mac_txd2 */
+-					<0 RK_PC6 1 &pcfg_pull_none>;
++					<0 RK_PC6 1 &pcfg_pull_none_8ma>;
+ 			};
+ 
+ 			rmiim1_pins: rmiim1-pins {
+diff --git a/arch/arm64/include/asm/futex.h b/arch/arm64/include/asm/futex.h
+index 07fe2479d310..b447b4db423a 100644
+--- a/arch/arm64/include/asm/futex.h
++++ b/arch/arm64/include/asm/futex.h
+@@ -30,8 +30,8 @@ do {									\
+ "	prfm	pstl1strm, %2\n"					\
+ "1:	ldxr	%w1, %2\n"						\
+ 	insn "\n"							\
+-"2:	stlxr	%w3, %w0, %2\n"						\
+-"	cbnz	%w3, 1b\n"						\
++"2:	stlxr	%w0, %w3, %2\n"						\
++"	cbnz	%w0, 1b\n"						\
+ "	dmb	ish\n"							\
+ "3:\n"									\
+ "	.pushsection .fixup,\"ax\"\n"					\
+@@ -50,30 +50,30 @@ do {									\
+ static inline int
+ arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *_uaddr)
+ {
+-	int oldval = 0, ret, tmp;
++	int oldval, ret, tmp;
+ 	u32 __user *uaddr = __uaccess_mask_ptr(_uaddr);
+ 
+ 	pagefault_disable();
+ 
+ 	switch (op) {
+ 	case FUTEX_OP_SET:
+-		__futex_atomic_op("mov	%w0, %w4",
++		__futex_atomic_op("mov	%w3, %w4",
+ 				  ret, oldval, uaddr, tmp, oparg);
+ 		break;
+ 	case FUTEX_OP_ADD:
+-		__futex_atomic_op("add	%w0, %w1, %w4",
++		__futex_atomic_op("add	%w3, %w1, %w4",
+ 				  ret, oldval, uaddr, tmp, oparg);
+ 		break;
+ 	case FUTEX_OP_OR:
+-		__futex_atomic_op("orr	%w0, %w1, %w4",
++		__futex_atomic_op("orr	%w3, %w1, %w4",
+ 				  ret, oldval, uaddr, tmp, oparg);
+ 		break;
+ 	case FUTEX_OP_ANDN:
+-		__futex_atomic_op("and	%w0, %w1, %w4",
++		__futex_atomic_op("and	%w3, %w1, %w4",
+ 				  ret, oldval, uaddr, tmp, ~oparg);
+ 		break;
+ 	case FUTEX_OP_XOR:
+-		__futex_atomic_op("eor	%w0, %w1, %w4",
++		__futex_atomic_op("eor	%w3, %w1, %w4",
+ 				  ret, oldval, uaddr, tmp, oparg);
+ 		break;
+ 	default:
+diff --git a/arch/arm64/kernel/traps.c b/arch/arm64/kernel/traps.c
+index 4fc0e958770b..4cacc33d07ce 100644
+--- a/arch/arm64/kernel/traps.c
++++ b/arch/arm64/kernel/traps.c
+@@ -145,10 +145,16 @@ static void dump_instr(const char *lvl, struct pt_regs *regs)
+ void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
+ {
+ 	struct stackframe frame;
+-	int skip;
++	int skip = 0;
+ 
+ 	pr_debug("%s(regs = %p tsk = %p)\n", __func__, regs, tsk);
+ 
++	if (regs) {
++		if (user_mode(regs))
++			return;
++		skip = 1;
++	}
++
+ 	if (!tsk)
+ 		tsk = current;
+ 
+@@ -169,7 +175,6 @@ void dump_backtrace(struct pt_regs *regs, struct task_struct *tsk)
+ 	frame.graph = tsk->curr_ret_stack;
+ #endif
+ 
+-	skip = !!regs;
+ 	printk("Call trace:\n");
+ 	while (1) {
+ 		unsigned long stack;
+@@ -232,15 +237,13 @@ static int __die(const char *str, int err, struct pt_regs *regs)
+ 		return ret;
+ 
+ 	print_modules();
+-	__show_regs(regs);
+ 	pr_emerg("Process %.*s (pid: %d, stack limit = 0x%p)\n",
+ 		 TASK_COMM_LEN, tsk->comm, task_pid_nr(tsk),
+ 		 end_of_stack(tsk));
++	show_regs(regs);
+ 
+-	if (!user_mode(regs)) {
+-		dump_backtrace(regs, tsk);
++	if (!user_mode(regs))
+ 		dump_instr(KERN_EMERG, regs);
+-	}
+ 
+ 	return ret;
+ }
+diff --git a/arch/arm64/mm/init.c b/arch/arm64/mm/init.c
+index caa295cd5d09..9e6c822d458d 100644
+--- a/arch/arm64/mm/init.c
++++ b/arch/arm64/mm/init.c
+@@ -447,7 +447,7 @@ void __init arm64_memblock_init(void)
+ 		 * memory spans, randomize the linear region as well.
+ 		 */
+ 		if (memstart_offset_seed > 0 && range >= ARM64_MEMSTART_ALIGN) {
+-			range = range / ARM64_MEMSTART_ALIGN + 1;
++			range /= ARM64_MEMSTART_ALIGN;
+ 			memstart_addr -= ARM64_MEMSTART_ALIGN *
+ 					 ((range * memstart_offset_seed) >> 16);
+ 		}
+diff --git a/arch/parisc/include/asm/ptrace.h b/arch/parisc/include/asm/ptrace.h
+index 46da07670c2b..c8f70f965e8e 100644
+--- a/arch/parisc/include/asm/ptrace.h
++++ b/arch/parisc/include/asm/ptrace.h
+@@ -22,7 +22,7 @@ unsigned long profile_pc(struct pt_regs *);
+ 
+ static inline unsigned long regs_return_value(struct pt_regs *regs)
+ {
+-	return regs->gr[20];
++	return regs->gr[28];
+ }
+ 
+ #endif
+diff --git a/arch/parisc/kernel/process.c b/arch/parisc/kernel/process.c
+index cad3e8661cd6..4d712c1d64b8 100644
+--- a/arch/parisc/kernel/process.c
++++ b/arch/parisc/kernel/process.c
+@@ -209,12 +209,6 @@ void __cpuidle arch_cpu_idle(void)
+ 
+ static int __init parisc_idle_init(void)
+ {
+-	const char *marker;
+-
+-	/* check QEMU/SeaBIOS marker in PAGE0 */
+-	marker = (char *) &PAGE0->pad0;
+-	running_on_qemu = (memcmp(marker, "SeaBIOS", 8) == 0);
+-
+ 	if (!running_on_qemu)
+ 		cpu_idle_poll_ctrl(1);
+ 
+diff --git a/arch/parisc/kernel/setup.c b/arch/parisc/kernel/setup.c
+index f7d0c3b33d70..550f80ae9c8f 100644
+--- a/arch/parisc/kernel/setup.c
++++ b/arch/parisc/kernel/setup.c
+@@ -406,6 +406,9 @@ void __init start_parisc(void)
+ 	int ret, cpunum;
+ 	struct pdc_coproc_cfg coproc_cfg;
+ 
++	/* check QEMU/SeaBIOS marker in PAGE0 */
++	running_on_qemu = (memcmp(&PAGE0->pad0, "SeaBIOS", 8) == 0);
++
+ 	cpunum = smp_processor_id();
+ 
+ 	set_firmware_width_unlocked();
+diff --git a/arch/powerpc/kernel/signal_64.c b/arch/powerpc/kernel/signal_64.c
+index 979b9463e17b..927384d85faf 100644
+--- a/arch/powerpc/kernel/signal_64.c
++++ b/arch/powerpc/kernel/signal_64.c
+@@ -746,12 +746,25 @@ int sys_rt_sigreturn(unsigned long r3, unsigned long r4, unsigned long r5,
+ 		if (restore_tm_sigcontexts(current, &uc->uc_mcontext,
+ 					   &uc_transact->uc_mcontext))
+ 			goto badframe;
+-	}
+-	else
+-	/* Fall through, for non-TM restore */
++	} else
+ #endif
+-	if (restore_sigcontext(current, NULL, 1, &uc->uc_mcontext))
+-		goto badframe;
++	{
++		/*
++		 * Fall through, for non-TM restore
++		 *
++		 * Unset MSR[TS] on the thread regs since MSR from user
++		 * context does not have MSR active, and recheckpoint was
++		 * not called since restore_tm_sigcontexts() was not called
++		 * also.
++		 *
++		 * If not unsetting it, the code can RFID to userspace with
++		 * MSR[TS] set, but without CPU in the proper state,
++		 * causing a TM bad thing.
++		 */
++		current->thread.regs->msr &= ~MSR_TS_MASK;
++		if (restore_sigcontext(current, NULL, 1, &uc->uc_mcontext))
++			goto badframe;
++	}
+ 
+ 	if (restore_altstack(&uc->uc_stack))
+ 		goto badframe;
+diff --git a/arch/x86/entry/vdso/Makefile b/arch/x86/entry/vdso/Makefile
+index 0a550dc5c525..839015f1b0de 100644
+--- a/arch/x86/entry/vdso/Makefile
++++ b/arch/x86/entry/vdso/Makefile
+@@ -48,10 +48,8 @@ targets += $(vdso_img_sodbg)
+ 
+ export CPPFLAGS_vdso.lds += -P -C
+ 
+-VDSO_LDFLAGS_vdso.lds = -m64 -Wl,-soname=linux-vdso.so.1 \
+-			-Wl,--no-undefined \
+-			-Wl,-z,max-page-size=4096 -Wl,-z,common-page-size=4096 \
+-			$(DISABLE_LTO)
++VDSO_LDFLAGS_vdso.lds = -m elf_x86_64 -soname linux-vdso.so.1 --no-undefined \
++			-z max-page-size=4096
+ 
+ $(obj)/vdso64.so.dbg: $(src)/vdso.lds $(vobjs) FORCE
+ 	$(call if_changed,vdso)
+@@ -103,10 +101,8 @@ CFLAGS_REMOVE_vvar.o = -pg
+ #
+ 
+ CPPFLAGS_vdsox32.lds = $(CPPFLAGS_vdso.lds)
+-VDSO_LDFLAGS_vdsox32.lds = -Wl,-m,elf32_x86_64 \
+-			   -Wl,-soname=linux-vdso.so.1 \
+-			   -Wl,-z,max-page-size=4096 \
+-			   -Wl,-z,common-page-size=4096
++VDSO_LDFLAGS_vdsox32.lds = -m elf32_x86_64 -soname linux-vdso.so.1 \
++			   -z max-page-size=4096
+ 
+ # 64-bit objects to re-brand as x32
+ vobjs64-for-x32 := $(filter-out $(vobjs-nox32),$(vobjs-y))
+@@ -134,7 +130,7 @@ $(obj)/vdsox32.so.dbg: $(src)/vdsox32.lds $(vobjx32s) FORCE
+ 	$(call if_changed,vdso)
+ 
+ CPPFLAGS_vdso32.lds = $(CPPFLAGS_vdso.lds)
+-VDSO_LDFLAGS_vdso32.lds = -m32 -Wl,-m,elf_i386 -Wl,-soname=linux-gate.so.1
++VDSO_LDFLAGS_vdso32.lds = -m elf_i386 -soname linux-gate.so.1
+ 
+ # This makes sure the $(obj) subdirectory exists even though vdso32/
+ # is not a kbuild sub-make subdirectory.
+@@ -180,13 +176,13 @@ $(obj)/vdso32.so.dbg: FORCE \
+ # The DSO images are built using a special linker script.
+ #
+ quiet_cmd_vdso = VDSO    $@
+-      cmd_vdso = $(CC) -nostdlib -o $@ \
++      cmd_vdso = $(LD) -nostdlib -o $@ \
+ 		       $(VDSO_LDFLAGS) $(VDSO_LDFLAGS_$(filter %.lds,$(^F))) \
+-		       -Wl,-T,$(filter %.lds,$^) $(filter %.o,$^) && \
++		       -T $(filter %.lds,$^) $(filter %.o,$^) && \
+ 		 sh $(srctree)/$(src)/checkundef.sh '$(NM)' '$@'
+ 
+-VDSO_LDFLAGS = -fPIC -shared $(call cc-ldoption, -Wl$(comma)--hash-style=both) \
+-	$(call cc-ldoption, -Wl$(comma)--build-id) -Wl,-Bsymbolic $(LTO_CFLAGS)
++VDSO_LDFLAGS = -shared $(call ld-option, --hash-style=both) \
++	$(call ld-option, --build-id) -Bsymbolic
+ GCOV_PROFILE := n
+ 
+ #
+diff --git a/arch/x86/events/amd/core.c b/arch/x86/events/amd/core.c
+index c84584bb9402..3e5dd85b019a 100644
+--- a/arch/x86/events/amd/core.c
++++ b/arch/x86/events/amd/core.c
+@@ -3,10 +3,14 @@
+ #include <linux/types.h>
+ #include <linux/init.h>
+ #include <linux/slab.h>
++#include <linux/delay.h>
+ #include <asm/apicdef.h>
++#include <asm/nmi.h>
+ 
+ #include "../perf_event.h"
+ 
++static DEFINE_PER_CPU(unsigned int, perf_nmi_counter);
++
+ static __initconst const u64 amd_hw_cache_event_ids
+ 				[PERF_COUNT_HW_CACHE_MAX]
+ 				[PERF_COUNT_HW_CACHE_OP_MAX]
+@@ -429,6 +433,132 @@ static void amd_pmu_cpu_dead(int cpu)
+ 	}
+ }
+ 
++/*
++ * When a PMC counter overflows, an NMI is used to process the event and
++ * reset the counter. NMI latency can result in the counter being updated
++ * before the NMI can run, which can result in what appear to be spurious
++ * NMIs. This function is intended to wait for the NMI to run and reset
++ * the counter to avoid possible unhandled NMI messages.
++ */
++#define OVERFLOW_WAIT_COUNT	50
++
++static void amd_pmu_wait_on_overflow(int idx)
++{
++	unsigned int i;
++	u64 counter;
++
++	/*
++	 * Wait for the counter to be reset if it has overflowed. This loop
++	 * should exit very, very quickly, but just in case, don't wait
++	 * forever...
++	 */
++	for (i = 0; i < OVERFLOW_WAIT_COUNT; i++) {
++		rdmsrl(x86_pmu_event_addr(idx), counter);
++		if (counter & (1ULL << (x86_pmu.cntval_bits - 1)))
++			break;
++
++		/* Might be in IRQ context, so can't sleep */
++		udelay(1);
++	}
++}
++
++static void amd_pmu_disable_all(void)
++{
++	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
++	int idx;
++
++	x86_pmu_disable_all();
++
++	/*
++	 * This shouldn't be called from NMI context, but add a safeguard here
++	 * to return, since if we're in NMI context we can't wait for an NMI
++	 * to reset an overflowed counter value.
++	 */
++	if (in_nmi())
++		return;
++
++	/*
++	 * Check each counter for overflow and wait for it to be reset by the
++	 * NMI if it has overflowed. This relies on the fact that all active
++	 * counters are always enabled when this function is caled and
++	 * ARCH_PERFMON_EVENTSEL_INT is always set.
++	 */
++	for (idx = 0; idx < x86_pmu.num_counters; idx++) {
++		if (!test_bit(idx, cpuc->active_mask))
++			continue;
++
++		amd_pmu_wait_on_overflow(idx);
++	}
++}
++
++static void amd_pmu_disable_event(struct perf_event *event)
++{
++	x86_pmu_disable_event(event);
++
++	/*
++	 * This can be called from NMI context (via x86_pmu_stop). The counter
++	 * may have overflowed, but either way, we'll never see it get reset
++	 * by the NMI if we're already in the NMI. And the NMI latency support
++	 * below will take care of any pending NMI that might have been
++	 * generated by the overflow.
++	 */
++	if (in_nmi())
++		return;
++
++	amd_pmu_wait_on_overflow(event->hw.idx);
++}
++
++/*
++ * Because of NMI latency, if multiple PMC counters are active or other sources
++ * of NMIs are received, the perf NMI handler can handle one or more overflowed
++ * PMC counters outside of the NMI associated with the PMC overflow. If the NMI
++ * doesn't arrive at the LAPIC in time to become a pending NMI, then the kernel
++ * back-to-back NMI support won't be active. This PMC handler needs to take into
++ * account that this can occur, otherwise this could result in unknown NMI
++ * messages being issued. Examples of this is PMC overflow while in the NMI
++ * handler when multiple PMCs are active or PMC overflow while handling some
++ * other source of an NMI.
++ *
++ * Attempt to mitigate this by using the number of active PMCs to determine
++ * whether to return NMI_HANDLED if the perf NMI handler did not handle/reset
++ * any PMCs. The per-CPU perf_nmi_counter variable is set to a minimum of the
++ * number of active PMCs or 2. The value of 2 is used in case an NMI does not
++ * arrive at the LAPIC in time to be collapsed into an already pending NMI.
++ */
++static int amd_pmu_handle_irq(struct pt_regs *regs)
++{
++	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
++	int active, handled;
++
++	/*
++	 * Obtain the active count before calling x86_pmu_handle_irq() since
++	 * it is possible that x86_pmu_handle_irq() may make a counter
++	 * inactive (through x86_pmu_stop).
++	 */
++	active = __bitmap_weight(cpuc->active_mask, X86_PMC_IDX_MAX);
++
++	/* Process any counter overflows */
++	handled = x86_pmu_handle_irq(regs);
++
++	/*
++	 * If a counter was handled, record the number of possible remaining
++	 * NMIs that can occur.
++	 */
++	if (handled) {
++		this_cpu_write(perf_nmi_counter,
++			       min_t(unsigned int, 2, active));
++
++		return handled;
++	}
++
++	if (!this_cpu_read(perf_nmi_counter))
++		return NMI_DONE;
++
++	this_cpu_dec(perf_nmi_counter);
++
++	return NMI_HANDLED;
++}
++
+ static struct event_constraint *
+ amd_get_event_constraints(struct cpu_hw_events *cpuc, int idx,
+ 			  struct perf_event *event)
+@@ -621,11 +751,11 @@ static ssize_t amd_event_sysfs_show(char *page, u64 config)
+ 
+ static __initconst const struct x86_pmu amd_pmu = {
+ 	.name			= "AMD",
+-	.handle_irq		= x86_pmu_handle_irq,
+-	.disable_all		= x86_pmu_disable_all,
++	.handle_irq		= amd_pmu_handle_irq,
++	.disable_all		= amd_pmu_disable_all,
+ 	.enable_all		= x86_pmu_enable_all,
+ 	.enable			= x86_pmu_enable_event,
+-	.disable		= x86_pmu_disable_event,
++	.disable		= amd_pmu_disable_event,
+ 	.hw_config		= amd_pmu_hw_config,
+ 	.schedule_events	= x86_schedule_events,
+ 	.eventsel		= MSR_K7_EVNTSEL0,
+@@ -728,7 +858,7 @@ void amd_pmu_enable_virt(void)
+ 	cpuc->perf_ctr_virt_mask = 0;
+ 
+ 	/* Reload all events */
+-	x86_pmu_disable_all();
++	amd_pmu_disable_all();
+ 	x86_pmu_enable_all(0);
+ }
+ EXPORT_SYMBOL_GPL(amd_pmu_enable_virt);
+@@ -746,7 +876,7 @@ void amd_pmu_disable_virt(void)
+ 	cpuc->perf_ctr_virt_mask = AMD64_EVENTSEL_HOSTONLY;
+ 
+ 	/* Reload all events */
+-	x86_pmu_disable_all();
++	amd_pmu_disable_all();
+ 	x86_pmu_enable_all(0);
+ }
+ EXPORT_SYMBOL_GPL(amd_pmu_disable_virt);
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 65e44f0588e2..6ed99de2ddf5 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -1328,8 +1328,9 @@ void x86_pmu_stop(struct perf_event *event, int flags)
+ 	struct cpu_hw_events *cpuc = this_cpu_ptr(&cpu_hw_events);
+ 	struct hw_perf_event *hwc = &event->hw;
+ 
+-	if (__test_and_clear_bit(hwc->idx, cpuc->active_mask)) {
++	if (test_bit(hwc->idx, cpuc->active_mask)) {
+ 		x86_pmu.disable(event);
++		__clear_bit(hwc->idx, cpuc->active_mask);
+ 		cpuc->events[hwc->idx] = NULL;
+ 		WARN_ON_ONCE(hwc->state & PERF_HES_STOPPED);
+ 		hwc->state |= PERF_HES_STOPPED;
+@@ -1426,16 +1427,8 @@ int x86_pmu_handle_irq(struct pt_regs *regs)
+ 	apic_write(APIC_LVTPC, APIC_DM_NMI);
+ 
+ 	for (idx = 0; idx < x86_pmu.num_counters; idx++) {
+-		if (!test_bit(idx, cpuc->active_mask)) {
+-			/*
+-			 * Though we deactivated the counter some cpus
+-			 * might still deliver spurious interrupts still
+-			 * in flight. Catch them:
+-			 */
+-			if (__test_and_clear_bit(idx, cpuc->running))
+-				handled++;
++		if (!test_bit(idx, cpuc->active_mask))
+ 			continue;
+-		}
+ 
+ 		event = cpuc->events[idx];
+ 
+diff --git a/arch/x86/include/asm/suspend_32.h b/arch/x86/include/asm/suspend_32.h
+index 982c325dad33..8be6afb58471 100644
+--- a/arch/x86/include/asm/suspend_32.h
++++ b/arch/x86/include/asm/suspend_32.h
+@@ -12,7 +12,13 @@
+ 
+ /* image of the saved processor state */
+ struct saved_context {
+-	u16 es, fs, gs, ss;
++	/*
++	 * On x86_32, all segment registers, with the possible exception of
++	 * gs, are saved at kernel entry in pt_regs.
++	 */
++#ifdef CONFIG_X86_32_LAZY_GS
++	u16 gs;
++#endif
+ 	unsigned long cr0, cr2, cr3, cr4;
+ 	u64 misc_enable;
+ 	bool misc_enable_saved;
+diff --git a/arch/x86/include/asm/suspend_64.h b/arch/x86/include/asm/suspend_64.h
+index 7306e911faee..a7af9f53c0cb 100644
+--- a/arch/x86/include/asm/suspend_64.h
++++ b/arch/x86/include/asm/suspend_64.h
+@@ -20,8 +20,20 @@
+  */
+ struct saved_context {
+ 	struct pt_regs regs;
+-	u16 ds, es, fs, gs, ss;
+-	unsigned long gs_base, gs_kernel_base, fs_base;
++
++	/*
++	 * User CS and SS are saved in current_pt_regs().  The rest of the
++	 * segment selectors need to be saved and restored here.
++	 */
++	u16 ds, es, fs, gs;
++
++	/*
++	 * Usermode FSBASE and GSBASE may not match the fs and gs selectors,
++	 * so we save them separately.  We save the kernelmode GSBASE to
++	 * restore percpu access after resume.
++	 */
++	unsigned long kernelmode_gs_base, usermode_gs_base, fs_base;
++
+ 	unsigned long cr0, cr2, cr3, cr4, cr8;
+ 	u64 misc_enable;
+ 	bool misc_enable_saved;
+@@ -30,8 +42,7 @@ struct saved_context {
+ 	u16 gdt_pad; /* Unused */
+ 	struct desc_ptr gdt_desc;
+ 	u16 idt_pad;
+-	u16 idt_limit;
+-	unsigned long idt_base;
++	struct desc_ptr idt;
+ 	u16 ldt;
+ 	u16 tss;
+ 	unsigned long tr;
+diff --git a/arch/x86/include/asm/xen/hypercall.h b/arch/x86/include/asm/xen/hypercall.h
+index bfd882617613..e7e625448008 100644
+--- a/arch/x86/include/asm/xen/hypercall.h
++++ b/arch/x86/include/asm/xen/hypercall.h
+@@ -217,6 +217,9 @@ privcmd_call(unsigned call,
+ 	__HYPERCALL_DECLS;
+ 	__HYPERCALL_5ARG(a1, a2, a3, a4, a5);
+ 
++	if (call >= PAGE_SIZE / sizeof(hypercall_page[0]))
++		return -EINVAL;
++
+ 	stac();
+ 	asm volatile(CALL_NOSPEC
+ 		     : __HYPERCALL_5PARAM
+diff --git a/arch/x86/power/cpu.c b/arch/x86/power/cpu.c
+index 04d5157fe7f8..a7d966964c6f 100644
+--- a/arch/x86/power/cpu.c
++++ b/arch/x86/power/cpu.c
+@@ -82,12 +82,8 @@ static void __save_processor_state(struct saved_context *ctxt)
+ 	/*
+ 	 * descriptor tables
+ 	 */
+-#ifdef CONFIG_X86_32
+ 	store_idt(&ctxt->idt);
+-#else
+-/* CONFIG_X86_64 */
+-	store_idt((struct desc_ptr *)&ctxt->idt_limit);
+-#endif
++
+ 	/*
+ 	 * We save it here, but restore it only in the hibernate case.
+ 	 * For ACPI S3 resume, this is loaded via 'early_gdt_desc' in 64-bit
+@@ -103,22 +99,18 @@ static void __save_processor_state(struct saved_context *ctxt)
+ 	/*
+ 	 * segment registers
+ 	 */
+-#ifdef CONFIG_X86_32
+-	savesegment(es, ctxt->es);
+-	savesegment(fs, ctxt->fs);
++#ifdef CONFIG_X86_32_LAZY_GS
+ 	savesegment(gs, ctxt->gs);
+-	savesegment(ss, ctxt->ss);
+-#else
+-/* CONFIG_X86_64 */
+-	asm volatile ("movw %%ds, %0" : "=m" (ctxt->ds));
+-	asm volatile ("movw %%es, %0" : "=m" (ctxt->es));
+-	asm volatile ("movw %%fs, %0" : "=m" (ctxt->fs));
+-	asm volatile ("movw %%gs, %0" : "=m" (ctxt->gs));
+-	asm volatile ("movw %%ss, %0" : "=m" (ctxt->ss));
++#endif
++#ifdef CONFIG_X86_64
++	savesegment(gs, ctxt->gs);
++	savesegment(fs, ctxt->fs);
++	savesegment(ds, ctxt->ds);
++	savesegment(es, ctxt->es);
+ 
+ 	rdmsrl(MSR_FS_BASE, ctxt->fs_base);
+-	rdmsrl(MSR_GS_BASE, ctxt->gs_base);
+-	rdmsrl(MSR_KERNEL_GS_BASE, ctxt->gs_kernel_base);
++	rdmsrl(MSR_GS_BASE, ctxt->kernelmode_gs_base);
++	rdmsrl(MSR_KERNEL_GS_BASE, ctxt->usermode_gs_base);
+ 	mtrr_save_fixed_ranges(NULL);
+ 
+ 	rdmsrl(MSR_EFER, ctxt->efer);
+@@ -180,6 +172,9 @@ static void fix_processor_context(void)
+ 	write_gdt_entry(desc, GDT_ENTRY_TSS, &tss, DESC_TSS);
+ 
+ 	syscall_init();				/* This sets MSR_*STAR and related */
++#else
++	if (boot_cpu_has(X86_FEATURE_SEP))
++		enable_sep_cpu();
+ #endif
+ 	load_TR_desc();				/* This does ltr */
+ 	load_mm_ldt(current->active_mm);	/* This does lldt */
+@@ -192,9 +187,12 @@ static void fix_processor_context(void)
+ }
+ 
+ /**
+- *	__restore_processor_state - restore the contents of CPU registers saved
+- *		by __save_processor_state()
+- *	@ctxt - structure to load the registers contents from
++ * __restore_processor_state - restore the contents of CPU registers saved
++ *                             by __save_processor_state()
++ * @ctxt - structure to load the registers contents from
++ *
++ * The asm code that gets us here will have restored a usable GDT, although
++ * it will be pointing to the wrong alias.
+  */
+ static void notrace __restore_processor_state(struct saved_context *ctxt)
+ {
+@@ -217,46 +215,52 @@ static void notrace __restore_processor_state(struct saved_context *ctxt)
+ 	write_cr2(ctxt->cr2);
+ 	write_cr0(ctxt->cr0);
+ 
++	/* Restore the IDT. */
++	load_idt(&ctxt->idt);
++
+ 	/*
+-	 * now restore the descriptor tables to their proper values
+-	 * ltr is done i fix_processor_context().
++	 * Just in case the asm code got us here with the SS, DS, or ES
++	 * out of sync with the GDT, update them.
+ 	 */
+-#ifdef CONFIG_X86_32
+-	load_idt(&ctxt->idt);
++	loadsegment(ss, __KERNEL_DS);
++	loadsegment(ds, __USER_DS);
++	loadsegment(es, __USER_DS);
++
++	/*
++	 * Restore percpu access.  Percpu access can happen in exception
++	 * handlers or in complicated helpers like load_gs_index().
++	 */
++#ifdef CONFIG_X86_64
++	wrmsrl(MSR_GS_BASE, ctxt->kernelmode_gs_base);
+ #else
+-/* CONFIG_X86_64 */
+-	load_idt((const struct desc_ptr *)&ctxt->idt_limit);
++	loadsegment(fs, __KERNEL_PERCPU);
++	loadsegment(gs, __KERNEL_STACK_CANARY);
+ #endif
+ 
++	/* Restore the TSS, RO GDT, LDT, and usermode-relevant MSRs. */
++	fix_processor_context();
++
+ 	/*
+-	 * segment registers
++	 * Now that we have descriptor tables fully restored and working
++	 * exception handling, restore the usermode segments.
+ 	 */
+-#ifdef CONFIG_X86_32
++#ifdef CONFIG_X86_64
++	loadsegment(ds, ctxt->es);
+ 	loadsegment(es, ctxt->es);
+ 	loadsegment(fs, ctxt->fs);
+-	loadsegment(gs, ctxt->gs);
+-	loadsegment(ss, ctxt->ss);
++	load_gs_index(ctxt->gs);
+ 
+ 	/*
+-	 * sysenter MSRs
++	 * Restore FSBASE and GSBASE after restoring the selectors, since
++	 * restoring the selectors clobbers the bases.  Keep in mind
++	 * that MSR_KERNEL_GS_BASE is horribly misnamed.
+ 	 */
+-	if (boot_cpu_has(X86_FEATURE_SEP))
+-		enable_sep_cpu();
+-#else
+-/* CONFIG_X86_64 */
+-	asm volatile ("movw %0, %%ds" :: "r" (ctxt->ds));
+-	asm volatile ("movw %0, %%es" :: "r" (ctxt->es));
+-	asm volatile ("movw %0, %%fs" :: "r" (ctxt->fs));
+-	load_gs_index(ctxt->gs);
+-	asm volatile ("movw %0, %%ss" :: "r" (ctxt->ss));
+-
+ 	wrmsrl(MSR_FS_BASE, ctxt->fs_base);
+-	wrmsrl(MSR_GS_BASE, ctxt->gs_base);
+-	wrmsrl(MSR_KERNEL_GS_BASE, ctxt->gs_kernel_base);
++	wrmsrl(MSR_KERNEL_GS_BASE, ctxt->usermode_gs_base);
++#elif defined(CONFIG_X86_32_LAZY_GS)
++	loadsegment(gs, ctxt->gs);
+ #endif
+ 
+-	fix_processor_context();
+-
+ 	do_fpu_end();
+ 	tsc_verify_tsc_adjust(true);
+ 	x86_platform.restore_sched_clock_state();
+diff --git a/arch/xtensa/kernel/stacktrace.c b/arch/xtensa/kernel/stacktrace.c
+index 0df4080fa20f..a94da7dd3eae 100644
+--- a/arch/xtensa/kernel/stacktrace.c
++++ b/arch/xtensa/kernel/stacktrace.c
+@@ -253,10 +253,14 @@ static int return_address_cb(struct stackframe *frame, void *data)
+ 	return 1;
+ }
+ 
++/*
++ * level == 0 is for the return address from the caller of this function,
++ * not from this function itself.
++ */
+ unsigned long return_address(unsigned level)
+ {
+ 	struct return_addr_data r = {
+-		.skip = level + 1,
++		.skip = level,
+ 	};
+ 	walk_stackframe(stack_pointer(NULL), return_address_cb, &r);
+ 	return r.addr;
+diff --git a/block/bio.c b/block/bio.c
+index 2e5d881423b8..d01ab919b313 100644
+--- a/block/bio.c
++++ b/block/bio.c
+@@ -1280,8 +1280,11 @@ struct bio *bio_copy_user_iov(struct request_queue *q,
+ 			}
+ 		}
+ 
+-		if (bio_add_pc_page(q, bio, page, bytes, offset) < bytes)
++		if (bio_add_pc_page(q, bio, page, bytes, offset) < bytes) {
++			if (!map_data)
++				__free_page(page);
+ 			break;
++		}
+ 
+ 		len -= bytes;
+ 		offset = 0;
+diff --git a/drivers/char/Kconfig b/drivers/char/Kconfig
+index c28dca0c613d..88316f86cc95 100644
+--- a/drivers/char/Kconfig
++++ b/drivers/char/Kconfig
+@@ -380,7 +380,7 @@ config XILINX_HWICAP
+ 
+ config R3964
+ 	tristate "Siemens R3964 line discipline"
+-	depends on TTY
++	depends on TTY && BROKEN
+ 	---help---
+ 	  This driver allows synchronous communication with devices using the
+ 	  Siemens R3964 packet protocol. Unless you are dealing with special
+diff --git a/drivers/gpu/drm/i915/gvt/gtt.c b/drivers/gpu/drm/i915/gvt/gtt.c
+index dadacbe558ab..1a1f7eb46d1e 100644
+--- a/drivers/gpu/drm/i915/gvt/gtt.c
++++ b/drivers/gpu/drm/i915/gvt/gtt.c
+@@ -1629,7 +1629,7 @@ void intel_vgpu_unpin_mm(struct intel_vgpu_mm *mm)
+ 	if (WARN_ON(mm->type != INTEL_GVT_MM_PPGTT))
+ 		return;
+ 
+-	atomic_dec(&mm->pincount);
++	atomic_dec_if_positive(&mm->pincount);
+ }
+ 
+ /**
+diff --git a/drivers/gpu/drm/udl/udl_drv.c b/drivers/gpu/drm/udl/udl_drv.c
+index 31421b6b586e..b45ac6bc8add 100644
+--- a/drivers/gpu/drm/udl/udl_drv.c
++++ b/drivers/gpu/drm/udl/udl_drv.c
+@@ -47,6 +47,7 @@ static struct drm_driver driver = {
+ 	.driver_features = DRIVER_MODESET | DRIVER_GEM | DRIVER_PRIME,
+ 	.load = udl_driver_load,
+ 	.unload = udl_driver_unload,
++	.release = udl_driver_release,
+ 
+ 	/* gem hooks */
+ 	.gem_free_object = udl_gem_free_object,
+diff --git a/drivers/gpu/drm/udl/udl_drv.h b/drivers/gpu/drm/udl/udl_drv.h
+index 2c149b841cf1..307455dd6526 100644
+--- a/drivers/gpu/drm/udl/udl_drv.h
++++ b/drivers/gpu/drm/udl/udl_drv.h
+@@ -101,6 +101,7 @@ void udl_urb_completion(struct urb *urb);
+ 
+ int udl_driver_load(struct drm_device *dev, unsigned long flags);
+ void udl_driver_unload(struct drm_device *dev);
++void udl_driver_release(struct drm_device *dev);
+ 
+ int udl_fbdev_init(struct drm_device *dev);
+ void udl_fbdev_cleanup(struct drm_device *dev);
+diff --git a/drivers/gpu/drm/udl/udl_main.c b/drivers/gpu/drm/udl/udl_main.c
+index f8ea3c99b523..60866b422f81 100644
+--- a/drivers/gpu/drm/udl/udl_main.c
++++ b/drivers/gpu/drm/udl/udl_main.c
+@@ -378,6 +378,12 @@ void udl_driver_unload(struct drm_device *dev)
+ 		udl_free_urb_list(dev);
+ 
+ 	udl_fbdev_cleanup(dev);
+-	udl_modeset_cleanup(dev);
+ 	kfree(udl);
+ }
++
++void udl_driver_release(struct drm_device *dev)
++{
++	udl_modeset_cleanup(dev);
++	drm_dev_fini(dev);
++	kfree(dev);
++}
+diff --git a/drivers/md/dm-table.c b/drivers/md/dm-table.c
+index f9cd81375f28..d76e685206b3 100644
+--- a/drivers/md/dm-table.c
++++ b/drivers/md/dm-table.c
+@@ -1789,6 +1789,36 @@ static bool dm_table_supports_discards(struct dm_table *t)
+ 	return true;
+ }
+ 
++static int device_requires_stable_pages(struct dm_target *ti,
++					struct dm_dev *dev, sector_t start,
++					sector_t len, void *data)
++{
++	struct request_queue *q = bdev_get_queue(dev->bdev);
++
++	return q && bdi_cap_stable_pages_required(q->backing_dev_info);
++}
++
++/*
++ * If any underlying device requires stable pages, a table must require
++ * them as well.  Only targets that support iterate_devices are considered:
++ * don't want error, zero, etc to require stable pages.
++ */
++static bool dm_table_requires_stable_pages(struct dm_table *t)
++{
++	struct dm_target *ti;
++	unsigned i;
++
++	for (i = 0; i < dm_table_get_num_targets(t); i++) {
++		ti = dm_table_get_target(t, i);
++
++		if (ti->type->iterate_devices &&
++		    ti->type->iterate_devices(ti, device_requires_stable_pages, NULL))
++			return true;
++	}
++
++	return false;
++}
++
+ void dm_table_set_restrictions(struct dm_table *t, struct request_queue *q,
+ 			       struct queue_limits *limits)
+ {
+@@ -1837,6 +1867,15 @@ void dm_table_set_restrictions(struct dm_table *t, struct request_queue *q,
+ 
+ 	dm_table_verify_integrity(t);
+ 
++	/*
++	 * Some devices don't use blk_integrity but still want stable pages
++	 * because they do their own checksumming.
++	 */
++	if (dm_table_requires_stable_pages(t))
++		q->backing_dev_info->capabilities |= BDI_CAP_STABLE_WRITES;
++	else
++		q->backing_dev_info->capabilities &= ~BDI_CAP_STABLE_WRITES;
++
+ 	/*
+ 	 * Determine whether or not this queue's I/O timings contribute
+ 	 * to the entropy pool, Only request-based targets use this.
+diff --git a/drivers/net/ethernet/broadcom/bnxt/bnxt.c b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+index 15ad247955f7..446577a1a6a5 100644
+--- a/drivers/net/ethernet/broadcom/bnxt/bnxt.c
++++ b/drivers/net/ethernet/broadcom/bnxt/bnxt.c
+@@ -1076,6 +1076,8 @@ static void bnxt_tpa_start(struct bnxt *bp, struct bnxt_rx_ring_info *rxr,
+ 	tpa_info = &rxr->rx_tpa[agg_id];
+ 
+ 	if (unlikely(cons != rxr->rx_next_cons)) {
++		netdev_warn(bp->dev, "TPA cons %x != expected cons %x\n",
++			    cons, rxr->rx_next_cons);
+ 		bnxt_sched_reset(bp, rxr);
+ 		return;
+ 	}
+@@ -1528,15 +1530,17 @@ static int bnxt_rx_pkt(struct bnxt *bp, struct bnxt_napi *bnapi, u32 *raw_cons,
+ 	}
+ 
+ 	cons = rxcmp->rx_cmp_opaque;
+-	rx_buf = &rxr->rx_buf_ring[cons];
+-	data = rx_buf->data;
+-	data_ptr = rx_buf->data_ptr;
+ 	if (unlikely(cons != rxr->rx_next_cons)) {
+ 		int rc1 = bnxt_discard_rx(bp, bnapi, raw_cons, rxcmp);
+ 
++		netdev_warn(bp->dev, "RX cons %x != expected cons %x\n",
++			    cons, rxr->rx_next_cons);
+ 		bnxt_sched_reset(bp, rxr);
+ 		return rc1;
+ 	}
++	rx_buf = &rxr->rx_buf_ring[cons];
++	data = rx_buf->data;
++	data_ptr = rx_buf->data_ptr;
+ 	prefetch(data_ptr);
+ 
+ 	misc = le32_to_cpu(rxcmp->rx_cmp_misc_v1);
+@@ -1553,11 +1557,17 @@ static int bnxt_rx_pkt(struct bnxt *bp, struct bnxt_napi *bnapi, u32 *raw_cons,
+ 
+ 	rx_buf->data = NULL;
+ 	if (rxcmp1->rx_cmp_cfa_code_errors_v2 & RX_CMP_L2_ERRORS) {
++		u32 rx_err = le32_to_cpu(rxcmp1->rx_cmp_cfa_code_errors_v2);
++
+ 		bnxt_reuse_rx_data(rxr, cons, data);
+ 		if (agg_bufs)
+ 			bnxt_reuse_rx_agg_bufs(bnapi, cp_cons, agg_bufs);
+ 
+ 		rc = -EIO;
++		if (rx_err & RX_CMPL_ERRORS_BUFFER_ERROR_MASK) {
++			netdev_warn(bp->dev, "RX buffer error %x\n", rx_err);
++			bnxt_sched_reset(bp, rxr);
++		}
+ 		goto next_rx;
+ 	}
+ 
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/en_common.c b/drivers/net/ethernet/mellanox/mlx5/core/en_common.c
+index ece3fb147e3e..36ae0b2519d2 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/en_common.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/en_common.c
+@@ -45,7 +45,9 @@ int mlx5e_create_tir(struct mlx5_core_dev *mdev,
+ 	if (err)
+ 		return err;
+ 
++	mutex_lock(&mdev->mlx5e_res.td.list_lock);
+ 	list_add(&tir->list, &mdev->mlx5e_res.td.tirs_list);
++	mutex_unlock(&mdev->mlx5e_res.td.list_lock);
+ 
+ 	return 0;
+ }
+@@ -53,8 +55,10 @@ int mlx5e_create_tir(struct mlx5_core_dev *mdev,
+ void mlx5e_destroy_tir(struct mlx5_core_dev *mdev,
+ 		       struct mlx5e_tir *tir)
+ {
++	mutex_lock(&mdev->mlx5e_res.td.list_lock);
+ 	mlx5_core_destroy_tir(mdev, tir->tirn);
+ 	list_del(&tir->list);
++	mutex_unlock(&mdev->mlx5e_res.td.list_lock);
+ }
+ 
+ static int mlx5e_create_mkey(struct mlx5_core_dev *mdev, u32 pdn,
+@@ -114,6 +118,7 @@ int mlx5e_create_mdev_resources(struct mlx5_core_dev *mdev)
+ 	}
+ 
+ 	INIT_LIST_HEAD(&mdev->mlx5e_res.td.tirs_list);
++	mutex_init(&mdev->mlx5e_res.td.list_lock);
+ 
+ 	return 0;
+ 
+@@ -140,15 +145,17 @@ int mlx5e_refresh_tirs(struct mlx5e_priv *priv, bool enable_uc_lb)
+ {
+ 	struct mlx5_core_dev *mdev = priv->mdev;
+ 	struct mlx5e_tir *tir;
+-	int err  = -ENOMEM;
++	int err  = 0;
+ 	u32 tirn = 0;
+ 	int inlen;
+ 	void *in;
+ 
+ 	inlen = MLX5_ST_SZ_BYTES(modify_tir_in);
+ 	in = kvzalloc(inlen, GFP_KERNEL);
+-	if (!in)
++	if (!in) {
++		err = -ENOMEM;
+ 		goto out;
++	}
+ 
+ 	if (enable_uc_lb)
+ 		MLX5_SET(modify_tir_in, in, ctx.self_lb_block,
+@@ -156,6 +163,7 @@ int mlx5e_refresh_tirs(struct mlx5e_priv *priv, bool enable_uc_lb)
+ 
+ 	MLX5_SET(modify_tir_in, in, bitmask.self_lb_en, 1);
+ 
++	mutex_lock(&mdev->mlx5e_res.td.list_lock);
+ 	list_for_each_entry(tir, &mdev->mlx5e_res.td.tirs_list, list) {
+ 		tirn = tir->tirn;
+ 		err = mlx5_core_modify_tir(mdev, tirn, in, inlen);
+@@ -167,6 +175,7 @@ int mlx5e_refresh_tirs(struct mlx5e_priv *priv, bool enable_uc_lb)
+ 	kvfree(in);
+ 	if (err)
+ 		netdev_err(priv->netdev, "refresh tir(0x%x) failed, %d\n", tirn, err);
++	mutex_unlock(&mdev->mlx5e_res.td.list_lock);
+ 
+ 	return err;
+ }
+diff --git a/drivers/net/ethernet/mellanox/mlx5/core/main.c b/drivers/net/ethernet/mellanox/mlx5/core/main.c
+index 558fc6a05e2a..826d1a4600f3 100644
+--- a/drivers/net/ethernet/mellanox/mlx5/core/main.c
++++ b/drivers/net/ethernet/mellanox/mlx5/core/main.c
+@@ -155,26 +155,6 @@ static struct mlx5_profile profile[] = {
+ 			.size	= 8,
+ 			.limit	= 4
+ 		},
+-		.mr_cache[16]	= {
+-			.size	= 8,
+-			.limit	= 4
+-		},
+-		.mr_cache[17]	= {
+-			.size	= 8,
+-			.limit	= 4
+-		},
+-		.mr_cache[18]	= {
+-			.size	= 8,
+-			.limit	= 4
+-		},
+-		.mr_cache[19]	= {
+-			.size	= 4,
+-			.limit	= 2
+-		},
+-		.mr_cache[20]	= {
+-			.size	= 4,
+-			.limit	= 2
+-		},
+ 	},
+ };
+ 
+diff --git a/drivers/net/ethernet/netronome/nfp/nfp_net_repr.c b/drivers/net/ethernet/netronome/nfp/nfp_net_repr.c
+index 9a7655560629..1910ca21a1bc 100644
+--- a/drivers/net/ethernet/netronome/nfp/nfp_net_repr.c
++++ b/drivers/net/ethernet/netronome/nfp/nfp_net_repr.c
+@@ -200,7 +200,7 @@ static netdev_tx_t nfp_repr_xmit(struct sk_buff *skb, struct net_device *netdev)
+ 	ret = dev_queue_xmit(skb);
+ 	nfp_repr_inc_tx_stats(netdev, len, ret);
+ 
+-	return ret;
++	return NETDEV_TX_OK;
+ }
+ 
+ static int nfp_repr_stop(struct net_device *netdev)
+diff --git a/drivers/net/hyperv/hyperv_net.h b/drivers/net/hyperv/hyperv_net.h
+index e33a6c672a0a..0f07b5978fa1 100644
+--- a/drivers/net/hyperv/hyperv_net.h
++++ b/drivers/net/hyperv/hyperv_net.h
+@@ -779,6 +779,7 @@ struct netvsc_device {
+ 
+ 	wait_queue_head_t wait_drain;
+ 	bool destroy;
++	bool tx_disable; /* if true, do not wake up queue again */
+ 
+ 	/* Receive buffer allocated by us but manages by NetVSP */
+ 	void *recv_buf;
+diff --git a/drivers/net/hyperv/netvsc.c b/drivers/net/hyperv/netvsc.c
+index 806239b89990..a3bb4d5c64f5 100644
+--- a/drivers/net/hyperv/netvsc.c
++++ b/drivers/net/hyperv/netvsc.c
+@@ -107,6 +107,7 @@ static struct netvsc_device *alloc_net_device(void)
+ 
+ 	init_waitqueue_head(&net_device->wait_drain);
+ 	net_device->destroy = false;
++	net_device->tx_disable = false;
+ 	atomic_set(&net_device->open_cnt, 0);
+ 	net_device->max_pkt = RNDIS_MAX_PKT_DEFAULT;
+ 	net_device->pkt_align = RNDIS_PKT_ALIGN_DEFAULT;
+@@ -712,7 +713,7 @@ static void netvsc_send_tx_complete(struct netvsc_device *net_device,
+ 	} else {
+ 		struct netdev_queue *txq = netdev_get_tx_queue(ndev, q_idx);
+ 
+-		if (netif_tx_queue_stopped(txq) &&
++		if (netif_tx_queue_stopped(txq) && !net_device->tx_disable &&
+ 		    (hv_ringbuf_avail_percent(&channel->outbound) > RING_AVAIL_PERCENT_HIWATER ||
+ 		     queue_sends < 1)) {
+ 			netif_tx_wake_queue(txq);
+@@ -865,7 +866,8 @@ static inline int netvsc_send_pkt(
+ 			netif_tx_stop_queue(txq);
+ 	} else if (ret == -EAGAIN) {
+ 		netif_tx_stop_queue(txq);
+-		if (atomic_read(&nvchan->queue_sends) < 1) {
++		if (atomic_read(&nvchan->queue_sends) < 1 &&
++		    !net_device->tx_disable) {
+ 			netif_tx_wake_queue(txq);
+ 			ret = -ENOSPC;
+ 		}
+diff --git a/drivers/net/hyperv/netvsc_drv.c b/drivers/net/hyperv/netvsc_drv.c
+index 74b9e51b2b47..eb92720dd1c4 100644
+--- a/drivers/net/hyperv/netvsc_drv.c
++++ b/drivers/net/hyperv/netvsc_drv.c
+@@ -108,6 +108,15 @@ static void netvsc_set_rx_mode(struct net_device *net)
+ 	rcu_read_unlock();
+ }
+ 
++static void netvsc_tx_enable(struct netvsc_device *nvscdev,
++			     struct net_device *ndev)
++{
++	nvscdev->tx_disable = false;
++	virt_wmb(); /* ensure queue wake up mechanism is on */
++
++	netif_tx_wake_all_queues(ndev);
++}
++
+ static int netvsc_open(struct net_device *net)
+ {
+ 	struct net_device_context *ndev_ctx = netdev_priv(net);
+@@ -128,7 +137,7 @@ static int netvsc_open(struct net_device *net)
+ 	rdev = nvdev->extension;
+ 	if (!rdev->link_state) {
+ 		netif_carrier_on(net);
+-		netif_tx_wake_all_queues(net);
++		netvsc_tx_enable(nvdev, net);
+ 	}
+ 
+ 	if (vf_netdev) {
+@@ -183,6 +192,17 @@ static int netvsc_wait_until_empty(struct netvsc_device *nvdev)
+ 	}
+ }
+ 
++static void netvsc_tx_disable(struct netvsc_device *nvscdev,
++			      struct net_device *ndev)
++{
++	if (nvscdev) {
++		nvscdev->tx_disable = true;
++		virt_wmb(); /* ensure txq will not wake up after stop */
++	}
++
++	netif_tx_disable(ndev);
++}
++
+ static int netvsc_close(struct net_device *net)
+ {
+ 	struct net_device_context *net_device_ctx = netdev_priv(net);
+@@ -191,7 +211,7 @@ static int netvsc_close(struct net_device *net)
+ 	struct netvsc_device *nvdev = rtnl_dereference(net_device_ctx->nvdev);
+ 	int ret;
+ 
+-	netif_tx_disable(net);
++	netvsc_tx_disable(nvdev, net);
+ 
+ 	/* No need to close rndis filter if it is removed already */
+ 	if (!nvdev)
+@@ -893,7 +913,7 @@ static int netvsc_detach(struct net_device *ndev,
+ 
+ 	/* If device was up (receiving) then shutdown */
+ 	if (netif_running(ndev)) {
+-		netif_tx_disable(ndev);
++		netvsc_tx_disable(nvdev, ndev);
+ 
+ 		ret = rndis_filter_close(nvdev);
+ 		if (ret) {
+@@ -1720,7 +1740,7 @@ static void netvsc_link_change(struct work_struct *w)
+ 		if (rdev->link_state) {
+ 			rdev->link_state = false;
+ 			netif_carrier_on(net);
+-			netif_tx_wake_all_queues(net);
++			netvsc_tx_enable(net_device, net);
+ 		} else {
+ 			notify = true;
+ 		}
+@@ -1730,7 +1750,7 @@ static void netvsc_link_change(struct work_struct *w)
+ 		if (!rdev->link_state) {
+ 			rdev->link_state = true;
+ 			netif_carrier_off(net);
+-			netif_tx_stop_all_queues(net);
++			netvsc_tx_disable(net_device, net);
+ 		}
+ 		kfree(event);
+ 		break;
+@@ -1739,7 +1759,7 @@ static void netvsc_link_change(struct work_struct *w)
+ 		if (!rdev->link_state) {
+ 			rdev->link_state = true;
+ 			netif_carrier_off(net);
+-			netif_tx_stop_all_queues(net);
++			netvsc_tx_disable(net_device, net);
+ 			event->event = RNDIS_STATUS_MEDIA_CONNECT;
+ 			spin_lock_irqsave(&ndev_ctx->lock, flags);
+ 			list_add(&event->list, &ndev_ctx->reconfig_events);
+diff --git a/drivers/net/phy/sfp.c b/drivers/net/phy/sfp.c
+index a1b68b19d912..5ab725a571a8 100644
+--- a/drivers/net/phy/sfp.c
++++ b/drivers/net/phy/sfp.c
+@@ -878,6 +878,10 @@ static int sfp_probe(struct platform_device *pdev)
+ 	if (poll)
+ 		mod_delayed_work(system_wq, &sfp->poll, poll_jiffies);
+ 
++	sfp->sfp_bus = sfp_register_socket(sfp->dev, sfp, &sfp_module_ops);
++	if (!sfp->sfp_bus)
++		return -ENOMEM;
++
+ 	return 0;
+ }
+ 
+@@ -887,10 +891,6 @@ static int sfp_remove(struct platform_device *pdev)
+ 
+ 	sfp_unregister_socket(sfp->sfp_bus);
+ 
+-	sfp->sfp_bus = sfp_register_socket(sfp->dev, sfp, &sfp_module_ops);
+-	if (!sfp->sfp_bus)
+-		return -ENOMEM;
+-
+ 	return 0;
+ }
+ 
+diff --git a/drivers/net/usb/qmi_wwan.c b/drivers/net/usb/qmi_wwan.c
+index 65e47cc52d14..01abe8eea753 100644
+--- a/drivers/net/usb/qmi_wwan.c
++++ b/drivers/net/usb/qmi_wwan.c
+@@ -1188,6 +1188,7 @@ static const struct usb_device_id products[] = {
+ 	{QMI_FIXED_INTF(0x19d2, 0x2002, 4)},	/* ZTE (Vodafone) K3765-Z */
+ 	{QMI_FIXED_INTF(0x2001, 0x7e19, 4)},	/* D-Link DWM-221 B1 */
+ 	{QMI_FIXED_INTF(0x2001, 0x7e35, 4)},	/* D-Link DWM-222 */
++	{QMI_FIXED_INTF(0x2020, 0x2031, 4)},	/* Olicard 600 */
+ 	{QMI_FIXED_INTF(0x2020, 0x2033, 4)},	/* BroadMobi BM806U */
+ 	{QMI_FIXED_INTF(0x0f3d, 0x68a2, 8)},    /* Sierra Wireless MC7700 */
+ 	{QMI_FIXED_INTF(0x114f, 0x68a2, 8)},    /* Sierra Wireless MC7750 */
+diff --git a/drivers/pci/quirks.c b/drivers/pci/quirks.c
+index d442afa195ab..867056395d48 100644
+--- a/drivers/pci/quirks.c
++++ b/drivers/pci/quirks.c
+@@ -3888,6 +3888,8 @@ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9128,
+ /* https://bugzilla.kernel.org/show_bug.cgi?id=42679#c14 */
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9130,
+ 			 quirk_dma_func1_alias);
++DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9170,
++			 quirk_dma_func1_alias);
+ /* https://bugzilla.kernel.org/show_bug.cgi?id=42679#c47 + c57 */
+ DECLARE_PCI_FIXUP_HEADER(PCI_VENDOR_ID_MARVELL_EXT, 0x9172,
+ 			 quirk_dma_func1_alias);
+diff --git a/drivers/staging/ccree/ssi_hash.c b/drivers/staging/ccree/ssi_hash.c
+index e266a70a1b32..13291aeaf350 100644
+--- a/drivers/staging/ccree/ssi_hash.c
++++ b/drivers/staging/ccree/ssi_hash.c
+@@ -1781,7 +1781,7 @@ static int ssi_ahash_import(struct ahash_request *req, const void *in)
+ 	struct device *dev = &ctx->drvdata->plat_dev->dev;
+ 	struct ahash_req_ctx *state = ahash_request_ctx(req);
+ 	u32 tmp;
+-	int rc = 0;
++	int rc;
+ 
+ 	memcpy(&tmp, in, sizeof(u32));
+ 	if (tmp != CC_EXPORT_MAGIC) {
+@@ -1790,12 +1790,9 @@ static int ssi_ahash_import(struct ahash_request *req, const void *in)
+ 	}
+ 	in += sizeof(u32);
+ 
+-	/* call init() to allocate bufs if the user hasn't */
+-	if (!state->digest_buff) {
+-		rc = ssi_hash_init(state, ctx);
+-		if (rc)
+-			goto out;
+-	}
++	rc = ssi_hash_init(state, ctx);
++	if (rc)
++		goto out;
+ 
+ 	dma_sync_single_for_cpu(dev, state->digest_buff_dma_addr,
+ 				ctx->inter_digestsize, DMA_BIDIRECTIONAL);
+diff --git a/drivers/tty/Kconfig b/drivers/tty/Kconfig
+index b811442c5ce6..9788a25a34f4 100644
+--- a/drivers/tty/Kconfig
++++ b/drivers/tty/Kconfig
+@@ -467,4 +467,28 @@ config VCC
+ 	depends on SUN_LDOMS
+ 	help
+ 	  Support for Sun logical domain consoles.
++
++config LDISC_AUTOLOAD
++	bool "Automatically load TTY Line Disciplines"
++	default y
++	help
++	  Historically the kernel has always automatically loaded any
++	  line discipline that is in a kernel module when a user asks
++	  for it to be loaded with the TIOCSETD ioctl, or through other
++	  means.  This is not always the best thing to do on systems
++	  where you know you will not be using some of the more
++	  "ancient" line disciplines, so prevent the kernel from doing
++	  this unless the request is coming from a process with the
++	  CAP_SYS_MODULE permissions.
++
++	  Say 'Y' here if you trust your userspace users to do the right
++	  thing, or if you have only provided the line disciplines that
++	  you know you will be using, or if you wish to continue to use
++	  the traditional method of on-demand loading of these modules
++	  by any user.
++
++	  This functionality can be changed at runtime with the
++	  dev.tty.ldisc_autoload sysctl, this configuration option will
++	  only set the default value of this functionality.
++
+ endif # TTY
+diff --git a/drivers/tty/tty_io.c b/drivers/tty/tty_io.c
+index 7e351d205393..dba4f53a7fff 100644
+--- a/drivers/tty/tty_io.c
++++ b/drivers/tty/tty_io.c
+@@ -511,6 +511,8 @@ static const struct file_operations hung_up_tty_fops = {
+ static DEFINE_SPINLOCK(redirect_lock);
+ static struct file *redirect;
+ 
++extern void tty_sysctl_init(void);
++
+ /**
+  *	tty_wakeup	-	request more data
+  *	@tty: terminal
+@@ -3332,6 +3334,7 @@ void console_sysfs_notify(void)
+  */
+ int __init tty_init(void)
+ {
++	tty_sysctl_init();
+ 	cdev_init(&tty_cdev, &tty_fops);
+ 	if (cdev_add(&tty_cdev, MKDEV(TTYAUX_MAJOR, 0), 1) ||
+ 	    register_chrdev_region(MKDEV(TTYAUX_MAJOR, 0), 1, "/dev/tty") < 0)
+diff --git a/drivers/tty/tty_ldisc.c b/drivers/tty/tty_ldisc.c
+index ca656ef8de64..01fcdc7ff077 100644
+--- a/drivers/tty/tty_ldisc.c
++++ b/drivers/tty/tty_ldisc.c
+@@ -155,6 +155,13 @@ static void put_ldops(struct tty_ldisc_ops *ldops)
+  *		takes tty_ldiscs_lock to guard against ldisc races
+  */
+ 
++#if defined(CONFIG_LDISC_AUTOLOAD)
++	#define INITIAL_AUTOLOAD_STATE	1
++#else
++	#define INITIAL_AUTOLOAD_STATE	0
++#endif
++static int tty_ldisc_autoload = INITIAL_AUTOLOAD_STATE;
++
+ static struct tty_ldisc *tty_ldisc_get(struct tty_struct *tty, int disc)
+ {
+ 	struct tty_ldisc *ld;
+@@ -169,6 +176,8 @@ static struct tty_ldisc *tty_ldisc_get(struct tty_struct *tty, int disc)
+ 	 */
+ 	ldops = get_ldops(disc);
+ 	if (IS_ERR(ldops)) {
++		if (!capable(CAP_SYS_MODULE) && !tty_ldisc_autoload)
++			return ERR_PTR(-EPERM);
+ 		request_module("tty-ldisc-%d", disc);
+ 		ldops = get_ldops(disc);
+ 		if (IS_ERR(ldops))
+@@ -841,3 +850,41 @@ void tty_ldisc_deinit(struct tty_struct *tty)
+ 		tty_ldisc_put(tty->ldisc);
+ 	tty->ldisc = NULL;
+ }
++
++static int zero;
++static int one = 1;
++static struct ctl_table tty_table[] = {
++	{
++		.procname	= "ldisc_autoload",
++		.data		= &tty_ldisc_autoload,
++		.maxlen		= sizeof(tty_ldisc_autoload),
++		.mode		= 0644,
++		.proc_handler	= proc_dointvec,
++		.extra1		= &zero,
++		.extra2		= &one,
++	},
++	{ }
++};
++
++static struct ctl_table tty_dir_table[] = {
++	{
++		.procname	= "tty",
++		.mode		= 0555,
++		.child		= tty_table,
++	},
++	{ }
++};
++
++static struct ctl_table tty_root_table[] = {
++	{
++		.procname	= "dev",
++		.mode		= 0555,
++		.child		= tty_dir_table,
++	},
++	{ }
++};
++
++void tty_sysctl_init(void)
++{
++	register_sysctl_table(tty_root_table);
++}
+diff --git a/drivers/virtio/virtio_ring.c b/drivers/virtio/virtio_ring.c
+index 71458f493cf8..cc9d421c0929 100644
+--- a/drivers/virtio/virtio_ring.c
++++ b/drivers/virtio/virtio_ring.c
+@@ -1087,6 +1087,8 @@ struct virtqueue *vring_create_virtqueue(
+ 					  GFP_KERNEL|__GFP_NOWARN|__GFP_ZERO);
+ 		if (queue)
+ 			break;
++		if (!may_reduce_num)
++			return NULL;
+ 	}
+ 
+ 	if (!num)
+diff --git a/fs/block_dev.c b/fs/block_dev.c
+index 3911c1a80219..61949e3446e5 100644
+--- a/fs/block_dev.c
++++ b/fs/block_dev.c
+@@ -306,10 +306,10 @@ static void blkdev_bio_end_io(struct bio *bio)
+ 	struct blkdev_dio *dio = bio->bi_private;
+ 	bool should_dirty = dio->should_dirty;
+ 
+-	if (dio->multi_bio && !atomic_dec_and_test(&dio->ref)) {
+-		if (bio->bi_status && !dio->bio.bi_status)
+-			dio->bio.bi_status = bio->bi_status;
+-	} else {
++	if (bio->bi_status && !dio->bio.bi_status)
++		dio->bio.bi_status = bio->bi_status;
++
++	if (!dio->multi_bio || atomic_dec_and_test(&dio->ref)) {
+ 		if (!dio->is_sync) {
+ 			struct kiocb *iocb = dio->iocb;
+ 			ssize_t ret;
+diff --git a/fs/btrfs/ioctl.c b/fs/btrfs/ioctl.c
+index cddd63b9103f..dd3b4820ac30 100644
+--- a/fs/btrfs/ioctl.c
++++ b/fs/btrfs/ioctl.c
+@@ -357,6 +357,16 @@ static noinline int btrfs_ioctl_fitrim(struct file *file, void __user *arg)
+ 	if (!capable(CAP_SYS_ADMIN))
+ 		return -EPERM;
+ 
++	/*
++	 * If the fs is mounted with nologreplay, which requires it to be
++	 * mounted in RO mode as well, we can not allow discard on free space
++	 * inside block groups, because log trees refer to extents that are not
++	 * pinned in a block group's free space cache (pinning the extents is
++	 * precisely the first phase of replaying a log tree).
++	 */
++	if (btrfs_test_opt(fs_info, NOLOGREPLAY))
++		return -EROFS;
++
+ 	rcu_read_lock();
+ 	list_for_each_entry_rcu(device, &fs_info->fs_devices->devices,
+ 				dev_list) {
+diff --git a/fs/btrfs/props.c b/fs/btrfs/props.c
+index cbabc6f2b322..266f9069307b 100644
+--- a/fs/btrfs/props.c
++++ b/fs/btrfs/props.c
+@@ -386,11 +386,11 @@ int btrfs_subvol_inherit_props(struct btrfs_trans_handle *trans,
+ 
+ static int prop_compression_validate(const char *value, size_t len)
+ {
+-	if (!strncmp("lzo", value, len))
++	if (!strncmp("lzo", value, 3))
+ 		return 0;
+-	else if (!strncmp("zlib", value, len))
++	else if (!strncmp("zlib", value, 4))
+ 		return 0;
+-	else if (!strncmp("zstd", value, len))
++	else if (!strncmp("zstd", value, 4))
+ 		return 0;
+ 
+ 	return -EINVAL;
+@@ -416,7 +416,7 @@ static int prop_compression_apply(struct inode *inode,
+ 		btrfs_set_fs_incompat(fs_info, COMPRESS_LZO);
+ 	} else if (!strncmp("zlib", value, 4)) {
+ 		type = BTRFS_COMPRESS_ZLIB;
+-	} else if (!strncmp("zstd", value, len)) {
++	} else if (!strncmp("zstd", value, 4)) {
+ 		type = BTRFS_COMPRESS_ZSTD;
+ 		btrfs_set_fs_incompat(fs_info, COMPRESS_ZSTD);
+ 	} else {
+diff --git a/include/linux/bitrev.h b/include/linux/bitrev.h
+index 50fb0dee23e8..d35b8ec1c485 100644
+--- a/include/linux/bitrev.h
++++ b/include/linux/bitrev.h
+@@ -34,41 +34,41 @@ static inline u32 __bitrev32(u32 x)
+ 
+ #define __constant_bitrev32(x)	\
+ ({					\
+-	u32 __x = x;			\
+-	__x = (__x >> 16) | (__x << 16);	\
+-	__x = ((__x & (u32)0xFF00FF00UL) >> 8) | ((__x & (u32)0x00FF00FFUL) << 8);	\
+-	__x = ((__x & (u32)0xF0F0F0F0UL) >> 4) | ((__x & (u32)0x0F0F0F0FUL) << 4);	\
+-	__x = ((__x & (u32)0xCCCCCCCCUL) >> 2) | ((__x & (u32)0x33333333UL) << 2);	\
+-	__x = ((__x & (u32)0xAAAAAAAAUL) >> 1) | ((__x & (u32)0x55555555UL) << 1);	\
+-	__x;								\
++	u32 ___x = x;			\
++	___x = (___x >> 16) | (___x << 16);	\
++	___x = ((___x & (u32)0xFF00FF00UL) >> 8) | ((___x & (u32)0x00FF00FFUL) << 8);	\
++	___x = ((___x & (u32)0xF0F0F0F0UL) >> 4) | ((___x & (u32)0x0F0F0F0FUL) << 4);	\
++	___x = ((___x & (u32)0xCCCCCCCCUL) >> 2) | ((___x & (u32)0x33333333UL) << 2);	\
++	___x = ((___x & (u32)0xAAAAAAAAUL) >> 1) | ((___x & (u32)0x55555555UL) << 1);	\
++	___x;								\
+ })
+ 
+ #define __constant_bitrev16(x)	\
+ ({					\
+-	u16 __x = x;			\
+-	__x = (__x >> 8) | (__x << 8);	\
+-	__x = ((__x & (u16)0xF0F0U) >> 4) | ((__x & (u16)0x0F0FU) << 4);	\
+-	__x = ((__x & (u16)0xCCCCU) >> 2) | ((__x & (u16)0x3333U) << 2);	\
+-	__x = ((__x & (u16)0xAAAAU) >> 1) | ((__x & (u16)0x5555U) << 1);	\
+-	__x;								\
++	u16 ___x = x;			\
++	___x = (___x >> 8) | (___x << 8);	\
++	___x = ((___x & (u16)0xF0F0U) >> 4) | ((___x & (u16)0x0F0FU) << 4);	\
++	___x = ((___x & (u16)0xCCCCU) >> 2) | ((___x & (u16)0x3333U) << 2);	\
++	___x = ((___x & (u16)0xAAAAU) >> 1) | ((___x & (u16)0x5555U) << 1);	\
++	___x;								\
+ })
+ 
+ #define __constant_bitrev8x4(x) \
+ ({			\
+-	u32 __x = x;	\
+-	__x = ((__x & (u32)0xF0F0F0F0UL) >> 4) | ((__x & (u32)0x0F0F0F0FUL) << 4);	\
+-	__x = ((__x & (u32)0xCCCCCCCCUL) >> 2) | ((__x & (u32)0x33333333UL) << 2);	\
+-	__x = ((__x & (u32)0xAAAAAAAAUL) >> 1) | ((__x & (u32)0x55555555UL) << 1);	\
+-	__x;								\
++	u32 ___x = x;	\
++	___x = ((___x & (u32)0xF0F0F0F0UL) >> 4) | ((___x & (u32)0x0F0F0F0FUL) << 4);	\
++	___x = ((___x & (u32)0xCCCCCCCCUL) >> 2) | ((___x & (u32)0x33333333UL) << 2);	\
++	___x = ((___x & (u32)0xAAAAAAAAUL) >> 1) | ((___x & (u32)0x55555555UL) << 1);	\
++	___x;								\
+ })
+ 
+ #define __constant_bitrev8(x)	\
+ ({					\
+-	u8 __x = x;			\
+-	__x = (__x >> 4) | (__x << 4);	\
+-	__x = ((__x & (u8)0xCCU) >> 2) | ((__x & (u8)0x33U) << 2);	\
+-	__x = ((__x & (u8)0xAAU) >> 1) | ((__x & (u8)0x55U) << 1);	\
+-	__x;								\
++	u8 ___x = x;			\
++	___x = (___x >> 4) | (___x << 4);	\
++	___x = ((___x & (u8)0xCCU) >> 2) | ((___x & (u8)0x33U) << 2);	\
++	___x = ((___x & (u8)0xAAU) >> 1) | ((___x & (u8)0x55U) << 1);	\
++	___x;								\
+ })
+ 
+ #define bitrev32(x) \
+diff --git a/include/linux/mlx5/driver.h b/include/linux/mlx5/driver.h
+index 88f0c530fe9c..32d445315128 100644
+--- a/include/linux/mlx5/driver.h
++++ b/include/linux/mlx5/driver.h
+@@ -743,6 +743,8 @@ struct mlx5_pagefault {
+ };
+ 
+ struct mlx5_td {
++	/* protects tirs list changes while tirs refresh */
++	struct mutex     list_lock;
+ 	struct list_head tirs_list;
+ 	u32              tdn;
+ };
+diff --git a/include/linux/string.h b/include/linux/string.h
+index 96115bf561b4..3d43329c20be 100644
+--- a/include/linux/string.h
++++ b/include/linux/string.h
+@@ -142,6 +142,9 @@ extern void * memscan(void *,int,__kernel_size_t);
+ #ifndef __HAVE_ARCH_MEMCMP
+ extern int memcmp(const void *,const void *,__kernel_size_t);
+ #endif
++#ifndef __HAVE_ARCH_BCMP
++extern int bcmp(const void *,const void *,__kernel_size_t);
++#endif
+ #ifndef __HAVE_ARCH_MEMCHR
+ extern void * memchr(const void *,int,__kernel_size_t);
+ #endif
+diff --git a/include/linux/virtio_ring.h b/include/linux/virtio_ring.h
+index bbf32524ab27..75007e648dfa 100644
+--- a/include/linux/virtio_ring.h
++++ b/include/linux/virtio_ring.h
+@@ -63,7 +63,7 @@ struct virtqueue;
+ /*
+  * Creates a virtqueue and allocates the descriptor ring.  If
+  * may_reduce_num is set, then this may allocate a smaller ring than
+- * expected.  The caller should query virtqueue_get_ring_size to learn
++ * expected.  The caller should query virtqueue_get_vring_size to learn
+  * the actual size of the ring.
+  */
+ struct virtqueue *vring_create_virtqueue(unsigned int index,
+diff --git a/include/net/ip.h b/include/net/ip.h
+index 80575db4e304..b8ebee43941f 100644
+--- a/include/net/ip.h
++++ b/include/net/ip.h
+@@ -603,7 +603,7 @@ int ip_options_get_from_user(struct net *net, struct ip_options_rcu **optp,
+ 			     unsigned char __user *data, int optlen);
+ void ip_options_undo(struct ip_options *opt);
+ void ip_forward_options(struct sk_buff *skb);
+-int ip_options_rcv_srr(struct sk_buff *skb);
++int ip_options_rcv_srr(struct sk_buff *skb, struct net_device *dev);
+ 
+ /*
+  *	Functions provided by ip_sockglue.c
+diff --git a/include/net/net_namespace.h b/include/net/net_namespace.h
+index f4bf75fac349..d96c9d9cca96 100644
+--- a/include/net/net_namespace.h
++++ b/include/net/net_namespace.h
+@@ -56,6 +56,7 @@ struct net {
+ 						 */
+ 	spinlock_t		rules_mod_lock;
+ 
++	u32			hash_mix;
+ 	atomic64_t		cookie_gen;
+ 
+ 	struct list_head	list;		/* list of network namespaces */
+diff --git a/include/net/netns/hash.h b/include/net/netns/hash.h
+index 24c78183a4c2..d9b665151f3d 100644
+--- a/include/net/netns/hash.h
++++ b/include/net/netns/hash.h
+@@ -2,21 +2,10 @@
+ #ifndef __NET_NS_HASH_H__
+ #define __NET_NS_HASH_H__
+ 
+-#include <asm/cache.h>
+-
+-struct net;
++#include <net/net_namespace.h>
+ 
+ static inline u32 net_hash_mix(const struct net *net)
+ {
+-#ifdef CONFIG_NET_NS
+-	/*
+-	 * shift this right to eliminate bits, that are
+-	 * always zeroed
+-	 */
+-
+-	return (u32)(((unsigned long)net) >> L1_CACHE_SHIFT);
+-#else
+-	return 0;
+-#endif
++	return net->hash_mix;
+ }
+ #endif
+diff --git a/kernel/irq/chip.c b/kernel/irq/chip.c
+index 0fa7ef74303b..317fc759de76 100644
+--- a/kernel/irq/chip.c
++++ b/kernel/irq/chip.c
+@@ -1363,6 +1363,10 @@ int irq_chip_set_vcpu_affinity_parent(struct irq_data *data, void *vcpu_info)
+ int irq_chip_set_wake_parent(struct irq_data *data, unsigned int on)
+ {
+ 	data = data->parent_data;
++
++	if (data->chip->flags & IRQCHIP_SKIP_SET_WAKE)
++		return 0;
++
+ 	if (data->chip->irq_set_wake)
+ 		return data->chip->irq_set_wake(data, on);
+ 
+diff --git a/kernel/irq/irqdesc.c b/kernel/irq/irqdesc.c
+index c2bfb11a9d05..aa08d4184608 100644
+--- a/kernel/irq/irqdesc.c
++++ b/kernel/irq/irqdesc.c
+@@ -535,6 +535,7 @@ int __init early_irq_init(void)
+ 		alloc_masks(&desc[i], node);
+ 		raw_spin_lock_init(&desc[i].lock);
+ 		lockdep_set_class(&desc[i].lock, &irq_desc_lock_class);
++		mutex_init(&desc[i].request_mutex);
+ 		desc_set_defaults(i, &desc[i], node, NULL, NULL);
+ 	}
+ 	return arch_early_irq_init();
+diff --git a/kernel/sched/fair.c b/kernel/sched/fair.c
+index 4d54c1fe9623..9829ede00498 100644
+--- a/kernel/sched/fair.c
++++ b/kernel/sched/fair.c
+@@ -7018,10 +7018,10 @@ static void update_cfs_rq_h_load(struct cfs_rq *cfs_rq)
+ 	if (cfs_rq->last_h_load_update == now)
+ 		return;
+ 
+-	cfs_rq->h_load_next = NULL;
++	WRITE_ONCE(cfs_rq->h_load_next, NULL);
+ 	for_each_sched_entity(se) {
+ 		cfs_rq = cfs_rq_of(se);
+-		cfs_rq->h_load_next = se;
++		WRITE_ONCE(cfs_rq->h_load_next, se);
+ 		if (cfs_rq->last_h_load_update == now)
+ 			break;
+ 	}
+@@ -7031,7 +7031,7 @@ static void update_cfs_rq_h_load(struct cfs_rq *cfs_rq)
+ 		cfs_rq->last_h_load_update = now;
+ 	}
+ 
+-	while ((se = cfs_rq->h_load_next) != NULL) {
++	while ((se = READ_ONCE(cfs_rq->h_load_next)) != NULL) {
+ 		load = cfs_rq->h_load;
+ 		load = div64_ul(load * se->avg.load_avg,
+ 			cfs_rq_load_avg(cfs_rq) + 1);
+diff --git a/kernel/time/alarmtimer.c b/kernel/time/alarmtimer.c
+index fa5de5e8de61..fdeb9bc6affb 100644
+--- a/kernel/time/alarmtimer.c
++++ b/kernel/time/alarmtimer.c
+@@ -597,7 +597,7 @@ static ktime_t alarm_timer_remaining(struct k_itimer *timr, ktime_t now)
+ {
+ 	struct alarm *alarm = &timr->it.alarm.alarmtimer;
+ 
+-	return ktime_sub(now, alarm->node.expires);
++	return ktime_sub(alarm->node.expires, now);
+ }
+ 
+ /**
+diff --git a/lib/string.c b/lib/string.c
+index 5e8d410a93df..1530643edf00 100644
+--- a/lib/string.c
++++ b/lib/string.c
+@@ -865,6 +865,26 @@ __visible int memcmp(const void *cs, const void *ct, size_t count)
+ EXPORT_SYMBOL(memcmp);
+ #endif
+ 
++#ifndef __HAVE_ARCH_BCMP
++/**
++ * bcmp - returns 0 if and only if the buffers have identical contents.
++ * @a: pointer to first buffer.
++ * @b: pointer to second buffer.
++ * @len: size of buffers.
++ *
++ * The sign or magnitude of a non-zero return value has no particular
++ * meaning, and architectures may implement their own more efficient bcmp(). So
++ * while this particular implementation is a simple (tail) call to memcmp, do
++ * not rely on anything but whether the return value is zero or non-zero.
++ */
++#undef bcmp
++int bcmp(const void *a, const void *b, size_t len)
++{
++	return memcmp(a, b, len);
++}
++EXPORT_SYMBOL(bcmp);
++#endif
++
+ #ifndef __HAVE_ARCH_MEMSCAN
+ /**
+  * memscan - Find a character in an area of memory.
+diff --git a/net/core/ethtool.c b/net/core/ethtool.c
+index 3469f5053c79..145cb343c1b0 100644
+--- a/net/core/ethtool.c
++++ b/net/core/ethtool.c
+@@ -1815,11 +1815,15 @@ static int ethtool_get_strings(struct net_device *dev, void __user *useraddr)
+ 	WARN_ON_ONCE(!ret);
+ 
+ 	gstrings.len = ret;
+-	data = vzalloc(gstrings.len * ETH_GSTRING_LEN);
+-	if (gstrings.len && !data)
+-		return -ENOMEM;
++	if (gstrings.len) {
++		data = vzalloc(gstrings.len * ETH_GSTRING_LEN);
++		if (!data)
++			return -ENOMEM;
+ 
+-	__ethtool_get_strings(dev, gstrings.string_set, data);
++		__ethtool_get_strings(dev, gstrings.string_set, data);
++	} else {
++		data = NULL;
++	}
+ 
+ 	ret = -EFAULT;
+ 	if (copy_to_user(useraddr, &gstrings, sizeof(gstrings)))
+@@ -1915,11 +1919,14 @@ static int ethtool_get_stats(struct net_device *dev, void __user *useraddr)
+ 		return -EFAULT;
+ 
+ 	stats.n_stats = n_stats;
+-	data = vzalloc(n_stats * sizeof(u64));
+-	if (n_stats && !data)
+-		return -ENOMEM;
+-
+-	ops->get_ethtool_stats(dev, &stats, data);
++	if (n_stats) {
++		data = vzalloc(n_stats * sizeof(u64));
++		if (!data)
++			return -ENOMEM;
++		ops->get_ethtool_stats(dev, &stats, data);
++	} else {
++		data = NULL;
++	}
+ 
+ 	ret = -EFAULT;
+ 	if (copy_to_user(useraddr, &stats, sizeof(stats)))
+@@ -1955,13 +1962,17 @@ static int ethtool_get_phy_stats(struct net_device *dev, void __user *useraddr)
+ 		return -EFAULT;
+ 
+ 	stats.n_stats = n_stats;
+-	data = vzalloc(n_stats * sizeof(u64));
+-	if (n_stats && !data)
+-		return -ENOMEM;
++	if (n_stats) {
++		data = vzalloc(n_stats * sizeof(u64));
++		if (!data)
++			return -ENOMEM;
+ 
+-	mutex_lock(&phydev->lock);
+-	phydev->drv->get_stats(phydev, &stats, data);
+-	mutex_unlock(&phydev->lock);
++		mutex_lock(&phydev->lock);
++		phydev->drv->get_stats(phydev, &stats, data);
++		mutex_unlock(&phydev->lock);
++	} else {
++		data = NULL;
++	}
+ 
+ 	ret = -EFAULT;
+ 	if (copy_to_user(useraddr, &stats, sizeof(stats)))
+diff --git a/net/core/net_namespace.c b/net/core/net_namespace.c
+index 0dd6359e5924..60b88718b1d4 100644
+--- a/net/core/net_namespace.c
++++ b/net/core/net_namespace.c
+@@ -285,6 +285,7 @@ static __net_init int setup_net(struct net *net, struct user_namespace *user_ns)
+ 
+ 	atomic_set(&net->count, 1);
+ 	refcount_set(&net->passive, 1);
++	get_random_bytes(&net->hash_mix, sizeof(u32));
+ 	net->dev_base_seq = 1;
+ 	net->user_ns = user_ns;
+ 	idr_init(&net->netns_ids);
+diff --git a/net/core/skbuff.c b/net/core/skbuff.c
+index 1b39aef5cf82..2b3b0307dd89 100644
+--- a/net/core/skbuff.c
++++ b/net/core/skbuff.c
+@@ -3808,7 +3808,7 @@ int skb_gro_receive(struct sk_buff **head, struct sk_buff *skb)
+ 	struct sk_buff *lp, *p = *head;
+ 	unsigned int delta_truesize;
+ 
+-	if (unlikely(p->len + len >= 65536))
++	if (unlikely(p->len + len >= 65536 || NAPI_GRO_CB(skb)->flush))
+ 		return -E2BIG;
+ 
+ 	lp = NAPI_GRO_CB(p)->last;
+diff --git a/net/ipv4/ip_input.c b/net/ipv4/ip_input.c
+index 1b160378ea9c..6fc45d3a1f8a 100644
+--- a/net/ipv4/ip_input.c
++++ b/net/ipv4/ip_input.c
+@@ -259,11 +259,10 @@ int ip_local_deliver(struct sk_buff *skb)
+ 		       ip_local_deliver_finish);
+ }
+ 
+-static inline bool ip_rcv_options(struct sk_buff *skb)
++static inline bool ip_rcv_options(struct sk_buff *skb, struct net_device *dev)
+ {
+ 	struct ip_options *opt;
+ 	const struct iphdr *iph;
+-	struct net_device *dev = skb->dev;
+ 
+ 	/* It looks as overkill, because not all
+ 	   IP options require packet mangling.
+@@ -299,7 +298,7 @@ static inline bool ip_rcv_options(struct sk_buff *skb)
+ 			}
+ 		}
+ 
+-		if (ip_options_rcv_srr(skb))
++		if (ip_options_rcv_srr(skb, dev))
+ 			goto drop;
+ 	}
+ 
+@@ -362,7 +361,7 @@ static int ip_rcv_finish(struct net *net, struct sock *sk, struct sk_buff *skb)
+ 	}
+ #endif
+ 
+-	if (iph->ihl > 5 && ip_rcv_options(skb))
++	if (iph->ihl > 5 && ip_rcv_options(skb, dev))
+ 		goto drop;
+ 
+ 	rt = skb_rtable(skb);
+diff --git a/net/ipv4/ip_options.c b/net/ipv4/ip_options.c
+index 32a35043c9f5..3db31bb9df50 100644
+--- a/net/ipv4/ip_options.c
++++ b/net/ipv4/ip_options.c
+@@ -612,7 +612,7 @@ void ip_forward_options(struct sk_buff *skb)
+ 	}
+ }
+ 
+-int ip_options_rcv_srr(struct sk_buff *skb)
++int ip_options_rcv_srr(struct sk_buff *skb, struct net_device *dev)
+ {
+ 	struct ip_options *opt = &(IPCB(skb)->opt);
+ 	int srrspace, srrptr;
+@@ -647,7 +647,7 @@ int ip_options_rcv_srr(struct sk_buff *skb)
+ 
+ 		orefdst = skb->_skb_refdst;
+ 		skb_dst_set(skb, NULL);
+-		err = ip_route_input(skb, nexthop, iph->saddr, iph->tos, skb->dev);
++		err = ip_route_input(skb, nexthop, iph->saddr, iph->tos, dev);
+ 		rt2 = skb_rtable(skb);
+ 		if (err || (rt2->rt_type != RTN_UNICAST && rt2->rt_type != RTN_LOCAL)) {
+ 			skb_dst_drop(skb);
+diff --git a/net/ipv4/tcp_dctcp.c b/net/ipv4/tcp_dctcp.c
+index 8b637f9f23a2..f0de9fb92f0d 100644
+--- a/net/ipv4/tcp_dctcp.c
++++ b/net/ipv4/tcp_dctcp.c
+@@ -66,11 +66,6 @@ static unsigned int dctcp_alpha_on_init __read_mostly = DCTCP_MAX_ALPHA;
+ module_param(dctcp_alpha_on_init, uint, 0644);
+ MODULE_PARM_DESC(dctcp_alpha_on_init, "parameter for initial alpha value");
+ 
+-static unsigned int dctcp_clamp_alpha_on_loss __read_mostly;
+-module_param(dctcp_clamp_alpha_on_loss, uint, 0644);
+-MODULE_PARM_DESC(dctcp_clamp_alpha_on_loss,
+-		 "parameter for clamping alpha on loss");
+-
+ static struct tcp_congestion_ops dctcp_reno;
+ 
+ static void dctcp_reset(const struct tcp_sock *tp, struct dctcp *ca)
+@@ -211,21 +206,23 @@ static void dctcp_update_alpha(struct sock *sk, u32 flags)
+ 	}
+ }
+ 
+-static void dctcp_state(struct sock *sk, u8 new_state)
++static void dctcp_react_to_loss(struct sock *sk)
+ {
+-	if (dctcp_clamp_alpha_on_loss && new_state == TCP_CA_Loss) {
+-		struct dctcp *ca = inet_csk_ca(sk);
++	struct dctcp *ca = inet_csk_ca(sk);
++	struct tcp_sock *tp = tcp_sk(sk);
+ 
+-		/* If this extension is enabled, we clamp dctcp_alpha to
+-		 * max on packet loss; the motivation is that dctcp_alpha
+-		 * is an indicator to the extend of congestion and packet
+-		 * loss is an indicator of extreme congestion; setting
+-		 * this in practice turned out to be beneficial, and
+-		 * effectively assumes total congestion which reduces the
+-		 * window by half.
+-		 */
+-		ca->dctcp_alpha = DCTCP_MAX_ALPHA;
+-	}
++	ca->loss_cwnd = tp->snd_cwnd;
++	tp->snd_ssthresh = max(tp->snd_cwnd >> 1U, 2U);
++}
++
++static void dctcp_state(struct sock *sk, u8 new_state)
++{
++	if (new_state == TCP_CA_Recovery &&
++	    new_state != inet_csk(sk)->icsk_ca_state)
++		dctcp_react_to_loss(sk);
++	/* We handle RTO in dctcp_cwnd_event to ensure that we perform only
++	 * one loss-adjustment per RTT.
++	 */
+ }
+ 
+ static void dctcp_cwnd_event(struct sock *sk, enum tcp_ca_event ev)
+@@ -237,6 +234,9 @@ static void dctcp_cwnd_event(struct sock *sk, enum tcp_ca_event ev)
+ 	case CA_EVENT_ECN_NO_CE:
+ 		dctcp_ce_state_1_to_0(sk);
+ 		break;
++	case CA_EVENT_LOSS:
++		dctcp_react_to_loss(sk);
++		break;
+ 	default:
+ 		/* Don't care for the rest. */
+ 		break;
+diff --git a/net/ipv6/ip6_output.c b/net/ipv6/ip6_output.c
+index 7ca8264cbdf9..2af849ba33c9 100644
+--- a/net/ipv6/ip6_output.c
++++ b/net/ipv6/ip6_output.c
+@@ -611,7 +611,7 @@ int ip6_fragment(struct net *net, struct sock *sk, struct sk_buff *skb,
+ 				inet6_sk(skb->sk) : NULL;
+ 	struct ipv6hdr *tmp_hdr;
+ 	struct frag_hdr *fh;
+-	unsigned int mtu, hlen, left, len;
++	unsigned int mtu, hlen, left, len, nexthdr_offset;
+ 	int hroom, troom;
+ 	__be32 frag_id;
+ 	int ptr, offset = 0, err = 0;
+@@ -622,6 +622,7 @@ int ip6_fragment(struct net *net, struct sock *sk, struct sk_buff *skb,
+ 		goto fail;
+ 	hlen = err;
+ 	nexthdr = *prevhdr;
++	nexthdr_offset = prevhdr - skb_network_header(skb);
+ 
+ 	mtu = ip6_skb_dst_mtu(skb);
+ 
+@@ -656,6 +657,7 @@ int ip6_fragment(struct net *net, struct sock *sk, struct sk_buff *skb,
+ 	    (err = skb_checksum_help(skb)))
+ 		goto fail;
+ 
++	prevhdr = skb_network_header(skb) + nexthdr_offset;
+ 	hroom = LL_RESERVED_SPACE(rt->dst.dev);
+ 	if (skb_has_frag_list(skb)) {
+ 		unsigned int first_len = skb_pagelen(skb);
+diff --git a/net/ipv6/ip6_tunnel.c b/net/ipv6/ip6_tunnel.c
+index 1812c2a748ff..f71c7915ff0e 100644
+--- a/net/ipv6/ip6_tunnel.c
++++ b/net/ipv6/ip6_tunnel.c
+@@ -633,7 +633,7 @@ ip4ip6_err(struct sk_buff *skb, struct inet6_skb_parm *opt,
+ 					   IPPROTO_IPIP,
+ 					   RT_TOS(eiph->tos), 0);
+ 		if (IS_ERR(rt) ||
+-		    rt->dst.dev->type != ARPHRD_TUNNEL) {
++		    rt->dst.dev->type != ARPHRD_TUNNEL6) {
+ 			if (!IS_ERR(rt))
+ 				ip_rt_put(rt);
+ 			goto out;
+@@ -643,7 +643,7 @@ ip4ip6_err(struct sk_buff *skb, struct inet6_skb_parm *opt,
+ 		ip_rt_put(rt);
+ 		if (ip_route_input(skb2, eiph->daddr, eiph->saddr, eiph->tos,
+ 				   skb2->dev) ||
+-		    skb_dst(skb2)->dev->type != ARPHRD_TUNNEL)
++		    skb_dst(skb2)->dev->type != ARPHRD_TUNNEL6)
+ 			goto out;
+ 	}
+ 
+diff --git a/net/ipv6/sit.c b/net/ipv6/sit.c
+index e23190725244..f7d080d1cf8e 100644
+--- a/net/ipv6/sit.c
++++ b/net/ipv6/sit.c
+@@ -661,6 +661,10 @@ static int ipip6_rcv(struct sk_buff *skb)
+ 		    !net_eq(tunnel->net, dev_net(tunnel->dev))))
+ 			goto out;
+ 
++		/* skb can be uncloned in iptunnel_pull_header, so
++		 * old iph is no longer valid
++		 */
++		iph = (const struct iphdr *)skb_mac_header(skb);
+ 		err = IP_ECN_decapsulate(iph, skb);
+ 		if (unlikely(err)) {
+ 			if (log_ecn_error)
+diff --git a/net/kcm/kcmsock.c b/net/kcm/kcmsock.c
+index 9bf997404918..7b4f3f865861 100644
+--- a/net/kcm/kcmsock.c
++++ b/net/kcm/kcmsock.c
+@@ -2059,14 +2059,14 @@ static int __init kcm_init(void)
+ 	if (err)
+ 		goto fail;
+ 
+-	err = sock_register(&kcm_family_ops);
+-	if (err)
+-		goto sock_register_fail;
+-
+ 	err = register_pernet_device(&kcm_net_ops);
+ 	if (err)
+ 		goto net_ops_fail;
+ 
++	err = sock_register(&kcm_family_ops);
++	if (err)
++		goto sock_register_fail;
++
+ 	err = kcm_proc_init();
+ 	if (err)
+ 		goto proc_init_fail;
+@@ -2074,12 +2074,12 @@ static int __init kcm_init(void)
+ 	return 0;
+ 
+ proc_init_fail:
+-	unregister_pernet_device(&kcm_net_ops);
+-
+-net_ops_fail:
+ 	sock_unregister(PF_KCM);
+ 
+ sock_register_fail:
++	unregister_pernet_device(&kcm_net_ops);
++
++net_ops_fail:
+ 	proto_unregister(&kcm_proto);
+ 
+ fail:
+@@ -2095,8 +2095,8 @@ static int __init kcm_init(void)
+ static void __exit kcm_exit(void)
+ {
+ 	kcm_proc_exit();
+-	unregister_pernet_device(&kcm_net_ops);
+ 	sock_unregister(PF_KCM);
++	unregister_pernet_device(&kcm_net_ops);
+ 	proto_unregister(&kcm_proto);
+ 	destroy_workqueue(kcm_wq);
+ 
+diff --git a/net/openvswitch/flow_netlink.c b/net/openvswitch/flow_netlink.c
+index e687b89dafe6..f5deae2ccb79 100644
+--- a/net/openvswitch/flow_netlink.c
++++ b/net/openvswitch/flow_netlink.c
+@@ -1967,14 +1967,14 @@ static struct nlattr *reserve_sfa_size(struct sw_flow_actions **sfa,
+ 
+ 	struct sw_flow_actions *acts;
+ 	int new_acts_size;
+-	int req_size = NLA_ALIGN(attr_len);
++	size_t req_size = NLA_ALIGN(attr_len);
+ 	int next_offset = offsetof(struct sw_flow_actions, actions) +
+ 					(*sfa)->actions_len;
+ 
+ 	if (req_size <= (ksize(*sfa) - next_offset))
+ 		goto out;
+ 
+-	new_acts_size = ksize(*sfa) * 2;
++	new_acts_size = max(next_offset + req_size, ksize(*sfa) * 2);
+ 
+ 	if (new_acts_size > MAX_ACTIONS_BUFSIZE) {
+ 		if ((MAX_ACTIONS_BUFSIZE - next_offset) < req_size) {
+diff --git a/net/rds/tcp.c b/net/rds/tcp.c
+index 2a08bf75d008..82e9ffecd90e 100644
+--- a/net/rds/tcp.c
++++ b/net/rds/tcp.c
+@@ -530,7 +530,7 @@ static void rds_tcp_kill_sock(struct net *net)
+ 	list_for_each_entry_safe(tc, _tc, &rds_tcp_conn_list, t_tcp_node) {
+ 		struct net *c_net = read_pnet(&tc->t_cpath->cp_conn->c_net);
+ 
+-		if (net != c_net || !tc->t_sock)
++		if (net != c_net)
+ 			continue;
+ 		if (!list_has_conn(&tmp_list, tc->t_cpath->cp_conn)) {
+ 			list_move_tail(&tc->t_tcp_node, &tmp_list);
+diff --git a/net/sched/act_sample.c b/net/sched/act_sample.c
+index a859b55d7899..64fd1e9818a6 100644
+--- a/net/sched/act_sample.c
++++ b/net/sched/act_sample.c
+@@ -45,6 +45,7 @@ static int tcf_sample_init(struct net *net, struct nlattr *nla,
+ 	struct tc_sample *parm;
+ 	struct tcf_sample *s;
+ 	bool exists = false;
++	u32 rate;
+ 	int ret;
+ 
+ 	if (!nla)
+@@ -73,10 +74,17 @@ static int tcf_sample_init(struct net *net, struct nlattr *nla,
+ 		if (!ovr)
+ 			return -EEXIST;
+ 	}
+-	s = to_sample(*a);
+ 
++	rate = nla_get_u32(tb[TCA_SAMPLE_RATE]);
++	if (!rate) {
++		tcf_idr_release(*a, bind);
++		return -EINVAL;
++	}
++
++	s = to_sample(*a);
+ 	s->tcf_action = parm->action;
+ 	s->rate = nla_get_u32(tb[TCA_SAMPLE_RATE]);
++	s->rate = rate;
+ 	s->psample_group_num = nla_get_u32(tb[TCA_SAMPLE_PSAMPLE_GROUP]);
+ 	psample_group = psample_group_get(net, s->psample_group_num);
+ 	if (!psample_group) {
+diff --git a/net/sched/cls_matchall.c b/net/sched/cls_matchall.c
+index 6499aecfbfc4..d8fd152779c8 100644
+--- a/net/sched/cls_matchall.c
++++ b/net/sched/cls_matchall.c
+@@ -125,6 +125,11 @@ static void mall_destroy(struct tcf_proto *tp)
+ 
+ static void *mall_get(struct tcf_proto *tp, u32 handle)
+ {
++	struct cls_mall_head *head = rtnl_dereference(tp->root);
++
++	if (head && head->handle == handle)
++		return head;
++
+ 	return NULL;
+ }
+ 
+diff --git a/net/sctp/protocol.c b/net/sctp/protocol.c
+index cbb04d66f564..a7529aca2ac8 100644
+--- a/net/sctp/protocol.c
++++ b/net/sctp/protocol.c
+@@ -605,6 +605,7 @@ static struct sock *sctp_v4_create_accept_sk(struct sock *sk,
+ static int sctp_v4_addr_to_user(struct sctp_sock *sp, union sctp_addr *addr)
+ {
+ 	/* No address mapping for V4 sockets */
++	memset(addr->v4.sin_zero, 0, sizeof(addr->v4.sin_zero));
+ 	return sizeof(struct sockaddr_in);
+ }
+ 
+diff --git a/sound/core/seq/seq_clientmgr.c b/sound/core/seq/seq_clientmgr.c
+index 350c33ec82b3..3bcd7a2f0394 100644
+--- a/sound/core/seq/seq_clientmgr.c
++++ b/sound/core/seq/seq_clientmgr.c
+@@ -1249,7 +1249,7 @@ static int snd_seq_ioctl_set_client_info(struct snd_seq_client *client,
+ 
+ 	/* fill the info fields */
+ 	if (client_info->name[0])
+-		strlcpy(client->name, client_info->name, sizeof(client->name));
++		strscpy(client->name, client_info->name, sizeof(client->name));
+ 
+ 	client->filter = client_info->filter;
+ 	client->event_lost = client_info->event_lost;
+@@ -1527,7 +1527,7 @@ static int snd_seq_ioctl_create_queue(struct snd_seq_client *client, void *arg)
+ 	/* set queue name */
+ 	if (!info->name[0])
+ 		snprintf(info->name, sizeof(info->name), "Queue-%d", q->queue);
+-	strlcpy(q->name, info->name, sizeof(q->name));
++	strscpy(q->name, info->name, sizeof(q->name));
+ 	snd_use_lock_free(&q->use_lock);
+ 
+ 	return 0;
+@@ -1589,7 +1589,7 @@ static int snd_seq_ioctl_set_queue_info(struct snd_seq_client *client,
+ 		queuefree(q);
+ 		return -EPERM;
+ 	}
+-	strlcpy(q->name, info->name, sizeof(q->name));
++	strscpy(q->name, info->name, sizeof(q->name));
+ 	queuefree(q);
+ 
+ 	return 0;
+diff --git a/sound/soc/fsl/fsl_esai.c b/sound/soc/fsl/fsl_esai.c
+index a23d6a821ff3..6152ae24772b 100644
+--- a/sound/soc/fsl/fsl_esai.c
++++ b/sound/soc/fsl/fsl_esai.c
+@@ -58,6 +58,8 @@ struct fsl_esai {
+ 	u32 fifo_depth;
+ 	u32 slot_width;
+ 	u32 slots;
++	u32 tx_mask;
++	u32 rx_mask;
+ 	u32 hck_rate[2];
+ 	u32 sck_rate[2];
+ 	bool hck_dir[2];
+@@ -358,21 +360,13 @@ static int fsl_esai_set_dai_tdm_slot(struct snd_soc_dai *dai, u32 tx_mask,
+ 	regmap_update_bits(esai_priv->regmap, REG_ESAI_TCCR,
+ 			   ESAI_xCCR_xDC_MASK, ESAI_xCCR_xDC(slots));
+ 
+-	regmap_update_bits(esai_priv->regmap, REG_ESAI_TSMA,
+-			   ESAI_xSMA_xS_MASK, ESAI_xSMA_xS(tx_mask));
+-	regmap_update_bits(esai_priv->regmap, REG_ESAI_TSMB,
+-			   ESAI_xSMB_xS_MASK, ESAI_xSMB_xS(tx_mask));
+-
+ 	regmap_update_bits(esai_priv->regmap, REG_ESAI_RCCR,
+ 			   ESAI_xCCR_xDC_MASK, ESAI_xCCR_xDC(slots));
+ 
+-	regmap_update_bits(esai_priv->regmap, REG_ESAI_RSMA,
+-			   ESAI_xSMA_xS_MASK, ESAI_xSMA_xS(rx_mask));
+-	regmap_update_bits(esai_priv->regmap, REG_ESAI_RSMB,
+-			   ESAI_xSMB_xS_MASK, ESAI_xSMB_xS(rx_mask));
+-
+ 	esai_priv->slot_width = slot_width;
+ 	esai_priv->slots = slots;
++	esai_priv->tx_mask = tx_mask;
++	esai_priv->rx_mask = rx_mask;
+ 
+ 	return 0;
+ }
+@@ -593,6 +587,7 @@ static int fsl_esai_trigger(struct snd_pcm_substream *substream, int cmd,
+ 	bool tx = substream->stream == SNDRV_PCM_STREAM_PLAYBACK;
+ 	u8 i, channels = substream->runtime->channels;
+ 	u32 pins = DIV_ROUND_UP(channels, esai_priv->slots);
++	u32 mask;
+ 
+ 	switch (cmd) {
+ 	case SNDRV_PCM_TRIGGER_START:
+@@ -605,15 +600,38 @@ static int fsl_esai_trigger(struct snd_pcm_substream *substream, int cmd,
+ 		for (i = 0; tx && i < channels; i++)
+ 			regmap_write(esai_priv->regmap, REG_ESAI_ETDR, 0x0);
+ 
++		/*
++		 * When set the TE/RE in the end of enablement flow, there
++		 * will be channel swap issue for multi data line case.
++		 * In order to workaround this issue, we switch the bit
++		 * enablement sequence to below sequence
++		 * 1) clear the xSMB & xSMA: which is done in probe and
++		 *                           stop state.
++		 * 2) set TE/RE
++		 * 3) set xSMB
++		 * 4) set xSMA:  xSMA is the last one in this flow, which
++		 *               will trigger esai to start.
++		 */
+ 		regmap_update_bits(esai_priv->regmap, REG_ESAI_xCR(tx),
+ 				   tx ? ESAI_xCR_TE_MASK : ESAI_xCR_RE_MASK,
+ 				   tx ? ESAI_xCR_TE(pins) : ESAI_xCR_RE(pins));
++		mask = tx ? esai_priv->tx_mask : esai_priv->rx_mask;
++
++		regmap_update_bits(esai_priv->regmap, REG_ESAI_xSMB(tx),
++				   ESAI_xSMB_xS_MASK, ESAI_xSMB_xS(mask));
++		regmap_update_bits(esai_priv->regmap, REG_ESAI_xSMA(tx),
++				   ESAI_xSMA_xS_MASK, ESAI_xSMA_xS(mask));
++
+ 		break;
+ 	case SNDRV_PCM_TRIGGER_SUSPEND:
+ 	case SNDRV_PCM_TRIGGER_STOP:
+ 	case SNDRV_PCM_TRIGGER_PAUSE_PUSH:
+ 		regmap_update_bits(esai_priv->regmap, REG_ESAI_xCR(tx),
+ 				   tx ? ESAI_xCR_TE_MASK : ESAI_xCR_RE_MASK, 0);
++		regmap_update_bits(esai_priv->regmap, REG_ESAI_xSMA(tx),
++				   ESAI_xSMA_xS_MASK, 0);
++		regmap_update_bits(esai_priv->regmap, REG_ESAI_xSMB(tx),
++				   ESAI_xSMB_xS_MASK, 0);
+ 
+ 		/* Disable and reset FIFO */
+ 		regmap_update_bits(esai_priv->regmap, REG_ESAI_xFCR(tx),
+@@ -903,6 +921,15 @@ static int fsl_esai_probe(struct platform_device *pdev)
+ 		return ret;
+ 	}
+ 
++	esai_priv->tx_mask = 0xFFFFFFFF;
++	esai_priv->rx_mask = 0xFFFFFFFF;
++
++	/* Clear the TSMA, TSMB, RSMA, RSMB */
++	regmap_write(esai_priv->regmap, REG_ESAI_TSMA, 0);
++	regmap_write(esai_priv->regmap, REG_ESAI_TSMB, 0);
++	regmap_write(esai_priv->regmap, REG_ESAI_RSMA, 0);
++	regmap_write(esai_priv->regmap, REG_ESAI_RSMB, 0);
++
+ 	ret = devm_snd_soc_register_component(&pdev->dev, &fsl_esai_component,
+ 					      &fsl_esai_dai, 1);
+ 	if (ret) {
