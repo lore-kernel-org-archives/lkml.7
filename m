@@ -2,275 +2,462 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-11.0 required=3.0
+	tests=HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9C214C10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 05:14:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2F6C0C10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 05:16:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6221F2073F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 05:14:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D75122073F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 05:16:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728417AbfDQFOb (ORCPT
+        id S1729270AbfDQFQ1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 01:14:31 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51234 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725767AbfDQFOa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 01:14:30 -0400
-Received: from smtp.corp.redhat.com (int-mx08.intmail.prod.int.phx2.redhat.com [10.5.11.23])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1B402A96E2;
-        Wed, 17 Apr 2019 05:14:29 +0000 (UTC)
-Received: from dhcp-128-65.nay.redhat.com (ovpn-12-44.pek2.redhat.com [10.72.12.44])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 876B319C67;
-        Wed, 17 Apr 2019 05:14:22 +0000 (UTC)
-Date:   Wed, 17 Apr 2019 13:14:18 +0800
-From:   Dave Young <dyoung@redhat.com>
-To:     Junichi Nomura <j-nomura@ce.jp.nec.com>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Chao Fan <fanc.fnst@cn.fujitsu.com>,
-        Baoquan He <bhe@redhat.com>, Kairui Song <kasong@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        linux-efi@vger.kernel.org,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
-        Sai Praneeth Prakhya <sai.praneeth.prakhya@intel.com>
-Subject: Re: kexec crash on OVMF i386 + x86_64 kernel (Re: [PATCH v4]
- x86/boot: Use efi_setup_data for searching RSDP on kexec-ed kernel)
-Message-ID: <20190417051418.GC8411@dhcp-128-65.nay.redhat.com>
-References: <20190412025416.GA11070@jeru.linux.bs1.fc.nec.co.jp>
- <20190412084956.GC19808@zn.tnic>
- <20190412133528.GD19808@zn.tnic>
- <cc2c1dbe-4fb3-fb7d-0540-c04734fc15cb@ce.jp.nec.com>
- <20190415090717.GA29317@zn.tnic>
- <20190415102525.GB29317@zn.tnic>
- <23309b73-d135-a207-564b-6003cee39184@ce.jp.nec.com>
- <4dbbbb4b-7af9-bd98-b567-890407a15cd1@ce.jp.nec.com>
- <20190416094554.GF27892@zn.tnic>
- <befd6560-f41a-b142-a839-aaab861dee5a@ce.jp.nec.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <befd6560-f41a-b142-a839-aaab861dee5a@ce.jp.nec.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.84 on 10.5.11.23
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Wed, 17 Apr 2019 05:14:29 +0000 (UTC)
+        Wed, 17 Apr 2019 01:16:27 -0400
+Received: from shards.monkeyblade.net ([23.128.96.9]:49464 "EHLO
+        shards.monkeyblade.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbfDQFQ1 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 01:16:27 -0400
+Received: from localhost (unknown [IPv6:2601:601:9f80:35cd::d71])
+        (using TLSv1 with cipher AES256-SHA (256/256 bits))
+        (Client did not present a certificate)
+        (Authenticated sender: davem-davemloft)
+        by shards.monkeyblade.net (Postfix) with ESMTPSA id BEFCA14E2064C;
+        Tue, 16 Apr 2019 22:16:25 -0700 (PDT)
+Date:   Tue, 16 Apr 2019 22:16:25 -0700 (PDT)
+Message-Id: <20190416.221625.898048119534445238.davem@davemloft.net>
+To:     torvalds@linux-foundation.org
+CC:     akpm@linux-foundation.org, netdev@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [GIT] Networking
+From:   David Miller <davem@davemloft.net>
+X-Mailer: Mew version 6.8 on Emacs 26.1
+Mime-Version: 1.0
+Content-Type: Text/Plain; charset=us-ascii
+Content-Transfer-Encoding: 7bit
+X-Greylist: Sender succeeded SMTP AUTH, not delayed by milter-greylist-4.5.12 (shards.monkeyblade.net [149.20.54.216]); Tue, 16 Apr 2019 22:16:26 -0700 (PDT)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Added efi people.
 
-I remember previously Sai did some efi32 tests for kexec, but I'm not
-sure if he tested EFI32 + 64bit kernel.
+1) Handle init flow failures properly in iwlwifi driver, from Shahar S
+   Matityahu.
 
-Kexec status is not certain because I'm not sure anyone tesed and
-reported issues for that.
+2) mac80211 TXQs need to be unscheduled on powersave start, from
+   Felix Fietkau.
 
-On 04/16/19 at 11:09pm, Junichi Nomura wrote:
-> On 4/16/19 6:45 PM, Borislav Petkov wrote:
-> > On Mon, Apr 15, 2019 at 11:14:34PM +0000, Junichi Nomura wrote:
-> >> I see kexec is only supported on 64bit kernel. But are we sure
-> >> we don't need to support kexec on EFI32 + 64bit kernel?
-> >>
-> >> I don't have such an environment and as far as I tried with OVMF i386
-> >> and KVM guest, that combination doesn't work reliably even with v5.0.
-> > 
-> > What does that mean exactly?
-> > 
-> > If it can be fixed, we can try to.
-> 
-> When I do kexec on OVMF i386 + x86_64 kernel, 1st kexec seems to work.
-> But 2nd kexec (i.e. kexec from kexec-booted system) causes kernel
-> crash during boot like this:
-> 
-> [   69.907176] kexec_core: Starting new kernel
-> early console in extract_kernel
-> input_data: 0x000000003e7a73b1
-> input_len: 0x00000000004464c8
-> output: 0x000000003d600000
-> output_len: 0x00000000015c7248
-> kernel_total_size: 0x000000000142c000
-> trampoline_32bit: 0x000000000009d000
-> booted via startup_64()
-> Physical KASLR using RDRAND RDTSC...
-> Virtual KASLR using RDRAND RDTSC...
-> 
-> Decompressing Linux... Parsing ELF... Performing relocations... done.
-> Booting the kernel.
-> [    0.000000] Linux version 5.0.0-dirty (root@vm76) (gcc version 4.8.5 20150623 (Red Hat 4.8.5-28) (GCC)) #2 SMP Mon Apr 8 04:42:45 EDT 2019
-> [    0.000000] Command line: root=UUID=6bea2b7b-e6cc-4dba-ac79-be6530d348f5 ro console=tty0 console=ttyS0,115200n8 no_timer_check net.ifnames=0 crashkernel=auto LANG=en_US.UTF-8 earlyprintk=serial,ttyS0,115200 kexec kexec
-> [    0.000000] x86/fpu: Supporting XSAVE feature 0x001: 'x87 floating point registers'
-> [    0.000000] x86/fpu: Supporting XSAVE feature 0x002: 'SSE registers'
-> [    0.000000] x86/fpu: Supporting XSAVE feature 0x004: 'AVX registers'
-> [    0.000000] x86/fpu: xstate_offset[2]:  576, xstate_sizes[2]:  256
-> [    0.000000] x86/fpu: Enabled xstate features 0x7, context size is 832 bytes, using 'standard' format.
-> [    0.000000] BIOS-provided physical RAM map:
-> [    0.000000] BIOS-e820: [mem 0x0000000000000100-0x000000000009ffff] usable
-> [    0.000000] BIOS-e820: [mem 0x0000000000100000-0x000000003ed74fff] usable
-> [    0.000000] BIOS-e820: [mem 0x000000003ed75000-0x000000003ee86fff] reserved
-> [    0.000000] BIOS-e820: [mem 0x000000003ee87000-0x000000003ff06fff] usable
-> [    0.000000] BIOS-e820: [mem 0x000000003ff07000-0x000000003ff5efff] reserved
-> [    0.000000] BIOS-e820: [mem 0x000000003ff5f000-0x000000003ff66fff] ACPI data
-> [    0.000000] BIOS-e820: [mem 0x000000003ff67000-0x000000003ff6afff] ACPI NVS
-> [    0.000000] BIOS-e820: [mem 0x000000003ff6b000-0x000000003ffcffff] usable
-> [    0.000000] BIOS-e820: [mem 0x000000003ffd0000-0x000000003ffeffff] reserved
-> [    0.000000] BIOS-e820: [mem 0x000000003fff0000-0x000000003fffffff] usable
-> [    0.000000] BIOS-e820: [mem 0x00000000ffe00000-0x00000000ffffffff] reserved
-> [    0.000000] printk: bootconsole [earlyser0] enabled
-> [    0.000000] NX (Execute Disable) protection: active
-> [    0.000000] DMI not present or invalid.
-> [    0.000000] Hypervisor detected: KVM
-> [    0.000000] kvm-clock: Using msrs 4b564d01 and 4b564d00
-> [    0.000000] kvm-clock: cpu 0, msr 2238e001, primary cpu clock
-> [    0.000001] kvm-clock: using sched offset of 100318497884 cycles
-> [    0.001055] clocksource: kvm-clock: mask: 0xffffffffffffffff max_cycles: 0x1cd42e4dffb, max_idle_ns: 881590591483 ns
-> [    0.004086] tsc: Detected 2399.998 MHz processor
-> [    0.005147] last_pfn = 0x40000 max_arch_pfn = 0x400000000
-> [    0.006234] x86/PAT: Configuration [0-7]: WB  WC  UC- UC  WB  WP  UC- WT  
-> Memory KASLR using RDRAND RDTSC...
-> [    0.008079] x2apic: enabled by BIOS, switching to x2apic ops
-> [    0.020284] RAMDISK: [mem 0x3b8da000-0x3d5fffff]
-> [    0.021169] ACPI: Early table checksum verification disabled
-> [    0.022280] ACPI BIOS Error (bug): A valid RSDP was not found (20181213/tbxfroot-210)
-> [    0.023755] No NUMA configuration found
-> [    0.024461] Faking a node at [mem 0x0000000000000000-0x000000003fffffff]
-> [    0.025746] NODE_DATA(0) allocated [mem 0x3ffa6000-0x3ffcffff]
-> [    0.027098] crashkernel: memory value expected
-> [    0.027918] Zone ranges:
-> [    0.028384]   DMA      [mem 0x0000000000001000-0x0000000000ffffff]
-> [    0.029553]   DMA32    [mem 0x0000000001000000-0x000000003fffffff]
-> [    0.030688]   Normal   empty
-> [    0.031217]   Device   empty
-> [    0.031741] Movable zone start for each node
-> [    0.032525] Early memory node ranges
-> [    0.033212]   node   0: [mem 0x0000000000001000-0x000000000009ffff]
-> [    0.034377]   node   0: [mem 0x0000000000100000-0x000000003ed74fff]
-> [    0.035520]   node   0: [mem 0x000000003ee87000-0x000000003ff06fff]
-> [    0.036663]   node   0: [mem 0x000000003ff6b000-0x000000003ffcffff]
-> [    0.037840]   node   0: [mem 0x000000003fff0000-0x000000003fffffff]
-> [    0.039012] Zeroed struct page in unavailable ranges: 503 pages
-> [    0.039013] Initmem setup node 0 [mem 0x0000000000001000-0x000000003fffffff]
-> [    0.044319] BUG: unable to handle kernel paging request at ffffffffff5fd020
-> [    0.045637] #PF error: [normal kernel read fault]
-> [    0.046501] PGD 2200e067 P4D 2200e067 PUD 22010067 PMD 22011067 PTE 0
-> [    0.047682] Oops: 0000 [#1] SMP
-> [    0.048258] CPU: 0 PID: 0 Comm: swapper Not tainted 5.0.0-dirty #2
-> [    0.049419] RIP: 0010:native_apic_mem_read+0x3/0x10
-> [    0.050328] Code: 00 00 e8 20 3a 2b 00 48 89 d8 5b 5d c3 90 90 90 90 90 90 90 90 90 90 55 89 ff 48 89 e5 89 b7 00 d0 5f ff 5d c3 66 90 55 89 ff <8b> 87 00 d0 5f ff 48 89 e5 5d c3 66 90 e8 7b 8a 5b 00 55 b8 01 00
-> [    0.053749] RSP: 0000:ffffffff88003e38 EFLAGS: 00010002
-> [    0.054703] RAX: ffffffff87248840 RBX: 000000003fe09000 RCX: 0000000000000000
-> [    0.056009] RDX: ffffffff88003e30 RSI: 000000000000f800 RDI: 0000000000000020
-> [    0.057346] RBP: ffffffff88003e48 R08: 0000000000000000 R09: 0000000000000000
-> [    0.058667] R10: 00000000000000ff R11: 0000000000000000 R12: 0000000001d254d6
-> [    0.059969] R13: 000000003d600000 R14: 0000000000000000 R15: 0000000000000000
-> [    0.061313] FS:  0000000000000000(0000) GS:ffffffff88173000(0000) knlGS:0000000000000000
-> [    0.062812] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [    0.063865] CR2: ffffffffff5fd020 CR3: 000000002200d000 CR4: 00000000000406b0
-> [    0.065222] Call Trace:
-> [    0.065670]  ? read_apic_id+0x19/0x30
-> [    0.066347]  init_apic_mappings+0x7a/0x129
-> [    0.067096]  setup_arch+0xb67/0xc19
-> [    0.067729]  start_kernel+0x6b/0x4e3
-> [    0.068386]  x86_64_start_reservations+0x24/0x26
-> [    0.069230]  x86_64_start_kernel+0x6f/0x72
-> [    0.069974]  secondary_startup_64+0xa4/0xb0
-> [    0.070739] Modules linked in:
-> [    0.071297] CR2: ffffffffff5fd020
-> [    0.071901] random: get_random_bytes called from print_oops_end_marker+0x3f/0x60 with crng_init=0
-> [    0.073567] ---[ end trace 2cc66932e568af60 ]---
-> [    0.074427] RIP: 0010:native_apic_mem_read+0x3/0x10
-> [    0.075320] Code: 00 00 e8 20 3a 2b 00 48 89 d8 5b 5d c3 90 90 90 90 90 90 90 90 90 90 55 89 ff 48 89 e5 89 b7 00 d0 5f ff 5d c3 66 90 55 89 ff <8b> 87 00 d0 5f ff 48 89 e5 5d c3 66 90 e8 7b 8a 5b 00 55 b8 01 00
-> [    0.078755] RSP: 0000:ffffffff88003e38 EFLAGS: 00010002
-> [    0.079741] RAX: ffffffff87248840 RBX: 000000003fe09000 RCX: 0000000000000000
-> [    0.081050] RDX: ffffffff88003e30 RSI: 000000000000f800 RDI: 0000000000000020
-> [    0.082355] RBP: ffffffff88003e48 R08: 0000000000000000 R09: 0000000000000000
-> [    0.083687] R10: 00000000000000ff R11: 0000000000000000 R12: 0000000001d254d6
-> [    0.084996] R13: 000000003d600000 R14: 0000000000000000 R15: 0000000000000000
-> [    0.086296] FS:  0000000000000000(0000) GS:ffffffff88173000(0000) knlGS:0000000000000000
-> [    0.087805] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [    0.088855] CR2: ffffffffff5fd020 CR3: 000000002200d000 CR4: 00000000000406b0
-> [    0.090167] Kernel panic - not syncing: Fatal exception
-> [    0.091160] BUG: unable to handle kernel paging request at ffffffffff5fd030
-> [    0.092438] #PF error: [normal kernel read fault]
-> [    0.093301] PGD 2200e067 P4D 2200e067 PUD 22010067 PMD 22011067 PTE 0
-> [    0.094480] Oops: 0000 [#2] SMP
-> [    0.095094] CPU: 0 PID: 0 Comm: swapper Tainted: G      D           5.0.0-dirty #2
-> [    0.096478] RIP: 0010:native_apic_mem_read+0x3/0x10
-> [    0.097367] Code: 00 00 e8 20 3a 2b 00 48 89 d8 5b 5d c3 90 90 90 90 90 90 90 90 90 90 55 89 ff 48 89 e5 89 b7 00 d0 5f ff 5d c3 66 90 55 89 ff <8b> 87 00 d0 5f ff 48 89 e5 5d c3 66 90 e8 7b 8a 5b 00 55 b8 01 00
-> [    0.100833] RSP: 0000:ffffffff88003aa8 EFLAGS: 00010002
-> [    0.101792] RAX: ffffffff87248840 RBX: 0000000000000046 RCX: 0000000000000000
-> [    0.103130] RDX: 0000000000000080 RSI: 0000000000002000 RDI: 0000000000000030
-> [    0.104433] RBP: ffffffff88003ac0 R08: 0000000000000001 R09: 0000000000000080
-> [    0.105733] R10: ffffffff88160ca0 R11: ffffffff8818a428 R12: 0000000000000000
-> [    0.107070] R13: 0000000000000046 R14: ffffffff88013740 R15: 000000000000000b
-> [    0.108382] FS:  0000000000000000(0000) GS:ffffffff88173000(0000) knlGS:0000000000000000
-> [    0.109872] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [    0.110926] CR2: ffffffffff5fd030 CR3: 000000002200d000 CR4: 00000000000406b0
-> [    0.112265] Call Trace:
-> [    0.112712]  ? clear_local_APIC+0x37/0x2f0
-> [    0.113463]  disable_local_APIC+0x22/0x60
-> [    0.114200]  native_stop_other_cpus+0xc8/0x160
-> [    0.115048]  panic+0x11a/0x2a8
-> [    0.115606]  oops_end+0xc1/0xd0
-> [    0.116188]  no_context+0x1eb/0x550
-> [    0.116826]  __bad_area_nosemaphore.constprop.30+0x50/0x1d0
-> [    0.117852]  bad_area_nosemaphore+0x13/0x20
-> [    0.118618]  do_kern_addr_fault+0x5c/0x90
-> [    0.119387]  __do_page_fault+0x382/0x440
-> [    0.120109]  ? memmap_init_zone+0x8f/0x22d
-> [    0.120851]  do_page_fault+0x32/0x120
-> [    0.121521]  page_fault+0x1e/0x30
-> [    0.122128] RIP: 0010:native_apic_mem_read+0x3/0x10
-> [    0.123045] Code: 00 00 e8 20 3a 2b 00 48 89 d8 5b 5d c3 90 90 90 90 90 90 90 90 90 90 55 89 ff 48 89 e5 89 b7 00 d0 5f ff 5d c3 66 90 55 89 ff <8b> 87 00 d0 5f ff 48 89 e5 5d c3 66 90 e8 7b 8a 5b 00 55 b8 01 00
-> [    0.126481] RSP: 0000:ffffffff88003e38 EFLAGS: 00010002
-> [    0.127502] RAX: ffffffff87248840 RBX: 000000003fe09000 RCX: 0000000000000000
-> [    0.128807] RDX: ffffffff88003e30 RSI: 000000000000f800 RDI: 0000000000000020
-> [    0.130161] RBP: ffffffff88003e48 R08: 0000000000000000 R09: 0000000000000000
-> [    0.131464] R10: 00000000000000ff R11: 0000000000000000 R12: 0000000001d254d6
-> [    0.132771] R13: 000000003d600000 R14: 0000000000000000 R15: 0000000000000000
-> [    0.134081]  ? native_apic_mem_write+0x10/0x10
-> [    0.134892]  ? read_apic_id+0x19/0x30
-> [    0.135564]  init_apic_mappings+0x7a/0x129
-> [    0.136316]  setup_arch+0xb67/0xc19
-> [    0.136954]  start_kernel+0x6b/0x4e3
-> [    0.137656]  x86_64_start_reservations+0x24/0x26
-> [    0.138576]  x86_64_start_kernel+0x6f/0x72
-> [    0.139329]  secondary_startup_64+0xa4/0xb0
-> [    0.140096] Modules linked in:
-> [    0.140653] CR2: ffffffffff5fd030
-> [    0.141259] ---[ end trace 2cc66932e568af61 ]---
-> [    0.142102] RIP: 0010:native_apic_mem_read+0x3/0x10
-> [    0.142992] Code: 00 00 e8 20 3a 2b 00 48 89 d8 5b 5d c3 90 90 90 90 90 90 90 90 90 90 55 89 ff 48 89 e5 89 b7 00 d0 5f ff 5d c3 66 90 55 89 ff <8b> 87 00 d0 5f ff 48 89 e5 5d c3 66 90 e8 7b 8a 5b 00 55 b8 01 00
-> [    0.146520] RSP: 0000:ffffffff88003e38 EFLAGS: 00010002
-> [    0.147533] RAX: ffffffff87248840 RBX: 000000003fe09000 RCX: 0000000000000000
-> [    0.148845] RDX: ffffffff88003e30 RSI: 000000000000f800 RDI: 0000000000000020
-> [    0.150191] RBP: ffffffff88003e48 R08: 0000000000000000 R09: 0000000000000000
-> [    0.151492] R10: 00000000000000ff R11: 0000000000000000 R12: 0000000001d254d6
-> [    0.152796] R13: 000000003d600000 R14: 0000000000000000 R15: 0000000000000000
-> [    0.154103] FS:  0000000000000000(0000) GS:ffffffff88173000(0000) knlGS:0000000000000000
-> [    0.155579] CS:  0010 DS: 0000 ES: 0000 CR0: 0000000080050033
-> [    0.156625] CR2: ffffffffff5fd030 CR3: 000000002200d000 CR4: 00000000000406b0
-> [    0.157967] Kernel panic - not syncing: Fatal exception
-> <repeating panic>
-> 
-> 
-> Libvirt configuration of the VM looks like this:
-> 
->   <os>
->     <type arch='x86_64' machine='pc'>hvm</type>
->     <loader readonly='yes' type='pflash'>/usr/share/edk2.git/ovmf-ia32/OVMF_CODE-pure-efi.fd</loader>
->     <nvram template='/usr/share/edk2.git/ovmf-ia32/OVMF_VARS-pure-efi.fd'>/var/lib/libvirt/qemu/nvram/vm76_VARS-32.fd</nvram>
->     <kernel>/var/lib/libvirt/boot/vmlinuz-5.0.0-dirty</kernel>
->     <initrd>/var/lib/libvirt/boot/initramfs-5.0.0-dirty.img</initrd>
->     <cmdline>root=UUID=6bea2b7b-e6cc-4dba-ac79-be6530d348f5 ro console=tty0 console=ttyS0,115200n8 no_timer_check net.ifnames=0 crashkernel=auto LANG=en_US.UTF-8 earlyprintk=serial,ttyS0,115200</cmdline>
->     <boot dev='hd'/>
->   </os>
-> 
-> -- 
-> Jun'ichi Nomura, NEC Corporation / NEC Solution Innovators, Ltd.
+3) SKB memory accounting fix in A-MDSU aggregation, from Felix
+   Fietkau.
+
+4) Increase RCU lock hold time in mlx5 FPGA code, from Saeed Mahameed.
+
+5) Avoid checksum complete with XDP in mlx5, also from Saeed.
+
+6) Fix netdev feature clobbering in ibmvnic driver, from Thomas
+   Falcon.
+
+7) Partial sent TLS record leak fix from Jakub Kicinski.
+
+8) Reject zero size iova range in vhost, from Jason Wang.
+
+9) Allow pending work to complete before clcsock release from
+   Karsten Graul.
+
+10) Fix XDP handling max MTU in thunderx, from Matteo Croce.
+
+11) A lot of protocols look at the sa_family field of a sockaddr
+    before validating it's length is large enough, from Tetsuo Handa.
+
+12) Don't write to free'd pointer in qede ptp error path, from Colin
+    Ian King.
+
+13) Have to recompile IP options in ipv4_link_failure because it can
+    be invoked from ARP, from Stephen Suryaputra.
+
+14) Doorbell handling fixes in qed from Denis Bolotin.
+
+15) Revert net-sysfs kobject register leak fix, it causes new
+    problems.  From Wang Hai.
+
+16) Spectre v1 fix in ATM code, from Gustavo A. R. Silva.
+
+17) Fix put of BROPT_VLAN_STATS_PER_PORT in bridging code, from
+    Nikolay Aleksandrov.
+
+Please pull, thanks a lot!
+
+The following changes since commit 869e3305f23dfeacdaa234717c92ccb237815d90:
+
+  Merge git://git.kernel.org/pub/scm/linux/kernel/git/davem/net (2019-04-08 17:10:46 -1000)
+
+are available in the Git repository at:
+
+  git://git.kernel.org/pub/scm/linux/kernel/git/davem/net 
+
+for you to fetch changes up to e6986423d28362aafe64d3757bbbc493f2687f8f:
+
+  socket: fix compat SO_RCVTIMEO_NEW/SO_SNDTIMEO_NEW (2019-04-16 21:52:22 -0700)
+
+----------------------------------------------------------------
+Alexander Wetzel (1):
+      mac80211: Honor SW_CRYPTO_CONTROL for unicast keys in AP VLAN mode
+
+Andrei Otcheretianski (1):
+      mac80211: Increase MAX_MSG_LEN
+
+Andy Duan (1):
+      net: fec: manage ahb clock in runtime pm
+
+Ard Biesheuvel (1):
+      net/core: work around section mismatch warning for ptp_classifier
+
+Arnd Bergmann (1):
+      socket: fix compat SO_RCVTIMEO_NEW/SO_SNDTIMEO_NEW
+
+Claudiu Manoil (2):
+      ocelot: Don't sleep in atomic context (irqs_disabled())
+      ocelot: Clean up stats update deferred work
+
+Colin Ian King (4):
+      vxge: fix return of a free'd memblock on a failed dma mapping
+      qede: fix write to free'd pointer error and double free of ptp
+      bnx2x: fix spelling mistake "dicline" -> "decline"
+      qed: fix spelling mistake "faspath" -> "fastpath"
+
+David Ahern (1):
+      selftests: fib_tests: Fix 'Command line is not complete' errors
+
+David Howells (1):
+      rxrpc: Trace received connection aborts
+
+David S. Miller (10):
+      Merge tag 'mac80211-for-davem-2019-04-09' of git://git.kernel.org/.../jberg/mac80211
+      Merge branch 'mlxsw-Various-fixes'
+      Merge branch 'ibmvnic-features'
+      Merge branch 'tls-leaks'
+      Merge branch 'smc-fixes'
+      Merge branch 'thunderx-xdp-mtu'
+      Merge branch 'rxrpc-fixes'
+      Merge branch 'qed-doorbell-overflow-recovery'
+      Merge tag 'mlx5-fixes-2019-04-09' of git://git.kernel.org/.../saeed/linux
+      Merge tag 'wireless-drivers-for-davem-2019-04-15' of git://git.kernel.org/.../kvalo/wireless-drivers
+
+Denis Bolotin (4):
+      qed: Delete redundant doorbell recovery types
+      qed: Fix the doorbell address sanity check
+      qed: Fix missing DORQ attentions
+      qed: Fix the DORQ's attentions handling
+
+Dmytro Linkin (1):
+      net/mlx5e: Protect against non-uplink representor for encap
+
+Eran Ben Elisha (2):
+      net/mlx5e: Skip un-needed tx recover if interface state is down
+      net/mlx5e: Use fail-safe channels reopen in tx reporter recover
+
+Eric Dumazet (4):
+      dctcp: more accurate tracking of packets delivery
+      ipv4: ensure rcu_read_lock() in ipv4_link_failure()
+      rtnetlink: fix rtnl_valid_stats_req() nlmsg_len check
+      tcp: tcp_grow_window() needs to respect tcp_space()
+
+Felix Fietkau (9):
+      mac80211: un-schedule TXQs on powersave start
+      mac80211: fix unaligned access in mesh table hash function
+      mac80211: fix memory accounting with A-MSDU aggregation
+      mac80211: do not call driver wake_tx_queue op during reconfig
+      mac80211: rework locking for txq scheduling / airtime fairness
+      mac80211: make ieee80211_schedule_txq schedule empty TXQs
+      mt76: mt7603: add missing initialization for dev->ps_lock
+      mt76: mt7603: fix sequence number assignment
+      mt76: mt7603: send BAR after powersave wakeup
+
+Gustavo A. R. Silva (1):
+      net: atm: Fix potential Spectre v1 vulnerabilities
+
+Hangbin Liu (1):
+      team: set slave to promisc if team is already in promisc mode
+
+Hoang Le (1):
+      tipc: missing entries in name table of publications
+
+Ido Schimmel (7):
+      mlxsw: spectrum_switchdev: Add MDB entries in prepare phase
+      mlxsw: core: Do not use WQ_MEM_RECLAIM for EMAD workqueue
+      mlxsw: core: Do not use WQ_MEM_RECLAIM for mlxsw ordered workqueue
+      mlxsw: core: Do not use WQ_MEM_RECLAIM for mlxsw workqueue
+      mlxsw: spectrum_router: Do not check VRF MAC address
+      selftests: mlxsw: Test VRF MAC vetoing
+      mlxsw: spectrum_buffers: Add a multicast pool for Spectrum-2
+
+Ihab Zhaika (2):
+      iwlwifi: rename structs to fit the new names
+      iwlwifi: add new 0x2723/0x2080 card for 22000
+
+Ilan Peer (1):
+      cfg80211: Handle WMM rules in regulatory domain intersection
+
+Jakub Kicinski (5):
+      net/tls: fix the IV leaks
+      net/tls: don't leak partially sent record in device mode
+      net: strparser: partially revert "strparser: Call skb_unclone conditionally"
+      net/tls: fix build without CONFIG_TLS_DEVICE
+      net/tls: prevent bad memory access in tls_is_sk_tx_device_offloaded()
+
+Jason Wang (1):
+      vhost: reject zero size iova range
+
+Jeffrey Altman (1):
+      rxrpc: Fix detection of out of order acks
+
+Jie Liu (1):
+      tipc: set sysctl_tipc_rmem and named_timeout right range
+
+Johannes Berg (4):
+      iwlwifi: mvm: fix TX crypto on 22560+ devices
+      iwlwifi: mvm: avoid possible deadlock in TX path
+      iwlwifi: mvm: update offloaded rate control on changes
+      mac80211_hwsim: calculate if_combination.max_interfaces
+
+Jonathan Lemon (1):
+      route: Avoid crash from dereferencing NULL rt->from
+
+Kalle Valo (2):
+      Merge tag 'iwlwifi-for-kalle-2019-03-22' of git://git.kernel.org/.../iwlwifi/iwlwifi-fixes
+      Merge tag 'iwlwifi-for-kalle-2019-04-03' of git://git.kernel.org/.../iwlwifi/iwlwifi-fixes
+
+Kangjie Lu (1):
+      net/smc: fix a NULL pointer dereference
+
+Karsten Graul (2):
+      net/smc: wait for pending work before clcsock release_sock
+      net/smc: fix return code from FLUSH command
+
+Konstantin Khlebnikov (1):
+      net/mlx5e: Switch to Toeplitz RSS hash by default
+
+Lorenzo Bianconi (1):
+      net: fou: do not use guehdr after iptunnel_pull_offloads in gue_udp_recv
+
+Luca Coelho (1):
+      iwlwifi: add support for quz firmwares
+
+Lukas Bulwahn (1):
+      MAINTAINERS: normalize Woojung Huh's email address
+
+Marc Dionne (4):
+      rxrpc: Clear socket error
+      rxrpc: Make rxrpc_kernel_check_life() indicate if call completed
+      rxrpc: Allow errors to be returned from rxrpc_queue_packet()
+      afs: Check for rxrpc call completion in wait loop
+
+Matteo Croce (2):
+      net: thunderx: raise XDP MTU to 1508
+      net: thunderx: don't allow jumbo frames with XDP
+
+Nathan Chancellor (1):
+      cfg80211: Change an 'else if' into an 'else' in cfg80211_calculate_bitrate_he
+
+Nikolay Aleksandrov (3):
+      net: bridge: multicast: use rcu to access port list from br_multicast_start_querier
+      net: bridge: fix per-port af_packet sockets
+      net: bridge: fix netlink export of vlan_stats_per_port option
+
+Or Gerlitz (1):
+      Revert "net/mlx5e: Enable reporting checksum unnecessary also for L3 packets"
+
+Sabrina Dubroca (1):
+      bonding: fix event handling for stacked bonds
+
+Saeed Mahameed (5):
+      net/mlx5: FPGA, tls, hold rcu read lock a bit longer
+      net/mlx5: FPGA, tls, idr remove on flow delete
+      net/mlx5e: XDP, Avoid checksum complete when XDP prog is loaded
+      net/mlx5e: Rx, Fixup skb checksum for packets with tail padding
+      net/mlx5e: Rx, Check ip headers sanity
+
+Shahar S Matityahu (4):
+      iwlwifi: add sync_nmi to trans ops
+      iwlwifi: dbg_ini: in case of region dump failure set memory to 0
+      iwlwifi: dbg_ini: fix bad dump size calculation
+      iwlwifi: use sync nmi in case of init flow failure
+
+Si-Wei Liu (1):
+      failover: allow name change on IFF_UP slave interfaces
+
+Stanislaw Gruszka (2):
+      cfg80211: add ratelimited variants of err and warn
+      mt76x02: avoid status_list.lock and sta->rate_ctrl_lock dependency
+
+Stephen Suryaputra (1):
+      ipv4: recompile ip options in ipv4_link_failure
+
+Sunil Dutt (1):
+      nl80211: Add NL80211_FLAG_CLEAR_SKB flag for other NL commands
+
+Tetsuo Handa (9):
+      net/rds: Check address length before reading address family
+      mISDN: Check address length before reading address family
+      sctp: Check address length before reading address family
+      net: netlink: Check address length before reading groups field
+      rxrpc: Check address length before reading srx_service field
+      Bluetooth: Check address length before reading address field
+      llc: Check address length before reading address field
+      bpf: Check address length before reading address family
+      udpv6: Check address length before reading address family
+
+Thomas Falcon (2):
+      ibmvnic: Enable GRO
+      ibmvnic: Fix netdev feature clobbering during a reset
+
+Tuong Lien (1):
+      tipc: fix link established but not in session
+
+Ursula Braun (2):
+      net/smc: propagate file from SMC to TCP socket
+      net/smc: move unhash before release of clcsock
+
+Vijayakumar Durai (1):
+      rt2x00: do not increment sequence number while re-transmitting
+
+Wang Hai (1):
+      Revert "net-sysfs: Fix memory leak in netdev_register_kobject"
+
+YueHaibing (2):
+      cfg80211: Use kmemdup in cfg80211_gen_new_ie()
+      net: netrom: Fix error cleanup path of nr_proto_init
+
+Yuya Kusakabe (1):
+      net: Fix missing meta data in skb with vlan packet
+
+ Documentation/networking/rxrpc.txt                       | 16 ++++++++-------
+ MAINTAINERS                                              |  2 +-
+ drivers/isdn/mISDN/socket.c                              |  4 ++--
+ drivers/net/bonding/bond_main.c                          |  6 +++++-
+ drivers/net/ethernet/broadcom/bnx2x/bnx2x_vfpf.c         |  2 +-
+ drivers/net/ethernet/cavium/thunder/nicvf_main.c         | 22 ++++++++++++++++++--
+ drivers/net/ethernet/freescale/fec_main.c                | 30 +++++++++++++++++++--------
+ drivers/net/ethernet/ibm/ibmvnic.c                       | 32 ++++++++++++++++++++++-------
+ drivers/net/ethernet/mellanox/mlx5/core/en.h             |  1 +
+ drivers/net/ethernet/mellanox/mlx5/core/en/reporter_tx.c | 11 +++++++---
+ drivers/net/ethernet/mellanox/mlx5/core/en/tc_tun.c      |  4 ++++
+ drivers/net/ethernet/mellanox/mlx5/core/en_ethtool.c     |  3 ++-
+ drivers/net/ethernet/mellanox/mlx5/core/en_main.c        | 21 ++++++++++++++-----
+ drivers/net/ethernet/mellanox/mlx5/core/en_rx.c          | 94 +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++-----------------
+ drivers/net/ethernet/mellanox/mlx5/core/en_stats.c       |  6 ++++++
+ drivers/net/ethernet/mellanox/mlx5/core/en_stats.h       |  4 ++++
+ drivers/net/ethernet/mellanox/mlx5/core/fpga/tls.c       | 61 ++++++++++++++++++++++--------------------------------
+ drivers/net/ethernet/mellanox/mlxsw/core.c               |  6 +++---
+ drivers/net/ethernet/mellanox/mlxsw/spectrum_buffers.c   | 19 +++++++++--------
+ drivers/net/ethernet/mellanox/mlxsw/spectrum_router.c    |  2 +-
+ drivers/net/ethernet/mellanox/mlxsw/spectrum_switchdev.c |  2 +-
+ drivers/net/ethernet/mscc/ocelot.c                       | 24 ++++++++++++++--------
+ drivers/net/ethernet/neterion/vxge/vxge-config.c         |  1 +
+ drivers/net/ethernet/qlogic/qed/qed.h                    |  7 +++++--
+ drivers/net/ethernet/qlogic/qed/qed_dev.c                | 85 +++++++++++++++++++++++++++++++---------------------------------------------
+ drivers/net/ethernet/qlogic/qed/qed_int.c                | 83 ++++++++++++++++++++++++++++++++++++++++++++++++++++++++------------------
+ drivers/net/ethernet/qlogic/qed/qed_int.h                |  4 ++--
+ drivers/net/ethernet/qlogic/qed/qed_main.c               |  2 +-
+ drivers/net/ethernet/qlogic/qed/qed_sriov.c              |  2 +-
+ drivers/net/ethernet/qlogic/qede/qede_ptp.c              |  7 +++----
+ drivers/net/team/team.c                                  | 26 +++++++++++++++++++++++
+ drivers/net/wireless/ath/ath10k/htt_rx.c                 |  2 +-
+ drivers/net/wireless/ath/ath10k/mac.c                    |  4 ++--
+ drivers/net/wireless/ath/ath9k/xmit.c                    |  5 ++++-
+ drivers/net/wireless/intel/iwlwifi/cfg/22000.c           | 30 +++++++++++++++++++--------
+ drivers/net/wireless/intel/iwlwifi/fw/dbg.c              | 34 ++++++++-----------------------
+ drivers/net/wireless/intel/iwlwifi/fw/init.c             |  1 -
+ drivers/net/wireless/intel/iwlwifi/iwl-config.h          |  3 ++-
+ drivers/net/wireless/intel/iwlwifi/iwl-csr.h             |  1 +
+ drivers/net/wireless/intel/iwlwifi/iwl-trans.h           | 12 +++++------
+ drivers/net/wireless/intel/iwlwifi/mvm/mac80211.c        | 71 ++++++++++++++++++++-------------------------------------------
+ drivers/net/wireless/intel/iwlwifi/mvm/mvm.h             |  1 -
+ drivers/net/wireless/intel/iwlwifi/mvm/sta.c             | 43 ++++----------------------------------
+ drivers/net/wireless/intel/iwlwifi/mvm/sta.h             |  7 ++-----
+ drivers/net/wireless/intel/iwlwifi/pcie/drv.c            | 13 ++++++------
+ drivers/net/wireless/intel/iwlwifi/pcie/internal.h       |  2 +-
+ drivers/net/wireless/intel/iwlwifi/pcie/trans.c          | 11 +++++++---
+ drivers/net/wireless/intel/iwlwifi/pcie/tx-gen2.c        |  2 +-
+ drivers/net/wireless/intel/iwlwifi/pcie/tx.c             |  2 +-
+ drivers/net/wireless/mac80211_hwsim.c                    | 19 +++++++++++++----
+ drivers/net/wireless/mediatek/mt76/mt7603/init.c         |  2 ++
+ drivers/net/wireless/mediatek/mt76/mt7603/mac.c          | 53 +++++++++++++----------------------------------
+ drivers/net/wireless/mediatek/mt76/mt7603/main.c         |  8 ++++----
+ drivers/net/wireless/mediatek/mt76/mt7603/mt7603.h       |  2 +-
+ drivers/net/wireless/mediatek/mt76/mt76x02_mac.c         | 14 +++++++------
+ drivers/net/wireless/ralink/rt2x00/rt2x00.h              |  1 -
+ drivers/net/wireless/ralink/rt2x00/rt2x00mac.c           | 10 ---------
+ drivers/net/wireless/ralink/rt2x00/rt2x00queue.c         | 15 ++++++++------
+ drivers/vhost/vhost.c                                    |  6 +++++-
+ fs/afs/rxrpc.c                                           | 24 +++++++++++++++-------
+ include/linux/netdevice.h                                |  3 +++
+ include/net/af_rxrpc.h                                   |  4 +++-
+ include/net/cfg80211.h                                   |  5 +++++
+ include/net/mac80211.h                                   | 63 ++++++++++++++++++++++++++++++--------------------------
+ include/net/netrom.h                                     |  2 +-
+ include/net/sock.h                                       |  6 ------
+ include/net/tls.h                                        |  4 +++-
+ net/atm/lec.c                                            |  6 +++++-
+ net/bluetooth/sco.c                                      |  4 ++--
+ net/bridge/br_input.c                                    | 23 +++++++++++++--------
+ net/bridge/br_multicast.c                                |  4 +++-
+ net/bridge/br_netlink.c                                  |  2 +-
+ net/core/dev.c                                           | 16 ++++++++++++++-
+ net/core/failover.c                                      |  6 +++---
+ net/core/filter.c                                        |  2 ++
+ net/core/net-sysfs.c                                     | 14 +++++--------
+ net/core/ptp_classifier.c                                |  7 ++++---
+ net/core/rtnetlink.c                                     |  2 +-
+ net/core/skbuff.c                                        | 10 ++++++++-
+ net/core/sock.c                                          |  4 ++--
+ net/ipv4/fou.c                                           |  4 +++-
+ net/ipv4/route.c                                         | 16 ++++++++++++++-
+ net/ipv4/tcp_dctcp.c                                     | 45 ++++++++++++++++------------------------
+ net/ipv4/tcp_input.c                                     | 10 ++++-----
+ net/ipv6/route.c                                         |  4 ++++
+ net/ipv6/udp.c                                           |  2 ++
+ net/llc/af_llc.c                                         |  3 +--
+ net/mac80211/driver-ops.h                                |  3 +++
+ net/mac80211/key.c                                       |  9 ++++----
+ net/mac80211/mesh_pathtbl.c                              |  2 +-
+ net/mac80211/rx.c                                        | 10 ++++++++-
+ net/mac80211/trace_msg.h                                 |  7 ++++++-
+ net/mac80211/tx.c                                        | 53 +++++++++++++++++++++--------------------------
+ net/netlink/af_netlink.c                                 |  3 ++-
+ net/netrom/af_netrom.c                                   | 76 ++++++++++++++++++++++++++++++++++++++++++++++++--------------------
+ net/netrom/nr_loopback.c                                 |  2 +-
+ net/netrom/nr_route.c                                    |  2 +-
+ net/netrom/sysctl_net_netrom.c                           |  5 ++++-
+ net/rds/af_rds.c                                         |  3 +++
+ net/rds/bind.c                                           |  2 ++
+ net/rxrpc/af_rxrpc.c                                     | 17 ++++++++++------
+ net/rxrpc/ar-internal.h                                  |  1 +
+ net/rxrpc/conn_event.c                                   | 11 ++++++----
+ net/rxrpc/input.c                                        | 18 ++++++++++------
+ net/rxrpc/peer_event.c                                   |  5 +++++
+ net/rxrpc/sendmsg.c                                      | 21 +++++++++++--------
+ net/sctp/socket.c                                        |  3 ++-
+ net/smc/af_smc.c                                         | 58 +++++++++++++++++++++++++++++++++++-----------------
+ net/smc/smc_close.c                                      | 25 +++++++++++++++++++----
+ net/smc/smc_close.h                                      |  1 +
+ net/smc/smc_ism.c                                        |  5 +++++
+ net/smc/smc_pnet.c                                       |  3 ++-
+ net/strparser/strparser.c                                | 12 +++++------
+ net/tipc/link.c                                          |  2 ++
+ net/tipc/name_table.c                                    |  3 ++-
+ net/tipc/sysctl.c                                        |  8 ++++++--
+ net/tls/tls_device.c                                     | 12 ++++++++++-
+ net/tls/tls_main.c                                       | 24 ++++++++++++++++++++++
+ net/tls/tls_sw.c                                         | 15 +-------------
+ net/wireless/nl80211.c                                   | 18 ++++++++++------
+ net/wireless/reg.c                                       | 39 +++++++++++++++++++++++++++++++++++
+ net/wireless/scan.c                                      |  3 +--
+ net/wireless/util.c                                      |  6 ++++--
+ tools/testing/selftests/drivers/net/mlxsw/rtnetlink.sh   | 20 ++++++++++++++++++
+ tools/testing/selftests/net/fib_tests.sh                 | 94 ++++++++++++++++++++++++++++++++++++------------------------------------------------
+ 125 files changed, 1118 insertions(+), 741 deletions(-)
