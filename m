@@ -2,121 +2,115 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 246FDC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 03:17:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 62E33C282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 03:17:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DA4382075B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 03:17:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="qQr912Ew"
+	by mail.kernel.org (Postfix) with ESMTP id 338DD2075B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 03:17:45 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555471065;
+	bh=EtNp+iz+vav9GE/rtTbs5jMyOX+/DllITj1zGt1ilPQ=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=LvnXgfFqqTmLsSrzUSx8Q/pMPNtRwnehKa0keHvqeOz7LJfAkViLRNq7LgqdFzp07
+	 /ZshMxSyMYNCP5zAWGyO9qyWFOtDt+JPJ5tI1w6F82nOzwq7OFE2T1kKHGA64wQGCy
+	 2RZzXbbpZMSCjcFKN1qWn8dtPFjuK7D8fIqovcQE=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729569AbfDQDRP (ORCPT
+        id S1730114AbfDQDRo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 23:17:15 -0400
-Received: from mail-eopbgr70072.outbound.protection.outlook.com ([40.107.7.72]:30538
-        "EHLO EUR04-HE1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1726946AbfDQDRP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 23:17:15 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=bq4xTuW7dXUIAnggPINbbPayYqhJ7L8ro+e8mQ1cAIQ=;
- b=qQr912EwBI+eB+UJa4xLqFtpuhoxkv/H+I6EezqHg9RR1Yct0e0fyATKZLsPKX5R08bWSrov/shdf7iUY4gjy6xv013s5Ca2YTC8QDd/QrFLri1sLC+s9KGjdu+3HpOmSaRAAjYTdllFyrsvvRjQpqtxTsu+ZVwjDJR0ltb/1+8=
-Received: from AM0PR04MB4211.eurprd04.prod.outlook.com (52.134.92.158) by
- AM0PR04MB4290.eurprd04.prod.outlook.com (52.134.91.148) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1792.17; Wed, 17 Apr 2019 03:17:11 +0000
-Received: from AM0PR04MB4211.eurprd04.prod.outlook.com
- ([fe80::8cda:4e52:8e87:8f0e]) by AM0PR04MB4211.eurprd04.prod.outlook.com
- ([fe80::8cda:4e52:8e87:8f0e%2]) with mapi id 15.20.1792.021; Wed, 17 Apr 2019
- 03:17:11 +0000
-From:   Aisheng Dong <aisheng.dong@nxp.com>
-To:     Anson Huang <anson.huang@nxp.com>,
-        "shawnguo@kernel.org" <shawnguo@kernel.org>,
-        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
-        "kernel@pengutronix.de" <kernel@pengutronix.de>,
-        "festevam@gmail.com" <festevam@gmail.com>,
-        "wsa+renesas@sang-engineering.com" <wsa+renesas@sang-engineering.com>,
-        "u.kleine-koenig@pengutronix.de" <u.kleine-koenig@pengutronix.de>,
-        "eha@deif.com" <eha@deif.com>,
-        "linux@rempel-privat.de" <linux@rempel-privat.de>,
-        "mojha@codeaurora.org" <mojha@codeaurora.org>,
-        Laurentiu Tudor <laurentiu.tudor@nxp.com>,
-        "peda@axentia.se" <peda@axentia.se>,
-        "linux-i2c@vger.kernel.org" <linux-i2c@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     dl-linux-imx <linux-imx@nxp.com>
-Subject: RE: [PATCH] i2c: imx: correct the method of getting private data in
- notifier_call
-Thread-Topic: [PATCH] i2c: imx: correct the method of getting private data in
- notifier_call
-Thread-Index: AQHU9ME0meJbs59NTkCxa+Er7M94G6Y/rRyAgAABQ1A=
-Date:   Wed, 17 Apr 2019 03:17:10 +0000
-Message-ID: <AM0PR04MB42110D893D07DFECFE167F5580250@AM0PR04MB4211.eurprd04.prod.outlook.com>
-References: <1555466064-27984-1-git-send-email-Anson.Huang@nxp.com>
- <AM0PR04MB4211D493C95357CE7B69574A80250@AM0PR04MB4211.eurprd04.prod.outlook.com>
-In-Reply-To: <AM0PR04MB4211D493C95357CE7B69574A80250@AM0PR04MB4211.eurprd04.prod.outlook.com>
-Accept-Language: zh-CN, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=aisheng.dong@nxp.com; 
-x-originating-ip: [119.31.174.66]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 656128ee-7c68-4a15-eee0-08d6c2e32e62
-x-ms-office365-filtering-ht: Tenant
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(5600140)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(2017052603328)(7193020);SRVR:AM0PR04MB4290;
-x-ms-traffictypediagnostic: AM0PR04MB4290:
-x-ld-processed: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635,ExtAddr
-x-microsoft-antispam-prvs: <AM0PR04MB42905EB1A58780103FCD47CC80250@AM0PR04MB4290.eurprd04.prod.outlook.com>
-x-forefront-prvs: 0010D93EFE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(346002)(376002)(366004)(396003)(39860400002)(136003)(189003)(31014005)(199004)(11346002)(81166006)(86362001)(8676002)(25786009)(446003)(4326008)(8936002)(74316002)(486006)(44832011)(256004)(7416002)(33656002)(186003)(81156014)(2940100002)(105586002)(26005)(305945005)(2201001)(476003)(7736002)(2501003)(3846002)(6116002)(99286004)(9686003)(5660300002)(66066001)(229853002)(71190400001)(6246003)(106356001)(71200400001)(93156006)(53936002)(68736007)(55016002)(6506007)(52536014)(14454004)(102836004)(97736004)(110136005)(316002)(478600001)(7696005)(6436002)(76176011)(2906002)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB4290;H:AM0PR04MB4211.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
-received-spf: None (protection.outlook.com: nxp.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: u6454qK2swX1tLegWTnsxDulIS4JtpCgiBiXfLJXZ4xJoOBg9sNIrbCyVttuzJBqtBNXECcMLyQTNwvMwBu1D5KWLm3c9eixgcMWiSBD39vJjxnwgHe/yXz7UO//b/yTit+UsDugkX0H1DGO3xYqDZ+4MlF8MTpigUg2JeRaQndrGd0BCtj4qq9pTB2/s530298JoWiFaLoWXd2DIJqH+kq19r1DS+z3Kp3jwx1Kw0vuJaVlYvnlVUamGSCqCkgnWT3fuBIhurPyNejGGFZn9w8zJ5Q2+CotnBHbqUeFydDFtCX+ohfLa1t71NviPaeAwRpVSl9/7QomVQ0JnSKsMepX3MbnKgC2UhiklgHDnG7oARJs5nXBYuA+Im9xW9BXA5JjG8QDUewtZHSjVgiak/XLRPjylwORS5jTtcGEMQ0=
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: base64
-MIME-Version: 1.0
-X-OriginatorOrg: nxp.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 656128ee-7c68-4a15-eee0-08d6c2e32e62
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Apr 2019 03:17:10.9523
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB4290
+        Tue, 16 Apr 2019 23:17:44 -0400
+Received: from mail.linuxfoundation.org ([140.211.169.12]:59140 "EHLO
+        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728083AbfDQDRn (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 23:17:43 -0400
+Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
+        by mail.linuxfoundation.org (Postfix) with ESMTPSA id 6056CA70;
+        Wed, 17 Apr 2019 03:17:42 +0000 (UTC)
+Date:   Tue, 16 Apr 2019 20:17:41 -0700
+From:   Andrew Morton <akpm@linux-foundation.org>
+To:     Matteo Croce <mcroce@redhat.com>
+Cc:     LKML <linux-kernel@vger.kernel.org>, linux-fsdevel@vger.kernel.org,
+        Kees Cook <keescook@chromium.org>
+Subject: Re: [PATCH v2] proc/sysctl: add shared variables for range check
+Message-Id: <20190416201741.19395c715a1cb0f2130e795a@linux-foundation.org>
+In-Reply-To: <20190417005943.17448-1-mcroce@redhat.com>
+References: <20190417005943.17448-1-mcroce@redhat.com>
+X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
+Mime-Version: 1.0
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Wy4uLl0NCg0KPiA+DQo+ID4gRml4ZXM6IDkwYWQyY2JlODhjMigiaTJjOiBpbXg6IHVzZSBjbGsg
-bm90aWZpZXIgZm9yIHJhdGUgY2hhbmdlcyIpDQo+ID4gU2lnbmVkLW9mZi1ieTogQW5zb24gSHVh
-bmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+IA0KPiBQbGVhc2UgYWxzbyBwcm92aWRlIGhvdyB0
-byByZXByb2R1Y2UgaXQuDQo+IEFuZCBpdCBzZWVtcyBub3QgYSBuZXcgaXNzdWUsIHNob3VsZCB3
-ZSBDQyBzdGFibGU/DQoNCkJlc2lkZXMgYWJvdmUgY29tbWVudHM6DQoNClJldmlld2VkLWJ5OiBE
-b25nIEFpc2hlbmcgPGFpc2hlbmcuZG9uZ0BueHAuY29tPg0KDQpSZWdhcmRzDQpEb25nIEFpc2hl
-bmcNCg0KPiANCj4gUmVnYXJkcw0KPiBEb25nIEFpc2hlbmcNCj4gDQo+ID4gLS0tDQo+ID4gIGRy
-aXZlcnMvaTJjL2J1c3Nlcy9pMmMtaW14LmMgfCA0ICsrLS0NCj4gPiAgMSBmaWxlIGNoYW5nZWQs
-IDIgaW5zZXJ0aW9ucygrKSwgMiBkZWxldGlvbnMoLSkNCj4gPg0KPiA+IGRpZmYgLS1naXQgYS9k
-cml2ZXJzL2kyYy9idXNzZXMvaTJjLWlteC5jDQo+ID4gYi9kcml2ZXJzL2kyYy9idXNzZXMvaTJj
-LWlteC5jIGluZGV4DQo+ID4gYzBjMzA0My4uZmQ3MGIxMSAxMDA2NDQNCj4gPiAtLS0gYS9kcml2
-ZXJzL2kyYy9idXNzZXMvaTJjLWlteC5jDQo+ID4gKysrIGIvZHJpdmVycy9pMmMvYnVzc2VzL2ky
-Yy1pbXguYw0KPiA+IEBAIC01MTUsOSArNTE1LDkgQEAgc3RhdGljIGludCBpMmNfaW14X2Nsa19u
-b3RpZmllcl9jYWxsKHN0cnVjdA0KPiA+IG5vdGlmaWVyX2Jsb2NrICpuYiwNCj4gPiAgCQkJCSAg
-ICAgdW5zaWduZWQgbG9uZyBhY3Rpb24sIHZvaWQgKmRhdGEpICB7DQo+ID4gIAlzdHJ1Y3QgY2xr
-X25vdGlmaWVyX2RhdGEgKm5kYXRhID0gZGF0YTsNCj4gPiAtCXN0cnVjdCBpbXhfaTJjX3N0cnVj
-dCAqaTJjX2lteCA9IGNvbnRhaW5lcl9vZigmbmRhdGEtPmNsaywNCj4gPiArCXN0cnVjdCBpbXhf
-aTJjX3N0cnVjdCAqaTJjX2lteCA9IGNvbnRhaW5lcl9vZihuYiwNCj4gPiAgCQkJCQkJICAgICAg
-c3RydWN0IGlteF9pMmNfc3RydWN0LA0KPiA+IC0JCQkJCQkgICAgICBjbGspOw0KPiA+ICsJCQkJ
-CQkgICAgICBjbGtfY2hhbmdlX25iKTsNCj4gPg0KPiA+ICAJaWYgKGFjdGlvbiAmIFBPU1RfUkFU
-RV9DSEFOR0UpDQo+ID4gIAkJaTJjX2lteF9zZXRfY2xrKGkyY19pbXgsIG5kYXRhLT5uZXdfcmF0
-ZSk7DQo+ID4gLS0NCj4gPiAyLjcuNA0KDQo=
+On Wed, 17 Apr 2019 02:59:43 +0200 Matteo Croce <mcroce@redhat.com> wrote:
+
+> In the sysctl code the proc_dointvec_minmax() function is often used to
+> validate the user supplied value between an allowed range. This function
+> uses the extra1 and extra2 members from struct ctl_table as minimum and
+> maximum allowed value.
+> 
+> On sysctl handler declaration, in every source file there are some readonly
+> variables containing just an integer which address is assigned to the
+> extra1 and extra2 members, so the sysctl range is enforced.
+> 
+> The special values 0, 1 and INT_MAX are very often used as range boundary,
+> leading duplication of variables like zero=0, one=1, int_max=INT_MAX in
+> different source files:
+> 
+>     $ git grep -E '\.extra[12].*&(zero|one|int_max)\b' |wc -l
+>     245
+> 
+> This patch adds three const variables for the most commonly used values,
+> and use them instead of creating a local one for every object file.
+> 
+
+Nice.  A few thoughts:
+
+> --- a/arch/s390/appldata/appldata_base.c
+> +++ b/arch/s390/appldata/appldata_base.c
+> @@ -220,15 +220,13 @@ appldata_timer_handler(struct ctl_table *ctl, int write,
+>  			   void __user *buffer, size_t *lenp, loff_t *ppos)
+>  {
+>  	int timer_active = appldata_timer_active;
+> -	int zero = 0;
+> -	int one = 1;
+>  	int rc;
+>  	struct ctl_table ctl_entry = {
+>  		.procname	= ctl->procname,
+>  		.data		= &timer_active,
+>  		.maxlen		= sizeof(int),
+> -		.extra1		= &zero,
+> -		.extra2		= &one,
+> +		.extra1		= (void *)&sysctl_zero,
+> +		.extra2		= (void *)&sysctl_one,
+
+The casts are ugly, and by casting away constness they introduce the
+risk that some errant could could change the value of 0, 1 and INT_MAX!
+Maybe - perhaps trying to do that would cause a segv but still,
+they're ugly.
+
+A proper fix would require changing extra1 and extra2 to const void *. 
+Perhaps that would be unfeasibly extensive?
+
+> ...
+>
+> --- a/fs/proc/proc_sysctl.c
+> +++ b/fs/proc/proc_sysctl.c
+> @@ -21,6 +21,11 @@ static const struct inode_operations proc_sys_inode_operations;
+>  static const struct file_operations proc_sys_dir_file_operations;
+>  static const struct inode_operations proc_sys_dir_operations;
+>  
+> +/* shared constants to be used in various sysctls */
+> +const int sysctl_zero = 0;
+> +const int sysctl_one = 1;
+> +const int sysctl_int_max = INT_MAX;
+
+Don't these require EXPORT_SYMBOL()?
+
+
