@@ -7,38 +7,38 @@ X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9C40C10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:43:53 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2F2CC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:43:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B11C120675
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:43:53 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 808FE20675
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:43:58 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="fT4VkUb9"
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="W3aA2C88"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731160AbfDQHnw (ORCPT
+        id S1731131AbfDQHnv (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 03:43:52 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:46336 "EHLO
+        Wed, 17 Apr 2019 03:43:51 -0400
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:46338 "EHLO
         smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
-        by vger.kernel.org with ESMTP id S1728108AbfDQHnu (ORCPT
+        by vger.kernel.org with ESMTP id S1727447AbfDQHnu (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 17 Apr 2019 03:43:50 -0400
 Received: from mailhost1.synopsys.com (us02-dmz-cl-eth-s1p4c0.internal.synopsys.com [10.12.241.126])
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTP id 3C9F6C0B16;
-        Wed, 17 Apr 2019 07:33:16 +0000 (UTC)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTP id 907F8C0B14;
+        Wed, 17 Apr 2019 07:33:14 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1555486396; bh=YwRTRliRe35QaXc9TWma0CdZJr5VED6GbuAobjabqLY=;
+        t=1555486394; bh=fg7z+hdIYKWaMyHO2cSI1s6q90ANqnyzXocHfWI4dKQ=;
         h=From:To:Cc:Subject:Date:In-Reply-To:References:In-Reply-To:
          References:From;
-        b=fT4VkUb9IchzQnevK8aHRDlNo5kYBRgzoN21KGwO04IJ6A9QAMnL3amlPST2SIxGu
-         wECROyJdQp457D762suH75dEvXfjWyFm3eA2yBEAr/Q1T+JNZUbUZguSZyykh8lQzi
-         sq4lhx/MA1iJrgjbBp4uWIuCbHRCCPhBp+Pw1D7jDYcbr/CxtXJ3/0b5gIt4HcNebR
-         OX+qMpHKWX9FEnAAm940qV7e4OCl7YhWFf/hm53wQaeN8AVrbQLQJaF72p8jNFLMVn
-         FmkjkVGUfDJno9M5z/zuxDtV+2cL5nLX8cL+rVrJa1KQenZr9KupFrjnf8qFSyfOyp
-         AguxcW9ra4AUA==
+        b=W3aA2C88qhWd6xAHpCUa8o3MnjR2F9VT/knoDG1+IQNu5wkuzs2Cco5YmauphtkNT
+         ZCC2/+mX0GqLY1tBzHPKpC8xLZRNRF1kOxCjn7bK1hENTXYYFZymKmUP8ehXq2Nixo
+         uip2u/MD2cT17vo+2pzbdbDUPJTVvUI/1cGZl2rNO61YQWE+vuKiqgbd9mFLjUmL6k
+         bPiwIm5mijcllx7y/0+J4GzNUc8UpIx8Cj/8739fwech/Z5kyLyXzjcFv2ekNjJoaT
+         TQ9MgFoUoNObNtWfAbd6NdjjEWhB/0Fn9j3XqOpvkt3fNpa2+rDgF/RziOfsXxBhXi
+         9NeTRMj7Xx5PQ==
 Received: from de02dwia024.internal.synopsys.com (de02dwia024.internal.synopsys.com [10.225.19.81])
-        by mailhost1.synopsys.com (Postfix) with ESMTP id E4A9D501F;
-        Wed, 17 Apr 2019 00:33:14 -0700 (PDT)
+        by mailhost1.synopsys.com (Postfix) with ESMTP id 44495501C;
+        Wed, 17 Apr 2019 00:33:13 -0700 (PDT)
 From:   Jose Abreu <Jose.Abreu@synopsys.com>
 To:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
@@ -46,9 +46,9 @@ Cc:     Jose Abreu <Jose.Abreu@synopsys.com>,
         "David S . Miller" <davem@davemloft.net>,
         Giuseppe Cavallaro <peppe.cavallaro@st.com>,
         Alexandre Torgue <alexandre.torgue@st.com>
-Subject: [PATCH net-next 2/2] net: stmmac: Set Flow Control to automatic mode in the driver
-Date:   Wed, 17 Apr 2019 09:33:05 +0200
-Message-Id: <62d330a2767a87367a9082116999158b442f65f0.1555486210.git.joabreu@synopsys.com>
+Subject: [PATCH net-next 1/2] net: stmmac: dwxgmac: Finish the Flow Control implementation
+Date:   Wed, 17 Apr 2019 09:33:04 +0200
+Message-Id: <6025da4fc4390316adf2abb32f4afcea2b4aef35.1555486210.git.joabreu@synopsys.com>
 X-Mailer: git-send-email 2.7.4
 In-Reply-To: <cover.1555486210.git.joabreu@synopsys.com>
 References: <cover.1555486210.git.joabreu@synopsys.com>
@@ -59,14 +59,9 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-By default Flow Control feature is not being enabled in stmmac.
-
-This is a useful feature that can prevent loss of packets and now that
-XGMAC already supports it (along with GMAC and QoS) it makes sense to
-activate it.
-
-Switch the module parameter to FLOW_AUTO so that Flow Control is
-activated.
+Finish the implementation of Flow Control feature. In order for it to
+work correctly we need to set EHFC bit and the correct threshold values
+for activating and deactivating it.
 
 Signed-off-by: Jose Abreu <joabreu@synopsys.com>
 Cc: Joao Pinto <jpinto@synopsys.com>
@@ -74,22 +69,83 @@ Cc: David S. Miller <davem@davemloft.net>
 Cc: Giuseppe Cavallaro <peppe.cavallaro@st.com>
 Cc: Alexandre Torgue <alexandre.torgue@st.com>
 ---
- drivers/net/ethernet/stmicro/stmmac/stmmac_main.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h     |  5 +++
+ drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c | 46 ++++++++++++++++++++++
+ 2 files changed, 51 insertions(+)
 
-diff --git a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-index a26e36dbb5df..7a895a2889e3 100644
---- a/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-+++ b/drivers/net/ethernet/stmicro/stmmac/stmmac_main.c
-@@ -74,7 +74,7 @@ MODULE_PARM_DESC(phyaddr, "Physical device address");
- #define STMMAC_TX_THRESH	(DMA_TX_SIZE / 4)
- #define STMMAC_RX_THRESH	(DMA_RX_SIZE / 4)
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
+index 37d5e6fe7473..085b700a4994 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2.h
+@@ -143,6 +143,11 @@
+ #define XGMAC_RSF			BIT(5)
+ #define XGMAC_RTC			GENMASK(1, 0)
+ #define XGMAC_RTC_SHIFT			0
++#define XGMAC_MTL_RXQ_FLOW_CONTROL(x)	(0x00001150 + (0x80 * (x)))
++#define XGMAC_RFD			GENMASK(31, 17)
++#define XGMAC_RFD_SHIFT			17
++#define XGMAC_RFA			GENMASK(15, 1)
++#define XGMAC_RFA_SHIFT			1
+ #define XGMAC_MTL_QINTEN(x)		(0x00001170 + (0x80 * (x)))
+ #define XGMAC_RXOIE			BIT(16)
+ #define XGMAC_MTL_QINT_STATUS(x)	(0x00001174 + (0x80 * (x)))
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
+index 2ba712b48a89..e79037f511e1 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwxgmac2_dma.c
+@@ -147,6 +147,52 @@ static void dwxgmac2_dma_rx_mode(void __iomem *ioaddr, int mode,
+ 	value &= ~XGMAC_RQS;
+ 	value |= (rqs << XGMAC_RQS_SHIFT) & XGMAC_RQS;
  
--static int flow_ctrl = FLOW_OFF;
-+static int flow_ctrl = FLOW_AUTO;
- module_param(flow_ctrl, int, 0644);
- MODULE_PARM_DESC(flow_ctrl, "Flow control ability [on/off]");
++	if ((fifosz >= 4096) && (qmode != MTL_QUEUE_AVB)) {
++		u32 flow = readl(ioaddr + XGMAC_MTL_RXQ_FLOW_CONTROL(channel));
++		unsigned int rfd, rfa;
++
++		value |= XGMAC_EHFC;
++
++		/* Set Threshold for Activating Flow Control to min 2 frames,
++		 * i.e. 1500 * 2 = 3000 bytes.
++		 *
++		 * Set Threshold for Deactivating Flow Control to min 1 frame,
++		 * i.e. 1500 bytes.
++		 */
++		switch (fifosz) {
++		case 4096:
++			/* This violates the above formula because of FIFO size
++			 * limit therefore overflow may occur in spite of this.
++			 */
++			rfd = 0x03; /* Full-2.5K */
++			rfa = 0x01; /* Full-1.5K */
++			break;
++
++		case 8192:
++			rfd = 0x06; /* Full-4K */
++			rfa = 0x0a; /* Full-6K */
++			break;
++
++		case 16384:
++			rfd = 0x06; /* Full-4K */
++			rfa = 0x12; /* Full-10K */
++			break;
++
++		default:
++			rfd = 0x06; /* Full-4K */
++			rfa = 0x1e; /* Full-16K */
++			break;
++		}
++
++		flow &= ~XGMAC_RFD;
++		flow |= rfd << XGMAC_RFD_SHIFT;
++
++		flow &= ~XGMAC_RFA;
++		flow |= rfa << XGMAC_RFA_SHIFT;
++
++		writel(flow, ioaddr + XGMAC_MTL_RXQ_FLOW_CONTROL(channel));
++	}
++
+ 	writel(value, ioaddr + XGMAC_MTL_RXQ_OPMODE(channel));
  
+ 	/* Enable MTL RX overflow */
 -- 
 2.7.4
 
