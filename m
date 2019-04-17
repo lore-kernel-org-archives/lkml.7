@@ -2,99 +2,93 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00FF5C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:38:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A4E4C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:38:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C3380206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:38:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 55AFD217D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:38:58 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555511938;
+	bh=li3TiGdcDEzOUBecAVdSW9wri5Gh01tHC9BkG4IpuAM=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=uQLYt92dU/CmpIC6UJJ+ZuK/2L00ibyDZqqVDVBQeByL6FqcGHdWLKBUev/1PXUEQ
+	 baNVgkAIDbxSHJCo5QigDO9i9bca1Z8Exgk41MFXYVYxa8pGMCV0WjYsN41aVUlqTz
+	 ISRcZEyu3cFweI548KHpAWS9Gihjtj181M/se4fI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732343AbfDQOip (ORCPT
+        id S1732544AbfDQOi5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 10:38:45 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:35950 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729395AbfDQOip (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 10:38:45 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D50B93092678;
-        Wed, 17 Apr 2019 14:38:44 +0000 (UTC)
-Received: from redhat.com (unknown [10.20.6.236])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id 544795D704;
-        Wed, 17 Apr 2019 14:38:43 +0000 (UTC)
-Date:   Wed, 17 Apr 2019 10:38:41 -0400
-From:   Jerome Glisse <jglisse@redhat.com>
-To:     Yue Haibing <yuehaibing@huawei.com>
-Cc:     bskeggs@redhat.com, airlied@linux.ie, daniel@ffwll.ch,
-        jgg@mellanox.com, rcampbell@nvidia.com, leonro@mellanox.com,
-        akpm@linux-foundation.org, sfr@canb.auug.org.au,
-        linux-kernel@vger.kernel.org, nouveau@lists.freedesktop.org,
-        dri-devel@lists.freedesktop.org, linux-mm@kvack.org
-Subject: Re: [PATCH] drm/nouveau: Fix DEVICE_PRIVATE dependencies
-Message-ID: <20190417143841.GD3229@redhat.com>
-References: <20190417142632.12992-1-yuehaibing@huawei.com>
+        Wed, 17 Apr 2019 10:38:57 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:55818 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729395AbfDQOi4 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 10:38:56 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=In-Reply-To:Content-Type:
+        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=4F9/JL9M2LVluN54Y8cO53OWfOU868csA+1WZmqHrX0=; b=t66O9imSnbi6XFUYLoQA4DFot
+        I/DaC2RDrPkbOQ35OZ/OM5RzpJjbLZK3f0dvT/UPH2caiktRnIBQ45AU83MCZhyJOYn/z0FicQpGc
+        yTCysMLR51QZduQgnVLWSmLoCeirbFVDH+b1pT0ULCeeJBxvjEKCD1kiMNBdDbwBe2cgg=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hGli3-0000Cw-QS; Wed, 17 Apr 2019 14:38:47 +0000
+Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
+        id 8E9761126DA5; Wed, 17 Apr 2019 15:38:46 +0100 (BST)
+Date:   Wed, 17 Apr 2019 15:38:46 +0100
+From:   Mark Brown <broonie@kernel.org>
+To:     Leilk Liu <leilk.liu@mediatek.com>
+Cc:     Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>,
+        devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-spi@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, fparent@baylibre.com
+Subject: Re: [PATCH] dt-bindings: spi: spi-mt65xx: add support for MT8516
+Message-ID: <20190417143846.GA5703@sirena.org.uk>
+References: <1555490836-13382-1-git-send-email-leilk.liu@mediatek.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
+Content-Type: multipart/signed; micalg=pgp-sha512;
+        protocol="application/pgp-signature"; boundary="IS0zKkzwUGydFO0o"
 Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190417142632.12992-1-yuehaibing@huawei.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Wed, 17 Apr 2019 14:38:45 +0000 (UTC)
+In-Reply-To: <1555490836-13382-1-git-send-email-leilk.liu@mediatek.com>
+X-Cookie: Boy!  Eucalyptus!
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 10:26:32PM +0800, Yue Haibing wrote:
-> From: YueHaibing <yuehaibing@huawei.com>
-> 
-> During randconfig builds, I occasionally run into an invalid configuration
-> 
-> WARNING: unmet direct dependencies detected for DEVICE_PRIVATE
->   Depends on [n]: ARCH_HAS_HMM_DEVICE [=n] && ZONE_DEVICE [=n]
->   Selected by [y]:
->   - DRM_NOUVEAU_SVM [=y] && HAS_IOMEM [=y] && ARCH_HAS_HMM [=y] && DRM_NOUVEAU [=y] && STAGING [=y]
-> 
-> mm/memory.o: In function `do_swap_page':
-> memory.c:(.text+0x2754): undefined reference to `device_private_entry_fault'
-> 
-> commit 5da25090ab04 ("mm/hmm: kconfig split HMM address space mirroring from device memory")
-> split CONFIG_DEVICE_PRIVATE dependencies from
-> ARCH_HAS_HMM to ARCH_HAS_HMM_DEVICE and ZONE_DEVICE,
-> so enable DRM_NOUVEAU_SVM will trigger this warning,
-> cause building failed.
-> 
-> Reported-by: Hulk Robot <hulkci@huawei.com>
-> Fixes: 5da25090ab04 ("mm/hmm: kconfig split HMM address space mirroring from device memory")
-> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
-Reviewed-by: Jérôme Glisse <jglisse@redhat.com>
+--IS0zKkzwUGydFO0o
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-> ---
->  drivers/gpu/drm/nouveau/Kconfig | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/drivers/gpu/drm/nouveau/Kconfig b/drivers/gpu/drm/nouveau/Kconfig
-> index 00cd9ab..99e30c1 100644
-> --- a/drivers/gpu/drm/nouveau/Kconfig
-> +++ b/drivers/gpu/drm/nouveau/Kconfig
-> @@ -74,7 +74,8 @@ config DRM_NOUVEAU_BACKLIGHT
->  
->  config DRM_NOUVEAU_SVM
->  	bool "(EXPERIMENTAL) Enable SVM (Shared Virtual Memory) support"
-> -	depends on ARCH_HAS_HMM
-> +	depends on ARCH_HAS_HMM_DEVICE
-> +	depends on ZONE_DEVICE
->  	depends on DRM_NOUVEAU
->  	depends on STAGING
->  	select HMM_MIRROR
-> -- 
-> 2.7.4
-> 
-> 
+On Wed, Apr 17, 2019 at 04:47:16PM +0800, Leilk Liu wrote:
+> Add binding documentation of spi-mt65xx for MT8516 SOC.
+
+Please use subject lines matching the style for the subsystem.  This
+makes it easier for people to identify relevant patches.
+
+--IS0zKkzwUGydFO0o
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAABCgAdFiEEreZoqmdXGLWf4p/qJNaLcl1Uh9AFAly3OnMACgkQJNaLcl1U
+h9CDkgf7Bx0bnRJJVFtQpite9Bwk7qhLVPQLE2niAQnuTpnQfiPcVJNEYN1NZY77
+JJgxEgnbj2h9umXbA3LRx3dGJ7CzkEoJ+3UGI5nL8LA12cMpzT5xCfa+7wMgxnzh
+x06IziNXB7fkG7TWnk98S45A5ULUAHXOo24znTbZz+5SxfGw5H2E6lGKOaMBJhd9
+oMMqefjcLLQK+AGEk97o8crtziPHYHukAg5twenB9qQdOlSqHuywFQ7G+gStSRmO
+tSDUWRInPf6sJfRmoNw13qzP/ESvbq5onFc+dsoLfRDfqyhy/DMV7DAYAh4UJj9D
+3i/gX2LDoJmrRbIHACBjllcgOPV9wQ==
+=JoPM
+-----END PGP SIGNATURE-----
+
+--IS0zKkzwUGydFO0o--
