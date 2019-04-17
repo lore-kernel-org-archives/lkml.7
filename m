@@ -6,52 +6,52 @@ X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 076E4C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 01:57:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB03C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 01:58:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF06820872
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 01:57:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 61E0720872
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 01:58:19 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=babayev.com header.i=@babayev.com header.b="H3+cj6AN"
+	dkim=pass (1024-bit key) header.d=babayev.com header.i=@babayev.com header.b="V71Lz4M8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729141AbfDQB5W (ORCPT
+        id S1729846AbfDQB6S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 21:57:22 -0400
-Received: from mail-it1-f193.google.com ([209.85.166.193]:53848 "EHLO
-        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728514AbfDQB5V (ORCPT
+        Tue, 16 Apr 2019 21:58:18 -0400
+Received: from mail-io1-f66.google.com ([209.85.166.66]:46193 "EHLO
+        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728032AbfDQB6R (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 21:57:21 -0400
-Received: by mail-it1-f193.google.com with SMTP id y204so2021573itf.3
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 18:57:21 -0700 (PDT)
+        Tue, 16 Apr 2019 21:58:17 -0400
+Received: by mail-io1-f66.google.com with SMTP id p23so19269531iol.13
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 18:58:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=babayev.com; s=google;
-        h=references:user-agent:from:to:cc:subject:in-reply-to:date
-         :message-id:mime-version;
+        h=references:user-agent:from:to:cc:subject:message-id:in-reply-to
+         :date:mime-version;
         bh=pTf6CqltW0FIDdPp5liGh7R5dI59lPVUwc4DYfwKKZg=;
-        b=H3+cj6ANoCx06laCGRyS/AohAiYRZ/wkuCon3WsCF1yqT9AuBRb42KRQNmh95Pnz1Y
-         w4GF+GoxOnLp0kMbXkViSzNO/EhVmG0vj4iPnHvK+yYgZJf42GsJ0OWnB4pUXYPjEpnl
-         H3M/irTr5fxVKM6Ea2aHwH8WSvXVmdVnITjyo=
+        b=V71Lz4M8pjYcoLQXfQqYDlhZ4X6nab3wH/uhawCxQPQIZRqXJu80sNmfD7wYU+FpDk
+         GUO8uIysfz7GQg66wpkvNNbqM5Cm7ss8yMPD3pIAITMms86QuWdFp79D263MnlRHcEVH
+         8wS60IfRuZ2Q2y67NXacqTp7GAWqyXbU/eH6Q=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :in-reply-to:date:message-id:mime-version;
+         :message-id:in-reply-to:date:mime-version;
         bh=pTf6CqltW0FIDdPp5liGh7R5dI59lPVUwc4DYfwKKZg=;
-        b=kzyrVvTGzHGyO35ft5HP+vbJe0ddh27tGUPYMhufyKph185vnO9gDxVGVavpWd6PZN
-         iaI2xMfgc2okKAsnco/IB2fGw7bLjF3hPX1OcLyCtMQq5II0+SWYSJw0ol6FAicIaIdQ
-         o5r141CsZL+vQLHRBb+QrDXqbYZSLsNfJJErbFovm7yYV9v6Qi/SMkjh6eCNQYdE/BVD
-         5fKlpGPutFINbVJnMaJAKPgXPEh39ZO7OmG132UC+TQtN8lpzpTNW7DXcrRA4Ag2Avmd
-         g9/A928o0glLL+ESta4L2hkfDwXV2adkyOd3dhEwhqF+pvkii7jjkhm+JPB9Eh2eRcIM
-         oFeQ==
-X-Gm-Message-State: APjAAAVR5V7eL0gvBLNRy1wiyyrBqzTvNtH3L1kA+MJQOIJwVodMgie6
-        43QAVgztOb1zogkJqAvMxZjaOQ==
-X-Google-Smtp-Source: APXvYqw9l6C1XLaoXuY7DQ1TN8ru2hU0BBOGISOBpu2Xp0PcR6So5dbp+gnm7U6t7IOJCMXrPvr7RA==
-X-Received: by 2002:a24:4d06:: with SMTP id l6mr27872283itb.140.1555466240673;
-        Tue, 16 Apr 2019 18:57:20 -0700 (PDT)
+        b=paMXfx8rBqM5dt5CUpPtZP/beHKakiXhWDoyyqYyr97Wslo5KepInGoNpf4AcUXaB6
+         9wUS1Cg2ivUS73HceNsZqBrBsQ+ZlkDkO74v5ijYd1ISJDtnZAuMzYoZ3fKogVYoaH73
+         bHS8aBu49n0mHYoUlZ8d+Lu754lbgE0g+1TY/V6PPREad+8wyBBtC0/IRGQVhhrrw3+y
+         weevSWGukUeRFGKSFj6VoGw4YzG2n8xIRfY+N2jaKPba9u8iHr2+1MBGbt6XBj74ePSd
+         Rad9wW+X/LWY+lMkDOrr56GNCkfMXYeurl4QSk31ROPOiRtGhAAxlPQLt3G2nlb6Ugnf
+         eiGQ==
+X-Gm-Message-State: APjAAAXFNzLeX9zPJJxqk9sYGVVAdENRtT7zgiiIFnr6GwzdE64xNpog
+        B9XIStV0A/u3VDs9SefEARZdHA==
+X-Google-Smtp-Source: APXvYqwKNLHTZHDalnMVgAcL0b5MnBQQ27PVMnCf6oaJHCxPwqlAzUbQjyrtuuYOG/wCNSTuGISOLQ==
+X-Received: by 2002:a6b:7b05:: with SMTP id l5mr54517265iop.260.1555466296693;
+        Tue, 16 Apr 2019 18:58:16 -0700 (PDT)
 Received: from localhost (50-46-216-15.evrt.wa.frontiernet.net. [50.46.216.15])
-        by smtp.gmail.com with ESMTPSA id y16sm19983036ion.64.2019.04.16.18.57.18
+        by smtp.gmail.com with ESMTPSA id w6sm19677440iom.22.2019.04.16.18.58.15
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 16 Apr 2019 18:57:19 -0700 (PDT)
+        Tue, 16 Apr 2019 18:58:15 -0700 (PDT)
 References: <20190416183620.39950-1-ruslan@babayev.com> <20190416195255.GC8093@roeck-us.net>
 User-agent: mu4e 1.0; emacs 26.1
 From:   Ruslan Babayev <ruslan@babayev.com>
@@ -60,15 +60,16 @@ Cc:     Ruslan Babayev <ruslan@babayev.com>, xe-linux-external@cisco.com,
         Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
         linux-kernel@vger.kernel.org
 Subject: Re: [PATCH 1/4] hwmon: (pmbus) add support for output voltage registers
-In-reply-to: <20190416195255.GC8093@roeck-us.net>
-Date:   Tue, 16 Apr 2019 18:57:18 -0700
 Message-ID: <8736mhe6m9.fsf@babayev.com>
+In-reply-to: <20190416195255.GC8093@roeck-us.net>
+Date:   Tue, 16 Apr 2019 18:58:15 -0700
 MIME-Version: 1.0
-Content-Type: text/plain
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
+Message-ID: <20190417015815.oBlDlTqIVFImnRtMl4xIGP2wWL-e17Py_1hisS8aEe0@z>
 
 Hi Guenter,
 
