@@ -5,91 +5,153 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 393C1C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:33:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D670FC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:34:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED65E20821
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:33:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C10720821
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:34:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733037AbfDQRdj (ORCPT
+        id S1733076AbfDQReE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 13:33:39 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56033 "EHLO mx1.redhat.com"
+        Wed, 17 Apr 2019 13:34:04 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:56418 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732321AbfDQRdj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 13:33:39 -0400
-Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        id S1732321AbfDQReE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 13:34:04 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
         (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 398BA307EA8F;
-        Wed, 17 Apr 2019 17:33:39 +0000 (UTC)
-Received: from maximlenovopc.usersys.redhat.com (unknown [10.35.206.34])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id B10F8608C1;
-        Wed, 17 Apr 2019 17:33:37 +0000 (UTC)
-Message-ID: <096935354b16662eb481aeda1f48001ba489463c.camel@redhat.com>
-Subject: Re: [PATCH] nvme: determine the number of IO queues
-From:   Maxim Levitsky <mlevitsk@redhat.com>
-To:     Aaron Ma <aaron.ma@canonical.com>, linux-kernel@vger.kernel.org,
-        linux-nvme@lists.infradead.org, keith.busch@intel.com, axboe@fb.com
-Date:   Wed, 17 Apr 2019 20:33:36 +0300
-In-Reply-To: <a2f0a97e14b884dc1183db9cbdd6f4b520000ce3.camel@redhat.com>
-References: <1555510379-20199-1-git-send-email-aaron.ma@canonical.com>
-         <a2f0a97e14b884dc1183db9cbdd6f4b520000ce3.camel@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
-Mime-Version: 1.0
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.44]); Wed, 17 Apr 2019 17:33:39 +0000 (UTC)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2B27BC04AC4B;
+        Wed, 17 Apr 2019 17:34:03 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-47.bos.redhat.com [10.18.17.47])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 10B885D9CC;
+        Wed, 17 Apr 2019 17:34:01 +0000 (UTC)
+Subject: Re: [PATCH v4 11/16] locking/rwsem: Enable readers spinning on writer
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+References: <20190413172259.2740-1-longman@redhat.com>
+ <20190413172259.2740-12-longman@redhat.com>
+ <20190417135659.GH4038@hirez.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ weim8xU=
+Organization: Red Hat
+Message-ID: <725e9765-b46e-5adb-1e81-90aefc6c38ad@redhat.com>
+Date:   Wed, 17 Apr 2019 13:34:01 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20190417135659.GH4038@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Wed, 17 Apr 2019 17:34:03 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 2019-04-17 at 20:32 +0300, Maxim Levitsky wrote:
-> On Wed, 2019-04-17 at 22:12 +0800, Aaron Ma wrote:
-> > Some controllers support limited IO queues, when over set
-> > the number, it will return invalid field error.
-> > Then NVME will be removed by driver.
-> > 
-> > Find the max number of IO queues that controller supports.
-> > When it still got invalid result, set 1 IO queue at least to
-> > bring NVME online.
-> 
-> To be honest a spec compliant device should not need this.
-> The spec states:
-> 
-> "Number of I/O Completion Queues Requested (NCQR): Indicates the number of I/O
-> Completion
-> Queues requested by software. This number does not include the Admin
-> Completion
-> Queue. A
-> minimum of one queue shall be requested, reflecting that the minimum support
-> is
-> for one I/O
-> Completion Queue. This is a 0’s based value. The maximum value that may be
-> specified is 65,534
-> (i.e., 65,535 I/O Completion Queues). If the value specified is 65,535, the
-> controller should return
-> an error of Invalid Field in Command."
-> 
-> 
-> This implies that you can ask for any value and the controller must not
-> respond
-> with an error, but rather indicate how many queues it supports.
-> 
-> Maybe its better to add a quirk for the broken device, which needs this?
+On 04/17/2019 09:56 AM, Peter Zijlstra wrote:
+> On Sat, Apr 13, 2019 at 01:22:54PM -0400, Waiman Long wrote:
+>> @@ -549,7 +582,7 @@ static noinline enum owner_state rwsem_spin_on_owner(struct rw_semaphore *sem)
+>>  	return !owner ? OWNER_NULL : OWNER_READER;
+>>  }
+>>  
+>> -static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
+>> +static bool rwsem_optimistic_spin(struct rw_semaphore *sem, bool wlock)
+>>  {
+>>  	bool taken = false;
+>>  	bool is_rt_task = rt_task(current);
+>> @@ -558,9 +591,6 @@ static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
+>>  	preempt_disable();
+>>  
+>>  	/* sem->wait_lock should not be held when doing optimistic spinning */
+>> -	if (!rwsem_can_spin_on_owner(sem))
+>> -		goto done;
+>> -
+>>  	if (!osq_lock(&sem->osq))
+>>  		goto done;
+>>  
+>> @@ -580,10 +610,11 @@ static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
+>>  		/*
+>>  		 * Try to acquire the lock
+>>  		 */
+>> -		if (rwsem_try_write_lock_unqueued(sem)) {
+>> -			taken = true;
+>> +		taken = wlock ? rwsem_try_write_lock_unqueued(sem)
+>> +			      : rwsem_try_read_lock_unqueued(sem);
+>> +
+>> +		if (taken)
+>>  			break;
+>> -		}
+>>  
+>>  		/*
+>>  		 * An RT task cannot do optimistic spinning if it cannot
+> Alternatively you pass the trylock function as an argument:
+>
+> static bool rwsem_optimistic_spin(struct rw_semaphore *sem,
+> 				  bool (*trylock)(struct rw_semaphore *sem))
+> {
+> 	...
+> 		if (trylock(sem)) {
+> 			taken = true;
+> 			goto unlock;
+> 		}
+> 	...
+> }
+>
+With retpoline, an indirect function call will be slower.
 
-I forgot to add the relevant paragraph:
+Cheers,
+Longman
 
-"Note: The value allocated may be smaller or larger than the number of queues
-requested, often in virtualized
-implementations. The controller may not have as many queues to allocate as are
-requested. Alternatively,
-the controller may have an allocation unit of queues (e.g. power of two) and may
-supply more queues to
-host software to satisfy its allocation unit."
-
-
-Best regards,
-	Maxim Levitsky
 
