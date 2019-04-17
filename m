@@ -2,414 +2,334 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63FBBC282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:57:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3724BC282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:59:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1EF2920821
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:57:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E5BE52054F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:59:29 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="c1v4SK4Z"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731493AbfDQH5F (ORCPT
+        id S1731203AbfDQH72 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 03:57:05 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:46209 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726895AbfDQHzE (ORCPT
+        Wed, 17 Apr 2019 03:59:28 -0400
+Received: from mail-ed1-f66.google.com ([209.85.208.66]:41970 "EHLO
+        mail-ed1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728373AbfDQH72 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 03:55:04 -0400
-X-Originating-IP: 90.88.160.238
-Received: from localhost (aaubervilliers-681-1-42-238.w90-88.abo.wanadoo.fr [90.88.160.238])
-        (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id 3DD56E0004;
-        Wed, 17 Apr 2019 07:55:00 +0000 (UTC)
-From:   Maxime Ripard <maxime.ripard@bootlin.com>
-To:     Daniel Vetter <daniel.vetter@intel.com>,
-        David Airlie <airlied@linux.ie>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
-        Sean Paul <seanpaul@chromium.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>
-Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
-        Hans Verkuil <hans.verkuil@cisco.com>,
-        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
-        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
-        linux-media@vger.kernel.org,
-        Emil Velikov <emil.velikov@collabora.com>
-Subject: [PATCH 03/20] drm/fourcc: Pass the format_info pointer to drm_format_plane_cpp
-Date:   Wed, 17 Apr 2019 09:54:29 +0200
-Message-Id: <35c8b9939b2e306684463f91b1f491a8a162ba9c.1555487650.git-series.maxime.ripard@bootlin.com>
-X-Mailer: git-send-email 2.21.0
-In-Reply-To: <cover.8ec406bf8f4f097e9dc909d5aac466556822f592.1555487650.git-series.maxime.ripard@bootlin.com>
-References: <cover.8ec406bf8f4f097e9dc909d5aac466556822f592.1555487650.git-series.maxime.ripard@bootlin.com>
+        Wed, 17 Apr 2019 03:59:28 -0400
+Received: by mail-ed1-f66.google.com with SMTP id g6so16183238edc.8
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 00:59:26 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=jQL+/hzVQKWUcXK58myvXbK+OrvlIIBcgeWycPAqydM=;
+        b=c1v4SK4Z6waVLTMxG/3vhnt+2e1modPUViHrZiLAq2V+hCJlKyO7p4wAtK5qyHq9j4
+         SLTvl2Me9IVKistTIOmYRK/xTqDVvgpDhw7j06HErVpfyB4hz4dxCSlAT9oCrUlGCGfB
+         ++B6Eg0NXD0pcN3yJ/yzpPLJtqaJYbogs/l6CNwvdxH/Dn/LyJhm0hmJcoDUryfu9vTe
+         GOVTSY/FKXqHRDQMeWBET8Ef3jFlPnmHkax3zdrRHQvpPiYI/QAgVPqfOvWjJ7z73/jM
+         0PZ3tWT7RyRyXa1vtrFMLcVYqV07YIpZUgdy8vROKQqPXiQqg4qq29IYQ6kEV0Gk1wnW
+         26AQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=jQL+/hzVQKWUcXK58myvXbK+OrvlIIBcgeWycPAqydM=;
+        b=IVkHbsR3D32lYdQi5XuDrknFCADmoPqNRfvfjZq+tNJDOLvKDVCIWwD5xfKL9rLgC+
+         +xOXiDXbBlv8pjA6OXZ28ONQ2omnhRkOk5Nc7Us7iaRnhMKKBp1Vsq1719N4muECcrD2
+         GGkJZSeTCvyFRo7A/q8q3AjfJytthlk8J93saLFowYwQIKtea96m3fvRp2pVqYgD2iku
+         ZcFjjgP4+jJV4OjAcVHk9J3oUMSF/oaYtyHrhWsVjAfNjPiiY48RNFoYZmsC4S+FBX5+
+         pAHLs5LxByeUhJaGC6CjXeoyP99r9TyGmwQ1U3PrJ1q2G2aXY4g5t+rtH3CoclyJKXJg
+         7Tkw==
+X-Gm-Message-State: APjAAAVlQaOCTh90u0bZlOBH2rSmG7GBBWinG64D1BlmFImy9bp5IZHz
+        1i2avnY2KSdlkYU24eoF5y2Pclvh84lUYljHTy8=
+X-Google-Smtp-Source: APXvYqwlLVcOMeJtr4wNVo5XRadsqKuP+HYJznYQvqQ0e4bLkZWQUGF4lNAhVltOW4+jGW/xJPXjiKyrXUOFH6GlGY4=
+X-Received: by 2002:a17:906:7b86:: with SMTP id s6mr45805184ejo.144.1555487965356;
+ Wed, 17 Apr 2019 00:59:25 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+References: <1555487246-15764-1-git-send-email-huangzhaoyang@gmail.com>
+In-Reply-To: <1555487246-15764-1-git-send-email-huangzhaoyang@gmail.com>
+From:   Zhaoyang Huang <huangzhaoyang@gmail.com>
+Date:   Wed, 17 Apr 2019 15:59:03 +0800
+Message-ID: <CAGWkznFCy-Fm1WObEk77shPGALWhn5dWS3ZLXY77+q_4Yp6bAQ@mail.gmail.com>
+Subject: Re: [RFC PATCH] mm/workingset : judge file page activity via timestamp
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        David Rientjes <rientjes@google.com>,
+        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
+        Roman Gushchin <guro@fb.com>, Jeff Layton <jlayton@redhat.com>,
+        Matthew Wilcox <mawilcox@microsoft.com>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Johannes Weiner <hannes@cmpxchg.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-So far, the drm_format_plane_cpp function was operating on the format's
-fourcc and was doing a lookup to retrieve the drm_format_info structure and
-return the cpp.
+add Johannes and answer his previous question.
 
-However, this is inefficient since in most cases, we will have the
-drm_format_info pointer already available so we shouldn't have to perform a
-new lookup. Some drm_fourcc functions also already operate on the
-drm_format_info pointer for that reason, so the API is quite inconsistent
-there.
+@Johannes Weiner
+Yes. I do agree with you about the original thought of sacrificing
+long distance access pages when huge memory demands arise. The problem
+is what is the criteria of the distance, which you can find from what
+I comment in the patch, that is, some pages have long refault_distance
+while having a very short access time in between. I think the latter
+one should be take into consideration or as part of the finnal
+decision of if the page should be active/inactive.
 
-Let's follow the latter pattern and remove the extra lookup while being a
-bit more consistent. In order to be extra consistent, also rename that
-function to drm_format_info_plane_cpp and to a static function in the
-header to match the current policy.
-
-Reviewed-by: Emil Velikov <emil.velikov@collabora.com>
-Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
----
- drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c     |  4 +++-
- drivers/gpu/drm/arm/malidp_hw.c            |  3 ++-
- drivers/gpu/drm/arm/malidp_planes.c        |  2 +-
- drivers/gpu/drm/drm_client.c               |  3 ++-
- drivers/gpu/drm/drm_fb_helper.c            |  2 +-
- drivers/gpu/drm/drm_format_helper.c        |  4 ++--
- drivers/gpu/drm/drm_fourcc.c               | 20 --------------------
- drivers/gpu/drm/i915/intel_sprite.c        |  3 ++-
- drivers/gpu/drm/mediatek/mtk_drm_fb.c      |  2 +-
- drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c  |  3 ++-
- drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.c   |  2 +-
- drivers/gpu/drm/msm/msm_fb.c               |  2 +-
- drivers/gpu/drm/radeon/radeon_fb.c         |  4 +++-
- drivers/gpu/drm/rockchip/rockchip_drm_fb.c |  2 +-
- drivers/gpu/drm/stm/ltdc.c                 |  2 +-
- drivers/gpu/drm/tegra/fb.c                 |  2 +-
- drivers/gpu/drm/zte/zx_plane.c             |  2 +-
- include/drm/drm_fourcc.h                   | 18 +++++++++++++++++-
- 18 files changed, 42 insertions(+), 38 deletions(-)
-
-diff --git a/drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c b/drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c
-index e47609218839..06e73a343724 100644
---- a/drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c
-+++ b/drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c
-@@ -121,6 +121,8 @@ static int amdgpufb_create_pinned_object(struct amdgpu_fbdev *rfbdev,
- 					 struct drm_mode_fb_cmd2 *mode_cmd,
- 					 struct drm_gem_object **gobj_p)
- {
-+	const struct drm_format_info *info = drm_get_format_info(dev,
-+								 mode_cmd);
- 	struct amdgpu_device *adev = rfbdev->adev;
- 	struct drm_gem_object *gobj = NULL;
- 	struct amdgpu_bo *abo = NULL;
-@@ -131,7 +133,7 @@ static int amdgpufb_create_pinned_object(struct amdgpu_fbdev *rfbdev,
- 	int height = mode_cmd->height;
- 	u32 cpp;
- 
--	cpp = drm_format_plane_cpp(mode_cmd->pixel_format, 0);
-+	cpp = drm_format_info_plane_cpp(info, 0);
- 
- 	/* need to align pitch with crtc limits */
- 	mode_cmd->pitches[0] = amdgpu_align_pitch(adev, mode_cmd->width, cpp,
-diff --git a/drivers/gpu/drm/arm/malidp_hw.c b/drivers/gpu/drm/arm/malidp_hw.c
-index 8df12e9a33bb..1c9e869f4c52 100644
---- a/drivers/gpu/drm/arm/malidp_hw.c
-+++ b/drivers/gpu/drm/arm/malidp_hw.c
-@@ -382,7 +382,8 @@ static void malidp500_modeset(struct malidp_hw_device *hwdev, struct videomode *
- 
- int malidp_format_get_bpp(u32 fmt)
- {
--	int bpp = drm_format_plane_cpp(fmt, 0) * 8;
-+	const struct drm_format_info *info = drm_format_info(fmt);
-+	int bpp = drm_format_info_plane_cpp(info, 0) * 8;
- 
- 	if (bpp == 0) {
- 		switch (fmt) {
-diff --git a/drivers/gpu/drm/arm/malidp_planes.c b/drivers/gpu/drm/arm/malidp_planes.c
-index 8f89813d08c1..361c02988375 100644
---- a/drivers/gpu/drm/arm/malidp_planes.c
-+++ b/drivers/gpu/drm/arm/malidp_planes.c
-@@ -227,7 +227,7 @@ bool malidp_format_mod_supported(struct drm_device *drm,
- 
- 	if (modifier & AFBC_SPLIT) {
- 		if (!info->is_yuv) {
--			if (drm_format_plane_cpp(format, 0) <= 2) {
-+			if (drm_format_info_plane_cpp(info, 0) <= 2) {
- 				DRM_DEBUG_KMS("RGB formats <= 16bpp are not supported with SPLIT\n");
- 				return false;
- 			}
-diff --git a/drivers/gpu/drm/drm_client.c b/drivers/gpu/drm/drm_client.c
-index f20d1dda3961..169d8eeaa662 100644
---- a/drivers/gpu/drm/drm_client.c
-+++ b/drivers/gpu/drm/drm_client.c
-@@ -243,6 +243,7 @@ static void drm_client_buffer_delete(struct drm_client_buffer *buffer)
- static struct drm_client_buffer *
- drm_client_buffer_create(struct drm_client_dev *client, u32 width, u32 height, u32 format)
- {
-+	const struct drm_format_info *info = drm_format_info(format);
- 	struct drm_mode_create_dumb dumb_args = { };
- 	struct drm_device *dev = client->dev;
- 	struct drm_client_buffer *buffer;
-@@ -258,7 +259,7 @@ drm_client_buffer_create(struct drm_client_dev *client, u32 width, u32 height, u
- 
- 	dumb_args.width = width;
- 	dumb_args.height = height;
--	dumb_args.bpp = drm_format_plane_cpp(format, 0) * 8;
-+	dumb_args.bpp = drm_format_info_plane_cpp(info, 0) * 8;
- 	ret = drm_mode_create_dumb(dev, &dumb_args, client->file);
- 	if (ret)
- 		goto err_delete;
-diff --git a/drivers/gpu/drm/drm_fb_helper.c b/drivers/gpu/drm/drm_fb_helper.c
-index 4de4b9d59d49..4fcbb9caaf68 100644
---- a/drivers/gpu/drm/drm_fb_helper.c
-+++ b/drivers/gpu/drm/drm_fb_helper.c
-@@ -767,7 +767,7 @@ static void drm_fb_helper_dirty_blit_real(struct drm_fb_helper *fb_helper,
- 					  struct drm_clip_rect *clip)
- {
- 	struct drm_framebuffer *fb = fb_helper->fb;
--	unsigned int cpp = drm_format_plane_cpp(fb->format->format, 0);
-+	unsigned int cpp = drm_format_info_plane_cpp(fb->format, 0);
- 	size_t offset = clip->y1 * fb->pitches[0] + clip->x1 * cpp;
- 	void *src = fb_helper->fbdev->screen_buffer + offset;
- 	void *dst = fb_helper->buffer->vaddr + offset;
-diff --git a/drivers/gpu/drm/drm_format_helper.c b/drivers/gpu/drm/drm_format_helper.c
-index da388012df2a..14d85eb1989d 100644
---- a/drivers/gpu/drm/drm_format_helper.c
-+++ b/drivers/gpu/drm/drm_format_helper.c
-@@ -36,7 +36,7 @@ static unsigned int clip_offset(struct drm_rect *clip,
- void drm_fb_memcpy(void *dst, void *vaddr, struct drm_framebuffer *fb,
- 		   struct drm_rect *clip)
- {
--	unsigned int cpp = drm_format_plane_cpp(fb->format->format, 0);
-+	unsigned int cpp = drm_format_info_plane_cpp(fb->format, 0);
- 	size_t len = (clip->x2 - clip->x1) * cpp;
- 	unsigned int y, lines = clip->y2 - clip->y1;
- 
-@@ -63,7 +63,7 @@ void drm_fb_memcpy_dstclip(void __iomem *dst, void *vaddr,
- 			   struct drm_framebuffer *fb,
- 			   struct drm_rect *clip)
- {
--	unsigned int cpp = drm_format_plane_cpp(fb->format->format, 0);
-+	unsigned int cpp = drm_format_info_plane_cpp(fb->format, 0);
- 	unsigned int offset = clip_offset(clip, fb->pitches[0], cpp);
- 	size_t len = (clip->x2 - clip->x1) * cpp;
- 	unsigned int y, lines = clip->y2 - clip->y1;
-diff --git a/drivers/gpu/drm/drm_fourcc.c b/drivers/gpu/drm/drm_fourcc.c
-index e4a2c8372c8b..5f63fc74e265 100644
---- a/drivers/gpu/drm/drm_fourcc.c
-+++ b/drivers/gpu/drm/drm_fourcc.c
-@@ -333,26 +333,6 @@ drm_get_format_info(struct drm_device *dev,
- EXPORT_SYMBOL(drm_get_format_info);
- 
- /**
-- * drm_format_plane_cpp - determine the bytes per pixel value
-- * @format: pixel format (DRM_FORMAT_*)
-- * @plane: plane index
-- *
-- * Returns:
-- * The bytes per pixel value for the specified plane.
-- */
--int drm_format_plane_cpp(uint32_t format, int plane)
--{
--	const struct drm_format_info *info;
--
--	info = drm_format_info(format);
--	if (!info || plane >= info->num_planes)
--		return 0;
--
--	return info->cpp[plane];
--}
--EXPORT_SYMBOL(drm_format_plane_cpp);
--
--/**
-  * drm_format_plane_width - width of the plane given the first plane
-  * @width: width of the first plane
-  * @format: pixel format
-diff --git a/drivers/gpu/drm/i915/intel_sprite.c b/drivers/gpu/drm/i915/intel_sprite.c
-index 2913e89280d7..e35601b1f878 100644
---- a/drivers/gpu/drm/i915/intel_sprite.c
-+++ b/drivers/gpu/drm/i915/intel_sprite.c
-@@ -325,7 +325,8 @@ skl_plane_max_stride(struct intel_plane *plane,
- 		     u32 pixel_format, u64 modifier,
- 		     unsigned int rotation)
- {
--	int cpp = drm_format_plane_cpp(pixel_format, 0);
-+	const struct drm_format_info *info = drm_format_info(pixel_format);
-+	int cpp = drm_format_info_plane_cpp(info, 0);
- 
- 	/*
- 	 * "The stride in bytes must not exceed the
-diff --git a/drivers/gpu/drm/mediatek/mtk_drm_fb.c b/drivers/gpu/drm/mediatek/mtk_drm_fb.c
-index 68fdef8b12bd..0d5334a5a9a7 100644
---- a/drivers/gpu/drm/mediatek/mtk_drm_fb.c
-+++ b/drivers/gpu/drm/mediatek/mtk_drm_fb.c
-@@ -104,7 +104,7 @@ struct drm_framebuffer *mtk_drm_mode_fb_create(struct drm_device *dev,
- 	if (!gem)
- 		return ERR_PTR(-ENOENT);
- 
--	bpp = drm_format_plane_cpp(cmd->pixel_format, 0);
-+	bpp = drm_format_info_plane_cpp(info, 0);
- 	size = (height - 1) * cmd->pitches[0] + width * bpp;
- 	size += cmd->offsets[0];
- 
-diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
-index b0cf63c4e3d7..a565dccaba3a 100644
---- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
-+++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c
-@@ -782,6 +782,7 @@ static void get_roi(struct drm_crtc *crtc, uint32_t *roi_w, uint32_t *roi_h)
- 
- static void mdp5_crtc_restore_cursor(struct drm_crtc *crtc)
- {
-+	const struct drm_format_info *info = drm_format_info(DRM_FORMAT_ARGB8888);
- 	struct mdp5_crtc_state *mdp5_cstate = to_mdp5_crtc_state(crtc->state);
- 	struct mdp5_crtc *mdp5_crtc = to_mdp5_crtc(crtc);
- 	struct mdp5_kms *mdp5_kms = get_kms(crtc);
-@@ -800,7 +801,7 @@ static void mdp5_crtc_restore_cursor(struct drm_crtc *crtc)
- 	width = mdp5_crtc->cursor.width;
- 	height = mdp5_crtc->cursor.height;
- 
--	stride = width * drm_format_plane_cpp(DRM_FORMAT_ARGB8888, 0);
-+	stride = width * drm_format_info_plane_cpp(info, 0);
- 
- 	get_roi(crtc, &roi_w, &roi_h);
- 
-diff --git a/drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.c b/drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.c
-index b30b2f4efc60..1ca294694597 100644
---- a/drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.c
-+++ b/drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.c
-@@ -158,7 +158,7 @@ uint32_t mdp5_smp_calculate(struct mdp5_smp *smp,
- 	for (i = 0; i < nplanes; i++) {
- 		int n, fetch_stride, cpp;
- 
--		cpp = drm_format_plane_cpp(fmt, i);
-+		cpp = drm_format_info_plane_cpp(info, i);
- 		fetch_stride = width * cpp / (i ? hsub : 1);
- 
- 		n = DIV_ROUND_UP(fetch_stride * nlines, smp->blk_size);
-diff --git a/drivers/gpu/drm/msm/msm_fb.c b/drivers/gpu/drm/msm/msm_fb.c
-index f69c0afd6ec6..29e45f2144b5 100644
---- a/drivers/gpu/drm/msm/msm_fb.c
-+++ b/drivers/gpu/drm/msm/msm_fb.c
-@@ -181,7 +181,7 @@ static struct drm_framebuffer *msm_framebuffer_init(struct drm_device *dev,
- 		unsigned int min_size;
- 
- 		min_size = (height - 1) * mode_cmd->pitches[i]
--			 + width * drm_format_plane_cpp(mode_cmd->pixel_format, i)
-+			 + width * drm_format_info_plane_cpp(info, i)
- 			 + mode_cmd->offsets[i];
- 
- 		if (bos[i]->size < min_size) {
-diff --git a/drivers/gpu/drm/radeon/radeon_fb.c b/drivers/gpu/drm/radeon/radeon_fb.c
-index 1298b84cb1c7..dbf596fc4339 100644
---- a/drivers/gpu/drm/radeon/radeon_fb.c
-+++ b/drivers/gpu/drm/radeon/radeon_fb.c
-@@ -125,6 +125,7 @@ static int radeonfb_create_pinned_object(struct radeon_fbdev *rfbdev,
- 					 struct drm_mode_fb_cmd2 *mode_cmd,
- 					 struct drm_gem_object **gobj_p)
- {
-+	const struct drm_format_info *info;
- 	struct radeon_device *rdev = rfbdev->rdev;
- 	struct drm_gem_object *gobj = NULL;
- 	struct radeon_bo *rbo = NULL;
-@@ -135,7 +136,8 @@ static int radeonfb_create_pinned_object(struct radeon_fbdev *rfbdev,
- 	int height = mode_cmd->height;
- 	u32 cpp;
- 
--	cpp = drm_format_plane_cpp(mode_cmd->pixel_format, 0);
-+	info = drm_get_format_info(rdev->ddev, mode_cmd);
-+	cpp = drm_format_info_plane_cpp(info, 0);
- 
- 	/* need to align pitch with crtc limits */
- 	mode_cmd->pitches[0] = radeon_align_pitch(rdev, mode_cmd->width, cpp,
-diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-index c318fae28581..57873c99ae29 100644
---- a/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-+++ b/drivers/gpu/drm/rockchip/rockchip_drm_fb.c
-@@ -98,7 +98,7 @@ rockchip_user_fb_create(struct drm_device *dev, struct drm_file *file_priv,
- 
- 		min_size = (height - 1) * mode_cmd->pitches[i] +
- 			mode_cmd->offsets[i] +
--			width * drm_format_plane_cpp(mode_cmd->pixel_format, i);
-+			width * drm_format_info_plane_cpp(info, i);
- 
- 		if (obj->size < min_size) {
- 			drm_gem_object_put_unlocked(obj);
-diff --git a/drivers/gpu/drm/stm/ltdc.c b/drivers/gpu/drm/stm/ltdc.c
-index 32fd6a3b37fb..6bb3cd3a1a01 100644
---- a/drivers/gpu/drm/stm/ltdc.c
-+++ b/drivers/gpu/drm/stm/ltdc.c
-@@ -779,7 +779,7 @@ static void ltdc_plane_atomic_update(struct drm_plane *plane,
- 
- 	/* Configures the color frame buffer pitch in bytes & line length */
- 	pitch_in_bytes = fb->pitches[0];
--	line_length = drm_format_plane_cpp(fb->format->format, 0) *
-+	line_length = drm_format_info_plane_cpp(fb->format, 0) *
- 		      (x1 - x0 + 1) + (ldev->caps.bus_width >> 3) - 1;
- 	val = ((pitch_in_bytes << 16) | line_length);
- 	reg_update_bits(ldev->regs, LTDC_L1CFBLR + lofs,
-diff --git a/drivers/gpu/drm/tegra/fb.c b/drivers/gpu/drm/tegra/fb.c
-index 94fb75089d87..d1042196a30f 100644
---- a/drivers/gpu/drm/tegra/fb.c
-+++ b/drivers/gpu/drm/tegra/fb.c
-@@ -149,7 +149,7 @@ struct drm_framebuffer *tegra_fb_create(struct drm_device *drm,
- 			goto unreference;
- 		}
- 
--		bpp = drm_format_plane_cpp(cmd->pixel_format, i);
-+		bpp = drm_format_info_plane_cpp(info, i);
- 
- 		size = (height - 1) * cmd->pitches[i] +
- 		       width * bpp + cmd->offsets[i];
-diff --git a/drivers/gpu/drm/zte/zx_plane.c b/drivers/gpu/drm/zte/zx_plane.c
-index c6a8be444300..d97a4dff515d 100644
---- a/drivers/gpu/drm/zte/zx_plane.c
-+++ b/drivers/gpu/drm/zte/zx_plane.c
-@@ -222,7 +222,7 @@ static void zx_vl_plane_atomic_update(struct drm_plane *plane,
- 		cma_obj = drm_fb_cma_get_gem_obj(fb, i);
- 		paddr = cma_obj->paddr + fb->offsets[i];
- 		paddr += src_y * fb->pitches[i];
--		paddr += src_x * drm_format_plane_cpp(format, i);
-+		paddr += src_x * drm_format_info_plane_cpp(fb->format, i);
- 		zx_writel(paddr_reg, paddr);
- 		paddr_reg += 4;
- 	}
-diff --git a/include/drm/drm_fourcc.h b/include/drm/drm_fourcc.h
-index eeec449d6c6a..6b5a82b31bc4 100644
---- a/include/drm/drm_fourcc.h
-+++ b/include/drm/drm_fourcc.h
-@@ -260,6 +260,23 @@ drm_format_info_is_yuv_sampling_444(const struct drm_format_info *info)
- 	return info->is_yuv && info->hsub == 1 && info->vsub == 1;
- }
- 
-+/**
-+ * drm_format_info_plane_cpp - determine the bytes per pixel value
-+ * @format: pixel format info
-+ * @plane: plane index
-+ *
-+ * Returns:
-+ * The bytes per pixel value for the specified plane.
-+ */
-+static inline
-+int drm_format_info_plane_cpp(const struct drm_format_info *info, int plane)
-+{
-+	if (!info || plane >= info->num_planes)
-+		return 0;
-+
-+	return info->cpp[plane];
-+}
-+
- const struct drm_format_info *__drm_format_info(u32 format);
- const struct drm_format_info *drm_format_info(u32 format);
- const struct drm_format_info *
-@@ -268,7 +285,6 @@ drm_get_format_info(struct drm_device *dev,
- uint32_t drm_mode_legacy_fb_format(uint32_t bpp, uint32_t depth);
- uint32_t drm_driver_legacy_fb_format(struct drm_device *dev,
- 				     uint32_t bpp, uint32_t depth);
--int drm_format_plane_cpp(uint32_t format, int plane);
- int drm_format_plane_width(int width, uint32_t format, int plane);
- int drm_format_plane_height(int height, uint32_t format, int plane);
- unsigned int drm_format_info_block_width(const struct drm_format_info *info,
--- 
-git-series 0.9.1
+On Wed, Apr 17, 2019 at 3:48 PM Zhaoyang Huang <huangzhaoyang@gmail.com> wrote:
+>
+> From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+>
+> This patch introduce timestamp into workingset's entry and judge if the page
+> is active or inactive via active_file/refault_ratio instead of refault distance.
+>
+> The original thought is coming from the logs we got from trace_printk in this
+> patch, we can find about 1/5 of the file pages' refault are under the
+> scenario[1],which will be counted as inactive as they have a long refault distance
+> in between access. However, we can also know from the time information that the
+> page refault quickly as comparing to the average refault time which is calculated
+> by the number of active file and refault ratio. We want to save these kinds of
+> pages from evicted earlier as it used to be. The refault ratio is the value
+> which can reflect lru's average file access frequency and also can be deemed as a
+> prediction of future.
+>
+> The patch is tested on an android system and reduce 30% of page faults, while
+> 60% of the pages remain the original status as (refault_distance < active_file)
+> indicates. Pages status got from ftrace during the test can refer to [2].
+>
+> [1]
+> system_server workingset_refault: WKST_ACT[0]:rft_dis 265976, act_file 34268 rft_ratio 3047 rft_time 0 avg_rft_time 11 refault 295592 eviction 29616 secs 97 pre_secs 97
+> HwBinder:922  workingset_refault: WKST_ACT[0]:rft_dis 264478, act_file 35037 rft_ratio 3070 rft_time 2 avg_rft_time 11 refault 310078 eviction 45600 secs 101 pre_secs 99
+>
+> [2]
+> WKST_ACT[0]:   original--INACTIVE  commit--ACTIVE
+> WKST_ACT[1]:   original--ACTIVE    commit--ACTIVE
+> WKST_INACT[0]: original--INACTIVE  commit--INACTIVE
+> WKST_INACT[1]: original--ACTIVE    commit--INACTIVE
+>
+> Signed-off-by: Zhaoyang Huang <huangzhaoyang@gmail.com>
+> ---
+>  include/linux/mmzone.h |   1 +
+>  mm/workingset.c        | 120 +++++++++++++++++++++++++++++++++++++++++++++----
+>  2 files changed, 112 insertions(+), 9 deletions(-)
+>
+> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> index 32699b2..6f30673 100644
+> --- a/include/linux/mmzone.h
+> +++ b/include/linux/mmzone.h
+> @@ -240,6 +240,7 @@ struct lruvec {
+>         atomic_long_t                   inactive_age;
+>         /* Refaults at the time of last reclaim cycle */
+>         unsigned long                   refaults;
+> +       atomic_long_t                   refaults_ratio;
+>  #ifdef CONFIG_MEMCG
+>         struct pglist_data *pgdat;
+>  #endif
+> diff --git a/mm/workingset.c b/mm/workingset.c
+> index 40ee02c..66c177b 100644
+> --- a/mm/workingset.c
+> +++ b/mm/workingset.c
+> @@ -160,6 +160,21 @@
+>                          MEM_CGROUP_ID_SHIFT)
+>  #define EVICTION_MASK  (~0UL >> EVICTION_SHIFT)
+>
+> +#ifdef CONFIG_64BIT
+> +#define EVICTION_SECS_POS_SHIFT 20
+> +#define EVICTION_SECS_SHRINK_SHIFT 4
+> +#define EVICTION_SECS_POS_MASK  ((1UL << EVICTION_SECS_POS_SHIFT) - 1)
+> +#else
+> +#ifndef CONFIG_MEMCG
+> +#define EVICTION_SECS_POS_SHIFT 12
+> +#define EVICTION_SECS_SHRINK_SHIFT 4
+> +#define EVICTION_SECS_POS_MASK  ((1UL << EVICTION_SECS_POS_SHIFT) - 1)
+> +#else
+> +#define EVICTION_SECS_POS_SHIFT 0
+> +#define EVICTION_SECS_SHRINK_SHIFT 0
+> +#define NO_SECS_IN_WORKINGSET
+> +#endif
+> +#endif
+>  /*
+>   * Eviction timestamps need to be able to cover the full range of
+>   * actionable refaults. However, bits are tight in the radix tree
+> @@ -169,10 +184,54 @@
+>   * evictions into coarser buckets by shaving off lower timestamp bits.
+>   */
+>  static unsigned int bucket_order __read_mostly;
+> -
+> +#ifdef NO_SECS_IN_WORKINGSET
+> +static void pack_secs(unsigned long *peviction) { }
+> +static unsigned int unpack_secs(unsigned long entry) {return 0; }
+> +#else
+> +/*
+> + * Shrink the timestamp according to its value and store it together
+> + * with the shrink size in the entry.
+> + */
+> +static void pack_secs(unsigned long *peviction)
+> +{
+> +       unsigned int secs;
+> +       unsigned long eviction;
+> +       int order;
+> +       int secs_shrink_size;
+> +       struct timespec ts;
+> +
+> +       get_monotonic_boottime(&ts);
+> +       secs = (unsigned int)ts.tv_sec ? (unsigned int)ts.tv_sec : 1;
+> +       order = get_count_order(secs);
+> +       secs_shrink_size = (order <= EVICTION_SECS_POS_SHIFT)
+> +                       ? 0 : (order - EVICTION_SECS_POS_SHIFT);
+> +
+> +       eviction = *peviction;
+> +       eviction = (eviction << EVICTION_SECS_POS_SHIFT)
+> +                       | ((secs >> secs_shrink_size) & EVICTION_SECS_POS_MASK);
+> +       eviction = (eviction << EVICTION_SECS_SHRINK_SHIFT) | (secs_shrink_size & 0xf);
+> +       *peviction = eviction;
+> +}
+> +/*
+> + * Unpack the second from the entry and restore the value according to the
+> + * shrink size.
+> + */
+> +static unsigned int unpack_secs(unsigned long entry)
+> +{
+> +       unsigned int secs;
+> +       int secs_shrink_size;
+> +
+> +       secs_shrink_size = entry & ((1 << EVICTION_SECS_SHRINK_SHIFT) - 1);
+> +       entry >>= EVICTION_SECS_SHRINK_SHIFT;
+> +       secs = entry & EVICTION_SECS_POS_MASK;
+> +       secs = secs << secs_shrink_size;
+> +       return secs;
+> +}
+> +#endif
+>  static void *pack_shadow(int memcgid, pg_data_t *pgdat, unsigned long eviction)
+>  {
+>         eviction >>= bucket_order;
+> +       pack_secs(&eviction);
+>         eviction = (eviction << MEM_CGROUP_ID_SHIFT) | memcgid;
+>         eviction = (eviction << NODES_SHIFT) | pgdat->node_id;
+>         eviction = (eviction << RADIX_TREE_EXCEPTIONAL_SHIFT);
+> @@ -181,20 +240,24 @@ static void *pack_shadow(int memcgid, pg_data_t *pgdat, unsigned long eviction)
+>  }
+>
+>  static void unpack_shadow(void *shadow, int *memcgidp, pg_data_t **pgdat,
+> -                         unsigned long *evictionp)
+> +                         unsigned long *evictionp, unsigned int *prev_secs)
+>  {
+>         unsigned long entry = (unsigned long)shadow;
+>         int memcgid, nid;
+> +       unsigned int secs;
+>
+>         entry >>= RADIX_TREE_EXCEPTIONAL_SHIFT;
+>         nid = entry & ((1UL << NODES_SHIFT) - 1);
+>         entry >>= NODES_SHIFT;
+>         memcgid = entry & ((1UL << MEM_CGROUP_ID_SHIFT) - 1);
+>         entry >>= MEM_CGROUP_ID_SHIFT;
+> +       secs = unpack_secs(entry);
+> +       entry >>= (EVICTION_SECS_POS_SHIFT + EVICTION_SECS_SHRINK_SHIFT);
+>
+>         *memcgidp = memcgid;
+>         *pgdat = NODE_DATA(nid);
+>         *evictionp = entry << bucket_order;
+> +       *prev_secs = secs;
+>  }
+>
+>  /**
+> @@ -242,9 +305,22 @@ bool workingset_refault(void *shadow)
+>         unsigned long refault;
+>         struct pglist_data *pgdat;
+>         int memcgid;
+> +#ifndef NO_SECS_IN_WORKINGSET
+> +       unsigned long avg_refault_time;
+> +       unsigned long refault_time;
+> +       int tradition;
+> +       unsigned int prev_secs;
+> +       unsigned int secs;
+> +       unsigned long refaults_ratio;
+> +#endif
+> +       struct timespec ts;
+> +       /*
+> +       convert jiffies to second
+> +       */
+> +       get_monotonic_boottime(&ts);
+> +       secs = (unsigned int)ts.tv_sec ? (unsigned int)ts.tv_sec : 1;
+>
+> -       unpack_shadow(shadow, &memcgid, &pgdat, &eviction);
+> -
+> +       unpack_shadow(shadow, &memcgid, &pgdat, &eviction, &prev_secs);
+>         rcu_read_lock();
+>         /*
+>          * Look up the memcg associated with the stored ID. It might
+> @@ -288,14 +364,37 @@ bool workingset_refault(void *shadow)
+>          * list is not a problem.
+>          */
+>         refault_distance = (refault - eviction) & EVICTION_MASK;
+> -
+>         inc_lruvec_state(lruvec, WORKINGSET_REFAULT);
+> -
+> -       if (refault_distance <= active_file) {
+> +#ifndef NO_SECS_IN_WORKINGSET
+> +       refaults_ratio = (atomic_long_read(&lruvec->inactive_age) + 1) / secs;
+> +       atomic_long_set(&lruvec->refaults_ratio, refaults_ratio);
+> +       refault_time = secs - prev_secs;
+> +       avg_refault_time = active_file / refaults_ratio;
+> +       tradition = !!(refault_distance < active_file);
+> +       if (refault_time <= avg_refault_time) {
+> +#else
+> +       if (refault_distance < active_file) {
+> +#endif
+>                 inc_lruvec_state(lruvec, WORKINGSET_ACTIVATE);
+> +#ifndef NO_SECS_IN_WORKINGSET
+> +               trace_printk("WKST_ACT[%d]:rft_dis %ld, act_file %ld \
+> +                               rft_ratio %ld rft_time %ld avg_rft_time %ld \
+> +                               refault %ld eviction %ld secs %d pre_secs %d\n",
+> +                               tradition, refault_distance, active_file,
+> +                               refaults_ratio, refault_time, avg_refault_time,
+> +                               refault, eviction, secs, prev_secs);
+> +#endif
+>                 rcu_read_unlock();
+>                 return true;
+>         }
+> +#ifndef NO_SECS_IN_WORKINGSET
+> +       trace_printk("WKST_INACT[%d]:rft_dis %ld, act_file %ld \
+> +                       rft_ratio %ld rft_time %ld avg_rft_time %ld \
+> +                       refault %ld eviction %ld secs %d pre_secs %d\n",
+> +                       tradition, refault_distance, active_file,
+> +                       refaults_ratio, refault_time, avg_refault_time,
+> +                       refault, eviction, secs, prev_secs);
+> +#endif
+>         rcu_read_unlock();
+>         return false;
+>  }
+> @@ -513,7 +612,9 @@ static int __init workingset_init(void)
+>         unsigned int max_order;
+>         int ret;
+>
+> -       BUILD_BUG_ON(BITS_PER_LONG < EVICTION_SHIFT);
+> +       BUILD_BUG_ON(BITS_PER_LONG < (EVICTION_SHIFT
+> +                               + EVICTION_SECS_POS_SHIFT
+> +                               + EVICTION_SECS_SHRINK_SHIFT));
+>         /*
+>          * Calculate the eviction bucket size to cover the longest
+>          * actionable refault distance, which is currently half of
+> @@ -521,7 +622,8 @@ static int __init workingset_init(void)
+>          * some more pages at runtime, so keep working with up to
+>          * double the initial memory by using totalram_pages as-is.
+>          */
+> -       timestamp_bits = BITS_PER_LONG - EVICTION_SHIFT;
+> +       timestamp_bits = BITS_PER_LONG - EVICTION_SHIFT
+> +                       - EVICTION_SECS_POS_SHIFT - EVICTION_SECS_SHRINK_SHIFT;
+>         max_order = fls_long(totalram_pages - 1);
+>         if (max_order > timestamp_bits)
+>                 bucket_order = max_order - timestamp_bits;
+> --
+> 1.9.1
+>
