@@ -2,225 +2,381 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6A341C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 19:26:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 60E60C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 19:27:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 269632073F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 19:26:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1017E20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 19:27:01 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=zytor.com header.i=@zytor.com header.b="UY4KFilM"
+	dkim=pass (2048-bit key) header.d=ragnatech-se.20150623.gappssmtp.com header.i=@ragnatech-se.20150623.gappssmtp.com header.b="knTZkJAg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733263AbfDQT0U (ORCPT
+        id S2387406AbfDQT07 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 15:26:20 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:57563 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730037AbfDQT0U (ORCPT
+        Wed, 17 Apr 2019 15:26:59 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:45710 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730037AbfDQT07 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 15:26:20 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3HJQ9uw4044595
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 17 Apr 2019 12:26:10 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3HJQ9uw4044595
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1555529170;
-        bh=G6Lng3aOcHnsMpCDlNeSdJK551egdYDfSE30f4iLPMc=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=UY4KFilMbL2NxLPYjkzvPBtM7Kci0AzICQrzVZgv4WSr09FD8bwmUiVakpPGCZaxq
-         DD+Pqu3/MG9eyn/OKyrDcNhc2jFyFR2bfjDFv5PeFh07k3dx6qEW5ev3lSzRXBTXxn
-         m+LlAo3+xhXmXETYAz4VZ7tp0aZBgg50upj/OyFOsvXzUaiAkBIQYb0Y2TrjS5m4bm
-         Bg2ut1KGeArx3pBn/XwyYL2GI8FLVQHcyC482P0K6UJbILNPMgtgPyTZ0Lg5c81jSm
-         OZEPqGXU1v5b0vU3pqMHZjzx/GvpwEMHBz4DHq+3NlEii+bFEgWA8ONlyqHK0ooOf5
-         DwZXO7WaPsqFw==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3HJQ9E64044592;
-        Wed, 17 Apr 2019 12:26:09 -0700
-Date:   Wed, 17 Apr 2019 12:26:09 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Xiaochen Shen <tipbot@zytor.com>
-Message-ID: <tip-7b05c9c1fd39cb08017353a47e7ff14ad1a3b875@git.kernel.org>
-Cc:     x86@kernel.org, mingo@redhat.com, tony.luck@intel.com, bp@suse.de,
-        hpa@zytor.com, xiaochen.shen@intel.com, fenghua.yu@intel.com,
-        tglx@linutronix.de, reinette.chatre@intel.com,
-        linux-kernel@vger.kernel.org, mingo@kernel.org
-Reply-To: x86@kernel.org, tony.luck@intel.com, bp@suse.de,
-          mingo@redhat.com, hpa@zytor.com, xiaochen.shen@intel.com,
-          fenghua.yu@intel.com, tglx@linutronix.de, mingo@kernel.org,
-          linux-kernel@vger.kernel.org, reinette.chatre@intel.com
-In-Reply-To: <1555499329-1170-3-git-send-email-xiaochen.shen@intel.com>
-References: <1555499329-1170-3-git-send-email-xiaochen.shen@intel.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/cache] x86/resctrl: Initialize a new resource group with
- default MBA values
-Git-Commit-ID: 7b05c9c1fd39cb08017353a47e7ff14ad1a3b875
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 17 Apr 2019 15:26:59 -0400
+Received: by mail-lf1-f65.google.com with SMTP id t11so15251099lfl.12
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 12:26:57 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ragnatech-se.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=E1yTxA6W/oSKCtCx4iFSa1jU5PoCmsF/79PeWoymyKY=;
+        b=knTZkJAgS9pLkNdDknqeZiOIPp0GQi2jxxBe+t89LVdWZ05sLPW3588TPM0K9scoG3
+         6lJNDhJGzlVI8vjsLvZ913PnAgjkUmxqMZfo6nAKA8de8X1xHzsixFvYmGRpHumcn7HW
+         aW4oEjxRqoCH5SWHCgA9r8Q1kgpdJSkDsvogs5zktZgiAy87gQWRpvZtTYQbcu/DwmbV
+         oJMSe2wUQXWCdg3DVRlFAEnhMwJfjVFOACbhRyCOi8avJXX38G4oLAIDhiVia1AnGvPC
+         XDe9NAMntlo9OOknwCgC2fMXNmj3bs8M7iDoNZzQDmtv+FD0Qo1xjcUGHCvhhM4KYcHh
+         /iew==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=E1yTxA6W/oSKCtCx4iFSa1jU5PoCmsF/79PeWoymyKY=;
+        b=rDJQBjdKHDE7kveStuHH1vwocFV8tniGtlbfn1unvrITEhObwIhQhJzClP+8URfE99
+         yu+jftEzjo7y8fZTDl/eEbOoxFcZq0WuFSBwDj4U22cVDiRrB/RhdJYZ85qRTEE6GgLr
+         ZXAUKFkTvim5srJH0hai//FUN533gcuNMsj64xMf3GneS8V71L7a+hlXoyBcPQV+UFNo
+         DrbULV9WMO5uhcPP/uUUZ58tjIIjd2pJImKorEKZH9wT5HOwq3305ubAdM5xPwG7OJTm
+         Unwb+b93eeibmm3SjJNalFpZwAlx13pmYB88+8kds3t7vlvxDiCEp2x7NzDiVVZ3Pkz5
+         gQdA==
+X-Gm-Message-State: APjAAAWNXHlooe9SgEfoUowDYXlQLEhxO1z9GxeFHkslzQK8L+EJRNbu
+        /zIVwcpyXD63n2ln6HbnlsuLuuF4Z2w=
+X-Google-Smtp-Source: APXvYqy628oSHB5nbtsayRCy9R5k1zrTUT+WBY3epns65ifWHbODBz+tzCn/cWuJ2Gj+4UIUJiXyoA==
+X-Received: by 2002:a19:761a:: with SMTP id c26mr30265670lff.8.1555529216514;
+        Wed, 17 Apr 2019 12:26:56 -0700 (PDT)
+Received: from localhost (89-233-230-99.cust.bredband2.com. [89.233.230.99])
+        by smtp.gmail.com with ESMTPSA id v13sm11115477lje.84.2019.04.17.12.26.55
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 17 Apr 2019 12:26:55 -0700 (PDT)
+Date:   Wed, 17 Apr 2019 21:26:54 +0200
+From:   Niklas =?iso-8859-1?Q?S=F6derlund?= 
+        <niklas.soderlund@ragnatech.se>
+To:     Steve Longerbeam <slongerbeam@gmail.com>
+Cc:     linux-media@vger.kernel.org, Eugeniu Rosca <erosca@de.adit-jv.com>,
+        Michael Rodin <mrodin@de.adit-jv.com>,
+        Eugen Friedrich <efriedrich@de.adit-jv.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        "open list:MEDIA DRIVERS FOR RENESAS - VIN" 
+        <linux-renesas-soc@vger.kernel.org>,
+        open list <linux-kernel@vger.kernel.org>
+Subject: Re: [RFC PATCH] media: rcar-csi2: Fix field detection
+Message-ID: <20190417192654.GP28515@bigcity.dyn.berto.se>
+References: <20190416233807.20213-1-slongerbeam@gmail.com>
+ <20190416235018.GJ28515@bigcity.dyn.berto.se>
+ <de946538-c958-1694-9e28-e2ab5d6fd997@gmail.com>
+ <9d1cb43e-ee9e-b68a-c700-e3ed70f16287@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=utf-8
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <9d1cb43e-ee9e-b68a-c700-e3ed70f16287@gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  7b05c9c1fd39cb08017353a47e7ff14ad1a3b875
-Gitweb:     https://git.kernel.org/tip/7b05c9c1fd39cb08017353a47e7ff14ad1a3b875
-Author:     Xiaochen Shen <xiaochen.shen@intel.com>
-AuthorDate: Wed, 17 Apr 2019 19:08:49 +0800
-Committer:  Borislav Petkov <bp@suse.de>
-CommitDate: Wed, 17 Apr 2019 21:18:05 +0200
+Hi Steve,
 
-x86/resctrl: Initialize a new resource group with default MBA values
+On 2019-04-17 10:56:55 -0700, Steve Longerbeam wrote:
+> Hi Nklas,
+> 
+> On 4/16/19 4:59 PM, Steve Longerbeam wrote:
+> > Hi Niklas,
+> > 
+> > On 4/16/19 4:50 PM, Niklas Söderlund wrote:
+> > > Hi Steve,
+> > > 
+> > > Thanks for your work.
+> > > 
+> > > I upported most rcar-csi2 patches but a few of them are still pending,
+> > > an alternating version based on this BSP patch is already on its way.
+> > > 
+> > > https://patchwork.linuxtv.org/patch/55623/
+> > 
+> > Great, that patch confirms that FLD_NUM should be set to 0 or 1 when
+> > setting FLD_DET_SEL = 0x01.
+> > 
+> > But your patch has it inverted. NTSC should be FLD_NUM=1, PAL should be
+> > FLD_NUM=0. Can you please confirm that after reading the commit
+> > description of my RFC patch.
+> 
+> Can you please confirm that your patch at
+> https://patchwork.linuxtv.org/patch/55623 has the FLD_NUM bits inverted?
+> It's the most important question regarding this. Please review my reasoning
+> in the RFC patch. NTSC should be FLD_NUM=1, PAL should be FLD_NUM=0.
 
-Currently, when a new resource group is created, the allocation values
-of the MBA resource are not initialized and remain meaningless data.
+I think the patch is correct, in experiments the WC counter starts at 0 
+not 1. I tested this by INTEN.INT_FSFE = 1 and then when the interrupt 
+fires reading PH0M0 which contains WC in bits [23,8], DT in bits [7,6] 
+and DT in bits [5,0].
 
-For example:
+PAL:
+[   30.114552] rcar-csi2 fea80000.csi2: REG: 0x00012003
+[   30.134481] rcar-csi2 fea80000.csi2: REG: 0x00011f03
+0 (0) [-] interlaced 0 829440 B 30.135507 30.135898 12.000 fps ts mono/EoF
+[   30.154548] rcar-csi2 fea80000.csi2: REG: 0x00012003
+[   30.174477] rcar-csi2 fea80000.csi2: REG: 0x00011f03
+1 (1) [-] interlaced 1 829440 B 30.175490 30.175571 25.011 fps ts mono/EoF
+[   30.194542] rcar-csi2 fea80000.csi2: REG: 0x00012003
+[   30.214472] rcar-csi2 fea80000.csi2: REG: 0x00011f03
+2 (2) [-] interlaced 2 829440 B 30.215483 30.215569 25.004 fps ts mono/EoF
+[   30.234535] rcar-csi2 fea80000.csi2: REG: 0x00012003
+[   30.254466] rcar-csi2 fea80000.csi2: REG: 0x00011f03
+3 (3) [-] interlaced 3 829440 B 30.255482 30.255569 25.001 fps ts mono/EoF
+[   30.274531] rcar-csi2 fea80000.csi2: REG: 0x00012003
+[   30.294459] rcar-csi2 fea80000.csi2: REG: 0x00011f03
+4 (0) [-] interlaced 4 829440 B 30.295472 30.295544 25.006 fps ts mono/EoF
+[   30.314525] rcar-csi2 fea80000.csi2: REG: 0x00012003
+[   30.334454] rcar-csi2 fea80000.csi2: REG: 0x00011f03
+5 (1) [-] interlaced 5 829440 B 30.335466 30.335545 25.004 fps ts mono/EoF
+[   30.354519] rcar-csi2 fea80000.csi2: REG: 0x00012003
+[   30.374450] rcar-csi2 fea80000.csi2: REG: 0x00011f03
+6 (2) [-] interlaced 6 829440 B 30.375464 30.375540 25.001 fps ts mono/EoF
+[   30.394515] rcar-csi2 fea80000.csi2: REG: 0x00012003
+[   30.414443] rcar-csi2 fea80000.csi2: REG: 0x00011f03
+7 (3) [-] interlaced 7 829440 B 30.415455 30.415535 25.006 fps ts mono/EoF
+[   30.434508] rcar-csi2 fea80000.csi2: REG: 0x00012003
+[   30.454438] rcar-csi2 fea80000.csi2: REG: 0x00011f03
+8 (0) [-] interlaced 8 829440 B 30.455452 30.455528 25.002 fps ts mono/EoF
+[   30.474503] rcar-csi2 fea80000.csi2: REG: 0x00012003
+[   30.494433] rcar-csi2 fea80000.csi2: REG: 0x00011f03
+9 (1) [-] interlaced 9 829440 B 30.495446 30.495519 25.004 fps ts mono/EoF
 
-  mkdir /sys/fs/resctrl/p1
-  cat /sys/fs/resctrl/p1/schemata
-  MB:0=100;1=100
+NTSC:
+[   32.023281] rcar-csi2 fea80000.csi2: REG: 0x0001e503
+[   32.039991] rcar-csi2 fea80000.csi2: REG: 0x0001e403
+1 (1) [-] interlaced 1 691200 B 32.040883 32.040930 28.261 fps ts mono/EoF
+[   32.056647] rcar-csi2 fea80000.csi2: REG: 0x0001e503
+[   32.073358] rcar-csi2 fea80000.csi2: REG: 0x0001e403
+2 (2) [-] interlaced 2 691200 B 32.074268 32.074336 29.954 fps ts mono/EoF
+[   32.090015] rcar-csi2 fea80000.csi2: REG: 0x0001e503
+[   32.106724] rcar-csi2 fea80000.csi2: REG: 0x0001e403
+3 (3) [-] interlaced 3 691200 B 32.107634 32.107696 29.971 fps ts mono/EoF
+[   32.123381] rcar-csi2 fea80000.csi2: REG: 0x0001e503
+[   32.140092] rcar-csi2 fea80000.csi2: REG: 0x0001e403
+4 (0) [-] interlaced 4 691200 B 32.140982 32.141024 29.987 fps ts mono/EoF
+[   32.156747] rcar-csi2 fea80000.csi2: REG: 0x0001e503
+[   32.173460] rcar-csi2 fea80000.csi2: REG: 0x0001e403
+5 (1) [-] interlaced 5 691200 B 32.174354 32.174396 29.965 fps ts mono/EoF
+[   32.190116] rcar-csi2 fea80000.csi2: REG: 0x0001e503
+[   32.206827] rcar-csi2 fea80000.csi2: REG: 0x0001e403
+6 (2) [-] interlaced 6 691200 B 32.207719 32.207759 29.972 fps ts mono/EoF
+[   32.223485] rcar-csi2 fea80000.csi2: REG: 0x0001e503
+[   32.240195] rcar-csi2 fea80000.csi2: REG: 0x0001e403
+7 (3) [-] interlaced 7 691200 B 32.241101 32.241166 29.956 fps ts mono/EoF
+[   32.256851] rcar-csi2 fea80000.csi2: REG: 0x0001e503
+[   32.273563] rcar-csi2 fea80000.csi2: REG: 0x0001e403
+8 (0) [-] interlaced 8 691200 B 32.274456 32.274497 29.981 fps ts mono/EoF
+[   32.290218] rcar-csi2 fea80000.csi2: REG: 0x0001e503
+[   32.306930] rcar-csi2 fea80000.csi2: REG: 0x0001e403
+9 (1) [-] interlaced 9 691200 B 32.307823 32.307864 29.970 fps ts mono/EoF
 
-  echo "MB:0=10;1=20" > /sys/fs/resctrl/p1/schemata
-  cat /sys/fs/resctrl/p1/schemata
-  MB:0= 10;1= 20
+I based my decision from this. If you have a other method to verify the 
+behavior, contradicting results or think I interpreted the my data wrong 
+I would be happy reconsider.
 
-  rmdir /sys/fs/resctrl/p1
-  mkdir /sys/fs/resctrl/p2
-  cat /sys/fs/resctrl/p2/schemata
-  MB:0= 10;1= 20
+> 
+> Also, slightly off-topic, but another question:
+> 
+> Do you know if it is possible to capture from a source that is sending
+> SEQ-BT/TB and transfer to userspace as unmodified SEQ-BT/TB without
+> requiring the capture of each field individually and concatenating them?
+> 
+> In other words, treat the frame from the source the same as progressive,
+> i.e. as if the source were sending V4L2_FIELD_NONE. That is, program VnMC.IM
+> bits as VNMC_IM_ODD_EVEN and use continuous frame capture mode.
 
-Therefore, when the new group is created, it is reasonable to initialize
-MBA resource with default values.
+I have very old patches [1] for this which I'm in the process of 
+refreshing. This is one of the series which I hope to unblock by my 
+upcoming cleanup of format handling inside rcar-vin.
 
-Initialize the MBA resource and cache resources in separate functions.
+If you plan to work on rcar-vin I would first like to get cleanup series 
+in as I think it will be quiet intrusive. After that I plan to refresh 
+all my VIN pending patches on top of that.
 
- [ bp: Add newlines between code blocks for better readability. ]
+- V4L2_FIELD_SEQ_{TB,BT}
+- Add support for UDS (Up Down Scaler)
+- rcar-vin: add support for suspend and resume
+- Reset register control
+- Additional checks when starting (upported from BSP)
 
-Signed-off-by: Xiaochen Shen <xiaochen.shen@intel.com>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Fenghua Yu <fenghua.yu@intel.com>
-Reviewed-by: Reinette Chatre <reinette.chatre@intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: pei.p.jia@intel.com
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: Tony Luck <tony.luck@intel.com>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/1555499329-1170-3-git-send-email-xiaochen.shen@intel.com
----
- arch/x86/kernel/cpu/resctrl/ctrlmondata.c |  4 +--
- arch/x86/kernel/cpu/resctrl/rdtgroup.c    | 52 ++++++++++++++++++++-----------
- 2 files changed, 35 insertions(+), 21 deletions(-)
+1. https://patchwork.linuxtv.org/patch/41742/
 
-diff --git a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
-index 2dbd990a2eb7..89320c0396b1 100644
---- a/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
-+++ b/arch/x86/kernel/cpu/resctrl/ctrlmondata.c
-@@ -342,10 +342,10 @@ int update_domains(struct rdt_resource *r, int closid)
- 	if (cpumask_empty(cpu_mask) || mba_sc)
- 		goto done;
- 	cpu = get_cpu();
--	/* Update CBM on this cpu if it's in cpu_mask. */
-+	/* Update resource control msr on this CPU if it's in cpu_mask. */
- 	if (cpumask_test_cpu(cpu, cpu_mask))
- 		rdt_ctrl_update(&msr_param);
--	/* Update CBM on other cpus. */
-+	/* Update resource control msr on other CPUs. */
- 	smp_call_function_many(cpu_mask, rdt_ctrl_update, &msr_param, 1);
- 	put_cpu();
- 
-diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-index 2f7e35849527..b8d88a15007a 100644
---- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-+++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
-@@ -2581,8 +2581,8 @@ static int __init_one_rdt_domain(struct rdt_domain *d, struct rdt_resource *r,
- 	return 0;
- }
- 
--/**
-- * rdtgroup_init_alloc - Initialize the new RDT group's allocations
-+/*
-+ * Initialize cache resources with default values.
-  *
-  * A new RDT group is being created on an allocation capable (CAT)
-  * supporting system. Set this group up to start off with all usable
-@@ -2591,38 +2591,52 @@ static int __init_one_rdt_domain(struct rdt_domain *d, struct rdt_resource *r,
-  * If there are no more shareable bits available on any domain then
-  * the entire allocation will fail.
-  */
-+static int rdtgroup_init_cat(struct rdt_resource *r, u32 closid)
-+{
-+	struct rdt_domain *d;
-+	int ret;
-+
-+	list_for_each_entry(d, &r->domains, list) {
-+		ret = __init_one_rdt_domain(d, r, closid);
-+		if (ret < 0)
-+			return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+/* Initialize MBA resource with default values. */
-+static void rdtgroup_init_mba(struct rdt_resource *r)
-+{
-+	struct rdt_domain *d;
-+
-+	list_for_each_entry(d, &r->domains, list) {
-+		d->new_ctrl = is_mba_sc(r) ? MBA_MAX_MBPS : r->default_ctrl;
-+		d->have_new_ctrl = true;
-+	}
-+}
-+
-+/* Initialize the RDT group's allocations. */
- static int rdtgroup_init_alloc(struct rdtgroup *rdtgrp)
- {
- 	struct rdt_resource *r;
--	struct rdt_domain *d;
- 	int ret;
- 
- 	for_each_alloc_enabled_rdt_resource(r) {
--		/*
--		 * Only initialize default allocations for CBM cache
--		 * resources
--		 */
--		if (r->rid == RDT_RESOURCE_MBA)
--			continue;
--		list_for_each_entry(d, &r->domains, list) {
--			ret = __init_one_rdt_domain(d, r, rdtgrp->closid);
-+		if (r->rid == RDT_RESOURCE_MBA) {
-+			rdtgroup_init_mba(r);
-+		} else {
-+			ret = rdtgroup_init_cat(r, rdtgrp->closid);
- 			if (ret < 0)
- 				return ret;
- 		}
--	}
- 
--	for_each_alloc_enabled_rdt_resource(r) {
--		/*
--		 * Only initialize default allocations for CBM cache
--		 * resources
--		 */
--		if (r->rid == RDT_RESOURCE_MBA)
--			continue;
- 		ret = update_domains(r, rdtgrp->closid);
- 		if (ret < 0) {
- 			rdt_last_cmd_puts("Failed to initialize allocations\n");
- 			return ret;
- 		}
-+
- 		rdtgrp->mode = RDT_MODE_SHAREABLE;
- 	}
- 
+> 
+> TIA,
+> Steve
+> 
+> 
+> > 
+> > 
+> > 
+> > > 
+> > > On 2019-04-16 16:38:07 -0700, Steve Longerbeam wrote:
+> > > > The RCAR Gen3 hardware manual doesn't mention that the "Word
+> > > > Count" field
+> > > > in the MIPI CSI-2 Frame Start packet is really the frame number.
+> > > > FS packets
+> > > > are short packets, and short packets do not have a WC but rather
+> > > > a 16-bit
+> > > > data field, and for Frame synchronization packets (FS/FE) the
+> > > > 16-bit data
+> > > > field contains a frame number.
+> > > > 
+> > > > Here is a reprinting from the MIPI CSI-2 specification, version 2
+> > > > (section 9.1.2 Low Level Protocol Short Packet Format):
+> > > > 
+> > > > "Figure 42 and Figure 43 show the Low Level Protocol Short Packet
+> > > > structures for the D-PHY and C-PHY physical layer options,
+> > > > respectively.
+> > > > For each option, the Short Packet structure matches the Packet
+> > > > Header of
+> > > > the corresponding Low Level Protocol Long Packet structure with the
+> > > > exception that the Packet Header Word Count (WC) field shall be
+> > > > replaced
+> > > > by the Short Packet Data Field...For Frame Synchronization Data Types
+> > > > the Short Packet Data Field shall be the frame number..."
+> > > > 
+> > > > Also in section 9.8.1 Frame Synchronization Packets, the CSI-2
+> > > > spec reads:
+> > > > 
+> > > > "The behavior of the 16-bit frame number shall be as one of the
+> > > > following
+> > > > - Frame number is always zero – frame number is inoperative.
+> > > > - Frame number increments by 1 for every FS packet with the same
+> > > > Virtual
+> > > >    Channel and is periodically reset to one e.g. 1, 2, 1, 2, 1,
+> > > > 2, 1, 2 or
+> > > >    1, 2, 3, 4, 1, 2, 3, 4"
+> > > > 
+> > > > So from the above, FLD_NUM in the FLD register matches against the
+> > > > frame number transmitted by the CSI-2 source in the Frame Start Packet,
+> > > > and goes as "1,2,1,2,1,2" or "1,2,3,4,...,1,2,3,4". If there is
+> > > > a match,
+> > > > the RCAR CSI-2 receiver declares the field as the even, e.g. the
+> > > > BOTTOM,
+> > > > field.
+> > > > 
+> > > > NTSC transmits bottom/even field first, and PAL and HD transmit top/odd
+> > > > field first. So fields with a frame number 1 in the CSI-2 Frame Start
+> > > > Packet are bottom/even fields for NTSC, and frame number 2 are
+> > > > bottom/even
+> > > > fields for PAL/HD.
+> > > > 
+> > > > But the above assumes the transmitting CSI-2 sensor is sending frame
+> > > > numbers in the sequence "1,2,1,2,...". But according to the CSI-2 spec,
+> > > > sensors are also allowed to send frame numbers that simply increment as
+> > > > in "1,2,3,4,...". To generalize to catch those cases, set FLD_DET_SEL
+> > > > to 0x01, which according to the RCAR Gen3 hardware manual means "the
+> > > > field is detected as the EVEN field when FLD_NUM[0] matches WC[0]".
+> > > > Then, the even/bottom fields have odd frame numbers for NTSC, and even
+> > > > frame numbers for PAL (this patch assumes HDMI sources will not
+> > > > implement .g_std(), so std will be 0 in that case).
+> > > > 
+> > > > Finally, set the FLD register to non-zero value only if trnsmitter is
+> > > > sending ALTERNATE fields.
+> > > > 
+> > > > Signed-off-by: Steve Longerbeam <slongerbeam@gmail.com>
+> > > > ---
+> > > >   drivers/media/platform/rcar-vin/rcar-csi2.c | 37
+> > > > ++++++++++++++++++---
+> > > >   1 file changed, 32 insertions(+), 5 deletions(-)
+> > > > 
+> > > > diff --git a/drivers/media/platform/rcar-vin/rcar-csi2.c
+> > > > b/drivers/media/platform/rcar-vin/rcar-csi2.c
+> > > > index a438ec2c218f..c5bee20d7907 100644
+> > > > --- a/drivers/media/platform/rcar-vin/rcar-csi2.c
+> > > > +++ b/drivers/media/platform/rcar-vin/rcar-csi2.c
+> > > > @@ -67,6 +67,7 @@ struct rcar_csi2;
+> > > >   /* Field Detection Control */
+> > > >   #define FLD_REG                0x1c
+> > > >   #define FLD_FLD_NUM(n)            (((n) & 0xff) << 16)
+> > > > +#define FLD_FLD_DET_SEL(n)        (((n) & 0x3) << 4)
+> > > >   #define FLD_FLD_EN4            BIT(3)
+> > > >   #define FLD_FLD_EN3            BIT(2)
+> > > >   #define FLD_FLD_EN2            BIT(1)
+> > > > @@ -462,10 +463,11 @@ static int rcsi2_calc_mbps(struct
+> > > > rcar_csi2 *priv, unsigned int bpp)
+> > > >       return mbps;
+> > > >   }
+> > > >   -static int rcsi2_start(struct rcar_csi2 *priv)
+> > > > +static int rcsi2_start(struct rcar_csi2 *priv, struct
+> > > > v4l2_subdev *nextsd)
+> > > >   {
+> > > >       const struct rcar_csi2_format *format;
+> > > > -    u32 phycnt, vcdt = 0, vcdt2 = 0;
+> > > > +    u32 phycnt, vcdt = 0, vcdt2 = 0, fld = 0;
+> > > > +    v4l2_std_id std = 0;
+> > > >       unsigned int i;
+> > > >       int mbps, ret;
+> > > >   @@ -476,6 +478,10 @@ static int rcsi2_start(struct rcar_csi2 *priv)
+> > > >       /* Code is validated in set_fmt. */
+> > > >       format = rcsi2_code_to_fmt(priv->mf.code);
+> > > >   +    ret = v4l2_subdev_call(nextsd, video, g_std, &std);
+> > > > +    if (ret < 0 && ret != -ENOIOCTLCMD && ret != -ENODEV)
+> > > > +        return ret;
+> > > > +
+> > > >       /*
+> > > >        * Enable all supported CSI-2 channels with virtual channel and
+> > > >        * data type matching.
+> > > > @@ -509,9 +515,30 @@ static int rcsi2_start(struct rcar_csi2 *priv)
+> > > >       rcsi2_reset(priv);
+> > > >       rcsi2_write(priv, PHTC_REG, 0);
+> > > >   +    /*
+> > > > +     * NTSC standard transmits even/bottom field first, then odd/top.
+> > > > +     * PAL standard and interlaced HD transmit odd/top field first,
+> > > > +     * then even/bottom.
+> > > > +     *
+> > > > +     * For CSI-2 sensors that transmit frame numbers (in the CSI-2
+> > > > +     * Frame Start packet) as "1,2,1,2,..." or "1,2,3,4,5,...", then:
+> > > > +     *
+> > > > +     * - for NTSC, the even/bottom fields have odd frame numbers.
+> > > > +     * - for PAL and HD, the even/bottom fields have even frame
+> > > > numbers.
+> > > > +     */
+> > > > +    if (priv->mf.field == V4L2_FIELD_ALTERNATE) {
+> > > > +        fld = FLD_FLD_DET_SEL(1) | FLD_FLD_EN4 | FLD_FLD_EN3 |
+> > > > +            FLD_FLD_EN2 | FLD_FLD_EN;
+> > > > +
+> > > > +        if (std & V4L2_STD_525_60)
+> > > > +            fld |= FLD_FLD_NUM(1); /* NTSC */
+> > > > +        else
+> > > > +            fld |= FLD_FLD_NUM(0); /* PAL or HD */
+> > > > +    }
+> > > > +
+> > > >       /* Configure */
+> > > > -    rcsi2_write(priv, FLD_REG, FLD_FLD_NUM(2) | FLD_FLD_EN4 |
+> > > > -            FLD_FLD_EN3 | FLD_FLD_EN2 | FLD_FLD_EN);
+> > > > +    rcsi2_write(priv, FLD_REG, fld);
+> > > > +
+> > > >       rcsi2_write(priv, VCDT_REG, vcdt);
+> > > >       if (vcdt2)
+> > > >           rcsi2_write(priv, VCDT2_REG, vcdt2);
+> > > > @@ -591,7 +618,7 @@ static int rcsi2_s_stream(struct v4l2_subdev
+> > > > *sd, int enable)
+> > > >       if (enable && priv->stream_count == 0) {
+> > > >           pm_runtime_get_sync(priv->dev);
+> > > >   -        ret = rcsi2_start(priv);
+> > > > +        ret = rcsi2_start(priv, nextsd);
+> > > >           if (ret) {
+> > > >               pm_runtime_put(priv->dev);
+> > > >               goto out;
+> > > > -- 
+> > > > 2.17.1
+> > > > 
+> > 
+> 
+
+-- 
+Regards,
+Niklas Söderlund
