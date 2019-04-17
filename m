@@ -2,100 +2,101 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D5DEC282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:46:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0BC04C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:47:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9DEE2184B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:46:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BD5EE2184B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:47:05 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="H7CRyOQ8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387984AbfDQVqa (ORCPT
+        id S2387574AbfDQVrF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 17:46:30 -0400
-Received: from mga12.intel.com ([192.55.52.136]:20157 "EHLO mga12.intel.com"
+        Wed, 17 Apr 2019 17:47:05 -0400
+Received: from ozlabs.org ([203.11.71.1]:37259 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S2387483AbfDQVmS (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 17:42:18 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga001.jf.intel.com ([10.7.209.18])
-  by fmsmga106.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Apr 2019 14:42:17 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,363,1549958400"; 
-   d="scan'208";a="224441141"
-Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
-  by orsmga001.jf.intel.com with ESMTP; 17 Apr 2019 14:42:16 -0700
-From:   Fenghua Yu <fenghua.yu@intel.com>
-To:     "Thomas Gleixner" <tglx@linutronix.de>,
-        "Ingo Molnar" <mingo@redhat.com>, "Borislav Petkov" <bp@alien8.de>,
-        "H Peter Anvin" <hpa@zytor.com>,
-        "Paolo Bonzini" <pbonzini@redhat.com>,
-        "Dave Hansen" <dave.hansen@intel.com>,
-        "Ashok Raj" <ashok.raj@intel.com>,
-        "Peter Zijlstra" <peterz@infradead.org>,
-        "Ravi V Shankar" <ravi.v.shankar@intel.com>,
-        "Xiaoyao Li " <xiaoyao.li@intel.com>,
-        "Christopherson Sean J" <sean.j.christopherson@intel.com>,
-        "Kalle Valo" <kvalo@codeaurora.org>,
-        "Michael Chan" <michael.chan@broadcom.com>
-Cc:     "linux-kernel" <linux-kernel@vger.kernel.org>,
-        "x86" <x86@kernel.org>, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, linux-wireless@vger.kernel.org,
-        Fenghua Yu <fenghua.yu@intel.com>
-Subject: [PATCH v7 04/21] x86/split_lock: Align x86_capability to unsigned long to avoid split locked access
-Date:   Wed, 17 Apr 2019 14:33:54 -0700
-Message-Id: <1555536851-17462-5-git-send-email-fenghua.yu@intel.com>
-X-Mailer: git-send-email 2.5.0
-In-Reply-To: <1555536851-17462-1-git-send-email-fenghua.yu@intel.com>
-References: <1555536851-17462-1-git-send-email-fenghua.yu@intel.com>
+        id S1727013AbfDQVrE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 17:47:04 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44kwn04CzFz9s3Z;
+        Thu, 18 Apr 2019 07:47:00 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1555537621;
+        bh=OJaecB3jUo/kGVNYHwnFI7et7SAbUrdJ87EpVGg1QsA=;
+        h=Date:From:To:Cc:Subject:From;
+        b=H7CRyOQ8qNK8Yey0VTE1C+eT0hVx0wm9qV7q/7L/mWRpfZeyKlccTLur82mqmPEuU
+         tjhdZjV7qY+GktkQWN99v/2JeeV6kNDzuidSxwqw/BLXzBEtkHqYukrden8Pt8laGz
+         qRrWfNkh5TIfo4fkHuZGiXMQo2kdE95thsidlCDDIIBqEqYK8xGgD26zi1wQ8wi8o0
+         TAgMV7X3i2++jG9vej49T5s9e96RcQpfjWRYZKPz+2cC0CxHDs5UaQlGUWEmDxhN7J
+         yOP8i8lBd3jX5R1cdoBwX1zp338N6nnMJRSBDbMBKnrjotUIzR32m2vpyuSjAsi1rP
+         HSHxZOjRVG6Dg==
+Date:   Thu, 18 Apr 2019 07:46:58 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Dave Airlie <airlied@linux.ie>,
+        DRI <dri-devel@lists.freedesktop.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christian =?UTF-8?B?S8O2bmln?= <christian.koenig@amd.com>,
+        Alex Deucher <alexander.deucher@amd.com>
+Subject: linux-next: Fixes tag needs some work in the drm-fixes tree
+Message-ID: <20190418074658.541fcfd7@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/XLXTcL=ylQN8SHPoU=W3Ai+"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-set_cpu_cap() calls locked BTS and clear_cpu_cap() calls locked BTR to
-operate on bitmap defined in x86_capability.
+--Sig_/XLXTcL=ylQN8SHPoU=W3Ai+
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Locked BTS/BTR accesses a single unsigned long location. In 64-bit mode,
-the location is at:
-base address of x86_capability + (bit offset in x86_capability / 64) * 8
+Hi all,
 
-Since base address of x86_capability may not be aligned to unsigned long,
-the single unsigned long location may cross two cache lines and
-accessing the location by locked BTS/BTR introductions will cause
-split lock.
+In commit
 
-To fix the split lock issue, align x86_capability to size of unsigned long
-so that the location will be always within one cache line.
+  453393369dc9 ("drm/ttm: fix incrementing the page pointer for huge pages")
 
-Changing x86_capability's type to unsigned long may also fix the issue
-because x86_capability will be naturally aligned to size of unsigned long.
-But this needs additional code changes. So choose the simpler solution
-by setting the array's alignment to size of unsigned long.
+Fixes tag
 
-Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
----
- arch/x86/include/asm/processor.h | 4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
+  Fixes: e16858a7e6e7 drm/ttm: fix start page for huge page check in ttm_pu=
+t_pages()
 
-diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-index 2bb3a648fc12..7c62b9ad6e5a 100644
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -93,7 +93,9 @@ struct cpuinfo_x86 {
- 	__u32			extended_cpuid_level;
- 	/* Maximum supported CPUID level, -1=no CPUID: */
- 	int			cpuid_level;
--	__u32			x86_capability[NCAPINTS + NBUGINTS];
-+	/* Aligned to size of unsigned long to avoid split lock in atomic ops */
-+	__u32			x86_capability[NCAPINTS + NBUGINTS]
-+				__aligned(sizeof(unsigned long));
- 	char			x86_vendor_id[16];
- 	char			x86_model_id[64];
- 	/* in KB - valid for CPUS which support this call: */
--- 
-2.19.1
+has these problem(s):
 
+  - Target SHA1 does not exist
+
+Did you mean
+
+Fixes: ac1e516d5a4c ("drm/ttm: fix start page for huge page check in ttm_pu=
+t_pages()")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/XLXTcL=ylQN8SHPoU=W3Ai+
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAly3ntIACgkQAVBC80lX
+0GwJFgf+L1fNt2DVdQGwvFYD1E2YdRwApLXSPHx5y4mAeuf96WDsDcwTEnSBucBe
+DLMF2YxsjfLBp/P/y6ZVm8mx7MdzGlUTapfrsh92tK5WjQsl1R6EiTGDN+2Wc3Fw
+Ykv42awjZmUPB8jZoAeAW5BLpdU+0nv0z0ru4r4yYlQboU5Hc6R3EAVTRpiGFcfO
+h/8TmuALnW0M3qBFjXfHeHMJLW9e6+4Yyc+kllo7/0mdXYkLDAPc1RZyjRArQd1y
+z0QfhifzC16rcFCugT1olN4B2QMBMECwSLfoa0T7Xey/ktyINbzA7Afu1u90UwQ8
+jqw82NLoVGUmSCLjazQJccDsdVwF7w==
+=ETlg
+-----END PGP SIGNATURE-----
+
+--Sig_/XLXTcL=ylQN8SHPoU=W3Ai+--
