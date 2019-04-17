@@ -2,34 +2,33 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32706C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:33:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CFF24C282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:34:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0A759206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:33:32 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C913206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:34:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732593AbfDQOdb (ORCPT
+        id S1732458AbfDQOee (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 10:33:31 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:45810 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732557AbfDQOd3 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 10:33:29 -0400
+        Wed, 17 Apr 2019 10:34:34 -0400
+Received: from foss.arm.com ([217.140.101.70]:45870 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731454AbfDQOee (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 10:34:34 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 96F8BA78;
-        Wed, 17 Apr 2019 07:33:28 -0700 (PDT)
-Received: from [10.1.196.69] (e112269-lin.cambridge.arm.com [10.1.196.69])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E33E03F557;
-        Wed, 17 Apr 2019 07:33:24 -0700 (PDT)
-Subject: Re: [PATCH v8 00/20] Convert x86 & arm64 to use generic page walk
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 71BB9A78;
+        Wed, 17 Apr 2019 07:34:33 -0700 (PDT)
+Received: from e112269-lin.arm.com (e112269-lin.cambridge.arm.com [10.1.196.69])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id E3E333F557;
+        Wed, 17 Apr 2019 07:34:29 -0700 (PDT)
+From:   Steven Price <steven.price@arm.com>
 To:     Dave Hansen <dave.hansen@intel.com>, linux-mm@kvack.org,
         Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Mark Rutland <Mark.Rutland@arm.com>,
-        Dave Hansen <dave.hansen@linux.intel.com>,
-        Arnd Bergmann <arnd@arndb.de>,
+Cc:     Mark Rutland <Mark.Rutland@arm.com>, Arnd Bergmann <arnd@arndb.de>,
         Ard Biesheuvel <ard.biesheuvel@linaro.org>,
         Peter Zijlstra <peterz@infradead.org>,
         Catalin Marinas <catalin.marinas@arm.com>, x86@kernel.org,
@@ -43,47 +42,262 @@ Cc:     Mark Rutland <Mark.Rutland@arm.com>,
         Thomas Gleixner <tglx@linutronix.de>,
         Andrew Morton <akpm@linux-foundation.org>,
         linux-arm-kernel@lists.infradead.org,
-        "Liang, Kan" <kan.liang@linux.intel.com>
-References: <20190403141627.11664-1-steven.price@arm.com>
- <4e804c87-1788-8903-ccc9-55953aa6da36@arm.com>
- <3b9561d0-3bde-ef7a-0313-c2cc6216f94d@intel.com>
-From:   Steven Price <steven.price@arm.com>
-Message-ID: <3acbf061-8c97-55eb-f4b6-163a33ea4d73@arm.com>
-Date:   Wed, 17 Apr 2019 15:28:54 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        "Liang, Kan" <kan.liang@linux.intel.com>,
+        Steven Price <steven.price@arm.com>
+Subject: [RFC PATCH 1/3] mm: Add generic ptdump
+Date:   Wed, 17 Apr 2019 15:34:21 +0100
+Message-Id: <20190417143423.26665-1-steven.price@arm.com>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <3acbf061-8c97-55eb-f4b6-163a33ea4d73@arm.com>
+References: <3acbf061-8c97-55eb-f4b6-163a33ea4d73@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <3b9561d0-3bde-ef7a-0313-c2cc6216f94d@intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 12/04/2019 15:44, Dave Hansen wrote:
-> On 4/10/19 7:56 AM, Steven Price wrote:
->> Gentle ping: who can take this? Is there anything blocking this series?
-> 
-> First of all, I really appreciate that you tried this.  Every open-coded
-> page walk has a set of common pitfalls, but is pretty unbounded in what
-> kinds of bugs it can contain.  I think this at least gets us to the
-> point where some of those pitfalls won't happen.  That's cool, but I'm a
-> worried that it hasn't gotten easier in the end.
+Add a generic version of page table dumping that architectures can
+opt-in to
 
-My plan was to implement the generic infrastructure and then work to
-remove the per-arch code for ptdump debugfs where possible. This patch
-series doesn't actually get that far because I wanted to get some
-confidence that the general approach would be accepted.
+Signed-off-by: Steven Price <steven.price@arm.com>
+---
+ include/linux/ptdump.h |  19 +++++
+ mm/Kconfig.debug       |  21 ++++++
+ mm/Makefile            |   1 +
+ mm/ptdump.c            | 159 +++++++++++++++++++++++++++++++++++++++++
+ 4 files changed, 200 insertions(+)
+ create mode 100644 include/linux/ptdump.h
+ create mode 100644 mm/ptdump.c
 
-> Linus also had some strong opinions in the past on how page walks should
-> be written.  He needs to have a look before we go much further.
+diff --git a/include/linux/ptdump.h b/include/linux/ptdump.h
+new file mode 100644
+index 000000000000..eb8e78154be3
+--- /dev/null
++++ b/include/linux/ptdump.h
+@@ -0,0 +1,19 @@
++/* SPDX-License-Identifier: GPL-2.0 */
++
++#ifndef _LINUX_PTDUMP_H
++#define _LINUX_PTDUMP_H
++
++struct ptdump_range {
++	unsigned long start;
++	unsigned long end;
++};
++
++struct ptdump_state {
++	void (*note_page)(struct ptdump_state *st, unsigned long addr,
++			  int level, unsigned long val);
++	const struct ptdump_range *range;
++};
++
++void ptdump_walk_pgd(struct ptdump_state *st, struct mm_struct *mm);
++
++#endif /* _LINUX_PTDUMP_H */
+diff --git a/mm/Kconfig.debug b/mm/Kconfig.debug
+index e3df921208c0..21bbf559408b 100644
+--- a/mm/Kconfig.debug
++++ b/mm/Kconfig.debug
+@@ -111,3 +111,24 @@ config DEBUG_RODATA_TEST
+     depends on STRICT_KERNEL_RWX
+     ---help---
+       This option enables a testcase for the setting rodata read-only.
++
++config GENERIC_PTDUMP
++	bool
++
++config PTDUMP_CORE
++	bool
++
++config PTDUMP_DEBUGFS
++	bool "Export kerenl pagetable layout to userspace via debugfs"
++	depends on DEBUG_KERNEL
++	depends on DEBUG_FS
++	depends on GENERIC_PTDUMP
++	select PTDUMP_CORE
++	help
++	  Say Y here if you want to show the kernel pagetable layout in a
++	  debugfs file. This information is only useful for kernel developers
++	  who are working in architecture specific areas of the kernel.
++	  It is probably not a good idea to enable this feature in a production
++	  kernel.
++
++	  If in doubt, say N.
+diff --git a/mm/Makefile b/mm/Makefile
+index d210cc9d6f80..59d653c3250d 100644
+--- a/mm/Makefile
++++ b/mm/Makefile
+@@ -99,3 +99,4 @@ obj-$(CONFIG_HARDENED_USERCOPY) += usercopy.o
+ obj-$(CONFIG_PERCPU_STATS) += percpu-stats.o
+ obj-$(CONFIG_HMM) += hmm.o
+ obj-$(CONFIG_MEMFD_CREATE) += memfd.o
++obj-$(CONFIG_PTDUMP_CORE) += ptdump.o
+diff --git a/mm/ptdump.c b/mm/ptdump.c
+new file mode 100644
+index 000000000000..c8e4c08ce206
+--- /dev/null
++++ b/mm/ptdump.c
+@@ -0,0 +1,159 @@
++// SPDX-License-Identifier: GPL-2.0
++
++#include <linux/mm.h>
++#include <linux/ptdump.h>
++#include <linux/kasan.h>
++
++static int ptdump_pgd_entry(pgd_t *pgd, unsigned long addr,
++			    unsigned long next, struct mm_walk *walk)
++{
++	struct ptdump_state *st = walk->private;
++	pgd_t val = READ_ONCE(*pgd);
++
++	if (pgd_large(val))
++		st->note_page(st, addr, 1, pgd_val(val));
++
++	return 0;
++}
++
++static int ptdump_p4d_entry(p4d_t *p4d, unsigned long addr,
++			    unsigned long next, struct mm_walk *walk)
++{
++	struct ptdump_state *st = walk->private;
++	p4d_t val = READ_ONCE(*p4d);
++
++	if (p4d_large(val))
++		st->note_page(st, addr, 2, p4d_val(val));
++
++	return 0;
++}
++
++static int ptdump_pud_entry(pud_t *pud, unsigned long addr,
++			    unsigned long next, struct mm_walk *walk)
++{
++	struct ptdump_state *st = walk->private;
++	pud_t val = READ_ONCE(*pud);
++
++	if (pud_large(val))
++		st->note_page(st, addr, 3, pud_val(val));
++
++	return 0;
++}
++
++static int ptdump_pmd_entry(pmd_t *pmd, unsigned long addr,
++			    unsigned long next, struct mm_walk *walk)
++{
++	struct ptdump_state *st = walk->private;
++	pmd_t val = READ_ONCE(*pmd);
++
++	if (pmd_large(val))
++		st->note_page(st, addr, 4, pmd_val(val));
++
++	return 0;
++}
++
++static int ptdump_pte_entry(pte_t *pte, unsigned long addr,
++			    unsigned long next, struct mm_walk *walk)
++{
++	struct ptdump_state *st = walk->private;
++
++	st->note_page(st, addr, 5, pte_val(READ_ONCE(*pte)));
++
++	return 0;
++}
++
++#ifdef CONFIG_KASAN
++/*
++ * This is an optimization for KASAN=y case. Since all kasan page tables
++ * eventually point to the kasan_early_shadow_page we could call note_page()
++ * right away without walking through lower level page tables. This saves
++ * us dozens of seconds (minutes for 5-level config) while checking for
++ * W+X mapping or reading kernel_page_tables debugfs file.
++ */
++static inline bool kasan_page_table(struct ptdump_state *st, void *pt,
++				    unsigned long addr)
++{
++	if (__pa(pt) == __pa(kasan_early_shadow_pmd) ||
++	    (pgtable_l5_enabled() &&
++			__pa(pt) == __pa(kasan_early_shadow_p4d)) ||
++	    __pa(pt) == __pa(kasan_early_shadow_pud)) {
++		st->note_page(st, addr, 5, pte_val(kasan_early_shadow_pte[0]));
++		return true;
++	}
++	return false;
++}
++#else
++static inline bool kasan_page_table(struct ptdump_state *st, void *pt,
++				    unsigned long addr)
++{
++	return false;
++}
++#endif
++
++static int ptdump_test_p4d(unsigned long addr, unsigned long next,
++			   p4d_t *p4d, struct mm_walk *walk)
++{
++	struct ptdump_state *st = walk->private;
++
++	if (kasan_page_table(st, p4d, addr))
++		return 1;
++	return 0;
++}
++
++static int ptdump_test_pud(unsigned long addr, unsigned long next,
++			   pud_t *pud, struct mm_walk *walk)
++{
++	struct ptdump_state *st = walk->private;
++
++	if (kasan_page_table(st, pud, addr))
++		return 1;
++	return 0;
++}
++
++static int ptdump_test_pmd(unsigned long addr, unsigned long next,
++			   pmd_t *pmd, struct mm_walk *walk)
++{
++	struct ptdump_state *st = walk->private;
++
++	if (kasan_page_table(st, pmd, addr))
++		return 1;
++	return 0;
++}
++
++static int ptdump_hole(unsigned long addr, unsigned long next,
++		       struct mm_walk *walk)
++{
++	struct ptdump_state *st = walk->private;
++
++	st->note_page(st, addr, -1, 0);
++
++	return 0;
++}
++
++void ptdump_walk_pgd(struct ptdump_state *st, struct mm_struct *mm)
++{
++	struct mm_walk walk = {
++		.mm		= mm,
++		.pgd_entry	= ptdump_pgd_entry,
++		.p4d_entry	= ptdump_p4d_entry,
++		.pud_entry	= ptdump_pud_entry,
++		.pmd_entry	= ptdump_pmd_entry,
++		.pte_entry	= ptdump_pte_entry,
++		.test_p4d	= ptdump_test_p4d,
++		.test_pud	= ptdump_test_pud,
++		.test_pmd	= ptdump_test_pmd,
++		.pte_hole	= ptdump_hole,
++		.private	= st
++	};
++	const struct ptdump_range *range = st->range;
++
++	down_read(&mm->mmap_sem);
++	while (range->start != range->end) {
++		walk_page_range(range->start, range->end, &walk);
++		range++;
++	}
++	up_read(&mm->mmap_sem);
++
++	/* Flush out the last page */
++	st->note_page(st, 0, 0, 0);
++}
+-- 
+2.20.1
 
-Fair enough. I'll post the initial work I've done on unifying the
-x86/arm64 ptdump code - the diffstat is a bit nicer on that - but
-there's still work to be done so I'm posting just as an RFC.
-
-Thanks,
-
-Steve
