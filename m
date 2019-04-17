@@ -7,25 +7,25 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C62ADC282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:42:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 23CA5C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:42:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 97A7D2184B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:42:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E54962183F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:42:24 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555519343;
-	bh=VVJy02ekNgpwUm+dVP8z6N9oUfCmBL3zFXQHdqs3W9k=;
+	s=default; t=1555519345;
+	bh=IUY8Ck01B7EwsmuISX1GtSm2uiU0R0Hn9eAUwvBPAHo=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=MhuoJPi1a4NtbQbSuU/w8SXzCpxLdOVLf5KA84jiPqfUnDM0zkfV2oz3UV3pjc0PX
-	 DpSD5B4of+7U9Gx2/6m57dYIOZjow63rFtb+wmViiKT8OSNtIBNHflyMoLDk5txmiB
-	 ahgd3dmfh3tZnqZVCp4fESJsTP35Uu5oIToU1Zcs=
+	b=EQutjtG+veFKlZsrXGflCOOnU3OXFm5KRlW5SElKW7hrlcwg6uimeYmpju+k3bO7t
+	 eY67lYvRrapIU7rKyOaU19AUvSeikDhbwYKCJeGHyMWrGvBleMniP6LfHKr6Nz54Dd
+	 h64OsrBRSas3IcF+7WhkJZFBS25YpORrq98BGHFo=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732904AbfDQQmW (ORCPT
+        id S1732916AbfDQQmY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 12:42:22 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37022 "EHLO
+        Wed, 17 Apr 2019 12:42:24 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37020 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732841AbfDQQmU (ORCPT
+        with ESMTP id S1732476AbfDQQmU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 17 Apr 2019 12:42:20 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
@@ -34,25 +34,25 @@ DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=fYQ7pRbdIUJW2qLPnGFvVJ8NpWcBHP37vcW8juhpgEo=; b=A+7h4CCTmzuN
-        bsmoyKGA4CTqWUOk81UnpMMGY7Uoi1iYwlDx5XKg3tohK5xv9C1j1/hbP71cqNE9gUnAofeceGd10
-        SXDHxlDNQZOwD/LbqBWJ1vdweja2ZkKLQZ/BH1YgOfCGsUaWSACSStQpFzo9luroST+LBk4Fq5E2b
-        rCzA4=;
+        List-Archive; bh=IuP+5WuNj2/WuLhAyTBWHBhUdUB0hL7J7i4E/p0VpDM=; b=jBIvgRvdFvgG
+        hFauuT+fygpNTglZuNzNa1uZ0BvQVv4lo7e2gkuRpkrNIJlmhnWjB1gKDWEU92GzfQLyGKsaDEXcK
+        bQfVPjLYe08o+hui+iEc4DHYJJeaQj6O/6gTCtZfVh43Wl3UyM59XGD10jmhUTAWZW7m4onlxDXHQ
+        15MvI=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hGndY-000154-Am; Wed, 17 Apr 2019 16:42:16 +0000
+        id 1hGndX-000151-6P; Wed, 17 Apr 2019 16:42:15 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 0C4B41128FC8; Wed, 17 Apr 2019 17:42:16 +0100 (BST)
+        id E8E5E1128FC7; Wed, 17 Apr 2019 17:42:14 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
 To:     Axel Lin <axel.lin@ingics.com>
 Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
         Mark Brown <broonie@kernel.org>, patches@opensource.cirrus.com
-Subject: Applied "regulator: wm8994: Switch to SPDX identifier" to the regulator tree
-In-Reply-To: <20190417141633.4730-5-axel.lin@ingics.com>
+Subject: Applied "regulator: wm8350: Switch to SPDX identifier" to the regulator tree
+In-Reply-To: <20190417141633.4730-3-axel.lin@ingics.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190417164216.0C4B41128FC8@debutante.sirena.org.uk>
-Date:   Wed, 17 Apr 2019 17:42:16 +0100 (BST)
+Message-Id: <20190417164214.E8E5E1128FC7@debutante.sirena.org.uk>
+Date:   Wed, 17 Apr 2019 17:42:14 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -60,7 +60,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: wm8994: Switch to SPDX identifier
+   regulator: wm8350: Switch to SPDX identifier
 
 has been applied to the regulator tree at
 
@@ -85,28 +85,29 @@ to this mail.
 Thanks,
 Mark
 
-From e8d59d9a79a1a40e909d5558fb2fa65d733c7a66 Mon Sep 17 00:00:00 2001
+From 87dbc5eb3cff166f8107f5be6a53db858211f23e Mon Sep 17 00:00:00 2001
 From: Axel Lin <axel.lin@ingics.com>
-Date: Wed, 17 Apr 2019 22:16:33 +0800
-Subject: [PATCH] regulator: wm8994: Switch to SPDX identifier
+Date: Wed, 17 Apr 2019 22:16:31 +0800
+Subject: [PATCH] regulator: wm8350: Switch to SPDX identifier
 
 Signed-off-by: Axel Lin <axel.lin@ingics.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/wm8994-regulator.c | 19 +++++++------------
- 1 file changed, 7 insertions(+), 12 deletions(-)
+ drivers/regulator/wm8350-regulator.c | 21 ++++++++-------------
+ 1 file changed, 8 insertions(+), 13 deletions(-)
 
-diff --git a/drivers/regulator/wm8994-regulator.c b/drivers/regulator/wm8994-regulator.c
-index 38928cdcb6e6..cadea0344486 100644
---- a/drivers/regulator/wm8994-regulator.c
-+++ b/drivers/regulator/wm8994-regulator.c
-@@ -1,15 +1,10 @@
+diff --git a/drivers/regulator/wm8350-regulator.c b/drivers/regulator/wm8350-regulator.c
+index 0eb3f3a33caa..56d6168a888d 100644
+--- a/drivers/regulator/wm8350-regulator.c
++++ b/drivers/regulator/wm8350-regulator.c
+@@ -1,16 +1,11 @@
 -/*
-- * wm8994-regulator.c  --  Regulator driver for the WM8994
+- * wm8350.c  --  Voltage and current regulation for the Wolfson WM8350 PMIC
 - *
-- * Copyright 2009 Wolfson Microelectronics PLC.
+- * Copyright 2007, 2008 Wolfson Microelectronics PLC.
 - *
-- * Author: Mark Brown <broonie@opensource.wolfsonmicro.com>
+- * Author: Liam Girdwood
+- *         linux@wolfsonmicro.com
 - *
 - *  This program is free software; you can redistribute  it and/or modify it
 - *  under  the terms of  the GNU General  Public License as published by the
@@ -115,11 +116,12 @@ index 38928cdcb6e6..cadea0344486 100644
 - */
 +// SPDX-License-Identifier: GPL-2.0+
 +//
-+// wm8994-regulator.c  --  Regulator driver for the WM8994
++// wm8350.c  --  Voltage and current regulation for the Wolfson WM8350 PMIC
 +//
-+// Copyright 2009 Wolfson Microelectronics PLC.
++// Copyright 2007, 2008 Wolfson Microelectronics PLC.
 +//
-+// Author: Mark Brown <broonie@opensource.wolfsonmicro.com>
++// Author: Liam Girdwood
++//         linux@wolfsonmicro.com
  
  #include <linux/module.h>
  #include <linux/moduleparam.h>
