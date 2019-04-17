@@ -2,117 +2,127 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 25601C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:42:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C62ADC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:42:23 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D9FA7217F9
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:42:18 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=yahoo.com header.i=@yahoo.com header.b="dhwxYMe/"
+	by mail.kernel.org (Postfix) with ESMTP id 97A7D2184B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:42:23 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555519343;
+	bh=VVJy02ekNgpwUm+dVP8z6N9oUfCmBL3zFXQHdqs3W9k=;
+	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
+	b=MhuoJPi1a4NtbQbSuU/w8SXzCpxLdOVLf5KA84jiPqfUnDM0zkfV2oz3UV3pjc0PX
+	 DpSD5B4of+7U9Gx2/6m57dYIOZjow63rFtb+wmViiKT8OSNtIBNHflyMoLDk5txmiB
+	 ahgd3dmfh3tZnqZVCp4fESJsTP35Uu5oIToU1Zcs=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732890AbfDQQmR (ORCPT
+        id S1732904AbfDQQmW (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 12:42:17 -0400
-Received: from sonic313-21.consmr.mail.bf2.yahoo.com ([74.6.133.195]:38290
-        "EHLO sonic313-21.consmr.mail.bf2.yahoo.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1732476AbfDQQmQ (ORCPT
+        Wed, 17 Apr 2019 12:42:22 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37022 "EHLO
+        heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732841AbfDQQmU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 12:42:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yahoo.com; s=s2048; t=1555519334; bh=3MM2CWsG+1KZRItt9dOySsdZCX9P8oSLNsyZBeCppkY=; h=Subject:To:Cc:References:From:Date:In-Reply-To:From:Subject; b=dhwxYMe/fWjUCSTCdw2AIWWaJWlbA6Flo+q1btTqFPC+OcthqRw+dGgYRtdAtxX9I9xDdpcaArGzhAacD9s1cOXDRbE0xREUUCZHdebSkbbDeiq3GOUULngJJ60n6307gtVEy67W9VEZhdFBKEi1QXPBXd1AU76sFyl+VStdTH9i0oyKM+ers/ayZOG1Ju8/7jhTqZwUDljGOs7HTWfH6aO+4d+ffYuclowIx+j4RTCZJQwb2A2kRCbricB83RHH65EG6+1IUWlH/yewJgEJXsGXJ4VkqfclQ9v+pdWTTzJytWJNk7z3rPPgBNO/5PJrsoqb4uW5X8yXDZ94EEMp0Q==
-X-YMail-OSG: K.6GFc0VM1neswhz_haptv_iiR9K5VoKZAPX0yN8uXKjWPnOLTONSKvQ0Mn_YsP
- HoA3Zg8hzAXK18DPM_zyPUMZOj7S6Pzn75nABZeQM6N7f.bjZfn.2sjWQD_ES83bwW7XQoK9Lnk5
- 36jOXpiYteMVbMQJgvTYo2CLYuTUXf1Jv_4zTmatAOkE_dfolIR1yhXBaLl0jD1d3f5KECE0iC3n
- beYuxI3n.q474NSfnLrAR8UNSOalHtfnAYTNZ9haWRMzi4s_2hCcUU3msHiTBRgouPUvQ8_NHvvd
- W1Ejv.9UMZYb2PXlOb6FCmExvCzsmEiBAQmpafsTsrEPY8LyP3N0JyCCGuqMf06TV.D8aWEGA.wH
- O8GFI1c5BoL_CzAOT0qplVVC.hALu3a3Uw4kdfKdpOKnMug1I3hQ5IUNgjGgjz_w9ZwfY.prBBZV
- P4e34u0hm7Q6A6efeTiolGh3k2yQCOyCekS0b0dPVvRqNqtxueAAQQfEDzCrI3c_5bheZBT8c4hz
- 1T07NCuhf3PXhqDdG4td8bI.NmhNM9rLVpY.q.JUB5hoTuOrXf2E_n4C4XBvJZu9rZFsJJSg8GTZ
- ZzcT75hiVElgWHZFgXq9aHXk29gf.QTvBfvuXMUbHWxJifuZjW2jvPBBFDfmDqNm.w2o5Fozqgk2
- PmMGzIQuOkvjVBzI82zQP3SAqpFVpU0gHw_2G.vKe99t.xnw0ljRNp70ixlCbY2MOa4L8bAUJYYF
- ujTasSnMHJ9wJMiaKT3Mk0kZnT01.5IaYdJ9udw4L8rjYpZgqtczI7Gf_sAVJMz0dGFB_Y6cIWog
- a7BdFz6EPTJxe3_r7oPhV_9KWeJdLtXPna3bDrdQK2LcuIL7Ly_ixoYdZAiSZ45U7ecoAdYFDf2Q
- 520zsc3tOBEi3wD.cNEYsLDVZRgAjUxZZQ0cgJY2_sWCqmRADpZT8N8VvAW4PmB9Gb3HFX1uLirG
- XS.Kay4SeDHb46ykVWLrPDEkkwDeFsGFGC6zGAP0jbOHWng5ST1egesDhUK4OA2WcrfZYh_jEg6V
- _PErPOO_QR8bLw5mYUYyTuL1AEvUGO4DqSZQTr3ag_TCYvBZ0maPg5CWaHijgNJjy6j.vfgqM0_k
- 2h93U16lBlR7XaqxGpfBxQmNu4A--
-Received: from sonic.gate.mail.ne1.yahoo.com by sonic313.consmr.mail.bf2.yahoo.com with HTTP; Wed, 17 Apr 2019 16:42:14 +0000
-Received: from c-67-169-65-224.hsd1.ca.comcast.net (EHLO [192.168.0.103]) ([67.169.65.224])
-          by smtp412.mail.bf1.yahoo.com (Oath Hermes SMTP Server) with ESMTPA ID 1f1ffef23e024c3542d30848c732eedf;
-          Wed, 17 Apr 2019 16:42:13 +0000 (UTC)
-Subject: Re: kernel BUG at kernel/cred.c:434!
-To:     Oleg Nesterov <oleg@redhat.com>, Paul Moore <paul@paul-moore.com>
-Cc:     "chengjian (D)" <cj.chengjian@huawei.com>,
-        Kees Cook <keescook@chromium.org>, NeilBrown <neilb@suse.com>,
-        Anna Schumaker <Anna.Schumaker@netapp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Xiexiuqi (Xie XiuQi)" <xiexiuqi@huawei.com>,
-        Li Bin <huawei.libin@huawei.com>,
-        Jason Yan <yanaijie@huawei.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Linux Security Module list 
-        <linux-security-module@vger.kernel.org>,
-        SELinux <selinux@vger.kernel.org>,
-        Yang Yingliang <yangyingliang@huawei.com>,
-        casey@schaufler-ca.com
-References: <b1575d02-fd88-65e6-2f16-70a96985087e@schaufler-ca.com>
- <20190415134331.GC22204@redhat.com>
- <CAHC9VhQ7ihqU0K57ctwzoHq0t0QVJPKiQQZn5TXB1FUqsvOSEQ@mail.gmail.com>
- <20190415150520.GA13257@redhat.com>
- <CAHC9VhSk1_fWooexHK0+5cKum55qTvj3uv5sRE=aJ4mv2GHJZg@mail.gmail.com>
- <CAGXu5jKYmoaR6bxW82ogN4iOeKi8AtEwkvVvCXd_gn3CCwFU2Q@mail.gmail.com>
- <fa325d38-db66-0ae7-0a6c-75934a9b0653@huawei.com>
- <CAHC9VhSpnSpYLLOcFUFLM=UU8tUTLAzJYb2NgdbN-nLPrh=55g@mail.gmail.com>
- <20190417145711.GI32622@redhat.com>
- <CAHC9VhSzo4DsMRknOA-4KKYJEir0wW74+quLheTjRw94OmhscA@mail.gmail.com>
- <20190417162723.GK32622@redhat.com>
-From:   Casey Schaufler <casey@schaufler-ca.com>
-Message-ID: <939a45a6-fc1b-0ac3-759b-0e7c3ce3d670@schaufler-ca.com>
-Date:   Wed, 17 Apr 2019 09:42:11 -0700
-User-Agent: Mozilla/5.0 (Windows NT 10.0; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <20190417162723.GK32622@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
+        Wed, 17 Apr 2019 12:42:20 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
+        Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
+        List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
+        List-Archive; bh=fYQ7pRbdIUJW2qLPnGFvVJ8NpWcBHP37vcW8juhpgEo=; b=A+7h4CCTmzuN
+        bsmoyKGA4CTqWUOk81UnpMMGY7Uoi1iYwlDx5XKg3tohK5xv9C1j1/hbP71cqNE9gUnAofeceGd10
+        SXDHxlDNQZOwD/LbqBWJ1vdweja2ZkKLQZ/BH1YgOfCGsUaWSACSStQpFzo9luroST+LBk4Fq5E2b
+        rCzA4=;
+Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
+        by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
+        (envelope-from <broonie@sirena.org.uk>)
+        id 1hGndY-000154-Am; Wed, 17 Apr 2019 16:42:16 +0000
+Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
+        id 0C4B41128FC8; Wed, 17 Apr 2019 17:42:16 +0100 (BST)
+From:   Mark Brown <broonie@kernel.org>
+To:     Axel Lin <axel.lin@ingics.com>
+Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>, patches@opensource.cirrus.com
+Subject: Applied "regulator: wm8994: Switch to SPDX identifier" to the regulator tree
+In-Reply-To: <20190417141633.4730-5-axel.lin@ingics.com>
+X-Patchwork-Hint: ignore
+Message-Id: <20190417164216.0C4B41128FC8@debutante.sirena.org.uk>
+Date:   Wed, 17 Apr 2019 17:42:16 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/17/2019 9:27 AM, Oleg Nesterov wrote:
-> On 04/17, Paul Moore wrote:
->> On Wed, Apr 17, 2019 at 10:57 AM Oleg Nesterov <oleg@redhat.com> wrote:
->>> On 04/17, Paul Moore wrote:
->>>> I'm tempted to simply return an error in selinux_setprocattr() if
->>>> the task's credentials are not the same as its real_cred;
->>> What about other modules? I have no idea what smack_setprocattr() is,
->>> but it too does prepare_creds/commit creds.
->>>
->>> it seems that the simplest workaround should simply add the additional
->>> cred == real_cred into proc_pid_attr_write().
->> Yes, that is simple, but I worry about what other LSMs might want to
->> do.  While I believe failing if the effective creds are not the same
->> as the real_creds is okay for SELinux (possibly Smack too), I worry
->> about what other LSMs may want to do.  After all,
->> proc_pid_attr_write() doesn't change the the creds itself, that is
->> something the specific LSMs do.
-> Yes, but if proc_pid_attr_write() is called with cred != real_cred then
-> something is already wrong?
->
-> In fact, I think that something is already wrong if it is not called by
-> user-space directly. Too late to ask, but why is this /proc/self/attr/
-> magic not implemented via syscall(s) ?
+The patch
 
-Shell scripts, for one thing. It's a straightforward and appropriate
-use of the /proc interface. System calls would require additional change
-to existing programs, whereas using the /proc interface allows a good
-deal to be done in the containing scripts.
-  
+   regulator: wm8994: Switch to SPDX identifier
+
+has been applied to the regulator tree at
+
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.2
+
+All being well this means that it will be integrated into the linux-next
+tree (usually sometime in the next 24 hours) and sent to Linus during
+the next merge window (or sooner if it is a bug fix), however if
+problems are discovered then the patch may be dropped or reverted.  
+
+You may get further e-mails resulting from automated or manual testing
+and review of the tree, please engage with people reporting problems and
+send followup patches addressing any issues that are reported if needed.
+
+If any updates are required or you are submitting further changes they
+should be sent as incremental updates against current git, existing
+patches will not be replaced.
+
+Please add any relevant lists and maintainers to the CCs when replying
+to this mail.
+
+Thanks,
+Mark
+
+From e8d59d9a79a1a40e909d5558fb2fa65d733c7a66 Mon Sep 17 00:00:00 2001
+From: Axel Lin <axel.lin@ingics.com>
+Date: Wed, 17 Apr 2019 22:16:33 +0800
+Subject: [PATCH] regulator: wm8994: Switch to SPDX identifier
+
+Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Signed-off-by: Mark Brown <broonie@kernel.org>
+---
+ drivers/regulator/wm8994-regulator.c | 19 +++++++------------
+ 1 file changed, 7 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/regulator/wm8994-regulator.c b/drivers/regulator/wm8994-regulator.c
+index 38928cdcb6e6..cadea0344486 100644
+--- a/drivers/regulator/wm8994-regulator.c
++++ b/drivers/regulator/wm8994-regulator.c
+@@ -1,15 +1,10 @@
+-/*
+- * wm8994-regulator.c  --  Regulator driver for the WM8994
+- *
+- * Copyright 2009 Wolfson Microelectronics PLC.
+- *
+- * Author: Mark Brown <broonie@opensource.wolfsonmicro.com>
+- *
+- *  This program is free software; you can redistribute  it and/or modify it
+- *  under  the terms of  the GNU General  Public License as published by the
+- *  Free Software Foundation;  either version 2 of the  License, or (at your
+- *  option) any later version.
+- */
++// SPDX-License-Identifier: GPL-2.0+
++//
++// wm8994-regulator.c  --  Regulator driver for the WM8994
++//
++// Copyright 2009 Wolfson Microelectronics PLC.
++//
++// Author: Mark Brown <broonie@opensource.wolfsonmicro.com>
+ 
+ #include <linux/module.h>
+ #include <linux/moduleparam.h>
+-- 
+2.20.1
 
