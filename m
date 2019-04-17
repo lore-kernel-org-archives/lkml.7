@@ -2,112 +2,88 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C9390C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:51:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 89495C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8A7D220652
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:51:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555523515;
-	bh=alhjzsBTJNyGGje0+kchr4wq2cZcp6GrZacLG8zYlwM=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=P657AeI763TUzeUh0fjdKennU2HU5pEenXeXL24JG0cOA6GumQthkAabg1waKHY/Y
-	 93BKOj5lV1D92NfPn38LSPcj/MEu0lo2maSrJCpyYfuTIQthdW3rAR6iH5g6cimTyu
-	 acP9X9k5wyZxHPcYZVNSlYVS5ZdcQRG5gQZyTEPo=
+	by mail.kernel.org (Postfix) with ESMTP id 50BF12064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:52:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=netronome-com.20150623.gappssmtp.com header.i=@netronome-com.20150623.gappssmtp.com header.b="UqM/5KVE"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733224AbfDQRvy (ORCPT
+        id S1733235AbfDQRwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 13:51:54 -0400
-Received: from mx2.suse.de ([195.135.220.15]:38802 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731977AbfDQRvy (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 13:51:54 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id BF352AD3B;
-        Wed, 17 Apr 2019 17:51:52 +0000 (UTC)
-Date:   Wed, 17 Apr 2019 19:51:51 +0200
-From:   Michal Hocko <mhocko@kernel.org>
-To:     Yang Shi <yang.shi@linux.alibaba.com>
-Cc:     Keith Busch <keith.busch@intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        mgorman@techsingularity.net, riel@surriel.com, hannes@cmpxchg.org,
-        akpm@linux-foundation.org, dan.j.williams@intel.com,
-        fengguang.wu@intel.com, fan.du@intel.com, ying.huang@intel.com,
-        ziy@nvidia.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-Subject: Re: [v2 RFC PATCH 0/9] Another Approach to Use PMEM as NUMA Node
-Message-ID: <20190417175151.GB9523@dhcp22.suse.cz>
-References: <a68137bb-dcd8-4e4a-b3a9-69a66f9dccaf@linux.alibaba.com>
- <20190416074714.GD11561@dhcp22.suse.cz>
- <876768ad-a63a-99c3-59de-458403f008c4@linux.alibaba.com>
- <a0bf6b61-1ec2-6209-5760-80c5f205d52e@intel.com>
- <20190417092318.GG655@dhcp22.suse.cz>
- <20190417152345.GB4786@localhost.localdomain>
- <20190417153923.GO5878@dhcp22.suse.cz>
- <20190417153739.GD4786@localhost.localdomain>
- <20190417163911.GA9523@dhcp22.suse.cz>
- <fcb30853-8039-8154-7ae0-706930642576@linux.alibaba.com>
+        Wed, 17 Apr 2019 13:52:05 -0400
+Received: from mail-qt1-f196.google.com ([209.85.160.196]:36630 "EHLO
+        mail-qt1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733170AbfDQRwE (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 13:52:04 -0400
+Received: by mail-qt1-f196.google.com with SMTP id s15so28390284qtn.3
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 10:52:03 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=netronome-com.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:in-reply-to:references
+         :organization:mime-version:content-transfer-encoding;
+        bh=2SUIuQnYAPUOgPmqi9wrI6b16FE1+k4sZw7VLX7K9ew=;
+        b=UqM/5KVEddTHkZenhHKXIQewMlb6bgM0k8PlWy1W36EtJfDKSLLL3kvMwxTydFVbnj
+         i0WCH5mcCI24aJzRVwGHc3CKBXHtbvYLE6UKdRm9WkdnAFDlLfQ+gNkXL3povgftiCQv
+         70ZVhN6E46ARpCjXLCNx3RmI8L5d6f2g9hY7E4jsvX/L+Oy1XKmLdVmz792X/4NrvDA2
+         ehfMzuu0CkOXcK78mn4zKadHXIaRjKOCRKo98MFzcpFS3MWubNDIK7SdLeHpzYB8LZ/U
+         OyZZG0a1jhAV7SihHzs67RjIOrw2a6Xaxav7W2gkpoGC+YjUnoRt5VHcEQfHDTpzGNnj
+         UsFw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:in-reply-to
+         :references:organization:mime-version:content-transfer-encoding;
+        bh=2SUIuQnYAPUOgPmqi9wrI6b16FE1+k4sZw7VLX7K9ew=;
+        b=ub/M0Au2rCGDcj36SUbYQOBWw+hHh8W7oIbuFOf06fjj1DLsCYM9y+oa/ze5C4jGjZ
+         6PKWD7XYwQouifNxfFS9VK3Nmsdam6i6kQivptdWxC3XzZWmzsGzYjOzBw+mnWmSrXQg
+         ZlfqjXGTHTVqIbCZAep4V28L1qocI5pwglMPHnYYyGbUuduXCF8L2Z51iy+OVdPkXFWp
+         N3AkuivDGTg8JRIZMwmZVAh0Zefibmz70QU6AtNfXPbKHE6AhQDsvFcwBzX0Znxngbcw
+         yHvzZhi9hqAzy+Zmv3KGBHGO8vfeTRQcOmPWwRs5apEr8DfV43b0N8gm2I60TUkDa02x
+         vekg==
+X-Gm-Message-State: APjAAAVPTrEi1oJMuS69tEvMhoq/iElqs2KFLCPGlRv1PLCcp4KjeYL2
+        7usaq5XRfpg2TciWX0D13rMoLQ==
+X-Google-Smtp-Source: APXvYqwR1PR0NeGd989IxaTi81nRdAImjAQS9S6kGjUXcCo0AN8MUcJ1cKUt0AmkqFPiN6iLGqftJw==
+X-Received: by 2002:a0c:8b4a:: with SMTP id d10mr71500307qvc.29.1555523523243;
+        Wed, 17 Apr 2019 10:52:03 -0700 (PDT)
+Received: from cakuba.netronome.com ([66.60.152.14])
+        by smtp.gmail.com with ESMTPSA id e128sm23314622qkd.79.2019.04.17.10.52.02
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 17 Apr 2019 10:52:03 -0700 (PDT)
+Date:   Wed, 17 Apr 2019 10:51:59 -0700
+From:   Jakub Kicinski <jakub.kicinski@netronome.com>
+To:     Colin King <colin.king@canonical.com>
+Cc:     "David S . Miller" <davem@davemloft.net>,
+        John Hurley <john.hurley@netronome.com>,
+        oss-drivers@netronome.com, netdev@vger.kernel.org,
+        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [oss-drivers] [PATCH] nfp: abm: fix spelling mistake
+ "offseting" -> "offsetting"
+Message-ID: <20190417105159.3dea5217@cakuba.netronome.com>
+In-Reply-To: <20190417131500.4793-1-colin.king@canonical.com>
+References: <20190417131500.4793-1-colin.king@canonical.com>
+Organization: Netronome Systems, Ltd.
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <fcb30853-8039-8154-7ae0-706930642576@linux.alibaba.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed 17-04-19 10:26:05, Yang Shi wrote:
+On Wed, 17 Apr 2019 14:15:00 +0100, Colin King wrote:
+> From: Colin Ian King <colin.king@canonical.com>
 > 
+> There are a couple of spelling mistakes in NL_SET_ERR_MSG_MOD error
+> messages. Fix these.
 > 
-> On 4/17/19 9:39 AM, Michal Hocko wrote:
-> > On Wed 17-04-19 09:37:39, Keith Busch wrote:
-> > > On Wed, Apr 17, 2019 at 05:39:23PM +0200, Michal Hocko wrote:
-> > > > On Wed 17-04-19 09:23:46, Keith Busch wrote:
-> > > > > On Wed, Apr 17, 2019 at 11:23:18AM +0200, Michal Hocko wrote:
-> > > > > > On Tue 16-04-19 14:22:33, Dave Hansen wrote:
-> > > > > > > Keith Busch had a set of patches to let you specify the demotion order
-> > > > > > > via sysfs for fun.  The rules we came up with were:
-> > > > > > I am not a fan of any sysfs "fun"
-> > > > > I'm hung up on the user facing interface, but there should be some way a
-> > > > > user decides if a memory node is or is not a migrate target, right?
-> > > > Why? Or to put it differently, why do we have to start with a user
-> > > > interface at this stage when we actually barely have any real usecases
-> > > > out there?
-> > > The use case is an alternative to swap, right? The user has to decide
-> > > which storage is the swap target, so operating in the same spirit.
-> > I do not follow. If you use rebalancing you can still deplete the memory
-> > and end up in a swap storage. If you want to reclaim/swap rather than
-> > rebalance then you do not enable rebalancing (by node_reclaim or similar
-> > mechanism).
-> 
-> I'm a little bit confused. Do you mean just do *not* do reclaim/swap in
-> rebalancing mode? If rebalancing is on, then node_reclaim just move the
-> pages around nodes, then kswapd or direct reclaim would take care of swap?
+> Signed-off-by: Colin Ian King <colin.king@canonical.com>
 
-Yes, that was the idea I wanted to get through. Sorry if that was not
-really clear.
+Acked-by: Jakub Kicinski <jakub.kicinski@netronome.com>
 
-> If so the node reclaim on PMEM node may rebalance the pages to DRAM node?
-> Should this be allowed?
-
-Why it shouldn't? If there are other vacant Nodes to absorb that memory
-then why not use it?
-
-> I think both I and Keith was supposed to treat PMEM as a tier in the reclaim
-> hierarchy. The reclaim should push inactive pages down to PMEM, then swap.
-> So, PMEM is kind of a "terminal" node. So, he introduced sysfs defined
-> target node, I introduced N_CPU_MEM.
-
-I understand that. And I am trying to figure out whether we really have
-to tream PMEM specially here. Why is it any better than a generic NUMA
-rebalancing code that could be used for many other usecases which are
-not PMEM specific. If you present PMEM as a regular memory then also use
-it as a normal memory.
--- 
-Michal Hocko
-SUSE Labs
+Thanks, Colin!
