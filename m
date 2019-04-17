@@ -7,54 +7,54 @@ X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51FE1C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E8896C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:54:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 227D3206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:54:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1AD7206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:54:26 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dxgGPNHz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mgUhS2QS"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387400AbfDQSyT (ORCPT
+        id S2387408AbfDQSyZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 14:54:19 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:34185 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727340AbfDQSyT (ORCPT
+        Wed, 17 Apr 2019 14:54:25 -0400
+Received: from mail-pl1-f196.google.com ([209.85.214.196]:35769 "EHLO
+        mail-pl1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727340AbfDQSyY (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 14:54:19 -0400
-Received: by mail-pf1-f193.google.com with SMTP id b3so12530799pfd.1
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 11:54:18 -0700 (PDT)
+        Wed, 17 Apr 2019 14:54:24 -0400
+Received: by mail-pl1-f196.google.com with SMTP id w24so12456030plp.2
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 11:54:23 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=qsjzJkqdlnv6TqmYbTZ/k4ggvnYzrdp3XDw3Tms4H2w=;
-        b=dxgGPNHzhwBm/Ikuq4E3ZSKt4+GJq8LRVVavLq/wRn71w2YV/y6Zu4ZqHWVS+zlrqB
-         Ax4umOGAvOweQi1ckRT3NEqEdsVYH9FhkQ/DtDq+iETqXY9hFOyzln0JI77i4fIA3sUT
-         YdjG3/P68PQak+MJyTxHe71ZzRQGQkyF0fwSSCxLFN7a0vac7EcCB/H+UnC1xKM169AN
-         mC3Lw940YNWZ8gz25DIV1C48F+NDSrqRCl+jI807xjxZ+K9duy2ZVNMqPn4f4mwiKDh7
-         P7nI5lJGoA3lDs3BQWfn9lDbjTlJVt35z0R+wshAkYo5FpA4YZ48oMIMRJFC//h8geoM
-         thpw==
+        bh=/alwtP8uexc5/qbVbFxk1HzLZnaCzxDkUrTDe6UQRX8=;
+        b=mgUhS2QS+qj85a7Zfb6cFoeg3UPJ4djxclyJDZz85OOl80UZFUMZyiREi7t3Q2KaAK
+         F+VScXtrjHwJ0JSjSAXsGSib7dvtz/30U5uZZ6EZ4S93p6xMnUH7kPVboEFZicfEm2CO
+         Rw5/mgu3yr798UWmbTUhNSOV1AYLuNay8h9bEEnqzo+sP7LmRI/V9usfKGa4Og8Lw25w
+         TZHXIB3Dt5L2SnEbOY20NDuNwzlvhs9evf0L790iZbH0patdxHcf2XWZxBckLwaW3Zwf
+         G0vliSfWKsmGQW1rz07iT+NagMhHP9eFwD/8JMioIQjb5wWeyTUw01J069q5Uv73WEZI
+         OJHw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references;
-        bh=qsjzJkqdlnv6TqmYbTZ/k4ggvnYzrdp3XDw3Tms4H2w=;
-        b=pE63Zeealmb6px22e7f3hm+8JN1TCWVC2pZ7HZp6zpP/u0/JfyPCkoHBMid26iY6/B
-         JF3vtSk/KQw0PBj+eo1vtMSxY4sQE/RvUg0nhFRFwpfVPwhMeV6KKYivoqwaIxN1t1bu
-         d/SmYc3baDc2LdL++OlTrIfg9xSfJrRKW+BAThKXPU+h3+/DPWMTCWRXXbgMJgomAYsb
-         cgdf2tIRsp+TI8dJCqA3Q6jQfzNH4wKlZ3AgOTfwXjOKo4yvFZgnkGlolgFyDF03a+D7
-         s8T0uziFVdDLTeRGMA6OzG63IzWjedBM4LV9QrXloST3TmnRKCqpo5ISlsXj9nda8TcP
-         evWw==
-X-Gm-Message-State: APjAAAXDIf+6Um8o8ogvW9d2GGMMzkV/q+saQzv9lDPMeX2KCaMZFVnb
-        J5xSgJTaEwCM5YZGXdJn4Po=
-X-Google-Smtp-Source: APXvYqypfl2UL5Bs2Rdbgv0WhUG3JeaL2LM4ucubIZqr0ehR1e2eGJYIvbSZMdpnNGruln3tLVVXvQ==
-X-Received: by 2002:a63:3281:: with SMTP id y123mr20518302pgy.272.1555527258314;
-        Wed, 17 Apr 2019 11:54:18 -0700 (PDT)
+        bh=/alwtP8uexc5/qbVbFxk1HzLZnaCzxDkUrTDe6UQRX8=;
+        b=k9vjcetTKYBZ/Sdr0m0EBzcHzi8Toy7ewApt2OvCz+54xNdanNgZjWpnIy1FxRxAFg
+         Nk6cgV4cbS66tiFYSt5Y8vNg7JhkurJQXBIKVdDmlD3zRqJr836OMJo1brmbWg7pJwH0
+         1TRbkyWTlHfP7vHyl6lEG94DuoPSDH/gVDSS4YiZS6C5yDPbhrNxJI5bSjfJpw7Ni7bB
+         iJQctUSFDh5ERfphnHz+svq70py7++7BZmYNKuZ/YVZ6zze/s5i85wQkJ7pWao3hl/NY
+         8Fgos9nuGjOPO9SK+dHZsCGOOWJU0zXtdtvowI9lEuEiMwfTdsrzW09tLgdMbFVihie8
+         rQjw==
+X-Gm-Message-State: APjAAAWvcHIXqNgGuvLYKtbnGKVI/8Vsh7QUOkOd+jQ+CBTv62jAevfy
+        iGeUYyWdfciICzwy9C8/qa0=
+X-Google-Smtp-Source: APXvYqxpTuvojY0ZSfgg2/vPF3GueR91nJDMwxH5nAX6etvEu9Q/JNn57BHrsumpCOb9lZyhfJOzCA==
+X-Received: by 2002:a17:902:d70f:: with SMTP id w15mr91372159ply.134.1555527263380;
+        Wed, 17 Apr 2019 11:54:23 -0700 (PDT)
 Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.250])
-        by smtp.gmail.com with ESMTPSA id v188sm82119643pgb.7.2019.04.17.11.54.17
+        by smtp.gmail.com with ESMTPSA id w189sm109458529pfw.147.2019.04.17.11.54.22
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Apr 2019 11:54:17 -0700 (PDT)
+        Wed, 17 Apr 2019 11:54:22 -0700 (PDT)
 From:   Florian Fainelli <f.fainelli@gmail.com>
 To:     bcm-kernel-feedback-list@broadcom.com,
         Markus Mayer <code@mmayer.net>,
@@ -63,23 +63,22 @@ To:     bcm-kernel-feedback-list@broadcom.com,
 Cc:     Markus Mayer <mmayer@broadcom.com>,
         ARM Kernel List <linux-arm-kernel@lists.infradead.org>,
         Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 4/6] memory: brcmstb: dpfe: prepare support for multiple API versions
-Date:   Wed, 17 Apr 2019 11:54:16 -0700
-Message-Id: <20190417185416.1177-1-f.fainelli@gmail.com>
+Subject: Re: [PATCH 5/6] memory: brcmstb: dpfe: prepare for API-dependent sysfs attributes
+Date:   Wed, 17 Apr 2019 11:54:21 -0700
+Message-Id: <20190417185421.1261-1-f.fainelli@gmail.com>
 X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190402230103.25491-5-code@mmayer.net>
-References: <20190402230103.25491-1-code@mmayer.net> <20190402230103.25491-5-code@mmayer.net>
+In-Reply-To: <20190402230103.25491-6-code@mmayer.net>
+References: <20190402230103.25491-1-code@mmayer.net> <20190402230103.25491-6-code@mmayer.net>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  2 Apr 2019 16:01:01 -0700, Markus Mayer <code@mmayer.net> wrote:
+On Tue,  2 Apr 2019 16:01:02 -0700, Markus Mayer <code@mmayer.net> wrote:
 > From: Markus Mayer <mmayer@broadcom.com>
 > 
-> Extend the driver, so it can handle different API versions for
-> interacting with the DCPU. This is in preparation for the upcoming API
-> v3.
+> Prepare the driver so that sysfs attributes can differ based on the API
+> version.
 > 
 > Signed-off-by: Markus Mayer <mmayer@broadcom.com>
 > ---
