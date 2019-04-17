@@ -2,112 +2,82 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_NEOMUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8ED73C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 74615C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:55:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FF6C20835
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:55:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="cG2lr7dm";
-	dkim=pass (1024-bit key) header.d=akkea.ca header.i=@akkea.ca header.b="cG2lr7dm"
+	by mail.kernel.org (Postfix) with ESMTP id 4FD5D20835
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:55:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732961AbfDQQzd (ORCPT
+        id S1732974AbfDQQzm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 12:55:33 -0400
-Received: from node.akkea.ca ([192.155.83.177]:45300 "EHLO node.akkea.ca"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732909AbfDQQz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 12:55:27 -0400
-Received: from localhost (localhost [127.0.0.1])
-        by node.akkea.ca (Postfix) with ESMTP id 67A3B4E204B;
-        Wed, 17 Apr 2019 16:55:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1555520127; bh=n7NBmBuXCoAUjhYQQ8du0zofSB1QjAXtffcxycHtgrU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=cG2lr7dmRKvNu4Uo0YgSWkjNNio4CsyOYpKJ32HumP9akTv+Bnp2T6ffpa5vOq4HH
-         KL61lm8jlZcJr37hYgRjbuuv0R6LxvRlphpqnMqsnSyeL6BJIwLwWAjTisOIagF6sU
-         0CB7204fpl3C/ofG7aHFXWtW2bIaQwNXkGPNdKtA=
-X-Virus-Scanned: Debian amavisd-new at mail.akkea.ca
-Received: from node.akkea.ca ([127.0.0.1])
-        by localhost (mail.akkea.ca [127.0.0.1]) (amavisd-new, port 10024)
-        with ESMTP id RwsdRxblYHvA; Wed, 17 Apr 2019 16:55:27 +0000 (UTC)
-Received: from midas.localdomain (S0106788a2041785e.gv.shawcable.net [70.66.86.75])
-        by node.akkea.ca (Postfix) with ESMTPSA id 0D5AF4E204D;
-        Wed, 17 Apr 2019 16:55:26 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=akkea.ca; s=mail;
-        t=1555520127; bh=n7NBmBuXCoAUjhYQQ8du0zofSB1QjAXtffcxycHtgrU=;
-        h=From:To:Cc:Subject:Date:In-Reply-To:References;
-        b=cG2lr7dmRKvNu4Uo0YgSWkjNNio4CsyOYpKJ32HumP9akTv+Bnp2T6ffpa5vOq4HH
-         KL61lm8jlZcJr37hYgRjbuuv0R6LxvRlphpqnMqsnSyeL6BJIwLwWAjTisOIagF6sU
-         0CB7204fpl3C/ofG7aHFXWtW2bIaQwNXkGPNdKtA=
-From:   "Angus Ainslie (Purism)" <angus@akkea.ca>
-To:     angus.ainslie@puri.sm
-Cc:     m.felsch@pengutronix.de, Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Shawn Guo <shawnguo@kernel.org>,
-        Sascha Hauer <s.hauer@pengutronix.de>,
-        Pengutronix Kernel Team <kernel@pengutronix.de>,
-        Fabio Estevam <festevam@gmail.com>,
-        NXP Linux Team <linux-imx@nxp.com>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Paul Walmsley <paul.walmsley@sifive.com>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        Guo Ren <guoren@kernel.org>,
-        "Angus Ainslie (Purism)" <angus@akkea.ca>,
-        Thierry Reding <treding@nvidia.com>,
-        Jonathan Cameron <Jonathan.Cameron@huawei.com>,
-        Kevin Hilman <khilman@baylibre.com>,
-        Manivannan Sadhasivam <manivannan.sadhasivam@linaro.org>,
-        Andrey Smirnov <andrew.smirnov@gmail.com>,
-        =?UTF-8?q?Jonathan=20Neusch=C3=A4fer?= <j.neuschaefer@gmx.net>,
-        Jacky Bai <ping.bai@nxp.com>,
-        Aisheng Dong <aisheng.dong@nxp.com>,
-        Bruno Thomsen <bruno.thomsen@gmail.com>,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-kernel@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-mediatek@lists.infradead.org
-Subject: [PATCH v5 3/3] dt-bindings: arm: fsl: Add the imx8mq boards
-Date:   Wed, 17 Apr 2019 09:55:14 -0700
-Message-Id: <20190417165514.18689-4-angus@akkea.ca>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190417165514.18689-1-angus@akkea.ca>
-References: <20190417165514.18689-1-angus@akkea.ca>
+        Wed, 17 Apr 2019 12:55:42 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:41043 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731745AbfDQQzk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 12:55:40 -0400
+Received: from localhost (lfbn-1-10718-76.w90-89.abo.wanadoo.fr [90.89.68.76])
+        (Authenticated sender: maxime.ripard@bootlin.com)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id C149C200008;
+        Wed, 17 Apr 2019 16:55:37 +0000 (UTC)
+Date:   Wed, 17 Apr 2019 18:55:36 +0200
+From:   Maxime Ripard <maxime.ripard@bootlin.com>
+To:     Yue Haibing <yuehaibing@huawei.com>
+Cc:     airlied@linux.ie, daniel@ffwll.ch, wens@csie.org,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        dri-devel@lists.freedesktop.org
+Subject: Re: [PATCH -next] drm/sun4i: Make some symbols static
+Message-ID: <20190417165536.kzjazgpcb4tf6ho3@flea>
+References: <20190416145855.20852-1-yuehaibing@huawei.com>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="vniiivupf33cx6yj"
+Content-Disposition: inline
+In-Reply-To: <20190416145855.20852-1-yuehaibing@huawei.com>
+User-Agent: NeoMutt/20180716
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Add an entry for imx8mq based boards
 
-Signed-off-by: Angus Ainslie (Purism) <angus@akkea.ca>
----
- Documentation/devicetree/bindings/arm/fsl.yaml | 7 +++++++
- 1 file changed, 7 insertions(+)
+--vniiivupf33cx6yj
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
 
-diff --git a/Documentation/devicetree/bindings/arm/fsl.yaml b/Documentation/devicetree/bindings/arm/fsl.yaml
-index 06762fe57227..ecf63a123950 100644
---- a/Documentation/devicetree/bindings/arm/fsl.yaml
-+++ b/Documentation/devicetree/bindings/arm/fsl.yaml
-@@ -175,6 +175,13 @@ properties:
-               - fsl,imx8mm-evk            # i.MX8MM EVK Board
-           - const: fsl,imx8mm
- 
-+      - description: i.MX8MQ based Boards
-+        items:
-+          - enum:
-+              - fsl,imx8mq-evk            # i.MX8MQ EVK Board
-+              - purism,librem5-devkit     # Purism Librem5 devkit
-+          - const: fsl,imx8mq
-+
-       - description: i.MX8QXP based Boards
-         items:
-           - enum:
--- 
-2.17.1
+On Tue, Apr 16, 2019 at 10:58:55PM +0800, Yue Haibing wrote:
+> From: YueHaibing <yuehaibing@huawei.com>
+>
+> Fix sparse warnings:
+>
+> drivers/gpu/drm/sun4i/sun8i_tcon_top.c:271:36: warning: symbol 'sun8i_r40_tcon_top_quirks' was not declared. Should it be static?
+> drivers/gpu/drm/sun4i/sun8i_tcon_top.c:276:36: warning: symbol 'sun50i_h6_tcon_top_quirks' was not declared. Should it be static?
+> drivers/gpu/drm/sun4i/sun4i_tcon.c:239:6: warning: symbol 'sun4i_tcon_set_mux' was not declared. Should it be static?
+>
+> Reported-by: Hulk Robot <hulkci@huawei.com>
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
 
+Applied, thanks!
+Maxime
+
+--
+Maxime Ripard, Bootlin
+Embedded Linux and Kernel engineering
+https://bootlin.com
+
+--vniiivupf33cx6yj
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iHUEABYIAB0WIQRcEzekXsqa64kGDp7j7w1vZxhRxQUCXLdaiAAKCRDj7w1vZxhR
+xaH2AP9W0Fd/cwkBPQyfYmwry5PZESYvbqbbyxCNlI3bJtzEOwEAw9T/UugkMGDH
+xqIE2H9T2uTSn37vrwgbsKDv0fD75AU=
+=wbE8
+-----END PGP SIGNATURE-----
+
+--vniiivupf33cx6yj--
