@@ -2,85 +2,96 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A47B2C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:57:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 16348C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:58:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7DA8B217D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:57:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D9AEA20651
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:58:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732662AbfDQO5Q (ORCPT
+        id S1732693AbfDQO57 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 10:57:16 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:40172 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730463AbfDQO5Q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 10:57:16 -0400
-Received: from smtp.corp.redhat.com (int-mx01.intmail.prod.int.phx2.redhat.com [10.5.11.11])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 8001EC066455;
-        Wed, 17 Apr 2019 14:57:15 +0000 (UTC)
-Received: from dhcp-27-174.brq.redhat.com (unknown [10.43.17.38])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 863F560156;
-        Wed, 17 Apr 2019 14:57:12 +0000 (UTC)
-Received: by dhcp-27-174.brq.redhat.com (nbSMTP-1.00) for uid 1000
-        oleg@redhat.com; Wed, 17 Apr 2019 16:57:15 +0200 (CEST)
-Date:   Wed, 17 Apr 2019 16:57:11 +0200
-From:   Oleg Nesterov <oleg@redhat.com>
-To:     Paul Moore <paul@paul-moore.com>
-Cc:     "chengjian (D)" <cj.chengjian@huawei.com>,
-        Kees Cook <keescook@chromium.org>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        NeilBrown <neilb@suse.com>,
-        Anna Schumaker <Anna.Schumaker@netapp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Xiexiuqi (Xie XiuQi)" <xiexiuqi@huawei.com>,
-        Li Bin <huawei.libin@huawei.com>,
-        Jason Yan <yanaijie@huawei.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Linux Security Module list 
-        <linux-security-module@vger.kernel.org>,
-        SELinux <selinux@vger.kernel.org>,
-        Yang Yingliang <yangyingliang@huawei.com>
-Subject: Re: kernel BUG at kernel/cred.c:434!
-Message-ID: <20190417145711.GI32622@redhat.com>
-References: <6e4428ca-3da1-a033-08f7-a51e57503989@huawei.com>
- <b1575d02-fd88-65e6-2f16-70a96985087e@schaufler-ca.com>
- <20190415134331.GC22204@redhat.com>
- <CAHC9VhQ7ihqU0K57ctwzoHq0t0QVJPKiQQZn5TXB1FUqsvOSEQ@mail.gmail.com>
- <20190415150520.GA13257@redhat.com>
- <CAHC9VhSk1_fWooexHK0+5cKum55qTvj3uv5sRE=aJ4mv2GHJZg@mail.gmail.com>
- <CAGXu5jKYmoaR6bxW82ogN4iOeKi8AtEwkvVvCXd_gn3CCwFU2Q@mail.gmail.com>
- <fa325d38-db66-0ae7-0a6c-75934a9b0653@huawei.com>
- <CAHC9VhSpnSpYLLOcFUFLM=UU8tUTLAzJYb2NgdbN-nLPrh=55g@mail.gmail.com>
+        Wed, 17 Apr 2019 10:57:59 -0400
+Received: from szxga07-in.huawei.com ([45.249.212.35]:58156 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732679AbfDQO57 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 10:57:59 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.59])
+        by Forcepoint Email with ESMTP id 2CB14854AF18FB4DA879;
+        Wed, 17 Apr 2019 22:57:55 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.408.0; Wed, 17 Apr 2019
+ 22:57:48 +0800
+From:   Yue Haibing <yuehaibing@huawei.com>
+To:     <geoff@infradead.org>, <perex@perex.cz>, <tiwai@suse.com>,
+        <benh@kernel.crashing.org>, <paulus@samba.org>,
+        <mpe@ellerman.id.au>
+CC:     <linux-kernel@vger.kernel.org>, <linuxppc-dev@lists.ozlabs.org>,
+        <alsa-devel@alsa-project.org>, YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH -next] ALSA: ps3: Remove set but not used variables 'start_vaddr' and 'pcm_index'
+Date:   Wed, 17 Apr 2019 22:57:22 +0800
+Message-ID: <20190417145722.20448-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAHC9VhSpnSpYLLOcFUFLM=UU8tUTLAzJYb2NgdbN-nLPrh=55g@mail.gmail.com>
-User-Agent: Mutt/1.5.24 (2015-08-30)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.11
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Wed, 17 Apr 2019 14:57:15 +0000 (UTC)
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/17, Paul Moore wrote:
->
-> I'm tempted to simply return an error in selinux_setprocattr() if
-> the task's credentials are not the same as its real_cred;
+From: YueHaibing <yuehaibing@huawei.com>
 
-What about other modules? I have no idea what smack_setprocattr() is,
-but it too does prepare_creds/commit creds.
+Fixes gcc '-Wunused-but-set-variable' warnings:
 
-it seems that the simplest workaround should simply add the additional
-cred == real_cred into proc_pid_attr_write().
+sound/ppc/snd_ps3.c: In function 'snd_ps3_program_dma':
+sound/ppc/snd_ps3.c:236:8: warning: variable 'start_vaddr' set but not used [-Wunused-but-set-variable]
+sound/ppc/snd_ps3.c: In function 'snd_ps3_pcm_open':
+sound/ppc/snd_ps3.c:529:6: warning: variable 'pcm_index' set but not used [-Wunused-but-set-variable]
 
-Oleg.
+They are never used and can be removed.
+
+Reported-by: Hulk Robot <hulkci@huawei.com>
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ sound/ppc/snd_ps3.c | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/sound/ppc/snd_ps3.c b/sound/ppc/snd_ps3.c
+index 521236e..f77a0d5 100644
+--- a/sound/ppc/snd_ps3.c
++++ b/sound/ppc/snd_ps3.c
+@@ -233,7 +233,6 @@ static int snd_ps3_program_dma(struct snd_ps3_card_info *card,
+ 	int fill_stages, dma_ch, stage;
+ 	enum snd_ps3_ch ch;
+ 	uint32_t ch0_kick_event = 0; /* initialize to mute gcc */
+-	void *start_vaddr;
+ 	unsigned long irqsave;
+ 	int silent = 0;
+ 
+@@ -257,7 +256,6 @@ static int snd_ps3_program_dma(struct snd_ps3_card_info *card,
+ 	fill_stages = 4;
+ 	spin_lock_irqsave(&card->dma_lock, irqsave);
+ 	for (ch = 0; ch < 2; ch++) {
+-		start_vaddr = card->dma_next_transfer_vaddr[0];
+ 		for (stage = 0; stage < fill_stages; stage++) {
+ 			dma_ch = stage * 2 + ch;
+ 			if (silent)
+@@ -526,9 +524,7 @@ static int snd_ps3_pcm_open(struct snd_pcm_substream *substream)
+ {
+ 	struct snd_pcm_runtime *runtime = substream->runtime;
+ 	struct snd_ps3_card_info *card = snd_pcm_substream_chip(substream);
+-	int pcm_index;
+ 
+-	pcm_index = substream->pcm->device;
+ 	/* to retrieve substream/runtime in interrupt handler */
+ 	card->substream = substream;
+ 
+-- 
+2.7.4
+
 
