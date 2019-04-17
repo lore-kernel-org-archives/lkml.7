@@ -2,270 +2,164 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 27500C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:10:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C6C7C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:13:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DFE502177B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:10:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 15322206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:13:03 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555506783;
+	bh=Ca6GnRH7HPKk3qnnC0cJrkktI28Ofpufp92Le0W3m+g=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=LKJoTxgEMGy/HdEYfSonHENIukb/MVzuFNsoxyGmdBxA3wn4cscg8S6XUQi1OuJjQ
+	 msf7rWBc0AFb9Kfs6F0HeQr5EQPzD+0gzkUZ9Ip8nY8GKYRSWFj8mA24Ci5X8VmB/g
+	 BMuyUCbfuBNv0nH7F646Zayc0UGsFbtFpPvZR3aQ=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732219AbfDQNKo (ORCPT
+        id S1732199AbfDQNNB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 09:10:44 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56314 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726800AbfDQNKn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 09:10:43 -0400
-Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 6820830842AC;
-        Wed, 17 Apr 2019 13:10:42 +0000 (UTC)
-Received: from [10.36.116.187] (ovpn-116-187.ams2.redhat.com [10.36.116.187])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2A5355D9E1;
-        Wed, 17 Apr 2019 13:10:39 +0000 (UTC)
-Subject: Re: [PATCH v1 2/4] mm/memory_hotplug: Make
- unregister_memory_section() never fail
-To:     Oscar Salvador <osalvador@suse.de>, linux-mm@kvack.org
-Cc:     linux-kernel@vger.kernel.org,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        "Rafael J. Wysocki" <rafael@kernel.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Andrew Banman <andrew.banman@hpe.com>,
-        "mike.travis@hpe.com" <mike.travis@hpe.com>,
+        Wed, 17 Apr 2019 09:13:01 -0400
+Received: from mx2.suse.de ([195.135.220.15]:57998 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730209AbfDQNNB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 09:13:01 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 51D34B171;
+        Wed, 17 Apr 2019 13:12:59 +0000 (UTC)
+Date:   Wed, 17 Apr 2019 15:12:58 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     David Hildenbrand <david@redhat.com>
+Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
         Andrew Morton <akpm@linux-foundation.org>,
-        Michal Hocko <mhocko@suse.com>,
+        Oscar Salvador <osalvador@suse.de>,
         Pavel Tatashin <pasha.tatashin@soleen.com>,
-        Qian Cai <cai@lca.pw>, Wei Yang <richard.weiyang@gmail.com>,
+        Wei Yang <richard.weiyang@gmail.com>, Qian Cai <cai@lca.pw>,
         Arun KS <arunks@codeaurora.org>,
         Mathieu Malaterre <malat@debian.org>
+Subject: Re: [PATCH v1 1/4] mm/memory_hotplug: Release memory resource after
+ arch_remove_memory()
+Message-ID: <20190417131258.GI5878@dhcp22.suse.cz>
 References: <20190409100148.24703-1-david@redhat.com>
- <20190409100148.24703-3-david@redhat.com> <1555505146.3139.26.camel@suse.de>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <d4b774c1-64a6-87f1-892e-8f3d447433c8@redhat.com>
-Date:   Wed, 17 Apr 2019 15:10:38 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ <20190409100148.24703-2-david@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <1555505146.3139.26.camel@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 17 Apr 2019 13:10:42 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190409100148.24703-2-david@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17.04.19 14:45, Oscar Salvador wrote:
-> On Tue, 2019-04-09 at 12:01 +0200, David Hildenbrand wrote:
->> Failing while removing memory is mostly ignored and cannot really be
->> handled. Let's treat errors in unregister_memory_section() in a nice
->> way, warning, but continuing.
->>
->> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
->> Cc: "Rafael J. Wysocki" <rafael@kernel.org>
->> Cc: Ingo Molnar <mingo@kernel.org>
->> Cc: Andrew Banman <andrew.banman@hpe.com>
->> Cc: "mike.travis@hpe.com" <mike.travis@hpe.com>
->> Cc: David Hildenbrand <david@redhat.com>
->> Cc: Andrew Morton <akpm@linux-foundation.org>
->> Cc: Oscar Salvador <osalvador@suse.de>
->> Cc: Michal Hocko <mhocko@suse.com>
->> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
->> Cc: Qian Cai <cai@lca.pw>
->> Cc: Wei Yang <richard.weiyang@gmail.com>
->> Cc: Arun KS <arunks@codeaurora.org>
->> Cc: Mathieu Malaterre <malat@debian.org>
->> Signed-off-by: David Hildenbrand <david@redhat.com>
->> ---
->>  drivers/base/memory.c  | 16 +++++-----------
->>  include/linux/memory.h |  2 +-
->>  mm/memory_hotplug.c    |  4 +---
->>  3 files changed, 7 insertions(+), 15 deletions(-)
->>
->> diff --git a/drivers/base/memory.c b/drivers/base/memory.c
->> index 0c9e22ffa47a..f180427e48f4 100644
->> --- a/drivers/base/memory.c
->> +++ b/drivers/base/memory.c
->> @@ -734,15 +734,18 @@ unregister_memory(struct memory_block *memory)
->>  {
->>  	BUG_ON(memory->dev.bus != &memory_subsys);
->>  
->> -	/* drop the ref. we got in remove_memory_section() */
->> +	/* drop the ref. we got via find_memory_block() */
->>  	put_device(&memory->dev);
->>  	device_unregister(&memory->dev);
->>  }
->>  
->> -static int remove_memory_section(struct mem_section *section)
->> +void unregister_memory_section(struct mem_section *section)
->>  {
->>  	struct memory_block *mem;
->>  
->> +	if (WARN_ON_ONCE(!present_section(section)))
->> +		return;
->> +
->>  	mutex_lock(&mem_sysfs_mutex);
->>  
->>  	/*
->> @@ -763,15 +766,6 @@ static int remove_memory_section(struct
->> mem_section *section)
->>  
->>  out_unlock:
->>  	mutex_unlock(&mem_sysfs_mutex);
->> -	return 0;
->> -}
->> -
->> -int unregister_memory_section(struct mem_section *section)
->> -{
->> -	if (!present_section(section))
->> -		return -EINVAL;
->> -
->> -	return remove_memory_section(section);
->>  }
->>  #endif /* CONFIG_MEMORY_HOTREMOVE */
->>  
->> diff --git a/include/linux/memory.h b/include/linux/memory.h
->> index a6ddefc60517..e1dc1bb2b787 100644
->> --- a/include/linux/memory.h
->> +++ b/include/linux/memory.h
->> @@ -113,7 +113,7 @@ extern int
->> register_memory_isolate_notifier(struct notifier_block *nb);
->>  extern void unregister_memory_isolate_notifier(struct notifier_block
->> *nb);
->>  int hotplug_memory_register(int nid, struct mem_section *section);
->>  #ifdef CONFIG_MEMORY_HOTREMOVE
->> -extern int unregister_memory_section(struct mem_section *);
->> +extern void unregister_memory_section(struct mem_section *);
->>  #endif
->>  extern int memory_dev_init(void);
->>  extern int memory_notify(unsigned long val, void *v);
->> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
->> index 696ed7ee5e28..b0cb05748f99 100644
->> --- a/mm/memory_hotplug.c
->> +++ b/mm/memory_hotplug.c
->> @@ -527,9 +527,7 @@ static int __remove_section(struct zone *zone,
->> struct mem_section *ms,
->>  	if (!valid_section(ms))
->>  		return ret;
->>  
->> -	ret = unregister_memory_section(ms);
->> -	if (ret)
->> -		return ret;
->> +	unregister_memory_section(ms);
+On Tue 09-04-19 12:01:45, David Hildenbrand wrote:
+> __add_pages() doesn't add the memory resource, so __remove_pages()
+> shouldn't remove it. Let's factor it out. Especially as it is a special
+> case for memory used as system memory, added via add_memory() and
+> friends.
 > 
-> So, technically unregister_memory_section() can __only__ fail in case
-> the section is not present, returning -EINVAL.
+> We now remove the resource after removing the sections instead of doing
+> it the other way around. I don't think this change is problematic.
 > 
-> Now, I was checking how the pair valid/present sections work.
-> Unless I am mistaken, we only mark sections as memmap those sections
-> that are present.
+> add_memory()
+> 	register memory resource
+> 	arch_add_memory()
 > 
-> This can come from two paths:
+> remove_memory
+> 	arch_remove_memory()
+> 	release memory resource
 > 
-> - Early boot:
->   * memblocks_present
->      memory_present           - mark sections as present
->     sparse_init               - iterates only over present sections
->      sparse_init_nid
->       sparse_init_one_section - mark section as valid
-> 
-> - Hotplug path:
->   * sparse_add_one_section
->      section_mark_present     - mark section as present
->      sparse_init_one_section  - mark section as valid
->    
-> 
-> During early boot, sparse_init iterates __only__ over present sections,
-> so only those are marked valid as well, and during hotplug, the section
-> is both marked present and valid.
-> 
-> All in all, I think that we are safe if we remove the present_section
-> check in your new unregister_memory_section(), as a valid_section
-> cannot be non-present, and we do already catch those early in
-> __remove_section().
+> While at it, explain why we ignore errors and that it only happeny if
+> we remove memory in a different granularity as we added it.
 
-Yes, dropping the check completely would be the next step.
+OK, I agree that the symmetry is good in general and it certainly makes
+sense here as well. But does it make sense to pick up this particular
+part without larger considerations of add vs. remove apis? I have a
+strong feeling this wouldn't be the only thing to care about. In other
+words does this help future changes or it is more likely to cause more
+code conflicts with other features being developed right now?
 
+> Cc: Andrew Morton <akpm@linux-foundation.org>
+> Cc: Oscar Salvador <osalvador@suse.de>
+> Cc: Michal Hocko <mhocko@suse.com>
+> Cc: David Hildenbrand <david@redhat.com>
+> Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+> Cc: Wei Yang <richard.weiyang@gmail.com>
+> Cc: Qian Cai <cai@lca.pw>
+> Cc: Arun KS <arunks@codeaurora.org>
+> Cc: Mathieu Malaterre <malat@debian.org>
+> Signed-off-by: David Hildenbrand <david@redhat.com>
+> ---
+>  mm/memory_hotplug.c | 34 ++++++++++++++++++++--------------
+>  1 file changed, 20 insertions(+), 14 deletions(-)
 > 
-> Then, the only thing missing to be completely error-less in that
-> codepath is to make unregister_mem_sect_under_nodes() void return-type.
-> Not that it matters a lot as we are already ignoring its return code,
-> but I find that quite disturbing and wrong.
+> diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+> index 4970ff658055..696ed7ee5e28 100644
+> --- a/mm/memory_hotplug.c
+> +++ b/mm/memory_hotplug.c
+> @@ -562,20 +562,6 @@ int __remove_pages(struct zone *zone, unsigned long phys_start_pfn,
+>  	if (is_dev_zone(zone)) {
+>  		if (altmap)
+>  			map_offset = vmem_altmap_offset(altmap);
+> -	} else {
+> -		resource_size_t start, size;
+> -
+> -		start = phys_start_pfn << PAGE_SHIFT;
+> -		size = nr_pages * PAGE_SIZE;
+> -
+> -		ret = release_mem_region_adjustable(&iomem_resource, start,
+> -					size);
+> -		if (ret) {
+> -			resource_size_t endres = start + size - 1;
+> -
+> -			pr_warn("Unable to release resource <%pa-%pa> (%d)\n",
+> -					&start, &endres, ret);
+> -		}
+>  	}
+>  
+>  	clear_zone_contiguous(zone);
+> @@ -1820,6 +1806,25 @@ void try_offline_node(int nid)
+>  }
+>  EXPORT_SYMBOL(try_offline_node);
+>  
+> +static void __release_memory_resource(u64 start, u64 size)
+> +{
+> +	int ret;
+> +
+> +	/*
+> +	 * When removing memory in the same granularity as it was added,
+> +	 * this function never fails. It might only fail if resources
+> +	 * have to be adjusted or split. We'll ignore the error, as
+> +	 * removing of memory cannot fail.
+> +	 */
+> +	ret = release_mem_region_adjustable(&iomem_resource, start, size);
+> +	if (ret) {
+> +		resource_size_t endres = start + size - 1;
+> +
+> +		pr_warn("Unable to release resource <%pa-%pa> (%d)\n",
+> +			&start, &endres, ret);
+> +	}
+> +}
+> +
+>  /**
+>   * remove_memory
+>   * @nid: the node ID
+> @@ -1854,6 +1859,7 @@ void __ref __remove_memory(int nid, u64 start, u64 size)
+>  	memblock_remove(start, size);
+>  
+>  	arch_remove_memory(nid, start, size, NULL);
+> +	__release_memory_resource(start, size);
+>  
+>  	try_offline_node(nid);
+>  
+> -- 
+> 2.17.2
 > 
-> So, would you like to take this patch in your patchset in case you re-
-> submit?
-
-I already had a look at that approach but would like to defer it, until
-I eventually factor out creation/deletion of memory devices (see my
-other RFC, still some work has to be done).
-
-Reasons:
-
-1. We only support unplug of system ram memory belonging to exactly one
-node. No need to iterate over all nodes. mem->node should later tell us
-exactly what needs to be removed. No need to iterate at all.
-
-2. unregister_mem_sect_under_nodes() should be replaced by
-"unregister_mem_block_under_nodes()". We only support unplug of whole
-memory blocks. Ripping out random sections from a memory block is not
-going to work and is not supported.
-
-IOW, this is some leftover when people turned memory block devices to
-span multiple sections. Once we clean that up, this problem goes away.
 
 -- 
-
-Thanks,
-
-David / dhildenb
+Michal Hocko
+SUSE Labs
