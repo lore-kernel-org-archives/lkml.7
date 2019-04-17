@@ -2,92 +2,108 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 28CEEC282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:00:14 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7DE68C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:04:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 064932173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:00:14 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 45F3920675
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:04:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732931AbfDQRAM (ORCPT
+        id S1732902AbfDQREm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 13:00:12 -0400
-Received: from guitar.tcltek.co.il ([192.115.133.116]:57569 "EHLO
-        mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1732737AbfDQRAM (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 13:00:12 -0400
-Received: from tarshish (unknown [10.0.8.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx.tkos.co.il (Postfix) with ESMTPS id C80244406EA;
-        Wed, 17 Apr 2019 20:00:10 +0300 (IDT)
-References: <20190417151348.100050-1-arnd@arndb.de>
-User-agent: mu4e 1.0; emacs 26.1
-From:   Baruch Siach <baruch@tkos.co.il>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     arm@kernel.org, Russell King <linux@armlinux.org.uk>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v3] ARM: debug-ll: add default address for digicolor
-In-reply-to: <20190417151348.100050-1-arnd@arndb.de>
-Date:   Wed, 17 Apr 2019 20:00:10 +0300
-Message-ID: <87y348h8it.fsf@tarshish>
+        Wed, 17 Apr 2019 13:04:42 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60470 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729512AbfDQREm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 13:04:42 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 2C54DADC1;
+        Wed, 17 Apr 2019 17:04:40 +0000 (UTC)
+Subject: Re: [PATCH v10 0/7] Add Fieldbus subsystem + support HMS Profinet
+ card
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com,
+        treding@nvidia.com, David Lechner <david@lechnology.com>,
+        noralf@tronnes.org, johan@kernel.org,
+        Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg KH <gregkh@linuxfoundation.org>, john.garry@huawei.com,
+        geert+renesas@glider.be, robin.murphy@arm.com,
+        Paul Gortmaker <paul.gortmaker@windriver.com>,
+        sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io,
+        Stuart Yoder <stuyoder@gmail.com>,
+        "J. Kiszka" <jan.kiszka@siemens.com>, maxime.ripard@bootlin.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+References: <20190409144250.7237-1-TheSven73@gmail.com>
+ <982e69c6-4e68-6f62-8bed-cd5a1802272b@metux.net>
+ <CAGngYiUTHZFFY=H7xXHzZnN4pS0jAqWBTrcw04hjf5S-ykxC9w@mail.gmail.com>
+ <c1831703-a476-8870-0a5f-9060bda0f669@metux.net>
+From:   =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Openpgp: preference=signencrypt
+Organization: SUSE Linux GmbH
+Message-ID: <31245f21-ae98-f10f-9484-a1719164ce16@suse.de>
+Date:   Wed, 17 Apr 2019 19:04:37 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain
+In-Reply-To: <c1831703-a476-8870-0a5f-9060bda0f669@metux.net>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
+Hi Enrico,
 
-On Wed, Apr 17 2019, Arnd Bergmann wrote:
-> The digicolor platform has three UARTs, but the Kconfig.debug
-> file explicitly lists port zero as the one to be used for the
-> console, while not providing any default values.
->
-> This can get an automated randconfig build stuck in a loop
-> waiting for the user to input the number. As we already know
-> the physical address, this patch provides that number as
-> default, along with a reasonable default value for the virtual
-> address.
->
-> Cc: Baruch Siach <baruch@tkos.co.il>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+Am 16.04.19 um 18:49 schrieb Enrico Weigelt, metux IT consult:
+> On 15.04.19 20:31, Sven Van Asbroeck wrote:
+>>> Maybe it would be better calling it "IEC-61158" instead of "fieldbus" ?>>> > Yes, we are certainly open to that, if it is more correct and/or
+> better> accepted by users.
+> Thanks, I'd really appreciate that :)
+> 
+> Maybe I'm a bit beaurocratic here, but I really believe that precise
+> naming is important, eg. for avoiding potential conflicts w/ different
+> fieldbus classes (eg. mvb) that might come in the future.
 
-Reviewed-by: Baruch Siach <baruch@tkos.co.il>
+I somewhat see your point, but I would not have recognized iec61158 as
+something relevant to my hardware, whereas fieldbus is understandable.
 
-Thanks,
-baruch
+If you see specific conflicts or differences, please explain them
+instead of just throwing around bus names. :) Then we can more easily
+discuss whether to make changes to this framework or whether we indeed
+need some fieldbus/iec61158/ subdirectory. For your RS-485 I don't see a
+conflict as that'll just go via tty/serial/ and optionally serdev, no?
+However, I'd be curious how I/O Link might relate to this, it seems to
+have no public specifications.
 
-> ---
->  arch/arm/Kconfig.debug | 2 ++
->  1 file changed, 2 insertions(+)
->
-> diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-> index a8a1e14f20ab..3e33753bd60c 100644
-> --- a/arch/arm/Kconfig.debug
-> +++ b/arch/arm/Kconfig.debug
-> @@ -1676,6 +1676,7 @@ config DEBUG_UART_PHYS
->  	default 0xe6e68000 if DEBUG_RCAR_GEN2_SCIF1
->  	default 0xe6ee0000 if DEBUG_RCAR_GEN2_SCIF4
->  	default 0xe8008000 if DEBUG_R7S72100_SCIF2
-> +	default 0xf0000000 if DEBUG_DIGICOLOR_UA0
->  	default 0xf0000be0 if ARCH_EBSA110
->  	default 0xf1012000 if DEBUG_MVEBU_UART0_ALTERNATE
->  	default 0xf1012100 if DEBUG_MVEBU_UART1_ALTERNATE
-> @@ -1728,6 +1729,7 @@ config DEBUG_UART_VIRT
->  	default 0xe0010fe0 if ARCH_RPC
->  	default 0xf0000be0 if ARCH_EBSA110
->  	default 0xf0010000 if DEBUG_ASM9260_UART
-> +	default 0xf0100000 if DEBUG_DIGICOLOR_UA0
->  	default 0xf01fb000 if DEBUG_NOMADIK_UART
->  	default 0xf0201000 if DEBUG_BCM2835 || DEBUG_BCM2836
->  	default 0xf1000300 if DEBUG_BCM_5301X
+> By the way: any special reason for doing this via device instead of
+> socket (like we have w/ can) ?
+> 
+> I'm, personally, pretty undecided which way is better. Device nodes give
+> us easy access control via fs permissions, while socket allows
+> firewalling.
+
+While I do like sockets, they seem more useful for packet-based
+communication, which may be an implementation detail of fieldbus_dev
+drivers, but AFAIU that's unrelated to Sven's memory-focused subsystem
+representing a view of the data received, which may be different from
+the last packet received. Also, when a packet is received via socket, it
+gets dequeued, whereas you'll want to access the device's memory without
+restrictions.
+
+Cheers,
+Andreas
 
 -- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
+SUSE Linux GmbH, Maxfeldstr. 5, 90409 Nürnberg, Germany
+GF: Felix Imendörffer, Mary Higgins, Sri Rasiah
+HRB 21284 (AG Nürnberg)
