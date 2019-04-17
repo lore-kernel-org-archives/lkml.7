@@ -2,183 +2,241 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7EFDDC10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:16:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 33FEAC10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:17:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A5582073F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:16:06 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="Bbz+OmU4"
+	by mail.kernel.org (Postfix) with ESMTP id F15252073F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:17:31 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731278AbfDQIQF (ORCPT
+        id S1731223AbfDQIRa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 04:16:05 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:50780 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727013AbfDQIQE (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 04:16:04 -0400
-Received: from lelv0265.itg.ti.com ([10.180.67.224])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3H8FBbJ081109;
-        Wed, 17 Apr 2019 03:15:11 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1555488911;
-        bh=wumQSc7E0aWFhIfz28v7eV7qfBezwMbHOMI9jrH1/X0=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=Bbz+OmU4bgWdnzlzCPj8sCOY1KcawHsGxVOQrGNOHsOiG045xF2xqAa6VdSFzburZ
-         EP17W+4h4AyK0Qn13JQRmJfzDBMfcWgpywFAkr8CmFq8J9+fztgD2rcrLXMTNT48EF
-         LFaadv7fIwkIrVEiJ4460JEfxycfZpvPP4npeWtc=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by lelv0265.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3H8FBK5075612
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 17 Apr 2019 03:15:11 -0500
-Received: from DFLE107.ent.ti.com (10.64.6.28) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 17
- Apr 2019 03:15:10 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DFLE107.ent.ti.com
- (10.64.6.28) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 17 Apr 2019 03:15:11 -0500
-Received: from [172.24.190.172] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3H8F7R3061372;
-        Wed, 17 Apr 2019 03:15:07 -0500
-Subject: Re: [PATCH v3 1/3] ARM: dts: da850: add cpu node and operating points
- to DT
-To:     Adam Ford <aford173@gmail.com>, Bartosz Golaszewski <brgl@bgdev.pl>
-CC:     David Lechner <david@lechnology.com>,
-        Kevin Hilman <khilman@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        devicetree <devicetree@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Bartosz Golaszewski <bgolaszewski@baylibre.com>
-References: <20190408075924.2284-1-brgl@bgdev.pl>
- <20190408075924.2284-2-brgl@bgdev.pl>
- <5f72a26b-428a-c50e-cb6a-7c888ea22329@ti.com>
- <CAMRc=McGwGh9RKhxxCDnz3aMG_EVjjXzN+pmMZVtE7aChdU3jw@mail.gmail.com>
- <3f6c906b-53b0-8284-bf4d-9b404f341e7b@ti.com>
- <CAMRc=Me8vppb9vEmKOUcU28YKVR9jJ64sBSn-KwNyNnZA=VB9Q@mail.gmail.com>
- <6ff5711c-b607-1f3a-e362-709b53762179@ti.com>
- <CAMRc=Mfb4xrpLkJoX0SyoCPU6Au1TPxCtr29EhvU=VsKkSt2xQ@mail.gmail.com>
- <CAHCN7x+CAr9MjckhVP_suBRHY+o8Je1aLz28XTL9bnDBd4WyKA@mail.gmail.com>
-From:   Sekhar Nori <nsekhar@ti.com>
-Message-ID: <7a26df9e-4e8d-2da2-48ad-157a1fe68d66@ti.com>
-Date:   Wed, 17 Apr 2019 13:45:06 +0530
+        Wed, 17 Apr 2019 04:17:30 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:40254 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727013AbfDQIRa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 04:17:30 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9999CA78;
+        Wed, 17 Apr 2019 01:17:29 -0700 (PDT)
+Received: from [10.162.0.144] (a075553-lin.blr.arm.com [10.162.0.144])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1A89B3F690;
+        Wed, 17 Apr 2019 01:17:26 -0700 (PDT)
+Subject: Re: [PATCH v9 3/5] KVM: arm64: Add userspace flag to enable pointer
+ authentication
+To:     Dave Martin <Dave.Martin@arm.com>
+Cc:     linux-arm-kernel@lists.infradead.org,
+        Marc Zyngier <marc.zyngier@arm.com>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        kvmarm@lists.cs.columbia.edu,
+        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
+        linux-kernel@vger.kernel.org
+References: <1555039236-10608-1-git-send-email-amit.kachhap@arm.com>
+ <1555039236-10608-4-git-send-email-amit.kachhap@arm.com>
+ <20190416163110.GW3567@e103592.cambridge.arm.com>
+From:   Amit Daniel Kachhap <amit.kachhap@arm.com>
+Message-ID: <d27e74e0-ad26-c47e-4998-fd1d854fef18@arm.com>
+Date:   Wed, 17 Apr 2019 13:47:24 +0530
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+ Thunderbird/60.4.0
 MIME-Version: 1.0
-In-Reply-To: <CAHCN7x+CAr9MjckhVP_suBRHY+o8Je1aLz28XTL9bnDBd4WyKA@mail.gmail.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20190416163110.GW3567@e103592.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Language: en-US
-Content-Transfer-Encoding: 8bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16/04/19 5:18 PM, Adam Ford wrote:
-> On Tue, Apr 16, 2019 at 3:38 AM Bartosz Golaszewski <brgl@bgdev.pl> wrote:
+
+Hi,
+On 4/16/19 10:01 PM, Dave Martin wrote:
+> On Fri, Apr 12, 2019 at 08:50:34AM +0530, Amit Daniel Kachhap wrote:
+>> Now that the building blocks of pointer authentication are present, lets
+>> add userspace flags KVM_ARM_VCPU_PTRAUTH_ADDRESS and
+>> KVM_ARM_VCPU_PTRAUTH_GENERIC. These flags will enable pointer
+>> authentication for the KVM guest on a per-vcpu basis through the ioctl
+>> KVM_ARM_VCPU_INIT.
 >>
->> pon., 15 kwi 2019 o 12:21 Sekhar Nori <nsekhar@ti.com> napisał(a):
->>>
->>> On 12/04/19 9:01 PM, Bartosz Golaszewski wrote:
->>>> pt., 12 kwi 2019 o 15:53 Sekhar Nori <nsekhar@ti.com> napisał(a):
->>>>>
->>>>> On 12/04/19 5:41 PM, Bartosz Golaszewski wrote:
->>>>>> pt., 12 kwi 2019 o 13:26 Sekhar Nori <nsekhar@ti.com> napisał(a):
->>>>>>>
->>>>>>> Hi Bartosz,
->>>>>>>
->>>>>>> On 08/04/19 1:29 PM, Bartosz Golaszewski wrote:
->>>>>>>> From: David Lechner <david@lechnology.com>
->>>>>>>>
->>>>>>>> This adds a cpu node and operating points to the common da850.dtsi file.
->>>>>>>>
->>>>>>>> Additionally, a regulator is added to the LEGO EV3 board along with
->>>>>>>> some board-specific CPU configuration.
->>>>>>>>
->>>>>>>> Regulators need to be hooked up on other boards to get them working.
->>>>>>>>
->>>>>>>> Signed-off-by: David Lechner <david@lechnology.com>
->>>>>>>> Signed-off-by: Bartosz Golaszewski <bgolaszewski@baylibre.com>
->>>>>>>
->>>>>>> I remember you mentioning about some problems using OCHI and cpufreq
->>>>>>> together. Are those resolved now? CPU PLL on DA850 can affect other
->>>>>>> peripheral clock frequencies too. So enabling it should really be a
->>>>>>> per-board decision.
->>>>>>>
->>>>>>
->>>>>> The problems are still there. I've never been able to find the
->>>>>> culprit, but it also occurs on TI BSP in the same way (a couple
->>>>>> cpufreq transitions will make the controller unresponsive).
->>>>>
->>>>> Is that on LCDK as well? As I recall cpufreq was never enabled on LCDK
->>>>> in TI BSP.
->>>>>
->>>>
->>>> Yes, I just verified that the bug occurs on LCDK with patches from this series.
->>>>
->>>>> If the OHCI problem is present on LCDK, then there is a user visible
->>>>> regression on mainline after this patch. Lets enable cpufreq in LCDK
->>>>> only if all working peripherals keep working afterwards.
->>>>>
->>>>
->>>> The OHCI driver doesn't register any cpufreq transition notifier
->>>> callbacks. I can't really find anything in the datasheet, but I'm
->>>> wondering if we shouldn't do something similar to what the driver for
->>>> davinci i2c controller does. I'll try a couple things tomorrow.
->>>
->>> Even if OHCI issue is fixed, with a fixed regulator like on LCDK, I am
->>> not sure the benefits of just frequency scaling will be justifiable enough.
->>>
->>> Fixing the OHCI issue may help in other boards like da850-evm use it
->>> though. So that will be a good thing.
->>>
+>> This features will allow the KVM guest to allow the handling of
+>> pointer authentication instructions or to treat them as undefined
+>> if not set.
 >>
->> I've been trying different things, like suspending the device before
->> the transition, resetting the controller or playing with the clock
->> during transitions but it always results in the same kind of error:
+>> Necessary documentations are added to reflect the changes done.
 >>
->> ohci-da8xx 1e25000.usb: frame counter not updating; disabled
->> ohci-da8xx 1e25000.usb: HC died; cleaning up
->> usb 1-1: USB disconnect, device number 2
+>> Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
+>> Cc: Mark Rutland <mark.rutland@arm.com>
+>> Cc: Marc Zyngier <marc.zyngier@arm.com>
+>> Cc: Christoffer Dall <christoffer.dall@arm.com>
+>> Cc: kvmarm@lists.cs.columbia.edu
+>> ---
 >>
->> If you have any idea - let me know, otherwise I'll give up.
+>> Changes since v8:
+>> *  Update vcpu->arch.flags to final enable state. [Dave Martin]
+>> *  Change in Documentation to make clear the implementation of 2 vcpu
+>>     feature flags. [Dave Martin]
 >>
->> If we agree on the direction of these patches, then I can go with a
->> single enabled OPP for lcdk (456 MHz) and all OPPs up to 375 MHz
->> enabled for da850-evm.
+>>   Documentation/arm64/pointer-authentication.txt | 22 ++++++++++++++++++----
+>>   Documentation/virtual/kvm/api.txt              |  6 ++++++
+>>   arch/arm64/include/asm/kvm_host.h              |  2 +-
+>>   arch/arm64/include/uapi/asm/kvm.h              |  2 ++
+>>   arch/arm64/kvm/reset.c                         | 24 ++++++++++++++++++++++++
+>>   5 files changed, 51 insertions(+), 5 deletions(-)
+>>
+>> diff --git a/Documentation/arm64/pointer-authentication.txt b/Documentation/arm64/pointer-authentication.txt
+>> index 5baca42..fc71b33 100644
+>> --- a/Documentation/arm64/pointer-authentication.txt
+>> +++ b/Documentation/arm64/pointer-authentication.txt
+>> @@ -87,7 +87,21 @@ used to get and set the keys for a thread.
+>>   Virtualization
+>>   --------------
+>>   
+>> -Pointer authentication is not currently supported in KVM guests. KVM
+>> -will mask the feature bits from ID_AA64ISAR1_EL1, and attempted use of
+>> -the feature will result in an UNDEFINED exception being injected into
+>> -the guest.
+>> +Pointer authentication is enabled in KVM guest when each virtual cpu is
+>> +initialised by passing flags KVM_ARM_VCPU_PTRAUTH_[ADDRESS/GENERIC] and
+>> +requesting these two separate cpu features to be enabled. The current KVM
+>> +guest implementation works by enabling both features together, so both
+>> +these userspace flags are checked before enabling pointer authentication.
+>> +The separate userspace flag will allow to have no userspace ABI changes
+>> +if support is added in the future to allow these two features to be
+>> +enabled independently of one another.
+>> +
+>> +As Arm Architecture specifies that Pointer Authentication feature is
+>> +implemented along with the VHE feature so KVM arm64 ptrauth code relies
+>> +on VHE mode to be present.
+>> +
+>> +Additionally, when these vcpu feature flags are not set then KVM will
+>> +filter out the Pointer Authentication system key registers from
+>> +KVM_GET/SET_REG_* ioctls and mask those features from cpufeature ID
+>> +register. Any attempt to use the Pointer Authentication instructions will
+>> +result in an UNDEFINED exception being injected into the guest.
+>> diff --git a/Documentation/virtual/kvm/api.txt b/Documentation/virtual/kvm/api.txt
+>> index 68509de..9d202f4 100644
+>> --- a/Documentation/virtual/kvm/api.txt
+>> +++ b/Documentation/virtual/kvm/api.txt
+>> @@ -2753,6 +2753,12 @@ Possible features:
+>>   	  Depends on KVM_CAP_ARM_PSCI_0_2.
+>>   	- KVM_ARM_VCPU_PMU_V3: Emulate PMUv3 for the CPU.
+>>   	  Depends on KVM_CAP_ARM_PMU_V3.
+>> +	- KVM_ARM_VCPU_PTRAUTH_ADDRESS: Enables Address Pointer authentication
+>> +	  for the CPU and supported only on arm64 architecture.
 > 
-> One last questions, and this probably directed at Sekhar, but what
-> happens if you modify the OPP for the boards with fixed regulators to
-> enable all the frequencies but with the only available voltage.  Is
-> there harm is running the processor at a higher voltage than
-> necessary?  I did some quick experiments on a different ARM board and
-> I saw some changes in power consumption.  I would think some power
-> savings might be better than none, but I don't know if it causes> damage.
-
-The OMAP-L138 datasheet mentions two versions of devices in core voltage
-specification:
-
-Variable (1.2V-1.0V) for 375 MHz version
-Variable (1.3V-1.0V) for 456 MHz version
-
-If you have 375 MHz version of device, I do not think you should run at
-1.3V. I don't know what "damage" it will cause or how long it takes for
-any of it to be visible.
-
-Keeping that aside, I doubt there will be a lot of power-saving benefit
-without voltage scaling. Even if you see a slightly lower power number
-when you reduce frequency, there is also work to be done for the scaling
-operation itself.
-
+> Nit: (arm64 only) would be less verbose.
+ok.
+> 
+>> +	  Must be requested if KVM_ARM_VCPU_PTRAUTH_GENERIC is also requested.
+>> +	- KVM_ARM_VCPU_PTRAUTH_GENERIC: Enables Generic Pointer authentication
+>> +	  for the CPU and supported only on arm64 architecture.
+> 
+> Ditto.  (Not a big deal, though.)
+> 
+>> +	  Must be requested if KVM_ARM_VCPU_PTRAUTH_ADDRESS is also requested.
+>>   
+>>   	- KVM_ARM_VCPU_SVE: Enables SVE for the CPU (arm64 only).
+>>   	  Depends on KVM_CAP_ARM_SVE.
+>> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+>> index a585d82..25f2598 100644
+>> --- a/arch/arm64/include/asm/kvm_host.h
+>> +++ b/arch/arm64/include/asm/kvm_host.h
+>> @@ -49,7 +49,7 @@
+>>   
+>>   #define KVM_MAX_VCPUS VGIC_V3_MAX_CPUS
+>>   
+>> -#define KVM_VCPU_MAX_FEATURES 5
+>> +#define KVM_VCPU_MAX_FEATURES 7
+>>   
+>>   #define KVM_REQ_SLEEP \
+>>   	KVM_ARCH_REQ_FLAGS(0, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
+>> diff --git a/arch/arm64/include/uapi/asm/kvm.h b/arch/arm64/include/uapi/asm/kvm.h
+>> index 6963b7e..fec2253 100644
+>> --- a/arch/arm64/include/uapi/asm/kvm.h
+>> +++ b/arch/arm64/include/uapi/asm/kvm.h
+>> @@ -103,6 +103,8 @@ struct kvm_regs {
+>>   #define KVM_ARM_VCPU_PSCI_0_2		2 /* CPU uses PSCI v0.2 */
+>>   #define KVM_ARM_VCPU_PMU_V3		3 /* Support guest PMUv3 */
+>>   #define KVM_ARM_VCPU_SVE		4 /* enable SVE for this CPU */
+>> +#define KVM_ARM_VCPU_PTRAUTH_ADDRESS	5 /* VCPU uses address authentication */
+>> +#define KVM_ARM_VCPU_PTRAUTH_GENERIC	6 /* VCPU uses generic authentication */
+>>   
+>>   struct kvm_vcpu_init {
+>>   	__u32 target;
+>> diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
+>> index f13378d..d13406b 100644
+>> --- a/arch/arm64/kvm/reset.c
+>> +++ b/arch/arm64/kvm/reset.c
+>> @@ -221,6 +221,24 @@ static void kvm_vcpu_reset_sve(struct kvm_vcpu *vcpu)
+>>   		memset(vcpu->arch.sve_state, 0, vcpu_sve_state_size(vcpu));
+>>   }
+>>   
+>> +static int kvm_vcpu_enable_ptrauth(struct kvm_vcpu *vcpu)
+>> +{
+>> +	/* Support ptrauth only if the system supports these capabilities. */
+>> +	if (!has_vhe() || !system_supports_address_auth() ||
+>> +		!system_supports_generic_auth())
+>> +		return -EINVAL;
+> 
+> Nit: Funny indentation.  Please align with the "if (".  It's also
+> preferable to keep the two system_supports_xxx_auth() aligned or on the
+> same line, since they go together.  This might be clearer split up:
+> 
+> 	if (!has_vhe())
+> 		return -EINVAL;
+> 
+> 	if (!system_supports_address_auth() ||
+> 	    !system_supports_generic_auth())
+> 		return -EINVAL;
+ok.
+> 
+>> +	/*
+> 
+> I'd say "for now" here, since we might relax this rule later on.
+> 
+>> +	 * Make sure that both address/generic pointer authentication
+>> +	 * features are requested by the userspace together.
+>> +	 */
+>> +	if (!test_bit(KVM_ARM_VCPU_PTRAUTH_ADDRESS, vcpu->arch.features) ||
+>> +		!test_bit(KVM_ARM_VCPU_PTRAUTH_GENERIC, vcpu->arch.features))
+>> +		return -EINVAL;
+>> +
+>> +	vcpu->arch.flags |= KVM_ARM64_GUEST_HAS_PTRAUTH;
+>> +	return 0;
+>> +}
+>> +
+>>   /**
+>>    * kvm_reset_vcpu - sets core registers and sys_regs to reset value
+>>    * @vcpu: The VCPU pointer
+>> @@ -261,6 +279,12 @@ int kvm_reset_vcpu(struct kvm_vcpu *vcpu)
+>>   		kvm_vcpu_reset_sve(vcpu);
+>>   	}
+>>   
+>> +	if (test_bit(KVM_ARM_VCPU_PTRAUTH_ADDRESS, vcpu->arch.features) ||
+>> +		test_bit(KVM_ARM_VCPU_PTRAUTH_GENERIC, vcpu->arch.features)) {
+> 
+> Nit: funny indentation.
+> 
+>> +		if (kvm_vcpu_enable_ptrauth(vcpu))
+>> +			goto out;
+>> +	}
+>> +
+> 
+> [...]
+> 
+> With those fixed,
+sure.
+> 
+> Reviewed-by: Dave Martin <Dave.Martin@arm.com>
 Thanks,
-Sekhar
+Amit
+> 
+> Cheers
+> ---Dave
+> 
