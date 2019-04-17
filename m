@@ -2,225 +2,198 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3ED95C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:06:01 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 96052C10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:06:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 02818206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:06:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 59908206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:06:07 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="gXXboVc7"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Gai/umrG"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731207AbfDQIGA (ORCPT
+        id S1731238AbfDQIGG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 04:06:00 -0400
-Received: from mail-wm1-f67.google.com ([209.85.128.67]:51608 "EHLO
-        mail-wm1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727087AbfDQIF7 (ORCPT
+        Wed, 17 Apr 2019 04:06:06 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:54332 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728373AbfDQIGF (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 04:05:59 -0400
-Received: by mail-wm1-f67.google.com with SMTP id 4so2216094wmf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 01:05:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=PI+9kWespWroqsfzmFgybRIIwFO/E+pJGyIm3CKWQLk=;
-        b=gXXboVc7qabiIXe3lYXP1Wl9FxK0ashMrfEYGagnHJFD+7QvNTKwB8TW4rJpCD74KR
-         KZSfeTyx5bEtnVkmVmDYdNH8oNnfL9VfNusSd+7Nc0F3Yk3QVMh5mInI+t7ojUWAtpaR
-         CSHoGrV7wPdzdrtJ/yMWed2CNvtG0UTPJTwfbeo1+lf3qlctVlqawboMv8ZomGCY2bEp
-         WLmq17crmrQu/wkgw39ufFChcG2iBqiXt0kLhPeW3pHPPseMFSMBUDjRlkG7NoQgNLjv
-         AQX3RNGQ6wB5oiZoXtBzL7GTz6/mUmRtLq215z+lNNhkYiDw1E9DQxCLEIfiRIQgxhZW
-         Mt2A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=PI+9kWespWroqsfzmFgybRIIwFO/E+pJGyIm3CKWQLk=;
-        b=PEQsdVtxBy7HK8zC+uDr01IPcoilTeIWMuWDHMpM/g36o92pDQxnLwvqfbaVgj9D+g
-         75/JrNbFrvI1e/eGryF5hHx6Fm4AeRNwbp7B3/7Vw4V/DZr2ULj1SHdcq56GwY9EApzd
-         C0mVhmBMYM0NOzUQTL4fQ3RonZtASGBFlRRNvzO6em5EfYTrsmBsNaktrWlb3xUiuwcx
-         VO8arNmLoQteEvAmv7wKUE5qwr8H1DZ/q0Gmh6IFkYzZqKb5mqoMQMGddeQB7ZDq1nDd
-         SR/tTLDGuMGiLRISFarGRYa+g4DZiSt8TtdnSp8OgFjvTPOE33WAi7oJkdnqaccZxBXy
-         OBHQ==
-X-Gm-Message-State: APjAAAVmIdJUjll1/rXEWIObw7G0DOhFJu/DLUHtkoEcSlcFX6zDRpSf
-        RgEoFHrpPvamANyaxOtUY88uhE0/cJI=
-X-Google-Smtp-Source: APXvYqwMFbXOOGHbif5JJqQI4qd9Xeafj7oVZ0bCwVCGmINLYB3KNLVYoPUGho/dIl763uzppkCxSg==
-X-Received: by 2002:a1c:495:: with SMTP id 143mr28199857wme.78.1555488357246;
-        Wed, 17 Apr 2019 01:05:57 -0700 (PDT)
-Received: from [192.168.0.41] (62.29.129.77.rev.sfr.net. [77.129.29.62])
-        by smtp.googlemail.com with ESMTPSA id x192sm1728948wmf.48.2019.04.17.01.05.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Apr 2019 01:05:56 -0700 (PDT)
-Subject: Re: [PATCH v1 1/1] thermal: rcar_gen3_thermal: request IRQ after
- device initialization
-To:     Jiada Wang <jiada_wang@mentor.com>, rui.zhang@intel.com,
-        edubezval@gmail.com
-Cc:     linux-pm@vger.kernel.org, linux-kernel@vger.kernel.org
-References: <20190411100352.15977-1-jiada_wang@mentor.com>
- <92504666-9e17-4c6d-fc74-6cf68b9f017b@linaro.org>
- <9a4de8ca-fa49-2050-e40b-b54d03484213@mentor.com>
-From:   Daniel Lezcano <daniel.lezcano@linaro.org>
-Message-ID: <5e685e1d-dca7-7292-1342-dbe609c517d2@linaro.org>
-Date:   Wed, 17 Apr 2019 10:05:55 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 17 Apr 2019 04:06:05 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=wSQxgLC5Hy48gnSZgUERxB5HKeEI4hy3A6LfcwqNs7Q=; b=Gai/umrGbb4i8h2P4E1YcNJgE
+        sHB7ZjWHi/WyZqmecdm1+rnhdbpf8Qii3Lkh7FuFheSxRO6YPB6Yrrfjnk4ZHa96cZfBTIVjN7otE
+        2xlRLzi0YMEb0InNgFqVJs7s+RAzv3YswWJLH66gtR3EutrLiDBr2FU1tWLS/MP9SgrA+5AbVNWtI
+        IN7lXEKdDoSmwsLxpQY69fIWyyBOHAqahrhdQ+vdklWO5Xo4sXBCRw+kh5xRITOiQYHGGdYm6hUwj
+        EeLITIrbsSgtOw0RtFGB2fxIpkeiwPgVi4xB0in6oDWrVBj/HlohghCpqv4nQS9/IcTCcbB6UerYJ
+        ujO05Xarg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hGfZo-0006KG-B1; Wed, 17 Apr 2019 08:05:52 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id E9D2829B52932; Wed, 17 Apr 2019 10:05:49 +0200 (CEST)
+Date:   Wed, 17 Apr 2019 10:05:49 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+Subject: Re: [PATCH v4 07/16] locking/rwsem: Implement lock handoff to
+ prevent lock starvation
+Message-ID: <20190417080549.GA4038@hirez.programming.kicks-ass.net>
+References: <20190413172259.2740-1-longman@redhat.com>
+ <20190413172259.2740-8-longman@redhat.com>
+ <20190416154937.GL12232@hirez.programming.kicks-ass.net>
+ <d10586ae-cd86-2992-766b-1ba4a4807b6a@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <9a4de8ca-fa49-2050-e40b-b54d03484213@mentor.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <d10586ae-cd86-2992-766b-1ba4a4807b6a@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/04/2019 05:01, Jiada Wang wrote:
-> Hi Daniel
+On Tue, Apr 16, 2019 at 02:16:11PM -0400, Waiman Long wrote:
+
+> >> @@ -608,56 +687,63 @@ __rwsem_down_write_failed_common(struct rw_semaphore *sem, int state)
+> >>  	 */
+> >>  	waiter.task = current;
+> >>  	waiter.type = RWSEM_WAITING_FOR_WRITE;
+> >> +	waiter.timeout = jiffies + RWSEM_WAIT_TIMEOUT;
+> >>  
+> >>  	raw_spin_lock_irq(&sem->wait_lock);
+> >>  
+> >>  	/* account for this before adding a new element to the list */
+> >> +	wstate = list_empty(&sem->wait_list) ? WRITER_FIRST : WRITER_NOT_FIRST;
+> >>  
+> >>  	list_add_tail(&waiter.list, &sem->wait_list);
+> >>  
+> >>  	/* we're now waiting on the lock */
+> >> +	if (wstate == WRITER_NOT_FIRST) {
+> >>  		count = atomic_long_read(&sem->count);
+> >>  
+> >>  		/*
+> >> +		 * If there were already threads queued before us and:
+> >> +		 *  1) there are no no active locks, wake the front
+> >> +		 *     queued process(es) as the handoff bit might be set.
+> >> +		 *  2) there are no active writers and some readers, the lock
+> >> +		 *     must be read owned; so we try to wake any read lock
+> >> +		 *     waiters that were queued ahead of us.
+> >>  		 */
+> >> +		if (!RWSEM_COUNT_LOCKED(count))
+> >> +			__rwsem_mark_wake(sem, RWSEM_WAKE_ANY, &wake_q);
+> >> +		else if (!(count & RWSEM_WRITER_MASK) &&
+> >> +			  (count & RWSEM_READER_MASK))
+> >>  			__rwsem_mark_wake(sem, RWSEM_WAKE_READERS, &wake_q);
+
+> > Does the above want to be something like:
+> >
+> > 		if (!(count & RWSEM_WRITER_LOCKED)) {
+> > 			__rwsem_mark_wake(sem, (count & RWSEM_READER_MASK) ?
+> > 					       RWSEM_WAKE_READERS :
+> > 					       RWSEM_WAKE_ANY, &wake_q);
+> > 		}
 > 
-> On 2019/04/17 4:22, Daniel Lezcano wrote:
->> On 11/04/2019 12:03, Jiada Wang wrote:
->>> Currently IRQ is remain enabled after .remove, later if device is
->>> probed,
->>> IRQ is requested before .thermal_init, this may cause IRQ function be
->>> triggered but not able to clear IRQ status, thus cause system to hang.
->>>
->>> this patch by moving request of IRQ after device initialization to
->>> avoid this issue.
->>
->> Why not disable the interrupt and clear the irq status in the .remove
->> callback, so the place is clean when probing again?
->>
->>
->>          struct rcar_gen3_thermal_priv *priv = dev_get_drvdata(dev);
->>
->>          rcar_thermal_irq_set(priv, false);
->>
->> should do the trick no ?
->>
-> yes, this issue also can be addressed by disable the interrupt in .remove.
+> Yes.
 > 
-> But there is race condition between .remove and irq thread function,
-> (which enables IRQ)
-> so driver need to ensure threaded irq has been disabled before call
-> rcar_thermal_irq_set(priv, false) in .remove.
-> this adds additional complexity.
+> >> +		else
+> >> +			goto wait;
+> >>  
+> >> +		/*
+> >> +		 * The wakeup is normally called _after_ the wait_lock
+> >> +		 * is released, but given that we are proactively waking
+> >> +		 * readers we can deal with the wake_q overhead as it is
+> >> +		 * similar to releasing and taking the wait_lock again
+> >> +		 * for attempting rwsem_try_write_lock().
+> >> +		 */
+> >> +		wake_up_q(&wake_q);
+> > Hurmph.. the reason we do wake_up_q() outside of wait_lock is such that
+> > those tasks don't bounce on wait_lock. Also, it removes a great deal of
+> > hold-time from wait_lock.
+> >
+> > So I'm not sure I buy your argument here.
+> >
 > 
-> I am fine with both solutions,
-> what is your opinion?
+> Actually, we don't want to release the wait_lock, do wake_up_q() and
+> acquire the wait_lock again as the state would have been changed. I
+> didn't change the comment on this patch, but will reword it to discuss that.
 
-My opinion is it is the tree hiding the forest.
+I don't understand, we've queued ourselves, we're on the list, we're not
+first. How would dropping the lock to try and kick waiters before us be
+a problem?
 
-After a quick look at the irq setup and handling, it appears the
-implementation is cumbersome. This part should be fixed before the rest:
+Sure, once we re-acquire the lock we have to re-avaluate @wstate to see
+if we're first now or not, but we need to do that anyway.
 
- - check IRQF_ONESHOT flag
- - remove the lock in the interrupt handlers
- - remove rcar_gen3_thermal_irq() which is pointless
- - check the IRQF_SHARED flag is correct (I doubt)
+So what is wrong with the below?
 
-As the function devm_request_threaded_irq() is called 3 times, you
-should add the priv->tscs[i]->zone in the private data and the irq
-thread handler should look like:
-
-static irqreturn_t rcar_gen3_thermal_irq_thread(int irq, void *data)
-{
-	struct thermal_zone_device *tz = data;
-
-	thermal_zone_device_update(tz, THERMAL_EVENT_UNSPECIFIED);
-
-	[ ... ]
-
-        return IRQ_HANDLED;
-}
-
-When the implementation is fixed, then we can take care of the .remove
-
->>> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
->>> ---
->>>   drivers/thermal/rcar_gen3_thermal.c | 48 ++++++++++++++++-------------
->>>   1 file changed, 26 insertions(+), 22 deletions(-)
->>>
->>> diff --git a/drivers/thermal/rcar_gen3_thermal.c
->>> b/drivers/thermal/rcar_gen3_thermal.c
->>> index 88fa41cf16e8..4d095d7f9763 100644
->>> --- a/drivers/thermal/rcar_gen3_thermal.c
->>> +++ b/drivers/thermal/rcar_gen3_thermal.c
->>> @@ -375,28 +375,6 @@ static int rcar_gen3_thermal_probe(struct
->>> platform_device *pdev)
->>>         platform_set_drvdata(pdev, priv);
->>>   -    /*
->>> -     * Request 2 (of the 3 possible) IRQs, the driver only needs to
->>> -     * to trigger on the low and high trip points of the current
->>> -     * temp window at this point.
->>> -     */
->>> -    for (i = 0; i < 2; i++) {
->>> -        irq = platform_get_irq(pdev, i);
->>> -        if (irq < 0)
->>> -            return irq;
->>> -
->>> -        irqname = devm_kasprintf(dev, GFP_KERNEL, "%s:ch%d",
->>> -                     dev_name(dev), i);
->>> -        if (!irqname)
->>> -            return -ENOMEM;
->>> -
->>> -        ret = devm_request_threaded_irq(dev, irq,
->>> rcar_gen3_thermal_irq,
->>> -                        rcar_gen3_thermal_irq_thread,
->>> -                        IRQF_SHARED, irqname, priv);
->>> -        if (ret)
->>> -            return ret;
->>> -    }
->>> -
->>>       pm_runtime_enable(dev);
->>>       pm_runtime_get_sync(dev);
->>>   @@ -458,6 +436,32 @@ static int rcar_gen3_thermal_probe(struct
->>> platform_device *pdev)
->>>           goto error_unregister;
->>>       }
->>>   +    /*
->>> +     * Request 2 (of the 3 possible) IRQs, the driver only needs to
->>> +     * to trigger on the low and high trip points of the current
->>> +     * temp window at this point.
->>> +     */
->>> +    for (i = 0; i < 2; i++) {
->>> +        irq = platform_get_irq(pdev, i);
->>> +        if (irq < 0) {
->>> +            ret = irq;
->>> +            goto error_unregister;
->>> +        }
->>> +
->>> +        irqname = devm_kasprintf(dev, GFP_KERNEL, "%s:ch%d",
->>> +                     dev_name(dev), i);
->>> +        if (!irqname) {
->>> +            ret = -ENOMEM;
->>> +            goto error_unregister;
->>> +        }
->>> +
->>> +        ret = devm_request_threaded_irq(dev, irq,
->>> rcar_gen3_thermal_irq,
->>> +                        rcar_gen3_thermal_irq_thread,
->>> +                        IRQF_SHARED, irqname, priv);
->>> +        if (ret)
->>> +            goto error_unregister;
->>> +    }
->>> +
->>>       rcar_thermal_irq_set(priv, true);
->>>         return 0;
->>>
->>
->>
-
-
--- 
- <http://www.linaro.org/> Linaro.org │ Open source software for ARM SoCs
-
-Follow Linaro:  <http://www.facebook.com/pages/Linaro> Facebook |
-<http://twitter.com/#!/linaroorg> Twitter |
-<http://www.linaro.org/linaro-blog/> Blog
-
+--- a/include/linux/sched/wake_q.h
++++ b/include/linux/sched/wake_q.h
+@@ -51,6 +51,11 @@ static inline void wake_q_init(struct wa
+ 	head->lastp = &head->first;
+ }
+ 
++static inline bool wake_q_empty(struct wake_q_head *head)
++{
++	return head->first == WAKE_Q_TAIL;
++}
++
+ extern void wake_q_add(struct wake_q_head *head, struct task_struct *task);
+ extern void wake_q_add_safe(struct wake_q_head *head, struct task_struct *task);
+ extern void wake_up_q(struct wake_q_head *head);
+--- a/kernel/locking/rwsem.c
++++ b/kernel/locking/rwsem.c
+@@ -700,25 +700,22 @@ __rwsem_down_write_failed_common(struct
+ 		 *     must be read owned; so we try to wake any read lock
+ 		 *     waiters that were queued ahead of us.
+ 		 */
+-		if (!(count & RWSEM_LOCKED_MASK))
+-			__rwsem_mark_wake(sem, RWSEM_WAKE_ANY, &wake_q);
+-		else if (!(count & RWSEM_WRITER_MASK) &&
+-				(count & RWSEM_READER_MASK))
+-			__rwsem_mark_wake(sem, RWSEM_WAKE_READERS, &wake_q);
+-		else
++		if (count & RWSEM_WRITER_LOCKED)
+ 			goto wait;
+-		/*
+-		 * The wakeup is normally called _after_ the wait_lock
+-		 * is released, but given that we are proactively waking
+-		 * readers we can deal with the wake_q overhead as it is
+-		 * similar to releasing and taking the wait_lock again
+-		 * for attempting rwsem_try_write_lock().
+-		 */
+-		wake_up_q(&wake_q);
+-		/*
+-		 * Reinitialize wake_q after use.
+-		 */
+-		wake_q_init(&wake_q);
++
++		__rwsem_mark_wake(sem, (count & RWSEM_READER_MASK) ?
++				RWSEM_WAKE_READERS :
++				RWSEM_WAKE_ANY, &wake_q);
++
++		if (!wake_q_empty(&wake_q)) {
++			raw_spin_unlock_irq(&sem->wait_lock);
++			wake_up_q(&wake_q);
++			/* used again, reinit */
++			wake_q_init(&wake_q);
++			raw_spin_lock_irq(&sem->wait_lock);
++			if (rwsem_waiter_is_first(sem, &waiter))
++				wstate = WRITER_FIRST;
++		}
+ 	} else {
+ 		count = atomic_long_add_return(RWSEM_FLAG_WAITERS, &sem->count);
+ 	}
