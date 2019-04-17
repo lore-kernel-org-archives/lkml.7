@@ -2,179 +2,144 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 909DDC282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:17:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB53C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:17:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 5FDC621773
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:17:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9B0052177B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:17:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="f4IblylY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732527AbfDQOQ5 convert rfc822-to-8bit (ORCPT
+        id S1732616AbfDQORq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 10:16:57 -0400
-Received: from mail-oln040092255080.outbound.protection.outlook.com ([40.92.255.80]:6033
-        "EHLO APC01-HK2-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729356AbfDQOQ4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 10:16:56 -0400
-Received: from HK2APC01FT008.eop-APC01.prod.protection.outlook.com
- (10.152.248.55) by HK2APC01HT066.eop-APC01.prod.protection.outlook.com
- (10.152.249.164) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1771.16; Wed, 17 Apr
- 2019 14:16:50 +0000
-Received: from PS2P216MB0642.KORP216.PROD.OUTLOOK.COM (10.152.248.51) by
- HK2APC01FT008.mail.protection.outlook.com (10.152.248.117) with Microsoft
- SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
- 15.20.1771.16 via Frontend Transport; Wed, 17 Apr 2019 14:16:50 +0000
-Received: from PS2P216MB0642.KORP216.PROD.OUTLOOK.COM
- ([fe80::adb3:4c16:60fd:65]) by PS2P216MB0642.KORP216.PROD.OUTLOOK.COM
- ([fe80::adb3:4c16:60fd:65%5]) with mapi id 15.20.1813.011; Wed, 17 Apr 2019
- 14:16:50 +0000
-From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
-        "corbet@lwn.net" <corbet@lwn.net>,
-        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
-Subject: [PATCH v4 2/4] PCI: Fix serious bug when sizing bridges with
- additional size
-Thread-Topic: [PATCH v4 2/4] PCI: Fix serious bug when sizing bridges with
- additional size
-Thread-Index: AQHU9SgyKeXkTr58j0ODKuisfKR/gw==
-Date:   Wed, 17 Apr 2019 14:16:50 +0000
-Message-ID: <PS2P216MB0642D39B45E16723F74569A480250@PS2P216MB0642.KORP216.PROD.OUTLOOK.COM>
-References: <20190417141610.6730-1-nicholas.johnson-opensource@outlook.com.au>
-In-Reply-To: <20190417141610.6730-1-nicholas.johnson-opensource@outlook.com.au>
-Accept-Language: en-AU, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-clientproxiedby: SG3P274CA0021.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:be::33)
- To PS2P216MB0642.KORP216.PROD.OUTLOOK.COM (2603:1096:300:1c::16)
-x-incomingtopheadermarker: OriginalChecksum:AEA2686BFC77E0B8295C2CC6D98F0AE82A025A56E0227523CAA8041E4157EB93;UpperCasedChecksum:DC62C1537FC1D240A6AE6EB47B63CD6B2E475442350B01E306E2B4D8D91CDBBB;SizeAsReceived:7824;Count:50
-x-ms-exchange-messagesentrepresentingtype: 1
-x-mailer: git-send-email 2.19.1
-x-tmn:  [WyzUIRclYih3miZ2HWiYHhAigWmNb9vBSp7hzbUALJ4=]
-x-microsoft-original-message-id: <20190417141610.6730-3-nicholas.johnson-opensource@outlook.com.au>
-x-ms-publictraffictype: Email
-x-incomingheadercount: 50
-x-eopattributedmessage: 0
-x-ms-exchange-slblob-mailprops: zswcL9HXbeUuq4/PM8OFiqKh1bfVgTnQaL38giUIfHvRrFg9RGhJH/9GZcdEQOUvQomBxZ4Lx77ji2xs6/KqRWvq0STsYSv6bWBVg5HQpf3S9lELODWH1q9+ICxfKAZeOOPi4saBLWthkrVyLJzILjnUU9lxD04Riuy63Bb8lWhYZL7F4G1AD0mgw3Jm+6MqpyCQpjyw1Su42hyBvvYrGvKV7auUjy1mVu1/xodf5rLw85HdUeRr+NXuQvU8hVtWB7EJyfAir+ocL5gYkcIH+X944XFaTzmTPcWHKS/V8sA6K1b3evNqRsSVLyGZknw14E/TE5/HsL+A3cXAt35JTJQ41kbqzBFpdHrhBbeWhJej/Aa2rd9yixSBaTi/p5MxZfoOSal9qeAmLBX/8ugqH2HosxUPj+xZ4NCSSGq/I2e7/Ea1bnNTP7v0yvanen6nX1qWB3hjmQCrTE2xFxTuWpZ+Mk9i5TjX/Dd6c0GzcVTzryAjshpwCGi8XJ4tZ3o6q7Iv1zpgmCxOXb+Or8+p7+ZNLM+WoOFmFMH4c/wMl6JUD8x+uQEcvus0Sn0ovyiZj3dyO07fGM8KDTaZSpNl5I4TmTtNn2sZTB0ADf55u9Vj9UKVzsqyUA/U9LeKyjEcwe9WEfiya4CrXsOmWEF2nptpQ4vmnHt9uWGirh+u1pBWQu7LsuIEkihcA32vKLLBDoOyBoXtU5QhF0K2CPvj0Fqn82SsyFV8WFrIxzQBp737N//udjFfTpUbhmqo2PP1
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(201702181274)(2017031323274)(2017031324274)(2017031322404)(1601125500)(1603101475)(1701031045);SRVR:HK2APC01HT066;
-x-ms-traffictypediagnostic: HK2APC01HT066:
-x-microsoft-antispam-message-info: 6rVJO04IiqI2phWER7OQBtVovgNJZPD74IS4pb/z/7e3j5LpQL3jiO9btM/yuMC4JZZ8NsFtchKB6llnR/hs40FoIAcsvZqbWR/1LZHAr/nTa3gOHYXO1ZTULNLoWTnsV8apHn8LQ5mAOSZTaaWNng11sAK60xRzqf3iKlEf9fyVZYfoa4toHT2QS5DmlhdA
-Content-Type: text/plain; charset="iso-8859-1"
-Content-Transfer-Encoding: 8BIT
+        Wed, 17 Apr 2019 10:17:46 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:58991 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728335AbfDQORp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 10:17:45 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3HEHJQ43935111
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Wed, 17 Apr 2019 07:17:19 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3HEHJQ43935111
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019041743; t=1555510640;
+        bh=FEcaeuwX1Xdz+Gj6TlnPpZ7hGM0EWtZNkBw11zdPMKY=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=f4IblylYwJTcdV01Lduc+WVtqh0ynYWahixMECqSfrfvBzVSMC2/RfC4raziAFkFC
+         A8ipF8Lx4l3HssmBghPlS9x5NEYsADpFfV1ktCD/BiKROB/3Hxb+NtOyvlg8tBE60h
+         a32hK1b7dcvOq3pexdwxe+ilGd4POsVT9MaRTZXmE934KewAwFT4PGXTmDJy3zYPHe
+         Lx2Mpi36ucDufnKgQ+mkUJ+hu8ITFqX4Bm0LmYogxB6NE56fDKG5lC1/8BZmR5Mv86
+         flBZdZu/GbqWLjoh6rwfgDFf1VC7Ge+0loufiEKxiyu06zTl0zRseUxMN+8a516bZQ
+         ldZ0z0aw3VG2w==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3HEHJdV3935108;
+        Wed, 17 Apr 2019 07:17:19 -0700
+Date:   Wed, 17 Apr 2019 07:17:19 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
+Message-ID: <tip-aa641c287b2f7676f6f0064a8351daf08eca6b0a@git.kernel.org>
+Cc:     mingo@redhat.com, akpm@linux-foundation.org, bp@suse.de,
+        tglx@linutronix.de, mingo@kernel.org, mhocko@suse.com,
+        jpoimboe@redhat.com, vbabka@suse.cz, luto@kernel.org,
+        sean.j.christopherson@intel.com, dave.hansen@intel.com,
+        x86@kernel.org, hpa@zytor.com, jkosina@suse.cz,
+        linux-kernel@vger.kernel.org, suravee.suthikulpanit@amd.com,
+        ndesaulniers@google.com, jgross@suse.com
+Reply-To: luto@kernel.org, sean.j.christopherson@intel.com, vbabka@suse.cz,
+          jgross@suse.com, ndesaulniers@google.com,
+          linux-kernel@vger.kernel.org, suravee.suthikulpanit@amd.com,
+          dave.hansen@intel.com, x86@kernel.org, jkosina@suse.cz,
+          hpa@zytor.com, bp@suse.de, tglx@linutronix.de, mingo@redhat.com,
+          akpm@linux-foundation.org, jpoimboe@redhat.com, mingo@kernel.org,
+          mhocko@suse.com
+In-Reply-To: <20190414160145.632513987@linutronix.de>
+References: <20190414160145.632513987@linutronix.de>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/irq] x86/irq/32: Define IRQ_STACK_SIZE
+Git-Commit-ID: aa641c287b2f7676f6f0064a8351daf08eca6b0a
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
-X-OriginatorOrg: outlook.com
-X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-Network-Message-Id: 9e9cabd2-e94b-4758-ce83-08d6c33f5526
-X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Apr 2019 14:16:50.2139
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Internet
-X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK2APC01HT066
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Change find_free_bus_resource function to not skip assigned resources
-with non-null parent.
+Commit-ID:  aa641c287b2f7676f6f0064a8351daf08eca6b0a
+Gitweb:     https://git.kernel.org/tip/aa641c287b2f7676f6f0064a8351daf08eca6b0a
+Author:     Thomas Gleixner <tglx@linutronix.de>
+AuthorDate: Sun, 14 Apr 2019 17:59:59 +0200
+Committer:  Borislav Petkov <bp@suse.de>
+CommitDate: Wed, 17 Apr 2019 15:18:36 +0200
 
-Add checks in pbus_size_io and pbus_size_mem to return success if
-resource returned from find_free_bus_resource is already allocated.
+x86/irq/32: Define IRQ_STACK_SIZE
 
-This avoids pbus_size_io and pbus_size_mem returning error code to
-__pci_bus_size_bridges when a resource has been successfully assigned in
-a previous pass. This fixes the existing behaviour where space for a
-resource could be reserved multiple times in different parent bridge
-windows. This also greatly reduces the number of failed BAR messages in
-dmesg when Linux assigns resources.
+On 32-bit IRQ_STACK_SIZE is the same as THREAD_SIZE.
 
-Signed-off-by: Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To allow sharing struct irq_stack with 32-bit, define IRQ_STACK_SIZE for
+32-bit and use it for struct irq_stack.
+
+No functional change.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Dave Hansen <dave.hansen@intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: Jiri Kosina <jkosina@suse.cz>
+Cc: Josh Poimboeuf <jpoimboe@redhat.com>
+Cc: Juergen Gross <jgross@suse.com>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: Nick Desaulniers <ndesaulniers@google.com>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: Suravee Suthikulpanit <suravee.suthikulpanit@amd.com>
+Cc: Vlastimil Babka <vbabka@suse.cz>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190414160145.632513987@linutronix.de
 ---
- drivers/pci/setup-bus.c | 28 +++++++++++++++++++---------
- 1 file changed, 19 insertions(+), 9 deletions(-)
+ arch/x86/include/asm/page_32_types.h | 2 ++
+ arch/x86/include/asm/processor.h     | 4 ++--
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/pci/setup-bus.c b/drivers/pci/setup-bus.c
-index a1ca8a11f..5b9ee9945 100644
---- a/drivers/pci/setup-bus.c
-+++ b/drivers/pci/setup-bus.c
-@@ -752,11 +752,17 @@ static void pci_bridge_check_ranges(struct pci_bus *bus)
- 	}
- }
+diff --git a/arch/x86/include/asm/page_32_types.h b/arch/x86/include/asm/page_32_types.h
+index 57b5dc15ca7e..565ad755c785 100644
+--- a/arch/x86/include/asm/page_32_types.h
++++ b/arch/x86/include/asm/page_32_types.h
+@@ -22,6 +22,8 @@
+ #define THREAD_SIZE_ORDER	1
+ #define THREAD_SIZE		(PAGE_SIZE << THREAD_SIZE_ORDER)
  
--/* Helper function for sizing routines: find first available
--   bus resource of a given type. Note: we intentionally skip
--   the bus resources which have already been assigned (that is,
--   have non-NULL parent resource). */
--static struct resource *find_free_bus_resource(struct pci_bus *bus,
-+/*
-+ * Helper function for sizing routines: find first bus resource of a given
-+ * type. Note: we do not skip the bus resources which have already been
-+ * assigned (r->parent != NULL). This is because a resource that is already
-+ * assigned (nothing more to be done) will be indistinguishable from one that
-+ * failed due to lack of space if we skip assigned resources. If the caller
-+ * function cannot tell the difference then it might try to place the
-+ * resources in a different window, doubling up on resources or causing
-+ * unforeseeable issues.
-+ */
-+static struct resource *find_bus_resource_of_type(struct pci_bus *bus,
- 			 unsigned long type_mask, unsigned long type)
- {
- 	int i;
-@@ -765,7 +771,7 @@ static struct resource *find_free_bus_resource(struct pci_bus *bus,
- 	pci_bus_for_each_resource(bus, r, i) {
- 		if (r == &ioport_resource || r == &iomem_resource)
- 			continue;
--		if (r && (r->flags & type_mask) == type && !r->parent)
-+		if (r && (r->flags & type_mask) == type)
- 			return r;
- 	}
- 	return NULL;
-@@ -863,14 +869,16 @@ static void pbus_size_io(struct pci_bus *bus, resource_size_t min_size,
- 		resource_size_t add_size, struct list_head *realloc_head)
- {
- 	struct pci_dev *dev;
--	struct resource *b_res = find_free_bus_resource(bus, IORESOURCE_IO,
--							IORESOURCE_IO);
-+	struct resource *b_res = find_bus_resource_of_type(bus, IORESOURCE_IO,
-+					IORESOURCE_IO);
- 	resource_size_t size = 0, size0 = 0, size1 = 0;
- 	resource_size_t children_add_size = 0;
- 	resource_size_t min_align, align;
++#define IRQ_STACK_SIZE		THREAD_SIZE
++
+ #define N_EXCEPTION_STACKS	1
  
- 	if (!b_res)
- 		return;
-+	if (b_res->parent)
-+		return;
+ #ifdef CONFIG_X86_PAE
+diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
+index 8fcfcd1a8375..8b4bf732e1b5 100644
+--- a/arch/x86/include/asm/processor.h
++++ b/arch/x86/include/asm/processor.h
+@@ -422,8 +422,8 @@ DECLARE_PER_CPU_ALIGNED(struct stack_canary, stack_canary);
+  * per-CPU IRQ handling stacks
+  */
+ struct irq_stack {
+-	u32                     stack[THREAD_SIZE/sizeof(u32)];
+-} __aligned(THREAD_SIZE);
++	u32			stack[IRQ_STACK_SIZE / sizeof(u32)];
++} __aligned(IRQ_STACK_SIZE);
  
- 	min_align = window_alignment(bus, IORESOURCE_IO);
- 	list_for_each_entry(dev, &bus->devices, bus_list) {
-@@ -975,7 +983,7 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
- 	resource_size_t min_align, align, size, size0, size1;
- 	resource_size_t aligns[18];	/* Alignments from 1Mb to 128Gb */
- 	int order, max_order;
--	struct resource *b_res = find_free_bus_resource(bus,
-+	struct resource *b_res = find_bus_resource_of_type(bus,
- 					mask | IORESOURCE_PREFETCH, type);
- 	resource_size_t children_add_size = 0;
- 	resource_size_t children_add_align = 0;
-@@ -983,6 +991,8 @@ static int pbus_size_mem(struct pci_bus *bus, unsigned long mask,
- 
- 	if (!b_res)
- 		return -ENOSPC;
-+	if (b_res->parent)
-+		return 0;
- 
- 	memset(aligns, 0, sizeof(aligns));
- 	max_order = 0;
--- 
-2.20.1
-
+ DECLARE_PER_CPU(struct irq_stack *, hardirq_stack);
+ DECLARE_PER_CPU(struct irq_stack *, softirq_stack);
