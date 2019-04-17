@@ -7,70 +7,71 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D08A2C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:03:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D442C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:04:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9B71721773
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:03:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C99CC21773
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:04:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=zytor.com header.i=@zytor.com header.b="wy5dIWn7"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=zytor.com header.i=@zytor.com header.b="SFxb82mQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731965AbfDQUDq (ORCPT
+        id S1732088AbfDQUE1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 16:03:46 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:48521 "EHLO
+        Wed, 17 Apr 2019 16:04:27 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:58011 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfDQUDp (ORCPT
+        with ESMTP id S1725848AbfDQUE1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 16:03:45 -0400
+        Wed, 17 Apr 2019 16:04:27 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3HK2lgt4055733
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3HK3UTk4056062
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 17 Apr 2019 13:02:47 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3HK2lgt4055733
+        Wed, 17 Apr 2019 13:03:30 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3HK3UTk4056062
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1555531369;
-        bh=g7lc63TjSl1sl8n9flTds5NVjZx74nLGvYK482qxHd8=;
+        s=2019041745; t=1555531412;
+        bh=GcMamOMWp3Z8wsQxkCYrf7I30NATUPWZVn8DD/wLGi4=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=wy5dIWn7kQpH5/yAqEwR9h9gEb4ZMP3czipE5k6hlIuStXbAv9lm6pyKm27xl3Opt
-         euDs9FZoCdOckeTIPpmRCHIJ3ioaolVt6gSt0epIhfrfBUX/qfxzHNlbzNNhrq1SqI
-         vyzxnag2iaXsZxl5hEnWEyWwWV/JyuhCu2ibfR0UJA4PmjofSteUUtx/L6gXP/dmh5
-         Zsz6FowFsBm0TpClNJZjbdv+M6sWGP2gdWiU7zxdnnH8q3s/sRIFlcSo/R/IqLxTiD
-         kgmixxxaX9tsmycJ5cxoenkV6YfRKyy7ktBCIYfU02cuDVoVmheyPCpbQ8HH0UlXaf
-         4pHDzW4ngjl9A==
+        b=SFxb82mQCJLzLHaeqGrCRHPjpJaUw1uyMG9uNrrYr7+6mJiNqHm+JACaXygUmYDuk
+         2Y77E9g/uqCwLfCFGGWba8mZv1o4urueER4BcKl5ZDI06mO9M3MG+mYynMwQHgGbgH
+         mCe95gr7UfVxTWkXGWjB/SWAmZAt6wdUuN6Sotgy2ea4sEGk8sRxcB+CK4HLXBFMdt
+         M3JcR9mPZnXQ5XKLHizLX5HX2aOymhVdAFdUqroNLGYS7n2wus2ieYWiUyqpdXEZzE
+         gLt3oOI7SP6VEhmMTKQCBCyK2655X41kZ9rwTLddGGRhYN5h8t57IKwyx+xw/xOs9B
+         LzeoAF1aR1LcQ==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3HK2lkb4055730;
-        Wed, 17 Apr 2019 13:02:47 -0700
-Date:   Wed, 17 Apr 2019 13:02:47 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3HK3Uja4056059;
+        Wed, 17 Apr 2019 13:03:30 -0700
+Date:   Wed, 17 Apr 2019 13:03:30 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
 From:   tip-bot for Josh Poimboeuf <tipbot@zytor.com>
-Message-ID: <tip-782e69efb3dfed6e8360bc612e8c7827a901a8f9@git.kernel.org>
-Cc:     rdunlap@infradead.org, mingo@kernel.org, bp@alien8.de,
-        linux-kernel@vger.kernel.org, schwidefsky@de.ibm.com,
-        longman@redhat.com, jpoimboe@redhat.com, heiko.carstens@de.ibm.com,
-        benh@kernel.crashing.org, tglx@linutronix.de, jikos@kernel.org,
-        will.deacon@arm.com, torvalds@linux-foundation.org,
-        aarcange@redhat.com, mpe@ellerman.id.au,
-        gregkh@linuxfoundation.org, luto@kernel.org, peterz@infradead.org,
-        pauld@redhat.com, jkosina@suse.cz, paulus@samba.org,
-        steven.price@arm.com, catalin.marinas@arm.com,
-        tyhicks@canonical.com, hpa@zytor.com, jcm@redhat.com
-Reply-To: mingo@kernel.org, rdunlap@infradead.org, schwidefsky@de.ibm.com,
-          linux-kernel@vger.kernel.org, bp@alien8.de, longman@redhat.com,
-          benh@kernel.crashing.org, heiko.carstens@de.ibm.com,
-          jpoimboe@redhat.com, torvalds@linux-foundation.org,
-          mpe@ellerman.id.au, aarcange@redhat.com, jikos@kernel.org,
-          will.deacon@arm.com, tglx@linutronix.de, pauld@redhat.com,
-          peterz@infradead.org, gregkh@linuxfoundation.org,
-          luto@kernel.org, tyhicks@canonical.com, hpa@zytor.com,
-          steven.price@arm.com, catalin.marinas@arm.com, paulus@samba.org,
-          jkosina@suse.cz, jcm@redhat.com
-In-Reply-To: <245a606e1a42a558a310220312d9b6adb9159df6.1555085500.git.jpoimboe@redhat.com>
-References: <245a606e1a42a558a310220312d9b6adb9159df6.1555085500.git.jpoimboe@redhat.com>
+Message-ID: <tip-0336e04a6520bdaefdb0769d2a70084fa52e81ed@git.kernel.org>
+Cc:     hpa@zytor.com, luto@kernel.org, bp@alien8.de, jpoimboe@redhat.com,
+        tyhicks@canonical.com, tglx@linutronix.de, aarcange@redhat.com,
+        longman@redhat.com, catalin.marinas@arm.com, peterz@infradead.org,
+        gregkh@linuxfoundation.org, benh@kernel.crashing.org,
+        jcm@redhat.com, paulus@samba.org, pauld@redhat.com,
+        mingo@kernel.org, jkosina@suse.cz, will.deacon@arm.com,
+        heiko.carstens@de.ibm.com, mpe@ellerman.id.au,
+        schwidefsky@de.ibm.com, linux-kernel@vger.kernel.org,
+        torvalds@linux-foundation.org, jikos@kernel.org,
+        rdunlap@infradead.org, steven.price@arm.com
+Reply-To: mpe@ellerman.id.au, heiko.carstens@de.ibm.com,
+          linux-kernel@vger.kernel.org, schwidefsky@de.ibm.com,
+          torvalds@linux-foundation.org, jikos@kernel.org,
+          steven.price@arm.com, rdunlap@infradead.org, paulus@samba.org,
+          pauld@redhat.com, mingo@kernel.org, jkosina@suse.cz,
+          will.deacon@arm.com, catalin.marinas@arm.com,
+          peterz@infradead.org, longman@redhat.com,
+          gregkh@linuxfoundation.org, benh@kernel.crashing.org,
+          jcm@redhat.com, hpa@zytor.com, bp@alien8.de, luto@kernel.org,
+          jpoimboe@redhat.com, tyhicks@canonical.com, aarcange@redhat.com,
+          tglx@linutronix.de
+In-Reply-To: <e4a161805458a5ec88812aac0307ae3908a030fc.1555085500.git.jpoimboe@redhat.com>
+References: <e4a161805458a5ec88812aac0307ae3908a030fc.1555085500.git.jpoimboe@redhat.com>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:core/speculation] powerpc/speculation: Support 'mitigations='
+Subject: [tip:core/speculation] s390/speculation: Support 'mitigations='
  cmdline option
-Git-Commit-ID: 782e69efb3dfed6e8360bc612e8c7827a901a8f9
+Git-Commit-ID: 0336e04a6520bdaefdb0769d2a70084fa52e81ed
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -84,18 +85,18 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  782e69efb3dfed6e8360bc612e8c7827a901a8f9
-Gitweb:     https://git.kernel.org/tip/782e69efb3dfed6e8360bc612e8c7827a901a8f9
+Commit-ID:  0336e04a6520bdaefdb0769d2a70084fa52e81ed
+Gitweb:     https://git.kernel.org/tip/0336e04a6520bdaefdb0769d2a70084fa52e81ed
 Author:     Josh Poimboeuf <jpoimboe@redhat.com>
-AuthorDate: Fri, 12 Apr 2019 15:39:30 -0500
+AuthorDate: Fri, 12 Apr 2019 15:39:31 -0500
 Committer:  Thomas Gleixner <tglx@linutronix.de>
 CommitDate: Wed, 17 Apr 2019 21:37:29 +0200
 
-powerpc/speculation: Support 'mitigations=' cmdline option
+s390/speculation: Support 'mitigations=' cmdline option
 
-Configure powerpc CPU runtime speculation bug mitigations in accordance
-with the 'mitigations=' cmdline option.  This affects Meltdown, Spectre
-v1, Spectre v2, and Speculative Store Bypass.
+Configure s390 runtime CPU speculation bug mitigations in accordance
+with the 'mitigations=' cmdline option.  This affects Spectre v1 and
+Spectre v2.
 
 The default behavior is unchanged.
 
@@ -128,83 +129,54 @@ Cc: Linus Torvalds <torvalds@linux-foundation.org>
 Cc: Randy Dunlap <rdunlap@infradead.org>
 Cc: Steven Price <steven.price@arm.com>
 Cc: Phil Auld <pauld@redhat.com>
-Link: https://lkml.kernel.org/r/245a606e1a42a558a310220312d9b6adb9159df6.1555085500.git.jpoimboe@redhat.com
+Link: https://lkml.kernel.org/r/e4a161805458a5ec88812aac0307ae3908a030fc.1555085500.git.jpoimboe@redhat.com
 
 ---
- Documentation/admin-guide/kernel-parameters.txt | 9 +++++----
- arch/powerpc/kernel/security.c                  | 6 +++---
- arch/powerpc/kernel/setup_64.c                  | 2 +-
- 3 files changed, 9 insertions(+), 8 deletions(-)
+ Documentation/admin-guide/kernel-parameters.txt | 5 +++--
+ arch/s390/kernel/nospec-branch.c                | 3 ++-
+ 2 files changed, 5 insertions(+), 3 deletions(-)
 
 diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index 779ddeb2929c..ac7150a25a7a 100644
+index ac7150a25a7a..1ae93872b79f 100644
 --- a/Documentation/admin-guide/kernel-parameters.txt
 +++ b/Documentation/admin-guide/kernel-parameters.txt
 @@ -2514,7 +2514,7 @@
  			http://repo.or.cz/w/linux-2.6/mini2440.git
  
  	mitigations=
--			[X86] Control optional mitigations for CPU
-+			[X86,PPC] Control optional mitigations for CPU
+-			[X86,PPC] Control optional mitigations for CPU
++			[X86,PPC,S390] Control optional mitigations for CPU
  			vulnerabilities.  This is a set of curated,
  			arch-independent options, each of which is an
  			aggregation of existing arch-specific options.
-@@ -2523,10 +2523,11 @@
- 				Disable all optional CPU mitigations.  This
- 				improves system performance, but it may also
+@@ -2525,7 +2525,8 @@
  				expose users to several CPU vulnerabilities.
--				Equivalent to: nopti [X86]
--					       nospectre_v2 [X86]
-+				Equivalent to: nopti [X86,PPC]
-+					       nospectre_v1 [PPC]
-+					       nospectre_v2 [X86,PPC]
+ 				Equivalent to: nopti [X86,PPC]
+ 					       nospectre_v1 [PPC]
+-					       nospectre_v2 [X86,PPC]
++					       nobp=0 [S390]
++					       nospectre_v2 [X86,PPC,S390]
  					       spectre_v2_user=off [X86]
--					       spec_store_bypass_disable=off [X86]
-+					       spec_store_bypass_disable=off [X86,PPC]
+ 					       spec_store_bypass_disable=off [X86,PPC]
  					       l1tf=off [X86]
+diff --git a/arch/s390/kernel/nospec-branch.c b/arch/s390/kernel/nospec-branch.c
+index bdddaae96559..649135cbedd5 100644
+--- a/arch/s390/kernel/nospec-branch.c
++++ b/arch/s390/kernel/nospec-branch.c
+@@ -1,6 +1,7 @@
+ // SPDX-License-Identifier: GPL-2.0
+ #include <linux/module.h>
+ #include <linux/device.h>
++#include <linux/cpu.h>
+ #include <asm/nospec-branch.h>
  
- 			auto (default)
-diff --git a/arch/powerpc/kernel/security.c b/arch/powerpc/kernel/security.c
-index 9b8631533e02..cdf3e73000e9 100644
---- a/arch/powerpc/kernel/security.c
-+++ b/arch/powerpc/kernel/security.c
-@@ -57,7 +57,7 @@ void setup_barrier_nospec(void)
- 	enable = security_ftr_enabled(SEC_FTR_FAVOUR_SECURITY) &&
- 		 security_ftr_enabled(SEC_FTR_BNDS_CHK_SPEC_BAR);
+ static int __init nobp_setup_early(char *str)
+@@ -58,7 +59,7 @@ early_param("nospectre_v2", nospectre_v2_setup_early);
  
--	if (!no_nospec)
-+	if (!no_nospec && !cpu_mitigations_off())
- 		enable_barrier_nospec(enable);
- }
- 
-@@ -116,7 +116,7 @@ static int __init handle_nospectre_v2(char *p)
- early_param("nospectre_v2", handle_nospectre_v2);
- void setup_spectre_v2(void)
+ void __init nospec_auto_detect(void)
  {
--	if (no_spectrev2)
-+	if (no_spectrev2 || cpu_mitigations_off())
- 		do_btb_flush_fixups();
- 	else
- 		btb_flush_enabled = true;
-@@ -307,7 +307,7 @@ void setup_stf_barrier(void)
- 
- 	stf_enabled_flush_types = type;
- 
--	if (!no_stf_barrier)
-+	if (!no_stf_barrier && !cpu_mitigations_off())
- 		stf_barrier_enable(enable);
- }
- 
-diff --git a/arch/powerpc/kernel/setup_64.c b/arch/powerpc/kernel/setup_64.c
-index 236c1151a3a7..c7ec27ba8926 100644
---- a/arch/powerpc/kernel/setup_64.c
-+++ b/arch/powerpc/kernel/setup_64.c
-@@ -958,7 +958,7 @@ void setup_rfi_flush(enum l1d_flush_type types, bool enable)
- 
- 	enabled_flush_types = types;
- 
--	if (!no_rfi_flush)
-+	if (!no_rfi_flush && !cpu_mitigations_off())
- 		rfi_flush_enable(enable);
- }
- 
+-	if (test_facility(156)) {
++	if (test_facility(156) || cpu_mitigations_off()) {
+ 		/*
+ 		 * The machine supports etokens.
+ 		 * Disable expolines and disable nobp.
