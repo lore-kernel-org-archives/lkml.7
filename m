@@ -2,168 +2,96 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 491A9C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:10:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EDCB9C282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:10:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 10CB820663
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:10:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BE5D220663
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:10:48 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730432AbfDQSKU (ORCPT
+        id S1731241AbfDQSKs (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 14:10:20 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:52337 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfDQSKU (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 14:10:20 -0400
-Received: from collins (196.109.29.93.rev.sfr.net [93.29.109.196])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id D874220000C;
-        Wed, 17 Apr 2019 18:10:15 +0000 (UTC)
-Message-ID: <0df3d4b5178d8a37b67b275e0771741c6c268de3.camel@bootlin.com>
-Subject: Support for 2D engines/blitters in V4L2 and DRM
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Nicolas Dufresne <nicolas@ndufresne.ca>
-Cc:     linux-kernel@vger.kernel.org,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
-        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
-        Eric Anholt <eric@anholt.net>, Rob Clark <robdclark@gmail.com>,
-        Dave Airlie <airlied@redhat.com>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>
-Date:   Wed, 17 Apr 2019 20:10:15 +0200
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.0 
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 17 Apr 2019 14:10:48 -0400
+Received: from mga17.intel.com ([192.55.52.151]:37532 "EHLO mga17.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725848AbfDQSKr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 14:10:47 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Apr 2019 11:10:47 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,362,1549958400"; 
+   d="scan'208";a="316802634"
+Received: from alison-desk.jf.intel.com (HELO alison-desk) ([10.54.74.53])
+  by orsmga005.jf.intel.com with ESMTP; 17 Apr 2019 11:10:47 -0700
+From:   Alison Schofield <alison.schofield@intel.com>
+To:     rjw@rjwysocki.net
+Cc:     Alison Schofield <alison.schofield@intel.com>,
+        robert.moore@intel.com, erik.schmauss@intel.com,
+        keith.busch@intel.com, linux-acpi@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH] acpi/hmat: Update acpi_hmat_type enum with ACPI_HMAT_TYPE_PROXIMITY
+Date:   Wed, 17 Apr 2019 11:13:10 -0700
+Message-Id: <20190417181310.27613-1-alison.schofield@intel.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Nicolas,
+ACPI 6.3 changed the subtable "Memory Subsystem Address Range Structure"
+to "Memory Proximity Domain Attributes Structure".
 
-I'm detaching this thread from our V4L2 stateless decoding spec since
-it has drifted off and would certainly be interesting to DRM folks as
-well!
+Updating and renaming of the structure was included in commit:
+ACPICA: ACPI 6.3: HMAT updates (9a8d961f1ef835b0d338fbe13da03cb424e87ae5)
 
-For context: I was initially talking about writing up support for the
-Allwinner 2D engine as a DRM render driver, where I'd like to be able
-to batch jobs that affect the same destination buffer to only signal
-the out fence once when the batch is done. We have a similar issue in
-v4l2 where we'd like the destination buffer for a set of requests (each
-covering one H264 slice) to be marked as done once the set was decoded.
+Rename the enum type to match the subtable and structure naming.
 
-Le mercredi 17 avril 2019 à 12:22 -0400, Nicolas Dufresne a écrit :
-> > > > Interestingly, I'm experiencing the exact same problem dealing with a
-> > > > 2D graphics blitter that has limited ouput scaling abilities which
-> > > > imply handlnig a large scaling operation as multiple clipped smaller
-> > > > scaling operations. The issue is basically that multiple jobs have to
-> > > > be submitted to complete a single frame and relying on an indication
-> > > > from the destination buffer (such as a fence) doesn't work to indicate
-> > > > that all the operations were completed, since we get the indication at
-> > > > each step instead of at the end of the batch.
-> > > 
-> > > That looks similar to the IMX.6 IPU m2m driver. It splits the image in
-> > > tiles of 1024x1024 and process each tile separately. This driver has
-> > > been around for a long time, so I guess they have a solution to that.
-> > > They don't need requests, because there is nothing to be bundled with
-> > > the input image. I know that Renesas folks have started working on a
-> > > de-interlacer. Again, this kind of driver may process and reuse input
-> > > buffers for motion compensation, but I don't think they need special
-> > > userspace API for that.
-> > 
-> > Thanks for the reference! I hope it's not a blitter that was
-> > contributed as a V4L2 driver instead of DRM, as it probably would be
-> > more useful in DRM (but that's way beside the point).
-> 
-> DRM does not offer a generic and discoverable interface for these
-> accelerators. Note that these drivers have most of the time started as
-> DRM driver and their DRM side where dropped. That was the case for
-> Exynos drivers at least.
+Signed-off-by: Alison Schofield <alison.schofield@intel.com>
+---
+ drivers/acpi/hmat/hmat.c | 4 ++--
+ include/acpi/actbl1.h    | 2 +-
+ 2 files changed, 3 insertions(+), 3 deletions(-)
 
-Heh, sadly I'm aware of how things turn out most of the time. The thing
-is that DRM expects drivers to implement their own interface. That's
-fine for passing BOs with GPU bitstream and textures, but not so much
-for dealing with framebuffer-based operations where the streaming and
-buffer interface that v4l2 has is a good fit.
-
-There's also the fact that the 2D pipeline is fixed-function and highly
-hardware-specific, so we need driver-specific job descriptions to
-really make the most of it. That's where v4l2 is not much of a good fit
-for complex 2D pipelines either. Most 2D engines can take multiple
-inputs and blit them together in various ways, which is too far from
-what v4l2 deals with. So we can have fixed single-buffer pipelines with
-at best CSC and scaling, but not much more with v4l2 really.
-
-I don't think it would be too much work to bring an interface to DRM in
-order to describe render framebuffers (we only have display
-framebuffers so far), with a simple queuing interface for scheduling
-driver-specific jobs, which could be grouped together to only signal
-the out fences when every buffer of the batch was done being rendered.
-This last point would allow handling cases where userapce need to
-perform multiple operations to carry out the single operation that it
-needs to do. In the case of my 2D blitter, that would be scaling above
-a 1024x1024 destination, which could be required to scaling a video
-buffer up to a 1920x1080 display. With that, we can e.g. page flip the
-2D engine destination buffer and be certain that scaling will be fully
-done when the fence is signaled.
-
-There's also the userspace problem: DRM render has mesa to back it in
-userspace and provide a generic API for other programes. For 2D
-engines, we don't have much to hold on to. Cairo has a DRM render
-interface that supports a few DRM render drivers where there is either
-a 2D pipeline or where pre-built shaders are used to implement a 2D
-pipeline, and that's about it as far as I know.
-
-There's also the possibility of writing up a drm-render DDX to handle
-these 2D blitters that can make things a lot faster when running a
-desktop environment. As for wayland, well, I don't really know what to
-think. I was under the impression that it relies on GL for 2D
-operations, but am really not sure how true that actually is.
-
-> The thing is that DRM is great if you do immediate display stuff, while
-> V4L2 is nice if you do streaming, where you expect filling queued, and
-> popping buffers from queues.
-> 
-> In the end, this is just an interface, nothing prevents you from making
-> an internal driver (like the Meson Canvas) and simply letting multiple
-> sub-system expose it. Specially that some of these IP will often
-> support both signal and memory processing, so they equally fit into a
-> media controller ISP, a v4l2 m2m or a DRM driver.
-
-Having base drivers that can hook to both v4l2 m2m and DRM would
-definitely be awesome. Maybe we could have some common internal
-synchronization logic to make writing these drivers easier.
-
-It would be cool if both could be used concurrently and not just return
--EBUSY when the device is used with the other subsystem.
-
-Anyway, that's my 2 cents about the situation and what we can do to
-improve it. I'm definitely interested in tackling these items, but it
-may take some time before we get there. Not to mention we need to
-rework media/v4l2 for per-slice decoding support ;)
-
-> Another driver you might want to look is Rockchip RGA driver (which is
-> a multi function IP, including blitting).
-
-Yep, I've aware of it as well. There's also vivante which exposes 2D
-cores but I'm really not sure whether any function is actually
-implemented. 
-
-OMAP4 and OMAP5 have a 2D engine that seems to be vivante as well from
-what I could find out, but it seems to only have blobs for bltsville
-and no significant docs.
-
-Cheers,
-
-Paul
+diff --git a/drivers/acpi/hmat/hmat.c b/drivers/acpi/hmat/hmat.c
+index b7824a0309f7..3e32120e2dab 100644
+--- a/drivers/acpi/hmat/hmat.c
++++ b/drivers/acpi/hmat/hmat.c
+@@ -411,7 +411,7 @@ static int __init hmat_parse_subtable(union acpi_subtable_headers *header,
+ 		return -EINVAL;
+ 
+ 	switch (hdr->type) {
+-	case ACPI_HMAT_TYPE_ADDRESS_RANGE:
++	case ACPI_HMAT_TYPE_PROXIMITY:
+ 		return hmat_parse_proximity_domain(header, end);
+ 	case ACPI_HMAT_TYPE_LOCALITY:
+ 		return hmat_parse_locality(header, end);
+@@ -649,7 +649,7 @@ static __init int hmat_init(void)
+ 		goto out_put;
+ 	}
+ 
+-	for (i = ACPI_HMAT_TYPE_ADDRESS_RANGE; i < ACPI_HMAT_TYPE_RESERVED; i++) {
++	for (i = ACPI_HMAT_TYPE_PROXIMITY; i < ACPI_HMAT_TYPE_RESERVED; i++) {
+ 		if (acpi_table_parse_entries(ACPI_SIG_HMAT,
+ 					     sizeof(struct acpi_table_hmat), i,
+ 					     hmat_parse_subtable, 0) < 0) {
+diff --git a/include/acpi/actbl1.h b/include/acpi/actbl1.h
+index d14037ddf108..22c039ebc6c5 100644
+--- a/include/acpi/actbl1.h
++++ b/include/acpi/actbl1.h
+@@ -1395,7 +1395,7 @@ struct acpi_table_hmat {
+ /* Values for HMAT structure types */
+ 
+ enum acpi_hmat_type {
+-	ACPI_HMAT_TYPE_ADDRESS_RANGE = 0,	/* Memory subsystem address range */
++	ACPI_HMAT_TYPE_PROXIMITY = 0,	/* Memory proximity domain attributes */
+ 	ACPI_HMAT_TYPE_LOCALITY = 1,	/* System locality latency and bandwidth information */
+ 	ACPI_HMAT_TYPE_CACHE = 2,	/* Memory side cache information */
+ 	ACPI_HMAT_TYPE_RESERVED = 3	/* 3 and greater are reserved */
+-- 
+2.14.1
 
