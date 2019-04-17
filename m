@@ -2,107 +2,110 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA097C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:36:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54A8AC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:37:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BD3F621773
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:36:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24414206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:37:25 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tW+80htR"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="e3xfUkCx"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732580AbfDQOgv (ORCPT
+        id S1732584AbfDQOhX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 10:36:51 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:41214 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731743AbfDQOgv (ORCPT
+        Wed, 17 Apr 2019 10:37:23 -0400
+Received: from mail-oi1-f193.google.com ([209.85.167.193]:33349 "EHLO
+        mail-oi1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732259AbfDQOhX (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 10:36:51 -0400
-Received: by mail-qt1-f195.google.com with SMTP id w30so27559616qta.8
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 07:36:50 -0700 (PDT)
+        Wed, 17 Apr 2019 10:37:23 -0400
+Received: by mail-oi1-f193.google.com with SMTP id e5so20226783oii.0;
+        Wed, 17 Apr 2019 07:37:22 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
+        d=gmail.com; s=20161025;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=GZ2Ly4RP/Dnf5F/ZG3aJK5z5nPfqb3L8ZTetUCkAOuM=;
-        b=tW+80htR43jlq2mGkJBGHZOYcRhvYFqbp9/zcCZkvE4V21tPRaAvav7/gh2kdUJCN8
-         gz34cy0kDrbsGNKpzndgU4CzrX5TWVQwgy2lKIVh76VaybEFrpni4t5o2TcM+vMhV7y6
-         Uklh3bypP0gtJ3gAU2ypVFNm/4e0fY5X7Sv7HMHH4BItCh+7VeWuooIPYqPLi6xjQBKu
-         PA0ncU30xH3JLdjVyI7+XGH4a3SZ1a5CeN62R3T5mfVNvAHw63J5YZRv5tMSd4Ly1YhI
-         H2A0p2rWmdHB/iGUgdJbtdEgElD5P/M0SUYXBnFhyWQh0K5NBuJ5eOOkEP3ZArdv8Iap
-         T7dA==
+        bh=KVL9KF/YoHtzs8IjWHwRGHOY6DKDTBP7zc6ndr7tx5s=;
+        b=e3xfUkCx499Q6ZWEuv72GXYEVXGDx+7aGV3XVxUyeFEoIihqBm6FuWKDh9k85LraPC
+         FPDWDfh9VNEGQ1Oacjd+VFEKMG8t+2DaIVBhzLyJryqpeCMYgb9PvNW8ilS2WeHdQlYY
+         s1yx5EL43kQ5aVZQLckp9ZuEa1uIsQbChvnG3DJVwMwlyktsnKQmnMHWvla97c5JNBbB
+         coXPfWAZz16bq8iPuYkakDREYFwPomhRHWG+zu4ouHbIfJzyy9g5TkdWxYiVLhe4idji
+         /178jEtlfgcqsW1Brt/zS7UKc399eFbJ0y0xbfFS09iZopZEfGliGDUThMCKftIaCmvh
+         V1lA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=GZ2Ly4RP/Dnf5F/ZG3aJK5z5nPfqb3L8ZTetUCkAOuM=;
-        b=Lo5SBzUr3AT9ne8j6dXKvymovxXR5FulZH9808gAuMI7S1mh3kvXdpn+x8fp8iy7vM
-         9YhhH68jJa0L6n2MIm7/zhR+DorQp+PIHq52pWdppMDI5vm1dWS53KLg+fzVhquuuhTN
-         k3kBSu/gWHyMK2M/3z3TZw0IynO7PzSMV17E3L6LkcA1cH7QMkKTgoT/hiSdiI7kw7b8
-         O940qoZUgTShcm2/dVUF/+4WIeLE+X539XLbxyB9mboMne+EEg7G5wgeoprxF7CvKW8T
-         VHekdRdnfY9tMdRy4/n2qclB7yz3JuUZst/oA1+2S3RNJQO6cFNOdykEhAQJN3Ihti7c
-         cyHw==
-X-Gm-Message-State: APjAAAVmWxt32Akz/I5YGzXqOVJn9fo/LJNzEOWy0KCUWUNpdcuLG4B9
-        FvTe7Nr5M+sArVXsDDJyFFiQbUvXttGEh+FhPDLO/Q==
-X-Google-Smtp-Source: APXvYqzJgYPo2BVx3Jwgau5Jm9ahbAhLpJYTEEi06dzWg2kwJ8VT+NMhrAqRqx8dfXPyDMts46sTX5Hr7S0oLkd273o=
-X-Received: by 2002:ac8:2949:: with SMTP id z9mr75131010qtz.302.1555511810391;
- Wed, 17 Apr 2019 07:36:50 -0700 (PDT)
+        bh=KVL9KF/YoHtzs8IjWHwRGHOY6DKDTBP7zc6ndr7tx5s=;
+        b=JfT3nIUUL06TuMV+6sJJOMaOsHgGoEMU7EWZ/k3idwn6ehfVdJ1uAYNQEpjPzf1jBa
+         EFMlCTld/SlWXeAOhm+oOBcuAuzwhkAipwgvEjPL2XOEuu8GcBOeNWhvtDfES9E0zXwn
+         HeRHR+TJePTpuiRaK0U0inr81mWoE0CgH/s3qh0YxJC6X/x+N/WwXkZRVn5xFkDIZenO
+         bzNhC9nW6zD6BPfiDvY430pJ+al4IvBD1UNFki0c+MDZ1cUpZUkND+zlMtouL9/CM+Jc
+         wZpHNcISX1FjClNnINYeUy8MWWwKNLKEUPz+o5y9YPW/x+/Akm1rDkSkvG5HOVlSCvmh
+         yKiA==
+X-Gm-Message-State: APjAAAVtiNGFJQ99ToHD+f5Q6QRvaLVD6jHBvgMrOY6K/Sm7RsUUZQBJ
+        dq8k6cdvL4YYzCVKCtdesI9A6gvdWXsWMl5QSyM=
+X-Google-Smtp-Source: APXvYqwzzDkTed9Kh/UGRtG/0sH/YvObQ9TaaQaBnqTEbeqLHTGrdH2kSDOwSiAltGeQPXi68t/6LeQi8m9SrMWNciE=
+X-Received: by 2002:aca:4202:: with SMTP id p2mr25429168oia.169.1555511842207;
+ Wed, 17 Apr 2019 07:37:22 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190313211844.29416-1-ilina@codeaurora.org> <20190313211844.29416-4-ilina@codeaurora.org>
-In-Reply-To: <20190313211844.29416-4-ilina@codeaurora.org>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 17 Apr 2019 16:36:36 +0200
-Message-ID: <CACRpkdZW8OhqmNdeC8KmiAN6iTDAm7NUzGGmu5+-3utdT+dtCg@mail.gmail.com>
-Subject: Re: [PATCH v4 03/10] of/irq: document properties for wakeup interrupt parent
-To:     Lina Iyer <ilina@codeaurora.org>,
-        "open list:OPEN FIRMWARE AND FLATTENED DEVICE TREE BINDINGS" 
-        <devicetree@vger.kernel.org>
-Cc:     Stephen Boyd <swboyd@chromium.org>,
-        Evan Green <evgreen@chromium.org>,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        rplsssn@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Doug Anderson <dianders@chromium.org>
+References: <20190409144250.7237-1-TheSven73@gmail.com> <982e69c6-4e68-6f62-8bed-cd5a1802272b@metux.net>
+ <CAGngYiUTHZFFY=H7xXHzZnN4pS0jAqWBTrcw04hjf5S-ykxC9w@mail.gmail.com>
+ <c1831703-a476-8870-0a5f-9060bda0f669@metux.net> <CAGngYiXx2eKR7DnHm9sNWVC+B1F2N6uUNXqZAq4rey2yjU1RyA@mail.gmail.com>
+ <23a25601-ed98-5348-9bac-bf8fc2baea5e@metux.net>
+In-Reply-To: <23a25601-ed98-5348-9bac-bf8fc2baea5e@metux.net>
+From:   Sven Van Asbroeck <thesven73@gmail.com>
+Date:   Wed, 17 Apr 2019 10:37:11 -0400
+Message-ID: <CAGngYiVSibcSas+cGPVkvBb-kgUnDAbgd3m59yyqwp5j1D+Cew@mail.gmail.com>
+Subject: Re: [PATCH v10 0/7] Add Fieldbus subsystem + support HMS Profinet card
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com,
+        =?UTF-8?Q?Andreas_F=C3=A4rber?= <afaerber@suse.de>,
+        treding@nvidia.com, David Lechner <david@lechnology.com>,
+        noralf@tronnes.org, johan@kernel.org,
+        Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg KH <gregkh@linuxfoundation.org>, john.garry@huawei.com,
+        geert+renesas@glider.be, robin.murphy@arm.com,
+        Paul Gortmaker <paul.gortmaker@windriver.com>,
+        sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io,
+        Stuart Yoder <stuyoder@gmail.com>,
+        "J. Kiszka" <jan.kiszka@siemens.com>, maxime.ripard@bootlin.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Mar 13, 2019 at 10:19 PM Lina Iyer <ilina@codeaurora.org> wrote:
+On Tue, Apr 16, 2019 at 5:21 PM Enrico Weigelt, metux IT consult
+<lkml@metux.net> wrote:
+>
+> Yet another question: does each fieldbus_dev instance talk to exactly
+> one plc process memory, or can there be many ?
 
-> +Mapping the interrupt specifiers in the device tree can be done using the
-> +"irqdomain-map" property. The property contains interrupt specifier at the
-> +current interrupt controller followed by the interrupt specifier at the mapped
-> +interrupt controller.
-> +
-> +   irqdomain-map = <incoming-interrupt-specifier mapped-interrupt-specifier>
-> +
-> +The optional properties "irqdomain-map-mask" and "irqdomain-map-pass-thru" may
-> +be provided to help interpret the valid bits of the incoming and mapped
-> +interrupt specifiers respectively.
-> +
-> +   Example:
-> +       irqdomain-map = <22 0 &intc 36 0>, <24 0 &intc 37 0>;
-> +       irqdomain-map-mask = <0xff 0>;
-> +       irqdomain-map-pass-thru = <0 0xff>;
+I'm by no means a fieldbus expert, so I had a little chat with one of
+the fieldbus
+people in the company here.
 
-This is looking a bit familiar to the existing interrupt-map that is
-used for PCI interrupts and Swizzling back to a set of PCI
-host interrupts.
+AFAIK if multiple plcs connect to the same device, all of them 'see' the same
+process memory for that device. Any mechanism to prevent these plcs from
+racing with each other is implemented in the application software. Could
+be handshaking, could be each plc dealing with a separate section of
+the process memory.
 
-I tried to document interrupt-map here:
-https://elinux.org/Device_Tree_Usage#Advanced_Interrupt_Mapping
+So for a fieldbus *device* (which is what this subsystem deals with) there can
+only be a single process memory. So we have a single devnode per device.
 
-interrupt-map is a bit convoluted, so I don't know if it would be subject
-to reuse for this. I suspect that interrupt-map, despite the name,
-is for PCI only.
+A fieldbus *controller* would have one process memory per device it connects to.
+But this subsystem does not deal with controllers.
 
-Yours,
-Linus Walleij
+This is my understanding, but I'd appreciate your input if I have overlooked
+something.
