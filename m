@@ -2,198 +2,340 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 96052C10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:06:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3C65CC10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:08:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 59908206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:06:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E73B5206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:08:10 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Gai/umrG"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="mZ6lpnts"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731238AbfDQIGG (ORCPT
+        id S1731209AbfDQIIJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 04:06:06 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:54332 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728373AbfDQIGF (ORCPT
+        Wed, 17 Apr 2019 04:08:09 -0400
+Received: from mail-pf1-f193.google.com ([209.85.210.193]:46156 "EHLO
+        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727177AbfDQIIJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 04:06:05 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=wSQxgLC5Hy48gnSZgUERxB5HKeEI4hy3A6LfcwqNs7Q=; b=Gai/umrGbb4i8h2P4E1YcNJgE
-        sHB7ZjWHi/WyZqmecdm1+rnhdbpf8Qii3Lkh7FuFheSxRO6YPB6Yrrfjnk4ZHa96cZfBTIVjN7otE
-        2xlRLzi0YMEb0InNgFqVJs7s+RAzv3YswWJLH66gtR3EutrLiDBr2FU1tWLS/MP9SgrA+5AbVNWtI
-        IN7lXEKdDoSmwsLxpQY69fIWyyBOHAqahrhdQ+vdklWO5Xo4sXBCRw+kh5xRITOiQYHGGdYm6hUwj
-        EeLITIrbsSgtOw0RtFGB2fxIpkeiwPgVi4xB0in6oDWrVBj/HlohghCpqv4nQS9/IcTCcbB6UerYJ
-        ujO05Xarg==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hGfZo-0006KG-B1; Wed, 17 Apr 2019 08:05:52 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id E9D2829B52932; Wed, 17 Apr 2019 10:05:49 +0200 (CEST)
-Date:   Wed, 17 Apr 2019 10:05:49 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
-Subject: Re: [PATCH v4 07/16] locking/rwsem: Implement lock handoff to
- prevent lock starvation
-Message-ID: <20190417080549.GA4038@hirez.programming.kicks-ass.net>
-References: <20190413172259.2740-1-longman@redhat.com>
- <20190413172259.2740-8-longman@redhat.com>
- <20190416154937.GL12232@hirez.programming.kicks-ass.net>
- <d10586ae-cd86-2992-766b-1ba4a4807b6a@redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <d10586ae-cd86-2992-766b-1ba4a4807b6a@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 17 Apr 2019 04:08:09 -0400
+Received: by mail-pf1-f193.google.com with SMTP id 9so11705323pfj.13;
+        Wed, 17 Apr 2019 01:08:08 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=qOCIU3pHa11BqOJDtitDLMSpV7CivUt4w35JumdU44Y=;
+        b=mZ6lpntsPwm3BYMGb6SkGmAmUYBNQv/beMIhD08LY1QKfyE7zJkhUBpJVsxhOBL0CQ
+         tvWV+h3SzXnaImARggK4H3IgqoQGR6dA/9t9XLEqyc2d9OseA/fbHbUB/XEa3ybShebi
+         LZI0Z4Xpe3bQr8e46hjeX6pzQC2xiDd64WKHshAbW/slciysHneLP/lq/YPJdUMOlV21
+         tq4DW4ZLPiWfbUzW2wGGykt4bUdEwDOZJw8d/h0K87VMHdQB/oHMeu+RqoAFLYa1YqzY
+         jnESjn7Rdrq91t5GwCuJGIipUH4YnDZYr7GwKrqzoDpjcCysVLu4GD5yPNa+2pc3sGVF
+         D5Xw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=qOCIU3pHa11BqOJDtitDLMSpV7CivUt4w35JumdU44Y=;
+        b=cgLhFoIvU1l1WOXQjZaAOSffIOs49HVsZzMkGjnF5fUJ8zzpFH9jj2EbOCWVW2zYZG
+         8I3GdUMYzRIqycSh9+3S2nfXRNlWjWgUZjBewGTaLltLaWuaicLu/u00ra7kQBV9mNqI
+         NzVdcgZzQyvdszjxFo5gFC1/sE8QlGV6SaVARFKF1f9wY5uubZ6xMZttqaT5ez/H1533
+         erYe9ydkGFkdwspqQ6N5ax8NC+dpb6XfQIJGatgbDhwX98lL5pRnD49C7Ye7GQGR3uqi
+         sPYp6dmHt+CJZ/3YVOH1f1AeGJZUdnSb6zK2tPhOQwwTQkLQeQqvNtViXCQmoX10gwkJ
+         en1g==
+X-Gm-Message-State: APjAAAUhHvjFTQzMbIr7l/RKOjqpSANBGww6BSD9wbSSYFZFUUbLSLUL
+        HkhEga1JTO7dANu6/miGU3c=
+X-Google-Smtp-Source: APXvYqx3WU9Y7EFRLGZnkJt1pw2QHAr5hSpIIQYFRXrdwR8ITQ6rHVF5edf/EPduzZuir8IEWkRVGg==
+X-Received: by 2002:a62:4554:: with SMTP id s81mr59788219pfa.66.1555488488103;
+        Wed, 17 Apr 2019 01:08:08 -0700 (PDT)
+Received: from localhost (59-120-186-245.HINET-IP.hinet.net. [59.120.186.245])
+        by smtp.gmail.com with ESMTPSA id 6sm70876136pfj.95.2019.04.17.01.08.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 17 Apr 2019 01:08:07 -0700 (PDT)
+From:   "Ji-Ze Hong (Peter Hong)" <hpeter@gmail.com>
+X-Google-Original-From: "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
+To:     peter_hong@fintek.com.tw, wg@grandegger.com, mkl@pengutronix.de
+Cc:     davem@davemloft.net, f.suligoi@asem.it,
+        linux-kernel@vger.kernel.org, inux-can@vger.kernel.org,
+        netdev@vger.kernel.org,
+        "Ji-Ze Hong (Peter Hong)" <hpeter+linux_kernel@gmail.com>
+Subject: [PATCH V1 1/1] can: sja1000: f81601: add Fintek F81601 support
+Date:   Wed, 17 Apr 2019 16:08:04 +0800
+Message-Id: <1555488484-14602-1-git-send-email-hpeter+linux_kernel@gmail.com>
+X-Mailer: git-send-email 2.7.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 02:16:11PM -0400, Waiman Long wrote:
+This patch add support for Fintek PCIE to 2 CAN controller support
 
-> >> @@ -608,56 +687,63 @@ __rwsem_down_write_failed_common(struct rw_semaphore *sem, int state)
-> >>  	 */
-> >>  	waiter.task = current;
-> >>  	waiter.type = RWSEM_WAITING_FOR_WRITE;
-> >> +	waiter.timeout = jiffies + RWSEM_WAIT_TIMEOUT;
-> >>  
-> >>  	raw_spin_lock_irq(&sem->wait_lock);
-> >>  
-> >>  	/* account for this before adding a new element to the list */
-> >> +	wstate = list_empty(&sem->wait_list) ? WRITER_FIRST : WRITER_NOT_FIRST;
-> >>  
-> >>  	list_add_tail(&waiter.list, &sem->wait_list);
-> >>  
-> >>  	/* we're now waiting on the lock */
-> >> +	if (wstate == WRITER_NOT_FIRST) {
-> >>  		count = atomic_long_read(&sem->count);
-> >>  
-> >>  		/*
-> >> +		 * If there were already threads queued before us and:
-> >> +		 *  1) there are no no active locks, wake the front
-> >> +		 *     queued process(es) as the handoff bit might be set.
-> >> +		 *  2) there are no active writers and some readers, the lock
-> >> +		 *     must be read owned; so we try to wake any read lock
-> >> +		 *     waiters that were queued ahead of us.
-> >>  		 */
-> >> +		if (!RWSEM_COUNT_LOCKED(count))
-> >> +			__rwsem_mark_wake(sem, RWSEM_WAKE_ANY, &wake_q);
-> >> +		else if (!(count & RWSEM_WRITER_MASK) &&
-> >> +			  (count & RWSEM_READER_MASK))
-> >>  			__rwsem_mark_wake(sem, RWSEM_WAKE_READERS, &wake_q);
+Signed-off-by: Ji-Ze Hong (Peter Hong) <hpeter+linux_kernel@gmail.com>
+---
+ drivers/net/can/sja1000/Kconfig  |   8 ++
+ drivers/net/can/sja1000/Makefile |   1 +
+ drivers/net/can/sja1000/f81601.c | 223 +++++++++++++++++++++++++++++++++++++++
+ 3 files changed, 232 insertions(+)
+ create mode 100644 drivers/net/can/sja1000/f81601.c
 
-> > Does the above want to be something like:
-> >
-> > 		if (!(count & RWSEM_WRITER_LOCKED)) {
-> > 			__rwsem_mark_wake(sem, (count & RWSEM_READER_MASK) ?
-> > 					       RWSEM_WAKE_READERS :
-> > 					       RWSEM_WAKE_ANY, &wake_q);
-> > 		}
-> 
-> Yes.
-> 
-> >> +		else
-> >> +			goto wait;
-> >>  
-> >> +		/*
-> >> +		 * The wakeup is normally called _after_ the wait_lock
-> >> +		 * is released, but given that we are proactively waking
-> >> +		 * readers we can deal with the wake_q overhead as it is
-> >> +		 * similar to releasing and taking the wait_lock again
-> >> +		 * for attempting rwsem_try_write_lock().
-> >> +		 */
-> >> +		wake_up_q(&wake_q);
-> > Hurmph.. the reason we do wake_up_q() outside of wait_lock is such that
-> > those tasks don't bounce on wait_lock. Also, it removes a great deal of
-> > hold-time from wait_lock.
-> >
-> > So I'm not sure I buy your argument here.
-> >
-> 
-> Actually, we don't want to release the wait_lock, do wake_up_q() and
-> acquire the wait_lock again as the state would have been changed. I
-> didn't change the comment on this patch, but will reword it to discuss that.
-
-I don't understand, we've queued ourselves, we're on the list, we're not
-first. How would dropping the lock to try and kick waiters before us be
-a problem?
-
-Sure, once we re-acquire the lock we have to re-avaluate @wstate to see
-if we're first now or not, but we need to do that anyway.
-
-So what is wrong with the below?
-
---- a/include/linux/sched/wake_q.h
-+++ b/include/linux/sched/wake_q.h
-@@ -51,6 +51,11 @@ static inline void wake_q_init(struct wa
- 	head->lastp = &head->first;
- }
+diff --git a/drivers/net/can/sja1000/Kconfig b/drivers/net/can/sja1000/Kconfig
+index f6dc89927ece..8588323c5138 100644
+--- a/drivers/net/can/sja1000/Kconfig
++++ b/drivers/net/can/sja1000/Kconfig
+@@ -101,4 +101,12 @@ config CAN_TSCAN1
+ 	  IRQ numbers are read from jumpers JP4 and JP5,
+ 	  SJA1000 IO base addresses are chosen heuristically (first that works).
  
-+static inline bool wake_q_empty(struct wake_q_head *head)
++config CAN_F81601
++	tristate "Fintek F81601 PCIE to 2 CAN Controller"
++	depends on PCI
++	help
++	  This driver adds support for Fintek F81601 PCIE to 2 CAN Controller.
++	  It had internal 24MHz clock source, but it can be changed by
++	  manufacturer. We can use modinfo to get usage for parameters.
++	  Visit http://www.fintek.com.tw to get more information.
+ endif
+diff --git a/drivers/net/can/sja1000/Makefile b/drivers/net/can/sja1000/Makefile
+index 9253aaf9e739..6f6268543bd9 100644
+--- a/drivers/net/can/sja1000/Makefile
++++ b/drivers/net/can/sja1000/Makefile
+@@ -13,3 +13,4 @@ obj-$(CONFIG_CAN_PEAK_PCMCIA) += peak_pcmcia.o
+ obj-$(CONFIG_CAN_PEAK_PCI) += peak_pci.o
+ obj-$(CONFIG_CAN_PLX_PCI) += plx_pci.o
+ obj-$(CONFIG_CAN_TSCAN1) += tscan1.o
++obj-$(CONFIG_CAN_F81601) += f81601.o
+diff --git a/drivers/net/can/sja1000/f81601.c b/drivers/net/can/sja1000/f81601.c
+new file mode 100644
+index 000000000000..1578bb837aaf
+--- /dev/null
++++ b/drivers/net/can/sja1000/f81601.c
+@@ -0,0 +1,223 @@
++// SPDX-License-Identifier: GPL-2.0
++/* Fintek F81601 PCIE to 2 CAN controller driver
++ *
++ * Copyright (C) 2019 Peter Hong <peter_hong@fintek.com.tw>
++ * Copyright (C) 2019 Linux Foundation
++ */
++
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/interrupt.h>
++#include <linux/netdevice.h>
++#include <linux/delay.h>
++#include <linux/slab.h>
++#include <linux/pci.h>
++#include <linux/can/dev.h>
++#include <linux/io.h>
++#include <linux/version.h>
++
++#include "sja1000.h"
++
++#define F81601_PCI_MAX_CHAN		2
++
++#define F81601_DECODE_REG		0x209
++#define F81601_IO_MODE			BIT(7)
++#define F81601_MEM_MODE			BIT(6)
++#define F81601_CFG_MODE			BIT(5)
++#define F81601_CAN2_INTERNAL_CLK	BIT(3)
++#define F81601_CAN1_INTERNAL_CLK	BIT(2)
++#define F81601_CAN2_EN			BIT(1)
++#define F81601_CAN1_EN			BIT(0)
++
++#define F81601_TRAP_REG			0x20a
++#define F81601_CAN2_HAS_EN		BIT(4)
++
++struct f81601_pci_card {
++	int channels;			/* detected channels count */
++	void __iomem *addr;
++	spinlock_t lock;		/* for access mem io */
++	struct pci_dev *dev;
++	struct net_device *net_dev[F81601_PCI_MAX_CHAN];
++};
++
++static const struct pci_device_id f81601_pci_tbl[] = {
++	{ PCI_DEVICE(0x1c29, 0x1703) },
++	{},
++};
++
++MODULE_DEVICE_TABLE(pci, f81601_pci_tbl);
++
++static bool internal_clk = 1;
++module_param(internal_clk, bool, 0444);
++MODULE_PARM_DESC(internal_clk, "Use internal clock, default 1 (24MHz)");
++
++static unsigned int external_clk;
++module_param(external_clk, uint, 0444);
++MODULE_PARM_DESC(external_clk, "External Clock, must spec when internal_clk = 0");
++
++static u8 f81601_pci_read_reg(const struct sja1000_priv *priv, int port)
 +{
-+	return head->first == WAKE_Q_TAIL;
++	return readb(priv->reg_base + port);
 +}
 +
- extern void wake_q_add(struct wake_q_head *head, struct task_struct *task);
- extern void wake_q_add_safe(struct wake_q_head *head, struct task_struct *task);
- extern void wake_up_q(struct wake_q_head *head);
---- a/kernel/locking/rwsem.c
-+++ b/kernel/locking/rwsem.c
-@@ -700,25 +700,22 @@ __rwsem_down_write_failed_common(struct
- 		 *     must be read owned; so we try to wake any read lock
- 		 *     waiters that were queued ahead of us.
- 		 */
--		if (!(count & RWSEM_LOCKED_MASK))
--			__rwsem_mark_wake(sem, RWSEM_WAKE_ANY, &wake_q);
--		else if (!(count & RWSEM_WRITER_MASK) &&
--				(count & RWSEM_READER_MASK))
--			__rwsem_mark_wake(sem, RWSEM_WAKE_READERS, &wake_q);
--		else
-+		if (count & RWSEM_WRITER_LOCKED)
- 			goto wait;
--		/*
--		 * The wakeup is normally called _after_ the wait_lock
--		 * is released, but given that we are proactively waking
--		 * readers we can deal with the wake_q overhead as it is
--		 * similar to releasing and taking the wait_lock again
--		 * for attempting rwsem_try_write_lock().
--		 */
--		wake_up_q(&wake_q);
--		/*
--		 * Reinitialize wake_q after use.
--		 */
--		wake_q_init(&wake_q);
++static void f81601_pci_write_reg(const struct sja1000_priv *priv, int port,
++				 u8 val)
++{
++	struct f81601_pci_card *card = priv->priv;
++	unsigned long flags;
 +
-+		__rwsem_mark_wake(sem, (count & RWSEM_READER_MASK) ?
-+				RWSEM_WAKE_READERS :
-+				RWSEM_WAKE_ANY, &wake_q);
++	spin_lock_irqsave(&card->lock, flags);
++	writeb(val, priv->reg_base + port);
++	readb(priv->reg_base);
++	spin_unlock_irqrestore(&card->lock, flags);
++}
 +
-+		if (!wake_q_empty(&wake_q)) {
-+			raw_spin_unlock_irq(&sem->wait_lock);
-+			wake_up_q(&wake_q);
-+			/* used again, reinit */
-+			wake_q_init(&wake_q);
-+			raw_spin_lock_irq(&sem->wait_lock);
-+			if (rwsem_waiter_is_first(sem, &waiter))
-+				wstate = WRITER_FIRST;
++static void f81601_pci_del_card(struct pci_dev *pdev)
++{
++	struct f81601_pci_card *card = pci_get_drvdata(pdev);
++	struct net_device *dev;
++	int i = 0;
++
++	for (i = 0; i < F81601_PCI_MAX_CHAN; i++) {
++		dev = card->net_dev[i];
++		if (!dev)
++			continue;
++
++		dev_info(&pdev->dev, "%s: Removing %s\n", __func__, dev->name);
++
++		unregister_sja1000dev(dev);
++		free_sja1000dev(dev);
++	}
++
++	pcim_iounmap(pdev, card->addr);
++}
++
++/* Probe F81601 based device for the SJA1000 chips and register each
++ * available CAN channel to SJA1000 Socket-CAN subsystem.
++ */
++static int f81601_pci_add_card(struct pci_dev *pdev,
++			       const struct pci_device_id *ent)
++{
++	struct sja1000_priv *priv;
++	struct net_device *dev;
++	struct f81601_pci_card *card;
++	int err, i;
++	u8 tmp;
++
++	if (pcim_enable_device(pdev) < 0) {
++		dev_err(&pdev->dev, "Failed to enable PCI device\n");
++		return -ENODEV;
++	}
++
++	dev_info(&pdev->dev, "Detected card at slot #%i\n",
++		 PCI_SLOT(pdev->devfn));
++
++	card = devm_kzalloc(&pdev->dev, sizeof(*card), GFP_KERNEL);
++	if (!card)
++		return -ENOMEM;
++
++	card->channels = 0;
++	card->dev = pdev;
++	spin_lock_init(&card->lock);
++
++	pci_set_drvdata(pdev, card);
++
++	tmp = F81601_IO_MODE | F81601_MEM_MODE | F81601_CFG_MODE |
++			F81601_CAN2_EN | F81601_CAN1_EN;
++
++	if (internal_clk) {
++		tmp |= F81601_CAN2_INTERNAL_CLK | F81601_CAN1_INTERNAL_CLK;
++
++		dev_info(&pdev->dev,
++			 "F81601 running with internal clock: 24Mhz\n");
++	} else {
++		dev_info(&pdev->dev,
++			 "F81601 running with external clock: %dMhz\n",
++			 external_clk / 1000000);
++	}
++
++	pci_write_config_byte(pdev, F81601_DECODE_REG, tmp);
++
++	card->addr = pcim_iomap(pdev, 0, pci_resource_len(pdev, 0));
++
++	if (!card->addr) {
++		err = -ENOMEM;
++		dev_err(&pdev->dev, "%s: Failed to remap BAR\n", __func__);
++		goto failure_cleanup;
++	}
++
++	/* Detect available channels */
++	for (i = 0; i < F81601_PCI_MAX_CHAN; i++) {
++		/* read CAN2_HW_EN strap pin */
++		pci_read_config_byte(pdev, F81601_TRAP_REG, &tmp);
++		if (i == 1 && !(tmp & F81601_CAN2_HAS_EN))
++			break;
++
++		dev = alloc_sja1000dev(0);
++		if (!dev) {
++			err = -ENOMEM;
++			goto failure_cleanup;
 +		}
- 	} else {
- 		count = atomic_long_add_return(RWSEM_FLAG_WAITERS, &sem->count);
- 	}
++
++		card->net_dev[i] = dev;
++		dev->irq = pdev->irq;
++
++		priv = netdev_priv(dev);
++		priv->priv = card;
++		priv->irq_flags = IRQF_SHARED;
++		priv->reg_base = card->addr + 0x80 * i;
++		priv->read_reg = f81601_pci_read_reg;
++		priv->write_reg = f81601_pci_write_reg;
++
++		if (internal_clk)
++			priv->can.clock.freq = 24000000 / 2;
++		else
++			priv->can.clock.freq = external_clk / 2;
++
++		priv->ocr = OCR_TX0_PUSHPULL | OCR_TX1_PUSHPULL;
++		priv->cdr = CDR_CBP;
++
++		SET_NETDEV_DEV(dev, &pdev->dev);
++		dev->dev_id = i;
++
++		/* Register SJA1000 device */
++		err = register_sja1000dev(dev);
++		if (err) {
++			dev_err(&pdev->dev,
++				"%s: Registering device failed: %x\n", __func__,
++				err);
++			goto failure_cleanup;
++		}
++
++		card->channels++;
++
++		dev_info(&pdev->dev, "Channel #%d, %s at 0x%p, irq %d\n", i,
++			 dev->name, priv->reg_base, dev->irq);
++	}
++
++	if (!card->channels) {
++		err = -ENODEV;
++		goto failure_cleanup;
++	}
++
++	return 0;
++
++failure_cleanup:
++	dev_err(&pdev->dev, "%s: failed: %d. Cleaning Up.\n", __func__, err);
++	f81601_pci_del_card(pdev);
++
++	return err;
++}
++
++static struct pci_driver f81601_pci_driver = {
++	.name =		"f81601",
++	.id_table =	f81601_pci_tbl,
++	.probe =	f81601_pci_add_card,
++	.remove =	f81601_pci_del_card,
++};
++
++MODULE_DESCRIPTION("Fintek F81601 PCIE to 2 CANBUS adaptor driver");
++MODULE_AUTHOR("Peter Hong <peter_hong@fintek.com.tw>");
++MODULE_LICENSE("GPL v2");
++
++module_pci_driver(f81601_pci_driver);
+-- 
+2.7.4
+
