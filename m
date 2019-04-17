@@ -4,78 +4,79 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 31392C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:30:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DCAEAC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:33:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E4D17206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:30:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A33A2206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:33:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="jz7yfzJe"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="D1sTj+g+"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732475AbfDQOa4 (ORCPT
+        id S1732579AbfDQOd1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 10:30:56 -0400
-Received: from mail-ed1-f65.google.com ([209.85.208.65]:40253 "EHLO
-        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731959AbfDQOa4 (ORCPT
+        Wed, 17 Apr 2019 10:33:27 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:38765 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732557AbfDQOd0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 10:30:56 -0400
-Received: by mail-ed1-f65.google.com with SMTP id d46so16355628eda.7
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 07:30:54 -0700 (PDT)
+        Wed, 17 Apr 2019 10:33:26 -0400
+Received: by mail-ed1-f68.google.com with SMTP id d13so21186925edr.5
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 07:33:24 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=ffwll.ch; s=google;
         h=sender:date:from:to:subject:message-id:mail-followup-to:references
          :mime-version:content-disposition:content-transfer-encoding
          :in-reply-to:user-agent;
-        bh=UtwXfgHiW9uxr4io2NrLhIlt9faL/SpYVdNzzRRZdyE=;
-        b=jz7yfzJePU9xVKg98q0j9gYBrMPepskYacPVPUSRTBKqyYiX04AHNuRcrz7uRDO/8f
-         ys4BD+WkVNbAA/cRFZ8tWp1Ts0mtTJL8ejOnPFUOZAeOFVIjMMQgmSap1cXh75O5pb1h
-         NxFTEug9hca9QghD86YEpDGy3ntZbtdmKrHVA=
+        bh=9vp0xDRk0PcZdoGi3TTAy6TNoMlOylfEgoLEBq8+ymc=;
+        b=D1sTj+g+FUumn2pYXFejKpK+hEg40IvZMjaVEP+pSJt9QvypykYwJb7NVEpaHk8qo6
+         XR33tLC/ZnE1S7SikfJABHcrVnx8h+GBep6bbtCuPMV9VU6NVVFcUGn1yArjQIcg+jWl
+         PpmggEwofaelWcvhw2h06NNQOs9lBwGlBlVJo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:sender:date:from:to:subject:message-id
          :mail-followup-to:references:mime-version:content-disposition
          :content-transfer-encoding:in-reply-to:user-agent;
-        bh=UtwXfgHiW9uxr4io2NrLhIlt9faL/SpYVdNzzRRZdyE=;
-        b=peq2o7q3xqO+/8Z1eNvsxuVNF9SPSXEIlQ4UlDWWn+BdpNl56o5sGPPnvU578TBsSC
-         6ZDsXLdfw5wUcQl3VrF15632J3hcjco+sW/dSfZn9atyY1x0QROGfiFegCKfm9zx3sHB
-         JNv76veSXkpvOEknoG3+frUe1GiSrq6nZhQ+G0DRhPHrr5s0EB4lU0BmZ58mUYjPyK/s
-         1sHt31s9l1fLAH+BhaQaDRSiuouf9PwBEkrPCvBoMZB68jwxEb69hwSNBRmN5Qh+pdKZ
-         kCSX6Vt2eVJi2FaE8QHJi7tmy637VpP7aYvogcf3+VJgHFxeFHl5GyRCsFIn2nppwKVV
-         PfNA==
-X-Gm-Message-State: APjAAAUcCKzif+012l0agfewul5vqr4FweBClg+lJv4YhYn3ihDtDzWC
-        HJUMythj55w27hfRQ9B1G3xFhA==
-X-Google-Smtp-Source: APXvYqxy1+5aJUdsuQrBfB1YwfPwwMbZ3cdbG1XS9RQBH621Drh22ZrDRGjDIz7yVQp0NbCbwbGmMw==
-X-Received: by 2002:a17:906:a291:: with SMTP id i17mr7689751ejz.180.1555511453952;
-        Wed, 17 Apr 2019 07:30:53 -0700 (PDT)
+        bh=9vp0xDRk0PcZdoGi3TTAy6TNoMlOylfEgoLEBq8+ymc=;
+        b=osBojX2rbtCsd0i4tkZSVS9De/OPpNmZhAVa+vci5qL72M5fq7XBj4THLSe2XL7Ca1
+         oDXeeEg3MviSRC/9T3aEyHKj0GxuvvYX8KkjQsnnqiY3VLy8CaLSDOoFdNYw2c7rp5R4
+         aBRgW0RwVxit0hPf9VyJoS6m7LYga55vI3n4WL9q7eWEN/c594qlCB7FPDCGsRTawbGy
+         zYQkXTKHlgWvvyHsaRKeDtB7qq2Z4GzYjwKfwmFwXh8Pbt6DxzwiyYU17S592uBRjXbE
+         RHnquVuKlbBoOaczwiLfpbv2Xoc9kL4nyzyGFRV12ogs8PblPXNBOfPNdON1XqxLI4Np
+         J7xg==
+X-Gm-Message-State: APjAAAVeu+uOfpbySyIRC68hkuS71pWKQg5yvev3zhYLW2+rtnXqB6T7
+        hxajdWZm3C+zolq2gTNwSWtvTw==
+X-Google-Smtp-Source: APXvYqyHJXMY+hQcFl2Ka4NUSc8AB0uGMBucNnW736dovVFKvjixNuqWHATwKbkFuN6nWEm4K1+17A==
+X-Received: by 2002:a50:ee9a:: with SMTP id f26mr16022724edr.118.1555511603343;
+        Wed, 17 Apr 2019 07:33:23 -0700 (PDT)
 Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
-        by smtp.gmail.com with ESMTPSA id j8sm4891124edq.39.2019.04.17.07.30.52
+        by smtp.gmail.com with ESMTPSA id p1sm8282108ejf.40.2019.04.17.07.33.22
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 17 Apr 2019 07:30:53 -0700 (PDT)
-Date:   Wed, 17 Apr 2019 16:30:51 +0200
+        Wed, 17 Apr 2019 07:33:22 -0700 (PDT)
+Date:   Wed, 17 Apr 2019 16:33:20 +0200
 From:   Daniel Vetter <daniel@ffwll.ch>
 To:     Christian =?iso-8859-1?Q?K=F6nig?= 
         <ckoenig.leichtzumerken@gmail.com>, sumit.semwal@linaro.org,
         linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
         linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
         amd-gfx@lists.freedesktop.org
-Subject: Re: [PATCH 05/12] dma-buf: add explicit buffer pinning
-Message-ID: <20190417143051.GG13337@phenom.ffwll.local>
+Subject: Re: [PATCH 04/12] dma-buf: add optional invalidate_mappings callback
+ v5
+Message-ID: <20190417143320.GH13337@phenom.ffwll.local>
 Mail-Followup-To: Christian =?iso-8859-1?Q?K=F6nig?= <ckoenig.leichtzumerken@gmail.com>,
         sumit.semwal@linaro.org, linux-media@vger.kernel.org,
         dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
         linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org
 References: <20190416183841.1577-1-christian.koenig@amd.com>
- <20190416183841.1577-6-christian.koenig@amd.com>
- <20190417142002.GE13337@phenom.ffwll.local>
+ <20190416183841.1577-5-christian.koenig@amd.com>
+ <20190417140116.GC13337@phenom.ffwll.local>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-In-Reply-To: <20190417142002.GE13337@phenom.ffwll.local>
+In-Reply-To: <20190417140116.GC13337@phenom.ffwll.local>
 X-Operating-System: Linux phenom 4.19.0-1-amd64 
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -83,212 +84,174 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 04:20:02PM +0200, Daniel Vetter wrote:
-> On Tue, Apr 16, 2019 at 08:38:34PM +0200, Christian König wrote:
-> > Add optional explicit pinning callbacks instead of implicitly assume the
-> > exporter pins the buffer when a mapping is created.
+On Wed, Apr 17, 2019 at 04:01:16PM +0200, Daniel Vetter wrote:
+> On Tue, Apr 16, 2019 at 08:38:33PM +0200, Christian König wrote:
+> > Each importer can now provide an invalidate_mappings callback.
+> > 
+> > This allows the exporter to provide the mappings without the need to pin
+> > the backing store.
+> > 
+> > v2: don't try to invalidate mappings when the callback is NULL,
+> >     lock the reservation obj while using the attachments,
+> >     add helper to set the callback
+> > v3: move flag for invalidation support into the DMA-buf,
+> >     use new attach_info structure to set the callback
+> > v4: use importer_priv field instead of mangling exporter priv.
+> > v5: drop invalidation_supported flag
 > > 
 > > Signed-off-by: Christian König <christian.koenig@amd.com>
-> 
-> Don't we need this together with the invalidate callback and the dynamic
-> stuff? Also I'm assuming that pin/unpin is pretty much required for
-> dynamic bo, so could we look at these callbacks instead of the dynamic
-> flag you add in patch 1.
-> 
-> I'm assuming following rules hold:
-> no pin/upin from exporter:
-> 
-> dma-buf is not dynamic, and pinned for the duration of map/unmap. I'm
-> not 100% sure whether really everyone wants the mapping to be cached for
-> the entire attachment, only drm_prime does that. And that's not the only
-> dma-buf importer.
-> 
-> pin/unpin calls are noops.
-> 
-> pin/unpin exist in the exporter, but importer has not provided an
-> invalidate callback:
-> 
-> We map at attach time, and we also have to pin, since the importer can't
-> handle the buffer disappearing, at attach time. We unmap/unpin at detach.
-
-For this case we should have a WARN in pin/unpin, to make sure importers
-don't do something stupid. One more thought below on pin/unpin.
-
-> pin/unpin from exporter, invalidate from importer:
-> 
-> Full dynamic mapping. We assume the importer will do caching, attach
-> fences as needed, and pin the underlying bo when it needs it it
-> permanently, without attaching fences (i.e. the scanout case).
-> 
-> Assuming I'm not terribly off with my understanding, then I think it'd be
-> best to introduce the entire new dma-buf api in the first patch, and flesh
-> it out later. Instead of spread over a few patches. Plus the above (maybe
-> prettier) as a nice kerneldoc overview comment for how dynamic dma-buf is
-> supposed to work really.
-> -Daniel
-> 
 > > ---
-> >  drivers/dma-buf/dma-buf.c | 39 +++++++++++++++++++++++++++++++++++++++
-> >  include/linux/dma-buf.h   | 37 +++++++++++++++++++++++++++++++------
-> >  2 files changed, 70 insertions(+), 6 deletions(-)
+> >  drivers/dma-buf/dma-buf.c | 37 +++++++++++++++++++++++++++++++++++++
+> >  include/linux/dma-buf.h   | 33 +++++++++++++++++++++++++++++++--
+> >  2 files changed, 68 insertions(+), 2 deletions(-)
 > > 
 > > diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
-> > index a3738fab3927..f23ff8355505 100644
+> > index 83c92bfd964c..a3738fab3927 100644
 > > --- a/drivers/dma-buf/dma-buf.c
 > > +++ b/drivers/dma-buf/dma-buf.c
-> > @@ -630,6 +630,41 @@ void dma_buf_detach(struct dma_buf *dmabuf, struct dma_buf_attachment *attach)
+> > @@ -563,6 +563,8 @@ struct dma_buf_attachment *dma_buf_attach(const struct dma_buf_attach_info *info
+> >  
+> >  	attach->dev = info->dev;
+> >  	attach->dmabuf = dmabuf;
+> > +	attach->importer_priv = info->importer_priv;
+> > +	attach->invalidate = info->invalidate;
+> >  
+> >  	mutex_lock(&dmabuf->lock);
+> >  
+> > @@ -571,7 +573,9 @@ struct dma_buf_attachment *dma_buf_attach(const struct dma_buf_attach_info *info
+> >  		if (ret)
+> >  			goto err_attach;
+> >  	}
+> > +	reservation_object_lock(dmabuf->resv, NULL);
+> >  	list_add(&attach->node, &dmabuf->attachments);
+> > +	reservation_object_unlock(dmabuf->resv);
+> >  
+> >  	mutex_unlock(&dmabuf->lock);
+> >  
+> > @@ -615,7 +619,9 @@ void dma_buf_detach(struct dma_buf *dmabuf, struct dma_buf_attachment *attach)
+> >  					   DMA_BIDIRECTIONAL);
+> >  
+> >  	mutex_lock(&dmabuf->lock);
+> > +	reservation_object_lock(dmabuf->resv, NULL);
+> >  	list_del(&attach->node);
+> > +	reservation_object_unlock(dmabuf->resv);
+> >  	if (dmabuf->ops->detach)
+> >  		dmabuf->ops->detach(dmabuf, attach);
+> >  
+> > @@ -653,7 +659,16 @@ dma_buf_map_attachment_locked(struct dma_buf_attachment *attach,
+> >  	if (attach->sgt)
+> >  		return attach->sgt;
+> >  
+> > +	/*
+> > +	 * Mapping a DMA-buf can trigger its invalidation, prevent sending this
+> > +	 * event to the caller by temporary removing this attachment from the
+> > +	 * list.
+> > +	 */
+> > +	if (attach->invalidate)
+> > +		list_del(&attach->node);
+> >  	sg_table = attach->dmabuf->ops->map_dma_buf(attach, direction);
+> > +	if (attach->invalidate)
+> > +		list_add(&attach->node, &attach->dmabuf->attachments);
+> >  	if (!sg_table)
+> >  		sg_table = ERR_PTR(-ENOMEM);
+> >  
+> > @@ -751,6 +766,26 @@ void dma_buf_unmap_attachment(struct dma_buf_attachment *attach,
 > >  }
-> >  EXPORT_SYMBOL_GPL(dma_buf_detach);
+> >  EXPORT_SYMBOL_GPL(dma_buf_unmap_attachment);
 > >  
 > > +/**
-> > + * dma_buf_pin - Lock down the DMA-buf
+> > + * dma_buf_invalidate_mappings - invalidate all mappings of this dma_buf
 > > + *
-> > + * @dmabuf:	[in]	DMA-buf to lock down.
+> > + * @dmabuf:	[in]	buffer which mappings should be invalidated
 > > + *
-> > + * Returns:
-> > + * 0 on success, negative error code on failure.
+> > + * Informs all attachmenst that they need to destroy and recreated all their
+> > + * mappings.
 > > + */
-> > +int dma_buf_pin(struct dma_buf *dmabuf)
-
-Hm, I think it'd be better to pin the attachment, not the underlying
-buffer. Attachment is the thin the importer will have to pin, and it's at
-attach/detach time where dma-buf needs to pin for importers who don't
-understand dynamic buffer sharing.
-
-Plus when we put that onto attachments, we can do a
-
-	WARN_ON(!attach->invalidate);
-
-sanity check. I think that would be good to have.
--Daniel
-
+> > +void dma_buf_invalidate_mappings(struct dma_buf *dmabuf)
 > > +{
-> > +	int ret = 0;
+> > +	struct dma_buf_attachment *attach;
 > > +
 > > +	reservation_object_assert_held(dmabuf->resv);
 > > +
-> > +	if (dmabuf->ops->pin)
-> > +		ret = dmabuf->ops->pin(dmabuf);
-> > +
-> > +	return ret;
+> > +	list_for_each_entry(attach, &dmabuf->attachments, node)
+> > +		if (attach->invalidate)
+> > +			attach->invalidate(attach);
 > > +}
-> > +EXPORT_SYMBOL_GPL(dma_buf_pin);
-> > +
-> > +/**
-> > + * dma_buf_unpin - Remove lock from DMA-buf
-> > + *
-> > + * @dmabuf:	[in]	DMA-buf to unlock.
-> > + */
-> > +void dma_buf_unpin(struct dma_buf *dmabuf)
-> > +{
-> > +	reservation_object_assert_held(dmabuf->resv);
-> > +
-> > +	if (dmabuf->ops->unpin)
-> > +		dmabuf->ops->unpin(dmabuf);
-> > +}
-> > +EXPORT_SYMBOL_GPL(dma_buf_unpin);
+> > +EXPORT_SYMBOL_GPL(dma_buf_invalidate_mappings);
 > > +
 > >  /**
-> >   * dma_buf_map_attachment_locked - Maps the buffer into _device_ address space
-> >   * with the reservation lock held. Is a wrapper for map_dma_buf() of the
-> > @@ -666,6 +701,8 @@ dma_buf_map_attachment_locked(struct dma_buf_attachment *attach,
-> >  	 */
-> >  	if (attach->invalidate)
-> >  		list_del(&attach->node);
-> > +	else
-> > +		dma_buf_pin(attach->dmabuf);
-> >  	sg_table = attach->dmabuf->ops->map_dma_buf(attach, direction);
-> >  	if (attach->invalidate)
-> >  		list_add(&attach->node, &attach->dmabuf->attachments);
-> > @@ -735,6 +772,8 @@ void dma_buf_unmap_attachment_locked(struct dma_buf_attachment *attach,
+> >   * DOC: cpu access
+> >   *
+> > @@ -1163,10 +1198,12 @@ static int dma_buf_debug_show(struct seq_file *s, void *unused)
+> >  		seq_puts(s, "\tAttached Devices:\n");
+> >  		attach_count = 0;
 > >  
-> >  	attach->dmabuf->ops->unmap_dma_buf(attach, sg_table,
-> >  						direction);
-> > +	if (!attach->invalidate)
-> > +		dma_buf_unpin(attach->dmabuf);
-> >  }
-> >  EXPORT_SYMBOL_GPL(dma_buf_unmap_attachment_locked);
+> > +		reservation_object_lock(buf_obj->resv, NULL);
+> >  		list_for_each_entry(attach_obj, &buf_obj->attachments, node) {
+> >  			seq_printf(s, "\t%s\n", dev_name(attach_obj->dev));
+> >  			attach_count++;
+> >  		}
+> > +		reservation_object_unlock(buf_obj->resv);
 > >  
+> >  		seq_printf(s, "Total %d devices attached\n\n",
+> >  				attach_count);
 > > diff --git a/include/linux/dma-buf.h b/include/linux/dma-buf.h
-> > index ece4638359a8..a615b74e5894 100644
+> > index 7e23758db3a4..ece4638359a8 100644
 > > --- a/include/linux/dma-buf.h
 > > +++ b/include/linux/dma-buf.h
-> > @@ -100,14 +100,40 @@ struct dma_buf_ops {
-> >  	 */
-> >  	void (*detach)(struct dma_buf *, struct dma_buf_attachment *);
-> >  
-> > +	/**
-> > +	 * @pin_dma_buf:
-> > +	 *
-> > +	 * This is called by dma_buf_pin and lets the exporter know that an
-> > +	 * importer assumes that the DMA-buf can't be invalidated any more.
-> > +	 *
-> > +	 * This is called with the dmabuf->resv object locked.
-> > +	 *
-> > +	 * This callback is optional.
-> > +	 *
-> > +	 * Returns:
-> > +	 *
-> > +	 * 0 on success, negative error code on failure.
-> > +	 */
-> > +	int (*pin)(struct dma_buf *);
+> > @@ -324,6 +324,7 @@ struct dma_buf {
+> >   * @dev: device attached to the buffer.
+> >   * @node: list of dma_buf_attachment.
+> >   * @priv: exporter specific attachment data.
+> > + * @importer_priv: importer specific attachment data.
+> >   *
+> >   * This structure holds the attachment information between the dma_buf buffer
+> >   * and its user device(s). The list contains one attachment struct per device
+> > @@ -340,6 +341,29 @@ struct dma_buf_attachment {
+> >  	struct list_head node;
+> >  	void *priv;
+> >  	struct sg_table *sgt;
+> > +	void *importer_priv;
 > > +
 > > +	/**
-> > +	 * @unpin_dma_buf:
+> > +	 * @invalidate:
 > > +	 *
-> > +	 * This is called by dma_buf_unpin and lets the exporter know that an
-> > +	 * importer doesn't need to the DMA-buf to stay were it is any more.
+> > +	 * Optional callback provided by the importer of the dma-buf.
 > > +	 *
-> > +	 * This is called with the dmabuf->resv object locked.
+> > +	 * If provided the exporter can avoid pinning the backing store while
+> > +	 * mappings exists.
 > > +	 *
-> > +	 * This callback is optional.
+> > +	 * The function is called with the lock of the reservation object
+> > +	 * associated with the dma_buf held and the mapping function must be
+> > +	 * called with this lock held as well. This makes sure that no mapping
+> > +	 * is created concurrently with an ongoing invalidation.
+> > +	 *
+> > +	 * After the callback all existing mappings are still valid until all
+> > +	 * fences in the dma_bufs reservation object are signaled, but should be
+> > +	 * destroyed by the importer as soon as possible.
+> > +	 *
+> > +	 * New mappings can be created immediately, but can't be used before the
+> > +	 * exclusive fence in the dma_bufs reservation object is signaled.
 > > +	 */
-> > +	void (*unpin)(struct dma_buf *);
-> > +
-> >  	/**
-> >  	 * @map_dma_buf:
-> >  	 *
-> >  	 * This is called by dma_buf_map_attachment() and is used to map a
-> >  	 * shared &dma_buf into device address space, and it is mandatory. It
-> > -	 * can only be called if @attach has been called successfully. This
-> > -	 * essentially pins the DMA buffer into place, and it cannot be moved
-> > -	 * any more
-> > +	 * can only be called if @attach has been called successfully.
-> >  	 *
-> >  	 * This call may sleep, e.g. when the backing storage first needs to be
-> >  	 * allocated, or moved to a location suitable for all currently attached
-> > @@ -148,9 +174,6 @@ struct dma_buf_ops {
-> >  	 *
-> >  	 * This is called by dma_buf_unmap_attachment() and should unmap and
-> >  	 * release the &sg_table allocated in @map_dma_buf, and it is mandatory.
-> > -	 * It should also unpin the backing storage if this is the last mapping
-> > -	 * of the DMA buffer, it the exporter supports backing storage
-> > -	 * migration.
-> >  	 *
-> >  	 * This is always called with the dmabuf->resv object locked when
-> >  	 * no_sgt_cache is true.
-> > @@ -442,6 +465,8 @@ int dma_buf_fd(struct dma_buf *dmabuf, int flags);
-> >  struct dma_buf *dma_buf_get(int fd);
-> >  void dma_buf_put(struct dma_buf *dmabuf);
-> >  
-> > +int dma_buf_pin(struct dma_buf *dmabuf);
-> > +void dma_buf_unpin(struct dma_buf *dmabuf);
-> >  struct sg_table *dma_buf_map_attachment_locked(struct dma_buf_attachment *,
-> >  					       enum dma_data_direction);
-> >  struct sg_table *dma_buf_map_attachment(struct dma_buf_attachment *,
-> > -- 
-> > 2.17.1
-> > 
-> > _______________________________________________
-> > dri-devel mailing list
-> > dri-devel@lists.freedesktop.org
-> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> > +	void (*invalidate)(struct dma_buf_attachment *attach);
 > 
-> -- 
-> Daniel Vetter
-> Software Engineer, Intel Corporation
-> http://blog.ffwll.ch
+> I would put the long kerneldoc into dma_buf_attach_info (as an inline
+> comment, you can mix the styles). And reference it from here with
+> something like
+> 
+> "Set from &dma_buf_attach_info.invalidate in dma_buf_attach(), see there
+> for more information."
+> 
+> This here feels a bit too much hidden.
 
+Question on semantics: Is invalidate allowed to add new fences? I think we
+need that for pipelined buffer moves and stuff perhaps (or pipeline
+pagetable invalidates or whatever you feel like pipelining). And it should
+be possible (we already hold the reservation lock), and I think ttm copes
+(but no idea really).
+
+Either way, docs need to be clear on this.
+-Daniel
 -- 
 Daniel Vetter
 Software Engineer, Intel Corporation
