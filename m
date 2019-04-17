@@ -2,116 +2,102 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 81B4DC282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:10:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6AD90C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:11:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 510E52183E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:10:34 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="s1KYIOL2"
+	by mail.kernel.org (Postfix) with ESMTP id 358CA2183E
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:11:51 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733038AbfDQVKd (ORCPT
+        id S1733147AbfDQVLt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 17:10:33 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:39004 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728074AbfDQVKc (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 17:10:32 -0400
-Received: by mail-pf1-f196.google.com with SMTP id i17so43538pfo.6;
-        Wed, 17 Apr 2019 14:10:32 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Tn+37+XDAd+/JBY7zfs8apH2ixBIPVzCz+3j8mVbjhw=;
-        b=s1KYIOL2gqie+9wCjvjUMEwNdgoG19Lekg1qhwvc9NA5o/NsI1AI+IjX1yYjAjNBTC
-         Z4BzKeqtOVVzr7rfwnfUJAH57Bt39t4gw2cjMEPHffuY4wSlWeNrpCG7WNtvThIQhtYa
-         f7BcWfSH43ZufZHZnDqK0Nl+J4uF6OYdrdOsVwRXYeF9LcneOLtgiV+5Yoha4eZj6vv8
-         YEqiagJZxHSRaqjm5s27o81689z8uQ0NcKMNNjPvAKZgyQefUqTZmFIsIMalP+kP91x9
-         foGUWOFl8BX27yAsptVNDHORZy8B4xvUJZYiP+maks8VMXzzbIj8WeQB9ZzKPvKYESOA
-         6FaA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Tn+37+XDAd+/JBY7zfs8apH2ixBIPVzCz+3j8mVbjhw=;
-        b=M/xKjAkbrEwBxmwraS7ungajTvwKCOr8DccYbUkFY3RCQEyGBPAEinzeQkKWVCOQcl
-         HD82ZAI0eZFrEglQPXNztTamzdXgqAJinW2a0yvpvhetAdZ6QSS10b3TaETF8cM5me/F
-         TIz1VzcwPDCVU0JWtKAGEWLIZaAPJRxGcMrjuh+fjeSXqI0sNYzmkn+gWeMtWEBZ++tK
-         Z1Rx5PcTOVrb8KkVaIwe5m7pKkx3OpPFRvC6RO+x/bVFMOWQNuWweTC6tv4WcJi7mTOn
-         32GtSs+5hS1EdNsiM4J3ULcv8RjOmfH0i22x0zbFNR72cxTEC8GOFyixHR2gG2Ktc6t+
-         zshw==
-X-Gm-Message-State: APjAAAUMGWzceEZkLfSWg/8HZoNnkhkcEPLIm5ZNcYCCgb/GrjUJwwlA
-        xbu+CM/Gj9usnEOPFjLmkiuZOfMcQPc=
-X-Google-Smtp-Source: APXvYqx0UHZFlzaNDC5nPiMns51PY3X3adBvT+lymhcZzc7iUX+rh+KaqWS69uwm6W5O5D57jVXCiw==
-X-Received: by 2002:a63:d250:: with SMTP id t16mr83195813pgi.288.1555535431423;
-        Wed, 17 Apr 2019 14:10:31 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id j19sm107828pfr.155.2019.04.17.14.10.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 17 Apr 2019 14:10:31 -0700 (PDT)
-Date:   Wed, 17 Apr 2019 14:10:26 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     jdelvare@suse.com, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org, corbet@lwn.net,
-        linux-doc@vger.kernel.org
-Subject: Re: [PATCH] hwmon: (ina3221) Add voltage conversion time settings
-Message-ID: <20190417211026.GA9565@Asurada-Nvidia.nvidia.com>
-References: <20190416235548.22733-1-nicoleotsuka@gmail.com>
- <1ad27385-e62a-d4f0-2590-c50458119f12@roeck-us.net>
- <2a193494-a33e-dac0-456a-241d7b3e59ad@roeck-us.net>
- <20190417183949.GB5073@Asurada-Nvidia.nvidia.com>
- <20190417194817.GA22652@Asurada-Nvidia.nvidia.com>
- <20190417201234.GA6223@roeck-us.net>
+        Wed, 17 Apr 2019 17:11:49 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:37066 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727013AbfDQVLt (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 17:11:49 -0400
+Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 2E1503003199;
+        Wed, 17 Apr 2019 21:11:49 +0000 (UTC)
+Received: from localhost.localdomain.com (unknown [10.20.6.236])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id E852A5C205;
+        Wed, 17 Apr 2019 21:11:46 +0000 (UTC)
+From:   jglisse@redhat.com
+To:     linux-mm@kvack.org
+Cc:     linux-kernel@vger.kernel.org,
+        =?UTF-8?q?J=C3=A9r=C3=B4me=20Glisse?= <jglisse@redhat.com>,
+        Guenter Roeck <linux@roeck-us.net>,
+        Leon Romanovsky <leonro@mellanox.com>,
+        Jason Gunthorpe <jgg@mellanox.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Ralph Campbell <rcampbell@nvidia.com>,
+        John Hubbard <jhubbard@nvidia.com>
+Subject: [PATCH] mm/hmm: add ARCH_HAS_HMM_MIRROR ARCH_HAS_HMM_DEVICE Kconfig
+Date:   Wed, 17 Apr 2019 17:11:41 -0400
+Message-Id: <20190417211141.17580-1-jglisse@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190417201234.GA6223@roeck-us.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+Content-Type: text/plain; charset=UTF-8
+Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 17 Apr 2019 21:11:49 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 01:12:34PM -0700, Guenter Roeck wrote:
-> On Wed, Apr 17, 2019 at 12:48:18PM -0700, Nicolin Chen wrote:
-> > On Wed, Apr 17, 2019 at 11:39:49AM -0700, Nicolin Chen wrote:
-> > 
-> > > > Thinking about it ... does it even make sense to cache reg_config twice,
-> > > > or would it be better to just update the local copy and use regmap_write()
-> > > > to send it to the chip ?
-> > > 
-> > > I remember the reason of adding the read-back was to prevent race
-> > > condition. But now we have mutex protections for all sysfs nodes,
-> > > maybe it's not necessary anymore. I will read the code carefully
-> > > and see if it's safe to remove it -- will do in a separate patch.
-> > 
-> > I just recalled a second thought for the reason why I left them
-> > there as it'd logically require a copy to restore upon failure
-> > of regmap_write, that might not look so neat as the read-back:
-> > 
-> > 	old_config = reg_config;
-> > 	reg_config &= mask;
-> > 	reg_config |= val;
-> > 	ret = regmap_write(reg_config);
-> > 	if (ret) {
-> > 		reg_config = old_config;
-> > 		return ret;
-> > 	}
-> 
-> 	reg = (reg_config & mask) | val;
-> 	ret = regmap_write(reg);
-> 	if (ret) 
-> 		return ret;
-> 	reg_config = reg;
-> 
-> doesn't look that bad to me, and is much less costly.
+From: Jérôme Glisse <jglisse@redhat.com>
 
-Okay. Will submit a change. Thanks
+This patch just add 2 new Kconfig that are _not use_ by anyone. I check
+that various make ARCH=somearch allmodconfig do work and do not complain.
+This new Kconfig need to be added first so that device driver that do
+depend on HMM can be updated.
+
+Once drivers are updated then i can update the HMM Kconfig to depends
+on this new Kconfig in a followup patch.
+
+Signed-off-by: Jérôme Glisse <jglisse@redhat.com>
+Cc: Guenter Roeck <linux@roeck-us.net>
+Cc: Leon Romanovsky <leonro@mellanox.com>
+Cc: Jason Gunthorpe <jgg@mellanox.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Ralph Campbell <rcampbell@nvidia.com>
+Cc: John Hubbard <jhubbard@nvidia.com>
+---
+ mm/Kconfig | 16 ++++++++++++++++
+ 1 file changed, 16 insertions(+)
+
+diff --git a/mm/Kconfig b/mm/Kconfig
+index 25c71eb8a7db..daadc9131087 100644
+--- a/mm/Kconfig
++++ b/mm/Kconfig
+@@ -676,6 +676,22 @@ config ZONE_DEVICE
+ 
+ 	  If FS_DAX is enabled, then say Y.
+ 
++config ARCH_HAS_HMM_MIRROR
++	bool
++	default y
++	depends on (X86_64 || PPC64)
++	depends on MMU && 64BIT
++
++config ARCH_HAS_HMM_DEVICE
++	bool
++	default y
++	depends on (X86_64 || PPC64)
++	depends on MEMORY_HOTPLUG
++	depends on MEMORY_HOTREMOVE
++	depends on SPARSEMEM_VMEMMAP
++	depends on ARCH_HAS_ZONE_DEVICE
++	select XARRAY_MULTI
++
+ config ARCH_HAS_HMM
+ 	bool
+ 	default y
+-- 
+2.20.1
+
