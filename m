@@ -2,130 +2,91 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FBD8C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:53:03 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93B0FC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:55:44 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 170D521773
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:53:03 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5D9A72183F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:55:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555512944;
+	bh=j9k/mzqnrZNzZ7Si59lWNOFs2wbvVmUBj3UwXe/aI5E=;
+	h=From:To:Cc:Subject:Date:List-ID:From;
+	b=oxes5yIsQiB6x9kKpfJJUeBwadWDTC2chn6urk/IHJQu1KCM6YgjpUfaFzlb5ulrn
+	 VZXLox48VVOExYGnAVViQLWsKIgfw4Cm/i4y+dX28nDQAeS1v9R6zQoZ4m7KXFE/B5
+	 Ofz7x4y+IAkjrplrT8VJxDzo+TpOREsGCZw5iE4k=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732504AbfDQOxC (ORCPT
+        id S1732415AbfDQOzn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 10:53:02 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:46278 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730463AbfDQOxB (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 10:53:01 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id D8DC3A78;
-        Wed, 17 Apr 2019 07:53:00 -0700 (PDT)
-Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 395D63F557;
-        Wed, 17 Apr 2019 07:52:59 -0700 (PDT)
-Date:   Wed, 17 Apr 2019 15:52:56 +0100
-From:   Dave Martin <Dave.Martin@arm.com>
-To:     Marc Zyngier <marc.zyngier@arm.com>
-Cc:     Amit Daniel Kachhap <amit.kachhap@arm.com>,
-        linux-arm-kernel@lists.infradead.org,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Kristina Martsenko <kristina.martsenko@arm.com>,
-        kvmarm@lists.cs.columbia.edu,
-        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v9 1/5] KVM: arm64: Add a vcpu flag to control ptrauth
- for guest
-Message-ID: <20190417145255.GB3567@e103592.cambridge.arm.com>
-References: <1555039236-10608-1-git-send-email-amit.kachhap@arm.com>
- <1555039236-10608-2-git-send-email-amit.kachhap@arm.com>
- <eeeebc4d-f061-42a5-954d-40161bbed23a@arm.com>
- <ef1eb326-cd3a-4033-813d-ceae262b4e23@arm.com>
- <239c5d74-221e-cf8c-2c41-80db016bdc2b@arm.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <239c5d74-221e-cf8c-2c41-80db016bdc2b@arm.com>
-User-Agent: Mutt/1.5.23 (2014-03-12)
+        Wed, 17 Apr 2019 10:55:43 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39792 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1732268AbfDQOzm (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 10:55:42 -0400
+Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id C10077DCE6;
+        Wed, 17 Apr 2019 14:55:42 +0000 (UTC)
+Received: from krava.brq.redhat.com (unknown [10.43.17.48])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id DA92A5D6A6;
+        Wed, 17 Apr 2019 14:55:39 +0000 (UTC)
+From:   Jiri Olsa <jolsa@kernel.org>
+To:     Arnaldo Carvalho de Melo <acme@kernel.org>
+Cc:     Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Song Liu <songliubraving@fb.com>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>
+Subject: [PATCH] perf bpf: Return NULL when RB tree lookup fails in perf_env__find_btf()
+Date:   Wed, 17 Apr 2019 16:55:39 +0200
+Message-Id: <20190417145539.11669-1-jolsa@kernel.org>
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.27]); Wed, 17 Apr 2019 14:55:42 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 03:19:11PM +0100, Marc Zyngier wrote:
-> On 17/04/2019 14:08, Amit Daniel Kachhap wrote:
-> > Hi,
-> > 
-> > On 4/17/19 2:05 PM, Marc Zyngier wrote:
-> >> On 12/04/2019 04:20, Amit Daniel Kachhap wrote:
-> >>> A per vcpu flag is added to check if pointer authentication is
-> >>> enabled for the vcpu or not. This flag may be enabled according to
-> >>> the necessary user policies and host capabilities.
-> >>>
-> >>> This patch also adds a helper to check the flag.
-> >>>
-> >>> Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
-> >>> Cc: Mark Rutland <mark.rutland@arm.com>
-> >>> Cc: Marc Zyngier <marc.zyngier@arm.com>
-> >>> Cc: Christoffer Dall <christoffer.dall@arm.com>
-> >>> Cc: kvmarm@lists.cs.columbia.edu
-> >>> ---
-> >>>
-> >>> Changes since v8:
-> >>> * Added a new per vcpu flag which will store Pointer Authentication enable
-> >>>    status instead of checking them again. [Dave Martin]
-> >>>
-> >>>   arch/arm64/include/asm/kvm_host.h | 4 ++++
-> >>>   1 file changed, 4 insertions(+)
-> >>>
-> >>> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
-> >>> index 9d57cf8..31dbc7c 100644
-> >>> --- a/arch/arm64/include/asm/kvm_host.h
-> >>> +++ b/arch/arm64/include/asm/kvm_host.h
-> >>> @@ -355,10 +355,14 @@ struct kvm_vcpu_arch {
-> >>>   #define KVM_ARM64_HOST_SVE_ENABLED	(1 << 4) /* SVE enabled for EL0 */
-> >>>   #define KVM_ARM64_GUEST_HAS_SVE		(1 << 5) /* SVE exposed to guest */
-> >>>   #define KVM_ARM64_VCPU_SVE_FINALIZED	(1 << 6) /* SVE config completed */
-> >>> +#define KVM_ARM64_GUEST_HAS_PTRAUTH	(1 << 7) /* PTRAUTH exposed to guest */
-> >>>   
-> >>>   #define vcpu_has_sve(vcpu) (system_supports_sve() && \
-> >>>   			    ((vcpu)->arch.flags & KVM_ARM64_GUEST_HAS_SVE))
-> >>>   
-> >>> +#define vcpu_has_ptrauth(vcpu)	\
-> >>> +			((vcpu)->arch.flags & KVM_ARM64_GUEST_HAS_PTRAUTH)
-> >>> +
-> >>
-> >> Just as for SVE, please first check that the system has PTRAUTH.
-> >> Something like:
-> >>
-> >> 		(cpus_have_const_cap(ARM64_HAS_GENERIC_AUTH_ARCH) && \
-> >> 		 ((vcpu)->arch.flags & KVM_ARM64_GUEST_HAS_PTRAUTH))
-> > 
-> > In the subsequent patches, vcpu->arch.flags is only set to 
-> > KVM_ARM64_GUEST_HAS_PTRAUTH when all host capability check conditions 
-> > matches such as system_supports_address_auth(), 
-> > system_supports_generic_auth() so doing them again is repetitive in my view.
-> 
-> It isn't the setting of the flag I care about, but the check of that
-> flag. Checking a flag for a feature that cannot be used on the running
-> system should have a zero cost, which isn't the case here.
-> 
-> Granted, the impact should be minimal and it looks like it mostly happen
-> on the slow path, but at the very least it would be consistent. So even
-> if you don't buy my argument about efficiency, please change it in the
-> name of consistency.
+We currently don't return NULL in case we don't find the
+bpf_prog_info_node, fixing that.
 
-One of the annoyances here is there is no single static key for ptrauth.
+Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+Cc: Namhyung Kim <namhyung@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Song Liu <songliubraving@fb.com>
+Fixes: 3792cb2ff43b ("perf bpf: Save BTF in a rbtree in perf_env")
+Link: http://lkml.kernel.org/n/tip-99g9rg4p20a1o99vr0nkjhq8@git.kernel.org
+Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
+---
+ tools/perf/util/env.c | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
 
-I'm assuming we don't want to check both static keys (for address and
-generic auth) on hot paths.
+diff --git a/tools/perf/util/env.c b/tools/perf/util/env.c
+index 34a363f2e71b..9494f9dc61ec 100644
+--- a/tools/perf/util/env.c
++++ b/tools/perf/util/env.c
+@@ -111,10 +111,12 @@ struct btf_node *perf_env__find_btf(struct perf_env *env, __u32 btf_id)
+ 		else if (btf_id > node->id)
+ 			n = n->rb_right;
+ 		else
+-			break;
++			goto out;
+ 	}
++	node = NULL;
+ 
+ 	up_read(&env->bpf_progs.lock);
++out:
+ 	return node;
+ }
+ 
+-- 
+2.17.2
 
-Checking just one of the two possibilities is OK for now, but we need
-to comment clearly somewhere that that will break if KVM is changed
-later to expose ptrauth to guests when the host doesn't support both
-types.
-
-Cheers
----Dave
