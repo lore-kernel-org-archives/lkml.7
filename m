@@ -2,125 +2,203 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1958BC282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:13:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 72B7FC10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:15:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DBD8A2073F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:13:27 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=yandex-team.ru header.i=@yandex-team.ru header.b="bHJJfJba"
+	by mail.kernel.org (Postfix) with ESMTP id 41BD42073F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:15:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731271AbfDQIN0 (ORCPT
+        id S1731268AbfDQIPJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 04:13:26 -0400
-Received: from forwardcorp1o.mail.yandex.net ([95.108.205.193]:33560 "EHLO
-        forwardcorp1o.mail.yandex.net" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727013AbfDQINY (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 04:13:24 -0400
-Received: from mxbackcorp1g.mail.yandex.net (mxbackcorp1g.mail.yandex.net [IPv6:2a02:6b8:0:1402::301])
-        by forwardcorp1o.mail.yandex.net (Yandex) with ESMTP id E76C12E145C;
-        Wed, 17 Apr 2019 11:13:21 +0300 (MSK)
-Received: from smtpcorp1p.mail.yandex.net (smtpcorp1p.mail.yandex.net [2a02:6b8:0:1472:2741:0:8b6:10])
-        by mxbackcorp1g.mail.yandex.net (nwsmtp/Yandex) with ESMTP id tyKNRnWhQ2-DLoOacZo;
-        Wed, 17 Apr 2019 11:13:21 +0300
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=yandex-team.ru; s=default;
-        t=1555488801; bh=erQjNL5gbIE//F78NAsnJp4HRRQg3PFtAJnUT1IRkZE=;
-        h=In-Reply-To:Message-ID:References:Date:To:From:Subject:Cc;
-        b=bHJJfJba+FA5aWWTIIGEzUQciZrmfp72Vp/9N1kFEx4hN6Mu7wNZUCi8nYx9qaDmE
-         0xx/moDmxWmdLQth9QM9TBLTIo52/FuP+MfYvQRTfDao/xUFIsXypSNPs5ICYtpEHs
-         rIsRdpNVN14GMjRG/Xgc+CwTMO4prpQYne2oyVlM=
-Authentication-Results: mxbackcorp1g.mail.yandex.net; dkim=pass header.i=@yandex-team.ru
-Received: from dynamic-red.dhcp.yndx.net (dynamic-red.dhcp.yndx.net [2a02:6b8:0:40c:f5ec:9361:ed45:768f])
-        by smtpcorp1p.mail.yandex.net (nwsmtp/Yandex) with ESMTPSA id 5VSG6SVdjC-DK0ipQ0r;
-        Wed, 17 Apr 2019 11:13:20 +0300
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (Client certificate not present)
-Subject: [PATCH 2/2] e1000e: start network tx queue only when link is up
-From:   Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-To:     netdev@vger.kernel.org, intel-wired-lan@lists.osuosl.org,
-        linux-kernel@vger.kernel.org,
-        Jeff Kirsher <jeffrey.t.kirsher@intel.com>
-Cc:     Sasha Levin <sashal@kernel.org>, Joseph Yasi <joe.yasi@gmail.com>,
-        Aaron Brown <aaron.f.brown@intel.com>,
-        Alexander Duyck <alexander.duyck@gmail.com>,
-        e1000-devel@lists.sourceforge.net
-Date:   Wed, 17 Apr 2019 11:13:20 +0300
-Message-ID: <155548880068.3454.1621821881762819373.stgit@buzz>
-In-Reply-To: <155548879651.3454.13167784936351314661.stgit@buzz>
-References: <155548879651.3454.13167784936351314661.stgit@buzz>
-User-Agent: StGit/0.17.1-dirty
+        Wed, 17 Apr 2019 04:15:09 -0400
+Received: from mx2.suse.de ([195.135.220.15]:36658 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726237AbfDQIPI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 04:15:08 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id D1C6CAFED;
+        Wed, 17 Apr 2019 08:15:06 +0000 (UTC)
+Subject: Re: btrfs: drop inode reference count on error path
+To:     Pan Bian <bianpan2016@163.com>, Chris Mason <clm@fb.com>,
+        Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org
+References: <1555467810-27859-1-git-send-email-bianpan2016@163.com>
+From:   Nikolay Borisov <nborisov@suse.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=nborisov@suse.com; prefer-encrypt=mutual; keydata=
+ mQINBFiKBz4BEADNHZmqwhuN6EAzXj9SpPpH/nSSP8YgfwoOqwrP+JR4pIqRK0AWWeWCSwmZ
+ T7g+RbfPFlmQp+EwFWOtABXlKC54zgSf+uulGwx5JAUFVUIRBmnHOYi/lUiE0yhpnb1KCA7f
+ u/W+DkwGerXqhhe9TvQoGwgCKNfzFPZoM+gZrm+kWv03QLUCr210n4cwaCPJ0Nr9Z3c582xc
+ bCUVbsjt7BN0CFa2BByulrx5xD9sDAYIqfLCcZetAqsTRGxM7LD0kh5WlKzOeAXj5r8DOrU2
+ GdZS33uKZI/kZJZVytSmZpswDsKhnGzRN1BANGP8sC+WD4eRXajOmNh2HL4P+meO1TlM3GLl
+ EQd2shHFY0qjEo7wxKZI1RyZZ5AgJnSmehrPCyuIyVY210CbMaIKHUIsTqRgY5GaNME24w7h
+ TyyVCy2qAM8fLJ4Vw5bycM/u5xfWm7gyTb9V1TkZ3o1MTrEsrcqFiRrBY94Rs0oQkZvunqia
+ c+NprYSaOG1Cta14o94eMH271Kka/reEwSZkC7T+o9hZ4zi2CcLcY0DXj0qdId7vUKSJjEep
+ c++s8ncFekh1MPhkOgNj8pk17OAESanmDwksmzh1j12lgA5lTFPrJeRNu6/isC2zyZhTwMWs
+ k3LkcTa8ZXxh0RfWAqgx/ogKPk4ZxOXQEZetkEyTFghbRH2BIwARAQABtCNOaWtvbGF5IEJv
+ cmlzb3YgPG5ib3Jpc292QHN1c2UuY29tPokCOAQTAQIAIgUCWIo48QIbAwYLCQgHAwIGFQgC
+ CQoLBBYCAwECHgECF4AACgkQcb6CRuU/KFc0eg/9GLD3wTQz9iZHMFbjiqTCitD7B6dTLV1C
+ ddZVlC8Hm/TophPts1bWZORAmYIihHHI1EIF19+bfIr46pvfTu0yFrJDLOADMDH+Ufzsfy2v
+ HSqqWV/nOSWGXzh8bgg/ncLwrIdEwBQBN9SDS6aqsglagvwFD91UCg/TshLlRxD5BOnuzfzI
+ Leyx2c6YmH7Oa1R4MX9Jo79SaKwdHt2yRN3SochVtxCyafDlZsE/efp21pMiaK1HoCOZTBp5
+ VzrIP85GATh18pN7YR9CuPxxN0V6IzT7IlhS4Jgj0NXh6vi1DlmKspr+FOevu4RVXqqcNTSS
+ E2rycB2v6cttH21UUdu/0FtMBKh+rv8+yD49FxMYnTi1jwVzr208vDdRU2v7Ij/TxYt/v4O8
+ V+jNRKy5Fevca/1xroQBICXsNoFLr10X5IjmhAhqIH8Atpz/89ItS3+HWuE4BHB6RRLM0gy8
+ T7rN6ja+KegOGikp/VTwBlszhvfLhyoyjXI44Tf3oLSFM+8+qG3B7MNBHOt60CQlMkq0fGXd
+ mm4xENl/SSeHsiomdveeq7cNGpHi6i6ntZK33XJLwvyf00PD7tip/GUj0Dic/ZUsoPSTF/mG
+ EpuQiUZs8X2xjK/AS/l3wa4Kz2tlcOKSKpIpna7V1+CMNkNzaCOlbv7QwprAerKYywPCoOSC
+ 7P25Ag0EWIoHPgEQAMiUqvRBZNvPvki34O/dcTodvLSyOmK/MMBDrzN8Cnk302XfnGlW/YAQ
+ csMWISKKSpStc6tmD+2Y0z9WjyRqFr3EGfH1RXSv9Z1vmfPzU42jsdZn667UxrRcVQXUgoKg
+ QYx055Q2FdUeaZSaivoIBD9WtJq/66UPXRRr4H/+Y5FaUZx+gWNGmBT6a0S/GQnHb9g3nonD
+ jmDKGw+YO4P6aEMxyy3k9PstaoiyBXnzQASzdOi39BgWQuZfIQjN0aW+Dm8kOAfT5i/yk59h
+ VV6v3NLHBjHVw9kHli3jwvsizIX9X2W8tb1SefaVxqvqO1132AO8V9CbE1DcVT8fzICvGi42
+ FoV/k0QOGwq+LmLf0t04Q0csEl+h69ZcqeBSQcIMm/Ir+NorfCr6HjrB6lW7giBkQl6hhomn
+ l1mtDP6MTdbyYzEiBFcwQD4terc7S/8ELRRybWQHQp7sxQM/Lnuhs77MgY/e6c5AVWnMKd/z
+ MKm4ru7A8+8gdHeydrRQSWDaVbfy3Hup0Ia76J9FaolnjB8YLUOJPdhI2vbvNCQ2ipxw3Y3c
+ KhVIpGYqwdvFIiz0Fej7wnJICIrpJs/+XLQHyqcmERn3s/iWwBpeogrx2Lf8AGezqnv9woq7
+ OSoWlwXDJiUdaqPEB/HmGfqoRRN20jx+OOvuaBMPAPb+aKJyle8zABEBAAGJAh8EGAECAAkF
+ AliKBz4CGwwACgkQcb6CRuU/KFdacg/+M3V3Ti9JYZEiIyVhqs+yHb6NMI1R0kkAmzsGQ1jU
+ zSQUz9AVMR6T7v2fIETTT/f5Oout0+Hi9cY8uLpk8CWno9V9eR/B7Ifs2pAA8lh2nW43FFwp
+ IDiSuDbH6oTLmiGCB206IvSuaQCp1fed8U6yuqGFcnf0ZpJm/sILG2ECdFK9RYnMIaeqlNQm
+ iZicBY2lmlYFBEaMXHoy+K7nbOuizPWdUKoKHq+tmZ3iA+qL5s6Qlm4trH28/fPpFuOmgP8P
+ K+7LpYLNSl1oQUr+WlqilPAuLcCo5Vdl7M7VFLMq4xxY/dY99aZx0ZJQYFx0w/6UkbDdFLzN
+ upT7NIN68lZRucImffiWyN7CjH23X3Tni8bS9ubo7OON68NbPz1YIaYaHmnVQCjDyDXkQoKC
+ R82Vf9mf5slj0Vlpf+/Wpsv/TH8X32ajva37oEQTkWNMsDxyw3aPSps6MaMafcN7k60y2Wk/
+ TCiLsRHFfMHFY6/lq/c0ZdOsGjgpIK0G0z6et9YU6MaPuKwNY4kBdjPNBwHreucrQVUdqRRm
+ RcxmGC6ohvpqVGfhT48ZPZKZEWM+tZky0mO7bhZYxMXyVjBn4EoNTsXy1et9Y1dU3HVJ8fod
+ 5UqrNrzIQFbdeM0/JqSLrtlTcXKJ7cYFa9ZM2AP7UIN9n1UWxq+OPY9YMOewVfYtL8M=
+Message-ID: <41baed4e-279c-6074-b2b8-d8972bdb8859@suse.com>
+Date:   Wed, 17 Apr 2019 11:15:05 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <1555467810-27859-1-git-send-email-bianpan2016@163.com>
+Content-Type: multipart/mixed;
+ boundary="------------7D938910A1B79AF0323CC7CA"
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Driver does not want to keep packets in tx queue when link is lost.
-But present code only reset NIC to flush them, but does not prevent
-queuing new packets. Moreover reset sequence itself could generate
-new packets via netconsole and NIC falls into endless reset loop.
+This is a multi-part message in MIME format.
+--------------7D938910A1B79AF0323CC7CA
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 8bit
 
-This patch wakes tx queue only when NIC is ready to send packets.
 
-This is proper fix for problem addressed by commit 0f9e980bf5ee
-("e1000e: fix cyclic resets at link up with active tx").
 
-Signed-off-by: Konstantin Khlebnikov <khlebnikov@yandex-team.ru>
-Suggested-by: Alexander Duyck <alexander.duyck@gmail.com>
----
- drivers/net/ethernet/intel/e1000e/netdev.c |    6 ++++--
- 1 file changed, 4 insertions(+), 2 deletions(-)
+On 17.04.19 г. 5:23 ч., Pan Bian wrote:
+> The reference count of inode is incremented by ihold. It should be
+> dropped if not used. However, the reference count is not dropped if
+> error occurs during updating the inode or deleting orphan items. This
+> patch fixes the bug.
+> 
+> Signed-off-by: Pan Bian <bianpan2016@163.com>
 
-diff --git a/drivers/net/ethernet/intel/e1000e/netdev.c b/drivers/net/ethernet/intel/e1000e/netdev.c
-index ba96e52aa8d1..fe643d66aa10 100644
---- a/drivers/net/ethernet/intel/e1000e/netdev.c
-+++ b/drivers/net/ethernet/intel/e1000e/netdev.c
-@@ -4209,7 +4209,7 @@ void e1000e_up(struct e1000_adapter *adapter)
- 		e1000_configure_msix(adapter);
- 	e1000_irq_enable(adapter);
+The extra reference count taken is needed for the call to d_instantiate,
+while this operation is in progress the inode is actually locked. This
+means it will be a lot clearer if ihold is done right before
+d_instantiate and they are moved at the end of the function where we are
+sure no errors have appened. Something like the attached diff
+
+
+--------------7D938910A1B79AF0323CC7CA
+Content-Type: text/x-patch;
+ name="btrfs-link-cleanup.diff"
+Content-Transfer-Encoding: 7bit
+Content-Disposition: attachment;
+ filename="btrfs-link-cleanup.diff"
+
+diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+index 82fdda8ff5ab..5cc6529a549f 100644
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -6579,7 +6579,7 @@ static int btrfs_link(struct dentry *old_dentry, struct inode *dir,
+ 	struct btrfs_fs_info *fs_info = btrfs_sb(inode->i_sb);
+ 	u64 index;
+ 	int err;
+-	int drop_inode = 0;
++	int log_mode;
  
--	netif_start_queue(adapter->netdev);
-+	/* tx queue started by watchdog timer when link is up */
+ 	/* do not allow sys_link's with other subvols of the same device */
+ 	if (root->root_key.objectid != BTRFS_I(inode)->root->root_key.objectid)
+@@ -6610,47 +6610,42 @@ static int btrfs_link(struct dentry *old_dentry, struct inode *dir,
+ 	inc_nlink(inode);
+ 	inode_inc_iversion(inode);
+ 	inode->i_ctime = current_time(inode);
+-	ihold(inode);
+ 	set_bit(BTRFS_INODE_COPY_EVERYTHING, &BTRFS_I(inode)->runtime_flags);
  
- 	e1000e_trigger_lsc(adapter);
+ 	err = btrfs_add_nondir(trans, BTRFS_I(dir), dentry, BTRFS_I(inode),
+ 			1, index);
++	if (err)
++		goto fail;
+ 
+-	if (err) {
+-		drop_inode = 1;
+-	} else {
+-		struct dentry *parent = dentry->d_parent;
+-		int ret;
+-
+-		err = btrfs_update_inode(trans, root, inode);
++	err = btrfs_update_inode(trans, root, inode);
++	if (err)
++		goto fail;
++	if (inode->i_nlink == 1) {
++		/*
++		 * If new hard link count is 1, it's a file created
++		 * with open(2) O_TMPFILE flag.
++		 */
++		err = btrfs_orphan_del(trans, BTRFS_I(inode));
++		if (err)
++			goto fail;
++	}
++	BTRFS_I(inode)->last_link_trans = trans->transid;
++	log_mode = btrfs_log_new_name(trans, BTRFS_I(inode), NULL,
++				      dentry->d_parent, true, NULL);
++	if (log_mode == BTRFS_NEED_TRANS_COMMIT) {
++		err = btrfs_commit_transaction(trans);
++		trans = NULL;
+ 		if (err)
+ 			goto fail;
+-		if (inode->i_nlink == 1) {
+-			/*
+-			 * If new hard link count is 1, it's a file created
+-			 * with open(2) O_TMPFILE flag.
+-			 */
+-			err = btrfs_orphan_del(trans, BTRFS_I(inode));
+-			if (err)
+-				goto fail;
+-		}
+-		BTRFS_I(inode)->last_link_trans = trans->transid;
+-		d_instantiate(dentry, inode);
+-		ret = btrfs_log_new_name(trans, BTRFS_I(inode), NULL, parent,
+-					 true, NULL);
+-		if (ret == BTRFS_NEED_TRANS_COMMIT) {
+-			err = btrfs_commit_transaction(trans);
+-			trans = NULL;
+-		}
+ 	}
+ 
++	ihold(inode);
++	d_instantiate(dentry, inode);
+ fail:
+ 	if (trans)
+ 		btrfs_end_transaction(trans);
+-	if (drop_inode) {
++	if (err)
+ 		inode_dec_link_count(inode);
+-		iput(inode);
+-	}
+ 	btrfs_btree_balance_dirty(fs_info);
+ 	return err;
  }
-@@ -4607,6 +4607,7 @@ int e1000e_open(struct net_device *netdev)
- 	pm_runtime_get_sync(&pdev->dev);
- 
- 	netif_carrier_off(netdev);
-+	netif_stop_queue(netdev);
- 
- 	/* allocate transmit descriptors */
- 	err = e1000e_setup_tx_resources(adapter->tx_ring);
-@@ -4667,7 +4668,6 @@ int e1000e_open(struct net_device *netdev)
- 	e1000_irq_enable(adapter);
- 
- 	adapter->tx_hang_recheck = false;
--	netif_start_queue(netdev);
- 
- 	hw->mac.get_link_status = true;
- 	pm_runtime_put(&pdev->dev);
-@@ -5289,6 +5289,7 @@ static void e1000_watchdog_task(struct work_struct *work)
- 			if (phy->ops.cfg_on_link_up)
- 				phy->ops.cfg_on_link_up(hw);
- 
-+			netif_wake_queue(netdev);
- 			netif_carrier_on(netdev);
- 
- 			if (!test_bit(__E1000_DOWN, &adapter->state))
-@@ -5302,6 +5303,7 @@ static void e1000_watchdog_task(struct work_struct *work)
- 			/* Link status message must follow this format */
- 			pr_info("%s NIC Link is Down\n", adapter->netdev->name);
- 			netif_carrier_off(netdev);
-+			netif_stop_queue(netdev);
- 			if (!test_bit(__E1000_DOWN, &adapter->state))
- 				mod_timer(&adapter->phy_info_timer,
- 					  round_jiffies(jiffies + 2 * HZ));
 
+--------------7D938910A1B79AF0323CC7CA--
