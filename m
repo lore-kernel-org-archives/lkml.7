@@ -2,165 +2,106 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=0.1 required=3.0 tests=FSL_HELO_FAKE,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F1434C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:29:39 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E457C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:32:01 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBD092173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:29:39 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555525779;
-	bh=D3wLtJO4BReF9RI7gJO/1Q+VPisxYCVIWO4OWEkFdlE=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=THuswgtggWPKD77SMVSu7o2PRdY9RiIDkp0PGIRiLW7bmI2usGkhs+e25GoPes6NA
-	 FZDcnXrM4jLHirSv7XABeXxc2171ptVuZxMzXGHqJ8QOft/eSW6mJICl2W7yCCeS6/
-	 H+MuHviF2/WmR/GFRqspW0w5nL92tkRBZ8gdrPN4=
+	by mail.kernel.org (Postfix) with ESMTP id 1F30620693
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:32:01 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732423AbfDQS3i (ORCPT
+        id S1732241AbfDQSb7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 14:29:38 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:44678 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732321AbfDQS3i (ORCPT
+        Wed, 17 Apr 2019 14:31:59 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:39661 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728373AbfDQSb6 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 14:29:38 -0400
-Received: by mail-wr1-f67.google.com with SMTP id w18so3105632wrv.11
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 11:29:37 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=bwVBL4kWuFln1ORwazUUMUmKQZg4gxsY+OMTK6S6/ig=;
-        b=iBIyPB0PimRV7hc9ZuvpCiTman37YmffyWA7FxV10EjPEGmM4livSxPsCzw1w6LUhL
-         20TrRKvWCI0P6nONQX3nC/G2sWnOC8c9LE8G8rLBlCqp3xnpC0GVtPvRbLV80Mwm9vOS
-         O0i7tV7DD/HEJ47O0ra0Tq/YgBAk++RFtqga9aHi9ElweQsXRH0jOP8+erfL3P7BAfmH
-         55SpxpgqVvtWhPBswdCEVfO13LX/rQxQSKdj3xQf9LNoFWk2kMjcfYIudcszy2FQDgiI
-         IIHN+Fa7kmPcIM6Jb+3N837qPG0IkxTGAr9cUMBmSCtggHlHE0ZPWqgcu6N5Nb6YpU65
-         AFKQ==
+        Wed, 17 Apr 2019 14:31:58 -0400
+Received: by mail-it1-f195.google.com with SMTP id 139so6010132ita.4
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 11:31:58 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=bwVBL4kWuFln1ORwazUUMUmKQZg4gxsY+OMTK6S6/ig=;
-        b=Co9ZTBy/zXhD5YRN3hEHyBny8IOqDL+MFltwG/AWEvf9IHAWB6DVcbPTQTfTLBFc1X
-         YzP7aNPznngo3E2UeaH5uy4VbEWklnpjQ/aeGi1gMHH8oQcXN6G1Kn3HQ+FpFGl7y54a
-         o8BguIYZD9+OYhuuNDpdPOCRqX638/NDuGZtWbA1vEsOOSrueOifPqQY3ZDf2Tj3P6d9
-         UTEc5QRG7iEf6eK3YwqOFjnxqnhfOMci2KROInkrb3ESDBTxPJfYdHaPcIjBnQQc4AgO
-         KDhPGD+yYz8aki2LVrUXTMJmxGVjVDQEqT12qaHgfm8t/n5aG9qQWpSm7mmp4dUL1OiL
-         /xKw==
-X-Gm-Message-State: APjAAAUHDwP5rGjQHXVbX7pmOmy/Nv1S6s7A7ZbLMmKIbAwmht0/ZIGK
-        1rmuyFB6aV9sNcVicafpUrSvAqBU
-X-Google-Smtp-Source: APXvYqyGQCfuKhiHlrrcJ+CCkS1JMcF4jna5843rMSkTTeuvm5KCL7XXWYsgYBcjDiVcHGDwjhEVXw==
-X-Received: by 2002:adf:e3c2:: with SMTP id k2mr857857wrm.325.1555525776250;
-        Wed, 17 Apr 2019 11:29:36 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id w10sm39466529wrv.8.2019.04.17.11.29.34
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 17 Apr 2019 11:29:35 -0700 (PDT)
-Date:   Wed, 17 Apr 2019 20:29:32 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Thara Gopinath <thara.gopinath@linaro.org>
-Cc:     mingo@redhat.com, peterz@infradead.org, rui.zhang@intel.com,
-        linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
-        viresh.kumar@linaro.org, javi.merino@kernel.org,
-        edubezval@gmail.com, daniel.lezcano@linaro.org,
-        vincent.guittot@linaro.org, nicolas.dechesne@linaro.org,
-        bjorn.andersson@linaro.org, dietmar.eggemann@arm.com,
-        Quentin Perret <quentin.perret@arm.com>,
-        "Rafael J. Wysocki" <rjw@rjwysocki.net>
-Subject: Re: [PATCH V2 0/3] Introduce Thermal Pressure
-Message-ID: <20190417182932.GB5140@gmail.com>
-References: <1555443521-579-1-git-send-email-thara.gopinath@linaro.org>
- <20190417053626.GA47282@gmail.com>
- <5CB75FD9.3070207@linaro.org>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=QE+zGVHcn4rBOczPAxq5RUTI7rRUphfsm3Pb8osPQq8=;
+        b=Q0lWj+8KIR1CGIK3iRV49IvWdLk2dfYNyzSMmFWdXgpfVyxeOQoWh82qPerdYbF5M4
+         xXch0ZSVQ9UStDwa3TzwSq5xFft+esvoX9x3uAcGh0bP1VKU2E3ZojP9/OoAWvR431Er
+         8WdF/9VktjpTCDdTmbylDv5Z6fwcV6QhL7gzhK+9VCH2YXV+jdDYhYpG2B1LvfOOFgMp
+         WamPdUE2cenErVA2hMu++yiP4YpXxxQbOPjWq4f2e+oinX1TPll6PHEcLKEwf2cJICB6
+         r2jCfxTr1EAXPBeJthN/yRt3DuLer/bykQb9+vJCWAjLNGXiQ02W0tRgfsBeTWL/5csH
+         ZFmw==
+X-Gm-Message-State: APjAAAWTmWsS5kbrKIe4C26ovgSSLbOUc1MIuyjeGzQc0i57IpYthaTn
+        LBE52KeGdtElQTbCKSIqLZaOtg==
+X-Google-Smtp-Source: APXvYqwxix+g5cmcRkKRStucRzDA4g1mUK1NrnV8ZH7ST/w4wToB4nt0cMQ7X52DuKYvA6LIH7Izug==
+X-Received: by 2002:a24:42ce:: with SMTP id i197mr4592itb.27.1555525917906;
+        Wed, 17 Apr 2019 11:31:57 -0700 (PDT)
+Received: from google.com ([2620:15c:183:0:20b8:dee7:5447:d05])
+        by smtp.gmail.com with ESMTPSA id x10sm2711397ita.4.2019.04.17.11.31.55
+        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
+        Wed, 17 Apr 2019 11:31:56 -0700 (PDT)
+Date:   Wed, 17 Apr 2019 12:31:52 -0600
+From:   Raul Rangel <rrangel@chromium.org>
+To:     Alan Stern <stern@rowland.harvard.edu>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-usb@vger.kernel.org, groeck@chromium.org, oneukum@suse.com,
+        djkurtz@chromium.org, zwisler@chromium.org,
+        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
+        Martin Blumenstingl <martin.blumenstingl@googlemail.com>,
+        Dmitry Torokhov <dtor@chromium.org>,
+        Suwan Kim <suwan.kim027@gmail.com>,
+        linux-kernel@vger.kernel.org,
+        "Gustavo A. R. Silva" <gustavo@embeddedor.com>,
+        Miquel Raynal <miquel.raynal@bootlin.com>,
+        Johan Hovold <johan@kernel.org>,
+        Mathias Nyman <mathias.nyman@linux.intel.com>,
+        Raul Rangel <rrangel@chromium.org>
+Subject: Re: [PATCH v2] usb/hcd: Send a uevent signaling that the host
+ controller has died
+Message-ID: <20190417183152.GA118957@google.com>
+References: <20190417175300.GA74282@google.com>
+ <Pine.LNX.4.44L0.1904171419260.1400-100000@iolanthe.rowland.org>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <5CB75FD9.3070207@linaro.org>
+In-Reply-To: <Pine.LNX.4.44L0.1904171419260.1400-100000@iolanthe.rowland.org>
 User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-
-* Thara Gopinath <thara.gopinath@linaro.org> wrote:
-
+On Wed, Apr 17, 2019 at 02:24:06PM -0400, Alan Stern wrote:
+> On Wed, 17 Apr 2019, Raul Rangel wrote:
 > 
-> On 04/17/2019 01:36 AM, Ingo Molnar wrote:
-> > 
-> > * Thara Gopinath <thara.gopinath@linaro.org> wrote:
-> > 
-> >> The test results below shows 3-5% improvement in performance when
-> >> using the third solution compared to the default system today where
-> >> scheduler is unware of cpu capacity limitations due to thermal events.
-> > 
-> > The numbers look very promising!
+> > > > Also where would be a good place to document this?
+> > > 
+> > > Documentation/ABI/ is a good start.
+> > I'll add something to Documentation/ABI/testing/xhci-uevent
 > 
-> Hello Ingo,
-> Thank you for the review.
-> > 
-> > I've rearranged the results to make the performance properties of the 
-> > various approaches and parameters easier to see:
-> > 
-> >                                          (seconds, lower is better)
-> > 
-> > 			                 Hackbench   Aobench   Dhrystone
-> >                                          =========   =======   =========
-> > Vanilla kernel (No Thermal Pressure)         10.21    141.58        1.14
-> > Instantaneous thermal pressure               10.16    141.63        1.15
-> > Thermal Pressure Averaging:
-> >       - PELT fmwk                             9.88    134.48        1.19
-> >       - non-PELT Algo. Decay : 500 ms         9.94    133.62        1.09
-> >       - non-PELT Algo. Decay : 250 ms         7.52    137.22        1.012
-> >       - non-PELT Algo. Decay : 125 ms         9.87    137.55        1.12
-> > 
-> > 
-> > Firstly, a couple of questions about the numbers:
-> > 
-> >    1)
-> > 
-> >       Is the 1.012 result for "non-PELT 250 msecs Dhrystone" really 1.012?
-> >       You reported it as:
-> > 
-> >              non-PELT Algo. Decay : 250 ms   1.012                   7.02%
+> Your patch will apply to all host controllers, not just xhci.  The
+> documentation filename should reflect this.  Perhaps "usb-uevent"?
+I realized that after I had sent the email :) I'll do usb-uevent.
 > 
-> It is indeed 1.012. So, I ran the "non-PELT Algo 250 ms" benchmarks
-> multiple time because of the anomalies noticed.  1.012 is a formatting
-> error on my part when I copy pasted the results into a google sheet I am
-> maintaining to capture the test results. Sorry about the confusion.
-
-That's actually pretty good, because it suggests a 35% and 15% 
-improvement over the vanilla kernel - which is very good for such 
-CPU-bound workloads.
-
-Not that 5% is bad in itself - but 15% is better ;-)
-
-> Regarding the decay period, I agree that more testing can be done. I 
-> like your suggestions below and I am going to try implementing them 
-> sometime next week. Once I have some solid results, I will send them 
-> out.
-
-Thanks!
-
-> My concern regarding getting hung up too much on decay period is that I 
-> think it could vary from SoC to SoC depending on the type and number of 
-> cores and thermal characteristics. So I was thinking eventually the 
-> decay period should be configurable via a config option or by any other 
-> means. Testing on different systems will definitely help and maybe I am 
-> wrong and there is no much variation between systems.
-
-Absolutely, so I'd not be against keeping it a SCHED_DEBUG tunable or so, 
-until there's a better understanding of how the physical properties of 
-the SoC map to an ideal decay period.
-
-Assuming PeterZ & Rafael & Quentin doesn't hate the whole thermal load 
-tracking approach. I suppose there's some connection of this to Energy 
-Aware Scheduling? Or not ...
-
-Thanks,
-
-	Ingo
+> > > Why do you need to lock something that is "dead"?  And why is the idr
+> > > lock the correct one here?
+> > We need to ensure that root_hub is not null. Though I'm not sure the
+> > lock is entirely necessary in this case. usb_remove_hcd stops the work
+> > item before it sets the rhdev to null. The reason I picked
+> > usb_bus_idr_lock was because it's the same lock that usb_remove_hcd uses
+> > when setting rhdev = NULL.
+> > 
+> > Alan, what do you think? Should I remove the lock?
+> 
+> You're both right; the lock isn't needed because the work is stopped
+> before the root hub gets removed.  Acquiring the lock doesn't do any
+> harm, but it isn't needed so you probably should remove it.  In fact, 
+> you don't even need to test for whether hcd->self.root_hub is 
+> non-NULL.
+Sounds good, I'll clean it up.
+> 
+> Alan Stern
+> 
+> 
