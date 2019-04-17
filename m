@@ -2,70 +2,153 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D3187C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 23:48:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 20212C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 23:50:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A215D21850
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 23:48:57 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555544937;
-	bh=Ngut8Zra1tNBDucFICW5oi5hzvpBUalr/ubinIxWQgw=;
-	h=In-Reply-To:References:Cc:From:Subject:To:Date:List-ID:From;
-	b=GqUGh2j+Ib+jJ41Q4rjuZTRcHkGKoTFynq4DgjbTVOg8nr3yNppbzNGvrQIwBGaZ7
-	 iWHrCPl44mkbukpjpd78l1tkOdqGcrevljW/xd3UTU7/T7cM2SuQ7kiZ56tiB9jzRl
-	 5HvXMxO6A6IypwqxzHbyC1pX2zoqpsHp6ufKFvWc=
+	by mail.kernel.org (Postfix) with ESMTP id C6BB62064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 23:50:45 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=microsoft.com header.i=@microsoft.com header.b="JStm/axj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387669AbfDQXs4 (ORCPT
+        id S2387722AbfDQXuo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 19:48:56 -0400
-Received: from mail.kernel.org ([198.145.29.99]:50068 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729331AbfDQXs4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 19:48:56 -0400
-Received: from localhost (unknown [104.132.0.74])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 3F949217FA;
-        Wed, 17 Apr 2019 23:48:55 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555544935;
-        bh=Ngut8Zra1tNBDucFICW5oi5hzvpBUalr/ubinIxWQgw=;
-        h=In-Reply-To:References:Cc:From:Subject:To:Date:From;
-        b=zczi+fYXLOXozwL8Lz2ntNKi3YyDwxLeSc5GG4OXraXsCsDkKmTwtPVa3zisxLBex
-         45/bytSwfCkszVcYUmwu3v0IR0vc/UTKH0FgCKPbSfXclD0ZUyYFzpxVsqJs9lFPNJ
-         8f5ACK9o/5MEio2kbwVG0miJsbeOsMGE6Beq32Vg=
-Content-Type: text/plain; charset="utf-8"
-MIME-Version: 1.0
+        Wed, 17 Apr 2019 19:50:44 -0400
+Received: from mail-eopbgr1310122.outbound.protection.outlook.com ([40.107.131.122]:6391
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1729331AbfDQXuo (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 19:50:44 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=microsoft.com;
+ s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=09xmkmPAM1NQzKiHAXMyXjMERVGRbkhd9A9b9x8qSCk=;
+ b=JStm/axjs61YN4vCOh3J9sAa0K28QHY34lssTMS9KV1ZxRAPnMeffyL//oGs5Wej/Bfyj0LwsLedBzgHw4ziupicxsiwIrItWBGJxbQKDY9LJgxFVvJieWYY+oycuP/ZNLtaGsPDYrj9ZcWSmaOeDEmIuTDZznDZoPWnrKVJrLY=
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM (10.170.189.13) by
+ PU1P153MB0156.APCP153.PROD.OUTLOOK.COM (10.170.189.12) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1813.1; Wed, 17 Apr 2019 23:50:33 +0000
+Received: from PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::9810:3b6b:debd:1f16]) by PU1P153MB0169.APCP153.PROD.OUTLOOK.COM
+ ([fe80::9810:3b6b:debd:1f16%3]) with mapi id 15.20.1835.000; Wed, 17 Apr 2019
+ 23:50:33 +0000
+From:   Dexuan Cui <decui@microsoft.com>
+To:     Thomas Gleixner <tglx@linutronix.de>,
+        vkuznets <vkuznets@redhat.com>
+CC:     "riel@surriel.com" <riel@surriel.com>,
+        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
+        "luto@kernel.org" <luto@kernel.org>,
+        Stephen Hemminger <sthemmin@microsoft.com>,
+        Sasha Levin <Alexander.Levin@microsoft.com>,
+        Haiyang Zhang <haiyangz@microsoft.com>,
+        KY Srinivasan <kys@microsoft.com>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Michael Kelley <mikelley@microsoft.com>,
+        "marcelo.cerri@canonical.com" <marcelo.cerri@canonical.com>,
+        "apw@canonical.com" <apw@canonical.com>,
+        "olaf@aepfle.de" <olaf@aepfle.de>,
+        "jasowang@redhat.com" <jasowang@redhat.com>,
+        Peter Zijlstra <peterz@infradead.org>
+Subject: RE: [PATCH] smp: Do not warn if smp_call_function_single() is doing a
+ self call.
+Thread-Topic: [PATCH] smp: Do not warn if smp_call_function_single() is doing
+ a self call.
+Thread-Index: AQHU84XIPd58XT1sd0attup0EFB40aY94IwAgAFaENeAAcu70A==
+Date:   Wed, 17 Apr 2019 23:50:33 +0000
+Message-ID: <PU1P153MB01693370A9E788356ACF989BBF250@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+References: <20190412235341.29379-1-decui@microsoft.com>
+ <20190415122128.GO11158@hirez.programming.kicks-ass.net>
+ <PU1P153MB01695FDC44C6A2C32C7FB887BF2B0@PU1P153MB0169.APCP153.PROD.OUTLOOK.COM>
+ <20190416093123.GR11158@hirez.programming.kicks-ass.net>
+ <87o9562o3w.fsf@vitty.brq.redhat.com>
+ <alpine.DEB.2.21.1904162206590.1780@nanos.tec.linutronix.de>
+In-Reply-To: <alpine.DEB.2.21.1904162206590.1780@nanos.tec.linutronix.de>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+msip_labels: MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Enabled=True;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SiteId=72f988bf-86f1-41af-91ab-2d7cd011db47;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Owner=decui@microsoft.com;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_SetDate=2019-04-17T23:50:27.8688937Z;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Name=General;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Application=Microsoft Azure
+ Information Protection;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_ActionId=9c48e79b-e876-4de9-8560-bdf2873f6f5f;
+ MSIP_Label_f42aa342-8706-4288-bd11-ebb85995028c_Extended_MSFT_Method=Automatic
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=decui@microsoft.com; 
+x-originating-ip: [2001:4898:80e8:2:d44c:40cf:3a0b:db6f]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: b32ce858-a9ad-4fab-94c7-08d6c38f7b65
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(5600141)(711020)(4605104)(4618075)(4534185)(4627221)(201703031133081)(201702281549075)(2017052603328)(7193020);SRVR:PU1P153MB0156;
+x-ms-traffictypediagnostic: PU1P153MB0156:
+x-ld-processed: 72f988bf-86f1-41af-91ab-2d7cd011db47,ExtAddr
+x-microsoft-antispam-prvs: <PU1P153MB015607406904EC4F564E4200BF250@PU1P153MB0156.APCP153.PROD.OUTLOOK.COM>
+x-ms-oob-tlc-oobclassifiers: OLM:10000;
+x-forefront-prvs: 0010D93EFE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10019020)(376002)(396003)(346002)(136003)(366004)(39860400002)(51914003)(189003)(199004)(86612001)(7416002)(486006)(305945005)(2906002)(14444005)(11346002)(446003)(7736002)(256004)(476003)(229853002)(316002)(6436002)(22452003)(86362001)(71200400001)(71190400001)(6116002)(74316002)(54906003)(46003)(99286004)(110136005)(33656002)(68736007)(8676002)(8936002)(5660300002)(8990500004)(10090500001)(81166006)(81156014)(52536014)(7696005)(76176011)(186003)(93886005)(102836004)(6506007)(4326008)(25786009)(97736004)(55016002)(478600001)(14454004)(6246003)(10290500003)(9686003)(53936002);DIR:OUT;SFP:1102;SCL:1;SRVR:PU1P153MB0156;H:PU1P153MB0169.APCP153.PROD.OUTLOOK.COM;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: microsoft.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: CY1yYAKd/sPKe6Aa/DuyxfYrBpATqzUkEMqZRftuA4NNWZ728eHrnvfZJa/oh+HMua3/O75dQ69OByOApolxkEJSBkqAWhvNisjfsQ+MW8ZFojMkyvQe0kVRNrjUOiCEcqJieZk4FWbRrejbGKBACWGtWXzIrBh8uRDfbmSXYOZEHtqncqcBpJBoRMLeBcuxfgp4PF3qsCUDNGjBUqQqrZsWsjagC3Yx6XDqvbUNpxs/OKnI08EtICaGT2bYXKJo8JOtfIGWnNgY2BXF7YistDofaAb8TZIckG9zSVbhq7TezpccIg8gK4iEo2i4RzsKAhqqfOAtDOIqSytVHJbAesfzvOYeijL3o8Ue/lp+Tgxh/ODHPka7OzEEmGkdPXkMdpcSWL2QMRj10t0eWT1fNCNR+cZtAr3TG5hHX9COk90=
+Content-Type: text/plain; charset="us-ascii"
 Content-Transfer-Encoding: quoted-printable
-In-Reply-To: <20190417112420.3034-1-paul@crapouillou.net>
-References: <20190417112420.3034-1-paul@crapouillou.net>
-Cc:     linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Paul Cercueil <paul@crapouillou.net>, stable@vger.kernel.org
-From:   Stephen Boyd <sboyd@kernel.org>
-Subject: Re: [PATCH] clk: ingenic/jz4725b: Fix parent of pixel clock
-To:     Michael Turquette <mturquette@baylibre.com>,
-        Paul Cercueil <paul@crapouillou.net>
-Message-ID: <155554493444.15276.2577888773542833089@swboyd.mtv.corp.google.com>
-User-Agent: alot/0.8
-Date:   Wed, 17 Apr 2019 16:48:54 -0700
+MIME-Version: 1.0
+X-OriginatorOrg: microsoft.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: b32ce858-a9ad-4fab-94c7-08d6c38f7b65
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Apr 2019 23:50:33.1161
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 72f988bf-86f1-41af-91ab-2d7cd011db47
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: PU1P153MB0156
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Quoting Paul Cercueil (2019-04-17 04:24:20)
-> The pixel clock is directly connected to the output of the PLL, and not
-> to the /2 divider.
+> From: Thomas Gleixner <tglx@linutronix.de>
+> Sent: Tuesday, April 16, 2019 1:13 PM
+> > ...
+> > True. And before we start digging deeper into this, let's step back: wh=
+y
+> > do we need to do clockevents_unbind_device() on hybernation? Can we jus=
+t
+> > disable the device and re-enable it back on resume?
+
+We do clockevents_unbind_device as part of hv_synic_cleanup(), which is
+called as a CPU hotplug callback: see vmbus_bus_init():
+    ret =3D cpuhp_setup_state(CPUHP_AP_ONLINE_DYN, "hyperv/vmbus:online",
+                        hv_synic_init, hv_synic_cleanup);
+
+Yes, it looks the right thing is to implement the suspend/resume callbacks =
+of
+the clock_event_device. Thank you for the suggestion! I'll look into this.
+
+> Yes. That's the right thing to do. Simple solution is to implement the
+> suspend/resume callbacks on the clock events device and be done with it.
+
+Agreed.
+
+> > Actually, all usages of clockevents_unbind_device() in kernel are
+> > limited to Hyper-V and with Michael's patches moving this out of VMBus
+> > driver I think it can go away completely.
+
+Thanks for the heads-up! I'll rebase to Michael's patches.
+=20
+> Correct. There was a driver which required that, but that's gone by now a=
+nd
+> of course nobody noticed that it was the last user. The reason why this
+> exists was to allow switching out an active clocksource similar to the
+> sysfs unbind file but without user space interaction.
 >=20
-> Cc: stable@vger.kernel.org
-> Fixes: 226dfa4726eb ("clk: Add Ingenic jz4725b CGU driver")
-> Signed-off-by: Paul Cercueil <paul@crapouillou.net>
-> ---
+> 	tglx
 
-Is this breaking something in 5.1-rc series? Or just found by
-inspection? I'm trying to understand the priority of this patch.
+Thanks for the background sharing!
 
+- Dexuan
