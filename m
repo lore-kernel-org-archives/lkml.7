@@ -2,108 +2,106 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 75D8DC282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 10:43:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A011FC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 10:45:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4B24A21773
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 10:43:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 7659620821
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 10:45:00 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732057AbfDQKnW (ORCPT
+        id S1731825AbfDQKo7 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 06:43:22 -0400
-Received: from mga05.intel.com ([192.55.52.43]:7938 "EHLO mga05.intel.com"
+        Wed, 17 Apr 2019 06:44:59 -0400
+Received: from mga07.intel.com ([134.134.136.100]:34257 "EHLO mga07.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731813AbfDQKnW (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 06:43:22 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
+        id S1728373AbfDQKo7 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 06:44:59 -0400
+X-Amp-Result: UNSCANNABLE
 X-Amp-File-Uploaded: False
-Received: from fmsmga003.fm.intel.com ([10.253.24.29])
-  by fmsmga105.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Apr 2019 03:43:22 -0700
+Received: from fmsmga001.fm.intel.com ([10.253.24.23])
+  by orsmga105.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Apr 2019 03:44:58 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,361,1549958400"; 
-   d="scan'208";a="150131067"
-Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.189])
-  by FMSMGA003.fm.intel.com with ESMTP; 17 Apr 2019 03:43:17 -0700
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org
-Cc:     akpm@linux-foundation.org, dave.hansen@intel.com,
-        sean.j.christopherson@intel.com, nhorman@redhat.com,
-        npmccallum@redhat.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH v20 28/28] docs: x86/sgx: Document the enclave API
-Date:   Wed, 17 Apr 2019 13:39:38 +0300
-Message-Id: <20190417103938.7762-29-jarkko.sakkinen@linux.intel.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com>
-References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com>
+   d="scan'208";a="165492292"
+Received: from kuha.fi.intel.com ([10.237.72.189])
+  by fmsmga001.fm.intel.com with SMTP; 17 Apr 2019 03:44:55 -0700
+Received: by kuha.fi.intel.com (sSMTP sendmail emulation); Wed, 17 Apr 2019 13:44:54 +0300
+Date:   Wed, 17 Apr 2019 13:44:54 +0300
+From:   Heikki Krogerus <heikki.krogerus@linux.intel.com>
+To:     Hans de Goede <hdegoede@redhat.com>
+Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+Subject: Re: [PATCH v3 13/13] platform/x86: intel_cht_int33fe: Replacing the
+ old connections with references
+Message-ID: <20190417104454.GQ1747@kuha.fi.intel.com>
+References: <20190412134122.82903-1-heikki.krogerus@linux.intel.com>
+ <20190412134122.82903-14-heikki.krogerus@linux.intel.com>
+ <a91a1d75-f224-9c9d-873a-f80467d2fb0c@redhat.com>
+ <20190417063918.GI1747@kuha.fi.intel.com>
+ <76d9ab79-a1d0-f3cd-ba5d-2325740c72ff@redhat.com>
+ <20190417093252.GO1747@kuha.fi.intel.com>
+ <2fcb2e2c-c390-1b49-7228-197f23401271@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <2fcb2e2c-c390-1b49-7228-197f23401271@redhat.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Document the enclave driver API i.e. the set of ioctl's used to create
-and manage enclaves and set their privileges
+On Wed, Apr 17, 2019 at 12:15:18PM +0200, Hans de Goede wrote:
+> Hi,
+> 
+> On 17-04-19 11:32, Heikki Krogerus wrote:
+> > On Wed, Apr 17, 2019 at 11:19:28AM +0200, Hans de Goede wrote:
+> 
+> <snip>
+> 
+> > > That is not going to work since the (virtual) mux / orientation-switch
+> > > devices are only registered once the driver binds to the piusb30532 i2c
+> > > device, so when creating the nodes we only have the piusb30532 i2c device.
+> > 
+> > It's not a problem, that's why we have the software nodes. The nodes
+> > can be created before the device entires. The node for pi3usb30532
+> > will just be the parent node for the new nodes we add for the mux and
+> > switch.
+> > 
+> > > I've been thinking some more about this and an easy fix is to have separate
+> > > fwnode_match functions for typec_switch_match and typec_mux_match and have
+> > > them check that the dev_name ends in "-mux" resp. "-switch" that requires
+> > > only a very minimal change to "usb: typec: Registering real device entries for the muxes"
+> > > and then everything should be fine.
+> > 
+> > I don't want to do anymore device name matching unless we have to, and
+> > here we don't have to. We can name the nodes for those virtual mux and
+> > switch, and then just do fwnode_find_named_child_node() in
+> > pi3usb30532.c for both of them.
+> 
+> Thinking more about this, I have a feeling that this makes things needlessly
+> complicated, checking the dev_name *ends* in "-mux" resp. "-switch" should be
+> 100% reliable since we call:
+> 
+>         dev_set_name(&sw->dev, "%s-switch", dev_name(parent));
+>         dev_set_name(&mux->dev, "%s-mux", dev_name(parent));
+> 
+> When registering the switch / mux, so I believe doing name (suffix) comparison
+> here is fine and much simpler. Anyways this is just my 2 cents on this, I'm
+> happy with either solution, your choice.
 
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
----
- Documentation/x86/sgx/3.API.rst | 27 +++++++++++++++++++++++++++
- Documentation/x86/sgx/index.rst |  1 +
- 2 files changed, 28 insertions(+)
- create mode 100644 Documentation/x86/sgx/3.API.rst
+You do have a point. I'll take a look how the two options look like,
+but maybe your way is better after all.
 
-diff --git a/Documentation/x86/sgx/3.API.rst b/Documentation/x86/sgx/3.API.rst
-new file mode 100644
-index 000000000000..b113aeb05f54
---- /dev/null
-+++ b/Documentation/x86/sgx/3.API.rst
-@@ -0,0 +1,27 @@
-+.. SPDX-License-Identifier: GPL-2.0
-+
-+===
-+API
-+===
-+
-+The enclave life-cycle starts by opening `/dev/sgx/enclave`. After this there is
-+already a data structure inside kernel tracking the enclave that is initially
-+uncreated. After this a set of ioctl's can be used to create, populate and
-+initialize the enclave.
-+
-+You can close (if you want) the fd after you've mmap()'d. As long as the file is
-+open the enclave stays alive so you might want to do that after you don't need
-+it anymore. Even munmap() won't destruct the enclave if the file is open.
-+Neither will closing the fd as long as you have mmap() done over the fd (even
-+if it does not across the range defined in SECS).
-+
-+Finally, there is ioctl to authorize priviliged attributes:
-+`SGX_IOC_ENCLAVE_SET_ATTRIBUTE`. Each of them is presented by a file inside
-+`/dev/sgx/`. Right now there is only one such file `/dev/sgx/provision`, which
-+controls the `PROVISON_KEY` attribute.
-+
-+.. kernel-doc:: arch/x86/kernel/cpu/sgx/driver/ioctl.c
-+   :functions: sgx_ioc_enclave_create
-+               sgx_ioc_enclave_add_page
-+               sgx_ioc_enclave_init
-+               sgx_ioc_enclave_set_attribute
-diff --git a/Documentation/x86/sgx/index.rst b/Documentation/x86/sgx/index.rst
-index 5d660e83d984..de0b78328611 100644
---- a/Documentation/x86/sgx/index.rst
-+++ b/Documentation/x86/sgx/index.rst
-@@ -15,3 +15,4 @@ potentially malicious.
- 
-    1.Architecture
-    2.Kernel-internals
-+   3.API
+thanks,
+
 -- 
-2.19.1
-
+heikki
