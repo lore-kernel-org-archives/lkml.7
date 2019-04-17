@@ -7,52 +7,57 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0F48C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:42:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 40738C282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:42:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7FBD020835
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:42:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 09E2120835
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:42:39 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555519355;
-	bh=V5vyzX2cYRdBJizwwmGAk5c7DodRl2AZKtpM+rnyM4E=;
+	s=default; t=1555519359;
+	bh=DzUet4X2fI4SkxxaKmcA4XHUE4zPR7wtw+CIim1LrsA=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=W8F8NDashhIXggku4a5xDon7DYud8wfxwZ/BeuKEd990yvQqTxA35nlNzDDL6oU3B
-	 2qNGAd+zNfYmg1vDZ63W3R2ds5RSQS7Aq6emhXp18sWa9PGkSuqfmrH//dTcyJM7go
-	 FEnMxBeEK4zCw3M8ADOuupr2qkePHL55+Eet93Yo=
+	b=beKFYEk7HTW74zs85ZS+v5aw4k4930eeJtnei9FArl0AuNjR3mX9VTO+Xu+b8z8hg
+	 hYmkWaI8vaKtddt1TUuEQnJte+1r4YYyv7owh36ZuVmycMiXRvtZONvlTjThFfukzv
+	 UBmP55mugL/4aKciRhKKn7rUT0qLqSj5/75lTYaM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732991AbfDQQme (ORCPT
+        id S1732999AbfDQQmi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 12:42:34 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37400 "EHLO
+        Wed, 17 Apr 2019 12:42:38 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37624 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732937AbfDQQm3 (ORCPT
+        with ESMTP id S1732937AbfDQQmg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 12:42:29 -0400
+        Wed, 17 Apr 2019 12:42:36 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=DBSFXeLls8eTpQqRwQJMGZjH5wSmKV3qPWzXKRb0KYY=; b=TFtBtrCXMTYA
-        7/I4HlFNocagZG+FACf3bCer4/w+tNzCmXfWfzNv4YgV0q7X1J6BmCinov0a8o5v0c9VYA+GCyY9I
-        rqtT2I9QArmzEInhN/AUSAIx1FZv31Dsy2ajPaKlAS8Cj+ma+fF/wrufIrbKlCc+RN6l53ftB3HaS
-        AD7Hw=;
+        List-Archive; bh=vll6DizoBPDWtabXDDVM5zbIdbu41auEcnb2SRX+tqg=; b=tLTjGRAfCxKE
+        Tai8SYbb6vQoZiC5NxoD2gHIItGWOQ/95H2ChyZkvH3Wxvrg1RSnjALFyRkmUEYPQjaEkJHwqmSY/
+        O2zIbTlML/VJSYrt7s3Z4W0oZigkgCf1LEUHebEtvkL31w71LYZDf9qTRMQiUZn4PPw2CSpHEHYyE
+        0OYHA=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hGndc-000158-6Q; Wed, 17 Apr 2019 16:42:20 +0000
+        id 1hGndY-000155-LL; Wed, 17 Apr 2019 16:42:16 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id BE6F71128FCA; Wed, 17 Apr 2019 17:42:14 +0100 (BST)
+        id 64D971128FC8; Wed, 17 Apr 2019 17:42:16 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, patches@opensource.cirrus.com
-Subject: Applied "regulator: wm8400: Switch to SPDX identifier" to the regulator tree
-In-Reply-To: <20190417141633.4730-4-axel.lin@ingics.com>
+To:     kbuild test robot <lkp@intel.com>
+Cc:     Alexandre Torgue <alexandre.torgue@st.com>, kbuild-all@01.org,
+        Liam Girdwood <lgirdwood@gmail.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-stm32@st-md-mailman.stormreply.com,
+        Mark Brown <broonie@kernel.org>,
+        Maxime Coquelin <mcoquelin.stm32@gmail.com>,
+        Pascal PAILLET-LME <p.paillet@st.com>
+Subject: Applied "regulator: ready_mask_table[] can be static" to the regulator tree
+In-Reply-To: <20190415165238.GA71613@lkp-sb05>
 X-Patchwork-Hint: ignore
-Message-Id: <20190417164214.BE6F71128FCA@debutante.sirena.org.uk>
-Date:   Wed, 17 Apr 2019 17:42:14 +0100 (BST)
+Message-Id: <20190417164216.64D971128FC8@debutante.sirena.org.uk>
+Date:   Wed, 17 Apr 2019 17:42:16 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -60,7 +65,7 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: wm8400: Switch to SPDX identifier
+   regulator: ready_mask_table[] can be static
 
 has been applied to the regulator tree at
 
@@ -85,45 +90,49 @@ to this mail.
 Thanks,
 Mark
 
-From 362af736508134dddcc4cccd575fbb7c22c29712 Mon Sep 17 00:00:00 2001
-From: Axel Lin <axel.lin@ingics.com>
-Date: Wed, 17 Apr 2019 22:16:32 +0800
-Subject: [PATCH] regulator: wm8400: Switch to SPDX identifier
+From 82f26185a91298a21aa33a985893dd5f8ed4c75a Mon Sep 17 00:00:00 2001
+From: kbuild test robot <lkp@intel.com>
+Date: Tue, 16 Apr 2019 00:52:38 +0800
+Subject: [PATCH] regulator: ready_mask_table[] can be static
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
+Fixes: 6cdae8173f67 ("regulator: Add support for stm32 power regulators")
+Signed-off-by: kbuild test robot <lkp@intel.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/wm8400-regulator.c | 20 +++++++-------------
- 1 file changed, 7 insertions(+), 13 deletions(-)
+ drivers/regulator/stm32-pwr.c | 6 +++---
+ 1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/regulator/wm8400-regulator.c b/drivers/regulator/wm8400-regulator.c
-index 5ce86b92851b..6f331b51e479 100644
---- a/drivers/regulator/wm8400-regulator.c
-+++ b/drivers/regulator/wm8400-regulator.c
-@@ -1,16 +1,10 @@
--/*
-- * Regulator support for WM8400
-- *
-- * Copyright 2008 Wolfson Microelectronics PLC.
-- *
-- * Author: Mark Brown <broonie@opensource.wolfsonmicro.com>
-- *
-- * This program is free software; you can redistribute it and/or
-- * modify it under the terms of the GNU General Public License as
-- * published by the Free Software Foundation; either version 2 of the
-- * License, or (at your option) any later version.
-- *
-- */
-+// SPDX-License-Identifier: GPL-2.0+
-+//
-+// Regulator support for WM8400
-+//
-+// Copyright 2008 Wolfson Microelectronics PLC.
-+//
-+// Author: Mark Brown <broonie@opensource.wolfsonmicro.com>
+diff --git a/drivers/regulator/stm32-pwr.c b/drivers/regulator/stm32-pwr.c
+index e434b26d4c8b..222d593d76a2 100644
+--- a/drivers/regulator/stm32-pwr.c
++++ b/drivers/regulator/stm32-pwr.c
+@@ -32,7 +32,7 @@ enum {
+ 	STM32PWR_REG_NUM_REGS
+ };
  
- #include <linux/bug.h>
- #include <linux/err.h>
+-u32 ready_mask_table[STM32PWR_REG_NUM_REGS] = {
++static u32 ready_mask_table[STM32PWR_REG_NUM_REGS] = {
+ 	[PWR_REG11] = REG_1_1_RDY,
+ 	[PWR_REG18] = REG_1_8_RDY,
+ 	[PWR_USB33] = USB_3_3_RDY,
+@@ -44,7 +44,7 @@ struct stm32_pwr_reg {
+ 	u32 ready_mask;
+ };
+ 
+-int stm32_pwr_reg_is_ready(struct regulator_dev *rdev)
++static int stm32_pwr_reg_is_ready(struct regulator_dev *rdev)
+ {
+ 	struct stm32_pwr_reg *priv = rdev_get_drvdata(rdev);
+ 	u32 val;
+@@ -54,7 +54,7 @@ int stm32_pwr_reg_is_ready(struct regulator_dev *rdev)
+ 	return (val & priv->ready_mask);
+ }
+ 
+-int stm32_pwr_reg_is_enabled(struct regulator_dev *rdev)
++static int stm32_pwr_reg_is_enabled(struct regulator_dev *rdev)
+ {
+ 	struct stm32_pwr_reg *priv = rdev_get_drvdata(rdev);
+ 	u32 val;
 -- 
 2.20.1
 
