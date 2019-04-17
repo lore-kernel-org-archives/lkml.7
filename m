@@ -2,67 +2,52 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F1E3C10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 05:28:17 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3597CC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 05:28:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1C6C7204EC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 05:28:17 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="tYytOG40"
+	by mail.kernel.org (Postfix) with ESMTP id 0EF732176F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 05:28:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730146AbfDQF2Q (ORCPT
+        id S1730372AbfDQF20 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 01:28:16 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:41735 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729099AbfDQF2P (ORCPT
+        Wed, 17 Apr 2019 01:28:26 -0400
+Received: from relay12.mail.gandi.net ([217.70.178.232]:58113 "EHLO
+        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727340AbfDQF20 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 01:28:15 -0400
-Received: by mail-pl1-f195.google.com with SMTP id d1so11450667plj.8
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 22:28:15 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Y5EwPg/bQEcUkZv671ATjbqlANxdDhHB9TcL2j0wyrQ=;
-        b=tYytOG404GSsMz3HoX+6UiM54xLYZ5XuZkCZxFiMWa5/iAmfRE7LyXmVW8d+gDOr3Q
-         3mBchf99H41AnzQBcRq1ushw3McoNUoFych5e4asVq07KLoYF1Vq1/Otg5l5jt/Q6o6D
-         dXGAwRhv1UA7Y0xxRorzfpRyvqrQrhIPjpvNULoDFRj0I/4thJ0iE1AUZ1M8/YIrUune
-         WPXwaJmkqmx0zhj5doY8nEswJHur/A4WMFaiFWNbtdpMapFeaxo0GosPMVIsG+rEbwV6
-         Z8Pwl4dlqAz6T+Ey7mT+X4FP2gm7Cs1+db8EBdIW+JLdYOSxXfUaQhJErTOz6+OmMzN0
-         lKRw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=Y5EwPg/bQEcUkZv671ATjbqlANxdDhHB9TcL2j0wyrQ=;
-        b=Y4qtMa6LWM8p9YrfDl3iymJatKhZXvUoDDlSMh6y89YIWKJGT31L3t1LieGODWhMrf
-         7B70VRX6ycEkusxupRHtPo9KNfnLZUiGdzkhxuDknpXnz2/BkMcKFAz0jz2LAHPM5nq/
-         ed1O/ZDc1zORtAnxXSXzmfOZElqGawHsK1AG19y3k0jkpBU9SjEobV4q4orRB4Whikad
-         4QWvTd7mAKPmoaXF+V+uSKUGeT7qK3rLjvK6nkxQ9izVmlvUGOI1RmLAPb5BWNjcWh9C
-         ztxpaXCCkCluNcf7bF6AE/XlQX1nrzJq/6s+i0EibqO0YfIy8QRbjD8ngbVOIJ1hkpPu
-         5AUg==
-X-Gm-Message-State: APjAAAWo5/UOm68sDKgUB7mVNHXuF7y9M+yKYckqPteqMj8FnSOIC27d
-        P87HvuRi36ld/MhFvPndzC9YyQ==
-X-Google-Smtp-Source: APXvYqwkWxqMMwAYuuBCAX7/YID5v7TAJru4jOTlBMfjCfNJ03Y6N/A9wK1wuev1jBnFyvzOisL8XQ==
-X-Received: by 2002:a17:902:302:: with SMTP id 2mr63474916pld.232.1555478894838;
-        Tue, 16 Apr 2019 22:28:14 -0700 (PDT)
-Received: from limbo.local (123-204-46-122.static.seed.net.tw. [123.204.46.122])
-        by smtp.gmail.com with ESMTPSA id g2sm87911381pfd.134.2019.04.16.22.28.12
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 22:28:14 -0700 (PDT)
-From:   Daniel Drake <drake@endlessm.com>
-To:     tglx@linutronix.de, lenb@kernel.org
-Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, linux@endlessm.com,
-        rjw@rjwysocki.net
-Subject: Detecting x86 LAPIC timer frequency from CPUID data
-Date:   Wed, 17 Apr 2019 13:28:10 +0800
-Message-Id: <20190417052810.3052-1-drake@endlessm.com>
-X-Mailer: git-send-email 2.19.1
+        Wed, 17 Apr 2019 01:28:26 -0400
+Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
+        (Authenticated sender: alex@ghiti.fr)
+        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 3A2E6200008;
+        Wed, 17 Apr 2019 05:28:18 +0000 (UTC)
+From:   Alexandre Ghiti <alex@ghiti.fr>
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        Russell King <linux@armlinux.org.uk>,
+        Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Paul Burton <paul.burton@mips.com>,
+        James Hogan <jhogan@kernel.org>,
+        Palmer Dabbelt <palmer@sifive.com>,
+        Albert Ou <aou@eecs.berkeley.edu>,
+        Alexander Viro <viro@zeniv.linux.org.uk>,
+        Luis Chamberlain <mcgrof@kernel.org>,
+        Kees Cook <keescook@chromium.org>,
+        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
+        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
+        Alexandre Ghiti <alex@ghiti.fr>
+Subject: [PATCH v3 05/11] arm: Properly account for stack randomization and stack guard gap
+Date:   Wed, 17 Apr 2019 01:22:41 -0400
+Message-Id: <20190417052247.17809-6-alex@ghiti.fr>
+X-Mailer: git-send-email 2.20.1
+In-Reply-To: <20190417052247.17809-1-alex@ghiti.fr>
+References: <20190417052247.17809-1-alex@ghiti.fr>
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -70,56 +55,48 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The CPUID.0x16 leaf provides "Bus (Reference) Frequency (in MHz)".
+This commit takes care of stack randomization and stack guard gap when
+computing mmap base address and checks if the task asked for randomization.
+This fixes the problem uncovered and not fixed for arm here:
+https://www.mail-archive.com/linux-kernel@vger.kernel.org/msg1429066.html
 
-In the thread "No 8254 PIT & no HPET on new Intel N3350 platforms
-causes kernel panic during early boot" we are exploring ways to have
-the kernel avoid using the PIT/HPET IRQ0 timer in more cases, and
-Thomas Gleixner suggested that we could use this CPUID data to set
-lapic_timer_frequency, avoiding the need for calibrate_APIC_clock()
-to measure the APIC clock against the IRQ0 timer.
+Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
+---
+ arch/arm/mm/mmap.c | 14 ++++++++++++--
+ 1 file changed, 12 insertions(+), 2 deletions(-)
 
-I'm thinking of the the following code change, however I get
-unexpected results on Intel i7-8565U (Whiskey Lake). When
-booting without this change, and with apic=notscdeadline (so that
-APIC clock gets calibrated and used), the bus speed is detected as
-23MHz:
-
- ... lapic delta = 149994
- ... PM-Timer delta = 357939
- ... PM-Timer result ok
- ..... delta 149994
- ..... mult: 6442193
- ..... calibration result: 23999
- ..... CPU clock speed is 1991.0916 MHz.
- ..... host bus clock speed is 23.0999 MHz.
-
-However the CPUID.0x16 ECX reports a 100MHz bus speed on this device,
-so this code change would produce a significantly different calibration.
-
-Am I doing anything obviously wrong?
-
-diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
-index 3fae23834069..6c51ce842f86 100644
---- a/arch/x86/kernel/tsc.c
-+++ b/arch/x86/kernel/tsc.c
-@@ -679,6 +679,16 @@ static unsigned long cpu_khz_from_cpuid(void)
+diff --git a/arch/arm/mm/mmap.c b/arch/arm/mm/mmap.c
+index f866870db749..bff3d00bda5b 100644
+--- a/arch/arm/mm/mmap.c
++++ b/arch/arm/mm/mmap.c
+@@ -18,8 +18,9 @@
+ 	 (((pgoff)<<PAGE_SHIFT) & (SHMLBA-1)))
  
- 	cpuid(0x16, &eax_base_mhz, &ebx_max_mhz, &ecx_bus_mhz, &edx);
+ /* gap between mmap and stack */
+-#define MIN_GAP (128*1024*1024UL)
+-#define MAX_GAP ((TASK_SIZE)/6*5)
++#define MIN_GAP		(128*1024*1024UL)
++#define MAX_GAP		((TASK_SIZE)/6*5)
++#define STACK_RND_MASK	(0x7ff >> (PAGE_SHIFT - 12))
  
-+#ifdef CONFIG_X86_LOCAL_APIC
-+	/*
-+	 * If bus frequency is provided in CPUID data, set
-+	 * global lapic_timer_frequency to bus_clock_cycles/jiffy.
-+	 * This avoids having to calibrate the APIC timer later.
-+	 */
-+	if (ecx_bus_mhz)
-+		lapic_timer_frequency = (ecx_bus_mhz * 1000000) / HZ;
-+#endif
+ static int mmap_is_legacy(struct rlimit *rlim_stack)
+ {
+@@ -35,6 +36,15 @@ static int mmap_is_legacy(struct rlimit *rlim_stack)
+ static unsigned long mmap_base(unsigned long rnd, struct rlimit *rlim_stack)
+ {
+ 	unsigned long gap = rlim_stack->rlim_cur;
++	unsigned long pad = stack_guard_gap;
 +
- 	return eax_base_mhz * 1000;
- }
++	/* Account for stack randomization if necessary */
++	if (current->flags & PF_RANDOMIZE)
++		pad += (STACK_RND_MASK << PAGE_SHIFT);
++
++	/* Values close to RLIM_INFINITY can overflow. */
++	if (gap + pad > gap)
++		gap += pad;
  
+ 	if (gap < MIN_GAP)
+ 		gap = MIN_GAP;
 -- 
-2.19.1
+2.20.1
 
