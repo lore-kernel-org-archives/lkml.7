@@ -2,88 +2,139 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 22217C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 01:38:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D32DDC10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 01:39:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DC6A520821
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 01:38:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AA67F2073F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 01:39:38 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729734AbfDQBir (ORCPT
+        id S1729960AbfDQBjh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 21:38:47 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:56798 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728514AbfDQBir (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 21:38:47 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 27C6246202;
-        Wed, 17 Apr 2019 01:38:47 +0000 (UTC)
-Received: from dhcp-128-65.nay.redhat.com (ovpn-12-87.pek2.redhat.com [10.72.12.87])
-        by smtp.corp.redhat.com (Postfix) with ESMTPS id ADED65D707;
-        Wed, 17 Apr 2019 01:38:42 +0000 (UTC)
-Date:   Wed, 17 Apr 2019 09:38:38 +0800
-From:   Dave Young <dyoung@redhat.com>
-To:     Borislav Petkov <bp@alien8.de>
-Cc:     Junichi Nomura <j-nomura@ce.jp.nec.com>,
-        Chao Fan <fanc.fnst@cn.fujitsu.com>,
-        Baoquan He <bhe@redhat.com>, Kairui Song <kasong@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] x86/boot: Use efi_setup_data for searching RSDP on
- kexec-ed kernels
-Message-ID: <20190417013838.GA8411@dhcp-128-65.nay.redhat.com>
-References: <20190412084956.GC19808@zn.tnic>
- <20190412133528.GD19808@zn.tnic>
- <cc2c1dbe-4fb3-fb7d-0540-c04734fc15cb@ce.jp.nec.com>
- <20190415090717.GA29317@zn.tnic>
- <20190415102525.GB29317@zn.tnic>
- <23309b73-d135-a207-564b-6003cee39184@ce.jp.nec.com>
- <20190416094024.GE27892@zn.tnic>
- <20190416095209.GG27892@zn.tnic>
- <20190416114133.GA7541@dhcp-128-65.nay.redhat.com>
- <20190416132253.GE31772@zn.tnic>
+        Tue, 16 Apr 2019 21:39:37 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6752 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728514AbfDQBjh (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 21:39:37 -0400
+Received: from DGGEMS414-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id 40EBAA30E5ED7AF442D4;
+        Wed, 17 Apr 2019 09:39:34 +0800 (CST)
+Received: from [127.0.0.1] (10.177.23.164) by DGGEMS414-HUB.china.huawei.com
+ (10.3.19.214) with Microsoft SMTP Server id 14.3.408.0; Wed, 17 Apr 2019
+ 09:39:31 +0800
+Subject: Re: [PATCH v2 0/2] iommu/arm-smmu-v3: make sure the kdump kernel can
+ work well when smmu is enabled
+To:     Will Deacon <will.deacon@arm.com>
+References: <20190318131243.20716-1-thunder.leizhen@huawei.com>
+ <20190404153031.GE27558@fuggles.cambridge.arm.com>
+ <5CAAB293.3080600@huawei.com>
+ <20190416091410.GC31579@fuggles.cambridge.arm.com>
+CC:     Jean-Philippe Brucker <jean-philippe.brucker@arm.com>,
+        Joerg Roedel <joro@8bytes.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        iommu <iommu@lists.linux-foundation.org>,
+        Robin Murphy <robin.murphy@arm.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>
+From:   "Leizhen (ThunderTown)" <thunder.leizhen@huawei.com>
+Message-ID: <5CB683D2.9010901@huawei.com>
+Date:   Wed, 17 Apr 2019 09:39:30 +0800
+User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:38.0) Gecko/20100101
+ Thunderbird/38.5.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190416132253.GE31772@zn.tnic>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 17 Apr 2019 01:38:47 +0000 (UTC)
+In-Reply-To: <20190416091410.GC31579@fuggles.cambridge.arm.com>
+Content-Type: text/plain; charset="windows-1252"
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [10.177.23.164]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/16/19 at 03:22pm, Borislav Petkov wrote:
-> On Tue, Apr 16, 2019 at 07:41:33PM +0800, Dave Young wrote:
-> > On 04/16/19 at 11:52am, Borislav Petkov wrote:
-> > > I'll queue the below in the next days if there are no more complaints:
-> > 
-> > As for the kexec breakage, even with the V3 patch, kexec still hangs on
-> > a Lenovo T420 laptop.  Kairui also reproduced the problem. So can we
-> > wait a few days see if we can make some progress to find the cause?
+
+
+On 2019/4/16 17:14, Will Deacon wrote:
+> On Mon, Apr 08, 2019 at 10:31:47AM +0800, Leizhen (ThunderTown) wrote:
+>> On 2019/4/4 23:30, Will Deacon wrote:
+>>> On Mon, Mar 18, 2019 at 09:12:41PM +0800, Zhen Lei wrote:
+>>>> v1 --> v2:
+>>>> 1. Drop part2. Now, we only use the SMMUv3 hardware feature STE.config=0b000
+>>>> (Report abort to device, no event recorded) to suppress the event messages
+>>>> caused by the unexpected devices.
+>>>> 2. rewrite the patch description.
+>>>
+>>> This issue came up a while back:
+>>>
+>>> https://lore.kernel.org/linux-pci/20180302103032.GB19323@arm.com/
+>>>
+>>> and I'd still prefer to solve it using the disable_bypass logic which we
+>>> already have. Something along the lines of the diff below?
+>>
+>> Yes, my patches also use disable_bypass=1(set ste.config=0b000). If
+>> SMMU_IDR0.ST_LEVEL=0(Linear Stream table supported), then all STE entries
+>> are allocated and initialized(set ste.config=0b000). But if SMMU_IDR0.ST_LEVEL=1
+>> (2-level Stream Table), we only allocated and initialized the first level tables,
+>> but leave level 2 tables dynamic allocated. That means, C_BAD_STREAMID(eventid=0x2)
+>> will be reported, if an unexpeted device access memory without reinitialized in
+>> kdump kernel.
 > 
-> How is applying this patch going to change anything?
+> So is your problem just that the C_BAD_STREAMID events are noisy? If so,
+> perhaps we should be disabling fault reporting entirely in the kdump kernel.
 > 
-> I was told that the breakage is there even without it...
+> How about the update diff below? I'm keen to have this as simple as
+> possible, so we don't end up introducing rarely tested, complex code on
+> the crash path.
+In theory, it can solve the problem, let me test it.
 
-Without this patch, the bug happens in the efi_get_rsdp.. function, this
-patch tries to fix that by adding kexec_get.. but the new introduced
-kexec_* function does not work on some laptops, so it is not a 100% good
-fix, I hoped we can get it working for all known issues.  But if we can
-not do it eg. within one week we can go with this version and leave the
-laptop issue as a known issue.
+But then again, below patch will also disable the fault reporting come from the
+expected devices which are used in the kdump kernel. In fact, my patches have been
+merged into our interval version more than 2 months, no bug have been found yet.
 
-But if you want to apply it now, I think it is fine as well, probably
-the laptop issue is lenovo firmware specific, we can add rsdp in cmdline
-or boot params via kexec-tools so it should be good by using new kexec-tools.
+However, my patches do not support the case that the hardware does not support the
+"STE bypass" feature, I think your patch can also resolve it.
 
-Thanks
-Dave
+> 
+> Will
+> 
+> --->8
+> 
+> diff --git a/drivers/iommu/arm-smmu-v3.c b/drivers/iommu/arm-smmu-v3.c
+> index d3880010c6cf..d8b73da6447d 100644
+> --- a/drivers/iommu/arm-smmu-v3.c
+> +++ b/drivers/iommu/arm-smmu-v3.c
+> @@ -2454,13 +2454,9 @@ static int arm_smmu_device_reset(struct arm_smmu_device *smmu, bool bypass)
+>  	/* Clear CR0 and sync (disables SMMU and queue processing) */
+>  	reg = readl_relaxed(smmu->base + ARM_SMMU_CR0);
+>  	if (reg & CR0_SMMUEN) {
+> -		if (is_kdump_kernel()) {
+> -			arm_smmu_update_gbpa(smmu, GBPA_ABORT, 0);
+> -			arm_smmu_device_disable(smmu);
+> -			return -EBUSY;
+> -		}
+> -
+>  		dev_warn(smmu->dev, "SMMU currently enabled! Resetting...\n");
+> +		WARN_ON(is_kdump_kernel() && !disable_bypass);
+> +		arm_smmu_update_gbpa(smmu, GBPA_ABORT, 0);
+>  	}
+>  
+>  	ret = arm_smmu_device_disable(smmu);
+> @@ -2553,6 +2549,8 @@ static int arm_smmu_device_reset(struct arm_smmu_device *smmu, bool bypass)
+>  		return ret;
+>  	}
+>  
+> +	if (is_kdump_kernel())
+> +		enables &= ~(CR0_EVTQEN | CR0_PRIQEN);
+>  
+>  	/* Enable the SMMU interface, or ensure bypass */
+>  	if (!bypass || disable_bypass) {
+> 
+> .
+> 
+
+-- 
+Thanks!
+BestRegards
+
