@@ -2,202 +2,78 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2E92C10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 09:52:20 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 58249C282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 09:53:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C23572173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 09:52:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 24B282173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 09:53:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731652AbfDQJwT (ORCPT
+        id S1731663AbfDQJxm (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 05:52:19 -0400
-Received: from mail-ed1-f67.google.com ([209.85.208.67]:45958 "EHLO
-        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727282AbfDQJwS (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 05:52:18 -0400
-Received: by mail-ed1-f67.google.com with SMTP id k92so2296910edc.12
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 02:52:17 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=0QDAFWJzTDCsMR5a8aWngWZoH/o61wzefj40665LFTI=;
-        b=ZcErPRd4HCcMLp2r4QZTQSd/kPQFpieHXfPHzUTEN5G4Afdq1Xj8YBoO3Zo4UGq/cm
-         AXGkszztP5iMXNJfWVOZTNbe8WLhDH/7ZbkFQlJYO7wtGDMQmZAtI0BIq/hTyJXXTDrn
-         kFYFztjXwbU2iwBfR781X3akSS1Tun1KA1GW7nRN3Sm98nVWQfP+SlZzCEBUIF+pGw27
-         pAj3rThV93YI9F3dW8aMIwoWb+4Umh0d0pW6s872lO9w425tpY+dhvk/sbaZZzwd5uLk
-         ySWlWD8t/gLtjzKViBMF/+BBafrmcRMndOOx6yX0Yj7Y8xdBzRMYDR/ak3lufGf7A1v+
-         VvZQ==
-X-Gm-Message-State: APjAAAXKmkIqijXKFfw1zmGCzJO/0GmFos7Kq4lp9oBeLO0vepd1XcIe
-        qYszX/YexeCr9CNS0v+rrmJzjg==
-X-Google-Smtp-Source: APXvYqyr0dIS87DAhb3TM+g+66FGpd+o/6t8nat0fgoP2dQBsWTot3XNe2IeCrCSqD5uif/ryx7WNA==
-X-Received: by 2002:aa7:da19:: with SMTP id r25mr42092715eds.130.1555494736617;
-        Wed, 17 Apr 2019 02:52:16 -0700 (PDT)
-Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
-        by smtp.gmail.com with ESMTPSA id h10sm2341755ede.21.2019.04.17.02.52.15
-        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Apr 2019 02:52:15 -0700 (PDT)
-Subject: Re: [PATCH v3 13/13] platform/x86: intel_cht_int33fe: Replacing the
- old connections with references
-To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>
-Cc:     "Rafael J. Wysocki" <rjw@rjwysocki.net>,
+        Wed, 17 Apr 2019 05:53:42 -0400
+Received: from foss.arm.com ([217.140.101.70]:42038 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727282AbfDQJxl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 05:53:41 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4975A374;
+        Wed, 17 Apr 2019 02:53:41 -0700 (PDT)
+Received: from mbp (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0FACD3F68F;
+        Wed, 17 Apr 2019 02:53:39 -0700 (PDT)
+Date:   Wed, 17 Apr 2019 10:53:37 +0100
+From:   Catalin Marinas <catalin.marinas@arm.com>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Will Deacon <will.deacon@arm.com>,
         Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Darren Hart <dvhart@infradead.org>,
-        Andy Shevchenko <andy@infradead.org>,
-        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
-        platform-driver-x86@vger.kernel.org,
-        Andy Shevchenko <andy.shevchenko@gmail.com>
-References: <20190412134122.82903-1-heikki.krogerus@linux.intel.com>
- <20190412134122.82903-14-heikki.krogerus@linux.intel.com>
- <a91a1d75-f224-9c9d-873a-f80467d2fb0c@redhat.com>
- <20190417063918.GI1747@kuha.fi.intel.com>
- <76d9ab79-a1d0-f3cd-ba5d-2325740c72ff@redhat.com>
- <20190417093252.GO1747@kuha.fi.intel.com>
-From:   Hans de Goede <hdegoede@redhat.com>
-Message-ID: <9304d771-df1f-aea4-43d2-7db540953cdd@redhat.com>
-Date:   Wed, 17 Apr 2019 11:52:15 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] arm64: futex: Restore oldval initialization to work
+ around buggy compilers
+Message-ID: <20190417095337.xnbdaki7kolqmchx@mbp>
+References: <20190417072121.4450-1-natechancellor@gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <20190417093252.GO1747@kuha.fi.intel.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190417072121.4450-1-natechancellor@gmail.com>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-On 17-04-19 11:32, Heikki Krogerus wrote:
-> On Wed, Apr 17, 2019 at 11:19:28AM +0200, Hans de Goede wrote:
->> Hi,
->>
->> On 17-04-19 08:39, Heikki Krogerus wrote:
->>> On Tue, Apr 16, 2019 at 11:35:36PM +0200, Hans de Goede wrote:
->>>> Hi,
->>>>
->>>> On 12-04-19 15:41, Heikki Krogerus wrote:
->>>>> Now that the software nodes support references, and the
->>>>> device connection API support parsing fwnode references,
->>>>> replacing the old connection descriptions with software node
->>>>> references. Relying on device names when matching the
->>>>> connection would not have been possible to link the USB
->>>>> Type-C connector and the DisplayPort connector together, but
->>>>> with real references it's not problem.
->>>>>
->>>>> The DisplayPort ACPI node is dag up, and the drivers own
->>>>> software node for the DisplayPort is set as the secondary
->>>>> node for it. The USB Type-C connector refers the software
->>>>> node, but it is now tied to the ACPI node, and therefore any
->>>>> device entry (struct drm_connector in practice) that the
->>>>> node combo is assigned to.
->>>>>
->>>>> The USB role switch device does not have ACPI node, so we
->>>>> have to wait for the device to appear. Then we can simply
->>>>> assign our software node for the to the device.
->>>>>
->>>>> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
->>>>> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
->>>>
->>>> So as promised I've been testing this series and this commit
->>>> breaks type-c functionality on devices using this driver.
->>>>
->>>> The problem is that typec_switch_get() and  typec_mux_get()
->>>> after this both return the same pointer, which is pointing
->>>> to the switch, so typec_mux_get() is returning the wrong
->>>> pointer.
->>>>
->>>> This is not surprising since the references for both are
->>>> both pointing to the fwnode attached to the piusb30532 devices:
->>>>
->>>> 	args[0].fwnode = data->node[INT33FE_NODE_PI3USB30532];
->>>>
->>>> So the class_find_device here:
->>>>
->>>> static void *typec_switch_match(struct device_connection *con, int ep,
->>>>                                   void *data)
->>>> {
->>>>           struct device *dev;
->>>>
->>>>           if (con->fwnode) {
->>>>                   if (con->id && !fwnode_property_present(con->fwnode, con->id))
->>>>                           return NULL;
->>>>
->>>>                   dev = class_find_device(&typec_mux_class, NULL, con->fwnode,
->>>>                                           fwnode_match);
->>>>           } else {
->>>>                   dev = class_find_device(&typec_mux_class, NULL,
->>>>                                           con->endpoint[ep], name_match);
->>>>           }
->>>>
->>>>           return dev ? to_typec_switch(dev) : ERR_PTR(-EPROBE_DEFER);
->>>> }
->>>>
->>>> Simply returns the first typec_mux_class device registered.
->>>>
->>>> I see 2 possible solutions to this problem:
->>>>
->>>> 1) Use separate typec_mux_class and typec_orientation_switch_class-es
->>>>
->>>> 2) Merge struct typec_switch and struct typec_mux into a single struct,
->>>> so that all typec_mux_class devices have the same memory layout, add
->>>> a subclass enum to this new merged struct and use that to identify
->>>> which of the typec_mux_class devices with the same fwnode pointer we
->>>> want.
->>>>
->>>> Any other suggestions?
->>>
->>> I think the correct fix is that we supply separate nodes for both
->>> device entries.
->>
->> That is not going to work since the (virtual) mux / orientation-switch
->> devices are only registered once the driver binds to the piusb30532 i2c
->> device, so when creating the nodes we only have the piusb30532 i2c device.
+On Wed, Apr 17, 2019 at 12:21:21AM -0700, Nathan Chancellor wrote:
+> Commit 045afc24124d ("arm64: futex: Fix FUTEX_WAKE_OP atomic ops with
+> non-zero result value") removed oldval's zero initialization in
+> arch_futex_atomic_op_inuser because it is not necessary. Unfortunately,
+> Android's arm64 GCC 4.9.4 [1] does not agree:
 > 
-> It's not a problem, that's why we have the software nodes. The nodes
-> can be created before the device entires. The node for pi3usb30532
-> will just be the parent node for the new nodes we add for the mux and
-> switch.
+> ../kernel/futex.c: In function 'do_futex':
+> ../kernel/futex.c:1658:17: warning: 'oldval' may be used uninitialized
+> in this function [-Wmaybe-uninitialized]
+>    return oldval == cmparg;
+>                  ^
+> In file included from ../kernel/futex.c:73:0:
+> ../arch/arm64/include/asm/futex.h:53:6: note: 'oldval' was declared here
+>   int oldval, ret, tmp;
+>       ^
 > 
->> I've been thinking some more about this and an easy fix is to have separate
->> fwnode_match functions for typec_switch_match and typec_mux_match and have
->> them check that the dev_name ends in "-mux" resp. "-switch" that requires
->> only a very minimal change to "usb: typec: Registering real device entries for the muxes"
->> and then everything should be fine.
+> GCC fails to follow that when ret is non-zero, futex_atomic_op_inuser
+> returns right away, avoiding the uninitialized use that it claims.
+> Restoring the zero initialization works around this issue.
 > 
-> I don't want to do anymore device name matching unless we have to, and
-> here we don't have to. We can name the nodes for those virtual mux and
-> switch, and then just do fwnode_find_named_child_node() in
-> pi3usb30532.c for both of them.
-
-Ok.
-
->> Note that another problem with this series which I noticed while testing
->> is that the usb-role-switch is not being found at all anymore after
->> this ("Replacing the old connections with references") patch. I still need
->> start debugging that.
+> [1]: https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/
 > 
-> OK, I'll wait for you results on that.
+> Cc: stable@vger.kernel.org
+> Fixes: 045afc24124d ("arm64: futex: Fix FUTEX_WAKE_OP atomic ops with non-zero result value")
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
-I understand that you want to wait with doing a v4 until this is resolved,
-but can you (privately) send me a v3.5 fixing the mux/switch issue so that
-I can test that (and get the problem out of the way for debugging the other
-stuff) ?
+Thanks. That compiler version doesn't seem very smart. I'll queue this
+for -rc6.
 
-I've also just replied to the following patch with a review remark:
-[PATCH v3 11/13] platform/x86: intel_cht_int33fe: Provide fwnode for the USB connector
-
-Since you need to respin the series anyways, it would be good if you can
-address that too.
-
-Regards,
-
-Hans
+-- 
+Catalin
