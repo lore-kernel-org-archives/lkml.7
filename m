@@ -2,127 +2,162 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 43F95C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 15:55:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A9E9C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 15:59:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0E23820663
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 15:55:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CCA8F206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 15:59:32 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="CpzeGPzQ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732794AbfDQPzd convert rfc822-to-8bit (ORCPT
+        id S1732663AbfDQP7c (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 11:55:33 -0400
-Received: from eu-smtp-delivery-151.mimecast.com ([146.101.78.151]:40205 "EHLO
-        eu-smtp-delivery-151.mimecast.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731454AbfDQPzd (ORCPT
+        Wed, 17 Apr 2019 11:59:32 -0400
+Received: from mail.efficios.com ([167.114.142.138]:59930 "EHLO
+        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729395AbfDQP7b (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 11:55:33 -0400
-Received: from AcuMS.aculab.com (156.67.243.126 [156.67.243.126]) (Using
- TLS) by relay.mimecast.com with ESMTP id
- uk-mta-43-4U1-6HfcPGaTLGSoAXGjSw-1; Wed, 17 Apr 2019 16:55:07 +0100
-Received: from AcuMS.Aculab.com (fd9f:af1c:a25b::d117) by AcuMS.aculab.com
- (fd9f:af1c:a25b::d117) with Microsoft SMTP Server (TLS) id 15.0.1347.2; Wed,
- 17 Apr 2019 16:53:36 +0100
-Received: from AcuMS.Aculab.com ([fe80::43c:695e:880f:8750]) by
- AcuMS.aculab.com ([fe80::43c:695e:880f:8750%12]) with mapi id 15.00.1347.000;
- Wed, 17 Apr 2019 16:53:36 +0100
-From:   David Laight <David.Laight@ACULAB.COM>
-To:     'Theodore Ts'o' <tytso@mit.edu>
-CC:     "'Reshetova, Elena'" <elena.reshetova@intel.com>,
-        'Peter Zijlstra' <peterz@infradead.org>,
-        Ingo Molnar <mingo@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        "luto@kernel.org" <luto@kernel.org>,
-        "luto@amacapital.net" <luto@amacapital.net>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "jpoimboe@redhat.com" <jpoimboe@redhat.com>,
-        "keescook@chromium.org" <keescook@chromium.org>,
-        "jannh@google.com" <jannh@google.com>,
-        "Perla, Enrico" <enrico.perla@intel.com>,
-        "mingo@redhat.com" <mingo@redhat.com>,
-        "bp@alien8.de" <bp@alien8.de>,
-        "tglx@linutronix.de" <tglx@linutronix.de>,
-        "gregkh@linuxfoundation.org" <gregkh@linuxfoundation.org>
-Subject: RE: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
-Thread-Topic: [PATCH] x86/entry/64: randomize kernel stack offset upon syscall
-Thread-Index: AQHU9E1UquBTkhVACE2y3BuRFoekIqY8wW2AgAAdM1CAAXexAIAANZ3ggAAW1gCAAApRgIAAMeKAgAAd+PCAARJkYIAAWDaAgAAZlPA=
-Date:   Wed, 17 Apr 2019 15:53:36 +0000
-Message-ID: <99e045427125403ba2b90c2707d74e02@AcuMS.aculab.com>
-References: <20190415060918.3766-1-elena.reshetova@intel.com>
- <20190415072535.GA51449@gmail.com>
- <2236FBA76BA1254E88B949DDB74E612BA4C4F90F@IRSMSX102.ger.corp.intel.com>
- <20190416073444.GC127769@gmail.com>
- <2236FBA76BA1254E88B949DDB74E612BA4C51962@IRSMSX102.ger.corp.intel.com>
- <20190416120822.GV11158@hirez.programming.kicks-ass.net>
- <01914abbfc1a4053897d8d87a63e3411@AcuMS.aculab.com>
- <20190416154348.GB3004@mit.edu>
- <2236FBA76BA1254E88B949DDB74E612BA4C52338@IRSMSX102.ger.corp.intel.com>
- <9cf586757eb44f2c8f167abf078da921@AcuMS.aculab.com>
- <20190417151555.GG4686@mit.edu>
-In-Reply-To: <20190417151555.GG4686@mit.edu>
-Accept-Language: en-GB, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-ms-exchange-transport-fromentityheader: Hosted
-x-originating-ip: [10.202.205.107]
+        Wed, 17 Apr 2019 11:59:31 -0400
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 070421D77E3;
+        Wed, 17 Apr 2019 11:59:30 -0400 (EDT)
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
+        with ESMTP id DIEi-4633uHk; Wed, 17 Apr 2019 11:59:29 -0400 (EDT)
+Received: from localhost (ip6-localhost [IPv6:::1])
+        by mail.efficios.com (Postfix) with ESMTP id 56ECF1D77DC;
+        Wed, 17 Apr 2019 11:59:29 -0400 (EDT)
+DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 56ECF1D77DC
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
+        s=default; t=1555516769;
+        bh=dnR8YugPKegltgLqamxAPBl6gUcWSxmEPI9eF8Ze/fk=;
+        h=Date:From:To:Message-ID:MIME-Version;
+        b=CpzeGPzQ154KXht4CSM6lwrJPfHzxaOGxQHhzWReRjVER7NWYY+GKd7+ZY4EDvOBi
+         M+T4mtRttkXUncF62CjiWdVFbja7Gg6KqgD6+X2Db42Od4DWwZ8hn+5nMZPzpcK+qa
+         6psWb+L9ewV49cEdBer5XUuVbpzaIlj9FKPo6lMcrWRc1c4LSM7xne+TUiFC/lfU8/
+         WV5pU5UFw2vmfwoSWsG2ugynxVxBxAxK2L5RkVL+xb1uMpQvCLK2Jc1qamw1DNMW7K
+         7jowo7CK5MYY+Y9E2gMhD8XH5QNIob7AD95ozgKvoEJ0rhDmtdeWEYxypsoHsDdR1P
+         ij2Yqua2lYi0A==
+X-Virus-Scanned: amavisd-new at efficios.com
+Received: from mail.efficios.com ([IPv6:::1])
+        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
+        with ESMTP id JT5xUcD0TKEO; Wed, 17 Apr 2019 11:59:29 -0400 (EDT)
+Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
+        by mail.efficios.com (Postfix) with ESMTP id 3E3961D77D5;
+        Wed, 17 Apr 2019 11:59:29 -0400 (EDT)
+Date:   Wed, 17 Apr 2019 11:59:29 -0400 (EDT)
+From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
+To:     carlos <carlos@redhat.com>, Will Deacon <will.deacon@arm.com>
+Cc:     Florian Weimer <fweimer@redhat.com>,
+        Joseph Myers <joseph@codesourcery.com>,
+        Szabolcs Nagy <szabolcs.nagy@arm.com>,
+        libc-alpha <libc-alpha@sourceware.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Ben Maurer <bmaurer@fb.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        "Paul E. McKenney" <paulmck@linux.vnet.ibm.com>,
+        Boqun Feng <boqun.feng@gmail.com>,
+        Dave Watson <davejwatson@fb.com>, Paul Turner <pjt@google.com>,
+        Rich Felker <dalias@libc.org>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        linux-api <linux-api@vger.kernel.org>
+Message-ID: <364803063.586.1555516769056.JavaMail.zimbra@efficios.com>
+In-Reply-To: <20190416173216.9028-2-mathieu.desnoyers@efficios.com>
+References: <20190416173216.9028-1-mathieu.desnoyers@efficios.com> <20190416173216.9028-2-mathieu.desnoyers@efficios.com>
+Subject: Re: [PATCH 1/5] glibc: Perform rseq(2) registration at C startup
+ and thread creation (v8)
 MIME-Version: 1.0
-X-MC-Unique: 4U1-6HfcPGaTLGSoAXGjSw-1
-X-Mimecast-Spam-Score: 0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+X-Originating-IP: [167.114.142.138]
+X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
+Thread-Topic: glibc: Perform rseq(2) registration at C startup and thread creation (v8)
+Thread-Index: SE1CutRP0aDD1UrXyGqfkCvIJpHajA==
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Theodore Ts'o
-> Sent: 17 April 2019 16:16
-> On Wed, Apr 17, 2019 at 09:28:35AM +0000, David Laight wrote:
-> >
-> > If you can guarantee back to back requests on the PRNG then it is probably
-> > possible to recalculate its state from 'bits of state'/5 calls.
-> > Depend on the PRNG this might be computationally expensive.
-> > For some PRNG it will be absolutely trivial.
-> > ...
-> > Stirring in a little bit of entropy doesn't help much either.
-> > The entropy bits are effectively initial state bits.
-> > Add 4 in with each request and 128 outputs gives 640 linear
-> > equations in the (128 + 4 * 128) unknowns - still solvable.
-> 
-> This is basically a scenario where the attacker has already taken
-> control of Ring 3 execution and the question is how hard is it for
-> them to perform privilege escalation attack to ring 0, right?
+----- On Apr 16, 2019, at 1:32 PM, Mathieu Desnoyers mathieu.desnoyers@efficios.com wrote:
 
-Or extract information that should only be known by ring 0.
-I fairly sure many of the side-channel attacks not only require
-ring 3 access, but also the ability to request ring 0 repeatedly
-perform a specific action on an otherwise idle system.
+[...]
+> diff --git a/sysdeps/unix/sysv/linux/aarch64/bits/rseq.h
+> b/sysdeps/unix/sysv/linux/aarch64/bits/rseq.h
+> new file mode 100644
+> index 0000000000..b02471a89a
+> --- /dev/null
+> +++ b/sysdeps/unix/sysv/linux/aarch64/bits/rseq.h
+> @@ -0,0 +1,32 @@
+> +/* Restartable Sequences Linux aarch64 architecture header.
+> +
+> +   Copyright (C) 2019 Free Software Foundation, Inc.
+> +
+> +   The GNU C Library is free software; you can redistribute it and/or
+> +   modify it under the terms of the GNU Lesser General Public
+> +   License as published by the Free Software Foundation; either
+> +   version 2.1 of the License, or (at your option) any later version.
+> +
+> +   The GNU C Library is distributed in the hope that it will be useful,
+> +   but WITHOUT ANY WARRANTY; without even the implied warranty of
+> +   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+> +   Lesser General Public License for more details.
+> +
+> +   You should have received a copy of the GNU Lesser General Public
+> +   License along with the GNU C Library; if not, see
+> +   <http://www.gnu.org/licenses/>.  */
+> +
+> +#ifndef _SYS_RSEQ_H
+> +# error "Never use <bits/rseq.h> directly; include <sys/rseq.h> instead."
+> +#endif
+> +
+> +/* RSEQ_SIG is a signature required before each abort handler code.
+> +
+> +   It is a 32-bit value that maps to actual architecture code compiled
+> +   into applications and libraries. It needs to be defined for each
+> +   architecture. When choosing this value, it needs to be taken into
+> +   account that generating invalid instructions may have ill effects on
+> +   tools like objdump, and may also have impact on the CPU speculative
+> +   execution efficiency in some cases.  */
+> +
+> +#define RSEQ_SIG 0xd428bc00	/* BRK #0x45E0.  */
 
-> I'm sure the security folks will think I'm defeatist, but my personal rule
-> of thumb is if the attacker has ring 3 control, you've already lost
-> --- I figure there are so many zero days that getting ring 0 control
-> is a foregone conclusion.  :-(
-> 
-> So that basically means if we want to protect against this, we're
-> going to do something which involves Real Crypto (tm).  Whether that's
-> RDRAND, or using Chacha20, etc., or something that has some attack
-> resistance, such as "half MD5", etc., but emminently crackable by
-> brute force, is essentially a overhead vs. security argument, and what
-> it is we are willing to pay.
+After further investigation, we should probably do the following
+to handle compiling with -mbig-endian on aarch64, which generates
+binaries with mixed code vs data endianness (little endian code,
+big endian data):
 
-Some of these 'random' values have a short lifetime - and would need
-to be cracked quickly to be of any use.
+#ifdef __ARM_BIG_ENDIAN
+#define RSEQ_SIG 0x00bc28d4	/* BRK #0x45E0.  */
+#else
+#define RSEQ_SIG 0xd428bc00	/* BRK #0x45E0.  */
+#endif
 
-I suspect that combining the output three linear generators with
-addition not xor would make it computationally much harder to
-reverse.
+Else mismatch between code endianness for the generated
+signatures and data endianness for the RSEQ_SIG parameter
+passed to the rseq registration will trigger application
+segmentation faults when the kernel try to abort rseq
+critical sections.
 
-	David
+For ARM32, the situation is a bit more complex. Only armv6+
+generates mixed-endianness code vs data with -mbig-endian.
+Prior to armv6, the code and data endianness matches. Therefore,
+I plan to #ifdef the reversed endianness handling with:
 
--
-Registered Address Lakeside, Bramley Road, Mount Farm, Milton Keynes, MK1 1PT, UK
-Registration No: 1397386 (Wales)
+#if __ARM_ARCH >= 6 && __ARM_BIG_ENDIAN
 
+on arm32.
+
+Thoughts ?
+
+Thanks,
+
+Mathieu
+
+-- 
+Mathieu Desnoyers
+EfficiOS Inc.
+http://www.efficios.com
