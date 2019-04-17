@@ -2,96 +2,104 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7CA8CC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 19:45:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2934FC282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 19:48:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4C6D42173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 19:45:41 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555530341;
-	bh=cL4EzZi/IUnfVtsgQ2ZFF/yOnZpkBepXRBmF6l1CzJY=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=VHMJ3FESGDffgwY8xT+aDDAuBKLbnCkm0HtMzoCmiZ8rM8Ej5My8o48lx43HRYY5p
-	 IvISGEgdUn76XKLXrY1wd8saMayaa0sOgVyMpf+ZwfXLSE1de1obn2ldkKPL2lwBKB
-	 mix8h/XLszx/SY2xUzrzUdW29/lO0PpC4nda2sDI=
+	by mail.kernel.org (Postfix) with ESMTP id E95A0205C9
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 19:48:25 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="cluWanpm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733215AbfDQTph (ORCPT
+        id S1733216AbfDQTsY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 15:45:37 -0400
-Received: from mail.kernel.org ([198.145.29.99]:46940 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1729779AbfDQTpc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 15:45:32 -0400
-Received: from mail-wr1-f43.google.com (mail-wr1-f43.google.com [209.85.221.43])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 0C5C9206BA
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 19:45:31 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555530331;
-        bh=cL4EzZi/IUnfVtsgQ2ZFF/yOnZpkBepXRBmF6l1CzJY=;
-        h=References:In-Reply-To:From:Date:Subject:To:Cc:From;
-        b=Y1WeZKb+x2wLYH5JOCf5RMZ+pt0QOlNGo/Med0Y+7XoHJfM51ExKKmlwN3z1fAQb2
-         JHeX7pAwa3qO1u/K/zRHTUvpNFqxLHV2R1nEIKzeoLcn0kOOU6w/pKUrhBgX0Amg6o
-         AyVqZVRlywoQdVRM/KXOryDjpNO7ptP5me/qDNB4=
-Received: by mail-wr1-f43.google.com with SMTP id k11so33505976wro.5
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 12:45:30 -0700 (PDT)
-X-Gm-Message-State: APjAAAVkJRQuvikcJL69VG+5y8MdmsffSfV0RzBfuRUbVFBo+9dJGb0c
-        7S1Ub09e7TlwS3M4CMW8TeA24ptDFeeHXFbh5lGUfw==
-X-Google-Smtp-Source: APXvYqzxP0uiBcY0Bzu1LYAhF6H28ro+GVmjLUj07Z4OKqCrthZxnrjCtZrYQRUQAGNcYIVrgtikztxrac4I2YzTzic=
-X-Received: by 2002:a5d:6a0f:: with SMTP id m15mr1100275wru.309.1555530329659;
- Wed, 17 Apr 2019 12:45:29 -0700 (PDT)
+        Wed, 17 Apr 2019 15:48:24 -0400
+Received: from mail-pg1-f195.google.com ([209.85.215.195]:37820 "EHLO
+        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729779AbfDQTsX (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 15:48:23 -0400
+Received: by mail-pg1-f195.google.com with SMTP id e6so25294pgc.4;
+        Wed, 17 Apr 2019 12:48:23 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=jD4t7ZMs5EXCYZ5VFvTHZgqBtravUrGVeV/sa0xSuR4=;
+        b=cluWanpmZqiOR7P42PjN3dbFGxEKxwX1T1gIp4j8LfPPFMxv2gdJvSRjYaKNuboZiY
+         3LkObegDKKXRb8yk68vpAouC/i2lKJvVoAWKwYnhqHUxRZKylXrSEd7hqMuKYoPwx5yD
+         x65MUlO9nUICwqq84XA64RR4J0hIVrO+5disRQsZt84SmS/y9M9xrmh1hhJBvStWca4f
+         X9uqHOnef3tqYsf2hnRi/P7R8FmWk9h7QJBEYbdGM5wi3WjPkaDA6W2sqDy+8MrdaeRc
+         7avb0/a5EzOWg0J//nJ9+8GDmYiXynoWgJ6Sg9lNadaaFYD01+u4lkbXRMqlriYs4nct
+         poVQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=jD4t7ZMs5EXCYZ5VFvTHZgqBtravUrGVeV/sa0xSuR4=;
+        b=LtLHWKRyF4t3OBX90N8M001V/zAfzH8osfJsBFvdj6LFc1SlIktadYaU1TQndxLJr/
+         OTym6pY0QcbdJFuRhjnHYGoto7wag4BSWTuTQwiVDyQTFFJDAwuTozHOd7QK4C7lDS30
+         68XPkdw+sJUi+nOmzEa/HWk2j6CnRl++JrVUfUhHoTRzTvgzI/dvRzV3vmHO3nATLvtK
+         q50PE/ut3F7b8k9c8n5x04l0DE+uK2gDBpQr6s6LykEB5OdKaSDgfDRI4vPjMCrRwyPc
+         wnGOsDK79I3m84wHM8OlLnuTsiso3MOtyf5tQDNquFuuKX3yNxf5IuNG5Zuh+cL36cfi
+         +cSw==
+X-Gm-Message-State: APjAAAWgzuxNLENbApGkUc4jH4LtBjhU2mCvxRdL7y4xLXACOrAJLQr9
+        j09bmvGYH8LGzpQGc+pOvG5HhxK+pgw=
+X-Google-Smtp-Source: APXvYqzn4Us/DH4j4G8brnXuFuvn3QZpvWjZl4t28MDAC8itfhYrWOIf0c4ei9sRwx/5bUbf0H4/Tg==
+X-Received: by 2002:aa7:8384:: with SMTP id u4mr90877158pfm.214.1555530502912;
+        Wed, 17 Apr 2019 12:48:22 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id b2sm70423162pfo.150.2019.04.17.12.48.22
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 17 Apr 2019 12:48:22 -0700 (PDT)
+Date:   Wed, 17 Apr 2019 12:48:18 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     jdelvare@suse.com, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org, corbet@lwn.net,
+        linux-doc@vger.kernel.org
+Subject: Re: [PATCH] hwmon: (ina3221) Add voltage conversion time settings
+Message-ID: <20190417194817.GA22652@Asurada-Nvidia.nvidia.com>
+References: <20190416235548.22733-1-nicoleotsuka@gmail.com>
+ <1ad27385-e62a-d4f0-2590-c50458119f12@roeck-us.net>
+ <2a193494-a33e-dac0-456a-241d7b3e59ad@roeck-us.net>
+ <20190417183949.GB5073@Asurada-Nvidia.nvidia.com>
 MIME-Version: 1.0
-References: <20190416063250.7514-1-aubrey.li@linux.intel.com> <20190416160143.8292ced993dc803aae7fa0da@linux-foundation.org>
-In-Reply-To: <20190416160143.8292ced993dc803aae7fa0da@linux-foundation.org>
-From:   Andy Lutomirski <luto@kernel.org>
-Date:   Wed, 17 Apr 2019 12:45:18 -0700
-X-Gmail-Original-Message-ID: <CALCETrUjF9PBmkzH1J86vw4ZW785DP7FtcT+gcSrx29=BUnjoQ@mail.gmail.com>
-Message-ID: <CALCETrUjF9PBmkzH1J86vw4ZW785DP7FtcT+gcSrx29=BUnjoQ@mail.gmail.com>
-Subject: Re: [PATCH v15 1/3] /proc/pid/status: Add support for architecture
- specific output
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Aubrey Li <aubrey.li@linux.intel.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        "H. Peter Anvin" <hpa@zytor.com>, Andi Kleen <ak@linux.intel.com>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Arjan van de Ven <arjan@linux.intel.com>,
-        Alexey Dobriyan <adobriyan@gmail.com>, aubrey.li@intel.com,
-        Linux API <linux-api@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190417183949.GB5073@Asurada-Nvidia.nvidia.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 4:01 PM Andrew Morton <akpm@linux-foundation.org> wrote:
->
-> On Tue, 16 Apr 2019 14:32:48 +0800 Aubrey Li <aubrey.li@linux.intel.com> wrote:
->
-> > The architecture specific information of the running processes could
-> > be useful to the userland. Add support to examine process architecture
-> > specific information externally.
->
-> The implementation looks just fine to me.  Have you had any feedback on
-> the overall desirability of adding this feature?
+On Wed, Apr 17, 2019 at 11:39:49AM -0700, Nicolin Chen wrote:
 
-I think I've been the most outspoken, and my not-all-that-strong
-opinion is that I don't really like it.  /proc/PID/status is already a
-bit of a mess, and I don't think we really want it to be a mess that
-is different on different architectures.  Hence my suggestion of
-/proc/PID/x86_status instead.  Or we could do /proc/PID/arch_status, I
-suppose, and make sure that everything in it is namespaced.  (We could
-easily end up with a situation where status fields from more than one
-architecture are present.  Think i386 + x86_64.  Thata's also the case
-where qemu userspace emulation is used to run binaries meant for one
-architecture on a different architecture's kernel.)
+> > Thinking about it ... does it even make sense to cache reg_config twice,
+> > or would it be better to just update the local copy and use regmap_write()
+> > to send it to the chip ?
+> 
+> I remember the reason of adding the read-back was to prevent race
+> condition. But now we have mutex protections for all sysfs nodes,
+> maybe it's not necessary anymore. I will read the code carefully
+> and see if it's safe to remove it -- will do in a separate patch.
 
---Andy
+I just recalled a second thought for the reason why I left them
+there as it'd logically require a copy to restore upon failure
+of regmap_write, that might not look so neat as the read-back:
+
+	old_config = reg_config;
+	reg_config &= mask;
+	reg_config |= val;
+	ret = regmap_write(reg_config);
+	if (ret) {
+		reg_config = old_config;
+		return ret;
+	}
+
+Would you prefer this?
