@@ -2,98 +2,56 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 49436C282DF
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:57:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B2AEDC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:01:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1B7E220663
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:57:56 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=kernel-dk.20150623.gappssmtp.com header.i=@kernel-dk.20150623.gappssmtp.com header.b="t92AtvlR"
+	by mail.kernel.org (Postfix) with ESMTP id 8407C20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:01:05 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733143AbfDQR5z (ORCPT
+        id S1730407AbfDQSBE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 13:57:55 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:40293 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733114AbfDQR5y (ORCPT
+        Wed, 17 Apr 2019 14:01:04 -0400
+Received: from emh02.mail.saunalahti.fi ([62.142.5.108]:33798 "EHLO
+        emh02.mail.saunalahti.fi" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726751AbfDQSBE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 13:57:54 -0400
-Received: by mail-io1-f68.google.com with SMTP id d201so21337352iof.7
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 10:57:53 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=kernel-dk.20150623.gappssmtp.com; s=20150623;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=R55o9kUXAJBh2tF+7lJ4JvdI2/7fbKVS3keHkBQuoNQ=;
-        b=t92AtvlR/3rv6myOl2qEMMrFqmL5j0URxSzPtqJ0hsuP5M2S1ZLU/myTKYV7zN6XRD
-         xl+SkL88CQctt26c/njZ9YlZ+w3p7jDh7xvxhSjj1mg+CGRnezVZcQFgX80j5Yrq24U9
-         qA9x83s5IJF/fAIfDW+7XOHyvihqjZgyzYoKbJBb90BzW4Sgm6xrOV4Jz0dC626BbJ96
-         hxU5+5EBmK2xI/y7MzhKSNqHQa/0psZSH5OkICMYwN4x4kuFrggbl1NzMjO7ohbmtBWk
-         E/2jU9aT1HwkQwRzrFXI+Vhj1FvTfT04H0Qkmxs5HQjU7tN133c/95tvJtjHERHb4YAH
-         Wlbg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=R55o9kUXAJBh2tF+7lJ4JvdI2/7fbKVS3keHkBQuoNQ=;
-        b=DH6bQyuzCDfAm04JBiJ/gS0UeaWhpSFhRN717FQqSOV9OST83KnxJBGbLkz3eRqAYg
-         PhF1roqHL5SF+XDu0sW86JehdYf4dBUyO3sdc63WJ1kCFtEH7LWs4h9SU8ISjrJ3K4Md
-         LVSaDQLNNE8fCNH9vgeMjmWTjRaavP9c1ioRI5sfHodRFJCl7i/Qk9lxpFPraODXlZRC
-         ip9MB6+nwvOtNEQ4dtfpwvt2+Uunwu76Of1ySMEHhOtpX0YWDfZZSACohRj2uc1ntKSM
-         rlphovvThDAsyYeaV47+FscZpAORoxPmZ0v7FftqBb9ZN0ZEts45NzimKbPqgoGSCOJV
-         vNGg==
-X-Gm-Message-State: APjAAAXADwsbbrjmVeGH7mJ3YQ0NX5pHGsCh0C1tI+nuqzFaHNCV9CGS
-        1AtoJgZRsOMaTk9eAfex9B7BxA==
-X-Google-Smtp-Source: APXvYqz9pczPxcJFDyzjPQrXKMuKkhGOqdKZhdX6tuSwnLL+/90o9NSkJ++zKmx0wuhuYOWclDBHnw==
-X-Received: by 2002:a6b:7417:: with SMTP id s23mr2709245iog.2.1555523873316;
-        Wed, 17 Apr 2019 10:57:53 -0700 (PDT)
-Received: from [192.168.1.158] ([216.160.245.98])
-        by smtp.gmail.com with ESMTPSA id e11sm19033013iob.48.2019.04.17.10.57.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Apr 2019 10:57:51 -0700 (PDT)
-Subject: Re: [PATCH v4 4/7] block: introduce write-hint to stream-id
- conversion
-To:     Kanchan Joshi <joshi.k@samsung.com>, linux-kernel@vger.kernel.org,
-        linux-block@vger.kernel.org, linux-nvme@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-ext4@vger.kernel.org
-Cc:     prakash.v@samsung.com
-References: <1555523406-2380-1-git-send-email-joshi.k@samsung.com>
- <CGME20190417175358epcas1p41a0a4e349dfe0a70bdcc244161c71604@epcas1p4.samsung.com>
- <1555523406-2380-5-git-send-email-joshi.k@samsung.com>
-From:   Jens Axboe <axboe@kernel.dk>
-Message-ID: <6850a3ad-805f-4232-1bc7-f3249e1fba96@kernel.dk>
-Date:   Wed, 17 Apr 2019 11:57:50 -0600
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 17 Apr 2019 14:01:04 -0400
+Received: from darkstar.musicnaut.iki.fi (85-76-110-185-nat.elisa-mobile.fi [85.76.110.185])
+        by emh02.mail.saunalahti.fi (Postfix) with ESMTP id C95E72000F;
+        Wed, 17 Apr 2019 21:01:01 +0300 (EEST)
+Date:   Wed, 17 Apr 2019 21:01:01 +0300
+From:   Aaro Koskinen <aaro.koskinen@iki.fi>
+To:     Jose Abreu <Jose.Abreu@synopsys.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Joao Pinto <Joao.Pinto@synopsys.com>,
+        "David S . Miller" <davem@davemloft.net>,
+        Giuseppe Cavallaro <peppe.cavallaro@st.com>,
+        Alexandre Torgue <alexandre.torgue@st.com>
+Subject: Re: [PATCH net-next 0/2] net: stmmac: Enable Flow Control
+Message-ID: <20190417180101.GA7350@darkstar.musicnaut.iki.fi>
+References: <cover.1555486210.git.joabreu@synopsys.com>
 MIME-Version: 1.0
-In-Reply-To: <1555523406-2380-5-git-send-email-joshi.k@samsung.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <cover.1555486210.git.joabreu@synopsys.com>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/17/19 11:50 AM, Kanchan Joshi wrote:
-> This patch moves write-hint-to-stream-id conversion in block-layer.
-> Earlier this was done by driver (nvme). Current conversion is of the
-> form "streamid = write-hint - 1", for both user and kernel streams.
-> Conversion takes stream limit (maintained in request queue) into
-> account. Write-hints beyond the exposed limit turn to 0.
-> A new field 'streamid' has been added in request. While 'write-hint'
-> field continues to exist. It keeps original value passed from upper
-> layer, and used during merging checks.
+Hi,
 
-Why not just use the bio write hint? We already disallow merging of
-dissimilar write hints, so req->bio->bi_write_hint is known to be
-identical with the rest of the bio's in that chain.
+On Wed, Apr 17, 2019 at 09:33:03AM +0200, Jose Abreu wrote:
+> I don't know of any specific reason why Flow Control is off by default but
+> do let me know if there is any.
 
--- 
-Jens Axboe
+It seems dwmac1000 assumes 4K FIFO size when configuring threshold
+values. This could be non-optimal for 8K/16K FIFOs, but that can be
+fixed later on with incremental patches.
 
+A.
