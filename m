@@ -2,74 +2,101 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1AFAFC282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:41:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 57838C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:42:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF11E20656
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:41:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="ogVeuicY"
+	by mail.kernel.org (Postfix) with ESMTP id 270BB20645
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:42:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731795AbfDQLlg (ORCPT
+        id S1731964AbfDQLms (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 07:41:36 -0400
-Received: from mail-io1-f67.google.com ([209.85.166.67]:41713 "EHLO
-        mail-io1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725792AbfDQLlf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 07:41:35 -0400
-Received: by mail-io1-f67.google.com with SMTP id v10so20272250iom.8
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 04:41:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=subject:to:references:from:message-id:date:user-agent:mime-version
-         :in-reply-to:content-language:content-transfer-encoding;
-        bh=EDbRpCydC3S6vLeF7++IiUU+jHXgnsSgM309DC1HEbY=;
-        b=ogVeuicYeqvOQG1GVM4a47BREt035jGHJSznG2rAcem3fpMrUwO+oVlKTc7UXrV25v
-         ZlGtNouiPwMoRjROZq+oKdhUfaBzQ4aT5RZ8GHstd8qQQTpUsGXI/lawcazeBPC7SMq7
-         vqW1u9XOSiY9ZESLBiIeR+8hzBs3qmwjnCysihWiWFIzOgzVf+vwTce7dNA74u3rXoyX
-         81oRLh1/oWCqNnHFx6469NPyAj6bEQvsRNC10U7qGVrtImtEZE26n/dVoMcGshGty5tK
-         tMhq9RjnYl7emFeqXIKygKXvQypx4WDZ/qhEM/zkvt8GJSgGJsyJupu0QjwhdmSrqcNG
-         P/8w==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=EDbRpCydC3S6vLeF7++IiUU+jHXgnsSgM309DC1HEbY=;
-        b=bLJumNEJ74xEnm+RbzAq7C5052m7WiPGBU30rWYhLxrWxUAYQkVvVHh3UBIRaNJhop
-         O3b1lXtjmhYJlIa6B5qubco2nQ29npjtEdp+8JF/uteCPN4jmP58q9KUz/hns5KVZMkP
-         ceWulQ49qxYRuQdjn/1XdfrXOm1BAG0WorqyIJ0X/ZYbk9+gNIVtsncLKThwCaOGZIfU
-         I8s3zjf114SwOTimZpXq4qNDmV/YLPU8OSCFxX7tuKBh9ti7v7iCbFhcRKVoiYdCsLqz
-         0NZxf8nR/9tt5XZ6i2FeQ3v08yBW5QZYmR3cMY6CRV2oQJI/vHvTdaJk5C2Hsm0C0PHG
-         AAXA==
-X-Gm-Message-State: APjAAAXUM/SpC6oG7aYMfBH7yJQeYOaHrN4XW3cdwHbFXhWpJyWmNyFw
-        BelONhvBAjHvjzBAEb8YFruvTMSyjhc=
-X-Google-Smtp-Source: APXvYqykzRKS4xCx7aGmskZH48M7WCcfq6/wHrtZ8F4ElkYBmwk06GHvvqe8WFXTxpH9Ovl1JgcfBQ==
-X-Received: by 2002:a5d:9947:: with SMTP id v7mr4236930ios.25.1555501294316;
-        Wed, 17 Apr 2019 04:41:34 -0700 (PDT)
-Received: from [172.22.22.26] (c-71-195-29-92.hsd1.mn.comcast.net. [71.195.29.92])
-        by smtp.googlemail.com with ESMTPSA id v10sm19620620iob.30.2019.04.17.04.41.33
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Apr 2019 04:41:33 -0700 (PDT)
-Subject: Re: [greybus-dev] [PATCH v2] Staging: greybus: Cleanup in greybus
- driver
-To:     Madhumitha Prabakaran <madhumithabiw@gmail.com>, johan@kernel.org,
-        elder@kernel.org, gregkh@linuxfoundation.org,
-        greybus-dev@lists.linaro.org, devel@driverdev.osuosl.org,
-        linux-kernel@vger.kernel.org
-References: <20190416221318.21161-1-madhumithabiw@gmail.com>
-From:   Alex Elder <elder@linaro.org>
-Message-ID: <b7ed0505-0ebf-98af-7beb-08b0709cc5fd@linaro.org>
-Date:   Wed, 17 Apr 2019 06:41:32 -0500
+        Wed, 17 Apr 2019 07:42:48 -0400
+Received: from mx2.suse.de ([195.135.220.15]:41570 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731520AbfDQLmr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 07:42:47 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 5FF40AE5E;
+        Wed, 17 Apr 2019 11:42:45 +0000 (UTC)
+Subject: Re: vmscan.c: Reclaim unevictable pages.
+To:     Pankaj Suryawanshi <pankajssuryawanshi@gmail.com>,
+        linux-kernel@vger.kernel.org, linux-mm@kvack.org,
+        kernelnewbies@kernelnewbies.org, mhocko@kernel.org,
+        minchan@kernel.org
+References: <CACDBo57pEVRjOBf0yLMQ+KuGPeOuFcMufGVzjPJVnwfLFjzFSA@mail.gmail.com>
+From:   Vlastimil Babka <vbabka@suse.cz>
+Openpgp: preference=signencrypt
+Autocrypt: addr=vbabka@suse.cz; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <9b1ace64-c4cc-b0b3-f864-c96124137853@suse.cz>
+Date:   Wed, 17 Apr 2019 13:39:26 +0200
 User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
  Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190416221318.21161-1-madhumithabiw@gmail.com>
+In-Reply-To: <CACDBo57pEVRjOBf0yLMQ+KuGPeOuFcMufGVzjPJVnwfLFjzFSA@mail.gmail.com>
 Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
@@ -78,219 +105,87 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 4/16/19 5:13 PM, Madhumitha Prabakaran wrote:
-> Fix a blank line after structure declarations. Also, convert
-> macros into inline functions in order to maintain Linux kernel
-> coding style based on which the inline function is
-> preferable over the macro.
-
-Madhumitha, here is my explanation for why *not* to convert these
-container_of() macros to inline functions.  It's not just because
-"we do this all over the kernel."  The reason is that it actually
-does not improve the code.
-
-Inline functions are often better than macros because they are
-explicit about types, allowing the compiler to tell you if you
-are passing parameters of the right type, and possibly assigning
-results to objects of the right type.
-
-Here is the definition of the container_of() macro in <linux/kernel.h>:
-
-#define container_of(ptr, type, member) ({                      \
-        const typeof(((type *)0)->member) * __mptr = (ptr);     \
-        (type *)((char *)__mptr - offsetof(type, member)); })
-
-You see that ptr is explicitly assigned to a local variable
-of the type of the member field, so the compiler is able to
-check that assignment.  And the return value is similarly
-cast to the type of the containing structure, so the type
-compatibility of the assignment can also be checked.  It is
-assumed that where this macro is used, the caller knows it
-is passing an appropriate address.
-
-There is another thing about this particular definition make
-it just as good as an inline function.  A macro expansion can
-result in one of its parameters being used more than once, and
-that allows those parameters to be *evaluated* more than once
-in a single statement, which can produce incorrect code.
-
-This macro is defined using the "statement expression"
-extension to C--where a compound statement is enclosed in
-parentheses--({ ... }).  This allows a local variable to be
-used in the macro expansion, which avoids any reuse of the
-macro parameters which might cause side-effects.
-
-So anyway, I don't think there is any benefit to replacing
-macros like this that do container_of() with inline functions.
-
-					-Alex
-
-> Blank line fixes are suggested by checkpatch.pl
+On 4/6/19 7:59 AM, Pankaj Suryawanshi wrote:
+> Hello ,
 > 
-> Signed-off-by: Madhumitha Prabakaran <madhumithabiw@gmail.com>
+> shrink_page_list() returns , number of pages reclaimed, when pages is
+> unevictable it returns VM_BUG_ON_PAGE(PageLRU(page) ||
+> PageUnevicatble(page),page);
 > 
-> Changes in v2:
-> - To maintain consistency in driver greybus, all the instances of macro
-> with container_of are fixed in a single patch.
-> ---
->  drivers/staging/greybus/bundle.h    |  6 +++++-
->  drivers/staging/greybus/control.h   |  6 +++++-
->  drivers/staging/greybus/gbphy.h     | 12 ++++++++++--
->  drivers/staging/greybus/greybus.h   |  6 +++++-
->  drivers/staging/greybus/hd.h        |  6 +++++-
->  drivers/staging/greybus/interface.h |  6 +++++-
->  drivers/staging/greybus/module.h    |  6 +++++-
->  drivers/staging/greybus/svc.h       |  6 +++++-
->  8 files changed, 45 insertions(+), 9 deletions(-)
+> We can add the unevictable pages in reclaim list in
+> shrink_page_list(), return total number of reclaim pages including
+> unevictable pages, let the caller handle unevictable pages.
 > 
-> diff --git a/drivers/staging/greybus/bundle.h b/drivers/staging/greybus/bundle.h
-> index 8734d2055657..84956eedb1c4 100644
-> --- a/drivers/staging/greybus/bundle.h
-> +++ b/drivers/staging/greybus/bundle.h
-> @@ -31,7 +31,11 @@ struct gb_bundle {
->  
->  	struct list_head	links;	/* interface->bundles */
->  };
-> -#define to_gb_bundle(d) container_of(d, struct gb_bundle, dev)
-> +
-> +static inline struct gb_bundle *to_gb_bundle(struct device *d)
-> +{
-> +	return container_of(d, struct gb_bundle, dev);
-> +}
->  
->  /* Greybus "private" definitions" */
->  struct gb_bundle *gb_bundle_create(struct gb_interface *intf, u8 bundle_id,
-> diff --git a/drivers/staging/greybus/control.h b/drivers/staging/greybus/control.h
-> index 3a29ec05f631..a681ef74e7fe 100644
-> --- a/drivers/staging/greybus/control.h
-> +++ b/drivers/staging/greybus/control.h
-> @@ -24,7 +24,11 @@ struct gb_control {
->  	char *vendor_string;
->  	char *product_string;
->  };
-> -#define to_gb_control(d) container_of(d, struct gb_control, dev)
-> +
-> +static inline struct gb_control *to_gb_control(struct device *d)
-> +{
-> +	return container_of(d, struct gb_control, dev);
-> +}
->  
->  struct gb_control *gb_control_create(struct gb_interface *intf);
->  int gb_control_enable(struct gb_control *control);
-> diff --git a/drivers/staging/greybus/gbphy.h b/drivers/staging/greybus/gbphy.h
-> index 99463489d7d6..20307f6dfcb9 100644
-> --- a/drivers/staging/greybus/gbphy.h
-> +++ b/drivers/staging/greybus/gbphy.h
-> @@ -15,7 +15,11 @@ struct gbphy_device {
->  	struct list_head list;
->  	struct device dev;
->  };
-> -#define to_gbphy_dev(d) container_of(d, struct gbphy_device, dev)
-> +
-> +static inline struct gbphy_device *to_gbphy_dev(struct device *d)
-> +{
-> +	return container_of(d, struct gbphy_device, dev);
-> +}
->  
->  static inline void *gb_gbphy_get_data(struct gbphy_device *gdev)
->  {
-> @@ -43,7 +47,11 @@ struct gbphy_driver {
->  
->  	struct device_driver driver;
->  };
-> -#define to_gbphy_driver(d) container_of(d, struct gbphy_driver, driver)
-> +
-> +static inline struct gbphy_driver *to_gbphy_driver(struct device_driver *d)
-> +{
-> +	return container_of(d, struct gbphy_driver, driver);
-> +}
->  
->  int gb_gbphy_register_driver(struct gbphy_driver *driver,
->  			     struct module *owner, const char *mod_name);
-> diff --git a/drivers/staging/greybus/greybus.h b/drivers/staging/greybus/greybus.h
-> index d03ddb7c9df0..a82d5002b4d5 100644
-> --- a/drivers/staging/greybus/greybus.h
-> +++ b/drivers/staging/greybus/greybus.h
-> @@ -64,7 +64,11 @@ struct greybus_driver {
->  
->  	struct device_driver driver;
->  };
-> -#define to_greybus_driver(d) container_of(d, struct greybus_driver, driver)
-> +
-> +static inline struct greybus_driver *to_greybus_driver(struct device_driver *d)
-> +{
-> +	return container_of(d, struct greybus_driver, driver);
-> +}
->  
->  static inline void greybus_set_drvdata(struct gb_bundle *bundle, void *data)
->  {
-> diff --git a/drivers/staging/greybus/hd.h b/drivers/staging/greybus/hd.h
-> index 6cf024a20a58..de7c49d05266 100644
-> --- a/drivers/staging/greybus/hd.h
-> +++ b/drivers/staging/greybus/hd.h
-> @@ -57,7 +57,11 @@ struct gb_host_device {
->  	/* Private data for the host driver */
->  	unsigned long hd_priv[0] __aligned(sizeof(s64));
->  };
-> -#define to_gb_host_device(d) container_of(d, struct gb_host_device, dev)
-> +
-> +static inline struct gb_host_device *to_gb_host_device(struct device *d)
-> +{
-> +	return container_of(d, struct gb_host_device, dev);
-> +}
->  
->  int gb_hd_cport_reserve(struct gb_host_device *hd, u16 cport_id);
->  void gb_hd_cport_release_reserved(struct gb_host_device *hd, u16 cport_id);
-> diff --git a/drivers/staging/greybus/interface.h b/drivers/staging/greybus/interface.h
-> index 1c00c5bb3ec9..f86c0d596dbe 100644
-> --- a/drivers/staging/greybus/interface.h
-> +++ b/drivers/staging/greybus/interface.h
-> @@ -63,7 +63,11 @@ struct gb_interface {
->  	struct work_struct mode_switch_work;
->  	struct completion mode_switch_completion;
->  };
-> -#define to_gb_interface(d) container_of(d, struct gb_interface, dev)
-> +
-> +static inline struct gb_interface *to_gb_interface(struct device *d)
-> +{
-> +	return container_of(d, struct gb_interface, dev);
-> +}
->  
->  struct gb_interface *gb_interface_create(struct gb_module *module,
->  					 u8 interface_id);
-> diff --git a/drivers/staging/greybus/module.h b/drivers/staging/greybus/module.h
-> index b1ebcc6636db..c427b788b677 100644
-> --- a/drivers/staging/greybus/module.h
-> +++ b/drivers/staging/greybus/module.h
-> @@ -22,7 +22,11 @@ struct gb_module {
->  
->  	struct gb_interface *interfaces[0];
->  };
-> -#define to_gb_module(d) container_of(d, struct gb_module, dev)
-> +
-> +static inline struct gb_module *to_gb_module(struct device *d)
-> +{
-> +	return container_of(d, struct gb_module, dev);
-> +}
->  
->  struct gb_module *gb_module_create(struct gb_host_device *hd, u8 module_id,
->  				   size_t num_interfaces);
-> diff --git a/drivers/staging/greybus/svc.h b/drivers/staging/greybus/svc.h
-> index ad01783bac9c..4e35ac9ed0ff 100644
-> --- a/drivers/staging/greybus/svc.h
-> +++ b/drivers/staging/greybus/svc.h
-> @@ -52,7 +52,11 @@ struct gb_svc {
->  	struct dentry *debugfs_dentry;
->  	struct svc_debugfs_pwrmon_rail *pwrmon_rails;
->  };
-> -#define to_gb_svc(d) container_of(d, struct gb_svc, dev)
-> +
-> +static inline struct gb_svc *to_gb_svc(struct device *d)
-> +{
-> +	return container_of(d, struct gb_svc, dev);
-> +}
->  
->  struct gb_svc *gb_svc_create(struct gb_host_device *hd);
->  int gb_svc_add(struct gb_svc *svc);
+> I think the problem is shrink_page_list is awkard. If page is
+> unevictable it goto activate_locked->keep_locked->keep lables, keep
+> lable list_add the unevictable pages and throw the VM_BUG instead of
+> passing it to caller while it relies on caller for
+> non-reclaimed-non-unevictable  page's putback.
+> I think we can make it consistent so that shrink_page_list could
+> return non-reclaimed pages via page_list and caller can handle it. As
+> an advance, it could try to migrate mlocked pages without retrial.
+> 
+> 
+> Below is the issue i observed of CMA_ALLOC of large size buffer :
+> (Kernel version - 4.14.65 With Android Pie.
+> 
+> [   24.718792] page dumped because: VM_BUG_ON_PAGE(PageLRU(page) ||
+> PageUnevictable(page))
+> [   24.726949] page->mem_cgroup:bd008c00
+> [   24.730693] ------------[ cut here ]------------
+> [   24.735304] kernel BUG at mm/vmscan.c:1350!
+> [   24.739478] Internal error: Oops - BUG: 0 [#1] PREEMPT SMP ARM
+
+Please include full report including the full stacktrace, kernel version
+etc etc.
+
+> 
+> 
+> Below is the patch which solved this issue :
+> 
+> diff --git a/mm/vmscan.c b/mm/vmscan.c
+> index be56e2e..12ac353 100644
+> --- a/mm/vmscan.c
+> +++ b/mm/vmscan.c
+> @@ -998,7 +998,7 @@ static unsigned long shrink_page_list(struct
+> list_head *page_list,
+>                 sc->nr_scanned++;
+> 
+>                 if (unlikely(!page_evictable(page)))
+> -                       goto activate_locked;
+> +                      goto cull_mlocked;
+> 
+>                 if (!sc->may_unmap && page_mapped(page))
+>                         goto keep_locked;
+> @@ -1331,7 +1331,12 @@ static unsigned long shrink_page_list(struct
+> list_head *page_list,
+>                 } else
+>                         list_add(&page->lru, &free_pages);
+>                 continue;
+> -
+> +cull_mlocked:
+> +                if (PageSwapCache(page))
+> +                        try_to_free_swap(page);
+> +                unlock_page(page);
+> +                list_add(&page->lru, &ret_pages);
+> +                continue;
+>  activate_locked:
+>                 /* Not a candidate for swapping, so reclaim swap space. */
+>                 if (PageSwapCache(page) && (mem_cgroup_swap_full(page) ||
+> 
+> 
+> 
+> 
+> It fixes the below issue.
+> 
+> 1. Large size buffer allocation using cma_alloc successful with
+> unevictable pages.
+> 
+> cma_alloc of current kernel will fail due to unevictable page
+> 
+> Please let me know if anything i am missing.
+> 
+> Regards,
+> Pankaj
 > 
 
