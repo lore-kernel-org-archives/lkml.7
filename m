@@ -2,472 +2,229 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EA2EEC10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 09:58:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31DA9C10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 10:01:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A720E21773
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 09:58:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id F173E21773
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 10:01:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731675AbfDQJ60 (ORCPT
+        id S1731660AbfDQKBH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 05:58:26 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:42146 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726237AbfDQJ6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 05:58:25 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 38404374;
-        Wed, 17 Apr 2019 02:58:25 -0700 (PDT)
-Received: from [10.162.41.195] (p8cg001049571a15.blr.arm.com [10.162.41.195])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C11583F68F;
-        Wed, 17 Apr 2019 02:58:19 -0700 (PDT)
-From:   Anshuman Khandual <anshuman.khandual@arm.com>
-Subject: Re: [PATCH V2 2/2] arm64/mm: Enable memory hot remove
-To:     Mark Rutland <mark.rutland@arm.com>
-Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mm@kvack.org, akpm@linux-foundation.org, will.deacon@arm.com,
-        catalin.marinas@arm.com, mhocko@suse.com,
-        mgorman@techsingularity.net, james.morse@arm.com,
-        robin.murphy@arm.com, cpandya@codeaurora.org,
-        arunks@codeaurora.org, dan.j.williams@intel.com, osalvador@suse.de,
-        david@redhat.com, cai@lca.pw, logang@deltatee.com,
-        ira.weiny@intel.com
-References: <1555221553-18845-1-git-send-email-anshuman.khandual@arm.com>
- <1555221553-18845-3-git-send-email-anshuman.khandual@arm.com>
- <20190415134841.GC13990@lakrids.cambridge.arm.com>
-Message-ID: <2faba38b-ab79-2dda-1b3c-ada5054d91fa@arm.com>
-Date:   Wed, 17 Apr 2019 15:28:18 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 17 Apr 2019 06:01:07 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:42841 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726237AbfDQKBG (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 06:01:06 -0400
+Received: from gallifrey.ext.pengutronix.de ([2001:67c:670:201:5054:ff:fe8d:eefb] helo=bjornoya.blackshift.org)
+        by metis.ext.pengutronix.de with esmtps (TLS1.2:ECDHE_RSA_AES_256_GCM_SHA384:256)
+        (Exim 4.89)
+        (envelope-from <mkl@pengutronix.de>)
+        id 1hGhML-0005iM-T5; Wed, 17 Apr 2019 12:00:05 +0200
+Received: from [IPv6:2a03:f580:87bc:d400:61a6:cf3c:f77c:6bd5] (unknown [IPv6:2a03:f580:87bc:d400:61a6:cf3c:f77c:6bd5])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-384) server-signature RSA-PSS (4096 bits)
+         client-signature RSA-PSS (4096 bits))
+        (Client CN "mkl@blackshift.org", Issuer "StartCom Class 1 Client CA" (not verified))
+        (Authenticated sender: mkl@blackshift.org)
+        by smtp.blackshift.org (Postfix) with ESMTPSA id 393283FDEB4;
+        Wed, 17 Apr 2019 10:00:00 +0000 (UTC)
+Subject: Re: [PATCH net-next 1/3] net: rework SIOCGSTAMP ioctl handling
+To:     Arnd Bergmann <arnd@arndb.de>,
+        "David S. Miller" <davem@davemloft.net>,
+        Ralf Baechle <ralf@linux-mips.org>,
+        Marcel Holtmann <marcel@holtmann.org>,
+        Johan Hedberg <johan.hedberg@gmail.com>,
+        Oliver Hartkopp <socketcan@hartkopp.net>,
+        Gerrit Renker <gerrit@erg.abdn.ac.uk>,
+        Alexander Aring <alex.aring@gmail.com>,
+        Stefan Schmidt <stefan@datenfreihafen.org>,
+        Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+        Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+        Vlad Yasevich <vyasevich@gmail.com>,
+        Neil Horman <nhorman@tuxdriver.com>,
+        Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+        Andrew Hendry <andrew.hendry@gmail.com>,
+        Eric Dumazet <edumazet@google.com>,
+        Willem de Bruijn <willemb@google.com>,
+        Deepa Dinamani <deepa.kernel@gmail.com>
+Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-hams@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+        linux-can@vger.kernel.org, dccp@vger.kernel.org,
+        linux-wpan@vger.kernel.org, linux-sctp@vger.kernel.org,
+        linux-x25@vger.kernel.org
+References: <20190416203620.539628-1-arnd@arndb.de>
+From:   Marc Kleine-Budde <mkl@pengutronix.de>
+Openpgp: preference=signencrypt
+Autocrypt: addr=mkl@pengutronix.de; prefer-encrypt=mutual; keydata=
+ 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
+Message-ID: <4eabda4b-d08e-ae29-b3df-0971e909fe9c@pengutronix.de>
+Date:   Wed, 17 Apr 2019 11:59:55 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-In-Reply-To: <20190415134841.GC13990@lakrids.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+In-Reply-To: <20190416203620.539628-1-arnd@arndb.de>
+Content-Type: multipart/signed; micalg=pgp-sha512;
+ protocol="application/pgp-signature";
+ boundary="oP6RuXvTEGF9Y54Th4EJnog3EsjFlvu8A"
+X-SA-Exim-Connect-IP: 2001:67c:670:201:5054:ff:fe8d:eefb
+X-SA-Exim-Mail-From: mkl@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+This is an OpenPGP/MIME signed message (RFC 4880 and 3156)
+--oP6RuXvTEGF9Y54Th4EJnog3EsjFlvu8A
+Content-Type: multipart/mixed; boundary="bhFxmOk9TZicUAH3UPosBJuXCCeMCMkUw";
+ protected-headers="v1"
+From: Marc Kleine-Budde <mkl@pengutronix.de>
+To: Arnd Bergmann <arnd@arndb.de>, "David S. Miller" <davem@davemloft.net>,
+ Ralf Baechle <ralf@linux-mips.org>, Marcel Holtmann <marcel@holtmann.org>,
+ Johan Hedberg <johan.hedberg@gmail.com>,
+ Oliver Hartkopp <socketcan@hartkopp.net>,
+ Gerrit Renker <gerrit@erg.abdn.ac.uk>, Alexander Aring
+ <alex.aring@gmail.com>, Stefan Schmidt <stefan@datenfreihafen.org>,
+ Alexey Kuznetsov <kuznet@ms2.inr.ac.ru>,
+ Hideaki YOSHIFUJI <yoshfuji@linux-ipv6.org>,
+ Vlad Yasevich <vyasevich@gmail.com>, Neil Horman <nhorman@tuxdriver.com>,
+ Marcelo Ricardo Leitner <marcelo.leitner@gmail.com>,
+ Andrew Hendry <andrew.hendry@gmail.com>, Eric Dumazet <edumazet@google.com>,
+ Willem de Bruijn <willemb@google.com>,
+ Deepa Dinamani <deepa.kernel@gmail.com>
+Cc: netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
+ linux-hams@vger.kernel.org, linux-bluetooth@vger.kernel.org,
+ linux-can@vger.kernel.org, dccp@vger.kernel.org, linux-wpan@vger.kernel.org,
+ linux-sctp@vger.kernel.org, linux-x25@vger.kernel.org
+Message-ID: <4eabda4b-d08e-ae29-b3df-0971e909fe9c@pengutronix.de>
+Subject: Re: [PATCH net-next 1/3] net: rework SIOCGSTAMP ioctl handling
+References: <20190416203620.539628-1-arnd@arndb.de>
+In-Reply-To: <20190416203620.539628-1-arnd@arndb.de>
+
+--bhFxmOk9TZicUAH3UPosBJuXCCeMCMkUw
+Content-Type: text/plain; charset=utf-8
+Content-Language: de-DE
+Content-Transfer-Encoding: quoted-printable
+
+On 4/16/19 10:32 PM, Arnd Bergmann wrote:
+> The SIOCGSTAMP/SIOCGSTAMPNS ioctl commands are implemented by many
+> socket protocol handlers, and all of those end up calling the same
+> sock_get_timestamp()/sock_get_timestampns() helper functions, which
+> results in a lot of duplicate code.
+>=20
+> With the introduction of 64-bit time_t on 32-bit architectures, this
+> gets worse, as we then need four different ioctl commands in each
+> socket protocol implementation.
+>=20
+> To simplify that, let's add a new .gettstamp() operation in
+> struct proto_ops, and move ioctl implementation into the common
+> sock_ioctl()/compat_sock_ioctl_trans() functions that these all go
+> through.
+>=20
+> We can reuse the sock_get_timestamp() implementation, but generalize
+> it so it can deal with both native and compat mode, as well as
+> timeval and timespec structures.
+>=20
+> Acked-by: Stefan Schmidt <stefan@datenfreihafen.org>
+> Link: https://lore.kernel.org/lkml/CAK8P3a038aDQQotzua_QtKGhq8O9n+rdiz2=
+=3DWDCp82ys8eUT+A@mail.gmail.com/
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+
+For the CAN part:
+
+Acked-by: Marc Kleine-Budde <mkl@pengutronix.de>
+
+regards,
+Marc
+
+--=20
+Pengutronix e.K.                  | Marc Kleine-Budde           |
+Industrial Linux Solutions        | Phone: +49-231-2826-924     |
+Vertretung West/Dortmund          | Fax:   +49-5121-206917-5555 |
+Amtsgericht Hildesheim, HRA 2686  | http://www.pengutronix.de   |
 
 
-On 04/15/2019 07:18 PM, Mark Rutland wrote:
-> Hi Anshuman,
-> 
-> On Sun, Apr 14, 2019 at 11:29:13AM +0530, Anshuman Khandual wrote:
->> Memory removal from an arch perspective involves tearing down two different
->> kernel based mappings i.e vmemmap and linear while releasing related page
->> table pages allocated for the physical memory range to be removed.
->>
->> Define a common kernel page table tear down helper remove_pagetable() which
->> can be used to unmap given kernel virtual address range. In effect it can
->> tear down both vmemap or kernel linear mappings. This new helper is called
->> from both vmemamp_free() and ___remove_pgd_mapping() during memory removal.
->> The argument 'direct' here identifies kernel linear mappings.
-> 
-> Can you please explain why we need to treat these differently? I thought
-> the next paragraph was going to do that, but as per my comment there it
-> doesn't seem to be relevant. :/
+--bhFxmOk9TZicUAH3UPosBJuXCCeMCMkUw--
 
-For linear mapping there is no actual allocated page which is mapped. Its the
-pfn derived from physical address (from __va(PA)-->PA translation) which is
-there in the page table entry and need not be freed any where during tear down.
+--oP6RuXvTEGF9Y54Th4EJnog3EsjFlvu8A
+Content-Type: application/pgp-signature; name="signature.asc"
+Content-Description: OpenPGP digital signature
+Content-Disposition: attachment; filename="signature.asc"
 
-But in case of vmemmap (struct page mapping for a given range) which is a real
-virtual mapping (like vmalloc) real pages are allocated (buddy or memblock) and
-are mapped in it's page table entries to effect the translation. These pages
-need to be freed while tearing down the translation. But for both mappings
-(linear and vmemmap) their page table pages need to be freed.
+-----BEGIN PGP SIGNATURE-----
 
-This differentiation is needed while deciding if [pte|pmd|pud]_page() at any
-given level needs to be freed or not. Will update the commit message with this
-explanation if required.
+iQEzBAEBCgAdFiEEmvEkXzgOfc881GuFWsYho5HknSAFAly2+RsACgkQWsYho5Hk
+nSA+5Qf/TdRQd9Jb+CrEOmRTXkDOy+oG5Q4lOH8kTGLGuVcufVKYrWxNazF2WNAU
+uiohTFCKRBHADN7QSPuJcj5bKF/zAva4tIOEI+P/E/kJKklBF0JwPc676SmkUaop
+mMat6DD+JbjBkUVVGum0QxcuvTX870gX//xOhwjjEZDwx9nphQ0LJHas6t675WJY
+/gM4YTaSzuGCMsh65dduYl3d2UG0a1X4S8JtOgoBniszfkJYDxd2TAhZdur/tCq6
+C3WtdnLh3NvCFu6Q4HDaBrXqgtv0/n1pX0zko+TNiNv0ETTx8bbHztafQBR/xWIt
+W2DtCx2TmAr9FxU5oK3tnc5OO9QiFg==
+=MQJ6
+-----END PGP SIGNATURE-----
 
-> 
->> Vmemmap mappings page table pages are allocated through sparse mem helper
->> functions like vmemmap_alloc_block() which does not cycle the pages through
->> pgtable_page_ctor() constructs. Hence while removing it skips corresponding
->> destructor construct pgtable_page_dtor().
-> 
-> I thought the ctor/dtor dance wasn't necessary for any init_mm tables,
-> so why do we need to mention it here specifically for the vmemmap
-> tables?
-
-Yeah not necessary any more. Will drop it.
-
-> 
->> While here update arch_add_mempory() to handle __add_pages() failures by
->> just unmapping recently added kernel linear mapping. 
-> 
-> Is this a latent bug?
-
-Did not get it. __add_pages() could fail because of __add_section() in which
-case we should remove the linear mapping added previously in the first step.
-Is there any concern here ?
-
-> 
->> Now enable memory hot remove on arm64 platforms by default with
->> ARCH_ENABLE_MEMORY_HOTREMOVE.
->>
->> This implementation is overall inspired from kernel page table tear down
->> procedure on X86 architecture.
->>
->> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
->> ---
->>  arch/arm64/Kconfig               |   3 +
->>  arch/arm64/include/asm/pgtable.h |   2 +
->>  arch/arm64/mm/mmu.c              | 221 ++++++++++++++++++++++++++++++++++++++-
->>  3 files changed, 224 insertions(+), 2 deletions(-)
->>
->> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
->> index c383625..a870eb2 100644
->> --- a/arch/arm64/Kconfig
->> +++ b/arch/arm64/Kconfig
->> @@ -267,6 +267,9 @@ config HAVE_GENERIC_GUP
->>  config ARCH_ENABLE_MEMORY_HOTPLUG
->>  	def_bool y
->>  
->> +config ARCH_ENABLE_MEMORY_HOTREMOVE
->> +	def_bool y
->> +
->>  config SMP
->>  	def_bool y
->>  
->> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
->> index de70c1e..1ee22ff 100644
->> --- a/arch/arm64/include/asm/pgtable.h
->> +++ b/arch/arm64/include/asm/pgtable.h
->> @@ -555,6 +555,7 @@ static inline phys_addr_t pud_page_paddr(pud_t pud)
->>  
->>  #else
->>  
->> +#define pmd_index(addr) 0
->>  #define pud_page_paddr(pud)	({ BUILD_BUG(); 0; })
->>  
->>  /* Match pmd_offset folding in <asm/generic/pgtable-nopmd.h> */
->> @@ -612,6 +613,7 @@ static inline phys_addr_t pgd_page_paddr(pgd_t pgd)
->>  
->>  #else
->>  
->> +#define pud_index(adrr)	0
->>  #define pgd_page_paddr(pgd)	({ BUILD_BUG(); 0;})
->>  
->>  /* Match pud_offset folding in <asm/generic/pgtable-nopud.h> */
->> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
->> index ef82312..a4750fe 100644
->> --- a/arch/arm64/mm/mmu.c
->> +++ b/arch/arm64/mm/mmu.c
->> @@ -733,6 +733,194 @@ int kern_addr_valid(unsigned long addr)
->>  
->>  	return pfn_valid(pte_pfn(pte));
->>  }
->> +
->> +#ifdef CONFIG_MEMORY_HOTPLUG
->> +static void free_pagetable(struct page *page, int order)
-> 
-> On arm64, all of the stage-1 page tables other than the PGD are always
-> PAGE_SIZE. We shouldn't need to pass an order around in order to free
-> page tables.
-> 
-> It looks like this function is misnamed, and is used to free vmemmap
-> backing pages in addition to page tables used to map them. It would be
-> nicer to come up with a better naming scheme.
-
-free_pagetable() is being used both for freeing page table pages as well
-mapped entries at various level (for vmemmap). As you rightly mentioned
-page table pages are invariably PAGE_SIZE (other than pgd) but theses
-mapped pages size can vary at various level. free_pagetable() is a very
-generic helper which can accommodate pages allocated from buddy as well
-as memblock. But I agree that the naming is misleading.
-
-Will something like this will be better ?
-
-void free_pagetable_mapped_page(struct page *page, int order)
-{
-	.......................
-	.......................
-}
-
-void free_pagetable_page(struct page *page)
-{
-	free_pagetable_mapped_page(page, 0);
-}
-
-- Call free_pgtable_page() while freeing pagetable pages
-- Call free_pgtable_mapped_page() while freeing mapped pages
-
-> 
->> +{
->> +	unsigned long magic;
->> +	unsigned int nr_pages = 1 << order;
->> +
->> +	if (PageReserved(page)) {
->> +		__ClearPageReserved(page);
->> +
->> +		magic = (unsigned long)page->freelist;
->> +		if (magic == SECTION_INFO || magic == MIX_SECTION_INFO) {
-> 
-> Not a new problem, but it's unfortunate that the core code reuses the
-> page::freelist field for this, given it also uses page::private for the
-> section number. Using fields from different parts of the union doesn't
-> seem robust.> 
-> It would seem nicer to have a private2 field in the struct for anonymous
-> pages.
-
-Okay. But I guess its not something for us to investigate in this context.
-
-> 
->> +			while (nr_pages--)
->> +				put_page_bootmem(page++);
->> +		} else {
->> +			while (nr_pages--)
->> +				free_reserved_page(page++);
->> +		}
->> +	} else {
->> +		free_pages((unsigned long)page_address(page), order);
->> +	}
->> +}
->> +
->> +#if (CONFIG_PGTABLE_LEVELS > 2)
->> +static void free_pte_table(pte_t *pte_start, pmd_t *pmd)
-> 
-> As a general note, for arm64 please append a 'p' for pointers to
-> entries, i.e. these should be ptep and pmdp.
-
-Sure will fix across the entire patch.
-
-> 
->> +{
->> +	pte_t *pte;
->> +	int i;
->> +
->> +	for (i = 0; i < PTRS_PER_PTE; i++) {
->> +		pte = pte_start + i;
->> +		if (!pte_none(*pte))
->> +			return;
->> +	}
-> 
-> You could get rid of the pte temporary, rename pte_start to ptep, and
-> simplify this to:
-> 
-> 	for (i = 0; i < PTRS_PER_PTE; i++)
-> 		if (!pte_none(ptep[i]))
-> 			return;
-> 
-> Similar applies at the other levels.
-
-Sure will do.
-
-> 
-> I take it that some higher-level serialization prevents concurrent
-> modification to this table. Where does that happen?
-
-mem_hotplug_begin()
-mem_hotplug_end()
-
-which operates on DEFINE_STATIC_PERCPU_RWSEM(mem_hotplug_lock)
-
-- arch_remove_memory() called from (__remove_memory || devm_memremap_pages_release)
-- vmemmap_free() called from __remove_pages called from (arch_remove_memory || devm_memremap_pages_release)
-
-Both __remove_memory() and devm_memremap_pages_release() are protected with
-pair of these.
-
-mem_hotplug_begin()
-mem_hotplug_end()
-
-vmemmap tear down happens before linear mapping and in sequence.
-
-> 
->> +
->> +	free_pagetable(pmd_page(*pmd), 0);
-> 
-> Here we free the pte level of table...
-> 
->> +	spin_lock(&init_mm.page_table_lock);
->> +	pmd_clear(pmd);
-> 
-> ... but only here do we disconnect it from the PMD level of table, and
-> we don't do any TLB maintenance just yet. The page could be poisoned
-> and/or reallocated before we invalidate the TLB, which is not safe. In
-> all cases, we must follow the sequence:
-> 
-> 1) clear the pointer to a table
-> 2) invalidate any corresponding TLB entries
-> 3) free the table page
-> 
-> ... or we risk a number of issues resulting from erroneous programming
-> of the TLBs. See pmd_free_pte_page() for an example of how to do this
-> correctly.
-
-Okay will send 'addr' into these functions and do somehting like this
-at all levels as in case for pmd_free_pte_page().
-
-        page = pud_page(*pudp);
-        pud_clear(pudp);
-        __flush_tlb_kernel_pgtable(addr);
-        free_pgtable_page(page);
-
-
-> 
-> I'd have thought similar applied to x86, so that implementation looks
-> suspicious to me too...
-> 
->> +	spin_unlock(&init_mm.page_table_lock);
-> 
-> What precisely is the page_table_lock intended to protect?
-
-Concurrent modification to kernel page table (init_mm) while clearing entries.
-
-> 
-> It seems odd to me that we're happy to walk the tables without the lock,
-> but only grab the lock when performing a modification. That implies we
-> either have some higher-level mutual exclusion, or we're not holding the
-> lock in all cases we need to be.
-
-On arm64
-
-- linear mapping is half kernel virtual range (unlikely to share PGD with any other)
-- vmemmap and vmalloc might or might not be aligned properly to avoid PGD/PUD/PMD overlap
-- This kernel virtual space layout is not fixed and can change in future
-
-Hence just to be on safer side lets take init_mm.page_table_lock for the entire tear
-down process in remove_pagetable(). put_page_bootmem/free_reserved_page/free_pages should
-not block for longer period unlike allocation paths. Hence it should be safe with overall
-spin lock on init_mm.page_table_lock unless if there are some other concerns.
-
-> 
->> +}
->> +#else
->> +static void free_pte_table(pte_t *pte_start, pmd_t *pmd)
->> +{
->> +}
->> +#endif
-> 
-> I'm surprised that we never need to free a pte table for 2 level paging.
-> Is that definitely the case?
-
-Will fix it.
-
-> 
->> +
->> +#if (CONFIG_PGTABLE_LEVELS > 3)
->> +static void free_pmd_table(pmd_t *pmd_start, pud_t *pud)
->> +{
->> +	pmd_t *pmd;
->> +	int i;
->> +
->> +	for (i = 0; i < PTRS_PER_PMD; i++) {
->> +		pmd = pmd_start + i;
->> +		if (!pmd_none(*pmd))
->> +			return;
->> +	}
->> +
->> +	free_pagetable(pud_page(*pud), 0);
->> +	spin_lock(&init_mm.page_table_lock);
->> +	pud_clear(pud);
->> +	spin_unlock(&init_mm.page_table_lock);
->> +}
->> +
->> +static void free_pud_table(pud_t *pud_start, pgd_t *pgd)
->> +{
->> +	pud_t *pud;
->> +	int i;
->> +
->> +	for (i = 0; i < PTRS_PER_PUD; i++) {
->> +		pud = pud_start + i;
->> +		if (!pud_none(*pud))
->> +			return;
->> +	}
->> +
->> +	free_pagetable(pgd_page(*pgd), 0);
->> +	spin_lock(&init_mm.page_table_lock);
->> +	pgd_clear(pgd);
->> +	spin_unlock(&init_mm.page_table_lock);
->> +}
->> +#else
->> +static void free_pmd_table(pmd_t *pmd_start, pud_t *pud)
->> +{
->> +}
->> +
->> +static void free_pud_table(pud_t *pud_start, pgd_t *pgd)
->> +{
->> +}
->> +#endif
-> 
-> It seems very odd to me that we suddenly need both of these, rather than
-> requiring one before the other. Naively, I'd have expected that we'd
-> need:
-> 
-> - free_pte_table for CONFIG_PGTABLE_LEVELS > 1 (i.e. always)
-> - free_pmd_table for CONFIG_PGTABLE_LEVELS > 2
-> - free_pud_table for CONFIG_PGTABLE_LEVELS > 3
-> 
-> ... matching the cases where the levels "really" exist. What am I
-> missing that ties the pmd and pud levels together?
-
-Might have got somehting wrong here. Will fix it.
-
-> 
->> +static void
->> +remove_pte_table(pte_t *pte_start, unsigned long addr,
->> +			unsigned long end, bool direct)
->> +{
->> +	pte_t *pte;
->> +
->> +	pte = pte_start + pte_index(addr);
->> +	for (; addr < end; addr += PAGE_SIZE, pte++) {
->> +		if (!pte_present(*pte))
->> +			continue;
->> +
->> +		if (!direct)
->> +			free_pagetable(pte_page(*pte), 0);
-> 
-> This is really confusing. Here we're freeing a page of memory backing
-> the vmemmap, which it _not_ a page table.
-
-Right. The new naming scheme proposed before should do take care.
-
-> 
-> At the least, can we please rename "direct" to something like
-> "free_backing", inverting its polarity?
-
-Will use 'sparse_vmap' instead and invert the polarity.
-
-> 
->> +		spin_lock(&init_mm.page_table_lock);
->> +		pte_clear(&init_mm, addr, pte);
->> +		spin_unlock(&init_mm.page_table_lock);
->> +	}
->> +}
-> 
-> Rather than explicitly using pte_index(), the usual style for arm64 is
-> to pass the pmdp in and use pte_offset_kernel() to find the relevant
-> ptep, e.g.
-> 
-> static void remove pte_table(pmd_t *pmdp, unsigned long addr,
-> 			     unsigned long end, bool direct)
-> {
-> 	pte_t *ptep = pte_offset_kernel(pmdp, addr);
-> 
-> 	do {
-> 		if (!pte_present(*ptep)
-> 			continue;
-> 
-> 		...
-> 
-> 	} while (ptep++, addr += PAGE_SIZE, addr != end);
-
-Will probably stick with 'next = [pgd|pud|pmd_addr]_end(addr, end)' which
-is used for iteration as well as for next level function.
-
-> }
-> 
-> ... with similar applying at all levels.
-
-Sure will change and this will probably get rid of additional [pmd|pud]_index()
-definitions added here.
+--oP6RuXvTEGF9Y54Th4EJnog3EsjFlvu8A--
