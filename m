@@ -2,226 +2,120 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9BB03C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 01:58:19 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 838DAC10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 01:58:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 61E0720872
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 01:58:19 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=babayev.com header.i=@babayev.com header.b="V71Lz4M8"
+	by mail.kernel.org (Postfix) with ESMTP id 4DA6F20872
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 01:58:55 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555466335;
+	bh=79y2VwyFLvPuG67VHvKi5Bil1zISo36QZq2kMZz5zcI=;
+	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
+	b=BfizA0NqVW6Gk+eSwlQ7opA0no9967N6myxSgThYdjb5X1ws1f7/aLTBCuOldWrAr
+	 V74Zm2KkimbGvpOC71ITY4HXT0Dm7b0mYcURYDM0jPijSM3gVFpKE6QabGH7QyBF8L
+	 L39DBF9U2JGGvOFIWgqfEIyuEEUak9Mxrf0HFWEI=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729846AbfDQB6S (ORCPT
+        id S1730190AbfDQB6y (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 21:58:18 -0400
-Received: from mail-io1-f66.google.com ([209.85.166.66]:46193 "EHLO
-        mail-io1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728032AbfDQB6R (ORCPT
+        Tue, 16 Apr 2019 21:58:54 -0400
+Received: from casper.infradead.org ([85.118.1.10]:35016 "EHLO
+        casper.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728032AbfDQB6y (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 21:58:17 -0400
-Received: by mail-io1-f66.google.com with SMTP id p23so19269531iol.13
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 18:58:17 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=babayev.com; s=google;
-        h=references:user-agent:from:to:cc:subject:message-id:in-reply-to
-         :date:mime-version;
-        bh=pTf6CqltW0FIDdPp5liGh7R5dI59lPVUwc4DYfwKKZg=;
-        b=V71Lz4M8pjYcoLQXfQqYDlhZ4X6nab3wH/uhawCxQPQIZRqXJu80sNmfD7wYU+FpDk
-         GUO8uIysfz7GQg66wpkvNNbqM5Cm7ss8yMPD3pIAITMms86QuWdFp79D263MnlRHcEVH
-         8wS60IfRuZ2Q2y67NXacqTp7GAWqyXbU/eH6Q=
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:references:user-agent:from:to:cc:subject
-         :message-id:in-reply-to:date:mime-version;
-        bh=pTf6CqltW0FIDdPp5liGh7R5dI59lPVUwc4DYfwKKZg=;
-        b=paMXfx8rBqM5dt5CUpPtZP/beHKakiXhWDoyyqYyr97Wslo5KepInGoNpf4AcUXaB6
-         9wUS1Cg2ivUS73HceNsZqBrBsQ+ZlkDkO74v5ijYd1ISJDtnZAuMzYoZ3fKogVYoaH73
-         bHS8aBu49n0mHYoUlZ8d+Lu754lbgE0g+1TY/V6PPREad+8wyBBtC0/IRGQVhhrrw3+y
-         weevSWGukUeRFGKSFj6VoGw4YzG2n8xIRfY+N2jaKPba9u8iHr2+1MBGbt6XBj74ePSd
-         Rad9wW+X/LWY+lMkDOrr56GNCkfMXYeurl4QSk31ROPOiRtGhAAxlPQLt3G2nlb6Ugnf
-         eiGQ==
-X-Gm-Message-State: APjAAAXFNzLeX9zPJJxqk9sYGVVAdENRtT7zgiiIFnr6GwzdE64xNpog
-        B9XIStV0A/u3VDs9SefEARZdHA==
-X-Google-Smtp-Source: APXvYqwKNLHTZHDalnMVgAcL0b5MnBQQ27PVMnCf6oaJHCxPwqlAzUbQjyrtuuYOG/wCNSTuGISOLQ==
-X-Received: by 2002:a6b:7b05:: with SMTP id l5mr54517265iop.260.1555466296693;
-        Tue, 16 Apr 2019 18:58:16 -0700 (PDT)
-Received: from localhost (50-46-216-15.evrt.wa.frontiernet.net. [50.46.216.15])
-        by smtp.gmail.com with ESMTPSA id w6sm19677440iom.22.2019.04.16.18.58.15
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 16 Apr 2019 18:58:15 -0700 (PDT)
-References: <20190416183620.39950-1-ruslan@babayev.com> <20190416195255.GC8093@roeck-us.net>
-User-agent: mu4e 1.0; emacs 26.1
-From:   Ruslan Babayev <ruslan@babayev.com>
+        Tue, 16 Apr 2019 21:58:54 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=casper.20170209; h=Content-Transfer-Encoding:Content-Type:
+        MIME-Version:References:In-Reply-To:Message-ID:Subject:Cc:To:From:Date:Sender
+        :Reply-To:Content-ID:Content-Description:Resent-Date:Resent-From:
+        Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:List-Help:
+        List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+        bh=S8RInvAC69V+yULWzOSPTpkgsKgagKqSc8vWonnjHdk=; b=TfIZ0rh1l4cXZFpNZv5pLWq/aa
+        00bwFyRhCo/rUaf0DQmBAzNWvSho3F5md0vYacEWBt9jTHMweaoFU3+zfwBVhAFObFu1aZfctthgq
+        FIp+7WTw+GM2+UBqEVOyR//5QNPwwj43J63I2Lvp3G6rrqkLhhBlUiw5iwil2i67DtB7NR136hVjo
+        QFNCr4u5cx5K0vt/69EVOUjss9vRm8mSdV+ahE+Fqi1pAcXIKKHiv0BIyV/8Um1ji++crImiONxSo
+        D0Q1GFEVsF++Ntfe8WScX1q1pdHzRPtjewDKAheKk54iPVINNgGydp46Cjrh92ofgWp1mJnpQrH7L
+        wda/oiCA==;
+Received: from 177.205.118.176.dynamic.adsl.gvt.net.br ([177.205.118.176] helo=coco.lan)
+        by casper.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hGZqV-0002ww-Uz; Wed, 17 Apr 2019 01:58:44 +0000
+Date:   Tue, 16 Apr 2019 22:58:36 -0300
+From:   Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
 To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     Ruslan Babayev <ruslan@babayev.com>, xe-linux-external@cisco.com,
-        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH 1/4] hwmon: (pmbus) add support for output voltage registers
-Message-ID: <8736mhe6m9.fsf@babayev.com>
-In-reply-to: <20190416195255.GC8093@roeck-us.net>
-Date:   Tue, 16 Apr 2019 18:58:15 -0700
+Cc:     Jonathan Corbet <corbet@lwn.net>,
+        Linux Doc Mailing List <linux-doc@vger.kernel.org>,
+        Mauro Carvalho Chehab <mchehab@infradead.org>,
+        linux-kernel@vger.kernel.org, Andrew Jeffery <andrew@aj.id.au>,
+        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
+        Jean Delvare <jdelvare@suse.com>,
+        Joel Stanley <joel@jms.id.au>,
+        linux-arm-kernel@lists.infradead.org,
+        linux-aspeed@lists.ozlabs.org, linux-hwmon@vger.kernel.org,
+        linuxppc-dev@lists.ozlabs.org, Liviu Dudau <liviu.dudau@arm.com>,
+        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
+        Michael Ellerman <mpe@ellerman.id.au>,
+        Paul Mackerras <paulus@samba.org>,
+        Sudeep Holla <sudeep.holla@arm.com>
+Subject: Re: [PATCH v2 00/21] Convert hwmon documentation to ReST
+Message-ID: <20190416225836.1d5953bc@coco.lan>
+In-Reply-To: <20190416203114.GB25517@roeck-us.net>
+References: <cover.1554923967.git.mchehab+samsung@kernel.org>
+        <20190411124324.3ed62fad@lwn.net>
+        <20190411174357.251904f5@coco.lan>
+        <20190411210731.GA29378@roeck-us.net>
+        <20190412100451.6fe49de7@lwn.net>
+        <f900adea-d231-c00d-847c-33e66e79ea30@roeck-us.net>
+        <20190416141949.09b48789@lwn.net>
+        <20190416203114.GB25517@roeck-us.net>
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
-Message-ID: <20190417015815.oBlDlTqIVFImnRtMl4xIGP2wWL-e17Py_1hisS8aEe0@z>
 
-Hi Guenter,
+Em Tue, 16 Apr 2019 13:31:14 -0700
+Guenter Roeck <linux@roeck-us.net> escreveu:
 
-Thanks for taking the time to review these patches. Please see my
-comments inline.
+> On Tue, Apr 16, 2019 at 02:19:49PM -0600, Jonathan Corbet wrote:
+> > On Fri, 12 Apr 2019 20:09:16 -0700
+> > Guenter Roeck <linux@roeck-us.net> wrote:
+> >   
+> > > The big real-world question is: Is the series good enough for you to accept,
+> > > or do you expect some level of user/kernel separation ?  
+> > 
+> > I guess it can go in; it's forward progress, even if it doesn't make the
+> > improvements I would like to see.
+> > 
+> > The real question, I guess, is who should take it.  I've been seeing a
+> > fair amount of activity on hwmon, so I suspect that the potential for
+> > conflicts is real.  Perhaps things would go smoother if it went through
+> > your tree?
+> >   
+> We'll see a number of conflicts, yes. In terms of timing, this is probably
+> the worst release in the last few years to make such a change. I currently
+> have 9 patches queued in hwmon-next which touch Documentation/hwmon.
+> Of course the changes made in those are all not ReST compatible, and I have
+> no idea what to look out for to make it compatible. So this is going to be
+> fun (in a negative sense) either way.
+> 
+> I don't really have a recommendation at this point; I think the best I could
+> do to take the patches which don't generate conflicts and leave the rest
+> alone. But that would also be bad, since the new index file would not match
+> reality. No idea, really, what the best or even a useful approach would be.
+> 
+> Maybe automated changes like this (assuming they are indeed automated)
+> can be generated and pushed right after a commit window closes. Would
+> that by any chance be possible ?
 
-Guenter Roeck writes:
+No, those patches are hand-maid, but I can surely rebase it on the top of
+your tree. Is your tree already merged at linux-next, or should I use some
+other branch/tree for rebase?
 
-> On Tue, Apr 16, 2019 at 11:36:16AM -0700, Ruslan Babayev wrote:
->> +static ssize_t pmbus_show_operation(struct device *dev,
->> +				    struct device_attribute *devattr, char *buf)
->> +{
->> +	struct sensor_device_attribute *attr = to_sensor_dev_attr(devattr);
->> +	struct pmbus_operation *operation = to_pmbus_operation(attr);
->> +	struct i2c_client *client = to_i2c_client(dev->parent);
->> +	int ret;
->> +
->> +	ret = pmbus_read_byte_data(client, operation->page, PMBUS_OPERATION);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	if (ret & PB_OPERATION_CONTROL_ON) {
->> +		if (ret & PB_OPERATION_MARGIN_HIGH)
->> +			return snprintf(buf, PAGE_SIZE, "high\n");
->> +		else if (ret & PB_OPERATION_MARGIN_LOW)
->> +			return snprintf(buf, PAGE_SIZE, "low\n");
->> +		else
->> +			return snprintf(buf, PAGE_SIZE, "on\n");
->> +	} else {
->> +			return snprintf(buf, PAGE_SIZE, "off\n");
->> +	}
->> +}
->> +
->> +static ssize_t pmbus_set_operation(struct device *dev,
->> +				   struct device_attribute *devattr,
->> +				   const char *buf, size_t count)
->> +{
->> +	struct sensor_device_attribute *attr = to_sensor_dev_attr(devattr);
->> +	struct pmbus_operation *operation = to_pmbus_operation(attr);
->> +	struct i2c_client *client = to_i2c_client(dev->parent);
->> +	int ret;
->> +	u8 val;
->> +
->> +	/*
->> +	 * sysfs_streq() doesn't need the \n's, but we add them so the strings
->> +	 * will be shared with pmbus_show_operation() above.
->> +	 */
->
-> Saving a few bytes of data in the driver is not worth such limitations.
-> I would not want to have to deal with users sending "echo -n on" to the
-> driver and complain that it doesn't work.
->
-
-Sending "echo -n on" works just fine. sysfs_streq ignores \n's as
-mentioned in the comment. This was actually shamelessly stolen from
-drivers/regulator/virtual.c set_mode().
-
->> +	if (sysfs_streq(buf, "on\n"))
->> +		val = PB_OPERATION_CONTROL_ON;
->> +	else if (sysfs_streq(buf, "off\n"))
->> +		val = 0;
->> +	else if (sysfs_streq(buf, "high\n"))
->> +		val = PB_OPERATION_CONTROL_ON | PB_OPERATION_ACT_ON_FAULT |
->> +		      PB_OPERATION_MARGIN_HIGH;
->> +	else if (sysfs_streq(buf, "low\n"))
->> +		val = PB_OPERATION_CONTROL_ON | PB_OPERATION_ACT_ON_FAULT |
->> +		      PB_OPERATION_MARGIN_LOW;
->> +	else
->> +		return -EINVAL;
->> +
->> +	ret = pmbus_write_byte_data(client, operation->page,
->> +				    PMBUS_OPERATION, val);
->> +	if (ret < 0)
->> +		return ret;
->> +
->> +	return count;
->> +}
->> +
-> I am not convinced that it is a good idea to implement this as sysfs
-> attributes. It is notmally only used in manufacturing, and there the
-> registers can be acccessed directly.
->
-> Either case, we can not implement this in the pmbus driver as generic code.
-> Operation commands are notoriously implemented with slight differences across
-> different devices. It would also probably be more appropriate to implement
-> as regulator, since it affects setting voltages, not limits.
->
-
-The OPERATION command as well as VOUT_COMMAND and VOUT_MARGIN_{HIGH,LOW}
-are standard registers specified in PMBus Spec Part II, Rev 1.2 Section
-13. "Output Voltage Related Commands". The devices I have seen so far
-(the ones that support voltage margining) all seem to be compliant with
-the standard as far as the OPERATION register is concerned.
-
-Some devices like TPS40422 use manufacturer specific registers instead of
-VOUT_MARGIN_{HIGH,LOW}. Those can be handled by overriding
-{read,write}_word_data to make it look standard to pmbus_core (as I have
-done in the PATCH 4/4)
-
->> +
->> +static const struct pmbus_sensor_attr vout_attributes[] = {
->> +	{
->> +		.reg = PMBUS_VOUT_COMMAND,
->> +		.class = PSC_VOLTAGE_OUT,
->> +		.label = "command",
->
-> Bad name for a label.
-
-Could you please suggest a better name?
-
->>  static int pmbus_find_attributes(struct i2c_client *client,
->>  				 struct pmbus_data *data)
->>  {
->> @@ -1912,6 +2089,12 @@ static int pmbus_find_attributes(struct i2c_client *client,
->>  	if (ret)
->>  		return ret;
->>
->> +	/* Output Voltage sensors */
->> +	ret = pmbus_add_vout_attrs(client, data, "out", vout_attributes,
->> +				   ARRAY_SIZE(vout_attributes));
->> +	if (ret)
->> +		return ret;
->> +
->
-> The sensors you are adding are not output voltage sensors. They are not
-> sensors in the first place, and should probably not be reported as sensor
-> values. And setting voltages as limits is really not appropriate.
->
-
-I understand your concerns about exposing these registers as sysfs
-entries in hwmon. These devices _are_ voltage regulators, and these
-registers are not exactly "sensors", although a lot of the existing
-pmbus_core code can be reused by pretending they are. Like VOUT_MODE
-exponent handling, linear16 format etc.
-
-I have looked at the regulator framework and into extending the
-pmbus_regulator_ops to support voltage margining with standard PMBUS
-VOUT_MARGIN registers. My predicament is that regulator framework
-
-1) Does NOT have the concept of "margining".
-
-2) Is not expected to be used at ALL on ACPI based systems. With ACPI
-   kernel assumes power control is done with Power Resource Objects
-   (ACPI section 7.1).
-
-The latter is a bigger issue for us - our system is Intel based. It
-seems like sysfs attributes is our only option.
-
-How would you feel if these registers (namely OPERATION and
-VOUT_MARGIN_{HIGH,LOW}) were exposed only in the drivers without making
-any changes to pmbus_core.c? Would these drivers have a chance of
-getting upstreamed? I hate the idea of maintaining out-of-tree drivers.
-
-Best regards,
-Ruslan
+Thanks,
+Mauro
