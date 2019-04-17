@@ -2,108 +2,222 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D777C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 09:54:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CD51C282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 09:56:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 43D0E2173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 09:54:45 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07CB92173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 09:56:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="TO3HQS+I"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731669AbfDQJyo (ORCPT
+        id S1731611AbfDQJ4i (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 05:54:44 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:42070 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727013AbfDQJyn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 05:54:43 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E5637374;
-        Wed, 17 Apr 2019 02:54:42 -0700 (PDT)
-Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A992B3F68F;
-        Wed, 17 Apr 2019 02:54:40 -0700 (PDT)
-Subject: Re: [PATCH] crypto: testmgr - allocate buffers with __GFP_COMP
-To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
-        Matthew Wilcox <willy@infradead.org>
-Cc:     Kees Cook <keescook@chromium.org>, Rik van Riel <riel@surriel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Eric Biggers <ebiggers@kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        linux-security-module <linux-security-module@vger.kernel.org>,
-        Geert Uytterhoeven <geert@linux-m68k.org>,
-        linux-crypto <linux-crypto@vger.kernel.org>,
-        Dmitry Vyukov <dvyukov@google.com>,
-        Laura Abbott <labbott@redhat.com>,
-        Linux ARM <linux-arm-kernel@lists.infradead.org>,
-        Herbert Xu <herbert@gondor.apana.org.au>
-References: <20190411192607.GD225654@gmail.com>
- <20190411192827.72551-1-ebiggers@kernel.org>
- <CAGXu5jJ8k7fP5Vb=ygmQ0B45GfrK2PeaV04bPWmcZ6Vb+swgyA@mail.gmail.com>
- <20190415022412.GA29714@bombadil.infradead.org>
- <20190415024615.f765e7oagw26ezam@gondor.apana.org.au>
- <20190416021852.GA18616@bombadil.infradead.org>
- <CAGXu5jKaVB=bTJCBWhsxAny7-OkzXQ+8KCd5O+_-7hKcJFiqKw@mail.gmail.com>
- <20190417040822.GB7751@bombadil.infradead.org>
- <20190417080919.54wywpzrt3psn4vj@shell.armlinux.org.uk>
-From:   Robin Murphy <robin.murphy@arm.com>
-Message-ID: <0ea51c23-d285-25c3-80d6-f3c0045ee325@arm.com>
-Date:   Wed, 17 Apr 2019 10:54:39 +0100
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 17 Apr 2019 05:56:38 -0400
+Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:50340 "EHLO
+        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-FAIL)
+        by vger.kernel.org with ESMTP id S1727013AbfDQJ4h (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 05:56:37 -0400
+Received: from mailhost.synopsys.com (dc2-mailhost2.synopsys.com [10.12.135.162])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 6FC9EC0AB9;
+        Wed, 17 Apr 2019 09:56:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1555494996; bh=6Zbp5BtzkyyeHc6qsBg6EXLVJRfzDZZ7gq/QFHkuLAU=;
+        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
+        b=TO3HQS+II4b5e7PMdy0MXybqxMu0xcgzVzOn0ia3zgOr4WVi7wHcd6gmGIh5JND7V
+         YXX6cXmuSyxor9COXLVQt1YWjbWTj7MjFB/IkwbA6Ak2UUhWq6PPkWiWXiJcPARhcX
+         5zGIV+l9N9j3XCTa7arTq9yyVC77EzEiBjRLmVrr334G2kglt5our2NEWAHxix7MG4
+         If3obezsdTT7Mcz0vw/88aryZKjBVh6rHnE2vHmroLueGP7YlcMEFB9c6sfr7jP6it
+         EW4fVbTIvFH4F9jt/iWnB+U189HhzbE+M5R0w7OIS4FyXKefGsYX8dcb6cs8GLhF7z
+         EI3cLXLX4O/0g==
+Received: from US01WEHTC2.internal.synopsys.com (us01wehtc2.internal.synopsys.com [10.12.239.237])
+        (using TLSv1.2 with cipher AES128-SHA256 (128/128 bits))
+        (No client certificate requested)
+        by mailhost.synopsys.com (Postfix) with ESMTPS id 5B8E4A0096;
+        Wed, 17 Apr 2019 09:56:36 +0000 (UTC)
+Received: from DE02WEHTCB.internal.synopsys.com (10.225.19.94) by
+ US01WEHTC2.internal.synopsys.com (10.12.239.237) with Microsoft SMTP Server
+ (TLS) id 14.3.408.0; Wed, 17 Apr 2019 02:56:36 -0700
+Received: from DE02WEMBXA.internal.synopsys.com ([fe80::a014:7216:77d:d55c])
+ by DE02WEHTCB.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Wed,
+ 17 Apr 2019 11:56:34 +0200
+From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
+To:     Vidya Sagar <vidyas@nvidia.com>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
+        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
+        "kishon@ti.com" <kishon@ti.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
+        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
+        "gustavo.pimentel@synopsys.com" <Gustavo.Pimentel@synopsys.com>
+CC:     "mperttunen@nvidia.com" <mperttunen@nvidia.com>,
+        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "kthota@nvidia.com" <kthota@nvidia.com>,
+        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
+        "sagar.tv@gmail.com" <sagar.tv@gmail.com>
+Subject: RE: [PATCH V3 04/16] PCI: dwc: Perform dbi regs write lock towards
+ the end
+Thread-Topic: [PATCH V3 04/16] PCI: dwc: Perform dbi regs write lock towards
+ the end
+Thread-Index: AQHU9IqKd2QC8WkfMUGD8rhulPpCxqZAHDUQ
+Date:   Wed, 17 Apr 2019 09:56:33 +0000
+Message-ID: <305100E33629484CBB767107E4246BBB0A22C127@de02wembxa.internal.synopsys.com>
+References: <20190416192730.15681-1-vidyas@nvidia.com>
+ <20190416192730.15681-5-vidyas@nvidia.com>
+In-Reply-To: <20190416192730.15681-5-vidyas@nvidia.com>
+Accept-Language: pt-PT, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcZ3VzdGF2b1xh?=
+ =?us-ascii?Q?cHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJh?=
+ =?us-ascii?Q?MjllMzViXG1zZ3NcbXNnLTEzNDc5ZDI4LTYwZjctMTFlOS05ODdkLWY4OTRj?=
+ =?us-ascii?Q?MjczODA0MlxhbWUtdGVzdFwxMzQ3OWQyOS02MGY3LTExZTktOTg3ZC1mODk0?=
+ =?us-ascii?Q?YzI3MzgwNDJib2R5LnR4dCIgc3o9IjE5MjYiIHQ9IjEzMTk5OTY4NTkyNDEx?=
+ =?us-ascii?Q?NjIwMSIgaD0iU04zaCs3NmlYRVNlUTNYRmsvZk1WL1hnL0E4PSIgaWQ9IiIg?=
+ =?us-ascii?Q?Ymw9IjAiIGJvPSIxIiBjaT0iY0FBQUFFUkhVMVJTUlVGTkNnVUFBQlFKQUFE?=
+ =?us-ascii?Q?cFZ2alZBL1hVQVNRZnl6R2twanhZSkIvTE1hU21QRmdPQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUhBQUFBQ2tDQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUVBQVFBQkFBQUFGdGJCcHdBQUFBQUFBQUFBQUFBQUFKNEFBQUJtQUdrQWJn?=
+ =?us-ascii?Q?QmhBRzRBWXdCbEFGOEFjQUJzQUdFQWJnQnVBR2tBYmdCbkFGOEFkd0JoQUhR?=
+ =?us-ascii?Q?QVpRQnlBRzBBWVFCeUFHc0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?RUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFHWUFid0IxQUc0QVpBQnlBSGtBWHdC?=
+ =?us-ascii?Q?d0FHRUFjZ0IwQUc0QVpRQnlBSE1BWHdCbkFHWUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFBQUFDQUFB?=
+ =?us-ascii?Q?QUFBQ2VBQUFBWmdCdkFIVUFiZ0JrQUhJQWVRQmZBSEFBWVFCeUFIUUFiZ0Js?=
+ =?us-ascii?Q?QUhJQWN3QmZBSE1BWVFCdEFITUFkUUJ1QUdjQVh3QmpBRzhBYmdCbUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFBQm1BRzhB?=
+ =?us-ascii?Q?ZFFCdUFHUUFjZ0I1QUY4QWNBQmhBSElBZEFCdUFHVUFjZ0J6QUY4QWN3QmhB?=
+ =?us-ascii?Q?RzBBY3dCMUFHNEFad0JmQUhJQVpRQnpBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdZQWJ3QjFBRzRBWkFCeUFIa0FY?=
+ =?us-ascii?Q?d0J3QUdFQWNnQjBBRzRBWlFCeUFITUFYd0J6QUcwQWFRQmpBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUNB?=
+ =?us-ascii?Q?QUFBQUFDZUFBQUFaZ0J2QUhVQWJnQmtBSElBZVFCZkFIQUFZUUJ5QUhRQWJn?=
+ =?us-ascii?Q?QmxBSElBY3dCZkFITUFkQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFCbUFH?=
+ =?us-ascii?Q?OEFkUUJ1QUdRQWNnQjVBRjhBY0FCaEFISUFkQUJ1QUdVQWNnQnpBRjhBZEFC?=
+ =?us-ascii?Q?ekFHMEFZd0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR1lBYndCMUFHNEFaQUJ5QUhr?=
+ =?us-ascii?Q?QVh3QndBR0VBY2dCMEFHNEFaUUJ5QUhNQVh3QjFBRzBBWXdBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFB?=
+ =?us-ascii?Q?Q0FBQUFBQUNlQUFBQVp3QjBBSE1BWHdCd0FISUFid0JrQUhVQVl3QjBBRjhB?=
+ =?us-ascii?Q?ZEFCeUFHRUFhUUJ1QUdrQWJnQm5BQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFBQUJ6?=
+ =?us-ascii?Q?QUdFQWJBQmxBSE1BWHdCaEFHTUFZd0J2QUhVQWJnQjBBRjhBY0FCc0FHRUFi?=
+ =?us-ascii?Q?Z0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFITUFZUUJzQUdVQWN3QmZB?=
+ =?us-ascii?Q?SEVBZFFCdkFIUUFaUUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFB?=
+ =?us-ascii?Q?QUFDQUFBQUFBQ2VBQUFBY3dCdUFIQUFjd0JmQUd3QWFRQmpBR1VBYmdCekFH?=
+ =?us-ascii?Q?VUFYd0IwQUdVQWNnQnRBRjhBTVFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFB?=
+ =?us-ascii?Q?QnpBRzRBY0FCekFGOEFiQUJwQUdNQVpRQnVBSE1BWlFCZkFIUUFaUUJ5QUcw?=
+ =?us-ascii?Q?QVh3QnpBSFFBZFFCa0FHVUFiZ0IwQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUhZQVp3QmZBR3NBWlFC?=
+ =?us-ascii?Q?NUFIY0Fid0J5QUdRQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
+ =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFB?=
+ =?us-ascii?Q?QUFBQUNBQUFBQUFBPSIvPjwvbWV0YT4=3D?=
+x-originating-ip: [10.107.25.131]
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-In-Reply-To: <20190417080919.54wywpzrt3psn4vj@shell.armlinux.org.uk>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-GB
-Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17/04/2019 09:09, Russell King - ARM Linux admin wrote:
-> On Tue, Apr 16, 2019 at 09:08:22PM -0700, Matthew Wilcox wrote:
->> On Mon, Apr 15, 2019 at 10:14:51PM -0500, Kees Cook wrote:
->>> On Mon, Apr 15, 2019 at 9:18 PM Matthew Wilcox <willy@infradead.org> wrote:
->>>> I agree; if the crypto code is never going to try to go from the address of
->>>> a byte in the allocation back to the head page, then there's no need to
->>>> specify GFP_COMP.
->>>>
->>>> But that leaves us in the awkward situation where
->>>> HARDENED_USERCOPY_PAGESPAN does need to be able to figure out whether
->>>> 'ptr + n - 1' lies within the same allocation as ptr.  Without using
->>>> a compound page, there's no indication in the VM structures that these
->>>> two pages were allocated as part of the same allocation.
->>>>
->>>> We could force all multi-page allocations to be compound pages if
->>>> HARDENED_USERCOPY_PAGESPAN is enabled, but I worry that could break
->>>> something.  We could make it catch fewer problems by succeeding if the
->>>> page is not compound.  I don't know, these all seem like bad choices
->>>> to me.
->>>
->>> If GFP_COMP is _not_ the correct signal about adjacent pages being
->>> part of the same allocation, then I agree: we need to drop this check
->>> entirely from PAGESPAN. Is there anything else that indicates this
->>> property? (Or where might we be able to store that info?)
->>
->> As far as I know, the page allocator does not store size information
->> anywhere, unless you use GFP_COMP.  That's why you have to pass
->> the 'order' to free_pages() and __free_pages().  It's also why
->> alloc_pages_exact() works (follow all the way into split_page()).
->>
->>> There are other pagespan checks, though, so those could stay. But I'd
->>> really love to gain page allocator allocation size checking ...
->>
->> I think that's a great idea, but I'm not sure how you'll be able to
->> do that.
-> 
-> However, we have had code (maybe historically now) that has allocated
-> a higher order page and then handed back pages that it doesn't need -
-> for example, when the code requires multiple contiguous pages but does
-> not require a power-of-2 size of contiguous pages.
+On Tue, Apr 16, 2019 at 20:27:18, Vidya Sagar <vidyas@nvidia.com> wrote:
 
-'git grep alloc_pages_exact' suggests it's not historical yet...
+> Remove multiple write enable and disable sequences of dbi registers as
+> Tegra194 implements writes to BAR-0 register (offset: 0x10) controlled by
+> DBI write-lock enable bit thereby not allowing any further writes to BAR-=
+0
+> register in config space to take place. Hence disabling write permission
+> only towards the end.
+>=20
+> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+> ---
+> Changes since [v2]:
+> * None
+>=20
+> Changes since [v1]:
+> * None
+>=20
+>  drivers/pci/controller/dwc/pcie-designware-host.c | 3 ---
+>  1 file changed, 3 deletions(-)
+>=20
+> diff --git a/drivers/pci/controller/dwc/pcie-designware-host.c b/drivers/=
+pci/controller/dwc/pcie-designware-host.c
+> index 2a5332e5ccfa..c0334c92c1a6 100644
+> --- a/drivers/pci/controller/dwc/pcie-designware-host.c
+> +++ b/drivers/pci/controller/dwc/pcie-designware-host.c
+> @@ -683,7 +683,6 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+>  	val &=3D 0xffff00ff;
+>  	val |=3D 0x00000100;
+>  	dw_pcie_writel_dbi(pci, PCI_INTERRUPT_LINE, val);
+> -	dw_pcie_dbi_ro_wr_dis(pci);
+> =20
+>  	/* Setup bus numbers */
+>  	val =3D dw_pcie_readl_dbi(pci, PCI_PRIMARY_BUS);
+> @@ -723,8 +722,6 @@ void dw_pcie_setup_rc(struct pcie_port *pp)
+> =20
+>  	dw_pcie_wr_own_conf(pp, PCI_BASE_ADDRESS_0, 4, 0);
+> =20
+> -	/* Enable write permission for the DBI read-only register */
+> -	dw_pcie_dbi_ro_wr_en(pci);
+>  	/* Program correct class for RC */
+>  	dw_pcie_wr_own_conf(pp, PCI_CLASS_DEVICE, 2, PCI_CLASS_BRIDGE_PCI);
+>  	/* Better disable write permission right after the update */
+> --=20
+> 2.17.1
 
-Robin.
+This setup sequence was written by Jingoo Han, let's check if he did this=20
+by some particular reason.
+Jingoo do you remember why you wrote the code like this?
+
+Regards,
+Gustavo
