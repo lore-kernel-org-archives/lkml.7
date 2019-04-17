@@ -3,102 +3,204 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=unavailable
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C67B4C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:23:31 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E1C19C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:23:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A27412173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:23:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AEBDA217F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:23:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732096AbfDQMXa (ORCPT
+        id S1732109AbfDQMX5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 08:23:30 -0400
-Received: from mout.kundenserver.de ([217.72.192.75]:38965 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731824AbfDQMXa (ORCPT
+        Wed, 17 Apr 2019 08:23:57 -0400
+Received: from relay9-d.mail.gandi.net ([217.70.183.199]:40731 "EHLO
+        relay9-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729898AbfDQMX4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 08:23:30 -0400
-Received: from [192.168.1.110] ([95.117.89.119]) by mrelayeu.kundenserver.de
- (mreue108 [212.227.15.183]) with ESMTPSA (Nemesis) id
- 1N6KQZ-1go4on3fIH-016deW; Wed, 17 Apr 2019 14:23:16 +0200
-Subject: Re: [PATCH v3 2/2] ftpm: add documentation for ftpm driver
-To:     Sasha Levin <sashal@kernel.org>, peterhuewe@gmx.de,
-        jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca
-Cc:     corbet@lwn.net, linux-kernel@vger.kernel.org,
-        linux-doc@vger.kernel.org, linux-integrity@vger.kernel.org,
-        linux-kernel@microsoft.com, thiruan@microsoft.com,
-        bryankel@microsoft.com
-References: <20190415155636.32748-1-sashal@kernel.org>
- <20190415155636.32748-3-sashal@kernel.org>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <b2c1b45e-515d-1d91-e3d9-5f9078078cae@metux.net>
-Date:   Wed, 17 Apr 2019 14:23:13 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Wed, 17 Apr 2019 08:23:56 -0400
+X-Originating-IP: 90.88.160.238
+Received: from aptenodytes (aaubervilliers-681-1-42-238.w90-88.abo.wanadoo.fr [90.88.160.238])
+        (Authenticated sender: paul.kocialkowski@bootlin.com)
+        by relay9-d.mail.gandi.net (Postfix) with ESMTPSA id 85AD0FF80D;
+        Wed, 17 Apr 2019 12:23:51 +0000 (UTC)
+Message-ID: <aeb78450cc49b9317e4bfde254181add9057f08d.camel@bootlin.com>
+Subject: Re: [PATCH 00/20] drm: Split out the formats API and move it to a
+ common place
+From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+To:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org
+Date:   Wed, 17 Apr 2019 14:23:51 +0200
+In-Reply-To: <cover.8ec406bf8f4f097e9dc909d5aac466556822f592.1555487650.git-series.maxime.ripard@bootlin.com>
+References: <cover.8ec406bf8f4f097e9dc909d5aac466556822f592.1555487650.git-series.maxime.ripard@bootlin.com>
+Organization: Bootlin
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.32.1 
 MIME-Version: 1.0
-In-Reply-To: <20190415155636.32748-3-sashal@kernel.org>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:Q4mIZ6PRvzl7CkhdTRWxQzpE0Qr0lw8fOeV0IjANte9Nu5XLEWc
- YDX1j11hPb+OKuezAvoRxufl6jGpJ7y7C/pA7Uc+HXVk3kHZRj2ghiF4SgrFm0GUdtBXP28
- 9Vmzz7AG59VDDWnp8kmnXfX45nnC6atxKRGAJi2c5T4NP/dIdySpC28it/LNARuL3qDG+IZ
- iubXd81kavOmR7Xl1F2PA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:htORYJ9y9YU=:sAjJigSH1/tKTvt7wkyqHE
- DhIN5XvSEprfRjbBH8QtS4FPXrPcf59mcTXQmkYODWAkJCOZZXgYvaxdYASDNuyqSM5u4LB7R
- +EEn3UpCn9vx+bCVkU6U/ZwXCfXIVbqfHC7IQ+ZEVqxVOFQzRtdDYD+nNqpD+aMcNVEKfIu88
- 8JX1fzzLkH5TGpVk8Dal1AYKDWviTsClbawd7Mf/1Pb/tsSgFfN+pa1Y0mA5FPgEzijDc9Q6O
- QD1Y8xxbkiK6re1ki779WG2YYf0GSsdCP+Zp5aCmoadGFK3SAc3rdlctXXcautqkIU4lBXJkt
- ZcLc4M08XmlJJ6ciN2lxwiBWgnaZwnobIkqS3bpcmoR/xca88jVe74E0yHQBMOuRermFUxXdp
- YV1TlfpDJjvy6Lfk96xqzec9r61+aYVQFUT/9F/BNg0G9feHmgBY9JcCCvqoSOqL8/eljKeav
- cfqBbYOYDNtU0T6sMEwDaIeiULaD+LcozXZBntbtpjylKS/mz5pux65dy6fgEFKgVl/MPDJ83
- jerJHR8c8HFK51d2PtJVYYIhadxZWQGVRcgw1WOkE0kWK+++25akfbfcYdFzuwYKbyBHAZESa
- 92MuQe7Hx1yw44nEQDZxlRwTX8F6dFeCgrRC6QA+m63+tU1+hrAljuWKtMFoN26SVRrq/dGam
- m7nIrFyOOHnqwHPWYs4j/dU2j+H4UDVXNgJyoKZDoPRrUh7ukruB6s4v9Hjpcq3VR9tNgYxwR
- 6R6MDyrkK1rktH1Mvh4Ru4v/HP5WoIrNlJtHrciNb/sd4YKi7TRj53i9wrI=
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 15.04.19 17:56, Sasha Levin wrote:
-
 Hi,
 
-> +The driver acts as a thin layer that passes commands to and from a TPM> +implemented in firmware. The driver itself doesn't contain much logic
-and is> +used more like a dumb pipe between firmware and kernel/userspace.
-Is that TPM already used in production or yet an PoC ?
-IOW: can the protocol be changed ?
+On Wed, 2019-04-17 at 09:54 +0200, Maxime Ripard wrote:
+> Hi,
+> 
+> DRM comes with an extensive format support to retrieve the various
+> parameters associated with a given format (such as the subsampling, or the
+> bits per pixel), as well as some helpers and utilities to ease the driver
+> development.
+> 
+> v4l2, on the other side, doesn't provide such facilities, leaving each
+> driver reimplement a subset of the formats parameters for the one supported
+> by that particular driver. This leads to a lot of duplication and
+> boilerplate code in the v4l2 drivers.
+> 
+> This series tries to address this by moving the DRM format API into lib and
+> turning it into a more generic API. In order to do this, we've needed to do
+> some preliminary changes on the DRM drivers, then moved the API and finally
+> converted a v4l2 driver to give an example of how such library could be
+> used.
+> 
+> Let me know what you think,
+> Maxime
 
-If so, I'd prefer using 9P for that. This already proven well, not just
-for grid computing (where it originally came from), but also in things
-like virtio, etc.
+Here is one general suggestion: calling the new library and functions
+and formats "pixel format" instead of "image format" since this is the
+most widely-used terminology (see the pixel format guide) and also the
+one that (personally) feels most accurate.
 
-In general, many of the hardware/chip interfaces out there basically
-deal with either either passing around some data packets or streams,
-or reading/setting some attributes. But everybody seems to do that part
-in his own special way - that takes up a big share of the driver
-development resources and final code - and that needs to be repeated
-for each OS. In many, many cases a standard protocol like 9P could
-already provide this - if folks would just use it :p
+What do you think?
 
-Therefore, I'm really a strong supporter of the idea of using 9P
-for this.
+Cheers,
 
-In your case, you could design the highlevel TPM interface like with
-a tcp stream / socket or a synthetic filesystem, and for the lowlevel
-part just like kvm does w/ virtio.
+Paul
 
-In case you have no experience w/ 9P+friends, feel free to ask,
-I'll to my best to explain it :)
-
-
---mtx
-
+> Changes from RFC:
+>   - Rebased on next
+>   - Fixed the various formats mapping
+>   - Added tags
+>   - Did most of the formats functions as inline functions
+>   - Used a consistent prefix for all the utilities functions
+>   - Fixed the compilation breakages, and did a run of allmodconfig for arm,
+>     arm64 and x86_64
+>   - Fixed out of array bounds warnings in the image_format_info_block_*
+>     functions
+>   - Added License and copyright headers on missing files
+> 
+> Maxime Ripard (20):
+>   drm: Remove users of drm_format_num_planes
+>   drm: Remove users of drm_format_(horz|vert)_chroma_subsampling
+>   drm/fourcc: Pass the format_info pointer to drm_format_plane_cpp
+>   drm/fourcc: Pass the format_info pointer to drm_format_plane_width/height
+>   drm: Replace instances of drm_format_info by drm_get_format_info
+>   lib: Add video format information library
+>   drm/fb: Move from drm_format_info to image_format_info
+>   drm/malidp: Convert to generic image format library
+>   drm/client: Convert to generic image format library
+>   drm/exynos: Convert to generic image format library
+>   drm/i915: Convert to generic image format library
+>   drm/ipuv3: Convert to generic image format library
+>   drm/msm: Convert to generic image format library
+>   drm/omap: Convert to generic image format library
+>   drm/rockchip: Convert to generic image format library
+>   drm/tegra: Convert to generic image format library
+>   drm/fourcc: Remove old DRM format API
+>   lib: image-formats: Add v4l2 formats support
+>   lib: image-formats: Add more functions
+>   media: sun6i: Convert to the image format API
+> 
+>  drivers/gpu/drm/Kconfig                                |   2 +-
+>  drivers/gpu/drm/amd/amdgpu/amdgpu_fb.c                 |   4 +-
+>  drivers/gpu/drm/arm/malidp_drv.c                       |   3 +-
+>  drivers/gpu/drm/arm/malidp_hw.c                        |   3 +-
+>  drivers/gpu/drm/arm/malidp_mw.c                        |   2 +-
+>  drivers/gpu/drm/arm/malidp_planes.c                    |  20 +-
+>  drivers/gpu/drm/armada/armada_fb.c                     |   3 +-
+>  drivers/gpu/drm/armada/armada_overlay.c                |   2 +-
+>  drivers/gpu/drm/armada/armada_plane.c                  |   2 +-
+>  drivers/gpu/drm/atmel-hlcdc/atmel_hlcdc_plane.c        |  11 +-
+>  drivers/gpu/drm/bochs/bochs.h                          |   4 +-
+>  drivers/gpu/drm/bochs/bochs_hw.c                       |   2 +-
+>  drivers/gpu/drm/drm_client.c                           |   7 +-
+>  drivers/gpu/drm/drm_fb_cma_helper.c                    |   4 +-
+>  drivers/gpu/drm/drm_fb_helper.c                        |  14 +-
+>  drivers/gpu/drm/drm_format_helper.c                    |   4 +-
+>  drivers/gpu/drm/drm_fourcc.c                           | 345 +-----
+>  drivers/gpu/drm/drm_framebuffer.c                      |  10 +-
+>  drivers/gpu/drm/drm_gem_framebuffer_helper.c           |   4 +-
+>  drivers/gpu/drm/exynos/exynos_drm_fb.c                 |   2 +-
+>  drivers/gpu/drm/exynos/exynos_drm_ipp.c                |   2 +-
+>  drivers/gpu/drm/exynos/exynos_drm_ipp.h                |   4 +-
+>  drivers/gpu/drm/exynos/exynos_drm_scaler.c             |   3 +-
+>  drivers/gpu/drm/gma500/framebuffer.c                   |   4 +-
+>  drivers/gpu/drm/i915/i915_drv.h                        |   6 +-
+>  drivers/gpu/drm/i915/intel_display.c                   |  14 +-
+>  drivers/gpu/drm/i915/intel_pm.c                        |   6 +-
+>  drivers/gpu/drm/i915/intel_sprite.c                    |   3 +-
+>  drivers/gpu/drm/imx/ipuv3-plane.c                      |  19 +-
+>  drivers/gpu/drm/mediatek/mtk_drm_fb.c                  |   8 +-
+>  drivers/gpu/drm/meson/meson_overlay.c                  |  14 +-
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_formats.c            |  11 +-
+>  drivers/gpu/drm/msm/disp/dpu1/dpu_plane.c              |  10 +-
+>  drivers/gpu/drm/msm/disp/mdp5/mdp5_crtc.c              |   4 +-
+>  drivers/gpu/drm/msm/disp/mdp5/mdp5_plane.c             |  25 +-
+>  drivers/gpu/drm/msm/disp/mdp5/mdp5_smp.c               |   8 +-
+>  drivers/gpu/drm/msm/msm_fb.c                           |  18 +-
+>  drivers/gpu/drm/omapdrm/dss/dispc.c                    |   9 +-
+>  drivers/gpu/drm/omapdrm/omap_fb.c                      |  15 +-
+>  drivers/gpu/drm/radeon/radeon_fb.c                     |   4 +-
+>  drivers/gpu/drm/rockchip/rockchip_drm_fb.c             |  17 +-
+>  drivers/gpu/drm/rockchip/rockchip_drm_vop.c            |  14 +-
+>  drivers/gpu/drm/selftests/Makefile                     |   3 +-
+>  drivers/gpu/drm/selftests/drm_modeset_selftests.h      |   3 +-
+>  drivers/gpu/drm/selftests/test-drm_format.c            | 280 +----
+>  drivers/gpu/drm/selftests/test-drm_modeset_common.h    |   3 +-
+>  drivers/gpu/drm/stm/ltdc.c                             |   2 +-
+>  drivers/gpu/drm/sun4i/sun4i_backend.c                  |   6 +-
+>  drivers/gpu/drm/sun4i/sun4i_frontend.c                 |  18 +-
+>  drivers/gpu/drm/sun4i/sun8i_vi_layer.c                 |   4 +-
+>  drivers/gpu/drm/sun4i/sun8i_vi_scaler.c                |   6 +-
+>  drivers/gpu/drm/sun4i/sun8i_vi_scaler.h                |   5 +-
+>  drivers/gpu/drm/tegra/fb.c                             |  14 +-
+>  drivers/gpu/drm/tegra/plane.c                          |   4 +-
+>  drivers/gpu/drm/vc4/vc4_plane.c                        |  15 +-
+>  drivers/gpu/drm/zte/zx_plane.c                         |   6 +-
+>  drivers/gpu/ipu-v3/ipu-pre.c                           |   3 +-
+>  drivers/gpu/ipu-v3/ipu-prg.c                           |   3 +-
+>  drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.c     |  89 +-
+>  drivers/media/platform/sunxi/sun6i-csi/sun6i_csi.h     |  49 +-
+>  drivers/media/platform/sunxi/sun6i-csi/sun6i_csi_reg.h |   6 +-
+>  drivers/media/platform/sunxi/sun6i-csi/sun6i_video.c   |  11 +-
+>  include/drm/drm_fourcc.h                               | 219 +---
+>  include/drm/drm_framebuffer.h                          |   4 +-
+>  include/drm/drm_mode_config.h                          |   5 +-
+>  include/linux/image-formats.h                          | 438 ++++++-
+>  lib/Kconfig                                            |   7 +-
+>  lib/Makefile                                           |   3 +-
+>  lib/image-formats-selftests.c                          | 325 +++++-
+>  lib/image-formats.c                                    | 717 ++++++++++-
+>  70 files changed, 1740 insertions(+), 1174 deletions(-)
+>  delete mode 100644 drivers/gpu/drm/selftests/test-drm_format.c
+>  create mode 100644 include/linux/image-formats.h
+>  create mode 100644 lib/image-formats-selftests.c
+>  create mode 100644 lib/image-formats.c
+> 
+> base-commit: de3c659c83ce88d495f2a36397071fdd0a337345
 -- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+Paul Kocialkowski, Bootlin
+Embedded Linux and kernel engineering
+https://bootlin.com
+
