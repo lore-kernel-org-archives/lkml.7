@@ -2,80 +2,75 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 649D8C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 03:24:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D318C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 03:25:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29AB120835
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 03:24:25 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555471465;
-	bh=IuidmULxl+r0vAi+16GzS/I3b50m+3IjshiEXzW3mUk=;
-	h=Date:From:To:Cc:Subject:In-Reply-To:References:List-ID:From;
-	b=ICs8dYzOEsLBN7PSLPp/qXM2z4ImxO0UfLBNGTwL0fBoOpZgnewswMWnDpT0o85L5
-	 lFYbCOD0GHKPwrAZZ0KqXAuIXVutFMIKt4i1g9haO123QlsZiM9z+cTkX6ZMQBaoGw
-	 xirdRTBQrZbgS2RGJvL8nu/S116P9/2mRJOw4Zok=
+	by mail.kernel.org (Postfix) with ESMTP id E762720835
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 03:25:34 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730064AbfDQDYX (ORCPT
+        id S1731096AbfDQDZd (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 23:24:23 -0400
-Received: from mail.linuxfoundation.org ([140.211.169.12]:59448 "EHLO
-        mail.linuxfoundation.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728083AbfDQDYX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 23:24:23 -0400
-Received: from localhost.localdomain (c-73-223-200-170.hsd1.ca.comcast.net [73.223.200.170])
-        by mail.linuxfoundation.org (Postfix) with ESMTPSA id 7D8A6B65;
-        Wed, 17 Apr 2019 03:24:22 +0000 (UTC)
-Date:   Tue, 16 Apr 2019 20:24:20 -0700
-From:   Andrew Morton <akpm@linux-foundation.org>
-To:     Guenter Roeck <groeck@google.com>
-Cc:     Dan Williams <dan.j.williams@intel.com>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Mathieu Desnoyers <mathieu.desnoyers@efficios.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Mike Rapoport <rppt@linux.ibm.com>,
-        Linux MM <linux-mm@kvack.org>
-Subject: Re: [PATCH] init: Initialize jump labels before command line option
- parsing
-Message-Id: <20190416202420.9acb6f56fd10e7f84446e75b@linux-foundation.org>
-In-Reply-To: <CABXOdTdSNgEnn+mEk-X5ZWph8rCz+yW7EKiA-GHnZdsBC3rsNg@mail.gmail.com>
-References: <155544804466.1032396.13418949511615676665.stgit@dwillia2-desk3.amr.corp.intel.com>
-        <20190416164418.3ca1d8cef2713a1154067291@linux-foundation.org>
-        <CAPcyv4iJxyiGWqjGKLuRgjr9UgDO9ERSghUi3k597gk=X5votQ@mail.gmail.com>
-        <CABXOdTdSNgEnn+mEk-X5ZWph8rCz+yW7EKiA-GHnZdsBC3rsNg@mail.gmail.com>
-X-Mailer: Sylpheed 3.5.1 (GTK+ 2.24.31; x86_64-pc-linux-gnu)
-Mime-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+        Tue, 16 Apr 2019 23:25:33 -0400
+Received: from szxga05-in.huawei.com ([45.249.212.191]:6754 "EHLO huawei.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728083AbfDQDZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 23:25:33 -0400
+Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
+        by Forcepoint Email with ESMTP id AE64A5FD58C2F666939A;
+        Wed, 17 Apr 2019 11:25:30 +0800 (CST)
+Received: from localhost (10.177.31.96) by DGGEMS411-HUB.china.huawei.com
+ (10.3.19.211) with Microsoft SMTP Server id 14.3.408.0; Wed, 17 Apr 2019
+ 11:25:20 +0800
+From:   Yue Haibing <yuehaibing@huawei.com>
+To:     <johannes.berg@intel.com>, <emmanuel.grumbach@intel.com>,
+        <luciano.coelho@intel.com>, <linuxwifi@intel.com>,
+        <kvalo@codeaurora.org>
+CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
+        <linux-wireless@vger.kernel.org>, <davem@davemloft.net>,
+        YueHaibing <yuehaibing@huawei.com>
+Subject: [PATCH] iwlwifi: Use correct channel_profile iniwl_get_nvm
+Date:   Wed, 17 Apr 2019 11:24:09 +0800
+Message-ID: <20190417032409.23924-1-yuehaibing@huawei.com>
+X-Mailer: git-send-email 2.10.2.windows.1
+MIME-Version: 1.0
+Content-Type: text/plain
+X-Originating-IP: [10.177.31.96]
+X-CFilter-Loop: Reflected
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Apr 2019 17:39:03 -0700 Guenter Roeck <groeck@google.com> wrote:
+From: YueHaibing <yuehaibing@huawei.com>
 
-> > > Has it been confirmed that this fixes
-> > > mm-shuffle-initial-free-memory-to-improve-memory-side-cache-utilization.patch
-> > > on beaglebone-black?
-> >
-> > This only fixes dynamically enabling the shuffling on 32-bit ARM.
-> > Guenter happened to run without the mm-only 'force-enable-always'
-> > patch and when he went to use the command line option to enable it he
-> > hit the jump-label warning.
-> >
-> 
-> For my part I have not seen the original failure; it seems that the
-> kernelci logs are no longer present. As such, I neither know how it
-> looks like nor how to (try to) reproduce it. I just thought it might
-> be worthwhile to run the patch through my boot tests to see if
-> anything pops up. From the feedback I got, though, it sounded like the
-> failure is/was very omap2 specific, so I would not be able to
-> reproduce it anyway.
+commit 2785ce008e3b ("iwlwifi: support new NVM response API")
+seems forgot use correct channel_profile in iwl_get_nvm when call
+iwl_init_sbands().
 
-hm.  Maybe we forge ahead and see if someone hits the issue who
-can work with us on resolving it.  It sounds like the affected population
-will be quite small.  But still, ugh :(
+Fixes: 2785ce008e3b ("iwlwifi: support new NVM response API")
+Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+---
+ drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c b/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c
+index 40985dc..d87a6bb 100644
+--- a/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c
++++ b/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c
+@@ -1496,7 +1496,7 @@ struct iwl_nvm_data *iwl_get_nvm(struct iwl_trans *trans,
+ 			  (void *)rsp_v3->regulatory.channel_profile;
+ 
+ 	iwl_init_sbands(trans->dev, trans->cfg, nvm,
+-			rsp->regulatory.channel_profile,
++			channel_profile,
+ 			nvm->valid_tx_ant & fw->valid_tx_ant,
+ 			nvm->valid_rx_ant & fw->valid_rx_ant,
+ 			sbands_flags, v4);
+-- 
+2.7.0
+
+
