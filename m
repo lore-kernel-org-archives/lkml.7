@@ -2,459 +2,1016 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CAB22C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:34:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 52A9DC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:34:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 905B720663
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:34:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C653420663
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:34:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="dILO4zi0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732857AbfDQQej (ORCPT
+        id S1732884AbfDQQe4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 12:34:39 -0400
-Received: from foss.arm.com ([217.140.101.70]:47578 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1730463AbfDQQei (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 12:34:38 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 122F0A78;
-        Wed, 17 Apr 2019 09:34:37 -0700 (PDT)
-Received: from [10.1.196.92] (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id AC9FD3F557;
-        Wed, 17 Apr 2019 09:34:31 -0700 (PDT)
-Subject: Re: [PATCH v6 10/12] soc: ti: Add MSI domain bus support for
- Interrupt Aggregator
-To:     Lokesh Vutla <lokeshvutla@ti.com>,
-        Tony Lindgren <tony@atomide.com>, Nishanth Menon <nm@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, jason@lakedaemon.net
-Cc:     Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        linux-kernel@vger.kernel.org,
-        Device Tree Mailing List <devicetree@vger.kernel.org>,
-        Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-References: <20190410041358.16809-1-lokeshvutla@ti.com>
- <20190410041358.16809-11-lokeshvutla@ti.com>
-From:   Marc Zyngier <marc.zyngier@arm.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=marc.zyngier@arm.com; prefer-encrypt=mutual; keydata=
- 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
-Organization: ARM Ltd
-Message-ID: <8691f4f1-741c-c15d-62d6-3c2f7157cb51@arm.com>
-Date:   Wed, 17 Apr 2019 17:34:29 +0100
-User-Agent: Mozilla/5.0 (X11; Linux aarch64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 17 Apr 2019 12:34:56 -0400
+Received: from mail-oi1-f196.google.com ([209.85.167.196]:43061 "EHLO
+        mail-oi1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732843AbfDQQez (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 12:34:55 -0400
+Received: by mail-oi1-f196.google.com with SMTP id t81so20537830oig.10
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 09:34:55 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=IAniwz2Woqse1Pge2WHiUsopATE5lHlNIuo4xzWIo9U=;
+        b=dILO4zi0XKQhmceHeF6clzy9EqC0KUAb0Tesv7oDpJfCXnXQOf5rL+rCgnRPcA70t+
+         shfkIvsmPfUYPvZdoUlIsr23qPo7enIsvs7zadvIT2LdpxJLWW+bgtP7bAXEJH4uT58g
+         JE+o7txLgUiOBCgfo9frydqkRibNqX5G0LnmI=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=IAniwz2Woqse1Pge2WHiUsopATE5lHlNIuo4xzWIo9U=;
+        b=RtKUnIWOtOlAYKp9JzYjQcFORqot2zMt9h41+c65EjxIACKc9TK2bLNcOY6eZ/DDz9
+         NiSZqJdrSG3554FAYTRHeMeNc8KCNLSj+ZmWcKa+E6LcNsuwO6tOcMHOgSWYx3UThost
+         yRqm5JaEVkBtqFn0a4TTClCVVyoa9b/355gUUw+r4zRPeX+GrDwnRs5iGKacVRduQN2A
+         BARD67CEuX1MAdflPqmxHHvUA4tK20xAQU1UQTnTfUsxQvWI2LpoEMnYCojSds7Y7dVM
+         b6uwPiSzW/Jn2N0aE7+xdQ0nkurSsPsRj4x08hTPV4G8raAlArIcvs13ay/YzZZ3uhuM
+         5ruQ==
+X-Gm-Message-State: APjAAAV9xaKApKK30OcLJtDeQ7HmoMhAeggUA7CanlH8sozFvduRBmKT
+        qmLf8gmD7U71gcLIdH+RSOo5qkBA1tM=
+X-Google-Smtp-Source: APXvYqwSUz4YOEoJDbiPWF6gnUGl34dhvsEixMToczZpU7xMGPZHBt5FIXxEDb23joEbqhldPeLrpA==
+X-Received: by 2002:aca:5512:: with SMTP id j18mr109014oib.65.1555518893977;
+        Wed, 17 Apr 2019 09:34:53 -0700 (PDT)
+Received: from mail-oi1-f178.google.com (mail-oi1-f178.google.com. [209.85.167.178])
+        by smtp.gmail.com with ESMTPSA id b140sm24239643oih.57.2019.04.17.09.34.53
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 17 Apr 2019 09:34:53 -0700 (PDT)
+Received: by mail-oi1-f178.google.com with SMTP id a6so20537294oie.5
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 09:34:53 -0700 (PDT)
+X-Received: by 2002:aca:e18b:: with SMTP id y133mr91207oig.157.1555518892755;
+ Wed, 17 Apr 2019 09:34:52 -0700 (PDT)
 MIME-Version: 1.0
-In-Reply-To: <20190410041358.16809-11-lokeshvutla@ti.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+References: <1555496317-16616-1-git-send-email-rushikesh.s.kadam@intel.com> <0b040e17750a36ec6ae6fe4e06133d656deb4409.camel@linux.intel.com>
+In-Reply-To: <0b040e17750a36ec6ae6fe4e06133d656deb4409.camel@linux.intel.com>
+From:   Jett Rink <jettrink@chromium.org>
+Date:   Wed, 17 Apr 2019 10:34:40 -0600
+X-Gmail-Original-Message-ID: <CAK+PMK5SjXUdr-EKTng63ZNZkqaXH_gX8gsYpWkMKfAoJaBB6g@mail.gmail.com>
+Message-ID: <CAK+PMK5SjXUdr-EKTng63ZNZkqaXH_gX8gsYpWkMKfAoJaBB6g@mail.gmail.com>
+Subject: Re: [PATCH v4] platform: chrome: Add ChromeOS EC ISHTP driver
+To:     Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+Cc:     Rushikesh S Kadam <rushikesh.s.kadam@intel.com>,
+        Benson Leung <bleung@chromium.org>,
+        Enric Balletbo i Serra <enric.balletbo@collabora.com>,
+        Guenter Roeck <groeck@chromium.org>,
+        Nick Crews <ncrews@chromium.org>,
+        Gwendal Grignou <gwendal@google.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 10/04/2019 05:13, Lokesh Vutla wrote:
-> With the system coprocessor managing the range allocation of the
-> inputs to Interrupt Aggregator, it is difficult to represent
-> the device IRQs from DT.
-> 
-> The suggestion is to use MSI in such cases where devices wants
-> to allocate and group interrupts dynamically.
-> 
-> Create a MSI domain bus layer that allocates and frees MSIs for
-> a device.
-> 
-> APIs that are implemented:
-> - ti_sci_inta_msi_create_irq_domain() that creates a MSI domain
-> - ti_sci_inta_msi_domain_alloc_irqs() that creates MSIs for the
->   specified device and resource.
-> - ti_sci_inta_msi_domain_free_irqs() frees the irqs attached to the device.
-> - ti_sci_inta_msi_get_virq() for getting the virq attached to a specific event.
-> 
-> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
-> ---
-> Changes since v5:
-> - Updated the input parametes to all apis
-> - Updated the default chip ops.
-> - Prefixed all the apis with ti_sci_inta_
-> 
-> Marc,
-> 	Right now ti_sci_resource is being passed for irq allocatons.
-> I couldn't get to use resources attached to platform_device. Because
-> platform_device resources are allocated in of_device_alloc() and number
-> of resources are fixed in it. In order to update the resources, driver
-> has to do a krealloc(pdev->resources) and update the num of resources.
-> Is it allowed to update the pdev->resources during probe time? If yes,
-> Ill be happy to update the patch to use platform_dev resources.
+Reviewed-by: Jett Rink <jettrink@chromium.org>
+Tested-by: Jett Rink <jettrink@chromium.org>
 
-My suggestion was for you to define your own bus, device type and co
-(much like the fsl-mc stuff), and not reuse platform devices at all.
-
-> 
-> 
->  MAINTAINERS                            |   2 +
->  drivers/soc/ti/Kconfig                 |   6 +
->  drivers/soc/ti/Makefile                |   1 +
->  drivers/soc/ti/ti_sci_inta_msi.c       | 167 +++++++++++++++++++++++++
->  include/linux/irqdomain.h              |   1 +
->  include/linux/msi.h                    |   6 +
->  include/linux/soc/ti/ti_sci_inta_msi.h |  23 ++++
->  7 files changed, 206 insertions(+)
->  create mode 100644 drivers/soc/ti/ti_sci_inta_msi.c
->  create mode 100644 include/linux/soc/ti/ti_sci_inta_msi.h
-> 
-> diff --git a/MAINTAINERS b/MAINTAINERS
-> index ba88b3033fe4..dd31d7cb2fc6 100644
-> --- a/MAINTAINERS
-> +++ b/MAINTAINERS
-> @@ -15353,6 +15353,8 @@ F:	Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
->  F:	Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.txt
->  F:	drivers/irqchip/irq-ti-sci-intr.c
->  F:	drivers/irqchip/irq-ti-sci-inta.c
-> +F:	include/linux/soc/ti/ti_sci_inta_msi.h
-> +F:	drivers/soc/ti/ti_sci_inta_msi.c
->  
->  Texas Instruments ASoC drivers
->  M:	Peter Ujfalusi <peter.ujfalusi@ti.com>
-> diff --git a/drivers/soc/ti/Kconfig b/drivers/soc/ti/Kconfig
-> index be4570baad96..82f110fe4953 100644
-> --- a/drivers/soc/ti/Kconfig
-> +++ b/drivers/soc/ti/Kconfig
-> @@ -73,4 +73,10 @@ config TI_SCI_PM_DOMAINS
->  	  called ti_sci_pm_domains. Note this is needed early in boot before
->  	  rootfs may be available.
->  
-> +config TI_SCI_INTA_MSI_DOMAIN
-> +	bool
-> +	select GENERIC_MSI_IRQ_DOMAIN
-> +	help
-> +	  Driver to enable Interrupt Aggregator specific MSI Domain.
-> +
->  endif # SOC_TI
-> diff --git a/drivers/soc/ti/Makefile b/drivers/soc/ti/Makefile
-> index a22edc0b258a..b3868d392d4f 100644
-> --- a/drivers/soc/ti/Makefile
-> +++ b/drivers/soc/ti/Makefile
-> @@ -8,3 +8,4 @@ obj-$(CONFIG_KEYSTONE_NAVIGATOR_DMA)	+= knav_dma.o
->  obj-$(CONFIG_AMX3_PM)			+= pm33xx.o
->  obj-$(CONFIG_WKUP_M3_IPC)		+= wkup_m3_ipc.o
->  obj-$(CONFIG_TI_SCI_PM_DOMAINS)		+= ti_sci_pm_domains.o
-> +obj-$(CONFIG_TI_SCI_INTA_MSI_DOMAIN)	+= ti_sci_inta_msi.o
-> diff --git a/drivers/soc/ti/ti_sci_inta_msi.c b/drivers/soc/ti/ti_sci_inta_msi.c
-> new file mode 100644
-> index 000000000000..247a5e5f216b
-> --- /dev/null
-> +++ b/drivers/soc/ti/ti_sci_inta_msi.c
-> @@ -0,0 +1,167 @@
-> +// SPDX-License-Identifier: GPL-2.0
-> +/*
-> + * Texas Instruments' K3 Interrupt Aggregator MSI bus
-> + *
-> + * Copyright (C) 2018-2019 Texas Instruments Incorporated - http://www.ti.com/
-> + *	Lokesh Vutla <lokeshvutla@ti.com>
-> + */
-> +
-> +#include <linux/of_device.h>
-> +#include <linux/of_address.h>
-> +#include <linux/of_irq.h>
-> +#include <linux/irq.h>
-> +#include <linux/irqdomain.h>
-> +#include <linux/msi.h>
-
-Alphabetical ordering, please.
-
-> +#include <linux/soc/ti/ti_sci_inta_msi.h>
-> +#include <linux/soc/ti/ti_sci_protocol.h>
-> +
-> +static void ti_sci_inta_msi_write_msg(struct irq_data *data,
-> +				      struct msi_msg *msg)
-> +{
-> +	/* Nothing to do */
-> +}
-> +
-> +static void ti_sci_inta_msi_compose_msi_msg(struct irq_data *data,
-> +					    struct msi_msg *msg)
-> +{
-> +	/* Nothing to do */
-> +}
-> +
-> +static int ti_sci_inta_msi_request_resources(struct irq_data *data)
-> +{
-> +	data = data->parent_data;
-> +
-> +	return data->chip->irq_request_resources(data);
-> +}
-> +
-> +static void ti_sci_inta_msi_release_resources(struct irq_data *data)
-> +{
-> +	data = data->parent_data;
-> +	data->chip->irq_release_resources(data);
-> +}
-
-The two functions above are an implementation of
-irq_chip_{request,release}_resource_parent(). Please make them generic
-functions, use them and fix drivers/gpio/gpio-thunderx.c to use them too.
-
-> +
-> +static void ti_sci_inta_msi_update_chip_ops(struct msi_domain_info *info)
-> +{
-> +	struct irq_chip *chip = info->chip;
-> +
-> +	WARN_ON(!chip);
-
-Just doing that isn't going to help, as you'll crash on the following
-line...
-
-> +	if (!chip->irq_mask)
-> +		chip->irq_mask = irq_chip_mask_parent;
-> +	if (!chip->irq_unmask)
-> +		chip->irq_unmask = irq_chip_unmask_parent;
-> +	if (!chip->irq_ack)
-> +		chip->irq_ack = irq_chip_ack_parent;
-> +	if (!chip->irq_set_type)
-> +		chip->irq_set_type = irq_chip_set_type_parent;
-> +	if (!chip->irq_write_msi_msg)
-> +		chip->irq_write_msi_msg = ti_sci_inta_msi_write_msg;
-> +	if (!chip->irq_compose_msi_msg)
-> +		chip->irq_compose_msi_msg = ti_sci_inta_msi_compose_msi_msg;
-> +	if (!chip->irq_request_resources)
-> +		chip->irq_request_resources = ti_sci_inta_msi_request_resources;
-> +	if (!chip->irq_release_resources)
-> +		chip->irq_release_resources = ti_sci_inta_msi_release_resources;
-
-Is there any case where a client driver wouldn't use the default all the
-time?
-
-> +}
-> +
-> +struct irq_domain
-> +*ti_sci_inta_msi_create_irq_domain(struct fwnode_handle *fwnode,
-> +				   struct msi_domain_info *info,
-> +				   struct irq_domain *parent)
-> +{
-> +	struct irq_domain *domain;
-> +
-> +	if (info->flags & MSI_FLAG_USE_DEF_CHIP_OPS)
-> +		ti_sci_inta_msi_update_chip_ops(info);
-
-If the answer above is "no", then you can happily ignore this flag and
-always populate the callbacks.
-
-> +
-> +	domain = msi_create_irq_domain(fwnode, info, parent);
-> +	if (domain)
-> +		irq_domain_update_bus_token(domain, DOMAIN_BUS_TI_SCI_INTA_MSI);
-> +
-> +	return domain;
-> +}
-> +EXPORT_SYMBOL_GPL(ti_sci_inta_msi_create_irq_domain);
-> +
-> +static void ti_sci_inta_msi_free_descs(struct device *dev)
-> +{
-> +	struct msi_desc *desc, *tmp;
-> +
-> +	list_for_each_entry_safe(desc, tmp, dev_to_msi_list(dev), list) {
-> +		list_del(&desc->list);
-> +		free_msi_entry(desc);
-> +	}
-> +}
-> +
-> +static int ti_sci_inta_msi_alloc_descs(struct device *dev, u32 dev_id,
-> +				       struct ti_sci_resource *res)
-> +{
-> +	struct msi_desc *msi_desc;
-> +	int set, i, count = 0;
-> +
-> +	for (set = 0; set < res->sets; set++) {
-> +		for (i = 0; i < res->desc[set].num; i++) {
-> +			msi_desc = alloc_msi_entry(dev, 1, NULL);
-> +			if (!msi_desc) {
-> +				ti_sci_inta_msi_free_descs(dev);
-> +				return -ENOMEM;
-> +			}
-> +
-> +			msi_desc->inta.index = res->desc[set].start + i;
-> +			msi_desc->inta.dev_id = dev_id;
-
-I'm highly suspiscious of this. See further down.
-
-> +			INIT_LIST_HEAD(&msi_desc->list);
-> +			list_add_tail(&msi_desc->list, dev_to_msi_list(dev));
-> +			count++;
-> +		}
-> +	}
-> +
-> +	return count;
-> +}
-> +
-> +int ti_sci_inta_msi_domain_alloc_irqs(struct platform_device *pdev,
-> +				      struct ti_sci_resource *res)
-> +{
-> +	struct irq_domain *msi_domain;
-> +	int ret, nvec;
-> +
-> +	msi_domain = dev_get_msi_domain(&pdev->dev);
-> +	if (!msi_domain)
-> +		return -EINVAL;
-> +
-> +	if (pdev->id < 0)
-> +		return -ENODEV;
-> +
-> +	nvec = ti_sci_inta_msi_alloc_descs(&pdev->dev, pdev->id, res);
-> +	if (nvec <= 0)
-> +		return nvec;
-> +
-> +	ret = msi_domain_alloc_irqs(msi_domain, &pdev->dev, nvec);
-> +	if (ret) {
-> +		dev_err(&pdev->dev, "Failed to allocate IRQs %d\n", ret);
-> +		goto cleanup;
-> +	}
-> +
-> +	return 0;
-> +
-> +cleanup:
-> +	ti_sci_inta_msi_free_descs(&pdev->dev);
-> +	return ret;
-> +}
-> +EXPORT_SYMBOL_GPL(ti_sci_inta_msi_domain_alloc_irqs);
-> +
-> +void ti_sci_inta_msi_domain_free_irqs(struct device *dev)
-> +{
-> +	msi_domain_free_irqs(dev->msi_domain, dev);
-> +	ti_sci_inta_msi_free_descs(dev);
-> +}
-> +EXPORT_SYMBOL_GPL(ti_sci_inta_msi_domain_free_irqs);
-> +
-> +unsigned int ti_sci_inta_msi_get_virq(struct platform_device *pdev, u32 index)
-> +{
-> +	struct msi_desc *desc;
-> +
-> +	for_each_msi_entry(desc, &pdev->dev)
-> +		if (desc->inta.index == index && desc->inta.dev_id == pdev->id)
-
-What is this "index"? Why isn't the right entry the index-th element in
-the msi_desc list?  Worse, the dev_id check. The whole point of having a
-per-device MSI list is that it is, well, per device.
-
-> +			return desc->irq;
-> +
-> +	return -ENODEV;
-> +}
-> +EXPORT_SYMBOL_GPL(ti_sci_inta_msi_get_virq);
-> diff --git a/include/linux/irqdomain.h b/include/linux/irqdomain.h
-> index 61706b430907..07ec8b390161 100644
-> --- a/include/linux/irqdomain.h
-> +++ b/include/linux/irqdomain.h
-> @@ -82,6 +82,7 @@ enum irq_domain_bus_token {
->  	DOMAIN_BUS_NEXUS,
->  	DOMAIN_BUS_IPI,
->  	DOMAIN_BUS_FSL_MC_MSI,
-> +	DOMAIN_BUS_TI_SCI_INTA_MSI,
->  };
->  
->  /**
-> diff --git a/include/linux/msi.h b/include/linux/msi.h
-> index 7e9b81c3b50d..7e12dfc4cb39 100644
-> --- a/include/linux/msi.h
-> +++ b/include/linux/msi.h
-> @@ -47,6 +47,11 @@ struct fsl_mc_msi_desc {
->  	u16				msi_index;
->  };
->  
-> +struct ti_sci_inta_msi_desc {
-> +	u16	dev_id;
-> +	u16	index;
-> +};
-> +
->  /**
->   * struct msi_desc - Descriptor structure for MSI based interrupts
->   * @list:	List head for management
-> @@ -106,6 +111,7 @@ struct msi_desc {
->  		 */
->  		struct platform_msi_desc platform;
->  		struct fsl_mc_msi_desc fsl_mc;
-> +		struct ti_sci_inta_msi_desc inta;
->  	};
->  };
->  
-> diff --git a/include/linux/soc/ti/ti_sci_inta_msi.h b/include/linux/soc/ti/ti_sci_inta_msi.h
-> new file mode 100644
-> index 000000000000..b0ca20ab3f49
-> --- /dev/null
-> +++ b/include/linux/soc/ti/ti_sci_inta_msi.h
-> @@ -0,0 +1,23 @@
-> +/* SPDX-License-Identifier: GPL-2.0 */
-> +/*
-> + * Texas Instruments' K3 TI SCI INTA MSI helper
-> + *
-> + * Copyright (C) 2018-2019 Texas Instruments Incorporated - http://www.ti.com/
-> + *	Lokesh Vutla <lokeshvutla@ti.com>
-> + */
-> +
-> +#ifndef __INCLUDE_LINUX_TI_SCI_INTA_MSI_H
-> +#define __INCLUDE_LINUX_TI_SCI_INTA_MSI_H
-> +
-> +#include <linux/msi.h>
-> +#include <linux/soc/ti/ti_sci_protocol.h>
-> +
-> +struct irq_domain
-> +*ti_sci_inta_msi_create_irq_domain(struct fwnode_handle *fwnode,
-> +				   struct msi_domain_info *info,
-> +				   struct irq_domain *parent);
-> +int ti_sci_inta_msi_domain_alloc_irqs(struct platform_device *pdev,
-> +				      struct ti_sci_resource *res);
-> +unsigned int ti_sci_inta_msi_get_virq(struct platform_device *dev, u32 index);
-> +void ti_sci_inta_msi_domain_free_irqs(struct device *dev);
-> +#endif /* __INCLUDE_LINUX_IRQCHIP_TI_SCI_INTA_H */
-> 
-
-Thanks,
-
-	M.
--- 
-Jazz is not dead. It just smells funny...
+On Wed, Apr 17, 2019 at 10:27 AM Srinivas Pandruvada
+<srinivas.pandruvada@linux.intel.com> wrote:
+>
+> On Wed, 2019-04-17 at 15:48 +0530, Rushikesh S Kadam wrote:
+> > This driver implements a slim layer to enable the ChromeOS
+> > EC kernel stack (cros_ec) to communicate with ChromeOS EC
+> > firmware running on the Intel Integrated Sensor Hub (ISH).
+> >
+> > The driver registers a ChromeOS EC MFD device to connect
+> > with cros_ec kernel stack (upper layer), and it registers a
+> > client with the ISH Transport Protocol bus (lower layer) to
+> > talk with the ISH firwmare. See description of the ISHTP
+> > protocol at Documentation/hid/intel-ish-hid.txt
+> >
+> > Signed-off-by: Rushikesh S Kadam <rushikesh.s.kadam@intel.com>
+> Acked-by: Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>
+>
+> I think you have some reviewed and tested by.
+>
+> Also copy to Jiri, as this may have to go via HID pull as this has
+> dependency.
+>
+> Thanks,
+> Srinivas
+>
+> > ---
+> > The patches are baselined to hid git tree, branch for-5.2/ish
+> >
+> https://git.kernel.org/pub/scm/linux/kernel/git/hid/hid.git/log/?h=for-5.2/ish
+> >
+> > v4
+> >  - Coding style related changes. No functional changes. Addresses
+> >    review comments on v3.
+> >
+> > v3
+> >  - Made several changes to improve code readability. Replaced
+> >    multiple cl_data_to_dev(client_data) with dev variable. Use
+> >    reverse Xmas tree for variable defintion where it made sense.
+> >    Dropped few debug prints. Add docstring for function
+> >    prepare_cros_ec_rx().
+> >  - Fix code in function prepare_cros_ec_rx() under label
+> >    end_cros_ec_dev_init_error.
+> >  - Recycle buffer in process_recv() on failing to obtain the
+> >    semaphore.
+> >  - Increase ISHTP TX/RX ring buffer size to 8.
+> >  - Alphabetically ordered CROS_EC_ISHTP entries in Makefile and
+> >    Kconfig.
+> >  - Updated commit message.
+> >
+> > v2
+> >  - Dropped unused "reset" parameter in function cros_ec_init()
+> >  - Change driver name to cros_ec_ishtp to be consistent with other
+> >    references in the code.
+> >  - Fixed a few typos.
+> >
+> > v1
+> >  - Initial version
+> >
+> >  drivers/platform/chrome/Kconfig         |  13 +
+> >  drivers/platform/chrome/Makefile        |   1 +
+> >  drivers/platform/chrome/cros_ec_ishtp.c | 763
+> > ++++++++++++++++++++++++++++++++
+> >  3 files changed, 777 insertions(+)
+> >  create mode 100644 drivers/platform/chrome/cros_ec_ishtp.c
+> >
+> > diff --git a/drivers/platform/chrome/Kconfig
+> > b/drivers/platform/chrome/Kconfig
+> > index 16b1615..5848179 100644
+> > --- a/drivers/platform/chrome/Kconfig
+> > +++ b/drivers/platform/chrome/Kconfig
+> > @@ -62,6 +62,19 @@ config CROS_EC_I2C
+> >         a checksum. Failing accesses will be retried three times to
+> >         improve reliability.
+> >
+> > +config CROS_EC_ISHTP
+> > +     tristate "ChromeOS Embedded Controller (ISHTP)"
+> > +     depends on MFD_CROS_EC
+> > +     depends on INTEL_ISH_HID
+> > +     help
+> > +       If you say Y here, you get support for talking to the
+> > ChromeOS EC
+> > +       firmware running on Intel Integrated Sensor Hub (ISH), using
+> > the
+> > +       ISH Transport protocol (ISH-TP). This uses a simple byte-
+> > level
+> > +       protocol with a checksum.
+> > +
+> > +       To compile this driver as a module, choose M here: the
+> > +       module will be called cros_ec_ishtp.
+> > +
+> >  config CROS_EC_SPI
+> >       tristate "ChromeOS Embedded Controller (SPI)"
+> >       depends on MFD_CROS_EC && SPI
+> > diff --git a/drivers/platform/chrome/Makefile
+> > b/drivers/platform/chrome/Makefile
+> > index cd591bf..4efe102 100644
+> > --- a/drivers/platform/chrome/Makefile
+> > +++ b/drivers/platform/chrome/Makefile
+> > @@ -7,6 +7,7 @@ cros_ec_ctl-objs                      :=
+> > cros_ec_sysfs.o cros_ec_lightbar.o \
+> >                                          cros_ec_vbc.o
+> > cros_ec_debugfs.o
+> >  obj-$(CONFIG_CROS_EC_CTL)            += cros_ec_ctl.o
+> >  obj-$(CONFIG_CROS_EC_I2C)            += cros_ec_i2c.o
+> > +obj-$(CONFIG_CROS_EC_ISHTP)          += cros_ec_ishtp.o
+> >  obj-$(CONFIG_CROS_EC_SPI)            += cros_ec_spi.o
+> >  cros_ec_lpcs-objs                    := cros_ec_lpc.o
+> > cros_ec_lpc_reg.o
+> >  cros_ec_lpcs-$(CONFIG_CROS_EC_LPC_MEC)       += cros_ec_lpc_mec.o
+> > diff --git a/drivers/platform/chrome/cros_ec_ishtp.c
+> > b/drivers/platform/chrome/cros_ec_ishtp.c
+> > new file mode 100644
+> > index 0000000..997503d
+> > --- /dev/null
+> > +++ b/drivers/platform/chrome/cros_ec_ishtp.c
+> > @@ -0,0 +1,763 @@
+> > +// SPDX-License-Identifier: GPL-2.0
+> > +// ISHTP interface for ChromeOS Embedded Controller
+> > +//
+> > +// Copyright (c) 2019, Intel Corporation.
+> > +//
+> > +// ISHTP client driver for talking to the Chrome OS EC firmware
+> > running
+> > +// on Intel Integrated Sensor Hub (ISH) using the ISH Transport
+> > protocol
+> > +// (ISH-TP).
+> > +
+> > +#include <linux/delay.h>
+> > +#include <linux/mfd/core.h>
+> > +#include <linux/mfd/cros_ec.h>
+> > +#include <linux/mfd/cros_ec_commands.h>
+> > +#include <linux/module.h>
+> > +#include <linux/pci.h>
+> > +#include <linux/intel-ish-client-if.h>
+> > +
+> > +/*
+> > + * ISH TX/RX ring buffer pool size
+> > + *
+> > + * The AP->ISH messages and corresponding ISH->AP responses are
+> > + * serialized. We need 1 TX and 1 RX buffer for these.
+> > + *
+> > + * The MKBP ISH->AP events are serialized. We need one additional RX
+> > + * buffer for them.
+> > + */
+> > +#define CROS_ISH_CL_TX_RING_SIZE             8
+> > +#define CROS_ISH_CL_RX_RING_SIZE             8
+> > +
+> > +/* ISH CrOS EC Host Commands */
+> > +enum cros_ec_ish_channel {
+> > +     CROS_EC_COMMAND = 1,                    /* AP->ISH message */
+> > +     CROS_MKBP_EVENT = 2,                    /* ISH->AP events */
+> > +};
+> > +
+> > +/*
+> > + * ISH firmware timeout for 1 message send failure is 1Hz, and the
+> > + * firmware will retry 2 times, so 3Hz is used for timeout.
+> > + */
+> > +#define ISHTP_SEND_TIMEOUT                   (3 * HZ)
+> > +
+> > +/* ISH Transport CrOS EC ISH client unique GUID */
+> > +static const guid_t cros_ish_guid =
+> > +     GUID_INIT(0x7b7154d0, 0x56f4, 0x4bdc,
+> > +               0xb0, 0xd8, 0x9e, 0x7c, 0xda, 0xe0, 0xd6, 0xa0);
+> > +
+> > +struct header {
+> > +     u8 channel;
+> > +     u8 status;
+> > +     u8 reserved[2];
+> > +} __packed;
+> > +
+> > +struct cros_ish_out_msg {
+> > +     struct header hdr;
+> > +     struct ec_host_request ec_request;
+> > +} __packed;
+> > +
+> > +struct cros_ish_in_msg {
+> > +     struct header hdr;
+> > +     struct ec_host_response ec_response;
+> > +} __packed;
+> > +
+> > +#define IN_MSG_EC_RESPONSE_PREAMBLE
+> > \
+> > +     offsetof(struct cros_ish_in_msg, ec_response)
+> > +
+> > +#define OUT_MSG_EC_REQUEST_PREAMBLE
+> > \
+> > +     offsetof(struct cros_ish_out_msg, ec_request)
+> > +
+> > +#define cl_data_to_dev(client_data) ishtp_device((client_data)-
+> > >cl_device)
+> > +
+> > +/*
+> > + * The Read-Write Semaphore is used to prevent message TX or RX
+> > while
+> > + * the ishtp client is being initialized or undergoing reset.
+> > + *
+> > + * The readers are the kernel function calls responsible for IA->ISH
+> > + * and ISH->AP messaging.
+> > + *
+> > + * The writers are .reset() and .probe() function.
+> > + */
+> > +DECLARE_RWSEM(init_lock);
+> > +
+> > +/**
+> > + * struct response_info - Encapsulate firmware response related
+> > + * information for passing between function ish_send() and
+> > + * process_recv() callback.
+> > + *
+> > + * @data: Copy the data received from firmware here.
+> > + * @max_size: Max size allocated for the @data buffer. If the
+> > received
+> > + * data exceeds this value, we log an error.
+> > + * @size: Actual size of data received from firmware.
+> > + * @error: 0 for success, negative error code for a failure in
+> > process_recv().
+> > + * @received: Set to true on receiving a valid firmware      respons
+> > e to host command
+> > + * @wait_queue: Wait queue for host to wait for firmware response.
+> > + */
+> > +struct response_info {
+> > +     void *data;
+> > +     size_t max_size;
+> > +     size_t size;
+> > +     int error;
+> > +     bool received;
+> > +     wait_queue_head_t wait_queue;
+> > +};
+> > +
+> > +/**
+> > + * struct ishtp_cl_data - Encapsulate per ISH TP Client.
+> > + *
+> > + * @cros_ish_cl: ISHTP firmware client instance.
+> > + * @cl_device: ISHTP client device instance.
+> > + * @response: Response info passing between ish_send() and
+> > process_recv().
+> > + * @work_ishtp_reset: Work queue reset handling.
+> > + * @work_ec_evt: Work queue for EC events.
+> > + * @ec_dev: CrOS EC MFD device.
+> > + *
+> > + * This structure is used to store per client data.
+> > + */
+> > +struct ishtp_cl_data {
+> > +     struct ishtp_cl *cros_ish_cl;
+> > +     struct ishtp_cl_device *cl_device;
+> > +
+> > +     /*
+> > +      * Used for passing firmware response information between
+> > +      * ish_send() and process_recv() callback.
+> > +      */
+> > +     struct response_info response;
+> > +
+> > +     struct work_struct work_ishtp_reset;
+> > +     struct work_struct work_ec_evt;
+> > +     struct cros_ec_device *ec_dev;
+> > +};
+> > +
+> > +/**
+> > + * ish_evt_handler - ISH to AP event handler
+> > + * @work: Work struct
+> > + */
+> > +static void ish_evt_handler(struct work_struct *work)
+> > +{
+> > +     struct ishtp_cl_data *client_data =
+> > +             container_of(work, struct ishtp_cl_data, work_ec_evt);
+> > +     struct cros_ec_device *ec_dev = client_data->ec_dev;
+> > +
+> > +     if (cros_ec_get_next_event(ec_dev, NULL) > 0) {
+> > +             blocking_notifier_call_chain(&ec_dev->event_notifier,
+> > +                                          0, ec_dev);
+> > +     }
+> > +}
+> > +
+> > +/**
+> > + * ish_send() - Send message from host to firmware
+> > + *
+> > + * @client_data: Client data instance
+> > + * @out_msg: Message buffer to be sent to firmware
+> > + * @out_size: Size of out going message
+> > + * @in_msg: Message buffer where the incoming data is copied. This
+> > buffer
+> > + * is allocated by calling
+> > + * @in_size: Max size of incoming message
+> > + *
+> > + * Return: Number of bytes copied in the in_msg on success, negative
+> > + * error code on failure.
+> > + */
+> > +static int ish_send(struct ishtp_cl_data *client_data,
+> > +                 u8 *out_msg, size_t out_size,
+> > +                 u8 *in_msg, size_t in_size)
+> > +{
+> > +     int rv;
+> > +     struct header *out_hdr = (struct header *)out_msg;
+> > +     struct ishtp_cl *cros_ish_cl = client_data->cros_ish_cl;
+> > +
+> > +     dev_dbg(cl_data_to_dev(client_data),
+> > +             "%s: channel=%02u status=%02u\n",
+> > +             __func__, out_hdr->channel, out_hdr->status);
+> > +
+> > +     /* Setup for incoming response */
+> > +     client_data->response.data = in_msg;
+> > +     client_data->response.max_size = in_size;
+> > +     client_data->response.error = 0;
+> > +     client_data->response.received = false;
+> > +
+> > +     rv = ishtp_cl_send(cros_ish_cl, out_msg, out_size);
+> > +     if (rv) {
+> > +             dev_err(cl_data_to_dev(client_data),
+> > +                     "ishtp_cl_send error %d\n", rv);
+> > +             return rv;
+> > +     }
+> > +
+> > +     wait_event_interruptible_timeout(client_data-
+> > >response.wait_queue,
+> > +                                      client_data-
+> > >response.received,
+> > +                                      ISHTP_SEND_TIMEOUT);
+> > +     if (!client_data->response.received) {
+> > +             dev_err(cl_data_to_dev(client_data),
+> > +                     "Timed out for response to host message\n");
+> > +             return -ETIMEDOUT;
+> > +     }
+> > +
+> > +     if (client_data->response.error < 0)
+> > +             return client_data->response.error;
+> > +
+> > +     return client_data->response.size;
+> > +}
+> > +
+> > +/**
+> > + * process_recv() - Received and parse incoming packet
+> > + * @cros_ish_cl: Client instance to get stats
+> > + * @rb_in_proc: Host interface message buffer
+> > + *
+> > + * Parse the incoming packet. If it is a response packet then it
+> > will
+> > + * update per instance flags and wake up the caller waiting to for
+> > the
+> > + * response. If it is an event packet then it will schedule event
+> > work.
+> > + */
+> > +static void process_recv(struct ishtp_cl *cros_ish_cl,
+> > +                      struct ishtp_cl_rb *rb_in_proc)
+> > +{
+> > +     size_t data_len = rb_in_proc->buf_idx;
+> > +     struct ishtp_cl_data *client_data =
+> > +             ishtp_get_client_data(cros_ish_cl);
+> > +     struct device *dev = cl_data_to_dev(client_data);
+> > +     struct cros_ish_in_msg *in_msg =
+> > +             (struct cros_ish_in_msg *)rb_in_proc->buffer.data;
+> > +
+> > +     /* Proceed only if reset or init is not in progress */
+> > +     if (!down_read_trylock(&init_lock)) {
+> > +             /* Free the buffer */
+> > +             ishtp_cl_io_rb_recycle(rb_in_proc);
+> > +             dev_warn(dev,
+> > +                      "Host is not ready to receive incoming
+> > messages\n");
+> > +             return;
+> > +     }
+> > +
+> > +     /*
+> > +      * All firmware messages contain a header. Check the buffer
+> > size
+> > +      * before accessing elements inside.
+> > +      */
+> > +     if (!rb_in_proc->buffer.data) {
+> > +             dev_warn(dev, "rb_in_proc->buffer.data returned null");
+> > +             client_data->response.error = -EBADMSG;
+> > +             goto end_error;
+> > +     }
+> > +
+> > +     if (data_len < sizeof(struct header)) {
+> > +             dev_err(dev, "data size %zu is less than header %zu\n",
+> > +                     data_len, sizeof(struct header));
+> > +             client_data->response.error = -EMSGSIZE;
+> > +             goto end_error;
+> > +     }
+> > +
+> > +     dev_dbg(dev, "channel=%02u status=%02u\n",
+> > +             in_msg->hdr.channel, in_msg->hdr.status);
+> > +
+> > +     switch (in_msg->hdr.channel) {
+> > +     case CROS_EC_COMMAND:
+> > +             /* Sanity check */
+> > +             if (!client_data->response.data) {
+> > +                     dev_err(dev,
+> > +                             "Receiving buffer is null. Should be
+> > allocated by calling function\n");
+> > +                     client_data->response.error = -EINVAL;
+> > +                     goto error_wake_up;
+> > +             }
+> > +
+> > +             if (client_data->response.received) {
+> > +                     dev_err(dev,
+> > +                             "Previous firmware message not yet
+> > processed\n");
+> > +                     client_data->response.error = -EINVAL;
+> > +                     goto error_wake_up;
+> > +             }
+> > +
+> > +             if (data_len > client_data->response.max_size) {
+> > +                     dev_err(dev,
+> > +                             "Received buffer size %zu is larger
+> > than allocated buffer %zu\n",
+> > +                             data_len, client_data-
+> > >response.max_size);
+> > +                     client_data->response.error = -EMSGSIZE;
+> > +                     goto error_wake_up;
+> > +             }
+> > +
+> > +             if (in_msg->hdr.status) {
+> > +                     dev_err(dev, "firmware returned status %d\n",
+> > +                             in_msg->hdr.status);
+> > +                     client_data->response.error = -EIO;
+> > +                     goto error_wake_up;
+> > +             }
+> > +
+> > +             /* Update the actual received buffer size */
+> > +             client_data->response.size = data_len;
+> > +
+> > +             /*
+> > +              * Copy the buffer received in firmware response for
+> > the
+> > +              * calling thread.
+> > +              */
+> > +             memcpy(client_data->response.data,
+> > +                    rb_in_proc->buffer.data, data_len);
+> > +
+> > +             /* Set flag before waking up the caller */
+> > +             client_data->response.received = true;
+> > +error_wake_up:
+> > +             /* Wake the calling thread */
+> > +             wake_up_interruptible(&client_data-
+> > >response.wait_queue);
+> > +
+> > +             break;
+> > +
+> > +     case CROS_MKBP_EVENT:
+> > +             /* The event system doesn't send any data in buffer */
+> > +             schedule_work(&client_data->work_ec_evt);
+> > +
+> > +             break;
+> > +
+> > +     default:
+> > +             dev_err(dev, "Invalid channel=%02d\n", in_msg-
+> > >hdr.channel);
+> > +     }
+> > +
+> > +end_error:
+> > +     /* Free the buffer */
+> > +     ishtp_cl_io_rb_recycle(rb_in_proc);
+> > +
+> > +     up_read(&init_lock);
+> > +}
+> > +
+> > +/**
+> > + * ish_event_cb() - bus driver callback for incoming message
+> > + * @cl_device: ISHTP client device for which this message is
+> > targeted.
+> > + *
+> > + * Remove the packet from the list and process the message by
+> > calling
+> > + * process_recv.
+> > + */
+> > +static void ish_event_cb(struct ishtp_cl_device *cl_device)
+> > +{
+> > +     struct ishtp_cl_rb *rb_in_proc;
+> > +     struct ishtp_cl *cros_ish_cl = ishtp_get_drvdata(cl_device);
+> > +
+> > +     while ((rb_in_proc = ishtp_cl_rx_get_rb(cros_ish_cl)) != NULL)
+> > {
+> > +             /* Decide what to do with received data */
+> > +             process_recv(cros_ish_cl, rb_in_proc);
+> > +     }
+> > +}
+> > +
+> > +/**
+> > + * cros_ish_init() - Init function for ISHTP client
+> > + * @cros_ish_cl: ISHTP client instance
+> > + *
+> > + * This function complete the initializtion of the client.
+> > + *
+> > + * Return: 0 for success, negative error code for failure.
+> > + */
+> > +static int cros_ish_init(struct ishtp_cl *cros_ish_cl)
+> > +{
+> > +     int rv;
+> > +     struct ishtp_device *dev;
+> > +     struct ishtp_fw_client *fw_client;
+> > +     struct ishtp_cl_data *client_data =
+> > ishtp_get_client_data(cros_ish_cl);
+> > +
+> > +     rv = ishtp_cl_link(cros_ish_cl);
+> > +     if (rv) {
+> > +             dev_err(cl_data_to_dev(client_data),
+> > +                     "ishtp_cl_link failed\n");
+> > +             return rv;
+> > +     }
+> > +
+> > +     dev = ishtp_get_ishtp_device(cros_ish_cl);
+> > +
+> > +     /* Connect to firmware client */
+> > +     ishtp_set_tx_ring_size(cros_ish_cl, CROS_ISH_CL_TX_RING_SIZE);
+> > +     ishtp_set_rx_ring_size(cros_ish_cl, CROS_ISH_CL_RX_RING_SIZE);
+> > +
+> > +     fw_client = ishtp_fw_cl_get_client(dev, &cros_ish_guid);
+> > +     if (!fw_client) {
+> > +             dev_err(cl_data_to_dev(client_data),
+> > +                     "ish client uuid not found\n");
+> > +             rv = -ENOENT;
+> > +             goto err_cl_unlink;
+> > +     }
+> > +
+> > +     ishtp_cl_set_fw_client_id(cros_ish_cl,
+> > +                               ishtp_get_fw_client_id(fw_client));
+> > +     ishtp_set_connection_state(cros_ish_cl, ISHTP_CL_CONNECTING);
+> > +
+> > +     rv = ishtp_cl_connect(cros_ish_cl);
+> > +     if (rv) {
+> > +             dev_err(cl_data_to_dev(client_data),
+> > +                     "client connect fail\n");
+> > +             goto err_cl_unlink;
+> > +     }
+> > +
+> > +     ishtp_register_event_cb(client_data->cl_device, ish_event_cb);
+> > +     return 0;
+> > +
+> > +err_cl_unlink:
+> > +     ishtp_cl_unlink(cros_ish_cl);
+> > +     return rv;
+> > +}
+> > +
+> > +/**
+> > + * cros_ish_deinit() - Deinit function for ISHTP client
+> > + * @cros_ish_cl: ISHTP client instance
+> > + *
+> > + * Unlink and free cros_ec client
+> > + */
+> > +static void cros_ish_deinit(struct ishtp_cl *cros_ish_cl)
+> > +{
+> > +     ishtp_set_connection_state(cros_ish_cl,
+> > ISHTP_CL_DISCONNECTING);
+> > +     ishtp_cl_disconnect(cros_ish_cl);
+> > +     ishtp_cl_unlink(cros_ish_cl);
+> > +     ishtp_cl_flush_queues(cros_ish_cl);
+> > +
+> > +     /* Disband and free all Tx and Rx client-level rings */
+> > +     ishtp_cl_free(cros_ish_cl);
+> > +}
+> > +
+> > +/**
+> > + * prepare_cros_ec_rx() - Check & prepare receive buffer
+> > + * @ec_dev: CrOS EC MFD device.
+> > + * @in_msg: Incoming message buffer
+> > + * @msg: cros_ec command used to send & receive data
+> > + *
+> > + * Return: 0 for success, negative error code for failure.
+> > + *
+> > + * Check the received buffer. Convert to cros_ec_command format.
+> > + */
+> > +static int prepare_cros_ec_rx(struct cros_ec_device *ec_dev,
+> > +                           const struct cros_ish_in_msg *in_msg,
+> > +                           struct cros_ec_command *msg)
+> > +{
+> > +     u8 sum = 0;
+> > +     int i, rv, offset;
+> > +
+> > +     /* Check response error code */
+> > +     msg->result = in_msg->ec_response.result;
+> > +     rv = cros_ec_check_result(ec_dev, msg);
+> > +     if (rv < 0)
+> > +             return rv;
+> > +
+> > +     if (in_msg->ec_response.data_len > msg->insize) {
+> > +             dev_err(ec_dev->dev, "Packet too long (%d bytes,
+> > expected %d)",
+> > +                     in_msg->ec_response.data_len, msg->insize);
+> > +             return -ENOSPC;
+> > +     }
+> > +
+> > +     /* Copy response packet payload and compute checksum */
+> > +     for (i = 0; i < sizeof(struct ec_host_response); i++)
+> > +             sum += ((u8 *)in_msg)[IN_MSG_EC_RESPONSE_PREAMBLE + i];
+> > +
+> > +     offset = sizeof(struct cros_ish_in_msg);
+> > +     for (i = 0; i < in_msg->ec_response.data_len; i++)
+> > +             sum += msg->data[i] = ((u8 *)in_msg)[offset + i];
+> > +
+> > +     if (sum) {
+> > +             dev_dbg(ec_dev->dev, "Bad received packet checksum
+> > %d\n", sum);
+> > +             return -EBADMSG;
+> > +     }
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +static int cros_ec_pkt_xfer_ish(struct cros_ec_device *ec_dev,
+> > +                             struct cros_ec_command *msg)
+> > +{
+> > +     int rv;
+> > +     struct ishtp_cl *cros_ish_cl = ec_dev->priv;
+> > +     struct ishtp_cl_data *client_data =
+> > ishtp_get_client_data(cros_ish_cl);
+> > +     struct device *dev = cl_data_to_dev(client_data);
+> > +     struct cros_ish_in_msg *in_msg = (struct cros_ish_in_msg
+> > *)ec_dev->din;
+> > +     struct cros_ish_out_msg *out_msg =
+> > +             (struct cros_ish_out_msg *)ec_dev->dout;
+> > +     size_t in_size = sizeof(struct cros_ish_in_msg) + msg->insize;
+> > +     size_t out_size = sizeof(struct cros_ish_out_msg) + msg-
+> > >outsize;
+> > +
+> > +     /* Proceed only if reset-init is not in progress */
+> > +     if (!down_read_trylock(&init_lock)) {
+> > +             dev_warn(dev,
+> > +                      "Host is not ready to send messages to ISH.
+> > Try again\n");
+> > +             return -EAGAIN;
+> > +     }
+> > +
+> > +     /* Sanity checks */
+> > +     if (in_size > ec_dev->din_size) {
+> > +             dev_err(dev,
+> > +                     "Incoming payload size %zu is too large for
+> > ec_dev->din_size %d\n",
+> > +                     in_size, ec_dev->din_size);
+> > +             return -EMSGSIZE;
+> > +     }
+> > +
+> > +     if (out_size > ec_dev->dout_size) {
+> > +             dev_err(dev,
+> > +                     "Outgoing payload size %zu is too large for
+> > ec_dev->dout_size %d\n",
+> > +                     out_size, ec_dev->dout_size);
+> > +             return -EMSGSIZE;
+> > +     }
+> > +
+> > +     /* Prepare the package to be sent over ISH TP */
+> > +     out_msg->hdr.channel = CROS_EC_COMMAND;
+> > +     out_msg->hdr.status = 0;
+> > +
+> > +     ec_dev->dout += OUT_MSG_EC_REQUEST_PREAMBLE;
+> > +     cros_ec_prepare_tx(ec_dev, msg);
+> > +     ec_dev->dout -= OUT_MSG_EC_REQUEST_PREAMBLE;
+> > +
+> > +     dev_dbg(dev,
+> > +             "out_msg: struct_ver=0x%x checksum=0x%x command=0x%x
+> > command_ver=0x%x data_len=0x%x\n",
+> > +             out_msg->ec_request.struct_version,
+> > +             out_msg->ec_request.checksum,
+> > +             out_msg->ec_request.command,
+> > +             out_msg->ec_request.command_version,
+> > +             out_msg->ec_request.data_len);
+> > +
+> > +     /* Send command to ISH EC firmware and read response */
+> > +     rv = ish_send(client_data,
+> > +                   (u8 *)out_msg, out_size,
+> > +                   (u8 *)in_msg, in_size);
+> > +     if (rv < 0)
+> > +             goto end_error;
+> > +
+> > +     rv = prepare_cros_ec_rx(ec_dev, in_msg, msg);
+> > +     if (rv)
+> > +             goto end_error;
+> > +
+> > +     rv = in_msg->ec_response.data_len;
+> > +
+> > +     dev_dbg(dev,
+> > +             "in_msg: struct_ver=0x%x checksum=0x%x result=0x%x
+> > data_len=0x%x\n",
+> > +             in_msg->ec_response.struct_version,
+> > +             in_msg->ec_response.checksum,
+> > +             in_msg->ec_response.result,
+> > +             in_msg->ec_response.data_len);
+> > +
+> > +end_error:
+> > +     if (msg->command == EC_CMD_REBOOT_EC)
+> > +             msleep(EC_REBOOT_DELAY_MS);
+> > +
+> > +     up_read(&init_lock);
+> > +
+> > +     return rv;
+> > +}
+> > +
+> > +static int cros_ec_dev_init(struct ishtp_cl_data *client_data)
+> > +{
+> > +     struct cros_ec_device *ec_dev;
+> > +     struct device *dev = cl_data_to_dev(client_data);
+> > +
+> > +     ec_dev = devm_kzalloc(dev, sizeof(*ec_dev), GFP_KERNEL);
+> > +     if (!ec_dev)
+> > +             return -ENOMEM;
+> > +
+> > +     client_data->ec_dev = ec_dev;
+> > +     dev->driver_data = ec_dev;
+> > +
+> > +     ec_dev->dev = dev;
+> > +     ec_dev->priv = client_data->cros_ish_cl;
+> > +     ec_dev->cmd_xfer = NULL;
+> > +     ec_dev->pkt_xfer = cros_ec_pkt_xfer_ish;
+> > +     ec_dev->phys_name = dev_name(dev);
+> > +     ec_dev->din_size = sizeof(struct cros_ish_in_msg) +
+> > +                        sizeof(struct
+> > ec_response_get_protocol_info);
+> > +     ec_dev->dout_size = sizeof(struct cros_ish_out_msg);
+> > +
+> > +     return cros_ec_register(ec_dev);
+> > +}
+> > +
+> > +static void reset_handler(struct work_struct *work)
+> > +{
+> > +     int rv;
+> > +     struct device *dev;
+> > +     struct ishtp_cl *cros_ish_cl;
+> > +     struct ishtp_cl_device *cl_device;
+> > +     struct ishtp_cl_data *client_data =
+> > +             container_of(work, struct ishtp_cl_data,
+> > work_ishtp_reset);
+> > +
+> > +     /* Lock for reset to complete */
+> > +     down_write(&init_lock);
+> > +
+> > +     cros_ish_cl = client_data->cros_ish_cl;
+> > +     cl_device = client_data->cl_device;
+> > +
+> > +     /* Unlink, flush queues & start again */
+> > +     ishtp_cl_unlink(cros_ish_cl);
+> > +     ishtp_cl_flush_queues(cros_ish_cl);
+> > +     ishtp_cl_free(cros_ish_cl);
+> > +
+> > +     cros_ish_cl = ishtp_cl_allocate(cl_device);
+> > +     if (!cros_ish_cl) {
+> > +             up_write(&init_lock);
+> > +             return;
+> > +     }
+> > +
+> > +     ishtp_set_drvdata(cl_device, cros_ish_cl);
+> > +     ishtp_set_client_data(cros_ish_cl, client_data);
+> > +     client_data->cros_ish_cl = cros_ish_cl;
+> > +
+> > +     rv = cros_ish_init(cros_ish_cl);
+> > +     if (rv) {
+> > +             ishtp_cl_free(cros_ish_cl);
+> > +             dev_err(cl_data_to_dev(client_data), "Reset Failed\n");
+> > +             up_write(&init_lock);
+> > +             return;
+> > +     }
+> > +
+> > +     /* Refresh ec_dev device pointers */
+> > +     client_data->ec_dev->priv = client_data->cros_ish_cl;
+> > +     dev = cl_data_to_dev(client_data);
+> > +     dev->driver_data = client_data->ec_dev;
+> > +
+> > +     dev_info(cl_data_to_dev(client_data), "Chrome EC ISH reset
+> > done\n");
+> > +
+> > +     up_write(&init_lock);
+> > +}
+> > +
+> > +/**
+> > + * cros_ec_ishtp_probe() - ISHTP client driver probe callback
+> > + * @cl_device: ISHTP client device instance
+> > + *
+> > + * Return: 0 for success, negative error code for failure.
+> > + */
+> > +static int cros_ec_ishtp_probe(struct ishtp_cl_device *cl_device)
+> > +{
+> > +     int rv;
+> > +     struct ishtp_cl *cros_ish_cl;
+> > +     struct ishtp_cl_data *client_data =
+> > +             devm_kzalloc(ishtp_device(cl_device),
+> > +                          sizeof(*client_data), GFP_KERNEL);
+> > +     if (!client_data)
+> > +             return -ENOMEM;
+> > +
+> > +     /* Lock for initialization to complete */
+> > +     down_write(&init_lock);
+> > +
+> > +     cros_ish_cl = ishtp_cl_allocate(cl_device);
+> > +     if (!cros_ish_cl) {
+> > +             rv = -ENOMEM;
+> > +             goto end_ishtp_cl_alloc_error;
+> > +     }
+> > +
+> > +     ishtp_set_drvdata(cl_device, cros_ish_cl);
+> > +     ishtp_set_client_data(cros_ish_cl, client_data);
+> > +     client_data->cros_ish_cl = cros_ish_cl;
+> > +     client_data->cl_device = cl_device;
+> > +
+> > +     init_waitqueue_head(&client_data->response.wait_queue);
+> > +
+> > +     INIT_WORK(&client_data->work_ishtp_reset,
+> > +               reset_handler);
+> > +     INIT_WORK(&client_data->work_ec_evt,
+> > +               ish_evt_handler);
+> > +
+> > +     rv = cros_ish_init(cros_ish_cl);
+> > +     if (rv)
+> > +             goto end_ishtp_cl_init_error;
+> > +
+> > +     ishtp_get_device(cl_device);
+> > +
+> > +     up_write(&init_lock);
+> > +
+> > +     /* Register croc_ec_dev mfd */
+> > +     rv = cros_ec_dev_init(client_data);
+> > +     if (rv)
+> > +             goto end_cros_ec_dev_init_error;
+> > +
+> > +     return 0;
+> > +
+> > +end_cros_ec_dev_init_error:
+> > +     ishtp_set_connection_state(cros_ish_cl,
+> > ISHTP_CL_DISCONNECTING);
+> > +     ishtp_cl_disconnect(cros_ish_cl);
+> > +     ishtp_cl_unlink(cros_ish_cl);
+> > +     ishtp_cl_flush_queues(cros_ish_cl);
+> > +     ishtp_put_device(cl_device);
+> > +end_ishtp_cl_init_error:
+> > +     ishtp_cl_free(cros_ish_cl);
+> > +end_ishtp_cl_alloc_error:
+> > +     up_write(&init_lock);
+> > +     return rv;
+> > +}
+> > +
+> > +/**
+> > + * cros_ec_ishtp_remove() - ISHTP client driver remove callback
+> > + * @cl_device: ISHTP client device instance
+> > + *
+> > + * Return: 0
+> > + */
+> > +static int cros_ec_ishtp_remove(struct ishtp_cl_device *cl_device)
+> > +{
+> > +     struct ishtp_cl *cros_ish_cl = ishtp_get_drvdata(cl_device);
+> > +     struct ishtp_cl_data *client_data =
+> > ishtp_get_client_data(cros_ish_cl);
+> > +
+> > +     cancel_work_sync(&client_data->work_ishtp_reset);
+> > +     cancel_work_sync(&client_data->work_ec_evt);
+> > +     cros_ish_deinit(cros_ish_cl);
+> > +     ishtp_put_device(cl_device);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +/**
+> > + * cros_ec_ishtp_reset() - ISHTP client driver reset callback
+> > + * @cl_device: ISHTP client device instance
+> > + *
+> > + * Return: 0
+> > + */
+> > +static int cros_ec_ishtp_reset(struct ishtp_cl_device *cl_device)
+> > +{
+> > +     struct ishtp_cl *cros_ish_cl = ishtp_get_drvdata(cl_device);
+> > +     struct ishtp_cl_data *client_data =
+> > ishtp_get_client_data(cros_ish_cl);
+> > +
+> > +     schedule_work(&client_data->work_ishtp_reset);
+> > +
+> > +     return 0;
+> > +}
+> > +
+> > +/**
+> > + * cros_ec_ishtp_suspend() - ISHTP client driver suspend callback
+> > + * @device: device instance
+> > + *
+> > + * Return: 0 for success, negative error code for failure.
+> > + */
+> > +static int __maybe_unused cros_ec_ishtp_suspend(struct device
+> > *device)
+> > +{
+> > +     struct ishtp_cl_device *cl_device = dev_get_drvdata(device);
+> > +     struct ishtp_cl *cros_ish_cl = ishtp_get_drvdata(cl_device);
+> > +     struct ishtp_cl_data *client_data =
+> > ishtp_get_client_data(cros_ish_cl);
+> > +
+> > +     return cros_ec_suspend(client_data->ec_dev);
+> > +}
+> > +
+> > +/**
+> > + * cros_ec_ishtp_resume() - ISHTP client driver resume callback
+> > + * @device: device instance
+> > + *
+> > + * Return: 0 for success, negative error code for failure.
+> > + */
+> > +static int __maybe_unused cros_ec_ishtp_resume(struct device
+> > *device)
+> > +{
+> > +     struct ishtp_cl_device *cl_device = dev_get_drvdata(device);
+> > +     struct ishtp_cl *cros_ish_cl = ishtp_get_drvdata(cl_device);
+> > +     struct ishtp_cl_data *client_data =
+> > ishtp_get_client_data(cros_ish_cl);
+> > +
+> > +     return cros_ec_resume(client_data->ec_dev);
+> > +}
+> > +
+> > +static SIMPLE_DEV_PM_OPS(cros_ec_ishtp_pm_ops,
+> > cros_ec_ishtp_suspend,
+> > +                      cros_ec_ishtp_resume);
+> > +
+> > +static struct ishtp_cl_driver        cros_ec_ishtp_driver = {
+> > +     .name = "cros_ec_ishtp",
+> > +     .guid = &cros_ish_guid,
+> > +     .probe = cros_ec_ishtp_probe,
+> > +     .remove = cros_ec_ishtp_remove,
+> > +     .reset = cros_ec_ishtp_reset,
+> > +     .driver = {
+> > +             .pm = &cros_ec_ishtp_pm_ops,
+> > +     },
+> > +};
+> > +
+> > +static int __init cros_ec_ishtp_mod_init(void)
+> > +{
+> > +     return ishtp_cl_driver_register(&cros_ec_ishtp_driver,
+> > THIS_MODULE);
+> > +}
+> > +
+> > +static void __exit cros_ec_ishtp_mod_exit(void)
+> > +{
+> > +     ishtp_cl_driver_unregister(&cros_ec_ishtp_driver);
+> > +}
+> > +
+> > +module_init(cros_ec_ishtp_mod_init);
+> > +module_exit(cros_ec_ishtp_mod_exit);
+> > +
+> > +MODULE_DESCRIPTION("ChromeOS EC ISHTP Client Driver");
+> > +MODULE_AUTHOR("Rushikesh S Kadam <rushikesh.s.kadam@intel.com>");
+> > +
+> > +MODULE_LICENSE("GPL v2");
+> > +MODULE_ALIAS("ishtp:*");
+>
