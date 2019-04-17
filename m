@@ -2,168 +2,206 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D641AC10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 05:36:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1C99EC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 05:40:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A41FE20675
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 05:36:33 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555479393;
-	bh=nW9+C9kF7oatNqrgkRmWroqdrEHbhT42B8iKBBtl0z4=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=dJVPCe8n37DwATtOOlcOK1HIRb1lZvtEA+Qx8aGKlovdvsjfpE6DBkGouh8MD7uBc
-	 eHSvoN6wDMIprEWNQpsnnedmiGdo+UecCLWVY6wknL1uJrt/8Ck06GWituri6QlWx5
-	 jcACOXDlbboX8hIOABpASNkptY1X2ExAYxNTOy5M=
+	by mail.kernel.org (Postfix) with ESMTP id D46B320675
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 05:40:06 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="W99qBBpI"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729803AbfDQFgc (ORCPT
+        id S1729813AbfDQFkF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 01:36:32 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:45541 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725767AbfDQFgc (ORCPT
+        Wed, 17 Apr 2019 01:40:05 -0400
+Received: from mail-oi1-f194.google.com ([209.85.167.194]:45281 "EHLO
+        mail-oi1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725873AbfDQFkE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 01:36:32 -0400
-Received: by mail-wr1-f67.google.com with SMTP id s15so30102488wra.12
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 22:36:30 -0700 (PDT)
+        Wed, 17 Apr 2019 01:40:04 -0400
+Received: by mail-oi1-f194.google.com with SMTP id y84so19007727oia.12
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 22:40:04 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=eXBDR7hUBuEDMZDkWPjX+E2sNNVB/9/GJEMgkNEoLeA=;
-        b=qWuu3JuA9wyrpLoDufBlXBHdvk8Pe7ToiTc6kNvOEwN7m7bpHsWllTJB+I/9ZBPwEd
-         tGBx8vq0aYqrAmCG3nZl1cNbgrAeBALHCjhwcezEmjqLoDCzoc7WCLWfDK7zZD/GB89n
-         5Z5e9w/veYMDNe68svMZYzGoYYbpwqOFBTYXzyWZ0c2Iead6jmqR+XqzV4R1bmKAW81u
-         Uw5fCn1CzmZWE6WZ0GHUw6eOk0xJSIr4iKCOacdYr96d1mlWh0lW04SwNKTwqYxoDMHQ
-         PKvjAC4F6ILLXgj1h7eGRG+Sjj+RvqA8l1HJWSHb5wxfLOyBwCkaknCy+0kbTt4Pdjg7
-         uKkA==
+        d=chromium.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc:content-transfer-encoding;
+        bh=YkGjzQJzuxy9380uGfSkjvLTDPxPOGfZUd85dURFAYU=;
+        b=W99qBBpIE+AZIRtQui0OFZeD192wHghWIkp4pYSnKPq46t2lrMLGEUHiGs6IOKWLyK
+         2ryA70BVVJBhwkKybWjWDJgrc5JbheMBbEIXYfyqJnmglXiEHq2SabvOXmezRmgvQKEf
+         h5UNwX+4v+yN3WoHuCshV3LFrQjAZgykvWSBo=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=eXBDR7hUBuEDMZDkWPjX+E2sNNVB/9/GJEMgkNEoLeA=;
-        b=LAN31yp3nYZLb5vd5/DLKRnqhN2vl5pQXZy4UWMjGPCQRb3US4bnJjPIhk8tBTbBOz
-         47fFAuf2eAXP/hGsUM7oWA4ahwfnlsIBPuXgFVO9Ecb6qfdvRr73X5Q7NNT8ZQt7EweB
-         m4wdfvCIgfIU6u52nepELfYSDLyRqMpqW3xBqZyx7iQcMevqT6casOVHcyZxY3FBWFlN
-         UeSCRWhAhXe5x6cq6Z9gkfZhtYJRs7XmCwTUH2ItiaZmJu1fjRGxnq8Zq5AW39TuF7mN
-         hiRyInmWDKGO1Bktc7oMRm3lb3LccxgjReHbvPM559x8ygQS3S6Ng3FdmaV+rwgCgEvQ
-         ZHEg==
-X-Gm-Message-State: APjAAAUQQ+RL1clsxO304gIsQ3FrFNFOnw+1pEQFcrrCRsip8pj3znlM
-        JA21l0r36EbWQuYUXO2lfwM=
-X-Google-Smtp-Source: APXvYqwAt1vX5GvQDzHvBi/RGLMoVQQFXeCoYiqXFur8rRqwuwC1FSVP9CTRrCy9W5UZG26Oy+mKGQ==
-X-Received: by 2002:a5d:6947:: with SMTP id r7mr21825391wrw.167.1555479390096;
-        Tue, 16 Apr 2019 22:36:30 -0700 (PDT)
-Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
-        by smtp.gmail.com with ESMTPSA id x14sm1262890wmj.3.2019.04.16.22.36.28
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 16 Apr 2019 22:36:29 -0700 (PDT)
-Date:   Wed, 17 Apr 2019 07:36:26 +0200
-From:   Ingo Molnar <mingo@kernel.org>
-To:     Thara Gopinath <thara.gopinath@linaro.org>
-Cc:     mingo@redhat.com, peterz@infradead.org, rui.zhang@intel.com,
-        linux-kernel@vger.kernel.org, amit.kachhap@gmail.com,
-        viresh.kumar@linaro.org, javi.merino@kernel.org,
-        edubezval@gmail.com, daniel.lezcano@linaro.org,
-        vincent.guittot@linaro.org, nicolas.dechesne@linaro.org,
-        bjorn.andersson@linaro.org, dietmar.eggemann@arm.com
-Subject: Re: [PATCH V2 0/3] Introduce Thermal Pressure
-Message-ID: <20190417053626.GA47282@gmail.com>
-References: <1555443521-579-1-git-send-email-thara.gopinath@linaro.org>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc:content-transfer-encoding;
+        bh=YkGjzQJzuxy9380uGfSkjvLTDPxPOGfZUd85dURFAYU=;
+        b=NCe3cxwadbIPOJ5XVSOQ2mY9SyjE70bFjth7bIPmTn/kraIGRFv0PoDyrjWdP/StYQ
+         /kFYCrhB9XeK1/Elvb5U9vWsT8Zofqknozh6MIG5X2WmeAn7BMO8UfB4j1B2K6A1YDaU
+         QV7h6OvGS2sIsuIqnxlwDoMRUpUaoHl11QTdQYFLIeQHQVLqst4O0XpwQJlYqwiGq0do
+         gd5eNgYGtnlIh88ZLGxEblKWP3Bz0W38ANlwcfXXOr9vqU9F7LPy+qAwVXot/cNkHbLd
+         77reytqQB2jM2+9UAwKXWW9+8F0L7qz+87xNXeqodG0twU07B5L/1yyvPjBa33hKPZWr
+         tveA==
+X-Gm-Message-State: APjAAAWEk1TJGqHI5M8Jdpp8AaXNqb1hsQ5EqCV00I9iicACYQF2gC0r
+        pSFVvq6wIGgjh3aSSlqnGIlQXiMXYyc=
+X-Google-Smtp-Source: APXvYqxbsFpWbLbtmymqhFzKhE8tjcLbZqpXBbl9BKUJWWuBLzSHCKsA36Zq5/lIf2uNEzR7Uwu6sw==
+X-Received: by 2002:aca:7513:: with SMTP id q19mr23837211oic.50.1555479603670;
+        Tue, 16 Apr 2019 22:40:03 -0700 (PDT)
+Received: from mail-ot1-f49.google.com (mail-ot1-f49.google.com. [209.85.210.49])
+        by smtp.gmail.com with ESMTPSA id b23sm20860798otl.55.2019.04.16.22.40.02
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Apr 2019 22:40:03 -0700 (PDT)
+Received: by mail-ot1-f49.google.com with SMTP id f10so19672852otb.6
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 22:40:02 -0700 (PDT)
+X-Received: by 2002:a05:6830:1248:: with SMTP id s8mr1224707otp.234.1555479601993;
+ Tue, 16 Apr 2019 22:40:01 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <1555443521-579-1-git-send-email-thara.gopinath@linaro.org>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190306080019.159676-1-acourbot@chromium.org>
+ <371df0e4ec9e38d83d11171cbd98f19954cbf787.camel@ndufresne.ca>
+ <da5aa9ab957923a72e30b169a3c242c4fe6260f1.camel@bootlin.com>
+ <c07703459c7e48904bd7fd83be1e675c70eee83c.camel@ndufresne.ca>
+ <d81d0112b99feba0a1899f3722077a4aeec9860c.camel@bootlin.com>
+ <439b7f57aa3ba2b2ed5b043f961ef87cb83912af.camel@ndufresne.ca>
+ <59e23c5ca5bfbadf9441ea06da2e9b9b5898c6d7.camel@bootlin.com>
+ <0b495143bb260cf9f8927ee541e7f001842ac5c3.camel@ndufresne.ca>
+ <CAPBb6MVG+3jQcw3AuhYDYCZ0YJ0aX=TmEuM5izh12GLw9V6B8Q@mail.gmail.com> <0f4775b1bb04e136e3a425df0ba6a201594acdbd.camel@bootlin.com>
+In-Reply-To: <0f4775b1bb04e136e3a425df0ba6a201594acdbd.camel@bootlin.com>
+From:   Alexandre Courbot <acourbot@chromium.org>
+Date:   Wed, 17 Apr 2019 14:39:50 +0900
+X-Gmail-Original-Message-ID: <CAPBb6MU4yJVJq_AasQ0p9PPxtUyt73yB-10=ATCudUTsiwKOSg@mail.gmail.com>
+Message-ID: <CAPBb6MU4yJVJq_AasQ0p9PPxtUyt73yB-10=ATCudUTsiwKOSg@mail.gmail.com>
+Subject: Re: [PATCH v4] media: docs-rst: Document m2m stateless video decoder interface
+To:     Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+Cc:     Nicolas Dufresne <nicolas@ndufresne.ca>,
+        Tomasz Figa <tfiga@chromium.org>,
+        Maxime Ripard <maxime.ripard@bootlin.com>,
+        Hans Verkuil <hverkuil@xs4all.nl>,
+        Dafna Hirschfeld <dafna3@gmail.com>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>,
+        Linux Media Mailing List <linux-media@vger.kernel.org>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+Hi Paul,
 
-* Thara Gopinath <thara.gopinath@linaro.org> wrote:
+On Tue, Apr 16, 2019 at 4:55 PM Paul Kocialkowski
+<paul.kocialkowski@bootlin.com> wrote:
+>
+> Hi,
+>
+> Le mardi 16 avril 2019 =C3=A0 16:22 +0900, Alexandre Courbot a =C3=A9crit=
+ :
+>
+> [...]
+>
+> > Thanks for this great discussion. Let me try to summarize the status
+> > of this thread + the IRC discussion and add my own thoughts:
+> >
+> > Proper support for multiple decoding units (e.g. H.264 slices) per
+> > frame should not be an afterthought ; compliance to encoded formats
+> > depend on it, and the benefit of lower latency is a significant
+> > consideration for vendors.
+> >
+> > m2m, which we use for all stateless codecs, has a strong assumption
+> > that one OUTPUT buffer consumed results in one CAPTURE buffer being
+> > produced. This assumption can however be overruled: at least the venus
+> > driver does it to implement the stateful specification.
+> >
+> > So we need a way to specify frame boundaries when submitting encoded
+> > content to the driver. One request should contain a single OUTPUT
+> > buffer, containing a single decoding unit, but we need a way to
+> > specify whether the driver should directly produce a CAPTURE buffer
+> > from this request, or keep using the same CAPTURE buffer with
+> > subsequent requests.
+> >
+> > I can think of 2 ways this can be expressed:
+> > 1) We keep the current m2m behavior as the default (a CAPTURE buffer
+> > is produced), and add a flag to ask the driver to change that behavior
+> > and hold on the CAPTURE buffer and reuse it with the next request(s) ;
+>
+> That would kind of break the stateless idea. I think we need requests
+> to be fully independent of eachother and have some entity that
+> coordinates requests for this kind of things.
 
-> The test results below shows 3-5% improvement in performance when
-> using the third solution compared to the default system today where
-> scheduler is unware of cpu capacity limitations due to thermal events.
+Side note: the idea that stateless decoders are entirely stateless is
+not completely accurate anyway. When we specify a resolution on the
+OUTPUT queue, we already store some state. What matters IIUC is that
+the *hardware* behaves in a stateless manner. I don't think we should
+refrain from storing some internal driver state if it makes sense.
 
-The numbers look very promising!
+Back to the topic: the effect of this flag would just be that the
+first buffer is the CAPTURE queue is not removed, i.e. the next
+request will work on the same buffer. It doesn't really preserve any
+state - if the next request is the beginning of a different frame,
+then the previous work will be discarded and the driver will behave as
+it should, not considering any previous state.
 
-I've rearranged the results to make the performance properties of the 
-various approaches and parameters easier to see:
+>
+> > 2) We specify that no CAPTURE buffer is produced by default, unless a
+> > flag asking so is specified.
+> >
+> > The flag could be specified in one of two ways:
+> > a) As a new v4l2_buffer.flag for the OUTPUT buffer ;
+> > b) As a dedicated control, either format-specific or more common to all=
+ codecs.
+>
+> I think we must aim for a generic solution that would be at least
+> common to all codecs, and if possible common to requests regardless of
+> whether they concern video decoding or not.
+>
+> I really like the idea of introducing a requests batch/group/queue,
+> which groups requests together and allows marking them done when the
+> whole group is done being decoded. For that, we explicitly mark one of
+> the requests as the final one, so that we can continue adding requests
+> to the batch even when it's already being processed. When all the
+> requests are done being decoded, we can mark them done.
 
-                                         (seconds, lower is better)
+I'd need to see this idea more developed (with maybe an example of the
+sequence of IOCTLs) to form an opinion about it. Also would need to be
+given a few examples of where this could be used outside of stateless
+codecs. Then we will have to address what this means for requests:
+your argument against using a "release CAPTURE buffer" flag was that
+requests won't be fully independent from each other anymore, but I
+don't see that situation changing with batches. Then, does the end of
+a batch only means that a CAPTURE buffer should be released, or are
+other actions required for non-codec use-cases? There are lots and
+lots of questions like this one lurking.
 
-			                 Hackbench   Aobench   Dhrystone
-                                         =========   =======   =========
-Vanilla kernel (No Thermal Pressure)         10.21    141.58        1.14
-Instantaneous thermal pressure               10.16    141.63        1.15
-Thermal Pressure Averaging:
-      - PELT fmwk                             9.88    134.48        1.19
-      - non-PELT Algo. Decay : 500 ms         9.94    133.62        1.09
-      - non-PELT Algo. Decay : 250 ms         7.52    137.22        1.012
-      - non-PELT Algo. Decay : 125 ms         9.87    137.55        1.12
+>
+> With that, we also need some tweaking in the core to look for an
+> available capture buffer that matches the output buffer's timestamp
+> before trying to dequeue the next available capture buffer
 
+I don't think that would be strictly necessary, unless we want to be
+able to decode slices from different frames before the first one is
+completed?
 
-Firstly, a couple of questions about the numbers:
+> This way,
+> the first request of the batch will get any queued capture buffer, but
+> subsequent requests will find the matchung capture buffer by timestamp.
+>
+> I think that's basically all we need to handle that and the two aspects
+> (picking by timestamp and requests groups) are rather independent and
+> the latter could probably be used in other situations than video
+> decoding.
+>
+> What do you think?
 
-   1)
+At the current point I'd like to avoid over-engineering things.
+Introducing a request batch mechanism would mean more months spent
+before we can set the stateless codec API in stone, and at some point
+we need to settle and release something that people can use. We don't
+even have clear idea of what batches would look like and in which
+cases they would be used. The idea of an extra flag is simple and
+AFAICT would do the job nicely, so why not proceed with this for the
+time being?
 
-      Is the 1.012 result for "non-PELT 250 msecs Dhrystone" really 1.012?
-      You reported it as:
-
-             non-PELT Algo. Decay : 250 ms   1.012                   7.02%
-
-      But the formatting is significant 3 digits versus only two for all 
-      the other results.
-
-   2)
-
-      You reported the hackbench numbers with "10 runs" - did the other 
-      benchmarks use 10 runs as well? Maybe you used fewer runs for the 
-      longest benchmark, Aobench?
-
-Secondly, it appears the non-PELT decaying average is the best approach, 
-but the results are a bit coarse around the ~250 msecs peak. Maybe it 
-would be good to measure it in 50 msecs steps between 50 msecs and 1000 
-msecs - but only if it can be scripted sanely:
-
-A possible approach would be to add a debug sysctl for the tuning period, 
-and script all these benchmark runs and the printing of the results. You 
-could add another (debug) sysctl to turn the 'instant' logic on, and to 
-restore vanilla kernel behavior as well - this makes it all much easier 
-to script and measure with a single kernel image, without having to 
-reboot the kernel. The sysctl overhead will not be measurable for 
-workloads like this.
-
-Then you can use "perf stat --null --table" to measure runtime and stddev 
-easily and with a single tool, for example:
-
-  dagon:~> perf stat --null --sync --repeat 10 --table ./hackbench 20 >benchmark.out
-
-  Performance counter stats for './hackbench 20' (10 runs):
-
-           # Table of individual measurements:
-           0.15246 (-0.03960) ######
-           0.20832 (+0.01627) ##
-           0.17895 (-0.01310) ##
-           0.19791 (+0.00585) #
-           0.19209 (+0.00004) #
-           0.19406 (+0.00201) #
-           0.22484 (+0.03278) ###
-           0.18695 (-0.00511) #
-           0.19032 (-0.00174) #
-           0.19464 (+0.00259) #
-
-           # Final result:
-           0.19205 +- 0.00592 seconds time elapsed  ( +-  3.08% )
-
-Note how all the individual measurements can be captured this way, 
-without seeing the benchmark output itself. So difference benchmarks can 
-be measured this way, assuming they don't have too long setup time.
-
-Thanks,
-
-	Ingo
+Cheers,
+Alex.
