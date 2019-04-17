@@ -2,79 +2,94 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 13AC0C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 23:54:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 71F6CC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 23:55:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CABDB21479
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 23:54:01 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (1024-bit key) header.d=crapouillou.net header.i=@crapouillou.net header.b="DuNfx7Kr"
+	by mail.kernel.org (Postfix) with ESMTP id 4A91C21479
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 23:55:29 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387758AbfDQXyA (ORCPT
+        id S2387788AbfDQXz2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 19:54:00 -0400
-Received: from outils.crapouillou.net ([89.234.176.41]:40548 "EHLO
-        crapouillou.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729331AbfDQXyA (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 19:54:00 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=crapouillou.net;
-        s=mail; t=1555545238; h=from:from:sender:reply-to:subject:subject:date:date:
-         message-id:message-id:to:to:cc:cc:mime-version:mime-version:
-         content-type:content-type:
-         content-transfer-encoding:content-transfer-encoding:
-         in-reply-to:in-reply-to:references:references;
-        bh=hLmmM439FFJveY4UvXXQncIQ+cI3VQgKJJz3bcNnSqo=;
-        b=DuNfx7Krxg0GUrGcKl7oBKlHrQ9ddpdHng3nF0Wv7V+JXX0zguIWcERrXY5OLQnRzHGmC2
-        n4SfM1EWkvDMRjh53c/0uFG3s4klWcVr0coy7e8EWkMeCFVDHquUqkoZApcW+V0UCJeENz
-        h679HJBjGNB1vOEWdONp8wcnirc1G8I=
-Date:   Thu, 18 Apr 2019 01:53:53 +0200
-From:   Paul Cercueil <paul@crapouillou.net>
-Subject: Re: [PATCH] clk: ingenic/jz4725b: Fix parent of pixel clock
-To:     Stephen Boyd <sboyd@kernel.org>
-Cc:     Michael Turquette <mturquette@baylibre.com>,
-        linux-clk@vger.kernel.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Message-Id: <1555545233.9064.0@crapouillou.net>
-In-Reply-To: <155554493444.15276.2577888773542833089@swboyd.mtv.corp.google.com>
-References: <20190417112420.3034-1-paul@crapouillou.net>
-        <155554493444.15276.2577888773542833089@swboyd.mtv.corp.google.com>
+        Wed, 17 Apr 2019 19:55:28 -0400
+Received: from mga11.intel.com ([192.55.52.93]:2215 "EHLO mga11.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729331AbfDQXz1 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 19:55:27 -0400
+X-Amp-Result: UNKNOWN
+X-Amp-Original-Verdict: FILE UNKNOWN
+X-Amp-File-Uploaded: False
+Received: from fmsmga004.fm.intel.com ([10.253.24.48])
+  by fmsmga102.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Apr 2019 16:55:27 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,363,1549958400"; 
+   d="scan'208";a="162854450"
+Received: from romley-ivt3.sc.intel.com ([172.25.110.60])
+  by fmsmga004.fm.intel.com with ESMTP; 17 Apr 2019 16:55:27 -0700
+Date:   Wed, 17 Apr 2019 16:47:28 -0700
+From:   Fenghua Yu <fenghua.yu@intel.com>
+To:     Thomas Gleixner <tglx@linutronix.de>
+Cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Christopherson Sean J <sean.j.christopherson@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Michael Chan <michael.chan@broadcom.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, linux-wireless@vger.kernel.org
+Subject: Re: [PATCH v7 18/21] x86/clearcpuid: Support feature flag string in
+ kernel option clearcpuid
+Message-ID: <20190417234728.GA18776@romley-ivt3.sc.intel.com>
+References: <1555536851-17462-1-git-send-email-fenghua.yu@intel.com>
+ <1555536851-17462-19-git-send-email-fenghua.yu@intel.com>
+ <alpine.DEB.2.21.1904180106400.3174@nanos.tec.linutronix.de>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1; format=flowed
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1904180106400.3174@nanos.tec.linutronix.de>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Stephen,
+On Thu, Apr 18, 2019 at 01:19:41AM +0200, Thomas Gleixner wrote:
+> On Wed, 17 Apr 2019, Fenghua Yu wrote:
+> 
+> > The kernel option clearcpuid currently only takes feature bit which
+> > can be changed from kernel to kernel.
+> > 
+> > Extend clearcpuid to use cap flag string, which is defined in
+> > x86_cap_flags[] and won't be changed from kernel to kernel.
+> > And user can easily get the cap flag string from /proc/cpuinfo.
+> 
+> If your machine dies because init triggers #AC then please explain how that
+> easily can be read from /proc/cpuinfo and how the sysadmin can figure out
+> what the heck he needs to write on the kernel command line.
+> 
+> The whole 'clearcpuid' thing should have never been merged. It's a pure
+> testing/debugging thing. And no, we are not going to proliferate it and
+> extend it for dubious value. Quite the contrary, we should simply rip it
+> out.
 
-Le jeu. 18 avril 2019 =E0 1:48, Stephen Boyd <sboyd@kernel.org> a =E9crit=20
-:
-> Quoting Paul Cercueil (2019-04-17 04:24:20)
->>  The pixel clock is directly connected to the output of the PLL, and=20
->> not
->>  to the /2 divider.
->>=20
->>  Cc: stable@vger.kernel.org
->>  Fixes: 226dfa4726eb ("clk: Add Ingenic jz4725b CGU driver")
->>  Signed-off-by: Paul Cercueil <paul@crapouillou.net>
->>  ---
->=20
-> Is this breaking something in 5.1-rc series? Or just found by
-> inspection? I'm trying to understand the priority of this patch.
+So I can remove the four 'clearcpuid' related patches 0018-0021 in the next
+version, right?
 
-I verified it with the hardware. It fixes a bug that has been present
-since the introduction of this driver.
+> 
+> Add a simple 'noac' or whatever command line option, which is documented
+> proper and can easily be mapped to a #AC crash during boot.
 
-However until now nothing uses this particular clock so it can go to=20
-5.2.
+OK. I will do this.
 
--Paul
+Thanks.
 
-=
-
+-Fenghua
