@@ -2,75 +2,125 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3BD78C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:35:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E78DAC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:35:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0B8E8217FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:35:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B6410217FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:35:46 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555536946;
+	bh=SJZSA0fLSDTiWyoKeLOooKR6+2R8Vzq7qlRdn+v/hVU=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=A2CXBc8HdOsJQL7s4UeIS+/g1ek+8l5bDWhrErYi5SsdCOtnA8nPa7brSgHhgmWG/
+	 MofjFKffsL7Efq0NAXpLxMQ2qqjKi+JAwkK35W/DE9IhF4Ou17whrqZthMjUi7SVr1
+	 Aqr9oiZ0TXvUyOGPkW3Chf5O+JfamrAnZIUBJ9Uk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387456AbfDQVfF (ORCPT
+        id S2387467AbfDQVfp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 17:35:05 -0400
-Received: from mail-qt1-f193.google.com ([209.85.160.193]:40249 "EHLO
-        mail-qt1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfDQVfF (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 17:35:05 -0400
-Received: by mail-qt1-f193.google.com with SMTP id x12so2751qts.7;
-        Wed, 17 Apr 2019 14:35:04 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=TMlvcXl4usKYZNI2g1wqgvxqcTRbJjB8VxhSe1PK0f8=;
-        b=WCO34XNTnPWbsMVRJC+RlmJ0qZ6WMBLSFiB3us+Eq12sq5UvqqBUIYNUqwXtVMv9gv
-         amlC/juuO5hq1IU62xfMNst7peg/yKtgGMwD+feOTcwfi8N0lBhj4okRMJer2UTNlwz5
-         vVFXXZs3FjwPsFCkCMMULrn86/N0YwQwVdetGpQOiWqu48cTbnze0lNQ5bcTT7m0VWTR
-         2Im+7LC0NLfQr/HAzHgZw3HG4X+bQ6lmOQrsqurjUgvLlhcxmXuudjgVgewbE7osyOwT
-         nlwOv83TQgHEGRdadPDbz+tFEWgPKp6AB2ebnLFHKZv2uwqCqp4PpdSV8zZ5ONK2pnzr
-         7hpA==
-X-Gm-Message-State: APjAAAXW78LXsROqSTM6S0m3T5PXPiHxZERzcPaUGvPhAop0a+YfNbRX
-        7RtPrhVg0b5C9ZcZ7oluncQoiDw6eQmN88HfTye58VVT
-X-Google-Smtp-Source: APXvYqw4n0pNvBg5dwif/v6nzj9iK1DQDGNThmnxsABgSKRyz+FMUsd8fB8J2vqPd6Yi8L+OSSI1gWX8NMDjJwWQ7Lk=
-X-Received: by 2002:a0c:ba10:: with SMTP id w16mr73956382qvf.115.1555536904406;
- Wed, 17 Apr 2019 14:35:04 -0700 (PDT)
+        Wed, 17 Apr 2019 17:35:45 -0400
+Received: from mail.kernel.org ([198.145.29.99]:48940 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725848AbfDQVfp (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 17:35:45 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 61E57217FA;
+        Wed, 17 Apr 2019 21:35:44 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555536944;
+        bh=SJZSA0fLSDTiWyoKeLOooKR6+2R8Vzq7qlRdn+v/hVU=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=C0tAra3z17APRqg1cXBU+ZIs+qMG8GgkE5e83EhUPlx6bkF1brK8gUWDQxLtdNXJK
+         WmlGH8rdgP9A7vrtJYko1vKA7ETlkHXUDi9Mhtqzd4va7ImwmAMpm9aovmTuUetPX7
+         cXxIxus6lTn3u2gb97uQlXWTmJ1Fo6Urc3sqEXqk=
+Date:   Wed, 17 Apr 2019 16:35:42 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Mohan Kumar <mohankumar718@gmail.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: Re: [PATCH] drivers: pci: This patch fix the following checkpatch
+ warning.
+Message-ID: <20190417213542.GU126710@google.com>
+References: <1555433020-3830-1-git-send-email-mohankumar718@gmail.com>
 MIME-Version: 1.0
-References: <20190416202013.4034148-1-arnd@arndb.de> <20190416202013.4034148-9-arnd@arndb.de>
- <20190417211934.GW2217@ZenIV.linux.org.uk>
-In-Reply-To: <20190417211934.GW2217@ZenIV.linux.org.uk>
-From:   Arnd Bergmann <arnd@arndb.de>
-Date:   Wed, 17 Apr 2019 23:34:48 +0200
-Message-ID: <CAK8P3a3A1i90htc5GgFnJNQepbdvF9eDZ05xftzFcSMK7CXs_w@mail.gmail.com>
-Subject: Re: [PATCH v3 08/26] compat_ioctl: add compat_ptr_ioctl()
-To:     Al Viro <viro@zeniv.linux.org.uk>
-Cc:     Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
-        y2038 Mailman List <y2038@lists.linaro.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1555433020-3830-1-git-send-email-mohankumar718@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 11:19 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
->
-> On Tue, Apr 16, 2019 at 10:19:46PM +0200, Arnd Bergmann wrote:
-> > Many drivers have ioctl() handlers that are completely compatible between
-> > 32-bit and 64-bit architectures, except for the argument that is passed
-> > down from user space and may have to be passed through compat_ptr()
-> > in order to become a valid 64-bit pointer.
-> >
-> > Using ".compat_ptr = compat_ptr_ioctl" in file operations should let
-> > us simplify a lot of those drivers to avoid #ifdef checks, and convert
-> > additional drivers that don't have proper compat handling yet.
->
-> You forgot to mention that it even gets the previous commit to build ;-)
-> IOW, that needs to be reordered.
+Hi Mohan,
 
-Right. I had reordered the series multiple times and got this part wrong
-in the end.
+On Tue, Apr 16, 2019 at 07:43:40PM +0300, Mohan Kumar wrote:
+> Use pr_err instead of printk
 
-       Arnd
+I don't mind taking patches like these, but they do tend to clutter
+the revision history if we're not careful.  So here are some hints:
+
+  - Make the subject line useful.  The one here really doesn't tell me
+    anything.  Run "git log --oneline drivers/pci/bus.c" and follow
+    the conventions there.  Something like:
+
+      PCI: Convert printk(KERN_*) to pr_*()
+
+  - Do all the similar changes at once.  I notice similar things in
+    these files:
+
+      drivers/pci/pci-acpi.c
+      drivers/pci/pci-stub.c
+      drivers/pci/pci-sysfs.c
+      drivers/pci/pci.c
+      drivers/pci/pcie/aspm.c
+      drivers/pci/quirks.c
+      drivers/pci/setup-bus.c
+      drivers/pci/slot.c
+
+    plus several in drivers/pci/hotplug/.  These could all be done in
+    a single patch.
+
+  - If there are several in a file that use the same prefix, add a
+    "#define pr_fmt()".  This should be a separate patch so each patch
+    does only one type of change, which makes them easier to review.
+
+  - There are several uses of "printk(KERN_DEBUG)",
+    "dev_printk(KERN_DEBUG)", and "pci_printk(KERN_DEBUG)".  The
+    obvious thing would be to convert those to pr_debug(), dev_dbg(),
+    and pci_dbg(), but I don't like that approach because pr_debug()
+    and friends do different things depending on how the kernel is
+    built.  The uses in PCI provide information that I want to appear
+    in the dmesg log *always*.  So they could be (a) left alone or (b)
+    converted from KERN_DEBUG to KERN_INFO (i.e., converted to
+    pr_info(), dev_info(), etc).
+
+> WARNING: Prefer [subsystem eg: netdev]_err([subsystem]dev, ...
+> then dev_err(dev, ... then pr_err(...  to printk(KERN_ERR ...
+> 
+> Signed-off-by: Mohan Kumar <mohankumar718@gmail.com>
+> ---
+>  drivers/pci/bus.c | 2 +-
+>  1 file changed, 1 insertion(+), 1 deletion(-)
+> 
+> diff --git a/drivers/pci/bus.c b/drivers/pci/bus.c
+> index 5cb40b2..2179a8b 100644
+> --- a/drivers/pci/bus.c
+> +++ b/drivers/pci/bus.c
+> @@ -23,7 +23,7 @@ void pci_add_resource_offset(struct list_head *resources, struct resource *res,
+>  
+>  	entry = resource_list_create_entry(res, 0);
+>  	if (!entry) {
+> -		printk(KERN_ERR "PCI: can't add host bridge window %pR\n", res);
+> +		pr_err("PCI: can't add host bridge window %pR\n", res);
+>  		return;
+>  	}
+>  
+> -- 
+> 2.7.4
+> 
