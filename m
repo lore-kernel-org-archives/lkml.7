@@ -2,138 +2,106 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6F934C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:32:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4F27C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:36:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 450DA2073F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:32:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8340421773
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:36:35 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kMbCFC+e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731952AbfDQLck (ORCPT
+        id S1731888AbfDQLge (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 07:32:40 -0400
-Received: from mx2.suse.de ([195.135.220.15]:40184 "EHLO mx1.suse.de"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731508AbfDQLcj (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 07:32:39 -0400
-X-Virus-Scanned: by amavisd-new at test-mx.suse.de
-Received: from relay2.suse.de (unknown [195.135.220.254])
-        by mx1.suse.de (Postfix) with ESMTP id 9FEB7AF8D;
-        Wed, 17 Apr 2019 11:32:37 +0000 (UTC)
-Message-ID: <1eba0edb8cc1b7136aac218cdb6696f92d8dbf20.camel@suse.de>
-Subject: Re: [PATCH 3/3] firmware: stratix10-svc: fix leaked of_node
- references
-From:   Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-To:     Wen Yang <wen.yang99@zte.com.cn>, linux-kernel@vger.kernel.org
-Cc:     wang.yi59@zte.com.cn,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        Alan Tull <atull@kernel.org>,
-        Richard Gong <richard.gong@intel.com>
-Date:   Wed, 17 Apr 2019 13:32:35 +0200
-In-Reply-To: <1555469093-35179-4-git-send-email-wen.yang99@zte.com.cn>
-References: <1555469093-35179-1-git-send-email-wen.yang99@zte.com.cn>
-         <1555469093-35179-4-git-send-email-wen.yang99@zte.com.cn>
-Content-Type: multipart/signed; micalg="pgp-sha256";
-        protocol="application/pgp-signature"; boundary="=-OU47z1bWZJtjh8cPzFkD"
-User-Agent: Evolution 3.30.5 
+        Wed, 17 Apr 2019 07:36:34 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:35164 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726695AbfDQLgd (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 07:36:33 -0400
+Received: by mail-ed1-f65.google.com with SMTP id y67so7399021ede.2
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 04:36:32 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=eKzmZNT13+qker03LiNcwHRJhLqfn2RV0qJqGvu7EY4=;
+        b=kMbCFC+eUYXJoI5dYtIWxJ5wK3/tha36syWzU3Rv+YAe3oJ6BkXSk74Q3VESpj80dR
+         rwS4k7J7wGEez1GYJIQtaNJcA8/AIEyQMKWheQtXWv5ow8aDkodVTPmMYIqKlv61FFQX
+         80PmR/Yoddis22cMFJor3N49+ErK3zzL18v3JifdHl06pgVZv3Y90lMwQoeR8omnz3rO
+         63/jkMGT/TOAn2CeUmPSyGR5c8Sf+pqUna0EBTsd6UTaaYJTkMFUPTXvAnBkqOkUTsIN
+         kXFV1i0kj/vB5ViXpaDufDydMr9N3On2/0gLJCPdeQCZDh3O70/pzzX8ZENA0CXK+mzl
+         rwgQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=eKzmZNT13+qker03LiNcwHRJhLqfn2RV0qJqGvu7EY4=;
+        b=aP8ckk0HGO++KKws3OoHf0uMSr19aflA8pgoxtLbLUzc4PbeQaPLnGkRxPfcJTiu+3
+         ebpb1M2IAvsSAae5Lqv5wKWVfoUhlORfQdezsp3jmPG0VSFwamR+HlicPikOgPwH57E0
+         /r+Lnohz6OoO77Kl6zsm4FzlEk/PoKl2TVrbixnn3EEUpnZa7aYXWYtU6AhJTAZbQQ45
+         8Z5tOuPmGLiMMK4oRih/rqw+9Ut4/G/sdIgmVKBORQN0jjUuV1/nuqPUnlFH4mRlr4Vq
+         oK17BWNxRznl4dgx/PkC35pbzsT/KjzQOQHwixpH98hD7ajBu6PRELUogoTythGt9WY0
+         QDrQ==
+X-Gm-Message-State: APjAAAXI2oEjeEfSuwyHPDuP97i+P0MmzVv5OSe/eopc+Z3vbJymY0cv
+        Hddc9YClTEXYGnvtC5nQcVSpT+KnOQRwj6JvvWM=
+X-Google-Smtp-Source: APXvYqyM0mpjUAGmFS7Qeq6tF9uIsM7K3XKsvzCmSbrsHUAUkohN+1Lb9WVOy6rYXPhbo36xcd4zlVfyWMp5FotVF6A=
+X-Received: by 2002:a50:ac2b:: with SMTP id v40mr19049674edc.54.1555500991965;
+ Wed, 17 Apr 2019 04:36:31 -0700 (PDT)
 MIME-Version: 1.0
+References: <1555487246-15764-1-git-send-email-huangzhaoyang@gmail.com>
+ <CAGWkznFCy-Fm1WObEk77shPGALWhn5dWS3ZLXY77+q_4Yp6bAQ@mail.gmail.com>
+ <CAGWkznEzRB2RPQEK5+4EYB73UYGMRbNNmMH-FyQqT2_en_q1+g@mail.gmail.com> <20190417110615.GC5878@dhcp22.suse.cz>
+In-Reply-To: <20190417110615.GC5878@dhcp22.suse.cz>
+From:   Zhaoyang Huang <huangzhaoyang@gmail.com>
+Date:   Wed, 17 Apr 2019 19:36:21 +0800
+Message-ID: <CAGWkznH6MjCkKeAO_1jJ07Ze2E3KHem0aNZ_Vwf080Yg-4Ujbw@mail.gmail.com>
+Subject: Re: [RFC PATCH] mm/workingset : judge file page activity via timestamp
+To:     Michal Hocko <mhocko@kernel.org>
+Cc:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        David Rientjes <rientjes@google.com>,
+        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
+        Roman Gushchin <guro@fb.com>, Jeff Layton <jlayton@redhat.com>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Matthew Wilcox <willy@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+sorry for the confusion. What I mean is the basic idea doesn't change
+as replacing the refault criteria from refault_distance to timestamp.
+But the detailed implementation changed a lot, including fix bugs,
+update the way of packing the timestamp, 32bit/64bit differentiation
+etc. So it makes sense for starting a new context.
 
---=-OU47z1bWZJtjh8cPzFkD
-Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
-
-On Wed, 2019-04-17 at 10:44 +0800, Wen Yang wrote:
-> In stratix10_svc_init function, fw_np is obtained by calling
-> of_find_node_by_name(), np is obtained by calling
-> of_find_matching_node(), and the reference counts of those
-> two device_nodes, fw_np and np, are increased.
-> But when the function exits, only of_node_put is called on np,
-> and fw_np's reference count is leaked.
->=20
-> Detected by coccinelle with the following warnings:
-> ./drivers/firmware/stratix10-svc.c:1020:2-8: ERROR: missing of_node_put;
-> acquired a node pointer with refcount incremented on line 1014, but witho=
-ut a
-> corresponding object release within this function.
-> ./drivers/firmware/stratix10-svc.c:1025:2-8: ERROR: missing of_node_put;
-> acquired a node pointer with refcount incremented on line 1014, but witho=
-ut a
-> corresponding object release within this function.
-> ./drivers/firmware/stratix10-svc.c:1027:1-7: ERROR: missing of_node_put;
-> acquired a node pointer with refcount incremented on line 1014, but witho=
-ut a
-> corresponding object release within this function.
->=20
-> Signed-off-by: Wen Yang <wen.yang99@zte.com.cn>
-> Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-> Cc: Alan Tull <atull@kernel.org>
-> Cc: Richard Gong <richard.gong@intel.com>
-> Cc: Nicolas Saenz Julienne <nsaenzjulienne@suse.de>
-> Cc: linux-kernel@vger.kernel.org
-> ---
->  drivers/firmware/stratix10-svc.c | 14 ++++++++++----
->  1 file changed, 10 insertions(+), 4 deletions(-)
->=20
-> diff --git a/drivers/firmware/stratix10-svc.c b/drivers/firmware/stratix1=
-0-
-> svc.c
-> index 6e65148..482a6bd 100644
-> --- a/drivers/firmware/stratix10-svc.c
-> +++ b/drivers/firmware/stratix10-svc.c
-> @@ -1016,15 +1016,21 @@ static int __init stratix10_svc_init(void)
->  		return -ENODEV;
-> =20
->  	np =3D of_find_matching_node(fw_np, stratix10_svc_drv_match);
-
-Sorry but this patch isn't right, of_find_matching_node() will free the
-reference to fw_np internally.
-
-> -	if (!np)
-> -		return -ENODEV;
-> +	if (!np) {
-> +		ret =3D -ENODEV;
-> +		goto out_put_fw_np;
-> +	}
-> =20
->  	of_node_put(np);
->  	ret =3D of_platform_populate(fw_np, stratix10_svc_drv_match, NULL, NULL=
-);
->  	if (ret)
-> -		return ret;
-> +		goto out_put_fw_np;
-
-Consequently and assuming I'm not missing something, I think fw_np shouldn'=
-t be
-used here as is.
-
-Regards,
-Nicolas
-
-
---=-OU47z1bWZJtjh8cPzFkD
-Content-Type: application/pgp-signature; name="signature.asc"
-Content-Description: This is a digitally signed message part
-Content-Transfer-Encoding: 7bit
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAABCAAdFiEErOkkGDHCg2EbPcGjlfZmHno8x/4FAly3DtMACgkQlfZmHno8
-x/6HeAgAh+LrkNghtEw2qyVOh8S/c9YBI/kby2TjwgfKHGaKjnCeJfrf4xQM+Nkl
-hoqOcb0Cow343nx8MtD2Fm2jImXzVvfteR/wFdR7aLbmI07T7SiJg8kbdTFKRxOi
-8Min92XYmXii65O0wGbDX/IyassX2er+fPbz6WWstsj3x+jmPanmEqncUuqla66j
-LkwMzZr0Mm+a0xfWlW+Jshhwgt1EyAvziDjbAy1VJZUZTHUwAWdCeqKWdRzLdDlj
-kZs/r1SL88PNH6iJDCMRNtum546sWbDAWglslQ+JkrdW2lluDhpt10XTKcQFjcEE
-7Gukb4Ebq/54tpRePOCIAyknFYsV0A==
-=xnTE
------END PGP SIGNATURE-----
-
---=-OU47z1bWZJtjh8cPzFkD--
-
+On Wed, Apr 17, 2019 at 7:06 PM Michal Hocko <mhocko@kernel.org> wrote:
+>
+> On Wed 17-04-19 18:55:15, Zhaoyang Huang wrote:
+> > fix one mailbox and update for some information
+> >
+> > Comparing to http://lkml.kernel.org/r/1554348617-12897-1-git-send-email-huangzhaoyang@gmail.com,
+> > this commit fix the packing order error and add trace_printk for
+> > reference debug information.
+> >
+> > For johannes's comments, please find bellowing for my feedback.
+>
+> OK, this suggests there is no strong reason to poset a new version of
+> the patch then. Please do not fragment discussion and continue
+> discussing in the original email thread until there is some conclusion
+> reached.
+>
+> Thanks!
+> --
+> Michal Hocko
+> SUSE Labs
