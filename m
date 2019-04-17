@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 54CCAC10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:28:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D37C282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:28:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 29D072073F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:28:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C2D22073F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:28:41 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731281AbfDQI2g (ORCPT
+        id S1731335AbfDQI2k (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 04:28:36 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:5599 "EHLO
+        Wed, 17 Apr 2019 04:28:40 -0400
+Received: from Mailgw01.mediatek.com ([1.203.163.78]:43504 "EHLO
         mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1727177AbfDQI2g (ORCPT
+        with ESMTP id S1726237AbfDQI2h (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 04:28:36 -0400
-X-UUID: afdf65d152914621a311a6ebc93f2c16-20190417
-X-UUID: afdf65d152914621a311a6ebc93f2c16-20190417
-Received: from mtkcas35.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        Wed, 17 Apr 2019 04:28:37 -0400
+X-UUID: a42a5e03da3d432da16e735a1c7ba2a4-20190417
+X-UUID: a42a5e03da3d432da16e735a1c7ba2a4-20190417
+Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
         (envelope-from <chunfeng.yun@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 44844121; Wed, 17 Apr 2019 16:28:27 +0800
+        with ESMTP id 1789847386; Wed, 17 Apr 2019 16:28:25 +0800
 Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- MTKMBS31N2.mediatek.inc (172.27.4.87) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 17 Apr 2019 16:28:25 +0800
+ MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
+ 15.0.1395.4; Wed, 17 Apr 2019 16:28:23 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 17 Apr 2019 16:28:24 +0800
+ Transport; Wed, 17 Apr 2019 16:28:23 +0800
 From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 CC:     Mathias Nyman <mathias.nyman@intel.com>,
@@ -41,12 +41,10 @@ CC:     Mathias Nyman <mathias.nyman@intel.com>,
         <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>
-Subject: [PATCH v3 2/6] usb: host: xhci-plat: get optional clock by devm_clk_get_optional()
-Date:   Wed, 17 Apr 2019 16:28:17 +0800
-Message-ID: <b61f41ecccde4f4fee4796a1da67a1c8bf8bbbcb.1555488276.git.chunfeng.yun@mediatek.com>
+Subject: [PATCH v3 1/6] usb: xhci-mtk: get optional clock by devm_clk_get_optional()
+Date:   Wed, 17 Apr 2019 16:28:16 +0800
+Message-ID: <bacafa9a60c2f437e2be0ccdf504492343fc0a66.1555488276.git.chunfeng.yun@mediatek.com>
 X-Mailer: git-send-email 1.7.9.5
-In-Reply-To: <bacafa9a60c2f437e2be0ccdf504492343fc0a66.1555488276.git.chunfeng.yun@mediatek.com>
-References: <bacafa9a60c2f437e2be0ccdf504492343fc0a66.1555488276.git.chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-MTK:  N
@@ -55,102 +53,63 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-When the driver tries to get optional clock, it ignores all errors except
--EPROBE_DEFER, but if only ignores -ENOENT, it will cover some real errors,
-such as -ENOMEM, so use devm_clk_get_optional() to get optional clock.
+Use devm_clk_get_optional() to get optional clock instead of
+optional_clk_get() which uses devm_clk_get() to get clock and
+checks for -EPROBE_DEFER but not -ENOENT as devm_clk_get_optional()
+does, in fact, only ignoring -ENOENT will cover more errors, so the
+replacement doesn't change original purpose.
 
-Cc: Mathias Nyman <mathias.nyman@intel.com>
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
 ---
 v3: modify changelog comment
 v2: no changes
 ---
- drivers/usb/host/xhci-plat.c | 39 +++++++++++++++++-------------------
- 1 file changed, 18 insertions(+), 21 deletions(-)
+ drivers/usb/host/xhci-mtk.c | 19 +++----------------
+ 1 file changed, 3 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/usb/host/xhci-plat.c b/drivers/usb/host/xhci-plat.c
-index 0ac4ec975547..998241f5fce3 100644
---- a/drivers/usb/host/xhci-plat.c
-+++ b/drivers/usb/host/xhci-plat.c
-@@ -165,8 +165,6 @@ static int xhci_plat_probe(struct platform_device *pdev)
- 	struct xhci_hcd		*xhci;
- 	struct resource         *res;
- 	struct usb_hcd		*hcd;
--	struct clk              *clk;
--	struct clk              *reg_clk;
- 	int			ret;
- 	int			irq;
+diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
+index 60987c787e44..026fe18972d3 100644
+--- a/drivers/usb/host/xhci-mtk.c
++++ b/drivers/usb/host/xhci-mtk.c
+@@ -206,19 +206,6 @@ static int xhci_mtk_ssusb_config(struct xhci_hcd_mtk *mtk)
+ 	return xhci_mtk_host_enable(mtk);
+ }
  
-@@ -235,31 +233,32 @@ static int xhci_plat_probe(struct platform_device *pdev)
- 	hcd->rsrc_start = res->start;
- 	hcd->rsrc_len = resource_size(res);
- 
-+	xhci = hcd_to_xhci(hcd);
-+
- 	/*
- 	 * Not all platforms have clks so it is not an error if the
- 	 * clock do not exist.
- 	 */
--	reg_clk = devm_clk_get(&pdev->dev, "reg");
--	if (!IS_ERR(reg_clk)) {
--		ret = clk_prepare_enable(reg_clk);
--		if (ret)
--			goto put_hcd;
--	} else if (PTR_ERR(reg_clk) == -EPROBE_DEFER) {
--		ret = -EPROBE_DEFER;
-+	xhci->reg_clk = devm_clk_get_optional(&pdev->dev, "reg");
-+	if (IS_ERR(xhci->reg_clk)) {
-+		ret = PTR_ERR(xhci->reg_clk);
- 		goto put_hcd;
+-/* ignore the error if the clock does not exist */
+-static struct clk *optional_clk_get(struct device *dev, const char *id)
+-{
+-	struct clk *opt_clk;
+-
+-	opt_clk = devm_clk_get(dev, id);
+-	/* ignore error number except EPROBE_DEFER */
+-	if (IS_ERR(opt_clk) && (PTR_ERR(opt_clk) != -EPROBE_DEFER))
+-		opt_clk = NULL;
+-
+-	return opt_clk;
+-}
+-
+ static int xhci_mtk_clks_get(struct xhci_hcd_mtk *mtk)
+ {
+ 	struct device *dev = mtk->dev;
+@@ -229,15 +216,15 @@ static int xhci_mtk_clks_get(struct xhci_hcd_mtk *mtk)
+ 		return PTR_ERR(mtk->sys_clk);
  	}
  
--	clk = devm_clk_get(&pdev->dev, NULL);
--	if (!IS_ERR(clk)) {
--		ret = clk_prepare_enable(clk);
--		if (ret)
--			goto disable_reg_clk;
--	} else if (PTR_ERR(clk) == -EPROBE_DEFER) {
--		ret = -EPROBE_DEFER;
-+	ret = clk_prepare_enable(xhci->reg_clk);
-+	if (ret)
-+		goto put_hcd;
-+
-+	xhci->clk = devm_clk_get_optional(&pdev->dev, NULL);
-+	if (IS_ERR(xhci->clk)) {
-+		ret = PTR_ERR(xhci->clk);
- 		goto disable_reg_clk;
- 	}
+-	mtk->ref_clk = optional_clk_get(dev, "ref_ck");
++	mtk->ref_clk = devm_clk_get_optional(dev, "ref_ck");
+ 	if (IS_ERR(mtk->ref_clk))
+ 		return PTR_ERR(mtk->ref_clk);
  
--	xhci = hcd_to_xhci(hcd);
-+	ret = clk_prepare_enable(xhci->clk);
-+	if (ret)
-+		goto disable_reg_clk;
-+
- 	priv_match = of_device_get_match_data(&pdev->dev);
- 	if (priv_match) {
- 		struct xhci_plat_priv *priv = hcd_to_xhci_priv(hcd);
-@@ -271,8 +270,6 @@ static int xhci_plat_probe(struct platform_device *pdev)
+-	mtk->mcu_clk = optional_clk_get(dev, "mcu_ck");
++	mtk->mcu_clk = devm_clk_get_optional(dev, "mcu_ck");
+ 	if (IS_ERR(mtk->mcu_clk))
+ 		return PTR_ERR(mtk->mcu_clk);
  
- 	device_wakeup_enable(hcd->self.controller);
+-	mtk->dma_clk = optional_clk_get(dev, "dma_ck");
++	mtk->dma_clk = devm_clk_get_optional(dev, "dma_ck");
+ 	return PTR_ERR_OR_ZERO(mtk->dma_clk);
+ }
  
--	xhci->clk = clk;
--	xhci->reg_clk = reg_clk;
- 	xhci->main_hcd = hcd;
- 	xhci->shared_hcd = __usb_create_hcd(driver, sysdev, &pdev->dev,
- 			dev_name(&pdev->dev), hcd);
-@@ -348,10 +345,10 @@ static int xhci_plat_probe(struct platform_device *pdev)
- 	usb_put_hcd(xhci->shared_hcd);
- 
- disable_clk:
--	clk_disable_unprepare(clk);
-+	clk_disable_unprepare(xhci->clk);
- 
- disable_reg_clk:
--	clk_disable_unprepare(reg_clk);
-+	clk_disable_unprepare(xhci->reg_clk);
- 
- put_hcd:
- 	usb_put_hcd(hcd);
 -- 
 2.21.0
 
