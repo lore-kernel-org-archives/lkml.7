@@ -2,117 +2,87 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D08AC282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 19:09:47 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6DDA5C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 19:11:16 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 460A8206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 19:09:47 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 38058206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 19:11:16 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733186AbfDQTJp (ORCPT
+        id S1733229AbfDQTLP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 15:09:45 -0400
-Received: from iolanthe.rowland.org ([192.131.102.54]:59196 "HELO
-        iolanthe.rowland.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with SMTP id S1732596AbfDQTJp (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 15:09:45 -0400
-Received: (qmail 4087 invoked by uid 2102); 17 Apr 2019 15:09:44 -0400
-Received: from localhost (sendmail-bs@127.0.0.1)
-  by localhost with SMTP; 17 Apr 2019 15:09:44 -0400
-Date:   Wed, 17 Apr 2019 15:09:44 -0400 (EDT)
-From:   Alan Stern <stern@rowland.harvard.edu>
-X-X-Sender: stern@iolanthe.rowland.org
-To:     syzbot <syzbot+d919b0f29d7b5a4994b9@syzkaller.appspotmail.com>
-cc:     andreyknvl@google.com, <gregkh@linuxfoundation.org>,
-        <gustavo@embeddedor.com>, <linux-kernel@vger.kernel.org>,
-        <linux-usb@vger.kernel.org>, <syzkaller-bugs@googlegroups.com>
-Subject: Re: INFO: task hung in usb_kill_urb
-In-Reply-To: <000000000000edf1630586acca2b@google.com>
-Message-ID: <Pine.LNX.4.44L0.1904171503410.1400-100000@iolanthe.rowland.org>
+        Wed, 17 Apr 2019 15:11:15 -0400
+Received: from mx2.suse.de ([195.135.220.15]:49068 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1730285AbfDQTLP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 15:11:15 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 94528ADE3;
+        Wed, 17 Apr 2019 19:11:13 +0000 (UTC)
+Message-ID: <d01f3c2c68f9e852b15526904f8dfd8cbcece120.camel@suse.de>
+Subject: Re: linux-next: manual merge of the scsi tree with the block tree
+From:   Martin Wilck <mwilck@suse.de>
+To:     Bart Van Assche <bvanassche@acm.org>,
+        Stephen Rothwell <sfr@canb.auug.org.au>,
+        James Bottomley <James.Bottomley@HansenPartnership.com>,
+        Jens Axboe <axboe@kernel.dk>
+Cc:     Christoph Hellwig <hch@lst.de>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Linux Next Mailing List <linux-next@vger.kernel.org>
+Date:   Wed, 17 Apr 2019 21:11:11 +0200
+In-Reply-To: <84c02649-1eeb-3d28-6cc2-0a5d0f5f6b7d@acm.org>
+References: <20190415155939.35325ef1@canb.auug.org.au>
+         <84c02649-1eeb-3d28-6cc2-0a5d0f5f6b7d@acm.org>
+Content-Type: text/plain; charset="UTF-8"
+User-Agent: Evolution 3.30.5 
 MIME-Version: 1.0
-Content-Type: TEXT/PLAIN; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Apr 2019, syzbot wrote:
-
-> Hello,
+On Mon, 2019-04-15 at 06:48 -0700, Bart Van Assche wrote:
+> On 4/14/19 10:59 PM, Stephen Rothwell wrote:
+> > Hi all,
+> > 
+> > Today's linux-next merge of the scsi tree got a conflict in:
+> > 
+> >   drivers/scsi/sd.c
+> > 
+> > between commit:
+> > 
+> >   c92e2f04b359 ("block: disk_events: introduce event flags")
+> > 
+> > from the block tree and commit:
+> > 
+> >   21e6ba3f0e02 ("scsi: sd: Rely on the driver core for asynchronous
+> > probing")
+> >   d16ece577bf2 ("scsi: sd: Inline sd_probe_part2()")
+> > 
+> > from the scsi tree.
+> > 
+> > I fixed it up (see below) and can carry the fix as necessary. This
+> > is now fixed as far as linux-next is concerned, but any non trivial
+> > conflicts should be mentioned to your upstream maintainer when your
+> > tree
+> > is submitted for merging.  You may also want to consider
+> > cooperating
+> > with the maintainer of the conflicting tree to minimise any
+> > particularly
+> > complex conflicts.
 > 
-> syzbot has tested the proposed patch but the reproducer still triggered  
-> crash:
-> INFO: task hung in usb_kill_urb
+> Thanks Stephen for having resolved this conflict. The conflict
+> resolution
+> looks good to me.
 
-That's surprising.  This patch was awfully similar to the previous one,
-which did prevent the crash earlier.
+Yes, it looks good to me as well.
 
-> Tested on:
-> 
-> commit:         9a33b369 usb-fuzzer: main usb gadget fuzzer driver
-> git tree:       https://github.com/google/kasan/tree/usb-fuzzer
-> console output: https://syzkaller.appspot.com/x/log.txt?x=10b5e057200000
-> kernel config:  https://syzkaller.appspot.com/x/.config?x=23e37f59d94ddd15
-> compiler:       gcc (GCC) 9.0.0 20181231 (experimental)
-> patch:          https://syzkaller.appspot.com/x/patch.diff?x=131dca6b200000
+Thanks,
+Martin
 
-Andrey, is there any way to increase the console output buffer size?  
-The link above doesn't go all the way back to the beginning of the test
-(it starts at timestamp 486.614697).
-
-Also, here's a slightly revised patch for testing.
-
-Alan Stern
-
-
-#syz test: https://github.com/google/kasan.git usb-fuzzer
-
---- a/drivers/usb/gadget/udc/dummy_hcd.c
-+++ b/drivers/usb/gadget/udc/dummy_hcd.c
-@@ -979,8 +979,18 @@ static int dummy_udc_start(struct usb_ga
- 	struct dummy_hcd	*dum_hcd = gadget_to_dummy_hcd(g);
- 	struct dummy		*dum = dum_hcd->dum;
- 
--	if (driver->max_speed == USB_SPEED_UNKNOWN)
-+	switch (g->speed) {
-+	/* All the speeds we support */
-+	case USB_SPEED_LOW:
-+	case USB_SPEED_FULL:
-+	case USB_SPEED_HIGH:
-+	case USB_SPEED_SUPER:
-+		break;
-+	default:
-+		dev_err(dummy_dev(dum_hcd), "Unsupported driver max speed %d\n",
-+				driver->max_speed);
- 		return -EINVAL;
-+	}
- 
- 	/*
- 	 * SLAVE side init ... the layer above hardware, which
-@@ -1784,9 +1794,10 @@ static void dummy_timer(struct timer_lis
- 		/* Bus speed is 500000 bytes/ms, so use a little less */
- 		total = 490000;
- 		break;
--	default:
-+	default:	/* Can't happen */
- 		dev_err(dummy_dev(dum_hcd), "bogus device speed\n");
--		return;
-+		total = 0;
-+		break;
- 	}
- 
- 	/* FIXME if HZ != 1000 this will probably misbehave ... */
-@@ -1828,7 +1839,7 @@ restart:
- 
- 		/* Used up this frame's bandwidth? */
- 		if (total <= 0)
--			break;
-+			continue;
- 
- 		/* find the gadget's ep for this request (if configured) */
- 		address = usb_pipeendpoint (urb->pipe);
 
