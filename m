@@ -5,109 +5,104 @@ X-Spam-Level:
 X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
-	version=3.4.0
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDC13C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B9E2AC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:52:09 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B9B9920872
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:50:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8B28720835
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:52:09 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="Y+URAciQ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="SWYe3Yj8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732012AbfDQLue (ORCPT
+        id S1732018AbfDQLwI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 07:50:34 -0400
-Received: from mail-wr1-f66.google.com ([209.85.221.66]:38766 "EHLO
-        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729522AbfDQLue (ORCPT
+        Wed, 17 Apr 2019 07:52:08 -0400
+Received: from mail-pf1-f194.google.com ([209.85.210.194]:35462 "EHLO
+        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729522AbfDQLwI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 07:50:34 -0400
-Received: by mail-wr1-f66.google.com with SMTP id k11so31572954wro.5
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 04:50:33 -0700 (PDT)
+        Wed, 17 Apr 2019 07:52:08 -0400
+Received: by mail-pf1-f194.google.com with SMTP id t21so12004424pfh.2;
+        Wed, 17 Apr 2019 04:52:07 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=qXkceclKYogbXCLoeXJVlPi06thLC4AnNmyU4U76yv0=;
-        b=Y+URAciQ+M8cmBS5dBKlsu+WhtMaPf7js4UjsiWn1RNagP6DfNTkIXBZB65yVLFgx1
-         dfs8AA+IZNEDxXIoinkKYo6Wi9cQOGMHfjmmmkEJrhY7KKaVPNZDH+80n5ihOJWzFr2o
-         TaUwx+enLeKiPx35cCrIV84XH4UDS45GpApGV0pQQAHQR3MOYxdKQzdQoUFZyfz1qTH4
-         Csd0SmPg4Qd5K9YNCql477FVYlcBWULpCJit8zGrX7sf9MfdU1TRCScRsGZiM8H6chuV
-         F+hen7472dLNuWdAumgrbuynaBeC14h3zR2N0qCysuU2dnzse3z4VnbaYD2WSnmXKgY9
-         tDiw==
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=+Jy3DWbk9Qv0+8KvNBKbZ1gEm4HZaoLcJzKvfJBaD5E=;
+        b=SWYe3Yj8ETbkBw2gpbitdQ6xGaO7BY7HmyqPT6TI5waSzG52Mfd2/z7yP5BjuvOimo
+         o1obi4wwEbJwGgbrcbRkdnfTnAHtNnWr6r9DfaX5ff1Z0hmUjs5fKPqIi5uTAb2at/kF
+         0nI9i87wZfVcYnsQjKPzfO4smxxS8R/86PdjvgGVMrMbyo7dlH/58L+w+0HtRHq5okH5
+         pmQCPfOrh2vc7oHlT8OgxlrwVHbAHMJdT3r7COXZppIEm8n8YqeZa176q7sXakPrCh6g
+         cS3SG5fu00wNPYCdloDp/qJ1jfP/Zp5+Uq5DKJydwKpW5L2NxcWp4NHxjZopOHWOEKgT
+         CoRQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=qXkceclKYogbXCLoeXJVlPi06thLC4AnNmyU4U76yv0=;
-        b=mt64P9w3ZPZH6VK2TKFf1cd24Fa820Hz6ZnKe2VZITQ2x1MuT5y7P8N7fGJ/oPGhQv
-         NVUU8IG9I4JiXLwKUXwa7jwDwtGaIxZQhCMXHVHzpuDXBrif0nV3BYH/yA56vya4EjQb
-         HiZY2boA8IzVzL66tX4pBp23bQi9imrG/RJ3F77rgD5OnwtPGzjt/xg3MFgyV1W57lAq
-         gsLIOXoN6xJYx6yhAZQLA17/90Xa8xYs1nR0SEs/aE9ile45WatR2cjdhDmO4VuQkDAK
-         gShxbBb4S06tzivOEykLG7nsYQMDLrYB2mhaM+i6LmmwzSfMrc5jEbTL177a1cdCXRMz
-         Fseg==
-X-Gm-Message-State: APjAAAVmoB5zVEuObSDnyf9R4/eH4qXJbK/YrafrQ/j2e7ODDNVe2cju
-        zhvAIKGmi6/iOmXEHZxcRfI=
-X-Google-Smtp-Source: APXvYqwuGyhQU4JfmZ+mKtKc73dPprmppDk33S0gj+yhJiGjOazmrIIy6v2Mvk131dsFzqqeYpUhcw==
-X-Received: by 2002:a5d:62cc:: with SMTP id o12mr2266249wrv.142.1555501832488;
-        Wed, 17 Apr 2019 04:50:32 -0700 (PDT)
-Received: from 5WDYG62 (static-css-cqn-143221.business.bouyguestelecom.com. [176.149.143.221])
-        by smtp.gmail.com with ESMTPSA id f128sm3778167wme.28.2019.04.17.04.50.31
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 17 Apr 2019 04:50:31 -0700 (PDT)
-Date:   Wed, 17 Apr 2019 13:50:25 +0200
-From:   Romain Izard <romain.izard.pro@gmail.com>
-To:     Alexandre Belloni <alexandre.belloni@bootlin.com>
-Cc:     Daniel Lezcano <daniel.lezcano@linaro.org>,
-        Arnd Bergmann <arnd@arndb.de>,
-        Alexander Dahl <ada@thorsis.com>,
-        Sebastian Andrzej Siewior <bigeasy@linutronix.de>,
-        linux-kernel@vger.kernel.org, Thomas Gleixner <tglx@linutronix.de>,
-        linux-arm-kernel@lists.infradead.org
-Subject: Re: [PATCH v2 9/9] misc: atmel_tclib: do not probe already used TCBs
-Message-ID: <20190417114934.GA28520@5WDYG62>
-References: <20190415150856.9384-1-alexandre.belloni@bootlin.com>
- <20190415150856.9384-10-alexandre.belloni@bootlin.com>
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=+Jy3DWbk9Qv0+8KvNBKbZ1gEm4HZaoLcJzKvfJBaD5E=;
+        b=mNUdHD3YruB/o2C6L1kUgSfedrSnBadp4y2pB8HB/XGe52DLtjUWuCMSdWV1p0WyrY
+         0J+mrgM6cYQD3HzBGj3qT4GYscL8lbobjzdFfEsfe6AFe41VEArE/WFmbtLcLF/zrrk5
+         2FBAI3GfOsIjsrTMVDyvkBAAqU8M5QzeUSFImFgUdtSc+YswIYI12fAEbMpYeutCiUV9
+         wlVT9J/3NguSVrHcmZ++DxBFS1eOzFkTWoVsFsEjEPygXWf75oN1r2iLXtAq8pOttEPw
+         xCccJBN1hUUYPAg+9h67VUdKTanaVtenDciRK29rirJreHQpwGCvjUB2al5QyyqomsD/
+         KAEg==
+X-Gm-Message-State: APjAAAXxiexnAqT/b91Gdy/AIADdsDcDRMbIrK9euBpYA9zkAa+hcdRb
+        B/PW5Y7/Y8ihIEB5tOtM0V9D2POQ
+X-Google-Smtp-Source: APXvYqxayOK99yaJb6YdpXrgZj+Oo39SuCX11gOmJlk2pCOT9TxG1UrKmROABOuDrjM28JRRVJjMVg==
+X-Received: by 2002:a63:6942:: with SMTP id e63mr83133514pgc.102.1555501927659;
+        Wed, 17 Apr 2019 04:52:07 -0700 (PDT)
+Received: from bharath12345-Inspiron-5559 ([103.110.42.34])
+        by smtp.gmail.com with ESMTPSA id h65sm144720205pfd.108.2019.04.17.04.52.04
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 17 Apr 2019 04:52:07 -0700 (PDT)
+Date:   Wed, 17 Apr 2019 17:22:00 +0530
+From:   Bharath Vedartham <linux.bhar@gmail.com>
+To:     akpm@linux-foundation.org, jannh@google.com
+Cc:     reiserfs-devel@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] reiserfs: Force type conversion in xattr_hash
+Message-ID: <20190417115200.GA10168@bharath12345-Inspiron-5559>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <20190415150856.9384-10-alexandre.belloni@bootlin.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 05:08:56PM +0200, Alexandre Belloni wrote:
-> The TCBs that have children are using the proper DT bindings and don't need
-> to be handled by tclib.
-> 
-> Cc: Arnd Bergmann <arnd@arndb.de>
-> Signed-off-by: Alexandre Belloni <alexandre.belloni@bootlin.com>
-> ---
->  drivers/misc/atmel_tclib.c | 3 +++
->  1 file changed, 3 insertions(+)
-> 
-> diff --git a/drivers/misc/atmel_tclib.c b/drivers/misc/atmel_tclib.c
-> index 194f774ab3a1..c1f5aba1c6f2 100644
-> --- a/drivers/misc/atmel_tclib.c
-> +++ b/drivers/misc/atmel_tclib.c
-> @@ -111,6 +111,9 @@ static int __init tc_probe(struct platform_device *pdev)
->  	struct resource	*r;
->  	unsigned int	i;
->  
-> +	if (of_get_child_count(pdev->dev.of_node))
-> +		return 0;
-> +
->  	irq = platform_get_irq(pdev, 0);
->  	if (irq < 0)
->  		return -EINVAL;
+This patch fixes the sparse warning:
 
-This lead to a panic during shutdown, as tc_shutdown is called on the
-device that has not been initialized and it has not been designed for
-this.
+fs/reiserfs//xattr.c:453:28: warning: incorrect type in return
+expression (different base types)
+fs/reiserfs//xattr.c:453:28:    expected unsigned int
+fs/reiserfs//xattr.c:453:28:    got restricted __wsum
+fs/reiserfs//xattr.c:453:28: warning: incorrect type in return
+expression (different base types)
+fs/reiserfs//xattr.c:453:28:    expected unsigned int
+fs/reiserfs//xattr.c:453:28:    got restricted __wsum
 
+csum_partial returns restricted integer __wsum whereas xattr_hash
+expects a return type of __u32.
+
+Signed-off-by: Bharath Vedartham <linux.bhar@gmail.com>
+---
+ fs/reiserfs/xattr.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/fs/reiserfs/xattr.c b/fs/reiserfs/xattr.c
+index 32d8986..60b29a0 100644
+--- a/fs/reiserfs/xattr.c
++++ b/fs/reiserfs/xattr.c
+@@ -450,7 +450,7 @@ static struct page *reiserfs_get_page(struct inode *dir, size_t n)
+ 
+ static inline __u32 xattr_hash(const char *msg, int len)
+ {
+-	return csum_partial(msg, len, 0);
++	return (__force __u32)csum_partial(msg, len, 0);
+ }
+ 
+ int reiserfs_commit_write(struct file *f, struct page *page,
 -- 
-Romain Izard
+2.7.4
+
