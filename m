@@ -2,55 +2,49 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 51241C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:36:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 355DEC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:36:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2C024217F4
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:36:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 07D7321773
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:36:43 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732151AbfDQMgl convert rfc822-to-8bit (ORCPT
+        id S1732170AbfDQMgl convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
         Wed, 17 Apr 2019 08:36:41 -0400
-Received: from skedge04.snt-world.com ([91.208.41.69]:55210 "EHLO
-        skedge04.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731932AbfDQMgi (ORCPT
+Received: from skedge03.snt-world.com ([91.208.41.68]:35504 "EHLO
+        skedge03.snt-world.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732121AbfDQMgk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 08:36:38 -0400
+        Wed, 17 Apr 2019 08:36:40 -0400
 Received: from sntmail10s.snt-is.com (unknown [10.203.32.183])
         (using TLSv1.2 with cipher ECDHE-RSA-AES128-GCM-SHA256 (128/128 bits))
         (No client certificate requested)
-        by skedge04.snt-world.com (Postfix) with ESMTPS id 10C2D67A6EC;
-        Wed, 17 Apr 2019 14:36:36 +0200 (CEST)
+        by skedge03.snt-world.com (Postfix) with ESMTPS id 1B07867A904;
+        Wed, 17 Apr 2019 14:36:34 +0200 (CEST)
 Received: from sntmail12r.snt-is.com (10.203.32.182) by sntmail10s.snt-is.com
  (10.203.32.183) with Microsoft SMTP Server (version=TLS1_2,
  cipher=TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256) id 15.1.1713.5; Wed, 17 Apr
- 2019 14:36:35 +0200
+ 2019 14:36:33 +0200
 Received: from sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305]) by
  sntmail12r.snt-is.com ([fe80::e551:8750:7bba:3305%3]) with mapi id
- 15.01.1713.004; Wed, 17 Apr 2019 14:36:35 +0200
+ 15.01.1713.004; Wed, 17 Apr 2019 14:36:33 +0200
 From:   Schrempf Frieder <frieder.schrempf@kontron.de>
 To:     "bbrezillon@kernel.org" <bbrezillon@kernel.org>,
         "miquel.raynal@bootlin.com" <miquel.raynal@bootlin.com>,
         "richard@nod.at" <richard@nod.at>,
-        David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Marek Vasut <marek.vasut@gmail.com>
-CC:     "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
-        "Schrempf Frieder" <frieder.schrempf@kontron.de>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: [PATCH v6 3/7] mtd: nand: Cleanup flags and fields for bad block
- marker position
-Thread-Topic: [PATCH v6 3/7] mtd: nand: Cleanup flags and fields for bad block
- marker position
-Thread-Index: AQHU9Roxb2A3ESCHo0O+hkiuuVmXDw==
-Date:   Wed, 17 Apr 2019 12:36:35 +0000
-Message-ID: <20190417123631.22545-4-frieder.schrempf@kontron.de>
-References: <20190417123631.22545-1-frieder.schrempf@kontron.de>
-In-Reply-To: <20190417123631.22545-1-frieder.schrempf@kontron.de>
+CC:     "linux-mtd@lists.infradead.org" <linux-mtd@lists.infradead.org>,
+        "Schrempf Frieder" <frieder.schrempf@kontron.de>
+Subject: [PATCH v6 0/7] mtd: rawnand: Support bad block markers in first,
+ second or last page
+Thread-Topic: [PATCH v6 0/7] mtd: rawnand: Support bad block markers in first,
+ second or last page
+Thread-Index: AQHU9Rowuz4F3g/Z5E6wJqwDJCNwcQ==
+Date:   Wed, 17 Apr 2019 12:36:33 +0000
+Message-ID: <20190417123631.22545-1-frieder.schrempf@kontron.de>
 Accept-Language: de-DE, en-US
 Content-Language: en-US
 X-MS-Has-Attach: 
@@ -61,14 +55,13 @@ Content-Type: text/plain; charset="iso-8859-1"
 Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
 X-SnT-MailScanner-Information: Please contact the ISP for more information
-X-SnT-MailScanner-ID: 10C2D67A6EC.A3062
+X-SnT-MailScanner-ID: 1B07867A904.ABA23
 X-SnT-MailScanner: Not scanned: please contact your Internet E-Mail Service Provider for details
 X-SnT-MailScanner-SpamCheck: 
 X-SnT-MailScanner-From: frieder.schrempf@kontron.de
-X-SnT-MailScanner-To: bbrezillon@kernel.org, computersforpeace@gmail.com,
-        dwmw2@infradead.org, linux-kernel@vger.kernel.org,
-        linux-mtd@lists.infradead.org, marek.vasut@gmail.com,
-        miquel.raynal@bootlin.com, richard@nod.at
+X-SnT-MailScanner-To: bbrezillon@kernel.org, linux-kernel@vger.kernel.org,
+        linux-mtd@lists.infradead.org, miquel.raynal@bootlin.com,
+        richard@nod.at
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -76,60 +69,91 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 From: Frieder Schrempf <frieder.schrempf@kontron.de>
 
-Now that we have moved the information to the chip level, let's
-remove all the unused flags and fields.
+Currently supported bad block marker positions within the block are:
+* in first page only
+* in last page only
+* in first or second page
 
-Signed-off-by: Frieder Schrempf <frieder.schrempf@kontron.de>
-Reviewed-by: Miquel Raynal <miquel.raynal@bootlin.com>
+After some cleanup and preparation in patches 1 to 4 we make it
+possible to set NAND_BBM_FIRSTPAGE, NAND_BBM_SECONDPAGE and
+NAND_BBM_LASTPAGE independently of each other (patch 5).
+
+Some ESMT NANDs are known to have been shipped by the manufacturer
+with bad block markers in the first or last page, instead of the
+first or second page.
+
+Also the datasheets for Cypress/Spansion/AMD NANDs claim that the
+first, second *and* last page needs to be checked.
+
+Therefore in patch 6 and 7 we set all three flags for
+AMD/Spansion/Cypress and ESMT chips.
 ---
- include/linux/mtd/bbm.h | 14 +-------------
- 1 file changed, 1 insertion(+), 13 deletions(-)
+Changes in v6:
+==============
+* None (v5 was missing some of the mentioned fixes)
 
-diff --git a/include/linux/mtd/bbm.h b/include/linux/mtd/bbm.h
-index 3102bd754d18..010bc5544c54 100644
---- a/include/linux/mtd/bbm.h
-+++ b/include/linux/mtd/bbm.h
-@@ -93,10 +93,7 @@ struct nand_bbt_descr {
- #define NAND_BBT_WRITE		0x00002000
- /* Read and write back block contents when writing bbt */
- #define NAND_BBT_SAVECONTENT	0x00004000
--/* Search good / bad pattern on the first and the second page */
--#define NAND_BBT_SCAN2NDPAGE	0x00008000
--/* Search good / bad pattern on the last page of the eraseblock */
--#define NAND_BBT_SCANLASTPAGE	0x00010000
-+
- /*
-  * Use a flash based bad block table. By default, OOB identifier is saved in
-  * OOB area. This option is passed to the default bad block table function.
-@@ -123,13 +120,6 @@ struct nand_bbt_descr {
- /* The maximum number of blocks to scan for a bbt */
- #define NAND_BBT_SCAN_MAXBLOCKS	4
- 
--/*
-- * Constants for oob configuration
-- */
--#define NAND_SMALL_BADBLOCK_POS		5
--#define NAND_LARGE_BADBLOCK_POS		0
--#define ONENAND_BADBLOCK_POS		0
--
- /*
-  * Bad block scanning errors
-  */
-@@ -140,7 +130,6 @@ struct nand_bbt_descr {
- /**
-  * struct bbm_info - [GENERIC] Bad Block Table data structure
-  * @bbt_erase_shift:	[INTERN] number of address bits in a bbt entry
-- * @badblockpos:	[INTERN] position of the bad block marker in the oob area
-  * @options:		options for this descriptor
-  * @bbt:		[INTERN] bad block table pointer
-  * @isbad_bbt:		function to determine if a block is bad
-@@ -150,7 +139,6 @@ struct nand_bbt_descr {
-  */
- struct bbm_info {
- 	int bbt_erase_shift;
--	int badblockpos;
- 	int options;
- 
- 	uint8_t *bbt;
+Changes in v5:
+==============
+* Rebase onto current nand/next
+* Fix nand_bbm_get_next_page() docs
+* Use inclusive values for start page in nand_bbm_get_next_page()
+* Return -EINVAL from nand_bbm_get_next_page() when no more pages are available
+* Improve code style in nand_block_bad()
+* Add parentheses in scan_block_fast() and nand_default_block_markbad()
+* Unsign badblockpos field in struct nand_chip and struct onenand_chip
+* Add R-b tags
+
+Changes in v4:
+==============
+* Move onenand changes to separate patch
+* Add missing badblockpos field to onenand_chip struct
+* Move cleanup of badblockpos field and flags to separate patch
+* Move assignemnt of badblockpos from onenand_bbt.c to onenand_base.c
+* Fix incorrect usage of bbt_options in nand_bbt.c
+* Add R-b tags
+
+Changes in v3:
+==============
+* Fix bit offsets for new flags in nand_chip->options
+* Move separation of flags for first and second page markers to a
+  separate patch
+* Fix cover letter
+* Fix S-o-b tag
+* Add R-b tags
+
+Changes in v2:
+==============
+* Rebase on 5.0-rc1
+* Add patch to move bad block marker position info to a common place and
+  rename/prepare existing flags
+* improve/rename function nand_bbm_get_next_page() to use new flags
+---
+Frieder Schrempf (7):
+  mtd: rawnand: Always store info about bad block markers in chip struct
+  mtd: onenand: Store bad block marker position in chip struct
+  mtd: nand: Cleanup flags and fields for bad block marker position
+  mtd: nand: Make flags for bad block marker position more granular
+  mtd: rawnand: Support bad block markers in first, second or last page
+  mtd: rawnand: ESMT: Also use the last page for bad block markers
+  mtd: rawnand: AMD: Also use the last page for bad block markers
+
+ drivers/mtd/nand/onenand/onenand_base.c |  5 +-
+ drivers/mtd/nand/onenand/onenand_bbt.c  |  3 --
+ drivers/mtd/nand/raw/internals.h        |  1 +
+ drivers/mtd/nand/raw/nand_amd.c         |  8 ++-
+ drivers/mtd/nand/raw/nand_base.c        | 65 +++++++++++++++++--------
+ drivers/mtd/nand/raw/nand_bbt.c         | 28 +++++------
+ drivers/mtd/nand/raw/nand_esmt.c        |  9 +++-
+ drivers/mtd/nand/raw/nand_hynix.c       |  4 +-
+ drivers/mtd/nand/raw/nand_macronix.c    |  2 +-
+ drivers/mtd/nand/raw/nand_micron.c      |  2 +-
+ drivers/mtd/nand/raw/nand_samsung.c     |  4 +-
+ drivers/mtd/nand/raw/nand_toshiba.c     |  2 +-
+ drivers/mtd/nand/raw/sh_flctl.c         |  4 +-
+ include/linux/mtd/bbm.h                 | 14 +-----
+ include/linux/mtd/onenand.h             |  3 ++
+ include/linux/mtd/rawnand.h             | 17 ++++++-
+ 16 files changed, 106 insertions(+), 65 deletions(-)
+
 -- 
 2.17.1
