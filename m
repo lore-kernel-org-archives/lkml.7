@@ -2,181 +2,153 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D442C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:04:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 059D3C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:12:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C99CC21773
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:04:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="key not found in DNS" (0-bit key) header.d=zytor.com header.i=@zytor.com header.b="SFxb82mQ"
+	by mail.kernel.org (Postfix) with ESMTP id 33B0820651
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:12:36 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555531956;
+	bh=Mo5WVNMnafU6YX4w6aBTS2+7npoANQF42AZYIZO8WMs=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=PyWRPLGB8tZ49Vuu379841mMKHuRrEvWNquXw/9ftEKQq0uq+eY1dN20mwup26HK0
+	 N32dvsU+snSRnWia0yBSjoyk3yNU3V+L0kPJhpCP+8rG/iN3DPVkTa+m9mcuL6o2k6
+	 NChvxInScCnTuTtkeI6Ft8AQJDEjODo1GhICI9s0=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732088AbfDQUE1 (ORCPT
+        id S1731030AbfDQUMf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 16:04:27 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:58011 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfDQUE1 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 16:04:27 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3HK3UTk4056062
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 17 Apr 2019 13:03:30 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3HK3UTk4056062
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041745; t=1555531412;
-        bh=GcMamOMWp3Z8wsQxkCYrf7I30NATUPWZVn8DD/wLGi4=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=SFxb82mQCJLzLHaeqGrCRHPjpJaUw1uyMG9uNrrYr7+6mJiNqHm+JACaXygUmYDuk
-         2Y77E9g/uqCwLfCFGGWba8mZv1o4urueER4BcKl5ZDI06mO9M3MG+mYynMwQHgGbgH
-         mCe95gr7UfVxTWkXGWjB/SWAmZAt6wdUuN6Sotgy2ea4sEGk8sRxcB+CK4HLXBFMdt
-         M3JcR9mPZnXQ5XKLHizLX5HX2aOymhVdAFdUqroNLGYS7n2wus2ieYWiUyqpdXEZzE
-         gLt3oOI7SP6VEhmMTKQCBCyK2655X41kZ9rwTLddGGRhYN5h8t57IKwyx+xw/xOs9B
-         LzeoAF1aR1LcQ==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3HK3Uja4056059;
-        Wed, 17 Apr 2019 13:03:30 -0700
-Date:   Wed, 17 Apr 2019 13:03:30 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Josh Poimboeuf <tipbot@zytor.com>
-Message-ID: <tip-0336e04a6520bdaefdb0769d2a70084fa52e81ed@git.kernel.org>
-Cc:     hpa@zytor.com, luto@kernel.org, bp@alien8.de, jpoimboe@redhat.com,
-        tyhicks@canonical.com, tglx@linutronix.de, aarcange@redhat.com,
-        longman@redhat.com, catalin.marinas@arm.com, peterz@infradead.org,
-        gregkh@linuxfoundation.org, benh@kernel.crashing.org,
-        jcm@redhat.com, paulus@samba.org, pauld@redhat.com,
-        mingo@kernel.org, jkosina@suse.cz, will.deacon@arm.com,
-        heiko.carstens@de.ibm.com, mpe@ellerman.id.au,
-        schwidefsky@de.ibm.com, linux-kernel@vger.kernel.org,
-        torvalds@linux-foundation.org, jikos@kernel.org,
-        rdunlap@infradead.org, steven.price@arm.com
-Reply-To: mpe@ellerman.id.au, heiko.carstens@de.ibm.com,
-          linux-kernel@vger.kernel.org, schwidefsky@de.ibm.com,
-          torvalds@linux-foundation.org, jikos@kernel.org,
-          steven.price@arm.com, rdunlap@infradead.org, paulus@samba.org,
-          pauld@redhat.com, mingo@kernel.org, jkosina@suse.cz,
-          will.deacon@arm.com, catalin.marinas@arm.com,
-          peterz@infradead.org, longman@redhat.com,
-          gregkh@linuxfoundation.org, benh@kernel.crashing.org,
-          jcm@redhat.com, hpa@zytor.com, bp@alien8.de, luto@kernel.org,
-          jpoimboe@redhat.com, tyhicks@canonical.com, aarcange@redhat.com,
-          tglx@linutronix.de
-In-Reply-To: <e4a161805458a5ec88812aac0307ae3908a030fc.1555085500.git.jpoimboe@redhat.com>
-References: <e4a161805458a5ec88812aac0307ae3908a030fc.1555085500.git.jpoimboe@redhat.com>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:core/speculation] s390/speculation: Support 'mitigations='
- cmdline option
-Git-Commit-ID: 0336e04a6520bdaefdb0769d2a70084fa52e81ed
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 17 Apr 2019 16:12:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:36474 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1725848AbfDQUMe (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 16:12:34 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 2F82B20651;
+        Wed, 17 Apr 2019 20:12:33 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555531953;
+        bh=Mo5WVNMnafU6YX4w6aBTS2+7npoANQF42AZYIZO8WMs=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=fGMRy6KihRFj/gkZMyd9mZ4HZ+GNtpgT0gH97XupSfhMLpIOroCMQMpc807ZMEgo5
+         1fs/RGNzmWGLsv3ESzAigwOnX3NOkuL6pzyG22qvY8zK1xhPITVb3eDerCan15idio
+         xpfEUnqy62w7nAS+wdYnu6aN8Yb+aepXkNVXRyjM=
+Date:   Wed, 17 Apr 2019 15:12:32 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     sundeep.lkml@gmail.com
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        sean.stalley@intel.com, sgoutham@marvell.com,
+        Subbaraya Sundeep <sbhatta@marvell.com>
+Subject: Re: [v3 PATCH 1/2] PCI: read fixed bus numbers in EA for type 1
+ functions
+Message-ID: <20190417201232.GQ126710@google.com>
+References: <1548249481-24645-1-git-send-email-sundeep.lkml@gmail.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <1548249481-24645-1-git-send-email-sundeep.lkml@gmail.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  0336e04a6520bdaefdb0769d2a70084fa52e81ed
-Gitweb:     https://git.kernel.org/tip/0336e04a6520bdaefdb0769d2a70084fa52e81ed
-Author:     Josh Poimboeuf <jpoimboe@redhat.com>
-AuthorDate: Fri, 12 Apr 2019 15:39:31 -0500
-Committer:  Thomas Gleixner <tglx@linutronix.de>
-CommitDate: Wed, 17 Apr 2019 21:37:29 +0200
+On Wed, Jan 23, 2019 at 06:48:00PM +0530, sundeep.lkml@gmail.com wrote:
+> From: Subbaraya Sundeep <sbhatta@marvell.com>
+> 
+> As per the spec - ECN_Enhanced_Allocation_23_Oct_2014_Final
+> and section 6.9.1.2, EA capability contains fixed secondary
+> and subordinate bus numbers for type 1 functions.
+> This patch adds support to read the fixed bus numbers
+> from EA capability for bridge.
+> 
+> Signed-off-by: Subbaraya Sundeep <sbhatta@marvell.com>
+> ---
+> v3:
+>   As per Bjorn's suggestion placed EA stuff in pci_ea_init and
+>   captured bus numbers in pci_dev
 
-s390/speculation: Support 'mitigations=' cmdline option
+You were right the first time, and my idea of putting this stuff in
+pci_ea_init() was well-intentioned but wrong.  It doesn't seem
+worthwhile to add those two fields to pci_dev when they will almost
+always be unused.
 
-Configure s390 runtime CPU speculation bug mitigations in accordance
-with the 'mitigations=' cmdline option.  This affects Spectre v1 and
-Spectre v2.
+I applied your v2 patch and revised it a little; I'll respond to that
+patch so the comments make sense there.
 
-The default behavior is unchanged.
-
-Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Tested-by: Jiri Kosina <jkosina@suse.cz> (on x86)
-Reviewed-by: Jiri Kosina <jkosina@suse.cz>
-Cc: Borislav Petkov <bp@alien8.de>
-Cc: "H . Peter Anvin" <hpa@zytor.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Peter Zijlstra <peterz@infradead.org>
-Cc: Jiri Kosina <jikos@kernel.org>
-Cc: Waiman Long <longman@redhat.com>
-Cc: Andrea Arcangeli <aarcange@redhat.com>
-Cc: Jon Masters <jcm@redhat.com>
-Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
-Cc: Paul Mackerras <paulus@samba.org>
-Cc: Michael Ellerman <mpe@ellerman.id.au>
-Cc: linuxppc-dev@lists.ozlabs.org
-Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
-Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
-Cc: linux-s390@vger.kernel.org
-Cc: Catalin Marinas <catalin.marinas@arm.com>
-Cc: Will Deacon <will.deacon@arm.com>
-Cc: linux-arm-kernel@lists.infradead.org
-Cc: linux-arch@vger.kernel.org
-Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Cc: Tyler Hicks <tyhicks@canonical.com>
-Cc: Linus Torvalds <torvalds@linux-foundation.org>
-Cc: Randy Dunlap <rdunlap@infradead.org>
-Cc: Steven Price <steven.price@arm.com>
-Cc: Phil Auld <pauld@redhat.com>
-Link: https://lkml.kernel.org/r/e4a161805458a5ec88812aac0307ae3908a030fc.1555085500.git.jpoimboe@redhat.com
-
----
- Documentation/admin-guide/kernel-parameters.txt | 5 +++--
- arch/s390/kernel/nospec-branch.c                | 3 ++-
- 2 files changed, 5 insertions(+), 3 deletions(-)
-
-diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
-index ac7150a25a7a..1ae93872b79f 100644
---- a/Documentation/admin-guide/kernel-parameters.txt
-+++ b/Documentation/admin-guide/kernel-parameters.txt
-@@ -2514,7 +2514,7 @@
- 			http://repo.or.cz/w/linux-2.6/mini2440.git
- 
- 	mitigations=
--			[X86,PPC] Control optional mitigations for CPU
-+			[X86,PPC,S390] Control optional mitigations for CPU
- 			vulnerabilities.  This is a set of curated,
- 			arch-independent options, each of which is an
- 			aggregation of existing arch-specific options.
-@@ -2525,7 +2525,8 @@
- 				expose users to several CPU vulnerabilities.
- 				Equivalent to: nopti [X86,PPC]
- 					       nospectre_v1 [PPC]
--					       nospectre_v2 [X86,PPC]
-+					       nobp=0 [S390]
-+					       nospectre_v2 [X86,PPC,S390]
- 					       spectre_v2_user=off [X86]
- 					       spec_store_bypass_disable=off [X86,PPC]
- 					       l1tf=off [X86]
-diff --git a/arch/s390/kernel/nospec-branch.c b/arch/s390/kernel/nospec-branch.c
-index bdddaae96559..649135cbedd5 100644
---- a/arch/s390/kernel/nospec-branch.c
-+++ b/arch/s390/kernel/nospec-branch.c
-@@ -1,6 +1,7 @@
- // SPDX-License-Identifier: GPL-2.0
- #include <linux/module.h>
- #include <linux/device.h>
-+#include <linux/cpu.h>
- #include <asm/nospec-branch.h>
- 
- static int __init nobp_setup_early(char *str)
-@@ -58,7 +59,7 @@ early_param("nospectre_v2", nospectre_v2_setup_early);
- 
- void __init nospec_auto_detect(void)
- {
--	if (test_facility(156)) {
-+	if (test_facility(156) || cpu_mitigations_off()) {
- 		/*
- 		 * The machine supports etokens.
- 		 * Disable expolines and disable nobp.
+> v2:
+>   None just added Sean
+> 
+>  drivers/pci/pci.c             | 10 ++++++++--
+>  include/linux/pci.h           |  4 ++++
+>  include/uapi/linux/pci_regs.h |  4 ++++
+>  3 files changed, 16 insertions(+), 2 deletions(-)
+> 
+> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+> index c25acac..484b63e 100644
+> --- a/drivers/pci/pci.c
+> +++ b/drivers/pci/pci.c
+> @@ -2909,6 +2909,7 @@ void pci_ea_init(struct pci_dev *dev)
+>  	u8 num_ent;
+>  	int offset;
+>  	int i;
+> +	u32 dw;
+>  
+>  	/* find PCI EA capability in list */
+>  	ea = pci_find_capability(dev, PCI_CAP_ID_EA);
+> @@ -2922,9 +2923,14 @@ void pci_ea_init(struct pci_dev *dev)
+>  
+>  	offset = ea + PCI_EA_FIRST_ENT;
+>  
+> -	/* Skip DWORD 2 for type 1 functions */
+> -	if (dev->hdr_type == PCI_HEADER_TYPE_BRIDGE)
+> +	/* Note fixed bus numbers for type 1 functions */
+> +	if (dev->hdr_type == PCI_HEADER_TYPE_BRIDGE) {
+> +		pci_read_config_dword(dev, offset, &dw);
+> +		dev->fixed_sec_busnr = dw & PCI_EA_FIXED_SEC_BUS;
+> +		dev->fixed_sub_busnr = (dw & PCI_EA_FIXED_SUB_BUS) >>
+> +					PCI_EA_FIXED_SUB_SHIFT;
+>  		offset += 4;
+> +	}
+>  
+>  	/* parse each EA entry */
+>  	for (i = 0; i < num_ent; ++i)
+> diff --git a/include/linux/pci.h b/include/linux/pci.h
+> index 65f1d8c..3e9a3ae 100644
+> --- a/include/linux/pci.h
+> +++ b/include/linux/pci.h
+> @@ -459,6 +459,10 @@ struct pci_dev {
+>  	char		*driver_override; /* Driver name to force a match */
+>  
+>  	unsigned long	priv_flags;	/* Private flags for the PCI driver */
+> +
+> +	/* bus numbers from EA capability if this device is a bridge */
+> +	u8 fixed_sec_busnr; /* Fixed Secondary Bus number */
+> +	u8 fixed_sub_busnr; /* Fixed Subordinate Bus number */
+>  };
+>  
+>  static inline struct pci_dev *pci_physfn(struct pci_dev *dev)
+> diff --git a/include/uapi/linux/pci_regs.h b/include/uapi/linux/pci_regs.h
+> index e1e9888..51e9ac0 100644
+> --- a/include/uapi/linux/pci_regs.h
+> +++ b/include/uapi/linux/pci_regs.h
+> @@ -372,6 +372,10 @@
+>  #define PCI_EA_FIRST_ENT_BRIDGE	8	/* First EA Entry for Bridges */
+>  #define  PCI_EA_ES		0x00000007 /* Entry Size */
+>  #define  PCI_EA_BEI		0x000000f0 /* BAR Equivalent Indicator */
+> +/* Fixed Secondary and Subordinate bus numbers in EA for Bridge */
+> +#define   PCI_EA_FIXED_SEC_BUS		0xff
+> +#define   PCI_EA_FIXED_SUB_BUS		0xff00
+> +#define   PCI_EA_FIXED_SUB_SHIFT	8
+>  /* 0-5 map to BARs 0-5 respectively */
+>  #define   PCI_EA_BEI_BAR0		0
+>  #define   PCI_EA_BEI_BAR5		5
+> -- 
+> 1.8.3.1
+> 
