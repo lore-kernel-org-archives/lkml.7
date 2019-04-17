@@ -2,87 +2,175 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 77D59C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:54:33 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B4431C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:54:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4608B206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:54:33 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="kL2qrRde"
+	by mail.kernel.org (Postfix) with ESMTP id 8E6DD20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:54:58 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387421AbfDQSyc (ORCPT
+        id S1733082AbfDQSy5 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 14:54:32 -0400
-Received: from mail-pl1-f194.google.com ([209.85.214.194]:37005 "EHLO
-        mail-pl1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727340AbfDQSyb (ORCPT
+        Wed, 17 Apr 2019 14:54:57 -0400
+Received: from lilium.sigma-star.at ([109.75.188.150]:46206 "EHLO
+        lilium.sigma-star.at" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727340AbfDQSy5 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 14:54:31 -0400
-Received: by mail-pl1-f194.google.com with SMTP id w23so12452714ply.4
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 11:54:31 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=PX7mS7+UBf59qHB/nHuTZzULE7xDIIbAilGm8NaqjVo=;
-        b=kL2qrRdeWDPx6JIfsrvWdMgH8TksMCy0D7xKP8taGoZDRRmlCf/ffXT6M5Jx4ciJMG
-         hCLP8Sl7CSaNIaQdBmui5L862+OsUVGMALaL0PGP+GkI1L9PDl313GrPohijIXc7mebN
-         vDezQoGVFn7R6tPiDycu7J4H7RyyfCayA0OVGijvM3KPTfmc0UcQC7kfBPoHh4vGsOFN
-         gcR1QGwJsvmYzcQ0JEzupktAWgGH4EPrqgUCGMkgYRv2vI5lxlvZNH5TRPEJkyZCADv5
-         cACOjO/cStadvy2zjT2U8YyKud9dykpOzpuW9jRbuHPOm9h0z/KOcVZdzUrfwltYrAPs
-         qiQQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=PX7mS7+UBf59qHB/nHuTZzULE7xDIIbAilGm8NaqjVo=;
-        b=ee3embMFsJ46Ug5QZHRoRgIbd4JhEkRtF6ux4B7JkTbeiZ4j8OLDzFikHEIkS9rk3i
-         BwlrJz3o2xaswWExmpRm/rLaRwti7CS+BrzMDmifnNcNHtF6/pU3kJDZ66OjwqM/1Zwy
-         FOzNi4dawJARCUysiEX/VctzpSITVbAPiAu8qC7K6miJa3Mw69rieFxftjoE0p8OztZn
-         OFusZ631PbmWySv+zmqNNtXbkjNnBuSEvauM13ZOo+ul8yqh+dTokupaLjPcAHmAnBt3
-         BnQO8pYxUXvJOIgjjj+RFvU391JOPpZgjfOA4UPpb8QtjJBmPNjw56jchLexiR9405OU
-         gD/A==
-X-Gm-Message-State: APjAAAWrVtsQpxa6SZp/PfHwyhaVTEILEdFwxofLd7CSSfuDKXlRMqUZ
-        Dl/PcuNZjrbwX9zkLJfkDUg=
-X-Google-Smtp-Source: APXvYqwBXOYH6w0Xk5SOVwHBd7bc/8Bi3KAWJdHxHKFOJbD6fn5jYuCkf9maR83ouas8vkmeJmz1ww==
-X-Received: by 2002:a17:902:9a0c:: with SMTP id v12mr63991196plp.184.1555527270706;
-        Wed, 17 Apr 2019 11:54:30 -0700 (PDT)
-Received: from fainelli-desktop.igp.broadcom.net ([192.19.223.250])
-        by smtp.gmail.com with ESMTPSA id g10sm42380637pgq.54.2019.04.17.11.54.29
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Apr 2019 11:54:29 -0700 (PDT)
-From:   Florian Fainelli <f.fainelli@gmail.com>
-To:     bcm-kernel-feedback-list@broadcom.com,
-        Markus Mayer <code@mmayer.net>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Gregory Fong <gregory.0xf0@gmail.com>
-Cc:     Markus Mayer <mmayer@broadcom.com>,
-        ARM Kernel List <linux-arm-kernel@lists.infradead.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 6/6] memory: brcmstb: dpfe: introduce DPFE API v3
-Date:   Wed, 17 Apr 2019 11:54:28 -0700
-Message-Id: <20190417185428.1352-1-f.fainelli@gmail.com>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190402230103.25491-7-code@mmayer.net>
-References: <20190402230103.25491-1-code@mmayer.net> <20190402230103.25491-7-code@mmayer.net>
+        Wed, 17 Apr 2019 14:54:57 -0400
+Received: from localhost (localhost [127.0.0.1])
+        by lilium.sigma-star.at (Postfix) with ESMTP id BFDFF18030842;
+        Wed, 17 Apr 2019 20:54:53 +0200 (CEST)
+From:   Richard Weinberger <richard@nod.at>
+To:     linux-mtd@lists.infradead.org
+Cc:     linux-kernel@vger.kernel.org, marek.vasut@gmail.com,
+        computersforpeace@gmail.com, dwmw2@infradead.org,
+        miquel.raynal@bootlin.com, bbrezillon@kernel.org,
+        Richard Weinberger <richard@nod.at>,
+        Boris Brezillon <boris.brezillon@collabora.com>
+Subject: [PATCH 1/2 v2] mtd: nandsim: Embed struct nand_chip in struct nandsim
+Date:   Wed, 17 Apr 2019 20:54:32 +0200
+Message-Id: <20190417185433.29666-1-richard@nod.at>
+X-Mailer: git-send-email 2.21.0
+MIME-Version: 1.0
+Content-Transfer-Encoding: quoted-printable
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue,  2 Apr 2019 16:01:03 -0700, Markus Mayer <code@mmayer.net> wrote:
-> From: Markus Mayer <mmayer@broadcom.com>
-> 
-> Introduce code to handle DPFE API v3. We also change the driver to
-> default to v3 by default and use API v2 only for select chips.
-> 
-> Signed-off-by: Markus Mayer <mmayer@broadcom.com>
-> ---
+We will need struct nand_controller soon, so more stuff need to
+be parts of struct nandsim.
+While we are here, rename "nand" to "ns" to use the same naming scheme
+everywhere in nandsim.
 
-Applied to drivers/next, thanks!
---
-Florian
+Reviewed-by: Boris Brezillon <boris.brezillon@collabora.com>
+Signed-off-by: Richard Weinberger <richard@nod.at>
+---
+ drivers/mtd/nand/raw/nandsim.c | 49 +++++++++++++++++-----------------
+ 1 file changed, 24 insertions(+), 25 deletions(-)
+
+diff --git a/drivers/mtd/nand/raw/nandsim.c b/drivers/mtd/nand/raw/nandsi=
+m.c
+index 933d1a629c51..3d80e2d23b6e 100644
+--- a/drivers/mtd/nand/raw/nandsim.c
++++ b/drivers/mtd/nand/raw/nandsim.c
+@@ -298,6 +298,7 @@ union ns_mem {
+  * The structure which describes all the internal simulator data.
+  */
+ struct nandsim {
++	struct nand_chip chip;
+ 	struct mtd_partition partitions[CONFIG_NANDSIM_MAX_PARTS];
+ 	unsigned int nbparts;
+=20
+@@ -2216,7 +2217,7 @@ static const struct nand_controller_ops ns_controll=
+er_ops =3D {
+ static int __init ns_init_module(void)
+ {
+ 	struct nand_chip *chip;
+-	struct nandsim *nand;
++	struct nandsim *ns;
+ 	int retval =3D -ENOMEM, i;
+=20
+ 	if (bus_width !=3D 8 && bus_width !=3D 16) {
+@@ -2224,16 +2225,14 @@ static int __init ns_init_module(void)
+ 		return -EINVAL;
+ 	}
+=20
+-	/* Allocate and initialize mtd_info, nand_chip and nandsim structures *=
+/
+-	chip =3D kzalloc(sizeof(struct nand_chip) + sizeof(struct nandsim),
+-		       GFP_KERNEL);
+-	if (!chip) {
++	ns =3D kzalloc(sizeof(struct nandsim), GFP_KERNEL);
++	if (!ns) {
+ 		NS_ERR("unable to allocate core structures.\n");
+ 		return -ENOMEM;
+ 	}
++	chip	    =3D &ns->chip;
+ 	nsmtd       =3D nand_to_mtd(chip);
+-	nand        =3D (struct nandsim *)(chip + 1);
+-	nand_set_controller_data(chip, (void *)nand);
++	nand_set_controller_data(chip, (void *)ns);
+=20
+ 	/*
+ 	 * Register simulator's callbacks.
+@@ -2266,19 +2265,19 @@ static int __init ns_init_module(void)
+ 	 * the initial ID read command correctly
+ 	 */
+ 	if (id_bytes[6] !=3D 0xFF || id_bytes[7] !=3D 0xFF)
+-		nand->geom.idbytes =3D 8;
++		ns->geom.idbytes =3D 8;
+ 	else if (id_bytes[4] !=3D 0xFF || id_bytes[5] !=3D 0xFF)
+-		nand->geom.idbytes =3D 6;
++		ns->geom.idbytes =3D 6;
+ 	else if (id_bytes[2] !=3D 0xFF || id_bytes[3] !=3D 0xFF)
+-		nand->geom.idbytes =3D 4;
++		ns->geom.idbytes =3D 4;
+ 	else
+-		nand->geom.idbytes =3D 2;
+-	nand->regs.status =3D NS_STATUS_OK(nand);
+-	nand->nxstate =3D STATE_UNKNOWN;
+-	nand->options |=3D OPT_PAGE512; /* temporary value */
+-	memcpy(nand->ids, id_bytes, sizeof(nand->ids));
++		ns->geom.idbytes =3D 2;
++	ns->regs.status =3D NS_STATUS_OK(ns);
++	ns->nxstate =3D STATE_UNKNOWN;
++	ns->options |=3D OPT_PAGE512; /* temporary value */
++	memcpy(ns->ids, id_bytes, sizeof(ns->ids));
+ 	if (bus_width =3D=3D 16) {
+-		nand->busw =3D 16;
++		ns->busw =3D 16;
+ 		chip->options |=3D NAND_BUSWIDTH_16;
+ 	}
+=20
+@@ -2323,27 +2322,27 @@ static int __init ns_init_module(void)
+ 	if ((retval =3D nand_create_bbt(chip)) !=3D 0)
+ 		goto err_exit;
+=20
+-	if ((retval =3D parse_badblocks(nand, nsmtd)) !=3D 0)
++	if ((retval =3D parse_badblocks(ns, nsmtd)) !=3D 0)
+ 		goto err_exit;
+=20
+ 	/* Register NAND partitions */
+-	retval =3D mtd_device_register(nsmtd, &nand->partitions[0],
+-				     nand->nbparts);
++	retval =3D mtd_device_register(nsmtd, &ns->partitions[0],
++				     ns->nbparts);
+ 	if (retval !=3D 0)
+ 		goto err_exit;
+=20
+-	if ((retval =3D nandsim_debugfs_create(nand)) !=3D 0)
++	if ((retval =3D nandsim_debugfs_create(ns)) !=3D 0)
+ 		goto err_exit;
+=20
+         return 0;
+=20
+ err_exit:
+-	free_nandsim(nand);
++	free_nandsim(ns);
+ 	nand_release(chip);
+-	for (i =3D 0;i < ARRAY_SIZE(nand->partitions); ++i)
+-		kfree(nand->partitions[i].name);
++	for (i =3D 0;i < ARRAY_SIZE(ns->partitions); ++i)
++		kfree(ns->partitions[i].name);
+ error:
+-	kfree(chip);
++	kfree(ns);
+ 	free_lists();
+=20
+ 	return retval;
+@@ -2364,7 +2363,7 @@ static void __exit ns_cleanup_module(void)
+ 	nand_release(chip); /* Unregister driver */
+ 	for (i =3D 0;i < ARRAY_SIZE(ns->partitions); ++i)
+ 		kfree(ns->partitions[i].name);
+-	kfree(mtd_to_nand(nsmtd));        /* Free other structures */
++	kfree(ns);        /* Free other structures */
+ 	free_lists();
+ }
+=20
+--=20
+2.21.0
+
