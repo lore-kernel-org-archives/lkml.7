@@ -6,32 +6,32 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
 	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C7D37C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:28:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90723C10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:28:49 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9C2D22073F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:28:41 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 66DBC20835
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:28:49 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731335AbfDQI2k (ORCPT
+        id S1731397AbfDQI2s (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 04:28:40 -0400
-Received: from Mailgw01.mediatek.com ([1.203.163.78]:43504 "EHLO
-        mailgw01.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726237AbfDQI2h (ORCPT
+        Wed, 17 Apr 2019 04:28:48 -0400
+Received: from mailgw02.mediatek.com ([1.203.163.81]:61757 "EHLO
+        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1731363AbfDQI2p (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 04:28:37 -0400
-X-UUID: a42a5e03da3d432da16e735a1c7ba2a4-20190417
-X-UUID: a42a5e03da3d432da16e735a1c7ba2a4-20190417
-Received: from mtkcas34.mediatek.inc [(172.27.4.253)] by mailgw01.mediatek.com
+        Wed, 17 Apr 2019 04:28:45 -0400
+X-UUID: b551e11c62bc4ef4adf0f522d45f8f81-20190417
+X-UUID: b551e11c62bc4ef4adf0f522d45f8f81-20190417
+Received: from mtkcas36.mediatek.inc [(172.27.4.253)] by mailgw02.mediatek.com
         (envelope-from <chunfeng.yun@mediatek.com>)
         (mailgw01.mediatek.com ESMTP with TLS)
-        with ESMTP id 1789847386; Wed, 17 Apr 2019 16:28:25 +0800
+        with ESMTP id 589636522; Wed, 17 Apr 2019 16:28:39 +0800
 Received: from mtkcas09.mediatek.inc (172.21.101.178) by
  MTKMBS31DR.mediatek.inc (172.27.6.102) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 17 Apr 2019 16:28:23 +0800
+ 15.0.1395.4; Wed, 17 Apr 2019 16:28:37 +0800
 Received: from localhost.localdomain (10.17.3.153) by mtkcas09.mediatek.inc
  (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 17 Apr 2019 16:28:23 +0800
+ Transport; Wed, 17 Apr 2019 16:28:37 +0800
 From:   Chunfeng Yun <chunfeng.yun@mediatek.com>
 To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>
 CC:     Mathias Nyman <mathias.nyman@intel.com>,
@@ -41,10 +41,12 @@ CC:     Mathias Nyman <mathias.nyman@intel.com>,
         <linux-usb@vger.kernel.org>, <linux-kernel@vger.kernel.org>,
         <linux-arm-kernel@lists.infradead.org>,
         <linux-mediatek@lists.infradead.org>
-Subject: [PATCH v3 1/6] usb: xhci-mtk: get optional clock by devm_clk_get_optional()
-Date:   Wed, 17 Apr 2019 16:28:16 +0800
-Message-ID: <bacafa9a60c2f437e2be0ccdf504492343fc0a66.1555488276.git.chunfeng.yun@mediatek.com>
+Subject: [PATCH v3 6/6] usb: mtu3: get optional clock by devm_clk_get_optional()
+Date:   Wed, 17 Apr 2019 16:28:21 +0800
+Message-ID: <80f2a1a7ff74202ab2d2af74addcf1f8551fff19.1555488276.git.chunfeng.yun@mediatek.com>
 X-Mailer: git-send-email 1.7.9.5
+In-Reply-To: <bacafa9a60c2f437e2be0ccdf504492343fc0a66.1555488276.git.chunfeng.yun@mediatek.com>
+References: <bacafa9a60c2f437e2be0ccdf504492343fc0a66.1555488276.git.chunfeng.yun@mediatek.com>
 MIME-Version: 1.0
 Content-Type: text/plain
 X-MTK:  N
@@ -56,27 +58,32 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 Use devm_clk_get_optional() to get optional clock instead of
 optional_clk_get() which uses devm_clk_get() to get clock and
 checks for -EPROBE_DEFER but not -ENOENT as devm_clk_get_optional()
-does, in fact, only ignoring -ENOENT will cover more errors, so the
-replacement doesn't change original purpose.
+does, in fact, only ignoring -ENOENT will cover more errors, so
+the replacement doesn't change original purpose.
 
 Signed-off-by: Chunfeng Yun <chunfeng.yun@mediatek.com>
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
 ---
-v3: modify changelog comment
-v2: no changes
+v3:
+  1. modify changelog comment
+  2. add Reviewed-by Matthias
+
+v2: new patch, merged into this series from
+    https://patchwork.kernel.org/patch/10878235/
 ---
- drivers/usb/host/xhci-mtk.c | 19 +++----------------
+ drivers/usb/mtu3/mtu3_plat.c | 19 +++----------------
  1 file changed, 3 insertions(+), 16 deletions(-)
 
-diff --git a/drivers/usb/host/xhci-mtk.c b/drivers/usb/host/xhci-mtk.c
-index 60987c787e44..026fe18972d3 100644
---- a/drivers/usb/host/xhci-mtk.c
-+++ b/drivers/usb/host/xhci-mtk.c
-@@ -206,19 +206,6 @@ static int xhci_mtk_ssusb_config(struct xhci_hcd_mtk *mtk)
- 	return xhci_mtk_host_enable(mtk);
+diff --git a/drivers/usb/mtu3/mtu3_plat.c b/drivers/usb/mtu3/mtu3_plat.c
+index e086630e41a9..745a1da5c9c0 100644
+--- a/drivers/usb/mtu3/mtu3_plat.c
++++ b/drivers/usb/mtu3/mtu3_plat.c
+@@ -210,19 +210,6 @@ static void ssusb_ip_sw_reset(struct ssusb_mtk *ssusb)
+ 	mtu3_setbits(ssusb->ippc_base, U3D_SSUSB_IP_PW_CTRL2, SSUSB_IP_DEV_PDN);
  }
  
 -/* ignore the error if the clock does not exist */
--static struct clk *optional_clk_get(struct device *dev, const char *id)
+-static struct clk *get_optional_clk(struct device *dev, const char *id)
 -{
 -	struct clk *opt_clk;
 -
@@ -88,27 +95,27 @@ index 60987c787e44..026fe18972d3 100644
 -	return opt_clk;
 -}
 -
- static int xhci_mtk_clks_get(struct xhci_hcd_mtk *mtk)
+ static int get_ssusb_rscs(struct platform_device *pdev, struct ssusb_mtk *ssusb)
  {
- 	struct device *dev = mtk->dev;
-@@ -229,15 +216,15 @@ static int xhci_mtk_clks_get(struct xhci_hcd_mtk *mtk)
- 		return PTR_ERR(mtk->sys_clk);
+ 	struct device_node *node = pdev->dev.of_node;
+@@ -245,15 +232,15 @@ static int get_ssusb_rscs(struct platform_device *pdev, struct ssusb_mtk *ssusb)
+ 		return PTR_ERR(ssusb->sys_clk);
  	}
  
--	mtk->ref_clk = optional_clk_get(dev, "ref_ck");
-+	mtk->ref_clk = devm_clk_get_optional(dev, "ref_ck");
- 	if (IS_ERR(mtk->ref_clk))
- 		return PTR_ERR(mtk->ref_clk);
+-	ssusb->ref_clk = get_optional_clk(dev, "ref_ck");
++	ssusb->ref_clk = devm_clk_get_optional(dev, "ref_ck");
+ 	if (IS_ERR(ssusb->ref_clk))
+ 		return PTR_ERR(ssusb->ref_clk);
  
--	mtk->mcu_clk = optional_clk_get(dev, "mcu_ck");
-+	mtk->mcu_clk = devm_clk_get_optional(dev, "mcu_ck");
- 	if (IS_ERR(mtk->mcu_clk))
- 		return PTR_ERR(mtk->mcu_clk);
+-	ssusb->mcu_clk = get_optional_clk(dev, "mcu_ck");
++	ssusb->mcu_clk = devm_clk_get_optional(dev, "mcu_ck");
+ 	if (IS_ERR(ssusb->mcu_clk))
+ 		return PTR_ERR(ssusb->mcu_clk);
  
--	mtk->dma_clk = optional_clk_get(dev, "dma_ck");
-+	mtk->dma_clk = devm_clk_get_optional(dev, "dma_ck");
- 	return PTR_ERR_OR_ZERO(mtk->dma_clk);
- }
+-	ssusb->dma_clk = get_optional_clk(dev, "dma_ck");
++	ssusb->dma_clk = devm_clk_get_optional(dev, "dma_ck");
+ 	if (IS_ERR(ssusb->dma_clk))
+ 		return PTR_ERR(ssusb->dma_clk);
  
 -- 
 2.21.0
