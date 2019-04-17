@@ -7,53 +7,56 @@ X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BD254C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:42:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D4027C282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:42:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8CF66217D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:42:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A2FE6217D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:42:32 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555519350;
-	bh=thySivS04g/SKEFjDFcJ4xVwcS/ytD4Eyozd5TvjJIw=;
+	s=default; t=1555519352;
+	bh=HeVVHpUszD56VIWjN2R7vu1E2MDYY1dW+pC9mjvMeSs=;
 	h=From:To:Cc:Subject:In-Reply-To:Date:List-ID:From;
-	b=HuaHJngzBOoTC5goeVRPyql15KmKFPLbxYcLFv107N5rkGUH98g8SaGI2VQGrHzM6
-	 A+z7QITEKAU8VGzA1lPgvRkK4l+0nWyvy8y+NQfuscgd7Tslx28nzRfku19HZCzJ6B
-	 ppRBmjmc+iS20V7EA1U7aqfB7+QuxPMwjYTvZghw=
+	b=wH3H2KOQHLLvjhx5L0OzWwDsqGFUBD5K09lG1MjUW/DNuHe4Lxga8Hw/MTzKHb0Sz
+	 2ZaGiCDl+StPYYc/8nzXRqVjulS5QO48bPcTYvL/zboABTiTuARJMaTxvEYeUXGCdD
+	 /qcansz8piiJOKP8weJ9mTneDky67KLBXX1fLN+o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732956AbfDQQm3 (ORCPT
+        id S1732968AbfDQQmb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 12:42:29 -0400
-Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37260 "EHLO
+        Wed, 17 Apr 2019 12:42:31 -0400
+Received: from heliosphere.sirena.org.uk ([172.104.155.198]:37322 "EHLO
         heliosphere.sirena.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732917AbfDQQmZ (ORCPT
+        with ESMTP id S1732793AbfDQQm1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 12:42:25 -0400
+        Wed, 17 Apr 2019 12:42:27 -0400
 DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
         d=sirena.org.uk; s=20170815-heliosphere; h=Date:Message-Id:In-Reply-To:
         Subject:Cc:To:From:Sender:Reply-To:MIME-Version:Content-Type:
         Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
         Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:References:
         List-Id:List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:
-        List-Archive; bh=cYfL21DRc+S8+tzCW6wA8TIyNOQcF1w9J6pJxXs1LNU=; b=FRUxacI3yU+R
-        oVbDfF47JXDIozcWTi+GRCjITATfp/VW1ep+v1cq7vexQjghFVDwsFJMp6HzI7R+c6VybE3rt/fPC
-        bwrDVFiCxurhI2k04PzJoir5yQRskJ5qmuwCUSWvoEXoZ50xeYAenHutgt0aAyyxckO1iFDqhCV8f
-        +52Us=;
+        List-Archive; bh=eVKUx54Igy3r5M5d3rxJIA1r0PzkBCgyDt//z0UAYmc=; b=aNJ6CEmEU9OR
+        OFEZNLT6lgTKMty8ho7nOLKgFhMYXWawuZwDMoGJTkXD/oMnGza/B7kJdAPv3yZmBz0J4vn5XoB7W
+        u+mQxsFke6hZgiygEwZXg1sX0bj39hZuwDUaYiit9MSL1yPIXpR4uTs1VxNRfFeLUo2iIT1Cj4W7c
+        vj2o0=;
 Received: from cpc102320-sgyl38-2-0-cust46.18-2.cable.virginm.net ([82.37.168.47] helo=debutante.sirena.org.uk)
         by heliosphere.sirena.org.uk with esmtpa (Exim 4.89)
         (envelope-from <broonie@sirena.org.uk>)
-        id 1hGndX-000155-Ju; Wed, 17 Apr 2019 16:42:15 +0000
+        id 1hGndY-000154-Un; Wed, 17 Apr 2019 16:42:16 +0000
 Received: by debutante.sirena.org.uk (Postfix, from userid 1000)
-        id 4D47A1128FC8; Wed, 17 Apr 2019 17:42:15 +0100 (BST)
+        id ABE661128FCC; Wed, 17 Apr 2019 17:42:16 +0100 (BST)
 From:   Mark Brown <broonie@kernel.org>
-To:     Axel Lin <axel.lin@ingics.com>
-Cc:     Liam Girdwood <lgirdwood@gmail.com>, linux-kernel@vger.kernel.org,
-        Mark Brown <broonie@kernel.org>, patches@opensource.cirrus.com,
-        Richard Fitzgerald <rf@opensource.cirrus.com>
-Subject: Applied "regulator: arizona: Switch to SPDX identifier" to the regulator tree
-In-Reply-To: <20190417141633.4730-1-axel.lin@ingics.com>
+To:     Leilk Liu <leilk.liu@mediatek.com>
+Cc:     devicetree@vger.kernel.org, fparent@baylibre.com,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        linux-mediatek@lists.infradead.org, linux-spi@vger.kernel.org,
+        Mark Brown <broonie@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Matthias Brugger <matthias.bgg@gmail.com>
+Subject: Applied "dt-bindings: spi: spi-mt65xx: add support for MT8516" to the spi tree
+In-Reply-To: <1555490836-13382-1-git-send-email-leilk.liu@mediatek.com>
 X-Patchwork-Hint: ignore
-Message-Id: <20190417164215.4D47A1128FC8@debutante.sirena.org.uk>
-Date:   Wed, 17 Apr 2019 17:42:15 +0100 (BST)
+Message-Id: <20190417164216.ABE661128FCC@debutante.sirena.org.uk>
+Date:   Wed, 17 Apr 2019 17:42:16 +0100 (BST)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
@@ -61,11 +64,11 @@ X-Mailing-List: linux-kernel@vger.kernel.org
 
 The patch
 
-   regulator: arizona: Switch to SPDX identifier
+   dt-bindings: spi: spi-mt65xx: add support for MT8516
 
-has been applied to the regulator tree at
+has been applied to the spi tree at
 
-   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/regulator.git for-5.2
+   https://git.kernel.org/pub/scm/linux/kernel/git/broonie/spi.git for-5.2
 
 All being well this means that it will be integrated into the linux-next
 tree (usually sometime in the next 24 hours) and sent to Linus during
@@ -86,73 +89,32 @@ to this mail.
 Thanks,
 Mark
 
-From dfc0c82b3368b26250b4e960ee78ef909feba364 Mon Sep 17 00:00:00 2001
-From: Axel Lin <axel.lin@ingics.com>
-Date: Wed, 17 Apr 2019 22:16:29 +0800
-Subject: [PATCH] regulator: arizona: Switch to SPDX identifier
+From bee5c20b7323a7af027d1b4ba538137b518ad232 Mon Sep 17 00:00:00 2001
+From: Leilk Liu <leilk.liu@mediatek.com>
+Date: Wed, 17 Apr 2019 16:47:16 +0800
+Subject: [PATCH] dt-bindings: spi: spi-mt65xx: add support for MT8516
 
-Signed-off-by: Axel Lin <axel.lin@ingics.com>
-Acked-by: Richard Fitzgerald <rf@opensource.cirrus.com>
+Add binding documentation of spi-mt65xx for MT8516 SOC.
+
+Signed-off-by: Leilk Liu <leilk.liu@mediatek.com>
+Reviewed-by: Matthias Brugger <matthias.bgg@gmail.com>
 Signed-off-by: Mark Brown <broonie@kernel.org>
 ---
- drivers/regulator/arizona-ldo1.c    | 19 +++++++------------
- drivers/regulator/arizona-micsupp.c | 19 +++++++------------
- 2 files changed, 14 insertions(+), 24 deletions(-)
+ Documentation/devicetree/bindings/spi/spi-mt65xx.txt | 1 +
+ 1 file changed, 1 insertion(+)
 
-diff --git a/drivers/regulator/arizona-ldo1.c b/drivers/regulator/arizona-ldo1.c
-index bf3ab405eed1..e4bc7b1e5ccd 100644
---- a/drivers/regulator/arizona-ldo1.c
-+++ b/drivers/regulator/arizona-ldo1.c
-@@ -1,15 +1,10 @@
--/*
-- * arizona-ldo1.c  --  LDO1 supply for Arizona devices
-- *
-- * Copyright 2012 Wolfson Microelectronics PLC.
-- *
-- * Author: Mark Brown <broonie@opensource.wolfsonmicro.com>
-- *
-- *  This program is free software; you can redistribute  it and/or modify it
-- *  under  the terms of  the GNU General  Public License as published by the
-- *  Free Software Foundation;  either version 2 of the  License, or (at your
-- *  option) any later version.
-- */
-+// SPDX-License-Identifier: GPL-2.0+
-+//
-+// arizona-ldo1.c  --  LDO1 supply for Arizona devices
-+//
-+// Copyright 2012 Wolfson Microelectronics PLC.
-+//
-+// Author: Mark Brown <broonie@opensource.wolfsonmicro.com>
+diff --git a/Documentation/devicetree/bindings/spi/spi-mt65xx.txt b/Documentation/devicetree/bindings/spi/spi-mt65xx.txt
+index 69c356767cf8..c0f6c8ecfa2e 100644
+--- a/Documentation/devicetree/bindings/spi/spi-mt65xx.txt
++++ b/Documentation/devicetree/bindings/spi/spi-mt65xx.txt
+@@ -10,6 +10,7 @@ Required properties:
+     - mediatek,mt8135-spi: for mt8135 platforms
+     - mediatek,mt8173-spi: for mt8173 platforms
+     - mediatek,mt8183-spi: for mt8183 platforms
++    - "mediatek,mt8516-spi", "mediatek,mt2712-spi": for mt8516 platforms
  
- #include <linux/module.h>
- #include <linux/moduleparam.h>
-diff --git a/drivers/regulator/arizona-micsupp.c b/drivers/regulator/arizona-micsupp.c
-index 120de94caf02..be0d46da51a1 100644
---- a/drivers/regulator/arizona-micsupp.c
-+++ b/drivers/regulator/arizona-micsupp.c
-@@ -1,15 +1,10 @@
--/*
-- * arizona-micsupp.c  --  Microphone supply for Arizona devices
-- *
-- * Copyright 2012 Wolfson Microelectronics PLC.
-- *
-- * Author: Mark Brown <broonie@opensource.wolfsonmicro.com>
-- *
-- *  This program is free software; you can redistribute  it and/or modify it
-- *  under  the terms of  the GNU General  Public License as published by the
-- *  Free Software Foundation;  either version 2 of the  License, or (at your
-- *  option) any later version.
-- */
-+// SPDX-License-Identifier: GPL-2.0+
-+//
-+// arizona-micsupp.c  --  Microphone supply for Arizona devices
-+//
-+// Copyright 2012 Wolfson Microelectronics PLC.
-+//
-+// Author: Mark Brown <broonie@opensource.wolfsonmicro.com>
+ - #address-cells: should be 1.
  
- #include <linux/module.h>
- #include <linux/moduleparam.h>
 -- 
 2.20.1
 
