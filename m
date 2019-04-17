@@ -2,174 +2,135 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CA6FFC282E0
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 19:40:15 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4702C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 19:45:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 98F5F20651
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 19:40:15 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RuXpETwf"
+	by mail.kernel.org (Postfix) with ESMTP id 7A381206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 19:45:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733240AbfDQTkO (ORCPT
+        id S1732958AbfDQTpc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 15:40:14 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:33515 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732958AbfDQTkJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 15:40:09 -0400
-Received: by mail-pl1-f195.google.com with SMTP id t16so12509627plo.0
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 12:40:09 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references
-         :mime-version:content-transfer-encoding;
-        bh=UyR+E+QP9/YBgUof0HLUBtIXg8lauiwUZnv+8kGnwi0=;
-        b=RuXpETwf6J+1aIICtr0LjFkcyuGTYqyudqgt8yJ0XbVu5l9h3Ww0nVugPD7GI8Rr/O
-         nyHCGDf0oIDjpyXnYFM+rPSnWyp+MJJWqscIXrYy+4hNH36PEN21GXxpa4E29tB8P8O6
-         JCR9uMaGPtqyYKFHdXpPUYHStJ2s53LHFn1Rfrvxvshx9dwNmkUrr9mK3EQ1NXLeUveS
-         AifpuUIvSYIIj7shDDsB6cHmB9Af2Z/85i6xCMIZQwxBhib8hszXwgSfOFQEv6Jy/lMF
-         53TCRBDNby1eH9QncyfSnPcZMVoiQEGeq7rxabL9YeEeMYaZhuPLnmM2pBybElmXhPAd
-         uU3A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references:mime-version:content-transfer-encoding;
-        bh=UyR+E+QP9/YBgUof0HLUBtIXg8lauiwUZnv+8kGnwi0=;
-        b=lntGzsxVrkXwkIKOPi+IkaIwQC/5PtlIw15g3AWaWCdja+O3UYDgehtObpEd20VTvb
-         sigDKcnQaomw4CVaQXgBj9d7NI9jA8yyq8oUERIeFXdtqcVfgiWl48JyFAkPFdUyTQto
-         4+Y1RfnMSi7Wdrvau46JoRdd9R2ycDj/0theRUt2dfQosQHq2BtYHxJY84qOsQN+oiJi
-         SytMbTppepGMU8NYwXSUUxXU30JmPgAc+f+kbNUJMMVdrvbcWhwygx4BgzuHMBA/IrrR
-         Ni3/m10rAGDkmBKftvVR+aKoOVLcxhbzoQ1KTnV4R4JDv4hHuGNZBXw9Xg6chYG3ZmpE
-         ucQg==
-X-Gm-Message-State: APjAAAW7xkBh83tV+rUerF53dHo8pnIwQL9lyban5Yq35tC4Kis4syqK
-        ++dRebxJIR3Ca2Gwftk8ikQ=
-X-Google-Smtp-Source: APXvYqzML/UNV8wJQff9+LzTiwC5spXfqD2Mqzdl4tmtOaS9M0PSAFTJ3kptuFcifq4SMlxYvWkbug==
-X-Received: by 2002:a17:902:988e:: with SMTP id s14mr87750846plp.167.1555530009021;
-        Wed, 17 Apr 2019 12:40:09 -0700 (PDT)
-Received: from tower.thefacebook.com ([2620:10d:c090:200::3:856])
-        by smtp.gmail.com with ESMTPSA id v9sm8625949pgf.73.2019.04.17.12.40.07
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 17 Apr 2019 12:40:08 -0700 (PDT)
-From:   Roman Gushchin <guroan@gmail.com>
-X-Google-Original-From: Roman Gushchin <guro@fb.com>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        kernel-team@fb.com, Matthew Wilcox <willy@infradead.org>,
-        Johannes Weiner <hannes@cmpxchg.org>,
-        Vlastimil Babka <vbabka@suse.cz>, Roman Gushchin <guro@fb.com>
-Subject: [PATCH v4 2/2] mm: show number of vmalloc pages in /proc/meminfo
-Date:   Wed, 17 Apr 2019 12:40:02 -0700
-Message-Id: <20190417194002.12369-3-guro@fb.com>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190417194002.12369-1-guro@fb.com>
-References: <20190417194002.12369-1-guro@fb.com>
+        Wed, 17 Apr 2019 15:45:32 -0400
+Received: from sauhun.de ([88.99.104.3]:33968 "EHLO pokefinder.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729291AbfDQTpb (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 15:45:31 -0400
+Received: from localhost (p5486CD54.dip0.t-ipconnect.de [84.134.205.84])
+        by pokefinder.org (Postfix) with ESMTPSA id DD8A72C088A;
+        Wed, 17 Apr 2019 21:45:28 +0200 (CEST)
+Date:   Wed, 17 Apr 2019 21:45:28 +0200
+From:   Wolfram Sang <wsa@the-dreams.de>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Jerry Hoemann <jerry.hoemann@hpe.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-watchdog@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 06/16] watchdog: hpwdt: drop warning after calling
+ watchdog_init_timeout
+Message-ID: <20190417194528.xwivkyubhxyfrx4m@ninjato>
+References: <20190416102515.12269-1-wsa+renesas@sang-engineering.com>
+ <20190416102515.12269-7-wsa+renesas@sang-engineering.com>
+ <20190416203431.GA20072@anatevka>
+ <20190416204814.GA26442@roeck-us.net>
+ <20190416205533.GB8268@kunai>
+ <20190416212046.GC26442@roeck-us.net>
+ <20190416221702.GC8268@kunai>
+ <20190416223813.GA744@roeck-us.net>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: multipart/signed; micalg=pgp-sha256;
+        protocol="application/pgp-signature"; boundary="i3b6ii7ljdtzo5c2"
+Content-Disposition: inline
+In-Reply-To: <20190416223813.GA744@roeck-us.net>
+User-Agent: NeoMutt/20170113 (1.7.2)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Vmalloc() is getting more and more used these days (kernel stacks,
-bpf and percpu allocator are new top users), and the total %
-of memory consumed by vmalloc() can be pretty significant
-and changes dynamically.
 
-/proc/meminfo is the best place to display this information:
-its top goal is to show top consumers of the memory.
+--i3b6ii7ljdtzo5c2
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+Content-Transfer-Encoding: quoted-printable
 
-Since the VmallocUsed field in /proc/meminfo is not in use
-for quite a long time (it has been defined to 0 by the
-commit a5ad88ce8c7f ("mm: get rid of 'vmalloc_info' from
-/proc/meminfo")), let's reuse it for showing the actual
-physical memory consumption of vmalloc().
 
-Signed-off-by: Roman Gushchin <guro@fb.com>
-Acked-by: Johannes Weiner <hannes@cmpxchg.org>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
----
- fs/proc/meminfo.c       |  2 +-
- include/linux/vmalloc.h |  2 ++
- mm/vmalloc.c            | 10 ++++++++++
- 3 files changed, 13 insertions(+), 1 deletion(-)
+> Yes, that works as well. Note that it will actually print something like
+> "watchdog: <device>: ..." due to the pr_fmt() at the top of watchdog_core=
+=2Ec.
+> I guess that should be ok.
 
-diff --git a/fs/proc/meminfo.c b/fs/proc/meminfo.c
-index 568d90e17c17..465ea0153b2a 100644
---- a/fs/proc/meminfo.c
-+++ b/fs/proc/meminfo.c
-@@ -120,7 +120,7 @@ static int meminfo_proc_show(struct seq_file *m, void *v)
- 	show_val_kb(m, "Committed_AS:   ", committed);
- 	seq_printf(m, "VmallocTotal:   %8lu kB\n",
- 		   (unsigned long)VMALLOC_TOTAL >> 10);
--	show_val_kb(m, "VmallocUsed:    ", 0ul);
-+	show_val_kb(m, "VmallocUsed:    ", vmalloc_nr_pages());
- 	show_val_kb(m, "VmallocChunk:   ", 0ul);
- 	show_val_kb(m, "Percpu:         ", pcpu_nr_pages());
- 
-diff --git a/include/linux/vmalloc.h b/include/linux/vmalloc.h
-index ad483378fdd1..316efa31c8b8 100644
---- a/include/linux/vmalloc.h
-+++ b/include/linux/vmalloc.h
-@@ -67,10 +67,12 @@ extern void vm_unmap_aliases(void);
- 
- #ifdef CONFIG_MMU
- extern void __init vmalloc_init(void);
-+extern unsigned long vmalloc_nr_pages(void);
- #else
- static inline void vmalloc_init(void)
+I have the following diff applied on top of patch 2. Works with and
+without a parent device. I am not super happy casting 'identity' but
+since its u8-type is exported to userspace, I think we can't avoid it.
+Guenter, is this cast safe? Here is the diff:
+
+diff --git a/drivers/watchdog/watchdog_core.c b/drivers/watchdog/watchdog_c=
+ore.c
+index cd3ca6b366ef..62be9e52a4de 100644
+--- a/drivers/watchdog/watchdog_core.c
++++ b/drivers/watchdog/watchdog_core.c
+@@ -115,6 +115,8 @@ static void watchdog_check_min_max_timeout(struct watch=
+dog_device *wdd)
+ int watchdog_init_timeout(struct watchdog_device *wdd,
+ 				unsigned int timeout_parm, struct device *dev)
  {
++	const char *dev_str =3D wdd->parent ? dev_name(wdd->parent) :
++			      (const char *)wdd->info->identity;
+ 	unsigned int t =3D 0;
+ 	int ret =3D 0;
+=20
+@@ -126,8 +128,8 @@ int watchdog_init_timeout(struct watchdog_device *wdd,
+ 			wdd->timeout =3D timeout_parm;
+ 			return 0;
+ 		}
+-		dev_err(dev, "driver supplied timeout (%u) out of range\n",
+-			timeout_parm);
++		pr_err("%s: driver supplied timeout (%u) out of range\n",
++			dev_str, timeout_parm);
+ 		ret =3D -EINVAL;
+ 	}
+=20
+@@ -138,12 +140,13 @@ int watchdog_init_timeout(struct watchdog_device *wdd,
+ 			wdd->timeout =3D t;
+ 			return 0;
+ 		}
+-		dev_err(dev, "DT supplied timeout (%u) out of range\n", t);
++		pr_err("%s: DT supplied timeout (%u) out of range\n", dev_str, t);
+ 		ret =3D -EINVAL;
+ 	}
+=20
+ 	if (ret < 0 && wdd->timeout)
+-		dev_warn(dev, "falling back to default timeout (%u)\n", wdd->timeout);
++		pr_warn("%s: falling back to default timeout (%u)\n", dev_str,
++			wdd->timeout);
+=20
+ 	return ret;
  }
-+static inline unsigned long vmalloc_nr_pages(void) { return 0; }
- #endif
- 
- extern void *vmalloc(unsigned long size);
-diff --git a/mm/vmalloc.c b/mm/vmalloc.c
-index 8ad8e8464e55..69a5673c4cd3 100644
---- a/mm/vmalloc.c
-+++ b/mm/vmalloc.c
-@@ -397,6 +397,13 @@ static void purge_vmap_area_lazy(void);
- static BLOCKING_NOTIFIER_HEAD(vmap_notify_list);
- static unsigned long lazy_max_pages(void);
- 
-+static atomic_long_t nr_vmalloc_pages;
-+
-+unsigned long vmalloc_nr_pages(void)
-+{
-+	return atomic_long_read(&nr_vmalloc_pages);
-+}
-+
- static struct vmap_area *__find_vmap_area(unsigned long addr)
- {
- 	struct rb_node *n = vmap_area_root.rb_node;
-@@ -2141,6 +2148,7 @@ static void __vunmap(const void *addr, int deallocate_pages)
- 			BUG_ON(!page);
- 			__free_pages(page, 0);
- 		}
-+		atomic_long_sub(area->nr_pages, &nr_vmalloc_pages);
- 
- 		kvfree(area->pages);
- 	}
-@@ -2317,12 +2325,14 @@ static void *__vmalloc_area_node(struct vm_struct *area, gfp_t gfp_mask,
- 		if (unlikely(!page)) {
- 			/* Successfully allocated i pages, free them in __vunmap() */
- 			area->nr_pages = i;
-+			atomic_long_add(area->nr_pages, &nr_vmalloc_pages);
- 			goto fail;
- 		}
- 		area->pages[i] = page;
- 		if (gfpflags_allow_blocking(gfp_mask|highmem_mask))
- 			cond_resched();
- 	}
-+	atomic_long_add(area->nr_pages, &nr_vmalloc_pages);
- 
- 	if (map_vm_area(area, prot, pages))
- 		goto fail;
--- 
-2.20.1
 
+
+--i3b6ii7ljdtzo5c2
+Content-Type: application/pgp-signature; name="signature.asc"
+
+-----BEGIN PGP SIGNATURE-----
+
+iQIzBAABCAAdFiEEOZGx6rniZ1Gk92RdFA3kzBSgKbYFAly3glgACgkQFA3kzBSg
+KbZk3A/+LZ2YvExZPaqhdORkp74iw/y522BH5v3O6XmWaBH2TLEYGEYsc41+LEuS
+4FzI1U5yp3k/sbqhUtpHN0lE/7q9WtB4gRCs+wMEMM+mgLf997UFHFVTfVynoGJs
+hkEfI7l7MDvPQS+lekjmLM/1eh1N3qEXVyvW4lZPD3S0TUgELFnfOzpzaypxi3X4
+kkg6MyeDQUiE9PxD6pHv8eBgWGF27R3cN2e9ZeSARjsRW8mdnH7LNipHlFwYJIok
+xzBRXycrJYfZMXh3C1bI1z7tvkV7Pwi0uNYATEQWJMc9/Jsf2PdguedybZj30ru3
+L5sUSyNaj50XwmkYWxJ+wRZZqgMhUh8jjd6+YoRh8z32PfA+ewD5hHiuWK/AUvET
+FNNuevV4cZ4bwleO6zixSjHviJMANhKDb8GGNjZk/a+lq4AGTE2cdD4AohaF0lCi
+ZEUUHzQiuKIVcNbvK5dEND/c56RHdwBsKkkQ9WV+Pfs6E7EoMLSeISEI17cJVkK3
+6q3jt9sDhoLGzt6x8yHgtq94rr8nCcF+mXOPLtDIlTSlJrzmiUlAjzOtuWZxljIo
+m2T1gCQUdAOC3CIEVxKoKNrxtvWg6CTcWGLjvNzYEQdNKQIsYHclubTl7Iz1AwOp
+57oli+kezXE+RtKBZDdv0i5SMs1RyiJyVJ13mPQUhtxA/E6z05s=
+=nISJ
+-----END PGP SIGNATURE-----
+
+--i3b6ii7ljdtzo5c2--
