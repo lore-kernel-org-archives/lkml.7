@@ -2,124 +2,105 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B0857C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:32:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E777AC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:32:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8005D21773
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:32:28 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UCpqiOYx"
+	by mail.kernel.org (Postfix) with ESMTP id B742F2173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:32:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732266AbfDQNc1 (ORCPT
+        id S1732294AbfDQNce (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 09:32:27 -0400
-Received: from mail-pf1-f194.google.com ([209.85.210.194]:42024 "EHLO
-        mail-pf1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729356AbfDQNc0 (ORCPT
+        Wed, 17 Apr 2019 09:32:34 -0400
+Received: from metis.ext.pengutronix.de ([85.220.165.71]:57425 "EHLO
+        metis.ext.pengutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729356AbfDQNce (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 09:32:26 -0400
-Received: by mail-pf1-f194.google.com with SMTP id w25so12108002pfi.9;
-        Wed, 17 Apr 2019 06:32:26 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc:content-transfer-encoding;
-        bh=dZRFc3P8uGOzh5Zz0BAB3HoSOPuInYM2ESa0V7ViyQY=;
-        b=UCpqiOYx54c7YvwCXfVD7JWl5Rl6kNOuPZIsXEN+DC6WO2Wzewf+N2uqXb+9CB9zb8
-         zpFXxWGS0rRVg58GHKswuloXZrH5MDhqyDqFVjk1AwGV5Ep1fQ7HitCWCEtwWj0uzFmX
-         PjL7ywtYjfMKt09QnbI5nbOlRX0AjhgMpT/rcDpEhlmAtPryI90To6Lz9w65UvtOWuuw
-         HChgyPI3EKHuOt8hkpjFn4IPJm/PRDM1TUQWhfK8m5OYvO4e/zyj0iiLI4JZEGeSyM1g
-         U7chLorkDSpJYmtiUjeKrQiZlWPL4/9GyUSHD9wru8YgtHjwhSPcxM7QhV5r49oGrh0f
-         1ZCQ==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc:content-transfer-encoding;
-        bh=dZRFc3P8uGOzh5Zz0BAB3HoSOPuInYM2ESa0V7ViyQY=;
-        b=o4dzmZmuaYu38Vag0AF+N2WpPmgG+jHYbehkBrC6XUIz4GNvdAlp0crKBrCKwkbzCf
-         zAzc7sl29B35pcz974u2ifq6IEZdIFWBOEvYTur1KaCKGWHXMhPC6Fmzi+jJrJlWlERQ
-         BAXBX2VbvNENrrL2EBgfoBllhZGL1vPn7+84rVgKEUZX4YQOzApwO2NeTjaFR/EN3/9K
-         3a/A1Erw3Ely9MPlA69TkqiGGW9ZVtXavIWpP4++LRZEMxZribr0R/DBCmtGpZHJ/156
-         seKsPxIjk5HiF+XyA01Hgq9PgxiGiwvCMcslGpl5OBTvsBC+YW8Lu9Li8rymu6qQo+fJ
-         12oQ==
-X-Gm-Message-State: APjAAAXygoRZ+Lwc33WRT/bgfjXb2i44WU2vWigQ3MYxW3KBzLp8x8z/
-        2iFg5Hyk/QE1g4Ws8wbxCvn0vyyUM7si3gEtF4sY3qrC
-X-Google-Smtp-Source: APXvYqz3yDZrzdyKMfbfnfO/up3f/vrblOubvd2vUDRCZpfI0E55KSjRh1Ctwnh980090LIlzfVAfj2JR6LU8IxjROw=
-X-Received: by 2002:a63:8ac4:: with SMTP id y187mr36712005pgd.13.1555507945926;
- Wed, 17 Apr 2019 06:32:25 -0700 (PDT)
-MIME-Version: 1.0
-References: <CANtEx+B4_-7Kfq6Gur1xHcXnTYRq8ZN=Qqs2X=h-ZJuFFF7LbQ@mail.gmail.com>
- <19402.1555487793@turing-police>
-In-Reply-To: <19402.1555487793@turing-police>
-From:   Steve French <smfrench@gmail.com>
-Date:   Wed, 17 Apr 2019 08:32:12 -0500
-Message-ID: <CAH2r5mvON=nCftcqcb4znhdOYR8XHcCKJseorWvzUVhG7oa8CQ@mail.gmail.com>
-Subject: Re: Need advice about do we need this if condition
-To:     =?UTF-8?Q?Valdis_Kl=C4=93tnieks?= <valdis.kletnieks@vt.edu>
-Cc:     B1C0D8C0 AACEC2D2D3CDC5CDCACE <alexander198961@gmail.com>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        kernelnewbies@kernelnewbies.org,
-        linux-fsdevel <linux-fsdevel@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>
+        Wed, 17 Apr 2019 09:32:34 -0400
+Received: from lupine.hi.pengutronix.de ([2001:67c:670:100:3ad5:47ff:feaf:1a17] helo=lupine)
+        by metis.ext.pengutronix.de with esmtp (Exim 4.89)
+        (envelope-from <p.zabel@pengutronix.de>)
+        id 1hGkfm-0003SU-5Y; Wed, 17 Apr 2019 15:32:22 +0200
+Message-ID: <1555507937.6446.10.camel@pengutronix.de>
+Subject: Re: [PATCH 02/20] drm: Remove users of
+ drm_format_(horz|vert)_chroma_subsampling
+From:   Philipp Zabel <p.zabel@pengutronix.de>
+To:     Maxime Ripard <maxime.ripard@bootlin.com>,
+        Daniel Vetter <daniel.vetter@intel.com>,
+        David Airlie <airlied@linux.ie>,
+        Maarten Lankhorst <maarten.lankhorst@linux.intel.com>,
+        Sean Paul <seanpaul@chromium.org>,
+        Mauro Carvalho Chehab <mchehab@kernel.org>
+Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
+        Hans Verkuil <hans.verkuil@cisco.com>,
+        Laurent Pinchart <laurent.pinchart@ideasonboard.com>,
+        Thomas Petazzoni <thomas.petazzoni@bootlin.com>,
+        Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
+        dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
+        linux-media@vger.kernel.org,
+        Emil Velikov <emil.velikov@collabora.com>
+Date:   Wed, 17 Apr 2019 15:32:17 +0200
+In-Reply-To: <749889cdf957406c86c1791c5bc2a00c3cb1be53.1555487650.git-series.maxime.ripard@bootlin.com>
+References: <cover.8ec406bf8f4f097e9dc909d5aac466556822f592.1555487650.git-series.maxime.ripard@bootlin.com>
+         <749889cdf957406c86c1791c5bc2a00c3cb1be53.1555487650.git-series.maxime.ripard@bootlin.com>
 Content-Type: text/plain; charset="UTF-8"
-Content-Transfer-Encoding: quoted-printable
+X-Mailer: Evolution 3.22.6-1+deb9u1 
+Mime-Version: 1.0
+Content-Transfer-Encoding: 7bit
+X-SA-Exim-Connect-IP: 2001:67c:670:100:3ad5:47ff:feaf:1a17
+X-SA-Exim-Mail-From: p.zabel@pengutronix.de
+X-SA-Exim-Scanned: No (on metis.ext.pengutronix.de); SAEximRunCond expanded to false
+X-PTX-Original-Recipient: linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 2:59 AM Valdis Kl=C4=93tnieks
-<valdis.kletnieks@vt.edu> wrote:
->
-> On Wed, 17 Apr 2019 08:25:22 +0300
->
-> (Adding Al Viro and the linux-fsdevel lists, as at the very least, the ma=
-npage
-> for the syscall needs some clarification...)
->
-> > hello I am trying to fix https://bugzilla.kernel.org/show_bug.cgi?id=3D=
-202935
->
-> So - convince us that it's in fact a "bug" and not a restriction.
->
-> > I found cause
-> > https://github.com/torvalds/linux/blob/master/fs/cifs/cifsfs.c#L1076 no=
-t
-> > sure is it correct to remove such condition ?
->
-> Does the CIFS protocol support copying from a file to another location in=
- the
-> same file? Was it intended to work on *any* filesystem?
+On Wed, 2019-04-17 at 09:54 +0200, Maxime Ripard wrote:
+> drm_format_horz_chroma_subsampling and drm_format_vert_chroma_subsampling
+> are basically a lookup in the drm_format_info table plus an access to the
+> hsub and vsub fields of the appropriate entry.
+> 
+> Most drivers are using this function while having access to the entry
+> already, which means that we will perform an unnecessary lookup. Removing
+> the call to these functions is therefore more efficient.
+> 
+> Some drivers will not have access to that entry in the function, but in
+> this case the overhead is minimal (we just have to call drm_format_info()
+> to perform the lookup) and we can even avoid multiple, inefficient lookups
+> in some places that need multiple fields from the drm_format_info
+> structure.
+> 
+> This is amplified by the fact that most of the time the callers will have
+> to retrieve both the vsub and hsub fields, meaning that they would perform
+> twice the lookup.
+> 
+> Reviewed-by: Emil Velikov <emil.velikov@collabora.com>
+> Reviewed-by: Paul Kocialkowski <paul.kocialkowski@bootlin.com>
+> Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 
-Looks like it should be allowed on the same file as long as the source
-and target file ranges do not overlap
+Reviewed-by: Philipp Zabel <p.zabel@pengutronix.de>
 
-See https://docs.microsoft.com/en-us/openspecs/windows_protocols/ms-fscc/1e=
-e611b7-43f0-468c-8a9d-28f04cdc3376
-section 2.3.7.2 and 2.3.8
-Server returns STATUS_NOT_SUPPORTED if "The source and target
-destination ranges overlap on the same file."
+Just one small suggestion:
 
-and line 112 and following of smb2_ioctl_filesys.c in Samba code
+[...]
+> diff --git a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> index 20a9c296d027..345d5cb5e956 100644
+> --- a/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> +++ b/drivers/gpu/drm/rockchip/rockchip_drm_vop.c
+> @@ -317,21 +317,18 @@ static void scl_vop_cal_scl_fac(struct vop *vop, const struct vop_win_data *win,
+>  			     uint32_t src_w, uint32_t src_h, uint32_t dst_w,
+>  			     uint32_t dst_h, uint32_t pixel_format)
+>  {
+> +	const struct drm_format_info *info = drm_format_info(pixel_format);
 
-https://git.samba.org/?p=3Dsamba.git;a=3Dblob;f=3Dsource3/smbd/smb2_ioctl_f=
-ilesys.c;h=3D8a9c8c64ec9ddbca4623251555f4792d76aa6e44;hb=3Drefs/heads/maste=
-r#l112
+The only call site in vop_plane_atomic_update passes fb->format->format
+as pixel_format parameter, so this could be simplified even further by
+replacing the uint32_t pixelformat argument with a const struct
+drm_format_info *info, and passing fb->format directly instead.
 
-> (For that matter, the manpage for the syscall is unclear on whether havin=
-g both
-> file descriptors open on the same file is OK or not - for bonus ambiguity
-> points, there's exactly zero discussion of what happens if source and
-> destination overlap destructively).
->
-
-
---=20
-Thanks,
-
-Steve
+regards
+Philipp
