@@ -2,140 +2,125 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 772BEC282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:34:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 51453C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:35:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3A88F20656
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:34:24 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="m2UHl/a0"
+	by mail.kernel.org (Postfix) with ESMTP id 20B5A217FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:35:18 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555533318;
+	bh=Us4Mh7NyDCpZ8PIITSv+u78YLzC6mwrmxrBVkQ4WdS4=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=n1LHmvlTzn41zglUUwToadwrbJEn2VhDo/cKDoVWcBIB6xOuWr3oKMcwVxWhr+mCc
+	 nRJPQbFptQ8SVLFHswmg9lL40jtOjoWa9KpxWzAlXGZjv+qpESs/gjg2mUmGmRsz0+
+	 27KFdjGZwa6NERccw3vroOzclx/QbUOTTghBRTdM=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732596AbfDQUeW (ORCPT
+        id S1732913AbfDQUfR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 16:34:22 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:33191 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727340AbfDQUeW (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 16:34:22 -0400
-Received: by mail-pg1-f196.google.com with SMTP id k19so85339pgh.0
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 13:34:22 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Txu2pNwANmfIrqpmFvCs7lHKfCWV4hN8q26eEPlsULM=;
-        b=m2UHl/a0zRHzYjIjkehNNLc9RD1K4Qks1O0DClAbh/KDXihByze+3vPSXM3H8I27rt
-         xuka8Wqo3/s32QGkMTdPJjvRzrRYN1duQu8i7CwIp3dnjVd+i0m/zMNBBByc7rFlTau6
-         QfGnhI5WZ0dGs4jNPNI3KaMhXEY9hv4sv8B9dbGh2jnyx7p4dulkxopb0XdvhiA6Axox
-         M5HRJ+Hwus8oPJKLsH3YsypGmuLrIaMEKbi4axIbZRUvgU5w4UgA4eGG1JsA9NNOpE7U
-         /YK/5JAyfN7GJTyIyvaWs+/Xj/mmTN5gJd/awMs761N0nmlri+cuI/Ot0uxvmPdcigLj
-         0TRA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Txu2pNwANmfIrqpmFvCs7lHKfCWV4hN8q26eEPlsULM=;
-        b=hPqIkxA5QsXf5X4vChgWOdK1TkwAs11okHk3QpPAYvn7uhUWJgdc7CpMaTc4vFW/mK
-         bMAZEsqBiWvSocV78mkXjl8Lr+wygr0U1KczLccS/0ZoIiwaBKdD2GX5HNLwY7uETz8s
-         aQVFsUw8lhPU9ru9vs7hyQOB9Fg7QwGXP1aQ+zTlOq7e9LeZzM7FyX6Kxo3YF2JGFRqc
-         9AcBDS6VtNf+AOuApNTIQK9IOcZ2Le3SZbkwioqKLYhnCY8WbU6tbkXGSdhvcANn3kWf
-         /aGxZO6utoH9c3azRBU1bJWsaxz7NADGe8a+4iOjDtH7sM4WxRLu1cFsqJsIP+WVDsQZ
-         65NQ==
-X-Gm-Message-State: APjAAAU2KtYDFShHgObAZOCK2OnBMu8iRUy08C4mCjig+JOFMes3quFj
-        6muV2s13wZ2YQBpGQfw7vh159w==
-X-Google-Smtp-Source: APXvYqzPbbF17LVnv2ToEEEsHdn78FUhFyenHDucdW+I/Sjw5d2WaSPEQOIoYNl3/fDhf/RD0Gd/CQ==
-X-Received: by 2002:a62:b602:: with SMTP id j2mr92744764pff.68.1555533261716;
-        Wed, 17 Apr 2019 13:34:21 -0700 (PDT)
-Received: from xps15 (S0106002369de4dac.cg.shawcable.net. [68.147.8.254])
-        by smtp.gmail.com with ESMTPSA id o68sm49732pfi.140.2019.04.17.13.34.20
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 17 Apr 2019 13:34:20 -0700 (PDT)
-Date:   Wed, 17 Apr 2019 14:34:18 -0600
-From:   Mathieu Poirier <mathieu.poirier@linaro.org>
-To:     Suzuki K Poulose <suzuki.poulose@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        coresight@lists.linaro.org, mike.leach@linaro.org,
-        rjw@rjwysocki.net, robert.walker@arm.com
-Subject: Re: [PATCH v2 07/36] coresight: replicator: Cleanup device tracking
-Message-ID: <20190417203418.GB14163@xps15>
-References: <1555344260-12375-1-git-send-email-suzuki.poulose@arm.com>
- <1555344260-12375-8-git-send-email-suzuki.poulose@arm.com>
+        Wed, 17 Apr 2019 16:35:17 -0400
+Received: from mail.kernel.org ([198.145.29.99]:46722 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727013AbfDQUfQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 16:35:16 -0400
+Received: from localhost (unknown [69.71.4.100])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 9B91B217F4;
+        Wed, 17 Apr 2019 20:35:15 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555533315;
+        bh=Us4Mh7NyDCpZ8PIITSv+u78YLzC6mwrmxrBVkQ4WdS4=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=02FwyfrZnnCqceCZcyg0aTSI1q6tBoMZKA6mviL57ryyHUJ/R29KCxM9DG5cgT3YE
+         aCZVqqTtqKfWH49R8b28XsXEH1pXOMwqeRXCRTbS1z9nMq4d2Xg5+4iku2MGJ4TqzV
+         kCLxr4oVKT2OU7Qs/8yvVmdrL6OOOXzGNnEScfvw=
+Date:   Wed, 17 Apr 2019 15:35:14 -0500
+From:   Bjorn Helgaas <helgaas@kernel.org>
+To:     Wenwen Wang <wang6495@umn.edu>
+Cc:     Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        "maintainer:X86 ARCHITECTURE (32-BIT AND 64-BIT)" <x86@kernel.org>,
+        "open list:PCI SUBSYSTEM" <linux-pci@vger.kernel.org>,
+        "open list:X86 ARCHITECTURE (32-BIT AND 64-BIT)" 
+        <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4] x86/PCI: fix a memory leak bug
+Message-ID: <20190417203514.GT126710@google.com>
+References: <1555510730-9060-1-git-send-email-wang6495@umn.edu>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <1555344260-12375-8-git-send-email-suzuki.poulose@arm.com>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <1555510730-9060-1-git-send-email-wang6495@umn.edu>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 05:03:50PM +0100, Suzuki K Poulose wrote:
-> In preparation to use a consistent device naming scheme,
-> clean up the device link tracking in replicator driver.
-> Use the "coresight" device instead of the "real" parent device
-> for all internal purposes. All other requests (e.g, power management,
-> DMA operations) must use the "real" device which is the parent device.
+On Wed, Apr 17, 2019 at 09:18:50AM -0500, Wenwen Wang wrote:
+> In pcibios_irq_init(), the PCI IRQ routing table 'pirq_table' is firstly
+> found through pirq_find_routing_table(). If the table is not found and
+> 'CONFIG_PCI_BIOS' is defined, the table is then allocated in
+> pcibios_get_irq_routing_table() using kmalloc(). In the following
+> execution, if the I/O APIC is used, this table is actually not used.
+> However, in that case, the allocated table is not freed, which is a memory
+> leak bug.
 > 
-> Cc: Mathieu Poirier <mathieu.poirier@linaro.org>
-> Signed-off-by: Suzuki K Poulose <suzuki.poulose@arm.com>
+> To fix this issue, free the allocated table if it is not used.
+> 
+> Signed-off-by: Wenwen Wang <wang6495@umn.edu>
+> Acked-by: Thomas Gleixner <tglx@linutronix.de>
+
+I added Ingo's reviewed-by (since the only change from v1 was to make the
+local variable name change he suggested) and applied this to pci/misc for
+v5.2, thanks!
+
 > ---
->  drivers/hwtracing/coresight/coresight-replicator.c | 7 ++-----
->  1 file changed, 2 insertions(+), 5 deletions(-)
+>  arch/x86/pci/irq.c | 10 ++++++++--
+>  1 file changed, 8 insertions(+), 2 deletions(-)
 > 
-> diff --git a/drivers/hwtracing/coresight/coresight-replicator.c b/drivers/hwtracing/coresight/coresight-replicator.c
-> index 4e0da85..8bbb008 100644
-> --- a/drivers/hwtracing/coresight/coresight-replicator.c
-> +++ b/drivers/hwtracing/coresight/coresight-replicator.c
-> @@ -26,13 +26,11 @@
->   * struct replicator_drvdata - specifics associated to a replicator component
->   * @base:	memory mapped base address for this component. Also indicates
->   *		whether this one is programmable or not.
-> - * @dev:	the device entity associated with this component
->   * @atclk:	optional clock for the core parts of the replicator.
->   * @csdev:	component vitals needed by the framework
->   */
->  struct replicator_drvdata {
->  	void __iomem		*base;
-> -	struct device		*dev;
->  	struct clk		*atclk;
->  	struct coresight_device	*csdev;
->  };
-> @@ -100,7 +98,7 @@ static int replicator_enable(struct coresight_device *csdev, int inport,
->  	if (drvdata->base)
->  		rc = dynamic_replicator_enable(drvdata, inport, outport);
->  	if (!rc)
-> -		dev_dbg(drvdata->dev, "REPLICATOR enabled\n");
-> +		dev_dbg(&csdev->dev, "REPLICATOR enabled\n");
->  	return rc;
->  }
+> diff --git a/arch/x86/pci/irq.c b/arch/x86/pci/irq.c
+> index 52e5510..d3a73f9 100644
+> --- a/arch/x86/pci/irq.c
+> +++ b/arch/x86/pci/irq.c
+> @@ -1119,6 +1119,8 @@ static const struct dmi_system_id pciirq_dmi_table[] __initconst = {
 >  
-> @@ -139,7 +137,7 @@ static void replicator_disable(struct coresight_device *csdev, int inport,
+>  void __init pcibios_irq_init(void)
+>  {
+> +	struct irq_routing_table *rtable = NULL;
+> +
+>  	DBG(KERN_DEBUG "PCI: IRQ init\n");
 >  
->  	if (drvdata->base)
->  		dynamic_replicator_disable(drvdata, inport, outport);
-> -	dev_dbg(drvdata->dev, "REPLICATOR disabled\n");
-> +	dev_dbg(&csdev->dev, "REPLICATOR disabled\n");
->  }
+>  	if (raw_pci_ops == NULL)
+> @@ -1129,8 +1131,10 @@ void __init pcibios_irq_init(void)
+>  	pirq_table = pirq_find_routing_table();
 >  
->  static const struct coresight_ops_link replicator_link_ops = {
-> @@ -193,7 +191,6 @@ static int replicator_probe(struct device *dev, struct resource *res)
->  	if (!drvdata)
->  		return -ENOMEM;
+>  #ifdef CONFIG_PCI_BIOS
+> -	if (!pirq_table && (pci_probe & PCI_BIOS_IRQ_SCAN))
+> +	if (!pirq_table && (pci_probe & PCI_BIOS_IRQ_SCAN)) {
+>  		pirq_table = pcibios_get_irq_routing_table();
+> +		rtable = pirq_table;
+> +	}
+>  #endif
+>  	if (pirq_table) {
+>  		pirq_peer_trick();
+> @@ -1145,8 +1149,10 @@ void __init pcibios_irq_init(void)
+>  		 * If we're using the I/O APIC, avoid using the PCI IRQ
+>  		 * routing table
+>  		 */
+> -		if (io_apic_assign_pci_irqs)
+> +		if (io_apic_assign_pci_irqs) {
+> +			kfree(rtable);
+>  			pirq_table = NULL;
+> +		}
+>  	}
 >  
-> -	drvdata->dev = dev;
->  	drvdata->atclk = devm_clk_get(dev, "atclk"); /* optional */
->  	if (!IS_ERR(drvdata->atclk)) {
->  		ret = clk_prepare_enable(drvdata->atclk);
-
-Reviewed-by: Mathieu Poirier <mathieu.poirier@linaro.org>
-
+>  	x86_init.pci.fixup_irqs();
 > -- 
 > 2.7.4
 > 
