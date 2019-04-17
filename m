@@ -2,106 +2,160 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 11670C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 03:00:05 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4CC27C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 03:01:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAC8621773
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 03:00:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PIVNEeid"
+	by mail.kernel.org (Postfix) with ESMTP id 25FCA21773
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 03:01:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729996AbfDQDAD (ORCPT
+        id S1729444AbfDQDBZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 23:00:03 -0400
-Received: from mail-lf1-f65.google.com ([209.85.167.65]:46186 "EHLO
-        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728032AbfDQDAD (ORCPT
+        Tue, 16 Apr 2019 23:01:25 -0400
+Received: from relay1.mentorg.com ([192.94.38.131]:59878 "EHLO
+        relay1.mentorg.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728032AbfDQDBZ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 23:00:03 -0400
-Received: by mail-lf1-f65.google.com with SMTP id k18so8693897lfj.13;
-        Tue, 16 Apr 2019 20:00:01 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=CPqjQVLtT6aFDQeUyBSw/2LEhQz8zlq+Rgpi71bmly8=;
-        b=PIVNEeidDIAHEfu8ckN3kRBlXea6F9HMPioWP1LYlEMjM/x/aH0Nt/bg1Vm2P73HYF
-         fd4jUEovycsERRrxrsxm2QiH0pkid57n9b9pAkfQJXmr7XFPKKLx+fB+l7F6EEewLFb7
-         GrPxmUeUxW2x+VRPf1YDZVpv30sE7u9nNp4SyAMHDFn3FTbNUKdvUjcehydT6C8t1j71
-         sjNy2YTbJkJl59VpL8pOK3UTc87IaHtRpN+jN88p0xNscAj9AkpuR1a79sqmGHWCBfrq
-         8Y9pCsN6BerByx9nuwAGxLuiHiGPYBrXXGcMZoh/xcsJvTOhubmZMszbaILNj51/SkEg
-         9vNw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=CPqjQVLtT6aFDQeUyBSw/2LEhQz8zlq+Rgpi71bmly8=;
-        b=sdmJtdjAHqHShyITNtLfEe3HEEriLVs8ElGCdM8S26wIhQq3+fSaJW7grgTC9NITi/
-         opnm0HiYhZKBgu2RwpG3IKTt5OG1D+P1r/DwRbdTYsu6lLlq9YgE8apDOJEv0nzM19t2
-         cGWIYOGfJNPPJhLxaFWVXGwM0AqZ0gTkvi5O7CRy+SFiRvlT/+74E0G68KhFw0XqDlV6
-         YZUj7bVkG5f3yKzsU7OP6rwRXidNZFmSxLEH8CoScF4+wz5blw/2cvQDGNqT3fqtRj04
-         V9hKGgqzxH9mr6BRBzl8zwV/9sDpnesPgaE04yXvza7oJ+Z4hGyuB8dutuUCcb3VAwNE
-         3ykQ==
-X-Gm-Message-State: APjAAAU2OZ1/NFw6HYzTsmPWP2wY2sQs8EKoxIKQl/xjpk99lFZUsmxt
-        4sgm7pmsooDKmMcCr+oCTxi8TsTRHmEHy8DdQEU=
-X-Google-Smtp-Source: APXvYqyvZea77TNs1EBQ0aI6LNDlEVixHjw2X0tfXkJYzDj9wywavXuRFlqiH9ZF06URo2Z0PNrIYtc3Yzc7eZYneAA=
-X-Received: by 2002:ac2:592b:: with SMTP id v11mr22699688lfi.85.1555470000609;
- Tue, 16 Apr 2019 20:00:00 -0700 (PDT)
+        Tue, 16 Apr 2019 23:01:25 -0400
+Received: from svr-orw-mbx-03.mgc.mentorg.com ([147.34.90.203])
+        by relay1.mentorg.com with esmtps (TLSv1.2:ECDHE-RSA-AES256-SHA384:256)
+        id 1hGap7-0004ih-VG from Jiada_Wang@mentor.com ; Tue, 16 Apr 2019 20:01:21 -0700
+Received: from [134.86.193.85] (147.34.91.1) by svr-orw-mbx-03.mgc.mentorg.com
+ (147.34.90.203) with Microsoft SMTP Server (TLS) id 15.0.1320.4; Tue, 16 Apr
+ 2019 20:01:18 -0700
+Subject: Re: [PATCH v1 1/1] thermal: rcar_gen3_thermal: request IRQ after
+ device initialization
+To:     Daniel Lezcano <daniel.lezcano@linaro.org>, <rui.zhang@intel.com>,
+        <edubezval@gmail.com>
+CC:     <linux-pm@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+References: <20190411100352.15977-1-jiada_wang@mentor.com>
+ <92504666-9e17-4c6d-fc74-6cf68b9f017b@linaro.org>
+From:   Jiada Wang <jiada_wang@mentor.com>
+Message-ID: <9a4de8ca-fa49-2050-e40b-b54d03484213@mentor.com>
+Date:   Wed, 17 Apr 2019 12:01:17 +0900
+User-Agent: Mozilla/5.0 (Windows NT 6.3; WOW64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-References: <20190412100018.20852-1-alban@kinvolk.io>
-In-Reply-To: <20190412100018.20852-1-alban@kinvolk.io>
-From:   Alexei Starovoitov <alexei.starovoitov@gmail.com>
-Date:   Tue, 16 Apr 2019 19:59:49 -0700
-Message-ID: <CAADnVQLzNotsJgniQc0cA0v8K=F0wwfOaT6KirRJ0urLiFib_Q@mail.gmail.com>
-Subject: Re: [PATCH bpf-next v1 1/2] bpf: sock ops: add netns in bpf context
-To:     Alban Crequy <alban.crequy@gmail.com>
-Cc:     John Fastabend <john.fastabend@gmail.com>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Daniel Borkmann <daniel@iogearbox.net>,
-        bpf <bpf@vger.kernel.org>,
-        Network Development <netdev@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        Alban Crequy <alban@kinvolk.io>, iago@kinvolk.io
-Content-Type: text/plain; charset="UTF-8"
+In-Reply-To: <92504666-9e17-4c6d-fc74-6cf68b9f017b@linaro.org>
+Content-Type: text/plain; charset="utf-8"; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
+X-ClientProxiedBy: svr-orw-mbx-08.mgc.mentorg.com (147.34.90.208) To
+ svr-orw-mbx-03.mgc.mentorg.com (147.34.90.203)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 3:01 AM Alban Crequy <alban.crequy@gmail.com> wrote:
->
-> From: Alban Crequy <alban@kinvolk.io>
->
-> sockops programs can now access the network namespace inode via
-> (struct bpf_sock_ops)->netns. This can be useful to apply different
-> policies on different network namespaces.
->
-> In the unlikely case where network namespaces are not compiled in
-> (CONFIG_NET_NS=n), the verifier will not allow access to ->netns.
->
-> Signed-off-by: Alban Crequy <alban@kinvolk.io>
-> ---
->  include/uapi/linux/bpf.h |  1 +
->  net/core/filter.c        | 40 ++++++++++++++++++++++++++++++++++++++++
->  2 files changed, 41 insertions(+)
->
-> diff --git a/include/uapi/linux/bpf.h b/include/uapi/linux/bpf.h
-> index 31a27dd337dc..5afaab25f205 100644
-> --- a/include/uapi/linux/bpf.h
-> +++ b/include/uapi/linux/bpf.h
-> @@ -3069,6 +3069,7 @@ struct bpf_sock_ops {
->         __u32 sk_txhash;
->         __u64 bytes_received;
->         __u64 bytes_acked;
-> +       __u64 netns;
->  };
+Hi Daniel
 
-stat /proc/self/ns/net
-returns inode and device.
-inum only is not enough to identify netns.
-Both need to be exposed. See netns_dev/netns_ino in bpf.h
+On 2019/04/17 4:22, Daniel Lezcano wrote:
+> On 11/04/2019 12:03, Jiada Wang wrote:
+>> Currently IRQ is remain enabled after .remove, later if device is probed,
+>> IRQ is requested before .thermal_init, this may cause IRQ function be
+>> triggered but not able to clear IRQ status, thus cause system to hang.
+>>
+>> this patch by moving request of IRQ after device initialization to
+>> avoid this issue.
+> 
+> Why not disable the interrupt and clear the irq status in the .remove
+> callback, so the place is clean when probing again?
+> 
+> 
+>          struct rcar_gen3_thermal_priv *priv = dev_get_drvdata(dev);
+> 
+>          rcar_thermal_irq_set(priv, false);
+> 
+> should do the trick no ?
+> 
+yes, this issue also can be addressed by disable the interrupt in .remove.
+
+But there is race condition between .remove and irq thread function,
+(which enables IRQ)
+so driver need to ensure threaded irq has been disabled before call 
+rcar_thermal_irq_set(priv, false) in .remove.
+this adds additional complexity.
+
+I am fine with both solutions,
+what is your opinion?
+
+Thanks,
+Jiada
+
+>> Signed-off-by: Jiada Wang <jiada_wang@mentor.com>
+>> ---
+>>   drivers/thermal/rcar_gen3_thermal.c | 48 ++++++++++++++++-------------
+>>   1 file changed, 26 insertions(+), 22 deletions(-)
+>>
+>> diff --git a/drivers/thermal/rcar_gen3_thermal.c b/drivers/thermal/rcar_gen3_thermal.c
+>> index 88fa41cf16e8..4d095d7f9763 100644
+>> --- a/drivers/thermal/rcar_gen3_thermal.c
+>> +++ b/drivers/thermal/rcar_gen3_thermal.c
+>> @@ -375,28 +375,6 @@ static int rcar_gen3_thermal_probe(struct platform_device *pdev)
+>>   
+>>   	platform_set_drvdata(pdev, priv);
+>>   
+>> -	/*
+>> -	 * Request 2 (of the 3 possible) IRQs, the driver only needs to
+>> -	 * to trigger on the low and high trip points of the current
+>> -	 * temp window at this point.
+>> -	 */
+>> -	for (i = 0; i < 2; i++) {
+>> -		irq = platform_get_irq(pdev, i);
+>> -		if (irq < 0)
+>> -			return irq;
+>> -
+>> -		irqname = devm_kasprintf(dev, GFP_KERNEL, "%s:ch%d",
+>> -					 dev_name(dev), i);
+>> -		if (!irqname)
+>> -			return -ENOMEM;
+>> -
+>> -		ret = devm_request_threaded_irq(dev, irq, rcar_gen3_thermal_irq,
+>> -						rcar_gen3_thermal_irq_thread,
+>> -						IRQF_SHARED, irqname, priv);
+>> -		if (ret)
+>> -			return ret;
+>> -	}
+>> -
+>>   	pm_runtime_enable(dev);
+>>   	pm_runtime_get_sync(dev);
+>>   
+>> @@ -458,6 +436,32 @@ static int rcar_gen3_thermal_probe(struct platform_device *pdev)
+>>   		goto error_unregister;
+>>   	}
+>>   
+>> +	/*
+>> +	 * Request 2 (of the 3 possible) IRQs, the driver only needs to
+>> +	 * to trigger on the low and high trip points of the current
+>> +	 * temp window at this point.
+>> +	 */
+>> +	for (i = 0; i < 2; i++) {
+>> +		irq = platform_get_irq(pdev, i);
+>> +		if (irq < 0) {
+>> +			ret = irq;
+>> +			goto error_unregister;
+>> +		}
+>> +
+>> +		irqname = devm_kasprintf(dev, GFP_KERNEL, "%s:ch%d",
+>> +					 dev_name(dev), i);
+>> +		if (!irqname) {
+>> +			ret = -ENOMEM;
+>> +			goto error_unregister;
+>> +		}
+>> +
+>> +		ret = devm_request_threaded_irq(dev, irq, rcar_gen3_thermal_irq,
+>> +						rcar_gen3_thermal_irq_thread,
+>> +						IRQF_SHARED, irqname, priv);
+>> +		if (ret)
+>> +			goto error_unregister;
+>> +	}
+>> +
+>>   	rcar_thermal_irq_set(priv, true);
+>>   
+>>   	return 0;
+>>
+> 
+> 
