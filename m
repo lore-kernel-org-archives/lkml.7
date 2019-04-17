@@ -2,54 +2,67 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-6.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B11D2C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 05:27:22 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4F1E3C10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 05:28:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8235D20872
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 05:27:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1C6C7204EC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 05:28:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=endlessm-com.20150623.gappssmtp.com header.i=@endlessm-com.20150623.gappssmtp.com header.b="tYytOG40"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730061AbfDQF1V (ORCPT
+        id S1730146AbfDQF2Q (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 01:27:21 -0400
-Received: from relay1-d.mail.gandi.net ([217.70.183.193]:35349 "EHLO
-        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725811AbfDQF1V (ORCPT
+        Wed, 17 Apr 2019 01:28:16 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:41735 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729099AbfDQF2P (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 01:27:21 -0400
-X-Originating-IP: 79.86.19.127
-Received: from alex.numericable.fr (127.19.86.79.rev.sfr.net [79.86.19.127])
-        (Authenticated sender: alex@ghiti.fr)
-        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id A4426240005;
-        Wed, 17 Apr 2019 05:27:10 +0000 (UTC)
-From:   Alexandre Ghiti <alex@ghiti.fr>
-To:     Andrew Morton <akpm@linux-foundation.org>
-Cc:     Christoph Hellwig <hch@lst.de>,
-        Russell King <linux@armlinux.org.uk>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Ralf Baechle <ralf@linux-mips.org>,
-        Paul Burton <paul.burton@mips.com>,
-        James Hogan <jhogan@kernel.org>,
-        Palmer Dabbelt <palmer@sifive.com>,
-        Albert Ou <aou@eecs.berkeley.edu>,
-        Alexander Viro <viro@zeniv.linux.org.uk>,
-        Luis Chamberlain <mcgrof@kernel.org>,
-        Kees Cook <keescook@chromium.org>,
-        linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-mips@vger.kernel.org, linux-riscv@lists.infradead.org,
-        linux-fsdevel@vger.kernel.org, linux-mm@kvack.org,
-        Alexandre Ghiti <alex@ghiti.fr>,
-        Christoph Hellwig <hch@infradead.org>
-Subject: [PATCH v3 04/11] arm64, mm: Move generic mmap layout functions to mm
-Date:   Wed, 17 Apr 2019 01:22:40 -0400
-Message-Id: <20190417052247.17809-5-alex@ghiti.fr>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <20190417052247.17809-1-alex@ghiti.fr>
-References: <20190417052247.17809-1-alex@ghiti.fr>
+        Wed, 17 Apr 2019 01:28:15 -0400
+Received: by mail-pl1-f195.google.com with SMTP id d1so11450667plj.8
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 22:28:15 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=endlessm-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Y5EwPg/bQEcUkZv671ATjbqlANxdDhHB9TcL2j0wyrQ=;
+        b=tYytOG404GSsMz3HoX+6UiM54xLYZ5XuZkCZxFiMWa5/iAmfRE7LyXmVW8d+gDOr3Q
+         3mBchf99H41AnzQBcRq1ushw3McoNUoFych5e4asVq07KLoYF1Vq1/Otg5l5jt/Q6o6D
+         dXGAwRhv1UA7Y0xxRorzfpRyvqrQrhIPjpvNULoDFRj0I/4thJ0iE1AUZ1M8/YIrUune
+         WPXwaJmkqmx0zhj5doY8nEswJHur/A4WMFaiFWNbtdpMapFeaxo0GosPMVIsG+rEbwV6
+         Z8Pwl4dlqAz6T+Ey7mT+X4FP2gm7Cs1+db8EBdIW+JLdYOSxXfUaQhJErTOz6+OmMzN0
+         lKRw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Y5EwPg/bQEcUkZv671ATjbqlANxdDhHB9TcL2j0wyrQ=;
+        b=Y4qtMa6LWM8p9YrfDl3iymJatKhZXvUoDDlSMh6y89YIWKJGT31L3t1LieGODWhMrf
+         7B70VRX6ycEkusxupRHtPo9KNfnLZUiGdzkhxuDknpXnz2/BkMcKFAz0jz2LAHPM5nq/
+         ed1O/ZDc1zORtAnxXSXzmfOZElqGawHsK1AG19y3k0jkpBU9SjEobV4q4orRB4Whikad
+         4QWvTd7mAKPmoaXF+V+uSKUGeT7qK3rLjvK6nkxQ9izVmlvUGOI1RmLAPb5BWNjcWh9C
+         ztxpaXCCkCluNcf7bF6AE/XlQX1nrzJq/6s+i0EibqO0YfIy8QRbjD8ngbVOIJ1hkpPu
+         5AUg==
+X-Gm-Message-State: APjAAAWo5/UOm68sDKgUB7mVNHXuF7y9M+yKYckqPteqMj8FnSOIC27d
+        P87HvuRi36ld/MhFvPndzC9YyQ==
+X-Google-Smtp-Source: APXvYqwkWxqMMwAYuuBCAX7/YID5v7TAJru4jOTlBMfjCfNJ03Y6N/A9wK1wuev1jBnFyvzOisL8XQ==
+X-Received: by 2002:a17:902:302:: with SMTP id 2mr63474916pld.232.1555478894838;
+        Tue, 16 Apr 2019 22:28:14 -0700 (PDT)
+Received: from limbo.local (123-204-46-122.static.seed.net.tw. [123.204.46.122])
+        by smtp.gmail.com with ESMTPSA id g2sm87911381pfd.134.2019.04.16.22.28.12
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Apr 2019 22:28:14 -0700 (PDT)
+From:   Daniel Drake <drake@endlessm.com>
+To:     tglx@linutronix.de, lenb@kernel.org
+Cc:     x86@kernel.org, linux-kernel@vger.kernel.org, linux@endlessm.com,
+        rjw@rjwysocki.net
+Subject: Detecting x86 LAPIC timer frequency from CPUID data
+Date:   Wed, 17 Apr 2019 13:28:10 +0800
+Message-Id: <20190417052810.3052-1-drake@endlessm.com>
+X-Mailer: git-send-email 2.19.1
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
@@ -57,272 +70,56 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-arm64 handles top-down mmap layout in a way that can be easily reused
-by other architectures, so make it available in mm.
-It then introduces a new config ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
-that can be set by other architectures to benefit from those functions.
-Note that this new config depends on MMU being enabled, if selected
-without MMU support, a warning will be thrown.
+The CPUID.0x16 leaf provides "Bus (Reference) Frequency (in MHz)".
 
-Suggested-by: Christoph Hellwig <hch@infradead.org>
-Signed-off-by: Alexandre Ghiti <alex@ghiti.fr>
----
- arch/Kconfig                       |  8 ++++
- arch/arm64/Kconfig                 |  1 +
- arch/arm64/include/asm/processor.h |  2 -
- arch/arm64/mm/mmap.c               | 76 ------------------------------
- kernel/sysctl.c                    |  6 ++-
- mm/util.c                          | 74 ++++++++++++++++++++++++++++-
- 6 files changed, 86 insertions(+), 81 deletions(-)
+In the thread "No 8254 PIT & no HPET on new Intel N3350 platforms
+causes kernel panic during early boot" we are exploring ways to have
+the kernel avoid using the PIT/HPET IRQ0 timer in more cases, and
+Thomas Gleixner suggested that we could use this CPUID data to set
+lapic_timer_frequency, avoiding the need for calibrate_APIC_clock()
+to measure the APIC clock against the IRQ0 timer.
 
-diff --git a/arch/Kconfig b/arch/Kconfig
-index 33687dddd86a..7c8965c64590 100644
---- a/arch/Kconfig
-+++ b/arch/Kconfig
-@@ -684,6 +684,14 @@ config HAVE_ARCH_COMPAT_MMAP_BASES
- 	  and vice-versa 32-bit applications to call 64-bit mmap().
- 	  Required for applications doing different bitness syscalls.
+I'm thinking of the the following code change, however I get
+unexpected results on Intel i7-8565U (Whiskey Lake). When
+booting without this change, and with apic=notscdeadline (so that
+APIC clock gets calibrated and used), the bus speed is detected as
+23MHz:
+
+ ... lapic delta = 149994
+ ... PM-Timer delta = 357939
+ ... PM-Timer result ok
+ ..... delta 149994
+ ..... mult: 6442193
+ ..... calibration result: 23999
+ ..... CPU clock speed is 1991.0916 MHz.
+ ..... host bus clock speed is 23.0999 MHz.
+
+However the CPUID.0x16 ECX reports a 100MHz bus speed on this device,
+so this code change would produce a significantly different calibration.
+
+Am I doing anything obviously wrong?
+
+diff --git a/arch/x86/kernel/tsc.c b/arch/x86/kernel/tsc.c
+index 3fae23834069..6c51ce842f86 100644
+--- a/arch/x86/kernel/tsc.c
++++ b/arch/x86/kernel/tsc.c
+@@ -679,6 +679,16 @@ static unsigned long cpu_khz_from_cpuid(void)
  
-+# This allows to use a set of generic functions to determine mmap base
-+# address by giving priority to top-down scheme only if the process
-+# is not in legacy mode (compat task, unlimited stack size or
-+# sysctl_legacy_va_layout).
-+config ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
-+	bool
-+	depends on MMU
+ 	cpuid(0x16, &eax_base_mhz, &ebx_max_mhz, &ecx_bus_mhz, &edx);
+ 
++#ifdef CONFIG_X86_LOCAL_APIC
++	/*
++	 * If bus frequency is provided in CPUID data, set
++	 * global lapic_timer_frequency to bus_clock_cycles/jiffy.
++	 * This avoids having to calibrate the APIC timer later.
++	 */
++	if (ecx_bus_mhz)
++		lapic_timer_frequency = (ecx_bus_mhz * 1000000) / HZ;
++#endif
 +
- config HAVE_COPY_THREAD_TLS
- 	bool
- 	help
-diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
-index 7e34b9eba5de..670719a26b45 100644
---- a/arch/arm64/Kconfig
-+++ b/arch/arm64/Kconfig
-@@ -66,6 +66,7 @@ config ARM64
- 	select ARCH_SUPPORTS_INT128 if GCC_VERSION >= 50000 || CC_IS_CLANG
- 	select ARCH_SUPPORTS_NUMA_BALANCING
- 	select ARCH_WANT_COMPAT_IPC_PARSE_VERSION
-+	select ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
- 	select ARCH_WANT_FRAME_POINTERS
- 	select ARCH_HAS_UBSAN_SANITIZE_ALL
- 	select ARM_AMBA
-diff --git a/arch/arm64/include/asm/processor.h b/arch/arm64/include/asm/processor.h
-index 5d9ce62bdebd..4de2a2fd605a 100644
---- a/arch/arm64/include/asm/processor.h
-+++ b/arch/arm64/include/asm/processor.h
-@@ -274,8 +274,6 @@ static inline void spin_lock_prefetch(const void *ptr)
- 		     "nop") : : "p" (ptr));
+ 	return eax_base_mhz * 1000;
  }
  
--#define HAVE_ARCH_PICK_MMAP_LAYOUT
--
- #endif
- 
- extern unsigned long __ro_after_init signal_minsigstksz; /* sigframe size */
-diff --git a/arch/arm64/mm/mmap.c b/arch/arm64/mm/mmap.c
-index ac89686c4af8..c74224421216 100644
---- a/arch/arm64/mm/mmap.c
-+++ b/arch/arm64/mm/mmap.c
-@@ -31,82 +31,6 @@
- 
- #include <asm/cputype.h>
- 
--/*
-- * Leave enough space between the mmap area and the stack to honour ulimit in
-- * the face of randomisation.
-- */
--#define MIN_GAP (SZ_128M)
--#define MAX_GAP	(STACK_TOP/6*5)
--
--static int mmap_is_legacy(struct rlimit *rlim_stack)
--{
--	if (current->personality & ADDR_COMPAT_LAYOUT)
--		return 1;
--
--	if (rlim_stack->rlim_cur == RLIM_INFINITY)
--		return 1;
--
--	return sysctl_legacy_va_layout;
--}
--
--unsigned long arch_mmap_rnd(void)
--{
--	unsigned long rnd;
--
--#ifdef CONFIG_COMPAT
--	if (is_compat_task())
--		rnd = get_random_long() & ((1UL << mmap_rnd_compat_bits) - 1);
--	else
--#endif
--		rnd = get_random_long() & ((1UL << mmap_rnd_bits) - 1);
--	return rnd << PAGE_SHIFT;
--}
--
--static unsigned long mmap_base(unsigned long rnd, struct rlimit *rlim_stack)
--{
--	unsigned long gap = rlim_stack->rlim_cur;
--	unsigned long pad = stack_guard_gap;
--
--	/* Account for stack randomization if necessary */
--	if (current->flags & PF_RANDOMIZE)
--		pad += (STACK_RND_MASK << PAGE_SHIFT);
--
--	/* Values close to RLIM_INFINITY can overflow. */
--	if (gap + pad > gap)
--		gap += pad;
--
--	if (gap < MIN_GAP)
--		gap = MIN_GAP;
--	else if (gap > MAX_GAP)
--		gap = MAX_GAP;
--
--	return PAGE_ALIGN(STACK_TOP - gap - rnd);
--}
--
--/*
-- * This function, called very early during the creation of a new process VM
-- * image, sets up which VM layout function to use:
-- */
--void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
--{
--	unsigned long random_factor = 0UL;
--
--	if (current->flags & PF_RANDOMIZE)
--		random_factor = arch_mmap_rnd();
--
--	/*
--	 * Fall back to the standard layout if the personality bit is set, or
--	 * if the expected stack growth is unlimited:
--	 */
--	if (mmap_is_legacy(rlim_stack)) {
--		mm->mmap_base = TASK_UNMAPPED_BASE + random_factor;
--		mm->get_unmapped_area = arch_get_unmapped_area;
--	} else {
--		mm->mmap_base = mmap_base(random_factor, rlim_stack);
--		mm->get_unmapped_area = arch_get_unmapped_area_topdown;
--	}
--}
--
- /*
-  * You really shouldn't be using read() or write() on /dev/mem.  This might go
-  * away in the future.
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index e5da394d1ca3..eb3414e78986 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -269,7 +269,8 @@ extern struct ctl_table epoll_table[];
- extern struct ctl_table firmware_config_table[];
- #endif
- 
--#ifdef HAVE_ARCH_PICK_MMAP_LAYOUT
-+#if defined(HAVE_ARCH_PICK_MMAP_LAYOUT) || \
-+    defined(CONFIG_ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT)
- int sysctl_legacy_va_layout;
- #endif
- 
-@@ -1564,7 +1565,8 @@ static struct ctl_table vm_table[] = {
- 		.proc_handler	= proc_dointvec,
- 		.extra1		= &zero,
- 	},
--#ifdef HAVE_ARCH_PICK_MMAP_LAYOUT
-+#if defined(HAVE_ARCH_PICK_MMAP_LAYOUT) || \
-+    defined(CONFIG_ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT)
- 	{
- 		.procname	= "legacy_va_layout",
- 		.data		= &sysctl_legacy_va_layout,
-diff --git a/mm/util.c b/mm/util.c
-index a54afb9b4faa..5c3393d32ed1 100644
---- a/mm/util.c
-+++ b/mm/util.c
-@@ -15,7 +15,12 @@
- #include <linux/vmalloc.h>
- #include <linux/userfaultfd_k.h>
- #include <linux/elf.h>
-+#include <linux/elf-randomize.h>
-+#include <linux/personality.h>
- #include <linux/random.h>
-+#include <linux/processor.h>
-+#include <linux/sizes.h>
-+#include <linux/compat.h>
- 
- #include <linux/uaccess.h>
- 
-@@ -313,7 +318,74 @@ unsigned long randomize_stack_top(unsigned long stack_top)
- #endif
- }
- 
--#if defined(CONFIG_MMU) && !defined(HAVE_ARCH_PICK_MMAP_LAYOUT)
-+#ifdef CONFIG_ARCH_WANT_DEFAULT_TOPDOWN_MMAP_LAYOUT
-+#ifdef CONFIG_ARCH_HAS_ELF_RANDOMIZE
-+unsigned long arch_mmap_rnd(void)
-+{
-+	unsigned long rnd;
-+
-+#ifdef CONFIG_COMPAT
-+	if (is_compat_task())
-+		rnd = get_random_long() & ((1UL << mmap_rnd_compat_bits) - 1);
-+	else
-+#endif /* CONFIG_COMPAT */
-+		rnd = get_random_long() & ((1UL << mmap_rnd_bits) - 1);
-+
-+	return rnd << PAGE_SHIFT;
-+}
-+#endif /* CONFIG_ARCH_HAS_ELF_RANDOMIZE */
-+
-+static int mmap_is_legacy(struct rlimit *rlim_stack)
-+{
-+	if (current->personality & ADDR_COMPAT_LAYOUT)
-+		return 1;
-+
-+	if (rlim_stack->rlim_cur == RLIM_INFINITY)
-+		return 1;
-+
-+	return sysctl_legacy_va_layout;
-+}
-+
-+#define MIN_GAP		(SZ_128M)
-+#define MAX_GAP		(STACK_TOP / 6 * 5)
-+
-+static unsigned long mmap_base(unsigned long rnd, struct rlimit *rlim_stack)
-+{
-+	unsigned long gap = rlim_stack->rlim_cur;
-+	unsigned long pad = stack_guard_gap;
-+
-+	/* Account for stack randomization if necessary */
-+	if (current->flags & PF_RANDOMIZE)
-+		pad += (STACK_RND_MASK << PAGE_SHIFT);
-+
-+	/* Values close to RLIM_INFINITY can overflow. */
-+	if (gap + pad > gap)
-+		gap += pad;
-+
-+	if (gap < MIN_GAP)
-+		gap = MIN_GAP;
-+	else if (gap > MAX_GAP)
-+		gap = MAX_GAP;
-+
-+	return PAGE_ALIGN(STACK_TOP - gap - rnd);
-+}
-+
-+void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
-+{
-+	unsigned long random_factor = 0UL;
-+
-+	if (current->flags & PF_RANDOMIZE)
-+		random_factor = arch_mmap_rnd();
-+
-+	if (mmap_is_legacy(rlim_stack)) {
-+		mm->mmap_base = TASK_UNMAPPED_BASE + random_factor;
-+		mm->get_unmapped_area = arch_get_unmapped_area;
-+	} else {
-+		mm->mmap_base = mmap_base(random_factor, rlim_stack);
-+		mm->get_unmapped_area = arch_get_unmapped_area_topdown;
-+	}
-+}
-+#elif defined(CONFIG_MMU) && !defined(HAVE_ARCH_PICK_MMAP_LAYOUT)
- void arch_pick_mmap_layout(struct mm_struct *mm, struct rlimit *rlim_stack)
- {
- 	mm->mmap_base = TASK_UNMAPPED_BASE;
 -- 
-2.20.1
+2.19.1
 
