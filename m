@@ -2,99 +2,84 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8275BC10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:54:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 5B037C10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:54:38 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4E474206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:54:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1F17E217D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:54:38 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="LUdIgNlb"
+	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="G5pbVkcg"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728888AbfDQIyT (ORCPT
+        id S1731168AbfDQIyg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 04:54:19 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:50804 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726237AbfDQIyT (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 04:54:19 -0400
-Received: by mail-wm1-f68.google.com with SMTP id z11so2410240wmi.0
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 01:54:18 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FbeBFpn+y42+bGubMile1GVQyTxVPR9FxPAa5oQU7cI=;
-        b=LUdIgNlbv3x0dDytjkavVezGXWrekvR4fZgMI2G64Q7bjpcVSkNXd1aJmBGsmo3LQ8
-         KVKvGGODA/sPSSLsi8oIzV3cj6Y8Ex1JnATJitL8VOiSdQiV8EO6Z9Q4Nmrf/JqJXEv6
-         V0Wu+U6bnjGUb+pvLi0tz7/YMYemhA2PZVCVomGIbtsHblmAwv99sVdftpzFAIgy8Gjz
-         q2l3XRN1vFnTpT67IW/u5c4Q7wZIYM8PKRs5cCmGpxxOnIXrcR8mepKL73nP1nbD0BIz
-         rDq5sPSIfyrSbYXB35RdAj0MGVS8/WFxMNexW4aS+BG/G1BK1bNVgN64mgcTPYJrohLY
-         uOVg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=FbeBFpn+y42+bGubMile1GVQyTxVPR9FxPAa5oQU7cI=;
-        b=Bfoa7NbuXqi3DQJvvlEXOX/9KODbrS4reSoC6WyIGzbdaR2qr+V8tvzdj4UxPLVnYf
-         OQC7FqGbMcsTazVvTEk7QkGHP6OK1Yvywzoiphnqc6zbBrcdkg+Gy/iSCCndfeaDPa3X
-         isPF/U6HpUZytqUXKK/e2cDJLnun8J8rEu9Bt9Xhs1pwwrYjOi7OgiH3pGZRcjyteAAX
-         dDlrn48H1n9roFRTNixnkY19kUA+zMykwrQWgxifmCO85K5KRGaXviQGLXVPp8poglk4
-         hLKYH3KwG6PQ3g8A7wekYeZNz/DvI53+x9YoWnokcYZxU72MJzC2a2UFnLk1np7oYHMz
-         vOWA==
-X-Gm-Message-State: APjAAAVH6ctOPIprvI/kQl73SeA/u9zrlGQPVu9y+OxW63Am6wyTsfcb
-        ueq88D6nnVZ/DCfN1+4nO98oNQ==
-X-Google-Smtp-Source: APXvYqxXoAWcfKJ7jWJKgqGJTIIzESZh7MPLrfBwNXnhQS+C1+yMWHrjo3MNRkgqDCtCDxdrU72hvw==
-X-Received: by 2002:a1c:7008:: with SMTP id l8mr29497812wmc.49.1555491257501;
-        Wed, 17 Apr 2019 01:54:17 -0700 (PDT)
-Received: from localhost.localdomain (200.red-83-34-200.dynamicip.rima-tde.net. [83.34.200.200])
-        by smtp.gmail.com with ESMTPSA id p6sm50111766wrt.4.2019.04.17.01.54.16
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 17 Apr 2019 01:54:17 -0700 (PDT)
-From:   Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-To:     jorge.ramirez-ortiz@linaro.org, lgirdwood@gmail.com,
-        broonie@kernel.org
-Cc:     linux-kernel@vger.kernel.org, khasim.mohammed@linaro.org
-Subject: [PATCH] regulator: core: do not report EPROBE_DEFER as error.
-Date:   Wed, 17 Apr 2019 10:54:11 +0200
-Message-Id: <20190417085411.14552-1-jorge.ramirez-ortiz@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        Wed, 17 Apr 2019 04:54:36 -0400
+Received: from mail.skyhub.de ([5.9.137.197]:58474 "EHLO mail.skyhub.de"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726237AbfDQIyg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 04:54:36 -0400
+Received: from zn.tnic (p200300EC2F112E000C2D4197130645E8.dip0.t-ipconnect.de [IPv6:2003:ec:2f11:2e00:c2d:4197:1306:45e8])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 61FD31EC04CD;
+        Wed, 17 Apr 2019 10:54:35 +0200 (CEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
+        t=1555491275;
+        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
+         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
+         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
+        bh=wR2+6axEGjnwmnsXoxIn9sKpzP9pltyK+ucxjvJbXZ0=;
+        b=G5pbVkcgbroTqGyPvHY2so8qVm83vxBN0SS1cSiIPjcaH0dEq459crdm6CQHClX50N3Uc9
+        qT47J2C1bQwXTG7J+dYgZnQiHoC/Hta7jvqqmz3n/IFrn9sPmn3EYoVhrytdhjnZEQ+KOQ
+        ZeZHOhHU6Smp1dfANM23ne17tskfMHs=
+Date:   Wed, 17 Apr 2019 10:54:34 +0200
+From:   Borislav Petkov <bp@alien8.de>
+To:     Dave Young <dyoung@redhat.com>,
+        Junichi Nomura <j-nomura@ce.jp.nec.com>
+Cc:     Chao Fan <fanc.fnst@cn.fujitsu.com>, Baoquan He <bhe@redhat.com>,
+        Kairui Song <kasong@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4] x86/boot: Use efi_setup_data for searching RSDP on
+ kexec-ed kernel
+Message-ID: <20190417085434.GC20492@zn.tnic>
+References: <20190412025416.GA11070@jeru.linux.bs1.fc.nec.co.jp>
+ <20190412084956.GC19808@zn.tnic>
+ <20190412133528.GD19808@zn.tnic>
+ <cc2c1dbe-4fb3-fb7d-0540-c04734fc15cb@ce.jp.nec.com>
+ <20190415090717.GA29317@zn.tnic>
+ <20190415102525.GB29317@zn.tnic>
+ <23309b73-d135-a207-564b-6003cee39184@ce.jp.nec.com>
+ <20190416094024.GE27892@zn.tnic>
+ <34d02ae0-7182-2983-b601-acbdb4085f33@ce.jp.nec.com>
+ <20190417070250.GD8411@dhcp-128-65.nay.redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+In-Reply-To: <20190417070250.GD8411@dhcp-128-65.nay.redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Do not log a temporary failure to get a regulator (EPROBE_DEFER) while
-the driver is requesting retries.
+On Wed, Apr 17, 2019 at 03:02:50PM +0800, Dave Young wrote:
+> How about move it after console_init,
 
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
----
- drivers/regulator/core.c | 5 +++--
- 1 file changed, 3 insertions(+), 2 deletions(-)
+Sounds ok to me. That's still before KASLR gets setup and should work
+for Chao's movable regions too.
 
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index 186a37675b50..0ca18bbdcd32 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -4342,8 +4342,9 @@ int regulator_bulk_get(struct device *dev, int num_consumers,
- 						      consumers[i].supply);
- 		if (IS_ERR(consumers[i].consumer)) {
- 			ret = PTR_ERR(consumers[i].consumer);
--			dev_err(dev, "Failed to get supply '%s': %d\n",
--				consumers[i].supply, ret);
-+			if (ret != -EPROBE_DEFER)
-+				dev_err(dev, "Failed to get supply '%s': %d\n",
-+					consumers[i].supply, ret);
- 			consumers[i].consumer = NULL;
- 			goto err;
- 		}
+> and at the same time skip efi_get_rsdp_addr in case kexec?
+
+If kexec_get_rsdp_addr() gets a correct address, efi_get_rsdp_addr()
+will be skipped.
+
 -- 
-2.21.0
+Regards/Gruss,
+    Boris.
 
+Good mailing practices for 400: avoid top-posting and trim the reply.
