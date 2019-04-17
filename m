@@ -2,164 +2,236 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2C585C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:29:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 17756C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:30:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E3331217FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:29:36 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555507777;
-	bh=0xJnJZYcgd0q+PpUhdPcfaC9aLx6V78fhgRRB1mEoMw=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=j6O5zequVm+zRXdBsH9ek5x9M6ZxmINCiCqaX+LZkYeLKIhOrCpljokUE51v+bKY9
-	 i2cDr9JINsKwH53TiFtI5W5ESP+o6PJPgdNloepMYqE17FPewpIcW52pK6et3iWuAD
-	 DqOji/Bf+01huJ8UbqTW3c0xxORal0gfEmaVd5rQ=
+	by mail.kernel.org (Postfix) with ESMTP id D90D82173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:30:24 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732248AbfDQN3f (ORCPT
+        id S1732265AbfDQNaX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 09:29:35 -0400
-Received: from mail.kernel.org ([198.145.29.99]:35674 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727034AbfDQN3f (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 09:29:35 -0400
-Received: from linux-8ccs (charybdis-ext.suse.de [195.135.221.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 655C72173C;
-        Wed, 17 Apr 2019 13:29:32 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555507774;
-        bh=0xJnJZYcgd0q+PpUhdPcfaC9aLx6V78fhgRRB1mEoMw=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=uoNwipDx1HX3uEz2u3yaItHobSLLQ/0QXLuhaUOmRGGBhP8yLFszHDQ2fyP/Qd9C6
-         oF0X93LjGfK00Z70keih5xxx+48yoTecUC3dROMESmURbKStfr4V7TjSLW1vT/d4WL
-         4JAu/5IIYYzOmO1tZkQ2/dbBplQjtMvdXQzLIAH8=
-Date:   Wed, 17 Apr 2019 15:29:29 +0200
-From:   Jessica Yu <jeyu@kernel.org>
-To:     "Joel Fernandes (Google)" <joel@joelfernandes.org>
-Cc:     linux-kernel@vger.kernel.org, paulmck@linux.vnet.ibm.com,
-        rostedt@goodmis.org, mathieu.desnoyers@efficios.com,
-        rcu@vger.kernel.org, kernel-hardening@lists.openwall.com,
-        kernel-team@android.com, keescook@chromium.org
-Subject: Re: [PATCH v3 1/3] module: Prepare for addition of new ro_after_init
- sections
-Message-ID: <20190417132929.GC17099@linux-8ccs>
-References: <20190410195708.162185-1-joel@joelfernandes.org>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii; format=flowed
-Content-Disposition: inline
-In-Reply-To: <20190410195708.162185-1-joel@joelfernandes.org>
-X-OS:   Linux linux-8ccs 5.1.0-rc1-lp150.12.28-default+ x86_64
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 17 Apr 2019 09:30:23 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:43365 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729395AbfDQNaW (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 09:30:22 -0400
+Received: by mail-ed1-f67.google.com with SMTP id j20so10774106edq.10;
+        Wed, 17 Apr 2019 06:30:20 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
+         :references;
+        bh=Vay1Xcn3qQLP8JZ9CpAgKgmvh83bqOteFhv69Rgc3sQ=;
+        b=EIVv90V3X3mvfOw/sMuhfvzaYjdDLFB3X903is3EH6bOT+mZ9JwkxXOqgw5imiwrIQ
+         Tz+Je+rEKNrVDEZkhFSRVEW5/T2O9PXALMCmytSfG8AyBEsIFLMKnY8uGxf8ndPdnTLE
+         76E0sYt+LiprWo2QR2OZbyjAbTyAVaMPNAXIFyJ4+/NroAC+R5LZIy54ZZ35MULN417M
+         dtUIMJCS34hpMwhTaSSHA1hoHpCDD6eJVStKftpAMEkYy8Kq20qOcj6Xq98Pp5jl0U1C
+         QseX2/Tn0OMK3uLsg8Y3HxnEymFoTqVHYTndnq9a6/gjQsjhv+0REGm/tiSYxU+2flN0
+         Vg7w==
+X-Gm-Message-State: APjAAAXL/HyFIMbjBsYfzJrzEBh7c8rfCPW+aXvwBTUNHJMNCoApAh+u
+        LfR4lpT88Njx7JYXweNhyg3HNbHQ
+X-Google-Smtp-Source: APXvYqxbmk/qbOPiFj76DQte2Aq4QGzVJE7wbesCl+pLx14Hq17SS9ACZTSS5DPfeTySpjkRlXpNxA==
+X-Received: by 2002:a17:906:4892:: with SMTP id v18mr45587920ejq.81.1555507819576;
+        Wed, 17 Apr 2019 06:30:19 -0700 (PDT)
+Received: from localhost ([46.140.72.82])
+        by smtp.gmail.com with ESMTPSA id y41sm2432688edd.96.2019.04.17.06.30.18
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 17 Apr 2019 06:30:18 -0700 (PDT)
+From:   Igor Opaniuk <igor.opaniuk@toradex.com>
+To:     devicetree@vger.kernel.org, linux-kernel@vger.kernel.org,
+        linux-arm-kernel@lists.infradead.org, linux-tegra@vger.kernel.org,
+        linux-imx@nxp.com
+Cc:     marc.w.gonzalez@free.fr, jonathanh@nvidia.com,
+        thierry.reding@gmail.com, festevam@gmail.com, robh+dt@kernel.org,
+        mark.rutland@arm.com, shawnguo@kernel.org, s.hauer@pengutronix.de,
+        kernel@pengutronix.de, marcel@ziswiler.com,
+        marcel.ziswiler@toradex.com, stefan@agner.ch
+Subject: [PATCH v4 2/2] ARM: dts: tegra124-apalis: convert to SPDX license tags
+Date:   Wed, 17 Apr 2019 15:30:15 +0200
+Message-Id: <20190417133015.6168-2-igor.opaniuk@toradex.com>
+X-Mailer: git-send-email 2.17.1
+In-Reply-To: <20190417133015.6168-1-igor.opaniuk@toradex.com>
+References: <20190417133015.6168-1-igor.opaniuk@toradex.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-+++ Joel Fernandes (Google) [10/04/19 15:57 -0400]:
->For the purposes of hardening modules by adding sections to
->ro_after_init sections, prepare for addition of new ro_after_init
->entries which we do in future patches. Create a table to which new
->entries could be added later. This makes it less error prone and reduce
->code duplication.
->
->Cc: paulmck@linux.vnet.ibm.com
->Cc: rostedt@goodmis.org
->Cc: mathieu.desnoyers@efficios.com
->Cc: rcu@vger.kernel.org
->Cc: kernel-hardening@lists.openwall.com
->Cc: kernel-team@android.com
->Suggested-by: keescook@chromium.org
->Reviewed-by: keescook@chromium.org
->Acked-by: rostedt@goodmis.org
->Signed-off-by: Joel Fernandes (Google) <joel@joelfernandes.org>
+Replace boiler plate licenses texts with the SPDX license
+identifiers in Colibri/Apalis DTS files.
 
-Hi Joel!
+Acked-by: Marcel Ziswiler <marcel.ziswiler@toradex.com>
+Signed-off-by: Igor Opaniuk <igor.opaniuk@toradex.com>
+---
+v4:
+- Fix typo in the SPDX tag, noticed by Marc (probably was introduced when
+  manually removing unneeded brackets)
 
-Thanks for the patchset! Apologies for the late reply, I've returned
-from vacation this week and am catching up on the previous threads..
+v3:
+- Add Marcel's Acked-by tag
+- Remove un-needed parentheses in SPDX line
+- Replace MIT with GPL-2.0 in tegra124-apalis-emc.dtsi
 
-And if I'm all caught up now, it looks like the plan now is to drop
-this patchset in favor of just marking the srcu pointer array const,
-is that correct? That should put it in a rodata section (ie., a
-section without SHF_WRITE) and the module loader will mark it RO
-appropriately after relocations are applied, so it really doesn't have
-to be a ro_after_init section then if I'm understanding correctly.
+v2:
+- Address Stefan's comment: replace GPL-2.0+ instead GPL-2.0
 
-Jessica
+ arch/arm/boot/dts/tegra124-apalis-emc.dtsi | 39 ++-------------------
+ arch/arm/boot/dts/tegra124-apalis-eval.dts | 40 ++--------------------
+ arch/arm/boot/dts/tegra124-apalis.dtsi     | 40 ++--------------------
+ 3 files changed, 6 insertions(+), 113 deletions(-)
 
->---
-> kernel/module.c | 41 +++++++++++++++++++++++------------------
-> 1 file changed, 23 insertions(+), 18 deletions(-)
->
->diff --git a/kernel/module.c b/kernel/module.c
->index 524da609c884..42e4e289d6c7 100644
->--- a/kernel/module.c
->+++ b/kernel/module.c
->@@ -3300,11 +3300,27 @@ static bool blacklisted(const char *module_name)
-> }
-> core_param(module_blacklist, module_blacklist, charp, 0400);
->
->+/*
->+ * Mark ro_after_init section with SHF_RO_AFTER_INIT so that
->+ * layout_sections() can put it in the right place.
->+ * Note: ro_after_init sections also have SHF_{WRITE,ALLOC} set.
->+ */
->+static const char * const ro_after_init_sections[] = {
->+	".data..ro_after_init",
->+
->+	/*
->+	 * __jump_table structures are never modified, with the exception of
->+	 * entries that refer to code in the __init section, which are
->+	 * annotated as such at module load time.
->+	 */
->+	"__jump_table",
->+};
->+
-> static struct module *layout_and_allocate(struct load_info *info, int flags)
-> {
-> 	struct module *mod;
-> 	unsigned int ndx;
->-	int err;
->+	int err, i;
->
-> 	err = check_modinfo(info->mod, info, flags);
-> 	if (err)
->@@ -3319,23 +3335,12 @@ static struct module *layout_and_allocate(struct load_info *info, int flags)
-> 	/* We will do a special allocation for per-cpu sections later. */
-> 	info->sechdrs[info->index.pcpu].sh_flags &= ~(unsigned long)SHF_ALLOC;
->
->-	/*
->-	 * Mark ro_after_init section with SHF_RO_AFTER_INIT so that
->-	 * layout_sections() can put it in the right place.
->-	 * Note: ro_after_init sections also have SHF_{WRITE,ALLOC} set.
->-	 */
->-	ndx = find_sec(info, ".data..ro_after_init");
->-	if (ndx)
->-		info->sechdrs[ndx].sh_flags |= SHF_RO_AFTER_INIT;
->-	/*
->-	 * Mark the __jump_table section as ro_after_init as well: these data
->-	 * structures are never modified, with the exception of entries that
->-	 * refer to code in the __init section, which are annotated as such
->-	 * at module load time.
->-	 */
->-	ndx = find_sec(info, "__jump_table");
->-	if (ndx)
->-		info->sechdrs[ndx].sh_flags |= SHF_RO_AFTER_INIT;
->+	/* Set sh_flags for read-only after init sections */
->+	for (i = 0; i < ARRAY_SIZE(ro_after_init_sections); i++) {
->+		ndx = find_sec(info, ro_after_init_sections[i]);
->+		if (ndx)
->+			info->sechdrs[ndx].sh_flags |= SHF_RO_AFTER_INIT;
->+	}
->
-> 	/* Determine total sizes, and put offsets in sh_entsize.  For now
-> 	   this is done generically; there doesn't appear to be any
->-- 
->2.21.0.392.gf8f6787159e-goog
->
+diff --git a/arch/arm/boot/dts/tegra124-apalis-emc.dtsi b/arch/arm/boot/dts/tegra124-apalis-emc.dtsi
+index ca2c3a557895..d18eaf4a4a3a 100644
+--- a/arch/arm/boot/dts/tegra124-apalis-emc.dtsi
++++ b/arch/arm/boot/dts/tegra124-apalis-emc.dtsi
+@@ -1,42 +1,7 @@
++// SPDX-License-Identifier: GPL-2.0 OR X11
+ /*
+- * Copyright 2016 Toradex AG
++ * Copyright 2016-2019 Toradex AG
+  *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License
+- *     version 2 as published by the Free Software Foundation.
+- *
+- *     This file is distributed in the hope that it will be useful
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
+  */
+ 
+ / {
+diff --git a/arch/arm/boot/dts/tegra124-apalis-eval.dts b/arch/arm/boot/dts/tegra124-apalis-eval.dts
+index eaee10ef6512..ceb3f6388c7d 100644
+--- a/arch/arm/boot/dts/tegra124-apalis-eval.dts
++++ b/arch/arm/boot/dts/tegra124-apalis-eval.dts
+@@ -1,42 +1,6 @@
++// SPDX-License-Identifier: GPL-2.0 OR X11
+ /*
+- * Copyright 2016-2018 Toradex AG
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License
+- *     version 2 as published by the Free Software Foundation.
+- *
+- *     This file is distributed in the hope that it will be useful
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
++ * Copyright 2016-2019 Toradex AG
+  */
+ 
+ /dts-v1/;
+diff --git a/arch/arm/boot/dts/tegra124-apalis.dtsi b/arch/arm/boot/dts/tegra124-apalis.dtsi
+index 13c93cd507d8..fdc8a4c5aab6 100644
+--- a/arch/arm/boot/dts/tegra124-apalis.dtsi
++++ b/arch/arm/boot/dts/tegra124-apalis.dtsi
+@@ -1,42 +1,6 @@
++// SPDX-License-Identifier: GPL-2.0 OR X11
+ /*
+- * Copyright 2016-2018 Toradex AG
+- *
+- * This file is dual-licensed: you can use it either under the terms
+- * of the GPL or the X11 license, at your option. Note that this dual
+- * licensing only applies to this file, and not this project as a
+- * whole.
+- *
+- *  a) This file is free software; you can redistribute it and/or
+- *     modify it under the terms of the GNU General Public License
+- *     version 2 as published by the Free Software Foundation.
+- *
+- *     This file is distributed in the hope that it will be useful
+- *     but WITHOUT ANY WARRANTY; without even the implied warranty of
+- *     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+- *     GNU General Public License for more details.
+- *
+- * Or, alternatively
+- *
+- *  b) Permission is hereby granted, free of charge, to any person
+- *     obtaining a copy of this software and associated documentation
+- *     files (the "Software"), to deal in the Software without
+- *     restriction, including without limitation the rights to use
+- *     copy, modify, merge, publish, distribute, sublicense, and/or
+- *     sell copies of the Software, and to permit persons to whom the
+- *     Software is furnished to do so, subject to the following
+- *     conditions:
+- *
+- *     The above copyright notice and this permission notice shall be
+- *     included in all copies or substantial portions of the Software.
+- *
+- *     THE SOFTWARE IS PROVIDED , WITHOUT WARRANTY OF ANY KIND
+- *     EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES
+- *     OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+- *     NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT
+- *     HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY
+- *     WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING
+- *     FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR
+- *     OTHER DEALINGS IN THE SOFTWARE.
++ * Copyright 2016-2019 Toradex AG
+  */
+ 
+ #include "tegra124.dtsi"
+-- 
+2.17.1
+
