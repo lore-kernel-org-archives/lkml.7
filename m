@@ -2,207 +2,225 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0DCA8C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 01:54:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 076E4C282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 01:57:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CEAEA21773
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 01:54:01 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BF06820872
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 01:57:23 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=babayev.com header.i=@babayev.com header.b="H3+cj6AN"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730243AbfDQBx5 (ORCPT
+        id S1729141AbfDQB5W (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 21:53:57 -0400
-Received: from mail.windriver.com ([147.11.1.11]:40494 "EHLO
-        mail.windriver.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728032AbfDQBxx (ORCPT
+        Tue, 16 Apr 2019 21:57:22 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:53848 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728514AbfDQB5V (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 21:53:53 -0400
-Received: from ALA-HCA.corp.ad.wrs.com ([147.11.189.40])
-        by mail.windriver.com (8.15.2/8.15.1) with ESMTPS id x3H1qmhg027856
-        (version=TLSv1 cipher=AES128-SHA bits=128 verify=FAIL);
-        Tue, 16 Apr 2019 18:52:48 -0700 (PDT)
-Received: from [128.224.162.199] (128.224.162.199) by ALA-HCA.corp.ad.wrs.com
- (147.11.189.50) with Microsoft SMTP Server (TLS) id 14.3.439.0; Tue, 16 Apr
- 2019 18:52:47 -0700
-Subject: Re: [RFC][PATCH] tracing/x86: Save CR2 before tracing irqsoff on
- error_entry
-To:     Steven Rostedt <rostedt@goodmis.org>,
-        LKML <linux-kernel@vger.kernel.org>
-CC:     Peter Zijlstra <peterz@infradead.org>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Ingo Molnar <mingo@kernel.org>, Borislav Petkov <bp@alien8.de>,
-        Andy Lutomirski <luto@amacapital.net>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>
-References: <20190320221534.165ab87b@oasis.local.home>
-From:   He Zhe <zhe.he@windriver.com>
-Message-ID: <bb376e6b-3ba4-8cd1-9fa4-8cfd421f8413@windriver.com>
-Date:   Wed, 17 Apr 2019 09:52:43 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Tue, 16 Apr 2019 21:57:21 -0400
+Received: by mail-it1-f193.google.com with SMTP id y204so2021573itf.3
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 18:57:21 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=babayev.com; s=google;
+        h=references:user-agent:from:to:cc:subject:in-reply-to:date
+         :message-id:mime-version;
+        bh=pTf6CqltW0FIDdPp5liGh7R5dI59lPVUwc4DYfwKKZg=;
+        b=H3+cj6ANoCx06laCGRyS/AohAiYRZ/wkuCon3WsCF1yqT9AuBRb42KRQNmh95Pnz1Y
+         w4GF+GoxOnLp0kMbXkViSzNO/EhVmG0vj4iPnHvK+yYgZJf42GsJ0OWnB4pUXYPjEpnl
+         H3M/irTr5fxVKM6Ea2aHwH8WSvXVmdVnITjyo=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:references:user-agent:from:to:cc:subject
+         :in-reply-to:date:message-id:mime-version;
+        bh=pTf6CqltW0FIDdPp5liGh7R5dI59lPVUwc4DYfwKKZg=;
+        b=kzyrVvTGzHGyO35ft5HP+vbJe0ddh27tGUPYMhufyKph185vnO9gDxVGVavpWd6PZN
+         iaI2xMfgc2okKAsnco/IB2fGw7bLjF3hPX1OcLyCtMQq5II0+SWYSJw0ol6FAicIaIdQ
+         o5r141CsZL+vQLHRBb+QrDXqbYZSLsNfJJErbFovm7yYV9v6Qi/SMkjh6eCNQYdE/BVD
+         5fKlpGPutFINbVJnMaJAKPgXPEh39ZO7OmG132UC+TQtN8lpzpTNW7DXcrRA4Ag2Avmd
+         g9/A928o0glLL+ESta4L2hkfDwXV2adkyOd3dhEwhqF+pvkii7jjkhm+JPB9Eh2eRcIM
+         oFeQ==
+X-Gm-Message-State: APjAAAVR5V7eL0gvBLNRy1wiyyrBqzTvNtH3L1kA+MJQOIJwVodMgie6
+        43QAVgztOb1zogkJqAvMxZjaOQ==
+X-Google-Smtp-Source: APXvYqw9l6C1XLaoXuY7DQ1TN8ru2hU0BBOGISOBpu2Xp0PcR6So5dbp+gnm7U6t7IOJCMXrPvr7RA==
+X-Received: by 2002:a24:4d06:: with SMTP id l6mr27872283itb.140.1555466240673;
+        Tue, 16 Apr 2019 18:57:20 -0700 (PDT)
+Received: from localhost (50-46-216-15.evrt.wa.frontiernet.net. [50.46.216.15])
+        by smtp.gmail.com with ESMTPSA id y16sm19983036ion.64.2019.04.16.18.57.18
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 16 Apr 2019 18:57:19 -0700 (PDT)
+References: <20190416183620.39950-1-ruslan@babayev.com> <20190416195255.GC8093@roeck-us.net>
+User-agent: mu4e 1.0; emacs 26.1
+From:   Ruslan Babayev <ruslan@babayev.com>
+To:     Guenter Roeck <linux@roeck-us.net>
+Cc:     Ruslan Babayev <ruslan@babayev.com>, xe-linux-external@cisco.com,
+        Jean Delvare <jdelvare@suse.com>, linux-hwmon@vger.kernel.org,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH 1/4] hwmon: (pmbus) add support for output voltage registers
+In-reply-to: <20190416195255.GC8093@roeck-us.net>
+Date:   Tue, 16 Apr 2019 18:57:18 -0700
+Message-ID: <8736mhe6m9.fsf@babayev.com>
 MIME-Version: 1.0
-In-Reply-To: <20190320221534.165ab87b@oasis.local.home>
-Content-Type: text/plain; charset="utf-8"
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Originating-IP: [128.224.162.199]
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From the last replies in the thread, it seems some work is going on. May I ask
-when we can possibly roughly have a fix or workaround?
+Hi Guenter,
 
-Thanks,
-Zhe
+Thanks for taking the time to review these patches. Please see my
+comments inline.
 
+Guenter Roeck writes:
 
-On 3/21/19 10:15 AM, Steven Rostedt wrote:
-> From: Steven Rostedt (VMware) <rostedt@goodmis.org>
+> On Tue, Apr 16, 2019 at 11:36:16AM -0700, Ruslan Babayev wrote:
+>> +static ssize_t pmbus_show_operation(struct device *dev,
+>> +				    struct device_attribute *devattr, char *buf)
+>> +{
+>> +	struct sensor_device_attribute *attr = to_sensor_dev_attr(devattr);
+>> +	struct pmbus_operation *operation = to_pmbus_operation(attr);
+>> +	struct i2c_client *client = to_i2c_client(dev->parent);
+>> +	int ret;
+>> +
+>> +	ret = pmbus_read_byte_data(client, operation->page, PMBUS_OPERATION);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	if (ret & PB_OPERATION_CONTROL_ON) {
+>> +		if (ret & PB_OPERATION_MARGIN_HIGH)
+>> +			return snprintf(buf, PAGE_SIZE, "high\n");
+>> +		else if (ret & PB_OPERATION_MARGIN_LOW)
+>> +			return snprintf(buf, PAGE_SIZE, "low\n");
+>> +		else
+>> +			return snprintf(buf, PAGE_SIZE, "on\n");
+>> +	} else {
+>> +			return snprintf(buf, PAGE_SIZE, "off\n");
+>> +	}
+>> +}
+>> +
+>> +static ssize_t pmbus_set_operation(struct device *dev,
+>> +				   struct device_attribute *devattr,
+>> +				   const char *buf, size_t count)
+>> +{
+>> +	struct sensor_device_attribute *attr = to_sensor_dev_attr(devattr);
+>> +	struct pmbus_operation *operation = to_pmbus_operation(attr);
+>> +	struct i2c_client *client = to_i2c_client(dev->parent);
+>> +	int ret;
+>> +	u8 val;
+>> +
+>> +	/*
+>> +	 * sysfs_streq() doesn't need the \n's, but we add them so the strings
+>> +	 * will be shared with pmbus_show_operation() above.
+>> +	 */
 >
-> He Zhe reported a crash by enabling trace events and selecting
-> "userstacktrace" which will read the stack of userspace for every trace
-> event recorded. Zhe narrowed it down to:
->
->  c3bc8fd637a9 ("tracing: Centralize preemptirq tracepoints and unify their usage")
->
-> With the problem config, I was able to also reproduce the error. I
-> narrowed it down to just having to do the following:
->
->  # cd /sys/kernel/tracing
->  # echo 1 > options/userstacktrace
->  # echo 1 > events/preemptirq/irq_disable/enable
->
-> And sure enough, I triggered a crash. Well, it was systemd crashing
-> with a bad memory access??
->
->  systemd-journal[537]: segfault at ed8cb8 ip 00007f7fffc9fef5 sp 00007ffc4062cb10 error 7
->
-> And it would crash similarly each time I tried it, but always at a
-> different place. After spending the day on this, I finally figured it
-> out. The bug is happening in entry_64.S right after error_entry.
-> There's two TRACE_IRQS_OFF in that code path, which if I comment out,
-> the bug goes away. Then it dawned on me that the crash always happens
-> when systemd does a normal page fault. We had this bug before, and it
-> was with the exception trace points.
->
-> The issue is that a tracepoint can fault (reading vmalloc or whatever).
-> And doing a userspace stack trace most definitely will fault. But if we
-> are coming from a legitimate page fault, the address of that fault (in
-> the CR2 register) will be lost if we fault before we get to the page
-> fault handler. That's exactly what is happening.
->
-> To solve this, a TRACE_IRQS_OFF_CR2 (and ON for consistency) was added
-> that saves the CR2 register. A new trace_hardirqs_off_thunk_cr2 is
-> created that stores the cr2 register, calls the
-> trace_hardirqs_off_caller, then on return restores the cr2 register if
-> it changed, before returning.
->
-> On my tests this fixes the issue. I just want to know if this is a
-> legitimate fix or if someone can come up with a better fix?
->
-> Note: this also saves the exception context just like the
-> do_page_fault() function does.
->
-> Note2: This only gets enabled when lockdep or irq tracing is enabled,
-> which is not recommended for production environments.
->
-> Link: http://lkml.kernel.org/r/897cf5cf-fc24-8a64-cb28-847f2d2e63d2@windriver.com
->
-> Fixes: c3bc8fd637a9 ("tracing: Centralize preemptirq tracepoints and unify their usage")
-> Signed-off-by: Steven Rostedt (VMware) <rostedt@goodmis.org>
-> ---
-> diff --git a/arch/x86/entry/common.c b/arch/x86/entry/common.c
-> index 7bc105f47d21..7edffec328e2 100644
-> --- a/arch/x86/entry/common.c
-> +++ b/arch/x86/entry/common.c
-> @@ -292,6 +292,32 @@ __visible void do_syscall_64(unsigned long nr, struct pt_regs *regs)
->  
->  	syscall_return_slowpath(regs);
->  }
-> +
-> +extern void trace_hardirqs_on_caller(unsigned long caller_addr);
-> +__visible void trace_hardirqs_on_caller_cr2(unsigned long caller_addr)
-> +{
-> +	unsigned long address = read_cr2(); /* Get the faulting address */
-> +	enum ctx_state prev_state;
-> +
-> +	prev_state = exception_enter();
-> +	trace_hardirqs_on_caller(caller_addr);
-> +	if (address != read_cr2())
-> +		write_cr2(address);
-> +	exception_exit(prev_state);
-> +}
-> +
-> +extern void trace_hardirqs_off_caller(unsigned long caller_addr);
-> +__visible void trace_hardirqs_off_caller_cr2(unsigned long caller_addr)
-> +{
-> +	unsigned long address = read_cr2(); /* Get the faulting address */
-> +	enum ctx_state prev_state;
-> +
-> +	prev_state = exception_enter();
-> +	trace_hardirqs_off_caller(caller_addr);
-> +	if (address != read_cr2())
-> +		write_cr2(address);
-> +	exception_exit(prev_state);
-> +}
->  #endif
->  
->  #if defined(CONFIG_X86_32) || defined(CONFIG_IA32_EMULATION)
-> diff --git a/arch/x86/entry/entry_64.S b/arch/x86/entry/entry_64.S
-> index 1f0efdb7b629..73ddf24fed3e 100644
-> --- a/arch/x86/entry/entry_64.S
-> +++ b/arch/x86/entry/entry_64.S
-> @@ -1248,12 +1248,12 @@ ENTRY(error_entry)
->  	 * we fix gsbase, and we should do it before enter_from_user_mode
->  	 * (which can take locks).
->  	 */
-> -	TRACE_IRQS_OFF
-> +	TRACE_IRQS_OFF_CR2
->  	CALL_enter_from_user_mode
->  	ret
->  
->  .Lerror_entry_done:
-> -	TRACE_IRQS_OFF
-> +	TRACE_IRQS_OFF_CR2
->  	ret
->  
->  	/*
-> diff --git a/arch/x86/entry/thunk_64.S b/arch/x86/entry/thunk_64.S
-> index be36bf4e0957..1300b53b98cb 100644
-> --- a/arch/x86/entry/thunk_64.S
-> +++ b/arch/x86/entry/thunk_64.S
-> @@ -41,6 +41,8 @@
->  #ifdef CONFIG_TRACE_IRQFLAGS
->  	THUNK trace_hardirqs_on_thunk,trace_hardirqs_on_caller,1
->  	THUNK trace_hardirqs_off_thunk,trace_hardirqs_off_caller,1
-> +	THUNK trace_hardirqs_on_thunk_cr2,trace_hardirqs_on_caller_cr2,1
-> +	THUNK trace_hardirqs_off_thunk_cr2,trace_hardirqs_off_caller_cr2,1
->  #endif
->  
->  #ifdef CONFIG_DEBUG_LOCK_ALLOC
-> diff --git a/arch/x86/include/asm/irqflags.h b/arch/x86/include/asm/irqflags.h
-> index 058e40fed167..dd511742ca2e 100644
-> --- a/arch/x86/include/asm/irqflags.h
-> +++ b/arch/x86/include/asm/irqflags.h
-> @@ -172,9 +172,13 @@ static inline int arch_irqs_disabled(void)
->  #ifdef CONFIG_TRACE_IRQFLAGS
->  #  define TRACE_IRQS_ON		call trace_hardirqs_on_thunk;
->  #  define TRACE_IRQS_OFF	call trace_hardirqs_off_thunk;
-> +#  define TRACE_IRQS_ON_CR2	call trace_hardirqs_on_thunk_cr2;
-> +#  define TRACE_IRQS_OFF_CR2	call trace_hardirqs_off_thunk_cr2;
->  #else
->  #  define TRACE_IRQS_ON
->  #  define TRACE_IRQS_OFF
-> +#  define TRACE_IRQS_ON_CR2
-> +#  define TRACE_IRQS_OFF_CR2
->  #endif
->  #ifdef CONFIG_DEBUG_LOCK_ALLOC
->  #  ifdef CONFIG_X86_64
+> Saving a few bytes of data in the driver is not worth such limitations.
+> I would not want to have to deal with users sending "echo -n on" to the
+> driver and complain that it doesn't work.
 >
 
+Sending "echo -n on" works just fine. sysfs_streq ignores \n's as
+mentioned in the comment. This was actually shamelessly stolen from
+drivers/regulator/virtual.c set_mode().
+
+>> +	if (sysfs_streq(buf, "on\n"))
+>> +		val = PB_OPERATION_CONTROL_ON;
+>> +	else if (sysfs_streq(buf, "off\n"))
+>> +		val = 0;
+>> +	else if (sysfs_streq(buf, "high\n"))
+>> +		val = PB_OPERATION_CONTROL_ON | PB_OPERATION_ACT_ON_FAULT |
+>> +		      PB_OPERATION_MARGIN_HIGH;
+>> +	else if (sysfs_streq(buf, "low\n"))
+>> +		val = PB_OPERATION_CONTROL_ON | PB_OPERATION_ACT_ON_FAULT |
+>> +		      PB_OPERATION_MARGIN_LOW;
+>> +	else
+>> +		return -EINVAL;
+>> +
+>> +	ret = pmbus_write_byte_data(client, operation->page,
+>> +				    PMBUS_OPERATION, val);
+>> +	if (ret < 0)
+>> +		return ret;
+>> +
+>> +	return count;
+>> +}
+>> +
+> I am not convinced that it is a good idea to implement this as sysfs
+> attributes. It is notmally only used in manufacturing, and there the
+> registers can be acccessed directly.
+>
+> Either case, we can not implement this in the pmbus driver as generic code.
+> Operation commands are notoriously implemented with slight differences across
+> different devices. It would also probably be more appropriate to implement
+> as regulator, since it affects setting voltages, not limits.
+>
+
+The OPERATION command as well as VOUT_COMMAND and VOUT_MARGIN_{HIGH,LOW}
+are standard registers specified in PMBus Spec Part II, Rev 1.2 Section
+13. "Output Voltage Related Commands". The devices I have seen so far
+(the ones that support voltage margining) all seem to be compliant with
+the standard as far as the OPERATION register is concerned.
+
+Some devices like TPS40422 use manufacturer specific registers instead of
+VOUT_MARGIN_{HIGH,LOW}. Those can be handled by overriding
+{read,write}_word_data to make it look standard to pmbus_core (as I have
+done in the PATCH 4/4)
+
+>> +
+>> +static const struct pmbus_sensor_attr vout_attributes[] = {
+>> +	{
+>> +		.reg = PMBUS_VOUT_COMMAND,
+>> +		.class = PSC_VOLTAGE_OUT,
+>> +		.label = "command",
+>
+> Bad name for a label.
+
+Could you please suggest a better name?
+
+>>  static int pmbus_find_attributes(struct i2c_client *client,
+>>  				 struct pmbus_data *data)
+>>  {
+>> @@ -1912,6 +2089,12 @@ static int pmbus_find_attributes(struct i2c_client *client,
+>>  	if (ret)
+>>  		return ret;
+>>
+>> +	/* Output Voltage sensors */
+>> +	ret = pmbus_add_vout_attrs(client, data, "out", vout_attributes,
+>> +				   ARRAY_SIZE(vout_attributes));
+>> +	if (ret)
+>> +		return ret;
+>> +
+>
+> The sensors you are adding are not output voltage sensors. They are not
+> sensors in the first place, and should probably not be reported as sensor
+> values. And setting voltages as limits is really not appropriate.
+>
+
+I understand your concerns about exposing these registers as sysfs
+entries in hwmon. These devices _are_ voltage regulators, and these
+registers are not exactly "sensors", although a lot of the existing
+pmbus_core code can be reused by pretending they are. Like VOUT_MODE
+exponent handling, linear16 format etc.
+
+I have looked at the regulator framework and into extending the
+pmbus_regulator_ops to support voltage margining with standard PMBUS
+VOUT_MARGIN registers. My predicament is that regulator framework
+
+1) Does NOT have the concept of "margining".
+
+2) Is not expected to be used at ALL on ACPI based systems. With ACPI
+   kernel assumes power control is done with Power Resource Objects
+   (ACPI section 7.1).
+
+The latter is a bigger issue for us - our system is Intel based. It
+seems like sysfs attributes is our only option.
+
+How would you feel if these registers (namely OPERATION and
+VOUT_MARGIN_{HIGH,LOW}) were exposed only in the drivers without making
+any changes to pmbus_core.c? Would these drivers have a chance of
+getting upstreamed? I hate the idea of maintaining out-of-tree drivers.
+
+Best regards,
+Ruslan
