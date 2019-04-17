@@ -4,26 +4,27 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 313CAC282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:55:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A4B7C10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:55:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 084AD20835
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:55:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5502E20835
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:55:40 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731402AbfDQHzf (ORCPT
+        id S1731416AbfDQHzj (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 03:55:35 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:41683 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731380AbfDQHza (ORCPT
+        Wed, 17 Apr 2019 03:55:39 -0400
+Received: from relay6-d.mail.gandi.net ([217.70.183.198]:35165 "EHLO
+        relay6-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731392AbfDQHzf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 03:55:30 -0400
+        Wed, 17 Apr 2019 03:55:35 -0400
+X-Originating-IP: 90.88.160.238
 Received: from localhost (aaubervilliers-681-1-42-238.w90-88.abo.wanadoo.fr [90.88.160.238])
         (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id 66EE3240014;
-        Wed, 17 Apr 2019 07:55:27 +0000 (UTC)
+        by relay6-d.mail.gandi.net (Postfix) with ESMTPSA id 1B9BCC0017;
+        Wed, 17 Apr 2019 07:55:31 +0000 (UTC)
 From:   Maxime Ripard <maxime.ripard@bootlin.com>
 To:     Daniel Vetter <daniel.vetter@intel.com>,
         David Airlie <airlied@linux.ie>,
@@ -38,9 +39,9 @@ Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
         Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         linux-media@vger.kernel.org
-Subject: [PATCH 10/20] drm/exynos: Convert to generic image format library
-Date:   Wed, 17 Apr 2019 09:54:36 +0200
-Message-Id: <77b68a688cf9970f14b97a87b19be0b309788e30.1555487650.git-series.maxime.ripard@bootlin.com>
+Subject: [PATCH 12/20] drm/ipuv3: Convert to generic image format library
+Date:   Wed, 17 Apr 2019 09:54:38 +0200
+Message-Id: <dc697850732d4dcf27b7cb3ecb9a4d419c941cb9.1555487650.git-series.maxime.ripard@bootlin.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.8ec406bf8f4f097e9dc909d5aac466556822f592.1555487650.git-series.maxime.ripard@bootlin.com>
 References: <cover.8ec406bf8f4f097e9dc909d5aac466556822f592.1555487650.git-series.maxime.ripard@bootlin.com>
@@ -56,64 +57,51 @@ use it so that we can deprecate the old DRM one.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- drivers/gpu/drm/exynos/exynos_drm_ipp.c    | 2 +-
- drivers/gpu/drm/exynos/exynos_drm_ipp.h    | 4 +++-
- drivers/gpu/drm/exynos/exynos_drm_scaler.c | 3 ++-
- 3 files changed, 6 insertions(+), 3 deletions(-)
+ drivers/gpu/ipu-v3/ipu-pre.c | 3 ++-
+ drivers/gpu/ipu-v3/ipu-prg.c | 3 ++-
+ 2 files changed, 4 insertions(+), 2 deletions(-)
 
-diff --git a/drivers/gpu/drm/exynos/exynos_drm_ipp.c b/drivers/gpu/drm/exynos/exynos_drm_ipp.c
-index 23226a0212e8..ba012840fe07 100644
---- a/drivers/gpu/drm/exynos/exynos_drm_ipp.c
-+++ b/drivers/gpu/drm/exynos/exynos_drm_ipp.c
-@@ -562,7 +562,7 @@ static int exynos_drm_ipp_check_format(struct exynos_drm_ipp_task *task,
- 	if (buf->buf.width == 0 || buf->buf.height == 0)
- 		return -EINVAL;
+diff --git a/drivers/gpu/ipu-v3/ipu-pre.c b/drivers/gpu/ipu-v3/ipu-pre.c
+index 6cacfd61d984..83bfcaefe1d3 100644
+--- a/drivers/gpu/ipu-v3/ipu-pre.c
++++ b/drivers/gpu/ipu-v3/ipu-pre.c
+@@ -15,6 +15,7 @@
+ #include <linux/clk.h>
+ #include <linux/err.h>
+ #include <linux/genalloc.h>
++#include <linux/image-formats.h>
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
+@@ -174,7 +175,7 @@ void ipu_pre_configure(struct ipu_pre *pre, unsigned int width,
+ 		       unsigned int height, unsigned int stride, u32 format,
+ 		       uint64_t modifier, unsigned int bufaddr)
+ {
+-	const struct drm_format_info *info = drm_format_info(format);
++	const struct image_format_info *info = image_format_drm_lookup(format);
+ 	u32 active_bpp = info->cpp[0] >> 1;
+ 	u32 val;
  
--	buf->format = drm_format_info(buf->buf.fourcc);
-+	buf->format = image_format_drm_lookup(buf->buf.fourcc);
- 	for (i = 0; i < buf->format->num_planes; i++) {
- 		unsigned int width = (i == 0) ? buf->buf.width :
- 			     DIV_ROUND_UP(buf->buf.width, buf->format->hsub);
-diff --git a/drivers/gpu/drm/exynos/exynos_drm_ipp.h b/drivers/gpu/drm/exynos/exynos_drm_ipp.h
-index 0b27d4a9bf94..c6cd21f185e6 100644
---- a/drivers/gpu/drm/exynos/exynos_drm_ipp.h
-+++ b/drivers/gpu/drm/exynos/exynos_drm_ipp.h
-@@ -71,12 +71,14 @@ struct exynos_drm_ipp {
- 	wait_queue_head_t done_wq;
- };
- 
-+struct image_format_info;
-+
- struct exynos_drm_ipp_buffer {
- 	struct drm_exynos_ipp_task_buffer buf;
- 	struct drm_exynos_ipp_task_rect rect;
- 
- 	struct exynos_drm_gem *exynos_gem[MAX_FB_BUFFER];
--	const struct drm_format_info *format;
-+	const struct image_format_info *format;
- 	dma_addr_t dma_addr[MAX_FB_BUFFER];
- };
- 
-diff --git a/drivers/gpu/drm/exynos/exynos_drm_scaler.c b/drivers/gpu/drm/exynos/exynos_drm_scaler.c
-index ed1dd1aec902..c9791a2013cf 100644
---- a/drivers/gpu/drm/exynos/exynos_drm_scaler.c
-+++ b/drivers/gpu/drm/exynos/exynos_drm_scaler.c
-@@ -11,6 +11,7 @@
- #include <linux/kernel.h>
- #include <linux/component.h>
+diff --git a/drivers/gpu/ipu-v3/ipu-prg.c b/drivers/gpu/ipu-v3/ipu-prg.c
+index 94b76badf677..042c141ad07e 100644
+--- a/drivers/gpu/ipu-v3/ipu-prg.c
++++ b/drivers/gpu/ipu-v3/ipu-prg.c
+@@ -14,6 +14,7 @@
+ #include <drm/drm_fourcc.h>
+ #include <linux/clk.h>
  #include <linux/err.h>
 +#include <linux/image-formats.h>
- #include <linux/interrupt.h>
- #include <linux/io.h>
- #include <linux/platform_device.h>
-@@ -301,7 +302,7 @@ static inline void scaler_set_rotation(struct scaler_context *scaler,
- }
- 
- static inline void scaler_set_csc(struct scaler_context *scaler,
--	const struct drm_format_info *fmt)
-+	const struct image_format_info *fmt)
+ #include <linux/iopoll.h>
+ #include <linux/mfd/syscon.h>
+ #include <linux/mfd/syscon/imx6q-iomuxc-gpr.h>
+@@ -132,7 +133,7 @@ EXPORT_SYMBOL_GPL(ipu_prg_present);
+ bool ipu_prg_format_supported(struct ipu_soc *ipu, uint32_t format,
+ 			      uint64_t modifier)
  {
- 	static const u32 csc_mtx[2][3][3] = {
- 		{ /* YCbCr to RGB */
+-	const struct drm_format_info *info = drm_format_info(format);
++	const struct image_format_info *info = image_format_drm_lookup(format);
+ 
+ 	if (info->num_planes != 1)
+ 		return false;
 -- 
 git-series 0.9.1
