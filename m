@@ -2,108 +2,109 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EF847C10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:36:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id D8085C10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:38:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C0F2E2073F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:36:13 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="D2DW7Bml"
+	by mail.kernel.org (Postfix) with ESMTP id A8509217D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:38:04 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731202AbfDQHgM (ORCPT
+        id S1728788AbfDQHiD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 03:36:12 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:54020 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfDQHgM (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 03:36:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=LpSOMcBlyIhKDhjISPyeoabpIEP0cf1quEet+iani6w=; b=D2DW7BmlhNdsVW2N0qdQU5a4Q
-        Rh12MOnXCjmXuA5EvJUsZAN+IntE+AG0sQu2GM5pUT+nQVaD+ML2pB6XKdWlcT4U6lhqDa6rhPPRj
-        eZ1tx6efRzTLZPydik65cMcS4dmTXzoyhdmquMC01ihvJJ+7O26gO1DcbR1tvIXQZpYBKIKYGQkMR
-        ERe0HsoxVcJqq4S+BF72DY+L2uRGs/BAcnFnrrSuomZULtLLL4J82yJlxhJhJ8HILfKoW11zFvwAr
-        lNzhFpcG18y4vdVDP+DQScSYYca10XAscnw/TbEkSehfzTJ/NubqC7aWDFyBfFZP2FXCU0PpOVRiw
-        OuD1Wl7Ig==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hGf6v-0005vA-44; Wed, 17 Apr 2019 07:36:01 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id D06F829B5293D; Wed, 17 Apr 2019 09:35:59 +0200 (CEST)
-Date:   Wed, 17 Apr 2019 09:35:59 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
-Subject: Re: [PATCH v4 07/16] locking/rwsem: Implement lock handoff to
- prevent lock starvation
-Message-ID: <20190417073559.GZ4038@hirez.programming.kicks-ass.net>
-References: <20190413172259.2740-1-longman@redhat.com>
- <20190413172259.2740-8-longman@redhat.com>
- <20190416154937.GL12232@hirez.programming.kicks-ass.net>
- <d10586ae-cd86-2992-766b-1ba4a4807b6a@redhat.com>
+        Wed, 17 Apr 2019 03:38:03 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:34696 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727013AbfDQHiC (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 03:38:02 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8AC00C049D7C;
+        Wed, 17 Apr 2019 07:38:02 +0000 (UTC)
+Received: from krava (unknown [10.43.17.48])
+        by smtp.corp.redhat.com (Postfix) with SMTP id DDE37608C1;
+        Wed, 17 Apr 2019 07:38:00 +0000 (UTC)
+Date:   Wed, 17 Apr 2019 09:38:00 +0200
+From:   Jiri Olsa <jolsa@redhat.com>
+To:     Song Liu <songliubraving@fb.com>
+Cc:     Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>,
+        Jiri Olsa <jolsa@kernel.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>
+Subject: Re: [PATCH] perf tools: Fix perf_env__find_bpf_prog_info rb tree
+ lookup
+Message-ID: <20190417073800.GE17024@krava>
+References: <20190416134151.15282-1-jolsa@kernel.org>
+ <20190416142028.GH11294@kernel.org>
+ <20190416143452.GB10125@krava>
+ <20190416143554.GB2459@kernel.org>
+ <20190416143748.GC2459@kernel.org>
+ <48CA4238-740E-4B42-BDB1-C2DD85A558C3@fb.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <d10586ae-cd86-2992-766b-1ba4a4807b6a@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <48CA4238-740E-4B42-BDB1-C2DD85A558C3@fb.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.31]); Wed, 17 Apr 2019 07:38:02 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 02:16:11PM -0400, Waiman Long wrote:
-
-> >> @@ -324,6 +364,12 @@ static void __rwsem_mark_wake(struct rw_semaphore *sem,
-> >>  		adjustment -= RWSEM_FLAG_WAITERS;
-> >>  	}
-> >>  
-> >> +	/*
-> >> +	 * Clear the handoff flag
-> >> +	 */
-> > Right, but that is a trivial comment in the 'increment i' style, it
-> > clearly states what the code does, but completely fails to elucidate the
-> > code.
-> >
-> > Maybe:
-> >
-> > 	/*
-> > 	 * When we've woken a reader, we no longer need to force writers
-> > 	 * to give up the lock and we can clear HANDOFF.
-> > 	 */
-> >
-> > And I suppose this is required if we were the pickup of the handoff set
-> > above, but is there a guarantee that the HANDOFF was not set by a
-> > writer?
+On Tue, Apr 16, 2019 at 08:25:17PM +0000, Song Liu wrote:
 > 
-> I can change the comment. The handoff bit is always cleared in
-> rwsem_try_write_lock() when the lock is successfully acquire. Will add a
-> comment to document that.
+> 
+> > On Apr 16, 2019, at 7:37 AM, Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com> wrote:
+> > 
+> > Em Tue, Apr 16, 2019 at 11:35:54AM -0300, Arnaldo Carvalho de Melo escreveu:
+> >> Em Tue, Apr 16, 2019 at 04:34:52PM +0200, Jiri Olsa escreveu:
+> >>> On Tue, Apr 16, 2019 at 11:20:28AM -0300, Arnaldo Carvalho de Melo wrote:
+> >>>> Em Tue, Apr 16, 2019 at 03:41:51PM +0200, Jiri Olsa escreveu:
+> >>>>> We currently don't return NULL in case we don't find
+> >>>>> the bpf_prog_info_node, fixing that.
+> >>>> 
+> >>>> Can you please try to figure out what was the changeset that introduced
+> >>>> this problem so that we can have a Fixes: tag that helps me determine if
+> >>>> this should go to perf/urgent (likely) or (perf/core) and to help the
+> >>>> stable guys as well?
+> >>> 
+> >>> sry, I keep forgetting this..
+> >>> 
+> >>> Fixes: e4378f0cb90b ("perf bpf: Save bpf_prog_info in a rbtree in perf_env")
+> >> 
+> >> I had just added:
+> >> 
+> >> Fixes: e4378f0cb90b ("perf bpf: Save bpf_prog_info in a rbtree in perf_env")
+> >> 
+> >> matches, good :-)
+> >> 
+> >> At firts I thought hey the look checks for NULL, then, hey, different
+> >> variable... good catch!
+> > 
+> > Ah, I also changed the summary from:
+> > 
+> >   "perf tools: Fix perf_env__find_bpf_prog_info rb tree"
+> > 
+> > to:
+> > 
+> >  perf bpf: Return NULL when RB tree lookup fails in perf_env__find_bpf_prog_info()
+> > 
+> > Thanks,
+> > 
+> > - Arnaldo
+> 
+> Thanks Jiri and Arnaldo!
+> 
+> I think we will need similar fix for perf_env__find_btf(). 
 
-That doesn't help much, because it drops ->wait_lock between setting it
-and acquiring it. So the read-acquire can interleave.
+right, I'll post it
 
-I _think_ it works, but I'm having trouble explaining how exactly. I
-think because readers don't spin yet and thus wakeups abide by queue
-order.
-
-And the other way around should have (write) spinners terminate the
-moment they see HANDOFF set by a readers, but I'm not immediately seeing
-that either.
-
-I'll continue staring at that.
-
+thanks,
+jirka
