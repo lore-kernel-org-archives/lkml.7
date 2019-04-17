@@ -2,93 +2,99 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CB399C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:57:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7C595C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:57:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A420720663
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:57:23 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4C50A20663
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:57:48 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555523868;
+	bh=V5GMeGWCLa5Im7kftNfSBFuWwQ+bYlU1N9X07k5ylqg=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=lyRasKM21xp6YqDJ7PwAZVm9+x8FyJCCUiLOMOW0syZiaMjAqDUc4NiAD9KqA471b
+	 D4i6nAuQXwDQL1HgLZUab3LfmixgUcPZn+lfXBku0r+EHyJsepIsVgYqN7xLf34hEG
+	 ADrkMssHHOllkyAtTZFyOSzVmVeinqO7BNGA+378=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732594AbfDQR5X convert rfc822-to-8bit (ORCPT
+        id S1733112AbfDQR5r (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 13:57:23 -0400
-Received: from mga01.intel.com ([192.55.52.88]:40168 "EHLO mga01.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726751AbfDQR5W (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 13:57:22 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from fmsmga004.fm.intel.com ([10.253.24.48])
-  by fmsmga101.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Apr 2019 10:57:22 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,362,1549958400"; 
-   d="scan'208";a="162770592"
-Received: from orsmsx108.amr.corp.intel.com ([10.22.240.6])
-  by fmsmga004.fm.intel.com with ESMTP; 17 Apr 2019 10:57:21 -0700
-Received: from orsmsx112.amr.corp.intel.com (10.22.240.13) by
- ORSMSX108.amr.corp.intel.com (10.22.240.6) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Wed, 17 Apr 2019 10:57:21 -0700
-Received: from orsmsx114.amr.corp.intel.com ([169.254.8.50]) by
- ORSMSX112.amr.corp.intel.com ([169.254.3.109]) with mapi id 14.03.0415.000;
- Wed, 17 Apr 2019 10:57:21 -0700
-From:   "Prakhya, Sai Praneeth" <sai.praneeth.prakhya@intel.com>
-To:     Dave Young <dyoung@redhat.com>,
-        Junichi Nomura <j-nomura@ce.jp.nec.com>
-CC:     Borislav Petkov <bp@alien8.de>,
-        Chao Fan <fanc.fnst@cn.fujitsu.com>,
-        Baoquan He <bhe@redhat.com>, Kairui Song <kasong@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-efi@vger.kernel.org" <linux-efi@vger.kernel.org>,
-        Ard Biesheuvel <ard.biesheuvel@linaro.org>
-Subject: RE: kexec crash on OVMF i386 + x86_64 kernel (Re: [PATCH v4]
- x86/boot: Use efi_setup_data for searching RSDP on kexec-ed kernel)
-Thread-Topic: kexec crash on OVMF i386 + x86_64 kernel (Re: [PATCH v4]
- x86/boot: Use efi_setup_data for searching RSDP on kexec-ed kernel)
-Thread-Index: AQHU9NyJk5MjJ378I0KIPA24f/91u6ZAo6ng
-Date:   Wed, 17 Apr 2019 17:57:20 +0000
-Message-ID: <FFF73D592F13FD46B8700F0A279B802F48AFF5CF@ORSMSX114.amr.corp.intel.com>
-References: <20190412025416.GA11070@jeru.linux.bs1.fc.nec.co.jp>
- <20190412084956.GC19808@zn.tnic> <20190412133528.GD19808@zn.tnic>
- <cc2c1dbe-4fb3-fb7d-0540-c04734fc15cb@ce.jp.nec.com>
- <20190415090717.GA29317@zn.tnic> <20190415102525.GB29317@zn.tnic>
- <23309b73-d135-a207-564b-6003cee39184@ce.jp.nec.com>
- <4dbbbb4b-7af9-bd98-b567-890407a15cd1@ce.jp.nec.com>
- <20190416094554.GF27892@zn.tnic>
- <befd6560-f41a-b142-a839-aaab861dee5a@ce.jp.nec.com>
- <20190417051418.GC8411@dhcp-128-65.nay.redhat.com>
-In-Reply-To: <20190417051418.GC8411@dhcp-128-65.nay.redhat.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiOTViZjA1NzEtNDVlOC00YWM1LTliZTYtNDQxYjE4YzhhODlmIiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiY0RnXC94Zlg5RHZqS3RjYThncHIzODNXSW1DZHB4WlB4SmdRaUNMbmFCdFA2alI2SjhubWFRTGc1eVk4MDZRZGgifQ==
-x-ctpclassification: CTP_NT
-dlp-product: dlpe-windows
-dlp-version: 11.0.600.7
-dlp-reaction: no-action
-x-originating-ip: [10.22.254.139]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 17 Apr 2019 13:57:47 -0400
+Received: from mx2.suse.de ([195.135.220.15]:39878 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1732587AbfDQR5q (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 13:57:46 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 60BC9AC63;
+        Wed, 17 Apr 2019 17:57:45 +0000 (UTC)
+Date:   Wed, 17 Apr 2019 19:57:43 +0200
+From:   Michal Hocko <mhocko@kernel.org>
+To:     Dave Hansen <dave.hansen@intel.com>
+Cc:     Yang Shi <yang.shi@linux.alibaba.com>, mgorman@techsingularity.net,
+        riel@surriel.com, hannes@cmpxchg.org, akpm@linux-foundation.org,
+        keith.busch@intel.com, dan.j.williams@intel.com,
+        fengguang.wu@intel.com, fan.du@intel.com, ying.huang@intel.com,
+        ziy@nvidia.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
+Subject: Re: [v2 RFC PATCH 0/9] Another Approach to Use PMEM as NUMA Node
+Message-ID: <20190417175743.GC9523@dhcp22.suse.cz>
+References: <1554955019-29472-1-git-send-email-yang.shi@linux.alibaba.com>
+ <20190412084702.GD13373@dhcp22.suse.cz>
+ <a68137bb-dcd8-4e4a-b3a9-69a66f9dccaf@linux.alibaba.com>
+ <20190416074714.GD11561@dhcp22.suse.cz>
+ <876768ad-a63a-99c3-59de-458403f008c4@linux.alibaba.com>
+ <a0bf6b61-1ec2-6209-5760-80c5f205d52e@intel.com>
+ <20190417092318.GG655@dhcp22.suse.cz>
+ <5c2d37e1-c7f6-5b7b-4f8e-a34e981b841e@intel.com>
 MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <5c2d37e1-c7f6-5b7b-4f8e-a34e981b841e@intel.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> Added efi people.
+On Wed 17-04-19 10:13:44, Dave Hansen wrote:
+> On 4/17/19 2:23 AM, Michal Hocko wrote:
+> >> 3. The demotion path can not have cycles
+> > yes. This could be achieved by GFP_NOWAIT opportunistic allocation for
+> > the migration target. That should prevent from loops or artificial nodes
+> > exhausting quite naturaly AFAICS. Maybe we will need some tricks to
+> > raise the watermark but I am not convinced something like that is really
+> > necessary.
 > 
-> I remember previously Sai did some efi32 tests for kexec, but I'm not sure if he
-> tested EFI32 + 64bit kernel.
+> I don't think GFP_NOWAIT alone is good enough.
 > 
-> Kexec status is not certain because I'm not sure anyone tesed and reported
-> issues for that.
+> Let's say we have a system full of clean page cache and only two nodes:
+> 0 and 1.  GFP_NOWAIT will eventually kick off kswapd on both nodes.
+> Each kswapd will be migrating pages to the *other* node since each is in
+> the other's fallback path.
 
-No.. I didn't test kexec on EFI32 + 64bit kernel and I also haven't tested kexec'ing from 
-kexec'd kernel.
+I was thinking along node reclaim like based migration. You are right
+that a parallel kswapd might reclaim enough to cause the ping pong and
+we might need to play some watermaks tricks but as you say below this is
+to be seen and a playground to explore. All I am saying is to try the
+most simplistic approach first without all the bells and whistles to see
+how this plays out with real workloads and build on top of that.
 
-Regards,
-Sai
+We already do have model - node_reclaim - which turned out to suck a lot
+because the reclaim was just too aggressive wrt. refault. Maybe
+migration will turn out much more feasible. And maybe I am completely
+wrong and we need a much more complex solution.
+
+> I think what you're saying is that, eventually, the kswapds will see
+> allocation failures and stop migrating, providing hysteresis.  This is
+> probably true.
+> 
+> But, I'm more concerned about that window where the kswapds are throwing
+> pages at each other because they're effectively just wasting resources
+> in this window.  I guess we should figure our how large this window is
+> and how fast (or if) the dampening occurs in practice.
+
+-- 
+Michal Hocko
+SUSE Labs
