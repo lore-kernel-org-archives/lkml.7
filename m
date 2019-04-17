@@ -7,55 +7,55 @@ X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
 	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9ED92C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 22:41:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 79E08C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 22:41:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 64CE7217FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 22:41:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 46735217FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 22:41:17 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="ShvckbTb"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="vKVblKbL"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387643AbfDQWlI (ORCPT
+        id S2387668AbfDQWlQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 18:41:08 -0400
-Received: from mail-pl1-f195.google.com ([209.85.214.195]:46222 "EHLO
-        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S2387624AbfDQWlG (ORCPT
+        Wed, 17 Apr 2019 18:41:16 -0400
+Received: from mail-pf1-f196.google.com ([209.85.210.196]:46741 "EHLO
+        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731857AbfDQWlP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 18:41:06 -0400
-Received: by mail-pl1-f195.google.com with SMTP id y6so156025pll.13;
-        Wed, 17 Apr 2019 15:41:05 -0700 (PDT)
+        Wed, 17 Apr 2019 18:41:15 -0400
+Received: by mail-pf1-f196.google.com with SMTP id 9so122241pfj.13;
+        Wed, 17 Apr 2019 15:41:15 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=86fe+O7jXPA0qhy2wYrXIFfPfbOKD6IEbw+ZHbB55Jw=;
-        b=ShvckbTbf5uva6JBmfeHPUGpnJfTmMF6naxlXa7RdilrKH23aKbj2xIXQGH6h27Q2J
-         j1SLP+f8zCRPUFVrQkGcHuYZm/J2/ne9liMR1MEOM2s0tFnGp7V0tiWqmghH86XCHb/l
-         nvucwylTk7Yi4VCFbKuQNsJ9RFpzPl+ZiAgGC20sKaNCugtMeTUfaNvME7+xOa/yakgG
-         9BiwXbjV9cKRhHV9JW373oD8BAP2lBJq2RJaJVheUaCP9znFA+T7amL/lr51YErnJ2Ke
-         ndgSroPIOO9I9s/npm0CtEeVKYoWXOHp4UhWN+vL6DAjyxxHv8CEamsrEGq5+rKmLk31
-         c0Mw==
+        bh=QgAlvPXLOPPvqeePDR0VxoNM/ii/ZZ0PATgQsPuV3J8=;
+        b=vKVblKbLKav0IYfwhBOE+vDWoC8eq8HC1DG+BoYOU+YxzWEOgz2Dh83Hmls4K7o4Fe
+         SSfi51UrRrVFgh+b5+DewbA76BlB5kjAawggizIfa00XoRtHPxgO75CrinShb0D5flqt
+         zXHbemWXo0AEABxixicnxV9ryYXZUK5ppgPHaT2UnQFftaWdlWZs1GzM1icQQY7jXcNE
+         J6sIaoBFOvVw3uUIsO8Hk6xNvfXGLSNNrHMSLX65NvPLKVSiYwjc2SfJCHlNf0uI83NG
+         k1dF14p27os0wOKycjeUskGvdK2hmGUepDPLY3yffM65DCdAZQxtAzPxX858VTP26bRJ
+         2Xhw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=86fe+O7jXPA0qhy2wYrXIFfPfbOKD6IEbw+ZHbB55Jw=;
-        b=FhD84aoAgKTHgDEtfc9Aeia4QofPKlCFd0SLgY09Sufo7+dds4QHogHuoZYFMLoAQt
-         RTD6DyglfkZrEPpFNSlpzZeBLvUEPREajIuomPWk44wzZ7FOe8Kl+Sl7PNI7utJLjgs7
-         wjpN/SoIaP786hqx3x0Z9CFOejKSxsiDCZgTdDMGx4TBVGBPgR87nkrCODw2y2Je4QrE
-         NS4RWWNmNAQC0th9Vb4PCDCxyhJAA6gwN77uihmJsFXmYmdX0xpY8lprbIvBcys1+ijF
-         bvEUqwkOB/wAbsKk9reMmwdnW6LNWWdFx6gJrZR2YjKrTkhvdrfRcgmn1MoaMHMYGmfV
-         XLNA==
-X-Gm-Message-State: APjAAAWEh3WpEessIj+z7DyxfubGySi4fTSO6U/iA43CVLyzE6USi0Fg
-        YjNkHV97T/F5C1J4hXzPjbI=
-X-Google-Smtp-Source: APXvYqw94dZ5ZmRzzGoBYKd0tZ3CBOJF5VuewFILC9V1lenb/mv0W5ESdXarsfImkv/NIoJZfKwHtw==
-X-Received: by 2002:a17:902:be04:: with SMTP id r4mr93253916pls.218.1555540491074;
-        Wed, 17 Apr 2019 15:34:51 -0700 (PDT)
+        bh=QgAlvPXLOPPvqeePDR0VxoNM/ii/ZZ0PATgQsPuV3J8=;
+        b=ttogM7wH0Xco1dTgjQqTflmjFB+GB6NXtqGFHB3IPfFMavS+wVY6T/Sr5FzdhnUHgQ
+         QYLzQStnFbADiV1b7zwxmkCReYiyi2ThBwPDYuZ0URWriA5bbCI2PNWpjiRiTU6XpRmn
+         Dy7xArhWfSnvPL96Y94RbXsCL5IQ0opqS60TnMSzzeedYG9LqRbwDQftaE0qe3rgXPs2
+         NVfQ0pjtY5nZzmsc8xJJpKEcCLznWDxPfjKM2Nsm6oMOfaet91M5aYdU884KU6a7lpb4
+         5IFRE9foQsgFj+uoL8A7ZO2ElDGQIPQNcLFTi0kGX64Xph4JrRnorbAcyPspmprnoLyr
+         Bmjg==
+X-Gm-Message-State: APjAAAXD+a33Rp9AJiHTD0ePml79XnwSi2vDaf+iE8EIsXzXOfWoQO8C
+        00RmvCbn5DDUXk1cx4F9i8Y=
+X-Google-Smtp-Source: APXvYqxKP1r6Akq/mQoseI7Bpurspbu75oPeQlGDu0DdM3dQKoxwwaDx2T7owfvq633BGfpHapXAPw==
+X-Received: by 2002:a63:6a43:: with SMTP id f64mr52497357pgc.366.1555540524801;
+        Wed, 17 Apr 2019 15:35:24 -0700 (PDT)
 Received: from localhost.localdomain (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
-        by smtp.gmail.com with ESMTPSA id l26sm281030pfb.20.2019.04.17.15.34.44
+        by smtp.gmail.com with ESMTPSA id l26sm281030pfb.20.2019.04.17.15.35.18
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Apr 2019 15:34:50 -0700 (PDT)
+        Wed, 17 Apr 2019 15:35:24 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -65,9 +65,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Tomeu Vizoso <tomeu.vizoso@collabora.com>
 Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pm@vger.kernel.org
-Subject: [PATCH v3 08/16] PM / devfreq: tegra: Clean up driver's probe / remove
-Date:   Thu, 18 Apr 2019 01:29:17 +0300
-Message-Id: <20190417222925.5815-9-digetx@gmail.com>
+Subject: [PATCH v3 13/16] PM / devfreq: tegra: Support Tegra30
+Date:   Thu, 18 Apr 2019 01:29:22 +0300
+Message-Id: <20190417222925.5815-14-digetx@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190417222925.5815-1-digetx@gmail.com>
 References: <20190417222925.5815-1-digetx@gmail.com>
@@ -78,152 +78,43 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Reset hardware, disable ACTMON clock, release OPP's and handle all
-possible error cases correctly, maintaining the correct tear down
-order. Also use devm_platform_ioremap_resource() which is now available
-in the kernel.
+The devfreq driver can be used on Tegra30 without any code change and
+it works perfectly fine, the default Tegra124 parameters are good enough
+for Tegra30.
 
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/devfreq/tegra-devfreq.c | 83 +++++++++++++++++++--------------
- 1 file changed, 47 insertions(+), 36 deletions(-)
+ drivers/devfreq/Kconfig         | 4 ++--
+ drivers/devfreq/tegra-devfreq.c | 1 +
+ 2 files changed, 3 insertions(+), 2 deletions(-)
 
+diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
+index a78dffe603c1..56db9dc05edb 100644
+--- a/drivers/devfreq/Kconfig
++++ b/drivers/devfreq/Kconfig
+@@ -92,8 +92,8 @@ config ARM_EXYNOS_BUS_DEVFREQ
+ 	  This does not yet operate with optimal voltages.
+ 
+ config ARM_TEGRA_DEVFREQ
+-	tristate "Tegra DEVFREQ Driver"
+-	depends on ARCH_TEGRA_124_SOC
++	tristate "NVIDIA Tegra30/114/124/210 DEVFREQ Driver"
++	depends on ARCH_TEGRA
+ 	select PM_OPP
+ 	help
+ 	  This adds the DEVFREQ driver for the Tegra family of SoCs.
 diff --git a/drivers/devfreq/tegra-devfreq.c b/drivers/devfreq/tegra-devfreq.c
-index ce1eb97a2090..70946e432d3c 100644
+index e9ab49394d35..029afc5fb6a9 100644
 --- a/drivers/devfreq/tegra-devfreq.c
 +++ b/drivers/devfreq/tegra-devfreq.c
-@@ -610,7 +610,6 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
- {
- 	struct tegra_devfreq *tegra;
- 	struct tegra_devfreq_device *dev;
--	struct resource *res;
- 	unsigned int i;
- 	unsigned long rate;
- 	int err;
-@@ -619,9 +618,7 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
- 	if (!tegra)
- 		return -ENOMEM;
- 
--	res = platform_get_resource(pdev, IORESOURCE_MEM, 0);
--
--	tegra->regs = devm_ioremap_resource(&pdev->dev, res);
-+	tegra->regs = devm_platform_ioremap_resource(pdev, 0);
- 	if (IS_ERR(tegra->regs))
- 		return PTR_ERR(tegra->regs);
- 
-@@ -643,11 +640,10 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
- 		return PTR_ERR(tegra->emc_clock);
- 	}
- 
--	tegra->rate_change_nb.notifier_call = tegra_actmon_rate_notify_cb;
--	err = clk_notifier_register(tegra->emc_clock, &tegra->rate_change_nb);
--	if (err) {
--		dev_err(&pdev->dev,
--			"Failed to register rate change notifier\n");
-+	tegra->irq = platform_get_irq(pdev, 0);
-+	if (tegra->irq < 0) {
-+		err = tegra->irq;
-+		dev_err(&pdev->dev, "Failed to get IRQ: %d\n", err);
- 		return err;
- 	}
- 
-@@ -678,54 +674,69 @@ static int tegra_devfreq_probe(struct platform_device *pdev)
- 
- 	for (rate = 0; rate <= tegra->max_freq * KHZ; rate++) {
- 		rate = clk_round_rate(tegra->emc_clock, rate);
--		dev_pm_opp_add(&pdev->dev, rate, 0);
--	}
- 
--	tegra->irq = platform_get_irq(pdev, 0);
--	if (tegra->irq < 0) {
--		err = tegra->irq;
--		dev_err(&pdev->dev, "Failed to get IRQ: %d\n", err);
--		return err;
-+		err = dev_pm_opp_add(&pdev->dev, rate, 0);
-+		if (err) {
-+			dev_err(&pdev->dev, "Failed to add OPP: %d\n", err);
-+			goto remove_opps;
-+		}
- 	}
- 
- 	platform_set_drvdata(pdev, tegra);
- 
-+	tegra->rate_change_nb.notifier_call = tegra_actmon_rate_notify_cb;
-+	err = clk_notifier_register(tegra->emc_clock, &tegra->rate_change_nb);
-+	if (err) {
-+		dev_err(&pdev->dev,
-+			"Failed to register rate change notifier\n");
-+		goto remove_opps;
-+	}
-+
-+	tegra_devfreq_profile.initial_freq = clk_get_rate(tegra->emc_clock);
-+	tegra->devfreq = devfreq_add_device(&pdev->dev,
-+					    &tegra_devfreq_profile,
-+					    "tegra_actmon",
-+					    NULL);
-+	if (IS_ERR(tegra->devfreq)) {
-+		err = PTR_ERR(tegra->devfreq);
-+		goto unreg_notifier;
-+	}
-+
- 	err = devm_request_threaded_irq(&pdev->dev, tegra->irq, NULL,
- 					actmon_thread_isr, IRQF_ONESHOT,
- 					"tegra-devfreq", tegra);
- 	if (err) {
--		dev_err(&pdev->dev, "Interrupt request failed\n");
--		return err;
-+		dev_err(&pdev->dev, "Interrupt request failed: %d\n", err);
-+		goto remove_devfreq;
- 	}
- 
--	tegra_devfreq_profile.initial_freq = clk_get_rate(tegra->emc_clock);
--	tegra->devfreq = devm_devfreq_add_device(&pdev->dev,
--						 &tegra_devfreq_profile,
--						 "tegra_actmon",
--						 NULL);
--
- 	return 0;
-+
-+remove_devfreq:
-+	devfreq_remove_device(tegra->devfreq);
-+
-+unreg_notifier:
-+	clk_notifier_unregister(tegra->emc_clock, &tegra->rate_change_nb);
-+
-+remove_opps:
-+	dev_pm_opp_remove_all_dynamic(&pdev->dev);
-+
-+	reset_control_reset(tegra->reset);
-+	clk_disable_unprepare(tegra->clock);
-+
-+	return err;
+@@ -738,6 +738,7 @@ static int tegra_devfreq_remove(struct platform_device *pdev)
  }
  
- static int tegra_devfreq_remove(struct platform_device *pdev)
- {
- 	struct tegra_devfreq *tegra = platform_get_drvdata(pdev);
--	int irq = platform_get_irq(pdev, 0);
--	u32 val;
--	unsigned int i;
--
--	for (i = 0; i < ARRAY_SIZE(actmon_device_configs); i++) {
--		val = device_readl(&tegra->devices[i], ACTMON_DEV_CTRL);
--		val &= ~ACTMON_DEV_CTRL_ENB;
--		device_writel(&tegra->devices[i], val, ACTMON_DEV_CTRL);
--	}
--
--	actmon_write_barrier(tegra);
- 
--	devm_free_irq(&pdev->dev, irq, tegra);
-+	devfreq_remove_device(tegra->devfreq);
-+	dev_pm_opp_remove_all_dynamic(&pdev->dev);
- 
- 	clk_notifier_unregister(tegra->emc_clock, &tegra->rate_change_nb);
- 
-+	reset_control_reset(tegra->reset);
- 	clk_disable_unprepare(tegra->clock);
- 
- 	return 0;
+ static const struct of_device_id tegra_devfreq_of_match[] = {
++	{ .compatible = "nvidia,tegra30-actmon" },
+ 	{ .compatible = "nvidia,tegra124-actmon" },
+ 	{ },
+ };
 -- 
 2.21.0
 
