@@ -2,299 +2,346 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-6.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E491BC10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 10:53:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C944C282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 10:55:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 8DCF420821
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 10:53:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0740C21841
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 10:55:30 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=vmware.com header.i=@vmware.com header.b="WY6WChZz"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="sN9XezfJ"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731819AbfDQKxy (ORCPT
+        id S1731758AbfDQKz3 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 06:53:54 -0400
-Received: from mail-eopbgr700045.outbound.protection.outlook.com ([40.107.70.45]:25984
-        "EHLO NAM04-SN1-obe.outbound.protection.outlook.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1731499AbfDQKxx (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 06:53:53 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=vmware.com;
- s=selector1;
- h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
- bh=PD03XZOCM6800OOmBvgPU29exF8SXQYISSpoDJEUTf4=;
- b=WY6WChZz7jbhVa636VuhkJEpaEfgGnn23UlR2w3vtf9YE8gxmzIU5Hr3/4ue5UtZW3+h23axFxB8UMGo3PmUihNtphCxwhEQvWZHmDSwq1as7xcPotlwg/ahNjiqA1I9O/a05gN+/stPN2DGi3dpQeYQDdx4VDm2Z7d/XYv4nus=
-Received: from MN2PR05MB6141.namprd05.prod.outlook.com (20.178.241.217) by
- MN2PR05MB6464.namprd05.prod.outlook.com (20.178.246.202) with Microsoft SMTP
- Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
- 15.20.1835.5; Wed, 17 Apr 2019 10:53:42 +0000
-Received: from MN2PR05MB6141.namprd05.prod.outlook.com
- ([fe80::91e:292d:e304:78ad]) by MN2PR05MB6141.namprd05.prod.outlook.com
- ([fe80::91e:292d:e304:78ad%7]) with mapi id 15.20.1813.009; Wed, 17 Apr 2019
- 10:53:42 +0000
-From:   Thomas Hellstrom <thellstrom@vmware.com>
-To:     "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
-        Linux-graphics-maintainer <Linux-graphics-maintainer@vmware.com>,
-        "christian.koenig@amd.com" <christian.koenig@amd.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH 5/9] drm/ttm: TTM fault handler helpers
-Thread-Topic: [PATCH 5/9] drm/ttm: TTM fault handler helpers
-Thread-Index: AQHU8UlmrKefacsgVEqIdDv9sHJp2aY8x/SAgANtGwA=
-Date:   Wed, 17 Apr 2019 10:53:42 +0000
-Message-ID: <e3c79dd12f9f2f589d3beb9dafdb8075f6b2c4ae.camel@vmware.com>
-References: <20190412160338.64994-1-thellstrom@vmware.com>
-         <20190412160338.64994-6-thellstrom@vmware.com>
-         <fe34e174-a0e2-9eb4-f05d-6797c61cf4a0@gmail.com>
-In-Reply-To: <fe34e174-a0e2-9eb4-f05d-6797c61cf4a0@gmail.com>
-Accept-Language: en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-authentication-results: spf=none (sender IP is )
- smtp.mailfrom=thellstrom@vmware.com; 
-x-originating-ip: [155.4.205.35]
-x-ms-publictraffictype: Email
-x-ms-office365-filtering-correlation-id: 3210b6d8-f19f-4403-ad47-08d6c322f522
-x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600140)(711020)(4605104)(2017052603328)(7193020);SRVR:MN2PR05MB6464;
-x-ms-traffictypediagnostic: MN2PR05MB6464:
-x-ld-processed: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0,ExtAddr
-x-microsoft-antispam-prvs: <MN2PR05MB64640F149B35C2BCC7877A68A1250@MN2PR05MB6464.namprd05.prod.outlook.com>
-x-forefront-prvs: 0010D93EFE
-x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(366004)(396003)(136003)(39860400002)(376002)(346002)(199004)(189003)(11346002)(14444005)(30864003)(446003)(6116002)(3846002)(256004)(2616005)(110136005)(2906002)(486006)(118296001)(476003)(186003)(478600001)(5660300002)(102836004)(106356001)(6506007)(105586002)(316002)(26005)(68736007)(14454004)(97736004)(99286004)(76176011)(6246003)(53936002)(229853002)(6436002)(6512007)(25786009)(2501003)(36756003)(6486002)(7736002)(71190400001)(71200400001)(305945005)(66574012)(81166006)(86362001)(8676002)(81156014)(66066001)(2201001)(8936002);DIR:OUT;SFP:1101;SCL:1;SRVR:MN2PR05MB6464;H:MN2PR05MB6141.namprd05.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
-received-spf: None (protection.outlook.com: vmware.com does not designate
- permitted sender hosts)
-x-ms-exchange-senderadcheck: 1
-x-microsoft-antispam-message-info: Ka9GGJQ6fjkloEe8+rUz0pB9veZsNCe0VqY4Muvnm5mgRFV+9GpaelrlP3C/L4w/nVyBxhquCyG2JB4lQfAMTeSsJHRNNcb9u+mt8bTqRAWDSmhM/qxljDj6/EvAVIurxwpXn5ek76oWSWdHOjfsaqPkPe5CcaOWeTNjUb6r+yQ1dPfb78/hvRRq1p//lpE46dqMmXjUlxwgCZ5MHAtKHpC1FGH+tDTHhXaCDK9/ZH9Av4RaGLFd5Qk5XtCN9MN9CEnaGv4Vwg4wpsyFNlnafIROCPeRRa2zNwgi4pgtbi4xfGf7S6a9jOSQMV3R2W7HxqrilTWhkQhRvuH4JxJOuWzzH+W8eXjMZQIKIT4wMOOFk+1PE6eUNPkbKuuEfrURjSk7FlrIMZRGNjrlYXVcVlfXElSmV33oyc6Slc7TTiw=
-Content-Type: text/plain; charset="utf-8"
-Content-ID: <DB331759790E8B48BDEFB81BA4F3864A@namprd05.prod.outlook.com>
-Content-Transfer-Encoding: base64
+        Wed, 17 Apr 2019 06:55:29 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:36002 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730926AbfDQKz3 (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 06:55:29 -0400
+Received: by mail-ed1-f67.google.com with SMTP id u57so19943378edm.3
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 03:55:27 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to;
+        bh=ywsDRnZXw0K4iHU5gOwpw1ILwLsnoHeavnwibTGmBkc=;
+        b=sN9XezfJY0PNH42t6H4czPbYwRjQATW+86vOgjPgf/vVnf8n0WV9saKa4gNRun3B0c
+         4TTo4BeVcRzq+CjyX8iAn+Qs1pDQl9MJaZchjS5PU1L1WM1ptL9Ge3c0d2FRlj5VIXcu
+         Wc7INNW6MVGOesBudlVu+nH6VYET/E17T8crD2iIBIBrHME+cdSsNpEMF+CX03N167rn
+         RGKlxjTBmwmccuuDGHXIg5ZVtRlCLd61vYnVmusHf7BV+o+Mqhd00V5fw5pS+gFQU1QY
+         F0LuQdhfbfRHhvsW8JqJzaaTds2pu28FYWzor7LIwu65BzRbOwfOAZUtz6jSoRFaBbyw
+         etrQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to;
+        bh=ywsDRnZXw0K4iHU5gOwpw1ILwLsnoHeavnwibTGmBkc=;
+        b=TqQEKGKPzg5HNqmAdL7/Xg3McP9GjnM6wKD9LtyqYcATYScOVJ97aYyloLV3su16fW
+         idrPZ+QuQqkZ1ggqLalG+D5ftrmLuqPdYLGUZ1vUgaeOAaIE2qiMN+oxcddw029OZMgB
+         RPPFikctLoStGRJ2WUa5gtrh+UyDgP112WXjX1UTYn5LCZ6zz5F/e0GkFE4wDFScR+xJ
+         mE0WjJBUvhMvMQm3DW6vUb2c0LkL6uPFC4nrez5BxUZm6YCaur0O2SNSvLn9d5/P2gR4
+         uE817RDstd6DTTGv04iiacGqyNlNHD8aAxWxyoe0WMO/HXgHZ4l6WTpghogbb4RKJcbI
+         6KEA==
+X-Gm-Message-State: APjAAAUl7zfuA2WeifA+My0gLXZ5jZcnHBpEA0loD5edJL8YngqCXxwr
+        ICt9uD7I+8scy6+e50SGslhqwzR2Peo/nkIRRO8=
+X-Google-Smtp-Source: APXvYqwzAXcD7VW4Lx4wIv4PjS0zl4BS0AJrB9UvjJX+C6yEgSwizlZoVQQj+wo9155ANTPb5q/SqjWuDHaJY7klXXo=
+X-Received: by 2002:a50:b283:: with SMTP id p3mr7504856edd.105.1555498526638;
+ Wed, 17 Apr 2019 03:55:26 -0700 (PDT)
 MIME-Version: 1.0
-X-OriginatorOrg: vmware.com
-X-MS-Exchange-CrossTenant-Network-Message-Id: 3210b6d8-f19f-4403-ad47-08d6c322f522
-X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Apr 2019 10:53:42.5186
- (UTC)
-X-MS-Exchange-CrossTenant-fromentityheader: Hosted
-X-MS-Exchange-CrossTenant-id: b39138ca-3cee-4b4a-a4d6-cd83d9dd62f0
-X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
-X-MS-Exchange-Transport-CrossTenantHeadersStamped: MN2PR05MB6464
+References: <1555487246-15764-1-git-send-email-huangzhaoyang@gmail.com> <CAGWkznFCy-Fm1WObEk77shPGALWhn5dWS3ZLXY77+q_4Yp6bAQ@mail.gmail.com>
+In-Reply-To: <CAGWkznFCy-Fm1WObEk77shPGALWhn5dWS3ZLXY77+q_4Yp6bAQ@mail.gmail.com>
+From:   Zhaoyang Huang <huangzhaoyang@gmail.com>
+Date:   Wed, 17 Apr 2019 18:55:15 +0800
+Message-ID: <CAGWkznEzRB2RPQEK5+4EYB73UYGMRbNNmMH-FyQqT2_en_q1+g@mail.gmail.com>
+Subject: Re: [RFC PATCH] mm/workingset : judge file page activity via timestamp
+To:     Andrew Morton <akpm@linux-foundation.org>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
+        David Rientjes <rientjes@google.com>,
+        Zhaoyang Huang <zhaoyang.huang@unisoc.com>,
+        Roman Gushchin <guro@fb.com>, Jeff Layton <jlayton@redhat.com>,
+        "open list:MEMORY MANAGEMENT" <linux-mm@kvack.org>,
+        LKML <linux-kernel@vger.kernel.org>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Johannes Weiner <hannes@cmpxchg.org>,
+        Matthew Wilcox <willy@infradead.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gTW9uLCAyMDE5LTA0LTE1IGF0IDA4OjM0ICswMjAwLCBDaHJpc3RpYW4gS8O2bmlnIHdyb3Rl
-Og0KPiBBbSAxMi4wNC4xOSB1bSAxODowNCBzY2hyaWViIFRob21hcyBIZWxsc3Ryb206DQo+ID4g
-V2l0aCB0aGUgdm13Z2Z4IGRpcnR5IHRyYWNraW5nLCB0aGUgZGVmYXVsdCBUVE0gZmF1bHQgaGFu
-ZGxlciBpcw0KPiA+IG5vdA0KPiA+IGNvbXBsZXRlbHkgc3VmZmljaWVudCAodm13Z2Z4IG5lZWQg
-dG8gbW9kaWZ5IHRoZSB2bWEtPnZtX2ZsYWdzDQo+ID4gbWVtYmVyLA0KPiA+IGFuZCBhbHNvIG5l
-ZWRzIHRvIHJlc3RyaWN0IHRoZSBudW1iZXIgb2YgcHJlZmF1bHRzKS4NCj4gPiANCj4gPiBXZSBh
-bHNvIHdhbnQgdG8gcmVwbGljYXRlIHRoZSBuZXcgdHRtX2JvX3ZtX3Jlc2VydmUoKSBmdW5jdGlv
-bmFsaXR5DQo+ID4gDQo+ID4gU28gc3RhcnQgdHVybmluZyB0aGUgVFRNIHZtIGNvZGUgaW50byBo
-ZWxwZXJzOg0KPiA+IHR0bV9ib192bV9mYXVsdF9yZXNlcnZlZCgpDQo+ID4gYW5kIHR0bV9ib192
-bV9yZXNlcnZlKCksIGFuZCBwcm92aWRlIGEgZGVmYXVsdCBUVE0gZmF1bHQgaGFuZGxlcg0KPiA+
-IGZvciBvdGhlcg0KPiA+IGRyaXZlcnMgdG8gdXNlLg0KPiA+IA0KPiA+IENjOiAiQ2hyaXN0aWFu
-IEvDtm5pZyIgPGNocmlzdGlhbi5rb2VuaWdAYW1kLmNvbT4NCj4gPiBTaWduZWQtb2ZmLWJ5OiBU
-aG9tYXMgSGVsbHN0cm9tIDx0aGVsbHN0cm9tQHZtd2FyZS5jb20+DQo+IA0KPiBUd28gbml0IHBp
-Y2tzIGJlbG93LCBhcGFydCBmcm9tIHRoYXQgbG9va3MgZ29vZCB0byBtZSBhcyB3ZWxsLg0KDQpU
-aGFua3MgQ2hyaXN0aWFuLA0KDQpJJ2xsIGluY29wb3JhdGUgdGhvc2UuDQoNCi9UaG9tYXMNCg0K
-DQo+IA0KPiA+IC0tLQ0KPiA+ICAgZHJpdmVycy9ncHUvZHJtL3R0bS90dG1fYm9fdm0uYyB8IDE3
-MCArKysrKysrKysrKysrKysrKysrKy0tLS0tLS0NCj4gPiAtLS0tLQ0KPiA+ICAgaW5jbHVkZS9k
-cm0vdHRtL3R0bV9ib19hcGkuaCAgICB8ICAxMCArKw0KPiA+ICAgMiBmaWxlcyBjaGFuZ2VkLCAx
-MTYgaW5zZXJ0aW9ucygrKSwgNjQgZGVsZXRpb25zKC0pDQo+ID4gDQo+ID4gZGlmZiAtLWdpdCBh
-L2RyaXZlcnMvZ3B1L2RybS90dG0vdHRtX2JvX3ZtLmMNCj4gPiBiL2RyaXZlcnMvZ3B1L2RybS90
-dG0vdHRtX2JvX3ZtLmMNCj4gPiBpbmRleCBiZmIyNWI4MWZlZDcuLjNiZDI4ZmI5NzEyNCAxMDA2
-NDQNCj4gPiAtLS0gYS9kcml2ZXJzL2dwdS9kcm0vdHRtL3R0bV9ib192bS5jDQo+ID4gKysrIGIv
-ZHJpdmVycy9ncHUvZHJtL3R0bS90dG1fYm9fdm0uYw0KPiA+IEBAIC00Miw4ICs0Miw2IEBADQo+
-ID4gICAjaW5jbHVkZSA8bGludXgvdWFjY2Vzcy5oPg0KPiA+ICAgI2luY2x1ZGUgPGxpbnV4L21l
-bV9lbmNyeXB0Lmg+DQo+ID4gICANCj4gPiAtI2RlZmluZSBUVE1fQk9fVk1fTlVNX1BSRUZBVUxU
-IDE2DQo+ID4gLQ0KPiA+ICAgc3RhdGljIHZtX2ZhdWx0X3QgdHRtX2JvX3ZtX2ZhdWx0X2lkbGUo
-c3RydWN0IHR0bV9idWZmZXJfb2JqZWN0DQo+ID4gKmJvLA0KPiA+ICAgCQkJCXN0cnVjdCB2bV9m
-YXVsdCAqdm1mKQ0KPiA+ICAgew0KPiA+IEBAIC0xMDYsMzEgKzEwNCwzMCBAQCBzdGF0aWMgdW5z
-aWduZWQgbG9uZyB0dG1fYm9faW9fbWVtX3BmbihzdHJ1Y3QNCj4gPiB0dG1fYnVmZmVyX29iamVj
-dCAqYm8sDQo+ID4gICAJCSsgcGFnZV9vZmZzZXQ7DQo+ID4gICB9DQo+ID4gICANCj4gPiAtc3Rh
-dGljIHZtX2ZhdWx0X3QgdHRtX2JvX3ZtX2ZhdWx0KHN0cnVjdCB2bV9mYXVsdCAqdm1mKQ0KPiA+
-ICsvKioNCj4gPiArICogdHRtX2JvX3ZtX3Jlc2VydmUgLSBSZXNlcnZlIGEgYnVmZmVyIG9iamVj
-dCBpbiBhIHJldHJ5YWJsZSB2bQ0KPiA+IGNhbGxiYWNrDQo+ID4gKyAqIEBibzogVGhlIGJ1ZmZl
-ciBvYmplY3QNCj4gPiArICogQHZtZjogVGhlIGZhdWx0IHN0cnVjdHVyZSBoYW5kZWQgdG8gdGhl
-IGNhbGxiYWNrDQo+ID4gKyAqDQo+ID4gKyAqIHZtIGNhbGxiYWNrcyBsaWtlIGZhdWx0KCkgYW5k
-ICpfbWt3cml0ZSgpIGFsbG93IGZvciB0aGUgbW1fc2VtDQo+ID4gdG8gYmUgZHJvcHBlZA0KPiA+
-ICsgKiBkdXJpbmcgbG9uZyB3YWl0cywgYW5kIGFmdGVyIHRoZSB3YWl0IHRoZSBjYWxsYmFjayB3
-aWxsIGJlDQo+ID4gcmVzdGFydGVkLiBUaGlzDQo+ID4gKyAqIGlzIHRvIGFsbG93IG90aGVyIHRo
-cmVhZHMgdXNpbmcgdGhlIHNhbWUgdmlydHVhbCBtZW1vcnkgc3BhY2UNCj4gPiBjb25jdXJyZW50
-DQo+ID4gKyAqIGFjY2VzcyB0byBtYXAoKSwgdW5tYXAoKSBjb21wbGV0ZWx5IHVucmVsYXRlZCBi
-dWZmZXIgb2JqZWN0cy4NCj4gPiBUVE0gYnVmZmVyDQo+ID4gKyAqIG9iamVjdCByZXNlcnZhdGlv
-bnMgc29tZXRpbWVzIHdhaXQgZm9yIEdQVSBhbmQgc2hvdWxkIHRoZXJlZm9yZQ0KPiA+IGJlDQo+
-ID4gKyAqIGNvbnNpZGVyZWQgbG9uZyB3YWl0cy4gVGhpcyBmdW5jdGlvbiByZXNlcnZlcyB0aGUg
-YnVmZmVyIG9iamVjdA0KPiA+IGludGVycnVwdGlibHkNCj4gPiArICogdGFraW5nIHRoaXMgaW50
-byBhY2NvdW50LiBTdGFydmF0aW9uIGlzIGF2b2lkZWQgYnkgdGhlIHZtDQo+ID4gc3lzdGVtIG5v
-dA0KPiA+ICsgKiBhbGxvd2luZyB0b28gbWFueSByZXBlYXRlZCByZXN0YXJ0cy4NCj4gPiArICog
-VGhpcyBmdW5jdGlvbiBpcyBpbnRlbmRlZCB0byBiZSB1c2VkIGluIGN1c3RvbWl6ZWQgZmF1bHQo
-KSBhbmQNCj4gPiBfbWt3cml0ZSgpDQo+ID4gKyAqIGhhbmRsZXJzLg0KPiA+ICsgKg0KPiA+ICsg
-KiBSZXR1cm46DQo+ID4gKyAqICAgIDAgb24gc3VjY2VzcyBhbmQgdGhlIGJvIHdhcyByZXNlcnZl
-ZC4NCj4gPiArICogICAgVk1fRkFVTFRfUkVUUlkgaWYgYmxvY2tpbmcgd2FpdC4NCj4gPiArICog
-ICAgVk1fRkFVTFRfTk9QQUdFIGlmIGJsb2NraW5nIHdhaXQgYW5kIHJldHJ5aW5nIHdhcyBub3QN
-Cj4gPiBhbGxvd2VkLg0KPiA+ICsgKi8NCj4gPiArdm1fZmF1bHRfdCB0dG1fYm9fdm1fcmVzZXJ2
-ZShzdHJ1Y3QgdHRtX2J1ZmZlcl9vYmplY3QgKmJvLA0KPiA+ICsJCQkgICAgIHN0cnVjdCB2bV9m
-YXVsdCAqdm1mKQ0KPiA+ICAgew0KPiA+IC0Jc3RydWN0IHZtX2FyZWFfc3RydWN0ICp2bWEgPSB2
-bWYtPnZtYTsNCj4gPiAtCXN0cnVjdCB0dG1fYnVmZmVyX29iamVjdCAqYm8gPSAoc3RydWN0IHR0
-bV9idWZmZXJfb2JqZWN0ICopDQo+ID4gLQkgICAgdm1hLT52bV9wcml2YXRlX2RhdGE7DQo+ID4g
-LQlzdHJ1Y3QgdHRtX2JvX2RldmljZSAqYmRldiA9IGJvLT5iZGV2Ow0KPiA+IC0JdW5zaWduZWQg
-bG9uZyBwYWdlX29mZnNldDsNCj4gPiAtCXVuc2lnbmVkIGxvbmcgcGFnZV9sYXN0Ow0KPiA+IC0J
-dW5zaWduZWQgbG9uZyBwZm47DQo+ID4gLQlzdHJ1Y3QgdHRtX3R0ICp0dG0gPSBOVUxMOw0KPiA+
-IC0Jc3RydWN0IHBhZ2UgKnBhZ2U7DQo+ID4gLQlpbnQgZXJyOw0KPiA+IC0JaW50IGk7DQo+ID4g
-LQl2bV9mYXVsdF90IHJldCA9IFZNX0ZBVUxUX05PUEFHRTsNCj4gPiAtCXVuc2lnbmVkIGxvbmcg
-YWRkcmVzcyA9IHZtZi0+YWRkcmVzczsNCj4gPiAtCXN0cnVjdCB0dG1fbWVtX3R5cGVfbWFuYWdl
-ciAqbWFuID0NCj4gPiAtCQkmYmRldi0+bWFuW2JvLT5tZW0ubWVtX3R5cGVdOw0KPiA+IC0Jc3Ry
-dWN0IHZtX2FyZWFfc3RydWN0IGN2bWE7DQo+ID4gLQ0KPiA+IC0JLyoNCj4gPiAtCSAqIFdvcmsg
-YXJvdW5kIGxvY2tpbmcgb3JkZXIgcmV2ZXJzYWwgaW4gZmF1bHQgLyBub3Bmbg0KPiA+IC0JICog
-YmV0d2VlbiBtbWFwX3NlbSBhbmQgYm9fcmVzZXJ2ZTogUGVyZm9ybSBhIHRyeWxvY2sgb3BlcmF0
-aW9uDQo+ID4gLQkgKiBmb3IgcmVzZXJ2ZSwgYW5kIGlmIGl0IGZhaWxzLCByZXRyeSB0aGUgZmF1
-bHQgYWZ0ZXIgd2FpdGluZw0KPiA+IC0JICogZm9yIHRoZSBidWZmZXIgdG8gYmVjb21lIHVucmVz
-ZXJ2ZWQuDQo+ID4gLQkgKi8NCj4gPiAgIAlpZiAodW5saWtlbHkoIXJlc2VydmF0aW9uX29iamVj
-dF90cnlsb2NrKGJvLT5yZXN2KSkpIHsNCj4gPiAgIAkJaWYgKHZtZi0+ZmxhZ3MgJiBGQVVMVF9G
-TEFHX0FMTE9XX1JFVFJZKSB7DQo+ID4gICAJCQlpZiAoISh2bWYtPmZsYWdzICYgRkFVTFRfRkxB
-R19SRVRSWV9OT1dBSVQpKSB7DQo+ID4gQEAgLTE1MSwxNCArMTQ4LDU2IEBAIHN0YXRpYyB2bV9m
-YXVsdF90IHR0bV9ib192bV9mYXVsdChzdHJ1Y3QNCj4gPiB2bV9mYXVsdCAqdm1mKQ0KPiA+ICAg
-CQlyZXR1cm4gVk1fRkFVTFRfTk9QQUdFOw0KPiA+ICAgCX0NCj4gPiAgIA0KPiA+ICsJcmV0dXJu
-IDA7DQo+ID4gK30NCj4gPiArRVhQT1JUX1NZTUJPTCh0dG1fYm9fdm1fcmVzZXJ2ZSk7DQo+ID4g
-Kw0KPiA+ICsvKioNCj4gPiArICogdHRtX2JvX3ZtX2ZhdWx0X3Jlc2VydmVkIC0gVFRNIGZhdWx0
-IGhlbHBlcg0KPiA+ICsgKiBAdm1mOiBUaGUgc3RydWN0IHZtX2ZhdWx0IGdpdmVuIGFzIGFyZ3Vt
-ZW50IHRvIHRoZSBmYXVsdA0KPiA+IGNhbGxiYWNrDQo+ID4gKyAqIEBjdm1hOiBUaGUgc3RydWN0
-IHZtd19hcmVhX3N0cnVjdCBhZmZlY3RlZC4gTm90ZSB0aGF0IHRoaXMgbWF5DQo+ID4gYmUgYQ0K
-PiA+ICsgKiBjb3B5IG9mIHRoZSByZWFsIHZtYSBvYmplY3QgaWYgdGhlIGNhbGxlciBuZWVkcywg
-Zm9yIGV4YW1wbGUsDQo+ID4gVk0NCj4gPiArICogZmxhZ3MgdG8gYmUgdGVtcG9yYXJpbHkgYWx0
-ZXJlZCB3aGlsZSBkZXRlcm1pbmluZyB0aGUgcGFnZQ0KPiA+IHByb3RlY3Rpb24uDQo+ID4gKyAq
-IEBudW1fcHJlZmF1bHQ6IE1heGltdW0gbnVtYmVyIG9mIHByZWZhdWx0IHBhZ2VzLiBUaGUgY2Fs
-bGVyIG1heQ0KPiA+IHdhbnQgdG8NCj4gPiArICogc3BlY2lmeSB0aGlzIGJhc2VkIG9uIG1hZHZp
-Y2Ugc2V0dGluZ3MgYW5kIHRoZSBzaXplIG9mIHRoZSBHUFUNCj4gPiBvYmplY3QNCj4gPiArICog
-YmFja2VkIGJ5IHRoZSBtZW1vcnkuDQo+ID4gKyAqDQo+ID4gKyAqIFRoaXMgZnVuY3Rpb24gaW5z
-ZXJ0cyBvbmUgb3IgbW9yZSBwYWdlIHRhYmxlIGVudHJpZXMgcG9pbnRpbmcNCj4gPiB0byB0aGUN
-Cj4gPiArICogbWVtb3J5IGJhY2tpbmcgdGhlIGJ1ZmZlciBvYmplY3QsIGFuZCB0aGVuIHJldHVy
-bnMgYSByZXR1cm4NCj4gPiBjb2RlDQo+ID4gKyAqIGluc3RydWN0aW5nIHRoZSBjYWxsZXIgdG8g
-cmV0cnkgdGhlIHBhZ2UgYWNjZXNzLg0KPiA+ICsgKg0KPiA+ICsgKiBSZXR1cm46DQo+ID4gKyAq
-ICAgVk1fRkFVTFRfTk9QQUdFIG9uIHN1Y2Nlc3Mgb3IgcGVuZGluZyBzaWduYWwNCj4gPiArICog
-ICBWTV9GQVVMVF9TSUdCVVMgb24gdW5zcGVjaWZpZWQgZXJyb3INCj4gPiArICogICBWTV9GQVVM
-VF9PT00gb24gb3V0LW9mLW1lbW9yeQ0KPiA+ICsgKiAgIFZNX0ZBVUxUX1JFVFJZIGlmIHJldHJ5
-YWJsZSB3YWl0DQo+ID4gKyAqLw0KPiA+ICt2bV9mYXVsdF90IHR0bV9ib192bV9mYXVsdF9yZXNl
-cnZlZChzdHJ1Y3Qgdm1fZmF1bHQgKnZtZiwNCj4gPiArCQkJCSAgICBzdHJ1Y3Qgdm1fYXJlYV9z
-dHJ1Y3QgKmN2bWEsDQo+ID4gKwkJCQkgICAgcGdvZmZfdCBudW1fcHJlZmF1bHQpDQo+ID4gK3sN
-Cj4gPiArCXN0cnVjdCB2bV9hcmVhX3N0cnVjdCAqdm1hID0gdm1mLT52bWE7DQo+ID4gKwlzdHJ1
-Y3QgdHRtX2J1ZmZlcl9vYmplY3QgKmJvID0gKHN0cnVjdCB0dG1fYnVmZmVyX29iamVjdCAqKQ0K
-PiA+ICsJICAgIHZtYS0+dm1fcHJpdmF0ZV9kYXRhOw0KPiA+ICsJc3RydWN0IHR0bV9ib19kZXZp
-Y2UgKmJkZXYgPSBiby0+YmRldjsNCj4gPiArCXVuc2lnbmVkIGxvbmcgcGFnZV9vZmZzZXQ7DQo+
-ID4gKwl1bnNpZ25lZCBsb25nIHBhZ2VfbGFzdDsNCj4gPiArCXVuc2lnbmVkIGxvbmcgcGZuOw0K
-PiA+ICsJc3RydWN0IHR0bV90dCAqdHRtID0gTlVMTDsNCj4gPiArCXN0cnVjdCBwYWdlICpwYWdl
-Ow0KPiA+ICsJaW50IGVycjsNCj4gPiArCXBnb2ZmX3QgaTsNCj4gPiArCXZtX2ZhdWx0X3QgcmV0
-ID0gVk1fRkFVTFRfTk9QQUdFOw0KPiA+ICsJdW5zaWduZWQgbG9uZyBhZGRyZXNzID0gdm1mLT5h
-ZGRyZXNzOw0KPiA+ICsJc3RydWN0IHR0bV9tZW1fdHlwZV9tYW5hZ2VyICptYW4gPQ0KPiA+ICsJ
-CSZiZGV2LT5tYW5bYm8tPm1lbS5tZW1fdHlwZV07DQo+ID4gKw0KPiA+ICAgCS8qDQo+ID4gICAJ
-ICogUmVmdXNlIHRvIGZhdWx0IGltcG9ydGVkIHBhZ2VzLiBUaGlzIHNob3VsZCBiZSBoYW5kbGVk
-DQo+ID4gICAJICogKGlmIGF0IGFsbCkgYnkgcmVkaXJlY3RpbmcgbW1hcCB0byB0aGUgZXhwb3J0
-ZXIuDQo+ID4gICAJICovDQo+ID4gLQlpZiAoYm8tPnR0bSAmJiAoYm8tPnR0bS0+cGFnZV9mbGFn
-cyAmIFRUTV9QQUdFX0ZMQUdfU0cpKSB7DQo+ID4gLQkJcmV0ID0gVk1fRkFVTFRfU0lHQlVTOw0K
-PiA+IC0JCWdvdG8gb3V0X3VubG9jazsNCj4gPiAtCX0NCj4gPiArCWlmIChiby0+dHRtICYmIChi
-by0+dHRtLT5wYWdlX2ZsYWdzICYgVFRNX1BBR0VfRkxBR19TRykpDQo+ID4gKwkJcmV0dXJuIFZN
-X0ZBVUxUX1NJR0JVUzsNCj4gPiAgIA0KPiA+ICAgCWlmIChiZGV2LT5kcml2ZXItPmZhdWx0X3Jl
-c2VydmVfbm90aWZ5KSB7DQo+ID4gICAJCXN0cnVjdCBkbWFfZmVuY2UgKm1vdmluZyA9IGRtYV9m
-ZW5jZV9nZXQoYm8tPm1vdmluZyk7DQo+ID4gQEAgLTE2OSwxMSArMjA4LDkgQEAgc3RhdGljIHZt
-X2ZhdWx0X3QgdHRtX2JvX3ZtX2ZhdWx0KHN0cnVjdA0KPiA+IHZtX2ZhdWx0ICp2bWYpDQo+ID4g
-ICAJCQlicmVhazsNCj4gPiAgIAkJY2FzZSAtRUJVU1k6DQo+ID4gICAJCWNhc2UgLUVSRVNUQVJU
-U1lTOg0KPiA+IC0JCQlyZXQgPSBWTV9GQVVMVF9OT1BBR0U7DQo+ID4gLQkJCWdvdG8gb3V0X3Vu
-bG9jazsNCj4gPiArCQkJcmV0dXJuIFZNX0ZBVUxUX05PUEFHRTsNCj4gPiAgIAkJZGVmYXVsdDoN
-Cj4gPiAtCQkJcmV0ID0gVk1fRkFVTFRfU0lHQlVTOw0KPiA+IC0JCQlnb3RvIG91dF91bmxvY2s7
-DQo+ID4gKwkJCXJldHVybiBWTV9GQVVMVF9TSUdCVVM7DQo+ID4gICAJCX0NCj4gPiAgIA0KPiA+
-ICAgCQlpZiAoYm8tPm1vdmluZyAhPSBtb3ZpbmcpIHsNCj4gPiBAQCAtMTg5LDI0ICsyMjYsMTUg
-QEAgc3RhdGljIHZtX2ZhdWx0X3QgdHRtX2JvX3ZtX2ZhdWx0KHN0cnVjdA0KPiA+IHZtX2ZhdWx0
-ICp2bWYpDQo+ID4gICAJICogbW92ZS4NCj4gPiAgIAkgKi8NCj4gPiAgIAlyZXQgPSB0dG1fYm9f
-dm1fZmF1bHRfaWRsZShibywgdm1mKTsNCj4gPiAtCWlmICh1bmxpa2VseShyZXQgIT0gMCkpIHsN
-Cj4gPiAtCQlpZiAocmV0ID09IFZNX0ZBVUxUX1JFVFJZICYmDQo+ID4gLQkJICAgICEodm1mLT5m
-bGFncyAmIEZBVUxUX0ZMQUdfUkVUUllfTk9XQUlUKSkgew0KPiA+IC0JCQkvKiBUaGUgQk8gaGFz
-IGFscmVhZHkgYmVlbiB1bnJlc2VydmVkLiAqLw0KPiA+IC0JCQlyZXR1cm4gcmV0Ow0KPiA+IC0J
-CX0NCj4gPiAtDQo+ID4gLQkJZ290byBvdXRfdW5sb2NrOw0KPiA+IC0JfQ0KPiA+ICsJaWYgKHVu
-bGlrZWx5KHJldCAhPSAwKSkNCj4gPiArCQlyZXR1cm4gcmV0Ow0KPiA+ICAgDQo+ID4gICAJZXJy
-ID0gdHRtX21lbV9pb19sb2NrKG1hbiwgdHJ1ZSk7DQo+ID4gLQlpZiAodW5saWtlbHkoZXJyICE9
-IDApKSB7DQo+ID4gLQkJcmV0ID0gVk1fRkFVTFRfTk9QQUdFOw0KPiA+IC0JCWdvdG8gb3V0X3Vu
-bG9jazsNCj4gPiAtCX0NCj4gPiArCWlmICh1bmxpa2VseShlcnIgIT0gMCkpDQo+ID4gKwkJcmV0
-dXJuIFZNX0ZBVUxUX05PUEFHRTsNCj4gPiAgIAllcnIgPSB0dG1fbWVtX2lvX3Jlc2VydmVfdm0o
-Ym8pOw0KPiA+ICAgCWlmICh1bmxpa2VseShlcnIgIT0gMCkpIHsNCj4gPiAtCQlyZXQgPSBWTV9G
-QVVMVF9TSUdCVVM7DQo+ID4gKwkJcmV0dXJuIFZNX0ZBVUxUX1NJR0JVUzsNCj4gPiAgIAkJZ290
-byBvdXRfaW9fdW5sb2NrOw0KPiANCj4gVGhpcyBnb3RvIGlzIG5vdyBzdXBlcmZsdW91cy4NCj4g
-DQo+ID4gICAJfQ0KPiA+ICAgDQo+ID4gQEAgLTIyMCwxNyArMjQ4LDExIEBAIHN0YXRpYyB2bV9m
-YXVsdF90IHR0bV9ib192bV9mYXVsdChzdHJ1Y3QNCj4gPiB2bV9mYXVsdCAqdm1mKQ0KPiA+ICAg
-CQlnb3RvIG91dF9pb191bmxvY2s7DQo+ID4gICAJfQ0KPiA+ICAgDQo+ID4gLQkvKg0KPiA+IC0J
-ICogTWFrZSBhIGxvY2FsIHZtYSBjb3B5IHRvIG1vZGlmeSB0aGUgcGFnZV9wcm90IG1lbWJlcg0K
-PiA+IC0JICogYW5kIHZtX2ZsYWdzIGlmIG5lY2Vzc2FyeS4gVGhlIHZtYSBwYXJhbWV0ZXIgaXMg
-cHJvdGVjdGVkDQo+ID4gLQkgKiBieSBtbWFwX3NlbSBpbiB3cml0ZSBtb2RlLg0KPiA+IC0JICov
-DQo+ID4gLQljdm1hID0gKnZtYTsNCj4gPiAtCWN2bWEudm1fcGFnZV9wcm90ID0gdm1fZ2V0X3Bh
-Z2VfcHJvdChjdm1hLnZtX2ZsYWdzKTsNCj4gPiArCWN2bWEtPnZtX3BhZ2VfcHJvdCA9IHZtX2dl
-dF9wYWdlX3Byb3QoY3ZtYS0+dm1fZmxhZ3MpOw0KPiA+ICAgDQo+ID4gICAJaWYgKGJvLT5tZW0u
-YnVzLmlzX2lvbWVtKSB7DQo+ID4gLQkJY3ZtYS52bV9wYWdlX3Byb3QgPSB0dG1faW9fcHJvdChi
-by0+bWVtLnBsYWNlbWVudCwNCj4gPiAtCQkJCQkJY3ZtYS52bV9wYWdlX3Byb3QpOw0KPiA+ICsJ
-CWN2bWEtPnZtX3BhZ2VfcHJvdCA9IHR0bV9pb19wcm90KGJvLT5tZW0ucGxhY2VtZW50LA0KPiA+
-ICsJCQkJCQkgY3ZtYS0+dm1fcGFnZV9wcm90KTsNCj4gPiAgIAl9IGVsc2Ugew0KPiA+ICAgCQlz
-dHJ1Y3QgdHRtX29wZXJhdGlvbl9jdHggY3R4ID0gew0KPiA+ICAgCQkJLmludGVycnVwdGlibGUg
-PSBmYWxzZSwNCj4gPiBAQCAtMjQwLDggKzI2Miw4IEBAIHN0YXRpYyB2bV9mYXVsdF90IHR0bV9i
-b192bV9mYXVsdChzdHJ1Y3QNCj4gPiB2bV9mYXVsdCAqdm1mKQ0KPiA+ICAgCQl9Ow0KPiA+ICAg
-DQo+ID4gICAJCXR0bSA9IGJvLT50dG07DQo+ID4gLQkJY3ZtYS52bV9wYWdlX3Byb3QgPSB0dG1f
-aW9fcHJvdChiby0+bWVtLnBsYWNlbWVudCwNCj4gPiAtCQkJCQkJY3ZtYS52bV9wYWdlX3Byb3Qp
-Ow0KPiA+ICsJCWN2bWEtPnZtX3BhZ2VfcHJvdCA9IHR0bV9pb19wcm90KGJvLT5tZW0ucGxhY2Vt
-ZW50LA0KPiA+ICsJCQkJCQkgY3ZtYS0+dm1fcGFnZV9wcm90KTsNCj4gPiAgIA0KPiA+ICAgCQkv
-KiBBbGxvY2F0ZSBhbGwgcGFnZSBhdCBvbmNlLCBtb3N0IGNvbW1vbiB1c2FnZSAqLw0KPiA+ICAg
-CQlpZiAodHRtX3R0X3BvcHVsYXRlKHR0bSwgJmN0eCkpIHsNCj4gPiBAQCAtMjU0LDEwICsyNzYs
-MTEgQEAgc3RhdGljIHZtX2ZhdWx0X3QgdHRtX2JvX3ZtX2ZhdWx0KHN0cnVjdA0KPiA+IHZtX2Zh
-dWx0ICp2bWYpDQo+ID4gICAJICogU3BlY3VsYXRpdmVseSBwcmVmYXVsdCBhIG51bWJlciBvZiBw
-YWdlcy4gT25seSBlcnJvciBvbg0KPiA+ICAgCSAqIGZpcnN0IHBhZ2UuDQo+ID4gICAJICovDQo+
-ID4gLQlmb3IgKGkgPSAwOyBpIDwgVFRNX0JPX1ZNX05VTV9QUkVGQVVMVDsgKytpKSB7DQo+ID4g
-Kwlmb3IgKGkgPSAwOyBpIDwgbnVtX3ByZWZhdWx0OyArK2kpIHsNCj4gPiAgIAkJaWYgKGJvLT5t
-ZW0uYnVzLmlzX2lvbWVtKSB7DQo+ID4gICAJCQkvKiBJb21lbSBzaG91bGQgbm90IGJlIG1hcmtl
-ZCBlbmNyeXB0ZWQgKi8NCj4gPiAtCQkJY3ZtYS52bV9wYWdlX3Byb3QgPQ0KPiA+IHBncHJvdF9k
-ZWNyeXB0ZWQoY3ZtYS52bV9wYWdlX3Byb3QpOw0KPiA+ICsJCQljdm1hLT52bV9wYWdlX3Byb3Qg
-PQ0KPiA+ICsJCQkJcGdwcm90X2RlY3J5cHRlZChjdm1hLT52bV9wYWdlX3Byb3QpOw0KPiA+ICAg
-CQkJcGZuID0gdHRtX2JvX2lvX21lbV9wZm4oYm8sIHBhZ2Vfb2Zmc2V0KTsNCj4gPiAgIAkJfSBl
-bHNlIHsNCj4gPiAgIAkJCXBhZ2UgPSB0dG0tPnBhZ2VzW3BhZ2Vfb2Zmc2V0XTsNCj4gPiBAQCAt
-MjczLDEwICsyOTYsMTAgQEAgc3RhdGljIHZtX2ZhdWx0X3QgdHRtX2JvX3ZtX2ZhdWx0KHN0cnVj
-dA0KPiA+IHZtX2ZhdWx0ICp2bWYpDQo+ID4gICAJCX0NCj4gPiAgIA0KPiA+ICAgCQlpZiAodm1h
-LT52bV9mbGFncyAmIFZNX01JWEVETUFQKQ0KPiA+IC0JCQlyZXQgPSB2bWZfaW5zZXJ0X21peGVk
-KCZjdm1hLCBhZGRyZXNzLA0KPiA+ICsJCQlyZXQgPSB2bWZfaW5zZXJ0X21peGVkKGN2bWEsIGFk
-ZHJlc3MsDQo+ID4gICAJCQkJCV9fcGZuX3RvX3Bmbl90KHBmbiwgUEZOX0RFVikpOw0KPiA+ICAg
-CQllbHNlDQo+ID4gLQkJCXJldCA9IHZtZl9pbnNlcnRfcGZuKCZjdm1hLCBhZGRyZXNzLCBwZm4p
-Ow0KPiA+ICsJCQlyZXQgPSB2bWZfaW5zZXJ0X3Bmbihjdm1hLCBhZGRyZXNzLCBwZm4pOw0KPiA+
-ICAgDQo+ID4gICAJCS8qDQo+ID4gICAJCSAqIFNvbWVib2R5IGJlYXQgdXMgdG8gdGhpcyBQVEUg
-b3IgcHJlZmF1bHRpbmcgdG8NCj4gPiBAQCAtMjk1LDcgKzMxOCwyNiBAQCBzdGF0aWMgdm1fZmF1
-bHRfdCB0dG1fYm9fdm1fZmF1bHQoc3RydWN0DQo+ID4gdm1fZmF1bHQgKnZtZikNCj4gPiAgIAly
-ZXQgPSBWTV9GQVVMVF9OT1BBR0U7DQo+ID4gICBvdXRfaW9fdW5sb2NrOg0KPiA+ICAgCXR0bV9t
-ZW1faW9fdW5sb2NrKG1hbik7DQo+ID4gLW91dF91bmxvY2s6DQo+ID4gKwlyZXR1cm4gcmV0Ow0K
-PiA+ICt9DQo+ID4gK0VYUE9SVF9TWU1CT0wodHRtX2JvX3ZtX2ZhdWx0X3Jlc2VydmVkKTsNCj4g
-PiArDQo+ID4gK3N0YXRpYyB2bV9mYXVsdF90IHR0bV9ib192bV9mYXVsdChzdHJ1Y3Qgdm1fZmF1
-bHQgKnZtZikNCj4gPiArew0KPiA+ICsJc3RydWN0IHZtX2FyZWFfc3RydWN0ICp2bWEgPSB2bWYt
-PnZtYTsNCj4gPiArCXN0cnVjdCB2bV9hcmVhX3N0cnVjdCBjdm1hID0gKnZtYTsNCj4gPiArCXN0
-cnVjdCB0dG1fYnVmZmVyX29iamVjdCAqYm8gPSAoc3RydWN0IHR0bV9idWZmZXJfb2JqZWN0ICop
-DQo+ID4gKwkgICAgdm1hLT52bV9wcml2YXRlX2RhdGE7DQo+IA0KPiBUaGF0IGV4dHJhIGNhc3Qg
-Y2FuIGJlIGRyb3BwZWQsIHRoZSB2bV9wcml2YXRlX2RhdGEgbWVtYmVyIGlzIGENCj4gdm9pZCog
-DQo+IGFueXdheS4NCj4gDQo+IFJlZ2FyZHMsDQo+IENocmlzdGlhbi4NCj4gDQo+ID4gKwl2bV9m
-YXVsdF90IHJldDsNCj4gPiArDQo+ID4gKwlyZXQgPSB0dG1fYm9fdm1fcmVzZXJ2ZShibywgdm1m
-KTsNCj4gPiArCWlmIChyZXQpDQo+ID4gKwkJcmV0dXJuIHJldDsNCj4gPiArDQo+ID4gKwlyZXQg
-PSB0dG1fYm9fdm1fZmF1bHRfcmVzZXJ2ZWQodm1mLCAmY3ZtYSwNCj4gPiBUVE1fQk9fVk1fTlVN
-X1BSRUZBVUxUKTsNCj4gPiArCWlmIChyZXQgPT0gVk1fRkFVTFRfUkVUUlkgJiYgISh2bWYtPmZs
-YWdzICYNCj4gPiBGQVVMVF9GTEFHX1JFVFJZX05PV0FJVCkpDQo+ID4gKwkJcmV0dXJuIHJldDsN
-Cj4gPiArDQo+ID4gICAJcmVzZXJ2YXRpb25fb2JqZWN0X3VubG9jayhiby0+cmVzdik7DQo+ID4g
-ICAJcmV0dXJuIHJldDsNCj4gPiAgIH0NCj4gPiBkaWZmIC0tZ2l0IGEvaW5jbHVkZS9kcm0vdHRt
-L3R0bV9ib19hcGkuaA0KPiA+IGIvaW5jbHVkZS9kcm0vdHRtL3R0bV9ib19hcGkuaA0KPiA+IGlu
-ZGV4IDQ5ZDljZGZjNThmMi4uYmViZmExNjQyNmNhIDEwMDY0NA0KPiA+IC0tLSBhL2luY2x1ZGUv
-ZHJtL3R0bS90dG1fYm9fYXBpLmgNCj4gPiArKysgYi9pbmNsdWRlL2RybS90dG0vdHRtX2JvX2Fw
-aS5oDQo+ID4gQEAgLTc2OCw0ICs3NjgsMTQgQEAgaW50IHR0bV9ib19zd2Fwb3V0KHN0cnVjdCB0
-dG1fYm9fZ2xvYmFsICpnbG9iLA0KPiA+ICAgCQkJc3RydWN0IHR0bV9vcGVyYXRpb25fY3R4ICpj
-dHgpOw0KPiA+ICAgdm9pZCB0dG1fYm9fc3dhcG91dF9hbGwoc3RydWN0IHR0bV9ib19kZXZpY2Ug
-KmJkZXYpOw0KPiA+ICAgaW50IHR0bV9ib193YWl0X3VucmVzZXJ2ZWQoc3RydWN0IHR0bV9idWZm
-ZXJfb2JqZWN0ICpibyk7DQo+ID4gKw0KPiA+ICsvKiBEZWZhdWx0IG51bWJlciBvZiBwcmUtZmF1
-bHRlZCBwYWdlcyBpbiB0aGUgVFRNIGZhdWx0IGhhbmRsZXIgKi8NCj4gPiArI2RlZmluZSBUVE1f
-Qk9fVk1fTlVNX1BSRUZBVUxUIDE2DQo+ID4gKw0KPiA+ICt2bV9mYXVsdF90IHR0bV9ib192bV9y
-ZXNlcnZlKHN0cnVjdCB0dG1fYnVmZmVyX29iamVjdCAqYm8sDQo+ID4gKwkJCSAgICAgc3RydWN0
-IHZtX2ZhdWx0ICp2bWYpOw0KPiA+ICsNCj4gPiArdm1fZmF1bHRfdCB0dG1fYm9fdm1fZmF1bHRf
-cmVzZXJ2ZWQoc3RydWN0IHZtX2ZhdWx0ICp2bWYsDQo+ID4gKwkJCQkgICAgc3RydWN0IHZtX2Fy
-ZWFfc3RydWN0ICpjdm1hLA0KPiA+ICsJCQkJICAgIHBnb2ZmX3QgbnVtX3ByZWZhdWx0KTsNCj4g
-PiAgICNlbmRpZg0K
+fix one mailbox and update for some information
+
+Comparing to http://lkml.kernel.org/r/1554348617-12897-1-git-send-email-huangzhaoyang@gmail.com,
+this commit fix the packing order error and add trace_printk for
+reference debug information.
+
+For johannes's comments, please find bellowing for my feedback.
+
+
+
+On Wed, Apr 17, 2019 at 3:59 PM Zhaoyang Huang <huangzhaoyang@gmail.com> wrote:
+>
+> add Johannes and answer his previous question.
+>
+> @Johannes Weiner
+> Yes. I do agree with you about the original thought of sacrificing
+> long distance access pages when huge memory demands arise. The problem
+> is what is the criteria of the distance, which you can find from what
+> I comment in the patch, that is, some pages have long refault_distance
+> while having a very short access time in between. I think the latter
+> one should be take into consideration or as part of the finnal
+> decision of if the page should be active/inactive.
+>
+> On Wed, Apr 17, 2019 at 3:48 PM Zhaoyang Huang <huangzhaoyang@gmail.com> wrote:
+> >
+> > From: Zhaoyang Huang <zhaoyang.huang@unisoc.com>
+> >
+> > This patch introduce timestamp into workingset's entry and judge if the page
+> > is active or inactive via active_file/refault_ratio instead of refault distance.
+> >
+> > The original thought is coming from the logs we got from trace_printk in this
+> > patch, we can find about 1/5 of the file pages' refault are under the
+> > scenario[1],which will be counted as inactive as they have a long refault distance
+> > in between access. However, we can also know from the time information that the
+> > page refault quickly as comparing to the average refault time which is calculated
+> > by the number of active file and refault ratio. We want to save these kinds of
+> > pages from evicted earlier as it used to be. The refault ratio is the value
+> > which can reflect lru's average file access frequency and also can be deemed as a
+> > prediction of future.
+> >
+> > The patch is tested on an android system and reduce 30% of page faults, while
+> > 60% of the pages remain the original status as (refault_distance < active_file)
+> > indicates. Pages status got from ftrace during the test can refer to [2].
+> >
+> > [1]
+> > system_server workingset_refault: WKST_ACT[0]:rft_dis 265976, act_file 34268 rft_ratio 3047 rft_time 0 avg_rft_time 11 refault 295592 eviction 29616 secs 97 pre_secs 97
+> > HwBinder:922  workingset_refault: WKST_ACT[0]:rft_dis 264478, act_file 35037 rft_ratio 3070 rft_time 2 avg_rft_time 11 refault 310078 eviction 45600 secs 101 pre_secs 99
+> >
+> > [2]
+> > WKST_ACT[0]:   original--INACTIVE  commit--ACTIVE
+> > WKST_ACT[1]:   original--ACTIVE    commit--ACTIVE
+> > WKST_INACT[0]: original--INACTIVE  commit--INACTIVE
+> > WKST_INACT[1]: original--ACTIVE    commit--INACTIVE
+> >
+> > Signed-off-by: Zhaoyang Huang <huangzhaoyang@gmail.com>
+> > ---
+> >  include/linux/mmzone.h |   1 +
+> >  mm/workingset.c        | 120 +++++++++++++++++++++++++++++++++++++++++++++----
+> >  2 files changed, 112 insertions(+), 9 deletions(-)
+> >
+> > diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
+> > index 32699b2..6f30673 100644
+> > --- a/include/linux/mmzone.h
+> > +++ b/include/linux/mmzone.h
+> > @@ -240,6 +240,7 @@ struct lruvec {
+> >         atomic_long_t                   inactive_age;
+> >         /* Refaults at the time of last reclaim cycle */
+> >         unsigned long                   refaults;
+> > +       atomic_long_t                   refaults_ratio;
+> >  #ifdef CONFIG_MEMCG
+> >         struct pglist_data *pgdat;
+> >  #endif
+> > diff --git a/mm/workingset.c b/mm/workingset.c
+> > index 40ee02c..66c177b 100644
+> > --- a/mm/workingset.c
+> > +++ b/mm/workingset.c
+> > @@ -160,6 +160,21 @@
+> >                          MEM_CGROUP_ID_SHIFT)
+> >  #define EVICTION_MASK  (~0UL >> EVICTION_SHIFT)
+> >
+> > +#ifdef CONFIG_64BIT
+> > +#define EVICTION_SECS_POS_SHIFT 20
+> > +#define EVICTION_SECS_SHRINK_SHIFT 4
+> > +#define EVICTION_SECS_POS_MASK  ((1UL << EVICTION_SECS_POS_SHIFT) - 1)
+> > +#else
+> > +#ifndef CONFIG_MEMCG
+> > +#define EVICTION_SECS_POS_SHIFT 12
+> > +#define EVICTION_SECS_SHRINK_SHIFT 4
+> > +#define EVICTION_SECS_POS_MASK  ((1UL << EVICTION_SECS_POS_SHIFT) - 1)
+> > +#else
+> > +#define EVICTION_SECS_POS_SHIFT 0
+> > +#define EVICTION_SECS_SHRINK_SHIFT 0
+> > +#define NO_SECS_IN_WORKINGSET
+> > +#endif
+> > +#endif
+> >  /*
+> >   * Eviction timestamps need to be able to cover the full range of
+> >   * actionable refaults. However, bits are tight in the radix tree
+> > @@ -169,10 +184,54 @@
+> >   * evictions into coarser buckets by shaving off lower timestamp bits.
+> >   */
+> >  static unsigned int bucket_order __read_mostly;
+> > -
+> > +#ifdef NO_SECS_IN_WORKINGSET
+> > +static void pack_secs(unsigned long *peviction) { }
+> > +static unsigned int unpack_secs(unsigned long entry) {return 0; }
+> > +#else
+> > +/*
+> > + * Shrink the timestamp according to its value and store it together
+> > + * with the shrink size in the entry.
+> > + */
+> > +static void pack_secs(unsigned long *peviction)
+> > +{
+> > +       unsigned int secs;
+> > +       unsigned long eviction;
+> > +       int order;
+> > +       int secs_shrink_size;
+> > +       struct timespec ts;
+> > +
+> > +       get_monotonic_boottime(&ts);
+> > +       secs = (unsigned int)ts.tv_sec ? (unsigned int)ts.tv_sec : 1;
+> > +       order = get_count_order(secs);
+> > +       secs_shrink_size = (order <= EVICTION_SECS_POS_SHIFT)
+> > +                       ? 0 : (order - EVICTION_SECS_POS_SHIFT);
+> > +
+> > +       eviction = *peviction;
+> > +       eviction = (eviction << EVICTION_SECS_POS_SHIFT)
+> > +                       | ((secs >> secs_shrink_size) & EVICTION_SECS_POS_MASK);
+> > +       eviction = (eviction << EVICTION_SECS_SHRINK_SHIFT) | (secs_shrink_size & 0xf);
+> > +       *peviction = eviction;
+> > +}
+> > +/*
+> > + * Unpack the second from the entry and restore the value according to the
+> > + * shrink size.
+> > + */
+> > +static unsigned int unpack_secs(unsigned long entry)
+> > +{
+> > +       unsigned int secs;
+> > +       int secs_shrink_size;
+> > +
+> > +       secs_shrink_size = entry & ((1 << EVICTION_SECS_SHRINK_SHIFT) - 1);
+> > +       entry >>= EVICTION_SECS_SHRINK_SHIFT;
+> > +       secs = entry & EVICTION_SECS_POS_MASK;
+> > +       secs = secs << secs_shrink_size;
+> > +       return secs;
+> > +}
+> > +#endif
+> >  static void *pack_shadow(int memcgid, pg_data_t *pgdat, unsigned long eviction)
+> >  {
+> >         eviction >>= bucket_order;
+> > +       pack_secs(&eviction);
+> >         eviction = (eviction << MEM_CGROUP_ID_SHIFT) | memcgid;
+> >         eviction = (eviction << NODES_SHIFT) | pgdat->node_id;
+> >         eviction = (eviction << RADIX_TREE_EXCEPTIONAL_SHIFT);
+> > @@ -181,20 +240,24 @@ static void *pack_shadow(int memcgid, pg_data_t *pgdat, unsigned long eviction)
+> >  }
+> >
+> >  static void unpack_shadow(void *shadow, int *memcgidp, pg_data_t **pgdat,
+> > -                         unsigned long *evictionp)
+> > +                         unsigned long *evictionp, unsigned int *prev_secs)
+> >  {
+> >         unsigned long entry = (unsigned long)shadow;
+> >         int memcgid, nid;
+> > +       unsigned int secs;
+> >
+> >         entry >>= RADIX_TREE_EXCEPTIONAL_SHIFT;
+> >         nid = entry & ((1UL << NODES_SHIFT) - 1);
+> >         entry >>= NODES_SHIFT;
+> >         memcgid = entry & ((1UL << MEM_CGROUP_ID_SHIFT) - 1);
+> >         entry >>= MEM_CGROUP_ID_SHIFT;
+> > +       secs = unpack_secs(entry);
+> > +       entry >>= (EVICTION_SECS_POS_SHIFT + EVICTION_SECS_SHRINK_SHIFT);
+> >
+> >         *memcgidp = memcgid;
+> >         *pgdat = NODE_DATA(nid);
+> >         *evictionp = entry << bucket_order;
+> > +       *prev_secs = secs;
+> >  }
+> >
+> >  /**
+> > @@ -242,9 +305,22 @@ bool workingset_refault(void *shadow)
+> >         unsigned long refault;
+> >         struct pglist_data *pgdat;
+> >         int memcgid;
+> > +#ifndef NO_SECS_IN_WORKINGSET
+> > +       unsigned long avg_refault_time;
+> > +       unsigned long refault_time;
+> > +       int tradition;
+> > +       unsigned int prev_secs;
+> > +       unsigned int secs;
+> > +       unsigned long refaults_ratio;
+> > +#endif
+> > +       struct timespec ts;
+> > +       /*
+> > +       convert jiffies to second
+> > +       */
+> > +       get_monotonic_boottime(&ts);
+> > +       secs = (unsigned int)ts.tv_sec ? (unsigned int)ts.tv_sec : 1;
+> >
+> > -       unpack_shadow(shadow, &memcgid, &pgdat, &eviction);
+> > -
+> > +       unpack_shadow(shadow, &memcgid, &pgdat, &eviction, &prev_secs);
+> >         rcu_read_lock();
+> >         /*
+> >          * Look up the memcg associated with the stored ID. It might
+> > @@ -288,14 +364,37 @@ bool workingset_refault(void *shadow)
+> >          * list is not a problem.
+> >          */
+> >         refault_distance = (refault - eviction) & EVICTION_MASK;
+> > -
+> >         inc_lruvec_state(lruvec, WORKINGSET_REFAULT);
+> > -
+> > -       if (refault_distance <= active_file) {
+> > +#ifndef NO_SECS_IN_WORKINGSET
+> > +       refaults_ratio = (atomic_long_read(&lruvec->inactive_age) + 1) / secs;
+> > +       atomic_long_set(&lruvec->refaults_ratio, refaults_ratio);
+> > +       refault_time = secs - prev_secs;
+> > +       avg_refault_time = active_file / refaults_ratio;
+> > +       tradition = !!(refault_distance < active_file);
+> > +       if (refault_time <= avg_refault_time) {
+> > +#else
+> > +       if (refault_distance < active_file) {
+> > +#endif
+> >                 inc_lruvec_state(lruvec, WORKINGSET_ACTIVATE);
+> > +#ifndef NO_SECS_IN_WORKINGSET
+> > +               trace_printk("WKST_ACT[%d]:rft_dis %ld, act_file %ld \
+> > +                               rft_ratio %ld rft_time %ld avg_rft_time %ld \
+> > +                               refault %ld eviction %ld secs %d pre_secs %d\n",
+> > +                               tradition, refault_distance, active_file,
+> > +                               refaults_ratio, refault_time, avg_refault_time,
+> > +                               refault, eviction, secs, prev_secs);
+> > +#endif
+> >                 rcu_read_unlock();
+> >                 return true;
+> >         }
+> > +#ifndef NO_SECS_IN_WORKINGSET
+> > +       trace_printk("WKST_INACT[%d]:rft_dis %ld, act_file %ld \
+> > +                       rft_ratio %ld rft_time %ld avg_rft_time %ld \
+> > +                       refault %ld eviction %ld secs %d pre_secs %d\n",
+> > +                       tradition, refault_distance, active_file,
+> > +                       refaults_ratio, refault_time, avg_refault_time,
+> > +                       refault, eviction, secs, prev_secs);
+> > +#endif
+> >         rcu_read_unlock();
+> >         return false;
+> >  }
+> > @@ -513,7 +612,9 @@ static int __init workingset_init(void)
+> >         unsigned int max_order;
+> >         int ret;
+> >
+> > -       BUILD_BUG_ON(BITS_PER_LONG < EVICTION_SHIFT);
+> > +       BUILD_BUG_ON(BITS_PER_LONG < (EVICTION_SHIFT
+> > +                               + EVICTION_SECS_POS_SHIFT
+> > +                               + EVICTION_SECS_SHRINK_SHIFT));
+> >         /*
+> >          * Calculate the eviction bucket size to cover the longest
+> >          * actionable refault distance, which is currently half of
+> > @@ -521,7 +622,8 @@ static int __init workingset_init(void)
+> >          * some more pages at runtime, so keep working with up to
+> >          * double the initial memory by using totalram_pages as-is.
+> >          */
+> > -       timestamp_bits = BITS_PER_LONG - EVICTION_SHIFT;
+> > +       timestamp_bits = BITS_PER_LONG - EVICTION_SHIFT
+> > +                       - EVICTION_SECS_POS_SHIFT - EVICTION_SECS_SHRINK_SHIFT;
+> >         max_order = fls_long(totalram_pages - 1);
+> >         if (max_order > timestamp_bits)
+> >                 bucket_order = max_order - timestamp_bits;
+> > --
+> > 1.9.1
+> >
