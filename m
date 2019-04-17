@@ -2,108 +2,457 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1E8F1C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:25:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8DEC1C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:26:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E0FEB20872
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:25:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 48AE520872
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:26:40 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="R5I8S7u4"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="DwxmMsU0"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732496AbfDQOZ5 (ORCPT
+        id S1732542AbfDQO0j (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 10:25:57 -0400
-Received: from mail-wm1-f68.google.com ([209.85.128.68]:51964 "EHLO
-        mail-wm1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730209AbfDQOZ4 (ORCPT
+        Wed, 17 Apr 2019 10:26:39 -0400
+Received: from mail-ed1-f67.google.com ([209.85.208.67]:42871 "EHLO
+        mail-ed1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732359AbfDQO0i (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 10:25:56 -0400
-Received: by mail-wm1-f68.google.com with SMTP id 4so3646928wmf.1
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 07:25:55 -0700 (PDT)
+        Wed, 17 Apr 2019 10:26:38 -0400
+Received: by mail-ed1-f67.google.com with SMTP id x61so21138411edc.9
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 07:26:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=SBRtaGtGdfO2nPrbZYAfnuDGqgX/CkdQttxJ5nNNDx0=;
-        b=R5I8S7u4B7fhcZYOXQD2GcqMko7BWx5L55UGtcuHezlzUx8lhmqmiVtlr+m/kCMyG7
-         10c0M7wKKpoevxZ9Bymg9j9NXwY5ldHHnwfyTpvtapSaW4TIkry0KFCl2L0T50lhBbxP
-         wN9kmuSo+vkLk5OXMKeHH3QhtzM0WkI9NdoAEQc3rrTS3StFKHaCFxe4AViAYny/wwY6
-         P8klVDu5AnGXFxbNXKzmEACZoIfuM6AgE1G59hR4zNFjQv+vccjDAl54sXS/ryVmGnpF
-         iXou37b17n1dvk/gm4+AqhpYmoVTOdBaD5FJSLP0WQ/290+N/NDTjZlqYgytHBh5/y7E
-         U3zw==
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=SfnoMrLiozTDsuobQ+BHEbZOSf/41WBWWV1hkJ5nCIk=;
+        b=DwxmMsU0WmTVWWPOl6gwMyw+iCMfQGcKW6Wx1yh5x66YVp/vImIZEzHEY00W8ESNxU
+         4xYEk78F+c2mArIEkx5rKTZNuu4M/BrzY69xE1ENFXPo2XqrKG8OnCFOFGtxa2BI7+H2
+         ACVJchCD5VdTb3azKS8zAu3qsTE7im3W3LeSk=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=SBRtaGtGdfO2nPrbZYAfnuDGqgX/CkdQttxJ5nNNDx0=;
-        b=IIIIkXh3fsDIW8P1BBQ2zCXIkO+6Jv8YOoQLXrVo7ewxcNgDPo5ngGtpS31gNhf8bo
-         xHkI42NNYY8og2T5m+Hl6zyh0S88r04FhxjjgQ0LXpw1ZEUOD2/REs7BTnkKBqkhJvdd
-         /gGL6SMYUuST+TYSr2R8ygY6/pN4OS3jgRFyuH2JW/KRUuN5o/wgWZ6T/AdmR3ZguC/r
-         mibwmu3OrJA0GEhsw6VJx4QbsImZmASYFUi11BJ/XDMOlz6sHAnwNlLpwWMGCfVldxT3
-         2FcPz3DmRHiuUWf6N7uuZmyb9FJoQhr1aj7/9MTDeltbZ4y42f+1y2m9/Av5V5W/sv8P
-         jbnA==
-X-Gm-Message-State: APjAAAUeONkET8RD7+ZnkbTuBxcXgfRQbrSAfMQwavcBZQmV9c3nmik+
-        dTo8yVdGXyh3KHopGy9l1LZZvw==
-X-Google-Smtp-Source: APXvYqwO9oQ4jn9grtw56F/rrjOqpKcMIU2JyGyu+VCmoWsZz9sO57EGc7wH8dA2nBnuxXcyR+/XXA==
-X-Received: by 2002:a1c:4105:: with SMTP id o5mr29588506wma.35.1555511154794;
-        Wed, 17 Apr 2019 07:25:54 -0700 (PDT)
-Received: from brauner.io ([185.197.132.10])
-        by smtp.gmail.com with ESMTPSA id y1sm154548713wrd.34.2019.04.17.07.25.53
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 17 Apr 2019 07:25:54 -0700 (PDT)
-Date:   Wed, 17 Apr 2019 16:25:52 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     Oleg Nesterov <oleg@redhat.com>
-Cc:     torvalds@linux-foundation.org, viro@zeniv.linux.org.uk,
-        jannh@google.com, dhowells@redhat.com, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org, serge@hallyn.com, luto@kernel.org,
-        arnd@arndb.de, ebiederm@xmission.com, keescook@chromium.org,
-        tglx@linutronix.de, mtk.manpages@gmail.com,
-        akpm@linux-foundation.org, cyphar@cyphar.com,
-        joel@joelfernandes.org, dancol@google.com
-Subject: Re: [PATCH v1 2/4] clone: add CLONE_PIDFD
-Message-ID: <20190417142551.lhufsdffqrih3jsp@brauner.io>
-References: <20190416170233.10208-1-christian@brauner.io>
- <20190416170233.10208-3-christian@brauner.io>
- <20190417142253.GH32622@redhat.com>
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=SfnoMrLiozTDsuobQ+BHEbZOSf/41WBWWV1hkJ5nCIk=;
+        b=Sxv4ZY/SjNR6h65uU3iX2p26ODzVS9G3qsJsAVzFteVURRGVL7J+g+2A/6B6wgkwR4
+         OsCcMlmr+FM0ueuzno21zRBQoH6njk6EH6mMGHpIoKqZhtj7QF3xr0+TZOPh+71mnL/N
+         yQhn2ZrUB/xeSeGRQb8UWA0kjNB+IsFfMRR4CPVTQaz95RROXATp8dhJZACfeB6tZevW
+         lKOh67+fFbMDrxnWnBlS9MTcVDKnRO/efG+ELxjnzAIZoVrHrVpmOQWDlWWCwHBKUogq
+         vymyH/k5mTkgWU9V0ilc9yadAiGzcfblBW/+/dVYFtlznkm87ybBllWyLv/2Y1qRXBRT
+         Tguw==
+X-Gm-Message-State: APjAAAWJkmo1cDf2KeR2EpJupeyo3uvoS8YFGusDWUpkAT0Otfe2mIQ3
+        Vs54ELx148mrBOHeWyh9a2cNMg==
+X-Google-Smtp-Source: APXvYqwu0QgVKfBpH9MV0EpYAfYEeED6y1FDUVnIHk1gj/BpjE28v/H5UhTKRdAHVMyXyo/Ak+SkGg==
+X-Received: by 2002:aa7:dc4d:: with SMTP id g13mr13268281edu.216.1555511194957;
+        Wed, 17 Apr 2019 07:26:34 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id q56sm4492848edd.80.2019.04.17.07.26.33
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 17 Apr 2019 07:26:34 -0700 (PDT)
+Date:   Wed, 17 Apr 2019 16:26:32 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     christian.koenig@amd.com
+Cc:     sumit.semwal@linaro.org, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org
+Subject: Re: [PATCH 03/12] dma-buf: lock the reservation object during
+ (un)map_dma_buf v3
+Message-ID: <20190417142632.GF13337@phenom.ffwll.local>
+Mail-Followup-To: christian.koenig@amd.com, sumit.semwal@linaro.org,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org
+References: <20190416183841.1577-1-christian.koenig@amd.com>
+ <20190416183841.1577-4-christian.koenig@amd.com>
+ <20190417140804.GD13337@phenom.ffwll.local>
+ <e22d3797-30e4-f4fd-be9c-42aedf213c5e@gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
-In-Reply-To: <20190417142253.GH32622@redhat.com>
-User-Agent: NeoMutt/20180716
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <e22d3797-30e4-f4fd-be9c-42aedf213c5e@gmail.com>
+X-Operating-System: Linux phenom 4.19.0-1-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 04:22:54PM +0200, Oleg Nesterov wrote:
-> On 04/16, Christian Brauner wrote:
-> >
-> > +	if (clone_flags & CLONE_PIDFD) {
-> > +		retval = pidfd_create(pid, &pidfdf);
-> > +		if (retval < 0)
-> > +			goto bad_fork_free_pid;
-> > +		pidfd = retval;
-> > +	}
+On Wed, Apr 17, 2019 at 04:14:32PM +0200, Christian König wrote:
+> Am 17.04.19 um 16:08 schrieb Daniel Vetter:
+> > On Tue, Apr 16, 2019 at 08:38:32PM +0200, Christian König wrote:
+> > > Make it mandatory for dynamic dma-buf callbacks to be called with the
+> > > reservation lock held.
+> > > 
+> > > For static dma-buf exporters we still have the fallback of using cached sgt.
+> > > 
+> > > v2: reordered
+> > > v3: rebased on sgt caching
+> > > v4: use the cached sgt when possible
+> > > 
+> > > Signed-off-by: Christian König <christian.koenig@amd.com>
+> > I think there's a bit a rebase chaos going on:
+> > - some comments left behind with no_sgt_cache, which I can't find anymore
+> > - the function signature rework of dma_buf_attach should imo be split out
 > 
-> ...
+> Ah, crap thought I've got all of those. Going to fix that.
 > 
-> > +	if (clone_flags & CLONE_PIDFD) {
-> > +		fd_install(pidfd, pidfdf);
-> > +		put_user(pidfd, parent_tidptr);
+> > Next issue is that the reservation object locking is still in the path of
+> > dma_buf_map, so probably still going to result in tons of lockdep splats.
+> > Except the i915+amdgpu path should now work due to the fastpath.
 > 
-> put_user() can fail, I don't think this error should be silently ignored,
-
-Yes, you're right, sorry.
-
-> this can lead to the hard-to-trigger/debug problems.
+> I actually found a solution for that :)
 > 
-> Why can't we do put_user-with-check along with pidfd_create() above?
+> The idea is now that we always cache the sgt in the attachment unless the
+> dynamic flag (previously no_sgt_cache flag) is set. And this cached sgt is
+> created without holding the lock.
 
-Yes, I'll take a look where it makes sense and respin.
+Yeah I think that idea works.
 
-Christian
+> We either need to document that really well or maybe split the mapping
+> callbacks into map/unmap and map_lock/unmap_locked. Opinions?
+
+I think the implementation doesn't. Exporter can't decide on its own
+whether dynamic/static is what's needed, we need to decide that for each
+attachment, taking both exporter and importer capabilities into account.
+
+I think if we do that, then it should work out. I replied on the pin/unpin
+interface patch with some more concrete thoughts. Maybe best to continue
+that discussion there, with more context.
+-Daniel
+
+> > Not sure that's a solution that really works, just hides that
+> > fundamentally we still have that issue of incompatible locking chains
+> > between different drivers.
+> 
+> We can now make a slow transition between static and dynamic DMA-buf
+> handling, so only driver who can do the locking will be affected.
+> 
+> Christian.
+> 
+> > -Daniel
+> > 
+> > > ---
+> > >   drivers/dma-buf/dma-buf.c                     | 24 ++++++++++---------
+> > >   drivers/gpu/drm/armada/armada_gem.c           |  6 ++++-
+> > >   drivers/gpu/drm/drm_prime.c                   |  6 ++++-
+> > >   drivers/gpu/drm/i915/i915_gem_dmabuf.c        |  6 ++++-
+> > >   drivers/gpu/drm/tegra/gem.c                   |  6 ++++-
+> > >   drivers/gpu/drm/udl/udl_dmabuf.c              |  6 ++++-
+> > >   .../common/videobuf2/videobuf2-dma-contig.c   |  6 ++++-
+> > >   .../media/common/videobuf2/videobuf2-dma-sg.c |  6 ++++-
+> > >   drivers/staging/media/tegra-vde/tegra-vde.c   |  6 ++++-
+> > >   include/linux/dma-buf.h                       | 23 ++++++++++++++++--
+> > >   10 files changed, 74 insertions(+), 21 deletions(-)
+> > > 
+> > > diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+> > > index ef480e5fb239..83c92bfd964c 100644
+> > > --- a/drivers/dma-buf/dma-buf.c
+> > > +++ b/drivers/dma-buf/dma-buf.c
+> > > @@ -532,8 +532,9 @@ EXPORT_SYMBOL_GPL(dma_buf_put);
+> > >   /**
+> > >    * dma_buf_attach - Add the device to dma_buf's attachments list; optionally,
+> > >    * calls attach() of dma_buf_ops to allow device-specific attach functionality
+> > > - * @dmabuf:	[in]	buffer to attach device to.
+> > > - * @dev:	[in]	device to be attached.
+> > > + * @info:	[in]	holds all the attach related information provided
+> > > + *			by the importer. see &struct dma_buf_attach_info
+> > > + *			for further details.
+> > >    *
+> > >    * Returns struct dma_buf_attachment pointer for this attachment. Attachments
+> > >    * must be cleaned up by calling dma_buf_detach().
+> > > @@ -547,20 +548,20 @@ EXPORT_SYMBOL_GPL(dma_buf_put);
+> > >    * accessible to @dev, and cannot be moved to a more suitable place. This is
+> > >    * indicated with the error code -EBUSY.
+> > >    */
+> > > -struct dma_buf_attachment *dma_buf_attach(struct dma_buf *dmabuf,
+> > > -					  struct device *dev)
+> > > +struct dma_buf_attachment *dma_buf_attach(const struct dma_buf_attach_info *info)
+> > >   {
+> > > +	struct dma_buf *dmabuf = info->dmabuf;
+> > >   	struct dma_buf_attachment *attach;
+> > >   	int ret;
+> > > -	if (WARN_ON(!dmabuf || !dev))
+> > > +	if (WARN_ON(!dmabuf || !info->dev))
+> > >   		return ERR_PTR(-EINVAL);
+> > >   	attach = kzalloc(sizeof(*attach), GFP_KERNEL);
+> > >   	if (!attach)
+> > >   		return ERR_PTR(-ENOMEM);
+> > > -	attach->dev = dev;
+> > > +	attach->dev = info->dev;
+> > >   	attach->dmabuf = dmabuf;
+> > >   	mutex_lock(&dmabuf->lock);
+> > > @@ -688,9 +689,9 @@ struct sg_table *dma_buf_map_attachment(struct dma_buf_attachment *attach,
+> > >   	if (attach->sgt)
+> > >   		return attach->sgt;
+> > > -	sg_table = attach->dmabuf->ops->map_dma_buf(attach, direction);
+> > > -	if (!sg_table)
+> > > -		sg_table = ERR_PTR(-ENOMEM);
+> > > +	reservation_object_lock(attach->dmabuf->resv, NULL);
+> > > +	sg_table = dma_buf_map_attachment_locked(attach, direction);
+> > > +	reservation_object_unlock(attach->dmabuf->resv);
+> > >   	return sg_table;
+> > >   }
+> > > @@ -744,8 +745,9 @@ void dma_buf_unmap_attachment(struct dma_buf_attachment *attach,
+> > >   	if (attach->sgt == sg_table)
+> > >   		return;
+> > > -	attach->dmabuf->ops->unmap_dma_buf(attach, sg_table,
+> > > -						direction);
+> > > +	reservation_object_lock(attach->dmabuf->resv, NULL);
+> > > +	dma_buf_unmap_attachment_locked(attach, sg_table, direction);
+> > > +	reservation_object_unlock(attach->dmabuf->resv);
+> > >   }
+> > >   EXPORT_SYMBOL_GPL(dma_buf_unmap_attachment);
+> > > diff --git a/drivers/gpu/drm/armada/armada_gem.c b/drivers/gpu/drm/armada/armada_gem.c
+> > > index 642d0e70d0f8..19c47821032f 100644
+> > > --- a/drivers/gpu/drm/armada/armada_gem.c
+> > > +++ b/drivers/gpu/drm/armada/armada_gem.c
+> > > @@ -501,6 +501,10 @@ armada_gem_prime_export(struct drm_device *dev, struct drm_gem_object *obj,
+> > >   struct drm_gem_object *
+> > >   armada_gem_prime_import(struct drm_device *dev, struct dma_buf *buf)
+> > >   {
+> > > +	struct dma_buf_attach_info attach_info = {
+> > > +		.dev = dev->dev,
+> > > +		.dmabuf = buf
+> > > +	};
+> > >   	struct dma_buf_attachment *attach;
+> > >   	struct armada_gem_object *dobj;
+> > > @@ -516,7 +520,7 @@ armada_gem_prime_import(struct drm_device *dev, struct dma_buf *buf)
+> > >   		}
+> > >   	}
+> > > -	attach = dma_buf_attach(buf, dev->dev);
+> > > +	attach = dma_buf_attach(&attach_info);
+> > >   	if (IS_ERR(attach))
+> > >   		return ERR_CAST(attach);
+> > > diff --git a/drivers/gpu/drm/drm_prime.c b/drivers/gpu/drm/drm_prime.c
+> > > index 231e3f6d5f41..1fadf5d5ed33 100644
+> > > --- a/drivers/gpu/drm/drm_prime.c
+> > > +++ b/drivers/gpu/drm/drm_prime.c
+> > > @@ -709,6 +709,10 @@ struct drm_gem_object *drm_gem_prime_import_dev(struct drm_device *dev,
+> > >   					    struct dma_buf *dma_buf,
+> > >   					    struct device *attach_dev)
+> > >   {
+> > > +	struct dma_buf_attach_info attach_info = {
+> > > +		.dev = attach_dev,
+> > > +		.dmabuf = dma_buf
+> > > +	};
+> > >   	struct dma_buf_attachment *attach;
+> > >   	struct sg_table *sgt;
+> > >   	struct drm_gem_object *obj;
+> > > @@ -729,7 +733,7 @@ struct drm_gem_object *drm_gem_prime_import_dev(struct drm_device *dev,
+> > >   	if (!dev->driver->gem_prime_import_sg_table)
+> > >   		return ERR_PTR(-EINVAL);
+> > > -	attach = dma_buf_attach(dma_buf, attach_dev);
+> > > +	attach = dma_buf_attach(&attach_info);
+> > >   	if (IS_ERR(attach))
+> > >   		return ERR_CAST(attach);
+> > > diff --git a/drivers/gpu/drm/i915/i915_gem_dmabuf.c b/drivers/gpu/drm/i915/i915_gem_dmabuf.c
+> > > index 82e2ca17a441..aa7f685bd6ca 100644
+> > > --- a/drivers/gpu/drm/i915/i915_gem_dmabuf.c
+> > > +++ b/drivers/gpu/drm/i915/i915_gem_dmabuf.c
+> > > @@ -277,6 +277,10 @@ static const struct drm_i915_gem_object_ops i915_gem_object_dmabuf_ops = {
+> > >   struct drm_gem_object *i915_gem_prime_import(struct drm_device *dev,
+> > >   					     struct dma_buf *dma_buf)
+> > >   {
+> > > +	struct dma_buf_attach_info attach_info = {
+> > > +		.dev = dev->dev,
+> > > +		.dmabuf = dma_buf
+> > > +	};
+> > >   	struct dma_buf_attachment *attach;
+> > >   	struct drm_i915_gem_object *obj;
+> > >   	int ret;
+> > > @@ -295,7 +299,7 @@ struct drm_gem_object *i915_gem_prime_import(struct drm_device *dev,
+> > >   	}
+> > >   	/* need to attach */
+> > > -	attach = dma_buf_attach(dma_buf, dev->dev);
+> > > +	attach = dma_buf_attach(&attach_info);
+> > >   	if (IS_ERR(attach))
+> > >   		return ERR_CAST(attach);
+> > > diff --git a/drivers/gpu/drm/tegra/gem.c b/drivers/gpu/drm/tegra/gem.c
+> > > index 4f80100ff5f3..8e6b6c879add 100644
+> > > --- a/drivers/gpu/drm/tegra/gem.c
+> > > +++ b/drivers/gpu/drm/tegra/gem.c
+> > > @@ -332,6 +332,10 @@ struct tegra_bo *tegra_bo_create_with_handle(struct drm_file *file,
+> > >   static struct tegra_bo *tegra_bo_import(struct drm_device *drm,
+> > >   					struct dma_buf *buf)
+> > >   {
+> > > +	struct dma_buf_attach_info attach_info = {
+> > > +		.dev = drm->dev,
+> > > +		.dmabuf = buf
+> > > +	};
+> > >   	struct tegra_drm *tegra = drm->dev_private;
+> > >   	struct dma_buf_attachment *attach;
+> > >   	struct tegra_bo *bo;
+> > > @@ -341,7 +345,7 @@ static struct tegra_bo *tegra_bo_import(struct drm_device *drm,
+> > >   	if (IS_ERR(bo))
+> > >   		return bo;
+> > > -	attach = dma_buf_attach(buf, drm->dev);
+> > > +	attach = dma_buf_attach(&attach_info);
+> > >   	if (IS_ERR(attach)) {
+> > >   		err = PTR_ERR(attach);
+> > >   		goto free;
+> > > diff --git a/drivers/gpu/drm/udl/udl_dmabuf.c b/drivers/gpu/drm/udl/udl_dmabuf.c
+> > > index 556f62662aa9..86b928f9742f 100644
+> > > --- a/drivers/gpu/drm/udl/udl_dmabuf.c
+> > > +++ b/drivers/gpu/drm/udl/udl_dmabuf.c
+> > > @@ -226,6 +226,10 @@ static int udl_prime_create(struct drm_device *dev,
+> > >   struct drm_gem_object *udl_gem_prime_import(struct drm_device *dev,
+> > >   				struct dma_buf *dma_buf)
+> > >   {
+> > > +	struct dma_buf_attach_info attach_info = {
+> > > +		.dev = dev->dev,
+> > > +		.dmabuf = dma_buf
+> > > +	};
+> > >   	struct dma_buf_attachment *attach;
+> > >   	struct sg_table *sg;
+> > >   	struct udl_gem_object *uobj;
+> > > @@ -233,7 +237,7 @@ struct drm_gem_object *udl_gem_prime_import(struct drm_device *dev,
+> > >   	/* need to attach */
+> > >   	get_device(dev->dev);
+> > > -	attach = dma_buf_attach(dma_buf, dev->dev);
+> > > +	attach = dma_buf_attach(&attach_info);
+> > >   	if (IS_ERR(attach)) {
+> > >   		put_device(dev->dev);
+> > >   		return ERR_CAST(attach);
+> > > diff --git a/drivers/media/common/videobuf2/videobuf2-dma-contig.c b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
+> > > index aff0ab7bf83d..1f2687b5eb0e 100644
+> > > --- a/drivers/media/common/videobuf2/videobuf2-dma-contig.c
+> > > +++ b/drivers/media/common/videobuf2/videobuf2-dma-contig.c
+> > > @@ -676,6 +676,10 @@ static void vb2_dc_detach_dmabuf(void *mem_priv)
+> > >   static void *vb2_dc_attach_dmabuf(struct device *dev, struct dma_buf *dbuf,
+> > >   	unsigned long size, enum dma_data_direction dma_dir)
+> > >   {
+> > > +	struct dma_buf_attach_info attach_info = {
+> > > +		.dev = dev,
+> > > +		.dmabuf = dbuf
+> > > +	};
+> > >   	struct vb2_dc_buf *buf;
+> > >   	struct dma_buf_attachment *dba;
+> > > @@ -691,7 +695,7 @@ static void *vb2_dc_attach_dmabuf(struct device *dev, struct dma_buf *dbuf,
+> > >   	buf->dev = dev;
+> > >   	/* create attachment for the dmabuf with the user device */
+> > > -	dba = dma_buf_attach(dbuf, buf->dev);
+> > > +	dba = dma_buf_attach(&attach_info);
+> > >   	if (IS_ERR(dba)) {
+> > >   		pr_err("failed to attach dmabuf\n");
+> > >   		kfree(buf);
+> > > diff --git a/drivers/media/common/videobuf2/videobuf2-dma-sg.c b/drivers/media/common/videobuf2/videobuf2-dma-sg.c
+> > > index 015e737095cd..cbd626d2393a 100644
+> > > --- a/drivers/media/common/videobuf2/videobuf2-dma-sg.c
+> > > +++ b/drivers/media/common/videobuf2/videobuf2-dma-sg.c
+> > > @@ -608,6 +608,10 @@ static void vb2_dma_sg_detach_dmabuf(void *mem_priv)
+> > >   static void *vb2_dma_sg_attach_dmabuf(struct device *dev, struct dma_buf *dbuf,
+> > >   	unsigned long size, enum dma_data_direction dma_dir)
+> > >   {
+> > > +	struct dma_buf_attach_info attach_info = {
+> > > +		.dev = dev,
+> > > +		.dmabuf = dbuf
+> > > +	};
+> > >   	struct vb2_dma_sg_buf *buf;
+> > >   	struct dma_buf_attachment *dba;
+> > > @@ -623,7 +627,7 @@ static void *vb2_dma_sg_attach_dmabuf(struct device *dev, struct dma_buf *dbuf,
+> > >   	buf->dev = dev;
+> > >   	/* create attachment for the dmabuf with the user device */
+> > > -	dba = dma_buf_attach(dbuf, buf->dev);
+> > > +	dba = dma_buf_attach(&attach_info);
+> > >   	if (IS_ERR(dba)) {
+> > >   		pr_err("failed to attach dmabuf\n");
+> > >   		kfree(buf);
+> > > diff --git a/drivers/staging/media/tegra-vde/tegra-vde.c b/drivers/staging/media/tegra-vde/tegra-vde.c
+> > > index aa6c6bba961e..5a10c1facc27 100644
+> > > --- a/drivers/staging/media/tegra-vde/tegra-vde.c
+> > > +++ b/drivers/staging/media/tegra-vde/tegra-vde.c
+> > > @@ -568,6 +568,10 @@ static int tegra_vde_attach_dmabuf(struct device *dev,
+> > >   				   size_t *size,
+> > >   				   enum dma_data_direction dma_dir)
+> > >   {
+> > > +	struct dma_buf_attach_info attach_info = {
+> > > +		.dev = dev,
+> > > +		.dmabuf = dmabuf
+> > > +	};
+> > >   	struct dma_buf_attachment *attachment;
+> > >   	struct dma_buf *dmabuf;
+> > >   	struct sg_table *sgt;
+> > > @@ -591,7 +595,7 @@ static int tegra_vde_attach_dmabuf(struct device *dev,
+> > >   		return -EINVAL;
+> > >   	}
+> > > -	attachment = dma_buf_attach(dmabuf, dev);
+> > > +	attachment = dma_buf_attach(&attach_info);
+> > >   	if (IS_ERR(attachment)) {
+> > >   		dev_err(dev, "Failed to attach dmabuf\n");
+> > >   		err = PTR_ERR(attachment);
+> > > diff --git a/include/linux/dma-buf.h b/include/linux/dma-buf.h
+> > > index 18a78be53541..7e23758db3a4 100644
+> > > --- a/include/linux/dma-buf.h
+> > > +++ b/include/linux/dma-buf.h
+> > > @@ -128,6 +128,9 @@ struct dma_buf_ops {
+> > >   	 * any other kind of sharing that the exporter might wish to make
+> > >   	 * available to buffer-users.
+> > >   	 *
+> > > +	 * This is always called with the dmabuf->resv object locked when
+> > > +	 * no_sgt_cache is true.
+> > > +	 *
+> > >   	 * Returns:
+> > >   	 *
+> > >   	 * A &sg_table scatter list of or the backing storage of the DMA buffer,
+> > > @@ -148,6 +151,9 @@ struct dma_buf_ops {
+> > >   	 * It should also unpin the backing storage if this is the last mapping
+> > >   	 * of the DMA buffer, it the exporter supports backing storage
+> > >   	 * migration.
+> > > +	 *
+> > > +	 * This is always called with the dmabuf->resv object locked when
+> > > +	 * no_sgt_cache is true.
+> > >   	 */
+> > >   	void (*unmap_dma_buf)(struct dma_buf_attachment *,
+> > >   			      struct sg_table *,
+> > > @@ -370,6 +376,19 @@ struct dma_buf_export_info {
+> > >   	struct dma_buf_export_info name = { .exp_name = KBUILD_MODNAME, \
+> > >   					 .owner = THIS_MODULE }
+> > > +/**
+> > > + * struct dma_buf_attach_info - holds information needed to attach to a dma_buf
+> > > + * @dmabuf:	the exported dma_buf
+> > > + * @dev:	the device which wants to import the attachment
+> > > + *
+> > > + * This structure holds the information required to attach to a buffer. Used
+> > > + * with dma_buf_attach() only.
+> > > + */
+> > > +struct dma_buf_attach_info {
+> > > +	struct dma_buf *dmabuf;
+> > > +	struct device *dev;
+> > > +};
+> > > +
+> > >   /**
+> > >    * get_dma_buf - convenience wrapper for get_file.
+> > >    * @dmabuf:	[in]	pointer to dma_buf
+> > > @@ -384,8 +403,8 @@ static inline void get_dma_buf(struct dma_buf *dmabuf)
+> > >   	get_file(dmabuf->file);
+> > >   }
+> > > -struct dma_buf_attachment *dma_buf_attach(struct dma_buf *dmabuf,
+> > > -							struct device *dev);
+> > > +struct dma_buf_attachment *
+> > > +dma_buf_attach(const struct dma_buf_attach_info *info);
+> > >   void dma_buf_detach(struct dma_buf *dmabuf,
+> > >   				struct dma_buf_attachment *dmabuf_attach);
+> > > -- 
+> > > 2.17.1
+> > > 
+> > > _______________________________________________
+> > > dri-devel mailing list
+> > > dri-devel@lists.freedesktop.org
+> > > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
