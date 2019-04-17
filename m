@@ -2,107 +2,87 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 979F8C10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 09:00:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E043C10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 09:01:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6F5F720693
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 09:00:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 16BC9217D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 09:01:07 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555491667;
+	bh=BEasVom47PMugj24F1KQvqhVPi/jf4xgcIShQ0cct9Q=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=K3keO8LJ37PrHPyK++EYzpjUUDvSTCGQQ69QpQDCbUzXCVxcTvxE/KnDrCkGE/gog
+	 YHa2hQ004xfL8YVcrSLHKNj952OBUzppGAOBLFS2QDW/sm58MawsJoNMTZjA+ZHKzh
+	 2IWdMVf4aWHuFkMzG6tzZQw0rgaJ0lL7TpPnQ9k8=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731450AbfDQJAg (ORCPT
+        id S1731485AbfDQJBF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 05:00:36 -0400
-Received: from mail-ot1-f67.google.com ([209.85.210.67]:39160 "EHLO
-        mail-ot1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726237AbfDQJAf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 05:00:35 -0400
-Received: by mail-ot1-f67.google.com with SMTP id f10so20041973otb.6
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 02:00:35 -0700 (PDT)
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=IVXQ9lQyi2Q5wZjTisjUyZ0XWSaOWQ+YMO9bua4jwlY=;
-        b=cd/Zr4PtIrLfMwAjbogs+4M+nMfxEvVqGL0gD4bNoXsG1ruZ+1km1++iMT6LYC/1Xi
-         P+ZiSEEU/oRsgTz7Gg9xzNkE/HHxH+8xACKidzU1E3SVfR6OVkZaA/mKAfjYximqVSrz
-         f2AG611RuxgpIhzaMOhR2kBK+7wgw/7+W1QOmexXOD3XNrr29GLlyz5+akE/VmWcJ+jf
-         FUo5VDSpKZ8z+RJQ1wdgd9jZG8YYTlFdp7kfVytIslK7sE6A/eHyyFu+wXDGEs/FcLSP
-         uEq/IzD4SWCODdXxBia1uTYxT9olAq2QB5IWNzAaYaGoNjIva2vuqlYKWF4RxA9Np+El
-         IGBw==
-X-Gm-Message-State: APjAAAVOA01coy2pFjXcwVCoM/Zp77F9FzQ70eM6mMnMDkeSpLE+pyIV
-        HSnyrJmp/B4BuO4s1rPbBGVfcsIl/7ZOUulH/xYS3g==
-X-Google-Smtp-Source: APXvYqxsTB5Pp6kOIv07dQS/TFykmrqTuxamMMOUJKhazGjniw4D901zY6sjI/2gTADp7RBilQXKya0NIaq4Jvsh2K0=
-X-Received: by 2002:a9d:6941:: with SMTP id p1mr52991357oto.64.1555491634828;
- Wed, 17 Apr 2019 02:00:34 -0700 (PDT)
+        Wed, 17 Apr 2019 05:01:05 -0400
+Received: from mail.kernel.org ([198.145.29.99]:60132 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726237AbfDQJBF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 05:01:05 -0400
+Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id 31DA621773;
+        Wed, 17 Apr 2019 09:01:04 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555491664;
+        bh=BEasVom47PMugj24F1KQvqhVPi/jf4xgcIShQ0cct9Q=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=QspXLNjinfzU9rdPnzoDUmzYu+ZBLtgi1/C5H/RtSr6uCWUIOmCVE46zf6esKcOru
+         0zfa7igR1qJ/ZdLWMoYZdW7eGE/eNhKGcZjbQoMrhmgurXyOgkd2qwKkx4nnsHYF5M
+         DWd41Wmk5zsEyxsctviG4vKhIAVMd6bposfoTndY=
+Date:   Wed, 17 Apr 2019 11:01:02 +0200
+From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
+        stable@vger.kernel.org
+Subject: Re: [PATCH] arm64: futex: Restore oldval initialization to work
+ around buggy compilers
+Message-ID: <20190417090102.GA11773@kroah.com>
+References: <20190417072121.4450-1-natechancellor@gmail.com>
 MIME-Version: 1.0
-References: <20190417084833.7401-1-mlichvar@redhat.com>
-In-Reply-To: <20190417084833.7401-1-mlichvar@redhat.com>
-From:   Ondrej Mosnacek <omosnace@redhat.com>
-Date:   Wed, 17 Apr 2019 11:00:23 +0200
-Message-ID: <CAFqZXNu_pc1BEGZJb=3Ez58uN+BfoECpSm2yVqv1MMx7iTLfRw@mail.gmail.com>
-Subject: Re: [PATCH] ntp: Allow TAI-UTC offset to be set to zero
-To:     Miroslav Lichvar <mlichvar@redhat.com>
-Cc:     Linux kernel mailing list <linux-kernel@vger.kernel.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        John Stultz <john.stultz@linaro.org>,
-        Richard Cochran <richardcochran@gmail.com>,
-        Prarit Bhargava <prarit@redhat.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190417072121.4450-1-natechancellor@gmail.com>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 10:48 AM Miroslav Lichvar <mlichvar@redhat.com> wrote:
-> The ADJ_TAI adjtimex mode sets the TAI-UTC offset of the system clock.
-> It is typically set by NTP/PTP implementations and it is automatically
-> updated by the kernel on leap seconds. The initial value is zero (which
-> applications may interpret as unknown), but this value cannot be set by
-> adjtimex. This limitation seems to go back to the original "nanokernel"
-> implementation by David Mills.
->
-> Change the ADJ_TAI check to accept zero as a valid TAI-UTC offset in
-> order to allow setting it back to the initial value.
->
-> Cc: Thomas Gleixner <tglx@linutronix.de>
-> Cc: John Stultz <john.stultz@linaro.org>
-> Cc: Richard Cochran <richardcochran@gmail.com>
-> Cc: Prarit Bhargava <prarit@redhat.com>
-> Suggested-by: Ondrej Mosnacek <omosnace@redhat.com>
-> Signed-off-by: Miroslav Lichvar <mlichvar@redhat.com>
+On Wed, Apr 17, 2019 at 12:21:21AM -0700, Nathan Chancellor wrote:
+> Commit 045afc24124d ("arm64: futex: Fix FUTEX_WAKE_OP atomic ops with
+> non-zero result value") removed oldval's zero initialization in
+> arch_futex_atomic_op_inuser because it is not necessary. Unfortunately,
+> Android's arm64 GCC 4.9.4 [1] does not agree:
+> 
+> ../kernel/futex.c: In function 'do_futex':
+> ../kernel/futex.c:1658:17: warning: 'oldval' may be used uninitialized
+> in this function [-Wmaybe-uninitialized]
+>    return oldval == cmparg;
+>                  ^
+> In file included from ../kernel/futex.c:73:0:
+> ../arch/arm64/include/asm/futex.h:53:6: note: 'oldval' was declared here
+>   int oldval, ret, tmp;
+>       ^
+> 
+> GCC fails to follow that when ret is non-zero, futex_atomic_op_inuser
+> returns right away, avoiding the uninitialized use that it claims.
+> Restoring the zero initialization works around this issue.
+> 
+> [1]: https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/
+> 
+> Cc: stable@vger.kernel.org
+> Fixes: 045afc24124d ("arm64: futex: Fix FUTEX_WAKE_OP atomic ops with non-zero result value")
+> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
 
-Thanks for sending the patch! Maybe you (or the committer) could
-consider adding:
-
-Fixes: 153b5d054ac2 ("ntp: support for TAI")
-
-so that it gets to the stable kernels as well.
-
-> ---
->  kernel/time/ntp.c | 2 +-
->  1 file changed, 1 insertion(+), 1 deletion(-)
->
-> diff --git a/kernel/time/ntp.c b/kernel/time/ntp.c
-> index 92a90014a925..f43d47c8c3b6 100644
-> --- a/kernel/time/ntp.c
-> +++ b/kernel/time/ntp.c
-> @@ -690,7 +690,7 @@ static inline void process_adjtimex_modes(const struct __kernel_timex *txc,
->                 time_constant = max(time_constant, 0l);
->         }
->
-> -       if (txc->modes & ADJ_TAI && txc->constant > 0)
-> +       if (txc->modes & ADJ_TAI && txc->constant >= 0)
->                 *time_tai = txc->constant;
->
->         if (txc->modes & ADJ_OFFSET)
-> --
-> 2.17.2
-
--- 
-Ondrej Mosnacek <omosnace at redhat dot com>
-Software Engineer, Security Technologies
-Red Hat, Inc.
+Reviewed-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
