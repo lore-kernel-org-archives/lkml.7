@@ -4,219 +4,171 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
-	autolearn_force=no version=3.4.0
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 361FAC282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:54:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3EB13C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:54:24 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF6142064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:54:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1102D2064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:54:24 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="gobsLPVi"
+	dkim=pass (1024-bit key) header.d=samsung.com header.i=@samsung.com header.b="utQTg6aR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387413AbfDQRyL (ORCPT
+        id S2387425AbfDQRyX (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 13:54:11 -0400
-Received: from mailout2.samsung.com ([203.254.224.25]:19389 "EHLO
-        mailout2.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733270AbfDQRyH (ORCPT
+        Wed, 17 Apr 2019 13:54:23 -0400
+Received: from mailout3.samsung.com ([203.254.224.33]:28413 "EHLO
+        mailout3.samsung.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1733279AbfDQRyE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 13:54:07 -0400
-Received: from epcas2p1.samsung.com (unknown [182.195.41.53])
-        by mailout2.samsung.com (KnoxPortal) with ESMTP id 20190417175404epoutp0288c2fbb7ca6af33bd277708600d09162~WVINqVbF00937009370epoutp02a;
-        Wed, 17 Apr 2019 17:54:04 +0000 (GMT)
-DKIM-Filter: OpenDKIM Filter v2.11.0 mailout2.samsung.com 20190417175404epoutp0288c2fbb7ca6af33bd277708600d09162~WVINqVbF00937009370epoutp02a
+        Wed, 17 Apr 2019 13:54:04 -0400
+Received: from epcas2p3.samsung.com (unknown [182.195.41.55])
+        by mailout3.samsung.com (KnoxPortal) with ESMTP id 20190417175400epoutp039229c55c9036ac787189769926a830bc~WVIKGH-RF3159031590epoutp03B;
+        Wed, 17 Apr 2019 17:54:00 +0000 (GMT)
+DKIM-Filter: OpenDKIM Filter v2.11.0 mailout3.samsung.com 20190417175400epoutp039229c55c9036ac787189769926a830bc~WVIKGH-RF3159031590epoutp03B
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=samsung.com;
-        s=mail20170921; t=1555523644;
-        bh=C76dKk0NmGHl/Qu5kKDvvmvO7y5dIxg97utO9LWSE00=;
+        s=mail20170921; t=1555523640;
+        bh=iP0XOFxFxW4dqp5UudF4yA1+ezdoL5xyOuz+dgVM6Tk=;
         h=From:To:Cc:Subject:Date:In-reply-to:References:From;
-        b=gobsLPViFWW1QCh76rBkz9VUva+tHQTkAHLWfnqJfEt2VQeTqga40ps/uXfD9vYte
-         TKZaGupcioY/yguegS6L2PShuTE+GGvVaef8wBup0SRUpLneK8FSwbfXraFw34W6kb
-         yyucSUIQs/f6edb+TFZu1YXBCtgmG2pj+f6Jvus4=
-Received: from epsmges2p4.samsung.com (unknown [182.195.42.72]) by
-        epcas2p2.samsung.com (KnoxPortal) with ESMTP id
-        20190417175404epcas2p24c94ad70bd5598a486988dde7e5b5cf3~WVINZ8aPP0324203242epcas2p2O;
-        Wed, 17 Apr 2019 17:54:04 +0000 (GMT)
-Received: from epcas2p4.samsung.com ( [182.195.41.56]) by
-        epsmges2p4.samsung.com (Symantec Messaging Gateway) with SMTP id
-        30.68.04207.C3867BC5; Thu, 18 Apr 2019 02:54:04 +0900 (KST)
+        b=utQTg6aRbKNBBC9fzqCj2hW7USv6659s2321i8+619vSmhLL2jhdOjys5Z6CFOyUr
+         PjErWBJFBEjehKAACrAz93nleSqYTRAajMhSyUSPovD1EIyEJNfJWDA5y9kkRIamBq
+         +NzcyemLet2TAgmlkK8VdDbX3z2DdL1NQgExKdQg=
+Received: from epsmges2p3.samsung.com (unknown [182.195.42.71]) by
+        epcas2p3.samsung.com (KnoxPortal) with ESMTP id
+        20190417175400epcas2p38ccb0c4ea4da9aedfb7bf2270190b367~WVIJ0XxbZ1769817698epcas2p3M;
+        Wed, 17 Apr 2019 17:54:00 +0000 (GMT)
+Received: from epcas2p2.samsung.com ( [182.195.41.54]) by
+        epsmges2p3.samsung.com (Symantec Messaging Gateway) with SMTP id
+        16.64.04206.83867BC5; Thu, 18 Apr 2019 02:54:00 +0900 (KST)
 Received: from epsmgms2p2new.samsung.com (unknown [182.195.42.143]) by
-        epcas2p1.samsung.com (KnoxPortal) with ESMTP id
-        20190417175404epcas2p1380bc5b15bd1e3c09866765c581a34c3~WVINFF7xW1198411984epcas2p1c;
-        Wed, 17 Apr 2019 17:54:04 +0000 (GMT)
-X-AuditID: b6c32a48-6a1ff7000000106f-01-5cb7683cfe84
+        epcas2p2.samsung.com (KnoxPortal) with ESMTP id
+        20190417175400epcas2p2b166bfaef69f5a02e856743be76199f3~WVIJci7c93108131081epcas2p2U;
+        Wed, 17 Apr 2019 17:54:00 +0000 (GMT)
+X-AuditID: b6c32a47-14bff7000000106e-16-5cb76838c683
 Received: from epmmp1.local.host ( [203.254.227.16]) by
         epsmgms2p2new.samsung.com (Symantec Messaging Gateway) with SMTP id
-        59.EF.03620.B3867BC5; Thu, 18 Apr 2019 02:54:04 +0900 (KST)
+        D8.EF.03620.73867BC5; Thu, 18 Apr 2019 02:54:00 +0900 (KST)
 Received: from test-PowerEdge-R720.sa.corp.samsungelectronics.net
         ([107.108.221.212]) by mmp1.samsung.com (Oracle Communications Messaging
         Server 7.0.5.31.0 64bit (built May  5 2014)) with ESMTPA id
-        <0PQ4006MF9PFCC30@mmp1.samsung.com>; Thu, 18 Apr 2019 02:54:03 +0900 (KST)
+        <0PQ4006MF9PFCC30@mmp1.samsung.com>; Thu, 18 Apr 2019 02:53:59 +0900 (KST)
 From:   Kanchan Joshi <joshi.k@samsung.com>
 To:     linux-kernel@vger.kernel.org, linux-block@vger.kernel.org,
         linux-nvme@lists.infradead.org, linux-fsdevel@vger.kernel.org,
         linux-ext4@vger.kernel.org
 Cc:     prakash.v@samsung.com, Kanchan Joshi <joshi.k@samsung.com>
-Subject: [PATCH v4 7/7] fs/ext4,jbd2: add support for sending write-hint
- with journal
-Date:   Wed, 17 Apr 2019 23:20:06 +0530
-Message-id: <1555523406-2380-8-git-send-email-joshi.k@samsung.com>
+Subject: [PATCH v4 5/7] nvme: register stream info with block layer
+Date:   Wed, 17 Apr 2019 23:20:04 +0530
+Message-id: <1555523406-2380-6-git-send-email-joshi.k@samsung.com>
 X-Mailer: git-send-email 2.7.4
 In-reply-to: <1555523406-2380-1-git-send-email-joshi.k@samsung.com>
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFprAIsWRmVeSWpSXmKPExsWy7bCmha5NxvYYg78vRS2O/n/LZrH3lrbF
-        zHl32Cz27D3JYnF51xw2i/nLnrJbXJmyiNmB3WPzknqPvi2rGD0+b5ILYI7isklJzcksSy3S
-        t0vgyvjzajtbwTGFivX/5BsYu6W7GDk5JARMJP5tb2fsYuTiEBLYwSjx8fB0KOc7o8SG7m+M
-        MFWflp9mgUjsZpS4vP0JM4QznUliz71vTF2MHBxsApoSFyaXgsRFBOYwSizbN40ZpJtZwE5i
-        xrfXrCC2sEC4xPP+1ewgNouAqsShTafB4rwCThIPljSxQWyTk7h5rhOsl1PAWeLRlVtsIEMl
-        BP6ySkz6twiqyEXi9oo+VghbWuLZqo1QpxZL/LpzlBmioYNR4nrDTBaIhL3ExT1/mSAu4pPo
-        OPyXHeRqCQFeiY42IYgSD4mtd3eyQXw2jVGi8883xgmMEgsYGVYxiqUWFOempxYbFZjoFSfm
-        Fpfmpesl5+duYgTHk5bHDsYD53wOMQpwMCrx8K5Q3R4jxJpYVlyZe4hRgoNZSYTXMWVLjBBv
-        SmJlVWpRfnxRaU5q8SFGaQ4WJXHeh9Jzo4UE0hNLUrNTUwtSi2CyTBycUg2Mu3zeuS+XWGTK
-        Wu5r/CN3UdqStpM155Y7nXazzldfITy3IM7mBO88K8d7jlEcOz9b391VnO7go3Roumjqp+q5
-        0/cETezbu2DV2eoNHbIWZqlvdscLSSxnkNr1pnLtEwG2X3XyYd2MF6+vDYgIO75c2Wda67cj
-        H7kaSjrtn60zr3VtFspKTYtQYinOSDTUYi4qTgQA9mJ9zqMCAAA=
-X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrPJMWRmVeSWpSXmKPExsVy+t9jAV2bjO0xBnsvMlkc/f+WzWLvLW2L
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFupnkeLIzCtJLcpLzFFi42LZdljTTNciY3uMQecXGYuj/9+yWey9pW0x
+        c94dNos9e0+yWFzeNYfNYv6yp+wWV6YsYnZg99i8pN6jb8sqRo/Pm+QCmKO4bFJSczLLUov0
+        7RK4Mg49+M1c8EW4YmWHQAPjIoEuRk4OCQETiTU7njB3MXJxCAnsYJR41LCWCcL5zihx6O8s
+        VpiqvStnsoHYQgK7GSVmvw6EKJrOJPF4fxNQEQcHm4CmxIXJpSBxEYE5jBLL9k1jBmlgFrCT
+        mPHtNdggYQFnid4H09lBbBYBVYlNT7cwgdi8Ak4Sk57uZ4JYJidx81wnWC8nUP2jK7fYQIZK
+        CPxklbgwZxILRJGLxJs509ghbGmJZ6s2MkLYxRK/7hxlhmjoYJS43jATqsFe4uKev0wQF/FJ
+        dBz+yw5ytYQAr0RHmxBEiYdEW9tlqPenMUq0PXvMPIFRYgEjwypGsdSC4tz01GKjAmO94sTc
+        4tK8dL3k/NxNjOBo0nLfwbjtnM8hRgEORiUe3hWq22OEWBPLiitzDzFKcDArifA6pmyJEeJN
+        SaysSi3Kjy8qzUktPsQozcGiJM77UHputJBAemJJanZqakFqEUyWiYNTqoFRgfvEjrYyscMN
+        37j0DQMFJ095Gq6oN/fKvuPJdv25GxY/STLbxBxtYpjLVvSt7tz68327LGw92bbXVzHb/A3O
+        bnPZ+0HR58Cx0On/7gVcnWb95mr3+T19pVxuj+XsFJslvYTLzhaUPzv5/rmR8Zf7t9NMn9/d
+        9f5NwJK45Zw/37r82fTj1PTrSizFGYmGWsxFxYkArtk3pKICAAA=
+X-Brightmail-Tracker: H4sIAAAAAAAAA+NgFvrPJMWRmVeSWpSXmKPExsVy+t9jAV2LjO0xBtfeMFsc/f+WzWLvLW2L
         mfPusFns2XuSxeLyrjlsFvOXPWW3uDJlEbMDu8fmJfUefVtWMXp83iQXwBzFZZOSmpNZllqk
-        b5fAlfHn1Xa2gmMKFev/yTcwdkt3MXJySAiYSHxafpqli5GLQ0hgJ6PElPe7WCGcmUwS+9af
-        Y+ti5OBgE9CUuDC5FCQuIjCHUaJn93pWkG5mATuJGd9eg9nCAuESu54sZAexWQRUJQ5tOg0W
-        5xVwkniwpIkNYpucxM1zncwgNqeAs8SjK7fA4kJANadX/WGfwMizgJFhFaNkakFxbnpusVGB
-        UV5quV5xYm5xaV66XnJ+7iZGYLBsO6zVv4Px8ZL4Q4wCHIxKPLwrVLfHCLEmlhVX5h5ilOBg
-        VhLhdUzZEiPEm5JYWZValB9fVJqTWnyIUZqDRUmclz//WKSQQHpiSWp2ampBahFMlomDU6qB
-        kf9Cj9idz4uWpbl82b5R3+f+3weWP7eoCz0sWT19wxnP31Hr/tXVrDwi0zddYnny+umTdr1S
-        WVW0u9zvTGN0/g5DZ6FTOtpzpLLXFjw4d3Nb8Dx23stcWytnmjz6dTpsQ/iSx4ed+XZurZlp
-        f2FV4ZFHYY8956avPcc6f/0H1vC5OpUs8qdPN29WYinOSDTUYi4qTgQAkhwY3BICAAA=
-X-CMS-MailID: 20190417175404epcas2p1380bc5b15bd1e3c09866765c581a34c3
+        b5fAlXHowW/mgi/CFSs7BBoYFwl0MXJySAiYSOxdOZOti5GLQ0hgJ6PEs1ONzBDOTCaJk6tn
+        sXQxcnCwCWhKXJhcChIXEZjDKNGzez0rSDezgJ3EjG+vwWxhAWeJ3gfT2UFsFgFViU1PtzCB
+        2LwCThKTnu5ngtgmJ3HzXCcziM0JVP/oyi02EFsIqOb0qj/sExh5FjAyrGKUTC0ozk3PLTYq
+        MMpLLdcrTswtLs1L10vOz93ECAyWbYe1+ncwPl4Sf4hRgINRiYd3her2GCHWxLLiytxDjBIc
+        zEoivI4pW2KEeFMSK6tSi/Lji0pzUosPMUpzsCiJ8/LnH4sUEkhPLEnNTk0tSC2CyTJxcEo1
+        MG68JtycU3HGyL/ks6jW1mvNXwOvCbwN+V4S5/R+78svhsz2yyqWpZtteNeg48J3ao/RBDkh
+        /v8X9Yya1y5/xKl0o4H3fs6fST0qjieKtitdlvwiqHqD40O8e28Ke1HdFLHtE8v+O53WLV5z
+        Y+N/e74NX9bO598bKyBSnRD1re2Qv9Ay28nfU5VYijMSDbWYi4oTAS4871MSAgAA
+X-CMS-MailID: 20190417175400epcas2p2b166bfaef69f5a02e856743be76199f3
 CMS-TYPE: 102P
-X-CMS-RootMailID: 20190417175404epcas2p1380bc5b15bd1e3c09866765c581a34c3
+X-CMS-RootMailID: 20190417175400epcas2p2b166bfaef69f5a02e856743be76199f3
 References: <1555523406-2380-1-git-send-email-joshi.k@samsung.com>
-        <CGME20190417175404epcas2p1380bc5b15bd1e3c09866765c581a34c3@epcas2p1.samsung.com>
+        <CGME20190417175400epcas2p2b166bfaef69f5a02e856743be76199f3@epcas2p2.samsung.com>
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-For NAND based SSDs, mixing of data with different life-time reduces
-efficiency of internal garbage-collection. During FS operations,
-series of journal updates will follow/precede series of data/meta
-updates, causing intermixing inside SSD. By passing a write-hint with
-journal, its write can be isolated from other data/meta writes, leading
-to endurance/performance benefit on SSD.
-This patch introduces "j_writehint" member in JBD2 journal, using which
-Ext4 specifies write-hint for journal.
+Make nvme driver register number of streams with block layer. Block
+layer will use that for write-hint to stream-id conversion. Registration
+is done for each namespace. Since NVMe spec allow all available
+streams (within subsystem) to be used by all namespaces, no attempt
+has been made to add reservation at namespace level.
 
 Signed-off-by: Kanchan Joshi <joshi.k@samsung.com>
 ---
- fs/ext4/ext4_jbd2.h  |  1 +
- fs/ext4/super.c      |  2 ++
- fs/jbd2/commit.c     | 11 +++++++----
- fs/jbd2/journal.c    |  3 ++-
- fs/jbd2/revoke.c     |  3 ++-
- include/linux/jbd2.h |  8 ++++++++
- 6 files changed, 22 insertions(+), 6 deletions(-)
+ drivers/nvme/host/core.c | 23 ++++++-----------------
+ 1 file changed, 6 insertions(+), 17 deletions(-)
 
-diff --git a/fs/ext4/ext4_jbd2.h b/fs/ext4/ext4_jbd2.h
-index 75a5309..ade47b2 100644
---- a/fs/ext4/ext4_jbd2.h
-+++ b/fs/ext4/ext4_jbd2.h
-@@ -16,6 +16,7 @@
- #include <linux/jbd2.h>
- #include "ext4.h"
- 
-+#define EXT4_JOURNAL_WRITE_HINT (WRITE_LIFE_KERN_MIN)
- #define EXT4_JOURNAL(inode)	(EXT4_SB((inode)->i_sb)->s_journal)
- 
- /* Define the number of blocks we need to account to a transaction to
-diff --git a/fs/ext4/super.c b/fs/ext4/super.c
-index 6ed4eb8..238c0b5 100644
---- a/fs/ext4/super.c
-+++ b/fs/ext4/super.c
-@@ -4298,6 +4298,8 @@ static int ext4_fill_super(struct super_block *sb, void *data, int silent)
- 
- 	set_task_ioprio(sbi->s_journal->j_task, journal_ioprio);
- 
-+	sbi->s_journal->j_writehint = EXT4_JOURNAL_WRITE_HINT;
-+
- 	sbi->s_journal->j_commit_callback = ext4_journal_commit_callback;
- 
- no_journal:
-diff --git a/fs/jbd2/commit.c b/fs/jbd2/commit.c
-index efd0ce9..be3a0b9 100644
---- a/fs/jbd2/commit.c
-+++ b/fs/jbd2/commit.c
-@@ -153,10 +153,12 @@ static int journal_submit_commit_record(journal_t *journal,
- 
- 	if (journal->j_flags & JBD2_BARRIER &&
- 	    !jbd2_has_feature_async_commit(journal))
--		ret = submit_bh(REQ_OP_WRITE,
--			REQ_SYNC | REQ_PREFLUSH | REQ_FUA, bh);
-+		ret = submit_bh_write_hint(REQ_OP_WRITE,
-+			REQ_SYNC | REQ_PREFLUSH | REQ_FUA, bh,
-+			journal->j_writehint);
- 	else
--		ret = submit_bh(REQ_OP_WRITE, REQ_SYNC, bh);
-+		ret = submit_bh_write_hint(REQ_OP_WRITE, REQ_SYNC, bh,
-+			journal->j_writehint);
- 
- 	*cbh = bh;
- 	return ret;
-@@ -713,7 +715,8 @@ void jbd2_journal_commit_transaction(journal_t *journal)
- 				clear_buffer_dirty(bh);
- 				set_buffer_uptodate(bh);
- 				bh->b_end_io = journal_end_buffer_io_sync;
--				submit_bh(REQ_OP_WRITE, REQ_SYNC, bh);
-+				submit_bh_write_hint(REQ_OP_WRITE, REQ_SYNC,
-+						bh, journal->j_writehint);
- 			}
- 			cond_resched();
- 			stats.run.rs_blocks_logged += bufs;
-diff --git a/fs/jbd2/journal.c b/fs/jbd2/journal.c
-index 382c030..6dc7c9a 100644
---- a/fs/jbd2/journal.c
-+++ b/fs/jbd2/journal.c
-@@ -1372,7 +1372,8 @@ static int jbd2_write_superblock(journal_t *journal, int write_flags)
- 		sb->s_checksum = jbd2_superblock_csum(journal, sb);
- 	get_bh(bh);
- 	bh->b_end_io = end_buffer_write_sync;
--	ret = submit_bh(REQ_OP_WRITE, write_flags, bh);
-+	ret = submit_bh_write_hint(REQ_OP_WRITE, write_flags, bh,
-+				   journal->j_writehint);
- 	wait_on_buffer(bh);
- 	if (buffer_write_io_error(bh)) {
- 		clear_buffer_write_io_error(bh);
-diff --git a/fs/jbd2/revoke.c b/fs/jbd2/revoke.c
-index a1143e5..376b1d8 100644
---- a/fs/jbd2/revoke.c
-+++ b/fs/jbd2/revoke.c
-@@ -642,7 +642,8 @@ static void flush_descriptor(journal_t *journal,
- 	set_buffer_jwrite(descriptor);
- 	BUFFER_TRACE(descriptor, "write");
- 	set_buffer_dirty(descriptor);
--	write_dirty_buffer(descriptor, REQ_SYNC);
-+	write_dirty_buffer_with_hint(descriptor, REQ_SYNC,
-+				journal->j_writehint);
+diff --git a/drivers/nvme/host/core.c b/drivers/nvme/host/core.c
+index 2c43e12..81b86fa 100644
+--- a/drivers/nvme/host/core.c
++++ b/drivers/nvme/host/core.c
+@@ -464,10 +464,6 @@ static int nvme_toggle_streams(struct nvme_ctrl *ctrl, bool enable)
+ 	return nvme_submit_sync_cmd(ctrl->admin_q, &c, NULL, 0);
  }
- #endif
  
-diff --git a/include/linux/jbd2.h b/include/linux/jbd2.h
-index 0f919d5..918f21e 100644
---- a/include/linux/jbd2.h
-+++ b/include/linux/jbd2.h
-@@ -1139,6 +1139,14 @@ struct journal_s
- 	 */
- 	__u32 j_csum_seed;
+-static int nvme_disable_streams(struct nvme_ctrl *ctrl)
+-{
+-	return nvme_toggle_streams(ctrl, false);
+-}
  
-+	/**
-+	 * @j_writehint:
-+	 *
-+	 * write-hint for journal (set by FS).
-+	 */
-+	enum rw_hint	j_writehint;
-+
-+
- #ifdef CONFIG_DEBUG_LOCK_ALLOC
- 	/**
- 	 * @j_trans_commit_map:
+ static int nvme_enable_streams(struct nvme_ctrl *ctrl)
+ {
+@@ -510,14 +506,7 @@ static int nvme_configure_directives(struct nvme_ctrl *ctrl)
+ 		return ret;
+ 
+ 	ctrl->nssa = le16_to_cpu(s.nssa);
+-	if (ctrl->nssa < BLK_MAX_WRITE_HINTS - 1) {
+-		dev_info(ctrl->device, "too few streams (%u) available\n",
+-					ctrl->nssa);
+-		nvme_disable_streams(ctrl);
+-		return 0;
+-	}
+-
+-	ctrl->nr_streams = min_t(unsigned, ctrl->nssa, BLK_MAX_WRITE_HINTS - 1);
++	ctrl->nr_streams = ctrl->nssa;
+ 	dev_info(ctrl->device, "Using %u streams\n", ctrl->nr_streams);
+ 	return 0;
+ }
+@@ -530,12 +519,9 @@ static void nvme_assign_write_stream(struct nvme_ctrl *ctrl,
+ 				     struct request *req, u16 *control,
+ 				     u32 *dsmgmt)
+ {
+-	enum rw_hint streamid = req->write_hint;
++	enum rw_hint streamid = req->streamid;
+ 
+-	if (streamid == WRITE_LIFE_NOT_SET || streamid == WRITE_LIFE_NONE)
+-		streamid = 0;
+-	else {
+-		streamid--;
++	if (streamid != 0) {
+ 		if (WARN_ON_ONCE(streamid > ctrl->nr_streams))
+ 			return;
+ 
+@@ -3189,6 +3175,7 @@ static int nvme_setup_streams_ns(struct nvme_ctrl *ctrl, struct nvme_ns *ns)
+ {
+ 	struct streams_directive_params s;
+ 	int ret;
++	u16 nr_streams;
+ 
+ 	if (!ctrl->nr_streams)
+ 		return 0;
+@@ -3200,6 +3187,8 @@ static int nvme_setup_streams_ns(struct nvme_ctrl *ctrl, struct nvme_ns *ns)
+ 	ns->sws = le32_to_cpu(s.sws);
+ 	ns->sgs = le16_to_cpu(s.sgs);
+ 
++	nr_streams = min_t(unsigned, ctrl->nr_streams, BLK_MAX_WRITE_HINTS - 1);
++	blk_queue_stream_limits(ns->queue, nr_streams);
+ 	if (ns->sws) {
+ 		unsigned int bs = 1 << ns->lba_shift;
+ 
 -- 
 2.7.4
 
