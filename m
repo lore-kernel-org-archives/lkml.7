@@ -2,207 +2,124 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3B971C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:50:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E3198C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:52:41 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EF21B20663
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:50:20 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A67F320663
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:52:41 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YqfWBwrm"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732041AbfDQSuT (ORCPT
+        id S1732529AbfDQSwk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 14:50:19 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:60164 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727340AbfDQSuT (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 14:50:19 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 4C31D4628B;
-        Wed, 17 Apr 2019 18:50:18 +0000 (UTC)
-Received: from llong.remote.csb (dhcp-17-47.bos.redhat.com [10.18.17.47])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 2FEBE5D707;
-        Wed, 17 Apr 2019 18:50:17 +0000 (UTC)
-Subject: Re: [PATCH v4 08/16] locking/rwsem: Make rwsem_spin_on_owner() return
- owner state
-To:     Peter Zijlstra <peterz@infradead.org>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
-References: <20190413172259.2740-1-longman@redhat.com>
- <20190413172259.2740-9-longman@redhat.com>
- <20190417124101.GE4038@hirez.programming.kicks-ass.net>
- <20190417130016.GU14281@hirez.programming.kicks-ass.net>
-From:   Waiman Long <longman@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- weim8xU=
-Organization: Red Hat
-Message-ID: <ab52fc94-fa1d-899f-9e76-d54834fd2882@redhat.com>
-Date:   Wed, 17 Apr 2019 14:50:16 -0400
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
- Thunderbird/52.9.1
+        Wed, 17 Apr 2019 14:52:40 -0400
+Received: from mail-pg1-f196.google.com ([209.85.215.196]:42259 "EHLO
+        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727340AbfDQSwk (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 14:52:40 -0400
+Received: by mail-pg1-f196.google.com with SMTP id p6so12406358pgh.9
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 11:52:40 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HJHPz+R+CU544kFQAxOjPvxjaUk0WljUZxgaPbvIzcc=;
+        b=YqfWBwrmfbl5Hv+1kfO451IuZw6K2fopkKRxOjVMmlqLtvfCD+8P8ulQ5lZgK/1Yuo
+         wotciWLK1N9YFaKqnCC7KhDsWaBYCcT1dWVmNfqTTBO+DZ/5zjovCURXwfjLc4pQbepd
+         VYPgFROhVk0Kz2SB9pI7EgoAvlIvb4aJVn2gBesvQmz74RGyw98dVBk0ZR4it8OA+gFO
+         1vAu6X2c1JHJk0vVLXC27yg0uqDAWYDzdVGAfYoi6j8YgTrYpToOSc/dvRAfaZhyVRNC
+         HlTYWRVSM1S292BTrmgfIvsUpIXINuwXvCLc9+m4MBwzQa93AZ+/J9BjehizbkejOG45
+         tAvQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HJHPz+R+CU544kFQAxOjPvxjaUk0WljUZxgaPbvIzcc=;
+        b=eRYJv7hcc2EixQvFWiZCfHM2osy+pDvrMFBzXLZswWOduvbnSwwzyUXy2Qu4izpmwJ
+         DElw/hsVpGI0Sp8xrbkNYtMVVRsB5aHrpQIWnGQru6tIylfuapUeIEXULH/dB5sOVzQ0
+         Pd0Trbxp04VRcbDBS4hu08LgYm0GuEE0tlzrxELU35fghvoCwaa1FF0NPhCm2sVLzzDT
+         uoXGxUslVDjqbDadgDYrT6bRlPfN8wCV0r/dSndc5IpaRzSv48vEg8admGYzZaAhnSbv
+         M52ypBJDqDUh1I8jwRCctCWZwb240E89wqBgiufmMh5fiCrEuWmDrFAge+X70Y0hYnz5
+         tg5A==
+X-Gm-Message-State: APjAAAXxp4QNBhcrTUEoHjURtBdaOb3Y838ToczlenVDBSFwR7s7Up8N
+        B1ojU+EMoDTlJ9Ey4aX9bQlG/WzUqeI=
+X-Google-Smtp-Source: APXvYqykeKm2o2jK/pzbLZZWY60wLb9avMmElfMMhZG0aMKJkE8U0atALpGy9m1VS/GCrsA8DTYNug==
+X-Received: by 2002:a63:2158:: with SMTP id s24mr38059731pgm.156.1555527159561;
+        Wed, 17 Apr 2019 11:52:39 -0700 (PDT)
+Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
+        by smtp.gmail.com with ESMTPSA id g5sm42888832pfo.53.2019.04.17.11.52.39
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 17 Apr 2019 11:52:39 -0700 (PDT)
+Date:   Wed, 17 Apr 2019 11:52:36 -0700
+From:   Nicolin Chen <nicoleotsuka@gmail.com>
+To:     "S.j. Wang" <shengjiu.wang@nxp.com>
+Cc:     "timur@kernel.org" <timur@kernel.org>,
+        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH V3 1/2] ASoC: fsl_asrc: replace the process_option table
+ with function
+Message-ID: <20190417185236.GC5073@Asurada-Nvidia.nvidia.com>
+References: <cover.1555491598.git.shengjiu.wang@nxp.com>
+ <1eaeb882bdd69108c8ce897398c5c36ece6d49c5.1555491598.git.shengjiu.wang@nxp.com>
 MIME-Version: 1.0
-In-Reply-To: <20190417130016.GU14281@hirez.programming.kicks-ass.net>
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.29]); Wed, 17 Apr 2019 18:50:18 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1eaeb882bdd69108c8ce897398c5c36ece6d49c5.1555491598.git.shengjiu.wang@nxp.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 04/17/2019 09:00 AM, Peter Zijlstra wrote:
-> On Wed, Apr 17, 2019 at 02:41:01PM +0200, Peter Zijlstra wrote:
->> On Sat, Apr 13, 2019 at 01:22:51PM -0400, Waiman Long wrote:
->>> In the special case that there is no active lock and the handoff bit
->>> is set, optimistic spinning has to be stopped.
->>> @@ -500,9 +521,19 @@ static noinline bool rwsem_spin_on_owner(struct rw_semaphore *sem)
->>>  
->>>  	/*
->>>  	 * If there is a new owner or the owner is not set, we continue
->>> -	 * spinning.
->>> +	 * spinning except when here is no active locks and the handoff bit
->>> +	 * is set. In this case, we have to stop spinning.
->>>  	 */
->>> -	return is_rwsem_owner_spinnable(READ_ONCE(sem->owner));
->>> +	owner = READ_ONCE(sem->owner);
->>> +	if (!is_rwsem_owner_spinnable(owner))
->>> +		return OWNER_NONSPINNABLE;
->>> +	if (owner && !is_rwsem_owner_reader(owner))
->>> +		return OWNER_WRITER;
->>> +
->>> +	count = atomic_long_read(&sem->count);
->>> +	if (RWSEM_COUNT_HANDOFF(count) && !RWSEM_COUNT_LOCKED(count))
->>> +		return OWNER_NONSPINNABLE;
->>> +	return !owner ? OWNER_NULL : OWNER_READER;
->>>  }
->> So this fixes a straight up bug in the last patch (and thus should be
->> done before so the bug never exists), and creates unreadable code while
->> at it.
->>
->> Also, I think only checking HANDOFF after the loop is wrong; the moment
->> HANDOFF happens you have to terminate the loop, irrespective of what
->> @owner does.
->>
->> Does something like so work?
->>
->> ---
-> enum owner_state {
-> 	OWNER_NULL		= 1 << 0,
-> 	OWNER_WRITER		= 1 << 1,
-> 	OWNER_READER		= 1 << 2,
-> 	OWNER_NONSPINNABLE	= 1 << 3,
-> };
-> #define OWNER_SPINNABLE		(OWNER_NULL | OWNER_WRITER)
->
-> static inline enum owner_state rwsem_owner_state(unsigned long owner)
-> {
-> 	if (!owner)
-> 		return OWNER_NULL;
->
-> 	if (owner & RWSEM_ANONYMOUSLY_OWNED)
-> 		return OWNER_NONSPINNABLE;
->
-> 	if (owner & RWSEM_READER_OWNER)
-> 		return OWNER_READER;
->
-> 	return OWNER_WRITER;
-> }
->
-> static noinline enum owner_state rwsem_spin_on_owner(struct rw_semaphore *sem)
-> {
-> 	struct task_struct *tmp, *owner = READ_ONCE(sem->owner);
-> 	enum owner_state state = rwsem_owner_state((unsigned long)owner);
->
-> 	if (state != OWNER_WRITER)
-> 		return state;
->
-> 	rcu_read_lock();
-> 	for (;;) {
-> 		if (atomic_long_read(&sem->count) & RWSEM_FLAG_HANDOFF) {
-> 			state = OWNER_NONSPINNABLE;
-> 			break;
-> 		}
->
-> 		tmp = READ_ONCE(sem->owner);
-> 		if (tmp != owner) {
-> 			state = rwsem_owner_state((unsigned long)tmp);
-> 			break;
-> 		}
->
-> 		/*
-> 		 * Ensure we emit the owner->on_cpu, dereference _after_
-> 		 * checking sem->owner still matches owner, if that fails,
-> 		 * owner might point to free()d memory, if it still matches,
-> 		 * the rcu_read_lock() ensures the memory stays valid.
-> 		 */
-> 		barrier();
->
-> 		if (need_resched() || !owner_on_cpu(owner)) {
-> 			state = OWNER_NONSPINNABLE;
-> 			break;
-> 		}
->
-> 		cpu_relax();
-> 	}
-> 	rcu_read_unlock();
->
-> 	return state;
-> }
+Hi Shengjiu,
 
-That code looks good to me. Thanks for the rewrite.
+This looks better. Just a couple of more small comments inline.
 
-Cheers,
-Longman
+On Wed, Apr 17, 2019 at 09:06:18AM +0000, S.j. Wang wrote:
 
+> +static int fsl_asrc_sel_proc(int inrate, int outrate, int *pre_proc,
+> +			     int *post_proc)
+
+Just a nit: it looks better by grouping them two-two.
+
+static int fsl_asrc_sel_proc(int inrate, int outrate,
+			     int *pre_proc, int *post_proc)
+
+> +	/* Condition for selection of post-processing */
+> +	post_proc_cond2 = (inrate * 15 > outrate * 16 && outrate < 56000) ||
+> +		(inrate > 56000 && outrate < 56000);
+
+Could align the indentation:
+	post_proc_cond2 = (inrate * 15 > outrate * 16 && outrate < 56000) ||
+			  (inrate > 56000 && outrate < 56000);
+
+Here:
+> +	/* Does not support cases: Tsout > 8.125 * Tsin */
+> +	if (inrate * 8 > 65 * outrate)
+> +		return -EINVAL;
+And here:
+> +	ret = fsl_asrc_sel_proc(inrate, outrate, &pre_proc, &post_proc);
+> +	if (ret) {
+> +		pair_err("No supported pre-processing options\n");
+> +		return ret;
+> +	}
+
+Instead of a general message, I was thinking of a more specific
+one by telling users that the ratio between the two rates isn't
+supported -- something similar to what I suggested previously:
+
+	pair_err("Does not support %d (input) > 8.125 * %d (output)\n",
+		 outrate, inrate);
+
+Thanks
+Nicolin
