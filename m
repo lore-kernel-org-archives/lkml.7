@@ -2,81 +2,83 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-10.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 18E15C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:37:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B46CDC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:37:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DADBB20835
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:37:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8359E20835
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:37:37 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="TfDvDce0"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="UfFXEsl5"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733060AbfDQRhL (ORCPT
+        id S1733083AbfDQRhg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 13:37:11 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:33376 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729641AbfDQRhK (ORCPT
+        Wed, 17 Apr 2019 13:37:36 -0400
+Received: from mail-qk1-f196.google.com ([209.85.222.196]:42973 "EHLO
+        mail-qk1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729641AbfDQRhf (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 13:37:10 -0400
-Received: by mail-qk1-f194.google.com with SMTP id k189so14867630qkc.0;
-        Wed, 17 Apr 2019 10:37:09 -0700 (PDT)
+        Wed, 17 Apr 2019 13:37:35 -0400
+Received: by mail-qk1-f196.google.com with SMTP id b74so14852429qkg.9
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 10:37:35 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:date:to:cc:subject:message-id:references:mime-version
          :content-disposition:in-reply-to:user-agent;
-        bh=rhG0aoYPjp9s4pL++SAagqfbVWzZ75og0HO64YD37Dc=;
-        b=TfDvDce0C6MB5Edb9RgZAar6yyY2nZ9R8BAhqA7jHaLz+yipha6KQwY1JIKmgV4tcs
-         awS3aMLLKDp9fi/DZPsz/sdb1HvoV6wiVhrDQvNrWrjxMbYsDal0/1aG56n1/goLjQNW
-         zSVN5DsqwBONtzAR0XueHGkPypPzzWrzaJa9tfWurzeQEJF0rKvwVPjBAzjgO/+4jQ5p
-         eMatxIgPznhUBpgcXZPlt0CGyqjeIHCePfw1NcXIp1ztD/bU1XrlXTitwpubE1qO+tyV
-         Pll15KRmmJBvj1hc55cb/YHBeXyEPRFbH24xONz8aRSm46tBnOn5kY9DKmz3hzR49pGF
-         cFvg==
+        bh=6/4BtlTJLa8Zvlk+i9ij0ya4oUngxJe3lXv6hSoAHJk=;
+        b=UfFXEsl5Gzm8+f4XLCekIRFrMWqIyqDbVu++s7rASqAVSrphl8wZ6NK6oajXw+iIcd
+         b4+BxA8DF8Ucp/k8s/W6GwtUef6DjEVzxLM/HIePDTLyp/YRIIoCJ4EJIqi1bnVwzZ46
+         ebzfFWVhDh1nj74rHbzpG77dnYLORcxKp72kR44eqzTY/7ULPYFx7QeiUq5WYn4GaYWc
+         l1AGmk5IMQD4MuYvDkvaspwaIO1HuX94lY1rjs8OHRqjPfQ+BTuXacWxrI7p5GEa99dW
+         Of6SVMmWxn2uaX67HtiEX3lWD5j291CD8/NOCavtaUmvd50ZjB0QBV6okJye/508roIE
+         5dEQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:date:to:cc:subject:message-id:references
          :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=rhG0aoYPjp9s4pL++SAagqfbVWzZ75og0HO64YD37Dc=;
-        b=e0LyOMoT3R85FM5N4hGFQl/ucUWGw24EEl+GWvT1smTd1MRNWPFglCuckV2CSxXpHK
-         qCIcSBHgf2/Xh2DfWvoZZA6DT0kj+JoYtf/LQiYpdvvLeAIWjIen7FzqYErZ4EpypN9D
-         yXOBy6YSElFo6oaKayTkfjyaPoQIpZDOUv2KOxy9wO3zn0AkPIioJJH2VhC9MANt/PjB
-         Kx46MYTYlmH5Ecm64aiJKJZJyw8e4ic0hyDbz5+OLNd2qMsqA48V8zIJiGAm0mUhSJap
-         xjeXBG2boCBRRtHFV1f/y43urWAaJZolX01cnib9K4z8FOAWOz8Aw+lYsjlzhp+LyjWe
-         J7ng==
-X-Gm-Message-State: APjAAAU/xlOq5yxZ/8iGgJd1mToK2aTrtCwZ3n1NF0sMF4nnQwo6IBWv
-        ZEoD6B0jXscCfAF57lbQKv4=
-X-Google-Smtp-Source: APXvYqwyQ7HbhafqlyJO+Hkz18SilbigvDC0+FXIArCe5+KBgWyFIVwkRXuMQno7CiKslnUHrm6dkA==
-X-Received: by 2002:a37:7383:: with SMTP id o125mr70125265qkc.56.1555522629139;
-        Wed, 17 Apr 2019 10:37:09 -0700 (PDT)
+        bh=6/4BtlTJLa8Zvlk+i9ij0ya4oUngxJe3lXv6hSoAHJk=;
+        b=gN0B9JSjS6oN75O7alF/C0fPY/CH+wxlgAt5b21ecZ8VyfkpI04qfOxnILueBzjnpG
+         ZdgFaXUa/6PGFFiB1qVq0bXtbdvJCE0dwJpeoY35T0XdMkmXoJThd0iKMXx7qS6wItRG
+         SMH2gF3qRSiGhMXhEVWlLG5py1+e31k1osTdnTNIxiLhffwMb+9UKKe8nmtz2xdD5CJ7
+         o2O7JimnPBjJqoEzypGVCEBYAlxpBtbQiLu8ocGxA0E/T6fSH+D8REetW+tpwjJths2W
+         qjTsB2p6ni5EN93gVDo/t2Jcmqg9Jzpeq0t94B8FWHx3VOe8ofDfAZoXRlv10vmrXNNW
+         AJXQ==
+X-Gm-Message-State: APjAAAUaSP01MnoDPswKyZN9KaMeJr2cJlejbOdLBY641wFIgJJNJYXt
+        PiyYk5dGYONTjNrD0e/BqlU=
+X-Google-Smtp-Source: APXvYqy/ed9pf1Gt4XRJjfnn1kCU0gSjSyfBvHghPuvo6NgP4XbaQ0vEWDHGzCVXrydTnLhsqNEsVg==
+X-Received: by 2002:a37:b303:: with SMTP id c3mr71001043qkf.154.1555522654671;
+        Wed, 17 Apr 2019 10:37:34 -0700 (PDT)
 Received: from quaco.ghostprotocols.net ([190.15.121.82])
-        by smtp.gmail.com with ESMTPSA id q16sm33535565qtb.27.2019.04.17.10.37.07
+        by smtp.gmail.com with ESMTPSA id s12sm33072772qke.36.2019.04.17.10.37.33
         (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 17 Apr 2019 10:37:08 -0700 (PDT)
+        Wed, 17 Apr 2019 10:37:33 -0700 (PDT)
 From:   Arnaldo Carvalho de Melo <arnaldo.melo@gmail.com>
 X-Google-Original-From: Arnaldo Carvalho de Melo <acme@kernel.org>
 Received: by quaco.ghostprotocols.net (Postfix, from userid 1000)
-        id 1AAD940521; Wed, 17 Apr 2019 14:37:05 -0300 (-03)
-Date:   Wed, 17 Apr 2019 14:37:04 -0300
-To:     Mukesh Ojha <mojha@codeaurora.org>
-Cc:     Colin King <colin.king@canonical.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
+        id 3E55340521; Wed, 17 Apr 2019 14:37:31 -0300 (-03)
+Date:   Wed, 17 Apr 2019 14:37:31 -0300
+To:     Song Liu <songliubraving@fb.com>
+Cc:     Jiri Olsa <jolsa@kernel.org>,
         Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Jiri Olsa <jolsa@redhat.com>,
         Namhyung Kim <namhyung@kernel.org>,
-        kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] perf test: fix spelling mistake "leadking" -> "leaking"
-Message-ID: <20190417173704.GB5246@kernel.org>
-References: <20190417105539.5902-1-colin.king@canonical.com>
- <c9808cb2-7025-2b7a-f311-c69469fc1341@codeaurora.org>
+        Peter Zijlstra <peterz@infradead.org>,
+        lkml <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>
+Subject: Re: [PATCH] perf bpf: Return NULL when RB tree lookup fails in
+ perf_env__find_btf()
+Message-ID: <20190417173731.GC5246@kernel.org>
+References: <20190417145539.11669-1-jolsa@kernel.org>
+ <A3C4DDC9-8E20-488C-A273-E3AE163A9774@fb.com>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <c9808cb2-7025-2b7a-f311-c69469fc1341@codeaurora.org>
+In-Reply-To: <A3C4DDC9-8E20-488C-A273-E3AE163A9774@fb.com>
 X-Url:  http://acmel.wordpress.com
 User-Agent: Mutt/1.11.3 (2019-02-01)
 Sender: linux-kernel-owner@vger.kernel.org
@@ -84,18 +86,22 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Em Wed, Apr 17, 2019 at 04:37:24PM +0530, Mukesh Ojha escreveu:
-> 
-> On 4/17/2019 4:25 PM, Colin King wrote:
-> > From: Colin Ian King <colin.king@canonical.com>
+Em Wed, Apr 17, 2019 at 04:49:13PM +0000, Song Liu escreveu:
+> > On Apr 17, 2019, at 7:55 AM, Jiri Olsa <jolsa@kernel.org> wrote:
 > > 
-> > There are a couple of spelling mistakes in test assert messages. Fix them.
+> > We currently don't return NULL in case we don't find the
+> > bpf_prog_info_node, fixing that.
 > > 
-> > Signed-off-by: Colin Ian King <colin.king@canonical.com>
+> > Signed-off-by: Jiri Olsa <jolsa@kernel.org>
+> > Cc: Alexander Shishkin <alexander.shishkin@linux.intel.com>
+> > Cc: Namhyung Kim <namhyung@kernel.org>
+> > Cc: Peter Zijlstra <peterz@infradead.org>
+> > Cc: Song Liu <songliubraving@fb.com>
+> > Fixes: 3792cb2ff43b ("perf bpf: Save BTF in a rbtree in perf_env")
+> > Link: http://lkml.kernel.org/n/tip-99g9rg4p20a1o99vr0nkjhq8@git.kernel.org
+> > Signed-off-by: Arnaldo Carvalho de Melo <acme@redhat.com>
 > 
-> Well, how are you shooting these mistakes one after the other?
-> 
-> Reviewed-by: Mukesh Ojha <mojha@codeaurora.org>
+> Acked-by: Song Liu <songliubraving@fb.com>
 
 Thanks, applied.
 
