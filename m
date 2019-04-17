@@ -2,151 +2,116 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C5B1C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 23:58:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2055C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 23:59:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C027820872
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 23:58:27 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555545507;
-	bh=BN1ZZXdzmYfqgnAQ5ZzEyFPan2Z6Qebjaw9X+M6aDOU=;
-	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
-	b=VR9u///zYY6YX4KNgCswtmm82lWuaC9455+I8yiVaVIzKSD+R9jZ15s/Nxo0Urqe0
-	 BdK5e3Zor3abSU9oaWdklI+g8ebF4dywhmjf+QTH3PNUJdP0kUS3KrrG2dYvAS9XLT
-	 O4PObggV26HKZ4tVRxIkjBFSRP6CHImNxGl+C7kU=
+	by mail.kernel.org (Postfix) with ESMTP id 9AB2C214DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 23:59:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="hE5dLaaM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387704AbfDQX60 (ORCPT
+        id S2387772AbfDQX7S (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 19:58:26 -0400
-Received: from mail-lf1-f67.google.com ([209.85.167.67]:39361 "EHLO
-        mail-lf1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729331AbfDQX60 (ORCPT
+        Wed, 17 Apr 2019 19:59:18 -0400
+Received: from mail-qk1-f172.google.com ([209.85.222.172]:46517 "EHLO
+        mail-qk1-f172.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729331AbfDQX7S (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 19:58:26 -0400
-Received: by mail-lf1-f67.google.com with SMTP id d12so145808lfk.6
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 16:58:24 -0700 (PDT)
+        Wed, 17 Apr 2019 19:59:18 -0400
+Received: by mail-qk1-f172.google.com with SMTP id x18so144732qkf.13
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 16:59:17 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linux-foundation.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=+kn5mtINPt4na060bar/tC0RHNfqAb7J/PmuZQ0Dyi8=;
-        b=IBLCLtPuOlIJGx6ETpn93rimEqBz5Au/0GjooFZAo0KIJTxoTsJPz413yAtvfmWoXY
-         BqvjzirjujDpTm8Z8RGtzbE47EZiPUSxIfegDrH1aTumTX5oM8C5bVyiexfx7ifgxxPB
-         UMawmkwQ/X7ZweYBYxIOjMj+Jba1Zio7Xb4vw=
+        d=gmail.com; s=20161025;
+        h=from:to:cc:subject:date:message-id;
+        bh=3XRhPvb4N6O2Yp22oGWiqnunQI/jsKYLTDZaTWQJAHg=;
+        b=hE5dLaaM59AJfw7S7sHDXzvb1OJKEh52dkD/G1zEUdB6/U80wglrYO7YowriLWiYr+
+         stXgQeTgaERkDxDHmGLi66wnNT9GDM0CsjMLYQiyAdiU7rCuOwPDxA8jivUjP3iwn1Pi
+         OkdGMW1+CmL1LvMmP1YmM8SBuj6hg27Izo5IBxYA9YsJxnlIPy3xfcaKw2x/rsLrwLIJ
+         MBCRjwpvX3/c0WwopScoMN6wbGZw5P5qg2oQ3VgiEkvRU84L+7hVK6/D+9eCQgvozqeF
+         iNtIn+q6x/5VnNshTdJiQGIMXPUOcazanmj0uJF8G+iGXU0wWIGV+fwpepUVCugeX9EK
+         bTFA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=+kn5mtINPt4na060bar/tC0RHNfqAb7J/PmuZQ0Dyi8=;
-        b=g8xnzWLK1myzwx1ODUqPJtcvGk7AeAEd91EMIyG+mftn5SgbPDSXARQPtRVp1Rp7wg
-         AYFhgCJqTwK6bq73BSjxpJfeQvaU1AmImyTA+K2InsGzE0hpKSa7jyRSBC7nAiH9sfxC
-         UzBOkWN/Vvy8BqXXQz2csy8MJYuE1UwmaX2Jwdir0BVktUd/WyKdD7s5AQJr1bOf+ORo
-         RGJoa1uf8wmkij6E25mpDCH0i7qEm9mo1Fj3n8lbVYSqoItizH3GubGsWsiySaXl6Lry
-         /D65vWn9T7YLJ0dAfVgPFF34KKnEVDIFZSx/9ry40lhDCfG/YxX0spbxSrhaaWo/h4Jl
-         KyLA==
-X-Gm-Message-State: APjAAAWq9GXh6CGtN5RjvYseMyiuzGJQxdADY1a1hucmHAof85dNZtYO
-        Ip0STa4hfVNn6PVMckv0Kdf+Kvg83Rk=
-X-Google-Smtp-Source: APXvYqxYkjEHST5iJ2cXORmE3uwq6FsaVc0ek4vTTjucxYq2QSKw2ROepXtUR85N3/ACvode1vzIgQ==
-X-Received: by 2002:ac2:5085:: with SMTP id f5mr20948510lfm.71.1555545503580;
-        Wed, 17 Apr 2019 16:58:23 -0700 (PDT)
-Received: from mail-lj1-f176.google.com (mail-lj1-f176.google.com. [209.85.208.176])
-        by smtp.gmail.com with ESMTPSA id p14sm83538lfk.6.2019.04.17.16.58.23
-        for <linux-kernel@vger.kernel.org>
+        h=x-gm-message-state:from:to:cc:subject:date:message-id;
+        bh=3XRhPvb4N6O2Yp22oGWiqnunQI/jsKYLTDZaTWQJAHg=;
+        b=gDER9teFZ6BkBvON9XzEG5I9YxrP82jU01e/meJbbB65iiN/GwLTbHCMZuQz89DVtq
+         ntsVaE94/hGZ6q8x+nsndm+8PJdEMRkSfuMWOXkv+PTQOFafHV3pRXvZC5lEtsObvVqX
+         qQ+PkpnXzDanD2ZPPlef9H1s5vP4NbvZwOdllpMYXFlZIRBY7QQF0U4fhGqaerdmjKzM
+         w7F3xgetmUW7gXKAzmOMTifhhFplEGMgZZbrUXHtO4RCcRwBoFk5DOGereuNrH1m6xQG
+         X6yR97R5Am5CZ5NAsHes3sN//lsK1uVqvbYkDLbQoRhF/qAEO74uh5m6W0Y+DlrPkWE6
+         uhTw==
+X-Gm-Message-State: APjAAAWeNw2yMrZSLZg16gyR2eC3jv464ZZNojXEcbpNgE+dU4yS6TqI
+        wh6ZnGnbcVJ3PMyIBJQXfA==
+X-Google-Smtp-Source: APXvYqxtNG8EzpEGUCFtXB1KXX6C4IN88Y3WZmx4GuZQSyYbQmiw/HIm2qpy+jlJ6qAPmdg+derE4g==
+X-Received: by 2002:a05:620a:12ea:: with SMTP id f10mr66950770qkl.86.1555545557148;
+        Wed, 17 Apr 2019 16:59:17 -0700 (PDT)
+Received: from gabell.cable.rcn.com (209-6-122-159.s2973.c3-0.arl-cbr1.sbo-arl.ma.cable.rcncustomer.com. [209.6.122.159])
+        by smtp.gmail.com with ESMTPSA id k41sm275584qtc.89.2019.04.17.16.59.15
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Apr 2019 16:58:23 -0700 (PDT)
-Received: by mail-lj1-f176.google.com with SMTP id v22so255453lje.9
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 16:58:23 -0700 (PDT)
-X-Received: by 2002:a2e:5dd2:: with SMTP id v79mr48356924lje.22.1555545190479;
- Wed, 17 Apr 2019 16:53:10 -0700 (PDT)
-MIME-Version: 1.0
-References: <cover.1554248001.git.khalid.aziz@oracle.com> <f1ac3700970365fb979533294774af0b0dd84b3b.1554248002.git.khalid.aziz@oracle.com>
- <20190417161042.GA43453@gmail.com> <e16c1d73-d361-d9c7-5b8e-c495318c2509@oracle.com>
- <20190417170918.GA68678@gmail.com> <56A175F6-E5DA-4BBD-B244-53B786F27B7F@gmail.com>
- <20190417172632.GA95485@gmail.com> <063753CC-5D83-4789-B594-019048DE22D9@gmail.com>
- <alpine.DEB.2.21.1904172317460.3174@nanos.tec.linutronix.de>
- <CAHk-=wgBMg9P-nYQR2pS0XwVdikPCBqLsMFqR9nk=wSmAd4_5g@mail.gmail.com> <alpine.DEB.2.21.1904180129000.3174@nanos.tec.linutronix.de>
-In-Reply-To: <alpine.DEB.2.21.1904180129000.3174@nanos.tec.linutronix.de>
-From:   Linus Torvalds <torvalds@linux-foundation.org>
-Date:   Wed, 17 Apr 2019 16:52:54 -0700
-X-Gmail-Original-Message-ID: <CAHk-=whUwOjFW6RjHVM8kNOv1QVLJuHj2Dda0=mpLPdJ1UyatQ@mail.gmail.com>
-Message-ID: <CAHk-=whUwOjFW6RjHVM8kNOv1QVLJuHj2Dda0=mpLPdJ1UyatQ@mail.gmail.com>
-Subject: Re: [RFC PATCH v9 03/13] mm: Add support for eXclusive Page Frame
- Ownership (XPFO)
-To:     Thomas Gleixner <tglx@linutronix.de>
-Cc:     Nadav Amit <nadav.amit@gmail.com>, Ingo Molnar <mingo@kernel.org>,
-        Khalid Aziz <khalid.aziz@oracle.com>, juergh@gmail.com,
-        Tycho Andersen <tycho@tycho.ws>, jsteckli@amazon.de,
-        Kees Cook <keescook@google.com>,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Juerg Haefliger <juerg.haefliger@canonical.com>,
-        deepa.srinivasan@oracle.com, chris.hyser@oracle.com,
-        Tyler Hicks <tyhicks@canonical.com>,
-        David Woodhouse <dwmw@amazon.co.uk>,
-        Andrew Cooper <andrew.cooper3@citrix.com>,
-        Jon Masters <jcm@redhat.com>,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        iommu <iommu@lists.linux-foundation.org>,
-        X86 ML <x86@kernel.org>,
-        "linux-alpha@vger.kernel.org" <linux-arm-kernel@lists.infradead.org>,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Khalid Aziz <khalid@gonehiking.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Dave Hansen <dave@sr71.net>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Arjan van de Ven <arjan@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Type: text/plain; charset="UTF-8"
+        Wed, 17 Apr 2019 16:59:16 -0700 (PDT)
+From:   Masayoshi Mizuma <msys.mizuma@gmail.com>
+To:     Steven Rostedt <rostedt@goodmis.org>
+Cc:     Masayoshi Mizuma <msys.mizuma@gmail.com>,
+        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
+        linux-kernel@vger.kernel.org
+Subject: [PATCH v2] ktest: Add support for meta characters in GRUB_MENU
+Date:   Wed, 17 Apr 2019 19:58:23 -0400
+Message-Id: <20190417235823.18176-1-msys.mizuma@gmail.com>
+X-Mailer: git-send-email 2.17.1
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 4:42 PM Thomas Gleixner <tglx@linutronix.de> wrote:
->
-> On Wed, 17 Apr 2019, Linus Torvalds wrote:
->
-> > With SMEP, user space pages are always NX.
->
-> We talk past each other. The user space page in the ring3 valid virtual
-> address space (non negative) is of course protected by SMEP.
->
-> The attack utilizes the kernel linear mapping of the physical
-> memory. I.e. user space address 0x43210 has a kernel equivalent at
-> 0xfxxxxxxxxxx. So if the attack manages to trick the kernel to that valid
-> kernel address and that is mapped X --> game over. SMEP does not help
-> there.
+From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
 
-Oh, agreed.
+ktest fails if meta characters are in GRUB_MENU, for example
+GRUB_MENU = 'Fedora (test)'
 
-But that would simply be a kernel bug. We should only map kernel pages
-executable when we have kernel code in them, and we should certainly
-not allow those pages to be mapped writably in user space.
+The failure happens because the meta characters are not escaped,
+so the menu doesn't match in any entries in GRUB_FILE.
 
-That kind of "executable in kernel, writable in user" would be a
-horrendous and major bug.
+Use quotemeta() to escape the meta characters.
 
-So i think it's a non-issue.
+Signed-off-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+---
+ tools/testing/ktest/ktest.pl | 6 ++++--
+ 1 file changed, 4 insertions(+), 2 deletions(-)
 
-> From the top of my head I'd say this is a non issue as those kernel address
-> space mappings _should_ be NX, but we got bitten by _should_ in the past:)
+diff --git a/tools/testing/ktest/ktest.pl b/tools/testing/ktest/ktest.pl
+index 87af8a68ab25..fc6140d45280 100755
+--- a/tools/testing/ktest/ktest.pl
++++ b/tools/testing/ktest/ktest.pl
+@@ -1866,9 +1866,10 @@ sub get_grub2_index {
+ 	or dodie "unable to get $grub_file";
+ 
+     my $found = 0;
++    my $grub_menu_qt = quotemeta($grub_menu);
+ 
+     while (<IN>) {
+-	if (/^menuentry.*$grub_menu/) {
++	if (/^menuentry.*$grub_menu_qt/) {
+ 	    $grub_number++;
+ 	    $found = 1;
+ 	    last;
+@@ -1909,9 +1910,10 @@ sub get_grub_index {
+ 	or dodie "unable to get menu.lst";
+ 
+     my $found = 0;
++    my $grub_menu_qt = quotemeta($grub_menu);
+ 
+     while (<IN>) {
+-	if (/^\s*title\s+$grub_menu\s*$/) {
++	if (/^\s*title\s+$grub_menu_qt\s*$/) {
+ 	    $grub_number++;
+ 	    $found = 1;
+ 	    last;
+-- 
+2.20.1
 
-I do agree that bugs can happen, obviously, and we might have missed something.
-
-But in the context of XPFO, I would argue (*very* strongly) that the
-likelihood of the above kind of bug is absolutely *miniscule* compared
-to the likelihood that we'd have something wrong in the software
-implementation of XPFO.
-
-So if the argument is "we might have bugs in software", then I think
-that's an argument _against_ XPFO rather than for it.
-
-                Linus
