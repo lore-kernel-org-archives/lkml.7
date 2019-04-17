@@ -2,188 +2,189 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 63A2EC282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 10:45:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id B0AB7C10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 10:46:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3245B21773
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 10:45:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8234A20821
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 10:46:26 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="bRbh/bvP"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731871AbfDQKpG (ORCPT
+        id S1731905AbfDQKqZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 06:45:06 -0400
-Received: from mga17.intel.com ([192.55.52.151]:9667 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726695AbfDQKpF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 06:45:05 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga007.jf.intel.com ([10.7.209.58])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Apr 2019 03:40:02 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,361,1549958400"; 
-   d="scan'208";a="132119702"
-Received: from jsakkine-mobl1.tm.intel.com (HELO localhost) ([10.237.50.189])
-  by orsmga007.jf.intel.com with ESMTP; 17 Apr 2019 03:39:54 -0700
-From:   Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-To:     linux-kernel@vger.kernel.org, x86@kernel.org,
-        linux-sgx@vger.kernel.org
-Cc:     akpm@linux-foundation.org, dave.hansen@intel.com,
-        sean.j.christopherson@intel.com, nhorman@redhat.com,
-        npmccallum@redhat.com, serge.ayoun@intel.com,
-        shay.katz-zamir@intel.com, haitao.huang@intel.com,
-        andriy.shevchenko@linux.intel.com, tglx@linutronix.de,
-        kai.svahn@intel.com, bp@alien8.de, josh@joshtriplett.org,
-        luto@kernel.org, kai.huang@intel.com, rientjes@google.com,
-        Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
-Subject: [PATCH v20 02/28] x86/cpufeatures: Add SGX sub-features (as Linux-defined bits)
-Date:   Wed, 17 Apr 2019 13:39:12 +0300
-Message-Id: <20190417103938.7762-3-jarkko.sakkinen@linux.intel.com>
-X-Mailer: git-send-email 2.19.1
-In-Reply-To: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com>
-References: <20190417103938.7762-1-jarkko.sakkinen@linux.intel.com>
-MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+        Wed, 17 Apr 2019 06:46:25 -0400
+Received: from smtprelay4.synopsys.com ([198.182.47.9]:42728 "EHLO
+        smtprelay.synopsys.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725792AbfDQKqY (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 06:46:24 -0400
+Received: from mailhost.synopsys.com (dc8-mailhost2.synopsys.com [10.13.135.210])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by smtprelay.synopsys.com (Postfix) with ESMTPS id 4307424E13E8;
+        Wed, 17 Apr 2019 03:46:24 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
+        t=1555497984; bh=x/hKVd6chHWC3xqn/pWkx+5QalIJTh6awxUnqpDGkmo=;
+        h=From:To:Cc:Subject:Date:From;
+        b=bRbh/bvP2DT35ElP4JFEKjFmzkweqMx1xRpofjfif6NVh6bfDQJlmsKwu+al9Y3p1
+         qq5wKMJlQvVUjmn7jrBFXqMyg3ILFCjW51y9xzxzHNly6a/W1Sqw6AzcJy2+W4m5CA
+         hZAos+rgRzea69z0ntH2COcNhUbgRHvijEy8dR5WQbDhkQ44fO6CKFlB5eq1YTWnJ1
+         68mRJL4Jt3aa25jKTn3h+7Z8nlRinaGUUNAve53LQYJG6rDvsXg9K3wK2R028T9Plz
+         hcjR4SYst/z4Ch6dt0GaH2xX4A7G9SeJucTlUcdIvKUH8G8VvLoSnY/MSuZj3ZQBuA
+         WF79S4g5mgBZQ==
+Received: from paltsev-e7480.internal.synopsys.com (paltsev-e7480.internal.synopsys.com [10.121.8.106])
+        by mailhost.synopsys.com (Postfix) with ESMTP id ED02EA0132;
+        Wed, 17 Apr 2019 10:46:16 +0000 (UTC)
+From:   Eugeniy Paltsev <eugeniy.paltsev@synopsys.com>
+To:     linux-snps-arc@lists.infradead.org,
+        Vineet Gupta <vineet.gupta1@synopsys.com>
+Cc:     linux-kernel@vger.kernel.org,
+        Alexey Brodkin <alexey.brodkin@synopsys.com>,
+        linux-arch@vger.kernel.org, linux-mm@kvack.org,
+        Eugeniy Paltsev <eugeniy.paltsev@synopsys.com>
+Subject: [PATCH v2] ARC: fix memory nodes topology in case of highmem enabled
+Date:   Wed, 17 Apr 2019 13:46:11 +0300
+Message-Id: <20190417104611.13257-1-Eugeniy.Paltsev@synopsys.com>
+X-Mailer: git-send-email 2.14.5
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Sean Christopherson <sean.j.christopherson@intel.com>
+Tweak generic node topology in case of CONFIG_HIGHMEM enabled to
+prioritize allocations from ZONE_HIGHMEM to avoid ZONE_NORMAL
+pressure.
 
-CPUID_12_EAX is an Intel-defined feature bits leaf dedicated for SGX
-that enumerates the SGX instruction sets that are supported by the
-CPU, e.g. SGX1, SGX2, etc...  Because Linux currently only cares about
-two bits (SGX1 and SGX2) and there are currently only four documented
-bits in total, relocate the bits to Linux-defined word 8 to conserve
-space.
+Here is example when we can see problems on ARC with currently
+existing topology configuration:
 
-But, keep the bit positions identical between the Intel-defined value
-and the Linux-defined value, e.g. keep SGX1 at bit 0.  This allows KVM
-to use its existing code for probing guest CPUID bits using Linux's
-X86_FEATURE_* definitions.  To do so, shift around some existing bits
-to effectively reserve bits 0-7 of word 8 for SGX sub-features.
+Generic statements:
+ - *NOT* every memory allocation which could be done from
+   ZONE_NORMAL also could be done from ZONE_HIGHMEM.
+ - Every memory allocation which could be done from ZONE_HIGHMEM
+   also could be done from ZONE_NORMAL (In other words ZONE_NORMAL
+   is more universal than ZONE_HIGHMEM)
 
-Signed-off-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Signed-off-by: Jarkko Sakkinen <jarkko.sakkinen@linux.intel.com>
+ARC statements:
+In case of CONFIG_HIGHMEM enabled we have 2 memory nodes:
+ - "node 0" has only ZONE_NORMAL memory.
+ - "node 1" has only ZONE_HIGHMEM memory.
+
+Steps to reproduce the problem:
+1) Let's try to allocate some memory from userspace. It can be
+   allocate from anywhere (ZONE_HIGHMEM/ZONE_NORMAL).
+2) Kernel tries to allocate memory from the closest memory node
+   to this CPU. As we don't have NUMA enabled and don't override
+   any define from "include/asm-generic/topology.h" the closest
+   memory node to any CPU will be "node 0"
+3) OK, we'll allocate memory from "node 0". Let's choose ZONE
+   to allocate from. This allocation could be done from both
+   ZONE_HIGHMEM / ZONE_NORMAL in this node. The allocation
+   priority between zones is ZONE_HIGHMEM > ZONE_NORMAL.
+   This is pretty logical - we don't want waste *universal*
+   ZONE_NORMAL if we can use ZONE_HIGHMEM. But we don't have
+   ZONE_HIGHMEM in "node 0" that's why we rollback to
+   ZONE_NORMAL and allocate memory from it.
+4) Let's try to allocate a lot of memory [more than we have free
+   memory in lowmem] from userspace.
+5) Kernel allocates as much memory as it can from the closest
+   memory node ("node 0"). But there is no enough memory in
+   "node 0". So we'll rollback to another memory node ("node 1")
+   and allocate the rest of the amount from it.
+
+   In other words we have following memory lookup path:
+      (node 0, ZONE_HIGHMEM) ->
+   -> (node 0, ZONE_NORMAL)  ->
+   -> (node 1, ZONE_HIGHMEM)
+
+   Now we don't have any free memory in (node 0, ZONE_NORMAL)
+   [Actually this is a simplification, but it doesn't matter
+   in this example]
+6) Oops, some internal kernel memory allocation happen which
+   requires ZONE_NORMAL. For example "kmalloc(size, GFP_KERNEL)"
+   was called.
+   So the we have following memory lookup path:
+   (node 0, ZONE_NORMAL) -> ("node 1", ZONE_NORMAL)
+   There is no free memory in "node 0". And there is no
+   ZONE_NORMAL in "node 1". We only have some free memory in
+   (node 1, ZONE_HIGHMEM) but HIGHMEM isn't suitable in this
+   case.
+7) As we can't allocate memory OOM-Killer is invoked, even if
+   we have some free memory in (node 1, ZONE_HIGHMEM).
+
+This patch tweaks generic node topology and mark memory from
+"node 1" as the closest to any CPU.
+
+So the we'll have following memory lookup path:
+    (node 1, ZONE_HIGHMEM) ->
+ -> (node 1, ZONE_NORMAL)  ->
+ -> (node 0, ZONE_HIGHMEM) ->
+ -> (node 0, ZONE_NORMAL)
+In case of node configuration on ARC we obtain the degenerate case
+of this path:
+(node 1, ZONE_HIGHMEM) -> (node 0, ZONE_NORMAL)
+
+In this case we don't waste *universal* ZONE_NORMAL if we can use
+ZONE_HIGHMEM so we don't face with the issue pointed in [5-7]
+
+Signed-off-by: Eugeniy Paltsev <Eugeniy.Paltsev@synopsys.com>
 ---
- arch/x86/include/asm/cpufeatures.h       | 22 ++++++++++++++++------
- arch/x86/include/asm/disabled-features.h |  6 +++++-
- arch/x86/kernel/cpu/scattered.c          |  2 ++
- tools/arch/x86/include/asm/cpufeatures.h | 21 +++++++++++++++------
- 4 files changed, 38 insertions(+), 13 deletions(-)
+Changes v1->v2:
+ * Changes in commit message and comments in a code. No functional
+   change intended.
 
-diff --git a/arch/x86/include/asm/cpufeatures.h b/arch/x86/include/asm/cpufeatures.h
-index a16325db4cff..313c58c04b51 100644
---- a/arch/x86/include/asm/cpufeatures.h
-+++ b/arch/x86/include/asm/cpufeatures.h
-@@ -222,12 +222,22 @@
- #define X86_FEATURE_L1TF_PTEINV		( 7*32+29) /* "" L1TF workaround PTE inversion */
- #define X86_FEATURE_IBRS_ENHANCED	( 7*32+30) /* Enhanced IBRS */
- 
--/* Virtualization flags: Linux defined, word 8 */
--#define X86_FEATURE_TPR_SHADOW		( 8*32+ 0) /* Intel TPR Shadow */
--#define X86_FEATURE_VNMI		( 8*32+ 1) /* Intel Virtual NMI */
--#define X86_FEATURE_FLEXPRIORITY	( 8*32+ 2) /* Intel FlexPriority */
--#define X86_FEATURE_EPT			( 8*32+ 3) /* Intel Extended Page Table */
--#define X86_FEATURE_VPID		( 8*32+ 4) /* Intel Virtual Processor ID */
-+/*
-+ * Scattered Intel features: Linux defined, word 8.
-+ *
-+ * Note that the bit location of the SGX features is meaningful as KVM expects
-+ * the Linux defined bit to match the Intel defined bit, e.g. X86_FEATURE_SGX1
-+ * must remain at bit 0, SGX2 at bit 1, etc...
-+ */
-+#define X86_FEATURE_SGX1		( 8*32+ 0) /* SGX1 leaf functions */
-+#define X86_FEATURE_SGX2		( 8*32+ 1) /* SGX2 leaf functions */
-+/* Bits [0:7] are reserved for SGX */
+ arch/arc/include/asm/Kbuild     |  1 -
+ arch/arc/include/asm/topology.h | 24 ++++++++++++++++++++++++
+ 2 files changed, 24 insertions(+), 1 deletion(-)
+ create mode 100644 arch/arc/include/asm/topology.h
+
+diff --git a/arch/arc/include/asm/Kbuild b/arch/arc/include/asm/Kbuild
+index caa270261521..e64e0439baff 100644
+--- a/arch/arc/include/asm/Kbuild
++++ b/arch/arc/include/asm/Kbuild
+@@ -18,7 +18,6 @@ generic-y += msi.h
+ generic-y += parport.h
+ generic-y += percpu.h
+ generic-y += preempt.h
+-generic-y += topology.h
+ generic-y += trace_clock.h
+ generic-y += user.h
+ generic-y += vga.h
+diff --git a/arch/arc/include/asm/topology.h b/arch/arc/include/asm/topology.h
+new file mode 100644
+index 000000000000..c3b8ab7ed011
+--- /dev/null
++++ b/arch/arc/include/asm/topology.h
+@@ -0,0 +1,24 @@
++#ifndef _ASM_ARC_TOPOLOGY_H
++#define _ASM_ARC_TOPOLOGY_H
 +
-+#define X86_FEATURE_TPR_SHADOW		( 8*32+ 8) /* Intel TPR Shadow */
-+#define X86_FEATURE_VNMI		( 8*32+ 9) /* Intel Virtual NMI */
-+#define X86_FEATURE_FLEXPRIORITY	( 8*32+10) /* Intel FlexPriority */
-+#define X86_FEATURE_EPT			( 8*32+11) /* Intel Extended Page Table */
-+#define X86_FEATURE_VPID		( 8*32+12) /* Intel Virtual Processor ID */
- 
- #define X86_FEATURE_VMMCALL		( 8*32+15) /* Prefer VMMCALL to VMCALL */
- #define X86_FEATURE_XENPV		( 8*32+16) /* "" Xen paravirtual guest */
-diff --git a/arch/x86/include/asm/disabled-features.h b/arch/x86/include/asm/disabled-features.h
-index 74de07d0f390..926f9dc4d75a 100644
---- a/arch/x86/include/asm/disabled-features.h
-+++ b/arch/x86/include/asm/disabled-features.h
-@@ -34,12 +34,16 @@
- # define DISABLE_CYRIX_ARR	(1<<(X86_FEATURE_CYRIX_ARR & 31))
- # define DISABLE_CENTAUR_MCR	(1<<(X86_FEATURE_CENTAUR_MCR & 31))
- # define DISABLE_PCID		0
-+# define DISABLE_SGX1		0
-+# define DISABLE_SGX2		0
- #else
- # define DISABLE_VME		0
- # define DISABLE_K6_MTRR	0
- # define DISABLE_CYRIX_ARR	0
- # define DISABLE_CENTAUR_MCR	0
- # define DISABLE_PCID		(1<<(X86_FEATURE_PCID & 31))
-+# define DISABLE_SGX1		(1<<(X86_FEATURE_SGX1 & 31))
-+# define DISABLE_SGX2		(1<<(X86_FEATURE_SGX2 & 31))
- #endif /* CONFIG_X86_64 */
- 
- #ifdef CONFIG_X86_INTEL_MEMORY_PROTECTION_KEYS
-@@ -79,7 +83,7 @@
- #define DISABLED_MASK5	0
- #define DISABLED_MASK6	0
- #define DISABLED_MASK7	(DISABLE_PTI)
--#define DISABLED_MASK8	0
-+#define DISABLED_MASK8	(DISABLE_SGX1|DISABLE_SGX2)
- #define DISABLED_MASK9	(DISABLE_MPX|DISABLE_SMAP|DISABLE_SGX_CORE)
- #define DISABLED_MASK10	0
- #define DISABLED_MASK11	0
-diff --git a/arch/x86/kernel/cpu/scattered.c b/arch/x86/kernel/cpu/scattered.c
-index 94aa1c72ca98..9a5f6cf947b9 100644
---- a/arch/x86/kernel/cpu/scattered.c
-+++ b/arch/x86/kernel/cpu/scattered.c
-@@ -31,6 +31,8 @@ static const struct cpuid_bit cpuid_bits[] = {
- 	{ X86_FEATURE_CDP_L3,		CPUID_ECX,  2, 0x00000010, 1 },
- 	{ X86_FEATURE_CDP_L2,		CPUID_ECX,  2, 0x00000010, 2 },
- 	{ X86_FEATURE_MBA,		CPUID_EBX,  3, 0x00000010, 0 },
-+	{ X86_FEATURE_SGX1,             CPUID_EAX,  0, 0x00000012, 0 },
-+	{ X86_FEATURE_SGX2,             CPUID_EAX,  1, 0x00000012, 0 },
- 	{ X86_FEATURE_HW_PSTATE,	CPUID_EDX,  7, 0x80000007, 0 },
- 	{ X86_FEATURE_CPB,		CPUID_EDX,  9, 0x80000007, 0 },
- 	{ X86_FEATURE_PROC_FEEDBACK,    CPUID_EDX, 11, 0x80000007, 0 },
-diff --git a/tools/arch/x86/include/asm/cpufeatures.h b/tools/arch/x86/include/asm/cpufeatures.h
-index 981ff9479648..748180a4a1f5 100644
---- a/tools/arch/x86/include/asm/cpufeatures.h
-+++ b/tools/arch/x86/include/asm/cpufeatures.h
-@@ -222,12 +222,21 @@
- #define X86_FEATURE_L1TF_PTEINV		( 7*32+29) /* "" L1TF workaround PTE inversion */
- #define X86_FEATURE_IBRS_ENHANCED	( 7*32+30) /* Enhanced IBRS */
- 
--/* Virtualization flags: Linux defined, word 8 */
--#define X86_FEATURE_TPR_SHADOW		( 8*32+ 0) /* Intel TPR Shadow */
--#define X86_FEATURE_VNMI		( 8*32+ 1) /* Intel Virtual NMI */
--#define X86_FEATURE_FLEXPRIORITY	( 8*32+ 2) /* Intel FlexPriority */
--#define X86_FEATURE_EPT			( 8*32+ 3) /* Intel Extended Page Table */
--#define X86_FEATURE_VPID		( 8*32+ 4) /* Intel Virtual Processor ID */
 +/*
-+ * Scattered Intel features: Linux defined, word 8.
++ * On ARC (w/o PAE) HIGHMEM addresses are smaller (0x0 based) than addresses in
++ * NORMAL aka low memory (0x8000_0000 based).
++ * Thus HIGHMEM on ARC is implemented with DISCONTIGMEM which requires multiple
++ * nodes. So here is memory node map on ARC:
++ *  - node 0: ZONE_NORMAL  memory (always)
++ *  - node 1: ZONE_HIGHMEM memory (only if CONFIG_HIGHMEM is enabled)
 + *
-+ * Note that the bit numbers of the SGX features are meaningful as KVM expects
-+ * the Linux defined bit to match the Intel defined bit, e.g. X86_FEATURE_SGX1
-+ * must remain at bit 0, SGX2 at bit 1, etc...
++ * In case of CONFIG_HIGHMEM enabled we tweak generic node topology and mark
++ * node 1 as the closest to all CPUs to prioritize allocations from ZONE_HIGHMEM
++ * where it is possible to avoid ZONE_NORMAL pressure.
 + */
-+#define X86_FEATURE_SGX1		( 8*32+ 0) /* SGX1 leaf functions */
-+#define X86_FEATURE_SGX2		( 8*32+ 1) /* SGX2 leaf functions */
++#ifdef CONFIG_HIGHMEM
++#define cpu_to_node(cpu)	((void)(cpu), 1)
++#define cpu_to_mem(cpu)		((void)(cpu), 1)
++#define cpumask_of_node(node)	((node) == 1 ? cpu_online_mask : cpu_none_mask)
++#endif /* CONFIG_HIGHMEM */
 +
-+#define X86_FEATURE_TPR_SHADOW		( 8*32+ 8) /* Intel TPR Shadow */
-+#define X86_FEATURE_VNMI		( 8*32+ 9) /* Intel Virtual NMI */
-+#define X86_FEATURE_FLEXPRIORITY	( 8*32+10) /* Intel FlexPriority */
-+#define X86_FEATURE_EPT			( 8*32+11) /* Intel Extended Page Table */
-+#define X86_FEATURE_VPID		( 8*32+12) /* Intel Virtual Processor ID */
- 
- #define X86_FEATURE_VMMCALL		( 8*32+15) /* Prefer VMMCALL to VMCALL */
- #define X86_FEATURE_XENPV		( 8*32+16) /* "" Xen paravirtual guest */
++#include <asm-generic/topology.h>
++
++#endif /* _ASM_ARC_TOPOLOGY_H */
 -- 
-2.19.1
+2.14.5
 
