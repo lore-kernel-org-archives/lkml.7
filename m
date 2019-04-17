@@ -5,81 +5,121 @@ X-Spam-Level:
 X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 397DDC282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:21:26 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BD66DC282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:22:25 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 071BE20821
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:21:26 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 96437206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:22:25 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733066AbfDQRVZ (ORCPT
+        id S1733021AbfDQRWY (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 13:21:25 -0400
-Received: from relay12.mail.gandi.net ([217.70.178.232]:35789 "EHLO
-        relay12.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732746AbfDQRVX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 13:21:23 -0400
-Received: from collins (196.109.29.93.rev.sfr.net [93.29.109.196])
-        (Authenticated sender: paul.kocialkowski@bootlin.com)
-        by relay12.mail.gandi.net (Postfix) with ESMTPSA id 1D15A20000D;
-        Wed, 17 Apr 2019 17:21:19 +0000 (UTC)
-Message-ID: <943166ee9799daf50615b1148f3f855aa90e9c84.camel@bootlin.com>
-Subject: Re: [PATCH v4] media: docs-rst: Document m2m stateless video
- decoder interface
-From:   Paul Kocialkowski <paul.kocialkowski@bootlin.com>
-To:     Nicolas Dufresne <nicolas@ndufresne.ca>,
-        Alexandre Courbot <acourbot@chromium.org>,
-        Tomasz Figa <tfiga@chromium.org>,
-        Maxime Ripard <maxime.ripard@bootlin.com>,
-        Hans Verkuil <hverkuil@xs4all.nl>,
-        Dafna Hirschfeld <dafna3@gmail.com>,
-        Mauro Carvalho Chehab <mchehab@kernel.org>,
-        linux-media@vger.kernel.org
-Cc:     linux-kernel@vger.kernel.org
-Date:   Wed, 17 Apr 2019 19:21:19 +0200
-In-Reply-To: <ec607c4917cd205f69de9a19c13a2109ff602477.camel@ndufresne.ca>
-References: <20190306080019.159676-1-acourbot@chromium.org>
-         <371df0e4ec9e38d83d11171cbd98f19954cbf787.camel@ndufresne.ca>
-         <da5aa9ab957923a72e30b169a3c242c4fe6260f1.camel@bootlin.com>
-         <c07703459c7e48904bd7fd83be1e675c70eee83c.camel@ndufresne.ca>
-         <d81d0112b99feba0a1899f3722077a4aeec9860c.camel@bootlin.com>
-         <439b7f57aa3ba2b2ed5b043f961ef87cb83912af.camel@ndufresne.ca>
-         <59e23c5ca5bfbadf9441ea06da2e9b9b5898c6d7.camel@bootlin.com>
-         <0b495143bb260cf9f8927ee541e7f001842ac5c3.camel@ndufresne.ca>
-         <f4561d1b89464341b66b87af90f0d47a5b093b57.camel@bootlin.com>
-         <ec607c4917cd205f69de9a19c13a2109ff602477.camel@ndufresne.ca>
-Content-Type: text/plain; charset="UTF-8"
-User-Agent: Evolution 3.32.0 
+        Wed, 17 Apr 2019 13:22:24 -0400
+Received: from mga18.intel.com ([134.134.136.126]:24574 "EHLO mga18.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729641AbfDQRWY (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 13:22:24 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from fmsmga006.fm.intel.com ([10.253.24.20])
+  by orsmga106.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Apr 2019 10:22:23 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,362,1549958400"; 
+   d="scan'208";a="338405920"
+Received: from orsmsx110.amr.corp.intel.com ([10.22.240.8])
+  by fmsmga006.fm.intel.com with ESMTP; 17 Apr 2019 10:22:22 -0700
+Received: from orsmsx114.amr.corp.intel.com ([169.254.8.50]) by
+ ORSMSX110.amr.corp.intel.com ([169.254.10.28]) with mapi id 14.03.0415.000;
+ Wed, 17 Apr 2019 10:22:22 -0700
+From:   "Prakhya, Sai Praneeth" <sai.praneeth.prakhya@intel.com>
+To:     Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        "H. Peter Anvin" <hpa@zytor.com>
+CC:     Daniel Drake <drake@endlessm.com>, Ingo Molnar <mingo@kernel.org>,
+        "Peter Zijlstra" <peterz@infradead.org>,
+        Borislav Petkov <bp@alien8.de>,
+        "Thomas Gleixner" <tglx@linutronix.de>,
+        Linux Kernel <linux-kernel@vger.kernel.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Jian-Hong Pan <jian-hong@endlessm.com>,
+        Matt Fleming <matt@codeblueprint.co.uk>,
+        linux-efi <linux-efi@vger.kernel.org>,
+        "Brown, Len" <len.brown@intel.com>,
+        "linux-tip-commits@vger.kernel.org" 
+        <linux-tip-commits@vger.kernel.org>,
+        Endless Linux Upstreaming Team <linux@endlessm.com>
+Subject: RE: EFI reboot vs. ACPI reboot (was: Re: [tip:x86/urgent]
+ x86/reboot, efi: Use EFI reboot for Acer TravelMate X514-51T)
+Thread-Topic: EFI reboot vs. ACPI reboot (was: Re: [tip:x86/urgent]
+ x86/reboot, efi: Use EFI reboot for Acer TravelMate X514-51T)
+Thread-Index: AQHU9TSRArd186GgH0GGiik0q/taeaZAlBFg
+Date:   Wed, 17 Apr 2019 17:22:21 +0000
+Message-ID: <FFF73D592F13FD46B8700F0A279B802F48AFEFF2@ORSMSX114.amr.corp.intel.com>
+References: <20190412080152.3718-1-jian-hong@endlessm.com>
+ <tip-0082517fa4bce073e7cf542633439f26538a14cc@git.kernel.org>
+ <20190416082042.GA69717@gmail.com>
+ <CAD8Lp44pQRYdw4cbfMt3uOSO23dzy_mWTt5T-Zjft08WWu_yUA@mail.gmail.com>
+ <20190417061650.GA31060@gmail.com>
+ <CAD8Lp45BLaoXF=RNcncqcTtNvaGHP72+a1CxcjoeBXDiw9TKbA@mail.gmail.com>
+ <17516564-37AC-4F77-9C0D-0DD71F8045EA@zytor.com>
+ <CAKv+Gu_jqoKiqq4ozcPwSxLmpuaWsFKy_xyYGhECLz+KLHOjOw@mail.gmail.com>
+In-Reply-To: <CAKv+Gu_jqoKiqq4ozcPwSxLmpuaWsFKy_xyYGhECLz+KLHOjOw@mail.gmail.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-titus-metadata-40: eyJDYXRlZ29yeUxhYmVscyI6IiIsIk1ldGFkYXRhIjp7Im5zIjoiaHR0cDpcL1wvd3d3LnRpdHVzLmNvbVwvbnNcL0ludGVsMyIsImlkIjoiNDdhYzJiMWMtNmRmOC00YmQxLTk4YmQtOGQ2OWQwNDYyMjQ5IiwicHJvcHMiOlt7Im4iOiJDVFBDbGFzc2lmaWNhdGlvbiIsInZhbHMiOlt7InZhbHVlIjoiQ1RQX05UIn1dfV19LCJTdWJqZWN0TGFiZWxzIjpbXSwiVE1DVmVyc2lvbiI6IjE3LjEwLjE4MDQuNDkiLCJUcnVzdGVkTGFiZWxIYXNoIjoiNm1Mbmw0UjhSWEl5MEJuODU4RXA1RmdmSEMrRGkrS0dwMVd5eXhnczljRDJBRGZoaTBWYjFTXC9pNHBvcFFBR1wvIn0=
+x-ctpclassification: CTP_NT
+dlp-product: dlpe-windows
+dlp-version: 11.0.600.7
+dlp-reaction: no-action
+x-originating-ip: [10.22.254.139]
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi,
-
-Le mercredi 17 avril 2019 à 12:17 -0400, Nicolas Dufresne a écrit :
-> In general, we say stateless from a HW point of view. It simply means
-> that the HW (the accelerator) can be multiplexed to process several
-> independent streams. While with stateful firmware, you generally can't
-> save the state, and ends up with a specific number of concurrent stream
-> (scheduling happens in the firmware). There is exception to that of
-> course, the newest Amlogic/Meson video decoder allow for saving the
-> decoder state. The registers are undocumented, since they are filled by
-> the HW parser, but it's separated in a way that we could multiplex.
-
-That's a nice summary! I think it constitutes a good definition of what
-we should call a stateless decoder. Perhaps we could write it down in
-the spec somewhere?
-
-> Of course we do have a state in our drivers. Each time you open an m2m
-> device, you create an new instance which will keep track of done jobs,
-> pending jobs, active format, allocated memory, etc.
-
-Yes, definitely.
-
-Cheers,
-
-Paul
-
+PiA+ID4+IFRoYXQgc2VlbXMgY291bnRlci1pbnR1aXRpdmUgdG8gbWU6IGlmIG5vIGZ1bGwgQUNQ
+SSBoYXJkd2FyZSBpcw0KPiA+ID4+IGltcGxlbWVudGVkIHRoZW4gd2Ugc2hvdWxkIGFzc3VtZSBy
+ZWR1Y2VkIEFDUEkgZnVuY3Rpb25hbGl0eSwgaS5lLg0KPiA+ID4+IGlmDQo+ID4gPnRoZQ0KPiA+
+ID4+IEVGSSBydW50aW1lIGlzIG90aGVyd2lzZSBhdmFpbGFibGUgd2Ugc2hvdWxkIGRlZmF1bHQg
+dG8gaXQuDQo+ID4gPg0KPiA+ID5JdCdzIGEgYml0IGNvbmZ1c2luZywgYnV0IG15IGxvb3NlIHVu
+ZGVyc3RhbmRpbmcgaXMgdGhhdCBwcmV2aW91cw0KPiA+ID52ZXJzaW9ucyBvZiB0aGUgQUNQSSBz
+cGVjIHJlcXVpcmVkIHN5c3RlbSBpbXBsZW1lbnRvcnMgdG8gaW1wbGVtZW50DQo+ID4gPnRoZSB3
+aG9sZSB0aGluZzsgYnV0IHRoYXQncyBpbmNyZWFzaW5nbHkgaW1wcmFjdGljYWwgdG9kYXksIGUu
+Zy4gd2l0aA0KPiA+ID5BUk0gc3lzdGVtcyBjb21pbmcgYWxvbmcsIHdoaWNoIGRvIG5vdCBnZWwg
+d2VsbCB3aXRoIHNvbWUgb2YgdGhlDQo+ID4gPmhpc3RvcmljYWwgeDg2LXJvb3RlZCBkZXNpZ24g
+YXNwZWN0cyB0aGF0IHNwaWxsZWQgb3ZlciBpbnRvIEFDUEkuIFRoZQ0KPiA+ID5WNSBzcGVjIGlu
+dHJvZHVjZXMgcmVkdWNlZCBtb2RlIGFzIGFuIG9wdC1pbiBuZXcgZmVhdHVyZSwgYnV0IGZvcg0K
+PiA+ID5jb21wYXRpYmlsaXR5IHdpdGggcHJlLVY1IGltcGxlbWVudGF0aW9ucyBpdCBuZWVkcyB0
+byBjb25zaWRlciAiZnVsbA0KPiA+ID5oYXJkd2FyZSIgbW9kZSBhcyB0aGUgZGVmYXVsdC4NCj4g
+PiA+DQo+ID4gPj4gRmVlbCBmcmVlIHRvIHNlbmQgYSBwYXRjaCB0aGF0IG1ha2VzIEVGSSByZWJv
+b3QgdGhlIGRlZmF1bHQgb25lDQo+ID4gPj4gdW5kZXIgdGhlc2UgY2lyY3Vtc3RhbmNlcywNCj4g
+PiA+DQo+ID4gPkp1c3QgdG8gY2hlY2ssIHlvdSBtZWFuOiBFRkkgcmVib290IChhbmQgc2h1dGRv
+d24pIGJlY29tZSB0aGUgZGVmYXVsdA0KPiA+ID5tZXRob2RzIHdoZW4gdGhlIG1hY2hpbmUgaXMg
+Ym9vdGVkIGluIEVGSSBtb2RlLCBhbmQgRUZJIHN0dWZmIGhhcyBub3QNCj4gPiA+YmVlbiBkaXNh
+YmxlZCB3aXRoIGEga2VybmVsIHBhcmFtZXRlcj8NCj4gPiA+RXZlbiB3aGVuIHJ1bm5pbmcgaW4g
+ZnVsbCBoYXJkd2FyZSBBQ1BJIG1vZGUuDQo+ID4gPg0KPiA+ID5UaGFua3MNCj4gPiA+RGFuaWVs
+DQo+ID4NCj4gPiBUaGlzLCBJIGJlbGlldmUsIGlzIGtub3duIHRvIG5vdCB3b3JrLg0KPiANCj4g
+SXQgZGVmaW5pdGVseSB1c2VkIHRvIGJlIHRoZSBjYXNlIHRoYXQgRUZJIHJlYm9vdCB3YXMgdW5y
+ZWxpYWJsZSwgYnV0IEkgZG9uJ3Qga25vdw0KPiB0aGUgZGV0YWlscy4NCg0KU29ycnkhIEFyZC4N
+CkkgZG9uJ3QgaGF2ZSB0aGUgZW5vdWdoIGhpc3RvcmljYWwga25vd2xlZGdlIHRvIHN0YXRlIHRo
+YXQgRUZJIHJlYm9vdCBpcyB1bnJlbGlhYmxlIA0Kb24gbW9zdCBvZiB0aGUgeDg2IHN5c3RlbXMg
+YnV0IEkgZGlkIGNvbWUgYWNyb3NzIHR3byBzeXN0ZW1zIHRoYXQgaGFkIGJ1Z2d5IGltcGxlbWVu
+dGF0aW9uIA0Kb2YgRUZJIHJlYm9vdCBhbmQgaGVuY2UgSSBoYXZlIGFkZGVkIGNvZGUgdG8gZGVh
+bCB3aXRoIEVGSSBydW50aW1lIHNlcnZpY2VzIHRoYXQgY2F1c2UgcGFnZSBmYXVsdHMuDQoNCkkg
+d2lsbCBhc2sgYXJvdW5kIGludGVybmFsbHkgdG8gY2hlY2sgaWYgaXQgaXMgYSBnb29kIGlkZWEg
+dG8gbWFrZSBFRkkgcmVib290IHRoZSBkZWZhdWx0IG1ldGhvZCANCndoZW4gdGhlIG1hY2hpbmUg
+aXMgYm9vdGVkIGluIEVGSSBtb2RlLg0KDQo+IEkgaGF2ZSBhZGRlZCBTYWkgdG8gY2MsIGhlIG1h
+eSBiZSBhYmxlIHRvIHByb3ZpZGUgYSBiaXQgbW9yZSBjb250ZXh0DQo+IGhlcmUsIHNpbmNlIGhl
+IGFkZGVkIHRoZSBjb2RlIHRvIGRlYWwgd2l0aCBwYWdlIGZhdWx0cyBkdXJpbmcgRUZJIHJ1bnRp
+bWUgc2VydmljZQ0KPiBpbnZvY2F0aW9ucyAod2hpY2ggd2FzIGluc3BpcmVkIGJ5IGEgRUZJIHJl
+Ym9vdCBpc3N1ZSBJSVJDKS4gVGhhdCBmZWF0dXJlIG1heQ0KPiBoYXZlIGltcHJvdmVkIHRoZSBz
+aXR1YXRpb24sIGJ1dCBJIGFtIG5vdCBjb25maWRlbnQgYXQgYWxsIHRoYXQgaXQgZml4ZXMgYWxs
+DQo+IHN5c3RlbXMuDQoNCkkgYmVsaWV2ZSwgdGhlIGNvZGUgSSBhZGRlZCBzaG91bGQgaW1wcm92
+ZSB0aGUgc2l0dWF0aW9uIGJ1dCBJIGFtIGhlc2l0YW50IHRvIHNheSB0aGF0IGl0IGZpeGVzIA0K
+KmFsbCogdGhlIHN5c3RlbXMgYmVjYXVzZSB0aGUgY29kZSBhZGRyZXNzZXMgb25seSBvbmUgdHlw
+ZSBvZiBidWcgbmFtZWx5IEVGSSBSZWJvb3QgYWNjZXNzaW5nIA0KaWxsZWdhbCBtZW1vcnkgYW5k
+IEkgaGF2ZSBubyBpZGVhIGFib3V0IG90aGVyIGJ1Z2d5IGltcGxlbWVudGF0aW9ucy4NCg0KUmVn
+YXJkcywNClNhaQ0K
