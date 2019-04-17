@@ -2,133 +2,102 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 2457EC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 02:24:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 126B9C10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 02:31:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD3EF21773
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 02:24:17 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C632A20872
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 02:31:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="LhJHzyyY"
+	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="S7Dzbxks"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731039AbfDQCYQ (ORCPT
+        id S1729410AbfDQCba (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 22:24:16 -0400
-Received: from m50-135.163.com ([123.125.50.135]:34420 "EHLO m50-135.163.com"
+        Tue, 16 Apr 2019 22:31:30 -0400
+Received: from bilbo.ozlabs.org ([203.11.71.1]:52047 "EHLO ozlabs.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727063AbfDQCYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 22:24:16 -0400
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
-        s=s110527; h=From:Subject:Date:Message-Id; bh=jf9JCgMee4wUA0t3fQ
-        g9zMVLthCu5mPOPOUXyNIR8Nk=; b=LhJHzyyYMwZbFrpKhKpPfBT5Ux09HgURM1
-        lR2GTxadgkWytkWyutCXYzrEZkGMaN9WMovrVp1HdpQbzAR+17Te98FbmF1sEJjB
-        NMfqlrC+SGx/T/d9a2g58YigDDzdWWWOZDKcSFkXOWnB30w17lRs6QIWchqAoBBb
-        c9Of4Yx1g=
-Received: from bp.localdomain (unknown [218.106.182.174])
-        by smtp5 (Coremail) with SMTP id D9GowACnqwwojrZcVrYOAQ--.137S3;
-        Wed, 17 Apr 2019 10:23:39 +0800 (CST)
-From:   Pan Bian <bianpan2016@163.com>
-To:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
-        David Sterba <dsterba@suse.com>
-Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
-        Pan Bian <bianpan2016@163.com>
-Subject: btrfs: drop inode reference count on error path
-Date:   Wed, 17 Apr 2019 10:23:30 +0800
-Message-Id: <1555467810-27859-1-git-send-email-bianpan2016@163.com>
-X-Mailer: git-send-email 2.7.4
-X-CM-TRANSID: D9GowACnqwwojrZcVrYOAQ--.137S3
-X-Coremail-Antispam: 1Uf129KBjvJXoW7ury7Ww1kXF4fKFykJr48Xrb_yoW8tFWUpF
-        yfCwn3K395XryDurs2qF4jvr4Fqa4vgw48XrsFvws5tF47Arn7tryFvr18Kay7trWkCryj
-        qr4Ykw4UWF47Cr7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
-        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UDsqZUUUUU=
-X-Originating-IP: [218.106.182.174]
-X-CM-SenderInfo: held01tdqsiiqw6rljoofrz/1tbiNgeZclWBeIWWqQAAsM
+        id S1727063AbfDQCba (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 22:31:30 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44kR7g2NRRz9s4Y;
+        Wed, 17 Apr 2019 12:31:26 +1000 (AEST)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
+        s=201702; t=1555468287;
+        bh=N6XJvE2sPWEMulBEn20x1fhchncL4AtWlBYLBmK6A3Q=;
+        h=Date:From:To:Cc:Subject:From;
+        b=S7DzbxksWt1kV7mNva13j1fKaqDkkd+J+kp5tNNK9V2b3XS8+iS17jMcuXcKgkymV
+         QpJAadXZ6f5rEedi8euGDP9gNRyo8A4S92acjPvsaGQEvZnjFGRw6/Rvmn+YQljB5G
+         a1brclnI4lEXTi3P/1Ss2KMZvQuzGWmQf96rdlmfY+hzu9FHuoJnuJYcXehd3i57Fi
+         HaIFWxA/sW8pNkTyh9DHIIEJjeVJFVOm9SkKLrMwOFC8E87LDa79/ISu8y36GUhhoY
+         aWtsrPD1oIwMbeqP0oxh3K9m7qAg97B/wtbmFiXyvDG1+5oyYxopTQz/w0Buu5EKux
+         hbXq4hnUOmv4Q==
+Date:   Wed, 17 Apr 2019 12:31:25 +1000
+From:   Stephen Rothwell <sfr@canb.auug.org.au>
+To:     Jens Axboe <axboe@kernel.dk>, Jaegeuk Kim <jaegeuk@kernel.org>
+Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Christoph Hellwig <hch@lst.de>, Chao Yu <yuchao0@huawei.com>
+Subject: linux-next: build warning after merge of the block tree
+Message-ID: <20190417123125.3de22f73@canb.auug.org.au>
+MIME-Version: 1.0
+Content-Type: multipart/signed; micalg=pgp-sha256;
+ boundary="Sig_/mNdL3ruxYKIGVZtrZ5ARkKw"; protocol="application/pgp-signature"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The reference count of inode is incremented by ihold. It should be
-dropped if not used. However, the reference count is not dropped if
-error occurs during updating the inode or deleting orphan items. This
-patch fixes the bug.
+--Sig_/mNdL3ruxYKIGVZtrZ5ARkKw
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: quoted-printable
 
-Signed-off-by: Pan Bian <bianpan2016@163.com>
----
- fs/btrfs/inode.c | 45 ++++++++++++++++++++++-----------------------
- 1 file changed, 22 insertions(+), 23 deletions(-)
+Hi all,
 
-diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
-index 82fdda8..400c914 100644
---- a/fs/btrfs/inode.c
-+++ b/fs/btrfs/inode.c
-@@ -6580,6 +6580,7 @@ static int btrfs_link(struct dentry *old_dentry, struct inode *dir,
- 	u64 index;
- 	int err;
- 	int drop_inode = 0;
-+	int ret;
- 
- 	/* do not allow sys_link's with other subvols of the same device */
- 	if (root->root_key.objectid != BTRFS_I(inode)->root->root_key.objectid)
-@@ -6616,32 +6617,30 @@ static int btrfs_link(struct dentry *old_dentry, struct inode *dir,
- 	err = btrfs_add_nondir(trans, BTRFS_I(dir), dentry, BTRFS_I(inode),
- 			1, index);
- 
--	if (err) {
--		drop_inode = 1;
--	} else {
--		struct dentry *parent = dentry->d_parent;
--		int ret;
-+	drop_inode = 1;
-+	if (err)
-+		goto fail;
- 
--		err = btrfs_update_inode(trans, root, inode);
-+	err = btrfs_update_inode(trans, root, inode);
-+	if (err)
-+		goto fail;
-+	if (inode->i_nlink == 1) {
-+		/*
-+		 * If new hard link count is 1, it's a file created
-+		 * with open(2) O_TMPFILE flag.
-+		 */
-+		err = btrfs_orphan_del(trans, BTRFS_I(inode));
- 		if (err)
- 			goto fail;
--		if (inode->i_nlink == 1) {
--			/*
--			 * If new hard link count is 1, it's a file created
--			 * with open(2) O_TMPFILE flag.
--			 */
--			err = btrfs_orphan_del(trans, BTRFS_I(inode));
--			if (err)
--				goto fail;
--		}
--		BTRFS_I(inode)->last_link_trans = trans->transid;
--		d_instantiate(dentry, inode);
--		ret = btrfs_log_new_name(trans, BTRFS_I(inode), NULL, parent,
--					 true, NULL);
--		if (ret == BTRFS_NEED_TRANS_COMMIT) {
--			err = btrfs_commit_transaction(trans);
--			trans = NULL;
--		}
-+	}
-+	BTRFS_I(inode)->last_link_trans = trans->transid;
-+	d_instantiate(dentry, inode);
-+	drop_inode = 0;
-+	ret = btrfs_log_new_name(trans, BTRFS_I(inode), NULL, dentry->d_parent,
-+			true, NULL);
-+	if (ret == BTRFS_NEED_TRANS_COMMIT) {
-+		err = btrfs_commit_transaction(trans);
-+		trans = NULL;
- 	}
- 
- fail:
--- 
-2.7.4
+After merging the block tree, today's linux-next build (x86_64
+allmodconfig) produced this warning:
 
+fs/f2fs/node.c: In function 'f2fs_remove_inode_page':
+fs/f2fs/node.c:1193:47: warning: format '%zu' expects argument of type 'siz=
+e_t', but argument 5 has type 'blkcnt_t' {aka 'long long unsigned int'} [-W=
+format=3D]
+    "Inconsistent i_blocks, ino:%lu, iblocks:%zu",
+                                             ~~^
+                                             %llu
+    inode->i_ino, inode->i_blocks);
+                  ~~~~~~~~~~~~~~~              =20
 
+Introduced by commit
+
+  90ae238d9dac ("f2fs: fix to avoid panic in f2fs_remove_inode_page()")
+
+from the f2fs tree interacting with commit
+
+  72deb455b5ec ("block: remove CONFIG_LBDAF")
+
+--=20
+Cheers,
+Stephen Rothwell
+
+--Sig_/mNdL3ruxYKIGVZtrZ5ARkKw
+Content-Type: application/pgp-signature
+Content-Description: OpenPGP digital signature
+
+-----BEGIN PGP SIGNATURE-----
+
+iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAly2j/0ACgkQAVBC80lX
+0GzDiwf/d9CUHjUAyzzDO9kDZdrbLqFE3thRc+3V4nrx1ZPK9YGjsQ4PQB6hhh7v
+pHdnVHq8V07WIYzPLvM/AW9MTwBhSQ+R5jpMfc7jIO3s2wACVjSrM2qofaZJqx89
+jXOEhPlQiRbDvYcgRvPpDACafFSeGe7gpB7e53pXPRdzlykIY0PYz/76J/87xVZd
+rrfz4fZ1PhYF8hODUIxll0BxiNQCdwO6v1ZJIf02Eb2E+C5Yft6t72Ro0sMaQtRg
+nP/3dMp41Yn+yiWhUn44RieVSpSwHPxOM0tUTMA6Q41jfnm+Iah+1+fbmvnRWgOs
+ZsaFjpACo22wyCovrk568/qk3Wma6g==
+=v9pi
+-----END PGP SIGNATURE-----
+
+--Sig_/mNdL3ruxYKIGVZtrZ5ARkKw--
