@@ -2,208 +2,294 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D81D0C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:30:24 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 31392C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:30:58 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A9ACE217D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:30:24 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E4D17206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:30:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=paul-moore-com.20150623.gappssmtp.com header.i=@paul-moore-com.20150623.gappssmtp.com header.b="XqD4anXL"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="jz7yfzJe"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732408AbfDQOaX (ORCPT
+        id S1732475AbfDQOa4 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 10:30:23 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:40334 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731959AbfDQOaW (ORCPT
+        Wed, 17 Apr 2019 10:30:56 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:40253 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731959AbfDQOa4 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 10:30:22 -0400
-Received: by mail-lj1-f196.google.com with SMTP id q66so1244268ljq.7
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 07:30:21 -0700 (PDT)
+        Wed, 17 Apr 2019 10:30:56 -0400
+Received: by mail-ed1-f65.google.com with SMTP id d46so16355628eda.7
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 07:30:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=paul-moore-com.20150623.gappssmtp.com; s=20150623;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=RuyB+W2pZ+QYBWd1eUaaacF+UuRg4xdSTEXA3oHZsgI=;
-        b=XqD4anXLFYevMs1lRTyx2zcvCQubqkTY0PZtzr3CqPikpdNRZHVYUdC2GGYDSv5VPg
-         WP7AOjjquBqxlihIVYE8Ypqmhww8GkwTIOFvHBaV1gZbcaUvBqkQgs6CUKIThv7mT9nM
-         O9SiJhcvum1RY7z4u/fPT2Rx+OnWtc6EiEgWzmqnHEHvA+fJ/vJ4UtkcdUfdH01sFnx2
-         2h5S1k5yplv9wpvVPXuwYWGr/lv6AE6PUhWlmvDk/RYEdzwF7uJ34XrUdoIuJKSoM2IP
-         uKqyh/uuIjalzz3U+m+JazO2dcqKqch99mbK9AEfN143+E4lJE/yu5lmPpEbVWaFuQyw
-         x3/Q==
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:subject:message-id:mail-followup-to:references
+         :mime-version:content-disposition:content-transfer-encoding
+         :in-reply-to:user-agent;
+        bh=UtwXfgHiW9uxr4io2NrLhIlt9faL/SpYVdNzzRRZdyE=;
+        b=jz7yfzJePU9xVKg98q0j9gYBrMPepskYacPVPUSRTBKqyYiX04AHNuRcrz7uRDO/8f
+         ys4BD+WkVNbAA/cRFZ8tWp1Ts0mtTJL8ejOnPFUOZAeOFVIjMMQgmSap1cXh75O5pb1h
+         NxFTEug9hca9QghD86YEpDGy3ntZbtdmKrHVA=
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=RuyB+W2pZ+QYBWd1eUaaacF+UuRg4xdSTEXA3oHZsgI=;
-        b=Y9SDs711lCaAnCjxjLQB3J8kCNoF8zT2haYlAugh7NCvvbVJe1A0uMSLy+2L4NiMKo
-         s7llncHIZqM8nJ2fJ6pfNUthOZW/stB+kBUk3I/7efwdrB/SXVNZURHod78JtbhdwdmD
-         e5f5uVbq8I9AW3fFLuvMIPha3TSxA/AIqsmTYJfHDqW0VPlHy3x+0czMtOeaBmqtcvfg
-         41JahaRyhq68SzwV5Avl+oEeQ1SrUiznK0FCsLrBJ6zgKpS2dD7gs0qoVvV2e9QTLOwM
-         ZNtiNwkYhwsiSGLLSX7O099T/d79oe4HrmGoydUQlDpz4/8sJsQdGqVknbsm++A8mjZa
-         Qe8Q==
-X-Gm-Message-State: APjAAAX0eDeQ+ockK5jZyxfLrOMhiqh6odONsqeV9eNtDHVBZlMecceS
-        zbtjHDxXVmG57dU9FOvBz5i7dMeYVBDZsjwMqi4C
-X-Google-Smtp-Source: APXvYqxRX2PGOIrx7dxH9uSGpkYFbI6pJPfeVsyp3u9ILZZQnkg2xJwcGRdaU/hpbceypTXYTq6mSPH0Nbc8CBFjxXQ=
-X-Received: by 2002:a2e:42cf:: with SMTP id h76mr46177693ljf.95.1555511420086;
- Wed, 17 Apr 2019 07:30:20 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=UtwXfgHiW9uxr4io2NrLhIlt9faL/SpYVdNzzRRZdyE=;
+        b=peq2o7q3xqO+/8Z1eNvsxuVNF9SPSXEIlQ4UlDWWn+BdpNl56o5sGPPnvU578TBsSC
+         6ZDsXLdfw5wUcQl3VrF15632J3hcjco+sW/dSfZn9atyY1x0QROGfiFegCKfm9zx3sHB
+         JNv76veSXkpvOEknoG3+frUe1GiSrq6nZhQ+G0DRhPHrr5s0EB4lU0BmZ58mUYjPyK/s
+         1sHt31s9l1fLAH+BhaQaDRSiuouf9PwBEkrPCvBoMZB68jwxEb69hwSNBRmN5Qh+pdKZ
+         kCSX6Vt2eVJi2FaE8QHJi7tmy637VpP7aYvogcf3+VJgHFxeFHl5GyRCsFIn2nppwKVV
+         PfNA==
+X-Gm-Message-State: APjAAAUcCKzif+012l0agfewul5vqr4FweBClg+lJv4YhYn3ihDtDzWC
+        HJUMythj55w27hfRQ9B1G3xFhA==
+X-Google-Smtp-Source: APXvYqxy1+5aJUdsuQrBfB1YwfPwwMbZ3cdbG1XS9RQBH621Drh22ZrDRGjDIz7yVQp0NbCbwbGmMw==
+X-Received: by 2002:a17:906:a291:: with SMTP id i17mr7689751ejz.180.1555511453952;
+        Wed, 17 Apr 2019 07:30:53 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id j8sm4891124edq.39.2019.04.17.07.30.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 17 Apr 2019 07:30:53 -0700 (PDT)
+Date:   Wed, 17 Apr 2019 16:30:51 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Christian =?iso-8859-1?Q?K=F6nig?= 
+        <ckoenig.leichtzumerken@gmail.com>, sumit.semwal@linaro.org,
+        linux-media@vger.kernel.org, dri-devel@lists.freedesktop.org,
+        linaro-mm-sig@lists.linaro.org, linux-kernel@vger.kernel.org,
+        amd-gfx@lists.freedesktop.org
+Subject: Re: [PATCH 05/12] dma-buf: add explicit buffer pinning
+Message-ID: <20190417143051.GG13337@phenom.ffwll.local>
+Mail-Followup-To: Christian =?iso-8859-1?Q?K=F6nig?= <ckoenig.leichtzumerken@gmail.com>,
+        sumit.semwal@linaro.org, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org
+References: <20190416183841.1577-1-christian.koenig@amd.com>
+ <20190416183841.1577-6-christian.koenig@amd.com>
+ <20190417142002.GE13337@phenom.ffwll.local>
 MIME-Version: 1.0
-References: <6e4428ca-3da1-a033-08f7-a51e57503989@huawei.com>
- <b1575d02-fd88-65e6-2f16-70a96985087e@schaufler-ca.com> <20190415134331.GC22204@redhat.com>
- <CAHC9VhQ7ihqU0K57ctwzoHq0t0QVJPKiQQZn5TXB1FUqsvOSEQ@mail.gmail.com>
- <20190415150520.GA13257@redhat.com> <CAHC9VhSk1_fWooexHK0+5cKum55qTvj3uv5sRE=aJ4mv2GHJZg@mail.gmail.com>
- <CAGXu5jKYmoaR6bxW82ogN4iOeKi8AtEwkvVvCXd_gn3CCwFU2Q@mail.gmail.com> <fa325d38-db66-0ae7-0a6c-75934a9b0653@huawei.com>
-In-Reply-To: <fa325d38-db66-0ae7-0a6c-75934a9b0653@huawei.com>
-From:   Paul Moore <paul@paul-moore.com>
-Date:   Wed, 17 Apr 2019 10:30:08 -0400
-Message-ID: <CAHC9VhSpnSpYLLOcFUFLM=UU8tUTLAzJYb2NgdbN-nLPrh=55g@mail.gmail.com>
-Subject: Re: kernel BUG at kernel/cred.c:434!
-To:     "chengjian (D)" <cj.chengjian@huawei.com>
-Cc:     Kees Cook <keescook@chromium.org>, Oleg Nesterov <oleg@redhat.com>,
-        Casey Schaufler <casey@schaufler-ca.com>,
-        NeilBrown <neilb@suse.com>,
-        Anna Schumaker <Anna.Schumaker@netapp.com>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        "Xiexiuqi (Xie XiuQi)" <xiexiuqi@huawei.com>,
-        Li Bin <huawei.libin@huawei.com>,
-        Jason Yan <yanaijie@huawei.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Linux Security Module list 
-        <linux-security-module@vger.kernel.org>,
-        SELinux <selinux@vger.kernel.org>,
-        Yang Yingliang <yangyingliang@huawei.com>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=iso-8859-1
+Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190417142002.GE13337@phenom.ffwll.local>
+X-Operating-System: Linux phenom 4.19.0-1-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 10:46 AM chengjian (D) <cj.chengjian@huawei.com> wrote:
-> On 2019/4/16 11:40, Kees Cook wrote:
-> > On Mon, Apr 15, 2019 at 11:20 AM Paul Moore <paul@paul-moore.com> wrote:
-> >> On Mon, Apr 15, 2019 at 11:05 AM Oleg Nesterov <oleg@redhat.com> wrote:
-> >>> On 04/15, Paul Moore wrote:
-> >>>> On Mon, Apr 15, 2019 at 9:43 AM Oleg Nesterov <oleg@redhat.com> wrote:
-> >>>>> Well, acct("/proc/self/attr/current") doesn't look like a good idea, but I do
-> >>>>> not know where should we put the additional check... And probably
-> >>>>> "echo /proc/self/attr/current > /proc/sys/kernel/core_pattern" can hit the
-> >>>>> same problem, do_coredump() does override_creds() too.
-> >>>>>
-> >>>>> May be just add
-> >>>>>
-> >>>>>          if (current->cred != current->real_cred)
-> >>>>>                  return -EACCES;
-> >>>>>
-> >>>>> into proc_pid_attr_write(), I dunno.
-> >>>> Is the problem that do_acct_process() is calling override_creds() and
-> >>>> the returned/old credentials are being freed before do_acct_process()
-> >>>> can reinstall the creds via revert_creds()?  Presumably because the
-> >>>> process accounting is causing the credentials to be replaced?
-> >>> Afaics, the problem is that do_acct_process() does override_creds() and
-> >>> then __kernel_write(). Which calls proc_pid_attr_write(), which in turn calls
-> >>> selinux_setprocattr(), which does another prepare_creds() + commit_creds();
-> >>> and commit_creds() hits
-> >>>
-> >>>          BUG_ON(task->cred != old);
-> >> Gotcha.  In the process of looking at the backtrace I forgot about the
-> >> BUG_ON() at the top of the oops message.
-> >>
-> >> I wonder what terrible things would happen if we changed the BUG_ON()
-> >> in commit_creds to simple returning an error an error code to the
-> >> caller.  There is a warning/requirement in commit_creds() function
-> >> header comment that it should always return 0.
-> > Would callers be expected to call abort_creds() on failure? There are
-> > a number of places where it'd need fixing up. And would likely be best
-> > with a __must_check marking.
-> >
-> > It seems like avoiding the pathological case might be simpler?
->
-> Yeah, Avoiding this pathological case is a better solution.
+On Wed, Apr 17, 2019 at 04:20:02PM +0200, Daniel Vetter wrote:
+> On Tue, Apr 16, 2019 at 08:38:34PM +0200, Christian König wrote:
+> > Add optional explicit pinning callbacks instead of implicitly assume the
+> > exporter pins the buffer when a mapping is created.
+> > 
+> > Signed-off-by: Christian König <christian.koenig@amd.com>
+> 
+> Don't we need this together with the invalidate callback and the dynamic
+> stuff? Also I'm assuming that pin/unpin is pretty much required for
+> dynamic bo, so could we look at these callbacks instead of the dynamic
+> flag you add in patch 1.
+> 
+> I'm assuming following rules hold:
+> no pin/upin from exporter:
+> 
+> dma-buf is not dynamic, and pinned for the duration of map/unmap. I'm
+> not 100% sure whether really everyone wants the mapping to be cached for
+> the entire attachment, only drm_prime does that. And that's not the only
+> dma-buf importer.
+> 
+> pin/unpin calls are noops.
+> 
+> pin/unpin exist in the exporter, but importer has not provided an
+> invalidate callback:
+> 
+> We map at attach time, and we also have to pin, since the importer can't
+> handle the buffer disappearing, at attach time. We unmap/unpin at detach.
 
-No arguments that this is particularly messed up scenario, I'm just
-trying to arrive at a solution that isn't too ugly.
+For this case we should have a WARN in pin/unpin, to make sure importers
+don't do something stupid. One more thought below on pin/unpin.
 
-> From: Yang Yingliang <yangyingliang@huawei.com>
-> Date: Sat, 13 Apr 2019 21:56:01 +0800
-> Subject: [PATCH] fix cred bug_on
->
-> Signed-off-by: Yang Yingliang <yangyingliang@huawei.com>
-> ---
->   kernel/acct.c            | 3 ++-
->   kernel/cred.c            | 6 ++++++
->   security/selinux/hooks.c | 2 ++
->   3 files changed, 10 insertions(+), 1 deletion(-)
->
-> diff --git a/kernel/acct.c b/kernel/acct.c
-> index addf7732fb56..f2065f899eee 100644
-> --- a/kernel/acct.c
-> +++ b/kernel/acct.c
-> @@ -522,7 +522,8 @@ static void do_acct_process(struct bsd_acct_struct
-> *acct)
->       }
->   out:
->       current->signal->rlim[RLIMIT_FSIZE].rlim_cur = flim;
-> -    revert_creds(orig_cred);
-> +    if (orig_cred == current->real_cred)    // [2]
-> +        revert_creds(orig_cred);
->   }
->
->   /**
-> diff --git a/kernel/cred.c b/kernel/cred.c
-> index ecf03657e71c..c4d5ba92fb9b 100644
-> --- a/kernel/cred.c
-> +++ b/kernel/cred.c
-> @@ -522,6 +522,9 @@ const struct cred *override_creds(const struct cred
-> *new)
->   {
->       const struct cred *old = current->cred;
->
-> +    if (old == new)    //  [3]
-> +        return old;
-> +
->       kdebug("override_creds(%p{%d,%d})", new,
->              atomic_read(&new->usage),
->              read_cred_subscribers(new));
-> @@ -551,6 +554,9 @@ void revert_creds(const struct cred *old)
->   {
->       const struct cred *override = current->cred;
->
-> +    if (override == old)    // [3]
-> +        return;
-> +
->       kdebug("revert_creds(%p{%d,%d})", old,
->              atomic_read(&old->usage),
->              read_cred_subscribers(old));
-> diff --git a/security/selinux/hooks.c b/security/selinux/hooks.c
-> index b5017beb4ef7..bc8108e4e90f 100644
-> --- a/security/selinux/hooks.c
-> +++ b/security/selinux/hooks.c
-> @@ -6590,6 +6590,8 @@ static int selinux_setprocattr(const char *name,
-> void *value, size_t size)
->           goto abort_change;
->       }
->
-> +    if (current->cred != current->real_cred)    // [1]
-> +        revert_creds(current->real_cred);
->       commit_creds(new);
->       return size;
+> pin/unpin from exporter, invalidate from importer:
+> 
+> Full dynamic mapping. We assume the importer will do caching, attach
+> fences as needed, and pin the underlying bo when it needs it it
+> permanently, without attaching fences (i.e. the scanout case).
+> 
+> Assuming I'm not terribly off with my understanding, then I think it'd be
+> best to introduce the entire new dma-buf api in the first patch, and flesh
+> it out later. Instead of spread over a few patches. Plus the above (maybe
+> prettier) as a nice kerneldoc overview comment for how dynamic dma-buf is
+> supposed to work really.
+> -Daniel
+> 
+> > ---
+> >  drivers/dma-buf/dma-buf.c | 39 +++++++++++++++++++++++++++++++++++++++
+> >  include/linux/dma-buf.h   | 37 +++++++++++++++++++++++++++++++------
+> >  2 files changed, 70 insertions(+), 6 deletions(-)
+> > 
+> > diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+> > index a3738fab3927..f23ff8355505 100644
+> > --- a/drivers/dma-buf/dma-buf.c
+> > +++ b/drivers/dma-buf/dma-buf.c
+> > @@ -630,6 +630,41 @@ void dma_buf_detach(struct dma_buf *dmabuf, struct dma_buf_attachment *attach)
+> >  }
+> >  EXPORT_SYMBOL_GPL(dma_buf_detach);
+> >  
+> > +/**
+> > + * dma_buf_pin - Lock down the DMA-buf
+> > + *
+> > + * @dmabuf:	[in]	DMA-buf to lock down.
+> > + *
+> > + * Returns:
+> > + * 0 on success, negative error code on failure.
+> > + */
+> > +int dma_buf_pin(struct dma_buf *dmabuf)
 
-Doing the revert only to then commit the creds seems really ugly to
-me.  I'm tempted to simply return an error in selinux_setprocattr() if
-the task's credentials are not the same as its real_cred; if we do
-that I believe we should resolve this problem.  The accounting write
-to the SELinux file in /proc would fail of course, but I think we can
-all consider that as a positive side-effect.
+Hm, I think it'd be better to pin the attachment, not the underlying
+buffer. Attachment is the thin the importer will have to pin, and it's at
+attach/detach time where dma-buf needs to pin for importers who don't
+understand dynamic buffer sharing.
 
-While I don't think this should have a negative impact on anything
-else, I haven't convinced myself of that just yet.
+Plus when we put that onto attachments, we can do a
+
+	WARN_ON(!attach->invalidate);
+
+sanity check. I think that would be good to have.
+-Daniel
+
+> > +{
+> > +	int ret = 0;
+> > +
+> > +	reservation_object_assert_held(dmabuf->resv);
+> > +
+> > +	if (dmabuf->ops->pin)
+> > +		ret = dmabuf->ops->pin(dmabuf);
+> > +
+> > +	return ret;
+> > +}
+> > +EXPORT_SYMBOL_GPL(dma_buf_pin);
+> > +
+> > +/**
+> > + * dma_buf_unpin - Remove lock from DMA-buf
+> > + *
+> > + * @dmabuf:	[in]	DMA-buf to unlock.
+> > + */
+> > +void dma_buf_unpin(struct dma_buf *dmabuf)
+> > +{
+> > +	reservation_object_assert_held(dmabuf->resv);
+> > +
+> > +	if (dmabuf->ops->unpin)
+> > +		dmabuf->ops->unpin(dmabuf);
+> > +}
+> > +EXPORT_SYMBOL_GPL(dma_buf_unpin);
+> > +
+> >  /**
+> >   * dma_buf_map_attachment_locked - Maps the buffer into _device_ address space
+> >   * with the reservation lock held. Is a wrapper for map_dma_buf() of the
+> > @@ -666,6 +701,8 @@ dma_buf_map_attachment_locked(struct dma_buf_attachment *attach,
+> >  	 */
+> >  	if (attach->invalidate)
+> >  		list_del(&attach->node);
+> > +	else
+> > +		dma_buf_pin(attach->dmabuf);
+> >  	sg_table = attach->dmabuf->ops->map_dma_buf(attach, direction);
+> >  	if (attach->invalidate)
+> >  		list_add(&attach->node, &attach->dmabuf->attachments);
+> > @@ -735,6 +772,8 @@ void dma_buf_unmap_attachment_locked(struct dma_buf_attachment *attach,
+> >  
+> >  	attach->dmabuf->ops->unmap_dma_buf(attach, sg_table,
+> >  						direction);
+> > +	if (!attach->invalidate)
+> > +		dma_buf_unpin(attach->dmabuf);
+> >  }
+> >  EXPORT_SYMBOL_GPL(dma_buf_unmap_attachment_locked);
+> >  
+> > diff --git a/include/linux/dma-buf.h b/include/linux/dma-buf.h
+> > index ece4638359a8..a615b74e5894 100644
+> > --- a/include/linux/dma-buf.h
+> > +++ b/include/linux/dma-buf.h
+> > @@ -100,14 +100,40 @@ struct dma_buf_ops {
+> >  	 */
+> >  	void (*detach)(struct dma_buf *, struct dma_buf_attachment *);
+> >  
+> > +	/**
+> > +	 * @pin_dma_buf:
+> > +	 *
+> > +	 * This is called by dma_buf_pin and lets the exporter know that an
+> > +	 * importer assumes that the DMA-buf can't be invalidated any more.
+> > +	 *
+> > +	 * This is called with the dmabuf->resv object locked.
+> > +	 *
+> > +	 * This callback is optional.
+> > +	 *
+> > +	 * Returns:
+> > +	 *
+> > +	 * 0 on success, negative error code on failure.
+> > +	 */
+> > +	int (*pin)(struct dma_buf *);
+> > +
+> > +	/**
+> > +	 * @unpin_dma_buf:
+> > +	 *
+> > +	 * This is called by dma_buf_unpin and lets the exporter know that an
+> > +	 * importer doesn't need to the DMA-buf to stay were it is any more.
+> > +	 *
+> > +	 * This is called with the dmabuf->resv object locked.
+> > +	 *
+> > +	 * This callback is optional.
+> > +	 */
+> > +	void (*unpin)(struct dma_buf *);
+> > +
+> >  	/**
+> >  	 * @map_dma_buf:
+> >  	 *
+> >  	 * This is called by dma_buf_map_attachment() and is used to map a
+> >  	 * shared &dma_buf into device address space, and it is mandatory. It
+> > -	 * can only be called if @attach has been called successfully. This
+> > -	 * essentially pins the DMA buffer into place, and it cannot be moved
+> > -	 * any more
+> > +	 * can only be called if @attach has been called successfully.
+> >  	 *
+> >  	 * This call may sleep, e.g. when the backing storage first needs to be
+> >  	 * allocated, or moved to a location suitable for all currently attached
+> > @@ -148,9 +174,6 @@ struct dma_buf_ops {
+> >  	 *
+> >  	 * This is called by dma_buf_unmap_attachment() and should unmap and
+> >  	 * release the &sg_table allocated in @map_dma_buf, and it is mandatory.
+> > -	 * It should also unpin the backing storage if this is the last mapping
+> > -	 * of the DMA buffer, it the exporter supports backing storage
+> > -	 * migration.
+> >  	 *
+> >  	 * This is always called with the dmabuf->resv object locked when
+> >  	 * no_sgt_cache is true.
+> > @@ -442,6 +465,8 @@ int dma_buf_fd(struct dma_buf *dmabuf, int flags);
+> >  struct dma_buf *dma_buf_get(int fd);
+> >  void dma_buf_put(struct dma_buf *dmabuf);
+> >  
+> > +int dma_buf_pin(struct dma_buf *dmabuf);
+> > +void dma_buf_unpin(struct dma_buf *dmabuf);
+> >  struct sg_table *dma_buf_map_attachment_locked(struct dma_buf_attachment *,
+> >  					       enum dma_data_direction);
+> >  struct sg_table *dma_buf_map_attachment(struct dma_buf_attachment *,
+> > -- 
+> > 2.17.1
+> > 
+> > _______________________________________________
+> > dri-devel mailing list
+> > dri-devel@lists.freedesktop.org
+> > https://lists.freedesktop.org/mailman/listinfo/dri-devel
+> 
+> -- 
+> Daniel Vetter
+> Software Engineer, Intel Corporation
+> http://blog.ffwll.ch
 
 -- 
-paul moore
-www.paul-moore.com
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
