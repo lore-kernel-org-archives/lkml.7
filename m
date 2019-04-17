@@ -2,134 +2,94 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38CFEC10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:39:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 8B32CC10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:41:46 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 081A22073F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:39:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 537DC2073F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:41:46 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="fMgW8PzH"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1728781AbfDQHjz (ORCPT
+        id S1728961AbfDQHlp (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 03:39:55 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:33544 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726773AbfDQHjz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 03:39:55 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id C1B0E3082A27;
-        Wed, 17 Apr 2019 07:39:54 +0000 (UTC)
-Received: from krava (unknown [10.43.17.48])
-        by smtp.corp.redhat.com (Postfix) with SMTP id 2A00F5C220;
-        Wed, 17 Apr 2019 07:39:53 +0000 (UTC)
-Date:   Wed, 17 Apr 2019 09:39:52 +0200
-From:   Jiri Olsa <jolsa@redhat.com>
-To:     Alexey Budankov <alexey.budankov@linux.intel.com>
-Cc:     Arnaldo Carvalho de Melo <acme@kernel.org>,
-        Namhyung Kim <namhyung@kernel.org>,
-        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ingo Molnar <mingo@redhat.com>,
-        Andi Kleen <ak@linux.intel.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v1] perf record: collect user registers set jointly with
- dwarf stacks
-Message-ID: <20190417073952.GF17024@krava>
-References: <a83183c0-21f4-02af-1443-1a3fdb5d89c3@linux.intel.com>
+        Wed, 17 Apr 2019 03:41:45 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:46383 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726773AbfDQHlp (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 03:41:45 -0400
+Received: by mail-lf1-f68.google.com with SMTP id k18so9162010lfj.13
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 00:41:43 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=TsZQ54Mb58ojmhd4luSv5Cy/zFTCqmtd7c8rf02fwtI=;
+        b=fMgW8PzH9WCt/OmE/UBhZ+VVupVzHD99xmsYUq73sxK68TNLBa7xsVQrDq6jqVUl+W
+         pGyZy0cP7/bqLnGOqXvipQ0gK5MzD6wC2btKnabHBTaAibd6fO5C/HLvxpMDkeNWBO4/
+         6vnbloCy/Fbm4TNmYVDmWPcXd2FuVSJ87ztWqJen1j01Bl1j+WJ9CnfIkNU+Wt5c+LWu
+         BzDEREygS9BrT0UDbL2zzlpu2BLrS0VCpyozocAHVR7uv0vqt37rw0sDA5cunIvWvvn4
+         OJM0mtQIeLEJSBQrHuuklBa1mvB6RreAGA+qRH5AeYpdDUI8dpJx/K1uQZsK6QBaVRmo
+         KGZg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=TsZQ54Mb58ojmhd4luSv5Cy/zFTCqmtd7c8rf02fwtI=;
+        b=AIuIyHmJBLvNe0vMucTrDlEkeSgHuAO4gjwHipaA9V4YH4pm3vFE4Uyr4G8NIwRTDv
+         F2IcxFcwqanmhW7IscWVkuwVMrGtHMCeY0Nr1R1ddS/OEkG3RFDJSVZo4Ab4aAZL7hjZ
+         6AwkIw5vC9rooyFs5IJrfXD40wMCmDRXb32f1KQD/yKnwmdLuAcuwDhbRVqiLSz+scqg
+         3G3U/zvbW8eLKO7qlRp2uy4sko850nvsLo/Ncsmj3bqN3S18ROuXcK/wt/ReP/N33dKt
+         1bANoUra+F76jBtMAtuCzPX0ejrXOOIQF6TMK+Tes1EXjF4HAoOajk6bOVBaZS4cNlZq
+         t8Zg==
+X-Gm-Message-State: APjAAAUYRQrxdOokeDb6F8IsbUk89s6CpHv/Km3wL7HIpdvPsp2dbmHT
+        uhbYnUkYRdIPlIlSNofGETpnJWuojatitad1AIc=
+X-Google-Smtp-Source: APXvYqw5ECPwxD37+hTt5ipw7RkA1Q3i7SdFpRyl3rgucmQGPVxJgB4cvMcM9QT7bHIs0228e2yjmAmb0L5MHMZt5pg=
+X-Received: by 2002:a19:f001:: with SMTP id p1mr4731539lfc.27.1555486902459;
+ Wed, 17 Apr 2019 00:41:42 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <a83183c0-21f4-02af-1443-1a3fdb5d89c3@linux.intel.com>
-User-Agent: Mutt/1.11.3 (2019-02-01)
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 17 Apr 2019 07:39:54 +0000 (UTC)
+References: <b86e6a5e-44d6-2c1b-879e-54a1bc671ad3@gmail.com> <20190416161840.c54f8fce7557e24fe0922338@linux-foundation.org>
+In-Reply-To: <20190416161840.c54f8fce7557e24fe0922338@linux-foundation.org>
+From:   Vitaly Wool <vitalywool@gmail.com>
+Date:   Wed, 17 Apr 2019 09:41:31 +0200
+Message-ID: <CAMJBoFOz41qyxwnQaJbDuv3n0Nzbzmwdx=Kyv=1wV51jr0ivKg@mail.gmail.com>
+Subject: Re: [PATCH 0/4] z3fold: support page migration
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     Linux-MM <linux-mm@kvack.org>, LKML <linux-kernel@vger.kernel.org>,
+        Oleksiy.Avramchenko@sony.com, Dan Streetman <ddstreet@ieee.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Mon, Apr 15, 2019 at 06:36:13PM +0300, Alexey Budankov wrote:
-> 
-> When dwarf stacks are collected jointly with user specified register
-> set using --user-regs option like below the full register context is
-> still captured on a sample:
-> 
->   $ perf record -g --call-graph dwarf,1024 --user-regs=IP,SP,BP -- matrix.gcc.g.O3
-> 
->   188143843893585 0x6b48 [0x4f8]: PERF_RECORD_SAMPLE(IP, 0x4002): 23828/23828: 0x401236 period: 1363819 addr: 0x7ffedbdd51ac
->   ... FP chain: nr:0
->   ... user regs: mask 0xff0fff ABI 64-bit
->   .... AX    0x53b
->   .... BX    0x7ffedbdd3cc0
->   .... CX    0xffffffff
->   .... DX    0x33d3a
->   .... SI    0x7f09b74c38d0
->   .... DI    0x0
->   .... BP    0x401260
->   .... SP    0x7ffedbdd3cc0
->   .... IP    0x401236
->   .... FLAGS 0x20a
->   .... CS    0x33
->   .... SS    0x2b
->   .... R8    0x7f09b74c3800
->   .... R9    0x7f09b74c2da0
->   .... R10   0xfffffffffffff3ce
->   .... R11   0x246
->   .... R12   0x401070
->   .... R13   0x7ffedbdd5db0
->   .... R14   0x0
->   .... R15   0x0
->   ... ustack: size 1024, offset 0xe0
->    . data_src: 0x5080021
->    ... thread: stack_test2.g.O:23828
->    ...... dso: /root/abudanko/stacks/stack_test2.g.O3
-> 
-> After applying the change suggested in the patch the sample data contain
-> only user specified register values:
-> 
->   $ perf record -g --call-graph dwarf,1024 --user-regs=IP,SP,BP -- matrix.gcc.g.03
-> 
->   188368474305373 0x5e40 [0x470]: PERF_RECORD_SAMPLE(IP, 0x4002): 23839/23839: 0x401236 period: 1260507 addr: 0x7ffd3d85e96c
->   ... FP chain: nr:0
->   ... user regs: mask 0x1c0 ABI 64-bit
->   .... BP    0x401260
->   .... SP    0x7ffd3d85cc20
->   .... IP    0x401236
->   ... ustack: size 1024, offset 0x58
->    . data_src: 0x5080021
->    ... thread: stack_test2.g.O:23839
->    ...... dso: /root/abudanko/stacks/stack_test2.g.O3
-> 
-> Signed-off-by: Alexey Budankov <alexey.budankov@linux.intel.com>
+Den ons 17 apr. 2019 kl 01:18 skrev Andrew Morton <akpm@linux-foundation.org>:
+>
+> On Thu, 11 Apr 2019 17:32:12 +0200 Vitaly Wool <vitalywool@gmail.com> wrote:
+>
+> > This patchset implements page migration support and slightly better
+> > buddy search. To implement page migration support, z3fold has to move
+> > away from the current scheme of handle encoding. i. e. stop encoding
+> > page address in handles. Instead, a small per-page structure is created
+> > which will contain actual addresses for z3fold objects, while pointers
+> > to fields of that structure will be used as handles.
+>
+> Can you please help find a reviewer for this work?
+>
+> For some reason I'm seeing a massive number of rejects when trying to
+> apply these.  It looks like your mail client performed some sort of
+> selective space-stuffing.  I suggest you email a patch to yourself,
+> check that the result applies properly.
 
-Acked-by: Jiri Olsa <jolsa@kernel.org>
 
-thanks,
-jirka
+Sorry about that. You can never be sure when you work with
+Thunderbird. I checked the tabs were not converted to spaces but
+Thunderbird managed to add extra space in the beginning of each
+unchanged line of the patch.
 
-> ---
->  tools/perf/util/evsel.c | 3 ++-
->  1 file changed, 2 insertions(+), 1 deletion(-)
-> 
-> diff --git a/tools/perf/util/evsel.c b/tools/perf/util/evsel.c
-> index 84cfb9fe2fc6..29a223b4c699 100644
-> --- a/tools/perf/util/evsel.c
-> +++ b/tools/perf/util/evsel.c
-> @@ -702,7 +702,8 @@ static void __perf_evsel__config_callchain(struct perf_evsel *evsel,
->  		if (!function) {
->  			perf_evsel__set_sample_bit(evsel, REGS_USER);
->  			perf_evsel__set_sample_bit(evsel, STACK_USER);
-> -			attr->sample_regs_user |= PERF_REGS_MASK;
-> +			if (!opts->sample_user_regs)
-> +				attr->sample_regs_user |= PERF_REGS_MASK;
->  			attr->sample_stack_user = param->dump_size;
->  			attr->exclude_callchain_user = 1;
->  		} else {
-> -- 
-> 2.20.1
-> 
+I'll just to a v2 patchset today.
