@@ -6,24 +6,25 @@ X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
 	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 00EAEC10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:55:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9536EC10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:55:53 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C778B20835
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:55:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 6D1C020835
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:55:53 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731453AbfDQHzt (ORCPT
+        id S1731464AbfDQHzw (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 03:55:49 -0400
-Received: from relay10.mail.gandi.net ([217.70.178.230]:43169 "EHLO
-        relay10.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731336AbfDQHze (ORCPT
+        Wed, 17 Apr 2019 03:55:52 -0400
+Received: from relay1-d.mail.gandi.net ([217.70.183.193]:35851 "EHLO
+        relay1-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731392AbfDQHzr (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 03:55:34 -0400
+        Wed, 17 Apr 2019 03:55:47 -0400
+X-Originating-IP: 90.88.160.238
 Received: from localhost (aaubervilliers-681-1-42-238.w90-88.abo.wanadoo.fr [90.88.160.238])
         (Authenticated sender: maxime.ripard@bootlin.com)
-        by relay10.mail.gandi.net (Postfix) with ESMTPSA id C2C4F240006;
-        Wed, 17 Apr 2019 07:55:29 +0000 (UTC)
+        by relay1-d.mail.gandi.net (Postfix) with ESMTPSA id BDF3D240005;
+        Wed, 17 Apr 2019 07:55:42 +0000 (UTC)
 From:   Maxime Ripard <maxime.ripard@bootlin.com>
 To:     Daniel Vetter <daniel.vetter@intel.com>,
         David Airlie <airlied@linux.ie>,
@@ -38,9 +39,9 @@ Cc:     Sakari Ailus <sakari.ailus@linux.intel.com>,
         Paul Kocialkowski <paul.kocialkowski@bootlin.com>,
         dri-devel@lists.freedesktop.org, linux-kernel@vger.kernel.org,
         linux-media@vger.kernel.org
-Subject: [PATCH 11/20] drm/i915: Convert to generic image format library
-Date:   Wed, 17 Apr 2019 09:54:37 +0200
-Message-Id: <9561d4a4a7c95e0c10c58a3a57f7bde9190fe1e8.1555487650.git-series.maxime.ripard@bootlin.com>
+Subject: [PATCH 14/20] drm/omap: Convert to generic image format library
+Date:   Wed, 17 Apr 2019 09:54:40 +0200
+Message-Id: <c85394324f6002cd56dcea27557d7a5c84dd1217.1555487650.git-series.maxime.ripard@bootlin.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <cover.8ec406bf8f4f097e9dc909d5aac466556822f592.1555487650.git-series.maxime.ripard@bootlin.com>
 References: <cover.8ec406bf8f4f097e9dc909d5aac466556822f592.1555487650.git-series.maxime.ripard@bootlin.com>
@@ -56,78 +57,84 @@ use it so that we can deprecate the old DRM one.
 
 Signed-off-by: Maxime Ripard <maxime.ripard@bootlin.com>
 ---
- drivers/gpu/drm/i915/intel_display.c | 4 ++--
- drivers/gpu/drm/i915/intel_pm.c      | 6 +++---
- drivers/gpu/drm/i915/intel_sprite.c  | 4 ++--
- 3 files changed, 7 insertions(+), 7 deletions(-)
+ drivers/gpu/drm/omapdrm/dss/dispc.c |  9 +++++----
+ drivers/gpu/drm/omapdrm/omap_fb.c   |  7 ++++---
+ 2 files changed, 9 insertions(+), 7 deletions(-)
 
-diff --git a/drivers/gpu/drm/i915/intel_display.c b/drivers/gpu/drm/i915/intel_display.c
-index 6a0c4f505593..c745e1172dc9 100644
---- a/drivers/gpu/drm/i915/intel_display.c
-+++ b/drivers/gpu/drm/i915/intel_display.c
-@@ -8094,7 +8094,7 @@ i9xx_get_initial_plane_config(struct intel_crtc *crtc,
+diff --git a/drivers/gpu/drm/omapdrm/dss/dispc.c b/drivers/gpu/drm/omapdrm/dss/dispc.c
+index ba82d916719c..bf60d49ad6ca 100644
+--- a/drivers/gpu/drm/omapdrm/dss/dispc.c
++++ b/drivers/gpu/drm/omapdrm/dss/dispc.c
+@@ -25,6 +25,7 @@
+ #include <linux/vmalloc.h>
+ #include <linux/export.h>
+ #include <linux/clk.h>
++#include <linux/image-formats.h>
+ #include <linux/io.h>
+ #include <linux/jiffies.h>
+ #include <linux/seq_file.h>
+@@ -1898,9 +1899,9 @@ static void dispc_ovl_set_scaling_uv(struct dispc_device *dispc,
+ 	int scale_x = out_width != orig_width;
+ 	int scale_y = out_height != orig_height;
+ 	bool chroma_upscale = plane != OMAP_DSS_WB;
+-	const struct drm_format_info *info;
++	const struct image_format_info *info;
  
- 	pixel_format = val & DISPPLANE_PIXFORMAT_MASK;
- 	fourcc = i9xx_format_to_fourcc(pixel_format);
--	fb->format = drm_format_info(fourcc);
-+	fb->format = image_format_drm_lookup(fourcc);
+-	info = drm_format_info(fourcc);
++	info = image_format_drm_lookup(fourcc);
  
- 	if (IS_HASWELL(dev_priv) || IS_BROADWELL(dev_priv)) {
- 		offset = I915_READ(DSPOFFSET(i9xx_plane));
-@@ -9194,7 +9194,7 @@ skylake_get_initial_plane_config(struct intel_crtc *crtc,
+ 	if (!dispc_has_feature(dispc, FEAT_HANDLE_UV_SEPARATE))
+ 		return;
+@@ -2623,9 +2624,9 @@ static int dispc_ovl_setup_common(struct dispc_device *dispc,
+ 	bool ilace = !!(vm->flags & DISPLAY_FLAGS_INTERLACED);
+ 	unsigned long pclk = dispc_plane_pclk_rate(dispc, plane);
+ 	unsigned long lclk = dispc_plane_lclk_rate(dispc, plane);
+-	const struct drm_format_info *info;
++	const struct image_format_info *info;
  
- 	fourcc = skl_format_to_fourcc(pixel_format,
- 				      val & PLANE_CTL_ORDER_RGBX, alpha);
--	fb->format = drm_format_info(fourcc);
-+	fb->format = image_format_drm_lookup(fourcc);
+-	info = drm_format_info(fourcc);
++	info = image_format_drm_lookup(fourcc);
  
- 	tiling = val & PLANE_CTL_TILED_MASK;
- 	switch (tiling) {
-diff --git a/drivers/gpu/drm/i915/intel_pm.c b/drivers/gpu/drm/i915/intel_pm.c
-index 7357bddf9ad9..3b490ea1baf0 100644
---- a/drivers/gpu/drm/i915/intel_pm.c
-+++ b/drivers/gpu/drm/i915/intel_pm.c
-@@ -3928,7 +3928,7 @@ skl_ddb_get_pipe_allocation_limits(struct drm_i915_private *dev_priv,
- }
+ 	/* when setting up WB, dispc_plane_pclk_rate() returns 0 */
+ 	if (plane == OMAP_DSS_WB)
+diff --git a/drivers/gpu/drm/omapdrm/omap_fb.c b/drivers/gpu/drm/omapdrm/omap_fb.c
+index 1d4143adf829..8caecfc8d1db 100644
+--- a/drivers/gpu/drm/omapdrm/omap_fb.c
++++ b/drivers/gpu/drm/omapdrm/omap_fb.c
+@@ -15,6 +15,7 @@
+  * this program.  If not, see <http://www.gnu.org/licenses/>.
+  */
  
- static int skl_compute_wm_params(const struct intel_crtc_state *crtc_state,
--				 int width, const struct drm_format_info *format,
-+				 int width, const struct image_format_info *format,
- 				 u64 modifier, unsigned int rotation,
- 				 u32 plane_pixel_rate, struct skl_wm_params *wp,
- 				 int color_plane);
-@@ -3949,7 +3949,7 @@ skl_cursor_allocation(const struct intel_crtc_state *crtc_state,
- 	struct skl_wm_params wp;
++#include <linux/image-formats.h>
+ #include <linux/seq_file.h>
  
- 	ret = skl_compute_wm_params(crtc_state, 256,
--				    drm_format_info(DRM_FORMAT_ARGB8888),
-+				    image_format_drm_lookup(DRM_FORMAT_ARGB8888),
- 				    DRM_FORMAT_MOD_LINEAR,
- 				    DRM_MODE_ROTATE_0,
- 				    crtc_state->pixel_rate, &wp, 0);
-@@ -4644,7 +4644,7 @@ skl_adjusted_plane_pixel_rate(const struct intel_crtc_state *cstate,
+ #include <drm/drm_crtc.h>
+@@ -60,7 +61,7 @@ struct plane {
+ struct omap_framebuffer {
+ 	struct drm_framebuffer base;
+ 	int pin_count;
+-	const struct drm_format_info *format;
++	const struct image_format_info *format;
+ 	struct plane planes[2];
+ 	/* lock for pinning (pin_count and planes.dma_addr) */
+ 	struct mutex lock;
+@@ -72,7 +73,7 @@ static const struct drm_framebuffer_funcs omap_framebuffer_funcs = {
+ };
  
- static int
- skl_compute_wm_params(const struct intel_crtc_state *crtc_state,
--		      int width, const struct drm_format_info *format,
-+		      int width, const struct image_format_info *format,
- 		      u64 modifier, unsigned int rotation,
- 		      u32 plane_pixel_rate, struct skl_wm_params *wp,
- 		      int color_plane)
-diff --git a/drivers/gpu/drm/i915/intel_sprite.c b/drivers/gpu/drm/i915/intel_sprite.c
-index e35601b1f878..152b58267671 100644
---- a/drivers/gpu/drm/i915/intel_sprite.c
-+++ b/drivers/gpu/drm/i915/intel_sprite.c
-@@ -325,8 +325,8 @@ skl_plane_max_stride(struct intel_plane *plane,
- 		     u32 pixel_format, u64 modifier,
- 		     unsigned int rotation)
+ static u32 get_linear_addr(struct drm_framebuffer *fb,
+-		const struct drm_format_info *format, int n, int x, int y)
++		const struct image_format_info *format, int n, int x, int y)
  {
--	const struct drm_format_info *info = drm_format_info(pixel_format);
--	int cpp = drm_format_info_plane_cpp(info, 0);
-+	const struct image_format_info *info = image_format_drm_lookup(pixel_format);
-+	int cpp = image_format_info_plane_cpp(info, 0);
+ 	struct omap_framebuffer *omap_fb = to_omap_framebuffer(fb);
+ 	struct plane *plane = &omap_fb->planes[n];
+@@ -126,7 +127,7 @@ void omap_framebuffer_update_scanout(struct drm_framebuffer *fb,
+ 		struct drm_plane_state *state, struct omap_overlay_info *info)
+ {
+ 	struct omap_framebuffer *omap_fb = to_omap_framebuffer(fb);
+-	const struct drm_format_info *format = omap_fb->format;
++	const struct image_format_info *format = omap_fb->format;
+ 	struct plane *plane = &omap_fb->planes[0];
+ 	u32 x, y, orient = 0;
  
- 	/*
- 	 * "The stride in bytes must not exceed the
 -- 
 git-series 0.9.1
