@@ -2,317 +2,138 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 46270C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 03:30:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4C08DC10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 03:32:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id EAB2E21773
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 03:30:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 195B121773
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 03:32:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="SJPDQbM1"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729790AbfDQDaG (ORCPT
+        id S1730193AbfDQDcB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 23:30:06 -0400
-Received: from lucky1.263xmail.com ([211.157.147.135]:52058 "EHLO
-        lucky1.263xmail.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727618AbfDQDaG (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 23:30:06 -0400
-X-Greylist: delayed 422 seconds by postgrey-1.27 at vger.kernel.org; Tue, 16 Apr 2019 23:30:02 EDT
-Received: from zhangqing?rock-chips.com (unknown [192.168.167.43])
-        by lucky1.263xmail.com (Postfix) with ESMTP id B7BCB2F584;
-        Wed, 17 Apr 2019 11:22:56 +0800 (CST)
-X-263anti-spam: KSV:0;BIG:0;
-X-MAIL-GRAY: 0
-X-MAIL-DELIVERY: 1
-X-KSVirus-check: 0
-X-ADDR-CHECKED4: 1
-X-ABS-CHECKED: 0
-X-SKE-CHECKED: 0
-X-ANTISPAM-LEVEL: 2
-Received: from [172.16.12.236] (unknown [58.22.7.114])
-        by smtp.263.net (postfix) whith ESMTP id P30916T140176444028672S1555471374916933_;
-        Wed, 17 Apr 2019 11:22:56 +0800 (CST)
-X-IP-DOMAINF: 1
-X-UNIQUE-TAG: <020b41a7e80fdb0536edcef5a9450d35>
-X-RL-SENDER: zhangqing@rock-chips.com
-X-SENDER: zhangqing@rock-chips.com
-X-LOGIN-NAME: zhangqing@rock-chips.com
-X-FST-TO: huangtao@rock-chips.com
-X-SENDER-IP: 58.22.7.114
-X-ATTACHMENT-NUM: 0
-X-DNS-TYPE: 0
-Subject: Re: [PATCH v1 1/3] thermal: rockchip: add pinctrl control
-To:     Daniel Lezcano <daniel.lezcano@linaro.org>, heiko@sntech.de
-Cc:     rui.zhang@intel.com, edubezval@gmail.com, robh+dt@kernel.org,
-        mark.rutland@arm.com, linux-pm@vger.kernel.org,
-        devicetree@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
-        linux-rockchip@lists.infradead.org, linux-kernel@vger.kernel.org,
-        xxx@rock-chips.com, xf@rock-chips.com, huangtao@rock-chips.com
-References: <1554100985-11385-1-git-send-email-zhangqing@rock-chips.com>
- <1554100985-11385-2-git-send-email-zhangqing@rock-chips.com>
- <30325add-d75a-6775-50c0-d2d2274ff81e@linaro.org>
- <db977a75-195f-4c98-ef84-aa186b484e0d@rock-chips.com>
- <6267ffc8-6ca4-86ad-7f87-c669bc9f3454@linaro.org>
-From:   "elaine.zhang" <zhangqing@rock-chips.com>
-Organization: rockchip
-Message-ID: <659a1c49-71e6-ab76-1ec1-b4f6c2843650@rock-chips.com>
-Date:   Wed, 17 Apr 2019 11:22:54 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
-MIME-Version: 1.0
-In-Reply-To: <6267ffc8-6ca4-86ad-7f87-c669bc9f3454@linaro.org>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Transfer-Encoding: 8bit
+        Tue, 16 Apr 2019 23:32:01 -0400
+Received: from mail-eopbgr40040.outbound.protection.outlook.com ([40.107.4.40]:9668
+        "EHLO EUR03-DB5-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727618AbfDQDcA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 23:32:00 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=GZVyEs3kKclVL75X4mVA8Jbw6qvnT381/7Q8bTp9QiA=;
+ b=SJPDQbM1+2qsFtm5mt15weNfuPSg6xzIOE/Dgk0JgLrlqzDL3ync46daBPKZfKVWTmPC6/kCNvpsYhCJ7iGIqDmeXaFp6jBZaxUlLDNPx+SJpxO2Q+9n5CKdxEATKNOROTRoXjcren5a77mXVWLFKpBDJB0QZVUNPMKz/GZd1LI=
+Received: from AM0PR04MB4211.eurprd04.prod.outlook.com (52.134.92.158) by
+ AM0PR04MB6465.eurprd04.prod.outlook.com (20.179.253.78) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1813.12; Wed, 17 Apr 2019 03:31:56 +0000
+Received: from AM0PR04MB4211.eurprd04.prod.outlook.com
+ ([fe80::8cda:4e52:8e87:8f0e]) by AM0PR04MB4211.eurprd04.prod.outlook.com
+ ([fe80::8cda:4e52:8e87:8f0e%2]) with mapi id 15.20.1792.021; Wed, 17 Apr 2019
+ 03:31:56 +0000
+From:   Aisheng Dong <aisheng.dong@nxp.com>
+To:     Anson Huang <anson.huang@nxp.com>,
+        "robh+dt@kernel.org" <robh+dt@kernel.org>,
+        "mark.rutland@arm.com" <mark.rutland@arm.com>,
+        "shawnguo@kernel.org" <shawnguo@kernel.org>,
+        "s.hauer@pengutronix.de" <s.hauer@pengutronix.de>,
+        "kernel@pengutronix.de" <kernel@pengutronix.de>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
+        "will.deacon@arm.com" <will.deacon@arm.com>,
+        "rui.zhang@intel.com" <rui.zhang@intel.com>,
+        "edubezval@gmail.com" <edubezval@gmail.com>,
+        "daniel.lezcano@linaro.org" <daniel.lezcano@linaro.org>,
+        "ulf.hansson@linaro.org" <ulf.hansson@linaro.org>,
+        Daniel Baluta <daniel.baluta@nxp.com>,
+        Peng Fan <peng.fan@nxp.com>,
+        "heiko@sntech.de" <heiko@sntech.de>,
+        "horms+renesas@verge.net.au" <horms+renesas@verge.net.au>,
+        "agross@kernel.org" <agross@kernel.org>,
+        "olof@lixom.net" <olof@lixom.net>,
+        "bjorn.andersson@linaro.org" <bjorn.andersson@linaro.org>,
+        "jagan@amarulasolutions.com" <jagan@amarulasolutions.com>,
+        "enric.balletbo@collabora.com" <enric.balletbo@collabora.com>,
+        "marc.w.gonzalez@free.fr" <marc.w.gonzalez@free.fr>,
+        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        "linux-arm-kernel@lists.infradead.org" 
+        <linux-arm-kernel@lists.infradead.org>,
+        "linux-pm@vger.kernel.org" <linux-pm@vger.kernel.org>
+CC:     dl-linux-imx <linux-imx@nxp.com>
+Subject: RE: [PATCH V12 1/5] dt-bindings: fsl: scu: add thermal binding
+Thread-Topic: [PATCH V12 1/5] dt-bindings: fsl: scu: add thermal binding
+Thread-Index: AQHU9AOTUGgOS08iR0aOB0ANqNq0mqY/s5cw
+Date:   Wed, 17 Apr 2019 03:31:55 +0000
+Message-ID: <AM0PR04MB42118E59E441BE043A3BE54F80250@AM0PR04MB4211.eurprd04.prod.outlook.com>
+References: <1555384609-7030-1-git-send-email-Anson.Huang@nxp.com>
+In-Reply-To: <1555384609-7030-1-git-send-email-Anson.Huang@nxp.com>
+Accept-Language: zh-CN, en-US
 Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=aisheng.dong@nxp.com; 
+x-originating-ip: [119.31.174.66]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 9a41f927-9e57-412f-7ce3-08d6c2e53deb
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600140)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:AM0PR04MB6465;
+x-ms-traffictypediagnostic: AM0PR04MB6465:
+x-microsoft-antispam-prvs: <AM0PR04MB646526034F033ECD8FECCB3F80250@AM0PR04MB6465.eurprd04.prod.outlook.com>
+x-forefront-prvs: 0010D93EFE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(376002)(346002)(396003)(136003)(366004)(39860400002)(189003)(199004)(66066001)(74316002)(86362001)(186003)(99286004)(2501003)(6506007)(76176011)(6246003)(44832011)(6116002)(3846002)(2201001)(97736004)(4326008)(26005)(55016002)(9686003)(102836004)(53936002)(316002)(110136005)(2906002)(25786009)(476003)(478600001)(105586002)(81156014)(6436002)(486006)(106356001)(229853002)(33656002)(256004)(81166006)(7416002)(8936002)(446003)(305945005)(11346002)(52536014)(7736002)(7696005)(5660300002)(68736007)(71190400001)(71200400001)(14454004)(8676002)(21314003)(921003)(1121003);DIR:OUT;SFP:1101;SCL:1;SRVR:AM0PR04MB6465;H:AM0PR04MB4211.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;MX:1;A:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: XUxqdTzg6azgAN6tnFkeTsVLLTQKiFk3mNLKIn/G3lWOkYiynoNcreDNBj5nBACh+FJQlSGPhrWKzoXcggKfprJe6v8C5O0lUSpRMW4qql7I5XIEnCQvsOFcYOn6YQVzldX6ln5ZFRH+NM3ha2kILraasjc3BONF+TEtP9FuZ7+/+9Hlal3lhwRl8l7pPiJz8CHeVZnEvuh1wVqQ/ypXavnTBaX9OmE2oBKaTreEwdv7QRWu9iec/4UrCagHuoCCMt0AA2NRtbTEZ0UBT0dEuypsK7Lw/X7CCZu0/pjyagep7gOF7vc8WhBxfNmmyVTSmhPrNUYcE9LO0+XDm86VGpgHnBp1LpnWCvxbhxNrgtzuZmUUEjNkXLzgs5iUzRKOeK5/p8r7sxmCEq+E3ykS+7HdfCChuyYBNaZEuKeBNO4=
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: base64
+MIME-Version: 1.0
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 9a41f927-9e57-412f-7ce3-08d6c2e53deb
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Apr 2019 03:31:55.9404
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: AM0PR04MB6465
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-hi,
-
-在 2019/4/16 下午6:12, Daniel Lezcano 写道:
-> Hi Elaine,
->
-> On 11/04/2019 09:46, elaine.zhang wrote:
->> hi,
->>
->> 在 2019/4/4 上午11:03, Daniel Lezcano 写道:
->>> On 01/04/2019 08:43, Elaine Zhang wrote:
->>>> Based on the TSADC Tshut mode to select pinctrl,
->>>> instead of setting pinctrl based on architecture
->>>> (Not depends on pinctrl setting by "init" or "default").
->>>> And it requires setting the tshut polarity before select pinctrl.
->>> I'm not sure to fully read the description. Can you rephrase/elaborate
->>> the changelog?
->> Example:
->>          tsadc: tsadc@ff250000 {
->>                      compatible = "rockchip,rk3328-tsadc";
->>                      .....
->>                  pinctrl-names = "init", "default", "sleep";
->>                      pinctrl-0 = <&otp_gpio>;
->>                      pinctrl-1 = <&otp_out>;
->>                      pinctrl-2 = <&otp_gpio>;
->>                      status = "disabled";
->>                  .....
->>              };
->>          &tsadc {
->>                  rockchip,hw-tshut-mode = <0>; /* tshut mode 0:CRU 1:GPIO */
->>                  status = "okay";
->>          };
->>      Application on the product, hope tsadc overtemperature reset cru to
->> restart.
->>      But when pinctrl is initialized, it will setting pinctrl by "init"
->> and "default".
->>      So the pinctrl will set iomux to "otp_out", which may be make system
->> crash.
-> why?
-This "otp_out" IO may be connected to the RESET circuit on the hardware. 
-If the IO is in the wrong state, it will trigger RESET (similar to the 
-effect of pressing the RESET button), which will cause the system to 
-restart all the time.
->
->>      tsadc gpio iomux:
->>      "otp_gpio" : just normal gpio, keep default level.
->>      "otp_out" : tsadc shut down io, when overtemperature,this io may be
->> trigger high
->>      level or low level(depend on the tsadc polarity).
->>
->>      After correction:
->>      if rockchip,hw-tshut-mode = <0>; (tsadc overtemperature reset cru to
->> restart)
->>      select pinctrl to otp_gpio
->>      if rockchip,hw-tshut-mode = <1>;(tsadc overtemperature IO triggers
->> output at high or low levels)
->>      select pinctrl to otp_out.
->>      Actively select iomux based on rockchip,hw-tshut-mode,
->>      rather than relying on the pinctrl framework to select iomux.
-> Let me rephrase it and tell me if I understood correctly:
->
-> "When the temperature sensor mode is set to 0, it will automatically
-> reset the board via the Clock-Reset-Unit (CRU) if the over temperature
-> threshold is reached. However, when the pinctrl initializes, it does a
-> transition to "otp_out" which may lead the SoC to crash (why?)
->
-> Explicitly use the pinctrl to set/unset the right mode instead of
-> relying on the pinctrl init mode"
-This explanation is correct.
->
-> So this patch is a fix and it must contain the Fixes: ... tag.
-OK, I'll fix that in the v2.
->
->
->>>> Signed-off-by: Elaine Zhang <zhangqing@rock-chips.com>
->>>> ---
->>>>    drivers/thermal/rockchip_thermal.c | 61
->>>> +++++++++++++++++++++++++++++++-------
->>>>    1 file changed, 50 insertions(+), 11 deletions(-)
->>>>
->>>> diff --git a/drivers/thermal/rockchip_thermal.c
->>>> b/drivers/thermal/rockchip_thermal.c
->>>> index 9c7643d62ed7..faa6c7792155 100644
->>>> --- a/drivers/thermal/rockchip_thermal.c
->>>> +++ b/drivers/thermal/rockchip_thermal.c
->>>> @@ -34,7 +34,7 @@
->>>>     */
->>>>    enum tshut_mode {
->>>>        TSHUT_MODE_CRU = 0,
->>>> -    TSHUT_MODE_GPIO,
->>>> +    TSHUT_MODE_OTP,
->>> Why do you change the enum name? The impact on the patch is much higher,
->>> no ?
->> I just want to make it a little bit more intuitive to understand the
->> definition of mode.
->>
->> TSHUT_MODE_CRU: pinctrl select iomux to otp_gpio,the io is normal io.
->> TSHUT_MODE_OTP: pinctrl select iomux to otp_out, the io is tsadc shut io.
-> I understand, but at the end the changes for this patch are counter
-> intuitive, so it is preferable to keep it as is so we can review the
-> important part.
->
-> [ ... ]
-OK, keep the enum name. I'll fix it in the V2.
->
->>>>    +static void thermal_pinctrl_select_otp(struct
->>>> rockchip_thermal_data *thermal)
->>>> +{
->>>> +    if (!IS_ERR(thermal->pinctrl) &&
->>>> !IS_ERR_OR_NULL(thermal->otp_state))
->>>> +        pinctrl_select_state(thermal->pinctrl,
->>>> +                     thermal->otp_state);
->>>> +}
->>>> +
->>>> +static void thermal_pinctrl_select_gpio(struct rockchip_thermal_data
->>>> *thermal)
->>>> +{
->>>> +    if (!IS_ERR(thermal->pinctrl) &&
->>>> !IS_ERR_OR_NULL(thermal->gpio_state))
->>>> +        pinctrl_select_state(thermal->pinctrl,
->>>> +                     thermal->gpio_state);
->>>> +}
->>> You should not have to create a couple of specific functions just to
->>> check the pinctrl pointers are set. The caller should do that.
->> Because there are several places where the call is made,create a couple
->> of specific functions reduce a lot of duplicated code.
-> No, that does not reduce a lot of duplicated code, it hides the fact
-> there is no control from the caller. See the comments below.
->
-> [ ... ]
-OK, I'll fix it in the V2.
->
->>>>    static int rockchip_configure_from_dt(struct device *dev,
->>>>                          struct device_node *np,
->>>>                          struct rockchip_thermal_data *thermal)
->>>> @@ -1103,7 +1120,7 @@ static int rockchip_configure_from_dt(struct
->>>> device *dev,
->>>>        if (of_property_read_u32(np, "rockchip,hw-tshut-mode",
->>>> &tshut_mode)) {
->>>>            dev_warn(dev,
->>>>                 "Missing tshut mode property, using default (%s)\n",
->>>> -             thermal->chip->tshut_mode == TSHUT_MODE_GPIO ?
->>>> +             thermal->chip->tshut_mode == TSHUT_MODE_OTP ?
->>>>                    "gpio" : "cru");
->>>>            thermal->tshut_mode = thermal->chip->tshut_mode;
->>>>        } else {
->>>> @@ -1242,6 +1259,8 @@ static int rockchip_thermal_probe(struct
->>>> platform_device *pdev)
->>>>            return error;
->>>>        }
->>>>    +    thermal->chip->control(thermal->regs, false);
->>>> +
->>>>        error = clk_prepare_enable(thermal->clk);
->>>>        if (error) {
->>>>            dev_err(&pdev->dev, "failed to enable converter clock: %d\n",
->>>> @@ -1267,6 +1286,24 @@ static int rockchip_thermal_probe(struct
->>>> platform_device *pdev)
->>>>        thermal->chip->initialize(thermal->grf, thermal->regs,
->>>>                      thermal->tshut_polarity);
->>>>    +    if (thermal->tshut_mode == TSHUT_MODE_OTP) {
->>>> +        thermal->pinctrl = devm_pinctrl_get(&pdev->dev);
->>>> +        if (IS_ERR(thermal->pinctrl))
->>>> +            dev_err(&pdev->dev, "failed to find thermal pinctrl\n");
->>>> +
->>>> +        thermal->gpio_state = pinctrl_lookup_state(thermal->pinctrl,
->>>> +                               "gpio");
-> panic if devm_pinctrl_get fails.
-OK, It's good advice. I'll fix it in the V2.
->
->>>> +        if (IS_ERR_OR_NULL(thermal->gpio_state))
->>>> +            dev_err(&pdev->dev, "failed to find thermal gpio state\n");
->>>> +
->>>> +        thermal->otp_state = pinctrl_lookup_state(thermal->pinctrl,
->>>> +                              "otpout");
->>>> +        if (IS_ERR_OR_NULL(thermal->otp_state))
->>>> +            dev_err(&pdev->dev, "failed to find thermal otpout
->>>> state\n");
->>> What is the meaning for the rest of the code if the lookup fails for any
->>> of those ?
->> If the lookup fails for any of those， The pinctrl is no longer set and
->> remains in its default state(otp_gpio normal io).
->>>> +        thermal_pinctrl_select_otp(thermal);
->>>> +    }
->>>> +
-> It is pointless to have a otp_state and a gpio_state field. Just use one
-> as the configuration tells you which lookup to do.
->
-> In case of error, just bail out. It is pointless to continue with a
-> broken configuration.
-If the DST node is not modified synchronously, which may cause the 
-rockchip_thermal driver probe failed.
-Should I ignore this?
->
-> 	thermal->pinctrl = devm_pinctrl_get(&pdev->dev);
-> 	if (IS_ERR(thermal->pinctrl)) {
-> 		dev_err(&pdev->dev, "....");
-> 		return PTR_ERR(thermal->pinctrl);
-> 	}
->
-> 	thermal->pinctrl_state =
-> 		pinctrl_lookup_state(thermal->pinctrl,
-> 			thermal->tshut_mode == TSHUT_MODE_OTP ?
-> 			"otp" : "gpio");
->
-> 	if (IS_ERR_OR_NULL(thermal->pinctrl_state)) {
-> 		dev_err(&pdev->dev, "....");
-> 		return -EINVAL;
-> 	}
->
->
-> No need to use the thermal_pinctrl_select_otp/gpio wrappers, just
-> replace them with:
->
-> pinctrl_select_state(thermal->pinctrl, thermal->pinctrl_state);
->
-> and use it unconditionally.
-OK. I'll fix it in the V2.
->
->
->>>>        for (i = 0; i < thermal->chip->chn_num; i++) {
->>>>            error = rockchip_thermal_register_sensor(pdev, thermal,
->>>>                            &thermal->sensors[i],
->>>> @@ -1338,7 +1375,8 @@ static int __maybe_unused
->>>> rockchip_thermal_suspend(struct device *dev)
->>>>        clk_disable(thermal->pclk);
->>>>        clk_disable(thermal->clk);
->>>>    -    pinctrl_pm_select_sleep_state(dev);
->>>> +    if (thermal->tshut_mode == TSHUT_MODE_OTP)
->>>> +        thermal_pinctrl_select_gpio(thermal);
->>>>          return 0;
->>>>    }
->>>> @@ -1383,7 +1421,8 @@ static int __maybe_unused
->>>> rockchip_thermal_resume(struct device *dev)
->>>>        for (i = 0; i < thermal->chip->chn_num; i++)
->>>>            rockchip_thermal_toggle_sensor(&thermal->sensors[i], true);
->>>>    -    pinctrl_pm_select_default_state(dev);
->>>> +    if (thermal->tshut_mode == TSHUT_MODE_OTP)
->>>> +        thermal_pinctrl_select_otp(thermal);
->>>>          return 0;
->>>>    }
->>>>
->>
->
-
-
+PiBGcm9tOiBBbnNvbiBIdWFuZw0KPiBTZW50OiBUdWVzZGF5LCBBcHJpbCAxNiwgMjAxOSAxMToy
+MiBBTQ0KPiANCj4gTlhQIGkuTVg4UVhQIGlzIGFuIEFSTXY4IFNvQyB3aXRoIGEgQ29ydGV4LU00
+IGNvcmUgaW5zaWRlIGFzIHN5c3RlbQ0KPiBjb250cm9sbGVyLCB0aGUgc3lzdGVtIGNvbnRyb2xs
+ZXIgaXMgaW4gY2hhcmdlIG9mIHN5c3RlbSBwb3dlciwgY2xvY2sgYW5kDQo+IHRoZXJtYWwgc2Vu
+c29ycyBldGMuIG1hbmFnZW1lbnQsIExpbnV4IGtlcm5lbCBoYXMgdG8gY29tbXVuaWNhdGUgd2l0
+aA0KPiBzeXN0ZW0gY29udHJvbGxlciB2aWEgTVUgKG1lc3NhZ2UgdW5pdCkgSVBDIHRvIGdldCB0
+ZW1wZXJhdHVyZSBmcm9tIHRoZXJtYWwNCj4gc2Vuc29ycywgdGhpcyBwYXRjaCBhZGRzIGJpbmRp
+bmcgZG9jIGZvciBpLk1YIHN5c3RlbSBjb250cm9sbGVyIHRoZXJtYWwgZHJpdmVyLg0KPiANCj4g
+U2lnbmVkLW9mZi1ieTogQW5zb24gSHVhbmcgPEFuc29uLkh1YW5nQG54cC5jb20+DQo+IC0tLQ0K
+PiBObyBjaGFuZ2VzLg0KPiAtLS0NCj4gIC4uLi9kZXZpY2V0cmVlL2JpbmRpbmdzL2FybS9mcmVl
+c2NhbGUvZnNsLHNjdS50eHQgICAgICAgIHwgMTYNCj4gKysrKysrKysrKysrKysrKw0KPiAgMSBm
+aWxlIGNoYW5nZWQsIDE2IGluc2VydGlvbnMoKykNCj4gDQo+IGRpZmYgLS1naXQgYS9Eb2N1bWVu
+dGF0aW9uL2RldmljZXRyZWUvYmluZGluZ3MvYXJtL2ZyZWVzY2FsZS9mc2wsc2N1LnR4dA0KPiBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNjYWxlL2ZzbCxzY3Uu
+dHh0DQo+IGluZGV4IDVkN2RiYWIuLmY0ZmI2ZDUgMTAwNjQ0DQo+IC0tLSBhL0RvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNjYWxlL2ZzbCxzY3UudHh0DQo+ICsrKyBi
+L0RvY3VtZW50YXRpb24vZGV2aWNldHJlZS9iaW5kaW5ncy9hcm0vZnJlZXNjYWxlL2ZzbCxzY3Uu
+dHh0DQo+IEBAIC0xMzMsNiArMTMzLDE3IEBAIFJUQyBiaW5kaW5ncyBiYXNlZCBvbiBTQ1UgTWVz
+c2FnZSBQcm90b2NvbA0KPiBSZXF1aXJlZCBwcm9wZXJ0aWVzOg0KPiAgLSBjb21wYXRpYmxlOiBz
+aG91bGQgYmUgImZzbCxpbXg4cXhwLXNjLXJ0YyI7DQo+IA0KPiArVGhlcm1hbCBiaW5kaW5ncyBi
+YXNlZCBvbiBTQ1UgTWVzc2FnZSBQcm90b2NvbA0KPiArLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0t
+LS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tLS0tDQo+ICsNCj4gK1JlcXVpcmVkIHBy
+b3BlcnRpZXM6DQo+ICstIGNvbXBhdGlibGU6CQkJU2hvdWxkIGJlIDoNCj4gKwkJCQkgICJmc2ws
+aW14OHF4cC1zYy10aGVybWFsIg0KPiArCQkJCWZvbGxvd2VkIGJ5ICJmc2wsaW14LXNjLXRoZXJt
+YWwiOw0KPiArDQo+ICstICN0aGVybWFsLXNlbnNvci1jZWxsczoJU2VlDQo+IERvY3VtZW50YXRp
+b24vZGV2aWNldHJlZS9iaW5kaW5ncy90aGVybWFsL3RoZXJtYWwudHh0DQo+ICsJCQkJZm9yIGEg
+ZGVzY3JpcHRpb24uDQoNCkJldHRlciB0byBoYXZlIGFuIGV4cGxpY2l0IHZhbHVlIGhlcmUuDQpl
+LmcuDQpNdXN0IGJlIDEuIFNlZSB4eHggZm9yIGEgZGVzY3JpcHRpb24uDQoNCk90aGVyd2lzZToN
+ClJldmlld2VkLWJ5OiBEb25nIEFpc2hlbmcgPGFpc2hlbmcuZG9uZ0BueHAuY29tPg0KDQpSZWdh
+cmRzDQpEb25nIEFpc2hlbmcNCg==
