@@ -2,223 +2,172 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E9EEBC282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:43:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 78764C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:44:47 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B0A0C206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:43:08 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=efficios.com header.i=@efficios.com header.b="BbbkodkX"
+	by mail.kernel.org (Postfix) with ESMTP id 3F9542173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:44:47 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732482AbfDQOnH (ORCPT
+        id S1732342AbfDQOoq (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 10:43:07 -0400
-Received: from mail.efficios.com ([167.114.142.138]:52554 "EHLO
-        mail.efficios.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727087AbfDQOnG (ORCPT
+        Wed, 17 Apr 2019 10:44:46 -0400
+Received: from mail-it1-f195.google.com ([209.85.166.195]:34087 "EHLO
+        mail-it1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727087AbfDQOop (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 10:43:06 -0400
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 02058B7437;
-        Wed, 17 Apr 2019 10:43:05 -0400 (EDT)
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10032)
-        with ESMTP id C9aWt50T_y2G; Wed, 17 Apr 2019 10:43:04 -0400 (EDT)
-Received: from localhost (ip6-localhost [IPv6:::1])
-        by mail.efficios.com (Postfix) with ESMTP id 53571B7433;
-        Wed, 17 Apr 2019 10:43:04 -0400 (EDT)
-DKIM-Filter: OpenDKIM Filter v2.10.3 mail.efficios.com 53571B7433
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=efficios.com;
-        s=default; t=1555512184;
-        bh=JUAnWFz+MyVnxpt2VcYfr/zD4CfFvd8t8LGA/XJXX2g=;
-        h=Date:From:To:Message-ID:MIME-Version;
-        b=BbbkodkXE3+7tZ9nZRHvCcTilWutzJ2mgOwf74sImCZK1amR+H/xqIblcaem/KpGv
-         WplMnQqmDOAdPYc5wH0u0zCCEQGM+pB7e97WBBkSlV3GkBDlq2g81SwGG2bjM7V3Ul
-         aAhWf2SSDu2stHzzk79InFLyPdubaG+dMUazXKVvwY08hRzXvHouBitHVHEMcoycgp
-         Cptex695qWRPtvcNCQa+N+mQk27KAYg1XQK2gVb99cBERVECzEW+/MW4Sv1PERRpAA
-         KHlniymZxXsAzrCZhJdFuiCATS+tkTNiKKfRR15OiFgFZKJda0AS4o5lTbmlEa7yTK
-         OWus99ymPpBOQ==
-X-Virus-Scanned: amavisd-new at efficios.com
-Received: from mail.efficios.com ([IPv6:::1])
-        by localhost (mail02.efficios.com [IPv6:::1]) (amavisd-new, port 10026)
-        with ESMTP id v_yy-jDIjGsP; Wed, 17 Apr 2019 10:43:04 -0400 (EDT)
-Received: from mail02.efficios.com (mail02.efficios.com [167.114.142.138])
-        by mail.efficios.com (Postfix) with ESMTP id 3EFA0B7426;
-        Wed, 17 Apr 2019 10:43:04 -0400 (EDT)
-Date:   Wed, 17 Apr 2019 10:43:04 -0400 (EDT)
-From:   Mathieu Desnoyers <mathieu.desnoyers@efficios.com>
-To:     richard earnshaw <Richard.Earnshaw@arm.com>
-Cc:     peter maydell <peter.maydell@linaro.org>,
-        Will Deacon <will.deacon@arm.com>,
-        libc-alpha <libc-alpha@sourceware.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        carlos <carlos@redhat.com>
-Message-ID: <1583901617.467.1555512184036.JavaMail.zimbra@efficios.com>
-In-Reply-To: <cecd4a6e-4a36-1785-4f65-486ba3847a06@arm.com>
-References: <1050734985.2625.1554838340011.JavaMail.zimbra@efficios.com> <1469455003.811.1555005112414.JavaMail.zimbra@efficios.com> <CAFEAcA849mmSds9euyvR2uLWqEeA2eedkmcq1O4pT6-S0oK8BA@mail.gmail.com> <936773156.261.1555333890988.JavaMail.zimbra@efficios.com> <CAFEAcA8YP5vvZpa_5dvv00koupsry9_3x2EB0cjvE6vtoi8sog@mail.gmail.com> <71495082.295.1555335441325.JavaMail.zimbra@efficios.com> <755179555.1337.1555421945337.JavaMail.zimbra@efficios.com> <cecd4a6e-4a36-1785-4f65-486ba3847a06@arm.com>
-Subject: Re: rseq/arm32: choosing rseq code signature
+        Wed, 17 Apr 2019 10:44:45 -0400
+Received: by mail-it1-f195.google.com with SMTP id z17so5549426itc.1
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 07:44:44 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=swy+eGKD6+hgCXXwFpR0lwbY+OP6aRVcMU67rirpl1s=;
+        b=N7EtPMaqp2RA2F5KytQkUs9IqmSrJb/79bryxWhHgHSz3tyqze/pzgyYx3bRok5m+S
+         5CIRdWn8dBEr5q4EJPAtWmC08lXWpaAKme1QlEHrNPalnKdD1iEHDMEjIkO3HZsHkSVn
+         QfnWn5EwxYXJjDfy6uoPt3e9rW6b2pobdaCHX2C6L2gOAIzVXoISnwrWAT+qeSXf5EkL
+         nH36j3DwKmiFEMuUUnVOIArHOHpU+nJKbh+NLuZbzjPGTGOp6vA8E7EB4qqrpaEMSRkW
+         F6OsAMpdmMZmue2HRrSP0EJWV4smNWRAX/zqTknNASxpdXkt7kOrnD2QsSIcdx8l9xCw
+         lhhw==
+X-Gm-Message-State: APjAAAUIA4n97QrJ2Gp+whWwofMYinMQYTBt6THlfedzWCWqMHs/9EzU
+        Fq5Y+rJF65jg3kkZO+oN6iu4MEIB8RtP5S917dY3Pg==
+X-Google-Smtp-Source: APXvYqytpTGhrZi38ve9hbxEPSXtbtFkV31D0vNL5snzjWLq27rS9Gafx8F48tMRK5tGAjRk4WISNR8u3HoVIxlLtw8=
+X-Received: by 2002:a24:3d94:: with SMTP id n142mr32260859itn.147.1555512284495;
+ Wed, 17 Apr 2019 07:44:44 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [167.114.142.138]
-X-Mailer: Zimbra 8.8.12_GA_3794 (ZimbraWebClient - FF66 (Linux)/8.8.12_GA_3794)
-Thread-Topic: rseq/arm32: choosing rseq code signature
-Thread-Index: Kl7P3cfIxmCIehH4hF96wGRn+XPyHQ==
+References: <20190408165942.23640-1-kasong@redhat.com> <20190415153622.GG12232@hirez.programming.kicks-ass.net>
+ <20190415165859.ul7i2w3lai3umgik@treble> <CACPcB9f8OJmk++54YwW3yhrnohj31+oJcxfesJbNbNSGk9WUQQ@mail.gmail.com>
+ <CACPcB9f0D4SdJLAtUs4vYwduBiPYDpa-y8r7jracYy=sAJmo5g@mail.gmail.com> <20190416201559.d267liiwpjvo3wet@treble>
+In-Reply-To: <20190416201559.d267liiwpjvo3wet@treble>
+From:   Kairui Song <kasong@redhat.com>
+Date:   Wed, 17 Apr 2019 22:44:33 +0800
+Message-ID: <CACPcB9cuvNt-+gw8_LzqDLZ-nZ+G_zLcSv6nftNONrYxVRx=wg@mail.gmail.com>
+Subject: Re: [RFC PATCH v2] perf/x86: make perf callchain work without CONFIG_FRAME_POINTER
+To:     Josh Poimboeuf <jpoimboe@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        Jiri Olsa <jolsa@redhat.com>,
+        Namhyung Kim <namhyung@kernel.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Borislav Petkov <bp@alien8.de>, Dave Young <dyoung@redhat.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
------ On Apr 17, 2019, at 6:37 AM, richard earnshaw Richard.Earnshaw@arm.com wrote:
+On Wed, Apr 17, 2019 at 4:16 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+>
+> On Wed, Apr 17, 2019 at 01:39:19AM +0800, Kairui Song wrote:
+> > On Tue, Apr 16, 2019 at 7:30 PM Kairui Song <kasong@redhat.com> wrote:
+> > >
+> > > On Tue, Apr 16, 2019 at 12:59 AM Josh Poimboeuf <jpoimboe@redhat.com> wrote:
+> > > >
+> > > > On Mon, Apr 15, 2019 at 05:36:22PM +0200, Peter Zijlstra wrote:
+> > > > >
+> > > > > I'll mostly defer to Josh on unwinding, but a few comments below.
+> > > > >
+> > > > > On Tue, Apr 09, 2019 at 12:59:42AM +0800, Kairui Song wrote:
+> > > > > > diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+> > > > > > index e2b1447192a8..6075a4f94376 100644
+> > > > > > --- a/arch/x86/events/core.c
+> > > > > > +++ b/arch/x86/events/core.c
+> > > > > > @@ -2355,6 +2355,12 @@ void arch_perf_update_userpage(struct perf_event *event,
+> > > > > >     cyc2ns_read_end();
+> > > > > >  }
+> > > > > >
+> > > > > > +static inline int
+> > > > > > +valid_perf_registers(struct pt_regs *regs)
+> > > > > > +{
+> > > > > > +   return (regs->ip && regs->bp && regs->sp);
+> > > > > > +}
+> > > > >
+> > > > > I'm unconvinced by this, with both guess and orc having !bp is perfectly
+> > > > > valid.
+> > > > >
+> > > > > >  void
+> > > > > >  perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *regs)
+> > > > > >  {
+> > > > > > @@ -2366,11 +2372,17 @@ perf_callchain_kernel(struct perf_callchain_entry_ctx *entry, struct pt_regs *re
+> > > > > >             return;
+> > > > > >     }
+> > > > > >
+> > > > > > -   if (perf_callchain_store(entry, regs->ip))
+> > > > > > +   if (valid_perf_registers(regs)) {
+> > > > > > +           if (perf_callchain_store(entry, regs->ip))
+> > > > > > +                   return;
+> > > > > > +           unwind_start(&state, current, regs, NULL);
+> > > > > > +   } else if (regs->sp) {
+> > > > > > +           unwind_start(&state, current, NULL, (unsigned long *)regs->sp);
+> > > > > > +   } else {
+> > > > > >             return;
+> > > > > > +   }
+> > > > >
+> > > > > AFAICT if we, by pure accident, end up with !bp for ORC, then we
+> > > > > initialize the unwind wrong.
+> > > > >
+> > > > > Note that @regs is mostly trivially correct, except for that tracepoint
+> > > > > case. So I don't think we should magic here.
+> > > >
+> > > > Ah, I didn't quite understand this code before, and I still don't
+> > > > really, but I guess the issue is that @regs can be either real or fake.
+> > > >
+> > > > In the real @regs case, we just want to always unwind starting from
+> > > > regs->sp.
+> > > >
+> > > > But in the fake @regs case, we should instead unwind from the current
+> > > > frame, skipping all frames until we hit the fake regs->sp.  Because
+> > > > starting from fake/incomplete regs is most likely going to cause
+> > > > problems with ORC (or DWARF for other arches).
+> > > >
+> > > > The idea of a fake regs is fragile and confusing.  Is it possible to
+> > > > just pass in the "skip" stack pointer directly instead?  That should
+> > > > work for both FP and non-FP.  And I _think_ there's no need to ever
+> > > > capture regs->bp anyway -- the stack pointer should be sufficient.
+> > >
+> > > Hi, that will break some other usage, if perf_callchain_kernel is
+> > > called but it won't unwind to the callsite (could be produced by
+> > > attach an ebpf call to kprobe), things will also go wrong. It should
+> > > start with given registers when the register is valid.
+> > > And it's true with omit frame pointer BP value could be anything, so 0
+> > > is also valid, I think I need to find a better way to tell if we could
+> > > start with the registers value or direct start unwinding and skip
+> > > until got the stack.
+> > >
+> >
+> > Hi, sorry I might have some misunderstanding. Adding an extra argument
+> > (eg. skip_sp) to indicate if it should just unwind from the current
+> > frame, and use SP as the "skip mark", should work well.
+> >
+> > And I also think the "fake"/"real" reg is fragile, could we abuse
+> > another eflag (just like PERF_EFLAGS_EXACT) to indicate the regs are
+> > partially dumped fake registers? So perf_callchain_kernel just check
+> > if it's a "partial registers", and in such case it can start unwinding
+> > and skip until it get to SP. This make it easier to tell if the
+> > registers are "fake".
+>
+> If you do the regs->eflags thing to mark the regs as fake in
+> (perf_arch_fetch_caller_regs()), then I don't think skip_sp would be
+> needed, because regs->sp could probably mark the skip point.
+>
+> Instead I was actually hoping we could get rid of fake regs and
+> perf_arch_fetch_caller_regs() altogether, because it's a nasty hack.
+> But I don't know what else those fake regs are used for.
+>
 
-> On 16/04/2019 14:39, Mathieu Desnoyers wrote:
->> ----- On Apr 15, 2019, at 9:37 AM, Mathieu Desnoyers
->> mathieu.desnoyers@efficios.com wrote:
->> 
->>> ----- On Apr 15, 2019, at 9:30 AM, peter maydell peter.maydell@linaro.org wrote:
->>>
->>>> On Mon, 15 Apr 2019 at 14:11, Mathieu Desnoyers
->>>> <mathieu.desnoyers@efficios.com> wrote:
->>>>>
->>>>> ----- On Apr 11, 2019, at 3:55 PM, peter maydell peter.maydell@linaro.org wrote:
->>>>>
->>>>>> On Thu, 11 Apr 2019 at 18:51, Mathieu Desnoyers
->>>>>> <mathieu.desnoyers@efficios.com> wrote:
->>>>>>>  * This translates to the following instruction pattern in the T16 instruction
->>>>>>>  * set:
->>>>>>>  *
->>>>>>>  * little endian:
->>>>>>>  * def3        udf    #243      ; 0xf3
->>>>>>>  * e7f5        b.n    <7f5>
->>>>>>>  *
->>>>>>>  * big endian:
->>>>>>>  * e7f5        b.n    <7f5>
->>>>>>>  * def3        udf    #243      ; 0xf3
->>>>>>
->>>>>> Do we really care about big-endian instruction-ordering for Thumb?
->>>>>> It requires (AIUI) either an ARMv7R CPU which implements and sets
->>>>>> SCTLR.IE to 1, or a v6-or-earlier CPU using BE32, and it's going to
->>>>>> be even rarer than normal BE8 big-endian...
->>>>>
->>>>> I don't think we care enough about it to look for a trick to
->>>>> turn the branch into something else (which would not branch away from the
->>>>> udf instruction), but considering this signature will be ABI, it's good to
->>>>> be thorough documentation-wise and cover all existing cases.
->>>>
->>>> I think if you want to document it it would be helpful to
->>>> readers to make it clear that this is the ultra-rare
->>>> big-endian-instruction-order "big endian Thumb", not the only
->>>> moderately-rare little-endian-instructions-big-endian-data
->>>> "big endian Thumb".
->>>
->>> I'm actually very much concerned about environments with big endian
->>> data and little endian code. Which gcc compiler flags do I need to
->>> use to test it ?
->>>
->>> I'm concerned about a signature mismatch between what is passed to
->>> the rseq system call ("data-endian signature") and what is generated
->>> in the code ("instruction-endian signature").
->> 
->> Based on this page:
->> http://infocenter.arm.com/help/index.jsp?topic=/com.arm.doc.ddi0360f/CDFBBCHB.html
->> 
->> My understanding is that the situation is as follows (please confirm):
->> 
->> - Prior to ARMv6, you could build and run code that is either big or little
->> endian,
->>   given you had a matching Linux kernel endianness. Code and data endianness
->>   needed
->>   to match,
->> - Starting from ARMv6, only little endian code is supported. The endianness for
->> data
->>   access can be changed through bit [9], the E bit, of the Program Status
->>   Register,
->>   (mixed endianness)
->> 
->> Looking at ARM build options for gcc, it seems you can select either big or
->> little
->> endian (-mbig-endian or -mlittle-endian (default)) which affects both
->> instruction and
->> data endianness. So I suspect the -mbig-endian option is really only useful for
->> pre-ARMv6.
-> 
-> -mbig-endian is still correct, even on later architectures.  The linker
-> gets involved, however, and (using the mapping symbol information) swaps
-> the code segments to little-endian form (this is why you have to use
-> .inst rather than .word when inserting instructions, so that the correct
-> mapping symbols are inserted).
-
-So what you're saying is that if I have:
-
-void main()
-{
-        asm volatile (
-                        ".arm\n\t"
-                        ".inst 0xe7f5def3\n\t"
-                        ".long 0xe7f5def3\n\t");
-}
-
-and compile it with:
-
-arm-linux-gnueabihf-gcc -mbig-endian -march=armv6 -c -o arm-big-endianv6.o arm-test-endian.c
-
-It's expected that the generated .o will have big endian instructions, matching
-the endianness of the data, e.g.:
-
-hexdump arm-big-endianv6.o
-
-[...]
-0000030 0a00 0900 80b5 00af f5e7 f3de f5e7 f3de
-
-But it's then at the linking stage that the linker will
-reverse the endianness of the ".inst" (but not .long).
-
-Let's see:
-
-arm-linux-gnueabihf-gcc -nodefaultlibs -nostdlib -mbig-endian -march=armv6 -o arm-big-endianv6 arm-big-endianv6.o 
-/usr/lib/gcc-cross/arm-linux-gnueabihf/7/../../../../arm-linux-gnueabihf/bin/ld: warning: cannot find entry symbol _start; defaulting to 00000000000001b0
-
-hexdump gives me:
-[...]
-00001b0 80b5 00af f5e7 f3de f5e7 f3de c046 bd46
-
-So it has not reversed the instruction endianness.
-
-What am I doing wrong ?
-
-I'm using:
-
-gcc version 7.3.0 (Ubuntu/Linaro 7.3.0-27ubuntu1~18.04)
-GNU ld (GNU Binutils for Ubuntu) 2.30
-
-Thanks,
-
-Mathieu
-
-> 
->> 
->> For ARMv6+ mixed-endianness, it seems to be a mode that temporarily swap
->> endianness
->> of load/store instructions for specific memory accesses communicating with DMA
->> devices,
->> so I don't see any scenario where we can generate a binary that has little
->> endian code
->> and big endian data. If that is true, then it should be fine to declare the
->> signature
->> with ".arm .inst" and expect the data endianness to be the same as code
->> endianness.
->> 
->> Am I missing something ?
->> 
->> Thanks,
->> 
->> Mathieu
+Despite it's hacky, it seems not necessary to dump every register. And
+is there a straight way to get caller's regs in the trace point? It
+seems more trouble some. Or if we just use the regs inside the
+tracepoint, but it would need even more workaround (eg. unwind one
+frame before do anything).
 
 -- 
-Mathieu Desnoyers
-EfficiOS Inc.
-http://www.efficios.com
+Best Regards,
+Kairui Song
