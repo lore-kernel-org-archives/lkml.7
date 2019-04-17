@@ -2,502 +2,252 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
-	URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E340C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 19:59:36 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6FD3CC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:02:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BA83D206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 19:59:35 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 3DD0421773
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:02:28 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=zytor.com header.i=@zytor.com header.b="xJME2M1V"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731576AbfDQT7e (ORCPT
+        id S1730921AbfDQUC0 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 15:59:34 -0400
-Received: from mail-il-dmz.mellanox.com ([193.47.165.129]:48479 "EHLO
-        mellanox.co.il" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1729251AbfDQT7b (ORCPT
+        Wed, 17 Apr 2019 16:02:26 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:57237 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727013AbfDQUC0 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 15:59:31 -0400
-Received: from Internal Mail-Server by MTLPINE1 (envelope-from asmaa@mellanox.com)
-        with ESMTPS (AES256-SHA encrypted); 17 Apr 2019 22:59:27 +0300
-Received: from farm-1.mtbu.labs.mlnx (farm-1.mtbu.labs.mlnx [10.15.2.31])
-        by mtbu-labmailer.labs.mlnx (8.14.4/8.14.4) with ESMTP id x3HJxPEs011515;
-        Wed, 17 Apr 2019 15:59:25 -0400
-Received: (from asmaa@localhost)
-        by farm-1.mtbu.labs.mlnx (8.14.7/8.13.8/Submit) id x3HJxPOR030984;
-        Wed, 17 Apr 2019 15:59:25 -0400
-From:   Asmaa Mnebhi <Asmaa@mellanox.com>
-To:     minyard@acm.org
-Cc:     Asmaa Mnebhi <Asmaa@mellanox.com>, linux-kernel@vger.kernel.org,
-        linux-i2c@vger.kernel.org
-Subject: [PATCH v2 1/1] Add support for IPMB driver
-Date:   Wed, 17 Apr 2019 15:59:19 -0400
-Message-Id: <8fae547729559b27e92baf69d289cdae9fe3396f.1555529640.git.Asmaa@mellanox.com>
-X-Mailer: git-send-email 2.1.2
-In-Reply-To: <cover.1555529640.git.Asmaa@mellanox.com>
-References: <cover.1555529640.git.Asmaa@mellanox.com>
-In-Reply-To: <cover.1555529640.git.Asmaa@mellanox.com>
-References: <cover.1555529640.git.Asmaa@mellanox.com>
+        Wed, 17 Apr 2019 16:02:26 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3HK1KGf4055600
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Wed, 17 Apr 2019 13:01:21 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3HK1KGf4055600
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019041745; t=1555531282;
+        bh=v970F83GTb2/HkuauTyH6ZUiaoaCioO1nf2EpqqnWDQ=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=xJME2M1V7SZGzZdHEIHuyg075iow4HMGM5wug7QAZtYhgm3ZmgbXkXU4kTvBURXze
+         YPg4IUNeMsiBFanuQPpdlU2+H+lzOeWbK5WQLXcx4na/3yxCnV0119IdDiJ9BEcHsF
+         JIBs5VHSxB5UtuUim7sYO40B6BYuZWC1EawbmF6T+ujAiG1KSNM4BTSdqN297jhqFN
+         gRlcUuDjmETxM4NMVu1je75EKcfk1Jv4aEKEkf3yMvBt0oRiboB1kh+BpEhPj+qMbI
+         WNjliBwau6gGYlHR46nw67rp8TRb//vu+eZd9mGcLkWaaayEXA67DVMgwmZhKzM1gq
+         xJkvCUm1iO6lA==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3HK1HmU4055593;
+        Wed, 17 Apr 2019 13:01:17 -0700
+Date:   Wed, 17 Apr 2019 13:01:17 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Josh Poimboeuf <tipbot@zytor.com>
+Message-ID: <tip-98af8452945c55652de68536afdde3b520fec429@git.kernel.org>
+Cc:     paulus@samba.org, mpe@ellerman.id.au, schwidefsky@de.ibm.com,
+        jikos@kernel.org, luto@kernel.org, benh@kernel.crashing.org,
+        linux-kernel@vger.kernel.org, rdunlap@infradead.org,
+        tyhicks@canonical.com, pauld@redhat.com, jkosina@suse.cz,
+        peterz@infradead.org, heiko.carstens@de.ibm.com, jcm@redhat.com,
+        torvalds@linux-foundation.org, jpoimboe@redhat.com,
+        will.deacon@arm.com, longman@redhat.com, steven.price@arm.com,
+        gregkh@linuxfoundation.org, mingo@kernel.org, bp@alien8.de,
+        hpa@zytor.com, tglx@linutronix.de, aarcange@redhat.com,
+        catalin.marinas@arm.com
+Reply-To: aarcange@redhat.com, catalin.marinas@arm.com, mingo@kernel.org,
+          tglx@linutronix.de, hpa@zytor.com, bp@alien8.de,
+          longman@redhat.com, will.deacon@arm.com, steven.price@arm.com,
+          gregkh@linuxfoundation.org, torvalds@linux-foundation.org,
+          jcm@redhat.com, heiko.carstens@de.ibm.com, jpoimboe@redhat.com,
+          peterz@infradead.org, tyhicks@canonical.com, jkosina@suse.cz,
+          pauld@redhat.com, luto@kernel.org, rdunlap@infradead.org,
+          linux-kernel@vger.kernel.org, benh@kernel.crashing.org,
+          mpe@ellerman.id.au, paulus@samba.org, schwidefsky@de.ibm.com,
+          jikos@kernel.org
+In-Reply-To: <b07a8ef9b7c5055c3a4637c87d07c296d5016fe0.1555085500.git.jpoimboe@redhat.com>
+References: <b07a8ef9b7c5055c3a4637c87d07c296d5016fe0.1555085500.git.jpoimboe@redhat.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:core/speculation] cpu/speculation: Add 'mitigations=' cmdline
+ option
+Git-Commit-ID: 98af8452945c55652de68536afdde3b520fec429
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
+MIME-Version: 1.0
+Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Support receiving IPMB requests on a Satellite MC from the BMC.
-Once a response is ready, this driver will send back a response
-to the BMC via the IPMB channel.
+Commit-ID:  98af8452945c55652de68536afdde3b520fec429
+Gitweb:     https://git.kernel.org/tip/98af8452945c55652de68536afdde3b520fec429
+Author:     Josh Poimboeuf <jpoimboe@redhat.com>
+AuthorDate: Fri, 12 Apr 2019 15:39:28 -0500
+Committer:  Thomas Gleixner <tglx@linutronix.de>
+CommitDate: Wed, 17 Apr 2019 21:37:28 +0200
 
-Signed-off-by: Asmaa Mnebhi <Asmaa@mellanox.com>
+cpu/speculation: Add 'mitigations=' cmdline option
+
+Keeping track of the number of mitigations for all the CPU speculation
+bugs has become overwhelming for many users.  It's getting more and more
+complicated to decide which mitigations are needed for a given
+architecture.  Complicating matters is the fact that each arch tends to
+have its own custom way to mitigate the same vulnerability.
+
+Most users fall into a few basic categories:
+
+a) they want all mitigations off;
+
+b) they want all reasonable mitigations on, with SMT enabled even if
+   it's vulnerable; or
+
+c) they want all reasonable mitigations on, with SMT disabled if
+   vulnerable.
+
+Define a set of curated, arch-independent options, each of which is an
+aggregation of existing options:
+
+- mitigations=off: Disable all mitigations.
+
+- mitigations=auto: [default] Enable all the default mitigations, but
+  leave SMT enabled, even if it's vulnerable.
+
+- mitigations=auto,nosmt: Enable all the default mitigations, disabling
+  SMT if needed by a mitigation.
+
+Currently, these options are placeholders which don't actually do
+anything.  They will be fleshed out in upcoming patches.
+
+Signed-off-by: Josh Poimboeuf <jpoimboe@redhat.com>
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
+Tested-by: Jiri Kosina <jkosina@suse.cz> (on x86)
+Reviewed-by: Jiri Kosina <jkosina@suse.cz>
+Cc: Borislav Petkov <bp@alien8.de>
+Cc: "H . Peter Anvin" <hpa@zytor.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: Peter Zijlstra <peterz@infradead.org>
+Cc: Jiri Kosina <jikos@kernel.org>
+Cc: Waiman Long <longman@redhat.com>
+Cc: Andrea Arcangeli <aarcange@redhat.com>
+Cc: Jon Masters <jcm@redhat.com>
+Cc: Benjamin Herrenschmidt <benh@kernel.crashing.org>
+Cc: Paul Mackerras <paulus@samba.org>
+Cc: Michael Ellerman <mpe@ellerman.id.au>
+Cc: linuxppc-dev@lists.ozlabs.org
+Cc: Martin Schwidefsky <schwidefsky@de.ibm.com>
+Cc: Heiko Carstens <heiko.carstens@de.ibm.com>
+Cc: linux-s390@vger.kernel.org
+Cc: Catalin Marinas <catalin.marinas@arm.com>
+Cc: Will Deacon <will.deacon@arm.com>
+Cc: linux-arm-kernel@lists.infradead.org
+Cc: linux-arch@vger.kernel.org
+Cc: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Cc: Tyler Hicks <tyhicks@canonical.com>
+Cc: Linus Torvalds <torvalds@linux-foundation.org>
+Cc: Randy Dunlap <rdunlap@infradead.org>
+Cc: Steven Price <steven.price@arm.com>
+Cc: Phil Auld <pauld@redhat.com>
+Link: https://lkml.kernel.org/r/b07a8ef9b7c5055c3a4637c87d07c296d5016fe0.1555085500.git.jpoimboe@redhat.com
+
 ---
- drivers/char/ipmi/Kconfig        |   8 +
- drivers/char/ipmi/Makefile       |   1 +
- drivers/char/ipmi/ipmb_dev_int.c | 407 +++++++++++++++++++++++++++++++++++++++
- 3 files changed, 416 insertions(+)
- create mode 100644 drivers/char/ipmi/ipmb_dev_int.c
+ Documentation/admin-guide/kernel-parameters.txt | 24 ++++++++++++++++++++++++
+ include/linux/cpu.h                             | 24 ++++++++++++++++++++++++
+ kernel/cpu.c                                    | 15 +++++++++++++++
+ 3 files changed, 63 insertions(+)
 
-diff --git a/drivers/char/ipmi/Kconfig b/drivers/char/ipmi/Kconfig
-index 94719fc..784bc84 100644
---- a/drivers/char/ipmi/Kconfig
-+++ b/drivers/char/ipmi/Kconfig
-@@ -74,6 +74,14 @@ config IPMI_SSIF
- 	 have a driver that must be accessed over an I2C bus instead of a
- 	 standard interface.  This module requires I2C support.
+diff --git a/Documentation/admin-guide/kernel-parameters.txt b/Documentation/admin-guide/kernel-parameters.txt
+index 858b6c0b9a15..720ffa9c4e04 100644
+--- a/Documentation/admin-guide/kernel-parameters.txt
++++ b/Documentation/admin-guide/kernel-parameters.txt
+@@ -2513,6 +2513,30 @@
+ 			in the "bleeding edge" mini2440 support kernel at
+ 			http://repo.or.cz/w/linux-2.6/mini2440.git
  
-+config IPMB_DEVICE_INTERFACE
-+       tristate 'IPMB Interface handler'
-+       select I2C
-+       help
-+         Provides a driver for a device (Satellite MC) to
-+         receive requests and send responses back to the BMC via
-+         the IPMB interface. This module requires I2C support.
++	mitigations=
++			Control optional mitigations for CPU vulnerabilities.
++			This is a set of curated, arch-independent options, each
++			of which is an aggregation of existing arch-specific
++			options.
 +
- config IPMI_POWERNV
-        depends on PPC_POWERNV
-        tristate 'POWERNV (OPAL firmware) IPMI interface'
-diff --git a/drivers/char/ipmi/Makefile b/drivers/char/ipmi/Makefile
-index 3f06b20..0822adc 100644
---- a/drivers/char/ipmi/Makefile
-+++ b/drivers/char/ipmi/Makefile
-@@ -26,3 +26,4 @@ obj-$(CONFIG_IPMI_KCS_BMC) += kcs_bmc.o
- obj-$(CONFIG_ASPEED_BT_IPMI_BMC) += bt-bmc.o
- obj-$(CONFIG_ASPEED_KCS_IPMI_BMC) += kcs_bmc_aspeed.o
- obj-$(CONFIG_NPCM7XX_KCS_IPMI_BMC) += kcs_bmc_npcm7xx.o
-+obj-$(CONFIG_IPMB_DEVICE_INTERFACE) += ipmb_dev_int.o
-diff --git a/drivers/char/ipmi/ipmb_dev_int.c b/drivers/char/ipmi/ipmb_dev_int.c
-new file mode 100644
-index 0000000..638324d
---- /dev/null
-+++ b/drivers/char/ipmi/ipmb_dev_int.c
-@@ -0,0 +1,407 @@
-+// SPDX-License-Identifier: GPL-2.0
++			off
++				Disable all optional CPU mitigations.  This
++				improves system performance, but it may also
++				expose users to several CPU vulnerabilities.
 +
++			auto (default)
++				Mitigate all CPU vulnerabilities, but leave SMT
++				enabled, even if it's vulnerable.  This is for
++				users who don't want to be surprised by SMT
++				getting disabled across kernel upgrades, or who
++				have other ways of avoiding SMT-based attacks.
++				This is the default behavior.
++
++			auto,nosmt
++				Mitigate all CPU vulnerabilities, disabling SMT
++				if needed.  This is for users who always want to
++				be fully mitigated, even if it means losing SMT.
++
+ 	mminit_loglevel=
+ 			[KNL] When CONFIG_DEBUG_MEMORY_INIT is set, this
+ 			parameter allows control of the logging verbosity for
+diff --git a/include/linux/cpu.h b/include/linux/cpu.h
+index 5041357d0297..2d9c6f4b78f5 100644
+--- a/include/linux/cpu.h
++++ b/include/linux/cpu.h
+@@ -187,4 +187,28 @@ static inline void cpu_smt_disable(bool force) { }
+ static inline void cpu_smt_check_topology(void) { }
+ #endif
+ 
 +/*
-+ * Mellanox IPMB driver to receive a request and send a response
-+ *
-+ * Copyright (C) 2018 Mellanox Techologies, Ltd.
-+ *
-+ * This was inspired by Brendan Higgins' ipmi-bmc-bt-i2c driver.
-+ *
-+ * This program is free software; you can redistribute it and/or
-+ * modify it under the terms of the GNU General Public License
-+ * version 2 as published by the Free Software Foundation.
-+ *
-+ * This program is distributed in the hope that it will be useful,
-+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
-+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-+ * GNU General Public License for more details.
++ * These are used for a global "mitigations=" cmdline option for toggling
++ * optional CPU mitigations.
 + */
++enum cpu_mitigations {
++	CPU_MITIGATIONS_OFF,
++	CPU_MITIGATIONS_AUTO,
++	CPU_MITIGATIONS_AUTO_NOSMT,
++};
 +
-+#include <linux/errno.h>
-+#include <linux/i2c.h>
-+#include <linux/miscdevice.h>
-+#include <linux/module.h>
-+#include <linux/mutex.h>
-+#include <linux/poll.h>
-+#include <linux/slab.h>
-+#include <linux/spinlock.h>
-+#include <linux/wait.h>
++extern enum cpu_mitigations cpu_mitigations;
 +
-+#define	PFX	"IPMB DEV INT: "
-+
-+#define	DEVICE_NAME	"ipmb-dev"
-+
-+#define	MAX_MSG_LEN		128
-+#define	IPMB_REQUEST_LEN_MIN	7
-+#define	NETFN_RSP_BIT_MASK	0x4
-+#define	REQUEST_QUEUE_MAX_LEN	256
-+
-+#define	IPMB_MSG_LEN_IDX	0
-+#define	RQ_SA_8BIT_IDX		1
-+#define	NETFN_LUN_IDX		2
-+
-+#define	IPMB_MSG_PAYLOAD_LEN_MAX \
-+	(MAX_MSG_LEN - IPMB_REQUEST_LEN_MIN - 1)
-+
-+struct ipmb_msg {
-+	u8 len;
-+	u8 rs_sa;
-+	u8 netfn_rs_lun;
-+	u8 checksum1;
-+	u8 rq_sa;
-+	u8 rq_seq_rq_lun;
-+	u8 cmd;
-+	u8 payload[IPMB_MSG_PAYLOAD_LEN_MAX];
-+	/* checksum2 is included in payload */
-+} __packed;
-+
-+static u32 ipmb_msg_len(struct ipmb_msg *ipmb_msg)
++/* mitigations=off */
++static inline bool cpu_mitigations_off(void)
 +{
-+	return ipmb_msg->len + 1;
++	return cpu_mitigations == CPU_MITIGATIONS_OFF;
 +}
 +
-+struct ipmb_request_elem {
-+	struct list_head list;
-+	struct ipmb_msg request;
-+};
-+
-+struct ipmb_dev {
-+	struct i2c_client *client;
-+	struct miscdevice miscdev;
-+	struct ipmb_msg request;
-+	struct list_head request_queue;
-+	atomic_t request_queue_len;
-+	struct ipmb_msg response;
-+	size_t msg_idx;
-+	spinlock_t lock;
-+	wait_queue_head_t wait_queue;
-+	struct mutex file_mutex;
-+};
-+
-+static int receive_ipmb_request(struct ipmb_dev *ipmb_dev_p,
-+				bool non_blocking,
-+				struct ipmb_msg *ipmb_request)
++/* mitigations=auto,nosmt */
++static inline bool cpu_mitigations_auto_nosmt(void)
 +{
-+	struct ipmb_request_elem *queue_elem;
-+	unsigned long flags;
-+	int res;
++	return cpu_mitigations == CPU_MITIGATIONS_AUTO_NOSMT;
++}
 +
-+	if (!non_blocking) {
+ #endif /* _LINUX_CPU_H_ */
+diff --git a/kernel/cpu.c b/kernel/cpu.c
+index d1c6d152da89..e70a90634b41 100644
+--- a/kernel/cpu.c
++++ b/kernel/cpu.c
+@@ -2279,3 +2279,18 @@ void __init boot_cpu_hotplug_init(void)
+ #endif
+ 	this_cpu_write(cpuhp_state.state, CPUHP_ONLINE);
+ }
 +
-+try_again:
-+		res = wait_event_interruptible(ipmb_dev_p->wait_queue,
-+				atomic_read(&ipmb_dev_p->request_queue_len));
-+		if (res)
-+			return res;
-+	}
++enum cpu_mitigations cpu_mitigations __ro_after_init = CPU_MITIGATIONS_AUTO;
 +
-+	spin_lock_irqsave(&ipmb_dev_p->lock, flags);
-+
-+	if (!atomic_read(&ipmb_dev_p->request_queue_len)) {
-+		spin_unlock_irqrestore(&ipmb_dev_p->lock, flags);
-+		if (non_blocking)
-+			return -EAGAIN;
-+		goto try_again;
-+	}
-+
-+	if (list_empty(&ipmb_dev_p->request_queue)) {
-+		pr_err(PFX "request_queue is empty\n");
-+		return -EIO;
-+	}
-+
-+	queue_elem = list_first_entry(&ipmb_dev_p->request_queue,
-+					struct ipmb_request_elem, list);
-+	memcpy(ipmb_request, &queue_elem->request, sizeof(*ipmb_request));
-+	list_del(&queue_elem->list);
-+	kfree(queue_elem);
-+	atomic_dec(&ipmb_dev_p->request_queue_len);
-+
-+	spin_unlock_irqrestore(&ipmb_dev_p->lock, flags);
++static int __init mitigations_parse_cmdline(char *arg)
++{
++	if (!strcmp(arg, "off"))
++		cpu_mitigations = CPU_MITIGATIONS_OFF;
++	else if (!strcmp(arg, "auto"))
++		cpu_mitigations = CPU_MITIGATIONS_AUTO;
++	else if (!strcmp(arg, "auto,nosmt"))
++		cpu_mitigations = CPU_MITIGATIONS_AUTO_NOSMT;
 +
 +	return 0;
 +}
-+
-+static inline struct ipmb_dev *to_ipmb_dev(struct file *file)
-+{
-+	return container_of(file->private_data, struct ipmb_dev, miscdev);
-+}
-+
-+static ssize_t ipmb_read(struct file *file, char __user *buf, size_t count,
-+			loff_t *ppos)
-+{
-+	struct ipmb_dev *ipmb_dev_p = to_ipmb_dev(file);
-+	struct ipmb_msg msg;
-+	ssize_t ret;
-+
-+	memset(&msg, 0, sizeof(msg));
-+
-+	mutex_lock(&ipmb_dev_p->file_mutex);
-+	ret = receive_ipmb_request(ipmb_dev_p, file->f_flags & O_NONBLOCK,
-+				&msg);
-+	if (ret < 0)
-+		goto out;
-+	count = min_t(size_t, count, ipmb_msg_len(&msg));
-+	if (copy_to_user(buf, &msg, count)) {
-+		ret = -EFAULT;
-+		goto out;
-+	}
-+
-+out:
-+	mutex_unlock(&ipmb_dev_p->file_mutex);
-+	if (ret < 0)
-+		return ret;
-+	else
-+		return count;
-+}
-+
-+static s32 i2c_smbus_write_block_data_local(struct i2c_client *client,
-+					u8 command, u8 length,
-+					u16 requester_i2c_addr,
-+					const char *msg)
-+{
-+	union i2c_smbus_data data;
-+	int ret;
-+
-+	if (length > I2C_SMBUS_BLOCK_MAX)
-+		length = I2C_SMBUS_BLOCK_MAX;
-+
-+	data.block[0] = length;
-+	memcpy(&data.block[1], msg, length);
-+
-+	ret = i2c_smbus_xfer(client->adapter, requester_i2c_addr,
-+				client->flags,
-+				I2C_SMBUS_WRITE, command,
-+				I2C_SMBUS_BLOCK_DATA, &data);
-+
-+	return ret;
-+}
-+
-+static ssize_t ipmb_write(struct file *file, const char __user *buf,
-+			size_t count, loff_t *ppos)
-+{
-+	struct ipmb_dev *ipmb_dev_p = to_ipmb_dev(file);
-+	u8 msg[MAX_MSG_LEN];
-+	ssize_t ret;
-+	u8 rq_sa, netf_rq_lun, msg_len;
-+
-+	if (count > sizeof(msg))
-+		return -EINVAL;
-+
-+	if (copy_from_user(&msg, buf, count) || count < msg[0])
-+		return -EFAULT;
-+
-+	rq_sa = (u16)(msg[RQ_SA_8BIT_IDX] >> 1);
-+	netf_rq_lun = msg[NETFN_LUN_IDX];
-+	/*
-+	 * subtract rq_sa and netf_rq_lun from the length of the msg passed to
-+	 * i2c_smbus_write_block_data_local
-+	 */
-+	msg_len = msg[IPMB_MSG_LEN_IDX] - 2;
-+
-+	mutex_lock(&ipmb_dev_p->file_mutex);
-+	ret = i2c_smbus_write_block_data_local(ipmb_dev_p->client,
-+					netf_rq_lun, msg_len, rq_sa, msg + 3);
-+	mutex_unlock(&ipmb_dev_p->file_mutex);
-+
-+	if (ret)
-+		return ret;
-+	else
-+		return count;
-+}
-+
-+static unsigned int ipmb_poll(struct file *file, poll_table *wait)
-+{
-+	struct ipmb_dev *ipmb_dev_p = to_ipmb_dev(file);
-+	unsigned int mask = 0;
-+
-+	mutex_lock(&ipmb_dev_p->file_mutex);
-+	poll_wait(file, &ipmb_dev_p->wait_queue, wait);
-+
-+	if (atomic_read(&ipmb_dev_p->request_queue_len))
-+		mask |= POLLIN;
-+	mask |= POLLOUT;
-+	mutex_unlock(&ipmb_dev_p->file_mutex);
-+	return mask;
-+}
-+
-+static const struct file_operations ipmb_fops = {
-+	.owner	= THIS_MODULE,
-+	.read	= ipmb_read,
-+	.write	= ipmb_write,
-+	.poll	= ipmb_poll,
-+};
-+
-+/* Called with ipmb_dev->lock held. */
-+static void handle_request(struct ipmb_dev *ipmb_dev_p)
-+{
-+	struct ipmb_request_elem *queue_elem;
-+
-+	if (atomic_read(&ipmb_dev_p->request_queue_len) >=
-+			REQUEST_QUEUE_MAX_LEN)
-+		return;
-+
-+	queue_elem = kmalloc(sizeof(*queue_elem), GFP_KERNEL);
-+	if (!queue_elem)
-+		return;
-+
-+	memcpy(&queue_elem->request, &ipmb_dev_p->request,
-+		sizeof(struct ipmb_msg));
-+	list_add(&queue_elem->list, &ipmb_dev_p->request_queue);
-+	atomic_inc(&ipmb_dev_p->request_queue_len);
-+	wake_up_all(&ipmb_dev_p->wait_queue);
-+}
-+
-+static u8 verify_checksum1(struct ipmb_dev *ipmb_dev_p, u8 rs_sa)
-+{
-+	return (rs_sa + ipmb_dev_p->request.netfn_rs_lun +
-+		ipmb_dev_p->request.checksum1);
-+}
-+
-+static bool is_ipmb_request(struct ipmb_dev *ipmb_dev_p, u8 rs_sa)
-+{
-+	if (ipmb_dev_p->msg_idx >= IPMB_REQUEST_LEN_MIN) {
-+		if (verify_checksum1(ipmb_dev_p, rs_sa))
-+			return false;
-+
-+		/*
-+		 * Check whether this is an IPMB request or
-+		 * response.
-+		 * The 6 MSB of netfn_rs_lun are dedicated to the netfn
-+		 * while the remaining bits are dedicated to the lun.
-+		 * If the LSB of the netfn is cleared, it is associated
-+		 * with an IPMB request.
-+		 * If the LSB of the netfn is set, it is associated with
-+		 * an IPMB response.
-+		 */
-+		if (!(ipmb_dev_p->request.netfn_rs_lun & NETFN_RSP_BIT_MASK))
-+			return true;
-+	}
-+	return false;
-+}
-+
-+/*
-+ * The IPMB protocol only supports I2C Writes so there is no need
-+ * to support I2C_SLAVE_READ* events.
-+ * This i2c callback function only monitors IPMB request messages
-+ * and adds them in a queue, so that they can be handled by
-+ * receive_ipmb_request.
-+ */
-+static int ipmb_slave_cb(struct i2c_client *client,
-+			enum i2c_slave_event event, u8 *val)
-+{
-+	struct ipmb_dev *ipmb_dev_p = i2c_get_clientdata(client);
-+	u8 *buf = (u8 *)&ipmb_dev_p->request;
-+
-+	spin_lock(&ipmb_dev_p->lock);
-+	switch (event) {
-+	case I2C_SLAVE_WRITE_REQUESTED:
-+		memset(&ipmb_dev_p->request, 0, sizeof(ipmb_dev_p->request));
-+		ipmb_dev_p->msg_idx = 0;
-+
-+		/*
-+		 * At index 0, ipmb_msg stores the length of msg,
-+		 * skip it for now.
-+		 * The len will be populated once the whole
-+		 * buf is populated.
-+		 *
-+		 * The I2C bus driver's responsibility is to pass the
-+		 * data bytes to the backend driver; it does not
-+		 * forward the i2c slave address.
-+		 * Since the first byte in the IPMB message is the
-+		 * address of the responder, it is the responsibility
-+		 * of the IPMB driver to format the message properly.
-+		 * So this driver prepends the address of the responder
-+		 * to the received i2c data before the request message
-+		 * is handled in userland.
-+		 */
-+		buf[++ipmb_dev_p->msg_idx] = (u8)(client->addr << 1);
-+		break;
-+
-+	case I2C_SLAVE_WRITE_RECEIVED:
-+		if (ipmb_dev_p->msg_idx >= sizeof(struct ipmb_msg))
-+			break;
-+
-+		buf[++ipmb_dev_p->msg_idx] = *val;
-+		break;
-+
-+	case I2C_SLAVE_STOP:
-+		ipmb_dev_p->request.len = ipmb_dev_p->msg_idx;
-+
-+		if (is_ipmb_request(ipmb_dev_p, (u8)(client->addr << 1)))
-+			handle_request(ipmb_dev_p);
-+		break;
-+
-+	default:
-+		break;
-+	}
-+	spin_unlock(&ipmb_dev_p->lock);
-+
-+	return 0;
-+}
-+
-+static int ipmb_probe(struct i2c_client *client,
-+			const struct i2c_device_id *id)
-+{
-+	struct ipmb_dev *ipmb_dev_p;
-+	int ret;
-+
-+	ipmb_dev_p = devm_kzalloc(&client->dev, sizeof(*ipmb_dev_p),
-+					GFP_KERNEL);
-+	if (!ipmb_dev_p)
-+		return -ENOMEM;
-+
-+	spin_lock_init(&ipmb_dev_p->lock);
-+	init_waitqueue_head(&ipmb_dev_p->wait_queue);
-+	atomic_set(&ipmb_dev_p->request_queue_len, 0);
-+	INIT_LIST_HEAD(&ipmb_dev_p->request_queue);
-+
-+	mutex_init(&ipmb_dev_p->file_mutex);
-+
-+	ipmb_dev_p->miscdev.minor = MISC_DYNAMIC_MINOR;
-+	ipmb_dev_p->miscdev.name = DEVICE_NAME;
-+	ipmb_dev_p->miscdev.fops = &ipmb_fops;
-+	ipmb_dev_p->miscdev.parent = &client->dev;
-+	ret = misc_register(&ipmb_dev_p->miscdev);
-+	if (ret)
-+		return ret;
-+
-+	ipmb_dev_p->client = client;
-+	i2c_set_clientdata(client, ipmb_dev_p);
-+	ret = i2c_slave_register(client, ipmb_slave_cb);
-+	if (ret) {
-+		misc_deregister(&ipmb_dev_p->miscdev);
-+		return ret;
-+	}
-+
-+	return 0;
-+}
-+
-+static int ipmb_remove(struct i2c_client *client)
-+{
-+	struct ipmb_dev *ipmb_dev_p = i2c_get_clientdata(client);
-+
-+	i2c_slave_unregister(client);
-+	misc_deregister(&ipmb_dev_p->miscdev);
-+
-+	return 0;
-+}
-+
-+static const struct i2c_device_id ipmb_id[] = {
-+	{"ipmb-dev", 0},
-+	{},
-+};
-+MODULE_DEVICE_TABLE(i2c, ipmb_id);
-+
-+static struct i2c_driver ipmb_driver = {
-+	.driver = {
-+		.name = "ipmb-dev",
-+	},
-+	.probe = ipmb_probe,
-+	.remove = ipmb_remove,
-+	.id_table = ipmb_id,
-+};
-+module_i2c_driver(ipmb_driver);
-+
-+MODULE_AUTHOR("Mellanox Technologies");
-+MODULE_DESCRIPTION("Mellanox BlueField IPMB driver");
-+MODULE_LICENSE("GPL");
--- 
-2.1.2
-
++early_param("mitigations", mitigations_parse_cmdline);
