@@ -2,64 +2,64 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
 	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,UNWANTED_LANGUAGE_BODY,
-	URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 8A2E9C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:02:40 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F0FDC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:02:51 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 46D3F206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:02:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id E49EC21773
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:02:50 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="YkN6uuUR"
+	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="UAUB5Ort"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732377AbfDQOCj (ORCPT
+        id S1732385AbfDQOCt (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 10:02:39 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:59413 "EHLO
+        Wed, 17 Apr 2019 10:02:49 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:41447 "EHLO
         terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731960AbfDQOCi (ORCPT
+        with ESMTP id S1731743AbfDQOCt (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 10:02:38 -0400
+        Wed, 17 Apr 2019 10:02:49 -0400
 Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3HE1jts3930777
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3HE2QEK3930805
         (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 17 Apr 2019 07:01:46 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3HE1jts3930777
+        Wed, 17 Apr 2019 07:02:26 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3HE2QEK3930805
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041743; t=1555509707;
-        bh=tBTT5DJkWl43S2hPiDWbIhsBneWv51Jto2D4cHXtH9s=;
+        s=2019041743; t=1555509746;
+        bh=ioEnpzsmtY4lHaW23ea0rdzCceY3etrElCrxJOJL1uk=;
         h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=YkN6uuURq2lcXTvYY6umMtK1EjmTQHrZMdG8p/gmBKRXXReqTWRGRHmyvEYh5+DZs
-         UVKoPlPVjRfykkJyFf4p1N4r4+x1dyUM66xrLpYlG0sOBtnohuS2fvtR6D0rJ1JG/k
-         jDWj2nu2ZPWO+5NmXKzHtnb7P7jwOC25DmyvzRVWlfaov5SQ2C2vrdmbmOLBz8c5bu
-         xTbhd6tswjOTDFEvC8TprC7q3it82kL7UhRH/OGIvTimRbKyNaLrra78qU6B/AwPf5
-         uroGrFIu+kW2JSVid6rRDS3gM/E2EGVWhuIfiPcPImO7pzsBQAs96TwqLtePkXhYmy
-         6Zro0QZeLkbPw==
+        b=UAUB5OrtTWHMNH2qJb+bYsWbimCe36LvypO5RXpSit2fcDiWbfPxJ3A3G5x3GPKWr
+         FKQqcQVoCyBOfkn/ILHIdY7daEUlpJfPTiQay4Xz4E2YI7xDbUxr8IyGrrZ9+v+BD0
+         MBkgkugIhAJuBrokF73J3769wmawT6nXXmtStIdjmp0OY00jqbEBBSaSEycq7wK50e
+         6gFrzeu4Vdn1GR7H21GCxxVLR8IVKYuU1fd9B4lkBdY9/kl8Pi9FJ0aD3e4XrK7F/4
+         ZEZZDE8O533QG/1tlwnWPg9PVPS2hylJiwG7iU1EIgnMLbG0pYKjsTnuib43I4RyBu
+         BiJqb0qIfHH1A==
 Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3HE1iNY3930774;
-        Wed, 17 Apr 2019 07:01:44 -0700
-Date:   Wed, 17 Apr 2019 07:01:44 -0700
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3HE2PA83930800;
+        Wed, 17 Apr 2019 07:02:25 -0700
+Date:   Wed, 17 Apr 2019 07:02:25 -0700
 X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Qian Cai <tipbot@zytor.com>
-Message-ID: <tip-80552f0f7aebdd8deda8ea455292cbfbf462d655@git.kernel.org>
-Cc:     cai@lca.pw, luto@amacapital.net, mingo@kernel.org,
-        linux-kernel@vger.kernel.org, bp@suse.de, vbabka@suse.cz,
-        akpm@linux-foundation.org, rientjes@google.com, tglx@linutronix.de,
-        linux-mm@kvack.org, hpa@zytor.com, iamjoonsoo.kim@lge.com,
-        jpoimboe@redhat.com, cl@linux.com, penberg@kernel.org
-Reply-To: iamjoonsoo.kim@lge.com, hpa@zytor.com, tglx@linutronix.de,
-          linux-mm@kvack.org, penberg@kernel.org, cl@linux.com,
-          jpoimboe@redhat.com, vbabka@suse.cz, luto@amacapital.net,
-          mingo@kernel.org, linux-kernel@vger.kernel.org, bp@suse.de,
-          cai@lca.pw, rientjes@google.com, akpm@linux-foundation.org
-In-Reply-To: <20190416142258.18694-1-cai@lca.pw>
-References: <20190416142258.18694-1-cai@lca.pw>
+From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
+Message-ID: <tip-7dbcf2b0b770eeb803a416ee8dcbef78e6389d40@git.kernel.org>
+Cc:     luto@kernel.org, linux-kernel@vger.kernel.org, jpoimboe@redhat.com,
+        tglx@linutronix.de, sean.j.christopherson@intel.com,
+        nstange@suse.de, bp@suse.de, mitsuo.hayasaka.hu@hitachi.com,
+        x86@kernel.org, hpa@zytor.com, mingo@kernel.org, mingo@redhat.com
+Reply-To: jpoimboe@redhat.com, linux-kernel@vger.kernel.org,
+          luto@kernel.org, sean.j.christopherson@intel.com,
+          tglx@linutronix.de, nstange@suse.de,
+          mitsuo.hayasaka.hu@hitachi.com, bp@suse.de, x86@kernel.org,
+          mingo@redhat.com, mingo@kernel.org, hpa@zytor.com
+In-Reply-To: <20190414160143.682135110@linutronix.de>
+References: <20190414160143.682135110@linutronix.de>
 To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/irq] mm/slab: Remove store_stackinfo()
-Git-Commit-ID: 80552f0f7aebdd8deda8ea455292cbfbf462d655
+Subject: [tip:x86/irq] x86/irq/64: Limit IST stack overflow check to #DB
+ stack
+Git-Commit-ID: 7dbcf2b0b770eeb803a416ee8dcbef78e6389d40
 X-Mailer: tip-git-log-daemon
 Robot-ID: <tip-bot.git.kernel.org>
 Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
@@ -73,132 +73,83 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  80552f0f7aebdd8deda8ea455292cbfbf462d655
-Gitweb:     https://git.kernel.org/tip/80552f0f7aebdd8deda8ea455292cbfbf462d655
-Author:     Qian Cai <cai@lca.pw>
-AuthorDate: Tue, 16 Apr 2019 10:22:57 -0400
+Commit-ID:  7dbcf2b0b770eeb803a416ee8dcbef78e6389d40
+Gitweb:     https://git.kernel.org/tip/7dbcf2b0b770eeb803a416ee8dcbef78e6389d40
+Author:     Thomas Gleixner <tglx@linutronix.de>
+AuthorDate: Sun, 14 Apr 2019 17:59:38 +0200
 Committer:  Borislav Petkov <bp@suse.de>
-CommitDate: Wed, 17 Apr 2019 11:46:27 +0200
+CommitDate: Wed, 17 Apr 2019 12:06:56 +0200
 
-mm/slab: Remove store_stackinfo()
+x86/irq/64: Limit IST stack overflow check to #DB stack
 
-store_stackinfo() does not seem used in actual SLAB debugging.
-Potentially, it could be added to check_poison_obj() to provide more
-information but this seems like an overkill due to the declining
-popularity of SLAB, so just remove it instead.
+Commit
 
-Signed-off-by: Qian Cai <cai@lca.pw>
+  37fe6a42b343 ("x86: Check stack overflow in detail")
+
+added a broad check for the full exception stack area, i.e. it considers
+the full exception stack area as valid.
+
+That's wrong in two aspects:
+
+ 1) It does not check the individual areas one by one
+
+ 2) #DF, NMI and #MCE are not enabling interrupts which means that a
+    regular device interrupt cannot happen in their context. In fact if a
+    device interrupt hits one of those IST stacks that's a bug because some
+    code path enabled interrupts while handling the exception.
+
+Limit the check to the #DB stack and consider all other IST stacks as
+'overflow' or invalid.
+
+Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
 Signed-off-by: Borislav Petkov <bp@suse.de>
-Acked-by: Thomas Gleixner <tglx@linutronix.de>
-Acked-by: Vlastimil Babka <vbabka@suse.cz>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Andy Lutomirski <luto@amacapital.net>
-Cc: Christoph Lameter <cl@linux.com>
-Cc: David Rientjes <rientjes@google.com>
-Cc: Joonsoo Kim <iamjoonsoo.kim@lge.com>
+Cc: Andy Lutomirski <luto@kernel.org>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
 Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: linux-mm <linux-mm@kvack.org>
-Cc: Pekka Enberg <penberg@kernel.org>
-Cc: rientjes@google.com
-Cc: sean.j.christopherson@intel.com
-Link: https://lkml.kernel.org/r/20190416142258.18694-1-cai@lca.pw
+Cc: Mitsuo Hayasaka <mitsuo.hayasaka.hu@hitachi.com>
+Cc: Nicolai Stange <nstange@suse.de>
+Cc: Sean Christopherson <sean.j.christopherson@intel.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/20190414160143.682135110@linutronix.de
 ---
- mm/slab.c | 48 ++++++------------------------------------------
- 1 file changed, 6 insertions(+), 42 deletions(-)
+ arch/x86/kernel/irq_64.c | 19 ++++++++++++++-----
+ 1 file changed, 14 insertions(+), 5 deletions(-)
 
-diff --git a/mm/slab.c b/mm/slab.c
-index 47a380a486ee..e79ef28396e2 100644
---- a/mm/slab.c
-+++ b/mm/slab.c
-@@ -1467,53 +1467,17 @@ static bool is_debug_pagealloc_cache(struct kmem_cache *cachep)
- }
- 
- #ifdef CONFIG_DEBUG_PAGEALLOC
--static void store_stackinfo(struct kmem_cache *cachep, unsigned long *addr,
--			    unsigned long caller)
--{
--	int size = cachep->object_size;
--
--	addr = (unsigned long *)&((char *)addr)[obj_offset(cachep)];
--
--	if (size < 5 * sizeof(unsigned long))
--		return;
--
--	*addr++ = 0x12345678;
--	*addr++ = caller;
--	*addr++ = smp_processor_id();
--	size -= 3 * sizeof(unsigned long);
--	{
--		unsigned long *sptr = &caller;
--		unsigned long svalue;
--
--		while (!kstack_end(sptr)) {
--			svalue = *sptr++;
--			if (kernel_text_address(svalue)) {
--				*addr++ = svalue;
--				size -= sizeof(unsigned long);
--				if (size <= sizeof(unsigned long))
--					break;
--			}
--		}
--
--	}
--	*addr++ = 0x87654321;
--}
--
--static void slab_kernel_map(struct kmem_cache *cachep, void *objp,
--				int map, unsigned long caller)
-+static void slab_kernel_map(struct kmem_cache *cachep, void *objp, int map)
+diff --git a/arch/x86/kernel/irq_64.c b/arch/x86/kernel/irq_64.c
+index 0469cd078db1..b50ac9c7397b 100644
+--- a/arch/x86/kernel/irq_64.c
++++ b/arch/x86/kernel/irq_64.c
+@@ -26,9 +26,18 @@ int sysctl_panic_on_stackoverflow;
+ /*
+  * Probabilistic stack overflow check:
+  *
+- * Only check the stack in process context, because everything else
+- * runs on the big interrupt stacks. Checking reliably is too expensive,
+- * so we just check from interrupts.
++ * Regular device interrupts can enter on the following stacks:
++ *
++ * - User stack
++ *
++ * - Kernel task stack
++ *
++ * - Interrupt stack if a device driver reenables interrupts
++ *   which should only happen in really old drivers.
++ *
++ * - Debug IST stack
++ *
++ * All other contexts are invalid.
+  */
+ static inline void stack_overflow_check(struct pt_regs *regs)
  {
- 	if (!is_debug_pagealloc_cache(cachep))
+@@ -53,8 +62,8 @@ static inline void stack_overflow_check(struct pt_regs *regs)
  		return;
  
--	if (caller)
--		store_stackinfo(cachep, objp, caller);
--
- 	kernel_map_pages(virt_to_page(objp), cachep->size / PAGE_SIZE, map);
- }
+ 	oist = this_cpu_ptr(&orig_ist);
+-	estack_top = (u64)oist->ist[0] - EXCEPTION_STKSZ + STACK_TOP_MARGIN;
+-	estack_bottom = (u64)oist->ist[N_EXCEPTION_STACKS - 1];
++	estack_bottom = (u64)oist->ist[DEBUG_STACK];
++	estack_top = estack_bottom - DEBUG_STKSZ + STACK_TOP_MARGIN;
+ 	if (regs->sp >= estack_top && regs->sp <= estack_bottom)
+ 		return;
  
- #else
- static inline void slab_kernel_map(struct kmem_cache *cachep, void *objp,
--				int map, unsigned long caller) {}
-+				int map) {}
- 
- #endif
- 
-@@ -1661,7 +1625,7 @@ static void slab_destroy_debugcheck(struct kmem_cache *cachep,
- 
- 		if (cachep->flags & SLAB_POISON) {
- 			check_poison_obj(cachep, objp);
--			slab_kernel_map(cachep, objp, 1, 0);
-+			slab_kernel_map(cachep, objp, 1);
- 		}
- 		if (cachep->flags & SLAB_RED_ZONE) {
- 			if (*dbg_redzone1(cachep, objp) != RED_INACTIVE)
-@@ -2434,7 +2398,7 @@ static void cache_init_objs_debug(struct kmem_cache *cachep, struct page *page)
- 		/* need to poison the objs? */
- 		if (cachep->flags & SLAB_POISON) {
- 			poison_obj(cachep, objp, POISON_FREE);
--			slab_kernel_map(cachep, objp, 0, 0);
-+			slab_kernel_map(cachep, objp, 0);
- 		}
- 	}
- #endif
-@@ -2813,7 +2777,7 @@ static void *cache_free_debugcheck(struct kmem_cache *cachep, void *objp,
- 
- 	if (cachep->flags & SLAB_POISON) {
- 		poison_obj(cachep, objp, POISON_FREE);
--		slab_kernel_map(cachep, objp, 0, caller);
-+		slab_kernel_map(cachep, objp, 0);
- 	}
- 	return objp;
- }
-@@ -3077,7 +3041,7 @@ static void *cache_alloc_debugcheck_after(struct kmem_cache *cachep,
- 		return objp;
- 	if (cachep->flags & SLAB_POISON) {
- 		check_poison_obj(cachep, objp);
--		slab_kernel_map(cachep, objp, 1, 0);
-+		slab_kernel_map(cachep, objp, 1);
- 		poison_obj(cachep, objp, POISON_INUSE);
- 	}
- 	if (cachep->flags & SLAB_STORE_USER)
