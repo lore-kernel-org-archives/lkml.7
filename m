@@ -2,126 +2,149 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0E264C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:54:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 651FDC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:56:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D3FAC20645
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:54:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 1FA3A20645
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:56:45 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="ExNi4No3"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="pfe/NuSF"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732085AbfDQMy2 (ORCPT
+        id S1731997AbfDQM4n (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 08:54:28 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:42940 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727034AbfDQMy2 (ORCPT
+        Wed, 17 Apr 2019 08:56:43 -0400
+Received: from mail-lf1-f66.google.com ([209.85.167.66]:38201 "EHLO
+        mail-lf1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729356AbfDQM4n (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 08:54:28 -0400
-Received: by mail-wr1-f65.google.com with SMTP id g3so31784085wrx.9
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 05:54:27 -0700 (PDT)
+        Wed, 17 Apr 2019 08:56:43 -0400
+Received: by mail-lf1-f66.google.com with SMTP id v1so9488262lfg.5
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 05:56:42 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=6saxc2kTeaHnspIYfhRGji+8DaiZiZ+BM5zhQWik19w=;
-        b=ExNi4No3r5ALAgrtFxr7ZSweILHDqvS0xKIvxhfu8IAuHh4xairEAUGf6TG6Ijm7kh
-         USpnAfoWv8R8UzTUCT5Qmu4zvt5IIX0Vwl9tilTledUFWNLzrN0UyxDM/341DTuOTiCB
-         c1lV1xBpEi/2pmPmPFnw1fAAA6CFKFZYOmkWdW3hFxgsa+bxdA0C3Ngns902zOUL4g/9
-         UCgZk5sM4GMGfKI40ASWx1hC5RtP2QzY43/oF4e50rLip+tEt+wD8QxF9TesT0f74qmg
-         uLnEyZbFwU5/UF95a7/shVNVm4TjV6m2K69wTvl9HIZODdmiEyO4oTj2EQetX1ed/djY
-         KVPw==
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=12mqcnOOt0vufAP9KYkBeANamYksA51AvFl5IrppBvM=;
+        b=pfe/NuSFFYnWmFIRCbwz4QpMLdrJfNI0taBbC3izuZfSInrQ4v1yP9XL29Eihd5UvT
+         JsdCq+sHbR6vXcdUULWvUIoiDbpnNewscpug90mCJERb9SpdPG1B7ca7QAq3ry0e+up8
+         urgLrbPMgbNUIVBB8FsW+1X0GoAsvFZaevqYxkNzI/1wooLzpHPQQD202eQ/wHdihbyX
+         W373q8NWTR3qNPzZECNdhdAokM3IK7RyEwA6+WIO4NfyXVNYUzc3AtDRzzQNo0b6jNAA
+         2eSkf585DR5oIim3ACRcvlTQ7BuQ3RYTHcbxOYza9ycMJlQSyciLgqgLom1CflxcySBE
+         daLA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=6saxc2kTeaHnspIYfhRGji+8DaiZiZ+BM5zhQWik19w=;
-        b=TEu16jwyHl+dWkiwJ3PKWAd7T9T0WMcbvC7xUqhyiyjfKmlPmVsKizzmmthw3viLxx
-         Q4htr0sZBUATD4g6E9yNDGZObtAiTX/cozzZtzd5ZTqf8uRPN724biBYzsIZV2v10D5e
-         8w6KHujWegssnHpjntFaDvJ7cSxiu4OWYS87sBSKfydfGlQA2g4dXvPD5dWG+vI/Lc/W
-         maDrbqWiiWsIk4OjWZ6PT2edwOvhCeTR8Hithlog7z6lIqQdGdDp6Cf6XP/k8lw9G1V9
-         AjdUInflCIVTmdUmoigr+dhOnqQ0WEkp580c0+42XQs55DtnxS+12iM1YiR3v9hfbiXw
-         fdrg==
-X-Gm-Message-State: APjAAAUBHRjNs1Mq2rGt+b++jCG9JwrigH0SbIErJ4rU2jYuapZbyg/Z
-        Amk7sV40ZNaa869qq94OyT3V5A==
-X-Google-Smtp-Source: APXvYqyXDbmF7CYpT+TxUzcq6T2QOyA3/SZL/h1WqJ+VMa6Kjcl+/B4SIb5vMmwvrXYjP8So9VjdrA==
-X-Received: by 2002:a5d:4d42:: with SMTP id a2mr57635518wru.130.1555505666491;
-        Wed, 17 Apr 2019 05:54:26 -0700 (PDT)
-Received: from brauner.io ([185.197.132.10])
-        by smtp.gmail.com with ESMTPSA id i17sm59701224wrs.44.2019.04.17.05.54.24
-        (version=TLS1_3 cipher=AEAD-AES256-GCM-SHA384 bits=256/256);
-        Wed, 17 Apr 2019 05:54:25 -0700 (PDT)
-Date:   Wed, 17 Apr 2019 14:54:23 +0200
-From:   Christian Brauner <christian@brauner.io>
-To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Cc:     Andy Lutomirski <luto@kernel.org>,
-        Aleksa Sarai <cyphar@cyphar.com>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Al Viro <viro@zeniv.linux.org.uk>,
-        Jann Horn <jannh@google.com>,
-        David Howells <dhowells@redhat.com>,
-        Linux API <linux-api@vger.kernel.org>,
-        LKML <linux-kernel@vger.kernel.org>,
-        "Serge E. Hallyn" <serge@hallyn.com>,
-        Arnd Bergmann <arnd@arndb.de>,
-        "Eric W. Biederman" <ebiederm@xmission.com>,
-        Kees Cook <keescook@chromium.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Oleg Nesterov <oleg@redhat.com>,
-        Joel Fernandes <joel@joelfernandes.org>,
-        Daniel Colascione <dancol@google.com>
-Subject: Re: RFC: on adding new CLONE_* flags [WAS Re: [PATCH 0/4] clone: add
- CLONE_PIDFD]
-Message-ID: <20190417125422.bhyrmzom4kwuenwm@brauner.io>
-References: <20190414201436.19502-1-christian@brauner.io>
- <dc05ffe3-c2ff-8b3e-d181-e0cc620bf91d@metux.net>
- <20190415195911.z7b7miwsj67ha54y@yavin>
- <CALCETrWxMnaPvwicqkMLswMynWvJVteazD-bFv3ZnBKWp-1joQ@mail.gmail.com>
- <c783a83a-01a1-9813-e2f7-0516cf7a1c16@metux.net>
- <CALCETrWWoEvnzx6oLTEajBmiArScX5sSt74o2VO+aTiwEi_9mQ@mail.gmail.com>
- <e58d1694-c143-3465-512d-43301422bd8b@metux.net>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=12mqcnOOt0vufAP9KYkBeANamYksA51AvFl5IrppBvM=;
+        b=D8oTZ9qWAouTZ7+ZQYAFQkyLVjwFAmBTt8A3aSH4vMKWVhodilWlljkmP0vjC71740
+         s9VNR3lptAEQm3lhYgnsZxznjmPnKOiSYdb+QSUFjHrTtAf4qVxghGu47IYxdHx8qubK
+         /Om7epNZ9rpSp3waZAq7m551jv20rFeMDbe/+xLoieGVUyna48VbgP8yh79koeCUJ23a
+         Hk3gqX0DcngA62atSQDlNIiHyjw2rI/e8z7s0+EC6iYbvuMOezM6mCwWmJaSHH/3Q7h5
+         VAkARHOIjofbxMYmWZ9pQynoCfaCktzWuesSPrqBsS6YeBvZmUdgJAQAKO9llbQVAzL3
+         unSQ==
+X-Gm-Message-State: APjAAAUdXB56YBqiSj26ungEMteaxxVwckasC5cFMlFs373ycVR7Sgqg
+        /8FQKZ+czHWN5ChUHTqEWbdQwFKJ5PRoFVhcz2dRiQ==
+X-Google-Smtp-Source: APXvYqyKugq64dpQttmgArM980GyW6dAgAgs94cFJjCWMe8IrhrAe+m4Fryp/g0eWTwmIQ803qjFSx/r7lanSaoDgVU=
+X-Received: by 2002:ac2:41cc:: with SMTP id d12mr40079726lfi.73.1555505801140;
+ Wed, 17 Apr 2019 05:56:41 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <e58d1694-c143-3465-512d-43301422bd8b@metux.net>
-User-Agent: NeoMutt/20180716
+References: <20190408214539.2705660-1-songliubraving@fb.com>
+ <20190410115907.GE19434@e105550-lin.cambridge.arm.com> <A2E9A149-9EAA-478D-A096-1D4D4BA442B3@fb.com>
+In-Reply-To: <A2E9A149-9EAA-478D-A096-1D4D4BA442B3@fb.com>
+From:   Vincent Guittot <vincent.guittot@linaro.org>
+Date:   Wed, 17 Apr 2019 14:56:29 +0200
+Message-ID: <CAKfTPtAFB3gSZYJN1BcjU_XoY=Pfu2xtea+2MEw7FkVc3mwTSA@mail.gmail.com>
+Subject: Re: [PATCH 0/7] introduce cpu.headroom knob to cpu controller
+To:     Song Liu <songliubraving@fb.com>
+Cc:     Morten Rasmussen <morten.rasmussen@arm.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        "cgroups@vger.kernel.org" <cgroups@vger.kernel.org>,
+        "mingo@redhat.com" <mingo@redhat.com>,
+        "peterz@infradead.org" <peterz@infradead.org>,
+        "tglx@linutronix.de" <tglx@linutronix.de>,
+        Kernel Team <Kernel-team@fb.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 02:03:16PM +0200, Enrico Weigelt, metux IT consult wrote:
-> On 16.04.19 23:31, Andy Lutomirski wrote:
-> 
-> >> How exactly would the pidfd improve this scenario ?
-> >> IMHO, would just need to pass the inherited fd's to that daemon (eg.
-> >> via unix socket) which then sets them up in the new child process.
-> > 
-> > It makes it easier to wait until the privileged program exits.
-> > Without pidfd, you can't just wait(2) because the program that gets
-> > spawned isn't a child.  
-> 
-> Ah, that is a cool thing !
-> I suppose that also works across namespaces ?
+On Wed, 10 Apr 2019 at 21:43, Song Liu <songliubraving@fb.com> wrote:
+>
+> Hi Morten,
+>
+> > On Apr 10, 2019, at 4:59 AM, Morten Rasmussen <morten.rasmussen@arm.com> wrote:
+> >
 
-Yes, it should. If you hand off the pidfd to another pidns (e.g. via SCM
-credentials) for example.
+> >
+> > The bit that isn't clear to me, is _why_ adding idle cycles helps your
+> > workload. I'm not convinced that adding headroom gives any latency
+> > improvements beyond watering down the impact of your side jobs. AFAIK,
+>
+> We think the latency improvements actually come from watering down the
+> impact of side jobs. It is not just statistically improving average
+> latency numbers, but also reduces resource contention caused by the side
+> workload. I don't know whether it is from reducing contention of ALUs,
+> memory bandwidth, CPU caches, or something else, but we saw reduced
+> latencies when headroom is used.
+>
+> > the throttling mechanism effectively removes the throttled tasks from
+> > the schedule according to a specific duty cycle. When the side job is
+> > not throttled the main workload is experiencing the same latency issues
+> > as before, but by dynamically tuning the side job throttling you can
+> > achieve a better average latency. Am I missing something?
+> >
+> > Have you looked at your distribution of main job latency and tried to
+> > compare with when throttling is active/not active?
+>
+> cfs_bandwidth adjusts allowed runtime for each task_group each period
+> (configurable, 100ms by default). cpu.headroom logic applies gentle
+> throttling, so that the side workload gets some runtime in every period.
+> Therefore, if we look at time window equal to or bigger than 100ms, we
+> don't really see "throttling active time" vs. "throttling inactive time".
+>
+> >
+> > I'm wondering if the headroom solution is really the right solution for
+> > your use-case or if what you are really after is something which is
+> > lower priority than just setting the weight to 1. Something that
+>
+> The experiments show that, cpu.weight does proper work for priority: the
+> main workload gets priority to use the CPU; while the side workload only
+> fill the idle CPU. However, this is not sufficient, as the side workload
+> creates big enough contention to impact the main workload.
+>
+> > (nearly) always gets pre-empted by your main job (SCHED_BATCH and
+> > SCHED_IDLE might not be enough). If your main job consist
+> > of lots of relatively short wake-ups things like the min_granularity
+> > could have significant latency impact.
+>
+> cpu.headroom gives benefits in addition to optimizations in pre-empt
+> side. By maintaining some idle time, fewer pre-empt actions are
+> necessary, thus the main workload will get better latency.
 
-> 
-> What other things can be done via pidfd ?
+I agree with Morten's proposal, SCHED_IDLE should help your latency
+problem because side job will be directly preempted unlike normal cfs
+task even lowest priority.
+In addition to min_granularity, sched_period also has an impact on the
+time that a task has to wait before preempting the running task. Also,
+some sched_feature like GENTLE_FAIR_SLEEPERS can also impact the
+latency of a task.
 
-Very basic things right now and until CLONE_PIDFD is accepted (possibly
-for 5.2) we won't enable any more features.
-I'm not a fan of wild speculations and grand schemes that then don't
-come to fruition. :) Right now it's about focussing on somewhat cleanly
-covering the basics. Coming to a consensus there was hard enough. We
-have no intention in making this more complex right now as it needs to
-be.
+It would be nice to know if the latency problem comes from contention
+on cache resources or if it's mainly because you main load waits
+before running on a CPU
 
-Christian
+Regards,
+Vincent
+
+>
+> Thanks,
+> Song
+>
+> >
+> > Morten
+>
