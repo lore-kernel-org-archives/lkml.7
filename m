@@ -2,131 +2,93 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 52C29C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:40:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BDB48C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:41:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1FAF82073F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:40:37 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=brauner.io header.i=@brauner.io header.b="QoeFvxk2"
+	by mail.kernel.org (Postfix) with ESMTP id 824BA2073F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:41:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731644AbfDQRkg (ORCPT
+        id S1731719AbfDQRlz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 13:40:36 -0400
-Received: from mail-it1-f196.google.com ([209.85.166.196]:36301 "EHLO
-        mail-it1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730799AbfDQRkf (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 13:40:35 -0400
-Received: by mail-it1-f196.google.com with SMTP id y10so5778220itc.1
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 10:40:35 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=brauner.io; s=google;
-        h=date:user-agent:in-reply-to:references:mime-version
-         :content-transfer-encoding:subject:to:cc:from:message-id;
-        bh=uVrb5dweB2C8mXvi3q1l0v5rIi877toRasgD0R+ONMw=;
-        b=QoeFvxk2fEJ0TpTcXOEIliUb9HRHH2C83+Vz0jMkBvDNtVIOIBAM+D3zQPCfHcpu12
-         WsZeBN3z7JUSQjAxXuViNScX+Facde+gFapRMm9IFSIINU9umjpzAwSvHxxP081Tiinp
-         5++D9TV0PR+s/pcMcN6QqxehzTUi0RFWRSZIf9xFovOotA7kg9R/EKmxZWFgK/MpERAs
-         +3jXg271ntys6G7JGYQ4DwJb7PNT6sAMh4MwxhL5Z+cJIoiMPTnrdgAiC/dhQsAB+d5L
-         +iblyq2XsN8BD9gFrKfLvysaIlJa7OhsDrjDoQsuw4igps+YwbZV6Q/ZfKwVLpDrjWv0
-         PhHg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:user-agent:in-reply-to:references
-         :mime-version:content-transfer-encoding:subject:to:cc:from
-         :message-id;
-        bh=uVrb5dweB2C8mXvi3q1l0v5rIi877toRasgD0R+ONMw=;
-        b=nU8I77K1ibPIofeOVo3nBSu0heZhpul8ayoQGOPsyDV51Tqxy6eWmNc4CQro+mkVn2
-         cG/Vi225Mhi2ulzADwi76Suh0fFV4tyYUkAV0wit9sW8gOlCkOYG1pEvKqN92I46PH/6
-         osYj6I+0kLCRWB3ubS3XHrDRCvxMKjlRMB1FmEKu4NKeJ8rJq3KXevCC9ipzWavU9OZJ
-         cuaVlGNa7cFArGX68SQ1cVHHS5bqwNoeggP0UQ8GQXYlc7lS8hBZORTry13+0lsSLHXU
-         wChcl/ZRUoiqaeV3pjm0d8U8iWi+c2VlEhoZtQliBd07vvbtLyjJqHqOFXb8KOrRQsOn
-         b/kw==
-X-Gm-Message-State: APjAAAW8bZ38662Gjw4hw7NMnVHnXBT1N4j4/RF1sQrTAKO9VOhGWqSz
-        wJJGPl30EsYMquCL++FHv034CQ==
-X-Google-Smtp-Source: APXvYqwsoNTYwbts1PjPRYKI4T8hAdJH0qSTMs3ZHUQiaM7ubgVHnBln1JDNP8jxdLqf+PEWJmct8g==
-X-Received: by 2002:a24:1908:: with SMTP id b8mr35308565itb.136.1555522834572;
-        Wed, 17 Apr 2019 10:40:34 -0700 (PDT)
-Received: from [26.66.231.223] ([208.54.80.227])
-        by smtp.gmail.com with ESMTPSA id t142sm1557379ita.38.2019.04.17.10.40.32
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Apr 2019 10:40:33 -0700 (PDT)
-Date:   Wed, 17 Apr 2019 17:36:32 +0200
-User-Agent: K-9 Mail for Android
-In-Reply-To: <20190417152055.GJ32622@redhat.com>
-References: <20190416170233.10208-1-christian@brauner.io> <20190416170233.10208-4-christian@brauner.io> <20190417140106.GG32622@redhat.com> <20190417141144.k2kmg7hd7pdpywyw@brauner.io> <20190417152055.GJ32622@redhat.com>
+        Wed, 17 Apr 2019 13:41:55 -0400
+Received: from mga02.intel.com ([134.134.136.20]:10538 "EHLO mga02.intel.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728074AbfDQRly (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 13:41:54 -0400
+X-Amp-Result: SKIPPED(no attachment in message)
+X-Amp-File-Uploaded: False
+Received: from orsmga008.jf.intel.com ([10.7.209.65])
+  by orsmga101.jf.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Apr 2019 10:41:54 -0700
+X-ExtLoop1: 1
+X-IronPort-AV: E=Sophos;i="5.60,362,1549958400"; 
+   d="scan'208";a="135186965"
+Received: from linux.intel.com ([10.54.29.200])
+  by orsmga008.jf.intel.com with ESMTP; 17 Apr 2019 10:41:52 -0700
+Received: from mhphan-mobl2.amr.corp.intel.com (unknown [10.255.84.70])
+        by linux.intel.com (Postfix) with ESMTP id 56EAC580297;
+        Wed, 17 Apr 2019 10:41:53 -0700 (PDT)
+Subject: Re: [alsa-devel] [PATCH -next] ASoC: Intel: Haswell: Remove set but
+ not used variable 'stage_type'
+To:     Yue Haibing <yuehaibing@huawei.com>,
+        liam.r.girdwood@linux.intel.com, yang.jie@linux.intel.com,
+        broonie@kernel.org, perex@perex.cz, tiwai@suse.com
+Cc:     alsa-devel@alsa-project.org, linux-kernel@vger.kernel.org
+References: <20190417151140.20320-1-yuehaibing@huawei.com>
+From:   Pierre-Louis Bossart <pierre-louis.bossart@linux.intel.com>
+Message-ID: <ba043cd7-07af-717f-7498-d6bda7d6b79e@linux.intel.com>
+Date:   Wed, 17 Apr 2019 12:41:52 -0500
+User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:60.0)
+ Gecko/20100101 Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain;
- charset=utf-8
-Content-Transfer-Encoding: quoted-printable
-Subject: Re: [PATCH v1 3/4] signal: support CLONE_PIDFD with pidfd_send_signal
-To:     Oleg Nesterov <oleg@redhat.com>
-CC:     torvalds@linux-foundation.org, viro@zeniv.linux.org.uk,
-        jannh@google.com, dhowells@redhat.com, linux-api@vger.kernel.org,
-        linux-kernel@vger.kernel.org, serge@hallyn.com, luto@kernel.org,
-        arnd@arndb.de, ebiederm@xmission.com, keescook@chromium.org,
-        tglx@linutronix.de, mtk.manpages@gmail.com,
-        akpm@linux-foundation.org, cyphar@cyphar.com,
-        joel@joelfernandes.org, dancol@google.com
-From:   Christian Brauner <christian@brauner.io>
-Message-ID: <B0F3DFB1-B9B5-478C-89BB-75CBC7719D3B@brauner.io>
+In-Reply-To: <20190417151140.20320-1-yuehaibing@huawei.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On April 17, 2019 5:20:55 PM GMT+02:00, Oleg Nesterov <oleg@redhat=2Ecom> w=
-rote:
->On 04/17, Christian Brauner wrote:
->>
->> On Wed, Apr 17, 2019 at 04:01:06PM +0200, Oleg Nesterov wrote:
->> > On 04/16, Christian Brauner wrote:
->> > >
->> > > @@ -3581,12 +3588,12 @@ SYSCALL_DEFINE4(pidfd_send_signal, int,
->pidfd, int, sig,
->> > >  	if (flags)
->> > >  		return -EINVAL;
->> > >
->> > > -	f =3D fdget_raw(pidfd);
->> > > +	f =3D fdget(pidfd);
->> >
->> > could you explain this change?
->> >
->> > I am just curious, I don't understand why should we disallow O_PATH
->and how
->> > this connects to this patch=2E
->>
->> Sending a signal through a pidfd is considered to be on a par with a
->> "write" to that pidfd=2E
->
->OK, but how this connects to "support pidfds" ?
->
->> Additionally, we use the fops associated with the fd to detect
->whether
->> it is actually a pidfd or not=2E This is not possible with O_PATH since
->> f_ops will be set to dummy fops=2E
->
->indeed=2E=2E=2E I didn't know this, thanks!
->
->But this means that pidfd_send_signal() will return -EBADF with or
->without
->this change; pidfd_to_pid() will return -EBADF even if fdget_raw()
->suceeds,
->right?
->
->To clarify, I am not arguing=2E I am trying to understand why exactly do
->we
->need this s/fdget_raw/fdget/ change and, why it doesn't come as a
->separate
->patch=2E Can you add a note into the changelog?
+On 4/17/19 10:11 AM, Yue Haibing wrote:
+> From: YueHaibing <yuehaibing@huawei.com>
+> 
+> Fixes gcc '-Wunused-but-set-variable' warning:
+> 
+> sound/soc/intel/haswell/sst-haswell-ipc.c: In function 'hsw_stream_message':
+> sound/soc/intel/haswell/sst-haswell-ipc.c:669:29: warning: variable 'stage_type' set but not used [-Wunused-but-set-variable]
+> 
+> It is never used since introduction in
+> commit ba57f68235cf ("ASoC: Intel: create haswell folder and move haswell platform files in")
 
-I should split this into a separate patch indeed=2E
-Let me do that for v2=2E
+Thanks for the patch.
 
-Christian
+I think you could go further in the cleanup and remove both the variable 
+declaration and the static inline mst_get_stage_type that will also be 
+useless as a consequence of this assignment removal.
+
+Care to send a v2?
+
+> 
+> Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+> ---
+>   sound/soc/intel/haswell/sst-haswell-ipc.c | 1 -
+>   1 file changed, 1 deletion(-)
+> 
+> diff --git a/sound/soc/intel/haswell/sst-haswell-ipc.c b/sound/soc/intel/haswell/sst-haswell-ipc.c
+> index 31fcdf12..4d3de99 100644
+> --- a/sound/soc/intel/haswell/sst-haswell-ipc.c
+> +++ b/sound/soc/intel/haswell/sst-haswell-ipc.c
+> @@ -672,7 +672,6 @@ static int hsw_stream_message(struct sst_hsw *hsw, u32 header)
+>   
+>   	stream_msg = msg_get_stream_type(header);
+>   	stream_id = msg_get_stream_id(header);
+> -	stage_type = msg_get_stage_type(header);
+>   
+>   	stream = get_stream_by_id(hsw, stream_id);
+>   	if (stream == NULL)
+> 
 
