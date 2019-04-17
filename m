@@ -2,111 +2,192 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECE30C10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 09:02:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 87C5EC10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 09:04:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BBB37217D7
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 09:02:51 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4B264206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 09:04:08 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="sIdP+yi/"
+	dkim=pass (1024-bit key) header.d=nxp.com header.i=@nxp.com header.b="knZ9o+0b"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731469AbfDQJCu (ORCPT
+        id S1731448AbfDQJEH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 05:02:50 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:59670 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727282AbfDQJCu (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 05:02:50 -0400
-Received: from zn.tnic (p200300EC2F112E000C2D4197130645E8.dip0.t-ipconnect.de [IPv6:2003:ec:2f11:2e00:c2d:4197:1306:45e8])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id 1DB251EC04CD;
-        Wed, 17 Apr 2019 11:02:48 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1555491768;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=hpZAds/cr3Ks/842iy6cnwejw+3zgKS3e8JJC80M1jA=;
-        b=sIdP+yi/SIf3SIbCeuYtY/Dvdkv6/JjVm2w9OPwvbvpqpo4c5OaTMQAfcZcYOxvW6iHj2p
-        MP7H6IAo5snWJ+j55Cd42KDF6CjthZvg8R0q25AFuQZdPsfexw8WdqQcWCyMTPfcSt7D4T
-        nbumkLodwnh3s4Tjk9tJ3VL1rWbJD80=
-Date:   Wed, 17 Apr 2019 11:02:47 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Dave Young <dyoung@redhat.com>,
-        Junichi Nomura <j-nomura@ce.jp.nec.com>
-Cc:     Chao Fan <fanc.fnst@cn.fujitsu.com>, Baoquan He <bhe@redhat.com>,
-        Kairui Song <kasong@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        Wed, 17 Apr 2019 05:04:07 -0400
+Received: from mail-eopbgr10058.outbound.protection.outlook.com ([40.107.1.58]:22752
+        "EHLO EUR02-HE1-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1728446AbfDQJEG (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 05:04:06 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=nxp.com; s=selector1;
+ h=From:Date:Subject:Message-ID:Content-Type:MIME-Version:X-MS-Exchange-SenderADCheck;
+ bh=fwjob00YzK3C4sOi8ZTHvHprXhem2LA70B5tKlraN4w=;
+ b=knZ9o+0bic10Cuzbs6aFDZ4o0E0w3Eq3tdwVaR6A/FYSJBFEErVYqlI5wOOE4t+NA8ZbjmNDFEK1133PDbnjZLWrsLN7WugIYG6jXCejd6bjuLMYaCZlOQT2+p7UKhfVkkhteQlws+pqj05VLwCsyd7BUMJPTPW+iFqrC2ZwIeM=
+Received: from VE1PR04MB6479.eurprd04.prod.outlook.com (20.179.233.80) by
+ VE1PR04MB6431.eurprd04.prod.outlook.com (20.179.232.156) with Microsoft SMTP
+ Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384) id
+ 15.20.1792.17; Wed, 17 Apr 2019 09:04:01 +0000
+Received: from VE1PR04MB6479.eurprd04.prod.outlook.com
+ ([fe80::6c03:86ad:729d:e311]) by VE1PR04MB6479.eurprd04.prod.outlook.com
+ ([fe80::6c03:86ad:729d:e311%7]) with mapi id 15.20.1792.018; Wed, 17 Apr 2019
+ 09:04:01 +0000
+From:   "S.j. Wang" <shengjiu.wang@nxp.com>
+To:     Nicolin Chen <nicoleotsuka@gmail.com>
+CC:     "timur@kernel.org" <timur@kernel.org>,
+        "Xiubo.Lee@gmail.com" <Xiubo.Lee@gmail.com>,
+        "festevam@gmail.com" <festevam@gmail.com>,
+        "broonie@kernel.org" <broonie@kernel.org>,
+        "alsa-devel@alsa-project.org" <alsa-devel@alsa-project.org>,
+        "linuxppc-dev@lists.ozlabs.org" <linuxppc-dev@lists.ozlabs.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH v4] x86/boot: Use efi_setup_data for searching RSDP on
- kexec-ed kernel
-Message-ID: <20190417090247.GD20492@zn.tnic>
-References: <20190412084956.GC19808@zn.tnic>
- <20190412133528.GD19808@zn.tnic>
- <cc2c1dbe-4fb3-fb7d-0540-c04734fc15cb@ce.jp.nec.com>
- <20190415090717.GA29317@zn.tnic>
- <20190415102525.GB29317@zn.tnic>
- <23309b73-d135-a207-564b-6003cee39184@ce.jp.nec.com>
- <20190416094024.GE27892@zn.tnic>
- <34d02ae0-7182-2983-b601-acbdb4085f33@ce.jp.nec.com>
- <20190417070250.GD8411@dhcp-128-65.nay.redhat.com>
- <20190417085434.GC20492@zn.tnic>
+Subject: Re: [PATCH V2 1/2] ASoC: fsl_asrc: replace the process_option table
+ with function
+Thread-Topic: [PATCH V2 1/2] ASoC: fsl_asrc: replace the process_option table
+ with function
+Thread-Index: AdT0/GcG100TVa/MRHKfxlkKyc55XQ==
+Date:   Wed, 17 Apr 2019 09:04:01 +0000
+Message-ID: <VE1PR04MB6479AF6501388845572EC268E3250@VE1PR04MB6479.eurprd04.prod.outlook.com>
+Accept-Language: en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+authentication-results: spf=none (sender IP is )
+ smtp.mailfrom=shengjiu.wang@nxp.com; 
+x-originating-ip: [92.121.36.197]
+x-ms-publictraffictype: Email
+x-ms-office365-filtering-correlation-id: 5e61cf4a-46e4-40d0-56e2-08d6c313a281
+x-ms-office365-filtering-ht: Tenant
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(4652040)(8989299)(4534185)(4627221)(201703031133081)(201702281549075)(8990200)(5600140)(711020)(4605104)(4618075)(2017052603328)(7193020);SRVR:VE1PR04MB6431;
+x-ms-traffictypediagnostic: VE1PR04MB6431:
+x-microsoft-antispam-prvs: <VE1PR04MB64310E63D68F5E6923919DCAE3250@VE1PR04MB6431.eurprd04.prod.outlook.com>
+x-forefront-prvs: 0010D93EFE
+x-forefront-antispam-report: SFV:NSPM;SFS:(10009020)(979002)(136003)(366004)(396003)(346002)(39860400002)(376002)(199004)(189003)(102836004)(8936002)(81156014)(81166006)(26005)(68736007)(486006)(186003)(8676002)(14454004)(476003)(86362001)(74316002)(5660300002)(97736004)(52536014)(71190400001)(71200400001)(2906002)(7736002)(305945005)(6116002)(25786009)(3846002)(6506007)(316002)(6436002)(4326008)(33656002)(256004)(54906003)(229853002)(6916009)(7696005)(1411001)(99286004)(6246003)(9686003)(55016002)(106356001)(66066001)(53936002)(105586002)(478600001)(969003)(989001)(999001)(1009001)(1019001);DIR:OUT;SFP:1101;SCL:1;SRVR:VE1PR04MB6431;H:VE1PR04MB6479.eurprd04.prod.outlook.com;FPR:;SPF:None;LANG:en;PTR:InfoNoRecords;A:1;MX:1;
+received-spf: None (protection.outlook.com: nxp.com does not designate
+ permitted sender hosts)
+x-ms-exchange-senderadcheck: 1
+x-microsoft-antispam-message-info: BGeDk0WtkgJGtj10SgrE/dGsE5K5h0kdsTVt2k9PoRpIsZals+W/CbmwZUjZN8/7cU1F/20YLAAys2hWCSwEaoeMGxOxU7xNsUJLKMqrXgdqAwS2bbWCpudvpmYuZjYMa6BXkiG7mLgj+MxxqcXYbqUJKw05Lnd2Y3jph2l9gcYgmh2NntFf62JWObvo1UxbGHbHa1ho2dR6FNLRbMzIzgFzY4VClD/75BZc+tG4lOczL8CzArifMyHjs+wyInqlmr26WYJGfxUI62d6Qnade3YXUbRbXxuspX5qlit7evNVKyB3jyu31fzVn6KlelNalacHoJYjKFc/yTrWuSr6p0ItM+MhZYyed8rE1jcz0QkQ7G6J6KdvP1bBWWBjm/DrbSLeINuDdJ2xpAcogRAn7i+0c4iX18XurHwTKWV+sUc=
+Content-Type: text/plain; charset="us-ascii"
+Content-Transfer-Encoding: quoted-printable
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190417085434.GC20492@zn.tnic>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+X-OriginatorOrg: nxp.com
+X-MS-Exchange-CrossTenant-Network-Message-Id: 5e61cf4a-46e4-40d0-56e2-08d6c313a281
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Apr 2019 09:04:01.6423
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Hosted
+X-MS-Exchange-CrossTenant-id: 686ea1d3-bc2b-4c6f-a92c-d99c5c301635
+X-MS-Exchange-CrossTenant-mailboxtype: HOSTED
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: VE1PR04MB6431
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 10:54:34AM +0200, Borislav Petkov wrote:
-> On Wed, Apr 17, 2019 at 03:02:50PM +0800, Dave Young wrote:
-> > How about move it after console_init,
-> 
-> Sounds ok to me. That's still before KASLR gets setup and should work
-> for Chao's movable regions too.
+Hi
 
----
-diff --git a/arch/x86/boot/compressed/misc.c b/arch/x86/boot/compressed/misc.c
-index c0d6c560df69..24e65a0f756d 100644
---- a/arch/x86/boot/compressed/misc.c
-+++ b/arch/x86/boot/compressed/misc.c
-@@ -351,9 +351,6 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
- 	/* Clear flags intended for solely in-kernel use. */
- 	boot_params->hdr.loadflags &= ~KASLR_FLAG;
- 
--	/* Save RSDP address for later use. */
--	boot_params->acpi_rsdp_addr = get_rsdp_addr();
--
- 	sanitize_boot_params(boot_params);
- 
- 	if (boot_params->screen_info.orig_video_mode == 7) {
-@@ -368,6 +365,14 @@ asmlinkage __visible void *extract_kernel(void *rmode, memptr heap,
- 	cols = boot_params->screen_info.orig_video_cols;
- 
- 	console_init();
-+
-+	/*
-+	 * Save RSDP address for later use. Have this after console_init()
-+	 * so that early debugging output from the RSDP parsing code can be
-+	 * collected.
-+	 */
-+	boot_params->acpi_rsdp_addr = get_rsdp_addr();
-+
- 	debug_putstr("early console in extract_kernel\n");
- 
- 	free_mem_ptr     = heap;	/* Heap */
+>=20
+>=20
+> On Thu, Apr 11, 2019 at 09:39:06AM +0000, S.j. Wang wrote:
+>=20
+> > +/*
+> > + * Select the pre-processing and post-processing options
+>=20
+> By aligning with other function comments:
+> /**
+>  * Select the pre-processing and post-processing options
+>=20
+> > + *
+> > + * Fsin: input sample rate
+> > + * Fsout: output sample rate
+>=20
+> I would suggest to use inrate and outrate to keep naming consistent.
+>=20
+> > + * pre_proc: return value for pre-processing option
+> > + * post_proc: return value for post-processing option  */ static int
+> > +fsl_asrc_sel_proc(int Fsin, int Fsout, int *pre_proc, int *post_proc)
+> > +{
+> > +     bool det_out_op2_cond;
+> > +     bool det_out_op0_cond;
+>=20
+> By looking at the comments below. Probably better to rename them
+>         bool post_proc_cond2, post_proc_cond0;
+>=20
+> > +     /* Codition for selection of post-processing */
+>=20
+> "Codition" -> "Conditions"
+>=20
+> > +     det_out_op2_cond =3D (((Fsin * 15 > Fsout * 16) & (Fsout < 56000)=
+) |
+> > +                                     ((Fsin > 56000) & (Fsout <
+> > + 56000)));
+>=20
+> Combining Daniel's comments + indentation alignment:
+>         det_out_op2_cond =3D (Fsin * 15 > Fsout * 16 && Fsout < 56000) ||
+>                            (Fsin > 56000 && Fsout < 56000);
+>=20
+> > +     det_out_op0_cond =3D (Fsin * 23 < Fsout * 8);
+> > +
+> > +     /*
+> > +      * unsupported case: Tsout>16.125*Tsin, and Tsout>8.125*Tsin.
+>=20
+> Funny thing is that there'd be no point in checking the 16.125, if Tsout =
+is
+> bigger than 8.125 times of Tsin, i.e. only one condition:
+>         Tsout > 8.125 * Tsin
+>=20
+> > +      * Tsout>16.125*Tsin -> Fsin * 8 > 129 * Fsout
+> > +      * Tsout>8.125*Tsin  -> Fsin * 8 > 65 * Fsout
+> > +      * Tsout>4.125*Tsin  -> Fsin * 8 > 33 * Fsout
+> > +      * Tsout>1.875*Tsin  -> Fsin * 8 > 15 * Fsout
+>=20
+> Took me a while to understand what it is saying....
+>=20
+> Better to write like this:
+>         /* Does not support cases: Tsout > 8.125 * Tsin */
+>         if (Fsin * 8 > 65 * Fsout) {
+>                 pair_err("Does not support %d > 8.125 * %d\n", Fsout, Fsi=
+n);
+>                 return -EINVAL;
+>         }
+>=20
+>         /* Otherwise, select pre_proc between [0, 2] */
+>         if (Fsin * 8 > 33 * Fsout)
+> > +             *pre_proc =3D 2;
+> > +     else if (Fsin * 8 > 15 * Fsout) {
+> > +             if (Fsin > 152000)
+> > +                     *pre_proc =3D 2;
+> > +             else
+> > +                     *pre_proc =3D 1;
+> > +     } else if (Fsin < 76000)
+> > +             *pre_proc =3D 0;
+> > +     else if (Fsin > 152000)
+> > +             *pre_proc =3D 2;
+> > +     else
+> > +             *pre_proc =3D 1;
+>=20
+> <=3D=3D Would look better by moving post_cond calculations here.
+>=20
+> > +     if (det_out_op2_cond)
+> > +             *post_proc =3D 2;
+> > +     else if (det_out_op0_cond)
+> > +             *post_proc =3D 0;
+> > +     else
+> > +             *post_proc =3D 1;
+>=20
+> And we could remove this check below:
+> > +     /* unsupported options */
+> > +     if (*pre_proc =3D=3D 4 || *pre_proc =3D=3D 5)
+> > +             return -EINVAL;
+>=20
+> So basically we are doing:
+>         1) Error out unsupported cases
+>         2) Select pre_proc
+>         3) Calculate conditions for post_proc
+>         4) Select post_proc
+>=20
+> Thanks
 
--- 
-Regards/Gruss,
-    Boris.
+Thanks for reviewing, will send v3.
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
