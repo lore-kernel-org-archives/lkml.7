@@ -2,129 +2,80 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F040CC282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:20:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BE1E6C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:21:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id C5A55217FA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:20:16 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 91C5F2183F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:21:19 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387453AbfDQVUP (ORCPT
+        id S2387454AbfDQVVS (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 17:20:15 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:58981 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726162AbfDQVUP (ORCPT
+        Wed, 17 Apr 2019 17:21:18 -0400
+Received: from zeniv.linux.org.uk ([195.92.253.2]:50946 "EHLO
+        ZenIV.linux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfDQVVR (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 17:20:15 -0400
-Received: from pd9ef12d2.dip0.t-ipconnect.de ([217.239.18.210] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hGryH-0005mC-Kp; Wed, 17 Apr 2019 23:19:57 +0200
-Date:   Wed, 17 Apr 2019 23:19:50 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Nadav Amit <nadav.amit@gmail.com>
-cc:     Ingo Molnar <mingo@kernel.org>,
-        Khalid Aziz <khalid.aziz@oracle.com>, juergh@gmail.com,
-        Tycho Andersen <tycho@tycho.ws>, jsteckli@amazon.de,
-        keescook@google.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Juerg Haefliger <juerg.haefliger@canonical.com>,
-        deepa.srinivasan@oracle.com, chris.hyser@oracle.com,
-        tyhicks@canonical.com, David Woodhouse <dwmw@amazon.co.uk>,
-        Andrew Cooper <andrew.cooper3@citrix.com>, jcm@redhat.com,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        iommu <iommu@lists.linux-foundation.org>,
-        X86 ML <x86@kernel.org>, linux-arm-kernel@lists.infradead.org,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Khalid Aziz <khalid@gonehiking.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Dave Hansen <dave@sr71.net>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Arjan van de Ven <arjan@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Subject: Re: [RFC PATCH v9 03/13] mm: Add support for eXclusive Page Frame
- Ownership (XPFO)
-In-Reply-To: <063753CC-5D83-4789-B594-019048DE22D9@gmail.com>
-Message-ID: <alpine.DEB.2.21.1904172317460.3174@nanos.tec.linutronix.de>
-References: <cover.1554248001.git.khalid.aziz@oracle.com> <f1ac3700970365fb979533294774af0b0dd84b3b.1554248002.git.khalid.aziz@oracle.com> <20190417161042.GA43453@gmail.com> <e16c1d73-d361-d9c7-5b8e-c495318c2509@oracle.com> <20190417170918.GA68678@gmail.com>
- <56A175F6-E5DA-4BBD-B244-53B786F27B7F@gmail.com> <20190417172632.GA95485@gmail.com> <063753CC-5D83-4789-B594-019048DE22D9@gmail.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 17 Apr 2019 17:21:17 -0400
+Received: from viro by ZenIV.linux.org.uk with local (Exim 4.92 #3 (Red Hat Linux))
+        id 1hGrzT-0007xA-Is; Wed, 17 Apr 2019 21:21:11 +0000
+Date:   Wed, 17 Apr 2019 22:21:11 +0100
+From:   Al Viro <viro@zeniv.linux.org.uk>
+To:     Arnd Bergmann <arnd@arndb.de>
+Cc:     linux-fsdevel@vger.kernel.org, y2038@lists.linaro.org,
+        linux-kernel@vger.kernel.org,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Felipe Balbi <felipe.balbi@linux.intel.com>,
+        Frederic Barrat <fbarrat@linux.ibm.com>,
+        Frank Haverkamp <haver@linux.ibm.com>,
+        Kashyap Desai <kashyap.desai@broadcom.com>,
+        Sumit Saxena <sumit.saxena@broadcom.com>,
+        Shivasharan S <shivasharan.srikanteshwara@broadcom.com>,
+        "James E.J. Bottomley" <jejb@linux.ibm.com>,
+        "Martin K. Petersen" <martin.petersen@oracle.com>,
+        Felipe Balbi <balbi@kernel.org>,
+        Jerry Zhang <zhangjerry@google.com>,
+        Vincent Pelletier <plr.vincent@gmail.com>,
+        Andrzej Pietrasiewicz <andrzej.p@collabora.com>,
+        Shen Jing <jingx.shen@intel.com>,
+        linuxppc-dev@lists.ozlabs.org, megaraidlinux.pdl@broadcom.com,
+        linux-scsi@vger.kernel.org, linux-usb@vger.kernel.org
+Subject: Re: [PATCH v3 10/26] compat_ioctl: use correct compat_ptr()
+ translation in drivers
+Message-ID: <20190417212111.GX2217@ZenIV.linux.org.uk>
+References: <20190416202013.4034148-1-arnd@arndb.de>
+ <20190416202013.4034148-11-arnd@arndb.de>
 MIME-Version: 1.0
-Content-Type: multipart/mixed; boundary="8323329-1402638458-1555535997=:3174"
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190416202013.4034148-11-arnd@arndb.de>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-  This message is in MIME format.  The first part should be readable text,
-  while the remaining parts are likely unreadable without MIME-aware tools.
-
---8323329-1402638458-1555535997=:3174
-Content-Type: text/plain; charset=utf-8
-Content-Transfer-Encoding: 8BIT
-
-On Wed, 17 Apr 2019, Nadav Amit wrote:
-> > On Apr 17, 2019, at 10:26 AM, Ingo Molnar <mingo@kernel.org> wrote:
-> >> As I was curious, I looked at the paper. Here is a quote from it:
-> >> 
-> >> "In x86-64, however, the permissions of physmap are not in sane state.
-> >> Kernels up to v3.8.13 violate the W^X property by mapping the entire region
-> >> as “readable, writeable, and executable” (RWX)—only very recent kernels
-> >> (≥v3.9) use the more conservative RW mapping.”
-> > 
-> > But v3.8.13 is a 5+ years old kernel, it doesn't count as a "modern" 
-> > kernel in any sense of the word. For any proposed patchset with 
-> > significant complexity and non-trivial costs the benchmark version 
-> > threshold is the "current upstream kernel".
-> > 
-> > So does that quote address my followup questions:
-> > 
-> >> Is this actually true of modern x86-64 kernels? We've locked down W^X
-> >> protections in general.
-> >> 
-> >> I.e. this conclusion:
-> >> 
-> >>  "Therefore, by simply overwriting kfptr with 0xFFFF87FF9F080000 and
-> >>   triggering the kernel to dereference it, an attacker can directly
-> >>   execute shell code with kernel privileges."
-> >> 
-> >> ... appears to be predicated on imperfect W^X protections on the x86-64
-> >> kernel.
-> >> 
-> >> Do such holes exist on the latest x86-64 kernel? If yes, is there a
-> >> reason to believe that these W^X holes cannot be fixed, or that any fix
-> >> would be more expensive than XPFO?
-> > 
-> > ?
-> > 
-> > What you are proposing here is a XPFO patch-set against recent kernels 
-> > with significant runtime overhead, so my questions about the W^X holes 
-> > are warranted.
-> > 
+On Tue, Apr 16, 2019 at 10:19:48PM +0200, Arnd Bergmann wrote:
+> A handful of drivers all have a trivial wrapper around their ioctl
+> handler, but don't call the compat_ptr() conversion function at the
+> moment. In practice this does not matter, since none of them are used
+> on the s390 architecture and for all other architectures, compat_ptr()
+> does not do anything, but using the new compat_ptr_ioctl()
+> helper makes it more correct in theory, and simplifies the code.
 > 
-> Just to clarify - I am an innocent bystander and have no part in this work.
-> I was just looking (again) at the paper, as I was curious due to the recent
-> patches that I sent that improve W^X protection.
+> Acked-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> Acked-by: Andrew Donnellan <andrew.donnellan@au1.ibm.com>
+> Acked-by: Felipe Balbi <felipe.balbi@linux.intel.com>
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> ---
+>  drivers/misc/cxl/flash.c            |  8 +-------
+>  drivers/misc/genwqe/card_dev.c      | 23 +----------------------
+>  drivers/scsi/megaraid/megaraid_mm.c | 28 +---------------------------
+>  drivers/usb/gadget/function/f_fs.c  | 12 +-----------
 
-It's not necessarily a W+X issue. The user space text is mapped in the
-kernel as well and even if it is mapped RX then this can happen. So any
-kernel mappings of user space text need to be mapped NX!
-
-Thanks,
-
-	tglx
---8323329-1402638458-1555535997=:3174--
+ACK, provided that all their ioctls are taking pointers (which is
+worth mentioning in commit message, assuming it's true)
