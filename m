@@ -2,113 +2,166 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1F69CC282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:57:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C6A2C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:58:04 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E1405206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:57:15 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C573F206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:58:03 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="foqLK7hG"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="tHtvYLxi"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732302AbfDQN5O (ORCPT
+        id S1732318AbfDQN6C (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 09:57:14 -0400
-Received: from merlin.infradead.org ([205.233.59.134]:57634 "EHLO
-        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729356AbfDQN5O (ORCPT
+        Wed, 17 Apr 2019 09:58:02 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:56038 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729940AbfDQN6B (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 09:57:14 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
-        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=BOrf+QF7nvh2oh+rkaLqk3HF+Je7cpTcZQWan29hzUA=; b=foqLK7hG6sfTn2tW5K0HB6C3E
-        nojUivmtotAkbQ4ZwbVMm4VrzADCJTB5iBn8pIcK5dv5CO4AO0vlCXxXdcGfpj7A2svPl3FAYIXA9
-        2PmX2egOjIlwazYBI7Gb5sWAyCyuuJqAFXzgJp547hbmeLl3FJuDApD84G+y8bS2Kpmq35V/Mrw/L
-        8M/6vOPGueWbm+vdzkawKkPK3K2dRyobg7Cla0f3Aglv+STd9BbBW/VjtuKDkbJ9c8xxeypR3psxu
-        oF+t/MwtcxaYgyFL+1OoZx+O41n17wxX1QHwuSAY5L1ifVeuuVFezcJX6E4ShSktFOQWEiulpNGpa
-        WXLgHGwPA==;
-Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
-        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
-        id 1hGl3e-0003QQ-29; Wed, 17 Apr 2019 13:57:02 +0000
-Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
-        id 5AB0929B5292B; Wed, 17 Apr 2019 15:56:59 +0200 (CEST)
-Date:   Wed, 17 Apr 2019 15:56:59 +0200
-From:   Peter Zijlstra <peterz@infradead.org>
-To:     Waiman Long <longman@redhat.com>
-Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        linux-kernel@vger.kernel.org, x86@kernel.org,
-        Davidlohr Bueso <dave@stgolabs.net>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Tim Chen <tim.c.chen@linux.intel.com>,
-        huang ying <huang.ying.caritas@gmail.com>
-Subject: Re: [PATCH v4 11/16] locking/rwsem: Enable readers spinning on writer
-Message-ID: <20190417135659.GH4038@hirez.programming.kicks-ass.net>
-References: <20190413172259.2740-1-longman@redhat.com>
- <20190413172259.2740-12-longman@redhat.com>
+        Wed, 17 Apr 2019 09:58:01 -0400
+Received: by mail-it1-f194.google.com with SMTP id y134so4673278itc.5
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 06:58:01 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linaro.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=r5h32+drSoE54EyvHLyIsrM6JZG0yPGOI/3krhxwzbQ=;
+        b=tHtvYLxiK8ft+wJ7IbmVKufEezCX/JUVctfVpTD7kQ89k2Zu55rObYNZmD7pGWTxtr
+         RolIv6ujTiCuXyUvK5CnxCVBKQ6SWLjNVcgLN9vGfv8LKUh1lFa1B3r1tEWY6IyFrYld
+         4syb8Ia918gVL39IHxVHELhSDJSHOTvpV4AOd/8Gp0hEV2eMGkYf27r0XrT50z20fDtA
+         lvXHT9RJrimjArD1uEoJKnwnh22tB2dKEeoadvKtU/KpZ5sHUIFsvtjahLIE26ly6q3W
+         HYaj7xamOtKZs3e4Ywhrua9ROaLP0X50uTyldUfwkTJCKVt3c6d3Itsj7aPgMl+RZ+Uk
+         JyXQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=r5h32+drSoE54EyvHLyIsrM6JZG0yPGOI/3krhxwzbQ=;
+        b=JTQjbV8FrU9erUAZP4jbz3S4PXa+GL9+uPxrSY9QoBG1SDb554+y94no6Zd2bJNQXu
+         HTTmrHnDJzV4QIlVYjDIub0YFGoaj9VsR+FGPrXLuXmX+/ak3vxgK7Ked7HD3VUuAcuC
+         6s997/bI9iFziSDFFw/CYnA1jNMON21vgtHEGIFob8yL0C6qHTFh3YrzhPoCeEKIEC3P
+         +fxs+vVBNsQWifje6E/X3FqUEDwLnI7AMOZr/M78ak5bnL9BY8/lYzyc7UzPiduymp8t
+         EDuFWwrcO4mxrP4mLFFAe/00M2mp8xJEODHbG0n89L3N4+7gwVBu/DwUkUSStFJ3J074
+         QBBg==
+X-Gm-Message-State: APjAAAUu9AETOovXmNvN+9RPPq60D1uB3bS1EfczRZZX6dGNElplJ+b8
+        DgimBNq3m16vPWWe6XJoySIGIJ3pT4qALhTtK/vAwA==
+X-Google-Smtp-Source: APXvYqztMwK1QRhYP119Nie/vqUAxuwnAGSKS4TeeOGW+tVyW7XIfBVB13GwGATJwSHN/Ol+7MbzWO+SBCD3wVP7f5s=
+X-Received: by 2002:a24:ee83:: with SMTP id b125mr32363980iti.43.1555509480777;
+ Wed, 17 Apr 2019 06:58:00 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190413172259.2740-12-longman@redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190412102738.12679-1-leo.yan@linaro.org> <20190412102738.12679-2-leo.yan@linaro.org>
+ <CANLsYkw1vaevcJZfjQfF9BeUvi1THGNtu+SH+LR008LjZOc7fA@mail.gmail.com> <20190417000959.GB6202@leoy-ThinkPad-X240s>
+In-Reply-To: <20190417000959.GB6202@leoy-ThinkPad-X240s>
+From:   Mathieu Poirier <mathieu.poirier@linaro.org>
+Date:   Wed, 17 Apr 2019 07:57:50 -0600
+Message-ID: <CANLsYkwEBmn519ey-Vg-4-yfKFCaZv8kTDZ4sWpVzNTBOdtC=g@mail.gmail.com>
+Subject: Re: [PATCH v5 1/4] dt-bindings: arm: coresight: Add new compatible
+ for static replicator
+To:     Leo Yan <leo.yan@linaro.org>
+Cc:     Suzuki K Poulose <suzuki.poulose@arm.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Mark Rutland <mark.rutland@arm.com>,
+        Alexander Shishkin <alexander.shishkin@linux.intel.com>,
+        linux-arm-kernel <linux-arm-kernel@lists.infradead.org>,
+        devicetree@vger.kernel.org,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Sat, Apr 13, 2019 at 01:22:54PM -0400, Waiman Long wrote:
-> @@ -549,7 +582,7 @@ static noinline enum owner_state rwsem_spin_on_owner(struct rw_semaphore *sem)
->  	return !owner ? OWNER_NULL : OWNER_READER;
->  }
->  
-> -static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
-> +static bool rwsem_optimistic_spin(struct rw_semaphore *sem, bool wlock)
->  {
->  	bool taken = false;
->  	bool is_rt_task = rt_task(current);
-> @@ -558,9 +591,6 @@ static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
->  	preempt_disable();
->  
->  	/* sem->wait_lock should not be held when doing optimistic spinning */
-> -	if (!rwsem_can_spin_on_owner(sem))
-> -		goto done;
-> -
->  	if (!osq_lock(&sem->osq))
->  		goto done;
->  
-> @@ -580,10 +610,11 @@ static bool rwsem_optimistic_spin(struct rw_semaphore *sem)
->  		/*
->  		 * Try to acquire the lock
->  		 */
-> -		if (rwsem_try_write_lock_unqueued(sem)) {
-> -			taken = true;
-> +		taken = wlock ? rwsem_try_write_lock_unqueued(sem)
-> +			      : rwsem_try_read_lock_unqueued(sem);
-> +
-> +		if (taken)
->  			break;
-> -		}
->  
->  		/*
->  		 * An RT task cannot do optimistic spinning if it cannot
+On Tue, 16 Apr 2019 at 18:10, Leo Yan <leo.yan@linaro.org> wrote:
+>
+> On Tue, Apr 16, 2019 at 02:18:40PM -0600, Mathieu Poirier wrote:
+> > Hi Leo,
+> >
+> > On Fri, 12 Apr 2019 at 04:28, Leo Yan <leo.yan@linaro.org> wrote:
+> > >
+> > > CoreSight uses below bindings for replicator:
+> > >
+> > >   Dynamic replicator, aka. configurable replicator:
+> > >     "arm,coresight-dynamic-replicator", "arm,primecell";
+> > >
+> > >   Static replicator, aka. non-configurable replicator:
+> > >     "arm,coresight-replicator";
+> > >
+> > > The compatible string "arm,coresight-replicator" is not an explicit
+> > > naming to express the replicator is 'static'.  To unify the naming
+> > > convention, this patch introduces a new compatible string
+> > > "arm,coresight-static-replicator" for the static replicator; the
+> > > compatible string "arm,coresight-replicator" is kept for backward
+> > > compatibility, but tag it as obsolete and suggest to use the new
+> > > compatible string.
+> > >
+> > > As result CoreSight replicator have below bindings:
+> > >
+> > >   Dynamic replicator:
+> > >     "arm,coresight-dynamic-replicator", "arm,primecell";
+> > >
+> > >   Static replicator:
+> > >     "arm,coresight-static-replicator";
+> > >     "arm,coresight-replicator"; (obsolete)
+> > >
+> > > Signed-off-by: Leo Yan <leo.yan@linaro.org>
+> > > ---
+> > >  Documentation/devicetree/bindings/arm/coresight.txt | 7 +++++--
+> > >  1 file changed, 5 insertions(+), 2 deletions(-)
+> > >
+> > > diff --git a/Documentation/devicetree/bindings/arm/coresight.txt b/Documentation/devicetree/bindings/arm/coresight.txt
+> > > index f8aff65ab921..d02d160fa8ac 100644
+> > > --- a/Documentation/devicetree/bindings/arm/coresight.txt
+> > > +++ b/Documentation/devicetree/bindings/arm/coresight.txt
+> > > @@ -69,7 +69,10 @@ its hardware characteristcs.
+> > >
+> > >         * compatible: Currently supported value is (note the absence of the
+> > >           AMBA markee):
+> > > -               - "arm,coresight-replicator"
+> > > +               - Coresight Non-configurable Replicator:
+> > > +                       "arm,coresight-static-replicator";
+> > > +                       "arm,coresight-replicator"; (OBSOLETE. For backward
+> > > +                               compatibility and will be removed)
+> > >
+> > >         * port or ports: see "Graph bindings for Coresight" below.
+> > >
+> > > @@ -169,7 +172,7 @@ Example:
+> > >                 /* non-configurable replicators don't show up on the
+> > >                  * AMBA bus.  As such no need to add "arm,primecell".
+> > >                  */
+> > > -               compatible = "arm,coresight-replicator";
+> > > +               compatible = "arm,coresight-static-replicator";
+> > >
+> > >                 out-ports {
+> > >                         #address-cells = <1>;
+> > > --
+> > > 2.17.1
+> >
+> > Since this is a binding patch it needs to be sent on its own.
+>
+> Thanks for reminding, Mathieu.
+>
+> Since this is the second time you remind me to send DT binding related
+> patches separately, so I may misunderstand your meaning and want to get
+> clarification to avoid making the same mistake for many times.
+>
+> Before I remembered in one patch set we need to organise patches with
+> sending document patch (or document changing patch) ahead and then
+> followed by the corresponding code change patch.  So this can give the
+> reviewers more clear context;  and this also can present the merging
+> dependency between document change patches and the code change patches.
+>
+> This is the rule I followed in this patch set and I sent to CoreSight
+> and DT maintainers (and mailing lists) together.
+>
+> Please let me know what you think about this?  And also welcome
+> Rob/Mark's suggestions.
 
-Alternatively you pass the trylock function as an argument:
+https://www.kernel.org/doc/Documentation/devicetree/bindings/submitting-patches.txt
 
-static bool rwsem_optimistic_spin(struct rw_semaphore *sem,
-				  bool (*trylock)(struct rw_semaphore *sem))
-{
-	...
-		if (trylock(sem)) {
-			taken = true;
-			goto unlock;
-		}
-	...
-}
-
+>
+> Thanks,
+> Leo Yan
