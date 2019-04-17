@@ -2,215 +2,119 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9E82DC282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:59:09 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 93E7FC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:59:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 645DE21773
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:59:09 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 62EC8206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:59:57 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="v1BZ4TCT"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="d3aCrIZf"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732350AbfDQN7I (ORCPT
+        id S1732355AbfDQN7z (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 09:59:08 -0400
-Received: from mail-qk1-f194.google.com ([209.85.222.194]:34319 "EHLO
-        mail-qk1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730209AbfDQN7I (ORCPT
+        Wed, 17 Apr 2019 09:59:55 -0400
+Received: from mail-wr1-f68.google.com ([209.85.221.68]:46316 "EHLO
+        mail-wr1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1731454AbfDQN7z (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 09:59:08 -0400
-Received: by mail-qk1-f194.google.com with SMTP id n68so14384054qka.1
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 06:59:07 -0700 (PDT)
+        Wed, 17 Apr 2019 09:59:55 -0400
+Received: by mail-wr1-f68.google.com with SMTP id t17so32051170wrw.13;
+        Wed, 17 Apr 2019 06:59:54 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
-         :cc;
-        bh=6RJK/OXbOLwSkl4kFszwfj+QheAbq4xdID7Xf2T785o=;
-        b=v1BZ4TCTQlKaiMK7OvoNZNm0OcZA5UTzBMq1nCEYhs+s8RllOjm9OqUHZ10pQMdIhk
-         nQDb31Fvji0FtabKyOUXZkNjPc+aou8vdGox7Fj/AFkBETy+9rJzJpyDh0w8DQMLq9Xa
-         LdDMhhfeJGc1PsNDIqL2NIOn4XsA+pqpuz/yYQWabVmtSdLom+UynLAyVI1/WEI/Ygfv
-         DtZLxmd9g6TBx4cWxow5+VF/9z2LKK9L6Ad9gVRBdd3K6NWXgJZSB7ZQNJIKdjV8dBK5
-         kcanX9O8Q6Dv7xw+WV0JG1NTxIPbCqu6+RPtNCojyIpMEV78YuhKtf2zYWGAN6Nf/tl+
-         5Ntg==
+        d=gmail.com; s=20161025;
+        h=reply-to:subject:to:references:from:message-id:date:user-agent
+         :mime-version:in-reply-to:content-transfer-encoding:content-language;
+        bh=w6bSU+aoJzkpTqgevvPOdjffpkj+vw/h7/N6upl4I1E=;
+        b=d3aCrIZfC1c8ZNp5KfpUfaTCTrPdWUzFNK5X/zD5gIjtyHC98BsuDA2yMulK00wt3k
+         DQgv8vCihflozMNGhNhP2kjts5Fb6VCJc98bQHzAqUY+/1crXAy3kW4ZqmDuUksOmWdV
+         1mZuh8Pg+6TnpOthNE/lMrhGo7Wj6Pt8DB7JdIhhTAc408V0fRbycArUbciJ62Ay5dB/
+         jWuIFmXj8hWO1ZiM5N6BaqBps3zofU+q5QFHZ0alIrACpTwiEVtgZv312QcNUF5W1Fiu
+         i2k/MoouE3CUIdnwr6gS3sFbA506h6j604EO8OFkRcwp+bw8QAMzQU9RMoO21UGoipX5
+         7LMQ==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=6RJK/OXbOLwSkl4kFszwfj+QheAbq4xdID7Xf2T785o=;
-        b=cFgAwYFtezQnUQB7qnImF3sgPUtSMVsAdKG4YVKSMJRd63mSiTNvSsRscw8LntaLg1
-         1bMTzLZydcxopHET7x7rlHPIFwbVIUsPdN3SKPgFqBjD6fbmjEFYJKGYnV+kd4e2s3DW
-         hOrHLIVG6crs4wbB5FF89Ep6gR19AExj11ndTt075g0ooruzeCu8ZaNN6slBgi/k3kEP
-         nUZfV1tjTPWIl4Y+V/vHCaofTO6RHMUwaX7+GBiI2wsJc09MV+iuaUFVA670+AGI5VO/
-         R0JY8j05yWAJHpmYwmCWufaxagty6+vrrb9eaFc/OQkLANMb/AIsbrAUJHUVkvXlso+6
-         n7JA==
-X-Gm-Message-State: APjAAAXxEKnDMZ2zsF2RLY1nHKSN4R1+iepwiY+8lAjFK1NDaInC//O7
-        8D42wBAEFF/d9KzkcA71zASwMzNZ5HZOqg5q541FsVq4l6c=
-X-Google-Smtp-Source: APXvYqwzmZTcuUJqd6dgDmRdPpkOESO7iaNxU+0+2Hi2/iUkdmRXFRq8f8kEbpw/HXHfJvV5Ra38qIDEhEeUb9ffDpY=
-X-Received: by 2002:a37:aad8:: with SMTP id t207mr64821208qke.42.1555509546844;
- Wed, 17 Apr 2019 06:59:06 -0700 (PDT)
-MIME-Version: 1.0
-References: <20190313211844.29416-1-ilina@codeaurora.org> <20190313211844.29416-8-ilina@codeaurora.org>
- <155266731117.20095.4543997300651173812@swboyd.mtv.corp.google.com>
- <20190316113948.1d180259@why.wild-wind.fr.eu.org> <155320527587.20095.3351235428610314272@swboyd.mtv.corp.google.com>
-In-Reply-To: <155320527587.20095.3351235428610314272@swboyd.mtv.corp.google.com>
-From:   Linus Walleij <linus.walleij@linaro.org>
-Date:   Wed, 17 Apr 2019 15:58:52 +0200
-Message-ID: <CACRpkdYF=ibjisyedZy7eK2D5ovVcGsbFBaDBmDyEQ1NuEO+rA@mail.gmail.com>
-Subject: Re: [PATCH v4 07/10] drivers: pinctrl: msm: setup GPIO irqchip hierarchy
-To:     Stephen Boyd <swboyd@chromium.org>,
-        Marc Zyngier <marc.zyngier@arm.com>
-Cc:     Lina Iyer <ilina@codeaurora.org>,
-        Evan Green <evgreen@chromium.org>,
+        h=x-gm-message-state:reply-to:subject:to:references:from:message-id
+         :date:user-agent:mime-version:in-reply-to:content-transfer-encoding
+         :content-language;
+        bh=w6bSU+aoJzkpTqgevvPOdjffpkj+vw/h7/N6upl4I1E=;
+        b=pnsI4GUuuE+7DOWwL7ym4f8JQPbA4a739W6sgJY2UgIIW5f5fi7YKI0k1RNtxr8sGU
+         zrvpHBeyc5v9/D+jxeljmPgPUaZ2aTlSAZjPrS5drMta0OrOoQ/QyhEAOgg/Uorkf7v3
+         pBGtUq6EXPcVccOGoEFBSBCSR74jCy34JrIol2Wo6qxfbisrLcf5m89Ze6qjyaMAd3Zy
+         TiUpaHnNXj0VIzogLomP5QGlV8FRGCMgSln/cw0HakAdg9D50KrdNQ1QMp4n9tJwmcmj
+         m9t1unV3jdbs1Ndk4iRjlzGucDr2ferkB8zjtg6AoD8lpr4Psn3a3MKsIgAu6KQwLid1
+         R00w==
+X-Gm-Message-State: APjAAAWnfg13DrvdcQtMa0j0A6CsG/qoI7tMnskx2DDMnwENrsZoWU1B
+        dY4BTMfB1j7mAnI+Rkw0Vtp9TMJL
+X-Google-Smtp-Source: APXvYqxlErQCHkXeMFNHjqw8q0+/CNg+qXFS1R46qIh3OUvsusNL0r4WGWDKqjtqh1Xw6lULjaPY8w==
+X-Received: by 2002:adf:e790:: with SMTP id n16mr19803632wrm.292.1555509593857;
+        Wed, 17 Apr 2019 06:59:53 -0700 (PDT)
+Received: from ?IPv6:2a02:908:1252:fb60:be8a:bd56:1f94:86e7? ([2a02:908:1252:fb60:be8a:bd56:1f94:86e7])
+        by smtp.gmail.com with ESMTPSA id z18sm84325274wrr.90.2019.04.17.06.59.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 17 Apr 2019 06:59:53 -0700 (PDT)
+Reply-To: christian.koenig@amd.com
+Subject: Re: dynamic DMA-buf sharing between devices
+To:     Chunming Zhou <zhoucm1@amd.com>,
+        "sumit.semwal@linaro.org" <sumit.semwal@linaro.org>,
+        "linux-media@vger.kernel.org" <linux-media@vger.kernel.org>,
+        "dri-devel@lists.freedesktop.org" <dri-devel@lists.freedesktop.org>,
+        "linaro-mm-sig@lists.linaro.org" <linaro-mm-sig@lists.linaro.org>,
         "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        rplsssn@codeaurora.org, linux-arm-msm@vger.kernel.org,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        Bjorn Andersson <bjorn.andersson@linaro.org>,
-        Doug Anderson <dianders@chromium.org>
-Content-Type: text/plain; charset="UTF-8"
+        "amd-gfx@lists.freedesktop.org" <amd-gfx@lists.freedesktop.org>
+References: <20190416183841.1577-1-christian.koenig@amd.com>
+ <b19612a3-0143-f8b5-7758-7e80c46d33d4@amd.com>
+From:   =?UTF-8?Q?Christian_K=c3=b6nig?= <ckoenig.leichtzumerken@gmail.com>
+Message-ID: <04558379-9788-bbcc-5c64-7fa9ad92f60d@gmail.com>
+Date:   Wed, 17 Apr 2019 15:59:51 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
+MIME-Version: 1.0
+In-Reply-To: <b19612a3-0143-f8b5-7758-7e80c46d33d4@amd.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 8bit
+Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Thu, Mar 21, 2019 at 10:54 PM Stephen Boyd <swboyd@chromium.org> wrote:
-> Quoting Marc Zyngier (2019-03-16 04:39:48)> > On Fri, 15 Mar 2019 09:28:31 -0700
-> > Stephen Boyd <swboyd@chromium.org> wrote:
-> >
-> > > Quoting Lina Iyer (2019-03-13 14:18:41)
-> > > > @@ -994,6 +1092,22 @@ static int msm_gpio_init(struct msm_pinctrl *pctrl)
-> > > >         pctrl->irq_chip.irq_request_resources = msm_gpio_irq_reqres;
-> > > >         pctrl->irq_chip.irq_release_resources = msm_gpio_irq_relres;
-> > > >
-> > > > +       chip->irq.chip = &pctrl->irq_chip;
-> > > > +       chip->irq.domain_ops = &msm_gpio_domain_ops;
-> > > > +       chip->irq.handler = handle_edge_irq;
-> > > > +       chip->irq.default_type = IRQ_TYPE_EDGE_RISING;
-> > >
-> > > This also changed from v3. It used to be IRQ_TYPE_NONE. Specifying this
-> > > here seems to cause gpiolib to print a WARN.
-> > >
-> > >
-> > >         /*
-> > >          * Specifying a default trigger is a terrible idea if DT or ACPI is
-> > >          * used to configure the interrupts, as you may end up with
-> > >          * conflicting triggers. Tell the user, and reset to NONE.
-> > >          */
-> > >         if (WARN(np && type != IRQ_TYPE_NONE,
-> > >                  "%s: Ignoring %u default trigger\n", np->full_name, type))
-> > >                 type = IRQ_TYPE_NONE;
-> > >
-> > >
-> > > So I guess this change should be dropped. Or at the least, it should be
-> > > split out to it's own patch and the motivations can be discussed in the
-> > > commit text.
-> >
-> > It is something I requested (although I expected this to be a
-> > different patch, and even a clarification would have been OK).
-> >
-> > One way or another, the default trigger must match the flow handler. If
-> > we set it up with IRQ_TYPE_NONE, what does it mean? The fact that
-> > IRQ_TYPE_NONE acts as a wildcard doesn't mean the handle_edge_irq flow
-> > handler is a good match for all interrupt types (it is rarely OK for
-> > level interrupts).
+On top of those I have 6 more patches in the pipeline to enable VRAM P2P 
+with DMA-buf.
+
+So that is not the end of the patch set :)
+
+Christian.
+
+Am 17.04.19 um 15:52 schrieb Chunming Zhou:
+> Thanks Christian, great job. I will verify it this week when I finish my
+> current work on hand.
 >
-> I think this is a question for Thierry or Linus. I'm not sure why this
-> check was put in place in the code. I tried to dig into it really quick
-> but I didn't find anything obvious and then I gave up.
+> -David
 >
-> Maybe with hierarchical irqdomains we can drop this check? I don't think
-> the gpiolib core ever uses this 'default_type' or 'handler' for anything
-> once we replace the irqdomain that's used for a particular gpiochip with
-> a custom irqdomain. The only user I see, gpiochip_irq_map(), won't ever
-> be called so it really ends up being a thing that the driver specific
-> irqdomains should check for and reject when parsing the DT and it sees
-> IRQ_TYPE_NONE come out.
->
-> ------8<-------
-> diff --git a/drivers/gpio/gpiolib.c b/drivers/gpio/gpiolib.c
-> index 144af0733581..fe2f7888c473 100644
-> --- a/drivers/gpio/gpiolib.c
-> +++ b/drivers/gpio/gpiolib.c
-> @@ -1922,7 +1922,7 @@ static int gpiochip_add_irqchip(struct gpio_chip *gpiochip,
->          * used to configure the interrupts, as you may end up with
->          * conflicting triggers. Tell the user, and reset to NONE.
->          */
-> -       if (WARN(np && type != IRQ_TYPE_NONE,
-> +       if (WARN(!gpiochip->irq.domain_ops && np && type != IRQ_TYPE_NONE,
->                  "%s: Ignoring %u default trigger\n", np->full_name, type))
->                 type = IRQ_TYPE_NONE;
+> 在 2019/4/17 2:38, Christian König wrote:
+>> Hi everybody,
+>>
+>> core idea in this patch set is that DMA-buf importers can now provide an optional invalidate callback. Using this callback and the reservation object exporters can now avoid pinning DMA-buf memory for a long time while sharing it between devices.
+>>
+>> I've already send out an older version roughly a year ago, but didn't had time to further look into cleaning this up.
+>>
+>> The last time a major problem was that we would had to fix up all drivers implementing DMA-buf at once.
+>>
+>> Now I avoid this by allowing mappings to be cached in the DMA-buf attachment and so driver can optionally move over to the new interface one by one.
+>>
+>> This is also a prerequisite to my patchset enabling sharing of device memory with DMA-buf.
+>>
+>> Please review and/or comment,
+>> Christian.
+>>
+>>
+>> _______________________________________________
+>> dri-devel mailing list
+>> dri-devel@lists.freedesktop.org
+>> https://lists.freedesktop.org/mailman/listinfo/dri-devel
 
-Sorry for taking long time to answer... this got lost in some mail
-storms.
-
-It's a bit of Marc Z question really but I try to answer and
-he can correct me.
-
-We are now getting used to ACPI and DT always specifying
-the IRQ trigger type on the consumer handle: a device tells
-the irqchip what kind of edge or level it wants.
-
-Things weren't always like that.
-
-Some boards in the kernel is still using board files. (Yeah
-please help in modernizing them, I am doing my part.)
-
-Old machines with GPIO irqchip jitted to the SoC irq controller
-sometimes had a hardcoded behavior such as edge, and the
-consumers would only issue something really legacy
-like
-
-request_irq(42, myhandler, 0, "myirq", data);
-
-and expect it to work, since 0 means use the default flags,
-it might have a platform device with this irq number passed
-as a resource, but that is a really dumb platform device still,
-and it might not have set any irqflags for the irq number
-it passes. It probably doesn't even know that the irq number
-is backed by an irq descriptor.
-
-Since the code that e.g. DT has inside drivers/of/platform.c
-irq_of_parse_and_map(), will incidentally create an irq
-descriptor and set up these flags from the consumer flags in the
-device tree and call the irqchip to set up the trigger through
-.set_type() whenever the interrupt is requested, this is no
-problem for DT. Or ACPI.
-
-But on a board file, the .set_type() will eventually be called
-with IRQ_TYPE_NONE, which will cause a bug, or no IRQs
-or something like that.
-
-So a bunch of GPIO irqchips are created passing
-IRQ_TYPE_EDGE_* or IRQ_TYPE_LEVEL_* to set up a default
-trigger, because all the irqs on this chip use the same trigger
-anyway, and they only have one flow handler anyway.
-Everything is edge, or everything is level or so.
-irq_set_irq_type() will be called when mapping the GPIO to
-an irq, including calls from gpiod_to_irq() and friends that
-get used a lot in legacy code.
-
-This happened by simply factoring custom GPIO irqchips
-into the gpiolib over time.
-
-No-one has really gotten around to tracking down
-all the offending callers of request_irq() and their respective
-interrupt providers and make sure the descriptors for all these
-IRQs get set up properly in drivers or board files. As far
-as I know. (INTERESTING WORK!)
-
-It is a mess, really hard to fix, essentially everything need to
-be modernized or deleted for us to get rid of the possibility
-to pass a default trigger.
-
-I guess it is possible to check all gpiochip_irqchip_add*
-and see if there are still chips passing something else than
-IRQ_TYPE_NONE. It would take some time to look at all of
-them, maybe it isn't used by anything anymore? Then
-we can simply delete this and assume it will always be
-set up orderly. We have modernized quite a few systems
-recently.
-
-Yours,
-Linus Walleij
