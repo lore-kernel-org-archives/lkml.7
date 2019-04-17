@@ -2,96 +2,79 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FAKE_REPLY_C,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EDCB9C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:10:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 15217C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:15:03 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE5D220663
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:10:48 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id CE85920674
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:15:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="dNT70rAR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731241AbfDQSKs (ORCPT
+        id S1730737AbfDQSPB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 14:10:48 -0400
-Received: from mga17.intel.com ([192.55.52.151]:37532 "EHLO mga17.intel.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725848AbfDQSKr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 14:10:47 -0400
-X-Amp-Result: SKIPPED(no attachment in message)
-X-Amp-File-Uploaded: False
-Received: from orsmga005.jf.intel.com ([10.7.209.41])
-  by fmsmga107.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Apr 2019 11:10:47 -0700
-X-ExtLoop1: 1
-X-IronPort-AV: E=Sophos;i="5.60,362,1549958400"; 
-   d="scan'208";a="316802634"
-Received: from alison-desk.jf.intel.com (HELO alison-desk) ([10.54.74.53])
-  by orsmga005.jf.intel.com with ESMTP; 17 Apr 2019 11:10:47 -0700
-From:   Alison Schofield <alison.schofield@intel.com>
-To:     rjw@rjwysocki.net
-Cc:     Alison Schofield <alison.schofield@intel.com>,
-        robert.moore@intel.com, erik.schmauss@intel.com,
-        keith.busch@intel.com, linux-acpi@vger.kernel.org,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] acpi/hmat: Update acpi_hmat_type enum with ACPI_HMAT_TYPE_PROXIMITY
-Date:   Wed, 17 Apr 2019 11:13:10 -0700
-Message-Id: <20190417181310.27613-1-alison.schofield@intel.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 17 Apr 2019 14:15:01 -0400
+Received: from mail-wm1-f43.google.com ([209.85.128.43]:56299 "EHLO
+        mail-wm1-f43.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfDQSPB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 14:15:01 -0400
+Received: by mail-wm1-f43.google.com with SMTP id o25so4482718wmf.5
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 11:15:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
+         :user-agent;
+        bh=qknltXgQ5IBlpPlWXUPSOmejXwDtBrUW+UOJB+W3m0o=;
+        b=dNT70rARPL2YKUYplIvRYV7DBpgUPH9AVykEvfqN+Yd/a+10pU1a0aOcpmGJc6G9Bl
+         D4aEPfJUfA77Ny6eM0qhQ/oZvpUaxtGJx5lrkd6KJae2mVQIc1psWNshCZY3lQjoz8Ri
+         fbpLKpKtomzh+yxuxCNK8uiOmMk3YpgGDmjUQHn81BBzlJYg6tiej8aMrhbXUPRCaw4i
+         xkPlV9rqq7ye8LoZpqscDpVGR1YJMt/BLTc7BMou0GHUOlrd/TEDTlgi2I0nofVegO+Y
+         x5qs3TvKcL/QknRXdo9jzXwl9O++AVQT7Tnb8KzjuS/mvXhirsrDXciTp4k7mB8M/9dL
+         y/Bg==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
+         :content-disposition:user-agent;
+        bh=qknltXgQ5IBlpPlWXUPSOmejXwDtBrUW+UOJB+W3m0o=;
+        b=uC8TDW4rqRtryIF4nQyv8Ief7X3nsL6Ll9UGYV0May5M/GOImLq039C8NibhMxLpJ8
+         zNJSf4xQY7k1Z4Q8thM5Ajsqm/tUKWwH923REoWVp/LjyiuMC7gieQw9lt1qUI5yeIIN
+         G3K2Qpc0GRkZoNbepWmL1CRFE3uR9uqnfRiBGhdpRD+h+d2k4px80ULpIMw3xiSpzyXX
+         bcgBGiLYWN8bzxJe7tlWrPNvhSGXCSSHRLrCRJHSwEbcFjRWZJTItMNktN0f33DD4FRF
+         RN1UXKQcxce/fYltNlieC9sBiV4+c0mPY6TN8UKIe3vaYQRkyol7UOW0OsBTHug1BkOF
+         5CyA==
+X-Gm-Message-State: APjAAAWHdlOTG8BXIi6UDu/uOCTfKq43Yg3M+gspmNyGsX39BEH4UhYF
+        jVrPMkBACHkmtT4mGIVPt4JBGoY=
+X-Google-Smtp-Source: APXvYqwsTDJMQi3tvMOYxMyoGQiXqG2Tposu/yMqUDpEJ0pONvIb3B49itO1QFWFB5ev5FO8gKh+lw==
+X-Received: by 2002:a1c:b088:: with SMTP id z130mr696286wme.5.1555524899432;
+        Wed, 17 Apr 2019 11:14:59 -0700 (PDT)
+Received: from avx2 ([46.53.244.117])
+        by smtp.gmail.com with ESMTPSA id a6sm46166826wrp.49.2019.04.17.11.14.57
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 17 Apr 2019 11:14:58 -0700 (PDT)
+Date:   Wed, 17 Apr 2019 21:14:55 +0300
+From:   Alexey Dobriyan <adobriyan@gmail.com>
+To:     shajit@codeaurora.org
+Cc:     linux-kernel@vger.kernel.org
+Subject: Re: fs/proc: Crash observed in next_tgid (fs/proc/base.c)
+Message-ID: <20190417181455.GA2965@avx2>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-ACPI 6.3 changed the subtable "Memory Subsystem Address Range Structure"
-to "Memory Proximity Domain Attributes Structure".
+> Test case: Not some specific test case.
 
-Updating and renaming of the structure was included in commit:
-ACPICA: ACPI 6.3: HMAT updates (9a8d961f1ef835b0d338fbe13da03cb424e87ae5)
+Write 2 programs: one forks, clones, and execs randomly (but not going
+out of control), another does open("/proc"), getdents in a loop.
+Don't use shell scripts or readdir as they only bring overhead.
 
-Rename the enum type to match the subtable and structure naming.
-
-Signed-off-by: Alison Schofield <alison.schofield@intel.com>
----
- drivers/acpi/hmat/hmat.c | 4 ++--
- include/acpi/actbl1.h    | 2 +-
- 2 files changed, 3 insertions(+), 3 deletions(-)
-
-diff --git a/drivers/acpi/hmat/hmat.c b/drivers/acpi/hmat/hmat.c
-index b7824a0309f7..3e32120e2dab 100644
---- a/drivers/acpi/hmat/hmat.c
-+++ b/drivers/acpi/hmat/hmat.c
-@@ -411,7 +411,7 @@ static int __init hmat_parse_subtable(union acpi_subtable_headers *header,
- 		return -EINVAL;
- 
- 	switch (hdr->type) {
--	case ACPI_HMAT_TYPE_ADDRESS_RANGE:
-+	case ACPI_HMAT_TYPE_PROXIMITY:
- 		return hmat_parse_proximity_domain(header, end);
- 	case ACPI_HMAT_TYPE_LOCALITY:
- 		return hmat_parse_locality(header, end);
-@@ -649,7 +649,7 @@ static __init int hmat_init(void)
- 		goto out_put;
- 	}
- 
--	for (i = ACPI_HMAT_TYPE_ADDRESS_RANGE; i < ACPI_HMAT_TYPE_RESERVED; i++) {
-+	for (i = ACPI_HMAT_TYPE_PROXIMITY; i < ACPI_HMAT_TYPE_RESERVED; i++) {
- 		if (acpi_table_parse_entries(ACPI_SIG_HMAT,
- 					     sizeof(struct acpi_table_hmat), i,
- 					     hmat_parse_subtable, 0) < 0) {
-diff --git a/include/acpi/actbl1.h b/include/acpi/actbl1.h
-index d14037ddf108..22c039ebc6c5 100644
---- a/include/acpi/actbl1.h
-+++ b/include/acpi/actbl1.h
-@@ -1395,7 +1395,7 @@ struct acpi_table_hmat {
- /* Values for HMAT structure types */
- 
- enum acpi_hmat_type {
--	ACPI_HMAT_TYPE_ADDRESS_RANGE = 0,	/* Memory subsystem address range */
-+	ACPI_HMAT_TYPE_PROXIMITY = 0,	/* Memory proximity domain attributes */
- 	ACPI_HMAT_TYPE_LOCALITY = 1,	/* System locality latency and bandwidth information */
- 	ACPI_HMAT_TYPE_CACHE = 2,	/* Memory side cache information */
- 	ACPI_HMAT_TYPE_RESERVED = 3	/* 3 and greater are reserved */
--- 
-2.14.1
-
+Run getdents in a loop and several forkers, see what happens.
