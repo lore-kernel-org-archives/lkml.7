@@ -2,96 +2,126 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,UNPARSEABLE_RELAY autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C4C0C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:43:59 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 09EE4C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:44:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D714D21773
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:43:58 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C7FB5217F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:44:09 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=baylibre-com.20150623.gappssmtp.com header.i=@baylibre-com.20150623.gappssmtp.com header.b="GffHTXGu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732524AbfDQUn5 (ORCPT
+        id S1733088AbfDQUoI (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 16:43:57 -0400
-Received: from out30-54.freemail.mail.aliyun.com ([115.124.30.54]:40096 "EHLO
-        out30-54.freemail.mail.aliyun.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727013AbfDQUn5 (ORCPT
+        Wed, 17 Apr 2019 16:44:08 -0400
+Received: from mail-wr1-f66.google.com ([209.85.221.66]:33739 "EHLO
+        mail-wr1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1732543AbfDQUoI (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 16:43:57 -0400
-X-Alimail-AntiSpam: AC=PASS;BC=-1|-1;BR=01201311R141e4;CH=green;DM=||false|;FP=0|-1|-1|-1|0|-1|-1|-1;HT=e01e04394;MF=yang.shi@linux.alibaba.com;NM=1;PH=DS;RN=14;SR=0;TI=SMTPD_---0TPaV10X_1555533824;
-Received: from US-143344MP.local(mailfrom:yang.shi@linux.alibaba.com fp:SMTPD_---0TPaV10X_1555533824)
-          by smtp.aliyun-inc.com(127.0.0.1);
-          Thu, 18 Apr 2019 04:43:49 +0800
-Subject: Re: [v2 RFC PATCH 0/9] Another Approach to Use PMEM as NUMA Node
-From:   Yang Shi <yang.shi@linux.alibaba.com>
-To:     Michal Hocko <mhocko@kernel.org>
-Cc:     mgorman@techsingularity.net, riel@surriel.com, hannes@cmpxchg.org,
-        akpm@linux-foundation.org, dave.hansen@intel.com,
-        keith.busch@intel.com, dan.j.williams@intel.com,
-        fengguang.wu@intel.com, fan.du@intel.com, ying.huang@intel.com,
-        ziy@nvidia.com, linux-mm@kvack.org, linux-kernel@vger.kernel.org
-References: <1554955019-29472-1-git-send-email-yang.shi@linux.alibaba.com>
- <20190412084702.GD13373@dhcp22.suse.cz>
- <a68137bb-dcd8-4e4a-b3a9-69a66f9dccaf@linux.alibaba.com>
- <20190416074714.GD11561@dhcp22.suse.cz>
- <876768ad-a63a-99c3-59de-458403f008c4@linux.alibaba.com>
-Message-ID: <c0fe0c54-b61a-4f5d-8af5-59818641e747@linux.alibaba.com>
-Date:   Wed, 17 Apr 2019 13:43:44 -0700
-User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.12; rv:52.0)
- Gecko/20100101 Thunderbird/52.7.0
+        Wed, 17 Apr 2019 16:44:08 -0400
+Received: by mail-wr1-f66.google.com with SMTP id q1so124677wrp.0
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 13:44:07 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=baylibre-com.20150623.gappssmtp.com; s=20150623;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Rh/NLrobqB5mwi5oJdqhmcZ7w624es9RRpYu13HpzFU=;
+        b=GffHTXGuyf7ylUhUSCeiE7D3EbMZ4p1+TeB1Krnur7r6ACKxhJym6b4jW25nB4Fywh
+         alDs9gVwPRI5pkxvhxzXmdBFwN5/yFlDvKBa9mQCnlpgIAPspg2mbGoYQi2szm/1n4MN
+         POYEL4poD3mqYsaywnENjHmw3o50QRbJNXA0Qi3gRLOhXjHOqUhZBqNVOA/YNbbsLHSf
+         ZQeGArIs2T0YmhakQdwHartrqIYbAvVOuWjv+e8JALeKz18w5T8KecavBU4ssfiipUv/
+         VerqXbFRuQd+YbjPSF86Rhqlu7iqr9/cL3hW5EzEt/AHN+9UoX1lCzzZoVOjpkk9iAAU
+         8bAQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=Rh/NLrobqB5mwi5oJdqhmcZ7w624es9RRpYu13HpzFU=;
+        b=Ob8elT3fy128Gx/YfZmrcqbDnTdfB+VqDV4zN8d2KY0py0i7/7BqN26DZX/F5duxIV
+         pbGJrnFyholkhsfn0sut3qTEkwbLHWthO0/UU7BkuI3jnHpNqyFb7H+gZ/y1BsSImCjP
+         4lOF62RQ9ebRWtSzRtW2u86qongFWR6q+0hI3uYN/v55qnPzw6VH5T2k31HpGnpyvXxb
+         B37DhDsU1qfIdKjdVX32WggtEtj+7ns30fkCm7Cnb1CdpnfnxLzLo9rcKMF5EPzgkHO0
+         Usk+lq/3v+ZO/KXZlSH4QuzwRpDMgDwjMmJ0oltHagImFgJkrtYzaADNcrRIdBl8Cg2e
+         Acqw==
+X-Gm-Message-State: APjAAAWwlqt0mJnzC4QR6KoO4RFHIVe/Fw9ykPR5UqmpxtPNKuMq8AUG
+        uFXpNjOr6ge8faSh/s+6ggyxug==
+X-Google-Smtp-Source: APXvYqzOraSx9954Y4LC4wyRGq61aX3Tq/cVz7PeIAzfh3Jpu6mKgYSU35zEueo/7GiRrxKYDi3j+Q==
+X-Received: by 2002:adf:f803:: with SMTP id s3mr38690686wrp.54.1555533846081;
+        Wed, 17 Apr 2019 13:44:06 -0700 (PDT)
+Received: from boomer.lan (cag06-3-82-243-161-21.fbx.proxad.net. [82.243.161.21])
+        by smtp.googlemail.com with ESMTPSA id c20sm98716866wre.28.2019.04.17.13.44.04
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 17 Apr 2019 13:44:05 -0700 (PDT)
+From:   Jerome Brunet <jbrunet@baylibre.com>
+To:     Ulf Hansson <ulf.hansson@linaro.org>,
+        Kevin Hilman <khilman@baylibre.com>
+Cc:     Jerome Brunet <jbrunet@baylibre.com>, linux-mmc@vger.kernel.org,
+        linux-amlogic@lists.infradead.org, linux-kernel@vger.kernel.org
+Subject: [PATCH 0/7] mmc: meson-gx: clean up and tuning update
+Date:   Wed, 17 Apr 2019 22:43:48 +0200
+Message-Id: <20190417204355.469-1-jbrunet@baylibre.com>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-In-Reply-To: <876768ad-a63a-99c3-59de-458403f008c4@linux.alibaba.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The purpose of this series is too improve reliability of the amlogic mmc
+driver on new (g12a) and old ones (axg, gxl, gxbb, etc...)
 
->>
->>>> I would also not touch the numa balancing logic at this stage and 
->>>> rather
->>>> see how the current implementation behaves.
->>> I agree we would prefer start from something simpler and see how it 
->>> works.
->>>
->>> The "twice access" optimization is aimed to reduce the PMEM 
->>> bandwidth burden
->>> since the bandwidth of PMEM is scarce resource. I did compare "twice 
->>> access"
->>> to "no twice access", it does save a lot bandwidth for some once-off 
->>> access
->>> pattern. For example, when running stress test with mmtest's
->>> usemem-stress-numa-compact. The kernel would promote ~600,000 pages 
->>> with
->>> "twice access" in 4 hours, but it would promote ~80,000,000 pages 
->>> without
->>> "twice access".
->> I pressume this is a result of a synthetic workload, right? Or do you
->> have any numbers for a real life usecase?
->
-> The test just uses usemem.
+* The 3 first patches are just harmless clean ups.
+* Patch 4 makes sure HS400 can't be enabled, we still have not been able
+  to crack this modes.
+* Patch 5 removes some clock glitches when switching to DDR modes
+* Patch 6 and 7 changes the tuning method from Rx phase to signal
+  resampling. It could have been done in a single patch but the unified
+  diff was extremely ugly. The change has been split in two patches to
+  ease review.
 
-I tried to run some more real life like usecases, the below shows the 
-result by running mmtest's db-sysbench-mariadb-oltp-rw-medium test, 
-which is a typical database workload, with and w/o "twice access" 
-optimization.
+The last tuning update that went through was meant to improve the axg
+support. Since then, it was reported to break some other boards, like the
+s912 vim2.
 
-                              w/                  w/o
-promotion          32771           312250
+Also with the current tuning method, it was impossible to find phase
+settings which would work on all the SoC, including the new ones.
 
-We can see the kernel did 10x promotion w/o "twice access" optimization.
+After redoing all the tests from scratch, it appeared that Rx phase made
+(strangely) almost no difference, especially on g12a and axg.
+It is important to have a phase shift between the Core and Tx clock, 180
+works best.
 
-I also tried kernel-devel and redis tests in mmtest, but they can't 
-generate enough memory pressure, so I had to run usemem test to generate 
-memory pressure. However, this brought in huge noise, particularly for 
-the w/o "twice access" case. But, the mysql test should be able to 
-demonstrate the improvement achieved by this optimization.
+I discussed the test results with Amlogic. They suggested to use 180/0 or
+0/180 for the Core and Tx phase. For tuning, they suggested to use
+signal resampling.
 
-And, I'm wondering whether this optimization is also suitable to general 
-NUMA balancing or not.
+So far, so good ... here the platform and modes tested:
+
+NanoPi-K2 (S905): SD UHS SDR50/DDR50, SDIO HS
+Odroid-C2 (S905): SD UHS SDR50/DDR50, eMMC DDR52/HS200
+Khadas Vim (S905X): SD HS, SDIO HS, eMMC HS200
+Libretech CC (S905X): SD HS, eMMC HS200
+Khadas Vim2 (S912): SD HS, SDIO HS, eMMC HS200
+S400 (A113D): SDIO UHS SDR104, eMMC DDR52/HS200
+U200 (S905D2): SD HS, eMMC DDR52/HS200
+SEI510 (S905X2): SD HS, eMMC DDR52/HS200
+
+Jerome Brunet (7):
+  mmc: meson-gx: remove open coded read with timeout
+  mmc: meson-gx: ack only raised irq
+  mmc: meson-gx: irq is not shared
+  mmc: meson-gx: disable HS400
+  mmc: meson-gx: avoid clock glitch when switching to DDR modes
+  mmc: meson-gx: remove Rx phase tuning
+  mmc: meson-gx: add signal resampling tuning
+
+ drivers/mmc/host/meson-gx-mmc.c | 418 +++++++++-----------------------
+ 1 file changed, 113 insertions(+), 305 deletions(-)
+
+-- 
+2.20.1
 
