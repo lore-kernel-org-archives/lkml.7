@@ -2,112 +2,94 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0A5D7C10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 10:31:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 00C6FC10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 10:31:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CF7032173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 10:31:29 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=armlinux.org.uk header.i=@armlinux.org.uk header.b="zlwxkvKb"
+	by mail.kernel.org (Postfix) with ESMTP id CDF172173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 10:31:56 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731600AbfDQKbN (ORCPT
+        id S1731781AbfDQKbz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 06:31:13 -0400
-Received: from pandora.armlinux.org.uk ([78.32.30.218]:50772 "EHLO
-        pandora.armlinux.org.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728575AbfDQKbM (ORCPT
+        Wed, 17 Apr 2019 06:31:55 -0400
+Received: from mail.cn.fujitsu.com ([183.91.158.132]:9763 "EHLO
+        heian.cn.fujitsu.com" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
+        with ESMTP id S1728575AbfDQKby (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 06:31:12 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
-        d=armlinux.org.uk; s=pandora-2019; h=Sender:In-Reply-To:Content-Type:
-        MIME-Version:References:Message-ID:Subject:Cc:To:From:Date:Reply-To:
-        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
-        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
-        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
-         bh=Mlspx2F3hquyjaWbJCFMBJqDbcOeqhgLomei92f1A3Y=; b=zlwxkvKb2XrzTEXnY0P1LO/lt
-        2sF6JLnyGuXvfpCe0SX7ucnnXsifKSWkYWvB1SlEl6qlX8HTyhY3uCoH6XZwE9SppsuzN7T05XISD
-        JpoMsQV0PJ9vkvRNRCi2L3FBUQuXuNoI0f594pU1HtXk83d2yulRtKFEUqI0SlgJjRlnh4dYEVDc7
-        MXv8youhQtNvnHJ5u/aY1SiVJ13+4n5t7AqxILPsBwr/2daNZTTcHzutjH3d5Ud7Y6lqW0l+5HTUG
-        pAaq4Hqd2GpG7xcnB5jbcrB7ZicQHY/fGXRim+jZACtmvB+UBFhOGZ2bq8hlZgOvEvZTaq/PA/a+u
-        iHeXNcstw==;
-Received: from shell.armlinux.org.uk ([fd8f:7570:feb6:1:5054:ff:fe00:4ec]:52140)
-        by pandora.armlinux.org.uk with esmtpsa (TLSv1.2:ECDHE-RSA-AES256-GCM-SHA384:256)
-        (Exim 4.90_1)
-        (envelope-from <linux@armlinux.org.uk>)
-        id 1hGhqL-00011w-7N; Wed, 17 Apr 2019 11:31:05 +0100
-Received: from linux by shell.armlinux.org.uk with local (Exim 4.89)
-        (envelope-from <linux@shell.armlinux.org.uk>)
-        id 1hGhqJ-0000mJ-1Z; Wed, 17 Apr 2019 11:31:03 +0100
-Date:   Wed, 17 Apr 2019 11:31:02 +0100
-From:   Russell King - ARM Linux admin <linux@armlinux.org.uk>
-To:     Catalin Marinas <catalin.marinas@arm.com>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Heinrich Schuchardt <xypron.glpk@gmx.de>,
-        stable@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org, Arnd Bergmann <arnd@arndb.de>
-Subject: Re: [PATCH 1/1] arm: mm: Export __sync_icache_dcache() for
- xen-privcmd
-Message-ID: <20190417103102.rl33skdknnqshcoj@shell.armlinux.org.uk>
-References: <20190413163052.11407-1-xypron.glpk@gmx.de>
- <20190415055109.GB9279@infradead.org>
- <20190417094137.2gkbtinldiwbkvwy@shell.armlinux.org.uk>
- <20190417100351.oix3df7hwwivgf7k@mbp>
+        Wed, 17 Apr 2019 06:31:54 -0400
+X-IronPort-AV: E=Sophos;i="5.60,361,1549900800"; 
+   d="scan'208";a="59526860"
+Received: from unknown (HELO cn.fujitsu.com) ([10.167.33.5])
+  by heian.cn.fujitsu.com with ESMTP; 17 Apr 2019 18:31:53 +0800
+Received: from G08CNEXCHPEKD01.g08.fujitsu.local (unknown [10.167.33.80])
+        by cn.fujitsu.com (Postfix) with ESMTP id CAE014CD8478;
+        Wed, 17 Apr 2019 18:31:48 +0800 (CST)
+Received: from localhost.localdomain (10.167.225.56) by
+ G08CNEXCHPEKD01.g08.fujitsu.local (10.167.33.89) with Microsoft SMTP Server
+ (TLS) id 14.3.439.0; Wed, 17 Apr 2019 18:31:54 +0800
+Date:   Wed, 17 Apr 2019 18:31:40 +0800
+From:   Chao Fan <fanc.fnst@cn.fujitsu.com>
+To:     Borislav Petkov <bp@alien8.de>
+CC:     Dave Young <dyoung@redhat.com>,
+        Junichi Nomura <j-nomura@ce.jp.nec.com>,
+        Baoquan He <bhe@redhat.com>, Kairui Song <kasong@redhat.com>,
+        "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v4] x86/boot: Use efi_setup_data for searching RSDP on
+ kexec-ed kernel
+Message-ID: <20190417103140.GB388@localhost.localdomain>
+References: <20190412084956.GC19808@zn.tnic>
+ <20190412133528.GD19808@zn.tnic>
+ <cc2c1dbe-4fb3-fb7d-0540-c04734fc15cb@ce.jp.nec.com>
+ <20190415090717.GA29317@zn.tnic>
+ <20190415102525.GB29317@zn.tnic>
+ <23309b73-d135-a207-564b-6003cee39184@ce.jp.nec.com>
+ <20190416094024.GE27892@zn.tnic>
+ <34d02ae0-7182-2983-b601-acbdb4085f33@ce.jp.nec.com>
+ <20190417070250.GD8411@dhcp-128-65.nay.redhat.com>
+ <20190417085434.GC20492@zn.tnic>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
+Content-Type: text/plain; charset="us-ascii"
 Content-Disposition: inline
-In-Reply-To: <20190417100351.oix3df7hwwivgf7k@mbp>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190417085434.GC20492@zn.tnic>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Originating-IP: [10.167.225.56]
+X-yoursite-MailScanner-ID: CAE014CD8478.AAB30
+X-yoursite-MailScanner: Found to be clean
+X-yoursite-MailScanner-From: fanc.fnst@cn.fujitsu.com
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 11:03:51AM +0100, Catalin Marinas wrote:
-> On Wed, Apr 17, 2019 at 10:41:37AM +0100, Russell King wrote:
-> > On Sun, Apr 14, 2019 at 10:51:09PM -0700, Christoph Hellwig wrote:
-> > > On Sat, Apr 13, 2019 at 06:30:52PM +0200, Heinrich Schuchardt wrote:
-> > > > This patch avoids
-> > > > ERROR: "__sync_icache_dcache" [drivers/xen/xen-privcmd.ko] undefined!
-> > > > observed when compiling v4.19.34.
-> > > > 
-> > > > The xen-privcmd driver, which can be modular, calls set_pte_at()
-> > > > which in turn may call __sync_icache_dcache().
-> > > 
-> > > Maybe that really is a sign that it should not be modular..
-> > 
-> > This issue has been discussed several times, and this URL gives a list
-> > of all messages on linux-arm-kernel that mention __sync_icache_dcache:
-> > 
-> > https://archive.armlinux.org.uk/lurker/search/20380101.000000.00000000@ml:linux-arm-kernel,sb:__sync_icache_dcache.en.html
-> > 
-> > At the beginning of March, Boris Ostrovsky pointed that another solution
-> > is available that does not need architecture private symbols to be
-> > exported.
-> > 
-> > Since I've already said in a previous thread that I don't want this
-> > function exported, it seems the way forward is pretty obvious.
-> 
-> Arnd submitted a patch, not sure what happened to it:
-> 
-> https://lore.kernel.org/lkml/20190304204826.2414365-1-arnd@arndb.de/
+On Wed, Apr 17, 2019 at 10:54:34AM +0200, Borislav Petkov wrote:
+>On Wed, Apr 17, 2019 at 03:02:50PM +0800, Dave Young wrote:
+>> How about move it after console_init,
+>
+>Sounds ok to me. That's still before KASLR gets setup and should work
+>for Chao's movable regions too.
 
-Thanks Catalin, this is the "another solution" that I referred to above.
-(You'll find the exact same URL in Boris' email.)
+Yes, when debugging, I also put it after console_init().
 
-> I think this boils down to whether set_pte_at() is allowed to be called
-> from loadable modules. If yes, __sync_icache_dcache() needs exporting,
-> otherwise Arnd's patch makes the relevant code built-in (and, if merged,
-> I'm happy to revert the similar export on arm64).
+Thanks,
+Chao Fan
 
-I think I've clearly expressed my opinion on that.  Hence why "the way
-forward is pretty obvious."  I don't understand why we still have the
-problem.
+>
+>> and at the same time skip efi_get_rsdp_addr in case kexec?
+>
+>If kexec_get_rsdp_addr() gets a correct address, efi_get_rsdp_addr()
+>will be skipped.
+>
+>-- 
+>Regards/Gruss,
+>    Boris.
+>
+>Good mailing practices for 400: avoid top-posting and trim the reply.
+>
+>
 
--- 
-RMK's Patch system: https://www.armlinux.org.uk/developer/patches/
-FTTC broadband for 0.8mile line in suburbia: sync at 12.1Mbps down 622kbps up
-According to speedtest.net: 11.9Mbps down 500kbps up
+
