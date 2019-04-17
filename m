@@ -2,95 +2,197 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 687C7C10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:10:07 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A5FC4C10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:11:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 30B9220675
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:10:07 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 81D3B20675
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:11:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731032AbfDQHKF convert rfc822-to-8bit (ORCPT
+        id S1731062AbfDQHLg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 03:10:05 -0400
-Received: from szxga08-in.huawei.com ([45.249.212.255]:35782 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728261AbfDQHKF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 03:10:05 -0400
-Received: from DGGEMM406-HUB.china.huawei.com (unknown [172.30.72.57])
-        by Forcepoint Email with ESMTP id 996C8CC5A94DDB03CB93;
-        Wed, 17 Apr 2019 15:10:00 +0800 (CST)
-Received: from dggeme761-chm.china.huawei.com (10.3.19.107) by
- DGGEMM406-HUB.china.huawei.com (10.3.20.214) with Microsoft SMTP Server (TLS)
- id 14.3.408.0; Wed, 17 Apr 2019 15:09:41 +0800
-Received: from dggeme762-chm.china.huawei.com (10.3.19.108) by
- dggeme761-chm.china.huawei.com (10.3.19.107) with Microsoft SMTP Server
- (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id
- 15.1.1591.10; Wed, 17 Apr 2019 15:09:41 +0800
-Received: from dggeme762-chm.china.huawei.com ([10.8.68.53]) by
- dggeme762-chm.china.huawei.com ([10.8.68.53]) with mapi id 15.01.1591.008;
- Wed, 17 Apr 2019 15:09:41 +0800
-From:   "zhuyan (M)" <zhuyan34@huawei.com>
-To:     Alan Stern <stern@rowland.harvard.edu>
-CC:     Greg KH <gregkh@linuxfoundation.org>,
-        "anton@enomsg.org" <anton@enomsg.org>,
-        "linux-usb@vger.kernel.org" <linux-usb@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "zhuyan (M)" <zhuyan34@huawei.com>
-Subject: Re: [PATCH] usb:host: fix divide-by-zero in function fhci_queue_urb
-Thread-Topic: [PATCH] usb:host: fix divide-by-zero in function fhci_queue_urb
-Thread-Index: AdT05r4f+lcz9XnHRgGSjwdOkKXG4g==
-Date:   Wed, 17 Apr 2019 07:09:41 +0000
-Message-ID: <cb1b585652b54d3d9ff8ef6548094d3b@huawei.com>
-Accept-Language: zh-CN, en-US
-Content-Language: zh-CN
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-originating-ip: [10.40.99.186]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: 8BIT
+        Wed, 17 Apr 2019 03:11:36 -0400
+Received: from bhuna.collabora.co.uk ([46.235.227.227]:53398 "EHLO
+        bhuna.collabora.co.uk" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728261AbfDQHLf (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 03:11:35 -0400
+Received: from localhost (unknown [IPv6:2a01:e0a:2c:6930:5cf4:84a1:2763:fe0d])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        (Authenticated sender: bbrezillon)
+        by bhuna.collabora.co.uk (Postfix) with ESMTPSA id 7E8C1260648;
+        Wed, 17 Apr 2019 08:11:33 +0100 (BST)
+Date:   Wed, 17 Apr 2019 09:11:30 +0200
+From:   Boris Brezillon <boris.brezillon@collabora.com>
+To:     masonccyang@mxic.com.tw
+Cc:     bbrezillon@kernel.org, computersforpeace@gmail.com,
+        dwmw2@infradead.org, juliensu@mxic.com.tw,
+        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
+        marek.vasut@gmail.com, miquel.raynal@bootlin.com, richard@nod.at,
+        zhengxunli@mxic.com.tw
+Subject: Re: [PATCH] mtd: rawnand: Add Macronix NAND read retry and
+ randomizer support
+Message-ID: <20190417091130.797395e6@collabora.com>
+In-Reply-To: <OF84BD5411.301E92AC-ON482583DF.000CC3CC-482583DF.000F4920@mxic.com.tw>
+References: <1554780172-23111-1-git-send-email-masonccyang@mxic.com.tw>
+        <20190409090427.22de9917@collabora.com>
+        <OF6C97E4DE.45261545-ON482583D7.00340468-482583D7.0034B3FE@mxic.com.tw>
+        <20190409114701.744c2c8c@collabora.com>
+        <OF9601E14B.A48284C4-ON482583D8.0005E3EB-482583D8.0006CC14@mxic.com.tw>
+        <20190410092258.332ef399@collabora.com>
+        <OF071D3608.9D6D2523-ON482583D9.00173F52-482583D9.0018188C@mxic.com.tw>
+        <20190411085353.4c1af008@collabora.com>
+        <OF34672B6F.AACFE22C-ON482583D9.00335814-482583D9.0033A673@mxic.com.tw>
+        <20190411112943.1fecfa69@collabora.com>
+        <OF84BD5411.301E92AC-ON482583DF.000CC3CC-482583DF.000F4920@mxic.com.tw>
+Organization: Collabora
+X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-redhat-linux-gnu)
 MIME-Version: 1.0
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=US-ASCII
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, 16 Apr 2019 11:07:56 -0400, Alan Stern wrote:
+On Wed, 17 Apr 2019 10:46:57 +0800
+masonccyang@mxic.com.tw wrote:
 
-> On Tue, 16 Apr 2019, zhuyan (M) wrote:
-> > On Tue, 16 Apr 2019 at 11:45:45 +0200, Greg KH wrote:
-> > > On Tue, Apr 09, 2019 at 10:37:12PM +0800, zhuyan wrote:
-> > > > In function fhci_queue_urb, the divisor of expression 
-> > > > (urb->transfer_buffer_length % usb_maxpacket(urb->dev, urb->pipe,
-> > > > usb_pipeout(urb->pipe))) may be zero.
-> > > 
-> > > How can you hit that?
-> > > 
-> > > > When it is zero, unexpected results may occur, so it is necessary 
-> > > > to ensure that the divisor is not zero.
-> > > > 
-> > > > Signed-off-by: zhuyan <zhuyan34@huawei.com>
-> > > 
-> > > I need a "Full" name here, not just a single name.  Whatever you use to sign documents is good.
-> > > 
-> > > thanks,
-> > > 
-> > > greg k-h
-> > 
-> > In function usb_maxpacket, when ep is NULL, its return value is 0.  
+> Hi Boris,
+>  
+>  
+> > > > > > > > Subject
+> > > > > > > > 
+> > > > > > > > Re: [PATCH] mtd: rawnand: Add Macronix NAND read retry and   
+> > > > > randomizer   
+> > > > > > > support   
+> > > > > > > > 
+> > > > > > > > On Tue, 9 Apr 2019 17:35:39 +0800
+> > > > > > > > masonccyang@mxic.com.tw wrote:
+> > > > > > > >   
+> > > > > > > > > > > +
+> > > > > > > > > > > +static const struct kobj_attribute sysfs_mxic_nand =
+> > > > > > > > > > > +   __ATTR(nand_random, S_IRUGO | S_IWUSR,
+> > > > > > > > > > > +          mxic_nand_rand_type_show,
+> > > > > > > > > > > +          mxic_nand_rand_type_store);   
+> > > > > > > > > > 
+> > > > > > > > > > No, we don't want to expose that through a sysfs file,   
+> > > > > especially   
+> > > > > > > since   
+> > > > > > > > > > changing the randomizer config means making the NAND   
+> > > unreadable   
+> > > > > for   
+> > > > > > > > > > those that have used it before the change.
+> > > > > > > > > >   
+> > > > > > > > > 
+> > > > > > > > > Our on-die randomizer is still readable from user after   
+> the 
+> > > > > function   
+> > > > > > > > > is enabled.   
+> > > > > > > > 
+> > > > > > > > You mean the memory is still readable no matter the   
+> randomizer 
+> > > > > state.   
+> > > > > > > > Not sure how that's possible, but okay.
+> > > > > > > >   
+> > > > > > > > > This randomizer is just like a internal memory cell 
+> > > > > > > > > reliability enhanced.   
+> > > > > > > > 
+> > > > > > > > Why don't you enable it by default then?   
+> > > > > > > 
+> > > > > > > The penalty of randomizer is read/write performance down.
+> > > > > > > i.e,. tPROG 300 us to 340 us (randomizer enable)
+> > > > > > > therefore, disable it by default.   
+> > > > > > 
+> > > > > > I'm a bit puzzled. On the NAND I've seen that required data
+> > > > > > randomization it's not something you'd want to disable as this   
+> > > implied  
+> > > > > > poor data retention. What's the use case here? Are we talking   
+> about 
+> > > SLC  
+> > > > > > or MLC NANDs? Should we enable this feature once we start seeing   
+>  
+> > > that  
+> > > > > > the NAND starts being less reliable (basically when read-retry   
+> > > happens  
+> > > > > > more often)? I really think this is something you should decide    
 > 
-> fhci_queue_urb() shouldn't use urb->pipe to compute the maxpacket size 
-> anyway.  It should use usb_endpoint_maxp(&urb->ep->desc).
+> > > kernel  
+> > > > > > side, because users have no clue when it's appropriate to switch   
+>  
+> > > this  
+> > > > > > feature on/off.
+> > > > > >   
+> > > > > 
+> > > > > It's SLC NAND and seems to has nothing to do with read-retry   
+> happens.
+> > > > > later, I will get more information for your concerns.   
+> > > > 
+> > > > Well, this feature is optional, and can be enabled to improve
+> > > > reliability. Sounds like a good reason to enable it when your NAND
+> > > > device starts showing reliability issues, and the number of   
+> read_retry
+> > > > attempts reflects the wear level pretty well. Alternatively, you   
+> could
+> > > > use the number of bitflips, but, in any case, don't expect the user   
+> to
+> > > > take this decision, because almost nobody knows what the randomizer
+> > > > is needed for.
+> > > >   
+> > > > >   
+> > > > > > >   
+> > > > > > > >   
+> > > > > > > > > It could be enable at any time with OTP bit function and   
+> > > that's   
+> > > > > why   
+> > > > > > > > > we patch it by sys-fs.   
+> > > > > > > > 
+> > > > > > > > Sorry, but that's not a good reason to expose that through   
+> > > sysfs.   
+> > > > > > > 
+> > > > > > > Any good way to expose randomizer function for user ?   
+> > > > > > 
+> > > > > > Don't expose it :P.   
+> > > > > 
+> > > > > oh, okay, I will remove sys-fs randomizer.
+> > > > > 
+> > > > > Is it OK to keep set/get features for randomizer ?   
+> > > > 
+> > > > I don't think it's a good idea to have dead code, so no. But I'm   
+> pretty
+> > > > sure we'll find a way to use/expose this feature.   
+> > > 
+> > > okay, great!
+> > > Looking forward to hearing this feature use/expose.  
+> > 
+> > But for that to happen we are waiting for inputs about when this is
+> > supposed to be used...  
+> 
+> 
+> The main reason to disable Randomizer in default is
+> NOP = 4 (default) change to NOP = 1 (Randomizer enable), 
+> NOP: number of partial program cycles in same page
+> 
+> Some OS file systems(or FTL) much concern NOP = 4 and 
+> any better way than sys-fs to enable it?
 
-Currently, fhci_queue_urb(), call usb_maxpacket() multiple times to calculate
- the maxpacket size. The usb_maxpacket() will call usb_endpoint_maxp() to 
-compute the maxpacket size.
+Well, that's more a constraint (no sub-page program when the randomizer
+is enabled) than something that would help decide whether it's relevant
+to enable the randomizer or not. Oh, and that's actually a proof that
+changing this property after the flash has been programmed is not
+possible (UBI will complain if subpage size changes).
 
-zhuyan
+BTW, you should check this prop to decide if subpage writes are
+supported...
 
-> > Then, in function fhci_queue_urb, the divisor of expression 
-> > (urb->transfer_buffer_length % usb_maxpacket(urb->dev, urb->pipe, 
-> > usb_pipeout(urb->pipe))) is zero. It will lead to unpredictable results.
+> 
+> of course, the other penalty of randomizer is 
+> read/write performance down.
+> i.e,. tPROG 300 us to 340 us (randomizer enable)
+
+Again, that's a constraint.
+
