@@ -2,150 +2,79 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 279A3C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:42:48 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7ADADC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:43:11 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD0EE20872
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:42:47 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="CLvTitsQ"
+	by mail.kernel.org (Postfix) with ESMTP id 4846321773
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:43:11 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732313AbfDQNmq (ORCPT
+        id S1732329AbfDQNnK (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 09:42:46 -0400
-Received: from mail-wr1-f65.google.com ([209.85.221.65]:45801 "EHLO
-        mail-wr1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729395AbfDQNmq (ORCPT
+        Wed, 17 Apr 2019 09:43:10 -0400
+Received: from youngberry.canonical.com ([91.189.89.112]:37804 "EHLO
+        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729395AbfDQNnJ (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 09:42:46 -0400
-Received: by mail-wr1-f65.google.com with SMTP id s15so31999333wra.12;
-        Wed, 17 Apr 2019 06:42:44 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=sender:from:to:cc:subject:date:message-id;
-        bh=ju5FaGbixUnDqk+BDqfanZ1dwj1okso/92chYbcPQ9k=;
-        b=CLvTitsQ/wDi4xRmOhPFtS3joWZ4coIw8oIqXlEAPmuyCoD4aNisabhCx4r6VZYi+b
-         9eK0Ao1VJVRsupHaR7ChptAb+0BlNtT27ZRT4NbGSLzB8aNSDlIwuivIXlpezeaYbxkM
-         AhKipHz7pcrc+f28zZGDuTfzFjGPrSKonbWFKixJFGgVra0E3ea62aw3+rkHA3GYi2N9
-         qg47ASPyNaMgDbv4RBIUS75jW/YhjF6lAf26tn4oRQS8WH29Xqe4O1zv8mUekD46n9IF
-         9DrKH1y4tYQ0tAj+igGK4rxMYWRstxbToYG2vO7uIQ1TCk4GtDlntp589L62mZorEjgD
-         iP4A==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:from:to:cc:subject:date:message-id;
-        bh=ju5FaGbixUnDqk+BDqfanZ1dwj1okso/92chYbcPQ9k=;
-        b=C8jVAcAkbVID5MTd4ZqXKxperczQFKtLsjyFw/diHNPS2pIgZK1lflvB9OM5Fb317t
-         e8Ab6N5I2udMl1VduFEKwepoEvv2NXRfbClp6YF9vLlHKD+aHDrzGz7D+LKpS/dqRANy
-         MOAmCNnpivSa2BZqB2ji+9rxAxy2xf6spW8am9jGjuy2VLRrxTkg0mzNqCzBeHgY7tCF
-         Sj0LiT9TyEXxwkLDIibkUPg8+Zz5MeSTM5Vl/w6D5Qri0AdO1FtPkUSc9nAJ7pxjwfHF
-         w46F0ODAL8H609DKxIhlIPHbp2JIr3nn1B45Ty9kTOmcVeqMcp3F7Kz9JKd0D3fdAqMQ
-         RxxA==
-X-Gm-Message-State: APjAAAXvBnkVBRkxAjWcRwEdZWXHbrF7dUmbzSkKZcE2p5Efek0hSLOn
-        7rjCa/Qce7h30w6QMvXNU7ZngSQS
-X-Google-Smtp-Source: APXvYqxIok5qw2gnfMYU3P1J9dhjfMYkmahYW72SZDwao8jvs0fNbI1hTUZQoZJLlcH7YcVHf8jnxw==
-X-Received: by 2002:adf:ee0e:: with SMTP id y14mr50965171wrn.21.1555508563784;
-        Wed, 17 Apr 2019 06:42:43 -0700 (PDT)
-Received: from 640k.localdomain ([93.56.166.5])
-        by smtp.gmail.com with ESMTPSA id t81sm4729595wmb.5.2019.04.17.06.42.42
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Apr 2019 06:42:43 -0700 (PDT)
-From:   Paolo Bonzini <pbonzini@redhat.com>
-To:     linux-kernel@vger.kernel.org, kvm@vger.kernel.org
-Cc:     peterx@redhat.com
-Subject: [PATCH] KVM: fix KVM_CLEAR_DIRTY_LOG for memory slots of unaligned size
-Date:   Wed, 17 Apr 2019 15:42:41 +0200
-Message-Id: <1555508561-19864-1-git-send-email-pbonzini@redhat.com>
-X-Mailer: git-send-email 1.8.3.1
+        Wed, 17 Apr 2019 09:43:09 -0400
+Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
+        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
+        (Exim 4.76)
+        (envelope-from <colin.king@canonical.com>)
+        id 1hGkq8-0002Gu-Ms; Wed, 17 Apr 2019 13:43:04 +0000
+From:   Colin King <colin.king@canonical.com>
+To:     QLogic-Storage-Upstream@cavium.com,
+        "James E . J . Bottomley" <jejb@linux.ibm.com>,
+        "Martin K . Petersen" <martin.petersen@oracle.com>,
+        linux-scsi@vger.kernel.org
+Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
+Subject: [PATCH] scsi: qedi: fix spelling mistake "oflload" -> "offload"
+Date:   Wed, 17 Apr 2019 14:43:04 +0100
+Message-Id: <20190417134304.10979-1-colin.king@canonical.com>
+X-Mailer: git-send-email 2.20.1
+MIME-Version: 1.0
+Content-Type: text/plain; charset="utf-8"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-If a memory slot's size is not a multiple of 64 pages (256K), then
-the KVM_CLEAR_DIRTY_LOG API is unusable: clearing the final 64 pages
-either requires the requested page range to go beyond memslot->npages,
-or requires log->num_pages to be unaligned, and kvm_clear_dirty_log_protect
-requires log->num_pages to be both in range and aligned.
+From: Colin Ian King <colin.king@canonical.com>
 
-To allow this case, allow log->num_pages not to be a multiple of 64 if
-it ends exactly on the last page of the slot.
+There are a couple of spelling mistakes in some kernel alert messages.
+Fix these.
 
-Reported-by: Peter Xu <peterx@redhat.com>
-Fixes: 98938aa8edd6 ("KVM: validate userspace input in kvm_clear_dirty_log_protect()", 2019-01-02)
-Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+Signed-off-by: Colin Ian King <colin.king@canonical.com>
 ---
- Documentation/virtual/kvm/api.txt            | 5 +++--
- tools/testing/selftests/kvm/dirty_log_test.c | 4 ++--
- virt/kvm/kvm_main.c                          | 7 ++++---
- 3 files changed, 9 insertions(+), 7 deletions(-)
+ drivers/scsi/qedi/qedi_iscsi.c | 4 ++--
+ 1 file changed, 2 insertions(+), 2 deletions(-)
 
-diff --git a/Documentation/virtual/kvm/api.txt b/Documentation/virtual/kvm/api.txt
-index b62ad0d94234..de97369ad30d 100644
---- a/Documentation/virtual/kvm/api.txt
-+++ b/Documentation/virtual/kvm/api.txt
-@@ -3829,8 +3829,9 @@ The ioctl clears the dirty status of pages in a memory slot, according to
- the bitmap that is passed in struct kvm_clear_dirty_log's dirty_bitmap
- field.  Bit 0 of the bitmap corresponds to page "first_page" in the
- memory slot, and num_pages is the size in bits of the input bitmap.
--Both first_page and num_pages must be a multiple of 64.  For each bit
--that is set in the input bitmap, the corresponding page is marked "clean"
-+first_page must be a multiple of 64; num_pages must also be a multiple of
-+64 unless first_page + num_pages is the size of the memory slot.  For each
-+bit that is set in the input bitmap, the corresponding page is marked "clean"
- in KVM's dirty bitmap, and dirty tracking is re-enabled for that page
- (for example via write-protection, or by clearing the dirty bit in
- a page table entry).
-diff --git a/tools/testing/selftests/kvm/dirty_log_test.c b/tools/testing/selftests/kvm/dirty_log_test.c
-index 4715cfba20dc..052fb5856df4 100644
---- a/tools/testing/selftests/kvm/dirty_log_test.c
-+++ b/tools/testing/selftests/kvm/dirty_log_test.c
-@@ -289,7 +289,7 @@ static void run_test(enum vm_guest_mode mode, unsigned long iterations,
- 	max_gfn = (1ul << (guest_pa_bits - guest_page_shift)) - 1;
- 	guest_page_size = (1ul << guest_page_shift);
- 	/* 1G of guest page sized pages */
--	guest_num_pages = (1ul << (30 - guest_page_shift));
-+	guest_num_pages = (1ul << (30 - guest_page_shift)) + 3;
- 	host_page_size = getpagesize();
- 	host_num_pages = (guest_num_pages * guest_page_size) / host_page_size +
- 			 !!((guest_num_pages * guest_page_size) % host_page_size);
-@@ -359,7 +359,7 @@ static void run_test(enum vm_guest_mode mode, unsigned long iterations,
- 		kvm_vm_get_dirty_log(vm, TEST_MEM_SLOT_INDEX, bmap);
- #ifdef USE_CLEAR_DIRTY_LOG
- 		kvm_vm_clear_dirty_log(vm, TEST_MEM_SLOT_INDEX, bmap, 0,
--				       DIV_ROUND_UP(host_num_pages, 64) * 64);
-+				       host_num_pages);
- #endif
- 		vm_dirty_log_verify(bmap);
- 		iteration++;
-diff --git a/virt/kvm/kvm_main.c b/virt/kvm/kvm_main.c
-index f4da53321161..ace23d8a309f 100644
---- a/virt/kvm/kvm_main.c
-+++ b/virt/kvm/kvm_main.c
-@@ -1269,7 +1269,7 @@ int kvm_clear_dirty_log_protect(struct kvm *kvm,
- 	if (as_id >= KVM_ADDRESS_SPACE_NUM || id >= KVM_USER_MEM_SLOTS)
- 		return -EINVAL;
+diff --git a/drivers/scsi/qedi/qedi_iscsi.c b/drivers/scsi/qedi/qedi_iscsi.c
+index 6d6d6013e35b..e4391ee2c27a 100644
+--- a/drivers/scsi/qedi/qedi_iscsi.c
++++ b/drivers/scsi/qedi/qedi_iscsi.c
+@@ -579,7 +579,7 @@ static int qedi_conn_start(struct iscsi_cls_conn *cls_conn)
+ 	rval = qedi_iscsi_update_conn(qedi, qedi_conn);
+ 	if (rval) {
+ 		iscsi_conn_printk(KERN_ALERT, conn,
+-				  "conn_start: FW oflload conn failed.\n");
++				  "conn_start: FW offload conn failed.\n");
+ 		rval = -EINVAL;
+ 		goto start_err;
+ 	}
+@@ -590,7 +590,7 @@ static int qedi_conn_start(struct iscsi_cls_conn *cls_conn)
+ 	rval = iscsi_conn_start(cls_conn);
+ 	if (rval) {
+ 		iscsi_conn_printk(KERN_ALERT, conn,
+-				  "iscsi_conn_start: FW oflload conn failed!!\n");
++				  "iscsi_conn_start: FW offload conn failed!!\n");
+ 	}
  
--	if ((log->first_page & 63) || (log->num_pages & 63))
-+	if (log->first_page & 63)
- 		return -EINVAL;
- 
- 	slots = __kvm_memslots(kvm, as_id);
-@@ -1282,8 +1282,9 @@ int kvm_clear_dirty_log_protect(struct kvm *kvm,
- 	n = kvm_dirty_bitmap_bytes(memslot);
- 
- 	if (log->first_page > memslot->npages ||
--	    log->num_pages > memslot->npages - log->first_page)
--			return -EINVAL;
-+	    log->num_pages > memslot->npages - log->first_page ||
-+	    (log->num_pages < memslot->npages - log->first_page && (log->num_pages & 63)))
-+	    return -EINVAL;
- 
- 	*flush = false;
- 	dirty_bitmap_buffer = kvm_second_dirty_bitmap(memslot);
+ start_err:
 -- 
-1.8.3.1
+2.20.1
 
