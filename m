@@ -2,89 +2,133 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 80FFDC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 02:22:37 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2457EC10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 02:24:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 52A0721773
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 02:22:37 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DD3EF21773
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 02:24:17 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="LhJHzyyY"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730733AbfDQCWg (ORCPT
+        id S1731039AbfDQCYQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 22:22:36 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:46428 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1727063AbfDQCWf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 22:22:35 -0400
-Received: from DGGEMS406-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id 9973C9C69598820E8015;
-        Wed, 17 Apr 2019 10:22:33 +0800 (CST)
-Received: from [127.0.0.1] (10.184.189.20) by DGGEMS406-HUB.china.huawei.com
- (10.3.19.206) with Microsoft SMTP Server id 14.3.408.0; Wed, 17 Apr 2019
- 10:22:27 +0800
-Subject: Re: some trouble when using vrf
-To:     David Ahern <dsa@cumulusnetworks.com>, <shrijeet@gmail.com>,
-        <davem@davemloft.net>, <netdev@vger.kernel.org>,
-        <linux-kernel@vger.kernel.org>
-CC:     Mingfangsen <mingfangsen@huawei.com>
-References: <15adf635-a74b-e9e3-5dad-b35890f0a746@huawei.com>
- <e4aa6621-8d9b-8d69-0562-610bae347ad3@cumulusnetworks.com>
-From:   linmiaohe <linmiaohe@huawei.com>
-Message-ID: <f106ad99-c0a3-346c-f01f-d6e48ab4b628@huawei.com>
-Date:   Wed, 17 Apr 2019 10:22:21 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
-MIME-Version: 1.0
-In-Reply-To: <e4aa6621-8d9b-8d69-0562-610bae347ad3@cumulusnetworks.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.184.189.20]
-X-CFilter-Loop: Reflected
+        Tue, 16 Apr 2019 22:24:16 -0400
+Received: from m50-135.163.com ([123.125.50.135]:34420 "EHLO m50-135.163.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727063AbfDQCYQ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 22:24:16 -0400
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=jf9JCgMee4wUA0t3fQ
+        g9zMVLthCu5mPOPOUXyNIR8Nk=; b=LhJHzyyYMwZbFrpKhKpPfBT5Ux09HgURM1
+        lR2GTxadgkWytkWyutCXYzrEZkGMaN9WMovrVp1HdpQbzAR+17Te98FbmF1sEJjB
+        NMfqlrC+SGx/T/d9a2g58YigDDzdWWWOZDKcSFkXOWnB30w17lRs6QIWchqAoBBb
+        c9Of4Yx1g=
+Received: from bp.localdomain (unknown [218.106.182.174])
+        by smtp5 (Coremail) with SMTP id D9GowACnqwwojrZcVrYOAQ--.137S3;
+        Wed, 17 Apr 2019 10:23:39 +0800 (CST)
+From:   Pan Bian <bianpan2016@163.com>
+To:     Chris Mason <clm@fb.com>, Josef Bacik <josef@toxicpanda.com>,
+        David Sterba <dsterba@suse.com>
+Cc:     linux-btrfs@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Pan Bian <bianpan2016@163.com>
+Subject: btrfs: drop inode reference count on error path
+Date:   Wed, 17 Apr 2019 10:23:30 +0800
+Message-Id: <1555467810-27859-1-git-send-email-bianpan2016@163.com>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID: D9GowACnqwwojrZcVrYOAQ--.137S3
+X-Coremail-Antispam: 1Uf129KBjvJXoW7ury7Ww1kXF4fKFykJr48Xrb_yoW8tFWUpF
+        yfCwn3K395XryDurs2qF4jvr4Fqa4vgw48XrsFvws5tF47Arn7tryFvr18Kay7trWkCryj
+        qr4Ykw4UWF47Cr7anT9S1TB71UUUUUUqnTZGkaVYY2UrUUUUjbIjqfuFe4nvWSU5nxnvy2
+        9KBjDUYxBIdaVFxhVjvjDU0xZFpf9x07UDsqZUUUUU=
+X-Originating-IP: [218.106.182.174]
+X-CM-SenderInfo: held01tdqsiiqw6rljoofrz/1tbiNgeZclWBeIWWqQAAsM
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+The reference count of inode is incremented by ihold. It should be
+dropped if not used. However, the reference count is not dropped if
+error occurs during updating the inode or deleting orphan items. This
+patch fixes the bug.
 
+Signed-off-by: Pan Bian <bianpan2016@163.com>
+---
+ fs/btrfs/inode.c | 45 ++++++++++++++++++++++-----------------------
+ 1 file changed, 22 insertions(+), 23 deletions(-)
 
-On 2019/4/16 23:20, David Ahern wrote:
-> On 4/16/19 5:26 AM, linmiaohe wrote:
->>     ...
->>     bind(sock_fd, (struct sockaddr *)&addr_serv, sizeof(addr_serv));
->>     ...
->>     ret = setsockopt(sock_fd, SOL_SOCKET, SO_BINDTODEVICE, bind_dev, strlen(bind_dev)+1);
->>     ...
->>     This code snipet doesn't work if the ip address of addr_serv is not in default vrf. And
->> "Cannot assign requested address" will occurs.
-> 
-> Applications must bind to the device first and then bind to the local
-> address. As I recall this applies regardless of whether it is a VRF or
-> other.
-> 
-> 
-It should be, but unfortunately some applications break this.
+diff --git a/fs/btrfs/inode.c b/fs/btrfs/inode.c
+index 82fdda8..400c914 100644
+--- a/fs/btrfs/inode.c
++++ b/fs/btrfs/inode.c
+@@ -6580,6 +6580,7 @@ static int btrfs_link(struct dentry *old_dentry, struct inode *dir,
+ 	u64 index;
+ 	int err;
+ 	int drop_inode = 0;
++	int ret;
+ 
+ 	/* do not allow sys_link's with other subvols of the same device */
+ 	if (root->root_key.objectid != BTRFS_I(inode)->root->root_key.objectid)
+@@ -6616,32 +6617,30 @@ static int btrfs_link(struct dentry *old_dentry, struct inode *dir,
+ 	err = btrfs_add_nondir(trans, BTRFS_I(dir), dentry, BTRFS_I(inode),
+ 			1, index);
+ 
+-	if (err) {
+-		drop_inode = 1;
+-	} else {
+-		struct dentry *parent = dentry->d_parent;
+-		int ret;
++	drop_inode = 1;
++	if (err)
++		goto fail;
+ 
+-		err = btrfs_update_inode(trans, root, inode);
++	err = btrfs_update_inode(trans, root, inode);
++	if (err)
++		goto fail;
++	if (inode->i_nlink == 1) {
++		/*
++		 * If new hard link count is 1, it's a file created
++		 * with open(2) O_TMPFILE flag.
++		 */
++		err = btrfs_orphan_del(trans, BTRFS_I(inode));
+ 		if (err)
+ 			goto fail;
+-		if (inode->i_nlink == 1) {
+-			/*
+-			 * If new hard link count is 1, it's a file created
+-			 * with open(2) O_TMPFILE flag.
+-			 */
+-			err = btrfs_orphan_del(trans, BTRFS_I(inode));
+-			if (err)
+-				goto fail;
+-		}
+-		BTRFS_I(inode)->last_link_trans = trans->transid;
+-		d_instantiate(dentry, inode);
+-		ret = btrfs_log_new_name(trans, BTRFS_I(inode), NULL, parent,
+-					 true, NULL);
+-		if (ret == BTRFS_NEED_TRANS_COMMIT) {
+-			err = btrfs_commit_transaction(trans);
+-			trans = NULL;
+-		}
++	}
++	BTRFS_I(inode)->last_link_trans = trans->transid;
++	d_instantiate(dentry, inode);
++	drop_inode = 0;
++	ret = btrfs_log_new_name(trans, BTRFS_I(inode), NULL, dentry->d_parent,
++			true, NULL);
++	if (ret == BTRFS_NEED_TRANS_COMMIT) {
++		err = btrfs_commit_transaction(trans);
++		trans = NULL;
+ 	}
+ 
+ fail:
+-- 
+2.7.4
 
->>
->>     2.When I run a udp server in default vrf and set net.ipv4.udp_l3mdev_accept=1,
->> it's supposed to work accorss VRFs.
-> 
-> UDP applications can use cmsg with IP_PKTINFO to send the reply out the
-> same device as the request was received. An app can also track the
-> relationship of the enslaved device to a VRF to use a VRF based lookup
-> to send a response. Choices.
-> 
-> 
-
-UDP applications using cmsg with IP_PKTINFO is really a good idea.
-
->>
->> Thanks a lot if you can help me fix these. Have a nice day.
->>
-> .
-> 
-
-Thanks a lot for your advice.
 
