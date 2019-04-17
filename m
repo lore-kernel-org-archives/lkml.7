@@ -2,114 +2,104 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 50742C10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:40:27 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E993CC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:41:26 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 25F1620835
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:40:27 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id BA93D20835
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:41:26 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731400AbfDQIkZ (ORCPT
+        id S1731158AbfDQIlZ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 04:40:25 -0400
-Received: from mout.kundenserver.de ([212.227.126.135]:43749 "EHLO
-        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726895AbfDQIkZ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 04:40:25 -0400
-Received: from [192.168.1.110] ([95.117.89.119]) by mrelayeu.kundenserver.de
- (mreue011 [212.227.15.167]) with ESMTPSA (Nemesis) id
- 1M2NqA-1hHEKA0bIU-003slx; Wed, 17 Apr 2019 10:39:08 +0200
-Subject: Re: [PATCH v11 3/7] anybus-s: support the Arcx anybus controller
-To:     Sven Van Asbroeck <thesven73@gmail.com>
-Cc:     Rob Herring <robh+dt@kernel.org>,
-        Linus Walleij <linus.walleij@linaro.org>,
-        Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com,
-        =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>,
-        treding@nvidia.com, David Lechner <david@lechnology.com>,
-        noralf@tronnes.org, johan@kernel.org,
-        Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com,
-        Arnd Bergmann <arnd@arndb.de>,
-        Greg KH <gregkh@linuxfoundation.org>, john.garry@huawei.com,
-        geert+renesas@glider.be, robin.murphy@arm.com,
-        Paul Gortmaker <paul.gortmaker@windriver.com>,
-        sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io,
-        Stuart Yoder <stuyoder@gmail.com>,
-        "J. Kiszka" <jan.kiszka@siemens.com>, maxime.ripard@bootlin.com,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        netdev <netdev@vger.kernel.org>
-References: <20190416155618.1369-1-TheSven73@gmail.com>
- <20190416155618.1369-4-TheSven73@gmail.com>
- <2caf5f92-164a-3723-e2ef-42e4045d2ec3@metux.net>
- <CAGngYiXZSaUwrCiqavMGDRb5Vuo2x8fTjDetT00PAjjtrYW+NA@mail.gmail.com>
- <bd36b798-d129-c81a-ab2d-22a5b46567f6@metux.net>
- <CAGngYiUaUoRUAiGUGbJEWGRj0bszeSsDDBfZMwoWokQRrMUhfA@mail.gmail.com>
-From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
-Organization: metux IT consult
-Message-ID: <3103f45a-facf-89a3-8a36-84507c570909@metux.net>
-Date:   Wed, 17 Apr 2019 10:39:03 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Wed, 17 Apr 2019 04:41:25 -0400
+Received: from ozlabs.org ([203.11.71.1]:40889 "EHLO ozlabs.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726895AbfDQIlZ (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 04:41:25 -0400
+Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
+        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
+         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
+        (No client certificate requested)
+        by mail.ozlabs.org (Postfix) with ESMTPSA id 44kbLV67Gvz9s4Y;
+        Wed, 17 Apr 2019 18:41:22 +1000 (AEST)
+From:   Michael Ellerman <mpe@ellerman.id.au>
+To:     Diana Madalina Craciun <diana.craciun@nxp.com>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        "linux-kernel\@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Cc:     "stable\@vger.kernel.org" <stable@vger.kernel.org>,
+        Sasha Levin <sashal@kernel.org>
+Subject: Re: [PATCH 4.9 20/76] powerpc/64: Disable the speculation barrier from the command line
+In-Reply-To: <VI1PR0401MB2463835B1223FDAE2EFFCD43FF240@VI1PR0401MB2463.eurprd04.prod.outlook.com>
+References: <20190415183707.712011689@linuxfoundation.org> <20190415183712.869759410@linuxfoundation.org> <VI1PR0401MB2463835B1223FDAE2EFFCD43FF240@VI1PR0401MB2463.eurprd04.prod.outlook.com>
+Date:   Wed, 17 Apr 2019 18:41:20 +1000
+Message-ID: <87ef61uiq7.fsf@concordia.ellerman.id.au>
 MIME-Version: 1.0
-In-Reply-To: <CAGngYiUaUoRUAiGUGbJEWGRj0bszeSsDDBfZMwoWokQRrMUhfA@mail.gmail.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Provags-ID: V03:K1:J1VGXw/sIMk06lVpe/qj508MUrpovhkBenvF/IWqgpKrFMDJCCi
- JAuod9W+gm9PMJtnIzQ+jOb/NxQm964O909uNBm5QwN8OpPaiEPrmEMTTHp/lL2L5kHRPIe
- l0mkTSRW7r2CTkKF03oY8os+hmsZcWby8FcvUDOakABsGroH4+NRDNn65UaOaz9COzfGGVK
- 2HGAlryCah2Ga0R3L+GIA==
-X-UI-Out-Filterresults: notjunk:1;V03:K0:ucpNO5lO9Gk=:o2KacvIlBEHT6L27wjw/6p
- wHeHWCjS/7KCalOgi11nYrN2oMNQacveFCn02kp5AXE3G3wFpANUe/dvAhy/RLUESh01Pkwf6
- ZEB+DkDX3+e/2bPAccz1fNRsAAqEGbFl4VYw4Xf8/VJ21IwpySgCklX66HXpBnjBFlUr4IBM7
- 2rxPuxq+pysrcU5IJjGHEAn1lb5CIjYoTHb3VOGYTvoS2EiOvalGZeKbWYr0mL+x1W2GsHAkx
- VcOmF3Q2u/fdqFl02kMiYUp7aiw9pSf1UxIokzq6NKUbIqNA9rHZ7srXNXCwNTlpS74ASkpVd
- UANpAxf/XAtf0z1f6RcjVQxT3SS0fGNpKEszDaBQp2OYFVdDTv4EXl/VAxazvy6M34UHVXU4J
- w3OFTJnYeu7Tn867EQYRrIvXyUdrNm1lRzqFWBKXfp8Lxlz/NayWI9dd4hDdLv+o6YISG+Bcu
- I0Cc1/E+R4bbpZ7KreHw8e4mEB0ErAslEDMq6HgKLD88pRijcC5Z4cngxiXdSNaQJsfi5HxOz
- GHgXMCOkvwSE0s13QanNpujNrCCVJYxOEYockr/wkzfr5k5M68+3Wvx7mUZyLuKCAr9aIGlhv
- PwwQzxgFQiXl9XL5w7k1aw76Hr2eCDRFOxSgPssg3SWdxeG4LzevjnQ1Zx2eYc+FWNl/tHJEs
- uzLsF+Mk5gIsco0NY3FQPfXVCYUUJ3+ELQsk73ZrJsYt634VuH3TDb0H1Ivu/F4NYbzZPWP2f
- jCWWY3QvL5Lb1FEIHWlHmG0dTpT7mXTwKFlt8lup51egOaOGP4beVvX/BhU=
+Content-Type: text/plain
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 16.04.19 23:23, Sven Van Asbroeck wrote:
+Diana Madalina Craciun <diana.craciun@nxp.com> writes:
+> Hi,
+>
+> I have tested the patches on NXP platforms and they worked as expected.
 
-Hi,
+Thanks Diana.
 
-> Well yes, we could treat it as an mfd device, with a common register accessor,> which registers anybus-s host and adc drivers, all selectable via>
-Kconfig / defconfig... But that's a lot of extra code just to handle one
-single> bit in a register, which is a boolean input.> > Can be done but
-is it worth it?
-hmm, I think the main question here is clean separation between
-subsystems - devices that span multiple subsystems, IMHO, fall
-into the category "mfd".
+cheers
 
-separate drivers probably don't make much sense here, but maybe
-a CONFIG_ flag for disabling this functionality ?
-
->> Does this power read-out involve some CAN traffic, or is it just
->> fetching from some card that just happens to be some CAN interface ?
->> (IOW: is cansocket needed for that ?)
-> 
-> It is purely a boolean input. The boolean output of a voltage monitor chip.
-> When our hardware is assembled, the voltage monitor input is connected
-> to a signal which indicates the CAN status. In theory, it could be connected
-> to the factory's light switch. It would then read out the status of the factory
-> floor lights. It has no CAN functionality whatsoever.
-
-hmm, wouldn't the input subsystem be more appropriate for that ?
-
-
---mtx
-
--- 
-Enrico Weigelt, metux IT consult
-Free software and Linux embedded engineering
-info@metux.net -- +49-151-27565287
+> On 4/15/2019 9:45 PM, Greg Kroah-Hartman wrote:
+>> commit cf175dc315f90185128fb061dc05b6fbb211aa2f upstream.
+>>
+>> The speculation barrier can be disabled from the command line
+>> with the parameter: "nospectre_v1".
+>>
+>> Signed-off-by: Diana Craciun <diana.craciun@nxp.com>
+>> Signed-off-by: Michael Ellerman <mpe@ellerman.id.au>
+>> Signed-off-by: Sasha Levin <sashal@kernel.org>
+>> ---
+>>  arch/powerpc/kernel/security.c | 12 +++++++++++-
+>>  1 file changed, 11 insertions(+), 1 deletion(-)
+>>
+>> diff --git a/arch/powerpc/kernel/security.c b/arch/powerpc/kernel/security.c
+>> index bf298d0c475f..813e38ff81ce 100644
+>> --- a/arch/powerpc/kernel/security.c
+>> +++ b/arch/powerpc/kernel/security.c
+>> @@ -17,6 +17,7 @@
+>>  unsigned long powerpc_security_features __read_mostly = SEC_FTR_DEFAULT;
+>>
+>>  bool barrier_nospec_enabled;
+>> +static bool no_nospec;
+>>
+>>  static void enable_barrier_nospec(bool enable)
+>>  {
+>> @@ -43,9 +44,18 @@ void setup_barrier_nospec(void)
+>>         enable = security_ftr_enabled(SEC_FTR_FAVOUR_SECURITY) &&
+>>                  security_ftr_enabled(SEC_FTR_BNDS_CHK_SPEC_BAR);
+>>
+>> -       enable_barrier_nospec(enable);
+>> +       if (!no_nospec)
+>> +               enable_barrier_nospec(enable);
+>>  }
+>>
+>> +static int __init handle_nospectre_v1(char *p)
+>> +{
+>> +       no_nospec = true;
+>> +
+>> +       return 0;
+>> +}
+>> +early_param("nospectre_v1", handle_nospectre_v1);
+>> +
+>>  #ifdef CONFIG_DEBUG_FS
+>>  static int barrier_nospec_set(void *data, u64 val)
+>>  {
+>> --
+>> 2.19.1
+>>
+>>
+>>
+>>
