@@ -6,62 +6,61 @@ X-Spam-Status: No, score=-6.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
 	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SPF_PASS
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF4F2C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:50:06 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 496DDC282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:50:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id AF9AD2064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:50:06 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 180FF217F9
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:50:09 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555523406;
-	bh=LFwuDlVPGADvtsgfuibUqCSUbDJMXlFc83CnCStxTKM=;
+	s=default; t=1555523410;
+	bh=wOGENtEpA0JIFFLivsD0YPE0DT/uG8DM+4MkpSef1SA=;
 	h=Subject:From:In-Reply-To:References:Date:To:Cc:List-ID:From;
-	b=Mvd8XoQbfkWk0JBemcsV0P0ICjHNsAslmt370CgH/g9tP/1APSrkSjlf4y6uZJhox
-	 OFok1q859hHuqZ58iJDC98/9ZdDxy3e7a5NhZ388DGQt3qDeTDOnEQc293cWeqqKzC
-	 vRvTedPnrDSBKvU8KOnPplHmKMoo5odb5asTCuuE=
+	b=2hFAPSlFHvNWn1R4MU1NSH8Tsm8DwGxbV4G29MTgj8WNbIcgltfJCrUmhuwkRmKxx
+	 WMeRh3I00PmCwbm4ImD+1hGW6LJqMXrVEMQt9a4d/tq59/lNlLZvPvDAhX0vFUZYwY
+	 5HN4Z5qAPZIlq3nnkIVphq9eGawtR0VLHFAnyieY=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733145AbfDQRuF (ORCPT
+        id S1733132AbfDQRuE (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 13:50:05 -0400
-Received: from mail.kernel.org ([198.145.29.99]:49014 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1733109AbfDQRuE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
         Wed, 17 Apr 2019 13:50:04 -0400
-Subject: Re: [GIT PULL] IPMI serious bugfixes for 5.1
+Received: from mail.kernel.org ([198.145.29.99]:48996 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731696AbfDQRuE (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 13:50:04 -0400
+Subject: Re: [GIT] Networking
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555523404;
-        bh=LFwuDlVPGADvtsgfuibUqCSUbDJMXlFc83CnCStxTKM=;
+        s=default; t=1555523403;
+        bh=wOGENtEpA0JIFFLivsD0YPE0DT/uG8DM+4MkpSef1SA=;
         h=From:In-Reply-To:References:Date:To:Cc:From;
-        b=phhcoj0bd67HEschtYsAH34Ncqh7E3G32j2wCP4ykt0ahMmd/1YcdP7D81XVjvVdT
-         z4JB9XjvxGh8PnnxrAPXuNy12/n+8OG6+nF8Sg82ZOJjZgRqoR5I2kSFFPnjiSdim5
-         jV8jwCdPO/yP8x/3ZY6YAErxTBDeBQHcVFqWmTw8=
+        b=11dSOeLqAGAa0HAzsgeo9xcE0lajUru8eIqey68pIPdLQObVkyOhDrX74DZlpI3oJ
+         b3lyHufFHaubBVowDGyo1pB7x6Gd96LeXWzLgHFxSm0mbAFTp4E4BI2GAJG+Pse4TQ
+         0jFmLPjL6WsUkZJwNx6AX1F21xrxx6wiU1bAEtfQ=
 From:   pr-tracker-bot@kernel.org
-In-Reply-To: <20190417154654.GL4121@minyard.net>
-References: <20190417154654.GL4121@minyard.net>
+In-Reply-To: <20190416.221625.898048119534445238.davem@davemloft.net>
+References: <20190416.221625.898048119534445238.davem@davemloft.net>
 X-PR-Tracked-List-Id: <linux-kernel.vger.kernel.org>
-X-PR-Tracked-Message-Id: <20190417154654.GL4121@minyard.net>
-X-PR-Tracked-Remote: https://github.com/cminyard/linux-ipmi.git
- tags/for-linus-5.1-2
-X-PR-Tracked-Commit-Id: 3b9a907223d7f6b9d1dadea29436842ae9bcd76d
+X-PR-Tracked-Message-Id: <20190416.221625.898048119534445238.davem@davemloft.net>
+X-PR-Tracked-Remote: git://git.kernel.org/pub/scm/linux/kernel/git/davem/net
+ refs/heads/master
+X-PR-Tracked-Commit-Id: e6986423d28362aafe64d3757bbbc493f2687f8f
 X-PR-Merge-Tree: torvalds/linux.git
 X-PR-Merge-Refname: refs/heads/master
-X-PR-Merge-Commit-Id: fe5cdef29e41c8bda8cd1a11545e7c6bfe25570e
-Message-Id: <155552340406.18419.13447767487971596344.pr-tracker-bot@kernel.org>
-Date:   Wed, 17 Apr 2019 17:50:04 +0000
-To:     Corey Minyard <minyard@acm.org>
-Cc:     Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        openipmi-developer@lists.sourceforge.net
+X-PR-Merge-Commit-Id: 2a3a028fc61d03e80ac57091330eb514280bd5be
+Message-Id: <155552340385.18419.11029455183848801067.pr-tracker-bot@kernel.org>
+Date:   Wed, 17 Apr 2019 17:50:03 +0000
+To:     David Miller <davem@davemloft.net>
+Cc:     torvalds@linux-foundation.org, akpm@linux-foundation.org,
+        netdev@vger.kernel.org, linux-kernel@vger.kernel.org
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The pull request you sent on Wed, 17 Apr 2019 10:46:54 -0500:
+The pull request you sent on Tue, 16 Apr 2019 22:16:25 -0700 (PDT):
 
-> https://github.com/cminyard/linux-ipmi.git tags/for-linus-5.1-2
+> git://git.kernel.org/pub/scm/linux/kernel/git/davem/net refs/heads/master
 
 has been merged into torvalds/linux.git:
-https://git.kernel.org/torvalds/c/fe5cdef29e41c8bda8cd1a11545e7c6bfe25570e
+https://git.kernel.org/torvalds/c/2a3a028fc61d03e80ac57091330eb514280bd5be
 
 Thank you!
 
