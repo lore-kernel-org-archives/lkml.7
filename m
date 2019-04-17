@@ -2,102 +2,126 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id F2DD0C10F13
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 00:20:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C972FC10F13
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 00:25:55 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B691E2177B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 00:20:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 90F352073F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 00:25:55 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="RQlTcaZy"
+	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="xhX89wge"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730971AbfDQAUv (ORCPT
+        id S1730756AbfDQAZy (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 20:20:51 -0400
-Received: from mail-oi1-f195.google.com ([209.85.167.195]:44735 "EHLO
-        mail-oi1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728856AbfDQAUu (ORCPT
+        Tue, 16 Apr 2019 20:25:54 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34394 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728856AbfDQAZx (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 20:20:50 -0400
-Received: by mail-oi1-f195.google.com with SMTP id i21so18555502oib.11;
-        Tue, 16 Apr 2019 17:20:50 -0700 (PDT)
+        Tue, 16 Apr 2019 20:25:53 -0400
+Received: by mail-ot1-f65.google.com with SMTP id k21so19250401otf.1
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 17:25:53 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=subject:to:cc:references:from:message-id:date:user-agent
-         :mime-version:in-reply-to:content-language:content-transfer-encoding;
-        bh=b58g4cJPAz/6cOF7x0QwjSMYANQGonoQR6DyLqU4OrE=;
-        b=RQlTcaZy7eR8bU/qAhn1kxp/dPe0L//smEtWtVb1gx+QUQKSyGu8oivpkD/8MNjFFB
-         /lnkwYmvDVJXuLxm3j/mKL2I7M5FkSINxeijtxRCSBV9nGIF5/MK3S8rFBX8IsV4TTsl
-         4J1IebaXfouCwU1bWGbufjPlftaR1wS+6/2F+sLXkKPE38Reri+qPD7Uu4nX5eTo681V
-         sfLy8fRNAftSG9iEVBSVV8/KMCaAi8l9LcUPmu+EAmks3PjXsOz1ArE25dP3iS80mnnB
-         1o325qPpPiRCYKo22PSiK+DArdhSw982mSGfg1P8EX/XS6iWiRIpk+TixapcQTgPaRIO
-         pIgA==
+        d=linaro.org; s=google;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=GxR3SmFS2DcVKS+hsstqZ3ZTAvI5HeM5sdfZJFbMgY4=;
+        b=xhX89wgeYbIU2PdBdm9sk7KpGcvCHL/B7aeauFFnbarVk5wmLIysny6Xp7i2UqD4En
+         Utm85VzBmifQFCS8KYwTeqvRzaWnacdfg9EYr/pW3rug06xTfpNKrHOnhHZTQeqimbTI
+         dX4XmY1XswjCDqaqMYrjC4EmwY/ztTGJwKYUFbnbdBeGglWIegEQPYq+MjpH/B6LgV6e
+         JZnOm4/bLRC9LMVHDs3Mf0j97vXEBbF8vdoC0kS9FVTo2jyOGY01IBcpcgGftTzKaZxm
+         hykKmFLbjtjRdPjzD2Kek4TT5PjYpht1/DNKuwG5cbea0BNyAwCp5URIP7BpxaC6Cnjq
+         /VCw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
-         :user-agent:mime-version:in-reply-to:content-language
-         :content-transfer-encoding;
-        bh=b58g4cJPAz/6cOF7x0QwjSMYANQGonoQR6DyLqU4OrE=;
-        b=FRFCoe3YwbA3QEZW1IP9Q/NbHJLHIADKi/cO7F6nM8B+nfpXlE6GimWxEH+SMxbBHl
-         Jhs11RHT1+HNaNL2q46SNR13Sf922F1MmiBQ73q2kCf6C50cM7k3Bzwh59kJzuf463Op
-         W1GuFA8V1yhI1vRGPeZSIITeFOZ2Gp3pctPObJECfXoxXL9fReTad7DpjSoldA3auVth
-         icI85WyhQ44Fpm9dSqFhObfuCLRe4IzklgMi0ioW/dADS58cSh13mRMGf9Zm5KIOaH/k
-         FMGbhbzs62cI4JODcR6eo0RGgStF7NRe7C6NSSTZecCs9RR13gc9lTKG32GefocOcpla
-         w8Iw==
-X-Gm-Message-State: APjAAAVFUmZ8XpoBQPSxiG2q3QIbKrtEDrjJeCKF6oG6q34EdbrBNvps
-        DVwWua3Og14KduPXWyQKBHg=
-X-Google-Smtp-Source: APXvYqziiM1KU4v/IWEwE8td7OTqUUbOo5BqHQf+TxHbo+SEici9grpfcggtslTvXIUllxLM0jT+9Q==
-X-Received: by 2002:aca:304e:: with SMTP id w75mr26373090oiw.176.1555460449814;
-        Tue, 16 Apr 2019 17:20:49 -0700 (PDT)
-Received: from [192.168.1.2] (ip68-101-123-102.oc.oc.cox.net. [68.101.123.102])
-        by smtp.googlemail.com with ESMTPSA id a34sm24853275otc.46.2019.04.16.17.20.47
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Tue, 16 Apr 2019 17:20:49 -0700 (PDT)
-Subject: Re: [PATCH v3 net-next 23/24] Documentation: net: dsa: Add details
- about NXP SJA1105 driver
-To:     Vladimir Oltean <olteanv@gmail.com>, vivien.didelot@gmail.com,
-        andrew@lunn.ch, davem@davemloft.net
-Cc:     netdev@vger.kernel.org, linux-kernel@vger.kernel.org,
-        georg.waibel@sensor-technik.de
-References: <20190413012822.30931-1-olteanv@gmail.com>
- <20190413012822.30931-24-olteanv@gmail.com>
-From:   Florian Fainelli <f.fainelli@gmail.com>
-Message-ID: <a09bdb25-6d18-b9f0-2be8-da9ad174ace8@gmail.com>
-Date:   Tue, 16 Apr 2019 17:20:47 -0700
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=GxR3SmFS2DcVKS+hsstqZ3ZTAvI5HeM5sdfZJFbMgY4=;
+        b=UoZSiTwtxvLAO+/6HzSIQ8ErGyFtJwMJOKIcaXmPTXzbCiw3WPckY63tAYqpOch1On
+         YM5saJ76rVylmiV6BJUfWCPBIbjZJE8RsduFkYfltSXr3kK/Xbb4roPCFNat2crg8M3b
+         IYVqvAPwmuPRjx2nwN8dbmLIcx9L/GAPwF5aUq54EnIwdnoFMnReAgSY5aWJLB3oVjMa
+         X1GMYnYtag0qvJWbUprVynPdEh1xmIZGXTNa54TLhz8nksrRYoJd7N3XxioHQPB1utya
+         K5pUhHHn+NJhKiDgENEy882fd/yzKgJbRuK2CwdFd+0IeNGqgLk09hv9ycpSprG08B4N
+         JmnA==
+X-Gm-Message-State: APjAAAX8aXFQv3cI7kvyNtNOAJiyoPz83cdA//hO4ERyzklNUp/yjRA+
+        Tg1oim81r5rWySt2sOYXm+8rvtwMuuQYhg==
+X-Google-Smtp-Source: APXvYqxqOCoacPNOuNGR1WYwHCtlfQDPF5qg0R0wz4E58SbEYKmEpu7s4dJvU7p8YDq/bdoh31xZgw==
+X-Received: by 2002:a9d:3d03:: with SMTP id a3mr52367720otc.72.1555460753050;
+        Tue, 16 Apr 2019 17:25:53 -0700 (PDT)
+Received: from leoy-ThinkPad-X240s (li808-42.members.linode.com. [104.237.132.42])
+        by smtp.gmail.com with ESMTPSA id n16sm19944570oic.7.2019.04.16.17.25.49
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 16 Apr 2019 17:25:51 -0700 (PDT)
+Date:   Wed, 17 Apr 2019 08:25:46 +0800
+From:   Leo Yan <leo.yan@linaro.org>
+To:     Valentin Schneider <valentin.schneider@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        olof@lixom.net, marc.w.gonzalez@free.fr, john.stultz@linaro.org,
+        liwei213@huawei.com
+Subject: Re: [PATCH] arm64: defconfig: Update UFSHCD for Hi3660 soc
+Message-ID: <20190417002546.GC6202@leoy-ThinkPad-X240s>
+References: <20190416170221.13764-1-valentin.schneider@arm.com>
 MIME-Version: 1.0
-In-Reply-To: <20190413012822.30931-24-olteanv@gmail.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190416170221.13764-1-valentin.schneider@arm.com>
+User-Agent: Mutt/1.9.4 (2018-02-28)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Tue, Apr 16, 2019 at 06:02:21PM +0100, Valentin Schneider wrote:
+> Commit 7ee7ef24d02d ("scsi: arm64: defconfig: enable configs for Hisilicon ufs")
+> set 'CONFIG_SCSI_UFS_HISI=y', but the configs it depends
+> on
+> 
+>   (CONFIG_SCSI_HFSHCD_PLATFORM && CONFIG_SCSI_UFSHCD)
+> 
+> were left to being built as modules.
+> 
+> Commit 1f4fa50dd48f ("arm64: defconfig: Regenerate for v4.20") "fixed"
+> that by reverting to 'CONFIG_SCSI_UFS_HISI=m'.
+> 
+> Thing is, if the rootfs is stored in the on-board flash (which
+> is the "canonical" way of doing things), we either need these drivers
+> to be built-in, or we need to fiddle with an initramfs to access that
+> flash and eventually load the modules installed over there.
+> 
+> The former is the easiest, do that.
+> 
+> Signed-off-by: Valentin Schneider <valentin.schneider@arm.com>
 
+Looks good to me:
 
-On 12/04/2019 18:28, Vladimir Oltean wrote:
+Reviewed-by: Leo Yan <leo.yan@linaro.org>
 
-[snip]
-
-> +Segregating the switch ports in multiple bridges is supported (e.g. 2 + 2), but
-> +all bridges should have the same level of VLAN awareness (either both have
-> +``vlan_filtering`` 0, or both 1). Also an inevitable limitation of the fact
-> +that VLAN awareness is global at the switch level is that once a bridge with
-> +``vlan_filtering`` enslaves at least one switch port, the other un-bridged
-> +ports are no longer available for standalone traffic termination.
-
-That is quite a limitation that I don't think I had fully grasped until 
-reading your different patches. Since enslaving ports into a bridge 
-comes after the network device was already made available for use, maybe 
-you should force the carrier down or something along those lines as soon 
-as a port is enslaved into a bridge with vlan_filtering=1 to make this 
-more predictable for the user?
--- 
-Florian
+> ---
+>  arch/arm64/configs/defconfig | 6 +++---
+>  1 file changed, 3 insertions(+), 3 deletions(-)
+> 
+> diff --git a/arch/arm64/configs/defconfig b/arch/arm64/configs/defconfig
+> index 2d9c39033c1a..32fb03503b0b 100644
+> --- a/arch/arm64/configs/defconfig
+> +++ b/arch/arm64/configs/defconfig
+> @@ -222,10 +222,10 @@ CONFIG_BLK_DEV_SD=y
+>  CONFIG_SCSI_SAS_ATA=y
+>  CONFIG_SCSI_HISI_SAS=y
+>  CONFIG_SCSI_HISI_SAS_PCI=y
+> -CONFIG_SCSI_UFSHCD=m
+> -CONFIG_SCSI_UFSHCD_PLATFORM=m
+> +CONFIG_SCSI_UFSHCD=y
+> +CONFIG_SCSI_UFSHCD_PLATFORM=y
+>  CONFIG_SCSI_UFS_QCOM=m
+> -CONFIG_SCSI_UFS_HISI=m
+> +CONFIG_SCSI_UFS_HISI=y
+>  CONFIG_ATA=y
+>  CONFIG_SATA_AHCI=y
+>  CONFIG_SATA_AHCI_PLATFORM=y
+> --
+> 2.20.1
+> 
