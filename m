@@ -2,237 +2,189 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D683BC10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 09:48:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id C5347C10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 09:52:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 92E3C21773
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 09:48:55 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=synopsys.com header.i=@synopsys.com header.b="KA6/jUoB"
+	by mail.kernel.org (Postfix) with ESMTP id 9E64F21773
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 09:52:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731957AbfDQJsy (ORCPT
+        id S1731561AbfDQJwF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 05:48:54 -0400
-Received: from dc2-smtprelay2.synopsys.com ([198.182.61.142]:50090 "EHLO
-        smtprelay-out1.synopsys.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1731639AbfDQJsv (ORCPT
+        Wed, 17 Apr 2019 05:52:05 -0400
+Received: from mail-ed1-f68.google.com ([209.85.208.68]:45937 "EHLO
+        mail-ed1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727282AbfDQJwE (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 05:48:51 -0400
-Received: from mailhost.synopsys.com (dc8-mailhost2.synopsys.com [10.13.135.210])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits))
-        (No client certificate requested)
-        by smtprelay-out1.synopsys.com (Postfix) with ESMTPS id 0AC9BC0B15;
-        Wed, 17 Apr 2019 09:39:14 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=synopsys.com; s=mail;
-        t=1555493956; bh=S+fy8+zpPNMJ6RZXypY8YvBTMgFM2RzLHf5HYS0AZDg=;
-        h=From:To:CC:Subject:Date:References:In-Reply-To:From;
-        b=KA6/jUoBpSEnAJWWmVd+O16XFBdWCch2VVOfBQzL2fB81V5+3hhzsLztZ7KQiQNPu
-         Ia/mB3XfJ5o6FLTxkrGAXr11T7IO4TSROAP+H6PMVZgO/VwyT5V6U9360z2P7AsIHq
-         +XdlfLXqXZsWSjQ2uJfnbI55KDKP7uAJVqPwRS2gttq5WuwPTJfoJadteGIpFhrxWS
-         uJ+PcgJ8xHrc7g1Z/tzA511/9X7G5e93/Ouds2Eu1yfHykAG8cpNQfrcdFnQU5GFcO
-         x4ArrEKWdROJMQ9Utrc9iZjDo/3hiLUFNLwpmHOv5RUXOZbuIV2MAxqR8zxzk5kOKK
-         OinIYXplsyzfw==
-Received: from us01wehtc1.internal.synopsys.com (us01wehtc1-vip.internal.synopsys.com [10.12.239.236])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mailhost.synopsys.com (Postfix) with ESMTPS id A7591A007A;
-        Wed, 17 Apr 2019 09:39:13 +0000 (UTC)
-Received: from DE02WEHTCB.internal.synopsys.com (10.225.19.94) by
- us01wehtc1.internal.synopsys.com (10.12.239.235) with Microsoft SMTP Server
- (TLS) id 14.3.408.0; Wed, 17 Apr 2019 02:39:12 -0700
-Received: from DE02WEMBXA.internal.synopsys.com ([fe80::a014:7216:77d:d55c])
- by DE02WEHTCB.internal.synopsys.com ([::1]) with mapi id 14.03.0415.000; Wed,
- 17 Apr 2019 11:39:10 +0200
-From:   Gustavo Pimentel <Gustavo.Pimentel@synopsys.com>
-To:     Vidya Sagar <vidyas@nvidia.com>,
-        "bhelgaas@google.com" <bhelgaas@google.com>,
-        "robh+dt@kernel.org" <robh+dt@kernel.org>,
-        "mark.rutland@arm.com" <mark.rutland@arm.com>,
-        "thierry.reding@gmail.com" <thierry.reding@gmail.com>,
-        "jonathanh@nvidia.com" <jonathanh@nvidia.com>,
-        "kishon@ti.com" <kishon@ti.com>,
-        "catalin.marinas@arm.com" <catalin.marinas@arm.com>,
-        "will.deacon@arm.com" <will.deacon@arm.com>,
-        "lorenzo.pieralisi@arm.com" <lorenzo.pieralisi@arm.com>,
-        "jingoohan1@gmail.com" <jingoohan1@gmail.com>,
-        "gustavo.pimentel@synopsys.com" <Gustavo.Pimentel@synopsys.com>
-CC:     "mperttunen@nvidia.com" <mperttunen@nvidia.com>,
-        "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
-        "devicetree@vger.kernel.org" <devicetree@vger.kernel.org>,
-        "linux-tegra@vger.kernel.org" <linux-tegra@vger.kernel.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
-        "linux-arm-kernel@lists.infradead.org" 
-        <linux-arm-kernel@lists.infradead.org>,
-        "kthota@nvidia.com" <kthota@nvidia.com>,
-        "mmaddireddy@nvidia.com" <mmaddireddy@nvidia.com>,
-        "sagar.tv@gmail.com" <sagar.tv@gmail.com>
-Subject: RE: [PATCH V3 08/16] PCI: dwc: Add support to enable CDM register
- check
-Thread-Topic: [PATCH V3 08/16] PCI: dwc: Add support to enable CDM register
- check
-Thread-Index: AQHU9IqfJ6hn1hISv0aqHiMRM1QAkqZAGXpg
-Date:   Wed, 17 Apr 2019 09:39:10 +0000
-Message-ID: <305100E33629484CBB767107E4246BBB0A22C0EC@de02wembxa.internal.synopsys.com>
-References: <20190416192730.15681-1-vidyas@nvidia.com>
- <20190416192730.15681-9-vidyas@nvidia.com>
-In-Reply-To: <20190416192730.15681-9-vidyas@nvidia.com>
-Accept-Language: pt-PT, en-US
-Content-Language: en-US
-X-MS-Has-Attach: 
-X-MS-TNEF-Correlator: 
-x-dg-ref: =?us-ascii?Q?PG1ldGE+PGF0IG5tPSJib2R5LnR4dCIgcD0iYzpcdXNlcnNcZ3VzdGF2b1xh?=
- =?us-ascii?Q?cHBkYXRhXHJvYW1pbmdcMDlkODQ5YjYtMzJkMy00YTQwLTg1ZWUtNmI4NGJh?=
- =?us-ascii?Q?MjllMzViXG1zZ3NcbXNnLWE1ODQ1ZGQ2LTYwZjQtMTFlOS05ODdkLWY4OTRj?=
- =?us-ascii?Q?MjczODA0MlxhbWUtdGVzdFxhNTg0NWRkOC02MGY0LTExZTktOTg3ZC1mODk0?=
- =?us-ascii?Q?YzI3MzgwNDJib2R5LnR4dCIgc3o9IjI0NzAiIHQ9IjEzMTk5OTY3NTQ4Njg3?=
- =?us-ascii?Q?OTk5MSIgaD0iYTNKdnNIdTEvQ1pwRFBBbVg1K2NvZGpXdWc4PSIgaWQ9IiIg?=
- =?us-ascii?Q?Ymw9IjAiIGJvPSIxIiBjaT0iY0FBQUFFUkhVMVJTUlVGTkNnVUFBQlFKQUFE?=
- =?us-ascii?Q?M3dOeG5BZlhVQWU5THlzQjlLK1pzNzB2S3dIMHI1bXdPQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUhBQUFBQ2tDQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUVBQVFBQkFBQUFGdGJCcHdBQUFBQUFBQUFBQUFBQUFKNEFBQUJtQUdrQWJn?=
- =?us-ascii?Q?QmhBRzRBWXdCbEFGOEFjQUJzQUdFQWJnQnVBR2tBYmdCbkFGOEFkd0JoQUhR?=
- =?us-ascii?Q?QVpRQnlBRzBBWVFCeUFHc0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?RUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFHWUFid0IxQUc0QVpBQnlBSGtBWHdC?=
- =?us-ascii?Q?d0FHRUFjZ0IwQUc0QVpRQnlBSE1BWHdCbkFHWUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFBQUFDQUFB?=
- =?us-ascii?Q?QUFBQ2VBQUFBWmdCdkFIVUFiZ0JrQUhJQWVRQmZBSEFBWVFCeUFIUUFiZ0Js?=
- =?us-ascii?Q?QUhJQWN3QmZBSE1BWVFCdEFITUFkUUJ1QUdjQVh3QmpBRzhBYmdCbUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFBQm1BRzhB?=
- =?us-ascii?Q?ZFFCdUFHUUFjZ0I1QUY4QWNBQmhBSElBZEFCdUFHVUFjZ0J6QUY4QWN3QmhB?=
- =?us-ascii?Q?RzBBY3dCMUFHNEFad0JmQUhJQVpRQnpBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUdZQWJ3QjFBRzRBWkFCeUFIa0FY?=
- =?us-ascii?Q?d0J3QUdFQWNnQjBBRzRBWlFCeUFITUFYd0J6QUcwQWFRQmpBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFBQUFBQUNB?=
- =?us-ascii?Q?QUFBQUFDZUFBQUFaZ0J2QUhVQWJnQmtBSElBZVFCZkFIQUFZUUJ5QUhRQWJn?=
- =?us-ascii?Q?QmxBSElBY3dCZkFITUFkQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQkFBQUFBQUFBQUFJQUFBQUFBSjRBQUFCbUFH?=
- =?us-ascii?Q?OEFkUUJ1QUdRQWNnQjVBRjhBY0FCaEFISUFkQUJ1QUdVQWNnQnpBRjhBZEFC?=
- =?us-ascii?Q?ekFHMEFZd0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUVBQUFBQUFBQUFBZ0FBQUFBQW5nQUFBR1lBYndCMUFHNEFaQUJ5QUhr?=
- =?us-ascii?Q?QVh3QndBR0VBY2dCMEFHNEFaUUJ5QUhNQVh3QjFBRzBBWXdBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFRQUFBQUFBQUFB?=
- =?us-ascii?Q?Q0FBQUFBQUNlQUFBQVp3QjBBSE1BWHdCd0FISUFid0JrQUhVQVl3QjBBRjhB?=
- =?us-ascii?Q?ZEFCeUFHRUFhUUJ1QUdrQWJnQm5BQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFCQUFBQUFBQUFBQUlBQUFBQUFKNEFBQUJ6?=
- =?us-ascii?Q?QUdFQWJBQmxBSE1BWHdCaEFHTUFZd0J2QUhVQWJnQjBBRjhBY0FCc0FHRUFi?=
- =?us-ascii?Q?Z0FBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBRUFBQUFBQUFBQUFnQUFBQUFBbmdBQUFITUFZUUJzQUdVQWN3QmZB?=
- =?us-ascii?Q?SEVBZFFCdkFIUUFaUUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQVFBQUFBQUFB?=
- =?us-ascii?Q?QUFDQUFBQUFBQ2VBQUFBY3dCdUFIQUFjd0JmQUd3QWFRQmpBR1VBYmdCekFH?=
- =?us-ascii?Q?VUFYd0IwQUdVQWNnQnRBRjhBTVFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUJBQUFBQUFBQUFBSUFBQUFBQUo0QUFB?=
- =?us-ascii?Q?QnpBRzRBY0FCekFGOEFiQUJwQUdNQVpRQnVBSE1BWlFCZkFIUUFaUUJ5QUcw?=
- =?us-ascii?Q?QVh3QnpBSFFBZFFCa0FHVUFiZ0IwQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFFQUFBQUFBQUFBQWdBQUFBQUFuZ0FBQUhZQVp3QmZBR3NBWlFC?=
- =?us-ascii?Q?NUFIY0Fid0J5QUdRQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFB?=
- =?us-ascii?Q?QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBUUFBQUFB?=
- =?us-ascii?Q?QUFBQUNBQUFBQUFBPSIvPjwvbWV0YT4=3D?=
-x-originating-ip: [10.107.25.131]
-Content-Type: text/plain; charset="us-ascii"
-Content-Transfer-Encoding: quoted-printable
+        Wed, 17 Apr 2019 05:52:04 -0400
+Received: by mail-ed1-f68.google.com with SMTP id k92so2296320edc.12
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 02:52:03 -0700 (PDT)
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=+zT28kDMButlPwZHfCkpmJ/Ssw+TDsJCMi0mgZkOg2Q=;
+        b=sFxczMBeHWwuhl6jHk6dKbQeYjQHMEDhEzjUg0A6b4Kw+opSy31yOvEckgI/yESoBF
+         fsNebX0+sO8zOhKay6Cs54uxF+bXexPJ8+VYXOvETzDmRET181+LkPBFmSTCEQC7JbpS
+         nL9AFObpb4O1ow/KpEU2fGqP0Ok8Ez9K/o87acd/zt/QF5wuUPv/7Cu7OojB1hSdiWUs
+         50lKBK5jqg2z1q0HNQ1knrdlZ9BIFF76jx4R/WA0p+wHZUURKXZzagYZA1bQNh1yEJnd
+         jYQ9GbIdDEu4/QsCHEI8kz6VhZMEauFQuh4yv5hReB6892aE5NGPyQ4sA5hHOTKc2luR
+         l7sA==
+X-Gm-Message-State: APjAAAWa08fTpoaWRgLon9eodIFAVZAxxGEK8pqZB1gSsJil06Y2ErPY
+        QmL/n6if3ygKT+ALfQKdAzqq/w==
+X-Google-Smtp-Source: APXvYqxWqx1BXim3osj7InhTfgyiU/TFaZ8oSwxYwGC9hVRHUp26/iX/AIwhfiWLSMBsDRPy0dFkYQ==
+X-Received: by 2002:a50:9317:: with SMTP id m23mr6204623eda.114.1555494722581;
+        Wed, 17 Apr 2019 02:52:02 -0700 (PDT)
+Received: from shalem.localdomain (84-106-84-65.cable.dynamic.v4.ziggo.nl. [84.106.84.65])
+        by smtp.gmail.com with ESMTPSA id h16sm8082640eja.23.2019.04.17.02.52.01
+        (version=TLS1_3 cipher=AEAD-AES128-GCM-SHA256 bits=128/128);
+        Wed, 17 Apr 2019 02:52:01 -0700 (PDT)
+Subject: Re: [PATCH v3 11/13] platform/x86: intel_cht_int33fe: Provide fwnode
+ for the USB connector
+To:     Heikki Krogerus <heikki.krogerus@linux.intel.com>,
+        "Rafael J. Wysocki" <rjw@rjwysocki.net>
+Cc:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        linux-acpi@vger.kernel.org, linux-kernel@vger.kernel.org,
+        platform-driver-x86@vger.kernel.org,
+        Andy Shevchenko <andy.shevchenko@gmail.com>
+References: <20190412134122.82903-1-heikki.krogerus@linux.intel.com>
+ <20190412134122.82903-12-heikki.krogerus@linux.intel.com>
+From:   Hans de Goede <hdegoede@redhat.com>
+Message-ID: <daed3557-7595-86c5-fde1-6ec048b0935d@redhat.com>
+Date:   Wed, 17 Apr 2019 11:52:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
+In-Reply-To: <20190412134122.82903-12-heikki.krogerus@linux.intel.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 16, 2019 at 20:27:22, Vidya Sagar <vidyas@nvidia.com> wrote:
+Hi,
 
-> Add support to enable CDM (Configuration Dependent Module) register check
-> for any data corruption based on the device-tree flag 'enable-cdm-check'.
->=20
-> Signed-off-by: Vidya Sagar <vidyas@nvidia.com>
+On 12-04-19 15:41, Heikki Krogerus wrote:
+> In ACPI, and now also in DT, the USB connectors usually have
+> their own device nodes. In case of USB Type-C, those
+> connector (port) nodes are child nodes of the controller or
+> PHY device, in our case the fusb302. The software fwnodes
+> allow us to create a similar child node for fusb302 that
+> represents the connector also on Intel CHT.
+> 
+> This makes it possible replace the fusb302 specific device
+> properties which were deprecated with the common USB
+> connector properties that tcpm.c is able to use directly.
+> 
+> Reviewed-by: Andy Shevchenko <andy.shevchenko@gmail.com>
+> Signed-off-by: Heikki Krogerus <heikki.krogerus@linux.intel.com>
 > ---
-> Changes since [v2]:
-> * Changed code and commit description to reflect change in flag from
->   'cdm-check' to 'enable-cdm-check'
->=20
-> Changes since [v1]:
-> * This is a new patch in v2 series
->=20
->  drivers/pci/controller/dwc/pcie-designware.c | 7 +++++++
->  drivers/pci/controller/dwc/pcie-designware.h | 9 +++++++++
->  2 files changed, 16 insertions(+)
->=20
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.c b/drivers/pci/c=
-ontroller/dwc/pcie-designware.c
-> index 44c0ba078452..5b416f483426 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.c
-> +++ b/drivers/pci/controller/dwc/pcie-designware.c
-> @@ -503,4 +503,11 @@ void dw_pcie_setup(struct dw_pcie *pci)
->  		break;
->  	}
->  	dw_pcie_writel_dbi(pci, PCIE_LINK_WIDTH_SPEED_CONTROL, val);
+>   drivers/platform/x86/intel_cht_int33fe.c | 37 ++++++++++++++++++++++--
+>   1 file changed, 34 insertions(+), 3 deletions(-)
+> 
+> diff --git a/drivers/platform/x86/intel_cht_int33fe.c b/drivers/platform/x86/intel_cht_int33fe.c
+> index 863a792d9282..eff5990322ff 100644
+> --- a/drivers/platform/x86/intel_cht_int33fe.c
+> +++ b/drivers/platform/x86/intel_cht_int33fe.c
+> @@ -24,6 +24,7 @@
+>   #include <linux/platform_device.h>
+>   #include <linux/regulator/consumer.h>
+>   #include <linux/slab.h>
+> +#include <linux/usb/pd.h>
+>   
+>   #define EXPECTED_PTYPE		4
+>   
+> @@ -31,6 +32,7 @@ enum {
+>   	INT33FE_NODE_FUSB302,
+>   	INT33FE_NODE_MAX17047,
+>   	INT33FE_NODE_PI3USB30532,
+> +	INT33FE_NODE_USB_CONNECTOR,
+>   	INT33FE_NODE_MAX,
+>   };
+>   
+> @@ -111,9 +113,29 @@ cht_int33fe_register_max17047(struct device *dev, struct cht_int33fe_data *data)
+>   
+>   static const struct property_entry fusb302_props[] = {
+>   	PROPERTY_ENTRY_STRING("linux,extcon-name", "cht_wcove_pwrsrc"),
+> -	PROPERTY_ENTRY_U32("fcs,max-sink-microvolt", 12000000),
+> -	PROPERTY_ENTRY_U32("fcs,max-sink-microamp",   3000000),
+> -	PROPERTY_ENTRY_U32("fcs,max-sink-microwatt", 36000000),
+
+Note that the 36000000 value being removed here is max-sink-microwatt,
+esp. the _max_ part is important. And recent versions of the fusb302
+code ignore this entirely.
+
+> +	{ }
+> +};
 > +
-> +	if (of_property_read_bool(np, "enable-cdm-check")) {
-> +		val =3D dw_pcie_readl_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS);
-> +		val |=3D PCIE_PL_CHK_REG_CHK_REG_CONTINUOUS |
-> +		       PCIE_PL_CHK_REG_CHK_REG_START;
-> +		dw_pcie_writel_dbi(pci, PCIE_PL_CHK_REG_CONTROL_STATUS, val);
+> +#define PDO_FIXED_FLAGS \
+> +	(PDO_FIXED_DUAL_ROLE | PDO_FIXED_DATA_SWAP | PDO_FIXED_USB_COMM)
+> +
+> +static const u32 src_pdo[] = {
+> +	PDO_FIXED(5000, 1500, PDO_FIXED_FLAGS),
+> +};
+> +
+> +static const u32 snk_pdo[] = {
+> +	PDO_FIXED(5000, 400, PDO_FIXED_FLAGS),
+> +	PDO_VAR(5000, 12000, 3000),
+> +};
+> +
+> +static const struct property_entry usb_connector_props[] = {
+> +	PROPERTY_ENTRY_STRING("name", "connector"),
+> +	PROPERTY_ENTRY_STRING("data-role", "dual"),
+> +	PROPERTY_ENTRY_STRING("power-role", "dual"),
+> +	PROPERTY_ENTRY_STRING("try-power-role", "sink"),
+> +	PROPERTY_ENTRY_U32_ARRAY("source-pdos", src_pdo),
+> +	PROPERTY_ENTRY_U32_ARRAY("sink-pdos", snk_pdo),
+> +	PROPERTY_ENTRY_U32("op-sink-microwatt", 36000000),
+
+Where as "op-sink-microwatt" is more interpreted as a minimum
+value for non PPS supplies not being able to deliver this causes
+the Capability Mismatch to get set. But for PPS supplies if I'm
+reading the code correctly, the entire PPS negotiation is failed
+by tcpm.c if this cannot be matched. I guess / hope that there
+is a fallback to none PPS PDOs then but I'm not sure.
+
+Anyways the charger the GPD-win ships with is a non PD capable
+5V/2A charger and the GPD-pocket ships with a charger which does
+max 12V/2A. The device itself will work fine on around 10W and
+even charge at that level (albeit slowly). So I believe that 10W
+would be a better value for "op-sink-microwatt" (the dt-binding
+says it is mandatory so we cannot just leave it out).
+
+Regards,
+
+Hans
+
+
+
+
+
+>   	{ }
+>   };
+>   
+> @@ -148,6 +170,15 @@ static int cht_int33fe_add_nodes(struct cht_int33fe_data *data)
+>   		data->node[i] = fwnode;
+>   	}
+>   
+> +	/* Node for the USB connector (FUSB302 is the parent) */
+> +	fwnode = fwnode_create_software_node(usb_connector_props,
+> +					     data->node[INT33FE_NODE_FUSB302]);
+> +	if (IS_ERR(fwnode)) {
+> +		ret = PTR_ERR(fwnode);
+> +		goto err_remove_nodes;
 > +	}
->  }
-> diff --git a/drivers/pci/controller/dwc/pcie-designware.h b/drivers/pci/c=
-ontroller/dwc/pcie-designware.h
-> index fa41d675c48f..7f57fe019fbf 100644
-> --- a/drivers/pci/controller/dwc/pcie-designware.h
-> +++ b/drivers/pci/controller/dwc/pcie-designware.h
-> @@ -83,6 +83,15 @@
->  #define PCIE_MISC_CONTROL_1_OFF		0x8BC
->  #define PCIE_DBI_RO_WR_EN		BIT(0)
-> =20
-> +#define PCIE_PL_CHK_REG_CONTROL_STATUS			0xB20
-> +#define PCIE_PL_CHK_REG_CHK_REG_START			BIT(0)
-> +#define PCIE_PL_CHK_REG_CHK_REG_CONTINUOUS		BIT(1)
-> +#define PCIE_PL_CHK_REG_CHK_REG_COMPARISON_ERROR	BIT(16)
-> +#define PCIE_PL_CHK_REG_CHK_REG_LOGIC_ERROR		BIT(17)
-> +#define PCIE_PL_CHK_REG_CHK_REG_COMPLETE		BIT(18)
+> +	data->node[INT33FE_NODE_USB_CONNECTOR] = fwnode;
 > +
-> +#define PCIE_PL_CHK_REG_ERR_ADDR			0xB28
-> +
->  /*
->   * iATU Unroll-specific register definitions
->   * From 4.80 core version the address translation will be made by unroll
-> --=20
-> 2.17.1
-
-Nice.
-
-Acked-by: Gustavo Pimentel <gustavo.pimentel@synopsys.com>
-
-Thanks,
-Gustavo
-
+>   	return 0;
+>   
+>   err_remove_nodes:
+> 
