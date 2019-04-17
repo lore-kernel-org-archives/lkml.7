@@ -2,245 +2,139 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A8D78C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:50:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4EB98C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:51:28 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 67A932064B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:50:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="wrF2JBXu"
+	by mail.kernel.org (Postfix) with ESMTP id 2A8EA2064B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:51:28 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731251AbfDQRue (ORCPT
+        id S1733152AbfDQRv1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 13:50:34 -0400
-Received: from mail-lj1-f196.google.com ([209.85.208.196]:33689 "EHLO
-        mail-lj1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1733152AbfDQRuJ (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 13:50:09 -0400
-Received: by mail-lj1-f196.google.com with SMTP id f23so1867000ljc.0
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 10:50:08 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:in-reply-to:references;
-        bh=l/8RWz1sFCy2pYyWFCkyCF9aMFvlsg0DvtWaIJqPbpo=;
-        b=wrF2JBXu9XGL9wJ/iPCe8UgDfd03WKnhdro+OjS7M6pxd/614QE+kWjqqq8Zcz1VUS
-         9xF2dFudI0pd2bfPeLbyuILW5twC+Or+O+C7TeQu9zvWXnsrJZz0YPz9ezUI6vykHaqr
-         Yj7ypQgKtpoIjv5seyBOSzdmBG0YGxU0H/cHuEbPWSUf34s5YwaocsYUAq6WJdtkBEQE
-         TXFEu/87+GRuJkxS4eI/+7zJpYrIkgHRPUGC+M13ewbYltCV9LUhIjTVi73nLYOwOLWQ
-         QdsvUgdsXCd3oo6GCzWTOX3kpjMEJtEwjIjrjC52WYhXRSKaVD/S5DjF+Cb60U6qCB/q
-         qZ+Q==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
-         :references;
-        bh=l/8RWz1sFCy2pYyWFCkyCF9aMFvlsg0DvtWaIJqPbpo=;
-        b=KoMLVgoCpKAU1zHV8hMLr5xbM/JbgWJbss97zQAhS1DDVqRRcupjuX7M8H3LGHRgov
-         nbLWdKrt3pQ6cuxKLYxVfFqy2D3N2oKGkP60LqNKd0xM+GNAP4FPCcnnrQ16+kXVd/aq
-         gWNzTloJgGrvvvreQSRwK7msUgI2HhgWu5ikZ/nLW3zpL1bhSwNGRLiJTIh6WS8CFaK9
-         1w2aosLgrY0tBoVPQ5mBSDxNRotGGAwiNIW/a22bD9Eoy33GRSco2kw8rfi80t/RsCUG
-         LFbUfmTEfuwRd7tQSuqCXE34qipshOMK9N2/Todq82P5SgG0xlmbU6QeKaiGaLjqahKN
-         yWdg==
-X-Gm-Message-State: APjAAAXmI5tmIAxIwGC1tDkc8t82NgcPTaGVdzOjhoKO7MuXhCkBK/VV
-        QylXHVVvTE2ZnoN65Ky8CDqLXw==
-X-Google-Smtp-Source: APXvYqwnX5Xr5levDcetJKe3/zYcg6G+k0lNts31W7yoEEoAhrWA164pOaFPnMEXD2JHTsBUumKrSw==
-X-Received: by 2002:a2e:204e:: with SMTP id g75mr14249387ljg.92.1555523407854;
-        Wed, 17 Apr 2019 10:50:07 -0700 (PDT)
-Received: from localhost.localdomain (59-201-94-178.pool.ukrtel.net. [178.94.201.59])
-        by smtp.gmail.com with ESMTPSA id f4sm11197173ljg.37.2019.04.17.10.50.06
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Apr 2019 10:50:07 -0700 (PDT)
-From:   Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-To:     grygorii.strashko@ti.com
-Cc:     linux-omap@vger.kernel.org, linux-kernel@vger.kernel.org,
-        netdev@vger.kernel.org, ilias.apalodimas@linaro.org,
-        hawk@kernel.org, xdp-newbies@vger.kernel.org, ast@kernel.org,
-        aniel@iogearbox.net, jakub.kicinski@netronome.com,
-        john.fastabend@gmail.com,
-        Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
-Subject: [RFC PATCH 1/3] net: ethernet: ti: davinci_cpdma: add dma mapped submit
-Date:   Wed, 17 Apr 2019 20:49:40 +0300
-Message-Id: <20190417174942.11811-2-ivan.khoronzhuk@linaro.org>
-X-Mailer: git-send-email 2.17.1
-In-Reply-To: <20190417174942.11811-1-ivan.khoronzhuk@linaro.org>
-References: <20190417174942.11811-1-ivan.khoronzhuk@linaro.org>
+        Wed, 17 Apr 2019 13:51:27 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:39952 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728237AbfDQRv0 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 13:51:26 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id E6D0A3001C76;
+        Wed, 17 Apr 2019 17:51:25 +0000 (UTC)
+Received: from llong.remote.csb (dhcp-17-47.bos.redhat.com [10.18.17.47])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id D1C5A608C2;
+        Wed, 17 Apr 2019 17:51:24 +0000 (UTC)
+Subject: Re: [PATCH v4 11/16] locking/rwsem: Enable readers spinning on writer
+To:     Peter Zijlstra <peterz@infradead.org>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+References: <20190413172259.2740-1-longman@redhat.com>
+ <20190413172259.2740-12-longman@redhat.com>
+ <20190417140527.GJ4038@hirez.programming.kicks-ass.net>
+From:   Waiman Long <longman@redhat.com>
+Openpgp: preference=signencrypt
+Autocrypt: addr=longman@redhat.com; prefer-encrypt=mutual; keydata=
+ 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
+ weim8xU=
+Organization: Red Hat
+Message-ID: <d18aa365-cedc-cd45-36a5-48d78af2fcce@redhat.com>
+Date:   Wed, 17 Apr 2019 13:51:24 -0400
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
+MIME-Version: 1.0
+In-Reply-To: <20190417140527.GJ4038@hirez.programming.kicks-ass.net>
+Content-Type: text/plain; charset=utf-8
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.43]); Wed, 17 Apr 2019 17:51:26 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-In case if dma mapped packet needs to be sent, like with XDP
-page pool, the "mapped" submit can be used. This patch adds dma
-mapped submit based on regular one.
+On 04/17/2019 10:05 AM, Peter Zijlstra wrote:
+> On Sat, Apr 13, 2019 at 01:22:54PM -0400, Waiman Long wrote:
+>> @@ -650,6 +686,33 @@ __rwsem_down_read_failed_common(struct rw_semaphore *sem, int state)
+>>  	struct rwsem_waiter waiter;
+>>  	DEFINE_WAKE_Q(wake_q);
+>>  
+>> +	if (!rwsem_can_spin_on_owner(sem))
+>> +		goto queue;
+>> +
+>> +	/*
+>> +	 * Undo read bias from down_read() and do optimistic spinning.
+>> +	 */
+>> +	atomic_long_add(-RWSEM_READER_BIAS, &sem->count);
+>> +	adjustment = 0;
+>> +	if (rwsem_optimistic_spin(sem, false)) {
+>> +		unsigned long flags;
+>> +
+>> +		/*
+>> +		 * Opportunistically wake up other readers in the wait queue.
+>> +		 * It has another chance of wakeup at unlock time.
+>> +		 */
+>> +		if ((atomic_long_read(&sem->count) & RWSEM_FLAG_WAITERS) &&
+>> +		    raw_spin_trylock_irqsave(&sem->wait_lock, flags)) {
+> why trylock? Also the rest of this function uses _irq(). Having had to
+> define @flags should've been a clue.
+>
+> You simply cnanot do down_*() with IRQs disabled.
 
-Signed-off-by: Ivan Khoronzhuk <ivan.khoronzhuk@linaro.org>
----
- drivers/net/ethernet/ti/davinci_cpdma.c | 84 ++++++++++++++++++++-----
- drivers/net/ethernet/ti/davinci_cpdma.h |  2 +
- 2 files changed, 72 insertions(+), 14 deletions(-)
+I used trylock to avoid getting stuck in the spinlock while holding a
+read lock on the rwsem.
 
-diff --git a/drivers/net/ethernet/ti/davinci_cpdma.c b/drivers/net/ethernet/ti/davinci_cpdma.c
-index 4236dcdd5634..96ec1d9d8f47 100644
---- a/drivers/net/ethernet/ti/davinci_cpdma.c
-+++ b/drivers/net/ethernet/ti/davinci_cpdma.c
-@@ -132,6 +132,15 @@ struct cpdma_chan {
- 	u32				rate;
- };
- 
-+struct submit_info {
-+	struct cpdma_chan *chan;
-+	int directed;
-+	void *token;
-+	void *data;
-+	int flags;
-+	int len;
-+};
-+
- struct cpdma_control_info {
- 	u32		reg;
- 	u32		shift, mask;
-@@ -183,6 +192,8 @@ static struct cpdma_control_info controls[] = {
- 				 (directed << CPDMA_TO_PORT_SHIFT));	\
- 	} while (0)
- 
-+#define CPDMA_DMA_EXT_MAP		BIT(16)
-+
- static void cpdma_desc_pool_destroy(struct cpdma_ctlr *ctlr)
- {
- 	struct cpdma_desc_pool *pool = ctlr->pool;
-@@ -1026,10 +1037,11 @@ static void __cpdma_chan_submit(struct cpdma_chan *chan,
- 	}
- }
- 
--int cpdma_chan_submit(struct cpdma_chan *chan, void *token, void *data,
--		      int len, int directed)
-+static int cpdma_chan_submit_si(struct submit_info *si)
- {
-+	struct cpdma_chan		*chan = si->chan;
- 	struct cpdma_ctlr		*ctlr = chan->ctlr;
-+	int				len = si->len;
- 	struct cpdma_desc __iomem	*desc;
- 	dma_addr_t			buffer;
- 	unsigned long			flags;
-@@ -1061,16 +1073,22 @@ int cpdma_chan_submit(struct cpdma_chan *chan, void *token, void *data,
- 		chan->stats.runt_transmit_buff++;
- 	}
- 
--	buffer = dma_map_single(ctlr->dev, data, len, chan->dir);
--	ret = dma_mapping_error(ctlr->dev, buffer);
--	if (ret) {
--		cpdma_desc_free(ctlr->pool, desc, 1);
--		ret = -EINVAL;
--		goto unlock_ret;
--	}
--
- 	mode = CPDMA_DESC_OWNER | CPDMA_DESC_SOP | CPDMA_DESC_EOP;
--	cpdma_desc_to_port(chan, mode, directed);
-+	cpdma_desc_to_port(chan, mode, si->directed);
-+
-+	if (si->flags & CPDMA_DMA_EXT_MAP) {
-+		buffer = (dma_addr_t)si->data;
-+		dma_sync_single_for_device(ctlr->dev, buffer, len, chan->dir);
-+		len |= CPDMA_DMA_EXT_MAP;
-+	} else {
-+		buffer = dma_map_single(ctlr->dev, si->data, len, chan->dir);
-+		ret = dma_mapping_error(ctlr->dev, buffer);
-+		if (ret) {
-+			cpdma_desc_free(ctlr->pool, desc, 1);
-+			ret = -EINVAL;
-+			goto unlock_ret;
-+		}
-+	}
- 
- 	/* Relaxed IO accessors can be used here as there is read barrier
- 	 * at the end of write sequence.
-@@ -1079,7 +1097,7 @@ int cpdma_chan_submit(struct cpdma_chan *chan, void *token, void *data,
- 	writel_relaxed(buffer, &desc->hw_buffer);
- 	writel_relaxed(len, &desc->hw_len);
- 	writel_relaxed(mode | len, &desc->hw_mode);
--	writel_relaxed((uintptr_t)token, &desc->sw_token);
-+	writel_relaxed((uintptr_t)si->token, &desc->sw_token);
- 	writel_relaxed(buffer, &desc->sw_buffer);
- 	writel_relaxed(len, &desc->sw_len);
- 	desc_read(desc, sw_len);
-@@ -1095,8 +1113,39 @@ int cpdma_chan_submit(struct cpdma_chan *chan, void *token, void *data,
- 	spin_unlock_irqrestore(&chan->lock, flags);
- 	return ret;
- }
-+
-+int cpdma_chan_submit(struct cpdma_chan *chan, void *token, void *data, int len,
-+		      int directed)
-+{
-+	struct submit_info si;
-+
-+	si.chan = chan;
-+	si.token = token;
-+	si.data = data;
-+	si.len = len;
-+	si.directed = directed;
-+	si.flags = 0;
-+
-+	return cpdma_chan_submit_si(&si);
-+}
- EXPORT_SYMBOL_GPL(cpdma_chan_submit);
- 
-+int cpdma_chan_submit_mapped(struct cpdma_chan *chan, void *token, void *data,
-+			     int len, int directed)
-+{
-+	struct submit_info si;
-+
-+	si.chan = chan;
-+	si.token = token;
-+	si.data = data;
-+	si.len = len;
-+	si.directed = directed;
-+	si.flags = CPDMA_DMA_EXT_MAP;
-+
-+	return cpdma_chan_submit_si(&si);
-+}
-+EXPORT_SYMBOL_GPL(cpdma_chan_submit_mapped);
-+
- bool cpdma_check_free_tx_desc(struct cpdma_chan *chan)
- {
- 	struct cpdma_ctlr	*ctlr = chan->ctlr;
-@@ -1123,10 +1172,17 @@ static void __cpdma_chan_free(struct cpdma_chan *chan,
- 	uintptr_t			token;
- 
- 	token      = desc_read(desc, sw_token);
--	buff_dma   = desc_read(desc, sw_buffer);
- 	origlen    = desc_read(desc, sw_len);
- 
--	dma_unmap_single(ctlr->dev, buff_dma, origlen, chan->dir);
-+	buff_dma   = desc_read(desc, sw_buffer);
-+	if (origlen & CPDMA_DMA_EXT_MAP) {
-+		origlen &= ~CPDMA_DMA_EXT_MAP;
-+		dma_sync_single_for_cpu(ctlr->dev, buff_dma, origlen,
-+					chan->dir);
-+	} else {
-+		dma_unmap_single(ctlr->dev, buff_dma, origlen, chan->dir);
-+	}
-+
- 	cpdma_desc_free(pool, desc, 1);
- 	(*chan->handler)((void *)token, outlen, status);
- }
-diff --git a/drivers/net/ethernet/ti/davinci_cpdma.h b/drivers/net/ethernet/ti/davinci_cpdma.h
-index d399af5389b8..20e4d43df6d1 100644
---- a/drivers/net/ethernet/ti/davinci_cpdma.h
-+++ b/drivers/net/ethernet/ti/davinci_cpdma.h
-@@ -84,6 +84,8 @@ int cpdma_chan_stop(struct cpdma_chan *chan);
- 
- int cpdma_chan_get_stats(struct cpdma_chan *chan,
- 			 struct cpdma_chan_stats *stats);
-+int cpdma_chan_submit_mapped(struct cpdma_chan *chan, void *token, void *data,
-+			     int len, int directed);
- int cpdma_chan_submit(struct cpdma_chan *chan, void *token, void *data,
- 		      int len, int directed);
- int cpdma_chan_process(struct cpdma_chan *chan, int quota);
--- 
-2.17.1
+You are right. I don't to use _irqsave version. Just the _irq version is
+enough.
+
+Thanks,
+Longman
+
 
