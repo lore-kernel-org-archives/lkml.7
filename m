@@ -2,718 +2,439 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B965BC282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:43:45 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 3CF0FC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:45:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 69ADB2173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:43:45 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="SuJAS06j"
+	by mail.kernel.org (Postfix) with ESMTP id 00F962173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 16:45:44 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733045AbfDQQno (ORCPT
+        id S1732795AbfDQQpn (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 12:43:44 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:50904 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732591AbfDQQnn (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 12:43:43 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3HGhNSI082000;
-        Wed, 17 Apr 2019 11:43:23 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1555519403;
-        bh=Kwn6csk7Sn8bP6FSdX1vvj7K/kYNK4Qw5jdwWn201bA=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=SuJAS06jf/Iqty6YVtdTi5hlVM2ILTJSHExoB61xFeE1ueIPRN+yfgch9jPvRPRYB
-         /aA30nsqiKMLoNFbB/UYTwIyk2CWd/Nm3jn7JnPkH3xEoPKTZHpzaJbKg/dSBf67kO
-         wcS5pruVu6fN5VzuIJNOObQNhedxIXxE1SA26L3E=
-Received: from DLEE109.ent.ti.com (dlee109.ent.ti.com [157.170.170.41])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3HGhNBc021563
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 17 Apr 2019 11:43:23 -0500
-Received: from DLEE102.ent.ti.com (157.170.170.32) by DLEE109.ent.ti.com
- (157.170.170.41) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 17
- Apr 2019 11:43:23 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE102.ent.ti.com
- (157.170.170.32) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 17 Apr 2019 11:43:23 -0500
-Received: from [172.24.190.117] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3HGhI6I117810;
-        Wed, 17 Apr 2019 11:43:19 -0500
-Subject: Re: [PATCH v6 09/12] irqchip: ti-sci-inta: Add support for Interrupt
- Aggregator driver
-To:     Marc Zyngier <marc.zyngier@arm.com>,
-        Tony Lindgren <tony@atomide.com>, Nishanth Menon <nm@ti.com>,
-        Santosh Shilimkar <ssantosh@kernel.org>,
-        Rob Herring <robh+dt@kernel.org>, <jason@lakedaemon.net>
-CC:     Linux ARM Mailing List <linux-arm-kernel@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>,
-        Device Tree Mailing List <devicetree@vger.kernel.org>,
-        Sekhar Nori <nsekhar@ti.com>, Tero Kristo <t-kristo@ti.com>,
-        Peter Ujfalusi <peter.ujfalusi@ti.com>,
-        Grygorii Strashko <grygorii.strashko@ti.com>
-References: <20190410041358.16809-1-lokeshvutla@ti.com>
- <20190410041358.16809-10-lokeshvutla@ti.com>
- <58ad996c-c7f6-5906-6516-b39132522903@arm.com>
-From:   Lokesh Vutla <lokeshvutla@ti.com>
-Message-ID: <dbf4143f-fc4b-6729-6abd-f4b15f0e97e7@ti.com>
-Date:   Wed, 17 Apr 2019 22:12:54 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.2.1
+        Wed, 17 Apr 2019 12:45:43 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:47890 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729395AbfDQQpn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 12:45:43 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4C85FA78;
+        Wed, 17 Apr 2019 09:45:42 -0700 (PDT)
+Received: from [10.162.41.195] (p8cg001049571a15.blr.arm.com [10.162.41.195])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 4F7253F557;
+        Wed, 17 Apr 2019 09:45:36 -0700 (PDT)
+Subject: Re: [PATCH V2 2/2] arm64/mm: Enable memory hot remove
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org, will.deacon@arm.com,
+        catalin.marinas@arm.com, mhocko@suse.com,
+        mgorman@techsingularity.net, james.morse@arm.com,
+        robin.murphy@arm.com, cpandya@codeaurora.org,
+        arunks@codeaurora.org, dan.j.williams@intel.com, osalvador@suse.de,
+        david@redhat.com, cai@lca.pw, logang@deltatee.com,
+        ira.weiny@intel.com
+References: <1555221553-18845-1-git-send-email-anshuman.khandual@arm.com>
+ <1555221553-18845-3-git-send-email-anshuman.khandual@arm.com>
+ <20190415134841.GC13990@lakrids.cambridge.arm.com>
+ <2faba38b-ab79-2dda-1b3c-ada5054d91fa@arm.com>
+ <20190417142154.GA393@lakrids.cambridge.arm.com>
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Message-ID: <bba0b71c-2d04-d589-e2bf-5de37806548f@arm.com>
+Date:   Wed, 17 Apr 2019 22:15:35 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-In-Reply-To: <58ad996c-c7f6-5906-6516-b39132522903@arm.com>
-Content-Type: text/plain; charset="utf-8"
+In-Reply-To: <20190417142154.GA393@lakrids.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
 Content-Language: en-US
 Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Marc,
 
-On 17/04/19 7:44 PM, Marc Zyngier wrote:
-> Hi Lokesh,
-> 
-> On 10/04/2019 05:13, Lokesh Vutla wrote:
->> Texas Instruments' K3 generation SoCs has an IP Interrupt Aggregator
->> which is an interrupt controller that does the following:
->> - Converts events to interrupts that can be understood by
->>   an interrupt router.
->> - Allows for multiplexing of events to interrupts.
+
+On 04/17/2019 07:51 PM, Mark Rutland wrote:
+> On Wed, Apr 17, 2019 at 03:28:18PM +0530, Anshuman Khandual wrote:
+>> On 04/15/2019 07:18 PM, Mark Rutland wrote:
+>>> On Sun, Apr 14, 2019 at 11:29:13AM +0530, Anshuman Khandual wrote:
+>>>> Memory removal from an arch perspective involves tearing down two different
+>>>> kernel based mappings i.e vmemmap and linear while releasing related page
+>>>> table pages allocated for the physical memory range to be removed.
+>>>>
+>>>> Define a common kernel page table tear down helper remove_pagetable() which
+>>>> can be used to unmap given kernel virtual address range. In effect it can
+>>>> tear down both vmemap or kernel linear mappings. This new helper is called
+>>>> from both vmemamp_free() and ___remove_pgd_mapping() during memory removal.
+>>>> The argument 'direct' here identifies kernel linear mappings.
+>>>
+>>> Can you please explain why we need to treat these differently? I thought
+>>> the next paragraph was going to do that, but as per my comment there it
+>>> doesn't seem to be relevant. :/
 >>
->> Configuration of the interrupt aggregator registers can only be done by
->> a system co-processor and the driver needs to send a message to this
->> co processor over TISCI protocol.
+>> For linear mapping there is no actual allocated page which is mapped. Its the
+>> pfn derived from physical address (from __va(PA)-->PA translation) which is
+>> there in the page table entry and need not be freed any where during tear down.
 >>
->> Add support for Interrupt Aggregator driver with 2 IRQ Domains:
->> - INTA MSI domain that interfaces the devices using which interrupts can be
->>   allocated dynamically.
->> - INTA domain that is parent to the MSI domain that manages the interrupt
->>   resources.
+>> But in case of vmemmap (struct page mapping for a given range) which is a real
+>> virtual mapping (like vmalloc) real pages are allocated (buddy or memblock) and
+>> are mapped in it's page table entries to effect the translation. These pages
+>> need to be freed while tearing down the translation. But for both mappings
+>> (linear and vmemmap) their page table pages need to be freed.
 >>
->> Signed-off-by: Lokesh Vutla <lokeshvutla@ti.com>
->> ---
->> Changes since v5:
->> - Moved all the allocation of events and parent irqs to .irq_request_resources
->>   callback of irqchip. This is based on the offline discussion with Marc.
+>> This differentiation is needed while deciding if [pte|pmd|pud]_page() at any
+>> given level needs to be freed or not. Will update the commit message with this
+>> explanation if required.
+> 
+> Ok. I think you just need to say:
+> 
+>   When removing a vmemmap pagetable range, we must also free the pages
+>   used to back this range of the vmemmap.
+
+Sure will update the commit message with something similar.
+
+> 
+>>>> While here update arch_add_mempory() to handle __add_pages() failures by
+>>>> just unmapping recently added kernel linear mapping. 
+>>>
+>>> Is this a latent bug?
 >>
->> Marc,
->> 	This version has a deviation from our discussion:
->> - Could not create separate irq_domains for each output(vint) of INTA, instead
->>   stick to a single irq_domain for the entire INTA. Because when creating
->>   msi_domain there is no parent available to attach. Even then I create
->>   irq_domains for all the available vints during probe, how do we decide
->>   which is the parent of msi_domain?
+>> Did not get it. __add_pages() could fail because of __add_section() in which
+>> case we should remove the linear mapping added previously in the first step.
+>> Is there any concern here ?
 > 
-> Yeah, you're right. The top-down allocation assumes that we already have
-> setup the domain hierarchy, and this delayed allocation scheme breaks
-> it. Oh well, never mind.
+> That is the question.
 > 
+> If that were to fail _before_ this series were applied, does that permit
+> anything bad to happen? e.g. is it permitted that when arch_add_memory()
+
+Before this patch ? Yeah if __add_pages() fail then there are no memory
+sections created for range (which means it can never be onlined) but they
+have got linear mapping which is not good.
+ > fails, the relevant memory can be physically removed?
+
+Yeah you can remove it but there are linear mapping entries in init_mm
+which when attempted will cause load/store instruction abort even after
+a successful MMU translation and should raise an exception on the CPU
+doing it.
+
+> 
+> If so, that could result in a number of problems, and would be a latent
+> bug...
+
+IIUC your question on the possibility of a latent bug. Yes if we just leave
+the linear mapping intact which does not have valid memory block sections,
+struct pages vmemmap etc it can cause unexpected behavior.
+
+> 
+> [...]
+> 
+>>>> +#ifdef CONFIG_MEMORY_HOTPLUG
+>>>> +static void free_pagetable(struct page *page, int order)
+>>>
+>>> On arm64, all of the stage-1 page tables other than the PGD are always
+>>> PAGE_SIZE. We shouldn't need to pass an order around in order to free
+>>> page tables.
+>>>
+>>> It looks like this function is misnamed, and is used to free vmemmap
+>>> backing pages in addition to page tables used to map them. It would be
+>>> nicer to come up with a better naming scheme.
 >>
+>> free_pagetable() is being used both for freeing page table pages as well
+>> mapped entries at various level (for vmemmap). As you rightly mentioned
+>> page table pages are invariably PAGE_SIZE (other than pgd) but theses
+>> mapped pages size can vary at various level. free_pagetable() is a very
+>> generic helper which can accommodate pages allocated from buddy as well
+>> as memblock. But I agree that the naming is misleading.
 >>
->>  MAINTAINERS                       |   1 +
->>  drivers/irqchip/Kconfig           |  11 +
->>  drivers/irqchip/Makefile          |   1 +
->>  drivers/irqchip/irq-ti-sci-inta.c | 622 ++++++++++++++++++++++++++++++
->>  4 files changed, 635 insertions(+)
->>  create mode 100644 drivers/irqchip/irq-ti-sci-inta.c
+>> Will something like this will be better ?
 >>
->> diff --git a/MAINTAINERS b/MAINTAINERS
->> index 90173038f674..ba88b3033fe4 100644
->> --- a/MAINTAINERS
->> +++ b/MAINTAINERS
->> @@ -15352,6 +15352,7 @@ F:	drivers/reset/reset-ti-sci.c
->>  F:	Documentation/devicetree/bindings/interrupt-controller/ti,sci-intr.txt
->>  F:	Documentation/devicetree/bindings/interrupt-controller/ti,sci-inta.txt
->>  F:	drivers/irqchip/irq-ti-sci-intr.c
->> +F:	drivers/irqchip/irq-ti-sci-inta.c
->>  
->>  Texas Instruments ASoC drivers
->>  M:	Peter Ujfalusi <peter.ujfalusi@ti.com>
->> diff --git a/drivers/irqchip/Kconfig b/drivers/irqchip/Kconfig
->> index a1ff64c1d40d..946c062fcec0 100644
->> --- a/drivers/irqchip/Kconfig
->> +++ b/drivers/irqchip/Kconfig
->> @@ -436,6 +436,17 @@ config TI_SCI_INTR_IRQCHIP
->>  	  If you wish to use interrupt router irq resources managed by the
->>  	  TI System Controller, say Y here. Otherwise, say N.
->>  
->> +config TI_SCI_INTA_IRQCHIP
->> +	bool
->> +	depends on TI_SCI_PROTOCOL && ARCH_K3
->> +	select IRQ_DOMAIN
->> +	select IRQ_DOMAIN_HIERARCHY
->> +	help
->> +	  This enables the irqchip driver support for K3 Interrupt aggregator
->> +	  over TI System Control Interface available on some new TI's SoCs.
->> +	  If you wish to use interrupt aggregator irq resources managed by the
->> +	  TI System Controller, say Y here. Otherwise, say N.
->> +
->>  endmenu
->>  
->>  config SIFIVE_PLIC
->> diff --git a/drivers/irqchip/Makefile b/drivers/irqchip/Makefile
->> index fa5c865788b5..8a33013da953 100644
->> --- a/drivers/irqchip/Makefile
->> +++ b/drivers/irqchip/Makefile
->> @@ -98,3 +98,4 @@ obj-$(CONFIG_IMX_IRQSTEER)		+= irq-imx-irqsteer.o
->>  obj-$(CONFIG_MADERA_IRQ)		+= irq-madera.o
->>  obj-$(CONFIG_LS1X_IRQ)			+= irq-ls1x.o
->>  obj-$(CONFIG_TI_SCI_INTR_IRQCHIP)	+= irq-ti-sci-intr.o
->> +obj-$(CONFIG_TI_SCI_INTA_IRQCHIP)	+= irq-ti-sci-inta.o
->> diff --git a/drivers/irqchip/irq-ti-sci-inta.c b/drivers/irqchip/irq-ti-sci-inta.c
->> new file mode 100644
->> index 000000000000..3eb935ebe10f
->> --- /dev/null
->> +++ b/drivers/irqchip/irq-ti-sci-inta.c
->> @@ -0,0 +1,622 @@
->> +// SPDX-License-Identifier: GPL-2.0
->> +/*
->> + * Texas Instruments' K3 Interrupt Aggregator irqchip driver
->> + *
->> + * Copyright (C) 2018-2019 Texas Instruments Incorporated - http://www.ti.com/
->> + *	Lokesh Vutla <lokeshvutla@ti.com>
->> + */
->> +
->> +#include <linux/err.h>
->> +#include <linux/io.h>
->> +#include <linux/msi.h>
->> +#include <linux/irqchip.h>
->> +#include <linux/of_platform.h>
->> +#include <linux/of_address.h>
->> +#include <linux/of_irq.h>
->> +#include <linux/module.h>
->> +#include <linux/moduleparam.h>
->> +#include <linux/irqdomain.h>
->> +#include <linux/interrupt.h>
->> +#include <linux/soc/ti/ti_sci_protocol.h>
->> +#include <linux/irqchip/chained_irq.h>
->> +#include <asm-generic/msi.h>
->> +
->> +#define TI_SCI_DEV_ID_MASK	0xffff
->> +#define TI_SCI_DEV_ID_SHIFT	16
->> +#define TI_SCI_IRQ_ID_MASK	0xffff
->> +#define TI_SCI_IRQ_ID_SHIFT	0
->> +#define HWIRQ_TO_DEVID(hwirq)	(((hwirq) >> (TI_SCI_DEV_ID_SHIFT)) & \
->> +				 (TI_SCI_DEV_ID_MASK))
->> +#define HWIRQ_TO_IRQID(hwirq)	((hwirq) & (TI_SCI_IRQ_ID_MASK))
->> +
->> +#define MAX_EVENTS_PER_VINT	64
->> +#define VINT_ENABLE_SET_OFFSET	0x0
->> +#define VINT_ENABLE_CLR_OFFSET	0x8
->> +#define VINT_STATUS_OFFSET	0x18
->> +
->> +/**
->> + * struct ti_sci_inta_event_desc - Description of an event coming to
->> + *				   Interrupt Aggregator. This serves
->> + *				   as a mapping table between global
->> + *				   event and hwirq.
->> + * @global_event:	Global event number corresponding to this event
->> + * @hwirq:		Hwirq of the incoming interrupt
->> + */
->> +struct ti_sci_inta_event_desc {
->> +	u16 global_event;
->> +	u32 hwirq;
->> +};
->> +
->> +/**
->> + * struct ti_sci_inta_vint_desc - Description of a virtual interrupt coming out
->> + *				  of Interrupt Aggregator.
->> + * @domain:		Pointer to IRQ domain to which this vint belongs.
->> + * @list:		List entry for the vint list
->> + * @event_map:		Bitmap to manage the allocation of events to vint.
->> + * @event_mutex:	Mutex to protect allocation of events.
->> + * @events:		Array of event descriptors assigned to this vint.
->> + * @parent_virq:	Linux IRQ number that gets attached to parent
->> + * @vint_id:		TISCI vint ID
->> + */
->> +struct ti_sci_inta_vint_desc {
->> +	struct irq_domain *domain;
->> +	struct list_head list;
->> +	unsigned long *event_map;
->> +	/* Mutex to protect allocation of events */
->> +	struct mutex event_mutex;
+>> void free_pagetable_mapped_page(struct page *page, int order)
+>> {
+>> 	.......................
+>> 	.......................
+>> }
+>>
+>> void free_pagetable_page(struct page *page)
+>> {
+>> 	free_pagetable_mapped_page(page, 0);
+>> }
+>>
+>> - Call free_pgtable_page() while freeing pagetable pages
+>> - Call free_pgtable_mapped_page() while freeing mapped pages
 > 
-> As mentioned in another email, this needs to be a spinlock, as the lock
-> may be taken in atomic context.
-> 
->> +	struct ti_sci_inta_event_desc events[MAX_EVENTS_PER_VINT];
->> +	unsigned int parent_virq;
->> +	u16 vint_id;
->> +};
->> +
->> +/**
->> + * struct ti_sci_inta_irq_domain - Structure representing a TISCI based
->> + *				   Interrupt Aggregator IRQ domain.
->> + * @sci:		Pointer to TISCI handle
->> + * @vint:		TISCI resource pointer representing IA inerrupts.
->> + * @global_event:	TISCI resource pointer representing global events.
->> + * @vint_list:		List of the vints active in the system
->> + * @vint_mutex:		Mutex to protect vint_list
->> + * @base:		Base address of the memory mapped IO registers
->> + * @pdev:		Pointer to platform device.
->> + */
->> +struct ti_sci_inta_irq_domain {
->> +	const struct ti_sci_handle *sci;
->> +	struct ti_sci_resource *vint;
->> +	struct ti_sci_resource *global_event;
->> +	struct list_head vint_list;
->> +	/* Mutex to protect vint list */
->> +	struct mutex vint_mutex;
->> +	void __iomem *base;
->> +	struct platform_device	*pdev;
->> +};
->> +
->> +/**
->> + * ti_sci_inta_irq_handler() - Chained IRQ handler for the vint irqs
->> + * @desc:	Pointer to irq_desc corresponding to the irq
->> + */
->> +static void ti_sci_inta_irq_handler(struct irq_desc *desc)
->> +{
->> +	struct ti_sci_inta_vint_desc *vint_desc;
->> +	struct ti_sci_inta_irq_domain *inta;
->> +	struct irq_domain *domain;
->> +	unsigned int virq, bit;
->> +	u64 val;
->> +
->> +	vint_desc = irq_desc_get_handler_data(desc);
->> +	domain = vint_desc->domain;
->> +	inta = domain->host_data;
->> +
->> +	chained_irq_enter(irq_desc_get_chip(desc), desc);
->> +
->> +	val = readq_relaxed(inta->base + vint_desc->vint_id * 0x1000 +
->> +			    VINT_STATUS_OFFSET);
->> +
->> +	for (bit = 0; bit < MAX_EVENTS_PER_VINT; bit++) {
->> +		if (BIT(bit) & val) {
->> +			virq = irq_find_mapping(domain,
->> +						vint_desc->events[bit].hwirq);
->> +			if (virq)
->> +				generic_handle_irq(virq);
->> +		}
->> +	}
->> +
->> +	chained_irq_exit(irq_desc_get_chip(desc), desc);
->> +}
->> +
->> +/**
->> + * ti_sci_inta_alloc_parent_irq() - Allocate parent irq to Interrupt aggregator
->> + * @domain:	IRQ domain corresponding to Interrupt Aggregator
->> + *
->> + * Return 0 if all went well else corresponding error value.
->> + */
->> +static struct ti_sci_inta_vint_desc
->> +*ti_sci_inta_alloc_parent_irq(struct irq_domain *domain)
-> 
-> nit: do not split lines like this, specially not with the * on a
-> different line than the type it applies to.
+> I think the "pgtable" naming isn't necessary. These functions are passed
+> the relevant page, and free that page (or a range starting at that
+> page).
 
-okay. I was trying to make checkpatch script happy.
+Though just freeing pages, these helpers free pages belonging to kernel page
+table (init_mm) which either contains entries or memory which is mapped in
+those entries. Appending 'pgtable' to their name seems appropriate and also
+help in preventing others from using it as a generic wrapper to free pages.
+But also I guess it is just a matter of code choice.
 
 > 
->> +{
->> +	struct ti_sci_inta_irq_domain *inta = domain->host_data;
->> +	struct ti_sci_inta_vint_desc *vint_desc;
->> +	struct irq_fwspec parent_fwspec;
->> +	u16 vint_id;
->> +
->> +	vint_id = ti_sci_get_free_resource(inta->vint);
->> +	if (vint_id == TI_SCI_RESOURCE_NULL)
->> +		return ERR_PTR(-EINVAL);
->> +
->> +	vint_desc = kzalloc(sizeof(*vint_desc), GFP_KERNEL);
->> +	if (!vint_desc)
->> +		return ERR_PTR(-ENOMEM);
->> +
->> +	vint_desc->event_map = kcalloc(BITS_TO_LONGS(MAX_EVENTS_PER_VINT),
->> +				       sizeof(*vint_desc->event_map),
->> +				       GFP_KERNEL);
+> I think it would be better to have something like:
 > 
-> You already have an array of MAX_EVENTS_PER_VINT (events) in this
-> structure. Why don't you simply declare it as a
-> MAX_EVENTS_PER_VINT-sized bitmap and save yourself the allocation?
+> static void free_hotplug_page_range(struct page *page, unsigned long size)
+> {
+> 	int order = get_order(size);
+> 	int nr_pages = 1 << order;
+> 
+> 	...
+> }
+> 
+> static void free_hotplug_page(struct page *page)
+> {
+> 	free_hotplug_page_range(page, PAGE_SIZE);
+> }
+> 
+> ... which avoids having to place get_order() in all the callers, and
+> makes things a bit easier to read.
 
-okay. will fix it in next version.
+Dont have a strong opinion on this but I guess its just code preference.
 
 > 
->> +	if (!vint_desc->event_map) {
->> +		kfree(vint_desc);
->> +		return ERR_PTR(-ENOMEM);
->> +	}
->> +	mutex_init(&vint_desc->event_mutex);
->> +
->> +	vint_desc->domain = domain;
->> +	vint_desc->vint_id = vint_id;
->> +	INIT_LIST_HEAD(&vint_desc->list);
->> +
->> +	mutex_lock(&inta->vint_mutex);
->> +	list_add_tail(&vint_desc->list, &inta->vint_list);
->> +	mutex_unlock(&inta->vint_mutex);
->> +
->> +	parent_fwspec.fwnode =
->> +	of_node_to_fwnode(of_irq_find_parent(dev_of_node(&inta->pdev->dev)));
+>>>
+>>>> +{
+>>>> +	unsigned long magic;
+>>>> +	unsigned int nr_pages = 1 << order;
+>>>> +
+>>>> +	if (PageReserved(page)) {
+>>>> +		__ClearPageReserved(page);
+>>>> +
+>>>> +		magic = (unsigned long)page->freelist;
+>>>> +		if (magic == SECTION_INFO || magic == MIX_SECTION_INFO) {
+>>>
+>>> Not a new problem, but it's unfortunate that the core code reuses the
+>>> page::freelist field for this, given it also uses page::private for the
+>>> section number. Using fields from different parts of the union doesn't
+>>> seem robust.> 
+>>> It would seem nicer to have a private2 field in the struct for anonymous
+>>> pages.
+>>
+>> Okay. But I guess its not something for us to investigate in this context.
+>>
+>>>
+>>>> +			while (nr_pages--)
+>>>> +				put_page_bootmem(page++);
+>>>> +		} else {
+>>>> +			while (nr_pages--)
+>>>> +				free_reserved_page(page++);
+>>>> +		}
+>>>> +	} else {
+>>>> +		free_pages((unsigned long)page_address(page), order);
+>>>> +	}
+>>>> +}
 > 
-> single line.
+> Looking at this again, I'm surprised that we'd ever free bootmem pages.
+> I'd expect that we'd only remove memory that was added as part of a
+> hotplug, and that shouldn't have come from bootmem.
 > 
->> +	parent_fwspec.param_count = 3;
->> +	parent_fwspec.param[0] = inta->pdev->id;
->> +	parent_fwspec.param[1] = vint_desc->vint_id;
->> +	parent_fwspec.param[2] = 1;
->> +
->> +	vint_desc->parent_virq = irq_create_fwspec_mapping(&parent_fwspec);
->> +	if (vint_desc->parent_virq <= 0)
->> +		return ERR_PTR(vint_desc->parent_virq);
+> Will we ever really try to free bootmem pages like this?
 > 
-> Don't you need to free vint_desc (and its event_map) here?
+> [...]
+> 
 
-yeah, you are right.
+There are page table pages and page table mapped pages for each mapping.
 
-> 
->> +
->> +	irq_set_chained_handler_and_data(vint_desc->parent_virq,
->> +					 ti_sci_inta_irq_handler, vint_desc);
->> +
->> +	return vint_desc;
->> +}
->> +
->> +/**
->> + * ti_sci_inta_alloc_event() - Attach an event to a IA vint.
->> + * @inta:	Pointer to INTA domain descriptor
->> + * @vint_desc:	Pointer to vint_desc to which the event gets attached
->> + * @free_bit:	Bit inside vint to which event gets attached
->> + * @hwirq:	hwirq of the input event
->> + *
->> + * Return global_event if all went ok else appropriate error value.
->> + */
->> +static
->> +int ti_sci_inta_alloc_event(struct ti_sci_inta_irq_domain *inta,
->> +			    struct ti_sci_inta_vint_desc *vint_desc,
->> +			    u16 free_bit, u32 hwirq)
->> +{
->> +	struct ti_sci_inta_event_desc *event_desc;
->> +	u16 dev_id, dev_index;
->> +	int err;
->> +
->> +	dev_id = HWIRQ_TO_DEVID(hwirq);
->> +	dev_index = HWIRQ_TO_IRQID(hwirq);
->> +	event_desc = &vint_desc->events[free_bit];
->> +	mutex_lock(&vint_desc->event_mutex);
->> +	event_desc->hwirq = hwirq;
->> +	event_desc->global_event = ti_sci_get_free_resource(inta->global_event);
->> +	if (event_desc->global_event == TI_SCI_RESOURCE_NULL) {
->> +		err = -EINVAL;
->> +		goto free_vint_bit;
->> +	}
->> +
->> +	err = inta->sci->ops.rm_irq_ops.set_event_map(inta->sci,
->> +						      dev_id, dev_index,
->> +						      inta->pdev->id,
->> +						      vint_desc->vint_id,
->> +						      event_desc->global_event,
->> +						      free_bit);
->> +	if (err)
->> +		goto free_global_event;
->> +
->> +	mutex_unlock(&vint_desc->event_mutex);
->> +	return 0;
->> +free_global_event:
->> +	ti_sci_release_resource(inta->global_event, event_desc->global_event);
->> +free_vint_bit:
->> +	clear_bit(free_bit, vint_desc->event_map);
->> +	mutex_unlock(&vint_desc->event_mutex);
->> +	return err;
->> +}
->> +
->> +/**
->> + * ti_sci_inta_alloc_irq() -  Allocate an irq within INTA domain
->> + * @domain:	irq_domain pointer corresponding to INTA
->> + * @hwirq:	hwirq of the input event
->> + *
->> + * Note: Allocation happens in the following manner:
->> + *	- Find a free bit available in any of the vints available in the list.
->> + *	- If not found, allocate a vint from the vint pool
->> + *	- Attach the free bit to input hwirq.
->> + * Return vint_desc if all went ok else appropriate error value.
->> + */
->> +static struct ti_sci_inta_vint_desc
->> +*ti_sci_inta_alloc_irq(struct irq_domain *domain, u32 hwirq)
->> +{
->> +	struct ti_sci_inta_irq_domain *inta = domain->host_data;
->> +	struct ti_sci_inta_vint_desc *vint_desc = NULL;
->> +	u16 free_bit;
->> +	int ret;
->> +
->> +	mutex_lock(&inta->vint_mutex);
->> +	list_for_each_entry(vint_desc, &inta->vint_list, list) {
->> +		mutex_lock(&vint_desc->event_mutex);
->> +		free_bit = find_first_zero_bit(vint_desc->event_map,
->> +					       MAX_EVENTS_PER_VINT);
->> +		if (free_bit != MAX_EVENTS_PER_VINT) {
->> +			set_bit(free_bit, vint_desc->event_map);
->> +			mutex_unlock(&vint_desc->event_mutex);
->> +			mutex_unlock(&inta->vint_mutex);
->> +			goto alloc_event;
->> +		}
->> +		mutex_unlock(&vint_desc->event_mutex);
->> +	}
->> +	mutex_unlock(&inta->vint_mutex);
->> +
->> +	/* No free bits available. Allocate a new vint */
->> +	vint_desc = ti_sci_inta_alloc_parent_irq(domain);
->> +	if (IS_ERR(vint_desc))
->> +		return vint_desc;
->> +
->> +	mutex_lock(&vint_desc->event_mutex);
->> +	free_bit = find_first_zero_bit(vint_desc->event_map,
->> +				       MAX_EVENTS_PER_VINT);
->> +	set_bit(free_bit, vint_desc->event_map);
->> +	mutex_unlock(&vint_desc->event_mutex);
->> +
->> +alloc_event:
->> +	ret = ti_sci_inta_alloc_event(inta, vint_desc, free_bit, hwirq);
->> +	if (ret)
->> +		return ERR_PTR(ret);
-> 
-> Without freeing the allocated bit?
+VMEMMAP Mapping:
 
-ti_sci_inta_alloc_event() is taking care of freeing the allocated bit with the
-lock acquired.
+1) vmemmap_populate (ARM64_4K_PAGES)
 
-> 
->> +
->> +	return vint_desc;
->> +}
->> +
->> +/**
->> + * __get_event_index() - Convert the hwirq to corresponding bit inside vint.
->> + * @vint_desc:	Pointer to vint_desc to which the hwirq is attached
->> + * @hwirq:	hwirq number within the domain
->> + *
->> + * Return the vint bit to which the hwirq is attached.
->> + */
->> +static int __get_event_index(struct ti_sci_inta_vint_desc *vint_desc, u32 hwirq)
->> +{
->> +	int i;
->> +
->> +	mutex_lock(&vint_desc->event_mutex);
->> +	for (i = 0; i < MAX_EVENTS_PER_VINT; i++)
->> +		if (vint_desc->events[i].hwirq == hwirq) {
->> +			mutex_unlock(&vint_desc->event_mutex);
->> +			return i;
->> +		}
->> +
->> +	mutex_unlock(&vint_desc->event_mutex);
->> +	return -ENODEV;
-> 
-> OK, this is terrible. Having this loop on every mask/unmask/ack, plus
-> the contention on the lock (64:1, great) is just going to ruin latency.
-> 
-> Can't you spare 5 bits in hwirq to encode the index? Somehow, I don't
-> really believe that you do have 16bits of DEVID *and* 16bits of IRQID
-> (whatever the later is). Or allocate some per interrupt data that allows
-> the retrieval of the index in O(1)?
+a) Vmemmap backing pages:
+	- vmemmap_alloc_block_buf(PMD_SIZE, node)
+		- sparse_buffer_alloc(size)
+			- memblock_alloc_try_nid_raw()	(NA as sparse_buffer is gone [1])
 
-Ill prefer the later. Will try to re create event_index structure a bit and get
-index in O(1).
+		- OR
 
-> 
-> It would also solve your locking issue...
-> 
->> +}
->> +
->> +/**
->> + * ti_sci_inta_free_parent_irq() - Free a parent irq to INTA
->> + * domain:	domain corresponding to INTA
->> + */
->> +static void ti_sci_inta_free_parent_irq(struct irq_domain *domain,
->> +					struct ti_sci_inta_vint_desc *vint_desc)
->> +{
->> +	struct ti_sci_inta_irq_domain *inta = domain->host_data;
->> +
->> +	mutex_lock(&inta->vint_mutex);
->> +	list_del(&vint_desc->list);
->> +	mutex_unlock(&inta->vint_mutex);
->> +	irq_dispose_mapping(vint_desc->parent_virq);
->> +	ti_sci_release_resource(inta->vint, vint_desc->vint_id);
->> +	kfree(vint_desc->event_map);
->> +	kfree(vint_desc);
->> +}
->> +
->> +/**
->> + * ti_sci_inta_free_irq() - Free an IRQ within INTA domain
->> + * domain:	Domain corresponding to INTA
->> + * vint_desc:	Pointer to vint_desc from which irq needs to be freed
->> + * hwirq:	Hwirq number within INTA domain that needs to be freed
->> + */
->> +static void ti_sci_inta_free_irq(struct irq_domain *domain,
->> +				 struct ti_sci_inta_vint_desc *vint_desc,
->> +				 u32 hwirq)
->> +{
->> +	struct ti_sci_inta_irq_domain *inta = domain->host_data;
->> +	struct ti_sci_inta_event_desc *event_desc;
->> +	int event_index = 0;
->> +
->> +	/* free event irq */
->> +	event_index = __get_event_index(vint_desc, hwirq);
->> +	event_desc = &vint_desc->events[event_index];
->> +	mutex_lock(&vint_desc->event_mutex);
->> +	inta->sci->ops.rm_irq_ops.free_event_map(inta->sci,
->> +						 HWIRQ_TO_DEVID(hwirq),
->> +						 HWIRQ_TO_IRQID(hwirq),
->> +						 inta->pdev->id,
->> +						 vint_desc->vint_id,
->> +						 event_desc->global_event,
->> +						 event_index);
->> +
->> +	clear_bit(event_index, vint_desc->event_map);
->> +	ti_sci_release_resource(inta->global_event, event_desc->global_event);
->> +	event_desc->global_event = TI_SCI_RESOURCE_NULL;
->> +	event_desc->hwirq = 0;
->> +	mutex_unlock(&vint_desc->event_mutex);
->> +
->> +	/* Free parent irq */
->> +	if (find_first_bit(vint_desc->event_map, MAX_EVENTS_PER_VINT) ==
->> +	    MAX_EVENTS_PER_VINT)
-> 
-> Single line. Also, how do you ensure that this doesn't race with the
-> allocation if you're not holding the lock?
+		-  vmemmap_alloc_block(size, node)
+			- alloc_pages_node()		-> When slab available (runtime)
+			- __earlyonly_bootmem_alloc 	-> When slab not available (NA)
 
-will fix it in next version.
+b) Vmemmap pgtable pages:
 
-> 
->> +		ti_sci_inta_free_parent_irq(domain, vint_desc);
->> +}
->> +
->> +/**
->> + * ti_sci_inta_request_resources() - Allocate resources for input irq
->> + * @data: Pointer to corresponding irq_data
->> + *
->> + * Note: This is the core api where the actual allocation happens for input
->> + *	 hwirq. This allocation involves creating a parent irq for vint.
->> + *	 If this is done in irq_domain_ops.alloc() then a deadlock is reached
->> + *	 for allocation. So this allocation is being done in request_resources()
->> + *
->> + * Return: 0 if all went well else corresponding error.
->> + */
->> +static int ti_sci_inta_request_resources(struct irq_data *data)
->> +{
->> +	struct ti_sci_inta_vint_desc *vint_desc;
->> +
->> +	vint_desc = ti_sci_inta_alloc_irq(data->domain, data->hwirq);
->> +	if (IS_ERR(vint_desc))
->> +		return PTR_ERR(vint_desc);
->> +
->> +	data->chip_data = vint_desc;
->> +
->> +	return 0;
->> +}
->> +
->> +/**
->> + * ti_sci_inta_release_resources - Release resources for input irq
->> + * @data: Pointer to corresponding irq_data
->> + *
->> + * Note: Corresponding to request_resources(), all the unmapping and deletion
->> + *	 of parent vint irqs happens in this api.
->> + */
->> +static void ti_sci_inta_release_resources(struct irq_data *data)
->> +{
->> +	struct ti_sci_inta_vint_desc *vint_desc;
->> +
->> +	vint_desc = irq_data_get_irq_chip_data(data);
->> +	ti_sci_inta_free_irq(data->domain, vint_desc, data->hwirq);
->> +}
->> +
->> +/**
->> + * __ti_sci_inta_manage_event() - Control the event based on the offset
->> + * @data:	Pointer to corresponding irq_data
->> + * @offset:	register offset using which event is controlled.
->> + */
->> +static void __ti_sci_inta_manage_event(struct irq_data *data, u32 offset)
->> +{
->> +	struct ti_sci_inta_vint_desc *vint_desc;
->> +	struct ti_sci_inta_irq_domain *inta;
->> +	int event_index;
->> +
->> +	vint_desc = irq_data_get_irq_chip_data(data);
->> +	inta = data->domain->host_data;
->> +	event_index = __get_event_index(vint_desc, data->hwirq);
->> +	if (event_index < 0)
->> +		return;
->> +
->> +	writeq_relaxed(BIT(event_index), inta->base +
->> +		       vint_desc->vint_id * 0x1000 + offset);
->> +}
->> +
->> +/**
->> + * ti_sci_inta_mask_irq() - Mask an event
->> + * @data:	Pointer to corresponding irq_data
->> + */
->> +static void ti_sci_inta_mask_irq(struct irq_data *data)
->> +{
->> +	__ti_sci_inta_manage_event(data, VINT_ENABLE_CLR_OFFSET);
->> +}
->> +
->> +/**
->> + * ti_sci_inta_unmask_irq() - Unmask an event
->> + * @data:	Pointer to corresponding irq_data
->> + */
->> +static void ti_sci_inta_unmask_irq(struct irq_data *data)
->> +{
->> +	__ti_sci_inta_manage_event(data, VINT_ENABLE_SET_OFFSET);
->> +}
->> +
->> +/**
->> + * ti_sci_inta_ack_irq() - Ack an event
->> + * @data:	Pointer to corresponding irq_data
->> + */
->> +static void ti_sci_inta_ack_irq(struct irq_data *data)
->> +{
->> +	__ti_sci_inta_manage_event(data, VINT_STATUS_OFFSET);
->> +}
->> +
->> +static int ti_sci_inta_set_affinity(struct irq_data *d,
->> +				    const struct cpumask *mask_val, bool force)
->> +{
->> +	return -EINVAL;
->> +}
->> +
->> +/**
->> + * ti_sci_inta_set_type() - Update the trigger type of the irq.
->> + * @data:	Pointer to corresponding irq_data
->> + * @type:	Trigger type as specified by user
->> + *
->> + * Note: This updates the handle_irq callback for level msi.
->> + *
->> + * Return 0 if all went well else appropriate error.
->> + */
->> +static int ti_sci_inta_set_type(struct irq_data *data, unsigned int type)
->> +{
->> +	struct irq_desc *desc = irq_to_desc(data->irq);
->> +
->> +	/*
->> +	 * .alloc default sets handle_edge_irq. But if the user specifies
->> +	 * that IRQ is level MSI, then update the handle to handle_level_irq
->> +	 */
->> +	if (type & IRQF_TRIGGER_HIGH)
->> +		desc->handle_irq = handle_level_irq;
->> +
->> +	return 0;
-> 
-> How about invalid values?
+vmemmap_pgd_populate()
+vmemmap_pud_populate()
+	 vmemmap_alloc_block_zero()
+		vmemmap_alloc_block()
+			alloc_pages_node()		-> When slab available (runtime)
+			__earlyonly_bootmem_alloc()	-> When slab not available (NA)
 
-Sure, will fix it in next version.
+2) vmemmap_populate (AR64_64K_PAGES || ARM64_16K_PAGES)
+
+a) Vmemmap backing pages:
+	vmemmap_pte_populate()
+		vmemmap_alloc_block_buf(PAGE_SIZE, node)
+		- sparse_buffer_alloc(size)
+			- memblock_alloc_try_nid_raw()	(NA as sparse_buffer is gone [1])
+
+		- OR
+
+		-  vmemmap_alloc_block(size, node)
+			- alloc_pages_node()		-> When slab available (runtime)
+			- __earlyonly_bootmem_alloc 	-> When slab not available (NA)
 
 
-Thanks and reagrds,
-Lokesh
+b) Vmemmap pgtable pages:
+
+vmemmap_pgd_populate()
+vmemmap_pud_populate()
+vmemmap_pmd_populate()
+	 vmemmap_alloc_block_zero()
+		vmemmap_alloc_block()
+			alloc_pages_node()		-> When slab available (runtime)
+			__earlyonly_bootmem_alloc()	-> When slab not available (NA)
+			
+LINEAR Mapping:
+
+a) There are no backing pages here
+
+b) Linear pgtable pages:
+
+	Gets allocated through __pgd_pgtable_alloc() --> __get_free_page() which is buddy.
+
+You might be right that we never allocate from memblock during memory hotplug but I
+would still suggest keeping PageRserved() check to deal with 'accidental/unexpected'
+memblock pages. If we are really sure that this is never going to happen then at least
+lets do an WARN_ON() if this functions ever gets one non-buddy page.
+
+I did give this a try (just calling free_pages) on couple of configs and did not see
+any problem/crash or bad_page() errors. Will do more investigation and tests tomorrow.
+
+[1] Though sparse_buffer gets allocated from memblock it does not stay till runtime.
+Early memory uses chunks from it but rest gets released back. Runtime hotplug ideally
+should not have got vmemmap backing memory from memblock. 
+
+ 
+>>> I take it that some higher-level serialization prevents concurrent
+>>> modification to this table. Where does that happen?
+>>
+>> mem_hotplug_begin()
+>> mem_hotplug_end()
+>>
+>> which operates on DEFINE_STATIC_PERCPU_RWSEM(mem_hotplug_lock)
+>>
+>> - arch_remove_memory() called from (__remove_memory || devm_memremap_pages_release)
+>> - vmemmap_free() called from __remove_pages called from (arch_remove_memory || devm_memremap_pages_release)
+>>
+>> Both __remove_memory() and devm_memremap_pages_release() are protected with
+>> pair of these.
+>>
+>> mem_hotplug_begin()
+>> mem_hotplug_end()
+>>
+>> vmemmap tear down happens before linear mapping and in sequence.
+>>
+>>>
+>>>> +
+>>>> +	free_pagetable(pmd_page(*pmd), 0);
+>>>
+>>> Here we free the pte level of table...
+>>>
+>>>> +	spin_lock(&init_mm.page_table_lock);
+>>>> +	pmd_clear(pmd);
+>>>
+>>> ... but only here do we disconnect it from the PMD level of table, and
+>>> we don't do any TLB maintenance just yet. The page could be poisoned
+>>> and/or reallocated before we invalidate the TLB, which is not safe. In
+>>> all cases, we must follow the sequence:
+>>>
+>>> 1) clear the pointer to a table
+>>> 2) invalidate any corresponding TLB entries
+>>> 3) free the table page
+>>>
+>>> ... or we risk a number of issues resulting from erroneous programming
+>>> of the TLBs. See pmd_free_pte_page() for an example of how to do this
+>>> correctly.
+>>
+>> Okay will send 'addr' into these functions and do somehting like this
+>> at all levels as in case for pmd_free_pte_page().
+>>
+>>         page = pud_page(*pudp);
+>>         pud_clear(pudp);
+>>         __flush_tlb_kernel_pgtable(addr);
+>>         free_pgtable_page(page);
+> 
+> That looks correct to me!
+> 
+>>> I'd have thought similar applied to x86, so that implementation looks
+>>> suspicious to me too...
+>>>
+>>>> +	spin_unlock(&init_mm.page_table_lock);
+>>>
+>>> What precisely is the page_table_lock intended to protect?
+>>
+>> Concurrent modification to kernel page table (init_mm) while clearing entries.
+> 
+> Concurrent modification by what code?
+> 
+> If something else can *modify* the portion of the table that we're
+> manipulating, then I don't see how we can safely walk the table up to
+> this point without holding the lock, nor how we can safely add memory.
+> 
+> Even if this is to protect something else which *reads* the tables,
+> other code in arm64 which modifies the kernel page tables doesn't take
+> the lock.
+> 
+> Usually, if you can do a lockless walk you have to verify that things
+> didn't change once you've taken the lock, but we don't follow that
+> pattern here.
+> 
+> As things stand it's not clear to me whether this is necessary or
+> sufficient.
+
+Hence lets take more conservative approach and wrap the entire process of
+remove_pagetable() under init_mm.page_table_lock which looks safe unless
+in the worst case when free_pages() gets stuck for some reason in which
+case we have bigger memory problem to deal with than a soft lock up.
+
+> 
+>>> It seems odd to me that we're happy to walk the tables without the lock,
+>>> but only grab the lock when performing a modification. That implies we
+>>> either have some higher-level mutual exclusion, or we're not holding the
+>>> lock in all cases we need to be.
+>>
+>> On arm64
+>>
+>> - linear mapping is half kernel virtual range (unlikely to share PGD with any other)
+>> - vmemmap and vmalloc might or might not be aligned properly to avoid PGD/PUD/PMD overlap
+>> - This kernel virtual space layout is not fixed and can change in future
+>>
+>> Hence just to be on safer side lets take init_mm.page_table_lock for the entire tear
+>> down process in remove_pagetable(). put_page_bootmem/free_reserved_page/free_pages should
+>> not block for longer period unlike allocation paths. Hence it should be safe with overall
+>> spin lock on init_mm.page_table_lock unless if there are some other concerns.
+> 
+> Given the other issues with the x86 hot-remove code, it's not clear to
+> me whether that locking is correct or necessary. I think that before we
+> make any claim as to whether that's safe we should figure out how the
+> lock is actually used today.
+
+Did not get you. What is the exact concern with the proposed lock which covers
+end to end remove_pagetable() and guarantees that kernel pagetable init_mm wont
+be modified cuncurrently. Thats what the definition of mm->page_table_lock says.
+Is not that enough ?
+
+struct mm_struct {
+................
+................
+................
+spinlock_t page_table_lock; /* Protects page tables and some
+                             * counters
+                             */
+...............
+...............
+}
+
+The worst would be hot-remove is bit slower which should be an acceptable
+proposition IMHO but again I am open to ideas on this.
+
+> 
+> I do not think we should mindlessly copy that.
+
+The overall protection for remove_pagetable() with init_mm.page_table_lock is a
+deviation from what x86 is doing right now.
