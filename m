@@ -2,142 +2,173 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 44D5EC282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:39:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BA17BC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:44:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 05471206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:39:55 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 79CF9206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:44:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="YXu0iFWD"
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="kkTQf8Jt"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732388AbfDQSjy (ORCPT
+        id S1731430AbfDQSoM (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 14:39:54 -0400
-Received: from mail-pf1-f195.google.com ([209.85.210.195]:37012 "EHLO
-        mail-pf1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728373AbfDQSjy (ORCPT
+        Wed, 17 Apr 2019 14:44:12 -0400
+Received: from mail-lj1-f195.google.com ([209.85.208.195]:46981 "EHLO
+        mail-lj1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727340AbfDQSoM (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 14:39:54 -0400
-Received: by mail-pf1-f195.google.com with SMTP id 8so12505356pfr.4;
-        Wed, 17 Apr 2019 11:39:53 -0700 (PDT)
+        Wed, 17 Apr 2019 14:44:12 -0400
+Received: by mail-lj1-f195.google.com with SMTP id h21so23384178ljk.13
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 11:44:10 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:content-transfer-encoding:in-reply-to
-         :user-agent;
-        bh=PBOQT6fkoE7GfjMsXFE/HyESKNpcEKYwhhA5gd7dzjg=;
-        b=YXu0iFWDwN2v0wfNalRGqqqyv77fKNUiAQbAiXtx9OUKAYw+1Pgi5Kq2Ti0uCZf/+d
-         O0Phy3cwWtk87rW93E+Y8xQNtZRYMSRF5Die9m+qoY6ZIlyiefIqjnbGmUi05wmApi3L
-         dRaa1u3A2zmU8TYGyuXhKlEShUEZOcFnTtKN8ViN1M9HpNK1rrlM4G1k7W6M9F9bOmUS
-         J0orT3J5vqdOMi7y3OVua0eg1HMxYJGHd3Is42QUubUxWC5FWu1xhZUDuxXjcP7pUGiU
-         +n5jLA76IgbMov3OKHlcTRZfnTZMk473HfxOD6TnfHsCCGdWH2G/WNoBLpW2WwYnB96x
-         P2WQ==
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=UIpbSehmMz/KBZb19dBtzvSykR387AXU45bcF3kvkm4=;
+        b=kkTQf8JtZ71uXPtgkEd9gma7wpUmmx97NZ4TWJbrHb6Mvoz6PzbcY5tElGbAw2wEy7
+         nAGlO/uaLeiabYx1t2rzhxWXwq7HcBgQtFxq1659PIaOkTEC9xEfFmnYORvswqZjYlwd
+         8iuvFnUPE1UI97SYp/4ezmLr+NwANP7Lj0KvqP9VMWxjJnm3H4IUVniN3E8BiG5jqNJ+
+         lm6DngII0v1QzGgJPVNWYjl7H9SfYstTBsfJU9qoO1pyaueTUyxwUYVBA4aAYA2iRvKK
+         mO+HulbfJZ4S0gNbtTGxumtVn+ZSd4QyIBU5HNp5g9yuOtyZwC3HKCKJUgVCkaZ6vN9z
+         /xEg==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:content-transfer-encoding
-         :in-reply-to:user-agent;
-        bh=PBOQT6fkoE7GfjMsXFE/HyESKNpcEKYwhhA5gd7dzjg=;
-        b=PigVZKaPehpg7VZpfIqAdpWIXPYO1G9uMJbWq23LydpySmU02QyxzR7kPnFiiIzfX1
-         m/Wye8nMQzrPKIxaqmVdLYyxujvWWTF/jhlWQVDkG0xXY/BkNKPX/FD50R9U+vNHYNzE
-         Rytkp3j5l/1nJCMHq/v4H02K0ay1HV1/I8AWjSPSXLu3xmEBw5kgsxfz/pbsAA8IufnE
-         666cnwYkoQXg3e153a62gJcN1uKVX1C/tFUaSaHHczqgwfv70tYZ64s+6YNwUByFduNX
-         jji4+6qcymqYeQq8PaDXaqA6hLnm9hZ0U+2gek6Ci4ZJF672Ilg1Ii2Ns7fPuRYLq0wA
-         mt6w==
-X-Gm-Message-State: APjAAAWtCMa8GaWQ76G0BT2CdvsDokWmknDyfOMn/gH7NJxKh+vz93lZ
-        +7P4O9VhSEJDRDdj4ahMizBntijWcg8=
-X-Google-Smtp-Source: APXvYqzFyTRYlghF/f7ZmXHJOzQFr9VecV1JCwU34JoY1FRDM+KAXDdkRiY1uU7WN/XXoWbESW4ESw==
-X-Received: by 2002:aa7:8c13:: with SMTP id c19mr90321674pfd.225.1555526393111;
-        Wed, 17 Apr 2019 11:39:53 -0700 (PDT)
-Received: from Asurada-Nvidia.nvidia.com (thunderhill.nvidia.com. [216.228.112.22])
-        by smtp.gmail.com with ESMTPSA id q128sm86364949pga.60.2019.04.17.11.39.52
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Wed, 17 Apr 2019 11:39:52 -0700 (PDT)
-Date:   Wed, 17 Apr 2019 11:39:50 -0700
-From:   Nicolin Chen <nicoleotsuka@gmail.com>
-To:     Guenter Roeck <linux@roeck-us.net>
-Cc:     jdelvare@suse.com, linux-hwmon@vger.kernel.org,
-        linux-kernel@vger.kernel.org, corbet@lwn.net,
-        linux-doc@vger.kernel.org
-Subject: Re: [PATCH] hwmon: (ina3221) Add voltage conversion time settings
-Message-ID: <20190417183949.GB5073@Asurada-Nvidia.nvidia.com>
-References: <20190416235548.22733-1-nicoleotsuka@gmail.com>
- <1ad27385-e62a-d4f0-2590-c50458119f12@roeck-us.net>
- <2a193494-a33e-dac0-456a-241d7b3e59ad@roeck-us.net>
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=UIpbSehmMz/KBZb19dBtzvSykR387AXU45bcF3kvkm4=;
+        b=o01ZqIRKyN1YFMhK5BUgt9PFsfSqSQj0APHFdrZN2o16KOxqPaK+QouV9c5MqbyV8s
+         /43ppQfWWBTB0GbwOfiosAjdCPt26WbOl9Nq7M8JvRA6QdrME2plneD+7JfdBt4/+MA7
+         BaJ1opkgWjkK2sDIruCuYZysx8Ka4UDuMV36FEfmjGhzDdNDm573aFUGb5eQnqSdNPCw
+         On7YUuS9K489R6ulGrn0ZGyPghVz3o2Y7ifszruq5lsTnZVj5Hg0Tks+nI3iep/gk7nz
+         BVcFjC5VNqEkHO7EzC0FjF7FQEw3cCwvAm9WNJrIqkRGqGTsvyyv7XaFjDJSi4AnlGiI
+         MzZg==
+X-Gm-Message-State: APjAAAWJo8O6ALVr6mJDpKNIFyXOnMarMJq/NVw4dqMpsWOGBVxVr9gI
+        HYJN3F2//ydWlCHJReYQl1RdJA==
+X-Google-Smtp-Source: APXvYqxllGYHF/7d868/kgXmY+um13gPE6GMCnNJm0Fd/serotSJLU44EMco9Z4AIHSdG1aVu77gFg==
+X-Received: by 2002:a2e:3e18:: with SMTP id l24mr50998325lja.68.1555526649813;
+        Wed, 17 Apr 2019 11:44:09 -0700 (PDT)
+Received: from wasted.cogentembedded.com ([31.173.81.147])
+        by smtp.gmail.com with ESMTPSA id w19sm10875592lfe.23.2019.04.17.11.44.07
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 17 Apr 2019 11:44:08 -0700 (PDT)
+Subject: Re: [PATCH v9 2/3] spi: Add Renesas R-Car Gen3 RPC-IF SPI controller
+ driver
+To:     masonccyang@mxic.com.tw
+Cc:     bbrezillon@kernel.org, broonie@kernel.org,
+        devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw,
+        lee.jones@linaro.org, linux-kernel@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-spi@vger.kernel.org,
+        marek.vasut@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org,
+        zhengxunli@mxic.com.tw
+References: <1553847606-18122-1-git-send-email-masonccyang@mxic.com.tw>
+ <1553847606-18122-3-git-send-email-masonccyang@mxic.com.tw>
+ <1e2bf23d-db39-0d1d-0bcc-6d9cd2935a82@cogentembedded.com>
+ <cdee3d53-6ee3-4435-117e-8ba4a58ca72b@cogentembedded.com>
+ <OF82CE76E9.E6395EF7-ON482583DD.000E37D7-482583DD.000E5077@mxic.com.tw>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <3d334751-8fd4-7db1-9deb-e6c94936df13@cogentembedded.com>
+Date:   Wed, 17 Apr 2019 21:44:07 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=iso-8859-1
-Content-Disposition: inline
-Content-Transfer-Encoding: 8bit
-In-Reply-To: <2a193494-a33e-dac0-456a-241d7b3e59ad@roeck-us.net>
-User-Agent: Mutt/1.9.4 (2018-02-28)
+In-Reply-To: <OF82CE76E9.E6395EF7-ON482583DD.000E37D7-482583DD.000E5077@mxic.com.tw>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 07:04:09AM -0700, Guenter Roeck wrote:
-> > > I am not quite sure if this update_interval is the best way to
-> > > implement the conversion time settings but I can't find another
-> > > common approach. This implementation certainly has drawbacks:
-> > >   1) It can't configure Bus and Shunt conversion times separately
-> > >      (Not crucial for me at this point as I set them equally)
-> > >   2) Users need to calculate for the settings of conversion time
-> > >   3) The ABI defines update_interval in msec while the hardware
-> > >      and datasheet does in usec, and that generates rounding diff
-> > >   4) The update_interval value would be spontaneously modified
-> > >      everytime number of samples or number of enabled channels
-> > >      gets changed. This might confuses users who tries to have
-> > >      a fixed update_interval other than really merely setting
-> > >      conversion time.
-> > > 
-> > > I see IIO subsystem have something like IIO_CHAN_INFO_INT_TIME
-> > > for conversion time setting exclusively. Do we have something
-> > > similar under hwmon?
-> > > 
-> > 
-> > No. I think what you have should be good enough for now.
-> > Please see comments below.
+On 04/15/2019 05:36 AM, masonccyang@mxic.com.tw wrote:
 
-OK. I will go ahead with this approach then.
+>> >> Add a driver for Renesas R-Car Gen3 RPC-IF SPI controller.
+>> >>
+>> >> Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+>> >> Signed-off-by: Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+>> > [...]
+>> >> diff --git a/drivers/spi/spi-renesas-rpc.c b/drivers/spi/spi-renesas-rpc.c
+>> >> new file mode 100644
+>> >> index 0000000..037f273
+>> >> --- /dev/null
+>> >> +++ b/drivers/spi/spi-renesas-rpc.c
+>> > [...]
+>> >> +static int rpc_spi_probe(struct platform_device *pdev)
+>> >> +{
+>> >> +   struct spi_controller *ctlr;
+>> >> +   struct rpc_mfd *rpc_mfd = dev_get_drvdata(pdev->dev.parent);
+>> >> +   struct rpc_spi *rpc;
+>> >> +   int ret;
+>> >> +
+>> >> +   ctlr = spi_alloc_master(&pdev->dev, sizeof(*rpc));
+>> >> +   if (!ctlr)
+>> >> +      return -ENOMEM;
+>> >> +
+>> >> +   platform_set_drvdata(pdev, ctlr);
+>> >> +
+>> >> +   rpc = spi_controller_get_devdata(ctlr);
+>> >> +
+>> >> +   ctlr->dev.of_node = pdev->dev.of_node;
+>> > [...]
+>> >> +
+>> >> +   pm_runtime_enable(&pdev->dev);
+>> >> +   ctlr->auto_runtime_pm = true;
+>> >
+>> >    I think this line no longer works as expected with the new
+>> probing scheme.
 
-> > > +        /* Update Bus-voltage conversion time */
-> > > +        ret = regmap_update_bits(ina->regmap, INA3221_CONFIG,
-> > > +                     INA3221_CONFIG_VBUS_CT_MASK,
-> > > +                     idx << INA3221_CONFIG_VBUS_CT_SHIFT);
-> > > +        if (ret)
-> > > +            return ret;
-> > > +
-> > > +        /* Update Shunt-voltage conversion time */
-> > > +        ret = regmap_update_bits(ina->regmap, INA3221_CONFIG,
-> > > +                     INA3221_CONFIG_VSH_CT_MASK,
-> > > +                     idx << INA3221_CONFIG_VSH_CT_SHIFT);
-> > > +        if (ret)
-> > > +            return ret;
-> > 
-> > It should be possible to update both conversion times with a single call,
-> > since both calls touch only one register. Something like
-> > 
-> >          ret = regmap_update_bits(ina->regmap, INA3221_CONFIG
-> >              INA3221_CONFIG_VBUS_CT_MASK | INA3221_CONFIG_VSH_CT_MASK,
-> >              (idx << INA3221_CONFIG_VBUS_CT_SHIFT) | (idx << INA3221_CONFIG_VSH_CT_SHIFT));
-> > 
-> > Granted, that is a bit long, but it saves an extra i2c write operation.
+   That's because we added another (SPI) device under our MFD.
 
-Will merge them.
+>> > Have you tested reading? v8 patch still works while v9 patches
+>> > hang on doing:
+>> >
+>> > $ cat /dev/mtd<n>...
+>>
+>>    Sorry, 'od -x', not 'cat'.
+> 
+> root@draak:/# cat /proc/mtd
+> dev:    size   erasesize  name
+> mtd0: 00040000 00001000 "Bank 1 - Boot parameter"
+> mtd1: 00140000 00001000 "Bank 1 - Loader-BL2"
+> mtd2: 00040000 00001000 "Bank 1 - Certification"
+> mtd3: 00080000 00001000 "Bank 1 - ARM Trusted FW"
+> mtd4: 00400000 00001000 "Bank 1 - Reserved-1"
+> mtd5: 00300000 00001000 "Bank 1 - U-Boot"
+> mtd6: 00200000 00001000 "Bank 1 - Reserved-2"
+> mtd7: 00480000 00001000 "Bank 1 - Splash"
+> mtd8: 00040000 00001000 "Bank 1 - Device Tree"
+> root@draak:/# od -x /dev/mtd1
+> 0000000 0000 d280 0001 d280 0002 d280 0003 d280
+> 0000020 0004 d280 0005 d280 0006 d280 0007 d280
+> 0000040 0008 d280 0009 d280 000a d280 000b d280
+> 0000060 000c d280 000d d280 000e d280 000f d280
+> 0000100 0010 d280 0011 d280 0012 d280 0013 d280
+> 0000120 0014 d280 0015 d280 0016 d280 0017 d280
+> 0000140 0018 d280 0019 d280 001a d280 001b d280
+> 0000160 001c d280 001d d280 001e d280 1000 d53e
+> 0000200 f800 9266 1000 d51e 3fdf d503 3ba0 1005
 
-> Thinking about it ... does it even make sense to cache reg_config twice,
-> or would it be better to just update the local copy and use regmap_write()
-> to send it to the chip ?
+   Still hangs for me. After I patches spi-mem.c and the driver to
+call RPM for the MFD, it started working again. Perhaps, that clock
+is still enabled on your target. What does the following print (for
+the RPC clocks)?
 
-I remember the reason of adding the read-back was to prevent race
-condition. But now we have mutex protections for all sysfs nodes,
-maybe it's not necessary anymore. I will read the code carefully
-and see if it's safe to remove it -- will do in a separate patch.
+$ mount none -t debugfs /sys/kernel/debug/
+$ cat /sys/kernel/debug/clk/clk_summary
 
-Thanks
-Nicolin
+> fyi~
+> 
+> best regards,
+> Mason
+
+MBR, Sergei
