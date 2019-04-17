@@ -2,129 +2,161 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 38086C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 22:42:16 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 14503C282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 22:42:18 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 0232320693
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 22:42:16 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="HoD831QF"
+	by mail.kernel.org (Postfix) with ESMTP id E85BA20693
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 22:42:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387750AbfDQWmO (ORCPT
+        id S2387775AbfDQWmR (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 18:42:14 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:37756 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729331AbfDQWmO (ORCPT
+        Wed, 17 Apr 2019 18:42:17 -0400
+Received: from Galois.linutronix.de ([146.0.238.70]:59701 "EHLO
+        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfDQWmP (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 18:42:14 -0400
-Received: by mail-pg1-f196.google.com with SMTP id e6so213495pgc.4;
-        Wed, 17 Apr 2019 15:42:13 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=i1R99iL8zt7pYA8QWKvwvqndRoGPVaYvfjEKGwYpQl8=;
-        b=HoD831QFjDx4BlpQhDI/TD3XXHvVVHsgOBIGfwMfKF7qnRPAgecLhMeFdTu8ine4PT
-         pS/K5fvyguJfbjW8xANbSOvNYyW3q0wsCPCzfPqsId/p7AON+5U0NVLFwMKfwR5vYLL1
-         yxzAwnPRoZFX7VdS3mZK+DFy06kNksUxXADdKePPW/iQcY4Mri71ZYeZcADrr/ffOWpB
-         V+XtePo1RZYdLEkhiaKau3fPSD4ge3w9rxVS/VkRJR7hfRwnXvjwpscWPulUie9sNOX8
-         /xKEJI1D5Fpzlf79qU3DiaSr4bHnyUuabem/rp3lCpaI5r5FyAfeMv/w34fUBaT7wCK1
-         0JNg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=i1R99iL8zt7pYA8QWKvwvqndRoGPVaYvfjEKGwYpQl8=;
-        b=la9mvPji93TREBWlY7Wrvj92tiDsMaaDdMlhk5ALIYTHJlqdGOvNacqeUxpGxRF2au
-         424IA0Q6SAYGfF+Z2mE0CnXXJds0/SN6y41UAslJ8WdGl7Yl/2aRjG0+xvi/7z0nCM0C
-         Onx7o03vEuk7INmYu5ioddao5Nznbj5QiiCloVQCWYntwn6bwpOTJ4soS1xRzhEK7ywY
-         0wnYoY+8FnxCTorfbFO5U37esTe+nXccJ2c/ofVEKNJwdaWuNkR3N2gtjPifGB5cEryf
-         6wTIQtLQQCA0bsdMUGVxxEaTRCWmSvucnRofS6F5FXyBVIV54lMmIwZS9YdfIMoGKuwH
-         ueiQ==
-X-Gm-Message-State: APjAAAWHUTzFA2nTyRj27eJ8fIyY3sWv/glMQ8JU8zObTEUwlpRLyYh8
-        giPnU9e0b9Y/AWNptD2sQGg=
-X-Google-Smtp-Source: APXvYqzfsqxb6oCf19KQ69nee6vwb/j4LlN53CNGTZed7Ee/lThOPjR/LlupIPNI1J3gQWbhe9CSgg==
-X-Received: by 2002:a63:cc0c:: with SMTP id x12mr85176635pgf.336.1555540436865;
-        Wed, 17 Apr 2019 15:33:56 -0700 (PDT)
-Received: from localhost.localdomain (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
-        by smtp.gmail.com with ESMTPSA id l26sm281030pfb.20.2019.04.17.15.33.50
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Apr 2019 15:33:56 -0700 (PDT)
-From:   Dmitry Osipenko <digetx@gmail.com>
-To:     Thierry Reding <thierry.reding@gmail.com>,
-        Jonathan Hunter <jonathanh@nvidia.com>,
-        MyungJoo Ham <myungjoo.ham@samsung.com>,
-        Kyungmin Park <kyungmin.park@samsung.com>,
-        Chanwoo Choi <cw00.choi@samsung.com>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>
-Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
-        linux-pm@vger.kernel.org
-Subject: [PATCH v3 00/16] NVIDIA Tegra devfreq improvements and Tegra20/30 support
-Date:   Thu, 18 Apr 2019 01:29:09 +0300
-Message-Id: <20190417222925.5815-1-digetx@gmail.com>
-X-Mailer: git-send-email 2.21.0
+        Wed, 17 Apr 2019 18:42:15 -0400
+Received: from pd9ef12d2.dip0.t-ipconnect.de ([217.239.18.210] helo=nanos)
+        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
+        (Exim 4.80)
+        (envelope-from <tglx@linutronix.de>)
+        id 1hGtFZ-0007Zs-6t; Thu, 18 Apr 2019 00:41:53 +0200
+Date:   Thu, 18 Apr 2019 00:41:52 +0200 (CEST)
+From:   Thomas Gleixner <tglx@linutronix.de>
+To:     Fenghua Yu <fenghua.yu@intel.com>
+cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
+        H Peter Anvin <hpa@zytor.com>,
+        Paolo Bonzini <pbonzini@redhat.com>,
+        Dave Hansen <dave.hansen@intel.com>,
+        Ashok Raj <ashok.raj@intel.com>,
+        Peter Zijlstra <peterz@infradead.org>,
+        Ravi V Shankar <ravi.v.shankar@intel.com>,
+        Xiaoyao Li <xiaoyao.li@intel.com>,
+        Christopherson Sean J <sean.j.christopherson@intel.com>,
+        Kalle Valo <kvalo@codeaurora.org>,
+        Michael Chan <michael.chan@broadcom.com>,
+        linux-kernel <linux-kernel@vger.kernel.org>,
+        x86 <x86@kernel.org>, kvm@vger.kernel.org,
+        netdev@vger.kernel.org, linux-wireless@vger.kernel.org
+Subject: Re: [PATCH v7 14/21] x86/split_lock: Enable split lock detection by
+ default
+In-Reply-To: <1555536851-17462-15-git-send-email-fenghua.yu@intel.com>
+Message-ID: <alpine.DEB.2.21.1904180019390.3174@nanos.tec.linutronix.de>
+References: <1555536851-17462-1-git-send-email-fenghua.yu@intel.com> <1555536851-17462-15-git-send-email-fenghua.yu@intel.com>
+User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=US-ASCII
+X-Linutronix-Spam-Score: -1.0
+X-Linutronix-Spam-Level: -
+X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Changelog:
+On Wed, 17 Apr 2019, Fenghua Yu wrote:
 
-v3: Addressed all review comments that were made by Chanwoo Choi to v2.
+> A split locked access locks bus and degrades overall memory access
+> performance. When split lock detection feature is enumerated, enable
+> the feature by default to find any split lock issue.
+> 
+> Signed-off-by: Fenghua Yu <fenghua.yu@intel.com>
+> ---
+>  arch/x86/kernel/cpu/intel.c | 34 ++++++++++++++++++++++++++++++++++
+>  1 file changed, 34 insertions(+)
+> 
+> diff --git a/arch/x86/kernel/cpu/intel.c b/arch/x86/kernel/cpu/intel.c
+> index 997d683d3c27..6a692d215bef 100644
+> --- a/arch/x86/kernel/cpu/intel.c
+> +++ b/arch/x86/kernel/cpu/intel.c
+> @@ -34,6 +34,8 @@
+>  DEFINE_PER_CPU(u64, msr_test_ctl_cache);
+>  EXPORT_PER_CPU_SYMBOL_GPL(msr_test_ctl_cache);
+>  
+> +static bool split_lock_detect_enable;
+> +
+>  /*
+>   * Just in case our CPU detection goes bad, or you have a weird system,
+>   * allow a way to override the automatic disabling of MPX.
+> @@ -164,6 +166,23 @@ static bool bad_spectre_microcode(struct cpuinfo_x86 *c)
+>  	return false;
+>  }
+>  
+> +static void split_lock_update_msr(void *__unused)
+> +{
+> +	if (split_lock_detect_enable) {
+> +		msr_set_bit(MSR_TEST_CTL, TEST_CTL_SPLIT_LOCK_DETECT_SHIFT);
+> +		this_cpu_or(msr_test_ctl_cache, TEST_CTL_SPLIT_LOCK_DETECT);
+> +	} else {
+> +		msr_clear_bit(MSR_TEST_CTL, TEST_CTL_SPLIT_LOCK_DETECT_SHIFT);
+> +		this_cpu_and(msr_test_ctl_cache, ~TEST_CTL_SPLIT_LOCK_DETECT);
+> +	}
 
-    Patch "Synchronize IRQ after masking it in hardware" morphed into
-    "Properly disable interrupts", which disables interrupts more solidly.
+Nothing in this file initializes msr_test_ctl_cache explicitely. Register
+caching always requires to read the register and store it in the cache
+before doing anything with it. Nothing guarantees that all bits in that MSR
+are 0 by default forever.
 
-    Added new minor patch: "Rename tegra-devfreq.c to tegra30-devfreq.c".
+And once you do that _before_ calling split_lock_update_msr() then you can
+spare the RMW in that function.
 
-    Added missed error handlings for dev_pm_opp_add().
+> +static void init_split_lock_detect(struct cpuinfo_x86 *c)
+> +{
+> +	if (cpu_has(c, X86_FEATURE_SPLIT_LOCK_DETECT))
+> +		split_lock_update_msr(NULL);
+> +}
+> +
+>  static void early_init_intel(struct cpuinfo_x86 *c)
+>  {
+>  	u64 misc_enable;
+> @@ -661,6 +680,8 @@ static void init_intel(struct cpuinfo_x86 *c)
+>  {
+>  	early_init_intel(c);
+>  
+> +	init_split_lock_detect(c);
 
-v2: The patchset was quite heavily reworked since v1, few patches we
-    dropped or squashed into the new ones and more patches we added.
-    In a result more bugs and potential problems are fixed now, driver's
-    code got more clean up.
+Sigh. Why needs this to be squeezed in the middle of the whole enumeration
+stuff? Just because....
 
-    The Tegra20 driver-addition patch is now a part of this series, it has
-    no changes since v1.
+init_intel_misc_features() is called at the end and it does also MSR
+caching etc. So down there is the right place.
 
-    https://patchwork.ozlabs.org/project/linux-tegra/list/?series=102823
+> +
+>  	intel_workarounds(c);
+>  
+>  	/*
+> @@ -1032,9 +1053,22 @@ static const struct cpu_dev intel_cpu_dev = {
+>  
+>  cpu_dev_register(intel_cpu_dev);
+>  
+> +#undef pr_fmt
+> +#define pr_fmt(fmt) "x86/split lock detection: " fmt
+> +
+> +static void show_split_lock_detection_info(void)
+> +{
+> +	if (split_lock_detect_enable)
+> +		pr_info("enabled\n");
+> +	else
+> +		pr_info("disabled\n");
 
-Dmitry Osipenko (16):
-  PM / devfreq: tegra: Fix kHz to Hz conversion
-  PM / devfreq: tegra: Replace readl-writel with relaxed versions
-  PM / devfreq: tegra: Replace write memory barrier with the read
-    barrier
-  PM / devfreq: tegra: Don't ignore clk errors
-  PM / devfreq: tegra: Don't set EMC clock rate to maximum on probe
-  PM / devfreq: tegra: Drop primary interrupt handler
-  PM / devfreq: tegra: Properly disable interrupts
-  PM / devfreq: tegra: Clean up driver's probe / remove
-  PM / devfreq: tegra: Avoid inconsistency of current frequency value
-  PM / devfreq: tegra: Mark ACTMON's governor as immutable
-  PM / devfreq: tegra: Move governor registration to driver's probe
-  PM / devfreq: tegra: Reconfigure hardware on governor's restart
-  PM / devfreq: tegra: Support Tegra30
-  PM / devfreq: tegra: Enable COMPILE_TEST for the driver
-  PM / devfreq: tegra: Rename tegra-devfreq.c to tegra30-devfreq.c
-  PM / devfreq: Introduce driver for NVIDIA Tegra20
+This function is truly useful. The else path is never invoked. See the call
+site below.
 
- MAINTAINERS                                   |   8 +
- drivers/devfreq/Kconfig                       |  15 +-
- drivers/devfreq/Makefile                      |   3 +-
- drivers/devfreq/tegra20-devfreq.c             | 202 +++++++++++
- .../{tegra-devfreq.c => tegra30-devfreq.c}    | 315 ++++++++----------
- 5 files changed, 369 insertions(+), 174 deletions(-)
- create mode 100644 drivers/devfreq/tegra20-devfreq.c
- rename drivers/devfreq/{tegra-devfreq.c => tegra30-devfreq.c} (81%)
+> +}
+> +
+>  static void __init set_split_lock_detect(void)
+>  {
+>  	setup_force_cpu_cap(X86_FEATURE_SPLIT_LOCK_DETECT);
+> +	split_lock_detect_enable = true;
+> +	show_split_lock_detection_info();
+>  }
 
--- 
-2.21.0
+Oh well.
 
+Thanks,
+
+	tglx
