@@ -3,133 +3,181 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id ECA69C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:29:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 971B2C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:30:07 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BE9E8206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:29:46 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 685D1206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:30:07 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731742AbfDQU3p (ORCPT
+        id S1732485AbfDQUaG (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 16:29:45 -0400
-Received: from mail.kernel.org ([198.145.29.99]:44702 "EHLO mail.kernel.org"
+        Wed, 17 Apr 2019 16:30:06 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:44012 "EHLO mx1.redhat.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727147AbfDQU3p (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 16:29:45 -0400
-Received: from gandalf.local.home (cpe-66-24-58-225.stny.res.rr.com [66.24.58.225])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        id S1727147AbfDQUaF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 16:30:05 -0400
+Received: from smtp.corp.redhat.com (int-mx03.intmail.prod.int.phx2.redhat.com [10.5.11.13])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id DEA33206BA;
-        Wed, 17 Apr 2019 20:29:43 +0000 (UTC)
-Date:   Wed, 17 Apr 2019 16:29:42 -0400
-From:   Steven Rostedt <rostedt@goodmis.org>
-To:     Masayoshi Mizuma <msys.mizuma@gmail.com>
-Cc:     Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ktest: Add workaround to avoid unexpected power cycle
-Message-ID: <20190417162942.375b3e3f@gandalf.local.home>
-In-Reply-To: <20190417201442.15030-1-msys.mizuma@gmail.com>
-References: <20190417201442.15030-1-msys.mizuma@gmail.com>
-X-Mailer: Claws Mail 3.17.3 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        by mx1.redhat.com (Postfix) with ESMTPS id 8CD4D3078ADD;
+        Wed, 17 Apr 2019 20:30:05 +0000 (UTC)
+Received: from gigantic.usersys.redhat.com (helium.bos.redhat.com [10.18.17.132])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id D5863608C1;
+        Wed, 17 Apr 2019 20:30:04 +0000 (UTC)
+From:   Bandan Das <bsd@redhat.com>
+To:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Arnaldo Carvalho de Melo <acme@kernel.org>,
+        Jiri Olsa <jolsa@redhat.com>
+Cc:     linux-kernel@vger.kernel.org, x86@kernel.org
+Subject: [PATCH v2] perf/x86: descriptive failure messages for PMU init
+Date:   Wed, 17 Apr 2019 16:30:04 -0400
+Message-ID: <jpgwojs5q9f.fsf@linux.bootlegged.copy>
+User-Agent: Gnus/5.13 (Gnus v5.13) Emacs/26.1 (gnu/linux)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.13
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.48]); Wed, 17 Apr 2019 20:30:05 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 17 Apr 2019 16:14:42 -0400
-Masayoshi Mizuma <msys.mizuma@gmail.com> wrote:
 
-> From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
-> 
-> Unexpected power cycle occurs while the installation of the
-> kernel.
-> 
-> That is because the default reboot command, "ssh $SSH_USER@$MACHINE
-> reboot" exits as 255 even if the reboot is successfully done,
-> like as:
-> 
->   ]# ssh root@Test reboot
->   Connection to Test closed by remote host.
->   ]# echo $?
->   255
->   ]#
-> 
-> To avoid the unexpected power cycle, the reboot is considered as
-> successfully done if the reboot is the default command and the
-> return code is 255.
-> 
+There's a default warning message that gets printed, however,
+there are various failure conditions:
+ - a msr read can fail
+ - a msr write can fail
+ - a msr has an unexpected value
+ - all msrs have unexpected values (disable PMU)
 
-Ah that explains why I've been seeing this :-)
+Lastly, use %llx to silence checkpatch
 
-Can we add a config modifying variable called:
+Signed-off-by: Bandan Das <bsd@redhat.com>
+---
+v2:
+ Remove virt specific pr_debugs
+ Change the default warning message
 
-REBOOT_RETURN_CODE
+ arch/x86/events/core.c | 53 +++++++++++++++++++++++++++++++-----------
+ 1 file changed, 40 insertions(+), 13 deletions(-)
 
-that is by default 255 and can be changed by the config file?
-
-You just need to add in %default:
-
-	"REBOOT_RETURN_CODE"	=> 255,
-
-my $reboot_return_code;
-
-
-and in %option_map:
-
-	"REBOOT_RETURN_CODE"	=> \$reboot_return_code,
-
-
-> Signed-off-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
-> ---
->  tools/testing/ktest/ktest.pl | 9 +++++++++
->  1 file changed, 9 insertions(+)
-> 
-> diff --git a/tools/testing/ktest/ktest.pl b/tools/testing/ktest/ktest.pl
-> index ea07d43856b8..765c6bc83ab4 100755
-> --- a/tools/testing/ktest/ktest.pl
-> +++ b/tools/testing/ktest/ktest.pl
-> @@ -1737,6 +1737,11 @@ sub run_command {
->      my $dord = 0;
->      my $dostdout = 0;
->      my $pid;
-> +    my $is_default_reboot = 0;
-> +
-> +    if ($command eq $default{REBOOT}) {
-> +	$is_default_reboot = 1;
-> +    }
-
-Do we really need to add this variable?
-
->  
->      $command =~ s/\$SSH_USER/$ssh_user/g;
->      $command =~ s/\$MACHINE/$machine/g;
-> @@ -1791,6 +1796,10 @@ sub run_command {
->      # shift 8 for real exit status
->      $run_command_status = $? >> 8;
->  
-> +    if ($run_command_status == 255 && $is_default_reboot) {
-
-Instead can we have:
-
-	if ($command eq $default{REBOOT} &&
-	    $run_command_status == $reboot_return_code) {
-
-?
-
-Thanks for these patches!
-
--- Steve
-
-> +	$run_command_status = 0;
-> +    }
-> +
->      close(CMD);
->      close(LOG) if ($dolog);
->      close(RD)  if ($dord);
+diff --git a/arch/x86/events/core.c b/arch/x86/events/core.c
+index 81911e11a15d..52b0893da78b 100644
+--- a/arch/x86/events/core.c
++++ b/arch/x86/events/core.c
+@@ -192,9 +192,16 @@ static void release_pmc_hardware(void) {}
+ 
+ static bool check_hw_exists(void)
+ {
+-	u64 val, val_fail = -1, val_new= ~0;
+-	int i, reg, reg_fail = -1, ret = 0;
+-	int bios_fail = 0;
++	u64 val = -1, val_fail = -1, val_new = ~0;
++	int i, reg = -1, reg_fail = -1, ret = 0;
++
++	enum {
++	      READ_FAIL	   =	1,
++	      WRITE_FAIL   =	2,
++	      PMU_FAIL	   =	3,
++	      BIOS_FAIL	   =	4,
++	};
++	int status = 0;
+ 	int reg_safe = -1;
+ 
+ 	/*
+@@ -204,10 +211,13 @@ static bool check_hw_exists(void)
+ 	for (i = 0; i < x86_pmu.num_counters; i++) {
+ 		reg = x86_pmu_config_addr(i);
+ 		ret = rdmsrl_safe(reg, &val);
+-		if (ret)
++		if (ret) {
++			status = READ_FAIL;
+ 			goto msr_fail;
++		}
++
+ 		if (val & ARCH_PERFMON_EVENTSEL_ENABLE) {
+-			bios_fail = 1;
++			status = BIOS_FAIL;
+ 			val_fail = val;
+ 			reg_fail = reg;
+ 		} else {
+@@ -218,11 +228,13 @@ static bool check_hw_exists(void)
+ 	if (x86_pmu.num_counters_fixed) {
+ 		reg = MSR_ARCH_PERFMON_FIXED_CTR_CTRL;
+ 		ret = rdmsrl_safe(reg, &val);
+-		if (ret)
++		if (ret) {
++			status = READ_FAIL;
+ 			goto msr_fail;
++		}
+ 		for (i = 0; i < x86_pmu.num_counters_fixed; i++) {
+ 			if (val & (0x03 << i*4)) {
+-				bios_fail = 1;
++				status = BIOS_FAIL;
+ 				val_fail = val;
+ 				reg_fail = reg;
+ 			}
+@@ -236,7 +248,7 @@ static bool check_hw_exists(void)
+ 	 */
+ 
+ 	if (reg_safe == -1) {
+-		reg = reg_safe;
++		status = PMU_FAIL;
+ 		goto msr_fail;
+ 	}
+ 
+@@ -246,18 +258,22 @@ static bool check_hw_exists(void)
+ 	 * (qemu/kvm) that don't trap on the MSR access and always return 0s.
+ 	 */
+ 	reg = x86_pmu_event_addr(reg_safe);
+-	if (rdmsrl_safe(reg, &val))
++	if (rdmsrl_safe(reg, &val)) {
++		status = READ_FAIL;
+ 		goto msr_fail;
++	}
+ 	val ^= 0xffffUL;
+ 	ret = wrmsrl_safe(reg, val);
+ 	ret |= rdmsrl_safe(reg, &val_new);
+-	if (ret || val != val_new)
++	if (ret || val != val_new) {
++		status = WRITE_FAIL;
+ 		goto msr_fail;
++	}
+ 
+ 	/*
+ 	 * We still allow the PMU driver to operate:
+ 	 */
+-	if (bios_fail) {
++	if (status == BIOS_FAIL) {
+ 		pr_cont("Broken BIOS detected, complain to your hardware vendor.\n");
+ 		pr_err(FW_BUG "the BIOS has corrupted hw-PMU resources (MSR %x is %Lx)\n",
+ 			      reg_fail, val_fail);
+@@ -270,8 +286,19 @@ static bool check_hw_exists(void)
+ 		pr_cont("PMU not available due to virtualization, using software events only.\n");
+ 	} else {
+ 		pr_cont("Broken PMU hardware detected, using software events only.\n");
+-		pr_err("Failed to access perfctr msr (MSR %x is %Lx)\n",
+-		       reg, val_new);
++	}
++	switch (status) {
++	case READ_FAIL:
++		pr_err("Failed to read perfctr msr (MSR %x)\n", reg);
++		break;
++	case WRITE_FAIL:
++		pr_err("Failed to write perfctr msr (MSR %x, wrote: %llx, read: %llx)\n",
++		       reg, val, val_new);
++		break;
++	case PMU_FAIL:
++		/* fall through for default message */
++	default:
++		pr_err(FW_BUG "the BIOS has corrupted hw-PMU resources.\n");
+ 	}
+ 
+ 	return false;
+-- 
+2.19.2
 
