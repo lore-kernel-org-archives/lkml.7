@@ -2,469 +2,100 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-14.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,USER_IN_DEF_DKIM_WL
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 10B51C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 22:54:41 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 49497C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 23:00:00 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B8E7C20656
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 22:54:40 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0E60F2183F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 23:00:00 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Mn1YtFP6"
+	dkim=pass (2048-bit key) header.d=intel-com.20150623.gappssmtp.com header.i=@intel-com.20150623.gappssmtp.com header.b="ZBLFEadu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387564AbfDQWyj (ORCPT
+        id S2387579AbfDQW77 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 18:54:39 -0400
-Received: from mail-wr1-f67.google.com ([209.85.221.67]:36546 "EHLO
-        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfDQWyi (ORCPT
+        Wed, 17 Apr 2019 18:59:59 -0400
+Received: from mail-ot1-f65.google.com ([209.85.210.65]:34766 "EHLO
+        mail-ot1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730037AbfDQW76 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 18:54:38 -0400
-Received: by mail-wr1-f67.google.com with SMTP id y13so429902wrd.3
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 15:54:36 -0700 (PDT)
+        Wed, 17 Apr 2019 18:59:58 -0400
+Received: by mail-ot1-f65.google.com with SMTP id k21so129807otf.1
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 15:59:58 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=google.com; s=20161025;
+        d=intel-com.20150623.gappssmtp.com; s=20150623;
         h=mime-version:references:in-reply-to:from:date:message-id:subject:to
          :cc;
-        bh=fI+B+7jxWBkf9fiGCTit20nyv5c7lLxLKEtMTOtcPLo=;
-        b=Mn1YtFP6oFnUsXjGXohN6+7UZFeEQD8fGIsrBKTg3l5tvgRCR3uk8n02ExBojsCgrD
-         oC4T7iDWCoi37gcZQ5ocQbMIi/azuMIKjG6wXW5E3AmK8CWmInUvQKoLIplc21GkCcgh
-         bbvihbMAYmhI9wEBOnCbKHua1DedatTq3nJyurtvRwdH95OSnDPlMQ0qkvmF1bbJXZ94
-         X88XtIm+bG4YwNzAGnkhR6nXB/TlI7J5kVX63Z+F5SiZmLx+BE2fVwh5jQHUx5AzmKsD
-         M+OEoGyFrXnKsXMb9xcfK1lK8ak6bn6UsoqQRE2J1nTT/nZMJC4eSQ+BET7aTRirsRvV
-         5pdA==
+        bh=Y5Q86gAOv8MWLH9laJ1IXocaow5yfnrBeR8EoiIfWbU=;
+        b=ZBLFEadujMfdBVNXmJrbI4zR196fsIe5mO0VxN2DENpJoVBadqYu0gk0x8BFoQgGPq
+         OK03oOc+QwJXFHRhGDlI7HCGUn2FEDGxayOCXFrte0xS6Eixyn+gIt/g4OryYh6KKycR
+         AtX1Bh19zGnaHnWO2gBlfJUTikry4l1+4Qk11EAhA94VzavMVUGVX203v5zHLieBR6zh
+         iTobtE2slojYN1Tb2AHac5rvm5VvsUU57qEovxYyIrZFhvH/Prks6Ak+9axoPXJErs1g
+         9Loy/hrOeN5wKsxb70LZ4bKOMK6ISrFa8Gw6DMu0Aw8V6ImUhRDqecnSs5U2wRmEqV76
+         IzUw==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:mime-version:references:in-reply-to:from:date
          :message-id:subject:to:cc;
-        bh=fI+B+7jxWBkf9fiGCTit20nyv5c7lLxLKEtMTOtcPLo=;
-        b=eUvonnzMzYh+k63EBiy8CCKJ9l3MdsHzIz3SypRkVjGSuWcl7Cs97NzAtB0M356snw
-         qDdMH/qBnz1B7iHHhf6NPa0NUNhAdizaCVQDKHtgmMx7t7JEd2/oHUQYU24BU+D/4eis
-         s2AsPLWhLoGmEXTEsbyX7QcBPuy6k2GLmVwNkhpzVDW3RzZPgjqlQD6M7cF0nz+S/J3E
-         SADqmQcozSNUkVIFrU20bGfiyy68Cjd92Pqwav94hiYcjHSI+qw9OreYD14p8aQFQkUz
-         bfKq2qW+Lh9VhBlTyJ+XbQ8x3So9rQgFZfod9CLAxaOwz05SD3qkCw8LY/XI2qHBZm/Z
-         1E7g==
-X-Gm-Message-State: APjAAAW1lEHMxWonad4bnkT8ndOc3AOJBSTI9pq/UyFROHUJPx6OAFDt
-        F5r9ui3zK4j2pD5UCWnyof4Ijn/mleRS7Lh8lFgXBszG+KJAMQ==
-X-Google-Smtp-Source: APXvYqw4zxAQTR5pmCJXvUSDpPlpZu3L0p+qo3YqaJQs4UPJYITTf8AJex9SfvjW0QjMpmVz+0FU2M8SiXZglFoY0ko=
-X-Received: by 2002:a05:6000:14a:: with SMTP id r10mr38300487wrx.107.1555540005137;
- Wed, 17 Apr 2019 15:26:45 -0700 (PDT)
+        bh=Y5Q86gAOv8MWLH9laJ1IXocaow5yfnrBeR8EoiIfWbU=;
+        b=gcgcQOUK1tzMqv1k271asqs78TP1j/TB0h+Ho+nZDoDIgc1O3jWxVCDUzzRV9iEayz
+         mV/96AzZuvWOC9JTsFHaCjBOmSl6iWJf47Edw6SO5vXm8U0m/zVcqrsaOequ0yeFW/bR
+         C233VCMKj47xnm5Gm/CP0sT/eHfVqo6nErOwoSOaeq2/Zls6LlujtNuCkWCaTYSVMEI0
+         qlaAqnr7kKVuLjwZ6uuSEq+MbGKUzEBpUGMNOn5yDDOTS9lnPPJ19K+d/2zHj37saI/X
+         tLHJg7/iqGQM0s+7aGPd9ACbpTaUxlCKe+d/3BWoObwCsv+OF4Y07C7eXONlEdLwN/9s
+         0S8g==
+X-Gm-Message-State: APjAAAUXWcmfkdSKnqielWK4kcK3MsI5LWqllDqWMC0u/0d747T6D63T
+        DUgajcPnxBvJXYn8G5bEB14Qg39BaKkGbZUxFWM2po76
+X-Google-Smtp-Source: APXvYqx0PiTtBkyrLfmk/jOmFbuQMwTA591NJRQvMCXkPXCoY+luPtiOJZPaujG8DsNnN9FucBhbxzpzdgGKAJXtWxA=
+X-Received: by 2002:a9d:27e3:: with SMTP id c90mr57351203otb.214.1555541997937;
+ Wed, 17 Apr 2019 15:59:57 -0700 (PDT)
 MIME-Version: 1.0
-References: <20190402104153.25404-1-patrick.bellasi@arm.com> <20190402104153.25404-7-patrick.bellasi@arm.com>
-In-Reply-To: <20190402104153.25404-7-patrick.bellasi@arm.com>
-From:   Suren Baghdasaryan <surenb@google.com>
-Date:   Wed, 17 Apr 2019 15:26:33 -0700
-Message-ID: <CAJuCfpH3htcr3xB_Y4nr7HXCdQd1hOdOAXbtZJB1SOt7Of_qbw@mail.gmail.com>
-Subject: Re: [PATCH v8 06/16] sched/core: uclamp: Extend sched_setattr() to
- support utilization clamping
-To:     Patrick Bellasi <patrick.bellasi@arm.com>
-Cc:     LKML <linux-kernel@vger.kernel.org>, linux-pm@vger.kernel.org,
-        linux-api@vger.kernel.org, Ingo Molnar <mingo@redhat.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Tejun Heo <tj@kernel.org>,
-        "Rafael J . Wysocki" <rafael.j.wysocki@intel.com>,
-        Vincent Guittot <vincent.guittot@linaro.org>,
-        Viresh Kumar <viresh.kumar@linaro.org>,
-        Paul Turner <pjt@google.com>,
-        Quentin Perret <quentin.perret@arm.com>,
-        Dietmar Eggemann <dietmar.eggemann@arm.com>,
-        Morten Rasmussen <morten.rasmussen@arm.com>,
-        Juri Lelli <juri.lelli@redhat.com>,
-        Todd Kjos <tkjos@google.com>,
-        Joel Fernandes <joelaf@google.com>,
-        Steve Muckle <smuckle@google.com>
+References: <155552633539.2015392.2477781120122237934.stgit@dwillia2-desk3.amr.corp.intel.com>
+ <20190417150331.90219ca42a1c0db8632d0fd5@linux-foundation.org>
+In-Reply-To: <20190417150331.90219ca42a1c0db8632d0fd5@linux-foundation.org>
+From:   Dan Williams <dan.j.williams@intel.com>
+Date:   Wed, 17 Apr 2019 15:59:46 -0700
+Message-ID: <CAPcyv4hB47NJrVi1sm+7msL+6dJNhBD10BJbtLPZRcK2JK6+pg@mail.gmail.com>
+Subject: Re: [PATCH v6 00/12] mm: Sub-section memory hotplug support
+To:     Andrew Morton <akpm@linux-foundation.org>
+Cc:     David Hildenbrand <david@redhat.com>,
+        =?UTF-8?B?SsOpcsO0bWUgR2xpc3Nl?= <jglisse@redhat.com>,
+        Logan Gunthorpe <logang@deltatee.com>,
+        Toshi Kani <toshi.kani@hpe.com>,
+        Jeff Moyer <jmoyer@redhat.com>, Michal Hocko <mhocko@suse.com>,
+        Vlastimil Babka <vbabka@suse.cz>,
+        stable <stable@vger.kernel.org>, Linux MM <linux-mm@kvack.org>,
+        linux-nvdimm <linux-nvdimm@lists.01.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        osalvador@suse.de
 Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Tue, Apr 2, 2019 at 3:42 AM Patrick Bellasi <patrick.bellasi@arm.com> wrote:
+On Wed, Apr 17, 2019 at 3:04 PM Andrew Morton <akpm@linux-foundation.org> wrote:
 >
-> The SCHED_DEADLINE scheduling class provides an advanced and formal
-> model to define tasks requirements that can translate into proper
-> decisions for both task placements and frequencies selections. Other
-> classes have a more simplified model based on the POSIX concept of
-> priorities.
+> On Wed, 17 Apr 2019 11:38:55 -0700 Dan Williams <dan.j.williams@intel.com> wrote:
 >
-> Such a simple priority based model however does not allow to exploit
-> most advanced features of the Linux scheduler like, for example, driving
-> frequencies selection via the schedutil cpufreq governor. However, also
-> for non SCHED_DEADLINE tasks, it's still interesting to define tasks
-> properties to support scheduler decisions.
+> > The memory hotplug section is an arbitrary / convenient unit for memory
+> > hotplug. 'Section-size' units have bled into the user interface
+> > ('memblock' sysfs) and can not be changed without breaking existing
+> > userspace. The section-size constraint, while mostly benign for typical
+> > memory hotplug, has and continues to wreak havoc with 'device-memory'
+> > use cases, persistent memory (pmem) in particular. Recall that pmem uses
+> > devm_memremap_pages(), and subsequently arch_add_memory(), to allocate a
+> > 'struct page' memmap for pmem. However, it does not use the 'bottom
+> > half' of memory hotplug, i.e. never marks pmem pages online and never
+> > exposes the userspace memblock interface for pmem. This leaves an
+> > opening to redress the section-size constraint.
 >
-> Utilization clamping exposes to user-space a new set of per-task
-> attributes the scheduler can use as hints about the expected/required
-> utilization for a task. This allows to implement a "proactive" per-task
-> frequency control policy, a more advanced policy than the current one
-> based just on "passive" measured task utilization. For example, it's
-> possible to boost interactive tasks (e.g. to get better performance) or
-> cap background tasks (e.g. to be more energy/thermal efficient).
->
-> Introduce a new API to set utilization clamping values for a specified
-> task by extending sched_setattr(), a syscall which already allows to
-> define task specific properties for different scheduling classes. A new
-> pair of attributes allows to specify a minimum and maximum utilization
-> the scheduler can consider for a task.
->
-> Do that by validating the required clamp values before and then applying
-> the required changes using _the_ same pattern already in use for
-> __setscheduler(). This ensures that the task is re-enqueued with the new
-> clamp values.
->
-> Do not allow to change sched class specific params and non class
-> specific params (i.e. clamp values) at the same time.  This keeps things
-> simple and still works for the most common cases since we are usually
-> interested in just one of the two actions.
+> v6 and we're not showing any review activity.  Who would be suitable
+> people to help out here?
 
-Sorry, I can't find where you are checking to eliminate the
-possibility of simultaneous changes to both sched class specific
-params and non class specific params... Am I too tired or they are
-indeed missing?
-
->
-> Signed-off-by: Patrick Bellasi <patrick.bellasi@arm.com>
-> Cc: Ingo Molnar <mingo@redhat.com>
-> Cc: Peter Zijlstra <peterz@infradead.org>
->
-> ---
-> Changes in v8:
->  Others:
->  - using p->uclamp_req to track clamp values "requested" from userspace
-> ---
->  include/linux/sched.h            |  9 ++++
->  include/uapi/linux/sched.h       | 12 ++++-
->  include/uapi/linux/sched/types.h | 66 ++++++++++++++++++++----
->  kernel/sched/core.c              | 87 +++++++++++++++++++++++++++++++-
->  4 files changed, 162 insertions(+), 12 deletions(-)
->
-> diff --git a/include/linux/sched.h b/include/linux/sched.h
-> index d8491954e2e1..c2b81a84985b 100644
-> --- a/include/linux/sched.h
-> +++ b/include/linux/sched.h
-> @@ -585,6 +585,7 @@ struct sched_dl_entity {
->   * @value:             clamp value "assigned" to a se
->   * @bucket_id:         bucket index corresponding to the "assigned" value
->   * @active:            the se is currently refcounted in a rq's bucket
-> + * @user_defined:      the requested clamp value comes from user-space
->   *
->   * The bucket_id is the index of the clamp bucket matching the clamp value
->   * which is pre-computed and stored to avoid expensive integer divisions from
-> @@ -594,11 +595,19 @@ struct sched_dl_entity {
->   * which can be different from the clamp value "requested" from user-space.
->   * This allows to know a task is refcounted in the rq's bucket corresponding
->   * to the "effective" bucket_id.
-> + *
-> + * The user_defined bit is set whenever a task has got a task-specific clamp
-> + * value requested from userspace, i.e. the system defaults apply to this task
-> + * just as a restriction. This allows to relax default clamps when a less
-> + * restrictive task-specific value has been requested, thus allowing to
-> + * implement a "nice" semantic. For example, a task running with a 20%
-> + * default boost can still drop its own boosting to 0%.
->   */
->  struct uclamp_se {
->         unsigned int value              : bits_per(SCHED_CAPACITY_SCALE);
->         unsigned int bucket_id          : bits_per(UCLAMP_BUCKETS);
->         unsigned int active             : 1;
-> +       unsigned int user_defined       : 1;
->  };
->  #endif /* CONFIG_UCLAMP_TASK */
->
-> diff --git a/include/uapi/linux/sched.h b/include/uapi/linux/sched.h
-> index 075c610adf45..d2c65617a4a4 100644
-> --- a/include/uapi/linux/sched.h
-> +++ b/include/uapi/linux/sched.h
-> @@ -53,10 +53,20 @@
->  #define SCHED_FLAG_RECLAIM             0x02
->  #define SCHED_FLAG_DL_OVERRUN          0x04
->  #define SCHED_FLAG_KEEP_POLICY         0x08
-> +#define SCHED_FLAG_KEEP_PARAMS         0x10
-> +#define SCHED_FLAG_UTIL_CLAMP_MIN      0x20
-> +#define SCHED_FLAG_UTIL_CLAMP_MAX      0x40
-> +
-> +#define SCHED_FLAG_KEEP_ALL    (SCHED_FLAG_KEEP_POLICY | \
-> +                                SCHED_FLAG_KEEP_PARAMS)
-> +
-> +#define SCHED_FLAG_UTIL_CLAMP  (SCHED_FLAG_UTIL_CLAMP_MIN | \
-> +                                SCHED_FLAG_UTIL_CLAMP_MAX)
->
->  #define SCHED_FLAG_ALL (SCHED_FLAG_RESET_ON_FORK       | \
->                          SCHED_FLAG_RECLAIM             | \
->                          SCHED_FLAG_DL_OVERRUN          | \
-> -                        SCHED_FLAG_KEEP_POLICY)
-> +                        SCHED_FLAG_KEEP_ALL            | \
-> +                        SCHED_FLAG_UTIL_CLAMP)
->
->  #endif /* _UAPI_LINUX_SCHED_H */
-> diff --git a/include/uapi/linux/sched/types.h b/include/uapi/linux/sched/types.h
-> index 10fbb8031930..c852153ddb0d 100644
-> --- a/include/uapi/linux/sched/types.h
-> +++ b/include/uapi/linux/sched/types.h
-> @@ -9,6 +9,7 @@ struct sched_param {
->  };
->
->  #define SCHED_ATTR_SIZE_VER0   48      /* sizeof first published struct */
-> +#define SCHED_ATTR_SIZE_VER1   56      /* add: util_{min,max} */
->
->  /*
->   * Extended scheduling parameters data structure.
-> @@ -21,8 +22,33 @@ struct sched_param {
->   * the tasks may be useful for a wide variety of application fields, e.g.,
->   * multimedia, streaming, automation and control, and many others.
->   *
-> - * This variant (sched_attr) is meant at describing a so-called
-> - * sporadic time-constrained task. In such model a task is specified by:
-> + * This variant (sched_attr) allows to define additional attributes to
-> + * improve the scheduler knowledge about task requirements.
-> + *
-> + * Scheduling Class Attributes
-> + * ===========================
-> + *
-> + * A subset of sched_attr attributes specifies the
-> + * scheduling policy and relative POSIX attributes:
-> + *
-> + *  @size              size of the structure, for fwd/bwd compat.
-> + *
-> + *  @sched_policy      task's scheduling policy
-> + *  @sched_nice                task's nice value      (SCHED_NORMAL/BATCH)
-> + *  @sched_priority    task's static priority (SCHED_FIFO/RR)
-> + *
-> + * Certain more advanced scheduling features can be controlled by a
-> + * predefined set of flags via the attribute:
-> + *
-> + *  @sched_flags       for customizing the scheduler behaviour
-> + *
-> + * Sporadic Time-Constrained Task Attributes
-> + * =========================================
-> + *
-> + * A subset of sched_attr attributes allows to describe a so-called
-> + * sporadic time-constrained task.
-> + *
-> + * In such a model a task is specified by:
->   *  - the activation period or minimum instance inter-arrival time;
->   *  - the maximum (or average, depending on the actual scheduling
->   *    discipline) computation time of all instances, a.k.a. runtime;
-> @@ -34,14 +60,8 @@ struct sched_param {
->   * than the runtime and must be completed by time instant t equal to
->   * the instance activation time + the deadline.
->   *
-> - * This is reflected by the actual fields of the sched_attr structure:
-> + * This is reflected by the following fields of the sched_attr structure:
->   *
-> - *  @size              size of the structure, for fwd/bwd compat.
-> - *
-> - *  @sched_policy      task's scheduling policy
-> - *  @sched_flags       for customizing the scheduler behaviour
-> - *  @sched_nice                task's nice value      (SCHED_NORMAL/BATCH)
-> - *  @sched_priority    task's static priority (SCHED_FIFO/RR)
->   *  @sched_deadline    representative of the task's deadline
->   *  @sched_runtime     representative of the task's runtime
->   *  @sched_period      representative of the task's period
-> @@ -53,6 +73,29 @@ struct sched_param {
->   * As of now, the SCHED_DEADLINE policy (sched_dl scheduling class) is the
->   * only user of this new interface. More information about the algorithm
->   * available in the scheduling class file or in Documentation/.
-> + *
-> + * Task Utilization Attributes
-> + * ===========================
-> + *
-> + * A subset of sched_attr attributes allows to specify the utilization
-> + * expected for a task. These attributes allow to inform the scheduler about
-> + * the utilization boundaries within which it should schedule the task. These
-> + * boundaries are valuable hints to support scheduler decisions on both task
-> + * placement and frequency selection.
-> + *
-> + *  @sched_util_min    represents the minimum utilization
-> + *  @sched_util_max    represents the maximum utilization
-> + *
-> + * Utilization is a value in the range [0..SCHED_CAPACITY_SCALE]. It
-> + * represents the percentage of CPU time used by a task when running at the
-> + * maximum frequency on the highest capacity CPU of the system. For example, a
-> + * 20% utilization task is a task running for 2ms every 10ms at maximum
-> + * frequency.
-> + *
-> + * A task with a min utilization value bigger than 0 is more likely scheduled
-> + * on a CPU with a capacity big enough to fit the specified value.
-> + * A task with a max utilization value smaller than 1024 is more likely
-> + * scheduled on a CPU with no more capacity than the specified value.
->   */
->  struct sched_attr {
->         __u32 size;
-> @@ -70,6 +113,11 @@ struct sched_attr {
->         __u64 sched_runtime;
->         __u64 sched_deadline;
->         __u64 sched_period;
-> +
-> +       /* Utilization hints */
-> +       __u32 sched_util_min;
-> +       __u32 sched_util_max;
-> +
->  };
->
->  #endif /* _UAPI_LINUX_SCHED_TYPES_H */
-> diff --git a/kernel/sched/core.c b/kernel/sched/core.c
-> index 20efb32e1a7e..68aed32e8ec7 100644
-> --- a/kernel/sched/core.c
-> +++ b/kernel/sched/core.c
-> @@ -1020,6 +1020,50 @@ int sysctl_sched_uclamp_handler(struct ctl_table *table, int write,
->         return result;
->  }
->
-> +static int uclamp_validate(struct task_struct *p,
-> +                          const struct sched_attr *attr)
-> +{
-> +       unsigned int lower_bound = p->uclamp_req[UCLAMP_MIN].value;
-> +       unsigned int upper_bound = p->uclamp_req[UCLAMP_MAX].value;
-> +
-> +       if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MIN)
-> +               lower_bound = attr->sched_util_min;
-> +       if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MAX)
-> +               upper_bound = attr->sched_util_max;
-> +
-> +       if (lower_bound > upper_bound)
-> +               return -EINVAL;
-> +       if (upper_bound > SCHED_CAPACITY_SCALE)
-> +               return -EINVAL;
-> +
-> +       return 0;
-> +}
-> +
-> +static void __setscheduler_uclamp(struct task_struct *p,
-> +                                 const struct sched_attr *attr)
-> +{
-> +       if (likely(!(attr->sched_flags & SCHED_FLAG_UTIL_CLAMP)))
-> +               return;
-> +
-> +       if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MIN) {
-> +               unsigned int lower_bound = attr->sched_util_min;
-> +
-> +               p->uclamp_req[UCLAMP_MIN].user_defined = true;
-> +               p->uclamp_req[UCLAMP_MIN].value = lower_bound;
-> +               p->uclamp_req[UCLAMP_MIN].bucket_id =
-> +                       uclamp_bucket_id(lower_bound);
-> +       }
-> +
-> +       if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP_MAX) {
-> +               unsigned int upper_bound =  attr->sched_util_max;
-> +
-> +               p->uclamp_req[UCLAMP_MAX].user_defined = true;
-> +               p->uclamp_req[UCLAMP_MAX].value = upper_bound;
-> +               p->uclamp_req[UCLAMP_MAX].bucket_id =
-> +                       uclamp_bucket_id(upper_bound);
-> +       }
-> +}
-> +
->  static void uclamp_fork(struct task_struct *p)
->  {
->         unsigned int clamp_id;
-> @@ -1056,6 +1100,13 @@ static void __init init_uclamp(void)
->  #else /* CONFIG_UCLAMP_TASK */
->  static inline void uclamp_rq_inc(struct rq *rq, struct task_struct *p) { }
->  static inline void uclamp_rq_dec(struct rq *rq, struct task_struct *p) { }
-> +static inline int uclamp_validate(struct task_struct *p,
-> +                                 const struct sched_attr *attr)
-> +{
-> +       return -ENODEV;
-
-ENOSYS might be more appropriate?
-
-> +}
-> +static void __setscheduler_uclamp(struct task_struct *p,
-> +                                 const struct sched_attr *attr) { }
->  static inline void uclamp_fork(struct task_struct *p) { }
->  static inline void init_uclamp(void) { }
->  #endif /* CONFIG_UCLAMP_TASK */
-> @@ -4424,6 +4475,13 @@ static void __setscheduler_params(struct task_struct *p,
->  static void __setscheduler(struct rq *rq, struct task_struct *p,
->                            const struct sched_attr *attr, bool keep_boost)
->  {
-> +       /*
-> +        * If params can't change scheduling class changes aren't allowed
-> +        * either.
-> +        */
-> +       if (attr->sched_flags & SCHED_FLAG_KEEP_PARAMS)
-> +               return;
-> +
->         __setscheduler_params(p, attr);
->
->         /*
-> @@ -4561,6 +4619,13 @@ static int __sched_setscheduler(struct task_struct *p,
->                         return retval;
->         }
->
-> +       /* Update task specific "requested" clamps */
-> +       if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP) {
-> +               retval = uclamp_validate(p, attr);
-> +               if (retval)
-> +                       return retval;
-> +       }
-> +
->         /*
->          * Make sure no PI-waiters arrive (or leave) while we are
->          * changing the priority of the task:
-> @@ -4590,6 +4655,8 @@ static int __sched_setscheduler(struct task_struct *p,
->                         goto change;
->                 if (dl_policy(policy) && dl_param_changed(p, attr))
->                         goto change;
-> +               if (attr->sched_flags & SCHED_FLAG_UTIL_CLAMP)
-> +                       goto change;
->
->                 p->sched_reset_on_fork = reset_on_fork;
->                 task_rq_unlock(rq, p, &rf);
-> @@ -4670,7 +4737,9 @@ static int __sched_setscheduler(struct task_struct *p,
->                 put_prev_task(rq, p);
->
->         prev_class = p->sched_class;
-> +
->         __setscheduler(rq, p, attr, pi);
-> +       __setscheduler_uclamp(p, attr);
->
->         if (queued) {
->                 /*
-> @@ -4846,6 +4915,10 @@ static int sched_copy_attr(struct sched_attr __user *uattr, struct sched_attr *a
->         if (ret)
->                 return -EFAULT;
->
-> +       if ((attr->sched_flags & SCHED_FLAG_UTIL_CLAMP) &&
-> +           size < SCHED_ATTR_SIZE_VER1)
-> +               return -EINVAL;
-> +
->         /*
->          * XXX: Do we want to be lenient like existing syscalls; or do we want
->          * to be strict and return an error on out-of-bounds values?
-> @@ -4922,10 +4995,15 @@ SYSCALL_DEFINE3(sched_setattr, pid_t, pid, struct sched_attr __user *, uattr,
->         rcu_read_lock();
->         retval = -ESRCH;
->         p = find_process_by_pid(pid);
-> -       if (p != NULL)
-> -               retval = sched_setattr(p, &attr);
-> +       if (likely(p))
-> +               get_task_struct(p);
->         rcu_read_unlock();
->
-> +       if (likely(p)) {
-> +               retval = sched_setattr(p, &attr);
-> +               put_task_struct(p);
-> +       }
-> +
->         return retval;
->  }
->
-> @@ -5076,6 +5154,11 @@ SYSCALL_DEFINE4(sched_getattr, pid_t, pid, struct sched_attr __user *, uattr,
->         else
->                 attr.sched_nice = task_nice(p);
->
-> +#ifdef CONFIG_UCLAMP_TASK
-> +       attr.sched_util_min = p->uclamp_req[UCLAMP_MIN].value;
-> +       attr.sched_util_max = p->uclamp_req[UCLAMP_MAX].value;
-> +#endif
-> +
->         rcu_read_unlock();
->
->         retval = sched_read_attr(uattr, &attr, size);
-> --
-> 2.20.1
->
+There was quite a bit of review of the cover letter from Michal and
+David, but you're right the details not so much as of yet. I'd like to
+call out other people where I can reciprocate with some review of my
+own. Oscar's altmap work looks like a good candidate for that.
