@@ -2,145 +2,120 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.0 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0D1B7C10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 06:00:55 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CD99C10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 06:06:33 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id D763620674
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 06:00:54 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D6A0A20674
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 06:06:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555481192;
+	bh=KqlpvqnBPd8CgD3q46qsV4B0VXY/h9f+Q+xIqkzUsIk=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=y5Mm4EIF4b3bNE6qZgp+VD+FdznlTz/78mYJ13BD3GE/lH6jALVszbztSTVdpmFDD
+	 yIX7IkGLVhyJgaWg4dhySF8jUwYJbMzxOR76MRZFKYWDEtJpPTBcNIU84CldaW82nq
+	 AOkuyRjPY4F6wecX2YdoWTH/rYdsbsLd6Yun8m2o=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730174AbfDQGAx (ORCPT
+        id S1729951AbfDQGGb (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 02:00:53 -0400
-Received: from mail-io1-f68.google.com ([209.85.166.68]:34590 "EHLO
-        mail-io1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1726395AbfDQGAx (ORCPT
+        Wed, 17 Apr 2019 02:06:31 -0400
+Received: from mail-wm1-f66.google.com ([209.85.128.66]:51763 "EHLO
+        mail-wm1-f66.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726273AbfDQGGa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 02:00:53 -0400
-Received: by mail-io1-f68.google.com with SMTP id n11so19645566ioh.1
-        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 23:00:52 -0700 (PDT)
+        Wed, 17 Apr 2019 02:06:30 -0400
+Received: by mail-wm1-f66.google.com with SMTP id 4so1851476wmf.1;
+        Tue, 16 Apr 2019 23:06:29 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=HX+VtUy9P30sN7q160zYq52Zi1gDPIOMUQgqPZMKC5s=;
+        b=HqbUIduM5D/Lo8pgvOYmQK3jWbjch9AcoFiLVb+0W9Z113NEq9Z3wNYTGgbS6+Rdwb
+         gsOLVu4JSnS5YK8h6+2MTaePJj91LfC1NyvaHK7Jnw1mflb5KUuBKDBmBOsz9vI7Pird
+         3/F9TA3jFKNaLRLOiV0NIbYiVPCCYrp+L+yRm56WStRbOtLstfAeSIJ35xvP2J3r8XEi
+         cINvfaWK8wqzh6fmPhL+M6GJaEcutuaTMjCcNysHs6EVnVgluOm/ZfdbLceMQCnpmTfb
+         trLOnt9p2/S6N89CofB1eYEm196zh8cQ1vpl2e73oeCAUDf8m9SGx7uYYScgiIFv2Jy8
+         VhvA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
-         :message-id:subject:to:cc;
-        bh=L7/SDybR+mTe0fM+YdP8FNuPT9/z0sB/mdxWUehWMf4=;
-        b=Xk28J1Dxb7FvRuY9ilX+KytBsYCLo0bGQFeZI9+NIEFRZixvy7m8XOi7wiLKWao5V3
-         i2iSTQnr72PlT/WhrSxHbzjvv+eoCvD8ubG6KbkFmWleuBjrJmsQPNdJtGycMptCqUOk
-         hKHl8UidE6rY5asjJxsq0IMbY+WNUDget6xoMSw/tGb9fHe+811ElgqkPVhy54y7BwWf
-         VKwYGFrH+skNZPBeZQb9s/x8X0uPqGgjQ8BqC+yC6ClIEIKhOuWkMJ0o5kRq3ClgeoiW
-         tmeLG24zkZBjkd7CYA3m5MvtHi9VXThw8LDKcNX8ZcaB0uE9IQn2aJdIS7HX1Q/q7eo4
-         +5MQ==
-X-Gm-Message-State: APjAAAX+RvRM42+8dbtnUkMa91FSuLGGzhNHfijYk2/aB7ceFwceYalX
-        evwenJRBVk/Y+c01P3Wn5ZEs8B/qKsIu+EB94fYvWg==
-X-Google-Smtp-Source: APXvYqz6/vrHm3lkailSAuT0n4NUSXe82n8QiLFNkQE50e54UVh8sQMUApt+L1LduRRXAyb8WOTgvfKlzIsx5Trjs7g=
-X-Received: by 2002:a6b:d119:: with SMTP id l25mr27778777iob.278.1555480852510;
- Tue, 16 Apr 2019 23:00:52 -0700 (PDT)
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=HX+VtUy9P30sN7q160zYq52Zi1gDPIOMUQgqPZMKC5s=;
+        b=saRObPq5CEtWlxTc7oD3Hu/lF30k4LrxxhR+7fITIy9neTf2fegldV2xiNmLmE4tzr
+         GskAKx6AvZTe3jIP/6TDaTP8ScbiY+HDr8uOpXGcqGPnj1e0ZvL/QoYAdT8pqQhLWr1e
+         908YJOGAfbgst3L08tF58ulvgsIFjflmJNtx/pmPtOZugmuSlgVp7hgyYpjR0hSUIogu
+         egMsY2ty80ii41EiaSWyBueLgJBElzX9+A2N7ttqI3dGHPq7Xa9KeEND0WgvT7bLfBOZ
+         J+fw4jD7WxAkNOGt3/wcVBcD/eWrgDp3/uFBL0gdBWWNwc4hPaS3pvttwrx4aNmtQYYY
+         SM7g==
+X-Gm-Message-State: APjAAAVHDbKNVjjvTBdRIceF9EriNmHIrqu0hkybTdM5P5HfrkTxya65
+        PL0X5CIMCX9X57+wypjD2oE=
+X-Google-Smtp-Source: APXvYqxntyCG73xR36JTJKs3tC6SelcDx7WNzZEqn7Fjyx+L88l4pyEuZzbK+nNg8/6RLUXtWgS7Vw==
+X-Received: by 2002:a1c:bd8b:: with SMTP id n133mr30053673wmf.73.1555481188858;
+        Tue, 16 Apr 2019 23:06:28 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id z14sm77427980wrv.78.2019.04.16.23.06.27
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 16 Apr 2019 23:06:27 -0700 (PDT)
+Date:   Wed, 17 Apr 2019 08:06:25 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Vince Weaver <vincent.weaver@maine.edu>
+Cc:     eranian@google.com, peterz@infradead.org,
+        alexander.shishkin@linux.intel.com, acme@redhat.com, hpa@zytor.com,
+        torvalds@linux-foundation.org, tglx@linutronix.de,
+        linux-kernel@vger.kernel.org, jolsa@redhat.com,
+        linux-tip-commits@vger.kernel.org
+Subject: Re: [tip:perf/core] perf/x86/intel: Force resched when TFA sysctl is
+ modified
+Message-ID: <20190417060625.GB97541@gmail.com>
+References: <20190408173252.37932-3-eranian@google.com>
+ <tip-f447e4eb3ad1e60d173ca997fcb2ef2a66f12574@git.kernel.org>
+ <alpine.DEB.2.21.1904161227001.20764@macbook-air>
 MIME-Version: 1.0
-References: <20190412133528.GD19808@zn.tnic> <cc2c1dbe-4fb3-fb7d-0540-c04734fc15cb@ce.jp.nec.com>
- <20190415090717.GA29317@zn.tnic> <20190415102525.GB29317@zn.tnic>
- <23309b73-d135-a207-564b-6003cee39184@ce.jp.nec.com> <20190416094024.GE27892@zn.tnic>
- <20190416095209.GG27892@zn.tnic> <20190416114133.GA7541@dhcp-128-65.nay.redhat.com>
- <20190416132253.GE31772@zn.tnic> <20190417013838.GA8411@dhcp-128-65.nay.redhat.com>
- <20190417045447.GB8411@dhcp-128-65.nay.redhat.com>
-In-Reply-To: <20190417045447.GB8411@dhcp-128-65.nay.redhat.com>
-From:   Kairui Song <kasong@redhat.com>
-Date:   Wed, 17 Apr 2019 14:00:41 +0800
-Message-ID: <CACPcB9cf0dtXFF+kpzBYXm3nvvG3uPDf81P1fa19+D37H9BaEg@mail.gmail.com>
-Subject: Re: [PATCH] x86/boot: Use efi_setup_data for searching RSDP on
- kexec-ed kernels
-To:     Dave Young <dyoung@redhat.com>
-Cc:     Borislav Petkov <bp@alien8.de>,
-        Junichi Nomura <j-nomura@ce.jp.nec.com>,
-        Chao Fan <fanc.fnst@cn.fujitsu.com>,
-        Baoquan He <bhe@redhat.com>, "x86@kernel.org" <x86@kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Content-Type: text/plain; charset="UTF-8"
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <alpine.DEB.2.21.1904161227001.20764@macbook-air>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 12:57 PM Dave Young <dyoung@redhat.com> wrote:
->
-> On 04/17/19 at 09:38am, Dave Young wrote:
-> > On 04/16/19 at 03:22pm, Borislav Petkov wrote:
-> > > On Tue, Apr 16, 2019 at 07:41:33PM +0800, Dave Young wrote:
-> > > > On 04/16/19 at 11:52am, Borislav Petkov wrote:
-> > > > > I'll queue the below in the next days if there are no more complaints:
-> > > >
-> > > > As for the kexec breakage, even with the V3 patch, kexec still hangs on
-> > > > a Lenovo T420 laptop.  Kairui also reproduced the problem. So can we
-> > > > wait a few days see if we can make some progress to find the cause?
-> > >
-> > > How is applying this patch going to change anything?
-> > >
-> > > I was told that the breakage is there even without it...
-> >
-> > Without this patch, the bug happens in the efi_get_rsdp.. function, this
-> > patch tries to fix that by adding kexec_get.. but the new introduced
-> > kexec_* function does not work on some laptops, so it is not a 100% good
-> > fix, I hoped we can get it working for all known issues.  But if we can
-> > not do it eg. within one week we can go with this version and leave the
-> > laptop issue as a known issue.
-> >
->
-> Latest debugging status:
->
-> Kexec boot works with commenting out some code like below, so the guid
-> cmp (memcmp) caused a system reset), still need to find out why:
->
-> diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
-> index d9f9abd63c68..13e7a23ae94c 100644
-> --- a/arch/x86/boot/compressed/acpi.c
-> +++ b/arch/x86/boot/compressed/acpi.c
-> @@ -95,10 +95,12 @@ __efi_get_rsdp_addr(unsigned long config_tables, unsigned int nr_tables,
->                         table = tbl->table;
->                 }
->
-> +/*
->                 if (!(efi_guidcmp(guid, ACPI_TABLE_GUID)))
->                         rsdp_addr = table;
->                 else if (!(efi_guidcmp(guid, ACPI_20_TABLE_GUID)))
->                         return table;
-> +*/
->         }
->
->         return rsdp_addr;
-> @@ -291,9 +293,10 @@ acpi_physical_address get_rsdp_addr(void)
->         if (!pa)
->                 pa = kexec_get_rsdp_addr();
->
-> +/*
->         if (!pa)
->                 pa = efi_get_rsdp_addr();
-> -
-> +*/
->         if (!pa)
->                 pa = bios_get_rsdp_addr();
->
->
 
-Hi Dave, for this case I think it's just because GCC will found the
-loop does nothing, and optimize out the whole loop in
-__efi_get_rsdp_addr and will no longer read the actual nr_table value.
+* Vince Weaver <vincent.weaver@maine.edu> wrote:
 
-I can fix the boot error on T420 with your patch, but if I add
-anything, like a hardcode value assignment with the right value for
-acpi_rsdp in the loop, it will reset the machine. But set acpi_rsdp
-with a right initial value out side the loop works fine.
-If the loop condition is false, then there should be no difference
-between just comment out the line you mentioned and add an assignment.
-Else it just assign the value multiple times, not very reasonable but
-shouldn't fail.
+> On Tue, 16 Apr 2019, tip-bot for Stephane Eranian wrote:
+> 
+> > Commit-ID:  f447e4eb3ad1e60d173ca997fcb2ef2a66f12574
+> > Gitweb:     https://git.kernel.org/tip/f447e4eb3ad1e60d173ca997fcb2ef2a66f12574
+> > Author:     Stephane Eranian <eranian@google.com>
+> > AuthorDate: Mon, 8 Apr 2019 10:32:52 -0700
+> > Committer:  Ingo Molnar <mingo@kernel.org>
+> > CommitDate: Tue, 16 Apr 2019 12:19:35 +0200
+> > 
+> > perf/x86/intel: Force resched when TFA sysctl is modified
+> 
+> What's TFA?  Tuna-fish-alarm?
 
-And, I inspected the generated ASM code also suggest the same thing.
-So still, access the systab memory is the cause of the system reset on
-certain machines.
+Heh, I wish! :-)
 
--- 
-Best Regards,
-Kairui Song
+> [...] Nowhere in the commit or in the code does it ever say what a TFA 
+> is or why we'd want to resched when it is modified.
+
+Yeah, it's the TSX-Force-Abort acronym - Intel has numbed our general 
+dislike to random acrynyms ...
+
+Peter and me usually fix such changelog context omissions, but this one 
+slipped through. :-/
+
+The commit is too deep down perf/core already to rebase it just for the 
+changelog, but if we are going to rebase it for some functional reason 
+I'll take care of it next time around.
+
+TFA. (Thanks For your Assistance. :-)
+
+	Ingo
