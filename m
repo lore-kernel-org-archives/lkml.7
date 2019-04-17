@@ -2,156 +2,141 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 74657C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:20:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 67AA9C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:20:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 357D721850
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:20:02 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="lz4JnTW0"
+	by mail.kernel.org (Postfix) with ESMTP id 42C3020821
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:20:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732988AbfDQRUA (ORCPT
+        id S1733036AbfDQRUQ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 13:20:00 -0400
-Received: from mail-pf1-f193.google.com ([209.85.210.193]:37488 "EHLO
-        mail-pf1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732905AbfDQRT7 (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 13:19:59 -0400
-Received: by mail-pf1-f193.google.com with SMTP id 8so12411409pfr.4;
-        Wed, 17 Apr 2019 10:19:59 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=V1yIYIvLzz+BOCdxdX2gjSKybWz8E9N/6tRrpN2enDY=;
-        b=lz4JnTW0SxRkuzYb5nVwScOlj31C+NR7Pbf9V6itmwyvo+tcPA9xux9vHCBHlmzlf8
-         l+V8GGCFjPLmvBpRzgeACiPtj6mSkfCDd56w0bYBQkYTi/I/GVwyrRB3giEJR/zpWrC4
-         Ly8vw18KA3Ytm2WNNnQcY8KjOlhY9n59X1m03ngRjQ/6YOOtXsB0oAtRdnVrdBL5lghC
-         QBkS95ipjK32Jj5COWARIon/mFRjh9umt56N+abO+6I5bCPJQveIPH6XghPnvqF21iIb
-         6KuFUeO5O8Syhf418LaQuuqrU8N7SpRNvehZAKN9N0qsgeiSnMw38h0ltYF4duUQ5Hob
-         SBzw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
-         :content-transfer-encoding:message-id:references:to;
-        bh=V1yIYIvLzz+BOCdxdX2gjSKybWz8E9N/6tRrpN2enDY=;
-        b=AB+/5bNqzE8pPKMWg9FiN//MJYp3G1BhgJSc/dK3fyktQOWyPLdJyLHxV9tntozdnb
-         cf0TBXLrcllVT12pP2ij/P3plJTU362VNXTcaFgrE3z6smBoYcF6Lv07DaewFtujuKfi
-         NP6rq7N5tJ26iGeQTj2VWruA8HBQKmXLw35XXy4uNP9RE8D5FJmbaFywgdAN1nTC0kKv
-         zmgM6m3ZVGsFeua8grL5fCrQqvlyZ/lK7qzYMhTWd+X7M1zBk3j14PWDeYfUWMEd02Ma
-         gWWq7eQRuBhglXizoJOsZB7UHsEfOWAzHZR0NKUaL6GlWws7DNW98aeaZAbGAU+XNgSH
-         z/gw==
-X-Gm-Message-State: APjAAAVZar6fhiCvhSUN1mDOVEOSESRq+jGCoH0PjzVR8CtIg2UsJn0P
-        mGI4pMZrX9G5sUA3obemFGk=
-X-Google-Smtp-Source: APXvYqw8tbbQTyJUpI8x5or/uOxF5UZyuqm6K8VfzwsOuau8hPR4i1Hby9IWvX82aT/ndMHLmdxiHA==
-X-Received: by 2002:aa7:814e:: with SMTP id d14mr90827247pfn.101.1555521598738;
-        Wed, 17 Apr 2019 10:19:58 -0700 (PDT)
-Received: from [10.33.115.113] ([66.170.99.2])
-        by smtp.gmail.com with ESMTPSA id b7sm149466641pfj.67.2019.04.17.10.19.56
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Apr 2019 10:19:57 -0700 (PDT)
-Content-Type: text/plain;
-        charset=utf-8
-Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
-Subject: Re: [RFC PATCH v9 03/13] mm: Add support for eXclusive Page Frame
- Ownership (XPFO)
-From:   Nadav Amit <nadav.amit@gmail.com>
-In-Reply-To: <20190417170918.GA68678@gmail.com>
-Date:   Wed, 17 Apr 2019 10:19:54 -0700
-Cc:     Khalid Aziz <khalid.aziz@oracle.com>, juergh@gmail.com,
-        Tycho Andersen <tycho@tycho.ws>, jsteckli@amazon.de,
-        keescook@google.com,
-        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
-        Juerg Haefliger <juerg.haefliger@canonical.com>,
-        deepa.srinivasan@oracle.com, chris.hyser@oracle.com,
-        tyhicks@canonical.com, David Woodhouse <dwmw@amazon.co.uk>,
-        Andrew Cooper <andrew.cooper3@citrix.com>, jcm@redhat.com,
-        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
-        iommu <iommu@lists.linux-foundation.org>,
-        X86 ML <x86@kernel.org>, linux-arm-kernel@lists.infradead.org,
-        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Linux-MM <linux-mm@kvack.org>,
-        LSM List <linux-security-module@vger.kernel.org>,
-        Khalid Aziz <khalid@gonehiking.org>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Thomas Gleixner <tglx@linutronix.de>,
-        Andy Lutomirski <luto@kernel.org>,
-        Peter Zijlstra <a.p.zijlstra@chello.nl>,
-        Dave Hansen <dave@sr71.net>, Borislav Petkov <bp@alien8.de>,
-        "H. Peter Anvin" <hpa@zytor.com>,
-        Arjan van de Ven <arjan@infradead.org>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-Content-Transfer-Encoding: quoted-printable
-Message-Id: <56A175F6-E5DA-4BBD-B244-53B786F27B7F@gmail.com>
-References: <cover.1554248001.git.khalid.aziz@oracle.com>
- <f1ac3700970365fb979533294774af0b0dd84b3b.1554248002.git.khalid.aziz@oracle.com>
- <20190417161042.GA43453@gmail.com>
- <e16c1d73-d361-d9c7-5b8e-c495318c2509@oracle.com>
- <20190417170918.GA68678@gmail.com>
-To:     Ingo Molnar <mingo@kernel.org>
-X-Mailer: Apple Mail (2.3445.102.3)
+        Wed, 17 Apr 2019 13:20:16 -0400
+Received: from foss.arm.com ([217.140.101.70]:48468 "EHLO foss.arm.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729395AbfDQRUP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 13:20:15 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4D6D715AB;
+        Wed, 17 Apr 2019 10:20:15 -0700 (PDT)
+Received: from e103592.cambridge.arm.com (usa-sjc-imap-foss1.foss.arm.com [10.72.51.249])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A21743F59C;
+        Wed, 17 Apr 2019 10:20:13 -0700 (PDT)
+Date:   Wed, 17 Apr 2019 18:20:11 +0100
+From:   Dave Martin <Dave.Martin@arm.com>
+To:     Marc Zyngier <marc.zyngier@arm.com>
+Cc:     Catalin Marinas <catalin.marinas@arm.com>,
+        Will Deacon <will.deacon@arm.com>,
+        linux-kernel@vger.kernel.org,
+        Kristina Martsenko <kristina.martsenko@arm.com>,
+        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
+        Amit Daniel Kachhap <amit.kachhap@arm.com>,
+        kvmarm@lists.cs.columbia.edu, linux-arm-kernel@lists.infradead.org
+Subject: Re: [PATCH v9 1/5] KVM: arm64: Add a vcpu flag to control ptrauth
+ for guest
+Message-ID: <20190417172010.GE3567@e103592.cambridge.arm.com>
+References: <1555039236-10608-1-git-send-email-amit.kachhap@arm.com>
+ <1555039236-10608-2-git-send-email-amit.kachhap@arm.com>
+ <eeeebc4d-f061-42a5-954d-40161bbed23a@arm.com>
+ <ef1eb326-cd3a-4033-813d-ceae262b4e23@arm.com>
+ <239c5d74-221e-cf8c-2c41-80db016bdc2b@arm.com>
+ <20190417145255.GB3567@e103592.cambridge.arm.com>
+ <a04c6bfd-fd6a-8ff9-a66a-3391af53afb5@arm.com>
+MIME-Version: 1.0
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <a04c6bfd-fd6a-8ff9-a66a-3391af53afb5@arm.com>
+User-Agent: Mutt/1.5.23 (2014-03-12)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-> On Apr 17, 2019, at 10:09 AM, Ingo Molnar <mingo@kernel.org> wrote:
->=20
->=20
-> * Khalid Aziz <khalid.aziz@oracle.com> wrote:
->=20
->>> I.e. the original motivation of the XPFO patches was to prevent =
-execution=20
->>> of direct kernel mappings. Is this motivation still present if those=20=
+On Wed, Apr 17, 2019 at 04:54:32PM +0100, Marc Zyngier wrote:
+> On 17/04/2019 15:52, Dave Martin wrote:
+> > On Wed, Apr 17, 2019 at 03:19:11PM +0100, Marc Zyngier wrote:
+> >> On 17/04/2019 14:08, Amit Daniel Kachhap wrote:
+> >>> Hi,
+> >>>
+> >>> On 4/17/19 2:05 PM, Marc Zyngier wrote:
+> >>>> On 12/04/2019 04:20, Amit Daniel Kachhap wrote:
+> >>>>> A per vcpu flag is added to check if pointer authentication is
+> >>>>> enabled for the vcpu or not. This flag may be enabled according to
+> >>>>> the necessary user policies and host capabilities.
+> >>>>>
+> >>>>> This patch also adds a helper to check the flag.
+> >>>>>
+> >>>>> Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
+> >>>>> Cc: Mark Rutland <mark.rutland@arm.com>
+> >>>>> Cc: Marc Zyngier <marc.zyngier@arm.com>
+> >>>>> Cc: Christoffer Dall <christoffer.dall@arm.com>
+> >>>>> Cc: kvmarm@lists.cs.columbia.edu
+> >>>>> ---
+> >>>>>
+> >>>>> Changes since v8:
+> >>>>> * Added a new per vcpu flag which will store Pointer Authentication enable
+> >>>>>    status instead of checking them again. [Dave Martin]
+> >>>>>
+> >>>>>   arch/arm64/include/asm/kvm_host.h | 4 ++++
+> >>>>>   1 file changed, 4 insertions(+)
+> >>>>>
+> >>>>> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
+> >>>>> index 9d57cf8..31dbc7c 100644
+> >>>>> --- a/arch/arm64/include/asm/kvm_host.h
+> >>>>> +++ b/arch/arm64/include/asm/kvm_host.h
+> >>>>> @@ -355,10 +355,14 @@ struct kvm_vcpu_arch {
+> >>>>>   #define KVM_ARM64_HOST_SVE_ENABLED	(1 << 4) /* SVE enabled for EL0 */
+> >>>>>   #define KVM_ARM64_GUEST_HAS_SVE		(1 << 5) /* SVE exposed to guest */
+> >>>>>   #define KVM_ARM64_VCPU_SVE_FINALIZED	(1 << 6) /* SVE config completed */
+> >>>>> +#define KVM_ARM64_GUEST_HAS_PTRAUTH	(1 << 7) /* PTRAUTH exposed to guest */
+> >>>>>   
+> >>>>>   #define vcpu_has_sve(vcpu) (system_supports_sve() && \
+> >>>>>   			    ((vcpu)->arch.flags & KVM_ARM64_GUEST_HAS_SVE))
+> >>>>>   
+> >>>>> +#define vcpu_has_ptrauth(vcpu)	\
+> >>>>> +			((vcpu)->arch.flags & KVM_ARM64_GUEST_HAS_PTRAUTH)
+> >>>>> +
+> >>>>
+> >>>> Just as for SVE, please first check that the system has PTRAUTH.
+> >>>> Something like:
+> >>>>
+> >>>> 		(cpus_have_const_cap(ARM64_HAS_GENERIC_AUTH_ARCH) && \
+> >>>> 		 ((vcpu)->arch.flags & KVM_ARM64_GUEST_HAS_PTRAUTH))
+> >>>
+> >>> In the subsequent patches, vcpu->arch.flags is only set to 
+> >>> KVM_ARM64_GUEST_HAS_PTRAUTH when all host capability check conditions 
+> >>> matches such as system_supports_address_auth(), 
+> >>> system_supports_generic_auth() so doing them again is repetitive in my view.
+> >>
+> >> It isn't the setting of the flag I care about, but the check of that
+> >> flag. Checking a flag for a feature that cannot be used on the running
+> >> system should have a zero cost, which isn't the case here.
+> >>
+> >> Granted, the impact should be minimal and it looks like it mostly happen
+> >> on the slow path, but at the very least it would be consistent. So even
+> >> if you don't buy my argument about efficiency, please change it in the
+> >> name of consistency.
+> > 
+> > One of the annoyances here is there is no single static key for ptrauth.
+> > 
+> > I'm assuming we don't want to check both static keys (for address and
+> > generic auth) on hot paths.
+> 
+> They both just branches, so I don't see why not. Of course, for people
+> using a lesser compiler (gcc 4.8 or clang), things will suck. But they
+> got it coming anyway.
 
->>> mappings are non-executable?
->>>=20
->>> (Sorry if this has been asked and answered in previous discussions.)
->>=20
->> Hi Ingo,
->>=20
->> That is a good question. Because of the cost of XPFO, we have to be =
-very
->> sure we need this protection. The paper from Vasileios, Michalis and
->> Angelos - <http://www.cs.columbia.edu/~vpk/papers/ret2dir.sec14.pdf>,
->> does go into how ret2dir attacks can bypass SMAP/SMEP in sections 6.1
->> and 6.2.
->=20
-> So it would be nice if you could generally summarize external =
-arguments=20
-> when defending a patchset, instead of me having to dig through a PDF=20=
+I seem to recall Christoffer expressing concerns about this at some
+point: even unconditional branches branches to a fixed address are not
+free (or even correctly predicted).
 
-> which not only causes me to spend time that you probably already spent=20=
+I don't think any compiler can elide static key checks of merge them
+together.
 
-> reading that PDF, but I might also interpret it incorrectly. ;-)
->=20
-> The PDF you cited says this:
->=20
->  "Unfortunately, as shown in Table 1, the W^X prop-erty is not =
-enforced=20
->   in many platforms, including x86-64.  In our example, the content of=20=
+Maybe I am misremembering.
 
->   user address 0xBEEF000 is also accessible through kernel address=20
->   0xFFFF87FF9F080000 as plain, executable code."
->=20
-> Is this actually true of modern x86-64 kernels? We've locked down W^X=20=
-
-> protections in general.
-
-As I was curious, I looked at the paper. Here is a quote from it:
-
-"In x86-64, however, the permissions of physmap are not in sane state.
-Kernels up to v3.8.13 violate the W^X property by mapping the entire =
-region
-as =E2=80=9Creadable, writeable, and executable=E2=80=9D (RWX)=E2=80=94onl=
-y very recent kernels
-(=E2=89=A5v3.9) use the more conservative RW mapping.=E2=80=9D
-
+Cheers
+---Dave
