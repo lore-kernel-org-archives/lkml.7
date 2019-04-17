@@ -2,241 +2,79 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 33FEAC10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:17:32 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37BEEC10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:17:48 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F15252073F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:17:31 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EBB1F2073F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:17:47 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="hrt29oHw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731223AbfDQIRa (ORCPT
+        id S1731298AbfDQIRr (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 04:17:30 -0400
-Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:40254 "EHLO
-        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727013AbfDQIRa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 04:17:30 -0400
-Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 9999CA78;
-        Wed, 17 Apr 2019 01:17:29 -0700 (PDT)
-Received: from [10.162.0.144] (a075553-lin.blr.arm.com [10.162.0.144])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 1A89B3F690;
-        Wed, 17 Apr 2019 01:17:26 -0700 (PDT)
-Subject: Re: [PATCH v9 3/5] KVM: arm64: Add userspace flag to enable pointer
- authentication
-To:     Dave Martin <Dave.Martin@arm.com>
-Cc:     linux-arm-kernel@lists.infradead.org,
-        Marc Zyngier <marc.zyngier@arm.com>,
-        Catalin Marinas <catalin.marinas@arm.com>,
-        Will Deacon <will.deacon@arm.com>,
-        Kristina Martsenko <kristina.martsenko@arm.com>,
-        kvmarm@lists.cs.columbia.edu,
-        Ramana Radhakrishnan <ramana.radhakrishnan@arm.com>,
-        linux-kernel@vger.kernel.org
-References: <1555039236-10608-1-git-send-email-amit.kachhap@arm.com>
- <1555039236-10608-4-git-send-email-amit.kachhap@arm.com>
- <20190416163110.GW3567@e103592.cambridge.arm.com>
-From:   Amit Daniel Kachhap <amit.kachhap@arm.com>
-Message-ID: <d27e74e0-ad26-c47e-4998-fd1d854fef18@arm.com>
-Date:   Wed, 17 Apr 2019 13:47:24 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.4.0
+        Wed, 17 Apr 2019 04:17:47 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:42958 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727013AbfDQIRq (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 04:17:46 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=pYAuHHbOcOLzRvW3LJKBYNzptxR3y0sDsbp8vk7QfjA=; b=hrt29oHwxRZZmiVKlMXLCzwcR
+        RugB7TsZIGMXwM6pw77jgouyQAKUfkOjkighmMkty9bYgQXf40s6WbkgaFbRO9JNtUBlAZD1GjRj+
+        gi0dDsmGjOwhnTs5O7a6ZHqaEIie6zHhhx0tVqCaAKxSdYb7Y4HL+zGVXLtzYrGiAlcRkDLfcIA5g
+        g/OAFRuuX9H0ybWzC9yjc8wjtmz3oyR6Y8Rt/XjAIBjJcjT5z8Wn4cR0ioJS4H0fILt3Xp+4IY8pp
+        3yN4nkIbZlAcN5UC4/b7+REu0Rklya7sezcHNFSdU8KlrWwohYIvy2XNOzt36+bwMU2jHybKXHvQn
+        u0DU7uV6g==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by bombadil.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hGflF-0008Sc-Ht; Wed, 17 Apr 2019 08:17:41 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 9C15329B52933; Wed, 17 Apr 2019 10:17:39 +0200 (CEST)
+Date:   Wed, 17 Apr 2019 10:17:39 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+Subject: Re: [PATCH v4 07/16] locking/rwsem: Implement lock handoff to
+ prevent lock starvation
+Message-ID: <20190417081739.GB4038@hirez.programming.kicks-ass.net>
+References: <20190413172259.2740-1-longman@redhat.com>
+ <20190413172259.2740-8-longman@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190416163110.GW3567@e103592.cambridge.arm.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190413172259.2740-8-longman@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Sat, Apr 13, 2019 at 01:22:50PM -0400, Waiman Long wrote:
+> +/*
+> + * This is safe to be called without holding the wait_lock.
 
-Hi,
-On 4/16/19 10:01 PM, Dave Martin wrote:
-> On Fri, Apr 12, 2019 at 08:50:34AM +0530, Amit Daniel Kachhap wrote:
->> Now that the building blocks of pointer authentication are present, lets
->> add userspace flags KVM_ARM_VCPU_PTRAUTH_ADDRESS and
->> KVM_ARM_VCPU_PTRAUTH_GENERIC. These flags will enable pointer
->> authentication for the KVM guest on a per-vcpu basis through the ioctl
->> KVM_ARM_VCPU_INIT.
->>
->> This features will allow the KVM guest to allow the handling of
->> pointer authentication instructions or to treat them as undefined
->> if not set.
->>
->> Necessary documentations are added to reflect the changes done.
->>
->> Signed-off-by: Amit Daniel Kachhap <amit.kachhap@arm.com>
->> Cc: Mark Rutland <mark.rutland@arm.com>
->> Cc: Marc Zyngier <marc.zyngier@arm.com>
->> Cc: Christoffer Dall <christoffer.dall@arm.com>
->> Cc: kvmarm@lists.cs.columbia.edu
->> ---
->>
->> Changes since v8:
->> *  Update vcpu->arch.flags to final enable state. [Dave Martin]
->> *  Change in Documentation to make clear the implementation of 2 vcpu
->>     feature flags. [Dave Martin]
->>
->>   Documentation/arm64/pointer-authentication.txt | 22 ++++++++++++++++++----
->>   Documentation/virtual/kvm/api.txt              |  6 ++++++
->>   arch/arm64/include/asm/kvm_host.h              |  2 +-
->>   arch/arm64/include/uapi/asm/kvm.h              |  2 ++
->>   arch/arm64/kvm/reset.c                         | 24 ++++++++++++++++++++++++
->>   5 files changed, 51 insertions(+), 5 deletions(-)
->>
->> diff --git a/Documentation/arm64/pointer-authentication.txt b/Documentation/arm64/pointer-authentication.txt
->> index 5baca42..fc71b33 100644
->> --- a/Documentation/arm64/pointer-authentication.txt
->> +++ b/Documentation/arm64/pointer-authentication.txt
->> @@ -87,7 +87,21 @@ used to get and set the keys for a thread.
->>   Virtualization
->>   --------------
->>   
->> -Pointer authentication is not currently supported in KVM guests. KVM
->> -will mask the feature bits from ID_AA64ISAR1_EL1, and attempted use of
->> -the feature will result in an UNDEFINED exception being injected into
->> -the guest.
->> +Pointer authentication is enabled in KVM guest when each virtual cpu is
->> +initialised by passing flags KVM_ARM_VCPU_PTRAUTH_[ADDRESS/GENERIC] and
->> +requesting these two separate cpu features to be enabled. The current KVM
->> +guest implementation works by enabling both features together, so both
->> +these userspace flags are checked before enabling pointer authentication.
->> +The separate userspace flag will allow to have no userspace ABI changes
->> +if support is added in the future to allow these two features to be
->> +enabled independently of one another.
->> +
->> +As Arm Architecture specifies that Pointer Authentication feature is
->> +implemented along with the VHE feature so KVM arm64 ptrauth code relies
->> +on VHE mode to be present.
->> +
->> +Additionally, when these vcpu feature flags are not set then KVM will
->> +filter out the Pointer Authentication system key registers from
->> +KVM_GET/SET_REG_* ioctls and mask those features from cpufeature ID
->> +register. Any attempt to use the Pointer Authentication instructions will
->> +result in an UNDEFINED exception being injected into the guest.
->> diff --git a/Documentation/virtual/kvm/api.txt b/Documentation/virtual/kvm/api.txt
->> index 68509de..9d202f4 100644
->> --- a/Documentation/virtual/kvm/api.txt
->> +++ b/Documentation/virtual/kvm/api.txt
->> @@ -2753,6 +2753,12 @@ Possible features:
->>   	  Depends on KVM_CAP_ARM_PSCI_0_2.
->>   	- KVM_ARM_VCPU_PMU_V3: Emulate PMUv3 for the CPU.
->>   	  Depends on KVM_CAP_ARM_PMU_V3.
->> +	- KVM_ARM_VCPU_PTRAUTH_ADDRESS: Enables Address Pointer authentication
->> +	  for the CPU and supported only on arm64 architecture.
-> 
-> Nit: (arm64 only) would be less verbose.
-ok.
-> 
->> +	  Must be requested if KVM_ARM_VCPU_PTRAUTH_GENERIC is also requested.
->> +	- KVM_ARM_VCPU_PTRAUTH_GENERIC: Enables Generic Pointer authentication
->> +	  for the CPU and supported only on arm64 architecture.
-> 
-> Ditto.  (Not a big deal, though.)
-> 
->> +	  Must be requested if KVM_ARM_VCPU_PTRAUTH_ADDRESS is also requested.
->>   
->>   	- KVM_ARM_VCPU_SVE: Enables SVE for the CPU (arm64 only).
->>   	  Depends on KVM_CAP_ARM_SVE.
->> diff --git a/arch/arm64/include/asm/kvm_host.h b/arch/arm64/include/asm/kvm_host.h
->> index a585d82..25f2598 100644
->> --- a/arch/arm64/include/asm/kvm_host.h
->> +++ b/arch/arm64/include/asm/kvm_host.h
->> @@ -49,7 +49,7 @@
->>   
->>   #define KVM_MAX_VCPUS VGIC_V3_MAX_CPUS
->>   
->> -#define KVM_VCPU_MAX_FEATURES 5
->> +#define KVM_VCPU_MAX_FEATURES 7
->>   
->>   #define KVM_REQ_SLEEP \
->>   	KVM_ARCH_REQ_FLAGS(0, KVM_REQUEST_WAIT | KVM_REQUEST_NO_WAKEUP)
->> diff --git a/arch/arm64/include/uapi/asm/kvm.h b/arch/arm64/include/uapi/asm/kvm.h
->> index 6963b7e..fec2253 100644
->> --- a/arch/arm64/include/uapi/asm/kvm.h
->> +++ b/arch/arm64/include/uapi/asm/kvm.h
->> @@ -103,6 +103,8 @@ struct kvm_regs {
->>   #define KVM_ARM_VCPU_PSCI_0_2		2 /* CPU uses PSCI v0.2 */
->>   #define KVM_ARM_VCPU_PMU_V3		3 /* Support guest PMUv3 */
->>   #define KVM_ARM_VCPU_SVE		4 /* enable SVE for this CPU */
->> +#define KVM_ARM_VCPU_PTRAUTH_ADDRESS	5 /* VCPU uses address authentication */
->> +#define KVM_ARM_VCPU_PTRAUTH_GENERIC	6 /* VCPU uses generic authentication */
->>   
->>   struct kvm_vcpu_init {
->>   	__u32 target;
->> diff --git a/arch/arm64/kvm/reset.c b/arch/arm64/kvm/reset.c
->> index f13378d..d13406b 100644
->> --- a/arch/arm64/kvm/reset.c
->> +++ b/arch/arm64/kvm/reset.c
->> @@ -221,6 +221,24 @@ static void kvm_vcpu_reset_sve(struct kvm_vcpu *vcpu)
->>   		memset(vcpu->arch.sve_state, 0, vcpu_sve_state_size(vcpu));
->>   }
->>   
->> +static int kvm_vcpu_enable_ptrauth(struct kvm_vcpu *vcpu)
->> +{
->> +	/* Support ptrauth only if the system supports these capabilities. */
->> +	if (!has_vhe() || !system_supports_address_auth() ||
->> +		!system_supports_generic_auth())
->> +		return -EINVAL;
-> 
-> Nit: Funny indentation.  Please align with the "if (".  It's also
-> preferable to keep the two system_supports_xxx_auth() aligned or on the
-> same line, since they go together.  This might be clearer split up:
-> 
-> 	if (!has_vhe())
-> 		return -EINVAL;
-> 
-> 	if (!system_supports_address_auth() ||
-> 	    !system_supports_generic_auth())
-> 		return -EINVAL;
-ok.
-> 
->> +	/*
-> 
-> I'd say "for now" here, since we might relax this rule later on.
-> 
->> +	 * Make sure that both address/generic pointer authentication
->> +	 * features are requested by the userspace together.
->> +	 */
->> +	if (!test_bit(KVM_ARM_VCPU_PTRAUTH_ADDRESS, vcpu->arch.features) ||
->> +		!test_bit(KVM_ARM_VCPU_PTRAUTH_GENERIC, vcpu->arch.features))
->> +		return -EINVAL;
->> +
->> +	vcpu->arch.flags |= KVM_ARM64_GUEST_HAS_PTRAUTH;
->> +	return 0;
->> +}
->> +
->>   /**
->>    * kvm_reset_vcpu - sets core registers and sys_regs to reset value
->>    * @vcpu: The VCPU pointer
->> @@ -261,6 +279,12 @@ int kvm_reset_vcpu(struct kvm_vcpu *vcpu)
->>   		kvm_vcpu_reset_sve(vcpu);
->>   	}
->>   
->> +	if (test_bit(KVM_ARM_VCPU_PTRAUTH_ADDRESS, vcpu->arch.features) ||
->> +		test_bit(KVM_ARM_VCPU_PTRAUTH_GENERIC, vcpu->arch.features)) {
-> 
-> Nit: funny indentation.
-> 
->> +		if (kvm_vcpu_enable_ptrauth(vcpu))
->> +			goto out;
->> +	}
->> +
-> 
-> [...]
-> 
-> With those fixed,
-sure.
-> 
-> Reviewed-by: Dave Martin <Dave.Martin@arm.com>
-Thanks,
-Amit
-> 
-> Cheers
-> ---Dave
-> 
+Because.... @waiter is *our* waiter and it's not going anywhere. So when
+it's first, it stays first until we do something about it.
+
+> + */
+> +static inline bool
+> +rwsem_waiter_is_first(struct rw_semaphore *sem, struct rwsem_waiter *waiter)
+> +{
+> +	return list_first_entry(&sem->wait_list, struct rwsem_waiter, list)
+> +			== waiter;
+> +}
