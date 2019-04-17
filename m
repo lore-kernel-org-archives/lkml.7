@@ -2,82 +2,101 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 64F15C10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:22:58 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E17DEC282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:24:06 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 266CD2073F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:22:58 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=alien8.de header.i=@alien8.de header.b="IqHe6gzv"
+	by mail.kernel.org (Postfix) with ESMTP id B2306204FD
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:24:06 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731339AbfDQIW5 (ORCPT
+        id S1731287AbfDQIYF (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 04:22:57 -0400
-Received: from mail.skyhub.de ([5.9.137.197]:51872 "EHLO mail.skyhub.de"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727282AbfDQIW4 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 04:22:56 -0400
-Received: from zn.tnic (p200300EC2F112E000C2D4197130645E8.dip0.t-ipconnect.de [IPv6:2003:ec:2f11:2e00:c2d:4197:1306:45e8])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.skyhub.de (SuperMail on ZX Spectrum 128k) with ESMTPSA id E393E1EC0A9C;
-        Wed, 17 Apr 2019 10:22:54 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=alien8.de; s=dkim;
-        t=1555489375;
-        h=from:from:reply-to:subject:subject:date:date:message-id:message-id:
-         to:to:cc:cc:mime-version:mime-version:content-type:content-type:
-         content-transfer-encoding:in-reply-to:in-reply-to:  references:references;
-        bh=l9LAGaY39CYwc+/0D5Xr9E295IfPN5GSOz12CAnvWjo=;
-        b=IqHe6gzvu7X3fnp93JvNC0lTOSgm9yDrGJ0Ly+GXsIv5Tnjd3gZebcZSdg1H7dide2hpiE
-        xgFZam4d8uIqvs2DwFAWbRPub5EygWE36rM/cM0fb8Oy47fMkg+1abQula6+53p383fzMq
-        YvIwVtegYq4dLXn1W16WLxqAltAwK/k=
-Date:   Wed, 17 Apr 2019 10:22:50 +0200
-From:   Borislav Petkov <bp@alien8.de>
-To:     Dave Young <dyoung@redhat.com>
-Cc:     Junichi Nomura <j-nomura@ce.jp.nec.com>,
-        Chao Fan <fanc.fnst@cn.fujitsu.com>,
-        Baoquan He <bhe@redhat.com>, Kairui Song <kasong@redhat.com>,
-        "x86@kernel.org" <x86@kernel.org>,
-        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
-        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
-Subject: Re: [PATCH] x86/boot: Use efi_setup_data for searching RSDP on
- kexec-ed kernels
-Message-ID: <20190417082250.GA20492@zn.tnic>
-References: <20190412133528.GD19808@zn.tnic>
- <cc2c1dbe-4fb3-fb7d-0540-c04734fc15cb@ce.jp.nec.com>
- <20190415090717.GA29317@zn.tnic>
- <20190415102525.GB29317@zn.tnic>
- <23309b73-d135-a207-564b-6003cee39184@ce.jp.nec.com>
- <20190416094024.GE27892@zn.tnic>
- <20190416095209.GG27892@zn.tnic>
- <20190416114133.GA7541@dhcp-128-65.nay.redhat.com>
- <20190416132253.GE31772@zn.tnic>
- <20190417013838.GA8411@dhcp-128-65.nay.redhat.com>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-In-Reply-To: <20190417013838.GA8411@dhcp-128-65.nay.redhat.com>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+        Wed, 17 Apr 2019 04:24:05 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37934 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1726895AbfDQIYF (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 04:24:05 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id BD87BAFED;
+        Wed, 17 Apr 2019 08:24:03 +0000 (UTC)
+From:   Johannes Thumshirn <jthumshirn@suse.de>
+To:     Bjorn Helgaas <bhelgaas@google.com>
+Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Johannes Thumshirn <jthumshirn@suse.de>
+Subject: [PATCH] PCI: Remove pci_request_region_exclusive()
+Date:   Wed, 17 Apr 2019 10:23:56 +0200
+Message-Id: <20190417082356.7054-1-jthumshirn@suse.de>
+X-Mailer: git-send-email 2.16.4
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 09:38:38AM +0800, Dave Young wrote:
-> But if you want to apply it now, I think it is fine as well, probably
-> the laptop issue is lenovo firmware specific, we can add rsdp in cmdline
-> or boot params via kexec-tools so it should be good by using new kexec-tools.
+pci_request_region_exclusive() was introduced with commit e8de1481fd71
+("resource: allow MMIO exclusivity for device drivers") in 2.6.29 which
+was released 2008.
 
-I'm not in a hurry to apply it - if you guys wanna debug this further,
-sure, we can wait and then tag all the fixes for stable so that they can
-get backported.
+It never had an in tree user since then, so after 11 years later let's
+remove it.
 
+Signed-off-by: Johannes Thumshirn <jthumshirn@suse.de>
+---
+ drivers/pci/pci.c   | 25 -------------------------
+ include/linux/pci.h |  1 -
+ 2 files changed, 26 deletions(-)
+
+diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
+index 7c1b362f599a..d185b49e105a 100644
+--- a/drivers/pci/pci.c
++++ b/drivers/pci/pci.c
+@@ -3706,31 +3706,6 @@ int pci_request_region(struct pci_dev *pdev, int bar, const char *res_name)
+ }
+ EXPORT_SYMBOL(pci_request_region);
+ 
+-/**
+- *	pci_request_region_exclusive - Reserved PCI I/O and memory resource
+- *	@pdev: PCI device whose resources are to be reserved
+- *	@bar: BAR to be reserved
+- *	@res_name: Name to be associated with resource.
+- *
+- *	Mark the PCI region associated with PCI device @pdev BR @bar as
+- *	being reserved by owner @res_name.  Do not access any
+- *	address inside the PCI regions unless this call returns
+- *	successfully.
+- *
+- *	Returns 0 on success, or %EBUSY on error.  A warning
+- *	message is also printed on failure.
+- *
+- *	The key difference that _exclusive makes it that userspace is
+- *	explicitly not allowed to map the resource via /dev/mem or
+- *	sysfs.
+- */
+-int pci_request_region_exclusive(struct pci_dev *pdev, int bar,
+-				 const char *res_name)
+-{
+-	return __pci_request_region(pdev, bar, res_name, IORESOURCE_EXCLUSIVE);
+-}
+-EXPORT_SYMBOL(pci_request_region_exclusive);
+-
+ /**
+  * pci_release_selected_regions - Release selected PCI I/O and memory resources
+  * @pdev: PCI device whose resources were previously reserved
+diff --git a/include/linux/pci.h b/include/linux/pci.h
+index 77448215ef5b..5f32275358cf 100644
+--- a/include/linux/pci.h
++++ b/include/linux/pci.h
+@@ -1233,7 +1233,6 @@ int __must_check pci_request_regions(struct pci_dev *, const char *);
+ int __must_check pci_request_regions_exclusive(struct pci_dev *, const char *);
+ void pci_release_regions(struct pci_dev *);
+ int __must_check pci_request_region(struct pci_dev *, int, const char *);
+-int __must_check pci_request_region_exclusive(struct pci_dev *, int, const char *);
+ void pci_release_region(struct pci_dev *, int);
+ int pci_request_selected_regions(struct pci_dev *, int, const char *);
+ int pci_request_selected_regions_exclusive(struct pci_dev *, int, const char *);
 -- 
-Regards/Gruss,
-    Boris.
+2.16.4
 
-Good mailing practices for 400: avoid top-posting and trim the reply.
