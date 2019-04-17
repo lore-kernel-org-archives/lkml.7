@@ -2,124 +2,126 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT autolearn=ham autolearn_force=no
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
 	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id A1736C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:15:04 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 02CA8C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:15:34 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6700820651
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:15:04 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="XcWBjlU0"
+	by mail.kernel.org (Postfix) with ESMTP id CE941217D7
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:15:33 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732767AbfDQUPD (ORCPT
+        id S1732965AbfDQUPc (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 16:15:03 -0400
-Received: from mail-qt1-f195.google.com ([209.85.160.195]:38770 "EHLO
-        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfDQUPC (ORCPT
+        Wed, 17 Apr 2019 16:15:32 -0400
+Received: from mout.kundenserver.de ([212.227.17.24]:58953 "EHLO
+        mout.kundenserver.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfDQUPb (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 16:15:02 -0400
-Received: by mail-qt1-f195.google.com with SMTP id d13so28881201qth.5
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 13:15:02 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=from:to:cc:subject:date:message-id;
-        bh=6v6KcEkS75wpAGqPcJpaPyTimG1OBw8fyJVHX7mRFl8=;
-        b=XcWBjlU0atGDp0IkBW8UtiiKtCtoNHVtKPiCZ7+Ub+mfp5wddAP2LaJUYwnFEr6PMe
-         Md83s6scLr1gKQP3i5Q66MwR0DW+RmCotvEoo+vHYUTOGwWZptv76A68IADVmkuVlqdB
-         2HUBK/xmedLSrcZJgTTx3GV6+VdBuawX+GkyfYwte9FJvh2ROLqCw5Cv2/JY12xrUvxW
-         BMsN2ZHcYvaSc5t+IABrlSZ3UhU5lF9qogxP2TZEMzx+EeWjFGI9Pq3/Q8ZREgbC8PCx
-         GEacCPbHaFf63UnC5ivQiopPhn3OX3V+U666ZVyL05eH4VTD++SuFNmyYBtZeP8jOlce
-         SYWw==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id;
-        bh=6v6KcEkS75wpAGqPcJpaPyTimG1OBw8fyJVHX7mRFl8=;
-        b=Y0LBjGvPkpXDaH4aoVP3XjdZ6vzykJcHjC/efbqstUCME194oFl5t24JuT9YlXx7o2
-         v8exWL7iW3NtCbZqdJEi4s8Bq+dhSMIX/FEcXXJdyf4DC27XiRpJP2vTDcSFEgZVkkgd
-         +SLmr2Pn6ILvtzhyyLYNrO07gZI3jT2/ytMy0JjyX4XuNnEFjFIOwxe30zfTR5xSZXgX
-         pLRVQZEmCY5bzv66YfV2B2Qzbd7XuupX6qfdtZwhOq8hezPxOrWrSleWAlpe6WgmoRkc
-         XH4oKrTQSeirqj9zfHreTtGRwgTug/9FbcsBRLMn37Nkq/8KvzhMlLiNyUphfGqqUV28
-         AuCw==
-X-Gm-Message-State: APjAAAUX9Z5FtmWzAnXodgZFy4I8KHqAzd4DfSXMiID22n/hucV8eMAx
-        WPIRpGep5Q1+KZr4o1iO9w==
-X-Google-Smtp-Source: APXvYqzrpIL0bqEkASajBDK29j5zI+5qFMLS+ALUtP5dVfiocqagFld+UWOCA3oeIQVkvDxnLykWwA==
-X-Received: by 2002:ac8:4685:: with SMTP id g5mr73338754qto.242.1555532101502;
-        Wed, 17 Apr 2019 13:15:01 -0700 (PDT)
-Received: from gabell.bos.redhat.com (nat-pool-bos-t.redhat.com. [66.187.233.206])
-        by smtp.gmail.com with ESMTPSA id d142sm35319783qke.20.2019.04.17.13.15.00
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Apr 2019 13:15:00 -0700 (PDT)
-From:   Masayoshi Mizuma <msys.mizuma@gmail.com>
-To:     Steven Rostedt <rostedt@goodmis.org>
-Cc:     Masayoshi Mizuma <msys.mizuma@gmail.com>,
-        Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>,
-        linux-kernel@vger.kernel.org
-Subject: [PATCH] ktest: Add workaround to avoid unexpected power cycle
-Date:   Wed, 17 Apr 2019 16:14:42 -0400
-Message-Id: <20190417201442.15030-1-msys.mizuma@gmail.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 17 Apr 2019 16:15:31 -0400
+Received: from [192.168.1.110] ([95.117.89.119]) by mrelayeu.kundenserver.de
+ (mreue109 [212.227.15.183]) with ESMTPSA (Nemesis) id
+ 1Md6V3-1ggh712z2Z-00aBmZ; Wed, 17 Apr 2019 22:14:04 +0200
+Subject: Re: [PATCH v10 0/7] Add Fieldbus subsystem + support HMS Profinet
+ card
+To:     =?UTF-8?Q?Andreas_F=c3=a4rber?= <afaerber@suse.de>
+Cc:     Sven Van Asbroeck <thesven73@gmail.com>,
+        Rob Herring <robh+dt@kernel.org>,
+        Linus Walleij <linus.walleij@linaro.org>,
+        Lee Jones <lee.jones@linaro.org>, mark.rutland@arm.com,
+        treding@nvidia.com, David Lechner <david@lechnology.com>,
+        noralf@tronnes.org, johan@kernel.org,
+        Michal Simek <monstr@monstr.eu>, michal.vokac@ysoft.com,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg KH <gregkh@linuxfoundation.org>, john.garry@huawei.com,
+        geert+renesas@glider.be, robin.murphy@arm.com,
+        Paul Gortmaker <paul.gortmaker@windriver.com>,
+        sebastien.bourdelin@savoirfairelinux.com, icenowy@aosc.io,
+        Stuart Yoder <stuyoder@gmail.com>,
+        "J. Kiszka" <jan.kiszka@siemens.com>, maxime.ripard@bootlin.com,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        netdev <netdev@vger.kernel.org>
+References: <20190409144250.7237-1-TheSven73@gmail.com>
+ <982e69c6-4e68-6f62-8bed-cd5a1802272b@metux.net>
+ <CAGngYiUTHZFFY=H7xXHzZnN4pS0jAqWBTrcw04hjf5S-ykxC9w@mail.gmail.com>
+ <c1831703-a476-8870-0a5f-9060bda0f669@metux.net>
+ <31245f21-ae98-f10f-9484-a1719164ce16@suse.de>
+From:   "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Organization: metux IT consult
+Message-ID: <293d9421-4a1c-cc12-f3a7-3f6ea3adb6ea@metux.net>
+Date:   Wed, 17 Apr 2019 22:13:59 +0200
+User-Agent: Mozilla/5.0 (X11; Linux i686 on x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.2.1
+MIME-Version: 1.0
+In-Reply-To: <31245f21-ae98-f10f-9484-a1719164ce16@suse.de>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 8bit
+X-Provags-ID: V03:K1:RslL9JEQ43EjUWwyo4ZLUo0XqNN21ltWInyz0jUjIDZj+Nn3neO
+ ZpwkwTszdO9752lNgVAwtw6QBs6YPIfpjz5g3A6k8DvJZuiPCoztnBBSJcHf31JyQJ2SnVf
+ oT+K7AP3yqmRu3fKPZVwSkfq1ZNMgzJyZRxJoHmjbKUo7UYxq9b5d2UOmfz07beetYm9WZ9
+ 7esMCmWc5LFUfdzOqYSoA==
+X-UI-Out-Filterresults: notjunk:1;V03:K0:s9QDRNhL2bo=:RfTlmRSrpQo2GZWBNZ/Z/O
+ rggTItsRDktdYXi5T24lAx3j/T8njbowmvR56RURpEAwcHU5bf6fzK7a6bxLXnHXS2P4mxIsi
+ dMCnYjLCJJZ5myi88LGCBCba0jPX1/S88jGSGv+G5N8eG2IJijiWlzNryF5mVAv+3ZuHiKDi9
+ vAepC5DUDDc6xmNjgRm9TTT+DTUv+OZsHPHSRBEikIylsmLr8XLeJwIE9yBbIXe+bYkDqEKQ8
+ Bv6YsmJnnhJTlg0cre1UrWR5TSnqmhndHMR+TB28TI2T/Jq1F8K1eAba3Z2ebOaxAr1puZf+g
+ exkQNv5Sk7kgro4S1fIrTZZ1kLiqez/cPRB1lENjBOQq7zQ/GNGbF0TBTqdCftHoBe3conWUJ
+ Q2hQdMrdY1nUgnUDOIkWDnvU2OTnCKWsdPo1Acju9vTDst8TAafSDw+opIleqbEzByS0HS1Dd
+ Jg4L8YjVEENvQr0xwaGEp6PK+xct4DvPGaX0YSFKoe2IPHm8V48k/S+g1y1XFWHJQA1UN2jTY
+ c0DvDDTwiG0aZk+olX7Ca6ZBPT27t8oG0ugq5Y9lYp8xNMmA5qTA/wncr34MplUScoJKRvymt
+ /KjRZQ31wf1u9zdtaDt11Ip9+MD/Ct9LF/eiguMcBRlcVvnS6xFDRidXewNkiVShiLskpXF1k
+ 5p77tESkKRk/iY6iQWM77LXqtp9xC+M++ZAJ316v3KiqnCvJYHoalIxtao3lHUZToTAU3Yigx
+ O4pCRW1nZAw7Yh8UneTE3ni43yNjTMCIEfPWuYe7eJqNuQi83mb0lVAnv7ykfH3zyDRewKfTE
+ nmyH5xFsollXT5SVgj8dXVcgNszbr33G/j+YMITBo1q5El3qYVApOEA7Tlwt8LdeY67D/0p
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
+On 17.04.19 19:04, Andreas Färber wrote:
 
-Unexpected power cycle occurs while the installation of the
-kernel.
+Hi,
 
-That is because the default reboot command, "ssh $SSH_USER@$MACHINE
-reboot" exits as 255 even if the reboot is successfully done,
-like as:
+> If you see specific conflicts or differences, please explain them> instead of just throwing around bus names. :) Then we can more easily>
+discuss whether to make changes to this framework or whether we indeed>
+need some fieldbus/iec61158/ subdirectory.
 
-  ]# ssh root@Test reboot
-  Connection to Test closed by remote host.
-  ]# echo $?
-  255
-  ]#
+For example, MVB semantically is more similar to can/canopen or even
+SNMP than to iec61158. T-bus is logically more a typically network
+interface (similar to 802.3 or HDLC), WTB is actually HDCL via RS485.
+KNX has similarities to canopen or SNMP. DALI is somewhat similar
+to I2C.
 
-To avoid the unexpected power cycle, the reboot is considered as
-successfully done if the reboot is the default command and the
-return code is 255.
+Ergo: there're various fieldbus protocols with entirely different
+concepts. Distributed process memory like in iec61158 is just one
+of them.
 
-Signed-off-by: Masayoshi Mizuma <m.mizuma@jp.fujitsu.com>
----
- tools/testing/ktest/ktest.pl | 9 +++++++++
- 1 file changed, 9 insertions(+)
+> For your RS-485 I don't see > conflict as that'll just go via tty/serial/ and optionally serdev, no?
 
-diff --git a/tools/testing/ktest/ktest.pl b/tools/testing/ktest/ktest.pl
-index ea07d43856b8..765c6bc83ab4 100755
---- a/tools/testing/ktest/ktest.pl
-+++ b/tools/testing/ktest/ktest.pl
-@@ -1737,6 +1737,11 @@ sub run_command {
-     my $dord = 0;
-     my $dostdout = 0;
-     my $pid;
-+    my $is_default_reboot = 0;
-+
-+    if ($command eq $default{REBOOT}) {
-+	$is_default_reboot = 1;
-+    }
- 
-     $command =~ s/\$SSH_USER/$ssh_user/g;
-     $command =~ s/\$MACHINE/$machine/g;
-@@ -1791,6 +1796,10 @@ sub run_command {
-     # shift 8 for real exit status
-     $run_command_status = $? >> 8;
- 
-+    if ($run_command_status == 255 && $is_default_reboot) {
-+	$run_command_status = 0;
-+    }
-+
-     close(CMD);
-     close(LOG) if ($dolog);
-     close(RD)  if ($dord);
+That's just layer 0/1. Ontop of that there're various protocols.
+Some folks do some ASCII-based protocol ontop of that (eg. elevators,
+water plants, etc), others put in HDLC (eg. WTB), some do completely
+weird things ;-)
+
+> However, I'd be curious how I/O Link might relate to this, it seems to> have no public specifications.
+https://io-link.com/de/Download/Download.php
+https://io-link.com/share/Downloads/Spec-Interface/IOL-Interface-Spec_10002_V112_Jul13.pdf
+
+> While I do like sockets, they seem more useful for packet-based> communication, which may be an implementation detail of fieldbus_dev>
+drivers, but AFAIU that's unrelated to Sven's memory-focused subsystem>
+representing a view of the data received, which may be different from>
+the last packet received. Also, when a packet is received via socket,
+it> gets dequeued, whereas you'll want to access the device's memory
+without> restrictions.
+okay, if the device always represents the current process memory, w/o
+showing the actual communication, then Sven's approach makes sense.
+
+
+--mtx
+
 -- 
-2.20.1
-
+Enrico Weigelt, metux IT consult
+Free software and Linux embedded engineering
+info@metux.net -- +49-151-27565287
