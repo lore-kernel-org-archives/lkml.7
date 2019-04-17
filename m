@@ -3,42 +3,42 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id B15D1C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:53:11 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 41545C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:53:17 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 7CAE8206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:53:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 0572420663
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 18:53:17 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733116AbfDQSxJ (ORCPT
+        id S1733146AbfDQSxP (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 14:53:09 -0400
+        Wed, 17 Apr 2019 14:53:15 -0400
 Received: from mga04.intel.com ([192.55.52.120]:21378 "EHLO mga04.intel.com"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1731358AbfDQSxI (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 14:53:08 -0400
+        id S1731358AbfDQSxP (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 14:53:15 -0400
 X-Amp-Result: SKIPPED(no attachment in message)
 X-Amp-File-Uploaded: False
-Received: from orsmga003.jf.intel.com ([10.7.209.27])
-  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Apr 2019 11:53:07 -0700
+Received: from orsmga005.jf.intel.com ([10.7.209.41])
+  by fmsmga104.fm.intel.com with ESMTP/TLS/DHE-RSA-AES256-GCM-SHA384; 17 Apr 2019 11:53:12 -0700
 X-ExtLoop1: 1
 X-IronPort-AV: E=Sophos;i="5.60,362,1549958400"; 
-   d="scan'208";a="143569844"
+   d="scan'208";a="316812583"
 Received: from dwillia2-desk3.jf.intel.com (HELO dwillia2-desk3.amr.corp.intel.com) ([10.54.39.16])
-  by orsmga003.jf.intel.com with ESMTP; 17 Apr 2019 11:53:07 -0700
-Subject: [PATCH v6 05/12] mm/sparsemem: Convert kmalloc_section_memmap() to
- populate_section_memmap()
+  by orsmga005.jf.intel.com with ESMTP; 17 Apr 2019 11:53:12 -0700
+Subject: [PATCH v6 06/12] mm/hotplug: Add mem-hotplug restrictions for
+ remove_memory()
 From:   Dan Williams <dan.j.williams@intel.com>
 To:     akpm@linux-foundation.org
 Cc:     Michal Hocko <mhocko@suse.com>,
-        David Hildenbrand <david@redhat.com>,
-        Logan Gunthorpe <logang@deltatee.com>, linux-mm@kvack.org,
+        Logan Gunthorpe <logang@deltatee.com>,
+        David Hildenbrand <david@redhat.com>, linux-mm@kvack.org,
         linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org,
         mhocko@suse.com, david@redhat.com
-Date:   Wed, 17 Apr 2019 11:39:21 -0700
-Message-ID: <155552636181.2015392.6062894291885124658.stgit@dwillia2-desk3.amr.corp.intel.com>
+Date:   Wed, 17 Apr 2019 11:39:27 -0700
+Message-ID: <155552636696.2015392.12612320706815016081.stgit@dwillia2-desk3.amr.corp.intel.com>
 In-Reply-To: <155552633539.2015392.2477781120122237934.stgit@dwillia2-desk3.amr.corp.intel.com>
 References: <155552633539.2015392.2477781120122237934.stgit@dwillia2-desk3.amr.corp.intel.com>
 User-Agent: StGit/0.18-2-gc94f
@@ -50,243 +50,268 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Allow sub-section sized ranges to be added to the memmap.
-populate_section_memmap() takes an explict pfn range rather than
-assuming a full section, and those parameters are plumbed all the way
-through to vmmemap_populate(). There should be no sub-section usage in
-current deployments. New warnings are added to clarify which memmap
-allocation paths are sub-section capable.
+Teach the arch_remove_memory() path to consult the same 'struct
+mhp_restrictions' context as was specified at arch_add_memory() time.
+
+No functional change, this is a preparation step for teaching
+__remove_pages() about how and when to allow sub-section hot-remove, and
+a cleanup for an unnecessary "is_dev_zone()" special case.
 
 Cc: Michal Hocko <mhocko@suse.com>
-Cc: David Hildenbrand <david@redhat.com>
 Cc: Logan Gunthorpe <logang@deltatee.com>
+Cc: David Hildenbrand <david@redhat.com>
 Signed-off-by: Dan Williams <dan.j.williams@intel.com>
 ---
- arch/x86/mm/init_64.c |    4 ++-
- include/linux/mm.h    |    4 ++-
- mm/sparse-vmemmap.c   |   21 +++++++++++------
- mm/sparse.c           |   61 +++++++++++++++++++++++++++++++------------------
- 4 files changed, 57 insertions(+), 33 deletions(-)
+ arch/ia64/mm/init.c            |    4 ++--
+ arch/powerpc/mm/mem.c          |    5 +++--
+ arch/s390/mm/init.c            |    2 +-
+ arch/sh/mm/init.c              |    4 ++--
+ arch/x86/mm/init_32.c          |    4 ++--
+ arch/x86/mm/init_64.c          |    5 +++--
+ include/linux/memory_hotplug.h |    5 +++--
+ kernel/memremap.c              |   14 ++++++++------
+ mm/memory_hotplug.c            |   17 ++++++++---------
+ 9 files changed, 32 insertions(+), 28 deletions(-)
 
+diff --git a/arch/ia64/mm/init.c b/arch/ia64/mm/init.c
+index d28e29103bdb..86c69c87e7e8 100644
+--- a/arch/ia64/mm/init.c
++++ b/arch/ia64/mm/init.c
+@@ -683,14 +683,14 @@ int arch_add_memory(int nid, u64 start, u64 size,
+ 
+ #ifdef CONFIG_MEMORY_HOTREMOVE
+ void arch_remove_memory(int nid, u64 start, u64 size,
+-			struct vmem_altmap *altmap)
++		struct mhp_restrictions *restrictions)
+ {
+ 	unsigned long start_pfn = start >> PAGE_SHIFT;
+ 	unsigned long nr_pages = size >> PAGE_SHIFT;
+ 	struct zone *zone;
+ 
+ 	zone = page_zone(pfn_to_page(start_pfn));
+-	__remove_pages(zone, start_pfn, nr_pages, altmap);
++	__remove_pages(zone, start_pfn, nr_pages, restrictions);
+ }
+ #endif
+ #endif
+diff --git a/arch/powerpc/mm/mem.c b/arch/powerpc/mm/mem.c
+index cc9425fb9056..ccab989f397d 100644
+--- a/arch/powerpc/mm/mem.c
++++ b/arch/powerpc/mm/mem.c
+@@ -132,10 +132,11 @@ int __meminit arch_add_memory(int nid, u64 start, u64 size,
+ 
+ #ifdef CONFIG_MEMORY_HOTREMOVE
+ void __meminit arch_remove_memory(int nid, u64 start, u64 size,
+-				  struct vmem_altmap *altmap)
++		struct mhp_restrictions *restrictions)
+ {
+ 	unsigned long start_pfn = start >> PAGE_SHIFT;
+ 	unsigned long nr_pages = size >> PAGE_SHIFT;
++	struct vmem_altmap *altmap = restrictions->altmap;
+ 	struct page *page;
+ 	int ret;
+ 
+@@ -147,7 +148,7 @@ void __meminit arch_remove_memory(int nid, u64 start, u64 size,
+ 	if (altmap)
+ 		page += vmem_altmap_offset(altmap);
+ 
+-	__remove_pages(page_zone(page), start_pfn, nr_pages, altmap);
++	__remove_pages(page_zone(page), start_pfn, nr_pages, restrictions);
+ 
+ 	/* Remove htab bolted mappings for this section of memory */
+ 	start = (unsigned long)__va(start);
+diff --git a/arch/s390/mm/init.c b/arch/s390/mm/init.c
+index 31b1071315d7..3af7b99af1b1 100644
+--- a/arch/s390/mm/init.c
++++ b/arch/s390/mm/init.c
+@@ -235,7 +235,7 @@ int arch_add_memory(int nid, u64 start, u64 size,
+ 
+ #ifdef CONFIG_MEMORY_HOTREMOVE
+ void arch_remove_memory(int nid, u64 start, u64 size,
+-			struct vmem_altmap *altmap)
++		struct mhp_restrictions *restrictions)
+ {
+ 	/*
+ 	 * There is no hardware or firmware interface which could trigger a
+diff --git a/arch/sh/mm/init.c b/arch/sh/mm/init.c
+index 5aeb4d7099a1..3cff7e4723e6 100644
+--- a/arch/sh/mm/init.c
++++ b/arch/sh/mm/init.c
+@@ -430,14 +430,14 @@ EXPORT_SYMBOL_GPL(memory_add_physaddr_to_nid);
+ 
+ #ifdef CONFIG_MEMORY_HOTREMOVE
+ void arch_remove_memory(int nid, u64 start, u64 size,
+-			struct vmem_altmap *altmap)
++		struct mhp_restrictions *restrictions)
+ {
+ 	unsigned long start_pfn = PFN_DOWN(start);
+ 	unsigned long nr_pages = size >> PAGE_SHIFT;
+ 	struct zone *zone;
+ 
+ 	zone = page_zone(pfn_to_page(start_pfn));
+-	__remove_pages(zone, start_pfn, nr_pages, altmap);
++	__remove_pages(zone, start_pfn, nr_pages, restrictions);
+ }
+ #endif
+ #endif /* CONFIG_MEMORY_HOTPLUG */
+diff --git a/arch/x86/mm/init_32.c b/arch/x86/mm/init_32.c
+index 075e568098f2..ba888fd38f5d 100644
+--- a/arch/x86/mm/init_32.c
++++ b/arch/x86/mm/init_32.c
+@@ -861,14 +861,14 @@ int arch_add_memory(int nid, u64 start, u64 size,
+ 
+ #ifdef CONFIG_MEMORY_HOTREMOVE
+ void arch_remove_memory(int nid, u64 start, u64 size,
+-			struct vmem_altmap *altmap)
++		struct mhp_restrictions *restrictions)
+ {
+ 	unsigned long start_pfn = start >> PAGE_SHIFT;
+ 	unsigned long nr_pages = size >> PAGE_SHIFT;
+ 	struct zone *zone;
+ 
+ 	zone = page_zone(pfn_to_page(start_pfn));
+-	__remove_pages(zone, start_pfn, nr_pages, altmap);
++	__remove_pages(zone, start_pfn, nr_pages, restrictions);
+ }
+ #endif
+ #endif
 diff --git a/arch/x86/mm/init_64.c b/arch/x86/mm/init_64.c
-index 20d14254b686..bb018d09d2dc 100644
+index bb018d09d2dc..4071632be007 100644
 --- a/arch/x86/mm/init_64.c
 +++ b/arch/x86/mm/init_64.c
-@@ -1457,7 +1457,9 @@ int __meminit vmemmap_populate(unsigned long start, unsigned long end, int node,
- {
- 	int err;
- 
--	if (boot_cpu_has(X86_FEATURE_PSE))
-+	if (end - start < PAGES_PER_SECTION * sizeof(struct page))
-+		err = vmemmap_populate_basepages(start, end, node);
-+	else if (boot_cpu_has(X86_FEATURE_PSE))
- 		err = vmemmap_populate_hugepages(start, end, node, altmap);
- 	else if (altmap) {
- 		pr_err_once("%s: no cpu support for altmap allocations\n",
-diff --git a/include/linux/mm.h b/include/linux/mm.h
-index 91a19229452b..3cc599fd3ae0 100644
---- a/include/linux/mm.h
-+++ b/include/linux/mm.h
-@@ -2750,8 +2750,8 @@ const char * arch_vma_name(struct vm_area_struct *vma);
- void print_vma_addr(char *prefix, unsigned long rip);
- 
- void *sparse_buffer_alloc(unsigned long size);
--struct page *sparse_mem_map_populate(unsigned long pnum, int nid,
--		struct vmem_altmap *altmap);
-+struct page * __populate_section_memmap(unsigned long pfn,
-+		unsigned long nr_pages, int nid, struct vmem_altmap *altmap);
- pgd_t *vmemmap_pgd_populate(unsigned long addr, int node);
- p4d_t *vmemmap_p4d_populate(pgd_t *pgd, unsigned long addr, int node);
- pud_t *vmemmap_pud_populate(p4d_t *p4d, unsigned long addr, int node);
-diff --git a/mm/sparse-vmemmap.c b/mm/sparse-vmemmap.c
-index 7fec05796796..dcb023aa23d1 100644
---- a/mm/sparse-vmemmap.c
-+++ b/mm/sparse-vmemmap.c
-@@ -245,19 +245,26 @@ int __meminit vmemmap_populate_basepages(unsigned long start,
- 	return 0;
+@@ -1142,8 +1142,9 @@ kernel_physical_mapping_remove(unsigned long start, unsigned long end)
  }
  
--struct page * __meminit sparse_mem_map_populate(unsigned long pnum, int nid,
--		struct vmem_altmap *altmap)
-+struct page * __meminit __populate_section_memmap(unsigned long pfn,
-+		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
+ void __ref arch_remove_memory(int nid, u64 start, u64 size,
+-			      struct vmem_altmap *altmap)
++		struct mhp_restrictions *restrictions)
  {
- 	unsigned long start;
- 	unsigned long end;
--	struct page *map;
- 
--	map = pfn_to_page(pnum * PAGES_PER_SECTION);
--	start = (unsigned long)map;
--	end = (unsigned long)(map + PAGES_PER_SECTION);
-+	/*
-+	 * The minimum granularity of memmap extensions is
-+	 * SECTION_ACTIVE_SIZE as allocations are tracked in the
-+	 * 'map_active' bitmap of the section.
-+	 */
-+	end = ALIGN(pfn + nr_pages, PHYS_PFN(SECTION_ACTIVE_SIZE));
-+	pfn &= PHYS_PFN(SECTION_ACTIVE_MASK);
-+	nr_pages = end - pfn;
-+
-+	start = (unsigned long) pfn_to_page(pfn);
-+	end = start + nr_pages * sizeof(struct page);
- 
- 	if (vmemmap_populate(start, end, nid, altmap))
- 		return NULL;
- 
--	return map;
-+	return pfn_to_page(pfn);
++	struct vmem_altmap *altmap = restrictions->altmap;
+ 	unsigned long start_pfn = start >> PAGE_SHIFT;
+ 	unsigned long nr_pages = size >> PAGE_SHIFT;
+ 	struct page *page = pfn_to_page(start_pfn);
+@@ -1153,7 +1154,7 @@ void __ref arch_remove_memory(int nid, u64 start, u64 size,
+ 	if (altmap)
+ 		page += vmem_altmap_offset(altmap);
+ 	zone = page_zone(page);
+-	__remove_pages(zone, start_pfn, nr_pages, altmap);
++	__remove_pages(zone, start_pfn, nr_pages, restrictions);
+ 	kernel_physical_mapping_remove(start, start + size);
  }
-diff --git a/mm/sparse.c b/mm/sparse.c
-index 5ef2f884c4e1..98408c0da060 100644
---- a/mm/sparse.c
-+++ b/mm/sparse.c
-@@ -452,8 +452,8 @@ static unsigned long __init section_map_size(void)
- 	return PAGE_ALIGN(sizeof(struct page) * PAGES_PER_SECTION);
- }
- 
--struct page __init *sparse_mem_map_populate(unsigned long pnum, int nid,
--		struct vmem_altmap *altmap)
-+struct page __init *__populate_section_memmap(unsigned long pfn,
-+		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
- {
- 	unsigned long size = section_map_size();
- 	struct page *map = sparse_buffer_alloc(size);
-@@ -534,10 +534,13 @@ static void __init sparse_init_nid(int nid, unsigned long pnum_begin,
- 	}
- 	sparse_buffer_init(map_count * section_map_size(), nid);
- 	for_each_present_section_nr(pnum_begin, pnum) {
-+		unsigned long pfn = section_nr_to_pfn(pnum);
-+
- 		if (pnum >= pnum_end)
- 			break;
- 
--		map = sparse_mem_map_populate(pnum, nid, NULL);
-+		map = __populate_section_memmap(pfn, PAGES_PER_SECTION,
-+				nid, NULL);
- 		if (!map) {
- 			pr_err("%s: node[%d] memory map backing failed. Some memory will not be available.",
- 			       __func__, nid);
-@@ -637,17 +640,17 @@ void offline_mem_sections(unsigned long start_pfn, unsigned long end_pfn)
  #endif
+diff --git a/include/linux/memory_hotplug.h b/include/linux/memory_hotplug.h
+index ae892eef8b82..31b768bd1268 100644
+--- a/include/linux/memory_hotplug.h
++++ b/include/linux/memory_hotplug.h
+@@ -125,9 +125,10 @@ static inline bool movable_node_is_enabled(void)
  
- #ifdef CONFIG_SPARSEMEM_VMEMMAP
--static inline struct page *kmalloc_section_memmap(unsigned long pnum, int nid,
--		struct vmem_altmap *altmap)
-+static struct page *populate_section_memmap(unsigned long pfn,
-+		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
- {
--	/* This will make the necessary allocations eventually. */
--	return sparse_mem_map_populate(pnum, nid, altmap);
-+	return __populate_section_memmap(pfn, nr_pages, nid, altmap);
- }
--static void __kfree_section_memmap(struct page *memmap,
-+
-+static void depopulate_section_memmap(unsigned long pfn, unsigned long nr_pages,
- 		struct vmem_altmap *altmap)
- {
--	unsigned long start = (unsigned long)memmap;
--	unsigned long end = (unsigned long)(memmap + PAGES_PER_SECTION);
-+	unsigned long start = (unsigned long) pfn_to_page(pfn);
-+	unsigned long end = start + nr_pages * sizeof(struct page);
- 
- 	vmemmap_free(start, end, altmap);
- }
-@@ -661,11 +664,18 @@ static void free_map_bootmem(struct page *memmap)
- }
+ #ifdef CONFIG_MEMORY_HOTREMOVE
+ extern void arch_remove_memory(int nid, u64 start, u64 size,
+-			       struct vmem_altmap *altmap);
++		struct mhp_restrictions *restrictions);
+ extern void __remove_pages(struct zone *zone, unsigned long start_pfn,
+-			   unsigned long nr_pages, struct vmem_altmap *altmap);
++		unsigned long nr_pages,
++		struct mhp_restrictions *restrictions);
  #endif /* CONFIG_MEMORY_HOTREMOVE */
- #else
--static struct page *__kmalloc_section_memmap(void)
-+struct page *populate_section_memmap(unsigned long pfn,
-+		unsigned long nr_pages, int nid, struct vmem_altmap *altmap)
- {
- 	struct page *page, *ret;
- 	unsigned long memmap_size = sizeof(struct page) * PAGES_PER_SECTION;
  
-+	if ((pfn & ~PAGE_SECTION_MASK) || nr_pages != PAGES_PER_SECTION) {
-+		WARN(1, "%s: called with section unaligned parameters\n",
-+				__func__);
-+		return NULL;
-+	}
+ /*
+diff --git a/kernel/memremap.c b/kernel/memremap.c
+index f355586ea54a..33475e211568 100644
+--- a/kernel/memremap.c
++++ b/kernel/memremap.c
+@@ -108,8 +108,11 @@ static void devm_memremap_pages_release(void *data)
+ 		__remove_pages(page_zone(pfn_to_page(pfn)), pfn,
+ 				align_size >> PAGE_SHIFT, NULL);
+ 	} else {
+-		arch_remove_memory(nid, align_start, align_size,
+-				pgmap->altmap_valid ? &pgmap->altmap : NULL);
++		struct mhp_restrictions restrictions = {
++			.altmap = pgmap->altmap_valid ? &pgmap->altmap : NULL,
++		};
 +
- 	page = alloc_pages(GFP_KERNEL|__GFP_NOWARN, get_order(memmap_size));
- 	if (page)
- 		goto got_map_page;
-@@ -682,15 +692,17 @@ static struct page *__kmalloc_section_memmap(void)
- 	return ret;
- }
- 
--static inline struct page *kmalloc_section_memmap(unsigned long pnum, int nid,
-+static void depopulate_section_memmap(unsigned long pfn, unsigned long nr_pages,
- 		struct vmem_altmap *altmap)
++		arch_remove_memory(nid, align_start, align_size, &restrictions);
+ 		kasan_remove_zero_shadow(__va(align_start), align_size);
+ 	}
+ 	mem_hotplug_done();
+@@ -142,15 +145,14 @@ static void devm_memremap_pages_release(void *data)
+ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
  {
--	return __kmalloc_section_memmap();
--}
-+	struct page *memmap = pfn_to_page(pfn);
+ 	resource_size_t align_start, align_size, align_end;
+-	struct vmem_altmap *altmap = pgmap->altmap_valid ?
+-			&pgmap->altmap : NULL;
+ 	struct resource *res = &pgmap->res;
+ 	struct dev_pagemap *conflict_pgmap;
+ 	struct mhp_restrictions restrictions = {
+ 		/*
+ 		 * We do not want any optional features only our own memmap
+ 		*/
+-		.altmap = altmap,
 +
-+	if ((pfn & ~PAGE_SECTION_MASK) || nr_pages != PAGES_PER_SECTION) {
-+		WARN(1, "%s: called with section unaligned parameters\n",
-+				__func__);
-+		return;
-+	}
++		.altmap = pgmap->altmap_valid ? &pgmap->altmap : NULL,
+ 	};
+ 	pgprot_t pgprot = PAGE_KERNEL;
+ 	int error, nid, is_ram;
+@@ -235,7 +237,7 @@ void *devm_memremap_pages(struct device *dev, struct dev_pagemap *pgmap)
  
--static void __kfree_section_memmap(struct page *memmap,
--		struct vmem_altmap *altmap)
--{
- 	if (is_vmalloc_addr(memmap))
- 		vfree(memmap);
- 	else
-@@ -761,12 +773,13 @@ int __meminit sparse_add_one_section(int nid, unsigned long start_pfn,
- 	if (ret < 0 && ret != -EEXIST)
- 		return ret;
- 	ret = 0;
--	memmap = kmalloc_section_memmap(section_nr, nid, altmap);
-+	memmap = populate_section_memmap(start_pfn, PAGES_PER_SECTION, nid,
-+			altmap);
- 	if (!memmap)
- 		return -ENOMEM;
- 	usage = kzalloc(mem_section_usage_size(), GFP_KERNEL);
- 	if (!usage) {
--		__kfree_section_memmap(memmap, altmap);
-+		depopulate_section_memmap(start_pfn, PAGES_PER_SECTION, altmap);
- 		return -ENOMEM;
+ 		zone = &NODE_DATA(nid)->node_zones[ZONE_DEVICE];
+ 		move_pfn_range_to_zone(zone, align_start >> PAGE_SHIFT,
+-				align_size >> PAGE_SHIFT, altmap);
++				align_size >> PAGE_SHIFT, restrictions.altmap);
  	}
  
-@@ -788,7 +801,7 @@ int __meminit sparse_add_one_section(int nid, unsigned long start_pfn,
- out:
- 	if (ret < 0) {
- 		kfree(usage);
--		__kfree_section_memmap(memmap, altmap);
-+		depopulate_section_memmap(start_pfn, PAGES_PER_SECTION, altmap);
- 	}
- 	return ret;
- }
-@@ -825,7 +838,8 @@ static inline void clear_hwpoisoned_pages(struct page *memmap, int nr_pages)
- #endif
- 
- static void free_section_usage(struct page *memmap,
--		struct mem_section_usage *usage, struct vmem_altmap *altmap)
-+		struct mem_section_usage *usage, unsigned long pfn,
-+		unsigned long nr_pages, struct vmem_altmap *altmap)
+ 	mem_hotplug_done();
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index d5874f9d4043..055cea62be6e 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -543,7 +543,7 @@ static void __remove_section(struct zone *zone, struct mem_section *ms,
+  * @zone: zone from which pages need to be removed
+  * @phys_start_pfn: starting pageframe (must be aligned to start of a section)
+  * @nr_pages: number of pages to remove (must be multiple of section size)
+- * @altmap: alternative device page map or %NULL if default memmap is used
++ * @restrictions: optional alternative device page map and other features
+  *
+  * Generic helper function to remove section mappings and sysfs entries
+  * for the section of the memory we are removing. Caller needs to make
+@@ -551,17 +551,15 @@ static void __remove_section(struct zone *zone, struct mem_section *ms,
+  * calling offline_pages().
+  */
+ void __remove_pages(struct zone *zone, unsigned long phys_start_pfn,
+-		    unsigned long nr_pages, struct vmem_altmap *altmap)
++		unsigned long nr_pages, struct mhp_restrictions *restrictions)
  {
- 	struct page *usage_page;
+ 	unsigned long i;
+-	unsigned long map_offset = 0;
+ 	int sections_to_remove;
++	unsigned long map_offset = 0;
++	struct vmem_altmap *altmap = restrictions->altmap;
  
-@@ -839,7 +853,7 @@ static void free_section_usage(struct page *memmap,
- 	if (PageSlab(usage_page) || PageCompound(usage_page)) {
- 		kfree(usage);
- 		if (memmap)
--			__kfree_section_memmap(memmap, altmap);
-+			depopulate_section_memmap(pfn, nr_pages, altmap);
- 		return;
- 	}
+-	/* In the ZONE_DEVICE case device driver owns the memory region */
+-	if (is_dev_zone(zone)) {
+-		if (altmap)
+-			map_offset = vmem_altmap_offset(altmap);
+-	}
++	if (altmap)
++		map_offset = vmem_altmap_offset(altmap);
  
-@@ -868,7 +882,8 @@ void sparse_remove_one_section(struct zone *zone, struct mem_section *ms,
+ 	clear_zone_contiguous(zone);
  
- 	clear_hwpoisoned_pages(memmap + map_offset,
- 			PAGES_PER_SECTION - map_offset);
--	free_section_usage(memmap, usage, altmap);
-+	free_section_usage(memmap, usage, section_nr_to_pfn(__section_nr(ms)),
-+			PAGES_PER_SECTION, altmap);
- }
- #endif /* CONFIG_MEMORY_HOTREMOVE */
- #endif /* CONFIG_MEMORY_HOTPLUG */
+@@ -1832,6 +1830,7 @@ static void __release_memory_resource(u64 start, u64 size)
+  */
+ void __ref __remove_memory(int nid, u64 start, u64 size)
+ {
++	struct mhp_restrictions restrictions = { 0 };
+ 	int ret;
+ 
+ 	BUG_ON(check_hotplug_memory_range(start, size));
+@@ -1853,7 +1852,7 @@ void __ref __remove_memory(int nid, u64 start, u64 size)
+ 	memblock_free(start, size);
+ 	memblock_remove(start, size);
+ 
+-	arch_remove_memory(nid, start, size, NULL);
++	arch_remove_memory(nid, start, size, &restrictions);
+ 	__release_memory_resource(start, size);
+ 
+ 	try_offline_node(nid);
 
