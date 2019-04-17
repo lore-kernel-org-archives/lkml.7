@@ -2,119 +2,115 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED,USER_AGENT_GIT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 862E7C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:15:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A6B16C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:16:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4F3EA20872
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:15:35 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="izogyHMf"
+	by mail.kernel.org (Postfix) with ESMTP id 7FB6020872
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:16:32 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732503AbfDQOPe (ORCPT
+        id S1732422AbfDQOQb convert rfc822-to-8bit (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 10:15:34 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:46547 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1731743AbfDQOPd (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 10:15:33 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3HEFHH73934878
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 17 Apr 2019 07:15:17 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3HEFHH73934878
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041743; t=1555510517;
-        bh=cQAQ9MkSVxJpiowc1BjGMeX9ilxmKi+RJV19iI4c2nE=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=izogyHMfOkdF7o/GPmjyaMD9RpE1ETR62Rj5Ucn62hp9CAZH407wNj6XNU3gKlgAF
-         cBFjIXccaNwtoHkFM0u5DW5aVgkOIwpBiCpOfngPHi6xWn5D2LcGGlkAkx7cr2ut/0
-         4YqbKCuAa/zzGQgD/Y511ht78gPWO72C2mS9J/U3mgn1SU5bd7eVskHODtnAaR9qZ1
-         7K/DJyRt1SeRs2i/XTn1bkUYyCqxgIFckYVd8mtrSf2i62p3IqjnCDsM2YwaZ0KQkJ
-         Suy+x02mEmvDlYGbAMyFOZMLLwqd9pvyCFedrIOMCtlCKoqdU2XvlmpP0DeuFciyWC
-         bo9bkWNNPMZCA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3HEFGXf3934875;
-        Wed, 17 Apr 2019 07:15:16 -0700
-Date:   Wed, 17 Apr 2019 07:15:16 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
-Message-ID: <tip-1bdb67e5aa2d5d43c48cb7d93393fcba276c9e71@git.kernel.org>
-Cc:     sean.j.christopherson@intel.com, mingo@redhat.com, x86@kernel.org,
-        mingo@kernel.org, bp@suse.de, linux-kernel@vger.kernel.org,
-        tglx@linutronix.de, luto@kernel.org, hpa@zytor.com,
-        jpoimboe@redhat.com
-Reply-To: mingo@redhat.com, sean.j.christopherson@intel.com, bp@suse.de,
-          mingo@kernel.org, x86@kernel.org, luto@kernel.org,
-          linux-kernel@vger.kernel.org, tglx@linutronix.de,
-          jpoimboe@redhat.com, hpa@zytor.com
-In-Reply-To: <20190414160145.349862042@linutronix.de>
-References: <20190414160145.349862042@linutronix.de>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/irq] x86/exceptions: Enable IST guard pages
-Git-Commit-ID: 1bdb67e5aa2d5d43c48cb7d93393fcba276c9e71
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 17 Apr 2019 10:16:31 -0400
+Received: from mail-oln040092253069.outbound.protection.outlook.com ([40.92.253.69]:48544
+        "EHLO APC01-SG2-obe.outbound.protection.outlook.com"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1731743AbfDQOQa (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 10:16:30 -0400
+Received: from HK2APC01FT008.eop-APC01.prod.protection.outlook.com
+ (10.152.248.59) by HK2APC01HT019.eop-APC01.prod.protection.outlook.com
+ (10.152.249.49) with Microsoft SMTP Server (version=TLS1_2,
+ cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id 15.20.1771.16; Wed, 17 Apr
+ 2019 14:16:24 +0000
+Received: from PS2P216MB0642.KORP216.PROD.OUTLOOK.COM (10.152.248.51) by
+ HK2APC01FT008.mail.protection.outlook.com (10.152.248.117) with Microsoft
+ SMTP Server (version=TLS1_2, cipher=TLS_ECDHE_RSA_WITH_AES_256_CBC_SHA384) id
+ 15.20.1771.16 via Frontend Transport; Wed, 17 Apr 2019 14:16:24 +0000
+Received: from PS2P216MB0642.KORP216.PROD.OUTLOOK.COM
+ ([fe80::adb3:4c16:60fd:65]) by PS2P216MB0642.KORP216.PROD.OUTLOOK.COM
+ ([fe80::adb3:4c16:60fd:65%5]) with mapi id 15.20.1813.011; Wed, 17 Apr 2019
+ 14:16:24 +0000
+From:   Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+To:     "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+CC:     "linux-pci@vger.kernel.org" <linux-pci@vger.kernel.org>,
+        "bhelgaas@google.com" <bhelgaas@google.com>,
+        "mika.westerberg@linux.intel.com" <mika.westerberg@linux.intel.com>,
+        "corbet@lwn.net" <corbet@lwn.net>,
+        Nicholas Johnson <nicholas.johnson-opensource@outlook.com.au>
+Subject: [PATCH v4 0/4] PCI: Patch series to support Thunderbolt without any
+ BIOS support
+Thread-Topic: [PATCH v4 0/4] PCI: Patch series to support Thunderbolt without
+ any BIOS support
+Thread-Index: AQHU9SgjzA7gZFnnDUaHy6fCOX1Rrg==
+Date:   Wed, 17 Apr 2019 14:16:24 +0000
+Message-ID: <PS2P216MB06427AB6C60D2848A5A015C880250@PS2P216MB0642.KORP216.PROD.OUTLOOK.COM>
+Accept-Language: en-AU, en-US
+Content-Language: en-US
+X-MS-Has-Attach: 
+X-MS-TNEF-Correlator: 
+x-clientproxiedby: SG3P274CA0012.SGPP274.PROD.OUTLOOK.COM (2603:1096:4:be::24)
+ To PS2P216MB0642.KORP216.PROD.OUTLOOK.COM (2603:1096:300:1c::16)
+x-incomingtopheadermarker: OriginalChecksum:46BB39BAE394C538EA30CBB9FCAD8F637F792E1F3A1A18B7D9B983343C13EF86;UpperCasedChecksum:1A9CC05C6D1A9571CF710F2CA31AE5E43CA0C2FEA2A80573CA5F8B0B964A406B;SizeAsReceived:7658;Count:48
+x-ms-exchange-messagesentrepresentingtype: 1
+x-mailer: git-send-email 2.19.1
+x-tmn:  [37iRqCiOdNruC8HLHjwatwwklSHT1s9DIzTW8xbDIwM=]
+x-microsoft-original-message-id: <20190417141610.6730-1-nicholas.johnson-opensource@outlook.com.au>
+x-ms-publictraffictype: Email
+x-incomingheadercount: 48
+x-eopattributedmessage: 0
+x-ms-exchange-slblob-mailprops: mBy7Mai7yE5GOp0BEGlYkd86SxW4/tB+yqhSIPKzB2c+9bKhujokHdF10X6U5BBeO8nJOA5QPNvf6k2RluEzW6ze+P7HUdVF6fNmJi80ED7wRi7I2UXmFvzuaqAr48pRBz6782rlQ+m7COIvEKJE3/8e4GaqII9wgVSX6A7ADBtvce117Cgnz9R51T2nd1iZdMZxpboyj8XqnNl6IXKfdWEICwuzbxXitPjQeICocjlTsB55HODSF4Zf9RlrFSX1T1geFlr0vaqWtY81htfyu11Scw3jwJ0VQF135sXja6KDQTVjZ9UKEEsfnTdF0+GMVrgmZTsSs8M0wHlY9vzLYoLhxHrDXEwKawpQNo5eCNrAgt14tTCl95Fo0nubdEG/1D6iO8Z/uT+RTQeLXYdPtp2nudVSz/osDCKP7e38sNaWc0Q5pLlDkhUCogpRry7Bt9S6PpEaFAuDcrHgZactweleMD25Rgp6Xuk9L2nwGmLJEodF/0riM+ZFrIxyeeDm8kt2cg0Mh9ZCX1ZN21ddQvzwwfoCEnEWiDs7Zx5RxhS/oZ9b7sYJ1pvo+1+jLehpqgNK8kcTB9UXH0nPFezv3pBRDHfq8fnlOt4PrpLV+yCyVf0yNtVNEoyu5i4MoIOKHVUrM1TpawXigh8eyufkY4s94DFZxFUcG02GUMPVmWy7AGFbj/ASnYdEiawsM/W9cdaTZ9M6RoFhQT7j2k7L9ds9vjbXiRUY
+x-microsoft-antispam: BCL:0;PCL:0;RULEID:(2390118)(7020095)(20181119110)(201702061078)(5061506573)(5061507331)(1603103135)(2017031320274)(201702181274)(2017031323274)(2017031324274)(2017031322404)(1601125500)(1603101475)(1701031045);SRVR:HK2APC01HT019;
+x-ms-traffictypediagnostic: HK2APC01HT019:
+x-microsoft-antispam-message-info: g9bMMi0Z55Jl+fiKA1YaAA4aB7xHLVkRsFK5IGzGLAEVTQscRV6T1Wgw5KdJ3EiFwUCWlP4B9Jj4c06ILAjna+pTIcr3rZlw24ZPXDy+kEJAKjNZzlo75X4GJ17Jk/vOFJpHqfgwFk5w20oQmF94qSknMhE4DoLA713HUrxPGNFrI5DoA4a+jqhj9z/DvOmP
+Content-Type: text/plain; charset="iso-8859-1"
+Content-Transfer-Encoding: 8BIT
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
-Content-Disposition: inline
+X-OriginatorOrg: outlook.com
+X-MS-Exchange-CrossTenant-RMS-PersistedConsumerOrg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-Network-Message-Id: 613ed3ba-7446-44e8-698c-08d6c33f457d
+X-MS-Exchange-CrossTenant-rms-persistedconsumerorg: 00000000-0000-0000-0000-000000000000
+X-MS-Exchange-CrossTenant-originalarrivaltime: 17 Apr 2019 14:16:24.4313
+ (UTC)
+X-MS-Exchange-CrossTenant-fromentityheader: Internet
+X-MS-Exchange-CrossTenant-id: 84df9e7f-e9f6-40af-b435-aaaaaaaaaaaa
+X-MS-Exchange-Transport-CrossTenantHeadersStamped: HK2APC01HT019
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  1bdb67e5aa2d5d43c48cb7d93393fcba276c9e71
-Gitweb:     https://git.kernel.org/tip/1bdb67e5aa2d5d43c48cb7d93393fcba276c9e71
-Author:     Thomas Gleixner <tglx@linutronix.de>
-AuthorDate: Sun, 14 Apr 2019 17:59:56 +0200
-Committer:  Borislav Petkov <bp@suse.de>
-CommitDate: Wed, 17 Apr 2019 15:05:32 +0200
+1. Based on 5.1-rc5 so should apply cleanly to latest version
+2. The comment clean-up patch is now last
+3. Kernel parameters are no longer renamed
 
-x86/exceptions: Enable IST guard pages
+Sorry - last time I misunderstood or read over the requirements too 
+quickly. I hope this time everything is as requested. Please let me know 
+if there is anything else to change.
 
-All usage sites which expected that the exception stacks in the CPU entry
-area are mapped linearly are fixed up. Enable guard pages between the
-IST stacks.
+It is still not as thoroughly checked over as my PATCH v2 series for 
+small typos, but I cannot find any problems. All patches pass the 
+scripts/checkpatch.pl perfectly with no warnings.
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Thomas Gleixner <tglx@linutronix.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190414160145.349862042@linutronix.de
----
- arch/x86/include/asm/cpu_entry_area.h | 8 ++------
- 1 file changed, 2 insertions(+), 6 deletions(-)
+Thank you for your continued patience and understanding.
 
-diff --git a/arch/x86/include/asm/cpu_entry_area.h b/arch/x86/include/asm/cpu_entry_area.h
-index 310eeb62d418..9c96406e6d2b 100644
---- a/arch/x86/include/asm/cpu_entry_area.h
-+++ b/arch/x86/include/asm/cpu_entry_area.h
-@@ -26,13 +26,9 @@ struct exception_stacks {
- 	ESTACKS_MEMBERS(0)
- };
- 
--/*
-- * The effective cpu entry area mapping with guard pages. Guard size is
-- * zero until the code which makes assumptions about linear mappings is
-- * cleaned up.
-- */
-+/* The effective cpu entry area mapping with guard pages. */
- struct cea_exception_stacks {
--	ESTACKS_MEMBERS(0)
-+	ESTACKS_MEMBERS(PAGE_SIZE)
- };
- 
- /*
+Nicholas Johnson (4):
+  PCI: Consider alignment of hot-added bridges when distributing
+    available resources
+  PCI: Fix serious bug when sizing bridges with additional size
+  PCI: Modify kernel parameters to differentiate between MMIO and
+    MMIO_PREF sizes
+  PCI: Cleanup block comments in setup-bus.c to meet kernel style
+    guidelines
+
+ .../admin-guide/kernel-parameters.txt         |   5 +-
+ drivers/pci/pci.c                             |  12 +-
+ drivers/pci/setup-bus.c                       | 504 +++++++++---------
+ include/linux/pci.h                           |   3 +-
+ 4 files changed, 278 insertions(+), 246 deletions(-)
+
+-- 
+2.20.1
+
