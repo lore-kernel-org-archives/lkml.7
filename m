@@ -2,149 +2,105 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6B7E5C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:05:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 21418C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:05:42 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 39B96206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:05:02 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4C78206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:05:41 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="c09Ft3QB"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="Q0tkYLno"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732348AbfDQOFB (ORCPT
+        id S1732380AbfDQOFk (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 10:05:01 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:34645 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729356AbfDQOFA (ORCPT
+        Wed, 17 Apr 2019 10:05:40 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:57770 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730463AbfDQOFk (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 10:05:00 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3HE4e8j3932813
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 17 Apr 2019 07:04:40 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3HE4e8j3932813
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041743; t=1555509881;
-        bh=ZU82v/0AFz6U8g36Dwdz5gwk0L3xOWGCdDCP6X5/T24=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=c09Ft3QBrG2mAVxphI4PdtZWYxEhqEzPx/q3vQ9q56gZxl3JwE8JfDZZs94zbLb1P
-         fAlK8aEtCCDM7BSmJVDRnaDAAvIyPY8Rdw0fNCejvwMe3J08xH7Y8QKAN8V51ZfrHV
-         ORAxNsE/E1uo9RJmRghhRWIyHEKLiMVa8Is3SCwDKsUAu/gXhRmLQUemRqzRBdoCei
-         0UnYjd1nlp8Q77QrY6rg/nILBHgxfHjpMgHOrXcA/MUYGCJUCSbjA56Cag3IqqD/rA
-         TWRvbq9O0YduZMy3sIRJ1DWQGP0B6bqT06GrA7EpMl3PpCy3WwIUXrGww9Fo7YRCbm
-         FG+DSeixf/XqA==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3HE4dWe3932810;
-        Wed, 17 Apr 2019 07:04:39 -0700
-Date:   Wed, 17 Apr 2019 07:04:39 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
-Message-ID: <tip-df835e7083bee33e98635aca26b39b63ebc6cca7@git.kernel.org>
-Cc:     x86@kernel.org, bp@suse.de, luto@kernel.org,
-        linux-kernel@vger.kernel.org, sean.j.christopherson@intel.com,
-        nstange@suse.de, mingo@redhat.com, tglx@linutronix.de,
-        hpa@zytor.com, jpoimboe@redhat.com, mingo@kernel.org
-Reply-To: jpoimboe@redhat.com, mingo@kernel.org,
-          sean.j.christopherson@intel.com, mingo@redhat.com,
-          nstange@suse.de, tglx@linutronix.de, hpa@zytor.com,
-          x86@kernel.org, bp@suse.de, luto@kernel.org,
-          linux-kernel@vger.kernel.org
-In-Reply-To: <20190414160143.961241397@linutronix.de>
-References: <20190414160143.961241397@linutronix.de>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/irq] x86/irq/64: Sanitize the top/bottom confusion
-Git-Commit-ID: df835e7083bee33e98635aca26b39b63ebc6cca7
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 17 Apr 2019 10:05:40 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=uaqhWcEMhOppFxNJuJkkefm8Cb4IwH32m7Y7mt4G/+E=; b=Q0tkYLnoZXcTq0NRUrlkEZW81
+        /KULfxKRSGSUKITkBkbhRVZxpA1kdFhPWtqenxHfduZZ08ickZYjg9HnWiiXYBAy/WcPN7EWSyv7k
+        67wqjAxsoUAmau3b+5owHktakJsdqWR2pgQrbvDsr/hXhz5W1O6Cea3emGn/T8fdevZebw6OLFLxi
+        k/T7FpvEBZhTLx+U7ODUPy52CjxQbEnjF8Px5S3RHMP6zNdcNxC1/jEBKKbUDoNJG4IDElOMBhklm
+        uj0dilWVH7bkc4Dx71LLQZe7qv9383VAUkapzcwVGuj5uquZxhG4g5yYwiXVG0slSASQnsiItV633
+        dGAllolTQ==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hGlBp-0003Zo-06; Wed, 17 Apr 2019 14:05:29 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 7474929B5292C; Wed, 17 Apr 2019 16:05:27 +0200 (CEST)
+Date:   Wed, 17 Apr 2019 16:05:27 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+Subject: Re: [PATCH v4 11/16] locking/rwsem: Enable readers spinning on writer
+Message-ID: <20190417140527.GJ4038@hirez.programming.kicks-ass.net>
+References: <20190413172259.2740-1-longman@redhat.com>
+ <20190413172259.2740-12-longman@redhat.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
+In-Reply-To: <20190413172259.2740-12-longman@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  df835e7083bee33e98635aca26b39b63ebc6cca7
-Gitweb:     https://git.kernel.org/tip/df835e7083bee33e98635aca26b39b63ebc6cca7
-Author:     Thomas Gleixner <tglx@linutronix.de>
-AuthorDate: Sun, 14 Apr 2019 17:59:41 +0200
-Committer:  Borislav Petkov <bp@suse.de>
-CommitDate: Wed, 17 Apr 2019 12:34:49 +0200
+On Sat, Apr 13, 2019 at 01:22:54PM -0400, Waiman Long wrote:
+> @@ -650,6 +686,33 @@ __rwsem_down_read_failed_common(struct rw_semaphore *sem, int state)
+>  	struct rwsem_waiter waiter;
+>  	DEFINE_WAKE_Q(wake_q);
+>  
+> +	if (!rwsem_can_spin_on_owner(sem))
+> +		goto queue;
+> +
+> +	/*
+> +	 * Undo read bias from down_read() and do optimistic spinning.
+> +	 */
+> +	atomic_long_add(-RWSEM_READER_BIAS, &sem->count);
+> +	adjustment = 0;
+> +	if (rwsem_optimistic_spin(sem, false)) {
+> +		unsigned long flags;
+> +
+> +		/*
+> +		 * Opportunistically wake up other readers in the wait queue.
+> +		 * It has another chance of wakeup at unlock time.
+> +		 */
+> +		if ((atomic_long_read(&sem->count) & RWSEM_FLAG_WAITERS) &&
+> +		    raw_spin_trylock_irqsave(&sem->wait_lock, flags)) {
 
-x86/irq/64: Sanitize the top/bottom confusion
+why trylock? Also the rest of this function uses _irq(). Having had to
+define @flags should've been a clue.
 
-On x86, stacks go top to bottom, but the stack overflow check uses it
-the other way round, which is just confusing. Clean it up and sanitize
-the warning string a bit.
+You simply cnanot do down_*() with IRQs disabled.
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Reviewed-by: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Nicolai Stange <nstange@suse.de>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190414160143.961241397@linutronix.de
----
- arch/x86/kernel/irq_64.c | 22 +++++++++++-----------
- 1 file changed, 11 insertions(+), 11 deletions(-)
-
-diff --git a/arch/x86/kernel/irq_64.c b/arch/x86/kernel/irq_64.c
-index f6dcc8fea5c0..cf200466d5c8 100644
---- a/arch/x86/kernel/irq_64.c
-+++ b/arch/x86/kernel/irq_64.c
-@@ -42,7 +42,7 @@ int sysctl_panic_on_stackoverflow;
- static inline void stack_overflow_check(struct pt_regs *regs)
- {
- #ifdef CONFIG_DEBUG_STACKOVERFLOW
--#define STACK_TOP_MARGIN	128
-+#define STACK_MARGIN	128
- 	struct orig_ist *oist;
- 	u64 irq_stack_top, irq_stack_bottom;
- 	u64 estack_top, estack_bottom;
-@@ -51,25 +51,25 @@ static inline void stack_overflow_check(struct pt_regs *regs)
- 	if (user_mode(regs))
- 		return;
- 
--	if (regs->sp >= curbase + sizeof(struct pt_regs) + STACK_TOP_MARGIN &&
-+	if (regs->sp >= curbase + sizeof(struct pt_regs) + STACK_MARGIN &&
- 	    regs->sp <= curbase + THREAD_SIZE)
- 		return;
- 
--	irq_stack_bottom = (u64)__this_cpu_read(irq_stack_ptr);
--	irq_stack_top = irq_stack_bottom - IRQ_STACK_SIZE + STACK_TOP_MARGIN;
--	if (regs->sp >= irq_stack_top && regs->sp <= irq_stack_bottom)
-+	irq_stack_top = (u64)__this_cpu_read(irq_stack_ptr);
-+	irq_stack_bottom = irq_stack_top - IRQ_STACK_SIZE + STACK_MARGIN;
-+	if (regs->sp >= irq_stack_bottom && regs->sp <= irq_stack_top)
- 		return;
- 
- 	oist = this_cpu_ptr(&orig_ist);
--	estack_bottom = (u64)oist->ist[DEBUG_STACK];
--	estack_top = estack_bottom - DEBUG_STKSZ + STACK_TOP_MARGIN;
--	if (regs->sp >= estack_top && regs->sp <= estack_bottom)
-+	estack_top = (u64)oist->ist[DEBUG_STACK];
-+	estack_bottom = estack_top - DEBUG_STKSZ + STACK_MARGIN;
-+	if (regs->sp >= estack_bottom && regs->sp <= estack_top)
- 		return;
- 
--	WARN_ONCE(1, "do_IRQ(): %s has overflown the kernel stack (cur:%Lx,sp:%lx,irq stk top-bottom:%Lx-%Lx,exception stk top-bottom:%Lx-%Lx,ip:%pF)\n",
-+	WARN_ONCE(1, "do_IRQ(): %s has overflown the kernel stack (cur:%Lx,sp:%lx, irq stack:%Lx-%Lx, exception stack: %Lx-%Lx, ip:%pF)\n",
- 		current->comm, curbase, regs->sp,
--		irq_stack_top, irq_stack_bottom,
--		estack_top, estack_bottom, (void *)regs->ip);
-+		irq_stack_bottom, irq_stack_top,
-+		estack_bottom, estack_top, (void *)regs->ip);
- 
- 	if (sysctl_panic_on_stackoverflow)
- 		panic("low stack detected by irq handler - check messages\n");
+> +			if (!list_empty(&sem->wait_list))
+> +				__rwsem_mark_wake(sem, RWSEM_WAKE_READ_OWNED,
+> +						  &wake_q);
+> +			raw_spin_unlock_irqrestore(&sem->wait_lock, flags);
+> +			wake_up_q(&wake_q);
+> +		}
+> +		return sem;
+> +	}
+> +
+> +queue:
+>  	waiter.task = current;
+>  	waiter.type = RWSEM_WAITING_FOR_READ;
+>  	waiter.timeout = jiffies + RWSEM_WAIT_TIMEOUT;
