@@ -2,91 +2,145 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,FSL_HELO_FAKE,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id D8E68C10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 05:57:28 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 7F521C10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 05:57:52 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A4F4420674
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 05:57:28 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4847021773
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 05:57:52 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555480672;
+	bh=4zjdeyrlTUes5XlDgTAxACNcRO4l0UuN6MbeUkjZIQ0=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=XbepASpO8o0n3+Bhv4OoV5UEyMGRqQeKb6noVMC4ovRRt0qqB4FRHgS3XS8ie96gb
+	 mfYAx/5T9WF/kx8DVXDVNqYQrsoxgjXMW+AswG38D4XYTGud2bJXl0UljUYym0CDlx
+	 q0MR/vJm6G6u5+5OJPUQ/Z9t+vmU5xNwluuAfUBk=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730652AbfDQF51 (ORCPT
+        id S1730703AbfDQF5v (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 01:57:27 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:36368 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1726273AbfDQF51 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 01:57:27 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id D6C1B308427C;
-        Wed, 17 Apr 2019 05:57:26 +0000 (UTC)
-Received: from [10.72.12.196] (ovpn-12-196.pek2.redhat.com [10.72.12.196])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 213155D719;
-        Wed, 17 Apr 2019 05:57:19 +0000 (UTC)
-Subject: Re: [PATCH] vhost/scsi: drop unnecessary smp_mb__after_atomic()
-To:     Stefan Hajnoczi <stefanha@redhat.com>, kvm@vger.kernel.org
-Cc:     virtualization@lists.linux-foundation.org,
-        linux-kernel@vger.kernel.org,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        Nicholas Bellinger <nab@linux-iscsi.org>,
-        Andrea Parri <andrea.parri@amarulasolutions.com>
-References: <20190416104748.26942-1-stefanha@redhat.com>
-From:   Jason Wang <jasowang@redhat.com>
-Message-ID: <c18ed846-940b-0b10-3d40-639b1f8dc499@redhat.com>
-Date:   Wed, 17 Apr 2019 13:57:18 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 17 Apr 2019 01:57:51 -0400
+Received: from mail-wr1-f67.google.com ([209.85.221.67]:44061 "EHLO
+        mail-wr1-f67.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726273AbfDQF5u (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 01:57:50 -0400
+Received: by mail-wr1-f67.google.com with SMTP id w18so69078wrv.11
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 22:57:49 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:content-transfer-encoding:in-reply-to
+         :user-agent;
+        bh=Ud8Y7hJFyd11bvF8mlu3ELwQOWk5sXwQ2iYqBOr8hmQ=;
+        b=Kxfx0nTlM0wSJQG22Hvpl1R+QsYQGJx/WtQRjWOXEc37pSUrZU3hqD/WLDfe3WxHKx
+         2xgrlluaAuRzA6Uzw0epx/wUCOu8ShNsTjCOvD5l1zKDiLd31fSMvWvJuUIDJp/GzfA6
+         80fxtD/Kgq4idovfBzhg0em7mHoOGLW7uQV/bq+Sx+2zk9mEHizlJ6PwxyO8aReye9wq
+         K1JuC8pFK+c5gtxY6r33neEyC5jgWDEpTHiKu3iYINcetYJcq6EzRC6qnDqg1hIQJ4Hy
+         h43TGG9g8t2DBlUM6w1+srybr0pZACJVyqYJmpGU9Z5RAvBQyQm5Gfw8wKgiBRNXZX1E
+         qkEw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=Ud8Y7hJFyd11bvF8mlu3ELwQOWk5sXwQ2iYqBOr8hmQ=;
+        b=AodKAPVwXleMDJZrfRrG0j5TJ19zJyjSafCUbXSy10XmMxz4xe+RXhleaEtNWQLcNl
+         4UArYhCNDgCR/eGfFJwNjH2f+i8W7SuAQwjt9+AlwepHsR/mhbVHwnIJzt1mT3haEo5I
+         7BTe3lcczc0i9w5KVKtq+rTP74eo3LZ0wdxaxLWV4FdWFX7NdjADYH0LvtB0yGXQ7wcr
+         oDwAE/8Ymi8CNdh7b9G7+Zr3/zjKunF3qQky8HYMV3qBqnT8Rot3XgZ3lCyenm7cABEP
+         /VMpbmD1l5jtJ+YzhaZZxXdmH/JRqjOoC1HPlUBPZ+H8S7v+rEsPjHC8h9v5lQqHhq4S
+         i/NA==
+X-Gm-Message-State: APjAAAX0WWpK593YMGDsWPoTlGOqFLPl596L8MXGnu2mTdlyCwLGEzMp
+        jvgQLa5T78nsN6fM9bB1ufs=
+X-Google-Smtp-Source: APXvYqyaCH5s8Y1QXy5pdkoyJUBbcFoINiue62YWeXR0GQ8ugiCeOjsL5loGWY0KHNSb7q+LL8T/kg==
+X-Received: by 2002:adf:ee01:: with SMTP id y1mr58026933wrn.51.1555480668830;
+        Tue, 16 Apr 2019 22:57:48 -0700 (PDT)
+Received: from gmail.com (2E8B0CD5.catv.pool.telekom.hu. [46.139.12.213])
+        by smtp.gmail.com with ESMTPSA id 61sm178930757wre.50.2019.04.16.22.57.47
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Tue, 16 Apr 2019 22:57:48 -0700 (PDT)
+Date:   Wed, 17 Apr 2019 07:57:45 +0200
+From:   Ingo Molnar <mingo@kernel.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Peter Zijlstra <peterz@infradead.org>,
+        Ingo Molnar <mingo@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+Subject: Re: [PATCH-tip 0/2] locking/rwsem: Rwsem rearchitecture part 2
+ follow-up patches
+Message-ID: <20190417055745.GA95755@gmail.com>
+References: <20190415205829.32707-1-longman@redhat.com>
+ <20190416131047.GW11158@hirez.programming.kicks-ass.net>
+ <4747d10b-e9a4-f453-ab4e-13fc984a4067@redhat.com>
+ <20190416141747.GN4038@hirez.programming.kicks-ass.net>
+ <18af71ce-1ef3-c6cd-4088-3b2a9bf0016e@redhat.com>
+ <20190416173700.GQ4038@hirez.programming.kicks-ass.net>
+ <2873c42c-f2a6-64e9-bf0f-9c86536984b7@redhat.com>
 MIME-Version: 1.0
-In-Reply-To: <20190416104748.26942-1-stefanha@redhat.com>
-Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Type: text/plain; charset=utf-8
+Content-Disposition: inline
 Content-Transfer-Encoding: 8bit
-Content-Language: en-US
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.40]); Wed, 17 Apr 2019 05:57:26 +0000 (UTC)
+In-Reply-To: <2873c42c-f2a6-64e9-bf0f-9c86536984b7@redhat.com>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
 
-On 2019/4/16 下午6:47, Stefan Hajnoczi wrote:
-> The vhost_scsi.ko code used several atomic variables at one point.
-> Later they were dropped or converted to regular ints protected by a
-> mutex.
->
-> The commit that made these changes left an unused smp_mb__after_atomic()
-> in vhost_scsi_set_endpoint().  It was previously used after incrementing
-> vhost_scsi->vhost_ref_cnt but this field has been dropped:
->
->    -     atomic_inc(&vs->vhost_ref_cnt);
->          smp_mb__after_atomic_inc();
->
-> Reported-by: Andrea Parri <andrea.parri@amarulasolutions.com>
-> Fixes: 101998f6fcd680 ("tcm_vhost: Post-merge review changes requested by MST")
-> Signed-off-by: Stefan Hajnoczi <stefanha@redhat.com>
-> ---
->   drivers/vhost/scsi.c | 1 -
->   1 file changed, 1 deletion(-)
->
-> diff --git a/drivers/vhost/scsi.c b/drivers/vhost/scsi.c
-> index 618fb6461017..c090d177bd75 100644
-> --- a/drivers/vhost/scsi.c
-> +++ b/drivers/vhost/scsi.c
-> @@ -1443,7 +1443,6 @@ vhost_scsi_set_endpoint(struct vhost_scsi *vs,
->   			tpg->tv_tpg_vhost_count++;
->   			tpg->vhost_scsi = vs;
->   			vs_tpg[tpg->tport_tpgt] = tpg;
-> -			smp_mb__after_atomic();
->   			match = true;
->   		}
->   		mutex_unlock(&tpg->tv_tpg_mutex);
+* Waiman Long <longman@redhat.com> wrote:
 
+> On 04/16/2019 01:37 PM, Peter Zijlstra wrote:
+> > On Tue, Apr 16, 2019 at 01:03:10PM -0400, Waiman Long wrote:
+> >> On 04/16/2019 10:17 AM, Peter Zijlstra wrote:
+> >>> On Tue, Apr 16, 2019 at 09:18:50AM -0400, Waiman Long wrote:
+> >>>> On 04/16/2019 09:10 AM, Peter Zijlstra wrote:
+> >>>>> On Mon, Apr 15, 2019 at 04:58:27PM -0400, Waiman Long wrote:
+> >>>>>> This series contain 2 follow-up patches to alleviate the performance
+> >>>>>> regression found in the page_fault1 test of the will-it-scale benchmark.
+> >>>>>> This does not recover all the lost performance, but reclaim a sizeable
+> >>>>>> portion of it.
+> >>>>>>
+> >>>>>> The regression was found on an Intel system. I have run the test on
+> >>>>>> an AMD system. The regression wasn't seen there.  There are only minor
+> >>>>>> variations in performance. Perhaps the page fault path is quite different
+> >>>>>> between Intel and AMD systems.
+> >>>>> Can you please just fold this back into the appropriate patches? Trying
+> >>>>> to review all the back and forth is painful.
+> >>>> I will send out an update part 2 patch with patch 1 of this series
+> >>>> merged into the writer spinning on reader patch. Patch 2 of this series
+> >>>> will be a standalone one.
+> >>> Hmm, in that case I can fold it back too. So hold off on sending it.
+> >>>
+> >>> I thought #2 was a fixup for an earlier patch as well.
+> >> #2 is a performance fix.
+> > Of this patch?
+> >
+> > 206038 N T Apr 13 Waiman Long     (7.5K) ├─>[PATCH v4 11/16] locking/rwsem: Enable readers spinning on writer
+> >
+> > Fixes should have a Fixes: tag. And if the patch it fixes isn't a commit
+> > yet, the patch should be refreshed to not need a fix.
+> 
+> The original patch isn't wrong. This patch just introduce another idea
+> to make it better. That is why I would still like to separate it as a
+> distinct patch.
 
-Looks like Paolo has sent an identical patch before this one.
+Yeah, I think it's better to have it in two separate patches. Basically 
+patch #1 has a downside for certain workloads, which the heuristics in 
+patch #2 improve. That's the only connection between the two patches.
 
-Thanks
+If we find some other worst-case workload then the split of the commits 
+would allow more finegrained examination of the effects of these 
+performance tunings.
 
+Thanks,
+
+	Ingo
