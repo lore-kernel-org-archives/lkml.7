@@ -2,98 +2,78 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4DF4BC282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:25:12 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EEE44C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:26:32 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1D08D206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:25:12 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="VJzpvllK"
+	by mail.kernel.org (Postfix) with ESMTP id BC4202173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:26:32 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555521992;
+	bh=oefqZujA30z4o7uM/+Cm/lpuqknG6U09RqnQclQJtEY=;
+	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
+	b=KYQVErYmsOI4cRyO2M4/vL18ZcqSCrVwZwdA910V398PTE1mj2/D2uSH7flspWEUE
+	 E1ZSo+P3wbU85j8Y+AIGTPBfa8nCmzalDZSAswSCIbJlrHiuVQllAzYyFhpzRX3n/a
+	 z6zMde4RjRkBfB2XUU5XWNE1KRC9F+Q4V4v0E2mU=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733004AbfDQRZK (ORCPT
+        id S1733015AbfDQR0b (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 13:25:10 -0400
-Received: from fllv0016.ext.ti.com ([198.47.19.142]:55264 "EHLO
-        fllv0016.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732321AbfDQRZK (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 13:25:10 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by fllv0016.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3HHOijJ092593;
-        Wed, 17 Apr 2019 12:24:44 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1555521884;
-        bh=yVgnOiQL608EUWHuPLXH7eDvrVEaDH7Dpfk7s4HRDzM=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To;
-        b=VJzpvllKd8av1n4Ii5yYXX1nl4IsJV+6V7vj2xN6ZZihogZ27yp32pY6lIMw1MlI/
-         qzk/dhAvXAuOJuUetu/cDVzs9i/esgGS+4ktUpVgLiy4oyVRFjL9tjatjnheXlE7V6
-         rtHya+ZkJSgt2cC+ayd579W8qTbYn7bvVsfsFGzw=
-Received: from DLEE112.ent.ti.com (dlee112.ent.ti.com [157.170.170.23])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3HHOiHc068018
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 17 Apr 2019 12:24:44 -0500
-Received: from DLEE101.ent.ti.com (157.170.170.31) by DLEE112.ent.ti.com
- (157.170.170.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 17
- Apr 2019 12:24:43 -0500
-Received: from fllv0039.itg.ti.com (10.64.41.19) by DLEE101.ent.ti.com
- (157.170.170.31) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 17 Apr 2019 12:24:43 -0500
-Received: from [10.250.138.29] (ileax41-snat.itg.ti.com [10.172.224.153])
-        by fllv0039.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3HHOaal044307;
-        Wed, 17 Apr 2019 12:24:38 -0500
-Subject: Re: [PATCH v3 0/5] MTD: Add Initial Hyperbus support
-To:     Marek Vasut <marek.vasut@gmail.com>,
-        Richard Weinberger <richard@nod.at>,
-        Rob Herring <robh+dt@kernel.org>,
-        Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
-CC:     David Woodhouse <dwmw2@infradead.org>,
-        Brian Norris <computersforpeace@gmail.com>,
-        Boris Brezillon <bbrezillon@kernel.org>,
-        <linux-mtd@lists.infradead.org>,
-        Tudor Ambarus <Tudor.Ambarus@microchip.com>,
-        Miquel Raynal <miquel.raynal@bootlin.com>,
-        Joakim Tjernlund <Joakim.Tjernlund@infinera.com>,
-        <devicetree@vger.kernel.org>, Mason Yang <masonccyang@mxic.com.tw>,
-        <linux-arm-kernel@lists.infradead.org>, <nsekhar@ti.com>,
-        <linux-kernel@vger.kernel.org>
-References: <20190412092923.24919-1-vigneshr@ti.com>
-From:   Vignesh Raghavendra <vigneshr@ti.com>
-Message-ID: <9e8575e2-b8de-341d-7ab5-08055b84c805@ti.com>
-Date:   Wed, 17 Apr 2019 22:54:36 +0530
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 17 Apr 2019 13:26:31 -0400
+Received: from mail.kernel.org ([198.145.29.99]:39708 "EHLO mail.kernel.org"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729641AbfDQR0a (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 13:26:30 -0400
+Received: from localhost (c-73-47-72-35.hsd1.nh.comcast.net [73.47.72.35])
+        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
+        (No client certificate requested)
+        by mail.kernel.org (Postfix) with ESMTPSA id DC931206BA;
+        Wed, 17 Apr 2019 17:26:29 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+        s=default; t=1555521990;
+        bh=oefqZujA30z4o7uM/+Cm/lpuqknG6U09RqnQclQJtEY=;
+        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
+        b=WlCYeDiukabEvrPaR85qY3M5wrZcG0iP1+8pB/77p+Tz/DzrFg5eBaasX+zRxu0Oh
+         ocnYkKbm3K8d3UsyPi3/nZ6AbcjsjYQFmKLpxULFmctb33XBlhbgu1/7VCVqCQJW8r
+         ZKinNeDF3A546TlZskxwFKG+Xzkkwj39mlaGW2cs=
+Date:   Wed, 17 Apr 2019 13:26:28 -0400
+From:   Sasha Levin <sashal@kernel.org>
+To:     "Enrico Weigelt, metux IT consult" <lkml@metux.net>
+Cc:     peterhuewe@gmx.de, jarkko.sakkinen@linux.intel.com, jgg@ziepe.ca,
+        corbet@lwn.net, linux-kernel@vger.kernel.org,
+        linux-doc@vger.kernel.org, linux-integrity@vger.kernel.org,
+        linux-kernel@microsoft.com, thiruan@microsoft.com,
+        bryankel@microsoft.com
+Subject: Re: [PATCH v3 2/2] ftpm: add documentation for ftpm driver
+Message-ID: <20190417172628.GF435@sasha-vm>
+References: <20190415155636.32748-1-sashal@kernel.org>
+ <20190415155636.32748-3-sashal@kernel.org>
+ <b2c1b45e-515d-1d91-e3d9-5f9078078cae@metux.net>
 MIME-Version: 1.0
-In-Reply-To: <20190412092923.24919-1-vigneshr@ti.com>
-Content-Type: text/plain; charset="utf-8"; format=flowed
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii; format=flowed
+Content-Disposition: inline
+In-Reply-To: <b2c1b45e-515d-1d91-e3d9-5f9078078cae@metux.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Sergei,
+On Wed, Apr 17, 2019 at 02:23:13PM +0200, Enrico Weigelt, metux IT consult wrote:
+>On 15.04.19 17:56, Sasha Levin wrote:
+>
+>Hi,
+>
+>> +The driver acts as a thin layer that passes commands to and from a TPM> +implemented in firmware. The driver itself doesn't contain much logic
+>and is> +used more like a dumb pipe between firmware and kernel/userspace.
+>Is that TPM already used in production or yet an PoC ?
+>IOW: can the protocol be changed ?
 
-On 12/04/19 2:59 PM, Vignesh Raghavendra wrote:
-> Vignesh Raghavendra (5):
->    mtd: cfi_cmdset_0002: Add support for polling status register
->    dt-bindings: mtd: Add binding documentation for HyperFlash
->    mtd: Add support for HyperBus memory devices
->    dt-bindings: mtd: Add bindings for TI's AM654 HyperBus memory
->      controller
->    mtd: hyperbus: Add driver for TI's HyperBus memory controller
-> 
+Sadly no, this is based on something that exists for a few years already
+and we're trying to make Linux run on it.
 
-Thanks for all the reviews!
-Were you able to test this series with your hardware? Would like to get 
-this into v5.2-rc1 if possible
-
-Regards
-Vignesh
+--
+Thanks,
+Sasha
