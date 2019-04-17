@@ -2,244 +2,103 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
-	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 57B7FC10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 04:07:23 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id BC90EC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 04:08:31 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id ED1AA2177B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 04:07:22 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 8AB2C20693
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 04:08:31 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="QQgoXxYQ"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="CON7p5qb"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726325AbfDQEHV (ORCPT
+        id S1726521AbfDQEIa (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 00:07:21 -0400
-Received: from userp2130.oracle.com ([156.151.31.86]:33258 "EHLO
-        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725320AbfDQEHV (ORCPT
+        Wed, 17 Apr 2019 00:08:30 -0400
+Received: from bombadil.infradead.org ([198.137.202.133]:37466 "EHLO
+        bombadil.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725320AbfDQEIa (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 00:07:21 -0400
-Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
-        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3H3xnrq176008;
-        Wed, 17 Apr 2019 04:07:07 GMT
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to : cc :
- references : from : message-id : date : mime-version : in-reply-to :
- content-type : content-transfer-encoding; s=corp-2018-07-02;
- bh=dqxLCZthXgkqgrYIN5PBFt7MgX9TO3+pBB9X+TscWlg=;
- b=QQgoXxYQVt00/GsnG33mmZu/m6mOUheqfoxahTCc/CS6mtXvRnJNW79F8V05776ISSKl
- rRQpqZ8sC05SDYDJKQs3kf0qLVWBIfXv7rd13IwEC7mOipVfq2w7plCdG0gFAbcO8Q1K
- VkNxwae5qYCBu70S3RM7KTmAbZbgeuUXjNDA/wy0g8d0AS/MNJpfQX0KyNSj9Rj4LpK3
- UZCtfip6+5+GWdqErNcWuzQtI1wu6ymZIwN0fn4u1+Yu1pdrkFcDpYIKgUlsH4xrGDpF
- dyOpsOaM5s+KBWtII00c28saAbnwQifNThoq1wHmSCL9xyWsQgHjk3AWEOSG5yMY1Tmr lw== 
-Received: from userp3030.oracle.com (userp3030.oracle.com [156.151.31.80])
-        by userp2130.oracle.com with ESMTP id 2rvwk3rega-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 17 Apr 2019 04:07:07 +0000
-Received: from pps.filterd (userp3030.oracle.com [127.0.0.1])
-        by userp3030.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3H46xWb181714;
-        Wed, 17 Apr 2019 04:07:07 GMT
-Received: from userv0121.oracle.com (userv0121.oracle.com [156.151.31.72])
-        by userp3030.oracle.com with ESMTP id 2ru4vtja5k-1
-        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 17 Apr 2019 04:07:07 +0000
-Received: from abhmp0003.oracle.com (abhmp0003.oracle.com [141.146.116.9])
-        by userv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x3H46tPn003232;
-        Wed, 17 Apr 2019 04:06:56 GMT
-Received: from [192.168.1.12] (/180.165.90.201)
-        by default (Oracle Beehive Gateway v4.0)
-        with ESMTP ; Tue, 16 Apr 2019 21:06:55 -0700
-Subject: Re: [RESEND PATCH] blk-mq: fix hang caused by freeze/unfreeze
- sequence
-To:     Roman Penyaev <rpenyaev@suse.de>,
-        Bart Van Assche <bvanassche@acm.org>
-Cc:     linux-block@vger.kernel.org, shirley.ma@oracle.com,
-        martin.petersen@oracle.com,
-        Roman Pen <roman.penyaev@profitbricks.com>,
-        Akinobu Mita <akinobu.mita@gmail.com>,
-        Tejun Heo <tj@kernel.org>, Jens Axboe <axboe@kernel.dk>,
-        Christoph Hellwig <hch@lst.de>, linux-kernel@vger.kernel.org,
-        linux-block-owner@vger.kernel.org
-References: <20190409090828.16282-1-bob.liu@oracle.com>
- <0763cb5a-5598-69e3-e5ac-765989aab5b1@acm.org>
- <84cf04edf8f3f3b87b78383a1837aff3@suse.de>
-From:   Bob Liu <bob.liu@oracle.com>
-Message-ID: <3a423156-4893-c0fd-9f3a-b26806817b7c@oracle.com>
-Date:   Wed, 17 Apr 2019 12:06:45 +0800
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.1
+        Wed, 17 Apr 2019 00:08:30 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=bombadil.20170209; h=In-Reply-To:Content-Type:MIME-Version
+        :References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=Em4HpOp3QfI9scdNSfMBzQDhJV4iaM3Bd30fC2vkXHU=; b=CON7p5qb8+GWuIuaXABny5e1b
+        78XtNR3iadVEg2rNXkBrCWv715s3AtTYJMLTdNT0QCRRdQ9fJWPSUQukE+LPNMhSr/fd10/w9l/Hv
+        Wz0AxaKBh/AeKrFFkj2x+XQBZjkfhjM5PcwIXKXslLN6KOny76URhvSqY42AecAmCwEZLapoJKSgv
+        sQQ45ZOYF0EGWTc/Ld4hZS8RUtZF2g6iRfTWKYYjcDEpKnjk8HRF+FkF9VvkYRZtxqji86Hy8FSOT
+        VDOBV85w1wdqy2/Y2Sw9nkmwjNCMyg4hUXDTwK39ZKai6BMQFvhoilI0BHoa+dcfib0I2PptYbriB
+        QVwqb5ZiQ==;
+Received: from willy by bombadil.infradead.org with local (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hGbry-0002lh-TV; Wed, 17 Apr 2019 04:08:22 +0000
+Date:   Tue, 16 Apr 2019 21:08:22 -0700
+From:   Matthew Wilcox <willy@infradead.org>
+To:     Kees Cook <keescook@chromium.org>
+Cc:     Herbert Xu <herbert@gondor.apana.org.au>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Rik van Riel <riel@surriel.com>,
+        linux-crypto <linux-crypto@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Laura Abbott <labbott@redhat.com>,
+        Linux-MM <linux-mm@kvack.org>
+Subject: Re: [PATCH] crypto: testmgr - allocate buffers with __GFP_COMP
+Message-ID: <20190417040822.GB7751@bombadil.infradead.org>
+References: <20190411192607.GD225654@gmail.com>
+ <20190411192827.72551-1-ebiggers@kernel.org>
+ <CAGXu5jJ8k7fP5Vb=ygmQ0B45GfrK2PeaV04bPWmcZ6Vb+swgyA@mail.gmail.com>
+ <20190415022412.GA29714@bombadil.infradead.org>
+ <20190415024615.f765e7oagw26ezam@gondor.apana.org.au>
+ <20190416021852.GA18616@bombadil.infradead.org>
+ <CAGXu5jKaVB=bTJCBWhsxAny7-OkzXQ+8KCd5O+_-7hKcJFiqKw@mail.gmail.com>
 MIME-Version: 1.0
-In-Reply-To: <84cf04edf8f3f3b87b78383a1837aff3@suse.de>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: base64
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9229 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=0 malwarescore=0
- phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
- adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
- engine=8.0.1-1810050000 definitions=main-1904170025
-X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9229 signatures=668685
-X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
- suspectscore=0 phishscore=0 bulkscore=0 spamscore=0 clxscore=1011
- lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
- classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
- definitions=main-1904170025
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CAGXu5jKaVB=bTJCBWhsxAny7-OkzXQ+8KCd5O+_-7hKcJFiqKw@mail.gmail.com>
+User-Agent: Mutt/1.9.2 (2017-12-15)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-T24gNC8xNS8xOSA1OjQ2IFBNLCBSb21hbiBQZW55YWV2IHdyb3RlOg0KPiBPbiAyMDE5LTA0
-LTEzIDA1OjQyLCBCYXJ0IFZhbiBBc3NjaGUgd3JvdGU6DQo+PiBPbiA0LzkvMTkgMjowOCBB
-TSwgQm9iIExpdSB3cm90ZToNCj4+PiDCoHZvaWQgYmxrX2ZyZWV6ZV9xdWV1ZV9zdGFydChz
-dHJ1Y3QgcmVxdWVzdF9xdWV1ZSAqcSkNCj4+PiDCoHsNCj4+PiAtwqDCoMKgIGludCBmcmVl
-emVfZGVwdGg7DQo+Pj4gLQ0KPj4+IC3CoMKgwqAgZnJlZXplX2RlcHRoID0gYXRvbWljX2lu
-Y19yZXR1cm4oJnEtPm1xX2ZyZWV6ZV9kZXB0aCk7DQo+Pj4gLcKgwqDCoCBpZiAoZnJlZXpl
-X2RlcHRoID09IDEpIHsNCj4+PiArwqDCoMKgIG11dGV4X2xvY2soJnEtPm1xX2ZyZWV6ZV9s
-b2NrKTsNCj4+PiArwqDCoMKgIGlmICgrK3EtPm1xX2ZyZWV6ZV9kZXB0aCA9PSAxKSB7DQo+
-Pj4gwqDCoMKgwqDCoMKgwqDCoCBwZXJjcHVfcmVmX2tpbGwoJnEtPnFfdXNhZ2VfY291bnRl
-cik7DQo+Pj4gK8KgwqDCoMKgwqDCoMKgIG11dGV4X3VubG9jaygmcS0+bXFfZnJlZXplX2xv
-Y2spOw0KPj4+IMKgwqDCoMKgwqDCoMKgwqAgaWYgKHF1ZXVlX2lzX21xKHEpKQ0KPj4+IMKg
-wqDCoMKgwqDCoMKgwqDCoMKgwqDCoCBibGtfbXFfcnVuX2h3X3F1ZXVlcyhxLCBmYWxzZSk7
-DQo+Pj4gK8KgwqDCoCB9IGVsc2Ugew0KPj4+ICvCoMKgwqDCoMKgwqDCoCBtdXRleF91bmxv
-Y2soJnEtPm1xX2ZyZWV6ZV9sb2NrKTsNCj4+PiDCoMKgwqDCoCB9DQo+Pj4gwqB9DQo+PiBI
-YXZlIHlvdSBjb25zaWRlcmVkIHRvIG1vdmUgdGhlIG11dGV4X3VubG9jaygpIGNhbGwgdG8g
-dGhlIGVuZCBvZiB0aGUgZnVuY3Rpb24NCj4+IHN1Y2ggdGhhdCB0aGVyZSBpcyBvbmx5IG9u
-ZSBtdXRleF91bmxvY2soKSBjYWxsIGluc3RlYWQgb2YgdHdvPyBJbiBjYXNlIHlvdQ0KPj4g
-d291bGQgYmUgd29ycmllZCBhYm91dCBob2xkaW5nIHRoZSBtdXRleCBhcm91bmQgdGhlIGNv
-ZGUgdGhhdCBydW5zIHRoZSBxdWV1ZSwNCj4+IGhvdyBhYm91dCBjaGFuZ2luZyB0aGUgYmxr
-X21xX3J1bl9od19xdWV1ZXMoKSBjYWxsIHN1Y2ggdGhhdCB0aGUgcXVldWVzIGFyZQ0KPj4g
-cnVuIGFzeW5jPw0KPiANCj4gSGkgQmFydCwNCj4gDQo+IFRoZSBvbmx5IHB1cnBvc2Ugb2Yg
-J21xX2ZyZWV6ZV9sb2NrJyBpcyB0byBhdm9pZCByYWNlIGJldHdlZW4gbXFfZnJlZXplX2Rl
-cHRoDQo+IHZhcmlhYmxlIGFuZCB0aGUgZm9sbG93aW5nIHVzYWdlIG9mIHFfdXNhZ2VfY291
-bnRlciBwZXJjcHUgcmVmLsKgIEkgYWRtaXQgdGhhdA0KPiBteSBvcmlnaW5hbCBjb21tZW50
-IGlzIHF1aXRlIHVuY2xlYXIsIGJ1dCBsb2NrZWQgc2VjdGlvbiBzaG91bGQgYmUgYXMgc2hv
-cnQNCj4gYXMgcG9zc2libGUsIHNvIHJldHVybmluZyB0byB5b3VyIHF1ZXN0aW9uOiBiZXR0
-ZXIgdG8gaGF2ZSB0d28gdW5sb2NrIGNhbGxzDQo+IGluc3RlYWQgb2YgZXhwYW5kaW5nIGxv
-Y2tlZCBjcml0aWNhbCBzZWN0aW9uLg0KPiANCj4gVW5mb3J0dW5hdGVseSBJIGRvIG5vdCBo
-YXZlIGhhcmR3YXJlIHRvIHBsYXkgYWdhaW4gd2l0aCB0aGUgaXNzdWUsIGJ1dCBJIHNlZQ0K
-PiB0aGVyZSBpcyBhIG5pY2UgY2FuZGlkYXRlIGZvciBhIHF1aWNrIHJlcHJvZHVjdGlvbjrC
-oCBudWxsX2JsayBxdWV1ZXMgd2l0aA0KPiBzaGFyZWQgdGFncy7CoCBIYXZpbmcgc2V2ZXJh
-bCBxdWV1ZXMgd2l0aCBzaGFyZWQgdGFncyBhbmQgYSBzY3JpcHQsIHdoaWNoDQo+IHBvd2Vy
-cyBvbi9vZmYgKEkgbWVhbiAncG93ZXInIGVudHJ5IG9mIGNvbmZpZ2ZzIG9mIHRoZSBudWxs
-X2JsaykgZGlmZmVyZW50DQo+IG51bGwgZGV2aWNlcyBmcm9tIGRpZmZlcmVudCBjcHVzIGl0
-IGlzIHF1aXRlIHBvc3NpYmxlIHRvIHRyaWdnZXIgdGhlIGlzc3VlLg0KPiBSYW5kb20gc2hv
-cnQgbXNkZWxheSgpIGluIGNvcnJlY3QgcGxhY2VzIGNhbiBoZWxwIHRvIGluY3JlYXNlIHBy
-b2JhYmlsaXR5IHRvDQo+IGhpdCB0aGUgaXNzdWUgcXVpdGUgZmFzdC4NCj4gDQo+IA0KPiBC
-dXQgQm9iLCB3aGF0IGlzIHRoZSBiYWNrdHJhY2Ugb2YgdGhlIGlzc3VlIHlvdSBoaXQ/wqAg
-V2hhdCBpcyB0aGUgZGV2aWNlPw0KPiBDb25kaXRpb25zIHRvIHJlcHJvZHVjZSB0aGUgaXNz
-dWUgYXJlIHF1aXRlIHNwZWNpZmljIGFuZCBmcmFua2x5IEkgZGlkIG5vdA0KPiBmaW5kIGFu
-eSAibmFrZWQiICh3aXRob3V0IGFueSBsb2NrcykgY2FsbHMgb2YgYmxrX21xX2ZyZWV6ZS91
-bmZyZWV6ZSBzZXF1ZW5jZSwNCj4gdGhlIG9ubHkgY2FuZGlkYXRlIHdoaWNoIEkgZm91bmQs
-IHNlZW1zLCBudWxsX2JsayAobm90IDEwMCUgc3VyZSwgYnV0IHdvcnRoIHRvDQo+IHRyeSku
-DQo+IA0KDQpZZXMsIGl0IGNhbiBiZSByZXByb2R1Y2VkIHdpdGggbnVsbF9ibGsuDQpCdXQg
-SSBhZGRlZCBhIG1zbGVlcCB0byBzYXZlIHRpbWUuDQpkaWZmIC0tZ2l0IGEvYmxvY2svYmxr
-LW1xLmMgYi9ibG9jay9ibGstbXEuYw0KaW5kZXggOTQzN2E1ZS4uODc1OTY3ZjEgMTAwNjQ0
-DQotLS0gYS9ibG9jay9ibGstbXEuYw0KKysrIGIvYmxvY2svYmxrLW1xLmMNCkBAIC0yMDIs
-NiArMjAyLDcgQEAgdm9pZCBibGtfbXFfdW5mcmVlemVfcXVldWUoc3RydWN0IHJlcXVlc3Rf
-cXVldWUgKnEpDQogICAgICAgIGZyZWV6ZV9kZXB0aCA9IGF0b21pY19kZWNfcmV0dXJuKCZx
-LT5tcV9mcmVlemVfZGVwdGgpOw0KICAgICAgICBXQVJOX09OX09OQ0UoZnJlZXplX2RlcHRo
-IDwgMCk7DQogICAgICAgIGlmICghZnJlZXplX2RlcHRoKSB7DQorICAgICAgICAgICAgICAg
-bXNsZWVwKDEwMDApOw0KICAgICAgICAgICAgICAgIHBlcmNwdV9yZWZfcmVzdXJyZWN0KCZx
-LT5xX3VzYWdlX2NvdW50ZXIpOw0KICAgICAgICAgICAgICAgIHdha2VfdXBfYWxsKCZxLT5t
-cV9mcmVlemVfd3EpOw0KICAgICAgICB9DQoNCg0KDQpCZWxvdyBpcyB0aGUgYmFja3RyYWNl
-Og0KLS0tDQpbICAyMzQuNjA0MjgwXSAtLS0tLS0tLS0tLS1bIGN1dCBoZXJlIF0tLS0tLS0t
-LS0tLS0NClsgIDIzNC42MDQyODhdIHBlcmNwdV9yZWZfa2lsbF9hbmRfY29uZmlybSBjYWxs
-ZWQgbW9yZSB0aGFuIG9uY2Ugb24gYmxrX3F1ZXVlX3VzYWdlX2NvdW50ZXJfcmVsZWFzZSEN
-ClsgIDIzNC42MDQzMDVdIFdBUk5JTkc6IENQVTogMCBQSUQ6IDExODU0IGF0IGxpYi9wZXJj
-cHUtcmVmY291bnQuYzozMzYgcGVyY3B1X3JlZl9raWxsX2FuZF9jb25maXJtKzB4OTkvMHhi
-MA0KWyAgMjM0LjYwNDMwNl0gTW9kdWxlcyBsaW5rZWQgaW46IG51bGxfYmxrIHRodW5kZXJi
-b2x0IGNjbSB4dF9DSEVDS1NVTSBpcHRhYmxlX21hbmdsZSBpcHRfTUFTUVVFUkFERSBpcHRh
-YmxlX25hdCBuZl9uYXRfaXB2NCBuZl9uYXQgeHRfY29ubnRyYWNrIG5mX2Nvbm50cmFjayBu
-Zl9kZWZyYWdfaXB2NiBuZl9kZWZyYWdfaXB2NCBpcHRfUkVKRUNUIG5mX3JlamVjdF9pcHY0
-IHh0X3RjcHVkcCBicmlkZ2Ugc3RwIGxsYyBkZXZsaW5rIGVidGFibGVfZmlsdGVyIGVidGFi
-bGVzIGlwNnRhYmxlX2ZpbHRlciBpcDZfdGFibGVzIGlwdGFibGVfZmlsdGVyIGJuZXAgYXJj
-NCBpbnRlbF9yYXBsIGl3bG12bSB4ODZfcGtnX3RlbXBfdGhlcm1hbCBpbnRlbF9wb3dlcmNs
-YW1wIG1hYzgwMjExIGNvcmV0ZW1wIHNuZF9zb2Nfc2tsIHNuZF9zb2Nfc2tsX2lwYyBzbmRf
-c29jX3NzdF9pcGMgc25kX3NvY19zc3RfZHNwIGt2bV9pbnRlbCBzbmRfaGRhX2V4dF9jb3Jl
-IHNuZF9zb2NfYWNwaV9pbnRlbF9tYXRjaCBzbmRfc29jX2FjcGkgc25kX3NvY19jb3JlIG5s
-c19pc284ODU5XzEgc25kX2hkYV9jb2RlY19oZG1pIHNuZF9oZGFfY29kZWNfY29uZXhhbnQg
-c25kX2NvbXByZXNzIGFjOTdfYnVzIHNuZF9oZGFfY29kZWNfZ2VuZXJpYyBzbmRfcGNtX2Rt
-YWVuZ2luZSBjcmN0MTBkaWZfcGNsbXVsIHNuZF9oZGFfaW50ZWwgY3JjMzJfcGNsbXVsIHNu
-ZF9oZGFfY29kZWMgZ2hhc2hfY2xtdWxuaV9pbnRlbCBpd2x3aWZpIHNuZF9oZGFfY29yZSBh
-ZXNuaV9pbnRlbCBzbmRfaHdkZXAgc25kX3BjbSB0aGlua3BhZF9hY3BpIHV2Y3ZpZGVvIG52
-cmFtIGxlZHRyaWdfYXVkaW8gYWVzX3g4Nl82NCBjcnlwdG9fc2ltZCBidHVzYiBjcnlwdGQg
-YnRydGwgZ2x1ZV9oZWxwZXIgc25kX3NlcV9taWRpIGJ0YmNtIHNuZF9zZXFfbWlkaV9ldmVu
-dCBpbnRlbF9jc3RhdGUgdmlkZW9idWYyX3ZtYWxsb2MgYnRpbnRlbCBzbmRfcmF3bWlkaSBj
-Zmc4MDIxMSBibHVldG9vdGggaW50ZWxfcmFwbF9wZXJmDQpbICAyMzQuNjA0MzYxXSAgaGlk
-X3NlbnNvcl9hY2NlbF8zZCBzbmRfc2VxIGhpZF9zZW5zb3JfbWFnbl8zZCB2aWRlb2J1ZjJf
-bWVtb3BzIHZpZGVvYnVmMl92NGwyIHZpZGVvYnVmMl9jb21tb24gaGlkX3NlbnNvcl9yb3Rh
-dGlvbiBydHN4X3BjaV9tcyBoaWRfc2Vuc29yX2FscyB3bWlfYm1vZiB2aWRlb2RldiBpbnB1
-dF9sZWRzIGpveWRldiBzZXJpb19yYXcgaGlkX3NlbnNvcl9neXJvXzNkIGludGVsX3dtaV90
-aHVuZGVyYm9sdCBoaWRfc2Vuc29yX3RyaWdnZXIgc25kX3NlcV9kZXZpY2UgaW5kdXN0cmlh
-bGlvX3RyaWdnZXJlZF9idWZmZXIga2ZpZm9fYnVmIHNuZF90aW1lciBoaWRfc2Vuc29yX2lp
-b19jb21tb24gbWVkaWEgaW5kdXN0cmlhbGlvIG1laV9tZSBzbmQgbWVtc3RpY2sgZWNkaF9n
-ZW5lcmljIG1laSB1Y3NpX2FjcGkgcHJvY2Vzc29yX3RoZXJtYWxfZGV2aWNlIHR5cGVjX3Vj
-c2kgaW50ZWxfc29jX2R0c19pb3NmIGludGVsX3BjaF90aGVybWFsIHR5cGVjIHNvdW5kY29y
-ZSBpbnQzNDAzX3RoZXJtYWwgaW50MzQweF90aGVybWFsX3pvbmUgaW50MzQwMF90aGVybWFs
-IGFjcGlfdGhlcm1hbF9yZWwgbWFjX2hpZCBhY3BpX3BhZCBzY2hfZnFfY29kZWwgcGFycG9y
-dF9wYyBwcGRldiBscCBwYXJwb3J0IGlwX3RhYmxlcyB4X3RhYmxlcyBhdXRvZnM0IGJ0cmZz
-IHpzdGRfY29tcHJlc3MgcmFpZDEwIHJhaWQ0NTYgYXN5bmNfcmFpZDZfcmVjb3YgYXN5bmNf
-bWVtY3B5IGFzeW5jX3BxIGFzeW5jX3hvciBhc3luY190eCB4b3IgcmFpZDZfcHEgcmFpZDAg
-bXVsdGlwYXRoIGxpbmVhciBoaWRfc2Vuc29yX2N1c3RvbSBoaWRfc2Vuc29yX2h1YiBpbnRl
-bF9pc2h0cF9oaWQgaGlkX2xvZ2l0ZWNoX2hpZHBwIGk5MTUga3ZtZ3QgdmZpb19tZGV2IG1k
-ZXYgdmZpb19pb21tdV90eXBlMSB2ZmlvIGt2bSBpcnFieXBhc3MgaTJjX2FsZ29fYml0IGRy
-bV9rbXNfaGVscGVyIHN5c2NvcHlhcmVhIHN5c2ZpbGxyZWN0IHN5c2ltZ2JsdCBmYl9zeXNf
-Zm9wcyBkcm0gd2Fjb20NClsgIDIzNC42MDQ0MTddICBoaWRfbG9naXRlY2hfZGogcnRzeF9w
-Y2lfc2RtbWMgaGlkX2dlbmVyaWMgZTEwMDBlIHVzYmhpZCBwc21vdXNlIGhpZCBpbnRlbF9p
-c2hfaXBjIHJ0c3hfcGNpIGludGVsX2lzaHRwIHdtaSB2aWRlbw0KWyAgMjM0LjYwNDQzMF0g
-Q1BVOiAwIFBJRDogMTE4NTQgQ29tbTogc2ggTm90IHRhaW50ZWQgNS4wLjArICMzMw0KWyAg
-MjM0LjYwNDQzMV0gSGFyZHdhcmUgbmFtZTogTEVOT1ZPIDIwTEpTMkVWMDgvMjBMSlMyRVYw
-OCwgQklPUyBSMFNFVDMzVyAoMS4xNyApIDA3LzE4LzIwMTgNClsgIDIzNC42MDQ0MzZdIFJJ
-UDogMDAxMDpwZXJjcHVfcmVmX2tpbGxfYW5kX2NvbmZpcm0rMHg5OS8weGIwDQpbICAyMzQu
-NjA0NDM5XSBDb2RlOiAwMCBlYiBkMyA4MCAzZCA3NiBhNCAyYSAwMSAwMCA3NSBhYiA0OCA4
-YiA1MyAxMCA0OCBjNyBjNiAwMCBmZCBhNiA4ZiA0OCBjNyBjNyBiMCA1NiBkNSA4ZiBjNiAw
-NSA1YiBhNCAyYSAwMSAwMSBlOCBmNyBhMiBiMSBmZiA8MGY+IDBiIDQ4IDhiIDQzIDA4IGVi
-IDg1IDkwIDkwIDkwIDkwIDkwIDkwIDkwIDkwIDkwIDkwIDkwIDkwIDkwIDkwDQpbICAyMzQu
-NjA0NDQxXSBSU1A6IDAwMTg6ZmZmZmEyODgwYWU5ZmQwMCBFRkxBR1M6IDAwMDEwMDg2DQpb
-ICAyMzQuNjA0NDQzXSBSQVg6IDAwMDAwMDAwMDAwMDAwMDAgUkJYOiBmZmZmOTc2OGIzYjgx
-NWQ4IFJDWDogMDAwMDAwMDAwMDAwMDAwMA0KWyAgMjM0LjYwNDQ0NV0gUkRYOiAwMDAwMDAw
-MDAwMDAwMDU1IFJTSTogZmZmZmZmZmY5MDU3NThmNSBSREk6IDAwMDAwMDAwMDAwMDAwNDYN
-ClsgIDIzNC42MDQ0NDddIFJCUDogZmZmZmEyODgwYWU5ZmQxOCBSMDg6IGZmZmZmZmZhMzE0
-YzgzN2QgUjA5OiBmZmZmZmZmZmZmZmZmZmZmDQpbICAyMzQuNjA0NDQ5XSBSMTA6IGZmZmZl
-M2M4NGZjMGEyMDAgUjExOiAwMDAwMDAwMDAwMDFhYmI0IFIxMjogMDAwMDAwMDAwMDAwMDI0
-Ng0KWyAgMjM0LjYwNDQ1MV0gUjEzOiAwMDAwMDAwMDAwMDAwMDAwIFIxNDogZmZmZjk3Njhi
-MDQ0ODMwMCBSMTU6IGZmZmY5NzY4YjI3MDM2MDANClsgIDIzNC42MDQ0NTRdIEZTOiAgMDAw
-MDdmYWUyZjNlNjU0MCgwMDAwKSBHUzpmZmZmOTc2OGQxNDAwMDAwKDAwMDApIGtubEdTOjAw
-MDAwMDAwMDAwMDAwMDANClsgIDIzNC42MDQ0NTZdIENTOiAgMDAxMCBEUzogMDAwMCBFUzog
-MDAwMCBDUjA6IDAwMDAwMDAwODAwNTAwMzMNClsgIDIzNC42MDQ0NThdIENSMjogMDAwMDU2
-MDc4MTAyZWUwOCBDUjM6IDAwMDAwMDA0MzEzODQwMDIgQ1I0OiAwMDAwMDAwMDAwMzYwNmYw
-DQpbICAyMzQuNjA0NDYwXSBEUjA6IDAwMDAwMDAwMDAwMDAwMDAgRFIxOiAwMDAwMDAwMDAw
-MDAwMDAwIERSMjogMDAwMDAwMDAwMDAwMDAwMA0KWyAgMjM0LjYwNDQ2Ml0gRFIzOiAwMDAw
-MDAwMDAwMDAwMDAwIERSNjogMDAwMDAwMDBmZmZlMGZmMCBEUjc6IDAwMDAwMDAwMDAwMDA0
-MDANClsgIDIzNC42MDQ0NjNdIENhbGwgVHJhY2U6DQpbICAyMzQuNjA0NDcxXSAgYmxrX2Zy
-ZWV6ZV9xdWV1ZV9zdGFydCsweDJkLzB4NTANClsgIDIzNC42MDQ0NzVdICBibGtfc2V0X3F1
-ZXVlX2R5aW5nKzB4MTcvMHg0MA0KWyAgMjM0LjYwNDQ3OV0gIGJsa19jbGVhbnVwX3F1ZXVl
-KzB4MjYvMHhkMA0KWyAgMjM0LjYwNDQ4Nl0gIG51bGxfZGVsX2RldisweDU5LzB4MTEwIFtu
-dWxsX2Jsa10NClsgIDIzNC42MDQ0OTFdICBudWxsYl9kZXZpY2VfcG93ZXJfc3RvcmUrMHhj
-YS8weDEwMCBbbnVsbF9ibGtdDQpbICAyMzQuNjA0NDk1XSAgY29uZmlnZnNfd3JpdGVfZmls
-ZSsweGI5LzB4MTIwDQpbICAyMzQuNjA0NTAwXSAgX192ZnNfd3JpdGUrMHgzYS8weDFiMA0K
-WyAgMjM0LjYwNDUwNV0gID8gYXBwYXJtb3JfZmlsZV9wZXJtaXNzaW9uKzB4MWEvMHgyMA0K
-WyAgMjM0LjYwNDUwOV0gID8gc2VjdXJpdHlfZmlsZV9wZXJtaXNzaW9uKzB4M2IvMHhmMA0K
-WyAgMjM0LjYwNDUxM10gID8gX2NvbmRfcmVzY2hlZCsweDFhLzB4NTANClsgIDIzNC42MDQ1
-MTZdICB2ZnNfd3JpdGUrMHhiOC8weDFiMA0KWyAgMjM0LjYwNDUxOV0gIGtzeXNfd3JpdGUr
-MHg1NS8weGMwDQpbICAyMzQuNjA0NTIzXSAgX194NjRfc3lzX3dyaXRlKzB4MWEvMHgyMA0K
-WyAgMjM0LjYwNDUyOF0gIGRvX3N5c2NhbGxfNjQrMHg1YS8weDExMA0KWyAgMjM0LjYwNDUz
-Ml0gIGVudHJ5X1NZU0NBTExfNjRfYWZ0ZXJfaHdmcmFtZSsweDQ0LzB4YTkNClsgIDIzNC42
-MDQ1MzVdIFJJUDogMDAzMzoweDdmYWUyZWYwNDE1NA0KWyAgMjM0LjYwNDUzN10gQ29kZTog
-ODkgMDIgNDggYzcgYzAgZmYgZmYgZmYgZmYgYzMgNjYgMmUgMGYgMWYgODQgMDAgMDAgMDAg
-MDAgMDAgNjYgOTAgNDggOGQgMDUgYjEgMDcgMmUgMDAgOGIgMDAgODUgYzAgNzUgMTMgYjgg
-MDEgMDAgMDAgMDAgMGYgMDUgPDQ4PiAzZCAwMCBmMCBmZiBmZiA3NyA1NCBmMyBjMyA2NiA5
-MCA0MSA1NCA1NSA0OSA4OSBkNCA1MyA0OCA4OSBmNQ0KWyAgMjM0LjYwNDUzOF0gUlNQOiAw
-MDJiOjAwMDA3ZmZkZGZlNjhlODggRUZMQUdTOiAwMDAwMDI0NiBPUklHX1JBWDogMDAwMDAw
-MDAwMDAwMDAwMQ0KWyAgMjM0LjYwNDU0MF0gUkFYOiBmZmZmZmZmZmZmZmZmZmRhIFJCWDog
-MDAwMDU2NDkzNDllNjhhMCBSQ1g6IDAwMDA3ZmFlMmVmMDQxNTQNClsgIDIzNC42MDQ1NDJd
-IFJEWDogMDAwMDAwMDAwMDAwMDAwMiBSU0k6IDAwMDA1NjQ5MzQ5ZTY4YTAgUkRJOiAwMDAw
-MDAwMDAwMDAwMDAxDQpbICAyMzQuNjA0NTQzXSBSQlA6IDAwMDAwMDAwMDAwMDAwMDIgUjA4
-OiAwMDAwMDAwMDAwMDAwMDc3IFIwOTogMDAwMDAwMDAwMDAwMDAwMA0KWyAgMjM0LjYwNDU0
-NF0gUjEwOiAwMDAwNTY0OTM0OWU2MDEwIFIxMTogMDAwMDAwMDAwMDAwMDI0NiBSMTI6IDAw
-MDAwMDAwMDAwMDAwMDENClsgIDIzNC42MDQ1NDVdIFIxMzogMDAwMDAwMDAwMDAwMDAwMiBS
-MTQ6IDdmZmZmZmZmZmZmZmZmZmYgUjE1OiAwMDAwN2ZmZGRmZTZhZWQ5DQpbICAyMzQuNjA0
-NTQ4XSAtLS1bIGVuZCB0cmFjZSBkOTkxMjkyOTE0NjRlYmFlIF0tLS0NCg==
+On Mon, Apr 15, 2019 at 10:14:51PM -0500, Kees Cook wrote:
+> On Mon, Apr 15, 2019 at 9:18 PM Matthew Wilcox <willy@infradead.org> wrote:
+> > I agree; if the crypto code is never going to try to go from the address of
+> > a byte in the allocation back to the head page, then there's no need to
+> > specify GFP_COMP.
+> >
+> > But that leaves us in the awkward situation where
+> > HARDENED_USERCOPY_PAGESPAN does need to be able to figure out whether
+> > 'ptr + n - 1' lies within the same allocation as ptr.  Without using
+> > a compound page, there's no indication in the VM structures that these
+> > two pages were allocated as part of the same allocation.
+> >
+> > We could force all multi-page allocations to be compound pages if
+> > HARDENED_USERCOPY_PAGESPAN is enabled, but I worry that could break
+> > something.  We could make it catch fewer problems by succeeding if the
+> > page is not compound.  I don't know, these all seem like bad choices
+> > to me.
+> 
+> If GFP_COMP is _not_ the correct signal about adjacent pages being
+> part of the same allocation, then I agree: we need to drop this check
+> entirely from PAGESPAN. Is there anything else that indicates this
+> property? (Or where might we be able to store that info?)
+
+As far as I know, the page allocator does not store size information
+anywhere, unless you use GFP_COMP.  That's why you have to pass
+the 'order' to free_pages() and __free_pages().  It's also why
+alloc_pages_exact() works (follow all the way into split_page()).
+
+> There are other pagespan checks, though, so those could stay. But I'd
+> really love to gain page allocator allocation size checking ...
+
+I think that's a great idea, but I'm not sure how you'll be able to
+do that.
