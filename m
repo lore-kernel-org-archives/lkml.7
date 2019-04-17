@@ -2,78 +2,108 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-6.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_NEOMUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=unavailable autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 58249C282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 09:53:43 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 6D777C282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 09:54:45 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 24B282173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 09:53:43 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 43D0E2173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 09:54:45 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731663AbfDQJxm (ORCPT
+        id S1731669AbfDQJyo (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 05:53:42 -0400
-Received: from foss.arm.com ([217.140.101.70]:42038 "EHLO foss.arm.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727282AbfDQJxl (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 05:53:41 -0400
+        Wed, 17 Apr 2019 05:54:44 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:42070 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1727013AbfDQJyn (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 05:54:43 -0400
 Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
-        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 4975A374;
-        Wed, 17 Apr 2019 02:53:41 -0700 (PDT)
-Received: from mbp (usa-sjc-mx-foss1.foss.arm.com [217.140.101.70])
-        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id 0FACD3F68F;
-        Wed, 17 Apr 2019 02:53:39 -0700 (PDT)
-Date:   Wed, 17 Apr 2019 10:53:37 +0100
-From:   Catalin Marinas <catalin.marinas@arm.com>
-To:     Nathan Chancellor <natechancellor@gmail.com>
-Cc:     Will Deacon <will.deacon@arm.com>,
-        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        linux-arm-kernel@lists.infradead.org, linux-kernel@vger.kernel.org,
-        stable@vger.kernel.org
-Subject: Re: [PATCH] arm64: futex: Restore oldval initialization to work
- around buggy compilers
-Message-ID: <20190417095337.xnbdaki7kolqmchx@mbp>
-References: <20190417072121.4450-1-natechancellor@gmail.com>
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id E5637374;
+        Wed, 17 Apr 2019 02:54:42 -0700 (PDT)
+Received: from [10.1.196.75] (e110467-lin.cambridge.arm.com [10.1.196.75])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id A992B3F68F;
+        Wed, 17 Apr 2019 02:54:40 -0700 (PDT)
+Subject: Re: [PATCH] crypto: testmgr - allocate buffers with __GFP_COMP
+To:     Russell King - ARM Linux admin <linux@armlinux.org.uk>,
+        Matthew Wilcox <willy@infradead.org>
+Cc:     Kees Cook <keescook@chromium.org>, Rik van Riel <riel@surriel.com>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Eric Biggers <ebiggers@kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        linux-security-module <linux-security-module@vger.kernel.org>,
+        Geert Uytterhoeven <geert@linux-m68k.org>,
+        linux-crypto <linux-crypto@vger.kernel.org>,
+        Dmitry Vyukov <dvyukov@google.com>,
+        Laura Abbott <labbott@redhat.com>,
+        Linux ARM <linux-arm-kernel@lists.infradead.org>,
+        Herbert Xu <herbert@gondor.apana.org.au>
+References: <20190411192607.GD225654@gmail.com>
+ <20190411192827.72551-1-ebiggers@kernel.org>
+ <CAGXu5jJ8k7fP5Vb=ygmQ0B45GfrK2PeaV04bPWmcZ6Vb+swgyA@mail.gmail.com>
+ <20190415022412.GA29714@bombadil.infradead.org>
+ <20190415024615.f765e7oagw26ezam@gondor.apana.org.au>
+ <20190416021852.GA18616@bombadil.infradead.org>
+ <CAGXu5jKaVB=bTJCBWhsxAny7-OkzXQ+8KCd5O+_-7hKcJFiqKw@mail.gmail.com>
+ <20190417040822.GB7751@bombadil.infradead.org>
+ <20190417080919.54wywpzrt3psn4vj@shell.armlinux.org.uk>
+From:   Robin Murphy <robin.murphy@arm.com>
+Message-ID: <0ea51c23-d285-25c3-80d6-f3c0045ee325@arm.com>
+Date:   Wed, 17 Apr 2019 10:54:39 +0100
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190417072121.4450-1-natechancellor@gmail.com>
-User-Agent: NeoMutt/20170113 (1.7.2)
+In-Reply-To: <20190417080919.54wywpzrt3psn4vj@shell.armlinux.org.uk>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: en-GB
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 12:21:21AM -0700, Nathan Chancellor wrote:
-> Commit 045afc24124d ("arm64: futex: Fix FUTEX_WAKE_OP atomic ops with
-> non-zero result value") removed oldval's zero initialization in
-> arch_futex_atomic_op_inuser because it is not necessary. Unfortunately,
-> Android's arm64 GCC 4.9.4 [1] does not agree:
+On 17/04/2019 09:09, Russell King - ARM Linux admin wrote:
+> On Tue, Apr 16, 2019 at 09:08:22PM -0700, Matthew Wilcox wrote:
+>> On Mon, Apr 15, 2019 at 10:14:51PM -0500, Kees Cook wrote:
+>>> On Mon, Apr 15, 2019 at 9:18 PM Matthew Wilcox <willy@infradead.org> wrote:
+>>>> I agree; if the crypto code is never going to try to go from the address of
+>>>> a byte in the allocation back to the head page, then there's no need to
+>>>> specify GFP_COMP.
+>>>>
+>>>> But that leaves us in the awkward situation where
+>>>> HARDENED_USERCOPY_PAGESPAN does need to be able to figure out whether
+>>>> 'ptr + n - 1' lies within the same allocation as ptr.  Without using
+>>>> a compound page, there's no indication in the VM structures that these
+>>>> two pages were allocated as part of the same allocation.
+>>>>
+>>>> We could force all multi-page allocations to be compound pages if
+>>>> HARDENED_USERCOPY_PAGESPAN is enabled, but I worry that could break
+>>>> something.  We could make it catch fewer problems by succeeding if the
+>>>> page is not compound.  I don't know, these all seem like bad choices
+>>>> to me.
+>>>
+>>> If GFP_COMP is _not_ the correct signal about adjacent pages being
+>>> part of the same allocation, then I agree: we need to drop this check
+>>> entirely from PAGESPAN. Is there anything else that indicates this
+>>> property? (Or where might we be able to store that info?)
+>>
+>> As far as I know, the page allocator does not store size information
+>> anywhere, unless you use GFP_COMP.  That's why you have to pass
+>> the 'order' to free_pages() and __free_pages().  It's also why
+>> alloc_pages_exact() works (follow all the way into split_page()).
+>>
+>>> There are other pagespan checks, though, so those could stay. But I'd
+>>> really love to gain page allocator allocation size checking ...
+>>
+>> I think that's a great idea, but I'm not sure how you'll be able to
+>> do that.
 > 
-> ../kernel/futex.c: In function 'do_futex':
-> ../kernel/futex.c:1658:17: warning: 'oldval' may be used uninitialized
-> in this function [-Wmaybe-uninitialized]
->    return oldval == cmparg;
->                  ^
-> In file included from ../kernel/futex.c:73:0:
-> ../arch/arm64/include/asm/futex.h:53:6: note: 'oldval' was declared here
->   int oldval, ret, tmp;
->       ^
-> 
-> GCC fails to follow that when ret is non-zero, futex_atomic_op_inuser
-> returns right away, avoiding the uninitialized use that it claims.
-> Restoring the zero initialization works around this issue.
-> 
-> [1]: https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/
-> 
-> Cc: stable@vger.kernel.org
-> Fixes: 045afc24124d ("arm64: futex: Fix FUTEX_WAKE_OP atomic ops with non-zero result value")
-> Signed-off-by: Nathan Chancellor <natechancellor@gmail.com>
+> However, we have had code (maybe historically now) that has allocated
+> a higher order page and then handed back pages that it doesn't need -
+> for example, when the code requires multiple contiguous pages but does
+> not require a power-of-2 size of contiguous pages.
 
-Thanks. That compiler version doesn't seem very smart. I'll queue this
-for -rc6.
+'git grep alloc_pages_exact' suggests it's not historical yet...
 
--- 
-Catalin
+Robin.
