@@ -2,125 +2,154 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	SIGNED_OFF_BY,SPF_PASS autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 32DEFC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:21:02 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 90B24C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:26:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id F22CA206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:21:01 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555532462;
-	bh=w6+k7XrFafMXB4J0ZdJ/JTrbU1zGGBV5NLLdrw96rKs=;
-	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=0L4ePLpdtBnH05yjhjAgRqddjajJl6UNn4hFJgZaH25inUZeOgQkMtAiDeT+POG1B
-	 b2ZVpKbSldinRi1S17sJ4wHe9D7x0MFXZxulQeaMnIlc4sF/KmgIbicBi4MRp1LHFO
-	 dMyScoYEXkvbnfNAJNStIPaEGPwcHfmcdWqrCbFc=
+	by mail.kernel.org (Postfix) with ESMTP id 5CA8020693
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:26:57 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=cogentembedded-com.20150623.gappssmtp.com header.i=@cogentembedded-com.20150623.gappssmtp.com header.b="tiQy37b8"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732306AbfDQUVA (ORCPT
+        id S1731765AbfDQU04 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 16:21:00 -0400
-Received: from mail.kernel.org ([198.145.29.99]:41634 "EHLO mail.kernel.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727013AbfDQUVA (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 16:21:00 -0400
-Received: from localhost (unknown [69.71.4.100])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 74139206BA;
-        Wed, 17 Apr 2019 20:20:59 +0000 (UTC)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555532459;
-        bh=w6+k7XrFafMXB4J0ZdJ/JTrbU1zGGBV5NLLdrw96rKs=;
-        h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=ToUwRqEqRr+ruGXWoCfUtUnHPpdbAJSje06uDGeaoIU5WK7/2oTIkoHeIO3/3uqLu
-         PMSLbzNMg1hAjfPM3nFWXgAoBLeCWhFSfJYXLRETsxnmFuucOqqcZZqqKbhZF7JI1e
-         F6y/v9Uhl3tKlAL/BK9PIhU5d6ETfWG7XfxDH020=
-Date:   Wed, 17 Apr 2019 15:20:58 -0500
-From:   Bjorn Helgaas <helgaas@kernel.org>
-To:     Johannes Thumshirn <jthumshirn@suse.de>
-Cc:     linux-pci@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] PCI: Remove pci_request_region_exclusive()
-Message-ID: <20190417202058.GS126710@google.com>
-References: <20190417082356.7054-1-jthumshirn@suse.de>
+        Wed, 17 Apr 2019 16:26:56 -0400
+Received: from mail-lf1-f65.google.com ([209.85.167.65]:40767 "EHLO
+        mail-lf1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729794AbfDQU0z (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 16:26:55 -0400
+Received: by mail-lf1-f65.google.com with SMTP id a28so19880197lfo.7
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 13:26:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cogentembedded-com.20150623.gappssmtp.com; s=20150623;
+        h=subject:to:cc:references:from:organization:message-id:date
+         :user-agent:mime-version:in-reply-to:content-language
+         :content-transfer-encoding;
+        bh=SjIFuWx1KX02yKTr+E/orZ3y381docbzWDlECrUzZO8=;
+        b=tiQy37b8+nGX5ESLjSPLCNwGtEwFSAf+CuvZpzq6l4WDVIc92bcItJjKa5wGw3SeeX
+         4c8XdSO9ar3coJyLHsH4tKbsUoGmbSlc26ghvVQBl/1+2mk7VL/sT5nVoot7vRF/OT+K
+         V2Eai2FN+8clZUN7tJh+60wS8K+H/gLJ2zOIf7/XalplYaOaghyc74z8HhsfPnpgrt7H
+         et1VLgTdmaKki1PMjSvGfpu+PAnTwD7hdvqD2Ex0N0elNM2HUNXu8RDQ4btOTpRWRP2q
+         5DXSWyB5kGizpsHEDG0SAB6g42WkcKQ/Ppg3dhLxTaaMp31TLxFXd5q9MnEXe7aCOzgF
+         jzAw==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:subject:to:cc:references:from:organization
+         :message-id:date:user-agent:mime-version:in-reply-to
+         :content-language:content-transfer-encoding;
+        bh=SjIFuWx1KX02yKTr+E/orZ3y381docbzWDlECrUzZO8=;
+        b=eo5AaMrJ0/LUrKZxuhhefQxSbEl0lYwIrkj0I+FTc16UthavHgV1wYkjQQvsYZ25Lz
+         lSQSIStZWxCQzsnVC0AQ4NdnE7C29ngpSTtj+iLUiakbu5VhAFR7Mk/2mZHh2t2MPISq
+         NwJBweL3TRywRpGbg3gEnK21Gsp+fdCSPokcGfjCvoPjc77i5jL+VHwBTk90DCIIntAr
+         UeFykCZoUSDsSb9VQlCLPhIOKay3DgO06TpnDuoQ6qlNpAKJ1UV00u3JhQ5GgjwyXrG6
+         xzEjxs2qSCMaExSlF29NQqkVE4/3P8I4zxHEqJ7eE81Tm1DAGwH3NrNIx5qdBi1tJn1d
+         hrzg==
+X-Gm-Message-State: APjAAAVhfKLa0rO7kRmCkBHybq7iVrOZk0Z04pwksfoMJG1IN8bwvulJ
+        yeZavta8TMRWQxL2tl43ogl2yg==
+X-Google-Smtp-Source: APXvYqzKT0KknDgG0w0fOqDmlQ1NMP6WxPf9AQe+WKcpgPpVydN1ouORS9udjE6W7Wl7hJ8zA2vi1g==
+X-Received: by 2002:a19:c216:: with SMTP id l22mr24646529lfc.112.1555532813455;
+        Wed, 17 Apr 2019 13:26:53 -0700 (PDT)
+Received: from wasted.cogentembedded.com ([31.173.81.147])
+        by smtp.gmail.com with ESMTPSA id i25sm2737268lfc.19.2019.04.17.13.26.51
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 17 Apr 2019 13:26:52 -0700 (PDT)
+Subject: Re: [PATCH v10 1/3] mfd: Add Renesas R-Car Gen3 RPC-IF MFD controller
+ driver
+To:     masonccyang@mxic.com.tw
+Cc:     bbrezillon@kernel.org, broonie@kernel.org,
+        devicetree@vger.kernel.org,
+        Geert Uytterhoeven <geert+renesas@glider.be>,
+        Simon Horman <horms@verge.net.au>, juliensu@mxic.com.tw,
+        lee.jones@linaro.org, linux-kernel@vger.kernel.org,
+        linux-renesas-soc@vger.kernel.org, linux-spi@vger.kernel.org,
+        marek.vasut@gmail.com, mark.rutland@arm.com, robh+dt@kernel.org
+References: <1555313834-15107-1-git-send-email-masonccyang@mxic.com.tw>
+ <1555313834-15107-2-git-send-email-masonccyang@mxic.com.tw>
+ <935046cc-e2e5-b9b8-0c94-1be5ae604276@cogentembedded.com>
+ <OF8A9D093C.B3035121-ON482583DE.00065F23-482583DE.00074AC0@mxic.com.tw>
+ <770002ab-7e08-b695-b5a5-fce772b600a5@cogentembedded.com>
+ <OF2BD84B79.FBC5E822-ON482583DF.0020009F-482583DF.0022E315@mxic.com.tw>
+From:   Sergei Shtylyov <sergei.shtylyov@cogentembedded.com>
+Organization: Cogent Embedded
+Message-ID: <76e9c2a8-1537-04ad-17e0-ebd9fa9b7b91@cogentembedded.com>
+Date:   Wed, 17 Apr 2019 23:26:51 +0300
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.2.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190417082356.7054-1-jthumshirn@suse.de>
-User-Agent: Mutt/1.10.1 (2018-07-13)
+In-Reply-To: <OF2BD84B79.FBC5E822-ON482583DF.0020009F-482583DF.0022E315@mxic.com.tw>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-MW
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 10:23:56AM +0200, Johannes Thumshirn wrote:
-> pci_request_region_exclusive() was introduced with commit e8de1481fd71
-> ("resource: allow MMIO exclusivity for device drivers") in 2.6.29 which
-> was released 2008.
-> 
-> It never had an in tree user since then, so after 11 years later let's
-> remove it.
-> 
-> Signed-off-by: Johannes Thumshirn <jthumshirn@suse.de>
+On 04/17/2019 09:21 AM, masonccyang@mxic.com.tw wrote:
 
-Applied to pci/misc for v5.2, thanks a lot!
+>> >> Re: [PATCH v10 1/3] mfd: Add Renesas R-Car Gen3 RPC-IF MFD
+>> controller driver
+>> >>
+>> >> The patch name is somewhat misleading -- there's no "MFD controller".
+>> >
+>> > Can't get your point ?
+>> >
+>> > RPC-IF support SPI and HF, it's a MFD controller and
+>> > that's why I patch it to MFD as Marek's comments.
+>>
+>>    I'd like the "controller" word dropped, as MFD stands for multi-
+>> function device
+>> anyway. "Controller" seems to be superfluous here...
+> 
+> okay, will rename to:
+> 
+> [PATCH v11 1/3] mfd: Add Renesas R-Car Gen3 RPC-IF MFD driver
 
-> ---
->  drivers/pci/pci.c   | 25 -------------------------
->  include/linux/pci.h |  1 -
->  2 files changed, 26 deletions(-)
+   Thanx!
+
+>> >> On 04/15/2019 10:37 AM, Mason Yang wrote:
+>> >>
+>> >> > Add a driver for Renesas R-Car Gen3 RPC-IF MFD controller.
+>> >> >
+>> >> > Signed-off-by: Mason Yang <masonccyang@mxic.com.tw>
+>> >> [...]
+>> >> > diff --git a/drivers/mfd/Kconfig b/drivers/mfd/Kconfig
+>> >> > index 26ad646..7914349 100644
+>> >> > --- a/drivers/mfd/Kconfig
+>> >> > +++ b/drivers/mfd/Kconfig
+>> >> > @@ -978,6 +978,15 @@ config MFD_RDC321X
+>> >> >       southbridge which provides access to GPIOs and Watchdog using the
+>> >> >       southbridge PCI device configuration space.
+>> >> >  
+>> >> > +config MFD_RENESAS_RPC
+>> >> > +   tristate "Renesas R-Car Gen3 RPC-IF MFD driver"
+>> >> > +   select MFD_CORE
+>> >> > +   depends on ARCH_RENESAS
+>> >> > +   help
+>> >> > +     This supports for Renesas R-Car Gen3 RPC-IF multifunction device
+>> >>
+>> >>    "For" node needed here.
+>> >
+>> > ?
+>>
+>>    Sorry, that was a typo: s/node/not/.
 > 
-> diff --git a/drivers/pci/pci.c b/drivers/pci/pci.c
-> index 7c1b362f599a..d185b49e105a 100644
-> --- a/drivers/pci/pci.c
-> +++ b/drivers/pci/pci.c
-> @@ -3706,31 +3706,6 @@ int pci_request_region(struct pci_dev *pdev, int bar, const char *res_name)
->  }
->  EXPORT_SYMBOL(pci_request_region);
->  
-> -/**
-> - *	pci_request_region_exclusive - Reserved PCI I/O and memory resource
-> - *	@pdev: PCI device whose resources are to be reserved
-> - *	@bar: BAR to be reserved
-> - *	@res_name: Name to be associated with resource.
-> - *
-> - *	Mark the PCI region associated with PCI device @pdev BR @bar as
-> - *	being reserved by owner @res_name.  Do not access any
-> - *	address inside the PCI regions unless this call returns
-> - *	successfully.
-> - *
-> - *	Returns 0 on success, or %EBUSY on error.  A warning
-> - *	message is also printed on failure.
-> - *
-> - *	The key difference that _exclusive makes it that userspace is
-> - *	explicitly not allowed to map the resource via /dev/mem or
-> - *	sysfs.
-> - */
-> -int pci_request_region_exclusive(struct pci_dev *pdev, int bar,
-> -				 const char *res_name)
-> -{
-> -	return __pci_request_region(pdev, bar, res_name, IORESOURCE_EXCLUSIVE);
-> -}
-> -EXPORT_SYMBOL(pci_request_region_exclusive);
-> -
->  /**
->   * pci_release_selected_regions - Release selected PCI I/O and memory resources
->   * @pdev: PCI device whose resources were previously reserved
-> diff --git a/include/linux/pci.h b/include/linux/pci.h
-> index 77448215ef5b..5f32275358cf 100644
-> --- a/include/linux/pci.h
-> +++ b/include/linux/pci.h
-> @@ -1233,7 +1233,6 @@ int __must_check pci_request_regions(struct pci_dev *, const char *);
->  int __must_check pci_request_regions_exclusive(struct pci_dev *, const char *);
->  void pci_release_regions(struct pci_dev *);
->  int __must_check pci_request_region(struct pci_dev *, int, const char *);
-> -int __must_check pci_request_region_exclusive(struct pci_dev *, int, const char *);
->  void pci_release_region(struct pci_dev *, int);
->  int pci_request_selected_regions(struct pci_dev *, int, const char *);
->  int pci_request_selected_regions_exclusive(struct pci_dev *, int, const char *);
-> -- 
-> 2.16.4
+> Oops, still don't know what do you mean to ?
 > 
+> Will change to:
+>          help
+>            This supports for Renesas R-Car Gen3 RPC-IF multifunction device
+>            which provides either SPI host or HyperFlash.
+>            You have to select individual components under the corresponding menu.
+> 
+> is it ok ?
+
+   Should be "This supports Renesas..."
+
+[...]
+
+MBR, Sergei
