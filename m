@@ -2,173 +2,85 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5309DC282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:02:56 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DB776C10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:05:37 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 282BC2054F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:02:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD0F5206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 08:05:37 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731041AbfDQICz (ORCPT
+        id S1731167AbfDQIFg (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 04:02:55 -0400
-Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:33560 "EHLO
-        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1728335AbfDQICy (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 04:02:54 -0400
-Received: from pps.filterd (m0098410.ppops.net [127.0.0.1])
-        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3H7teQe100556
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 04:02:53 -0400
-Received: from e06smtp07.uk.ibm.com (e06smtp07.uk.ibm.com [195.75.94.103])
-        by mx0a-001b2d01.pphosted.com with ESMTP id 2rwym7sx69-1
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 04:02:52 -0400
-Received: from localhost
-        by e06smtp07.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
-        for <linux-kernel@vger.kernel.org> from <schwidefsky@de.ibm.com>;
-        Wed, 17 Apr 2019 09:02:50 +0100
-Received: from b06cxnps3075.portsmouth.uk.ibm.com (9.149.109.195)
-        by e06smtp07.uk.ibm.com (192.168.101.137) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
-        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
-        Wed, 17 Apr 2019 09:02:47 +0100
-Received: from d06av24.portsmouth.uk.ibm.com (d06av24.portsmouth.uk.ibm.com [9.149.105.60])
-        by b06cxnps3075.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3H82k9J49807494
-        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
-        Wed, 17 Apr 2019 08:02:46 GMT
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 47A6842054;
-        Wed, 17 Apr 2019 08:02:46 +0000 (GMT)
-Received: from d06av24.portsmouth.uk.ibm.com (unknown [127.0.0.1])
-        by IMSVA (Postfix) with ESMTP id 1026042064;
-        Wed, 17 Apr 2019 08:02:46 +0000 (GMT)
-Received: from mschwideX1 (unknown [9.145.37.72])
-        by d06av24.portsmouth.uk.ibm.com (Postfix) with ESMTP;
-        Wed, 17 Apr 2019 08:02:45 +0000 (GMT)
-Date:   Wed, 17 Apr 2019 10:02:44 +0200
-From:   Martin Schwidefsky <schwidefsky@de.ibm.com>
-To:     Linus Torvalds <torvalds@linux-foundation.org>
-Cc:     Christoph Hellwig <hch@infradead.org>,
-        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        linuxppc-dev@lists.ozlabs.org,
-        linux-s390 <linux-s390@vger.kernel.org>
-Subject: Re: Linux 5.1-rc5
-In-Reply-To: <20190417094637.51ad4c67@mschwideX1>
-References: <CAHk-=wjvcuyCQGnfOhooaL1H4H63qXO=xgo+9yncSOG=eK+kbA@mail.gmail.com>
-        <20190415051919.GA31481@infradead.org>
-        <CAHk-=wj7jgMOVFW0tiU-X+zhg6+Rn7mEBTej+f26rV3zXezOSA@mail.gmail.com>
-        <20190416110906.6c773aff@mschwideX1>
-        <20190416140658.2cb73a3f@mschwideX1>
-        <CAHk-=wjKi5C+Onhp5Vs5BQxHbaBud9M3cTS-S6Tr9yDY4dS-Sw@mail.gmail.com>
-        <CAHk-=wj2SW0Zno0Yn=S9wrsmHOKV0FiFPiPS4TM=Gn8yjfYXAg@mail.gmail.com>
-        <20190417094637.51ad4c67@mschwideX1>
-X-Mailer: Claws Mail 3.13.2 (GTK+ 2.24.30; x86_64-pc-linux-gnu)
-MIME-Version: 1.0
+        Wed, 17 Apr 2019 04:05:36 -0400
+Received: from mx2.suse.de ([195.135.220.15]:60888 "EHLO mx1.suse.de"
+        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
+        id S1727087AbfDQIFg (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 04:05:36 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id C0FD4AC69;
+        Wed, 17 Apr 2019 08:05:34 +0000 (UTC)
+Date:   Wed, 17 Apr 2019 10:05:33 +0200
+Message-ID: <s5hk1fthx9u.wl-tiwai@suse.de>
+From:   Takashi Iwai <tiwai@suse.de>
+To:     "Arnd Bergmann" <arnd@arndb.de>
+Cc:     "Alexander Viro" <viro@zeniv.linux.org.uk>,
+        <alsa-devel@alsa-project.org>, "Vinod Koul" <vkoul@kernel.org>,
+        <linux-um@lists.infradead.org>, <y2038@lists.linaro.org>,
+        "Jaroslav Kysela" <perex@perex.cz>,
+        <linux-fsdevel@vger.kernel.org>, <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v3 20/26] compat_ioctl: remove translation for sound ioctls
+In-Reply-To: <20190416202839.248216-1-arnd@arndb.de>
+References: <20190416202013.4034148-1-arnd@arndb.de>
+        <20190416202839.248216-1-arnd@arndb.de>
+User-Agent: Wanderlust/2.15.9 (Almost Unreal) SEMI/1.14.6 (Maruoka)
+ FLIM/1.14.9 (=?UTF-8?B?R29qxY0=?=) APEL/10.8 Emacs/25.3
+ (x86_64-suse-linux-gnu) MULE/6.0 (HANACHIRUSATO)
+MIME-Version: 1.0 (generated by SEMI 1.14.6 - "Maruoka")
 Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: 7bit
-X-TM-AS-GCONF: 00
-x-cbid: 19041708-0028-0000-0000-00000361BC9D
-X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
-x-cbparentid: 19041708-0029-0000-0000-00002420F79A
-Message-Id: <20190417100244.42e29736@mschwideX1>
-X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-17_04:,,
- signatures=0
-X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
- malwarescore=0 suspectscore=0 phishscore=0 bulkscore=0 spamscore=0
- clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
- mlxlogscore=636 adultscore=0 classifier=spam adjust=0 reason=mlx
- scancount=1 engine=8.0.1-1810050000 definitions=main-1904170054
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 17 Apr 2019 09:46:37 +0200
-Martin Schwidefsky <schwidefsky@de.ibm.com> wrote:
+On Tue, 16 Apr 2019 22:28:05 +0200,
+Arnd Bergmann wrote:
+> 
+> The SNDCTL_* and SOUND_* commands are the old OSS user interface.
+> 
+> I checked all the sound ioctl commands listed in fs/compat_ioctl.c
+> to see if we still need the translation handlers. Here is what I
+> found:
+> 
+> - sound/oss/ is (almost) gone from the kernel, this is what actually
+>   needed all the translations
+> - The ALSA emulation for OSS correctly handles all compat_ioctl
+>   commands already.
+> - sound/oss/dmasound/ is the last holdout of the original OSS code,
+>   this is only used on arch/m68k, which has no 64-bit mode and
+>   hence needs no compat handlers
+> - arch/um/drivers/hostaudio_kern.c may run in 64-bit mode with
+>   32-bit x86 user space underneath it. This rare corner case is
+>   the only one that still needs the compat handlers.
+> 
+> By adding a simple redirect of .compat_ioctl to .unlocked_ioctl in the
+> UML driver, we can remove all the COMPATIBLE_IOCTL() annotations without
+> a change in functionality. For completeness, I'm adding the same thing
+> to the dmasound file, knowing that it makes no difference.
+> 
+> The compat_ioctl list contains one comment about SNDCTL_DSP_MAPINBUF and
+> SNDCTL_DSP_MAPOUTBUF, which actually would need a translation handler
+> if implemented. However, the native implementation just returns -EINVAL,
+> so we don't care.
+> 
+> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
 
-> On Tue, 16 Apr 2019 09:49:46 -0700
-> Linus Torvalds <torvalds@linux-foundation.org> wrote:
-> 
-> > On Tue, Apr 16, 2019 at 9:16 AM Linus Torvalds
-> > <torvalds@linux-foundation.org> wrote:  
-> > >
-> > > We actually already *have* this function.
-> > >
-> > > It's called "gup_fast_permitted()" and it's used by x86-64 to verify
-> > > the proper address range. Exactly like s390 needs..
-> > >
-> > > Could you please use that instead?    
-> > 
-> > IOW, something like the attached.
-> > 
-> > Obviously untested. And maybe 'current' isn't declared in
-> > <asm/pgtable.h>, in which case you'd need to modify it to instead make
-> > the inline function be "s390_gup_fast_permitted()" that takes a
-> > pointer to the mm, and do something like
-> > 
-> >   #define gup_fast_permitted(start, pages) \
-> >          s390_gup_fast_permitted(current->mm, start, pages)
-> > 
-> > instead.
-> > 
-> > But I think you get the idea..  
-> 
-> Nice, I did not realize that gup_fast_permitted is a platform
-> override-able function. So that part is doable in arch/s390. But I
-> spoke to soon, I got my first crash and realized that the common gup code
-> is not usable as it is. The reason is this e.g. this sequence:
-> 
-> 	pgdp = pgd_offset(current->mm, addr);
-> 	pgd_t pgd = READ_ONCE(*pgdp);
-> 	/* some checking on pgd */
-> 	gup_p4d_range(pgd, addr, next, write, pages, nr);
-> 
-> 	p4dp = p4d_offset(&pgd, addr);
-> 	p4d_t p4d = READ_ONCE(*p4dp);
-> 	/* some checking on p4d */
-> 	gup_pud_range(p4d, addr, next, write, pages, nr);
-> 
-> 	pudp = pud_offset(&p4d, addr);
-> 	pud_t pud = READ_ONCE(*pudp);
-> 	/* some checking on pud */
-> 	gup_pmd_range(pud, addr, next, write, pages, nr;
-> 
-> Each step along the way will read the page table entry and pass the
-> table entry to the next function. This clashes with the page table
-> folding on s390. The s390 gup code looks more like this:
-> 
-> 	pgdp = pgd_offset(current->mm, addr);
-> 	/* some checking on pgd */
-> 	pgd_t pgd = READ_ONCE(*pgdp);
-> 	gup_p4d_range(pgdp, pgd, addr, next, write, pages, &nr);
-> 
-> 	p4dp = p4d_offset(pgdp, addr);
-> 	p4d_t p4d = READ_ONCE(*p4dp);
-> 	/* some checking on p4d */
-> 	gup_pud_range(p4dp, p4d, addr, next, write, pages, nr);
-> 
-> 	pudp = pud_offset(p4dp, addr);
-> 	pud_t pud = READ_ONCE(*pudp);
-> 	/* some checking on pud */
-> 	gup_pmd_range(pudp, pud, addr, next, write, pages, nr;
-> 
-> There are magic dereferences in the s390 versions of p4d_offset,
-> pud_offset and pmd_offset functions. To make this work the pointer
-> passed to these functions may not be the local copy of the already
-> dereferenced table entry. I'll cook up a patch for the common code.
+This looks like a really nice cleanup.  Thanks!
 
-Grumpf, that does *not* work. For gup the table entries may be read only
-once. Now I remember why I open-coded p4d_offset, pud_offset and pmd_offset
-in arch/s390/mm/gup.c, to avoid to read the table entries twice.
-It will be hard to use the common gup code after all.
+Reviewed-by: Takashi Iwai <tiwai@suse.de>
 
--- 
-blue skies,
-   Martin.
 
-"Reality continues to ruin my life." - Calvin.
-
+Takashi
