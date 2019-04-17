@@ -2,115 +2,472 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-3.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_NEOMUTT autolearn=ham
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS autolearn=ham
 	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 4620AC10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 09:57:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id EA2EEC10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 09:58:27 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 1E0F920835
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 09:57:57 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A720E21773
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 09:58:27 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731639AbfDQJ54 (ORCPT
+        id S1731675AbfDQJ60 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 05:57:56 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:51902 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727013AbfDQJ5z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 05:57:55 -0400
-Received: from smtp.corp.redhat.com (int-mx05.intmail.prod.int.phx2.redhat.com [10.5.11.15])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 1BD613082A27;
-        Wed, 17 Apr 2019 09:57:55 +0000 (UTC)
-Received: from sirius.home.kraxel.org (ovpn-116-65.ams2.redhat.com [10.36.116.65])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id 80B285D71E;
-        Wed, 17 Apr 2019 09:57:51 +0000 (UTC)
-Received: by sirius.home.kraxel.org (Postfix, from userid 1000)
-        id B636D1747B; Wed, 17 Apr 2019 11:57:50 +0200 (CEST)
-Date:   Wed, 17 Apr 2019 11:57:50 +0200
-From:   Gerd Hoffmann <kraxel@redhat.com>
-To:     Chia-I Wu <olvaffe@gmail.com>
-Cc:     Gurchetan Singh <gurchetansingh@chromium.org>,
-        Tomeu Vizoso <tomeu.vizoso@collabora.com>,
-        "Michael S. Tsirkin" <mst@redhat.com>,
-        David Airlie <airlied@linux.ie>,
-        Jason Wang <jasowang@redhat.com>,
-        open list <linux-kernel@vger.kernel.org>,
-        ML dri-devel <dri-devel@lists.freedesktop.org>,
-        "open list:VIRTIO CORE, NET AND BLOCK DRIVERS" 
-        <virtualization@lists.linux-foundation.org>,
-        David Airlie <airlied@redhat.com>, virtio@lists.oasis-open.org
-Subject: Re: [PATCH 3/3] virtio-gpu api: VIRTIO_GPU_F_RESSOURCE_V2
-Message-ID: <20190417095750.lre3xrg4dlgskfjg@sirius.home.kraxel.org>
-References: <20190410114227.25846-1-kraxel@redhat.com>
- <20190410114227.25846-4-kraxel@redhat.com>
- <CAAfnVBm5XZx8P7k5np823-uRr-kqf0ey9Y3GtoE2Geo4dCdQ=g@mail.gmail.com>
- <20190411050322.mfxo5mrwwzajlz3h@sirius.home.kraxel.org>
- <CAAfnVB=v+daY0Q+mtdK2Q=F7iS_Ra7jGYfic3twfnUVo=tz3Yg@mail.gmail.com>
- <20190412054924.dvh6bfxfrbgvezxr@sirius.home.kraxel.org>
- <CAPaKu7QsDp=kRsMzMf0YcvafsXBsr_m4bstuZiWAcmYiV_AxnQ@mail.gmail.com>
+        Wed, 17 Apr 2019 05:58:26 -0400
+Received: from usa-sjc-mx-foss1.foss.arm.com ([217.140.101.70]:42146 "EHLO
+        foss.arm.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1726237AbfDQJ6Z (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 05:58:25 -0400
+Received: from usa-sjc-imap-foss1.foss.arm.com (unknown [10.72.51.249])
+        by usa-sjc-mx-foss1.foss.arm.com (Postfix) with ESMTP id 38404374;
+        Wed, 17 Apr 2019 02:58:25 -0700 (PDT)
+Received: from [10.162.41.195] (p8cg001049571a15.blr.arm.com [10.162.41.195])
+        by usa-sjc-imap-foss1.foss.arm.com (Postfix) with ESMTPSA id C11583F68F;
+        Wed, 17 Apr 2019 02:58:19 -0700 (PDT)
+From:   Anshuman Khandual <anshuman.khandual@arm.com>
+Subject: Re: [PATCH V2 2/2] arm64/mm: Enable memory hot remove
+To:     Mark Rutland <mark.rutland@arm.com>
+Cc:     linux-kernel@vger.kernel.org, linux-arm-kernel@lists.infradead.org,
+        linux-mm@kvack.org, akpm@linux-foundation.org, will.deacon@arm.com,
+        catalin.marinas@arm.com, mhocko@suse.com,
+        mgorman@techsingularity.net, james.morse@arm.com,
+        robin.murphy@arm.com, cpandya@codeaurora.org,
+        arunks@codeaurora.org, dan.j.williams@intel.com, osalvador@suse.de,
+        david@redhat.com, cai@lca.pw, logang@deltatee.com,
+        ira.weiny@intel.com
+References: <1555221553-18845-1-git-send-email-anshuman.khandual@arm.com>
+ <1555221553-18845-3-git-send-email-anshuman.khandual@arm.com>
+ <20190415134841.GC13990@lakrids.cambridge.arm.com>
+Message-ID: <2faba38b-ab79-2dda-1b3c-ada5054d91fa@arm.com>
+Date:   Wed, 17 Apr 2019 15:28:18 +0530
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.9.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <CAPaKu7QsDp=kRsMzMf0YcvafsXBsr_m4bstuZiWAcmYiV_AxnQ@mail.gmail.com>
-User-Agent: NeoMutt/20180716
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.15
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.45]); Wed, 17 Apr 2019 09:57:55 +0000 (UTC)
+In-Reply-To: <20190415134841.GC13990@lakrids.cambridge.arm.com>
+Content-Type: text/plain; charset=utf-8
+Content-Language: en-US
+Content-Transfer-Encoding: 7bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Fri, Apr 12, 2019 at 04:34:20PM -0700, Chia-I Wu wrote:
-> Hi,
+
+
+On 04/15/2019 07:18 PM, Mark Rutland wrote:
+> Hi Anshuman,
 > 
-> I am still new to virgl, and missed the last round of discussion about
-> resource_create_v2.
+> On Sun, Apr 14, 2019 at 11:29:13AM +0530, Anshuman Khandual wrote:
+>> Memory removal from an arch perspective involves tearing down two different
+>> kernel based mappings i.e vmemmap and linear while releasing related page
+>> table pages allocated for the physical memory range to be removed.
+>>
+>> Define a common kernel page table tear down helper remove_pagetable() which
+>> can be used to unmap given kernel virtual address range. In effect it can
+>> tear down both vmemap or kernel linear mappings. This new helper is called
+>> from both vmemamp_free() and ___remove_pgd_mapping() during memory removal.
+>> The argument 'direct' here identifies kernel linear mappings.
 > 
-> From the discussion below, semantically resource_create_v2 creates a host
-> resource object _without_ any storage; memory_create creates a host memory
-> object which provides the storage.  Is that correct?
+> Can you please explain why we need to treat these differently? I thought
+> the next paragraph was going to do that, but as per my comment there it
+> doesn't seem to be relevant. :/
 
-Right now all resource_create_* variants create a resource object with
-host storage.  memory_create creates guest storage, and
-resource_attach_memory binds things together.  Then you have to transfer
-the data.
+For linear mapping there is no actual allocated page which is mapped. Its the
+pfn derived from physical address (from __va(PA)-->PA translation) which is
+there in the page table entry and need not be freed any where during tear down.
 
-Hmm, maybe we need a flag indicating that host storage is not needed,
-for resources where we want establish some kind of shared mapping later
-on.
+But in case of vmemmap (struct page mapping for a given range) which is a real
+virtual mapping (like vmalloc) real pages are allocated (buddy or memblock) and
+are mapped in it's page table entries to effect the translation. These pages
+need to be freed while tearing down the translation. But for both mappings
+(linear and vmemmap) their page table pages need to be freed.
 
-> Do we expect these new commands to be supported by OpenGL, which does not
-> separate resources and memories?
+This differentiation is needed while deciding if [pte|pmd|pud]_page() at any
+given level needs to be freed or not. Will update the commit message with this
+explanation if required.
 
-Well, for opengl you need a 1:1 relationship between memory region and
-resource.
-
-> > Yes, even though it is not clear yet how we are going to handle
-> > host-allocated buffers in the vhost-user case ...
 > 
-> This might be another dumb question, but is this only an issue for
-> vhost-user(-gpu) case?  What mechanisms are used to map host dma-buf into
-> the guest address space?
+>> Vmemmap mappings page table pages are allocated through sparse mem helper
+>> functions like vmemmap_alloc_block() which does not cycle the pages through
+>> pgtable_page_ctor() constructs. Hence while removing it skips corresponding
+>> destructor construct pgtable_page_dtor().
+> 
+> I thought the ctor/dtor dance wasn't necessary for any init_mm tables,
+> so why do we need to mention it here specifically for the vmemmap
+> tables?
 
-qemu can change the address space, that includes mmap()ing stuff there.
-An external vhost-user process can't do this, it can only read the
-address space layout, and read/write from/to guest memory.
+Yeah not necessary any more. Will drop it.
 
-> But one needs to create the resource first to know which memory types can
-> be attached to it.  I think the metadata needs to be returned with
-> resource_create_v2.
+> 
+>> While here update arch_add_mempory() to handle __add_pages() failures by
+>> just unmapping recently added kernel linear mapping. 
+> 
+> Is this a latent bug?
 
-There is a resource_info reply for that.
+Did not get it. __add_pages() could fail because of __add_section() in which
+case we should remove the linear mapping added previously in the first step.
+Is there any concern here ?
 
-> That should be good enough.  But by returning alignments, we can minimize
-> the gaps when attaching multiple resources, especially when the resources
-> are only used by GPU.
+> 
+>> Now enable memory hot remove on arm64 platforms by default with
+>> ARCH_ENABLE_MEMORY_HOTREMOVE.
+>>
+>> This implementation is overall inspired from kernel page table tear down
+>> procedure on X86 architecture.
+>>
+>> Signed-off-by: Anshuman Khandual <anshuman.khandual@arm.com>
+>> ---
+>>  arch/arm64/Kconfig               |   3 +
+>>  arch/arm64/include/asm/pgtable.h |   2 +
+>>  arch/arm64/mm/mmu.c              | 221 ++++++++++++++++++++++++++++++++++++++-
+>>  3 files changed, 224 insertions(+), 2 deletions(-)
+>>
+>> diff --git a/arch/arm64/Kconfig b/arch/arm64/Kconfig
+>> index c383625..a870eb2 100644
+>> --- a/arch/arm64/Kconfig
+>> +++ b/arch/arm64/Kconfig
+>> @@ -267,6 +267,9 @@ config HAVE_GENERIC_GUP
+>>  config ARCH_ENABLE_MEMORY_HOTPLUG
+>>  	def_bool y
+>>  
+>> +config ARCH_ENABLE_MEMORY_HOTREMOVE
+>> +	def_bool y
+>> +
+>>  config SMP
+>>  	def_bool y
+>>  
+>> diff --git a/arch/arm64/include/asm/pgtable.h b/arch/arm64/include/asm/pgtable.h
+>> index de70c1e..1ee22ff 100644
+>> --- a/arch/arm64/include/asm/pgtable.h
+>> +++ b/arch/arm64/include/asm/pgtable.h
+>> @@ -555,6 +555,7 @@ static inline phys_addr_t pud_page_paddr(pud_t pud)
+>>  
+>>  #else
+>>  
+>> +#define pmd_index(addr) 0
+>>  #define pud_page_paddr(pud)	({ BUILD_BUG(); 0; })
+>>  
+>>  /* Match pmd_offset folding in <asm/generic/pgtable-nopmd.h> */
+>> @@ -612,6 +613,7 @@ static inline phys_addr_t pgd_page_paddr(pgd_t pgd)
+>>  
+>>  #else
+>>  
+>> +#define pud_index(adrr)	0
+>>  #define pgd_page_paddr(pgd)	({ BUILD_BUG(); 0;})
+>>  
+>>  /* Match pud_offset folding in <asm/generic/pgtable-nopud.h> */
+>> diff --git a/arch/arm64/mm/mmu.c b/arch/arm64/mm/mmu.c
+>> index ef82312..a4750fe 100644
+>> --- a/arch/arm64/mm/mmu.c
+>> +++ b/arch/arm64/mm/mmu.c
+>> @@ -733,6 +733,194 @@ int kern_addr_valid(unsigned long addr)
+>>  
+>>  	return pfn_valid(pte_pfn(pte));
+>>  }
+>> +
+>> +#ifdef CONFIG_MEMORY_HOTPLUG
+>> +static void free_pagetable(struct page *page, int order)
+> 
+> On arm64, all of the stage-1 page tables other than the PGD are always
+> PAGE_SIZE. We shouldn't need to pass an order around in order to free
+> page tables.
+> 
+> It looks like this function is misnamed, and is used to free vmemmap
+> backing pages in addition to page tables used to map them. It would be
+> nicer to come up with a better naming scheme.
 
-We can add alignments to the resource_info reply.
+free_pagetable() is being used both for freeing page table pages as well
+mapped entries at various level (for vmemmap). As you rightly mentioned
+page table pages are invariably PAGE_SIZE (other than pgd) but theses
+mapped pages size can vary at various level. free_pagetable() is a very
+generic helper which can accommodate pages allocated from buddy as well
+as memblock. But I agree that the naming is misleading.
 
-cheers,
-  Gerd
+Will something like this will be better ?
 
+void free_pagetable_mapped_page(struct page *page, int order)
+{
+	.......................
+	.......................
+}
+
+void free_pagetable_page(struct page *page)
+{
+	free_pagetable_mapped_page(page, 0);
+}
+
+- Call free_pgtable_page() while freeing pagetable pages
+- Call free_pgtable_mapped_page() while freeing mapped pages
+
+> 
+>> +{
+>> +	unsigned long magic;
+>> +	unsigned int nr_pages = 1 << order;
+>> +
+>> +	if (PageReserved(page)) {
+>> +		__ClearPageReserved(page);
+>> +
+>> +		magic = (unsigned long)page->freelist;
+>> +		if (magic == SECTION_INFO || magic == MIX_SECTION_INFO) {
+> 
+> Not a new problem, but it's unfortunate that the core code reuses the
+> page::freelist field for this, given it also uses page::private for the
+> section number. Using fields from different parts of the union doesn't
+> seem robust.> 
+> It would seem nicer to have a private2 field in the struct for anonymous
+> pages.
+
+Okay. But I guess its not something for us to investigate in this context.
+
+> 
+>> +			while (nr_pages--)
+>> +				put_page_bootmem(page++);
+>> +		} else {
+>> +			while (nr_pages--)
+>> +				free_reserved_page(page++);
+>> +		}
+>> +	} else {
+>> +		free_pages((unsigned long)page_address(page), order);
+>> +	}
+>> +}
+>> +
+>> +#if (CONFIG_PGTABLE_LEVELS > 2)
+>> +static void free_pte_table(pte_t *pte_start, pmd_t *pmd)
+> 
+> As a general note, for arm64 please append a 'p' for pointers to
+> entries, i.e. these should be ptep and pmdp.
+
+Sure will fix across the entire patch.
+
+> 
+>> +{
+>> +	pte_t *pte;
+>> +	int i;
+>> +
+>> +	for (i = 0; i < PTRS_PER_PTE; i++) {
+>> +		pte = pte_start + i;
+>> +		if (!pte_none(*pte))
+>> +			return;
+>> +	}
+> 
+> You could get rid of the pte temporary, rename pte_start to ptep, and
+> simplify this to:
+> 
+> 	for (i = 0; i < PTRS_PER_PTE; i++)
+> 		if (!pte_none(ptep[i]))
+> 			return;
+> 
+> Similar applies at the other levels.
+
+Sure will do.
+
+> 
+> I take it that some higher-level serialization prevents concurrent
+> modification to this table. Where does that happen?
+
+mem_hotplug_begin()
+mem_hotplug_end()
+
+which operates on DEFINE_STATIC_PERCPU_RWSEM(mem_hotplug_lock)
+
+- arch_remove_memory() called from (__remove_memory || devm_memremap_pages_release)
+- vmemmap_free() called from __remove_pages called from (arch_remove_memory || devm_memremap_pages_release)
+
+Both __remove_memory() and devm_memremap_pages_release() are protected with
+pair of these.
+
+mem_hotplug_begin()
+mem_hotplug_end()
+
+vmemmap tear down happens before linear mapping and in sequence.
+
+> 
+>> +
+>> +	free_pagetable(pmd_page(*pmd), 0);
+> 
+> Here we free the pte level of table...
+> 
+>> +	spin_lock(&init_mm.page_table_lock);
+>> +	pmd_clear(pmd);
+> 
+> ... but only here do we disconnect it from the PMD level of table, and
+> we don't do any TLB maintenance just yet. The page could be poisoned
+> and/or reallocated before we invalidate the TLB, which is not safe. In
+> all cases, we must follow the sequence:
+> 
+> 1) clear the pointer to a table
+> 2) invalidate any corresponding TLB entries
+> 3) free the table page
+> 
+> ... or we risk a number of issues resulting from erroneous programming
+> of the TLBs. See pmd_free_pte_page() for an example of how to do this
+> correctly.
+
+Okay will send 'addr' into these functions and do somehting like this
+at all levels as in case for pmd_free_pte_page().
+
+        page = pud_page(*pudp);
+        pud_clear(pudp);
+        __flush_tlb_kernel_pgtable(addr);
+        free_pgtable_page(page);
+
+
+> 
+> I'd have thought similar applied to x86, so that implementation looks
+> suspicious to me too...
+> 
+>> +	spin_unlock(&init_mm.page_table_lock);
+> 
+> What precisely is the page_table_lock intended to protect?
+
+Concurrent modification to kernel page table (init_mm) while clearing entries.
+
+> 
+> It seems odd to me that we're happy to walk the tables without the lock,
+> but only grab the lock when performing a modification. That implies we
+> either have some higher-level mutual exclusion, or we're not holding the
+> lock in all cases we need to be.
+
+On arm64
+
+- linear mapping is half kernel virtual range (unlikely to share PGD with any other)
+- vmemmap and vmalloc might or might not be aligned properly to avoid PGD/PUD/PMD overlap
+- This kernel virtual space layout is not fixed and can change in future
+
+Hence just to be on safer side lets take init_mm.page_table_lock for the entire tear
+down process in remove_pagetable(). put_page_bootmem/free_reserved_page/free_pages should
+not block for longer period unlike allocation paths. Hence it should be safe with overall
+spin lock on init_mm.page_table_lock unless if there are some other concerns.
+
+> 
+>> +}
+>> +#else
+>> +static void free_pte_table(pte_t *pte_start, pmd_t *pmd)
+>> +{
+>> +}
+>> +#endif
+> 
+> I'm surprised that we never need to free a pte table for 2 level paging.
+> Is that definitely the case?
+
+Will fix it.
+
+> 
+>> +
+>> +#if (CONFIG_PGTABLE_LEVELS > 3)
+>> +static void free_pmd_table(pmd_t *pmd_start, pud_t *pud)
+>> +{
+>> +	pmd_t *pmd;
+>> +	int i;
+>> +
+>> +	for (i = 0; i < PTRS_PER_PMD; i++) {
+>> +		pmd = pmd_start + i;
+>> +		if (!pmd_none(*pmd))
+>> +			return;
+>> +	}
+>> +
+>> +	free_pagetable(pud_page(*pud), 0);
+>> +	spin_lock(&init_mm.page_table_lock);
+>> +	pud_clear(pud);
+>> +	spin_unlock(&init_mm.page_table_lock);
+>> +}
+>> +
+>> +static void free_pud_table(pud_t *pud_start, pgd_t *pgd)
+>> +{
+>> +	pud_t *pud;
+>> +	int i;
+>> +
+>> +	for (i = 0; i < PTRS_PER_PUD; i++) {
+>> +		pud = pud_start + i;
+>> +		if (!pud_none(*pud))
+>> +			return;
+>> +	}
+>> +
+>> +	free_pagetable(pgd_page(*pgd), 0);
+>> +	spin_lock(&init_mm.page_table_lock);
+>> +	pgd_clear(pgd);
+>> +	spin_unlock(&init_mm.page_table_lock);
+>> +}
+>> +#else
+>> +static void free_pmd_table(pmd_t *pmd_start, pud_t *pud)
+>> +{
+>> +}
+>> +
+>> +static void free_pud_table(pud_t *pud_start, pgd_t *pgd)
+>> +{
+>> +}
+>> +#endif
+> 
+> It seems very odd to me that we suddenly need both of these, rather than
+> requiring one before the other. Naively, I'd have expected that we'd
+> need:
+> 
+> - free_pte_table for CONFIG_PGTABLE_LEVELS > 1 (i.e. always)
+> - free_pmd_table for CONFIG_PGTABLE_LEVELS > 2
+> - free_pud_table for CONFIG_PGTABLE_LEVELS > 3
+> 
+> ... matching the cases where the levels "really" exist. What am I
+> missing that ties the pmd and pud levels together?
+
+Might have got somehting wrong here. Will fix it.
+
+> 
+>> +static void
+>> +remove_pte_table(pte_t *pte_start, unsigned long addr,
+>> +			unsigned long end, bool direct)
+>> +{
+>> +	pte_t *pte;
+>> +
+>> +	pte = pte_start + pte_index(addr);
+>> +	for (; addr < end; addr += PAGE_SIZE, pte++) {
+>> +		if (!pte_present(*pte))
+>> +			continue;
+>> +
+>> +		if (!direct)
+>> +			free_pagetable(pte_page(*pte), 0);
+> 
+> This is really confusing. Here we're freeing a page of memory backing
+> the vmemmap, which it _not_ a page table.
+
+Right. The new naming scheme proposed before should do take care.
+
+> 
+> At the least, can we please rename "direct" to something like
+> "free_backing", inverting its polarity?
+
+Will use 'sparse_vmap' instead and invert the polarity.
+
+> 
+>> +		spin_lock(&init_mm.page_table_lock);
+>> +		pte_clear(&init_mm, addr, pte);
+>> +		spin_unlock(&init_mm.page_table_lock);
+>> +	}
+>> +}
+> 
+> Rather than explicitly using pte_index(), the usual style for arm64 is
+> to pass the pmdp in and use pte_offset_kernel() to find the relevant
+> ptep, e.g.
+> 
+> static void remove pte_table(pmd_t *pmdp, unsigned long addr,
+> 			     unsigned long end, bool direct)
+> {
+> 	pte_t *ptep = pte_offset_kernel(pmdp, addr);
+> 
+> 	do {
+> 		if (!pte_present(*ptep)
+> 			continue;
+> 
+> 		...
+> 
+> 	} while (ptep++, addr += PAGE_SIZE, addr != end);
+
+Will probably stick with 'next = [pgd|pud|pmd_addr]_end(addr, end)' which
+is used for iteration as well as for next level function.
+
+> }
+> 
+> ... with similar applying at all levels.
+
+Sure will change and this will probably get rid of additional [pmd|pud]_index()
+definitions added here.
