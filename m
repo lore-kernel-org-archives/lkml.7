@@ -2,98 +2,144 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_NEOMUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-4.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0C17CC10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 04:12:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 54955C10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 04:13:40 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CAA2520872
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 04:12:56 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20E9D20872
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 04:13:40 +0000 (UTC)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
+	s=default; t=1555474420;
+	bh=qmGrhJHNHxMV4n0I9ShPd2bnUMFpdPtpNBGJSS9pjoU=;
+	h=References:In-Reply-To:From:Date:Subject:To:Cc:List-ID:From;
+	b=KSN0/fZ6fWqEsb9wwx+vOYZfLOP+pT7vrr4FaxjdvVHh9mKS/ruvL1DS9cR+zf6cF
+	 I2+abIvH09Ukm+z01kBMpaDk0Kg2snOLN9o/Eb+0ytfrgixgX9n0NEPGrKgvzDXs5Y
+	 Oe/CbR4KJz/lXd6gdN6xiPf69b+gr6QVtEIbCeBg=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1726198AbfDQEMz (ORCPT
+        id S1726434AbfDQENi (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 00:12:55 -0400
-Received: from guitar.tcltek.co.il ([192.115.133.116]:57528 "EHLO
-        mx.tkos.co.il" rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725844AbfDQEMz (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 00:12:55 -0400
-Received: from tarshish (unknown [10.0.8.2])
-        (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
-        (No client certificate requested)
-        by mx.tkos.co.il (Postfix) with ESMTPS id 0B4F84403CA;
-        Wed, 17 Apr 2019 07:12:52 +0300 (IDT)
-Date:   Wed, 17 Apr 2019 07:12:50 +0300
-From:   Baruch Siach <baruch@tkos.co.il>
-To:     Arnd Bergmann <arnd@arndb.de>
-Cc:     arm@kernel.org, linux-arm-kernel@lists.infradead.org,
-        Russell King <linux@armlinux.org.uk>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH] ARM: debug-ll: add default address for digicolor
-Message-ID: <20190417041250.nbqy2ltjw77wlnts@tarshish>
-References: <20190416131746.1303495-1-arnd@arndb.de>
+        Wed, 17 Apr 2019 00:13:38 -0400
+Received: from mail-lj1-f194.google.com ([209.85.208.194]:41667 "EHLO
+        mail-lj1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725767AbfDQENi (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 00:13:38 -0400
+Received: by mail-lj1-f194.google.com with SMTP id k8so21101779lja.8
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 21:13:37 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=linux-foundation.org; s=google;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Scd0mxLNvddMA/EuL7KgAfLfPq4A2d2A+jt31P9MYwQ=;
+        b=f5LPUMydRgoieOXcslgprAzTIXLGrkdJ4t2S8woBSwJXvjjtlVT8iDFx/1ghkcZUGh
+         TZTtsQjCJGNB//d2GFXCDvOKk5h8AXP8fCW1qGx8gml+SB2p8iffhIOQtqwHfr/8Ndxv
+         Z0QzY8plk8LPA73p03U7k1H7fhKlySUGyOuzw=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Scd0mxLNvddMA/EuL7KgAfLfPq4A2d2A+jt31P9MYwQ=;
+        b=M/2ewF4ZNH2+nrlxfSIz1fxpp7a0acYHFFkd3qyArA/F55GWXJCMoooiZEGHrW6+HE
+         bWQMtfRM/URjU8tVoyMVUQ6nt6MGGt6BoDYMD1pXCmIkA+NUaY3EMjJRvA1QcmieygBr
+         kkP9ediPay+aXQ+2E3qe9R7uL1uMAfLJGRrb2cs12AErih09L9GRMoV5R5fV4TCy6FPO
+         WSVzKKnwfnZN+wVReRbWzSnZ9wSF5B/PbehqrUIW+g9nODUYfJaYnT5TsGiJbfGM2lD/
+         C2jDRdIti+DMLp5j/RJcOBoU0bG8em4NttcIiCQLPvculbjc97zbt8zGh00ullTCD8hp
+         Po4Q==
+X-Gm-Message-State: APjAAAWWaHpMmfM5XyUPfohHOItUFrksqflQXIZIXmTApimtHKRnPk/O
+        JDWUmjOpidTDO4innkA8xqCwlJVmhGs=
+X-Google-Smtp-Source: APXvYqwyKzcNjevC+XPToMx4J/vD9k5YZJtcAtSDMYNrQx/UlcICn2wqIGIzlVuT9dNuCKQbC5eKyA==
+X-Received: by 2002:a2e:88c1:: with SMTP id a1mr5087788ljk.78.1555474415687;
+        Tue, 16 Apr 2019 21:13:35 -0700 (PDT)
+Received: from mail-lf1-f43.google.com (mail-lf1-f43.google.com. [209.85.167.43])
+        by smtp.gmail.com with ESMTPSA id m1sm10955438lfk.84.2019.04.16.21.13.33
+        for <linux-kernel@vger.kernel.org>
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Tue, 16 Apr 2019 21:13:34 -0700 (PDT)
+Received: by mail-lf1-f43.google.com with SMTP id j11so17750795lfm.0
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 21:13:33 -0700 (PDT)
+X-Received: by 2002:ac2:495e:: with SMTP id o30mr24639187lfi.35.1555474413536;
+ Tue, 16 Apr 2019 21:13:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190416131746.1303495-1-arnd@arndb.de>
-User-Agent: NeoMutt/20180716
+References: <CAHk-=wjvcuyCQGnfOhooaL1H4H63qXO=xgo+9yncSOG=eK+kbA@mail.gmail.com>
+ <20190415051919.GA31481@infradead.org> <CAHk-=wj7jgMOVFW0tiU-X+zhg6+Rn7mEBTej+f26rV3zXezOSA@mail.gmail.com>
+ <87sguhti6e.fsf@concordia.ellerman.id.au>
+In-Reply-To: <87sguhti6e.fsf@concordia.ellerman.id.au>
+From:   Linus Torvalds <torvalds@linux-foundation.org>
+Date:   Tue, 16 Apr 2019 21:13:17 -0700
+X-Gmail-Original-Message-ID: <CAHk-=wi2HxyJoH3xhr_ytM3gf1mkvq8Dq9Do+EdNZrm8KjV_6w@mail.gmail.com>
+Message-ID: <CAHk-=wi2HxyJoH3xhr_ytM3gf1mkvq8Dq9Do+EdNZrm8KjV_6w@mail.gmail.com>
+Subject: Re: Linux 5.1-rc5
+To:     Michael Ellerman <mpe@ellerman.id.au>
+Cc:     Christoph Hellwig <hch@infradead.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        linuxppc-dev@lists.ozlabs.org,
+        Martin Schwidefsky <schwidefsky@de.ibm.com>,
+        linux-s390 <linux-s390@vger.kernel.org>,
+        Nicholas Piggin <npiggin@gmail.com>,
+        "Aneesh Kumar K.V" <aneesh.kumar@linux.ibm.com>,
+        Paul Mackerras <paulus@ozlabs.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Arnd,
+On Tue, Apr 16, 2019 at 8:38 PM Michael Ellerman <mpe@ellerman.id.au> wrote:
+>
+> > That said, powerpc and s390 should at least look at maybe adding a
+> > check for the page ref in their gup paths too. Powerpc has the special
+> > gup_hugepte() case
+>
+> Which uses page_cache_add_speculative(), which handles the case of the
+> refcount being zero but not overflow. So that looks like it needs
+> fixing.
 
-On Tue, Apr 16, 2019 at 03:17:30PM +0200, Arnd Bergmann wrote:
-> The digicolor platform has three UARTs, but the Kconfig.debug
-> file explicitly lists port zero as the one to be used for the
-> console, while not providing any default values.
-> 
-> This can get an automated randconfig build stuck in a loop
-> waiting for the user to input the number. As we already know
-> the physical address, this patch provides that number as
-> default, along with a reasonable default value for the virtual
-> address.
-> 
-> Cc: Baruch Siach <baruch@tkos.co.il>
-> Signed-off-by: Arnd Bergmann <arnd@arndb.de>
-> ---
->  arch/arm/Kconfig.debug | 2 ++
->  1 file changed, 2 insertions(+)
-> 
-> diff --git a/arch/arm/Kconfig.debug b/arch/arm/Kconfig.debug
-> index a8a1e14f20ab..e5f0b36d797f 100644
-> --- a/arch/arm/Kconfig.debug
-> +++ b/arch/arm/Kconfig.debug
-> @@ -1676,6 +1676,7 @@ config DEBUG_UART_PHYS
->  	default 0xe6e68000 if DEBUG_RCAR_GEN2_SCIF1
->  	default 0xe6ee0000 if DEBUG_RCAR_GEN2_SCIF4
->  	default 0xe8008000 if DEBUG_R7S72100_SCIF2
-> +	default 0xf0000740 if DEBUG_DIGICOLOR_UA0
+Note that unlike the zero check, the "too many refs" check does _not_
+need to be atomic.
 
-The addruart macro in arch/arm/include/debug/digicolor.S adds the 0x740 offset. 
-So CONFIG_DEBUG_UART_PHYS should be 0xf0000000.
+Because it's not a correctness issue right at some magical exact
+point, it's a much more ambiguous a "the refcount is now so large that
+I'm not going to do GUP on this page any more". Being off by a number
+of pages in case there's a race is just fine.
 
->  	default 0xf0000be0 if ARCH_EBSA110
->  	default 0xf1012000 if DEBUG_MVEBU_UART0_ALTERNATE
->  	default 0xf1012100 if DEBUG_MVEBU_UART1_ALTERNATE
-> @@ -1785,6 +1786,7 @@ config DEBUG_UART_VIRT
->  	default 0xfd012000 if DEBUG_MVEBU_UART0_ALTERNATE && ARCH_MV78XX0
->  	default 0xfd883000 if DEBUG_ALPINE_UART0
->  	default 0xfde12000 if DEBUG_MVEBU_UART0_ALTERNATE && ARCH_DOVE
-> +	default 0xfe000740 if DEBUG_DIGICOLOR_UA0
+So you could do something like this (TOTALLY UNTESTED, and
+whitespace-damaged on purpose - I don't want you to apply it blindly)
+appended patch.
 
-The value I used when testing used to be 0xf0100000.
+> And we have a few uses of bare get_page() in KVM code which might be
+> subject to the same attack.
 
->  	default 0xfe012000 if DEBUG_MVEBU_UART0_ALTERNATE && ARCH_ORION5X
->  	default 0xfe017000 if DEBUG_MMP_UART2
->  	default 0xfe018000 if DEBUG_MMP_UART3
+Note that you really have to have not just a get_page(), but some way
+of lining up *billions* of them. Which really tends to be pretty hard.
 
-Thanks,
-baruch
+            Linus
 
--- 
-     http://baruch.siach.name/blog/                  ~. .~   Tk Open Systems
-=}------------------------------------------------ooO--U--Ooo------------{=
-   - baruch@tkos.co.il - tel: +972.52.368.4656, http://www.tkos.co.il -
+----
+
+diff --git a/arch/powerpc/mm/hugetlbpage.c b/arch/powerpc/mm/hugetlbpage.c
+index 9e732bb2c84a..52db7ff7c756 100644
+--- a/arch/powerpc/mm/hugetlbpage.c
++++ b/arch/powerpc/mm/hugetlbpage.c
+@@ -523,7 +523,8 @@ struct page *follow_huge_pd(struct vm_area_struct *vma,
+                page = pte_page(*ptep);
+                page += ((address & mask) >> PAGE_SHIFT);
+                if (flags & FOLL_GET)
+-                       get_page(page);
++                       if (!try_get_page(page))
++                               page = NULL;
+        } else {
+                if (is_hugetlb_entry_migration(*ptep)) {
+                        spin_unlock(ptl);
+@@ -883,6 +884,8 @@ int gup_hugepte(pte_t *ptep, unsigned long sz,
+unsigned long addr,
+
+        refs = 0;
+        head = pte_page(pte);
++       if (page_ref_count(head) < 0)
++               return 0;
+
+        page = head + ((addr & (sz-1)) >> PAGE_SHIFT);
+        do {
