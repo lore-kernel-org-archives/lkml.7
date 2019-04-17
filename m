@@ -2,157 +2,146 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 84287C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:17:49 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E270AC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:18:02 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 50C3320651
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:17:49 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A8E3220651
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 20:18:02 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="PAIbKk1e"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733057AbfDQURs (ORCPT
+        id S1733095AbfDQUSB (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 16:17:48 -0400
-Received: from mx1.redhat.com ([209.132.183.28]:58228 "EHLO mx1.redhat.com"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1727340AbfDQURr (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 16:17:47 -0400
-Received: from smtp.corp.redhat.com (int-mx06.intmail.prod.int.phx2.redhat.com [10.5.11.16])
-        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
-        (No client certificate requested)
-        by mx1.redhat.com (Postfix) with ESMTPS id 9E3B2F74A0;
-        Wed, 17 Apr 2019 20:17:46 +0000 (UTC)
-Received: from [10.36.116.26] (ovpn-116-26.ams2.redhat.com [10.36.116.26])
-        by smtp.corp.redhat.com (Postfix) with ESMTP id E634A5C205;
-        Wed, 17 Apr 2019 20:17:44 +0000 (UTC)
-Subject: Re: [PATCH v6 07/12] mm: Kill is_dev_zone() helper
-To:     Dan Williams <dan.j.williams@intel.com>, akpm@linux-foundation.org
-Cc:     Michal Hocko <mhocko@suse.com>,
-        Logan Gunthorpe <logang@deltatee.com>, linux-mm@kvack.org,
-        linux-nvdimm@lists.01.org, linux-kernel@vger.kernel.org
-References: <155552633539.2015392.2477781120122237934.stgit@dwillia2-desk3.amr.corp.intel.com>
- <155552637207.2015392.16917498971420465931.stgit@dwillia2-desk3.amr.corp.intel.com>
-From:   David Hildenbrand <david@redhat.com>
-Openpgp: preference=signencrypt
-Autocrypt: addr=david@redhat.com; prefer-encrypt=mutual; keydata=
- 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
- SE+xAvmumFBY
-Organization: Red Hat GmbH
-Message-ID: <f189190c-4d70-be54-e194-fb736505f38e@redhat.com>
-Date:   Wed, 17 Apr 2019 22:17:44 +0200
-User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
- Thunderbird/60.6.1
+        Wed, 17 Apr 2019 16:18:01 -0400
+Received: from mail-pl1-f193.google.com ([209.85.214.193]:33853 "EHLO
+        mail-pl1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727340AbfDQUSB (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 16:18:01 -0400
+Received: by mail-pl1-f193.google.com with SMTP id y6so30652plt.1;
+        Wed, 17 Apr 2019 13:18:00 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=sender:date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=FKYoOrkPWJ8jYz0Ef0/9SONZYVLSf2vd4XE8IVn6Uwk=;
+        b=PAIbKk1eK3lD3LJbW7MpUHTCpgwHZ2UH5CMR6oNWqDdFgNtPdaVfwomU3g4mWJ/mJF
+         X5qU/gHgH/cvbdNucP/ivTYIgRGUJPa3KTVZ0Ia+ttnmvjRqvt7qRDwG39bBcyBNm3SO
+         FxQ/GDlaf262cgjrnwWtdXFpZgIGfW8qnggzBmzZ/AGPMfxAplDeoyIJEU7vAHdCyia+
+         RnyWm0UXgElftqDs8wsDN1tpdX8TOq+bUmRUslEzxP3tEX4Z92vF2FNwoS5juCj0sbZd
+         7ZgllYSyfRB6eF2ta4peeKHymy66ciht3IyKHB+vkIfxUhXwwwvywaFeBhDO/WgdsW5l
+         ah6w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :references:mime-version:content-disposition:in-reply-to:user-agent;
+        bh=FKYoOrkPWJ8jYz0Ef0/9SONZYVLSf2vd4XE8IVn6Uwk=;
+        b=Lb3w+QlAVDphBFn2/ZV2p3WY+9S7/kAxLxdJXrBjdksZW/VWrhB+Y+d4G43NSdTgWX
+         5SLpsMOtgz337aTmyO22lE4Lphu8sdvgKpUESbZF88KriLGm+aLmcJS42693dPu0or9J
+         ozOuF9SU9x3yw3GJ5eRVklyWBPE8l+KRY4B+tIt9nt2Fx8qEO/FVuo/+1R7s9wuZ9MST
+         Bmy0QPUTnQgv07Ft3MBg3YwUtLphntr27q1GioPnJrSpVGwpFmuue3AqpIR4qc+2G7LP
+         SmJ3jkKBggKaRlQsdNFqy243YblhJqFf4nACh2JKxlBCGExWp5dc5xxwrDNHrn4UmKd+
+         q4hw==
+X-Gm-Message-State: APjAAAX3EZesLahkaoZHfEKuIx3aw3KMyuJ2nACmYh/K2xW3Tu2CRTHN
+        D8oC0gmdLysVQ5/lGffov+k=
+X-Google-Smtp-Source: APXvYqy+2deBavO0Vs2tDyN+AwVD06NlB/evbn0ZQSuiHhZ+DuRqMhtfXUOSGNx0UW3Qsw6zzNzIIg==
+X-Received: by 2002:a17:902:2c01:: with SMTP id m1mr23479512plb.22.1555532280476;
+        Wed, 17 Apr 2019 13:18:00 -0700 (PDT)
+Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
+        by smtp.gmail.com with ESMTPSA id d68sm55869pfg.16.2019.04.17.13.17.59
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
+        Wed, 17 Apr 2019 13:17:59 -0700 (PDT)
+Date:   Wed, 17 Apr 2019 13:17:58 -0700
+From:   Guenter Roeck <linux@roeck-us.net>
+To:     Wolfram Sang <wsa@the-dreams.de>
+Cc:     Jerry Hoemann <jerry.hoemann@hpe.com>,
+        Wolfram Sang <wsa+renesas@sang-engineering.com>,
+        linux-watchdog@vger.kernel.org, linux-renesas-soc@vger.kernel.org,
+        Wim Van Sebroeck <wim@linux-watchdog.org>,
+        linux-kernel@vger.kernel.org
+Subject: Re: [PATCH v2 06/16] watchdog: hpwdt: drop warning after calling
+ watchdog_init_timeout
+Message-ID: <20190417201758.GB6223@roeck-us.net>
+References: <20190416102515.12269-1-wsa+renesas@sang-engineering.com>
+ <20190416102515.12269-7-wsa+renesas@sang-engineering.com>
+ <20190416203431.GA20072@anatevka>
+ <20190416204814.GA26442@roeck-us.net>
+ <20190416205533.GB8268@kunai>
+ <20190416212046.GC26442@roeck-us.net>
+ <20190416221702.GC8268@kunai>
+ <20190416223813.GA744@roeck-us.net>
+ <20190417194528.xwivkyubhxyfrx4m@ninjato>
 MIME-Version: 1.0
-In-Reply-To: <155552637207.2015392.16917498971420465931.stgit@dwillia2-desk3.amr.corp.intel.com>
-Content-Type: text/plain; charset=utf-8
-Content-Language: en-US
-Content-Transfer-Encoding: 7bit
-X-Scanned-By: MIMEDefang 2.79 on 10.5.11.16
-X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.38]); Wed, 17 Apr 2019 20:17:46 +0000 (UTC)
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190417194528.xwivkyubhxyfrx4m@ninjato>
+User-Agent: Mutt/1.5.24 (2015-08-30)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On 17.04.19 20:39, Dan Williams wrote:
-> Given there are no more usages of is_dev_zone() outside of 'ifdef
-> CONFIG_ZONE_DEVICE' protection, kill off the compilation helper.
+On Wed, Apr 17, 2019 at 09:45:28PM +0200, Wolfram Sang wrote:
 > 
-> Cc: Michal Hocko <mhocko@suse.com>
-> Cc: David Hildenbrand <david@redhat.com>
-> Cc: Logan Gunthorpe <logang@deltatee.com>
-> Signed-off-by: Dan Williams <dan.j.williams@intel.com>
-> ---
->  include/linux/mmzone.h |   12 ------------
->  mm/page_alloc.c        |    2 +-
->  2 files changed, 1 insertion(+), 13 deletions(-)
+> > Yes, that works as well. Note that it will actually print something like
+> > "watchdog: <device>: ..." due to the pr_fmt() at the top of watchdog_core.c.
+> > I guess that should be ok.
 > 
-> diff --git a/include/linux/mmzone.h b/include/linux/mmzone.h
-> index b13f0cddf75e..3237c5e456df 100644
-> --- a/include/linux/mmzone.h
-> +++ b/include/linux/mmzone.h
-> @@ -855,18 +855,6 @@ static inline int local_memory_node(int node_id) { return node_id; };
->   */
->  #define zone_idx(zone)		((zone) - (zone)->zone_pgdat->node_zones)
->  
-> -#ifdef CONFIG_ZONE_DEVICE
-> -static inline bool is_dev_zone(const struct zone *zone)
-> -{
-> -	return zone_idx(zone) == ZONE_DEVICE;
-> -}
-> -#else
-> -static inline bool is_dev_zone(const struct zone *zone)
-> -{
-> -	return false;
-> -}
-> -#endif
-> -
->  /*
->   * Returns true if a zone has pages managed by the buddy allocator.
->   * All the reclaim decisions have to use this function rather than
-> diff --git a/mm/page_alloc.c b/mm/page_alloc.c
-> index c9ad28a78018..fd455bd742d5 100644
-> --- a/mm/page_alloc.c
-> +++ b/mm/page_alloc.c
-> @@ -5844,7 +5844,7 @@ void __ref memmap_init_zone_device(struct zone *zone,
->  	unsigned long start = jiffies;
->  	int nid = pgdat->node_id;
->  
-> -	if (WARN_ON_ONCE(!pgmap || !is_dev_zone(zone)))
-> +	if (WARN_ON_ONCE(!pgmap || zone_idx(zone) != ZONE_DEVICE))
->  		return;
->  
->  	/*
+> I have the following diff applied on top of patch 2. Works with and
+> without a parent device. I am not super happy casting 'identity' but
+> since its u8-type is exported to userspace, I think we can't avoid it.
+> Guenter, is this cast safe? Here is the diff:
 > 
-
-I like seeing that go
-
-Acked-by: David Hildenbrand <david@redhat.com>
-
--- 
+I would think it is safe, but question is if it is it needed - ie do you see
+a warning if it isn't there ? Presumably yes; if so, let's just do it.
 
 Thanks,
+Guenter
 
-David / dhildenb
+> diff --git a/drivers/watchdog/watchdog_core.c b/drivers/watchdog/watchdog_core.c
+> index cd3ca6b366ef..62be9e52a4de 100644
+> --- a/drivers/watchdog/watchdog_core.c
+> +++ b/drivers/watchdog/watchdog_core.c
+> @@ -115,6 +115,8 @@ static void watchdog_check_min_max_timeout(struct watchdog_device *wdd)
+>  int watchdog_init_timeout(struct watchdog_device *wdd,
+>  				unsigned int timeout_parm, struct device *dev)
+>  {
+> +	const char *dev_str = wdd->parent ? dev_name(wdd->parent) :
+> +			      (const char *)wdd->info->identity;
+>  	unsigned int t = 0;
+>  	int ret = 0;
+>  
+> @@ -126,8 +128,8 @@ int watchdog_init_timeout(struct watchdog_device *wdd,
+>  			wdd->timeout = timeout_parm;
+>  			return 0;
+>  		}
+> -		dev_err(dev, "driver supplied timeout (%u) out of range\n",
+> -			timeout_parm);
+> +		pr_err("%s: driver supplied timeout (%u) out of range\n",
+> +			dev_str, timeout_parm);
+>  		ret = -EINVAL;
+>  	}
+>  
+> @@ -138,12 +140,13 @@ int watchdog_init_timeout(struct watchdog_device *wdd,
+>  			wdd->timeout = t;
+>  			return 0;
+>  		}
+> -		dev_err(dev, "DT supplied timeout (%u) out of range\n", t);
+> +		pr_err("%s: DT supplied timeout (%u) out of range\n", dev_str, t);
+>  		ret = -EINVAL;
+>  	}
+>  
+>  	if (ret < 0 && wdd->timeout)
+> -		dev_warn(dev, "falling back to default timeout (%u)\n", wdd->timeout);
+> +		pr_warn("%s: falling back to default timeout (%u)\n", dev_str,
+> +			wdd->timeout);
+>  
+>  	return ret;
+>  }
+> 
+
+
