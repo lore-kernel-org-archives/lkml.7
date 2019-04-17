@@ -2,92 +2,218 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=unavailable
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 5D619C10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 06:46:34 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E6AD6C282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 06:47:36 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2B73D2176F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 06:46:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AD6DE217D4
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 06:47:36 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-	s=default; t=1555483594;
-	bh=oZ3WP7uQg7sRTTKdU7exhKEufd0mtIFEjulXJ42hmSI=;
+	s=default; t=1555483656;
+	bh=eoObjqlTO00GHxJ7NKpjX9DEaFfBYW/V935x8ZS76q0=;
 	h=Date:From:To:Cc:Subject:References:In-Reply-To:List-ID:From;
-	b=PoRwEpUOxcojp8co/42CErmYoueulgr/bHbtmg3f6R31UsBTxlTe7B9OVpDqJFHmg
-	 r/fRlRtpRBAd+EG1l7nk/EM57uY5UFmRJ8Qadf+1e8f4C2mTlMqRbuo56S1r7Vp6hh
-	 q28r8vf7CJsInTHcih/6eshUOCpmjTD4uVDvr64w=
+	b=O0ZKDK6///m4k74UCp/aUq/QK2tiYwlhF30RzuL6VMAyWYbv9w/Ko5AbY4g9H/MTB
+	 p8G2NgAPNQQamRQrserPQXx8qzF+S2fZ2ZCBf0DsgoQpLvx7w6czmkKsfnKTgn+gJ8
+	 EYdZ4RFcpQKru8vwDr9h18n+OFDHMYjpAd+6aVkc=
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730779AbfDQGqc (ORCPT
+        id S1729906AbfDQGrf (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 02:46:32 -0400
-Received: from mail.kernel.org ([198.145.29.99]:42110 "EHLO mail.kernel.org"
+        Wed, 17 Apr 2019 02:47:35 -0400
+Received: from mail.kernel.org ([198.145.29.99]:42332 "EHLO mail.kernel.org"
         rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1725767AbfDQGqc (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 02:46:32 -0400
+        id S1726313AbfDQGrf (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 02:47:35 -0400
 Received: from localhost (83-86-89-107.cable.dynamic.v4.ziggo.nl [83.86.89.107])
         (using TLSv1.2 with cipher ECDHE-RSA-AES256-GCM-SHA384 (256/256 bits))
         (No client certificate requested)
-        by mail.kernel.org (Postfix) with ESMTPSA id 60A022176F;
-        Wed, 17 Apr 2019 06:46:31 +0000 (UTC)
+        by mail.kernel.org (Postfix) with ESMTPSA id 912312176F;
+        Wed, 17 Apr 2019 06:47:33 +0000 (UTC)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=kernel.org;
-        s=default; t=1555483591;
-        bh=oZ3WP7uQg7sRTTKdU7exhKEufd0mtIFEjulXJ42hmSI=;
+        s=default; t=1555483654;
+        bh=eoObjqlTO00GHxJ7NKpjX9DEaFfBYW/V935x8ZS76q0=;
         h=Date:From:To:Cc:Subject:References:In-Reply-To:From;
-        b=X0edzbW6sjOkTLvx1vi2sfhd735aV/+GAr1EGPQomSM8kg6fa41N1XMMEhv5Q2wrK
-         NUr8BlwKlifRKnD0bRo7WsJTRVqgH8k41Cdx1ItZQqbg18/KgA9KexOIOyfQ0boYLm
-         ixJhut4nh1MZcepgjuwIxF8STE0is0b9nOysHquU=
-Date:   Wed, 17 Apr 2019 08:46:29 +0200
+        b=Iim2UVMp/F63scTd/sxEd0oK23Q/y8LlEOWdaUueoU4A4skstbaNQ2Cu2wV+fogRq
+         jZfHahLkzkRP0f+GUIBrJ+ZyZztXnu1XrujuYd2x7bR/OyjmEwjvTH0dx5pOV2fwz3
+         mT7R/7IyeXcDaGr/FErxHK0sdWLBnmimDSdRj1MM=
+Date:   Wed, 17 Apr 2019 08:47:31 +0200
 From:   Greg Kroah-Hartman <gregkh@linuxfoundation.org>
-To:     Jiri Slaby <jslaby@suse.cz>
-Cc:     Fuqian Huang <huangfq.daxian@gmail.com>,
-        linux-kernel@vger.kernel.org
-Subject: Re: [PATCH v4] tty: rocket: Remove the rp_ioctl
-Message-ID: <20190417064629.GA19549@kroah.com>
-References: <20190416145300.28212-1-huangfq.daxian@gmail.com>
- <06427d24-535b-e116-51e0-d98565a8fda1@suse.cz>
+To:     Nathan Chancellor <natechancellor@gmail.com>
+Cc:     linux-kernel@vger.kernel.org, stable@vger.kernel.org,
+        stable@kernel.org, Will Deacon <will.deacon@arm.com>
+Subject: Re: [PATCH 4.9 72/76] arm64: futex: Fix FUTEX_WAKE_OP atomic ops
+ with non-zero result value
+Message-ID: <20190417064731.GB19549@kroah.com>
+References: <20190415183707.712011689@linuxfoundation.org>
+ <20190415183729.170980546@linuxfoundation.org>
+ <20190415220151.GA23056@archlinux-i9>
+ <20190416090052.GD4209@kroah.com>
+ <20190416164751.GA25801@archlinux-i9>
+ <20190417061508.GB18320@kroah.com>
+ <20190417064153.GA14656@archlinux-i9>
 MIME-Version: 1.0
 Content-Type: text/plain; charset=us-ascii
 Content-Disposition: inline
-In-Reply-To: <06427d24-535b-e116-51e0-d98565a8fda1@suse.cz>
+In-Reply-To: <20190417064153.GA14656@archlinux-i9>
 User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 08:27:41AM +0200, Jiri Slaby wrote:
-> On 16. 04. 19, 16:53, Fuqian Huang wrote:
-> > --- a/drivers/tty/rocket.c
-> > +++ b/drivers/tty/rocket.c
-> ...
-> > -/*  IOCTL call handler into the driver */
-> > -static int rp_ioctl(struct tty_struct *tty,
-> > -		    unsigned int cmd, unsigned long arg)
-> > -{
-> > -	struct r_port *info = tty->driver_data;
-> > -	void __user *argp = (void __user *)arg;
-> > -	int ret = 0;
-> > -
-> > -	if (cmd != RCKP_GET_PORTS && rocket_paranoia_check(info, "rp_ioctl"))
-> > -		return -ENXIO;
-> > -
-> > -	switch (cmd) {
-> > -	case RCKP_GET_STRUCT:
-> > -		if (copy_to_user(argp, info, sizeof (struct r_port)))
-> > -			ret = -EFAULT;
-> > -		break;
+On Tue, Apr 16, 2019 at 11:41:53PM -0700, Nathan Chancellor wrote:
+> On Wed, Apr 17, 2019 at 08:15:08AM +0200, Greg Kroah-Hartman wrote:
+> > On Tue, Apr 16, 2019 at 09:47:51AM -0700, Nathan Chancellor wrote:
+> > > On Tue, Apr 16, 2019 at 11:00:52AM +0200, Greg Kroah-Hartman wrote:
+> > > > On Mon, Apr 15, 2019 at 03:01:51PM -0700, Nathan Chancellor wrote:
+> > > > > On Mon, Apr 15, 2019 at 08:44:36PM +0200, Greg Kroah-Hartman wrote:
+> > > > > > From: Will Deacon <will.deacon@arm.com>
+> > > > > > 
+> > > > > > commit 045afc24124d80c6998d9c770844c67912083506 upstream.
+> > > > > > 
+> > > > > > Rather embarrassingly, our futex() FUTEX_WAKE_OP implementation doesn't
+> > > > > > explicitly set the return value on the non-faulting path and instead
+> > > > > > leaves it holding the result of the underlying atomic operation. This
+> > > > > > means that any FUTEX_WAKE_OP atomic operation which computes a non-zero
+> > > > > > value will be reported as having failed. Regrettably, I wrote the buggy
+> > > > > > code back in 2011 and it was upstreamed as part of the initial arm64
+> > > > > > support in 2012.
+> > > > > > 
+> > > > > > The reasons we appear to get away with this are:
+> > > > > > 
+> > > > > >   1. FUTEX_WAKE_OP is rarely used and therefore doesn't appear to get
+> > > > > >      exercised by futex() test applications
+> > > > > > 
+> > > > > >   2. If the result of the atomic operation is zero, the system call
+> > > > > >      behaves correctly
+> > > > > > 
+> > > > > >   3. Prior to version 2.25, the only operation used by GLIBC set the
+> > > > > >      futex to zero, and therefore worked as expected. From 2.25 onwards,
+> > > > > >      FUTEX_WAKE_OP is not used by GLIBC at all.
+> > > > > > 
+> > > > > > Fix the implementation by ensuring that the return value is either 0
+> > > > > > to indicate that the atomic operation completed successfully, or -EFAULT
+> > > > > > if we encountered a fault when accessing the user mapping.
+> > > > > > 
+> > > > > > Cc: <stable@kernel.org>
+> > > > > > Fixes: 6170a97460db ("arm64: Atomic operations")
+> > > > > > Signed-off-by: Will Deacon <will.deacon@arm.com>
+> > > > > > Signed-off-by: Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+> > > > > > 
+> > > > > > ---
+> > > > > >  arch/arm64/include/asm/futex.h |   16 ++++++++--------
+> > > > > >  1 file changed, 8 insertions(+), 8 deletions(-)
+> > > > > > 
+> > > > > > --- a/arch/arm64/include/asm/futex.h
+> > > > > > +++ b/arch/arm64/include/asm/futex.h
+> > > > > > @@ -33,8 +33,8 @@
+> > > > > >  "	prfm	pstl1strm, %2\n"					\
+> > > > > >  "1:	ldxr	%w1, %2\n"						\
+> > > > > >  	insn "\n"							\
+> > > > > > -"2:	stlxr	%w3, %w0, %2\n"						\
+> > > > > > -"	cbnz	%w3, 1b\n"						\
+> > > > > > +"2:	stlxr	%w0, %w3, %2\n"						\
+> > > > > > +"	cbnz	%w0, 1b\n"						\
+> > > > > >  "	dmb	ish\n"							\
+> > > > > >  "3:\n"									\
+> > > > > >  "	.pushsection .fixup,\"ax\"\n"					\
+> > > > > > @@ -53,29 +53,29 @@
+> > > > > >  static inline int
+> > > > > >  arch_futex_atomic_op_inuser(int op, int oparg, int *oval, u32 __user *uaddr)
+> > > > > >  {
+> > > > > > -	int oldval = 0, ret, tmp;
+> > > > > > +	int oldval, ret, tmp;
+> > > > > >  
+> > > > > >  	pagefault_disable();
+> > > > > >  
+> > > > > >  	switch (op) {
+> > > > > >  	case FUTEX_OP_SET:
+> > > > > > -		__futex_atomic_op("mov	%w0, %w4",
+> > > > > > +		__futex_atomic_op("mov	%w3, %w4",
+> > > > > >  				  ret, oldval, uaddr, tmp, oparg);
+> > > > > >  		break;
+> > > > > >  	case FUTEX_OP_ADD:
+> > > > > > -		__futex_atomic_op("add	%w0, %w1, %w4",
+> > > > > > +		__futex_atomic_op("add	%w3, %w1, %w4",
+> > > > > >  				  ret, oldval, uaddr, tmp, oparg);
+> > > > > >  		break;
+> > > > > >  	case FUTEX_OP_OR:
+> > > > > > -		__futex_atomic_op("orr	%w0, %w1, %w4",
+> > > > > > +		__futex_atomic_op("orr	%w3, %w1, %w4",
+> > > > > >  				  ret, oldval, uaddr, tmp, oparg);
+> > > > > >  		break;
+> > > > > >  	case FUTEX_OP_ANDN:
+> > > > > > -		__futex_atomic_op("and	%w0, %w1, %w4",
+> > > > > > +		__futex_atomic_op("and	%w3, %w1, %w4",
+> > > > > >  				  ret, oldval, uaddr, tmp, ~oparg);
+> > > > > >  		break;
+> > > > > >  	case FUTEX_OP_XOR:
+> > > > > > -		__futex_atomic_op("eor	%w0, %w1, %w4",
+> > > > > > +		__futex_atomic_op("eor	%w3, %w1, %w4",
+> > > > > >  				  ret, oldval, uaddr, tmp, oparg);
+> > > > > >  		break;
+> > > > > >  	default:
+> > > > > > 
+> > > > > >
+> > > > > 
+> > > > > This causes a (false) build warning with AOSP's GCC 4.9.4 (which is
+> > > > > used to build nearly all arm64 Android kernels before 4.14):
+> > > > > 
+> > > > >   CC      kernel/futex.o
+> > > > > ../kernel/futex.c: In function 'do_futex':
+> > > > > ../kernel/futex.c:1492:17: warning: 'oldval' may be used uninitialized in this function [-Wmaybe-uninitialized]
+> > > > >    return oldval == cmparg;
+> > > > >                  ^
+> > > > > In file included from ../kernel/futex.c:69:0:
+> > > > > ../arch/arm64/include/asm/futex.h:56:6: note: 'oldval' was declared here
+> > > > >   int oldval, ret, tmp;
+> > > > >       ^
+> > > > > 
+> > > > > The only reason I bring this up is Qualcomm based kernels have a Python
+> > > > > script that emulates -Werror, meaning this will be fatal for a large
+> > > > > number of kernels, when this eventually gets merged into them.
+> > > > 
+> > > > Argh, really?  That's a buggy compiler that you have there, as oldval
+> > > > will be set correctly if all is good, and if not, ret will be and the
+> > > > code will error out.
+> > > > 
+> > > 
+> > > Correct.
+> > > 
+> > > > Working around broken compilers is not something I really like doing :(
+> > > > 
+> > > 
+> > > Indeed, I wouldn't have brought it up if it wasn't the compiler for all
+> > > Android 4.9 kernels aside from the Pixel 3 (XL).
+> > > 
+> > > > That being said, does this also show up in the 4.19.y and 5.0.y tree
+> > > > right now?  If not, why not?
+> > > > 
+> > > 
+> > > It does.
+> > > 
+> > > $ make ARCH=arm64 CROSS_COMPILE=<path>/bin/aarch64-linux-gnu- defconfig kernel/futex.o
+> > 
+> > Great, so it seems this needs to be fixed in Linus's tree first, before
+> > I can backport it everywhere.
+> > 
 > 
-> I am not sure what Greg meant, but I had only this particular ioctl on
-> mind when I was writing about removal. The other ones might be used _in
-> theory_. Even though they are not exposed to userspace either. So if
-> they are not source of potential issues, I would keep them:
+> Well, is it worth working around this in Linus's tree? I know you hate
+> taking patches just for stable but this compiler won't be used on 4.14+
+> according to [1] and support for it is planned to be discontinued in
+> less than a year [2]. This warning doesn't happen with Clang or newer
+> versions of GCC (I tested 6.3 in a Debian Docker image, which seems to
+> be the oldest I can find). I suppose there could be other buggy/ancient
+> compilers to work around...
 
-I was just meaning that one specific ioctl, not the whole thing.
+Yes it is worth it, I do not take fixes that are not in Linus's tree,
+otherwise we will have major problems over time.
 
-Although dropping all of these custom ioctls is probably the right thing
-to do in the long-run, for now, let's just get rid of the problem one.
+As this is a valid compiler version to be using for 5.0+, it should be
+fixed upstream first.
 
 thanks,
 
