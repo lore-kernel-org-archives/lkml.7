@@ -2,67 +2,88 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id BC06BC282DC
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:00:52 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 736AFC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:02:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9567B206BA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:00:52 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 42C1F206BA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:02:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732002AbfDQMAv (ORCPT
+        id S1732029AbfDQMCL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 08:00:51 -0400
-Received: from youngberry.canonical.com ([91.189.89.112]:35777 "EHLO
-        youngberry.canonical.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729522AbfDQMAv (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 08:00:51 -0400
-Received: from 1.general.cking.uk.vpn ([10.172.193.212] helo=localhost)
-        by youngberry.canonical.com with esmtpsa (TLS1.0:RSA_AES_256_CBC_SHA1:32)
-        (Exim 4.76)
-        (envelope-from <colin.king@canonical.com>)
-        id 1hGjFA-0001b9-1I; Wed, 17 Apr 2019 12:00:48 +0000
-From:   Colin King <colin.king@canonical.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
-        devel@driverdev.osuosl.org
-Cc:     kernel-janitors@vger.kernel.org, linux-kernel@vger.kernel.org
-Subject: [PATCH] staging: rtl8723bs: fix spelling mistake: "nonprintabl" -> "non-printable"
-Date:   Wed, 17 Apr 2019 13:00:47 +0100
-Message-Id: <20190417120047.20015-1-colin.king@canonical.com>
-X-Mailer: git-send-email 2.20.1
+        Wed, 17 Apr 2019 08:02:11 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:41322 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1731717AbfDQMCK (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 08:02:10 -0400
+Received: from smtp.corp.redhat.com (int-mx04.intmail.prod.int.phx2.redhat.com [10.5.11.14])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id 5DFB8C060200;
+        Wed, 17 Apr 2019 12:02:10 +0000 (UTC)
+Received: from t460s.redhat.com (ovpn-117-141.ams2.redhat.com [10.36.117.141])
+        by smtp.corp.redhat.com (Postfix) with ESMTP id 216905D9E1;
+        Wed, 17 Apr 2019 12:02:04 +0000 (UTC)
+From:   David Hildenbrand <david@redhat.com>
+To:     linux-mm@kvack.org
+Cc:     linux-kernel@vger.kernel.org, David Hildenbrand <david@redhat.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Oscar Salvador <osalvador@suse.de>,
+        Michal Hocko <mhocko@suse.com>,
+        Pavel Tatashin <pasha.tatashin@soleen.com>,
+        Wei Yang <richard.weiyang@gmail.com>, Qian Cai <cai@lca.pw>,
+        Arun KS <arunks@codeaurora.org>,
+        Mathieu Malaterre <malat@debian.org>
+Subject: [PATCH] mm/memory_hotplug: Fixup "Release memory resource after arch_remove_memory()"
+Date:   Wed, 17 Apr 2019 14:02:04 +0200
+Message-Id: <20190417120204.6997-1-david@redhat.com>
+In-Reply-To: <20190409100148.24703-2-david@redhat.com>
+References: <20190409100148.24703-2-david@redhat.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="utf-8"
 Content-Transfer-Encoding: 8bit
+X-Scanned-By: MIMEDefang 2.79 on 10.5.11.14
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.32]); Wed, 17 Apr 2019 12:02:10 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Colin Ian King <colin.king@canonical.com>
+pr_warn with "%pa" expects a pointer to phys_addr_t or resource_size_t.
+So let's propery use resource_size_t for the start address and size,
+we are dealing with resources after all.
 
-There is a spelling mistake in an RT_TRACE message, fix it.
-
-Signed-off-by: Colin Ian King <colin.king@canonical.com>
+Cc: Andrew Morton <akpm@linux-foundation.org>
+Cc: Oscar Salvador <osalvador@suse.de>
+Cc: Michal Hocko <mhocko@suse.com>
+Cc: David Hildenbrand <david@redhat.com>
+Cc: Pavel Tatashin <pasha.tatashin@soleen.com>
+Cc: Wei Yang <richard.weiyang@gmail.com>
+Cc: Qian Cai <cai@lca.pw>
+Cc: Arun KS <arunks@codeaurora.org>
+Cc: Mathieu Malaterre <malat@debian.org>
+Reviewed-by: Oscar Salvador <osalvador@suse.de>
+Signed-off-by: David Hildenbrand <david@redhat.com>
 ---
- drivers/staging/rtl8723bs/core/rtw_ioctl_set.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ mm/memory_hotplug.c | 3 ++-
+ 1 file changed, 2 insertions(+), 1 deletion(-)
 
-diff --git a/drivers/staging/rtl8723bs/core/rtw_ioctl_set.c b/drivers/staging/rtl8723bs/core/rtw_ioctl_set.c
-index 0c8a050b2a81..bd75bca1ac6e 100644
---- a/drivers/staging/rtl8723bs/core/rtw_ioctl_set.c
-+++ b/drivers/staging/rtl8723bs/core/rtw_ioctl_set.c
-@@ -44,7 +44,7 @@ u8 rtw_validate_ssid(struct ndis_802_11_ssid *ssid)
- 	for (i = 0; i < ssid->SsidLength; i++) {
- 		/* wifi, printable ascii code must be supported */
- 		if (!((ssid->Ssid[i] >= 0x20) && (ssid->Ssid[i] <= 0x7e))) {
--			RT_TRACE(_module_rtl871x_ioctl_set_c_, _drv_err_, ("ssid has nonprintabl ascii\n"));
-+			RT_TRACE(_module_rtl871x_ioctl_set_c_, _drv_err_, ("ssid has non-printable ascii\n"));
- 			ret = false;
- 			break;
- 		}
+diff --git a/mm/memory_hotplug.c b/mm/memory_hotplug.c
+index 093f6dc66f46..328878b6799d 100644
+--- a/mm/memory_hotplug.c
++++ b/mm/memory_hotplug.c
+@@ -1800,7 +1800,8 @@ void try_offline_node(int nid)
+ }
+ EXPORT_SYMBOL(try_offline_node);
+ 
+-static void __release_memory_resource(u64 start, u64 size)
++static void __release_memory_resource(resource_size_t start,
++				      resource_size_t size)
+ {
+ 	int ret;
+ 
 -- 
 2.20.1
 
