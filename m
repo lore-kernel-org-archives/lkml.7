@@ -2,165 +2,102 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
-	SPF_PASS,URIBL_BLOCKED autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-2.5 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,
+	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id C78BCC282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 15:04:38 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 94B77C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 15:05:56 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9470620652
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 15:04:38 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 5E4AA205F4
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 15:05:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=ssi.gouv.fr header.i=@ssi.gouv.fr header.b="jV8MxviG"
+	dkim=pass (2048-bit key) header.d=cmpxchg-org.20150623.gappssmtp.com header.i=@cmpxchg-org.20150623.gappssmtp.com header.b="ti8W5H7D"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732372AbfDQPEh (ORCPT
+        id S1732617AbfDQPFz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 11:04:37 -0400
-Received: from smtp-out.ssi.gouv.fr ([86.65.182.90]:58753 "EHLO
-        smtp-out.ssi.gouv.fr" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729940AbfDQPEh (ORCPT
+        Wed, 17 Apr 2019 11:05:55 -0400
+Received: from mail-yb1-f193.google.com ([209.85.219.193]:45592 "EHLO
+        mail-yb1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729356AbfDQPFz (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 11:04:37 -0400
-Received: from smtp-out.ssi.gouv.fr (localhost [127.0.0.1])
-        by smtp-out.ssi.gouv.fr (Postfix) with ESMTP id D8105D00072;
-        Wed, 17 Apr 2019 17:04:42 +0200 (CEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=ssi.gouv.fr;
-        s=20160407; t=1555513482;
-        bh=bWo7dnLioagPdYzeH6OkizN9W/LfrOvfG5WnkrxndVw=;
-        h=Subject:To:CC:References:From:Date:In-Reply-To:From:Subject;
-        b=jV8MxviGAxdH+OunhCErssEvmPHeF5oMM0dJwXZGbLsBnQBYC9fjrZVbkqxoix+z6
-         fGco0gKIhKr6uZOsQmD2Xcq3eyBCTtHKeqV1Ey4oawf62voYRXB//2fmMoLsIADZpw
-         N/jraYDvIUwiBLDvPGGo5hODncdzH7hqmo95k1uyU9n7wM8tmB+fSS0QvkNlZTQXDk
-         h3DGsO7tJZmcbppX2R+l3sOwg5x7hLdctG5mQspxmvgJYTHIsJrot07zmb8uvloTGu
-         /wrosttuAMbxalRCK/WP9Pc+GJcvt1uYnmxJiODolngESMD85YdxsJjGe4wTyloqAV
-         yIVgV30KDqvzw==
-Subject: Re: [RFC PATCH v1 1/5] fs: Add support for an O_MAYEXEC flag on
- sys_open()
-To:     Florian Weimer <fweimer@redhat.com>,
-        Steve Grubb <sgrubb@redhat.com>
-CC:     Jan Kara <jack@suse.cz>,
-        =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mic@digikod.net>,
-        <linux-kernel@vger.kernel.org>, Al Viro <viro@zeniv.linux.org.uk>,
-        James Morris <jmorris@namei.org>,
-        Jonathan Corbet <corbet@lwn.net>,
-        Kees Cook <keescook@chromium.org>,
-        Matthew Garrett <mjg59@google.com>,
-        Michael Kerrisk <mtk.manpages@gmail.com>,
-        Mimi Zohar <zohar@linux.ibm.com>,
-        =?UTF-8?Q?Philippe_Tr=c3=a9buchet?= 
-        <philippe.trebuchet@ssi.gouv.fr>, Shuah Khan <shuah@kernel.org>,
-        Thibaut Sautereau <thibaut.sautereau@ssi.gouv.fr>,
-        Vincent Strubel <vincent.strubel@ssi.gouv.fr>,
-        Yves-Alexis Perez <yves-alexis.perez@ssi.gouv.fr>,
-        <kernel-hardening@lists.openwall.com>, <linux-api@vger.kernel.org>,
-        <linux-security-module@vger.kernel.org>,
-        <linux-fsdevel@vger.kernel.org>,
-        Matthew Bobrowski <mbobrowski@mbobrowski.org>
-References: <20181212081712.32347-1-mic@digikod.net> <3452959.b6JmBh7Lnt@x2>
- <87wojuxj8s.fsf@oldenburg2.str.redhat.com> <2361288.r9sZr2NHLB@x2>
- <875zrd7xy8.fsf@oldenburg2.str.redhat.com>
-From:   =?UTF-8?Q?Micka=c3=abl_Sala=c3=bcn?= <mickael.salaun@ssi.gouv.fr>
-Message-ID: <7da3a491-232a-5a02-63a2-65aa9df413ea@ssi.gouv.fr>
-Date:   Wed, 17 Apr 2019 17:04:41 +0200
-User-Agent: Mozilla/5.0 (X11; Linux i686; rv:52.0) Gecko/20100101
- Thunderbird/52.6.0
+        Wed, 17 Apr 2019 11:05:55 -0400
+Received: by mail-yb1-f193.google.com with SMTP id b18so9204819yba.12
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 08:05:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=cmpxchg-org.20150623.gappssmtp.com; s=20150623;
+        h=date:from:to:cc:subject:message-id:references:mime-version
+         :content-disposition:in-reply-to:user-agent;
+        bh=LVyq6OE19KhM+/xQW2Gwk2ofoXjKkpXeXhoSwbk5MqA=;
+        b=ti8W5H7DMOt1m37y3NdNUhonSIHrqY9ax3MP/DwOqIirdqCPaWRNh3hzf6+dTUS8RN
+         6uZ0DRf96ReenpoZExR+2F0t80NQhBLa+i4fSzUdLTUmi+YYSIG5HE0JPpHiFWI9yjAx
+         dx9TB/Rb3ISoeOU8AjSFUcKZ7wOwz1Ai+/XYIB097IKpJwt0STBD5PAZ6w3nenElwrfu
+         e78xTZYXG5QOFAqCEjvr7e33HmMwdYRqwXfBDCE/QyiUXNzmOnL0Ew7MKuQNUW7qORBn
+         wxzISXJV/u9CeTwdsQuTBoL3Mo7RnE9pazUVenDU4BtNNeig9S2lz3y48EAddNRibCbh
+         P+cQ==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
+         :mime-version:content-disposition:in-reply-to:user-agent;
+        bh=LVyq6OE19KhM+/xQW2Gwk2ofoXjKkpXeXhoSwbk5MqA=;
+        b=a6kXw2NVmbgfVyVpEdbhnEFvNxeb91OO9FmZ2+9+zs2/VMaHJY0FwXm1JaLaNkREaN
+         NQXsQk8zER+XTXzeehaaYBILCEri5BG+o/FnjcgZpzqN+S0yueuNIL7RayYxCTvIyMPD
+         OPsmy61N8p23/dk+0xA04U8fOWk2jnxFmIemwoGkW2gdc0PTAJYuxjbE7+dtuB3hNX/6
+         sOwwhJuBw5ymxPasZfeduu7yOc4eaqPEqtONjwZLsYfuKw2RG2HbPa55G6beUbeiOKrr
+         6lqDb+TEBzR0n+2Xpg7y7C6qtD3PHnThaBFC9PJuicrgI+b0qeYIHNDEwjmJ5485eSc6
+         QGjw==
+X-Gm-Message-State: APjAAAX+HaD/vryCmI8SjyYVJ+frBkkSxjaEvaESN4IxBIhqI/NLbf0T
+        tDsh5hfFW8s9YaQP06YMEydCsLwJ7WQ=
+X-Google-Smtp-Source: APXvYqwnaSGgY+8GXvGpEGOeVdfnmrv02humxUlwDvsTeBJqmXiK044S4LlaabEwB+SWiMHu5SYP8Q==
+X-Received: by 2002:a25:2d55:: with SMTP id s21mr71611013ybe.170.1555513554132;
+        Wed, 17 Apr 2019 08:05:54 -0700 (PDT)
+Received: from localhost ([2620:10d:c091:200::2:fc54])
+        by smtp.gmail.com with ESMTPSA id k123sm19177171ywa.57.2019.04.17.08.05.52
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 17 Apr 2019 08:05:52 -0700 (PDT)
+Date:   Wed, 17 Apr 2019 11:05:51 -0400
+From:   Johannes Weiner <hannes@cmpxchg.org>
+To:     Vlastimil Babka <vbabka@suse.cz>
+Cc:     Roman Gushchin <guro@fb.com>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        "linux-mm@kvack.org" <linux-mm@kvack.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>,
+        Kernel Team <Kernel-team@fb.com>
+Subject: Re: [PATCH] mm: fix false-positive OVERCOMMIT_GUESS failures
+Message-ID: <20190417150551.GA23013@cmpxchg.org>
+References: <20190412191418.26333-1-hannes@cmpxchg.org>
+ <20190412200629.GA24377@tower.DHCP.thefacebook.com>
+ <0d2ad7c1-4a5f-08b0-0f57-0273fedc4f70@suse.cz>
 MIME-Version: 1.0
-In-Reply-To: <875zrd7xy8.fsf@oldenburg2.str.redhat.com>
-Content-Type: text/plain; charset="utf-8"
-Content-Language: en-GB
-Content-Transfer-Encoding: quoted-printable
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <0d2ad7c1-4a5f-08b0-0f57-0273fedc4f70@suse.cz>
+User-Agent: Mutt/1.11.4 (2019-03-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
+On Wed, Apr 17, 2019 at 02:04:17PM +0200, Vlastimil Babka wrote:
+> On 4/12/19 10:06 PM, Roman Gushchin wrote:
+> > On Fri, Apr 12, 2019 at 03:14:18PM -0400, Johannes Weiner wrote:
+> >> With the default overcommit==guess we occasionally run into mmap
+> >> rejections despite plenty of memory that would get dropped under
+> >> pressure but just isn't accounted reclaimable. One example of this is
+> >> dying cgroups pinned by some page cache. A previous case was auxiliary
+> >> path name memory associated with dentries; we have since annotated
+> >> those allocations to avoid overcommit failures (see d79f7aa496fc ("mm:
+> >> treat indirectly reclaimable memory as free in overcommit logic")).
+> >>
+> >> But trying to classify all allocated memory reliably as reclaimable
+> >> and unreclaimable is a bit of a fool's errand. There could be a myriad
+> >> of dependencies that constantly change with kernel versions.
+> 
+> Just wondering, did you find at least one another reclaimable case like
+> those path names?
 
-On 17/04/2019 12:01, Florian Weimer wrote:
-> * Steve Grubb:
->
->> On Tuesday, April 16, 2019 7:49:39 AM EDT Florian Weimer wrote:
->>> * Steve Grubb:
->>>> This flag that is being proposed means that you would have to patch al=
-l
->>>> interpreters to use it. If you are sure that upstreams will accept tha=
-t,
->>>> why not just change the policy to interpreters shouldn't execute
->>>> anything unless the execute bit is set? That is simpler and doesn't ne=
-ed
->>>> a kernel change. And setting the execute bit is an auditable event.
->>>
->>> I think we need something like O_MAYEXEC so that security policies can
->>> be enforced and noexec mounts can be detected.
->>
->> Application whitelisting can already today stop unknown software without
->> needing O_MAYEXEC.
-
-Whitelisting may be a lot of thing (path/TPE, signed binaries=E2=80=A6), bu=
-t
-being able to handle this with a global system configuration (instead of
-app-specific hardcoded configuration) is a good idea. ;)
-
->
-> I'm somewhat interested in using this to add a proper check for
-> executability to explicit dynamic loader invocations.  In other words,
-> this
->
->   /lib64/ld-linux-x86-64.so.2 /path/to/noexec/fs/program
->
-> should refuse to run the program if the program is located on a file
-> system mounted with the noexec attribute.
-
-What if a sysadmin need to do this on an executable mount point? Being
-able to enforce a security policy according to a configuration may fit
-to much more use cases.
-
->
->> The problem is that passing O_MAYEXEC is opt-in. You can use ptrace/secc=
-omp/
->> bpf/LD_PRELOAD/LD_AUDIT to remove that bit from an otherwise normal prog=
-ram.
->> This does not require privs to do so.
->
-> That doesn't really help with the above.
-
-Right, ptrace/LD_PRELOAD and so on must be addressed by something else
-than only O_MAYEXEC.
-
->
->> But let's consider that this comes to pass and every interpreter is
->> updated and IMA can see the O_MAYEXEC flag. Attackers now simply pivot
->> to running programs via stdin. It never touches disk and therefore
->> nothing enforces security policy. This already is among the most
->> common ways that malware runs today to evade detection.
-
-As my previous reply, use cases like stdin may be restricted as well.
-
->
-> Are you referring to Windows malware using Powershell?
->
-> I'm not sure this is applicable to Linux.  We do not have much
-> behavioral monitoring anyway.
->
-> Thanks,
-> Florian
->
-
---
-Micka=C3=ABl Sala=C3=BCn
-ANSSI/SDE/ST/LAM
-
-Les donn=C3=A9es =C3=A0 caract=C3=A8re personnel recueillies et trait=C3=A9=
-es dans le cadre de cet =C3=A9change, le sont =C3=A0 seule fin d=E2=80=99ex=
-=C3=A9cution d=E2=80=99une relation professionnelle et s=E2=80=99op=C3=A8re=
-nt dans cette seule finalit=C3=A9 et pour la dur=C3=A9e n=C3=A9cessaire =C3=
-=A0 cette relation. Si vous souhaitez faire usage de vos droits de consulta=
-tion, de rectification et de suppression de vos donn=C3=A9es, veuillez cont=
-acter contact.rgpd@sgdsn.gouv.fr. Si vous avez re=C3=A7u ce message par err=
-eur, nous vous remercions d=E2=80=99en informer l=E2=80=99exp=C3=A9diteur e=
-t de d=C3=A9truire le message. The personal data collected and processed du=
-ring this exchange aims solely at completing a business relationship and is=
- limited to the necessary duration of that relationship. If you wish to use=
- your rights of consultation, rectification and deletion of your data, plea=
-se contact: contact.rgpd@sgdsn.gouv.fr. If you have received this message i=
-n error, we thank you for informing the sender and destroying the message.
+I'm only aware of the cgroup structures which can be pinned by a
+dentry, inode, or page cache page. But they're an entire tree of
+memory allocations, per-cpu memory regions etc. that would be
+impossible to annotate correctly; it's also unreclaimable while the
+cgroup is user-visible and only becomes reclaimable once rmdir'd.
