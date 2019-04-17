@@ -2,133 +2,132 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY,
+X-Spam-Status: No, score=-3.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
 	URIBL_BLOCKED autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 491C7C10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 05:47:18 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E5E2EC10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 05:48:50 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 208D520835
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 05:47:18 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id B1E6020835
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 05:48:50 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="F93X7Oda"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729484AbfDQFrR (ORCPT
+        id S1730003AbfDQFst (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 01:47:17 -0400
-Received: from mailgw02.mediatek.com ([210.61.82.184]:5987 "EHLO
-        mailgw02.mediatek.com" rhost-flags-OK-FAIL-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1725811AbfDQFrQ (ORCPT
+        Wed, 17 Apr 2019 01:48:49 -0400
+Received: from mail-it1-f194.google.com ([209.85.166.194]:53483 "EHLO
+        mail-it1-f194.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725811AbfDQFss (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 01:47:16 -0400
-X-UUID: da3c797957e74ae4863dd889c9675c1a-20190417
-X-UUID: da3c797957e74ae4863dd889c9675c1a-20190417
-Received: from mtkcas09.mediatek.inc [(172.21.101.178)] by mailgw02.mediatek.com
-        (envelope-from <ck.hu@mediatek.com>)
-        (mhqrelay.mediatek.com ESMTP with TLS)
-        with ESMTP id 348513542; Wed, 17 Apr 2019 13:47:10 +0800
-Received: from mtkcas09.mediatek.inc (172.21.101.178) by
- mtkmbs01n1.mediatek.inc (172.21.101.68) with Microsoft SMTP Server (TLS) id
- 15.0.1395.4; Wed, 17 Apr 2019 13:47:08 +0800
-Received: from [172.21.77.4] (172.21.77.4) by mtkcas09.mediatek.inc
- (172.21.101.73) with Microsoft SMTP Server id 15.0.1395.4 via Frontend
- Transport; Wed, 17 Apr 2019 13:47:08 +0800
-Message-ID: <1555480028.3515.4.camel@mtksdaap41>
-Subject: Re: [PATCH v1 3/4] drm/mediatek: fix boot up for 720 and 480 but
- 1080
-From:   CK Hu <ck.hu@mediatek.com>
-To:     Frank Wunderlich <frank-w@public-files.de>
-CC:     Philipp Zabel <p.zabel@pengutronix.de>,
-        David Airlie <airlied@linux.ie>,
-        Daniel Vetter <daniel@ffwll.ch>,
-        Matthias Brugger <matthias.bgg@gmail.com>,
-        <dri-devel@lists.freedesktop.org>,
-        <linux-arm-kernel@lists.infradead.org>,
-        <linux-mediatek@lists.infradead.org>,
-        <linux-kernel@vger.kernel.org>, Rob Herring <robh+dt@kernel.org>,
-        "Mark Rutland" <mark.rutland@arm.com>,
-        <devicetree@vger.kernel.org>,
-        chunhui dai <chunhui.dai@mediatek.com>,
-        Ryder Lee <ryder.lee@mediatek.com>,
-        Bibby Hsieh <bibby.hsieh@mediatek.com>
-Date:   Wed, 17 Apr 2019 13:47:08 +0800
-In-Reply-To: <20190416145848.11932-4-frank-w@public-files.de>
-References: <20190416145848.11932-1-frank-w@public-files.de>
-         <20190416145848.11932-4-frank-w@public-files.de>
-Content-Type: text/plain; charset="UTF-8"
-X-Mailer: Evolution 3.10.4-0ubuntu2 
+        Wed, 17 Apr 2019 01:48:48 -0400
+Received: by mail-it1-f194.google.com with SMTP id y204so2648324itf.3
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 22:48:48 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=gmail.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=Fox/O+Kk3y7e1Ph8qLyYTZtLSePizPB0+Dl4N7GU+o0=;
+        b=F93X7OdalbF+M7wC4KAAg8CPA6ogPPS2uAcEzwenoJ9rcle8xyJ1leJwhKKcnSXnpX
+         jMb+htv5yBcMCEI4quEVUwIDMTcrXwPZ1CE9078mfXFEe5TWiFHlOnMX/ZVfGCDTOYZF
+         a/o1Y85BumNTPnSLXzIvvZeaRCzH6q2QlZWaYu0rbXflv/5dUC8i2OMG52hsFujMNoDe
+         bvZQ5PVCQZrDnlND0og4i20l5I7rV77mnckJ3wAE5ELDYaggms0Izs1MDRQw6RTMrU7f
+         UiXf+QzfggbTZDZ6r0xUy2xpxLg3yFlJVXZJvHqZfL9uI3IKT4+7awkIOpRN7vNkc0Xy
+         ky8w==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=Fox/O+Kk3y7e1Ph8qLyYTZtLSePizPB0+Dl4N7GU+o0=;
+        b=mPy6d9ExohiqvM4EV1mm65AAb+l9LDAFjYqFqPPodSKz407j/Oodu/Jwc4aHfwDEtu
+         P7l7BfoYTkTEXpRByOhvj8pZNNp4ScAT71TSiGgaWReTboEAlixlfgiibi2dBcRKBLOB
+         /HLFOKaOSfLWFPdIHr2Y4G9Lv2GwvXBcMkc7JEfYYFbhQK4USncklFCUvRLAMiZObV5W
+         ucOmSmm23vSv/lAS5IMF4CHs5yFuj68QrVIr3BL4tdAlvt2dNtECLk0kV53ArASBiodF
+         vyWR86+3ZCWhbs1PFUszQeF2zSjWk8GVCdFfZRirfB9/K2jdFJRKS1BB4+zazRO/WP1/
+         XkPw==
+X-Gm-Message-State: APjAAAWjK1xx3QlCbiJUgCoScS2hd0SJhcx3aunWLLDmMLKhsKeKJSi1
+        ta+/umbtE98KmaTqU6HM5S+2fQRW3Tl1JLtqHw==
+X-Google-Smtp-Source: APXvYqw1Q7oX/a+INgbKYW5ru5p0KWRthBcNQSSwg+dDjO6DW2btc74qBkR5gLWFnVsYe1GrWI3wLj79fOkTfGbNWd8=
+X-Received: by 2002:a02:6951:: with SMTP id e78mr53873370jac.132.1555480128160;
+ Tue, 16 Apr 2019 22:48:48 -0700 (PDT)
 MIME-Version: 1.0
-Content-Transfer-Encoding: 7bit
-X-MTK:  N
+References: <1554703115-15299-1-git-send-email-kernelfans@gmail.com>
+ <1554703115-15299-2-git-send-email-kernelfans@gmail.com> <20190416190148.GM31772@zn.tnic>
+In-Reply-To: <20190416190148.GM31772@zn.tnic>
+From:   Pingfan Liu <kernelfans@gmail.com>
+Date:   Wed, 17 Apr 2019 13:48:36 +0800
+Message-ID: <CAFgQCTso4L+Pxr-uMmCErM9fk4KMDcttcjSNWis9YbBVt-1MLQ@mail.gmail.com>
+Subject: Re: [PATCH v4 1/2] kernel/crash_core: separate the parsing routines
+ to lib/parse_crashkernel.c
+To:     Borislav Petkov <bp@alien8.de>
+Cc:     x86@kernel.org, Thomas Gleixner <tglx@linutronix.de>,
+        Ingo Molnar <mingo@redhat.com>,
+        "H. Peter Anvin" <hpa@zytor.com>, Baoquan He <bhe@redhat.com>,
+        Will Deacon <will.deacon@arm.com>,
+        Nicolas Pitre <nico@linaro.org>,
+        Chao Fan <fanc.fnst@cn.fujitsu.com>,
+        "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>,
+        Ard Biesheuvel <ard.biesheuvel@linaro.org>,
+        Vivek Goyal <vgoyal@redhat.com>,
+        Hari Bathini <hbathini@linux.vnet.ibm.com>,
+        LKML <linux-kernel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi, Frank:
+On Wed, Apr 17, 2019 at 3:01 AM Borislav Petkov <bp@alien8.de> wrote:
+>
+> On Mon, Apr 08, 2019 at 01:58:34PM +0800, Pingfan Liu wrote:
+> > Beside kernel, at early boot stage, the KASLR code also needs to parse the
+> > crashkernel=x@y or crashkernel=ramsize-range:size[,...][@offset] option,
+> > and avoid to put randomized kernel in the region.
+> >
+> > Extracting the parsing related routines to lib/parse_crashkernel.c, so it
+> > will be handy included by other
+> > files.
+>
+> Use this commit message for your next submission:
+>
+>     crash: Carve out crashkernel= cmdline parsing
+>
+>     Make the "crashkernel=" parsing functionality available to the early
+>     KASLR code. Will be used by a later patch to parse crashkernel regions
+>     which KASLR should aviod.
+>
+OK.
 
-On Tue, 2019-04-16 at 16:58 +0200, Frank Wunderlich wrote:
-> From: chunhui dai <chunhui.dai@mediatek.com>
-> 
-> - 1080 plg in/out with ng/ok
-> - support other resolutions like 1280x1024
-
-The description is so simple and I could not understand why
-pll_default_off could fix this problem. And why only MT2701 has this
-problem? Please describe more clear about this patch.
+> > Signed-off-by: Pingfan Liu <kernelfans@gmail.com>
+> > Cc: Thomas Gleixner <tglx@linutronix.de>
+> > Cc: Ingo Molnar <mingo@redhat.com>
+> > Cc: Borislav Petkov <bp@alien8.de>
+> > Cc: "H. Peter Anvin" <hpa@zytor.com>
+> > Cc: Baoquan He <bhe@redhat.com>
+> > Cc: Will Deacon <will.deacon@arm.com>
+> > Cc: Nicolas Pitre <nico@linaro.org>
+> > Cc: Chao Fan <fanc.fnst@cn.fujitsu.com>
+> > Cc: "Kirill A. Shutemov" <kirill.shutemov@linux.intel.com>
+> > Cc: Ard Biesheuvel <ard.biesheuvel@linaro.org>
+> > Cc: Vivek Goyal <vgoyal@redhat.com>
+> > CC: Hari Bathini <hbathini@linux.vnet.ibm.com>
+> > Cc: linux-kernel@vger.kernel.org
+> > ---
+> >  kernel/crash_core.c     | 273 ---------------------------------------------
+> >  lib/Makefile            |   2 +
+> >  lib/parse_crashkernel.c | 289 ++++++++++++++++++++++++++++++++++++++++++++++++
+> >  3 files changed, 291 insertions(+), 273 deletions(-)
+>
+> And this is not how you carve out code.
+>
+> First, you do a patch which does only code move. Nothing more.
+>
+> In a follow on patch, you make the changes to the moved code so that it
+> is immediately visible what you're changing.
+>
+Will fix it. Thanks for your review.
 
 Regards,
-CK
-
-> 
-> Signed-off-by: chunhui dai <chunhui.dai@mediatek.com>
-> Signed-off-by: Frank Wunderlich <frank-w@public-files.de>
-> Tested-by: Frank Wunderlich <frank-w@public-files.de>
-> ---
->  drivers/gpu/drm/mediatek/mtk_hdmi_phy.c        | 3 +++
->  drivers/gpu/drm/mediatek/mtk_hdmi_phy.h        | 1 +
->  drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c | 1 +
->  3 files changed, 5 insertions(+)
-> 
-> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
-> index 5223498502c4..edadb7a700f1 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.c
-> @@ -184,6 +184,9 @@ static int mtk_hdmi_phy_probe(struct platform_device *pdev)
->  		return PTR_ERR(phy_provider);
->  	}
-> 
-> +	if (hdmi_phy->conf->pll_default_off)
-> +		hdmi_phy->conf->hdmi_phy_disable_tmds(hdmi_phy);
-> +
->  	return of_clk_add_provider(dev->of_node, of_clk_src_simple_get,
->  				   hdmi_phy->pll);
->  }
-> diff --git a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
-> index 2d8b3182470d..f472fdeb63dc 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
-> +++ b/drivers/gpu/drm/mediatek/mtk_hdmi_phy.h
-> @@ -22,6 +22,7 @@ struct mtk_hdmi_phy;
->  struct mtk_hdmi_phy_conf {
->  	bool tz_disabled;
->  	unsigned long flags;
-> +	bool pll_default_off;
->  	const struct clk_ops *hdmi_phy_clk_ops;
->  	void (*hdmi_phy_enable_tmds)(struct mtk_hdmi_phy *hdmi_phy);
->  	void (*hdmi_phy_disable_tmds)(struct mtk_hdmi_phy *hdmi_phy);
-> diff --git a/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c b/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
-> index d3cc4022e988..6fbedacfc1e8 100644
-> --- a/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
-> +++ b/drivers/gpu/drm/mediatek/mtk_mt2701_hdmi_phy.c
-> @@ -239,6 +239,7 @@ static void mtk_hdmi_phy_disable_tmds(struct mtk_hdmi_phy *hdmi_phy)
->  struct mtk_hdmi_phy_conf mtk_hdmi_phy_2701_conf = {
->  	.tz_disabled = true,
->  	.flags = CLK_SET_RATE_GATE,
-> +	.pll_default_off = true,
->  	.hdmi_phy_clk_ops = &mtk_hdmi_phy_pll_ops,
->  	.hdmi_phy_enable_tmds = mtk_hdmi_phy_enable_tmds,
->  	.hdmi_phy_disable_tmds = mtk_hdmi_phy_disable_tmds,
-> --
-> 2.17.1
-> 
-
-
+Pingfan
