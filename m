@@ -2,147 +2,209 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-0.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED
+	autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 61B26C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:43:42 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 2CE2EC282DD
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:45:05 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 3421C2073F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:43:42 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id DDD092173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 17:45:04 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=fail reason="signature verification failed" (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="BqA4BWkJ"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="OT1Icl5u"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731746AbfDQRnl (ORCPT
+        id S1731741AbfDQRpD (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 13:43:41 -0400
-Received: from mail-pg1-f195.google.com ([209.85.215.195]:45688 "EHLO
-        mail-pg1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1727569AbfDQRnk (ORCPT
+        Wed, 17 Apr 2019 13:45:03 -0400
+Received: from mail-pl1-f195.google.com ([209.85.214.195]:36141 "EHLO
+        mail-pl1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1726365AbfDQRpD (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 13:43:40 -0400
-Received: by mail-pg1-f195.google.com with SMTP id y3so12318732pgk.12;
-        Wed, 17 Apr 2019 10:43:40 -0700 (PDT)
+        Wed, 17 Apr 2019 13:45:03 -0400
+Received: by mail-pl1-f195.google.com with SMTP id ck15so12388099plb.3;
+        Wed, 17 Apr 2019 10:45:02 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
-        h=sender:date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=Xb4dDY8Ht5vsPhb6Ii7KBS3ZH6iBZMm1tLBFEdnq7bo=;
-        b=BqA4BWkJoVPi6+PwGHhsOWzyFx1IDgxa5Fcya+P9/nbqlF4qTwByIkuHJDpBRgFzZG
-         Dk+74/3mVzCPZfvxNNRQvWkX70qwNGeXcKaEbXz6BKcmH2XeB3G/kdyrnWVLPt+kW6Wt
-         1a9U1GGZXUx0/2JRaWXGb8DZWDMJKSGqI/LZvzcjOP1g4ZYBGRO16VfnxVq1jGgKi+U4
-         Tvc5cy8hGYUvO7UMKvSpJSQ6aijiJq31topFVQKEyX0vC5LixXp3Eal6IYknXQlXnre7
-         BStMbDJvw8IC71pT+zb4EnNcUAvRB1aEPOiuShfbKutdrVnGNaoPGw5jxTn0J7VZ20UQ
-         9U4w==
+        h=mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=iiKewh/rfSv9TET3jU6nkn7AWCBEz5+mb4Gwkj8mwj8=;
+        b=OT1Icl5ug+NAclWFwwjy4encfGqF8h6cQ+Sluh8LzmcZ7PDJwN1EgFXlFIUgiOWhv3
+         CdyxbET3pK6vk3eVE6CuZMYXEDZBkDGGS0j/EPXB7PkGD/NOQuXKFupb6p+NcuweE25U
+         zSQgwg5NjcZJ6sJtwNWHBhcXJCP2pmcgCP9PRguBY4GjSzejO9PQXa/vMmQ7Pc7yKdS6
+         tduovyaAMGBZQaLuQngghondFXL+EQQVleQZ++7KcWxjU8TgbrwM37zs5xY/S5QIMxhe
+         58nzwPq5oTgFA4zTqspejrXFnGO1J+TMkYisCWw26t7w22hh5emAce2dBtovssrt//Df
+         d0Ow==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
-         :references:mime-version:content-disposition:in-reply-to:user-agent;
-        bh=Xb4dDY8Ht5vsPhb6Ii7KBS3ZH6iBZMm1tLBFEdnq7bo=;
-        b=tFYgmg859gpzvmL4XgmCd9Ddvk70PGxGKzi5VYoV8lvk8dYLYh9EI0fII2stycByor
-         vq549WqBAXg2wtAblSI1CEvwqYKcUhUxpApbH6ZGuWhWV6RUmAHKFiqM3C9Ixa8l1LgN
-         4VAZmabqmhrDjq+Br+L8CfS/YQcGr26UGXP1KXgGN+xwPQXwOwjCRM7M5AI0omb6Q/at
-         M23OVdi7Z0gnc8x3Yd960udlxMxFxA43XfaguzvLaGoDlvckOe11eBFM/o7xK/081T9g
-         WQDy69qzmvM5TbQzdUsIFRIJQB+FtElmPpRl+Hw9NeM9iFMnYBX+WFWUGUu7mbUtXQqA
-         Ei+Q==
-X-Gm-Message-State: APjAAAUATJSrk/Vn8P4T/B6lKtKoAZA0HkLGAa//0dCtt60ebdbKRAaj
-        x03jv+zsf680uuPiuBmX+5A=
-X-Google-Smtp-Source: APXvYqx3fuy7b8UJvMM0ooV7d7Bhu13mTndtGcb1/KeBvuhFe0R+J0MnnnXU3Buj0QbQJnti18Lv8g==
-X-Received: by 2002:a63:30c5:: with SMTP id w188mr83242355pgw.76.1555523019795;
-        Wed, 17 Apr 2019 10:43:39 -0700 (PDT)
-Received: from localhost ([2600:1700:e321:62f0:329c:23ff:fee3:9d7c])
-        by smtp.gmail.com with ESMTPSA id x28sm62632792pgl.38.2019.04.17.10.43.37
+        h=x-gm-message-state:mime-version:subject:from:in-reply-to:date:cc
+         :content-transfer-encoding:message-id:references:to;
+        bh=iiKewh/rfSv9TET3jU6nkn7AWCBEz5+mb4Gwkj8mwj8=;
+        b=OQeDrafRyPKzMHumxh69tP0+/Ygb/gQdpiPFvhcvfe0gq/CS5tQEQmOzQ/AhvUD6j5
+         GUnnJbYi39Zbv3EpbSWhr9tcpqF6t332IuFgSPAHBgjIgNrcLKGp1k/iP4TicgrR9Yhl
+         ueN/RT47Vt0P18fT/1A0Y9QFlSXT1cjnma4emSZT59Eo4f3DrYw8lA5yhEzx0d4fYJrg
+         89EWRgMULgkscJjCiycWRaeYUQJRbWp+gFmvViX2yyvOxzrwgMqHqpTVkYRJLvt8pfio
+         gUayhgdgpfLaBN0j5kaZ7UNdYsqzt9j9L2APTxU7DDRHvWJAWA1LBxfqXxdTorn9bqLb
+         OXFg==
+X-Gm-Message-State: APjAAAUyHRq9N2bgCXydFHGKvQfMZEa0zvg/EPe+es3KBRnUZA7NnzD+
+        TB+Sa6rrylMIMagh3w/RChs=
+X-Google-Smtp-Source: APXvYqzfMmBcNUH3fJFzGd3r9yH7kGevsQ52l1TqCRzwV4eMJos/uHwMz4Wl+hkhnB1q+aRwaHSPBg==
+X-Received: by 2002:a17:902:6bc7:: with SMTP id m7mr42510170plt.146.1555523101228;
+        Wed, 17 Apr 2019 10:45:01 -0700 (PDT)
+Received: from [10.33.115.113] ([66.170.99.2])
+        by smtp.gmail.com with ESMTPSA id v188sm81987353pgb.7.2019.04.17.10.44.57
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Apr 2019 10:43:38 -0700 (PDT)
-Date:   Wed, 17 Apr 2019 10:43:37 -0700
-From:   Guenter Roeck <linux@roeck-us.net>
-To:     Mauro Carvalho Chehab <mchehab@infradead.org>
-Cc:     Linux Doc Mailing List <linux-doc@vger.kernel.org>,
-        linux-kernel@vger.kernel.org, Jonathan Corbet <corbet@lwn.net>,
-        Jean Delvare <jdelvare@suse.com>,
-        Rob Herring <robh+dt@kernel.org>,
-        Mark Rutland <mark.rutland@arm.com>,
-        Dirk Eibach <eibach@gdsys.de>,
-        George Joseph <george.joseph@fairview5.com>,
-        Joel Stanley <joel@jms.id.au>,
-        Andrew Jeffery <andrew@aj.id.au>,
-        Fenghua Yu <fenghua.yu@intel.com>,
-        Support Opensource <support.opensource@diasemi.com>,
-        Juerg Haefliger <juergh@gmail.com>,
-        Steve Glendinning <steve.glendinning@shawell.net>,
-        Huang Rui <ray.huang@amd.com>,
-        Benjamin Herrenschmidt <benh@kernel.crashing.org>,
-        Paul Mackerras <paulus@samba.org>,
-        Michael Ellerman <mpe@ellerman.id.au>,
-        Clemens Ladisch <clemens@ladisch.de>,
-        Rudolf Marek <r.marek@assembler.cz>,
-        Andreas Werner <andreas.werner@men.de>,
-        Jim Cromie <jim.cromie@gmail.com>,
-        Kamil Debski <kamil@wypas.org>,
-        Bartlomiej Zolnierkiewicz <b.zolnierkie@samsung.com>,
-        Hans de Goede <hdegoede@redhat.com>,
-        Liviu Dudau <liviu.dudau@arm.com>,
-        Sudeep Holla <sudeep.holla@arm.com>,
-        Lorenzo Pieralisi <lorenzo.pieralisi@arm.com>,
-        Marc Hulsman <m.hulsman@tudelft.nl>,
-        linux-hwmon@vger.kernel.org, devicetree@vger.kernel.org,
-        linux-arm-kernel@lists.infradead.org,
-        linux-aspeed@lists.ozlabs.org, linuxppc-dev@lists.ozlabs.org,
-        patches@opensource.cirrus.com
-Subject: Re: [PATCH v3 21/21] docs: hwmon: Add an index file and rename docs
- to *.rst
-Message-ID: <20190417174337.GA16749@roeck-us.net>
-References: <cover.1555494108.git.mchehab+samsung@kernel.org>
- <efbe0a2b5be35026c3a2dbdb9090c4fbd932c9a2.1555494108.git.mchehab+samsung@kernel.org>
- <20190417164741.GA12147@roeck-us.net>
- <20190417141352.3225bbb3@coco.lan>
- <20190417142215.791df5e7@coco.lan>
-MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190417142215.791df5e7@coco.lan>
-User-Agent: Mutt/1.5.24 (2015-08-30)
+        Wed, 17 Apr 2019 10:44:58 -0700 (PDT)
+Content-Type: text/plain;
+        charset=utf-8
+Mime-Version: 1.0 (Mac OS X Mail 12.2 \(3445.102.3\))
+Subject: Re: [RFC PATCH v9 03/13] mm: Add support for eXclusive Page Frame
+ Ownership (XPFO)
+From:   Nadav Amit <nadav.amit@gmail.com>
+In-Reply-To: <20190417172632.GA95485@gmail.com>
+Date:   Wed, 17 Apr 2019 10:44:56 -0700
+Cc:     Khalid Aziz <khalid.aziz@oracle.com>, juergh@gmail.com,
+        Tycho Andersen <tycho@tycho.ws>, jsteckli@amazon.de,
+        keescook@google.com,
+        Konrad Rzeszutek Wilk <konrad.wilk@oracle.com>,
+        Juerg Haefliger <juerg.haefliger@canonical.com>,
+        deepa.srinivasan@oracle.com, chris.hyser@oracle.com,
+        tyhicks@canonical.com, David Woodhouse <dwmw@amazon.co.uk>,
+        Andrew Cooper <andrew.cooper3@citrix.com>, jcm@redhat.com,
+        Boris Ostrovsky <boris.ostrovsky@oracle.com>,
+        iommu <iommu@lists.linux-foundation.org>,
+        X86 ML <x86@kernel.org>, linux-arm-kernel@lists.infradead.org,
+        "open list:DOCUMENTATION" <linux-doc@vger.kernel.org>,
+        Linux List Kernel Mailing <linux-kernel@vger.kernel.org>,
+        Linux-MM <linux-mm@kvack.org>,
+        LSM List <linux-security-module@vger.kernel.org>,
+        Khalid Aziz <khalid@gonehiking.org>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Andrew Morton <akpm@linux-foundation.org>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        Andy Lutomirski <luto@kernel.org>,
+        Peter Zijlstra <a.p.zijlstra@chello.nl>,
+        Dave Hansen <dave@sr71.net>, Borislav Petkov <bp@alien8.de>,
+        "H. Peter Anvin" <hpa@zytor.com>,
+        Arjan van de Ven <arjan@infradead.org>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>
+Content-Transfer-Encoding: quoted-printable
+Message-Id: <063753CC-5D83-4789-B594-019048DE22D9@gmail.com>
+References: <cover.1554248001.git.khalid.aziz@oracle.com>
+ <f1ac3700970365fb979533294774af0b0dd84b3b.1554248002.git.khalid.aziz@oracle.com>
+ <20190417161042.GA43453@gmail.com>
+ <e16c1d73-d361-d9c7-5b8e-c495318c2509@oracle.com>
+ <20190417170918.GA68678@gmail.com>
+ <56A175F6-E5DA-4BBD-B244-53B786F27B7F@gmail.com>
+ <20190417172632.GA95485@gmail.com>
+To:     Ingo Molnar <mingo@kernel.org>
+X-Mailer: Apple Mail (2.3445.102.3)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, Apr 17, 2019 at 02:22:15PM -0300, Mauro Carvalho Chehab wrote:
-> Em Wed, 17 Apr 2019 14:13:52 -0300
-> Mauro Carvalho Chehab <mchehab+samsung@kernel.org> escreveu:
-> 
-> > Em Wed, 17 Apr 2019 09:47:41 -0700
-> > Guenter Roeck <linux@roeck-us.net> escreveu:
-> > 
-> > > On Wed, Apr 17, 2019 at 06:46:29AM -0300, Mauro Carvalho Chehab wrote:  
-> > > > Now that all files were converted to ReST format, rename them
-> > > > and add an index.
-> > > > 
-> > > > Signed-off-by: Mauro Carvalho Chehab <mchehab+samsung@kernel.org>
-> > > > Acked-by: Liviu Dudau <liviu.dudau@arm.com>    
-> > > 
-> > > I applied all patches except this one, which fails due to a conflict in
-> > > ab8500. I also notice that this file has not been touched by your series,
-> > > which is odd. At the same time, patch 20/21 is missing from your series,
-> > > and has been missing all along. Does the missing patch possibly touch
-> > > Documentation/hwmon/ab8500 ?  
-> > 
-> > Patch 20/21 is the biggest one. Maybe vger rejected it either due to
-> > its size or due to the number of c/c.
-> > 
-> > Just bounced it to you. Please let me know if you didn't receive it
-> > yet.
-> 
-> Btw, LKML got it:
-> 
-> https://lore.kernel.org/lkml/cccc2a52363a5aaeea10e186ead8570503ea648e.1555494108.git.mchehab+samsung@kernel.org/
-> 
-patchwork didn't get it (or didn't accept it). I got it now.
-All patches applied, and pushed out to hwmon-next.
+> On Apr 17, 2019, at 10:26 AM, Ingo Molnar <mingo@kernel.org> wrote:
+>=20
+>=20
+> * Nadav Amit <nadav.amit@gmail.com> wrote:
+>=20
+>>> On Apr 17, 2019, at 10:09 AM, Ingo Molnar <mingo@kernel.org> wrote:
+>>>=20
+>>>=20
+>>> * Khalid Aziz <khalid.aziz@oracle.com> wrote:
+>>>=20
+>>>>> I.e. the original motivation of the XPFO patches was to prevent =
+execution=20
+>>>>> of direct kernel mappings. Is this motivation still present if =
+those=20
+>>>>> mappings are non-executable?
+>>>>>=20
+>>>>> (Sorry if this has been asked and answered in previous =
+discussions.)
+>>>>=20
+>>>> Hi Ingo,
+>>>>=20
+>>>> That is a good question. Because of the cost of XPFO, we have to be =
+very
+>>>> sure we need this protection. The paper from Vasileios, Michalis =
+and
+>>>> Angelos - =
+<http://www.cs.columbia.edu/~vpk/papers/ret2dir.sec14.pdf>,
+>>>> does go into how ret2dir attacks can bypass SMAP/SMEP in sections =
+6.1
+>>>> and 6.2.
+>>>=20
+>>> So it would be nice if you could generally summarize external =
+arguments=20
+>>> when defending a patchset, instead of me having to dig through a PDF=20=
 
-We have one (new) unconverted file left - Documentation/hwmon/lochnagar.
-Can you by any chance have a look into that as well ?
+>>> which not only causes me to spend time that you probably already =
+spent=20
+>>> reading that PDF, but I might also interpret it incorrectly. ;-)
+>>>=20
+>>> The PDF you cited says this:
+>>>=20
+>>> "Unfortunately, as shown in Table 1, the W^X prop-erty is not =
+enforced=20
+>>>  in many platforms, including x86-64.  In our example, the content =
+of=20
+>>>  user address 0xBEEF000 is also accessible through kernel address=20
+>>>  0xFFFF87FF9F080000 as plain, executable code."
+>>>=20
+>>> Is this actually true of modern x86-64 kernels? We've locked down =
+W^X=20
+>>> protections in general.
+>>=20
+>> As I was curious, I looked at the paper. Here is a quote from it:
+>>=20
+>> "In x86-64, however, the permissions of physmap are not in sane =
+state.
+>> Kernels up to v3.8.13 violate the W^X property by mapping the entire =
+region
+>> as =E2=80=9Creadable, writeable, and executable=E2=80=9D (RWX)=E2=80=94=
+only very recent kernels
+>> (=E2=89=A5v3.9) use the more conservative RW mapping.=E2=80=9D
+>=20
+> But v3.8.13 is a 5+ years old kernel, it doesn't count as a "modern"=20=
 
-Thanks!
-Guenter
+> kernel in any sense of the word. For any proposed patchset with=20
+> significant complexity and non-trivial costs the benchmark version=20
+> threshold is the "current upstream kernel".
+>=20
+> So does that quote address my followup questions:
+>=20
+>> Is this actually true of modern x86-64 kernels? We've locked down W^X
+>> protections in general.
+>>=20
+>> I.e. this conclusion:
+>>=20
+>>  "Therefore, by simply overwriting kfptr with 0xFFFF87FF9F080000 and
+>>   triggering the kernel to dereference it, an attacker can directly
+>>   execute shell code with kernel privileges."
+>>=20
+>> ... appears to be predicated on imperfect W^X protections on the =
+x86-64
+>> kernel.
+>>=20
+>> Do such holes exist on the latest x86-64 kernel? If yes, is there a
+>> reason to believe that these W^X holes cannot be fixed, or that any =
+fix
+>> would be more expensive than XPFO?
+>=20
+> ?
+>=20
+> What you are proposing here is a XPFO patch-set against recent kernels=20=
+
+> with significant runtime overhead, so my questions about the W^X holes=20=
+
+> are warranted.
+>=20
+
+Just to clarify - I am an innocent bystander and have no part in this =
+work.
+I was just looking (again) at the paper, as I was curious due to the =
+recent
+patches that I sent that improve W^X protection.
+
