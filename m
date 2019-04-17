@@ -2,84 +2,251 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id CBC30C282DD
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:27:46 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F7BFC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:29:10 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 9AFCB2173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:27:46 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=amazonses.com header.i=@amazonses.com header.b="bZjJwk3b"
+	by mail.kernel.org (Postfix) with ESMTP id 643432173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:29:10 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732224AbfDQN1o (ORCPT
+        id S1732231AbfDQN3J (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 09:27:44 -0400
-Received: from a9-46.smtp-out.amazonses.com ([54.240.9.46]:39622 "EHLO
-        a9-46.smtp-out.amazonses.com" rhost-flags-OK-OK-OK-OK)
-        by vger.kernel.org with ESMTP id S1727034AbfDQN1o (ORCPT
+        Wed, 17 Apr 2019 09:29:09 -0400
+Received: from mx0a-001b2d01.pphosted.com ([148.163.156.1]:55600 "EHLO
+        mx0a-001b2d01.pphosted.com" rhost-flags-OK-OK-OK-OK)
+        by vger.kernel.org with ESMTP id S1727034AbfDQN3I (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 09:27:44 -0400
-DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/simple;
-        s=6gbrjpgwjskckoa6a5zn6fwqkn67xbtw; d=amazonses.com; t=1555507663;
-        h=Date:From:To:cc:Subject:In-Reply-To:Message-ID:References:MIME-Version:Content-Type:Feedback-ID;
-        bh=9pePXe16Pm2sxz5+PY34bI9W90zEIcb20PpoSEOxJTI=;
-        b=bZjJwk3bVTXsr1+Ka6SqEQZ7tpn+LdSlTg8zXZXM2NSPN/ix4m4ImO+nk8wNWLgb
-        f/EueiAV+rbhBF2JrWPmqKMZlIqnt44dbCE+dTsKw0nBaY9UbpaRrDCN/LPrmaRXtsb
-        GaUIudJugC+DttqYbbZvPaU9Vj1fQfjqcOT/JJY0=
-Date:   Wed, 17 Apr 2019 13:27:43 +0000
-From:   Christopher Lameter <cl@linux.com>
-X-X-Sender: cl@nuc-kabylake
-To:     Jesper Dangaard Brouer <netdev@brouer.com>
-cc:     Pekka Enberg <penberg@iki.fi>, Michal Hocko <mhocko@kernel.org>,
-        "Tobin C. Harding" <me@tobin.cc>, Vlastimil Babka <vbabka@suse.cz>,
-        "Tobin C. Harding" <tobin@kernel.org>,
-        Andrew Morton <akpm@linux-foundation.org>,
-        Pekka Enberg <penberg@kernel.org>,
-        David Rientjes <rientjes@google.com>,
-        Joonsoo Kim <iamjoonsoo.kim@lge.com>,
-        Tejun Heo <tj@kernel.org>, Qian Cai <cai@lca.pw>,
-        Linus Torvalds <torvalds@linux-foundation.org>,
-        linux-mm@kvack.org, linux-kernel@vger.kernel.org,
-        Mel Gorman <mgorman@techsingularity.net>,
-        "netdev@vger.kernel.org" <netdev@vger.kernel.org>,
-        Alexander Duyck <alexander.duyck@gmail.com>
-Subject: Re: [PATCH 0/1] mm: Remove the SLAB allocator
-In-Reply-To: <20190417105018.78604ad8@carbon>
-Message-ID: <0100016a2b7b515b-2a0a4fab-6c9d-4eeb-a0c8-d3fffbf64e55-000000@email.amazonses.com>
-References: <20190410024714.26607-1-tobin@kernel.org> <f06aaeae-28c0-9ea4-d795-418ec3362d17@suse.cz> <20190410081618.GA25494@eros.localdomain> <20190411075556.GO10383@dhcp22.suse.cz> <262df687-c934-b3e2-1d5f-548e8a8acb74@iki.fi>
- <20190417105018.78604ad8@carbon>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 17 Apr 2019 09:29:08 -0400
+Received: from pps.filterd (m0098394.ppops.net [127.0.0.1])
+        by mx0a-001b2d01.pphosted.com (8.16.0.27/8.16.0.27) with SMTP id x3HDPO4m103600
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 09:29:07 -0400
+Received: from e06smtp03.uk.ibm.com (e06smtp03.uk.ibm.com [195.75.94.99])
+        by mx0a-001b2d01.pphosted.com with ESMTP id 2rx50pg2j8-1
+        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=NOT)
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 09:29:07 -0400
+Received: from localhost
+        by e06smtp03.uk.ibm.com with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted
+        for <linux-kernel@vger.kernel.org> from <fbarrat@linux.ibm.com>;
+        Wed, 17 Apr 2019 14:29:05 +0100
+Received: from b06cxnps4076.portsmouth.uk.ibm.com (9.149.109.198)
+        by e06smtp03.uk.ibm.com (192.168.101.133) with IBM ESMTP SMTP Gateway: Authorized Use Only! Violators will be prosecuted;
+        (version=TLSv1/SSLv3 cipher=AES256-GCM-SHA384 bits=256/256)
+        Wed, 17 Apr 2019 14:29:03 +0100
+Received: from d06av21.portsmouth.uk.ibm.com (d06av21.portsmouth.uk.ibm.com [9.149.105.232])
+        by b06cxnps4076.portsmouth.uk.ibm.com (8.14.9/8.14.9/NCO v10.0) with ESMTP id x3HDT1gw45940836
+        (version=TLSv1/SSLv3 cipher=DHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 17 Apr 2019 13:29:01 GMT
+Received: from d06av21.portsmouth.uk.ibm.com (unknown [127.0.0.1])
+        by IMSVA (Postfix) with ESMTP id ACF5452094;
+        Wed, 17 Apr 2019 13:29:01 +0000 (GMT)
+Received: from [9.145.163.137] (unknown [9.145.163.137])
+        by d06av21.portsmouth.uk.ibm.com (Postfix) with ESMTP id 2A0A75209C;
+        Wed, 17 Apr 2019 13:29:01 +0000 (GMT)
+Subject: Re: [PATCH v4 2/7] ocxl: Don't pass pci_dev around
+To:     "Alastair D'Silva" <alastair@au1.ibm.com>, alastair@d-silva.org
+Cc:     Andrew Donnellan <andrew.donnellan@au1.ibm.com>,
+        Arnd Bergmann <arnd@arndb.de>,
+        Greg Kroah-Hartman <gregkh@linuxfoundation.org>,
+        linux-kernel@vger.kernel.org, linuxppc-dev@lists.ozlabs.org
+References: <20190327053137.15173-1-alastair@au1.ibm.com>
+ <20190327053137.15173-3-alastair@au1.ibm.com>
+From:   Frederic Barrat <fbarrat@linux.ibm.com>
+Date:   Wed, 17 Apr 2019 15:29:00 +0200
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101
+ Thunderbird/60.6.1
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-SES-Outgoing: 2019.04.17-54.240.9.46
-Feedback-ID: 1.us-east-1.fQZZZ0Xtj2+TD7V5apTT/NrT6QKuPgzCT/IC7XYgDKI=:AmazonSES
+In-Reply-To: <20190327053137.15173-3-alastair@au1.ibm.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Language: fr
+Content-Transfer-Encoding: 8bit
+X-TM-AS-GCONF: 00
+x-cbid: 19041713-0012-0000-0000-0000030FDA70
+X-IBM-AV-DETECTION: SAVI=unused REMOTE=unused XFE=unused
+x-cbparentid: 19041713-0013-0000-0000-0000214818D0
+Message-Id: <6e662291-3e2a-bd98-5c3a-eaa3e79588a9@linux.ibm.com>
+X-Proofpoint-Virus-Version: vendor=fsecure engine=2.50.10434:,, definitions=2019-04-17_06:,,
+ signatures=0
+X-Proofpoint-Spam-Details: rule=outbound_notspam policy=outbound score=0 priorityscore=1501
+ malwarescore=0 suspectscore=2 phishscore=0 bulkscore=0 spamscore=0
+ clxscore=1015 lowpriorityscore=0 mlxscore=0 impostorscore=0
+ mlxlogscore=999 adultscore=0 classifier=spam adjust=0 reason=mlx
+ scancount=1 engine=8.0.1-1810050000 definitions=main-1904170092
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 17 Apr 2019, Jesper Dangaard Brouer wrote:
 
-> I do think SLUB have a number of pathological cases where SLAB is
-> faster.  If was significantly more difficult to get good bulk-free
-> performance for SLUB.  SLUB is only fast as long as objects belong to
-> the same page.  To get good bulk-free performance if objects are
-> "mixed", I coded this[1] way-too-complex fast-path code to counter
-> act this (joined work with Alex Duyck).
 
-Right. SLUB usually compensates for that with superior allocation
-performance.
+Le 27/03/2019 à 06:31, Alastair D'Silva a écrit :
+> From: Alastair D'Silva <alastair@d-silva.org>
+> 
+> This data is already available in a struct
+> 
+> Signed-off-by: Alastair D'Silva <alastair@d-silva.org>
+> ---
 
-> > It's, of course, worth thinking about other pathological cases too.
-> > Workloads that cause large allocations is one. Workloads that cause lots
-> > of slab cache shrinking is another.
->
-> I also worry about long uptimes when SLUB objects/pages gets too
-> fragmented... as I said SLUB is only efficient when objects are
-> returned to the same page, while SLAB is not.
+Acked-by: Frederic Barrat <fbarrat@linux.ibm.com>
 
-??? Why would SLUB pages get more fragmented? SLUB has fragmentation
-prevention methods that SLAB does not have.
+
+>   drivers/misc/ocxl/core.c | 38 +++++++++++++++++++++-----------------
+>   1 file changed, 21 insertions(+), 17 deletions(-)
+> 
+> diff --git a/drivers/misc/ocxl/core.c b/drivers/misc/ocxl/core.c
+> index 1a4411b72d35..2f2fe12eac1e 100644
+> --- a/drivers/misc/ocxl/core.c
+> +++ b/drivers/misc/ocxl/core.c
+> @@ -66,10 +66,11 @@ static int set_afu_device(struct ocxl_afu *afu, const char *location)
+>   	return rc;
+>   }
+>   
+> -static int assign_afu_actag(struct ocxl_afu *afu, struct pci_dev *dev)
+> +static int assign_afu_actag(struct ocxl_afu *afu)
+>   {
+>   	struct ocxl_fn *fn = afu->fn;
+>   	int actag_count, actag_offset;
+> +	struct pci_dev *pci_dev = to_pci_dev(fn->dev.parent);
+>   
+>   	/*
+>   	 * if there were not enough actags for the function, each afu
+> @@ -79,16 +80,16 @@ static int assign_afu_actag(struct ocxl_afu *afu, struct pci_dev *dev)
+>   		fn->actag_enabled / fn->actag_supported;
+>   	actag_offset = ocxl_actag_afu_alloc(fn, actag_count);
+>   	if (actag_offset < 0) {
+> -		dev_err(&afu->dev, "Can't allocate %d actags for AFU: %d\n",
+> +		dev_err(&pci_dev->dev, "Can't allocate %d actags for AFU: %d\n",
+>   			actag_count, actag_offset);
+>   		return actag_offset;
+>   	}
+>   	afu->actag_base = fn->actag_base + actag_offset;
+>   	afu->actag_enabled = actag_count;
+>   
+> -	ocxl_config_set_afu_actag(dev, afu->config.dvsec_afu_control_pos,
+> +	ocxl_config_set_afu_actag(pci_dev, afu->config.dvsec_afu_control_pos,
+>   				afu->actag_base, afu->actag_enabled);
+> -	dev_dbg(&afu->dev, "actag base=%d enabled=%d\n",
+> +	dev_dbg(&pci_dev->dev, "actag base=%d enabled=%d\n",
+>   		afu->actag_base, afu->actag_enabled);
+>   	return 0;
+>   }
+> @@ -103,10 +104,11 @@ static void reclaim_afu_actag(struct ocxl_afu *afu)
+>   	ocxl_actag_afu_free(afu->fn, start_offset, size);
+>   }
+>   
+> -static int assign_afu_pasid(struct ocxl_afu *afu, struct pci_dev *dev)
+> +static int assign_afu_pasid(struct ocxl_afu *afu)
+>   {
+>   	struct ocxl_fn *fn = afu->fn;
+>   	int pasid_count, pasid_offset;
+> +	struct pci_dev *pci_dev = to_pci_dev(fn->dev.parent);
+>   
+>   	/*
+>   	 * We only support the case where the function configuration
+> @@ -115,7 +117,7 @@ static int assign_afu_pasid(struct ocxl_afu *afu, struct pci_dev *dev)
+>   	pasid_count = 1 << afu->config.pasid_supported_log;
+>   	pasid_offset = ocxl_pasid_afu_alloc(fn, pasid_count);
+>   	if (pasid_offset < 0) {
+> -		dev_err(&afu->dev, "Can't allocate %d PASIDs for AFU: %d\n",
+> +		dev_err(&pci_dev->dev, "Can't allocate %d PASIDs for AFU: %d\n",
+>   			pasid_count, pasid_offset);
+>   		return pasid_offset;
+>   	}
+> @@ -123,10 +125,10 @@ static int assign_afu_pasid(struct ocxl_afu *afu, struct pci_dev *dev)
+>   	afu->pasid_count = 0;
+>   	afu->pasid_max = pasid_count;
+>   
+> -	ocxl_config_set_afu_pasid(dev, afu->config.dvsec_afu_control_pos,
+> +	ocxl_config_set_afu_pasid(pci_dev, afu->config.dvsec_afu_control_pos,
+>   				afu->pasid_base,
+>   				afu->config.pasid_supported_log);
+> -	dev_dbg(&afu->dev, "PASID base=%d, enabled=%d\n",
+> +	dev_dbg(&pci_dev->dev, "PASID base=%d, enabled=%d\n",
+>   		afu->pasid_base, pasid_count);
+>   	return 0;
+>   }
+> @@ -172,9 +174,10 @@ static void release_fn_bar(struct ocxl_fn *fn, int bar)
+>   	WARN_ON(fn->bar_used[idx] < 0);
+>   }
+>   
+> -static int map_mmio_areas(struct ocxl_afu *afu, struct pci_dev *dev)
+> +static int map_mmio_areas(struct ocxl_afu *afu)
+>   {
+>   	int rc;
+> +	struct pci_dev *pci_dev = to_pci_dev(afu->fn->dev.parent);
+>   
+>   	rc = reserve_fn_bar(afu->fn, afu->config.global_mmio_bar);
+>   	if (rc)
+> @@ -187,10 +190,10 @@ static int map_mmio_areas(struct ocxl_afu *afu, struct pci_dev *dev)
+>   	}
+>   
+>   	afu->global_mmio_start =
+> -		pci_resource_start(dev, afu->config.global_mmio_bar) +
+> +		pci_resource_start(pci_dev, afu->config.global_mmio_bar) +
+>   		afu->config.global_mmio_offset;
+>   	afu->pp_mmio_start =
+> -		pci_resource_start(dev, afu->config.pp_mmio_bar) +
+> +		pci_resource_start(pci_dev, afu->config.pp_mmio_bar) +
+>   		afu->config.pp_mmio_offset;
+>   
+>   	afu->global_mmio_ptr = ioremap(afu->global_mmio_start,
+> @@ -198,7 +201,7 @@ static int map_mmio_areas(struct ocxl_afu *afu, struct pci_dev *dev)
+>   	if (!afu->global_mmio_ptr) {
+>   		release_fn_bar(afu->fn, afu->config.pp_mmio_bar);
+>   		release_fn_bar(afu->fn, afu->config.global_mmio_bar);
+> -		dev_err(&dev->dev, "Error mapping global mmio area\n");
+> +		dev_err(&pci_dev->dev, "Error mapping global mmio area\n");
+>   		return -ENOMEM;
+>   	}
+>   
+> @@ -234,17 +237,17 @@ static int configure_afu(struct ocxl_afu *afu, u8 afu_idx, struct pci_dev *dev)
+>   	if (rc)
+>   		return rc;
+>   
+> -	rc = assign_afu_actag(afu, dev);
+> +	rc = assign_afu_actag(afu);
+>   	if (rc)
+>   		return rc;
+>   
+> -	rc = assign_afu_pasid(afu, dev);
+> +	rc = assign_afu_pasid(afu);
+>   	if (rc) {
+>   		reclaim_afu_actag(afu);
+>   		return rc;
+>   	}
+>   
+> -	rc = map_mmio_areas(afu, dev);
+> +	rc = map_mmio_areas(afu);
+>   	if (rc) {
+>   		reclaim_afu_pasid(afu);
+>   		reclaim_afu_actag(afu);
+> @@ -331,7 +334,7 @@ void remove_afu(struct ocxl_afu *afu)
+>   	device_unregister(&afu->dev);
+>   }
+>   
+> -static struct ocxl_fn *alloc_function(struct pci_dev *dev)
+> +static struct ocxl_fn *alloc_function(void)
+>   {
+>   	struct ocxl_fn *fn;
+>   
+> @@ -342,6 +345,7 @@ static struct ocxl_fn *alloc_function(struct pci_dev *dev)
+>   	INIT_LIST_HEAD(&fn->afu_list);
+>   	INIT_LIST_HEAD(&fn->pasid_list);
+>   	INIT_LIST_HEAD(&fn->actag_list);
+> +
+>   	return fn;
+>   }
+>   
+> @@ -491,7 +495,7 @@ struct ocxl_fn *init_function(struct pci_dev *dev)
+>   	struct ocxl_fn *fn;
+>   	int rc;
+>   
+> -	fn = alloc_function(dev);
+> +	fn = alloc_function();
+>   	if (!fn)
+>   		return ERR_PTR(-ENOMEM);
+>   
+> 
+
