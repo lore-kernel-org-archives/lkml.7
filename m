@@ -2,132 +2,258 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS
-	autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id DF48CC10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 01:09:08 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 434ABC10F14
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 01:20:57 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id A36122177B
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 01:09:08 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF33520872
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 01:20:56 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=canb.auug.org.au header.i=@canb.auug.org.au header.b="cxC6JhMB"
+	dkim=pass (1024-bit key) header.d=chromium.org header.i=@chromium.org header.b="A+Mlu8iM"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1729694AbfDQBJH (ORCPT
+        id S1729577AbfDQBUz (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 21:09:07 -0400
-Received: from ozlabs.org ([203.11.71.1]:54083 "EHLO ozlabs.org"
-        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
-        id S1728028AbfDQBJH (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 21:09:07 -0400
-Received: from authenticated.ozlabs.org (localhost [127.0.0.1])
-        (using TLSv1.3 with cipher TLS_AES_256_GCM_SHA384 (256/256 bits)
-         key-exchange ECDHE (P-256) server-signature RSA-PSS (4096 bits) server-digest SHA256)
-        (No client certificate requested)
-        by mail.ozlabs.org (Postfix) with ESMTPSA id 44kPJc2Jrrz9s55;
-        Wed, 17 Apr 2019 11:09:03 +1000 (AEST)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/simple; d=canb.auug.org.au;
-        s=201702; t=1555463344;
-        bh=gx/m3xcElozFNplOIZLgXvME1X2j76PV32tUNT6mwjs=;
-        h=Date:From:To:Cc:Subject:From;
-        b=cxC6JhMBLZunL8dOEiIQwZBSS8ImYiAP+pCZqJQll/KBYSoOo4GK7yqFwocieYCaP
-         BvDIDD29AuMxLGVvHnTRdnUn38r+YobK08aUAIsiCh1x3QdbxbIOpP59y3YnMU3pTW
-         qwTdWJw820cav5G7eod9pXHukgXLlCcmyt2k/+eG66ca/ehx3muzZVC870fOIzVgr9
-         cJnAJyh9FAQGv48SmAdmbUPRssnjA14OY+rutg3dmAAhMO9zJie4suRCt+Hil1W6P+
-         MCPFAmdS7+JiBl3jFdCPxGj4kEnsvuIGVKs/2WTuEcu0uz+dNbytMan7VHbUVYED2C
-         8Ca64YAWXRSbw==
-Date:   Wed, 17 Apr 2019 11:08:56 +1000
-From:   Stephen Rothwell <sfr@canb.auug.org.au>
-To:     Daniel Borkmann <daniel@iogearbox.net>,
-        Alexei Starovoitov <ast@kernel.org>,
-        Networking <netdev@vger.kernel.org>
-Cc:     Linux Next Mailing List <linux-next@vger.kernel.org>,
-        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
-        Benjamin Poirier <bpoirier@suse.com>
-Subject: linux-next: manual merge of the bpf-next tree with the bpf tree
-Message-ID: <20190417110856.54b4ac1c@canb.auug.org.au>
+        Tue, 16 Apr 2019 21:20:55 -0400
+Received: from mail-it1-f193.google.com ([209.85.166.193]:39933 "EHLO
+        mail-it1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728373AbfDQBUy (ORCPT
+        <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 21:20:54 -0400
+Received: by mail-it1-f193.google.com with SMTP id 139so1830843ita.4
+        for <linux-kernel@vger.kernel.org>; Tue, 16 Apr 2019 18:20:54 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=chromium.org; s=google;
+        h=from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RrgIDIhRz2qb3P+eKnsRFs3y8x7xZCgl9V4HBIL7OvY=;
+        b=A+Mlu8iMG+8hs+vZxkeng8V5XYbUQHVCYDUGOhkUPkTDVHK7Q/4ROWgZxuSGv+SDtm
+         euYmRoQpqnESydv0bV7kojP+QseK//J79FrCdsrgpbW+AkW97he9ehpzxi5tJ1zpRx4H
+         Gih/NZfoDMKVCSHL2s5ccUR/JqV0aRj34EJ7w=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
+         :content-transfer-encoding;
+        bh=RrgIDIhRz2qb3P+eKnsRFs3y8x7xZCgl9V4HBIL7OvY=;
+        b=jVDVOpv2wyYUw8GsKrOK6eXekIYOygzqenmlZ0pGYtWl0QEuQkpap4Az0WvUn4/hXV
+         DutAvGF9zgsmpStRmVlV4dsaihHJgoGJEusLllAexFRW51AtJsK72BKKZSlLXKEK7nRA
+         WsBSHzhThR2EeUl4okNaQLzeeJfMSiguqjNXh8I44JO0q2koaywDINblSP09eTkcw02d
+         OR0HXoB64hbM5+b3euawryjPZjXwaHwB20Nj8ZmlqZoP9grwPgzNuuHS/FSwT39kagrx
+         lAwsMgqLPvC4ZmvwHgsz+IQYjF2MS10kM+X6Q26Oq6rktsFD9fRCX+z6XlZUYetDVCb9
+         YLrg==
+X-Gm-Message-State: APjAAAUED8oGmE+yT1ebo34mZeonbVcOnmysNcqzQrtdBWs/u/3n21Kv
+        rDxsa9O0WNsM3vnzivBfsF1xuQ==
+X-Google-Smtp-Source: APXvYqxqEmHfh0qr2biVTLz+wPvbSvEu6kfdyhdxbe0xvcac/orJFiTwvulLpBWBZ4kfUnomm21HiQ==
+X-Received: by 2002:a24:f949:: with SMTP id l70mr32996494ith.116.1555464053744;
+        Tue, 16 Apr 2019 18:20:53 -0700 (PDT)
+Received: from ncrews2.bld.corp.google.com ([2620:15c:183:200:cb43:2cd4:65f5:5c84])
+        by smtp.gmail.com with ESMTPSA id s1sm19938530ioe.18.2019.04.16.18.20.52
+        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
+        Tue, 16 Apr 2019 18:20:53 -0700 (PDT)
+From:   Nick Crews <ncrews@chromium.org>
+To:     enric.balletbo@collabora.com, bleung@chromium.org
+Cc:     linux-kernel@vger.kernel.org, dlaurie@chromium.org,
+        derat@google.com, dtor@google.com, sjg@chromium.org,
+        bartfab@chromium.org, lamzin@google.com, jchwong@google.com,
+        Nick Crews <ncrews@chromium.org>
+Subject: [PATCH v3 1/2] platform/chrome: wilco_ec: Add Boot on AC support
+Date:   Tue, 16 Apr 2019 19:20:47 -0600
+Message-Id: <20190417012048.87977-1-ncrews@chromium.org>
+X-Mailer: git-send-email 2.20.1
 MIME-Version: 1.0
-Content-Type: multipart/signed; micalg=pgp-sha256;
- boundary="Sig_/PToTIyXnHLFQ77QlRBaumDo"; protocol="application/pgp-signature"
+Content-Transfer-Encoding: 8bit
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
---Sig_/PToTIyXnHLFQ77QlRBaumDo
-Content-Type: text/plain; charset=US-ASCII
-Content-Transfer-Encoding: quoted-printable
+Boot on AC is a policy which makes the device boot from S5 when AC
+power is connected. This is useful for users who want to run their
+device headless or with a dock.
 
-Hi all,
+v3 changes:
+- Add docstring to wilco_ec_add_sysfs()
+- Tweak a comment
+- Use val > 1 instead of val != 0 && val != 1
+v2 changes:
+- Move documentation to Documentation/ABI/testing/sysfs-platform-wilco-ec
 
-Today's linux-next merge of the bpf-next tree got a conflict in:
+Signed-off-by: Nick Crews <ncrews@chromium.org>
+---
+ .../ABI/testing/sysfs-platform-wilco-ec       | 11 +++
+ drivers/platform/chrome/wilco_ec/Makefile     |  2 +-
+ drivers/platform/chrome/wilco_ec/core.c       |  9 +++
+ drivers/platform/chrome/wilco_ec/sysfs.c      | 77 +++++++++++++++++++
+ include/linux/platform_data/wilco-ec.h        | 12 +++
+ 5 files changed, 110 insertions(+), 1 deletion(-)
+ create mode 100644 Documentation/ABI/testing/sysfs-platform-wilco-ec
+ create mode 100644 drivers/platform/chrome/wilco_ec/sysfs.c
 
-  tools/bpf/bpftool/map.c
+diff --git a/Documentation/ABI/testing/sysfs-platform-wilco-ec b/Documentation/ABI/testing/sysfs-platform-wilco-ec
+new file mode 100644
+index 000000000000..e074c203cd32
+--- /dev/null
++++ b/Documentation/ABI/testing/sysfs-platform-wilco-ec
+@@ -0,0 +1,11 @@
++What:		/sys/bus/platform/devices/GOOG000C\:00/boot_on_ac
++Date:		April 2019
++KernelVersion:	5.2
++Description:
++		Boot on AC is a policy which makes the device boot from S5
++		when AC power is connected. This is useful for users who
++		want to run their device headless or with a dock.
++
++		Input should be parseable by kstrtou8() to 0 or 1.
++		Output will be either "0\n" or "1\n".
++
+diff --git a/drivers/platform/chrome/wilco_ec/Makefile b/drivers/platform/chrome/wilco_ec/Makefile
+index 063e7fb4ea17..1281dd7737c4 100644
+--- a/drivers/platform/chrome/wilco_ec/Makefile
++++ b/drivers/platform/chrome/wilco_ec/Makefile
+@@ -1,6 +1,6 @@
+ # SPDX-License-Identifier: GPL-2.0
+ 
+-wilco_ec-objs				:= core.o mailbox.o
++wilco_ec-objs				:= core.o mailbox.o sysfs.o
+ obj-$(CONFIG_WILCO_EC)			+= wilco_ec.o
+ wilco_ec_debugfs-objs			:= debugfs.o
+ obj-$(CONFIG_WILCO_EC_DEBUGFS)		+= wilco_ec_debugfs.o
+diff --git a/drivers/platform/chrome/wilco_ec/core.c b/drivers/platform/chrome/wilco_ec/core.c
+index 05e1e2be1c91..abd15d04e57b 100644
+--- a/drivers/platform/chrome/wilco_ec/core.c
++++ b/drivers/platform/chrome/wilco_ec/core.c
+@@ -89,8 +89,16 @@ static int wilco_ec_probe(struct platform_device *pdev)
+ 		goto unregister_debugfs;
+ 	}
+ 
++	ret = wilco_ec_add_sysfs(ec);
++	if (ret < 0) {
++		dev_err(dev, "Failed to create sysfs entries: %d", ret);
++		goto unregister_rtc;
++	}
++
+ 	return 0;
+ 
++unregister_rtc:
++	platform_device_unregister(ec->rtc_pdev);
+ unregister_debugfs:
+ 	if (ec->debugfs_pdev)
+ 		platform_device_unregister(ec->debugfs_pdev);
+@@ -102,6 +110,7 @@ static int wilco_ec_remove(struct platform_device *pdev)
+ {
+ 	struct wilco_ec_device *ec = platform_get_drvdata(pdev);
+ 
++	wilco_ec_remove_sysfs(ec);
+ 	platform_device_unregister(ec->rtc_pdev);
+ 	if (ec->debugfs_pdev)
+ 		platform_device_unregister(ec->debugfs_pdev);
+diff --git a/drivers/platform/chrome/wilco_ec/sysfs.c b/drivers/platform/chrome/wilco_ec/sysfs.c
+new file mode 100644
+index 000000000000..959b5da2eb16
+--- /dev/null
++++ b/drivers/platform/chrome/wilco_ec/sysfs.c
+@@ -0,0 +1,77 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * Copyright 2019 Google LLC
++ *
++ * Sysfs properties to view and modify EC-controlled features on Wilco devices.
++ * The entries will appear under /sys/bus/platform/devices/GOOG000C:00/
++ *
++ * See Documentation/ABI/testing/sysfs-platform-wilco-ec for more information.
++ */
++
++#include <linux/platform_data/wilco-ec.h>
++#include <linux/sysfs.h>
++
++#define CMD_KB_CMOS			0x7C
++#define SUB_CMD_KB_CMOS_AUTO_ON		0x03
++
++struct boot_on_ac_request {
++	u8 cmd;			/* Always CMD_KB_CMOS */
++	u8 reserved1;
++	u8 sub_cmd;		/* Always SUB_CMD_KB_CMOS_AUTO_ON */
++	u8 reserved3to5[3];
++	u8 val;			/* Either 0 or 1 */
++	u8 reserved7;
++} __packed;
++
++static ssize_t boot_on_ac_store(struct device *dev,
++				struct device_attribute *attr,
++				const char *buf, size_t count)
++{
++	struct wilco_ec_device *ec = dev_get_drvdata(dev);
++	struct boot_on_ac_request rq;
++	struct wilco_ec_message msg;
++	int ret;
++	u8 val;
++
++	ret = kstrtou8(buf, 10, &val);
++	if (ret < 0)
++		return ret;
++	if (val > 1)
++		return -EINVAL;
++
++	memset(&rq, 0, sizeof(rq));
++	rq.cmd = CMD_KB_CMOS;
++	rq.sub_cmd = SUB_CMD_KB_CMOS_AUTO_ON;
++	rq.val = val;
++
++	memset(&msg, 0, sizeof(msg));
++	msg.type = WILCO_EC_MSG_LEGACY;
++	msg.request_data = &rq;
++	msg.request_size = sizeof(rq);
++	ret = wilco_ec_mailbox(ec, &msg);
++	if (ret < 0)
++		return ret;
++
++	return count;
++}
++
++static DEVICE_ATTR_WO(boot_on_ac);
++
++static struct attribute *wilco_dev_attrs[] = {
++	&dev_attr_boot_on_ac.attr,
++	NULL,
++};
++
++static struct attribute_group wilco_dev_attr_group = {
++	.attrs = wilco_dev_attrs,
++};
++
++int wilco_ec_add_sysfs(struct wilco_ec_device *ec)
++{
++	return sysfs_create_group(&ec->dev->kobj, &wilco_dev_attr_group);
++}
++
++void wilco_ec_remove_sysfs(struct wilco_ec_device *ec)
++{
++	sysfs_create_group(&ec->dev->kobj, &wilco_dev_attr_group);
++}
+diff --git a/include/linux/platform_data/wilco-ec.h b/include/linux/platform_data/wilco-ec.h
+index 1ff224793c99..7809b098ce27 100644
+--- a/include/linux/platform_data/wilco-ec.h
++++ b/include/linux/platform_data/wilco-ec.h
+@@ -123,4 +123,16 @@ struct wilco_ec_message {
+  */
+ int wilco_ec_mailbox(struct wilco_ec_device *ec, struct wilco_ec_message *msg);
+ 
++/**
++ * wilco_ec_add_sysfs() - Create sysfs entries
++ * @ec: Wilco EC device
++ *
++ * wilco_ec_remove_sysfs() needs to be called afterwards
++ * to perform the necessary cleanup.
++ *
++ * Return: 0 on success or negative error code on failure.
++ */
++int wilco_ec_add_sysfs(struct wilco_ec_device *ec);
++void wilco_ec_remove_sysfs(struct wilco_ec_device *ec);
++
+ #endif /* WILCO_EC_H */
+-- 
+2.20.1
 
-between commit:
-
-  e0665239e07f ("bpftool: Fix errno variable usage")
-
-from the bpf tree and commit:
-
-  0478c3bf8124 ("bpftool: Use print_entry_error() in case of ENOENT when du=
-mping")
-
-from the bpf-next tree.
-
-I fixed it up (see below) and can carry the fix as necessary. This
-is now fixed as far as linux-next is concerned, but any non trivial
-conflicts should be mentioned to your upstream maintainer when your tree
-is submitted for merging.  You may also want to consider cooperating
-with the maintainer of the conflicting tree to minimise any particularly
-complex conflicts.
-
---=20
-Cheers,
-Stephen Rothwell
-
-diff --cc tools/bpf/bpftool/map.c
-index 1744bf61a0b8,44b192e87708..000000000000
---- a/tools/bpf/bpftool/map.c
-+++ b/tools/bpf/bpftool/map.c
-@@@ -722,11 -715,16 +715,16 @@@ static int dump_map_elem(int fd, void *
-  		jsonw_string_field(json_wtr, "error", strerror(lookup_errno));
-  		jsonw_end_object(json_wtr);
-  	} else {
-+ 		const char *msg =3D NULL;
-+=20
- -		if (errno =3D=3D ENOENT)
- +		if (lookup_errno =3D=3D ENOENT)
-- 			print_entry_plain(map_info, key, NULL);
-- 		else
-- 			print_entry_error(map_info, key,
-- 					  strerror(lookup_errno));
-+ 			msg =3D "<no entry>";
-+ 		else if (lookup_errno =3D=3D ENOSPC &&
-+ 			 map_info->type =3D=3D BPF_MAP_TYPE_REUSEPORT_SOCKARRAY)
-+ 			msg =3D "<cannot read>";
-+=20
-+ 		print_entry_error(map_info, key,
-+ 				  msg ? : strerror(lookup_errno));
-  	}
- =20
-  	return 0;
-
---Sig_/PToTIyXnHLFQ77QlRBaumDo
-Content-Type: application/pgp-signature
-Content-Description: OpenPGP digital signature
-
------BEGIN PGP SIGNATURE-----
-
-iQEzBAEBCAAdFiEENIC96giZ81tWdLgKAVBC80lX0GwFAly2fKgACgkQAVBC80lX
-0Gw8OQf/VvGCw2rn2B10cwgm/rjs+IduAfPs8kwMGJ+1YheHdRd6PggMRa2kqDPI
-2NW4J1kENtmWz5Jx48JzKrKbbwmpK5Af19oWbg7nTApBwTIeePd/uHeqorJYt/7P
-gSleXDPgq3TnyDhQhlzWLyTcRAaL7QadSdQWUjW1/zi/BI+HnzqzeXFDBX2F+yhn
-cWB6V0irEqDw11sLG8CmZi6FMJ9G/5HyP/T+LAv3lKR3thF6B1m8KBdPKuLfylSI
-kZ6cq6hcaINXHpO4ZMJ6rRWoE39kjOpv/nfuWTJUBY//xWkSsUxQuNmzt7DDV/Z5
-oTdt+XPhJeSnZeiDHKoRGq0WyAhNxw==
-=/wDW
------END PGP SIGNATURE-----
-
---Sig_/PToTIyXnHLFQ77QlRBaumDo--
