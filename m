@@ -2,99 +2,120 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-2.4 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,
+	MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,UNPARSEABLE_RELAY autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 99B8AC282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 00:35:00 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id DDF77C10F13
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 00:36:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 6658F21773
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 00:35:00 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id A3C9021773
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 00:36:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="MWxB6oLr"
+	dkim=pass (2048-bit key) header.d=oracle.com header.i=@oracle.com header.b="tjgCByq4"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731072AbfDQAe7 (ORCPT
+        id S1731080AbfDQAgN (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 20:34:59 -0400
-Received: from mail-pg1-f196.google.com ([209.85.215.196]:36257 "EHLO
-        mail-pg1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728959AbfDQAe6 (ORCPT
+        Tue, 16 Apr 2019 20:36:13 -0400
+Received: from userp2130.oracle.com ([156.151.31.86]:42910 "EHLO
+        userp2130.oracle.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1728237AbfDQAgN (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 20:34:58 -0400
-Received: by mail-pg1-f196.google.com with SMTP id 85so11147554pgc.3;
-        Tue, 16 Apr 2019 17:34:58 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:references:mime-version
-         :content-disposition:in-reply-to:user-agent;
-        bh=m6Evmiu6N3CMu8nqqs5KUJxPxiVSmDM0bjR0jghXw/0=;
-        b=MWxB6oLr9JJwbBuU0dQgJUWw1gP4zzVYKHoAffPfz39brpls0BJywYQ9Kqy8j8b8Ep
-         W2Kl3CXc6x4id7fGy0aVDxxMU2du+uCXZRunn2r4GSNLHm33FcmaBGujQRBEP8akMtUh
-         RnbD6Fuz3uVcji1WJuNYy+uJ/XqH3ZgLfTdghRhDm4mbp8/B0mhrUuzELFAeUuybts2i
-         HCj6YDvVQTt0WtghW9T5J+Y4d2UJlaNHr1KBtUSj3Xbl9masV3SZNoX/wsuRTmT73qmS
-         PyoMXsete6KtrFV5C0EWs1pdzlqkIEQ9sEgvlVDz/ZO/uHtnIXZ9QKtIYTmAD2FEfVYl
-         uDQA==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:references
-         :mime-version:content-disposition:in-reply-to:user-agent;
-        bh=m6Evmiu6N3CMu8nqqs5KUJxPxiVSmDM0bjR0jghXw/0=;
-        b=dfaU9q5DVQJdwn9MKpPCgiNTmV7QAF8x49ga68VJpLZKcFa8hDTdgwn/oPf4QMrD3V
-         8ElpKrpfgmXGXkkhfXZ44vs6uXJnDGJxzGwYkb5vRjFHuB+uU6Q9r5V0oqT4JPhVc8RQ
-         ZZRvt0TsgR3viYGzIz32ISzrfGsLufcphcuQWTv0Z9K2G+bpK873Fe1BKeiKso8rhA1m
-         zmeBY+//ydT/hpX4mHk01clyOBP36M2u5103Ch7Vpulz2TR8I1y+D++kkdoTsQPnKCav
-         mxRz+iczSjneuAEUWIhVQukC45PSjPAFKFgUDCkfn31+KqiV4rVQSAMcMKHTXN/N4ZpH
-         sUGQ==
-X-Gm-Message-State: APjAAAV7oTB8yrwrlTJnaWg5kbAdST9epkG0zcsgTiAXm+PJB06ZSbpk
-        6LsD0WcKAJs4hv4K6fOA6sM=
-X-Google-Smtp-Source: APXvYqyFGato7ZM2M7Hdryhhisysgb2wHyGP6HEwcNIEoxQV9VNRS2iecGfXXYn4suvMeB9c83G1cw==
-X-Received: by 2002:a63:5947:: with SMTP id j7mr78075729pgm.62.1555461298198;
-        Tue, 16 Apr 2019 17:34:58 -0700 (PDT)
-Received: from localhost ([175.223.21.206])
-        by smtp.gmail.com with ESMTPSA id l88sm87504792pfb.104.2019.04.16.17.34.56
-        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
-        Tue, 16 Apr 2019 17:34:56 -0700 (PDT)
-Date:   Wed, 17 Apr 2019 09:34:53 +0900
-From:   Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>
-To:     Jerome Glisse <jglisse@redhat.com>,
-        Andrew Morton <akpm@linux-foundation.org>
-Cc:     linux-kernel@vger.kernel.org, Minchan Kim <minchan@kernel.org>,
-        Nitin Gupta <ngupta@vflare.org>,
-        Sergey Senozhatsky <sergey.senozhatsky.work@gmail.com>,
-        stable@vger.kernel.org,
-        Linus Torvalds <torvalds@linux-foundation.org>
-Subject: Re: [PATCH] zram: pass down the bvec we need to read into in the
- work struct
-Message-ID: <20190417003453.GA16316@jagdpanzerIV>
-References: <20190408183219.26377-1-jglisse@redhat.com>
- <20190410194350.GA25351@redhat.com>
- <20190416165345.df90a7491b94f4e9eea9978d@linux-foundation.org>
+        Tue, 16 Apr 2019 20:36:13 -0400
+Received: from pps.filterd (userp2130.oracle.com [127.0.0.1])
+        by userp2130.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3H0OCft029440;
+        Wed, 17 Apr 2019 00:36:10 GMT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=oracle.com; h=subject : to :
+ references : from : message-id : date : mime-version : in-reply-to :
+ content-type : content-transfer-encoding; s=corp-2018-07-02;
+ bh=VYx8l/OLZY22zLAiBBrv9wYWwlUXBjfJNs0LLrNYpLw=;
+ b=tjgCByq4+aFdKsEjJYcTrbbSsBEmmgjnknfdBTHCL7UFrqyh5NlsEED/dkXb6932lgY0
+ aJYPagIFPhkU8Bn7a39V2HLXJLPKXqEnC+jigiPQJzIkdTwxu7Z5hddq4EBOZV+Eubtb
+ HCoEpAkYjQWSICyCHcM8bRNefKqW1nAZG1KyLIyAh6bxZ1N98CvA2XL+z0bjEwOadXzP
+ MPwu919K/mfNCo+DFTvmnbPpLmKM8CNmZxywsI52Ra0kmpLlght/kHcphJ+MFJctDW78
+ vYkjQfK5cjzlwOhaYNsYAyMvGgqvuqjU08vEgU24/z7hZzk1io9EceQCqqJ/2kkdyVSM QQ== 
+Received: from aserp3020.oracle.com (aserp3020.oracle.com [141.146.126.70])
+        by userp2130.oracle.com with ESMTP id 2rvwk3qwap-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 17 Apr 2019 00:36:10 +0000
+Received: from pps.filterd (aserp3020.oracle.com [127.0.0.1])
+        by aserp3020.oracle.com (8.16.0.27/8.16.0.27) with SMTP id x3H0a9OI130840;
+        Wed, 17 Apr 2019 00:36:09 GMT
+Received: from aserv0121.oracle.com (aserv0121.oracle.com [141.146.126.235])
+        by aserp3020.oracle.com with ESMTP id 2rv2tv2dwq-1
+        (version=TLSv1.2 cipher=ECDHE-RSA-AES256-GCM-SHA384 bits=256 verify=OK);
+        Wed, 17 Apr 2019 00:36:09 +0000
+Received: from abhmp0018.oracle.com (abhmp0018.oracle.com [141.146.116.24])
+        by aserv0121.oracle.com (8.14.4/8.13.8) with ESMTP id x3H0a6xb003838;
+        Wed, 17 Apr 2019 00:36:06 GMT
+Received: from dhcp-10-132-91-102.usdhcp.oraclecorp.com (/10.132.91.102)
+        by default (Oracle Beehive Gateway v4.0)
+        with ESMTP ; Tue, 16 Apr 2019 17:36:06 -0700
+Subject: Re: [PATCH] KVM: vmx: print more APICv fields in dump_vmcs
+To:     Paolo Bonzini <pbonzini@redhat.com>, linux-kernel@vger.kernel.org,
+        kvm@vger.kernel.org
+References: <1555335333-23636-1-git-send-email-pbonzini@redhat.com>
+From:   Krish Sadhukhan <krish.sadhukhan@oracle.com>
+Message-ID: <648a74b9-d592-8505-25d7-96a16fed9f51@oracle.com>
+Date:   Tue, 16 Apr 2019 17:36:05 -0700
+User-Agent: Mozilla/5.0 (X11; Linux x86_64; rv:52.0) Gecko/20100101
+ Thunderbird/52.4.0
 MIME-Version: 1.0
-Content-Type: text/plain; charset=us-ascii
-Content-Disposition: inline
-In-Reply-To: <20190416165345.df90a7491b94f4e9eea9978d@linux-foundation.org>
-User-Agent: Mutt/1.11.4 (2019-03-13)
+In-Reply-To: <1555335333-23636-1-git-send-email-pbonzini@redhat.com>
+Content-Type: text/plain; charset=utf-8; format=flowed
+Content-Transfer-Encoding: 7bit
+Content-Language: en-US
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9229 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 suspectscore=3 malwarescore=0
+ phishscore=0 bulkscore=0 spamscore=0 mlxscore=0 mlxlogscore=999
+ adultscore=0 classifier=spam adjust=0 reason=mlx scancount=1
+ engine=8.0.1-1810050000 definitions=main-1904170000
+X-Proofpoint-Virus-Version: vendor=nai engine=5900 definitions=9229 signatures=668685
+X-Proofpoint-Spam-Details: rule=notspam policy=default score=0 priorityscore=1501 malwarescore=0
+ suspectscore=3 phishscore=0 bulkscore=0 spamscore=0 clxscore=1015
+ lowpriorityscore=0 mlxscore=0 impostorscore=0 mlxlogscore=999 adultscore=0
+ classifier=spam adjust=0 reason=mlx scancount=1 engine=8.0.1-1810050000
+ definitions=main-1904170000
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On (04/16/19 16:53), Andrew Morton wrote:
-> > Adding more Cc and stable (i thought this was 5.1 addition). Note that
-> > without this patch on arch/kernel where PAGE_SIZE != 4096 userspace
-> > could read random memory through a zram block device (thought userspace
-> > probably would have no control on the address being read).
-> 
-> Looks good to me.
-> 
-> Minchan & Sergey, can you please review?
 
-Sorry.
 
-Looks OK to me.
+On 04/15/2019 06:35 AM, Paolo Bonzini wrote:
+> The SVI, RVI, virtual-APIC page address and APIC-access page address fields
+> were left out of dump_vmcs.  Add them.
+>
+> Signed-off-by: Paolo Bonzini <pbonzini@redhat.com>
+> ---
+>   arch/x86/kvm/vmx/vmx.c | 13 +++++++++++--
+>   1 file changed, 11 insertions(+), 2 deletions(-)
+>
+> diff --git a/arch/x86/kvm/vmx/vmx.c b/arch/x86/kvm/vmx/vmx.c
+> index ab432a930ae8..f8054dc1de65 100644
+> --- a/arch/x86/kvm/vmx/vmx.c
+> +++ b/arch/x86/kvm/vmx/vmx.c
+> @@ -5723,8 +5723,17 @@ static void dump_vmcs(void)
+>   	if (secondary_exec_control & SECONDARY_EXEC_TSC_SCALING)
+>   		pr_err("TSC Multiplier = 0x%016llx\n",
+>   		       vmcs_read64(TSC_MULTIPLIER));
+> -	if (cpu_based_exec_ctrl & CPU_BASED_TPR_SHADOW)
+> -		pr_err("TPR Threshold = 0x%02x\n", vmcs_read32(TPR_THRESHOLD));
+> +	if (cpu_based_exec_ctrl & CPU_BASED_TPR_SHADOW) {
+> +		if (secondary_exec_control & SECONDARY_EXEC_VIRTUAL_INTR_DELIVERY) {
+> +			u16 status = vmcs_read16(GUEST_INTR_STATUS);
+> +			pr_err("SVI|RVI = %02x|%02x ", status >> 8, status & 0xff);
+> +		}
+> +		pr_err(KERN_CONT "TPR Threshold = 0x%02x\n", vmcs_read32(TPR_THRESHOLD));
+> +		if (secondary_exec_control & (SECONDARY_EXEC_VIRTUALIZE_APIC_ACCESSES |
+> +		    			      SECONDARY_EXEC_VIRTUALIZE_X2APIC_MODE))
+> +			pr_err("APIC-access addr = 0x%016llx ", vmcs_read64(APIC_ACCESS_ADDR));
+> +		pr_err(KERN_CONT "virt-APIC addr=0x%016llx\n", vmcs_read64(VIRTUAL_APIC_PAGE_ADDR));
+> +	}
+>   	if (pin_based_exec_ctrl & PIN_BASED_POSTED_INTR)
+>   		pr_err("PostedIntrVec = 0x%02x\n", vmcs_read16(POSTED_INTR_NV));
+>   	if ((secondary_exec_control & SECONDARY_EXEC_ENABLE_EPT))
 
-Reviewed-by: Sergey Senozhatsky <sergey.senozhatsky@gmail.com>
-
-	-ss
+Reviewed-by: Krish Sadhukhan <krish.sadhukhan@oracle.com>
