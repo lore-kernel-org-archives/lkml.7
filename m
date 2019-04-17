@@ -3,102 +3,92 @@ X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
 X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
-	autolearn=ham autolearn_force=no version=3.4.0
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
+	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id EB796C10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:35:29 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id CC4E5C10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:35:35 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id B963F2073F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:35:29 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 9C8952176F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:35:35 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1730266AbfDQHf2 (ORCPT
+        id S1731023AbfDQHfe (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 03:35:28 -0400
-Received: from paleale.coelho.fi ([176.9.41.70]:53526 "EHLO
-        farmhouse.coelho.fi" rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org
-        with ESMTP id S1726773AbfDQHf2 (ORCPT
+        Wed, 17 Apr 2019 03:35:34 -0400
+Received: from rtits2.realtek.com ([211.75.126.72]:60999 "EHLO
+        rtits2.realtek.com.tw" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1727282AbfDQHfd (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 03:35:28 -0400
-Received: from 91-156-6-193.elisa-laajakaista.fi ([91.156.6.193] helo=redipa.ger.corp.intel.com)
-        by farmhouse.coelho.fi with esmtpsa (TLS1.2:ECDHE_RSA_AES_128_GCM_SHA256:128)
-        (Exim 4.91)
-        (envelope-from <luca@coelho.fi>)
-        id 1hGf6G-0006gA-PY; Wed, 17 Apr 2019 10:35:21 +0300
-From:   Luca Coelho <luca@coelho.fi>
-To:     kvalo@codeaurora.org, johannes@sipsolutions.net,
-        emmanuel.grumbach@intel.com, linuxwifi@intel.com
-Cc:     linux-kernel@vger.kernel.org, linux-wireless@vger.kernel.org,
-        Shahar S Matityahu <shahar.s.matityahu@intel.com>,
-        Michal Hocko <mhocko@kernel.org>,
-        Luca Coelho <luciano.coelho@intel.com>
-Date:   Wed, 17 Apr 2019 10:35:16 +0300
-Message-Id: <20190417073516.24250-1-luca@coelho.fi>
-X-Mailer: git-send-email 2.20.1
-In-Reply-To: <748205b02961167b0926d4afe8d9ad9cb37bf6ef.camel@coelho.fi>
-References: <748205b02961167b0926d4afe8d9ad9cb37bf6ef.camel@coelho.fi>
+        Wed, 17 Apr 2019 03:35:33 -0400
+Authenticated-By: 
+X-SpamFilter-By: BOX Solutions SpamTrap 5.62 with qID x3H7ZHr5006556, This message is accepted by code: ctloc85258
+Received: from mail.realtek.com (rtitcasv01.realtek.com.tw[172.21.6.18])
+        by rtits2.realtek.com.tw (8.15.2/2.57/5.78) with ESMTPS id x3H7ZHr5006556
+        (version=TLSv1 cipher=AES256-SHA bits=256 verify=NOT);
+        Wed, 17 Apr 2019 15:35:17 +0800
+Received: from localhost (172.22.88.128) by RTITCASV01.realtek.com.tw
+ (172.21.6.18) with Microsoft SMTP Server id 14.3.408.0; Wed, 17 Apr 2019
+ 15:35:16 +0800
+From:   <ricky_wu@realtek.com>
+To:     <arnd@arndb.de>, <gregkh@linuxfoundation.org>,
+        <linux-kernel@vger.kernel.org>, <kai.heng.feng@canonical.com>
+CC:     RickyWu <ricky_wu@realtek.com>
+Subject: [PATCH v2] misc: rtsx: Fixed rts5260 power saving parameter and sd glitch
+Date:   Wed, 17 Apr 2019 15:35:08 +0800
+Message-ID: <20190417073508.12389-1-ricky_wu@realtek.com>
+X-Mailer: git-send-email 2.17.1
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Subject: [PATCH] iwlwifi: don't panic in error path on non-msix systems
+Content-Type: text/plain
+X-Originating-IP: [172.22.88.128]
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Shahar S Matityahu <shahar.s.matityahu@intel.com>
+From: RickyWu <ricky_wu@realtek.com>
 
-The driver uses msix causes-register to handle both msix and non msix
-interrupts when performing sync nmi.  On devices that do not support
-msix this register is unmapped and accessing it causes a kernel panic.
+this patch fixes rts5260 power saving parameter
+make power saving function work on L1.1, L1.2
 
-Solve this by differentiating the two cases and accessing the proper
-causes-register in each case.
-
-Reported-by: Michal Hocko <mhocko@kernel.org>
-Signed-off-by: Shahar S Matityahu <shahar.s.matityahu@intel.com>
-Signed-off-by: Luca Coelho <luciano.coelho@intel.com>
+Signed-off-by: RickyWu <ricky_wu@realtek.com>
 ---
- .../net/wireless/intel/iwlwifi/pcie/trans.c   | 19 +++++++++++++------
- 1 file changed, 13 insertions(+), 6 deletions(-)
+ drivers/misc/cardreader/rts5260.c | 7 ++++---
+ 1 file changed, 4 insertions(+), 3 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-index 79c1dc05f948..c4375b868901 100644
---- a/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-+++ b/drivers/net/wireless/intel/iwlwifi/pcie/trans.c
-@@ -3644,20 +3644,27 @@ struct iwl_trans *iwl_trans_pcie_alloc(struct pci_dev *pdev,
+diff --git a/drivers/misc/cardreader/rts5260.c b/drivers/misc/cardreader/rts5260.c
+index da22bcb62b04..52c95add56f0 100644
+--- a/drivers/misc/cardreader/rts5260.c
++++ b/drivers/misc/cardreader/rts5260.c
+@@ -451,6 +451,7 @@ static void rts5260_pwr_saving_setting(struct rtsx_pcr *pcr)
+ 	lss_l1_2 = rtsx_check_dev_flag(pcr, ASPM_L1_2_EN)
+ 			| rtsx_check_dev_flag(pcr, PM_L1_2_EN);
  
- void iwl_trans_pcie_sync_nmi(struct iwl_trans *trans)
- {
-+	struct iwl_trans_pcie *trans_pcie = IWL_TRANS_GET_PCIE_TRANS(trans);
- 	unsigned long timeout = jiffies + IWL_TRANS_NMI_TIMEOUT;
-+	u32 inta_addr, sw_err_bit;
-+
-+	if (trans_pcie->msix_enabled) {
-+		inta_addr = CSR_MSIX_HW_INT_CAUSES_AD;
-+		sw_err_bit = MSIX_HW_INT_CAUSES_REG_SW_ERR;
-+	} else {
-+		inta_addr = CSR_INT;
-+		sw_err_bit = CSR_INT_BIT_SW_ERR;
-+	}
++	rtsx_pci_write_register(pcr, ASPM_FORCE_CTL, 0xFF, 0);
+ 	if (lss_l1_2) {
+ 		pcr_dbg(pcr, "Set parameters for L1.2.");
+ 		rtsx_pci_write_register(pcr, PWR_GLOBAL_CTRL,
+@@ -573,10 +574,10 @@ static int rts5260_extra_init_hw(struct rtsx_pcr *pcr)
+ 	 * to drive low, and we forcibly request clock.
+ 	 */
+ 	if (option->force_clkreq_0)
+-		rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, PETXCFG,
++		rtsx_pci_write_register(pcr, PETXCFG,
+ 				 FORCE_CLKREQ_DELINK_MASK, FORCE_CLKREQ_LOW);
+ 	else
+-		rtsx_pci_add_cmd(pcr, WRITE_REG_CMD, PETXCFG,
++		rtsx_pci_write_register(pcr, PETXCFG,
+ 				 FORCE_CLKREQ_DELINK_MASK, FORCE_CLKREQ_HIGH);
  
- 	iwl_disable_interrupts(trans);
- 	iwl_force_nmi(trans);
- 	while (time_after(timeout, jiffies)) {
--		u32 inta_hw = iwl_read32(trans,
--					 CSR_MSIX_HW_INT_CAUSES_AD);
-+		u32 inta_hw = iwl_read32(trans, inta_addr);
- 
- 		/* Error detected by uCode */
--		if (inta_hw & MSIX_HW_INT_CAUSES_REG_SW_ERR) {
-+		if (inta_hw & sw_err_bit) {
- 			/* Clear causes register */
--			iwl_write32(trans, CSR_MSIX_HW_INT_CAUSES_AD,
--				    inta_hw &
--				    MSIX_HW_INT_CAUSES_REG_SW_ERR);
-+			iwl_write32(trans, inta_addr, inta_hw & sw_err_bit);
- 			break;
- 		}
- 
+ 	return 0;
+@@ -704,7 +705,7 @@ void rts5260_init_params(struct rtsx_pcr *pcr)
+ 	option->ocp_en = 1;
+ 	if (option->ocp_en)
+ 		hw_param->interrupt_en |= SD_OC_INT_EN;
+-	hw_param->ocp_glitch =  SDVIO_OCP_GLITCH_800U | SDVIO_OCP_GLITCH_800U;
++	hw_param->ocp_glitch =  SD_OCP_GLITCH_100U | SDVIO_OCP_GLITCH_800U;
+ 	option->sd_400mA_ocp_thd = RTS5260_DVCC_OCP_THD_550;
+ 	option->sd_800mA_ocp_thd = RTS5260_DVCC_OCP_THD_970;
+ }
 -- 
-2.20.1
+2.17.1
 
