@@ -2,193 +2,145 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-1.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	MAILING_LIST_MULTI,SPF_PASS,URIBL_BLOCKED autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-5.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7B2EDC10F12
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:08:25 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 66251C10F12
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:08:30 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 452D120675
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:08:25 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 386682176F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 07:08:30 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731122AbfDQHIX convert rfc822-to-8bit (ORCPT
+        id S1731151AbfDQHI2 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 03:08:23 -0400
-Received: from relay4-d.mail.gandi.net ([217.70.183.196]:45777 "EHLO
-        relay4-d.mail.gandi.net" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1728261AbfDQHIX (ORCPT
-        <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 03:08:23 -0400
-X-Originating-IP: 90.88.160.238
-Received: from xps13 (aaubervilliers-681-1-42-238.w90-88.abo.wanadoo.fr [90.88.160.238])
-        (Authenticated sender: miquel.raynal@bootlin.com)
-        by relay4-d.mail.gandi.net (Postfix) with ESMTPSA id C2AD0E0014;
-        Wed, 17 Apr 2019 07:08:18 +0000 (UTC)
-Date:   Wed, 17 Apr 2019 09:08:17 +0200
-From:   Miquel Raynal <miquel.raynal@bootlin.com>
-To:     masonccyang@mxic.com.tw
-Cc:     "Boris Brezillon" <boris.brezillon@collabora.com>,
-        bbrezillon@kernel.org, computersforpeace@gmail.com,
-        dwmw2@infradead.org, juliensu@mxic.com.tw,
-        linux-kernel@vger.kernel.org, linux-mtd@lists.infradead.org,
-        marek.vasut@gmail.com, richard@nod.at, zhengxunli@mxic.com.tw
-Subject: Re: [PATCH] mtd: rawnand: Add Macronix NAND read retry and
- randomizer support
-Message-ID: <20190417090817.7a0c4638@xps13>
-In-Reply-To: <OF84BD5411.301E92AC-ON482583DF.000CC3CC-482583DF.000F4920@mxic.com.tw>
-References: <1554780172-23111-1-git-send-email-masonccyang@mxic.com.tw>
-        <20190409090427.22de9917@collabora.com>
-        <OF6C97E4DE.45261545-ON482583D7.00340468-482583D7.0034B3FE@mxic.com.tw>
-        <20190409114701.744c2c8c@collabora.com>
-        <OF9601E14B.A48284C4-ON482583D8.0005E3EB-482583D8.0006CC14@mxic.com.tw>
-        <20190410092258.332ef399@collabora.com>
-        <OF071D3608.9D6D2523-ON482583D9.00173F52-482583D9.0018188C@mxic.com.tw>
-        <20190411085353.4c1af008@collabora.com>
-        <OF34672B6F.AACFE22C-ON482583D9.00335814-482583D9.0033A673@mxic.com.tw>
-        <20190411112943.1fecfa69@collabora.com>
-        <OF84BD5411.301E92AC-ON482583DF.000CC3CC-482583DF.000F4920@mxic.com.tw>
-Organization: Bootlin
-X-Mailer: Claws Mail 3.17.1 (GTK+ 2.24.32; x86_64-pc-linux-gnu)
+        Wed, 17 Apr 2019 03:08:28 -0400
+Received: from mx1.redhat.com ([209.132.183.28]:35472 "EHLO mx1.redhat.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1728261AbfDQHI2 (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 03:08:28 -0400
+Received: from smtp.corp.redhat.com (int-mx07.intmail.prod.int.phx2.redhat.com [10.5.11.22])
+        (using TLSv1.2 with cipher AECDH-AES256-SHA (256/256 bits))
+        (No client certificate requested)
+        by mx1.redhat.com (Postfix) with ESMTPS id AA8BD3199362;
+        Wed, 17 Apr 2019 07:08:27 +0000 (UTC)
+Received: from dhcp-128-65.nay.redhat.com (ovpn-12-44.pek2.redhat.com [10.72.12.44])
+        by smtp.corp.redhat.com (Postfix) with ESMTPS id 738C61001DF3;
+        Wed, 17 Apr 2019 07:08:22 +0000 (UTC)
+Date:   Wed, 17 Apr 2019 15:08:18 +0800
+From:   Dave Young <dyoung@redhat.com>
+To:     Kairui Song <kasong@redhat.com>
+Cc:     Borislav Petkov <bp@alien8.de>,
+        Junichi Nomura <j-nomura@ce.jp.nec.com>,
+        Chao Fan <fanc.fnst@cn.fujitsu.com>,
+        Baoquan He <bhe@redhat.com>, "x86@kernel.org" <x86@kernel.org>,
+        "kexec@lists.infradead.org" <kexec@lists.infradead.org>,
+        "linux-kernel@vger.kernel.org" <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH] x86/boot: Use efi_setup_data for searching RSDP on
+ kexec-ed kernels
+Message-ID: <20190417070818.GE8411@dhcp-128-65.nay.redhat.com>
+References: <20190415090717.GA29317@zn.tnic>
+ <20190415102525.GB29317@zn.tnic>
+ <23309b73-d135-a207-564b-6003cee39184@ce.jp.nec.com>
+ <20190416094024.GE27892@zn.tnic>
+ <20190416095209.GG27892@zn.tnic>
+ <20190416114133.GA7541@dhcp-128-65.nay.redhat.com>
+ <20190416132253.GE31772@zn.tnic>
+ <20190417013838.GA8411@dhcp-128-65.nay.redhat.com>
+ <20190417045447.GB8411@dhcp-128-65.nay.redhat.com>
+ <CACPcB9cf0dtXFF+kpzBYXm3nvvG3uPDf81P1fa19+D37H9BaEg@mail.gmail.com>
 MIME-Version: 1.0
-Content-Type: text/plain; charset=UTF-8
-Content-Transfer-Encoding: 8BIT
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <CACPcB9cf0dtXFF+kpzBYXm3nvvG3uPDf81P1fa19+D37H9BaEg@mail.gmail.com>
+User-Agent: Mutt/1.11.3 (2019-02-01)
+X-Scanned-By: MIMEDefang 2.84 on 10.5.11.22
+X-Greylist: Sender IP whitelisted, not delayed by milter-greylist-4.5.16 (mx1.redhat.com [10.5.110.41]); Wed, 17 Apr 2019 07:08:27 +0000 (UTC)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Mason,
-
-masonccyang@mxic.com.tw wrote on Wed, 17 Apr 2019 10:46:57 +0800:
-
-> Hi Boris,
->  
->  
-> > > > > > > > Subject
-> > > > > > > > 
-> > > > > > > > Re: [PATCH] mtd: rawnand: Add Macronix NAND read retry and   
-> > > > > randomizer   
-> > > > > > > support   
-> > > > > > > > 
-> > > > > > > > On Tue, 9 Apr 2019 17:35:39 +0800
-> > > > > > > > masonccyang@mxic.com.tw wrote:
-> > > > > > > >   
-> > > > > > > > > > > +
-> > > > > > > > > > > +static const struct kobj_attribute sysfs_mxic_nand =
-> > > > > > > > > > > +   __ATTR(nand_random, S_IRUGO | S_IWUSR,
-> > > > > > > > > > > +          mxic_nand_rand_type_show,
-> > > > > > > > > > > +          mxic_nand_rand_type_store);   
-> > > > > > > > > > 
-> > > > > > > > > > No, we don't want to expose that through a sysfs file,   
-> > > > > especially   
-> > > > > > > since   
-> > > > > > > > > > changing the randomizer config means making the NAND   
-> > > unreadable   
-> > > > > for   
-> > > > > > > > > > those that have used it before the change.
-> > > > > > > > > >   
-> > > > > > > > > 
-> > > > > > > > > Our on-die randomizer is still readable from user after   
-> the 
-> > > > > function   
-> > > > > > > > > is enabled.   
-> > > > > > > > 
-> > > > > > > > You mean the memory is still readable no matter the   
-> randomizer 
-> > > > > state.   
-> > > > > > > > Not sure how that's possible, but okay.
-> > > > > > > >   
-> > > > > > > > > This randomizer is just like a internal memory cell 
-> > > > > > > > > reliability enhanced.   
-> > > > > > > > 
-> > > > > > > > Why don't you enable it by default then?   
-> > > > > > > 
-> > > > > > > The penalty of randomizer is read/write performance down.
-> > > > > > > i.e,. tPROG 300 us to 340 us (randomizer enable)
-> > > > > > > therefore, disable it by default.   
-> > > > > > 
-> > > > > > I'm a bit puzzled. On the NAND I've seen that required data
-> > > > > > randomization it's not something you'd want to disable as this   
-> > > implied  
-> > > > > > poor data retention. What's the use case here? Are we talking   
-> about 
-> > > SLC  
-> > > > > > or MLC NANDs? Should we enable this feature once we start seeing   
->  
-> > > that  
-> > > > > > the NAND starts being less reliable (basically when read-retry   
-> > > happens  
-> > > > > > more often)? I really think this is something you should decide    
+On 04/17/19 at 02:00pm, Kairui Song wrote:
+> On Wed, Apr 17, 2019 at 12:57 PM Dave Young <dyoung@redhat.com> wrote:
+> >
+> > On 04/17/19 at 09:38am, Dave Young wrote:
+> > > On 04/16/19 at 03:22pm, Borislav Petkov wrote:
+> > > > On Tue, Apr 16, 2019 at 07:41:33PM +0800, Dave Young wrote:
+> > > > > On 04/16/19 at 11:52am, Borislav Petkov wrote:
+> > > > > > I'll queue the below in the next days if there are no more complaints:
+> > > > >
+> > > > > As for the kexec breakage, even with the V3 patch, kexec still hangs on
+> > > > > a Lenovo T420 laptop.  Kairui also reproduced the problem. So can we
+> > > > > wait a few days see if we can make some progress to find the cause?
+> > > >
+> > > > How is applying this patch going to change anything?
+> > > >
+> > > > I was told that the breakage is there even without it...
+> > >
+> > > Without this patch, the bug happens in the efi_get_rsdp.. function, this
+> > > patch tries to fix that by adding kexec_get.. but the new introduced
+> > > kexec_* function does not work on some laptops, so it is not a 100% good
+> > > fix, I hoped we can get it working for all known issues.  But if we can
+> > > not do it eg. within one week we can go with this version and leave the
+> > > laptop issue as a known issue.
+> > >
+> >
+> > Latest debugging status:
+> >
+> > Kexec boot works with commenting out some code like below, so the guid
+> > cmp (memcmp) caused a system reset), still need to find out why:
+> >
+> > diff --git a/arch/x86/boot/compressed/acpi.c b/arch/x86/boot/compressed/acpi.c
+> > index d9f9abd63c68..13e7a23ae94c 100644
+> > --- a/arch/x86/boot/compressed/acpi.c
+> > +++ b/arch/x86/boot/compressed/acpi.c
+> > @@ -95,10 +95,12 @@ __efi_get_rsdp_addr(unsigned long config_tables, unsigned int nr_tables,
+> >                         table = tbl->table;
+> >                 }
+> >
+> > +/*
+> >                 if (!(efi_guidcmp(guid, ACPI_TABLE_GUID)))
+> >                         rsdp_addr = table;
+> >                 else if (!(efi_guidcmp(guid, ACPI_20_TABLE_GUID)))
+> >                         return table;
+> > +*/
+> >         }
+> >
+> >         return rsdp_addr;
+> > @@ -291,9 +293,10 @@ acpi_physical_address get_rsdp_addr(void)
+> >         if (!pa)
+> >                 pa = kexec_get_rsdp_addr();
+> >
+> > +/*
+> >         if (!pa)
+> >                 pa = efi_get_rsdp_addr();
+> > -
+> > +*/
+> >         if (!pa)
+> >                 pa = bios_get_rsdp_addr();
+> >
+> >
 > 
-> > > kernel  
-> > > > > > side, because users have no clue when it's appropriate to switch   
->  
-> > > this  
-> > > > > > feature on/off.
-> > > > > >   
-> > > > > 
-> > > > > It's SLC NAND and seems to has nothing to do with read-retry   
-> happens.
-> > > > > later, I will get more information for your concerns.   
-> > > > 
-> > > > Well, this feature is optional, and can be enabled to improve
-> > > > reliability. Sounds like a good reason to enable it when your NAND
-> > > > device starts showing reliability issues, and the number of   
-> read_retry
-> > > > attempts reflects the wear level pretty well. Alternatively, you   
-> could
-> > > > use the number of bitflips, but, in any case, don't expect the user   
-> to
-> > > > take this decision, because almost nobody knows what the randomizer
-> > > > is needed for.
-> > > >   
-> > > > >   
-> > > > > > >   
-> > > > > > > >   
-> > > > > > > > > It could be enable at any time with OTP bit function and   
-> > > that's   
-> > > > > why   
-> > > > > > > > > we patch it by sys-fs.   
-> > > > > > > > 
-> > > > > > > > Sorry, but that's not a good reason to expose that through   
-> > > sysfs.   
-> > > > > > > 
-> > > > > > > Any good way to expose randomizer function for user ?   
-> > > > > > 
-> > > > > > Don't expose it :P.   
-> > > > > 
-> > > > > oh, okay, I will remove sys-fs randomizer.
-> > > > > 
-> > > > > Is it OK to keep set/get features for randomizer ?   
-> > > > 
-> > > > I don't think it's a good idea to have dead code, so no. But I'm   
-> pretty
-> > > > sure we'll find a way to use/expose this feature.   
-> > > 
-> > > okay, great!
-> > > Looking forward to hearing this feature use/expose.  
-> > 
-> > But for that to happen we are waiting for inputs about when this is
-> > supposed to be used...  
+> Hi Dave, for this case I think it's just because GCC will found the
+> loop does nothing, and optimize out the whole loop in
+> __efi_get_rsdp_addr and will no longer read the actual nr_table value.
 > 
+> I can fix the boot error on T420 with your patch, but if I add
+> anything, like a hardcode value assignment with the right value for
+> acpi_rsdp in the loop, it will reset the machine. But set acpi_rsdp
+> with a right initial value out side the loop works fine.
+> If the loop condition is false, then there should be no difference
+> between just comment out the line you mentioned and add an assignment.
+> Else it just assign the value multiple times, not very reasonable but
+> shouldn't fail.
 > 
-> The main reason to disable Randomizer in default is
-> NOP = 4 (default) change to NOP = 1 (Randomizer enable), 
-> NOP: number of partial program cycles in same page
+> And, I inspected the generated ASM code also suggest the same thing.
+> So still, access the systab memory is the cause of the system reset on
+> certain machines.
 
-I am not sure to understand, is this related to what we call 'subpages'?
+Makse sense, my previous debug also point to some systab accessing.
+Probably some early pg table mess up.
 
-> 
-> Some OS file systems(or FTL) much concern NOP = 4 and 
-> any better way than sys-fs to enable it?
-
-sysfs entry => user action
-The user has absolutely no way to know when it is relevant to enable
-the randomizer. The kernel must be in charge of it. So the question is:
-when is it relevant to enable the randomizer? What criteria? What
-threshold?
-
-
-Thanks,
-Miquèl
+Thanks
+Dave
