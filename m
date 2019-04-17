@@ -2,176 +2,230 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-4.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SPF_PASS autolearn=ham autolearn_force=no
-	version=3.4.0
+X-Spam-Status: No, score=-8.6 required=3.0 tests=DKIMWL_WL_MED,DKIM_SIGNED,
+	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,
+	SPF_PASS,USER_IN_DEF_DKIM_WL autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id E760CC282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 23:05:30 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id A4097C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 23:05:39 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id BF83E2183F
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 23:05:30 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 4EF532183F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 23:05:39 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (2048-bit key) header.d=google.com header.i=@google.com header.b="Lm6m18D7"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387671AbfDQXF3 (ORCPT
+        id S2387729AbfDQXFh (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 19:05:29 -0400
-Received: from Galois.linutronix.de ([146.0.238.70]:59747 "EHLO
-        Galois.linutronix.de" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1729079AbfDQXF3 (ORCPT
+        Wed, 17 Apr 2019 19:05:37 -0400
+Received: from mail-lf1-f68.google.com ([209.85.167.68]:42672 "EHLO
+        mail-lf1-f68.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S2387678AbfDQXFg (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 19:05:29 -0400
-Received: from pd9ef12d2.dip0.t-ipconnect.de ([217.239.18.210] helo=nanos)
-        by Galois.linutronix.de with esmtpsa (TLS1.2:DHE_RSA_AES_256_CBC_SHA256:256)
-        (Exim 4.80)
-        (envelope-from <tglx@linutronix.de>)
-        id 1hGtc5-00085l-Rr; Thu, 18 Apr 2019 01:05:10 +0200
-Date:   Thu, 18 Apr 2019 01:05:08 +0200 (CEST)
-From:   Thomas Gleixner <tglx@linutronix.de>
-To:     Fenghua Yu <fenghua.yu@intel.com>
-cc:     Ingo Molnar <mingo@redhat.com>, Borislav Petkov <bp@alien8.de>,
-        H Peter Anvin <hpa@zytor.com>,
-        Paolo Bonzini <pbonzini@redhat.com>,
-        Dave Hansen <dave.hansen@intel.com>,
-        Ashok Raj <ashok.raj@intel.com>,
-        Peter Zijlstra <peterz@infradead.org>,
-        Ravi V Shankar <ravi.v.shankar@intel.com>,
-        Xiaoyao Li <xiaoyao.li@intel.com>,
-        Christopherson Sean J <sean.j.christopherson@intel.com>,
-        Kalle Valo <kvalo@codeaurora.org>,
-        Michael Chan <michael.chan@broadcom.com>,
-        linux-kernel <linux-kernel@vger.kernel.org>,
-        x86 <x86@kernel.org>, kvm@vger.kernel.org,
-        netdev@vger.kernel.org, linux-wireless@vger.kernel.org
-Subject: Re: [PATCH v7 17/21] x86/clearcpuid: Support multiple clearcpuid
- options
-In-Reply-To: <1555536851-17462-18-git-send-email-fenghua.yu@intel.com>
-Message-ID: <alpine.DEB.2.21.1904180055160.3174@nanos.tec.linutronix.de>
-References: <1555536851-17462-1-git-send-email-fenghua.yu@intel.com> <1555536851-17462-18-git-send-email-fenghua.yu@intel.com>
-User-Agent: Alpine 2.21 (DEB 202 2017-01-01)
+        Wed, 17 Apr 2019 19:05:36 -0400
+Received: by mail-lf1-f68.google.com with SMTP id w23so68307lfc.9
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 16:05:34 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=google.com; s=20161025;
+        h=mime-version:references:in-reply-to:from:date:message-id:subject:to
+         :cc;
+        bh=lsbUj33t0gvsr22SOjy5oOx+euNA0zyjnMbm0MoFT28=;
+        b=Lm6m18D7DDLxGW4pE/oVKUWBxtkwVpAhoiG0u+nt2CWjHjnCRil59cTQhP7ctWxWfB
+         llpokaf87CTT/uuVnY2BfjPG5EMdVTf6PynjKbcGVLLJmRA5Am1sPG+vL9CrhOjEATHF
+         upZAjB4Cy8U+D1qKKaVLfffEDCi9sl9MPO0kXlaxzYSsME79qLHkjuelCL4qbh5yzo1r
+         shMoJ27CpZN1unYrM/1yWDBOHRYEYcri09mleCpaiL9ODAMEjFeMISI/j1UsY0DlZ9Uu
+         pQBq+RmtKdZjyq8Xc+8CEDSh+YUz7AzGfOTrySfiw5uc/UQAPBL3qI89MUsjyccCN1YR
+         oGvA==
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=lsbUj33t0gvsr22SOjy5oOx+euNA0zyjnMbm0MoFT28=;
+        b=qW/jvG1EBnmx6W6J2xIOoPRtjzUPq7Jj1x3/ic4nxS7qrKDAHMnePcOD49tnMeu52O
+         Wn6EBCyyStiIvh9zcEUR8tuGr7HVzMcoy2DG9z0zfB2TolwYHNdQWKyOMVBDc7NP2EA2
+         dObVFgHN8NWvP5Ze5qXcVHhILFbbmTFIEX36CmwRWkwtyhrUvD4vXaWGoGX5kCe6RP/7
+         5wuFYVUCMBGUsSTPyCNcvOGU/7x+RmB10zNPl7fio/Bj6wWYl9st0/XDC+s04wOKjwec
+         +t/d17SnjRTaioM6QSbqeP+VQA8lNaKNG6mlHntQ1Vc6FUVQlL1ihGURArbboHDnGMTQ
+         jdbA==
+X-Gm-Message-State: APjAAAWAci3FgE1SAMg0mOMzLKUKD5qjUpXlCkiObmHEOQD/gk+pg+EQ
+        Z1upIhn2yWJoTmBfeFkgedlDNiRvY2kuMntq96HldQ==
+X-Google-Smtp-Source: APXvYqxqkq3F6+1EvDLG61w59or1bkG0FDpMZ/OUVPo7BaZGGzGboJAexHvSYCvAxGx4PzKyDNrJh0jxAJjgtoqa7G4=
+X-Received: by 2002:a19:e619:: with SMTP id d25mr21178562lfh.66.1555542333025;
+ Wed, 17 Apr 2019 16:05:33 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=US-ASCII
-X-Linutronix-Spam-Score: -1.0
-X-Linutronix-Spam-Level: -
-X-Linutronix-Spam-Status: No , -1.0 points, 5.0 required,  ALL_TRUSTED=-1,SHORTCIRCUIT=-0.0001
+References: <20190313222124.229371-1-rajatja@google.com> <20190411003738.55073-1-rajatja@google.com>
+ <20190411003738.55073-2-rajatja@google.com> <CAHp75Vd9xTB90GMra10VxQkR-fVY7NxxY_w6gGEGvD0XOF_xSA@mail.gmail.com>
+In-Reply-To: <CAHp75Vd9xTB90GMra10VxQkR-fVY7NxxY_w6gGEGvD0XOF_xSA@mail.gmail.com>
+From:   Rajat Jain <rajatja@google.com>
+Date:   Wed, 17 Apr 2019 16:04:56 -0700
+Message-ID: <CACK8Z6G=vT_tk3W95DJVg12VsH9d0smAKpCq3_oUOzgBr3nMvQ@mail.gmail.com>
+Subject: Re: [PATCH v5 2/3] platform/x86: intel_pmc_core: Allow to dump debug
+ registers on S0ix failure
+To:     Andy Shevchenko <andy.shevchenko@gmail.com>
+Cc:     Rajneesh Bhardwaj <rajneesh.bhardwaj@intel.com>,
+        Vishwanath Somayaji <vishwanath.somayaji@intel.com>,
+        Darren Hart <dvhart@infradead.org>,
+        Andy Shevchenko <andy@infradead.org>,
+        Platform Driver <platform-driver-x86@vger.kernel.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        Rafael J Wysocki <rafael.j.wysocki@intel.com>,
+        Srinivas Pandruvada <srinivas.pandruvada@linux.intel.com>,
+        Furquan Shaikh <furquan@google.com>,
+        Evan Green <evgreen@google.com>,
+        Rajat Jain <rajatxjain@gmail.com>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-On Wed, 17 Apr 2019, Fenghua Yu wrote:
->  int cmdline_find_option_bool(const char *cmdline_ptr, const char *option);
->  int cmdline_find_option(const char *cmdline_ptr, const char *option,
->  			char *buffer, int bufsize);
-> +int cmdline_find_option_in_range(const char *cmdline_ptr, int cmdline_size,
-> +				 const char *option, char *buffer, int bufsize,
-> +				 char **arg_pos);
->  
->  #endif /* _ASM_X86_CMDLINE_H */
-> diff --git a/arch/x86/kernel/fpu/init.c b/arch/x86/kernel/fpu/init.c
-> index 6abd83572b01..88bbba7ee96a 100644
-> --- a/arch/x86/kernel/fpu/init.c
-> +++ b/arch/x86/kernel/fpu/init.c
-> @@ -243,16 +243,31 @@ static void __init fpu__init_system_ctx_switch(void)
->  	WARN_ON_FPU(current->thread.fpu.initialized);
->  }
->  
-> +static void __init clear_cpuid(void)
-> +{
-> +	char arg[32], *argptr, *option_pos, clearcpuid_option[] = "clearcpuid";
-> +	int bit, cmdline_size;
-> +
-> +	/* Find each option in boot_command_line and clear specified cpu cap. */
-> +	cmdline_size = COMMAND_LINE_SIZE;
-> +	while (cmdline_find_option_in_range(boot_command_line, cmdline_size,
-> +					    clearcpuid_option, arg,
-> +					    sizeof(arg), &option_pos) >= 0) {
-> +		/* Chang command line range for next search. */
+On Thu, Apr 11, 2019 at 6:40 AM Andy Shevchenko
+<andy.shevchenko@gmail.com> wrote:
+>
+> On Thu, Apr 11, 2019 at 3:38 AM Rajat Jain <rajatja@google.com> wrote:
+> >
+> > Add a module parameter which when enabled, will check on resume, if the
+> > last S0ix attempt was successful. If not, the driver would warn and provide
+> > helpful debug information (which gets latched during the failed suspend
+> > attempt) to debug the S0ix failure.
+> >
+> > This information is very useful to debug S0ix failures. Specially since
+> > the latched debug information will be lost (over-written) if the system
+> > attempts to go into runtime (or imminent) S0ix again after that failed
+> > suspend attempt.
+>
+> > +static int pmc_core_suspend(struct device *dev)
+> > +{
+> > +       struct pmc_dev *pmcdev = dev_get_drvdata(dev);
+> > +
+> > +       pmcdev->check_counters = false;
+> > +
+> > +       /* No warnings on S0ix failures */
+> > +       if (!warn_on_s0ix_failures)
+> > +               return 0;
+> > +
+> > +       /* Check if the syspend will actually use S0ix */
+> > +       if (pm_suspend_via_firmware())
+> > +               return 0;
+> > +
+> > +       /* Save PC10 and S0ix residency for checking later */
+>
+> > +       if (!rdmsrl_safe(MSR_PKG_C10_RESIDENCY, &pmcdev->pc10_counter) &&
+> > +           !pmc_core_dev_state_get(pmcdev, &pmcdev->s0ix_counter))
+>
+> Split it.
 
-Chang?
+done
 
-> +		cmdline_size = option_pos - boot_command_line + 1;
-> +		argptr = arg;
-> +		if (get_option(&argptr, &bit) &&
-> +		    bit >= 0 && bit < NCAPINTS * 32)
-> +			setup_clear_cpu_cap(bit);
-> +	}
-> +}
-> +
->  /*
->   * We parse fpu parameters early because fpu__init_system() is executed
->   * before parse_early_param().
->   */
->  static void __init fpu__init_parse_early_param(void)
->  {
-> -	char arg[32];
-> -	char *argptr = arg;
-> -	int bit;
-> -
->  	if (cmdline_find_option_bool(boot_command_line, "no387"))
->  		setup_clear_cpu_cap(X86_FEATURE_FPU);
->  
-> @@ -271,12 +286,7 @@ static void __init fpu__init_parse_early_param(void)
->  	if (cmdline_find_option_bool(boot_command_line, "noxsaves"))
->  		setup_clear_cpu_cap(X86_FEATURE_XSAVES);
->  
-> -	if (cmdline_find_option(boot_command_line, "clearcpuid", arg,
-> -				sizeof(arg)) &&
-> -	    get_option(&argptr, &bit) &&
-> -	    bit >= 0 &&
-> -	    bit < NCAPINTS * 32)
-> -		setup_clear_cpu_cap(bit);
-> +	clear_cpuid();
+>
+> > +               pmcdev->check_counters = true;
+> > +
+> > +       return 0;
+> > +}
+> > +
+> > +static inline bool pmc_core_is_pc10_failed(struct pmc_dev *pmcdev)
+> > +{
+> > +       u64 pc10_counter;
+> > +
+> > +       if (!rdmsrl_safe(MSR_PKG_C10_RESIDENCY, &pc10_counter) &&
+> > +           pc10_counter == pmcdev->pc10_counter)
+> > +               return true;
+>
+> Split this as well.
 
-I have no idea how that clearcpuid evaluation ended up in the FPU code, but
-it does not belong here at all as it can turn off arbitrary cpuid bits.
+done
+>
+> > +
+> > +       return false;
+> > +}
+> > +
+> > +static inline bool pmc_core_is_s0ix_failed(struct pmc_dev *pmcdev)
+> > +{
+> > +       u64 s0ix_counter;
+> > +
+> > +       if (!pmc_core_dev_state_get(pmcdev, &s0ix_counter) &&
+> > +           s0ix_counter == pmcdev->s0ix_counter)
+> > +               return true;
+>
+> And this.
 
-Please move this out first into a more sensible place in kernel/cpu/
+done
+>
+> > +
+> > +       return false;
+> > +}
+> > +
+> > +static int pmc_core_resume(struct device *dev)
+> > +{
+> > +       struct pmc_dev *pmcdev = dev_get_drvdata(dev);
+> > +
+> > +       if (!pmcdev->check_counters)
+> > +               return 0;
+> > +
+> > +       if (pmc_core_is_pc10_failed(pmcdev)) {
+> > +               dev_info(dev, "PC10 entry had failed (PC10 cnt=0x%llx)\n",
+> > +                        pmcdev->pc10_counter);
+> > +       } else if (pmc_core_is_s0ix_failed(pmcdev)) {
+>
+> > +
+>
+> Redundant.
 
->  }
->  
->  /*
-> diff --git a/arch/x86/lib/cmdline.c b/arch/x86/lib/cmdline.c
-> index 3261abb21ef4..9cf1a0773877 100644
-> --- a/arch/x86/lib/cmdline.c
-> +++ b/arch/x86/lib/cmdline.c
-> @@ -114,13 +114,15 @@ __cmdline_find_option_bool(const char *cmdline, int max_cmdline_size,
->   * @option: option string to look for
->   * @buffer: memory buffer to return the option argument
->   * @bufsize: size of the supplied memory buffer
-> + * @option_pos: pointer to the option if found
->   *
->   * Returns the length of the argument (regardless of if it was
->   * truncated to fit in the buffer), or -1 on not found.
->   */
->  static int
->  __cmdline_find_option(const char *cmdline, int max_cmdline_size,
-> -		      const char *option, char *buffer, int bufsize)
-> +		      const char *option, char *buffer, int bufsize,
-> +		      char **arg_pos)
+I did not quite understand the comment, but I have restructured this
+and I think this concerned will be addressed.
+
+>
+> > +               const struct pmc_bit_map **maps = pmcdev->map->slps0_dbg_maps;
+> > +               const struct pmc_bit_map *map;
+> > +               int offset = pmcdev->map->slps0_dbg_offset;
+> > +               u32 data;
+> > +
+> > +               dev_warn(dev, "S0ix entry had failed (S0ix cnt=%llu)\n",
+> > +                        pmcdev->s0ix_counter);
+> > +               while (*maps) {
+> > +                       map = *maps;
+> > +                       data = pmc_core_reg_read(pmcdev, offset);
+> > +                       offset += 4;
+> > +                       while (map->name) {
+> > +                               dev_warn(dev, "SLP_S0_DBG: %-32s\tState: %s\n",
+> > +                                        map->name,
+> > +                                        data & map->bit_mask ? "Yes" : "No");
+>
+> > +                               ++map;
+>
+> map++;
+
+done
+>
+> > +                       }
+> > +                       ++maps;
+>
+> maps++;
+
+done
+>
+> > +               }
+>
+> This is quite noisy. You need to print only what is important. I don't
+> think polluting dmesg with piles of these kind of messages is a good
+> idea.
+> Also, it is more likely should be done on debug level (except may be
+> one or two messages with really important information).
+
+Changed it to dev_dbg in my latest patch. I do not know if a subset of
+this information will be helpful to Intel to debug S0ix failures. This
+is something I'd like to defer to Rajneesh. I'd be happy to cut it
+short if it can still get the info Intel needs to debug S0ix failures.
 
 
-Bah. For a silly per cpu variable you add a separate patch, but here you do
-2 things in one go:
 
-  1) Change the parser
 
-  2) Change the call site.
-
-No, you know exactly how this should be done.
-
->  {
->  	char c;
->  	int pos = 0, len = -1;
-> @@ -164,6 +166,9 @@ __cmdline_find_option(const char *cmdline, int max_cmdline_size,
->  				len = 0;
->  				bufptr = buffer;
->  				state = st_bufcpy;
-> +				if (arg_pos)
-> +					*arg_pos = (char *)cmdline -
-> +						   strlen(option) - 1;
-
-https://marc.info/?l=linux-kernel&m=148467980905537&w=2
-
-Thanks,
-
-	tglx
+>
+> > +       }
+> > +       return 0;
+> > +}
+> > +
+> > +#endif
+>
+> --
+> With Best Regards,
+> Andy Shevchenko
