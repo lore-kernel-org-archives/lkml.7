@@ -2,111 +2,263 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-12.1 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no
-	version=3.4.0
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 0521DC282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 19:24:51 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 1CB9BC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 19:25:43 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id CA08E2173C
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 19:24:50 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id D4DCE2073F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 19:25:42 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=linaro.org header.i=@linaro.org header.b="FNfJ5k9a"
+	dkim=fail reason="key not found in DNS" (0-bit key) header.d=zytor.com header.i=@zytor.com header.b="ZTGcidZR"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733084AbfDQTYt (ORCPT
+        id S1733238AbfDQTZl (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 15:24:49 -0400
-Received: from mail-wr1-f41.google.com ([209.85.221.41]:45477 "EHLO
-        mail-wr1-f41.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730037AbfDQTYs (ORCPT
+        Wed, 17 Apr 2019 15:25:41 -0400
+Received: from terminus.zytor.com ([198.137.202.136]:32997 "EHLO
+        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1730037AbfDQTZl (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 15:24:48 -0400
-Received: by mail-wr1-f41.google.com with SMTP id s15so33385107wra.12
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 12:24:47 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=linaro.org; s=google;
-        h=from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xbkDshoRwG+I0w+DmgS1Lh94U4IFVKrRkWhOXAIbiIg=;
-        b=FNfJ5k9aN8Zj682O9MfPTUexqXnljpSE+IcdsbyHR8l2Bnzxzvg4S8Uo5wSntA01mS
-         G2q1ycJGyJz7dZR5V7jZJtnYFQbFl4KGrsKqew9O3m7FJpxIKfBxQLMLwj80+I+GxCK8
-         Z3cRfzvNHpsG8qtuH5QkWb0fCFOOm6rxampqAk+GWH7ioBIzn4x4H16z10fV6jLIP8hk
-         23AAkndgENtkGk3VL4KvGyn4ROjQ5IBnxpaGopwqSQLaXVjbZB2LzPxdC42JyHCnE12o
-         UFF5qnlNr4nXFQQQUqGNQpoUBI+x+fSLLUvkCgsfMPXC+DRiY//E2uxCVBySEu7a+Y/y
-         nKrg==
-X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=1e100.net; s=20161025;
-        h=x-gm-message-state:from:to:cc:subject:date:message-id:mime-version
-         :content-transfer-encoding;
-        bh=xbkDshoRwG+I0w+DmgS1Lh94U4IFVKrRkWhOXAIbiIg=;
-        b=pPr3LmUzJjEBsnT40FIrXE4g0llQZZ8lH0XWTKLi8gO9bksp1gUNZz4xzF+i9f1Uhw
-         op9WKWzTGu9mt4Kyd5aM6K0/74BFQsYRayvT49HFdJGP/nKBfc2HNJJ7lsrR+xxLEGt7
-         OpPHMEBzLnaSVaatVYGkKvQOViXlXX29ZcK38wUIaTY2TfDCkSjqBTIHX5mW/J1AK+g0
-         dGPyd+QYE1ISoayT9ldItO97Gw16cy7rMR6Ec0WsgiwRH3MQeIcZ0xVwwNO++j4Ss/la
-         6uqeC0KNNULcWwcnSOfOey3/zDGUSMwr1uo4f7xlHOkXiizFeXxYJFgEWMcG66KEeaOI
-         X3/A==
-X-Gm-Message-State: APjAAAXgh+DRrCnRhjmjoup52coFt+oqrdQ40G1+qY6pB7isj8b604En
-        5jUonEvu+qMAsHj6UP77NlDFOg==
-X-Google-Smtp-Source: APXvYqx+6GfTYL6uoPD6e0+k9tHnAgsXxxt339BV3J+oJyx4/Zgk7ewFPDr1b1fgk4dzJpuEyADWHg==
-X-Received: by 2002:adf:f390:: with SMTP id m16mr4529765wro.25.1555529086982;
-        Wed, 17 Apr 2019 12:24:46 -0700 (PDT)
-Received: from localhost.localdomain (200.red-83-34-200.dynamicip.rima-tde.net. [83.34.200.200])
-        by smtp.gmail.com with ESMTPSA id y9sm95076745wrn.18.2019.04.17.12.24.45
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-SHA bits=128/128);
-        Wed, 17 Apr 2019 12:24:46 -0700 (PDT)
-From:   Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
-To:     jorge.ramirez-ortiz@linaro.org, lgirdwood@gmail.com,
-        broonie@kernel.org
-Cc:     linux-kernel@vger.kernel.org, linux-arm-msm@vger.kernel.org,
-        khasim.mohammed@linaro.org
-Subject: [PATCH v2] regulator: core: do not report EPROBE_DEFER as error but as debug
-Date:   Wed, 17 Apr 2019 21:24:43 +0200
-Message-Id: <20190417192443.6501-1-jorge.ramirez-ortiz@linaro.org>
-X-Mailer: git-send-email 2.21.0
+        Wed, 17 Apr 2019 15:25:41 -0400
+Received: from terminus.zytor.com (localhost [127.0.0.1])
+        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3HJPPvK4044506
+        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
+        Wed, 17 Apr 2019 12:25:25 -0700
+DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3HJPPvK4044506
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
+        s=2019041745; t=1555529126;
+        bh=TM1oKx9qk4qpVXLvV6gzo9mEz2XbvXLbeuAMYEGd0xQ=;
+        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
+        b=ZTGcidZRpHpZfNsfPvU9APkhkrzOyEu0VPegSNBYumQN4Ev0LmNYU4msLepyQ6L5P
+         bqGxbzOhwDdROQouD2ArOQIl50OkvMeVbdnDuDXHEJCpsANQO1eI9FQkpuuYGiJcH5
+         jmXShO/ZusKSQ7tenploCats4mgV9e4noyc23MfwaPVmPZvdPSxI52ytgs+EUtYmaZ
+         oLWHdRYI3n9jWyLVE1oXZai0IaryWvHJFcA6yihHwP+0jLLfjbXzWhlg+XB38Cgu88
+         7JP4+GvcHpYiYG+Z2YTBZUuNRvq2A8OdA7Ioka+hiixt+PgppaiQg8/025/qRHu9dq
+         KAq8oXzuJ6SHg==
+Received: (from tipbot@localhost)
+        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3HJPPUO4044502;
+        Wed, 17 Apr 2019 12:25:25 -0700
+Date:   Wed, 17 Apr 2019 12:25:25 -0700
+X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
+From:   tip-bot for Xiaochen Shen <tipbot@zytor.com>
+Message-ID: <tip-8cea8808525eb3a36f3d54412843948f169d6a6e@git.kernel.org>
+Cc:     fenghua.yu@intel.com, mingo@kernel.org, mingo@redhat.com,
+        x86@kernel.org, reinette.chatre@intel.com, tony.luck@intel.com,
+        tglx@linutronix.de, hpa@zytor.com, linux-kernel@vger.kernel.org,
+        bp@suse.de, xiaochen.shen@intel.com
+Reply-To: mingo@redhat.com, fenghua.yu@intel.com, mingo@kernel.org,
+          x86@kernel.org, reinette.chatre@intel.com, hpa@zytor.com,
+          tglx@linutronix.de, tony.luck@intel.com, bp@suse.de,
+          linux-kernel@vger.kernel.org, xiaochen.shen@intel.com
+In-Reply-To: <1555499329-1170-2-git-send-email-xiaochen.shen@intel.com>
+References: <1555499329-1170-2-git-send-email-xiaochen.shen@intel.com>
+To:     linux-tip-commits@vger.kernel.org
+Subject: [tip:x86/cache] x86/resctrl: Move per RDT domain initialization to
+ a separate function
+Git-Commit-ID: 8cea8808525eb3a36f3d54412843948f169d6a6e
+X-Mailer: tip-git-log-daemon
+Robot-ID: <tip-bot.git.kernel.org>
+Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
+ these emails
 MIME-Version: 1.0
 Content-Transfer-Encoding: 8bit
+Content-Type: text/plain; charset=UTF-8
+Content-Disposition: inline
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Temporary failures to get a regulator (EPROBE_DEFER) should be logged
-as debug information instead of errors.
+Commit-ID:  8cea8808525eb3a36f3d54412843948f169d6a6e
+Gitweb:     https://git.kernel.org/tip/8cea8808525eb3a36f3d54412843948f169d6a6e
+Author:     Xiaochen Shen <xiaochen.shen@intel.com>
+AuthorDate: Wed, 17 Apr 2019 19:08:48 +0800
+Committer:  Borislav Petkov <bp@suse.de>
+CommitDate: Wed, 17 Apr 2019 21:03:38 +0200
 
-Signed-off-by: Jorge Ramirez-Ortiz <jorge.ramirez-ortiz@linaro.org>
+x86/resctrl: Move per RDT domain initialization to a separate function
+
+Carve out per rdt_domain initialization code from rdtgroup_init_alloc()
+into a separate function.
+
+No functional change, make the code more readable and save us at least
+two indentation levels.
+
+Signed-off-by: Xiaochen Shen <xiaochen.shen@intel.com>
+Signed-off-by: Borislav Petkov <bp@suse.de>
+Cc: Fenghua Yu <fenghua.yu@intel.com>
+Cc: "H. Peter Anvin" <hpa@zytor.com>
+Cc: Ingo Molnar <mingo@redhat.com>
+Cc: pei.p.jia@intel.com
+Cc: Reinette Chatre <reinette.chatre@intel.com>
+Cc: Thomas Gleixner <tglx@linutronix.de>
+Cc: Tony Luck <tony.luck@intel.com>
+Cc: x86-ml <x86@kernel.org>
+Link: https://lkml.kernel.org/r/1555499329-1170-2-git-send-email-xiaochen.shen@intel.com
 ---
- drivers/regulator/core.c | 9 +++++++--
- 1 file changed, 7 insertions(+), 2 deletions(-)
+ arch/x86/kernel/cpu/resctrl/rdtgroup.c | 131 ++++++++++++++++++---------------
+ 1 file changed, 72 insertions(+), 59 deletions(-)
 
-diff --git a/drivers/regulator/core.c b/drivers/regulator/core.c
-index 186a37675b50..a2725269a94a 100644
---- a/drivers/regulator/core.c
-+++ b/drivers/regulator/core.c
-@@ -4342,8 +4342,6 @@ int regulator_bulk_get(struct device *dev, int num_consumers,
- 						      consumers[i].supply);
- 		if (IS_ERR(consumers[i].consumer)) {
- 			ret = PTR_ERR(consumers[i].consumer);
--			dev_err(dev, "Failed to get supply '%s': %d\n",
--				consumers[i].supply, ret);
- 			consumers[i].consumer = NULL;
- 			goto err;
- 		}
-@@ -4352,6 +4350,13 @@ int regulator_bulk_get(struct device *dev, int num_consumers,
- 	return 0;
+diff --git a/arch/x86/kernel/cpu/resctrl/rdtgroup.c b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+index 399601eda8e4..2f7e35849527 100644
+--- a/arch/x86/kernel/cpu/resctrl/rdtgroup.c
++++ b/arch/x86/kernel/cpu/resctrl/rdtgroup.c
+@@ -2516,28 +2516,86 @@ static void cbm_ensure_valid(u32 *_val, struct rdt_resource *r)
+ 	bitmap_clear(val, zero_bit, cbm_len - zero_bit);
+ }
  
- err:
-+	if (ret != -EPROBE_DEFER)
-+		dev_err(dev, "Failed to get supply '%s': %d\n",
-+			consumers[i].supply, ret);
-+	else
-+		dev_dbg(dev, "Failed to get supply '%s', deferring\n",
-+			consumers[i].supply);
++/*
++ * Initialize cache resources per RDT domain
++ *
++ * Set the RDT domain up to start off with all usable allocations. That is,
++ * all shareable and unused bits. All-zero CBM is invalid.
++ */
++static int __init_one_rdt_domain(struct rdt_domain *d, struct rdt_resource *r,
++				 u32 closid)
++{
++	struct rdt_resource *r_cdp = NULL;
++	struct rdt_domain *d_cdp = NULL;
++	u32 used_b = 0, unused_b = 0;
++	unsigned long tmp_cbm;
++	enum rdtgrp_mode mode;
++	u32 peer_ctl, *ctrl;
++	int i;
 +
- 	while (--i >= 0)
- 		regulator_put(consumers[i].consumer);
++	rdt_cdp_peer_get(r, d, &r_cdp, &d_cdp);
++	d->have_new_ctrl = false;
++	d->new_ctrl = r->cache.shareable_bits;
++	used_b = r->cache.shareable_bits;
++	ctrl = d->ctrl_val;
++	for (i = 0; i < closids_supported(); i++, ctrl++) {
++		if (closid_allocated(i) && i != closid) {
++			mode = rdtgroup_mode_by_closid(i);
++			if (mode == RDT_MODE_PSEUDO_LOCKSETUP)
++				break;
++			/*
++			 * If CDP is active include peer domain's
++			 * usage to ensure there is no overlap
++			 * with an exclusive group.
++			 */
++			if (d_cdp)
++				peer_ctl = d_cdp->ctrl_val[i];
++			else
++				peer_ctl = 0;
++			used_b |= *ctrl | peer_ctl;
++			if (mode == RDT_MODE_SHAREABLE)
++				d->new_ctrl |= *ctrl | peer_ctl;
++		}
++	}
++	if (d->plr && d->plr->cbm > 0)
++		used_b |= d->plr->cbm;
++	unused_b = used_b ^ (BIT_MASK(r->cache.cbm_len) - 1);
++	unused_b &= BIT_MASK(r->cache.cbm_len) - 1;
++	d->new_ctrl |= unused_b;
++	/*
++	 * Force the initial CBM to be valid, user can
++	 * modify the CBM based on system availability.
++	 */
++	cbm_ensure_valid(&d->new_ctrl, r);
++	/*
++	 * Assign the u32 CBM to an unsigned long to ensure that
++	 * bitmap_weight() does not access out-of-bound memory.
++	 */
++	tmp_cbm = d->new_ctrl;
++	if (bitmap_weight(&tmp_cbm, r->cache.cbm_len) < r->cache.min_cbm_bits) {
++		rdt_last_cmd_printf("No space on %s:%d\n", r->name, d->id);
++		return -ENOSPC;
++	}
++	d->have_new_ctrl = true;
++
++	return 0;
++}
++
+ /**
+  * rdtgroup_init_alloc - Initialize the new RDT group's allocations
+  *
+  * A new RDT group is being created on an allocation capable (CAT)
+  * supporting system. Set this group up to start off with all usable
+- * allocations. That is, all shareable and unused bits.
++ * allocations.
+  *
+- * All-zero CBM is invalid. If there are no more shareable bits available
+- * on any domain then the entire allocation will fail.
++ * If there are no more shareable bits available on any domain then
++ * the entire allocation will fail.
+  */
+ static int rdtgroup_init_alloc(struct rdtgroup *rdtgrp)
+ {
+-	struct rdt_resource *r_cdp = NULL;
+-	struct rdt_domain *d_cdp = NULL;
+-	u32 used_b = 0, unused_b = 0;
+-	u32 closid = rdtgrp->closid;
+ 	struct rdt_resource *r;
+-	unsigned long tmp_cbm;
+-	enum rdtgrp_mode mode;
+ 	struct rdt_domain *d;
+-	u32 peer_ctl, *ctrl;
+-	int i, ret;
++	int ret;
  
--- 
-2.21.0
-
+ 	for_each_alloc_enabled_rdt_resource(r) {
+ 		/*
+@@ -2547,54 +2605,9 @@ static int rdtgroup_init_alloc(struct rdtgroup *rdtgrp)
+ 		if (r->rid == RDT_RESOURCE_MBA)
+ 			continue;
+ 		list_for_each_entry(d, &r->domains, list) {
+-			rdt_cdp_peer_get(r, d, &r_cdp, &d_cdp);
+-			d->have_new_ctrl = false;
+-			d->new_ctrl = r->cache.shareable_bits;
+-			used_b = r->cache.shareable_bits;
+-			ctrl = d->ctrl_val;
+-			for (i = 0; i < closids_supported(); i++, ctrl++) {
+-				if (closid_allocated(i) && i != closid) {
+-					mode = rdtgroup_mode_by_closid(i);
+-					if (mode == RDT_MODE_PSEUDO_LOCKSETUP)
+-						break;
+-					/*
+-					 * If CDP is active include peer
+-					 * domain's usage to ensure there
+-					 * is no overlap with an exclusive
+-					 * group.
+-					 */
+-					if (d_cdp)
+-						peer_ctl = d_cdp->ctrl_val[i];
+-					else
+-						peer_ctl = 0;
+-					used_b |= *ctrl | peer_ctl;
+-					if (mode == RDT_MODE_SHAREABLE)
+-						d->new_ctrl |= *ctrl | peer_ctl;
+-				}
+-			}
+-			if (d->plr && d->plr->cbm > 0)
+-				used_b |= d->plr->cbm;
+-			unused_b = used_b ^ (BIT_MASK(r->cache.cbm_len) - 1);
+-			unused_b &= BIT_MASK(r->cache.cbm_len) - 1;
+-			d->new_ctrl |= unused_b;
+-			/*
+-			 * Force the initial CBM to be valid, user can
+-			 * modify the CBM based on system availability.
+-			 */
+-			cbm_ensure_valid(&d->new_ctrl, r);
+-			/*
+-			 * Assign the u32 CBM to an unsigned long to ensure
+-			 * that bitmap_weight() does not access out-of-bound
+-			 * memory.
+-			 */
+-			tmp_cbm = d->new_ctrl;
+-			if (bitmap_weight(&tmp_cbm, r->cache.cbm_len) <
+-			    r->cache.min_cbm_bits) {
+-				rdt_last_cmd_printf("No space on %s:%d\n",
+-						    r->name, d->id);
+-				return -ENOSPC;
+-			}
+-			d->have_new_ctrl = true;
++			ret = __init_one_rdt_domain(d, r, rdtgrp->closid);
++			if (ret < 0)
++				return ret;
+ 		}
+ 	}
+ 
