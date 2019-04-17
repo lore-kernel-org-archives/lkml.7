@@ -2,213 +2,271 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-11.8 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
-	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED autolearn=ham
-	autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,URIBL_BLOCKED,USER_AGENT_MUTT autolearn=ham autolearn_force=no
+	version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3FD7BC282DA
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 4E93DC282DD
 	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:20:14 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id DD3E720872
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:20:11 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 20AC62177B
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 14:20:14 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=zytor.com header.i=@zytor.com header.b="cVNxR3Np"
+	dkim=fail reason="signature verification failed" (1024-bit key) header.d=ffwll.ch header.i=@ffwll.ch header.b="EvnrgSgw"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732487AbfDQOUG (ORCPT
+        id S1732519AbfDQOUJ (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 10:20:06 -0400
-Received: from terminus.zytor.com ([198.137.202.136]:56985 "EHLO
-        terminus.zytor.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1732320AbfDQOUG (ORCPT
+        Wed, 17 Apr 2019 10:20:09 -0400
+Received: from mail-ed1-f65.google.com ([209.85.208.65]:37522 "EHLO
+        mail-ed1-f65.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729940AbfDQOUH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 10:20:06 -0400
-Received: from terminus.zytor.com (localhost [127.0.0.1])
-        by terminus.zytor.com (8.15.2/8.15.2) with ESMTPS id x3HEIfGu3935492
-        (version=TLSv1.3 cipher=TLS_AES_256_GCM_SHA384 bits=256 verify=NO);
-        Wed, 17 Apr 2019 07:18:41 -0700
-DKIM-Filter: OpenDKIM Filter v2.11.0 terminus.zytor.com x3HEIfGu3935492
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=zytor.com;
-        s=2019041743; t=1555510722;
-        bh=z4RUN2z+mkQ1VjzMNA0vYEJawBo92Yz1HRqahcDVVZE=;
-        h=Date:From:Cc:Reply-To:In-Reply-To:References:To:Subject:From;
-        b=cVNxR3Np2THwGvHfzmV7MYc85OWtKP7P/IX36MuQ9dWYYd7YXs1XgMVQG/r6LJ9FV
-         4QabP4rZCwQN18A2y2kfug3ids+IC1oQD7ovAfSyC3nTVSbjVWlDh35HAbw34VOu7m
-         nw0rkxbbzqshej4vnzRr5Hk47F55CYr/cy4zXzPaFWWo04OOXMW89QzaQ4LyC9zLbD
-         7RxXVkYLU9TgKbIyBeXUQCxhw81dwLy1z3tqnKcA6otK8oED7OHPMgS6ocbXAEsmJH
-         JGE0AaB3rxaI/1L+qFo/AJcLh4VWb4Bs1vGqEc4Ng3D+F/H6AJ6pY+sz5U2KhQNKz+
-         2a3UZ6YK4DrbQ==
-Received: (from tipbot@localhost)
-        by terminus.zytor.com (8.15.2/8.15.2/Submit) id x3HEIfP63935489;
-        Wed, 17 Apr 2019 07:18:41 -0700
-Date:   Wed, 17 Apr 2019 07:18:41 -0700
-X-Authentication-Warning: terminus.zytor.com: tipbot set sender to tipbot@zytor.com using -f
-From:   tip-bot for Thomas Gleixner <tipbot@zytor.com>
-Message-ID: <tip-a754fe2b76d1d6bce7069657bba975034f3ad961@git.kernel.org>
-Cc:     hpa@zytor.com, mingo@kernel.org, bp@suse.de,
-        dave.hansen@linux.intel.com, vbabka@suse.cz,
-        linux-kernel@vger.kernel.org, jkosina@suse.cz, mingo@redhat.com,
-        ndesaulniers@google.com, nstange@suse.de, tglx@linutronix.de,
-        jgross@suse.com, jpoimboe@redhat.com, x86@kernel.org,
-        sean.j.christopherson@intel.com, akpm@linux-foundation.org,
-        luto@kernel.org
-Reply-To: akpm@linux-foundation.org, luto@kernel.org,
-          sean.j.christopherson@intel.com, tglx@linutronix.de,
-          jgross@suse.com, jpoimboe@redhat.com, x86@kernel.org,
-          jkosina@suse.cz, mingo@redhat.com, ndesaulniers@google.com,
-          nstange@suse.de, vbabka@suse.cz, linux-kernel@vger.kernel.org,
-          dave.hansen@linux.intel.com, hpa@zytor.com, mingo@kernel.org,
-          bp@suse.de
-In-Reply-To: <20190414160145.824805922@linutronix.de>
-References: <20190414160145.824805922@linutronix.de>
-To:     linux-tip-commits@vger.kernel.org
-Subject: [tip:x86/irq] x86/irq/32: Rename hard/softirq_stack to
- hard/softirq_stack_ptr
-Git-Commit-ID: a754fe2b76d1d6bce7069657bba975034f3ad961
-X-Mailer: tip-git-log-daemon
-Robot-ID: <tip-bot.git.kernel.org>
-Robot-Unsubscribe: Contact <mailto:hpa@kernel.org> to get blacklisted from
- these emails
+        Wed, 17 Apr 2019 10:20:07 -0400
+Received: by mail-ed1-f65.google.com with SMTP id f53so19572363ede.4
+        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 07:20:05 -0700 (PDT)
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=ffwll.ch; s=google;
+        h=sender:date:from:to:cc:subject:message-id:mail-followup-to
+         :references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=IckmlwlCYuYebAcm4zShyTjyGza8QayjzJCK2BIDC8A=;
+        b=EvnrgSgwKziWe2cW4rkAUzKIQplJ10lLdiJ83Vt1Mn1sXfJfIy+XzMDFUVurZUAxN1
+         +CzrKwnU4OAhVw7rltEruRDSpvijL7SbddL9ijUHuLEcTy2ZEtOox7/G6tXmcvD983dN
+         Ycg2CEczhicwhkacHk4LFCoHwsShyHoUc6fqs=
+X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
+        d=1e100.net; s=20161025;
+        h=x-gm-message-state:sender:date:from:to:cc:subject:message-id
+         :mail-followup-to:references:mime-version:content-disposition
+         :content-transfer-encoding:in-reply-to:user-agent;
+        bh=IckmlwlCYuYebAcm4zShyTjyGza8QayjzJCK2BIDC8A=;
+        b=DMiCqSP7mRb05qsITUwBpsnvq/p5h7gCde1Hitg6CF1+mpQqtMNsR/7Kf3FSHKo4BC
+         y3NeDQ+RQGDRxuaLw2H6L9vx91mLQPzJ771lKF1E79u9KR8LwDY9mi00H3LKJw/5FIEx
+         A+QxecFwOoeak0rU5kXHTgemEiblCDJmakQRkRyK8K2aJkt21rddYQdAKWs98uXZylih
+         vO5ojT2s+3JL6efErfiTvOrlX/ATikJDEMpt3amtHeFqFHw+KcSZC7Cp33pyzeaN2VW6
+         CcO/d1rhiV46CzohUMH3HajzcD3mkqRKNudqUt2cg7vlpE8xUlcTNIhtI7FGhpO4+QDV
+         BOrA==
+X-Gm-Message-State: APjAAAXsqCXFyGPjddtaCJmPUBgjzJ58TW816PUqC4sWWCpqeG7JzbDb
+        P+TC88ehjUvTv8jHp7yRbMsWLA==
+X-Google-Smtp-Source: APXvYqyheS+LMtUGXq44aXxVzKb+GydoNsHhKC1b6fYaB+qqgFFyDv0RDHiAmrb75q/3tAQ5vq/2hg==
+X-Received: by 2002:a17:906:3e85:: with SMTP id a5mr48593940ejj.272.1555510804861;
+        Wed, 17 Apr 2019 07:20:04 -0700 (PDT)
+Received: from phenom.ffwll.local ([2a02:168:569e:0:3106:d637:d723:e855])
+        by smtp.gmail.com with ESMTPSA id w58sm17267091edd.69.2019.04.17.07.20.03
+        (version=TLS1_2 cipher=ECDHE-RSA-CHACHA20-POLY1305 bits=256/256);
+        Wed, 17 Apr 2019 07:20:04 -0700 (PDT)
+Date:   Wed, 17 Apr 2019 16:20:02 +0200
+From:   Daniel Vetter <daniel@ffwll.ch>
+To:     Christian =?iso-8859-1?Q?K=F6nig?= 
+        <ckoenig.leichtzumerken@gmail.com>
+Cc:     sumit.semwal@linaro.org, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org
+Subject: Re: [PATCH 05/12] dma-buf: add explicit buffer pinning
+Message-ID: <20190417142002.GE13337@phenom.ffwll.local>
+Mail-Followup-To: Christian =?iso-8859-1?Q?K=F6nig?= <ckoenig.leichtzumerken@gmail.com>,
+        sumit.semwal@linaro.org, linux-media@vger.kernel.org,
+        dri-devel@lists.freedesktop.org, linaro-mm-sig@lists.linaro.org,
+        linux-kernel@vger.kernel.org, amd-gfx@lists.freedesktop.org
+References: <20190416183841.1577-1-christian.koenig@amd.com>
+ <20190416183841.1577-6-christian.koenig@amd.com>
 MIME-Version: 1.0
-Content-Transfer-Encoding: 8bit
-Content-Type: text/plain; charset=UTF-8
+Content-Type: text/plain; charset=iso-8859-1
 Content-Disposition: inline
+Content-Transfer-Encoding: 8bit
+In-Reply-To: <20190416183841.1577-6-christian.koenig@amd.com>
+X-Operating-System: Linux phenom 4.19.0-1-amd64 
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Commit-ID:  a754fe2b76d1d6bce7069657bba975034f3ad961
-Gitweb:     https://git.kernel.org/tip/a754fe2b76d1d6bce7069657bba975034f3ad961
-Author:     Thomas Gleixner <tglx@linutronix.de>
-AuthorDate: Sun, 14 Apr 2019 18:00:01 +0200
-Committer:  Borislav Petkov <bp@suse.de>
-CommitDate: Wed, 17 Apr 2019 15:24:18 +0200
+On Tue, Apr 16, 2019 at 08:38:34PM +0200, Christian König wrote:
+> Add optional explicit pinning callbacks instead of implicitly assume the
+> exporter pins the buffer when a mapping is created.
+> 
+> Signed-off-by: Christian König <christian.koenig@amd.com>
 
-x86/irq/32: Rename hard/softirq_stack to hard/softirq_stack_ptr
+Don't we need this together with the invalidate callback and the dynamic
+stuff? Also I'm assuming that pin/unpin is pretty much required for
+dynamic bo, so could we look at these callbacks instead of the dynamic
+flag you add in patch 1.
 
-The percpu storage holds a pointer to the stack not the stack
-itself. Rename it before sharing struct irq_stack with 64-bit.
+I'm assuming following rules hold:
+no pin/upin from exporter:
 
-No functional changes.
+dma-buf is not dynamic, and pinned for the duration of map/unmap. I'm
+not 100% sure whether really everyone wants the mapping to be cached for
+the entire attachment, only drm_prime does that. And that's not the only
+dma-buf importer.
 
-Signed-off-by: Thomas Gleixner <tglx@linutronix.de>
-Signed-off-by: Borislav Petkov <bp@suse.de>
-Cc: Andrew Morton <akpm@linux-foundation.org>
-Cc: Andy Lutomirski <luto@kernel.org>
-Cc: Dave Hansen <dave.hansen@linux.intel.com>
-Cc: "H. Peter Anvin" <hpa@zytor.com>
-Cc: Ingo Molnar <mingo@redhat.com>
-Cc: Jiri Kosina <jkosina@suse.cz>
-Cc: Josh Poimboeuf <jpoimboe@redhat.com>
-Cc: Juergen Gross <jgross@suse.com>
-Cc: Nick Desaulniers <ndesaulniers@google.com>
-Cc: Nicolai Stange <nstange@suse.de>
-Cc: Sean Christopherson <sean.j.christopherson@intel.com>
-Cc: Vlastimil Babka <vbabka@suse.cz>
-Cc: x86-ml <x86@kernel.org>
-Link: https://lkml.kernel.org/r/20190414160145.824805922@linutronix.de
----
- arch/x86/include/asm/processor.h |  4 ++--
- arch/x86/kernel/dumpstack_32.c   |  4 ++--
- arch/x86/kernel/irq_32.c         | 19 ++++++++++---------
- 3 files changed, 14 insertions(+), 13 deletions(-)
+pin/unpin calls are noops.
 
-diff --git a/arch/x86/include/asm/processor.h b/arch/x86/include/asm/processor.h
-index ff3f469ab2d4..0b7d866a1ad5 100644
---- a/arch/x86/include/asm/processor.h
-+++ b/arch/x86/include/asm/processor.h
-@@ -425,8 +425,8 @@ struct irq_stack {
- 	char			stack[IRQ_STACK_SIZE];
- } __aligned(IRQ_STACK_SIZE);
- 
--DECLARE_PER_CPU(struct irq_stack *, hardirq_stack);
--DECLARE_PER_CPU(struct irq_stack *, softirq_stack);
-+DECLARE_PER_CPU(struct irq_stack *, hardirq_stack_ptr);
-+DECLARE_PER_CPU(struct irq_stack *, softirq_stack_ptr);
- #endif	/* X86_64 */
- 
- extern unsigned int fpu_kernel_xstate_size;
-diff --git a/arch/x86/kernel/dumpstack_32.c b/arch/x86/kernel/dumpstack_32.c
-index d305440ebe9c..64a59d726639 100644
---- a/arch/x86/kernel/dumpstack_32.c
-+++ b/arch/x86/kernel/dumpstack_32.c
-@@ -34,7 +34,7 @@ const char *stack_type_name(enum stack_type type)
- 
- static bool in_hardirq_stack(unsigned long *stack, struct stack_info *info)
- {
--	unsigned long *begin = (unsigned long *)this_cpu_read(hardirq_stack);
-+	unsigned long *begin = (unsigned long *)this_cpu_read(hardirq_stack_ptr);
- 	unsigned long *end   = begin + (THREAD_SIZE / sizeof(long));
- 
- 	/*
-@@ -59,7 +59,7 @@ static bool in_hardirq_stack(unsigned long *stack, struct stack_info *info)
- 
- static bool in_softirq_stack(unsigned long *stack, struct stack_info *info)
- {
--	unsigned long *begin = (unsigned long *)this_cpu_read(softirq_stack);
-+	unsigned long *begin = (unsigned long *)this_cpu_read(softirq_stack_ptr);
- 	unsigned long *end   = begin + (THREAD_SIZE / sizeof(long));
- 
- 	/*
-diff --git a/arch/x86/kernel/irq_32.c b/arch/x86/kernel/irq_32.c
-index 95600a99ae93..f37489c806fa 100644
---- a/arch/x86/kernel/irq_32.c
-+++ b/arch/x86/kernel/irq_32.c
-@@ -51,8 +51,8 @@ static inline int check_stack_overflow(void) { return 0; }
- static inline void print_stack_overflow(void) { }
- #endif
- 
--DEFINE_PER_CPU(struct irq_stack *, hardirq_stack);
--DEFINE_PER_CPU(struct irq_stack *, softirq_stack);
-+DEFINE_PER_CPU(struct irq_stack *, hardirq_stack_ptr);
-+DEFINE_PER_CPU(struct irq_stack *, softirq_stack_ptr);
- 
- static void call_on_stack(void *func, void *stack)
- {
-@@ -76,7 +76,7 @@ static inline int execute_on_irq_stack(int overflow, struct irq_desc *desc)
- 	u32 *isp, *prev_esp, arg1;
- 
- 	curstk = (struct irq_stack *) current_stack();
--	irqstk = __this_cpu_read(hardirq_stack);
-+	irqstk = __this_cpu_read(hardirq_stack_ptr);
- 
- 	/*
- 	 * this is where we switch to the IRQ stack. However, if we are
-@@ -113,21 +113,22 @@ void irq_ctx_init(int cpu)
- {
- 	struct irq_stack *irqstk;
- 
--	if (per_cpu(hardirq_stack, cpu))
-+	if (per_cpu(hardirq_stack_ptr, cpu))
- 		return;
- 
- 	irqstk = page_address(alloc_pages_node(cpu_to_node(cpu),
- 					       THREADINFO_GFP,
- 					       THREAD_SIZE_ORDER));
--	per_cpu(hardirq_stack, cpu) = irqstk;
-+	per_cpu(hardirq_stack_ptr, cpu) = irqstk;
- 
- 	irqstk = page_address(alloc_pages_node(cpu_to_node(cpu),
- 					       THREADINFO_GFP,
- 					       THREAD_SIZE_ORDER));
--	per_cpu(softirq_stack, cpu) = irqstk;
-+	per_cpu(softirq_stack_ptr, cpu) = irqstk;
- 
--	printk(KERN_DEBUG "CPU %u irqstacks, hard=%p soft=%p\n",
--	       cpu, per_cpu(hardirq_stack, cpu),  per_cpu(softirq_stack, cpu));
-+	pr_debug("CPU %u irqstacks, hard=%p soft=%p\n",
-+		 cpu, per_cpu(hardirq_stack_ptr, cpu),
-+		 per_cpu(softirq_stack_ptr, cpu));
- }
- 
- void do_softirq_own_stack(void)
-@@ -135,7 +136,7 @@ void do_softirq_own_stack(void)
- 	struct irq_stack *irqstk;
- 	u32 *isp, *prev_esp;
- 
--	irqstk = __this_cpu_read(softirq_stack);
-+	irqstk = __this_cpu_read(softirq_stack_ptr);
- 
- 	/* build the stack frame on the softirq stack */
- 	isp = (u32 *) ((char *)irqstk + sizeof(*irqstk));
+pin/unpin exist in the exporter, but importer has not provided an
+invalidate callback:
+
+We map at attach time, and we also have to pin, since the importer can't
+handle the buffer disappearing, at attach time. We unmap/unpin at detach.
+
+pin/unpin from exporter, invalidate from importer:
+
+Full dynamic mapping. We assume the importer will do caching, attach
+fences as needed, and pin the underlying bo when it needs it it
+permanently, without attaching fences (i.e. the scanout case).
+
+Assuming I'm not terribly off with my understanding, then I think it'd be
+best to introduce the entire new dma-buf api in the first patch, and flesh
+it out later. Instead of spread over a few patches. Plus the above (maybe
+prettier) as a nice kerneldoc overview comment for how dynamic dma-buf is
+supposed to work really.
+-Daniel
+
+> ---
+>  drivers/dma-buf/dma-buf.c | 39 +++++++++++++++++++++++++++++++++++++++
+>  include/linux/dma-buf.h   | 37 +++++++++++++++++++++++++++++++------
+>  2 files changed, 70 insertions(+), 6 deletions(-)
+> 
+> diff --git a/drivers/dma-buf/dma-buf.c b/drivers/dma-buf/dma-buf.c
+> index a3738fab3927..f23ff8355505 100644
+> --- a/drivers/dma-buf/dma-buf.c
+> +++ b/drivers/dma-buf/dma-buf.c
+> @@ -630,6 +630,41 @@ void dma_buf_detach(struct dma_buf *dmabuf, struct dma_buf_attachment *attach)
+>  }
+>  EXPORT_SYMBOL_GPL(dma_buf_detach);
+>  
+> +/**
+> + * dma_buf_pin - Lock down the DMA-buf
+> + *
+> + * @dmabuf:	[in]	DMA-buf to lock down.
+> + *
+> + * Returns:
+> + * 0 on success, negative error code on failure.
+> + */
+> +int dma_buf_pin(struct dma_buf *dmabuf)
+> +{
+> +	int ret = 0;
+> +
+> +	reservation_object_assert_held(dmabuf->resv);
+> +
+> +	if (dmabuf->ops->pin)
+> +		ret = dmabuf->ops->pin(dmabuf);
+> +
+> +	return ret;
+> +}
+> +EXPORT_SYMBOL_GPL(dma_buf_pin);
+> +
+> +/**
+> + * dma_buf_unpin - Remove lock from DMA-buf
+> + *
+> + * @dmabuf:	[in]	DMA-buf to unlock.
+> + */
+> +void dma_buf_unpin(struct dma_buf *dmabuf)
+> +{
+> +	reservation_object_assert_held(dmabuf->resv);
+> +
+> +	if (dmabuf->ops->unpin)
+> +		dmabuf->ops->unpin(dmabuf);
+> +}
+> +EXPORT_SYMBOL_GPL(dma_buf_unpin);
+> +
+>  /**
+>   * dma_buf_map_attachment_locked - Maps the buffer into _device_ address space
+>   * with the reservation lock held. Is a wrapper for map_dma_buf() of the
+> @@ -666,6 +701,8 @@ dma_buf_map_attachment_locked(struct dma_buf_attachment *attach,
+>  	 */
+>  	if (attach->invalidate)
+>  		list_del(&attach->node);
+> +	else
+> +		dma_buf_pin(attach->dmabuf);
+>  	sg_table = attach->dmabuf->ops->map_dma_buf(attach, direction);
+>  	if (attach->invalidate)
+>  		list_add(&attach->node, &attach->dmabuf->attachments);
+> @@ -735,6 +772,8 @@ void dma_buf_unmap_attachment_locked(struct dma_buf_attachment *attach,
+>  
+>  	attach->dmabuf->ops->unmap_dma_buf(attach, sg_table,
+>  						direction);
+> +	if (!attach->invalidate)
+> +		dma_buf_unpin(attach->dmabuf);
+>  }
+>  EXPORT_SYMBOL_GPL(dma_buf_unmap_attachment_locked);
+>  
+> diff --git a/include/linux/dma-buf.h b/include/linux/dma-buf.h
+> index ece4638359a8..a615b74e5894 100644
+> --- a/include/linux/dma-buf.h
+> +++ b/include/linux/dma-buf.h
+> @@ -100,14 +100,40 @@ struct dma_buf_ops {
+>  	 */
+>  	void (*detach)(struct dma_buf *, struct dma_buf_attachment *);
+>  
+> +	/**
+> +	 * @pin_dma_buf:
+> +	 *
+> +	 * This is called by dma_buf_pin and lets the exporter know that an
+> +	 * importer assumes that the DMA-buf can't be invalidated any more.
+> +	 *
+> +	 * This is called with the dmabuf->resv object locked.
+> +	 *
+> +	 * This callback is optional.
+> +	 *
+> +	 * Returns:
+> +	 *
+> +	 * 0 on success, negative error code on failure.
+> +	 */
+> +	int (*pin)(struct dma_buf *);
+> +
+> +	/**
+> +	 * @unpin_dma_buf:
+> +	 *
+> +	 * This is called by dma_buf_unpin and lets the exporter know that an
+> +	 * importer doesn't need to the DMA-buf to stay were it is any more.
+> +	 *
+> +	 * This is called with the dmabuf->resv object locked.
+> +	 *
+> +	 * This callback is optional.
+> +	 */
+> +	void (*unpin)(struct dma_buf *);
+> +
+>  	/**
+>  	 * @map_dma_buf:
+>  	 *
+>  	 * This is called by dma_buf_map_attachment() and is used to map a
+>  	 * shared &dma_buf into device address space, and it is mandatory. It
+> -	 * can only be called if @attach has been called successfully. This
+> -	 * essentially pins the DMA buffer into place, and it cannot be moved
+> -	 * any more
+> +	 * can only be called if @attach has been called successfully.
+>  	 *
+>  	 * This call may sleep, e.g. when the backing storage first needs to be
+>  	 * allocated, or moved to a location suitable for all currently attached
+> @@ -148,9 +174,6 @@ struct dma_buf_ops {
+>  	 *
+>  	 * This is called by dma_buf_unmap_attachment() and should unmap and
+>  	 * release the &sg_table allocated in @map_dma_buf, and it is mandatory.
+> -	 * It should also unpin the backing storage if this is the last mapping
+> -	 * of the DMA buffer, it the exporter supports backing storage
+> -	 * migration.
+>  	 *
+>  	 * This is always called with the dmabuf->resv object locked when
+>  	 * no_sgt_cache is true.
+> @@ -442,6 +465,8 @@ int dma_buf_fd(struct dma_buf *dmabuf, int flags);
+>  struct dma_buf *dma_buf_get(int fd);
+>  void dma_buf_put(struct dma_buf *dmabuf);
+>  
+> +int dma_buf_pin(struct dma_buf *dmabuf);
+> +void dma_buf_unpin(struct dma_buf *dmabuf);
+>  struct sg_table *dma_buf_map_attachment_locked(struct dma_buf_attachment *,
+>  					       enum dma_data_direction);
+>  struct sg_table *dma_buf_map_attachment(struct dma_buf_attachment *,
+> -- 
+> 2.17.1
+> 
+> _______________________________________________
+> dri-devel mailing list
+> dri-devel@lists.freedesktop.org
+> https://lists.freedesktop.org/mailman/listinfo/dri-devel
+
+-- 
+Daniel Vetter
+Software Engineer, Intel Corporation
+http://blog.ffwll.ch
