@@ -2,98 +2,95 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-5.3 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
-	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,
-	USER_AGENT_MUTT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 6ABBAC282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:31:57 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E9533C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:32:08 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 2DA602183E
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:31:57 +0000 (UTC)
-Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="njlU1ILK"
+	by mail.kernel.org (Postfix) with ESMTP id BFA30217FA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 21:32:08 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1733302AbfDQVbz (ORCPT
+        id S2387463AbfDQVcH (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 17:31:55 -0400
-Received: from mail-wr1-f54.google.com ([209.85.221.54]:44760 "EHLO
-        mail-wr1-f54.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfDQVbz (ORCPT
+        Wed, 17 Apr 2019 17:32:07 -0400
+Received: from mail-qt1-f195.google.com ([209.85.160.195]:38786 "EHLO
+        mail-qt1-f195.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfDQVcH (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 17:31:55 -0400
-Received: by mail-wr1-f54.google.com with SMTP id w18so184686wrv.11
-        for <linux-kernel@vger.kernel.org>; Wed, 17 Apr 2019 14:31:54 -0700 (PDT)
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
-        d=gmail.com; s=20161025;
-        h=date:from:to:cc:subject:message-id:mime-version:content-disposition
-         :user-agent;
-        bh=sYW8lwz4YkKdb66JKELKl8FrmGviUYgvoOuvSaDD9Kk=;
-        b=njlU1ILKiYIQzfJ2I9kWI8kUgw1n/MNjml+x6V2Qmco0a26RASwolTf8iZ0Ea//gbc
-         Wy+W4n/ZZT3c7lbKkh320nXyNoAH0zFlHcAjW0DZ9SW6CQbe6dupnhvvq91af0BNBnbd
-         nREHyXoFJQJk5xCkEI6n01INGs2tygqEEp8XCLCn0e5X0BwcKMzRQdXrrC3KsWVBVVY8
-         vjXMDSshWTl1QDSjZVgYnh75twcsXvZwrF9LZZrLu9cNX/I6jLolhP3Pu/sbF+ko9phK
-         Swg2hpqz5TSquUn0KB61ptpCHL+1ypRRBfVKzWMJnfi9KgqBuPsHn5fIjA3Govn7/xm4
-         B0Vw==
+        Wed, 17 Apr 2019 17:32:07 -0400
+Received: by mail-qt1-f195.google.com with SMTP id d13so6714qth.5;
+        Wed, 17 Apr 2019 14:32:06 -0700 (PDT)
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
-        h=x-gm-message-state:date:from:to:cc:subject:message-id:mime-version
-         :content-disposition:user-agent;
-        bh=sYW8lwz4YkKdb66JKELKl8FrmGviUYgvoOuvSaDD9Kk=;
-        b=uVmhzGed6LVe4ct5f8GDkccSm/laS4i5g5gG0/pSU4iRavErrGqgqQZ7VPbZKOkLm1
-         m8HKb+MxbydEPNb7aNgg+i0QFPz2er7FBbRvtMkvP7iKr+zk/zC3kCMTu1vFUGgMzpfL
-         SOSCLA18AcD61JBz8YFsNpN5dmMRfZB+ZCtrtXZWZzvRq/f1k/ky39q+1gCbLdKR7s3i
-         tTbWQxyQsGyauO5XdRxrTGxoxs+KvDQyYrgME5nhkmPucN/9MNoAU3QpHtLtDZhEGu/F
-         AI02kCnHCtTXLNFLk3gWvJSk+K2NUYKcooMFaRMgITAOT/pnNjbOSd0Tf92XkoHbGNZk
-         A46w==
-X-Gm-Message-State: APjAAAXNPGV7Yujbg7equ9NBwfP0qnJ6fgwGQmiANj5nV3rOTez4JWi+
-        IYdedxd2itSn3Y3argr13Tcbxyw=
-X-Google-Smtp-Source: APXvYqzVHnKwf21ESyAt9lwSkD1mlm1hm9xnfEnM4L+SnozNsh28dK4AhL3suOl3CHopDfS3SUUcyA==
-X-Received: by 2002:adf:fec3:: with SMTP id q3mr59393229wrs.173.1555536713268;
-        Wed, 17 Apr 2019 14:31:53 -0700 (PDT)
-Received: from avx2 ([46.53.244.117])
-        by smtp.gmail.com with ESMTPSA id l20sm74276wme.20.2019.04.17.14.31.51
-        (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Apr 2019 14:31:52 -0700 (PDT)
-Date:   Thu, 18 Apr 2019 00:31:50 +0300
-From:   Alexey Dobriyan <adobriyan@gmail.com>
-To:     akpm@linux-foundation.org
-Cc:     linux-kernel@vger.kernel.org
-Subject: [PATCH] exec: move ->recursion_depth out of critical sections
-Message-ID: <20190417213150.GA26474@avx2>
+        h=x-gm-message-state:mime-version:references:in-reply-to:from:date
+         :message-id:subject:to:cc;
+        bh=NS2VRDxKzZD0tRaotA5kqUlPsqan9DRxqtcv7Aye8Cc=;
+        b=VEoOHoLJCvDYI2ik5yAApDqoRZwW6nMruQbA/I5RHeGS04Tv6o0kG/3Ic02XceYvez
+         Hoy1LotyAd2r5KtPdK2e4TG8nDrDvbqs78r5W6/MPljOfsX/+8Cc2jGwxwl8wUKvpaL5
+         VKNg/aJDx3nfa7bDJR75KPJ2UDoaW13jsNqZvg6Dzxk/HopzknR+QbakDTv6eq3OvZ2W
+         PA4VcHzK2RXirctEXSYBmDIaYlvTv58S6vgDDc9bQNl2T+aOWVkmTrbdWf65EzlRwibF
+         MJ9gxx1YZA6eWBXtVPOPj0QosMNRa7ZUiuOkn+ckiKsf1xip7J2GBrcpzNfYXaOuzPEI
+         GQuA==
+X-Gm-Message-State: APjAAAUXUl0BKgUsldT9NjpCwGkN03+WSkQSwtEjLp9+cK7/tEE9SboF
+        KmalzSS+KPSk1wTf6pSBT1rgm/k3yuwcLFs3UCo=
+X-Google-Smtp-Source: APXvYqyPa5UBM853md5L0dq/2nTACaXsFnZgRfeZ2BAgzI+nv7Hj4f6k+ENPc8OFmmPfUvvSvz602hYO3yyXoVZPoIM=
+X-Received: by 2002:ac8:276b:: with SMTP id h40mr74468946qth.319.1555536725823;
+ Wed, 17 Apr 2019 14:32:05 -0700 (PDT)
 MIME-Version: 1.0
-Content-Type: text/plain; charset=utf-8
-Content-Disposition: inline
-User-Agent: Mutt/1.10.1 (2018-07-13)
+References: <20190416202013.4034148-1-arnd@arndb.de> <20190416202013.4034148-12-arnd@arndb.de>
+ <20190417212312.GY2217@ZenIV.linux.org.uk>
+In-Reply-To: <20190417212312.GY2217@ZenIV.linux.org.uk>
+From:   Arnd Bergmann <arnd@arndb.de>
+Date:   Wed, 17 Apr 2019 23:31:48 +0200
+Message-ID: <CAK8P3a2aRKZDpLJzCW74kwQaYr-Y2txh_5NY2CkRoZFzV=Cn6Q@mail.gmail.com>
+Subject: Re: [PATCH v3 11/26] ceph: fix compat_ioctl for ceph_dir_operations
+To:     Al Viro <viro@zeniv.linux.org.uk>
+Cc:     Linux FS-devel Mailing List <linux-fsdevel@vger.kernel.org>,
+        y2038 Mailman List <y2038@lists.linaro.org>,
+        Linux Kernel Mailing List <linux-kernel@vger.kernel.org>,
+        "Yan, Zheng" <zyan@redhat.com>, "# 3.4.x" <stable@vger.kernel.org>,
+        Sage Weil <sage@redhat.com>, Ilya Dryomov <idryomov@gmail.com>,
+        ceph-devel <ceph-devel@vger.kernel.org>
+Content-Type: text/plain; charset="UTF-8"
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-->recursion_depth is changed only by current, therefore decrementing can be
-done without taking any locks.
+On Wed, Apr 17, 2019 at 11:23 PM Al Viro <viro@zeniv.linux.org.uk> wrote:
+>
+> On Tue, Apr 16, 2019 at 10:19:49PM +0200, Arnd Bergmann wrote:
+> > The ceph_ioctl function is used both for files and directories, but only
+> > the files support doing that in 32-bit compat mode.
+> >
+> > For consistency, add the same compat handler to the dir operations
+> > as well.
+> >
+> > Reviewed-by: "Yan, Zheng" <zyan@redhat.com>
+> > Cc: stable@vger.kernel.org
+> > Signed-off-by: Arnd Bergmann <arnd@arndb.de>
+> > ---
+> >  fs/ceph/dir.c | 1 +
+> >  1 file changed, 1 insertion(+)
+> >
+> > diff --git a/fs/ceph/dir.c b/fs/ceph/dir.c
+> > index a8f429882249..7c060cb22aa3 100644
+> > --- a/fs/ceph/dir.c
+> > +++ b/fs/ceph/dir.c
+> > @@ -1785,6 +1785,7 @@ const struct file_operations ceph_dir_fops = {
+> >       .open = ceph_open,
+> >       .release = ceph_release,
+> >       .unlocked_ioctl = ceph_ioctl,
+> > +     .compat_ioctl = ceph_ioctl,
+>
+> Again, broken on s390 (and so's the ceph_file_ops, of course).
+> It wants compat_ptr() applied to argument...
 
-Signed-off-by: Alexey Dobriyan <adobriyan@gmail.com>
----
+This gets changed in a later patch, I intentionally left this one
+doing the same as ceph_file_fops so the patch can be
+backported if necessary, without also backporting the
+patch that adds compat_ptr_ioctl.
 
- fs/exec.c |    4 +++-
- 1 file changed, 3 insertions(+), 1 deletion(-)
-
---- a/fs/exec.c
-+++ b/fs/exec.c
-@@ -1652,11 +1652,13 @@ int search_binary_handler(struct linux_binprm *bprm)
- 		if (!try_module_get(fmt->module))
- 			continue;
- 		read_unlock(&binfmt_lock);
-+
- 		bprm->recursion_depth++;
- 		retval = fmt->load_binary(bprm);
-+		bprm->recursion_depth--;
-+
- 		read_lock(&binfmt_lock);
- 		put_binfmt(fmt);
--		bprm->recursion_depth--;
- 		if (retval < 0 && !bprm->mm) {
- 			/* we got to flush_old_exec() and failed after it */
- 			read_unlock(&binfmt_lock);
+       Arnd
