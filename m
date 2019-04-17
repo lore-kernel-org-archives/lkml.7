@@ -2,128 +2,166 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-16.1 required=3.0 tests=DKIMWL_WL_HIGH,DKIM_SIGNED,
-	DKIM_VALID,DKIM_VALID_AU,HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PULL_REQUEST,
-	MAILING_LIST_MULTI,MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT
+X-Spam-Status: No, score=-2.3 required=3.0 tests=DKIM_INVALID,DKIM_SIGNED,
+	HEADER_FROM_DIFFERENT_DOMAINS,MAILING_LIST_MULTI,SPF_PASS,USER_AGENT_MUTT
 	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 7A112C282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:59:10 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 076D5C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:00:29 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 4297F21773
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 12:59:10 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id C82CA2173C
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 13:00:28 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (1024-bit key) header.d=ti.com header.i=@ti.com header.b="HMJSfK4B"
+	dkim=fail reason="signature verification failed" (2048-bit key) header.d=infradead.org header.i=@infradead.org header.b="KsqX64pA"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1732171AbfDQM7I (ORCPT
+        id S1732192AbfDQNA1 (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 08:59:08 -0400
-Received: from lelv0143.ext.ti.com ([198.47.23.248]:57966 "EHLO
-        lelv0143.ext.ti.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1730037AbfDQM7I (ORCPT
+        Wed, 17 Apr 2019 09:00:27 -0400
+Received: from merlin.infradead.org ([205.233.59.134]:57124 "EHLO
+        merlin.infradead.org" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1729318AbfDQNA1 (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 08:59:08 -0400
-Received: from fllv0035.itg.ti.com ([10.64.41.0])
-        by lelv0143.ext.ti.com (8.15.2/8.15.2) with ESMTP id x3HCx6f8097955;
-        Wed, 17 Apr 2019 07:59:06 -0500
-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=ti.com;
-        s=ti-com-17Q1; t=1555505946;
-        bh=ghrb1BFjNPTO4slONC0Jaq5JNWNbvk+eUBdYBG6EjtE=;
-        h=From:To:CC:Subject:Date;
-        b=HMJSfK4B37lNaDLcs5z5KguPd9lu6oJDQvO2SdS1UkyvoeQsAYn7l8w2kRJhko+NX
-         INCPPEvp7Jm6FRMhAh8lmSu/WePIYCHLRny8OW3CZMZoSgQ+r3FMv5chaaeXp1yTIj
-         kD374KZDyS28+GT4y+O3SCo4m4iqQ/TYA2lHmySo=
-Received: from DFLE103.ent.ti.com (dfle103.ent.ti.com [10.64.6.24])
-        by fllv0035.itg.ti.com (8.15.2/8.15.2) with ESMTPS id x3HCx6hG009532
-        (version=TLSv1.2 cipher=AES256-GCM-SHA384 bits=256 verify=FAIL);
-        Wed, 17 Apr 2019 07:59:06 -0500
-Received: from DFLE102.ent.ti.com (10.64.6.23) by DFLE103.ent.ti.com
- (10.64.6.24) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5; Wed, 17
- Apr 2019 07:59:06 -0500
-Received: from lelv0327.itg.ti.com (10.180.67.183) by DFLE102.ent.ti.com
- (10.64.6.23) with Microsoft SMTP Server (version=TLS1_2,
- cipher=TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA256_P256) id 15.1.1713.5 via
- Frontend Transport; Wed, 17 Apr 2019 07:59:06 -0500
-Received: from a0393678ub.india.ti.com (ileax41-snat.itg.ti.com [10.172.224.153])
-        by lelv0327.itg.ti.com (8.15.2/8.15.2) with ESMTP id x3HCx46t032834;
-        Wed, 17 Apr 2019 07:59:05 -0500
-From:   Kishon Vijay Abraham I <kishon@ti.com>
-To:     Greg Kroah-Hartman <gregkh@linuxfoundation.org>, <kishon@ti.com>
-CC:     <linux-kernel@vger.kernel.org>
-Subject: [GIT PULL v2] PHY: For 5.1 -rc
-Date:   Wed, 17 Apr 2019 18:27:58 +0530
-Message-ID: <20190417125758.5742-1-kishon@ti.com>
-X-Mailer: git-send-email 2.17.1
+        Wed, 17 Apr 2019 09:00:27 -0400
+DKIM-Signature: v=1; a=rsa-sha256; q=dns/txt; c=relaxed/relaxed;
+        d=infradead.org; s=merlin.20170209; h=In-Reply-To:Content-Type:MIME-Version:
+        References:Message-ID:Subject:Cc:To:From:Date:Sender:Reply-To:
+        Content-Transfer-Encoding:Content-ID:Content-Description:Resent-Date:
+        Resent-From:Resent-Sender:Resent-To:Resent-Cc:Resent-Message-ID:List-Id:
+        List-Help:List-Unsubscribe:List-Subscribe:List-Post:List-Owner:List-Archive;
+         bh=x3TB78eLMmND4F0NhqqOIiB/RJHNLVhUND4CEfUPCFo=; b=KsqX64pA42RMrZpuxVvORZeR4
+        n1hmBacM6fYUjLCs4X33e45ezLlY05VAcOyhWtdaxJ2quXC+JjQCzIfw8S2ynuq3gLfF2449WlAOw
+        jt/hlDYCJUiv5JvMBVelaW4jJWy9M6fiK7Ihu7xb2FMYrn03IN9HzPrrKFvY3QJXqMbpVtXrioPA9
+        hEDbSHLt3/5r4xMNRlhSP2uqR5SIQJIgJ1eJ5CUTbkf3yCUPKhwVzEVZwOsoj+Uv7Qm89Ajv1vrGD
+        nMhnOqvo2OG1MlMvEwaSuP1xQA06JjHsbWzDFEw/ZME9UNFYOcloEwx5qcL3QqjNKAxBK1/twp+IY
+        fw+o0dMhg==;
+Received: from j217100.upc-j.chello.nl ([24.132.217.100] helo=hirez.programming.kicks-ass.net)
+        by merlin.infradead.org with esmtpsa (Exim 4.90_1 #2 (Red Hat Linux))
+        id 1hGkAj-0002VF-Qi; Wed, 17 Apr 2019 13:00:18 +0000
+Received: by hirez.programming.kicks-ass.net (Postfix, from userid 1000)
+        id 92AD429AD7C08; Wed, 17 Apr 2019 15:00:16 +0200 (CEST)
+Date:   Wed, 17 Apr 2019 15:00:16 +0200
+From:   Peter Zijlstra <peterz@infradead.org>
+To:     Waiman Long <longman@redhat.com>
+Cc:     Ingo Molnar <mingo@redhat.com>, Will Deacon <will.deacon@arm.com>,
+        Thomas Gleixner <tglx@linutronix.de>,
+        linux-kernel@vger.kernel.org, x86@kernel.org,
+        Davidlohr Bueso <dave@stgolabs.net>,
+        Linus Torvalds <torvalds@linux-foundation.org>,
+        Tim Chen <tim.c.chen@linux.intel.com>,
+        huang ying <huang.ying.caritas@gmail.com>
+Subject: Re: [PATCH v4 08/16] locking/rwsem: Make rwsem_spin_on_owner()
+ return owner state
+Message-ID: <20190417130016.GU14281@hirez.programming.kicks-ass.net>
+References: <20190413172259.2740-1-longman@redhat.com>
+ <20190413172259.2740-9-longman@redhat.com>
+ <20190417124101.GE4038@hirez.programming.kicks-ass.net>
 MIME-Version: 1.0
-Content-Type: text/plain
-X-EXCLAIMER-MD-CONFIG: e1e8a2fd-e40a-4ac6-ac9b-f7e9cc9ee180
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <20190417124101.GE4038@hirez.programming.kicks-ass.net>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-Hi Greg,
+On Wed, Apr 17, 2019 at 02:41:01PM +0200, Peter Zijlstra wrote:
+> On Sat, Apr 13, 2019 at 01:22:51PM -0400, Waiman Long wrote:
+> > In the special case that there is no active lock and the handoff bit
+> > is set, optimistic spinning has to be stopped.
+> 
+> > @@ -500,9 +521,19 @@ static noinline bool rwsem_spin_on_owner(struct rw_semaphore *sem)
+> >  
+> >  	/*
+> >  	 * If there is a new owner or the owner is not set, we continue
+> > -	 * spinning.
+> > +	 * spinning except when here is no active locks and the handoff bit
+> > +	 * is set. In this case, we have to stop spinning.
+> >  	 */
+> > -	return is_rwsem_owner_spinnable(READ_ONCE(sem->owner));
+> > +	owner = READ_ONCE(sem->owner);
+> > +	if (!is_rwsem_owner_spinnable(owner))
+> > +		return OWNER_NONSPINNABLE;
+> > +	if (owner && !is_rwsem_owner_reader(owner))
+> > +		return OWNER_WRITER;
+> > +
+> > +	count = atomic_long_read(&sem->count);
+> > +	if (RWSEM_COUNT_HANDOFF(count) && !RWSEM_COUNT_LOCKED(count))
+> > +		return OWNER_NONSPINNABLE;
+> > +	return !owner ? OWNER_NULL : OWNER_READER;
+> >  }
+> 
+> So this fixes a straight up bug in the last patch (and thus should be
+> done before so the bug never exists), and creates unreadable code while
+> at it.
+> 
+> Also, I think only checking HANDOFF after the loop is wrong; the moment
+> HANDOFF happens you have to terminate the loop, irrespective of what
+> @owner does.
+> 
+> Does something like so work?
+> 
+> ---
 
-Please find the updated pull request for 5.1 -rc.
+enum owner_state {
+	OWNER_NULL		= 1 << 0,
+	OWNER_WRITER		= 1 << 1,
+	OWNER_READER		= 1 << 2,
+	OWNER_NONSPINNABLE	= 1 << 3,
+};
+#define OWNER_SPINNABLE		(OWNER_NULL | OWNER_WRITER)
 
-I've removed the lengthy ti-pipe3 PHY driver changes to follow the TRM
-sequence. This will be included in 5.2 -rc1 pull request.
+static inline enum owner_state rwsem_owner_state(unsigned long owner)
+{
+	if (!owner)
+		return OWNER_NULL;
 
-I've also added an additional patch to fix gadget mode working in
-Allwinner's sun4i-usb PHY driver.
+	if (owner & RWSEM_ANONYMOUSLY_OWNED)
+		return OWNER_NONSPINNABLE;
 
-Let me know if I have to make any modifications.
+	if (owner & RWSEM_READER_OWNER)
+		return OWNER_READER;
 
-Thanks
-Kishon
+	return OWNER_WRITER;
+}
 
-The following changes since commit 9e98c678c2d6ae3a17cb2de55d17f69dddaa231b:
+static noinline enum owner_state rwsem_spin_on_owner(struct rw_semaphore *sem)
+{
+	struct task_struct *tmp, *owner = READ_ONCE(sem->owner);
+	enum owner_state state = rwsem_owner_state((unsigned long)owner);
 
-  Linux 5.1-rc1 (2019-03-17 14:22:26 -0700)
+	if (state != OWNER_WRITER)
+		return state;
 
-are available in the Git repository at:
+	rcu_read_lock();
+	for (;;) {
+		if (atomic_long_read(&sem->count) & RWSEM_FLAG_HANDOFF) {
+			state = OWNER_NONSPINNABLE;
+			break;
+		}
 
-  git://git.kernel.org/pub/scm/linux/kernel/git/kishon/linux-phy.git tags/phy-for-5.1-rc-v2
+		tmp = READ_ONCE(sem->owner);
+		if (tmp != owner) {
+			state = rwsem_owner_state((unsigned long)tmp);
+			break;
+		}
 
-for you to fetch changes up to e6f32efb1b128344a2c7df9875bc1a1abaa1d395:
+		/*
+		 * Ensure we emit the owner->on_cpu, dereference _after_
+		 * checking sem->owner still matches owner, if that fails,
+		 * owner might point to free()d memory, if it still matches,
+		 * the rcu_read_lock() ensures the memory stays valid.
+		 */
+		barrier();
 
-  phy: sun4i-usb: Make sure to disable PHY0 passby for peripheral mode (2019-04-17 12:06:02 +0530)
+		if (need_resched() || !owner_on_cpu(owner)) {
+			state = OWNER_NONSPINNABLE;
+			break;
+		}
 
-----------------------------------------------------------------
-phy: for 5.1-rc
+		cpu_relax();
+	}
+	rcu_read_unlock();
 
-  *) Fix sun4i-usb PHY driver to get USB gadget working on H3/R40/V3/V3s
-  *) Fix cable state handling in phy-twl4030-usb driver to get rid of
-     regulator_put() warning
-  *) Fix linker errors and compilation warnings got with randconfig
-  *) Fix sparse warnings and .cocci warnings
-
-Signed-off-by: Kishon Vijay Abraham I <kishon@ti.com>
-
-----------------------------------------------------------------
-Arnd Bergmann (3):
-      phy: allwinner: allow compile testing
-      phy: ti: usb2: fix OMAP_CONTROL_PHY dependency
-      phy: mapphone-mdm6600: add gpiolib dependency
-
-Paul Kocialkowski (1):
-      phy: sun4i-usb: Make sure to disable PHY0 passby for peripheral mode
-
-Tony Lindgren (1):
-      phy: phy-twl4030-usb: Fix cable state handling
-
-YueHaibing (3):
-      phy: rockchip-typec: Make usb3_pll_cfg and dp_pll_cfg static
-      phy: qcom-ufs: Make ufs_qcom_phy_disable_iface_clk static
-      phy: fix platform_no_drv_owner.cocci warnings
-
- drivers/phy/allwinner/Kconfig              |  9 ++++++---
- drivers/phy/allwinner/phy-sun4i-usb.c      |  4 ++++
- drivers/phy/marvell/phy-mvebu-a3700-utmi.c |  1 -
- drivers/phy/motorola/Kconfig               |  2 +-
- drivers/phy/qualcomm/phy-qcom-ufs.c        |  2 +-
- drivers/phy/rockchip/phy-rockchip-typec.c  |  4 ++--
- drivers/phy/ti/Kconfig                     |  2 +-
- drivers/phy/ti/phy-twl4030-usb.c           | 35 +++++++++++++----------------------
- 8 files changed, 28 insertions(+), 31 deletions(-)
+	return state;
+}
