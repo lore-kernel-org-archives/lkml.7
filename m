@@ -2,75 +2,99 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-9.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED,
-	USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
+	SPF_PASS,USER_AGENT_GIT autolearn=unavailable autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 1D318C10F14
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 03:25:35 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 998FCC282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 03:27:19 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id E762720835
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 03:25:34 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id 685612073F
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 03:27:19 +0000 (UTC)
+Authentication-Results: mail.kernel.org;
+	dkim=pass (1024-bit key) header.d=163.com header.i=@163.com header.b="QPIGeHZj"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731096AbfDQDZd (ORCPT
+        id S1731090AbfDQD1R (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Tue, 16 Apr 2019 23:25:33 -0400
-Received: from szxga05-in.huawei.com ([45.249.212.191]:6754 "EHLO huawei.com"
-        rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1728083AbfDQDZd (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Tue, 16 Apr 2019 23:25:33 -0400
-Received: from DGGEMS411-HUB.china.huawei.com (unknown [172.30.72.60])
-        by Forcepoint Email with ESMTP id AE64A5FD58C2F666939A;
-        Wed, 17 Apr 2019 11:25:30 +0800 (CST)
-Received: from localhost (10.177.31.96) by DGGEMS411-HUB.china.huawei.com
- (10.3.19.211) with Microsoft SMTP Server id 14.3.408.0; Wed, 17 Apr 2019
- 11:25:20 +0800
-From:   Yue Haibing <yuehaibing@huawei.com>
-To:     <johannes.berg@intel.com>, <emmanuel.grumbach@intel.com>,
-        <luciano.coelho@intel.com>, <linuxwifi@intel.com>,
-        <kvalo@codeaurora.org>
-CC:     <linux-kernel@vger.kernel.org>, <netdev@vger.kernel.org>,
-        <linux-wireless@vger.kernel.org>, <davem@davemloft.net>,
-        YueHaibing <yuehaibing@huawei.com>
-Subject: [PATCH] iwlwifi: Use correct channel_profile iniwl_get_nvm
-Date:   Wed, 17 Apr 2019 11:24:09 +0800
-Message-ID: <20190417032409.23924-1-yuehaibing@huawei.com>
-X-Mailer: git-send-email 2.10.2.windows.1
-MIME-Version: 1.0
-Content-Type: text/plain
-X-Originating-IP: [10.177.31.96]
-X-CFilter-Loop: Reflected
+        Tue, 16 Apr 2019 23:27:17 -0400
+Received: from m50-132.163.com ([123.125.50.132]:49080 "EHLO m50-132.163.com"
+        rhost-flags-OK-OK-OK-OK) by vger.kernel.org with ESMTP
+        id S1729079AbfDQD1R (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Tue, 16 Apr 2019 23:27:17 -0400
+X-Greylist: delayed 905 seconds by postgrey-1.27 at vger.kernel.org; Tue, 16 Apr 2019 23:27:16 EDT
+DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed; d=163.com;
+        s=s110527; h=From:Subject:Date:Message-Id; bh=pa90oONOQE2aayBbcS
+        fTUNDIb3aN4WNHk8cBOwnKV9k=; b=QPIGeHZjtRc8PxLcJ88ZoKfF4B54r3fRh2
+        SXIHDXaOkiWPdFTskE/w7V7lwSPNuPT1XllxM8gB6XQmOVk3ORVdyWYZAcWQsKNt
+        +j8ncjWEpohlqgOG+LvztIa249yqKFDBiDqJnYbmbZD9jeLzwSIIGn3EzpGp26fz
+        SpsRC4SMc=
+Received: from bp.localdomain (unknown [218.106.182.174])
+        by smtp2 (Coremail) with SMTP id DNGowAC3Xv98mbZcFKkoAA--.242S3;
+        Wed, 17 Apr 2019 11:12:07 +0800 (CST)
+From:   Pan Bian <bianpan2016@163.com>
+To:     Jens Axboe <axboe@kernel.dk>
+Cc:     linux-block@vger.kernel.org, linux-kernel@vger.kernel.org,
+        Pan Bian <bianpan2016@163.com>
+Subject: scsi: bsg-lib: drop device reference on error path
+Date:   Wed, 17 Apr 2019 11:11:55 +0800
+Message-Id: <1555470715-55702-1-git-send-email-bianpan2016@163.com>
+X-Mailer: git-send-email 2.7.4
+X-CM-TRANSID: DNGowAC3Xv98mbZcFKkoAA--.242S3
+X-Coremail-Antispam: 1Uf129KBjvdXoW7GFWxJr47ZrykuryxJr45Awb_yoWkGrX_CF
+        y093s7Xrn5CFWfCF4YkFWUtr92gF4DXF1IvF4UtF93ZFyUGrZxJa1UZr15urZ8Ww4fu3W2
+        v3ZrZFWfCr1SqjkaLaAFLSUrUUUUUb8apTn2vfkv8UJUUUU8Yxn0WfASr-VFAUDa7-sFnT
+        9fnUUvcSsGvfC2KfnxnUUI43ZEXa7IUjwID3UUUUU==
+X-Originating-IP: [218.106.182.174]
+X-CM-SenderInfo: held01tdqsiiqw6rljoofrz/xtbBzweZclaD2NPpCgAAse
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: YueHaibing <yuehaibing@huawei.com>
+The function put_device is not called to drop the device reference taken
+by get_device on error paths. This patch fixes the bug.
 
-commit 2785ce008e3b ("iwlwifi: support new NVM response API")
-seems forgot use correct channel_profile in iwl_get_nvm when call
-iwl_init_sbands().
-
-Fixes: 2785ce008e3b ("iwlwifi: support new NVM response API")
-Signed-off-by: YueHaibing <yuehaibing@huawei.com>
+Fixes: cd2f076f1d7("bsg: convert to use blk-mq")
+Signed-off-by: Pan Bian <bianpan2016@163.com>
 ---
- drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c | 2 +-
- 1 file changed, 1 insertion(+), 1 deletion(-)
+ block/bsg-lib.c | 11 +++++++----
+ 1 file changed, 7 insertions(+), 4 deletions(-)
 
-diff --git a/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c b/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c
-index 40985dc..d87a6bb 100644
---- a/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c
-+++ b/drivers/net/wireless/intel/iwlwifi/iwl-nvm-parse.c
-@@ -1496,7 +1496,7 @@ struct iwl_nvm_data *iwl_get_nvm(struct iwl_trans *trans,
- 			  (void *)rsp_v3->regulatory.channel_profile;
+diff --git a/block/bsg-lib.c b/block/bsg-lib.c
+index 005e2b7..fe9e0cc 100644
+--- a/block/bsg-lib.c
++++ b/block/bsg-lib.c
+@@ -281,21 +281,24 @@ static blk_status_t bsg_queue_rq(struct blk_mq_hw_ctx *hctx,
+ 	struct bsg_set *bset =
+ 		container_of(q->tag_set, struct bsg_set, tag_set);
+ 	int ret;
++	blk_status_t status = BLK_STS_IOERR;
  
- 	iwl_init_sbands(trans->dev, trans->cfg, nvm,
--			rsp->regulatory.channel_profile,
-+			channel_profile,
- 			nvm->valid_tx_ant & fw->valid_tx_ant,
- 			nvm->valid_rx_ant & fw->valid_rx_ant,
- 			sbands_flags, v4);
+ 	blk_mq_start_request(req);
+ 
+ 	if (!get_device(dev))
+-		return BLK_STS_IOERR;
++		return status;
+ 
+ 	if (!bsg_prepare_job(dev, req))
+-		return BLK_STS_IOERR;
++		goto out;
+ 
+ 	ret = bset->job_fn(blk_mq_rq_to_pdu(req));
+ 	if (ret)
+-		return BLK_STS_IOERR;
++		goto out;
+ 
++	status = BLK_STS_OK;
++out:
+ 	put_device(dev);
+-	return BLK_STS_OK;
++	return status;
+ }
+ 
+ /* called right after the request is allocated for the request_queue */
 -- 
-2.7.0
+2.7.4
 
 
