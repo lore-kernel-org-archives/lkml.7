@@ -2,60 +2,61 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-8.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
+X-Spam-Status: No, score=-13.8 required=3.0 tests=DKIM_SIGNED,DKIM_VALID,
 	DKIM_VALID_AU,FREEMAIL_FORGED_FROMDOMAIN,FREEMAIL_FROM,
-	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,
-	SPF_PASS,USER_AGENT_GIT autolearn=ham autolearn_force=no version=3.4.0
+	HEADER_FROM_DIFFERENT_DOMAINS,INCLUDES_PATCH,MAILING_LIST_MULTI,
+	MENTIONS_GIT_HOSTING,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_GIT autolearn=ham
+	autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 3D39EC282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 22:43:13 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id 37DF0C282DC
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 22:43:22 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 09ECA20693
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 22:43:13 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id EF17020693
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 22:43:21 +0000 (UTC)
 Authentication-Results: mail.kernel.org;
-	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="jhIfB8c8"
+	dkim=pass (2048-bit key) header.d=gmail.com header.i=@gmail.com header.b="FUvnq4Iu"
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S2387820AbfDQWnM (ORCPT
+        id S2387837AbfDQWnU (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 18:43:12 -0400
-Received: from mail-pf1-f196.google.com ([209.85.210.196]:36797 "EHLO
-        mail-pf1-f196.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
-        with ESMTP id S1725848AbfDQWnL (ORCPT
+        Wed, 17 Apr 2019 18:43:20 -0400
+Received: from mail-pg1-f193.google.com ([209.85.215.193]:44050 "EHLO
+        mail-pg1-f193.google.com" rhost-flags-OK-OK-OK-OK) by vger.kernel.org
+        with ESMTP id S1725848AbfDQWnU (ORCPT
         <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 18:43:11 -0400
-Received: by mail-pf1-f196.google.com with SMTP id z5so145948pfn.3;
-        Wed, 17 Apr 2019 15:43:11 -0700 (PDT)
+        Wed, 17 Apr 2019 18:43:20 -0400
+Received: by mail-pg1-f193.google.com with SMTP id i2so197938pgj.11;
+        Wed, 17 Apr 2019 15:43:19 -0700 (PDT)
 DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=gmail.com; s=20161025;
         h=from:to:cc:subject:date:message-id:in-reply-to:references
          :mime-version:content-transfer-encoding;
-        bh=k6Pr36LZNLjaMWytmQ2oiF4ANNpidxKFHqrr3mek8mw=;
-        b=jhIfB8c8280b29Bn9iobebXWNuX4TNUhrhzSN+sLCgndes9qQpZ6rbt0RiwI186ls0
-         YDEk4JxRU5Td5T3/fHCw05YEsGVdiNEYOwv3dcPqiErcGNFrYYZymWiBtv+IWLBn2Tvn
-         NrNsIS1ZdiqUQvYlifHfSfb/B3eoJGrJfSezJkNCUedpWqMhIuwfBiKwkwsNIg0ZTosz
-         /xHw8pgTAJBQVpx2Os1sJtQ7Tyt4iTjjAgTT7+/5y9bn6ycjHsUPKEg+cIxzcQsCr8BW
-         eta5FB6UTHqFanx5ank5+XLT5emUUy3WOeZs3WVEceT3LVO0N2H9hiX8T0upHowVP3m9
-         ZZgA==
+        bh=Ldt/gMqUoTia1r5kWEOCtxg7qB1prjq5nzjT+0b4O1I=;
+        b=FUvnq4Iu4fItbpisPxzGQe+Q3/2ENX2rAL8UnQuQn3m6FHlCWZmQZ7s7QCjIXSSev0
+         +wzf6PkgOVBYF76TV/yxYr+5FCv6kHJ0IZBpfA6xr/ELJBDRab4Z5p7oPqZXC1NFndgY
+         I+Dj/myzru2ER2/IAeUe1AehVWe0oeguKpELS/XlBtNFlHATKvuBjkkwtmUfRcTc5HZ8
+         Uq6Dhh6Bqfk9KWS6HuhbWEjZdMgGg4wk1ESX+kOqtN8YE1GHF9YUrvCjGGaMacHGcjOB
+         Aga61fvSm7IioulbsqUiZERQLPHErluS3KKCTkFEST1hEW9MncF7nrpSxSy/ZRa8yIO4
+         +6cA==
 X-Google-DKIM-Signature: v=1; a=rsa-sha256; c=relaxed/relaxed;
         d=1e100.net; s=20161025;
         h=x-gm-message-state:from:to:cc:subject:date:message-id:in-reply-to
          :references:mime-version:content-transfer-encoding;
-        bh=k6Pr36LZNLjaMWytmQ2oiF4ANNpidxKFHqrr3mek8mw=;
-        b=Xcgll4EqGprLAjLyAWahmawjFViK229Lvk3fXmhzA2mNGCyN9Eo1y2o4+SesGSuX46
-         lGnGjdr49VDnikJTw4UhcJCp1/eAVblTZaeI9oclXFt2eouuGVmoqYDnNWLo2GJ0kKFm
-         Mx0kkRr3iPXBvJdQauMgkpue54F0IEJYb53oofMzn0N0CvQRXWZxqFFxLynlc5eXEUeN
-         2jRQmUx/PcQ7GEk/EhUd4jL/wlHjqS9kafY0/OoBpDRNsvvtmA6qewaz4UMnq2NQb8QI
-         Z/lBMoRzazs7/AhCXP5JOVIAa8OrkcP3l9bc9Kx7/MrKtMuDZheifSX7jBW/CsIw6o05
-         a1/g==
-X-Gm-Message-State: APjAAAVUl7Y7oLAu6MrEHQpRJGqkwNPHe/4OaRA/Oj2mi5gOGGLtqBBh
-        ZXtN/vziw1Wu46W3igd9wH8=
-X-Google-Smtp-Source: APXvYqxf3vzMaAPN9gDU6LKmYZABS5f0D10Z8ep1JCuWlVE+zoz1ycgLMsnNHulbiC9AnCp26EQ2uQ==
-X-Received: by 2002:aa7:8c86:: with SMTP id p6mr93630321pfd.37.1555540504519;
-        Wed, 17 Apr 2019 15:35:04 -0700 (PDT)
+        bh=Ldt/gMqUoTia1r5kWEOCtxg7qB1prjq5nzjT+0b4O1I=;
+        b=e1robnuQBM9D3NOj41mzKIBeRFGUDvAjMjCNv1n4rDqsoZCP6g/H8LWlXTVyUKOvoR
+         V+lg3aBDNx72AyjJCQYF6v0wHuSCAyBkoTjHIQA5XSBRshzK8ZJg8T1IsqdM+1lrJsmr
+         Fw+L2/tK5tPEST7FOLPaGX0tZJhjZV3dXZznaU4F5ktaszbEpRNXU0p+1pQKY6Fj6Rq9
+         OQ81r8p7toANkNjtrjcxdTge54X+lzJal3K3fSw6GEg7kcthbjwSmy/fEoAmARZ3Q2rn
+         nDxCi4QjnmHdvzkcwPIys+tGuL3XKmHWsfah/BAwSRej9Fx0+/EDQvSF0ISrhcNviuA9
+         1icw==
+X-Gm-Message-State: APjAAAUpgvqFVwAzXvTofwMcpheKaBqdk4NlILAjusv3KG2LTfW2kiLm
+        Vp3FCuC60jbapkj+WNb6Xa0=
+X-Google-Smtp-Source: APXvYqyhGfUz9MhERILGcUY0gpp3TyYKd5FukSJuUcDRNVj+PFBRGFrT3UZacAWLf/kPq5YxNHXLog==
+X-Received: by 2002:aa7:85d9:: with SMTP id z25mr92092566pfn.31.1555540545136;
+        Wed, 17 Apr 2019 15:35:45 -0700 (PDT)
 Received: from localhost.localdomain (ppp94-29-35-107.pppoe.spdop.ru. [94.29.35.107])
-        by smtp.gmail.com with ESMTPSA id l26sm281030pfb.20.2019.04.17.15.34.58
+        by smtp.gmail.com with ESMTPSA id l26sm281030pfb.20.2019.04.17.15.35.38
         (version=TLS1_2 cipher=ECDHE-RSA-AES128-GCM-SHA256 bits=128/128);
-        Wed, 17 Apr 2019 15:35:04 -0700 (PDT)
+        Wed, 17 Apr 2019 15:35:44 -0700 (PDT)
 From:   Dmitry Osipenko <digetx@gmail.com>
 To:     Thierry Reding <thierry.reding@gmail.com>,
         Jonathan Hunter <jonathanh@nvidia.com>,
@@ -65,9 +66,9 @@ To:     Thierry Reding <thierry.reding@gmail.com>,
         Tomeu Vizoso <tomeu.vizoso@collabora.com>
 Cc:     linux-tegra@vger.kernel.org, linux-kernel@vger.kernel.org,
         linux-pm@vger.kernel.org
-Subject: [PATCH v3 10/16] PM / devfreq: tegra: Mark ACTMON's governor as immutable
-Date:   Thu, 18 Apr 2019 01:29:19 +0300
-Message-Id: <20190417222925.5815-11-digetx@gmail.com>
+Subject: [PATCH v3 16/16] PM / devfreq: Introduce driver for NVIDIA Tegra20
+Date:   Thu, 18 Apr 2019 01:29:25 +0300
+Message-Id: <20190417222925.5815-17-digetx@gmail.com>
 X-Mailer: git-send-email 2.21.0
 In-Reply-To: <20190417222925.5815-1-digetx@gmail.com>
 References: <20190417222925.5815-1-digetx@gmail.com>
@@ -78,41 +79,279 @@ Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-The ACTMON's governor supports only the Tegra's devfreq device and there
-is no need to use any other governor, hence let's mark Tegra governor as
-immutable to permanently stick it with Tegra's devfreq device.
+Add devfreq driver for NVIDIA Tegra20 SoC's. The driver periodically
+reads out Memory Controller counters and adjusts memory frequency based
+on the memory clients activity.
 
-Reviewed-by: Chanwoo Choi <cw00.choi@samsung.com>
 Signed-off-by: Dmitry Osipenko <digetx@gmail.com>
 ---
- drivers/devfreq/Kconfig         | 1 -
- drivers/devfreq/tegra-devfreq.c | 1 +
- 2 files changed, 1 insertion(+), 1 deletion(-)
+ MAINTAINERS                       |   8 ++
+ drivers/devfreq/Kconfig           |  10 ++
+ drivers/devfreq/Makefile          |   1 +
+ drivers/devfreq/tegra20-devfreq.c | 202 ++++++++++++++++++++++++++++++
+ 4 files changed, 221 insertions(+)
+ create mode 100644 drivers/devfreq/tegra20-devfreq.c
 
+diff --git a/MAINTAINERS b/MAINTAINERS
+index 002d564efbe5..c70896550a27 100644
+--- a/MAINTAINERS
++++ b/MAINTAINERS
+@@ -10070,6 +10070,14 @@ F:	include/linux/memblock.h
+ F:	mm/memblock.c
+ F:	Documentation/core-api/boot-time-mm.rst
+ 
++MEMORY FREQUENCY SCALING DRIVER FOR NVIDIA TEGRA20
++M:	Dmitry Osipenko <digetx@gmail.com>
++L:	linux-pm@vger.kernel.org
++L:	linux-tegra@vger.kernel.org
++T:	git git://git.kernel.org/pub/scm/linux/kernel/git/mzx/devfreq.git
++S:	Maintained
++F:	drivers/devfreq/tegra20-devfreq.c
++
+ MEMORY MANAGEMENT
+ L:	linux-mm@kvack.org
+ W:	http://www.linux-mm.org
 diff --git a/drivers/devfreq/Kconfig b/drivers/devfreq/Kconfig
-index 6a172d338f6d..a78dffe603c1 100644
+index a6bba6e1e7d9..1530dbefa31f 100644
 --- a/drivers/devfreq/Kconfig
 +++ b/drivers/devfreq/Kconfig
-@@ -94,7 +94,6 @@ config ARM_EXYNOS_BUS_DEVFREQ
- config ARM_TEGRA_DEVFREQ
- 	tristate "Tegra DEVFREQ Driver"
- 	depends on ARCH_TEGRA_124_SOC
--	select DEVFREQ_GOV_SIMPLE_ONDEMAND
- 	select PM_OPP
- 	help
- 	  This adds the DEVFREQ driver for the Tegra family of SoCs.
-diff --git a/drivers/devfreq/tegra-devfreq.c b/drivers/devfreq/tegra-devfreq.c
-index d72c16752012..272232ce2960 100644
---- a/drivers/devfreq/tegra-devfreq.c
-+++ b/drivers/devfreq/tegra-devfreq.c
-@@ -606,6 +606,7 @@ static struct devfreq_governor tegra_devfreq_governor = {
- 	.name = "tegra_actmon",
- 	.get_target_freq = tegra_governor_get_target,
- 	.event_handler = tegra_governor_event_handler,
-+	.immutable = true,
- };
+@@ -100,6 +100,16 @@ config ARM_TEGRA_DEVFREQ
+ 	  It reads ACTMON counters of memory controllers and adjusts the
+ 	  operating frequencies and voltages with OPP support.
  
- static int tegra_devfreq_probe(struct platform_device *pdev)
++config ARM_TEGRA20_DEVFREQ
++	tristate "NVIDIA Tegra20 DEVFREQ Driver"
++	depends on (TEGRA_MC && TEGRA20_EMC) || COMPILE_TEST
++	select DEVFREQ_GOV_SIMPLE_ONDEMAND
++	select PM_OPP
++	help
++	  This adds the DEVFREQ driver for the Tegra20 family of SoCs.
++	  It reads Memory Controller counters and adjusts the operating
++	  frequencies and voltages with OPP support.
++
+ config ARM_RK3399_DMC_DEVFREQ
+ 	tristate "ARM RK3399 DMC DEVFREQ Driver"
+ 	depends on ARCH_ROCKCHIP
+diff --git a/drivers/devfreq/Makefile b/drivers/devfreq/Makefile
+index 47e5aeeebfd1..338ae8440db6 100644
+--- a/drivers/devfreq/Makefile
++++ b/drivers/devfreq/Makefile
+@@ -11,6 +11,7 @@ obj-$(CONFIG_DEVFREQ_GOV_PASSIVE)	+= governor_passive.o
+ obj-$(CONFIG_ARM_EXYNOS_BUS_DEVFREQ)	+= exynos-bus.o
+ obj-$(CONFIG_ARM_RK3399_DMC_DEVFREQ)	+= rk3399_dmc.o
+ obj-$(CONFIG_ARM_TEGRA_DEVFREQ)		+= tegra30-devfreq.o
++obj-$(CONFIG_ARM_TEGRA20_DEVFREQ)	+= tegra20-devfreq.o
+ 
+ # DEVFREQ Event Drivers
+ obj-$(CONFIG_PM_DEVFREQ_EVENT)		+= event/
+diff --git a/drivers/devfreq/tegra20-devfreq.c b/drivers/devfreq/tegra20-devfreq.c
+new file mode 100644
+index 000000000000..ec2cec6808ed
+--- /dev/null
++++ b/drivers/devfreq/tegra20-devfreq.c
+@@ -0,0 +1,202 @@
++// SPDX-License-Identifier: GPL-2.0
++/*
++ * NVIDIA Tegra20 devfreq driver
++ *
++ * Copyright (C) 2019 GRATE-DRIVER project
++ */
++
++#include <linux/clk.h>
++#include <linux/devfreq.h>
++#include <linux/io.h>
++#include <linux/kernel.h>
++#include <linux/module.h>
++#include <linux/of_device.h>
++#include <linux/platform_device.h>
++#include <linux/pm_opp.h>
++#include <linux/slab.h>
++
++#include <soc/tegra/mc.h>
++
++#include "governor.h"
++
++#define MC_STAT_CONTROL				0x90
++#define MC_STAT_EMC_CLOCK_LIMIT			0xa0
++#define MC_STAT_EMC_CLOCKS			0xa4
++#define MC_STAT_EMC_CONTROL			0xa8
++#define MC_STAT_EMC_COUNT			0xb8
++
++#define EMC_GATHER_CLEAR			(1 << 8)
++#define EMC_GATHER_ENABLE			(3 << 8)
++
++struct tegra_devfreq {
++	struct devfreq *devfreq;
++	struct clk *clk;
++	void __iomem *regs;
++};
++
++static int tegra_devfreq_target(struct device *dev, unsigned long *freq,
++				u32 flags)
++{
++	struct tegra_devfreq *tegra = dev_get_drvdata(dev);
++	struct devfreq *devfreq = tegra->devfreq;
++	struct dev_pm_opp *opp;
++	unsigned long rate;
++	int err;
++
++	opp = devfreq_recommended_opp(dev, freq, flags);
++	if (IS_ERR(opp))
++		return PTR_ERR(opp);
++
++	rate = dev_pm_opp_get_freq(opp);
++	dev_pm_opp_put(opp);
++
++	err = clk_set_min_rate(tegra->clk, rate);
++	if (err)
++		return err;
++
++	err = clk_set_rate(tegra->clk, 0);
++	if (err)
++		goto restore_min_rate;
++
++	return 0;
++
++restore_min_rate:
++	clk_set_min_rate(tegra->clk, devfreq->previous_freq);
++
++	return err;
++}
++
++static int tegra_devfreq_get_dev_status(struct device *dev,
++					struct devfreq_dev_status *stat)
++{
++	struct tegra_devfreq *tegra = dev_get_drvdata(dev);
++
++	stat->busy_time = readl_relaxed(tegra->regs + MC_STAT_EMC_COUNT);
++	stat->total_time = readl_relaxed(tegra->regs + MC_STAT_EMC_CLOCKS) / 8;
++	stat->current_frequency = clk_get_rate(tegra->clk);
++
++	writel_relaxed(EMC_GATHER_CLEAR, tegra->regs + MC_STAT_CONTROL);
++	writel_relaxed(EMC_GATHER_ENABLE, tegra->regs + MC_STAT_CONTROL);
++
++	return 0;
++}
++
++static struct devfreq_dev_profile tegra_devfreq_profile = {
++	.polling_ms	= 500,
++	.target		= tegra_devfreq_target,
++	.get_dev_status	= tegra_devfreq_get_dev_status,
++};
++
++static struct tegra_mc *tegra_get_memory_controller(void)
++{
++	struct platform_device *pdev;
++	struct device_node *np;
++	struct tegra_mc *mc;
++
++	np = of_find_compatible_node(NULL, NULL, "nvidia,tegra20-mc-gart");
++	if (!np)
++		return ERR_PTR(-ENOENT);
++
++	pdev = of_find_device_by_node(np);
++	of_node_put(np);
++	if (!pdev)
++		return ERR_PTR(-ENODEV);
++
++	mc = platform_get_drvdata(pdev);
++	if (!mc)
++		return ERR_PTR(-EPROBE_DEFER);
++
++	return mc;
++}
++
++static int tegra_devfreq_probe(struct platform_device *pdev)
++{
++	struct tegra_devfreq *tegra;
++	struct tegra_mc *mc;
++	unsigned long max_rate;
++	unsigned long rate;
++	int err;
++
++	mc = tegra_get_memory_controller();
++	if (IS_ERR(mc)) {
++		err = PTR_ERR(mc);
++		dev_err(&pdev->dev, "failed to get memory controller: %d\n",
++			err);
++		return err;
++	}
++
++	tegra = devm_kzalloc(&pdev->dev, sizeof(*tegra), GFP_KERNEL);
++	if (!tegra)
++		return -ENOMEM;
++
++	/* EMC is a system-critical clock that is always enabled */
++	tegra->clk = devm_clk_get(&pdev->dev, "emc");
++	if (IS_ERR(tegra->clk)) {
++		err = PTR_ERR(tegra->clk);
++		dev_err(&pdev->dev, "failed to get emc clock: %d\n", err);
++		return err;
++	}
++
++	tegra->regs = mc->regs;
++
++	max_rate = clk_round_rate(tegra->clk, ULONG_MAX);
++
++	for (rate = 0; rate <= max_rate; rate++) {
++		rate = clk_round_rate(tegra->clk, rate);
++
++		err = dev_pm_opp_add(&pdev->dev, rate, 0);
++		if (err) {
++			dev_err(&pdev->dev, "failed to add opp: %d\n", err);
++			goto remove_opps;
++		}
++	}
++
++	/*
++	 * Reset statistic gathers state, select global bandwidth for the
++	 * statistics collection mode and set clocks counter saturation
++	 * limit to maximum.
++	 */
++	writel_relaxed(0x00000000, tegra->regs + MC_STAT_CONTROL);
++	writel_relaxed(0x00000000, tegra->regs + MC_STAT_EMC_CONTROL);
++	writel_relaxed(0xffffffff, tegra->regs + MC_STAT_EMC_CLOCK_LIMIT);
++
++	platform_set_drvdata(pdev, tegra);
++
++	tegra->devfreq = devfreq_add_device(&pdev->dev, &tegra_devfreq_profile,
++					    DEVFREQ_GOV_SIMPLE_ONDEMAND, NULL);
++	if (IS_ERR(tegra->devfreq)) {
++		err = PTR_ERR(tegra->devfreq);
++		goto remove_opps;
++	}
++
++	return 0;
++
++remove_opps:
++	dev_pm_opp_remove_all_dynamic(&pdev->dev);
++
++	return err;
++}
++
++static int tegra_devfreq_remove(struct platform_device *pdev)
++{
++	struct tegra_devfreq *tegra = platform_get_drvdata(pdev);
++
++	devfreq_remove_device(tegra->devfreq);
++	dev_pm_opp_remove_all_dynamic(&pdev->dev);
++
++	return 0;
++}
++
++static struct platform_driver tegra_devfreq_driver = {
++	.probe		= tegra_devfreq_probe,
++	.remove		= tegra_devfreq_remove,
++	.driver		= {
++		.name	= "tegra20-devfreq",
++	},
++};
++module_platform_driver(tegra_devfreq_driver);
++
++MODULE_ALIAS("platform:tegra20-devfreq");
++MODULE_AUTHOR("Dmitry Osipenko <digetx@gmail.com>");
++MODULE_DESCRIPTION("NVIDIA Tegra20 devfreq driver");
++MODULE_LICENSE("GPL v2");
 -- 
 2.21.0
 
