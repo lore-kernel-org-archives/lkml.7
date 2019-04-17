@@ -2,166 +2,97 @@ Return-Path: <SRS0=uTOJ=ST=vger.kernel.org=linux-kernel-owner@kernel.org>
 X-Spam-Checker-Version: SpamAssassin 3.4.0 (2014-02-07) on
 	aws-us-west-2-korg-lkml-1.web.codeaurora.org
 X-Spam-Level: 
-X-Spam-Status: No, score=-7.0 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
-	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,URIBL_BLOCKED
-	autolearn=unavailable autolearn_force=no version=3.4.0
+X-Spam-Status: No, score=-8.5 required=3.0 tests=HEADER_FROM_DIFFERENT_DOMAINS,
+	INCLUDES_PATCH,MAILING_LIST_MULTI,SIGNED_OFF_BY,SPF_PASS,USER_AGENT_MUTT
+	autolearn=ham autolearn_force=no version=3.4.0
 Received: from mail.kernel.org (mail.kernel.org [198.145.29.99])
-	by smtp.lore.kernel.org (Postfix) with ESMTP id 9F5BDC282DA
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:13:21 +0000 (UTC)
+	by smtp.lore.kernel.org (Postfix) with ESMTP id E2511C282DA
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:14:12 +0000 (UTC)
 Received: from vger.kernel.org (vger.kernel.org [209.132.180.67])
-	by mail.kernel.org (Postfix) with ESMTP id 79B59206B6
-	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:13:21 +0000 (UTC)
+	by mail.kernel.org (Postfix) with ESMTP id AF588206B6
+	for <linux-kernel@archiver.kernel.org>; Wed, 17 Apr 2019 11:14:12 +0000 (UTC)
 Received: (majordomo@vger.kernel.org) by vger.kernel.org via listexpand
-        id S1731807AbfDQLNU (ORCPT
+        id S1731886AbfDQLOL (ORCPT
         <rfc822;linux-kernel@archiver.kernel.org>);
-        Wed, 17 Apr 2019 07:13:20 -0400
-Received: from szxga07-in.huawei.com ([45.249.212.35]:46872 "EHLO huawei.com"
+        Wed, 17 Apr 2019 07:14:11 -0400
+Received: from mx2.suse.de ([195.135.220.15]:37706 "EHLO mx1.suse.de"
         rhost-flags-OK-OK-OK-FAIL) by vger.kernel.org with ESMTP
-        id S1729522AbfDQLNU (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
-        Wed, 17 Apr 2019 07:13:20 -0400
-Received: from DGGEMS410-HUB.china.huawei.com (unknown [172.30.72.59])
-        by Forcepoint Email with ESMTP id C26418AC2282557F7E6C;
-        Wed, 17 Apr 2019 19:13:16 +0800 (CST)
-Received: from [127.0.0.1] (10.184.225.177) by DGGEMS410-HUB.china.huawei.com
- (10.3.19.210) with Microsoft SMTP Server id 14.3.408.0; Wed, 17 Apr 2019
- 19:13:07 +0800
-To:     <mcgrof@kernel.org>, <keescook@chromium.org>,
-        <linux-kernel@vger.kernel.org>, <linux-fsdevel@vger.kernel.org>
-CC:     <mingfangsen@huawei.com>, <wangxiaogang3@huawei.com>,
-        "Zhoukang (A)" <zhoukang7@huawei.com>
-From:   Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Subject: [PATCH next] sysctl: add proc_dointvec_jiffies_minmax to limit the
- min/max write value
-Message-ID: <032e024f-2b1b-a980-1b53-d903bc8db297@huawei.com>
-Date:   Wed, 17 Apr 2019 19:12:58 +0800
-User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64; rv:60.0) Gecko/20100101
- Thunderbird/60.5.0
+        id S1729522AbfDQLOL (ORCPT <rfc822;linux-kernel@vger.kernel.org>);
+        Wed, 17 Apr 2019 07:14:11 -0400
+X-Virus-Scanned: by amavisd-new at test-mx.suse.de
+Received: from relay2.suse.de (unknown [195.135.220.254])
+        by mx1.suse.de (Postfix) with ESMTP id 3EBC8AF01;
+        Wed, 17 Apr 2019 11:14:10 +0000 (UTC)
+Received: by quack2.suse.cz (Postfix, from userid 1000)
+        id 504F41E15AE; Wed, 17 Apr 2019 13:14:08 +0200 (CEST)
+Date:   Wed, 17 Apr 2019 13:14:08 +0200
+From:   Jan Kara <jack@suse.cz>
+To:     Wenwen Wang <wang6495@umn.edu>
+Cc:     Jan Kara <jack@suse.com>, open list <linux-kernel@vger.kernel.org>
+Subject: Re: [PATCH v2] udf: fix an uninitialized read bug and remove dead
+ code
+Message-ID: <20190417111408.GB26435@quack2.suse.cz>
+References: <1555351086-3935-1-git-send-email-wang6495@umn.edu>
 MIME-Version: 1.0
-Content-Type: text/plain; charset="gbk"
-Content-Transfer-Encoding: 7bit
-X-Originating-IP: [10.184.225.177]
-X-CFilter-Loop: Reflected
+Content-Type: text/plain; charset=us-ascii
+Content-Disposition: inline
+In-Reply-To: <1555351086-3935-1-git-send-email-wang6495@umn.edu>
+User-Agent: Mutt/1.10.1 (2018-07-13)
 Sender: linux-kernel-owner@vger.kernel.org
 Precedence: bulk
 List-ID: <linux-kernel.vger.kernel.org>
 X-Mailing-List: linux-kernel@vger.kernel.org
 
-From: Zhiqiang Liu <liuzhiqiang26@huawei.com>
+On Mon 15-04-19 12:58:06, Wenwen Wang wrote:
+> In udf_lookup(), the pointer 'fi' is a local variable initialized by the
+> return value of the function call udf_find_entry(). However, if the macro
+> 'UDF_RECOVERY' is defined, this variable will become uninitialized if the
+> else branch is not taken, which can potentially cause incorrect results in
+> the following execution.
+> 
+> To fix this issue, this patch drops the whole code in the ifdef
+> 'UDF_RECOVERY' region, as it is dead code.
+> 
+> Signed-off-by: Wenwen Wang <wang6495@umn.edu>
 
-In proc_dointvec_jiffies func, the write value is only checked
-whether it is larger than INT_MAX. If the write value is less
-than zero, it can also be successfully writen in the data.
+Thanks for the patch. I've added it to my tree.
 
-However, in some scenarios, users would adopt the data to
-set timers or check whether time is expired. Generally, the data
-will be cast to an unsigned type variable, then the negative data
-becomes a very large unsigned value, which leads to long waits
-or other unpredictable problems.
+								Honza
 
-Here, we add a new func, proc_dointvec_jiffies_minmax, to limit the
-min/max write value, which is similar to the proc_dointvec_minmax func.
-
-Signed-off-by: Zhiqiang Liu <liuzhiqiang26@huawei.com>
-Reported-by: Qiang Ning <ningqiang1@huawei.com>
-Reviewed-by: Jie Liu <liujie165@huawei.com>
----
- include/linux/sysctl.h |  2 ++
- kernel/sysctl.c        | 44 +++++++++++++++++++++++++++++++++++++++++++-
- 2 files changed, 45 insertions(+), 1 deletion(-)
-
-diff --git a/include/linux/sysctl.h b/include/linux/sysctl.h
-index b769ecf..8bde8a0 100644
---- a/include/linux/sysctl.h
-+++ b/include/linux/sysctl.h
-@@ -53,6 +53,8 @@ extern int proc_douintvec_minmax(struct ctl_table *table, int write,
- 				 loff_t *ppos);
- extern int proc_dointvec_jiffies(struct ctl_table *, int,
- 				 void __user *, size_t *, loff_t *);
-+extern int proc_dointvec_jiffies_minmax(struct ctl_table *, int,
-+				 void __user *, size_t *, loff_t *);
- extern int proc_dointvec_userhz_jiffies(struct ctl_table *, int,
- 					void __user *, size_t *, loff_t *);
- extern int proc_dointvec_ms_jiffies(struct ctl_table *, int,
-diff --git a/kernel/sysctl.c b/kernel/sysctl.c
-index c9ec050..8e1eb59 100644
---- a/kernel/sysctl.c
-+++ b/kernel/sysctl.c
-@@ -2967,10 +2967,15 @@ static int do_proc_dointvec_jiffies_conv(bool *negp, unsigned long *lvalp,
- 					 int *valp,
- 					 int write, void *data)
- {
-+	struct do_proc_dointvec_minmax_conv_param *param = data;
-+
- 	if (write) {
- 		if (*lvalp > INT_MAX / HZ)
- 			return 1;
- 		*valp = *negp ? -(*lvalp*HZ) : (*lvalp*HZ);
-+		if ((param->min && (*param->min)*HZ > *valp) ||
-+		    (param->max && (*param->max)*HZ < *valp))
-+			return -EINVAL;
- 	} else {
- 		int val = *valp;
- 		unsigned long lval;
-@@ -3053,7 +3058,37 @@ int proc_dointvec_jiffies(struct ctl_table *table, int write,
- 			  void __user *buffer, size_t *lenp, loff_t *ppos)
- {
-     return do_proc_dointvec(table,write,buffer,lenp,ppos,
--		    	    do_proc_dointvec_jiffies_conv,NULL);
-+			    do_proc_dointvec_jiffies_conv, NULL);
-+}
-+
-+/**
-+ * proc_dointvec_jiffies_minmax - read a vector of integers as seconds with min/max values
-+ * @table: the sysctl table
-+ * @write: %TRUE if this is a write to the sysctl file
-+ * @buffer: the user buffer
-+ * @lenp: the size of the user buffer
-+ * @ppos: file position
-+ *
-+ * Reads/writes up to table->maxlen/sizeof(unsigned int) integer
-+ * values from/to the user buffer, treated as an ASCII string.
-+ * The values read are assumed to be in seconds, and are converted into
-+ * jiffies.
-+ *
-+ * This routine will ensure the values are within the range specified by
-+ * table->extra1 (min) and table->extra2 (max).
-+ *
-+ * Returns 0 on success or -EINVAL on write when the range check fails.
-+ */
-+int proc_dointvec_jiffies_minmax(struct ctl_table *table, int write,
-+			  void __user *buffer, size_t *lenp, loff_t *ppos)
-+{
-+	struct do_proc_dointvec_minmax_conv_param param = {
-+		.min = (int *) table->extra1,
-+		.max = (int *) table->extra2,
-+	};
-+
-+	return do_proc_dointvec(table, write, buffer, lenp, ppos,
-+				do_proc_dointvec_jiffies_conv, &param);
- }
-
- /**
-@@ -3301,6 +3336,12 @@ int proc_dointvec_jiffies(struct ctl_table *table, int write,
- 	return -ENOSYS;
- }
-
-+int proc_dointvec_jiffies_minmax(struct ctl_table *table, int write,
-+		    void __user *buffer, size_t *lenp, loff_t *ppos)
-+{
-+	return -ENOSYS;
-+}
-+
- int proc_dointvec_userhz_jiffies(struct ctl_table *table, int write,
- 		    void __user *buffer, size_t *lenp, loff_t *ppos)
- {
-@@ -3359,6 +3400,7 @@ static int proc_dointvec_minmax_bpf_stats(struct ctl_table *table, int write,
- EXPORT_SYMBOL(proc_dointvec);
- EXPORT_SYMBOL(proc_douintvec);
- EXPORT_SYMBOL(proc_dointvec_jiffies);
-+EXPORT_SYMBOL(proc_dointvec_jiffies_minmax);
- EXPORT_SYMBOL(proc_dointvec_minmax);
- EXPORT_SYMBOL_GPL(proc_douintvec_minmax);
- EXPORT_SYMBOL(proc_dointvec_userhz_jiffies);
+> ---
+>  fs/udf/namei.c | 15 ---------------
+>  1 file changed, 15 deletions(-)
+> 
+> diff --git a/fs/udf/namei.c b/fs/udf/namei.c
+> index 58cc241..77b6d89 100644
+> --- a/fs/udf/namei.c
+> +++ b/fs/udf/namei.c
+> @@ -304,21 +304,6 @@ static struct dentry *udf_lookup(struct inode *dir, struct dentry *dentry,
+>  	if (dentry->d_name.len > UDF_NAME_LEN)
+>  		return ERR_PTR(-ENAMETOOLONG);
+>  
+> -#ifdef UDF_RECOVERY
+> -	/* temporary shorthand for specifying files by inode number */
+> -	if (!strncmp(dentry->d_name.name, ".B=", 3)) {
+> -		struct kernel_lb_addr lb = {
+> -			.logicalBlockNum = 0,
+> -			.partitionReferenceNum =
+> -				simple_strtoul(dentry->d_name.name + 3,
+> -						NULL, 0),
+> -		};
+> -		inode = udf_iget(dir->i_sb, lb);
+> -		if (IS_ERR(inode))
+> -			return inode;
+> -	} else
+> -#endif /* UDF_RECOVERY */
+> -
+>  	fi = udf_find_entry(dir, &dentry->d_name, &fibh, &cfi);
+>  	if (IS_ERR(fi))
+>  		return ERR_CAST(fi);
+> -- 
+> 2.7.4
+> 
+> 
 -- 
-1.8.3.1
-
+Jan Kara <jack@suse.com>
+SUSE Labs, CR
